@@ -1,67 +1,656 @@
-// Функция для получения initData (нужна для аутентификации)
-function getInitData() {
-    const tg = window.Telegram.WebApp;
-    return tg.initData; // Строка с данными пользователя и подписью[citation:4]
-}
-
-// Функция для запросов к бэкенду
-async function callBackend(endpoint, method = 'GET', data = null) {
-    const url = `https://твой-бэкенд.ru${endpoint}`; // Замени на свой URL
-    
-    const headers = {
-        'Content-Type': 'application/json',
-        'Authorization': `tg:${getInitData()}` // Передаём initData для проверки[citation:10]
-    };
-    
-    const options = {
-        method: method,
-        headers: headers,
-    };
-    
-    if (data) {
-        options.body = JSON.stringify(data);
-    }
-    
-    try {
-        const response = await fetch(url, options);
-        if (!response.ok) {
-            throw new Error(`HTTP ${response.status}`);
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Telegram Mini App — Полная версия</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
-        return await response.json();
-    } catch (error) {
-        console.error('Backend error:', error);
-        tg.showAlert('Ошибка связи с сервером');
-        return null;
-    }
-}
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background: var(--tg-theme-bg-color, #ffffff);
+            color: var(--tg-theme-text-color, #000000);
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .card {
+            background: var(--tg-theme-secondary-bg-color, #f0f0f0);
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+        }
+        
+        h1 {
+            font-size: 24px;
+            margin-bottom: 10px;
+            color: var(--tg-theme-text-color, #000);
+        }
+        
+        h2 {
+            font-size: 18px;
+            margin-bottom: 15px;
+            color: var(--tg-theme-text-color, #000);
+        }
+        
+        h3 {
+            font-size: 16px;
+            margin-bottom: 10px;
+            color: var(--tg-theme-text-color, #000);
+        }
+        
+        .username {
+            color: var(--tg-theme-link-color, #2481cc);
+            font-weight: bold;
+        }
+        
+        input, textarea, select {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border-radius: 12px;
+            border: 1px solid var(--tg-theme-hint-color, #ccc);
+            background: var(--tg-theme-bg-color, white);
+            color: var(--tg-theme-text-color, black);
+            font-size: 16px;
+            font-family: inherit;
+        }
+        
+        button {
+            background: var(--tg-theme-button-color, #2481cc);
+            color: var(--tg-theme-button-text-color, white);
+            border: none;
+            padding: 12px 24px;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 10px;
+            transition: all 0.2s;
+        }
+        
+        button:active {
+            opacity: 0.8;
+            transform: scale(0.98);
+        }
+        
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        .btn-secondary {
+            background: var(--tg-theme-secondary-bg-color, #e0e0e0);
+            color: var(--tg-theme-text-color, #000);
+            border: 1px solid var(--tg-theme-hint-color, #ccc);
+        }
+        
+        .info {
+            font-size: 14px;
+            color: var(--tg-theme-hint-color, #999);
+            margin-top: 10px;
+            text-align: center;
+        }
+        
+        .status {
+            background: var(--tg-theme-bg-color, white);
+            border-radius: 12px;
+            padding: 12px;
+            margin-top: 10px;
+            font-size: 14px;
+            border-left: 3px solid var(--tg-theme-button-color, #2481cc);
+        }
+        
+        .status-error {
+            border-left-color: #ff3b30;
+            background: rgba(255, 59, 48, 0.1);
+        }
+        
+        .status-success {
+            border-left-color: #34c759;
+            background: rgba(52, 199, 89, 0.1);
+        }
+        
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--tg-theme-button-color, #2481cc);
+            border-top-color: transparent;
+            border-radius: 50%;
+            animation: spin 0.6s linear infinite;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        .message-item {
+            background: var(--tg-theme-bg-color, white);
+            padding: 10px;
+            margin: 8px 0;
+            border-radius: 8px;
+            border: 1px solid var(--tg-theme-hint-color, #eee);
+        }
+        
+        .message-text {
+            font-size: 14px;
+            margin-bottom: 5px;
+        }
+        
+        .message-time {
+            font-size: 11px;
+            color: var(--tg-theme-hint-color, #999);
+        }
+        
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .tab {
+            flex: 1;
+            background: var(--tg-theme-secondary-bg-color, #e0e0e0);
+            color: var(--tg-theme-text-color, #000);
+            padding: 10px;
+            text-align: center;
+            cursor: pointer;
+            border-radius: 12px;
+            transition: all 0.3s;
+        }
+        
+        .tab.active {
+            background: var(--tg-theme-button-color, #2481cc);
+            color: var(--tg-theme-button-text-color, white);
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        @media (prefers-color-scheme: dark) {
+            .message-item {
+                border-color: #333;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Шапка с приветствием -->
+        <div class="card">
+            <h1>🌟 Привет, <span id="userName" class="username">загрузка...</span>!</h1>
+            <p>Добро пожаловать в полноценное Telegram Mini App с бэкендом!</p>
+        </div>
+        
+        <!-- Вкладки -->
+        <div class="tabs">
+            <div class="tab active" data-tab="main">📝 Главная</div>
+            <div class="tab" data-tab="messages">💬 Сообщения</div>
+            <div class="tab" data-tab="profile">👤 Профиль</div>
+            <div class="tab" data-tab="settings">⚙️ Настройки</div>
+        </div>
+        
+        <!-- Вкладка: Главная -->
+        <div id="tab-main" class="tab-content active">
+            <div class="card">
+                <h3>📝 Отправить сообщение</h3>
+                <textarea id="messageInput" rows="3" placeholder="Напишите что-нибудь..."></textarea>
+                <button id="sendToBotBtn">📤 Отправить боту</button>
+                <button id="sendToBackendBtn" class="btn-secondary">💾 Отправить и сохранить в бэкенд</button>
+            </div>
+            
+            <div class="card">
+                <h3>🔄 Запросы к API</h3>
+                <button id="testApiBtn">🔌 Проверить связь с бэкендом</button>
+                <div id="apiStatus" class="status">
+                    ⚡ Статус не проверен
+                </div>
+            </div>
+            
+            <div class="card">
+                <h3>ℹ️ Информация о приложении</h3>
+                <div id="appInfo" class="status">
+                    Загрузка...
+                </div>
+            </div>
+        </div>
+        
+        <!-- Вкладка: Сообщения -->
+        <div id="tab-messages" class="tab-content">
+            <div class="card">
+                <h3>💬 История сообщений</h3>
+                <button id="loadMessagesBtn">📥 Загрузить сообщения</button>
+                <div id="messagesList" class="status">
+                    Нажмите "Загрузить сообщения", чтобы увидеть историю
+                </div>
+            </div>
+        </div>
+        
+        <!-- Вкладка: Профиль -->
+        <div id="tab-profile" class="tab-content">
+            <div class="card">
+                <h3>👤 Данные пользователя</h3>
+                <div id="profileInfo" class="status">
+                    Загрузка...
+                </div>
+                <button id="refreshProfileBtn">🔄 Обновить профиль</button>
+            </div>
+        </div>
+        
+        <!-- Вкладка: Настройки -->
+        <div id="tab-settings" class="tab-content">
+            <div class="card">
+                <h3>🎨 Внешний вид</h3>
+                <button id="closeAppBtn">❌ Закрыть приложение</button>
+                <button id="toggleMainButtonBtn">🔘 Показать/скрыть MainButton</button>
+                <div class="info">
+                    Telegram Mini App v2.0<br>
+                    Поддерживает тёмную тему автоматически
+                </div>
+            </div>
+        </div>
+    </div>
 
-// Пример использования: при нажатии кнопки отправляем сообщение на бэкенд
-document.getElementById('sendBtn').onclick = async () => {
-    const message = document.getElementById('messageInput').value.trim();
-    if (message) {
-        // Сначала отправляем боту через Telegram (как было)
-        tg.sendData(JSON.stringify({
-            type: 'message',
-            text: message,
-            timestamp: new Date().toISOString()
-        }));
+    <script>
+        // ==================== ИНИЦИАЛИЗАЦИЯ ====================
+        const tg = window.Telegram.WebApp;
         
-        // А теперь ещё и на бэкенд
-        const result = await callBackend('/api/message', 'POST', {
-            message: message,
-            timestamp: new Date().toISOString()
-        });
+        // Расширяем приложение на весь экран
+        tg.expand();
         
-        if (result && result.status === 'success') {
+        // Настройка MainButton
+        tg.MainButton.setText("✅ Готово");
+        tg.MainButton.show();
+        
+        // Глобальные переменные
+        let currentUser = null;
+        let backendUrl = "https://твой-бэкенд.ru"; // 🔥 ЗАМЕНИ НА СВОЙ URL БЭКЕНДА
+        let isBackendAvailable = false;
+        
+        // ==================== ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ ====================
+        
+        // Получение initData для аутентификации
+        function getInitData() {
+            return tg.initData;
+        }
+        
+        // Отображение уведомлений
+        function showNotification(message, type = 'info') {
             tg.showPopup({
-                title: 'Сохранено!',
-                message: `Привет, ${result.user.first_name}! Твоё сообщение сохранено на сервере.`,
+                title: type === 'error' ? '❌ Ошибка' : type === 'success' ? '✅ Успех' : 'ℹ️ Информация',
+                message: message,
                 buttons: [{ type: 'ok' }]
             });
         }
         
-        document.getElementById('messageInput').value = '';
-    } else {
-        tg.showAlert('Пожалуйста, введите сообщение');
-    }
-};
+        // Запрос к бэкенду
+        async function callBackend(endpoint, method = 'GET', data = null) {
+            if (!backendUrl || backendUrl === "https://твой-бэкенд.ru") {
+                console.warn('Бэкенд не настроен');
+                return null;
+            }
+            
+            const headers = {
+                'Content-Type': 'application/json',
+            };
+            
+            const initData = getInitData();
+            if (initData) {
+                headers['Authorization'] = `tg:${initData}`;
+            }
+            
+            const options = {
+                method: method,
+                headers: headers,
+            };
+            
+            if (data && (method === 'POST' || method === 'PUT')) {
+                options.body = JSON.stringify(data);
+            }
+            
+            try {
+                const response = await fetch(`${backendUrl}${endpoint}`, options);
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+                return await response.json();
+            } catch (error) {
+                console.error(`Backend error (${endpoint}):`, error);
+                return null;
+            }
+        }
+        
+        // Проверка доступности бэкенда
+        async function checkBackendHealth() {
+            const statusDiv = document.getElementById('apiStatus');
+            statusDiv.innerHTML = '<div class="loading"></div> Проверка связи...';
+            
+            const result = await callBackend('/api/health', 'GET');
+            
+            if (result && result.status === 'ok') {
+                isBackendAvailable = true;
+                statusDiv.innerHTML = `
+                    ✅ Бэкенд доступен<br>
+                    Время сервера: ${new Date(result.timestamp).toLocaleString()}
+                `;
+                statusDiv.classList.add('status-success');
+                statusDiv.classList.remove('status-error');
+                return true;
+            } else {
+                isBackendAvailable = false;
+                statusDiv.innerHTML = `
+                    ⚠️ Бэкенд недоступен<br>
+                    Проверьте URL: ${backendUrl}<br>
+                    Убедитесь, что сервер запущен
+                `;
+                statusDiv.classList.add('status-error');
+                statusDiv.classList.remove('status-success');
+                return false;
+            }
+        }
+        
+        // Загрузка сообщений с бэкенда
+        async function loadMessagesFromBackend() {
+            const messagesDiv = document.getElementById('messagesList');
+            messagesDiv.innerHTML = '<div class="loading"></div> Загрузка сообщений...';
+            
+            const result = await callBackend('/api/messages', 'GET');
+            
+            if (result && result.messages) {
+                if (result.messages.length === 0) {
+                    messagesDiv.innerHTML = '📭 Нет сохранённых сообщений';
+                } else {
+                    messagesDiv.innerHTML = '';
+                    result.messages.forEach(msg => {
+                        const msgElement = document.createElement('div');
+                        msgElement.className = 'message-item';
+                        msgElement.innerHTML = `
+                            <div class="message-text">${escapeHtml(msg.text)}</div>
+                            <div class="message-time">📅 ${new Date(msg.timestamp).toLocaleString()}</div>
+                        `;
+                        messagesDiv.appendChild(msgElement);
+                    });
+                }
+                messagesDiv.classList.add('status-success');
+            } else {
+                messagesDiv.innerHTML = '❌ Не удалось загрузить сообщения. Проверьте подключение к бэкенду.';
+                messagesDiv.classList.add('status-error');
+            }
+        }
+        
+        // Обновление профиля
+        async function refreshProfile() {
+            const profileDiv = document.getElementById('profileInfo');
+            profileDiv.innerHTML = '<div class="loading"></div> Загрузка профиля...';
+            
+            if (!currentUser) {
+                profileDiv.innerHTML = '❌ Пользователь не авторизован в Telegram';
+                return;
+            }
+            
+            const result = await callBackend(`/api/user/${currentUser.id}`, 'GET');
+            
+            if (result) {
+                profileDiv.innerHTML = `
+                    <strong>Telegram ID:</strong> ${result.telegram_id}<br>
+                    <strong>Имя:</strong> ${result.name || currentUser.first_name}<br>
+                    <strong>Сообщений отправлено:</strong> ${result.messages_count || 0}<br>
+                    <strong>Язык:</strong> ${currentUser.language_code || 'не указан'}<br>
+                    <strong>Премиум:</strong> ${currentUser.is_premium ? '✅ Да' : '❌ Нет'}
+                `;
+                profileDiv.classList.add('status-success');
+            } else {
+                profileDiv.innerHTML = '❌ Не удалось загрузить профиль. Проверьте подключение к бэкенду.';
+                profileDiv.classList.add('status-error');
+            }
+        }
+        
+        // Отправка сообщения только боту (через Telegram)
+        function sendToBot(message) {
+            tg.sendData(JSON.stringify({
+                type: 'message',
+                text: message,
+                timestamp: new Date().toISOString(),
+                source: 'telegram'
+            }));
+            showNotification('Сообщение отправлено боту!', 'success');
+        }
+        
+        // Отправка сообщения в бэкенд
+        async function sendToBackend(message) {
+            if (!isBackendAvailable) {
+                showNotification('Бэкенд недоступен. Проверьте подключение.', 'error');
+                return false;
+            }
+            
+            const result = await callBackend('/api/message', 'POST', {
+                message: message,
+                timestamp: new Date().toISOString(),
+                user_id: currentUser?.id
+            });
+            
+            if (result && result.status === 'success') {
+                showNotification(`Сообщение сохранено на сервере, ${result.user?.first_name || 'пользователь'}!`, 'success');
+                return true;
+            } else {
+                showNotification('Не удалось сохранить сообщение на сервере', 'error');
+                return false;
+            }
+        }
+        
+        // Экранирование HTML для безопасности
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+        
+        // Обновление информации о приложении
+        function updateAppInfo() {
+            const infoDiv = document.getElementById('appInfo');
+            infoDiv.innerHTML = `
+                <strong>Платформа:</strong> ${tg.platform}<br>
+                <strong>Тема:</strong> ${tg.colorScheme} (светлая/тёмная)<br>
+                <strong>Версия Telegram:</strong> ${tg.version}<br>
+                <strong>Бэкенд:</strong> ${isBackendAvailable ? '✅ Подключён' : '❌ Не подключён'}<br>
+                <strong>MainButton:</strong> ${tg.MainButton.isVisible ? 'Видна' : 'Скрыта'}<br>
+                <strong>Viewport:</strong> ${tg.viewportHeight}px
+            `;
+        }
+        
+        // ==================== ИНИЦИАЛИЗАЦИЯ ПОЛЬЗОВАТЕЛЯ ====================
+        
+        function initUser() {
+            if (tg.initDataUnsafe && tg.initDataUnsafe.user) {
+                currentUser = tg.initDataUnsafe.user;
+                const firstName = currentUser.first_name || '';
+                const lastName = currentUser.last_name || '';
+                const fullName = (firstName + ' ' + lastName).trim();
+                
+                document.getElementById('userName').innerText = firstName || 'пользователь';
+                
+                const welcomeMessage = `👋 Привет, ${firstName}! Добро пожаловать в полноценное Mini App с бэкендом.`;
+                document.querySelector('.card p').innerText = welcomeMessage;
+                
+                // Показываем приветствие только при первом запуске
+                if (!sessionStorage.getItem('welcomeShown')) {
+                    tg.showPopup({
+                        title: `Привет, ${firstName}!`,
+                        message: 'Это полноценное Telegram Mini App с поддержкой бэкенда. Попробуй отправить сообщение или проверить связь с сервером!',
+                        buttons: [{ type: 'ok' }]
+                    });
+                    sessionStorage.setItem('welcomeShown', 'true');
+                }
+            } else {
+                document.getElementById('userName').innerText = 'гость';
+                currentUser = {
+                    id: null,
+                    first_name: 'Гость',
+                    language_code: 'ru'
+                };
+            }
+        }
+        
+        // ==================== НАСТРОЙКА ОБРАБОТЧИКОВ ====================
+        
+        // Настройка вкладок
+        function setupTabs() {
+            const tabs = document.querySelectorAll('.tab');
+            tabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    const tabName = tab.dataset.tab;
+                    
+                    // Обновляем активную вкладку
+                    tabs.forEach(t => t.classList.remove('active'));
+                    tab.classList.add('active');
+                    
+                    // Обновляем контент
+                    document.querySelectorAll('.tab-content').forEach(content => {
+                        content.classList.remove('active');
+                    });
+                    document.getElementById(`tab-${tabName}`).classList.add('active');
+                });
+            });
+        }
+        
+        // Настройка кнопок
+        function setupButtons() {
+            // Отправка боту
+            document.getElementById('sendToBotBtn').onclick = () => {
+                const message = document.getElementById('messageInput').value.trim();
+                if (message) {
+                    sendToBot(message);
+                    document.getElementById('messageInput').value = '';
+                } else {
+                    showNotification('Введите сообщение', 'info');
+                }
+            };
+            
+            // Отправка в бэкенд
+            document.getElementById('sendToBackendBtn').onclick = async () => {
+                const message = document.getElementById('messageInput').value.trim();
+                if (message) {
+                    const success = await sendToBackend(message);
+                    if (success) {
+                        document.getElementById('messageInput').value = '';
+                    }
+                } else {
+                    showNotification('Введите сообщение', 'info');
+                }
+            };
+            
+            // Проверка API
+            document.getElementById('testApiBtn').onclick = async () => {
+                await checkBackendHealth();
+                updateAppInfo();
+            };
+            
+            // Загрузка сообщений
+            document.getElementById('loadMessagesBtn').onclick = async () => {
+                await loadMessagesFromBackend();
+            };
+            
+            // Обновление профиля
+            document.getElementById('refreshProfileBtn').onclick = async () => {
+                await refreshProfile();
+            };
+            
+            // Закрытие приложения
+            document.getElementById('closeAppBtn').onclick = () => {
+                tg.close();
+            };
+            
+            // Toggle MainButton
+            let mainButtonVisible = true;
+            document.getElementById('toggleMainButtonBtn').onclick = () => {
+                if (mainButtonVisible) {
+                    tg.MainButton.hide();
+                } else {
+                    tg.MainButton.show();
+                }
+                mainButtonVisible = !mainButtonVisible;
+                updateAppInfo();
+            };
+        }
+        
+        // Настройка MainButton
+        function setupMainButton() {
+            tg.MainButton.onClick(async () => {
+                const message = document.getElementById('messageInput').value.trim();
+                if (message) {
+                    await sendToBackend(message);
+                    sendToBot(message);
+                    document.getElementById('messageInput').value = '';
+                    tg.showPopup({
+                        title: 'Отправлено!',
+                        message: 'Сообщение отправлено и сохранено',
+                        buttons: [{ type: 'ok' }]
+                    });
+                } else {
+                    tg.showAlert('Сначала введите сообщение');
+                }
+            });
+        }
+        
+        // Автоматическая проверка бэкенда при старте
+        async function autoCheckBackend() {
+            if (backendUrl && backendUrl !== "https://твой-бэкенд.ru") {
+                await checkBackendHealth();
+            } else {
+                const statusDiv = document.getElementById('apiStatus');
+                statusDiv.innerHTML = `
+                    ⚙️ Бэкенд не настроен<br>
+                    Отредактируйте файл и укажите ваш backendUrl
+                `;
+            }
+            updateAppInfo();
+        }
+        
+        // ==================== ЗАПУСК ====================
+        
+        function init() {
+            initUser();
+            setupTabs();
+            setupButtons();
+            setupMainButton();
+            autoCheckBackend().then(() => {
+                if (currentUser && currentUser.id) {
+                    refreshProfile();
+                }
+            });
+            
+            // Обновляем информацию при изменении размера
+            window.addEventListener('resize', () => {
+                tg.expand();
+                updateAppInfo();
+            });
+        }
+        
+        // Запускаем приложение после полной загрузки
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', init);
+        } else {
+            init();
+        }
+    </script>
+</body>
+</html>
