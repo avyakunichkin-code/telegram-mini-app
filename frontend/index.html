@@ -1,0 +1,67 @@
+// Функция для получения initData (нужна для аутентификации)
+function getInitData() {
+    const tg = window.Telegram.WebApp;
+    return tg.initData; // Строка с данными пользователя и подписью[citation:4]
+}
+
+// Функция для запросов к бэкенду
+async function callBackend(endpoint, method = 'GET', data = null) {
+    const url = `https://твой-бэкенд.ru${endpoint}`; // Замени на свой URL
+    
+    const headers = {
+        'Content-Type': 'application/json',
+        'Authorization': `tg:${getInitData()}` // Передаём initData для проверки[citation:10]
+    };
+    
+    const options = {
+        method: method,
+        headers: headers,
+    };
+    
+    if (data) {
+        options.body = JSON.stringify(data);
+    }
+    
+    try {
+        const response = await fetch(url, options);
+        if (!response.ok) {
+            throw new Error(`HTTP ${response.status}`);
+        }
+        return await response.json();
+    } catch (error) {
+        console.error('Backend error:', error);
+        tg.showAlert('Ошибка связи с сервером');
+        return null;
+    }
+}
+
+// Пример использования: при нажатии кнопки отправляем сообщение на бэкенд
+document.getElementById('sendBtn').onclick = async () => {
+    const message = document.getElementById('messageInput').value.trim();
+    if (message) {
+        // Сначала отправляем боту через Telegram (как было)
+        tg.sendData(JSON.stringify({
+            type: 'message',
+            text: message,
+            timestamp: new Date().toISOString()
+        }));
+        
+        // А теперь ещё и на бэкенд
+        const result = await callBackend('/api/message', 'POST', {
+            message: message,
+            timestamp: new Date().toISOString()
+        });
+        
+        if (result && result.status === 'success') {
+            tg.showPopup({
+                title: 'Сохранено!',
+                message: `Привет, ${result.user.first_name}! Твоё сообщение сохранено на сервере.`,
+                buttons: [{ type: 'ok' }]
+            });
+        }
+        
+        document.getElementById('messageInput').value = '';
+    } else {
+        tg.showAlert('Пожалуйста, введите сообщение');
+    }
+};
