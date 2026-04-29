@@ -283,7 +283,7 @@
         
         // Глобальные переменные
         let currentUser = null;
-        let backendUrl = "https://твой-бэкенд.ru"; // 🔥 ЗАМЕНИ НА СВОЙ URL БЭКЕНДА
+        let backendUrl = "https://telegram-mini-app-zwfs.onrender.com"; // 🔥 ЗАМЕНИ НА СВОЙ URL БЭКЕНДА
         let isBackendAvailable = false;
         
         // ==================== ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ ====================
@@ -304,7 +304,7 @@
         
         // Запрос к бэкенду
         async function callBackend(endpoint, method = 'GET', data = null) {
-            if (!backendUrl || backendUrl === "https://твой-бэкенд.ru") {
+            if (!backendUrl || backendUrl === "https://telegram-mini-app-zwfs.onrender.com") {
                 console.warn('Бэкенд не настроен');
                 return null;
             }
