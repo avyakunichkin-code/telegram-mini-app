@@ -17,6 +17,7 @@ app = FastAPI(title="Telegram Mini App API", description="API для Telegram Mi
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
+        "https://avyakunichkin-code.github.io",
         "https://*.github.io",
         "http://localhost:3000",
         "http://localhost:8000",
