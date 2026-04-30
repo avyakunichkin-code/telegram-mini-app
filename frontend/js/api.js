@@ -1,5 +1,3 @@
-// frontend/js/api.js
-
 let authToken = localStorage.getItem(APP_CONFIG.TOKEN_KEY);
 
 function setAuthToken(token) {
@@ -18,7 +16,6 @@ async function apiCall(endpoint, method = 'GET', data = null) {
         'Content-Type': 'application/json',
     };
     
-    // Токен берём из переменной, которая обновляется через setAuthToken
     const token = authToken || localStorage.getItem(APP_CONFIG.TOKEN_KEY);
     
     if (token) {
@@ -39,10 +36,8 @@ async function apiCall(endpoint, method = 'GET', data = null) {
     
     try {
         const response = await fetch(`${APP_CONFIG.API_URL}${endpoint}`, options);
-        console.log(`📡 ${endpoint} - Status: ${response.status}`);  // ← отладка
-        
+
         if (response.status === 401) {
-            console.log('🔴 401 Unauthorized, clearing token');
             setAuthToken(null);
             if (window.showLogin) window.showLogin();
             return null;
@@ -58,3 +53,33 @@ async function apiCall(endpoint, method = 'GET', data = null) {
         return null;
     }
 }
+
+const API = {
+    register(payload) {
+        return apiCall('/api/register', 'POST', payload);
+    },
+    login(payload) {
+        return apiCall('/api/login', 'POST', payload);
+    },
+    getMe() {
+        return apiCall('/api/user/me');
+    },
+    upsertSalary(payload) {
+        return apiCall('/api/finance/salary', 'PUT', payload);
+    },
+    getOverview() {
+        return apiCall('/api/finance/overview');
+    },
+    addLiability(payload) {
+        return apiCall('/api/finance/liabilities', 'POST', payload);
+    },
+    deleteLiability(id) {
+        return apiCall(`/api/finance/liabilities/${id}`, 'DELETE');
+    },
+    addAsset(payload) {
+        return apiCall('/api/finance/assets', 'POST', payload);
+    },
+    deleteAsset(id) {
+        return apiCall(`/api/finance/assets/${id}`, 'DELETE');
+    }
+};

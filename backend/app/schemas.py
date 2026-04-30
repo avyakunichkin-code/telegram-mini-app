@@ -1,6 +1,6 @@
 from datetime import datetime
-from typing import Optional
-from pydantic import BaseModel, EmailStr
+from typing import Optional, List
+from pydantic import BaseModel
 
 
 # Auth
@@ -44,3 +44,57 @@ class UserResponse(BaseModel):
     email: Optional[str]
     messages_count: int
     created_at: datetime
+
+
+class SalaryProfileUpdate(BaseModel):
+    monthly_amount: float
+    monthly_receipts_count: int
+
+
+class SalaryProfileResponse(BaseModel):
+    monthly_amount: float
+    monthly_receipts_count: int
+
+
+class LiabilityCreate(BaseModel):
+    title: Optional[str] = "Обязательство"
+    total_debt: float
+    annual_rate_percent: float
+    monthly_payment: float
+
+
+class LiabilityResponse(BaseModel):
+    id: int
+    title: str
+    total_debt: float
+    annual_rate_percent: float
+    monthly_payment: float
+    created_at: datetime
+
+
+class AssetCreate(BaseModel):
+    title: Optional[str] = "Актив"
+    asset_value: float
+    monthly_maintenance_cost: float
+
+
+class AssetResponse(BaseModel):
+    id: int
+    title: str
+    asset_value: float
+    monthly_maintenance_cost: float
+    created_at: datetime
+
+
+class FinanceOverview(BaseModel):
+    salary: SalaryProfileResponse
+    liabilities: List[LiabilityResponse]
+    assets: List[AssetResponse]
+    total_monthly_income: float
+    total_monthly_liabilities_payment: float
+    total_monthly_assets_maintenance: float
+    net_monthly_cashflow: float
+    liabilities_to_income_ratio: float
+    gamification_level: str
+    score: int
+    xp_to_next_level: int
