@@ -40,18 +40,13 @@ users_db: Dict[int, Dict] = {}           # user_id -> user data
 def verify_telegram_auth(init_data: str) -> Optional[Dict[str, Any]]:
     """
     Проверяет подлинность данных от Telegram
-    Возвращает данные пользователя или None
+    Использует официальный метод Telegram
     """
-    # 🆕 ДОБАВЬТЕ ЭТУ ОТЛАДКУ
-    print(f"🔍 Verifying auth, BOT_TOKEN present: {bool(BOT_TOKEN)}")
-    print(f"📦 init_data length: {len(init_data) if init_data else 0}")
-    
     if not init_data or not BOT_TOKEN:
-        print("❌ Missing init_data or BOT_TOKEN")
         return None
     
     try:
-        # Парсим init_data
+        # Разбираем параметры
         params = {}
         for item in init_data.split('&'):
             if '=' in item:
@@ -60,36 +55,35 @@ def verify_telegram_auth(init_data: str) -> Optional[Dict[str, Any]]:
         
         received_hash = params.pop('hash', None)
         if not received_hash:
-            print("No hash in init_data")
             return None
         
-        # Сортируем параметры и создаём строку для проверки
-        data_check_string = '\n'.join(
-            f"{k}={v}" for k, v in sorted(params.items())
-        )
+        # Создаём строку для проверки в правильном формате
+        # Важно: параметры должны быть отсортированы по алфавиту!
+        sorted_params = sorted(params.items())
+        data_check_string = '\n'.join([f"{k}={v}" for k, v in sorted_params])
         
         # Создаём HMAC-SHA256 подпись
         secret_key = hashlib.sha256(BOT_TOKEN.encode()).digest()
         computed_hash = hmac.new(
             secret_key,
-            data_check_string.encode(),
+            data_check_string.encode('utf-8'),
             hashlib.sha256
         ).hexdigest()
         
         if computed_hash != received_hash:
-            print(f"Hash mismatch: computed={computed_hash}, received={received_hash}")
+            print(f"❌ Hash mismatch")
             return None
         
-        # Проверяем, что данные не устарели (не старше 24 часов)
+        # Проверяем возраст
         auth_date = int(params.get('auth_date', 0))
         if datetime.now().timestamp() - auth_date > 86400:
-            print(f"Auth data too old: {auth_date}")
             return None
         
-        # Извлекаем данные пользователя
+        # Извлекаем пользователя
         user_data = json.loads(params.get('user', '{}'))
+        
+        # Сохраняем пользователя
         if user_data:
-            # Сохраняем пользователя в БД
             user_id = user_data.get('id')
             if user_id and user_id not in users_db:
                 users_db[user_id] = {
