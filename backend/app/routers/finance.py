@@ -69,6 +69,8 @@ async def upsert_salary_profile(
 
     game_profile = _get_active_game_profile(db, current_user.id)
     sync_time(game_profile)
+    if game_profile.base_params_locked == 1:
+        raise HTTPException(status_code=400, detail="Base parameters are locked after game start")
     profile = _get_or_create_salary_profile(db, game_profile.id)
     profile.monthly_amount = payload.monthly_amount
     profile.monthly_receipts_count = payload.monthly_receipts_count

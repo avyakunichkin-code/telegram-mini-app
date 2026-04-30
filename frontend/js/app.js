@@ -12,9 +12,6 @@ async function checkTokenAndStart() {
     if (user) {
         document.getElementById('userName').innerText = user.username;
         showApp();
-        if (window.loadFinanceOverview) {
-            await window.loadFinanceOverview();
-        }
     } else {
         setAuthToken(null);
         showLogin();

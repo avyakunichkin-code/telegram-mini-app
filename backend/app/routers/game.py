@@ -3,8 +3,8 @@ from sqlalchemy.orm import Session
 
 from app.auth import get_current_user
 from app.database import get_db
-from app.models import GameProfile
-from app.schemas import GameProfileCreate, GameProfileResponse, TimeConfigUpdate, TimeStatusResponse
+from app.models import GameProfile, FinanceSalary
+from app.schemas import GameProfileCreate, GameProfileResponse, TimeConfigUpdate, TimeStatusResponse, GameStartRequest
 from app.game_time import (
     get_active_game_profile,
     sync_time,
@@ -86,6 +86,50 @@ async def activate_game_profile(
     profile.is_active = 1
     db.commit()
     return {"status": "success", "active_profile_id": profile_id}
+
+
+@router.post("/start", response_model=GameProfileResponse)
+async def start_new_game(
+    payload: GameStartRequest,
+    current_user=Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    mode = _validate_mode(payload.mode)
+    name = (payload.profile_name or "").strip()
+    if not name:
+        raise HTTPException(status_code=400, detail="profile_name is required")
+    if payload.monthly_amount < 0:
+        raise HTTPException(status_code=400, detail="monthly_amount must be >= 0")
+    if payload.monthly_receipts_count <= 0:
+        raise HTTPException(status_code=400, detail="monthly_receipts_count must be > 0")
+    if payload.period_duration_seconds < 10:
+        raise HTTPException(status_code=400, detail="period_duration_seconds must be >= 10")
+
+    db.query(GameProfile).filter(GameProfile.user_id == current_user.id).update({"is_active": 0})
+
+    profile = GameProfile(
+        user_id=current_user.id,
+        name=name,
+        mode=mode,
+        is_active=1,
+        base_params_locked=1,
+        onboarding_state="started",
+        period_duration_seconds=payload.period_duration_seconds,
+        time_state="pause",
+    )
+    db.add(profile)
+    db.commit()
+    db.refresh(profile)
+
+    salary = FinanceSalary(
+        game_profile_id=profile.id,
+        monthly_amount=payload.monthly_amount,
+        monthly_receipts_count=payload.monthly_receipts_count,
+    )
+    db.add(salary)
+    db.commit()
+    db.refresh(profile)
+    return profile
 
 
 @router.get("/time", response_model=TimeStatusResponse)

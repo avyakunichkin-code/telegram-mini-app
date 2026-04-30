@@ -10,8 +10,8 @@ function showApp() {
     document.getElementById('loginPanel').classList.add('hidden');
     document.getElementById('registerPanel').classList.add('hidden');
     document.getElementById('appPanel').classList.remove('hidden');
-    if (window.loadFinanceOverview) {
-        window.loadFinanceOverview();
+    if (window.loadStartMenu) {
+        window.loadStartMenu();
     }
 }
 
@@ -32,7 +32,6 @@ async function handleRegister() {
         setAuthToken(result.access_token);
         document.getElementById('userName').innerText = result.username;
         showApp();
-        if (window.loadFinanceOverview) window.loadFinanceOverview();
         showNotification('Регистрация успешна!', 'success');
     } else {
         showNotification('Ошибка регистрации', 'error');
@@ -54,9 +53,6 @@ async function handleLogin() {
         setAuthToken(result.access_token);
         document.getElementById('userName').innerText = result.username;
         showApp();
-        if (window.loadFinanceOverview) {
-            await window.loadFinanceOverview();
-        }
         showNotification('Вход выполнен!', 'success');
     } else {
         console.error('Login failed, no token received');

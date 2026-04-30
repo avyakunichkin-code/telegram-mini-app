@@ -39,68 +39,94 @@
         
         <!-- Основное приложение -->
         <div id="appPanel" class="panel hidden">
-            <div class="card">
-                <h1>🎮 Привет, <span id="userName" class="username">загрузка...</span>!</h1>
-                <p>Прокачай финансовую грамотность: доход, обязательства и активы.</p>
+            <div id="startMenuScreen" class="screen">
+                <div class="card">
+                    <h1>🎮 Привет, <span id="userName" class="username">игрок</span></h1>
+                    <p>Выбери действие для продолжения.</p>
+                </div>
+                <div class="card">
+                    <button id="newGameBtn">🆕 Новая игра</button>
+                    <button id="loadGameBtn" class="btn-secondary">📂 Загрузка</button>
+                    <button id="settingsBtn" class="btn-secondary">⚙️ Настройки</button>
+                    <button id="logoutBtn" class="btn-secondary">🚪 Выход</button>
+                </div>
+                <div id="gameProfilesList" class="status hidden"></div>
             </div>
 
-            <div class="card">
-                <h3>🏆 Прогресс</h3>
-                <div id="scoreBoard" class="status">Загрузка...</div>
+            <div id="difficultyScreen" class="screen hidden">
+                <div class="card">
+                    <h3>🎚️ Выбор сложности</h3>
+                    <input type="text" id="newProfileName" placeholder="Название сохранения">
+                    <select id="newGameMode">
+                        <option value="light">Light — мягкий старт</option>
+                        <option value="hardcore">Hardcore — больше контроля</option>
+                    </select>
+                    <input type="number" id="newPeriodDuration" placeholder="Секунд на период (например 300)">
+                    <button id="toBaseParamsBtn">➡️ Далее: базовые параметры</button>
+                    <button id="backToMenuBtn" class="btn-secondary">⬅️ Назад</button>
+                </div>
             </div>
 
-            <div class="card">
-                <h3>⏱️ Время симуляции</h3>
-                <div id="timeStatus" class="status">Загрузка...</div>
-                <input type="number" id="periodDurationSeconds" placeholder="Секунд на период (по умолчанию 300)">
-                <button id="applyTimeConfigBtn">⚙️ Применить длительность периода</button>
-                <button id="timePlayBtn">▶️ Play</button>
-                <button id="timePauseBtn" class="btn-secondary">⏸️ Pause</button>
-                <button id="timeNextBtn" class="btn-secondary">⏭️ Next</button>
+            <div id="baseParamsScreen" class="screen hidden">
+                <div class="card">
+                    <h3>🧩 Базовые параметры</h3>
+                    <input type="number" id="startSalaryAmount" placeholder="Зарплата за месяц (RUB)">
+                    <input type="number" id="startSalaryReceipts" placeholder="Количество поступлений (1-2)">
+                    <div class="info">После старта эти параметры блокируются и меняются только игровыми действиями.</div>
+                    <button id="startGameBtn">🚀 Старт</button>
+                    <button id="backToDifficultyBtn" class="btn-secondary">⬅️ Назад к сложности</button>
+                </div>
             </div>
 
-            <div class="card">
-                <h3>🎯 Игровые профили</h3>
-                <input type="text" id="gameProfileName" placeholder="Название профиля (например, Light старт)">
-                <select id="gameProfileMode">
-                    <option value="light">Light</option>
-                    <option value="hardcore">Hardcore</option>
-                </select>
-                <button id="createGameProfileBtn">➕ Создать профиль</button>
-                <div id="gameProfilesList" class="status">Профили загружаются...</div>
-            </div>
+            <div id="gameScreen" class="screen hidden">
+                <div class="top-hud card">
+                    <div id="hudInfo" class="status">Загрузка...</div>
+                    <div class="hud-actions">
+                        <button id="timePauseBtn" class="btn-secondary hud-btn">=</button>
+                        <button id="timePlayBtn" class="hud-btn">|&gt;</button>
+                        <button id="timeNextBtn" class="btn-secondary hud-btn">| |&gt;</button>
+                    </div>
+                </div>
 
-            <div class="card">
-                <h3>💼 Зарплата за месяц</h3>
-                <input type="number" id="salaryAmount" placeholder="Сумма дохода за месяц">
-                <input type="number" id="salaryReceiptsCount" placeholder="Количество поступлений">
-                <button id="saveSalaryBtn">💾 Сохранить доход</button>
-            </div>
+                <div id="section-dashboard" class="game-section">
+                    <div class="card">
+                        <h3>🏆 Прогресс</h3>
+                        <div id="scoreBoard" class="status">Загрузка...</div>
+                    </div>
+                </div>
 
-            <div class="card">
-                <h3>📉 Добавить кредит/обязательство</h3>
-                <input type="text" id="liabilityTitle" placeholder="Название (например, Ипотека)">
-                <input type="number" id="liabilityDebt" placeholder="Общая задолженность">
-                <input type="number" id="liabilityRate" placeholder="% годовых">
-                <input type="number" id="liabilityPayment" placeholder="Ежемесячный платеж">
-                <button id="addLiabilityBtn">➕ Добавить обязательство</button>
-                <div id="liabilitiesList" class="status">Нет обязательств</div>
-            </div>
+                <div id="section-finance" class="game-section hidden">
+                    <div class="card">
+                        <h3>📉 Обязательства</h3>
+                        <input type="text" id="liabilityTitle" placeholder="Название (например, Ипотека)">
+                        <input type="number" id="liabilityDebt" placeholder="Общая задолженность">
+                        <input type="number" id="liabilityRate" placeholder="% годовых">
+                        <input type="number" id="liabilityPayment" placeholder="Ежемесячный платеж">
+                        <button id="addLiabilityBtn">➕ Добавить обязательство</button>
+                        <div id="liabilitiesList" class="status">Нет обязательств</div>
+                    </div>
+                    <div class="card">
+                        <h3>📈 Активы</h3>
+                        <input type="text" id="assetTitle" placeholder="Название актива">
+                        <input type="number" id="assetValue" placeholder="Стоимость актива">
+                        <input type="number" id="assetMaintenance" placeholder="Стоимость обслуживания в месяц">
+                        <button id="addAssetBtn">➕ Добавить актив</button>
+                        <div id="assetsList" class="status">Нет активов</div>
+                    </div>
+                </div>
 
-            <div class="card">
-                <h3>📈 Добавить актив</h3>
-                <input type="text" id="assetTitle" placeholder="Название актива">
-                <input type="number" id="assetValue" placeholder="Стоимость актива">
-                <input type="number" id="assetMaintenance" placeholder="Стоимость обслуживания в месяц">
-                <button id="addAssetBtn">➕ Добавить актив</button>
-                <div id="assetsList" class="status">Нет активов</div>
-            </div>
+                <div id="section-menu" class="game-section hidden">
+                    <div class="card">
+                        <h3>⚙️ Меню</h3>
+                        <button id="goToStartMenuBtn" class="btn-secondary">🏠 На стартовый экран</button>
+                        <button id="logoutBtnSecondary" class="btn-secondary">🚪 Выход</button>
+                    </div>
+                </div>
 
-            <div class="card">
-                <button id="logoutBtn">🚪 Выйти из аккаунта</button>
-                <div class="info">
-                    Money Quest v4.0<br>
-                    Направление: геймификация финансовой грамотности
+                <div class="bottom-nav">
+                    <button class="nav-btn active" data-section="dashboard">Главная</button>
+                    <button class="nav-btn" data-section="finance">Финансы</button>
+                    <button class="nav-btn" data-section="menu">Меню</button>
                 </div>
             </div>
         </div>

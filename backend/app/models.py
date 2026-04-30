@@ -89,6 +89,8 @@ class GameProfile(Base):
     period_index = Column(Integer, nullable=False, default=1)
     period_duration_seconds = Column(Integer, nullable=False, default=300)
     period_anchor_at = Column(DateTime, nullable=False, default=datetime.utcnow)
+    base_params_locked = Column(Integer, nullable=False, default=0)
+    onboarding_state = Column(String(30), nullable=False, default="draft")
     created_at = Column(DateTime, default=datetime.utcnow)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 

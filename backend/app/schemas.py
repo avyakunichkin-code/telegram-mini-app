@@ -122,6 +122,8 @@ class GameProfileResponse(BaseModel):
     time_state: str
     period_index: int
     period_duration_seconds: int
+    base_params_locked: int
+    onboarding_state: str
 
 
 class TimeConfigUpdate(BaseModel):
@@ -133,3 +135,11 @@ class TimeStatusResponse(BaseModel):
     period_index: int
     period_duration_seconds: int
     seconds_until_next_period: int
+
+
+class GameStartRequest(BaseModel):
+    profile_name: str
+    mode: str
+    period_duration_seconds: int
+    monthly_amount: float
+    monthly_receipts_count: int

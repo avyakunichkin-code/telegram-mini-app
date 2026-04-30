@@ -171,6 +171,49 @@ button:active {
     display: none;
 }
 
+.screen {
+    padding-bottom: 72px;
+}
+
+.top-hud {
+    position: sticky;
+    top: 0;
+    z-index: 5;
+}
+
+.hud-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.hud-btn {
+    width: auto;
+    margin-top: 8px;
+    flex: 1;
+    min-width: 70px;
+}
+
+.bottom-nav {
+    position: fixed;
+    left: 20px;
+    right: 20px;
+    bottom: 10px;
+    display: flex;
+    gap: 8px;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.nav-btn {
+    width: 100%;
+    margin-top: 0;
+}
+
+.nav-btn.active {
+    background: #1f8cff;
+    color: #fff;
+}
+
 @media (prefers-color-scheme: dark) {
     .message-item {
         border-color: #333;

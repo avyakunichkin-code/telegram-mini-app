@@ -67,6 +67,9 @@ const API = {
     createGameProfile(payload) {
         return apiCall('/api/game/profiles', 'POST', payload);
     },
+    startNewGame(payload) {
+        return apiCall('/api/game/start', 'POST', payload);
+    },
     activateGameProfile(id) {
         return apiCall(`/api/game/profiles/${id}/activate`, 'POST');
     },
