@@ -67,7 +67,7 @@ async def upsert_salary_profile(
     if payload.monthly_receipts_count <= 0:
         raise HTTPException(status_code=400, detail="monthly_receipts_count must be > 0")
 
-    game_profile = _get_active_game_profile(db, current_user.id)
+    game_profile = get_active_game_profile(db, current_user.id)
     sync_time(game_profile)
     if game_profile.base_params_locked == 1:
         raise HTTPException(status_code=400, detail="Base parameters are locked after game start")
@@ -92,7 +92,7 @@ async def create_liability(
     if payload.total_debt < 0 or payload.annual_rate_percent < 0 or payload.monthly_payment < 0:
         raise HTTPException(status_code=400, detail="Numeric values must be >= 0")
 
-    game_profile = _get_active_game_profile(db, current_user.id)
+    game_profile = get_active_game_profile(db, current_user.id)
     sync_time(game_profile)
     liability = FinanceLiability(
         title=(payload.title or "Обязательство").strip() or "Обязательство",
@@ -112,7 +112,7 @@ async def list_liabilities(
     current_user=Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
-    game_profile = _get_active_game_profile(db, current_user.id)
+    game_profile = get_active_game_profile(db, current_user.id)
     sync_time(game_profile)
     return (
         db.query(FinanceLiability)
@@ -128,7 +128,7 @@ async def delete_liability(
     current_user=Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
-    game_profile = _get_active_game_profile(db, current_user.id)
+    game_profile = get_active_game_profile(db, current_user.id)
     liability = (
         db.query(FinanceLiability)
         .filter(
@@ -153,7 +153,7 @@ async def create_asset(
     if payload.asset_value < 0 or payload.monthly_maintenance_cost < 0:
         raise HTTPException(status_code=400, detail="Numeric values must be >= 0")
 
-    game_profile = _get_active_game_profile(db, current_user.id)
+    game_profile = get_active_game_profile(db, current_user.id)
     sync_time(game_profile)
     asset = FinanceAsset(
         title=(payload.title or "Актив").strip() or "Актив",
@@ -172,7 +172,7 @@ async def list_assets(
     current_user=Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
-    game_profile = _get_active_game_profile(db, current_user.id)
+    game_profile = get_active_game_profile(db, current_user.id)
     sync_time(game_profile)
     return (
         db.query(FinanceAsset)
@@ -188,7 +188,7 @@ async def delete_asset(
     current_user=Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
-    game_profile = _get_active_game_profile(db, current_user.id)
+    game_profile = get_active_game_profile(db, current_user.id)
     asset = (
         db.query(FinanceAsset)
         .filter(
@@ -209,7 +209,7 @@ async def finance_overview(
     current_user=Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
-    game_profile = _get_active_game_profile(db, current_user.id)
+    game_profile = get_active_game_profile(db, current_user.id)
     sync_time(game_profile)
     profile = _get_or_create_salary_profile(db, game_profile.id)
     liabilities = db.query(FinanceLiability).filter(FinanceLiability.game_profile_id == game_profile.id).all()
