@@ -50,6 +50,27 @@
             </div>
 
             <div class="card">
+                <h3>⏱️ Время симуляции</h3>
+                <div id="timeStatus" class="status">Загрузка...</div>
+                <input type="number" id="periodDurationSeconds" placeholder="Секунд на период (по умолчанию 300)">
+                <button id="applyTimeConfigBtn">⚙️ Применить длительность периода</button>
+                <button id="timePlayBtn">▶️ Play</button>
+                <button id="timePauseBtn" class="btn-secondary">⏸️ Pause</button>
+                <button id="timeNextBtn" class="btn-secondary">⏭️ Next</button>
+            </div>
+
+            <div class="card">
+                <h3>🎯 Игровые профили</h3>
+                <input type="text" id="gameProfileName" placeholder="Название профиля (например, Light старт)">
+                <select id="gameProfileMode">
+                    <option value="light">Light</option>
+                    <option value="hardcore">Hardcore</option>
+                </select>
+                <button id="createGameProfileBtn">➕ Создать профиль</button>
+                <div id="gameProfilesList" class="status">Профили загружаются...</div>
+            </div>
+
+            <div class="card">
                 <h3>💼 Зарплата за месяц</h3>
                 <input type="number" id="salaryAmount" placeholder="Сумма дохода за месяц">
                 <input type="number" id="salaryReceiptsCount" placeholder="Количество поступлений">

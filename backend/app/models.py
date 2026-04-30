@@ -70,3 +70,57 @@ class Asset(Base):
     user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
 
     user = relationship("User", back_populates="assets")
+
+
+class GameProfile(Base):
+    __tablename__ = "game_profiles"
+
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=False, index=True)
+    name = Column(String(100), nullable=False)
+    mode = Column(String(20), nullable=False, default="light")
+    is_active = Column(Integer, nullable=False, default=0)
+    is_archived = Column(Integer, nullable=False, default=0)
+    league = Column(String(50), nullable=False, default="Bronze")
+    level = Column(Integer, nullable=False, default=1)
+    xp = Column(Integer, nullable=False, default=0)
+    streak = Column(Integer, nullable=False, default=0)
+    time_state = Column(String(20), nullable=False, default="pause")
+    period_index = Column(Integer, nullable=False, default=1)
+    period_duration_seconds = Column(Integer, nullable=False, default=300)
+    period_anchor_at = Column(DateTime, nullable=False, default=datetime.utcnow)
+    created_at = Column(DateTime, default=datetime.utcnow)
+    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+
+class FinanceSalary(Base):
+    __tablename__ = "finance_salaries"
+
+    id = Column(Integer, primary_key=True, index=True)
+    game_profile_id = Column(Integer, ForeignKey("game_profiles.id"), nullable=False, unique=True, index=True)
+    monthly_amount = Column(Float, nullable=False, default=0)
+    monthly_receipts_count = Column(Integer, nullable=False, default=1)
+    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+
+class FinanceLiability(Base):
+    __tablename__ = "finance_liabilities"
+
+    id = Column(Integer, primary_key=True, index=True)
+    game_profile_id = Column(Integer, ForeignKey("game_profiles.id"), nullable=False, index=True)
+    title = Column(String(120), nullable=False, default="Обязательство")
+    total_debt = Column(Float, nullable=False)
+    annual_rate_percent = Column(Float, nullable=False)
+    monthly_payment = Column(Float, nullable=False)
+    created_at = Column(DateTime, default=datetime.utcnow)
+
+
+class FinanceAsset(Base):
+    __tablename__ = "finance_assets"
+
+    id = Column(Integer, primary_key=True, index=True)
+    game_profile_id = Column(Integer, ForeignKey("game_profiles.id"), nullable=False, index=True)
+    title = Column(String(120), nullable=False, default="Актив")
+    asset_value = Column(Float, nullable=False)
+    monthly_maintenance_cost = Column(Float, nullable=False, default=0)
+    created_at = Column(DateTime, default=datetime.utcnow)

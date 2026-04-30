@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.database import engine, Base
-from app.routers import auth_router, users_router, messages_router, health_router, finance_router
+from app.routers import auth_router, users_router, messages_router, health_router, finance_router, game_router
 
 # Создаём таблицы
 Base.metadata.create_all(bind=engine)
@@ -31,6 +31,7 @@ app.include_router(auth_router)
 app.include_router(users_router)
 app.include_router(messages_router)
 app.include_router(finance_router)
+app.include_router(game_router)
 
 
 @app.get("/")

@@ -35,6 +35,9 @@ def verify_password(plain_password: str, hashed_password: str) -> bool:
 def create_access_token(data: dict) -> str:
     """Создание JWT токена"""
     to_encode = data.copy()
+    if "sub" in to_encode:
+        # JWT subject обычно строка; так избегаем проблем несовместимости по типам.
+        to_encode["sub"] = str(to_encode["sub"])
     expire = datetime.utcnow() + timedelta(minutes=config.ACCESS_TOKEN_EXPIRE_MINUTES)
     to_encode.update({"exp": expire})
     encoded_jwt = jwt.encode(to_encode, config.SECRET_KEY, algorithm=config.ALGORITHM)
@@ -52,10 +55,13 @@ def get_current_user_optional(
     token = credentials.credentials
     try:
         payload = jwt.decode(token, config.SECRET_KEY, algorithms=[config.ALGORITHM])
-        user_id: int = payload.get("sub")
-        if user_id is None:
+        sub = payload.get("sub")
+        if sub is None:
             return None
+        user_id = int(sub)
     except JWTError:
+        return None
+    except (TypeError, ValueError):
         return None
     
     user = db.query(User).filter(User.id == user_id).first()

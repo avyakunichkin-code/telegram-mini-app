@@ -3,7 +3,8 @@ from sqlalchemy.orm import Session
 
 from app.auth import get_current_user
 from app.database import get_db
-from app.models import SalaryProfile, Liability, Asset
+from app.models import FinanceSalary, FinanceLiability, FinanceAsset
+from app.game_time import get_active_game_profile, sync_time, get_seconds_until_next
 from app.schemas import (
     SalaryProfileUpdate,
     SalaryProfileResponse,
@@ -17,16 +18,16 @@ from app.schemas import (
 router = APIRouter(prefix="/api/finance", tags=["finance"])
 
 
-def _get_or_create_salary_profile(db: Session, user_id: int) -> SalaryProfile:
-    profile = db.query(SalaryProfile).filter(SalaryProfile.user_id == user_id).first()
-    if profile:
-        return profile
+def _get_or_create_salary_profile(db: Session, game_profile_id: int) -> FinanceSalary:
+    salary = db.query(FinanceSalary).filter(FinanceSalary.game_profile_id == game_profile_id).first()
+    if salary:
+        return salary
 
-    profile = SalaryProfile(user_id=user_id, monthly_amount=0, monthly_receipts_count=1)
-    db.add(profile)
+    salary = FinanceSalary(game_profile_id=game_profile_id, monthly_amount=0, monthly_receipts_count=1)
+    db.add(salary)
     db.commit()
-    db.refresh(profile)
-    return profile
+    db.refresh(salary)
+    return salary
 
 
 def _compute_gamification(net_cashflow: float, liabilities_ratio: float, assets_count: int) -> tuple[int, str, int]:
@@ -66,7 +67,9 @@ async def upsert_salary_profile(
     if payload.monthly_receipts_count <= 0:
         raise HTTPException(status_code=400, detail="monthly_receipts_count must be > 0")
 
-    profile = _get_or_create_salary_profile(db, current_user.id)
+    game_profile = _get_active_game_profile(db, current_user.id)
+    sync_time(game_profile)
+    profile = _get_or_create_salary_profile(db, game_profile.id)
     profile.monthly_amount = payload.monthly_amount
     profile.monthly_receipts_count = payload.monthly_receipts_count
     db.commit()
@@ -87,12 +90,14 @@ async def create_liability(
     if payload.total_debt < 0 or payload.annual_rate_percent < 0 or payload.monthly_payment < 0:
         raise HTTPException(status_code=400, detail="Numeric values must be >= 0")
 
-    liability = Liability(
+    game_profile = _get_active_game_profile(db, current_user.id)
+    sync_time(game_profile)
+    liability = FinanceLiability(
         title=(payload.title or "Обязательство").strip() or "Обязательство",
         total_debt=payload.total_debt,
         annual_rate_percent=payload.annual_rate_percent,
         monthly_payment=payload.monthly_payment,
-        user_id=current_user.id,
+        game_profile_id=game_profile.id,
     )
     db.add(liability)
     db.commit()
@@ -105,10 +110,12 @@ async def list_liabilities(
     current_user=Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
+    game_profile = _get_active_game_profile(db, current_user.id)
+    sync_time(game_profile)
     return (
-        db.query(Liability)
-        .filter(Liability.user_id == current_user.id)
-        .order_by(Liability.created_at.desc())
+        db.query(FinanceLiability)
+        .filter(FinanceLiability.game_profile_id == game_profile.id)
+        .order_by(FinanceLiability.created_at.desc())
         .all()
     )
 
@@ -119,9 +126,13 @@ async def delete_liability(
     current_user=Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
+    game_profile = _get_active_game_profile(db, current_user.id)
     liability = (
-        db.query(Liability)
-        .filter(Liability.id == liability_id, Liability.user_id == current_user.id)
+        db.query(FinanceLiability)
+        .filter(
+            FinanceLiability.id == liability_id,
+            FinanceLiability.game_profile_id == game_profile.id,
+        )
         .first()
     )
     if not liability:
@@ -140,11 +151,13 @@ async def create_asset(
     if payload.asset_value < 0 or payload.monthly_maintenance_cost < 0:
         raise HTTPException(status_code=400, detail="Numeric values must be >= 0")
 
-    asset = Asset(
+    game_profile = _get_active_game_profile(db, current_user.id)
+    sync_time(game_profile)
+    asset = FinanceAsset(
         title=(payload.title or "Актив").strip() or "Актив",
         asset_value=payload.asset_value,
         monthly_maintenance_cost=payload.monthly_maintenance_cost,
-        user_id=current_user.id,
+        game_profile_id=game_profile.id,
     )
     db.add(asset)
     db.commit()
@@ -157,7 +170,14 @@ async def list_assets(
     current_user=Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
-    return db.query(Asset).filter(Asset.user_id == current_user.id).order_by(Asset.created_at.desc()).all()
+    game_profile = _get_active_game_profile(db, current_user.id)
+    sync_time(game_profile)
+    return (
+        db.query(FinanceAsset)
+        .filter(FinanceAsset.game_profile_id == game_profile.id)
+        .order_by(FinanceAsset.created_at.desc())
+        .all()
+    )
 
 
 @router.delete("/assets/{asset_id}")
@@ -166,7 +186,15 @@ async def delete_asset(
     current_user=Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
-    asset = db.query(Asset).filter(Asset.id == asset_id, Asset.user_id == current_user.id).first()
+    game_profile = _get_active_game_profile(db, current_user.id)
+    asset = (
+        db.query(FinanceAsset)
+        .filter(
+            FinanceAsset.id == asset_id,
+            FinanceAsset.game_profile_id == game_profile.id,
+        )
+        .first()
+    )
     if not asset:
         raise HTTPException(status_code=404, detail="Asset not found")
     db.delete(asset)
@@ -179,9 +207,11 @@ async def finance_overview(
     current_user=Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
-    profile = _get_or_create_salary_profile(db, current_user.id)
-    liabilities = db.query(Liability).filter(Liability.user_id == current_user.id).all()
-    assets = db.query(Asset).filter(Asset.user_id == current_user.id).all()
+    game_profile = _get_active_game_profile(db, current_user.id)
+    sync_time(game_profile)
+    profile = _get_or_create_salary_profile(db, game_profile.id)
+    liabilities = db.query(FinanceLiability).filter(FinanceLiability.game_profile_id == game_profile.id).all()
+    assets = db.query(FinanceAsset).filter(FinanceAsset.game_profile_id == game_profile.id).all()
 
     total_income = profile.monthly_amount
     total_liability_payments = sum(item.monthly_payment for item in liabilities)
@@ -206,4 +236,8 @@ async def finance_overview(
         gamification_level=level,
         score=score,
         xp_to_next_level=xp_to_next,
+        time_state=game_profile.time_state,
+        period_index=game_profile.period_index,
+        period_duration_seconds=game_profile.period_duration_seconds,
+        seconds_until_next_period=get_seconds_until_next(game_profile),
     )

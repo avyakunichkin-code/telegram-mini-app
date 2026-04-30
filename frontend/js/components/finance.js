@@ -4,6 +4,7 @@ async function loadFinanceOverview() {
     const assetsList = document.getElementById('assetsList');
 
     showLoading(scoreBoard);
+    await loadGameProfiles();
     const overview = await API.getOverview();
     if (!overview) {
         scoreBoard.innerHTML = '❌ Не удалось загрузить финансовые данные';
@@ -13,10 +14,13 @@ async function loadFinanceOverview() {
 
     document.getElementById('salaryAmount').value = overview.salary.monthly_amount || '';
     document.getElementById('salaryReceiptsCount').value = overview.salary.monthly_receipts_count || 1;
+    document.getElementById('periodDurationSeconds').value = overview.period_duration_seconds;
 
     scoreBoard.innerHTML = `
         <strong>Уровень:</strong> ${overview.gamification_level}<br>
         <strong>Очки:</strong> ${overview.score}/100<br>
+        <strong>Период:</strong> #${overview.period_index} (${overview.time_state})<br>
+        <strong>До следующего периода:</strong> ${overview.seconds_until_next_period} сек<br>
         <strong>Доход:</strong> ${overview.total_monthly_income.toFixed(2)}<br>
         <strong>Платежи по обязательствам:</strong> ${overview.total_monthly_liabilities_payment.toFixed(2)}<br>
         <strong>Обслуживание активов:</strong> ${overview.total_monthly_assets_maintenance.toFixed(2)}<br>
@@ -28,6 +32,33 @@ async function loadFinanceOverview() {
 
     renderLiabilities(overview.liabilities, liabilitiesList);
     renderAssets(overview.assets, assetsList);
+    await loadTimeStatus();
+}
+
+async function loadGameProfiles() {
+    const container = document.getElementById('gameProfilesList');
+    const profiles = await API.getGameProfiles();
+    if (!profiles || !Array.isArray(profiles)) {
+        container.innerHTML = '❌ Не удалось загрузить профили';
+        return;
+    }
+    if (!profiles.length) {
+        container.innerHTML = 'Пока нет профилей. Создай первый профиль и начни игру.';
+        return;
+    }
+    container.innerHTML = '';
+    profiles.forEach((profile) => {
+        const row = document.createElement('div');
+        row.className = 'message-item';
+        row.innerHTML = `
+            <div class="message-text"><strong>${escapeHtml(profile.name)}</strong> (${profile.mode})</div>
+            <div class="message-time">Лига: ${profile.league}, уровень: ${profile.level}, XP: ${profile.xp}, streak: ${profile.streak}</div>
+            <button class="btn-secondary" data-activate-profile="${profile.id}" ${profile.is_active ? 'disabled' : ''}>
+                ${profile.is_active ? '✅ Активный' : 'Сделать активным'}
+            </button>
+        `;
+        container.appendChild(row);
+    });
 }
 
 function renderLiabilities(items, target) {
@@ -144,12 +175,109 @@ async function handleDeleteClick(event) {
     }
 }
 
+async function createGameProfile() {
+    const name = document.getElementById('gameProfileName').value.trim();
+    const mode = document.getElementById('gameProfileMode').value;
+    if (!name) {
+        showNotification('Введите название профиля', 'error');
+        return;
+    }
+    const result = await API.createGameProfile({ name, mode });
+    if (!result) {
+        showNotification('Не удалось создать профиль', 'error');
+        return;
+    }
+    document.getElementById('gameProfileName').value = '';
+    showNotification('Профиль создан', 'success');
+    await loadFinanceOverview();
+}
+
+async function handleProfilesClick(event) {
+    const profileId = event.target.dataset.activateProfile;
+    if (!profileId) {
+        return;
+    }
+    const result = await API.activateGameProfile(profileId);
+    if (!result) {
+        showNotification('Не удалось переключить профиль', 'error');
+        return;
+    }
+    showNotification('Профиль переключен', 'success');
+    await loadFinanceOverview();
+}
+
+async function loadTimeStatus() {
+    const container = document.getElementById('timeStatus');
+    const status = await API.getTimeStatus();
+    if (!status) {
+        container.innerHTML = '❌ Не удалось загрузить статус времени';
+        return;
+    }
+    container.innerHTML = `
+        <strong>Состояние:</strong> ${status.time_state}<br>
+        <strong>Текущий период:</strong> #${status.period_index}<br>
+        <strong>Длительность периода:</strong> ${status.period_duration_seconds} сек<br>
+        <strong>До следующего периода:</strong> ${status.seconds_until_next_period} сек
+    `;
+}
+
+async function setPlayMode() {
+    const result = await API.setTimePlay();
+    if (!result) {
+        showNotification('Не удалось включить Play', 'error');
+        return;
+    }
+    showNotification('Режим Play включен', 'success');
+    await loadFinanceOverview();
+}
+
+async function setPauseMode() {
+    const result = await API.setTimePause();
+    if (!result) {
+        showNotification('Не удалось включить Pause', 'error');
+        return;
+    }
+    showNotification('Режим Pause включен', 'success');
+    await loadFinanceOverview();
+}
+
+async function nextPeriod() {
+    const result = await API.setTimeNext();
+    if (!result) {
+        showNotification('Не удалось перейти к следующему периоду', 'error');
+        return;
+    }
+    showNotification('Перешли к следующему периоду', 'success');
+    await loadFinanceOverview();
+}
+
+async function applyTimeConfig() {
+    const value = Number(document.getElementById('periodDurationSeconds').value);
+    if (Number.isNaN(value) || value < 10) {
+        showNotification('Введите длительность периода не меньше 10 секунд', 'error');
+        return;
+    }
+    const result = await API.setTimeConfig({ period_duration_seconds: value });
+    if (!result) {
+        showNotification('Не удалось применить длительность периода', 'error');
+        return;
+    }
+    showNotification('Длительность периода обновлена', 'success');
+    await loadFinanceOverview();
+}
+
 function setupFinanceHandlers() {
     document.getElementById('saveSalaryBtn').onclick = saveSalary;
     document.getElementById('addLiabilityBtn').onclick = addLiability;
     document.getElementById('addAssetBtn').onclick = addAsset;
+    document.getElementById('createGameProfileBtn').onclick = createGameProfile;
+    document.getElementById('timePlayBtn').onclick = setPlayMode;
+    document.getElementById('timePauseBtn').onclick = setPauseMode;
+    document.getElementById('timeNextBtn').onclick = nextPeriod;
+    document.getElementById('applyTimeConfigBtn').onclick = applyTimeConfig;
     document.getElementById('liabilitiesList').addEventListener('click', handleDeleteClick);
     document.getElementById('assetsList').addEventListener('click', handleDeleteClick);
+    document.getElementById('gameProfilesList').addEventListener('click', handleProfilesClick);
 }
 
 window.loadFinanceOverview = loadFinanceOverview;

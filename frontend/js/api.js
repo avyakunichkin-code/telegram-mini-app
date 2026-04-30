@@ -61,6 +61,30 @@ const API = {
     login(payload) {
         return apiCall('/api/login', 'POST', payload);
     },
+    getGameProfiles() {
+        return apiCall('/api/game/profiles');
+    },
+    createGameProfile(payload) {
+        return apiCall('/api/game/profiles', 'POST', payload);
+    },
+    activateGameProfile(id) {
+        return apiCall(`/api/game/profiles/${id}/activate`, 'POST');
+    },
+    getTimeStatus() {
+        return apiCall('/api/game/time');
+    },
+    setTimePlay() {
+        return apiCall('/api/game/time/play', 'POST');
+    },
+    setTimePause() {
+        return apiCall('/api/game/time/pause', 'POST');
+    },
+    setTimeNext() {
+        return apiCall('/api/game/time/next', 'POST');
+    },
+    setTimeConfig(payload) {
+        return apiCall('/api/game/time/config', 'PUT', payload);
+    },
     getMe() {
         return apiCall('/api/user/me');
     },

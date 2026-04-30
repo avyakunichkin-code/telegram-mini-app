@@ -98,3 +98,38 @@ class FinanceOverview(BaseModel):
     gamification_level: str
     score: int
     xp_to_next_level: int
+    time_state: str
+    period_index: int
+    period_duration_seconds: int
+    seconds_until_next_period: int
+
+
+class GameProfileCreate(BaseModel):
+    name: str
+    mode: str
+
+
+class GameProfileResponse(BaseModel):
+    id: int
+    name: str
+    mode: str
+    is_active: int
+    is_archived: int
+    league: str
+    level: int
+    xp: int
+    streak: int
+    time_state: str
+    period_index: int
+    period_duration_seconds: int
+
+
+class TimeConfigUpdate(BaseModel):
+    period_duration_seconds: int
+
+
+class TimeStatusResponse(BaseModel):
+    time_state: str
+    period_index: int
+    period_duration_seconds: int
+    seconds_until_next_period: int
