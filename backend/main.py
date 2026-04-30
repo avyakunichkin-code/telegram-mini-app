@@ -7,6 +7,7 @@ import hmac
 import json
 from datetime import datetime
 import os
+import urllib.parse
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -39,105 +40,94 @@ users_db: Dict[int, Dict] = {}           # user_id -> user data
 
 def verify_telegram_auth(init_data: str) -> Optional[Dict[str, Any]]:
     """
-    Проверяет подлинность данных от Telegram с максимальной отладкой
+    Проверяет подлинность данных от Telegram Web App
     """
-    if not init_data:
-        print("❌ init_data is empty")
-        return None
-    
-    if not BOT_TOKEN:
-        print("❌ BOT_TOKEN is not set!")
+    if not init_data or not BOT_TOKEN:
+        print("❌ Missing init_data or BOT_TOKEN")
         return None
     
     try:
-        # Выводим ВСЮ строку init_data для анализа
-        print(f"\n📦 FULL init_data:\n{init_data}\n")
-        print(f"📏 Length: {len(init_data)}")
-        
         # Разбираем параметры
         params = {}
         for item in init_data.split('&'):
             if '=' in item:
                 key, value = item.split('=', 1)
                 params[key] = value
-                print(f"   {key} = {value[:50] if len(value) > 50 else value}...")
         
+        # Извлекаем hash (обязательный параметр)
         received_hash = params.pop('hash', None)
-        print(f"\n🔑 Received hash: {received_hash}")
-        
         if not received_hash:
             print("❌ No hash in init_data")
             return None
         
-        # Пробуем ДВА способа построения строки для проверки
+        # ⚠️ ВАЖНО: Удаляем signature, если он есть (Telegram Web App его не использует)
+        if 'signature' in params:
+            print("⚠️ Removing 'signature' parameter (not used in Web App verification)")
+            del params['signature']
         
-        # Способ 1: Сортировка по алфавиту (как в документации Telegram)
-        sorted_params = sorted(params.items())
-        data_check_string_1 = '\n'.join([f"{k}={v}" for k, v in sorted_params])
+        # Сортируем параметры по алфавиту (как требует документация Telegram)
+        sorted_keys = sorted(params.keys())
+        data_check_parts = []
+        for key in sorted_keys:
+            value = params[key]
+            data_check_parts.append(f"{key}={value}")
         
-        # Способ 2: Без сортировки (в порядке прихода)
-        data_check_string_2 = '\n'.join([f"{k}={params[k]}" for k in params.keys()])
+        data_check_string = '\n'.join(data_check_parts)
         
-        print(f"\n📝 Data check string (sorted):\n{data_check_string_1[:200]}...")
-        print(f"\n📝 Data check string (original order):\n{data_check_string_2[:200]}...")
+        print(f"📝 Data check string (first 200 chars): {data_check_string[:200]}...")
         
-        # Вычисляем обе подписи
+        # Вычисляем подпись
         secret_key = hashlib.sha256(BOT_TOKEN.encode()).digest()
-        
-        computed_hash_1 = hmac.new(
+        computed_hash = hmac.new(
             secret_key,
-            data_check_string_1.encode('utf-8'),
+            data_check_string.encode('utf-8'),
             hashlib.sha256
         ).hexdigest()
         
-        computed_hash_2 = hmac.new(
-            secret_key,
-            data_check_string_2.encode('utf-8'),
-            hashlib.sha256
-        ).hexdigest()
+        print(f"🔑 Computed hash: {computed_hash}")
+        print(f"🔑 Received hash: {received_hash}")
         
-        print(f"\n🔑 Computed hash (sorted):    {computed_hash_1}")
-        print(f"🔑 Computed hash (original): {computed_hash_2}")
-        print(f"🔑 Received hash:            {received_hash}")
-        
-        # Проверяем оба способа
-        if computed_hash_1 == received_hash:
-            print("✅ Match with SORTED order!")
-            data_check_string = data_check_string_1
-        elif computed_hash_2 == received_hash:
-            print("✅ Match with ORIGINAL order!")
-            data_check_string = data_check_string_2
-        else:
-            print("❌ Hash mismatch with both methods!")
-            print(f"\n💡 BOT_TOKEN in use: {BOT_TOKEN[:15]}...")
+        if computed_hash != received_hash:
+            print("❌ Hash mismatch!")
             return None
         
-        # Проверяем возраст
+        # Проверяем возраст данных (не старше 24 часов)
         auth_date = int(params.get('auth_date', 0))
-        age = datetime.now().timestamp() - auth_date
-        print(f"\n📅 Auth date: {auth_date}, age: {age:.0f} seconds")
+        current_time = datetime.now().timestamp()
+        age = current_time - auth_date
         
-        if age > 86400:
-            print("❌ Auth data too old (more than 24 hours)")
+        print(f"📅 Auth date: {auth_date}, current: {int(current_time)}, age: {age:.0f} seconds")
+        
+        if age > 86400:  # 24 часа
+            print("❌ Auth data too old")
             return None
         
-        # Извлекаем пользователя
-        user_data = json.loads(params.get('user', '{}'))
-        print(f"\n✅ Auth successful for user: {user_data.get('first_name')} (id: {user_data.get('id')})")
+        # Извлекаем данные пользователя из URL-encoded JSON
+        user_json_str = params.get('user', '{}')
+        print(f"👤 User JSON string (first 100): {user_json_str[:100]}...")
         
-        # Сохраняем пользователя
-        if user_data:
-            user_id = user_data.get('id')
-            if user_id and user_id not in users_db:
-                users_db[user_id] = {
-                    "id": user_id,
-                    "first_name": user_data.get('first_name', ''),
-                    "last_name": user_data.get('last_name', ''),
-                    "username": user_data.get('username', ''),
-                    "language_code": user_data.get('language_code', ''),
-                    "is_premium": user_data.get('is_premium', False),
-                    "created_at": datetime.now().isoformat()
-                }
+        # Декодируем URL-encoded JSON
+        import urllib.parse
+        user_json_decoded = urllib.parse.unquote(user_json_str)
+        print(f"👤 User JSON decoded: {user_json_decoded[:200]}...")
+        
+        user_data = json.loads(user_json_decoded)
+        
+        print(f"✅ Auth successful for user: {user_data.get('first_name')} (id: {user_data.get('id')})")
+        
+        # Сохраняем пользователя в БД
+        user_id = user_data.get('id')
+        if user_id and user_id not in users_db:
+            users_db[user_id] = {
+                "id": user_id,
+                "first_name": user_data.get('first_name', ''),
+                "last_name": user_data.get('last_name', ''),
+                "username": user_data.get('username', ''),
+                "language_code": user_data.get('language_code', ''),
+                "is_premium": user_data.get('is_premium', False),
+                "created_at": datetime.now().isoformat()
+            }
+            print(f"💾 Saved user to DB: {user_id}")
         
         return user_data
         
