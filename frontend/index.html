@@ -5,215 +5,25 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>Telegram Mini App — Полная версия</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            background: var(--tg-theme-bg-color, #ffffff);
-            color: var(--tg-theme-text-color, #000000);
-            padding: 20px;
-            min-height: 100vh;
-        }
-        
-        .container {
-            max-width: 600px;
-            margin: 0 auto;
-        }
-        
-        .card {
-            background: var(--tg-theme-secondary-bg-color, #f0f0f0);
-            border-radius: 16px;
-            padding: 20px;
-            margin-bottom: 20px;
-            transition: all 0.3s ease;
-        }
-        
-        h1 {
-            font-size: 24px;
-            margin-bottom: 10px;
-            color: var(--tg-theme-text-color, #000);
-        }
-        
-        h2 {
-            font-size: 18px;
-            margin-bottom: 15px;
-            color: var(--tg-theme-text-color, #000);
-        }
-        
-        h3 {
-            font-size: 16px;
-            margin-bottom: 10px;
-            color: var(--tg-theme-text-color, #000);
-        }
-        
-        .username {
-            color: var(--tg-theme-link-color, #2481cc);
-            font-weight: bold;
-        }
-        
-        input, textarea, select {
-            width: 100%;
-            padding: 12px;
-            margin: 10px 0;
-            border-radius: 12px;
-            border: 1px solid var(--tg-theme-hint-color, #ccc);
-            background: var(--tg-theme-bg-color, white);
-            color: var(--tg-theme-text-color, black);
-            font-size: 16px;
-            font-family: inherit;
-        }
-        
-        button {
-            background: var(--tg-theme-button-color, #2481cc);
-            color: var(--tg-theme-button-text-color, white);
-            border: none;
-            padding: 12px 24px;
-            border-radius: 12px;
-            font-size: 16px;
-            font-weight: 500;
-            cursor: pointer;
-            width: 100%;
-            margin-top: 10px;
-            transition: all 0.2s;
-        }
-        
-        button:active {
-            opacity: 0.8;
-            transform: scale(0.98);
-        }
-        
-        button:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
-        
-        .btn-secondary {
-            background: var(--tg-theme-secondary-bg-color, #e0e0e0);
-            color: var(--tg-theme-text-color, #000);
-            border: 1px solid var(--tg-theme-hint-color, #ccc);
-        }
-        
-        .info {
-            font-size: 14px;
-            color: var(--tg-theme-hint-color, #999);
-            margin-top: 10px;
-            text-align: center;
-        }
-        
-        .status {
-            background: var(--tg-theme-bg-color, white);
-            border-radius: 12px;
-            padding: 12px;
-            margin-top: 10px;
-            font-size: 14px;
-            border-left: 3px solid var(--tg-theme-button-color, #2481cc);
-        }
-        
-        .status-error {
-            border-left-color: #ff3b30;
-            background: rgba(255, 59, 48, 0.1);
-        }
-        
-        .status-success {
-            border-left-color: #34c759;
-            background: rgba(52, 199, 89, 0.1);
-        }
-        
-        .loading {
-            display: inline-block;
-            width: 20px;
-            height: 20px;
-            border: 2px solid var(--tg-theme-button-color, #2481cc);
-            border-top-color: transparent;
-            border-radius: 50%;
-            animation: spin 0.6s linear infinite;
-        }
-        
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-        
-        .message-item {
-            background: var(--tg-theme-bg-color, white);
-            padding: 10px;
-            margin: 8px 0;
-            border-radius: 8px;
-            border: 1px solid var(--tg-theme-hint-color, #eee);
-        }
-        
-        .message-text {
-            font-size: 14px;
-            margin-bottom: 5px;
-        }
-        
-        .message-time {
-            font-size: 11px;
-            color: var(--tg-theme-hint-color, #999);
-        }
-        
-        .tabs {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 20px;
-        }
-        
-        .tab {
-            flex: 1;
-            background: var(--tg-theme-secondary-bg-color, #e0e0e0);
-            color: var(--tg-theme-text-color, #000);
-            padding: 10px;
-            text-align: center;
-            cursor: pointer;
-            border-radius: 12px;
-            transition: all 0.3s;
-        }
-        
-        .tab.active {
-            background: var(--tg-theme-button-color, #2481cc);
-            color: var(--tg-theme-button-text-color, white);
-        }
-        
-        .tab-content {
-            display: none;
-        }
-        
-        .tab-content.active {
-            display: block;
-        }
-        
-        .hidden {
-            display: none;
-        }
-        
-        @media (prefers-color-scheme: dark) {
-            .message-item {
-                border-color: #333;
-            }
-        }
-    </style>
+    <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
     <div class="container">
         <!-- Панель логина -->
-        <div id="loginPanel">
+        <div id="loginPanel" class="panel">
             <div class="card">
                 <h1>🔐 Вход в систему</h1>
                 <input type="text" id="loginUsername" placeholder="Имя пользователя">
                 <input type="password" id="loginPassword" placeholder="Пароль">
                 <button id="loginBtn">Войти</button>
                 <div class="info">
-                    Нет аккаунта? <a href="#" id="showRegisterBtn" style="color: var(--tg-theme-link-color);">Зарегистрироваться</a>
+                    Нет аккаунта? <a href="#" id="showRegisterBtn">Зарегистрироваться</a>
                 </div>
             </div>
         </div>
         
         <!-- Панель регистрации -->
-        <div id="registerPanel" class="hidden">
+        <div id="registerPanel" class="panel hidden">
             <div class="card">
                 <h1>📝 Регистрация</h1>
                 <input type="text" id="regUsername" placeholder="Имя пользователя *">
@@ -222,13 +32,13 @@
                 <input type="email" id="regEmail" placeholder="Email">
                 <button id="registerBtn">Зарегистрироваться</button>
                 <div class="info">
-                    Уже есть аккаунт? <a href="#" id="showLoginBtn" style="color: var(--tg-theme-link-color);">Войти</a>
+                    Уже есть аккаунт? <a href="#" id="showLoginBtn">Войти</a>
                 </div>
             </div>
         </div>
         
         <!-- Основное приложение -->
-        <div id="appPanel" class="hidden">
+        <div id="appPanel" class="panel hidden">
             <!-- Шапка с приветствием -->
             <div class="card">
                 <h1>🌟 Привет, <span id="userName" class="username">загрузка...</span>!</h1>
@@ -248,7 +58,7 @@
                 <div class="card">
                     <h3>📝 Отправить сообщение</h3>
                     <textarea id="messageInput" rows="3" placeholder="Напишите что-нибудь..."></textarea>
-                    <button id="sendToBackendBtn">💾 Отправить сообщение</button>
+                    <button id="sendMessageBtn">💾 Отправить сообщение</button>
                 </div>
                 
                 <div class="card">
@@ -296,296 +106,15 @@
         </div>
     </div>
 
-    <script>
-        // ==================== КОНФИГУРАЦИЯ ====================
-        const API_URL = "https://telegram-mini-app-zwfs.onrender.com";
-        
-        // Инициализация Telegram Web App
-        const tg = window.Telegram.WebApp;
-        if (tg) {
-            tg.expand();
-            tg.MainButton.setText("✅ Готово");
-            tg.MainButton.show();
-        }
-        
-        // Глобальные переменные
-        let token = localStorage.getItem("token");
-        let currentUser = null;
-        
-        // ==================== ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ ====================
-        
-        function showNotification(message, type = 'info') {
-            if (tg && tg.showPopup) {
-                tg.showPopup({
-                    title: type === 'error' ? '❌ Ошибка' : type === 'success' ? '✅ Успех' : 'ℹ️ Информация',
-                    message: message,
-                    buttons: [{ type: 'ok' }]
-                });
-            } else {
-                alert(message);
-            }
-        }
-        
-        async function apiCall(endpoint, method = 'GET', data = null) {
-            const headers = {
-                'Content-Type': 'application/json',
-            };
-            
-            if (token) {
-                headers['Authorization'] = `Bearer ${token}`;
-            }
-            
-            const options = {
-                method: method,
-                headers: headers,
-            };
-            
-            if (data && (method === 'POST' || method === 'PUT')) {
-                options.body = JSON.stringify(data);
-            }
-            
-            try {
-                const response = await fetch(`${API_URL}${endpoint}`, options);
-                if (!response.ok) {
-                    if (response.status === 401) {
-                        // Токен истёк
-                        localStorage.removeItem("token");
-                        token = null;
-                        showLogin();
-                        return null;
-                    }
-                    throw new Error(`HTTP ${response.status}`);
-                }
-                return await response.json();
-            } catch (error) {
-                console.error(`API error (${endpoint}):`, error);
-                return null;
-            }
-        }
-        
-        // ==================== АВТОРИЗАЦИЯ ====================
-        
-        function showLogin() {
-            document.getElementById("loginPanel").classList.remove("hidden");
-            document.getElementById("registerPanel").classList.add("hidden");
-            document.getElementById("appPanel").classList.add("hidden");
-        }
-        
-        function showApp() {
-            document.getElementById("loginPanel").classList.add("hidden");
-            document.getElementById("registerPanel").classList.add("hidden");
-            document.getElementById("appPanel").classList.remove("hidden");
-            loadProfile();
-            updateAppInfo();
-        }
-        
-        // Регистрация
-        document.getElementById("registerBtn").onclick = async () => {
-            const username = document.getElementById("regUsername").value;
-            const password = document.getElementById("regPassword").value;
-            const full_name = document.getElementById("regFullname").value;
-            const email = document.getElementById("regEmail").value;
-            
-            if (!username || !password) {
-                showNotification("Заполните имя пользователя и пароль", "error");
-                return;
-            }
-            
-            const result = await apiCall("/api/register", "POST", {
-                username, password, full_name, email
-            });
-            
-            if (result && result.access_token) {
-                token = result.access_token;
-                localStorage.setItem("token", token);
-                currentUser = { id: result.user_id, username: result.username };
-                showApp();
-                showNotification("Регистрация успешна!", "success");
-            } else {
-                showNotification("Ошибка регистрации", "error");
-            }
-        };
-        
-        // Логин
-        document.getElementById("loginBtn").onclick = async () => {
-            const username = document.getElementById("loginUsername").value;
-            const password = document.getElementById("loginPassword").value;
-            
-            if (!username || !password) {
-                showNotification("Введите имя пользователя и пароль", "error");
-                return;
-            }
-            
-            const result = await apiCall("/api/login", "POST", { username, password });
-            
-            if (result && result.access_token) {
-                token = result.access_token;
-                localStorage.setItem("token", token);
-                currentUser = { id: result.user_id, username: result.username };
-                showApp();
-                showNotification("Вход выполнен!", "success");
-            } else {
-                showNotification("Неверное имя пользователя или пароль", "error");
-            }
-        };
-        
-        // Переключение между формами
-        document.getElementById("showRegisterBtn").onclick = (e) => {
-            e.preventDefault();
-            document.getElementById("loginPanel").classList.add("hidden");
-            document.getElementById("registerPanel").classList.remove("hidden");
-        };
-        
-        document.getElementById("showLoginBtn").onclick = (e) => {
-            e.preventDefault();
-            document.getElementById("registerPanel").classList.add("hidden");
-            document.getElementById("loginPanel").classList.remove("hidden");
-        };
-        
-        // Выход
-        document.getElementById("logoutBtn").onclick = () => {
-            localStorage.removeItem("token");
-            token = null;
-            currentUser = null;
-            showLogin();
-            showNotification("Вы вышли из аккаунта", "info");
-        };
-        
-        // ==================== ОСНОВНОЙ ФУНКЦИОНАЛ ====================
-        
-        async function loadProfile() {
-            const profileDiv = document.getElementById("profileInfo");
-            profileDiv.innerHTML = '<div class="loading"></div> Загрузка...';
-            
-            const result = await apiCall("/api/user/me", "GET");
-            
-            if (result) {
-                document.getElementById("userName").innerText = result.username;
-                profileDiv.innerHTML = `
-                    <strong>ID:</strong> ${result.id}<br>
-                    <strong>Имя пользователя:</strong> ${result.username}<br>
-                    <strong>Полное имя:</strong> ${result.full_name || '—'}<br>
-                    <strong>Email:</strong> ${result.email || '—'}<br>
-                    <strong>Сообщений:</strong> ${result.messages_count}<br>
-                    <strong>Зарегистрирован:</strong> ${new Date(result.created_at).toLocaleString()}
-                `;
-                profileDiv.classList.add("status-success");
-            } else {
-                profileDiv.innerHTML = "❌ Не удалось загрузить профиль";
-                profileDiv.classList.add("status-error");
-            }
-        }
-        
-        async function loadMessages() {
-            const messagesDiv = document.getElementById("messagesList");
-            messagesDiv.innerHTML = '<div class="loading"></div> Загрузка...';
-            
-            const result = await apiCall("/api/messages?limit=50", "GET");
-            
-            if (result && Array.isArray(result)) {
-                if (result.length === 0) {
-                    messagesDiv.innerHTML = "📭 Нет сообщений";
-                } else {
-                    messagesDiv.innerHTML = "";
-                    result.forEach(msg => {
-                        const msgElement = document.createElement("div");
-                        msgElement.className = "message-item";
-                        msgElement.innerHTML = `
-                            <div class="message-text">${escapeHtml(msg.text)}</div>
-                            <div class="message-time">📅 ${new Date(msg.timestamp).toLocaleString()}</div>
-                        `;
-                        messagesDiv.appendChild(msgElement);
-                    });
-                }
-                messagesDiv.classList.add("status-success");
-            } else {
-                messagesDiv.innerHTML = "❌ Не удалось загрузить сообщения";
-                messagesDiv.classList.add("status-error");
-            }
-        }
-        
-        async function sendMessage() {
-            const text = document.getElementById("messageInput").value.trim();
-            if (!text) {
-                showNotification("Введите сообщение", "info");
-                return;
-            }
-            
-            const result = await apiCall("/api/messages", "POST", { text });
-            
-            if (result) {
-                document.getElementById("messageInput").value = "";
-                showNotification("Сообщение отправлено!", "success");
-                loadMessages();
-            } else {
-                showNotification("Ошибка отправки", "error");
-            }
-        }
-        
-        function updateAppInfo() {
-            const infoDiv = document.getElementById("appInfo");
-            infoDiv.innerHTML = `
-                <strong>Статус:</strong> ✅ Авторизован<br>
-                <strong>Пользователь:</strong> ${currentUser?.username || '—'}<br>
-                <strong>База данных:</strong> PostgreSQL<br>
-                <strong>Авторизация:</strong> JWT (логин/пароль)<br>
-                <strong>Платформа:</strong> ${tg ? tg.platform : 'Web'}
-            `;
-        }
-        
-        function escapeHtml(text) {
-            const div = document.createElement("div");
-            div.textContent = text;
-            return div.innerHTML;
-        }
-        
-        // ==================== НАСТРОЙКА ИНТЕРФЕЙСА ====================
-        
-        function setupTabs() {
-            const tabs = document.querySelectorAll(".tab");
-            tabs.forEach(tab => {
-                tab.addEventListener("click", () => {
-                    const tabName = tab.dataset.tab;
-                    tabs.forEach(t => t.classList.remove("active"));
-                    tab.classList.add("active");
-                    document.querySelectorAll(".tab-content").forEach(content => {
-                        content.classList.remove("active");
-                    });
-                    document.getElementById(`tab-${tabName}`).classList.add("active");
-                    
-                    if (tabName === "messages") loadMessages();
-                    if (tabName === "profile") loadProfile();
-                });
-            });
-        }
-        
-        function setupButtons() {
-            document.getElementById("sendToBackendBtn").onclick = sendMessage;
-            document.getElementById("loadMessagesBtn").onclick = loadMessages;
-            document.getElementById("refreshProfileBtn").onclick = loadProfile;
-        }
-        
-        // ==================== ПРОВЕРКА ТОКЕНА ПРИ СТАРТЕ ====================
-        
-        async function checkTokenAndStart() {
-            if (!token) {
-                showLogin();
-                return;
-            }
-            
-            const result = await apiCall("/api/user/me", "GET");
-            if (result) {
-                currentUser = { id: result.id, username: result.username };
-                showApp();
-            } else {
-                showLogin();
-            }
-        }
-        
-        // Запуск
-        setupTabs();
-        setupButtons();
-        checkTokenAndStart();
-    </script>
+    <!-- Скрипты -->
+    <script src="js/config.js"></script>
+    <script src="js/utils.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/components/notifications.js"></script>
+    <script src="js/components/tabs.js"></script>
+    <script src="js/components/messages.js"></script>
+    <script src="js/components/profile.js"></script>
+    <script src="js/app.js"></script>
 </body>
 </html>
