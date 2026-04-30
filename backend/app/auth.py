@@ -1,29 +1,45 @@
 from datetime import datetime, timedelta
+import hashlib
+import secrets
 from typing import Optional
 
-from fastapi import HTTPException, Depends, status
+from fastapi import HTTPException, Depends
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from jose import JWTError, jwt
-from passlib.context import CryptContext
 from sqlalchemy.orm import Session
 
 from app.config import config
 from app.database import get_db
 from app.models import User
 
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 security = HTTPBearer()
 
 
-def verify_password(plain_password: str, hashed_password: str) -> bool:
-    return pwd_context.verify(plain_password, hashed_password)
-
-
 def get_password_hash(password: str) -> str:
-    return pwd_context.hash(password)
+    """
+    Хеширование пароля с солью.
+    Формат: "salt:hash"
+    """
+    salt = secrets.token_hex(16)
+    hash_obj = hashlib.sha256((password + salt).encode())
+    return f"{salt}:{hash_obj.hexdigest()}"
+
+
+def verify_password(plain_password: str, hashed_password: str) -> bool:
+    """
+    Проверка пароля.
+    Ожидается формат: "salt:hash"
+    """
+    try:
+        salt, stored_hash = hashed_password.split(":")
+        hash_obj = hashlib.sha256((plain_password + salt).encode())
+        return hash_obj.hexdigest() == stored_hash
+    except Exception:
+        return False
 
 
 def create_access_token(data: dict) -> str:
+    """Создание JWT токена"""
     to_encode = data.copy()
     expire = datetime.utcnow() + timedelta(minutes=config.ACCESS_TOKEN_EXPIRE_MINUTES)
     to_encode.update({"exp": expire})

@@ -12,11 +12,14 @@ router = APIRouter(prefix="/api", tags=["auth"])
 @router.post("/register", response_model=Token)
 async def register(user_data: UserRegister, db: Session = Depends(get_db)):
     """Регистрация нового пользователя"""
+    # Проверяем, существует ли пользователь
     existing = db.query(User).filter(User.username == user_data.username).first()
     if existing:
         raise HTTPException(status_code=400, detail="Username already exists")
     
+    # Хешируем пароль (теперь без bcrypt)
     hashed_password = get_password_hash(user_data.password)
+    
     new_user = User(
         username=user_data.username,
         email=user_data.email,
@@ -29,6 +32,7 @@ async def register(user_data: UserRegister, db: Session = Depends(get_db)):
     db.commit()
     db.refresh(new_user)
     
+    # Создаём токен
     access_token = create_access_token(data={"sub": new_user.id})
     
     return Token(
