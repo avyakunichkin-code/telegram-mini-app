@@ -6,7 +6,7 @@ from sqlalchemy.orm import Session
 from app.database import get_db
 from app.models import Message
 from app.schemas import MessageCreate, MessageResponse
-from app.auth import get_current_user
+from app.auth import get_current_user  # ← обязательно для защищённых эндпоинтов
 
 router = APIRouter(prefix="/api", tags=["messages"])
 
@@ -14,10 +14,10 @@ router = APIRouter(prefix="/api", tags=["messages"])
 @router.post("/messages", response_model=MessageResponse)
 async def create_message(
     message: MessageCreate,
-    current_user = Depends(get_current_user),
+    current_user = Depends(get_current_user),  # ← требует авторизацию
     db: Session = Depends(get_db)
 ):
-    """Создание нового сообщения"""
+    """Создание нового сообщения — ТРЕБУЕТ авторизацию"""
     new_message = Message(
         text=message.text,
         user_id=current_user.id,
@@ -39,10 +39,10 @@ async def create_message(
 @router.get("/messages", response_model=List[MessageResponse])
 async def get_messages(
     limit: int = 50,
-    current_user = Depends(get_current_user),
+    current_user = Depends(get_current_user),  # ← требует авторизацию
     db: Session = Depends(get_db)
 ):
-    """Получение сообщений текущего пользователя"""
+    """Получение сообщений — ТРЕБУЕТ авторизацию"""
     messages = db.query(Message).filter(
         Message.user_id == current_user.id
     ).order_by(Message.timestamp.desc()).limit(limit).all()
@@ -61,10 +61,10 @@ async def get_messages(
 @router.delete("/messages/{message_id}")
 async def delete_message(
     message_id: int,
-    current_user = Depends(get_current_user),
+    current_user = Depends(get_current_user),  # ← требует авторизацию
     db: Session = Depends(get_db)
 ):
-    """Удаление сообщения"""
+    """Удаление сообщения — ТРЕБУЕТ авторизацию"""
     message = db.query(Message).filter(
         Message.id == message_id,
         Message.user_id == current_user.id

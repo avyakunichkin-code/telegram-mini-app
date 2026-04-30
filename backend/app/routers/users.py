@@ -11,10 +11,10 @@ router = APIRouter(prefix="/api/user", tags=["users"])
 
 @router.get("/me", response_model=UserResponse)
 async def get_me(
-    current_user = Depends(get_current_user),
+    current_user = Depends(get_current_user),  # ← требует авторизацию
     db: Session = Depends(get_db)
 ):
-    """Получение профиля текущего пользователя"""
+    """Получение профиля текущего пользователя — ТРЕБУЕТ авторизацию"""
     messages_count = db.query(Message).filter(Message.user_id == current_user.id).count()
     
     return UserResponse(

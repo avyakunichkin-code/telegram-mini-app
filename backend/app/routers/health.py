@@ -10,6 +10,7 @@ router = APIRouter(prefix="/api", tags=["health"])
 
 @router.get("/health")
 async def health_check(db: Session = Depends(get_db)):
+    """Проверка здоровья сервера — не требует авторизации"""
     try:
         user_count = db.query(User).count()
         message_count = db.query(Message).count()

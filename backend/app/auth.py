@@ -12,24 +12,18 @@ from app.config import config
 from app.database import get_db
 from app.models import User
 
-security = HTTPBearer()
+security = HTTPBearer(auto_error=False)  # ← auto_error=False — не выдавать ошибку автоматически
 
 
 def get_password_hash(password: str) -> str:
-    """
-    Хеширование пароля с солью.
-    Формат: "salt:hash"
-    """
+    """Хеширование пароля с солью. Формат: "salt:hash" """
     salt = secrets.token_hex(16)
     hash_obj = hashlib.sha256((password + salt).encode())
     return f"{salt}:{hash_obj.hexdigest()}"
 
 
 def verify_password(plain_password: str, hashed_password: str) -> bool:
-    """
-    Проверка пароля.
-    Ожидается формат: "salt:hash"
-    """
+    """Проверка пароля"""
     try:
         salt, stored_hash = hashed_password.split(":")
         hash_obj = hashlib.sha256((plain_password + salt).encode())
@@ -47,22 +41,33 @@ def create_access_token(data: dict) -> str:
     return encoded_jwt
 
 
-def get_current_user(
-    credentials: HTTPAuthorizationCredentials = Depends(security),
+def get_current_user_optional(
+    credentials: Optional[HTTPAuthorizationCredentials] = Depends(security),
     db: Session = Depends(get_db)
-) -> User:
-    """Получение текущего пользователя из JWT токена"""
+) -> Optional[User]:
+    """Получение пользователя из токена (опционально)"""
+    if not credentials:
+        return None
+    
     token = credentials.credentials
     try:
         payload = jwt.decode(token, config.SECRET_KEY, algorithms=[config.ALGORITHM])
         user_id: int = payload.get("sub")
         if user_id is None:
-            raise HTTPException(status_code=401, detail="Invalid token")
+            return None
     except JWTError:
-        raise HTTPException(status_code=401, detail="Invalid token")
+        return None
     
     user = db.query(User).filter(User.id == user_id).first()
+    return user
+
+
+def get_current_user(
+    credentials: HTTPAuthorizationCredentials = Depends(security),
+    db: Session = Depends(get_db)
+) -> User:
+    """Получение пользователя из токена (обязательно)"""
+    user = get_current_user_optional(credentials, db)
     if user is None:
-        raise HTTPException(status_code=401, detail="User not found")
-    
+        raise HTTPException(status_code=401, detail="Not authenticated")
     return user

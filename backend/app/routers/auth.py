@@ -11,13 +11,14 @@ router = APIRouter(prefix="/api", tags=["auth"])
 
 @router.post("/register", response_model=Token)
 async def register(user_data: UserRegister, db: Session = Depends(get_db)):
-    """Регистрация нового пользователя"""
+    """Регистрация нового пользователя — не требует авторизации"""
+    
     # Проверяем, существует ли пользователь
     existing = db.query(User).filter(User.username == user_data.username).first()
     if existing:
         raise HTTPException(status_code=400, detail="Username already exists")
     
-    # Хешируем пароль (теперь без bcrypt)
+    # Хешируем пароль
     hashed_password = get_password_hash(user_data.password)
     
     new_user = User(
@@ -45,7 +46,8 @@ async def register(user_data: UserRegister, db: Session = Depends(get_db)):
 
 @router.post("/login", response_model=Token)
 async def login(user_data: UserLogin, db: Session = Depends(get_db)):
-    """Вход в систему"""
+    """Вход в систему — не требует авторизации"""
+    
     user = db.query(User).filter(User.username == user_data.username).first()
     
     if not user or not verify_password(user_data.password, user.hashed_password):
