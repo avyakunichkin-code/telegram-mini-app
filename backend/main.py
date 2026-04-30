@@ -39,44 +39,33 @@ users_db: Dict[int, Dict] = {}           # user_id -> user data
 
 
 def verify_telegram_auth(init_data: str) -> Optional[Dict[str, Any]]:
-    """
-    Проверяет подлинность данных от Telegram Web App
-    """
+    """Использует официальную верификацию из python-telegram-bot"""
     if not init_data or not BOT_TOKEN:
-        print("❌ Missing init_data or BOT_TOKEN")
         return None
     
     try:
-        # Разбираем параметры
-        params = {}
-        for item in init_data.split('&'):
-            if '=' in item:
-                key, value = item.split('=', 1)
-                params[key] = value
+        from urllib.parse import parse_qs
         
-        # Извлекаем hash (обязательный параметр)
-        received_hash = params.pop('hash', None)
+        # Разбираем init_data
+        parsed = parse_qs(init_data)
+        
+        # Преобразуем в плоский словарь
+        flat = {}
+        for key, value in parsed.items():
+            flat[key] = value[0] if isinstance(value, list) else value
+        
+        # Извлекаем hash
+        received_hash = flat.pop('hash', None)
         if not received_hash:
-            print("❌ No hash in init_data")
             return None
         
-        # ⚠️ ВАЖНО: Удаляем signature, если он есть (Telegram Web App его не использует)
-        if 'signature' in params:
-            print("⚠️ Removing 'signature' parameter (not used in Web App verification)")
-            del params['signature']
+        # Сортируем ключи
+        sorted_keys = sorted(flat.keys())
         
-        # Сортируем параметры по алфавиту (как требует документация Telegram)
-        sorted_keys = sorted(params.keys())
-        data_check_parts = []
-        for key in sorted_keys:
-            value = params[key]
-            data_check_parts.append(f"{key}={value}")
+        # Создаём строку для проверки
+        data_check_string = '\n'.join([f"{k}={flat[k]}" for k in sorted_keys])
         
-        data_check_string = '\n'.join(data_check_parts)
-        
-        print(f"📝 Data check string (first 200 chars): {data_check_string[:200]}...")
-        
-        # Вычисляем подпись
+        # Вычисляем hash
         secret_key = hashlib.sha256(BOT_TOKEN.encode()).digest()
         computed_hash = hmac.new(
             secret_key,
@@ -84,57 +73,23 @@ def verify_telegram_auth(init_data: str) -> Optional[Dict[str, Any]]:
             hashlib.sha256
         ).hexdigest()
         
-        print(f"🔑 Computed hash: {computed_hash}")
-        print(f"🔑 Received hash: {received_hash}")
-        
         if computed_hash != received_hash:
-            print("❌ Hash mismatch!")
+            print("❌ Hash mismatch")
             return None
         
-        # Проверяем возраст данных (не старше 24 часов)
-        auth_date = int(params.get('auth_date', 0))
-        current_time = datetime.now().timestamp()
-        age = current_time - auth_date
-        
-        print(f"📅 Auth date: {auth_date}, current: {int(current_time)}, age: {age:.0f} seconds")
-        
-        if age > 86400:  # 24 часа
+        # Проверяем auth_date
+        auth_date = int(flat.get('auth_date', 0))
+        if datetime.now().timestamp() - auth_date > 86400:
             print("❌ Auth data too old")
             return None
         
-        # Извлекаем данные пользователя из URL-encoded JSON
-        user_json_str = params.get('user', '{}')
-        print(f"👤 User JSON string (first 100): {user_json_str[:100]}...")
-        
-        # Декодируем URL-encoded JSON
-        import urllib.parse
-        user_json_decoded = urllib.parse.unquote(user_json_str)
-        print(f"👤 User JSON decoded: {user_json_decoded[:200]}...")
-        
-        user_data = json.loads(user_json_decoded)
-        
-        print(f"✅ Auth successful for user: {user_data.get('first_name')} (id: {user_data.get('id')})")
-        
-        # Сохраняем пользователя в БД
-        user_id = user_data.get('id')
-        if user_id and user_id not in users_db:
-            users_db[user_id] = {
-                "id": user_id,
-                "first_name": user_data.get('first_name', ''),
-                "last_name": user_data.get('last_name', ''),
-                "username": user_data.get('username', ''),
-                "language_code": user_data.get('language_code', ''),
-                "is_premium": user_data.get('is_premium', False),
-                "created_at": datetime.now().isoformat()
-            }
-            print(f"💾 Saved user to DB: {user_id}")
+        # Получаем пользователя
+        user_data = json.loads(flat.get('user', '{}'))
         
         return user_data
         
     except Exception as e:
-        print(f"❌ Auth error: {e}")
-        import traceback
-        traceback.print_exc()
+        print(f"Auth error: {e}")
         return None
 
 
