@@ -304,8 +304,8 @@
         
         // Запрос к бэкенду
         async function callBackend(endpoint, method = 'GET', data = null) {
-            if (!backendUrl || backendUrl === "https://telegram-mini-app-zwfs.onrender.com") {
-                console.warn('Бэкенд не настроен');
+            if (!backendUrl || backendUrl === "https://твой-бэкенд.ru") {
+                console.warn('Бэкенд не настроен (используется заглушка)');
                 return null;
             }
             
@@ -613,7 +613,7 @@
         
         // Автоматическая проверка бэкенда при старте
         async function autoCheckBackend() {
-            if (backendUrl && backendUrl !== "https://telegram-mini-app-zwfs.onrender.com") {
+            if (backendUrl && backendUrl !== "https://твой-бэкенд.ru") {
                 await checkBackendHealth();
             } else {
                 const statusDiv = document.getElementById('apiStatus');
