@@ -39,48 +39,91 @@ users_db: Dict[int, Dict] = {}           # user_id -> user data
 
 def verify_telegram_auth(init_data: str) -> Optional[Dict[str, Any]]:
     """
-    Проверяет подлинность данных от Telegram
-    Использует официальный метод Telegram
+    Проверяет подлинность данных от Telegram с максимальной отладкой
     """
-    if not init_data or not BOT_TOKEN:
+    if not init_data:
+        print("❌ init_data is empty")
+        return None
+    
+    if not BOT_TOKEN:
+        print("❌ BOT_TOKEN is not set!")
         return None
     
     try:
+        # Выводим ВСЮ строку init_data для анализа
+        print(f"\n📦 FULL init_data:\n{init_data}\n")
+        print(f"📏 Length: {len(init_data)}")
+        
         # Разбираем параметры
         params = {}
         for item in init_data.split('&'):
             if '=' in item:
                 key, value = item.split('=', 1)
                 params[key] = value
+                print(f"   {key} = {value[:50] if len(value) > 50 else value}...")
         
         received_hash = params.pop('hash', None)
+        print(f"\n🔑 Received hash: {received_hash}")
+        
         if not received_hash:
+            print("❌ No hash in init_data")
             return None
         
-        # Создаём строку для проверки в правильном формате
-        # Важно: параметры должны быть отсортированы по алфавиту!
-        sorted_params = sorted(params.items())
-        data_check_string = '\n'.join([f"{k}={v}" for k, v in sorted_params])
+        # Пробуем ДВА способа построения строки для проверки
         
-        # Создаём HMAC-SHA256 подпись
+        # Способ 1: Сортировка по алфавиту (как в документации Telegram)
+        sorted_params = sorted(params.items())
+        data_check_string_1 = '\n'.join([f"{k}={v}" for k, v in sorted_params])
+        
+        # Способ 2: Без сортировки (в порядке прихода)
+        data_check_string_2 = '\n'.join([f"{k}={params[k]}" for k in params.keys()])
+        
+        print(f"\n📝 Data check string (sorted):\n{data_check_string_1[:200]}...")
+        print(f"\n📝 Data check string (original order):\n{data_check_string_2[:200]}...")
+        
+        # Вычисляем обе подписи
         secret_key = hashlib.sha256(BOT_TOKEN.encode()).digest()
-        computed_hash = hmac.new(
+        
+        computed_hash_1 = hmac.new(
             secret_key,
-            data_check_string.encode('utf-8'),
+            data_check_string_1.encode('utf-8'),
             hashlib.sha256
         ).hexdigest()
         
-        if computed_hash != received_hash:
-            print(f"❌ Hash mismatch")
+        computed_hash_2 = hmac.new(
+            secret_key,
+            data_check_string_2.encode('utf-8'),
+            hashlib.sha256
+        ).hexdigest()
+        
+        print(f"\n🔑 Computed hash (sorted):    {computed_hash_1}")
+        print(f"🔑 Computed hash (original): {computed_hash_2}")
+        print(f"🔑 Received hash:            {received_hash}")
+        
+        # Проверяем оба способа
+        if computed_hash_1 == received_hash:
+            print("✅ Match with SORTED order!")
+            data_check_string = data_check_string_1
+        elif computed_hash_2 == received_hash:
+            print("✅ Match with ORIGINAL order!")
+            data_check_string = data_check_string_2
+        else:
+            print("❌ Hash mismatch with both methods!")
+            print(f"\n💡 BOT_TOKEN in use: {BOT_TOKEN[:15]}...")
             return None
         
         # Проверяем возраст
         auth_date = int(params.get('auth_date', 0))
-        if datetime.now().timestamp() - auth_date > 86400:
+        age = datetime.now().timestamp() - auth_date
+        print(f"\n📅 Auth date: {auth_date}, age: {age:.0f} seconds")
+        
+        if age > 86400:
+            print("❌ Auth data too old (more than 24 hours)")
             return None
         
         # Извлекаем пользователя
         user_data = json.loads(params.get('user', '{}'))
+        print(f"\n✅ Auth successful for user: {user_data.get('first_name')} (id: {user_data.get('id')})")
         
         # Сохраняем пользователя
         if user_data:
@@ -99,7 +142,9 @@ def verify_telegram_auth(init_data: str) -> Optional[Dict[str, Any]]:
         return user_data
         
     except Exception as e:
-        print(f"Auth error: {e}")
+        print(f"❌ Auth error: {e}")
+        import traceback
+        traceback.print_exc()
         return None
 
 
