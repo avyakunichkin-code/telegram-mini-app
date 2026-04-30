@@ -60,12 +60,24 @@ async function handleLogin() {
     
     const result = await API.login({ username, password });
     
+    console.log('Login result:', result);  // ← Отладка
+    
     if (result && result.access_token) {
+        // Сохраняем токен
         setAuthToken(result.access_token);
+        
+        // Дополнительная проверка
+        console.log('Token saved:', localStorage.getItem(APP_CONFIG.TOKEN_KEY));
+        console.log('Current authToken variable:', authToken);
+        
+        // Обновляем имя пользователя
+        document.getElementById('userName').innerText = result.username;
+        
         showApp();
-        if (window.loadProfile) window.loadProfile();
+        await loadProfile();  // ← ждём загрузки профиля
         showNotification('Вход выполнен!', 'success');
     } else {
+        console.error('Login failed, no token received');
         showNotification('Неверное имя пользователя или пароль', 'error');
     }
 }

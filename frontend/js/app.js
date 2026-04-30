@@ -1,25 +1,38 @@
-// Главный файл приложения
+// frontend/js/app.js
 
-// Инициализация Telegram
-if (tg) {
-    tg.MainButton.onClick(() => {
-        const messageInput = document.getElementById('messageInput');
-        if (messageInput && messageInput.value.trim()) {
-            sendMessage();
-        } else {
-            showNotification('Сначала введите сообщение', 'info');
-        }
-    });
+// Проверка токена при старте
+async function checkTokenAndStart() {
+    const token = localStorage.getItem(APP_CONFIG.TOKEN_KEY);
+    console.log('Checking token on start:', token ? 'present' : 'not found');
+    
+    if (!token) {
+        showLogin();
+        return;
+    }
+    
+    setAuthToken(token);
+    const user = await API.getMe();
+    
+    if (user) {
+        console.log('Token valid, user:', user.username);
+        document.getElementById('userName').innerText = user.username;
+        showApp();
+        await loadProfile();
+    } else {
+        console.log('Token invalid, clearing');
+        setAuthToken(null);
+        showLogin();
+    }
 }
 
-// Запуск приложения
+// Инициализация
 document.addEventListener('DOMContentLoaded', async () => {
-    // Настройка обработчиков
+    console.log('App starting...');
+    
     setupTabs();
     setupAuthHandlers();
     setupMessagesHandlers();
     setupProfileHandlers();
     
-    // Проверка токена
     await checkTokenAndStart();
 });

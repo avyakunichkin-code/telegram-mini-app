@@ -1,12 +1,15 @@
-// API запросы
+// frontend/js/api.js
+
 let authToken = localStorage.getItem(APP_CONFIG.TOKEN_KEY);
 
 function setAuthToken(token) {
     authToken = token;
     if (token) {
         localStorage.setItem(APP_CONFIG.TOKEN_KEY, token);
+        console.log('Token saved to localStorage and variable');  // ← отладка
     } else {
         localStorage.removeItem(APP_CONFIG.TOKEN_KEY);
+        console.log('Token removed');
     }
 }
 
@@ -15,8 +18,14 @@ async function apiCall(endpoint, method = 'GET', data = null) {
         'Content-Type': 'application/json',
     };
     
-    if (authToken) {
-        headers['Authorization'] = `Bearer ${authToken}`;
+    // Токен берём из переменной, которая обновляется через setAuthToken
+    const token = authToken || localStorage.getItem(APP_CONFIG.TOKEN_KEY);
+    
+    if (token) {
+        headers['Authorization'] = `Bearer ${token}`;
+        console.log(`🔑 Sending request to ${endpoint} with token`);  // ← отладка
+    } else {
+        console.log(`🔓 No token for ${endpoint}`);
     }
     
     const options = {
@@ -30,8 +39,10 @@ async function apiCall(endpoint, method = 'GET', data = null) {
     
     try {
         const response = await fetch(`${APP_CONFIG.API_URL}${endpoint}`, options);
+        console.log(`📡 ${endpoint} - Status: ${response.status}`);  // ← отладка
         
         if (response.status === 401) {
+            console.log('🔴 401 Unauthorized, clearing token');
             setAuthToken(null);
             if (window.showLogin) window.showLogin();
             return null;
@@ -47,19 +58,3 @@ async function apiCall(endpoint, method = 'GET', data = null) {
         return null;
     }
 }
-
-// Специализированные API методы
-const API = {
-    // Auth
-    register: (data) => apiCall('/api/register', 'POST', data),
-    login: (data) => apiCall('/api/login', 'POST', data),
-    getMe: () => apiCall('/api/user/me', 'GET'),
-    
-    // Messages
-    sendMessage: (text) => apiCall('/api/messages', 'POST', { text }),
-    getMessages: (limit = APP_CONFIG.MESSAGES_LIMIT) => apiCall(`/api/messages?limit=${limit}`, 'GET'),
-    deleteMessage: (id) => apiCall(`/api/messages/${id}`, 'DELETE'),
-    
-    // Health
-    health: () => apiCall('/api/health', 'GET')
-};
