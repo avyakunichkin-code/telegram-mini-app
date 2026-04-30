@@ -22,7 +22,6 @@ app.add_middleware(
         "http://localhost:3000",
         "http://localhost:8000",
         "http://127.0.0.1:5500",
-        "*"  # Для теста, потом замени на свой домен
     ],
     allow_credentials=True,
     allow_methods=["*"],
@@ -43,7 +42,12 @@ def verify_telegram_auth(init_data: str) -> Optional[Dict[str, Any]]:
     Проверяет подлинность данных от Telegram
     Возвращает данные пользователя или None
     """
+    # 🆕 ДОБАВЬТЕ ЭТУ ОТЛАДКУ
+    print(f"🔍 Verifying auth, BOT_TOKEN present: {bool(BOT_TOKEN)}")
+    print(f"📦 init_data length: {len(init_data) if init_data else 0}")
+    
     if not init_data or not BOT_TOKEN:
+        print("❌ Missing init_data or BOT_TOKEN")
         return None
     
     try:
