@@ -186,6 +186,10 @@
             display: block;
         }
         
+        .hidden {
+            display: none;
+        }
+        
         @media (prefers-color-scheme: dark) {
             .message-item {
                 border-color: #333;
@@ -195,127 +199,140 @@
 </head>
 <body>
     <div class="container">
-        <!-- Шапка с приветствием -->
-        <div class="card">
-            <h1>🌟 Привет, <span id="userName" class="username">загрузка...</span>!</h1>
-            <p>Добро пожаловать в полноценное Telegram Mini App с бэкендом!</p>
-        </div>
-        
-        <!-- Вкладки -->
-        <div class="tabs">
-            <div class="tab active" data-tab="main">📝 Главная</div>
-            <div class="tab" data-tab="messages">💬 Сообщения</div>
-            <div class="tab" data-tab="profile">👤 Профиль</div>
-            <div class="tab" data-tab="settings">⚙️ Настройки</div>
-        </div>
-        
-        <!-- Вкладка: Главная -->
-        <div id="tab-main" class="tab-content active">
+        <!-- Панель логина -->
+        <div id="loginPanel">
             <div class="card">
-                <h3>📝 Отправить сообщение</h3>
-                <textarea id="messageInput" rows="3" placeholder="Напишите что-нибудь..."></textarea>
-                <button id="sendToBotBtn">📤 Отправить боту</button>
-                <button id="sendToBackendBtn" class="btn-secondary">💾 Отправить и сохранить в бэкенд</button>
-            </div>
-            
-            <div class="card">
-                <h3>🔄 Запросы к API</h3>
-                <button id="testApiBtn">🔌 Проверить связь с бэкендом</button>
-                <div id="apiStatus" class="status">
-                    ⚡ Статус не проверен
-                </div>
-            </div>
-            
-            <div class="card">
-                <h3>ℹ️ Информация о приложении</h3>
-                <div id="appInfo" class="status">
-                    Загрузка...
-                </div>
-            </div>
-        </div>
-        
-        <!-- Вкладка: Сообщения -->
-        <div id="tab-messages" class="tab-content">
-            <div class="card">
-                <h3>💬 История сообщений</h3>
-                <button id="loadMessagesBtn">📥 Загрузить сообщения</button>
-                <div id="messagesList" class="status">
-                    Нажмите "Загрузить сообщения", чтобы увидеть историю
-                </div>
-            </div>
-        </div>
-        
-        <!-- Вкладка: Профиль -->
-        <div id="tab-profile" class="tab-content">
-            <div class="card">
-                <h3>👤 Данные пользователя</h3>
-                <div id="profileInfo" class="status">
-                    Загрузка...
-                </div>
-                <button id="refreshProfileBtn">🔄 Обновить профиль</button>
-            </div>
-        </div>
-        
-        <!-- Вкладка: Настройки -->
-        <div id="tab-settings" class="tab-content">
-            <div class="card">
-                <h3>🎨 Внешний вид</h3>
-                <button id="closeAppBtn">❌ Закрыть приложение</button>
-                <button id="toggleMainButtonBtn">🔘 Показать/скрыть MainButton</button>
+                <h1>🔐 Вход в систему</h1>
+                <input type="text" id="loginUsername" placeholder="Имя пользователя">
+                <input type="password" id="loginPassword" placeholder="Пароль">
+                <button id="loginBtn">Войти</button>
                 <div class="info">
-                    Telegram Mini App v2.0<br>
-                    Поддерживает тёмную тему автоматически
+                    Нет аккаунта? <a href="#" id="showRegisterBtn" style="color: var(--tg-theme-link-color);">Зарегистрироваться</a>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Панель регистрации -->
+        <div id="registerPanel" class="hidden">
+            <div class="card">
+                <h1>📝 Регистрация</h1>
+                <input type="text" id="regUsername" placeholder="Имя пользователя *">
+                <input type="password" id="regPassword" placeholder="Пароль *">
+                <input type="text" id="regFullname" placeholder="Полное имя">
+                <input type="email" id="regEmail" placeholder="Email">
+                <button id="registerBtn">Зарегистрироваться</button>
+                <div class="info">
+                    Уже есть аккаунт? <a href="#" id="showLoginBtn" style="color: var(--tg-theme-link-color);">Войти</a>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Основное приложение -->
+        <div id="appPanel" class="hidden">
+            <!-- Шапка с приветствием -->
+            <div class="card">
+                <h1>🌟 Привет, <span id="userName" class="username">загрузка...</span>!</h1>
+                <p>Добро пожаловать в Telegram Mini App с PostgreSQL!</p>
+            </div>
+            
+            <!-- Вкладки -->
+            <div class="tabs">
+                <div class="tab active" data-tab="main">📝 Главная</div>
+                <div class="tab" data-tab="messages">💬 Сообщения</div>
+                <div class="tab" data-tab="profile">👤 Профиль</div>
+                <div class="tab" data-tab="settings">⚙️ Настройки</div>
+            </div>
+            
+            <!-- Вкладка: Главная -->
+            <div id="tab-main" class="tab-content active">
+                <div class="card">
+                    <h3>📝 Отправить сообщение</h3>
+                    <textarea id="messageInput" rows="3" placeholder="Напишите что-нибудь..."></textarea>
+                    <button id="sendToBackendBtn">💾 Отправить сообщение</button>
+                </div>
+                
+                <div class="card">
+                    <h3>ℹ️ Информация о приложении</h3>
+                    <div id="appInfo" class="status">
+                        Загрузка...
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Вкладка: Сообщения -->
+            <div id="tab-messages" class="tab-content">
+                <div class="card">
+                    <h3>💬 История сообщений</h3>
+                    <button id="loadMessagesBtn">📥 Загрузить сообщения</button>
+                    <div id="messagesList" class="status">
+                        Нажмите "Загрузить сообщения", чтобы увидеть историю
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Вкладка: Профиль -->
+            <div id="tab-profile" class="tab-content">
+                <div class="card">
+                    <h3>👤 Данные пользователя</h3>
+                    <div id="profileInfo" class="status">
+                        Загрузка...
+                    </div>
+                    <button id="refreshProfileBtn">🔄 Обновить профиль</button>
+                </div>
+            </div>
+            
+            <!-- Вкладка: Настройки -->
+            <div id="tab-settings" class="tab-content">
+                <div class="card">
+                    <h3>🎨 Настройки</h3>
+                    <button id="logoutBtn">🚪 Выйти из аккаунта</button>
+                    <div class="info">
+                        Telegram Mini App v3.0<br>
+                        База данных: PostgreSQL<br>
+                        Авторизация: JWT (логин/пароль)
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
     <script>
-        // ==================== ИНИЦИАЛИЗАЦИЯ ====================
+        // ==================== КОНФИГУРАЦИЯ ====================
+        const API_URL = "https://telegram-mini-app-zwfs.onrender.com";
+        
+        // Инициализация Telegram Web App
         const tg = window.Telegram.WebApp;
-        
-        // Расширяем приложение на весь экран
-        tg.expand();
-        
-        // Настройка MainButton
-        tg.MainButton.setText("✅ Готово");
-        tg.MainButton.show();
+        if (tg) {
+            tg.expand();
+            tg.MainButton.setText("✅ Готово");
+            tg.MainButton.show();
+        }
         
         // Глобальные переменные
+        let token = localStorage.getItem("token");
         let currentUser = null;
-        let backendUrl = "https://telegram-mini-app-zwfs.onrender.com"; // 🔥 ЗАМЕНИ НА СВОЙ URL БЭКЕНДА
-        let isBackendAvailable = false;
         
         // ==================== ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ ====================
         
-        // Получение initData для аутентификации
-        function getInitData() {
-            return tg.initData;
-        }
-        
-        // Отображение уведомлений
         function showNotification(message, type = 'info') {
-            tg.showPopup({
-                title: type === 'error' ? '❌ Ошибка' : type === 'success' ? '✅ Успех' : 'ℹ️ Информация',
-                message: message,
-                buttons: [{ type: 'ok' }]
-            });
+            if (tg && tg.showPopup) {
+                tg.showPopup({
+                    title: type === 'error' ? '❌ Ошибка' : type === 'success' ? '✅ Успех' : 'ℹ️ Информация',
+                    message: message,
+                    buttons: [{ type: 'ok' }]
+                });
+            } else {
+                alert(message);
+            }
         }
         
-        // Запрос к бэкенду
-        async function callBackend(endpoint, method = 'GET', data = null) {
-            if (!backendUrl || backendUrl === "https://твой-бэкенд.ru") {
-                console.warn('Бэкенд не настроен (используется заглушка)');
-                return null;
-            }
-            
+        async function apiCall(endpoint, method = 'GET', data = null) {
             const headers = {
                 'Content-Type': 'application/json',
             };
             
-            const initData = getInitData();
-            if (initData) {
-                headers['Authorization'] = `tg:${initData}`;
+            if (token) {
+                headers['Authorization'] = `Bearer ${token}`;
             }
             
             const options = {
@@ -328,61 +345,151 @@
             }
             
             try {
-                const response = await fetch(`${backendUrl}${endpoint}`, options);
+                const response = await fetch(`${API_URL}${endpoint}`, options);
                 if (!response.ok) {
-                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                    if (response.status === 401) {
+                        // Токен истёк
+                        localStorage.removeItem("token");
+                        token = null;
+                        showLogin();
+                        return null;
+                    }
+                    throw new Error(`HTTP ${response.status}`);
                 }
                 return await response.json();
             } catch (error) {
-                console.error(`Backend error (${endpoint}):`, error);
+                console.error(`API error (${endpoint}):`, error);
                 return null;
             }
         }
         
-        // Проверка доступности бэкенда
-        async function checkBackendHealth() {
-            const statusDiv = document.getElementById('apiStatus');
-            statusDiv.innerHTML = '<div class="loading"></div> Проверка связи...';
+        // ==================== АВТОРИЗАЦИЯ ====================
+        
+        function showLogin() {
+            document.getElementById("loginPanel").classList.remove("hidden");
+            document.getElementById("registerPanel").classList.add("hidden");
+            document.getElementById("appPanel").classList.add("hidden");
+        }
+        
+        function showApp() {
+            document.getElementById("loginPanel").classList.add("hidden");
+            document.getElementById("registerPanel").classList.add("hidden");
+            document.getElementById("appPanel").classList.remove("hidden");
+            loadProfile();
+            updateAppInfo();
+        }
+        
+        // Регистрация
+        document.getElementById("registerBtn").onclick = async () => {
+            const username = document.getElementById("regUsername").value;
+            const password = document.getElementById("regPassword").value;
+            const full_name = document.getElementById("regFullname").value;
+            const email = document.getElementById("regEmail").value;
             
-            const result = await callBackend('/api/health', 'GET');
+            if (!username || !password) {
+                showNotification("Заполните имя пользователя и пароль", "error");
+                return;
+            }
             
-            if (result && result.status === 'ok') {
-                isBackendAvailable = true;
-                statusDiv.innerHTML = `
-                    ✅ Бэкенд доступен<br>
-                    Время сервера: ${new Date(result.timestamp).toLocaleString()}
-                `;
-                statusDiv.classList.add('status-success');
-                statusDiv.classList.remove('status-error');
-                return true;
+            const result = await apiCall("/api/register", "POST", {
+                username, password, full_name, email
+            });
+            
+            if (result && result.access_token) {
+                token = result.access_token;
+                localStorage.setItem("token", token);
+                currentUser = { id: result.user_id, username: result.username };
+                showApp();
+                showNotification("Регистрация успешна!", "success");
             } else {
-                isBackendAvailable = false;
-                statusDiv.innerHTML = `
-                    ⚠️ Бэкенд недоступен<br>
-                    Проверьте URL: ${backendUrl}<br>
-                    Убедитесь, что сервер запущен
+                showNotification("Ошибка регистрации", "error");
+            }
+        };
+        
+        // Логин
+        document.getElementById("loginBtn").onclick = async () => {
+            const username = document.getElementById("loginUsername").value;
+            const password = document.getElementById("loginPassword").value;
+            
+            if (!username || !password) {
+                showNotification("Введите имя пользователя и пароль", "error");
+                return;
+            }
+            
+            const result = await apiCall("/api/login", "POST", { username, password });
+            
+            if (result && result.access_token) {
+                token = result.access_token;
+                localStorage.setItem("token", token);
+                currentUser = { id: result.user_id, username: result.username };
+                showApp();
+                showNotification("Вход выполнен!", "success");
+            } else {
+                showNotification("Неверное имя пользователя или пароль", "error");
+            }
+        };
+        
+        // Переключение между формами
+        document.getElementById("showRegisterBtn").onclick = (e) => {
+            e.preventDefault();
+            document.getElementById("loginPanel").classList.add("hidden");
+            document.getElementById("registerPanel").classList.remove("hidden");
+        };
+        
+        document.getElementById("showLoginBtn").onclick = (e) => {
+            e.preventDefault();
+            document.getElementById("registerPanel").classList.add("hidden");
+            document.getElementById("loginPanel").classList.remove("hidden");
+        };
+        
+        // Выход
+        document.getElementById("logoutBtn").onclick = () => {
+            localStorage.removeItem("token");
+            token = null;
+            currentUser = null;
+            showLogin();
+            showNotification("Вы вышли из аккаунта", "info");
+        };
+        
+        // ==================== ОСНОВНОЙ ФУНКЦИОНАЛ ====================
+        
+        async function loadProfile() {
+            const profileDiv = document.getElementById("profileInfo");
+            profileDiv.innerHTML = '<div class="loading"></div> Загрузка...';
+            
+            const result = await apiCall("/api/user/me", "GET");
+            
+            if (result) {
+                document.getElementById("userName").innerText = result.username;
+                profileDiv.innerHTML = `
+                    <strong>ID:</strong> ${result.id}<br>
+                    <strong>Имя пользователя:</strong> ${result.username}<br>
+                    <strong>Полное имя:</strong> ${result.full_name || '—'}<br>
+                    <strong>Email:</strong> ${result.email || '—'}<br>
+                    <strong>Сообщений:</strong> ${result.messages_count}<br>
+                    <strong>Зарегистрирован:</strong> ${new Date(result.created_at).toLocaleString()}
                 `;
-                statusDiv.classList.add('status-error');
-                statusDiv.classList.remove('status-success');
-                return false;
+                profileDiv.classList.add("status-success");
+            } else {
+                profileDiv.innerHTML = "❌ Не удалось загрузить профиль";
+                profileDiv.classList.add("status-error");
             }
         }
         
-        // Загрузка сообщений с бэкенда
-        async function loadMessagesFromBackend() {
-            const messagesDiv = document.getElementById('messagesList');
-            messagesDiv.innerHTML = '<div class="loading"></div> Загрузка сообщений...';
+        async function loadMessages() {
+            const messagesDiv = document.getElementById("messagesList");
+            messagesDiv.innerHTML = '<div class="loading"></div> Загрузка...';
             
-            const result = await callBackend('/api/messages', 'GET');
+            const result = await apiCall("/api/messages?limit=50", "GET");
             
-            if (result && result.messages) {
-                if (result.messages.length === 0) {
-                    messagesDiv.innerHTML = '📭 Нет сохранённых сообщений';
+            if (result && Array.isArray(result)) {
+                if (result.length === 0) {
+                    messagesDiv.innerHTML = "📭 Нет сообщений";
                 } else {
-                    messagesDiv.innerHTML = '';
-                    result.messages.forEach(msg => {
-                        const msgElement = document.createElement('div');
-                        msgElement.className = 'message-item';
+                    messagesDiv.innerHTML = "";
+                    result.forEach(msg => {
+                        const msgElement = document.createElement("div");
+                        msgElement.className = "message-item";
                         msgElement.innerHTML = `
                             <div class="message-text">${escapeHtml(msg.text)}</div>
                             <div class="message-time">📅 ${new Date(msg.timestamp).toLocaleString()}</div>
@@ -390,267 +497,95 @@
                         messagesDiv.appendChild(msgElement);
                     });
                 }
-                messagesDiv.classList.add('status-success');
+                messagesDiv.classList.add("status-success");
             } else {
-                messagesDiv.innerHTML = '❌ Не удалось загрузить сообщения. Проверьте подключение к бэкенду.';
-                messagesDiv.classList.add('status-error');
+                messagesDiv.innerHTML = "❌ Не удалось загрузить сообщения";
+                messagesDiv.classList.add("status-error");
             }
         }
         
-        // Обновление профиля
-        async function refreshProfile() {
-            const profileDiv = document.getElementById('profileInfo');
-            profileDiv.innerHTML = '<div class="loading"></div> Загрузка профиля...';
-            
-            if (!currentUser) {
-                profileDiv.innerHTML = '❌ Пользователь не авторизован в Telegram';
+        async function sendMessage() {
+            const text = document.getElementById("messageInput").value.trim();
+            if (!text) {
+                showNotification("Введите сообщение", "info");
                 return;
             }
             
-            const result = await callBackend(`/api/user/${currentUser.id}`, 'GET');
+            const result = await apiCall("/api/messages", "POST", { text });
             
             if (result) {
-                profileDiv.innerHTML = `
-                    <strong>Telegram ID:</strong> ${result.telegram_id}<br>
-                    <strong>Имя:</strong> ${result.name || currentUser.first_name}<br>
-                    <strong>Сообщений отправлено:</strong> ${result.messages_count || 0}<br>
-                    <strong>Язык:</strong> ${currentUser.language_code || 'не указан'}<br>
-                    <strong>Премиум:</strong> ${currentUser.is_premium ? '✅ Да' : '❌ Нет'}
-                `;
-                profileDiv.classList.add('status-success');
+                document.getElementById("messageInput").value = "";
+                showNotification("Сообщение отправлено!", "success");
+                loadMessages();
             } else {
-                profileDiv.innerHTML = '❌ Не удалось загрузить профиль. Проверьте подключение к бэкенду.';
-                profileDiv.classList.add('status-error');
+                showNotification("Ошибка отправки", "error");
             }
         }
         
-        // Отправка сообщения только боту (через Telegram)
-        function sendToBot(message) {
-            tg.sendData(JSON.stringify({
-                type: 'message',
-                text: message,
-                timestamp: new Date().toISOString(),
-                source: 'telegram'
-            }));
-            showNotification('Сообщение отправлено боту!', 'success');
+        function updateAppInfo() {
+            const infoDiv = document.getElementById("appInfo");
+            infoDiv.innerHTML = `
+                <strong>Статус:</strong> ✅ Авторизован<br>
+                <strong>Пользователь:</strong> ${currentUser?.username || '—'}<br>
+                <strong>База данных:</strong> PostgreSQL<br>
+                <strong>Авторизация:</strong> JWT (логин/пароль)<br>
+                <strong>Платформа:</strong> ${tg ? tg.platform : 'Web'}
+            `;
         }
         
-        // Отправка сообщения в бэкенд
-        async function sendToBackend(message) {
-            if (!isBackendAvailable) {
-                showNotification('Бэкенд недоступен. Проверьте подключение.', 'error');
-                return false;
-            }
-            
-            const result = await callBackend('/api/message', 'POST', {
-                message: message,
-                timestamp: new Date().toISOString(),
-                user_id: currentUser?.id
-            });
-            
-            if (result && result.status === 'success') {
-                showNotification(`Сообщение сохранено на сервере, ${result.user?.first_name || 'пользователь'}!`, 'success');
-                return true;
-            } else {
-                showNotification('Не удалось сохранить сообщение на сервере', 'error');
-                return false;
-            }
-        }
-        
-        // Экранирование HTML для безопасности
         function escapeHtml(text) {
-            const div = document.createElement('div');
+            const div = document.createElement("div");
             div.textContent = text;
             return div.innerHTML;
         }
         
-        // Обновление информации о приложении
-        function updateAppInfo() {
-            const infoDiv = document.getElementById('appInfo');
-            infoDiv.innerHTML = `
-                <strong>Платформа:</strong> ${tg.platform}<br>
-                <strong>Тема:</strong> ${tg.colorScheme} (светлая/тёмная)<br>
-                <strong>Версия Telegram:</strong> ${tg.version}<br>
-                <strong>Бэкенд:</strong> ${isBackendAvailable ? '✅ Подключён' : '❌ Не подключён'}<br>
-                <strong>MainButton:</strong> ${tg.MainButton.isVisible ? 'Видна' : 'Скрыта'}<br>
-                <strong>Viewport:</strong> ${tg.viewportHeight}px
-            `;
-        }
+        // ==================== НАСТРОЙКА ИНТЕРФЕЙСА ====================
         
-        // ==================== ИНИЦИАЛИЗАЦИЯ ПОЛЬЗОВАТЕЛЯ ====================
-        
-        function initUser() {
-            if (tg.initDataUnsafe && tg.initDataUnsafe.user) {
-                currentUser = tg.initDataUnsafe.user;
-                const firstName = currentUser.first_name || '';
-                const lastName = currentUser.last_name || '';
-                const fullName = (firstName + ' ' + lastName).trim();
-                
-                document.getElementById('userName').innerText = firstName || 'пользователь';
-                
-                const welcomeMessage = `👋 Привет, ${firstName}! Добро пожаловать в полноценное Mini App с бэкендом.`;
-                document.querySelector('.card p').innerText = welcomeMessage;
-                
-                // Показываем приветствие только при первом запуске
-                if (!sessionStorage.getItem('welcomeShown')) {
-                    tg.showPopup({
-                        title: `Привет, ${firstName}!`,
-                        message: 'Это полноценное Telegram Mini App с поддержкой бэкенда. Попробуй отправить сообщение или проверить связь с сервером!',
-                        buttons: [{ type: 'ok' }]
-                    });
-                    sessionStorage.setItem('welcomeShown', 'true');
-                }
-            } else {
-                document.getElementById('userName').innerText = 'гость';
-                currentUser = {
-                    id: null,
-                    first_name: 'Гость',
-                    language_code: 'ru'
-                };
-            }
-        }
-        
-        // ==================== НАСТРОЙКА ОБРАБОТЧИКОВ ====================
-        
-        // Настройка вкладок
         function setupTabs() {
-            const tabs = document.querySelectorAll('.tab');
+            const tabs = document.querySelectorAll(".tab");
             tabs.forEach(tab => {
-                tab.addEventListener('click', () => {
+                tab.addEventListener("click", () => {
                     const tabName = tab.dataset.tab;
-                    
-                    // Обновляем активную вкладку
-                    tabs.forEach(t => t.classList.remove('active'));
-                    tab.classList.add('active');
-                    
-                    // Обновляем контент
-                    document.querySelectorAll('.tab-content').forEach(content => {
-                        content.classList.remove('active');
+                    tabs.forEach(t => t.classList.remove("active"));
+                    tab.classList.add("active");
+                    document.querySelectorAll(".tab-content").forEach(content => {
+                        content.classList.remove("active");
                     });
-                    document.getElementById(`tab-${tabName}`).classList.add('active');
+                    document.getElementById(`tab-${tabName}`).classList.add("active");
+                    
+                    if (tabName === "messages") loadMessages();
+                    if (tabName === "profile") loadProfile();
                 });
             });
         }
         
-        // Настройка кнопок
         function setupButtons() {
-            // Отправка боту
-            document.getElementById('sendToBotBtn').onclick = () => {
-                const message = document.getElementById('messageInput').value.trim();
-                if (message) {
-                    sendToBot(message);
-                    document.getElementById('messageInput').value = '';
-                } else {
-                    showNotification('Введите сообщение', 'info');
-                }
-            };
-            
-            // Отправка в бэкенд
-            document.getElementById('sendToBackendBtn').onclick = async () => {
-                const message = document.getElementById('messageInput').value.trim();
-                if (message) {
-                    const success = await sendToBackend(message);
-                    if (success) {
-                        document.getElementById('messageInput').value = '';
-                    }
-                } else {
-                    showNotification('Введите сообщение', 'info');
-                }
-            };
-            
-            // Проверка API
-            document.getElementById('testApiBtn').onclick = async () => {
-                await checkBackendHealth();
-                updateAppInfo();
-            };
-            
-            // Загрузка сообщений
-            document.getElementById('loadMessagesBtn').onclick = async () => {
-                await loadMessagesFromBackend();
-            };
-            
-            // Обновление профиля
-            document.getElementById('refreshProfileBtn').onclick = async () => {
-                await refreshProfile();
-            };
-            
-            // Закрытие приложения
-            document.getElementById('closeAppBtn').onclick = () => {
-                tg.close();
-            };
-            
-            // Toggle MainButton
-            let mainButtonVisible = true;
-            document.getElementById('toggleMainButtonBtn').onclick = () => {
-                if (mainButtonVisible) {
-                    tg.MainButton.hide();
-                } else {
-                    tg.MainButton.show();
-                }
-                mainButtonVisible = !mainButtonVisible;
-                updateAppInfo();
-            };
+            document.getElementById("sendToBackendBtn").onclick = sendMessage;
+            document.getElementById("loadMessagesBtn").onclick = loadMessages;
+            document.getElementById("refreshProfileBtn").onclick = loadProfile;
         }
         
-        // Настройка MainButton
-        function setupMainButton() {
-            tg.MainButton.onClick(async () => {
-                const message = document.getElementById('messageInput').value.trim();
-                if (message) {
-                    await sendToBackend(message);
-                    sendToBot(message);
-                    document.getElementById('messageInput').value = '';
-                    tg.showPopup({
-                        title: 'Отправлено!',
-                        message: 'Сообщение отправлено и сохранено',
-                        buttons: [{ type: 'ok' }]
-                    });
-                } else {
-                    tg.showAlert('Сначала введите сообщение');
-                }
-            });
-        }
+        // ==================== ПРОВЕРКА ТОКЕНА ПРИ СТАРТЕ ====================
         
-        // Автоматическая проверка бэкенда при старте
-        async function autoCheckBackend() {
-            if (backendUrl && backendUrl !== "https://твой-бэкенд.ru") {
-                await checkBackendHealth();
-            } else {
-                const statusDiv = document.getElementById('apiStatus');
-                statusDiv.innerHTML = `
-                    ⚙️ Бэкенд не настроен<br>
-                    Отредактируйте файл и укажите ваш backendUrl
-                `;
+        async function checkTokenAndStart() {
+            if (!token) {
+                showLogin();
+                return;
             }
-            updateAppInfo();
-        }
-        
-        // ==================== ЗАПУСК ====================
-        
-        function init() {
-            initUser();
-            setupTabs();
-            setupButtons();
-            setupMainButton();
-            autoCheckBackend().then(() => {
-                if (currentUser && currentUser.id) {
-                    refreshProfile();
-                }
-            });
             
-            // Обновляем информацию при изменении размера
-            window.addEventListener('resize', () => {
-                tg.expand();
-                updateAppInfo();
-            });
+            const result = await apiCall("/api/user/me", "GET");
+            if (result) {
+                currentUser = { id: result.id, username: result.username };
+                showApp();
+            } else {
+                showLogin();
+            }
         }
         
-        // Запускаем приложение после полной загрузки
-        if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', init);
-        } else {
-            init();
-        }
+        // Запуск
+        setupTabs();
+        setupButtons();
+        checkTokenAndStart();
     </script>
 </body>
 </html>

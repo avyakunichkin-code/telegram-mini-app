@@ -1,20 +1,26 @@
-from fastapi import FastAPI, HTTPException, Header, Request
+from fastapi import FastAPI, HTTPException, Header, Depends, status
 from fastapi.middleware.cors import CORSMiddleware
-from pydantic import BaseModel
+from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
+from pydantic import BaseModel, EmailStr
 from typing import Optional, List, Dict, Any
-import hashlib
-import hmac
-import json
-from datetime import datetime
+from datetime import datetime, timedelta
 import os
-import urllib.parse
 from dotenv import load_dotenv
+
+# Аутентификация
+from passlib.context import CryptContext
+from jose import JWTError, jwt
+
+# PostgreSQL
+from sqlalchemy import create_engine, Column, Integer, String, DateTime, Text, Boolean, ForeignKey
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import sessionmaker, Session, relationship
 
 load_dotenv()
 
-app = FastAPI(title="Telegram Mini App API", description="API для Telegram Mini App", version="1.0.0")
+app = FastAPI(title="Telegram Mini App API", version="2.0.0")
 
-# CORS настройки
+# CORS
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
@@ -29,231 +35,286 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-BOT_TOKEN = os.getenv("BOT_TOKEN", "")
+# ==================== КОНФИГУРАЦИЯ ====================
 
-# Хранилище данных
-messages_db: Dict[int, List[Dict]] = {}
-users_db: Dict[int, Dict] = {}
+SECRET_KEY = os.getenv("SECRET_KEY", "your-secret-key-change-me-123456789")
+ALGORITHM = "HS256"
+ACCESS_TOKEN_EXPIRE_MINUTES = 60 * 24 * 7  # 7 дней
 
-# ==================== МОДЕЛИ ====================
+# Хеширование паролей
+pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
-class MessageData(BaseModel):
-    message: str
-    timestamp: str
-    user_id: Optional[int] = None
+# Security
+security = HTTPBearer()
+
+# ==================== ПОДКЛЮЧЕНИЕ К БАЗЕ ====================
+
+DATABASE_URL = os.getenv("DATABASE_URL", "postgresql://user:pass@localhost:5432/db")
+
+# Для Render Internal URL нужно добавить ?sslmode=require
+if "render.com" in DATABASE_URL and "?" not in DATABASE_URL:
+    DATABASE_URL += "?sslmode=require"
+
+engine = create_engine(DATABASE_URL)
+SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+Base = declarative_base()
+
+# ==================== МОДЕЛИ БАЗЫ ДАННЫХ ====================
+
+class User(Base):
+    __tablename__ = "users"
+    
+    id = Column(Integer, primary_key=True, index=True)
+    username = Column(String(50), unique=True, index=True, nullable=False)
+    email = Column(String(100), unique=True, index=True, nullable=True)
+    hashed_password = Column(String(200), nullable=False)
+    full_name = Column(String(100))
+    telegram_id = Column(Integer, unique=True, nullable=True)
+    
+    created_at = Column(DateTime, default=datetime.utcnow)
+    
+    # Связи
+    messages = relationship("Message", back_populates="user", cascade="all, delete-orphan")
+
+class Message(Base):
+    __tablename__ = "messages"
+    
+    id = Column(Integer, primary_key=True, index=True)
+    text = Column(Text, nullable=False)
+    timestamp = Column(DateTime, default=datetime.utcnow)
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+    
+    # Связи
+    user = relationship("User", back_populates="messages")
+
+# Создаём таблицы
+Base.metadata.create_all(bind=engine)
+
+# ==================== МОДЕЛИ PYDANTIC ====================
+
+class UserRegister(BaseModel):
+    username: str
+    password: str
+    full_name: Optional[str] = None
+    email: Optional[str] = None
+    telegram_id: Optional[int] = None
+
+class UserLogin(BaseModel):
+    username: str
+    password: str
+
+class Token(BaseModel):
+    access_token: str
+    token_type: str
+    user_id: int
+    username: str
+
+class MessageCreate(BaseModel):
+    text: str
+
+class MessageResponse(BaseModel):
+    id: int
+    text: str
+    timestamp: datetime
+    username: str
+
+class UserResponse(BaseModel):
+    id: int
+    username: str
+    full_name: Optional[str]
+    email: Optional[str]
+    messages_count: int
+    created_at: datetime
 
 # ==================== ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ ====================
 
-def get_user_id_from_request(authorization: Optional[str] = None, user_id_param: Optional[int] = None) -> Optional[int]:
-    """
-    Упрощённое получение user_id.
-    Сначала пытается из авторизации, потом из параметра, потом берёт тестовый ID.
-    """
-    # Пытаемся извлечь из заголовка Authorization (упрощённо)
-    if authorization and authorization.startswith("tg:"):
-        try:
-            init_data = authorization[3:]
-            params = {}
-            for item in init_data.split('&'):
-                if '=' in item:
-                    key, value = item.split('=', 1)
-                    params[key] = value
-            
-            user_param = params.get('user', '')
-            if user_param:
-                user_decoded = urllib.parse.unquote(user_param)
-                user_data = json.loads(user_decoded)
-                user_id = user_data.get('id')
-                if user_id:
-                    return user_id
-        except:
-            pass
+def get_db():
+    """Получение сессии БД"""
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
+
+def verify_password(plain_password: str, hashed_password: str) -> bool:
+    return pwd_context.verify(plain_password, hashed_password)
+
+def get_password_hash(password: str) -> str:
+    return pwd_context.hash(password)
+
+def create_access_token(data: dict) -> str:
+    to_encode = data.copy()
+    expire = datetime.utcnow() + timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
+    to_encode.update({"exp": expire})
+    encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
+    return encoded_jwt
+
+def get_current_user(credentials: HTTPAuthorizationCredentials = Depends(security), db: Session = Depends(get_db)):
+    """Получение текущего пользователя по JWT токену"""
+    token = credentials.credentials
+    try:
+        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        user_id: int = payload.get("sub")
+        if user_id is None:
+            raise HTTPException(status_code=401, detail="Invalid token")
+    except JWTError:
+        raise HTTPException(status_code=401, detail="Invalid token")
     
-    # Если передан параметр user_id
-    if user_id_param:
-        return user_id_param
+    user = db.query(User).filter(User.id == user_id).first()
+    if user is None:
+        raise HTTPException(status_code=401, detail="User not found")
     
-    # Тестовый ID (твой Telegram ID)
-    return 247028870
+    return user
 
 # ==================== ЭНДПОИНТЫ ====================
 
-@app.get("/")
-async def root():
-    return {
-        "name": "Telegram Mini App API",
-        "version": "1.0.0",
-        "endpoints": {
-            "health": "/api/health",
-            "message": "/api/message (POST)",
-            "messages": "/api/messages (GET)",
-            "user": "/api/user/{id} (GET)",
-        }
-    }
-
-
 @app.get("/api/health")
-async def health_check():
+async def health_check(db: Session = Depends(get_db)):
+    """Проверка здоровья"""
+    user_count = db.query(User).count()
+    message_count = db.query(Message).count()
     return {
         "status": "ok",
         "timestamp": datetime.now().isoformat(),
-        "bot_token_configured": bool(BOT_TOKEN),
-        "users_count": len(users_db),
-        "messages_count": sum(len(msgs) for msgs in messages_db.values())
+        "database": "connected",
+        "users": user_count,
+        "messages": message_count
     }
 
-
-@app.post("/api/message")
-async def save_message(
-    message_data: MessageData,
-    request: Request,
-    authorization: Optional[str] = Header(None)
-):
-    """Сохраняет сообщение от пользователя"""
-    # Получаем ID пользователя
-    user_id = get_user_id_from_request(authorization, message_data.user_id)
+@app.post("/api/register", response_model=Token)
+async def register(user_data: UserRegister, db: Session = Depends(get_db)):
+    """Регистрация нового пользователя"""
+    # Проверяем, существует ли пользователь
+    existing = db.query(User).filter(User.username == user_data.username).first()
+    if existing:
+        raise HTTPException(status_code=400, detail="Username already exists")
     
-    print(f"📝 Сохраняем сообщение от user_id: {user_id}")
-    print(f"📝 Текст: {message_data.message[:50]}...")
+    # Создаём пользователя
+    hashed_password = get_password_hash(user_data.password)
+    new_user = User(
+        username=user_data.username,
+        email=user_data.email,
+        full_name=user_data.full_name,
+        hashed_password=hashed_password,
+        telegram_id=user_data.telegram_id,
+        created_at=datetime.utcnow()
+    )
     
-    # Инициализируем хранилище для пользователя если нужно
-    if user_id not in messages_db:
-        messages_db[user_id] = []
+    db.add(new_user)
+    db.commit()
+    db.refresh(new_user)
     
-    message_id = len(messages_db[user_id])
-    new_message = {
-        "id": message_id,
-        "text": message_data.message,
-        "timestamp": message_data.timestamp,
-        "user_id": user_id
-    }
-    messages_db[user_id].append(new_message)
-    
-    # Создаём пользователя если его нет
-    if user_id not in users_db:
-        users_db[user_id] = {
-            "id": user_id,
-            "first_name": "User",
-            "created_at": datetime.now().isoformat()
-        }
+    # Создаём токен
+    access_token = create_access_token(data={"sub": new_user.id})
     
     return {
-        "status": "success",
-        "message_id": message_id,
-        "user_id": user_id,
-        "timestamp": message_data.timestamp
+        "access_token": access_token,
+        "token_type": "bearer",
+        "user_id": new_user.id,
+        "username": new_user.username
     }
 
+@app.post("/api/login", response_model=Token)
+async def login(user_data: UserLogin, db: Session = Depends(get_db)):
+    """Вход в систему"""
+    user = db.query(User).filter(User.username == user_data.username).first()
+    
+    if not user or not verify_password(user_data.password, user.hashed_password):
+        raise HTTPException(status_code=401, detail="Invalid username or password")
+    
+    access_token = create_access_token(data={"sub": user.id})
+    
+    return {
+        "access_token": access_token,
+        "token_type": "bearer",
+        "user_id": user.id,
+        "username": user.username
+    }
 
-@app.get("/api/messages")
+@app.post("/api/messages")
+async def create_message(
+    message: MessageCreate,
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    """Создание нового сообщения"""
+    new_message = Message(
+        text=message.text,
+        user_id=current_user.id,
+        timestamp=datetime.utcnow()
+    )
+    
+    db.add(new_message)
+    db.commit()
+    db.refresh(new_message)
+    
+    return {
+        "id": new_message.id,
+        "text": new_message.text,
+        "timestamp": new_message.timestamp,
+        "user_id": current_user.id,
+        "username": current_user.username
+    }
+
+@app.get("/api/messages", response_model=List[MessageResponse])
 async def get_messages(
-    request: Request,
-    authorization: Optional[str] = Header(None)
+    limit: int = 50,
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db)
 ):
-    """Получает все сообщения пользователя"""
-    user_id = get_user_id_from_request(authorization)
+    """Получение сообщений текущего пользователя"""
+    messages = db.query(Message).filter(
+        Message.user_id == current_user.id
+    ).order_by(Message.timestamp.desc()).limit(limit).all()
     
-    print(f"📋 Загружаем сообщения для user_id: {user_id}")
-    
-    user_messages = messages_db.get(user_id, [])
-    # Сортируем от новых к старым
-    user_messages_sorted = sorted(user_messages, key=lambda x: x.get('timestamp', ''), reverse=True)
-    
-    return {
-        "status": "success",
-        "user_id": user_id,
-        "total": len(user_messages_sorted),
-        "messages": user_messages_sorted
-    }
+    return [
+        MessageResponse(
+            id=m.id,
+            text=m.text,
+            timestamp=m.timestamp,
+            username=current_user.username
+        )
+        for m in messages
+    ]
 
-
-@app.get("/api/user/{telegram_id}")
-async def get_user_data(
-    telegram_id: int,
-    authorization: Optional[str] = Header(None)
-):
-    """Получает данные пользователя"""
-    # Проверяем, что запрашивает свои данные
-    request_user_id = get_user_id_from_request(authorization)
+@app.get("/api/user/me", response_model=UserResponse)
+async def get_me(current_user: User = Depends(get_current_user), db: Session = Depends(get_db)):
+    """Получение профиля текущего пользователя"""
+    messages_count = db.query(Message).filter(Message.user_id == current_user.id).count()
     
-    print(f"👤 Запрос профиля: requested={telegram_id}, auth_user={request_user_id}")
-    
-    # Если ID не совпадают, но это тестовый режим — разрешаем
-    if telegram_id != request_user_id and request_user_id != 247028870:
-        # Не совпадает — пробуем взять из запроса
-        pass
-    
-    # Создаём пользователя если его нет
-    if telegram_id not in users_db:
-        users_db[telegram_id] = {
-            "id": telegram_id,
-            "first_name": "User",
-            "username": None,
-            "language_code": "ru",
-            "is_premium": False,
-            "created_at": datetime.now().isoformat()
-        }
-    
-    user_info = users_db.get(telegram_id, {})
-    user_messages = messages_db.get(telegram_id, [])
-    
-    return {
-        "telegram_id": telegram_id,
-        "name": user_info.get('first_name', 'User'),
-        "username": user_info.get('username'),
-        "language_code": user_info.get('language_code', 'ru'),
-        "is_premium": user_info.get('is_premium', False),
-        "messages_count": len(user_messages),
-        "registered_at": user_info.get('created_at')
-    }
-
-
-@app.get("/api/messages/latest")
-async def get_latest_messages(
-    limit: int = 10,
-    authorization: Optional[str] = Header(None)
-):
-    """Получает последние N сообщений"""
-    user_id = get_user_id_from_request(authorization)
-    user_messages = messages_db.get(user_id, [])
-    
-    latest_messages = user_messages[-limit:] if user_messages else []
-    latest_messages.reverse()
-    
-    return {
-        "status": "success",
-        "user_id": user_id,
-        "limit": limit,
-        "total": len(user_messages),
-        "messages": latest_messages
-    }
-
+    return UserResponse(
+        id=current_user.id,
+        username=current_user.username,
+        full_name=current_user.full_name,
+        email=current_user.email,
+        messages_count=messages_count,
+        created_at=current_user.created_at
+    )
 
 @app.delete("/api/messages/{message_id}")
 async def delete_message(
     message_id: int,
-    authorization: Optional[str] = Header(None)
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db)
 ):
-    """Удаляет сообщение"""
-    user_id = get_user_id_from_request(authorization)
-    user_messages = messages_db.get(user_id, [])
+    """Удаление сообщения"""
+    message = db.query(Message).filter(
+        Message.id == message_id,
+        Message.user_id == current_user.id
+    ).first()
     
-    for i, msg in enumerate(user_messages):
-        if msg.get('id') == message_id:
-            deleted = user_messages.pop(i)
-            messages_db[user_id] = user_messages
-            return {"status": "success", "deleted_message": deleted}
+    if not message:
+        raise HTTPException(status_code=404, detail="Message not found")
     
-    raise HTTPException(status_code=404, detail="Message not found")
-
+    db.delete(message)
+    db.commit()
+    
+    return {"status": "success", "deleted_id": message_id}
 
 # ==================== ЗАПУСК ====================
 
 if __name__ == "__main__":
     import uvicorn
-    print("🚀 Запуск Telegram Mini App Backend...")
-    print(f"📌 BOT_TOKEN: {'✅ установлен' if BOT_TOKEN else '❌ НЕ УСТАНОВЛЕН'}")
-    print("📍 Сервер запущен")
-    print("\n✨ Авторизация ВРЕМЕННО ОТКЛЮЧЕНА — используется тестовый user_id=247028870")
-    
+    print("🚀 Запуск Telegram Mini App Backend с PostgreSQL...")
+    print(f"📌 База данных: {DATABASE_URL[:50]}...")
     uvicorn.run(app, host="0.0.0.0", port=10000)
