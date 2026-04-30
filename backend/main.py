@@ -1,11 +1,39 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from sqlalchemy import inspect, text
 
 from app.database import engine, Base
 from app.routers import auth_router, users_router, messages_router, health_router, finance_router, game_router
 
-# Создаём таблицы
+
+def ensure_schema_compatibility() -> None:
+    """
+    Лёгкая авто-миграция для уже созданных таблиц без Alembic.
+    Нужна, чтобы деплой не падал при добавлении новых полей модели.
+    """
+    inspector = inspect(engine)
+    if "game_profiles" not in inspector.get_table_names():
+        return
+
+    columns = {item["name"] for item in inspector.get_columns("game_profiles")}
+    statements = []
+    if "base_params_locked" not in columns:
+        statements.append("ALTER TABLE game_profiles ADD COLUMN base_params_locked INTEGER NOT NULL DEFAULT 0")
+    if "onboarding_state" not in columns:
+        statements.append("ALTER TABLE game_profiles ADD COLUMN onboarding_state VARCHAR(30) NOT NULL DEFAULT 'draft'")
+
+    if not statements:
+        return
+
+    with engine.begin() as connection:
+        for stmt in statements:
+            connection.execute(text(stmt))
+    print(f"✅ Схема game_profiles обновлена: {len(statements)} изм.")
+
+
+# Создаём/обновляем таблицы
 Base.metadata.create_all(bind=engine)
+ensure_schema_compatibility()
 print("✅ Таблицы созданы/проверены")
 
 app = FastAPI(title="Telegram Mini App API", version="2.0.0")
