@@ -2,8 +2,8 @@ from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 from datetime import datetime
 
-from app.database import get_db
-from app.models import User, Message, Liability, Asset
+from ..database import get_db
+from ..models import User, Message, Liability, Asset
 
 router = APIRouter(prefix="/api", tags=["health"])
 

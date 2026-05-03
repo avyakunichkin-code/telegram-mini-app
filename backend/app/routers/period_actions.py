@@ -2,11 +2,11 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from datetime import datetime
 
-from app.auth import get_current_user
-from app.database import get_db
-from app.models import GameProfile, PeriodSnapshot, FinanceSalary, FinanceLiability, FinanceAsset
-from app.schemas import SafetyFundContribution, PeriodStatusResponse, PeriodSummaryResponse
-from app.game_time import get_active_game_profile, sync_time, get_seconds_until_next
+from ..auth import get_current_user
+from ..database import get_db
+from ..models import GameProfile, PeriodSnapshot, FinanceSalary, FinanceLiability, FinanceAsset
+from ..schemas import SafetyFundContribution, PeriodStatusResponse, PeriodSummaryResponse
+from ..game_time import get_active_game_profile, sync_time, get_seconds_until_next
 
 router = APIRouter(prefix="/api/game/period", tags=["period"])
 

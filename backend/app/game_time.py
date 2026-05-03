@@ -4,7 +4,7 @@ from typing import Tuple
 from fastapi import HTTPException
 from sqlalchemy.orm import Session
 
-from app.models import GameProfile
+from .models import GameProfile
 
 
 def get_active_game_profile(db: Session, user_id: int) -> GameProfile:

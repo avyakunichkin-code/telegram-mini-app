@@ -3,10 +3,10 @@ from datetime import datetime
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
-from app.database import get_db
-from app.models import Message
-from app.schemas import MessageCreate, MessageResponse
-from app.auth import get_current_user  # ← обязательно для защищённых эндпоинтов
+from ..database import get_db
+from ..models import Message
+from ..schemas import MessageCreate, MessageResponse
+from ..auth import get_current_user  # ← обязательно для защищённых эндпоинтов
 
 router = APIRouter(prefix="/api", tags=["messages"])
 

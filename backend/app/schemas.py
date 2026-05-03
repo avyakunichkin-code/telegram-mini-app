@@ -102,6 +102,7 @@ class FinanceOverview(BaseModel):
     period_index: int
     period_duration_seconds: int
     seconds_until_next_period: int
+    safety_fund_total: float = 0  # Добавить
 
 
 class GameProfileCreate(BaseModel):
@@ -143,3 +144,33 @@ class GameStartRequest(BaseModel):
     period_duration_seconds: int
     monthly_amount: float
     monthly_receipts_count: int
+
+
+# ==================== ДЕЙСТВИЯ ПЕРИОДА (НОВЫЕ) ====================
+
+class SafetyFundContribution(BaseModel):
+    amount: float
+
+
+class PeriodStatusResponse(BaseModel):
+    period_index: int
+    salary_claimed: bool
+    salary_amount: float
+    safety_fund_total: float
+    safety_fund_contribution: float
+    can_claim_salary: bool
+    can_contribute_to_fund: bool
+    required_actions_completed: bool
+    total_expenses: float
+    net_income_available: float
+
+
+class PeriodSummaryResponse(BaseModel):
+    period_index: int
+    salary_claimed: bool
+    salary_amount: float
+    safety_fund_contribution: float
+    safety_fund_total: float
+    net_savings: float
+    xp_earned: int
+    required_actions_completed: bool

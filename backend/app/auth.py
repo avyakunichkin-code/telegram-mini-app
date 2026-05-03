@@ -8,9 +8,9 @@ from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from jose import JWTError, jwt
 from sqlalchemy.orm import Session
 
-from app.config import config
-from app.database import get_db
-from app.models import User
+from .config import config
+from .database import get_db
+from .models import User
 
 security = HTTPBearer(auto_error=False)  # ← auto_error=False — не выдавать ошибку автоматически
 

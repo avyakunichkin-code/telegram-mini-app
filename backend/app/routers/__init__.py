@@ -1,9 +1,18 @@
-from app.routers.auth import router as auth_router
-from app.routers.messages import router as messages_router
-from app.routers.users import router as users_router
-from app.routers.health import router as health_router
-from app.routers.finance import router as finance_router
-from app.routers.game import router as game_router
-from app.routers.period_actions import router as period_router  # Добавить
+from ..routers.auth import router as auth_router
+from ..routers.messages import router as messages_router
+from ..routers.users import router as users_router
+from ..routers.health import router as health_router
+from ..routers.finance import router as finance_router
+from ..routers.game import router as game_router
+from ..routers.period_actions import router as period_router
 
 # Экспортируем все роутеры
+__all__ = [
+    "auth_router",
+    "messages_router",
+    "users_router",
+    "health_router",
+    "finance_router",
+    "game_router",
+    "period_router"
+]
