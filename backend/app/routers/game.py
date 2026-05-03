@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Request
 from sqlalchemy.orm import Session
 from datetime import datetime
 from typing import List
@@ -94,10 +94,28 @@ async def activate_game_profile(
 
 @router.post("/start", response_model=GameStartResponse)
 async def start_new_game(
-        payload: GameStartRequest,
+        request: Request,
         current_user=Depends(get_current_user),
         db: Session = Depends(get_db)
 ):
+    # Получаем тело запроса в сыром виде
+    body = await request.json()
+
+    # Преобразуем старый формат в новый, если нужно
+    if "monthly_salary" in body:
+        # Уже новый формат
+        payload = GameStartRequest(**body)
+    else:
+        # Старый формат: конвертируем
+        payload = GameStartRequest(
+            profile_name=body.get("profile_name"),
+            mode=body.get("mode"),
+            period_duration_seconds=body.get("period_duration_seconds"),
+            cash_balance=body.get("cash_balance", 0),
+            monthly_salary=body.get("monthly_amount", 0),
+            assets=[],          # в старом формате активов не было
+            liabilities=[]      # и обязательств тоже
+        )
     """
     Создаёт новый игровой профиль с полной конфигурацией:
     - стартовый баланс
@@ -117,13 +135,13 @@ async def start_new_game(
     if payload.monthly_salary < 0:
         raise HTTPException(status_code=400, detail="monthly_salary cannot be negative")
 
-    # 2. Деактивируем все текущие активные профили пользователя
+    # Деактивируем все текущие активные профили пользователя
     db.query(GameProfile).filter(
         GameProfile.user_id == current_user.id,
         GameProfile.is_active == 1
     ).update({"is_active": 0})
 
-    # 3. Создаём профиль
+    # Создаём профиль
     new_profile = GameProfile(
         user_id=current_user.id,
         name=payload.profile_name.strip(),
@@ -136,14 +154,14 @@ async def start_new_game(
         period_index=1,
         time_state="pause",
         period_anchor_at=datetime.utcnow(),
-        base_params_locked=1,          # блокируем базовые параметры после старта
+        base_params_locked=1,
         onboarding_state="started"
     )
     db.add(new_profile)
     db.commit()
     db.refresh(new_profile)
 
-    # 4. Создаём зарплатную запись
+    # Зарплата
     salary = FinanceSalary(
         game_profile_id=new_profile.id,
         monthly_amount=payload.monthly_salary,
@@ -151,7 +169,7 @@ async def start_new_game(
     )
     db.add(salary)
 
-    # 5. Создаём активы
+    # Активы и обязательства из payload (если есть)
     for asset_data in payload.assets:
         asset = FinanceAsset(
             game_profile_id=new_profile.id,
@@ -162,7 +180,6 @@ async def start_new_game(
         )
         db.add(asset)
 
-    # 6. Создаём обязательства
     for liability_data in payload.liabilities:
         liability = FinanceLiability(
             game_profile_id=new_profile.id,
@@ -174,7 +191,7 @@ async def start_new_game(
         )
         db.add(liability)
 
-    # 7. Фиксируем стартовую транзакцию (начальный баланс)
+    # Транзакция начального баланса
     start_transaction = Transaction(
         game_profile_id=new_profile.id,
         amount=payload.cash_balance,
