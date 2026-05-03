@@ -5,6 +5,7 @@ from typing import List
 
 from ..auth import get_current_user
 from ..database import get_db
+from ..game_period import process_period_end
 from ..models import GameProfile, FinanceSalary, FinanceAsset, FinanceLiability, Transaction
 from ..schemas import (GameProfileCreate, GameProfileResponse, TimeConfigUpdate, TimeStatusResponse, GameStartRequest,
                        GameStartResponse, AssetCreate, LiabilityCreate)
@@ -245,13 +246,28 @@ async def set_pause_mode(
 
 @router.post("/time/next", response_model=TimeStatusResponse)
 async def go_to_next_period(
-    current_user=Depends(get_current_user),
-    db: Session = Depends(get_db),
+        current_user=Depends(get_current_user),
+        db: Session = Depends(get_db),
 ):
     profile = get_active_game_profile(db, current_user.id)
-    next_period(profile)
+    if not profile:
+        raise HTTPException(status_code=404, detail="Активный профиль не найден")
+
+    # Завершаем текущий период
+    period_result = process_period_end(db, profile)
+
+    if period_result["game_over"]:
+        raise HTTPException(
+            status_code=400,
+            detail="Игра окончена. Вы трижды подряд имели отрицательный баланс. Начните новую игру."
+        )
+
+    # Обновляем состояние времени
+    sync_time(profile)
+    set_time_state(profile, "pause")
     db.commit()
     db.refresh(profile)
+
     return TimeStatusResponse(
         time_state=profile.time_state,
         period_index=profile.period_index,
