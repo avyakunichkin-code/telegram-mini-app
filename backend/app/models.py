@@ -91,6 +91,7 @@ class GameProfile(Base):
     cash_balance = Column(Float, nullable=False, default=0)
     safety_fund_balance = Column(Float, nullable=False, default=0)
     negative_periods_count = Column(Integer, nullable=False, default=0)
+    last_period_salary_claimed = Column(Integer, nullable=False, default=0)
 
     created_at = Column(DateTime, default=datetime.utcnow)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)

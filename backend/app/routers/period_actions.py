@@ -3,7 +3,7 @@ from sqlalchemy.orm import Session
 from datetime import datetime
 
 from ..auth import get_current_user
-from ..balance_utils import adjust_balance, TRANSACTION_TYPES
+from ..balance_utils import adjust_balance, TRANSACTION_TYPES, adjust_safety_fund_balance
 from ..database import get_db
 from ..models import GameProfile, PeriodSnapshot, FinanceSalary, FinanceLiability, FinanceAsset
 from ..schemas import SafetyFundContribution, PeriodStatusResponse, PeriodSummaryResponse
@@ -170,43 +170,75 @@ async def claim_salary(
 
 @router.post("/contribute-to-safety-fund")
 async def contribute_to_safety_fund(
-    contribution: SafetyFundContribution,
-    current_user=Depends(get_current_user),
-    db: Session = Depends(get_db)
+        contribution: SafetyFundContribution,
+        current_user=Depends(get_current_user),
+        db: Session = Depends(get_db)
 ):
-    """Отложить деньги в подушку безопасности"""
+    """
+    Отложить деньги в подушку безопасности.
+    Списывает указанную сумму с cash_balance и зачисляет на safety_fund_balance.
+    """
     if contribution.amount <= 0:
-        raise HTTPException(status_code=400, detail="Contribution amount must be positive")
+        raise HTTPException(status_code=400, detail="Сумма должна быть положительной")
 
     profile = get_active_game_profile(db, current_user.id)
     sync_time(profile)
-    snapshot = get_current_period_snapshot(db, profile)
 
-    # Проверяем, что сумма не превышает доступный доход
-    net_income_available = calculate_available_net_income(db, profile, snapshot)
-
-    if contribution.amount > net_income_available:
+    # Проверяем, достаточно ли средств на основном балансе
+    if profile.cash_balance < contribution.amount:
         raise HTTPException(
             status_code=400,
-            detail=f"Not enough available income. Available: {net_income_available:,.2f} ₽"
+            detail=f"Недостаточно средств. Доступно: {profile.cash_balance:,.2f} ₽"
         )
 
-    # Обновляем снимок периода
-    snapshot.safety_fund_contribution += contribution.amount
-    snapshot.safety_fund_total += contribution.amount
-    snapshot.total_expenses += contribution.amount
+    period_index = profile.period_index
+    amount = contribution.amount
 
-    # Обновляем глобальный профиль
-    profile.safety_fund_total += contribution.amount
+    # Используем adjust_safety_fund_balance для перевода
+    try:
+        new_safety_fund = adjust_safety_fund_balance(
+            db=db,
+            game_profile_id=profile.id,
+            amount=amount,  # положительное число → в подушку
+            type=TRANSACTION_TYPES["SAFETY_FUND_CONTRIBUTION"],
+            description=f"Взнос в подушку безопасности #{period_index}",
+            period_index=period_index,
+        )
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
+    # Обновляем профиль в текущей сессии (adjust_safety_fund_balance уже изменил балансы)
+    db.refresh(profile)
+
+    # Начисляем небольшой XP за финансовую дисциплину (например, 5 XP)
+    xp_gained = 5
+    profile.xp += xp_gained
+
+    # Обработка повышения уровня (как в claim-salary)
+    level_up = False
+    xp_for_next = 100
+    while profile.xp >= xp_for_next:
+        profile.level += 1
+        profile.xp -= xp_for_next
+        level_up = True
+        xp_for_next = 100 + (profile.level - 1) * 50
 
     db.commit()
 
-    return {
+    response = {
         "status": "success",
-        "contributed": contribution.amount,
-        "total_safety_fund": snapshot.safety_fund_total,
-        "message": f"Отложено {contribution.amount:,.2f} ₽ в подушку безопасности"
+        "contributed": amount,
+        "new_cash_balance": profile.cash_balance,
+        "new_safety_fund_balance": new_safety_fund,
+        "xp_gained": xp_gained,
+        "level_up": level_up,
+        "new_level": profile.level if level_up else None,
+        "message": f"Отложено {amount:,.2f} ₽ в подушку безопасности"
     }
+    if level_up:
+        response["message"] += f" Поздравляем! Вы достигли {profile.level} уровня!"
+
+    return response
 
 
 @router.post("/complete-period", response_model=PeriodSummaryResponse)

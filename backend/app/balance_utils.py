@@ -145,32 +145,23 @@ def adjust_safety_fund_balance(
         raise ValueError(f"GameProfile with id {game_profile_id} not found")
 
     if amount > 0:
-        # Перевод с основного счёта в подушку
         if profile.cash_balance < amount:
-            raise ValueError(f"Недостаточно средств на основном балансе. Доступно: {profile.cash_balance}")
+            raise ValueError(...)
         profile.cash_balance -= amount
         profile.safety_fund_balance += amount
+        # Одна транзакция на списание
         add_transaction(
             db=db,
             game_profile_id=game_profile_id,
-            amount=-amount,  # списание с основного счёта
+            amount=-amount,
             type=type,
-            description=description,
-            period_index=period_index,
-        )
-        add_transaction(
-            db=db,
-            game_profile_id=game_profile_id,
-            amount=amount,   # зачисление на подушку (отдельная запись для истории подушки? но подушка не имеет своей таблицы транзакций, поэтому просто запишем общую операцию)
-            type=type,
-            description=f"Зачисление в подушку: {description}",
+            description=f"В подушку: {description}",
             period_index=period_index,
         )
     elif amount < 0:
-        # Перевод из подушки на основной счёт
         withdrawal = -amount
         if profile.safety_fund_balance < withdrawal:
-            raise ValueError(f"Недостаточно средств на подушке безопасности. Доступно: {profile.safety_fund_balance}")
+            raise ValueError(...)
         profile.cash_balance += withdrawal
         profile.safety_fund_balance -= withdrawal
         add_transaction(
@@ -178,12 +169,8 @@ def adjust_safety_fund_balance(
             game_profile_id=game_profile_id,
             amount=withdrawal,
             type=type,
-            description=description,
+            description=f"Из подушки: {description}",
             period_index=period_index,
         )
-    else:
-        # amount == 0, ничего не делаем
-        pass
-
     db.flush()
     return profile.safety_fund_balance
