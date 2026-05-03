@@ -7,7 +7,7 @@ from .database import Base
 
 class User(Base):
     __tablename__ = "users"
-    
+
     id = Column(Integer, primary_key=True, index=True)
     username = Column(String(50), unique=True, index=True, nullable=False)
     email = Column(String(100), unique=True, index=True, nullable=True)
@@ -35,19 +35,16 @@ class Message(Base):
 
 class SalaryProfile(Base):
     __tablename__ = "salary_profiles"
-
     id = Column(Integer, primary_key=True, index=True)
     monthly_amount = Column(Float, nullable=False, default=0)
     monthly_receipts_count = Column(Integer, nullable=False, default=1)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
     user_id = Column(Integer, ForeignKey("users.id"), nullable=False, unique=True)
-
     user = relationship("User", back_populates="salary_profile")
 
 
 class Liability(Base):
     __tablename__ = "liabilities"
-
     id = Column(Integer, primary_key=True, index=True)
     title = Column(String(120), nullable=False, default="Обязательство")
     total_debt = Column(Float, nullable=False)
@@ -55,24 +52,21 @@ class Liability(Base):
     monthly_payment = Column(Float, nullable=False)
     created_at = Column(DateTime, default=datetime.utcnow)
     user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
-
     user = relationship("User", back_populates="liabilities")
 
 
 class Asset(Base):
     __tablename__ = "assets"
-
     id = Column(Integer, primary_key=True, index=True)
     title = Column(String(120), nullable=False, default="Актив")
     asset_value = Column(Float, nullable=False)
     monthly_maintenance_cost = Column(Float, nullable=False, default=0)
     created_at = Column(DateTime, default=datetime.utcnow)
     user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
-
     user = relationship("User", back_populates="assets")
 
 
-# ==================== ИГРОВЫЕ ПРОФИЛИ (ТОЛЬКО ОДИН РАЗ!) ====================
+# ==================== НОВЫЕ ИГРОВЫЕ МОДЕЛИ ====================
 
 class GameProfile(Base):
     __tablename__ = "game_profiles"
@@ -93,20 +87,20 @@ class GameProfile(Base):
     period_anchor_at = Column(DateTime, nullable=False, default=datetime.utcnow)
     base_params_locked = Column(Integer, nullable=False, default=0)
     onboarding_state = Column(String(30), nullable=False, default="draft")
-
-    # Дополнительные поля
-    safety_fund_total = Column(Float, nullable=False, default=0)
-    last_period_salary_claimed = Column(Integer, nullable=False, default=0)
+    # НОВЫЕ ПОЛЯ:
+    cash_balance = Column(Float, nullable=False, default=0)
+    safety_fund_balance = Column(Float, nullable=False, default=0)
+    negative_periods_count = Column(Integer, nullable=False, default=0)
 
     created_at = Column(DateTime, default=datetime.utcnow)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
-    # Связи
     user = relationship("User", backref="game_profiles")
     finance_salary = relationship("FinanceSalary", back_populates="game_profile", uselist=False, cascade="all, delete-orphan")
     finance_liabilities = relationship("FinanceLiability", back_populates="game_profile", cascade="all, delete-orphan")
     finance_assets = relationship("FinanceAsset", back_populates="game_profile", cascade="all, delete-orphan")
     period_snapshots = relationship("PeriodSnapshot", back_populates="game_profile", cascade="all, delete-orphan")
+    transactions = relationship("Transaction", back_populates="game_profile", cascade="all, delete-orphan")
 
 
 class FinanceSalary(Base):
@@ -117,7 +111,6 @@ class FinanceSalary(Base):
     monthly_amount = Column(Float, nullable=False, default=0)
     monthly_receipts_count = Column(Integer, nullable=False, default=1)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
-
     game_profile = relationship("GameProfile", back_populates="finance_salary")
 
 
@@ -130,8 +123,8 @@ class FinanceLiability(Base):
     total_debt = Column(Float, nullable=False)
     annual_rate_percent = Column(Float, nullable=False)
     monthly_payment = Column(Float, nullable=False)
+    is_active = Column(Integer, nullable=False, default=1)   # НОВОЕ
     created_at = Column(DateTime, default=datetime.utcnow)
-
     game_profile = relationship("GameProfile", back_populates="finance_liabilities")
 
 
@@ -143,8 +136,8 @@ class FinanceAsset(Base):
     title = Column(String(120), nullable=False, default="Актив")
     asset_value = Column(Float, nullable=False)
     monthly_maintenance_cost = Column(Float, nullable=False, default=0)
+    is_active = Column(Integer, nullable=False, default=1)   # НОВОЕ
     created_at = Column(DateTime, default=datetime.utcnow)
-
     game_profile = relationship("GameProfile", back_populates="finance_assets")
 
 
@@ -154,22 +147,28 @@ class PeriodSnapshot(Base):
     id = Column(Integer, primary_key=True, index=True)
     game_profile_id = Column(Integer, ForeignKey("game_profiles.id"), nullable=False, index=True)
     period_index = Column(Integer, nullable=False)
-
-    # Действия периода
     salary_claimed = Column(Integer, nullable=False, default=0)
     salary_amount = Column(Float, nullable=False, default=0)
     safety_fund_contribution = Column(Float, nullable=False, default=0)
     safety_fund_total = Column(Float, nullable=False, default=0)
     total_expenses = Column(Float, nullable=False, default=0)
-
-    # Статус
     is_completed = Column(Integer, nullable=False, default=0)
     completed_at = Column(DateTime, nullable=True)
-
-    # Метрики периода
     net_savings = Column(Float, nullable=False, default=0)
     xp_earned = Column(Integer, nullable=False, default=0)
-
     created_at = Column(DateTime, default=datetime.utcnow)
-
     game_profile = relationship("GameProfile", back_populates="period_snapshots")
+
+
+class Transaction(Base):
+    __tablename__ = "transactions"
+
+    id = Column(Integer, primary_key=True, index=True)
+    game_profile_id = Column(Integer, ForeignKey("game_profiles.id"), nullable=False, index=True)
+    amount = Column(Float, nullable=False)
+    type = Column(String(50), nullable=False)
+    description = Column(Text, nullable=True)
+    period_index = Column(Integer, nullable=False)
+    timestamp = Column(DateTime, default=datetime.utcnow)
+
+    game_profile = relationship("GameProfile", back_populates="transactions")
