@@ -3,6 +3,7 @@ from sqlalchemy.orm import Session
 from datetime import datetime
 
 from ..auth import get_current_user
+from ..balance_utils import adjust_balance, TRANSACTION_TYPES
 from ..database import get_db
 from ..models import GameProfile, PeriodSnapshot, FinanceSalary, FinanceLiability, FinanceAsset
 from ..schemas import SafetyFundContribution, PeriodStatusResponse, PeriodSummaryResponse
@@ -93,43 +94,78 @@ async def get_period_status(
 
 @router.post("/claim-salary")
 async def claim_salary(
-    current_user=Depends(get_current_user),
-    db: Session = Depends(get_db)
+        current_user=Depends(get_current_user),
+        db: Session = Depends(get_db)
 ):
     """Получить зарплату за текущий период (один раз за период)"""
+    # Получаем активный профиль
     profile = get_active_game_profile(db, current_user.id)
-    sync_time(profile)
-    snapshot = get_current_period_snapshot(db, profile)
+    sync_time(profile)  # синхронизируем время (на всякий случай)
 
     # Проверяем, не получали ли уже зарплату в этом периоде
-    if snapshot.salary_claimed == 1:
-        raise HTTPException(status_code=400, detail="Salary already claimed this period")
+    if profile.last_period_salary_claimed == profile.period_index:
+        raise HTTPException(
+            status_code=400,
+            detail=f"Зарплата уже получена в периоде #{profile.period_index}"
+        )
 
-    # Получаем зарплату
-    salary = db.query(FinanceSalary).filter(FinanceSalary.game_profile_id == profile.id).first()
-    if not salary:
-        raise HTTPException(status_code=400, detail="Salary profile not configured")
+    # Получаем зарплатную запись для профиля
+    salary = db.query(FinanceSalary).filter(
+        FinanceSalary.game_profile_id == profile.id
+    ).first()
+    if not salary or salary.monthly_amount <= 0:
+        raise HTTPException(
+            status_code=400,
+            detail="Зарплата не настроена или равна нулю"
+        )
 
-    monthly_income = salary.monthly_amount
-    if monthly_income <= 0:
-        raise HTTPException(status_code=400, detail="Salary amount must be greater than 0")
+    amount = salary.monthly_amount
+    period_index = profile.period_index
 
-    # Обновляем снимок периода
-    snapshot.salary_claimed = 1
-    snapshot.salary_amount = monthly_income
+    # Начисляем зарплату на баланс
+    try:
+        new_balance = adjust_balance(
+            db=db,
+            game_profile_id=profile.id,
+            amount=amount,
+            type=TRANSACTION_TYPES["SALARY"],
+            description=f"Зарплата за период #{period_index}",
+            period_index=period_index,
+        )
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
+    # Обновляем флаг получения зарплаты в профиле
+    profile.last_period_salary_claimed = period_index
+
+    # Начисляем XP (базово 10 XP за получение зарплаты)
+    xp_gained = 10
+    profile.xp += xp_gained
+
+    # Повышение уровня (простая логика: каждые 100 XP – новый уровень)
+    level_up = False
+    xp_for_next = 100
+    while profile.xp >= xp_for_next:
+        profile.level += 1
+        profile.xp -= xp_for_next
+        level_up = True
+        xp_for_next = 100 + (profile.level - 1) * 50  # прогрессия
+
     db.commit()
 
-    # Обновляем глобальный профиль
-    profile.last_period_salary_claimed = profile.period_index
-
-    # Обновляем финансовый обзор
-    db.commit()
-
-    return {
+    response = {
         "status": "success",
-        "amount": monthly_income,
-        "message": f"Вы получили зарплату: {monthly_income:,.2f} ₽"
+        "amount": amount,
+        "new_balance": new_balance,
+        "xp_gained": xp_gained,
+        "level_up": level_up,
+        "new_level": profile.level if level_up else None,
+        "message": f"Вы получили зарплату: {amount:,.2f} ₽"
     }
+    if level_up:
+        response["message"] += f" Поздравляем! Вы достигли {profile.level} уровня!"
+
+    return response
 
 
 @router.post("/contribute-to-safety-fund")
