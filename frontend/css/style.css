@@ -219,3 +219,31 @@ button:active {
         border-color: #333;
     }
 }
+
+.status.syncing {
+    border-left-color: #ff9500;
+    background: rgba(255, 149, 0, 0.1);
+    animation: pulse 1s infinite;
+}
+
+@keyframes pulse {
+    0% { opacity: 1; }
+    50% { opacity: 0.6; }
+    100% { opacity: 1; }
+}
+
+.syncing .loading {
+    border-color: #ff9500;
+    border-top-color: transparent;
+}
+
+button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.bottom-nav .nav-btn.disabled {
+    opacity: 0.5;
+    pointer-events: none;
+}

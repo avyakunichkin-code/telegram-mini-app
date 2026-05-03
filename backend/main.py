@@ -3,7 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy import inspect, text
 
 from app.database import engine, Base
-from app.routers import auth_router, users_router, messages_router, health_router, finance_router, game_router
+from app.routers import auth_router, users_router, messages_router, health_router, finance_router, game_router, period_router
 
 
 def ensure_schema_compatibility() -> None:
@@ -60,6 +60,7 @@ app.include_router(users_router)
 app.include_router(messages_router)
 app.include_router(finance_router)
 app.include_router(game_router)
+app.include_router(period_router)
 
 
 @app.get("/")

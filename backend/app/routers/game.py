@@ -138,7 +138,7 @@ async def get_time_status(
     db: Session = Depends(get_db),
 ):
     profile = get_active_game_profile(db, current_user.id)
-    sync_time(profile)
+    sync_time(profile)  # Важно: синхронизируем перед возвратом
     db.commit()
     db.refresh(profile)
     return TimeStatusResponse(

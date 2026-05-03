@@ -126,3 +126,37 @@ class FinanceAsset(Base):
     asset_value = Column(Float, nullable=False)
     monthly_maintenance_cost = Column(Float, nullable=False, default=0)
     created_at = Column(DateTime, default=datetime.utcnow)
+
+class PeriodSnapshot(Base):
+    __tablename__ = "period_snapshots"
+
+    id = Column(Integer, primary_key=True, index=True)
+    game_profile_id = Column(Integer, ForeignKey("game_profiles.id"), nullable=False, index=True)
+    period_index = Column(Integer, nullable=False)
+
+    # Действия периода
+    salary_claimed = Column(Integer, nullable=False, default=0)  # 0 или 1
+    salary_amount = Column(Float, nullable=False, default=0)
+    safety_fund_contribution = Column(Float, nullable=False, default=0)
+    safety_fund_total = Column(Float, nullable=False, default=0)  # Накопленная подушка
+    total_expenses = Column(Float, nullable=False, default=0)  # Расходы за период
+
+    # Статус
+    is_completed = Column(Integer, nullable=False, default=0)  # 0 или 1
+    completed_at = Column(DateTime, nullable=True)
+
+    # Метрики периода
+    net_savings = Column(Float, nullable=False, default=0)  # Чистые сбережения
+    xp_earned = Column(Integer, nullable=False, default=0)
+
+    created_at = Column(DateTime, default=datetime.utcnow)
+
+
+class GameProfile(Base):
+    __tablename__ = "game_profiles"
+
+    # ... существующие поля ...
+
+    # Добавить новые поля
+    safety_fund_total = Column(Float, nullable=False, default=0)  # Общая накопленная подушка
+    last_period_salary_claimed = Column(Integer, nullable=False, default=0)
