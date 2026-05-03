@@ -4,6 +4,7 @@ from sqlalchemy.orm import Session
 from ..auth import get_current_user
 from ..database import get_db
 from ..models import FinanceSalary, FinanceLiability, FinanceAsset, Transaction
+from ..balance_utils import adjust_balance, get_cash_balance, adjust_safety_fund_balance
 from ..game_time import get_active_game_profile, sync_time, get_seconds_until_next
 from ..schemas import (
     SalaryProfileUpdate,
