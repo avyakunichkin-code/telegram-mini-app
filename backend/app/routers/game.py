@@ -1,11 +1,11 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
-from app.auth import get_current_user
-from app.database import get_db
-from app.models import GameProfile, FinanceSalary
-from app.schemas import GameProfileCreate, GameProfileResponse, TimeConfigUpdate, TimeStatusResponse, GameStartRequest
-from app.game_time import (
+from ..auth import get_current_user
+from ..database import get_db
+from ..models import GameProfile, FinanceSalary
+from ..schemas import GameProfileCreate, GameProfileResponse, TimeConfigUpdate, TimeStatusResponse, GameStartRequest
+from ..game_time import (
     get_active_game_profile,
     sync_time,
     set_time_state,
@@ -138,7 +138,7 @@ async def get_time_status(
     db: Session = Depends(get_db),
 ):
     profile = get_active_game_profile(db, current_user.id)
-    sync_time(profile)
+    sync_time(profile)  # Важно: синхронизируем перед возвратом
     db.commit()
     db.refresh(profile)
     return TimeStatusResponse(

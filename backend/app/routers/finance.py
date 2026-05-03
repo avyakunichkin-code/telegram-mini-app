@@ -1,11 +1,11 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
-from app.auth import get_current_user
-from app.database import get_db
-from app.models import FinanceSalary, FinanceLiability, FinanceAsset
-from app.game_time import get_active_game_profile, sync_time, get_seconds_until_next
-from app.schemas import (
+from ..auth import get_current_user
+from ..database import get_db
+from ..models import FinanceSalary, FinanceLiability, FinanceAsset
+from ..game_time import get_active_game_profile, sync_time, get_seconds_until_next
+from ..schemas import (
     SalaryProfileUpdate,
     SalaryProfileResponse,
     LiabilityCreate,

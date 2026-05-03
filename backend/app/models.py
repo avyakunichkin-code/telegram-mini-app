@@ -2,7 +2,7 @@ from datetime import datetime
 from sqlalchemy import Column, Integer, String, DateTime, Text, ForeignKey, Float
 from sqlalchemy.orm import relationship
 
-from app.database import Base
+from .database import Base
 
 
 class User(Base):
@@ -11,11 +11,11 @@ class User(Base):
     id = Column(Integer, primary_key=True, index=True)
     username = Column(String(50), unique=True, index=True, nullable=False)
     email = Column(String(100), unique=True, index=True, nullable=True)
-    hashed_password = Column(String(200), nullable=False)  # Хранит "salt:hash"
+    hashed_password = Column(String(200), nullable=False)
     full_name = Column(String(100))
     telegram_id = Column(Integer, unique=True, nullable=True)
     created_at = Column(DateTime, default=datetime.utcnow)
-    
+
     messages = relationship("Message", back_populates="user", cascade="all, delete-orphan")
     salary_profile = relationship("SalaryProfile", back_populates="user", uselist=False, cascade="all, delete-orphan")
     liabilities = relationship("Liability", back_populates="user", cascade="all, delete-orphan")
@@ -24,12 +24,12 @@ class User(Base):
 
 class Message(Base):
     __tablename__ = "messages"
-    
+
     id = Column(Integer, primary_key=True, index=True)
     text = Column(Text, nullable=False)
     timestamp = Column(DateTime, default=datetime.utcnow)
     user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
-    
+
     user = relationship("User", back_populates="messages")
 
 
@@ -72,6 +72,8 @@ class Asset(Base):
     user = relationship("User", back_populates="assets")
 
 
+# ==================== ИГРОВЫЕ ПРОФИЛИ (ТОЛЬКО ОДИН РАЗ!) ====================
+
 class GameProfile(Base):
     __tablename__ = "game_profiles"
 
@@ -91,8 +93,20 @@ class GameProfile(Base):
     period_anchor_at = Column(DateTime, nullable=False, default=datetime.utcnow)
     base_params_locked = Column(Integer, nullable=False, default=0)
     onboarding_state = Column(String(30), nullable=False, default="draft")
+
+    # Дополнительные поля
+    safety_fund_total = Column(Float, nullable=False, default=0)
+    last_period_salary_claimed = Column(Integer, nullable=False, default=0)
+
     created_at = Column(DateTime, default=datetime.utcnow)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+    # Связи
+    user = relationship("User", backref="game_profiles")
+    finance_salary = relationship("FinanceSalary", back_populates="game_profile", uselist=False, cascade="all, delete-orphan")
+    finance_liabilities = relationship("FinanceLiability", back_populates="game_profile", cascade="all, delete-orphan")
+    finance_assets = relationship("FinanceAsset", back_populates="game_profile", cascade="all, delete-orphan")
+    period_snapshots = relationship("PeriodSnapshot", back_populates="game_profile", cascade="all, delete-orphan")
 
 
 class FinanceSalary(Base):
@@ -103,6 +117,8 @@ class FinanceSalary(Base):
     monthly_amount = Column(Float, nullable=False, default=0)
     monthly_receipts_count = Column(Integer, nullable=False, default=1)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+    game_profile = relationship("GameProfile", back_populates="finance_salary")
 
 
 class FinanceLiability(Base):
@@ -116,6 +132,8 @@ class FinanceLiability(Base):
     monthly_payment = Column(Float, nullable=False)
     created_at = Column(DateTime, default=datetime.utcnow)
 
+    game_profile = relationship("GameProfile", back_populates="finance_liabilities")
+
 
 class FinanceAsset(Base):
     __tablename__ = "finance_assets"
@@ -126,3 +144,32 @@ class FinanceAsset(Base):
     asset_value = Column(Float, nullable=False)
     monthly_maintenance_cost = Column(Float, nullable=False, default=0)
     created_at = Column(DateTime, default=datetime.utcnow)
+
+    game_profile = relationship("GameProfile", back_populates="finance_assets")
+
+
+class PeriodSnapshot(Base):
+    __tablename__ = "period_snapshots"
+
+    id = Column(Integer, primary_key=True, index=True)
+    game_profile_id = Column(Integer, ForeignKey("game_profiles.id"), nullable=False, index=True)
+    period_index = Column(Integer, nullable=False)
+
+    # Действия периода
+    salary_claimed = Column(Integer, nullable=False, default=0)
+    salary_amount = Column(Float, nullable=False, default=0)
+    safety_fund_contribution = Column(Float, nullable=False, default=0)
+    safety_fund_total = Column(Float, nullable=False, default=0)
+    total_expenses = Column(Float, nullable=False, default=0)
+
+    # Статус
+    is_completed = Column(Integer, nullable=False, default=0)
+    completed_at = Column(DateTime, nullable=True)
+
+    # Метрики периода
+    net_savings = Column(Float, nullable=False, default=0)
+    xp_earned = Column(Integer, nullable=False, default=0)
+
+    created_at = Column(DateTime, default=datetime.utcnow)
+
+    game_profile = relationship("GameProfile", back_populates="period_snapshots")
