@@ -15,25 +15,25 @@ async function apiCall(endpoint, method = 'GET', data = null) {
     const headers = {
         'Content-Type': 'application/json',
     };
-    
+
     const token = authToken || localStorage.getItem(APP_CONFIG.TOKEN_KEY);
-    
+
     if (token) {
         headers['Authorization'] = `Bearer ${token}`;
         console.log(`🔑 Sending request to ${endpoint} with token`);  // ← отладка
     } else {
         console.log(`🔓 No token for ${endpoint}`);
     }
-    
+
     const options = {
         method: method,
         headers: headers,
     };
-    
+
     if (data && (method === 'POST' || method === 'PUT')) {
         options.body = JSON.stringify(data);
     }
-    
+
     try {
         const response = await fetch(`${APP_CONFIG.API_URL}${endpoint}`, options);
 
@@ -108,5 +108,17 @@ const API = {
     },
     deleteAsset(id) {
         return apiCall(`/api/finance/assets/${id}`, 'DELETE');
+    },
+    getPeriodStatus() {
+        return apiCall('/api/game/period/status');
+    },
+    claimSalary() {
+        return apiCall('/api/game/period/claim-salary', 'POST');
+    },
+    contributeToSafetyFund(payload) {
+        return apiCall('/api/game/period/contribute-to-safety-fund', 'POST', payload);
+    },
+    completePeriod() {
+        return apiCall('/api/game/period/complete-period', 'POST');
     }
 };
