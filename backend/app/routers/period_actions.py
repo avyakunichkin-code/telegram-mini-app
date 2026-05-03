@@ -299,3 +299,56 @@ async def complete_period(
         xp_earned=xp_earned,
         required_actions_completed=True
     )
+
+
+@router.post("/withdraw-from-safety-fund")
+async def withdraw_from_safety_fund(
+        withdrawal: SafetyFundContribution,
+        current_user=Depends(get_current_user),
+        db: Session = Depends(get_db)
+):
+    """
+    Снять деньги с подушки безопасности на основной счёт.
+    Без комиссии, без ограничений по периоду.
+    """
+    if withdrawal.amount <= 0:
+        raise HTTPException(status_code=400, detail="Сумма должна быть положительной")
+
+    profile = get_active_game_profile(db, current_user.id)
+    sync_time(profile)
+
+    # Проверяем, достаточно ли средств на подушке
+    if profile.safety_fund_balance < withdrawal.amount:
+        raise HTTPException(
+            status_code=400,
+            detail=f"Недостаточно средств на подушке безопасности. Доступно: {profile.safety_fund_balance:,.2f} ₽"
+        )
+
+    period_index = profile.period_index
+    amount = withdrawal.amount
+
+    # Используем adjust_safety_fund_balance с отрицательной суммой (снятие)
+    try:
+        new_safety_fund = adjust_safety_fund_balance(
+            db=db,
+            game_profile_id=profile.id,
+            amount=-amount,   # отрицательное — снятие
+            type=TRANSACTION_TYPES["SAFETY_FUND_WITHDRAWAL"],
+            description=f"Снятие с подушки безопасности #{period_index}",
+            period_index=period_index,
+        )
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
+    db.refresh(profile)
+
+    # XP не начисляем (или начисляем штраф?, но по условию — без комиссии, без штрафа)
+    # Можно при желании добавить -2 XP, но пока оставим без изменений XP.
+
+    return {
+        "status": "success",
+        "withdrawn": amount,
+        "new_cash_balance": profile.cash_balance,
+        "new_safety_fund_balance": new_safety_fund,
+        "message": f"Снято {amount:,.2f} ₽ с подушки безопасности"
+    }

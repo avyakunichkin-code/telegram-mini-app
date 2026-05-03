@@ -490,8 +490,10 @@ async function startGame() {
         profile_name: newGameState.profile_name,
         mode: newGameState.mode,
         period_duration_seconds: newGameState.period_duration_seconds,
-        monthly_amount,
-        monthly_receipts_count
+        cash_balance: monthly_amount,   // или cash_balance: 0, если не хотим стартовый баланс
+        monthly_salary: monthly_amount,
+        assets: [],    // пока пустые, позже добавим из UI
+        liabilities: []
     });
 
     if (!result) {
