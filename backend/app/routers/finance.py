@@ -3,7 +3,7 @@ from sqlalchemy.orm import Session
 
 from ..auth import get_current_user
 from ..database import get_db
-from ..models import FinanceSalary, FinanceLiability, FinanceAsset
+from ..models import FinanceSalary, FinanceLiability, FinanceAsset, Transaction
 from ..game_time import get_active_game_profile, sync_time, get_seconds_until_next
 from ..schemas import (
     SalaryProfileUpdate,
@@ -120,6 +120,31 @@ async def list_liabilities(
         .order_by(FinanceLiability.created_at.desc())
         .all()
     )
+
+
+@router.get("/transactions")
+async def get_transactions(
+        limit: int = 50,
+        offset: int = 0,
+        current_user=Depends(get_current_user),
+        db: Session = Depends(get_db)
+):
+    profile = get_active_game_profile(db, current_user.id)
+    transactions = db.query(Transaction).filter(
+        Transaction.game_profile_id == profile.id
+    ).order_by(Transaction.timestamp.desc()).offset(offset).limit(limit).all()
+
+    return [
+        {
+            "id": t.id,
+            "amount": t.amount,
+            "type": t.type,
+            "description": t.description,
+            "period_index": t.period_index,
+            "timestamp": t.timestamp.isoformat()
+        }
+        for t in transactions
+    ]
 
 
 @router.delete("/liabilities/{liability_id}")

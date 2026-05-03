@@ -174,3 +174,30 @@ class PeriodSummaryResponse(BaseModel):
     net_savings: float
     xp_earned: int
     required_actions_completed: bool
+
+class AssetCreate(BaseModel):
+    title: str
+    asset_value: float
+    monthly_maintenance_cost: float
+
+
+class LiabilityCreate(BaseModel):
+    title: str
+    total_debt: float
+    annual_rate_percent: float
+    monthly_payment: float
+
+
+class GameStartRequest(BaseModel):
+    profile_name: str
+    mode: str                      # "light" или "hardcore"
+    period_duration_seconds: int   # длительность периода в секундах
+    cash_balance: float            # стартовый баланс
+    monthly_salary: float          # зарплата за период
+    assets: List[AssetCreate] = [] # список активов
+    liabilities: List[LiabilityCreate] = []  # список обязательств
+
+
+class GameStartResponse(BaseModel):
+    profile_id: int
+    message: str

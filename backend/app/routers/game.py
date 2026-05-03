@@ -1,10 +1,13 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
+from datetime import datetime
+from typing import List
 
 from ..auth import get_current_user
 from ..database import get_db
-from ..models import GameProfile, FinanceSalary
-from ..schemas import GameProfileCreate, GameProfileResponse, TimeConfigUpdate, TimeStatusResponse, GameStartRequest
+from ..models import GameProfile, FinanceSalary, FinanceAsset, FinanceLiability, Transaction
+from ..schemas import (GameProfileCreate, GameProfileResponse, TimeConfigUpdate, TimeStatusResponse, GameStartRequest,
+                       GameStartResponse, AssetCreate, LiabilityCreate)
 from ..game_time import (
     get_active_game_profile,
     sync_time,
@@ -88,48 +91,104 @@ async def activate_game_profile(
     return {"status": "success", "active_profile_id": profile_id}
 
 
-@router.post("/start", response_model=GameProfileResponse)
+@router.post("/start", response_model=GameStartResponse)
 async def start_new_game(
-    payload: GameStartRequest,
-    current_user=Depends(get_current_user),
-    db: Session = Depends(get_db),
+        payload: GameStartRequest,
+        current_user=Depends(get_current_user),
+        db: Session = Depends(get_db)
 ):
-    mode = _validate_mode(payload.mode)
-    name = (payload.profile_name or "").strip()
-    if not name:
+    """
+    Создаёт новый игровой профиль с полной конфигурацией:
+    - стартовый баланс
+    - зарплата
+    - список активов (со стоимостью и обслуживанием)
+    - список обязательств (долг, процент, платёж)
+    """
+    # 1. Валидация
+    if not payload.profile_name.strip():
         raise HTTPException(status_code=400, detail="profile_name is required")
-    if payload.monthly_amount < 0:
-        raise HTTPException(status_code=400, detail="monthly_amount must be >= 0")
-    if payload.monthly_receipts_count <= 0:
-        raise HTTPException(status_code=400, detail="monthly_receipts_count must be > 0")
+    if payload.mode not in ["light", "hardcore"]:
+        raise HTTPException(status_code=400, detail="mode must be light or hardcore")
     if payload.period_duration_seconds < 10:
         raise HTTPException(status_code=400, detail="period_duration_seconds must be >= 10")
+    if payload.cash_balance < 0:
+        raise HTTPException(status_code=400, detail="cash_balance cannot be negative")
+    if payload.monthly_salary < 0:
+        raise HTTPException(status_code=400, detail="monthly_salary cannot be negative")
 
-    db.query(GameProfile).filter(GameProfile.user_id == current_user.id).update({"is_active": 0})
+    # 2. Деактивируем все текущие активные профили пользователя
+    db.query(GameProfile).filter(
+        GameProfile.user_id == current_user.id,
+        GameProfile.is_active == 1
+    ).update({"is_active": 0})
 
-    profile = GameProfile(
+    # 3. Создаём профиль
+    new_profile = GameProfile(
         user_id=current_user.id,
-        name=name,
-        mode=mode,
+        name=payload.profile_name.strip(),
+        mode=payload.mode,
         is_active=1,
-        base_params_locked=1,
-        onboarding_state="started",
         period_duration_seconds=payload.period_duration_seconds,
+        cash_balance=payload.cash_balance,
+        safety_fund_balance=0,
+        negative_periods_count=0,
+        period_index=1,
         time_state="pause",
+        period_anchor_at=datetime.utcnow(),
+        base_params_locked=1,          # блокируем базовые параметры после старта
+        onboarding_state="started"
     )
-    db.add(profile)
+    db.add(new_profile)
     db.commit()
-    db.refresh(profile)
+    db.refresh(new_profile)
 
+    # 4. Создаём зарплатную запись
     salary = FinanceSalary(
-        game_profile_id=profile.id,
-        monthly_amount=payload.monthly_amount,
-        monthly_receipts_count=payload.monthly_receipts_count,
+        game_profile_id=new_profile.id,
+        monthly_amount=payload.monthly_salary,
+        monthly_receipts_count=1
     )
     db.add(salary)
+
+    # 5. Создаём активы
+    for asset_data in payload.assets:
+        asset = FinanceAsset(
+            game_profile_id=new_profile.id,
+            title=asset_data.title,
+            asset_value=asset_data.asset_value,
+            monthly_maintenance_cost=asset_data.monthly_maintenance_cost,
+            is_active=1
+        )
+        db.add(asset)
+
+    # 6. Создаём обязательства
+    for liability_data in payload.liabilities:
+        liability = FinanceLiability(
+            game_profile_id=new_profile.id,
+            title=liability_data.title,
+            total_debt=liability_data.total_debt,
+            annual_rate_percent=liability_data.annual_rate_percent,
+            monthly_payment=liability_data.monthly_payment,
+            is_active=1
+        )
+        db.add(liability)
+
+    # 7. Фиксируем стартовую транзакцию (начальный баланс)
+    start_transaction = Transaction(
+        game_profile_id=new_profile.id,
+        amount=payload.cash_balance,
+        type="initial_balance",
+        description=f"Стартовый баланс при создании профиля '{new_profile.name}'",
+        period_index=1
+    )
+    db.add(start_transaction)
+
     db.commit()
-    db.refresh(profile)
-    return profile
+
+    return GameStartResponse(
+        profile_id=new_profile.id,
+        message=f"Игра '{new_profile.name}' успешно запущена. Баланс: {payload.cash_balance} ₽"
+    )
 
 
 @router.get("/time", response_model=TimeStatusResponse)
