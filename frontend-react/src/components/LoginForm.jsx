@@ -16,7 +16,7 @@ export function LoginForm({ onSwitchToRegister }) {
     setIsSubmitting(true);
     try {
       await login(username, password);
-      window.location.href = '/';
+      window.location.href = '/telegram-mini-app/#/';
     } catch (err) {
       setError('Неверное имя пользователя или пароль');
     } finally {
