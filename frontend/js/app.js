@@ -20,8 +20,8 @@ async function checkTokenAndStart() {
 
 // Инициализация
 document.addEventListener('DOMContentLoaded', async () => {
-    setupAuthHandlers();
-    setupFinanceHandlers();
-    
+    if (typeof setupAuthHandlers === 'function') setupAuthHandlers();
+    if (typeof window.setupFinanceHandlers === 'function') window.setupFinanceHandlers();
+    // или просто setupFinanceHandlers(), если она глобальная
     await checkTokenAndStart();
 });

@@ -113,6 +113,8 @@ async function loadFinanceOverview() {
         return;
     }
 
+    updateBalancesUI(overview);
+
     // Обновляем глобальное состояние времени
     currentGameTime = {
         time_state: overview.time_state,
@@ -184,6 +186,88 @@ function renderAssets(items, target) {
         `;
         target.appendChild(row);
     });
+}
+
+function addAssetRow(assetData = null) {
+    const container = document.getElementById('assetsListContainer');
+    const row = document.createElement('div');
+    row.className = 'asset-row';
+    row.style.display = 'flex';
+    row.style.gap = '8px';
+    row.style.marginBottom = '8px';
+    row.innerHTML = `
+        <input type="text" placeholder="Название" value="${assetData?.title || ''}" style="flex: 2;">
+        <input type="number" placeholder="Стоимость" value="${assetData?.asset_value || ''}" style="flex: 1;">
+        <input type="number" placeholder="Обслуживание в месяц" value="${assetData?.monthly_maintenance_cost || ''}" style="flex: 1;">
+        <button type="button" class="removeAssetBtn" style="width: auto; background: #ff3b30;">✖️</button>
+    `;
+    container.appendChild(row);
+    // Привязываем удаление
+    row.querySelector('.removeAssetBtn').addEventListener('click', () => row.remove());
+}
+
+function addLiabilityRow(liabilityData = null) {
+    const container = document.getElementById('liabilitiesListContainer');
+    const row = document.createElement('div');
+    row.className = 'liability-row';
+    row.style.display = 'flex';
+    row.style.gap = '8px';
+    row.style.marginBottom = '8px';
+    row.innerHTML = `
+        <input type="text" placeholder="Название" value="${liabilityData?.title || ''}" style="flex: 2;">
+        <input type="number" placeholder="Сумма долга" value="${liabilityData?.total_debt || ''}" style="flex: 1;">
+        <input type="number" placeholder="Годовой %" value="${liabilityData?.annual_rate_percent || ''}" style="flex: 1;">
+        <input type="number" placeholder="Платёж в месяц" value="${liabilityData?.monthly_payment || ''}" style="flex: 1;">
+        <button type="button" class="removeLiabilityBtn" style="width: auto; background: #ff3b30;">✖️</button>
+    `;
+    container.appendChild(row);
+    row.querySelector('.removeLiabilityBtn').addEventListener('click', () => row.remove());
+}
+
+function collectAssets() {
+    const rows = document.querySelectorAll('#assetsListContainer .asset-row');
+    const assets = [];
+    rows.forEach(row => {
+        const inputs = row.querySelectorAll('input');
+        const title = inputs[0].value.trim();
+        const asset_value = parseFloat(inputs[1].value);
+        const monthly_maintenance_cost = parseFloat(inputs[2].value);
+        if (title && !isNaN(asset_value) && !isNaN(monthly_maintenance_cost)) {
+            assets.push({ title, asset_value, monthly_maintenance_cost });
+        }
+    });
+    return assets;
+}
+
+function collectLiabilities() {
+    const rows = document.querySelectorAll('#liabilitiesListContainer .liability-row');
+    const liabilities = [];
+    rows.forEach(row => {
+        const inputs = row.querySelectorAll('input');
+        const title = inputs[0].value.trim();
+        const total_debt = parseFloat(inputs[1].value);
+        const annual_rate_percent = parseFloat(inputs[2].value);
+        const monthly_payment = parseFloat(inputs[3].value);
+        if (title && !isNaN(total_debt) && !isNaN(annual_rate_percent) && !isNaN(monthly_payment)) {
+            liabilities.push({ title, total_debt, annual_rate_percent, monthly_payment });
+        }
+    });
+    return liabilities;
+}
+
+async function updateBalancesUI(overview) {
+    if (!overview) return;
+    const balanceDiv = document.getElementById('balanceInfo');
+    if (balanceDiv) {
+        balanceDiv.innerHTML = `
+            💳 Текущий баланс: <strong>${overview.cash_balance.toFixed(2)} ₽</strong><br>
+            🛡️ Подушка безопасности: <strong>${overview.safety_fund_balance.toFixed(2)} ₽</strong><br>
+            📉 Обязательные расходы в месяц: <strong>${overview.total_monthly_obligations.toFixed(2)} ₽</strong>
+        `;
+    }
+    // Обновим номер периода в заголовке
+    const periodSpan = document.getElementById('periodNumber');
+    if (periodSpan) periodSpan.innerText = overview.period_index;
 }
 
 // ==================== УПРАВЛЕНИЕ ВРЕМЕНЕМ ====================
@@ -457,7 +541,20 @@ async function handleProfilesClick(event) {
     await openGameplay();
 }
 
+function resetBaseParamsForm() {
+    // Очищаем контейнеры
+    document.getElementById('assetsListContainer').innerHTML = '';
+    document.getElementById('liabilitiesListContainer').innerHTML = '';
+    // Добавляем по одному пустому шаблону
+    addAssetRow();
+    addLiabilityRow();
+    // Сбросим числовые поля (если нужно)
+    document.getElementById('startCashBalance').value = '0';
+    document.getElementById('startMonthlySalary').value = '0';
+}
+
 function openNewGameStep1() {
+    resetBaseParamsForm();
     showScreen('difficultyScreen');
 }
 
@@ -474,33 +571,44 @@ function toBaseParamsStep() {
     newGameState.profile_name = profile_name;
     newGameState.mode = mode;
     newGameState.period_duration_seconds = period_duration_seconds;
+    resetBaseParamsForm();
     showScreen('baseParamsScreen');
 }
 
 async function startGame() {
-    const monthly_amount = Number(document.getElementById('startSalaryAmount')?.value);
-    const monthly_receipts_count = Number(document.getElementById('startSalaryReceipts')?.value);
+    const profile_name = document.getElementById('newProfileName').value.trim();
+    const mode = document.getElementById('newGameMode').value;
+    const period_duration_seconds = Number(document.getElementById('newPeriodDuration').value);
+    const cash_balance = Number(document.getElementById('startCashBalance').value);
+    const monthly_salary = Number(document.getElementById('startMonthlySalary').value);
+    const assets = collectAssets();
+    const liabilities = collectLiabilities();
 
-    if (Number.isNaN(monthly_amount) || Number.isNaN(monthly_receipts_count) || monthly_receipts_count <= 0) {
-        showNotification('Введи корректные базовые параметры', 'error');
+    if (!profile_name || period_duration_seconds < 10) {
+        showNotification('Заполните название и корректную длительность периода', 'error');
+        return;
+    }
+    if (isNaN(cash_balance) || isNaN(monthly_salary)) {
+        showNotification('Укажите корректный баланс и зарплату', 'error');
         return;
     }
 
     const result = await API.startNewGame({
-        profile_name: newGameState.profile_name,
-        mode: newGameState.mode,
-        period_duration_seconds: newGameState.period_duration_seconds,
-        monthly_amount,
-        monthly_receipts_count
+        profile_name,
+        mode,
+        period_duration_seconds,
+        cash_balance,
+        monthly_salary,
+        assets,
+        liabilities
     });
 
-    if (!result) {
-        showNotification('Не удалось запустить новую игру', 'error');
-        return;
+    if (result) {
+        showNotification(result.message, 'success');
+        await openGameplay();
+    } else {
+        showNotification('Не удалось запустить игру', 'error');
     }
-
-    showNotification('Игра запущена. Базовые параметры зафиксированы.', 'success');
-    await openGameplay();
 }
 
 // ==================== НАСТРОЙКА ОБРАБОТЧИКОВ ====================
@@ -554,6 +662,19 @@ function setupFinanceHandlers() {
     document.querySelectorAll('.nav-btn').forEach((btn) => {
         btn.addEventListener('click', () => showGameSection(btn.dataset.section));
     });
+
+    // Действия периода
+    const claimBtn = document.getElementById('claimSalaryBtn');
+    const contributeBtn = document.getElementById('contributeFundBtn');
+    const withdrawBtn = document.getElementById('withdrawFundBtn');
+
+    if (claimBtn) claimBtn.addEventListener('click', handleClaimSalary);
+    if (contributeBtn) contributeBtn.addEventListener('click', handleContribute);
+    if (withdrawBtn) withdrawBtn.addEventListener('click', handleWithdraw);
+
+    document.getElementById('addAssetBtn')?.addEventListener('click', () => addAssetRow());
+    document.getElementById('addLiabilityBtn')?.addEventListener('click', () => addLiabilityRow());
+    document.getElementById('startGameBtn').onclick = startGame;
 }
 
 // ==================== ЭКСПОРТ ====================
@@ -564,3 +685,4 @@ window.openGameplay = openGameplay;
 window.initTimeSystem = initTimeSystem;
 window.stopTimeTicker = stopTimeTicker;
 window.forceSyncAndRefresh = forceSyncAndRefresh;
+window.updateBalancesUI = updateBalancesUI;
