@@ -20,10 +20,12 @@ async def register(user_data: UserRegister, db: Session = Depends(get_db)):
     
     # Хешируем пароль
     hashed_password = get_password_hash(user_data.password)
-    
+
+    email = user_data.email if user_data.email and user_data.email.strip() else None
+
     new_user = User(
         username=user_data.username,
-        email=user_data.email,
+        email=email,   # ← вместо user_data.email
         full_name=user_data.full_name,
         hashed_password=hashed_password,
         telegram_id=user_data.telegram_id,
