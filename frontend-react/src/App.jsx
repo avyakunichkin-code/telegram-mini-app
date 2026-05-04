@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { HashRouter, Routes, Route } from 'react-router-dom';
 import { AppRoot } from '@telegram-apps/telegram-ui';  // импортируем AppRoot
 import { API } from './api';
 import { AuthProvider, useAuth } from './context/AuthContext';
@@ -103,7 +103,7 @@ function App() {
   return (
     <AppRoot>   {/* <-- обязательно */}
       <AuthProvider>
-        <BrowserRouter>
+        <HashRouter>
           <Routes>
             <Route path="/login" element={<LoginForm onSwitchToRegister={() => window.location.href='/register'} />} />
             <Route path="/register" element={<RegisterForm onSwitchToLogin={() => window.location.href='/login'} />} />
@@ -113,7 +113,7 @@ function App() {
               </AuthGuard>
             } />
           </Routes>
-        </BrowserRouter>
+        </HashRouter>
       </AuthProvider>
     </AppRoot>
   );
