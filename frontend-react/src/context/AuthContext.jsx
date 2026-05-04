@@ -31,8 +31,9 @@ export function AuthProvider({ children }) {
   const register = async (userData) => {
     const data = await API.register(userData);
     setAuthToken(data.access_token);
-    const userMe = await API.getMe();
-    setUser(userMe);
+    // Не вызываем getMe здесь, доверимся тому, что после логина редирект сам запросит getMe
+    // Но чтобы пользователь сразу был в контексте, можно вернуть данные
+    setUser({ id: data.user_id, username: data.username });
     return data;
   };
 

@@ -6,15 +6,21 @@ export function LoginForm({ onSwitchToRegister }) {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const { login } = useAuth();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (isSubmitting) return;
     setError('');
+    setIsSubmitting(true);
     try {
       await login(username, password);
+      window.location.href = '/';
     } catch (err) {
       setError('Неверное имя пользователя или пароль');
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
