@@ -19,6 +19,32 @@ from ..schemas import (
 router = APIRouter(prefix="/api/finance", tags=["finance"])
 
 
+def _compute_gamification(net_cashflow: float, liabilities_ratio: float, assets_count: int):
+    score = 0
+    if net_cashflow > 0:
+        score += min(50, int(net_cashflow // 1000) * 5)
+    if liabilities_ratio <= 20:
+        score += 30
+    elif liabilities_ratio <= 35:
+        score += 20
+    elif liabilities_ratio <= 50:
+        score += 10
+    score += min(20, assets_count * 5)
+    score = max(0, min(100, score))
+
+    if score >= 80:
+        level = "Финансовый стратег"
+    elif score >= 55:
+        level = "Уверенный планировщик"
+    elif score >= 30:
+        level = "Начинающий инвестор"
+    else:
+        level = "Финансовый новичок"
+
+    xp_to_next = 0 if score >= 100 else 100 - score
+    return score, level, xp_to_next
+
+
 def _get_or_create_salary_profile(db: Session, game_profile_id: int) -> FinanceSalary:
     salary = db.query(FinanceSalary).filter(FinanceSalary.game_profile_id == game_profile_id).first()
     if salary:
@@ -238,34 +264,48 @@ async def finance_overview(
     profile = get_active_game_profile(db, current_user.id)
     sync_time(profile)
 
-    # Зарплата
-    salary = db.query(FinanceSalary).filter(
-        FinanceSalary.game_profile_id == profile.id
-    ).first()
+    salary = db.query(FinanceSalary).filter(FinanceSalary.game_profile_id == profile.id).first()
     monthly_income = salary.monthly_amount if salary else 0
 
-    # Обязательства (активные)
-    liabilities = db.query(FinanceLiability).filter(
+    # Преобразуем обязательства в Pydantic-схемы
+    liabilities_orm = db.query(FinanceLiability).filter(
         FinanceLiability.game_profile_id == profile.id,
         FinanceLiability.is_active == 1
     ).all()
-    total_liability_payment = sum(l.monthly_payment for l in liabilities)
+    liabilities = [
+        LiabilityResponse(
+            id=l.id,
+            title=l.title,
+            total_debt=l.total_debt,
+            annual_rate_percent=l.annual_rate_percent,
+            monthly_payment=l.monthly_payment,
+            created_at=l.created_at
+        ) for l in liabilities_orm
+    ]
 
-    # Активы (активные)
-    assets = db.query(FinanceAsset).filter(
+    # Преобразуем активы в Pydantic-схемы
+    assets_orm = db.query(FinanceAsset).filter(
         FinanceAsset.game_profile_id == profile.id,
         FinanceAsset.is_active == 1
     ).all()
-    total_asset_maintenance = sum(a.monthly_maintenance_cost for a in assets)
+    assets = [
+        AssetResponse(
+            id=a.id,
+            title=a.title,
+            asset_value=a.asset_value,
+            monthly_maintenance_cost=a.monthly_maintenance_cost,
+            created_at=a.created_at
+        ) for a in assets_orm
+    ]
 
+    total_liability_payment = sum(l.monthly_payment for l in liabilities)
+    total_asset_maintenance = sum(a.monthly_maintenance_cost for a in assets)
     total_monthly_obligations = total_liability_payment + total_asset_maintenance
     net_cashflow = monthly_income - total_monthly_obligations
     liabilities_ratio = (total_liability_payment / monthly_income * 100) if monthly_income > 0 else 0
 
-    # Геймификация
     score, level, xp_to_next = _compute_gamification(net_cashflow, liabilities_ratio, len(assets))
 
-    # Возвращаем расширенный ответ
     return FinanceOverview(
         salary=SalaryProfileResponse(
             monthly_amount=salary.monthly_amount if salary else 0,
