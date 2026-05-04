@@ -256,7 +256,6 @@ function collectLiabilities() {
 }
 
 async function updateBalancesUI(overview) {
-    const overview = await API.getOverview();
     if (!overview) return;
     const balanceDiv = document.getElementById('balanceInfo');
     if (balanceDiv) {
