@@ -14,6 +14,10 @@ let currentGameTime = {
 let localRemainingSeconds = 0;
 let lastServerSync = 0;
 
+// Глобальные временные массивы для новых игр
+window.tempAssets = window.tempAssets || [];
+window.tempLiabilities = window.tempLiabilities || [];
+
 // ==================== ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ ====================
 
 function formatTime(seconds) {
@@ -188,73 +192,6 @@ function renderAssets(items, target) {
     });
 }
 
-function addAssetRow(assetData = null) {
-    const container = document.getElementById('assetsListContainer');
-    const row = document.createElement('div');
-    row.className = 'asset-row';
-    row.style.display = 'flex';
-    row.style.gap = '8px';
-    row.style.marginBottom = '8px';
-    row.innerHTML = `
-        <input type="text" placeholder="Название" value="${assetData?.title || ''}" style="flex: 2;">
-        <input type="number" placeholder="Стоимость" value="${assetData?.asset_value || ''}" style="flex: 1;">
-        <input type="number" placeholder="Обслуживание в месяц" value="${assetData?.monthly_maintenance_cost || ''}" style="flex: 1;">
-        <button type="button" class="removeAssetBtn" style="width: auto; background: #ff3b30;">✖️</button>
-    `;
-    container.appendChild(row);
-    // Привязываем удаление
-    row.querySelector('.removeAssetBtn').addEventListener('click', () => row.remove());
-}
-
-function addLiabilityRow(liabilityData = null) {
-    const container = document.getElementById('liabilitiesListContainer');
-    const row = document.createElement('div');
-    row.className = 'liability-row';
-    row.style.display = 'flex';
-    row.style.gap = '8px';
-    row.style.marginBottom = '8px';
-    row.innerHTML = `
-        <input type="text" placeholder="Название" value="${liabilityData?.title || ''}" style="flex: 2;">
-        <input type="number" placeholder="Сумма долга" value="${liabilityData?.total_debt || ''}" style="flex: 1;">
-        <input type="number" placeholder="Годовой %" value="${liabilityData?.annual_rate_percent || ''}" style="flex: 1;">
-        <input type="number" placeholder="Платёж в месяц" value="${liabilityData?.monthly_payment || ''}" style="flex: 1;">
-        <button type="button" class="removeLiabilityBtn" style="width: auto; background: #ff3b30;">✖️</button>
-    `;
-    container.appendChild(row);
-    row.querySelector('.removeLiabilityBtn').addEventListener('click', () => row.remove());
-}
-
-function collectAssets() {
-    const rows = document.querySelectorAll('#assetsListContainer .asset-row');
-    const assets = [];
-    rows.forEach(row => {
-        const inputs = row.querySelectorAll('input');
-        const title = inputs[0].value.trim();
-        const asset_value = parseFloat(inputs[1].value);
-        const monthly_maintenance_cost = parseFloat(inputs[2].value);
-        if (title && !isNaN(asset_value) && !isNaN(monthly_maintenance_cost)) {
-            assets.push({ title, asset_value, monthly_maintenance_cost });
-        }
-    });
-    return assets;
-}
-
-function collectLiabilities() {
-    const rows = document.querySelectorAll('#liabilitiesListContainer .liability-row');
-    const liabilities = [];
-    rows.forEach(row => {
-        const inputs = row.querySelectorAll('input');
-        const title = inputs[0].value.trim();
-        const total_debt = parseFloat(inputs[1].value);
-        const annual_rate_percent = parseFloat(inputs[2].value);
-        const monthly_payment = parseFloat(inputs[3].value);
-        if (title && !isNaN(total_debt) && !isNaN(annual_rate_percent) && !isNaN(monthly_payment)) {
-            liabilities.push({ title, total_debt, annual_rate_percent, monthly_payment });
-        }
-    });
-    return liabilities;
-}
-
 async function updateBalancesUI(overview) {
     if (!overview) return;
     const balanceDiv = document.getElementById('balanceInfo');
@@ -265,7 +202,6 @@ async function updateBalancesUI(overview) {
             📉 Обязательные расходы в месяц: <strong>${overview.total_monthly_obligations.toFixed(2)} ₽</strong>
         `;
     }
-    // Обновим номер периода в заголовке
     const periodSpan = document.getElementById('periodNumber');
     if (periodSpan) periodSpan.innerText = overview.period_index;
 }
@@ -274,10 +210,8 @@ async function updateBalancesUI(overview) {
 
 async function fetchTimeStatus() {
     if (isTimeSyncInProgress) return null;
-
     isTimeSyncInProgress = true;
     setHUDState('syncing', '🔄 Синхронизация...');
-
     try {
         const result = await API.getTimeStatus();
         if (result) {
@@ -312,9 +246,7 @@ async function forceSyncAndRefresh() {
 
 async function setPlayMode() {
     if (isTimeSyncInProgress || currentGameTime.time_state === 'play') return;
-
     setHUDState('syncing', '▶️ Запуск времени...');
-
     const result = await API.setTimePlay();
     if (result) {
         currentGameTime.time_state = 'play';
@@ -331,9 +263,7 @@ async function setPlayMode() {
 
 async function setPauseMode() {
     if (isTimeSyncInProgress || currentGameTime.time_state === 'pause') return;
-
     setHUDState('syncing', '⏸️ Остановка времени...');
-
     const result = await API.setTimePause();
     if (result) {
         currentGameTime.time_state = 'pause';
@@ -349,14 +279,8 @@ async function setPauseMode() {
 
 async function nextPeriod() {
     if (isTimeSyncInProgress) return;
-
     setHUDState('syncing', '⏩ Переход к следующему периоду...');
-
-    // Если есть функция завершения периода — вызываем
-    if (window.completePeriod) {
-        await window.completePeriod();
-    }
-
+    if (window.completePeriod) await window.completePeriod();
     const result = await API.setTimeNext();
     if (result) {
         currentGameTime = {
@@ -376,18 +300,13 @@ async function nextPeriod() {
     }
 }
 
-// ==================== ТИКЕР ВРЕМЕНИ ====================
-
 function startTimeTicker() {
     if (timeTicker) clearInterval(timeTicker);
-
     timeTicker = setInterval(() => {
         if (currentGameTime.time_state !== 'play') return;
-
         const now = Date.now();
         const elapsedSeconds = Math.floor((now - lastServerSync) / 1000);
         const remaining = currentGameTime.seconds_until_next_period - elapsedSeconds;
-
         if (remaining <= 0) {
             handlePeriodEnd();
         } else {
@@ -400,74 +319,241 @@ function startTimeTicker() {
 async function handlePeriodEnd() {
     if (timeTicker) clearInterval(timeTicker);
     timeTicker = null;
-
     setHUDState('syncing', '🔄 Конец периода, загрузка...');
     showNotification('⏰ Период завершён! Загружаем новый период...', 'info');
-
     const status = await forceSyncAndRefresh();
-
-    if (status && status.seconds_until_next_period > 0) {
-        startTimeTicker();
-    }
+    if (status && status.seconds_until_next_period > 0) startTimeTicker();
 }
 
 function stopTimeTicker() {
-    if (timeTicker) {
-        clearInterval(timeTicker);
-        timeTicker = null;
+    if (timeTicker) clearInterval(timeTicker);
+    timeTicker = null;
+}
+
+// ==================== ДЕЙСТВИЯ ПЕРИОДА ====================
+
+async function handleClaimSalary() {
+    const result = await API.claimSalary();
+    if (result && result.status === 'success') {
+        showNotification(result.message, 'success');
+        await loadFinanceOverview();
+    } else {
+        showNotification('Не удалось получить зарплату', 'error');
     }
 }
 
-// ==================== ФИНАНСОВЫЕ ДЕЙСТВИЯ ====================
-
-async function addLiability() {
-    const title = document.getElementById('liabilityTitle')?.value.trim() || 'Обязательство';
-    const total_debt = Number(document.getElementById('liabilityDebt')?.value);
-    const annual_rate_percent = Number(document.getElementById('liabilityRate')?.value);
-    const monthly_payment = Number(document.getElementById('liabilityPayment')?.value);
-
-    if ([total_debt, annual_rate_percent, monthly_payment].some(Number.isNaN)) {
-        showNotification('Заполните параметры обязательства', 'error');
+async function handleContribute() {
+    const amountInput = document.getElementById('contributionAmount');
+    const amount = parseFloat(amountInput.value);
+    if (isNaN(amount) || amount <= 0) {
+        showNotification('Введите корректную сумму для взноса', 'error');
         return;
     }
-
-    const result = await API.addLiability({ title, total_debt, annual_rate_percent, monthly_payment });
-    if (!result) {
-        showNotification('Не удалось добавить обязательство', 'error');
-        return;
+    const result = await API.contributeToSafetyFund({ amount });
+    if (result && result.status === 'success') {
+        showNotification(result.message, 'success');
+        amountInput.value = '';
+        await loadFinanceOverview();
+    } else {
+        showNotification('Ошибка при взносе', 'error');
     }
-
-    if (document.getElementById('liabilityTitle')) document.getElementById('liabilityTitle').value = '';
-    if (document.getElementById('liabilityDebt')) document.getElementById('liabilityDebt').value = '';
-    if (document.getElementById('liabilityRate')) document.getElementById('liabilityRate').value = '';
-    if (document.getElementById('liabilityPayment')) document.getElementById('liabilityPayment').value = '';
-
-    showNotification('Обязательство добавлено', 'success');
-    await loadFinanceOverview();
 }
 
-async function addAsset() {
-    const title = document.getElementById('assetTitle')?.value.trim() || 'Актив';
-    const asset_value = Number(document.getElementById('assetValue')?.value);
-    const monthly_maintenance_cost = Number(document.getElementById('assetMaintenance')?.value);
-
-    if ([asset_value, monthly_maintenance_cost].some(Number.isNaN)) {
-        showNotification('Заполните параметры актива', 'error');
+async function handleWithdraw() {
+    const amountInput = document.getElementById('withdrawalAmount');
+    const amount = parseFloat(amountInput.value);
+    if (isNaN(amount) || amount <= 0) {
+        showNotification('Введите корректную сумму для снятия', 'error');
         return;
     }
-
-    const result = await API.addAsset({ title, asset_value, monthly_maintenance_cost });
-    if (!result) {
-        showNotification('Не удалось добавить актив', 'error');
-        return;
+    const result = await API.withdrawFromSafetyFund({ amount });
+    if (result && result.status === 'success') {
+        showNotification(result.message, 'success');
+        amountInput.value = '';
+        await loadFinanceOverview();
+    } else {
+        showNotification('Ошибка при снятии', 'error');
     }
+}
 
-    if (document.getElementById('assetTitle')) document.getElementById('assetTitle').value = '';
-    if (document.getElementById('assetValue')) document.getElementById('assetValue').value = '';
-    if (document.getElementById('assetMaintenance')) document.getElementById('assetMaintenance').value = '';
+// ==================== УПРАВЛЕНИЕ АКТИВАМИ И ОБЯЗАТЕЛЬСТВАМИ (СТАРТОВЫЙ ЭКРАН) ====================
 
-    showNotification('Актив добавлен', 'success');
-    await loadFinanceOverview();
+function renderAssetsList() {
+    const container = document.getElementById('assetsListContainer');
+    if (!container) return;
+    const assets = window.tempAssets || [];
+    container.innerHTML = '';
+    assets.forEach((asset, idx) => {
+        const div = document.createElement('div');
+        div.className = 'asset-item';
+        div.dataset.index = idx;
+        div.innerHTML = `
+            <span><strong>${escapeHtml(asset.title)}</strong> (${asset.asset_value.toFixed(0)} ₽ / обслуживание ${asset.monthly_maintenance_cost.toFixed(0)} ₽)</span>
+            <div>
+                <button class="icon-btn edit-asset" data-idx="${idx}">✏️</button>
+                <button class="icon-btn danger delete-asset" data-idx="${idx}">🗑️</button>
+            </div>
+        `;
+        container.appendChild(div);
+    });
+    const addBtn = document.createElement('button');
+    addBtn.type = 'button';
+    addBtn.className = 'btn-secondary';
+    addBtn.textContent = '+ Добавить актив';
+    addBtn.onclick = () => startAddAsset();
+    container.appendChild(addBtn);
+}
+
+function startAddAsset() {
+    const container = document.getElementById('assetsListContainer');
+    const form = document.createElement('div');
+    form.className = 'edit-form';
+    form.innerHTML = `
+        <input type="text" placeholder="Название" id="newAssetTitle">
+        <input type="number" placeholder="Стоимость" id="newAssetValue">
+        <input type="number" placeholder="Обслуживание" id="newAssetMaintenance">
+        <button class="icon-btn" id="saveNewAsset">✅</button>
+        <button class="icon-btn danger" id="cancelNewAsset">❌</button>
+    `;
+    container.appendChild(form);
+    document.getElementById('saveNewAsset').onclick = () => {
+        const title = document.getElementById('newAssetTitle').value.trim();
+        const value = parseFloat(document.getElementById('newAssetValue').value);
+        const maint = parseFloat(document.getElementById('newAssetMaintenance').value);
+        if (title && !isNaN(value) && !isNaN(maint)) {
+            window.tempAssets.push({ title, asset_value: value, monthly_maintenance_cost: maint });
+            renderAssetsList();
+        } else {
+            showNotification('Заполните все поля', 'error');
+        }
+    };
+    document.getElementById('cancelNewAsset').onclick = () => renderAssetsList();
+}
+
+function editAsset(index) {
+    const asset = window.tempAssets[index];
+    const container = document.getElementById('assetsListContainer');
+    const div = container.querySelector(`.asset-item[data-index="${index}"]`);
+    if (!div) return;
+    div.style.display = 'none';
+    const form = document.createElement('div');
+    form.className = 'edit-form';
+    form.innerHTML = `
+        <input type="text" value="${escapeHtml(asset.title)}" id="editAssetTitle">
+        <input type="number" value="${asset.asset_value}" id="editAssetValue">
+        <input type="number" value="${asset.monthly_maintenance_cost}" id="editAssetMaintenance">
+        <button class="icon-btn" id="updateAsset">✅</button>
+        <button class="icon-btn danger" id="cancelEditAsset">❌</button>
+    `;
+    div.insertAdjacentElement('afterend', form);
+    document.getElementById('updateAsset').onclick = () => {
+        const newTitle = document.getElementById('editAssetTitle').value.trim();
+        const newValue = parseFloat(document.getElementById('editAssetValue').value);
+        const newMaint = parseFloat(document.getElementById('editAssetMaintenance').value);
+        if (newTitle && !isNaN(newValue) && !isNaN(newMaint)) {
+            window.tempAssets[index] = { title: newTitle, asset_value: newValue, monthly_maintenance_cost: newMaint };
+            renderAssetsList();
+        } else {
+            showNotification('Некорректные данные', 'error');
+        }
+    };
+    document.getElementById('cancelEditAsset').onclick = () => renderAssetsList();
+}
+
+function deleteAsset(index) {
+    window.tempAssets.splice(index, 1);
+    renderAssetsList();
+}
+
+function renderLiabilitiesList() {
+    const container = document.getElementById('liabilitiesListContainer');
+    if (!container) return;
+    const liabilities = window.tempLiabilities || [];
+    container.innerHTML = '';
+    liabilities.forEach((item, idx) => {
+        const div = document.createElement('div');
+        div.className = 'liability-item';
+        div.dataset.index = idx;
+        div.innerHTML = `
+            <span><strong>${escapeHtml(item.title)}</strong> (долг: ${item.total_debt.toFixed(0)} ₽, ${item.annual_rate_percent}%, платёж: ${item.monthly_payment.toFixed(0)} ₽)</span>
+            <div>
+                <button class="icon-btn edit-liability" data-idx="${idx}">✏️</button>
+                <button class="icon-btn danger delete-liability" data-idx="${idx}">🗑️</button>
+            </div>
+        `;
+        container.appendChild(div);
+    });
+    const addBtn = document.createElement('button');
+    addBtn.type = 'button';
+    addBtn.className = 'btn-secondary';
+    addBtn.textContent = '+ Добавить обязательство';
+    addBtn.onclick = () => startAddLiability();
+    container.appendChild(addBtn);
+}
+
+function startAddLiability() {
+    const container = document.getElementById('liabilitiesListContainer');
+    const form = document.createElement('div');
+    form.className = 'edit-form';
+    form.innerHTML = `
+        <input type="text" placeholder="Название" id="newLiabilityTitle">
+        <input type="number" placeholder="Сумма долга" id="newLiabilityDebt">
+        <input type="number" placeholder="Годовой %" id="newLiabilityRate">
+        <input type="number" placeholder="Платёж в месяц" id="newLiabilityPayment">
+        <button class="icon-btn" id="saveNewLiability">✅</button>
+        <button class="icon-btn danger" id="cancelNewLiability">❌</button>
+    `;
+    container.appendChild(form);
+    document.getElementById('saveNewLiability').onclick = () => {
+        const title = document.getElementById('newLiabilityTitle').value.trim();
+        const total_debt = parseFloat(document.getElementById('newLiabilityDebt').value);
+        const annual_rate_percent = parseFloat(document.getElementById('newLiabilityRate').value);
+        const monthly_payment = parseFloat(document.getElementById('newLiabilityPayment').value);
+        if (title && !isNaN(total_debt) && !isNaN(annual_rate_percent) && !isNaN(monthly_payment)) {
+            window.tempLiabilities.push({ title, total_debt, annual_rate_percent, monthly_payment });
+            renderLiabilitiesList();
+        } else {
+            showNotification('Заполните все поля', 'error');
+        }
+    };
+    document.getElementById('cancelNewLiability').onclick = () => renderLiabilitiesList();
+}
+
+function editLiability(index) {
+    const liability = window.tempLiabilities[index];
+    const container = document.getElementById('liabilitiesListContainer');
+    const div = container.querySelector(`.liability-item[data-index="${index}"]`);
+    if (!div) return;
+    div.style.display = 'none';
+    const form = document.createElement('div');
+    form.className = 'edit-form';
+    form.innerHTML = `
+        <input type="text" value="${escapeHtml(liability.title)}" id="editLiabilityTitle">
+        <input type="number" value="${liability.total_debt}" id="editLiabilityDebt">
+        <input type="number" value="${liability.annual_rate_percent}" id="editLiabilityRate">
+        <input type="number" value="${liability.monthly_payment}" id="editLiabilityPayment">
+        <button class="icon-btn" id="updateLiability">✅</button>
+        <button class="icon-btn danger" id="cancelEditLiability">❌</button>
+    `;
+    div.insertAdjacentElement('afterend', form);
+    document.getElementById('updateLiability').onclick = () => {
+        const newTitle = document.getElementById('editLiabilityTitle').value.trim();
+        const newDebt = parseFloat(document.getElementById('editLiabilityDebt').value);
+        const newRate = parseFloat(document.getElementById('editLiabilityRate').value);
+        const newPayment = parseFloat(document.getElementById('editLiabilityPayment').value);
+        if (newTitle && !isNaN(newDebt) && !isNaN(newRate) && !isNaN(newPayment)) {
+            window.tempLiabilities[index] = { title: newTitle, total_debt: newDebt, annual_rate_percent: newRate, monthly_payment: newPayment };
+            renderLiabilitiesList();
+        } else {
+            showNotification('Некорректные данные', 'error');
+        }
+    };
+    document.getElementById('cancelEditLiability').onclick = () => renderLiabilitiesList();
+}
+
+function deleteLiability(index) {
+    window.tempLiabilities.splice(index, 1);
+    renderLiabilitiesList();
 }
 
 // ==================== ЗАГРУЗКА МЕНЮ ====================
@@ -476,15 +562,12 @@ async function loadStartMenu() {
     showScreen('startMenuScreen');
     const container = document.getElementById('gameProfilesList');
     if (!container) return;
-
     container.classList.remove('hidden');
     const profiles = await API.getGameProfiles();
-
     if (!profiles || !Array.isArray(profiles) || profiles.length === 0) {
         container.innerHTML = 'Сохранений пока нет. Нажми "Новая игра".';
         return;
     }
-
     container.innerHTML = '<strong>📁 Сохранения:</strong><br>';
     profiles.forEach((profile) => {
         container.innerHTML += `
@@ -508,53 +591,14 @@ async function openGameplay() {
 
 async function initTimeSystem() {
     const status = await fetchTimeStatus();
-    if (status && status.time_state === 'play') {
-        startTimeTicker();
-    }
-}
-
-// ==================== ОБРАБОТЧИКИ СОБЫТИЙ ====================
-
-async function handleDeleteClick(event) {
-    const liabilityId = event.target.dataset.deleteLiability;
-    const assetId = event.target.dataset.deleteAsset;
-
-    if (liabilityId) {
-        await API.deleteLiability(liabilityId);
-        await loadFinanceOverview();
-    }
-    if (assetId) {
-        await API.deleteAsset(assetId);
-        await loadFinanceOverview();
-    }
-}
-
-async function handleProfilesClick(event) {
-    const profileId = event.target.dataset.activateProfile;
-    if (!profileId) return;
-
-    const result = await API.activateGameProfile(profileId);
-    if (!result) {
-        showNotification('Не удалось переключить профиль', 'error');
-        return;
-    }
-    await openGameplay();
-}
-
-function resetBaseParamsForm() {
-    // Очищаем контейнеры
-    document.getElementById('assetsListContainer').innerHTML = '';
-    document.getElementById('liabilitiesListContainer').innerHTML = '';
-    // Добавляем по одному пустому шаблону
-    addAssetRow();
-    addLiabilityRow();
-    // Сбросим числовые поля (если нужно)
-    document.getElementById('startCashBalance').value = '0';
-    document.getElementById('startMonthlySalary').value = '0';
+    if (status && status.time_state === 'play') startTimeTicker();
 }
 
 function openNewGameStep1() {
-    resetBaseParamsForm();
+    window.tempAssets = [];
+    window.tempLiabilities = [];
+    renderAssetsList();
+    renderLiabilitiesList();
     showScreen('difficultyScreen');
 }
 
@@ -562,16 +606,17 @@ function toBaseParamsStep() {
     const profile_name = document.getElementById('newProfileName')?.value.trim();
     const mode = document.getElementById('newGameMode')?.value;
     const period_duration_seconds = Number(document.getElementById('newPeriodDuration')?.value);
-
     if (!profile_name || Number.isNaN(period_duration_seconds) || period_duration_seconds < 10) {
         showNotification('Заполни название и корректную длительность периода', 'error');
         return;
     }
-
     newGameState.profile_name = profile_name;
     newGameState.mode = mode;
     newGameState.period_duration_seconds = period_duration_seconds;
-    resetBaseParamsForm();
+    window.tempAssets = window.tempAssets || [];
+    window.tempLiabilities = window.tempLiabilities || [];
+    renderAssetsList();
+    renderLiabilitiesList();
     showScreen('baseParamsScreen');
 }
 
@@ -581,8 +626,8 @@ async function startGame() {
     const period_duration_seconds = Number(document.getElementById('newPeriodDuration').value);
     const cash_balance = Number(document.getElementById('startCashBalance').value);
     const monthly_salary = Number(document.getElementById('startMonthlySalary').value);
-    const assets = collectAssets();
-    const liabilities = collectLiabilities();
+    const assets = window.tempAssets || [];
+    const liabilities = window.tempLiabilities || [];
 
     if (!profile_name || period_duration_seconds < 10) {
         showNotification('Заполните название и корректную длительность периода', 'error');
@@ -611,6 +656,32 @@ async function startGame() {
     }
 }
 
+// ==================== ОБРАБОТЧИКИ СОБЫТИЙ ====================
+
+async function handleDeleteClick(event) {
+    const liabilityId = event.target.dataset.deleteLiability;
+    const assetId = event.target.dataset.deleteAsset;
+    if (liabilityId) {
+        await API.deleteLiability(liabilityId);
+        await loadFinanceOverview();
+    }
+    if (assetId) {
+        await API.deleteAsset(assetId);
+        await loadFinanceOverview();
+    }
+}
+
+async function handleProfilesClick(event) {
+    const profileId = event.target.dataset.activateProfile;
+    if (!profileId) return;
+    const result = await API.activateGameProfile(profileId);
+    if (!result) {
+        showNotification('Не удалось переключить профиль', 'error');
+        return;
+    }
+    await openGameplay();
+}
+
 // ==================== НАСТРОЙКА ОБРАБОТЧИКОВ ====================
 
 function setupFinanceHandlers() {
@@ -637,7 +708,6 @@ function setupFinanceHandlers() {
     const timePlayBtn = document.getElementById('timePlayBtn');
     const timePauseBtn = document.getElementById('timePauseBtn');
     const timeNextBtn = document.getElementById('timeNextBtn');
-
     if (timePlayBtn) timePlayBtn.onclick = setPlayMode;
     if (timePauseBtn) timePauseBtn.onclick = setPauseMode;
     if (timeNextBtn) timeNextBtn.onclick = nextPeriod;
@@ -645,7 +715,6 @@ function setupFinanceHandlers() {
     // Финансы
     const addLiabilityBtn = document.getElementById('addLiabilityBtn');
     const addAssetBtn = document.getElementById('addAssetBtn');
-
     if (addLiabilityBtn) addLiabilityBtn.onclick = addLiability;
     if (addAssetBtn) addAssetBtn.onclick = addAsset;
 
@@ -653,7 +722,6 @@ function setupFinanceHandlers() {
     const liabilitiesList = document.getElementById('liabilitiesList');
     const assetsList = document.getElementById('assetsList');
     const gameProfilesList = document.getElementById('gameProfilesList');
-
     if (liabilitiesList) liabilitiesList.addEventListener('click', handleDeleteClick);
     if (assetsList) assetsList.addEventListener('click', handleDeleteClick);
     if (gameProfilesList) gameProfilesList.addEventListener('click', handleProfilesClick);
@@ -667,18 +735,34 @@ function setupFinanceHandlers() {
     const claimBtn = document.getElementById('claimSalaryBtn');
     const contributeBtn = document.getElementById('contributeFundBtn');
     const withdrawBtn = document.getElementById('withdrawFundBtn');
-
     if (claimBtn) claimBtn.addEventListener('click', handleClaimSalary);
     if (contributeBtn) contributeBtn.addEventListener('click', handleContribute);
     if (withdrawBtn) withdrawBtn.addEventListener('click', handleWithdraw);
 
-    document.getElementById('addAssetBtn')?.addEventListener('click', () => addAssetRow());
-    document.getElementById('addLiabilityBtn')?.addEventListener('click', () => addLiabilityRow());
-    document.getElementById('startGameBtn').onclick = startGame;
+    // Делегирование для редактирования/удаления активов и обязательств на стартовом экране
+    document.getElementById('assetsListContainer')?.addEventListener('click', (e) => {
+        const btn = e.target.closest('button');
+        if (!btn) return;
+        const idx = btn.dataset.idx;
+        if (btn.classList.contains('edit-asset') && idx !== undefined) {
+            editAsset(parseInt(idx));
+        } else if (btn.classList.contains('delete-asset') && idx !== undefined) {
+            deleteAsset(parseInt(idx));
+        }
+    });
+    document.getElementById('liabilitiesListContainer')?.addEventListener('click', (e) => {
+        const btn = e.target.closest('button');
+        if (!btn) return;
+        const idx = btn.dataset.idx;
+        if (btn.classList.contains('edit-liability') && idx !== undefined) {
+            editLiability(parseInt(idx));
+        } else if (btn.classList.contains('delete-liability') && idx !== undefined) {
+            deleteLiability(parseInt(idx));
+        }
+    });
 }
 
 // ==================== ЭКСПОРТ ====================
-
 window.loadFinanceOverview = loadFinanceOverview;
 window.loadStartMenu = loadStartMenu;
 window.openGameplay = openGameplay;
@@ -686,3 +770,4 @@ window.initTimeSystem = initTimeSystem;
 window.stopTimeTicker = stopTimeTicker;
 window.forceSyncAndRefresh = forceSyncAndRefresh;
 window.updateBalancesUI = updateBalancesUI;
+window.setupFinanceHandlers = setupFinanceHandlers;

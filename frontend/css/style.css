@@ -18,11 +18,13 @@ body {
 }
 
 .card {
-    background: var(--tg-theme-secondary-bg-color, #f0f0f0);
-    border-radius: 16px;
-    padding: 20px;
-    margin-bottom: 20px;
-    transition: all 0.3s ease;
+    padding: 12px 16px;
+    margin-bottom: 12px;
+}
+
+.card h3 {
+    font-size: 16px;
+    margin-bottom: 8px;
 }
 
 h1 {
@@ -43,29 +45,15 @@ h3 {
 }
 
 input, textarea, select {
-    width: 100%;
-    padding: 12px;
-    margin: 10px 0;
-    border-radius: 12px;
-    border: 1px solid var(--tg-theme-hint-color, #ccc);
-    background: var(--tg-theme-bg-color, white);
-    color: var(--tg-theme-text-color, black);
-    font-size: 16px;
-    font-family: inherit;
+    padding: 8px 10px;
+    margin: 4px 0 8px;
+    font-size: 14px;
 }
 
 button {
-    background: var(--tg-theme-button-color, #2481cc);
-    color: var(--tg-theme-button-text-color, white);
-    border: none;
-    padding: 12px 24px;
-    border-radius: 12px;
-    font-size: 16px;
-    font-weight: 500;
-    cursor: pointer;
-    width: 100%;
-    margin-top: 10px;
-    transition: all 0.2s;
+    padding: 8px 16px;
+    font-size: 14px;
+    margin-top: 6px;
 }
 
 button:active {
@@ -74,9 +62,7 @@ button:active {
 }
 
 .btn-secondary {
-    background: var(--tg-theme-secondary-bg-color, #e0e0e0);
-    color: var(--tg-theme-text-color, #000);
-    border: 1px solid var(--tg-theme-hint-color, #ccc);
+    padding: 6px 12px;
 }
 
 .info {
@@ -246,4 +232,52 @@ button:disabled {
 .bottom-nav .nav-btn.disabled {
     opacity: 0.5;
     pointer-events: none;
+}
+
+.assets-list, .liabilities-list {
+    margin-top: 8px;
+}
+
+.asset-item, .liability-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: var(--tg-theme-bg-color, white);
+    border-radius: 10px;
+    padding: 6px 10px;
+    margin-bottom: 6px;
+    border: 1px solid var(--tg-theme-hint-color, #ddd);
+    font-size: 13px;
+}
+.asset-item span, .liability-item span {
+    flex: 1;
+}
+.icon-btn {
+    background: none;
+    border: none;
+    padding: 4px 8px;
+    width: auto;
+    margin: 0;
+    font-size: 16px;
+    cursor: pointer;
+    color: var(--tg-theme-link-color, #2481cc);
+}
+.icon-btn.danger {
+    color: #ff3b30;
+}
+.edit-form {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    width: 100%;
+}
+.edit-form input {
+    flex: 1;
+    min-width: 80px;
+    margin: 0;
+    padding: 6px;
+}
+.edit-form button {
+    width: auto;
+    padding: 6px 10px;
 }
