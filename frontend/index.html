@@ -69,13 +69,41 @@
 
             <div id="baseParamsScreen" class="screen hidden">
                 <div class="card">
-                    <h3>🧩 Базовые параметры</h3>
-                    <input type="number" id="startCashBalance" placeholder="Стартовый баланс (₽)">
-                    <input type="number" id="startMonthlySalary" placeholder="Ежемесячная зарплата (₽)">
-                    <input type="number" id="startSalaryReceipts" placeholder="Количество поступлений (1-2)">
-                    <div class="info">После старта эти параметры блокируются и меняются только игровыми действиями.</div>
-                    <button id="startGameBtn">🚀 Старт</button>
-                    <button id="backToDifficultyBtn" class="btn-secondary">⬅️ Назад к сложности</button>
+                    <h3>💰 Базовые параметры</h3>
+                    <input type="number" id="startCashBalance" placeholder="Стартовый баланс (₽)" value="0">
+                    <input type="number" id="startMonthlySalary" placeholder="Ежемесячная зарплата (₽)" value="0">
+                </div>
+
+                <div class="card">
+                    <h3>🏦 Активы (расходы на обслуживание)</h3>
+                    <div id="assetsListContainer">
+                        <div class="asset-row" style="display: flex; gap: 8px; margin-bottom: 8px;">
+                            <input type="text" placeholder="Название" style="flex: 2;">
+                            <input type="number" placeholder="Стоимость" style="flex: 1;">
+                            <input type="number" placeholder="Обслуживание в месяц" style="flex: 1;">
+                            <button type="button" class="removeAssetBtn" style="width: auto; background: #ff3b30;">✖️</button>
+                        </div>
+                    </div>
+                    <button type="button" id="addAssetBtn" class="btn-secondary">+ Добавить актив</button>
+                </div>
+
+                <div class="card">
+                    <h3>💳 Обязательства (кредиты, ипотека)</h3>
+                    <div id="liabilitiesListContainer">
+                        <div class="liability-row" style="display: flex; gap: 8px; margin-bottom: 8px;">
+                            <input type="text" placeholder="Название" style="flex: 2;">
+                            <input type="number" placeholder="Сумма долга" style="flex: 1;">
+                            <input type="number" placeholder="Годовой %" style="flex: 1;">
+                            <input type="number" placeholder="Платёж в месяц" style="flex: 1;">
+                            <button type="button" class="removeLiabilityBtn" style="width: auto; background: #ff3b30;">✖️</button>
+                        </div>
+                    </div>
+                    <button type="button" id="addLiabilityBtn" class="btn-secondary">+ Добавить обязательство</button>
+                </div>
+
+                <div class="card">
+                    <button id="startGameBtn" class="btn-primary">🚀 Старт игры</button>
+                    <button id="backToDifficultyBtn" class="btn-secondary">⬅️ Назад</button>
                 </div>
             </div>
 
