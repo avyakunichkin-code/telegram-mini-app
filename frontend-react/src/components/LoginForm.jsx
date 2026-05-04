@@ -1,0 +1,51 @@
+import { useState } from 'react';
+import { Button, Input, Cell, Section } from '@telegram-apps/telegram-ui';
+import { useAuth } from '../context/AuthContext';
+
+export function LoginForm({ onSwitchToRegister }) {
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+  const { login } = useAuth();
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError('');
+    try {
+      await login(username, password);
+    } catch (err) {
+      setError('Неверное имя пользователя или пароль');
+    }
+  };
+
+  return (
+    <form onSubmit={handleSubmit}>
+      <Section header="Вход">
+        <Cell>
+          <Input
+            header="Имя пользователя"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+            placeholder="username"
+          />
+        </Cell>
+        <Cell>
+          <Input
+            header="Пароль"
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            placeholder="••••••"
+          />
+        </Cell>
+        {error && <Cell><div style={{ color: 'red' }}>{error}</div></Cell>}
+        <Cell>
+          <Button mode="filled" type="submit" stretched>Войти</Button>
+        </Cell>
+        <Cell>
+          <Button mode="plain" onClick={onSwitchToRegister}>Зарегистрироваться</Button>
+        </Cell>
+      </Section>
+    </form>
+  );
+}
