@@ -103,6 +103,9 @@ class FinanceOverview(BaseModel):
     period_duration_seconds: int
     seconds_until_next_period: int
     safety_fund_total: float = 0  # Добавить
+    cash_balance: float
+    safety_fund_balance: float
+    total_monthly_obligations: float  # сумма ежемесячных платежей по обязательствам
 
 
 class GameProfileCreate(BaseModel):

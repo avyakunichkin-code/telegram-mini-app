@@ -232,40 +232,60 @@ async def delete_asset(
 
 @router.get("/overview", response_model=FinanceOverview)
 async def finance_overview(
-    current_user=Depends(get_current_user),
-    db: Session = Depends(get_db),
+        current_user=Depends(get_current_user),
+        db: Session = Depends(get_db),
 ):
-    game_profile = get_active_game_profile(db, current_user.id)
-    sync_time(game_profile)
-    profile = _get_or_create_salary_profile(db, game_profile.id)
-    liabilities = db.query(FinanceLiability).filter(FinanceLiability.game_profile_id == game_profile.id).all()
-    assets = db.query(FinanceAsset).filter(FinanceAsset.game_profile_id == game_profile.id).all()
+    profile = get_active_game_profile(db, current_user.id)
+    sync_time(profile)
 
-    total_income = profile.monthly_amount
-    total_liability_payments = sum(item.monthly_payment for item in liabilities)
-    total_assets_maintenance = sum(item.monthly_maintenance_cost for item in assets)
-    net_cashflow = total_income - total_liability_payments - total_assets_maintenance
-    liabilities_ratio = (total_liability_payments / total_income * 100) if total_income > 0 else 0
+    # Зарплата
+    salary = db.query(FinanceSalary).filter(
+        FinanceSalary.game_profile_id == profile.id
+    ).first()
+    monthly_income = salary.monthly_amount if salary else 0
 
+    # Обязательства (активные)
+    liabilities = db.query(FinanceLiability).filter(
+        FinanceLiability.game_profile_id == profile.id,
+        FinanceLiability.is_active == 1
+    ).all()
+    total_liability_payment = sum(l.monthly_payment for l in liabilities)
+
+    # Активы (активные)
+    assets = db.query(FinanceAsset).filter(
+        FinanceAsset.game_profile_id == profile.id,
+        FinanceAsset.is_active == 1
+    ).all()
+    total_asset_maintenance = sum(a.monthly_maintenance_cost for a in assets)
+
+    total_monthly_obligations = total_liability_payment + total_asset_maintenance
+    net_cashflow = monthly_income - total_monthly_obligations
+    liabilities_ratio = (total_liability_payment / monthly_income * 100) if monthly_income > 0 else 0
+
+    # Геймификация
     score, level, xp_to_next = _compute_gamification(net_cashflow, liabilities_ratio, len(assets))
 
+    # Возвращаем расширенный ответ
     return FinanceOverview(
         salary=SalaryProfileResponse(
-            monthly_amount=profile.monthly_amount,
-            monthly_receipts_count=profile.monthly_receipts_count,
+            monthly_amount=salary.monthly_amount if salary else 0,
+            monthly_receipts_count=salary.monthly_receipts_count if salary else 1
         ),
         liabilities=liabilities,
         assets=assets,
-        total_monthly_income=round(total_income, 2),
-        total_monthly_liabilities_payment=round(total_liability_payments, 2),
-        total_monthly_assets_maintenance=round(total_assets_maintenance, 2),
+        total_monthly_income=round(monthly_income, 2),
+        total_monthly_liabilities_payment=round(total_liability_payment, 2),
+        total_monthly_assets_maintenance=round(total_asset_maintenance, 2),
         net_monthly_cashflow=round(net_cashflow, 2),
         liabilities_to_income_ratio=round(liabilities_ratio, 2),
         gamification_level=level,
         score=score,
         xp_to_next_level=xp_to_next,
-        time_state=game_profile.time_state,
-        period_index=game_profile.period_index,
-        period_duration_seconds=game_profile.period_duration_seconds,
-        seconds_until_next_period=get_seconds_until_next(game_profile),
+        time_state=profile.time_state,
+        period_index=profile.period_index,
+        period_duration_seconds=profile.period_duration_seconds,
+        seconds_until_next_period=get_seconds_until_next(profile),
+        cash_balance=round(profile.cash_balance, 2),
+        safety_fund_balance=round(profile.safety_fund_balance, 2),
+        total_monthly_obligations=round(total_monthly_obligations, 2)
     )

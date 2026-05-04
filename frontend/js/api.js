@@ -120,5 +120,8 @@ const API = {
     },
     completePeriod() {
         return apiCall('/api/game/period/complete-period', 'POST');
+    },
+    withdrawFromSafetyFund(payload) {
+        return apiCall('/api/game/period/withdraw-from-safety-fund', 'POST', payload);
     }
 };

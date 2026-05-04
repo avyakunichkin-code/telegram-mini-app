@@ -113,6 +113,8 @@ async function loadFinanceOverview() {
         return;
     }
 
+    updateBalancesUI(overview);
+
     // Обновляем глобальное состояние времени
     currentGameTime = {
         time_state: overview.time_state,
@@ -184,6 +186,22 @@ function renderAssets(items, target) {
         `;
         target.appendChild(row);
     });
+}
+
+async function updateBalancesUI(overview) {
+    const overview = await API.getOverview();
+    if (!overview) return;
+    const balanceDiv = document.getElementById('balanceInfo');
+    if (balanceDiv) {
+        balanceDiv.innerHTML = `
+            💳 Текущий баланс: <strong>${overview.cash_balance.toFixed(2)} ₽</strong><br>
+            🛡️ Подушка безопасности: <strong>${overview.safety_fund_balance.toFixed(2)} ₽</strong><br>
+            📉 Обязательные расходы в месяц: <strong>${overview.total_monthly_obligations.toFixed(2)} ₽</strong>
+        `;
+    }
+    // Обновим номер периода в заголовке
+    const periodSpan = document.getElementById('periodNumber');
+    if (periodSpan) periodSpan.innerText = overview.period_index;
 }
 
 // ==================== УПРАВЛЕНИЕ ВРЕМЕНЕМ ====================
@@ -478,8 +496,11 @@ function toBaseParamsStep() {
 }
 
 async function startGame() {
-    const monthly_amount = Number(document.getElementById('startSalaryAmount')?.value);
-    const monthly_receipts_count = Number(document.getElementById('startSalaryReceipts')?.value);
+    const profile_name = document.getElementById('newProfileName').value.trim();
+    const mode = document.getElementById('newGameMode').value;
+    const period_duration_seconds = Number(document.getElementById('newPeriodDuration').value);
+    const cash_balance = Number(document.getElementById('startCashBalance').value);
+    const monthly_salary = Number(document.getElementById('startMonthlySalary').value);
 
     if (Number.isNaN(monthly_amount) || Number.isNaN(monthly_receipts_count) || monthly_receipts_count <= 0) {
         showNotification('Введи корректные базовые параметры', 'error');
@@ -556,6 +577,15 @@ function setupFinanceHandlers() {
     document.querySelectorAll('.nav-btn').forEach((btn) => {
         btn.addEventListener('click', () => showGameSection(btn.dataset.section));
     });
+
+    // Действия периода
+    const claimBtn = document.getElementById('claimSalaryBtn');
+    const contributeBtn = document.getElementById('contributeFundBtn');
+    const withdrawBtn = document.getElementById('withdrawFundBtn');
+
+    if (claimBtn) claimBtn.addEventListener('click', handleClaimSalary);
+    if (contributeBtn) contributeBtn.addEventListener('click', handleContribute);
+    if (withdrawBtn) withdrawBtn.addEventListener('click', handleWithdraw);
 }
 
 // ==================== ЭКСПОРТ ====================
@@ -566,3 +596,4 @@ window.openGameplay = openGameplay;
 window.initTimeSystem = initTimeSystem;
 window.stopTimeTicker = stopTimeTicker;
 window.forceSyncAndRefresh = forceSyncAndRefresh;
+window.updateBalancesUI = updateBalancesUI;

@@ -70,7 +70,8 @@
             <div id="baseParamsScreen" class="screen hidden">
                 <div class="card">
                     <h3>🧩 Базовые параметры</h3>
-                    <input type="number" id="startSalaryAmount" placeholder="Зарплата за месяц (RUB)">
+                    <input type="number" id="startCashBalance" placeholder="Стартовый баланс (₽)">
+                    <input type="number" id="startMonthlySalary" placeholder="Ежемесячная зарплата (₽)">
                     <input type="number" id="startSalaryReceipts" placeholder="Количество поступлений (1-2)">
                     <div class="info">После старта эти параметры блокируются и меняются только игровыми действиями.</div>
                     <button id="startGameBtn">🚀 Старт</button>
@@ -90,9 +91,22 @@
 
                 <div id="section-dashboard" class="game-section">
                     <div class="card">
-                        <h3>🏆 Прогресс</h3>
-                        <div id="scoreBoard" class="status">Загрузка...</div>
+                        <h3>💰 Финансы</h3>
+                        <div id="balanceInfo" class="status">
+                            Загрузка...
+                        </div>
                     </div>
+                    <div class="card">
+                        <h3>🎯 Действия периода #<span id="periodNumber">1</span></h3>
+                        <button id="claimSalaryBtn" class="action-btn salary-btn">📥 Получить зарплату</button>
+                        <div class="fund-actions">
+                            <input type="number" id="contributionAmount" placeholder="Сумма для подушки">
+                            <button id="contributeFundBtn" class="action-btn">💼 Отложить в подушку</button>
+                            <input type="number" id="withdrawalAmount" placeholder="Сумма снятия">
+                            <button id="withdrawFundBtn" class="action-btn">🏦 Снять с подушки</button>
+                        </div>
+                    </div>
+                    <div id="periodResult" class="status hidden"></div>
                 </div>
 
                 <div id="section-finance" class="game-section hidden">
@@ -140,6 +154,7 @@
     <script src="js/auth.js"></script>
     <script src="js/components/notifications.js"></script>
     <script src="js/components/finance.js"></script>
+    <script src="js/components/period_actions.js"></script>
     <script src="js/app.js"></script>
 </body>
 </html>
