@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>Money Quest</title>
+  <!-- Подключаем настоящий SDK Telegram (для реального окружения) -->
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <script>
+    // Эмуляция для локальной разработки (если Telegram WebApp не загрузился)
+    if (!window.Telegram?.WebApp) {
+      console.log('🔧 Эмуляция Telegram WebApp (локальный режим)');
+      window.Telegram = window.Telegram || {};
+      window.Telegram.WebApp = {
+        initData: '',
+        initDataUnsafe: { user: null },
+        version: '6.0',
+        platform: 'web',
+        colorScheme: 'light',
+        themeParams: {},
+        isExpanded: true,
+        expand: () => {},
+        close: () => {},
+        sendData: () => {},
+        MainButton: { show: () => {}, hide: () => {}, setText: () => {}, onClick: () => {} },
+        BackButton: { show: () => {}, hide: () => {} },
+        HapticFeedback: { impactOccurred: () => {} },
+      };
+    }
+  </script>
+  <script type="module" crossorigin src="/telegram-mini-app/assets/index-Jnm_dR-v.js"></script>
+  <link rel="stylesheet" crossorigin href="/telegram-mini-app/assets/index-lkg2wwGs.css">
+</head>
+<body>
+<div id="root"></div>
+</body>
+</html>
