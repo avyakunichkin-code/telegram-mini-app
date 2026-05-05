@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <title>Money Quest</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <script>
+        // Принудительный редирект на хэш-версию для корректной работы HashRouter
+        if (!window.location.hash && window.location.pathname !== '/' && window.location.pathname !== '/telegram-mini-app/') {
+          var newUrl = '/telegram-mini-app/#/' + window.location.search;
+          window.location.replace(newUrl);
+        }
+    </script>
+</head>
+<body>
+<div id="root"></div>
+</body>
+</html>
