@@ -10,21 +10,36 @@ export function setAuthToken(token) {
 }
 
 async function apiCall(endpoint, method = 'GET', data = null) {
-    const headers = { 'Content-Type': 'application/json' };
-    if (authToken) headers['Authorization'] = `Bearer ${authToken}`;
+  const headers = { 'Content-Type': 'application/json' };
+  if (authToken) headers['Authorization'] = `Bearer ${authToken}`;
 
-    const options = { method, headers };
-    if (data && (method === 'POST' || method === 'PUT')) {
-        options.body = JSON.stringify(data);
-    }
+  const options = { method, headers };
+  if (data && (method === 'POST' || method === 'PUT')) {
+    options.body = JSON.stringify(data);
+  }
 
-    const response = await fetch(`${API_BASE}${endpoint}`, options);
-    if (response.status === 401) {
-        setAuthToken(null);
-        throw new Error('Unauthorized');
-    }
-    if (!response.ok) throw new Error(`HTTP ${response.status}`);
-    return response.json();
+  const response = await fetch(`${API_BASE}${endpoint}`, options);
+
+  // Пытаемся распарсить тело ответа (может быть JSON или текст)
+  let responseBody;
+  const contentType = response.headers.get('content-type');
+  if (contentType && contentType.includes('application/json')) {
+    responseBody = await response.json();
+  } else {
+    responseBody = await response.text();
+  }
+
+  if (!response.ok) {
+    // Возвращаем структурированную ошибку вместо выброса исключения
+    return {
+      error: true,
+      status: response.status,
+      detail: responseBody.detail || responseBody.message || responseBody,
+      raw: responseBody,
+    };
+  }
+
+  return responseBody;
 }
 
 export const API = {

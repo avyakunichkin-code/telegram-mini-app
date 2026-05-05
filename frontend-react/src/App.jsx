@@ -93,7 +93,16 @@ function GameApp() {
   }
 
   if (screen === 'game') {
-    return <GameScreen onLogout={handleLogout} />;
+    return (
+      <GameScreen
+        onLogout={() => {
+          logout();
+          window.location.href = '/login';
+        }}
+        onNewGame={() => setScreen('difficulty')}
+        onLoadGame={() => setScreen('startMenu')}
+      />
+    );
   }
 
   return null;
