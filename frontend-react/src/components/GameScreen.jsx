@@ -8,12 +8,16 @@ import {
   Spinner,
 } from '@telegram-apps/telegram-ui';
 import { useGame } from '../hooks/useGame';
-import { API } from '../api';          // <-- добавлен импорт API
+import { API } from '../api';
 import { formatTime } from '../utils';
+import { showNotification } from './notifications';
 
 export function GameScreen({ onLogout }) {
   const [activeTab, setActiveTab] = useState('dashboard');
   const [loadingAction, setLoadingAction] = useState(false); // для блокировки кнопок
+  // Дополнительные состояния
+  const [isContributing, setIsContributing] = useState(false);
+  const [isWithdrawing, setIsWithdrawing] = useState(false);
 
   const {
     overview,
@@ -64,6 +68,57 @@ export function GameScreen({ onLogout }) {
     }
   };
 
+  // Обработчик взноса в подушку
+  const handleContribute = async () => {
+    const amount = parseFloat(contributionAmount);
+    if (isNaN(amount) || amount <= 0) {
+      showNotification('Введите корректную сумму', 'error');
+      return;
+    }
+    setIsContributing(true);
+    try {
+      const result = await contributeToSafetyFund(amount);
+      if (result && result.status === 'success') {
+        showNotification(result.message || `Подушка пополнена на ${amount} ₽`, 'success');
+        setContributionAmount('');
+      } else {
+        // Извлекаем детали ошибки
+        const errorMsg = result?.detail || result?.message || 'Ошибка при пополнении подушки';
+        showNotification(errorMsg, 'error');
+      }
+    } catch (err) {
+      console.error(err);
+      showNotification('Ошибка соединения с сервером', 'error');
+    } finally {
+      setIsContributing(false);
+    }
+  };
+
+  // Обработчик снятия с подушки
+  const handleWithdraw = async () => {
+    const amount = parseFloat(withdrawalAmount);
+    if (isNaN(amount) || amount <= 0) {
+      showNotification('Введите корректную сумму', 'error');
+      return;
+    }
+    setIsWithdrawing(true);
+    try {
+      const result = await withdrawFromSafetyFund(amount);
+      if (result && result.status === 'success') {
+        showNotification(result.message || `С подушки снято ${amount} ₽`, 'success');
+        setWithdrawalAmount('');
+      } else {
+        const errorMsg = result?.detail || result?.message || 'Ошибка при снятии';
+        showNotification(errorMsg, 'error');
+      }
+    } catch (err) {
+      console.error(err);
+      showNotification('Ошибка соединения с сервером', 'error');
+    } finally {
+      setIsWithdrawing(false);
+    }
+  };
+
   return (
     <div style={{ padding: '1rem', paddingBottom: '80px' }}> {/* отступ для меню */}
       {/* HUD */}
@@ -92,43 +147,46 @@ export function GameScreen({ onLogout }) {
 
       {/* Действия периода */}
       <Section header="Действия периода">
+        {/* Зарплата – можно оставить в Cell, так как это одна кнопка */}
         <Cell>
-          <Button stretched onClick={claimSalary} disabled={loadingAction}>Получить зарплату</Button>
+          <Button stretched onClick={claimSalary} disabled={loadingAction}>
+            Получить зарплату
+          </Button>
         </Cell>
-        <Cell>
+
+        {/* Взнос в подушку */}
+        <div style={{ margin: '12px 0' }}>
           <div style={{ display: 'flex', gap: '0.5rem' }}>
             <input
               type="number"
               placeholder="Сумма"
               value={contributionAmount}
               onChange={(e) => setContributionAmount(e.target.value)}
-              style={{ flex: 1 }}
-              disabled={loadingAction}
+              style={{ flex: 1, padding: '10px', borderRadius: '10px', border: '1px solid var(--tg-theme-hint-color)' }}
+              disabled={isContributing}
             />
-            <Button onClick={() => {
-              const amount = parseFloat(contributionAmount);
-              if (!isNaN(amount) && amount > 0) contributeToSafetyFund(amount);
-              setContributionAmount('');
-            }} disabled={loadingAction}>В подушку</Button>
+            <Button onClick={handleContribute} disabled={isContributing}>
+              {isContributing ? '⏳' : 'В подушку'}
+            </Button>
           </div>
-        </Cell>
-        <Cell>
+        </div>
+
+        {/* Снятие с подушки */}
+        <div style={{ margin: '12px 0' }}>
           <div style={{ display: 'flex', gap: '0.5rem' }}>
             <input
               type="number"
               placeholder="Сумма"
               value={withdrawalAmount}
               onChange={(e) => setWithdrawalAmount(e.target.value)}
-              style={{ flex: 1 }}
-              disabled={loadingAction}
+              style={{ flex: 1, padding: '10px', borderRadius: '10px', border: '1px solid var(--tg-theme-hint-color)' }}
+              disabled={isWithdrawing}
             />
-            <Button onClick={() => {
-              const amount = parseFloat(withdrawalAmount);
-              if (!isNaN(amount) && amount > 0) withdrawFromSafetyFund(amount);
-              setWithdrawalAmount('');
-            }} disabled={loadingAction}>Снять с подушки</Button>
+            <Button onClick={handleWithdraw} disabled={isWithdrawing}>
+              {isWithdrawing ? '⏳' : 'Снять с подушки'}
+            </Button>
           </div>
-        </Cell>
+        </div>
       </Section>
 
       {/* Дополнительный контент (вкладки) будет внутри основного потока, а меню снизу – фиксированное */}

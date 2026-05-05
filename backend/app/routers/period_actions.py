@@ -337,6 +337,7 @@ async def withdraw_from_safety_fund(
             description=f"Снятие с подушки безопасности #{period_index}",
             period_index=period_index,
         )
+        db.commit()
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
 
