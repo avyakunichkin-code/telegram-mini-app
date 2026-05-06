@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Spinner, Button, Modal, Cell, Section } from '@telegram-apps/telegram-ui';
 import { useGame } from '../hooks/useGame';
 import { GameHUD } from './GameHUD';
@@ -7,16 +7,16 @@ import { FinanceSection } from './FinanceSection';
 import { MenuSection } from './MenuSection';
 import { showNotification } from './notifications';
 import { API } from '../api';
-import { EventModal } from './EventModal';
+import { EventDeck } from './EventDeck';
+import { MqLogo } from './MqLogo';
 
 export function GameScreen({ onLogout, onNewGame, onLoadGame }) {
   const [activeTab, setActiveTab] = useState('dashboard');
-  const [eventOpen, setEventOpen] = useState(false);
   const [salaryWarnOpen, setSalaryWarnOpen] = useState(false);
   const {
     overview,
     timeStatus,
-    pendingEvent,
+    pendingEvents,
     loading,
     error,
     setPlay,
@@ -30,10 +30,6 @@ export function GameScreen({ onLogout, onNewGame, onLoadGame }) {
     refreshOverview,
     refreshPendingEvent,
   } = useGame();
-
-  useEffect(() => {
-    if (pendingEvent) setEventOpen(true);
-  }, [pendingEvent]);
 
   const handleRequestNextPeriod = async () => {
     try {
@@ -88,7 +84,18 @@ export function GameScreen({ onLogout, onNewGame, onLoadGame }) {
   }
 
   return (
-    <div className="app-shell" style={{ padding: '12px', paddingBottom: 'calc(80px + env(safe-area-inset-bottom, 0px))' }}>
+    <div
+      className="app-shell"
+      style={{ padding: '12px', paddingBottom: 'calc(var(--tma-tabbar-height) + env(safe-area-inset-bottom, 0px))' }}
+    >
+      <header className="tma-app-header">
+        <MqLogo size={34} />
+        <div className="tma-app-header__text">
+          <span className="tma-app-header__name">Money Quest</span>
+          <span className="tma-app-header__tag">Финансы как игра</span>
+        </div>
+      </header>
+
       <Modal open={salaryWarnOpen} onClose={() => setSalaryWarnOpen(false)}>
         <Section header="Следующий период">
           <Cell multiline>
@@ -104,12 +111,11 @@ export function GameScreen({ onLogout, onNewGame, onLoadGame }) {
         </Section>
       </Modal>
 
-      <EventModal
-        open={eventOpen && !!pendingEvent}
-        event={pendingEvent}
-        onClose={() => setEventOpen(false)}
-        onChoose={async (choiceId) => {
-          await API.chooseEvent(pendingEvent.id, choiceId);
+      <EventDeck
+        events={pendingEvents}
+        onResolved={async (eventId, choiceId) => {
+          await API.chooseEvent(eventId, choiceId);
+          showNotification('Решение применено', 'success');
           await refreshOverview();
           await refreshPendingEvent();
         }}
@@ -144,26 +150,33 @@ export function GameScreen({ onLogout, onNewGame, onLoadGame }) {
         />
       )}
 
-      <div className="bottom-nav" style={{ paddingBottom: 'calc(10px + env(safe-area-inset-bottom, 0px))' }}>
+      <nav
+        className="bottom-nav tma-tabbar"
+        aria-label="Основные разделы"
+        style={{ paddingBottom: 'calc(8px + env(safe-area-inset-bottom, 0px))' }}
+      >
         <Button
+          size="s"
           mode={activeTab === 'dashboard' ? 'filled' : 'outline'}
           onClick={() => setActiveTab('dashboard')}
         >
           Главная
         </Button>
         <Button
+          size="s"
           mode={activeTab === 'finance' ? 'filled' : 'outline'}
           onClick={() => setActiveTab('finance')}
         >
           Финансы
         </Button>
         <Button
+          size="s"
           mode={activeTab === 'menu' ? 'filled' : 'outline'}
           onClick={() => setActiveTab('menu')}
         >
           Меню
         </Button>
-      </div>
+      </nav>
     </div>
   );
 }

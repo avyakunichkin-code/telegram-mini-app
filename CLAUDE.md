@@ -84,11 +84,11 @@
 - `frontend-react/src/hooks/useGame.js`
   - загрузка `overview`, `timeStatus`, `periodStatus`
   - таймер и переход периодов
-  - загрузка `pendingEvent`
+  - загрузка `pendingEvents` (массив из `/api/game/events/pending`)
 - `frontend-react/src/components/GameScreen.jsx`
-  - показывает `EventModal`, когда есть pending событие
-- `frontend-react/src/components/EventModal.jsx`
-  - UI выбора варианта события
+  - шапка с лого MQ, блок `EventDeck` с карточками событий (easy: до трёх за период)
+- `frontend-react/src/components/EventDeck.jsx`
+  - карточки: два исхода — свайп + зелёная/красная кнопки; иначе список вариантов
 - `frontend-react/src/components/FinanceSection.jsx`
   - UI инвестиций/страховок/типовых активов
 - `frontend-react/src/components/ToastHost.jsx` + `frontend-react/src/components/notifications.js`

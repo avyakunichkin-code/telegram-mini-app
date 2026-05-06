@@ -5,7 +5,7 @@ from datetime import datetime
 
 from .models import GameProfile, FinanceAsset, FinanceLiability, Transaction, InvestmentPosition
 from .balance_utils import adjust_balance, add_transaction, TRANSACTION_TYPES
-from .routers.events import ensure_event_for_period, _ensure_seed_events
+from .routers.events import ensure_period_events, _ensure_seed_events
 from .routers.insurance import charge_premiums_for_period
 
 
@@ -198,7 +198,7 @@ def process_period_end(db: Session, profile: GameProfile) -> dict:
     # 8. Событие на новый период (easy)
     try:
         _ensure_seed_events(db)
-        ensure_event_for_period(db, profile.id, profile.period_index, profile.mode)
+        ensure_period_events(db, profile.id, profile.period_index, profile.mode)
     except Exception:
         # События не должны ломать завершение периода
         pass

@@ -90,76 +90,79 @@ def _pick_weighted(defs: list[EventDefinition]) -> EventDefinition:
     return defs[-1]
 
 
-def ensure_event_for_period(db: Session, game_profile_id: int, period_index: int, mode: str) -> EventInstance | None:
-    """Гарантирует, что на период есть 0..1 pending-событие (light: создаём почти всегда)."""
-    existing = (
-        db.query(EventInstance)
-        .filter(
-            EventInstance.game_profile_id == game_profile_id,
-            EventInstance.period_index == period_index,
-            EventInstance.status == "pending",
-        )
-        .first()
-    )
-    if existing:
-        return existing
+EVENTS_PER_PERIOD_LIGHT = 3
 
+
+def _target_pending_count_for_period(mode: str) -> int:
+    """Целевое число ожидающих решения событий на один период."""
+    if mode == "light":
+        return EVENTS_PER_PERIOD_LIGHT
+    # как раньше: ~70% один сценарий, ~30% без событий
+    return 1 if random.random() <= 0.7 else 0
+
+
+def ensure_period_events(db: Session, game_profile_id: int, period_index: int, mode: str) -> None:
+    """Дозаполняет pending-события текущего периода до целевого числа (easy: три разных сценария)."""
     defs = (
         db.query(EventDefinition)
         .filter(EventDefinition.is_active == 1, EventDefinition.mode == mode)
         .all()
     )
     if not defs:
-        return None
+        return
 
-    # Easy: шанс 70% на событие в периоде.
-    if mode == "light":
-        if random.random() > 0.7:
-            return None
+    target = _target_pending_count_for_period(mode)
+    if target <= 0:
+        return
 
-    picked = _pick_weighted(defs)
-    inst = EventInstance(
-        game_profile_id=game_profile_id,
-        period_index=period_index,
-        definition_id=picked.id,
-        status="pending",
-    )
-    db.add(inst)
-    db.commit()
-    db.refresh(inst)
-    return inst
-
-
-@router.get("/pending")
-async def get_pending_event(current_user=Depends(get_current_user), db: Session = Depends(get_db)):
-    profile = get_active_game_profile(db, current_user.id)
-    sync_time(profile)
-    _ensure_seed_events(db)
-
-    inst = (
+    existing_pending = (
         db.query(EventInstance)
-        .filter(EventInstance.game_profile_id == profile.id, EventInstance.status == "pending")
-        .order_by(EventInstance.created_at.desc())
-        .first()
-    )
-    if not inst:
-        # создаём событие для текущего периода (если по шансам выпало)
-        inst = ensure_event_for_period(db, profile.id, profile.period_index, profile.mode)
-        if not inst:
-            return {"event": None}
-
-    definition = db.query(EventDefinition).filter(EventDefinition.id == inst.definition_id).first()
-    if not definition:
-        return {"event": None}
-    choices = (
-        db.query(EventChoice)
-        .filter(EventChoice.definition_id == definition.id)
-        .order_by(EventChoice.id.asc())
+        .filter(
+            EventInstance.game_profile_id == game_profile_id,
+            EventInstance.period_index == period_index,
+            EventInstance.status == "pending",
+        )
+        .order_by(EventInstance.id.asc())
         .all()
     )
+    pending_count = len(existing_pending)
+    used_def_ids = {e.definition_id for e in existing_pending}
+    need = target - pending_count
+    if need <= 0:
+        return
 
-    return {
-        "event": {
+    for _ in range(need):
+        pool = [d for d in defs if d.id not in used_def_ids]
+        if not pool:
+            pool = defs
+
+        picked = _pick_weighted(pool)
+        inst = EventInstance(
+            game_profile_id=game_profile_id,
+            period_index=period_index,
+            definition_id=picked.id,
+            status="pending",
+        )
+        db.add(inst)
+        existing_pending.append(inst)
+        used_def_ids.add(picked.id)
+
+    db.commit()
+
+
+def serialize_instance_rows(db: Session, insts: list[EventInstance]) -> list[dict]:
+    out = []
+    for inst in insts:
+        definition = db.query(EventDefinition).filter(EventDefinition.id == inst.definition_id).first()
+        if not definition:
+            continue
+        choices = (
+            db.query(EventChoice)
+            .filter(EventChoice.definition_id == definition.id)
+            .order_by(EventChoice.id.asc())
+            .all()
+        )
+        out.append({
             "id": inst.id,
             "period_index": inst.period_index,
             "key": definition.key,
@@ -169,7 +172,36 @@ async def get_pending_event(current_user=Depends(get_current_user), db: Session 
                 {"id": c.id, "title": c.title, "description": c.description}
                 for c in choices
             ],
-        }
+        })
+    return out
+
+
+@router.get("/pending")
+async def get_pending_event(current_user=Depends(get_current_user), db: Session = Depends(get_db)):
+    profile = get_active_game_profile(db, current_user.id)
+    sync_time(profile)
+    _ensure_seed_events(db)
+
+    ensure_period_events(db, profile.id, profile.period_index, profile.mode)
+
+    insts = (
+        db.query(EventInstance)
+        .filter(
+            EventInstance.game_profile_id == profile.id,
+            EventInstance.status == "pending",
+            EventInstance.period_index == profile.period_index,
+        )
+        .order_by(EventInstance.id.asc())
+        .all()
+    )
+
+    events = serialize_instance_rows(db, insts)
+
+    first = events[0] if events else None
+
+    return {
+        "events": events,
+        "event": first,
     }
 
 

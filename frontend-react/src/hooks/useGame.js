@@ -6,7 +6,7 @@ export function useGame() {
   const [overview, setOverview] = useState(null);
   const [timeStatus, setTimeStatus] = useState(null);
   const [periodStatus, setPeriodStatus] = useState(null);
-  const [pendingEvent, setPendingEvent] = useState(null);
+  const [pendingEvents, setPendingEvents] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -27,7 +27,10 @@ export function useGame() {
       setOverview(overviewData);
       setTimeStatus(timeData);
       setPeriodStatus(periodData);
-      setPendingEvent(eventData?.event ?? null);
+      const evList =
+        Array.isArray(eventData?.events) ? eventData.events
+        : (eventData?.event ? [eventData.event] : []);
+      setPendingEvents(evList);
       localRemainingRef.current = timeData.seconds_until_next_period;
       lastSyncRef.current = Date.now();
       setError(null);
@@ -53,7 +56,9 @@ export function useGame() {
 
   const refreshPendingEvent = useCallback(async () => {
     const data = await API.getPendingEvent();
-    setPendingEvent(data?.event ?? null);
+    const evList =
+      Array.isArray(data?.events) ? data.events : (data?.event ? [data.event] : []);
+    setPendingEvents(evList);
   }, []);
 
   const fetchPeriodStatus = useCallback(async () => {
@@ -192,7 +197,7 @@ export function useGame() {
   return {
     overview,
     periodStatus,
-    pendingEvent,
+    pendingEvents,
     timeStatus: timeStatus ? {
       ...timeStatus,
       remainingLocal: localRemainingRef.current,

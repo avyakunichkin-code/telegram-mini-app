@@ -13,7 +13,7 @@ export function GameHUD({ timeStatus, setPlay, setPause, onRequestNextPeriod }) 
           <span
             style={{
               fontFamily: 'var(--telegram-font-monospace, ui-monospace), monospace',
-              fontSize: '1.35rem',
+              fontSize: '1.2rem',
               fontVariantNumeric: 'tabular-nums',
               letterSpacing: '0.02em',
             }}
