@@ -1,6 +1,6 @@
 from datetime import datetime
 from typing import Optional, List
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict, Field, model_validator
 
 
 # Auth
@@ -153,11 +153,31 @@ class TimeStatusResponse(BaseModel):
 
 
 class GameStartRequest(BaseModel):
+    """Тело POST /api/game/start (новый и legacy-формат через model_validator)."""
+
+    model_config = ConfigDict(extra="ignore")
+
     profile_name: str
     mode: str
     period_duration_seconds: int
-    monthly_amount: float
-    monthly_receipts_count: int
+    cash_balance: float = 0
+    monthly_receipts_count: int = 1
+    monthly_salary: float = 0
+    monthly_amount: Optional[float] = None
+    assets: List[AssetCreate] = Field(default_factory=list)
+    liabilities: List[LiabilityCreate] = Field(default_factory=list)
+
+    @model_validator(mode="after")
+    def coalesce_monthly_salary(self):
+        if self.monthly_salary in (0, 0.0) and self.monthly_amount is not None:
+            return self.model_copy(update={"monthly_salary": float(self.monthly_amount)})
+        return self
+
+
+class GameStartResponse(BaseModel):
+    profile_id: int
+    message: str
+
 
 # ==================== ДЕЙСТВИЯ ПЕРИОДА ====================
 

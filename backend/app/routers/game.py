@@ -174,8 +174,10 @@ async def start_new_game(
         asset = FinanceAsset(
             game_profile_id=new_profile.id,
             title=asset_data.title,
+            kind=getattr(asset_data, "kind", None) or "generic",
             asset_value=asset_data.asset_value,
             monthly_maintenance_cost=asset_data.monthly_maintenance_cost,
+            monthly_income=float(getattr(asset_data, "monthly_income", 0) or 0),
             is_active=1
         )
         db.add(asset)
