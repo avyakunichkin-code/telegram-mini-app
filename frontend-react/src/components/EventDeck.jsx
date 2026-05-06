@@ -1,92 +1,40 @@
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState, useCallback } from 'react';
+import { Button } from '@telegram-apps/telegram-ui';
 import { showNotification } from './notifications';
-
-const SWIPE_PX = 56;
 
 function truncate(str, len) {
   if (!str) return '';
   return str.length <= len ? str : `${str.slice(0, len - 1)}…`;
 }
 
-/** Карточка события с ровно двумя исходами: свайп ↔ и две наглядные кнопки. */
 function BinaryEventCard({ event, onPick, disabled }) {
-  const startX = useRef(null);
-  const [offset, setOffset] = useState(0);
-
   const c0 = event.choices[0];
   const c1 = event.choices[1];
-
-  const commitSwipe = async (direction) => {
-    if (disabled) return;
-    const choiceId = direction >= 0 ? c0.id : c1.id;
-    await onPick(event.id, choiceId);
-  };
-
-  const onTouchStart = (e) => {
-    startX.current = e.touches[0].clientX;
-  };
-
-  const onTouchMove = (e) => {
-    if (startX.current === null) return;
-    const x = e.touches[0].clientX;
-    const d = Math.max(-SWIPE_PX * 2, Math.min(SWIPE_PX * 2, x - startX.current));
-    setOffset(d);
-  };
-
-  const onTouchEnd = () => {
-    if (Math.abs(offset) >= SWIPE_PX) {
-      void commitSwipe(offset);
-    }
-    startX.current = null;
-    setOffset(0);
-  };
 
   return (
     <div className="event-deck-card tma-bordered-inner">
       <div className="event-deck-card__meta">Период #{event.period_index}</div>
       <div className="event-deck-card__title">{event.title}</div>
       <div className="event-deck-card__desc">{event.description}</div>
-      <div className="event-deck-swipe-area">
-        <div className="event-deck-swipe-hint-left">← {truncate(c1.title, 28)}</div>
-        <div className="event-deck-swipe-hint-right">{truncate(c0.title, 28)} →</div>
-      </div>
-      <div
-        className="event-deck-surface"
-        onTouchStart={onTouchStart}
-        onTouchMove={onTouchMove}
-        onTouchEnd={onTouchEnd}
-      >
-        <div
-          className="event-deck-surface__inner"
-          style={{ transform: `translateX(${offset * 0.35}px)` }}
-        >
-          Свайп или кнопки
-        </div>
-        <div
-          className="event-deck-surface__tint event-deck-surface__tint--no"
-          style={{ opacity: offset < -24 ? Math.min(0.35, (-offset / SWIPE_PX) * 0.25) : 0 }}
-        />
-        <div
-          className="event-deck-surface__tint event-deck-surface__tint--yes"
-          style={{ opacity: offset > 24 ? Math.min(0.35, (offset / SWIPE_PX) * 0.25) : 0 }}
-        />
-      </div>
+      <p className="event-deck-choice-hint">
+        Первое действие — зелёная кнопка, второе — красная.
+      </p>
       <div className="event-deck-actions">
         <button
           type="button"
           className="tma-choice-btn tma-choice-btn--no"
           disabled={disabled}
-          onClick={() => { void commitSwipe(-1); }}
+          onClick={() => { void onPick(event.id, c1.id); }}
         >
-          {truncate(c1.title, 56)}
+          {truncate(c1.title, 64)}
         </button>
         <button
           type="button"
           className="tma-choice-btn tma-choice-btn--yes"
           disabled={disabled}
-          onClick={() => { void commitSwipe(1); }}
+          onClick={() => { void onPick(event.id, c0.id); }}
         >
-          {truncate(c0.title, 56)}
+          {truncate(c0.title, 64)}
         </button>
       </div>
     </div>
@@ -117,10 +65,107 @@ function PolyEventCard({ event, onPick, disabled }) {
   );
 }
 
-export function EventDeck({ events, onResolved }) {
-  const [busyId, setBusyId] = useState(null);
+function EventCardInner({ event, onPick, busyId }) {
+  const disabled = busyId !== null;
+  const n = event.choices?.length ?? 0;
+  if (n === 2) {
+    return <BinaryEventCard event={event} onPick={onPick} disabled={disabled} />;
+  }
+  return <PolyEventCard event={event} onPick={onPick} disabled={disabled} />;
+}
 
-  if (!events || events.length === 0) return null;
+export function EventsTriggerButton({ count, open, onOpen }) {
+  if (count <= 0) return null;
+  return (
+    <div className="tma-events-trigger-wrap">
+      <Button size="s" mode={open ? 'filled' : 'outline'} className="tma-events-trigger" onClick={onOpen}>
+        События
+        <span className="tma-events-badge" aria-hidden>
+          {count}
+        </span>
+      </Button>
+    </div>
+  );
+}
+
+const CAROUSEL_EDGE = 52;
+const SLIDE_MS = 290;
+
+/** Полный экран над игрой; карточки переключаются стрелками / свайпом (новая выезжает поверх текущей). Закрытие — только ×. */
+export function EventCarouselOverlay({ open, onClose, events, onResolved }) {
+  const [idx, setIdx] = useState(0);
+  const [busyId, setBusyId] = useState(null);
+  const [slide, setSlide] = useState(null);
+  const animLock = useRef(false);
+  const touchStart = useRef(null);
+  const slideTimer = useRef(null);
+
+  const list = Array.isArray(events) ? events : [];
+  const n = list.length;
+
+  const clearSlideTimer = () => {
+    if (slideTimer.current) {
+      window.clearTimeout(slideTimer.current);
+      slideTimer.current = null;
+    }
+  };
+
+  useEffect(() => {
+    if (open) setIdx(0);
+  }, [open]);
+
+  useEffect(() => {
+    setIdx((i) => (n === 0 ? 0 : Math.min(Math.max(i, 0), n - 1)));
+  }, [n]);
+
+  useEffect(() => () => clearSlideTimer(), []);
+
+  const finalizeSlide = useCallback((enterIdx) => {
+    clearSlideTimer();
+    setIdx(enterIdx);
+    setSlide(null);
+    animLock.current = false;
+  }, []);
+
+  const startSlide = useCallback(
+    (dir, enterIdx) => {
+      if (busyId !== null || animLock.current || n === 0) return;
+      if (enterIdx < 0 || enterIdx >= n) return;
+      animLock.current = true;
+      setSlide({ dir, enterIdx });
+      clearSlideTimer();
+      slideTimer.current = window.setTimeout(() => finalizeSlide(enterIdx), SLIDE_MS);
+    },
+    [busyId, n, finalizeSlide],
+  );
+
+  const goNext = useCallback(() => {
+    if (idx >= n - 1) return;
+    startSlide('next', idx + 1);
+  }, [idx, n, startSlide]);
+
+  const goPrev = useCallback(() => {
+    if (idx <= 0) return;
+    startSlide('prev', idx - 1);
+  }, [idx, startSlide]);
+
+  const onViewportTouchStart = (e) => {
+    if (busyId !== null || slide || animLock.current) return;
+    if (e.target.closest('button, a, [role="button"]')) return;
+    touchStart.current = e.touches[0].clientX;
+  };
+
+  const onViewportTouchEnd = (e) => {
+    const start = touchStart.current;
+    touchStart.current = null;
+    if (start === null || slide || busyId !== null) return;
+    const end = e.changedTouches[0]?.clientX;
+    if (end === undefined) return;
+    const dx = end - start;
+    if (Math.abs(dx) < CAROUSEL_EDGE) return;
+    if (dx < 0) goNext();
+    else goPrev();
+  };
 
   const handlePick = async (eventInstanceId, choiceId) => {
     setBusyId(eventInstanceId);
@@ -133,26 +178,105 @@ export function EventDeck({ events, onResolved }) {
     }
   };
 
+  const onDotActivate = useCallback(
+    (i) => {
+      if (busyId !== null || slide || animLock.current) return;
+      if (i === idx) return;
+      startSlide(i > idx ? 'next' : 'prev', i);
+    },
+    [busyId, idx, slide, startSlide],
+  );
+
+  useEffect(() => {
+    if (n === 0 && open) onClose();
+  }, [n, open, onClose]);
+
+  if (!open || n === 0) return null;
+
+  const current = list[idx];
+  const entering = slide ? list[slide.enterIdx] : null;
+
   return (
-    <section className="event-deck-shell tma-bordered-inner" aria-label="События периода">
-      <div className="event-deck-shell__hdr">
-        <span className="event-deck-shell__title">Ситуации месяца</span>
-        <span className="event-deck-shell__count">{events.length}</span>
-      </div>
-      <p className="event-deck-shell__hint">
-        Если два исхода: свайп вправо или зелёная кнопка — первое действие; влево или красная — второе.
-      </p>
-      <div className="event-deck-list">
-        {events.map((ev) => (
-          <div key={ev.id}>
-            {(ev.choices?.length ?? 0) === 2 ? (
-              <BinaryEventCard event={ev} onPick={handlePick} disabled={busyId !== null} />
-            ) : (
-              <PolyEventCard event={ev} onPick={handlePick} disabled={busyId !== null} />
-            )}
+    <div className="events-overlay-root" role="dialog" aria-modal="true" aria-labelledby="events-overlay-title">
+      <div className="events-overlay-backdrop" />
+
+      <div className="events-overlay-panel">
+        <div className="events-overlay-toolbar">
+          <div className="events-overlay-toolbar__left">
+            <span id="events-overlay-title" className="events-overlay-title">
+              Ситуации месяца
+            </span>
           </div>
-        ))}
+          <button type="button" className="events-overlay-close" aria-label="Закрыть" onClick={onClose}>
+            ×
+          </button>
+        </div>
+
+        {n > 1 ? (
+          <div className="events-carousel-dots">
+            {list.map((ev, i) => (
+              <button
+                key={ev.id}
+                type="button"
+                className={`events-carousel-dot ${i === idx && !slide ? 'events-carousel-dot--active' : ''}`}
+                aria-label={`Ситуация ${i + 1}`}
+                aria-current={i === idx && !slide ? 'step' : undefined}
+                disabled={!!slide || busyId !== null}
+                onClick={() => onDotActivate(i)}
+              />
+            ))}
+          </div>
+        ) : null}
+
+        <div
+          className="event-carousel-viewport"
+          onTouchStart={onViewportTouchStart}
+          onTouchEnd={onViewportTouchEnd}
+          onTouchCancel={() => { touchStart.current = null; }}
+        >
+          {current ? (
+            <div
+              className={`event-carousel-layer event-carousel-layer--base ${slide ? 'event-carousel-layer--dim' : ''}`}
+              aria-hidden={!!slide}
+            >
+              <EventCardInner event={current} onPick={handlePick} busyId={busyId} />
+            </div>
+          ) : null}
+
+          {entering ? (
+            <div
+              key={`${entering.id}-${slide.dir}-${slide.enterIdx}`}
+              className={`event-carousel-layer event-carousel-layer--top event-carousel-layer--enter-${slide.dir}`}
+            >
+              <EventCardInner event={entering} onPick={handlePick} busyId={busyId} />
+            </div>
+          ) : null}
+        </div>
+
+        <div className="events-carousel-nav">
+          <button
+            type="button"
+            className="events-carousel-arrow"
+            aria-label="Предыдущая карточка"
+            disabled={idx <= 0 || !!slide || busyId !== null}
+            onClick={() => goPrev()}
+          >
+            ‹
+          </button>
+          <span className="events-carousel-counter">
+            {idx + 1} / {n}
+          </span>
+          <button
+            type="button"
+            className="events-carousel-arrow"
+            aria-label="Следующая карточка"
+            disabled={idx >= n - 1 || !!slide || busyId !== null}
+            onClick={() => goNext()}
+          >
+            ›
+          </button>
+        </div>
       </div>
-    </section>
+    </div>
   );
 }

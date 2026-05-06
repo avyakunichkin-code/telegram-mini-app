@@ -86,9 +86,10 @@
   - таймер и переход периодов
   - загрузка `pendingEvents` (массив из `/api/game/events/pending`)
 - `frontend-react/src/components/GameScreen.jsx`
-  - шапка с лого MQ, блок `EventDeck` с карточками событий (easy: до трёх за период)
+  - шапка: лого MQ + кнопка «События» (бейдж = число активных сценариев)
+  - слой `EventCarouselOverlay` поверх интерфейса: слайдер карточек (easy: до трёх за период), закрытие ×
 - `frontend-react/src/components/EventDeck.jsx`
-  - карточки: два исхода — свайп + зелёная/красная кнопки; иначе список вариантов
+  - `EventsTriggerButton`, `EventCarouselOverlay`: два исхода — красная/зелёная кнопки иначе список; перелистывание ‹ › или свайп по полю карты
 - `frontend-react/src/components/FinanceSection.jsx`
   - UI инвестиций/страховок/типовых активов
 - `frontend-react/src/components/ToastHost.jsx` + `frontend-react/src/components/notifications.js`

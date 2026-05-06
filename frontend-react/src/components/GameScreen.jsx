@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import { Spinner, Button, Modal, Cell, Section } from '@telegram-apps/telegram-ui';
 import { useGame } from '../hooks/useGame';
 import { GameHUD } from './GameHUD';
@@ -7,12 +7,13 @@ import { FinanceSection } from './FinanceSection';
 import { MenuSection } from './MenuSection';
 import { showNotification } from './notifications';
 import { API } from '../api';
-import { EventDeck } from './EventDeck';
+import { EventsTriggerButton, EventCarouselOverlay } from './EventDeck';
 import { MqLogo } from './MqLogo';
 
 export function GameScreen({ onLogout, onNewGame, onLoadGame }) {
   const [activeTab, setActiveTab] = useState('dashboard');
   const [salaryWarnOpen, setSalaryWarnOpen] = useState(false);
+  const [eventsOpen, setEventsOpen] = useState(false);
   const {
     overview,
     timeStatus,
@@ -30,6 +31,8 @@ export function GameScreen({ onLogout, onNewGame, onLoadGame }) {
     refreshOverview,
     refreshPendingEvent,
   } = useGame();
+
+  const closeEventsOverlay = useCallback(() => setEventsOpen(false), []);
 
   const handleRequestNextPeriod = async () => {
     try {
@@ -94,6 +97,11 @@ export function GameScreen({ onLogout, onNewGame, onLoadGame }) {
           <span className="tma-app-header__name">Money Quest</span>
           <span className="tma-app-header__tag">Финансы как игра</span>
         </div>
+        <EventsTriggerButton
+          count={pendingEvents?.length ?? 0}
+          open={eventsOpen}
+          onOpen={() => setEventsOpen(true)}
+        />
       </header>
 
       <Modal open={salaryWarnOpen} onClose={() => setSalaryWarnOpen(false)}>
@@ -111,7 +119,9 @@ export function GameScreen({ onLogout, onNewGame, onLoadGame }) {
         </Section>
       </Modal>
 
-      <EventDeck
+      <EventCarouselOverlay
+        open={eventsOpen}
+        onClose={closeEventsOverlay}
         events={pendingEvents}
         onResolved={async (eventId, choiceId) => {
           await API.chooseEvent(eventId, choiceId);
