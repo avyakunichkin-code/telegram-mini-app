@@ -124,6 +124,8 @@ class FinanceLiability(Base):
     total_debt = Column(Float, nullable=False)
     annual_rate_percent = Column(Float, nullable=False)
     monthly_payment = Column(Float, nullable=False)
+    overdue_amount = Column(Float, nullable=False, default=0)  # сумма просрочки (неоплаченная часть)
+    overdue_periods = Column(Integer, nullable=False, default=0)  # сколько периодов подряд есть просрочка
     is_active = Column(Integer, nullable=False, default=1)   # НОВОЕ
     created_at = Column(DateTime, default=datetime.utcnow)
     game_profile = relationship("GameProfile", back_populates="finance_liabilities")

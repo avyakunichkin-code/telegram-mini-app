@@ -5,29 +5,21 @@ import { showNotification } from './notifications';
 export function FinanceSection({ overview, refreshOverview }) {
   const handleDeleteLiability = async (id) => {
     try {
-      const result = await API.deleteLiability(id);
-      if (result && !result.error) {
-        await refreshOverview();
-        showNotification('Обязательство удалено', 'success');
-      } else {
-        showNotification(result?.detail || 'Ошибка удаления', 'error');
-      }
+      await API.deleteLiability(id);
+      await refreshOverview();
+      showNotification('Обязательство удалено', 'success');
     } catch (err) {
-      showNotification('Ошибка соединения', 'error');
+      showNotification(err?.detail || err?.message || 'Ошибка соединения', 'error');
     }
   };
 
   const handleDeleteAsset = async (id) => {
     try {
-      const result = await API.deleteAsset(id);
-      if (result && !result.error) {
-        await refreshOverview();
-        showNotification('Актив удалён', 'success');
-      } else {
-        showNotification(result?.detail || 'Ошибка удаления', 'error');
-      }
+      await API.deleteAsset(id);
+      await refreshOverview();
+      showNotification('Актив удалён', 'success');
     } catch (err) {
-      showNotification('Ошибка соединения', 'error');
+      showNotification(err?.detail || err?.message || 'Ошибка соединения', 'error');
     }
   };
 

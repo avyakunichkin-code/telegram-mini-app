@@ -10,6 +10,7 @@ import { StartMenuScreen } from './components/StartMenuScreen';
 import { DifficultyScreen } from './components/DifficultyScreen';
 import { BaseParamsScreen } from './components/BaseParamsScreen';
 import { GameScreen } from './components/GameScreen';
+import { ToastHost } from './components/ToastHost';
 
 import '@telegram-apps/telegram-ui/dist/styles.css';
 
@@ -50,8 +51,6 @@ function GameApp() {
       if (result) {
         setScreen('game');
         // Дополнительно можно сохранить профиль активным, но сервер уже сделал это
-      } else {
-        alert('Ошибка при старте игры');
       }
     };
 
@@ -112,6 +111,7 @@ function App() {
   return (
     <AppRoot>   {/* <-- обязательно */}
       <AuthProvider>
+        <ToastHost />
         <HashRouter>
           <Routes>
             <Route path="/login" element={<LoginForm onSwitchToRegister={() => window.location.href='/register'} />} />

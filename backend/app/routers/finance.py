@@ -279,6 +279,8 @@ async def finance_overview(
             total_debt=l.total_debt,
             annual_rate_percent=l.annual_rate_percent,
             monthly_payment=l.monthly_payment,
+            overdue_amount=float(getattr(l, "overdue_amount", 0) or 0),
+            overdue_periods=int(getattr(l, "overdue_periods", 0) or 0),
             created_at=l.created_at
         ) for l in liabilities_orm
     ]
@@ -303,8 +305,16 @@ async def finance_overview(
     total_monthly_obligations = total_liability_payment + total_asset_maintenance
     net_cashflow = monthly_income - total_monthly_obligations
     liabilities_ratio = (total_liability_payment / monthly_income * 100) if monthly_income > 0 else 0
+    total_overdue_amount = sum(float(l.overdue_amount or 0) for l in liabilities_orm)
+    overdue_liabilities_count = sum(1 for l in liabilities_orm if float(getattr(l, "overdue_amount", 0) or 0) > 0)
 
     score, level, xp_to_next = _compute_gamification(net_cashflow, liabilities_ratio, len(assets))
+
+    # MVP-условие победы: подушка >= 3 * обязательные расходы, нет просрочек, net_cashflow >= 0
+    win_target_safety_fund = float(total_monthly_obligations) * 3.0
+    win_progress_safety_fund = 1.0 if win_target_safety_fund <= 0 else float(profile.safety_fund_balance) / win_target_safety_fund
+    win_ready = (total_overdue_amount <= 0) and (net_cashflow >= 0)
+    win_reached = win_ready and (float(profile.safety_fund_balance) >= win_target_safety_fund) and (win_target_safety_fund > 0)
 
     return FinanceOverview(
         salary=SalaryProfileResponse(
@@ -327,5 +337,11 @@ async def finance_overview(
         seconds_until_next_period=get_seconds_until_next(profile),
         cash_balance=round(profile.cash_balance, 2),
         safety_fund_balance=round(profile.safety_fund_balance, 2),
-        total_monthly_obligations=round(total_monthly_obligations, 2)
+        total_monthly_obligations=round(total_monthly_obligations, 2),
+        total_overdue_amount=round(total_overdue_amount, 2),
+        overdue_liabilities_count=overdue_liabilities_count,
+        win_target_safety_fund=round(win_target_safety_fund, 2),
+        win_progress_safety_fund=round(win_progress_safety_fund, 4),
+        win_ready=bool(win_ready),
+        win_reached=bool(win_reached),
     )

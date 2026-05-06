@@ -15,14 +15,22 @@ export function StartMenuScreen({ onNewGame, onLoadGame, onLogout }) {
 
   const loadProfiles = async () => {
     setLoading(true);
-    const data = await API.getGameProfiles();
-    if (data) setProfiles(data);
+    try {
+      const data = await API.getGameProfiles();
+      setProfiles(data || []);
+    } catch (e) {
+      setProfiles([]);
+    }
     setLoading(false);
   };
 
   const handleActivate = async (profileId) => {
-    await API.activateGameProfile(profileId);
-    if (onLoadGame) onLoadGame();
+    try {
+      await API.activateGameProfile(profileId);
+      if (onLoadGame) onLoadGame();
+    } catch (e) {
+      // на MVP молча остаёмся на экране
+    }
   };
 
   const lastProfile = profiles.find(p => p.is_active) || profiles[0];

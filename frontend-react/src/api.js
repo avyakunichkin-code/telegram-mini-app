@@ -9,6 +9,18 @@ export function setAuthToken(token) {
     else localStorage.removeItem('tg_miniapp_token');
 }
 
+export class ApiError extends Error {
+  constructor({ status, detail, raw, endpoint, method }) {
+    super(typeof detail === 'string' ? detail : 'Ошибка запроса');
+    this.name = 'ApiError';
+    this.status = status;
+    this.detail = detail;
+    this.raw = raw;
+    this.endpoint = endpoint;
+    this.method = method;
+  }
+}
+
 async function apiCall(endpoint, method = 'GET', data = null) {
   const headers = { 'Content-Type': 'application/json' };
   if (authToken) headers['Authorization'] = `Bearer ${authToken}`;
@@ -30,13 +42,13 @@ async function apiCall(endpoint, method = 'GET', data = null) {
   }
 
   if (!response.ok) {
-    // Возвращаем структурированную ошибку вместо выброса исключения
-    return {
-      error: true,
+    throw new ApiError({
       status: response.status,
-      detail: responseBody.detail || responseBody.message || responseBody,
+      detail: responseBody?.detail || responseBody?.message || responseBody,
       raw: responseBody,
-    };
+      endpoint,
+      method,
+    });
   }
 
   return responseBody;
@@ -72,6 +84,10 @@ export const API = {
     },
     setTimeNext() {
         return apiCall('/api/game/time/next', 'POST');
+    },
+    // Период
+    getPeriodStatus() {
+        return apiCall('/api/game/period/status');
     },
     // Финансы
     getOverview() {

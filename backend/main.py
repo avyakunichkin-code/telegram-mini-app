@@ -15,12 +15,22 @@ def ensure_schema_compatibility() -> None:
     if "game_profiles" not in inspector.get_table_names():
         return
 
-    columns = {item["name"] for item in inspector.get_columns("game_profiles")}
     statements = []
+
+    # ---- game_profiles ----
+    columns = {item["name"] for item in inspector.get_columns("game_profiles")}
     if "base_params_locked" not in columns:
         statements.append("ALTER TABLE game_profiles ADD COLUMN base_params_locked INTEGER NOT NULL DEFAULT 0")
     if "onboarding_state" not in columns:
         statements.append("ALTER TABLE game_profiles ADD COLUMN onboarding_state VARCHAR(30) NOT NULL DEFAULT 'draft'")
+
+    # ---- finance_liabilities ----
+    if "finance_liabilities" in inspector.get_table_names():
+        liab_columns = {item["name"] for item in inspector.get_columns("finance_liabilities")}
+        if "overdue_amount" not in liab_columns:
+            statements.append("ALTER TABLE finance_liabilities ADD COLUMN overdue_amount FLOAT NOT NULL DEFAULT 0")
+        if "overdue_periods" not in liab_columns:
+            statements.append("ALTER TABLE finance_liabilities ADD COLUMN overdue_periods INTEGER NOT NULL DEFAULT 0")
 
     if not statements:
         return
@@ -28,7 +38,7 @@ def ensure_schema_compatibility() -> None:
     with engine.begin() as connection:
         for stmt in statements:
             connection.execute(text(stmt))
-    print(f"✅ Схема game_profiles обновлена: {len(statements)} изм.")
+    print(f"✅ Схема обновлена: {len(statements)} изм.")
 
 
 # Создаём/обновляем таблицы

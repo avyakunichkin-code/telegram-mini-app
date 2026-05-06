@@ -5,6 +5,7 @@ import { API } from '../api';
 export function useGame() {
   const [overview, setOverview] = useState(null);
   const [timeStatus, setTimeStatus] = useState(null);
+  const [periodStatus, setPeriodStatus] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -15,12 +16,14 @@ export function useGame() {
   // Загрузка данных
   const loadData = useCallback(async () => {
     try {
-      const [overviewData, timeData] = await Promise.all([
+      const [overviewData, timeData, periodData] = await Promise.all([
         API.getOverview(),
         API.getTimeStatus(),
+        API.getPeriodStatus(),
       ]);
       setOverview(overviewData);
       setTimeStatus(timeData);
+      setPeriodStatus(periodData);
       localRemainingRef.current = timeData.seconds_until_next_period;
       lastSyncRef.current = Date.now();
       setError(null);
@@ -35,6 +38,11 @@ export function useGame() {
   const refreshOverview = useCallback(async () => {
     const data = await API.getOverview();
     setOverview(data);
+  }, []);
+
+  const refreshPeriodStatus = useCallback(async () => {
+    const data = await API.getPeriodStatus();
+    setPeriodStatus(data);
   }, []);
 
   // Таймер
@@ -76,12 +84,13 @@ export function useGame() {
       lastSyncRef.current = Date.now();
       // Обновляем overview
       await refreshOverview();
+      await refreshPeriodStatus();
       // Если режим play – перезапускаем таймер
       if (newTime.time_state === 'play') {
         startTimer();
       }
     }
-  }, [refreshOverview, startTimer]);
+  }, [refreshOverview, refreshPeriodStatus, startTimer]);
 
   // Действия времени
   const setPlay = useCallback(async () => {
@@ -106,40 +115,60 @@ export function useGame() {
 
   const nextPeriod = useCallback(async () => {
     stopTimer();
+
+    // Ручной Next: предупредим, что зарплата сгорит.
+    try {
+      const status = await API.getPeriodStatus();
+      setPeriodStatus(status);
+      if (status && status.salary_claimed === false && status.can_claim_salary) {
+        const ok = window.confirm(
+          'Вы не получили зарплату в этом периоде. Если перейти дальше, зарплата сгорит. Перейти в следующий период?'
+        );
+        if (!ok) return;
+      }
+    } catch (e) {
+      // Если статус не получили — не блокируем переход.
+    }
+
     const result = await API.setTimeNext();
     if (result) {
       setTimeStatus(result);
       localRemainingRef.current = result.seconds_until_next_period;
       lastSyncRef.current = Date.now();
       await refreshOverview();
+      await refreshPeriodStatus();
       if (result.time_state === 'play') startTimer();
     }
-  }, [refreshOverview, startTimer, stopTimer]);
+    return result;
+  }, [refreshOverview, refreshPeriodStatus, startTimer, stopTimer]);
 
   // Действия периода
   const claimSalary = useCallback(async () => {
     const result = await API.claimSalary();
     if (result && result.status === 'success') {
       await refreshOverview();
+      await refreshPeriodStatus();
     }
     return result;
-  }, [refreshOverview]);
+  }, [refreshOverview, refreshPeriodStatus]);
 
   const contributeToSafetyFund = useCallback(async (amount) => {
     const result = await API.contributeToSafetyFund({ amount });
     if (result && result.status === 'success') {
       await refreshOverview();
+      await refreshPeriodStatus();
     }
     return result;
-  }, [refreshOverview]);
+  }, [refreshOverview, refreshPeriodStatus]);
 
   const withdrawFromSafetyFund = useCallback(async (amount) => {
     const result = await API.withdrawFromSafetyFund({ amount });
     if (result && result.status === 'success') {
       await refreshOverview();
+      await refreshPeriodStatus();
     }
     return result;
-  }, [refreshOverview]);
+  }, [refreshOverview, refreshPeriodStatus]);
 
   // Инициализация
   useEffect(() => {
@@ -158,6 +187,7 @@ export function useGame() {
 
   return {
     overview,
+    periodStatus,
     timeStatus: timeStatus ? {
       ...timeStatus,
       remainingLocal: localRemainingRef.current,
@@ -171,5 +201,6 @@ export function useGame() {
     contributeToSafetyFund,
     withdrawFromSafetyFund,
     refreshOverview,
+    refreshPeriodStatus,
   };
 }

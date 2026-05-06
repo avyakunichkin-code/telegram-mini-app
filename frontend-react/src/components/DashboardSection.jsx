@@ -5,8 +5,28 @@ import { showNotification } from './notifications';
 export function DashboardSection({ overview, claimSalary, contributeToSafetyFund, withdrawFromSafetyFund, refreshOverview }) {
   const [contributionAmount, setContributionAmount] = useState('');
   const [withdrawalAmount, setWithdrawalAmount] = useState('');
+  const [isClaiming, setIsClaiming] = useState(false);
   const [isContributing, setIsContributing] = useState(false);
   const [isWithdrawing, setIsWithdrawing] = useState(false);
+
+  const handleClaimSalary = async () => {
+    if (isClaiming) return;
+    setIsClaiming(true);
+    try {
+      const result = await claimSalary();
+      if (result && result.status === 'success') {
+        showNotification(result.message || 'Зарплата получена!', 'success');
+        await refreshOverview();
+      } else {
+        showNotification('Неизвестная ошибка', 'error');
+      }
+    } catch (err) {
+      console.error(err);
+      showNotification(err?.detail || err?.message || 'Ошибка соединения с сервером', 'error');
+    } finally {
+      setIsClaiming(false);
+    }
+  };
 
   const handleContribute = async () => {
     const amount = parseFloat(contributionAmount);
@@ -17,16 +37,17 @@ export function DashboardSection({ overview, claimSalary, contributeToSafetyFund
     setIsContributing(true);
     try {
       const result = await contributeToSafetyFund(amount);
-      if (result && !result.error && result.status === 'success') {
+      if (result && result.status === 'success') {
         showNotification(result.message || `Подушка пополнена на ${amount} ₽`, 'success');
         setContributionAmount('');
+        await refreshOverview();
       } else {
         const errorMsg = result?.detail || result?.message || 'Ошибка при пополнении подушки';
         showNotification(errorMsg, 'error');
       }
     } catch (err) {
       console.error(err);
-      showNotification('Ошибка соединения с сервером', 'error');
+      showNotification(err?.detail || err?.message || 'Ошибка соединения с сервером', 'error');
     } finally {
       setIsContributing(false);
     }
@@ -41,16 +62,17 @@ export function DashboardSection({ overview, claimSalary, contributeToSafetyFund
     setIsWithdrawing(true);
     try {
       const result = await withdrawFromSafetyFund(amount);
-      if (result && !result.error && result.status === 'success') {
+      if (result && result.status === 'success') {
         showNotification(result.message || `С подушки снято ${amount} ₽`, 'success');
         setWithdrawalAmount('');
+        await refreshOverview();
       } else {
         const errorMsg = result?.detail || result?.message || 'Ошибка при снятии';
         showNotification(errorMsg, 'error');
       }
     } catch (err) {
       console.error(err);
-      showNotification('Ошибка соединения с сервером', 'error');
+      showNotification(err?.detail || err?.message || 'Ошибка соединения с сервером', 'error');
     } finally {
       setIsWithdrawing(false);
     }
@@ -66,14 +88,30 @@ export function DashboardSection({ overview, claimSalary, contributeToSafetyFund
           <div>💰 Баланс: {overview.cash_balance.toFixed(2)} ₽</div>
           <div>🛡️ Подушка: {overview.safety_fund_balance.toFixed(2)} ₽</div>
           <div>📈 Чистый поток: {overview.net_monthly_cashflow.toFixed(2)} ₽</div>
+          {typeof overview.total_overdue_amount === 'number' && overview.total_overdue_amount > 0 && (
+            <div>⏰ Просрочки: {overview.total_overdue_amount.toFixed(2)} ₽</div>
+          )}
         </Cell>
       </Section>
+
+      {/* Победа (MVP) */}
+      {typeof overview.win_target_safety_fund === 'number' && overview.win_target_safety_fund > 0 && (
+        <Section header="Цель (победа)">
+          <Cell multiline>
+            <div>🎯 Подушка: {overview.safety_fund_balance.toFixed(2)} / {overview.win_target_safety_fund.toFixed(2)} ₽</div>
+            <div>✅ Условия: нет просрочек и чистый поток ≥ 0</div>
+            <div>
+              Статус: {overview.win_reached ? 'ПОБЕДА!' : overview.win_ready ? 'готов(а) к победе — дожми подушку' : 'пока не выполнено'}
+            </div>
+          </Cell>
+        </Section>
+      )}
 
       {/* Действия периода */}
       <Section header="Действия периода">
         <Cell>
-          <Button stretched onClick={claimSalary} disabled={isContributing || isWithdrawing}>
-            Получить зарплату
+          <Button stretched onClick={handleClaimSalary} disabled={isClaiming || isContributing || isWithdrawing}>
+            {isClaiming ? <div className="spinner" /> : 'Получить зарплату'}
           </Button>
         </Cell>
         <div style={{ margin: '12px 0' }}>
@@ -87,7 +125,7 @@ export function DashboardSection({ overview, claimSalary, contributeToSafetyFund
               disabled={isContributing}
             />
             <Button onClick={handleContribute} disabled={isContributing}>
-              {isContributing ? '⏳' : 'В подушку'}
+              {isContributing ? <div className="spinner" /> : 'В подушку'}
             </Button>
           </div>
         </div>
@@ -102,7 +140,7 @@ export function DashboardSection({ overview, claimSalary, contributeToSafetyFund
               disabled={isWithdrawing}
             />
             <Button onClick={handleWithdraw} disabled={isWithdrawing}>
-              {isWithdrawing ? '⏳' : 'Снять с подушки'}
+              {isWithdrawing ? <div className="spinner" /> : 'Снять с подушки'}
             </Button>
           </div>
         </div>
