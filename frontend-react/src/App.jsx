@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { HashRouter, Routes, Route } from 'react-router-dom';
 import { AppRoot } from '@telegram-apps/telegram-ui';  // импортируем AppRoot
-import { API } from './api';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { AuthGuard } from './components/AuthGuard';
 import { LoginForm } from './components/LoginForm';
@@ -17,11 +16,6 @@ import '@telegram-apps/telegram-ui/dist/styles.css';
 function GameApp() {
   const [screen, setScreen] = useState('start'); // 'start', 'difficulty', 'baseParams', 'game'
   const [difficultyConfig, setDifficultyConfig] = useState(null);
-  const [newGameState, setNewGameState] = useState({
-    profile_name: '',
-    mode: 'light',
-    period_duration_seconds: 300,
-  });
   const { logout } = useAuth();
 
   const handleNewGame = () => {
@@ -29,32 +23,11 @@ function GameApp() {
   };
 
   const handleDifficultyNext = (config) => {
-    console.log('Config from difficulty:', config); // проверьте, что config.profile_name не пуст
     setDifficultyConfig(config);
     setScreen('baseParams');
   };
 
   const handleDifficultyBack = () => setScreen('start');
-
-  const handleBaseParamsStart = async (params) => {
-      // Объединяем config из DifficultyScreen с параметрами из BaseParamsScreen
-      const fullConfig = {
-        profile_name: difficultyConfig.profileName,
-        mode: difficultyConfig.mode,
-        period_duration_seconds: difficultyConfig.periodDuration,
-        cash_balance: params.cash_balance,
-        monthly_salary: params.monthly_salary,
-        assets: params.assets,
-        liabilities: params.liabilities,
-      };
-      const result = await API.startNewGame(fullConfig);
-      if (result) {
-        setScreen('game');
-        // Дополнительно можно сохранить профиль активным, но сервер уже сделал это
-      }
-    };
-
-  const handleBaseParamsBack = () => setScreen('difficulty');
 
   const handleLoadGame = () => {
     // После загрузки профиля переходим в игру
@@ -66,13 +39,10 @@ function GameApp() {
     window.location.href = '/login';
   };
 
-  const handleGameStarted = (result) => {
-    console.log('Игра создана', result);
+  const handleGameStarted = () => {
     setScreen('game');
   };
 
-  // Здесь будут другие экраны (DifficultyScreen, BaseParamsScreen, GameScreen)
-  // пока показываем StartMenuScreen
   if (screen === 'start') {
     return <StartMenuScreen onNewGame={handleNewGame} onLoadGame={handleLoadGame} onLogout={handleLogout} />;
   }
@@ -99,7 +69,7 @@ function GameApp() {
           window.location.href = '/login';
         }}
         onNewGame={() => setScreen('difficulty')}
-        onLoadGame={() => setScreen('startMenu')}
+        onLoadGame={() => setScreen('start')}
       />
     );
   }

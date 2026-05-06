@@ -3,7 +3,15 @@ import { API } from '../api';
 import { showNotification } from './notifications';
 import { useEffect, useState } from 'react';
 
+const FINANCE_TABS = [
+  { id: 'invest', label: 'Инвестиции' },
+  { id: 'insurance', label: 'Страховки' },
+  { id: 'templates', label: 'Типовые активы' },
+  { id: 'lists', label: 'Список активов и долгов' },
+];
+
 export function FinanceSection({ overview, refreshOverview }) {
+  const [financeTab, setFinanceTab] = useState('invest');
   const [investPositions, setInvestPositions] = useState([]);
   const [policies, setPolicies] = useState([]);
   const [depositAmount, setDepositAmount] = useState(10000);
@@ -58,7 +66,25 @@ export function FinanceSection({ overview, refreshOverview }) {
 
   return (
     <>
-      <Section header="Инвестиции (easy)">
+      <Section header="Разделы">
+        <Cell>
+          <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', justifyContent: 'flex-start' }}>
+            {FINANCE_TABS.map((t) => (
+              <Button
+                key={t.id}
+                size="s"
+                mode={financeTab === t.id ? 'filled' : 'outline'}
+                onClick={() => setFinanceTab(t.id)}
+              >
+                {t.label}
+              </Button>
+            ))}
+          </div>
+        </Cell>
+      </Section>
+
+      {financeTab === 'invest' && (
+      <Section header="Инвестиции">
         <Cell multiline>
           <div style={{ fontWeight: 600, marginBottom: 6 }}>Депозит</div>
           <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
@@ -117,8 +143,10 @@ export function FinanceSection({ overview, refreshOverview }) {
           ))}
         </List>
       </Section>
+      )}
 
-      <Section header="Страховки (easy)">
+      {financeTab === 'insurance' && (
+      <Section header="Страховки">
         <Cell multiline>
           <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
             <Select header="Тип" value={policyKind} onChange={(e) => setPolicyKind(e.target.value)}>
@@ -166,8 +194,10 @@ export function FinanceSection({ overview, refreshOverview }) {
           ))}
         </List>
       </Section>
+      )}
 
-      <Section header="Типовые активы (easy)">
+      {financeTab === 'templates' && (
+      <Section header="Типовые активы">
         <List>
           {assetTemplates.length === 0 && <Cell>Шаблоны не загружены</Cell>}
           {assetTemplates.map((t) => (
@@ -200,7 +230,10 @@ export function FinanceSection({ overview, refreshOverview }) {
           ))}
         </List>
       </Section>
+      )}
 
+      {financeTab === 'lists' && (
+      <>
       <Section header="Обязательства">
         <List>
           {overview.liabilities.length === 0 && <Cell>Нет обязательств</Cell>}
@@ -213,7 +246,13 @@ export function FinanceSection({ overview, refreshOverview }) {
               <div><strong>{liability.title}</strong></div>
               <div>Долг: {liability.total_debt.toFixed(2)} ₽</div>
               <div>Ставка: {liability.annual_rate_percent}%</div>
-              <div>Платёж: {liability.monthly_payment.toFixed(2)} ₽</div>
+              <div>Платёж: {liability.monthly_payment.toFixed(2)} ₽/мес</div>
+              {(Number(liability.overdue_amount) > 0 || Number(liability.overdue_periods) > 0) && (
+                <div style={{ color: 'var(--tg-theme-destructive-text-color, #c62828)' }}>
+                  Просрочка: {Number(liability.overdue_amount || 0).toFixed(2)} ₽
+                  {Number(liability.overdue_periods) > 0 ? ` (${liability.overdue_periods} пер. подряд)` : ''}
+                </div>
+              )}
             </Cell>
           ))}
         </List>
@@ -227,16 +266,20 @@ export function FinanceSection({ overview, refreshOverview }) {
                 Удалить
               </Button>
             }>
-              <div><strong>{asset.title}</strong></div>
+              <div><strong>{asset.title}</strong>{asset.kind && asset.kind !== 'generic' ? <span style={{ opacity: 0.75 }}> · {asset.kind}</span> : null}</div>
               <div>Стоимость: {asset.asset_value.toFixed(2)} ₽</div>
-              <div>Обслуживание: {asset.monthly_maintenance_cost.toFixed(2)} ₽</div>
-              {typeof asset.monthly_income === 'number' && asset.monthly_income > 0 && (
-                <div>Доход: {asset.monthly_income.toFixed(2)} ₽</div>
-              )}
+              <div>Обслуживание: {asset.monthly_maintenance_cost.toFixed(2)} ₽/мес</div>
+              <div>
+                Доход: {typeof asset.monthly_income === 'number' && asset.monthly_income > 0
+                  ? `${asset.monthly_income.toFixed(2)} ₽/мес`
+                  : '—'}
+              </div>
             </Cell>
           ))}
         </List>
       </Section>
+      </>
+      )}
     </>
   );
 }

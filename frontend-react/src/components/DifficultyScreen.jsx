@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Button, Input, Cell, Section, Select } from '@telegram-apps/telegram-ui';
+import { showNotification } from './notifications';
 
 export function DifficultyScreen({ onNext, onBack }) {
   const [profileName, setProfileName] = useState('');
@@ -9,11 +10,11 @@ export function DifficultyScreen({ onNext, onBack }) {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!profileName.trim()) {
-      alert('Введите название профиля');
+      showNotification('Введите название профиля', 'error');
       return;
     }
     if (periodDuration < 10) {
-      alert('Длительность периода должна быть не менее 10 секунд');
+      showNotification('Длительность периода должна быть не менее 10 секунд', 'error');
       return;
     }
     onNext({

@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Button, Input, Cell, Section, List } from '@telegram-apps/telegram-ui';
 import { API } from '../api';
+import { showNotification } from './notifications';
 
 export function BaseParamsScreen({ profileName, mode, periodDuration, onBack, onGameStarted }) {
   console.log('BaseParamsScreen props:', { profileName, mode, periodDuration });
@@ -51,9 +52,9 @@ export function BaseParamsScreen({ profileName, mode, periodDuration, onBack, on
   const handleStart = async () => {
     console.log('Starting game with profileName:', profileName); // тут должно быть значение
     if (!profileName) {
-        console.error('profileName is empty!');
-        return;
-      }
+      showNotification('Не задано название профиля. Вернитесь назад и введите его.', 'error');
+      return;
+    }
     setLoading(true);
     try {
       const result = await API.startNewGame({
@@ -69,7 +70,7 @@ export function BaseParamsScreen({ profileName, mode, periodDuration, onBack, on
         onGameStarted(result);
       }
     } catch (error) {
-      console.error(error);
+      showNotification(error?.detail || error?.message || 'Не удалось запустить игру', 'error');
     } finally {
       setLoading(false);
     }

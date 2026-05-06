@@ -14,8 +14,9 @@ export function useGame() {
   const localRemainingRef = useRef(0);
   const lastSyncRef = useRef(Date.now());
 
-  // Загрузка данных
+  // Загрузка данных (можно повторить после ошибки)
   const loadData = useCallback(async () => {
+    setLoading(true);
     try {
       const [overviewData, timeData, periodData, eventData] = await Promise.all([
         API.getOverview(),
@@ -31,7 +32,9 @@ export function useGame() {
       lastSyncRef.current = Date.now();
       setError(null);
     } catch (err) {
-      setError(err.message);
+      setOverview(null);
+      setTimeStatus(null);
+      setError(err.detail || err.message || 'Не удалось загрузить данные');
     } finally {
       setLoading(false);
     }
@@ -51,6 +54,12 @@ export function useGame() {
   const refreshPendingEvent = useCallback(async () => {
     const data = await API.getPendingEvent();
     setPendingEvent(data?.event ?? null);
+  }, []);
+
+  const fetchPeriodStatus = useCallback(async () => {
+    const data = await API.getPeriodStatus();
+    setPeriodStatus(data);
+    return data;
   }, []);
 
   // Таймер
@@ -73,7 +82,7 @@ export function useGame() {
         timerRef.current = null;
         handlePeriodEnd();
       }
-    }, 200);
+    }, 1000);
   }, [timeStatus]);
 
   const stopTimer = useCallback(() => {
@@ -84,22 +93,37 @@ export function useGame() {
   }, []);
 
   const handlePeriodEnd = useCallback(async () => {
-    // Принудительно переходим на следующий период
     const newTime = await API.setTimeNext();
     if (newTime) {
       setTimeStatus(newTime);
       localRemainingRef.current = newTime.seconds_until_next_period;
       lastSyncRef.current = Date.now();
-      // Обновляем overview
       await refreshOverview();
       await refreshPeriodStatus();
       await refreshPendingEvent();
-      // Если режим play – перезапускаем таймер
       if (newTime.time_state === 'play') {
         startTimer();
       }
     }
   }, [refreshOverview, refreshPeriodStatus, refreshPendingEvent, startTimer]);
+
+  /** Ручной или подтверждённый переход (без window.confirm — его показывает GameScreen). */
+  const advancePeriod = useCallback(async () => {
+    stopTimer();
+    const result = await API.setTimeNext();
+    if (result) {
+      setTimeStatus(result);
+      localRemainingRef.current = result.seconds_until_next_period;
+      lastSyncRef.current = Date.now();
+      await refreshOverview();
+      await refreshPeriodStatus();
+      await refreshPendingEvent();
+      if (result.time_state === 'play') {
+        startTimer();
+      }
+    }
+    return result;
+  }, [refreshOverview, refreshPeriodStatus, refreshPendingEvent, startTimer, stopTimer]);
 
   // Действия времени
   const setPlay = useCallback(async () => {
@@ -121,36 +145,6 @@ export function useGame() {
       stopTimer();
     }
   }, [stopTimer]);
-
-  const nextPeriod = useCallback(async () => {
-    stopTimer();
-
-    // Ручной Next: предупредим, что зарплата сгорит.
-    try {
-      const status = await API.getPeriodStatus();
-      setPeriodStatus(status);
-      if (status && status.salary_claimed === false && status.can_claim_salary) {
-        const ok = window.confirm(
-          'Вы не получили зарплату в этом периоде. Если перейти дальше, зарплата сгорит. Перейти в следующий период?'
-        );
-        if (!ok) return;
-      }
-    } catch (e) {
-      // Если статус не получили — не блокируем переход.
-    }
-
-    const result = await API.setTimeNext();
-    if (result) {
-      setTimeStatus(result);
-      localRemainingRef.current = result.seconds_until_next_period;
-      lastSyncRef.current = Date.now();
-      await refreshOverview();
-      await refreshPeriodStatus();
-      await refreshPendingEvent();
-      if (result.time_state === 'play') startTimer();
-    }
-    return result;
-  }, [refreshOverview, refreshPeriodStatus, refreshPendingEvent, startTimer, stopTimer]);
 
   // Действия периода
   const claimSalary = useCallback(async () => {
@@ -207,7 +201,9 @@ export function useGame() {
     error,
     setPlay,
     setPause,
-    nextPeriod,
+    advancePeriod,
+    fetchPeriodStatus,
+    reload: loadData,
     claimSalary,
     contributeToSafetyFund,
     withdrawFromSafetyFund,

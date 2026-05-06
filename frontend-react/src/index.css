@@ -54,15 +54,25 @@ body {
   margin: 0;
 }
 
+/* Основная оболочка TMA / мини-приложения: столбец на всю ширину, без «лендингового» центрирования */
 #root {
-  width: 1126px;
-  max-width: 100%;
+  width: 100%;
+  max-width: 480px;
   margin: 0 auto;
-  text-align: center;
-  border-inline: 1px solid var(--border);
+  text-align: left;
+  border: none;
   min-height: 100svh;
+  min-height: 100dvh;
   display: flex;
   flex-direction: column;
+  box-sizing: border-box;
+  background: var(--tg-theme-bg-color, var(--bg));
+  color: var(--tg-theme-text-color, var(--text));
+}
+
+.app-shell {
+  text-align: left;
+  flex: 1;
   box-sizing: border-box;
 }
 
@@ -113,14 +123,17 @@ code {
 .bottom-nav {
   position: fixed;
   bottom: 0;
-  left: 0;
-  right: 0;
-  background: var(--tg-theme-bg-color);
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: 480px;
+  box-sizing: border-box;
+  background: var(--tg-theme-bg-color, var(--bg));
   padding: 10px 12px;
   display: flex;
   gap: 10px;
   justify-content: space-around;
-  border-top: 1px solid var(--tg-theme-hint-color);
+  border-top: 1px solid var(--tg-theme-hint-color, var(--border));
   z-index: 100;
 }
 

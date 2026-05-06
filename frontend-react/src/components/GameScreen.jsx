@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Spinner, Button } from '@telegram-apps/telegram-ui';
+import { Spinner, Button, Modal, Cell, Section } from '@telegram-apps/telegram-ui';
 import { useGame } from '../hooks/useGame';
 import { GameHUD } from './GameHUD';
 import { DashboardSection } from './DashboardSection';
@@ -12,6 +12,7 @@ import { EventModal } from './EventModal';
 export function GameScreen({ onLogout, onNewGame, onLoadGame }) {
   const [activeTab, setActiveTab] = useState('dashboard');
   const [eventOpen, setEventOpen] = useState(false);
+  const [salaryWarnOpen, setSalaryWarnOpen] = useState(false);
   const {
     overview,
     timeStatus,
@@ -20,7 +21,9 @@ export function GameScreen({ onLogout, onNewGame, onLoadGame }) {
     error,
     setPlay,
     setPause,
-    nextPeriod,
+    advancePeriod,
+    fetchPeriodStatus,
+    reload,
     claimSalary,
     contributeToSafetyFund,
     withdrawFromSafetyFund,
@@ -32,12 +35,75 @@ export function GameScreen({ onLogout, onNewGame, onLoadGame }) {
     if (pendingEvent) setEventOpen(true);
   }, [pendingEvent]);
 
+  const handleRequestNextPeriod = async () => {
+    try {
+      const st = await fetchPeriodStatus();
+      if (st && st.salary_claimed === false && st.can_claim_salary) {
+        setSalaryWarnOpen(true);
+        return;
+      }
+    } catch (_) {
+      // если статус не получили — идём дальше без модалки
+    }
+    try {
+      await advancePeriod();
+    } catch (e) {
+      showNotification(e?.detail || e?.message || 'Не удалось перейти к следующему периоду', 'error');
+    }
+  };
+
+  const confirmAdvanceWithSalaryLoss = async () => {
+    setSalaryWarnOpen(false);
+    try {
+      await advancePeriod();
+    } catch (e) {
+      showNotification(e?.detail || e?.message || 'Не удалось перейти к следующему периоду', 'error');
+    }
+  };
+
   if (loading) return <Spinner />;
-  if (error) return <div>Ошибка: {error}</div>;
-  if (!overview || !timeStatus) return <div>Нет данных</div>;
+  if (error) {
+    return (
+      <Section header="Не удалось загрузить игру">
+        <Cell multiline subtitle={error}>
+          <div>Проверьте сеть и попробуйте ещё раз.</div>
+        </Cell>
+        <Cell>
+          <Button stretched mode="filled" onClick={() => reload()}>
+            Повторить загрузку
+          </Button>
+        </Cell>
+      </Section>
+    );
+  }
+  if (!overview || !timeStatus) {
+    return (
+      <Section header="Нет данных">
+        <Cell>Профиль игры недоступен.</Cell>
+        <Cell>
+          <Button stretched onClick={() => reload()}>Обновить</Button>
+        </Cell>
+      </Section>
+    );
+  }
 
   return (
-    <div style={{ padding: '1rem', paddingBottom: '80px' }}>
+    <div className="app-shell" style={{ padding: '12px', paddingBottom: 'calc(80px + env(safe-area-inset-bottom, 0px))' }}>
+      <Modal open={salaryWarnOpen} onClose={() => setSalaryWarnOpen(false)}>
+        <Section header="Следующий период">
+          <Cell multiline>
+            <div style={{ fontWeight: 600, marginBottom: 8 }}>Зарплата не получена</div>
+            <div style={{ lineHeight: 1.35 }}>
+              Если перейти к следующему периоду, зарплата за текущий месяц <strong>сгорит</strong>, как при пропуске рабочего дня без отработки.
+            </div>
+          </Cell>
+          <Cell style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+            <Button mode="filled" stretched onClick={confirmAdvanceWithSalaryLoss}>Перейти</Button>
+            <Button mode="outline" stretched onClick={() => setSalaryWarnOpen(false)}>Отмена</Button>
+          </Cell>
+        </Section>
+      </Modal>
+
       <EventModal
         open={eventOpen && !!pendingEvent}
         event={pendingEvent}
@@ -53,7 +119,7 @@ export function GameScreen({ onLogout, onNewGame, onLoadGame }) {
         timeStatus={timeStatus}
         setPlay={setPlay}
         setPause={setPause}
-        nextPeriod={nextPeriod}
+        onRequestNextPeriod={handleRequestNextPeriod}
       />
 
       {activeTab === 'dashboard' && (
@@ -78,8 +144,7 @@ export function GameScreen({ onLogout, onNewGame, onLoadGame }) {
         />
       )}
 
-      {/* Фиксированное нижнее меню */}
-      <div className="bottom-nav">
+      <div className="bottom-nav" style={{ paddingBottom: 'calc(10px + env(safe-area-inset-bottom, 0px))' }}>
         <Button
           mode={activeTab === 'dashboard' ? 'filled' : 'outline'}
           onClick={() => setActiveTab('dashboard')}
