@@ -3,8 +3,10 @@
 from sqlalchemy.orm import Session
 from datetime import datetime
 
-from .models import GameProfile, FinanceAsset, FinanceLiability, Transaction
+from .models import GameProfile, FinanceAsset, FinanceLiability, Transaction, InvestmentPosition
 from .balance_utils import adjust_balance, add_transaction, TRANSACTION_TYPES
+from .routers.events import ensure_event_for_period, _ensure_seed_events
+from .routers.insurance import charge_premiums_for_period
 
 
 def process_period_end(db: Session, profile: GameProfile) -> dict:
@@ -24,6 +26,7 @@ def process_period_end(db: Session, profile: GameProfile) -> dict:
     total_spend = 0.0
     breakdown = []
     total_overdue_added = 0.0
+    invest_income = 0.0
 
     # 1. Собираем активные активы
     assets = db.query(FinanceAsset).filter(
@@ -52,6 +55,20 @@ def process_period_end(db: Session, profile: GameProfile) -> dict:
             period_index=period_index,
         )
         db.refresh(profile)
+
+    # 2.1 Доход от активов (аренда и т.п.) — начисляется автоматически в конце периода
+    assets_income = sum(float(getattr(a, "monthly_income", 0) or 0) for a in assets)
+    if assets_income > 0:
+        adjust_balance(
+            db=db,
+            game_profile_id=profile.id,
+            amount=assets_income,
+            type="asset_income",
+            description=f"Доход от активов за период #{period_index}",
+            period_index=period_index,
+        )
+        db.refresh(profile)
+        breakdown.append({"type": "asset_income", "title": "Доход от активов", "amount": round(assets_income, 2)})
 
     # 3. Обязательства: игрок может забыть/не хватить денег → уходит в просрочку (без штрафов на MVP).
     liabilities = db.query(FinanceLiability).filter(
@@ -95,6 +112,46 @@ def process_period_end(db: Session, profile: GameProfile) -> dict:
             "unpaid": unpaid,
         })
 
+    # 3.5 Страховки: списываем премии (на MVP без просрочек — может уйти в минус)
+    insurance_spend = 0.0
+    try:
+        insurance_spend = float(charge_premiums_for_period(db, profile, period_index) or 0)
+        if insurance_spend > 0:
+            breakdown.append({"type": "insurance", "title": "Премии", "amount": insurance_spend})
+    except Exception:
+        pass
+
+    # 3.6 Инвестиции: начисления (депозит — капитализация, облигации — купон на баланс)
+    positions = (
+        db.query(InvestmentPosition)
+        .filter(InvestmentPosition.game_profile_id == profile.id, InvestmentPosition.is_active == 1)
+        .all()
+    )
+    for pos in positions:
+        # начисляем только если прошёл период
+        if int(pos.last_accrued_period) >= int(period_index):
+            continue
+        periods_to_accrue = int(period_index) - int(pos.last_accrued_period)
+        if periods_to_accrue <= 0:
+            continue
+
+        monthly_rate = float(pos.annual_rate_percent) / 100.0 / 12.0
+        if pos.kind == "deposit":
+            # капитализация на principal
+            interest = float(pos.principal) * monthly_rate * periods_to_accrue
+            pos.principal = float(pos.principal) + interest
+            invest_income += interest
+        elif pos.kind == "bond":
+            # купон на баланс
+            coupon = float(pos.principal) * monthly_rate * periods_to_accrue
+            if coupon != 0:
+                adjust_balance(db, profile.id, +coupon, "bond_coupon", f"Купон: {pos.title}", period_index)
+                db.refresh(profile)
+                invest_income += coupon
+        pos.last_accrued_period = int(period_index)
+    if invest_income != 0:
+        breakdown.append({"type": "invest", "title": "Доход от инвестиций", "amount": round(invest_income, 2)})
+
     # 4. Проверка отрицательного баланса
     if profile.cash_balance < 0:
         profile.negative_periods_count += 1
@@ -137,6 +194,14 @@ def process_period_end(db: Session, profile: GameProfile) -> dict:
 
     db.commit()
     db.refresh(profile)
+
+    # 8. Событие на новый период (easy)
+    try:
+        _ensure_seed_events(db)
+        ensure_event_for_period(db, profile.id, profile.period_index, profile.mode)
+    except Exception:
+        # События не должны ломать завершение периода
+        pass
 
     return {
         "total_spent": total_spend,

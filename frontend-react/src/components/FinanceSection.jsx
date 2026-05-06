@@ -1,8 +1,39 @@
-import { Button, Cell, Section, List } from '@telegram-apps/telegram-ui';
+import { Button, Cell, Section, List, Input, Select } from '@telegram-apps/telegram-ui';
 import { API } from '../api';
 import { showNotification } from './notifications';
+import { useEffect, useState } from 'react';
 
 export function FinanceSection({ overview, refreshOverview }) {
+  const [investPositions, setInvestPositions] = useState([]);
+  const [policies, setPolicies] = useState([]);
+  const [depositAmount, setDepositAmount] = useState(10000);
+  const [depositRate, setDepositRate] = useState(12);
+  const [bondAmount, setBondAmount] = useState(10000);
+  const [bondRate, setBondRate] = useState(10);
+  const [policyKind, setPolicyKind] = useState('health');
+  const [policyPremium, setPolicyPremium] = useState(1500);
+  const [policyCoverage, setPolicyCoverage] = useState(100000);
+  const [assetTemplates, setAssetTemplates] = useState([]);
+
+  const reloadExtra = async () => {
+    try {
+      const [pos, pol, tpl] = await Promise.all([
+        API.listInvestPositions(),
+        API.listPolicies(),
+        API.getAssetTemplates(),
+      ]);
+      if (Array.isArray(pos)) setInvestPositions(pos);
+      if (Array.isArray(pol)) setPolicies(pol);
+      if (Array.isArray(tpl)) setAssetTemplates(tpl);
+    } catch (e) {
+      // не блокируем экран
+    }
+  };
+
+  useEffect(() => {
+    reloadExtra();
+  }, []);
+
   const handleDeleteLiability = async (id) => {
     try {
       await API.deleteLiability(id);
@@ -27,6 +58,149 @@ export function FinanceSection({ overview, refreshOverview }) {
 
   return (
     <>
+      <Section header="Инвестиции (easy)">
+        <Cell multiline>
+          <div style={{ fontWeight: 600, marginBottom: 6 }}>Депозит</div>
+          <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+            <Input header="Сумма" type="number" value={depositAmount} onChange={(e) => setDepositAmount(Number(e.target.value))} />
+            <Input header="% годовых" type="number" value={depositRate} onChange={(e) => setDepositRate(Number(e.target.value))} />
+            <Button onClick={async () => {
+              try {
+                await API.openDeposit({ amount: depositAmount, annual_rate_percent: depositRate });
+                showNotification('Депозит открыт', 'success');
+                await refreshOverview();
+                await reloadExtra();
+              } catch (e) {
+                showNotification(e?.detail || e?.message || 'Не удалось открыть депозит', 'error');
+              }
+            }}>Открыть</Button>
+          </div>
+        </Cell>
+
+        <Cell multiline>
+          <div style={{ fontWeight: 600, marginBottom: 6 }}>Облигации</div>
+          <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+            <Input header="Сумма" type="number" value={bondAmount} onChange={(e) => setBondAmount(Number(e.target.value))} />
+            <Input header="% годовых" type="number" value={bondRate} onChange={(e) => setBondRate(Number(e.target.value))} />
+            <Button onClick={async () => {
+              try {
+                await API.buyBond({ amount: bondAmount, annual_rate_percent: bondRate, title: 'Облигации (easy)' });
+                showNotification('Облигации куплены', 'success');
+                await refreshOverview();
+                await reloadExtra();
+              } catch (e) {
+                showNotification(e?.detail || e?.message || 'Не удалось купить облигации', 'error');
+              }
+            }}>Купить</Button>
+          </div>
+        </Cell>
+
+        <List>
+          {investPositions.length === 0 && <Cell>Нет инвестиций</Cell>}
+          {investPositions.map((p) => (
+            <Cell key={p.id} multiline after={
+              <Button size="s" mode="destructive" onClick={async () => {
+                try {
+                  await API.closeInvestPosition(p.id);
+                  showNotification('Позиция закрыта', 'success');
+                  await refreshOverview();
+                  await reloadExtra();
+                } catch (e) {
+                  showNotification(e?.detail || e?.message || 'Не удалось закрыть позицию', 'error');
+                }
+              }}>Закрыть</Button>
+            }>
+              <div><strong>{p.title}</strong> ({p.kind})</div>
+              <div>Сумма: {Number(p.principal).toFixed(2)} ₽</div>
+              <div>Ставка: {p.annual_rate_percent}%</div>
+            </Cell>
+          ))}
+        </List>
+      </Section>
+
+      <Section header="Страховки (easy)">
+        <Cell multiline>
+          <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+            <Select header="Тип" value={policyKind} onChange={(e) => setPolicyKind(e.target.value)}>
+              <option value="health">Здоровье</option>
+              <option value="property">Имущество</option>
+              <option value="car">Авто</option>
+            </Select>
+            <Input header="Премия/мес" type="number" value={policyPremium} onChange={(e) => setPolicyPremium(Number(e.target.value))} />
+            <Input header="Покрытие" type="number" value={policyCoverage} onChange={(e) => setPolicyCoverage(Number(e.target.value))} />
+            <Button onClick={async () => {
+              try {
+                await API.buyPolicy({
+                  kind: policyKind,
+                  monthly_premium: policyPremium,
+                  coverage_limit: policyCoverage,
+                });
+                showNotification('Полис оформлен', 'success');
+                await refreshOverview();
+                await reloadExtra();
+              } catch (e) {
+                showNotification(e?.detail || e?.message || 'Не удалось оформить полис', 'error');
+              }
+            }}>Оформить</Button>
+          </div>
+        </Cell>
+
+        <List>
+          {policies.length === 0 && <Cell>Нет активных полисов</Cell>}
+          {policies.map((p) => (
+            <Cell key={p.id} multiline after={
+              <Button size="s" mode="destructive" onClick={async () => {
+                try {
+                  await API.cancelPolicy(p.id);
+                  showNotification('Полис отменён', 'success');
+                  await reloadExtra();
+                } catch (e) {
+                  showNotification(e?.detail || e?.message || 'Не удалось отменить полис', 'error');
+                }
+              }}>Отменить</Button>
+            }>
+              <div><strong>{p.title}</strong> ({p.kind})</div>
+              <div>Премия: {Number(p.monthly_premium).toFixed(2)} ₽/мес</div>
+              <div>Покрытие: {Number(p.coverage_limit).toFixed(0)} ₽</div>
+            </Cell>
+          ))}
+        </List>
+      </Section>
+
+      <Section header="Типовые активы (easy)">
+        <List>
+          {assetTemplates.length === 0 && <Cell>Шаблоны не загружены</Cell>}
+          {assetTemplates.map((t) => (
+            <Cell
+              key={t.key}
+              multiline
+              after={
+                <Button
+                  size="s"
+                  onClick={async () => {
+                    try {
+                      await API.createAssetFromTemplate(t.key);
+                      showNotification('Актив добавлен', 'success');
+                      await refreshOverview();
+                      await reloadExtra();
+                    } catch (e) {
+                      showNotification(e?.detail || e?.message || 'Не удалось добавить актив', 'error');
+                    }
+                  }}
+                >
+                  Добавить
+                </Button>
+              }
+            >
+              <div><strong>{t.title}</strong></div>
+              <div>Стоимость: {Number(t.asset_value).toFixed(0)} ₽</div>
+              <div>Обслуживание: {Number(t.monthly_maintenance_cost).toFixed(0)} ₽/мес</div>
+              {Number(t.monthly_income) > 0 ? <div>Доход: {Number(t.monthly_income).toFixed(0)} ₽/мес</div> : null}
+            </Cell>
+          ))}
+        </List>
+      </Section>
+
       <Section header="Обязательства">
         <List>
           {overview.liabilities.length === 0 && <Cell>Нет обязательств</Cell>}
@@ -56,6 +230,9 @@ export function FinanceSection({ overview, refreshOverview }) {
               <div><strong>{asset.title}</strong></div>
               <div>Стоимость: {asset.asset_value.toFixed(2)} ₽</div>
               <div>Обслуживание: {asset.monthly_maintenance_cost.toFixed(2)} ₽</div>
+              {typeof asset.monthly_income === 'number' && asset.monthly_income > 0 && (
+                <div>Доход: {asset.monthly_income.toFixed(2)} ₽</div>
+              )}
             </Cell>
           ))}
         </List>

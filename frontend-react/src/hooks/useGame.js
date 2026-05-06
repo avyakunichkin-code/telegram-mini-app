@@ -6,6 +6,7 @@ export function useGame() {
   const [overview, setOverview] = useState(null);
   const [timeStatus, setTimeStatus] = useState(null);
   const [periodStatus, setPeriodStatus] = useState(null);
+  const [pendingEvent, setPendingEvent] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -16,14 +17,16 @@ export function useGame() {
   // Загрузка данных
   const loadData = useCallback(async () => {
     try {
-      const [overviewData, timeData, periodData] = await Promise.all([
+      const [overviewData, timeData, periodData, eventData] = await Promise.all([
         API.getOverview(),
         API.getTimeStatus(),
         API.getPeriodStatus(),
+        API.getPendingEvent(),
       ]);
       setOverview(overviewData);
       setTimeStatus(timeData);
       setPeriodStatus(periodData);
+      setPendingEvent(eventData?.event ?? null);
       localRemainingRef.current = timeData.seconds_until_next_period;
       lastSyncRef.current = Date.now();
       setError(null);
@@ -43,6 +46,11 @@ export function useGame() {
   const refreshPeriodStatus = useCallback(async () => {
     const data = await API.getPeriodStatus();
     setPeriodStatus(data);
+  }, []);
+
+  const refreshPendingEvent = useCallback(async () => {
+    const data = await API.getPendingEvent();
+    setPendingEvent(data?.event ?? null);
   }, []);
 
   // Таймер
@@ -85,12 +93,13 @@ export function useGame() {
       // Обновляем overview
       await refreshOverview();
       await refreshPeriodStatus();
+      await refreshPendingEvent();
       // Если режим play – перезапускаем таймер
       if (newTime.time_state === 'play') {
         startTimer();
       }
     }
-  }, [refreshOverview, refreshPeriodStatus, startTimer]);
+  }, [refreshOverview, refreshPeriodStatus, refreshPendingEvent, startTimer]);
 
   // Действия времени
   const setPlay = useCallback(async () => {
@@ -137,10 +146,11 @@ export function useGame() {
       lastSyncRef.current = Date.now();
       await refreshOverview();
       await refreshPeriodStatus();
+      await refreshPendingEvent();
       if (result.time_state === 'play') startTimer();
     }
     return result;
-  }, [refreshOverview, refreshPeriodStatus, startTimer, stopTimer]);
+  }, [refreshOverview, refreshPeriodStatus, refreshPendingEvent, startTimer, stopTimer]);
 
   // Действия периода
   const claimSalary = useCallback(async () => {
@@ -188,6 +198,7 @@ export function useGame() {
   return {
     overview,
     periodStatus,
+    pendingEvent,
     timeStatus: timeStatus ? {
       ...timeStatus,
       remainingLocal: localRemainingRef.current,
@@ -202,5 +213,6 @@ export function useGame() {
     withdrawFromSafetyFund,
     refreshOverview,
     refreshPeriodStatus,
+    refreshPendingEvent,
   };
 }

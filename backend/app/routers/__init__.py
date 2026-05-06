@@ -5,6 +5,9 @@ from ..routers.health import router as health_router
 from ..routers.finance import router as finance_router
 from ..routers.game import router as game_router
 from ..routers.period_actions import router as period_router
+from ..routers.events import router as events_router
+from ..routers.invest import router as invest_router
+from ..routers.insurance import router as insurance_router
 
 # Экспортируем все роутеры
 __all__ = [
@@ -14,5 +17,8 @@ __all__ = [
     "health_router",
     "finance_router",
     "game_router",
-    "period_router"
+    "period_router",
+    "events_router",
+    "invest_router",
+    "insurance_router",
 ]

@@ -137,11 +137,88 @@ class FinanceAsset(Base):
     id = Column(Integer, primary_key=True, index=True)
     game_profile_id = Column(Integer, ForeignKey("game_profiles.id"), nullable=False, index=True)
     title = Column(String(120), nullable=False, default="Актив")
+    kind = Column(String(50), nullable=False, default="generic")  # например: home, rental_home, car, rental_car, deposit, bond
     asset_value = Column(Float, nullable=False)
     monthly_maintenance_cost = Column(Float, nullable=False, default=0)
+    monthly_income = Column(Float, nullable=False, default=0)  # доход от аренды/купоны/проценты
     is_active = Column(Integer, nullable=False, default=1)   # НОВОЕ
     created_at = Column(DateTime, default=datetime.utcnow)
     game_profile = relationship("GameProfile", back_populates="finance_assets")
+
+
+# ==================== СОБЫТИЯ (MVP) ====================
+
+class EventDefinition(Base):
+    __tablename__ = "event_definitions"
+
+    id = Column(Integer, primary_key=True, index=True)
+    key = Column(String(80), unique=True, nullable=False, index=True)
+    mode = Column(String(20), nullable=False, default="light")  # light/hardcore/any (пока light)
+    title = Column(String(160), nullable=False)
+    description = Column(Text, nullable=False, default="")
+    weight = Column(Integer, nullable=False, default=100)
+    is_active = Column(Integer, nullable=False, default=1)
+    created_at = Column(DateTime, default=datetime.utcnow)
+
+    choices = relationship("EventChoice", back_populates="definition", cascade="all, delete-orphan")
+
+
+class EventChoice(Base):
+    __tablename__ = "event_choices"
+
+    id = Column(Integer, primary_key=True, index=True)
+    definition_id = Column(Integer, ForeignKey("event_definitions.id"), nullable=False, index=True)
+    title = Column(String(160), nullable=False)
+    description = Column(Text, nullable=False, default="")
+    effects_json = Column(Text, nullable=False, default="{}")  # JSON: {cash_delta, safety_delta, ...}
+
+    definition = relationship("EventDefinition", back_populates="choices")
+
+
+class EventInstance(Base):
+    __tablename__ = "event_instances"
+
+    id = Column(Integer, primary_key=True, index=True)
+    game_profile_id = Column(Integer, ForeignKey("game_profiles.id"), nullable=False, index=True)
+    period_index = Column(Integer, nullable=False, index=True)
+    definition_id = Column(Integer, ForeignKey("event_definitions.id"), nullable=False, index=True)
+    status = Column(String(20), nullable=False, default="pending")  # pending/selected/expired
+    selected_choice_id = Column(Integer, ForeignKey("event_choices.id"), nullable=True)
+    created_at = Column(DateTime, default=datetime.utcnow)
+    resolved_at = Column(DateTime, nullable=True)
+
+
+# ==================== ИНВЕСТИЦИИ (EASY MVP) ====================
+
+class InvestmentPosition(Base):
+    __tablename__ = "investment_positions"
+
+    id = Column(Integer, primary_key=True, index=True)
+    game_profile_id = Column(Integer, ForeignKey("game_profiles.id"), nullable=False, index=True)
+    kind = Column(String(30), nullable=False)  # deposit | bond
+    title = Column(String(160), nullable=False)
+    principal = Column(Float, nullable=False, default=0)
+    annual_rate_percent = Column(Float, nullable=False, default=0)
+    started_period = Column(Integer, nullable=False)
+    last_accrued_period = Column(Integer, nullable=False)
+    is_active = Column(Integer, nullable=False, default=1)
+    created_at = Column(DateTime, default=datetime.utcnow)
+
+
+# ==================== СТРАХОВКИ (EASY MVP) ====================
+
+class InsurancePolicy(Base):
+    __tablename__ = "insurance_policies"
+
+    id = Column(Integer, primary_key=True, index=True)
+    game_profile_id = Column(Integer, ForeignKey("game_profiles.id"), nullable=False, index=True)
+    kind = Column(String(30), nullable=False)  # health | property | car
+    title = Column(String(160), nullable=False)
+    monthly_premium = Column(Float, nullable=False, default=0)
+    coverage_limit = Column(Float, nullable=False, default=0)
+    is_active = Column(Integer, nullable=False, default=1)
+    created_at = Column(DateTime, default=datetime.utcnow)
+
 
 
 class PeriodSnapshot(Base):

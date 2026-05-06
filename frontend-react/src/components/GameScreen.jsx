@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Spinner, Button } from '@telegram-apps/telegram-ui';
 import { useGame } from '../hooks/useGame';
 import { GameHUD } from './GameHUD';
@@ -6,12 +6,16 @@ import { DashboardSection } from './DashboardSection';
 import { FinanceSection } from './FinanceSection';
 import { MenuSection } from './MenuSection';
 import { showNotification } from './notifications';
+import { API } from '../api';
+import { EventModal } from './EventModal';
 
 export function GameScreen({ onLogout, onNewGame, onLoadGame }) {
   const [activeTab, setActiveTab] = useState('dashboard');
+  const [eventOpen, setEventOpen] = useState(false);
   const {
     overview,
     timeStatus,
+    pendingEvent,
     loading,
     error,
     setPlay,
@@ -21,7 +25,12 @@ export function GameScreen({ onLogout, onNewGame, onLoadGame }) {
     contributeToSafetyFund,
     withdrawFromSafetyFund,
     refreshOverview,
+    refreshPendingEvent,
   } = useGame();
+
+  useEffect(() => {
+    if (pendingEvent) setEventOpen(true);
+  }, [pendingEvent]);
 
   if (loading) return <Spinner />;
   if (error) return <div>Ошибка: {error}</div>;
@@ -29,6 +38,17 @@ export function GameScreen({ onLogout, onNewGame, onLoadGame }) {
 
   return (
     <div style={{ padding: '1rem', paddingBottom: '80px' }}>
+      <EventModal
+        open={eventOpen && !!pendingEvent}
+        event={pendingEvent}
+        onClose={() => setEventOpen(false)}
+        onChoose={async (choiceId) => {
+          await API.chooseEvent(pendingEvent.id, choiceId);
+          await refreshOverview();
+          await refreshPendingEvent();
+        }}
+      />
+
       <GameHUD
         timeStatus={timeStatus}
         setPlay={setPlay}

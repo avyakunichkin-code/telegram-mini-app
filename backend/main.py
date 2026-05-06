@@ -3,7 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy import inspect, text
 
 from app.database import engine, Base
-from app.routers import auth_router, users_router, messages_router, health_router, finance_router, game_router, period_router
+from app.routers import auth_router, users_router, messages_router, health_router, finance_router, game_router, period_router, events_router, invest_router, insurance_router
 
 
 def ensure_schema_compatibility() -> None:
@@ -31,6 +31,14 @@ def ensure_schema_compatibility() -> None:
             statements.append("ALTER TABLE finance_liabilities ADD COLUMN overdue_amount FLOAT NOT NULL DEFAULT 0")
         if "overdue_periods" not in liab_columns:
             statements.append("ALTER TABLE finance_liabilities ADD COLUMN overdue_periods INTEGER NOT NULL DEFAULT 0")
+
+    # ---- finance_assets ----
+    if "finance_assets" in inspector.get_table_names():
+        asset_columns = {item["name"] for item in inspector.get_columns("finance_assets")}
+        if "kind" not in asset_columns:
+            statements.append("ALTER TABLE finance_assets ADD COLUMN kind VARCHAR(50) NOT NULL DEFAULT 'generic'")
+        if "monthly_income" not in asset_columns:
+            statements.append("ALTER TABLE finance_assets ADD COLUMN monthly_income FLOAT NOT NULL DEFAULT 0")
 
     if not statements:
         return
@@ -71,6 +79,9 @@ app.include_router(messages_router)
 app.include_router(finance_router)
 app.include_router(game_router)
 app.include_router(period_router)
+app.include_router(events_router)
+app.include_router(invest_router)
+app.include_router(insurance_router)
 
 
 @app.get("/")

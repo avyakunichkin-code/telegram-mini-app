@@ -202,15 +202,17 @@ async def create_asset(
     current_user=Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
-    if payload.asset_value < 0 or payload.monthly_maintenance_cost < 0:
+    if payload.asset_value < 0 or payload.monthly_maintenance_cost < 0 or payload.monthly_income < 0:
         raise HTTPException(status_code=400, detail="Numeric values must be >= 0")
 
     game_profile = get_active_game_profile(db, current_user.id)
     sync_time(game_profile)
     asset = FinanceAsset(
         title=(payload.title or "Актив").strip() or "Актив",
+        kind=(payload.kind or "generic").strip() or "generic",
         asset_value=payload.asset_value,
         monthly_maintenance_cost=payload.monthly_maintenance_cost,
+        monthly_income=payload.monthly_income,
         game_profile_id=game_profile.id,
     )
     db.add(asset)
@@ -231,6 +233,85 @@ async def list_assets(
         .filter(FinanceAsset.game_profile_id == game_profile.id)
         .order_by(FinanceAsset.created_at.desc())
         .all()
+    )
+
+
+@router.get("/asset-templates")
+async def list_asset_templates():
+    """Типовые активы для easy. В hard позже добавим налоги/амортизацию/ремонт."""
+    return [
+        {
+            "key": "home",
+            "title": "Жилая квартира",
+            "kind": "home",
+            "asset_value": 4_500_000,
+            "monthly_maintenance_cost": 6_000,
+            "monthly_income": 0,
+        },
+        {
+            "key": "rental_home",
+            "title": "Доходная квартира (аренда)",
+            "kind": "rental_home",
+            "asset_value": 5_200_000,
+            "monthly_maintenance_cost": 7_000,
+            "monthly_income": 35_000,
+        },
+        {
+            "key": "car_personal",
+            "title": "Личная машина",
+            "kind": "car_personal",
+            "asset_value": 1_200_000,
+            "monthly_maintenance_cost": 12_000,
+            "monthly_income": 0,
+        },
+        {
+            "key": "car_taxi",
+            "title": "Машина для такси (аренда)",
+            "kind": "car_taxi",
+            "asset_value": 1_500_000,
+            "monthly_maintenance_cost": 18_000,
+            "monthly_income": 45_000,
+        },
+    ]
+
+
+@router.post("/assets/from-template", response_model=AssetResponse)
+async def create_asset_from_template(
+    payload: dict,
+    current_user=Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    key = (payload.get("key") or "").strip()
+    if not key:
+        raise HTTPException(status_code=400, detail="key is required")
+
+    templates = {t["key"]: t for t in await list_asset_templates()}
+    if key not in templates:
+        raise HTTPException(status_code=404, detail="Template not found")
+    t = templates[key]
+
+    game_profile = get_active_game_profile(db, current_user.id)
+    sync_time(game_profile)
+
+    asset = FinanceAsset(
+        title=t["title"],
+        kind=t["kind"],
+        asset_value=float(t["asset_value"]),
+        monthly_maintenance_cost=float(t["monthly_maintenance_cost"]),
+        monthly_income=float(t["monthly_income"]),
+        game_profile_id=game_profile.id,
+    )
+    db.add(asset)
+    db.commit()
+    db.refresh(asset)
+    return AssetResponse(
+        id=asset.id,
+        title=asset.title,
+        kind=asset.kind,
+        asset_value=asset.asset_value,
+        monthly_maintenance_cost=asset.monthly_maintenance_cost,
+        monthly_income=asset.monthly_income,
+        created_at=asset.created_at,
     )
 
 
@@ -294,17 +375,22 @@ async def finance_overview(
         AssetResponse(
             id=a.id,
             title=a.title,
+            kind=getattr(a, "kind", "generic") or "generic",
             asset_value=a.asset_value,
             monthly_maintenance_cost=a.monthly_maintenance_cost,
+            monthly_income=float(getattr(a, "monthly_income", 0) or 0),
             created_at=a.created_at
         ) for a in assets_orm
     ]
 
+    assets_income = sum(float(a.monthly_income or 0) for a in assets_orm)
+
     total_liability_payment = sum(l.monthly_payment for l in liabilities)
     total_asset_maintenance = sum(a.monthly_maintenance_cost for a in assets)
     total_monthly_obligations = total_liability_payment + total_asset_maintenance
-    net_cashflow = monthly_income - total_monthly_obligations
-    liabilities_ratio = (total_liability_payment / monthly_income * 100) if monthly_income > 0 else 0
+    total_income = monthly_income + assets_income
+    net_cashflow = total_income - total_monthly_obligations
+    liabilities_ratio = (total_liability_payment / total_income * 100) if total_income > 0 else 0
     total_overdue_amount = sum(float(l.overdue_amount or 0) for l in liabilities_orm)
     overdue_liabilities_count = sum(1 for l in liabilities_orm if float(getattr(l, "overdue_amount", 0) or 0) > 0)
 
@@ -323,7 +409,7 @@ async def finance_overview(
         ),
         liabilities=liabilities,
         assets=assets,
-        total_monthly_income=round(monthly_income, 2),
+        total_monthly_income=round(total_income, 2),
         total_monthly_liabilities_payment=round(total_liability_payment, 2),
         total_monthly_assets_maintenance=round(total_asset_maintenance, 2),
         net_monthly_cashflow=round(net_cashflow, 2),

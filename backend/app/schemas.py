@@ -76,15 +76,19 @@ class LiabilityResponse(BaseModel):
 
 class AssetCreate(BaseModel):
     title: Optional[str] = "Актив"
+    kind: Optional[str] = "generic"
     asset_value: float
     monthly_maintenance_cost: float
+    monthly_income: float = 0
 
 
 class AssetResponse(BaseModel):
     id: int
     title: str
+    kind: str
     asset_value: float
     monthly_maintenance_cost: float
+    monthly_income: float
     created_at: datetime
 
 

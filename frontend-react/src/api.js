@@ -89,9 +89,45 @@ export const API = {
     getPeriodStatus() {
         return apiCall('/api/game/period/status');
     },
+    // События
+    getPendingEvent() {
+        return apiCall('/api/game/events/pending');
+    },
+    chooseEvent(eventId, choiceId) {
+        return apiCall(`/api/game/events/${eventId}/choose`, 'POST', { choice_id: choiceId });
+    },
     // Финансы
     getOverview() {
         return apiCall('/api/finance/overview');
+    },
+    getAssetTemplates() {
+        return apiCall('/api/finance/asset-templates');
+    },
+    createAssetFromTemplate(key) {
+        return apiCall('/api/finance/assets/from-template', 'POST', { key });
+    },
+    // Инвестиции
+    listInvestPositions() {
+        return apiCall('/api/invest/positions');
+    },
+    openDeposit(payload) {
+        return apiCall('/api/invest/deposit/open', 'POST', payload);
+    },
+    buyBond(payload) {
+        return apiCall('/api/invest/bond/buy', 'POST', payload);
+    },
+    closeInvestPosition(id) {
+        return apiCall(`/api/invest/positions/${id}/close`, 'POST');
+    },
+    // Страховки
+    listPolicies() {
+        return apiCall('/api/insurance/policies');
+    },
+    buyPolicy(payload) {
+        return apiCall('/api/insurance/buy', 'POST', payload);
+    },
+    cancelPolicy(id) {
+        return apiCall(`/api/insurance/${id}/cancel`, 'POST');
     },
     claimSalary() {
         return apiCall('/api/game/period/claim-salary', 'POST');
