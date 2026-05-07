@@ -1,5 +1,5 @@
 from datetime import datetime
-from sqlalchemy import Column, Integer, String, DateTime, Text, ForeignKey, Float
+from sqlalchemy import Column, Integer, String, DateTime, Text, ForeignKey, Float, UniqueConstraint
 from sqlalchemy.orm import relationship
 
 from .database import Base
@@ -92,6 +92,7 @@ class GameProfile(Base):
     safety_fund_balance = Column(Float, nullable=False, default=0)
     negative_periods_count = Column(Integer, nullable=False, default=0)
     last_period_salary_claimed = Column(Integer, nullable=False, default=0)
+    clean_period_streak = Column(Integer, nullable=False, default=0)
 
     created_at = Column(DateTime, default=datetime.utcnow)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
@@ -238,6 +239,23 @@ class PeriodSnapshot(Base):
     xp_earned = Column(Integer, nullable=False, default=0)
     created_at = Column(DateTime, default=datetime.utcnow)
     game_profile = relationship("GameProfile", back_populates="period_snapshots")
+
+
+class PeriodEconomyClosing(Base):
+    """Снимок финансов в конце периода — для графиков и аналитики по месяцам."""
+
+    __tablename__ = "period_economy_closings"
+    __table_args__ = (
+        UniqueConstraint("game_profile_id", "period_index", name="uq_period_economy_closing_pi"),
+    )
+
+    id = Column(Integer, primary_key=True, index=True)
+    game_profile_id = Column(Integer, ForeignKey("game_profiles.id"), nullable=False, index=True)
+    period_index = Column(Integer, nullable=False)
+    cash_balance = Column(Float, nullable=False, default=0)
+    safety_fund_balance = Column(Float, nullable=False, default=0)
+    total_overdue_amount = Column(Float, nullable=False, default=0)
+    closed_at = Column(DateTime, default=datetime.utcnow)
 
 
 class Transaction(Base):

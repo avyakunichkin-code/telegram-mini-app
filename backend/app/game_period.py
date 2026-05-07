@@ -3,7 +3,7 @@
 from sqlalchemy.orm import Session
 from datetime import datetime
 
-from .models import GameProfile, FinanceAsset, FinanceLiability, Transaction, InvestmentPosition
+from .models import GameProfile, FinanceAsset, FinanceLiability, Transaction, InvestmentPosition, PeriodEconomyClosing
 from .balance_utils import adjust_balance, add_transaction, TRANSACTION_TYPES
 from .routers.events import ensure_period_events, _ensure_seed_events
 from .routers.insurance import charge_premiums_for_period
@@ -187,6 +187,23 @@ def process_period_end(db: Session, profile: GameProfile) -> dict:
     # 6. Сбрасываем флаг получения зарплаты (если он хранится в профиле)
     # Важно: НЕ сбрасываем в 0. Поле хранит номер периода, в котором брали зарплату.
     # После увеличения period_index сравнение перестанет совпадать само.
+
+    # 6.5 Снимок на конец периода для аналитики + счётчик «чистых» месяцев без просрочек
+    total_overdue_now = round(sum(float(li.overdue_amount or 0) for li in liabilities), 2)
+    if total_overdue_now <= 1e-8:
+        profile.clean_period_streak = int(getattr(profile, "clean_period_streak", 0) or 0) + 1
+    else:
+        profile.clean_period_streak = 0
+
+    db.add(
+        PeriodEconomyClosing(
+            game_profile_id=int(profile.id),
+            period_index=int(period_index),
+            cash_balance=float(profile.cash_balance),
+            safety_fund_balance=float(profile.safety_fund_balance),
+            total_overdue_amount=float(total_overdue_now),
+        )
+    )
 
     # 7. Увеличиваем номер периода
     profile.period_index += 1

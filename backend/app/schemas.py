@@ -117,6 +117,25 @@ class FinanceOverview(BaseModel):
     win_progress_safety_fund: float = 0
     win_ready: bool = False
     win_reached: bool = False
+    clean_period_streak: int = 0
+
+
+class AnalyticsTimeseriesPoint(BaseModel):
+    """Точка истории по закрытому периоду или текущему снимку."""
+
+    period_index: int
+    cash_balance: float
+    safety_fund_balance: float
+    total_overdue_amount: float
+    is_projection: bool = False
+
+
+class FinanceAnalyticsTimeseriesResponse(BaseModel):
+    """Ряд для графиков («фаза B» аналитики); закрытия пишутся при завершении периода."""
+
+    current_period_index: int
+    clean_period_streak: int
+    points: List["AnalyticsTimeseriesPoint"]
 
 
 class GameProfileCreate(BaseModel):

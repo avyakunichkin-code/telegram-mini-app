@@ -1,6 +1,20 @@
 import { Button, Cell, Section } from '@telegram-apps/telegram-ui';
 import { useState } from 'react';
 import { showNotification } from './notifications';
+import { MoneyText } from './MoneyText';
+import { IconFlowStat, IconOverdueStat, IconShieldStat, IconWalletStat, IconTargetStat, IconStreakStat } from './icons/StatIcons';
+
+function StatRow({ icon, label, children }) {
+  return (
+    <div className="mq-stat-row">
+      <span className="mq-stat-row__ico" aria-hidden>{icon}</span>
+      <div className="mq-stat-row__body">
+        <span className="mq-stat-row__label">{label}</span>
+        <span className="mq-stat-row__value">{children}</span>
+      </div>
+    </div>
+  );
+}
 
 export function DashboardSection({ overview, claimSalary, contributeToSafetyFund, withdrawFromSafetyFund, refreshOverview }) {
   const [contributionAmount, setContributionAmount] = useState('');
@@ -80,34 +94,55 @@ export function DashboardSection({ overview, claimSalary, contributeToSafetyFund
 
   if (!overview) return null;
 
+  const streak = overview.clean_period_streak ?? 0;
+
   return (
     <>
-      {/* Балансы */}
       <Section header="Финансы">
         <Cell multiline>
-          <div>💰 Баланс: {overview.cash_balance.toFixed(2)} ₽</div>
-          <div>🛡️ Подушка: {overview.safety_fund_balance.toFixed(2)} ₽</div>
-          <div>📈 Чистый поток: {overview.net_monthly_cashflow.toFixed(2)} ₽</div>
+          <StatRow icon={<IconWalletStat />} label="Баланс">
+            <MoneyText value={overview.cash_balance} />
+          </StatRow>
+          <StatRow icon={<IconShieldStat />} label="Подушка">
+            <MoneyText value={overview.safety_fund_balance} />
+          </StatRow>
+          <StatRow icon={<IconFlowStat />} label="Чистый поток (мес.)">
+            <MoneyText value={overview.net_monthly_cashflow} />
+          </StatRow>
           {typeof overview.total_overdue_amount === 'number' && overview.total_overdue_amount > 0 && (
-            <div>⏰ Просрочки: {overview.total_overdue_amount.toFixed(2)} ₽</div>
+            <StatRow icon={<IconOverdueStat />} label="Просрочки">
+              <MoneyText value={overview.total_overdue_amount} />
+            </StatRow>
           )}
+          <StatRow icon={<IconStreakStat />} label="Чистых месяцев подряд">
+            <strong>{streak}</strong>
+          </StatRow>
         </Cell>
       </Section>
 
-      {/* Победа (MVP) */}
       {typeof overview.win_target_safety_fund === 'number' && overview.win_target_safety_fund > 0 && (
         <Section header="Цель (победа)">
           <Cell multiline>
-            <div>🎯 Подушка: {overview.safety_fund_balance.toFixed(2)} / {overview.win_target_safety_fund.toFixed(2)} ₽</div>
-            <div>✅ Условия: нет просрочек и чистый поток ≥ 0</div>
-            <div>
-              Статус: {overview.win_reached ? 'ПОБЕДА!' : overview.win_ready ? 'готов(а) к победе — дожми подушку' : 'пока не выполнено'}
+            <StatRow icon={<IconTargetStat />} label="Подушка к цели">
+              <>
+                <MoneyText value={overview.safety_fund_balance} /> / <MoneyText value={overview.win_target_safety_fund} />
+              </>
+            </StatRow>
+            <div style={{ marginTop: 10, fontSize: 13, lineHeight: 1.42 }}>
+              Условия: нет просрочек и чистый поток ≥ 0.
+            </div>
+            <div style={{ marginTop: 8, fontWeight: 600 }}>
+              Статус:{' '}
+              {overview.win_reached
+                ? 'победа'
+                : overview.win_ready
+                  ? 'можно финишировать — добейте подушку'
+                  : 'пока не выполнено'}
             </div>
           </Cell>
         </Section>
       )}
 
-      {/* Действия периода */}
       <Section header="Действия периода">
         <Cell>
           <Button stretched onClick={handleClaimSalary} disabled={isClaiming || isContributing || isWithdrawing}>
@@ -121,7 +156,7 @@ export function DashboardSection({ overview, claimSalary, contributeToSafetyFund
               placeholder="Сумма"
               value={contributionAmount}
               onChange={(e) => setContributionAmount(e.target.value)}
-              style={{ flex: 1, padding: '10px', borderRadius: '10px', border: '1px solid var(--tg-theme-hint-color)' }}
+              className="mq-input-inline"
               disabled={isContributing}
             />
             <Button onClick={handleContribute} disabled={isContributing}>
@@ -136,7 +171,7 @@ export function DashboardSection({ overview, claimSalary, contributeToSafetyFund
               placeholder="Сумма"
               value={withdrawalAmount}
               onChange={(e) => setWithdrawalAmount(e.target.value)}
-              style={{ flex: 1, padding: '10px', borderRadius: '10px', border: '1px solid var(--tg-theme-hint-color)' }}
+              className="mq-input-inline"
               disabled={isWithdrawing}
             />
             <Button onClick={handleWithdraw} disabled={isWithdrawing}>
@@ -146,14 +181,19 @@ export function DashboardSection({ overview, claimSalary, contributeToSafetyFund
         </div>
       </Section>
 
-      {/* Финансовый обзор (сводка) */}
       <Section header="Финансовый обзор">
         <Cell multiline>
           <div>Уровень: {overview.gamification_level}</div>
           <div>Очки: {overview.score}/100</div>
-          <div>Доход: {overview.total_monthly_income.toFixed(2)} ₽</div>
-          <div>Платежи: {overview.total_monthly_liabilities_payment.toFixed(2)} ₽</div>
-          <div>Обслуживание активов: {overview.total_monthly_assets_maintenance.toFixed(2)} ₽</div>
+          <div>
+            Доход: <MoneyText value={overview.total_monthly_income} />
+          </div>
+          <div>
+            Платежи: <MoneyText value={overview.total_monthly_liabilities_payment} />
+          </div>
+          <div>
+            Обслуживание активов: <MoneyText value={overview.total_monthly_assets_maintenance} />
+          </div>
           <div>Долговая нагрузка: {overview.liabilities_to_income_ratio.toFixed(2)}%</div>
           <div>XP до след. уровня: {overview.xp_to_next_level}</div>
         </Cell>

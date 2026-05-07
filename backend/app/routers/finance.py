@@ -1,9 +1,11 @@
+from typing import List
+
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
 from ..auth import get_current_user
 from ..database import get_db
-from ..models import FinanceSalary, FinanceLiability, FinanceAsset, Transaction
+from ..models import FinanceSalary, FinanceLiability, FinanceAsset, Transaction, PeriodEconomyClosing
 from ..balance_utils import adjust_balance, get_cash_balance, adjust_safety_fund_balance
 from ..game_time import get_active_game_profile, sync_time, get_seconds_until_next
 from ..schemas import (
@@ -14,35 +16,11 @@ from ..schemas import (
     AssetCreate,
     AssetResponse,
     FinanceOverview,
+    AnalyticsTimeseriesPoint,
+    FinanceAnalyticsTimeseriesResponse,
 )
 
 router = APIRouter(prefix="/api/finance", tags=["finance"])
-
-
-def _compute_gamification(net_cashflow: float, liabilities_ratio: float, assets_count: int):
-    score = 0
-    if net_cashflow > 0:
-        score += min(50, int(net_cashflow // 1000) * 5)
-    if liabilities_ratio <= 20:
-        score += 30
-    elif liabilities_ratio <= 35:
-        score += 20
-    elif liabilities_ratio <= 50:
-        score += 10
-    score += min(20, assets_count * 5)
-    score = max(0, min(100, score))
-
-    if score >= 80:
-        level = "Финансовый стратег"
-    elif score >= 55:
-        level = "Уверенный планировщик"
-    elif score >= 30:
-        level = "Начинающий инвестор"
-    else:
-        level = "Финансовый новичок"
-
-    xp_to_next = 0 if score >= 100 else 100 - score
-    return score, level, xp_to_next
 
 
 def _get_or_create_salary_profile(db: Session, game_profile_id: int) -> FinanceSalary:
@@ -430,4 +408,59 @@ async def finance_overview(
         win_progress_safety_fund=round(win_progress_safety_fund, 4),
         win_ready=bool(win_ready),
         win_reached=bool(win_reached),
+        clean_period_streak=int(getattr(profile, "clean_period_streak", 0) or 0),
+    )
+
+
+@router.get("/analytics/timeseries", response_model=FinanceAnalyticsTimeseriesResponse)
+async def finance_analytics_timeseries(
+    limit: int = 48,
+    current_user=Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    profile = get_active_game_profile(db, current_user.id)
+    sync_time(profile)
+
+    limit = max(4, min(120, limit))
+
+    closings_rows = (
+        db.query(PeriodEconomyClosing)
+        .filter(PeriodEconomyClosing.game_profile_id == profile.id)
+        .order_by(PeriodEconomyClosing.period_index.desc())
+        .limit(limit)
+        .all()
+    )
+    closings_rows = list(reversed(closings_rows))
+
+    liabilities_orm = db.query(FinanceLiability).filter(
+        FinanceLiability.game_profile_id == profile.id,
+        FinanceLiability.is_active == 1,
+    ).all()
+    total_overdue_now = round(sum(float(l.overdue_amount or 0) for l in liabilities_orm), 2)
+
+    points: List[AnalyticsTimeseriesPoint] = [
+        AnalyticsTimeseriesPoint(
+            period_index=int(r.period_index),
+            cash_balance=round(float(r.cash_balance), 2),
+            safety_fund_balance=round(float(r.safety_fund_balance), 2),
+            total_overdue_amount=round(float(r.total_overdue_amount), 2),
+            is_projection=False,
+        )
+        for r in closings_rows
+    ]
+
+    points.append(
+        AnalyticsTimeseriesPoint(
+            period_index=int(profile.period_index),
+            cash_balance=round(float(profile.cash_balance), 2),
+            safety_fund_balance=round(float(profile.safety_fund_balance), 2),
+            total_overdue_amount=total_overdue_now,
+            is_projection=True,
+        )
+    )
+
+    return FinanceAnalyticsTimeseriesResponse(
+        current_period_index=int(profile.period_index),
+        clean_period_streak=int(getattr(profile, "clean_period_streak", 0) or 0),
+        points=points,
     )

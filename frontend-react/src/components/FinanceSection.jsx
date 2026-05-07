@@ -1,6 +1,7 @@
 import { Button, Cell, Section, List, Input, Select } from '@telegram-apps/telegram-ui';
 import { API } from '../api';
 import { showNotification } from './notifications';
+import { MoneyText } from './MoneyText';
 import { useEffect, useState } from 'react';
 
 const FINANCE_TABS = [
@@ -140,7 +141,9 @@ export function FinanceSection({ overview, refreshOverview }) {
               }}>Закрыть</Button>
             }>
               <div><strong>{p.title}</strong> ({p.kind})</div>
-              <div>Сумма: {Number(p.principal).toFixed(2)} ₽</div>
+              <div>
+                Сумма: <MoneyText value={p.principal} />
+              </div>
               <div>Ставка: {p.annual_rate_percent}%</div>
             </Cell>
           ))}
@@ -193,8 +196,12 @@ export function FinanceSection({ overview, refreshOverview }) {
               }}>Отменить</Button>
             }>
               <div><strong>{p.title}</strong> ({p.kind})</div>
-              <div>Премия: {Number(p.monthly_premium).toFixed(2)} ₽/мес</div>
-              <div>Покрытие: {Number(p.coverage_limit).toFixed(0)} ₽</div>
+              <div>
+                Премия: <MoneyText value={p.monthly_premium} /> / мес
+              </div>
+              <div>
+                Покрытие: <MoneyText value={p.coverage_limit} decimals={0} />
+              </div>
             </Cell>
           ))}
         </List>
@@ -230,9 +237,17 @@ export function FinanceSection({ overview, refreshOverview }) {
               }
             >
               <div><strong>{t.title}</strong></div>
-              <div>Стоимость: {Number(t.asset_value).toFixed(0)} ₽</div>
-              <div>Обслуживание: {Number(t.monthly_maintenance_cost).toFixed(0)} ₽/мес</div>
-              {Number(t.monthly_income) > 0 ? <div>Доход: {Number(t.monthly_income).toFixed(0)} ₽/мес</div> : null}
+              <div>
+                Стоимость: <MoneyText value={t.asset_value} decimals={0} />
+              </div>
+              <div>
+                Обслуживание: <MoneyText value={t.monthly_maintenance_cost} decimals={0} /> / мес
+              </div>
+              {Number(t.monthly_income) > 0 ? (
+                <div>
+                  Доход: <MoneyText value={t.monthly_income} decimals={0} /> / мес
+                </div>
+              ) : null}
             </Cell>
           ))}
         </List>
@@ -253,12 +268,16 @@ export function FinanceSection({ overview, refreshOverview }) {
               </Button>
             }>
               <div><strong>{liability.title}</strong></div>
-              <div>Долг: {liability.total_debt.toFixed(2)} ₽</div>
+              <div>
+                Долг: <MoneyText value={liability.total_debt} />
+              </div>
               <div>Ставка: {liability.annual_rate_percent}%</div>
-              <div>Платёж: {liability.monthly_payment.toFixed(2)} ₽/мес</div>
+              <div>
+                Платёж: <MoneyText value={liability.monthly_payment} /> / мес
+              </div>
               {(Number(liability.overdue_amount) > 0 || Number(liability.overdue_periods) > 0) && (
                 <div style={{ color: 'var(--tg-theme-destructive-text-color, #c62828)' }}>
-                  Просрочка: {Number(liability.overdue_amount || 0).toFixed(2)} ₽
+                  Просрочка: <MoneyText value={Number(liability.overdue_amount || 0)} />
                   {Number(liability.overdue_periods) > 0 ? ` (${liability.overdue_periods} пер. подряд)` : ''}
                 </div>
               )}
@@ -276,12 +295,21 @@ export function FinanceSection({ overview, refreshOverview }) {
               </Button>
             }>
               <div><strong>{asset.title}</strong>{asset.kind && asset.kind !== 'generic' ? <span style={{ opacity: 0.75 }}> · {asset.kind}</span> : null}</div>
-              <div>Стоимость: {asset.asset_value.toFixed(2)} ₽</div>
-              <div>Обслуживание: {asset.monthly_maintenance_cost.toFixed(2)} ₽/мес</div>
               <div>
-                Доход: {typeof asset.monthly_income === 'number' && asset.monthly_income > 0
-                  ? `${asset.monthly_income.toFixed(2)} ₽/мес`
-                  : '—'}
+                Стоимость: <MoneyText value={asset.asset_value} />
+              </div>
+              <div>
+                Обслуживание: <MoneyText value={asset.monthly_maintenance_cost} /> / мес
+              </div>
+              <div>
+                Доход:{' '}
+                {typeof asset.monthly_income === 'number' && asset.monthly_income > 0 ? (
+                  <>
+                    <MoneyText value={asset.monthly_income} /> / мес
+                  </>
+                ) : (
+                  '—'
+                )}
               </div>
             </Cell>
           ))}

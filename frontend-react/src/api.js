@@ -100,6 +100,10 @@ export const API = {
     getOverview() {
         return apiCall('/api/finance/overview');
     },
+    getFinanceAnalyticsTimeseries(limit = 48) {
+        const q = limit ? `?limit=${encodeURIComponent(limit)}` : '';
+        return apiCall(`/api/finance/analytics/timeseries${q}`);
+    },
     getAssetTemplates() {
         return apiCall('/api/finance/asset-templates');
     },

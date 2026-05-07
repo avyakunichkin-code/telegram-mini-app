@@ -57,7 +57,8 @@
 - `GET /api/game/period/status`
 
 ### Финансы/обзор
-- `GET /api/finance/overview` → главные цифры + прогресс победы (MVP)
+- `GET /api/finance/overview` → главные цифры + прогресс победы (MVP); поле `clean_period_streak`
+- `GET /api/finance/analytics/timeseries` → ряд снимков на конец периодов + текущий снимок (графики)
 - `GET /api/finance/asset-templates`
 - `POST /api/finance/assets/from-template`
 
