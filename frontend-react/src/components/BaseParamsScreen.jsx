@@ -2,9 +2,9 @@ import { useState } from 'react';
 import { Button, Input, Cell, Section, List } from '@telegram-apps/telegram-ui';
 import { API } from '../api';
 import { showNotification } from './notifications';
+import { MoneyText } from './MoneyText';
 
 export function BaseParamsScreen({ profileName, mode, periodDuration, onBack, onGameStarted }) {
-  console.log('BaseParamsScreen props:', { profileName, mode, periodDuration });
   const [cashBalance, setCashBalance] = useState(0);
   const [monthlySalary, setMonthlySalary] = useState(0);
   const [assets, setAssets] = useState([]);
@@ -50,7 +50,6 @@ export function BaseParamsScreen({ profileName, mode, periodDuration, onBack, on
   };
 
   const handleStart = async () => {
-    console.log('Starting game with profileName:', profileName); // тут должно быть значение
     if (!profileName) {
       showNotification('Не задано название профиля. Вернитесь назад и введите его.', 'error');
       return;
@@ -77,7 +76,12 @@ export function BaseParamsScreen({ profileName, mode, periodDuration, onBack, on
   };
 
   return (
-    <div style={{ padding: '1rem' }}>
+    <div
+      className="mq-page mq-stack mq-stack-animate mq-stack--tight"
+      style={{ padding: '12px 12px calc(24px + env(safe-area-inset-bottom, 0))' }}
+    >
+      <div className="mq-page__decor" aria-hidden />
+      <div className="mq-enter-item">
       <Section header="Базовые параметры">
         <Cell>
           <Input
@@ -96,8 +100,10 @@ export function BaseParamsScreen({ profileName, mode, periodDuration, onBack, on
           />
         </Cell>
       </Section>
+      </div>
 
       {/* Активы */}
+      <div className="mq-enter-item">
       <Section header="Активы (расходы на обслуживание)">
         <List>
           {assets.map((asset, idx) => (
@@ -107,12 +113,12 @@ export function BaseParamsScreen({ profileName, mode, periodDuration, onBack, on
               after={<Button mode="destructive" size="s" onClick={() => removeAsset(idx)}>Удалить</Button>}
             >
               <div><strong>{asset.title}</strong></div>
-              <div>Стоимость: {asset.asset_value} ₽</div>
-              <div>Обслуживание: {asset.monthly_maintenance_cost} ₽/мес</div>
+              <div>Стоимость: <MoneyText value={asset.asset_value} decimals={0} /></div>
+              <div>Обслуживание: <MoneyText value={asset.monthly_maintenance_cost} decimals={0} /> / мес</div>
             </Cell>
           ))}
           <Cell>
-            <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+            <div className="mq-inline-field-row">
               <Input
                 placeholder="Название"
                 value={newAsset.title}
@@ -133,13 +139,15 @@ export function BaseParamsScreen({ profileName, mode, periodDuration, onBack, on
                 onChange={(e) => setNewAsset({ ...newAsset, monthly_maintenance_cost: Number(e.target.value) })}
                 style={{ flex: 1 }}
               />
-              <Button onClick={addAsset}>+</Button>
+              <Button className="mq-chip-btn" onClick={addAsset}>+</Button>
             </div>
           </Cell>
         </List>
       </Section>
+      </div>
 
       {/* Обязательства */}
+      <div className="mq-enter-item">
       <Section header="Обязательства (кредиты, ипотека)">
         <List>
           {liabilities.map((liab, idx) => (
@@ -149,13 +157,13 @@ export function BaseParamsScreen({ profileName, mode, periodDuration, onBack, on
               after={<Button mode="destructive" size="s" onClick={() => removeLiability(idx)}>Удалить</Button>}
             >
               <div><strong>{liab.title}</strong></div>
-              <div>Долг: {liab.total_debt} ₽</div>
+              <div>Долг: <MoneyText value={liab.total_debt} /></div>
               <div>Ставка: {liab.annual_rate_percent}%</div>
-              <div>Платёж: {liab.monthly_payment} ₽/мес</div>
+              <div>Платёж: <MoneyText value={liab.monthly_payment} /> / мес</div>
             </Cell>
           ))}
           <Cell>
-            <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+            <div className="mq-inline-field-row">
               <Input
                 placeholder="Название"
                 value={newLiability.title}
@@ -183,13 +191,14 @@ export function BaseParamsScreen({ profileName, mode, periodDuration, onBack, on
                 onChange={(e) => setNewLiability({ ...newLiability, monthly_payment: Number(e.target.value) })}
                 style={{ flex: 1 }}
               />
-              <Button onClick={addLiability}>+</Button>
+              <Button className="mq-chip-btn" onClick={addLiability}>+</Button>
             </div>
           </Cell>
         </List>
       </Section>
+      </div>
 
-      <div style={{ marginTop: '1rem', display: 'flex', gap: '0.5rem' }}>
+      <div className="mq-enter-item mq-actions-stack" style={{ marginTop: '0.75rem' }}>
         <Button stretched onClick={handleStart} disabled={loading}>
           {loading ? 'Запуск...' : 'Старт игры'}
         </Button>

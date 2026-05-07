@@ -86,12 +86,14 @@ export function FinanceSection({ overview, refreshOverview }) {
         </div>
       </div>
 
+      <div key={financeTab} className="mq-tab-panel-reveal">
+
       {financeTab === 'invest' && (
       <div role="tabpanel" id="finance-panel-invest" aria-labelledby="finance-tab-invest">
       <Section header="Инвестиции">
         <Cell multiline>
           <div style={{ fontWeight: 600, marginBottom: 6 }}>Депозит</div>
-          <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+          <div className="mq-inline-field-row">
             <Input header="Сумма" type="number" value={depositAmount} onChange={(e) => setDepositAmount(Number(e.target.value))} />
             <Input header="% годовых" type="number" value={depositRate} onChange={(e) => setDepositRate(Number(e.target.value))} />
             <Button onClick={async () => {
@@ -109,7 +111,7 @@ export function FinanceSection({ overview, refreshOverview }) {
 
         <Cell multiline>
           <div style={{ fontWeight: 600, marginBottom: 6 }}>Облигации</div>
-          <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+          <div className="mq-inline-field-row">
             <Input header="Сумма" type="number" value={bondAmount} onChange={(e) => setBondAmount(Number(e.target.value))} />
             <Input header="% годовых" type="number" value={bondRate} onChange={(e) => setBondRate(Number(e.target.value))} />
             <Button onClick={async () => {
@@ -156,7 +158,7 @@ export function FinanceSection({ overview, refreshOverview }) {
       <div role="tabpanel" id="finance-panel-insurance" aria-labelledby="finance-tab-insurance">
       <Section header="Страховки">
         <Cell multiline>
-          <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+          <div className="mq-inline-field-row">
             <Select header="Тип" value={policyKind} onChange={(e) => setPolicyKind(e.target.value)}>
               <option value="health">Здоровье</option>
               <option value="property">Имущество</option>
@@ -318,6 +320,8 @@ export function FinanceSection({ overview, refreshOverview }) {
       </>
       </div>
       )}
+
+      </div>
     </>
   );
 }

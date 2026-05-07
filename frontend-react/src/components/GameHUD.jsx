@@ -1,32 +1,37 @@
 import { Button, Cell, Section } from '@telegram-apps/telegram-ui';
 import { formatTime } from '../utils';
 
-export function GameHUD({ timeStatus, setPlay, setPause, onRequestNextPeriod }) {
+export function GameHUD({
+  className = '',
+  timeStatus,
+  setPlay,
+  setPause,
+  onRequestNextPeriod,
+}) {
   if (!timeStatus) return null;
   const remaining = timeStatus.remainingLocal ?? timeStatus.seconds_until_next_period;
 
   return (
-    <Section header="Игровое время">
-      <Cell multiline>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '0.5rem' }}>
-          <span>Период #{timeStatus.period_index}</span>
-          <span
-            style={{
-              fontFamily: 'var(--telegram-font-monospace, ui-monospace), monospace',
-              fontSize: '1.2rem',
-              fontVariantNumeric: 'tabular-nums',
-              letterSpacing: '0.02em',
-            }}
-          >
-            {formatTime(remaining)}
-          </span>
-          <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
-            <Button size="s" onClick={setPlay} disabled={timeStatus.time_state === 'play'}>Играть</Button>
-            <Button size="s" onClick={setPause} disabled={timeStatus.time_state === 'pause'}>Пауза</Button>
-            <Button size="s" onClick={onRequestNextPeriod}>Дальше</Button>
-          </div>
-        </div>
-      </Cell>
-    </Section>
+    <div className={className}>
+      <div className="mq-hud">
+        <Section header="Игровое время">
+          <Cell multiline>
+            <div className="mq-hud__row">
+              <span className="mq-period-label">Период #{timeStatus.period_index}</span>
+              <span className="mq-timer-chip">{formatTime(remaining)}</span>
+              <div className="mq-hud-actions">
+                <Button size="s" onClick={setPlay} disabled={timeStatus.time_state === 'play'}>
+                  Играть
+                </Button>
+                <Button size="s" onClick={setPause} disabled={timeStatus.time_state === 'pause'}>
+                  Пауза
+                </Button>
+                <Button size="s" onClick={onRequestNextPeriod}>Дальше</Button>
+              </div>
+            </div>
+          </Cell>
+        </Section>
+      </div>
+    </div>
   );
 }

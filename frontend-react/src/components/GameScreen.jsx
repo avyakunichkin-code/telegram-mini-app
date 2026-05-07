@@ -62,49 +62,59 @@ export function GameScreen({ onLogout, onNewGame, onLoadGame }) {
     }
   };
 
-  if (loading) return <Spinner />;
+  if (loading) {
+    return (
+      <div className="app-shell mq-page mq-page--center" style={{ padding: '16px' }}>
+        <div className="mq-page__decor" aria-hidden />
+        <Spinner />
+      </div>
+    );
+  }
   if (error) {
     return (
-      <Section header="Не удалось загрузить игру">
-        <Cell multiline subtitle={error}>
-          <div>Проверьте сеть и попробуйте ещё раз.</div>
-        </Cell>
-        <Cell>
-          <Button stretched mode="filled" onClick={() => reload()}>
-            Повторить загрузку
-          </Button>
-        </Cell>
-      </Section>
+      <div className="app-shell mq-page" style={{ padding: '12px' }}>
+        <div className="mq-page__decor" aria-hidden />
+        <div className="mq-stack mq-stack-animate mq-stack--tight">
+          <div className="mq-enter-item">
+            <Section header="Не удалось загрузить игру">
+              <Cell multiline subtitle={error}>
+                <div>Проверьте сеть и попробуйте ещё раз.</div>
+              </Cell>
+              <Cell>
+                <Button stretched mode="filled" onClick={() => reload()}>
+                  Повторить загрузку
+                </Button>
+              </Cell>
+            </Section>
+          </div>
+        </div>
+      </div>
     );
   }
   if (!overview || !timeStatus) {
     return (
-      <Section header="Нет данных">
-        <Cell>Профиль игры недоступен.</Cell>
-        <Cell>
-          <Button stretched onClick={() => reload()}>Обновить</Button>
-        </Cell>
-      </Section>
+      <div className="app-shell mq-page" style={{ padding: '12px' }}>
+        <div className="mq-page__decor" aria-hidden />
+        <div className="mq-stack mq-stack-animate mq-stack--tight">
+          <div className="mq-enter-item">
+            <Section header="Нет данных">
+              <Cell>Профиль игры недоступен.</Cell>
+              <Cell>
+                <Button stretched onClick={() => reload()}>Обновить</Button>
+              </Cell>
+            </Section>
+          </div>
+        </div>
+      </div>
     );
   }
 
   return (
     <div
-      className="app-shell"
+      className="app-shell mq-page"
       style={{ padding: '12px', paddingBottom: 'calc(var(--tma-tabbar-height) + env(safe-area-inset-bottom, 0px))' }}
     >
-      <header className="tma-app-header">
-        <MqLogo size={34} />
-        <div className="tma-app-header__text">
-          <span className="tma-app-header__name">Money Quest</span>
-          <span className="tma-app-header__tag">Финансы как игра</span>
-        </div>
-        <EventsTriggerButton
-          count={pendingEvents?.length ?? 0}
-          open={eventsOpen}
-          onOpen={() => setEventsOpen(true)}
-        />
-      </header>
+      <div className="mq-page__decor" aria-hidden />
 
       <Modal open={salaryWarnOpen} onClose={() => setSalaryWarnOpen(false)}>
         <Section header="Следующий период">
@@ -133,38 +143,57 @@ export function GameScreen({ onLogout, onNewGame, onLoadGame }) {
         }}
       />
 
-      <GameHUD
-        timeStatus={timeStatus}
-        setPlay={setPlay}
-        setPause={setPause}
-        onRequestNextPeriod={handleRequestNextPeriod}
-      />
-
-      {activeTab === 'dashboard' && (
-        <DashboardSection
-          overview={overview}
-          claimSalary={claimSalary}
-          contributeToSafetyFund={contributeToSafetyFund}
-          withdrawFromSafetyFund={withdrawFromSafetyFund}
-          refreshOverview={refreshOverview}
+      <div className="mq-stack mq-stack-animate mq-stack--tight">
+        <div className="mq-enter-item">
+          <header className="tma-app-header">
+            <MqLogo size={34} />
+            <div className="tma-app-header__text">
+              <span className="tma-app-header__name">Money Quest</span>
+              <span className="tma-app-header__tag">Финансы как игра</span>
+            </div>
+            <EventsTriggerButton
+              count={pendingEvents?.length ?? 0}
+              open={eventsOpen}
+              onOpen={() => setEventsOpen(true)}
+            />
+          </header>
+        </div>
+        <GameHUD
+          className="mq-enter-item"
+          timeStatus={timeStatus}
+          setPlay={setPlay}
+          setPause={setPause}
+          onRequestNextPeriod={handleRequestNextPeriod}
         />
-      )}
 
-      {activeTab === 'finance' && (
-        <FinanceSection overview={overview} refreshOverview={refreshOverview} />
-      )}
+        <div key={activeTab} className="mq-enter-item">
+          {activeTab === 'dashboard' && (
+            <DashboardSection
+              overview={overview}
+              claimSalary={claimSalary}
+              contributeToSafetyFund={contributeToSafetyFund}
+              withdrawFromSafetyFund={withdrawFromSafetyFund}
+              refreshOverview={refreshOverview}
+            />
+          )}
 
-      {activeTab === 'analytics' && (
-        <AnalyticsSection overview={overview} />
-      )}
+          {activeTab === 'finance' && (
+            <FinanceSection overview={overview} refreshOverview={refreshOverview} />
+          )}
 
-      {activeTab === 'menu' && (
-        <MenuSection
-          onLogout={onLogout}
-          onNewGame={onNewGame}
-          onLoadGame={onLoadGame}
-        />
-      )}
+          {activeTab === 'analytics' && (
+            <AnalyticsSection overview={overview} />
+          )}
+
+          {activeTab === 'menu' && (
+            <MenuSection
+              onLogout={onLogout}
+              onNewGame={onNewGame}
+              onLoadGame={onLoadGame}
+            />
+          )}
+        </div>
+      </div>
 
       <BottomGameNav activeTab={activeTab} setActiveTab={setActiveTab} />
     </div>

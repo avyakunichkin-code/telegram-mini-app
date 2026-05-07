@@ -149,36 +149,36 @@ export function DashboardSection({ overview, claimSalary, contributeToSafetyFund
             {isClaiming ? <div className="spinner" /> : 'Получить зарплату'}
           </Button>
         </Cell>
-        <div style={{ margin: '12px 0' }}>
-          <div style={{ display: 'flex', gap: '0.5rem' }}>
+        <Cell>
+          <div className="mq-dash-actions">
             <input
               type="number"
               placeholder="Сумма"
               value={contributionAmount}
               onChange={(e) => setContributionAmount(e.target.value)}
-              className="mq-input-inline"
+              className="mq-input-inline mq-dash-actions__field"
               disabled={isContributing}
             />
             <Button onClick={handleContribute} disabled={isContributing}>
               {isContributing ? <div className="spinner" /> : 'В подушку'}
             </Button>
           </div>
-        </div>
-        <div style={{ margin: '12px 0' }}>
-          <div style={{ display: 'flex', gap: '0.5rem' }}>
+        </Cell>
+        <Cell>
+          <div className="mq-dash-actions">
             <input
               type="number"
               placeholder="Сумма"
               value={withdrawalAmount}
               onChange={(e) => setWithdrawalAmount(e.target.value)}
-              className="mq-input-inline"
+              className="mq-input-inline mq-dash-actions__field"
               disabled={isWithdrawing}
             />
             <Button onClick={handleWithdraw} disabled={isWithdrawing}>
               {isWithdrawing ? <div className="spinner" /> : 'Снять с подушки'}
             </Button>
           </div>
-        </div>
+        </Cell>
       </Section>
 
       <Section header="Финансовый обзор">

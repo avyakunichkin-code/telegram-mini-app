@@ -28,7 +28,10 @@ export function RegisterForm({ onSwitchToLogin }) {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form className="mq-page mq-page--auth" onSubmit={handleSubmit}>
+      <div className="mq-page__decor" aria-hidden />
+      <div className="mq-auth-inner mq-stack mq-stack-animate mq-stack--tight">
+      <div className="mq-enter-item">
       <Section header="Регистрация">
         <Cell>
           <Input
@@ -60,7 +63,11 @@ export function RegisterForm({ onSwitchToLogin }) {
             onChange={(e) => setEmail(e.target.value)}
           />
         </Cell>
-        {error && <Cell><div style={{ color: 'red' }}>{error}</div></Cell>}
+        {error ? (
+          <Cell>
+            <div className="mq-form-alert">{error}</div>
+          </Cell>
+        ) : null}
         <Cell>
           <Button mode="filled" type="submit" stretched disabled={isSubmitting}>
             {isSubmitting ? 'Регистрация...' : 'Зарегистрироваться'}
@@ -70,6 +77,8 @@ export function RegisterForm({ onSwitchToLogin }) {
           <Button mode="plain" onClick={onSwitchToLogin}>Уже есть аккаунт? Войти</Button>
         </Cell>
       </Section>
+      </div>
+      </div>
     </form>
   );
 }

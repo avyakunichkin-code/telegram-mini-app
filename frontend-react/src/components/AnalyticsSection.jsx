@@ -78,7 +78,8 @@ export function AnalyticsSection({ overview }) {
   const streak = ts?.clean_period_streak ?? overview.clean_period_streak ?? 0;
 
   return (
-    <>
+    <div className="mq-stack mq-stack-animate mq-stack--tight">
+      <div className="mq-enter-item">
       <Section header={`Период и цель №${period}`}>
         <Cell multiline subtitle="Ставка победы (MVP): подушка к обязательствам, без просрочек, неотрицательный поток.">
           <div style={{ marginBottom: 8 }}>
@@ -101,7 +102,9 @@ export function AnalyticsSection({ overview }) {
           ) : null}
         </Cell>
       </Section>
+      </div>
 
+      <div className="mq-enter-item">
       <Section header="Мотивация">
         <Cell multiline>
           <div className="mq-streak-row">
@@ -116,7 +119,9 @@ export function AnalyticsSection({ overview }) {
           </div>
         </Cell>
       </Section>
+      </div>
 
+      <div className="mq-enter-item">
       <Section header="Динамика (закрытые периоды)">
         <Cell multiline>
           {tsError ? <div className="mq-ts-error">{tsError}</div> : null}
@@ -131,7 +136,9 @@ export function AnalyticsSection({ overview }) {
           {!ts && !tsError ? <div className="mq-ts-error">Загрузка графиков…</div> : null}
         </Cell>
       </Section>
+      </div>
 
+      <div className="mq-enter-item">
       <Section header="Потоки месяца (нагрузка)">
         <Cell multiline>
           <BarCompare
@@ -174,6 +181,7 @@ export function AnalyticsSection({ overview }) {
           </div>
         </Cell>
       </Section>
-    </>
+      </div>
+    </div>
   );
 }

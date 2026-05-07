@@ -25,7 +25,13 @@ export function DifficultyScreen({ onNext, onBack }) {
   };
 
   return (
-    <form onSubmit={handleSubmit} style={{ padding: '1rem' }}>
+    <form
+      className="mq-page mq-stack mq-stack-animate mq-stack--tight"
+      onSubmit={handleSubmit}
+      style={{ padding: '12px 12px calc(24px + env(safe-area-inset-bottom, 0))' }}
+    >
+      <div className="mq-page__decor" aria-hidden />
+      <div className="mq-enter-item">
       <Section header="Выбор сложности">
         <Cell>
           <Input
@@ -62,6 +68,7 @@ export function DifficultyScreen({ onNext, onBack }) {
           <Button mode="plain" onClick={onBack} stretched>Назад</Button>
         </Cell>
       </Section>
+      </div>
     </form>
   );
 }

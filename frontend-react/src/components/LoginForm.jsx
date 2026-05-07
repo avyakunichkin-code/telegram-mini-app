@@ -25,7 +25,10 @@ export function LoginForm({ onSwitchToRegister }) {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form className="mq-page mq-page--auth" onSubmit={handleSubmit}>
+      <div className="mq-page__decor" aria-hidden />
+      <div className="mq-auth-inner mq-stack mq-stack-animate mq-stack--tight">
+      <div className="mq-enter-item">
       <Section header="Вход">
         <Cell>
           <Input
@@ -44,7 +47,11 @@ export function LoginForm({ onSwitchToRegister }) {
             placeholder="••••••"
           />
         </Cell>
-        {error && <Cell><div style={{ color: 'red' }}>{error}</div></Cell>}
+        {error ? (
+          <Cell>
+            <div className="mq-form-alert">{error}</div>
+          </Cell>
+        ) : null}
         <Cell>
           <Button mode="filled" type="submit" stretched>Войти</Button>
         </Cell>
@@ -52,6 +59,8 @@ export function LoginForm({ onSwitchToRegister }) {
           <Button mode="plain" onClick={onSwitchToRegister}>Зарегистрироваться</Button>
         </Cell>
       </Section>
+      </div>
+      </div>
     </form>
   );
 }

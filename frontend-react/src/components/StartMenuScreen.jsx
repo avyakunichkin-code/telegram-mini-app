@@ -36,7 +36,14 @@ export function StartMenuScreen({ onNewGame, onLoadGame, onLogout }) {
   const lastProfile = profiles.find(p => p.is_active) || profiles[0];
   const otherProfiles = profiles.filter(p => p !== lastProfile);
 
-  if (loading) return <Spinner />;
+  if (loading) {
+    return (
+      <div className="mq-page mq-page--center" style={{ padding: 16 }}>
+        <div className="mq-page__decor" aria-hidden />
+        <Spinner />
+      </div>
+    );
+  }
 
   const handleLogout = () => {
     logout();
@@ -44,7 +51,9 @@ export function StartMenuScreen({ onNewGame, onLoadGame, onLogout }) {
   };
 
   return (
-    <div style={{ padding: '1rem' }}>
+    <div className="mq-page mq-stack mq-stack-animate mq-stack--tight" style={{ padding: '12px 12px calc(24px + env(safe-area-inset-bottom, 0))' }}>
+      <div className="mq-page__decor" aria-hidden />
+      <div className="mq-enter-item">
       <Section header="Игровые профили">
         {lastProfile ? (
           <Cell
@@ -62,8 +71,9 @@ export function StartMenuScreen({ onNewGame, onLoadGame, onLogout }) {
           <Cell>Нет сохранений. Нажмите "Новая игра"</Cell>
         )}
       </Section>
+      </div>
 
-      <div style={{ marginTop: '1rem', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+      <div className="mq-enter-item mq-actions-stack">
         <Button mode="filled" onClick={onNewGame}>Новая игра</Button>
         <Button mode="outline" onClick={() => setShowLoadModal(true)} disabled={profiles.length === 0}>
           Загрузка
