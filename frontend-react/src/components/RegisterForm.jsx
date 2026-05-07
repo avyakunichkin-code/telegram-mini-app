@@ -33,7 +33,8 @@ export function RegisterForm({ onSwitchToLogin }) {
       <div className="mq-auth-inner mq-stack mq-stack-animate mq-stack--tight">
       <div className="mq-enter-item">
       <Section header="Регистрация">
-        <Cell>
+        <div className="mq-screen-intro">Поля со звёздочкой обязательны. Остальное можно заполнить позже в профиле.</div>
+        <Cell multiline subtitle="Логин для входа в приложение">
           <Input
             header="Имя пользователя *"
             value={username}
@@ -48,14 +49,14 @@ export function RegisterForm({ onSwitchToLogin }) {
             onChange={(e) => setPassword(e.target.value)}
           />
         </Cell>
-        <Cell>
+        <Cell multiline subtitle="Как к вам обращаться в интерфейсе (по желанию)">
           <Input
             header="Полное имя"
             value={fullName}
             onChange={(e) => setFullName(e.target.value)}
           />
         </Cell>
-        <Cell>
+        <Cell multiline subtitle="Для восстановления и рассылок, если подключим">
           <Input
             header="Email"
             type="email"
@@ -69,12 +70,14 @@ export function RegisterForm({ onSwitchToLogin }) {
           </Cell>
         ) : null}
         <Cell>
-          <Button mode="filled" type="submit" stretched disabled={isSubmitting}>
-            {isSubmitting ? 'Регистрация...' : 'Зарегистрироваться'}
-          </Button>
-        </Cell>
-        <Cell>
-          <Button mode="plain" onClick={onSwitchToLogin}>Уже есть аккаунт? Войти</Button>
+          <div className="mq-actions-stack">
+            <Button mode="filled" type="submit" stretched disabled={isSubmitting}>
+              {isSubmitting ? 'Регистрация...' : 'Зарегистрироваться'}
+            </Button>
+            <Button mode="plain" type="button" stretched onClick={onSwitchToLogin}>
+              Уже есть аккаунт — войти
+            </Button>
+          </div>
         </Cell>
       </Section>
       </div>

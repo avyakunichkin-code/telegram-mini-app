@@ -30,7 +30,8 @@ export function LoginForm({ onSwitchToRegister }) {
       <div className="mq-auth-inner mq-stack mq-stack-animate mq-stack--tight">
       <div className="mq-enter-item">
       <Section header="Вход">
-        <Cell>
+        <div className="mq-screen-intro">Тот же визуальный язык, что в игре: короткие подписи и один основной шаг.</div>
+        <Cell multiline subtitle="Как при регистрации, латиницей">
           <Input
             header="Имя пользователя"
             value={username}
@@ -53,10 +54,12 @@ export function LoginForm({ onSwitchToRegister }) {
           </Cell>
         ) : null}
         <Cell>
-          <Button mode="filled" type="submit" stretched>Войти</Button>
-        </Cell>
-        <Cell>
-          <Button mode="plain" onClick={onSwitchToRegister}>Зарегистрироваться</Button>
+          <div className="mq-actions-stack">
+            <Button mode="filled" type="submit" stretched>Войти</Button>
+            <Button mode="plain" type="button" stretched onClick={onSwitchToRegister}>
+              Нет аккаунта? Зарегистрироваться
+            </Button>
+          </div>
         </Cell>
       </Section>
       </div>

@@ -70,20 +70,26 @@ body {
 #root {
   --tma-tabbar-height: 56px;
 
-  /* Совмещение бренда MQ с палитрой Telegram UI (telegram-ui использует префикс --tgui--) */
-  --mq-accent-fill: color-mix(
-    in srgb,
-    var(--tg-theme-button-color, var(--mq-violet)) 38%,
-    var(--mq-violet) 62%
-  );
-  --mq-accent-link: color-mix(
-    in srgb,
-    var(--tg-theme-link-color, var(--mq-violet-deep)) 35%,
-    var(--mq-violet-deep) 65%
-  );
-  --tgui--button_color: var(--mq-accent-fill);
-  --tgui--button_text_color: var(--tg-theme-button-text-color, #ffffff);
-  --tgui--link_color: var(--mq-accent-link);
+  /* Шкала типографики TMA: не добавлять на экран произвольные размеры (см. BRANDBOOK 4.5) */
+  --mq-fs-body: 15px;
+  --mq-fs-caption: 12px;
+  --mq-fs-small: 11px;
+
+  /*
+   * Основная заливка CTA и ссылки: Quest Violet (бренд), без «голубого» акцента клиента Telegram.
+   * Текст на кнопке остаётся из темы (обычно белый на тёмном / чёрный на светлом — задаёт telegram-ui).
+   */
+  --mq-accent-fill: var(--mq-violet);
+  --mq-accent-link: var(--mq-violet-deep);
+
+  /* telegram-ui tokens */
+  --tgui--button_color: #6d28d9 !important;
+  --tgui--link_color: #5b21b6 !important;
+  --tgui--outline: color-mix(in srgb, #6d28d9 46%, var(--tg-theme-hint-color, #e5e7eb)) !important;
+  --tgui--accent_text_color: #6d28d9 !important;
+  --tgui--primary_code_highlight: #5b21b6 !important;
+  --tgui--toast_accent_color: #6d28d9 !important;
+  --tgui--button_text_color: var(--tg-theme-button-text-color, #ffffff) !important;
 
   width: 100%;
   max-width: 480px;
@@ -107,6 +113,129 @@ body {
     0 0 0 1px color-mix(in srgb, var(--tg-theme-hint-color, var(--mq-line)) 35%, transparent);
   background: var(--tg-theme-bg-color, var(--bg));
   color: var(--tg-theme-text-color, var(--text));
+  font-size: var(--mq-fs-body);
+  line-height: 1.42;
+}
+
+/* На всякий случай дублируем на :root (некоторые компоненты читают токены выше по дереву) */
+:root {
+  --tgui--button_color: #6d28d9 !important;
+  --tgui--link_color: #5b21b6 !important;
+  --tgui--outline: color-mix(in srgb, #6d28d9 46%, #e5e7eb) !important;
+  --tgui--accent_text_color: #6d28d9 !important;
+  --tgui--primary_code_highlight: #5b21b6 !important;
+  --tgui--toast_accent_color: #6d28d9 !important;
+}
+
+/* Кнопки: всегда с рамкой; filled — заливка, outline/plain — остаются библиотечными */
+#root button:not(.tma-nav-icon-btn):not(.events-carousel-dot):not(.events-carousel-arrow):not(.events-overlay-close) {
+  box-shadow: 0 0 0 1px var(--tgui--outline) inset;
+}
+
+/* Компактные поля с подчёркиванием (для мастера «Базовые параметры» и похожих форм) */
+.mq-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  position: relative;
+  z-index: 3;
+}
+
+.mq-field__label {
+  font-size: var(--mq-fs-caption);
+  font-weight: 650;
+  letter-spacing: 0.01em;
+  color: var(--tg-theme-text-color, var(--mq-ink));
+}
+
+.mq-field__input {
+  width: 100%;
+  box-sizing: border-box;
+  border: none;
+  border-bottom: 1.5px solid color-mix(in srgb, var(--tgui--outline), transparent 12%);
+  border-radius: 0;
+  padding: 8px 2px 9px;
+  background: transparent;
+  color: var(--tg-theme-text-color, var(--mq-ink));
+  font: inherit;
+  font-size: var(--mq-fs-body);
+  line-height: 1.25;
+  outline: none;
+  position: relative;
+  z-index: 3;
+  pointer-events: auto;
+}
+
+/* Если в ячейке telegram-ui есть верхний overlay-слой, приподнимаем контентные элементы */
+.mq-field,
+.mq-field__input,
+.mq-add-action,
+.mq-actions-stack button {
+  position: relative;
+  z-index: 3;
+}
+
+/* Внутри Cell: отключаем «активность всей ячейки», чтобы клики шли в реальные контролы */
+#root [class*='tgui-']:has(.mq-field) {
+  cursor: default !important;
+}
+
+/* На случай, если в текущем браузере :has недоступен — просто не даём псевдослою ловить клики */
+#root [class*='tgui-'] .mq-field {
+  pointer-events: auto;
+}
+
+.mq-field__input::placeholder {
+  color: color-mix(in srgb, var(--tg-theme-hint-color, #6b7280), transparent 10%);
+}
+
+.mq-field__input:focus-visible {
+  border-bottom-color: #5b21b6;
+  box-shadow: 0 3px 0 -2px rgba(91, 33, 182, 0.45);
+}
+
+/* Убираем браузерные стрелки у number в WebKit */
+.mq-field__input[type='number']::-webkit-outer-spin-button,
+.mq-field__input[type='number']::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* И в Firefox */
+.mq-field__input[type='number'] {
+  -moz-appearance: textfield;
+}
+
+/* Hover/глубина для filled-кнопок (не трогаем outline/plain) */
+@media (hover: hover) {
+  #root button:not(.tma-nav-icon-btn):not(.events-carousel-dot):not(.events-carousel-arrow):not(.events-overlay-close) {
+    transition:
+      background-color 0.14s ease,
+      box-shadow 0.14s ease,
+      transform 0.12s cubic-bezier(0.22, 1, 0.32, 1);
+  }
+  #root button:not(.tma-nav-icon-btn):not(.events-carousel-dot):not(.events-carousel-arrow):not(.events-overlay-close):active:not(:disabled) {
+    transform: scale(0.985);
+  }
+  /* filled у telegram-ui использует var(--tgui--button_color) — затемняем только его */
+  #root button:not(.tma-nav-icon-btn):not(.events-carousel-dot):not(.events-carousel-arrow):not(.events-overlay-close)[style*='--tgui--button_color'],
+  #root button:not(.tma-nav-icon-btn):not(.events-carousel-dot):not(.events-carousel-arrow):not(.events-overlay-close)[class*='tgui-']:where(:not(:disabled)) {
+    /* оставляем библиотечные состояния; глубина достигается рамкой и лёгким transform */
+  }
+}
+
+/* Убираем подсветку строк/блоков при наведении (desktop) */
+@media (hover: hover) {
+  #root [class*='tgui-'][class*='Cell']:hover,
+  #root [class*='tgui-'][class*='cell']:hover,
+  #root [class*='tgui-'][role='button']:hover {
+    background-color: transparent !important;
+  }
+}
+
+/* Библиотечный overlay-слой для нажатий/подсветки (span.tgui-8071f6e...): не должен блокировать вложенные контролы */
+#root span[class*='tgui-'] {
+  pointer-events: none;
 }
 
 .app-shell {
@@ -244,6 +373,199 @@ code {
   }
 }
 
+/* Вкладки «Финансы» игры: всегда сетка 2×2 для равномерного заполнения ширины */
+.mq-tablist--2x2 {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.mq-fin-wrap {
+  width: 100%;
+}
+
+.mq-fin-shell {
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+.mq-fin-field-grid {
+  display: grid;
+  gap: 10px;
+  width: 100%;
+  box-sizing: border-box;
+  align-items: end;
+}
+
+.mq-fin-field-grid--2 {
+  grid-template-columns: 1fr 1fr;
+}
+
+/* Депозит / облигации: два поля + кнопка в одной сетке */
+.mq-fin-field-grid--with-cta {
+  grid-template-columns: 1fr 1fr auto;
+}
+
+@media (max-width: 392px) {
+  .mq-fin-field-grid--with-cta {
+    grid-template-columns: 1fr 1fr;
+  }
+  .mq-fin-field-grid--with-cta > button {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 352px) {
+  .mq-fin-field-grid--2 {
+    grid-template-columns: 1fr;
+  }
+}
+
+.mq-fin-btn-span2 {
+  grid-column: 1 / -1;
+  justify-self: stretch;
+}
+
+.mq-fin-block-head {
+  margin: 0 0 8px;
+  font-size: var(--mq-fs-caption);
+  font-weight: 650;
+  letter-spacing: 0.02em;
+  color: var(--tg-theme-text-color, var(--mq-ink));
+}
+
+.mq-section-intro {
+  margin: 0 0 10px;
+  padding: 0 20px;
+  font-size: var(--mq-fs-caption);
+  line-height: 1.42;
+  font-weight: 500;
+  color: color-mix(in srgb, var(--tg-theme-text-color, #111) 58%, var(--tg-theme-hint-color, #6b7280));
+}
+
+/* Экраны с внешним padding (стартеры, авторизация): вводный текст без лишней «колонны» */
+.mq-screen-intro {
+  margin: 0 0 10px;
+  padding: 0 20px;
+  font-size: var(--mq-fs-caption);
+  line-height: 1.42;
+  font-weight: 500;
+  color: color-mix(in srgb, var(--tg-theme-text-color, #111) 62%, var(--tg-theme-hint-color, #6b7280));
+}
+
+/* Внутри Section на игровой вкладке: под заголовком, по ширине контента секции */
+.mq-slot-intro {
+  margin: 0 0 10px;
+  padding: 0 20px;
+  font-size: var(--mq-fs-caption);
+  line-height: 1.42;
+  font-weight: 500;
+  color: color-mix(in srgb, var(--tg-theme-text-color, #111) 58%, var(--tg-theme-hint-color, #6b7280));
+}
+
+.mq-add-block {
+  margin-top: 6px;
+  padding-top: 10px;
+  border-top: 1px dashed color-mix(in srgb, var(--tg-theme-hint-color), transparent 68%);
+}
+
+.mq-add-heading {
+  margin: 0 0 8px;
+  font-size: var(--mq-fs-caption);
+  font-weight: 650;
+  color: var(--tg-theme-text-color);
+}
+
+/* Более лёгкие input-подсказки (на базовых формах): не превращаем в еле-серый текст */
+.mq-screen-intro strong,
+.mq-slot-intro strong {
+  font-weight: 650;
+}
+
+.mq-add-action {
+  margin-top: 10px;
+}
+
+.mq-li-title {
+  font-weight: 650;
+  font-size: var(--mq-fs-body);
+  margin-bottom: 2px;
+}
+
+.mq-li-meta {
+  font-size: var(--mq-fs-caption);
+  line-height: 1.42;
+  color: var(--tg-theme-hint-color);
+}
+
+.mq-caption-muted {
+  margin: 8px 0 0;
+  font-size: var(--mq-fs-caption);
+  line-height: 1.42;
+  font-weight: 500;
+  color: var(--tg-theme-hint-color);
+}
+
+.mq-caption-muted:first-child {
+  margin-top: 0;
+}
+
+.mq-in-tab-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.mq-modal-lead {
+  margin: 0 0 8px;
+  font-size: var(--mq-fs-body);
+  font-weight: 650;
+  color: var(--tg-theme-text-color, var(--mq-ink));
+}
+
+.mq-modal-body {
+  margin: 0;
+  font-size: var(--mq-fs-body);
+  line-height: 1.42;
+}
+
+.mq-modal-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.mq-bar-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.mq-period-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.mq-period-actions__row {
+  display: grid;
+  grid-template-columns: 1fr minmax(118px, 36%);
+  gap: 8px;
+  align-items: center;
+}
+
+@media (max-width: 360px) {
+  .mq-period-actions__row {
+    grid-template-columns: 1fr;
+  }
+}
+
+.mq-input-inline--dense {
+  padding: 8px 10px;
+  font-size: var(--mq-fs-caption);
+}
+
 .mq-tab {
   margin: 0;
   padding: 8px 4px;
@@ -298,12 +620,12 @@ code {
 }
 
 .analytics-bar-caption__title {
-  font-size: 13px;
+  font-size: var(--mq-fs-caption);
   font-weight: 650;
 }
 
 .analytics-bar-caption__sub {
-  font-size: 11px;
+  font-size: var(--mq-fs-caption);
   color: var(--tg-theme-hint-color);
 }
 
@@ -368,6 +690,21 @@ code {
   margin-top: 1px;
 }
 
+.mq-stat-row__mqcoin {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--mq-violet);
+}
+
+.mq-stat-row__mqcoin.mq-stat-row__mqcoin--emerald {
+  color: var(--mq-emerald);
+}
+
+.mq-stat-row__mqcoin svg {
+  display: block;
+}
+
 .mq-stat-row__body {
   display: flex;
   flex-direction: column;
@@ -376,12 +713,13 @@ code {
 }
 
 .mq-stat-row__label {
-  font-size: 12px;
+  font-size: var(--mq-fs-caption);
+  font-weight: 500;
   color: var(--tg-theme-hint-color);
 }
 
 .mq-stat-row__value {
-  font-size: 15px;
+  font-size: var(--mq-fs-body);
   font-weight: 600;
   color: var(--tg-theme-text-color);
 }
@@ -426,18 +764,18 @@ code {
 
 .mq-streak-row__title {
   font-weight: 650;
-  font-size: 14px;
+  font-size: var(--mq-fs-body);
 }
 
 .mq-streak-row__text {
-  font-size: 13px;
+  font-size: var(--mq-fs-caption);
   line-height: 1.42;
   opacity: 0.95;
   margin-top: 2px;
 }
 
 .mq-ts-error {
-  font-size: 13px;
+  font-size: var(--mq-fs-caption);
   color: var(--tg-theme-hint-color);
 }
 
@@ -460,12 +798,12 @@ code {
 }
 
 .mq-spark-block__title {
-  font-size: 13px;
+  font-size: var(--mq-fs-caption);
   font-weight: 650;
 }
 
 .mq-spark-block__sub {
-  font-size: 11px;
+  font-size: var(--mq-fs-caption);
   color: var(--tg-theme-hint-color);
 }
 
@@ -484,9 +822,13 @@ code {
 
 .mq-spark-hint {
   margin: 8px 0 0;
-  font-size: 11px;
-  line-height: 1.35;
+  font-size: var(--mq-fs-caption);
+  line-height: 1.38;
   color: var(--tg-theme-hint-color);
+}
+
+.mq-stat-row--dense {
+  padding: 4px 0;
 }
 
 .game-content {
@@ -547,13 +889,13 @@ code {
 
 .tma-app-header__name {
   font-weight: 650;
-  font-size: 16px;
+  font-size: calc(var(--mq-fs-body) + 1px);
   color: var(--tg-theme-text-color, var(--mq-ink));
   letter-spacing: -0.02em;
 }
 
 .tma-app-header__tag {
-  font-size: 12px;
+  font-size: var(--mq-fs-caption);
   color: var(--tg-theme-hint-color, var(--text));
 }
 
@@ -617,12 +959,23 @@ code {
 
 .events-overlay-toolbar__left {
   min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
 }
 
 .events-overlay-title {
   font-weight: 650;
-  font-size: 17px;
+  font-size: calc(var(--mq-fs-body) + 2px);
   letter-spacing: -0.02em;
+}
+
+.events-overlay-tagline {
+  margin: 0;
+  font-size: var(--mq-fs-caption);
+  font-weight: 450;
+  line-height: 1.38;
+  color: var(--tg-theme-hint-color);
 }
 
 .events-overlay-close {
@@ -753,14 +1106,14 @@ code {
 .events-carousel-counter {
   text-align: center;
   font-variant-numeric: tabular-nums;
-  font-size: 13px;
+  font-size: var(--mq-fs-caption);
   font-weight: 590;
   color: var(--tg-theme-hint-color);
 }
 
 .event-deck-choice-hint {
   margin: 6px 0 0;
-  font-size: 11px;
+  font-size: var(--mq-fs-caption);
   line-height: 1.38;
   color: var(--tg-theme-hint-color);
 }
@@ -777,7 +1130,7 @@ code {
 }
 
 .event-deck-card__meta {
-  font-size: 11px;
+  font-size: var(--mq-fs-caption);
   text-transform: uppercase;
   letter-spacing: 0.04em;
   color: var(--tg-theme-hint-color);
@@ -786,13 +1139,13 @@ code {
 
 .event-deck-card__title {
   font-weight: 650;
-  font-size: 15px;
+  font-size: var(--mq-fs-body);
   margin: 2px 0 4px;
   color: var(--tg-theme-text-color);
 }
 
 .event-deck-card__desc {
-  font-size: 13px;
+  font-size: var(--mq-fs-body);
   line-height: 1.42;
   color: var(--tg-theme-text-color);
   opacity: 0.92;
@@ -803,7 +1156,7 @@ code {
   grid-template-columns: 1fr 1fr;
   gap: 8px;
   margin-top: 6px;
-  font-size: 11px;
+  font-size: var(--mq-fs-caption);
   color: var(--tg-theme-hint-color);
 }
 
@@ -830,7 +1183,7 @@ code {
   display: grid;
   place-items: center;
   padding: 8px;
-  font-size: 11px;
+  font-size: var(--mq-fs-caption);
   color: var(--tg-theme-hint-color);
 }
 
@@ -862,10 +1215,24 @@ code {
   margin-top: 10px;
 }
 
+.mq-poly-choice-title {
+  font-weight: 650;
+  font-size: var(--mq-fs-body);
+}
+
+.mq-poly-choice-desc {
+  opacity: 0.85;
+  font-size: var(--mq-fs-caption);
+  margin-top: 4px;
+  display: block;
+}
+
 .tma-choice-btn {
   appearance: none;
   border-radius: 10px;
-  font: inherit;
+  font-family: inherit;
+  font-size: var(--mq-fs-body);
+  line-height: 1.3;
   cursor: pointer;
   min-height: 44px;
   padding: 8px 10px;

@@ -15,6 +15,7 @@ export function GameHUD({
     <div className={className}>
       <div className="mq-hud">
         <Section header="Игровое время">
+          <div className="mq-slot-intro">Один период — один «месяц»: таймер паузы и кнопки как в остальном интерфейсе.</div>
           <Cell multiline>
             <div className="mq-hud__row">
               <span className="mq-period-label">Период #{timeStatus.period_index}</span>
@@ -26,7 +27,9 @@ export function GameHUD({
                 <Button size="s" onClick={setPause} disabled={timeStatus.time_state === 'pause'}>
                   Пауза
                 </Button>
-                <Button size="s" onClick={onRequestNextPeriod}>Дальше</Button>
+                <Button size="s" mode="filled" onClick={onRequestNextPeriod}>
+                  Дальше
+                </Button>
               </div>
             </div>
           </Cell>

@@ -66,9 +66,11 @@ export function FinanceSection({ overview, refreshOverview }) {
   if (!overview) return null;
 
   return (
-    <>
-      <div className="mq-tabs-wrap">
-        <div className="mq-tablist" role="tablist" aria-label="Разделы финансов">
+    <div className="mq-stack mq-stack-animate mq-stack--tight mq-fin-page">
+      <div className="mq-enter-item">
+        <div className="mq-slot-intro">Вкладки ниже — те же четыре задачи: вложения, страховки, шаблоны, списки долгов и активов.</div>
+        <div className="mq-tabs-wrap mq-fin-wrap">
+        <div className="mq-tablist mq-tablist--2x2" role="tablist" aria-label="Разделы финансов">
           {FINANCE_TABS.map((t) => (
             <button
               key={t.id}
@@ -84,19 +86,21 @@ export function FinanceSection({ overview, refreshOverview }) {
             </button>
           ))}
         </div>
+        </div>
       </div>
 
-      <div key={financeTab} className="mq-tab-panel-reveal">
+      <div key={financeTab} className="mq-enter-item mq-tab-panel-reveal mq-fin-shell">
 
       {financeTab === 'invest' && (
       <div role="tabpanel" id="finance-panel-invest" aria-labelledby="finance-tab-invest">
       <Section header="Инвестиции">
+        <div className="mq-slot-intro">Easy MVP: депозит растёт в теле вклада, облигации платят купон на счёт каждый период.</div>
         <Cell multiline>
-          <div style={{ fontWeight: 600, marginBottom: 6 }}>Депозит</div>
-          <div className="mq-inline-field-row">
-            <Input header="Сумма" type="number" value={depositAmount} onChange={(e) => setDepositAmount(Number(e.target.value))} />
+          <div className="mq-fin-block-head">Депозит</div>
+          <div className="mq-fin-field-grid mq-fin-field-grid--with-cta">
+            <Input header="Сумма (₽)" type="number" value={depositAmount} onChange={(e) => setDepositAmount(Number(e.target.value))} />
             <Input header="% годовых" type="number" value={depositRate} onChange={(e) => setDepositRate(Number(e.target.value))} />
-            <Button onClick={async () => {
+            <Button mode="filled" onClick={async () => {
               try {
                 await API.openDeposit({ amount: depositAmount, annual_rate_percent: depositRate });
                 showNotification('Депозит открыт', 'success');
@@ -110,11 +114,11 @@ export function FinanceSection({ overview, refreshOverview }) {
         </Cell>
 
         <Cell multiline>
-          <div style={{ fontWeight: 600, marginBottom: 6 }}>Облигации</div>
-          <div className="mq-inline-field-row">
-            <Input header="Сумма" type="number" value={bondAmount} onChange={(e) => setBondAmount(Number(e.target.value))} />
+          <div className="mq-fin-block-head">Облигации</div>
+          <div className="mq-fin-field-grid mq-fin-field-grid--with-cta">
+            <Input header="Сумма (₽)" type="number" value={bondAmount} onChange={(e) => setBondAmount(Number(e.target.value))} />
             <Input header="% годовых" type="number" value={bondRate} onChange={(e) => setBondRate(Number(e.target.value))} />
-            <Button onClick={async () => {
+            <Button mode="filled" onClick={async () => {
               try {
                 await API.buyBond({ amount: bondAmount, annual_rate_percent: bondRate, title: 'Облигации (easy)' });
                 showNotification('Облигации куплены', 'success');
@@ -157,16 +161,19 @@ export function FinanceSection({ overview, refreshOverview }) {
       {financeTab === 'insurance' && (
       <div role="tabpanel" id="finance-panel-insurance" aria-labelledby="finance-tab-insurance">
       <Section header="Страховки">
+        <div className="mq-slot-intro">Выберите тип, задайте премию и лимит выплаты. Премия списывается в конце периода.</div>
         <Cell multiline>
-          <div className="mq-inline-field-row">
-            <Select header="Тип" value={policyKind} onChange={(e) => setPolicyKind(e.target.value)}>
+          <div className="mq-fin-field-grid mq-fin-field-grid--2">
+            <div style={{ gridColumn: '1 / -1' }}>
+              <Select header="Тип полиса" value={policyKind} onChange={(e) => setPolicyKind(e.target.value)}>
               <option value="health">Здоровье</option>
               <option value="property">Имущество</option>
               <option value="car">Авто</option>
-            </Select>
-            <Input header="Премия/мес" type="number" value={policyPremium} onChange={(e) => setPolicyPremium(Number(e.target.value))} />
-            <Input header="Покрытие" type="number" value={policyCoverage} onChange={(e) => setPolicyCoverage(Number(e.target.value))} />
-            <Button onClick={async () => {
+              </Select>
+            </div>
+            <Input header="Премия в месяц (₽)" type="number" value={policyPremium} onChange={(e) => setPolicyPremium(Number(e.target.value))} />
+            <Input header="Покрытие (лимит, ₽)" type="number" value={policyCoverage} onChange={(e) => setPolicyCoverage(Number(e.target.value))} />
+            <Button mode="filled" className="mq-fin-btn-span2" stretched onClick={async () => {
               try {
                 await API.buyPolicy({
                   kind: policyKind,
@@ -179,7 +186,7 @@ export function FinanceSection({ overview, refreshOverview }) {
               } catch (e) {
                 showNotification(e?.detail || e?.message || 'Не удалось оформить полис', 'error');
               }
-            }}>Оформить</Button>
+            }}>Оформить полис</Button>
           </div>
         </Cell>
 
@@ -214,6 +221,7 @@ export function FinanceSection({ overview, refreshOverview }) {
       {financeTab === 'templates' && (
       <div role="tabpanel" id="finance-panel-templates" aria-labelledby="finance-tab-templates">
       <Section header="Типовые активы">
+        <div className="mq-slot-intro">Готовые пресеты: добавляются в игру один тапом, с заданными стоимостью и обслуживанием.</div>
         <List>
           {assetTemplates.length === 0 && <Cell>Шаблоны не загружены</Cell>}
           {assetTemplates.map((t) => (
@@ -261,6 +269,7 @@ export function FinanceSection({ overview, refreshOverview }) {
       <div role="tabpanel" id="finance-panel-lists" aria-labelledby="finance-tab-lists">
       <>
       <Section header="Обязательства">
+        <div className="mq-slot-intro">Живые платежи и просрочки по уже заведённым кредитам и займам.</div>
         <List>
           {overview.liabilities.length === 0 && <Cell>Нет обязательств</Cell>}
           {overview.liabilities.map(liability => (
@@ -288,6 +297,7 @@ export function FinanceSection({ overview, refreshOverview }) {
         </List>
       </Section>
       <Section header="Активы">
+        <div className="mq-slot-intro">Обслуживание и опциональный доход по объектам уже в этом профиле.</div>
         <List>
           {overview.assets.length === 0 && <Cell>Нет активов</Cell>}
           {overview.assets.map(asset => (
@@ -322,6 +332,6 @@ export function FinanceSection({ overview, refreshOverview }) {
       )}
 
       </div>
-    </>
+    </div>
   );
 }

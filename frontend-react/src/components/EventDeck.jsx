@@ -56,8 +56,8 @@ function PolyEventCard({ event, onPick, disabled }) {
             disabled={disabled}
             onClick={() => { void onPick(event.id, c.id); }}
           >
-            <span style={{ fontWeight: 650 }}>{c.title}</span>
-            {c.description ? <span style={{ opacity: 0.8, marginTop: 4, display: 'block' }}>{c.description}</span> : null}
+            <span className="mq-poly-choice-title">{c.title}</span>
+            {c.description ? <span className="mq-poly-choice-desc">{c.description}</span> : null}
           </button>
         ))}
       </div>
@@ -205,6 +205,9 @@ export function EventCarouselOverlay({ open, onClose, events, onResolved }) {
           <div className="events-overlay-toolbar__left">
             <span id="events-overlay-title" className="events-overlay-title">
               Ситуации месяца
+            </span>
+            <span className="events-overlay-tagline">
+              Выберите вариант на карточке — последствия применятся сразу. Закрыть без ответа можно только «×».
             </span>
           </div>
           <button type="button" className="events-overlay-close" aria-label="Закрыть" onClick={onClose}>

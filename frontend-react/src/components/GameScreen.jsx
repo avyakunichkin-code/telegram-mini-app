@@ -77,8 +77,9 @@ export function GameScreen({ onLogout, onNewGame, onLoadGame }) {
         <div className="mq-stack mq-stack-animate mq-stack--tight">
           <div className="mq-enter-item">
             <Section header="Не удалось загрузить игру">
+              <div className="mq-screen-intro">Типичные причины: нет сети, недоступен API или истекла сессия.</div>
               <Cell multiline subtitle={error}>
-                <div>Проверьте сеть и попробуйте ещё раз.</div>
+                <div className="mq-modal-body">Проверьте соединение и откройте приложение заново при необходимости.</div>
               </Cell>
               <Cell>
                 <Button stretched mode="filled" onClick={() => reload()}>
@@ -98,9 +99,12 @@ export function GameScreen({ onLogout, onNewGame, onLoadGame }) {
         <div className="mq-stack mq-stack-animate mq-stack--tight">
           <div className="mq-enter-item">
             <Section header="Нет данных">
-              <Cell>Профиль игры недоступен.</Cell>
+              <div className="mq-screen-intro">Не удалось прочитать активный профиль. Сеть или сервер могли ответить с ошибкой.</div>
+              <Cell multiline subtitle="Попробуйте ещё раз после проверки соединения">
+                <div className="mq-modal-body">Профиль игры сейчас недоступен.</div>
+              </Cell>
               <Cell>
-                <Button stretched onClick={() => reload()}>Обновить</Button>
+                <Button stretched mode="filled" onClick={() => reload()}>Обновить</Button>
               </Cell>
             </Section>
           </div>
@@ -118,15 +122,22 @@ export function GameScreen({ onLogout, onNewGame, onLoadGame }) {
 
       <Modal open={salaryWarnOpen} onClose={() => setSalaryWarnOpen(false)}>
         <Section header="Следующий период">
+          <div className="mq-screen-intro">Проверка перед сменой месяца в игре.</div>
           <Cell multiline>
-            <div style={{ fontWeight: 600, marginBottom: 8 }}>Зарплата не получена</div>
-            <div style={{ lineHeight: 1.35 }}>
-              Если перейти к следующему периоду, зарплата за текущий месяц <strong>сгорит</strong>, как при пропуске рабочего дня без отработки.
-            </div>
+            <div className="mq-modal-lead">Зарплата за этот период ещё не получена</div>
+            <p className="mq-modal-body">
+              Если перейти дальше, начисление за текущий месяц <strong>сгорит</strong>, как если не нажали «Получить зарплату».
+            </p>
           </Cell>
-          <Cell style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
-            <Button mode="filled" stretched onClick={confirmAdvanceWithSalaryLoss}>Перейти</Button>
-            <Button mode="outline" stretched onClick={() => setSalaryWarnOpen(false)}>Отмена</Button>
+          <Cell>
+            <div className="mq-modal-actions">
+              <Button mode="filled" stretched onClick={confirmAdvanceWithSalaryLoss}>
+                Перейти без зарплаты
+              </Button>
+              <Button mode="outline" stretched onClick={() => setSalaryWarnOpen(false)}>
+                Отмена
+              </Button>
+            </div>
           </Cell>
         </Section>
       </Modal>

@@ -69,3 +69,71 @@ export function IconStreakStat({ size = 18 }) {
     </svg>
   );
 }
+
+export function IconStarStat({ size = 18 }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" className="mq-stat-ico mq-stat-ico--violet" aria-hidden>
+      <path
+        d="M12 5.5l1.76 4.56h4.8l-3.86 3 1.52 4.94L12 16.9l-4.22 2.1 1.52-4.94-3.86-3h4.8L12 5.5z"
+        stroke="currentColor"
+        strokeWidth="1.55"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
+export function IconBarsStat({ size = 18 }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" className="mq-stat-ico mq-stat-ico--muted" aria-hidden>
+      <path d="M6 17V10M11 17V7M16 17v-5" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
+      <path d="M5 21h14" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" />
+    </svg>
+  );
+}
+
+export function IconDownStat({ size = 18 }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" className="mq-stat-ico mq-stat-ico--violet" aria-hidden>
+      <path d="M12 17V8M16 13l-4 4.5L8 13" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
+export function IconWrenchStat({ size = 18 }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" className="mq-stat-ico mq-stat-ico--muted" aria-hidden>
+      <path
+        d="M15.26 12.94l-.07.07m-9.73 7.73a8 8 0 019.15-13.15l-.88 2a6 6 0 014.94 9.94l-.88 2"
+        stroke="currentColor"
+        strokeWidth="1.55"
+        strokeLinecap="round"
+      />
+      <circle cx="7.5" cy="16.5" r="1.5" stroke="currentColor" strokeWidth="1.55" />
+    </svg>
+  );
+}
+
+export function IconPercentStat({ size = 18 }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" className="mq-stat-ico mq-stat-ico--emerald" aria-hidden>
+      <circle cx="8" cy="8" r="2" stroke="currentColor" strokeWidth="1.5" />
+      <circle cx="16" cy="16" r="2" stroke="currentColor" strokeWidth="1.5" />
+      <path d="M17 8L8 17" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+    </svg>
+  );
+}
+
+export function IconXpStat({ size = 18 }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" className="mq-stat-ico mq-stat-ico--violet" aria-hidden>
+      <path
+        d="M7 21h10v-9H7v9z"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinejoin="round"
+      />
+      <path d="M10 21V12h4v9M12 9V5M9 8l3-4 3 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}

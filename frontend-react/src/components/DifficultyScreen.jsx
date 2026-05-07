@@ -33,7 +33,10 @@ export function DifficultyScreen({ onNext, onBack }) {
       <div className="mq-page__decor" aria-hidden />
       <div className="mq-enter-item">
       <Section header="Выбор сложности">
-        <Cell>
+        <div className="mq-screen-intro">
+          Имя слота и темп игры (длительность «месяца»). Позже настроите деньги и долги на следующем шаге.
+        </div>
+        <Cell multiline subtitle="Отображается в списке сохранений и в шапке профиля">
           <Input
             header="Название сохранения"
             value={profileName}
@@ -42,7 +45,7 @@ export function DifficultyScreen({ onNext, onBack }) {
             required
           />
         </Cell>
-        <Cell>
+        <Cell multiline subtitle="Правила экономики и давление по событиям">
           <Select
             header="Режим"
             value={mode}
@@ -52,7 +55,7 @@ export function DifficultyScreen({ onNext, onBack }) {
             <option value="hardcore">Hardcore — больше контроля</option>
           </Select>
         </Cell>
-        <Cell>
+        <Cell multiline subtitle="Сколько секунд длится один игровой период (например 300 = 5 мин)">
           <Input
             header="Длительность периода (секунд)"
             type="number"
@@ -62,10 +65,14 @@ export function DifficultyScreen({ onNext, onBack }) {
           />
         </Cell>
         <Cell>
-          <Button type="submit" mode="filled" stretched>Далее: базовые параметры</Button>
-        </Cell>
-        <Cell>
-          <Button mode="plain" onClick={onBack} stretched>Назад</Button>
+          <div className="mq-actions-stack">
+            <Button type="submit" mode="filled" stretched>
+              Далее: базовые параметры
+            </Button>
+            <Button type="button" mode="plain" stretched onClick={onBack}>
+              Назад
+            </Button>
+          </div>
         </Cell>
       </Section>
       </div>

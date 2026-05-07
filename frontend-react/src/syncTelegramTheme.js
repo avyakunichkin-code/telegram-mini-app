@@ -33,8 +33,11 @@ export function syncTelegramThemeToRoot() {
   set('--tg-theme-bg-color', p.bg_color);
   set('--tg-theme-text-color', p.text_color);
   set('--tg-theme-hint-color', p.hint_color);
-  set('--tg-theme-link-color', p.link_color);
-  set('--tg-theme-button-color', p.button_color);
+  // В TMA мы оставляем фон/текст из темы Telegram, но CTA/акцент фиксируем брендом Money Quest.
+  // Это убирает конфликт «голубые кнопки + фиолетовое меню».
+  rootEl.style.setProperty('--tg-theme-link-color', '#5B21B6');
+  rootEl.style.setProperty('--tg-theme-button-color', '#6D28D9');
+  rootEl.style.setProperty('--tg-theme-accent-text-color', '#6D28D9');
   set('--tg-theme-button-text-color', p.button_text_color);
   set('--tg-theme-secondary-bg-color', p.secondary_bg_color);
 
