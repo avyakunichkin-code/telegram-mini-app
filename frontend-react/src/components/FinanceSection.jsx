@@ -6,8 +6,8 @@ import { useEffect, useState } from 'react';
 const FINANCE_TABS = [
   { id: 'invest', label: 'Инвестиции' },
   { id: 'insurance', label: 'Страховки' },
-  { id: 'templates', label: 'Типовые активы' },
-  { id: 'lists', label: 'Список активов и долгов' },
+  { id: 'templates', label: 'Шаблоны' },
+  { id: 'lists', label: 'Долги · активы' },
 ];
 
 export function FinanceSection({ overview, refreshOverview }) {
@@ -66,24 +66,27 @@ export function FinanceSection({ overview, refreshOverview }) {
 
   return (
     <>
-      <Section header="Разделы">
-        <Cell>
-          <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', justifyContent: 'flex-start' }}>
-            {FINANCE_TABS.map((t) => (
-              <Button
-                key={t.id}
-                size="s"
-                mode={financeTab === t.id ? 'filled' : 'outline'}
-                onClick={() => setFinanceTab(t.id)}
-              >
-                {t.label}
-              </Button>
-            ))}
-          </div>
-        </Cell>
-      </Section>
+      <div className="mq-tabs-wrap">
+        <div className="mq-tablist" role="tablist" aria-label="Разделы финансов">
+          {FINANCE_TABS.map((t) => (
+            <button
+              key={t.id}
+              id={`finance-tab-${t.id}`}
+              type="button"
+              role="tab"
+              aria-selected={financeTab === t.id}
+              aria-controls={`finance-panel-${t.id}`}
+              className={`mq-tab ${financeTab === t.id ? 'mq-tab--active' : ''}`}
+              onClick={() => setFinanceTab(t.id)}
+            >
+              {t.label}
+            </button>
+          ))}
+        </div>
+      </div>
 
       {financeTab === 'invest' && (
+      <div role="tabpanel" id="finance-panel-invest" aria-labelledby="finance-tab-invest">
       <Section header="Инвестиции">
         <Cell multiline>
           <div style={{ fontWeight: 600, marginBottom: 6 }}>Депозит</div>
@@ -143,9 +146,11 @@ export function FinanceSection({ overview, refreshOverview }) {
           ))}
         </List>
       </Section>
+      </div>
       )}
 
       {financeTab === 'insurance' && (
+      <div role="tabpanel" id="finance-panel-insurance" aria-labelledby="finance-tab-insurance">
       <Section header="Страховки">
         <Cell multiline>
           <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
@@ -194,9 +199,11 @@ export function FinanceSection({ overview, refreshOverview }) {
           ))}
         </List>
       </Section>
+      </div>
       )}
 
       {financeTab === 'templates' && (
+      <div role="tabpanel" id="finance-panel-templates" aria-labelledby="finance-tab-templates">
       <Section header="Типовые активы">
         <List>
           {assetTemplates.length === 0 && <Cell>Шаблоны не загружены</Cell>}
@@ -230,9 +237,11 @@ export function FinanceSection({ overview, refreshOverview }) {
           ))}
         </List>
       </Section>
+      </div>
       )}
 
       {financeTab === 'lists' && (
+      <div role="tabpanel" id="finance-panel-lists" aria-labelledby="finance-tab-lists">
       <>
       <Section header="Обязательства">
         <List>
@@ -279,6 +288,7 @@ export function FinanceSection({ overview, refreshOverview }) {
         </List>
       </Section>
       </>
+      </div>
       )}
     </>
   );

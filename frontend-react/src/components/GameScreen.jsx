@@ -4,7 +4,9 @@ import { useGame } from '../hooks/useGame';
 import { GameHUD } from './GameHUD';
 import { DashboardSection } from './DashboardSection';
 import { FinanceSection } from './FinanceSection';
+import { AnalyticsSection } from './AnalyticsSection';
 import { MenuSection } from './MenuSection';
+import { BottomGameNav } from './BottomGameNav';
 import { showNotification } from './notifications';
 import { API } from '../api';
 import { EventsTriggerButton, EventCarouselOverlay } from './EventDeck';
@@ -152,6 +154,10 @@ export function GameScreen({ onLogout, onNewGame, onLoadGame }) {
         <FinanceSection overview={overview} refreshOverview={refreshOverview} />
       )}
 
+      {activeTab === 'analytics' && (
+        <AnalyticsSection overview={overview} />
+      )}
+
       {activeTab === 'menu' && (
         <MenuSection
           onLogout={onLogout}
@@ -160,33 +166,7 @@ export function GameScreen({ onLogout, onNewGame, onLoadGame }) {
         />
       )}
 
-      <nav
-        className="bottom-nav tma-tabbar"
-        aria-label="Основные разделы"
-        style={{ paddingBottom: 'calc(8px + env(safe-area-inset-bottom, 0px))' }}
-      >
-        <Button
-          size="s"
-          mode={activeTab === 'dashboard' ? 'filled' : 'outline'}
-          onClick={() => setActiveTab('dashboard')}
-        >
-          Главная
-        </Button>
-        <Button
-          size="s"
-          mode={activeTab === 'finance' ? 'filled' : 'outline'}
-          onClick={() => setActiveTab('finance')}
-        >
-          Финансы
-        </Button>
-        <Button
-          size="s"
-          mode={activeTab === 'menu' ? 'filled' : 'outline'}
-          onClick={() => setActiveTab('menu')}
-        >
-          Меню
-        </Button>
-      </nav>
+      <BottomGameNav activeTab={activeTab} setActiveTab={setActiveTab} />
     </div>
   );
 }

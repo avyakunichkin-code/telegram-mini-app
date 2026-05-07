@@ -91,7 +91,11 @@
 - `frontend-react/src/components/EventDeck.jsx`
   - `EventsTriggerButton`, `EventCarouselOverlay`: два исхода — красная/зелёная кнопки иначе список; перелистывание ‹ › или свайп по полю карты
 - `frontend-react/src/components/FinanceSection.jsx`
-  - UI инвестиций/страховок/типовых активов
+  - UI инвестиций/страховок/шаблонов/долгов и активов; **вкладки** `.mq-tablist` (не ряд кнопок)
+- `frontend-react/src/components/BottomGameNav.jsx` + `icons/NavIcons.jsx`
+  - нижняя навигация: главная (дом), финансы (монеты), аналитика (график вверх), меню (бургер)
+- `frontend-react/src/components/AnalyticsSection.jsx`
+  - мини-обзор и бары по полям `overview`; концепт расширений: `docs/ANALYTICS_CONCEPT.md`
 - `frontend-react/src/components/ToastHost.jsx` + `frontend-react/src/components/notifications.js`
   - toast-уведомления вместо `alert`
 

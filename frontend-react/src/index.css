@@ -68,7 +68,22 @@ body {
 
 /* Основная оболочка TMA: колонка + «рамка приложения», компактная типографика */
 #root {
-  --tma-tabbar-height: 54px;
+  --tma-tabbar-height: 56px;
+
+  /* Совмещение бренда MQ с палитрой Telegram UI (telegram-ui использует префикс --tgui--) */
+  --mq-accent-fill: color-mix(
+    in srgb,
+    var(--tg-theme-button-color, var(--mq-violet)) 38%,
+    var(--mq-violet) 62%
+  );
+  --mq-accent-link: color-mix(
+    in srgb,
+    var(--tg-theme-link-color, var(--mq-violet-deep)) 35%,
+    var(--mq-violet-deep) 65%
+  );
+  --tgui--button_color: var(--mq-accent-fill);
+  --tgui--button_text_color: var(--tg-theme-button-text-color, #ffffff);
+  --tgui--link_color: var(--mq-accent-link);
 
   width: 100%;
   max-width: 480px;
@@ -158,9 +173,9 @@ code {
     var(--tg-theme-hint-color, var(--mq-line)) 4%
   );
   backdrop-filter: blur(10px);
-  padding: 8px 8px;
+  padding: 8px 6px;
   display: flex;
-  gap: 6px;
+  gap: 4px;
   justify-content: space-between;
   align-items: stretch;
   border-top: 1px solid color-mix(in srgb, var(--tg-theme-hint-color, var(--border)) 50%, transparent);
@@ -168,17 +183,143 @@ code {
   z-index: 100;
 }
 
-.bottom-nav button,
-.bottom-nav [role='button'],
-.bottom-nav a[role='button'] {
+.bottom-nav--icons {
+  padding-top: 6px;
+}
+
+.tma-nav-icon-btn {
   flex: 1;
-  max-width: 34%;
-  font-size: 13px !important;
-  font-weight: 590;
-  border-radius: 10px !important;
-  min-height: 42px !important;
-  padding-top: 0 !important;
-  padding-bottom: 0 !important;
+  min-width: 0;
+  max-width: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 46px;
+  margin: 0;
+  padding: 0;
+  border: none;
+  border-radius: 12px;
+  background: transparent;
+  color: var(--tg-theme-hint-color, var(--text));
+  cursor: pointer;
+  transition:
+    background 0.15s ease,
+    color 0.15s ease,
+    transform 0.08s ease;
+}
+
+.tma-nav-icon-btn:active {
+  transform: scale(0.96);
+}
+
+.tma-nav-icon-btn--active {
+  color: var(--tg-theme-button-text-color, #fff);
+  background: var(--mq-accent-fill);
+  box-shadow: 0 2px 10px color-mix(in srgb, var(--mq-violet) 28%, transparent);
+}
+
+.tma-nav-icon-btn:focus-visible {
+  outline: 2px solid var(--mq-accent-link);
+  outline-offset: 2px;
+}
+
+/* Вкладки «Финансы» */
+.mq-tabs-wrap {
+  margin-bottom: 10px;
+}
+
+.mq-tablist {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 4px;
+  padding: 4px;
+  border-radius: 12px;
+  background: color-mix(in srgb, var(--tg-theme-hint-color, var(--mq-line)) 10%, transparent);
+  border: 1px solid color-mix(in srgb, var(--tg-theme-hint-color, var(--mq-line)) 35%, transparent);
+}
+
+.mq-tab {
+  margin: 0;
+  padding: 8px 4px;
+  border: none;
+  border-radius: 9px;
+  font: inherit;
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1.2;
+  text-align: center;
+  color: var(--tg-theme-text-color, var(--mq-ink));
+  background: transparent;
+  cursor: pointer;
+  transition:
+    background 0.12s ease,
+    color 0.12s ease;
+}
+
+.mq-tab--active {
+  color: var(--tg-theme-button-text-color, #fff);
+  background: var(--mq-accent-fill);
+  box-shadow: 0 1px 4px color-mix(in srgb, var(--mq-violet) 22%, transparent);
+}
+
+.mq-tab:focus-visible {
+  outline: 2px solid var(--mq-accent-link);
+  outline-offset: 1px;
+}
+
+/* Аналитика: компактные бары */
+.analytics-bar-block {
+  margin-top: 2px;
+}
+
+.analytics-bar-caption {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin-bottom: 4px;
+}
+
+.analytics-bar-caption__title {
+  font-size: 13px;
+  font-weight: 650;
+}
+
+.analytics-bar-caption__sub {
+  font-size: 11px;
+  color: var(--tg-theme-hint-color);
+}
+
+.analytics-bar-track {
+  height: 10px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--tg-theme-hint-color), transparent 76%);
+  overflow: hidden;
+}
+
+.analytics-bar-fill {
+  height: 100%;
+  border-radius: 999px;
+  transition: width 0.35s ease;
+}
+
+.analytics-bar-fill--success {
+  background: linear-gradient(90deg, var(--mq-emerald), color-mix(in srgb, var(--mq-emerald), #fff 18%));
+}
+
+.analytics-bar-fill--violet {
+  background: linear-gradient(90deg, var(--mq-violet-deep), var(--mq-violet));
+}
+
+.analytics-bar-fill--danger {
+  background: linear-gradient(90deg, var(--mq-danger), color-mix(in srgb, var(--mq-danger), #fff 22%));
+}
+
+.analytics-bar-fill--neutral {
+  background: linear-gradient(
+    90deg,
+    color-mix(in srgb, var(--tg-theme-hint-color), var(--mq-violet) 40%),
+    var(--tg-theme-hint-color)
+  );
 }
 
 .game-content {
@@ -188,8 +329,8 @@ code {
 .spinner {
   width: 18px;
   height: 18px;
-  border: 2px solid rgba(255,255,255,0.3);
-  border-top-color: white;
+  border: 2px solid color-mix(in srgb, var(--tg-theme-hint-color), transparent 72%);
+  border-top-color: var(--mq-accent-fill);
   border-radius: 50%;
   animation: spin 0.6s linear infinite;
 }

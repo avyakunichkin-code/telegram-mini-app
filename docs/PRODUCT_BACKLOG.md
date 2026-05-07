@@ -2,7 +2,7 @@
 
 Живой список идей по **бэкенду**, **механикам**, **UI/UX** и **дизайну**. Отмечайте выполненное через `[x]`, планируйте через **приоритет** и блок **«В работу»**.
 
-**Связанные документы:** [`CLAUDE.md`](../CLAUDE.md) (архитектура), [`docs/brandbook/BRANDBOOK.md`](brandbook/BRANDBOOK.md) (визуал и тон), [`docs/TMA_USER_FLOWS.md`](TMA_USER_FLOWS.md) (потоки и боли TMA).
+**Связанные документы:** [`CLAUDE.md`](../CLAUDE.md) (архитектура), [`docs/brandbook/BRANDBOOK.md`](brandbook/BRANDBOOK.md) (визуал и тон), [`docs/TMA_USER_FLOWS.md`](TMA_USER_FLOWS.md) (потоки и боли TMA), [`docs/ANALYTICS_CONCEPT.md`](ANALYTICS_CONCEPT.md) (аналитический экран и API).
 
 ---
 
