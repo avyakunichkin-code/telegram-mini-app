@@ -60,7 +60,7 @@ class LiabilityCreate(BaseModel):
     title: Optional[str] = "Обязательство"
     total_debt: float
     annual_rate_percent: float
-    monthly_payment: float
+    monthly_payment: Optional[float] = None  # не используется: платёж считается как тело × %/100 / 12
 
 
 class LiabilityResponse(BaseModel):

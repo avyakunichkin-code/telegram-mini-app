@@ -13,12 +13,12 @@ export function FinancePremium({ overview, refreshOverview }) {
             <span className="mqx-hero-pill mqx-hero-pill--brand">MQ</span>
             <span className="mqx-hero-pill">Финансы</span>
           </div>
-          <span className="mqx-hero-pill mqx-hero-pill--ghost">4 вкладки</span>
+          <span className="mqx-hero-pill mqx-hero-pill--ghost">3 вкладки</span>
         </div>
 
         <div className="mqx-hero__title mqx-hero__title--tab">Управление капиталом</div>
         <div className="mqx-hero__sub">
-          Инвестиции, страховки, шаблоны и списки активов/долгов.
+          Инвестиции, страховки, активы и долги.
         </div>
       </header>
 

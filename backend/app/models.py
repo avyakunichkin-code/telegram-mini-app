@@ -147,6 +147,38 @@ class FinanceAsset(Base):
     game_profile = relationship("GameProfile", back_populates="finance_assets")
 
 
+class AssetTemplate(Base):
+    """Типовой актив для каталога (используется при добавлении в игре)."""
+
+    __tablename__ = "asset_templates"
+
+    id = Column(Integer, primary_key=True, index=True)
+    template_key = Column(String(80), unique=True, nullable=False, index=True)
+    title = Column(String(160), nullable=False)
+    kind = Column(String(50), nullable=False, default="generic")
+    asset_value = Column(Float, nullable=False)
+    monthly_maintenance_cost = Column(Float, nullable=False, default=0)
+    monthly_income = Column(Float, nullable=False, default=0)
+    is_active = Column(Integer, nullable=False, default=1)
+    sort_order = Column(Integer, nullable=False, default=100)
+    created_at = Column(DateTime, default=datetime.utcnow)
+
+
+class LiabilityTemplate(Base):
+    """Типовое обязательство (выдача суммы на баланс при оформлении в игре)."""
+
+    __tablename__ = "liability_templates"
+
+    id = Column(Integer, primary_key=True, index=True)
+    template_key = Column(String(80), unique=True, nullable=False, index=True)
+    title = Column(String(160), nullable=False)
+    total_debt = Column(Float, nullable=False)
+    annual_rate_percent = Column(Float, nullable=False)
+    is_active = Column(Integer, nullable=False, default=1)
+    sort_order = Column(Integer, nullable=False, default=100)
+    created_at = Column(DateTime, default=datetime.utcnow)
+
+
 # ==================== СОБЫТИЯ (MVP) ====================
 
 class EventDefinition(Base):
@@ -159,6 +191,10 @@ class EventDefinition(Base):
     description = Column(Text, nullable=False, default="")
     weight = Column(Integer, nullable=False, default=100)
     is_active = Column(Integer, nullable=False, default=1)
+    # mandatory=1 зарезервировано под будущие обязательные сценарии (логику пока не включаем)
+    mandatory = Column(Integer, nullable=False, default=0)
+    category = Column(String(80), nullable=True)
+    metadata_json = Column(Text, nullable=False, default="{}")
     created_at = Column(DateTime, default=datetime.utcnow)
 
     choices = relationship("EventChoice", back_populates="definition", cascade="all, delete-orphan")

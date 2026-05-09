@@ -7,6 +7,8 @@ export function useGame() {
   const [timeStatus, setTimeStatus] = useState(null);
   const [periodStatus, setPeriodStatus] = useState(null);
   const [pendingEvents, setPendingEvents] = useState([]);
+  /** Увеличивается только при загрузке/смене периода при наличии незакрытых событий (не после каждого выбора). */
+  const [eventsPromptTick, setEventsPromptTick] = useState(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -31,6 +33,7 @@ export function useGame() {
         Array.isArray(eventData?.events) ? eventData.events
         : (eventData?.event ? [eventData.event] : []);
       setPendingEvents(evList);
+      if (evList.length > 0) setEventsPromptTick((t) => t + 1);
       localRemainingRef.current = timeData.seconds_until_next_period;
       lastSyncRef.current = Date.now();
       setError(null);
@@ -54,11 +57,13 @@ export function useGame() {
     setPeriodStatus(data);
   }, []);
 
-  const refreshPendingEvent = useCallback(async () => {
+  const refreshPendingEvent = useCallback(async ({ bumpOverlay = false } = {}) => {
     const data = await API.getPendingEvent();
     const evList =
       Array.isArray(data?.events) ? data.events : (data?.event ? [data.event] : []);
     setPendingEvents(evList);
+    if (bumpOverlay && evList.length > 0) setEventsPromptTick((t) => t + 1);
+    return evList.length;
   }, []);
 
   const fetchPeriodStatus = useCallback(async () => {
@@ -105,7 +110,7 @@ export function useGame() {
       lastSyncRef.current = Date.now();
       await refreshOverview();
       await refreshPeriodStatus();
-      await refreshPendingEvent();
+      await refreshPendingEvent({ bumpOverlay: true });
       if (newTime.time_state === 'play') {
         startTimer();
       }
@@ -122,7 +127,7 @@ export function useGame() {
       lastSyncRef.current = Date.now();
       await refreshOverview();
       await refreshPeriodStatus();
-      await refreshPendingEvent();
+      await refreshPendingEvent({ bumpOverlay: true });
       if (result.time_state === 'play') {
         startTimer();
       }
@@ -198,6 +203,7 @@ export function useGame() {
     overview,
     periodStatus,
     pendingEvents,
+    eventsPromptTick,
     timeStatus: timeStatus ? {
       ...timeStatus,
       remainingLocal: localRemainingRef.current,

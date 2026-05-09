@@ -128,7 +128,7 @@ body {
 }
 
 /* Кнопки: всегда с рамкой; filled — заливка, outline/plain — остаются библиотечными */
-#root button:not(.tma-nav-icon-btn):not(.events-carousel-dot):not(.events-carousel-arrow):not(.events-overlay-close) {
+#root button:not(.tma-nav-icon-btn):not(.events-carousel-dot):not(.events-carousel-arrow):not(.events-overlay-close):not(.mqx-events-choice) {
   box-shadow: 0 0 0 1px var(--tgui--outline) inset;
 }
 
@@ -208,18 +208,18 @@ body {
 
 /* Hover/глубина для filled-кнопок (не трогаем outline/plain) */
 @media (hover: hover) {
-  #root button:not(.tma-nav-icon-btn):not(.events-carousel-dot):not(.events-carousel-arrow):not(.events-overlay-close) {
+  #root button:not(.tma-nav-icon-btn):not(.events-carousel-dot):not(.events-carousel-arrow):not(.events-overlay-close):not(.mqx-events-choice) {
     transition:
       background-color 0.14s ease,
       box-shadow 0.14s ease,
       transform 0.12s cubic-bezier(0.22, 1, 0.32, 1);
   }
-  #root button:not(.tma-nav-icon-btn):not(.events-carousel-dot):not(.events-carousel-arrow):not(.events-overlay-close):active:not(:disabled) {
+  #root button:not(.tma-nav-icon-btn):not(.events-carousel-dot):not(.events-carousel-arrow):not(.events-overlay-close):not(.mqx-events-choice):active:not(:disabled) {
     transform: scale(0.985);
   }
   /* filled у telegram-ui использует var(--tgui--button_color) — затемняем только его */
-  #root button:not(.tma-nav-icon-btn):not(.events-carousel-dot):not(.events-carousel-arrow):not(.events-overlay-close)[style*='--tgui--button_color'],
-  #root button:not(.tma-nav-icon-btn):not(.events-carousel-dot):not(.events-carousel-arrow):not(.events-overlay-close)[class*='tgui-']:where(:not(:disabled)) {
+  #root button:not(.tma-nav-icon-btn):not(.events-carousel-dot):not(.events-carousel-arrow):not(.events-overlay-close):not(.mqx-events-choice)[style*='--tgui--button_color'],
+  #root button:not(.tma-nav-icon-btn):not(.events-carousel-dot):not(.events-carousel-arrow):not(.events-overlay-close):not(.mqx-events-choice)[class*='tgui-']:where(:not(:disabled)) {
     /* оставляем библиотечные состояния; глубина достигается рамкой и лёгким transform */
   }
 }
@@ -532,6 +532,151 @@ body {
   margin-top: 10px;
   font-size: var(--mq-fs-caption);
   color: rgba(15, 17, 21, 0.55);
+}
+
+.mqx-fin-longhelp {
+  margin-top: 10px;
+  font-size: var(--mq-fs-caption);
+  line-height: 1.4;
+  color: rgba(15, 17, 21, 0.58);
+}
+
+.mqx-fin-subtabs-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.mqx-fin-subtab {
+  border: 1px solid color-mix(in srgb, var(--mq-line) 75%, transparent);
+  background: rgba(255, 255, 255, 0.72);
+  border-radius: 12px;
+  padding: 10px 10px;
+  font-size: 13px;
+  font-weight: 750;
+  color: rgba(15, 17, 21, 0.88);
+}
+
+.mqx-fin-subtab--active {
+  background: rgba(109, 40, 217, 0.10);
+  border-color: rgba(109, 40, 217, 0.32);
+  color: rgba(91, 33, 182, 0.98);
+}
+
+.mqx-fin-grid-actions {
+  align-items: stretch;
+}
+
+.mqx-fin-bt-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.mqx-fin-toggle-btn.mqx-fin-toggle-btn--active {
+  box-shadow: 0 0 0 2px rgba(109, 40, 217, 0.22);
+}
+
+.mqx-fin-actions-top {
+  display: flex;
+  justify-content: flex-start;
+}
+
+.mqx-fin-row--positions {
+  align-items: center;
+}
+
+.mqx-fin-row--positions .mqx-fin-row__r {
+  flex-direction: row;
+  align-items: center;
+  gap: 10px;
+}
+
+.mqx-fin-acc-list {
+  display: grid;
+  gap: 8px;
+}
+
+.mqx-fin-acc {
+  border: 1px solid color-mix(in srgb, var(--mq-line) 75%, transparent);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.72);
+  overflow: hidden;
+}
+
+.mqx-fin-acc-trigger {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 11px 12px;
+  border: none;
+  background: transparent;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  color: rgba(15, 17, 21, 0.92);
+}
+
+.mqx-fin-acc-title {
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+}
+
+.mqx-fin-acc-chev {
+  font-size: 12px;
+  color: rgba(15, 17, 21, 0.45);
+}
+
+.mqx-fin-acc-body {
+  padding: 0 12px 11px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.mqx-fin-acc-meta {
+  font-size: var(--mq-fs-caption);
+  color: rgba(15, 17, 21, 0.55);
+  line-height: 1.35;
+  min-width: 0;
+}
+
+.mqx-fin-icon-btn {
+  flex-shrink: 0;
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  border: 1px solid rgba(91, 33, 182, 0.28);
+  background: linear-gradient(135deg, rgba(109, 40, 217, 0.92), rgba(91, 33, 182, 0.95));
+  color: #fff;
+  font-size: 18px;
+  font-weight: 800;
+  line-height: 1;
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+}
+
+.mqx-fin-icon-btn--minus {
+  background: rgba(255, 255, 255, 0.86);
+  border: 1px solid color-mix(in srgb, var(--mq-line) 70%, transparent);
+  color: rgba(220, 38, 38, 0.95);
+}
+
+.mqx-fin-icon-btn--plus:active,
+.mqx-fin-icon-btn--minus:active {
+  transform: scale(0.96);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mqx-fin-icon-btn--plus:active,
+  .mqx-fin-icon-btn--minus:active {
+    transform: none;
+  }
 }
 
 .mqx-fin-grid {
@@ -1695,6 +1840,134 @@ code {
   background: transparent;
 }
 
+/* Money Quest Premium — оверлей событий (наследует разметку events-overlay-*) */
+.mqx-events-overlay {
+  z-index: 530;
+}
+
+.mqx-events-backdrop {
+  background: color-mix(in srgb, #0f0a1f 72%, transparent);
+}
+
+.mqx-events-panel.events-overlay-panel {
+  background: linear-gradient(
+    160deg,
+    color-mix(in srgb, var(--tg-theme-bg-color, var(--bg)) 92%, #6d28d9 8%),
+    var(--tg-theme-bg-color, var(--bg))
+  );
+  border: 1px solid color-mix(in srgb, var(--mq-violet, #7c3aed) 38%, transparent);
+  box-shadow:
+    0 22px 60px rgba(15, 10, 40, 0.38),
+    0 0 0 1px color-mix(in srgb, #fff 6%, transparent) inset;
+}
+
+.mqx-events-title {
+  background: linear-gradient(90deg, var(--tg-theme-text-color, var(--text)), var(--mq-violet, #7c3aed));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.mqx-events-sub {
+  max-width: 52ch;
+}
+
+.mqx-events-close {
+  border-radius: 14px;
+  background: color-mix(in srgb, var(--tg-theme-secondary-bg-color, #f4f4f8) 70%, transparent);
+}
+
+.mqx-events-card {
+  width: 100%;
+  padding: 14px;
+  margin: 0;
+  border-radius: 14px;
+  box-sizing: border-box;
+  background: color-mix(in srgb, var(--tg-theme-secondary-bg-color, #eef0f8) 55%, transparent);
+  border: 1px solid color-mix(in srgb, var(--tg-theme-hint-color, var(--mq-line)) 35%, transparent);
+}
+
+.mqx-events-card__kicker {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 8px;
+  font-size: 11px;
+  font-weight: 650;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--tg-theme-hint-color);
+}
+
+.mqx-events-card__kicker-sep {
+  font-weight: 550;
+  letter-spacing: 0.02em;
+}
+
+.mqx-events-card__title {
+  margin: 8px 0 6px;
+  font-size: calc(var(--mq-fs-body) + 4px);
+  font-weight: 720;
+  letter-spacing: -0.03em;
+  line-height: 1.2;
+}
+
+.mqx-events-card__desc {
+  font-size: var(--mq-fs-body);
+  line-height: 1.45;
+  opacity: 0.9;
+}
+
+.mqx-events-card__choices {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 14px;
+}
+
+button.mqx-events-choice {
+  appearance: none;
+  cursor: pointer;
+  width: 100%;
+  padding: 12px 14px;
+  border-radius: 12px;
+  border: 1px solid color-mix(in srgb, var(--mq-violet, #7c3aed) 45%, transparent);
+  font-family: inherit;
+  background: linear-gradient(
+    165deg,
+    color-mix(in srgb, var(--mq-violet, #7c3aed) 22%, transparent),
+    transparent
+  );
+  color: var(--tg-theme-text-color, var(--text));
+  transition: opacity 0.15s ease, transform 0.06s ease;
+  text-align: left;
+}
+
+button.mqx-events-choice:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+button.mqx-events-choice:active:not(:disabled) {
+  transform: translateY(1px);
+}
+
+.mqx-events-choice__title {
+  display: block;
+  font-weight: 680;
+}
+
+.mqx-events-choice__desc {
+  display: block;
+  margin-top: 4px;
+  font-size: var(--mq-fs-caption);
+  opacity: 0.82;
+}
+
+.mqx-events-arrow.events-carousel-arrow {
+  background: color-mix(in srgb, var(--mq-violet, #7c3aed) 18%, transparent);
+}
+
 .events-carousel-dots {
   display: flex;
   justify-content: center;
@@ -2231,20 +2504,20 @@ code {
 /* Кнопки в контентной зоне: мягкая глубина (нижнее меню и оверлеи не трогаем) */
 #root button:not(.tma-nav-icon-btn):not(.events-carousel-dot):not(.events-carousel-arrow):not(
     .events-overlay-close
-  ):focus-visible {
+  ):not(.mqx-events-choice):focus-visible {
   outline: 2px solid color-mix(in srgb, var(--mq-accent-link), transparent 22%);
   outline-offset: 2px;
 }
 
 #root button:not(.tma-nav-icon-btn):not(.events-carousel-dot):not(.events-carousel-arrow):not(
     .events-overlay-close
-  ):active:not(:disabled) {
+  ):not(.mqx-events-choice):active:not(:disabled) {
   transform: scale(0.985);
 }
 
 #root button:not(.tma-nav-icon-btn):not(.events-carousel-dot):not(.events-carousel-arrow):not(
     .events-overlay-close
-  ):not(:disabled) {
+  ):not(.mqx-events-choice):not(:disabled) {
   transition:
     transform 0.14s cubic-bezier(0.22, 1, 0.32, 1),
     box-shadow 0.18s ease,

@@ -7,71 +7,40 @@ function truncate(str, len) {
   return str.length <= len ? str : `${str.slice(0, len - 1)}…`;
 }
 
-function BinaryEventCard({ event, onPick, disabled }) {
-  const c0 = event.choices[0];
-  const c1 = event.choices[1];
+function EventChoicesCard({ event, onPick, busyId }) {
+  const disabled = busyId !== null;
+  const choices = event.choices || [];
 
   return (
-    <div className="event-deck-card tma-bordered-inner">
-      <div className="event-deck-card__meta">Период #{event.period_index}</div>
-      <div className="event-deck-card__title">{event.title}</div>
-      <div className="event-deck-card__desc">{event.description}</div>
-      <p className="event-deck-choice-hint">
-        Первое действие — зелёная кнопка, второе — красная.
-      </p>
-      <div className="event-deck-actions">
-        <button
-          type="button"
-          className="tma-choice-btn tma-choice-btn--no"
-          disabled={disabled}
-          onClick={() => { void onPick(event.id, c1.id); }}
-        >
-          {truncate(c1.title, 64)}
-        </button>
-        <button
-          type="button"
-          className="tma-choice-btn tma-choice-btn--yes"
-          disabled={disabled}
-          onClick={() => { void onPick(event.id, c0.id); }}
-        >
-          {truncate(c0.title, 64)}
-        </button>
+    <div className="mqx-events-card event-deck-card">
+      <div className="mqx-events-card__kicker">
+        Период #{event.period_index}
+        {(event.idxInDeck != null && event.deckLen != null) ? (
+          <span className="mqx-events-card__kicker-sep">
+            карточка {event.idxInDeck + 1} из {event.deckLen}
+          </span>
+        ) : null}
       </div>
-    </div>
-  );
-}
-
-function PolyEventCard({ event, onPick, disabled }) {
-  return (
-    <div className="event-deck-card tma-bordered-inner">
-      <div className="event-deck-card__meta">Период #{event.period_index}</div>
-      <div className="event-deck-card__title">{event.title}</div>
-      <div className="event-deck-card__desc">{event.description}</div>
-      <div className="event-deck-poly">
-        {event.choices.map((c) => (
+      <div className="mqx-events-card__title">{event.title}</div>
+      <div className="mqx-events-card__desc">{event.description}</div>
+      <div className="mqx-events-card__choices">
+        {choices.map((c) => (
           <button
             key={c.id}
             type="button"
-            className="tma-choice-btn tma-choice-btn--outline"
+            className="mqx-events-choice"
             disabled={disabled}
             onClick={() => { void onPick(event.id, c.id); }}
           >
-            <span className="mq-poly-choice-title">{c.title}</span>
-            {c.description ? <span className="mq-poly-choice-desc">{c.description}</span> : null}
+            <span className="mqx-events-choice__title">{truncate(c.title, 96)}</span>
+            {c.description ? (
+              <span className="mqx-events-choice__desc">{truncate(c.description, 180)}</span>
+            ) : null}
           </button>
         ))}
       </div>
     </div>
   );
-}
-
-function EventCardInner({ event, onPick, busyId }) {
-  const disabled = busyId !== null;
-  const n = event.choices?.length ?? 0;
-  if (n === 2) {
-    return <BinaryEventCard event={event} onPick={onPick} disabled={disabled} />;
-  }
-  return <PolyEventCard event={event} onPick={onPick} disabled={disabled} />;
 }
 
 export function EventsTriggerButton({ count, open, onOpen }) {
@@ -100,8 +69,13 @@ export function EventCarouselOverlay({ open, onClose, events, onResolved }) {
   const touchStart = useRef(null);
   const slideTimer = useRef(null);
 
-  const list = Array.isArray(events) ? events : [];
-  const n = list.length;
+  const rawList = Array.isArray(events) ? events : [];
+  const n = rawList.length;
+  const list = rawList.map((ev, i) => ({
+    ...ev,
+    idxInDeck: i,
+    deckLen: n,
+  }));
 
   const clearSlideTimer = () => {
     if (slideTimer.current) {
@@ -197,32 +171,38 @@ export function EventCarouselOverlay({ open, onClose, events, onResolved }) {
   const entering = slide ? list[slide.enterIdx] : null;
 
   return (
-    <div className="events-overlay-root" role="dialog" aria-modal="true" aria-labelledby="events-overlay-title">
-      <div className="events-overlay-backdrop" />
+    <div
+      className="mqx-events-overlay events-overlay-root"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="events-overlay-title"
+    >
+      <div className="mqx-events-backdrop events-overlay-backdrop" />
 
-      <div className="events-overlay-panel">
-        <div className="events-overlay-toolbar">
-          <div className="events-overlay-toolbar__left">
-            <span id="events-overlay-title" className="events-overlay-title">
-              Ситуации месяца
+      <div className="mqx-events-panel events-overlay-panel">
+        <div className="mqx-events-toolbar events-overlay-toolbar">
+          <div className="mqx-events-toolbar__text events-overlay-toolbar__left">
+            <span id="events-overlay-title" className="mqx-events-title events-overlay-title">
+              События периода
             </span>
-            <span className="events-overlay-tagline">
-              Выберите вариант на карточке — последствия применятся сразу. Закрыть без ответа можно только «×».
+            <span className="mqx-events-sub events-overlay-tagline">
+              Эффекты применяются сразу после выбора; при нехватке средств сервер вернёт ошибку. Окно можно закрыть «×» —
+              нерешённые карточки остаются доступными из кнопки «События».
             </span>
           </div>
-          <button type="button" className="events-overlay-close" aria-label="Закрыть" onClick={onClose}>
+          <button type="button" className="mqx-events-close events-overlay-close" aria-label="Закрыть" onClick={onClose}>
             ×
           </button>
         </div>
 
         {n > 1 ? (
-          <div className="events-carousel-dots">
+          <div className="mqx-events-dots events-carousel-dots">
             {list.map((ev, i) => (
               <button
                 key={ev.id}
                 type="button"
-                className={`events-carousel-dot ${i === idx && !slide ? 'events-carousel-dot--active' : ''}`}
-                aria-label={`Ситуация ${i + 1}`}
+                className={`mqx-events-dot events-carousel-dot ${i === idx && !slide ? 'events-carousel-dot--active' : ''}`}
+                aria-label={`Карточка ${i + 1}`}
                 aria-current={i === idx && !slide ? 'step' : undefined}
                 disabled={!!slide || busyId !== null}
                 onClick={() => onDotActivate(i)}
@@ -232,7 +212,7 @@ export function EventCarouselOverlay({ open, onClose, events, onResolved }) {
         ) : null}
 
         <div
-          className="event-carousel-viewport"
+          className="mqx-events-viewport event-carousel-viewport"
           onTouchStart={onViewportTouchStart}
           onTouchEnd={onViewportTouchEnd}
           onTouchCancel={() => { touchStart.current = null; }}
@@ -242,7 +222,7 @@ export function EventCarouselOverlay({ open, onClose, events, onResolved }) {
               className={`event-carousel-layer event-carousel-layer--base ${slide ? 'event-carousel-layer--dim' : ''}`}
               aria-hidden={!!slide}
             >
-              <EventCardInner event={current} onPick={handlePick} busyId={busyId} />
+              <EventChoicesCard event={current} onPick={handlePick} busyId={busyId} />
             </div>
           ) : null}
 
@@ -251,27 +231,27 @@ export function EventCarouselOverlay({ open, onClose, events, onResolved }) {
               key={`${entering.id}-${slide.dir}-${slide.enterIdx}`}
               className={`event-carousel-layer event-carousel-layer--top event-carousel-layer--enter-${slide.dir}`}
             >
-              <EventCardInner event={entering} onPick={handlePick} busyId={busyId} />
+              <EventChoicesCard event={entering} onPick={handlePick} busyId={busyId} />
             </div>
           ) : null}
         </div>
 
-        <div className="events-carousel-nav">
+        <div className="mqx-events-nav events-carousel-nav">
           <button
             type="button"
-            className="events-carousel-arrow"
+            className="mqx-events-arrow events-carousel-arrow"
             aria-label="Предыдущая карточка"
             disabled={idx <= 0 || !!slide || busyId !== null}
             onClick={() => goPrev()}
           >
             ‹
           </button>
-          <span className="events-carousel-counter">
+          <span className="mqx-events-counter events-carousel-counter">
             {idx + 1} / {n}
           </span>
           <button
             type="button"
-            className="events-carousel-arrow"
+            className="mqx-events-arrow events-carousel-arrow"
             aria-label="Следующая карточка"
             disabled={idx >= n - 1 || !!slide || busyId !== null}
             onClick={() => goNext()}

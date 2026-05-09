@@ -5,8 +5,9 @@ from sqlalchemy.orm import Session
 
 from ..auth import get_current_user
 from ..database import get_db
-from ..models import FinanceSalary, FinanceLiability, FinanceAsset, Transaction, PeriodEconomyClosing
-from ..balance_utils import adjust_balance, get_cash_balance, adjust_safety_fund_balance
+from ..models import FinanceSalary, FinanceLiability, FinanceAsset, Transaction, PeriodEconomyClosing, AssetTemplate, LiabilityTemplate
+from ..balance_utils import adjust_balance, adjust_safety_fund_balance
+from ..finance_helpers import monthly_interest_payment
 from ..game_time import get_active_game_profile, sync_time, get_seconds_until_next
 from ..schemas import (
     SalaryProfileUpdate,
@@ -21,6 +22,12 @@ from ..schemas import (
 )
 
 router = APIRouter(prefix="/api/finance", tags=["finance"])
+
+EPSILON = 1e-6
+
+
+def _cash_required_to_close(liability: FinanceLiability) -> float:
+    return float(liability.overdue_amount or 0) + float(liability.total_debt or 0)
 
 
 def _get_or_create_salary_profile(db: Session, game_profile_id: int) -> FinanceSalary:
@@ -94,16 +101,17 @@ async def create_liability(
     current_user=Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
-    if payload.total_debt < 0 or payload.annual_rate_percent < 0 or payload.monthly_payment < 0:
+    if payload.total_debt < 0 or payload.annual_rate_percent < 0:
         raise HTTPException(status_code=400, detail="Numeric values must be >= 0")
 
     game_profile = get_active_game_profile(db, current_user.id)
     sync_time(game_profile)
+    mp = monthly_interest_payment(payload.total_debt, payload.annual_rate_percent)
     liability = FinanceLiability(
         title=(payload.title or "Обязательство").strip() or "Обязательство",
         total_debt=payload.total_debt,
         annual_rate_percent=payload.annual_rate_percent,
-        monthly_payment=payload.monthly_payment,
+        monthly_payment=mp,
         game_profile_id=game_profile.id,
     )
     db.add(liability)
@@ -159,6 +167,7 @@ async def delete_liability(
     db: Session = Depends(get_db),
 ):
     game_profile = get_active_game_profile(db, current_user.id)
+    sync_time(game_profile)
     liability = (
         db.query(FinanceLiability)
         .filter(
@@ -169,9 +178,74 @@ async def delete_liability(
     )
     if not liability:
         raise HTTPException(status_code=404, detail="Liability not found")
+
+    due = round(_cash_required_to_close(liability), 2)
+    if due > EPSILON:
+        if float(game_profile.cash_balance) + EPSILON < due:
+            raise HTTPException(
+                status_code=400,
+                detail="Недостаточно средств на счёте, чтобы вернуть тело долга и погасить просрочку",
+            )
+        adjust_balance(
+            db=db,
+            game_profile_id=game_profile.id,
+            amount=-due,
+            type="liability_close",
+            description=f"Закрытие обязательства: {liability.title}",
+            period_index=int(game_profile.period_index),
+        )
     db.delete(liability)
     db.commit()
     return {"status": "success", "deleted_id": liability_id}
+
+
+@router.post("/liabilities/from-template", response_model=LiabilityResponse)
+async def create_liability_from_template(
+    payload: dict,
+    current_user=Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    key = (payload.get("key") or "").strip()
+    if not key:
+        raise HTTPException(status_code=400, detail="key is required")
+
+    tpl = (
+        db.query(LiabilityTemplate)
+        .filter(LiabilityTemplate.template_key == key, LiabilityTemplate.is_active == 1)
+        .first()
+    )
+    if not tpl:
+        raise HTTPException(status_code=404, detail="Template not found or inactive")
+
+    game_profile = get_active_game_profile(db, current_user.id)
+    sync_time(game_profile)
+    principal = float(tpl.total_debt)
+    rate = float(tpl.annual_rate_percent)
+    mp = monthly_interest_payment(principal, rate)
+
+    adjust_balance(
+        db=db,
+        game_profile_id=game_profile.id,
+        amount=principal,
+        type="liability_disbursement",
+        description=f"Получение кредита: {tpl.title}",
+        period_index=int(game_profile.period_index),
+    )
+
+    liability = FinanceLiability(
+        game_profile_id=game_profile.id,
+        title=tpl.title,
+        total_debt=principal,
+        annual_rate_percent=rate,
+        monthly_payment=mp,
+        overdue_amount=0,
+        overdue_periods=0,
+        is_active=1,
+    )
+    db.add(liability)
+    db.commit()
+    db.refresh(liability)
+    return liability
 
 
 @router.post("/assets", response_model=AssetResponse)
@@ -185,6 +259,18 @@ async def create_asset(
 
     game_profile = get_active_game_profile(db, current_user.id)
     sync_time(game_profile)
+    if int(game_profile.base_params_locked) == 1 and payload.asset_value > EPSILON:
+        if float(game_profile.cash_balance) + EPSILON < float(payload.asset_value):
+            raise HTTPException(status_code=400, detail="Недостаточно средств на счёте для покупки актива")
+        adjust_balance(
+            db=db,
+            game_profile_id=game_profile.id,
+            amount=-float(payload.asset_value),
+            type="asset_purchase",
+            description=f"Покупка актива: {(payload.title or 'Актив').strip()}",
+            period_index=int(game_profile.period_index),
+        )
+
     asset = FinanceAsset(
         title=(payload.title or "Актив").strip() or "Актив",
         kind=(payload.kind or "generic").strip() or "generic",
@@ -214,43 +300,52 @@ async def list_assets(
     )
 
 
-@router.get("/asset-templates")
-async def list_asset_templates():
-    """Типовые активы для easy. В hard позже добавим налоги/амортизацию/ремонт."""
+def _templates_db_session(db: Session):
+    rows = (
+        db.query(AssetTemplate)
+        .filter(AssetTemplate.is_active == 1)
+        .order_by(AssetTemplate.sort_order.asc(), AssetTemplate.id.asc())
+        .all()
+    )
     return [
         {
-            "key": "home",
-            "title": "Жилая квартира",
-            "kind": "home",
-            "asset_value": 4_500_000,
-            "monthly_maintenance_cost": 6_000,
-            "monthly_income": 0,
-        },
-        {
-            "key": "rental_home",
-            "title": "Доходная квартира (аренда)",
-            "kind": "rental_home",
-            "asset_value": 5_200_000,
-            "monthly_maintenance_cost": 7_000,
-            "monthly_income": 35_000,
-        },
-        {
-            "key": "car_personal",
-            "title": "Личная машина",
-            "kind": "car_personal",
-            "asset_value": 1_200_000,
-            "monthly_maintenance_cost": 12_000,
-            "monthly_income": 0,
-        },
-        {
-            "key": "car_taxi",
-            "title": "Машина для такси (аренда)",
-            "kind": "car_taxi",
-            "asset_value": 1_500_000,
-            "monthly_maintenance_cost": 18_000,
-            "monthly_income": 45_000,
-        },
+            "key": t.template_key,
+            "title": t.title,
+            "kind": t.kind,
+            "asset_value": float(t.asset_value),
+            "monthly_maintenance_cost": float(t.monthly_maintenance_cost),
+            "monthly_income": float(t.monthly_income or 0),
+        }
+        for t in rows
     ]
+
+
+@router.get("/asset-templates")
+async def list_asset_templates(db: Session = Depends(get_db)):
+    return _templates_db_session(db)
+
+
+@router.get("/liability-templates")
+async def list_liability_templates(db: Session = Depends(get_db)):
+    rows = (
+        db.query(LiabilityTemplate)
+        .filter(LiabilityTemplate.is_active == 1)
+        .order_by(LiabilityTemplate.sort_order.asc(), LiabilityTemplate.id.asc())
+        .all()
+    )
+    out = []
+    for t in rows:
+        td = float(t.total_debt)
+        ar = float(t.annual_rate_percent)
+        mp = monthly_interest_payment(td, ar)
+        out.append({
+            "key": t.template_key,
+            "title": t.title,
+            "total_debt": td,
+            "annual_rate_percent": ar,
+            "monthly_payment": mp,
+        })
+    return out
 
 
 @router.post("/assets/from-template", response_model=AssetResponse)
@@ -263,20 +358,31 @@ async def create_asset_from_template(
     if not key:
         raise HTTPException(status_code=400, detail="key is required")
 
-    templates = {t["key"]: t for t in await list_asset_templates()}
-    if key not in templates:
+    tpl_row = db.query(AssetTemplate).filter(AssetTemplate.template_key == key, AssetTemplate.is_active == 1).first()
+    if not tpl_row:
         raise HTTPException(status_code=404, detail="Template not found")
-    t = templates[key]
-
     game_profile = get_active_game_profile(db, current_user.id)
     sync_time(game_profile)
 
+    cost = float(tpl_row.asset_value)
+    if cost > EPSILON:
+        if float(game_profile.cash_balance) + EPSILON < cost:
+            raise HTTPException(status_code=400, detail="Недостаточно средств на счёте для покупки актива")
+        adjust_balance(
+            db=db,
+            game_profile_id=game_profile.id,
+            amount=-cost,
+            type="asset_purchase",
+            description=f"Покупка актива из каталога: {tpl_row.title}",
+            period_index=int(game_profile.period_index),
+        )
+
     asset = FinanceAsset(
-        title=t["title"],
-        kind=t["kind"],
-        asset_value=float(t["asset_value"]),
-        monthly_maintenance_cost=float(t["monthly_maintenance_cost"]),
-        monthly_income=float(t["monthly_income"]),
+        title=tpl_row.title,
+        kind=tpl_row.kind,
+        asset_value=cost,
+        monthly_maintenance_cost=float(tpl_row.monthly_maintenance_cost),
+        monthly_income=float(tpl_row.monthly_income or 0),
         game_profile_id=game_profile.id,
     )
     db.add(asset)
@@ -300,6 +406,7 @@ async def delete_asset(
     db: Session = Depends(get_db),
 ):
     game_profile = get_active_game_profile(db, current_user.id)
+    sync_time(game_profile)
     asset = (
         db.query(FinanceAsset)
         .filter(
@@ -310,6 +417,17 @@ async def delete_asset(
     )
     if not asset:
         raise HTTPException(status_code=404, detail="Asset not found")
+
+    sale = float(asset.asset_value or 0)
+    if sale > EPSILON:
+        adjust_balance(
+            db=db,
+            game_profile_id=game_profile.id,
+            amount=sale,
+            type="asset_sale",
+            description=f"Продажа актива: {asset.title}",
+            period_index=int(game_profile.period_index),
+        )
     db.delete(asset)
     db.commit()
     return {"status": "success", "deleted_id": asset_id}

@@ -3,6 +3,7 @@ import random
 from datetime import datetime
 
 from fastapi import APIRouter, Depends, HTTPException
+from sqlalchemy import or_
 from sqlalchemy.orm import Session
 
 from ..auth import get_current_user
@@ -24,7 +25,7 @@ def _ensure_seed_events(db: Session) -> None:
     def add_event(key: str, title: str, description: str, choices: list[dict], weight: int = 100):
         ed = EventDefinition(
             key=key,
-            mode="light",
+            mode="any",
             title=title,
             description=description,
             weight=weight,
@@ -77,75 +78,48 @@ def _ensure_seed_events(db: Session) -> None:
     db.commit()
 
 
-def _pick_weighted(defs: list[EventDefinition]) -> EventDefinition:
-    total = sum(max(0, int(d.weight or 0)) for d in defs)
-    if total <= 0:
-        return defs[0]
-    r = random.randint(1, total)
-    acc = 0
-    for d in defs:
-        acc += max(0, int(d.weight or 0))
-        if r <= acc:
-            return d
-    return defs[-1]
-
-
-EVENTS_PER_PERIOD_LIGHT = 3
-
-
-def _target_pending_count_for_period(mode: str) -> int:
-    """Целевое число ожидающих решения событий на один период."""
-    if mode == "light":
-        return EVENTS_PER_PERIOD_LIGHT
-    # как раньше: ~70% один сценарий, ~30% без событий
-    return 1 if random.random() <= 0.7 else 0
+EVENTS_PER_PERIOD = 3
 
 
 def ensure_period_events(db: Session, game_profile_id: int, period_index: int, mode: str) -> None:
-    """Дозаполняет pending-события текущего периода до целевого числа (easy: три разных сценария)."""
+    """
+    Один раз на период создаёт фиксированное число сценариев (до 3).
+    После решения части из них новые не добавляются до следующего периода.
+    """
+    total_existing = (
+        db.query(EventInstance)
+        .filter(
+            EventInstance.game_profile_id == game_profile_id,
+            EventInstance.period_index == period_index,
+        )
+        .count()
+    )
+    if total_existing > 0:
+        return
+
     defs = (
         db.query(EventDefinition)
-        .filter(EventDefinition.is_active == 1, EventDefinition.mode == mode)
+        .filter(
+            EventDefinition.is_active == 1,
+            or_(EventDefinition.mode == mode, EventDefinition.mode == "any"),
+        )
         .all()
     )
     if not defs:
         return
 
-    target = _target_pending_count_for_period(mode)
-    if target <= 0:
-        return
+    n = min(EVENTS_PER_PERIOD, len(defs))
+    picked = random.sample(defs, k=n)
 
-    existing_pending = (
-        db.query(EventInstance)
-        .filter(
-            EventInstance.game_profile_id == game_profile_id,
-            EventInstance.period_index == period_index,
-            EventInstance.status == "pending",
+    for d in picked:
+        db.add(
+            EventInstance(
+                game_profile_id=game_profile_id,
+                period_index=period_index,
+                definition_id=d.id,
+                status="pending",
+            )
         )
-        .order_by(EventInstance.id.asc())
-        .all()
-    )
-    pending_count = len(existing_pending)
-    used_def_ids = {e.definition_id for e in existing_pending}
-    need = target - pending_count
-    if need <= 0:
-        return
-
-    for _ in range(need):
-        pool = [d for d in defs if d.id not in used_def_ids]
-        if not pool:
-            pool = defs
-
-        picked = _pick_weighted(pool)
-        inst = EventInstance(
-            game_profile_id=game_profile_id,
-            period_index=period_index,
-            definition_id=picked.id,
-            status="pending",
-        )
-        db.add(inst)
-        existing_pending.append(inst)
-        used_def_ids.add(picked.id)
 
     db.commit()
 
@@ -239,38 +213,44 @@ async def choose_event(event_id: int, payload: dict, current_user=Depends(get_cu
     cash_delta = float(effects.get("cash_delta", 0) or 0)
     safety_delta = float(effects.get("safety_delta", 0) or 0)
 
-    if cash_delta != 0:
-        adjust_balance(
-            db=db,
-            game_profile_id=profile.id,
-            amount=cash_delta,
-            type="event_cash",
-            description=f"Событие: {choice.title}",
-            period_index=profile.period_index,
-        )
-        db.refresh(profile)
+    # Проверка достаточности средств до записи в БД
+    if cash_delta < 0 and float(profile.cash_balance) < (-cash_delta) - 1e-6:
+        raise HTTPException(status_code=400, detail="Недостаточно средств на счёте для этого выбора")
 
-    if safety_delta != 0:
-        # safety_delta > 0: переложить из cash в safety; если денег нет — ошибка
-        if safety_delta > 0:
-            adjust_safety_fund_balance(
+    try:
+        if cash_delta != 0:
+            adjust_balance(
                 db=db,
                 game_profile_id=profile.id,
-                amount=safety_delta,
-                type=TRANSACTION_TYPES["SAFETY_FUND_CONTRIBUTION"],
+                amount=cash_delta,
+                type="event_cash",
                 description=f"Событие: {choice.title}",
                 period_index=profile.period_index,
             )
-        else:
-            adjust_safety_fund_balance(
-                db=db,
-                game_profile_id=profile.id,
-                amount=safety_delta,  # отрицательное = снятие
-                type=TRANSACTION_TYPES["SAFETY_FUND_WITHDRAWAL"],
-                description=f"Событие: {choice.title}",
-                period_index=profile.period_index,
-            )
-        db.refresh(profile)
+            db.refresh(profile)
+
+        if safety_delta != 0:
+            if safety_delta > 0:
+                adjust_safety_fund_balance(
+                    db=db,
+                    game_profile_id=profile.id,
+                    amount=safety_delta,
+                    type=TRANSACTION_TYPES["SAFETY_FUND_CONTRIBUTION"],
+                    description=f"Событие: {choice.title}",
+                    period_index=profile.period_index,
+                )
+            else:
+                adjust_safety_fund_balance(
+                    db=db,
+                    game_profile_id=profile.id,
+                    amount=safety_delta,
+                    type=TRANSACTION_TYPES["SAFETY_FUND_WITHDRAWAL"],
+                    description=f"Событие: {choice.title}",
+                    period_index=profile.period_index,
+                )
+            db.refresh(profile)
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e) or "Недостаточно средств") from e
 
     inst.status = "selected"
     inst.selected_choice_id = int(choice_id)

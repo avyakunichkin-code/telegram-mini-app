@@ -107,8 +107,14 @@ export const API = {
     getAssetTemplates() {
         return apiCall('/api/finance/asset-templates');
     },
+    getLiabilityTemplates() {
+        return apiCall('/api/finance/liability-templates');
+    },
     createAssetFromTemplate(key) {
         return apiCall('/api/finance/assets/from-template', 'POST', { key });
+    },
+    createLiabilityFromTemplate(key) {
+        return apiCall('/api/finance/liabilities/from-template', 'POST', { key });
     },
     // Инвестиции
     listInvestPositions() {

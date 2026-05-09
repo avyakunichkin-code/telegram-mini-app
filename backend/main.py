@@ -34,6 +34,18 @@ def ensure_schema_compatibility() -> None:
         if "overdue_periods" not in liab_columns:
             statements.append("ALTER TABLE finance_liabilities ADD COLUMN overdue_periods INTEGER NOT NULL DEFAULT 0")
 
+    # ---- event_definitions (расширение без запуска 0003) ----
+    if "event_definitions" in inspector.get_table_names():
+        ed_cols = {item["name"] for item in inspector.get_columns("event_definitions")}
+        if "mandatory" not in ed_cols:
+            statements.append("ALTER TABLE event_definitions ADD COLUMN mandatory INTEGER NOT NULL DEFAULT 0")
+        if "category" not in ed_cols:
+            statements.append("ALTER TABLE event_definitions ADD COLUMN category VARCHAR(80)")
+        if "metadata_json" not in ed_cols:
+            statements.append(
+                "ALTER TABLE event_definitions ADD COLUMN metadata_json TEXT NOT NULL DEFAULT '{}'"
+            )
+
     # ---- finance_assets ----
     if "finance_assets" in inspector.get_table_names():
         asset_columns = {item["name"] for item in inspector.get_columns("finance_assets")}

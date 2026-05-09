@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { Spinner, Button, Modal, Cell, Section } from '@telegram-apps/telegram-ui';
 import { useGame } from '../hooks/useGame';
 import { DashboardPremium } from './DashboardPremium';
@@ -30,9 +30,16 @@ export function GameScreen({ onLogout, onNewGame, onLoadGame }) {
     withdrawFromSafetyFund,
     refreshOverview,
     refreshPendingEvent,
+    eventsPromptTick,
   } = useGame();
 
   const closeEventsOverlay = useCallback(() => setEventsOpen(false), []);
+
+  useEffect(() => {
+    if (eventsPromptTick > 0 && (pendingEvents?.length ?? 0) > 0) {
+      setEventsOpen(true);
+    }
+  }, [eventsPromptTick, pendingEvents]);
 
   const handleRequestNextPeriod = async () => {
     try {

@@ -146,7 +146,7 @@ def adjust_safety_fund_balance(
 
     if amount > 0:
         if profile.cash_balance < amount:
-            raise ValueError(...)
+            raise ValueError("Недостаточно средств на счёте для перевода в подушку безопасности")
         profile.cash_balance -= amount
         profile.safety_fund_balance += amount
         # Одна транзакция на списание
@@ -161,7 +161,7 @@ def adjust_safety_fund_balance(
     elif amount < 0:
         withdrawal = -amount
         if profile.safety_fund_balance < withdrawal:
-            raise ValueError(...)
+            raise ValueError("Недостаточно средств в подушке безопасности")
         profile.cash_balance += withdrawal
         profile.safety_fund_balance -= withdrawal
         add_transaction(
