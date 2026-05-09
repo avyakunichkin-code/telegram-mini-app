@@ -4,6 +4,7 @@ import { API } from '../api';
 import { showNotification } from './notifications';
 import { MoneyText } from './MoneyText';
 import { sanitizeIntInput, sanitizeDecimalInput, parseNumLoose } from '../utils/numberFields';
+import { MqxFrame } from './MqxFrame';
 
 export function BaseParamsScreen({ profileName, mode, periodDuration, onBack, onGameStarted }) {
   const [cashStr, setCashStr] = useState('');
@@ -102,13 +103,10 @@ export function BaseParamsScreen({ profileName, mode, periodDuration, onBack, on
   };
 
   return (
-    <div
-      className="mq-page mq-stack mq-stack-animate mq-stack--tight"
-      style={{ padding: '12px 12px calc(24px + env(safe-area-inset-bottom, 0))' }}
-    >
-      <div className="mq-page__decor" aria-hidden />
+    <MqxFrame>
+      <div className="mq-stack mq-stack-animate mq-stack--tight">
       <div className="mq-enter-item">
-        <Section header="Базовые параметры">
+      <Section header="Базовые параметры">
           <div className="mq-screen-intro">Стартовое состояние кошелька на первый месяц.</div>
           <Cell multiline subtitle="На карте наличными">
             <label className="mq-field">
@@ -311,6 +309,7 @@ export function BaseParamsScreen({ profileName, mode, periodDuration, onBack, on
           Назад
         </Button>
       </div>
-    </div>
+      </div>
+    </MqxFrame>
   );
 }

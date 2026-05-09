@@ -1,16 +1,14 @@
 import { useCallback, useState } from 'react';
 import { Spinner, Button, Modal, Cell, Section } from '@telegram-apps/telegram-ui';
 import { useGame } from '../hooks/useGame';
-import { GameHUD } from './GameHUD';
-import { DashboardSection } from './DashboardSection';
-import { FinanceSection } from './FinanceSection';
-import { AnalyticsSection } from './AnalyticsSection';
-import { MenuSection } from './MenuSection';
+import { DashboardPremium } from './DashboardPremium';
+import { FinancePremium } from './FinancePremium';
+import { AnalyticsPremium } from './AnalyticsPremium';
+import { MenuPremium } from './MenuPremium';
 import { BottomGameNav } from './BottomGameNav';
 import { showNotification } from './notifications';
 import { API } from '../api';
-import { EventsTriggerButton, EventCarouselOverlay } from './EventDeck';
-import { MqLogo } from './MqLogo';
+import { EventCarouselOverlay } from './EventDeck';
 
 export function GameScreen({ onLogout, onNewGame, onLoadGame }) {
   const [activeTab, setActiveTab] = useState('dashboard');
@@ -154,55 +152,43 @@ export function GameScreen({ onLogout, onNewGame, onLoadGame }) {
         }}
       />
 
-      <div className="mq-stack mq-stack-animate mq-stack--tight">
-        <div className="mq-enter-item">
-          <header className="tma-app-header">
-            <MqLogo size={34} />
-            <div className="tma-app-header__text">
-              <span className="tma-app-header__name">Money Quest</span>
-              <span className="tma-app-header__tag">Финансы как игра</span>
-            </div>
-            <EventsTriggerButton
-              count={pendingEvents?.length ?? 0}
-              open={eventsOpen}
-              onOpen={() => setEventsOpen(true)}
-            />
-          </header>
-        </div>
-        <GameHUD
-          className="mq-enter-item"
-          timeStatus={timeStatus}
-          setPlay={setPlay}
-          setPause={setPause}
-          onRequestNextPeriod={handleRequestNextPeriod}
-        />
-
-        <div key={activeTab} className="mq-enter-item">
+      <div className="mqx-screen">
+        <div className="mqx-frame">
+          <div className="mq-stack mq-stack-animate mq-stack--tight">
+            <div key={activeTab} className="mq-enter-item">
           {activeTab === 'dashboard' && (
-            <DashboardSection
+            <DashboardPremium
               overview={overview}
+              timeStatus={timeStatus}
+              pendingEventsCount={pendingEvents?.length ?? 0}
+              onOpenEvents={() => setEventsOpen(true)}
+              setPlay={setPlay}
+              setPause={setPause}
+              onNextPeriod={handleRequestNextPeriod}
               claimSalary={claimSalary}
               contributeToSafetyFund={contributeToSafetyFund}
               withdrawFromSafetyFund={withdrawFromSafetyFund}
-              refreshOverview={refreshOverview}
+              onGoFinance={() => setActiveTab('finance')}
             />
           )}
 
           {activeTab === 'finance' && (
-            <FinanceSection overview={overview} refreshOverview={refreshOverview} />
+            <FinancePremium overview={overview} refreshOverview={refreshOverview} />
           )}
 
           {activeTab === 'analytics' && (
-            <AnalyticsSection overview={overview} />
+            <AnalyticsPremium overview={overview} />
           )}
 
           {activeTab === 'menu' && (
-            <MenuSection
+            <MenuPremium
               onLogout={onLogout}
               onNewGame={onNewGame}
               onLoadGame={onLoadGame}
             />
           )}
+            </div>
+          </div>
         </div>
       </div>
 

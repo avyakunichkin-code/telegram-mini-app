@@ -1,0 +1,1315 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Money Quest — Investor UI Deck (v1)</title>
+    <style>
+      /* Investor Deck — печатный HTML для экспорта в PDF
+         Формат: A4, каждая «страница» = 1 макет экрана + подпись.
+       */
+
+      :root {
+        --violet: #6d28d9;
+        --violet-deep: #5b21b6;
+        --emerald: #059669;
+        --danger: #dc2626;
+        --warn: #d97706;
+
+        --ink: #0f1115;
+        --slate: #6b7280;
+        --line: #e5e7eb;
+        --mist: #f5f6f8;
+
+        --card: rgba(255, 255, 255, 0.74);
+        --card-line: rgba(229, 231, 235, 0.9);
+
+        --r12: 10px;
+        --r16: 12px;
+        --shadow:
+          0 18px 42px rgba(15, 17, 21, 0.12),
+          0 2px 10px rgba(15, 17, 21, 0.06);
+
+        --fs-body: 11pt;
+        --fs-cap: 9.5pt;
+        --fs-micro: 8.5pt;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html,
+      body {
+        height: 100%;
+      }
+
+      body {
+        margin: 0;
+        color: var(--ink);
+        background: #fff;
+        font: 400 var(--fs-body) / 1.4 system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+        padding: 0 12mm 16mm;
+        max-width: 210mm;
+        margin-inline: auto;
+      }
+
+      @page {
+        size: A4;
+        margin: 14mm 12mm 16mm 12mm;
+      }
+
+      .cover {
+        page-break-after: always;
+        min-height: 250mm;
+        margin: -10mm -12mm 0 -12mm;
+        padding: 18mm 14mm;
+        background:
+          radial-gradient(800px 320px at 14% 18%, rgba(109, 40, 217, 0.18), transparent 60%),
+          radial-gradient(560px 320px at 82% 30%, rgba(5, 150, 105, 0.12), transparent 62%),
+          linear-gradient(160deg, var(--mist) 0%, #ffffff 48%, #ffffff 100%);
+        border-bottom: 4px solid var(--violet);
+      }
+
+      .kicker {
+        display: inline-flex;
+        gap: 8px;
+        align-items: center;
+        font-size: 9pt;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: color-mix(in srgb, var(--emerald), var(--ink) 30%);
+        font-weight: 700;
+      }
+
+      .cover h1 {
+        margin: 10mm 0 4mm;
+        font-size: 34pt;
+        line-height: 1.06;
+        letter-spacing: -0.03em;
+        font-weight: 800;
+        color: var(--violet-deep);
+      }
+
+      .cover p {
+        margin: 0;
+        max-width: 150mm;
+        color: var(--slate);
+        font-size: 12pt;
+      }
+
+      .meta {
+        margin-top: 10mm;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6mm;
+        color: var(--slate);
+        font-size: 9pt;
+      }
+
+      .meta b {
+        color: var(--ink);
+        font-weight: 700;
+      }
+
+      h2 {
+        margin: 9mm 0 3mm;
+        font-size: 13pt;
+        letter-spacing: -0.01em;
+        font-weight: 750;
+      }
+
+      .page {
+        page-break-after: always;
+        padding-top: 4mm;
+      }
+
+      .page-title {
+        display: flex;
+        align-items: baseline;
+        justify-content: space-between;
+        gap: 10mm;
+        margin-bottom: 4mm;
+      }
+
+      .page-title h2 {
+        margin: 0;
+      }
+
+      .page-title .hint {
+        font-size: 9pt;
+        color: var(--slate);
+      }
+
+      .grid-2 {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 8mm;
+        align-items: start;
+      }
+
+      .notes {
+        border: 1px solid var(--line);
+        border-radius: 10px;
+        padding: 4mm;
+        background: #fff;
+      }
+
+      .notes h3 {
+        margin: 0 0 2mm;
+        font-size: 10pt;
+        font-weight: 750;
+      }
+
+      .notes ul {
+        margin: 0;
+        padding-left: 4mm;
+        color: var(--slate);
+        font-size: 9.3pt;
+        line-height: 1.35;
+      }
+
+      .notes li {
+        margin-bottom: 1.6mm;
+      }
+
+      /* Телефон-мок */
+      .phone {
+        width: 82mm;
+        height: 162mm;
+        /* Чуть меньше радиус, чтобы не "срезать" контент */
+        border-radius: 10mm;
+        padding: 10px;
+        background:
+          linear-gradient(180deg, rgba(255, 255, 255, 0.75), rgba(255, 255, 255, 0.44)),
+          linear-gradient(155deg, rgba(109, 40, 217, 0.18), transparent 58%),
+          linear-gradient(25deg, rgba(5, 150, 105, 0.12), transparent 50%);
+        border: 1px solid rgba(229, 231, 235, 0.9);
+        box-shadow: var(--shadow);
+        position: relative;
+        overflow: hidden;
+      }
+
+      .phone:before {
+        content: "";
+        position: absolute;
+        inset: -30px;
+        background:
+          radial-gradient(380px 220px at 20% 20%, rgba(109, 40, 217, 0.22), transparent 60%),
+          radial-gradient(360px 240px at 90% 30%, rgba(91, 33, 182, 0.16), transparent 60%),
+          radial-gradient(420px 240px at 40% 92%, rgba(5, 150, 105, 0.12), transparent 62%),
+          linear-gradient(0deg, rgba(255, 255, 255, 0.78), rgba(255, 255, 255, 0.78));
+        opacity: 0.9;
+        filter: saturate(1.02);
+        pointer-events: none;
+      }
+
+      .screen {
+        position: relative;
+        height: 100%;
+        border-radius: 8.5mm;
+        overflow: hidden;
+        background:
+          linear-gradient(180deg, rgba(255, 255, 255, 0.85), rgba(245, 246, 248, 0.9));
+        border: 1px solid rgba(229, 231, 235, 0.8);
+      }
+
+      /* Верхний hero как в mqx-hero */
+      .hero {
+        padding: 14px 14px 12px;
+        background:
+          radial-gradient(260px 140px at 12% 26%, rgba(255, 255, 255, 0.35), transparent 62%),
+          linear-gradient(90deg, var(--violet-deep), var(--violet));
+        color: #fff;
+        position: relative;
+      }
+
+      .hero .top {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+      }
+
+      .brand {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        font-weight: 800;
+        letter-spacing: -0.02em;
+      }
+
+      .badge {
+        font-size: 9px;
+        font-weight: 800;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        padding: 4px 7px;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.18);
+        border: 1px solid rgba(255, 255, 255, 0.22);
+      }
+
+      .hero h3 {
+        margin: 12px 0 0;
+        font-size: 16px;
+        line-height: 1.12;
+        font-weight: 800;
+        letter-spacing: -0.02em;
+      }
+
+      .hero p {
+        margin: 6px 0 0;
+        font-size: 11px;
+        line-height: 1.25;
+        color: rgba(255, 255, 255, 0.82);
+      }
+
+      .content {
+        padding: 12px 12px 0;
+        display: grid;
+        gap: 10px;
+      }
+
+      .card {
+        background: var(--card);
+        border: 1px solid var(--card-line);
+        border-radius: var(--r16);
+        padding: 10px;
+        box-shadow:
+          0 1px 0 rgba(255, 255, 255, 0.55) inset,
+          0 10px 26px rgba(15, 17, 21, 0.08);
+      }
+
+      .card .title {
+        font-size: 12px;
+        font-weight: 800;
+        letter-spacing: -0.01em;
+        margin: 0;
+      }
+
+      .card .sub {
+        margin: 4px 0 0;
+        font-size: 10px;
+        color: rgba(15, 17, 21, 0.62);
+        line-height: 1.25;
+      }
+
+      .kpi-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+        margin-top: 9px;
+      }
+
+      .kpi {
+        border-radius: 12px;
+        padding: 10px 10px 9px;
+        background: rgba(255, 255, 255, 0.72);
+        border: 1px solid rgba(229, 231, 235, 0.8);
+      }
+
+      .kpi .lbl {
+        font-size: 9px;
+        color: rgba(15, 17, 21, 0.62);
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        font-weight: 800;
+      }
+
+      .kpi .val {
+        margin-top: 5px;
+        font-size: 16px;
+        letter-spacing: -0.02em;
+        font-weight: 900;
+        font-variant-numeric: tabular-nums;
+      }
+
+      .kpi .val small {
+        font-size: 10px;
+        font-weight: 800;
+        color: rgba(15, 17, 21, 0.55);
+      }
+
+      .pill-row {
+        margin-top: 10px;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+      }
+
+      .pill {
+        font-size: 10px;
+        line-height: 1;
+        padding: 8px 10px;
+        border-radius: 999px;
+        border: 1px solid rgba(229, 231, 235, 0.9);
+        background: rgba(255, 255, 255, 0.6);
+        display: inline-flex;
+        gap: 8px;
+        align-items: center;
+      }
+
+      .dot {
+        width: 7px;
+        height: 7px;
+        border-radius: 999px;
+        background: var(--violet);
+        box-shadow: 0 0 0 3px rgba(109, 40, 217, 0.12);
+      }
+
+      .dot.ok {
+        background: var(--emerald);
+        box-shadow: 0 0 0 3px rgba(5, 150, 105, 0.12);
+      }
+
+      .dot.bad {
+        background: var(--danger);
+        box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.12);
+      }
+
+      .btn-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+        margin-top: 10px;
+      }
+
+      .btn {
+        border-radius: 12px;
+        padding: 10px 10px;
+        border: 1px solid rgba(229, 231, 235, 0.9);
+        background: rgba(255, 255, 255, 0.66);
+        font-size: 11px;
+        font-weight: 800;
+        letter-spacing: -0.01em;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .btn.primary {
+        background: linear-gradient(90deg, var(--violet-deep), var(--violet));
+        color: #fff;
+        border-color: rgba(255, 255, 255, 0.14);
+        box-shadow: 0 10px 24px rgba(109, 40, 217, 0.22);
+      }
+
+      .btn.ghost {
+        color: rgba(15, 17, 21, 0.8);
+      }
+
+      .tabs {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 6px;
+      }
+
+      .tab {
+        border-radius: 10px;
+        padding: 9px 10px;
+        font-size: 10px;
+        font-weight: 800;
+        background: rgba(255, 255, 255, 0.65);
+        border: 1px solid rgba(229, 231, 235, 0.9);
+      }
+
+      .tab.active {
+        background: rgba(109, 40, 217, 0.12);
+        border-color: rgba(109, 40, 217, 0.35);
+        color: var(--violet-deep);
+      }
+
+      .nav {
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        padding: 9px 10px 12px;
+        background:
+          linear-gradient(
+            180deg,
+            rgba(255, 255, 255, 0) 0%,
+            rgba(255, 255, 255, 0.88) 40%,
+            rgba(255, 255, 255, 0.94) 100%
+          );
+        border-top: 1px solid rgba(229, 231, 235, 0.85);
+        backdrop-filter: blur(10px);
+      }
+
+      .nav .row {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 6px;
+      }
+
+      .nav .item {
+        height: 32px;
+        border-radius: 10px;
+        border: 1px solid rgba(229, 231, 235, 0.9);
+        background: rgba(255, 255, 255, 0.6);
+        display: grid;
+        place-items: center;
+      }
+
+      .nav .item.active {
+        background: linear-gradient(90deg, var(--violet-deep), var(--violet));
+        border-color: rgba(255, 255, 255, 0.2);
+      }
+
+      .nav .item svg {
+        width: 18px;
+        height: 18px;
+        stroke: rgba(15, 17, 21, 0.62);
+        fill: none;
+        stroke-width: 2;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+      }
+
+      .nav .item.active svg {
+        stroke: rgba(255, 255, 255, 0.92);
+      }
+
+      .chart {
+        height: 54px;
+        border-radius: 12px;
+        border: 1px solid rgba(109, 40, 217, 0.28);
+        background: rgba(109, 40, 217, 0.06);
+        margin-top: 8px;
+        overflow: hidden;
+      }
+
+      .chart svg {
+        width: 100%;
+        height: 100%;
+        display: block;
+      }
+
+      .chart .grid {
+        stroke: rgba(109, 40, 217, 0.14);
+        stroke-width: 1;
+        shape-rendering: crispEdges;
+      }
+
+      .chart .line {
+        stroke: rgba(91, 33, 182, 0.92);
+        stroke-width: 2.25;
+        fill: none;
+      }
+
+      .chart .area {
+        fill: rgba(109, 40, 217, 0.14);
+      }
+
+      .caption {
+        margin-top: 3mm;
+        font-size: 9pt;
+        color: var(--slate);
+      }
+
+      .tag {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 2px 8px;
+        border-radius: 999px;
+        border: 1px solid var(--line);
+        font-size: 8.8pt;
+        color: var(--slate);
+        background: #fff;
+      }
+
+      .tag b {
+        color: var(--ink);
+        font-weight: 750;
+      }
+
+      .tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+        margin-top: 2mm;
+      }
+
+      /* маленькие блоки «список/строки» */
+      .rows {
+        margin-top: 8px;
+        display: grid;
+        gap: 6px;
+      }
+
+      .row-item {
+        display: flex;
+        justify-content: space-between;
+        gap: 10px;
+        padding: 9px 10px;
+        border-radius: 12px;
+        border: 1px solid rgba(229, 231, 235, 0.85);
+        background: rgba(255, 255, 255, 0.62);
+        font-variant-numeric: tabular-nums;
+      }
+
+      .row-item .l {
+        font-size: 10px;
+        color: rgba(15, 17, 21, 0.7);
+        font-weight: 800;
+      }
+
+      .row-item .r {
+        font-size: 11px;
+        font-weight: 900;
+        color: rgba(15, 17, 21, 0.9);
+      }
+    </style>
+  </head>
+  <body>
+    <section class="cover">
+      <div class="kicker">
+        <span style="width: 8px; height: 8px; border-radius: 999px; background: var(--violet)"></span>
+        Money Quest — Investor UI Deck
+      </div>
+      <h1>Эталонный дизайн экранов<br />Telegram Mini App</h1>
+      <p>
+        Минималистичный, но «премиальный» UI: плотная информация без перегруза, акцент на ключевых KPI и следующих действиях.
+        Стилизация близка к текущему light‑premium интерфейсу (Quest Violet + glass).
+      </p>
+      <div class="meta">
+        <div><b>Версия:</b> v1</div>
+        <div><b>Дата:</b> май 2026</div>
+        <div><b>Формат:</b> печатный HTML → экспорт в PDF</div>
+        <div><b>Примечание:</b> цифры/графики — демонстрационные</div>
+      </div>
+    </section>
+
+    <!-- START / AUTH -->
+    <section class="page">
+      <div class="page-title">
+        <h2>Старт / Сохранения</h2>
+        <div class="hint">Цель: быстрый вход в активный профиль + понятный CTA</div>
+      </div>
+      <div class="grid-2">
+        <div>
+          <div class="phone">
+            <div class="screen">
+              <div class="hero">
+                <div class="top">
+                  <div class="brand">MQ <span class="badge">Light</span></div>
+                  <div class="badge">Профили</div>
+                </div>
+                <h3>Продолжить игру</h3>
+                <p>Активный профиль — один тап. Остальные сохранения — в списке.</p>
+              </div>
+              <div class="content">
+                <div class="card">
+                  <p class="title">Aleksei · Period 7</p>
+                  <p class="sub">Режим: Light · Статус: в работе · Без просрочек: 2</p>
+                  <div class="kpi-row">
+                    <div class="kpi">
+                      <div class="lbl">Наличные</div>
+                      <div class="val">124 500 <small>₽</small></div>
+                    </div>
+                    <div class="kpi">
+                      <div class="lbl">Подушка</div>
+                      <div class="val">52 000 <small>₽</small></div>
+                    </div>
+                  </div>
+                  <div class="btn-row">
+                    <div class="btn primary">Продолжить</div>
+                    <div class="btn ghost">Все сохранения</div>
+                  </div>
+                </div>
+                <div class="card">
+                  <p class="title">Новая игра</p>
+                  <p class="sub">Создайте профиль и выберите темп периода.</p>
+                  <div class="btn-row">
+                    <div class="btn primary">Новый профиль</div>
+                    <div class="btn ghost">Выйти</div>
+                  </div>
+                </div>
+              </div>
+              <div class="nav">
+                <div class="row">
+                  <div class="item active" aria-label="Главная">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 10.5 12 4l8 6.5V20a1 1 0 0 1-1 1h-5v-6H10v6H5a1 1 0 0 1-1-1v-9.5Z"/></svg>
+                  </div>
+                  <div class="item" aria-label="Финансы">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 10V7a5 5 0 0 1 10 0v3"/><path d="M6 10h12v10a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V10Z"/><path d="M10 14h4"/></svg>
+                  </div>
+                  <div class="item" aria-label="Аналитика">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 19V5"/><path d="M4 19h16"/><path d="M7 15l4-4 3 3 5-6"/></svg>
+                  </div>
+                  <div class="item" aria-label="Меню">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 7h14"/><path d="M5 12h14"/><path d="M5 17h14"/></svg>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="caption">Экран «Профили»: выделяем активный слот, рядом — быстрые KPI и 1 главный CTA.</div>
+        </div>
+        <aside class="notes">
+          <h3>Композиция</h3>
+          <ul>
+            <li><b>Hero</b> задаёт контекст (что это за экран) и держит брендовый тон.</li>
+            <li><b>KPI‑карточка</b> — не таблица: 2 метрики + статус.</li>
+            <li><b>Два CTA</b>: primary «Продолжить», secondary «Все сохранения».</li>
+          </ul>
+          <div class="tags">
+            <span class="tag"><b>UX</b> быстрый старт</span>
+            <span class="tag"><b>UI</b> карточки + стекло</span>
+            <span class="tag"><b>Info</b> плотность без мелочи</span>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <section class="page">
+      <div class="page-title">
+        <h2>Логин / Регистрация</h2>
+        <div class="hint">Цель: максимально короткая форма без «телеграм‑синевы»</div>
+      </div>
+      <div class="grid-2">
+        <div>
+          <div class="phone">
+            <div class="screen">
+              <div class="hero">
+                <div class="top">
+                  <div class="brand">MQ <span class="badge">Account</span></div>
+                  <div class="badge">Безопасно</div>
+                </div>
+                <h3>Вход</h3>
+                <p>Один шаг до игры. Система уведомлений вместо алертов.</p>
+              </div>
+              <div class="content">
+                <div class="card">
+                  <p class="title">Данные</p>
+                  <p class="sub">Минимальные поля: логин и пароль.</p>
+                  <div class="rows">
+                    <div class="row-item">
+                      <div class="l">Имя пользователя</div>
+                      <div class="r">username</div>
+                    </div>
+                    <div class="row-item">
+                      <div class="l">Пароль</div>
+                      <div class="r">••••••••</div>
+                    </div>
+                  </div>
+                  <div class="btn-row">
+                    <div class="btn primary">Войти</div>
+                    <div class="btn ghost">Регистрация</div>
+                  </div>
+                </div>
+                <div class="card">
+                  <p class="title">Подсказка</p>
+                  <p class="sub">Проверки ошибок в одном месте, не «красным текстом» по всей форме.</p>
+                  <div class="pill-row">
+                    <span class="pill"><span class="dot bad"></span>Неверный пароль</span>
+                    <span class="pill"><span class="dot ok"></span>Успешный вход</span>
+                  </div>
+                </div>
+              </div>
+              <div class="nav">
+                <div class="row">
+                  <div class="item" aria-label="Главная">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 10.5 12 4l8 6.5V20a1 1 0 0 1-1 1h-5v-6H10v6H5a1 1 0 0 1-1-1v-9.5Z"/></svg>
+                  </div>
+                  <div class="item active" aria-label="Финансы">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 10V7a5 5 0 0 1 10 0v3"/><path d="M6 10h12v10a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V10Z"/><path d="M10 14h4"/></svg>
+                  </div>
+                  <div class="item" aria-label="Аналитика">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 19V5"/><path d="M4 19h16"/><path d="M7 15l4-4 3 3 5-6"/></svg>
+                  </div>
+                  <div class="item" aria-label="Меню">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 7h14"/><path d="M5 12h14"/><path d="M5 17h14"/></svg>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="caption">Auth‑экраны выглядят как часть того же продукта: hero + одна карточка‑форма + один primary CTA.</div>
+        </div>
+        <aside class="notes">
+          <h3>Принципы</h3>
+          <ul>
+            <li>Поля — <b>крупные</b>, подписи — <b>caption</b>, без лишних рамок.</li>
+            <li>Состояния ошибок — через <b>тосты/плашки</b>, не переносят контент.</li>
+            <li>Визуально одинаковая логика CTA на всех экранах.</li>
+          </ul>
+          <div class="tags">
+            <span class="tag"><b>Minimal</b> 2 поля</span>
+            <span class="tag"><b>Brand</b> violet‑акцент</span>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <!-- ONBOARDING -->
+    <section class="page">
+      <div class="page-title">
+        <h2>Мастер: Сложность</h2>
+        <div class="hint">Цель: 3 решения без перегруза (слот, режим, длительность)</div>
+      </div>
+      <div class="grid-2">
+        <div>
+          <div class="phone">
+            <div class="screen">
+              <div class="hero">
+                <div class="top">
+                  <div class="brand">MQ <span class="badge">Setup</span></div>
+                  <div class="badge">Шаг 1/2</div>
+                </div>
+                <h3>Сложность и темп</h3>
+                <p>Выбираем режим и длительность «месяца».</p>
+              </div>
+              <div class="content">
+                <div class="card">
+                  <p class="title">Слот</p>
+                  <p class="sub">Название сохранения, чтобы видеть прогресс в списке.</p>
+                  <div class="rows">
+                    <div class="row-item">
+                      <div class="l">Название</div>
+                      <div class="r">Мой первый профиль</div>
+                    </div>
+                  </div>
+                </div>
+                <div class="card">
+                  <p class="title">Режим</p>
+                  <div class="tabs" style="margin-top: 8px">
+                    <div class="tab active">Light</div>
+                    <div class="tab">Hardcore</div>
+                  </div>
+                  <p class="sub" style="margin-top: 8px">Light — мягкий старт с ошибками. Hardcore — больше контроля.</p>
+                </div>
+                <div class="card">
+                  <p class="title">Длительность периода</p>
+                  <p class="sub">Например, 300 секунд = 5 минут на «месяц».</p>
+                  <div class="rows">
+                    <div class="row-item">
+                      <div class="l">Секунды</div>
+                      <div class="r">300</div>
+                    </div>
+                  </div>
+                  <div class="btn-row">
+                    <div class="btn primary">Далее</div>
+                    <div class="btn ghost">Назад</div>
+                  </div>
+                </div>
+              </div>
+              <div class="nav">
+                <div class="row">
+                  <div class="item active" aria-label="Главная">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 10.5 12 4l8 6.5V20a1 1 0 0 1-1 1h-5v-6H10v6H5a1 1 0 0 1-1-1v-9.5Z"/></svg>
+                  </div>
+                  <div class="item" aria-label="Финансы">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 10V7a5 5 0 0 1 10 0v3"/><path d="M6 10h12v10a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V10Z"/><path d="M10 14h4"/></svg>
+                  </div>
+                  <div class="item" aria-label="Аналитика">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 19V5"/><path d="M4 19h16"/><path d="M7 15l4-4 3 3 5-6"/></svg>
+                  </div>
+                  <div class="item" aria-label="Меню">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 7h14"/><path d="M5 12h14"/><path d="M5 17h14"/></svg>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="caption">Шаг 1: плотные карточки-решения. Активное состояние выделяем мягким violet‑тоном.</div>
+        </div>
+        <aside class="notes">
+          <h3>Фишки для читаемости</h3>
+          <ul>
+            <li>В каждом блоке — <b>одна мысль</b> и <b>один контроль</b>.</li>
+            <li>Табы как <b>2×1</b>: быстро считываются, не «крошатся».</li>
+            <li>Описание — короткое, на уровне caption.</li>
+          </ul>
+        </aside>
+      </div>
+    </section>
+
+    <section class="page">
+      <div class="page-title">
+        <h2>Мастер: Базовые параметры</h2>
+        <div class="hint">Цель: понятные подписи, без предзаполненных “0”, компактные списки</div>
+      </div>
+      <div class="grid-2">
+        <div>
+          <div class="phone">
+            <div class="screen">
+              <div class="hero">
+                <div class="top">
+                  <div class="brand">MQ <span class="badge">Setup</span></div>
+                  <div class="badge">Шаг 2/2</div>
+                </div>
+                <h3>Стартовые деньги</h3>
+                <p>Наличка, зарплата, активы и долги — как стартовая модель.</p>
+              </div>
+              <div class="content">
+                <div class="card">
+                  <p class="title">Наличка и доход</p>
+                  <div class="rows">
+                    <div class="row-item">
+                      <div class="l">Стартовый баланс</div>
+                      <div class="r">—</div>
+                    </div>
+                    <div class="row-item">
+                      <div class="l">Зарплата в период</div>
+                      <div class="r">70 000 ₽</div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="card">
+                  <p class="title">Активы</p>
+                  <p class="sub">Короткий список + кнопка добавления.</p>
+                  <div class="rows">
+                    <div class="row-item">
+                      <div class="l">Авто · обслуживание</div>
+                      <div class="r">4 500 ₽</div>
+                    </div>
+                    <div class="row-item">
+                      <div class="l">Депозит · доход</div>
+                      <div class="r">1 200 ₽</div>
+                    </div>
+                  </div>
+                  <div class="btn-row">
+                    <div class="btn primary">+ Добавить</div>
+                    <div class="btn ghost">Шаблоны</div>
+                  </div>
+                </div>
+
+                <div class="card">
+                  <p class="title">Обязательства</p>
+                  <p class="sub">Показываем ежемесячный платёж как главное.</p>
+                  <div class="rows">
+                    <div class="row-item">
+                      <div class="l">Ипотека · платёж</div>
+                      <div class="r">32 000 ₽</div>
+                    </div>
+                    <div class="row-item">
+                      <div class="l">Кредит · платёж</div>
+                      <div class="r">8 500 ₽</div>
+                    </div>
+                  </div>
+                  <div class="btn-row">
+                    <div class="btn primary">Старт игры</div>
+                    <div class="btn ghost">Назад</div>
+                  </div>
+                </div>
+              </div>
+              <div class="nav">
+                <div class="row">
+                  <div class="item active" aria-label="Главная">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 10.5 12 4l8 6.5V20a1 1 0 0 1-1 1h-5v-6H10v6H5a1 1 0 0 1-1-1v-9.5Z"/></svg>
+                  </div>
+                  <div class="item" aria-label="Финансы">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 10V7a5 5 0 0 1 10 0v3"/><path d="M6 10h12v10a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V10Z"/><path d="M10 14h4"/></svg>
+                  </div>
+                  <div class="item" aria-label="Аналитика">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 19V5"/><path d="M4 19h16"/><path d="M7 15l4-4 3 3 5-6"/></svg>
+                  </div>
+                  <div class="item" aria-label="Меню">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 7h14"/><path d="M5 12h14"/><path d="M5 17h14"/></svg>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="caption">Шаг 2: «модель стартового месяца» — три карточки, где главное видно сразу.</div>
+        </div>
+        <aside class="notes">
+          <h3>Оптимизация плотности</h3>
+          <ul>
+            <li>Строки‑значения — <b>StatRow</b> / list‑item, не текст параграфами.</li>
+            <li>Ключевые CTA — всегда <b>filled violet</b>.</li>
+            <li>В списках главное — <b>платёж/обслуживание</b>, остальное внутри деталей/редактирования.</li>
+          </ul>
+        </aside>
+      </div>
+    </section>
+
+    <!-- GAME -->
+    <section class="page">
+      <div class="page-title">
+        <h2>Игра: Главная (Dashboard)</h2>
+        <div class="hint">Цель: 1 взгляд → статус периода → следующий шаг</div>
+      </div>
+      <div class="grid-2">
+        <div>
+          <div class="phone">
+            <div class="screen">
+              <div class="hero">
+                <div class="top">
+                  <div class="brand">MQ <span class="badge">Period 7</span></div>
+                  <div class="badge">События · 2</div>
+                </div>
+                <h3>Месяц идёт</h3>
+                <p>Успей: забрать зарплату, закрыть платёж, пополнить подушку.</p>
+                <div class="pill-row" style="margin-top: 10px">
+                  <span class="pill"><span class="dot ok"></span>Цель: почти</span>
+                  <span class="pill"><span class="dot"></span>Поток: +6 400 ₽</span>
+                  <span class="pill"><span class="dot bad"></span>Просрочка: 8 500 ₽</span>
+                </div>
+              </div>
+              <div class="content">
+                <div class="card">
+                  <p class="title">Ключевые метрики</p>
+                  <div class="kpi-row">
+                    <div class="kpi">
+                      <div class="lbl">Наличные</div>
+                      <div class="val">124 500 <small>₽</small></div>
+                    </div>
+                    <div class="kpi">
+                      <div class="lbl">Подушка</div>
+                      <div class="val">52 000 <small>₽</small></div>
+                    </div>
+                  </div>
+                  <div class="rows">
+                    <div class="row-item">
+                      <div class="l">Платежи/мес</div>
+                      <div class="r">40 500 ₽</div>
+                    </div>
+                    <div class="row-item">
+                      <div class="l">Доход/мес</div>
+                      <div class="r">46 900 ₽</div>
+                    </div>
+                  </div>
+                </div>
+                <div class="card">
+                  <p class="title">Действия периода</p>
+                  <p class="sub">Кнопки компактные — только то, что реально делается руками.</p>
+                  <div class="btn-row">
+                    <div class="btn primary">Забрать зарплату</div>
+                    <div class="btn ghost">В подушку</div>
+                  </div>
+                </div>
+              </div>
+              <div class="nav">
+                <div class="row">
+                  <div class="item active" aria-label="Главная">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 10.5 12 4l8 6.5V20a1 1 0 0 1-1 1h-5v-6H10v6H5a1 1 0 0 1-1-1v-9.5Z"/></svg>
+                  </div>
+                  <div class="item" aria-label="Финансы">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 10V7a5 5 0 0 1 10 0v3"/><path d="M6 10h12v10a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V10Z"/><path d="M10 14h4"/></svg>
+                  </div>
+                  <div class="item" aria-label="Аналитика">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 19V5"/><path d="M4 19h16"/><path d="M7 15l4-4 3 3 5-6"/></svg>
+                  </div>
+                  <div class="item" aria-label="Меню">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 7h14"/><path d="M5 12h14"/><path d="M5 17h14"/></svg>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="caption">Главная: hero показывает состояние периода; ниже — KPI + действия, без лишних таблиц.</div>
+        </div>
+        <aside class="notes">
+          <h3>Выделение главного</h3>
+          <ul>
+            <li>В hero — <b>3 маркера</b>: цель/поток/риск (цветом и словом).</li>
+            <li>В KPI — максимум <b>2 большие цифры</b> + 2 строки рядом.</li>
+            <li>Сценарные действия — <b>2 кнопки</b>, остальное в «Финансах».</li>
+          </ul>
+        </aside>
+      </div>
+    </section>
+
+    <section class="page">
+      <div class="page-title">
+        <h2>Игра: Финансы (2×2 табы + плотные карточки)</h2>
+        <div class="hint">Цель: много функций — через группировку, без “пустоты справа”</div>
+      </div>
+      <div class="grid-2">
+        <div>
+          <div class="phone">
+            <div class="screen">
+              <div class="hero">
+                <div class="top">
+                  <div class="brand">MQ <span class="badge">Финансы</span></div>
+                  <div class="badge">4 вкладки</div>
+                </div>
+                <h3>Управление капиталом</h3>
+                <p>Инвестиции, страховки, шаблоны и списки активов/долгов.</p>
+              </div>
+              <div class="content">
+                <div class="card">
+                  <p class="title">Разделы</p>
+                  <div class="tabs" style="margin-top: 8px">
+                    <div class="tab active">Инвестиции</div>
+                    <div class="tab">Страховки</div>
+                    <div class="tab">Шаблоны</div>
+                    <div class="tab">Долги · активы</div>
+                  </div>
+                  <p class="sub" style="margin-top: 8px">Сетка 2×2 — равномерно заполняет ширину и не «крошит» подписи.</p>
+                </div>
+                <div class="card">
+                  <p class="title">Инвестиции (пример)</p>
+                  <div class="rows">
+                    <div class="row-item">
+                      <div class="l">Депозит · сумма</div>
+                      <div class="r">10 000 ₽</div>
+                    </div>
+                    <div class="row-item">
+                      <div class="l">Ставка</div>
+                      <div class="r">12% годовых</div>
+                    </div>
+                  </div>
+                  <div class="btn-row">
+                    <div class="btn primary">Открыть</div>
+                    <div class="btn ghost">Позиции</div>
+                  </div>
+                </div>
+              </div>
+              <div class="nav">
+                <div class="row">
+                  <div class="item" aria-label="Главная">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 10.5 12 4l8 6.5V20a1 1 0 0 1-1 1h-5v-6H10v6H5a1 1 0 0 1-1-1v-9.5Z"/></svg>
+                  </div>
+                  <div class="item active" aria-label="Финансы">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 10V7a5 5 0 0 1 10 0v3"/><path d="M6 10h12v10a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V10Z"/><path d="M10 14h4"/></svg>
+                  </div>
+                  <div class="item" aria-label="Аналитика">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 19V5"/><path d="M4 19h16"/><path d="M7 15l4-4 3 3 5-6"/></svg>
+                  </div>
+                  <div class="item" aria-label="Меню">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 7h14"/><path d="M5 12h14"/><path d="M5 17h14"/></svg>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="caption">Финансы: вверху — “2×2” навигация, ниже — конкретный сценарий (инвест/страх).</div>
+        </div>
+        <aside class="notes">
+          <h3>Как держим минимализм</h3>
+          <ul>
+            <li>Не показываем всё сразу: один таб = один сценарий.</li>
+            <li>Поля и цифры “съедаются” в строки: 2–3 поля максимум в карточке.</li>
+            <li>“Списки” (активы/долги) — как <b>плотные строки</b> с главным числом справа.</li>
+          </ul>
+        </aside>
+      </div>
+    </section>
+
+    <section class="page">
+      <div class="page-title">
+        <h2>Игра: Аналитика (цель + динамика + риски)</h2>
+        <div class="hint">Цель: объяснить прогресс и здоровье профиля без “сложных терминов”</div>
+      </div>
+      <div class="grid-2">
+        <div>
+          <div class="phone">
+            <div class="screen">
+              <div class="hero">
+                <div class="top">
+                  <div class="brand">MQ <span class="badge">Аналитика</span></div>
+                  <div class="badge">48 периодов</div>
+                </div>
+                <h3>Цель и динамика</h3>
+                <p>Прогресс подушки, серии “чистых” месяцев и потоки.</p>
+              </div>
+              <div class="content">
+                <div class="card">
+                  <p class="title">Цель периода</p>
+                  <p class="sub">Подушка: 52 000 / 121 500 ₽</p>
+                  <div class="pill-row">
+                    <span class="pill"><span class="dot"></span>Статус: почти</span>
+                    <span class="pill"><span class="dot ok"></span>Серия: 2</span>
+                  </div>
+                </div>
+                <div class="card">
+                  <p class="title">Динамика (мини‑график)</p>
+                  <p class="sub">Заглушка: кривые баланса / подушки / просрочки.</p>
+                  <div class="chart" role="img" aria-label="График баланса за периоды">
+                    <svg viewBox="0 0 300 54" preserveAspectRatio="none">
+                      <path class="area" d="M0,44 L25,40 L50,42 L75,34 L100,36 L125,30 L150,26 L175,28 L200,22 L225,18 L250,20 L275,14 L300,12 L300,54 L0,54 Z"></path>
+                      <path class="line" d="M0,44 L25,40 L50,42 L75,34 L100,36 L125,30 L150,26 L175,28 L200,22 L225,18 L250,20 L275,14 L300,12"></path>
+                      <path class="grid" d="M0 13 H300"></path>
+                      <path class="grid" d="M0 27 H300"></path>
+                      <path class="grid" d="M0 41 H300"></path>
+                    </svg>
+                  </div>
+                </div>
+                <div class="card">
+                  <p class="title">Риски</p>
+                  <div class="rows">
+                    <div class="row-item">
+                      <div class="l">Нагрузка к доходу</div>
+                      <div class="r">86%</div>
+                    </div>
+                    <div class="row-item">
+                      <div class="l">Просрочки</div>
+                      <div class="r">8 500 ₽</div>
+                    </div>
+                    <div class="row-item">
+                      <div class="l">Чистый поток</div>
+                      <div class="r">+6 400 ₽</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="nav">
+                <div class="row">
+                  <div class="item" aria-label="Главная">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 10.5 12 4l8 6.5V20a1 1 0 0 1-1 1h-5v-6H10v6H5a1 1 0 0 1-1-1v-9.5Z"/></svg>
+                  </div>
+                  <div class="item" aria-label="Финансы">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 10V7a5 5 0 0 1 10 0v3"/><path d="M6 10h12v10a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V10Z"/><path d="M10 14h4"/></svg>
+                  </div>
+                  <div class="item active" aria-label="Аналитика">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 19V5"/><path d="M4 19h16"/><path d="M7 15l4-4 3 3 5-6"/></svg>
+                  </div>
+                  <div class="item" aria-label="Меню">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 7h14"/><path d="M5 12h14"/><path d="M5 17h14"/></svg>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="caption">Аналитика: 3 карточки — “цель”, “динамика”, “риски”. Каждая отвечает на один вопрос.</div>
+        </div>
+        <aside class="notes">
+          <h3>Подача для инвесторов</h3>
+          <ul>
+            <li>Показываем, что игра <b>учит дисциплине</b>: серия “чистых месяцев”.</li>
+            <li>Мини‑графики — чтобы продемонстрировать потенциал развития: история, прогноз, инсайты.</li>
+            <li>Свод “рисков” — объяснимо: нагрузка, просрочки, поток.</li>
+          </ul>
+        </aside>
+      </div>
+    </section>
+
+    <section class="page">
+      <div class="page-title">
+        <h2>Игра: События (оверлей-карусель)</h2>
+        <div class="hint">Цель: удержать фокус на решении, не перекрывая смысл интерфейса</div>
+      </div>
+      <div class="grid-2">
+        <div>
+          <div class="phone">
+            <div class="screen">
+              <div class="hero">
+                <div class="top">
+                  <div class="brand">MQ <span class="badge">События</span></div>
+                  <div class="badge">2 активных</div>
+                </div>
+                <h3>Выбор и последствия</h3>
+                <p>Короткий текст + 2 варианта. Сильный акцент на последствиях.</p>
+              </div>
+              <div class="content">
+                <div class="card">
+                  <p class="title">Карточка события</p>
+                  <p class="sub">“Сломалась техника. Починить сейчас или отложить?”</p>
+                  <div class="pill-row">
+                    <span class="pill"><span class="dot bad"></span>Риск: просрочка</span>
+                    <span class="pill"><span class="dot"></span>Период: 7</span>
+                  </div>
+                  <div class="btn-row">
+                    <div class="btn primary">Починить −6 000 ₽</div>
+                    <div class="btn ghost">Отложить · риск ↑</div>
+                  </div>
+                </div>
+                <div class="card">
+                  <p class="title">Почему так</p>
+                  <p class="sub">События — механизм обучения: показывают trade‑off и повторяемые модели решений.</p>
+                </div>
+              </div>
+              <div class="nav">
+                <div class="row">
+                  <div class="item" aria-label="Главная">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 10.5 12 4l8 6.5V20a1 1 0 0 1-1 1h-5v-6H10v6H5a1 1 0 0 1-1-1v-9.5Z"/></svg>
+                  </div>
+                  <div class="item" aria-label="Финансы">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 10V7a5 5 0 0 1 10 0v3"/><path d="M6 10h12v10a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V10Z"/><path d="M10 14h4"/></svg>
+                  </div>
+                  <div class="item" aria-label="Аналитика">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 19V5"/><path d="M4 19h16"/><path d="M7 15l4-4 3 3 5-6"/></svg>
+                  </div>
+                  <div class="item active" aria-label="Меню">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 7h14"/><path d="M5 12h14"/><path d="M5 17h14"/></svg>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="caption">События: одна карточка = один выбор. Всё лишнее прячем, чтобы не создавать шум.</div>
+        </div>
+        <aside class="notes">
+          <h3>Минимализм при большом объёме</h3>
+          <ul>
+            <li>Ставим “скелет”: заголовок → 2 строки текста → 2 кнопки → 2–3 маркера.</li>
+            <li>Приоритет — <b>последствия</b>, а не “красивый текст”.</li>
+            <li>Карусель = удерживает фокус, не превращая всё в список.</li>
+          </ul>
+        </aside>
+      </div>
+    </section>
+
+    <section class="page">
+      <div class="page-title">
+        <h2>Игра: Меню (сессия и аккаунт)</h2>
+        <div class="hint">Цель: 3 действия, никаких “настроек ради настроек”</div>
+      </div>
+      <div class="grid-2">
+        <div>
+          <div class="phone">
+            <div class="screen">
+              <div class="hero">
+                <div class="top">
+                  <div class="brand">MQ <span class="badge">Меню</span></div>
+                  <div class="badge">Сессия</div>
+                </div>
+                <h3>Управление</h3>
+                <p>Новая игра, выбор сохранения, выход.</p>
+              </div>
+              <div class="content">
+                <div class="card">
+                  <p class="title">Действия</p>
+                  <p class="sub">Для инвесторской демо‑версии: всё по делу.</p>
+                  <div class="btn-row">
+                    <div class="btn primary">Новая игра</div>
+                    <div class="btn ghost">Выбрать сохранение</div>
+                  </div>
+                  <div class="btn-row">
+                    <div class="btn ghost">Выйти</div>
+                    <div class="btn ghost">О проекте</div>
+                  </div>
+                </div>
+                <div class="card">
+                  <p class="title">Статус билда</p>
+                  <p class="sub">v1: easy‑механики, события, инвестиции, страховки. Далее — hard‑экономика.</p>
+                </div>
+              </div>
+              <div class="nav">
+                <div class="row">
+                  <div class="item" aria-label="Главная">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 10.5 12 4l8 6.5V20a1 1 0 0 1-1 1h-5v-6H10v6H5a1 1 0 0 1-1-1v-9.5Z"/></svg>
+                  </div>
+                  <div class="item" aria-label="Финансы">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 10V7a5 5 0 0 1 10 0v3"/><path d="M6 10h12v10a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V10Z"/><path d="M10 14h4"/></svg>
+                  </div>
+                  <div class="item" aria-label="Аналитика">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 19V5"/><path d="M4 19h16"/><path d="M7 15l4-4 3 3 5-6"/></svg>
+                  </div>
+                  <div class="item active" aria-label="Меню">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 7h14"/><path d="M5 12h14"/><path d="M5 17h14"/></svg>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="caption">Меню: всё коротко. Доп. инфо (“о проекте”) — опционально и не конкурирует с CTA.</div>
+        </div>
+        <aside class="notes">
+          <h3>Почему так</h3>
+          <ul>
+            <li>Меню не должно “съедать” дизайн: простая карточка с действиями.</li>
+            <li>Для демо инвесторам — можно добавить “О проекте” и “Roadmap”, но держать 2‑й важностью.</li>
+          </ul>
+        </aside>
+      </div>
+    </section>
+  </body>
+</html>
+

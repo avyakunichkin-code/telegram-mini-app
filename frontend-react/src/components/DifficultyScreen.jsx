@@ -1,6 +1,7 @@
 import { useState } from 'react';
-import { Button, Input, Cell, Section, Select } from '@telegram-apps/telegram-ui';
+import { Button, Input, Select } from '@telegram-apps/telegram-ui';
 import { showNotification } from './notifications';
+import { MqxShell } from './MqxShell';
 
 export function DifficultyScreen({ onNext, onBack }) {
   const [profileName, setProfileName] = useState('');
@@ -25,47 +26,49 @@ export function DifficultyScreen({ onNext, onBack }) {
   };
 
   return (
-    <form
-      className="mq-page mq-stack mq-stack-animate mq-stack--tight"
-      onSubmit={handleSubmit}
-      style={{ padding: '12px 12px calc(24px + env(safe-area-inset-bottom, 0))' }}
+    <MqxShell
+      header={
+        <header className="mqx-hero mqx-hero--tab">
+          <div className="mqx-hero__glow" aria-hidden />
+          <div className="mqx-hero__top">
+            <div className="mqx-hero-pills">
+              <span className="mqx-hero-pill mqx-hero-pill--brand">MQ</span>
+              <span className="mqx-hero-pill">Новая игра</span>
+            </div>
+            <span className="mqx-hero-pill mqx-hero-pill--ghost">Шаг 1/2</span>
+          </div>
+          <div className="mqx-hero__title mqx-hero__title--tab">Сложность и темп</div>
+          <div className="mqx-hero__sub">Название слота, режим экономики и длительность «месяца».</div>
+        </header>
+      }
     >
-      <div className="mq-page__decor" aria-hidden />
-      <div className="mq-enter-item">
-      <Section header="Выбор сложности">
-        <div className="mq-screen-intro">
-          Имя слота и темп игры (длительность «месяца»). Позже настроите деньги и долги на следующем шаге.
-        </div>
-        <Cell multiline subtitle="Отображается в списке сохранений и в шапке профиля">
-          <Input
-            header="Название сохранения"
-            value={profileName}
-            onChange={(e) => setProfileName(e.target.value)}
-            placeholder="Мой первый профиль"
-            required
-          />
-        </Cell>
-        <Cell multiline subtitle="Правила экономики и давление по событиям">
-          <Select
-            header="Режим"
-            value={mode}
-            onChange={(e) => setMode(e.target.value)}
-          >
-            <option value="light">Light — мягкий старт</option>
-            <option value="hardcore">Hardcore — больше контроля</option>
-          </Select>
-        </Cell>
-        <Cell multiline subtitle="Сколько секунд длится один игровой период (например 300 = 5 мин)">
-          <Input
-            header="Длительность периода (секунд)"
-            type="number"
-            value={periodDuration}
-            onChange={(e) => setPeriodDuration(Number(e.target.value))}
-            placeholder="300"
-          />
-        </Cell>
-        <Cell>
-          <div className="mq-actions-stack">
+      <form onSubmit={handleSubmit}>
+        <div className="mqx-card">
+          <div className="mqx-card__title">Параметры</div>
+          <div className="mqx-card__sub">Минимум настроек — максимум контроля.</div>
+
+          <div className="mqx-form" style={{ marginTop: 12 }}>
+            <Input
+              header="Название сохранения"
+              value={profileName}
+              onChange={(e) => setProfileName(e.target.value)}
+              placeholder="Мой первый профиль"
+              required
+            />
+            <Select header="Режим" value={mode} onChange={(e) => setMode(e.target.value)}>
+              <option value="light">Light — мягкий старт</option>
+              <option value="hardcore">Hardcore — больше контроля</option>
+            </Select>
+            <Input
+              header="Длительность периода (сек)"
+              type="number"
+              value={periodDuration}
+              onChange={(e) => setPeriodDuration(Number(e.target.value))}
+              placeholder="300"
+            />
+          </div>
+
+          <div className="mq-actions-stack" style={{ marginTop: 12 }}>
             <Button type="submit" mode="filled" stretched>
               Далее: базовые параметры
             </Button>
@@ -73,9 +76,8 @@ export function DifficultyScreen({ onNext, onBack }) {
               Назад
             </Button>
           </div>
-        </Cell>
-      </Section>
-      </div>
-    </form>
+        </div>
+      </form>
+    </MqxShell>
   );
 }

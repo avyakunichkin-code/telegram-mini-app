@@ -1,7 +1,9 @@
 import { useState, useEffect } from 'react';
-import { Button, Cell, Section, List, Modal, Spinner } from '@telegram-apps/telegram-ui';
+import { Button, List, Modal, Spinner } from '@telegram-apps/telegram-ui';
 import { useAuth } from '../context/AuthContext';
 import { API } from '../api';
+import { MqxShell } from './MqxShell';
+import { MoneyText } from './MoneyText';
 
 export function StartMenuScreen({ onNewGame, onLoadGame, onLogout }) {
   const [profiles, setProfiles] = useState([]);
@@ -38,10 +40,26 @@ export function StartMenuScreen({ onNewGame, onLoadGame, onLogout }) {
 
   if (loading) {
     return (
-      <div className="mq-page mq-page--center" style={{ padding: 16 }}>
-        <div className="mq-page__decor" aria-hidden />
-        <Spinner />
-      </div>
+      <MqxShell
+        header={
+          <header className="mqx-hero mqx-hero--tab">
+            <div className="mqx-hero__glow" aria-hidden />
+            <div className="mqx-hero__top">
+              <div className="mqx-hero-pills">
+                <span className="mqx-hero-pill mqx-hero-pill--brand">MQ</span>
+                <span className="mqx-hero-pill">Профили</span>
+              </div>
+              <span className="mqx-hero-pill mqx-hero-pill--ghost">Старт</span>
+            </div>
+            <div className="mqx-hero__title mqx-hero__title--tab">Продолжить игру</div>
+            <div className="mqx-hero__sub">Активный слот — один тап. Остальные сохранения — в списке.</div>
+          </header>
+        }
+      >
+        <div style={{ padding: 24, display: 'grid', placeItems: 'center' }}>
+          <Spinner />
+        </div>
+      </MqxShell>
     );
   }
 
@@ -51,60 +69,81 @@ export function StartMenuScreen({ onNewGame, onLoadGame, onLogout }) {
   };
 
   return (
-    <div className="mq-page mq-stack mq-stack-animate mq-stack--tight" style={{ padding: '12px 12px calc(24px + env(safe-area-inset-bottom, 0))' }}>
-      <div className="mq-page__decor" aria-hidden />
-      <div className="mq-enter-item">
-      <Section header="Игровые профили">
-        <div className="mq-screen-intro">Активный или последний профиль — быстрый старт. Остальные — в «Все сохранения».</div>
+    <MqxShell
+      header={
+        <header className="mqx-hero mqx-hero--tab">
+          <div className="mqx-hero__glow" aria-hidden />
+          <div className="mqx-hero__top">
+            <div className="mqx-hero-pills">
+              <span className="mqx-hero-pill mqx-hero-pill--brand">MQ</span>
+              <span className="mqx-hero-pill">Профили</span>
+            </div>
+            <span className="mqx-hero-pill mqx-hero-pill--ghost">{profiles.length} слотов</span>
+          </div>
+          <div className="mqx-hero__title mqx-hero__title--tab">Продолжить игру</div>
+          <div className="mqx-hero__sub">Выберите активный слот или создайте новый профиль.</div>
+        </header>
+      }
+    >
+      <div className="mqx-card">
+        <div className="mqx-card__title">Активный профиль</div>
+        <div className="mqx-card__sub">Быстрый старт: один тап — и вы в периоде.</div>
+
         {lastProfile ? (
-          <Cell
-            multiline
-            subtitle={`Период ${lastProfile.period_index} · режим ${lastProfile.mode}`}
-            after={
+          <div className="mqx-fin-row" style={{ marginTop: 12 }}>
+            <div className="mqx-fin-row__l">
+              <div className="mqx-fin-row__title">{lastProfile.name}</div>
+              <div className="mqx-fin-row__sub">Период {lastProfile.period_index} · режим {lastProfile.mode}</div>
+            </div>
+            <div className="mqx-fin-row__r">
+              <div className="mqx-fin-row__val">
+                <MoneyText value={Number(lastProfile.cash_balance || 0)} />
+              </div>
               <Button mode="filled" size="s" onClick={() => handleActivate(lastProfile.id)}>
                 Продолжить
               </Button>
-            }
-          >
-            <div className="mq-li-title">{lastProfile.name}</div>
-          </Cell>
+            </div>
+          </div>
         ) : (
-          <Cell multiline subtitle="Создайте первый профиль кнопкой ниже.">
-            <div className="mq-caption-muted" style={{ marginTop: 0 }}>Пока нет сохранений в этом аккаунте.</div>
-          </Cell>
+          <div className="mqx-fin-empty" style={{ marginTop: 12 }}>Пока нет сохранений в этом аккаунте.</div>
         )}
-      </Section>
       </div>
 
-      <div className="mq-enter-item mq-actions-stack">
-        <Button mode="filled" onClick={onNewGame}>Новая игра</Button>
-        <Button mode="outline" onClick={() => setShowLoadModal(true)} disabled={profiles.length === 0}>
-          Все сохранения
-        </Button>
-        <Button mode="plain" onClick={handleLogout}>Выйти</Button>
+      <div className="mqx-card">
+        <div className="mqx-card__title">Действия</div>
+        <div className="mqx-card__sub">Для демо и инвесторской презентации — всё по делу.</div>
+        <div className="mq-actions-stack" style={{ marginTop: 12 }}>
+          <Button mode="filled" onClick={onNewGame}>Новая игра</Button>
+          <Button mode="outline" onClick={() => setShowLoadModal(true)} disabled={profiles.length === 0}>
+            Все сохранения
+          </Button>
+          <Button mode="plain" onClick={handleLogout}>Выйти</Button>
+        </div>
       </div>
 
       <Modal open={showLoadModal} onClose={() => setShowLoadModal(false)}>
-        <Section header="Все сохранения">
-          <div className="mq-screen-intro">Выберите слот и нажмите «Загрузить», чтобы сделать его активным.</div>
-          <List>
-            {otherProfiles.map(profile => (
-              <Cell
-                key={profile.id}
-                multiline
-                subtitle={`Период ${profile.period_index} · режим ${profile.mode}`}
-                after={
-                  <Button mode="filled" size="s" onClick={() => { handleActivate(profile.id); setShowLoadModal(false); }}>
-                    Загрузить
-                  </Button>
-                }
-              >
-                <div className="mq-li-title">{profile.name}</div>
-              </Cell>
-            ))}
-          </List>
-        </Section>
+        <div className="mqx-modal">
+          <div className="mqx-card">
+            <div className="mqx-card__title">Все сохранения</div>
+            <div className="mqx-card__sub">Выберите слот и нажмите «Загрузить».</div>
+            <List>
+              {otherProfiles.map(profile => (
+                <div key={profile.id} className="mqx-fin-row" style={{ marginTop: 10 }}>
+                  <div className="mqx-fin-row__l">
+                    <div className="mqx-fin-row__title">{profile.name}</div>
+                    <div className="mqx-fin-row__sub">Период {profile.period_index} · режим {profile.mode}</div>
+                  </div>
+                  <div className="mqx-fin-row__r">
+                    <Button mode="filled" size="s" onClick={() => { handleActivate(profile.id); setShowLoadModal(false); }}>
+                      Загрузить
+                    </Button>
+                  </div>
+                </div>
+              ))}
+            </List>
+          </div>
+        </div>
       </Modal>
-    </div>
+    </MqxShell>
   );
 }

@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Button, Input, Cell, Section } from '@telegram-apps/telegram-ui';
 import { useAuth } from '../context/AuthContext';
+import { MqxFrame } from './MqxFrame';
 
 export function LoginForm({ onSwitchToRegister }) {
   const [username, setUsername] = useState('');
@@ -25,45 +26,42 @@ export function LoginForm({ onSwitchToRegister }) {
   };
 
   return (
-    <form className="mq-page mq-page--auth" onSubmit={handleSubmit}>
-      <div className="mq-page__decor" aria-hidden />
-      <div className="mq-auth-inner mq-stack mq-stack-animate mq-stack--tight">
-      <div className="mq-enter-item">
-      <Section header="Вход">
-        <div className="mq-screen-intro">Тот же визуальный язык, что в игре: короткие подписи и один основной шаг.</div>
-        <Cell multiline subtitle="Как при регистрации, латиницей">
-          <Input
-            header="Имя пользователя"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            placeholder="username"
-          />
-        </Cell>
-        <Cell>
-          <Input
-            header="Пароль"
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            placeholder="••••••"
-          />
-        </Cell>
-        {error ? (
-          <Cell>
-            <div className="mq-form-alert">{error}</div>
+    <MqxFrame contentClassName="mqx-auth">
+      <form onSubmit={handleSubmit}>
+        <Section header="Вход">
+          <div className="mq-screen-intro">Тот же визуальный язык, что в игре: короткие подписи и один основной шаг.</div>
+          <Cell multiline subtitle="Как при регистрации, латиницей">
+            <Input
+              header="Имя пользователя"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              placeholder="username"
+            />
           </Cell>
-        ) : null}
-        <Cell>
-          <div className="mq-actions-stack">
-            <Button mode="filled" type="submit" stretched>Войти</Button>
-            <Button mode="plain" type="button" stretched onClick={onSwitchToRegister}>
-              Нет аккаунта? Зарегистрироваться
-            </Button>
-          </div>
-        </Cell>
-      </Section>
-      </div>
-      </div>
-    </form>
+          <Cell>
+            <Input
+              header="Пароль"
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="••••••"
+            />
+          </Cell>
+          {error ? (
+            <Cell>
+              <div className="mq-form-alert">{error}</div>
+            </Cell>
+          ) : null}
+          <Cell>
+            <div className="mq-actions-stack">
+              <Button mode="filled" type="submit" stretched>Войти</Button>
+              <Button mode="plain" type="button" stretched onClick={onSwitchToRegister}>
+                Нет аккаунта? Зарегистрироваться
+              </Button>
+            </div>
+          </Cell>
+        </Section>
+      </form>
+    </MqxFrame>
   );
 }
