@@ -25,6 +25,9 @@ router = APIRouter(prefix="/api/finance", tags=["finance"])
 
 EPSILON = 1e-6
 
+# Победа недоступна в периодах 1..6; с периода 7 условия могут быть выполнены.
+MIN_PERIOD_INDEX_FOR_WIN = 7
+
 
 def _cash_required_to_close(liability: FinanceLiability) -> float:
     return float(liability.overdue_amount or 0) + float(liability.total_debt or 0)
@@ -496,7 +499,13 @@ async def finance_overview(
     win_target_safety_fund = float(total_monthly_obligations) * 3.0
     win_progress_safety_fund = 1.0 if win_target_safety_fund <= 0 else float(profile.safety_fund_balance) / win_target_safety_fund
     win_ready = (total_overdue_amount <= 0) and (net_cashflow >= 0)
-    win_reached = win_ready and (float(profile.safety_fund_balance) >= win_target_safety_fund) and (win_target_safety_fund > 0)
+    win_allowed_by_period = int(profile.period_index) >= MIN_PERIOD_INDEX_FOR_WIN
+    win_reached = (
+        win_allowed_by_period
+        and win_ready
+        and (float(profile.safety_fund_balance) >= win_target_safety_fund)
+        and (win_target_safety_fund > 0)
+    )
 
     return FinanceOverview(
         salary=SalaryProfileResponse(

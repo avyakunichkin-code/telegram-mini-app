@@ -1,6 +1,6 @@
 /** Мини-линейные графики без зависимостей (видна траектория по закрытым периодам + текущий снимок). */
 
-function SparkLineSvg({ series, title, subtitle, accent = 'violet' }) {
+export function SparkLineSvg({ series, title, subtitle, accent = 'violet', dark = false, height = 48 }) {
   const vals = (series ?? []).filter((v) => Number.isFinite(v));
   if (vals.length === 0) return null;
 
@@ -8,7 +8,7 @@ function SparkLineSvg({ series, title, subtitle, accent = 'violet' }) {
   const max = Math.max(...vals);
   const span = Math.max(max - min, 1e-6);
   const w = 220;
-  const h = 48;
+  const h = height;
   const pad = 4;
   const points = vals
     .map((v, i) => {
@@ -19,12 +19,19 @@ function SparkLineSvg({ series, title, subtitle, accent = 'violet' }) {
     .join(' ');
 
   return (
-    <div className={`mq-spark-block mq-spark-block--${accent}`}>
+    <div className={`mq-spark-block mq-spark-block--${accent}${dark ? ' mq-spark-block--dark' : ''}`}>
       <div className="mq-spark-block__titles">
         <span className="mq-spark-block__title">{title}</span>
         {subtitle ? <span className="mq-spark-block__sub">{subtitle}</span> : null}
       </div>
-      <svg className="mq-sparkline" viewBox={`0 0 ${w} ${h}`} preserveAspectRatio="none" aria-hidden role="presentation">
+      <svg
+        className="mq-sparkline"
+        style={{ height: `${h}px` }}
+        viewBox={`0 0 ${w} ${h}`}
+        preserveAspectRatio="none"
+        aria-hidden
+        role="presentation"
+      >
         <polyline fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" points={points} />
       </svg>
     </div>
@@ -50,13 +57,41 @@ export function AnalyticsBalanceCharts({ timeseriesPayload }) {
         title="Денежный счёт"
         subtitle={`${Number.isFinite(lastCash) ? lastCash.toLocaleString('ru-RU', { maximumFractionDigits: 0 }) : '—'} ₽ · ${tail}`}
         accent="violet"
+        dark={false}
       />
       <SparkLineSvg
         series={cushionSeries}
         title="Подушка безопасности"
         subtitle={`${Number.isFinite(lastCushion) ? lastCushion.toLocaleString('ru-RU', { maximumFractionDigits: 0 }) : '—'} ₽ · ${tail}`}
         accent="emerald"
+        dark={false}
       />
     </div>
+  );
+}
+
+/** Наивный прогноз счёта: хвост истории + 12 шагов по чистому потоку месяца. */
+export function CashForecastSpark({ timeseriesPayload, netMonthly }) {
+  const pts = timeseriesPayload?.points ?? [];
+  const cash = pts.map((p) => Number(p.cash_balance)).filter((v) => Number.isFinite(v));
+  if (cash.length === 0) return null;
+
+  const last = cash[cash.length - 1];
+  const tail = cash.slice(-Math.min(10, cash.length));
+  const net = Number(netMonthly) || 0;
+  const horizon = 12;
+  const projected = Array.from({ length: horizon + 1 }, (_, i) => last + i * net);
+  const series = [...tail.slice(0, -1), ...projected];
+  const endVal = projected[projected.length - 1];
+
+  return (
+    <SparkLineSvg
+      series={series}
+      title="Прогноз счёта"
+      subtitle={`≈ ${Number.isFinite(endVal) ? endVal.toLocaleString('ru-RU', { maximumFractionDigits: 0 }) : '—'} ₽ · +12 пер.`}
+      accent="sky"
+      dark
+      height={56}
+    />
   );
 }

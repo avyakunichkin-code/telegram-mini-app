@@ -4,6 +4,8 @@
 
 Текущий MVP вкладки строится на полях `GET /api/finance/overview` и текстовых блоках ниже не хватает — пункты помечены **(будущее)**.
 
+**Согласование с продуктом:** целевая модель победы и метрик (средний чистый cashflow за **6** периодов, несколько целей из **шаблона**) — [`docs/ideas/money-quest-evolution-after-mvp.md`](ideas/money-quest-evolution-after-mvp.md) §II; отображение «победа недоступна до 7-го периода» при необходимости — из `period_index` в overview.
+
 ---
 
 ## 1. Цели экрана
@@ -82,7 +84,7 @@
 ## 6. Техника и платформа (Telegram Mini App)
 
 - Избегать тяжёлых SVG-чартов там, где достаточно **CSS-баров** и нативного скролла секций.  
-- Опционально одна зависимость уровня **lightweight-chart** только если появится чёткая потребность.  
+- Опционально библиотека **lightweight-chart** (графики) только если появится чёткая потребность — не путать с устаревшим игровым «режимом light».  
 - **Доступность**: для баров добавлять текстовые дубли (процент + сумма) для скринридеров.
 
 ---
@@ -91,6 +93,7 @@
 
 | Файл | Содержание |
 |------|------------|
+| [`docs/ideas/money-quest-evolution-after-mvp.md`](ideas/money-quest-evolution-after-mvp.md) | Целевая концепция Game/Plan и метрики победы |
 | [`MONEY_QUEST_DESIGN_AND_GDD_OUTLINE.md`](MONEY_QUEST_DESIGN_AND_GDD_OUTLINE.md) | Роль аналитики в GDD |
 | [`PRODUCT_BACKLOG.md`](PRODUCT_BACKLOG.md) | Приоритизация задач API и UI |
 | [`brandbook/BRANDBOOK.md`](brandbook/BRANDBOOK.md) | Цвета статусов и типографика KPI |

@@ -84,8 +84,8 @@ function App() {
         <ToastHost />
         <HashRouter>
           <Routes>
-            <Route path="/login" element={<LoginForm onSwitchToRegister={() => window.location.href='/register'} />} />
-            <Route path="/register" element={<RegisterForm onSwitchToLogin={() => window.location.href='/login'} />} />
+            <Route path="/login" element={<LoginForm onSwitchToRegister={() => window.location.href='/telegram-mini-app/#/register'} />} />
+            <Route path="/register" element={<RegisterForm onSwitchToLogin={() => window.location.href='/telegram-mini-app/#/login'} />} />
             <Route path="/" element={
               <AuthGuard>
                 <GameApp />
