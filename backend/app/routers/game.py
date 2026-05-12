@@ -7,6 +7,7 @@ from ..auth import get_current_user
 from ..database import get_db
 from ..game_period import process_period_end
 from ..models import GameProfile, FinanceSalary, FinanceAsset, FinanceLiability, Transaction
+from ..finance_helpers import monthly_interest_payment
 from ..schemas import (GameProfileCreate, GameProfileResponse, TimeConfigUpdate, TimeStatusResponse, GameStartRequest,
                        GameStartResponse, AssetCreate, LiabilityCreate)
 from ..game_time import (
@@ -174,8 +175,10 @@ async def start_new_game(
         asset = FinanceAsset(
             game_profile_id=new_profile.id,
             title=asset_data.title,
+            kind=getattr(asset_data, "kind", None) or "generic",
             asset_value=asset_data.asset_value,
             monthly_maintenance_cost=asset_data.monthly_maintenance_cost,
+            monthly_income=float(getattr(asset_data, "monthly_income", 0) or 0),
             is_active=1
         )
         db.add(asset)
@@ -186,7 +189,7 @@ async def start_new_game(
             title=liability_data.title,
             total_debt=liability_data.total_debt,
             annual_rate_percent=liability_data.annual_rate_percent,
-            monthly_payment=liability_data.monthly_payment,
+            monthly_payment=monthly_interest_payment(liability_data.total_debt, liability_data.annual_rate_percent),
             is_active=1
         )
         db.add(liability)

@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Button, Input, Cell, Section } from '@telegram-apps/telegram-ui';
 import { useAuth } from '../context/AuthContext';
+import { MqxFrame } from './MqxFrame';
 
 export function RegisterForm({ onSwitchToLogin }) {
   const [username, setUsername] = useState('');
@@ -28,48 +29,57 @@ export function RegisterForm({ onSwitchToLogin }) {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <Section header="Регистрация">
-        <Cell>
-          <Input
-            header="Имя пользователя *"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-          />
-        </Cell>
-        <Cell>
-          <Input
-            header="Пароль *"
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-        </Cell>
-        <Cell>
-          <Input
-            header="Полное имя"
-            value={fullName}
-            onChange={(e) => setFullName(e.target.value)}
-          />
-        </Cell>
-        <Cell>
-          <Input
-            header="Email"
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
-        </Cell>
-        {error && <Cell><div style={{ color: 'red' }}>{error}</div></Cell>}
-        <Cell>
-          <Button mode="filled" type="submit" stretched disabled={isSubmitting}>
-            {isSubmitting ? 'Регистрация...' : 'Зарегистрироваться'}
-          </Button>
-        </Cell>
-        <Cell>
-          <Button mode="plain" onClick={onSwitchToLogin}>Уже есть аккаунт? Войти</Button>
-        </Cell>
-      </Section>
-    </form>
+    <MqxFrame contentClassName="mqx-auth">
+      <form onSubmit={handleSubmit}>
+        <Section header="Регистрация">
+          <div className="mq-screen-intro">Поля со звёздочкой обязательны. Остальное можно заполнить позже в профиле.</div>
+          <Cell multiline subtitle="Логин для входа в приложение">
+            <Input
+              header="Имя пользователя *"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+            />
+          </Cell>
+          <Cell>
+            <Input
+              header="Пароль *"
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+          </Cell>
+          <Cell multiline subtitle="Как к вам обращаться в интерфейсе (по желанию)">
+            <Input
+              header="Полное имя"
+              value={fullName}
+              onChange={(e) => setFullName(e.target.value)}
+            />
+          </Cell>
+          <Cell multiline subtitle="Для восстановления и рассылок, если подключим">
+            <Input
+              header="Email"
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
+          </Cell>
+          {error ? (
+            <Cell>
+              <div className="mq-form-alert">{error}</div>
+            </Cell>
+          ) : null}
+          <Cell>
+            <div className="mq-actions-stack">
+              <Button mode="filled" type="submit" stretched disabled={isSubmitting}>
+                {isSubmitting ? 'Регистрация...' : 'Зарегистрироваться'}
+              </Button>
+              <Button mode="plain" type="button" stretched onClick={onSwitchToLogin}>
+                Уже есть аккаунт — войти
+              </Button>
+            </div>
+          </Cell>
+        </Section>
+      </form>
+    </MqxFrame>
   );
 }

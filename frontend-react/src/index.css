@@ -1,12 +1,23 @@
 :root {
+  /* Money Quest palette (fallback вне темы Telegram) — см. docs/brandbook/BRANDBOOK.md */
+  --mq-violet: #6d28d9;
+  --mq-violet-deep: #5b21b6;
+  --mq-emerald: #059669;
+  --mq-emerald-soft: rgba(5, 150, 105, 0.14);
+  --mq-danger: #dc2626;
+  --mq-danger-soft: rgba(220, 38, 38, 0.12);
+  --mq-warning: #d97706;
+  --mq-ink: #0f1115;
+  --mq-line: #e5e7eb;
+
   --text: #6b6375;
   --text-h: #08060d;
   --bg: #fff;
   --border: #e5e4e7;
   --code-bg: #f4f3ec;
-  --accent: #aa3bff;
-  --accent-bg: rgba(170, 59, 255, 0.1);
-  --accent-border: rgba(170, 59, 255, 0.5);
+  --accent: #6d28d9;
+  --accent-bg: rgba(109, 40, 217, 0.1);
+  --accent-border: rgba(109, 40, 217, 0.42);
   --social-bg: rgba(244, 243, 236, 0.5);
   --shadow:
     rgba(0, 0, 0, 0.1) 0 10px 15px -3px, rgba(0, 0, 0, 0.05) 0 4px 6px -2px;
@@ -52,17 +63,1668 @@
 
 body {
   margin: 0;
+  background: var(--tg-theme-secondary-bg-color, var(--tg-theme-bg-color, #f5f6f8));
 }
 
+/* Основная оболочка TMA: колонка + «рамка приложения», компактная типографика */
 #root {
-  width: 1126px;
-  max-width: 100%;
+  --tma-tabbar-height: 56px;
+
+  /* Шкала типографики TMA: не добавлять на экран произвольные размеры (см. BRANDBOOK 4.5) */
+  --mq-fs-body: 15px;
+  --mq-fs-caption: 12px;
+  --mq-fs-small: 11px;
+
+  /*
+   * Основная заливка CTA и ссылки: Quest Violet (бренд), без «голубого» акцента клиента Telegram.
+   * Текст на кнопке остаётся из темы (обычно белый на тёмном / чёрный на светлом — задаёт telegram-ui).
+   */
+  --mq-accent-fill: var(--mq-violet);
+  --mq-accent-link: var(--mq-violet-deep);
+
+  /* telegram-ui tokens */
+  --tgui--button_color: #6d28d9 !important;
+  --tgui--link_color: #5b21b6 !important;
+  --tgui--outline: color-mix(in srgb, #6d28d9 46%, var(--tg-theme-hint-color, #e5e7eb)) !important;
+  --tgui--accent_text_color: #6d28d9 !important;
+  --tgui--primary_code_highlight: #5b21b6 !important;
+  --tgui--toast_accent_color: #6d28d9 !important;
+  --tgui--button_text_color: var(--tg-theme-button-text-color, #ffffff) !important;
+
+  width: 100%;
+  max-width: 480px;
   margin: 0 auto;
-  text-align: center;
-  border-inline: 1px solid var(--border);
+  text-align: left;
   min-height: 100svh;
+  min-height: 100dvh;
   display: flex;
   flex-direction: column;
+  box-sizing: border-box;
+  font-size: 15px;
+  line-height: 1.42;
+  letter-spacing: 0.01px;
+  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, Ubuntu, Cantarell,
+    'Noto Sans', 'Helvetica Neue', Arial, sans-serif;
+  border-left: 1px solid
+    color-mix(in srgb, var(--tg-theme-hint-color, var(--mq-line)) 45%, transparent);
+  border-right: 1px solid
+    color-mix(in srgb, var(--tg-theme-hint-color, var(--mq-line)) 45%, transparent);
+  box-shadow:
+    0 0 0 1px color-mix(in srgb, var(--tg-theme-hint-color, var(--mq-line)) 35%, transparent);
+  background: var(--tg-theme-bg-color, var(--bg));
+  color: var(--tg-theme-text-color, var(--text));
+  font-size: var(--mq-fs-body);
+  line-height: 1.42;
+}
+
+/* На всякий случай дублируем на :root (некоторые компоненты читают токены выше по дереву) */
+:root {
+  --tgui--button_color: #6d28d9 !important;
+  --tgui--link_color: #5b21b6 !important;
+  --tgui--outline: color-mix(in srgb, #6d28d9 46%, #e5e7eb) !important;
+  --tgui--accent_text_color: #6d28d9 !important;
+  --tgui--primary_code_highlight: #5b21b6 !important;
+  --tgui--toast_accent_color: #6d28d9 !important;
+}
+
+/* Кнопки: всегда с рамкой; filled — заливка, outline/plain — остаются библиотечными */
+#root button:not(.tma-nav-icon-btn):not(.events-carousel-dot):not(.events-carousel-arrow):not(.events-overlay-close):not(.mqx-events-choice) {
+  box-shadow: 0 0 0 1px var(--tgui--outline) inset;
+}
+
+/* Компактные поля с подчёркиванием (для мастера «Базовые параметры» и похожих форм) */
+.mq-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  position: relative;
+  z-index: 3;
+}
+
+.mq-field__label {
+  font-size: var(--mq-fs-caption);
+  font-weight: 650;
+  letter-spacing: 0.01em;
+  color: var(--tg-theme-text-color, var(--mq-ink));
+}
+
+.mq-field__input {
+  width: 100%;
+  box-sizing: border-box;
+  border: none;
+  border-bottom: 1.5px solid color-mix(in srgb, var(--tgui--outline), transparent 12%);
+  border-radius: 0;
+  padding: 8px 2px 9px;
+  background: transparent;
+  color: var(--tg-theme-text-color, var(--mq-ink));
+  font: inherit;
+  font-size: var(--mq-fs-body);
+  line-height: 1.25;
+  outline: none;
+  position: relative;
+  z-index: 3;
+  pointer-events: auto;
+}
+
+/* Если в ячейке telegram-ui есть верхний overlay-слой, приподнимаем контентные элементы */
+.mq-field,
+.mq-field__input,
+.mq-add-action,
+.mq-actions-stack button {
+  position: relative;
+  z-index: 3;
+}
+
+/* Внутри Cell: отключаем «активность всей ячейки», чтобы клики шли в реальные контролы */
+#root [class*='tgui-']:has(.mq-field) {
+  cursor: default !important;
+}
+
+/* На случай, если в текущем браузере :has недоступен — просто не даём псевдослою ловить клики */
+#root [class*='tgui-'] .mq-field {
+  pointer-events: auto;
+}
+
+.mq-field__input::placeholder {
+  color: color-mix(in srgb, var(--tg-theme-hint-color, #6b7280), transparent 10%);
+}
+
+.mq-field__input:focus-visible {
+  border-bottom-color: #5b21b6;
+  box-shadow: 0 3px 0 -2px rgba(91, 33, 182, 0.45);
+}
+
+/* Убираем браузерные стрелки у number в WebKit */
+.mq-field__input[type='number']::-webkit-outer-spin-button,
+.mq-field__input[type='number']::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* И в Firefox */
+.mq-field__input[type='number'] {
+  -moz-appearance: textfield;
+}
+
+/* Hover/глубина для filled-кнопок (не трогаем outline/plain) */
+@media (hover: hover) {
+  #root button:not(.tma-nav-icon-btn):not(.events-carousel-dot):not(.events-carousel-arrow):not(.events-overlay-close):not(.mqx-events-choice) {
+    transition:
+      background-color 0.14s ease,
+      box-shadow 0.14s ease,
+      transform 0.12s cubic-bezier(0.22, 1, 0.32, 1);
+  }
+  #root button:not(.tma-nav-icon-btn):not(.events-carousel-dot):not(.events-carousel-arrow):not(.events-overlay-close):not(.mqx-events-choice):active:not(:disabled) {
+    transform: scale(0.985);
+  }
+  /* filled у telegram-ui использует var(--tgui--button_color) — затемняем только его */
+  #root button:not(.tma-nav-icon-btn):not(.events-carousel-dot):not(.events-carousel-arrow):not(.events-overlay-close):not(.mqx-events-choice)[style*='--tgui--button_color'],
+  #root button:not(.tma-nav-icon-btn):not(.events-carousel-dot):not(.events-carousel-arrow):not(.events-overlay-close):not(.mqx-events-choice)[class*='tgui-']:where(:not(:disabled)) {
+    /* оставляем библиотечные состояния; глубина достигается рамкой и лёгким transform */
+  }
+}
+
+/* Убираем подсветку строк/блоков при наведении (desktop) */
+@media (hover: hover) {
+  #root [class*='tgui-'][class*='Cell']:hover,
+  #root [class*='tgui-'][class*='cell']:hover,
+  #root [class*='tgui-'][role='button']:hover {
+    background-color: transparent !important;
+  }
+}
+
+/* Библиотечный overlay-слой для нажатий/подсветки: не должен блокировать вложенные контролы */
+#root .tgui-8071f6e38c77bc0b {
+  pointer-events: none;
+}
+
+/* ==========================================================================
+ * Premium dashboard (GameScreen -> DashboardPremium)
+ * ========================================================================== */
+
+.mqx-screen {
+  min-height: 100%;
+  padding: 8px 0 0;
+}
+
+.mqx-frame {
+  background:
+    radial-gradient(circle at 12% -6%, rgba(109, 40, 217, 0.10), transparent 44%),
+    radial-gradient(circle at 92% 10%, rgba(217, 70, 239, 0.08), transparent 42%),
+    radial-gradient(circle at 70% 92%, rgba(5, 150, 105, 0.08), transparent 42%),
+    linear-gradient(180deg, #ffffff 0%, #fbfbff 100%);
+  border: 1px solid color-mix(in srgb, var(--mq-line) 70%, transparent);
+  border-radius: 18px;
+  overflow: hidden;
+  box-shadow: 0 22px 55px rgba(15, 17, 21, 0.14);
+  color: var(--mq-ink);
+}
+
+.mqx-hero {
+  position: relative;
+  padding: 18px 18px 14px;
+  background: linear-gradient(135deg, #6d28d9 0%, #5b21b6 52%, #4338ca 100%);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.18);
+  overflow: hidden;
+}
+
+.mqx-hero__glow {
+  position: absolute;
+  inset: 0;
+  opacity: 0.18;
+  background: radial-gradient(circle at top right, #ffffff, transparent 35%);
+  pointer-events: none;
+}
+
+.mqx-hero__top {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.mqx-hero__kicker {
+  font-size: var(--mq-fs-small);
+  text-transform: uppercase;
+  letter-spacing: 0.26em;
+  color: rgba(245, 243, 255, 0.72);
+}
+
+.mqx-hero__title {
+  margin-top: 8px;
+  font-size: 26px;
+  line-height: 1.02;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  color: #fff;
+}
+
+.mqx-period-chip {
+  border-radius: 14px;
+  padding: 10px 12px;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  backdrop-filter: blur(16px);
+  text-align: right;
+  flex-shrink: 0;
+}
+
+.mqx-period-chip__label {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  color: rgba(245, 243, 255, 0.7);
+}
+
+.mqx-period-chip__value {
+  font-size: 18px;
+  font-weight: 800;
+  color: #fff;
+  font-variant-numeric: tabular-nums;
+}
+
+.mqx-hero__mid {
+  position: relative;
+  margin-top: 14px;
+  display: flex;
+  gap: 12px;
+  align-items: stretch;
+}
+
+.mqx-timer {
+  flex: 1;
+  border-radius: 14px;
+  padding: 12px 14px;
+  background: rgba(0, 0, 0, 0.22);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.mqx-timer__label {
+  font-size: var(--mq-fs-caption);
+  color: rgba(245, 243, 255, 0.68);
+}
+
+.mqx-timer__value {
+  margin-top: 4px;
+  font-size: 28px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: #fff;
+  font-variant-numeric: tabular-nums;
+}
+
+.mqx-hero-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.mqx-btn {
+  appearance: none;
+  border-radius: 14px;
+  padding: 11px 14px;
+  min-width: 112px;
+  font-size: var(--mq-fs-body);
+  font-weight: 700;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  background: rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.92);
+  cursor: pointer;
+  transition: transform 0.12s cubic-bezier(0.22, 1, 0.32, 1), opacity 0.15s ease;
+}
+
+.mqx-btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.mqx-btn:active:not(:disabled) {
+  transform: scale(0.985);
+}
+
+.mqx-btn--filled {
+  background: #ffffff;
+  border-color: rgba(255, 255, 255, 0.22);
+  color: #0b1020;
+}
+
+.mqx-btn--outline {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.mqx-hero__bottom {
+  position: relative;
+  margin-top: 12px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: space-between;
+}
+
+.mqx-pill {
+  border-radius: 14px;
+  padding: 9px 12px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  background: rgba(0, 0, 0, 0.18);
+  color: rgba(255, 255, 255, 0.92);
+  font-size: var(--mq-fs-caption);
+  font-weight: 650;
+  cursor: pointer;
+}
+
+.mqx-pill--events {
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.mqx-pill__badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 6px;
+  margin-left: 6px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.18);
+  font-variant-numeric: tabular-nums;
+}
+
+.mqx-content {
+  padding: 14px 14px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  color: var(--mq-ink);
+}
+
+.mqx-auth {
+  min-height: calc(100svh - 32px);
+  display: grid;
+  place-items: center;
+  padding: 8px 0;
+}
+
+.mqx-hero--tab {
+  padding: 14px 14px 14px;
+}
+
+.mqx-hero__title--tab {
+  margin-top: 10px;
+  font-size: 20px;
+  letter-spacing: -0.02em;
+}
+
+.mqx-hero__sub {
+  margin-top: 6px;
+  font-size: var(--mq-fs-caption);
+  color: rgba(245, 243, 255, 0.82);
+  max-width: 34ch;
+}
+
+.mqx-hero-pills {
+  display: inline-flex;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.mqx-hero-pill {
+  display: inline-flex;
+  align-items: center;
+  height: 26px;
+  padding: 0 10px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.14);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  color: rgba(255, 255, 255, 0.92);
+  font-size: 11px;
+  font-weight: 750;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+.mqx-hero-pill--brand {
+  font-weight: 800;
+  letter-spacing: 0.06em;
+}
+
+.mqx-hero-pill--ghost {
+  background: rgba(255, 255, 255, 0.10);
+}
+
+.mqx-fin {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.mqx-fin-card {
+  overflow: hidden;
+}
+
+.mqx-fin-tabs {
+  margin-top: 12px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.mqx-fin-tab {
+  border: 1px solid color-mix(in srgb, var(--mq-line) 75%, transparent);
+  background: rgba(255, 255, 255, 0.7);
+  border-radius: 12px;
+  padding: 10px 10px;
+  font-size: 13px;
+  font-weight: 750;
+  letter-spacing: -0.01em;
+  color: rgba(15, 17, 21, 0.9);
+  white-space: nowrap;
+}
+
+.mqx-fin-tab--active {
+  background: rgba(109, 40, 217, 0.10);
+  border-color: rgba(109, 40, 217, 0.32);
+  color: rgba(91, 33, 182, 0.98);
+}
+
+.mqx-fin-note {
+  margin-top: 10px;
+  font-size: var(--mq-fs-caption);
+  color: rgba(15, 17, 21, 0.55);
+}
+
+.mqx-fin-longhelp {
+  margin-top: 10px;
+  font-size: var(--mq-fs-caption);
+  line-height: 1.4;
+  color: rgba(15, 17, 21, 0.58);
+}
+
+.mqx-fin-subtabs-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.mqx-fin-subtab {
+  border: 1px solid color-mix(in srgb, var(--mq-line) 75%, transparent);
+  background: rgba(255, 255, 255, 0.72);
+  border-radius: 12px;
+  padding: 10px 10px;
+  font-size: 13px;
+  font-weight: 750;
+  color: rgba(15, 17, 21, 0.88);
+}
+
+.mqx-fin-subtab--active {
+  background: rgba(109, 40, 217, 0.10);
+  border-color: rgba(109, 40, 217, 0.32);
+  color: rgba(91, 33, 182, 0.98);
+}
+
+.mqx-fin-grid-actions {
+  align-items: stretch;
+}
+
+.mqx-fin-bt-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.mqx-fin-toggle-btn.mqx-fin-toggle-btn--active {
+  box-shadow: 0 0 0 2px rgba(109, 40, 217, 0.22);
+}
+
+.mqx-fin-actions-top {
+  display: flex;
+  justify-content: flex-start;
+}
+
+.mqx-fin-row--positions {
+  align-items: center;
+}
+
+.mqx-fin-row--positions .mqx-fin-row__r {
+  flex-direction: row;
+  align-items: center;
+  gap: 10px;
+}
+
+.mqx-fin-acc-list {
+  display: grid;
+  gap: 8px;
+}
+
+.mqx-fin-acc {
+  border: 1px solid color-mix(in srgb, var(--mq-line) 75%, transparent);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.72);
+  overflow: hidden;
+}
+
+.mqx-fin-acc-trigger {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 11px 12px;
+  border: none;
+  background: transparent;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  color: rgba(15, 17, 21, 0.92);
+}
+
+.mqx-fin-acc-title {
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+}
+
+.mqx-fin-acc-chev {
+  font-size: 12px;
+  color: rgba(15, 17, 21, 0.45);
+}
+
+.mqx-fin-acc-body {
+  padding: 0 12px 11px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.mqx-fin-acc-meta {
+  font-size: var(--mq-fs-caption);
+  color: rgba(15, 17, 21, 0.55);
+  line-height: 1.35;
+  min-width: 0;
+}
+
+.mqx-fin-icon-btn {
+  flex-shrink: 0;
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  border: 1px solid rgba(91, 33, 182, 0.28);
+  background: linear-gradient(135deg, rgba(109, 40, 217, 0.92), rgba(91, 33, 182, 0.95));
+  color: #fff;
+  font-size: 18px;
+  font-weight: 800;
+  line-height: 1;
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+}
+
+.mqx-fin-icon-btn--minus {
+  background: rgba(255, 255, 255, 0.86);
+  border: 1px solid color-mix(in srgb, var(--mq-line) 70%, transparent);
+  color: rgba(220, 38, 38, 0.95);
+}
+
+.mqx-fin-icon-btn--plus:active,
+.mqx-fin-icon-btn--minus:active {
+  transform: scale(0.96);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mqx-fin-icon-btn--plus:active,
+  .mqx-fin-icon-btn--minus:active {
+    transform: none;
+  }
+}
+
+.mqx-fin-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.mqx-fin-grid > :nth-child(3),
+.mqx-fin-grid > :nth-child(4) {
+  margin-top: -4px;
+}
+
+.mqx-fin-grid--2 {
+  grid-template-columns: 1fr 1fr;
+}
+
+.mqx-fin-span2 {
+  grid-column: 1 / -1;
+}
+
+.mqx-fin-divider {
+  margin-top: 12px;
+  height: 1px;
+  background: color-mix(in srgb, var(--mq-line) 80%, transparent);
+}
+
+.mqx-fin-list {
+  display: grid;
+  gap: 10px;
+}
+
+.mqx-fin-empty {
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: rgba(15, 17, 21, 0.03);
+  border: 1px dashed color-mix(in srgb, var(--mq-line) 80%, transparent);
+  color: rgba(15, 17, 21, 0.55);
+  font-size: var(--mq-fs-caption);
+}
+
+.mqx-fin-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: 12px;
+  border: 1px solid color-mix(in srgb, var(--mq-line) 75%, transparent);
+  background: rgba(255, 255, 255, 0.66);
+}
+
+.mqx-fin-row__l {
+  min-width: 0;
+}
+
+.mqx-fin-row__title {
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  color: rgba(15, 17, 21, 0.92);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.mqx-fin-row__sub {
+  margin-top: 4px;
+  font-size: var(--mq-fs-caption);
+  color: rgba(15, 17, 21, 0.55);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.mqx-fin-row__r {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: flex-end;
+  flex-shrink: 0;
+}
+
+.mqx-fin-row__val {
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+}
+
+.mqx-fin-pair {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+}
+
+.mqx-fin-subcard {
+  border: 1px solid color-mix(in srgb, var(--mq-line) 75%, transparent);
+  border-radius: 14px;
+  padding: 12px;
+  background: rgba(255, 255, 255, 0.62);
+}
+
+.mqx-fin-subhead {
+  font-size: 14px;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  color: rgba(15, 17, 21, 0.92);
+  margin-bottom: 10px;
+}
+
+.mqx-form {
+  display: grid;
+  gap: 10px;
+}
+
+/* Modal content inside telegram-ui Modal */
+.mqx-modal {
+  padding: 14px;
+}
+
+.mqx-card,
+.mqx-mini {
+  border: 1px solid color-mix(in srgb, var(--mq-line) 75%, transparent);
+  background: rgba(255, 255, 255, 0.76);
+  backdrop-filter: blur(12px);
+}
+
+.mqx-card {
+  border-radius: 16px;
+  padding: 14px;
+}
+
+.mqx-card--goal {
+  border-color: rgba(5, 150, 105, 0.26);
+  background: linear-gradient(135deg, rgba(5, 150, 105, 0.12), rgba(5, 150, 105, 0.05));
+}
+
+.mqx-card__kicker {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  color: rgba(15, 17, 21, 0.62);
+}
+
+.mqx-card__kicker--emerald {
+  color: rgba(110, 231, 183, 0.9);
+}
+
+.mqx-card__kicker--violet {
+  color: rgba(109, 40, 217, 0.72);
+}
+
+.mqx-card__kicker--amber {
+  color: rgba(245, 158, 11, 0.95);
+}
+
+.mqx-card__title {
+  margin-top: 6px;
+  font-size: 18px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+.mqx-card__sub {
+  margin-top: 4px;
+  font-size: var(--mq-fs-caption);
+  color: rgba(15, 17, 21, 0.55);
+}
+
+.mqx-goal__top {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: flex-start;
+}
+
+.mqx-goal__badge {
+  align-self: flex-start;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: rgba(5, 150, 105, 0.10);
+  border: 1px solid rgba(5, 150, 105, 0.18);
+  color: rgba(5, 150, 105, 0.92);
+  font-size: var(--mq-fs-caption);
+  font-weight: 800;
+}
+
+.mqx-goal__progress {
+  margin-top: 12px;
+}
+
+.mqx-goal__row {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  font-size: var(--mq-fs-caption);
+  color: rgba(15, 17, 21, 0.62);
+}
+
+.mqx-progress {
+  margin-top: 10px;
+  height: 12px;
+  border-radius: 999px;
+  overflow: hidden;
+  background: rgba(15, 17, 21, 0.08);
+}
+
+.mqx-progress__fill {
+  height: 100%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, rgba(5, 150, 105, 0.95), rgba(45, 212, 191, 0.9));
+}
+
+.mqx-block__head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.mqx-block__title {
+  font-size: 16px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+.mqx-link {
+  border: none;
+  background: transparent;
+  padding: 0;
+  color: #5b21b6;
+  font-size: var(--mq-fs-caption);
+  font-weight: 650;
+  cursor: pointer;
+}
+
+.mqx-grid2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.mqx-mini {
+  border-radius: 16px;
+  padding: 12px;
+}
+
+.mqx-mini__icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, rgba(109, 40, 217, 1), rgba(217, 70, 239, 1));
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  display: grid;
+  place-items: center;
+}
+
+.mqx-mini__icon svg {
+  width: 20px;
+  height: 20px;
+  stroke: rgba(255, 255, 255, 0.92);
+  fill: none;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.mqx-accent--violet { background: linear-gradient(135deg, #7c3aed, #d946ef); }
+.mqx-accent--emerald { background: linear-gradient(135deg, #10b981, #2dd4bf); }
+.mqx-accent--sky { background: linear-gradient(135deg, #0ea5e9, #22d3ee); }
+.mqx-accent--amber { background: linear-gradient(135deg, #f59e0b, #fb923c); }
+
+.mqx-mini__label {
+  margin-top: 10px;
+  font-size: var(--mq-fs-caption);
+  color: rgba(15, 17, 21, 0.55);
+}
+
+.mqx-mini__value {
+  margin-top: 4px;
+  font-size: 18px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+.mqx-actions__head,
+.mqx-analytics__head {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: flex-start;
+}
+
+.mqx-xp {
+  border-radius: 14px;
+  padding: 8px 10px;
+  font-size: var(--mq-fs-caption);
+  font-weight: 700;
+  color: rgba(91, 33, 182, 0.95);
+  background: rgba(109, 40, 217, 0.08);
+  border: 1px solid rgba(91, 33, 182, 0.18);
+}
+
+.mqx-action {
+  border-radius: 14px;
+  padding: 14px 12px;
+  border: 1px solid color-mix(in srgb, var(--mq-line) 72%, transparent);
+  background: rgba(255, 255, 255, 0.7);
+  color: rgba(15, 17, 21, 0.92);
+  font-size: var(--mq-fs-body);
+  font-weight: 750;
+  cursor: pointer;
+  transition: transform 0.12s cubic-bezier(0.22, 1, 0.32, 1), border-color 0.15s ease, background 0.15s ease;
+}
+
+.mqx-action:active {
+  transform: scale(0.988);
+}
+
+.mqx-action:hover {
+  border-color: rgba(91, 33, 182, 0.35);
+  background: rgba(109, 40, 217, 0.06);
+}
+
+.mqx-analytics__title {
+  margin-top: 4px;
+  font-size: 20px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+.mqx-score__label {
+  font-size: var(--mq-fs-caption);
+  color: rgba(15, 17, 21, 0.55);
+}
+
+.mqx-score__value {
+  font-size: 34px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: #5b21b6;
+  font-variant-numeric: tabular-nums;
+}
+
+.mqx-bars {
+  margin-top: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.mqx-bars__row {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 6px;
+  font-size: var(--mq-fs-caption);
+}
+
+.mqx-bars__label { color: rgba(15, 17, 21, 0.6); }
+.mqx-bars__value { color: rgba(15, 17, 21, 0.92); font-weight: 700; }
+
+.mqx-bars__track {
+  height: 8px;
+  border-radius: 999px;
+  overflow: hidden;
+  background: rgba(15, 17, 21, 0.08);
+}
+
+.mqx-bars__fill { height: 100%; border-radius: 999px; }
+.mqx-bar--emerald { background: #10b981; }
+.mqx-bar--rose { background: #f43f5e; }
+.mqx-bar--violet { background: #8b5cf6; }
+
+.mqx-xp-card {
+  margin-top: 12px;
+  border-radius: 18px;
+  padding: 12px;
+  border: 1px solid rgba(91, 33, 182, 0.22);
+  background: rgba(109, 40, 217, 0.08);
+}
+
+.mqx-xp-card__row {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  font-size: var(--mq-fs-caption);
+  color: rgba(91, 33, 182, 0.92);
+}
+
+.mqx-xp-card__track {
+  margin-top: 10px;
+  height: 8px;
+  border-radius: 999px;
+  overflow: hidden;
+  background: rgba(0, 0, 0, 0.22);
+}
+
+.mqx-xp-card__fill {
+  height: 100%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, rgba(167, 139, 250, 0.95), rgba(217, 70, 239, 0.9));
+}
+
+/* --- Analytics Premium (редизайн в стиле Dashboard / MQX) --- */
+.mqx-analytics-page {
+  padding-top: 10px;
+}
+
+.mqx-analytics-level {
+  border-radius: 22px;
+  padding: 16px;
+  box-shadow: 0 14px 40px rgba(15, 23, 42, 0.06);
+}
+
+.mqx-analytics-level__top {
+  display: flex;
+  justify-content: space-between;
+  gap: 14px;
+  align-items: flex-start;
+}
+
+.mqx-analytics-level__title {
+  margin-top: 8px;
+  font-size: 22px;
+  font-weight: 850;
+  letter-spacing: -0.03em;
+  line-height: 1.15;
+  color: rgba(15, 17, 21, 0.96);
+}
+
+.mqx-analytics-level__sub {
+  margin: 6px 0 0;
+  font-size: var(--mq-fs-caption);
+  line-height: 1.4;
+  color: rgba(15, 17, 21, 0.52);
+}
+
+.mqx-analytics-level__score-chip {
+  flex-shrink: 0;
+  text-align: right;
+  padding: 10px 14px;
+  border-radius: 18px;
+  background: linear-gradient(135deg, #7c3aed, #d946ef);
+  color: #fff;
+  box-shadow: 0 10px 28px rgba(109, 40, 217, 0.28);
+}
+
+.mqx-analytics-level__score-label {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  opacity: 0.72;
+}
+
+.mqx-analytics-level__score-value {
+  margin-top: 2px;
+  font-size: 28px;
+  font-weight: 850;
+  letter-spacing: -0.03em;
+  font-variant-numeric: tabular-nums;
+}
+
+.mqx-analytics-xp {
+  margin-top: 16px;
+}
+
+.mqx-analytics-xp__row {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  font-size: var(--mq-fs-caption);
+  color: rgba(15, 17, 21, 0.58);
+}
+
+.mqx-analytics-xp__nums {
+  font-weight: 700;
+  color: rgba(15, 17, 21, 0.88);
+}
+
+.mqx-analytics-xp__track {
+  margin-top: 8px;
+  height: 10px;
+  border-radius: 999px;
+  overflow: hidden;
+  background: rgba(15, 17, 21, 0.08);
+}
+
+.mqx-analytics-xp__fill {
+  height: 100%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #7c3aed, #e879f9);
+  transition: width 0.35s ease;
+}
+
+.mqx-card--analytics-goals {
+  border: none;
+  padding: 16px;
+  border-radius: 24px;
+  color: #fff;
+  background: linear-gradient(145deg, #5b21b6 0%, #a21caf 48%, #4c1d95 100%);
+  box-shadow: 0 18px 46px rgba(76, 29, 149, 0.35);
+}
+
+.mqx-analytics-goals__top {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: flex-start;
+}
+
+.mqx-analytics-goals__kicker {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.mqx-analytics-goals__title {
+  margin: 8px 0 0;
+  font-size: 22px;
+  font-weight: 850;
+  letter-spacing: -0.03em;
+  color: rgba(255, 255, 255, 0.98);
+}
+
+.mqx-card--analytics-goals h2 {
+  color: rgba(255, 255, 255, 0.98);
+}
+
+.mqx-analytics-goals__badge {
+  text-align: right;
+  padding: 8px 12px;
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+}
+
+.mqx-analytics-goals__badge-label {
+  font-size: 10px;
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.mqx-analytics-goals__badge-value {
+  font-size: 22px;
+  font-weight: 850;
+  font-variant-numeric: tabular-nums;
+}
+
+.mqx-analytics-goals__list {
+  margin-top: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.mqx-analytics-goal-row__head {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 6px;
+  font-size: var(--mq-fs-caption);
+}
+
+.mqx-analytics-goal-row__label {
+  font-weight: 650;
+  color: rgba(255, 255, 255, 0.92);
+}
+
+.mqx-analytics-goal-row__value {
+  text-align: right;
+  color: rgba(255, 255, 255, 0.72);
+  font-variant-numeric: tabular-nums;
+}
+
+.mqx-analytics-goal-row__value .mq-money__unit {
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.mqx-card--analytics-goals .mq-money__value {
+  color: rgba(255, 255, 255, 0.96);
+}
+
+.mqx-analytics-goal-track {
+  height: 10px;
+  border-radius: 999px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.mqx-analytics-goal-fill {
+  height: 100%;
+  border-radius: 999px;
+}
+
+.mqx-analytics-goal-fill--violet {
+  background: linear-gradient(90deg, #c4b5fd, #f0abfc);
+}
+
+.mqx-analytics-goal-fill--emerald {
+  background: linear-gradient(90deg, #6ee7b7, #5eead4);
+}
+
+.mqx-analytics-goal-fill--sky {
+  background: linear-gradient(90deg, #7dd3fc, #a5f3fc);
+}
+
+.mqx-analytics-cashflow {
+  border-radius: 22px;
+  padding: 16px;
+}
+
+/* После тёмного блока графиков — прохладная «светлая» гамма в тон индиго/ночному */
+.mqx-analytics-cashflow--after-charts {
+  border: 1px solid rgba(99, 102, 241, 0.16);
+  background: linear-gradient(
+    185deg,
+    rgba(238, 242, 255, 0.94) 0%,
+    rgba(255, 255, 255, 0.9) 42%,
+    rgba(248, 250, 252, 0.96) 100%
+  );
+  box-shadow: 0 14px 40px rgba(30, 27, 75, 0.08);
+}
+
+.mqx-analytics-cashflow--after-charts .mqx-analytics-cashflow__title,
+.mqx-analytics-cashflow--after-charts h2.mqx-analytics-cashflow__title,
+.mqx-analytics-cashflow--after-charts h2 {
+  color: rgba(30, 27, 75, 0.96);
+}
+
+.mqx-analytics-cashflow--after-charts .mqx-card__kicker--violet {
+  color: rgba(79, 70, 229, 0.82);
+}
+
+.mqx-analytics-cashflow--after-charts .mqx-analytics-cf-row__label {
+  color: rgba(30, 27, 75, 0.82);
+}
+
+.mqx-analytics-cashflow--after-charts .mqx-analytics-cf-row__amount,
+.mqx-analytics-cashflow--after-charts .mqx-analytics-cf-suffix {
+  color: rgba(51, 65, 85, 0.72);
+}
+
+.mqx-analytics-cashflow--after-charts .mqx-analytics-cf-track {
+  background: rgba(30, 27, 75, 0.1);
+}
+
+.mqx-analytics-cashflow--after-charts .mqx-analytics-cf-fill--emerald {
+  background: linear-gradient(90deg, #2dd4bf, #059669);
+}
+
+.mqx-analytics-cashflow--after-charts .mqx-analytics-cf-fill--violet {
+  background: linear-gradient(90deg, #818cf8, #7c3aed);
+}
+
+.mqx-analytics-cashflow--after-charts .mqx-analytics-cf-fill--rose {
+  background: linear-gradient(90deg, #fb7185, #be123c);
+}
+
+.mqx-analytics-cashflow--after-charts .mqx-analytics-cf-fill--slate {
+  background: linear-gradient(90deg, #94a3b8, #475569);
+}
+
+.mqx-analytics-cashflow__head {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: flex-start;
+}
+
+.mqx-analytics-cashflow__title {
+  margin-top: 4px;
+  font-size: 20px;
+  font-weight: 850;
+  letter-spacing: -0.03em;
+}
+
+.mqx-analytics-cashflow__pill {
+  flex-shrink: 0;
+  padding: 8px 10px;
+  border-radius: 14px;
+  font-size: var(--mq-fs-caption);
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+}
+
+.mqx-analytics-cashflow__pill--pos {
+  background: rgba(16, 185, 129, 0.12);
+  color: rgba(4, 120, 87, 0.95);
+  border: 1px solid rgba(16, 185, 129, 0.22);
+}
+
+.mqx-analytics-cashflow__pill--neg {
+  background: rgba(244, 63, 94, 0.1);
+  color: rgba(190, 18, 60, 0.95);
+  border: 1px solid rgba(244, 63, 94, 0.2);
+}
+
+.mqx-analytics-cashflow__bars {
+  margin-top: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.mqx-analytics-cf-row__head {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 6px;
+  font-size: var(--mq-fs-caption);
+}
+
+.mqx-analytics-cf-row__label {
+  font-weight: 650;
+  color: rgba(15, 17, 21, 0.78);
+}
+
+.mqx-analytics-cf-row__amount {
+  color: rgba(15, 17, 21, 0.55);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.mqx-analytics-cf-suffix {
+  font-weight: 600;
+  color: rgba(15, 17, 21, 0.45);
+}
+
+.mqx-analytics-cf-track {
+  height: 10px;
+  border-radius: 999px;
+  overflow: hidden;
+  background: rgba(15, 17, 21, 0.08);
+}
+
+.mqx-analytics-cf-fill {
+  height: 100%;
+  border-radius: 999px;
+}
+
+.mqx-analytics-cf-fill--emerald {
+  background: linear-gradient(90deg, #34d399, #10b981);
+}
+
+.mqx-analytics-cf-fill--violet {
+  background: linear-gradient(90deg, #8b5cf6, #d946ef);
+}
+
+.mqx-analytics-cf-fill--rose {
+  background: linear-gradient(90deg, #fb7185, #e11d48);
+}
+
+.mqx-analytics-cf-fill--slate {
+  background: linear-gradient(90deg, #94a3b8, #64748b);
+}
+
+.mqx-card--analytics-dark {
+  border-radius: 22px;
+  padding: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  background: linear-gradient(165deg, #0f172a 0%, #1e1b4b 100%);
+  color: #fff;
+  box-shadow: 0 18px 50px rgba(15, 23, 42, 0.35);
+}
+
+/* Переход от фиолетовых «Целей» к тёмной динамике */
+.mqx-card--analytics-goals + .mqx-card--analytics-dark {
+  border-color: rgba(196, 181, 253, 0.28);
+  background: linear-gradient(168deg, rgba(46, 16, 101, 0.55) 0%, #0f172a 32%, #1e1b4b 100%);
+  box-shadow:
+    0 22px 56px rgba(49, 46, 129, 0.38),
+    0 0 0 1px rgba(167, 139, 250, 0.12) inset;
+}
+
+.mqx-analytics-dark__head {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: flex-start;
+}
+
+.mqx-analytics-dark__kicker {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  color: rgba(196, 181, 253, 0.65);
+}
+
+.mqx-analytics-dark__title {
+  margin-top: 4px;
+  font-size: 20px;
+  font-weight: 850;
+  letter-spacing: -0.03em;
+  color: rgba(255, 255, 255, 0.98);
+}
+
+.mqx-card--analytics-dark h2 {
+  color: rgba(255, 255, 255, 0.98);
+}
+
+.mqx-analytics-dark__chip {
+  flex-shrink: 0;
+  padding: 8px 10px;
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.06);
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.mqx-analytics-dark__charts {
+  margin-top: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.mqx-analytics-dark__spark-wrap {
+  border-radius: 16px;
+  padding: 10px 10px 6px;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  background: linear-gradient(180deg, rgba(139, 92, 246, 0.12), transparent);
+}
+
+.mqx-analytics-dark__spark-wrap:last-of-type {
+  background: linear-gradient(180deg, rgba(16, 185, 129, 0.12), transparent);
+}
+
+.mqx-analytics-dark__hint {
+  margin: 4px 0 0;
+  font-size: 11px;
+  line-height: 1.4;
+  color: rgba(255, 255, 255, 0.42);
+}
+
+.mqx-analytics-dark__err {
+  font-size: var(--mq-fs-caption);
+  color: rgba(252, 165, 165, 0.95);
+}
+
+.mqx-analytics-lifestyle {
+  border-radius: 22px;
+  padding: 16px;
+}
+
+.mqx-analytics-lifestyle__head {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: flex-start;
+}
+
+.mqx-analytics-lifestyle__title {
+  margin-top: 4px;
+  font-size: 20px;
+  font-weight: 850;
+  letter-spacing: -0.03em;
+}
+
+.mqx-analytics-lifestyle__stress {
+  text-align: right;
+}
+
+.mqx-analytics-lifestyle__stress-label {
+  font-size: var(--mq-fs-caption);
+  color: rgba(15, 17, 21, 0.5);
+}
+
+.mqx-analytics-lifestyle__stress-value {
+  font-size: 28px;
+  font-weight: 850;
+  color: #ea580c;
+  font-variant-numeric: tabular-nums;
+}
+
+.mqx-analytics-lifestyle__bar-block {
+  margin-top: 14px;
+}
+
+.mqx-analytics-lifestyle__bar-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 6px;
+  font-size: var(--mq-fs-caption);
+}
+
+.mqx-analytics-lifestyle__bar-caption {
+  color: rgba(15, 17, 21, 0.55);
+}
+
+.mqx-analytics-lifestyle__bar-pct {
+  font-weight: 700;
+  color: rgba(15, 17, 21, 0.88);
+}
+
+.mqx-analytics-lifestyle__track {
+  height: 10px;
+  border-radius: 999px;
+  overflow: hidden;
+  background: rgba(15, 17, 21, 0.08);
+}
+
+.mqx-analytics-lifestyle__fill {
+  height: 100%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #fb923c, #f43f5e);
+}
+
+.mqx-analytics-runway {
+  margin-top: 14px;
+  padding: 12px 14px;
+  border-radius: 16px;
+  border: 1px solid color-mix(in srgb, var(--mq-line) 70%, transparent);
+  background: rgba(248, 250, 252, 0.9);
+}
+
+.mqx-analytics-runway__label {
+  font-size: var(--mq-fs-caption);
+  color: rgba(15, 17, 21, 0.52);
+  line-height: 1.35;
+}
+
+.mqx-analytics-runway__value {
+  margin-top: 6px;
+  font-size: 26px;
+  font-weight: 850;
+  letter-spacing: -0.03em;
+}
+
+.mqx-card--analytics-forecast {
+  border-radius: 22px;
+  padding: 16px;
+  border: none;
+  color: #fff;
+  background: linear-gradient(145deg, #111827 0%, #312e81 100%);
+  box-shadow: 0 18px 46px rgba(17, 24, 39, 0.38);
+}
+
+.mqx-analytics-forecast__head {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: flex-start;
+}
+
+.mqx-analytics-forecast__kicker {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  color: rgba(125, 211, 252, 0.65);
+}
+
+.mqx-analytics-forecast__title {
+  margin-top: 4px;
+  font-size: 20px;
+  font-weight: 850;
+  letter-spacing: -0.03em;
+  color: rgba(255, 255, 255, 0.98);
+}
+
+.mqx-card--analytics-forecast h2 {
+  color: rgba(255, 255, 255, 0.98);
+}
+
+.mqx-analytics-forecast__side {
+  text-align: right;
+  padding: 8px 10px;
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.mqx-analytics-forecast__side-label {
+  font-size: 10px;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.mqx-analytics-forecast__side-value {
+  margin-top: 2px;
+  font-size: 16px;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+}
+
+.mqx-analytics-forecast__chart {
+  margin-top: 12px;
+  border-radius: 16px;
+  padding: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  background: rgba(255, 255, 255, 0.04);
+  min-height: 88px;
+}
+
+.mqx-analytics-forecast__placeholder {
+  padding: 20px;
+  text-align: center;
+  font-size: var(--mq-fs-caption);
+  color: rgba(255, 255, 255, 0.45);
+}
+
+.mqx-analytics-forecast__callout {
+  margin-top: 14px;
+  padding: 12px 14px;
+  border-radius: 16px;
+  border: 1px solid rgba(52, 211, 153, 0.2);
+  background: rgba(16, 185, 129, 0.12);
+}
+
+.mqx-analytics-forecast__callout-text {
+  font-size: var(--mq-fs-caption);
+  line-height: 1.4;
+  color: rgba(209, 250, 229, 0.88);
+}
+
+.mqx-analytics-forecast__callout-sum {
+  margin-top: 8px;
+  font-size: 24px;
+  font-weight: 850;
+  letter-spacing: -0.02em;
+}
+
+.mqx-analytics-forecast__callout-sum .mq-money__unit {
+  color: rgba(255, 255, 255, 0.65);
+}
+
+.mqx-analytics-forecast__callout-sum .mq-money__value {
+  color: #fff;
+}
+
+.mqx-analytics-forecast__side-value .mq-money__value {
+  color: rgba(255, 255, 255, 0.96);
+}
+
+.mqx-analytics-forecast__side-value .mq-money__unit {
+  color: rgba(255, 255, 255, 0.55);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mqx-action,
+  .mqx-btn {
+    transition: none;
+  }
+}
+
+.app-shell {
+  text-align: left;
+  flex: 1;
   box-sizing: border-box;
 }
 
@@ -113,17 +1775,1474 @@ code {
 .bottom-nav {
   position: fixed;
   bottom: 0;
-  left: 0;
-  right: 0;
-  background: var(--tg-theme-bg-color);
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: 480px;
+  box-sizing: border-box;
+  background:
+    linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--tg-theme-bg-color, var(--bg)) 86%, transparent) 0%,
+      color-mix(in srgb, var(--tg-theme-bg-color, var(--bg)) 96%, transparent) 100%
+    );
+  backdrop-filter: blur(10px);
+  padding: 8px 6px;
+  display: flex;
+  gap: 4px;
+  justify-content: space-between;
+  align-items: stretch;
+  border-top: 1px solid color-mix(in srgb, var(--tg-theme-hint-color, var(--border)) 50%, transparent);
+  box-shadow:
+    0 -10px 24px color-mix(in srgb, #000 10%, transparent),
+    0 0 0 1px color-mix(in srgb, var(--tg-theme-hint-color, var(--border)) 25%, transparent) inset;
+  min-height: var(--tma-tabbar-height);
+  z-index: 100;
+}
+
+.bottom-nav--icons {
+  padding-top: 6px;
+}
+
+.tma-nav-icon-btn {
+  flex: 1;
+  min-width: 0;
+  max-width: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 46px;
+  margin: 0;
+  padding: 0;
+  border: none;
+  border-radius: 12px;
+  background: transparent;
+  color: var(--tg-theme-hint-color, var(--text));
+  cursor: pointer;
+  transition:
+    background 0.15s ease,
+    color 0.15s ease,
+    transform 0.08s ease;
+}
+
+.tma-nav-icon-btn:active {
+  transform: scale(0.96);
+}
+
+.tma-nav-icon-btn--active {
+  color: var(--tg-theme-button-text-color, #fff);
+  background: var(--mq-accent-fill);
+  box-shadow:
+    0 2px 10px color-mix(in srgb, var(--mq-violet) 28%, transparent),
+    0 0 0 1px color-mix(in srgb, #fff 18%, transparent) inset;
+}
+
+.tma-nav-icon-btn:focus-visible {
+  outline: 2px solid var(--mq-accent-link);
+  outline-offset: 2px;
+}
+
+/* Вкладки «Финансы» */
+.mq-tabs-wrap {
+  margin-bottom: 10px;
+}
+
+.mq-tablist {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 4px;
+  padding: 4px;
+  border-radius: 12px;
+  background: color-mix(in srgb, var(--tg-theme-hint-color, var(--mq-line)) 10%, transparent);
+  border: 1px solid color-mix(in srgb, var(--tg-theme-hint-color, var(--mq-line)) 35%, transparent);
+}
+
+@media (max-width: 400px) {
+  .mq-tablist {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* Вкладки «Финансы» игры: всегда сетка 2×2 для равномерного заполнения ширины */
+.mq-tablist--2x2 {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.mq-fin-wrap {
+  width: 100%;
+}
+
+.mq-fin-shell {
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+.mq-fin-field-grid {
+  display: grid;
+  gap: 10px;
+  width: 100%;
+  box-sizing: border-box;
+  align-items: end;
+}
+
+.mq-fin-field-grid--2 {
+  grid-template-columns: 1fr 1fr;
+}
+
+/* Депозит / облигации: два поля + кнопка в одной сетке */
+.mq-fin-field-grid--with-cta {
+  grid-template-columns: 1fr 1fr auto;
+}
+
+@media (max-width: 392px) {
+  .mq-fin-field-grid--with-cta {
+    grid-template-columns: 1fr 1fr;
+  }
+  .mq-fin-field-grid--with-cta > button {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 352px) {
+  .mq-fin-field-grid--2 {
+    grid-template-columns: 1fr;
+  }
+}
+
+.mq-fin-btn-span2 {
+  grid-column: 1 / -1;
+  justify-self: stretch;
+}
+
+.mq-fin-block-head {
+  margin: 0 0 8px;
+  font-size: var(--mq-fs-caption);
+  font-weight: 650;
+  letter-spacing: 0.02em;
+  color: var(--tg-theme-text-color, var(--mq-ink));
+}
+
+.mq-section-intro {
+  margin: 0 0 10px;
+  padding: 0 20px;
+  font-size: var(--mq-fs-caption);
+  line-height: 1.42;
+  font-weight: 500;
+  color: color-mix(in srgb, var(--tg-theme-text-color, #111) 58%, var(--tg-theme-hint-color, #6b7280));
+}
+
+/* Экраны с внешним padding (стартеры, авторизация): вводный текст без лишней «колонны» */
+.mq-screen-intro {
+  margin: 0 0 10px;
+  padding: 0 20px;
+  font-size: var(--mq-fs-caption);
+  line-height: 1.42;
+  font-weight: 500;
+  color: color-mix(in srgb, var(--tg-theme-text-color, #111) 62%, var(--tg-theme-hint-color, #6b7280));
+}
+
+/* Внутри Section на игровой вкладке: под заголовком, по ширине контента секции */
+.mq-slot-intro {
+  margin: 0 0 10px;
+  padding: 0 20px;
+  font-size: var(--mq-fs-caption);
+  line-height: 1.42;
+  font-weight: 500;
+  color: color-mix(in srgb, var(--tg-theme-text-color, #111) 58%, var(--tg-theme-hint-color, #6b7280));
+}
+
+.mq-add-block {
+  margin-top: 6px;
+  padding-top: 10px;
+  border-top: 1px dashed color-mix(in srgb, var(--tg-theme-hint-color), transparent 68%);
+}
+
+.mq-add-heading {
+  margin: 0 0 8px;
+  font-size: var(--mq-fs-caption);
+  font-weight: 650;
+  color: var(--tg-theme-text-color);
+}
+
+/* Более лёгкие input-подсказки (на базовых формах): не превращаем в еле-серый текст */
+.mq-screen-intro strong,
+.mq-slot-intro strong {
+  font-weight: 650;
+}
+
+.mq-add-action {
+  margin-top: 10px;
+}
+
+.mq-li-title {
+  font-weight: 650;
+  font-size: var(--mq-fs-body);
+  margin-bottom: 2px;
+}
+
+.mq-li-meta {
+  font-size: var(--mq-fs-caption);
+  line-height: 1.42;
+  color: var(--tg-theme-hint-color);
+}
+
+.mq-caption-muted {
+  margin: 8px 0 0;
+  font-size: var(--mq-fs-caption);
+  line-height: 1.42;
+  font-weight: 500;
+  color: var(--tg-theme-hint-color);
+}
+
+.mq-caption-muted:first-child {
+  margin-top: 0;
+}
+
+.mq-in-tab-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.mq-modal-lead {
+  margin: 0 0 8px;
+  font-size: var(--mq-fs-body);
+  font-weight: 650;
+  color: var(--tg-theme-text-color, var(--mq-ink));
+}
+
+.mq-modal-body {
+  margin: 0;
+  font-size: var(--mq-fs-body);
+  line-height: 1.42;
+}
+
+.mq-modal-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.mq-bar-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.mq-period-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.mq-period-actions__row {
+  display: grid;
+  grid-template-columns: 1fr minmax(118px, 36%);
+  gap: 8px;
+  align-items: center;
+}
+
+@media (max-width: 360px) {
+  .mq-period-actions__row {
+    grid-template-columns: 1fr;
+  }
+}
+
+.mq-input-inline--dense {
+  padding: 8px 10px;
+  font-size: var(--mq-fs-caption);
+}
+
+.mq-tab {
+  margin: 0;
+  padding: 8px 4px;
+  border: none;
+  border-radius: 9px;
+  font: inherit;
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1.2;
+  text-align: center;
+  color: var(--tg-theme-text-color, var(--mq-ink));
+  background: transparent;
+  cursor: pointer;
+  transition:
+    background 0.18s cubic-bezier(0.22, 1, 0.32, 1),
+    color 0.18s ease,
+    transform 0.14s cubic-bezier(0.22, 1, 0.32, 1),
+    box-shadow 0.2s ease;
+}
+
+.mq-tab:active:not(.mq-tab--active) {
+  transform: scale(0.96);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mq-tab {
+    transition: background 0.12s ease, color 0.12s ease;
+  }
+}
+
+.mq-tab--active {
+  color: var(--tg-theme-button-text-color, #fff);
+  background: var(--mq-accent-fill);
+  box-shadow: 0 1px 4px color-mix(in srgb, var(--mq-violet) 22%, transparent);
+}
+
+.mq-tab:focus-visible {
+  outline: 2px solid var(--mq-accent-link);
+  outline-offset: 1px;
+}
+
+/* Аналитика: компактные бары */
+.analytics-bar-block {
+  margin-top: 2px;
+}
+
+.analytics-bar-caption {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin-bottom: 4px;
+}
+
+.analytics-bar-caption__title {
+  font-size: var(--mq-fs-caption);
+  font-weight: 650;
+}
+
+.analytics-bar-caption__sub {
+  font-size: var(--mq-fs-caption);
+  color: var(--tg-theme-hint-color);
+}
+
+.analytics-bar-track {
+  height: 10px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--tg-theme-hint-color), transparent 76%);
+  overflow: hidden;
+}
+
+.analytics-bar-fill {
+  height: 100%;
+  border-radius: 999px;
+  transition: width 0.35s ease;
+}
+
+.analytics-bar-fill--success {
+  background: linear-gradient(90deg, var(--mq-emerald), color-mix(in srgb, var(--mq-emerald), #fff 18%));
+}
+
+.analytics-bar-fill--violet {
+  background: linear-gradient(90deg, var(--mq-violet-deep), var(--mq-violet));
+}
+
+.analytics-bar-fill--danger {
+  background: linear-gradient(90deg, var(--mq-danger), color-mix(in srgb, var(--mq-danger), #fff 22%));
+}
+
+.analytics-bar-fill--neutral {
+  background: linear-gradient(
+    90deg,
+    color-mix(in srgb, var(--tg-theme-hint-color), var(--mq-violet) 40%),
+    var(--tg-theme-hint-color)
+  );
+}
+
+/* Деньги и строки статистики */
+.mq-money {
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.mq-money__value {
+  letter-spacing: -0.01em;
+}
+
+.mq-stat-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 6px 0;
+  border-bottom: 1px solid color-mix(in srgb, var(--tg-theme-hint-color), transparent 88%);
+}
+
+.mq-stat-row:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.mq-stat-row__ico {
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.mq-stat-row__mqcoin {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--mq-violet);
+}
+
+.mq-stat-row__mqcoin.mq-stat-row__mqcoin--emerald {
+  color: var(--mq-emerald);
+}
+
+.mq-stat-row__mqcoin svg {
+  display: block;
+}
+
+.mq-stat-row__body {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.mq-stat-row__label {
+  font-size: var(--mq-fs-caption);
+  font-weight: 500;
+  color: var(--tg-theme-hint-color);
+}
+
+.mq-stat-row__value {
+  font-size: var(--mq-fs-body);
+  font-weight: 600;
+  color: var(--tg-theme-text-color);
+}
+
+.mq-stat-ico {
+  color: var(--mq-violet);
+}
+
+.mq-stat-ico--muted {
+  color: color-mix(in srgb, var(--tg-theme-hint-color), var(--mq-violet) 25%);
+}
+
+.mq-stat-ico--emerald {
+  color: var(--mq-emerald);
+}
+
+.mq-stat-ico--danger {
+  color: var(--mq-danger);
+}
+
+.mq-stat-ico--violet {
+  color: var(--mq-violet);
+}
+
+.mq-input-inline {
+  flex: 1;
+  min-width: 0;
   padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid color-mix(in srgb, var(--tg-theme-hint-color), transparent 40%);
+  font: inherit;
+  background: var(--tg-theme-bg-color, var(--bg));
+  color: var(--tg-theme-text-color);
+  box-sizing: border-box;
+}
+
+.mq-streak-row {
   display: flex;
   gap: 10px;
-  justify-content: space-around;
-  border-top: 1px solid var(--tg-theme-hint-color);
-  z-index: 100;
+  align-items: flex-start;
+}
+
+.mq-streak-row__title {
+  font-weight: 650;
+  font-size: var(--mq-fs-body);
+}
+
+.mq-streak-row__text {
+  font-size: var(--mq-fs-caption);
+  line-height: 1.42;
+  opacity: 0.95;
+  margin-top: 2px;
+}
+
+.mq-ts-error {
+  font-size: var(--mq-fs-caption);
+  color: var(--tg-theme-hint-color);
+}
+
+.mq-spark-pair {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.mq-spark-block {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.mq-spark-block__titles {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.mq-spark-block__title {
+  font-size: var(--mq-fs-caption);
+  font-weight: 650;
+}
+
+.mq-spark-block__sub {
+  font-size: var(--mq-fs-caption);
+  color: var(--tg-theme-hint-color);
+}
+
+.mq-sparkline {
+  width: 100%;
+  height: 52px;
+}
+
+.mq-spark-block--violet .mq-sparkline {
+  color: var(--mq-violet);
+}
+
+.mq-spark-block--emerald .mq-sparkline {
+  color: var(--mq-emerald);
+}
+
+.mq-spark-block--sky .mq-sparkline {
+  color: #38bdf8;
+}
+
+.mq-spark-block--dark .mq-spark-block__title {
+  color: rgba(255, 255, 255, 0.78);
+}
+
+.mq-spark-block--dark .mq-spark-block__sub {
+  color: rgba(255, 255, 255, 0.48);
+}
+
+.mq-spark-block--dark.mq-spark-block--violet .mq-sparkline {
+  color: #c4b5fd;
+}
+
+.mq-spark-block--dark.mq-spark-block--emerald .mq-sparkline {
+  color: #6ee7b7;
+}
+
+.mq-spark-block--dark.mq-spark-block--sky .mq-sparkline {
+  color: #7dd3fc;
+}
+
+.mq-spark-hint {
+  margin: 8px 0 0;
+  font-size: var(--mq-fs-caption);
+  line-height: 1.38;
+  color: var(--tg-theme-hint-color);
+}
+
+.mq-stat-row--dense {
+  padding: 4px 0;
 }
 
 .game-content {
   padding-bottom: 80px; /* чтобы контент не перекрывался меню */
+}
+
+.spinner {
+  width: 18px;
+  height: 18px;
+  border: 2px solid color-mix(in srgb, var(--tg-theme-hint-color), transparent 72%);
+  border-top-color: var(--mq-accent-fill);
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* --- Шапка и оболочка игры под TMA --- */
+.tma-app-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  margin-bottom: 10px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid
+    color-mix(in srgb, var(--tg-theme-hint-color, var(--mq-line)) 40%, transparent);
+}
+
+.tma-app-header__text {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  flex: 1;
+  min-width: 0;
+}
+
+.tma-events-trigger-wrap {
+  flex-shrink: 0;
+}
+
+.tma-events-trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px !important;
+}
+
+.tma-events-badge {
+  font-variant-numeric: tabular-nums;
+  font-weight: 700;
+  font-size: 12px;
+  line-height: 1;
+  min-width: 1.35rem;
+  padding: 2px 6px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--tg-theme-bg-color), var(--tg-theme-button-color, var(--mq-violet)) 22%);
+}
+
+.tma-app-header__name {
+  font-weight: 650;
+  font-size: calc(var(--mq-fs-body) + 1px);
+  color: var(--tg-theme-text-color, var(--mq-ink));
+  letter-spacing: -0.02em;
+}
+
+.tma-app-header__tag {
+  font-size: var(--mq-fs-caption);
+  color: var(--tg-theme-hint-color, var(--text));
+}
+
+.mq-logo {
+  flex-shrink: 0;
+}
+
+.tma-bordered-inner {
+  border: 1px solid color-mix(in srgb, var(--tg-theme-hint-color, var(--mq-line)) 42%, transparent);
+  border-radius: 12px;
+  background: color-mix(
+    in srgb,
+    var(--tg-theme-secondary-bg-color, transparent) 40%,
+    var(--tg-theme-bg-color, #fff)
+  );
+}
+
+/* --- События: полный экран ПОД закрытием только × --- */
+.events-overlay-root {
+  position: fixed;
+  inset: 0;
+  z-index: 520;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px;
+  padding-top: calc(12px + env(safe-area-inset-top, 0px));
+  pointer-events: auto;
+}
+
+.events-overlay-backdrop {
+  position: absolute;
+  inset: 0;
+  background: color-mix(in srgb, #000000 42%, transparent);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.events-overlay-panel {
+  position: relative;
+  width: min(448px, 100%);
+  max-height: calc(92dvh - env(safe-area-inset-top, 0px));
+  padding: 14px 14px 12px;
+  border-radius: 16px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  background: var(--tg-theme-bg-color, var(--bg));
+  color: var(--tg-theme-text-color, var(--text));
+  border: 1px solid color-mix(in srgb, var(--tg-theme-hint-color, var(--mq-line)) 40%, transparent);
+  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.25);
+}
+
+.events-overlay-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.events-overlay-toolbar__left {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.events-overlay-title {
+  font-weight: 650;
+  font-size: calc(var(--mq-fs-body) + 2px);
+  letter-spacing: -0.02em;
+}
+
+.events-overlay-tagline {
+  margin: 0;
+  font-size: var(--mq-fs-caption);
+  font-weight: 450;
+  line-height: 1.38;
+  color: var(--tg-theme-hint-color);
+}
+
+.events-overlay-close {
+  flex-shrink: 0;
+  width: 44px;
+  height: 44px;
+  border: none;
+  border-radius: 12px;
+  font-size: 26px;
+  line-height: 1;
+  cursor: pointer;
+  padding: 0;
+  margin: -10px -8px 0 0;
+  color: var(--tg-theme-hint-color);
+  background: transparent;
+}
+
+/* Money Quest Premium — оверлей событий (наследует разметку events-overlay-*) */
+.mqx-events-overlay {
+  z-index: 530;
+}
+
+.mqx-events-backdrop {
+  background: color-mix(in srgb, #0f0a1f 72%, transparent);
+}
+
+.mqx-events-panel.events-overlay-panel {
+  background: linear-gradient(
+    160deg,
+    color-mix(in srgb, var(--tg-theme-bg-color, var(--bg)) 92%, #6d28d9 8%),
+    var(--tg-theme-bg-color, var(--bg))
+  );
+  border: 1px solid color-mix(in srgb, var(--mq-violet, #7c3aed) 38%, transparent);
+  box-shadow:
+    0 22px 60px rgba(15, 10, 40, 0.38),
+    0 0 0 1px color-mix(in srgb, #fff 6%, transparent) inset;
+}
+
+.mqx-events-title {
+  background: linear-gradient(90deg, var(--tg-theme-text-color, var(--text)), var(--mq-violet, #7c3aed));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.mqx-events-sub {
+  max-width: 52ch;
+}
+
+.mqx-events-close {
+  border-radius: 14px;
+  background: color-mix(in srgb, var(--tg-theme-secondary-bg-color, #f4f4f8) 70%, transparent);
+}
+
+.mqx-events-card {
+  width: 100%;
+  padding: 14px;
+  margin: 0;
+  border-radius: 14px;
+  box-sizing: border-box;
+  background: color-mix(in srgb, var(--tg-theme-secondary-bg-color, #eef0f8) 55%, transparent);
+  border: 1px solid color-mix(in srgb, var(--tg-theme-hint-color, var(--mq-line)) 35%, transparent);
+}
+
+.mqx-events-card__kicker {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 8px;
+  font-size: 11px;
+  font-weight: 650;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--tg-theme-hint-color);
+}
+
+.mqx-events-card__kicker-sep {
+  font-weight: 550;
+  letter-spacing: 0.02em;
+}
+
+.mqx-events-card__title {
+  margin: 8px 0 6px;
+  font-size: calc(var(--mq-fs-body) + 4px);
+  font-weight: 720;
+  letter-spacing: -0.03em;
+  line-height: 1.2;
+}
+
+.mqx-events-card__desc {
+  font-size: var(--mq-fs-body);
+  line-height: 1.45;
+  opacity: 0.9;
+}
+
+.mqx-events-card__choices {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 14px;
+}
+
+button.mqx-events-choice {
+  appearance: none;
+  cursor: pointer;
+  width: 100%;
+  padding: 12px 14px;
+  border-radius: 12px;
+  border: 1px solid color-mix(in srgb, var(--mq-violet, #7c3aed) 45%, transparent);
+  font-family: inherit;
+  background: linear-gradient(
+    165deg,
+    color-mix(in srgb, var(--mq-violet, #7c3aed) 22%, transparent),
+    transparent
+  );
+  color: var(--tg-theme-text-color, var(--text));
+  transition: opacity 0.15s ease, transform 0.06s ease;
+  text-align: left;
+}
+
+button.mqx-events-choice:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+button.mqx-events-choice:active:not(:disabled) {
+  transform: translateY(1px);
+}
+
+.mqx-events-choice__title {
+  display: block;
+  font-weight: 680;
+}
+
+.mqx-events-choice__desc {
+  display: block;
+  margin-top: 4px;
+  font-size: var(--mq-fs-caption);
+  opacity: 0.82;
+}
+
+.mqx-events-arrow.events-carousel-arrow {
+  background: color-mix(in srgb, var(--mq-violet, #7c3aed) 18%, transparent);
+}
+
+.events-carousel-dots {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.events-carousel-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 999px;
+  border: none;
+  padding: 0;
+  background: color-mix(in srgb, var(--tg-theme-hint-color), transparent 30%);
+  cursor: pointer;
+}
+
+.events-carousel-dot--active {
+  background: var(--tg-theme-button-color, var(--mq-violet));
+  transform: scale(1.08);
+}
+
+.event-carousel-viewport {
+  position: relative;
+  flex: 1;
+  min-height: clamp(260px, 48vh, 420px);
+  max-height: min(58vh, 520px);
+  overflow: hidden;
+  touch-action: manipulation;
+}
+
+.event-carousel-layer {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.event-carousel-layer--base {
+  z-index: 1;
+}
+
+.event-carousel-layer--top {
+  z-index: 2;
+}
+
+.event-carousel-layer--dim {
+  opacity: 0.5;
+  filter: saturate(0.85);
+}
+
+.event-carousel-layer--enter-next {
+  animation: mqCardEnterRight 0.29s cubic-bezier(0.25, 0.8, 0.25, 1) forwards;
+}
+
+.event-carousel-layer--enter-prev {
+  animation: mqCardEnterLeft 0.29s cubic-bezier(0.25, 0.8, 0.25, 1) forwards;
+}
+
+@keyframes mqCardEnterRight {
+  from {
+    transform: translateX(115%);
+    box-shadow: -12px 0 34px rgba(0, 0, 0, 0.12);
+    opacity: 0.94;
+  }
+  to {
+    transform: translateX(0);
+    box-shadow: 0 0 0 transparent;
+    opacity: 1;
+  }
+}
+
+@keyframes mqCardEnterLeft {
+  from {
+    transform: translateX(-115%);
+    box-shadow: 12px 0 34px rgba(0, 0, 0, 0.12);
+    opacity: 0.94;
+  }
+  to {
+    transform: translateX(0);
+    box-shadow: 0 0 0 transparent;
+    opacity: 1;
+  }
+}
+
+.events-carousel-nav {
+  margin-top: 12px;
+  display: grid;
+  grid-template-columns: 48px minmax(0, 1fr) 48px;
+  gap: 6px;
+  align-items: center;
+}
+
+.events-carousel-arrow {
+  height: 44px;
+  border-radius: 12px;
+  border: none;
+  background: color-mix(in srgb, var(--tg-theme-hint-color), transparent 88%);
+  color: var(--tg-theme-text-color);
+  cursor: pointer;
+  font-size: 22px;
+  line-height: 1;
+  padding-bottom: 2px;
+}
+
+.events-carousel-arrow:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+.events-carousel-counter {
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+  font-size: var(--mq-fs-caption);
+  font-weight: 590;
+  color: var(--tg-theme-hint-color);
+}
+
+.event-deck-choice-hint {
+  margin: 6px 0 0;
+  font-size: var(--mq-fs-caption);
+  line-height: 1.38;
+  color: var(--tg-theme-hint-color);
+}
+
+.event-deck-card {
+  padding: 10px 10px;
+  max-height: 100%;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+.event-carousel-layer--base.event-carousel-layer--dim {
+  pointer-events: none;
+}
+
+.event-deck-card__meta {
+  font-size: var(--mq-fs-caption);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--tg-theme-hint-color);
+  opacity: 0.9;
+}
+
+.event-deck-card__title {
+  font-weight: 650;
+  font-size: var(--mq-fs-body);
+  margin: 2px 0 4px;
+  color: var(--tg-theme-text-color);
+}
+
+.event-deck-card__desc {
+  font-size: var(--mq-fs-body);
+  line-height: 1.42;
+  color: var(--tg-theme-text-color);
+  opacity: 0.92;
+}
+
+.event-deck-swipe-area {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-top: 6px;
+  font-size: var(--mq-fs-caption);
+  color: var(--tg-theme-hint-color);
+}
+
+.event-deck-swipe-hint-left {
+  text-align: left;
+}
+
+.event-deck-swipe-hint-right {
+  text-align: right;
+}
+
+.event-deck-surface {
+  position: relative;
+  margin-top: 6px;
+  border-radius: 10px;
+  min-height: 38px;
+  background: color-mix(in srgb, var(--tg-theme-hint-color, #999) 8%, transparent);
+  overflow: hidden;
+}
+
+.event-deck-surface__inner {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  padding: 8px;
+  font-size: var(--mq-fs-caption);
+  color: var(--tg-theme-hint-color);
+}
+
+.event-deck-surface__tint {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.event-deck-surface__tint--yes {
+  background: linear-gradient(90deg, transparent, rgba(5, 150, 105, 0.45));
+}
+
+.event-deck-surface__tint--no {
+  background: linear-gradient(270deg, transparent, rgba(220, 38, 38, 0.4));
+}
+
+.event-deck-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.event-deck-poly {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.mq-poly-choice-title {
+  font-weight: 650;
+  font-size: var(--mq-fs-body);
+}
+
+.mq-poly-choice-desc {
+  opacity: 0.85;
+  font-size: var(--mq-fs-caption);
+  margin-top: 4px;
+  display: block;
+}
+
+.tma-choice-btn {
+  appearance: none;
+  border-radius: 10px;
+  font-family: inherit;
+  font-size: var(--mq-fs-body);
+  line-height: 1.3;
+  cursor: pointer;
+  min-height: 44px;
+  padding: 8px 10px;
+  text-align: center;
+  transition: opacity 0.15s ease, transform 0.05s ease;
+}
+
+.tma-choice-btn:active:not(:disabled) {
+  transform: scale(0.98);
+}
+
+.tma-choice-btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.tma-choice-btn--yes {
+  border: none;
+  color: #fff;
+  background: linear-gradient(180deg, #10b981, var(--mq-emerald));
+  box-shadow:
+    inset 0 1px rgba(255, 255, 255, 0.15),
+    0 2px 6px rgba(5, 150, 105, 0.28);
+}
+
+.tma-choice-btn--no {
+  border: 1px solid color-mix(in srgb, var(--mq-danger) 62%, transparent);
+  background: color-mix(in srgb, var(--mq-danger-soft), var(--tg-theme-bg-color));
+  color: color-mix(in srgb, var(--mq-danger) 85%, var(--tg-theme-text-color, #111));
+}
+
+.tma-choice-btn--outline {
+  border: 1px solid color-mix(in srgb, var(--tg-theme-hint-color), transparent 58%);
+  background: transparent;
+  color: var(--tg-theme-text-color);
+}
+
+/* =====================================================================
+ * Страничная оболочка: фон, «воздух», анимации появления
+ * ===================================================================== */
+
+.mq-page {
+  --mq-page-pad-x: 12px;
+  --mq-page-pad-y: 12px;
+
+  position: relative;
+  z-index: 0;
+  box-sizing: border-box;
+}
+
+.mq-page--center {
+  display: grid;
+  min-height: 60svh;
+  place-items: center;
+}
+
+.mq-page--auth {
+  min-height: 100svh;
+  display: flex;
+  align-items: center;
+  padding: calc(14px + env(safe-area-inset-top, 0)) 12px calc(22px + env(safe-area-inset-bottom, 0));
+  box-sizing: border-box;
+}
+
+.mq-auth-inner {
+  width: 100%;
+  max-width: 440px;
+  margin-inline: auto;
+}
+
+.mq-form-alert {
+  padding: 10px 12px;
+  border-radius: 10px;
+  font-size: 14px;
+  line-height: 1.38;
+  color: var(--tg-theme-destructive-text-color, var(--mq-danger));
+  background: color-mix(in srgb, var(--mq-danger-soft), var(--tg-theme-bg-color) 88%);
+  border: 1px solid color-mix(in srgb, var(--mq-danger) 42%, transparent);
+}
+
+/* Фоновый слой: мягкий градиент + сетка, не перекрывает контент */
+.mq-page__decor {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  overflow: hidden;
+  border-radius: inherit;
+}
+
+.mq-page__decor::before {
+  content: '';
+  position: absolute;
+  inset: -32% -8% auto -28%;
+  height: clamp(220px, 56vw, 420px);
+  background:
+    radial-gradient(
+      ellipse 90% 100% at 16% -6%,
+      color-mix(in srgb, var(--tg-theme-button-color, var(--mq-violet)) 28%, transparent),
+      transparent 58%
+    ),
+    radial-gradient(
+      ellipse 80% 100% at 96% -2%,
+      color-mix(in srgb, var(--mq-emerald) 26%, transparent),
+      transparent 56%
+    );
+  filter: blur(0px);
+  transform: rotate(-2deg) scale(1.02);
+  animation: mqDecorDrift 18s ease-in-out infinite alternate;
+}
+
+.mq-page__decor::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  opacity: 0.42;
+  background-image: radial-gradient(
+    circle at 1px 1px,
+    color-mix(in srgb, var(--tg-theme-hint-color, var(--mq-line)), transparent 86%) 0.9px,
+    transparent 1px
+  );
+  background-size: 17px 17px;
+  mask-image: linear-gradient(
+    to bottom,
+    black 0%,
+    rgba(0, 0, 0, 0.8) 40%,
+    transparent 92%
+  );
+}
+
+@keyframes mqDecorDrift {
+  from {
+    transform: rotate(-2deg) scale(1) translateY(0px);
+    filter: saturate(1);
+  }
+  to {
+    transform: rotate(2deg) scale(1.07) translateY(14px);
+    filter: saturate(1.06);
+  }
+}
+
+@keyframes mqEnterUp {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.mq-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.mq-stack--tight {
+  gap: 10px;
+}
+
+.mq-stack-animate > .mq-enter-item {
+  opacity: 0;
+  animation: mqEnterUp 0.52s cubic-bezier(0.22, 1, 0.32, 1) both;
+}
+
+.mq-stack-animate > .mq-enter-item:nth-child(1) {
+  animation-delay: 0.03s;
+}
+.mq-stack-animate > .mq-enter-item:nth-child(2) {
+  animation-delay: 0.08s;
+}
+.mq-stack-animate > .mq-enter-item:nth-child(3) {
+  animation-delay: 0.13s;
+}
+.mq-stack-animate > .mq-enter-item:nth-child(4) {
+  animation-delay: 0.18s;
+}
+.mq-stack-animate > .mq-enter-item:nth-child(5) {
+  animation-delay: 0.23s;
+}
+.mq-stack-animate > .mq-enter-item:nth-child(6) {
+  animation-delay: 0.28s;
+}
+.mq-stack-animate > .mq-enter-item:nth-child(7) {
+  animation-delay: 0.33s;
+}
+.mq-stack-animate > .mq-enter-item:nth-child(8) {
+  animation-delay: 0.38s;
+}
+.mq-stack-animate > .mq-enter-item:nth-child(9) {
+  animation-delay: 0.43s;
+}
+.mq-stack-animate > .mq-enter-item:nth-child(10) {
+  animation-delay: 0.48s;
+}
+
+.mq-actions-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 6px;
+}
+
+.mq-actions-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+
+.mq-inline-field-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+}
+
+.mq-inline-field-row > * {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.mq-inline-field-row > button {
+  flex: 0 0 auto;
+}
+
+.mq-chip-btn {
+  min-width: 44px !important;
+  border-radius: 12px !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mq-page__decor::before,
+  .mq-stack-animate > .mq-enter-item {
+    animation: none !important;
+  }
+  .mq-stack-animate > .mq-enter-item {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* Игровой HUD и таймер */
+.mq-hud {
+  border-radius: 14px;
+  border: 1px solid color-mix(in srgb, var(--tg-theme-hint-color, var(--mq-line)), 54%, transparent);
+  box-shadow:
+    0 1px 0 color-mix(in srgb, var(--tg-theme-secondary-bg-color, #fff), transparent 40%),
+    0 10px 30px color-mix(in srgb, #000, transparent 92%);
+}
+
+.mq-hud__row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.mq-period-label {
+  font-weight: 650;
+  font-size: 15px;
+  letter-spacing: -0.02em;
+}
+
+.mq-timer-chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 10px;
+  border-radius: 10px;
+  font-family:
+    ui-monospace, var(--telegram-font-monospace, SFMono-Regular), Menlo,
+    monospace;
+  font-size: 1.1rem;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.04em;
+  color: var(--tg-theme-text-color, var(--mq-ink));
+  background: color-mix(
+    in srgb,
+    var(--tg-theme-secondary-bg-color, #f5f6f8) 88%,
+    var(--tg-theme-hint-color, var(--mq-line)) 12%
+  );
+  border: 1px solid color-mix(in srgb, var(--tg-theme-hint-color), transparent 74%);
+}
+
+.mq-hud-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+/* Кнопки в контентной зоне: мягкая глубина (нижнее меню и оверлеи не трогаем) */
+#root button:not(.tma-nav-icon-btn):not(.events-carousel-dot):not(.events-carousel-arrow):not(
+    .events-overlay-close
+  ):not(.mqx-events-choice):focus-visible {
+  outline: 2px solid color-mix(in srgb, var(--mq-accent-link), transparent 22%);
+  outline-offset: 2px;
+}
+
+#root button:not(.tma-nav-icon-btn):not(.events-carousel-dot):not(.events-carousel-arrow):not(
+    .events-overlay-close
+  ):not(.mqx-events-choice):active:not(:disabled) {
+  transform: scale(0.985);
+}
+
+#root button:not(.tma-nav-icon-btn):not(.events-carousel-dot):not(.events-carousel-arrow):not(
+    .events-overlay-close
+  ):not(.mqx-events-choice):not(:disabled) {
+  transition:
+    transform 0.14s cubic-bezier(0.22, 1, 0.32, 1),
+    box-shadow 0.18s ease,
+    filter 0.18s ease,
+    opacity 0.18s ease;
+}
+
+.mq-input-inline:focus-visible {
+  outline: none;
+  border-color: color-mix(in srgb, var(--mq-accent-fill), transparent 8%);
+  box-shadow:
+    0 0 0 3px color-mix(in srgb, var(--mq-violet), transparent 82%),
+    0 1px 0 color-mix(in srgb, #fff, transparent 70%);
+}
+
+.mq-dash-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+}
+
+.mq-dash-actions .mq-dash-actions__field {
+  flex: 2 1 120px;
+  min-width: 0;
+}
+
+.mq-dash-block {
+  margin: 14px 0 0;
+}
+
+/* Смена внутренней вкладки (напр. финансы) */
+.mq-tab-panel-reveal {
+  animation: mqEnterUp 0.44s cubic-bezier(0.22, 1, 0.32, 1) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mq-tab-panel-reveal {
+    animation: none;
+  }
+}
+
+.bottom-nav button.tma-nav-icon-btn svg {
+  transition:
+    transform 0.28s cubic-bezier(0.22, 1, 0.32, 1),
+    opacity 0.22s ease;
+}
+
+.tma-nav-icon-btn:active svg {
+  transform: scale(0.92);
+}
+
+.tma-nav-icon-btn--active svg {
+  transform: translateY(-1px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bottom-nav button.tma-nav-icon-btn svg {
+    transition: none;
+  }
 }

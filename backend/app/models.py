@@ -1,5 +1,5 @@
 from datetime import datetime
-from sqlalchemy import Column, Integer, String, DateTime, Text, ForeignKey, Float
+from sqlalchemy import Column, Integer, String, DateTime, Text, ForeignKey, Float, UniqueConstraint
 from sqlalchemy.orm import relationship
 
 from .database import Base
@@ -92,6 +92,7 @@ class GameProfile(Base):
     safety_fund_balance = Column(Float, nullable=False, default=0)
     negative_periods_count = Column(Integer, nullable=False, default=0)
     last_period_salary_claimed = Column(Integer, nullable=False, default=0)
+    clean_period_streak = Column(Integer, nullable=False, default=0)
 
     created_at = Column(DateTime, default=datetime.utcnow)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
@@ -124,6 +125,8 @@ class FinanceLiability(Base):
     total_debt = Column(Float, nullable=False)
     annual_rate_percent = Column(Float, nullable=False)
     monthly_payment = Column(Float, nullable=False)
+    overdue_amount = Column(Float, nullable=False, default=0)  # сумма просрочки (неоплаченная часть)
+    overdue_periods = Column(Integer, nullable=False, default=0)  # сколько периодов подряд есть просрочка
     is_active = Column(Integer, nullable=False, default=1)   # НОВОЕ
     created_at = Column(DateTime, default=datetime.utcnow)
     game_profile = relationship("GameProfile", back_populates="finance_liabilities")
@@ -135,11 +138,124 @@ class FinanceAsset(Base):
     id = Column(Integer, primary_key=True, index=True)
     game_profile_id = Column(Integer, ForeignKey("game_profiles.id"), nullable=False, index=True)
     title = Column(String(120), nullable=False, default="Актив")
+    kind = Column(String(50), nullable=False, default="generic")  # например: home, rental_home, car, rental_car, deposit, bond
     asset_value = Column(Float, nullable=False)
     monthly_maintenance_cost = Column(Float, nullable=False, default=0)
+    monthly_income = Column(Float, nullable=False, default=0)  # доход от аренды/купоны/проценты
     is_active = Column(Integer, nullable=False, default=1)   # НОВОЕ
     created_at = Column(DateTime, default=datetime.utcnow)
     game_profile = relationship("GameProfile", back_populates="finance_assets")
+
+
+class AssetTemplate(Base):
+    """Типовой актив для каталога (используется при добавлении в игре)."""
+
+    __tablename__ = "asset_templates"
+
+    id = Column(Integer, primary_key=True, index=True)
+    template_key = Column(String(80), unique=True, nullable=False, index=True)
+    title = Column(String(160), nullable=False)
+    kind = Column(String(50), nullable=False, default="generic")
+    asset_value = Column(Float, nullable=False)
+    monthly_maintenance_cost = Column(Float, nullable=False, default=0)
+    monthly_income = Column(Float, nullable=False, default=0)
+    is_active = Column(Integer, nullable=False, default=1)
+    sort_order = Column(Integer, nullable=False, default=100)
+    created_at = Column(DateTime, default=datetime.utcnow)
+
+
+class LiabilityTemplate(Base):
+    """Типовое обязательство (выдача суммы на баланс при оформлении в игре)."""
+
+    __tablename__ = "liability_templates"
+
+    id = Column(Integer, primary_key=True, index=True)
+    template_key = Column(String(80), unique=True, nullable=False, index=True)
+    title = Column(String(160), nullable=False)
+    total_debt = Column(Float, nullable=False)
+    annual_rate_percent = Column(Float, nullable=False)
+    is_active = Column(Integer, nullable=False, default=1)
+    sort_order = Column(Integer, nullable=False, default=100)
+    created_at = Column(DateTime, default=datetime.utcnow)
+
+
+# ==================== СОБЫТИЯ (MVP) ====================
+
+class EventDefinition(Base):
+    __tablename__ = "event_definitions"
+
+    id = Column(Integer, primary_key=True, index=True)
+    key = Column(String(80), unique=True, nullable=False, index=True)
+    mode = Column(String(20), nullable=False, default="light")  # light/hardcore/any (пока light)
+    title = Column(String(160), nullable=False)
+    description = Column(Text, nullable=False, default="")
+    weight = Column(Integer, nullable=False, default=100)
+    is_active = Column(Integer, nullable=False, default=1)
+    # mandatory=1 зарезервировано под будущие обязательные сценарии (логику пока не включаем)
+    mandatory = Column(Integer, nullable=False, default=0)
+    category = Column(String(80), nullable=True)
+    metadata_json = Column(Text, nullable=False, default="{}")
+    created_at = Column(DateTime, default=datetime.utcnow)
+
+    choices = relationship("EventChoice", back_populates="definition", cascade="all, delete-orphan")
+
+
+class EventChoice(Base):
+    __tablename__ = "event_choices"
+
+    id = Column(Integer, primary_key=True, index=True)
+    definition_id = Column(Integer, ForeignKey("event_definitions.id"), nullable=False, index=True)
+    title = Column(String(160), nullable=False)
+    description = Column(Text, nullable=False, default="")
+    effects_json = Column(Text, nullable=False, default="{}")  # JSON: {cash_delta, safety_delta, ...}
+
+    definition = relationship("EventDefinition", back_populates="choices")
+
+
+class EventInstance(Base):
+    __tablename__ = "event_instances"
+
+    id = Column(Integer, primary_key=True, index=True)
+    game_profile_id = Column(Integer, ForeignKey("game_profiles.id"), nullable=False, index=True)
+    period_index = Column(Integer, nullable=False, index=True)
+    definition_id = Column(Integer, ForeignKey("event_definitions.id"), nullable=False, index=True)
+    status = Column(String(20), nullable=False, default="pending")  # pending/selected/expired
+    selected_choice_id = Column(Integer, ForeignKey("event_choices.id"), nullable=True)
+    created_at = Column(DateTime, default=datetime.utcnow)
+    resolved_at = Column(DateTime, nullable=True)
+
+
+# ==================== ИНВЕСТИЦИИ (EASY MVP) ====================
+
+class InvestmentPosition(Base):
+    __tablename__ = "investment_positions"
+
+    id = Column(Integer, primary_key=True, index=True)
+    game_profile_id = Column(Integer, ForeignKey("game_profiles.id"), nullable=False, index=True)
+    kind = Column(String(30), nullable=False)  # deposit | bond
+    title = Column(String(160), nullable=False)
+    principal = Column(Float, nullable=False, default=0)
+    annual_rate_percent = Column(Float, nullable=False, default=0)
+    started_period = Column(Integer, nullable=False)
+    last_accrued_period = Column(Integer, nullable=False)
+    is_active = Column(Integer, nullable=False, default=1)
+    created_at = Column(DateTime, default=datetime.utcnow)
+
+
+# ==================== СТРАХОВКИ (EASY MVP) ====================
+
+class InsurancePolicy(Base):
+    __tablename__ = "insurance_policies"
+
+    id = Column(Integer, primary_key=True, index=True)
+    game_profile_id = Column(Integer, ForeignKey("game_profiles.id"), nullable=False, index=True)
+    kind = Column(String(30), nullable=False)  # health | property | car
+    title = Column(String(160), nullable=False)
+    monthly_premium = Column(Float, nullable=False, default=0)
+    coverage_limit = Column(Float, nullable=False, default=0)
+    is_active = Column(Integer, nullable=False, default=1)
+    created_at = Column(DateTime, default=datetime.utcnow)
+
 
 
 class PeriodSnapshot(Base):
@@ -159,6 +275,23 @@ class PeriodSnapshot(Base):
     xp_earned = Column(Integer, nullable=False, default=0)
     created_at = Column(DateTime, default=datetime.utcnow)
     game_profile = relationship("GameProfile", back_populates="period_snapshots")
+
+
+class PeriodEconomyClosing(Base):
+    """Снимок финансов в конце периода — для графиков и аналитики по месяцам."""
+
+    __tablename__ = "period_economy_closings"
+    __table_args__ = (
+        UniqueConstraint("game_profile_id", "period_index", name="uq_period_economy_closing_pi"),
+    )
+
+    id = Column(Integer, primary_key=True, index=True)
+    game_profile_id = Column(Integer, ForeignKey("game_profiles.id"), nullable=False, index=True)
+    period_index = Column(Integer, nullable=False)
+    cash_balance = Column(Float, nullable=False, default=0)
+    safety_fund_balance = Column(Float, nullable=False, default=0)
+    total_overdue_amount = Column(Float, nullable=False, default=0)
+    closed_at = Column(DateTime, default=datetime.utcnow)
 
 
 class Transaction(Base):

@@ -9,22 +9,49 @@ export function setAuthToken(token) {
     else localStorage.removeItem('tg_miniapp_token');
 }
 
+export class ApiError extends Error {
+  constructor({ status, detail, raw, endpoint, method }) {
+    super(typeof detail === 'string' ? detail : 'Ошибка запроса');
+    this.name = 'ApiError';
+    this.status = status;
+    this.detail = detail;
+    this.raw = raw;
+    this.endpoint = endpoint;
+    this.method = method;
+  }
+}
+
 async function apiCall(endpoint, method = 'GET', data = null) {
-    const headers = { 'Content-Type': 'application/json' };
-    if (authToken) headers['Authorization'] = `Bearer ${authToken}`;
+  const headers = { 'Content-Type': 'application/json' };
+  if (authToken) headers['Authorization'] = `Bearer ${authToken}`;
 
-    const options = { method, headers };
-    if (data && (method === 'POST' || method === 'PUT')) {
-        options.body = JSON.stringify(data);
-    }
+  const options = { method, headers };
+  if (data && (method === 'POST' || method === 'PUT')) {
+    options.body = JSON.stringify(data);
+  }
 
-    const response = await fetch(`${API_BASE}${endpoint}`, options);
-    if (response.status === 401) {
-        setAuthToken(null);
-        throw new Error('Unauthorized');
-    }
-    if (!response.ok) throw new Error(`HTTP ${response.status}`);
-    return response.json();
+  const response = await fetch(`${API_BASE}${endpoint}`, options);
+
+  // Пытаемся распарсить тело ответа (может быть JSON или текст)
+  let responseBody;
+  const contentType = response.headers.get('content-type');
+  if (contentType && contentType.includes('application/json')) {
+    responseBody = await response.json();
+  } else {
+    responseBody = await response.text();
+  }
+
+  if (!response.ok) {
+    throw new ApiError({
+      status: response.status,
+      detail: responseBody?.detail || responseBody?.message || responseBody,
+      raw: responseBody,
+      endpoint,
+      method,
+    });
+  }
+
+  return responseBody;
 }
 
 export const API = {
@@ -58,9 +85,59 @@ export const API = {
     setTimeNext() {
         return apiCall('/api/game/time/next', 'POST');
     },
+    // Период
+    getPeriodStatus() {
+        return apiCall('/api/game/period/status');
+    },
+    // События
+    getPendingEvent() {
+        return apiCall('/api/game/events/pending');
+    },
+    chooseEvent(eventId, choiceId) {
+        return apiCall(`/api/game/events/${eventId}/choose`, 'POST', { choice_id: choiceId });
+    },
     // Финансы
     getOverview() {
         return apiCall('/api/finance/overview');
+    },
+    getFinanceAnalyticsTimeseries(limit = 48) {
+        const q = limit ? `?limit=${encodeURIComponent(limit)}` : '';
+        return apiCall(`/api/finance/analytics/timeseries${q}`);
+    },
+    getAssetTemplates() {
+        return apiCall('/api/finance/asset-templates');
+    },
+    getLiabilityTemplates() {
+        return apiCall('/api/finance/liability-templates');
+    },
+    createAssetFromTemplate(key) {
+        return apiCall('/api/finance/assets/from-template', 'POST', { key });
+    },
+    createLiabilityFromTemplate(key) {
+        return apiCall('/api/finance/liabilities/from-template', 'POST', { key });
+    },
+    // Инвестиции
+    listInvestPositions() {
+        return apiCall('/api/invest/positions');
+    },
+    openDeposit(payload) {
+        return apiCall('/api/invest/deposit/open', 'POST', payload);
+    },
+    buyBond(payload) {
+        return apiCall('/api/invest/bond/buy', 'POST', payload);
+    },
+    closeInvestPosition(id) {
+        return apiCall(`/api/invest/positions/${id}/close`, 'POST');
+    },
+    // Страховки
+    listPolicies() {
+        return apiCall('/api/insurance/policies');
+    },
+    buyPolicy(payload) {
+        return apiCall('/api/insurance/buy', 'POST', payload);
+    },
+    cancelPolicy(id) {
+        return apiCall(`/api/insurance/${id}/cancel`, 'POST');
     },
     claimSalary() {
         return apiCall('/api/game/period/claim-salary', 'POST');

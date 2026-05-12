@@ -23,8 +23,8 @@ def get_current_period_snapshot(db: Session, profile: GameProfile, create_if_mis
         snapshot = PeriodSnapshot(
             game_profile_id=profile.id,
             period_index=profile.period_index,
-            safety_fund_total=profile.safety_fund_total
-        )
+            safety_fund_total=profile.safety_fund_balance,
+            )
         db.add(snapshot)
         db.commit()
         db.refresh(snapshot)
@@ -122,6 +122,13 @@ async def claim_salary(
     amount = salary.monthly_amount
     period_index = profile.period_index
 
+    snapshot = get_current_period_snapshot(db, profile)
+    if snapshot.salary_claimed == 1:
+        raise HTTPException(
+            status_code=400,
+            detail=f"Зарплата уже получена в периоде #{profile.period_index}"
+        )
+
     # Начисляем зарплату на баланс
     try:
         new_balance = adjust_balance(
@@ -137,6 +144,8 @@ async def claim_salary(
 
     # Обновляем флаг получения зарплаты в профиле
     profile.last_period_salary_claimed = period_index
+    snapshot.salary_claimed = 1
+    snapshot.salary_amount = amount
 
     # Начисляем XP (базово 10 XP за получение зарплаты)
     xp_gained = 10
@@ -193,6 +202,7 @@ async def contribute_to_safety_fund(
 
     period_index = profile.period_index
     amount = contribution.amount
+    snapshot = get_current_period_snapshot(db, profile)
 
     # Используем adjust_safety_fund_balance для перевода
     try:
@@ -209,6 +219,8 @@ async def contribute_to_safety_fund(
 
     # Обновляем профиль в текущей сессии (adjust_safety_fund_balance уже изменил балансы)
     db.refresh(profile)
+    snapshot.safety_fund_total = profile.safety_fund_balance
+    snapshot.safety_fund_contribution = float(snapshot.safety_fund_contribution or 0) + amount
 
     # Начисляем небольшой XP за финансовую дисциплину (например, 5 XP)
     xp_gained = 5
@@ -326,6 +338,7 @@ async def withdraw_from_safety_fund(
 
     period_index = profile.period_index
     amount = withdrawal.amount
+    snapshot = get_current_period_snapshot(db, profile)
 
     # Используем adjust_safety_fund_balance с отрицательной суммой (снятие)
     try:
@@ -342,6 +355,7 @@ async def withdraw_from_safety_fund(
         raise HTTPException(status_code=400, detail=str(e))
 
     db.refresh(profile)
+    snapshot.safety_fund_total = profile.safety_fund_balance
 
     # XP не начисляем (или начисляем штраф?, но по условию — без комиссии, без штрафа)
     # Можно при желании добавить -2 XP, но пока оставим без изменений XP.
