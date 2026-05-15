@@ -16,8 +16,10 @@ export function GameStarterPicker({
   onChange,
   disabled = false,
   labelledById,
+  /** Ручной сценарий уходит в режим План; в потоке Game обычно false */
+  showManualOption = false,
 }) {
-  const manualSelected = value == null;
+  const manualSelected = showManualOption && value == null;
 
   return (
     <div
@@ -49,19 +51,21 @@ export function GameStarterPicker({
           );
         })}
 
-        <button
-          type="button"
-          role="radio"
-          aria-checked={manualSelected}
-          disabled={disabled}
-          className={`mq-game-template-card mq-game-template-card--manual${manualSelected ? ' mq-game-template-card--selected' : ''}`}
-          onClick={() => onChange(null)}
-        >
-          <span className="mq-game-template-card__title">Свой сценарий</span>
-          <span className="mq-game-template-card__desc">
-            Задайте стартовый баланс, зарплату, активы и долги на следующем шаге.
-          </span>
-        </button>
+        {showManualOption ? (
+          <button
+            type="button"
+            role="radio"
+            aria-checked={manualSelected}
+            disabled={disabled}
+            className={`mq-game-template-card mq-game-template-card--manual${manualSelected ? ' mq-game-template-card--selected' : ''}`}
+            onClick={() => onChange(null)}
+          >
+            <span className="mq-game-template-card__title">Свой сценарий</span>
+            <span className="mq-game-template-card__desc">
+              Задайте стартовый баланс, зарплату, активы и долги на следующем шаге.
+            </span>
+          </button>
+        ) : null}
       </div>
     </div>
   );

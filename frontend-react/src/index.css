@@ -1140,7 +1140,117 @@ body {
   color: color-mix(in srgb, var(--mqx-ink) 55%, transparent);
 }
 
-/* Каталог шаблонов старта (DifficultyScreen): карточки + radiogroup */
+/* Выбор режима сохранения: Игра / План (заглушка) */
+.mq-profile-mode-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+  margin-top: 14px;
+}
+
+@media (min-width: 400px) {
+  .mq-profile-mode-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+  }
+}
+
+.mq-profile-mode-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+  margin: 0;
+  padding: 14px 14px 16px;
+  min-height: 148px;
+  border-radius: 14px;
+  text-align: left;
+  font: inherit;
+  border: 1px solid color-mix(in srgb, var(--mqx-ink) 14%, transparent);
+  background: color-mix(in srgb, var(--tg-theme-secondary-bg-color, var(--bg)) 96%, transparent);
+  cursor: pointer;
+  transition:
+    border-color 0.15s ease,
+    box-shadow 0.15s ease,
+    transform 0.12s ease;
+}
+
+.mq-profile-mode-card:focus-visible {
+  outline: 2px solid var(--accent-border);
+  outline-offset: 2px;
+}
+
+.mq-profile-mode-card:active:not(.mq-profile-mode-card--soon) {
+  transform: scale(0.99);
+}
+
+.mq-profile-mode-card--game:hover:not(:disabled) {
+  border-color: color-mix(in srgb, var(--mq-emerald) 42%, var(--mqx-ink));
+  box-shadow: 0 6px 22px color-mix(in srgb, var(--mqx-ink) 8%, transparent);
+}
+
+.mq-profile-mode-card--soon {
+  cursor: not-allowed;
+  opacity: 0.62;
+  filter: grayscale(0.35);
+  pointer-events: none;
+}
+
+.mq-profile-mode-card__badge {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  padding: 3px 8px;
+  border-radius: 999px;
+  font-size: var(--mq-fs-small);
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.mq-profile-mode-card__badge--soon {
+  background: color-mix(in srgb, var(--mqx-ink) 10%, transparent);
+  border: 1px solid color-mix(in srgb, var(--mqx-ink) 14%, transparent);
+  color: color-mix(in srgb, var(--mqx-ink) 62%, transparent);
+}
+
+.mq-profile-mode-card__art {
+  width: 72px;
+  height: 72px;
+  flex-shrink: 0;
+}
+
+.mq-profile-mode-card__art--game {
+  color: var(--mq-emerald);
+}
+
+.mq-profile-mode-card__art--plan {
+  color: color-mix(in srgb, var(--accent) 85%, var(--mq-violet));
+}
+
+.mq-profile-mode-card__title {
+  margin-top: 2px;
+  font-weight: 820;
+  font-size: calc(var(--mq-fs-body) + 1px);
+  letter-spacing: -0.02em;
+  color: color-mix(in srgb, var(--mqx-ink) 94%, transparent);
+}
+
+.mq-profile-mode-card__desc {
+  font-size: var(--mq-fs-caption);
+  line-height: 1.38;
+  color: color-mix(in srgb, var(--mqx-ink) 56%, transparent);
+}
+
+.mq-profile-mode-footnote {
+  margin-top: 14px;
+  font-size: var(--mq-fs-caption);
+  line-height: 1.4;
+  color: color-mix(in srgb, var(--mqx-ink) 52%, transparent);
+}
+
+/* Каталог шаблонов старта (поток новой игры): карточки + radiogroup */
 .mq-game-catalog-label {
   display: block;
   margin-bottom: 10px;

@@ -2,38 +2,38 @@
 layer: plan
 status: draft
 spec: specs/features/SPEC_game-plan.md
-last_reviewed: 2026-05-16
+last_reviewed: 2026-05-17
 ---
 
-# Plan: эпик G1 — Game Mode, один шаблон E2E, ADR-001
+# Plan: эпик G1 — Game Mode, каталог шаблонов E2E, ADR-001
 
-**Spec (approved):** [`SPEC_game-plan`](../specs/features/SPEC_game-plan.md)  
+**Spec (implemented):** [`SPEC_game-plan`](../specs/features/SPEC_game-plan.md)  
 **ADR:** [`ADR-001`](../decisions/ADR-001-save-kind-remove-light-hardcore.md)  
 **Тяжёлый детальный план по слоям БД/API:** [evolution §II.3](../vision/ideas/money-quest-evolution-after-mvp.md#ii3-план-доработок-по-слоям) (ориентир; G1 режет scope: Game only, Plan в MVP 2.0).
 
 ## Summary
 
-Один **вертикальный срез**: миграция **`save_kind` + удаление light/hardcore**, таблица/сид **одного шаблона**, применение старта, правка **событий**, **API + `api.js`**, **замена `DifficultyScreen`**, смоук **нескольких периодов**. Отдельного релиза «только поле без шаблона» нет.
+Один **вертикальный срез**: миграция **`save_kind` + удаление light/hardcore**, таблица **`game_starter_templates`** и сид **каталога шаблонов**, применение старта (blueprint), правка **событий**, **API + `api.js`**, **новый поток старта без `DifficultyScreen`** (удалён), смоук **нескольких периодов**. Отдельного релиза «только поле без шаблона» нет.
 
 ## Dependency graph
 
 ```text
 SQL: save_kind, шаблоны, миграция event filter, удаление mode usage
-  └── models + seed 1 template
+  └── models + seed каталога шаблонов
         └── POST profiles + GET templates
               └── process_period_end + lifestyle field (минимум)
-                    └── frontend старт без DifficultyScreen
+                    └── frontend: NewProfileKindScreen → GameTemplatePickScreen
                           └── overview задел (опционально той же веткой)
 ```
 
 ## Vertical slices
 
 1. **Slice 1 — Backend+DB ядро:** `save_kind`, шаблон, бэкфилл профилей `game`, убрать валидацию light/hardcore, мигрировать `EventDefinition`/фильтр, `ensure_period_events` от `save_kind`.
-2. **Slice 2 — Старт из шаблона:** blueprint создаёт salary/assets/liabilities как задумано одним шаблоном.
-3. **Slice 3 — Frontend:** новый поток старта, удаление/обход `DifficultyScreen`, список профилей без legacy mode.
+2. **Slice 2 — Старт из шаблона:** blueprint создаёт salary/assets/liabilities для выбранного ключа шаблона.
+3. **Slice 3 — Frontend:** `NewProfileKindScreen` → `GameTemplatePickScreen` → игра; **`DifficultyScreen` удалён**; список профилей без legacy `mode`; Plan в UI — заглушка.
 4. **Slice 4 — Наблюдаемость победы/cashflow:** малый прирост overview (если входит в объём G1 по spec).
 
-**Не входит:** Plan prefill, сетка 4–5 шаблонов, полный victory M из N (кроме задела схемой).
+**Не входит:** Plan UI и prefill; полный victory **M из N** (кроме задела схемой и полей overview). Контент каталога можно расширять без смены контракта.
 
 ## Risks
 
@@ -47,8 +47,8 @@ SQL: save_kind, шаблоны, миграция event filter, удаление 
 - [x] SPEC_game-plan → `approved`
 - [x] ADR-001 зафиксирован
 - [x] MVP audit подписан владельцем (2026-05-16)
-- [ ] MQ-101–108 — playable Game path (один шаблон E2E)
-- [ ] SPEC → `implemented` после приёмки
+- [x] MQ-101–108 — playable Game path (каталог шаблонов + старт из blueprint E2E)
+- [x] SPEC_game-plan → `implemented` в репозитории (продуктовый sign-off при необходимости отдельно)
 
 ## Tasks (MQ-101–108)
 
@@ -68,9 +68,9 @@ SQL: save_kind, шаблоны, миграция event filter, удаление 
 - **Files:** `backend/app/models.py`, `backend/main.py`.
 - **Estimate:** S · **Depends:** MQ-101
 
-### MQ-103 — Сиды: один Game-шаблон + миграция значений событий
+### MQ-103 — Сиды: каталог Game-шаблонов + миграция значений событий
 
-- **Acceptance:** одна строка каталога шаблонов с blueprint (JSON); `event_definitions.mode` (или замена поля) приведены к семантике `game` / `plan` / `any` по [ADR-001](../decisions/ADR-001-save-kind-remove-light-hardcore.md).
+- **Acceptance:** несколько строк в `game_starter_templates` с blueprint (JSON); `event_definitions.mode` приведены к семантике `game` / `plan` / `any` по [ADR-001](../decisions/ADR-001-save-kind-remove-light-hardcore.md).
 - **Verify:** данные в БД после миграции + сид; выборка событий для `save_kind=game` не пустая там, где ожидается.
 - **Files:** `backend/migrations/`, при необходимости SQL seed.
 - **Estimate:** M · **Depends:** MQ-101
@@ -107,7 +107,7 @@ SQL: save_kind, шаблоны, миграция event filter, удаление 
 
 - **Acceptance:** поток новой игры не требует light/hardcore; вызовы `api.js` соответствуют MQ-104; список профилей не показывает legacy режим (достаточно `save_kind`/лейбла game).
 - **Verify:** `npm run build`; ручной проход новой игры в dev.
-- **Files:** `frontend-react/src/api.js`, экраны старта (`DifficultyScreen`, router, профили).
+- **Files:** `frontend-react/src/api.js`, `App.jsx`, `components/new-game/NewProfileKindScreen.jsx`, `components/new-game/GameTemplatePickScreen.jsx`, `GameStarterPicker.jsx`, список профилей.
 - **Estimate:** L · **Depends:** MQ-104, MQ-105
 
 **Расширение (не блокер G1):** overview `avg_net_cashflow_6p` / victory v2 — отдельные пункты бэклога после закрытия MQ-108.
