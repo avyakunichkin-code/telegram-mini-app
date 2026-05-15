@@ -5,6 +5,7 @@ import { SparkLineSvg, CashForecastSpark } from './AnalyticsCharts';
 import { IconPercentStat, IconOverdueStat, IconShieldStat, IconFlowStat } from './icons/StatIcons';
 import { MqStatRow } from './MqStatRow';
 import { MqxGoalBar, MqxCashflowBar, pctClamp01 } from './mqx/MqxMetricBars';
+import { MqxTabHero } from './MqxTabHero';
 
 function formatSignedMoney(n) {
   const v = Number(n) || 0;
@@ -141,18 +142,12 @@ export function AnalyticsPremium({ overview }) {
 
   return (
     <>
-      <header className="mqx-hero mqx-hero--tab">
-        <div className="mqx-hero__glow" aria-hidden />
-        <div className="mqx-hero__top">
-          <div className="mqx-hero-pills">
-            <span className="mqx-hero-pill mqx-hero-pill--brand">MQ</span>
-            <span className="mqx-hero-pill">Аналитика</span>
-          </div>
-          <span className="mqx-hero-pill mqx-hero-pill--ghost">Период #{overview.period_index}</span>
-        </div>
-        <div className="mqx-hero__title mqx-hero__title--tab">Финансовая картина</div>
-        <div className="mqx-hero__sub">Рейтинг, цели, потоки и динамика — в одном стиле с главной.</div>
-      </header>
+      <MqxTabHero
+        sectionLabel="Аналитика"
+        rightPill={`Период #${overview.period_index}`}
+        title="Финансовая картина"
+        subtitle="Рейтинг, цели, потоки и динамика — в одном стиле с главной."
+      />
 
       <main className="mqx-content mqx-analytics-page">
         <section className="mqx-card mqx-analytics-level">
@@ -324,6 +319,27 @@ export function AnalyticsPremium({ overview }) {
               fraction={maintenance / denom}
               fillClass="mqx-analytics-cf-fill--slate"
             />
+          </div>
+          <div className="mqx-analytics-cashflow__hint" role="note">
+            {(() => {
+              const n = Number(overview.avg_net_cashflow_6p_n) || 0;
+              const v = Number(overview.avg_net_cashflow_6p);
+              if (n <= 0) {
+                return (
+                  <>
+                    После нескольких закрытых периодов здесь появится среднее изменение наличных и подушки между
+                    закрытиями (до шести последних интервалов).
+                  </>
+                );
+              }
+              return (
+                <>
+                  Среднее изменение (наличные + подушка) по {n}{' '}
+                  {n === 1 ? 'интервалу' : 'интервалам'} между закрытиями:{' '}
+                  <strong>{formatSignedMoney(v)} ₽</strong>
+                </>
+              );
+            })()}
           </div>
         </section>
 

@@ -82,6 +82,24 @@ body {
   --mq-accent-fill: var(--mq-violet);
   --mq-accent-link: var(--mq-violet-deep);
 
+  /*
+   * MQX (Dashboard / Finance / Analytics): поверхности и типографика от темы TMA,
+   * чтобы не оставался «кусок светлого UI» в тёмной теме клиента.
+   */
+  --mqx-ink: var(--tg-theme-text-color, var(--mq-ink));
+  --mqx-surface-a: var(--tg-theme-bg-color, #ffffff);
+  --mqx-surface-b: color-mix(
+    in srgb,
+    var(--tg-theme-secondary-bg-color, #eef0f6) 32%,
+    var(--tg-theme-bg-color, #ffffff) 68%
+  );
+  --mqx-glass-strong: color-mix(in srgb, var(--tg-theme-bg-color, #ffffff) 90%, transparent);
+  --mqx-glass-mid: color-mix(in srgb, var(--tg-theme-bg-color, #ffffff) 78%, transparent);
+  --mqx-glass-soft: color-mix(in srgb, var(--tg-theme-bg-color, #ffffff) 70%, transparent);
+  --mqx-glass-softer: color-mix(in srgb, var(--tg-theme-bg-color, #ffffff) 64%, transparent);
+  --mqx-shadow-soft: color-mix(in srgb, var(--mqx-ink) 13%, transparent);
+  --mqx-shadow-card: color-mix(in srgb, var(--mqx-ink) 8%, transparent);
+
   /* telegram-ui tokens */
   --tgui--button_color: #6d28d9 !important;
   --tgui--link_color: #5b21b6 !important;
@@ -148,6 +166,17 @@ body {
   color: var(--tg-theme-text-color, var(--mq-ink));
 }
 
+.mq-field__hint {
+  font-size: var(--mq-fs-small);
+  line-height: 1.35;
+  font-weight: 500;
+  color: color-mix(
+    in srgb,
+    var(--tg-theme-text-color, var(--mq-ink)) 42%,
+    var(--tg-theme-hint-color, #6b7280)
+  );
+}
+
 .mq-field__input {
   width: 100%;
   box-sizing: border-box;
@@ -206,6 +235,24 @@ body {
   -moz-appearance: textfield;
 }
 
+/* Подсказки под полями telegram-ui Input внутри MQX-карточек */
+.mqx-form-field-hint-wrap {
+  display: flex;
+  flex-direction: column;
+}
+
+.mqx-field-inline-hint {
+  margin: 6px 0 0;
+  padding: 0 2px;
+  font-size: var(--mq-fs-caption);
+  line-height: 1.38;
+  color: color-mix(
+    in srgb,
+    var(--tg-theme-text-color, var(--mq-ink)) 48%,
+    var(--tg-theme-hint-color, #6b7280)
+  );
+}
+
 /* Hover/глубина для filled-кнопок (не трогаем outline/plain) */
 @media (hover: hover) {
   #root button:not(.tma-nav-icon-btn):not(.events-carousel-dot):not(.events-carousel-arrow):not(.events-overlay-close):not(.mqx-events-choice) {
@@ -254,12 +301,12 @@ body {
     radial-gradient(circle at 12% -6%, rgba(109, 40, 217, 0.10), transparent 44%),
     radial-gradient(circle at 92% 10%, rgba(217, 70, 239, 0.08), transparent 42%),
     radial-gradient(circle at 70% 92%, rgba(5, 150, 105, 0.08), transparent 42%),
-    linear-gradient(180deg, #ffffff 0%, #fbfbff 100%);
-  border: 1px solid color-mix(in srgb, var(--mq-line) 70%, transparent);
+    linear-gradient(180deg, var(--mqx-surface-a) 0%, var(--mqx-surface-b) 100%);
+  border: 1px solid color-mix(in srgb, var(--tg-theme-hint-color, var(--mq-line)) 42%, transparent);
   border-radius: 18px;
   overflow: hidden;
-  box-shadow: 0 22px 55px rgba(15, 17, 21, 0.14);
-  color: var(--mq-ink);
+  box-shadow: 0 22px 55px var(--mqx-shadow-soft);
+  color: var(--mqx-ink);
 }
 
 .mqx-hero {
@@ -437,7 +484,7 @@ body {
   display: flex;
   flex-direction: column;
   gap: 14px;
-  color: var(--mq-ink);
+  color: var(--mqx-ink);
 }
 
 .mqx-auth {
@@ -522,9 +569,9 @@ body {
 .mqx-capital-card {
   border-radius: 22px;
   padding: 18px;
-  background: rgba(255, 255, 255, 0.72);
+  background: var(--mqx-glass-mid);
   backdrop-filter: blur(16px);
-  box-shadow: 0 14px 40px rgba(15, 23, 42, 0.06);
+  box-shadow: 0 14px 40px var(--mqx-shadow-card);
 }
 
 .mqx-capital-card__title {
@@ -532,7 +579,7 @@ body {
   font-size: 22px;
   font-weight: 850;
   letter-spacing: -0.03em;
-  color: rgba(15, 17, 21, 0.96);
+  color: color-mix(in srgb, var(--mqx-ink) 96%, transparent);
 }
 
 .mqx-capital-card .mqx-capital-card__title:first-child {
@@ -565,7 +612,7 @@ body {
   margin: 12px 0 0;
   font-size: var(--mq-fs-caption);
   line-height: 1.45;
-  color: rgba(15, 17, 21, 0.52);
+  color: color-mix(in srgb, var(--mqx-ink) 52%, transparent);
 }
 
 .mqx-capital-subtabs {
@@ -576,13 +623,13 @@ body {
 }
 
 .mqx-capital-subtab {
-  border: 1px solid color-mix(in srgb, var(--mq-line) 75%, transparent);
-  background: rgba(255, 255, 255, 0.85);
+  border: 1px solid color-mix(in srgb, var(--tg-theme-hint-color, var(--mq-line)) 72%, transparent);
+  background: var(--mqx-glass-strong);
   border-radius: 12px;
   padding: 10px;
   font-size: 13px;
   font-weight: 750;
-  color: rgba(15, 17, 21, 0.82);
+  color: color-mix(in srgb, var(--mqx-ink) 82%, transparent);
 }
 
 .mqx-capital-subtab--active {
@@ -637,22 +684,22 @@ body {
   gap: 12px;
   padding: 14px 14px;
   border-radius: 18px;
-  border: 1px solid color-mix(in srgb, var(--mq-line) 72%, transparent);
-  background: rgba(255, 255, 255, 0.92);
+  border: 1px solid color-mix(in srgb, var(--tg-theme-hint-color, var(--mq-line)) 72%, transparent);
+  background: var(--mqx-glass-strong);
 }
 
 .mqx-capital-template-row__title {
   font-size: 16px;
   font-weight: 850;
   letter-spacing: -0.02em;
-  color: rgba(15, 17, 21, 0.94);
+  color: color-mix(in srgb, var(--mqx-ink) 94%, transparent);
 }
 
 .mqx-capital-template-row__meta {
   margin-top: 6px;
   font-size: var(--mq-fs-caption);
   line-height: 1.4;
-  color: rgba(15, 17, 21, 0.52);
+  color: color-mix(in srgb, var(--mqx-ink) 52%, transparent);
 }
 
 .mqx-capital-add-btn {
@@ -669,8 +716,8 @@ body {
   gap: 12px;
   padding: 14px;
   border-radius: 18px;
-  border: 1px solid color-mix(in srgb, var(--mq-line) 72%, transparent);
-  background: rgba(255, 255, 255, 0.92);
+  border: 1px solid color-mix(in srgb, var(--tg-theme-hint-color, var(--mq-line)) 72%, transparent);
+  background: var(--mqx-glass-strong);
 }
 
 .mqx-capital-position-card__kicker {
@@ -686,20 +733,20 @@ body {
   font-size: 16px;
   font-weight: 850;
   letter-spacing: -0.02em;
-  color: rgba(15, 17, 21, 0.94);
+  color: color-mix(in srgb, var(--mqx-ink) 94%, transparent);
 }
 
 .mqx-capital-position-card__value {
   margin-top: 6px;
   font-size: var(--mq-fs-caption);
-  color: rgba(15, 17, 21, 0.55);
+  color: color-mix(in srgb, var(--mqx-ink) 55%, transparent);
 }
 
 .mqx-capital-delete-btn {
   flex-shrink: 0;
   border-radius: 12px;
   border: 1px solid rgba(244, 63, 94, 0.28);
-  background: rgba(255, 241, 242, 0.95);
+  background: color-mix(in srgb, var(--mq-danger-soft) 92%, var(--tg-theme-bg-color, #fff) 8%);
   color: rgba(190, 18, 60, 0.95);
   padding: 8px 12px;
   font-size: 12px;
@@ -726,7 +773,7 @@ body {
   font-size: 24px;
   font-weight: 850;
   letter-spacing: -0.03em;
-  color: rgba(15, 17, 21, 0.96);
+  color: color-mix(in srgb, var(--mqx-ink) 96%, transparent);
 }
 
 .mqx-capital-positions-block__badge {
@@ -749,7 +796,7 @@ body {
   overflow: hidden;
   border-radius: 22px;
   padding: 16px;
-  box-shadow: 0 14px 40px rgba(15, 23, 42, 0.06);
+  box-shadow: 0 14px 40px var(--mqx-shadow-card);
 }
 
 .mqx-fin-tabs {
@@ -760,14 +807,14 @@ body {
 }
 
 .mqx-fin-tab {
-  border: 1px solid color-mix(in srgb, var(--mq-line) 75%, transparent);
-  background: rgba(255, 255, 255, 0.7);
+  border: 1px solid color-mix(in srgb, var(--tg-theme-hint-color, var(--mq-line)) 72%, transparent);
+  background: var(--mqx-glass-soft);
   border-radius: 12px;
   padding: 10px 10px;
   font-size: 13px;
   font-weight: 750;
   letter-spacing: -0.01em;
-  color: rgba(15, 17, 21, 0.9);
+  color: color-mix(in srgb, var(--mqx-ink) 90%, transparent);
   white-space: nowrap;
 }
 
@@ -780,14 +827,14 @@ body {
 .mqx-fin-note {
   margin-top: 10px;
   font-size: var(--mq-fs-caption);
-  color: rgba(15, 17, 21, 0.55);
+  color: color-mix(in srgb, var(--mqx-ink) 55%, transparent);
 }
 
 .mqx-fin-longhelp {
   margin-top: 10px;
   font-size: var(--mq-fs-caption);
   line-height: 1.4;
-  color: rgba(15, 17, 21, 0.58);
+  color: color-mix(in srgb, var(--mqx-ink) 58%, transparent);
 }
 
 .mqx-fin-subtabs-row {
@@ -797,13 +844,13 @@ body {
 }
 
 .mqx-fin-subtab {
-  border: 1px solid color-mix(in srgb, var(--mq-line) 75%, transparent);
-  background: rgba(255, 255, 255, 0.72);
+  border: 1px solid color-mix(in srgb, var(--tg-theme-hint-color, var(--mq-line)) 72%, transparent);
+  background: var(--mqx-glass-mid);
   border-radius: 12px;
   padding: 10px 10px;
   font-size: 13px;
   font-weight: 750;
-  color: rgba(15, 17, 21, 0.88);
+  color: color-mix(in srgb, var(--mqx-ink) 88%, transparent);
 }
 
 .mqx-fin-subtab--active {
@@ -847,9 +894,9 @@ body {
 }
 
 .mqx-fin-acc {
-  border: 1px solid color-mix(in srgb, var(--mq-line) 75%, transparent);
+  border: 1px solid color-mix(in srgb, var(--tg-theme-hint-color, var(--mq-line)) 72%, transparent);
   border-radius: 12px;
-  background: rgba(255, 255, 255, 0.72);
+  background: var(--mqx-glass-mid);
   overflow: hidden;
 }
 
@@ -865,7 +912,7 @@ body {
   font: inherit;
   text-align: left;
   cursor: pointer;
-  color: rgba(15, 17, 21, 0.92);
+  color: color-mix(in srgb, var(--mqx-ink) 92%, transparent);
 }
 
 .mqx-fin-acc-title {
@@ -876,7 +923,7 @@ body {
 
 .mqx-fin-acc-chev {
   font-size: 12px;
-  color: rgba(15, 17, 21, 0.45);
+  color: color-mix(in srgb, var(--mqx-ink) 45%, transparent);
 }
 
 .mqx-fin-acc-body {
@@ -889,7 +936,7 @@ body {
 
 .mqx-fin-acc-meta {
   font-size: var(--mq-fs-caption);
-  color: rgba(15, 17, 21, 0.55);
+  color: color-mix(in srgb, var(--mqx-ink) 55%, transparent);
   line-height: 1.35;
   min-width: 0;
 }
@@ -911,8 +958,8 @@ body {
 }
 
 .mqx-fin-icon-btn--minus {
-  background: rgba(255, 255, 255, 0.86);
-  border: 1px solid color-mix(in srgb, var(--mq-line) 70%, transparent);
+  background: var(--mqx-glass-strong);
+  border: 1px solid color-mix(in srgb, var(--tg-theme-hint-color, var(--mq-line)) 70%, transparent);
   color: rgba(220, 38, 38, 0.95);
 }
 
@@ -950,7 +997,7 @@ body {
 .mqx-fin-divider {
   margin-top: 12px;
   height: 1px;
-  background: color-mix(in srgb, var(--mq-line) 80%, transparent);
+  background: color-mix(in srgb, var(--tg-theme-hint-color, var(--mq-line)) 80%, transparent);
 }
 
 .mqx-fin-list {
@@ -961,9 +1008,9 @@ body {
 .mqx-fin-empty {
   padding: 10px 12px;
   border-radius: 12px;
-  background: rgba(15, 17, 21, 0.03);
-  border: 1px dashed color-mix(in srgb, var(--mq-line) 80%, transparent);
-  color: rgba(15, 17, 21, 0.55);
+  background: color-mix(in srgb, var(--mqx-ink) 3%, transparent);
+  border: 1px dashed color-mix(in srgb, var(--tg-theme-hint-color, var(--mq-line)) 78%, transparent);
+  color: color-mix(in srgb, var(--mqx-ink) 55%, transparent);
   font-size: var(--mq-fs-caption);
 }
 
@@ -973,8 +1020,8 @@ body {
   gap: 10px;
   padding: 10px 12px;
   border-radius: 12px;
-  border: 1px solid color-mix(in srgb, var(--mq-line) 75%, transparent);
-  background: rgba(255, 255, 255, 0.66);
+  border: 1px solid color-mix(in srgb, var(--tg-theme-hint-color, var(--mq-line)) 72%, transparent);
+  background: var(--mqx-glass-softer);
 }
 
 .mqx-fin-row__l {
@@ -985,7 +1032,7 @@ body {
   font-size: 13px;
   font-weight: 800;
   letter-spacing: -0.01em;
-  color: rgba(15, 17, 21, 0.92);
+  color: color-mix(in srgb, var(--mqx-ink) 92%, transparent);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -994,7 +1041,7 @@ body {
 .mqx-fin-row__sub {
   margin-top: 4px;
   font-size: var(--mq-fs-caption);
-  color: rgba(15, 17, 21, 0.55);
+  color: color-mix(in srgb, var(--mqx-ink) 55%, transparent);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -1020,17 +1067,17 @@ body {
 }
 
 .mqx-fin-subcard {
-  border: 1px solid color-mix(in srgb, var(--mq-line) 75%, transparent);
+  border: 1px solid color-mix(in srgb, var(--tg-theme-hint-color, var(--mq-line)) 72%, transparent);
   border-radius: 14px;
   padding: 12px;
-  background: rgba(255, 255, 255, 0.62);
+  background: var(--mqx-glass-softer);
 }
 
 .mqx-fin-subhead {
   font-size: 14px;
   font-weight: 800;
   letter-spacing: -0.01em;
-  color: rgba(15, 17, 21, 0.92);
+  color: color-mix(in srgb, var(--mqx-ink) 92%, transparent);
   margin-bottom: 10px;
 }
 
@@ -1046,8 +1093,8 @@ body {
 
 .mqx-card,
 .mqx-mini {
-  border: 1px solid color-mix(in srgb, var(--mq-line) 75%, transparent);
-  background: rgba(255, 255, 255, 0.76);
+  border: 1px solid color-mix(in srgb, var(--tg-theme-hint-color, var(--mq-line)) 72%, transparent);
+  background: var(--mqx-glass-strong);
   backdrop-filter: blur(12px);
 }
 
@@ -1065,7 +1112,7 @@ body {
   font-size: 10px;
   text-transform: uppercase;
   letter-spacing: 0.2em;
-  color: rgba(15, 17, 21, 0.62);
+  color: color-mix(in srgb, var(--mqx-ink) 62%, transparent);
 }
 
 .mqx-card__kicker--emerald {
@@ -1090,7 +1137,163 @@ body {
 .mqx-card__sub {
   margin-top: 4px;
   font-size: var(--mq-fs-caption);
-  color: rgba(15, 17, 21, 0.55);
+  color: color-mix(in srgb, var(--mqx-ink) 55%, transparent);
+}
+
+/* Каталог шаблонов старта (DifficultyScreen): карточки + radiogroup */
+.mq-game-catalog-label {
+  display: block;
+  margin-bottom: 10px;
+  font-weight: 700;
+  font-size: var(--mq-fs-caption);
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--mqx-ink) 52%, transparent);
+}
+
+.mq-game-template-picker {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.mq-game-template-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 10px;
+}
+
+@media (min-width: 440px) {
+  .mq-game-template-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .mq-game-template-card--manual {
+    grid-column: 1 / -1;
+  }
+}
+
+.mq-game-template-card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+  width: 100%;
+  margin: 0;
+  padding: 12px 14px;
+  border-radius: 12px;
+  text-align: left;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+  border: 1px solid color-mix(in srgb, var(--mqx-ink) 14%, transparent);
+  background: color-mix(in srgb, var(--tg-theme-secondary-bg-color, var(--bg)) 94%, transparent);
+  transition:
+    border-color 0.15s ease,
+    box-shadow 0.15s ease,
+    background 0.15s ease;
+}
+
+.mq-game-template-card:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.mq-game-template-card:focus-visible {
+  outline: 2px solid var(--accent-border);
+  outline-offset: 2px;
+}
+
+.mq-game-template-card--selected {
+  border-color: var(--accent-border);
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--accent) 18%, transparent);
+  background: color-mix(in srgb, var(--accent-bg) 55%, var(--tg-theme-secondary-bg-color, var(--bg)));
+}
+
+.mq-game-template-card--easy {
+  border-left: 3px solid var(--mq-emerald);
+}
+
+.mq-game-template-card--mid {
+  border-left: 3px solid var(--mq-warning);
+}
+
+.mq-game-template-card--hard {
+  border-left: 3px solid color-mix(in srgb, var(--mq-danger) 82%, var(--mq-warning));
+}
+
+.mq-game-template-card--extreme {
+  border-left: 3px solid var(--mq-danger);
+}
+
+.mq-game-template-card--manual {
+  border-left: 3px solid color-mix(in srgb, var(--mqx-ink) 35%, transparent);
+}
+
+.mq-game-template-card__tier {
+  flex-shrink: 0;
+}
+
+.mq-game-tier-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 8px;
+  border-radius: 999px;
+  font-size: var(--mq-fs-small);
+  font-weight: 800;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+
+.mq-game-tier-badge--easy {
+  background: var(--mq-emerald-soft);
+  color: rgba(5, 105, 75, 0.98);
+}
+
+.mq-game-tier-badge--mid {
+  background: rgba(217, 119, 6, 0.14);
+  color: rgba(180, 83, 9, 0.98);
+}
+
+.mq-game-tier-badge--hard {
+  background: rgba(234, 88, 12, 0.12);
+  color: rgba(194, 65, 12, 0.98);
+}
+
+.mq-game-tier-badge--extreme {
+  background: var(--mq-danger-soft);
+  color: rgba(185, 28, 28, 0.98);
+}
+
+@media (prefers-color-scheme: dark) {
+  .mq-game-tier-badge--easy {
+    color: rgba(167, 243, 208, 0.95);
+  }
+
+  .mq-game-tier-badge--mid {
+    color: rgba(253, 224, 171, 0.96);
+  }
+
+  .mq-game-tier-badge--hard {
+    color: rgba(254, 215, 170, 0.96);
+  }
+
+  .mq-game-tier-badge--extreme {
+    color: rgba(254, 202, 202, 0.96);
+  }
+}
+
+.mq-game-template-card__title {
+  font-weight: 780;
+  font-size: var(--mq-fs-body);
+  letter-spacing: -0.01em;
+  color: color-mix(in srgb, var(--mqx-ink) 94%, transparent);
+}
+
+.mq-game-template-card__desc {
+  font-size: var(--mq-fs-caption);
+  line-height: 1.38;
+  color: color-mix(in srgb, var(--mqx-ink) 58%, transparent);
 }
 
 .mqx-goal__top {
@@ -1120,7 +1323,7 @@ body {
   justify-content: space-between;
   gap: 10px;
   font-size: var(--mq-fs-caption);
-  color: rgba(15, 17, 21, 0.62);
+  color: color-mix(in srgb, var(--mqx-ink) 62%, transparent);
 }
 
 .mqx-progress {
@@ -1128,7 +1331,7 @@ body {
   height: 12px;
   border-radius: 999px;
   overflow: hidden;
-  background: rgba(15, 17, 21, 0.08);
+  background: color-mix(in srgb, var(--mqx-ink) 8%, transparent);
 }
 
 .mqx-progress__fill {
@@ -1200,7 +1403,7 @@ body {
 .mqx-mini__label {
   margin-top: 10px;
   font-size: var(--mq-fs-caption);
-  color: rgba(15, 17, 21, 0.55);
+  color: color-mix(in srgb, var(--mqx-ink) 55%, transparent);
 }
 
 .mqx-mini__value {
@@ -1231,9 +1434,9 @@ body {
 .mqx-action {
   border-radius: 14px;
   padding: 14px 12px;
-  border: 1px solid color-mix(in srgb, var(--mq-line) 72%, transparent);
-  background: rgba(255, 255, 255, 0.7);
-  color: rgba(15, 17, 21, 0.92);
+  border: 1px solid color-mix(in srgb, var(--tg-theme-hint-color, var(--mq-line)) 72%, transparent);
+  background: var(--mqx-glass-soft);
+  color: color-mix(in srgb, var(--mqx-ink) 92%, transparent);
   font-size: var(--mq-fs-body);
   font-weight: 750;
   cursor: pointer;
@@ -1258,7 +1461,7 @@ body {
 
 .mqx-score__label {
   font-size: var(--mq-fs-caption);
-  color: rgba(15, 17, 21, 0.55);
+  color: color-mix(in srgb, var(--mqx-ink) 55%, transparent);
 }
 
 .mqx-score__value {
@@ -1284,14 +1487,14 @@ body {
   font-size: var(--mq-fs-caption);
 }
 
-.mqx-bars__label { color: rgba(15, 17, 21, 0.6); }
-.mqx-bars__value { color: rgba(15, 17, 21, 0.92); font-weight: 700; }
+.mqx-bars__label { color: color-mix(in srgb, var(--mqx-ink) 60%, transparent); }
+.mqx-bars__value { color: color-mix(in srgb, var(--mqx-ink) 92%, transparent); font-weight: 700; }
 
 .mqx-bars__track {
   height: 8px;
   border-radius: 999px;
   overflow: hidden;
-  background: rgba(15, 17, 21, 0.08);
+  background: color-mix(in srgb, var(--mqx-ink) 8%, transparent);
 }
 
 .mqx-bars__fill { height: 100%; border-radius: 999px; }
@@ -1320,7 +1523,7 @@ body {
   height: 8px;
   border-radius: 999px;
   overflow: hidden;
-  background: rgba(0, 0, 0, 0.22);
+  background: color-mix(in srgb, var(--mqx-ink) 22%, transparent);
 }
 
 .mqx-xp-card__fill {
@@ -1337,7 +1540,7 @@ body {
 .mqx-analytics-level {
   border-radius: 22px;
   padding: 16px;
-  box-shadow: 0 14px 40px rgba(15, 23, 42, 0.06);
+  box-shadow: 0 14px 40px var(--mqx-shadow-card);
 }
 
 .mqx-analytics-level__top {
@@ -1353,14 +1556,14 @@ body {
   font-weight: 850;
   letter-spacing: -0.03em;
   line-height: 1.15;
-  color: rgba(15, 17, 21, 0.96);
+  color: color-mix(in srgb, var(--mqx-ink) 96%, transparent);
 }
 
 .mqx-analytics-level__sub {
   margin: 6px 0 0;
   font-size: var(--mq-fs-caption);
   line-height: 1.4;
-  color: rgba(15, 17, 21, 0.52);
+  color: color-mix(in srgb, var(--mqx-ink) 52%, transparent);
 }
 
 .mqx-analytics-level__score-chip {
@@ -1397,12 +1600,12 @@ body {
   justify-content: space-between;
   gap: 10px;
   font-size: var(--mq-fs-caption);
-  color: rgba(15, 17, 21, 0.58);
+  color: color-mix(in srgb, var(--mqx-ink) 58%, transparent);
 }
 
 .mqx-analytics-xp__nums {
   font-weight: 700;
-  color: rgba(15, 17, 21, 0.88);
+  color: color-mix(in srgb, var(--mqx-ink) 88%, transparent);
 }
 
 .mqx-analytics-xp__track {
@@ -1410,7 +1613,7 @@ body {
   height: 10px;
   border-radius: 999px;
   overflow: hidden;
-  background: rgba(15, 17, 21, 0.08);
+  background: color-mix(in srgb, var(--mqx-ink) 8%, transparent);
 }
 
 .mqx-analytics-xp__fill {
@@ -1538,39 +1741,39 @@ body {
   padding: 16px;
 }
 
-/* После тёмного блока графиков — прохладная «светлая» гамма в тон индиго/ночному */
+/* После тёмного блока графиков: фон из темы TMA с лёгким индиго-оттенком */
 .mqx-analytics-cashflow--after-charts {
-  border: 1px solid rgba(99, 102, 241, 0.16);
+  border: 1px solid color-mix(in srgb, #818cf8 24%, var(--tg-theme-hint-color, var(--mq-line)) 76%);
   background: linear-gradient(
     185deg,
-    rgba(238, 242, 255, 0.94) 0%,
-    rgba(255, 255, 255, 0.9) 42%,
-    rgba(248, 250, 252, 0.96) 100%
+    color-mix(in srgb, #a5b4fc 14%, var(--tg-theme-bg-color, #ffffff) 86%) 0%,
+    color-mix(in srgb, var(--tg-theme-bg-color, #ffffff) 88%, var(--tg-theme-secondary-bg-color, #f1f5f9) 12%) 45%,
+    color-mix(in srgb, var(--tg-theme-secondary-bg-color, #f8fafc) 38%, var(--tg-theme-bg-color, #ffffff) 62%) 100%
   );
-  box-shadow: 0 14px 40px rgba(30, 27, 75, 0.08);
+  box-shadow: 0 14px 40px var(--mqx-shadow-card);
 }
 
 .mqx-analytics-cashflow--after-charts .mqx-analytics-cashflow__title,
 .mqx-analytics-cashflow--after-charts h2.mqx-analytics-cashflow__title,
 .mqx-analytics-cashflow--after-charts h2 {
-  color: rgba(30, 27, 75, 0.96);
+  color: color-mix(in srgb, var(--mqx-ink) 96%, transparent);
 }
 
 .mqx-analytics-cashflow--after-charts .mqx-card__kicker--violet {
-  color: rgba(79, 70, 229, 0.82);
+  color: color-mix(in srgb, var(--mq-violet-deep) 78%, var(--mqx-ink) 22%);
 }
 
 .mqx-analytics-cashflow--after-charts .mqx-analytics-cf-row__label {
-  color: rgba(30, 27, 75, 0.82);
+  color: color-mix(in srgb, var(--mqx-ink) 82%, transparent);
 }
 
 .mqx-analytics-cashflow--after-charts .mqx-analytics-cf-row__amount,
 .mqx-analytics-cashflow--after-charts .mqx-analytics-cf-suffix {
-  color: rgba(51, 65, 85, 0.72);
+  color: color-mix(in srgb, var(--mqx-ink) 62%, var(--tg-theme-hint-color, var(--mq-line)) 38%);
 }
 
 .mqx-analytics-cashflow--after-charts .mqx-analytics-cf-track {
-  background: rgba(30, 27, 75, 0.1);
+  background: color-mix(in srgb, var(--mqx-ink) 10%, transparent);
 }
 
 .mqx-analytics-cashflow--after-charts .mqx-analytics-cf-fill--emerald {
@@ -1631,6 +1834,13 @@ body {
   gap: 14px;
 }
 
+.mqx-analytics-cashflow__hint {
+  margin-top: 14px;
+  font-size: var(--mq-fs-caption);
+  line-height: 1.45;
+  color: color-mix(in srgb, var(--mqx-ink) 62%, transparent);
+}
+
 .mqx-analytics-cf-row__head {
   display: flex;
   justify-content: space-between;
@@ -1641,25 +1851,25 @@ body {
 
 .mqx-analytics-cf-row__label {
   font-weight: 650;
-  color: rgba(15, 17, 21, 0.78);
+  color: color-mix(in srgb, var(--mqx-ink) 78%, transparent);
 }
 
 .mqx-analytics-cf-row__amount {
-  color: rgba(15, 17, 21, 0.55);
+  color: color-mix(in srgb, var(--mqx-ink) 55%, transparent);
   font-weight: 600;
   font-variant-numeric: tabular-nums;
 }
 
 .mqx-analytics-cf-suffix {
   font-weight: 600;
-  color: rgba(15, 17, 21, 0.45);
+  color: color-mix(in srgb, var(--mqx-ink) 45%, transparent);
 }
 
 .mqx-analytics-cf-track {
   height: 10px;
   border-radius: 999px;
   overflow: hidden;
-  background: rgba(15, 17, 21, 0.08);
+  background: color-mix(in srgb, var(--mqx-ink) 8%, transparent);
 }
 
 .mqx-analytics-cf-fill {
@@ -1689,7 +1899,7 @@ body {
   border: 1px solid rgba(255, 255, 255, 0.06);
   background: linear-gradient(165deg, #0f172a 0%, #1e1b4b 100%);
   color: #fff;
-  box-shadow: 0 18px 50px rgba(15, 23, 42, 0.35);
+  box-shadow: 0 18px 50px color-mix(in srgb, var(--mqx-ink) 32%, transparent);
 }
 
 /* Переход от фиолетовых «Целей» к тёмной динамике */
@@ -1792,7 +2002,7 @@ body {
 
 .mqx-analytics-lifestyle__stress-label {
   font-size: var(--mq-fs-caption);
-  color: rgba(15, 17, 21, 0.5);
+  color: color-mix(in srgb, var(--mqx-ink) 50%, transparent);
 }
 
 .mqx-analytics-lifestyle__stress-value {
@@ -1814,19 +2024,19 @@ body {
 }
 
 .mqx-analytics-lifestyle__bar-caption {
-  color: rgba(15, 17, 21, 0.55);
+  color: color-mix(in srgb, var(--mqx-ink) 55%, transparent);
 }
 
 .mqx-analytics-lifestyle__bar-pct {
   font-weight: 700;
-  color: rgba(15, 17, 21, 0.88);
+  color: color-mix(in srgb, var(--mqx-ink) 88%, transparent);
 }
 
 .mqx-analytics-lifestyle__track {
   height: 10px;
   border-radius: 999px;
   overflow: hidden;
-  background: rgba(15, 17, 21, 0.08);
+  background: color-mix(in srgb, var(--mqx-ink) 8%, transparent);
 }
 
 .mqx-analytics-lifestyle__fill {
@@ -1839,13 +2049,17 @@ body {
   margin-top: 14px;
   padding: 12px 14px;
   border-radius: 16px;
-  border: 1px solid color-mix(in srgb, var(--mq-line) 70%, transparent);
-  background: rgba(248, 250, 252, 0.9);
+  border: 1px solid color-mix(in srgb, var(--tg-theme-hint-color, var(--mq-line)) 70%, transparent);
+  background: color-mix(
+    in srgb,
+    var(--tg-theme-secondary-bg-color, #f8fafc) 48%,
+    var(--tg-theme-bg-color, #ffffff) 52%
+  );
 }
 
 .mqx-analytics-runway__label {
   font-size: var(--mq-fs-caption);
-  color: rgba(15, 17, 21, 0.52);
+  color: color-mix(in srgb, var(--mqx-ink) 52%, transparent);
   line-height: 1.35;
 }
 
@@ -1862,7 +2076,7 @@ body {
   border: none;
   color: #fff;
   background: linear-gradient(145deg, #111827 0%, #312e81 100%);
-  box-shadow: 0 18px 46px rgba(17, 24, 39, 0.38);
+  box-shadow: 0 18px 46px color-mix(in srgb, var(--mqx-ink) 34%, transparent);
 }
 
 .mqx-analytics-forecast__head {
@@ -3174,6 +3388,18 @@ button.mqx-events-choice:active:not(:disabled) {
 /* =====================================================================
  * Страничная оболочка: фон, «воздух», анимации появления
  * ===================================================================== */
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
 
 .mq-page {
   --mq-page-pad-x: 12px;

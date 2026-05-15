@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
-import { Spinner, Button, Modal, Cell, Section } from '@telegram-apps/telegram-ui';
+import { Spinner, Button, Modal } from '@telegram-apps/telegram-ui';
 import { useGame } from '../hooks/useGame';
 import { DashboardPremium } from './DashboardPremium';
 import { FinancePremium } from './FinancePremium';
@@ -9,6 +9,8 @@ import { BottomGameNav } from './BottomGameNav';
 import { showNotification } from './notifications';
 import { API } from '../api';
 import { EventCarouselOverlay } from './EventDeck';
+import { MqxShell } from './MqxShell';
+import { MqxTabHero } from './MqxTabHero';
 
 export function GameScreen({ onLogout, onNewGame, onLoadGame }) {
   const [activeTab, setActiveTab] = useState('dashboard');
@@ -35,8 +37,10 @@ export function GameScreen({ onLogout, onNewGame, onLoadGame }) {
 
   const closeEventsOverlay = useCallback(() => setEventsOpen(false), []);
 
+  // Открыть колоду при появлении новых событий (тик из useGame при смене периода).
   useEffect(() => {
     if (eventsPromptTick > 0 && (pendingEvents?.length ?? 0) > 0) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- синхронизация с событиями бэкенда
       setEventsOpen(true);
     }
   }, [eventsPromptTick, pendingEvents]);
@@ -48,7 +52,7 @@ export function GameScreen({ onLogout, onNewGame, onLoadGame }) {
         setSalaryWarnOpen(true);
         return;
       }
-    } catch (_) {
+    } catch {
       // если статус не получили — идём дальше без модалки
     }
     try {
@@ -69,51 +73,81 @@ export function GameScreen({ onLogout, onNewGame, onLoadGame }) {
 
   if (loading) {
     return (
-      <div className="app-shell mq-page mq-page--center" style={{ padding: '16px' }}>
+      <div className="app-shell mq-page mq-page--center" style={{ padding: '16px', paddingBottom: 'calc(var(--tma-tabbar-height) + env(safe-area-inset-bottom, 0px))' }}>
         <div className="mq-page__decor" aria-hidden />
-        <Spinner />
+        <MqxShell
+          header={
+            <MqxTabHero
+              sectionLabel="Игра"
+              rightPill="Загрузка"
+              title="Подключаемся"
+              subtitle="Таймер, баланс и события появятся в привычной рамке."
+            />
+          }
+        >
+          <div className="mqx-card" style={{ display: 'grid', placeItems: 'center', minHeight: 140, padding: 28 }}>
+            <Spinner />
+          </div>
+        </MqxShell>
       </div>
     );
   }
   if (error) {
     return (
-      <div className="app-shell mq-page" style={{ padding: '12px' }}>
+      <div className="app-shell mq-page" style={{ padding: '12px', paddingBottom: 'calc(var(--tma-tabbar-height) + env(safe-area-inset-bottom, 0px))' }}>
         <div className="mq-page__decor" aria-hidden />
-        <div className="mq-stack mq-stack-animate mq-stack--tight">
-          <div className="mq-enter-item">
-            <Section header="Не удалось загрузить игру">
-              <div className="mq-screen-intro">Типичные причины: нет сети, недоступен API или истекла сессия.</div>
-              <Cell multiline subtitle={error}>
-                <div className="mq-modal-body">Проверьте соединение и откройте приложение заново при необходимости.</div>
-              </Cell>
-              <Cell>
+        <MqxShell
+          header={
+            <MqxTabHero
+              sectionLabel="Игра"
+              rightPill="Ошибка"
+              title="Не удалось загрузить"
+              subtitle="Проверьте сеть, VPN и что сессия ещё действительна."
+            />
+          }
+        >
+          <div className="mq-stack mq-stack--tight mq-stack-animate">
+            <div className="mqx-card mq-enter-item">
+              <div className="mqx-card__kicker">Сеть или API</div>
+              <div className="mqx-card__title">Что-то пошло не так</div>
+              <p className="mqx-card__sub">{error}</p>
+              <div className="mq-actions-stack" style={{ marginTop: 16 }}>
                 <Button stretched mode="filled" onClick={() => reload()}>
                   Повторить загрузку
                 </Button>
-              </Cell>
-            </Section>
+              </div>
+            </div>
           </div>
-        </div>
+        </MqxShell>
       </div>
     );
   }
   if (!overview || !timeStatus) {
     return (
-      <div className="app-shell mq-page" style={{ padding: '12px' }}>
+      <div className="app-shell mq-page" style={{ padding: '12px', paddingBottom: 'calc(var(--tma-tabbar-height) + env(safe-area-inset-bottom, 0px))' }}>
         <div className="mq-page__decor" aria-hidden />
-        <div className="mq-stack mq-stack-animate mq-stack--tight">
-          <div className="mq-enter-item">
-            <Section header="Нет данных">
-              <div className="mq-screen-intro">Не удалось прочитать активный профиль. Сеть или сервер могли ответить с ошибкой.</div>
-              <Cell multiline subtitle="Попробуйте ещё раз после проверки соединения">
-                <div className="mq-modal-body">Профиль игры сейчас недоступен.</div>
-              </Cell>
-              <Cell>
-                <Button stretched mode="filled" onClick={() => reload()}>Обновить</Button>
-              </Cell>
-            </Section>
+        <MqxShell
+          header={
+            <MqxTabHero
+              sectionLabel="Игра"
+              rightPill="Нет данных"
+              title="Профиль недоступен"
+              subtitle="Сервер не вернул состояние игры. Обновление иногда помогает."
+            />
+          }
+        >
+          <div className="mq-stack mq-stack--tight mq-stack-animate">
+            <div className="mqx-card mq-enter-item">
+              <div className="mqx-card__title">Пустой ответ</div>
+              <p className="mqx-card__sub">Активный профиль сейчас не прочитать. Попробуйте ещё раз.</p>
+              <div className="mq-actions-stack" style={{ marginTop: 16 }}>
+                <Button stretched mode="filled" onClick={() => reload()}>
+                  Обновить
+                </Button>
+              </div>
+            </div>
           </div>
-        </div>
+        </MqxShell>
       </div>
     );
   }
@@ -126,16 +160,16 @@ export function GameScreen({ onLogout, onNewGame, onLoadGame }) {
       <div className="mq-page__decor" aria-hidden />
 
       <Modal open={salaryWarnOpen} onClose={() => setSalaryWarnOpen(false)}>
-        <Section header="Следующий период">
-          <div className="mq-screen-intro">Проверка перед сменой месяца в игре.</div>
-          <Cell multiline>
-            <div className="mq-modal-lead">Зарплата за этот период ещё не получена</div>
+        <div className="mqx-modal">
+          <div className="mqx-card">
+            <div className="mqx-card__kicker mqx-card__kicker--amber">Период</div>
+            <div className="mqx-card__title">Следующий период</div>
+            <p className="mqx-card__sub">Проверка перед сменой месяца в игре.</p>
+            <p className="mq-modal-lead" style={{ marginTop: 14 }}>Зарплата за этот период ещё не получена</p>
             <p className="mq-modal-body">
               Если перейти дальше, начисление за текущий месяц <strong>сгорит</strong>, как если не нажали «Получить зарплату».
             </p>
-          </Cell>
-          <Cell>
-            <div className="mq-modal-actions">
+            <div className="mq-modal-actions" style={{ marginTop: 16 }}>
               <Button mode="filled" stretched onClick={confirmAdvanceWithSalaryLoss}>
                 Перейти без зарплаты
               </Button>
@@ -143,8 +177,8 @@ export function GameScreen({ onLogout, onNewGame, onLoadGame }) {
                 Отмена
               </Button>
             </div>
-          </Cell>
-        </Section>
+          </div>
+        </div>
       </Modal>
 
       <EventCarouselOverlay

@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react';
-import { Button, Cell, Modal, Section } from '@telegram-apps/telegram-ui';
+import { Button, Modal } from '@telegram-apps/telegram-ui';
 import { MoneyText } from './MoneyText';
 import { showNotification } from './notifications';
 
@@ -352,20 +352,22 @@ export function DashboardPremium({
       </main>
 
       <Modal open={moneyModal !== null} onClose={() => setMoneyModal(null)}>
-        <Section header={moneyModal === 'in' ? 'В подушку' : 'Снять с подушки'}>
-          <Cell multiline>
-            <div className="mq-modal-lead">Сумма</div>
-            <input
-              className="mq-field__input"
-              name={moneyModal === 'in' ? 'safety_fund_in' : 'safety_fund_out'}
-              inputMode="numeric"
-              value={amountStr}
-              placeholder="0"
-              onChange={(e) => setAmountStr(e.target.value)}
-            />
-          </Cell>
-          <Cell>
-            <div className="mq-modal-actions">
+        <div className="mqx-modal">
+          <div className="mqx-card">
+            <div className="mqx-card__title">{moneyModal === 'in' ? 'В подушку' : 'Снять с подушки'}</div>
+            <p className="mq-modal-lead" style={{ marginTop: 8 }}>Сумма</p>
+            <label className="mq-field" style={{ marginTop: 6 }}>
+              <span className="mq-field__label visually-hidden">Сумма</span>
+              <input
+                className="mq-field__input"
+                name={moneyModal === 'in' ? 'safety_fund_in' : 'safety_fund_out'}
+                inputMode="numeric"
+                value={amountStr}
+                placeholder="0"
+                onChange={(e) => setAmountStr(e.target.value)}
+              />
+            </label>
+            <div className="mq-modal-actions" style={{ marginTop: 16 }}>
               <Button mode="filled" stretched disabled={busyAction !== null} onClick={submitMoney}>
                 Выполнить
               </Button>
@@ -373,8 +375,8 @@ export function DashboardPremium({
                 Отмена
               </Button>
             </div>
-          </Cell>
-        </Section>
+          </div>
+        </div>
       </Modal>
     </>
   );

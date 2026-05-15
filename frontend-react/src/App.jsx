@@ -11,6 +11,15 @@ import { BaseParamsScreen } from './components/BaseParamsScreen';
 import { GameScreen } from './components/GameScreen';
 import { ToastHost } from './components/ToastHost';
 
+function GameAppFlowShell({ children }) {
+  return (
+    <div className="app-shell mq-page" style={{ padding: '12px' }}>
+      <div className="mq-page__decor" aria-hidden />
+      {children}
+    </div>
+  );
+}
+
 function GameApp() {
   const navigate = useNavigate();
   const [screen, setScreen] = useState('start'); // 'start', 'difficulty', 'baseParams', 'game'
@@ -43,22 +52,38 @@ function GameApp() {
   };
 
   if (screen === 'start') {
-    return <StartMenuScreen onNewGame={handleNewGame} onLoadGame={handleLoadGame} onLogout={handleLogout} />;
+    return (
+      <GameAppFlowShell>
+        <StartMenuScreen onNewGame={handleNewGame} onLoadGame={handleLoadGame} onLogout={handleLogout} />
+      </GameAppFlowShell>
+    );
   }
 
   if (screen === 'difficulty') {
-    return <DifficultyScreen onNext={handleDifficultyNext} onBack={handleDifficultyBack} />;
+    return (
+      <GameAppFlowShell>
+        <DifficultyScreen
+          onNext={handleDifficultyNext}
+          onBack={handleDifficultyBack}
+          onJumpToGame={handleGameStarted}
+        />
+      </GameAppFlowShell>
+    );
   }
 
   if (screen === 'baseParams') {
-    return <BaseParamsScreen
-      profileName={difficultyConfig.profile_name}
-      saveKind={difficultyConfig.save_kind}
-      templateKey={difficultyConfig.template_key}
-      periodDuration={difficultyConfig.period_duration_seconds}
-      onBack={() => setScreen('difficulty')}
-      onGameStarted={handleGameStarted}
-    />;
+    return (
+      <GameAppFlowShell>
+        <BaseParamsScreen
+          profileName={difficultyConfig.profile_name}
+          saveKind={difficultyConfig.save_kind}
+          templateKey={difficultyConfig.template_key}
+          periodDuration={difficultyConfig.period_duration_seconds}
+          onBack={() => setScreen('difficulty')}
+          onGameStarted={handleGameStarted}
+        />
+      </GameAppFlowShell>
+    );
   }
 
   if (screen === 'game') {
@@ -84,21 +109,27 @@ function App() {
             <Route
               path="/login"
               element={
-                <LoginForm
-                  onSwitchToRegister={() => {
-                    window.location.href = `${import.meta.env.BASE_URL}#/register`;
-                  }}
-                />
+                <div className="app-shell mq-page mq-page--auth">
+                  <div className="mq-page__decor" aria-hidden />
+                  <LoginForm
+                    onSwitchToRegister={() => {
+                      window.location.href = `${import.meta.env.BASE_URL}#/register`;
+                    }}
+                  />
+                </div>
               }
             />
             <Route
               path="/register"
               element={
-                <RegisterForm
-                  onSwitchToLogin={() => {
-                    window.location.href = `${import.meta.env.BASE_URL}#/login`;
-                  }}
-                />
+                <div className="app-shell mq-page mq-page--auth">
+                  <div className="mq-page__decor" aria-hidden />
+                  <RegisterForm
+                    onSwitchToLogin={() => {
+                      window.location.href = `${import.meta.env.BASE_URL}#/login`;
+                    }}
+                  />
+                </div>
               }
             />
             <Route path="/" element={

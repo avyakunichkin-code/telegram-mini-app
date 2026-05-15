@@ -29,6 +29,37 @@ EPSILON = 1e-6
 MIN_PERIOD_INDEX_FOR_WIN = 7
 
 
+def _liquid_snapshot_total(row: PeriodEconomyClosing) -> float:
+    return float(row.cash_balance or 0) + float(row.safety_fund_balance or 0)
+
+
+def _avg_net_cashflow_last_closed_intervals(
+    db: Session, game_profile_id: int, max_intervals: int = 6
+) -> tuple[float, int]:
+    """
+    Среднее Δ(наличные + подушка) между соседними снимками закрытия периода.
+    Берём до max_intervals последних интервалов (нужно ≥2 снимка в окне).
+    """
+    limit = max_intervals + 1
+    rows = (
+        db.query(PeriodEconomyClosing)
+        .filter(PeriodEconomyClosing.game_profile_id == game_profile_id)
+        .order_by(PeriodEconomyClosing.period_index.desc())
+        .limit(limit)
+        .all()
+    )
+    if len(rows) < 2:
+        return 0.0, 0
+    ascending = list(reversed(rows))
+    deltas: List[float] = []
+    for i in range(1, len(ascending)):
+        deltas.append(_liquid_snapshot_total(ascending[i]) - _liquid_snapshot_total(ascending[i - 1]))
+    tail = deltas[-max_intervals:]
+    if not tail:
+        return 0.0, 0
+    return round(sum(tail) / len(tail), 2), len(tail)
+
+
 def _cash_required_to_close(liability: FinanceLiability) -> float:
     return float(liability.overdue_amount or 0) + float(liability.total_debt or 0)
 
@@ -507,6 +538,8 @@ async def finance_overview(
         and (win_target_safety_fund > 0)
     )
 
+    avg_cf_6, avg_cf_n = _avg_net_cashflow_last_closed_intervals(db, profile.id, max_intervals=6)
+
     return FinanceOverview(
         salary=SalaryProfileResponse(
             monthly_amount=salary.monthly_amount if salary else 0,
@@ -536,6 +569,8 @@ async def finance_overview(
         win_ready=bool(win_ready),
         win_reached=bool(win_reached),
         clean_period_streak=int(getattr(profile, "clean_period_streak", 0) or 0),
+        avg_net_cashflow_6p=avg_cf_6,
+        avg_net_cashflow_6p_n=avg_cf_n,
     )
 
 

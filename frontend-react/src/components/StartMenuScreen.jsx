@@ -1,8 +1,9 @@
-import { useState, useEffect } from 'react';
-import { Button, List, Modal, Spinner } from '@telegram-apps/telegram-ui';
+import { useState, useEffect, useCallback } from 'react';
+import { Button, Modal, Spinner } from '@telegram-apps/telegram-ui';
 import { useAuth } from '../context/AuthContext';
 import { API } from '../api';
 import { MqxShell } from './MqxShell';
+import { MqxTabHero } from './MqxTabHero';
 import { MoneyText } from './MoneyText';
 
 export function StartMenuScreen({ onNewGame, onLoadGame, onLogout }) {
@@ -11,120 +12,126 @@ export function StartMenuScreen({ onNewGame, onLoadGame, onLogout }) {
   const [showLoadModal, setShowLoadModal] = useState(false);
   const { logout } = useAuth();
 
-  useEffect(() => {
-    loadProfiles();
-  }, []);
-
-  const loadProfiles = async () => {
+  const loadProfiles = useCallback(async () => {
     setLoading(true);
     try {
       const data = await API.getGameProfiles();
       setProfiles(data || []);
-    } catch (e) {
+    } catch {
       setProfiles([]);
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
-  };
+  }, []);
+
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- первичная загрузка списка профилей
+    void loadProfiles();
+  }, [loadProfiles]);
 
   const handleActivate = async (profileId) => {
     try {
       await API.activateGameProfile(profileId);
       if (onLoadGame) onLoadGame();
-    } catch (e) {
+    } catch {
       // на MVP молча остаёмся на экране
     }
   };
 
-  const lastProfile = profiles.find(p => p.is_active) || profiles[0];
-  const otherProfiles = profiles.filter(p => p !== lastProfile);
+  const lastProfile = profiles.find((p) => p.is_active) || profiles[0];
+  const otherProfiles = profiles.filter((p) => p !== lastProfile);
 
-  if (loading) {
-    return (
-      <MqxShell
-        header={
-          <header className="mqx-hero mqx-hero--tab">
-            <div className="mqx-hero__glow" aria-hidden />
-            <div className="mqx-hero__top">
-              <div className="mqx-hero-pills">
-                <span className="mqx-hero-pill mqx-hero-pill--brand">MQ</span>
-                <span className="mqx-hero-pill">Профили</span>
-              </div>
-              <span className="mqx-hero-pill mqx-hero-pill--ghost">Старт</span>
-            </div>
-            <div className="mqx-hero__title mqx-hero__title--tab">Продолжить игру</div>
-            <div className="mqx-hero__sub">Активный слот — один тап. Остальные сохранения — в списке.</div>
-          </header>
-        }
-      >
-        <div style={{ padding: 24, display: 'grid', placeItems: 'center' }}>
-          <Spinner />
-        </div>
-      </MqxShell>
-    );
-  }
+  const saveKindLabel = (sk) => {
+    if (sk === 'game') return 'Игра';
+    if (sk === 'plan') return 'План';
+    return sk || '—';
+  };
+
+  const profileSubtitle = (p) => {
+    const kind = saveKindLabel(p.save_kind);
+    let extra = '';
+    if (p.starter_template_key) extra = ` · ${p.starter_template_key}`;
+    else if (p.save_kind === 'game') extra = ' · без шаблона';
+    return `Период ${p.period_index} · ${kind}${extra}`;
+  };
 
   const handleLogout = () => {
     logout();
     if (onLogout) onLogout();
   };
 
+  if (loading) {
+    return (
+      <MqxShell
+        header={
+          <MqxTabHero
+            sectionLabel="Профили"
+            rightPill="…"
+            title="Загрузка слотов"
+            subtitle="Подтягиваем сохранения аккаунта."
+          />
+        }
+      >
+        <div className="mqx-card" style={{ display: 'grid', placeItems: 'center', minHeight: 120, padding: 28 }}>
+          <Spinner />
+        </div>
+      </MqxShell>
+    );
+  }
+
   return (
     <MqxShell
       header={
-        <header className="mqx-hero mqx-hero--tab">
-          <div className="mqx-hero__glow" aria-hidden />
-          <div className="mqx-hero__top">
-            <div className="mqx-hero-pills">
-              <span className="mqx-hero-pill mqx-hero-pill--brand">MQ</span>
-              <span className="mqx-hero-pill">Профили</span>
-            </div>
-            <span className="mqx-hero-pill mqx-hero-pill--ghost">{profiles.length} слотов</span>
-          </div>
-          <div className="mqx-hero__title mqx-hero__title--tab">Продолжить игру</div>
-          <div className="mqx-hero__sub">Выберите активный слот или создайте новый профиль.</div>
-        </header>
+        <MqxTabHero
+          sectionLabel="Профили"
+          rightPill={`${profiles.length} слотов`}
+          title="Продолжить игру"
+          subtitle="Активный слот — один тап. Остальные — в модалке «Все сохранения»."
+        />
       }
     >
-      <div className="mqx-card">
-        <div className="mqx-card__title">Активный профиль</div>
-        <div className="mqx-card__sub">Быстрый старт: один тап — и вы в периоде.</div>
+      <div className="mq-stack mq-stack--tight mq-stack-animate">
+        <div className="mq-enter-item mqx-card">
+          <div className="mqx-card__kicker mqx-card__kicker--violet">Быстрый старт</div>
+          <div className="mqx-card__title">Активный профиль</div>
+          <div className="mqx-card__sub">Как на главном табло: карточка и действие без лишней обвязки.</div>
 
-        {lastProfile ? (
-          <div className="mqx-fin-row" style={{ marginTop: 12 }}>
-            <div className="mqx-fin-row__l">
-              <div className="mqx-fin-row__title">{lastProfile.name}</div>
-              <div className="mqx-fin-row__sub">
-                Период {lastProfile.period_index}
-                {' · '}
-                {lastProfile.save_kind === 'game' ? 'Игра' : lastProfile.save_kind}
-                {lastProfile.starter_template_key
-                  ? ` · ${lastProfile.starter_template_key}`
-                  : ', свой старт'}
+          {lastProfile ? (
+            <div className="mqx-fin-row" style={{ marginTop: 14 }}>
+              <div className="mqx-fin-row__l">
+                <div className="mqx-fin-row__title">{lastProfile.name}</div>
+                <div className="mqx-fin-row__sub">{profileSubtitle(lastProfile)}</div>
+              </div>
+              <div className="mqx-fin-row__r">
+                <div className="mqx-fin-row__val">
+                  <MoneyText value={Number(lastProfile.cash_balance || 0)} />
+                </div>
+                <Button mode="filled" size="s" onClick={() => handleActivate(lastProfile.id)}>
+                  Продолжить
+                </Button>
               </div>
             </div>
-            <div className="mqx-fin-row__r">
-              <div className="mqx-fin-row__val">
-                <MoneyText value={Number(lastProfile.cash_balance || 0)} />
-              </div>
-              <Button mode="filled" size="s" onClick={() => handleActivate(lastProfile.id)}>
-                Продолжить
-              </Button>
+          ) : (
+            <div className="mqx-fin-empty" style={{ marginTop: 14 }}>
+              Пока нет сохранений в этом аккаунте.
             </div>
+          )}
+        </div>
+
+        <div className="mq-enter-item mqx-card">
+          <div className="mqx-card__title">Действия</div>
+          <div className="mqx-card__sub">Новая игра или список слотов — в одном визуальном ряду с игрой.</div>
+          <div className="mq-actions-stack" style={{ marginTop: 14 }}>
+            <Button mode="filled" onClick={onNewGame}>
+              Новая игра
+            </Button>
+            <Button mode="outline" onClick={() => setShowLoadModal(true)} disabled={profiles.length === 0}>
+              Все сохранения
+            </Button>
+            <Button mode="plain" onClick={handleLogout}>
+              Выйти
+            </Button>
           </div>
-        ) : (
-          <div className="mqx-fin-empty" style={{ marginTop: 12 }}>Пока нет сохранений в этом аккаунте.</div>
-        )}
-      </div>
-
-      <div className="mqx-card">
-        <div className="mqx-card__title">Действия</div>
-        <div className="mqx-card__sub">Для демо и инвесторской презентации — всё по делу.</div>
-        <div className="mq-actions-stack" style={{ marginTop: 12 }}>
-          <Button mode="filled" onClick={onNewGame}>Новая игра</Button>
-          <Button mode="outline" onClick={() => setShowLoadModal(true)} disabled={profiles.length === 0}>
-            Все сохранения
-          </Button>
-          <Button mode="plain" onClick={handleLogout}>Выйти</Button>
         </div>
       </div>
 
@@ -132,27 +139,29 @@ export function StartMenuScreen({ onNewGame, onLoadGame, onLogout }) {
         <div className="mqx-modal">
           <div className="mqx-card">
             <div className="mqx-card__title">Все сохранения</div>
-            <div className="mqx-card__sub">Выберите слот и нажмите «Загрузить».</div>
-            <List>
-              {otherProfiles.map(profile => (
+            <p className="mqx-card__sub">Выберите слот и нажмите «Загрузить».</p>
+            <div className="mqx-fin-list" style={{ marginTop: 12 }}>
+              {otherProfiles.map((profile) => (
                 <div key={profile.id} className="mqx-fin-row" style={{ marginTop: 10 }}>
                   <div className="mqx-fin-row__l">
                     <div className="mqx-fin-row__title">{profile.name}</div>
-                    <div className="mqx-fin-row__sub">
-                      Период {profile.period_index}
-                      {' · '}
-                      {profile.save_kind === 'game' ? 'Игра' : profile.save_kind}
-                      {profile.starter_template_key ? ` · ${profile.starter_template_key}` : ', свой старт'}
-                    </div>
+                    <div className="mqx-fin-row__sub">{profileSubtitle(profile)}</div>
                   </div>
                   <div className="mqx-fin-row__r">
-                    <Button mode="filled" size="s" onClick={() => { handleActivate(profile.id); setShowLoadModal(false); }}>
+                    <Button
+                      mode="filled"
+                      size="s"
+                      onClick={() => {
+                        void handleActivate(profile.id);
+                        setShowLoadModal(false);
+                      }}
+                    >
                       Загрузить
                     </Button>
                   </div>
                 </div>
               ))}
-            </List>
+            </div>
           </div>
         </div>
       </Modal>
