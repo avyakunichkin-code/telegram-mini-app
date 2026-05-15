@@ -202,7 +202,7 @@ export function AnalyticsSection({ overview }) {
               <MoneyText value={overview.net_monthly_cashflow} />
             </MqStatRow>
             <p className="mq-caption-muted">
-              Документ с идеями развития аналитики: <strong>docs/ANALYTICS_CONCEPT.md</strong>
+              Документ с идеями развития аналитики: <strong>docs/specs/SPEC_ANALYTICS.md</strong>
             </p>
           </Cell>
         </Section>

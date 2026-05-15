@@ -69,6 +69,9 @@ export const API = {
     activateGameProfile(id) {
         return apiCall(`/api/game/profiles/${id}/activate`, 'POST');
     },
+    listGameTemplates() {
+        return apiCall('/api/game/templates');
+    },
     startNewGame(payload) {
         return apiCall('/api/game/start', 'POST', payload);
     },

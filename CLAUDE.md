@@ -4,13 +4,14 @@
 
 | Документ | Назначение |
 |----------|------------|
-| [`docs/README.md`](docs/README.md) | Оглавление папки `docs/` |
-| [`docs/SPEC_PRODUCT.md`](docs/SPEC_PRODUCT.md) | Продукт, цикл, экономика MVP, ссылки на рост |
-| [`docs/ideas/money-quest-evolution-after-mvp.md`](docs/ideas/money-quest-evolution-after-mvp.md) | **Часть II** — целевая концепция Game/Plan, шаблоны, победа из шаблона, Q&A, план по слоям |
-| [`docs/PRODUCT_BACKLOG.md`](docs/PRODUCT_BACKLOG.md) | Бэклог по слоям |
-| [`docs/TMA_USER_FLOWS.md`](docs/TMA_USER_FLOWS.md) | Потоки и боли TMA |
-| [`docs/ANALYTICS_CONCEPT.md`](docs/ANALYTICS_CONCEPT.md) | Экран аналитики и данные |
-| [`docs/MONEY_QUEST_DESIGN_AND_GDD_OUTLINE.md`](docs/MONEY_QUEST_DESIGN_AND_GDD_OUTLINE.md) | GDD-оглавление и анализ |
+| [`docs/README.md`](docs/README.md) | Оглавление папки `docs/` и слои документации |
+| [`docs/DOCUMENTATION_SYSTEM.md`](docs/DOCUMENTATION_SYSTEM.md) | Конвейер idea → spec → plan → tasks |
+| [`docs/foundation/SPEC_PRODUCT.md`](docs/foundation/SPEC_PRODUCT.md) | Продукт, цикл, экономика MVP, ссылки на рост |
+| [`docs/vision/ideas/money-quest-evolution-after-mvp.md`](docs/vision/ideas/money-quest-evolution-after-mvp.md) | **Часть II** — целевая концепция Game/Plan, шаблоны, победа из шаблона, Q&A, план по слоям |
+| [`docs/backlog/PRODUCT_BACKLOG.md`](docs/backlog/PRODUCT_BACKLOG.md) | Бэклог по слоям |
+| [`docs/foundation/TMA_USER_FLOWS.md`](docs/foundation/TMA_USER_FLOWS.md) | Потоки и боли TMA |
+| [`docs/specs/SPEC_ANALYTICS.md`](docs/specs/SPEC_ANALYTICS.md) | Экран аналитики и данные |
+| [`docs/reference/MONEY_QUEST_DESIGN_AND_GDD_OUTLINE.md`](docs/reference/MONEY_QUEST_DESIGN_AND_GDD_OUTLINE.md) | GDD-оглавление и анализ |
 
 ---
 
@@ -95,7 +96,7 @@
 - `frontend-react/src/components/EventDeck.jsx` — кнопка событий, `EventCarouselOverlay`, свайп/стрелки.
 - `frontend-react/src/components/FinanceSection.jsx` — инвестиции, страховки, шаблоны, долги, активы; вкладки `.mq-tablist`.
 - `frontend-react/src/components/BottomGameNav.jsx` + `icons/NavIcons.jsx` — нижняя навигация.
-- `frontend-react/src/components/AnalyticsSection.jsx` / **AnalyticsPremium**, **DashboardPremium** — обзор и цели; концепт: `docs/ANALYTICS_CONCEPT.md`.
+- `frontend-react/src/components/AnalyticsSection.jsx` / **AnalyticsPremium**, **DashboardPremium** — обзор и цели; spec: [`docs/specs/SPEC_ANALYTICS.md`](docs/specs/SPEC_ANALYTICS.md).
 - `frontend-react/src/components/ToastHost.jsx` + `notifications.js` — тосты вместо `alert`.
 - Поток старта: `StartMenuScreen` → **`DifficultyScreen`** (legacy light/hardcore) → `BaseParamsScreen` → `GameScreen` — **планируется** выбор Game/Plan и шаблонов (см. evolution §II.3).
 
@@ -120,7 +121,7 @@
 - `net_monthly_cashflow >= 0`;
 - **`win_reached` = true` только если `period_index >= 7`** (периоды 1–6 победы нет — технический и продуктовый запрет).
 
-**Дальше:** победа **M из N целей** из шаблона, средний cashflow за 6 периодов, пороги кэша/cashflow из шаблона — см. [`docs/ideas/money-quest-evolution-after-mvp.md`](docs/ideas/money-quest-evolution-after-mvp.md) §II.
+**Дальше:** победа **M из N целей** из шаблона, средний cashflow за 6 периодов, пороги кэша/cashflow из шаблона — см. [`docs/vision/ideas/money-quest-evolution-after-mvp.md`](docs/vision/ideas/money-quest-evolution-after-mvp.md) §II.
 
 ---
 

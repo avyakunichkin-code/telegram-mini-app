@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Money Quest — Брендбук v1.0</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+    :root {
+      --violet: #6D28D9;
+      --violet-deep: #5B21B6;
+      --emerald: #059669;
+      --ink: #0F1115;
+      --mist: #F5F6F8;
+      --slate: #6B7280;
+      --line: #E5E7EB;
+      --danger: #DC2626;
+      --warn: #D97706;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      font-size: 11pt;
+      line-height: 1.45;
+      color: var(--ink);
+      background: #fff;
+      margin: 0;
+      padding: 0 12mm 14mm;
+      max-width: 210mm;
+      margin-inline: auto;
+    }
+
+    @page { size: A4; margin: 14mm 12mm 16mm 12mm; }
+
+    h1 {
+      font-size: 22pt;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      margin: 0 0 4mm;
+      color: var(--violet-deep);
+    }
+
+    h2 {
+      font-size: 13pt;
+      font-weight: 600;
+      margin: 8mm 0 3mm;
+      padding-bottom: 1mm;
+      border-bottom: 1px solid var(--line);
+    }
+
+    h3 { font-size: 11pt; font-weight: 600; margin: 5mm 0 2mm; }
+
+    p { margin: 0 0 2.5mm; }
+    ul { margin: 0 0 3mm 4mm; padding: 0; }
+    li { margin-bottom: 1.5mm; }
+
+    .meta {
+      font-size: 9pt;
+      color: var(--slate);
+      margin-bottom: 6mm;
+    }
+
+    .cover {
+      min-height: 240mm;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: flex-start;
+      page-break-after: always;
+      border-bottom: 4px solid var(--violet);
+      margin: -8mm -12mm 0 -12mm;
+      padding: 20mm 14mm;
+      background: linear-gradient(160deg, var(--mist) 0%, #fff 45%);
+    }
+
+    .cover-tag { font-size: 10pt; color: var(--emerald); font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; }
+    .cover h1 { font-size: 36pt; margin: 4mm 0; }
+    .cover p { max-width: 130mm; font-size: 12pt; color: var(--slate); }
+
+    table { width: 100%; border-collapse: collapse; margin: 2mm 0 4mm; font-size: 9.5pt; }
+    th, td { border: 1px solid var(--line); padding: 2mm 2.5mm; text-align: left; vertical-align: top; }
+    th { background: var(--mist); font-weight: 600; }
+
+    .swatches { display: flex; flex-wrap: wrap; gap: 3mm; margin: 3mm 0; }
+    .swatch {
+      width: 28mm;
+      border-radius: 2mm;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      break-inside: avoid;
+    }
+    .swatch-color { height: 16mm; }
+    .swatch-info { padding: 2mm; font-size: 8pt; background: #fff; }
+
+    .logo-row { display: flex; gap: 4mm; flex-wrap: wrap; margin: 4mm 0; align-items: flex-start; }
+    .logo-panel {
+      flex: 1 1 42%;
+      min-height: 42mm;
+      border: 1px solid var(--line);
+      border-radius: 2mm;
+      padding: 4mm;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      break-inside: avoid;
+    }
+    .logo-panel.dark { background: #16171D; color: #fff; border-color: #2e303a; }
+
+    .dont {
+      background: #FEF2F2;
+      border: 1px solid #FECACA;
+      border-radius: 2mm;
+      padding: 3mm;
+      margin: 3mm 0;
+      font-size: 9.5pt;
+    }
+
+    .mock {
+      border: 1px solid var(--line);
+      border-radius: 3mm;
+      padding: 4mm;
+      margin: 4mm 0;
+      break-inside: avoid;
+    }
+    .mock-title { font-weight: 700; font-size: 10pt; margin-bottom: 2mm; color: var(--violet-deep); }
+    .bizcard {
+      width: 85.6mm;
+      height: 53.98mm;
+      border: 1px dashed var(--slate);
+      border-radius: 2mm;
+      padding: 4mm;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      background: #fff;
+    }
+    .bizcard-bar { height: 2mm; background: var(--violet); border-radius: 1mm; }
+
+    .banner {
+      aspect-ratio: 1200 / 628;
+      width: 100%;
+      max-height: 52mm;
+      background: var(--mist);
+      border-radius: 2mm;
+      display: grid;
+      grid-template-columns: 1fr 2fr;
+      align-items: center;
+      padding: 3mm;
+      gap: 3mm;
+      border: 1px solid var(--line);
+    }
+
+    .export-box {
+      background: #ECFDF5;
+      border: 1px solid #a7f3d0;
+      border-radius: 2mm;
+      padding: 3mm;
+      margin-top: 4mm;
+      font-size: 9.5pt;
+    }
+
+    @media print {
+      body { padding: 0; max-width: none; }
+      .cover { margin: -14mm -12mm 0 -12mm; }
+      a { color: inherit; text-decoration: none; }
+      h2 { break-after: avoid; }
+    }
+
+    svg { display: block; }
+  </style>
+</head>
+<body>
+
+  <header class="cover">
+    <div class="cover-tag">Финансы как игра</div>
+    <h1>Money Quest</h1>
+    <p>Брендбук v1.0 — логотип, цвета, типографика, макеты, кросс-платформа. Экспортируйте этот файл в PDF через меню «Печать» браузера.</p>
+    <p style="font-size: 10pt; margin-top: 6mm;"><strong>Дата:</strong> май 2026</p>
+  </header>
+
+  <p class="meta">Документ соответствует содержимому Markdown: <code>docs/reference/brandbook/BRANDBOOK.md</code></p>
+
+  <h2>1. Логотип — варианты на фонах</h2>
+  <div class="logo-row">
+    <div class="logo-panel">
+      <p style="font-size:8pt;color:var(--slate);margin:0 0 2mm;">Светлый фон • основной знак</p>
+      <!-- MQ monogram + wordmark SVG -->
+      <svg width="200" height="56" aria-label="Money Quest logo light" role="img">
+        <defs>
+          <linearGradient id="gq" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" style="stop-color:#7C3AED"/>
+            <stop offset="100%" style="stop-color:#5B21B6"/>
+          </linearGradient>
+        </defs>
+        <rect rx="12" ry="12" width="52" height="52" fill="url(#gq)"/>
+        <text x="26" y="36" font-family="Inter, sans-serif" font-weight="700" font-size="26" fill="#fff" text-anchor="middle">MQ</text>
+        <text x="64" y="28" font-family="Inter, sans-serif" font-weight="700" font-size="22" fill="#111827">Money Quest</text>
+        <text x="64" y="44" font-family="Inter, sans-serif" font-weight="400" font-size="11" fill="#6B7280">Финансы как игра</text>
+      </svg>
+    </div>
+    <div class="logo-panel dark">
+      <p style="font-size:8pt;opacity:.8;margin:0 0 2mm;">Тёмный фон • монохром</p>
+      <svg width="200" height="56" aria-label="Money Quest logo dark" role="img">
+        <rect rx="12" ry="12" width="52" height="52" fill="#FFFFFF" fill-opacity=".12" stroke="#9CA3AF" stroke-width="1"/>
+        <text x="26" y="36" font-family="Inter, sans-serif" font-weight="700" font-size="26" fill="#F9FAFB" text-anchor="middle">MQ</text>
+        <text x="64" y="28" font-family="Inter, sans-serif" font-weight="700" font-size="22" fill="#F9FAFB">Money Quest</text>
+        <text x="64" y="44" font-family="Inter, sans-serif" font-weight="400" font-size="11" fill="#D1D5DB">Финансы как игра</text>
+      </svg>
+    </div>
+  </div>
+
+  <h3>Минимальные размеры и зона охранения</h3>
+  <ul>
+    <li>Минимальная высота монограммы в TMA header: <strong>24 px</strong></li>
+    <li>Отступ свободного поля вокруг знака: <strong>≥ 1/2 высоты монограммы</strong></li>
+    <li>Печать визитки: монограмма <strong>не менее 8 mm</strong></li>
+  </ul>
+
+  <div class="dont">
+    <strong>Нельзя:</strong> растягивать по вертикали/горизонтали без пропорций; класть на «шумный» фото без затемняющей подложки; добавлять символ валют внутрь знака (₽ € $) без отдельного макета; использовать несколько несогласованных градиентов на маленьких размерах.
+  </div>
+
+  <h2>2. Палитра и сочетания</h2>
+  <div class="swatches">
+    <div class="swatch"><div class="swatch-color" style="background:#6D28D9"></div><div class="swatch-info"><strong>Quest Violet</strong><br/>#6D28D9 — главный акцент</div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#5B21B6"></div><div class="swatch-info"><strong>Violet Deep</strong><br/>#5B21B6 — hover / глубина</div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#059669"></div><div class="swatch-info"><strong>Signal Emerald</strong><br/>#059669 — успех, деньги +</div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#0F1115"></div><div class="swatch-info"><strong>Ink</strong><br/>#0F1115 — заголовки / офлайн текст</div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#F5F6F8"></div><div class="swatch-info"><strong>Mist</strong><br/>#F5F6F8 — фон блоков веб</div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#DC2626"></div><div class="swatch-info"><strong>Danger</strong><br/>#DC2626 — просрочка / ошибка</div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#D97706"></div><div class="swatch-info"><strong>Warning</strong><br/>#D97706 — таймер / внимание</div></div>
+  </div>
+  <p><strong>Сочетания:</strong> белый фон + Ink текст + Violet CTA • тёмный #16171D + светлый текст + emerald для KPI • один градиент hero (Violet Deep → Indigo) только для промо-баннеров без мелкой типографики по градиенту.</p>
+  <p><strong>Telegram Mini App:</strong> при конфликте приоритет у <code>tg-theme-*</code>; палитру бренда использовать в иконках, лендингах и постах соцсетей.</p>
+
+  <h2>3. Типографика</h2>
+  <table>
+    <thead><tr><th>Стиль</th><th>Размер</th><th>Вес</th><th>Применение</th></tr></thead>
+    <tbody>
+      <tr><td>H1 веб</td><td>28–32 px</td><td>Semibold</td><td>Герои лендинга</td></tr>
+      <tr><td>H2</td><td>22–24 px</td><td>Semibold</td><td>Секции</td></tr>
+      <tr><td>Body</td><td>15–17 px</td><td>Regular</td><td>Операционный текст</td></tr>
+      <tr><td>Caption</td><td>12–13 px</td><td>Regular</td><td>Подписи, disclaimers</td></tr>
+    </tbody>
+  </table>
+  <p><strong>Верно:</strong> слева по краю в карточках продуктовых экранов; табличные числа для балансов; один «главный» акцент весом на экран.</p>
+  <p><strong>Неверно:</strong> заголовки только CAPS без причины; слишком плотный интерлиньяж; много разных семейств на одном экране.</p>
+
+  <h2>4. Примеры макетов</h2>
+
+  <div class="mock">
+    <div class="mock-title">Визитка 90 × 54 mm — структура</div>
+    <div class="bizcard">
+      <div style="display:flex;align-items:center;gap:4mm;">
+        <div style="width:14mm;height:14mm;border-radius:4px;background:#6D28D9;color:#fff;font-weight:700;display:flex;align-items:center;justify-content:center;font-size:9pt;">MQ</div>
+        <div><div style="font-weight:700;font-size:11pt;">Money Quest</div><div style="font-size:8pt;color:var(--slate);">Финансы как игра</div></div>
+      </div>
+      <div style="font-size:8pt;line-height:1.35;"><strong>Имя Фамилия</strong> · Роль<br/>email@moneyquest.ru · Telegram / Bot</div>
+      <div class="bizcard-bar"></div>
+    </div>
+  </div>
+
+  <div class="mock">
+    <div class="mock-title">Баннер 1200 × 628 (ориентир)</div>
+    <div class="banner">
+      <div style="font-weight:800;font-size:18pt;color:var(--violet-deep);">MQ</div>
+      <div>
+        <div style="font-size:13pt;font-weight:700;">Начни учиться финансам играючи</div>
+        <div style="font-size:9pt;color:var(--slate);margin-top:1mm;">Периоды, решения и последствия в Telegram</div>
+        <div style="margin-top:2mm;display:inline-block;background:var(--violet);color:#fff;padding:1mm 4mm;border-radius:4mm;font-size:9pt;font-weight:600;">Играть</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="mock">
+    <div class="mock-title">Социальная сеть — пост 1080 × 1080 (направление)</div>
+    <p style="font-size:9.5pt;">Верх: знак MQ. Центр: одно ключевое обещание. Низ: полоса Line #E5E7EB. Доля текста до 25% поля для узнавания образа игры на превью.</p>
+    <svg width="100%" viewBox="0 0 200 200" style="border:1px solid var(--line);border-radius:2mm;background:var(--mist);">
+      <defs>
+        <pattern id="pat" width="8" height="8" patternUnits="userSpaceOnUse">
+          <path d="M0 8 L8 8 M8 0 L8 8" stroke="#E5E7EB" stroke-width="0.5"/>
+        </pattern>
+      </defs>
+      <rect width="200" height="200" fill="url(#pat)"/>
+      <rect x="52" y="48" width="96" height="96" rx="16" fill="#6D28D9"/>
+      <text x="100" y="108" fill="#fff" font-family="Inter,sans-serif" font-size="42" font-weight="700" text-anchor="middle">MQ</text>
+      <rect x="0" y="170" width="200" height="30" fill="#059669"/>
+    </svg>
+  </div>
+
+  <h2>5. Паттерны и иконсет</h2>
+  <ul>
+    <li><strong>Паттерн «Сетка периода»</strong>: шаг 8 px, цвет линии #E5E7EB с opacity 0.25–0.35, не под обычный body-текст.</li>
+    <li><strong>Иконография</strong>: outline 24 px, stroke ~1.75 px, округлые края; один стиль во всём продукте.</li>
+  </ul>
+
+  <h2>6. Кросс-платформа</h2>
+  <table>
+    <thead><tr><th>Платформа</th><th>Правило</th></tr></thead>
+    <tbody>
+      <tr><td>TMA</td><td>Соблюдать tg-theme; брендовые блоки только в ваших контейнерах.</td></tr>
+      <tr><td>Веб</td><td>Inter + радиус карточек 12 px + палитра раздела 2.</td></tr>
+      <tr><td>Печать</td><td>Минимальные высоты знака как выше + защитные поля.</td></tr>
+      <tr><td>Партнёры</td><td>Дистанция до чужих лого ≥ вашего clear space или 8 мм.</td></tr>
+    </tbody>
+  </table>
+
+  <div class="export-box">
+    <strong>Как сохранить этот файл в PDF</strong><br/>
+    Откройте этот документ в <strong>Chrome</strong> или <strong>Edge</strong>. Нажмите <strong>Ctrl+P</strong>. Принтер: <strong>«Сохранить как PDF»</strong>. Включите<strong>«Фоновая графика»</strong> для сохранения цветовых блоков.<br/><br/>
+    Альтернатива: исходник Markdown сконвертировать через <strong>Pandoc</strong> или расширение <strong>Markdown PDF</strong> в VS Code / Cursor из файла <code>BRANDBOOK.md</code>.
+  </div>
+
+</body>
+</html>

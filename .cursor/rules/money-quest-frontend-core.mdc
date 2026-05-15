@@ -1,0 +1,56 @@
+---
+description: Базовые правила UI Money Quest (React TMA, MQX, язык, состояния)
+globs: frontend-react/**/*.{jsx,js,css}
+alwaysApply: false
+---
+
+# Frontend — базовые правила
+
+Полная spec: [`docs/specs/SPEC_FRONTEND_UI.md`](docs/specs/SPEC_FRONTEND_UI.md). Бренд: [`docs/reference/brandbook/BRANDBOOK.md`](docs/reference/brandbook/BRANDBOOK.md).
+
+## Эталон и legacy
+
+- **Новый игровой UI** — только `*Premium.jsx` + `mqx-*` (`DashboardPremium`, `FinancePremium`, `AnalyticsPremium`).
+- **Не расширять** legacy `*Section.jsx` (`premium === false`); багфиксы — минимальный diff.
+- Общие примитивы — `frontend-react/src/components/mqx/`.
+
+## Язык и контент
+
+- Видимый UI — **русский**. Не оставлять EN kickers (`Positions`, `cashflow`, `Forecast`) в production.
+- Тон: коротко, активный залог (брендбук §1). Суммы — `<MoneyText />`.
+
+## Состояния экрана
+
+Каждый асинхронный блок: **loading** (Spinner / текст), **empty** (`mqx-fin-empty`), **error** (тост или Section). Не `alert` — `showNotification`.
+
+## Данные и состояние игры
+
+- **API**: `frontend-react/src/api.js` — не дублировать разбор ошибок; при не-`ok` — `ApiError`.
+- **Игровое состояние**: `frontend-react/src/hooks/useGame.js` и связанные вызовы; при смене контракта сверяться с роутами из `CLAUDE.md`.
+- Не хардкодить прогресс (% в style) без полей из `overview`/API.
+- Смена API → синхронизировать `api.js` и хуки.
+
+## Legacy-поток старта
+
+- `DifficultyScreen` (`light` / `hardcore`) — **legacy** до Game/Plan (см. [`docs/specs/features/SPEC_game-plan.md`](docs/specs/features/SPEC_game-plan.md), [evolution §II](docs/vision/ideas/money-quest-evolution-after-mvp.md)).
+
+## Структура компонента
+
+```jsx
+// ✅ section + h2, guard на null
+export function Block({ overview }) {
+  if (!overview) return null;
+  return (
+    <section className="mqx-card mqx-capital-card">
+      <h2 className="mqx-capital-card__title">Заголовок</h2>
+    </section>
+  );
+}
+```
+
+- Файл компонента **&lt; ~200 строк** — выносить подкомпоненты.
+- Не дублировать `BottomGameNav` внутри страниц.
+
+## Сборка
+
+После изменений: `cd frontend-react && npm run build`.

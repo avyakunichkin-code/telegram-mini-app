@@ -81,7 +81,7 @@ def _ensure_seed_events(db: Session) -> None:
 EVENTS_PER_PERIOD = 3
 
 
-def ensure_period_events(db: Session, game_profile_id: int, period_index: int, mode: str) -> None:
+def ensure_period_events(db: Session, game_profile_id: int, period_index: int, save_kind: str) -> None:
     """
     Один раз на период создаёт фиксированное число сценариев (до 3).
     После решения части из них новые не добавляются до следующего периода.
@@ -101,7 +101,7 @@ def ensure_period_events(db: Session, game_profile_id: int, period_index: int, m
         db.query(EventDefinition)
         .filter(
             EventDefinition.is_active == 1,
-            or_(EventDefinition.mode == mode, EventDefinition.mode == "any"),
+            or_(EventDefinition.mode == save_kind, EventDefinition.mode == "any"),
         )
         .all()
     )
@@ -156,7 +156,7 @@ async def get_pending_event(current_user=Depends(get_current_user), db: Session 
     sync_time(profile)
     _ensure_seed_events(db)
 
-    ensure_period_events(db, profile.id, profile.period_index, profile.mode)
+    ensure_period_events(db, profile.id, profile.period_index, profile.save_kind)
 
     insts = (
         db.query(EventInstance)

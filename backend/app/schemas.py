@@ -140,13 +140,17 @@ class FinanceAnalyticsTimeseriesResponse(BaseModel):
 
 class GameProfileCreate(BaseModel):
     name: str
-    mode: str
+    save_kind: str = "game"
 
 
 class GameProfileResponse(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
     id: int
     name: str
-    mode: str
+    save_kind: str
+    starter_template_key: Optional[str] = None
+    cash_balance: float = 0
     is_active: int
     is_archived: int
     league: str
@@ -171,14 +175,21 @@ class TimeStatusResponse(BaseModel):
     seconds_until_next_period: int
 
 
+class GameStarterTemplatePublic(BaseModel):
+    template_key: str
+    title: str
+    difficulty_rank: int
+
+
 class GameStartRequest(BaseModel):
     """Тело POST /api/game/start (новый и legacy-формат через model_validator)."""
 
     model_config = ConfigDict(extra="ignore")
 
     profile_name: str
-    mode: str
-    period_duration_seconds: int
+    save_kind: str = "game"
+    template_key: Optional[str] = None
+    period_duration_seconds: int = 300
     cash_balance: float = 0
     monthly_receipts_count: int = 1
     monthly_salary: float = 0
@@ -187,10 +198,14 @@ class GameStartRequest(BaseModel):
     liabilities: List[LiabilityCreate] = Field(default_factory=list)
 
     @model_validator(mode="after")
-    def coalesce_monthly_salary(self):
+    def normalize_game_start(self):
+        sk = (self.save_kind or "game").strip().lower()
+        if sk != "game":
+            raise ValueError("Only save_kind=game is supported")
+        updates: dict = {"save_kind": sk}
         if self.monthly_salary in (0, 0.0) and self.monthly_amount is not None:
-            return self.model_copy(update={"monthly_salary": float(self.monthly_amount)})
-        return self
+            updates["monthly_salary"] = float(self.monthly_amount)
+        return self.model_copy(update=updates)
 
 
 class GameStartResponse(BaseModel):

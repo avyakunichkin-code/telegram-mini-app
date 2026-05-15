@@ -4,45 +4,11 @@ import { MoneyText } from './MoneyText';
 import { SparkLineSvg, CashForecastSpark } from './AnalyticsCharts';
 import { IconPercentStat, IconOverdueStat, IconShieldStat, IconFlowStat } from './icons/StatIcons';
 import { MqStatRow } from './MqStatRow';
-
-function pctClamp01(x) {
-  if (!Number.isFinite(x)) return 0;
-  return Math.max(0, Math.min(1, x));
-}
+import { MqxGoalBar, MqxCashflowBar, pctClamp01 } from './mqx/MqxMetricBars';
 
 function formatSignedMoney(n) {
   const v = Number(n) || 0;
   return v >= 0 ? `+${v.toLocaleString('ru-RU', { maximumFractionDigits: 0 })}` : v.toLocaleString('ru-RU', { maximumFractionDigits: 0 });
-}
-
-function MqxGoalBar({ label, valueNode, fraction, fillClass }) {
-  const pct = Math.round(pctClamp01(fraction) * 100);
-  return (
-    <div className="mqx-analytics-goal-row">
-      <div className="mqx-analytics-goal-row__head">
-        <span className="mqx-analytics-goal-row__label">{label}</span>
-        <span className="mqx-analytics-goal-row__value">{valueNode}</span>
-      </div>
-      <div className="mqx-analytics-goal-track">
-        <div className={`mqx-analytics-goal-fill ${fillClass}`} style={{ width: `${pct}%` }} />
-      </div>
-    </div>
-  );
-}
-
-function MqxCashflowBar({ label, amountNode, fraction, fillClass }) {
-  const pct = Math.round(pctClamp01(fraction) * 100);
-  return (
-    <div className="mqx-analytics-cf-row">
-      <div className="mqx-analytics-cf-row__head">
-        <span className="mqx-analytics-cf-row__label">{label}</span>
-        <span className="mqx-analytics-cf-row__amount">{amountNode}</span>
-      </div>
-      <div className="mqx-analytics-cf-track">
-        <div className={`mqx-analytics-cf-fill ${fillClass}`} style={{ width: `${pct}%` }} />
-      </div>
-    </div>
-  );
 }
 
 export function AnalyticsPremium({ overview }) {

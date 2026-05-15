@@ -1,0 +1,13 @@
+---
+description: Соглашения по backend Money Quest (FastAPI, период, БД)
+globs: backend/**/*.py
+alwaysApply: false
+---
+
+# Backend
+
+- **Конец периода и экономика**: `backend/app/game_period.py` (`process_period_end` и связанная логика).
+- **Модели**: `backend/app/models.py`; новые сущности — согласовать с SQL-миграциями и лёгкой автомиграцией в `backend/main.py`, если она уже есть для подобных полей.
+- **Роутеры**: подключение в `backend/main.py`; префиксы API держать согласованными с фронтом (`/api/...`).
+- **Ошибки API**: предсказуемые статусы и тело ответа; фронт ожидает единый контракт ошибок через `apiCall` в `frontend-react/src/api.js`.
+- **Победа MVP** и дорожная карта режимов: `GET /api/finance/overview` (`win_reached` при `period_index >= 7`); spec эпика Game/Plan — [`docs/specs/features/SPEC_game-plan.md`](docs/specs/features/SPEC_game-plan.md).

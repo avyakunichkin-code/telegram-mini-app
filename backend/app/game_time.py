@@ -16,7 +16,7 @@ def get_active_game_profile(db: Session, user_id: int) -> GameProfile:
     if profile:
         return profile
 
-    fallback = GameProfile(user_id=user_id, name="Мой первый профиль", mode="light", is_active=1)
+    fallback = GameProfile(user_id=user_id, name="Мой первый профиль", save_kind="game", is_active=1)
     db.add(fallback)
     db.commit()
     db.refresh(fallback)

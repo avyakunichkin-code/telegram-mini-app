@@ -3,8 +3,9 @@ import { API } from '../api';
 import { showNotification } from './notifications';
 import { MoneyText } from './MoneyText';
 import { useEffect, useState } from 'react';
+import { CapitalPortfolioPanels } from './CapitalPortfolioPanels';
 
-const FINANCE_TABS = [
+export const FINANCE_TABS = [
   { id: 'invest', label: 'Инвестиции' },
   { id: 'insurance', label: 'Страховки' },
   { id: 'portfolio', label: 'Активы · долги' },
@@ -16,8 +17,18 @@ const DEPOSIT_HELP =
 const BOND_HELP =
   'Облигации платят купон на счёт. 1/12 от ставки добавляется на счёт автоматически в начале каждого периода.';
 
-export function FinanceSection({ overview, refreshOverview, premium = false }) {
-  const [financeTab, setFinanceTab] = useState('invest');
+export function FinanceSection({
+  overview,
+  refreshOverview,
+  premium = false,
+  capitalLayout = false,
+  financeTab: financeTabProp,
+  onFinanceTabChange,
+  hideSectionsCard = false,
+}) {
+  const [financeTabInternal, setFinanceTabInternal] = useState('invest');
+  const financeTab = financeTabProp ?? financeTabInternal;
+  const setFinanceTab = onFinanceTabChange ?? setFinanceTabInternal;
   const [investPositions, setInvestPositions] = useState([]);
   const [policies, setPolicies] = useState([]);
   const [depositAmount, setDepositAmount] = useState(10000);
@@ -520,11 +531,16 @@ export function FinanceSection({ overview, refreshOverview, premium = false }) {
     }
   };
 
+  const activeTabLabel = FINANCE_TABS.find((t) => t.id === financeTab)?.label || 'Финансы';
+  const ownedAssets = overview.assets || [];
+  const ownedLiabilities = overview.liabilities || [];
+
   return (
-    <div className="mqx-fin">
-      <div className="mqx-card mqx-fin-card">
-        <div className="mqx-card__title">Разделы</div>
-        <div className="mqx-fin-tabs" role="tablist" aria-label="Разделы финансов">
+    <div className={`mqx-fin ${capitalLayout ? 'mqx-fin--capital' : ''}`}>
+      {!hideSectionsCard ? (
+        <div className="mqx-card mqx-fin-card">
+          <div className="mqx-card__title">Разделы</div>
+          <div className="mqx-fin-tabs" role="tablist" aria-label="Разделы финансов">
           {FINANCE_TABS.map((t) => (
             <button
               key={t.id}
@@ -539,16 +555,39 @@ export function FinanceSection({ overview, refreshOverview, premium = false }) {
               {t.label}
             </button>
           ))}
+          </div>
         </div>
-      </div>
+      ) : null}
 
+      {financeTab === 'portfolio' && capitalLayout ? (
+        <CapitalPortfolioPanels
+          activeTabLabel={activeTabLabel}
+          portfolioTab={portfolioTab}
+          setPortfolioTab={setPortfolioTab}
+          setExpandedDebtTpl={setExpandedDebtTpl}
+          setExpandedAssetTpl={setExpandedAssetTpl}
+          portfolioAssetsMode={portfolioAssetsMode}
+          setPortfolioAssetsMode={setPortfolioAssetsMode}
+          portfolioDebtsMode={portfolioDebtsMode}
+          setPortfolioDebtsMode={setPortfolioDebtsMode}
+          assetTemplates={assetTemplates}
+          liabilityTemplates={liabilityTemplates}
+          ownedAssets={ownedAssets}
+          ownedLiabilities={ownedLiabilities}
+          refreshOverview={refreshOverview}
+          reloadExtra={reloadExtra}
+          handleDeleteAsset={handleDeleteAsset}
+          handleDeleteLiability={handleDeleteLiability}
+          addLiabilityFromTemplate={addLiabilityFromTemplate}
+        />
+      ) : (
       <div
-        className="mqx-card mqx-fin-card"
+        className={`mqx-card mqx-fin-card ${capitalLayout ? 'mqx-capital-card' : ''}`}
         role="tabpanel"
         id={`finance-panel-${financeTab}`}
         aria-labelledby={`finance-tab-${financeTab}`}
       >
-        <div className="mqx-card__title">{FINANCE_TABS.find((t) => t.id === financeTab)?.label || 'Финансы'}</div>
+        <h2 className={capitalLayout ? 'mqx-capital-card__title' : 'mqx-card__title'}>{activeTabLabel}</h2>
 
         {financeTab === 'invest' ? (
           <>
@@ -718,7 +757,7 @@ export function FinanceSection({ overview, refreshOverview, premium = false }) {
           </>
         ) : null}
 
-        {financeTab === 'portfolio' ? (
+        {financeTab === 'portfolio' && !capitalLayout ? (
           <>
             <div className="mqx-fin-subtabs mqx-fin-subtabs-row" role="tablist" aria-label="Портфель">
               <button
@@ -947,6 +986,7 @@ export function FinanceSection({ overview, refreshOverview, premium = false }) {
           </>
         ) : null}
       </div>
+      )}
     </div>
   );
 }

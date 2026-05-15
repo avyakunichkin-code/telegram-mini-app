@@ -74,7 +74,11 @@ class GameProfile(Base):
     id = Column(Integer, primary_key=True, index=True)
     user_id = Column(Integer, ForeignKey("users.id"), nullable=False, index=True)
     name = Column(String(100), nullable=False)
-    mode = Column(String(20), nullable=False, default="light")
+    save_kind = Column(String(16), nullable=False, default="game")  # game | plan (plan — MVP 2.0)
+    starter_template_key = Column(String(80), nullable=True)
+    starter_params_json = Column(Text, nullable=False, default="{}")
+    base_monthly_lifestyle_expense = Column(Float, nullable=False, default=0)
+    delta_monthly_lifestyle_expense = Column(Float, nullable=False, default=0)
     is_active = Column(Integer, nullable=False, default=0)
     is_archived = Column(Integer, nullable=False, default=0)
     league = Column(String(50), nullable=False, default="Bronze")
@@ -179,6 +183,23 @@ class LiabilityTemplate(Base):
     created_at = Column(DateTime, default=datetime.utcnow)
 
 
+class GameStarterTemplate(Base):
+    """Стартовый шаблон Game Mode (blueprint JSON + базовые расходы «жизни»)."""
+
+    __tablename__ = "game_starter_templates"
+
+    id = Column(Integer, primary_key=True, index=True)
+    template_key = Column(String(80), unique=True, nullable=False, index=True)
+    title = Column(String(160), nullable=False)
+    difficulty_rank = Column(Integer, nullable=False, default=1)
+    base_monthly_lifestyle_expense = Column(Float, nullable=False, default=0)
+    blueprint_json = Column(Text, nullable=False, default="{}")
+    victory_config_json = Column(Text, nullable=False, default="{}")
+    is_active = Column(Integer, nullable=False, default=1)
+    sort_order = Column(Integer, nullable=False, default=100)
+    created_at = Column(DateTime, default=datetime.utcnow)
+
+
 # ==================== СОБЫТИЯ (MVP) ====================
 
 class EventDefinition(Base):
@@ -186,7 +207,8 @@ class EventDefinition(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     key = Column(String(80), unique=True, nullable=False, index=True)
-    mode = Column(String(20), nullable=False, default="light")  # light/hardcore/any (пока light)
+    # Совместимость с профилем: game | plan | any (legacy light/hardcore → game в миграции)
+    mode = Column(String(20), nullable=False, default="game")
     title = Column(String(160), nullable=False)
     description = Column(Text, nullable=False, default="")
     weight = Column(Integer, nullable=False, default=100)
