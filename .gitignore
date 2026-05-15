@@ -40,7 +40,12 @@ yarn-debug.log*
 pnpm-debug.log*
 
 # ===== Cursor / tooling =====
-.cursor/
+# Версионируем только rules и project skills; прочее в .cursor/ остаётся локальным
+.cursor/*
+!.cursor/rules/
+!.cursor/rules/**
+!.cursor/skills/
+!.cursor/skills/**
 
 # ===== Logs =====
 logs/

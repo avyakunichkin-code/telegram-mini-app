@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { HashRouter, Routes, Route } from 'react-router-dom';
+import { useState } from 'react';
+import { HashRouter, Routes, Route, useNavigate } from 'react-router-dom';
 import { AppRoot } from '@telegram-apps/telegram-ui';  // импортируем AppRoot
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { AuthGuard } from './components/AuthGuard';
@@ -11,9 +11,8 @@ import { BaseParamsScreen } from './components/BaseParamsScreen';
 import { GameScreen } from './components/GameScreen';
 import { ToastHost } from './components/ToastHost';
 
-import '@telegram-apps/telegram-ui/dist/styles.css';
-
 function GameApp() {
+  const navigate = useNavigate();
   const [screen, setScreen] = useState('start'); // 'start', 'difficulty', 'baseParams', 'game'
   const [difficultyConfig, setDifficultyConfig] = useState(null);
   const { logout } = useAuth();
@@ -36,7 +35,7 @@ function GameApp() {
 
   const handleLogout = () => {
     logout();
-    window.location.href = '/login';
+    navigate('/login', { replace: true });
   };
 
   const handleGameStarted = () => {
@@ -54,7 +53,8 @@ function GameApp() {
   if (screen === 'baseParams') {
     return <BaseParamsScreen
       profileName={difficultyConfig.profile_name}
-      mode={difficultyConfig.mode}
+      saveKind={difficultyConfig.save_kind}
+      templateKey={difficultyConfig.template_key}
       periodDuration={difficultyConfig.period_duration_seconds}
       onBack={() => setScreen('difficulty')}
       onGameStarted={handleGameStarted}
@@ -64,10 +64,7 @@ function GameApp() {
   if (screen === 'game') {
     return (
       <GameScreen
-        onLogout={() => {
-          logout();
-          window.location.href = '/login';
-        }}
+        onLogout={handleLogout}
         onNewGame={() => setScreen('difficulty')}
         onLoadGame={() => setScreen('start')}
       />
@@ -84,8 +81,26 @@ function App() {
         <ToastHost />
         <HashRouter>
           <Routes>
-            <Route path="/login" element={<LoginForm onSwitchToRegister={() => window.location.href='/telegram-mini-app/#/register'} />} />
-            <Route path="/register" element={<RegisterForm onSwitchToLogin={() => window.location.href='/telegram-mini-app/#/login'} />} />
+            <Route
+              path="/login"
+              element={
+                <LoginForm
+                  onSwitchToRegister={() => {
+                    window.location.href = `${import.meta.env.BASE_URL}#/register`;
+                  }}
+                />
+              }
+            />
+            <Route
+              path="/register"
+              element={
+                <RegisterForm
+                  onSwitchToLogin={() => {
+                    window.location.href = `${import.meta.env.BASE_URL}#/login`;
+                  }}
+                />
+              }
+            />
             <Route path="/" element={
               <AuthGuard>
                 <GameApp />

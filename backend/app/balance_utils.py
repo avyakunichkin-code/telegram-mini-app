@@ -15,6 +15,7 @@ TRANSACTION_TYPES = {
     "SAFETY_FUND_WITHDRAWAL": "safety_fund_withdrawal",
     "LIABILITY_PAYMENT": "liability_payment",
     "ASSET_MAINTENANCE": "asset_maintenance",
+    "LIFESTYLE_EXPENSE": "lifestyle_expense",
     "PERIOD_PENALTY": "period_penalty",
     "GAME_OVER": "game_over",
 }

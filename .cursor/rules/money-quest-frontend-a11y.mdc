@@ -1,0 +1,41 @@
+---
+description: Доступность и интерактивность TMA (a11y, табы, диалоги)
+globs: frontend-react/**/*.{jsx,js}
+alwaysApply: false
+---
+
+# Frontend — a11y и интерактив
+
+## Кнопки
+
+- Интерактив — `<button type="button">`, не кликабельный `<div>`.
+- Иконка без текста — `aria-label` (см. `BottomGameNav`, `mqx-fin-icon-btn--plus`).
+
+## Заголовки
+
+- **Один `h1`** на экран вкладки (в hero).
+- Секции — `h2`, не `div` с классом заголовка без семантики.
+
+## Табы
+
+```jsx
+<div role="tablist" aria-label="Разделы финансов">
+  <button role="tab" aria-selected={active} aria-controls="panel-id" />
+</div>
+<section role="tabpanel" id="panel-id" aria-labelledby="tab-id" />
+```
+
+## Диалоги (события, модалки)
+
+- Оверлей событий: `role="dialog"`, `aria-modal="true"`, кнопка закрытия с `aria-label="Закрыть"`.
+- При добавлении новых modal overlay — по возможности ловушка фокуса и возврат фокуса при закрытии.
+
+## Состояние не только цветом
+
+- Плюс/минус cashflow — дублировать знаком и подписью (`mqx-analytics-cashflow__pill--pos/neg`).
+- Опасные действия — явный текст («Удалить»), не только цвет кнопки.
+
+## Навигация
+
+- `BottomGameNav`: `aria-current="page"` на активной вкладке.
+- Рассмотреть видимые RU-подписи под иконками (spec Open Questions).

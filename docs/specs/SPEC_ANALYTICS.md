@@ -1,10 +1,17 @@
-# Концепция вкладки «Аналитика» (Money Quest)
+---
+layer: spec
+domain: analytics
+status: active
+last_reviewed: 2026-05-16
+---
 
-Документ фиксирует **виэны и дорожную карту** экрана аналитики: что показываем игроку, зачем (обучение + обратная связь), какие данные нужны от бэкенда.
+# Spec: вкладка «Аналитика» (Money Quest)
+
+Документ фиксирует **вижн и дорожную карту** экрана аналитики: что показываем игроку, зачем (обучение + обратная связь), какие данные нужны от бэкенда.
 
 Текущий MVP вкладки строится на полях `GET /api/finance/overview` и текстовых блоках ниже не хватает — пункты помечены **(будущее)**.
 
-**Согласование с продуктом:** целевая модель победы и метрик (средний чистый cashflow за **6** периодов, несколько целей из **шаблона**) — [`docs/ideas/money-quest-evolution-after-mvp.md`](ideas/money-quest-evolution-after-mvp.md) §II; отображение «победа недоступна до 7-го периода» при необходимости — из `period_index` в overview.
+**Согласование с продуктом:** целевая модель победы и метрик — [evolution §II](../vision/ideas/money-quest-evolution-after-mvp.md); «победа недоступна до 7-го периода» — из `period_index` в overview.
 
 ---
 
@@ -93,10 +100,11 @@
 
 | Файл | Содержание |
 |------|------------|
-| [`docs/ideas/money-quest-evolution-after-mvp.md`](ideas/money-quest-evolution-after-mvp.md) | Целевая концепция Game/Plan и метрики победы |
-| [`MONEY_QUEST_DESIGN_AND_GDD_OUTLINE.md`](MONEY_QUEST_DESIGN_AND_GDD_OUTLINE.md) | Роль аналитики в GDD |
-| [`PRODUCT_BACKLOG.md`](PRODUCT_BACKLOG.md) | Приоритизация задач API и UI |
-| [`brandbook/BRANDBOOK.md`](brandbook/BRANDBOOK.md) | Цвета статусов и типографика KPI |
+| [evolution §II](../vision/ideas/money-quest-evolution-after-mvp.md) | Game/Plan и метрики победы |
+| [GDD outline](../reference/MONEY_QUEST_DESIGN_AND_GDD_OUTLINE.md) | Роль аналитики в GDD |
+| [`PRODUCT_BACKLOG.md`](../backlog/PRODUCT_BACKLOG.md) | Приоритизация задач API и UI |
+| [`BRANDBOOK.md`](../reference/brandbook/BRANDBOOK.md) | Цвета статусов и типографика KPI |
+| [`SPEC_FRONTEND_UI.md`](SPEC_FRONTEND_UI.md) | MQX, a11y, premium-экраны |
 
 ---
 

@@ -112,6 +112,22 @@ def process_period_end(db: Session, profile: GameProfile) -> dict:
             "unpaid": unpaid,
         })
 
+    # 3.4 Базовые расходы «жизни» (шаблон Game + при необходимости дельты на профиле)
+    lifestyle_total = float(getattr(profile, "base_monthly_lifestyle_expense", 0) or 0) + float(
+        getattr(profile, "delta_monthly_lifestyle_expense", 0) or 0
+    )
+    if lifestyle_total > 0:
+        adjust_balance(
+            db=db,
+            game_profile_id=profile.id,
+            amount=-lifestyle_total,
+            type=TRANSACTION_TYPES["LIFESTYLE_EXPENSE"],
+            description=f"Расходы «жизни» за период #{period_index}",
+            period_index=period_index,
+        )
+        db.refresh(profile)
+        breakdown.append({"type": "lifestyle", "title": "Расходы «жизни»", "amount": round(lifestyle_total, 2)})
+
     # 3.5 Страховки: списываем премии (на MVP без просрочек — может уйти в минус)
     insurance_spend = 0.0
     try:
@@ -215,7 +231,7 @@ def process_period_end(db: Session, profile: GameProfile) -> dict:
     # 8. Событие на новый период (easy)
     try:
         _ensure_seed_events(db)
-        ensure_period_events(db, profile.id, profile.period_index, profile.mode)
+        ensure_period_events(db, profile.id, profile.period_index, profile.save_kind)
     except Exception:
         # События не должны ломать завершение периода
         pass

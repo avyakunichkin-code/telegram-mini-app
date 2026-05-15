@@ -17,7 +17,7 @@
    Низкий порог входа (Mini App без отдельной установки), сессии на «один-два минутные захода», синхронизация с темой клиента Telegram — упор на быстрый старт против «тяжёлого» симулятора.
 
 3. **Два режима сохранения (целевая модель)**  
-   Явное разделение **Game** (игра, шаблоны, цели из шаблона, агрегированные «жизненные» расходы + события) и **Plan** (планирование, статьи расходов, префилл стартового снимка) — см. [`docs/ideas/money-quest-evolution-after-mvp.md`](ideas/money-quest-evolution-after-mvp.md) §II. В коде MVP ещё используется устаревшая пара **light / hardcore** на профиле — планируется замена на **`save_kind`** и шаблоны.
+   Явное разделение **Game** (игра, шаблоны, цели из шаблона, агрегированные «жизненные» расходы + события) и **Plan** (планирование, статьи расходов, префилл стартового снимка) — см. [evolution §II](../vision/ideas/money-quest-evolution-after-mvp.md). В коде MVP ещё используется устаревшая пара **light / hardcore** на профиле — планируется замена на **`save_kind`** и шаблоны.
 
 4. **Не только баланс, но решения событий**  
    Карточки ситуаций за период (несколько сценариев) задают нарратив и микровыбор в рамках бюджета — мост между «цифрами» и «историей месяца».
@@ -276,10 +276,10 @@
 | Документ | Назначение |
 |---------|-------------|
 | `CLAUDE.md` | Технический онбординг и текущее состояние экономики MVP |
-| `docs/ideas/money-quest-evolution-after-mvp.md` | Целевая концепция Game/Plan, Q&A, план по слоям |
-| `docs/PRODUCT_BACKLOG.md` | Приоритизируемые идеи пост-MVP |
-| `docs/TMA_USER_FLOWS.md` | Пользовательские потоки и боли внутри TMA |
-| `docs/brandbook/BRANDBOOK.md` | Тон и визуальные правила продукта |
+| [`vision/ideas/money-quest-evolution-after-mvp.md`](../vision/ideas/money-quest-evolution-after-mvp.md) | Целевая концепция Game/Plan |
+| [`backlog/PRODUCT_BACKLOG.md`](../backlog/PRODUCT_BACKLOG.md) | Приоритизируемые идеи |
+| [`foundation/TMA_USER_FLOWS.md`](../foundation/TMA_USER_FLOWS.md) | Потоки TMA |
+| [`reference/brandbook/BRANDBOOK.md`](brandbook/BRANDBOOK.md) | Тон и визуал |
 
 ---
 

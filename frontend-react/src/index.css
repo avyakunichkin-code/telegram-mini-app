@@ -1,5 +1,5 @@
 :root {
-  /* Money Quest palette (fallback вне темы Telegram) — см. docs/brandbook/BRANDBOOK.md */
+  /* Money Quest palette (fallback вне темы Telegram) — см. docs/reference/brandbook/BRANDBOOK.md */
   --mq-violet: #6d28d9;
   --mq-violet-deep: #5b21b6;
   --mq-emerald: #059669;
@@ -234,6 +234,8 @@ body {
 }
 
 /* Библиотечный overlay-слой для нажатий/подсветки: не должен блокировать вложенные контролы */
+/* Хрупко: hashed class из @telegram-apps/telegram-ui (Cell overlay). При обновлении пакета —
+   если клики по .mq-field ломаются, проверьте DOM и замените селектор. Пакет см. package.json */
 #root .tgui-8071f6e38c77bc0b {
   pointer-events: none;
 }
@@ -493,6 +495,250 @@ body {
   background: rgba(255, 255, 255, 0.10);
 }
 
+/* --- Finance / Capital Management Premium --- */
+.mqx-capital-page {
+  padding-top: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.mqx-hero--capital {
+  padding-bottom: 22px;
+}
+
+.mqx-hero__title--capital {
+  margin-top: 18px;
+  font-size: clamp(28px, 7vw, 34px);
+  line-height: 1.02;
+}
+
+.mqx-hero__sub--capital {
+  margin-top: 10px;
+  max-width: 85%;
+  line-height: 1.45;
+}
+
+.mqx-capital-card {
+  border-radius: 22px;
+  padding: 18px;
+  background: rgba(255, 255, 255, 0.72);
+  backdrop-filter: blur(16px);
+  box-shadow: 0 14px 40px rgba(15, 23, 42, 0.06);
+}
+
+.mqx-capital-card__title {
+  margin: 0;
+  font-size: 22px;
+  font-weight: 850;
+  letter-spacing: -0.03em;
+  color: rgba(15, 17, 21, 0.96);
+}
+
+.mqx-capital-card .mqx-capital-card__title:first-child {
+  font-size: clamp(22px, 5vw, 28px);
+}
+
+.mqx-capital-tabs {
+  margin-top: 16px;
+  gap: 10px;
+}
+
+.mqx-capital-tab {
+  border-radius: 14px;
+  padding: 14px 12px;
+  font-size: 13px;
+}
+
+.mqx-capital-tab--active {
+  border-color: rgba(109, 40, 217, 0.38);
+  background: rgba(109, 40, 217, 0.1);
+  color: rgba(91, 33, 182, 0.98);
+  box-shadow: 0 0 0 1px rgba(109, 40, 217, 0.08);
+}
+
+.mqx-fin--capital {
+  gap: 14px;
+}
+
+.mqx-capital-lead {
+  margin: 12px 0 0;
+  font-size: var(--mq-fs-caption);
+  line-height: 1.45;
+  color: rgba(15, 17, 21, 0.52);
+}
+
+.mqx-capital-subtabs {
+  margin-top: 14px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.mqx-capital-subtab {
+  border: 1px solid color-mix(in srgb, var(--mq-line) 75%, transparent);
+  background: rgba(255, 255, 255, 0.85);
+  border-radius: 12px;
+  padding: 10px;
+  font-size: 13px;
+  font-weight: 750;
+  color: rgba(15, 17, 21, 0.82);
+}
+
+.mqx-capital-subtab--active {
+  border-color: rgba(109, 40, 217, 0.32);
+  background: rgba(109, 40, 217, 0.1);
+  color: rgba(91, 33, 182, 0.98);
+}
+
+.mqx-capital-mode-grid {
+  margin-top: 16px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.mqx-capital-mode-btn {
+  border: none;
+  border-radius: 14px;
+  padding: 14px 12px;
+  font-size: 13px;
+  font-weight: 800;
+  cursor: pointer;
+  color: #fff;
+  background: linear-gradient(90deg, #7c3aed, #d946ef);
+  box-shadow: 0 10px 28px rgba(109, 40, 217, 0.24);
+}
+
+.mqx-capital-mode-btn--ghost {
+  color: rgba(91, 33, 182, 0.95);
+  background: rgba(109, 40, 217, 0.08);
+  border: 1px solid rgba(109, 40, 217, 0.22);
+  box-shadow: none;
+}
+
+.mqx-capital-mode-btn--ghost-active {
+  border-color: rgba(109, 40, 217, 0.38);
+  background: rgba(109, 40, 217, 0.14);
+}
+
+.mqx-capital-template-list,
+.mqx-capital-position-list {
+  margin-top: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.mqx-capital-template-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 14px 14px;
+  border-radius: 18px;
+  border: 1px solid color-mix(in srgb, var(--mq-line) 72%, transparent);
+  background: rgba(255, 255, 255, 0.92);
+}
+
+.mqx-capital-template-row__title {
+  font-size: 16px;
+  font-weight: 850;
+  letter-spacing: -0.02em;
+  color: rgba(15, 17, 21, 0.94);
+}
+
+.mqx-capital-template-row__meta {
+  margin-top: 6px;
+  font-size: var(--mq-fs-caption);
+  line-height: 1.4;
+  color: rgba(15, 17, 21, 0.52);
+}
+
+.mqx-capital-add-btn {
+  width: 44px;
+  height: 44px;
+  border-radius: 14px;
+  font-size: 22px;
+}
+
+.mqx-capital-position-card {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 14px;
+  border-radius: 18px;
+  border: 1px solid color-mix(in srgb, var(--mq-line) 72%, transparent);
+  background: rgba(255, 255, 255, 0.92);
+}
+
+.mqx-capital-position-card__kicker {
+  font-size: 10px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: rgba(109, 40, 217, 0.82);
+}
+
+.mqx-capital-position-card__name {
+  margin-top: 4px;
+  font-size: 16px;
+  font-weight: 850;
+  letter-spacing: -0.02em;
+  color: rgba(15, 17, 21, 0.94);
+}
+
+.mqx-capital-position-card__value {
+  margin-top: 6px;
+  font-size: var(--mq-fs-caption);
+  color: rgba(15, 17, 21, 0.55);
+}
+
+.mqx-capital-delete-btn {
+  flex-shrink: 0;
+  border-radius: 12px;
+  border: 1px solid rgba(244, 63, 94, 0.28);
+  background: rgba(255, 241, 242, 0.95);
+  color: rgba(190, 18, 60, 0.95);
+  padding: 8px 12px;
+  font-size: 12px;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.mqx-capital-positions-block__head {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: flex-start;
+}
+
+.mqx-capital-positions-block__kicker {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  color: rgba(109, 40, 217, 0.72);
+}
+
+.mqx-capital-positions-block__title {
+  margin: 4px 0 0;
+  font-size: 24px;
+  font-weight: 850;
+  letter-spacing: -0.03em;
+  color: rgba(15, 17, 21, 0.96);
+}
+
+.mqx-capital-positions-block__badge {
+  flex-shrink: 0;
+  padding: 8px 10px;
+  border-radius: 12px;
+  background: rgba(109, 40, 217, 0.1);
+  color: rgba(91, 33, 182, 0.95);
+  font-size: var(--mq-fs-caption);
+  font-weight: 800;
+}
+
 .mqx-fin {
   display: flex;
   flex-direction: column;
@@ -501,6 +747,9 @@ body {
 
 .mqx-fin-card {
   overflow: hidden;
+  border-radius: 22px;
+  padding: 16px;
+  box-shadow: 0 14px 40px rgba(15, 23, 42, 0.06);
 }
 
 .mqx-fin-tabs {
@@ -2717,6 +2966,16 @@ button.mqx-events-choice:active:not(:disabled) {
     transform: translateX(0);
     box-shadow: 0 0 0 transparent;
     opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .event-carousel-layer--enter-next,
+  .event-carousel-layer--enter-prev {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+    box-shadow: none !important;
   }
 }
 

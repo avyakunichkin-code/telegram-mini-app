@@ -1,3 +1,5 @@
+import json
+
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy import inspect, text
@@ -54,13 +56,88 @@ def ensure_schema_compatibility() -> None:
         if "monthly_income" not in asset_columns:
             statements.append("ALTER TABLE finance_assets ADD COLUMN monthly_income FLOAT NOT NULL DEFAULT 0")
 
-    if not statements:
-        return
+    # ---- game_profiles: save_kind + шаблон (ADR-001 / эпик G1) ----
+    if "game_profiles" in inspector.get_table_names():
+        gp_cols = {item["name"] for item in inspector.get_columns("game_profiles")}
+        if "save_kind" not in gp_cols:
+            statements.append(
+                "ALTER TABLE game_profiles ADD COLUMN save_kind VARCHAR(16) NOT NULL DEFAULT 'game'"
+            )
+        if "starter_template_key" not in gp_cols:
+            statements.append(
+                "ALTER TABLE game_profiles ADD COLUMN starter_template_key VARCHAR(80)"
+            )
+        if "starter_params_json" not in gp_cols:
+            statements.append(
+                "ALTER TABLE game_profiles ADD COLUMN starter_params_json TEXT NOT NULL DEFAULT '{}'"
+            )
+        if "base_monthly_lifestyle_expense" not in gp_cols:
+            statements.append(
+                "ALTER TABLE game_profiles ADD COLUMN base_monthly_lifestyle_expense DOUBLE PRECISION NOT NULL DEFAULT 0"
+            )
+        if "delta_monthly_lifestyle_expense" not in gp_cols:
+            statements.append(
+                "ALTER TABLE game_profiles ADD COLUMN delta_monthly_lifestyle_expense DOUBLE PRECISION NOT NULL DEFAULT 0"
+            )
 
-    with engine.begin() as connection:
-        for stmt in statements:
-            connection.execute(text(stmt))
-    print(f"✅ Схема обновлена: {len(statements)} изм.")
+    if statements:
+        with engine.begin() as connection:
+            for stmt in statements:
+                connection.execute(text(stmt))
+        print(f"✅ Схема обновлена: {len(statements)} изм.")
+
+    # DROP legacy mode после появления save_kind (повторный inspect)
+    inspector = inspect(engine)
+    if "game_profiles" in inspector.get_table_names():
+        gp_cols = {item["name"] for item in inspector.get_columns("game_profiles")}
+        if "mode" in gp_cols and "save_kind" in gp_cols:
+            with engine.begin() as connection:
+                connection.execute(text("ALTER TABLE game_profiles DROP COLUMN mode"))
+            print("✅ Удалена колонка game_profiles.mode (save_kind)")
+
+    # События: light/hardcore → game
+    if "event_definitions" in inspector.get_table_names():
+        with engine.begin() as connection:
+            connection.execute(
+                text(
+                    "UPDATE event_definitions SET mode = 'game' WHERE mode IN ('light', 'hardcore')"
+                )
+            )
+
+    # Сид базового шаблона Game (таблица создаётся metadata.create_all)
+    inspector = inspect(engine)
+    if "game_starter_templates" in inspector.get_table_names():
+        blueprint = json.dumps(
+            {
+                "period_duration_seconds": 300,
+                "cash_balance": 8000,
+                "monthly_salary": 45000,
+                "assets": [],
+                "liabilities": [],
+            },
+            ensure_ascii=False,
+        )
+        with engine.begin() as connection:
+            connection.execute(
+                text(
+                    """
+                    INSERT INTO game_starter_templates
+                      (template_key, title, difficulty_rank, base_monthly_lifestyle_expense,
+                       blueprint_json, victory_config_json, is_active, sort_order)
+                    VALUES
+                      (:template_key, :title, :difficulty_rank, :base_expense,
+                       :blueprint_json, '{}', 1, 10)
+                    ON CONFLICT (template_key) DO NOTHING
+                    """
+                ),
+                {
+                    "template_key": "mq_game_basic_v1",
+                    "title": "Базовый старт",
+                    "difficulty_rank": 1,
+                    "base_expense": 12000.0,
+                    "blueprint_json": blueprint,
+                },
+            )
 
 
 # Создаём/обновляем таблицы

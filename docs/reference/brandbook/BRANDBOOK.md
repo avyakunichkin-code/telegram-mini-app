@@ -8,7 +8,7 @@
 
 ## 1. Основные принципы бренда
 
-**Money Quest** — обучающая игра про личные финансы через игровые периоды, решения и последствия. В целевой версии продукт разделяет **игровой** и **планировочный** режимы (см. `docs/ideas/money-quest-evolution-after-mvp.md` §II); визуальный язык бренда единый для обоих.
+**Money Quest** — обучающая игра про личные финансы через игровые периоды, решения и последствия. В целевой версии продукт разделяет **игровой** и **планировочный** режимы (см. [`docs/vision/ideas/money-quest-evolution-after-mvp.md`](../../vision/ideas/money-quest-evolution-after-mvp.md) §II); визуальный язык бренда единый для обоих.
 
 | Параметр | Описание |
 |----------|-----------|
@@ -232,8 +232,8 @@
 
 ## 9. Экспорт в PDF
 
-Источник этого текста:** `docs/brandbook/BRANDBOOK.md`  
-**Готовый к печати HTML:** `docs/brandbook/brandbook-print.html`  
+Источник этого текста:** `docs/reference/brandbook/BRANDBOOK.md`  
+**Готовый к печати HTML:** `docs/reference/brandbook/brandbook-print.html`  
 
 ### Вариант A — браузер (быстро)
 
@@ -244,7 +244,7 @@
 ### Вариант B — Pandoc
 
 ```bash
-pandoc docs/brandbook/BRANDBOOK.md -o MoneyQuest-Brandbook.pdf --pdf-engine=xelatex -V geometry:margin=20mm -V fontsize=11pt
+pandoc docs/reference/brandbook/BRANDBOOK.md -o MoneyQuest-Brandbook.pdf --pdf-engine=xelatex -V geometry:margin=20mm -V fontsize=11pt
 ```
 
 При отсутствии LaTeX: `pandoc BRANDBOOK.md -o brandbook.docx`, затем экспорт из Word в PDF.

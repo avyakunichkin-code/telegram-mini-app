@@ -93,7 +93,14 @@ export function StartMenuScreen({ onNewGame, onLoadGame, onLogout }) {
           <div className="mqx-fin-row" style={{ marginTop: 12 }}>
             <div className="mqx-fin-row__l">
               <div className="mqx-fin-row__title">{lastProfile.name}</div>
-              <div className="mqx-fin-row__sub">Период {lastProfile.period_index} · режим {lastProfile.mode}</div>
+              <div className="mqx-fin-row__sub">
+                Период {lastProfile.period_index}
+                {' · '}
+                {lastProfile.save_kind === 'game' ? 'Игра' : lastProfile.save_kind}
+                {lastProfile.starter_template_key
+                  ? ` · ${lastProfile.starter_template_key}`
+                  : ', свой старт'}
+              </div>
             </div>
             <div className="mqx-fin-row__r">
               <div className="mqx-fin-row__val">
@@ -131,7 +138,12 @@ export function StartMenuScreen({ onNewGame, onLoadGame, onLogout }) {
                 <div key={profile.id} className="mqx-fin-row" style={{ marginTop: 10 }}>
                   <div className="mqx-fin-row__l">
                     <div className="mqx-fin-row__title">{profile.name}</div>
-                    <div className="mqx-fin-row__sub">Период {profile.period_index} · режим {profile.mode}</div>
+                    <div className="mqx-fin-row__sub">
+                      Период {profile.period_index}
+                      {' · '}
+                      {profile.save_kind === 'game' ? 'Игра' : profile.save_kind}
+                      {profile.starter_template_key ? ` · ${profile.starter_template_key}` : ', свой старт'}
+                    </div>
                   </div>
                   <div className="mqx-fin-row__r">
                     <Button mode="filled" size="s" onClick={() => { handleActivate(profile.id); setShowLoadModal(false); }}>

@@ -2,7 +2,12 @@
 
 Живой список идей по **бэкенду**, **механикам**, **UI/UX** и **дизайну**. Отмечайте выполненное через `[x]`, планируйте через **приоритет** и блок **«В работу»**.
 
-**Связанные документы:** [`CLAUDE.md`](../CLAUDE.md) (архитектура), **[`docs/ideas/money-quest-evolution-after-mvp.md`](ideas/money-quest-evolution-after-mvp.md)** (целевая концепция Game/Plan и план по слоям), [`docs/SPEC_PRODUCT.md`](SPEC_PRODUCT.md), [`docs/brandbook/BRANDBOOK.md`](brandbook/BRANDBOOK.md) (визуал и тон), [`docs/TMA_USER_FLOWS.md`](TMA_USER_FLOWS.md) (потоки и боли TMA), [`docs/ANALYTICS_CONCEPT.md`](ANALYTICS_CONCEPT.md) (аналитический экран и API).
+**Трассировка эпиков:** [`TRACEABILITY.md`](../TRACEABILITY.md)  
+**Связанные документы:** [`CLAUDE.md`](../CLAUDE.md), [evolution §II](../vision/ideas/money-quest-evolution-after-mvp.md), [`foundation/SPEC_PRODUCT.md`](../foundation/SPEC_PRODUCT.md), [`reference/brandbook/BRANDBOOK.md`](../reference/brandbook/BRANDBOOK.md), [`foundation/TMA_USER_FLOWS.md`](../foundation/TMA_USER_FLOWS.md), [`specs/SPEC_ANALYTICS.md`](../specs/SPEC_ANALYTICS.md), [`specs/SPEC_FRONTEND_UI.md`](../specs/SPEC_FRONTEND_UI.md).
+
+Шаблон пункта с привязкой к spec:
+
+`- [ ] P1 Заголовок — см. [SPEC_…](../specs/features/SPEC_….md), MQ-0xx`
 
 ---
 
@@ -52,13 +57,27 @@
 - [x] **Победа MVP** — подушка, просрочки, чистый денежный поток (`overview`); **`win_reached` только с 7-го периода** (`period_index >= 7`).
 - [x] **Поражение** — связка с `negative_periods_count` (3 подряд в логике периода).
 
-### Режимы Game / Plan и шаблоны (целевая модель — см. `docs/ideas/...` §II)
+### Режимы Game / Plan и шаблоны
 
-- [ ] P0 **`save_kind` `game` \| `plan`** на профиле + миграция с `GameProfile.mode` (`light`/`hardcore`); неизменяемость режима после создания.
-- [ ] P0 **`starter_params_json`** при создании профиля; префилл новой **Plan**-игры из стартового снимка выбранного сохранения.
-- [ ] P1 **Каталог `game_starter_templates`** (старт, `victory_config`, `base_monthly_lifestyle_expense`, difficulty).
-- [ ] P1 **UI:** выбор Game/Plan, первый Game — сразу базовый шаблон; повторная игра — сетка шаблонов; список сохранений с бейджами `game`/`plan` + difficulty.
-- [ ] P1 **Движок победы** по шаблону (M из N целей); средний чистый cashflow за **6** периодов в overview.
+Целевая модель: [evolution §II](../vision/ideas/money-quest-evolution-after-mvp.md). Эпик G1 (approved): [`SPEC_game-plan`](../specs/features/SPEC_game-plan.md), план работ: [`PLAN_game-plan`](../plans/PLAN_game-plan.md), решение по legacy: [ADR-001](../decisions/ADR-001-save-kind-remove-light-hardcore.md). Чеклист текущего MVP: [`foundation/MVP_AUDIT_VS_SPEC.md`](../foundation/MVP_AUDIT_VS_SPEC.md) (подписан 2026-05-16).
+
+#### Эпик G1 — очередь MQ (Game: один шаблон end-to-end)
+
+- [ ] P0 **MQ-101** — SQL: `save_kind`, таблица шаблонов, колонка дельты lifestyle, отказ от `GameProfile.mode` ([детали в plan](../plans/PLAN_game-plan.md)).
+- [ ] P0 **MQ-102** — Модели SQLAlchemy и автодобавление колонок под MQ-101.
+- [ ] P0 **MQ-103** — Сид одного `game_starter_templates` + миграция событий под `game`/`plan`/`any`.
+- [ ] P0 **MQ-104** — API профилей и `GET /game/templates`; без light/hardcore.
+- [ ] P0 **MQ-105** — Применение blueprint шаблона при создании профиля.
+- [ ] P0 **MQ-106** — `ensure_period_events` / период: фильтр по `save_kind`, без legacy `profile.mode`.
+- [ ] P0 **MQ-107** — Конец периода: `base_monthly_lifestyle_expense` + дельта на профиле (минимальный учёт в cash).
+- [ ] P0 **MQ-108** — Frontend: поток старта без `DifficultyScreen`; `api.js` под новый контракт.
+
+#### После G1 / MVP 2.0 Plan
+
+- [ ] P1 **`starter_params_json` и префилл новой Plan** из стартового снимка — **не входит в G1** (Plan Mode MVP 2.0).
+- [ ] P1 **Каталог 4–5 шаблонов** Game и сетка выбора при повторной новой игре.
+- [ ] P1 **Движок победы** по шаблону (M из N целей); средний чистый cashflow за **6** периодов в `overview`.
+- [ ] P1 **UI:** экран выбора Game **и Plan** при новой игре; список сохранений с бейджами `game`/`plan` + difficulty для game (расширение после MQ-108).
 - [ ] P2 **События:** уровень, `repeat_policy`, эффекты на месячные расходы, `mandatory_gate` (см. концепцию).
 
 ### Углубление экономики и давления (после режимов)
@@ -160,8 +179,8 @@ _Сюда переносите строки из разделов выше и п
 
 | Дата | Что закрыли |
 |------|-------------|
-| | |
+| 2026-05-16 | Подписан [`MVP_AUDIT_VS_SPEC`](../foundation/MVP_AUDIT_VS_SPEC.md); заведены пункты **MQ-101–108** (эпик G1). |
 
 ---
 
-*Последнее обновление: май 2026 — синхронизация с концепцией Game/Plan (`docs/ideas/...` §II), правки бэклога и MVP-победы (`period_index >= 7`).*
+*Последнее обновление: май 2026 — подписан MVP audit; эпик G1: очередь MQ-101–108 в этом файле и в [`plans/PLAN_game-plan.md`](../plans/PLAN_game-plan.md).*

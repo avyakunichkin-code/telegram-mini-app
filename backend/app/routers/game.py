@@ -2,14 +2,24 @@ from fastapi import APIRouter, Depends, HTTPException, Request
 from sqlalchemy.orm import Session
 from datetime import datetime
 from typing import List
+import json
 
 from ..auth import get_current_user
 from ..database import get_db
 from ..game_period import process_period_end
-from ..models import GameProfile, FinanceSalary, FinanceAsset, FinanceLiability, Transaction
+from ..models import GameProfile, FinanceSalary, FinanceAsset, FinanceLiability, Transaction, GameStarterTemplate
 from ..finance_helpers import monthly_interest_payment
-from ..schemas import (GameProfileCreate, GameProfileResponse, TimeConfigUpdate, TimeStatusResponse, GameStartRequest,
-                       GameStartResponse, AssetCreate, LiabilityCreate)
+from ..schemas import (
+    GameProfileCreate,
+    GameProfileResponse,
+    TimeConfigUpdate,
+    TimeStatusResponse,
+    GameStartRequest,
+    GameStartResponse,
+    AssetCreate,
+    LiabilityCreate,
+    GameStarterTemplatePublic,
+)
 from ..game_time import (
     get_active_game_profile,
     sync_time,
@@ -22,11 +32,29 @@ from ..game_time import (
 router = APIRouter(prefix="/api/game", tags=["game"])
 
 
-def _validate_mode(mode: str) -> str:
-    normalized = (mode or "").strip().lower()
-    if normalized not in {"light", "hardcore"}:
-        raise HTTPException(status_code=400, detail="mode must be light or hardcore")
+def _validate_save_kind(save_kind: str) -> str:
+    normalized = (save_kind or "").strip().lower()
+    if normalized != "game":
+        raise HTTPException(status_code=400, detail="save_kind must be game (plan — позже)")
     return normalized
+
+
+@router.get("/templates", response_model=list[GameStarterTemplatePublic])
+async def list_game_templates(db: Session = Depends(get_db)):
+    rows = (
+        db.query(GameStarterTemplate)
+        .filter(GameStarterTemplate.is_active == 1)
+        .order_by(GameStarterTemplate.sort_order.asc(), GameStarterTemplate.id.asc())
+        .all()
+    )
+    return [
+        GameStarterTemplatePublic(
+            template_key=r.template_key,
+            title=r.title,
+            difficulty_rank=int(r.difficulty_rank or 1),
+        )
+        for r in rows
+    ]
 
 
 @router.get("/profiles", response_model=list[GameProfileResponse])
@@ -48,7 +76,7 @@ async def create_game_profile(
     current_user=Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
-    mode = _validate_mode(payload.mode)
+    save_kind = _validate_save_kind(payload.save_kind)
     profile_name = (payload.name or "").strip()
     if not profile_name:
         raise HTTPException(status_code=400, detail="name is required")
@@ -60,7 +88,7 @@ async def create_game_profile(
     profile = GameProfile(
         user_id=current_user.id,
         name=profile_name,
-        mode=mode,
+        save_kind=save_kind,
         is_active=0 if has_any else 1,
     )
     db.add(profile)
@@ -99,79 +127,126 @@ async def start_new_game(
         current_user=Depends(get_current_user),
         db: Session = Depends(get_db)
 ):
-    # Получаем тело запроса в сыром виде
+    """
+    Новый профиль Game: либо из шаблона (`template_key`), либо ручной набор активов/долгов (legacy UI).
+    """
     body = await request.json()
 
-    # Преобразуем старый формат в новый, если нужно
-    if "monthly_salary" in body:
-        # Уже новый формат
-        payload = GameStartRequest(**body)
-    else:
-        # Старый формат: конвертируем
+    if "monthly_salary" not in body and "monthly_amount" in body:
         payload = GameStartRequest(
             profile_name=body.get("profile_name"),
-            mode=body.get("mode"),
-            period_duration_seconds=body.get("period_duration_seconds"),
+            save_kind=body.get("save_kind") or "game",
+            template_key=body.get("template_key"),
+            period_duration_seconds=body.get("period_duration_seconds") or 300,
             cash_balance=body.get("cash_balance", 0),
             monthly_salary=body.get("monthly_amount", 0),
-            assets=[],          # в старом формате активов не было
-            liabilities=[]      # и обязательств тоже
+            assets=[],
+            liabilities=[],
         )
-    """
-    Создаёт новый игровой профиль с полной конфигурацией:
-    - стартовый баланс
-    - зарплата
-    - список активов (со стоимостью и обслуживанием)
-    - список обязательств (долг, процент, платёж)
-    """
-    # 1. Валидация
+    else:
+        payload = GameStartRequest(**body)
+
     if not payload.profile_name.strip():
         raise HTTPException(status_code=400, detail="profile_name is required")
-    if payload.mode not in ["light", "hardcore"]:
-        raise HTTPException(status_code=400, detail="mode must be light or hardcore")
-    if payload.period_duration_seconds < 10:
+
+    save_kind = _validate_save_kind(payload.save_kind)
+
+    starter_template_key = None
+    base_monthly_lifestyle = 0.0
+    period_duration_seconds = int(payload.period_duration_seconds)
+    cash_balance = float(payload.cash_balance)
+    monthly_salary = float(payload.monthly_salary)
+    assets_list: List[AssetCreate] = []
+    liabilities_list: List[LiabilityCreate] = []
+
+    if payload.template_key:
+        tk = (payload.template_key or "").strip()
+        if not tk:
+            raise HTTPException(status_code=400, detail="template_key is empty")
+        tmpl = (
+            db.query(GameStarterTemplate)
+            .filter(GameStarterTemplate.template_key == tk, GameStarterTemplate.is_active == 1)
+            .first()
+        )
+        if not tmpl:
+            raise HTTPException(status_code=404, detail="game template not found")
+        try:
+            bp = json.loads(tmpl.blueprint_json or "{}")
+        except json.JSONDecodeError:
+            bp = {}
+        period_duration_seconds = int(bp.get("period_duration_seconds") or period_duration_seconds)
+        cash_balance = float(bp.get("cash_balance", cash_balance))
+        monthly_salary = float(bp.get("monthly_salary", monthly_salary))
+        starter_template_key = tk
+        base_monthly_lifestyle = float(tmpl.base_monthly_lifestyle_expense or 0)
+
+        for a in bp.get("assets") or []:
+            if isinstance(a, dict):
+                assets_list.append(
+                    AssetCreate(
+                        title=a.get("title") or "Актив",
+                        kind=a.get("kind") or "generic",
+                        asset_value=float(a.get("asset_value") or 0),
+                        monthly_maintenance_cost=float(a.get("monthly_maintenance_cost") or 0),
+                        monthly_income=float(a.get("monthly_income") or 0),
+                    )
+                )
+        for li in bp.get("liabilities") or []:
+            if isinstance(li, dict):
+                liabilities_list.append(
+                    LiabilityCreate(
+                        title=li.get("title") or "Обязательство",
+                        total_debt=float(li.get("total_debt") or 0),
+                        annual_rate_percent=float(li.get("annual_rate_percent") or 0),
+                    )
+                )
+    else:
+        assets_list = list(payload.assets)
+        liabilities_list = list(payload.liabilities)
+
+    if period_duration_seconds < 10:
         raise HTTPException(status_code=400, detail="period_duration_seconds must be >= 10")
-    if payload.cash_balance < 0:
+    if cash_balance < 0:
         raise HTTPException(status_code=400, detail="cash_balance cannot be negative")
-    if payload.monthly_salary < 0:
+    if monthly_salary < 0:
         raise HTTPException(status_code=400, detail="monthly_salary cannot be negative")
 
-    # Деактивируем все текущие активные профили пользователя
     db.query(GameProfile).filter(
         GameProfile.user_id == current_user.id,
         GameProfile.is_active == 1
     ).update({"is_active": 0})
 
-    # Создаём профиль
     new_profile = GameProfile(
         user_id=current_user.id,
         name=payload.profile_name.strip(),
-        mode=payload.mode,
+        save_kind=save_kind,
+        starter_template_key=starter_template_key,
+        starter_params_json="{}",
+        base_monthly_lifestyle_expense=base_monthly_lifestyle,
+        delta_monthly_lifestyle_expense=0,
         is_active=1,
-        period_duration_seconds=payload.period_duration_seconds,
-        cash_balance=payload.cash_balance,
+        period_duration_seconds=period_duration_seconds,
+        cash_balance=cash_balance,
         safety_fund_balance=0,
         negative_periods_count=0,
         period_index=1,
         time_state="pause",
         period_anchor_at=datetime.utcnow(),
         base_params_locked=1,
-        onboarding_state="started"
+        onboarding_state="started",
     )
     db.add(new_profile)
     db.commit()
     db.refresh(new_profile)
 
-    # Зарплата
     salary = FinanceSalary(
         game_profile_id=new_profile.id,
-        monthly_amount=payload.monthly_salary,
+        monthly_amount=monthly_salary,
         monthly_receipts_count=1
     )
     db.add(salary)
 
-    # Активы и обязательства из payload (если есть)
-    for asset_data in payload.assets:
+    for asset_data in assets_list:
         asset = FinanceAsset(
             game_profile_id=new_profile.id,
             title=asset_data.title,
@@ -183,7 +258,7 @@ async def start_new_game(
         )
         db.add(asset)
 
-    for liability_data in payload.liabilities:
+    for liability_data in liabilities_list:
         liability = FinanceLiability(
             game_profile_id=new_profile.id,
             title=liability_data.title,
@@ -194,10 +269,9 @@ async def start_new_game(
         )
         db.add(liability)
 
-    # Транзакция начального баланса
     start_transaction = Transaction(
         game_profile_id=new_profile.id,
-        amount=payload.cash_balance,
+        amount=cash_balance,
         type="initial_balance",
         description=f"Стартовый баланс при создании профиля '{new_profile.name}'",
         period_index=1
@@ -208,7 +282,7 @@ async def start_new_game(
 
     return GameStartResponse(
         profile_id=new_profile.id,
-        message=f"Игра '{new_profile.name}' успешно запущена. Баланс: {payload.cash_balance} ₽"
+        message=f"Игра '{new_profile.name}' успешно запущена. Баланс: {cash_balance} ₽"
     )
 
 

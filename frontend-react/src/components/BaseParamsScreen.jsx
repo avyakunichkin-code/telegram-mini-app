@@ -6,7 +6,7 @@ import { MoneyText } from './MoneyText';
 import { sanitizeIntInput, sanitizeDecimalInput, parseNumLoose } from '../utils/numberFields';
 import { MqxFrame } from './MqxFrame';
 
-export function BaseParamsScreen({ profileName, mode, periodDuration, onBack, onGameStarted }) {
+export function BaseParamsScreen({ profileName, saveKind = 'game', templateKey = null, periodDuration, onBack, onGameStarted }) {
   const [cashStr, setCashStr] = useState('');
   const [salaryStr, setSalaryStr] = useState('');
 
@@ -75,7 +75,7 @@ export function BaseParamsScreen({ profileName, mode, periodDuration, onBack, on
       showNotification('Не задано название профиля. Вернитесь назад и введите его.', 'error');
       return;
     }
-    if (!salaryStr || salaryStr.trim() === '') {
+    if (!templateKey && (!salaryStr || salaryStr.trim() === '')) {
       showNotification('Укажите зарплату (в этом MVP она фиксированная)', 'error');
       return;
     }
@@ -83,15 +83,23 @@ export function BaseParamsScreen({ profileName, mode, periodDuration, onBack, on
     const monthly_salary = parseNumLoose(salaryStr, 0);
     setLoading(true);
     try {
-      const result = await API.startNewGame({
+      const basePayload = {
         profile_name: profileName,
-        mode,
+        save_kind: saveKind || 'game',
         period_duration_seconds: periodDuration,
-        cash_balance,
-        monthly_salary,
-        assets,
-        liabilities,
-      });
+      };
+      const result = templateKey
+        ? await API.startNewGame({
+            ...basePayload,
+            template_key: templateKey,
+          })
+        : await API.startNewGame({
+            ...basePayload,
+            cash_balance,
+            monthly_salary,
+            assets,
+            liabilities,
+          });
       if (result) {
         onGameStarted(result);
       }
@@ -107,36 +115,49 @@ export function BaseParamsScreen({ profileName, mode, periodDuration, onBack, on
       <div className="mq-stack mq-stack-animate mq-stack--tight">
       <div className="mq-enter-item">
       <Section header="Базовые параметры">
-          <div className="mq-screen-intro">Стартовое состояние кошелька на первый месяц.</div>
-          <Cell multiline subtitle="На карте наличными">
-            <label className="mq-field">
-              <span className="mq-field__label">Стартовый баланс (₽)</span>
-              <input
-                className="mq-field__input"
-                name="cash_balance"
-                inputMode="numeric"
-                value={cashStr}
-                placeholder="0"
-                onChange={(e) => setCashStr(sanitizeIntInput(e.target.value))}
-              />
-            </label>
-          </Cell>
-          <Cell multiline subtitle="Начисляется кнопкой «Получить зарплату» в игре">
-            <label className="mq-field">
-              <span className="mq-field__label">Зарплата (₽)</span>
-              <input
-                className="mq-field__input"
-                name="monthly_salary"
-                inputMode="numeric"
-                value={salaryStr}
-                placeholder="например 50000"
-                onChange={(e) => setSalaryStr(sanitizeIntInput(e.target.value))}
-              />
-            </label>
-          </Cell>
+          {templateKey ? (
+            <>
+              <div className="mq-screen-intro">
+                Выбран старт из шаблона каталога — зарплата, баланс и обязательства подставятся автоматически. Лишний шаг можно будет убрать в следующих версиях потока.
+              </div>
+              <Cell multiline subtitle={`Шаблон: ${templateKey}`} />
+            </>
+          ) : (
+            <>
+              <div className="mq-screen-intro">Стартовое состояние кошелька на первый месяц.</div>
+              <Cell multiline subtitle="На карте наличными">
+                <label className="mq-field">
+                  <span className="mq-field__label">Стартовый баланс (₽)</span>
+                  <input
+                    className="mq-field__input"
+                    name="cash_balance"
+                    inputMode="numeric"
+                    value={cashStr}
+                    placeholder="0"
+                    onChange={(e) => setCashStr(sanitizeIntInput(e.target.value))}
+                  />
+                </label>
+              </Cell>
+              <Cell multiline subtitle="Начисляется кнопкой «Получить зарплату» в игре">
+                <label className="mq-field">
+                  <span className="mq-field__label">Зарплата (₽)</span>
+                  <input
+                    className="mq-field__input"
+                    name="monthly_salary"
+                    inputMode="numeric"
+                    value={salaryStr}
+                    placeholder="например 50000"
+                    onChange={(e) => setSalaryStr(sanitizeIntInput(e.target.value))}
+                  />
+                </label>
+              </Cell>
+            </>
+          )}
         </Section>
       </div>
 
+      {!templateKey ? (
+        <>
       <div className="mq-enter-item">
         <Section header="Активы">
           <div className="mq-screen-intro">
@@ -300,6 +321,8 @@ export function BaseParamsScreen({ profileName, mode, periodDuration, onBack, on
           </div>
         </Section>
       </div>
+        </>
+      ) : null}
 
       <div className="mq-enter-item mq-actions-stack" style={{ marginTop: '0.75rem' }}>
         <Button stretched mode="filled" onClick={handleStart} disabled={loading}>

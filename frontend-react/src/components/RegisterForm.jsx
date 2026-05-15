@@ -20,8 +20,8 @@ export function RegisterForm({ onSwitchToLogin }) {
     try {
       await register({ username, password, full_name: fullName, email: email || undefined });
       // После успешной регистрации перенаправляем на главную
-      window.location.href = '/telegram-mini-app/#/';
-    } catch (err) {
+      window.location.href = `${import.meta.env.BASE_URL}#/`;
+    } catch {
       setError('Ошибка регистрации. Возможно, имя уже занято.');
     } finally {
       setIsSubmitting(false);
