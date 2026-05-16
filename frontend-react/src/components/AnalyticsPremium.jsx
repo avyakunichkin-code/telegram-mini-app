@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import { API } from '../api';
+import { API, ApiError, formatApiErrorDetail } from '../api';
 import { MoneyText } from './MoneyText';
 import { SparkLineSvg, CashForecastSpark } from './AnalyticsCharts';
 import { IconPercentStat, IconOverdueStat, IconShieldStat, IconFlowStat } from './icons/StatIcons';
@@ -28,7 +28,11 @@ export function AnalyticsPremium({ overview }) {
       } catch (e) {
         if (!cancelled) {
           setTs(null);
-          setTsError(e?.detail || e?.message || 'Не удалось загрузить ряд');
+          const msg =
+            e instanceof ApiError
+              ? formatApiErrorDetail(e.detail, e.message)
+              : formatApiErrorDetail(e?.detail ?? e?.message, e?.message || 'Не удалось загрузить ряд');
+          setTsError(msg);
         }
       }
     })();

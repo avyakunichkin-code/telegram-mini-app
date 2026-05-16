@@ -9,9 +9,43 @@ export function setAuthToken(token) {
     else localStorage.removeItem('tg_miniapp_token');
 }
 
+/**
+ * Одна строка для UI/тостов: FastAPI часто возвращает `detail` строкой или массивом `{ msg, loc… }`.
+ */
+export function formatApiErrorDetail(detail, fallback = 'Ошибка запроса') {
+  if (detail == null || detail === '') return fallback;
+  if (typeof detail === 'string') return detail;
+  if (typeof detail === 'number' || typeof detail === 'boolean') return String(detail);
+  if (Array.isArray(detail)) {
+    const lines = [];
+    for (const item of detail) {
+      if (item == null) continue;
+      if (typeof item === 'string') lines.push(item);
+      else if (typeof item === 'object' && typeof item.msg === 'string') lines.push(item.msg);
+      else if (typeof item === 'object' && typeof item.message === 'string') lines.push(item.message);
+    }
+    if (lines.length) return lines.join(' ');
+    try {
+      return JSON.stringify(detail);
+    } catch {
+      return fallback;
+    }
+  }
+  if (typeof detail === 'object') {
+    if (typeof detail.msg === 'string') return detail.msg;
+    if (typeof detail.message === 'string') return detail.message;
+    try {
+      return JSON.stringify(detail);
+    } catch {
+      return fallback;
+    }
+  }
+  return fallback;
+}
+
 export class ApiError extends Error {
   constructor({ status, detail, raw, endpoint, method }) {
-    super(typeof detail === 'string' ? detail : 'Ошибка запроса');
+    super(typeof detail === 'string' ? detail : formatApiErrorDetail(detail, 'Ошибка запроса'));
     this.name = 'ApiError';
     this.status = status;
     this.detail = detail;

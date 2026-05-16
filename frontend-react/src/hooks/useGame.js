@@ -1,6 +1,6 @@
 // src/hooks/useGame.js
 import { useState, useEffect, useCallback, useRef } from 'react';
-import { API } from '../api';
+import { API, ApiError, formatApiErrorDetail } from '../api';
 
 export function useGame() {
   const [overview, setOverview] = useState(null);
@@ -40,7 +40,11 @@ export function useGame() {
     } catch (err) {
       setOverview(null);
       setTimeStatus(null);
-      setError(err.detail || err.message || 'Не удалось загрузить данные');
+      const msg =
+        err instanceof ApiError
+          ? formatApiErrorDetail(err.detail, err.message)
+          : formatApiErrorDetail(err?.detail ?? err?.message, err?.message || 'Не удалось загрузить данные');
+      setError(msg);
     } finally {
       setLoading(false);
     }

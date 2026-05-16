@@ -6,8 +6,9 @@ alwaysApply: true
 # Money Quest — ориентиры
 
 - **Онбординг и карта кода**: сначала [`CLAUDE.md`](CLAUDE.md) (стек, папки, эндпоинты, экономика периода).
-- **Продукт и MVP**: [`docs/foundation/SPEC_PRODUCT.md`](docs/foundation/SPEC_PRODUCT.md) (§0 — дорожная карта Game/Plan).
+- **Продукт и MVP**: [`docs/foundation/SPEC_PRODUCT.md`](docs/foundation/SPEC_PRODUCT.md) (раздел 0 — дорожная карта Game/Plan).
 - **Целевая концепция и план работ**: [`docs/vision/ideas/money-quest-evolution-after-mvp.md`](docs/vision/ideas/money-quest-evolution-after-mvp.md) (часть II).
+- **Черновик баланса (победа / поражение / ограничения MVP)**: [`docs/vision/ideas/game-balance-thresholds-and-constraints.md`](docs/vision/ideas/game-balance-thresholds-and-constraints.md).
 Приоритет скиллов и что удалено из проекта по смыслу — [`docs/agents/CURSOR_SKILLS.md`](docs/agents/CURSOR_SKILLS.md).
 - **Frontend UI/UX**: [`docs/specs/SPEC_FRONTEND_UI.md`](docs/specs/SPEC_FRONTEND_UI.md); правила `.cursor/rules/money-quest-frontend-*.mdc`.
 - **Миграции БД**: SQL в `backend/migrations/`, без Alembic; на Windows — `backend/migrate.ps1` при наличии `psql` и `DATABASE_URL`.

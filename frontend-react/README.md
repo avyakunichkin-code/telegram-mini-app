@@ -1,16 +1,42 @@
-# React + Vite
+# Money Quest — фронтенд (React + Vite)
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Клиент Telegram Mini App для [Money Quest](../README.md). UI на React 18 и [`@telegram-apps/telegram-ui`](https://github.com/Telegram-Mini-Apps/TelegramUI).
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Скрипты
 
-## React Compiler
+| Команда | Назначение |
+|---------|------------|
+| `npm run dev` | Разработка (Vite dev server, HMR) |
+| `npm run build` | Production-сборка в `dist/` |
+| `npm run preview` | Локальный просмотр собранного `dist/` |
+| `npm run lint` | ESLint по проекту |
+| `npm run deploy` | Сборка + публикация `dist/` через `gh-pages` (перед первым запуском: `npm install`) |
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+Домашняя страница для деплоя и base path GitHub Pages: поле **`homepage`** в [`package.json`](./package.json).
 
-## Expanding the ESLint configuration
+---
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## Backend API
+
+В режиме разработки базовый URL для `fetch` пустой (запросы идут на тот же origin, обычно с прокси Vite к backend или через настройку dev).
+
+Для production в [`src/api.js`](src/api.js) задан URL API по умолчанию (Render). Если понадобятся несколько окружений, вынесите базовый URL в переменную с префиксом **`VITE_`** (читает Vite через `import.meta.env`), измените [`src/api.js`](src/api.js) и задайте значение в CI или в `.env` (локально файл не коммитить — см. корневой `.gitignore`).
+
+---
+
+## Документация продукта
+
+- UI/поведение клиента: [`../docs/specs/SPEC_FRONTEND_UI.md`](../docs/specs/SPEC_FRONTEND_UI.md)
+- Бренд и тон: [`../docs/reference/brandbook/BRANDBOOK.md`](../docs/reference/brandbook/BRANDBOOK.md)
+- Карта всей документации: [`../docs/README.md`](../docs/README.md)
+
+---
+
+## Каталог (важнее для разработчиков)
+
+- [`src/main.jsx`](src/main.jsx), [`src/App.jsx`](src/App.jsx) — вход и роутинг
+- [`src/api.js`](src/api.js) — HTTP-обёртка и ошибки API
+- [`src/hooks/useGame.js`](src/hooks/useGame.js) — состояние игры, период, события
+- [`src/components/`](src/components/) — экраны и секции (игра, финансы, аналитика, старт профиля)
