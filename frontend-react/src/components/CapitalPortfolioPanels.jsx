@@ -58,23 +58,6 @@ function PositionCard({ kicker, name, valueNode, onDelete }) {
   );
 }
 
-function PositionsBlock({ kicker, title, count, children }) {
-  return (
-    <section className="mqx-card mqx-capital-card mqx-capital-positions-block">
-      <div className="mqx-capital-positions-block__head">
-        <div>
-          <div className="mqx-capital-positions-block__kicker">{kicker}</div>
-          <h2 className="mqx-capital-positions-block__title">{title}</h2>
-        </div>
-        <div className="mqx-capital-positions-block__badge">
-          {count} {count === 1 ? 'позиция' : 'позиции'}
-        </div>
-      </div>
-      <div className="mqx-capital-position-list">{children}</div>
-    </section>
-  );
-}
-
 export function CapitalPortfolioPanels({
   activeTabLabel,
   portfolioTab,
@@ -269,34 +252,6 @@ export function CapitalPortfolioPanels({
           </>
         ) : null}
       </section>
-
-      {portfolioTab === 'assets' && portfolioAssetsMode === 'add' && ownedAssets.length > 0 ? (
-        <PositionsBlock kicker="Positions" title="Ваши активы" count={ownedAssets.length}>
-          {ownedAssets.map((a) => (
-            <PositionCard
-              key={a.id}
-              kicker={assetKindLabel(a.kind)}
-              name={a.title}
-              valueNode={<MoneyText value={a.asset_value} decimals={0} />}
-              onDelete={() => void handleDeleteAsset(a.id)}
-            />
-          ))}
-        </PositionsBlock>
-      ) : null}
-
-      {portfolioTab === 'debts' && portfolioDebtsMode === 'add' && ownedLiabilities.length > 0 ? (
-        <PositionsBlock kicker="Positions" title="Ваши долги" count={ownedLiabilities.length}>
-          {ownedLiabilities.map((l) => (
-            <PositionCard
-              key={l.id}
-              kicker="Долг"
-              name={l.title}
-              valueNode={<MoneyText value={l.total_debt} decimals={0} />}
-              onDelete={() => void handleDeleteLiability(l.id)}
-            />
-          ))}
-        </PositionsBlock>
-      ) : null}
     </>
   );
 }

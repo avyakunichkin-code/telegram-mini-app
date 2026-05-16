@@ -528,6 +528,7 @@ body {
   position: relative;
   isolation: isolate;
   overflow: clip;
+  background: var(--tg-theme-secondary-bg-color, var(--tg-theme-bg-color, #f0f2f5));
 }
 
 .mq-auth-bg-layer {
@@ -539,11 +540,12 @@ body {
 
 .mq-auth-bg-lottie-slot {
   position: absolute;
+  top: clamp(-200px, -20vmin, -72px);
+  bottom: auto;
   left: 50%;
-  bottom: clamp(-168px, -18vmin, -48px);
   transform: translateX(-50%);
-  width: min(220vw, 780px);
-  height: clamp(340px, 72vh, 640px);
+  width: min(200vw, 720px);
+  height: clamp(300px, 56vh, 560px);
 }
 
 .mq-auth-bg-wash {
@@ -551,14 +553,8 @@ body {
   inset: 0;
   z-index: 1;
   pointer-events: none;
-  background:
-    radial-gradient(
-      ellipse 105% 88% at 50% 100%,
-      color-mix(in srgb, var(--tg-theme-bg-color, var(--tg-theme-secondary-bg-color, #16171d)) 22%, transparent) 0%,
-      color-mix(in srgb, var(--tg-theme-bg-color, var(--tg-theme-secondary-bg-color, #16171d)) 86%, transparent) 48%,
-      color-mix(in srgb, var(--tg-theme-bg-color, var(--tg-theme-secondary-bg-color, #16171d)) 100%, #08090d)
-    ),
-    radial-gradient(circle at 50% -20%, rgba(109, 40, 217, 0.16), transparent 58%);
+  /* без затемнения: фон даёт .mqx-auth--lottie-bg */
+  background: transparent;
 }
 
 .mq-auth-foreground {
@@ -588,7 +584,8 @@ body {
   border-radius: 0;
   border: none !important;
   background: transparent !important;
-  opacity: 0.58;
+  /* на светлом фоне чуть ярче без вуали */
+  opacity: 0.82;
 }
 
 .mqx-auth .mq-auth-tgs--backdrop {
@@ -614,7 +611,7 @@ body {
 
 .mq-auth-tgs.mq-auth-tgs--backdrop.mq-auth-tgs--skeleton {
   opacity: 0.35;
-  background: rgba(255, 255, 255, 0.05) !important;
+  background: color-mix(in srgb, var(--tg-theme-hint-color, #9ca3af) 22%, transparent) !important;
 }
 
 @media (prefers-reduced-motion: reduce) {
