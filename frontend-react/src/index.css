@@ -523,9 +523,51 @@ body {
 }
 
 /* Telegram `.tgs` на экранах входа / проверки сессии (`FintechTgsSticker`) */
-.mq-auth-tgs-row {
-  display: flex;
-  justify-content: center;
+
+.mqx-auth--lottie-bg {
+  position: relative;
+  isolation: isolate;
+  overflow: clip;
+}
+
+.mq-auth-bg-layer {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.mq-auth-bg-lottie-slot {
+  position: absolute;
+  left: 50%;
+  bottom: clamp(-168px, -18vmin, -48px);
+  transform: translateX(-50%);
+  width: min(220vw, 780px);
+  height: clamp(340px, 72vh, 640px);
+}
+
+.mq-auth-bg-wash {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background:
+    radial-gradient(
+      ellipse 105% 88% at 50% 100%,
+      color-mix(in srgb, var(--tg-theme-bg-color, var(--tg-theme-secondary-bg-color, #16171d)) 22%, transparent) 0%,
+      color-mix(in srgb, var(--tg-theme-bg-color, var(--tg-theme-secondary-bg-color, #16171d)) 86%, transparent) 48%,
+      color-mix(in srgb, var(--tg-theme-bg-color, var(--tg-theme-secondary-bg-color, #16171d)) 100%, #08090d)
+    ),
+    radial-gradient(circle at 50% -20%, rgba(109, 40, 217, 0.16), transparent 58%);
+}
+
+.mq-auth-foreground {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  max-width: 440px;
+  margin-inline: auto;
+  align-self: center;
 }
 
 .mq-auth-tgs {
@@ -538,7 +580,23 @@ body {
   isolation: isolate;
 }
 
-.mqx-auth .mq-auth-tgs {
+.mq-auth-tgs--backdrop {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 0;
+  border: none !important;
+  background: transparent !important;
+  opacity: 0.58;
+}
+
+.mqx-auth .mq-auth-tgs--backdrop {
+  background: transparent !important;
+  border: none !important;
+}
+
+.mqx-auth .mq-auth-tgs:not(.mq-auth-tgs--backdrop) {
   background: rgba(0, 0, 0, 0.14);
   border: 1px solid rgba(255, 255, 255, 0.09);
 }
@@ -552,6 +610,11 @@ body {
 .mq-auth-tgs--skeleton {
   animation: mq-lottie-skel-shine-alt 1.1s ease-in-out infinite;
   background-size: 200% 100%;
+}
+
+.mq-auth-tgs.mq-auth-tgs--backdrop.mq-auth-tgs--skeleton {
+  opacity: 0.35;
+  background: rgba(255, 255, 255, 0.05) !important;
 }
 
 @media (prefers-reduced-motion: reduce) {

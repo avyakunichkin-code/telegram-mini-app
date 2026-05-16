@@ -7,7 +7,7 @@ import { AnalyticsPremium } from './AnalyticsPremium';
 import { MenuPremium } from './MenuPremium';
 import { BottomGameNav } from './BottomGameNav';
 import { showNotification } from './notifications';
-import { API } from '../api';
+import { API, formatApiErrorDetail } from '../api';
 import { EventCarouselOverlay } from './EventDeck';
 import { MqxShell } from './MqxShell';
 import { MqxTabHero } from './MqxTabHero';
@@ -124,7 +124,7 @@ export function GameScreen({ onLogout, onNewGame, onLoadGame }) {
             <div className="mqx-card mq-enter-item">
               <div className="mqx-card__kicker">Сеть или API</div>
               <div className="mqx-card__title">Что-то пошло не так</div>
-              <p className="mqx-card__sub">{error}</p>
+              <p className="mqx-card__sub">{formatApiErrorDetail(error, 'Не удалось загрузить данные')}</p>
               <div className="mq-actions-stack" style={{ marginTop: 16 }}>
                 <Button stretched mode="filled" onClick={() => reload()}>
                   Повторить загрузку

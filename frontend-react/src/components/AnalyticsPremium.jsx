@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { API, ApiError, formatApiErrorDetail } from '../api';
+import { asSafeReactText } from '../utils/displayText';
 import { MoneyText } from './MoneyText';
 import { SparkLineSvg, CashForecastSpark } from './AnalyticsCharts';
 import { IconPercentStat, IconOverdueStat, IconShieldStat, IconFlowStat } from './icons/StatIcons';
@@ -158,7 +159,7 @@ export function AnalyticsPremium({ overview }) {
           <div className="mqx-analytics-level__top">
             <div>
               <div className="mqx-card__kicker mqx-card__kicker--violet">Финансовый уровень</div>
-              <div className="mqx-analytics-level__title">{overview.gamification_level}</div>
+              <div className="mqx-analytics-level__title">{asSafeReactText(overview.gamification_level)}</div>
               <p className="mqx-analytics-level__sub">Период игры #{overview.period_index} · чистых месяцев подряд: {streak}</p>
             </div>
             <div className="mqx-analytics-level__score-chip" aria-label="Очки рейтинга">

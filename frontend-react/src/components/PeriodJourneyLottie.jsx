@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
-import Lottie from 'lottie-react';
+
+import { Lottie } from '../lottieReactPlayer';
 
 /**
  * Прогресс периода 0…1.

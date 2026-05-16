@@ -18,6 +18,7 @@ import {
 } from './icons/StatIcons';
 import { IconCoins } from './icons/NavIcons';
 import { MqStatRow } from './MqStatRow';
+import { asSafeReactText } from '../utils/displayText';
 
 function coinsStatIcon(colorClass) {
   return (
@@ -106,6 +107,7 @@ export function DashboardSection({ overview, claimSalary, contributeToSafetyFund
   if (!overview) return null;
 
   const streak = overview.clean_period_streak ?? 0;
+  const liabilitiesRatio = Number(overview.liabilities_to_income_ratio);
 
   return (
     <div className="mq-stack mq-stack-animate mq-stack--tight">
@@ -211,10 +213,10 @@ export function DashboardSection({ overview, claimSalary, contributeToSafetyFund
         <div className="mq-slot-intro">Структура доходов и расходов в модели месяца — те же строки и иконки, что и блок «Финансы».</div>
         <Cell multiline>
           <MqStatRow dense icon={<IconStarStat />} label="Уровень геймификации">
-            {overview.gamification_level}
+            {asSafeReactText(overview.gamification_level)}
           </MqStatRow>
           <MqStatRow dense icon={<IconBarsStat />} label="Очки (из 100)">
-            {overview.score}
+            {asSafeReactText(overview.score)}
           </MqStatRow>
           <MqStatRow dense icon={coinsStatIcon('mq-stat-row__mqcoin--emerald')} label="Ежемесячный доход">
             <MoneyText value={overview.total_monthly_income} />
@@ -226,10 +228,10 @@ export function DashboardSection({ overview, claimSalary, contributeToSafetyFund
             <MoneyText value={overview.total_monthly_assets_maintenance} />
           </MqStatRow>
           <MqStatRow dense icon={<IconPercentStat />} label="Долговая нагрузка к доходу">
-            {overview.liabilities_to_income_ratio.toFixed(1)}%
+            {Number.isFinite(liabilitiesRatio) ? `${liabilitiesRatio.toFixed(1)}%` : '—'}
           </MqStatRow>
           <MqStatRow dense icon={<IconXpStat />} label="XP до следующего уровня">
-            {overview.xp_to_next_level}
+            {asSafeReactText(overview.xp_to_next_level)}
           </MqStatRow>
         </Cell>
       </Section>

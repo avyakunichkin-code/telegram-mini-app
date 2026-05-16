@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import Lottie from 'lottie-react';
+import { Lottie } from '../lottieReactPlayer';
 
 import fintechTgsUrl from '../assets/lottie/Fintech.tgs?url';
 
@@ -34,7 +34,7 @@ function usePrefersReducedMotion() {
 /**
  * Telegram `.tgs` (gzip Lottie) для экранов входа / проверки сессии.
  */
-export function FintechTgsSticker({ className = '' }) {
+export function FintechTgsSticker({ className = '', backdrop = false }) {
   const reducedMotion = usePrefersReducedMotion();
   const lottieRef = useRef(null);
   const [animationData, setAnimationData] = useState(null);
@@ -84,7 +84,14 @@ export function FintechTgsSticker({ className = '' }) {
 
   return (
     <div
-      className={`mq-auth-tgs${animationData ? '' : ' mq-auth-tgs--skeleton'}${className ? ` ${className}` : ''}`}
+      className={[
+        'mq-auth-tgs',
+        animationData ? '' : ' mq-auth-tgs--skeleton',
+        backdrop ? ' mq-auth-tgs--backdrop' : '',
+        className,
+      ]
+        .filter(Boolean)
+        .join(' ')}
       aria-hidden
     >
       {animationData ? (
@@ -94,7 +101,7 @@ export function FintechTgsSticker({ className = '' }) {
           loop={!reducedMotion}
           autoplay={!reducedMotion}
           rendererSettings={{
-            preserveAspectRatio: 'xMidYMid meet',
+            preserveAspectRatio: backdrop ? 'xMidYMid slice' : 'xMidYMid meet',
             clearCanvas: true,
           }}
           className="mq-auth-tgs__lottie"
