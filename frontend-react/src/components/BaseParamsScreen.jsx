@@ -4,6 +4,7 @@ import { API } from '../api';
 import { showNotification } from './notifications';
 import { MoneyText } from './MoneyText';
 import { sanitizeIntInput, sanitizeDecimalInput, parseNumLoose } from '../utils/numberFields';
+import { DEFAULT_PERIOD_DURATION_SECONDS } from '../config/gameDefaults';
 import { MqxShell } from './MqxShell';
 import { MqxTabHero } from './MqxTabHero';
 
@@ -11,7 +12,7 @@ export function BaseParamsScreen({
   profileName,
   saveKind = 'game',
   templateKey = null,
-  periodDuration,
+  periodDuration = DEFAULT_PERIOD_DURATION_SECONDS,
   onBack,
   onGameStarted,
 }) {

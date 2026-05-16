@@ -72,13 +72,24 @@
 - [x] P0 **MQ-107** — Конец периода: `base_monthly_lifestyle_expense` + дельта на профиле (минимальный учёт в cash).
 - [x] P0 **MQ-108** — Frontend: поток старта без `DifficultyScreen`; `api.js` под новый контракт.
 
+#### Эпик MVP 1.1 — прокачка, `event_tier`, эффекты событий (черновик очереди)
+
+Spec среза: **[`SPEC_mvp-11-progression-events`](../specs/features/SPEC_mvp-11-progression-events.md)** (**approved**). План выполнения: **[`PLAN_mvp-11-progression-events`](../plans/PLAN_mvp-11-progression-events.md)**. Норматив уровня/XP и матрица: **[`LEVEL_XP_SYSTEM`](../specs/gameplay/LEVEL_XP_SYSTEM.md)**, **[`XP_EVENTS_ACTIONS_MATRIX`](../specs/gameplay/catalogs/XP_EVENTS_ACTIONS_MATRIX.md)**; дорожная карта фаз: **[`PLAN_level-xp-progression`](../plans/PLAN_level-xp-progression.md)**.
+
+- [ ] P0 **MQ-111** — SQL миграция: `event_definitions.event_tier`, `repeat_policy`; модель SQLAlchemy.
+- [ ] P0 **MQ-112** — `ensure_period_events`: окно \([L−2, L]\) по tier, **`repeat_policy`**, fallback §6 spec; весовая выборка **без** повторов.
+- [ ] P0 **MQ-113** — `character_progression.py`: единая функция XP/уровня; перевод **`game_period` + `period_actions`** на утилиту.
+- [ ] P0 **MQ-114** — События: `effects_json` whitelist **`xp_delta`**, **`monthly_lifestyle_delta`** + clamp; обработчик choose.
+- [ ] P0 **MQ-115** — **`GET /finance/overview`** поля `character_*`; `api.js` + типы контрактов.
+- [ ] P0 **MQ-116** — Siды событий (≥12, распределение tier); фронт: блок уровень/XP на главной игры.
+
 #### После G1 / MVP 2.0 Plan
 
 - [ ] P1 **`starter_params_json` и префилл новой Plan** из стартового снимка — **не входит в G1** (Plan Mode MVP 2.0).
 - [ ] P1 **Дополнительные шаблоны Game** — контент, баланс, возможный пятый сценарий (базовый каталог из **четырёх** сидов уже в игре).
 - [ ] P1 **Движок победы** по шаблону (M из N целей); средний чистый cashflow за **6** периодов в `overview`.
 - [ ] P1 **UI:** мастер **Plan**, префилл; список сохранений с бейджами `game`/`plan` и меткой сложности шаблона для Game (экран выбора режима уже есть; Plan — заглушка).
-- [ ] P2 **События:** уровень, `repeat_policy`, эффекты на месячные расходы, `mandatory_gate` (см. концепцию).
+- [ ] P2 **События (после MVP 1.1):** `mandatory_gate`, предикаты страхование/активы; **tier/repeat/monthly deltas** см. **[`SPEC_mvp-11-progression-events`](../specs/features/SPEC_mvp-11-progression-events.md)**.
 
 ### Углубление экономики и давления (после режимов)
 

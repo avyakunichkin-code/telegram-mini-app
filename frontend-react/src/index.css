@@ -442,6 +442,138 @@ body {
   background: rgba(255, 255, 255, 0.1);
 }
 
+/* Мини-сценка «путь месяца» — вариант на Lottie (`src/assets/lottie/mascot-period.json`) */
+.mq-period-boy {
+  margin-top: 10px;
+  padding: 7px 10px 9px;
+  border-radius: 14px;
+  background: rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.13);
+}
+
+.mq-period-boy__label {
+  font-size: var(--mq-fs-caption);
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: rgba(245, 243, 255, 0.68);
+}
+
+.mq-period-boy__lottie-wrap {
+  position: relative;
+  margin-top: 6px;
+  height: 56px;
+  width: 100%;
+  border-radius: 12px;
+  overflow: hidden;
+  background: rgba(0, 0, 0, 0.22);
+  isolation: isolate;
+}
+
+.mq-period-boy__lottie {
+  pointer-events: none;
+  filter: contrast(1.04) saturate(1.05);
+}
+
+.mq-period-boy--lottie-paused .mq-period-boy__lottie {
+  filter: contrast(0.98) saturate(0.92);
+  opacity: 0.88;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mq-period-boy__lottie-wrap {
+    background: rgba(0, 0, 0, 0.15);
+  }
+
+  .mq-period-boy__lottie {
+    filter: none;
+  }
+
+  .mq-period-boy__lottie-wrap--skeleton::after {
+    animation: none;
+  }
+}
+
+.mq-period-boy__lottie-wrap--skeleton {
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.mq-period-boy__lottie-wrap--skeleton::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    100deg,
+    transparent 44%,
+    rgba(255, 255, 255, 0.12) 50%,
+    transparent 56%
+  );
+  background-size: 220% 100%;
+  animation: mq-lottie-skel-shine 1.15s ease-in-out infinite;
+}
+
+@keyframes mq-lottie-skel-shine {
+  0% {
+    background-position: 120% 0;
+  }
+
+  100% {
+    background-position: -120% 0;
+  }
+}
+
+/* Telegram `.tgs` на экранах входа / проверки сессии (`FintechTgsSticker`) */
+.mq-auth-tgs-row {
+  display: flex;
+  justify-content: center;
+}
+
+.mq-auth-tgs {
+  position: relative;
+  width: 132px;
+  height: 132px;
+  border-radius: 20px;
+  overflow: hidden;
+  background: rgba(0, 0, 0, 0.12);
+  isolation: isolate;
+}
+
+.mqx-auth .mq-auth-tgs {
+  background: rgba(0, 0, 0, 0.14);
+  border: 1px solid rgba(255, 255, 255, 0.09);
+}
+
+.mq-auth-tgs__lottie {
+  pointer-events: none;
+  width: 100%;
+  height: 100%;
+}
+
+.mq-auth-tgs--skeleton {
+  animation: mq-lottie-skel-shine-alt 1.1s ease-in-out infinite;
+  background-size: 200% 100%;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mq-auth-tgs--skeleton {
+    animation: none;
+  }
+}
+
+@keyframes mq-lottie-skel-shine-alt {
+  0% {
+    opacity: 0.55;
+  }
+
+  50% {
+    opacity: 0.85;
+  }
+
+  100% {
+    opacity: 0.55;
+  }
+}
+
 .mqx-hero__bottom {
   position: relative;
   margin-top: 12px;
@@ -1127,6 +1259,47 @@ body {
   color: rgba(245, 158, 11, 0.95);
 }
 
+.mqx-card__kicker--sky {
+  color: rgba(56, 189, 248, 0.95);
+}
+
+.mqx-card--character {
+  border-color: rgba(56, 189, 248, 0.28);
+  background: linear-gradient(135deg, rgba(56, 189, 248, 0.12), rgba(56, 189, 248, 0.04));
+}
+
+.mqx-character__top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 10px;
+  margin-top: 4px;
+}
+
+.mqx-chip {
+  flex-shrink: 0;
+}
+
+.mqx-chip--xp {
+  font-size: 11px;
+  font-weight: 800;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: rgba(56, 189, 248, 0.2);
+}
+
+.mqx-progress__fill--xp {
+  background: linear-gradient(90deg, #38bdf8, #818cf8);
+}
+
+.mqx-character__meter {
+  margin-top: 12px;
+}
+
+.mqx-character__meter-labels {
+  margin-top: 8px;
+}
+
 .mqx-card__title {
   margin-top: 6px;
   font-size: 18px;
@@ -1265,6 +1438,9 @@ body {
   display: flex;
   flex-direction: column;
   gap: 0;
+  position: relative;
+  z-index: 2;
+  touch-action: manipulation;
 }
 
 .mq-game-template-grid {
@@ -1298,6 +1474,10 @@ body {
   cursor: pointer;
   border: 1px solid color-mix(in srgb, var(--mqx-ink) 14%, transparent);
   background: color-mix(in srgb, var(--tg-theme-secondary-bg-color, var(--bg)) 94%, transparent);
+  position: relative;
+  z-index: 0;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
   transition:
     border-color 0.15s ease,
     box-shadow 0.15s ease,
@@ -3600,6 +3780,99 @@ button.mqx-events-choice:active:not(:disabled) {
   );
 }
 
+/* --- Эмоциональный фон игры: «время идёт» / пауза / ожидание (GameScreen) --- */
+.mq-page--mood-playing .mq-page__decor::before {
+  height: clamp(240px, 58vw, 440px);
+  background:
+    radial-gradient(
+      ellipse 70% 85% at 50% 112%,
+      color-mix(in srgb, var(--mq-warning) 16%, transparent),
+      transparent 52%
+    ),
+    radial-gradient(
+      ellipse 90% 100% at 16% -6%,
+      color-mix(in srgb, var(--tg-theme-button-color, var(--mq-violet)) 32%, transparent),
+      transparent 58%
+    ),
+    radial-gradient(
+      ellipse 80% 100% at 96% -2%,
+      color-mix(in srgb, var(--mq-emerald) 28%, transparent),
+      transparent 56%
+    );
+  animation: mqDecorDriftAlive 11s ease-in-out infinite alternate;
+}
+
+.mq-page--mood-pause .mq-page__decor::before {
+  animation: mqDecorDriftPause 24s ease-in-out infinite alternate;
+  filter: saturate(0.96);
+}
+
+.mq-page--mood-await .mq-page__decor::before {
+  animation: mqDecorAwait 30s ease-in-out infinite alternate;
+  filter: saturate(0.93);
+}
+
+.mq-page--mood-playing .mq-page__decor::after {
+  opacity: 0.5;
+}
+
+.mq-page--mood-pause .mq-page__decor::after,
+.mq-page--mood-await .mq-page__decor::after {
+  opacity: 0.35;
+}
+
+@keyframes mqDecorDriftAlive {
+  0% {
+    transform: rotate(-2deg) scale(1) translateY(0);
+    filter: saturate(1) brightness(1);
+  }
+  50% {
+    transform: rotate(0.5deg) scale(1.09) translateY(12px);
+    filter: saturate(1.14) brightness(1.05);
+  }
+  100% {
+    transform: rotate(2deg) scale(1.07) translateY(14px);
+    filter: saturate(1.08) brightness(1.03);
+  }
+}
+
+@keyframes mqDecorDriftPause {
+  from {
+    transform: rotate(-2deg) scale(1) translateY(0);
+  }
+  to {
+    transform: rotate(1.5deg) scale(1.05) translateY(9px);
+  }
+}
+
+@keyframes mqDecorAwait {
+  from {
+    transform: rotate(-1deg) scale(1) translateY(0);
+    opacity: 0.97;
+  }
+  to {
+    transform: rotate(1deg) scale(1.03) translateY(5px);
+    opacity: 1;
+  }
+}
+
+/* Лёгкая зернистость (тема-адаптивная), только под контентом игры */
+.mq-page__grain {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  overflow: hidden;
+  border-radius: inherit;
+  background: color-mix(in srgb, var(--tg-theme-text-color) 4.8%, transparent);
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 256 256'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  mask-size: 160px 160px;
+  mask-repeat: repeat;
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 256 256'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  -webkit-mask-size: 160px 160px;
+  -webkit-mask-repeat: repeat;
+}
+
 @keyframes mqDecorDrift {
   from {
     transform: rotate(-2deg) scale(1) translateY(0px);
@@ -3711,6 +3984,15 @@ button.mqx-events-choice:active:not(:disabled) {
   .mq-stack-animate > .mq-enter-item {
     opacity: 1;
     transform: none;
+  }
+  /* Состояние «игра» без анимации: сохраняем лёгкий насыщенный кадр из mid-keyframe */
+  .mq-page--mood-playing .mq-page__decor::before {
+    filter: saturate(1.06) brightness(1.02);
+  }
+  .mq-page--mood-pause .mq-page__decor::before,
+  .mq-page--mood-await .mq-page__decor::before {
+    opacity: 1;
+    filter: saturate(0.96);
   }
 }
 

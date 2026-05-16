@@ -1,7 +1,9 @@
-import { useMemo, useState } from 'react';
+import { useMemo, useState, lazy, Suspense } from 'react';
 import { Button, Modal } from '@telegram-apps/telegram-ui';
 import { MoneyText } from './MoneyText';
 import { showNotification } from './notifications';
+
+const PeriodJourneyLottie = lazy(() => import('./PeriodJourneyLottie'));
 
 function formatSignedMoney(n) {
   const v = Number(n) || 0;
@@ -107,6 +109,15 @@ export function DashboardPremium({
     };
   }, [overview]);
 
+  const characterXp = useMemo(() => {
+    const level = Math.max(1, Number(overview?.character_level) || 1);
+    const xp = Math.max(0, Number(overview?.character_xp) || 0);
+    const needRaw = overview?.character_xp_need_for_next;
+    const need = Number.isFinite(Number(needRaw)) && Number(needRaw) > 0 ? Number(needRaw) : 100;
+    const frac = need > 0 ? xp / need : 0;
+    return { level, xp, need, frac: pctClamp01(frac) };
+  }, [overview]);
+
   const overviewBars = useMemo(() => {
     const income = Number(overview?.total_monthly_income) || 0;
     const liab = Number(overview?.total_monthly_liabilities_payment) || 0;
@@ -191,6 +202,21 @@ export function DashboardPremium({
             </div>
           </div>
 
+          <Suspense
+            fallback={
+              <div className="mq-period-boy mq-period-boy--lottie mq-period-boy--lottie-skeleton" aria-hidden>
+                <div className="mq-period-boy__label">Цикл месяца · Lottie</div>
+                <div className="mq-period-boy__lottie-wrap mq-period-boy__lottie-wrap--skeleton" />
+              </div>
+            }
+          >
+            <PeriodJourneyLottie
+              timeState={timeStatus?.time_state}
+              remainingSeconds={remaining}
+              periodDurationSeconds={timeStatus?.period_duration_seconds}
+            />
+          </Suspense>
+
           <div className="mqx-hero__bottom">
             <button type="button" className="mqx-pill" onClick={onNextPeriod}>
               Следующий период
@@ -204,6 +230,34 @@ export function DashboardPremium({
       </header>
 
       <main className="mqx-content">
+          <section className="mqx-card mqx-card--character" aria-labelledby="mq-character-progress">
+            <div className="mqx-card__kicker mqx-card__kicker--sky">Герой</div>
+            <div className="mqx-character__top">
+              <div>
+                <div className="mqx-card__title" id="mq-character-progress">
+                  Уровень {characterXp.level}
+                </div>
+                <p className="mqx-card__sub">Опыт к следующему уровню</p>
+              </div>
+              <span className="mqx-chip mqx-chip--xp" aria-hidden>
+                XP
+              </span>
+            </div>
+            <div className="mqx-character__meter" role="group" aria-label="Прогресс опыта">
+              <div className="mqx-progress">
+                <div className="mqx-progress__fill mqx-progress__fill--xp" style={{ width: `${Math.round(characterXp.frac * 100)}%` }} />
+              </div>
+              <div className="mqx-goal__row mqx-character__meter-labels">
+                <span>Накоплено</span>
+                <span>
+                  {characterXp.xp}
+                  {' '}
+                  / {characterXp.need}
+                </span>
+              </div>
+            </div>
+          </section>
+
           <section className="mqx-card mqx-card--goal">
             <div className="mqx-goal__top">
               <div>

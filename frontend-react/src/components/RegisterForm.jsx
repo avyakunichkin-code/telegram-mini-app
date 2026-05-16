@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Button, Input } from '@telegram-apps/telegram-ui';
 import { useAuth } from '../context/AuthContext';
+import { LazyFintechTgsSticker } from './LazyFintechTgsSticker';
 import { MqxShell } from './MqxShell';
 import { MqxTabHero } from './MqxTabHero';
 
@@ -41,6 +42,9 @@ export function RegisterForm({ onSwitchToLogin }) {
       contentClassName="mqx-auth"
     >
       <form onSubmit={handleSubmit} className="mq-stack mq-stack--tight">
+        <div className="mq-auth-tgs-row">
+          <LazyFintechTgsSticker />
+        </div>
         <div className="mqx-card mq-enter-item mq-stack-animate">
           <div className="mqx-card__kicker mqx-card__kicker--violet">Профиль</div>
           <div className="mqx-card__title">Создать аккаунт</div>

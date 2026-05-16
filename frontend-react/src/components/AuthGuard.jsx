@@ -3,6 +3,7 @@ import { Spinner } from '@telegram-apps/telegram-ui';
 import { useAuth } from '../context/AuthContext';
 import { MqxShell } from './MqxShell';
 import { MqxTabHero } from './MqxTabHero';
+import { LazyFintechTgsSticker } from './LazyFintechTgsSticker';
 
 export function AuthGuard({ children }) {
   const { user, loading } = useAuth();
@@ -21,7 +22,11 @@ export function AuthGuard({ children }) {
           }
           contentClassName="mqx-auth"
         >
-          <div className="mqx-card" style={{ display: 'grid', placeItems: 'center', minHeight: 120, padding: 28 }}>
+          <div
+            className="mqx-card"
+            style={{ display: 'grid', placeItems: 'center', gap: 16, minHeight: 160, padding: 28 }}
+          >
+            <LazyFintechTgsSticker />
             <Spinner />
           </div>
         </MqxShell>

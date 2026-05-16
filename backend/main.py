@@ -158,6 +158,12 @@ def ensure_schema_compatibility() -> None:
             statements.append(
                 "ALTER TABLE event_definitions ADD COLUMN metadata_json TEXT NOT NULL DEFAULT '{}'"
             )
+        if "event_tier" not in ed_cols:
+            statements.append("ALTER TABLE event_definitions ADD COLUMN event_tier INTEGER NOT NULL DEFAULT 1")
+        if "repeat_policy" not in ed_cols:
+            statements.append(
+                "ALTER TABLE event_definitions ADD COLUMN repeat_policy VARCHAR(32) NOT NULL DEFAULT 'repeatable'"
+            )
 
     # ---- finance_assets ----
     if "finance_assets" in inspector.get_table_names():

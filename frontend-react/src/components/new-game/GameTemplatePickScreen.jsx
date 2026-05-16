@@ -1,20 +1,20 @@
 import { useEffect, useState } from 'react';
-import { Button, Input, Spinner } from '@telegram-apps/telegram-ui';
+import { Button, Spinner } from '@telegram-apps/telegram-ui';
 import { API } from '../../api';
 import { showNotification } from '../notifications';
 import { MqxShell } from '../MqxShell';
 import { MqxTabHero } from '../MqxTabHero';
 import { GameStarterPicker } from '../GameStarterPicker';
+import { DEFAULT_PERIOD_DURATION_SECONDS, normalizeStarterTemplate } from '../../config/gameDefaults';
 
 /**
- * Шаг 2 (Game): только шаблоны каталога + темп периода. Ручной сценарий — через будущий Plan.
+ * Шаг 2 (Game): только шаблоны каталога. Длительность периода — в `DEFAULT_PERIOD_DURATION_SECONDS`.
  */
 export function GameTemplatePickScreen({ profileName, onBack, onJumpToGame }) {
   const [templates, setTemplates] = useState([]);
   const [loading, setLoading] = useState(true);
   const [starting, setStarting] = useState(false);
   const [selectedKey, setSelectedKey] = useState(null);
-  const [periodSeconds, setPeriodSeconds] = useState(300);
 
   useEffect(() => {
     let cancelled = false;
@@ -23,9 +23,11 @@ export function GameTemplatePickScreen({ profileName, onBack, onJumpToGame }) {
       try {
         const rows = await API.listGameTemplates();
         if (cancelled) return;
-        const list = Array.isArray(rows) ? rows : [];
+        const raw = Array.isArray(rows) ? rows : [];
+        const list = raw.map(normalizeStarterTemplate).filter(Boolean);
         setTemplates(list);
-        setSelectedKey(list.length ? list[0].template_key : null);
+        const firstKey = list.length ? list[0].template_key : null;
+        setSelectedKey(firstKey ? String(firstKey) : null);
       } catch {
         if (!cancelled) {
           setTemplates([]);
@@ -41,8 +43,7 @@ export function GameTemplatePickScreen({ profileName, onBack, onJumpToGame }) {
     };
   }, []);
 
-  const handleStart = async (e) => {
-    e.preventDefault();
+  const handleStart = async () => {
     if (!profileName?.trim()) {
       showNotification('Нет названия профиля — вернитесь назад.', 'error');
       return;
@@ -51,17 +52,13 @@ export function GameTemplatePickScreen({ profileName, onBack, onJumpToGame }) {
       showNotification('Выберите шаблон старта', 'error');
       return;
     }
-    if (periodSeconds < 10) {
-      showNotification('Длительность периода не менее 10 секунд', 'error');
-      return;
-    }
     setStarting(true);
     try {
       await API.startNewGame({
         profile_name: profileName.trim(),
         save_kind: 'game',
         template_key: selectedKey,
-        period_duration_seconds: periodSeconds,
+        period_duration_seconds: DEFAULT_PERIOD_DURATION_SECONDS,
       });
       onJumpToGame();
     } catch (error) {
@@ -78,11 +75,11 @@ export function GameTemplatePickScreen({ profileName, onBack, onJumpToGame }) {
           sectionLabel="Новая игра"
           rightPill="Шаг 2"
           title="Шаблон игры"
-          subtitle="Один тап по сценарию — и можно начинать период. Пользовательский ввод будет в режиме «План»."
+          subtitle="Один тап по сценарию и старт партии. Длительность периода сейчас фиксируется в конфиге клиента."
         />
       }
     >
-      <form onSubmit={handleStart} className="mq-stack mq-stack--tight mq-stack-animate">
+      <div className="mq-stack mq-stack--tight mq-stack-animate">
         <div className="mq-enter-item mqx-card">
           <div className="mqx-card__kicker">Профиль</div>
           <div className="mqx-card__title">{profileName.trim() || 'Без названия'}</div>
@@ -110,7 +107,7 @@ export function GameTemplatePickScreen({ profileName, onBack, onJumpToGame }) {
               <GameStarterPicker
                 templates={templates}
                 value={selectedKey}
-                onChange={setSelectedKey}
+                onChange={(key) => setSelectedKey(key == null ? null : String(key))}
                 disabled={loading}
                 labelledById="mq-game-catalog-label-pick"
                 showManualOption={false}
@@ -118,27 +115,23 @@ export function GameTemplatePickScreen({ profileName, onBack, onJumpToGame }) {
             </>
           )}
 
-          <div className="mqx-form" style={{ marginTop: 16 }}>
-            <Input
-              header="Длительность периода (сек)"
-              type="number"
-              value={periodSeconds}
-              min={10}
-              onChange={(e) => setPeriodSeconds(Number(e.target.value))}
-              placeholder="300"
-            />
-          </div>
+          <p className="mqx-card__sub" style={{ marginTop: 14, marginBottom: 0 }}>
+            Длительность периода: <strong>{DEFAULT_PERIOD_DURATION_SECONDS} сек.</strong>{' '}
+            <span style={{ opacity: 0.75 }}>
+              Изменить: файл <code>frontend-react/src/config/gameDefaults.js</code>
+            </span>
+          </p>
         </div>
 
         <div className="mq-enter-item mq-actions-stack">
-          <Button type="submit" mode="filled" stretched disabled={loading || starting || !selectedKey}>
+          <Button type="button" mode="filled" stretched disabled={loading || starting || !selectedKey} onClick={handleStart}>
             {starting ? 'Запуск…' : 'Начать игру'}
           </Button>
           <Button type="button" mode="outline" stretched onClick={onBack} disabled={starting}>
             Назад
           </Button>
         </div>
-      </form>
+      </div>
     </MqxShell>
   );
 }

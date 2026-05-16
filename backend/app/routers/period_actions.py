@@ -5,6 +5,7 @@ from datetime import datetime
 from ..auth import get_current_user
 from ..balance_utils import adjust_balance, TRANSACTION_TYPES, adjust_safety_fund_balance
 from ..database import get_db
+from ..character_progression import apply_character_xp
 from ..models import GameProfile, PeriodSnapshot, FinanceSalary, FinanceLiability, FinanceAsset
 from ..schemas import SafetyFundContribution, PeriodStatusResponse, PeriodSummaryResponse
 from ..game_time import get_active_game_profile, sync_time, get_seconds_until_next
@@ -147,18 +148,8 @@ async def claim_salary(
     snapshot.salary_claimed = 1
     snapshot.salary_amount = amount
 
-    # Начисляем XP (базово 10 XP за получение зарплаты)
     xp_gained = 10
-    profile.xp += xp_gained
-
-    # Повышение уровня (простая логика: каждые 100 XP – новый уровень)
-    level_up = False
-    xp_for_next = 100
-    while profile.xp >= xp_for_next:
-        profile.level += 1
-        profile.xp -= xp_for_next
-        level_up = True
-        xp_for_next = 100 + (profile.level - 1) * 50  # прогрессия
+    xp_apply = apply_character_xp(profile, xp_gained, db)
 
     db.commit()
 
@@ -166,12 +157,12 @@ async def claim_salary(
         "status": "success",
         "amount": amount,
         "new_balance": new_balance,
-        "xp_gained": xp_gained,
-        "level_up": level_up,
-        "new_level": profile.level if level_up else None,
+        "xp_gained": xp_apply["xp_gained"],
+        "level_up": xp_apply["level_up"],
+        "new_level": xp_apply["new_level"],
         "message": f"Вы получили зарплату: {amount:,.2f} ₽"
     }
-    if level_up:
+    if xp_apply["level_up"]:
         response["message"] += f" Поздравляем! Вы достигли {profile.level} уровня!"
 
     return response
@@ -222,18 +213,8 @@ async def contribute_to_safety_fund(
     snapshot.safety_fund_total = profile.safety_fund_balance
     snapshot.safety_fund_contribution = float(snapshot.safety_fund_contribution or 0) + amount
 
-    # Начисляем небольшой XP за финансовую дисциплину (например, 5 XP)
     xp_gained = 5
-    profile.xp += xp_gained
-
-    # Обработка повышения уровня (как в claim-salary)
-    level_up = False
-    xp_for_next = 100
-    while profile.xp >= xp_for_next:
-        profile.level += 1
-        profile.xp -= xp_for_next
-        level_up = True
-        xp_for_next = 100 + (profile.level - 1) * 50
+    xp_apply = apply_character_xp(profile, xp_gained, db)
 
     db.commit()
 
@@ -242,12 +223,12 @@ async def contribute_to_safety_fund(
         "contributed": amount,
         "new_cash_balance": profile.cash_balance,
         "new_safety_fund_balance": new_safety_fund,
-        "xp_gained": xp_gained,
-        "level_up": level_up,
-        "new_level": profile.level if level_up else None,
+        "xp_gained": xp_apply["xp_gained"],
+        "level_up": xp_apply["level_up"],
+        "new_level": xp_apply["new_level"],
         "message": f"Отложено {amount:,.2f} ₽ в подушку безопасности"
     }
-    if level_up:
+    if xp_apply["level_up"]:
         response["message"] += f" Поздравляем! Вы достигли {profile.level} уровня!"
 
     return response
@@ -279,15 +260,7 @@ async def complete_period(
     if net_savings > 0:
         xp_earned += min(30, int(net_savings / 1000))  # Бонус за сбережения
 
-    # Обновляем XP и уровень профиля
-    profile.xp += xp_earned
-
-    # Обработка уровней
-    xp_for_next_level = 100
-    while profile.xp >= xp_for_next_level:
-        profile.level += 1
-        profile.xp -= xp_for_next_level
-        xp_for_next_level = 100 + (profile.level - 1) * 50
+    apply_character_xp(profile, xp_earned, db)
 
     # Отмечаем период как завершённый
     snapshot.is_completed = 1
@@ -309,7 +282,7 @@ async def complete_period(
         safety_fund_total=snapshot.safety_fund_total,
         net_savings=net_savings,
         xp_earned=xp_earned,
-        required_actions_completed=True
+        required_actions_completed=True,
     )
 
 

@@ -9,6 +9,7 @@ from ..models import FinanceSalary, FinanceLiability, FinanceAsset, Transaction,
 from ..balance_utils import adjust_balance, adjust_safety_fund_balance
 from ..finance_helpers import monthly_interest_payment
 from ..game_time import get_active_game_profile, sync_time, get_seconds_until_next
+from ..character_progression import character_xp_need_for_next_level
 from ..schemas import (
     SalaryProfileUpdate,
     SalaryProfileResponse,
@@ -555,6 +556,9 @@ async def finance_overview(
         gamification_level=level,
         score=score,
         xp_to_next_level=xp_to_next,
+        character_level=max(1, int(getattr(profile, "level", 1) or 1)),
+        character_xp=max(0, int(getattr(profile, "xp", 0) or 0)),
+        character_xp_need_for_next=character_xp_need_for_next_level(profile.level),
         time_state=profile.time_state,
         period_index=profile.period_index,
         period_duration_seconds=profile.period_duration_seconds,

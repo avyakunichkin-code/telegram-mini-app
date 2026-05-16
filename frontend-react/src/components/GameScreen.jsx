@@ -12,6 +12,12 @@ import { EventCarouselOverlay } from './EventDeck';
 import { MqxShell } from './MqxShell';
 import { MqxTabHero } from './MqxTabHero';
 
+/** Эмоциональный слой страницы: фон синхронизирован с «время идёт» / «пауза» / загрузка. */
+function gamePageMoodClass(timeStatus) {
+  if (!timeStatus) return 'mq-page--mood-await';
+  return timeStatus.time_state === 'play' ? 'mq-page--mood-playing' : 'mq-page--mood-pause';
+}
+
 export function GameScreen({ onLogout, onNewGame, onLoadGame }) {
   const [activeTab, setActiveTab] = useState('dashboard');
   const [salaryWarnOpen, setSalaryWarnOpen] = useState(false);
@@ -73,8 +79,12 @@ export function GameScreen({ onLogout, onNewGame, onLoadGame }) {
 
   if (loading) {
     return (
-      <div className="app-shell mq-page mq-page--center" style={{ padding: '16px', paddingBottom: 'calc(var(--tma-tabbar-height) + env(safe-area-inset-bottom, 0px))' }}>
+      <div
+        className={`app-shell mq-page mq-page--center ${gamePageMoodClass(timeStatus)}`}
+        style={{ padding: '16px', paddingBottom: 'calc(var(--tma-tabbar-height) + env(safe-area-inset-bottom, 0px))' }}
+      >
         <div className="mq-page__decor" aria-hidden />
+        <div className="mq-page__grain" aria-hidden />
         <MqxShell
           header={
             <MqxTabHero
@@ -94,8 +104,12 @@ export function GameScreen({ onLogout, onNewGame, onLoadGame }) {
   }
   if (error) {
     return (
-      <div className="app-shell mq-page" style={{ padding: '12px', paddingBottom: 'calc(var(--tma-tabbar-height) + env(safe-area-inset-bottom, 0px))' }}>
+      <div
+        className={`app-shell mq-page ${gamePageMoodClass(timeStatus)}`}
+        style={{ padding: '12px', paddingBottom: 'calc(var(--tma-tabbar-height) + env(safe-area-inset-bottom, 0px))' }}
+      >
         <div className="mq-page__decor" aria-hidden />
+        <div className="mq-page__grain" aria-hidden />
         <MqxShell
           header={
             <MqxTabHero
@@ -124,8 +138,12 @@ export function GameScreen({ onLogout, onNewGame, onLoadGame }) {
   }
   if (!overview || !timeStatus) {
     return (
-      <div className="app-shell mq-page" style={{ padding: '12px', paddingBottom: 'calc(var(--tma-tabbar-height) + env(safe-area-inset-bottom, 0px))' }}>
+      <div
+        className={`app-shell mq-page ${gamePageMoodClass(timeStatus)}`}
+        style={{ padding: '12px', paddingBottom: 'calc(var(--tma-tabbar-height) + env(safe-area-inset-bottom, 0px))' }}
+      >
         <div className="mq-page__decor" aria-hidden />
+        <div className="mq-page__grain" aria-hidden />
         <MqxShell
           header={
             <MqxTabHero
@@ -154,10 +172,11 @@ export function GameScreen({ onLogout, onNewGame, onLoadGame }) {
 
   return (
     <div
-      className="app-shell mq-page"
+      className={`app-shell mq-page ${gamePageMoodClass(timeStatus)}`}
       style={{ padding: '12px', paddingBottom: 'calc(var(--tma-tabbar-height) + env(safe-area-inset-bottom, 0px))' }}
     >
       <div className="mq-page__decor" aria-hidden />
+      <div className="mq-page__grain" aria-hidden />
 
       <Modal open={salaryWarnOpen} onClose={() => setSalaryWarnOpen(false)}>
         <div className="mqx-modal">
@@ -186,8 +205,14 @@ export function GameScreen({ onLogout, onNewGame, onLoadGame }) {
         onClose={closeEventsOverlay}
         events={pendingEvents}
         onResolved={async (eventId, choiceId) => {
-          await API.chooseEvent(eventId, choiceId);
-          showNotification('Решение применено', 'success');
+          const res = await API.chooseEvent(eventId, choiceId);
+          const xpg = Number(res?.xp_gained) || 0;
+          const lv = res?.level_up ? res?.new_level : null;
+          if (xpg > 0) {
+            showNotification(lv ? `+${xpg} XP · уровень ${lv}` : `+${xpg} XP`, 'success');
+          } else {
+            showNotification('Решение применено', 'success');
+          }
           await refreshOverview();
           await refreshPendingEvent();
         }}

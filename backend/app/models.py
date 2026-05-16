@@ -217,6 +217,8 @@ class EventDefinition(Base):
     mandatory = Column(Integer, nullable=False, default=0)
     category = Column(String(80), nullable=True)
     metadata_json = Column(Text, nullable=False, default="{}")
+    event_tier = Column(Integer, nullable=False, default=1)
+    repeat_policy = Column(String(32), nullable=False, default="repeatable")  # repeatable | once_per_profile
     created_at = Column(DateTime, default=datetime.utcnow)
 
     choices = relationship("EventChoice", back_populates="definition", cascade="all, delete-orphan")
