@@ -11,9 +11,16 @@ from sqlalchemy.orm import Session
 from ..auth import get_current_user
 from ..balance_utils import adjust_balance, adjust_safety_fund_balance, TRANSACTION_TYPES
 from ..character_progression import apply_character_xp
+from ..game_rules import (
+    EventProfileCounterSnapshot,
+    clamp_profile_lifestyle_delta,
+    event_tier_in_core_window,
+    event_tier_in_fallback_primary,
+    is_event_definition_eligible,
+)
 from ..database import get_db
 from ..game_time import get_active_game_profile, sync_time
-from ..models import EventChoice, EventDefinition, EventInstance, GameProfile
+from ..models import EventChoice, EventDefinition, EventInstance, EventProfileCounter, GameProfile
 from ..mvp11_event_seeds import ensure_mvp11_event_catalog
 
 
@@ -22,7 +29,6 @@ router = APIRouter(prefix="/api/game/events", tags=["events"])
 logger = logging.getLogger(__name__)
 
 EVENTS_PER_PERIOD = 3
-EVENT_LIFESTYLE_DELTA_ABS_CAP = 15000.0
 ALLOWED_EFFECT_KEYS = frozenset({"cash_delta", "safety_delta", "xp_delta", "monthly_lifestyle_delta"})
 
 
@@ -57,11 +63,6 @@ def _weighted_sample_without_replacement(defs: list[EventDefinition], k: int) ->
 
 def _def_tier(d: EventDefinition) -> int:
     return max(1, int(getattr(d, "event_tier", 1) or 1))
-
-
-def _def_repeat_pol(d: EventDefinition) -> str:
-    pol = getattr(d, "repeat_policy", None) or "repeatable"
-    return str(pol).strip() or "repeatable"
 
 
 def _ensure_seed_events(db: Session) -> None:
@@ -129,6 +130,48 @@ def _ensure_seed_events(db: Session) -> None:
     ensure_mvp11_event_catalog(db)
 
 
+def _load_event_counter_map(db: Session, game_profile_id: int) -> dict[int, EventProfileCounterSnapshot]:
+    rows = (
+        db.query(EventProfileCounter)
+        .filter(EventProfileCounter.game_profile_id == game_profile_id)
+        .all()
+    )
+    return {
+        int(r.definition_id): EventProfileCounterSnapshot(
+            times_selected=int(r.times_selected or 0),
+            last_selected_period_index=(
+                int(r.last_selected_period_index) if r.last_selected_period_index is not None else None
+            ),
+        )
+        for r in rows
+    }
+
+
+def record_event_profile_selection(
+    db: Session, game_profile_id: int, definition_id: int, period_index: int
+) -> None:
+    row = (
+        db.query(EventProfileCounter)
+        .filter(
+            EventProfileCounter.game_profile_id == game_profile_id,
+            EventProfileCounter.definition_id == definition_id,
+        )
+        .first()
+    )
+    if row:
+        row.times_selected = int(row.times_selected or 0) + 1
+        row.last_selected_period_index = int(period_index)
+    else:
+        db.add(
+            EventProfileCounter(
+                game_profile_id=game_profile_id,
+                definition_id=definition_id,
+                times_selected=1,
+                last_selected_period_index=int(period_index),
+            )
+        )
+
+
 def ensure_period_events(db: Session, game_profile_id: int, period_index: int, save_kind: str) -> None:
     profile = db.query(GameProfile).filter(GameProfile.id == game_profile_id).first()
     if not profile:
@@ -161,20 +204,17 @@ def ensure_period_events(db: Session, game_profile_id: int, period_index: int, s
         )
         return
 
-    selected_rows = (
-        db.query(EventInstance.definition_id)
-        .filter(
-            EventInstance.game_profile_id == game_profile_id,
-            EventInstance.status == "selected",
-        )
-        .distinct()
-        .all()
-    )
-    blocked_once = {int(r[0]) for r in selected_rows}
+    counter_map = _load_event_counter_map(db, game_profile_id)
 
     repeat_ok: list[EventDefinition] = []
     for d in defs_all:
-        if _def_repeat_pol(d) == "once_per_profile" and int(d.id) in blocked_once:
+        if not is_event_definition_eligible(
+            repeat_policy=getattr(d, "repeat_policy", None),
+            repeat_max=getattr(d, "repeat_max", None),
+            cooldown_periods=int(getattr(d, "cooldown_periods", 0) or 0),
+            current_period_index=int(period_index),
+            counter=counter_map.get(int(d.id)),
+        ):
             continue
         repeat_ok.append(d)
 
@@ -183,16 +223,14 @@ def ensure_period_events(db: Session, game_profile_id: int, period_index: int, s
         return
 
     L = max(1, int(getattr(profile, "level", 1) or 1))
-    lower_bound = max(1, L - 2)
-    upper_bound = L
     base_k = min(EVENTS_PER_PERIOD, len(repeat_ok))
 
-    core = [d for d in repeat_ok if lower_bound <= _def_tier(d) <= upper_bound]
+    core = [d for d in repeat_ok if event_tier_in_core_window(_def_tier(d), L)]
 
     if len(core) >= base_k:
         picked = _weighted_sample_without_replacement(core, base_k)
     else:
-        p1 = [d for d in repeat_ok if 1 <= _def_tier(d) <= L]
+        p1 = [d for d in repeat_ok if event_tier_in_fallback_primary(_def_tier(d), L)]
         if not p1:
             logger.error("ensure_period_events: fallback P1 empty profile=%s L=%s", game_profile_id, L)
             p1 = [d for d in repeat_ok if _def_tier(d) == 1]
@@ -361,13 +399,10 @@ async def choose_event(
         raise HTTPException(status_code=400, detail=str(e) or "Недостаточно средств") from e
 
     if monthly_lifestyle_delta != 0:
-        nd = float(getattr(profile, "delta_monthly_lifestyle_expense", 0) or 0) + monthly_lifestyle_delta
-        cap = EVENT_LIFESTYLE_DELTA_ABS_CAP
-        if nd > cap:
-            nd = cap
-        elif nd < -cap:
-            nd = -cap
-        profile.delta_monthly_lifestyle_expense = nd
+        profile.delta_monthly_lifestyle_expense = clamp_profile_lifestyle_delta(
+            float(getattr(profile, "delta_monthly_lifestyle_expense", 0) or 0),
+            monthly_lifestyle_delta,
+        )
 
     xp_info = {"xp_gained": 0, "level_up": False, "new_level": None}
     if xp_delta > 0:
@@ -376,6 +411,7 @@ async def choose_event(
     inst.status = "selected"
     inst.selected_choice_id = int(choice_id)
     inst.resolved_at = datetime.utcnow()
+    record_event_profile_selection(db, profile.id, int(inst.definition_id), int(profile.period_index))
     db.commit()
 
     return {

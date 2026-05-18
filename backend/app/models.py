@@ -16,57 +16,8 @@ class User(Base):
     telegram_id = Column(Integer, unique=True, nullable=True)
     created_at = Column(DateTime, default=datetime.utcnow)
 
-    messages = relationship("Message", back_populates="user", cascade="all, delete-orphan")
-    salary_profile = relationship("SalaryProfile", back_populates="user", uselist=False, cascade="all, delete-orphan")
-    liabilities = relationship("Liability", back_populates="user", cascade="all, delete-orphan")
-    assets = relationship("Asset", back_populates="user", cascade="all, delete-orphan")
 
-
-class Message(Base):
-    __tablename__ = "messages"
-
-    id = Column(Integer, primary_key=True, index=True)
-    text = Column(Text, nullable=False)
-    timestamp = Column(DateTime, default=datetime.utcnow)
-    user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
-
-    user = relationship("User", back_populates="messages")
-
-
-class SalaryProfile(Base):
-    __tablename__ = "salary_profiles"
-    id = Column(Integer, primary_key=True, index=True)
-    monthly_amount = Column(Float, nullable=False, default=0)
-    monthly_receipts_count = Column(Integer, nullable=False, default=1)
-    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
-    user_id = Column(Integer, ForeignKey("users.id"), nullable=False, unique=True)
-    user = relationship("User", back_populates="salary_profile")
-
-
-class Liability(Base):
-    __tablename__ = "liabilities"
-    id = Column(Integer, primary_key=True, index=True)
-    title = Column(String(120), nullable=False, default="Обязательство")
-    total_debt = Column(Float, nullable=False)
-    annual_rate_percent = Column(Float, nullable=False)
-    monthly_payment = Column(Float, nullable=False)
-    created_at = Column(DateTime, default=datetime.utcnow)
-    user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
-    user = relationship("User", back_populates="liabilities")
-
-
-class Asset(Base):
-    __tablename__ = "assets"
-    id = Column(Integer, primary_key=True, index=True)
-    title = Column(String(120), nullable=False, default="Актив")
-    asset_value = Column(Float, nullable=False)
-    monthly_maintenance_cost = Column(Float, nullable=False, default=0)
-    created_at = Column(DateTime, default=datetime.utcnow)
-    user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
-    user = relationship("User", back_populates="assets")
-
-
-# ==================== НОВЫЕ ИГРОВЫЕ МОДЕЛИ ====================
+# ==================== Игровые модели (партия = game_profile) ====================
 
 class GameProfile(Base):
     __tablename__ = "game_profiles"
@@ -213,15 +164,20 @@ class EventDefinition(Base):
     description = Column(Text, nullable=False, default="")
     weight = Column(Integer, nullable=False, default=100)
     is_active = Column(Integer, nullable=False, default=1)
-    # mandatory=1 зарезервировано под будущие обязательные сценарии (логику пока не включаем)
+    # legacy: 0/1; предпочтительно mandatory_gate
     mandatory = Column(Integer, nullable=False, default=0)
+    mandatory_gate = Column(String(32), nullable=False, default="none")  # none | blocks_period_end
     category = Column(String(80), nullable=True)
     metadata_json = Column(Text, nullable=False, default="{}")
+    prerequisites_json = Column(Text, nullable=False, default="{}")
     event_tier = Column(Integer, nullable=False, default=1)
-    repeat_policy = Column(String(32), nullable=False, default="repeatable")  # repeatable | once_per_profile
+    repeat_policy = Column(String(32), nullable=False, default="repeatable")  # repeatable | once_per_profile | max_per_profile
+    repeat_max = Column(Integer, nullable=True)
+    cooldown_periods = Column(Integer, nullable=False, default=0)
     created_at = Column(DateTime, default=datetime.utcnow)
 
     choices = relationship("EventChoice", back_populates="definition", cascade="all, delete-orphan")
+    profile_counters = relationship("EventProfileCounter", back_populates="definition", cascade="all, delete-orphan")
 
 
 class EventChoice(Base):
@@ -234,6 +190,20 @@ class EventChoice(Base):
     effects_json = Column(Text, nullable=False, default="{}")  # JSON: {cash_delta, safety_delta, ...}
 
     definition = relationship("EventDefinition", back_populates="choices")
+
+
+class EventProfileCounter(Base):
+    """Сколько раз событие уже выбирали в партии + период последнего выбора (cooldown / repeat)."""
+
+    __tablename__ = "event_profile_counters"
+
+    game_profile_id = Column(Integer, ForeignKey("game_profiles.id"), primary_key=True, nullable=False)
+    definition_id = Column(Integer, ForeignKey("event_definitions.id"), primary_key=True, nullable=False)
+    times_selected = Column(Integer, nullable=False, default=0)
+    last_selected_period_index = Column(Integer, nullable=True)
+    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+    definition = relationship("EventDefinition", back_populates="profile_counters")
 
 
 class EventInstance(Base):
@@ -273,10 +243,17 @@ class InsurancePolicy(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     game_profile_id = Column(Integer, ForeignKey("game_profiles.id"), nullable=False, index=True)
-    kind = Column(String(30), nullable=False)  # health | property | car
+    product = Column(String(30), nullable=True)
+    insured_object = Column(String(30), nullable=True)
+    kind = Column(String(40), nullable=False)
     title = Column(String(160), nullable=False)
     monthly_premium = Column(Float, nullable=False, default=0)
+    payout_amount = Column(Float, nullable=True)
     coverage_limit = Column(Float, nullable=False, default=0)
+    term_periods = Column(Integer, nullable=False, default=12)
+    started_period_index = Column(Integer, nullable=True)
+    expires_period_index = Column(Integer, nullable=True)
+    claimed_period_index = Column(Integer, nullable=True)
     is_active = Column(Integer, nullable=False, default=1)
     created_at = Column(DateTime, default=datetime.utcnow)
 

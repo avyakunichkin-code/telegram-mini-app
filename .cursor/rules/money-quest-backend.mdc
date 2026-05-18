@@ -11,3 +11,16 @@ alwaysApply: false
 - **Роутеры**: подключение в `backend/main.py`; префиксы API держать согласованными с фронтом (`/api/...`).
 - **Ошибки API**: предсказуемые статусы и тело ответа; фронт ожидает единый контракт ошибок через `apiCall` в `frontend-react/src/api.js`.
 - **Победа MVP** и дорожная карта режимов: `GET /api/finance/overview` (`win_reached` при `period_index >= 7`); spec эпика Game/Plan — [`docs/specs/features/SPEC_game-plan.md`](docs/specs/features/SPEC_game-plan.md).
+- **Инварианты логики (XP, tier-окно, победа MVP):** `backend/app/game_rules.py` — чистые функции; числовые константы там же. Роутеры не дублируют условия победы/XP вручную.
+
+## Локальные тесты (без CI)
+
+После правок в `backend/` (особенно `game_rules.py`, `game_period.py`, `character_progression.py`, `routers/events.py`, `routers/finance.py`) **запускай** и в ответе пользователю **напоминай**, если не запускал:
+
+```bash
+cd backend && python -m pytest -q
+```
+
+Первый раз или после смены окружения: `python -m pip install -r requirements-dev.txt`.
+
+В CI тесты пока не подключаем — только локальная проверка перед завершением задачи.

@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="ru" data-theme="light">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Money Quest — примитивы MQX</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <header class="lab-header">
+      <div>
+        <h1>Примитивы MQX</h1>
+        <p>
+          Кнопки, пилюли, чипы, прогресс — 5 вариантов на макете hero + светлой карточки.
+          Выберите вариант в чате; в prod только после «утверждаем X».
+        </p>
+      </div>
+      <div class="lab-theme" role="group" aria-label="Тема">
+        <button type="button" class="is-active" data-theme-btn="light">Светлая</button>
+        <button type="button" data-theme-btn="dark">Тёмная</button>
+      </div>
+    </header>
+
+    <main class="lab-wrap">
+      <section class="lab-section" id="variant-a">
+        <div class="lab-section__label">
+          <span class="lab-section__id">A</span>
+          <span>REF — как в prod сейчас</span>
+        </div>
+        <p class="lab-section__note">
+          Hero: белая filled + glass outline. Светлая зона: mode-кнопки outline/active. Пилюли стеклянные.
+          XP-чип с голубым фоном; прогресс с градиентом.
+        </p>
+        <article class="lab-stage">
+          <div class="lab-stage__hero">
+            <p class="lab-caption">Hero</p>
+            <div class="lab-row">
+              <button type="button" class="ref-btn-filled">Пауза</button>
+              <button type="button" class="ref-btn-outline">След. месяц</button>
+              <div class="ref-chip-period">
+                <div class="ref-chip-period__l">Период</div>
+                <div class="ref-chip-period__v">3</div>
+              </div>
+            </div>
+            <p class="lab-caption" style="margin-top: 14px">Пилюли</p>
+            <div class="lab-row">
+              <button type="button" class="ref-pill">События <span class="ref-pill__badge">2</span></button>
+              <button type="button" class="ref-pill">Аналитика</button>
+            </div>
+          </div>
+          <div class="lab-stage__body">
+            <p class="lab-caption">Светлая карточка</p>
+            <div class="lab-row">
+              <button type="button" class="ref-mode ref-mode--on">Активы</button>
+              <button type="button" class="ref-mode">Долги</button>
+            </div>
+            <div class="lab-row" style="margin-top: 12px; justify-content: space-between">
+              <span class="ref-chip-xp">+120 XP</span>
+              <span style="font-size: 12px; color: var(--text-muted)">Ур. 4 → 5</span>
+            </div>
+            <div class="ref-progress" style="margin-top: 8px">
+              <div class="ref-progress__fill"></div>
+            </div>
+          </div>
+        </article>
+      </section>
+
+      <section class="lab-section" id="variant-b">
+        <div class="lab-section__label">
+          <span class="lab-section__id">B</span>
+          <span>Единый violet</span>
+        </div>
+        <p class="lab-section__note">
+          Primary везде #6d28d9 без градиентов. Hero: белая CTA + прозрачная outline. На светлом — violet filled /
+          outline. Чип ставки как invest D. Прогресс — сплошной emerald.
+        </p>
+        <article class="lab-stage">
+          <div class="lab-stage__hero">
+            <p class="lab-caption">Hero</p>
+            <div class="lab-row">
+              <button type="button" class="b-btn-hero-primary">Пауза</button>
+              <button type="button" class="b-btn-hero-secondary">След. месяц</button>
+              <div class="b-chip-rate">
+                <span class="b-chip-rate__v">12%</span>
+                <span class="b-chip-rate__h">год.</span>
+              </div>
+            </div>
+            <p class="lab-caption" style="margin-top: 14px">Пилюли</p>
+            <div class="lab-row">
+              <button type="button" class="b-pill">События <span class="b-pill__badge">2</span></button>
+              <button type="button" class="b-pill b-pill--ghost">Аналитика</button>
+            </div>
+          </div>
+          <div class="lab-stage__body">
+            <p class="lab-caption">Светлая карточка</p>
+            <div class="lab-row">
+              <button type="button" class="b-btn-primary" style="flex: 1">Активы</button>
+              <button type="button" class="b-btn-secondary" style="flex: 1">Долги</button>
+            </div>
+            <div class="lab-row" style="margin-top: 12px">
+              <span class="b-chip-tag">+120 XP</span>
+              <span style="font-size: 12px; color: var(--text-muted)">Цель месяца</span>
+            </div>
+            <div class="b-progress" style="margin-top: 8px">
+              <div class="b-progress__fill"></div>
+            </div>
+          </div>
+        </article>
+      </section>
+
+      <section class="lab-section" id="variant-c">
+        <div class="lab-section__label">
+          <span class="lab-section__id">C</span>
+          <span>Мягче и крупнее</span>
+        </div>
+        <p class="lab-section__note">
+          Больше радиус и padding, лёгкая тень на primary. Пилюли капсульные. Прогресс violet→emerald mix.
+        </p>
+        <article class="lab-stage">
+          <div class="lab-stage__hero">
+            <div class="lab-row">
+              <button type="button" class="c-btn c-btn--primary">Пауза</button>
+              <button
+                type="button"
+                class="c-btn c-btn--secondary"
+                style="border-color: rgba(255, 255, 255, 0.4); color: #fff; background: rgba(255, 255, 255, 0.12)"
+              >
+                След. месяц
+              </button>
+              <span
+                class="c-chip-soft"
+                style="color: #fff; border-color: rgba(255, 255, 255, 0.25); background: rgba(255, 255, 255, 0.12)"
+                >Период 3</span
+              >
+            </div>
+            <div class="lab-row" style="margin-top: 10px">
+              <button type="button" class="c-pill c-pill--violet">События 2</button>
+              <button type="button" class="c-pill c-pill--glass">Аналитика</button>
+            </div>
+          </div>
+          <div class="lab-stage__body">
+            <div class="lab-row">
+              <button type="button" class="c-btn c-btn--primary" style="flex: 1">Активы</button>
+              <button type="button" class="c-btn c-btn--secondary" style="flex: 1">Долги</button>
+            </div>
+            <div class="c-progress" style="margin-top: 12px">
+              <div class="c-progress__fill"></div>
+            </div>
+          </div>
+        </article>
+      </section>
+
+      <section class="lab-section lab-section--featured" id="variant-d">
+        <div class="lab-section__label">
+          <span class="lab-section__id">D ★</span>
+          <span>Утверждённый гибрид</span>
+        </div>
+        <p class="lab-section__note">
+          Размеры D · шрифты C (15px кнопки, 13px пилюли) · прогресс 6px D · fill: emerald-градиент B+A.
+          XP-полоса — голубой градиент как в A.
+        </p>
+        <article class="lab-stage">
+          <div class="lab-stage__hero">
+            <p class="lab-caption">Hero</p>
+            <div class="lab-row">
+              <button type="button" class="d-btn d-btn--primary">Пауза</button>
+              <button
+                type="button"
+                class="d-btn"
+                style="background: rgba(255, 255, 255, 0.12); color: #fff; border: 1px solid rgba(255, 255, 255, 0.2)"
+              >
+                След. месяц
+              </button>
+              <div class="d-chip-period">
+                <span class="d-chip-period__l">Период</span>
+                <span class="d-chip-period__v">3</span>
+              </div>
+            </div>
+            <p class="lab-caption" style="margin-top: 10px">Пилюли</p>
+            <div class="lab-row">
+              <button type="button" class="d-pill">События <span class="d-pill__badge">2</span></button>
+              <button type="button" class="d-pill">Аналитика</button>
+            </div>
+          </div>
+          <div class="lab-stage__body">
+            <p class="lab-caption">Светлая карточка</p>
+            <div class="lab-row">
+              <button type="button" class="d-btn d-btn--primary" style="flex: 1">Активы</button>
+              <button type="button" class="d-btn d-btn--secondary" style="flex: 1">Долги</button>
+            </div>
+            <div class="lab-row" style="margin-top: 10px; justify-content: space-between; align-items: center">
+              <span class="d-chip-xp">+120 XP</span>
+              <span style="font-size: 12px; color: var(--text-muted)">Ур. 4 → 5</span>
+            </div>
+            <p class="lab-caption" style="margin-top: 10px">Цель (emerald)</p>
+            <div class="d-progress" style="margin-top: 6px">
+              <div class="d-progress__fill"></div>
+            </div>
+            <p class="lab-caption" style="margin-top: 10px">XP (sky)</p>
+            <div class="d-progress" style="margin-top: 6px">
+              <div class="d-progress__fill d-progress__fill--xp"></div>
+            </div>
+          </div>
+        </article>
+      </section>
+
+      <section class="lab-section" id="variant-e">
+        <div class="lab-section__label">
+          <span class="lab-section__id">E</span>
+          <span>Акцент-линия + сегменты</span>
+        </div>
+        <p class="lab-section__note">
+          Secondary как текст с underline. Прогресс сегментами (месяцы). Пилюли outline на hero.
+        </p>
+        <article class="lab-stage">
+          <div class="lab-stage__hero">
+            <div class="lab-row">
+              <button type="button" class="e-btn-primary">Пауза</button>
+              <button type="button" class="e-btn-secondary">След. месяц</button>
+            </div>
+            <div class="lab-row" style="margin-top: 10px">
+              <button type="button" class="e-pill-outline">События · 2</button>
+            </div>
+          </div>
+          <div class="lab-stage__body">
+            <div class="e-subtabs">
+              <button type="button" class="e-subtab e-subtab--on">Активы</button>
+              <button type="button" class="e-subtab">Долги</button>
+            </div>
+            <p class="lab-caption" style="margin-top: 12px">Прогресс (6 периодов, 4 закрыты)</p>
+            <div class="e-progress-segments" aria-hidden="true">
+              <span class="is-on"></span>
+              <span class="is-on"></span>
+              <span class="is-on"></span>
+              <span class="is-on"></span>
+              <span></span>
+              <span></span>
+            </div>
+          </div>
+        </article>
+      </section>
+    </main>
+
+    <script>
+      document.querySelectorAll('[data-theme-btn]').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          const theme = btn.getAttribute('data-theme-btn');
+          document.documentElement.setAttribute('data-theme', theme);
+          document.querySelectorAll('[data-theme-btn]').forEach((b) => b.classList.toggle('is-active', b === btn));
+        });
+      });
+    </script>
+  </body>
+</html>

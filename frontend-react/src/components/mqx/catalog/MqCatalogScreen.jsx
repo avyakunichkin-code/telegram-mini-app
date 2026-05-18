@@ -15,6 +15,13 @@ import {
   LiabilityTemplateMetrics,
   MetricInlineItem,
   MetricsRow,
+  MqxButton,
+  MqxChip,
+  MqxPeriodChip,
+  MqxPill,
+  MqxProgress,
+  MqxSubtab,
+  MqxModeButton,
 } from '../index';
 
 function CatalogSection({ title, children }) {
@@ -83,22 +90,62 @@ export function MqCatalogScreen() {
         </MetricsRow>
       </CatalogSection>
 
+      <CatalogSection title="Примитивы (D + C + B/A)">
+        <p className="mqx-catalog__lead" style={{ marginTop: 0 }}>
+          Размеры D · шрифты 15/13px (C) · прогресс 6px · emerald-градиент цели · sky-градиент XP.
+        </p>
+        <div
+          style={{
+            marginTop: 12,
+            padding: 14,
+            borderRadius: 16,
+            background: 'linear-gradient(135deg, #6d28d9 0%, #5b21b6 52%, #4338ca 100%)',
+          }}
+        >
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, alignItems: 'center' }}>
+            <MqxButton variant="hero-filled">Пауза</MqxButton>
+            <MqxButton variant="hero-outline">След. месяц</MqxButton>
+            <MqxPeriodChip value="#3" />
+          </div>
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, marginTop: 10 }}>
+            <MqxPill events badge={2}>
+              События
+            </MqxPill>
+            <MqxPill>Аналитика</MqxPill>
+          </div>
+        </div>
+        <div style={{ maxWidth: 360, marginTop: 12, display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
+          <MqxButton variant="primary">Активы</MqxButton>
+          <MqxButton variant="secondary">Долги</MqxButton>
+        </div>
+        <div
+          style={{
+            maxWidth: 360,
+            marginTop: 12,
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+          }}
+        >
+          <MqxChip xp>+120 XP</MqxChip>
+          <span style={{ fontSize: 13, opacity: 0.65 }}>Ур. 4 → 5</span>
+        </div>
+        <div style={{ maxWidth: 360, marginTop: 8 }}>
+          <div style={{ fontSize: 11, fontWeight: 700, opacity: 0.55, marginBottom: 4 }}>Цель</div>
+          <MqxProgress value={62} aria-label="Прогресс цели" />
+          <div style={{ fontSize: 11, fontWeight: 700, opacity: 0.55, margin: '10px 0 4px' }}>XP</div>
+          <MqxProgress value={62} xp aria-label="Прогресс опыта" />
+        </div>
+      </CatalogSection>
+
       <CatalogSection title="Кнопки и вкладки">
         <div className="mqx-fin-subtabs-row" style={{ maxWidth: 360 }}>
-          <button type="button" className="mqx-fin-subtab mqx-fin-subtab--active">
-            Активные
-          </button>
-          <button type="button" className="mqx-fin-subtab">
-            В рамке
-          </button>
+          <MqxSubtab active>Активные</MqxSubtab>
+          <MqxSubtab>В рамке</MqxSubtab>
         </div>
         <div className="mqx-capital-mode-grid" style={{ maxWidth: 360, marginTop: 12 }}>
-          <button type="button" className="mqx-capital-mode-btn mqx-capital-mode-btn--active">
-            Режим вкл
-          </button>
-          <button type="button" className="mqx-capital-mode-btn">
-            Режим выкл
-          </button>
+          <MqxModeButton active>Режим вкл</MqxModeButton>
+          <MqxModeButton>Режим выкл</MqxModeButton>
         </div>
       </CatalogSection>
 

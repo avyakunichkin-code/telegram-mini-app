@@ -1,5 +1,6 @@
 import { InvestAmountControl } from './InvestAmountControl';
 import { InvestRateChip } from './InvestRateChip';
+import { MqxModeButton } from './mqx';
 
 /** Форма депозита / облигаций — variant D (компактная строка) + chip ставки. */
 export function InvestProductForm({
@@ -31,14 +32,14 @@ export function InvestProductForm({
           compact
           rateSlot={<InvestRateChip annualRatePercent={annualRatePercent} productId={productId} />}
         />
-        <button
-          type="button"
-          className="mqx-capital-mode-btn mqx-capital-mode-btn--active mqx-invest-form__submit"
+        <MqxModeButton
+          active
+          className="mqx-invest-form__submit"
           disabled={!canSubmit}
           onClick={onSubmit}
         >
           {submitLabel}
-        </button>
+        </MqxModeButton>
       </div>
     </article>
   );

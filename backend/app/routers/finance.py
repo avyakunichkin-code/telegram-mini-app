@@ -10,6 +10,7 @@ from ..balance_utils import adjust_balance, adjust_safety_fund_balance
 from ..finance_helpers import monthly_interest_payment
 from ..game_time import get_active_game_profile, sync_time, get_seconds_until_next
 from ..character_progression import character_xp_need_for_next_level
+from ..game_rules import MvpVictoryInput, evaluate_mvp_victory
 from ..schemas import (
     SalaryProfileUpdate,
     SalaryProfileResponse,
@@ -25,9 +26,6 @@ from ..schemas import (
 router = APIRouter(prefix="/api/finance", tags=["finance"])
 
 EPSILON = 1e-6
-
-# Победа недоступна в периодах 1..6; с периода 7 условия могут быть выполнены.
-MIN_PERIOD_INDEX_FOR_WIN = 7
 
 
 def _liquid_snapshot_total(row: PeriodEconomyClosing) -> float:
@@ -527,17 +525,19 @@ async def finance_overview(
 
     score, level, xp_to_next = _compute_gamification(net_cashflow, liabilities_ratio, len(assets))
 
-    # MVP-условие победы: подушка >= 3 * обязательные расходы, нет просрочек, net_cashflow >= 0
-    win_target_safety_fund = float(total_monthly_obligations) * 3.0
-    win_progress_safety_fund = 1.0 if win_target_safety_fund <= 0 else float(profile.safety_fund_balance) / win_target_safety_fund
-    win_ready = (total_overdue_amount <= 0) and (net_cashflow >= 0)
-    win_allowed_by_period = int(profile.period_index) >= MIN_PERIOD_INDEX_FOR_WIN
-    win_reached = (
-        win_allowed_by_period
-        and win_ready
-        and (float(profile.safety_fund_balance) >= win_target_safety_fund)
-        and (win_target_safety_fund > 0)
+    victory = evaluate_mvp_victory(
+        MvpVictoryInput(
+            period_index=int(profile.period_index),
+            safety_fund_balance=float(profile.safety_fund_balance),
+            total_monthly_obligations=float(total_monthly_obligations),
+            total_overdue_amount=float(total_overdue_amount),
+            net_monthly_cashflow=float(net_cashflow),
+        )
     )
+    win_target_safety_fund = victory.win_target_safety_fund
+    win_progress_safety_fund = victory.win_progress_safety_fund
+    win_ready = victory.win_ready
+    win_reached = victory.win_reached
 
     avg_cf_6, avg_cf_n = _avg_net_cashflow_last_closed_intervals(db, profile.id, max_intervals=6)
 

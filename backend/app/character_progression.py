@@ -4,13 +4,10 @@ from __future__ import annotations
 
 from sqlalchemy.orm import Session
 
+from .game_rules import apply_xp_to_character_state, character_xp_need_for_next_level
 from .models import GameProfile
 
-
-def character_xp_need_for_next_level(level: int) -> int:
-    """Порог XP для перехода с текущего числового уровня на следующий (см. SPEC / LEVEL_XP_SYSTEM)."""
-    L = max(1, int(level))
-    return 100 + max(0, L - 1) * 50
+__all__ = ("character_xp_need_for_next_level", "apply_character_xp")
 
 
 def apply_character_xp(profile: GameProfile, delta: int, db: Session) -> dict:
@@ -18,30 +15,12 @@ def apply_character_xp(profile: GameProfile, delta: int, db: Session) -> dict:
     Начисляет XP (delta >= 0), обрабатывает каскад level-up.
     Возвращает служебный dict для API-ответов.
     """
-    if delta < 0:
-        raise ValueError("apply_character_xp: delta must be >= 0")
-
-    if delta == 0:
-        need = character_xp_need_for_next_level(profile.level)
-        return {
-            "xp_gained": 0,
-            "level_up": False,
-            "new_level": None,
-            "character_xp_need_for_next": need,
-        }
-
-    profile.xp = int(getattr(profile, "xp", 0) or 0) + int(delta)
-    level_up = False
-    xp_for_next = character_xp_need_for_next_level(profile.level)
-    while profile.xp >= xp_for_next:
-        profile.level += 1
-        profile.xp -= xp_for_next
-        level_up = True
-        xp_for_next = character_xp_need_for_next_level(profile.level)
-
-    return {
-        "xp_gained": delta,
-        "level_up": level_up,
-        "new_level": int(profile.level) if level_up else None,
-        "character_xp_need_for_next": character_xp_need_for_next_level(profile.level),
-    }
+    _ = db  # сессия для единообразия вызовов роутеров; flush/commit снаружи
+    new_level, new_xp, info = apply_xp_to_character_state(
+        int(getattr(profile, "level", 1) or 1),
+        int(getattr(profile, "xp", 0) or 0),
+        delta,
+    )
+    profile.level = new_level
+    profile.xp = new_xp
+    return info

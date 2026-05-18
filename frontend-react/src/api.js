@@ -167,6 +167,9 @@ export const API = {
         return apiCall(`/api/invest/positions/${id}/close`, 'POST');
     },
     // Страховки
+    getInsuranceCatalog() {
+        return apiCall('/api/insurance/catalog');
+    },
     listPolicies() {
         return apiCall('/api/insurance/policies');
     },

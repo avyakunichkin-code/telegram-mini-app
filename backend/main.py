@@ -5,7 +5,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy import inspect, text
 
 from app.database import engine, Base
-from app.routers import auth_router, users_router, messages_router, health_router, finance_router, game_router, period_router, events_router, invest_router, insurance_router
+from app.routers import auth_router, users_router, health_router, finance_router, game_router, period_router, events_router, invest_router, insurance_router
 
 # Каталог стартов Game: сортируется sort_order; ON CONFLICT не обновляет существующие строки.
 GAME_STARTER_TEMPLATE_SEEDS = [
@@ -164,6 +164,20 @@ def ensure_schema_compatibility() -> None:
             statements.append(
                 "ALTER TABLE event_definitions ADD COLUMN repeat_policy VARCHAR(32) NOT NULL DEFAULT 'repeatable'"
             )
+        if "cooldown_periods" not in ed_cols:
+            statements.append(
+                "ALTER TABLE event_definitions ADD COLUMN cooldown_periods INTEGER NOT NULL DEFAULT 0"
+            )
+        if "repeat_max" not in ed_cols:
+            statements.append("ALTER TABLE event_definitions ADD COLUMN repeat_max INTEGER NULL")
+        if "mandatory_gate" not in ed_cols:
+            statements.append(
+                "ALTER TABLE event_definitions ADD COLUMN mandatory_gate VARCHAR(32) NOT NULL DEFAULT 'none'"
+            )
+        if "prerequisites_json" not in ed_cols:
+            statements.append(
+                "ALTER TABLE event_definitions ADD COLUMN prerequisites_json TEXT NOT NULL DEFAULT '{}'"
+            )
 
     # ---- finance_assets ----
     if "finance_assets" in inspector.get_table_names():
@@ -276,7 +290,6 @@ app.add_middleware(
 app.include_router(health_router)
 app.include_router(auth_router)
 app.include_router(users_router)
-app.include_router(messages_router)
 app.include_router(finance_router)
 app.include_router(game_router)
 app.include_router(period_router)

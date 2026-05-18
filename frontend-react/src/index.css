@@ -7,6 +7,8 @@
   --mq-danger: #dc2626;
   --mq-danger-soft: rgba(220, 38, 38, 0.12);
   --mq-warning: #d97706;
+  --mq-xp-sky: #38bdf8;
+  --mq-xp-accent: #818cf8;
   --mq-ink: #0f1115;
   --mq-line: #e5e7eb;
 
@@ -350,10 +352,10 @@ body {
 }
 
 .mqx-period-chip {
-  border-radius: 14px;
-  padding: 10px 12px;
+  border-radius: 11px;
+  padding: 7px 10px;
   background: rgba(255, 255, 255, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.14);
+  border: 1px solid rgba(255, 255, 255, 0.16);
   backdrop-filter: blur(16px);
   text-align: right;
   flex-shrink: 0;
@@ -361,16 +363,20 @@ body {
 
 .mqx-period-chip__label {
   font-size: 10px;
+  font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.2em;
-  color: rgba(245, 243, 255, 0.7);
+  letter-spacing: 0.14em;
+  color: rgba(245, 243, 255, 0.72);
+  line-height: 1.2;
 }
 
 .mqx-period-chip__value {
-  font-size: 18px;
+  margin-top: 1px;
+  font-size: 16px;
   font-weight: 800;
   color: #fff;
   font-variant-numeric: tabular-nums;
+  line-height: 1.1;
 }
 
 .mqx-hero__mid {
@@ -411,10 +417,10 @@ body {
 
 .mqx-btn {
   appearance: none;
-  border-radius: 14px;
-  padding: 11px 14px;
-  min-width: 112px;
-  font-size: var(--mq-fs-body);
+  border-radius: 12px;
+  padding: 9px 12px;
+  min-width: 96px;
+  font-size: 15px;
   font-weight: 700;
   border: 1px solid rgba(255, 255, 255, 0.18);
   background: rgba(255, 255, 255, 0.1);
@@ -440,6 +446,18 @@ body {
 
 .mqx-btn--outline {
   background: rgba(255, 255, 255, 0.1);
+}
+
+.mqx-btn--primary {
+  background: var(--mq-violet);
+  border-color: var(--mq-violet-deep);
+  color: #fff;
+}
+
+.mqx-btn--secondary {
+  background: var(--tg-theme-bg-color, #fff);
+  border-color: color-mix(in srgb, var(--mq-violet) 35%, var(--mq-line));
+  color: var(--mq-violet-deep);
 }
 
 /* Мини-сценка «путь месяца» — вариант на Lottie (`src/assets/lottie/mascot-period.json`) */
@@ -644,13 +662,13 @@ body {
 }
 
 .mqx-pill {
-  border-radius: 14px;
-  padding: 9px 12px;
-  border: 1px solid rgba(255, 255, 255, 0.18);
-  background: rgba(0, 0, 0, 0.18);
+  border-radius: 10px;
+  padding: 8px 11px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(0, 0, 0, 0.2);
   color: rgba(255, 255, 255, 0.92);
-  font-size: var(--mq-fs-caption);
-  font-weight: 650;
+  font-size: 13px;
+  font-weight: 700;
   cursor: pointer;
 }
 
@@ -662,12 +680,14 @@ body {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-width: 18px;
-  height: 18px;
-  padding: 0 6px;
+  min-width: 17px;
+  height: 17px;
+  padding: 0 5px;
   margin-left: 6px;
   border-radius: 999px;
-  background: rgba(255, 255, 255, 0.18);
+  background: rgba(255, 255, 255, 0.2);
+  font-size: 11px;
+  font-weight: 800;
   font-variant-numeric: tabular-nums;
 }
 
@@ -818,10 +838,10 @@ body {
   border: 1px solid color-mix(in srgb, var(--tg-theme-hint-color, var(--mq-line)) 72%, transparent);
   background: var(--tg-theme-bg-color, #fff);
   border-radius: 12px;
-  padding: 10px;
-  font-size: 13px;
-  font-weight: 750;
-  color: color-mix(in srgb, var(--mqx-ink) 82%, transparent);
+  padding: 9px 12px;
+  font-size: 15px;
+  font-weight: 700;
+  color: color-mix(in srgb, var(--mqx-ink) 88%, transparent);
 }
 
 .mqx-capital-subtab--active {
@@ -839,10 +859,10 @@ body {
 
 .mqx-capital-mode-btn {
   border: 1px solid color-mix(in srgb, var(--mq-violet) 42%, var(--mq-line));
-  border-radius: 14px;
-  padding: 14px 12px;
-  font-size: 13px;
-  font-weight: 800;
+  border-radius: 12px;
+  padding: 9px 12px;
+  font-size: 15px;
+  font-weight: 700;
   cursor: pointer;
   color: var(--mq-violet-deep);
   background: var(--tg-theme-bg-color, #fff);
@@ -1173,9 +1193,9 @@ body {
   border: 1px solid color-mix(in srgb, var(--tg-theme-hint-color, var(--mq-line)) 72%, transparent);
   background: var(--tg-theme-bg-color, #fff);
   border-radius: 12px;
-  padding: 10px 10px;
-  font-size: 13px;
-  font-weight: 750;
+  padding: 9px 12px;
+  font-size: 15px;
+  font-weight: 700;
   color: color-mix(in srgb, var(--mqx-ink) 88%, transparent);
 }
 
@@ -1744,15 +1764,18 @@ body {
 }
 
 .mqx-chip--xp {
-  font-size: 11px;
-  font-weight: 800;
-  padding: 6px 10px;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 5px 9px;
   border-radius: 999px;
-  background: rgba(56, 189, 248, 0.2);
+  background: var(--tg-theme-bg-color, #fff);
+  border: 1.5px solid var(--mq-xp-accent);
+  color: var(--mq-xp-accent);
+  font-variant-numeric: tabular-nums;
 }
 
 .mqx-progress__fill--xp {
-  background: linear-gradient(90deg, #38bdf8, #818cf8);
+  background: linear-gradient(90deg, var(--mq-xp-sky), var(--mq-xp-accent));
 }
 
 .mqx-character__meter {
@@ -2080,17 +2103,17 @@ body {
 }
 
 .mqx-progress {
-  margin-top: 10px;
-  height: 12px;
+  margin-top: 8px;
+  height: 6px;
   border-radius: 999px;
   overflow: hidden;
-  background: color-mix(in srgb, var(--mqx-ink) 8%, transparent);
+  background: color-mix(in srgb, var(--mqx-ink) 10%, transparent);
 }
 
 .mqx-progress__fill {
   height: 100%;
   border-radius: 999px;
-  background: linear-gradient(90deg, rgba(5, 150, 105, 0.95), rgba(45, 212, 191, 0.9));
+  background: linear-gradient(90deg, #059669 0%, #34d399 52%, #2dd4bf 100%);
 }
 
 .mqx-block__head {

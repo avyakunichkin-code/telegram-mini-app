@@ -10,7 +10,7 @@
 |-------|--------|------------|
 | [asset-cards/](asset-cards/) | внедрено в prod | Карточки активов |
 | [invest-forms/](invest-forms/) | внедрено в prod | Формы депозита / облигаций |
-| `primitives/` | **следующий шаг** | Кнопки, pills, chips, progress |
+| [primitives/](primitives/) | **утверждено → prod** | Гибрид D+C+B/A; в `mqx/primitives/` |
 | `shell/` | план | Card, hero, empty/error |
 | `dashboard/` | план | Герой, stat-блоки |
 | `events/` | план | События |

@@ -7,12 +7,17 @@ import { CapitalPortfolioPanels } from './CapitalPortfolioPanels';
 import { InvestProductForm } from './InvestProductForm';
 import { InvestPositionRow } from './InvestPositionRow';
 import { InvestPositionMetrics } from './InvestPositionMetrics';
-import { AssetPositionMetrics, LiabilityPositionMetrics } from './mqx';
+import { AssetPositionMetrics, LiabilityPositionMetrics, MqxModeButton, MqxSubtab } from './mqx';
 import {
   BOND_ANNUAL_RATE_PERCENT,
   clampInvestAmount,
   DEPOSIT_ANNUAL_RATE_PERCENT,
 } from '../constants/investProducts';
+import {
+  DEFAULT_INSURANCE_CATALOG_KEY,
+  findInsuranceCatalogItem,
+  INSURANCE_CATALOG,
+} from '../constants/insuranceProducts';
 
 export const FINANCE_TABS = [
   { id: 'invest', label: 'Инвестиции' },
@@ -42,9 +47,11 @@ export function FinanceSection({
   const [policies, setPolicies] = useState([]);
   const [depositAmount, setDepositAmount] = useState(0);
   const [bondAmount, setBondAmount] = useState(0);
-  const [policyKind, setPolicyKind] = useState('health');
+  const [policyCatalogKey, setPolicyCatalogKey] = useState(DEFAULT_INSURANCE_CATALOG_KEY);
   const [policyPremium, setPolicyPremium] = useState(1500);
-  const [policyCoverage, setPolicyCoverage] = useState(100000);
+  const [policyPayout, setPolicyPayout] = useState(100000);
+  const [policyTermPeriods, setPolicyTermPeriods] = useState(12);
+  const selectedInsurance = findInsuranceCatalogItem(policyCatalogKey);
   const [assetTemplates, setAssetTemplates] = useState([]);
   const [liabilityTemplates, setLiabilityTemplates] = useState([]);
 
@@ -257,23 +264,38 @@ export function FinanceSection({
                 <Cell multiline>
                   <div className="mq-fin-field-grid mq-fin-field-grid--2">
                     <div style={{ gridColumn: '1 / -1' }}>
-                      <Select header="Тип полиса" value={policyKind} onChange={(e) => setPolicyKind(e.target.value)}>
-                        <option value="health">Здоровье</option>
-                        <option value="property">Имущество</option>
-                        <option value="car">Авто</option>
+                      <Select
+                        header="Продукт"
+                        value={policyCatalogKey}
+                        onChange={(e) => setPolicyCatalogKey(e.target.value)}
+                      >
+                        {INSURANCE_CATALOG.map((item) => (
+                          <option key={item.kind} value={item.kind}>
+                            {item.product_label} — {item.object_label}
+                          </option>
+                        ))}
                       </Select>
+                      <div className="mq-slot-intro" style={{ marginTop: 6 }}>
+                        {selectedInsurance.title}
+                      </div>
                     </div>
                     <Input
-                      header="Премия в месяц (₽)"
+                      header="Оплата за период (₽)"
                       type="number"
                       value={policyPremium}
                       onChange={(e) => setPolicyPremium(Number(e.target.value))}
                     />
                     <Input
-                      header="Покрытие (лимит, ₽)"
+                      header="Сумма выплаты (₽)"
                       type="number"
-                      value={policyCoverage}
-                      onChange={(e) => setPolicyCoverage(Number(e.target.value))}
+                      value={policyPayout}
+                      onChange={(e) => setPolicyPayout(Number(e.target.value))}
+                    />
+                    <Input
+                      header="Срок (периодов)"
+                      type="number"
+                      value={policyTermPeriods}
+                      onChange={(e) => setPolicyTermPeriods(Number(e.target.value))}
                     />
                     <Button
                       mode="filled"
@@ -281,10 +303,13 @@ export function FinanceSection({
                       stretched
                       onClick={async () => {
                         try {
+                          const item = findInsuranceCatalogItem(policyCatalogKey);
                           await API.buyPolicy({
-                            kind: policyKind,
+                            product: item.product,
+                            insured_object: item.insured_object,
                             monthly_premium: policyPremium,
-                            coverage_limit: policyCoverage,
+                            payout_amount: policyPayout,
+                            term_periods: policyTermPeriods,
                           });
                           showNotification('Полис оформлен', 'success');
                           await refreshOverview();
@@ -330,7 +355,10 @@ export function FinanceSection({
                         Премия: <MoneyText value={p.monthly_premium} /> / мес
                       </div>
                       <div>
-                        Покрытие: <MoneyText value={p.coverage_limit} decimals={0} />
+                        Выплата: <MoneyText value={p.payout_amount ?? p.coverage_limit} decimals={0} />
+                      </div>
+                      <div>
+                        Срок: период {p.started_period_index ?? '—'} — {p.expires_period_index ?? '—'}
                       </div>
                     </Cell>
                   ))}
@@ -589,24 +617,22 @@ export function FinanceSection({
         {financeTab === 'invest' ? (
           <>
             <div className="mqx-fin-subtabs mqx-fin-subtabs-row" role="tablist" aria-label="Инструмент">
-              <button
-                type="button"
+              <MqxSubtab
                 role="tab"
                 aria-selected={investProductTab === 'deposit'}
-                className={`mqx-fin-subtab ${investProductTab === 'deposit' ? 'mqx-fin-subtab--active' : ''}`}
+                active={investProductTab === 'deposit'}
                 onClick={() => setInvestProductTab('deposit')}
               >
                 Депозиты
-              </button>
-              <button
-                type="button"
+              </MqxSubtab>
+              <MqxSubtab
                 role="tab"
                 aria-selected={investProductTab === 'bond'}
-                className={`mqx-fin-subtab ${investProductTab === 'bond' ? 'mqx-fin-subtab--active' : ''}`}
+                active={investProductTab === 'bond'}
                 onClick={() => setInvestProductTab('bond')}
               >
                 Облигации
-              </button>
+              </MqxSubtab>
             </div>
 
             <div className="mqx-fin-longhelp">{selectedInvestSubtitle}</div>
@@ -626,13 +652,7 @@ export function FinanceSection({
                   onSubmit={() => void (investProductTab === 'deposit' ? openDeposit() : openBond())}
                 />
                 <div className="mqx-invest-form-actions">
-                  <button
-                    type="button"
-                    className="mqx-capital-mode-btn"
-                    onClick={() => setInvestUiMode('positions')}
-                  >
-                    Позиции
-                  </button>
+                  <MqxModeButton onClick={() => setInvestUiMode('positions')}>Позиции</MqxModeButton>
                 </div>
               </>
             ) : (
@@ -664,26 +684,43 @@ export function FinanceSection({
 
         {financeTab === 'insurance' ? (
           <>
-            <div className="mqx-card__sub">Премия списывается в конце периода.</div>
+            <div className="mqx-card__sub">
+              Премия списывается в конце периода. При страховом случае — полная сумма выплаты, полис закрывается.
+            </div>
             <div className="mqx-fin-grid mqx-fin-grid--2" style={{ marginTop: 12 }}>
               <div className="mqx-fin-span2">
-                <Select header="Тип полиса" value={policyKind} onChange={(e) => setPolicyKind(e.target.value)}>
-                  <option value="health">Здоровье</option>
-                  <option value="property">Имущество</option>
-                  <option value="car">Авто</option>
+                <Select
+                  header="Продукт"
+                  value={policyCatalogKey}
+                  onChange={(e) => setPolicyCatalogKey(e.target.value)}
+                >
+                  {INSURANCE_CATALOG.map((item) => (
+                    <option key={item.kind} value={item.kind}>
+                      {item.product_label} — {item.object_label}
+                    </option>
+                  ))}
                 </Select>
+                <div className="mqx-card__sub" style={{ marginTop: 6 }}>
+                  {selectedInsurance.title}
+                </div>
               </div>
               <Input
-                header="Премия / мес"
+                header="Оплата за период"
                 type="number"
                 value={policyPremium}
                 onChange={(e) => setPolicyPremium(Number(e.target.value))}
               />
               <Input
-                header="Покрытие"
+                header="Сумма выплаты"
                 type="number"
-                value={policyCoverage}
-                onChange={(e) => setPolicyCoverage(Number(e.target.value))}
+                value={policyPayout}
+                onChange={(e) => setPolicyPayout(Number(e.target.value))}
+              />
+              <Input
+                header="Срок (периодов)"
+                type="number"
+                value={policyTermPeriods}
+                onChange={(e) => setPolicyTermPeriods(Number(e.target.value))}
               />
               <div className="mqx-fin-span2">
                 <Button
@@ -691,10 +728,13 @@ export function FinanceSection({
                   stretched
                   onClick={async () => {
                     try {
+                      const item = findInsuranceCatalogItem(policyCatalogKey);
                       await API.buyPolicy({
-                        kind: policyKind,
+                        product: item.product,
+                        insured_object: item.insured_object,
                         monthly_premium: policyPremium,
-                        coverage_limit: policyCoverage,
+                        payout_amount: policyPayout,
+                        term_periods: policyTermPeriods,
                       });
                       showNotification('Полис оформлен', 'success');
                       await refreshOverview();
@@ -722,7 +762,9 @@ export function FinanceSection({
                       </div>
                     </div>
                     <div className="mqx-fin-row__r">
-                      <div className="mqx-fin-row__val"><MoneyText value={p.coverage_limit} decimals={0} /></div>
+                      <div className="mqx-fin-row__val">
+                        <MoneyText value={p.payout_amount ?? p.coverage_limit} decimals={0} />
+                      </div>
                       <Button size="s" mode="destructive" onClick={async () => {
                         try {
                           await API.cancelPolicy(p.id);
@@ -743,30 +785,28 @@ export function FinanceSection({
         {financeTab === 'portfolio' && !capitalLayout ? (
           <>
             <div className="mqx-fin-subtabs mqx-fin-subtabs-row" role="tablist" aria-label="Портфель">
-              <button
-                type="button"
+              <MqxSubtab
                 role="tab"
                 aria-selected={portfolioTab === 'assets'}
-                className={`mqx-fin-subtab ${portfolioTab === 'assets' ? 'mqx-fin-subtab--active' : ''}`}
+                active={portfolioTab === 'assets'}
                 onClick={() => {
                   setPortfolioTab('assets');
                   setExpandedDebtTpl(null);
                 }}
               >
                 Активы
-              </button>
-              <button
-                type="button"
+              </MqxSubtab>
+              <MqxSubtab
                 role="tab"
                 aria-selected={portfolioTab === 'debts'}
-                className={`mqx-fin-subtab ${portfolioTab === 'debts' ? 'mqx-fin-subtab--active' : ''}`}
+                active={portfolioTab === 'debts'}
                 onClick={() => {
                   setPortfolioTab('debts');
                   setExpandedAssetTpl(null);
                 }}
               >
                 Долги
-              </button>
+              </MqxSubtab>
             </div>
 
             {portfolioTab === 'assets' ? (

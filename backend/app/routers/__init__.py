@@ -1,5 +1,4 @@
 from ..routers.auth import router as auth_router
-from ..routers.messages import router as messages_router
 from ..routers.users import router as users_router
 from ..routers.health import router as health_router
 from ..routers.finance import router as finance_router
@@ -9,10 +8,8 @@ from ..routers.events import router as events_router
 from ..routers.invest import router as invest_router
 from ..routers.insurance import router as insurance_router
 
-# Экспортируем все роутеры
 __all__ = [
     "auth_router",
-    "messages_router",
     "users_router",
     "health_router",
     "finance_router",

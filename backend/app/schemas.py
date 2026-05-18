@@ -24,25 +24,13 @@ class Token(BaseModel):
     username: str
 
 
-# Messages
-class MessageCreate(BaseModel):
-    text: str
-
-
-class MessageResponse(BaseModel):
-    id: int
-    text: str
-    timestamp: datetime
-    username: str
-
-
 # User
 class UserResponse(BaseModel):
     id: int
     username: str
     full_name: Optional[str]
     email: Optional[str]
-    messages_count: int
+    game_profiles_count: int
     created_at: datetime
 
 

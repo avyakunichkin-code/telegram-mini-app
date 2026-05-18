@@ -178,6 +178,9 @@ def ensure_mvp11_event_catalog(db: Session) -> None:
         if existing:
             existing.event_tier = int(spec.get("event_tier", 1))
             existing.repeat_policy = str(spec.get("repeat_policy", "repeatable"))
+            existing.repeat_max = spec.get("repeat_max")
+            existing.cooldown_periods = int(spec.get("cooldown_periods", 0) or 0)
+            existing.mandatory_gate = str(spec.get("mandatory_gate", "none"))
             existing.weight = int(spec.get("weight", 100))
             continue
         ed = EventDefinition(
@@ -189,6 +192,9 @@ def ensure_mvp11_event_catalog(db: Session) -> None:
             is_active=1,
             event_tier=int(spec.get("event_tier", 1)),
             repeat_policy=str(spec.get("repeat_policy", "repeatable")),
+            repeat_max=spec.get("repeat_max"),
+            cooldown_periods=int(spec.get("cooldown_periods", 0) or 0),
+            mandatory_gate=str(spec.get("mandatory_gate", "none")),
         )
         db.add(ed)
         db.flush()

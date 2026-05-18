@@ -6,6 +6,8 @@ import {
   CapitalPositionCard,
   LiabilityPositionMetrics,
   LiabilityTemplateMetrics,
+  MqxModeButton,
+  MqxSubtab,
 } from './mqx';
 
 const ASSET_KIND_LABELS = {
@@ -51,50 +53,45 @@ export function CapitalPortfolioPanels({
       <h2 className="mqx-capital-card__title">{activeTabLabel}</h2>
 
       <div className="mqx-fin-subtabs mqx-capital-subtabs" role="tablist" aria-label="Портфель">
-        <button
-          type="button"
+        <MqxSubtab
+          capital
           role="tab"
           aria-selected={portfolioTab === 'assets'}
-          className={`mqx-capital-subtab${portfolioTab === 'assets' ? ' mqx-capital-subtab--active' : ''}`}
+          active={portfolioTab === 'assets'}
           onClick={() => {
             setPortfolioTab('assets');
             setExpandedDebtTpl(null);
           }}
         >
           Активы
-        </button>
-        <button
-          type="button"
+        </MqxSubtab>
+        <MqxSubtab
+          capital
           role="tab"
           aria-selected={portfolioTab === 'debts'}
-          className={`mqx-capital-subtab${portfolioTab === 'debts' ? ' mqx-capital-subtab--active' : ''}`}
+          active={portfolioTab === 'debts'}
           onClick={() => {
             setPortfolioTab('debts');
             setExpandedAssetTpl(null);
           }}
         >
           Долги
-        </button>
+        </MqxSubtab>
       </div>
 
       {portfolioTab === 'assets' ? (
         <>
           <p className="mqx-capital-lead">Покупка из шаблона списывает стоимость с текущего счёта.</p>
           <div className="mqx-capital-mode-grid">
-            <button
-              type="button"
-              className={`mqx-capital-mode-btn${portfolioAssetsMode === 'add' ? ' mqx-capital-mode-btn--active' : ''}`}
-              onClick={() => setPortfolioAssetsMode('add')}
-            >
+            <MqxModeButton active={portfolioAssetsMode === 'add'} onClick={() => setPortfolioAssetsMode('add')}>
               Добавить актив
-            </button>
-            <button
-              type="button"
-              className={`mqx-capital-mode-btn${portfolioAssetsMode === 'positions' ? ' mqx-capital-mode-btn--active' : ''}`}
+            </MqxModeButton>
+            <MqxModeButton
+              active={portfolioAssetsMode === 'positions'}
               onClick={() => setPortfolioAssetsMode('positions')}
             >
               Позиции
-            </button>
+            </MqxModeButton>
           </div>
 
           {portfolioAssetsMode === 'add' ? (
@@ -172,20 +169,15 @@ export function CapitalPortfolioPanels({
             Новый долг зачисляет сумму на счёт; закрытие возвращает тело и гасит просрочку.
           </p>
           <div className="mqx-capital-mode-grid">
-            <button
-              type="button"
-              className={`mqx-capital-mode-btn${portfolioDebtsMode === 'add' ? ' mqx-capital-mode-btn--active' : ''}`}
-              onClick={() => setPortfolioDebtsMode('add')}
-            >
+            <MqxModeButton active={portfolioDebtsMode === 'add'} onClick={() => setPortfolioDebtsMode('add')}>
               Добавить долг
-            </button>
-            <button
-              type="button"
-              className={`mqx-capital-mode-btn${portfolioDebtsMode === 'positions' ? ' mqx-capital-mode-btn--active' : ''}`}
+            </MqxModeButton>
+            <MqxModeButton
+              active={portfolioDebtsMode === 'positions'}
               onClick={() => setPortfolioDebtsMode('positions')}
             >
               Позиции
-            </button>
+            </MqxModeButton>
           </div>
 
           {portfolioDebtsMode === 'add' ? (

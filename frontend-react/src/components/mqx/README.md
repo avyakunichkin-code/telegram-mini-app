@@ -1,6 +1,6 @@
 # MQX — UI kit Money Quest
 
-Канонические React-компоненты финансового UI (метрики с иконками, карточки портфеля, формы инвестиций).
+Канонические React-компоненты финансового UI (метрики с иконками, карточки портфеля, формы инвестиций, примитивы).
 
 **Процесс работы:** сначала варианты в `design-lab/` → выбор → утверждение → MQX → prod. Подробно: [`DESIGN_WORKFLOW.md`](./DESIGN_WORKFLOW.md).
 
@@ -14,12 +14,13 @@ http://localhost:5173/#/dev/mqx
 
 (или ваш `VITE` URL + `#/dev/mqx`). Маршрут **не попадает в production** (`import.meta.env.DEV`).
 
-**Статические эксперименты до переноса в код:** `design-lab/asset-cards`, `design-lab/invest-forms`.
+**Статические эксперименты до переноса в код:** `design-lab/asset-cards`, `design-lab/invest-forms`, `design-lab/primitives`.
 
 ## Структура
 
 ```text
 mqx/
+  primitives/                    — кнопки, пилюли, чипы, прогресс (утверждённый гибрид D+C+B/A)
   icons/FinanceMetricIcons.jsx   — монеты, ↓ ↑ %
   metrics/                       — MetricInlineItem, *Metrics
   layout/                        — CapitalPositionCard, InvestPositionRow
@@ -27,7 +28,21 @@ mqx/
   index.js                       — barrel export
 ```
 
-## Правила
+## Примитивы (prod)
+
+| Компонент | Назначение |
+|-----------|------------|
+| `MqxButton` | Hero filled/outline, primary/secondary на светлом |
+| `MqxPill` | Пилюли hero, badge событий |
+| `MqxPeriodChip` | «Период» + номер в hero |
+| `MqxChip` | XP outline (`xp`, опционально `xpAmount` → «+120 XP») |
+| `MqxProgress` | 6px; emerald-градиент цели; `xp` — sky-градиент |
+| `MqxSubtab` | Вкладки финансов / капитала |
+| `MqxModeButton` | Режимы «добавить / позиции», submit инвестиций |
+
+Токены: `--mq-xp-sky`, `--mq-xp-accent` в `index.css`.
+
+## Правила метрик
 
 | Контекст | Иконки |
 |----------|--------|
@@ -36,11 +51,4 @@ mqx/
 | Позиции депозита/облигации | монеты, **% зелёный**, ↑ доход за период |
 | Формы депозита/облигации | без иконок метрик; chip ставки справа |
 
-Импорт в экранах: `import { AssetTemplateMetrics, ... } from './mqx';`
-
-## Best practice для проекта
-
-1. **Источник правды** — `components/mqx/` + стили `mqx-*` в `index.css`.
-2. **Витрина** — `#/dev/mqx` (React, всегда синхронна с prod-кодом).
-3. **Design-lab** — быстрые A/B макеты без сборки; после выбора перенос в `mqx/`.
-4. Storybook — опционально позже, если команда вырастет; для TMA сейчас избыточен.
+Импорт: `import { MqxButton, AssetTemplateMetrics, ... } from './mqx';`

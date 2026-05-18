@@ -2,6 +2,7 @@ import { useMemo, useState, lazy, Suspense } from 'react';
 import { Button, Modal } from '@telegram-apps/telegram-ui';
 import { MoneyText } from './MoneyText';
 import { showNotification } from './notifications';
+import { MqxButton, MqxChip, MqxPeriodChip, MqxPill, MqxProgress } from './mqx';
 
 const PeriodJourneyLottie = lazy(() => import('./PeriodJourneyLottie'));
 
@@ -168,10 +169,7 @@ export function DashboardPremium({
               <div className="mqx-hero__title">Финансы как игра</div>
             </div>
 
-            <div className="mqx-period-chip">
-              <div className="mqx-period-chip__label">Период</div>
-              <div className="mqx-period-chip__value">#{periodIndex}</div>
-            </div>
+            <MqxPeriodChip value={`#${periodIndex}`} />
           </div>
 
           <div className="mqx-hero__mid">
@@ -183,22 +181,12 @@ export function DashboardPremium({
             </div>
 
             <div className="mqx-hero-actions">
-              <button
-                type="button"
-                className="mqx-btn mqx-btn--filled"
-                disabled={!canPlay}
-                onClick={() => setPlay()}
-              >
+              <MqxButton variant="hero-filled" disabled={!canPlay} onClick={() => setPlay()}>
                 Играть
-              </button>
-              <button
-                type="button"
-                className="mqx-btn mqx-btn--outline"
-                disabled={!canPause}
-                onClick={() => setPause()}
-              >
+              </MqxButton>
+              <MqxButton variant="hero-outline" disabled={!canPause} onClick={() => setPause()}>
                 Пауза
-              </button>
+              </MqxButton>
             </div>
           </div>
 
@@ -218,13 +206,11 @@ export function DashboardPremium({
           </Suspense>
 
           <div className="mqx-hero__bottom">
-            <button type="button" className="mqx-pill" onClick={onNextPeriod}>
-              Следующий период
-            </button>
+            <MqxPill onClick={onNextPeriod}>Следующий период</MqxPill>
             {pendingEventsCount > 0 ? (
-              <button type="button" className="mqx-pill mqx-pill--events" onClick={onOpenEvents}>
-                События <span className="mqx-pill__badge">{pendingEventsCount}</span>
-              </button>
+              <MqxPill events badge={pendingEventsCount} onClick={onOpenEvents}>
+                События
+              </MqxPill>
             ) : null}
           </div>
       </header>
@@ -239,14 +225,12 @@ export function DashboardPremium({
                 </div>
                 <p className="mqx-card__sub">Опыт к следующему уровню</p>
               </div>
-              <span className="mqx-chip mqx-chip--xp" aria-hidden>
+              <MqxChip xp aria-hidden>
                 XP
-              </span>
+              </MqxChip>
             </div>
             <div className="mqx-character__meter" role="group" aria-label="Прогресс опыта">
-              <div className="mqx-progress">
-                <div className="mqx-progress__fill mqx-progress__fill--xp" style={{ width: `${Math.round(characterXp.frac * 100)}%` }} />
-              </div>
+              <MqxProgress value={Math.round(characterXp.frac * 100)} xp aria-label="Прогресс опыта" />
               <div className="mqx-goal__row mqx-character__meter-labels">
                 <span>Накоплено</span>
                 <span>
@@ -275,9 +259,7 @@ export function DashboardPremium({
                     <MoneyText value={goal.current} decimals={0} /> / <MoneyText value={goal.target} decimals={0} />
                   </span>
                 </div>
-                <div className="mqx-progress">
-                  <div className="mqx-progress__fill" style={{ width: `${Math.round(goal.frac * 100)}%` }} />
-                </div>
+                <MqxProgress value={Math.round(goal.frac * 100)} aria-label="Прогресс подушки к цели" />
               </div>
             ) : (
               <div className="mqx-goal__progress">
