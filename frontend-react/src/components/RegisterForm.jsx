@@ -1,7 +1,9 @@
 import { useState } from 'react';
-import { Button, Input, Cell, Section } from '@telegram-apps/telegram-ui';
+import { Button, Input } from '@telegram-apps/telegram-ui';
 import { useAuth } from '../context/AuthContext';
-import { MqxFrame } from './MqxFrame';
+import { AuthHeroBackdrop } from './AuthHeroBackdrop';
+import { MqxShell } from './MqxShell';
+import { MqxTabHero } from './MqxTabHero';
 
 export function RegisterForm({ onSwitchToLogin }) {
   const [username, setUsername] = useState('');
@@ -19,7 +21,6 @@ export function RegisterForm({ onSwitchToLogin }) {
     setIsSubmitting(true);
     try {
       await register({ username, password, full_name: fullName, email: email || undefined });
-      // После успешной регистрации перенаправляем на главную
       window.location.href = `${import.meta.env.BASE_URL}#/`;
     } catch {
       setError('Ошибка регистрации. Возможно, имя уже занято.');
@@ -29,57 +30,73 @@ export function RegisterForm({ onSwitchToLogin }) {
   };
 
   return (
-    <MqxFrame contentClassName="mqx-auth">
-      <form onSubmit={handleSubmit}>
-        <Section header="Регистрация">
-          <div className="mq-screen-intro">Поля со звёздочкой обязательны. Остальное можно заполнить позже в профиле.</div>
-          <Cell multiline subtitle="Логин для входа в приложение">
-            <Input
-              header="Имя пользователя *"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-            />
-          </Cell>
-          <Cell>
-            <Input
-              header="Пароль *"
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
-          </Cell>
-          <Cell multiline subtitle="Как к вам обращаться в интерфейсе (по желанию)">
-            <Input
-              header="Полное имя"
-              value={fullName}
-              onChange={(e) => setFullName(e.target.value)}
-            />
-          </Cell>
-          <Cell multiline subtitle="Для восстановления и рассылок, если подключим">
-            <Input
-              header="Email"
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-            />
-          </Cell>
-          {error ? (
-            <Cell>
-              <div className="mq-form-alert">{error}</div>
-            </Cell>
-          ) : null}
-          <Cell>
-            <div className="mq-actions-stack">
+    <MqxShell
+      header={
+        <MqxTabHero
+          sectionLabel="Аккаунт"
+          rightPill="Регистрация"
+          title="Новый игрок"
+          subtitle="Обязательны логин и пароль со звёздочкой. Остальное — позже."
+        />
+      }
+      contentClassName="mqx-auth mqx-auth--lottie-bg"
+    >
+      <AuthHeroBackdrop />
+      <div className="mq-auth-foreground">
+        <form onSubmit={handleSubmit} className="mq-stack mq-stack--tight">
+          <div className="mqx-card mq-enter-item mq-stack-animate">
+            <div className="mqx-card__kicker mqx-card__kicker--violet">Профиль</div>
+            <div className="mqx-card__title">Создать аккаунт</div>
+            <p className="mqx-card__sub">Дальше вы попадёте в те же экраны, что и на демо-стартовом потоке.</p>
+
+            <div className="mqx-form" style={{ marginTop: 14 }}>
+              <Input
+                header="Имя пользователя *"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                autoComplete="username"
+              />
+              <Input
+                header="Пароль *"
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                autoComplete="new-password"
+              />
+              <div className="mqx-form-field-hint-wrap">
+                <Input
+                  header="Полное имя"
+                  value={fullName}
+                  onChange={(e) => setFullName(e.target.value)}
+                  autoComplete="name"
+                />
+                <p className="mqx-field-inline-hint">Как к вам обращаться в интерфейсе (по желанию)</p>
+              </div>
+              <div className="mqx-form-field-hint-wrap">
+                <Input
+                  header="Email"
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  autoComplete="email"
+                />
+                <p className="mqx-field-inline-hint">Для восстановления и рассылок, если подключим</p>
+              </div>
+            </div>
+
+            {error ? <div className="mq-form-alert" style={{ marginTop: 12 }}>{error}</div> : null}
+
+            <div className="mq-actions-stack" style={{ marginTop: 16 }}>
               <Button mode="filled" type="submit" stretched disabled={isSubmitting}>
-                {isSubmitting ? 'Регистрация...' : 'Зарегистрироваться'}
+                {isSubmitting ? 'Регистрация…' : 'Зарегистрироваться'}
               </Button>
-              <Button mode="plain" type="button" stretched onClick={onSwitchToLogin}>
+              <Button mode="outline" type="button" stretched onClick={onSwitchToLogin}>
                 Уже есть аккаунт — войти
               </Button>
             </div>
-          </Cell>
-        </Section>
-      </form>
-    </MqxFrame>
+          </div>
+        </form>
+      </div>
+    </MqxShell>
   );
 }

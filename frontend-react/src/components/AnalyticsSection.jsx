@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Cell, Section } from '@telegram-apps/telegram-ui';
-import { API } from '../api';
+import { API, ApiError, formatApiErrorDetail } from '../api';
 import { MoneyText } from './MoneyText';
 import { AnalyticsBalanceCharts } from './AnalyticsCharts';
 import { IconStreakStat, IconPercentStat, IconOverdueStat, IconShieldStat, IconFlowStat } from './icons/StatIcons';
@@ -51,7 +51,11 @@ export function AnalyticsSection({ overview }) {
       } catch (e) {
         if (!cancelled) {
           setTs(null);
-          setTsError(e?.detail || e?.message || 'Не удалось загрузить ряд');
+          const msg =
+            e instanceof ApiError
+              ? formatApiErrorDetail(e.detail, e.message)
+              : formatApiErrorDetail(e?.detail ?? e?.message, e?.message || 'Не удалось загрузить ряд');
+          setTsError(msg);
         }
       }
     })();

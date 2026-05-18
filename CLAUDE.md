@@ -7,11 +7,13 @@
 | [`docs/README.md`](docs/README.md) | Оглавление папки `docs/` и слои документации |
 | [`docs/DOCUMENTATION_SYSTEM.md`](docs/DOCUMENTATION_SYSTEM.md) | Конвейер idea → spec → plan → tasks |
 | [`docs/foundation/SPEC_PRODUCT.md`](docs/foundation/SPEC_PRODUCT.md) | Продукт, цикл, экономика MVP, ссылки на рост |
+| [`docs/specs/gameplay/LEVEL_XP_SYSTEM.md`](docs/specs/gameplay/LEVEL_XP_SYSTEM.md) | Уровень/XP игрока, разблокировки, источники опыта (канон игровой меты) |
 | [`docs/vision/ideas/money-quest-evolution-after-mvp.md`](docs/vision/ideas/money-quest-evolution-after-mvp.md) | **Часть II** — целевая концепция Game/Plan, шаблоны, победа из шаблона, Q&A, план по слоям |
 | [`docs/backlog/PRODUCT_BACKLOG.md`](docs/backlog/PRODUCT_BACKLOG.md) | Бэклог по слоям |
 | [`docs/foundation/TMA_USER_FLOWS.md`](docs/foundation/TMA_USER_FLOWS.md) | Потоки и боли TMA |
 | [`docs/specs/SPEC_ANALYTICS.md`](docs/specs/SPEC_ANALYTICS.md) | Экран аналитики и данные |
 | [`docs/reference/MONEY_QUEST_DESIGN_AND_GDD_OUTLINE.md`](docs/reference/MONEY_QUEST_DESIGN_AND_GDD_OUTLINE.md) | GDD-оглавление и анализ |
+| [`docs/vision/ideas/game-balance-thresholds-and-constraints.md`](docs/vision/ideas/game-balance-thresholds-and-constraints.md) | Черновик порогов баланса (победа, поражение, MVP-ограничения), idea-refine |
 
 ---
 
@@ -20,7 +22,7 @@
 - **Money Quest** — Telegram Mini App: **игра по финансовой грамотности** с периодами («месяц»), балансами, обязательствами, событиями.
 - **Core loop:** период с таймером → действия игрока → конец периода (`process_period_end`: списания, доходы, просрочки, инвестиции, страховки, снимки, новые события) → следующий период.
 - **Текущий MVP:** зарплата по кнопке (пропуск периода → выплата за период не повторяется), подушка, активы/долги из шаблонов БД, до трёх событий на период, инвестиции и страховки.
-- **Целевая модель (в разработке, см. evolution §II):** два **неизменяемых** режима сохранения — **Game** (шаблоны старта, агрегированные «жизненные» расходы, цели победы из шаблона, прогрессия уровня/достижений) и **Plan** (ручной ввод, статьи расходов, префилл стартового снимка из другого сохранения). В коде пока остаётся устаревшая пара **`GameProfile.mode`**: `light` / `hardcore` и фильтр событий — планируется замена на **`save_kind`**: `game` \| `plan` + поля шаблона (**только по согласованному PR** с миграцией).
+- **Режимы сохранения:** **`save_kind`**: `game` \| `plan` (immutable после создания). **Game** — старт из каталога **`game_starter_templates`** (`starter_template_key`, blueprint, `base_monthly_lifestyle_expense`), без экрана ручных базовых параметров на входе. **Plan** — заложен в API и модели; в UI пока заглушка «Скоро» (мастер и префилл — MVP 2.0). Legacy **`light` / `hardcore`** и **`DifficultyScreen`** сняты; фильтр событий использует семантику **`game` / `plan` / `any`** на **`EventDefinition.mode`** в связке с **`profile.save_kind`** ([ADR-001](docs/decisions/ADR-001-save-kind-remove-light-hardcore.md)).
 
 ---
 
@@ -34,7 +36,7 @@
 ## Где что лежит (backend)
 
 - `backend/main.py` — `Base.metadata.create_all`, лёгкая автомиграция отдельных колонок (без Alembic), подключение роутеров.
-- `backend/app/models.py` — `GameProfile` (в т.ч. `period_index`, `time_state`, `cash_balance`, `safety_fund_balance`, `level`, `xp`, `clean_period_streak`, устар. `mode`), `FinanceSalary`, `FinanceAsset`, `FinanceLiability`, `PeriodSnapshot`, `Transaction`, `PeriodEconomyClosing`; события `EventDefinition`, `EventChoice`, `EventInstance`; `InvestmentPosition`, `InsurancePolicy`; каталоги `AssetTemplate`, `LiabilityTemplate`.
+- `backend/app/models.py` — `GameProfile` (`save_kind`, `starter_template_key`, `base_monthly_lifestyle_expense`, `delta_monthly_lifestyle_expense`, период и балансы); `GameStarterTemplate`; `FinanceSalary`, `FinanceAsset`, `FinanceLiability`, …; события `EventDefinition`, `EventChoice`, `EventInstance`; каталоги активов/долгов и др.
 - `backend/app/game_time.py` — синхронизация времени периода (anchor / duration).
 - `backend/app/game_period.py` — **главная экономика на конец периода:** обслуживание активов, доход активов, платежи по обязательствам и просрочка, премии страховок, инвестиции, поражение при трёх подряд периодах с отрицательным `cash`, события нового периода.
 - `backend/app/routers/finance.py` — **`GET /api/finance/overview`** (в т.ч. условие победы MVP и **`win_reached`** только при **`period_index >= 7`** — первые шесть периодов без победы).
@@ -59,7 +61,7 @@
 
 ### Финансы / обзор
 
-- `GET /api/finance/overview` — главные цифры, прогресс победы MVP, `clean_period_streak`, таймер периода
+- `GET /api/finance/overview` — главные цифры, прогресс победы MVP, `clean_period_streak`, таймер периода; поля **`avg_net_cashflow_6p`** / **`avg_net_cashflow_6p_n`** (задел под victory v2)
 - `GET /api/finance/analytics/timeseries` — ряд закрытий периодов + текущая проекция
 - `GET /api/finance/asset-templates`
 - `POST /api/finance/assets/from-template`
@@ -84,7 +86,7 @@
 
 ### Профили игры
 
-- `GET/POST /api/game/profiles` и связанные (см. `backend/app/routers/game.py`) — создание профиля с **`mode` light/hardcore** (legacy до внедрения `save_kind`).
+- `GET/POST /api/game/profiles`, **`GET /api/game/templates`**, старт партии — см. `backend/app/routers/game.py`: **`save_kind`**, для Game — **`template_key`** и применение blueprint.
 
 ---
 
@@ -98,7 +100,7 @@
 - `frontend-react/src/components/BottomGameNav.jsx` + `icons/NavIcons.jsx` — нижняя навигация.
 - `frontend-react/src/components/AnalyticsSection.jsx` / **AnalyticsPremium**, **DashboardPremium** — обзор и цели; spec: [`docs/specs/SPEC_ANALYTICS.md`](docs/specs/SPEC_ANALYTICS.md).
 - `frontend-react/src/components/ToastHost.jsx` + `notifications.js` — тосты вместо `alert`.
-- Поток старта: `StartMenuScreen` → **`DifficultyScreen`** (legacy light/hardcore) → `BaseParamsScreen` → `GameScreen` — **планируется** выбор Game/Plan и шаблонов (см. evolution §II.3).
+- Поток **новой игры:** `StartMenuScreen` → **`NewProfileKindScreen`** (имя + плитки **Игра / План**; Plan неактивен) → **`GameTemplatePickScreen`** (каталог шаблонов + длительность периода + создание профиля) → **`GameScreen`**. **`BaseParamsScreen`** остаётся в коде под будущий мастер **Plan**, не используется для старта Game. Переиспользуемый выбор шаблона: `GameStarterPicker` (опция ручного сценария для Game выключена).
 
 ---
 
@@ -136,8 +138,8 @@
 
 ## Следующие шаги (согласовано с документацией)
 
-1. Схема **`save_kind`**, шаблоны старта, `starter_params_json`, расширение событий (уровень, повторяемость, эффекты на месячные расходы) — см. **evolution §II.3**.
-2. Движок победы по шаблону + поле **среднего чистого cashflow за 6 периодов** в overview.
-3. UI: выбор Game/Plan, список сохранений с бейджами, замена `DifficultyScreen` на поток шаблонов.
-4. Связка событий со страховками и типами активов (узкий первый слой).
-5. Отдельные механики «давления» (штрафы просрочки, налоги) — после стабилизации режимов и контрактов API.
+1. **Plan Mode:** мастер ввода, префилл из **`starter_params_json`**, активация плитки Plan в UI — см. **evolution §II.3**.
+2. **Victory v2:** движок **M из N** из шаблона; связать **`avg_net_cashflow_6p`** с условиями победы вместо только MVP-правила.
+3. **UI:** список сохранений с бейджами **`game` / `plan`** и меткой сложности шаблона для Game.
+4. Расширение событий (уровень, повторяемость, эффекты на месячные расходы).
+5. Механики давления (штрафы просрочки, налоги) — после стабилизации контрактов API.

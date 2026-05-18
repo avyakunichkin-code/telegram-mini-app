@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException, Request
 from sqlalchemy.orm import Session
 from datetime import datetime
-from typing import List
+from typing import List, Optional
 import json
 
 from ..auth import get_current_user
@@ -34,9 +34,26 @@ router = APIRouter(prefix="/api/game", tags=["game"])
 
 def _validate_save_kind(save_kind: str) -> str:
     normalized = (save_kind or "").strip().lower()
-    if normalized != "game":
-        raise HTTPException(status_code=400, detail="save_kind must be game (plan — позже)")
+    if normalized not in ("game", "plan"):
+        raise HTTPException(status_code=400, detail="save_kind must be 'game' or 'plan'")
     return normalized
+
+
+def _starter_template_public(row: GameStarterTemplate) -> GameStarterTemplatePublic:
+    desc: Optional[str] = None
+    try:
+        bp = json.loads(row.blueprint_json or "{}")
+        raw = bp.get("description")
+        if isinstance(raw, str) and raw.strip():
+            desc = raw.strip()
+    except json.JSONDecodeError:
+        desc = None
+    return GameStarterTemplatePublic(
+        template_key=row.template_key,
+        title=row.title,
+        difficulty_rank=int(row.difficulty_rank or 1),
+        description=desc,
+    )
 
 
 @router.get("/templates", response_model=list[GameStarterTemplatePublic])
@@ -47,14 +64,7 @@ async def list_game_templates(db: Session = Depends(get_db)):
         .order_by(GameStarterTemplate.sort_order.asc(), GameStarterTemplate.id.asc())
         .all()
     )
-    return [
-        GameStarterTemplatePublic(
-            template_key=r.template_key,
-            title=r.title,
-            difficulty_rank=int(r.difficulty_rank or 1),
-        )
-        for r in rows
-    ]
+    return [_starter_template_public(r) for r in rows]
 
 
 @router.get("/profiles", response_model=list[GameProfileResponse])
@@ -128,7 +138,8 @@ async def start_new_game(
         db: Session = Depends(get_db)
 ):
     """
-    Новый профиль Game: либо из шаблона (`template_key`), либо ручной набор активов/долгов (legacy UI).
+    Новый профиль: **game** — из шаблона (`template_key`) или ручной набор активов/долгов;
+    **plan** — только ручной старт (без каталожных game-шаблонов).
     """
     body = await request.json()
 
@@ -150,6 +161,12 @@ async def start_new_game(
         raise HTTPException(status_code=400, detail="profile_name is required")
 
     save_kind = _validate_save_kind(payload.save_kind)
+
+    if save_kind == "plan" and payload.template_key:
+        raise HTTPException(
+            status_code=400,
+            detail="Plan saves cannot use game starter templates; omit template_key",
+        )
 
     starter_template_key = None
     base_monthly_lifestyle = 0.0

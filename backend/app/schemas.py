@@ -104,6 +104,9 @@ class FinanceOverview(BaseModel):
     gamification_level: str
     score: int
     xp_to_next_level: int
+    character_level: int = 1
+    character_xp: int = 0
+    character_xp_need_for_next: int = 100
     time_state: str
     period_index: int
     period_duration_seconds: int
@@ -118,6 +121,10 @@ class FinanceOverview(BaseModel):
     win_ready: bool = False
     win_reached: bool = False
     clean_period_streak: int = 0
+    # Среднее изменение (наличные + подушка) между последовательными закрытиями;
+    # до 6 последних интервалов по PeriodEconomyClosing (прокси до victory v2).
+    avg_net_cashflow_6p: float = 0.0
+    avg_net_cashflow_6p_n: int = 0
 
 
 class AnalyticsTimeseriesPoint(BaseModel):
@@ -179,6 +186,7 @@ class GameStarterTemplatePublic(BaseModel):
     template_key: str
     title: str
     difficulty_rank: int
+    description: Optional[str] = None
 
 
 class GameStartRequest(BaseModel):
@@ -200,8 +208,8 @@ class GameStartRequest(BaseModel):
     @model_validator(mode="after")
     def normalize_game_start(self):
         sk = (self.save_kind or "game").strip().lower()
-        if sk != "game":
-            raise ValueError("Only save_kind=game is supported")
+        if sk not in ("game", "plan"):
+            raise ValueError("save_kind must be 'game' or 'plan'")
         updates: dict = {"save_kind": sk}
         if self.monthly_salary in (0, 0.0) and self.monthly_amount is not None:
             updates["monthly_salary"] = float(self.monthly_amount)

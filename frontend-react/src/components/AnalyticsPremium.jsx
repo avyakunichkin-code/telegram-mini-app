@@ -1,10 +1,12 @@
 import { useEffect, useMemo, useState } from 'react';
-import { API } from '../api';
+import { API, ApiError, formatApiErrorDetail } from '../api';
+import { asSafeReactText } from '../utils/displayText';
 import { MoneyText } from './MoneyText';
 import { SparkLineSvg, CashForecastSpark } from './AnalyticsCharts';
 import { IconPercentStat, IconOverdueStat, IconShieldStat, IconFlowStat } from './icons/StatIcons';
 import { MqStatRow } from './MqStatRow';
 import { MqxGoalBar, MqxCashflowBar, pctClamp01 } from './mqx/MqxMetricBars';
+import { MqxTabHero } from './MqxTabHero';
 
 function formatSignedMoney(n) {
   const v = Number(n) || 0;
@@ -27,7 +29,11 @@ export function AnalyticsPremium({ overview }) {
       } catch (e) {
         if (!cancelled) {
           setTs(null);
-          setTsError(e?.detail || e?.message || 'Не удалось загрузить ряд');
+          const msg =
+            e instanceof ApiError
+              ? formatApiErrorDetail(e.detail, e.message)
+              : formatApiErrorDetail(e?.detail ?? e?.message, e?.message || 'Не удалось загрузить ряд');
+          setTsError(msg);
         }
       }
     })();
@@ -141,25 +147,19 @@ export function AnalyticsPremium({ overview }) {
 
   return (
     <>
-      <header className="mqx-hero mqx-hero--tab">
-        <div className="mqx-hero__glow" aria-hidden />
-        <div className="mqx-hero__top">
-          <div className="mqx-hero-pills">
-            <span className="mqx-hero-pill mqx-hero-pill--brand">MQ</span>
-            <span className="mqx-hero-pill">Аналитика</span>
-          </div>
-          <span className="mqx-hero-pill mqx-hero-pill--ghost">Период #{overview.period_index}</span>
-        </div>
-        <div className="mqx-hero__title mqx-hero__title--tab">Финансовая картина</div>
-        <div className="mqx-hero__sub">Рейтинг, цели, потоки и динамика — в одном стиле с главной.</div>
-      </header>
+      <MqxTabHero
+        sectionLabel="Аналитика"
+        rightPill={`Период #${overview.period_index}`}
+        title="Финансовая картина"
+        subtitle="Рейтинг, цели, потоки и динамика — в одном стиле с главной."
+      />
 
       <main className="mqx-content mqx-analytics-page">
         <section className="mqx-card mqx-analytics-level">
           <div className="mqx-analytics-level__top">
             <div>
               <div className="mqx-card__kicker mqx-card__kicker--violet">Финансовый уровень</div>
-              <div className="mqx-analytics-level__title">{overview.gamification_level}</div>
+              <div className="mqx-analytics-level__title">{asSafeReactText(overview.gamification_level)}</div>
               <p className="mqx-analytics-level__sub">Период игры #{overview.period_index} · чистых месяцев подряд: {streak}</p>
             </div>
             <div className="mqx-analytics-level__score-chip" aria-label="Очки рейтинга">
@@ -324,6 +324,27 @@ export function AnalyticsPremium({ overview }) {
               fraction={maintenance / denom}
               fillClass="mqx-analytics-cf-fill--slate"
             />
+          </div>
+          <div className="mqx-analytics-cashflow__hint" role="note">
+            {(() => {
+              const n = Number(overview.avg_net_cashflow_6p_n) || 0;
+              const v = Number(overview.avg_net_cashflow_6p);
+              if (n <= 0) {
+                return (
+                  <>
+                    После нескольких закрытых периодов здесь появится среднее изменение наличных и подушки между
+                    закрытиями (до шести последних интервалов).
+                  </>
+                );
+              }
+              return (
+                <>
+                  Среднее изменение (наличные + подушка) по {n}{' '}
+                  {n === 1 ? 'интервалу' : 'интервалам'} между закрытиями:{' '}
+                  <strong>{formatSignedMoney(v)} ₽</strong>
+                </>
+              );
+            })()}
           </div>
         </section>
 

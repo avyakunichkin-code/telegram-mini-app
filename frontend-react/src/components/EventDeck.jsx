@@ -1,12 +1,13 @@
 import { useEffect, useRef, useState, useCallback } from 'react';
 import { Button } from '@telegram-apps/telegram-ui';
 import { showNotification } from './notifications';
+import { asSafeReactText } from '../utils/displayText';
 
-function truncate(str, len) {
-  if (!str) return '';
-  return str.length <= len ? str : `${str.slice(0, len - 1)}…`;
+function truncate(raw, len) {
+  const s = String(asSafeReactText(raw, ''));
+  if (!s) return '';
+  return s.length <= len ? s : `${s.slice(0, len - 1)}…`;
 }
-
 function EventChoicesCard({ event, onPick, busyId }) {
   const disabled = busyId !== null;
   const choices = event.choices || [];
@@ -21,8 +22,8 @@ function EventChoicesCard({ event, onPick, busyId }) {
           </span>
         ) : null}
       </div>
-      <div className="mqx-events-card__title">{event.title}</div>
-      <div className="mqx-events-card__desc">{event.description}</div>
+      <div className="mqx-events-card__title">{asSafeReactText(event.title)}</div>
+      <div className="mqx-events-card__desc">{asSafeReactText(event.description)}</div>
       <div className="mqx-events-card__choices">
         {choices.map((c) => (
           <button

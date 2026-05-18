@@ -61,24 +61,35 @@
 
 Целевая модель: [evolution §II](../vision/ideas/money-quest-evolution-after-mvp.md). Эпик G1 (approved): [`SPEC_game-plan`](../specs/features/SPEC_game-plan.md), план работ: [`PLAN_game-plan`](../plans/PLAN_game-plan.md), решение по legacy: [ADR-001](../decisions/ADR-001-save-kind-remove-light-hardcore.md). Чеклист текущего MVP: [`foundation/MVP_AUDIT_VS_SPEC.md`](../foundation/MVP_AUDIT_VS_SPEC.md) (подписан 2026-05-16).
 
-#### Эпик G1 — очередь MQ (Game: один шаблон end-to-end)
+#### Эпик G1 — очередь MQ (каталог шаблонов E2E)
 
-- [ ] P0 **MQ-101** — SQL: `save_kind`, таблица шаблонов, колонка дельты lifestyle, отказ от `GameProfile.mode` ([детали в plan](../plans/PLAN_game-plan.md)).
-- [ ] P0 **MQ-102** — Модели SQLAlchemy и автодобавление колонок под MQ-101.
-- [ ] P0 **MQ-103** — Сид одного `game_starter_templates` + миграция событий под `game`/`plan`/`any`.
-- [ ] P0 **MQ-104** — API профилей и `GET /game/templates`; без light/hardcore.
-- [ ] P0 **MQ-105** — Применение blueprint шаблона при создании профиля.
-- [ ] P0 **MQ-106** — `ensure_period_events` / период: фильтр по `save_kind`, без legacy `profile.mode`.
-- [ ] P0 **MQ-107** — Конец периода: `base_monthly_lifestyle_expense` + дельта на профиле (минимальный учёт в cash).
-- [ ] P0 **MQ-108** — Frontend: поток старта без `DifficultyScreen`; `api.js` под новый контракт.
+- [x] P0 **MQ-101** — SQL: `save_kind`, таблица шаблонов, колонка дельты lifestyle, отказ от `GameProfile.mode` ([детали в plan](../plans/PLAN_game-plan.md)).
+- [x] P0 **MQ-102** — Модели SQLAlchemy и автодобавление колонок под MQ-101.
+- [x] P0 **MQ-103** — Сид каталога `game_starter_templates` + миграция событий под `game`/`plan`/`any`.
+- [x] P0 **MQ-104** — API профилей и `GET /game/templates`; без light/hardcore.
+- [x] P0 **MQ-105** — Применение blueprint шаблона при создании профиля.
+- [x] P0 **MQ-106** — `ensure_period_events` / период: фильтр по `save_kind`, без legacy `profile.mode`.
+- [x] P0 **MQ-107** — Конец периода: `base_monthly_lifestyle_expense` + дельта на профиле (минимальный учёт в cash).
+- [x] P0 **MQ-108** — Frontend: поток старта без `DifficultyScreen`; `api.js` под новый контракт.
+
+#### Эпик MVP 1.1 — прокачка, `event_tier`, эффекты событий (черновик очереди)
+
+Spec среза: **[`SPEC_mvp-11-progression-events`](../specs/features/SPEC_mvp-11-progression-events.md)** (**approved**). План выполнения: **[`PLAN_mvp-11-progression-events`](../plans/PLAN_mvp-11-progression-events.md)**. Норматив уровня/XP и матрица: **[`LEVEL_XP_SYSTEM`](../specs/gameplay/LEVEL_XP_SYSTEM.md)**, **[`XP_EVENTS_ACTIONS_MATRIX`](../specs/gameplay/catalogs/XP_EVENTS_ACTIONS_MATRIX.md)**; дорожная карта фаз: **[`PLAN_level-xp-progression`](../plans/PLAN_level-xp-progression.md)**.
+
+- [ ] P0 **MQ-111** — SQL миграция: `event_definitions.event_tier`, `repeat_policy`; модель SQLAlchemy.
+- [ ] P0 **MQ-112** — `ensure_period_events`: окно \([L−2, L]\) по tier, **`repeat_policy`**, fallback §6 spec; весовая выборка **без** повторов.
+- [ ] P0 **MQ-113** — `character_progression.py`: единая функция XP/уровня; перевод **`game_period` + `period_actions`** на утилиту.
+- [ ] P0 **MQ-114** — События: `effects_json` whitelist **`xp_delta`**, **`monthly_lifestyle_delta`** + clamp; обработчик choose.
+- [ ] P0 **MQ-115** — **`GET /finance/overview`** поля `character_*`; `api.js` + типы контрактов.
+- [ ] P0 **MQ-116** — Siды событий (≥12, распределение tier); фронт: блок уровень/XP на главной игры.
 
 #### После G1 / MVP 2.0 Plan
 
 - [ ] P1 **`starter_params_json` и префилл новой Plan** из стартового снимка — **не входит в G1** (Plan Mode MVP 2.0).
-- [ ] P1 **Каталог 4–5 шаблонов** Game и сетка выбора при повторной новой игре.
+- [ ] P1 **Дополнительные шаблоны Game** — контент, баланс, возможный пятый сценарий (базовый каталог из **четырёх** сидов уже в игре).
 - [ ] P1 **Движок победы** по шаблону (M из N целей); средний чистый cashflow за **6** периодов в `overview`.
-- [ ] P1 **UI:** экран выбора Game **и Plan** при новой игре; список сохранений с бейджами `game`/`plan` + difficulty для game (расширение после MQ-108).
-- [ ] P2 **События:** уровень, `repeat_policy`, эффекты на месячные расходы, `mandatory_gate` (см. концепцию).
+- [ ] P1 **UI:** мастер **Plan**, префилл; список сохранений с бейджами `game`/`plan` и меткой сложности шаблона для Game (экран выбора режима уже есть; Plan — заглушка).
+- [ ] P2 **События (после MVP 1.1):** `mandatory_gate`, предикаты страхование/активы; **tier/repeat/monthly deltas** см. **[`SPEC_mvp-11-progression-events`](../specs/features/SPEC_mvp-11-progression-events.md)**.
 
 ### Углубление экономики и давления (после режимов)
 
@@ -114,7 +125,7 @@
 - [x] **Финансы: сегменты** (инвестиции / страховки / шаблоны / списки).
 - [x] **Список обязательств: просрочка** суммарно по долгу там, где есть данные из API.
 - [x] **Список активов: доход** и тип (`kind`).
-- [x] **Тосты вместо alert** на шагах сложности и при ошибках старта игры из базовых параметров.
+- [x] **Тосты вместо alert** при ошибках старта и в игровых действиях (legacy экран сложности снят).
 - [x] **Лого MQ + переменные палитры бренда** в `#root` (fallback к `tg-theme`), рамка колонки приложения.
 - [x] **Компактный таббар** и базовый **15px / системный стек** в колонке TMA.
 - [x] **События: до 3 за период** с бэка + **кнопка в шапке** и **оверлей-слайдер карточек** (закрытие ×, зелёный/красный при двух исходах).

@@ -17,7 +17,7 @@ alwaysApply: false
 ## Язык и контент
 
 - Видимый UI — **русский**. Не оставлять EN kickers (`Positions`, `cashflow`, `Forecast`) в production.
-- Тон: коротко, активный залог (брендбук §1). Суммы — `<MoneyText />`.
+- Тон: коротко, активный залог (брендбук, раздел 1). Суммы — `<MoneyText />`.
 
 ## Состояния экрана
 
@@ -30,9 +30,10 @@ alwaysApply: false
 - Не хардкодить прогресс (% в style) без полей из `overview`/API.
 - Смена API → синхронизировать `api.js` и хуки.
 
-## Legacy-поток старта
+## Поток старта
 
-- `DifficultyScreen` (`light` / `hardcore`) — **legacy** до Game/Plan (см. [`docs/specs/features/SPEC_game-plan.md`](docs/specs/features/SPEC_game-plan.md), [evolution §II](docs/vision/ideas/money-quest-evolution-after-mvp.md)).
+- Новая игра: **`NewProfileKindScreen`** → **`GameTemplatePickScreen`** → игра; **`DifficultyScreen`** удалён ([`SPEC_game-plan`](docs/specs/features/SPEC_game-plan.md)).
+- **`BaseParamsScreen`** остаётся под будущий **Plan** (ручной ввод); для **Game** ручной «свой сценарий» на экране выбора шаблона не показывается (`GameStarterPicker` без опции manual).
 
 ## Структура компонента
 

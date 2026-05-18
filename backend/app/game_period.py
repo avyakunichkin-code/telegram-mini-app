@@ -5,7 +5,8 @@ from datetime import datetime
 
 from .models import GameProfile, FinanceAsset, FinanceLiability, Transaction, InvestmentPosition, PeriodEconomyClosing
 from .balance_utils import adjust_balance, add_transaction, TRANSACTION_TYPES
-from .routers.events import ensure_period_events, _ensure_seed_events
+from .character_progression import apply_character_xp
+from .routers.events import ensure_period_events, expire_pending_events_for_closed_period, _ensure_seed_events
 from .routers.insurance import charge_premiums_for_period
 
 
@@ -188,17 +189,9 @@ def process_period_end(db: Session, profile: GameProfile) -> dict:
         profile.negative_periods_count = 0
 
     # 5. Начисляем XP за завершение периода
-    xp_earned = 5
-    profile.xp += xp_earned
-
-    # Обработка повышения уровня
-    level_up = False
-    xp_for_next = 100
-    while profile.xp >= xp_for_next:
-        profile.level += 1
-        profile.xp -= xp_for_next
-        level_up = True
-        xp_for_next = 100 + (profile.level - 1) * 50
+    xp_info = apply_character_xp(profile, 5, db)
+    xp_earned = int(xp_info.get("xp_gained", 0) or 0)
+    level_up = bool(xp_info.get("level_up"))
 
     # 6. Сбрасываем флаг получения зарплаты (если он хранится в профиле)
     # Важно: НЕ сбрасываем в 0. Поле хранит номер периода, в котором брали зарплату.
@@ -220,6 +213,8 @@ def process_period_end(db: Session, profile: GameProfile) -> dict:
             total_overdue_amount=float(total_overdue_now),
         )
     )
+
+    expire_pending_events_for_closed_period(db, profile.id, int(period_index))
 
     # 7. Увеличиваем номер периода
     profile.period_index += 1
@@ -245,5 +240,5 @@ def process_period_end(db: Session, profile: GameProfile) -> dict:
         "overdue_added": round(total_overdue_added, 2),
         "xp_earned": xp_earned,
         "level_up": level_up,
-        "new_level": profile.level if level_up else None
+        "new_level": xp_info.get("new_level"),
     }
