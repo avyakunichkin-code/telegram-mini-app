@@ -5,8 +5,27 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Money Quest — страховки</title>
     <link rel="stylesheet" href="./styles.css" />
+    <link rel="stylesheet" href="./plan-cards-h.css" />
   </head>
   <body>
+    <svg xmlns="http://www.w3.org/2000/svg" style="display: none" aria-hidden="true">
+      <symbol id="icon-coins" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75">
+        <ellipse cx="8" cy="7" rx="5" ry="2.2" />
+        <path d="M3 7v4c0 1.2 2.2 2.2 5 2.2s5-1 5-2.2V7" />
+        <ellipse cx="14" cy="13" rx="5" ry="2.2" />
+        <path d="M9 13v4c0 1.2 2.2 2.2 5 2.2s5-1 5-2.2v-4" />
+      </symbol>
+      <symbol id="icon-trend-down" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25">
+        <path stroke-linecap="round" d="M12 5v10" />
+        <path stroke-linecap="round" stroke-linejoin="round" d="M8 13l4 4 4-4" />
+      </symbol>
+      <symbol id="icon-term" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75">
+        <circle cx="12" cy="13" r="7.25" />
+        <path stroke-linecap="round" d="M12 10v4l2.5 1.5" />
+        <path stroke-linecap="round" d="M12 4.5V3" />
+      </symbol>
+    </svg>
+
     <header class="lab-header">
       <div>
         <h1>Страховки</h1>
@@ -60,7 +79,7 @@
           <span>Каталог + invest D (рекомендация)</span>
         </div>
         <p class="lab-section__note">
-          Сетка 2×2 типов → готовые тарифы (без ручного ввода). Метрики: ↓ премия, ◎ выплата, ⏱ срок.
+          Сетка 2×2 → тарифы карточками asset H (accent, inline-метрики, кнопка «+»). Без ручного ввода.
         </p>
         <article class="ins-b">
           <p class="lab-hint" style="margin-top: 0">Премия списывается в конце периода. Выплата — один раз при случае.</p>
@@ -89,36 +108,197 @@
         </article>
 
         <p class="lab-subhead">Активные полисы</p>
-        <article class="ins-policy">
-          <div class="ins-policy__accent ins-policy__accent--auto" aria-hidden="true"></div>
-          <div>
-            <div class="ins-policy__kicker">Авто · Ответственность</div>
-            <div class="ins-policy__title">ОСАГО</div>
-            <div class="ins-policy__meta">Период 3 — 15 · при случае выплата 400 000 ₽</div>
-            <div class="ins-metrics">
-              <span class="ins-metric"><span class="ins-metric__icon ins-metric__icon--down">↓</span>2 400 ₽/период</span>
-              <span class="ins-metric"><span class="ins-metric__icon ins-metric__icon--coin">◎</span>400 000 ₽</span>
-              <span class="ins-metric"><span class="ins-metric__icon ins-metric__icon--term">⏱</span>12 пер.</span>
+        <article class="mq-card mq-card--accent mq-card--flat mq-card--simple">
+          <div class="mq-card__accent" aria-hidden="true"></div>
+          <div class="mq-card__accent-body">
+            <div class="mq-card__kicker">Авто · Ответственность</div>
+            <div class="mq-card__title">ОСАГО — Стандарт</div>
+            <div class="mq-metrics-inline" role="list">
+              <span class="mq-inline-metric" role="listitem" data-tip="Оплата за период" tabindex="0">
+                <span class="mq-metric-glyph mq-metric-glyph--down" aria-hidden="true"><svg><use href="#icon-trend-down" /></svg></span>
+                <span class="mq-inline-metric__val mq-val--neg">2 400 ₽</span>
+              </span>
+              <span class="mq-inline-metric" role="listitem" data-tip="Сумма выплаты" tabindex="0">
+                <span class="mq-metric-glyph mq-metric-glyph--coin" aria-hidden="true"><svg><use href="#icon-coins" /></svg></span>
+                <span class="mq-inline-metric__val">400 000 ₽</span>
+              </span>
+              <span class="mq-inline-metric" role="listitem" data-tip="Срок (периоды)" tabindex="0">
+                <span class="mq-metric-glyph mq-metric-glyph--term" aria-hidden="true"><svg><use href="#icon-term" /></svg></span>
+                <span class="mq-inline-metric__val">3–15</span>
+              </span>
             </div>
           </div>
-          <button type="button" class="ins-btn ins-btn--ghost" style="width: auto; margin: 0; padding: 8px 12px; font-size: 12px">
-            Отменить
-          </button>
+          <button type="button" class="mq-card__add mq-card__add--minus" aria-label="Отменить полис">−</button>
         </article>
 
-        <article class="ins-policy">
-          <div class="ins-policy__accent ins-policy__accent--mortgage" aria-hidden="true"></div>
-          <div>
-            <div class="ins-policy__kicker">Ипотека · Имущество</div>
-            <div class="ins-policy__title">Ипотека — страхование имущества</div>
-            <div class="ins-metrics">
-              <span class="ins-metric"><span class="ins-metric__icon ins-metric__icon--down">↓</span>1 800 ₽/период</span>
-              <span class="ins-metric"><span class="ins-metric__icon ins-metric__icon--coin">◎</span>2 500 000 ₽</span>
+        <article class="mq-card mq-card--accent mq-card--flat mq-card--simple">
+          <div class="mq-card__accent mq-card__accent--mortgage" aria-hidden="true"></div>
+          <div class="mq-card__accent-body">
+            <div class="mq-card__kicker">Ипотека · Имущество</div>
+            <div class="mq-card__title">Ипотека — страхование имущества</div>
+            <div class="mq-metrics-inline" role="list">
+              <span class="mq-inline-metric" role="listitem" data-tip="Оплата за период" tabindex="0">
+                <span class="mq-metric-glyph mq-metric-glyph--down" aria-hidden="true"><svg><use href="#icon-trend-down" /></svg></span>
+                <span class="mq-inline-metric__val mq-val--neg">1 800 ₽</span>
+              </span>
+              <span class="mq-inline-metric" role="listitem" data-tip="Сумма выплаты" tabindex="0">
+                <span class="mq-metric-glyph mq-metric-glyph--coin" aria-hidden="true"><svg><use href="#icon-coins" /></svg></span>
+                <span class="mq-inline-metric__val">2 500 000 ₽</span>
+              </span>
             </div>
           </div>
-          <button type="button" class="ins-btn ins-btn--ghost" style="width: auto; margin: 0; padding: 8px 12px; font-size: 12px">
-            Отменить
-          </button>
+          <button type="button" class="mq-card__add mq-card__add--minus" aria-label="Отменить полис">−</button>
+        </article>
+
+      </section>
+
+      <p class="lab-divider">Карточки тарифа (оформление) — как asset-cards, метрики: ↓ премия · ◎ выплата · ⏱ срок</p>
+
+      <section class="lab-section" id="plan-g">
+        <div class="lab-section__label">
+          <span class="lab-section__id">G</span>
+          <span class="lab-section__title">Полоса + иконки в рамке xs</span>
+        </div>
+        <p class="lab-section__note">Как asset G — рамки у иконок, только числа, tooltip.</p>
+        <article class="mq-card mq-card--accent mq-card--flat">
+          <div class="mq-card__accent" aria-hidden="true"></div>
+          <div class="mq-card__accent-body">
+            <div class="mq-card__kicker">Авто · Ответственность</div>
+            <div class="mq-card__title">ОСАГО — Стандарт</div>
+            <div class="mq-metrics-inline" role="list">
+              <span class="mq-inline-metric" role="listitem" data-tip="Оплата за период" tabindex="0">
+                <span class="mq-metric-icon mq-metric-icon--down mq-metric-icon--xs" aria-hidden="true"><svg><use href="#icon-trend-down" /></svg></span>
+                <span class="mq-inline-metric__val mq-val--neg">2 400 ₽</span>
+              </span>
+              <span class="mq-inline-metric" role="listitem" data-tip="Сумма выплаты" tabindex="0">
+                <span class="mq-metric-icon mq-metric-icon--coin mq-metric-icon--xs" aria-hidden="true"><svg><use href="#icon-coins" /></svg></span>
+                <span class="mq-inline-metric__val">400 000 ₽</span>
+              </span>
+              <span class="mq-inline-metric" role="listitem" data-tip="Срок" tabindex="0">
+                <span class="mq-metric-icon mq-metric-icon--term mq-metric-icon--xs" aria-hidden="true"><svg><use href="#icon-term" /></svg></span>
+                <span class="mq-inline-metric__val">12 пер.</span>
+              </span>
+            </div>
+          </div>
+          <button type="button" class="mq-card__add" aria-label="Оформить">+</button>
+        </article>
+      </section>
+
+      <section class="lab-section lab-section--featured" id="plan-h">
+        <div class="lab-section__label">
+          <span class="lab-section__id">H ★</span>
+          <span class="lab-section__title">Полоса + линия без рамок — prod</span>
+        </div>
+        <p class="lab-section__note">Как asset H — только цвет иконки и число. В приложении: <code>InsurancePlanCard</code>.</p>
+        <article class="mq-card mq-card--accent mq-card--flat">
+          <div class="mq-card__accent" aria-hidden="true"></div>
+          <div class="mq-card__accent-body">
+            <div class="mq-card__kicker">Авто · Ответственность</div>
+            <div class="mq-card__title">ОСАГО — Стандарт</div>
+            <div class="mq-metrics-inline" role="list">
+              <span class="mq-inline-metric" role="listitem" data-tip="Оплата за период" tabindex="0">
+                <span class="mq-metric-glyph mq-metric-glyph--down" aria-hidden="true"><svg><use href="#icon-trend-down" /></svg></span>
+                <span class="mq-inline-metric__val mq-val--neg">2 400 ₽</span>
+              </span>
+              <span class="mq-inline-metric" role="listitem" data-tip="Сумма выплаты" tabindex="0">
+                <span class="mq-metric-glyph mq-metric-glyph--coin" aria-hidden="true"><svg><use href="#icon-coins" /></svg></span>
+                <span class="mq-inline-metric__val">400 000 ₽</span>
+              </span>
+              <span class="mq-inline-metric" role="listitem" data-tip="Срок" tabindex="0">
+                <span class="mq-metric-glyph mq-metric-glyph--term" aria-hidden="true"><svg><use href="#icon-term" /></svg></span>
+                <span class="mq-inline-metric__val">12 пер.</span>
+              </span>
+            </div>
+          </div>
+          <button type="button" class="mq-card__add" aria-label="Оформить">+</button>
+        </article>
+      </section>
+
+      <section class="lab-section" id="plan-i">
+        <div class="lab-section__label">
+          <span class="lab-section__id">I</span>
+          <span class="lab-section__title">Полоса + строки</span>
+        </div>
+        <p class="lab-section__note">Вертикально, без текстовых подписей слева.</p>
+        <article class="mq-card mq-card--accent mq-card--flat">
+          <div class="mq-card__accent mq-card__accent--mortgage" aria-hidden="true"></div>
+          <div class="mq-card__accent-body">
+            <div class="mq-card__kicker">Ипотека · Жизнь</div>
+            <div class="mq-card__title">Ипотека — страхование жизни — Стандарт</div>
+            <div class="mq-metrics-rows-compact">
+              <div class="mq-metric-row-compact" data-tip="Оплата за период" tabindex="0">
+                <span class="mq-metric-icon mq-metric-icon--down mq-metric-icon--xs" aria-hidden="true"><svg><use href="#icon-trend-down" /></svg></span>
+                <span class="mq-metric-row-compact__val mq-val--neg">1 800 ₽</span>
+              </div>
+              <div class="mq-metric-row-compact" data-tip="Сумма выплаты" tabindex="0">
+                <span class="mq-metric-icon mq-metric-icon--coin mq-metric-icon--xs" aria-hidden="true"><svg><use href="#icon-coins" /></svg></span>
+                <span class="mq-metric-row-compact__val">2 500 000 ₽</span>
+              </div>
+              <div class="mq-metric-row-compact" data-tip="Срок" tabindex="0">
+                <span class="mq-metric-icon mq-metric-icon--term mq-metric-icon--xs" aria-hidden="true"><svg><use href="#icon-term" /></svg></span>
+                <span class="mq-metric-row-compact__val">12 пер.</span>
+              </div>
+            </div>
+          </div>
+          <button type="button" class="mq-card__add">+</button>
+        </article>
+      </section>
+
+      <section class="lab-section" id="plan-j">
+        <div class="lab-section__label">
+          <span class="lab-section__id">J</span>
+          <span class="lab-section__title">Линия с «·»</span>
+        </div>
+        <article class="mq-card mq-card--accent mq-card--flat">
+          <div class="mq-card__accent" aria-hidden="true"></div>
+          <div class="mq-card__accent-body">
+            <div class="mq-card__kicker">Авто · Ответственность</div>
+            <div class="mq-card__title">ОСАГО — Плюс</div>
+            <div class="mq-metrics-inline mq-metrics-inline--dots" role="list">
+              <span class="mq-inline-metric" data-tip="Оплата за период" tabindex="0">
+                <span class="mq-metric-glyph mq-metric-glyph--down" aria-hidden="true"><svg><use href="#icon-trend-down" /></svg></span>
+                <span class="mq-inline-metric__val mq-val--neg">3 600 ₽</span>
+              </span>
+              <span class="mq-inline-metric" data-tip="Сумма выплаты" tabindex="0">
+                <span class="mq-metric-glyph mq-metric-glyph--coin" aria-hidden="true"><svg><use href="#icon-coins" /></svg></span>
+                <span class="mq-inline-metric__val">600 000 ₽</span>
+              </span>
+              <span class="mq-inline-metric" data-tip="Срок" tabindex="0">
+                <span class="mq-metric-glyph mq-metric-glyph--term" aria-hidden="true"><svg><use href="#icon-term" /></svg></span>
+                <span class="mq-inline-metric__val">12 пер.</span>
+              </span>
+            </div>
+          </div>
+          <button type="button" class="mq-card__add">+</button>
+        </article>
+      </section>
+
+      <section class="lab-section" id="plan-k">
+        <div class="lab-section__label">
+          <span class="lab-section__id">K</span>
+          <span class="lab-section__title">space-between</span>
+        </div>
+        <article class="mq-card mq-card--accent mq-card--flat">
+          <div class="mq-card__accent" aria-hidden="true"></div>
+          <div class="mq-card__accent-body">
+            <div class="mq-card__kicker">Авто · Имущество</div>
+            <div class="mq-card__title">КАСКО — Стандарт</div>
+            <div class="mq-metrics-inline mq-metrics-inline--spread" role="list">
+              <span class="mq-inline-metric" data-tip="Оплата за период" tabindex="0">
+                <span class="mq-metric-glyph mq-metric-glyph--down" aria-hidden="true"><svg><use href="#icon-trend-down" /></svg></span>
+                <span class="mq-inline-metric__val mq-val--neg">8 500 ₽</span>
+              </span>
+              <span class="mq-inline-metric" data-tip="Сумма выплаты" tabindex="0">
+                <span class="mq-metric-glyph mq-metric-glyph--coin" aria-hidden="true"><svg><use href="#icon-coins" /></svg></span>
+                <span class="mq-inline-metric__val">1 200 000 ₽</span>
+              </span>
+              <span class="mq-inline-metric" data-tip="Срок" tabindex="0">
+                <span class="mq-metric-glyph mq-metric-glyph--term" aria-hidden="true"><svg><use href="#icon-term" /></svg></span>
+                <span class="mq-inline-metric__val">12 пер.</span>
+              </span>
+            </div>
+          </div>
+          <button type="button" class="mq-card__add">+</button>
         </article>
       </section>
 
@@ -238,30 +418,38 @@
         const list = document.getElementById('ins-plan-list');
         if (!list) return;
         list.innerHTML = '';
+        const accentExtra = kind.startsWith('mortgage') ? ' mq-card__accent--mortgage' : '';
+        const kickers = {
+          auto_liability: 'Авто · Ответственность',
+          auto_property: 'Авто · Имущество',
+          mortgage_life: 'Ипотека · Жизнь',
+          mortgage_property: 'Ипотека · Имущество',
+        };
+        const kicker = kickers[kind] || kind;
         (PLANS[kind] || []).forEach((plan) => {
           const card = document.createElement('article');
-          card.className = 'ins-plan';
-          card.innerHTML =
-            '<div><motion class="ins-plan__title">' +
-            (titles[kind] || kind) +
-            ' \u2014 ' +
-            plan.label +
-            '</div><div class="ins-metrics">' +
-            '<span class="ins-metric"><span class="ins-metric__icon ins-metric__icon--down">\u2193</span>' +
-            fmt(plan.premium) +
-            ' \u20bd/\u043f\u0435\u0440\u0438\u043e\u0434</span>' +
-            '<span class="ins-metric"><span class="ins-metric__icon ins-metric__icon--coin">\u25ce</span>' +
-            fmt(plan.payout) +
-            ' \u20bd</span>' +
-            '<span class="ins-metric"><span class="ins-metric__icon ins-metric__icon--term">\u23f1</span>' +
-            plan.term +
-            ' \u043f\u0435\u0440.</span></div></div>' +
-            '<button type="button" class="ins-btn ins-btn--ghost" style="width:auto;margin:0;padding:8px 12px;font-size:12px">\u041e\u0444\u043e\u0440\u043c\u0438\u0442\u044c</button>';
-          card.innerHTML = card.innerHTML.replace(/motion/g, 'motion').replace(/motion/g, 'motion');
-          card.innerHTML = card.innerHTML.replace(/motion/g, 'div');
+          card.className = 'mq-card mq-card--accent mq-card--flat mq-card--simple';
+          card.innerHTML = [
+            '<div class="mq-card__accent' + accentExtra + '" aria-hidden="true"></div>',
+            '<div class="mq-card__accent-body">',
+            '<div class="mq-card__kicker">' + kicker + '</div>',
+            '<div class="mq-card__title">' + (titles[kind] || kind) + ' — ' + plan.label + '</div>',
+            '<div class="mq-metrics-inline" role="list">',
+            '<span class="mq-inline-metric" role="listitem" data-tip="Оплата за период" tabindex="0">',
+            '<span class="mq-metric-glyph mq-metric-glyph--down" aria-hidden="true"><svg><use href="#icon-trend-down" /></svg></span>',
+            '<span class="mq-inline-metric__val mq-val--neg">' + fmt(plan.premium) + ' ₽</span></span>',
+            '<span class="mq-inline-metric" role="listitem" data-tip="Сумма выплаты" tabindex="0">',
+            '<span class="mq-metric-glyph mq-metric-glyph--coin" aria-hidden="true"><svg><use href="#icon-coins" /></svg></span>',
+            '<span class="mq-inline-metric__val">' + fmt(plan.payout) + ' ₽</span></span>',
+            '<span class="mq-inline-metric" role="listitem" data-tip="Срок" tabindex="0">',
+            '<span class="mq-metric-glyph mq-metric-glyph--term" aria-hidden="true"><svg><use href="#icon-term" /></svg></span>',
+            '<span class="mq-inline-metric__val">' + plan.term + ' пер.</span></span>',
+            '</div></div>',
+            '<button type="button" class="mq-card__add" aria-label="Оформить">+</button>',
+          ].join('');
           list.appendChild(card);
         });
-      };
+      }
       renderPlans(currentKind);
 
       document.querySelectorAll('.ins-catalog__item').forEach((btn) => {

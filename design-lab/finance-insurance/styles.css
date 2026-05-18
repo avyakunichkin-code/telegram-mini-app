@@ -520,3 +520,255 @@ body {
   font-weight: 800;
   margin-bottom: 6px;
 }
+
+/* Карточки тарифа — серия как asset-cards G–K (H в prod) */
+
+.lab-divider {
+  margin: 32px 0 20px;
+  padding-top: 20px;
+  border-top: 2px dashed var(--mq-violet);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--mq-violet);
+  line-height: 1.45;
+}
+
+.mq-card {
+  border-radius: 18px;
+  border: 1px solid var(--glass-border);
+  background: var(--surface);
+  padding: 14px;
+}
+
+.mq-card__kicker {
+  font-size: 10px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: rgba(37, 99, 235, 0.82);
+}
+
+.mq-card__title {
+  font-size: 15px;
+  font-weight: 800;
+  margin-top: 4px;
+}
+
+.mq-card__add {
+  width: 44px;
+  height: 44px;
+  border-radius: 14px;
+  border: 1px solid var(--glass-border);
+  background: var(--surface-2);
+  font-size: 22px;
+  font-weight: 500;
+  line-height: 1;
+  cursor: pointer;
+  color: var(--mq-violet-deep);
+}
+
+.mq-card--accent {
+  display: grid;
+  grid-template-columns: 4px 1fr auto;
+  gap: 12px;
+  align-items: start;
+  padding-left: 12px;
+}
+
+.mq-card__accent {
+  align-self: stretch;
+  border-radius: 4px;
+  background: linear-gradient(180deg, #2563eb, #0ea5e9);
+}
+
+.mq-card__accent--mortgage {
+  background: linear-gradient(180deg, #6d28d9, #7c3aed);
+}
+
+.mq-card__accent-body {
+  flex: 1;
+  min-width: 0;
+}
+
+.mq-card--accent.mq-card--flat {
+  align-items: stretch;
+}
+
+.mq-metrics-inline {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px 14px;
+  margin-top: 10px;
+}
+
+.mq-metrics-inline--spread {
+  justify-content: space-between;
+  gap: 8px 6px;
+}
+
+.mq-metrics-inline--dots .mq-inline-metric:not(:last-child)::after {
+  content: '·';
+  margin-left: 14px;
+  color: var(--text-muted);
+  font-weight: 700;
+  pointer-events: none;
+}
+
+.mq-inline-metric {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  cursor: default;
+  outline: none;
+}
+
+.mq-inline-metric__val {
+  font-size: 12px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.mq-inline-metric[data-tip]::before {
+  content: attr(data-tip);
+  position: absolute;
+  left: 50%;
+  bottom: calc(100% + 8px);
+  transform: translateX(-50%) translateY(4px);
+  padding: 5px 8px;
+  border-radius: 8px;
+  background: var(--mq-ink);
+  color: #f9fafb;
+  font-size: 10px;
+  font-weight: 600;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.15s ease, transform 0.15s ease;
+  z-index: 5;
+}
+
+.mq-inline-metric[data-tip]:hover::before,
+.mq-inline-metric[data-tip]:focus-visible::before {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+.mq-metric-glyph {
+  display: grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  flex-shrink: 0;
+}
+
+.mq-metric-glyph svg {
+  width: 16px;
+  height: 16px;
+}
+
+.mq-metric-glyph--coin {
+  color: #7c3aed;
+}
+
+.mq-metric-glyph--down {
+  color: var(--mq-danger);
+}
+
+.mq-metric-glyph--term {
+  color: var(--mq-violet-deep);
+}
+
+.mq-val--neg {
+  color: var(--mq-danger);
+}
+
+.mq-metric-icon {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 12px;
+  border: 1px solid var(--glass-border);
+  background: var(--surface-2);
+}
+
+.mq-metric-icon svg {
+  width: 18px;
+  height: 18px;
+}
+
+.mq-metric-icon--xs {
+  width: 28px;
+  height: 28px;
+  border-radius: 9px;
+}
+
+.mq-metric-icon--xs svg {
+  width: 14px;
+  height: 14px;
+}
+
+.mq-metric-icon--coin {
+  color: #7c3aed;
+  background: rgba(109, 40, 217, 0.1);
+  border-color: rgba(109, 40, 217, 0.2);
+}
+
+.mq-metric-icon--down {
+  color: var(--mq-danger);
+  background: rgba(220, 38, 38, 0.1);
+  border-color: rgba(220, 38, 38, 0.2);
+}
+
+.mq-metric-icon--term {
+  color: var(--mq-violet-deep);
+  background: rgba(109, 40, 217, 0.1);
+  border-color: rgba(109, 40, 217, 0.2);
+}
+
+.mq-metrics-rows-compact {
+  margin-top: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.mq-metric-row-compact {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  position: relative;
+  outline: none;
+}
+
+.mq-metric-row-compact__val {
+  font-size: 13px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.mq-metric-row-compact[data-tip]::before {
+  content: attr(data-tip);
+  position: absolute;
+  left: 0;
+  bottom: calc(100% + 6px);
+  padding: 4px 8px;
+  border-radius: 8px;
+  background: var(--mq-ink);
+  color: #f9fafb;
+  font-size: 10px;
+  font-weight: 600;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.15s ease;
+  z-index: 5;
+}
+
+.mq-metric-row-compact[data-tip]:hover::before,
+.mq-metric-row-compact[data-tip]:focus-visible::before {
+  opacity: 1;
+}

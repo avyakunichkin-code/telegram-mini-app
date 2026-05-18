@@ -5,6 +5,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy import inspect, text
 
 from app.database import engine, Base
+from app.victory_seeds import VICTORY_CONFIG_BY_TEMPLATE_KEY, victory_config_json_for_template
 from app.routers import (
     auth_router,
     users_router,
@@ -262,15 +263,31 @@ def ensure_schema_compatibility() -> None:
         )
         with engine.begin() as connection:
             for seed in GAME_STARTER_TEMPLATE_SEEDS:
+                tk = seed["template_key"]
                 connection.execute(
                     stmt,
                     {
-                        "template_key": seed["template_key"],
+                        "template_key": tk,
                         "title": seed["title"],
                         "difficulty_rank": int(seed["difficulty_rank"]),
                         "base_expense": float(seed["base_expense"]),
                         "sort_order": int(seed["sort_order"]),
                         "blueprint_json": json.dumps(seed["blueprint"], ensure_ascii=False),
+                    },
+                )
+            update_victory = text(
+                """
+                UPDATE game_starter_templates
+                SET victory_config_json = :victory_json
+                WHERE template_key = :template_key
+                """
+            )
+            for tk in VICTORY_CONFIG_BY_TEMPLATE_KEY:
+                connection.execute(
+                    update_victory,
+                    {
+                        "template_key": tk,
+                        "victory_json": victory_config_json_for_template(tk),
                     },
                 )
 

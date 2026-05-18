@@ -915,7 +915,8 @@ body {
 
 /* Asset template cards — design-lab variant H */
 .mqx-capital-template-row--asset-h,
-.mqx-capital-template-row--liability-h {
+.mqx-capital-template-row--liability-h,
+.mqx-capital-template-row--insurance-h {
   display: grid;
   grid-template-columns: 4px 1fr auto;
   gap: 12px;
@@ -940,6 +941,46 @@ body {
     rgba(220, 38, 38, 0.92),
     rgba(185, 28, 28, 0.88)
   );
+}
+
+.mqx-capital-template-row__accent--ins-auto {
+  background: linear-gradient(180deg, #2563eb, #0ea5e9);
+}
+
+.mqx-capital-template-row__accent--ins-mortgage {
+  background: linear-gradient(180deg, #6d28d9, #7c3aed);
+}
+
+.mqx-capital-template-row__accent--ins-default {
+  background: linear-gradient(
+    180deg,
+    rgba(109, 40, 217, 0.92),
+    rgba(14, 165, 233, 0.88)
+  );
+}
+
+.mqx-capital-template-row--insurance-h .mqx-capital-template-row__kicker {
+  color: color-mix(in srgb, var(--mqx-ink) 52%, transparent);
+}
+
+/* Страховки: лёгкая карточка без «стекла», иконки без подложки (asset H) */
+.mqx-capital-template-row--insurance-h {
+  border: none;
+  background: transparent;
+  border-radius: 0;
+  padding: 6px 6px 6px 10px;
+  box-shadow: none;
+}
+
+.mqx-capital-template-row--insurance-h .mqx-capital-template-row__title {
+  font-size: 14px;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+}
+
+.mqx-ins-plan-list .mqx-capital-template-row--insurance-h + .mqx-capital-template-row--insurance-h,
+.mqx-ins-policy-list .mqx-capital-template-row--insurance-h + .mqx-capital-template-row--insurance-h {
+  margin-top: 4px;
 }
 
 .mqx-capital-template-row__kicker {
@@ -1022,6 +1063,11 @@ body {
   width: 22px;
   height: 22px;
   flex-shrink: 0;
+}
+
+.mqx-metric-glyph svg {
+  width: 16px;
+  height: 16px;
 }
 
 .mqx-metric-glyph--coin {
@@ -1116,68 +1162,12 @@ body {
   gap: 8px;
 }
 
-.mqx-ins-plan {
-  display: grid;
-  grid-template-columns: 1fr auto;
-  gap: 10px;
-  align-items: center;
-  padding: 12px;
-  border-radius: 16px;
-  border: 1px solid color-mix(in srgb, var(--tg-theme-hint-color, var(--mq-line)) 72%, transparent);
-  background: var(--mqx-glass-strong);
-}
-
-.mqx-ins-plan__title {
-  font-size: 14px;
-  font-weight: 800;
-  margin-bottom: 6px;
-}
-
-.mqx-ins-policy {
-  display: grid;
-  grid-template-columns: 4px 1fr auto;
-  gap: 12px;
-  align-items: start;
-  padding: 12px 12px 12px 10px;
-  border-radius: 16px;
-  border: 1px solid color-mix(in srgb, var(--tg-theme-hint-color, var(--mq-line)) 72%, transparent);
-  background: var(--mqx-glass-strong);
-}
-
-.mqx-ins-policy + .mqx-ins-policy {
+.mqx-ins-plan-list .mqx-capital-template-row + .mqx-capital-template-row {
   margin-top: 8px;
 }
 
-.mqx-ins-policy__accent {
-  align-self: stretch;
-  border-radius: 4px;
-  background: var(--mq-violet, #6d28d9);
-}
-
-.mqx-ins-policy__accent--auto {
-  background: linear-gradient(180deg, #2563eb, #0ea5e9);
-}
-
-.mqx-ins-policy__accent--mortgage {
-  background: linear-gradient(180deg, #6d28d9, #7c3aed);
-}
-
-.mqx-ins-policy__kicker {
-  font-size: 10px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: var(--tg-theme-hint-color, var(--mq-text-muted));
-}
-
-.mqx-ins-policy__title {
-  font-size: 15px;
-  font-weight: 800;
-  margin-top: 2px;
-}
-
 .mqx-ins-metrics {
-  margin-top: 6px;
+  margin-top: 0;
 }
 
 .mqx-ins-policy-list {

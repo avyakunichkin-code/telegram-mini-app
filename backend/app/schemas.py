@@ -80,6 +80,29 @@ class AssetResponse(BaseModel):
     created_at: datetime
 
 
+class VictoryGoalOverview(BaseModel):
+    key: str
+    type: str
+    title: str
+    required: bool = False
+    enabled: bool = True
+    met: bool = False
+    progress: float = 0.0
+    detail: dict = Field(default_factory=dict)
+
+
+class VictoryOverview(BaseModel):
+    schema_version: int = 1
+    template_key: str = ""
+    min_period_index: int = 7
+    period_gate_open: bool = False
+    goals_met: int = 0
+    goals_required: int = 0
+    goals_enabled: int = 0
+    win_reached: bool = False
+    goals: List[VictoryGoalOverview] = Field(default_factory=list)
+
+
 class FinanceOverview(BaseModel):
     salary: SalaryProfileResponse
     liabilities: List[LiabilityResponse]
@@ -110,9 +133,10 @@ class FinanceOverview(BaseModel):
     win_reached: bool = False
     clean_period_streak: int = 0
     # Среднее изменение (наличные + подушка) между последовательными закрытиями;
-    # до 6 последних интервалов по PeriodEconomyClosing (прокси до victory v2).
+    # до 6 последних интервалов по PeriodEconomyClosing (цель avg_liquid_delta_6p).
     avg_net_cashflow_6p: float = 0.0
     avg_net_cashflow_6p_n: int = 0
+    victory: Optional[VictoryOverview] = None
 
 
 class AnalyticsTimeseriesPoint(BaseModel):

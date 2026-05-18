@@ -5,14 +5,24 @@ from sqlalchemy.orm import Session
 
 from ..auth import get_current_user
 from ..database import get_db
-from ..models import FinanceSalary, FinanceLiability, FinanceAsset, Transaction, PeriodEconomyClosing, AssetTemplate, LiabilityTemplate
+from ..models import (
+    FinanceSalary,
+    FinanceLiability,
+    FinanceAsset,
+    Transaction,
+    PeriodEconomyClosing,
+    AssetTemplate,
+    LiabilityTemplate,
+    GameStarterTemplate,
+)
 from ..balance_utils import adjust_balance, adjust_safety_fund_balance
 from ..finance_helpers import monthly_interest_payment
 from ..game_time import get_active_game_profile, sync_time, get_seconds_until_next
 from ..achievement_engine import process_achievement_unlocks
 from ..achievement_seeds import ensure_achievement_catalog
 from ..character_progression import character_xp_need_for_next_level
-from ..game_rules import MvpVictoryInput, evaluate_mvp_victory
+from ..victory_engine import VictoryEvaluationInput, evaluate_victory, parse_victory_config
+from ..victory_seeds import DEFAULT_TEMPLATE_KEY
 from ..schemas import (
     SalaryProfileUpdate,
     SalaryProfileResponse,
@@ -21,6 +31,8 @@ from ..schemas import (
     AssetCreate,
     AssetResponse,
     FinanceOverview,
+    VictoryOverview,
+    VictoryGoalOverview,
     AnalyticsTimeseriesPoint,
     FinanceAnalyticsTimeseriesResponse,
 )
@@ -535,21 +547,65 @@ async def finance_overview(
 
     score, level, xp_to_next = _compute_gamification(net_cashflow, liabilities_ratio, len(assets))
 
-    victory = evaluate_mvp_victory(
-        MvpVictoryInput(
+    avg_cf_6, avg_cf_n = _avg_net_cashflow_last_closed_intervals(db, profile.id, max_intervals=6)
+
+    template_key = getattr(profile, "starter_template_key", None) or DEFAULT_TEMPLATE_KEY
+    template_row = (
+        db.query(GameStarterTemplate)
+        .filter(GameStarterTemplate.template_key == template_key)
+        .first()
+    )
+    if template_row:
+        template_key = template_row.template_key
+        raw_victory = template_row.victory_config_json
+    else:
+        raw_victory = None
+
+    victory_cfg = parse_victory_config(raw_victory, template_key=template_key)
+    victory_result = evaluate_victory(
+        victory_cfg,
+        VictoryEvaluationInput(
             period_index=int(profile.period_index),
             safety_fund_balance=float(profile.safety_fund_balance),
+            cash_balance=float(profile.cash_balance),
             total_monthly_obligations=float(total_monthly_obligations),
             total_overdue_amount=float(total_overdue_amount),
             net_monthly_cashflow=float(net_cashflow),
-        )
+            character_level=max(1, int(getattr(profile, "level", 1) or 1)),
+            monthly_salary=float(salary.monthly_amount if salary else 0),
+            avg_net_cashflow_6p=float(avg_cf_6),
+            avg_net_cashflow_6p_n=int(avg_cf_n),
+        ),
+        template_key=template_key,
     )
-    win_target_safety_fund = victory.win_target_safety_fund
-    win_progress_safety_fund = victory.win_progress_safety_fund
-    win_ready = victory.win_ready
-    win_reached = victory.win_reached
+    win_target_safety_fund = victory_result.win_target_safety_fund
+    win_progress_safety_fund = victory_result.win_progress_safety_fund
+    win_ready = victory_result.win_ready
+    win_reached = victory_result.win_reached
 
-    avg_cf_6, avg_cf_n = _avg_net_cashflow_last_closed_intervals(db, profile.id, max_intervals=6)
+    victory_overview = VictoryOverview(
+        schema_version=victory_result.schema_version,
+        template_key=victory_result.template_key,
+        min_period_index=victory_result.min_period_index,
+        period_gate_open=victory_result.period_gate_open,
+        goals_met=victory_result.goals_met,
+        goals_required=victory_result.goals_required,
+        goals_enabled=victory_result.goals_enabled,
+        win_reached=victory_result.win_reached,
+        goals=[
+            VictoryGoalOverview(
+                key=g.key,
+                type=g.type,
+                title=g.title,
+                required=g.required,
+                enabled=g.enabled,
+                met=g.met,
+                progress=g.progress,
+                detail=g.detail,
+            )
+            for g in victory_result.goals
+        ],
+    )
 
     return FinanceOverview(
         salary=SalaryProfileResponse(
@@ -585,6 +641,7 @@ async def finance_overview(
         clean_period_streak=int(getattr(profile, "clean_period_streak", 0) or 0),
         avg_net_cashflow_6p=avg_cf_6,
         avg_net_cashflow_6p_n=avg_cf_n,
+        victory=victory_overview,
     )
 
 

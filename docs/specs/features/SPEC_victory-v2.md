@@ -1,0 +1,200 @@
+---
+layer: spec
+status: approved
+owner: product
+last_reviewed: 2026-05-19
+tracks: victory-v2, game-plan
+idea: vision/ideas/money-quest-evolution-after-mvp.md
+related: specs/features/SPEC_game-plan.md
+adr: decisions/ADR-001-save-kind-remove-light-hardcore.md
+---
+
+# Spec: Victory v2 — M из N по шаблону
+
+## Assumptions
+
+1. **C2:** у каждого активного `game_starter_templates` задан валидный `victory_config_json`; пустого `{}` нет; fallback MVP в коде не используется.
+2. **A1:** знаменатель цели «подушка в месяцах» = только **`total_monthly_obligations`** (платежи по долгам + обслуживание активов), **без** lifestyle.
+3. **B1 + B3:** цель `avg_liquid_delta_6p` — среднее Δ(cash + подушка) между соседними `PeriodEconomyClosing`; порог — **`current_monthly_salary * salary_multiplier`** (текущая зарплата профиля, т.к. зарплату можно менять в игре).
+4. **D1:** победа = **`met_count >= required_goals_met`** среди целей с `enabled: true`; отдельного слоя must-have в v2.0 нет.
+5. **F1:** после `win_reached` партия **продолжается** (`is_active` не сбрасывается).
+6. **E:** достижения и победа — разные продукты; допускается общий хелпер обязательств, без дублирования целей в `achievement_tier_definitions`.
+7. Поле **`goals[].required`** хранится в JSON для будущей фазы («все required + M из optional»); в v2.0 **игнорируется** движком.
+
+---
+
+## Objective
+
+**Why:** разные сценарии Game Mode должны иметь разную планку победы без хардкода в `finance.py`.
+
+**Success criteria**
+
+- [ ] `GET /api/finance/overview` считает победу по `victory_config_json` шаблона профиля (`starter_template_key`).
+- [ ] Базовый шаблон эквивалентен MVP (3 цели, M=3, период ≥ 7).
+- [ ] Жёсткие шаблоны: 5 целей, M=3 (подушка 6×, просрочка, avg liquid, уровень, кэш).
+- [ ] Блок `victory` в overview + сохранены legacy-поля `win_*` для UI подушки.
+- [ ] Unit-тесты на парсинг config и оценку целей.
+
+---
+
+## Контракт `victory_config` (schema_version 1)
+
+```json
+{
+  "schema_version": 1,
+  "min_period_index_for_victory": 7,
+  "required_goals_met": 3,
+  "goals": [
+    {
+      "key": "safety_3x",
+      "type": "safety_fund_months",
+      "title": "Подушка ≥ 3× обязательств",
+      "months_multiplier": 3,
+      "required": false,
+      "enabled": true
+    }
+  ]
+}
+```
+
+| Поле | Тип | Описание |
+|------|-----|----------|
+| `schema_version` | int | Сейчас только `1` |
+| `min_period_index_for_victory` | int | Победа недоступна при `period_index` ниже (дефолт **7**) |
+| `required_goals_met` | int | **M** — сколько целей из включённых должно быть выполнено |
+| `goals[]` | array | Список целей |
+| `goals[].key` | string | Стабильный id для API/UI |
+| `goals[].type` | string | См. таблицу типов |
+| `goals[].title` | string | Человекочитаемое название |
+| `goals[].required` | bool | Зарезервировано; default `false` |
+| `goals[].enabled` | bool | Участвует в N, если `true` |
+
+### Типы целей (v2.0)
+
+| `type` | Параметры | Условие `met` |
+|--------|-----------|---------------|
+| `safety_fund_months` | `months_multiplier` | `safety_fund >= obligations * multiplier` и `obligations > 0` |
+| `no_overdue` | — | `total_overdue_amount <= 0` |
+| `net_monthly_cashflow_nonneg` | — | `net_monthly_cashflow >= 0` |
+| `avg_liquid_delta_6p` | `window` (default 6), `min_samples`, `salary_multiplier` **или** `min_avg` | `samples >= min_samples` и (`avg >= salary * multiplier` или `avg >= min_avg`) |
+| `character_level` | `min_level` | `profile.level >= min_level` |
+| `cash_balance_min` | `min_cash` | `cash_balance >= min_cash` |
+
+**`avg_liquid_delta_6p`:** тот же алгоритм, что `avg_net_cashflow_6p` / `avg_net_cashflow_6p_n` в overview (интервалы между закрытиями периода).
+
+**Зарплата для B3:** `FinanceSalary.monthly_amount` на момент запроса overview.
+
+---
+
+## Логика победы
+
+```
+enabled_goals = [g for g in goals if g.enabled]
+N = len(enabled_goals)
+met_count = count(g.met for g in enabled_goals)
+period_gate_open = period_index >= min_period_index_for_victory
+win_reached = period_gate_open AND met_count >= required_goals_met
+```
+
+`required` на целях в v2.0 не меняет формулу.
+
+### Legacy `win_ready` (совместимость UI)
+
+Подмножество «почти победа» без подушки и без ворот периода:
+
+- если в config есть цели `no_overdue` и `net_monthly_cashflow_nonneg` (enabled) — обе должны быть `met`;
+- иначе `win_ready = met_count >= max(0, required_goals_met - 1)` среди enabled (без учёта `period_gate_open`).
+
+### Legacy `win_target_safety_fund` / `win_progress_safety_fund`
+
+Берутся из **первой** enabled-цели `safety_fund_months`; если такой нет — target `0`, progress `0`.
+
+---
+
+## Сиды шаблонов (контент v1)
+
+### `mq_game_basic_v1` — эквивалент MVP
+
+- 3 цели: подушка **3×** obligations, нет просрочки, cashflow ≥ 0  
+- `required_goals_met: 3`
+
+### `mq_game_tight_budget_v1`, `mq_game_mortgage_stress_v1`, `mq_game_debt_stack_v1`
+
+- 5 целей, `required_goals_met: 3`:
+  1. подушка **6×** obligations  
+  2. нет просрочки  
+  3. `avg_liquid_delta_6p`: `window=6`, `min_samples=3`, `salary_multiplier=5`  
+  4. `character_level`: `min_level=5`  
+  5. `cash_balance_min`: `12000` / `15000` / `18000` соответственно  
+
+Цифры `min_cash` и `min_level` — черновик баланса; меняются в JSON без миграции схемы.
+
+---
+
+## API: `GET /api/finance/overview`
+
+Добавить объект **`victory`** (не ломая существующие поля):
+
+```json
+{
+  "victory": {
+    "schema_version": 1,
+    "template_key": "mq_game_basic_v1",
+    "min_period_index": 7,
+    "period_gate_open": true,
+    "goals_met": 3,
+    "goals_required": 3,
+    "goals_enabled": 3,
+    "win_reached": true,
+    "goals": [
+      {
+        "key": "safety_3x",
+        "type": "safety_fund_months",
+        "title": "...",
+        "required": false,
+        "enabled": true,
+        "met": true,
+        "progress": 1.0,
+        "detail": { "target": 30000, "current": 35000 }
+      }
+    ]
+  },
+  "win_reached": true,
+  "win_ready": true,
+  "win_target_safety_fund": 30000,
+  "win_progress_safety_fund": 1.0
+}
+```
+
+Если у профиля нет `starter_template_key` или шаблон не найден — используется config **`mq_game_basic_v1`** (страховка для legacy-профилей).
+
+---
+
+## Out of scope (v2.0)
+
+- UI экрана победы / тоста (отдельная задача).
+- Учёт `goals[].required` в логике.
+- Победа в Plan Mode (`save_kind=plan`).
+- Достижения как цели победы.
+
+---
+
+## Реализация (код)
+
+| Модуль | Назначение |
+|--------|------------|
+| `backend/app/victory_engine.py` | Парсинг config, оценка целей, M из N |
+| `backend/app/victory_seeds.py` | JSON по `template_key` |
+| `backend/migrations/0010_victory_config_seeds.sql` | UPDATE существующих строк каталога |
+| `backend/app/routers/finance.py` | Подключение движка в overview |
+| `backend/tests/test_victory_engine.py` | Тесты |
+
+`evaluate_mvp_victory` в `game_rules.py` остаётся для unit-тестов MVP-инвариантов; production overview использует `victory_engine`.
+
+---
+
+## Связанные документы
+
+- [evolution §II.3](../../vision/ideas/money-quest-evolution-after-mvp.md)
+- [SPEC_game-plan](SPEC_game-plan.md) — задел `victory_config_json`
+- [GAME.md](../../../GAME.md) § победа

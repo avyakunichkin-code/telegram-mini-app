@@ -1,25 +1,31 @@
-import { Button } from '@telegram-apps/telegram-ui';
-import { findInsuranceCatalogItem } from '../../../constants/insuranceProducts';
+import { findInsuranceCatalogItem, insuranceAccentClass } from '../../../constants/insuranceProducts';
 import { InsurancePlanMetrics } from '../metrics/InsurancePlanMetrics';
+import { CapitalPositionCard } from './CapitalPositionCard';
 
-/** Готовый тариф: название, метрики, кнопка оформления. */
+/** Готовый тариф — карточка как asset H: accent, kicker, метрики, кнопка «+». */
 export function InsurancePlanCard({ plan, busy, onBuy }) {
   const catalog = findInsuranceCatalogItem(plan.kind);
-  const title = `${catalog.title} — ${plan.label}`;
+  const accent = insuranceAccentClass(catalog.product);
 
   return (
-    <article className="mqx-ins-plan">
-      <div className="mqx-ins-plan__body">
-        <div className="mqx-ins-plan__title">{title}</div>
+    <CapitalPositionCard
+      variant="insurance"
+      accentTone={accent}
+      kicker={`${catalog.product_label} · ${catalog.object_label}`}
+      title={`${catalog.title} — ${plan.label}`}
+      metrics={
         <InsurancePlanMetrics
           monthlyPremium={plan.monthly_premium}
           payoutAmount={plan.payout_amount}
           termPeriods={plan.term_periods}
         />
-      </div>
-      <Button size="s" mode="filled" disabled={busy} onClick={() => onBuy(plan)}>
-        Оформить
-      </Button>
-    </article>
+      }
+      action={{
+        className: 'mqx-fin-icon-btn mqx-fin-icon-btn--plus mqx-capital-add-btn',
+        onClick: () => !busy && onBuy(plan),
+      }}
+      actionLabel="+"
+      actionAriaLabel={`Оформить ${catalog.title} — ${plan.label}`}
+    />
   );
 }
