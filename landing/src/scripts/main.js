@@ -1,3 +1,4 @@
+import { initHeroDemo, stopHeroDemo } from './demo-hero.js';
 import {
   applyStaticI18n,
   getLang,
@@ -120,19 +121,8 @@ function wireReveal() {
   nodes.forEach((n) => io.observe(n));
 }
 
-function wireHeroTimer() {
-  const el = document.getElementById('hero-timer');
-  if (!el || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-  let sec = 4 * 60 + 12;
-  setInterval(() => {
-    sec = sec > 0 ? sec - 1 : 4 * 60 + 12;
-    const m = String(Math.floor(sec / 60)).padStart(2, '0');
-    const s = String(sec % 60).padStart(2, '0');
-    el.textContent = `${m}:${s}`;
-  }, 1000);
-}
-
 async function setLocale(code) {
+  stopHeroDemo();
   await loadLocale(code);
   applyStaticI18n();
   renderHowSteps();
@@ -141,6 +131,7 @@ async function setLocale(code) {
   renderFaq();
   setLangButtons(code);
   wireReveal();
+  initHeroDemo();
 }
 
 async function boot() {
@@ -148,7 +139,6 @@ async function boot() {
   const initial = initLang();
   await setLocale(initial);
   wireLangSwitcher(setLocale);
-  wireHeroTimer();
 }
 
 boot().catch((err) => {

@@ -1,5 +1,7 @@
 const STORAGE_KEY = 'mq-landing-lang';
 const SUPPORTED = ['ru', 'en'];
+/** Vite подставляет BASE_PATH при сборке (напр. /telegram-mini-app/landing/) */
+const assetBase = import.meta.env.BASE_URL;
 
 let messages = {};
 let lang = 'ru';
@@ -14,7 +16,7 @@ export function getLang() {
 
 export async function loadLocale(next) {
   const code = SUPPORTED.includes(next) ? next : 'ru';
-  const res = await fetch(`/locales/${code}.json`);
+  const res = await fetch(`${assetBase}locales/${code}.json`);
   if (!res.ok) throw new Error(`Locale ${code} not found`);
   messages = await res.json();
   lang = code;

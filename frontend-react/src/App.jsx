@@ -10,6 +10,7 @@ import { NewProfileKindScreen } from './components/new-game/NewProfileKindScreen
 import { GameTemplatePickScreen } from './components/new-game/GameTemplatePickScreen';
 import { GameScreen } from './components/GameScreen';
 import { ToastHost } from './components/ToastHost';
+import { MqCatalogScreen } from './components/mqx/catalog/MqCatalogScreen';
 
 function GameAppFlowShell({ children }) {
   return (
@@ -134,6 +135,16 @@ function App() {
                 </div>
               }
             />
+            {import.meta.env.DEV ? (
+              <Route
+                path="/dev/mqx"
+                element={
+                  <div className="app-shell mq-page" style={{ padding: '12px' }}>
+                    <MqCatalogScreen />
+                  </div>
+                }
+              />
+            ) : null}
             <Route path="/" element={
               <AuthGuard>
                 <GameApp />

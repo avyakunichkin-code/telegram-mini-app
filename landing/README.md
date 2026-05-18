@@ -33,21 +33,20 @@ npm run preview
 
 Ссылка на бота **намеренно отсутствует** (статус «Скоро в Telegram»). Когда будете готовы — добавьте CTA в локали и hero, не трогая модуль игры.
 
-## Деплой (отдельно от игры)
+## Деплой на GitHub Pages (вместе с игрой)
 
-Варианты:
-
-1. **Отдельный репозиторий** — только содержимое `landing/dist/` на GitHub Pages / Netlify / Beget static.
-2. **Поддомен** — `landing.example.com` → корень `dist/`.
-3. **Другая ветка `gh-pages`** — только артефакт лендинга (не смешивать с `frontend-react` deploy).
-
-Для GitHub Pages в подпапке репозитория:
+Основной способ — из `frontend-react/`:
 
 ```bash
-BASE_PATH=/имя-репо/ npm run build
+cd ../frontend-react
+npm run deploy
 ```
 
-Для корня домена: `npm run build` (base `/` по умолчанию).
+Скрипт [`scripts/build-pages.mjs`](../frontend-react/scripts/build-pages.mjs) собирает лендинг с `BASE_PATH=/telegram-mini-app/landing/`, игру с `/telegram-mini-app/`, копирует лендинг в `dist/landing/` и выкладывает один `dist/` на ветку `gh-pages`.
+
+Локальная сборка без публикации: `cd frontend-react && npm run build:pages`.
+
+Отдельный деплой только лендинга (другой хостинг): `BASE_PATH=/путь/ npm run build` в каталоге `landing/`.
 
 ## Бренд
 

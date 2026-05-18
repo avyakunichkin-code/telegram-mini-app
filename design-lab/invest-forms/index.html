@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="ru" data-theme="light">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Money Quest — формы инвестиций</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <header class="lab-header">
+      <div>
+        <h1>Депозит и облигации</h1>
+        <p>Подчёркнутый ввод · ползунок 0…420&nbsp;000 ₽ · ставка только для чтения</p>
+      </div>
+      <div class="lab-theme" role="group" aria-label="Тема">
+        <button type="button" class="is-active" data-theme-btn="light">Светлая</button>
+        <button type="button" data-theme-btn="dark">Тёмная</button>
+      </div>
+    </header>
+
+    <main class="lab-wrap">
+      <section class="lab-section" id="variant-a">
+        <div class="lab-section__label">
+          <span class="lab-section__id">A</span>
+          <span>Минимал</span>
+        </div>
+        <p class="lab-section__note">Только подчёркивание и ползунок; ставка текстом справа от заголовка.</p>
+        <article class="inv-a" data-demo>
+          <div class="inv-a__top">
+            <strong>Депозит</strong>
+            <span class="inv-a__rate-text">12% годовых</span>
+          </div>
+          <label class="inv-amount-label">Сумма</label>
+          <div class="inv-underline">
+            <input type="text" inputmode="numeric" data-amount value="120000" />
+            <span class="inv-underline__unit">₽</span>
+          </div>
+          <input type="range" class="inv-slider" data-slider min="0" max="420000" step="1000" value="120000" />
+          <div class="inv-range-hint"><span>0</span><span>На счёте: 420 000 ₽</span></div>
+          <button type="button" class="inv-btn">Открыть депозит</button>
+        </article>
+      </section>
+
+      <section class="lab-section lab-section--featured" id="variant-b">
+        <div class="lab-section__label">
+          <span class="lab-section__id">B ★</span>
+          <span>Полоса + chip ставки (prod)</span>
+        </div>
+        <p class="lab-section__note">Как карточки активов H: accent, фиксированная ставка, компактная высота.</p>
+        <article class="inv-b" data-demo>
+          <div class="inv-b__accent" aria-hidden="true"></div>
+          <div>
+            <div class="inv-b__head">
+              <div class="inv-b__title">Депозит</div>
+              <div class="inv-rate-chip">
+                <div class="inv-rate-chip__val">12%</div>
+                <div class="inv-rate-chip__hint">годовых</div>
+              </div>
+            </div>
+            <label class="inv-amount-label">Сумма</label>
+            <div class="inv-underline">
+              <input type="text" inputmode="numeric" data-amount value="120000" />
+              <span class="inv-underline__unit">₽</span>
+            </div>
+            <input type="range" class="inv-slider" data-slider min="0" max="420000" step="1000" value="120000" />
+            <div class="inv-range-hint"><span>0</span><span>На счёте: 420 000 ₽</span></div>
+            <button type="button" class="inv-btn">Открыть депозит</button>
+          </div>
+        </article>
+        <p class="lab-hint" style="margin-top: 12px">Облигации — тот же каркас, синий accent и 10%:</p>
+        <article class="inv-b" data-demo style="margin-top: 8px">
+          <div class="inv-b__accent" style="background: linear-gradient(180deg, #5b21b6, #2563eb)" aria-hidden="true"></div>
+          <div>
+            <div class="inv-b__head">
+              <div class="inv-b__title">Облигации</div>
+              <div class="inv-rate-chip inv-rate-chip--bond">
+                <div class="inv-rate-chip__val">10%</div>
+                <div class="inv-rate-chip__hint">годовых</div>
+              </div>
+            </div>
+            <label class="inv-amount-label">Сумма</label>
+            <div class="inv-underline inv-underline--bond">
+              <input type="text" inputmode="numeric" data-amount value="50000" />
+              <span class="inv-underline__unit">₽</span>
+            </div>
+            <input type="range" class="inv-slider" data-slider min="0" max="420000" step="1000" value="50000" />
+            <div class="inv-range-hint"><span>0</span><span>На счёте: 420 000 ₽</span></div>
+            <button type="button" class="inv-btn" style="background: linear-gradient(135deg, #3b82f6, #2563eb)">Купить облигации</button>
+          </div>
+        </article>
+      </section>
+
+      <section class="lab-section" id="variant-c">
+        <div class="lab-section__label">
+          <span class="lab-section__id">C</span>
+          <span>Hero-сумма</span>
+        </div>
+        <p class="lab-section__note">Крупная сумма для «главного решения»; ставка строкой сверху.</p>
+        <article class="inv-c" data-demo>
+          <div class="inv-c__rate-line">Ставка: <strong>12% годовых</strong> · только чтение</div>
+          <label class="inv-amount-label">Сумма вклада</label>
+          <div class="inv-underline inv-underline--hero">
+            <input type="text" inputmode="numeric" data-amount value="200000" />
+            <span class="inv-underline__unit">₽</span>
+          </div>
+          <input type="range" class="inv-slider" data-slider min="0" max="420000" step="1000" value="200000" />
+          <div class="inv-range-hint"><span>0</span><span>420 000 ₽</span></div>
+          <button type="button" class="inv-btn">Открыть</button>
+        </article>
+      </section>
+
+      <section class="lab-section" id="variant-d">
+        <div class="lab-section__label">
+          <span class="lab-section__id">D</span>
+          <span>Компактная строка</span>
+        </div>
+        <p class="lab-section__note">Сумма и chip ставки в одной линии — меньше высоты блока.</p>
+        <article class="inv-d" data-demo>
+          <div class="inv-d__row">
+            <div style="flex: 1">
+              <label class="inv-amount-label">Сумма</label>
+              <div class="inv-underline">
+                <input type="text" inputmode="numeric" data-amount value="80000" />
+                <span class="inv-underline__unit">₽</span>
+              </div>
+            </div>
+            <div class="inv-rate-chip">
+              <div class="inv-rate-chip__val">12%</div>
+              <div class="inv-rate-chip__hint">год.</div>
+            </div>
+          </div>
+          <input type="range" class="inv-slider" data-slider min="0" max="420000" step="1000" value="80000" />
+          <button type="button" class="inv-btn">Открыть</button>
+        </article>
+      </section>
+
+      <section class="lab-section" id="variant-e">
+        <div class="lab-section__label">
+          <span class="lab-section__id">E</span>
+          <span>Плотный TMA</span>
+        </div>
+        <p class="lab-section__note">Минимум вертикали: ползунок сразу под суммой, ставка внизу слева.</p>
+        <article class="inv-e" data-demo>
+          <div class="inv-underline">
+            <input type="text" inputmode="numeric" data-amount value="30000" aria-label="Сумма" />
+            <span class="inv-underline__unit">₽</span>
+          </div>
+          <input type="range" class="inv-slider" data-slider min="0" max="420000" step="1000" value="30000" />
+          <div class="inv-e__foot">
+            <span class="lab-hint" style="margin: 0">0 — 420 000 ₽</span>
+            <div class="inv-rate-chip">
+              <span class="inv-rate-chip__val">10%</span>
+              <span class="inv-rate-chip__hint">годовых</span>
+            </div>
+          </div>
+          <button type="button" class="inv-btn">Купить</button>
+        </article>
+      </section>
+    </main>
+
+    <script>
+      document.querySelectorAll('[data-theme-btn]').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          document.documentElement.setAttribute('data-theme', btn.getAttribute('data-theme-btn'));
+          document.querySelectorAll('[data-theme-btn]').forEach((b) => b.classList.toggle('is-active', b === btn));
+        });
+      });
+
+      document.querySelectorAll('[data-demo]').forEach((card) => {
+        const input = card.querySelector('[data-amount]');
+        const slider = card.querySelector('[data-slider]');
+        if (!input || !slider) return;
+        const max = Number(slider.max) || 0;
+        const syncFromSlider = () => {
+          input.value = Number(slider.value).toLocaleString('ru-RU');
+        };
+        const syncFromInput = () => {
+          const raw = input.value.replace(/[^\d]/g, '');
+          let n = raw === '' ? 0 : Math.min(max, Math.max(0, Number(raw) || 0));
+          slider.value = String(n);
+          input.value = n === 0 ? '' : n.toLocaleString('ru-RU');
+        };
+        slider.addEventListener('input', syncFromSlider);
+        input.addEventListener('input', syncFromInput);
+        syncFromSlider();
+      });
+    </script>
+  </body>
+</html>

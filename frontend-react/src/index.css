@@ -816,7 +816,7 @@ body {
 
 .mqx-capital-subtab {
   border: 1px solid color-mix(in srgb, var(--tg-theme-hint-color, var(--mq-line)) 72%, transparent);
-  background: var(--mqx-glass-strong);
+  background: var(--tg-theme-bg-color, #fff);
   border-radius: 12px;
   padding: 10px;
   font-size: 13px;
@@ -825,9 +825,9 @@ body {
 }
 
 .mqx-capital-subtab--active {
-  border-color: rgba(109, 40, 217, 0.32);
-  background: rgba(109, 40, 217, 0.1);
-  color: rgba(91, 33, 182, 0.98);
+  border-color: var(--mq-violet-deep);
+  background: var(--mq-violet);
+  color: #fff;
 }
 
 .mqx-capital-mode-grid {
@@ -838,27 +838,26 @@ body {
 }
 
 .mqx-capital-mode-btn {
-  border: none;
+  border: 1px solid color-mix(in srgb, var(--mq-violet) 42%, var(--mq-line));
   border-radius: 14px;
   padding: 14px 12px;
   font-size: 13px;
   font-weight: 800;
   cursor: pointer;
-  color: #fff;
-  background: linear-gradient(90deg, #7c3aed, #d946ef);
-  box-shadow: 0 10px 28px rgba(109, 40, 217, 0.24);
-}
-
-.mqx-capital-mode-btn--ghost {
-  color: rgba(91, 33, 182, 0.95);
-  background: rgba(109, 40, 217, 0.08);
-  border: 1px solid rgba(109, 40, 217, 0.22);
+  color: var(--mq-violet-deep);
+  background: var(--tg-theme-bg-color, #fff);
   box-shadow: none;
 }
 
-.mqx-capital-mode-btn--ghost-active {
-  border-color: rgba(109, 40, 217, 0.38);
-  background: rgba(109, 40, 217, 0.14);
+.mqx-capital-mode-btn--active {
+  border-color: var(--mq-violet-deep);
+  background: var(--mq-violet);
+  color: #fff;
+}
+
+.mqx-capital-mode-btn--active:disabled {
+  opacity: 0.42;
+  cursor: not-allowed;
 }
 
 .mqx-capital-template-list,
@@ -892,6 +891,141 @@ body {
   font-size: var(--mq-fs-caption);
   line-height: 1.4;
   color: color-mix(in srgb, var(--mqx-ink) 52%, transparent);
+}
+
+/* Asset template cards — design-lab variant H */
+.mqx-capital-template-row--asset-h,
+.mqx-capital-template-row--liability-h {
+  display: grid;
+  grid-template-columns: 4px 1fr auto;
+  gap: 12px;
+  align-items: start;
+  padding-left: 10px;
+}
+
+.mqx-capital-template-row__accent {
+  align-self: stretch;
+  border-radius: 4px;
+  background: linear-gradient(
+    180deg,
+    rgba(109, 40, 217, 0.92),
+    rgba(5, 150, 105, 0.88)
+  );
+  min-height: 48px;
+}
+
+.mqx-capital-template-row__accent--liability {
+  background: linear-gradient(
+    180deg,
+    rgba(220, 38, 38, 0.92),
+    rgba(185, 28, 28, 0.88)
+  );
+}
+
+.mqx-capital-template-row__kicker {
+  font-size: 10px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: rgba(109, 40, 217, 0.82);
+}
+
+.mqx-capital-template-row--asset-h .mqx-capital-template-row__title {
+  margin-top: 4px;
+}
+
+.mqx-asset-metrics-inline {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px 14px;
+  margin-top: 10px;
+}
+
+.mqx-inline-metric {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  outline: none;
+}
+
+.mqx-inline-metric__val {
+  font-size: 12px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  color: color-mix(in srgb, var(--mqx-ink) 88%, transparent);
+}
+
+.mqx-inline-metric__val .mq-money__unit {
+  font-size: 0.92em;
+}
+
+.mqx-inline-metric__val--neg {
+  color: var(--mq-danger);
+}
+
+.mqx-inline-metric__val--pos {
+  color: var(--mq-emerald, #059669);
+}
+
+.mqx-inline-metric[data-tip]::before {
+  content: attr(data-tip);
+  position: absolute;
+  left: 50%;
+  bottom: calc(100% + 8px);
+  transform: translateX(-50%) translateY(4px);
+  padding: 5px 8px;
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--mqx-ink) 96%, #000 4%);
+  color: #f9fafb;
+  font-size: 10px;
+  font-weight: 600;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.15s ease, transform 0.15s ease;
+  z-index: 5;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+}
+
+.mqx-inline-metric[data-tip]:hover::before,
+.mqx-inline-metric[data-tip]:focus-visible::before {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+.mqx-metric-glyph {
+  display: grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  flex-shrink: 0;
+}
+
+.mqx-metric-glyph--coin {
+  color: #7c3aed;
+}
+
+.mqx-metric-glyph--down {
+  color: var(--mq-danger);
+}
+
+.mqx-metric-glyph--up {
+  color: var(--mq-emerald, #059669);
+}
+
+.mqx-metric-glyph--neg {
+  color: var(--mq-danger);
+}
+
+.mqx-metric-glyph--pos {
+  color: var(--mq-emerald, #059669);
+}
+
+.mqx-capital-template-row--liability-h .mqx-capital-template-row__kicker {
+  color: rgba(185, 28, 28, 0.88);
 }
 
 .mqx-capital-add-btn {
@@ -1037,7 +1171,7 @@ body {
 
 .mqx-fin-subtab {
   border: 1px solid color-mix(in srgb, var(--tg-theme-hint-color, var(--mq-line)) 72%, transparent);
-  background: var(--mqx-glass-mid);
+  background: var(--tg-theme-bg-color, #fff);
   border-radius: 12px;
   padding: 10px 10px;
   font-size: 13px;
@@ -1046,13 +1180,282 @@ body {
 }
 
 .mqx-fin-subtab--active {
-  background: rgba(109, 40, 217, 0.10);
-  border-color: rgba(109, 40, 217, 0.32);
-  color: rgba(91, 33, 182, 0.98);
+  background: var(--mq-violet);
+  border-color: var(--mq-violet-deep);
+  color: #fff;
 }
 
 .mqx-fin-grid-actions {
   align-items: stretch;
+}
+
+/* —— Инвестиции: форма депозита / облигаций (variant D) —— */
+
+.mqx-invest-form {
+  margin-top: 12px;
+  padding: 14px;
+  border-radius: 18px;
+  border: 1px solid color-mix(in srgb, var(--tg-theme-hint-color, var(--mq-line)) 72%, transparent);
+  background: var(--mqx-glass-strong);
+}
+
+.mqx-invest-form__body {
+  min-width: 0;
+}
+
+.mqx-invest-form__title {
+  margin-bottom: 10px;
+  font-size: 15px;
+  font-weight: 850;
+  letter-spacing: -0.02em;
+  color: color-mix(in srgb, var(--mqx-ink) 94%, transparent);
+}
+
+.mqx-invest-rate {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+  padding: 6px 10px;
+  min-width: 56px;
+  border-radius: 10px;
+  background: rgba(5, 150, 105, 0.1);
+  border: 1px solid rgba(5, 150, 105, 0.22);
+}
+
+.mqx-invest-rate--chip {
+  align-self: flex-end;
+}
+
+.mqx-invest-form--bond .mqx-invest-rate {
+  background: rgba(37, 99, 235, 0.1);
+  border-color: rgba(37, 99, 235, 0.22);
+}
+
+.mqx-invest-rate__val {
+  font-size: 14px;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  color: var(--mq-emerald);
+  line-height: 1.1;
+}
+
+.mqx-invest-form--bond .mqx-invest-rate__val {
+  color: #2563eb;
+}
+
+.mqx-invest-rate__hint {
+  font-size: 10px;
+  font-weight: 650;
+  color: color-mix(in srgb, var(--mqx-ink) 50%, transparent);
+  text-transform: lowercase;
+}
+
+.mqx-invest-amount {
+  margin-top: 0;
+}
+
+.mqx-invest-amount--compact {
+  margin-top: 0;
+}
+
+.mqx-invest-amount__row {
+  display: flex;
+  align-items: flex-end;
+  gap: 12px;
+}
+
+.mqx-invest-amount__row-main {
+  flex: 1;
+  min-width: 0;
+}
+
+.mqx-invest-amount--compact .mqx-invest-amount__input {
+  font-size: 18px;
+}
+
+.mqx-invest-amount--compact .mqx-invest-slider {
+  margin-top: 8px;
+}
+
+.mqx-invest-amount__label {
+  display: block;
+  font-size: 10px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: color-mix(in srgb, var(--mqx-ink) 48%, transparent);
+  margin-bottom: 4px;
+}
+
+.mqx-invest-amount__field {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  border-bottom: 2px solid rgba(109, 40, 217, 0.35);
+  padding-bottom: 4px;
+}
+
+.mqx-invest-form--bond .mqx-invest-amount__field {
+  border-bottom-color: rgba(37, 99, 235, 0.35);
+}
+
+.mqx-invest-amount__input {
+  flex: 1;
+  min-width: 0;
+  border: none;
+  background: transparent;
+  padding: 0;
+  font: inherit;
+  font-size: 22px;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.03em;
+  color: color-mix(in srgb, var(--mqx-ink) 96%, transparent);
+  outline: none;
+}
+
+.mqx-invest-amount__input::placeholder {
+  color: color-mix(in srgb, var(--mqx-ink) 28%, transparent);
+}
+
+.mqx-invest-amount__input:disabled {
+  opacity: 0.45;
+}
+
+.mqx-invest-amount__unit {
+  font-size: 14px;
+  font-weight: 700;
+  color: color-mix(in srgb, var(--mqx-ink) 45%, transparent);
+}
+
+.mqx-invest-slider {
+  width: 100%;
+  margin-top: 12px;
+  height: 4px;
+  -webkit-appearance: none;
+  appearance: none;
+  background: color-mix(in srgb, var(--tg-theme-hint-color, var(--mq-line)) 55%, transparent);
+  border-radius: 999px;
+  outline: none;
+}
+
+.mqx-invest-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 2px solid #fff;
+  background: var(--mq-violet);
+  box-shadow: 0 2px 8px rgba(109, 40, 217, 0.35);
+  cursor: pointer;
+}
+
+.mqx-invest-slider::-moz-range-thumb {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 2px solid #fff;
+  background: var(--mq-violet);
+  box-shadow: 0 2px 8px rgba(109, 40, 217, 0.35);
+  cursor: pointer;
+}
+
+.mqx-invest-slider:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.mqx-invest-amount__range-hint {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  margin-top: 6px;
+  font-size: 10px;
+  font-weight: 650;
+  color: color-mix(in srgb, var(--mqx-ink) 48%, transparent);
+}
+
+.mqx-invest-amount__max {
+  text-align: right;
+}
+
+.mqx-invest-form__submit {
+  width: 100%;
+  margin-top: 14px;
+}
+
+.mqx-invest-form__submit:disabled {
+  opacity: 0.42;
+  cursor: not-allowed;
+}
+
+.mqx-fin-row--invest-pos .mqx-asset-metrics-inline {
+  margin-top: 8px;
+}
+
+.mqx-asset-metrics-inline--invest {
+  gap: 12px 16px;
+}
+
+.mqx-invest-form-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+/* MQX catalog (dev) */
+.mqx-catalog {
+  max-width: 520px;
+  margin: 0 auto;
+}
+
+.mqx-catalog__header {
+  margin-bottom: 20px;
+}
+
+.mqx-catalog__header h1 {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 850;
+}
+
+.mqx-catalog__lead {
+  margin: 8px 0 0;
+  font-size: 13px;
+  line-height: 1.45;
+  color: color-mix(in srgb, var(--mqx-ink) 55%, transparent);
+}
+
+.mqx-catalog__back {
+  display: inline-block;
+  margin-top: 10px;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--mq-violet);
+}
+
+.mqx-catalog-section {
+  margin-bottom: 24px;
+}
+
+.mqx-catalog-section__title {
+  margin: 0 0 10px;
+  font-size: 12px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: rgba(109, 40, 217, 0.85);
+}
+
+.mqx-catalog-glyphs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  align-items: center;
 }
 
 .mqx-fin-bt-row {
@@ -1138,8 +1541,8 @@ body {
   width: 34px;
   height: 34px;
   border-radius: 10px;
-  border: 1px solid rgba(91, 33, 182, 0.28);
-  background: linear-gradient(135deg, rgba(109, 40, 217, 0.92), rgba(91, 33, 182, 0.95));
+  border: 1px solid var(--mq-violet-deep);
+  background: var(--mq-violet);
   color: #fff;
   font-size: 18px;
   font-weight: 800;

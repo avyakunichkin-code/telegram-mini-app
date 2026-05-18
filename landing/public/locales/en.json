@@ -24,7 +24,16 @@
     "ctaPartners": "For partners & investors",
     "status": "Coming soon on Telegram",
     "periodLabel": "Period",
-    "timer": "04:12"
+    "timer": "04:12",
+    "demo": {
+      "cashLabel": "Cash",
+      "fundLabel": "Safety fund",
+      "salaryBtn": "Claim salary",
+      "toastSalary": "Salary deposited",
+      "eventTitle": "Unexpected expense",
+      "eventChoiceA": "Pay now",
+      "eventChoiceB": "Postpone"
+    }
   },
   "how": {
     "title": "The loop in one minute",

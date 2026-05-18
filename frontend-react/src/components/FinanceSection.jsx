@@ -4,6 +4,15 @@ import { showNotification } from './notifications';
 import { MoneyText } from './MoneyText';
 import { useEffect, useState } from 'react';
 import { CapitalPortfolioPanels } from './CapitalPortfolioPanels';
+import { InvestProductForm } from './InvestProductForm';
+import { InvestPositionRow } from './InvestPositionRow';
+import { InvestPositionMetrics } from './InvestPositionMetrics';
+import { AssetPositionMetrics, LiabilityPositionMetrics } from './mqx';
+import {
+  BOND_ANNUAL_RATE_PERCENT,
+  clampInvestAmount,
+  DEPOSIT_ANNUAL_RATE_PERCENT,
+} from '../constants/investProducts';
 
 export const FINANCE_TABS = [
   { id: 'invest', label: 'Инвестиции' },
@@ -31,10 +40,8 @@ export function FinanceSection({
   const setFinanceTab = onFinanceTabChange ?? setFinanceTabInternal;
   const [investPositions, setInvestPositions] = useState([]);
   const [policies, setPolicies] = useState([]);
-  const [depositAmount, setDepositAmount] = useState(10000);
-  const [depositRate, setDepositRate] = useState(12);
-  const [bondAmount, setBondAmount] = useState(10000);
-  const [bondRate, setBondRate] = useState(10);
+  const [depositAmount, setDepositAmount] = useState(0);
+  const [bondAmount, setBondAmount] = useState(0);
   const [policyKind, setPolicyKind] = useState('health');
   const [policyPremium, setPolicyPremium] = useState(1500);
   const [policyCoverage, setPolicyCoverage] = useState(100000);
@@ -75,6 +82,13 @@ export function FinanceSection({
   useEffect(() => {
     if (premium) setInvestUiMode('form');
   }, [investProductTab, premium]);
+
+  const maxCash = Math.max(0, Math.floor(Number(overview?.cash_balance) || 0));
+
+  useEffect(() => {
+    setDepositAmount((v) => clampInvestAmount(v, maxCash));
+    setBondAmount((v) => clampInvestAmount(v, maxCash));
+  }, [maxCash]);
 
   const handleDeleteLiability = async (id) => {
     try {
@@ -141,80 +155,63 @@ export function FinanceSection({
             <div role="tabpanel" id="finance-panel-invest" aria-labelledby="finance-tab-invest">
               <Section header="Инвестиции">
                 <div className="mq-slot-intro">{DEPOSIT_HELP}</div>
-                <Cell multiline>
-                  <div className="mq-fin-block-head">Депозит</div>
-                  <div className="mq-fin-field-grid mq-fin-field-grid--with-cta">
-                    <Input
-                      header="Сумма (₽)"
-                      type="number"
-                      value={depositAmount}
-                      onChange={(e) => setDepositAmount(Number(e.target.value))}
-                    />
-                    <Input
-                      header="% годовых"
-                      type="number"
-                      value={depositRate}
-                      onChange={(e) => setDepositRate(Number(e.target.value))}
-                    />
-                    <Button
-                      mode="filled"
-                      onClick={async () => {
-                        try {
-                          await API.openDeposit({ amount: depositAmount, annual_rate_percent: depositRate });
-                          showNotification('Депозит открыт', 'success');
-                          await refreshOverview();
-                          await reloadExtra();
-                        } catch (e) {
-                          showNotification(e?.detail || e?.message || 'Не удалось открыть депозит', 'error');
-                        }
-                      }}
-                    >
-                      Открыть
-                    </Button>
-                  </div>
+                                <Cell multiline>
+                  <InvestProductForm
+                    productId="deposit"
+                    productTitle="Депозит"
+                    amount={depositAmount}
+                    maxCash={maxCash}
+                    annualRatePercent={DEPOSIT_ANNUAL_RATE_PERCENT}
+                    onAmountChange={setDepositAmount}
+                    submitLabel="Открыть депозит"
+                    onSubmit={async () => {
+                      try {
+                        await API.openDeposit({
+                          amount: depositAmount,
+                          annual_rate_percent: DEPOSIT_ANNUAL_RATE_PERCENT,
+                        });
+                        showNotification('Депозит открыт', 'success');
+                        setDepositAmount(0);
+                        await refreshOverview();
+                        await reloadExtra();
+                      } catch (e) {
+                        showNotification(e?.detail || e?.message || 'Не удалось открыть депозит', 'error');
+                      }
+                    }}
+                  />
                 </Cell>
 
                 <Cell multiline>
-                  <div className="mq-fin-block-head">Облигации</div>
-                  <div className="mq-slot-intro" style={{ marginBottom: 8 }}>
+                  <div className="mq-slot-intro" style={{ marginBottom: 4 }}>
                     {BOND_HELP}
                   </div>
-                  <div className="mq-fin-field-grid mq-fin-field-grid--with-cta">
-                    <Input
-                      header="Сумма (₽)"
-                      type="number"
-                      value={bondAmount}
-                      onChange={(e) => setBondAmount(Number(e.target.value))}
-                    />
-                    <Input
-                      header="% годовых"
-                      type="number"
-                      value={bondRate}
-                      onChange={(e) => setBondRate(Number(e.target.value))}
-                    />
-                    <Button
-                      mode="filled"
-                      onClick={async () => {
-                        try {
-                          await API.buyBond({
-                            amount: bondAmount,
-                            annual_rate_percent: bondRate,
-                            title: 'Облигации (easy)',
-                          });
-                          showNotification('Облигации куплены', 'success');
-                          await refreshOverview();
-                          await reloadExtra();
-                        } catch (e) {
-                          showNotification(e?.detail || e?.message || 'Не удалось купить облигации', 'error');
-                        }
-                      }}
-                    >
-                      Открыть
-                    </Button>
-                  </div>
+                  <InvestProductForm
+                    productId="bond"
+                    productTitle="Облигации"
+                    amount={bondAmount}
+                    maxCash={maxCash}
+                    annualRatePercent={BOND_ANNUAL_RATE_PERCENT}
+                    onAmountChange={setBondAmount}
+                    submitLabel="Купить облигации"
+                    onSubmit={async () => {
+                      try {
+                        await API.buyBond({
+                          amount: bondAmount,
+                          annual_rate_percent: BOND_ANNUAL_RATE_PERCENT,
+                          title: 'Облигации (easy)',
+                        });
+                        showNotification('Облигации куплены', 'success');
+                        setBondAmount(0);
+                        await refreshOverview();
+                        await reloadExtra();
+                      } catch (e) {
+                        showNotification(e?.detail || e?.message || 'Не удалось купить облигации', 'error');
+                      }
+                    }}
+                  />
                 </Cell>
 
-                <List>
+<List>
                   {investPositions.length === 0 && <Cell>Нет позиций</Cell>}
                   {investPositions.map((p) => (
                     <Cell
@@ -240,12 +237,12 @@ export function FinanceSection({
                       }
                     >
                       <div>
-                        <strong>{p.title}</strong> ({p.kind})
+                        <strong>{p.title}</strong>
                       </div>
-                      <div>
-                        Сумма: <MoneyText value={p.principal} />
-                      </div>
-                      <div>Ставка: {p.annual_rate_percent}%</div>
+                      <InvestPositionMetrics
+                        principal={p.principal}
+                        annualRatePercent={p.annual_rate_percent}
+                      />
                     </Cell>
                   ))}
                 </List>
@@ -408,12 +405,11 @@ export function FinanceSection({
                             <span style={{ opacity: 0.75 }}> · {asset.kind}</span>
                           ) : null}
                         </div>
-                        <div>
-                          Стоимость: <MoneyText value={asset.asset_value} />
-                        </div>
-                        <div>
-                          Обслуживание: <MoneyText value={asset.monthly_maintenance_cost} /> / мес
-                        </div>
+                        <AssetPositionMetrics
+                          assetValue={asset.asset_value}
+                          monthlyMaintenanceCost={asset.monthly_maintenance_cost}
+                          monthlyIncome={asset.monthly_income}
+                        />
                       </Cell>
                     ))}
                   </List>
@@ -464,14 +460,13 @@ export function FinanceSection({
                         <div>
                           <strong>{liability.title}</strong>
                         </div>
-                        <div>
-                          Долг: <MoneyText value={liability.total_debt} />
-                        </div>
-                        <div>Ставка: {liability.annual_rate_percent}%</div>
-                        <div>
-                          Платёж: <MoneyText value={liability.monthly_payment} /> / мес
-                        </div>
-                        {(Number(liability.overdue_amount) > 0 || Number(liability.overdue_periods) > 0) && (
+                        <LiabilityPositionMetrics
+                          totalDebt={liability.total_debt}
+                          monthlyPayment={liability.monthly_payment}
+                          annualRatePercent={liability.annual_rate_percent}
+                          overdueAmount={liability.overdue_amount}
+                        />
+                        {(Number(liability.overdue_periods) > 0) && (
                           <div style={{ color: 'var(--tg-theme-destructive-text-color, #c62828)' }}>
                             Просрочка: <MoneyText value={Number(liability.overdue_amount || 0)} />
                             {Number(liability.overdue_periods) > 0
@@ -496,8 +491,9 @@ export function FinanceSection({
 
   const openDeposit = async () => {
     try {
-      await API.openDeposit({ amount: depositAmount, annual_rate_percent: depositRate });
+      await API.openDeposit({ amount: depositAmount, annual_rate_percent: DEPOSIT_ANNUAL_RATE_PERCENT });
       showNotification('Депозит открыт', 'success');
+      setDepositAmount(0);
       await refreshOverview();
       await reloadExtra();
     } catch (e) {
@@ -509,10 +505,11 @@ export function FinanceSection({
     try {
       await API.buyBond({
         amount: bondAmount,
-        annual_rate_percent: bondRate,
+        annual_rate_percent: BOND_ANNUAL_RATE_PERCENT,
         title: 'Облигации (easy)',
       });
       showNotification('Облигации добавлены', 'success');
+      setBondAmount(0);
       await refreshOverview();
       await reloadExtra();
     } catch (e) {
@@ -616,33 +613,26 @@ export function FinanceSection({
 
             {investUiMode === 'form' ? (
               <>
-                <div className="mqx-fin-grid mqx-fin-grid-actions" style={{ marginTop: 12 }}>
-                  <Input
-                    header={investProductTab === 'deposit' ? 'Депозит · сумма' : 'Облигации · сумма'}
-                    type="number"
-                    value={investProductTab === 'deposit' ? depositAmount : bondAmount}
-                    onChange={(e) =>
-                      investProductTab === 'deposit'
-                        ? setDepositAmount(Number(e.target.value))
-                        : setBondAmount(Number(e.target.value))
-                    }
-                  />
-                  <Input
-                    header="Ставка (% годовых)"
-                    type="number"
-                    value={investProductTab === 'deposit' ? depositRate : bondRate}
-                    onChange={(e) =>
-                      investProductTab === 'deposit'
-                        ? setDepositRate(Number(e.target.value))
-                        : setBondRate(Number(e.target.value))
-                    }
-                  />
-                  <Button mode="filled" onClick={() => void (investProductTab === 'deposit' ? openDeposit() : openBond())}>
-                    Открыть
-                  </Button>
-                  <Button mode="outline" onClick={() => setInvestUiMode('positions')}>
+                <InvestProductForm
+                  productId={investProductTab}
+                  productTitle={investProductTab === 'deposit' ? 'Депозит' : 'Облигации'}
+                  amount={investProductTab === 'deposit' ? depositAmount : bondAmount}
+                  maxCash={maxCash}
+                  annualRatePercent={
+                    investProductTab === 'deposit' ? DEPOSIT_ANNUAL_RATE_PERCENT : BOND_ANNUAL_RATE_PERCENT
+                  }
+                  onAmountChange={investProductTab === 'deposit' ? setDepositAmount : setBondAmount}
+                  submitLabel={investProductTab === 'deposit' ? 'Открыть депозит' : 'Купить облигации'}
+                  onSubmit={() => void (investProductTab === 'deposit' ? openDeposit() : openBond())}
+                />
+                <div className="mqx-invest-form-actions">
+                  <button
+                    type="button"
+                    className="mqx-capital-mode-btn"
+                    onClick={() => setInvestUiMode('positions')}
+                  >
                     Позиции
-                  </Button>
+                  </button>
                 </div>
               </>
             ) : (
@@ -659,18 +649,11 @@ export function FinanceSection({
                     </div>
                   ) : (
                     selectedInvestPositions.map((p) => (
-                      <div key={p.id} className="mqx-fin-row mqx-fin-row--positions">
-                        <div className="mqx-fin-row__l">
-                          <div className="mqx-fin-row__title">{p.title}</div>
-                          <div className="mqx-fin-row__sub">{p.kind} · ставка {p.annual_rate_percent}%</div>
-                        </div>
-                        <div className="mqx-fin-row__r">
-                          <span className="mqx-fin-row__val"><MoneyText value={p.principal} /></span>
-                          <button type="button" className="mqx-fin-icon-btn mqx-fin-icon-btn--minus" aria-label="Закрыть позицию" onClick={() => void closeInvest(p.id)}>
-                            −
-                          </button>
-                        </div>
-                      </div>
+                      <InvestPositionRow
+                        key={p.id}
+                        position={p}
+                        onClose={() => void closeInvest(p.id)}
+                      />
                     ))
                   )}
                 </div>

@@ -24,7 +24,16 @@
     "ctaPartners": "Для партнёров и инвесторов",
     "status": "Скоро в Telegram",
     "periodLabel": "Период",
-    "timer": "04:12"
+    "timer": "04:12",
+    "demo": {
+      "cashLabel": "Cash",
+      "fundLabel": "Подушка",
+      "salaryBtn": "Получить зарплату",
+      "toastSalary": "Зарплата зачислена",
+      "eventTitle": "Непредвиденный расход",
+      "eventChoiceA": "Оплатить сейчас",
+      "eventChoiceB": "Отложить"
+    }
   },
   "how": {
     "title": "За минуту — суть цикла",

@@ -9,8 +9,9 @@
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "predeploy": "npm run build",
-    "deploy": "gh-pages -d dist"
+    "build:pages": "node scripts/build-pages.mjs",
+    "deploy": "npm run build:pages && gh-pages -d dist",
+    "deploy:game-only": "npm run build && gh-pages -d dist"
   },
   "dependencies": {
     "@telegram-apps/telegram-ui": "^2.1.13",
