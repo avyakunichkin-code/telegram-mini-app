@@ -5,7 +5,18 @@ from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy import inspect, text
 
 from app.database import engine, Base
-from app.routers import auth_router, users_router, health_router, finance_router, game_router, period_router, events_router, invest_router, insurance_router
+from app.routers import (
+    auth_router,
+    users_router,
+    health_router,
+    finance_router,
+    game_router,
+    period_router,
+    events_router,
+    invest_router,
+    insurance_router,
+    achievements_router,
+)
 
 # Каталог стартов Game: сортируется sort_order; ON CONFLICT не обновляет существующие строки.
 GAME_STARTER_TEMPLATE_SEEDS = [
@@ -296,6 +307,7 @@ app.include_router(period_router)
 app.include_router(events_router)
 app.include_router(invest_router)
 app.include_router(insurance_router)
+app.include_router(achievements_router)
 
 
 @app.get("/")

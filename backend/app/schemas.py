@@ -125,6 +125,44 @@ class AnalyticsTimeseriesPoint(BaseModel):
     is_projection: bool = False
 
 
+class AchievementTierStatus(BaseModel):
+    tier_key: str
+    tier_index: int
+    title: str
+    description: str = ""
+    xp_reward: int = 0
+    unlocked: bool = False
+
+
+class AchievementChainStatus(BaseModel):
+    chain_key: str
+    category: str
+    title: str
+    description: str = ""
+    max_tier: int
+    current_tier: int = 0
+    tiers: List[AchievementTierStatus] = Field(default_factory=list)
+
+
+class AchievementUnlockEvent(BaseModel):
+    chain_key: str
+    tier_key: str
+    tier_index: int
+    title: str
+    xp_reward: int = 0
+    xp_gained: int = 0
+    level_up: bool = False
+    new_level: Optional[int] = None
+
+
+class AchievementsOverviewResponse(BaseModel):
+    period_index: int
+    character_level: int
+    character_xp: int
+    chains: List[AchievementChainStatus] = Field(default_factory=list)
+    newly_unlocked: List[AchievementUnlockEvent] = Field(default_factory=list)
+
+
 class FinanceAnalyticsTimeseriesResponse(BaseModel):
     """Ряд для графиков («фаза B» аналитики); закрытия пишутся при завершении периода."""
 

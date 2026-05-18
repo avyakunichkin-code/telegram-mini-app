@@ -49,6 +49,57 @@ _CATALOG_BY_PAIR: dict[tuple[str, str], InsuranceProductSpec] = {
 
 _CATALOG_BY_KIND: dict[str, InsuranceProductSpec] = {s.kind: s for s in INSURANCE_CATALOG}
 
+# Сетка 2×2 на экране «Страховки» (основные пары MVP).
+INSURANCE_GRID_KINDS: tuple[str, ...] = (
+    "mortgage_life",
+    "mortgage_property",
+    "auto_liability",
+    "auto_property",
+)
+
+
+@dataclass(frozen=True)
+class InsurancePlanSpec:
+    plan_key: str
+    kind: str
+    label: str
+    monthly_premium: float
+    payout_amount: float
+    term_periods: int
+
+    def to_dict(self) -> dict[str, Any]:
+        return {
+            "plan_key": self.plan_key,
+            "kind": self.kind,
+            "label": self.label,
+            "monthly_premium": self.monthly_premium,
+            "payout_amount": self.payout_amount,
+            "term_periods": self.term_periods,
+        }
+
+
+# Готовые тарифы на каждый тип (без ручного ввода в UI).
+INSURANCE_PLANS: tuple[InsurancePlanSpec, ...] = (
+    InsurancePlanSpec("mortgage_life_basic", "mortgage_life", "Базовый", 1200, 1_500_000, 12),
+    InsurancePlanSpec("mortgage_life_standard", "mortgage_life", "Стандарт", 1800, 2_500_000, 12),
+    InsurancePlanSpec("mortgage_life_plus", "mortgage_life", "Максимум", 2600, 4_000_000, 24),
+    InsurancePlanSpec("mortgage_property_basic", "mortgage_property", "Базовый", 1400, 2_000_000, 12),
+    InsurancePlanSpec("mortgage_property_standard", "mortgage_property", "Стандарт", 1800, 3_500_000, 12),
+    InsurancePlanSpec("mortgage_property_plus", "mortgage_property", "Максимум", 2400, 5_000_000, 24),
+    InsurancePlanSpec("auto_liability_basic", "auto_liability", "Базовый", 1800, 300_000, 12),
+    InsurancePlanSpec("auto_liability_standard", "auto_liability", "Стандарт", 2400, 400_000, 12),
+    InsurancePlanSpec("auto_liability_plus", "auto_liability", "Плюс", 3600, 600_000, 12),
+    InsurancePlanSpec("auto_property_basic", "auto_property", "Базовый", 6500, 800_000, 12),
+    InsurancePlanSpec("auto_property_standard", "auto_property", "Стандарт", 8500, 1_200_000, 12),
+    InsurancePlanSpec("auto_property_plus", "auto_property", "Премиум", 12_000, 2_500_000, 24),
+    InsurancePlanSpec("health_life_basic", "health_life", "Базовый", 900, 200_000, 12),
+    InsurancePlanSpec("health_life_standard", "health_life", "Стандарт", 1500, 400_000, 12),
+    InsurancePlanSpec("property_property_basic", "property_property", "Базовый", 1100, 500_000, 12),
+    InsurancePlanSpec("property_property_standard", "property_property", "Стандарт", 1600, 1_000_000, 12),
+)
+
+_PLANS_BY_KEY: dict[str, InsurancePlanSpec] = {p.plan_key: p for p in INSURANCE_PLANS}
+
 # Старый MVP: kind = health | property | car
 _LEGACY_KIND_MAP: dict[str, tuple[str, str]] = {
     "health": ("health", "life"),
@@ -59,6 +110,26 @@ _LEGACY_KIND_MAP: dict[str, tuple[str, str]] = {
 
 def list_catalog() -> list[dict[str, Any]]:
     return [s.to_dict() for s in INSURANCE_CATALOG]
+
+
+def list_grid_catalog() -> list[dict[str, Any]]:
+    return [s.to_dict() for s in INSURANCE_CATALOG if s.kind in INSURANCE_GRID_KINDS]
+
+
+def list_plans(*, kind: str | None = None) -> list[dict[str, Any]]:
+    rows = INSURANCE_PLANS
+    if kind:
+        k = kind.strip()
+        rows = tuple(p for p in rows if p.kind == k)
+    return [p.to_dict() for p in rows]
+
+
+def resolve_plan(plan_key: str) -> InsurancePlanSpec:
+    key = (plan_key or "").strip()
+    plan = _PLANS_BY_KEY.get(key)
+    if not plan:
+        raise ValueError(f"unknown insurance plan: {key}")
+    return plan
 
 
 def resolve_product_object(

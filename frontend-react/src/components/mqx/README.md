@@ -21,7 +21,9 @@ http://localhost:5173/#/dev/mqx
 ```text
 mqx/
   primitives/                    — кнопки, пилюли, чипы, прогресс (утверждённый гибрид D+C+B/A)
-  icons/FinanceMetricIcons.jsx   — монеты, ↓ ↑ %
+  icons/FinanceMetricIcons.jsx   — монеты, ↓ ↑ %, срок (term)
+  layout/InsuranceProductPicker.jsx — страховки: сетка 2×2 + тарифы
+  layout/InsurancePolicyRow.jsx     — активный полис (accent + метрики)
   metrics/                       — MetricInlineItem, *Metrics
   layout/                        — CapitalPositionCard, InvestPositionRow
   catalog/MqCatalogScreen.jsx    — витрина (dev)

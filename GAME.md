@@ -31,9 +31,9 @@
 | События | ✅ MVP + 1.1 в коде | 3/период, tier-окно, `xp_delta`, lifestyle delta; сиды MVP 1.1 |
 | Победа MVP | ✅ Готово | Overview; `win_reached` с 7-го периода |
 | Game / Plan, шаблоны старта | ✅ G1 | `save_kind`, каталог шаблонов, blueprint; **Plan — заглушка в UI** |
-| character_level / XP | 🟡 Частично | Начисление в коде; UI «Развитие», API-gates, единый модуль XP — в работе (MQ-111–116) |
-| `cooldown_periods` | ⬜ План | Поле и фильтр в `ensure_period_events` — не реализовано |
-| Достижения (UI + движок) | ⬜ Backlog | Цепочки из анкеты — дизайн, не продукт |
+| character_level / XP | 🟡 Частично | MQ-111–115 в коде; HUD уровня на дашборде; API-gates и экран «Развитие» — backlog |
+| `cooldown_periods` | ✅ Готово | Поле, счётчики (`0007`), фильтр в `ensure_period_events` |
+| Достижения (UI + движок) | 🟡 В работе | `0009`, `achievement_engine`, API; UI «Развитие» и SPEC — backlog **M12** |
 | Victory v2 (M из N из шаблона) | ⬜ Vision | `victory_config` в данных — задел |
 | Онбординг 3 шага | ⬜ Backlog | [`TMA_USER_FLOWS.md`](docs/foundation/TMA_USER_FLOWS.md) |
 | Retention-метрики / Closed Alpha | ⬜ Не запущено | Нет валидации D1/D7 на 50–150 игроках |
@@ -370,7 +370,7 @@
 
 ### 7.8. Остывание (`cooldown_periods`)
 
-После выбора игроком событие не выпадает **N периодов**. Поле в **`event_definitions.cooldown_periods`**; фильтр в `ensure_period_events` по последнему `EventInstance` со `status=selected`. ⬜ **не реализовано** — см. §0.2.
+После выбора игроком событие не выпадает **N периодов**. Поле в **`event_definitions.cooldown_periods`**; фильтр через `EventProfileCounter` и `is_event_definition_eligible` в `ensure_period_events`. ✅ Реализовано; контентные значения N в сидах — донастройка.
 
 ---
 

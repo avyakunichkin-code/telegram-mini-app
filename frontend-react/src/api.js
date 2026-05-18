@@ -133,6 +133,9 @@ export const API = {
     chooseEvent(eventId, choiceId) {
         return apiCall(`/api/game/events/${eventId}/choose`, 'POST', { choice_id: choiceId });
     },
+    getAchievements() {
+        return apiCall('/api/game/achievements');
+    },
     // Финансы
     getOverview() {
         return apiCall('/api/finance/overview');

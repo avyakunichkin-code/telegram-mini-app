@@ -4,6 +4,8 @@ from app.insurance_catalog import (
     insurance_kind,
     legacy_kind_to_pair,
     list_catalog,
+    list_plans,
+    resolve_plan,
     resolve_product_object,
 )
 
@@ -38,3 +40,16 @@ def test_catalog_has_mortgage_and_auto_pairs():
 def test_unknown_pair_raises():
     with pytest.raises(ValueError):
         resolve_product_object(product="unknown", insured_object="thing")
+
+
+def test_plans_for_auto_liability():
+    plans = list_plans(kind="auto_liability")
+    assert len(plans) >= 2
+    assert all(p["kind"] == "auto_liability" for p in plans)
+    assert plans[0]["plan_key"]
+
+
+def test_resolve_plan():
+    plan = resolve_plan("auto_liability_standard")
+    assert plan.monthly_premium == 2400
+    assert plan.payout_amount == 400_000

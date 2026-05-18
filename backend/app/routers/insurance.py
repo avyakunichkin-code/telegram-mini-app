@@ -5,7 +5,7 @@ from ..auth import get_current_user
 from ..balance_utils import adjust_balance
 from ..database import get_db
 from ..game_time import get_active_game_profile, sync_time
-from ..insurance_catalog import list_catalog, resolve_product_object
+from ..insurance_catalog import list_catalog, list_grid_catalog, list_plans, resolve_plan, resolve_product_object
 from ..models import InsurancePolicy
 
 
@@ -33,8 +33,12 @@ def _policy_to_dict(row: InsurancePolicy) -> dict:
 
 @router.get("/catalog")
 async def insurance_catalog():
-    """Справочник пар продукт × объект для UI."""
-    return {"items": list_catalog()}
+    """Справочник пар продукт × объект, сетка 2×2 и готовые тарифы."""
+    return {
+        "items": list_catalog(),
+        "grid_items": list_grid_catalog(),
+        "plans": list_plans(),
+    }
 
 
 @router.get("/policies")
@@ -52,19 +56,30 @@ async def list_policies(current_user=Depends(get_current_user), db: Session = De
 
 @router.post("/buy")
 async def buy_policy(payload: dict, current_user=Depends(get_current_user), db: Session = Depends(get_db)):
-    try:
-        spec = resolve_product_object(
-            product=payload.get("product"),
-            insured_object=payload.get("insured_object"),
-            kind=payload.get("kind"),
-        )
-    except ValueError as e:
-        raise HTTPException(status_code=400, detail=str(e)) from e
-
-    title = (payload.get("title") or "").strip() or spec.title
-    monthly_premium = float(payload.get("monthly_premium") or 0)
-    payout_amount = float(payload.get("payout_amount") or payload.get("coverage_limit") or 0)
-    term_periods = int(payload.get("term_periods") or 12)
+    plan_key = (payload.get("plan_key") or "").strip()
+    if plan_key:
+        try:
+            plan = resolve_plan(plan_key)
+            spec = resolve_product_object(kind=plan.kind)
+        except ValueError as e:
+            raise HTTPException(status_code=400, detail=str(e)) from e
+        monthly_premium = float(plan.monthly_premium)
+        payout_amount = float(plan.payout_amount)
+        term_periods = int(plan.term_periods)
+        title = (payload.get("title") or "").strip() or f"{spec.title} — {plan.label}"
+    else:
+        try:
+            spec = resolve_product_object(
+                product=payload.get("product"),
+                insured_object=payload.get("insured_object"),
+                kind=payload.get("kind"),
+            )
+        except ValueError as e:
+            raise HTTPException(status_code=400, detail=str(e)) from e
+        title = (payload.get("title") or "").strip() or spec.title
+        monthly_premium = float(payload.get("monthly_premium") or 0)
+        payout_amount = float(payload.get("payout_amount") or payload.get("coverage_limit") or 0)
+        term_periods = int(payload.get("term_periods") or 12)
 
     if monthly_premium <= 0:
         raise HTTPException(status_code=400, detail="monthly_premium must be > 0")

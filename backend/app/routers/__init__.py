@@ -7,6 +7,7 @@ from ..routers.period_actions import router as period_router
 from ..routers.events import router as events_router
 from ..routers.invest import router as invest_router
 from ..routers.insurance import router as insurance_router
+from ..routers.achievements import router as achievements_router
 
 __all__ = [
     "auth_router",
@@ -18,4 +19,5 @@ __all__ = [
     "events_router",
     "invest_router",
     "insurance_router",
+    "achievements_router",
 ]

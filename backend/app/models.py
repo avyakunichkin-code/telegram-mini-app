@@ -307,3 +307,58 @@ class Transaction(Base):
     timestamp = Column(DateTime, default=datetime.utcnow)
 
     game_profile = relationship("GameProfile", back_populates="transactions")
+
+
+# ==================== ДОСТИЖЕНИЯ (цепочки + ступени) ====================
+
+
+class AchievementChain(Base):
+    __tablename__ = "achievement_chains"
+
+    id = Column(Integer, primary_key=True, index=True)
+    chain_key = Column(String(80), unique=True, nullable=False, index=True)
+    category = Column(String(50), nullable=False)
+    title = Column(String(160), nullable=False)
+    description = Column(Text, nullable=False, default="")
+    max_tier = Column(Integer, nullable=False, default=1)
+    is_active = Column(Integer, nullable=False, default=1)
+    sort_order = Column(Integer, nullable=False, default=100)
+    created_at = Column(DateTime, default=datetime.utcnow)
+
+    tiers = relationship(
+        "AchievementTierDefinition",
+        back_populates="chain",
+        cascade="all, delete-orphan",
+        order_by="AchievementTierDefinition.tier_index",
+    )
+
+
+class AchievementTierDefinition(Base):
+    __tablename__ = "achievement_tier_definitions"
+    __table_args__ = (UniqueConstraint("chain_key", "tier_index", name="uq_achievement_tier_chain_index"),)
+
+    id = Column(Integer, primary_key=True, index=True)
+    chain_key = Column(String(80), ForeignKey("achievement_chains.chain_key"), nullable=False, index=True)
+    tier_index = Column(Integer, nullable=False)
+    tier_key = Column(String(80), unique=True, nullable=False, index=True)
+    title = Column(String(160), nullable=False)
+    description = Column(Text, nullable=False, default="")
+    criteria_json = Column(Text, nullable=False, default="{}")
+    xp_reward = Column(Integer, nullable=False, default=0)
+    sort_order = Column(Integer, nullable=False, default=100)
+
+    chain = relationship("AchievementChain", back_populates="tiers")
+    unlocks = relationship("ProfileAchievementUnlock", back_populates="tier_definition", cascade="all, delete-orphan")
+
+
+class ProfileAchievementUnlock(Base):
+    __tablename__ = "profile_achievement_unlocks"
+
+    game_profile_id = Column(Integer, ForeignKey("game_profiles.id"), primary_key=True, nullable=False)
+    tier_definition_id = Column(
+        Integer, ForeignKey("achievement_tier_definitions.id"), primary_key=True, nullable=False
+    )
+    unlocked_at = Column(DateTime, default=datetime.utcnow)
+    period_index = Column(Integer, nullable=False, default=1)
+
+    tier_definition = relationship("AchievementTierDefinition", back_populates="unlocks")

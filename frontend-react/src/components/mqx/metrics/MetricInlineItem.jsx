@@ -1,6 +1,7 @@
 import {
   IconMetricCoins,
   IconMetricPercent,
+  IconMetricTerm,
   IconMetricTrendDown,
   IconMetricTrendUp,
 } from '../icons/FinanceMetricIcons';
@@ -10,6 +11,7 @@ const GLYPH_ICONS = {
   down: IconMetricTrendDown,
   up: IconMetricTrendUp,
   percent: IconMetricPercent,
+  term: IconMetricTerm,
 };
 
 /** Иконка + значение в линию; подсказка при наведении. */

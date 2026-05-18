@@ -5,6 +5,8 @@ from datetime import datetime
 
 from .models import GameProfile, FinanceAsset, FinanceLiability, Transaction, InvestmentPosition, PeriodEconomyClosing
 from .balance_utils import adjust_balance, add_transaction, TRANSACTION_TYPES
+from .achievement_engine import process_achievement_unlocks
+from .achievement_seeds import ensure_achievement_catalog
 from .character_progression import apply_character_xp
 from .routers.events import ensure_period_events, expire_pending_events_for_closed_period, _ensure_seed_events
 from .routers.insurance import charge_premiums_for_period
@@ -216,6 +218,13 @@ def process_period_end(db: Session, profile: GameProfile) -> dict:
 
     expire_pending_events_for_closed_period(db, profile.id, int(period_index))
 
+    achievement_unlocks: list = []
+    try:
+        ensure_achievement_catalog(db)
+        achievement_unlocks = process_achievement_unlocks(db, profile)
+    except Exception:
+        achievement_unlocks = []
+
     # 7. Увеличиваем номер периода
     profile.period_index += 1
     profile.period_anchor_at = datetime.utcnow()
@@ -241,4 +250,5 @@ def process_period_end(db: Session, profile: GameProfile) -> dict:
         "xp_earned": xp_earned,
         "level_up": level_up,
         "new_level": xp_info.get("new_level"),
+        "achievement_unlocks": achievement_unlocks,
     }

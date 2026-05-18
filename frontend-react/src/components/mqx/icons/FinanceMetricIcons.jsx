@@ -43,6 +43,17 @@ export function IconMetricTrendUp({ size = 16 }) {
   );
 }
 
+/** Срок / период — для страховок и срочных продуктов. */
+export function IconMetricTerm({ size = 16 }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" aria-hidden>
+      <circle cx="12" cy="13" r="7.25" stroke="currentColor" strokeWidth="1.75" />
+      <path stroke="currentColor" strokeWidth="1.85" strokeLinecap="round" d="M12 10v4l2.5 1.5" />
+      <path stroke="currentColor" strokeWidth="1.85" strokeLinecap="round" d="M12 4.5V3" />
+    </svg>
+  );
+}
+
 /** Ставка % — для позиций и шаблонов. */
 export function IconMetricPercent({ size = 16 }) {
   return (

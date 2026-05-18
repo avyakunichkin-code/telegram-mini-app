@@ -9,6 +9,8 @@ from ..models import FinanceSalary, FinanceLiability, FinanceAsset, Transaction,
 from ..balance_utils import adjust_balance, adjust_safety_fund_balance
 from ..finance_helpers import monthly_interest_payment
 from ..game_time import get_active_game_profile, sync_time, get_seconds_until_next
+from ..achievement_engine import process_achievement_unlocks
+from ..achievement_seeds import ensure_achievement_catalog
 from ..character_progression import character_xp_need_for_next_level
 from ..game_rules import MvpVictoryInput, evaluate_mvp_victory
 from ..schemas import (
@@ -473,6 +475,14 @@ async def finance_overview(
 ):
     profile = get_active_game_profile(db, current_user.id)
     sync_time(profile)
+
+    try:
+        ensure_achievement_catalog(db)
+        process_achievement_unlocks(db, profile)
+        db.commit()
+        db.refresh(profile)
+    except Exception:
+        db.rollback()
 
     salary = db.query(FinanceSalary).filter(FinanceSalary.game_profile_id == profile.id).first()
     monthly_income = salary.monthly_amount if salary else 0

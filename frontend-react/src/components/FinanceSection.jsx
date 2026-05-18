@@ -7,17 +7,19 @@ import { CapitalPortfolioPanels } from './CapitalPortfolioPanels';
 import { InvestProductForm } from './InvestProductForm';
 import { InvestPositionRow } from './InvestPositionRow';
 import { InvestPositionMetrics } from './InvestPositionMetrics';
-import { AssetPositionMetrics, LiabilityPositionMetrics, MqxModeButton, MqxSubtab } from './mqx';
+import {
+  AssetPositionMetrics,
+  InsurancePolicyRow,
+  InsuranceProductPicker,
+  LiabilityPositionMetrics,
+  MqxModeButton,
+  MqxSubtab,
+} from './mqx';
 import {
   BOND_ANNUAL_RATE_PERCENT,
   clampInvestAmount,
   DEPOSIT_ANNUAL_RATE_PERCENT,
 } from '../constants/investProducts';
-import {
-  DEFAULT_INSURANCE_CATALOG_KEY,
-  findInsuranceCatalogItem,
-  INSURANCE_CATALOG,
-} from '../constants/insuranceProducts';
 
 export const FINANCE_TABS = [
   { id: 'invest', label: 'Инвестиции' },
@@ -47,11 +49,8 @@ export function FinanceSection({
   const [policies, setPolicies] = useState([]);
   const [depositAmount, setDepositAmount] = useState(0);
   const [bondAmount, setBondAmount] = useState(0);
-  const [policyCatalogKey, setPolicyCatalogKey] = useState(DEFAULT_INSURANCE_CATALOG_KEY);
-  const [policyPremium, setPolicyPremium] = useState(1500);
-  const [policyPayout, setPolicyPayout] = useState(100000);
-  const [policyTermPeriods, setPolicyTermPeriods] = useState(12);
-  const selectedInsurance = findInsuranceCatalogItem(policyCatalogKey);
+  const [buyingPlanKey, setBuyingPlanKey] = useState(null);
+  const [cancellingPolicyId, setCancellingPolicyId] = useState(null);
   const [assetTemplates, setAssetTemplates] = useState([]);
   const [liabilityTemplates, setLiabilityTemplates] = useState([]);
 
@@ -114,6 +113,33 @@ export function FinanceSection({
       showNotification('Актив удалён', 'success');
     } catch (err) {
       showNotification(err?.detail || err?.message || 'Ошибка соединения', 'error');
+    }
+  };
+
+  const buyInsurancePlan = async (plan) => {
+    setBuyingPlanKey(plan.plan_key);
+    try {
+      await API.buyPolicy({ plan_key: plan.plan_key });
+      showNotification('Полис оформлен', 'success');
+      await refreshOverview();
+      await reloadExtra();
+    } catch (e) {
+      showNotification(e?.detail || e?.message || 'Не удалось оформить полис', 'error');
+    } finally {
+      setBuyingPlanKey(null);
+    }
+  };
+
+  const cancelInsurancePolicy = async (policyId) => {
+    setCancellingPolicyId(policyId);
+    try {
+      await API.cancelPolicy(policyId);
+      showNotification('Полис отменён', 'success');
+      await reloadExtra();
+    } catch (e) {
+      showNotification(e?.detail || e?.message || 'Не удалось отменить полис', 'error');
+    } finally {
+      setCancellingPolicyId(null);
     }
   };
 
@@ -260,106 +286,21 @@ export function FinanceSection({
           {financeTab === 'insurance' && (
             <div role="tabpanel" id="finance-panel-insurance" aria-labelledby="finance-tab-insurance">
               <Section header="Страховки">
-                <div className="mq-slot-intro">Выберите тип, задайте премию и лимит выплаты. Премия списывается в конце периода.</div>
+                <div className="mq-slot-intro">
+                  Премия списывается в конце периода. При страховом случае — полная выплата, полис закрывается.
+                </div>
                 <Cell multiline>
-                  <div className="mq-fin-field-grid mq-fin-field-grid--2">
-                    <div style={{ gridColumn: '1 / -1' }}>
-                      <Select
-                        header="Продукт"
-                        value={policyCatalogKey}
-                        onChange={(e) => setPolicyCatalogKey(e.target.value)}
-                      >
-                        {INSURANCE_CATALOG.map((item) => (
-                          <option key={item.kind} value={item.kind}>
-                            {item.product_label} — {item.object_label}
-                          </option>
-                        ))}
-                      </Select>
-                      <div className="mq-slot-intro" style={{ marginTop: 6 }}>
-                        {selectedInsurance.title}
-                      </div>
-                    </div>
-                    <Input
-                      header="Оплата за период (₽)"
-                      type="number"
-                      value={policyPremium}
-                      onChange={(e) => setPolicyPremium(Number(e.target.value))}
-                    />
-                    <Input
-                      header="Сумма выплаты (₽)"
-                      type="number"
-                      value={policyPayout}
-                      onChange={(e) => setPolicyPayout(Number(e.target.value))}
-                    />
-                    <Input
-                      header="Срок (периодов)"
-                      type="number"
-                      value={policyTermPeriods}
-                      onChange={(e) => setPolicyTermPeriods(Number(e.target.value))}
-                    />
-                    <Button
-                      mode="filled"
-                      className="mq-fin-btn-span2"
-                      stretched
-                      onClick={async () => {
-                        try {
-                          const item = findInsuranceCatalogItem(policyCatalogKey);
-                          await API.buyPolicy({
-                            product: item.product,
-                            insured_object: item.insured_object,
-                            monthly_premium: policyPremium,
-                            payout_amount: policyPayout,
-                            term_periods: policyTermPeriods,
-                          });
-                          showNotification('Полис оформлен', 'success');
-                          await refreshOverview();
-                          await reloadExtra();
-                        } catch (e) {
-                          showNotification(e?.detail || e?.message || 'Не удалось оформить полис', 'error');
-                        }
-                      }}
-                    >
-                      Оформить полис
-                    </Button>
-                  </div>
+                  <InsuranceProductPicker onBuy={buyInsurancePlan} buyingPlanKey={buyingPlanKey} />
                 </Cell>
-
                 <List>
                   {policies.length === 0 && <Cell>Нет активных полисов</Cell>}
                   {policies.map((p) => (
-                    <Cell
-                      key={p.id}
-                      multiline
-                      after={
-                        <Button
-                          size="s"
-                          mode="destructive"
-                          onClick={async () => {
-                            try {
-                              await API.cancelPolicy(p.id);
-                              showNotification('Полис отменён', 'success');
-                              await reloadExtra();
-                            } catch (e) {
-                              showNotification(e?.detail || e?.message || 'Не удалось отменить полис', 'error');
-                            }
-                          }}
-                        >
-                          Отменить
-                        </Button>
-                      }
-                    >
-                      <div>
-                        <strong>{p.title}</strong> ({p.kind})
-                      </div>
-                      <div>
-                        Премия: <MoneyText value={p.monthly_premium} /> / мес
-                      </div>
-                      <div>
-                        Выплата: <MoneyText value={p.payout_amount ?? p.coverage_limit} decimals={0} />
-                      </div>
-                      <div>
-                        Срок: период {p.started_period_index ?? '—'} — {p.expires_period_index ?? '—'}
-                      </div>
+                    <Cell key={p.id} multiline>
+                      <InsurancePolicyRow
+                        policy={p}
+                        busy={cancellingPolicyId === p.id}
+                        onCancel={cancelInsurancePolicy}
+                      />
                     </Cell>
                   ))}
                 </List>
@@ -687,95 +628,18 @@ export function FinanceSection({
             <div className="mqx-card__sub">
               Премия списывается в конце периода. При страховом случае — полная сумма выплаты, полис закрывается.
             </div>
-            <div className="mqx-fin-grid mqx-fin-grid--2" style={{ marginTop: 12 }}>
-              <div className="mqx-fin-span2">
-                <Select
-                  header="Продукт"
-                  value={policyCatalogKey}
-                  onChange={(e) => setPolicyCatalogKey(e.target.value)}
-                >
-                  {INSURANCE_CATALOG.map((item) => (
-                    <option key={item.kind} value={item.kind}>
-                      {item.product_label} — {item.object_label}
-                    </option>
-                  ))}
-                </Select>
-                <div className="mqx-card__sub" style={{ marginTop: 6 }}>
-                  {selectedInsurance.title}
-                </div>
-              </div>
-              <Input
-                header="Оплата за период"
-                type="number"
-                value={policyPremium}
-                onChange={(e) => setPolicyPremium(Number(e.target.value))}
-              />
-              <Input
-                header="Сумма выплаты"
-                type="number"
-                value={policyPayout}
-                onChange={(e) => setPolicyPayout(Number(e.target.value))}
-              />
-              <Input
-                header="Срок (периодов)"
-                type="number"
-                value={policyTermPeriods}
-                onChange={(e) => setPolicyTermPeriods(Number(e.target.value))}
-              />
-              <div className="mqx-fin-span2">
-                <Button
-                  mode="filled"
-                  stretched
-                  onClick={async () => {
-                    try {
-                      const item = findInsuranceCatalogItem(policyCatalogKey);
-                      await API.buyPolicy({
-                        product: item.product,
-                        insured_object: item.insured_object,
-                        monthly_premium: policyPremium,
-                        payout_amount: policyPayout,
-                        term_periods: policyTermPeriods,
-                      });
-                      showNotification('Полис оформлен', 'success');
-                      await refreshOverview();
-                      await reloadExtra();
-                    } catch (e) {
-                      showNotification(e?.detail || e?.message || 'Не удалось оформить полис', 'error');
-                    }
-                  }}
-                >
-                  Оформить полис
-                </Button>
-              </div>
-            </div>
-
-            <div className="mqx-fin-list" style={{ marginTop: 12 }}>
+            <InsuranceProductPicker onBuy={buyInsurancePlan} buyingPlanKey={buyingPlanKey} />
+            <div className="mqx-ins-policy-list" style={{ marginTop: 12 }}>
               {policies.length === 0 ? (
                 <div className="mqx-fin-empty">Нет активных полисов</div>
               ) : (
                 policies.map((p) => (
-                  <div key={p.id} className="mqx-fin-row">
-                    <div className="mqx-fin-row__l">
-                      <div className="mqx-fin-row__title">{p.title}</div>
-                      <div className="mqx-fin-row__sub">
-                        {p.kind} · <MoneyText value={p.monthly_premium} /> / мес
-                      </div>
-                    </div>
-                    <div className="mqx-fin-row__r">
-                      <div className="mqx-fin-row__val">
-                        <MoneyText value={p.payout_amount ?? p.coverage_limit} decimals={0} />
-                      </div>
-                      <Button size="s" mode="destructive" onClick={async () => {
-                        try {
-                          await API.cancelPolicy(p.id);
-                          showNotification('Полис отменён', 'success');
-                          await reloadExtra();
-                        } catch (e) {
-                          showNotification(e?.detail || e?.message || 'Не удалось отменить полис', 'error');
-                        }
-                      }}>Отменить</Button>
-                    </div>
-                  </div>
+                  <InsurancePolicyRow
+                    key={p.id}
+                    policy={p}
+                    busy={cancellingPolicyId === p.id}
+                    onCancel={cancelInsurancePolicy}
+                  />
                 ))
               )}
             </div>
