@@ -17,6 +17,21 @@ class User(Base):
     created_at = Column(DateTime, default=datetime.utcnow)
 
 
+class ApiIdempotencyRecord(Base):
+    """Сохранённый ответ для повторного POST с тем же Idempotency-Key."""
+
+    __tablename__ = "api_idempotency_records"
+    __table_args__ = (UniqueConstraint("user_id", "route_key", "idempotency_key", name="uq_idempotency_user_route_key"),)
+
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=False, index=True)
+    route_key = Column(String(128), nullable=False)
+    idempotency_key = Column(String(128), nullable=False)
+    status_code = Column(Integer, nullable=False, default=200)
+    response_json = Column(Text, nullable=False, default="{}")
+    created_at = Column(DateTime, default=datetime.utcnow)
+
+
 # ==================== Игровые модели (партия = game_profile) ====================
 
 class GameProfile(Base):
@@ -362,3 +377,19 @@ class ProfileAchievementUnlock(Base):
     period_index = Column(Integer, nullable=False, default=1)
 
     tier_definition = relationship("AchievementTierDefinition", back_populates="unlocks")
+
+
+class NotificationLog(Base):
+    """Журнал уведомлений (MVP 1.2 A0: audience admin → Telegram ops)."""
+
+    __tablename__ = "notification_log"
+
+    id = Column(Integer, primary_key=True, index=True)
+    audience = Column(String(16), nullable=False, default="admin", index=True)
+    kind = Column(String(64), nullable=False, index=True)
+    dedupe_key = Column(String(160), nullable=True, unique=True, index=True)
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=True, index=True)
+    game_profile_id = Column(Integer, ForeignKey("game_profiles.id"), nullable=True, index=True)
+    payload_json = Column(Text, nullable=False, default="{}")
+    telegram_sent = Column(Integer, nullable=False, default=0)
+    created_at = Column(DateTime, default=datetime.utcnow, index=True)

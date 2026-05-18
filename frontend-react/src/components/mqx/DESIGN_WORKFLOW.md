@@ -69,12 +69,12 @@ npx serve .
 | Спринт | Тема design-lab | После утверждения |
 |--------|-----------------|-------------------|
 | 1 | `primitives/` — кнопки, pills, chips, progress | `mqx/primitives/` |
-| 2 | `shell/` — card, hero, empty/error | `mqx/layout/` |
-| 3 | `finance-insurance/` и доработки финансов | `mqx/` + Finance |
+| 2 | `shell/` — card, block, stat-mini (**внедрено**) | `MqxCard`, `MqxCardHeader`, `MqxBlockSection`, `MqxStatMini` |
+| 3 | `finance-insurance/` — **внедрено** | `InsuranceSection`, `Insurance*Card/Row/Picker`, Finance |
 | 4 | `dashboard/` — герой, stat-иконки | DashboardPremium |
-| 5 | `events/` — pill, карточка события | EventDeck |
+| 5 | `events/` — pill, карточка, оверлей (**внедрено**) | `EventCard`, `EventCarouselOverlay`, `MqxPill` |
 
-Текущий статус: **метрики и карточки портфеля** внедрены до формализации процесса; дальше — по этому циклу с **спринта 1 (primitives)**.
+Текущий статус: **примитивы**, **shell**, **события**, **портфель**, **страховки**, **VictoryGoalsPanel** в prod; дальше — `dashboard/` (hero), empty/error в shell.
 
 ---
 

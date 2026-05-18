@@ -8,21 +8,51 @@ import {
   CapitalPositionCard,
   IconMetricCoins,
   IconMetricPercent,
+  IconMetricTerm,
   IconMetricTrendDown,
   IconMetricTrendUp,
+  InsurancePlanCard,
+  InsurancePlanMetrics,
+  InsurancePolicyMetrics,
+  InsurancePolicyRow,
+  InsuranceProductPicker,
+  InsuranceSection,
+  VictoryGoalsPanel,
   InvestPositionMetrics,
   LiabilityPositionMetrics,
   LiabilityTemplateMetrics,
   MetricInlineItem,
   MetricsRow,
+  MqxBlockSection,
   MqxButton,
+  MqxCard,
+  MqxCardHeader,
   MqxChip,
+  MqxGoalBadge,
   MqxPeriodChip,
   MqxPill,
   MqxProgress,
+  MqxStatMini,
   MqxSubtab,
   MqxModeButton,
+  EventCard,
 } from '../index';
+import { MoneyText } from '../../MoneyText';
+import { INSURANCE_PLANS } from '../../../constants/insuranceProducts';
+
+const DEMO_POLICY = {
+  id: 1,
+  kind: 'auto_liability',
+  product: 'auto',
+  title: 'ОСАГО — Стандарт',
+  monthly_premium: 2400,
+  payout_amount: 400000,
+  term_periods: 12,
+  started_period_index: 3,
+  expires_period_index: 15,
+};
+
+const DEMO_PLAN = INSURANCE_PLANS.find((p) => p.plan_key === 'auto_liability_standard') ?? INSURANCE_PLANS[0];
 
 function CatalogSection({ title, children }) {
   return (
@@ -50,6 +80,82 @@ export function MqCatalogScreen() {
         </Link>
       </header>
 
+      <CatalogSection title="Shell — карточка и блоки">
+        <div className="mqx-stack" style={{ gap: 12, maxWidth: 420 }}>
+          <MqxCard variant="character">
+            <MqxCardHeader
+              kicker="Герой"
+              kickerTone="sky"
+              title="Уровень 3"
+              sub="Опыт к следующему уровню"
+              trailing={<MqxChip xp>XP</MqxChip>}
+            />
+            <MqxProgress value={65} xp aria-label="Демо XP" />
+          </MqxCard>
+          <MqxCard variant="goal">
+            <MqxCardHeader
+              layout="split"
+              kicker="Цель"
+              kickerTone="emerald"
+              title="Победа в сценарии"
+              sub="2 из 3 целей"
+              trailing={<MqxGoalBadge>Почти</MqxGoalBadge>}
+            />
+          </MqxCard>
+          <MqxBlockSection title="Финансы" actionLabel="Детали" onAction={() => {}}>
+            <div className="mqx-grid2">
+              <MqxStatMini
+                title="Баланс"
+                accent="mqx-accent--violet"
+                value={<MoneyText value={42000} />}
+                icon={(
+                  <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M7 10V7a5 5 0 0 1 10 0v3" />
+                  </svg>
+                )}
+              />
+              <MqxStatMini
+                title="Подушка"
+                accent="mqx-accent--emerald"
+                value={<MoneyText value={18000} />}
+                icon={(
+                  <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M12 3 20 7v6c0 5-3.4 8.2-8 9-4.6-.8-8-4-8-9V7l8-4Z" />
+                  </svg>
+                )}
+              />
+            </div>
+          </MqxBlockSection>
+        </div>
+      </CatalogSection>
+
+      <CatalogSection title="События — pill и карточка">
+        <div className="mqx-stack" style={{ gap: 12, maxWidth: 420 }}>
+          <MqxPill events badge={2}>
+            События
+          </MqxPill>
+          <EventCard
+            event={{
+              id: 1,
+              period_index: 4,
+              title: 'ДТП',
+              description: 'Небольшое столкновение. При ОСАГО страховая покроет ущерб.',
+              idxInDeck: 0,
+              deckLen: 2,
+              choices: [
+                { id: 10, title: 'Оформить по полису ОСАГО', description: 'Выплата по страховке' },
+                { id: 11, title: 'Оплатить из своих (−45 000 ₽)' },
+              ],
+            }}
+            busyId={null}
+            onPick={() => {}}
+          />
+          <p className="mqx-catalog__note">
+            Полный оверлей: <code>EventCarouselOverlay</code> в игре (карусель + свайп).
+          </p>
+        </div>
+      </CatalogSection>
+
       <CatalogSection title="Иконки метрик">
         <div className="mqx-catalog-glyphs">
           <span className="mqx-metric-glyph mqx-metric-glyph--coin">
@@ -67,7 +173,38 @@ export function MqCatalogScreen() {
           <span className="mqx-metric-glyph mqx-metric-glyph--percent mqx-metric-glyph--neg">
             <IconMetricPercent />
           </span>
+          <span className="mqx-metric-glyph mqx-metric-glyph--term">
+            <IconMetricTerm />
+          </span>
         </div>
+      </CatalogSection>
+
+      <CatalogSection title="Страховки — метрики (asset H)">
+        <InsurancePlanMetrics monthlyPremium={2400} payoutAmount={400000} termPeriods={12} />
+        <div style={{ marginTop: 10 }}>
+          <InsurancePolicyMetrics policy={DEMO_POLICY} />
+        </div>
+      </CatalogSection>
+
+      <CatalogSection title="Страховки — тариф (InsurancePlanCard)">
+        <InsurancePlanCard plan={DEMO_PLAN} onBuy={() => {}} />
+      </CatalogSection>
+
+      <CatalogSection title="Страховки — активный полис (InsurancePolicyRow)">
+        <InsurancePolicyRow policy={DEMO_POLICY} onCancel={() => {}} />
+      </CatalogSection>
+
+      <CatalogSection title="Страховки — блок (InsuranceProductPicker)">
+        <InsuranceProductPicker onBuy={() => {}} />
+      </CatalogSection>
+
+      <CatalogSection title="Страховки — экран (InsuranceSection)">
+        <InsuranceSection
+          policies={[DEMO_POLICY]}
+          onBuy={() => {}}
+          onCancel={() => {}}
+          intro={null}
+        />
       </CatalogSection>
 
       <CatalogSection title="MetricInlineItem">
@@ -217,6 +354,48 @@ export function MqCatalogScreen() {
             −
           </button>
         </div>
+      </CatalogSection>
+
+      <CatalogSection title="Цели победы (Victory v2)">
+        <VictoryGoalsPanel
+          victory={{
+            goals_met: 2,
+            goals_required: 3,
+            period_gate_open: true,
+            win_reached: false,
+            min_period_index: 7,
+            goals: [
+              {
+                key: 'safety_3x',
+                type: 'safety_fund_months',
+                title: 'Подушка ≥ 3× обязательств',
+                met: true,
+                enabled: true,
+                progress: 1,
+                detail: { current: 90000, target: 60000 },
+              },
+              {
+                key: 'no_overdue',
+                type: 'no_overdue',
+                title: 'Без просрочек',
+                met: true,
+                enabled: true,
+                progress: 1,
+                detail: { total_overdue_amount: 0 },
+              },
+              {
+                key: 'cashflow',
+                type: 'net_monthly_cashflow_nonneg',
+                title: 'Поток ≥ 0',
+                met: false,
+                enabled: true,
+                progress: 0.4,
+                detail: { net_monthly_cashflow: -2000 },
+              },
+            ],
+          }}
+          legacyGoal={{ target: 60000, current: 40000, frac: 0.67, win: false, ready: false }}
+        />
       </CatalogSection>
 
       <CatalogSection title="Форма депозита (variant D)">

@@ -206,9 +206,16 @@ export function GameScreen({ onLogout, onNewGame, onLoadGame }) {
         events={pendingEvents}
         onResolved={async (eventId, choiceId) => {
           const res = await API.chooseEvent(eventId, choiceId);
+          const claim = res?.insurance_claim;
           const xpg = Number(res?.xp_gained) || 0;
           const lv = res?.level_up ? res?.new_level : null;
-          if (xpg > 0) {
+          if (claim?.applied && Number(claim.payout_amount) > 0) {
+            const title = claim.policy_title ? `${claim.policy_title}: ` : '';
+            showNotification(
+              `${title}выплата +${Math.round(Number(claim.payout_amount))} ₽`,
+              'success',
+            );
+          } else if (xpg > 0) {
             showNotification(lv ? `+${xpg} XP · уровень ${lv}` : `+${xpg} XP`, 'success');
           } else {
             showNotification('Решение применено', 'success');

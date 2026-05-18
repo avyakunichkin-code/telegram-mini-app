@@ -1,6 +1,6 @@
 # MQX — UI kit Money Quest
 
-Канонические React-компоненты финансового UI (метрики с иконками, карточки портфеля, формы инвестиций, примитивы).
+Канонические React-компоненты финансового UI (метрики с иконками, карточки портфеля, формы инвестиций, страховки, примитивы).
 
 **Процесс работы:** сначала варианты в `design-lab/` → выбор → утверждение → MQX → prod. Подробно: [`DESIGN_WORKFLOW.md`](./DESIGN_WORKFLOW.md).
 
@@ -14,21 +14,81 @@ http://localhost:5173/#/dev/mqx
 
 (или ваш `VITE` URL + `#/dev/mqx`). Маршрут **не попадает в production** (`import.meta.env.DEV`).
 
-**Статические эксперименты до переноса в код:** `design-lab/asset-cards`, `design-lab/invest-forms`, `design-lab/primitives`.
+**Статические эксперименты до переноса в код:** `design-lab/asset-cards`, `design-lab/invest-forms`, `design-lab/finance-insurance`, `design-lab/primitives`.
 
 ## Структура
 
 ```text
 mqx/
-  primitives/                    — кнопки, пилюли, чипы, прогресс (утверждённый гибрид D+C+B/A)
-  icons/FinanceMetricIcons.jsx   — монеты, ↓ ↑ %, срок (term)
-  layout/InsuranceProductPicker.jsx — страховки: сетка 2×2 + тарифы
-  layout/InsurancePolicyRow.jsx     — активный полис (accent + метрики)
-  metrics/                       — MetricInlineItem, *Metrics
-  layout/                        — CapitalPositionCard, InvestPositionRow
-  catalog/MqCatalogScreen.jsx    — витрина (dev)
-  index.js                       — barrel export
+  primitives/                         — кнопки, пилюли, чипы, прогресс
+  icons/FinanceMetricIcons.jsx        — монеты, ↓ ↑ %, срок (term)
+  metrics/
+    MetricInlineItem, MetricsRow
+    Asset*Metrics, Liability*Metrics, InvestPositionMetrics
+    InsurancePlanMetrics, InsurancePolicyMetrics
+  layout/
+    MqxCard, MqxCardHeader            — оболочка карточки и шапка
+    MqxGoalBadge, MqxBlockSection     — бейдж цели, секция с заголовком
+    MqxStatMini                       — плитка stat 2×2
+    VictoryGoalItem, VictoryGoalsPanel — цели победы v2
+    CapitalPositionCard               — asset | liability | insurance
+    InsuranceCatalogGrid              — сетка 2×2 типов
+    InsurancePlanCard                 — тариф (+)
+    InsurancePolicyRow                — активный полис (−)
+    InsuranceProductPicker            — каталог + список тарифов
+    InsuranceSection                  — полный блок для Finance
+    InvestPositionRow
+  events/
+    EventCard, EventChoiceButton
+    EventCarouselOverlay, EventCarouselDots, EventCarouselNav
+    EventOverlayToolbar, useEventCarousel
+  catalog/MqCatalogScreen.jsx
+  index.js
 ```
+
+## События (prod)
+
+| Компонент | Назначение |
+|-----------|------------|
+| `MqxPill` + `events` | Кнопка «События» с badge на дашборде |
+| `EventCard` | Карточка: период, текст, выборы |
+| `EventChoiceButton` | Одна кнопка выбора |
+| `EventCarouselOverlay` | Полноэкранный оверлей с каруселью |
+| `EventCarouselDots` / `EventCarouselNav` | Навигация |
+| `EventOverlayToolbar` | Заголовок и закрытие |
+| `useEventCarousel` | Состояние свайпа/слайдов |
+
+Импорт: `import { EventCarouselOverlay } from './mqx';`  
+Legacy: `EventDeck.jsx` реэкспортирует те же компоненты.
+
+## Shell (prod)
+
+| Компонент | Назначение |
+|-----------|------------|
+| `MqxCard` | `variant`: default \| goal \| character |
+| `MqxCardHeader` | kicker + title + sub + `trailing`; `layout`: stack \| split |
+| `MqxGoalBadge` | Статус цели на дашборде |
+| `MqxBlockSection` | Блок «Финансы» с ссылкой действия |
+| `MqxStatMini` | Иконка + подпись + значение в `mqx-grid2` |
+| `VictoryGoalsPanel` | M из N целей победы (+ legacy подушка) |
+
+Утилиты: `utils/victoryGoalDisplay.js` (без React).
+
+## Страховки (prod, design-lab B + card H)
+
+| Компонент | Назначение |
+|-----------|------------|
+| `InsuranceCatalogGrid` | Плитки 2×2: продукт × объект (ипотека, авто…) |
+| `InsurancePlanCard` | Готовый тариф: accent H, метрики, кнопка **+** |
+| `InsurancePolicyRow` | Активный полис: те же метрики, кнопка **−** |
+| `InsuranceProductPicker` | Сетка типов + список тарифов (без ручного ввода) |
+| `InsuranceSection` | Intro + picker + список полисов |
+| `InsurancePlanMetrics` | ↓ премия · монеты выплата · ⏱ срок |
+| `InsurancePolicyMetrics` | То же для активного полиса |
+
+Данные: `constants/insuranceProducts.js` (синхрон с `backend/app/insurance_catalog.py`), покупка через `plan_key` в API.
+
+Карточки: `CapitalPositionCard` с `variant="insurance"`, `accentTone`: `auto` | `mortgage` | `default`.
 
 ## Примитивы (prod)
 
@@ -37,20 +97,18 @@ mqx/
 | `MqxButton` | Hero filled/outline, primary/secondary на светлом |
 | `MqxPill` | Пилюли hero, badge событий |
 | `MqxPeriodChip` | «Период» + номер в hero |
-| `MqxChip` | XP outline (`xp`, опционально `xpAmount` → «+120 XP») |
+| `MqxChip` | XP outline |
 | `MqxProgress` | 6px; emerald-градиент цели; `xp` — sky-градиент |
 | `MqxSubtab` | Вкладки финансов / капитала |
 | `MqxModeButton` | Режимы «добавить / позиции», submit инвестиций |
-
-Токены: `--mq-xp-sky`, `--mq-xp-accent` в `index.css`.
 
 ## Правила метрик
 
 | Контекст | Иконки |
 |----------|--------|
-| Шаблоны / позиции активов | монеты, ↓ обслуживание, ↑ доход |
-| Шаблоны / позиции долгов | монеты (тело), ↓ платёж, **% красный** |
-| Позиции депозита/облигации | монеты, **% зелёный**, ↑ доход за период |
-| Формы депозита/облигации | без иконок метрик; chip ставки справа |
+| Активы | монеты, ↓ обслуживание, ↑ доход |
+| Долги | монеты, ↓ платёж, **% красный** |
+| Инвестиции | монеты, **% зелёный**, ↑ доход за период |
+| **Страховки** | **↓** премия за период, **монеты** выплата, **⏱** срок |
 
-Импорт: `import { MqxButton, AssetTemplateMetrics, ... } from './mqx';`
+Импорт: `import { InsuranceSection, InsurancePlanCard, ... } from './mqx';`

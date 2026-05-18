@@ -1,4 +1,5 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Request
+from fastapi.responses import JSONResponse
 from sqlalchemy.orm import Session
 
 from ..auth import get_current_user
@@ -6,6 +7,8 @@ from ..database import get_db
 from ..game_time import get_active_game_profile, sync_time
 from ..balance_utils import adjust_balance
 from ..models import InvestmentPosition
+from ..idempotency import read_idempotency_key, run_idempotent
+from ..level_gates import UNLOCK_BOND_BUY, UNLOCK_DEPOSIT_OPEN, require_character_level
 
 
 router = APIRouter(prefix="/api/invest", tags=["invest"])
@@ -36,7 +39,12 @@ async def list_positions(current_user=Depends(get_current_user), db: Session = D
 
 
 @router.post("/deposit/open")
-async def open_deposit(payload: dict, current_user=Depends(get_current_user), db: Session = Depends(get_db)):
+async def open_deposit(
+    request: Request,
+    payload: dict,
+    current_user=Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
     amount = float(payload.get("amount") or 0)
     annual_rate_percent = float(payload.get("annual_rate_percent") or 0)
     if amount <= 0:
@@ -44,32 +52,49 @@ async def open_deposit(payload: dict, current_user=Depends(get_current_user), db
     if annual_rate_percent < 0:
         raise HTTPException(status_code=400, detail="annual_rate_percent must be >= 0")
 
-    profile = get_active_game_profile(db, current_user.id)
-    sync_time(profile)
-    if profile.cash_balance < amount:
-        raise HTTPException(status_code=400, detail="Недостаточно средств")
+    idem_key = read_idempotency_key(request)
 
-    # списываем деньги
-    adjust_balance(db, profile.id, -amount, "deposit_open", "Открытие депозита", profile.period_index)
+    def _execute() -> dict:
+        profile = get_active_game_profile(db, current_user.id)
+        sync_time(profile)
+        require_character_level(profile, UNLOCK_DEPOSIT_OPEN, "invest.deposit_open")
+        if profile.cash_balance < amount:
+            raise HTTPException(status_code=400, detail="Недостаточно средств")
+        adjust_balance(db, profile.id, -amount, "deposit_open", "Открытие депозита", profile.period_index)
+        pos = InvestmentPosition(
+            game_profile_id=profile.id,
+            kind="deposit",
+            title=f"Депозит {annual_rate_percent:.1f}% годовых",
+            principal=amount,
+            annual_rate_percent=annual_rate_percent,
+            started_period=profile.period_index,
+            last_accrued_period=profile.period_index,
+            is_active=1,
+        )
+        db.add(pos)
+        db.commit()
+        db.refresh(pos)
+        return {"status": "success", "position_id": pos.id}
 
-    pos = InvestmentPosition(
-        game_profile_id=profile.id,
-        kind="deposit",
-        title=f"Депозит {annual_rate_percent:.1f}% годовых",
-        principal=amount,
-        annual_rate_percent=annual_rate_percent,
-        started_period=profile.period_index,
-        last_accrued_period=profile.period_index,
-        is_active=1,
-    )
-    db.add(pos)
-    db.commit()
-    db.refresh(pos)
-    return {"status": "success", "position_id": pos.id}
+    if idem_key:
+        status, body = run_idempotent(
+            db,
+            user_id=current_user.id,
+            route_key="invest.deposit_open",
+            idempotency_key=idem_key,
+            handler=_execute,
+        )
+        return JSONResponse(status_code=status, content=body)
+    return _execute()
 
 
 @router.post("/bond/buy")
-async def buy_bond(payload: dict, current_user=Depends(get_current_user), db: Session = Depends(get_db)):
+async def buy_bond(
+    request: Request,
+    payload: dict,
+    current_user=Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
     amount = float(payload.get("amount") or 0)
     annual_rate_percent = float(payload.get("annual_rate_percent") or 0)
     title = (payload.get("title") or "ОФЗ (условно)").strip() or "ОФЗ (условно)"
@@ -78,27 +103,40 @@ async def buy_bond(payload: dict, current_user=Depends(get_current_user), db: Se
     if annual_rate_percent < 0:
         raise HTTPException(status_code=400, detail="annual_rate_percent must be >= 0")
 
-    profile = get_active_game_profile(db, current_user.id)
-    sync_time(profile)
-    if profile.cash_balance < amount:
-        raise HTTPException(status_code=400, detail="Недостаточно средств")
+    idem_key = read_idempotency_key(request)
 
-    adjust_balance(db, profile.id, -amount, "bond_buy", f"Покупка облигаций: {title}", profile.period_index)
+    def _execute() -> dict:
+        profile = get_active_game_profile(db, current_user.id)
+        sync_time(profile)
+        require_character_level(profile, UNLOCK_BOND_BUY, "invest.bond_buy")
+        if profile.cash_balance < amount:
+            raise HTTPException(status_code=400, detail="Недостаточно средств")
+        adjust_balance(db, profile.id, -amount, "bond_buy", f"Покупка облигаций: {title}", profile.period_index)
+        pos = InvestmentPosition(
+            game_profile_id=profile.id,
+            kind="bond",
+            title=title,
+            principal=amount,
+            annual_rate_percent=annual_rate_percent,
+            started_period=profile.period_index,
+            last_accrued_period=profile.period_index,
+            is_active=1,
+        )
+        db.add(pos)
+        db.commit()
+        db.refresh(pos)
+        return {"status": "success", "position_id": pos.id}
 
-    pos = InvestmentPosition(
-        game_profile_id=profile.id,
-        kind="bond",
-        title=title,
-        principal=amount,
-        annual_rate_percent=annual_rate_percent,
-        started_period=profile.period_index,
-        last_accrued_period=profile.period_index,
-        is_active=1,
-    )
-    db.add(pos)
-    db.commit()
-    db.refresh(pos)
-    return {"status": "success", "position_id": pos.id}
+    if idem_key:
+        status, body = run_idempotent(
+            db,
+            user_id=current_user.id,
+            route_key="invest.bond_buy",
+            idempotency_key=idem_key,
+            handler=_execute,
+        )
+        return JSONResponse(status_code=status, content=body)
+    return _execute()
 
 
 @router.post("/positions/{position_id}/close")

@@ -91,6 +91,13 @@ class VictoryGoalOverview(BaseModel):
     detail: dict = Field(default_factory=dict)
 
 
+class CharacterUnlockOverview(BaseModel):
+    feature: str
+    min_level: int
+    unlocked: bool
+    label: str = ""
+
+
 class VictoryOverview(BaseModel):
     schema_version: int = 1
     template_key: str = ""
@@ -137,6 +144,7 @@ class FinanceOverview(BaseModel):
     avg_net_cashflow_6p: float = 0.0
     avg_net_cashflow_6p_n: int = 0
     victory: Optional[VictoryOverview] = None
+    character_unlocks: List[CharacterUnlockOverview] = Field(default_factory=list)
 
 
 class AnalyticsTimeseriesPoint(BaseModel):

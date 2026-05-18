@@ -21,6 +21,7 @@ from ..game_rules import (
 from ..database import get_db
 from ..game_time import get_active_game_profile, sync_time
 from ..models import EventChoice, EventDefinition, EventInstance, EventProfileCounter, GameProfile
+from ..insurance_events import apply_insurance_claim_from_effects
 from ..mvp11_event_seeds import ensure_mvp11_event_catalog
 
 
@@ -29,7 +30,9 @@ router = APIRouter(prefix="/api/game/events", tags=["events"])
 logger = logging.getLogger(__name__)
 
 EVENTS_PER_PERIOD = 3
-ALLOWED_EFFECT_KEYS = frozenset({"cash_delta", "safety_delta", "xp_delta", "monthly_lifestyle_delta"})
+ALLOWED_EFFECT_KEYS = frozenset(
+    {"cash_delta", "safety_delta", "xp_delta", "monthly_lifestyle_delta", "insurance_claim"}
+)
 
 
 def expire_pending_events_for_closed_period(db: Session, game_profile_id: int, closed_period_index: int) -> int:
@@ -356,12 +359,28 @@ async def choose_event(
     safety_delta = float(effects.get("safety_delta", 0) or 0)
     xp_delta = int(effects.get("xp_delta", 0) or 0)
     monthly_lifestyle_delta = float(effects.get("monthly_lifestyle_delta", 0) or 0)
+    insurance_claim_spec = effects.get("insurance_claim")
+    if insurance_claim_spec is not None and not isinstance(insurance_claim_spec, dict):
+        raise HTTPException(status_code=400, detail="insurance_claim must be an object")
 
     if xp_delta < 0:
         raise HTTPException(status_code=400, detail="xp_delta must be >= 0")
 
     if cash_delta < 0 and float(profile.cash_balance) < (-cash_delta) - 1e-6:
         raise HTTPException(status_code=400, detail="Недостаточно средств на счёте для этого выбора")
+
+    insurance_claim_result = None
+    if insurance_claim_spec:
+        try:
+            insurance_claim_result = apply_insurance_claim_from_effects(
+                db,
+                profile,
+                insurance_claim_spec,
+                int(profile.period_index),
+            )
+            db.refresh(profile)
+        except ValueError as e:
+            raise HTTPException(status_code=400, detail=str(e) or "Страховой случай недоступен") from e
 
     try:
         if cash_delta != 0:
@@ -414,10 +433,13 @@ async def choose_event(
     record_event_profile_selection(db, profile.id, int(inst.definition_id), int(profile.period_index))
     db.commit()
 
-    return {
+    response = {
         "status": "success",
         "xp_gained": int(xp_info.get("xp_gained", 0) or 0),
         "level_up": bool(xp_info.get("level_up")),
         "new_level": xp_info.get("new_level"),
     }
+    if insurance_claim_result:
+        response["insurance_claim"] = insurance_claim_result
+    return response
 

@@ -156,6 +156,56 @@ MVP11_EVENT_SPECS: list[dict] = [
         ],
     },
     {
+        "key": "mq11_car_accident",
+        "title": "ДТП",
+        "description": "Небольшое столкновение. При ОСАГО страховая покроет ущерб третьим лицам.",
+        "weight": 55,
+        "event_tier": 3,
+        "repeat_policy": "repeatable",
+        "choices": [
+            {
+                "title": "Оформить по полису ОСАГО",
+                "effects": {
+                    "insurance_claim": {"product": "auto", "insured_object": "liability"},
+                    "xp_delta": 4,
+                },
+            },
+            {
+                "title": "Оплатить из своих (−45 000 ₽)",
+                "effects": {"cash_delta": -45000, "xp_delta": 2},
+            },
+            {
+                "title": "Договориться без оформления",
+                "effects": {"cash_delta": -12000, "xp_delta": 1},
+            },
+        ],
+    },
+    {
+        "key": "mq11_home_water_damage",
+        "title": "Затопило квартиру",
+        "description": "Прорвало трубу у соседей. Страховка имущества поможет восстановить ремонт.",
+        "weight": 50,
+        "event_tier": 3,
+        "repeat_policy": "repeatable",
+        "choices": [
+            {
+                "title": "Вызвать страховую (имущество)",
+                "effects": {
+                    "insurance_claim": {"product": "property", "insured_object": "property"},
+                    "xp_delta": 4,
+                },
+            },
+            {
+                "title": "Ремонт за свой счёт (−80 000 ₽)",
+                "effects": {"cash_delta": -80000, "xp_delta": 2},
+            },
+            {
+                "title": "Косметический ремонт (−25 000 ₽)",
+                "effects": {"cash_delta": -25000, "xp_delta": 1},
+            },
+        ],
+    },
+    {
         "key": "mq11_wedding_gift_once",
         "title": "Свадьба друга (разовый сценарий)",
         "description": "Приглашение на праздник — подарок и поездка.",

@@ -29,10 +29,11 @@
 |----|----------|------|--------|
 | **G1** | Game / Plan, шаблоны старта | DB+Backend+Frontend | ✅ MQ-101–108 |
 | **M11** | MVP 1.1: tier, XP, события, HUD уровня | DB+Backend+Frontend | ✅ MQ-111–116 (код); приёмка / плейтест — ⬜ |
-| **M12** | Достижения (цепочки из GAME §5) | DB+Backend+Frontend | 🟡 движок + миграция 0009; **нет SPEC** |
+| **M12** | Достижения (цепочки из GAME §5) | DB+Backend+Frontend | 🟡 [SPEC_achievements](../specs/features/SPEC_achievements.md); BE ✅, FE «Развитие» ⬜ |
 | **V2** | Victory M из N | DB+Backend+Frontend+Doc | ⬜ `victory_config` — задел в данных |
 | **I1** | Страховки: продукт + объект | DB+Backend+Frontend | 🟡 0008 + UI в работе |
 | **α** | Pre-Alpha / Closed Alpha гейты | Doc+Frontend (метрики) | ⬜ см. GAME §11 |
+| **A0** | Admin Watchtower (MVP 1.2) | DB+Backend+Frontend | 🟡 Phase 0 в коде |
 
 > **Расхождение с GAME.md §0.2:** `cooldown_periods` и фильтр в `ensure_period_events` **уже в коде** (`game_rules.is_event_definition_eligible`, `events.py`, миграция 0007). В GAME.md пометить «не реализовано» — устарело.
 
@@ -55,7 +56,7 @@
 - [ ] P1 **[DB] ⚠ spec** Victory v2 — нормализовать схему `victory_config_json` (цели, M из N, `min_period_index_for_victory`) — evolution §II.3.
 - [ ] P1 **[DB] ⚠ spec** Plan Mode — поля префилла / `starter_params_json` на шаблоне или снимке.
 - [ ] P2 **[DB] ⚠ spec** События: `prerequisites_json`, `chain_id`, веса 🟢🔴🟡 по уровню (GAME §7.3–7.4) — нет каталога колонок в spec.
-- [ ] P2 **[DB]** Сиды достижений по таблице GAME §5.3 (6 цепочек × 4 tier) — после утверждения критериев в spec M12.
+- [x] P2 **[DB]** Сиды достижений по GAME §5.3 (6×4) — `achievement_seeds.py`, [SPEC_achievements](../specs/features/SPEC_achievements.md) §7.
 - [ ] P2 **[DB]** Расширить сиды событий до 20–25 на tier (рекомендация GAME §8.3) + значения `cooldown_periods` в контенте.
 - [ ] P3 **[DB] ⚠ spec** Журнал аудита / product events — таблица или внешняя аналитика.
 
@@ -75,15 +76,15 @@
 ### Эпик M12 — достижения (из GAME §5)
 
 - [x] **[Backend]** `achievement_engine.py`, хуки в `game_period`, `finance`, `GET /api/achievements` (черновик).
-- [ ] P0 **[Backend]** Завершить критерии `criteria_json` по всем tier из GAME §5.3; тесты `test_achievement_engine.py` на реальные пороги.
-- [ ] P1 **[Backend]** Стабильный контракт `GET /api/achievements` + синхронизация `api.js`.
-- [ ] P1 **[Backend] ⚠ spec** API-gates по `character_level` (вклад, страховка, облигации) — LEVEL_XP_SYSTEM §8; сейчас gates не везде в роутерах.
+- [x] P0 **[Backend]** Критерии `criteria_json` по tier из GAME §5.3 (без `stub` в сидах); `test_achievement_engine.py`.
+- [ ] P1 **[Backend]** Стабильный контракт `GET /api/achievements` + синхронизация `api.js`; интеграционные тесты с БД.
+- [x] P1 **[Backend]** API-gates по `character_level` — `level_gates.py`, invest/insurance/finance from-template, `character_unlocks` в overview; `test_level_gates.py`, `test_api_level_gates.py`.
 - [ ] P2 **[Backend] ⚠ spec** Альтернативные ветки достижений (долговой vs бездолговой путь, GAME §9.3 п.6).
 
 ### Эпик V2 — победа из шаблона
 
-- [ ] P1 **[Backend] ⚠ spec** Движок **M из N** по `victory_config_json`; использовать `avg_net_cashflow_6p` в условиях.
-- [ ] P1 **[Backend]** `min_period_index_for_victory` из шаблона (дефолт 7).
+- [x] P1 **[Backend]** Движок **M из N** по `victory_config_json`; `avg_liquid_delta_6p` / зарплата в порогах — `victory_engine.py`, миграция `0010`, `test_victory_engine.py`.
+- [x] P1 **[Backend]** `min_period_index_for_victory` из шаблона (дефолт 7) — в overview `victory.*`.
 
 ### События и контент (после M11)
 
@@ -91,6 +92,20 @@
 - [ ] P2 **[Backend] ⚠ spec** Предикаты событий: страховка / актив / инвестиция; цепочки событий.
 - [ ] P2 **[Backend] ⚠ spec** Баланс 🟢🔴🟡 от **финансового здоровья**, не только от уровня (GAME §9.1 п.3).
 - [ ] P2 **[Backend] ⚠ spec** Макро-события (ставка, кризис) с 5–6 уровня (GAME §1.9, §9.3 п.7).
+
+### Эпик A0 — Admin Watchtower (MVP 1.2)
+
+Идея: [`admin-and-notifications.md`](../vision/ideas/admin-and-notifications.md) · Phase 0 = ops-наблюдаемость при низком DAU.
+
+- [x] P0 **[DB]** `notification_log` — миграция `0012_notification_log.sql`.
+- [x] P0 **[Backend]** `emit_admin_alert`, hooks: register, profile, game start, period (win/loss/milestone), Telegram ops.
+- [x] P0 **[Backend]** `GET /api/admin/watchtower` + allowlist `ADMIN_USER_IDS`.
+- [x] P0 **[Frontend]** Экран `#/admin` Watchtower (read-only).
+- [ ] P1 **[Backend+Frontend]** Player inbox (Phase 1 idea).
+- [ ] P2 **[Backend+Frontend]** Draft/publish контента и «отправить себе» (Phase 2 idea).
+- [ ] P2 **[Doc]** Spec [`SPEC_admin-and-notifications.md`](../specs/features/SPEC_admin-and-notifications.md).
+
+**Env (backend):** `ADMIN_USER_IDS`, `OPS_TELEGRAM_BOT_TOKEN`, `OPS_TELEGRAM_CHAT_ID`, `ADMIN_WEB_BASE_URL`.
 
 ### Экономика и давление
 
@@ -191,7 +206,7 @@
 
 | Тема | GAME | Действие |
 |------|------|----------|
-| Достижения M12 | §5.3, §10.5 | **SPEC_achievements** + критерии `criteria_json` + план сидов |
+| Достижения M12 | §5.3, §10.5 | [SPEC_achievements](../specs/features/SPEC_achievements.md); UI «Развитие» |
 | Victory v2 | §1.8, §13 | Spec движка целей; связь с `victory_config` |
 | Plan Mode | §1.10, §13 | Spec мастера + префилл (отдельно от G1) |
 | `mandatory_gate` | §13 | Дополнение SPEC событий или ADR |
@@ -206,7 +221,7 @@
 | Соц. механики | §8.1 | Idea: NPC, бенчмарки — низкий приоритет |
 | Монетизация Soft Launch | §11.3 | TBD product |
 
-- [ ] P1 **[Doc]** **`SPEC_achievements.md`** — цепочки, tier, XP-награды, момент проверки (конец периода / overview / действие).
+- [x] P1 **[Doc]** [SPEC_achievements.md](../specs/features/SPEC_achievements.md) — цепочки, `criteria_json`, API, прокси v1.0.
 - [ ] P1 **[Doc]** **`PLAN_achievements.md`** + эпик **M12** в TRACEABILITY.
 - [ ] P1 **[Doc]** **`SPEC_victory-v2.md`** — M из N, поля config, UI прогресса целей.
 - [ ] P1 **[Doc]** Протокол **Pre-Alpha** плейтеста: чеклист готовности (GAME §11.1), опрос понимания вклад/подушка, критерий ~80% до 3–4 периода.
@@ -229,10 +244,11 @@
 |------|----|---------|----------|-----|
 | G1 Game/Plan | ✅ | ✅ | ✅ Plan stub | ✅ |
 | M11 Progression | ✅ | ✅ | 🟡 приёмка UI | ✅ |
-| M12 Achievements | 🟡 0009 | 🟡 engine | ⬜ Развитие | ⚠ SPEC |
-| V2 Victory | config | engine | прогресс целей | ⚠ SPEC |
+| M12 Achievements | 🟡 0009 | ✅ criteria + gates | ⬜ Развитие | ✅ SPEC |
+| V2 Victory | ✅ 0010 | ✅ engine | прогресс целей | ✅ SPEC |
 | I1 Insurance | ✅ 0008 | 🟡 claim | 🟡 catalog UI | ⚠ SPEC |
 | α Playtest | — | — | опрос/метрики | протокол |
+| A0 Watchtower | ✅ 0012 | 🟡 Phase 0 | 🟡 `#/admin` | idea |
 
 ---
 
@@ -240,8 +256,10 @@
 
 | Приоритет | Пункт | Слой | Ветка / заметка |
 |-----------|-------|------|-----------------|
-| P0 | M12: SPEC + критерии достижений | Doc→Backend | после GAME-синка |
-| P0 | Приёмка MQ-116 / тесты M11 | Backend | `pytest -q` |
+| P0 | A0: env TG + `ADMIN_USER_IDS` на Render | Backend | см. idea §Phase 0 |
+| P1 | M12: экран «Развитие» + unlock toasts | Frontend | [SPEC_achievements](../specs/features/SPEC_achievements.md) §11 |
+| P0 | Приёмка MQ-116 / тесты M11 | Backend | `pytest -q` ✅ 75 |
+| P1 | UI: `character_unlocks`, 403 `level_gate` | Frontend | overview + FinanceSection |
 | P1 | Экран «Развитие» | Frontend | `achievements` API |
 | P1 | I1: каталог страховок в FinanceSection | Frontend | design-lab |
 
@@ -253,6 +271,8 @@
 |------|-------------|
 | 2026-05-16 | MVP audit; MQ-101–108 (G1). |
 | 2026-05-19 | Синхронизация с [`GAME.md`](../../GAME.md): слои DB/BE/FE/Doc; M11 отмечен выполненным в коде; заведены M12, V2, I1, α; пробелы ⚠ spec; исправлена устаревшая пометка про cooldown. |
+| 2026-05-19 | **MVP 1.2 / A0:** эпик Admin Watchtower Phase 0 — `notification_log`, ops-алерты, `#/admin`. |
+| 2026-05-19 | **Q1** quality-release; **V2** victory engine; **M12** критерии достижений + API level-gates (`level_gates.py`, overview `character_unlocks`). |
 
 ---
 

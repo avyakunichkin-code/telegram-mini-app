@@ -2,7 +2,18 @@ import { useMemo, useState, lazy, Suspense } from 'react';
 import { Button, Modal } from '@telegram-apps/telegram-ui';
 import { MoneyText } from './MoneyText';
 import { showNotification } from './notifications';
-import { MqxButton, MqxChip, MqxPeriodChip, MqxPill, MqxProgress } from './mqx';
+import {
+  MqxBlockSection,
+  MqxButton,
+  MqxCard,
+  MqxCardHeader,
+  MqxChip,
+  MqxPeriodChip,
+  MqxPill,
+  MqxProgress,
+  MqxStatMini,
+  VictoryGoalsPanel,
+} from './mqx';
 
 const PeriodJourneyLottie = lazy(() => import('./PeriodJourneyLottie'));
 
@@ -216,19 +227,19 @@ export function DashboardPremium({
       </header>
 
       <main className="mqx-content">
-          <section className="mqx-card mqx-card--character" aria-labelledby="mq-character-progress">
-            <div className="mqx-card__kicker mqx-card__kicker--sky">Герой</div>
-            <div className="mqx-character__top">
-              <div>
-                <div className="mqx-card__title" id="mq-character-progress">
-                  Уровень {characterXp.level}
-                </div>
-                <p className="mqx-card__sub">Опыт к следующему уровню</p>
-              </div>
-              <MqxChip xp aria-hidden>
-                XP
-              </MqxChip>
-            </div>
+          <MqxCard variant="character" ariaLabelledBy="mq-character-progress">
+            <MqxCardHeader
+              kicker="Герой"
+              kickerTone="sky"
+              title={`Уровень ${characterXp.level}`}
+              titleId="mq-character-progress"
+              sub="Опыт к следующему уровню"
+              trailing={(
+                <MqxChip xp aria-hidden>
+                  XP
+                </MqxChip>
+              )}
+            />
             <div className="mqx-character__meter" role="group" aria-label="Прогресс опыта">
               <MqxProgress value={Math.round(characterXp.frac * 100)} xp aria-label="Прогресс опыта" />
               <div className="mqx-goal__row mqx-character__meter-labels">
@@ -240,56 +251,22 @@ export function DashboardPremium({
                 </span>
               </div>
             </div>
-          </section>
+          </MqxCard>
 
-          <section className="mqx-card mqx-card--goal">
-            <div className="mqx-goal__top">
-              <div>
-                <div className="mqx-card__kicker mqx-card__kicker--emerald">Цель</div>
-                <div className="mqx-card__title">Финансовая свобода</div>
-              </div>
-              <div className="mqx-goal__badge">{goal.win ? 'Победа' : goal.ready ? 'Почти' : 'В работе'}</div>
-            </div>
-
-            {goal.target > 0 ? (
-              <div className="mqx-goal__progress">
-                <div className="mqx-goal__row">
-                  <span>Подушка к цели</span>
-                  <span>
-                    <MoneyText value={goal.current} decimals={0} /> / <MoneyText value={goal.target} decimals={0} />
-                  </span>
-                </div>
-                <MqxProgress value={Math.round(goal.frac * 100)} aria-label="Прогресс подушки к цели" />
-              </div>
-            ) : (
-              <div className="mqx-goal__progress">
-                <div className="mqx-goal__row">
-                  <span>Цель не задана</span>
-                  <span>—</span>
-                </div>
-              </div>
-            )}
-          </section>
-
-          <section className="mqx-block">
-            <div className="mqx-block__head">
-              <div className="mqx-block__title">Финансы</div>
-              <button type="button" className="mqx-link" onClick={onGoFinance}>
-                Детали
-              </button>
-            </div>
+          <VictoryGoalsPanel victory={overview?.victory} legacyGoal={goal} />
+          <MqxBlockSection title="Финансы" actionLabel="Детали" onAction={onGoFinance}>
             <div className="mqx-grid2">
               {financeCards.map((c) => (
-                <div key={c.title} className="mqx-mini" role="group" aria-label={c.title}>
-                  <div className={`mqx-mini__icon ${c.accent}`} aria-hidden>
-                    {c.icon}
-                  </div>
-                  <div className="mqx-mini__label">{c.title}</div>
-                  <div className="mqx-mini__value">{c.valueNode}</div>
-                </div>
+                <MqxStatMini
+                  key={c.title}
+                  title={c.title}
+                  value={c.valueNode}
+                  icon={c.icon}
+                  accent={c.accent}
+                />
               ))}
             </div>
-          </section>
+          </MqxBlockSection>
 
           <section className="mqx-card">
             <div className="mqx-actions__head">

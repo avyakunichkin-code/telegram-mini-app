@@ -11,10 +11,10 @@
 | [asset-cards/](asset-cards/) | внедрено в prod | Карточки активов |
 | [invest-forms/](invest-forms/) | внедрено в prod | Формы депозита / облигаций |
 | [primitives/](primitives/) | **утверждено → prod** | Гибрид D+C+B/A; в `mqx/primitives/` |
-| [finance-insurance/](finance-insurance/) | **утверждено B → prod** | Сетка 2×2 + тарифы, без ручного ввода |
-| `shell/` | план | Card, hero, empty/error |
+| [finance-insurance/](finance-insurance/) | **внедрено в prod** | B: каталог 2×2 + тарифы; карточки asset H |
+| [shell/](shell/) | **внедрено в prod** | MqxCard, header, block, stat-mini |
 | `dashboard/` | план | Герой, stat-блоки |
-| `events/` | план | События |
+| [events/](events/) | **внедрено в prod** | EventCard, EventCarouselOverlay, MqxPill |
 
 ## Как работать
 

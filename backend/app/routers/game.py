@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException, Request
+from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from datetime import datetime
 from typing import List, Optional
@@ -20,6 +20,7 @@ from ..schemas import (
     LiabilityCreate,
     GameStarterTemplatePublic,
 )
+from ..game_start_validation import validate_game_start_request
 from ..game_time import (
     get_active_game_profile,
     sync_time,
@@ -104,6 +105,14 @@ async def create_game_profile(
     db.add(profile)
     db.commit()
     db.refresh(profile)
+
+    try:
+        from ..admin_notify import notify_profile_created
+
+        notify_profile_created(db, profile)
+    except Exception:
+        pass
+
     return profile
 
 
@@ -133,40 +142,16 @@ async def activate_game_profile(
 
 @router.post("/start", response_model=GameStartResponse)
 async def start_new_game(
-        request: Request,
-        current_user=Depends(get_current_user),
-        db: Session = Depends(get_db)
+    payload: GameStartRequest,
+    current_user=Depends(get_current_user),
+    db: Session = Depends(get_db),
 ):
     """
-    Новый профиль: **game** — из шаблона (`template_key`) или ручной набор активов/долгов;
-    **plan** — только ручной старт (без каталожных game-шаблонов).
+    Новый профиль: **game** — из каталога (`template_key` обязателен);
+    **plan** — ручной старт без game-шаблонов (MVP 2.0).
     """
-    body = await request.json()
-
-    if "monthly_salary" not in body and "monthly_amount" in body:
-        payload = GameStartRequest(
-            profile_name=body.get("profile_name"),
-            save_kind=body.get("save_kind") or "game",
-            template_key=body.get("template_key"),
-            period_duration_seconds=body.get("period_duration_seconds") or 300,
-            cash_balance=body.get("cash_balance", 0),
-            monthly_salary=body.get("monthly_amount", 0),
-            assets=[],
-            liabilities=[],
-        )
-    else:
-        payload = GameStartRequest(**body)
-
-    if not payload.profile_name.strip():
-        raise HTTPException(status_code=400, detail="profile_name is required")
-
+    validate_game_start_request(payload, db)
     save_kind = _validate_save_kind(payload.save_kind)
-
-    if save_kind == "plan" and payload.template_key:
-        raise HTTPException(
-            status_code=400,
-            detail="Plan saves cannot use game starter templates; omit template_key",
-        )
 
     starter_template_key = None
     base_monthly_lifestyle = 0.0
@@ -177,16 +162,12 @@ async def start_new_game(
     liabilities_list: List[LiabilityCreate] = []
 
     if payload.template_key:
-        tk = (payload.template_key or "").strip()
-        if not tk:
-            raise HTTPException(status_code=400, detail="template_key is empty")
+        tk = payload.template_key.strip()
         tmpl = (
             db.query(GameStarterTemplate)
             .filter(GameStarterTemplate.template_key == tk, GameStarterTemplate.is_active == 1)
             .first()
         )
-        if not tmpl:
-            raise HTTPException(status_code=404, detail="game template not found")
         try:
             bp = json.loads(tmpl.blueprint_json or "{}")
         except json.JSONDecodeError:
@@ -220,13 +201,6 @@ async def start_new_game(
     else:
         assets_list = list(payload.assets)
         liabilities_list = list(payload.liabilities)
-
-    if period_duration_seconds < 10:
-        raise HTTPException(status_code=400, detail="period_duration_seconds must be >= 10")
-    if cash_balance < 0:
-        raise HTTPException(status_code=400, detail="cash_balance cannot be negative")
-    if monthly_salary < 0:
-        raise HTTPException(status_code=400, detail="monthly_salary cannot be negative")
 
     db.query(GameProfile).filter(
         GameProfile.user_id == current_user.id,
@@ -296,6 +270,13 @@ async def start_new_game(
     db.add(start_transaction)
 
     db.commit()
+
+    try:
+        from ..admin_notify import notify_game_started
+
+        notify_game_started(db, new_profile)
+    except Exception:
+        pass
 
     return GameStartResponse(
         profile_id=new_profile.id,

@@ -48,9 +48,16 @@ ACHIEVEMENT_CHAIN_SPECS: list[dict] = [
         "sort_order": 20,
         "tiers": [
             _tier(1, "deposit_t1", "Первый вклад", "Открыть вклад от 1 000 ₽", 10, _crit("deposit_opened", min_principal=1000)),
-            _tier(2, "deposit_t2", "Серьёзный вклад", "Сумма вклада ≥ 2 зарплат", 30, _crit("stub", note="deposit_vs_salary")),
-            _tier(3, "deposit_t3", "Капитализация", "Накопленные % ≥ 10 000 ₽", 80, _crit("stub", note="deposit_interest_cumul")),
-            _tier(4, "deposit_t4", "Покрытие статьи", "% вклада покрывают статью расходов", 200, _crit("stub", note="deposit_covers_expense")),
+            _tier(2, "deposit_t2", "Серьёзный вклад", "Сумма вклада ≥ 2 зарплат", 30, _crit("deposit_principal_vs_salary", salary_multiplier=2)),
+            _tier(3, "deposit_t3", "Капитализация", "Накопленные % ≥ 10 000 ₽", 80, _crit("deposit_accrued_interest", min_interest=10_000)),
+            _tier(
+                4,
+                "deposit_t4",
+                "Покрытие статьи",
+                "Проценты по вкладу ≥ 10% месячных расходов",
+                200,
+                _crit("deposit_monthly_income_ratio", min_ratio=0.1),
+            ),
         ],
     },
     {
@@ -62,8 +69,8 @@ ACHIEVEMENT_CHAIN_SPECS: list[dict] = [
         "tiers": [
             _tier(1, "insurance_t1", "Первый полис", "Оформить любую страховку", 10, _crit("insurance_active_count", min_count=1)),
             _tier(2, "insurance_t2", "Две линии защиты", "Два разных полиса", 30, _crit("insurance_active_count", min_count=2)),
-            _tier(3, "insurance_t3", "Выплата сработала", "Страховая выплата > 50% ущерба", 70, _crit("stub", note="insurance_claim_ratio")),
-            _tier(4, "insurance_t4", "Долгий покой", "24 периода без «голого» шока", 150, _crit("stub", note="insurance_no_naked_shock")),
+            _tier(3, "insurance_t3", "Выплата сработала", "Хотя бы одна страховая выплата", 70, _crit("insurance_claimed_count", min_count=1)),
+            _tier(4, "insurance_t4", "Долгий покой", "24 периода без просрочки при активной страховке", 150, _crit("insured_clean_streak", min_periods=24)),
         ],
     },
     {
@@ -73,10 +80,10 @@ ACHIEVEMENT_CHAIN_SPECS: list[dict] = [
         "description": "Дисциплина обслуживания долгов.",
         "sort_order": 40,
         "tiers": [
-            _tier(1, "credit_t1", "Платёж в срок", "Первый платёж по долгу без просрочки", 10, _crit("clean_period_streak", min_periods=1)),
-            _tier(2, "credit_t2", "Досрочное погашение", "Досрочка ≥ 30% тела", 40, _crit("stub", note="early_repayment")),
-            _tier(3, "credit_t3", "Закрытие долга", "Закрыть кредит с переплатой < 15%", 100, _crit("stub", note="loan_closed")),
-            _tier(4, "credit_t4", "Крупный выход", "Раннее закрытие крупного долга", 300, _crit("stub", note="large_loan_early_close")),
+            _tier(1, "credit_t1", "Платёж в срок", "Нет просрочки по обязательствам", 10, _crit("no_overdue")),
+            _tier(2, "credit_t2", "Закрытие долга", "Полностью закрыть одно обязательство", 40, _crit("liabilities_closed_count", min_count=1)),
+            _tier(3, "credit_t3", "Дисциплина", "3 периода подряд без просрочки", 100, _crit("clean_period_streak", min_periods=3)),
+            _tier(4, "credit_t4", "Крупный выход", "Закрыть крупный долг (≥ 300 000 ₽)", 300, _crit("liability_close_payment", min_amount=300_000)),
         ],
     },
     {
@@ -88,8 +95,8 @@ ACHIEVEMENT_CHAIN_SPECS: list[dict] = [
         "tiers": [
             _tier(1, "investment_t1", "Первая бумага", "Купить облигацию", 15, _crit("bond_count", min_count=1)),
             _tier(2, "investment_t2", "Портфель облигаций", "Три облигации в портфеле", 50, _crit("bond_count", min_count=3)),
-            _tier(3, "investment_t3", "Пассивный поток", "Пассивный доход > 5% расходов", 120, _crit("stub", note="passive_income_5pct")),
-            _tier(4, "investment_t4", "Сильный пассив", "Пассивный доход > 30% расходов", 300, _crit("stub", note="passive_income_30pct")),
+            _tier(3, "investment_t3", "Пассивный поток", "Пассивный доход > 5% расходов", 120, _crit("passive_income_ratio", min_ratio=0.05)),
+            _tier(4, "investment_t4", "Сильный пассив", "Пассивный доход > 30% расходов", 300, _crit("passive_income_ratio", min_ratio=0.30)),
         ],
     },
     {
@@ -100,8 +107,8 @@ ACHIEVEMENT_CHAIN_SPECS: list[dict] = [
         "sort_order": 60,
         "tiers": [
             _tier(1, "capital_t1", "В плюсе", "Чистый капитал > 0", 10, _crit("liquid_net_worth", min_amount=1)),
-            _tier(2, "capital_t2", "Полгода дохода", "Ликвидность > 6 месяцев дохода", 50, _crit("stub", note="liquid_vs_salary_6")),
-            _tier(3, "capital_t3", "Два года дохода", "Ликвидность > 24 месяцев дохода", 150, _crit("stub", note="liquid_vs_salary_24")),
+            _tier(2, "capital_t2", "Полгода дохода", "Ликвидность > 6 месяцев дохода", 50, _crit("liquid_vs_salary_months", min_months=6)),
+            _tier(3, "capital_t3", "Два года дохода", "Ликвидность > 24 месяцев дохода", 150, _crit("liquid_vs_salary_months", min_months=24)),
             _tier(4, "capital_t4", "Капитал 100k", "Ликвидность ≥ 100 000 ₽", 500, _crit("liquid_net_worth", min_amount=100_000)),
         ],
     },

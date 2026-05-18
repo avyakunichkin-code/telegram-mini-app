@@ -23,6 +23,12 @@ from ..achievement_seeds import ensure_achievement_catalog
 from ..character_progression import character_xp_need_for_next_level
 from ..victory_engine import VictoryEvaluationInput, evaluate_victory, parse_victory_config
 from ..victory_seeds import DEFAULT_TEMPLATE_KEY
+from ..level_gates import (
+    UNLOCK_ASSET_FROM_TEMPLATE,
+    UNLOCK_LIABILITY_FROM_TEMPLATE,
+    character_unlocks_payload,
+    require_character_level,
+)
 from ..schemas import (
     SalaryProfileUpdate,
     SalaryProfileResponse,
@@ -33,6 +39,7 @@ from ..schemas import (
     FinanceOverview,
     VictoryOverview,
     VictoryGoalOverview,
+    CharacterUnlockOverview,
     AnalyticsTimeseriesPoint,
     FinanceAnalyticsTimeseriesResponse,
 )
@@ -266,6 +273,7 @@ async def create_liability_from_template(
 
     game_profile = get_active_game_profile(db, current_user.id)
     sync_time(game_profile)
+    require_character_level(game_profile, UNLOCK_LIABILITY_FROM_TEMPLATE, "finance.liability_from_template")
     principal = float(tpl.total_debt)
     rate = float(tpl.annual_rate_percent)
     mp = monthly_interest_payment(principal, rate)
@@ -410,6 +418,7 @@ async def create_asset_from_template(
         raise HTTPException(status_code=404, detail="Template not found")
     game_profile = get_active_game_profile(db, current_user.id)
     sync_time(game_profile)
+    require_character_level(game_profile, UNLOCK_ASSET_FROM_TEMPLATE, "finance.asset_from_template")
 
     cost = float(tpl_row.asset_value)
     if cost > EPSILON:
@@ -642,6 +651,9 @@ async def finance_overview(
         avg_net_cashflow_6p=avg_cf_6,
         avg_net_cashflow_6p_n=avg_cf_n,
         victory=victory_overview,
+        character_unlocks=[
+            CharacterUnlockOverview(**item) for item in character_unlocks_payload(profile)
+        ],
     )
 
 

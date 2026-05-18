@@ -23,6 +23,7 @@ from .models import (
     InsurancePolicy,
     InvestmentPosition,
     ProfileAchievementUnlock,
+    Transaction,
 )
 
 logger = logging.getLogger(__name__)
@@ -42,6 +43,13 @@ class AchievementEvaluationContext:
     total_overdue_amount: float
     clean_period_streak: int
     period_index: int
+    monthly_passive_income: float
+    estimated_deposit_monthly_interest: float
+    estimated_deposit_accrued_interest: float
+    liquid_total: float
+    liabilities_closed_count: int
+    max_liability_close_payment: float
+    insurance_claims_count: int
 
 
 def monthly_reference_expense(profile: GameProfile, liabilities: list, assets: list) -> float:
@@ -95,9 +103,59 @@ def build_achievement_context(db: Session, profile: GameProfile) -> AchievementE
         .count()
     )
 
+    period_index = int(profile.period_index or 1)
+    monthly_asset_income = sum(float(getattr(a, "monthly_income", 0) or 0) for a in assets)
+    bonds = (
+        db.query(InvestmentPosition)
+        .filter(
+            InvestmentPosition.game_profile_id == profile.id,
+            InvestmentPosition.is_active == 1,
+            InvestmentPosition.kind == "bond",
+        )
+        .all()
+    )
+    bond_monthly_coupon = sum(
+        float(p.principal or 0) * float(p.annual_rate_percent or 0) / 100.0 / 12.0 for p in bonds
+    )
+    monthly_passive_income = monthly_asset_income + bond_monthly_coupon
+
+    deposit_monthly_interest = 0.0
+    deposit_accrued_interest = 0.0
+    for pos in deposits:
+        principal = float(pos.principal or 0)
+        rate = float(pos.annual_rate_percent or 0) / 100.0
+        periods_held = max(0, period_index - int(pos.started_period or period_index))
+        monthly_int = principal * rate / 12.0
+        deposit_monthly_interest += monthly_int
+        deposit_accrued_interest += monthly_int * max(1, periods_held)
+
+    close_rows = (
+        db.query(Transaction.amount)
+        .filter(
+            Transaction.game_profile_id == profile.id,
+            Transaction.type == "liability_close",
+        )
+        .all()
+    )
+    close_payments = [abs(float(r[0] or 0)) for r in close_rows]
+    liabilities_closed_count = len(close_payments)
+    max_close_payment = max(close_payments, default=0.0)
+
+    insurance_claims_count = (
+        db.query(InsurancePolicy)
+        .filter(
+            InsurancePolicy.game_profile_id == profile.id,
+            InsurancePolicy.claimed_period_index.isnot(None),
+        )
+        .count()
+    )
+
+    cash = float(profile.cash_balance or 0)
+    safety = float(profile.safety_fund_balance or 0)
+
     return AchievementEvaluationContext(
-        safety_fund_balance=float(profile.safety_fund_balance or 0),
-        cash_balance=float(profile.cash_balance or 0),
+        safety_fund_balance=safety,
+        cash_balance=cash,
         monthly_reference_expense=monthly_reference_expense(profile, liabilities, assets),
         monthly_salary=monthly_salary,
         active_insurance_count=int(insurance_count),
@@ -105,7 +163,14 @@ def build_achievement_context(db: Session, profile: GameProfile) -> AchievementE
         active_bond_count=int(bonds_count),
         total_overdue_amount=sum(float(getattr(l, "overdue_amount", 0) or 0) for l in liabilities),
         clean_period_streak=int(getattr(profile, "clean_period_streak", 0) or 0),
-        period_index=int(profile.period_index or 1),
+        period_index=period_index,
+        monthly_passive_income=monthly_passive_income,
+        estimated_deposit_monthly_interest=deposit_monthly_interest,
+        estimated_deposit_accrued_interest=deposit_accrued_interest,
+        liquid_total=cash + safety,
+        liabilities_closed_count=liabilities_closed_count,
+        max_liability_close_payment=max_close_payment,
+        insurance_claims_count=int(insurance_claims_count),
     )
 
 
@@ -148,6 +213,58 @@ def evaluate_achievement_criteria(criteria: dict, ctx: AchievementEvaluationCont
     if ctype == "clean_period_streak":
         minimum = int(criteria.get("min_periods", 1) or 1)
         return ctx.clean_period_streak >= minimum
+
+    if ctype == "deposit_principal_vs_salary":
+        mult = float(criteria.get("salary_multiplier", 2) or 2)
+        if ctx.monthly_salary <= 0:
+            return False
+        return ctx.max_deposit_principal >= ctx.monthly_salary * mult - 1e-6
+
+    if ctype == "deposit_accrued_interest":
+        minimum = float(criteria.get("min_interest", 0) or 0)
+        return ctx.estimated_deposit_accrued_interest >= minimum - 1e-6
+
+    if ctype == "deposit_monthly_income_ratio":
+        ratio = float(criteria.get("min_ratio", 0.1) or 0.1)
+        ref = float(ctx.monthly_reference_expense)
+        if ref <= 0:
+            return False
+        return ctx.estimated_deposit_monthly_interest >= ref * ratio - 1e-6
+
+    if ctype == "passive_income_ratio":
+        ratio = float(criteria.get("min_ratio", 0.05) or 0.05)
+        ref = float(ctx.monthly_reference_expense)
+        if ref <= 0:
+            return False
+        return ctx.monthly_passive_income >= ref * ratio - 1e-6
+
+    if ctype == "liquid_vs_salary_months":
+        months = float(criteria.get("min_months", 6) or 6)
+        if ctx.monthly_salary <= 0:
+            return False
+        return ctx.liquid_total >= ctx.monthly_salary * months - 1e-6
+
+    if ctype == "liabilities_closed_count":
+        minimum = int(criteria.get("min_count", 1) or 1)
+        return ctx.liabilities_closed_count >= minimum
+
+    if ctype == "liability_close_payment":
+        minimum = float(criteria.get("min_amount", 0) or 0)
+        return ctx.max_liability_close_payment >= minimum - 1e-6
+
+    if ctype == "insurance_claimed_count":
+        minimum = int(criteria.get("min_count", 1) or 1)
+        return ctx.insurance_claims_count >= minimum
+
+    if ctype == "insured_clean_streak":
+        min_periods = int(criteria.get("min_periods", 24) or 24)
+        return (
+            ctx.clean_period_streak >= min_periods
+            and (ctx.active_insurance_count >= 1 or ctx.insurance_claims_count >= 1)
+        )
+
+    if ctype == "no_overdue":
+        return ctx.total_overdue_amount <= 0
 
     logger.debug("achievement criteria type not implemented: %s", ctype)
     return False

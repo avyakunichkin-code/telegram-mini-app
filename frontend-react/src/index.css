@@ -959,17 +959,16 @@ body {
   );
 }
 
-.mqx-capital-template-row--insurance-h .mqx-capital-template-row__kicker {
-  color: color-mix(in srgb, var(--mqx-ink) 52%, transparent);
-}
-
-/* Страховки: лёгкая карточка без «стекла», иконки без подложки (asset H) */
 .mqx-capital-template-row--insurance-h {
   border: none;
   background: transparent;
   border-radius: 0;
   padding: 6px 6px 6px 10px;
   box-shadow: none;
+}
+
+.mqx-capital-template-row--insurance-h .mqx-capital-template-row__kicker {
+  color: color-mix(in srgb, var(--mqx-ink) 52%, transparent);
 }
 
 .mqx-capital-template-row--insurance-h .mqx-capital-template-row__title {
@@ -1174,6 +1173,7 @@ body {
   display: flex;
   flex-direction: column;
   gap: 8px;
+  margin-top: 12px;
 }
 
 .mqx-capital-template-row--liability-h .mqx-capital-template-row__kicker {
@@ -1592,6 +1592,13 @@ body {
 
 .mqx-catalog-section {
   margin-bottom: 24px;
+}
+
+.mqx-catalog__note {
+  margin: 0;
+  font-size: var(--mq-fs-caption);
+  line-height: 1.4;
+  color: color-mix(in srgb, var(--mqx-ink) 55%, transparent);
 }
 
 .mqx-catalog-section__title {
@@ -2232,6 +2239,38 @@ body {
   gap: 10px;
   font-size: var(--mq-fs-caption);
   color: color-mix(in srgb, var(--mqx-ink) 62%, transparent);
+}
+
+.mqx-victory-goals {
+  list-style: none;
+  margin: 12px 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.mqx-victory-goals__item--met .mqx-victory-goals__status {
+  color: rgba(5, 150, 105, 0.92);
+}
+
+.mqx-victory-goals__title {
+  font-weight: 700;
+  color: var(--mqx-ink);
+}
+
+.mqx-victory-goals__status {
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.mqx-victory-goals__hint {
+  margin-top: 4px;
+  opacity: 0.9;
+}
+
+.mqx-progress--done {
+  --mqx-progress-fill: rgba(5, 150, 105, 0.85);
 }
 
 .mqx-progress {
@@ -4740,4 +4779,61 @@ button.mqx-events-choice:active:not(:disabled) {
   .bottom-nav button.tma-nav-icon-btn svg {
     transition: none;
   }
+}
+
+/* Admin Watchtower (MVP 1.2 A0) */
+.admin-watchtower__header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.admin-watchtower__actions {
+  display: flex;
+  gap: 8px;
+}
+
+.admin-watchtower__block {
+  margin-bottom: 12px;
+}
+
+.admin-watchtower__block-title {
+  margin: 0 0 10px;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.admin-watchtower__table-wrap {
+  overflow-x: auto;
+}
+
+.admin-watchtower__table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+.admin-watchtower__table th,
+.admin-watchtower__table td {
+  padding: 6px 8px;
+  text-align: left;
+  border-bottom: 1px solid var(--mq-border-subtle, rgba(128, 128, 128, 0.25));
+}
+
+.admin-watchtower__row--highlight {
+  background: color-mix(in srgb, var(--mq-accent, #7c5cff) 12%, transparent);
+}
+
+.admin-watchtower__loading {
+  display: flex;
+  justify-content: center;
+  padding: 24px;
+}
+
+.admin-watchtower__error {
+  padding: 12px;
+  margin-bottom: 12px;
 }

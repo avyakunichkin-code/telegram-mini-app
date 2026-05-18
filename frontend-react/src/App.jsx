@@ -11,6 +11,7 @@ import { GameTemplatePickScreen } from './components/new-game/GameTemplatePickSc
 import { GameScreen } from './components/GameScreen';
 import { ToastHost } from './components/ToastHost';
 import { MqCatalogScreen } from './components/mqx/catalog/MqCatalogScreen';
+import { AdminWatchtowerScreen } from './components/admin/AdminWatchtowerScreen';
 
 function GameAppFlowShell({ children }) {
   return (
@@ -145,6 +146,17 @@ function App() {
                 }
               />
             ) : null}
+            <Route
+              path="/admin"
+              element={
+                <AuthGuard>
+                  <div className="app-shell mq-page" style={{ padding: '12px' }}>
+                    <div className="mq-page__decor" aria-hidden />
+                    <AdminWatchtowerScreen />
+                  </div>
+                </AuthGuard>
+              }
+            />
             <Route path="/" element={
               <AuthGuard>
                 <GameApp />

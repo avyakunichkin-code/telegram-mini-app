@@ -34,7 +34,14 @@ async def register(user_data: UserRegister, db: Session = Depends(get_db)):
     db.add(new_user)
     db.commit()
     db.refresh(new_user)
-    
+
+    try:
+        from ..admin_notify import notify_user_registered
+
+        notify_user_registered(db, new_user)
+    except Exception:
+        pass
+
     # Создаём токен
     access_token = create_access_token(data={"sub": str(new_user.id)})
     

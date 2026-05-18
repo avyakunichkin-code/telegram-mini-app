@@ -1,4 +1,5 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Request
+from fastapi.responses import JSONResponse
 from sqlalchemy.orm import Session
 
 from ..auth import get_current_user
@@ -7,6 +8,8 @@ from ..database import get_db
 from ..game_time import get_active_game_profile, sync_time
 from ..insurance_catalog import list_catalog, list_grid_catalog, list_plans, resolve_plan, resolve_product_object
 from ..models import InsurancePolicy
+from ..idempotency import read_idempotency_key, run_idempotent
+from ..level_gates import UNLOCK_INSURANCE_BUY, require_character_level
 
 
 router = APIRouter(prefix="/api/insurance", tags=["insurance"])
@@ -55,7 +58,12 @@ async def list_policies(current_user=Depends(get_current_user), db: Session = De
 
 
 @router.post("/buy")
-async def buy_policy(payload: dict, current_user=Depends(get_current_user), db: Session = Depends(get_db)):
+async def buy_policy(
+    request: Request,
+    payload: dict,
+    current_user=Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
     plan_key = (payload.get("plan_key") or "").strip()
     if plan_key:
         try:
@@ -88,30 +96,44 @@ async def buy_policy(payload: dict, current_user=Depends(get_current_user), db: 
     if term_periods <= 0:
         raise HTTPException(status_code=400, detail="term_periods must be > 0")
 
-    profile = get_active_game_profile(db, current_user.id)
-    sync_time(profile)
-    started = int(profile.period_index or 1)
-    expires = started + term_periods
+    idem_key = read_idempotency_key(request)
 
-    policy = InsurancePolicy(
-        game_profile_id=profile.id,
-        product=spec.product,
-        insured_object=spec.insured_object,
-        kind=spec.kind,
-        title=title,
-        monthly_premium=monthly_premium,
-        payout_amount=payout_amount,
-        coverage_limit=payout_amount,
-        term_periods=term_periods,
-        started_period_index=started,
-        expires_period_index=expires,
-        claimed_period_index=None,
-        is_active=1,
-    )
-    db.add(policy)
-    db.commit()
-    db.refresh(policy)
-    return {"status": "success", "policy_id": policy.id, "policy": _policy_to_dict(policy)}
+    def _execute() -> dict:
+        profile = get_active_game_profile(db, current_user.id)
+        sync_time(profile)
+        require_character_level(profile, UNLOCK_INSURANCE_BUY, "insurance.buy")
+        started = int(profile.period_index or 1)
+        expires = started + term_periods
+        policy = InsurancePolicy(
+            game_profile_id=profile.id,
+            product=spec.product,
+            insured_object=spec.insured_object,
+            kind=spec.kind,
+            title=title,
+            monthly_premium=monthly_premium,
+            payout_amount=payout_amount,
+            coverage_limit=payout_amount,
+            term_periods=term_periods,
+            started_period_index=started,
+            expires_period_index=expires,
+            claimed_period_index=None,
+            is_active=1,
+        )
+        db.add(policy)
+        db.commit()
+        db.refresh(policy)
+        return {"status": "success", "policy_id": policy.id, "policy": _policy_to_dict(policy)}
+
+    if idem_key:
+        status, body = run_idempotent(
+            db,
+            user_id=current_user.id,
+            route_key="insurance.buy",
+            idempotency_key=idem_key,
+            handler=_execute,
+        )
+        return JSONResponse(status_code=status, content=body)
+    return _execute()
 
 
 @router.post("/{policy_id}/cancel")
@@ -150,43 +172,6 @@ def expire_policies_for_period(db: Session, profile, period_index: int) -> int:
     if n:
         db.commit()
     return n
-
-
-def settle_insurance_claim(db: Session, profile, policy_id: int, period_index: int) -> dict:
-    """
-    Страховой случай: полная сумма выплаты на cash, полис закрывается.
-    Остаток лимита / частичные выплаты не используются (игровая механика).
-    """
-    policy = (
-        db.query(InsurancePolicy)
-        .filter(
-            InsurancePolicy.id == policy_id,
-            InsurancePolicy.game_profile_id == profile.id,
-            InsurancePolicy.is_active == 1,
-            InsurancePolicy.claimed_period_index.is_(None),
-        )
-        .first()
-    )
-    if not policy:
-        raise HTTPException(status_code=404, detail="Policy not found or already used")
-
-    payout = float(policy.payout_amount if policy.payout_amount is not None else policy.coverage_limit or 0)
-    if payout <= 0:
-        raise HTTPException(status_code=400, detail="Policy has no payout amount")
-
-    adjust_balance(
-        db,
-        profile.id,
-        payout,
-        "insurance_claim",
-        f"Страховая выплата: {policy.title}",
-        period_index,
-    )
-    policy.claimed_period_index = period_index
-    policy.is_active = 0
-    db.commit()
-    db.refresh(profile)
-    return {"status": "success", "payout_amount": payout, "policy_id": policy.id}
 
 
 def charge_premiums_for_period(db: Session, profile, period_index: int) -> float:

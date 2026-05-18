@@ -226,11 +226,19 @@ def process_period_end(db: Session, profile: GameProfile) -> dict:
         achievement_unlocks = []
 
     # 7. Увеличиваем номер периода
+    closed_period_index = int(period_index)
     profile.period_index += 1
     profile.period_anchor_at = datetime.utcnow()
 
     db.commit()
     db.refresh(profile)
+
+    try:
+        from .admin_notify import process_period_admin_alerts
+
+        process_period_admin_alerts(db, profile, closed_period_index=closed_period_index)
+    except Exception:
+        pass
 
     # 8. Событие на новый период (easy)
     try:

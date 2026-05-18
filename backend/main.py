@@ -17,6 +17,7 @@ from app.routers import (
     invest_router,
     insurance_router,
     achievements_router,
+    admin_router,
 )
 
 # Каталог стартов Game: сортируется sort_order; ON CONFLICT не обновляет существующие строки.
@@ -325,6 +326,7 @@ app.include_router(events_router)
 app.include_router(invest_router)
 app.include_router(insurance_router)
 app.include_router(achievements_router)
+app.include_router(admin_router)
 
 
 @app.get("/")

@@ -1,0 +1,87 @@
+"""A0 Watchtower: admin API, dedupe, emit."""
+
+from __future__ import annotations
+
+import os
+
+import pytest
+
+from app.admin_notify import emit_admin_alert
+from app.models import NotificationLog
+
+
+@pytest.fixture()
+def admin_env(test_user, monkeypatch):
+    monkeypatch.setenv("ADMIN_USER_IDS", str(test_user.id))
+    from app.config import config
+
+    config.ADMIN_USER_IDS = {test_user.id}
+    monkeypatch.delenv("OPS_TELEGRAM_BOT_TOKEN", raising=False)
+    monkeypatch.delenv("OPS_TELEGRAM_CHAT_ID", raising=False)
+    from app import config as config_module
+
+    config_module.config.OPS_TELEGRAM_BOT_TOKEN = ""
+    config_module.config.OPS_TELEGRAM_CHAT_ID = ""
+    yield test_user
+
+
+def test_emit_admin_alert_dedupe(db_session):
+    os.environ.setdefault("SECRET_KEY", "test")
+    first = emit_admin_alert(
+        db_session,
+        "user_registered",
+        {"username": "a"},
+        user_id=1,
+        dedupe_key="user_registered:1",
+    )
+    second = emit_admin_alert(
+        db_session,
+        "user_registered",
+        {"username": "a"},
+        user_id=1,
+        dedupe_key="user_registered:1",
+    )
+    assert first is not None
+    assert second is None
+    assert db_session.query(NotificationLog).count() == 1
+
+
+def test_admin_watchtower_forbidden(client, auth_headers):
+    resp = client.get("/api/admin/watchtower", headers=auth_headers)
+    assert resp.status_code == 403
+
+
+def test_admin_watchtower_ok(client, admin_env, auth_headers):
+    token_headers = auth_headers
+    resp = client.get("/api/admin/watchtower", headers=token_headers)
+    assert resp.status_code == 200
+    data = resp.json()
+    assert "users" in data
+    assert "profiles" in data
+    assert "notifications" in data
+    usernames = [u["username"] for u in data["users"]]
+    assert admin_env.username in usernames
+
+
+def test_register_emits_admin_notification(client, db_session, monkeypatch):
+    monkeypatch.setenv("ADMIN_USER_IDS", "99999")
+    from app.config import config
+
+    config.ADMIN_USER_IDS = set()
+    resp = client.post(
+        "/api/register",
+        json={
+            "username": "watchtower_new",
+            "password": "secret123",
+            "email": "wt@example.com",
+        },
+    )
+    assert resp.status_code == 200
+    row = (
+        db_session.query(NotificationLog)
+        .filter(NotificationLog.kind == "user_registered")
+        .order_by(NotificationLog.id.desc())
+        .first()
+    )
+    assert row is not None
+    assert row.audience == "admin"

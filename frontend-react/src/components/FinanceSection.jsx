@@ -9,8 +9,7 @@ import { InvestPositionRow } from './InvestPositionRow';
 import { InvestPositionMetrics } from './InvestPositionMetrics';
 import {
   AssetPositionMetrics,
-  InsurancePolicyRow,
-  InsuranceProductPicker,
+  InsuranceSection,
   LiabilityPositionMetrics,
   MqxModeButton,
   MqxSubtab,
@@ -286,24 +285,15 @@ export function FinanceSection({
           {financeTab === 'insurance' && (
             <div role="tabpanel" id="finance-panel-insurance" aria-labelledby="finance-tab-insurance">
               <Section header="Страховки">
-                <div className="mq-slot-intro">
-                  Премия списывается в конце периода. При страховом случае — полная выплата, полис закрывается.
-                </div>
                 <Cell multiline>
-                  <InsuranceProductPicker onBuy={buyInsurancePlan} buyingPlanKey={buyingPlanKey} />
+                  <InsuranceSection
+                    policies={policies}
+                    buyingPlanKey={buyingPlanKey}
+                    cancellingPolicyId={cancellingPolicyId}
+                    onBuy={buyInsurancePlan}
+                    onCancel={cancelInsurancePolicy}
+                  />
                 </Cell>
-                <List>
-                  {policies.length === 0 && <Cell>Нет активных полисов</Cell>}
-                  {policies.map((p) => (
-                    <Cell key={p.id} multiline>
-                      <InsurancePolicyRow
-                        policy={p}
-                        busy={cancellingPolicyId === p.id}
-                        onCancel={cancelInsurancePolicy}
-                      />
-                    </Cell>
-                  ))}
-                </List>
               </Section>
             </div>
           )}
@@ -624,26 +614,14 @@ export function FinanceSection({
         ) : null}
 
         {financeTab === 'insurance' ? (
-          <>
-            <div className="mqx-card__sub">
-              Премия списывается в конце периода. При страховом случае — полная сумма выплаты, полис закрывается.
-            </div>
-            <InsuranceProductPicker onBuy={buyInsurancePlan} buyingPlanKey={buyingPlanKey} />
-            <div className="mqx-ins-policy-list" style={{ marginTop: 12 }}>
-              {policies.length === 0 ? (
-                <div className="mqx-fin-empty">Нет активных полисов</div>
-              ) : (
-                policies.map((p) => (
-                  <InsurancePolicyRow
-                    key={p.id}
-                    policy={p}
-                    busy={cancellingPolicyId === p.id}
-                    onCancel={cancelInsurancePolicy}
-                  />
-                ))
-              )}
-            </div>
-          </>
+          <InsuranceSection
+            policies={policies}
+            buyingPlanKey={buyingPlanKey}
+            cancellingPolicyId={cancellingPolicyId}
+            onBuy={buyInsurancePlan}
+            onCancel={cancelInsurancePolicy}
+            intro="Премия списывается в конце периода. При страховом случае — полная сумма выплаты, полис закрывается."
+          />
         ) : null}
 
         {financeTab === 'portfolio' && !capitalLayout ? (
