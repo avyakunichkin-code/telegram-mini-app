@@ -16,6 +16,7 @@ from ..models import (
     GameStarterTemplate,
 )
 from ..balance_utils import adjust_balance, adjust_safety_fund_balance
+from ..finance_analytics import avg_net_cashflow_last_closed_intervals as _avg_net_cashflow_last_closed_intervals
 from ..finance_helpers import monthly_interest_payment
 from ..game_time import get_active_game_profile, sync_time, get_seconds_until_next
 from ..achievement_engine import process_achievement_unlocks
@@ -47,37 +48,6 @@ from ..schemas import (
 router = APIRouter(prefix="/api/finance", tags=["finance"])
 
 EPSILON = 1e-6
-
-
-def _liquid_snapshot_total(row: PeriodEconomyClosing) -> float:
-    return float(row.cash_balance or 0) + float(row.safety_fund_balance or 0)
-
-
-def _avg_net_cashflow_last_closed_intervals(
-    db: Session, game_profile_id: int, max_intervals: int = 6
-) -> tuple[float, int]:
-    """
-    Среднее Δ(наличные + подушка) между соседними снимками закрытия периода.
-    Берём до max_intervals последних интервалов (нужно ≥2 снимка в окне).
-    """
-    limit = max_intervals + 1
-    rows = (
-        db.query(PeriodEconomyClosing)
-        .filter(PeriodEconomyClosing.game_profile_id == game_profile_id)
-        .order_by(PeriodEconomyClosing.period_index.desc())
-        .limit(limit)
-        .all()
-    )
-    if len(rows) < 2:
-        return 0.0, 0
-    ascending = list(reversed(rows))
-    deltas: List[float] = []
-    for i in range(1, len(ascending)):
-        deltas.append(_liquid_snapshot_total(ascending[i]) - _liquid_snapshot_total(ascending[i - 1]))
-    tail = deltas[-max_intervals:]
-    if not tail:
-        return 0.0, 0
-    return round(sum(tail) / len(tail), 2), len(tail)
 
 
 def _cash_required_to_close(liability: FinanceLiability) -> float:
@@ -548,6 +518,9 @@ async def finance_overview(
     total_liability_payment = sum(l.monthly_payment for l in liabilities)
     total_asset_maintenance = sum(a.monthly_maintenance_cost for a in assets)
     total_monthly_obligations = total_liability_payment + total_asset_maintenance
+    monthly_lifestyle_expense = float(getattr(profile, "base_monthly_lifestyle_expense", 0) or 0) + float(
+        getattr(profile, "delta_monthly_lifestyle_expense", 0) or 0
+    )
     total_income = monthly_income + assets_income
     net_cashflow = total_income - total_monthly_obligations
     liabilities_ratio = (total_liability_payment / total_income * 100) if total_income > 0 else 0
@@ -626,6 +599,7 @@ async def finance_overview(
         total_monthly_income=round(total_income, 2),
         total_monthly_liabilities_payment=round(total_liability_payment, 2),
         total_monthly_assets_maintenance=round(total_asset_maintenance, 2),
+        monthly_lifestyle_expense=round(max(0.0, monthly_lifestyle_expense), 2),
         net_monthly_cashflow=round(net_cashflow, 2),
         liabilities_to_income_ratio=round(liabilities_ratio, 2),
         gamification_level=level,

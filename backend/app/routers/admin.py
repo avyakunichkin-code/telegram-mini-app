@@ -8,6 +8,7 @@ from typing import Any, List, Optional
 
 from fastapi import APIRouter, Depends, Query
 from pydantic import BaseModel
+from sqlalchemy import func
 from sqlalchemy.orm import Session
 
 from ..admin_auth import require_admin_user
@@ -79,11 +80,16 @@ async def admin_watchtower(
         .all()
     )
 
-    profile_counts: dict[int, int] = {}
-    for u in users:
-        profile_counts[u.id] = (
-            db.query(GameProfile).filter(GameProfile.user_id == u.id).count()
-        )
+    user_ids = [u.id for u in users]
+    profile_counts: dict[int, int] = {uid: 0 for uid in user_ids}
+    if user_ids:
+        for uid, cnt in (
+            db.query(GameProfile.user_id, func.count(GameProfile.id))
+            .filter(GameProfile.user_id.in_(user_ids))
+            .group_by(GameProfile.user_id)
+            .all()
+        ):
+            profile_counts[int(uid)] = int(cnt)
 
     return AdminWatchtowerResponse(
         users=[

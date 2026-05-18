@@ -6,7 +6,8 @@ import os
 
 import pytest
 
-from app.admin_notify import emit_admin_alert
+from app.admin_notify import _admin_link, emit_admin_alert
+from app.config import _resolve_admin_web_base_url
 from app.models import NotificationLog
 
 
@@ -23,6 +24,20 @@ def admin_env(test_user, monkeypatch):
     config_module.config.OPS_TELEGRAM_BOT_TOKEN = ""
     config_module.config.OPS_TELEGRAM_CHAT_ID = ""
     yield test_user
+
+
+def test_admin_web_base_url_render_default(monkeypatch):
+    monkeypatch.delenv("ADMIN_WEB_BASE_URL", raising=False)
+    monkeypatch.delenv("PUBLIC_APP_URL", raising=False)
+    monkeypatch.setenv("DATABASE_URL", "postgresql://x@dpg-xxx.render.com/db")
+    assert "github.io" in _resolve_admin_web_base_url()
+    assert "localhost" not in _resolve_admin_web_base_url()
+
+
+def test_admin_link_uses_hash_router(monkeypatch):
+    monkeypatch.setenv("ADMIN_WEB_BASE_URL", "https://example.github.io/telegram-mini-app/#")
+    link = _admin_link("/admin?profile=7")
+    assert link == "https://example.github.io/telegram-mini-app/#/admin?profile=7"
 
 
 def test_emit_admin_alert_dedupe(db_session):
@@ -73,6 +88,7 @@ def test_register_emits_admin_notification(client, db_session, monkeypatch):
         json={
             "username": "watchtower_new",
             "password": "secret123",
+            "password_confirm": "secret123",
             "email": "wt@example.com",
         },
     )

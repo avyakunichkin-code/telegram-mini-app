@@ -111,7 +111,11 @@ async def create_game_profile(
 
         notify_profile_created(db, profile)
     except Exception:
-        pass
+        import logging
+
+        logging.getLogger(__name__).warning(
+            "Admin notify failed for profile_created", exc_info=True
+        )
 
     return profile
 
@@ -276,7 +280,11 @@ async def start_new_game(
 
         notify_game_started(db, new_profile)
     except Exception:
-        pass
+        import logging
+
+        logging.getLogger(__name__).warning(
+            "Admin notify failed for game_started", exc_info=True
+        )
 
     return GameStartResponse(
         profile_id=new_profile.id,

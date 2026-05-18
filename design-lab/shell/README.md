@@ -1,23 +1,30 @@
-# Shell — карточки, заголовки, stat-mini
+# Shell — главный экран дашборда (без hero)
 
-**Статус:** утверждён гибрид prod-паттернов → внедрено в `mqx/layout/` (без отдельного HTML-раунда: повторяет уже работающий дашборд).
+## Утверждено (2026-05)
 
-## Компоненты MQX
+**Канон:** [`APPROVED-LAYOUT.md`](./APPROVED-LAYOUT.md) + макет **D′** в `index.html`.
 
-| Компонент | Назначение |
-|-----------|------------|
-| `MqxCard` | Оболочка `mqx-card`, варианты `default` \| `goal` \| `character` |
-| `MqxCardHeader` | Kicker + title + sub + trailing; `layout`: `stack` \| `split` |
-| `MqxGoalBadge` | Бейдж «Победа / Почти / В работе» |
-| `MqxBlockSection` | Секция с заголовком и ссылкой «Детали» |
-| `MqxStatMini` | Плитка в сетке 2×2 (иконка + label + value) |
-| `VictoryGoalItem` | Одна цель в списке победы |
-| `VictoryGoalsPanel` | Собранная панель целей (использует shell) |
+| # | Блок | Поведение |
+|---|------|-----------|
+| ① | **Уровень** | Всегда виден. Без «Герой». XP + очки + bars (из стратега). Компакт: **H1 / H2 / H3** |
+| ② | **Дашборд периода** | Сворачивается. **Свёрнуто:** сводка целей + 4 chip (финансы). **Развёрнуто:** цели + финансы 2×2 |
+| ③ | **Действия** | Всегда виден. **Зарплата** = primary |
 
-Живой каталог: `#/dev/mqx` → секция **Shell — карточка и блоки**.
+## Запуск
 
-## Не делаем (v1 shell)
+```bash
+cd design-lab/shell
+npx serve .
+```
 
-- Hero / таймер (остаётся в `DashboardPremium` до спринта `dashboard/`)
-- Empty / error states (следующий подслой shell)
-- Отдельные Storybook-сторис
+1. Секция **H** — выберите компактный «Уровень» (H1 inline, **H2 slim ★**, H3 chips).
+2. Секция **D′** — полный стек; клик по «Дашборд периода» раскрывает цели и финансы.
+
+## Старые варианты A/B/C
+
+Справочные (до утверждения D′). Не внедрять в prod без отдельного решения.
+
+## Prod
+
+После выбора **H?** + подтверждения D′ → MQX → `DashboardPremium`.  
+Расходы: `monthly_lifestyle_expense` — см. [`docs/vision/ideas/monthly-expenses-display.md`](../../docs/vision/ideas/monthly-expenses-display.md).

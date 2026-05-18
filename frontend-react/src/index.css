@@ -2399,6 +2399,25 @@ body {
   background: rgba(109, 40, 217, 0.06);
 }
 
+.mqx-action--primary {
+  background: linear-gradient(165deg, var(--mq-violet, #7c3aed), var(--mq-violet-deep, #5b21b6));
+  color: #fff;
+  border-color: transparent;
+  font-weight: 750;
+  box-shadow: 0 4px 14px color-mix(in srgb, var(--mq-violet, #7c3aed) 28%, transparent);
+}
+
+.mqx-action--primary:hover {
+  filter: brightness(1.05);
+  border-color: transparent;
+  background: linear-gradient(165deg, var(--mq-violet, #7c3aed), var(--mq-violet-deep, #5b21b6));
+}
+
+.mqx-action--primary:active:not(:disabled) {
+  transform: translateY(1px);
+  box-shadow: none;
+}
+
 .mqx-analytics__title {
   margin-top: 4px;
   font-size: 20px;

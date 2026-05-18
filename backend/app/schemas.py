@@ -1,15 +1,30 @@
 from datetime import datetime
 from typing import Optional, List
-from pydantic import BaseModel, ConfigDict, Field, model_validator
+from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
 
 
 # Auth
 class UserRegister(BaseModel):
-    username: str
-    password: str
+    username: str = Field(min_length=2, max_length=50)
+    password: str = Field(min_length=6, max_length=128)
+    password_confirm: str = Field(min_length=6, max_length=128)
+    email: str = Field(min_length=5, max_length=100)
     full_name: Optional[str] = None
-    email: Optional[str] = None
     telegram_id: Optional[int] = None
+
+    @field_validator("email")
+    @classmethod
+    def normalize_email(cls, value: str) -> str:
+        normalized = (value or "").strip().lower()
+        if "@" not in normalized or "." not in normalized.split("@")[-1]:
+            raise ValueError("Valid email is required")
+        return normalized
+
+    @model_validator(mode="after")
+    def passwords_must_match(self) -> "UserRegister":
+        if self.password != self.password_confirm:
+            raise ValueError("Passwords do not match")
+        return self
 
 
 class UserLogin(BaseModel):
@@ -117,6 +132,8 @@ class FinanceOverview(BaseModel):
     total_monthly_income: float
     total_monthly_liabilities_payment: float
     total_monthly_assets_maintenance: float
+    # Расходы «жизни» за период (base + delta); списываются в конце периода.
+    monthly_lifestyle_expense: float = 0
     net_monthly_cashflow: float
     liabilities_to_income_ratio: float
     gamification_level: str

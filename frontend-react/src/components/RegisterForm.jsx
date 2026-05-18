@@ -1,13 +1,37 @@
 import { useState } from 'react';
 import { Button, Input } from '@telegram-apps/telegram-ui';
+import { formatApiErrorDetail } from '../api';
 import { useAuth } from '../context/AuthContext';
 import { AuthHeroBackdrop } from './AuthHeroBackdrop';
 import { MqxShell } from './MqxShell';
 import { MqxTabHero } from './MqxTabHero';
 
+function validateRegisterForm({ username, password, passwordConfirm, email }) {
+  const trimmedUsername = username.trim();
+  const trimmedEmail = email.trim();
+
+  if (!trimmedUsername) {
+    return 'Введите имя пользователя';
+  }
+  if (password.length < 6) {
+    return 'Пароль — не короче 6 символов';
+  }
+  if (password !== passwordConfirm) {
+    return 'Пароли не совпадают';
+  }
+  if (!trimmedEmail) {
+    return 'Укажите email';
+  }
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmedEmail)) {
+    return 'Введите корректный email';
+  }
+  return null;
+}
+
 export function RegisterForm({ onSwitchToLogin }) {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [passwordConfirm, setPasswordConfirm] = useState('');
   const [fullName, setFullName] = useState('');
   const [email, setEmail] = useState('');
   const [error, setError] = useState('');
@@ -18,12 +42,35 @@ export function RegisterForm({ onSwitchToLogin }) {
     e.preventDefault();
     if (isSubmitting) return;
     setError('');
+
+    const validationError = validateRegisterForm({
+      username,
+      password,
+      passwordConfirm,
+      email,
+    });
+    if (validationError) {
+      setError(validationError);
+      return;
+    }
+
     setIsSubmitting(true);
     try {
-      await register({ username, password, full_name: fullName, email: email || undefined });
+      await register({
+        username: username.trim(),
+        password,
+        password_confirm: passwordConfirm,
+        full_name: fullName.trim() || undefined,
+        email: email.trim(),
+      });
       window.location.href = `${import.meta.env.BASE_URL}#/`;
-    } catch {
-      setError('Ошибка регистрации. Возможно, имя уже занято.');
+    } catch (err) {
+      setError(
+        formatApiErrorDetail(
+          err?.detail ?? err?.message,
+          'Ошибка регистрации. Возможно, имя или email уже заняты.',
+        ),
+      );
     } finally {
       setIsSubmitting(false);
     }
@@ -36,7 +83,7 @@ export function RegisterForm({ onSwitchToLogin }) {
           sectionLabel="Аккаунт"
           rightPill="Регистрация"
           title="Новый игрок"
-          subtitle="Обязательны логин и пароль со звёздочкой. Остальное — позже."
+          subtitle="Логин, email и пароль — обязательны. Повторите пароль для проверки."
         />
       }
       contentClassName="mqx-auth mqx-auth--lottie-bg"
@@ -57,10 +104,27 @@ export function RegisterForm({ onSwitchToLogin }) {
                 autoComplete="username"
               />
               <Input
+                header="Email *"
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                autoComplete="email"
+                inputMode="email"
+              />
+              <Input
                 header="Пароль *"
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
+                placeholder="••••••"
+                autoComplete="new-password"
+              />
+              <Input
+                header="Повторите пароль *"
+                type="password"
+                value={passwordConfirm}
+                onChange={(e) => setPasswordConfirm(e.target.value)}
+                placeholder="••••••"
                 autoComplete="new-password"
               />
               <div className="mqx-form-field-hint-wrap">
@@ -71,16 +135,6 @@ export function RegisterForm({ onSwitchToLogin }) {
                   autoComplete="name"
                 />
                 <p className="mqx-field-inline-hint">Как к вам обращаться в интерфейсе (по желанию)</p>
-              </div>
-              <div className="mqx-form-field-hint-wrap">
-                <Input
-                  header="Email"
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  autoComplete="email"
-                />
-                <p className="mqx-field-inline-hint">Для восстановления и рассылок, если подключим</p>
               </div>
             </div>
 

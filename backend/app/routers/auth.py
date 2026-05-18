@@ -21,11 +21,9 @@ async def register(user_data: UserRegister, db: Session = Depends(get_db)):
     # Хешируем пароль
     hashed_password = get_password_hash(user_data.password)
 
-    email = user_data.email if user_data.email and user_data.email.strip() else None
-
     new_user = User(
-        username=user_data.username,
-        email=email,   # ← вместо user_data.email
+        username=user_data.username.strip(),
+        email=user_data.email,
         full_name=user_data.full_name,
         hashed_password=hashed_password,
         telegram_id=user_data.telegram_id,
@@ -40,7 +38,11 @@ async def register(user_data: UserRegister, db: Session = Depends(get_db)):
 
         notify_user_registered(db, new_user)
     except Exception:
-        pass
+        import logging
+
+        logging.getLogger(__name__).warning(
+            "Admin notify failed for user_registered", exc_info=True
+        )
 
     # Создаём токен
     access_token = create_access_token(data={"sub": str(new_user.id)})

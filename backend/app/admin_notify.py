@@ -13,9 +13,10 @@ import urllib.parse
 import urllib.request
 from typing import Any, Optional
 
+from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
-from .config import config
+from .config import _resolve_admin_web_base_url
 from .models import GameProfile, NotificationLog, User
 from .profile_victory import profile_win_reached
 
@@ -32,12 +33,12 @@ _KIND_EMOJI = {
 
 
 def _admin_link(path: str) -> str:
-    base = config.ADMIN_WEB_BASE_URL
+    base = _resolve_admin_web_base_url().rstrip("/")
     if not path.startswith("/"):
         path = f"/{path}"
-    if "#" in base and not path.startswith("#"):
+    if "#" in base:
         return f"{base}{path}"
-    return f"{base}{path}"
+    return f"{base}/#{path}"
 
 
 def _format_telegram_text(kind: str, payload: dict[str, Any]) -> str:
@@ -57,6 +58,8 @@ def _format_telegram_text(kind: str, payload: dict[str, Any]) -> str:
 
 
 def _send_telegram_message(text: str) -> bool:
+    from .config import config
+
     token = config.OPS_TELEGRAM_BOT_TOKEN
     chat_id = config.OPS_TELEGRAM_CHAT_ID
     if not token or not chat_id:
@@ -78,6 +81,11 @@ def _send_telegram_message(text: str) -> bool:
         return False
 
 
+def _session_has_foreign_pending(db: Session) -> bool:
+    """Есть ли на сессии незакоммиченные изменения кроме будущей строки notification_log."""
+    return bool(db.new or db.dirty or db.deleted)
+
+
 def emit_admin_alert(
     db: Session,
     kind: str,
@@ -88,19 +96,26 @@ def emit_admin_alert(
     dedupe_key: Optional[str] = None,
 ) -> Optional[NotificationLog]:
     """
-  Записать алерт и отправить в Telegram (если настроено).
-  При dedupe_key и существующей записи — no-op.
-    """
-    payload = dict(payload or {})
+    Записать алерт и отправить в Telegram (если настроено).
+    При dedupe_key и существующей записи — no-op.
 
-    if dedupe_key:
-        existing = (
-            db.query(NotificationLog)
-            .filter(NotificationLog.dedupe_key == dedupe_key)
-            .first()
-        )
-        if existing:
-            return None
+    Если на сессии уже есть чужие pending-изменения — только flush (без commit),
+    чтобы не закоммитить чужую работу. Иначе — commit только записи алерта.
+    """
+    from .config import config
+
+    payload = dict(payload or {})
+    foreign_pending = _session_has_foreign_pending(db)
+
+    with db.no_autoflush:
+        if dedupe_key:
+            existing = (
+                db.query(NotificationLog)
+                .filter(NotificationLog.dedupe_key == dedupe_key)
+                .first()
+            )
+            if existing:
+                return None
 
     if user_id and "user_id" not in payload:
         payload["user_id"] = user_id
@@ -126,15 +141,25 @@ def emit_admin_alert(
         payload_json=json.dumps(payload, ensure_ascii=False),
         telegram_sent=telegram_sent,
     )
-    db.add(row)
     try:
-        db.commit()
+        with db.no_autoflush:
+            if foreign_pending:
+                with db.begin_nested():
+                    db.add(row)
+                    db.flush()
+            else:
+                db.add(row)
+        if not foreign_pending:
+            db.commit()
+        db.refresh(row)
+        return row
+    except IntegrityError:
+        return None
     except Exception:
-        db.rollback()
+        if not foreign_pending:
+            db.rollback()
         logger.exception("Failed to persist admin alert kind=%s", kind)
         return None
-    db.refresh(row)
-    return row
 
 
 def notify_user_registered(db: Session, user: User) -> None:

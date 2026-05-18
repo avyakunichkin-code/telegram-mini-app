@@ -12,7 +12,7 @@
 | [invest-forms/](invest-forms/) | внедрено в prod | Формы депозита / облигаций |
 | [primitives/](primitives/) | **утверждено → prod** | Гибрид D+C+B/A; в `mqx/primitives/` |
 | [finance-insurance/](finance-insurance/) | **внедрено в prod** | B: каталог 2×2 + тарифы; карточки asset H |
-| [shell/](shell/) | **внедрено в prod** | MqxCard, header, block, stat-mini |
+| [shell/](shell/) | **варианты A/B/C** — обсуждение | Дашборд main; `cd shell && npx serve .` |
 | `dashboard/` | план | Герой, stat-блоки |
 | [events/](events/) | **внедрено в prod** | EventCard, EventCarouselOverlay, MqxPill |
 

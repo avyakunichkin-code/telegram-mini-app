@@ -238,7 +238,13 @@ def process_period_end(db: Session, profile: GameProfile) -> dict:
 
         process_period_admin_alerts(db, profile, closed_period_index=closed_period_index)
     except Exception:
-        pass
+        import logging
+
+        logging.getLogger(__name__).warning(
+            "Admin notify failed after period end profile_id=%s",
+            profile.id,
+            exc_info=True,
+        )
 
     # 8. Событие на новый период (easy)
     try:

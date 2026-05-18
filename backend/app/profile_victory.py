@@ -5,7 +5,7 @@ from __future__ import annotations
 from sqlalchemy.orm import Session
 
 from .models import FinanceAsset, FinanceLiability, FinanceSalary, GameProfile, GameStarterTemplate
-from .routers.finance import _avg_net_cashflow_last_closed_intervals
+from .finance_analytics import avg_net_cashflow_last_closed_intervals
 from .victory_engine import VictoryEvaluationInput, evaluate_victory, parse_victory_config
 from .victory_seeds import DEFAULT_TEMPLATE_KEY
 
@@ -33,7 +33,7 @@ def profile_win_reached(db: Session, profile: GameProfile) -> bool:
     net_cashflow = total_income - total_monthly_obligations
     total_overdue_amount = sum(float(l.overdue_amount or 0) for l in liabilities_orm)
 
-    avg_cf_6, avg_cf_n = _avg_net_cashflow_last_closed_intervals(db, profile.id, max_intervals=6)
+    avg_cf_6, avg_cf_n = avg_net_cashflow_last_closed_intervals(db, profile.id, max_intervals=6)
 
     template_key = getattr(profile, "starter_template_key", None) or DEFAULT_TEMPLATE_KEY
     template_row = (

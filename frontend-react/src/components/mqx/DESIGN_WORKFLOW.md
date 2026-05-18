@@ -69,7 +69,7 @@ npx serve .
 | Спринт | Тема design-lab | После утверждения |
 |--------|-----------------|-------------------|
 | 1 | `primitives/` — кнопки, pills, chips, progress | `mqx/primitives/` |
-| 2 | `shell/` — card, block, stat-mini (**внедрено**) | `MqxCard`, `MqxCardHeader`, `MqxBlockSection`, `MqxStatMini` |
+| 2 | `shell/` — дашборд main (**варианты A/B/C в design-lab**) | После утверждения → MQX → DashboardPremium |
 | 3 | `finance-insurance/` — **внедрено** | `InsuranceSection`, `Insurance*Card/Row/Picker`, Finance |
 | 4 | `dashboard/` — герой, stat-иконки | DashboardPremium |
 | 5 | `events/` — pill, карточка, оверлей (**внедрено**) | `EventCard`, `EventCarouselOverlay`, `MqxPill` |

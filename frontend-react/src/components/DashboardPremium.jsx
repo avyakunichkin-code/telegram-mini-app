@@ -53,7 +53,7 @@ export function DashboardPremium({
     const cash = Number(overview?.cash_balance) || 0;
     const safety = Number(overview?.safety_fund_balance) || 0;
     const flow = Number(overview?.net_monthly_cashflow) || 0;
-    const streak = Number(overview?.clean_period_streak) || 0;
+    const lifestyleExpense = Number(overview?.monthly_lifestyle_expense) || 0;
     return [
       {
         title: 'Баланс',
@@ -91,17 +91,14 @@ export function DashboardPremium({
         ),
       },
       {
-        title: 'Стрик месяцев',
-        valueNode: <span className="mqx-card-value">{streak}</span>,
+        title: 'Расходы',
+        valueNode: <MoneyText value={lifestyleExpense} />,
         accent: 'mqx-accent--amber',
         icon: (
           <svg viewBox="0 0 24 24" aria-hidden="true">
-            <path d="M7 3v3" />
-            <path d="M17 3v3" />
-            <path d="M4 8h16" />
-            <path d="M6 6h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2Z" />
-            <path d="M8 12h4" />
-            <path d="M8 16h6" />
+            <path d="M4 19V5" />
+            <path d="M4 19h16" />
+            <path d="M16 9l-4 4-2-2-4 4" />
           </svg>
         ),
       },
@@ -280,7 +277,7 @@ export function DashboardPremium({
             <div className="mqx-grid2">
               <button
                 type="button"
-                className="mqx-action"
+                className="mqx-action mqx-action--primary"
                 disabled={busyAction !== null}
                 onClick={async () => {
                   try {

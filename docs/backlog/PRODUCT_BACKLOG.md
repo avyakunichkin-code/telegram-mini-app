@@ -105,7 +105,7 @@
 - [ ] P2 **[Backend+Frontend]** Draft/publish контента и «отправить себе» (Phase 2 idea).
 - [ ] P2 **[Doc]** Spec [`SPEC_admin-and-notifications.md`](../specs/features/SPEC_admin-and-notifications.md).
 
-**Env (backend):** `ADMIN_USER_IDS`, `OPS_TELEGRAM_BOT_TOKEN`, `OPS_TELEGRAM_CHAT_ID`, `ADMIN_WEB_BASE_URL`.
+**Env (backend):** `ADMIN_USER_IDS`, `OPS_TELEGRAM_BOT_TOKEN`, `OPS_TELEGRAM_CHAT_ID`; ссылки в TG — `ADMIN_WEB_BASE_URL` или `PUBLIC_APP_URL` (на Render без env — дефолт GitHub Pages).
 
 ### Экономика и давление
 

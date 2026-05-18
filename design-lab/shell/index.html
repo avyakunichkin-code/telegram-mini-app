@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="ru" data-theme="light">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Money Quest — shell дашборда</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <header class="lab-header">
+      <div>
+        <h1>Shell — главный экран дашборда</h1>
+        <p>
+          Только <strong>main</strong> (без hero). Одинаковые тестовые данные во всех вариантах.
+          Выберите в чате → «утверждаем X» → MQX → prod.
+        </p>
+      </div>
+      <div class="lab-theme" role="group" aria-label="Тема">
+        <button type="button" class="is-active" data-theme-btn="light">Светлая</button>
+        <button type="button" data-theme-btn="dark">Тёмная</button>
+      </div>
+    </header>
+
+    <main class="lab-wrap">
+      <!-- ═══════════════ H1–H3: компактный «Уровень» ═══════════════ -->
+      <section class="lab-section" id="variant-level">
+        <div class="lab-section__label">
+          <span class="lab-section__id">H</span>
+          <span class="lab-section__title">Блок «Уровень» — компактно (sky), без «Герой»</span>
+        </div>
+        <p class="lab-section__note">
+          Объединяет бывшие «Герой» + «Фин. стратег»: только заголовок <strong>Уровень N</strong>, XP, очки, bars.
+          Выберите H1 / H2 / H3 для полного макета D′ ниже.
+        </p>
+
+        <p class="lab-dash-stack__label">H1 — inline</p>
+        <article class="level-compact level-h1">
+          <div class="level-h1__row">
+            <div>
+              <div class="level-compact__title">Уровень 3</div>
+              <div class="level-h1__xp-wrap">
+                <div class="level-h1__xp-bar"><div class="level-h1__xp-fill"></div></div>
+                <div class="level-h1__xp-num">45 / 100 XP</div>
+              </div>
+            </div>
+            <div class="level-h1__score">
+              <div class="level-compact__score-label">Очки</div>
+              <div class="level-compact__score">1 240</div>
+            </div>
+          </div>
+        </article>
+
+        <p class="lab-dash-stack__label" style="margin-top: 14px">H2 — slim card ★</p>
+        <article class="level-compact level-h2">
+          <div class="level-h2__head">
+            <div>
+              <div class="level-compact__title">Уровень 3</div>
+              <div class="level-h2__sub">45 / 100 XP к след. уровню</div>
+            </div>
+            <div>
+              <div class="level-compact__score-label">Очки</div>
+              <div class="level-compact__score">1 240</div>
+            </div>
+          </div>
+          <div class="level-h2__meter">
+            <div class="dash-progress"><div class="dash-progress__fill dash-progress__fill--xp" style="width: 45%"></div></div>
+          </div>
+          <div class="level-h2__bars">
+            <div>
+              <div class="level-h2__bar-row"><span>Доход</span><span>50 000</span></div>
+              <div class="level-h2__bar-track"><div class="level-h2__bar-fill dash-bar-fill--emerald" style="width: 100%"></div></div>
+            </div>
+            <div>
+              <div class="level-h2__bar-row"><span>Долги</span><span>12 000</span></div>
+              <div class="level-h2__bar-track"><div class="level-h2__bar-fill dash-bar-fill--rose" style="width: 24%"></div></div>
+            </div>
+          </div>
+        </article>
+
+        <p class="lab-dash-stack__label" style="margin-top: 14px">H3 — chips</p>
+        <article class="level-compact level-h3">
+          <div class="level-compact__title" style="margin-bottom: 8px">Уровень 3</div>
+          <div class="level-h3__chips">
+            <div class="level-h3__chip">
+              <div class="level-h3__chip-label">XP</div>
+              <div class="level-h3__chip-value">45%</div>
+            </div>
+            <div class="level-h3__chip">
+              <div class="level-h3__chip-label">Очки</div>
+              <div class="level-h3__chip-value">1 240</div>
+            </div>
+            <div class="level-h3__chip">
+              <div class="level-h3__chip-label">Доход</div>
+              <div class="level-h3__chip-value">50k</div>
+            </div>
+          </div>
+        </article>
+      </section>
+
+      <!-- ═══════════════ D′ утверждённый стек ═══════════════ -->
+      <section class="lab-section lab-section--featured" id="variant-d-approved">
+        <div class="lab-section__label">
+          <span class="lab-section__id">D′ ★</span>
+          <span class="lab-section__title">Утверждённая раскладка (полный main)</span>
+        </div>
+        <p class="lab-section__note">
+          <strong>① Уровень</strong> (H2) → <strong>② сворачиваемый</strong> (цели + финансы) → <strong>③ действия</strong>.
+          См. <a href="./APPROVED-LAYOUT.md">APPROVED-LAYOUT.md</a>.
+        </p>
+        <article class="lab-phone">
+          <div class="lab-dash-stack">
+            <p class="lab-dash-stack__label">① Уровень — всегда</p>
+            <article class="level-compact level-h2">
+              <div class="level-h2__head">
+                <div>
+                  <div class="level-compact__title">Уровень 3</div>
+                  <div class="level-h2__sub">45 / 100 XP</div>
+                </div>
+                <div>
+                  <div class="level-compact__score-label">Очки</div>
+                  <div class="level-compact__score">1 240</div>
+                </div>
+              </div>
+              <div class="level-h2__meter">
+                <div class="dash-progress"><div class="dash-progress__fill dash-progress__fill--xp" style="width: 45%"></div></div>
+              </div>
+              <div class="level-h2__bars">
+                <div>
+                  <div class="level-h2__bar-row"><span>Доход</span><span>50 000</span></div>
+                  <div class="level-h2__bar-track"><div class="level-h2__bar-fill dash-bar-fill--emerald" style="width: 100%"></div></div>
+                </div>
+                <div>
+                  <div class="level-h2__bar-row"><span>Долги</span><span>12 000</span></div>
+                  <div class="level-h2__bar-track"><div class="level-h2__bar-fill dash-bar-fill--rose" style="width: 24%"></div></div>
+                </div>
+              </div>
+            </article>
+
+            <p class="lab-dash-stack__label">② Дашборд периода — сворачивается</p>
+            <div class="shell-d" data-shell-d>
+              <button type="button" class="shell-d__toggle" data-shell-d-toggle aria-expanded="false" aria-controls="shell-d-expand-approved">
+                <div class="shell-d__compact-top">
+                  <div>
+                    <div class="shell-d__summary-title">Дашборд периода</div>
+                    <div class="shell-d__summary-sub shell-d__summary-sub--goals-only">2 из 3 целей · Почти</div>
+                  </div>
+                  <span class="shell-d__chevron" aria-hidden>▼</span>
+                </div>
+                <div class="shell-d__chips">
+                  <div class="shell-d__chip"><div class="shell-d__chip-label">Баланс</div><div class="shell-d__chip-value">42 150</div></div>
+                  <div class="shell-d__chip"><div class="shell-d__chip-label">Подушка</div><div class="shell-d__chip-value">18 000</div></div>
+                  <div class="shell-d__chip"><div class="shell-d__chip-label">Поток</div><div class="shell-d__chip-value">+3 200</div></div>
+                  <div class="shell-d__chip"><div class="shell-d__chip-label">Расходы</div><div class="shell-d__chip-value">9 600</div></div>
+                </div>
+                <p class="shell-d__expand-hint">Цели и финансы — нажмите, чтобы развернуть</p>
+              </button>
+              <div class="shell-d__expand" id="shell-d-expand-approved">
+                <div class="shell-b__highlight shell-b__highlight--goal" style="margin-top: 10px">
+                  <div class="dash-head-split">
+                    <div>
+                      <div class="dash-kicker" style="color: var(--mq-emerald)">Цель</div>
+                      <h2 class="dash-title" style="font-size: 16px">Победа в сценарии</h2>
+                    </div>
+                    <span class="dash-badge">Почти</span>
+                  </div>
+                  <ul class="dash-goal-list">
+                    <li class="dash-goal-item">
+                      <div class="dash-goal-item__row"><span class="dash-goal-item__name">Подушка ≥ 3×</span><span class="dash-goal-item__status">✓</span></div>
+                      <div class="dash-progress"><div class="dash-progress__fill" style="width: 100%"></div></div>
+                    </li>
+                    <li class="dash-goal-item">
+                      <div class="dash-goal-item__row"><span class="dash-goal-item__name">Поток ≥ 0</span><span class="dash-goal-item__status" style="color: var(--text-muted)">…</span></div>
+                      <div class="dash-progress"><div class="dash-progress__fill" style="width: 40%"></div></div>
+                    </li>
+                  </ul>
+                </div>
+                <div class="shell-d__expand-finance">
+                  <div class="dash-block-head">
+                    <span class="dash-block-title">Финансы</span>
+                    <button type="button" class="dash-link">Детали</button>
+                  </div>
+                  <div class="dash-grid2">
+                    <div class="dash-mini"><div class="dash-mini__icon dash-mini__icon--violet">₽</div><div class="dash-mini__label">Баланс</div><div class="dash-mini__value">42 150</div></div>
+                    <div class="dash-mini"><div class="dash-mini__icon dash-mini__icon--emerald">🛡</div><div class="dash-mini__label">Подушка</div><div class="dash-mini__value">18 000</div></div>
+                    <div class="dash-mini"><div class="dash-mini__icon dash-mini__icon--sky">↗</div><div class="dash-mini__label">Поток</div><div class="dash-mini__value">+3 200</div></div>
+                    <div class="dash-mini"><div class="dash-mini__icon dash-mini__icon--amber">↓</div><div class="dash-mini__label">Расходы</div><div class="dash-mini__value">9 600</div></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <p class="lab-dash-stack__label">③ Действия — всегда</p>
+            <div class="shell-actions-card">
+              <div class="dash-actions-head">
+                <div>
+                  <h2 class="dash-title" style="margin-top: 0; font-size: 16px">Действия периода</h2>
+                  <p class="dash-sub">Управляй денежным потоком</p>
+                </div>
+                <span class="dash-xp-tag">XP +10</span>
+              </div>
+              <div class="dash-action-grid">
+                <button type="button" class="dash-action dash-action--primary">Зарплата</button>
+                <button type="button" class="dash-action">В подушку</button>
+                <button type="button" class="dash-action">Снять</button>
+                <button type="button" class="dash-action">Инвестировать</button>
+              </div>
+            </div>
+          </div>
+        </article>
+      </section>
+
+      <!-- ═══════════════ D (legacy demo) ═══════════════ -->
+      <section class="lab-section" id="variant-d-legacy">
+        <div class="lab-section__label">
+          <span class="lab-section__id">D₀</span>
+          <span class="lab-section__title">Ранний прототип (устарел)</span>
+        </div>
+        <p class="lab-section__note">См. <strong>D′</strong> выше — актуальная раскладка.</p>
+      </section>
+      <!-- ═══════════════ A ═══════════════ -->
+      <section class="lab-section" id="variant-a">
+        <div class="lab-section__label">
+          <span class="lab-section__id">A</span>
+          <span class="lab-section__title">Composable + градиенты (как prod сейчас)</span>
+        </div>
+        <p class="lab-section__note">
+          Отдельные glass-карточки: character (sky), goal (emerald). Stat-mini в своих плитках.
+          Действия и «стратег» — neutral glass без акцентной полоски.
+        </p>
+        <article class="lab-phone">
+          <p class="lab-phone__hint">Hero не показан — только прокручиваемый main</p>
+          <div class="lab-stack">
+            <div class="shell-a__card shell-a__card--character">
+              <div class="dash-head-split">
+                <div>
+                  <div class="dash-kicker shell-a__kicker--sky">Герой</div>
+                  <h2 class="dash-title">Уровень 3</h2>
+                  <p class="dash-sub">Опыт к следующему уровню</p>
+                </div>
+                <span class="dash-chip-xp">XP</span>
+              </div>
+              <div class="dash-progress" aria-hidden>
+                <div class="dash-progress__fill dash-progress__fill--xp" style="width: 45%"></div>
+              </div>
+              <div class="dash-progress-labels"><span>Накоплено</span><span>45 / 100</span></div>
+            </div>
+
+            <div class="shell-a__card shell-a__card--goal">
+              <div class="dash-head-split">
+                <div>
+                  <div class="dash-kicker shell-a__kicker--emerald">Цель</div>
+                  <h2 class="dash-title">Победа в сценарии</h2>
+                  <p class="dash-sub">2 из 3 целей</p>
+                </div>
+                <span class="dash-badge">Почти</span>
+              </div>
+              <ul class="dash-goal-list">
+                <li class="dash-goal-item">
+                  <div class="dash-goal-item__row">
+                    <span class="dash-goal-item__name">Подушка ≥ 3× обязательств</span>
+                    <span class="dash-goal-item__status">Выполнено</span>
+                  </div>
+                  <div class="dash-progress"><div class="dash-progress__fill" style="width: 100%"></div></div>
+                </li>
+                <li class="dash-goal-item">
+                  <div class="dash-goal-item__row">
+                    <span class="dash-goal-item__name">Без просрочек</span>
+                    <span class="dash-goal-item__status">Выполнено</span>
+                  </div>
+                  <div class="dash-progress"><div class="dash-progress__fill" style="width: 100%"></div></div>
+                </li>
+                <li class="dash-goal-item">
+                  <div class="dash-goal-item__row">
+                    <span class="dash-goal-item__name">Поток ≥ 0</span>
+                    <span class="dash-goal-item__status" style="color: var(--text-muted)">В работе</span>
+                  </div>
+                  <div class="dash-progress"><div class="dash-progress__fill" style="width: 40%"></div></div>
+                </li>
+              </ul>
+            </div>
+
+            <div class="shell-a__card" style="padding: 12px 14px 14px">
+              <div class="dash-block-head">
+                <span class="dash-block-title">Финансы</span>
+                <button type="button" class="dash-link">Детали</button>
+              </div>
+              <div class="dash-grid2">
+                <div class="dash-mini">
+                  <div class="dash-mini__icon dash-mini__icon--violet">₽</div>
+                  <div class="dash-mini__label">Баланс</div>
+                  <div class="dash-mini__value">42 150 ₽</div>
+                </div>
+                <div class="dash-mini">
+                  <div class="dash-mini__icon dash-mini__icon--emerald">🛡</div>
+                  <div class="dash-mini__label">Подушка</div>
+                  <div class="dash-mini__value">18 000 ₽</div>
+                </div>
+                <div class="dash-mini">
+                  <div class="dash-mini__icon dash-mini__icon--sky">↗</div>
+                  <div class="dash-mini__label">Чистый поток</div>
+                  <div class="dash-mini__value">+3 200</div>
+                </div>
+                <div class="dash-mini">
+                  <div class="dash-mini__icon dash-mini__icon--amber">📅</div>
+                  <div class="dash-mini__label">Расходы</div>
+                  <div class="dash-mini__value">9 600</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="shell-a__card">
+              <div class="dash-actions-head">
+                <div>
+                  <h2 class="dash-title" style="margin-top: 0">Действия периода</h2>
+                  <p class="dash-sub">Управляй денежным потоком</p>
+                </div>
+                <span class="dash-xp-tag">XP +10</span>
+              </div>
+              <div class="dash-action-grid">
+                <button type="button" class="dash-action dash-action--primary">Зарплата</button>
+                <button type="button" class="dash-action">В подушку</button>
+                <button type="button" class="dash-action">Снять</button>
+                <button type="button" class="dash-action">Инвестировать</button>
+              </div>
+            </div>
+
+            <div class="shell-a__card">
+              <div class="dash-head-split">
+                <div>
+                  <div class="dash-kicker">Уровень</div>
+                  <h2 class="dash-title" style="margin-top: 4px">Финансовый стратег</h2>
+                </div>
+                <div class="dash-score">
+                  <div class="dash-score__label">Очки</div>
+                  <div class="dash-score__value">1 240</div>
+                </div>
+              </div>
+              <div class="dash-bars">
+                <div>
+                  <div class="dash-bar-row"><span>Доход</span><span>50 000 ₽</span></div>
+                  <div class="dash-bar-track"><div class="dash-bar-fill dash-bar-fill--emerald" style="width: 100%"></div></div>
+                </div>
+                <div>
+                  <div class="dash-bar-row"><span>Долги</span><span>12 000 ₽</span></div>
+                  <div class="dash-bar-track"><div class="dash-bar-fill dash-bar-fill--rose" style="width: 24%"></div></div>
+                </div>
+                <div>
+                  <div class="dash-bar-row"><span>Активы</span><span>8 500 ₽</span></div>
+                  <div class="dash-bar-track"><div class="dash-bar-fill dash-bar-fill--violet" style="width: 17%"></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </article>
+      </section>
+
+      <!-- ═══════════════ B ═══════════════ -->
+      <section class="lab-section" id="variant-b">
+        <div class="lab-section__label">
+          <span class="lab-section__id">B ★</span>
+          <span class="lab-section__title">Highlight vs Neutral (рекомендуемый гибрид)</span>
+        </div>
+        <p class="lab-section__note">
+          «Герой» и «Цели» — highlight-панели (violet/emerald glow). Финансы — только заголовок + сетка без общей коробки.
+          Действия и стратег — плоские neutral-карточки на белом.
+        </p>
+        <article class="lab-phone">
+          <p class="lab-phone__hint">Меньше «стекла» — иерархия через тип панели</p>
+          <div class="lab-stack">
+            <div class="shell-b__highlight">
+              <div class="dash-head-split">
+                <div>
+                  <div class="dash-kicker" style="color: var(--mq-violet)">Герой</div>
+                  <h2 class="dash-title">Уровень 3</h2>
+                  <p class="dash-sub">Опыт к следующему уровню</p>
+                </div>
+                <span class="dash-chip-xp">XP</span>
+              </div>
+              <div class="dash-progress"><div class="dash-progress__fill dash-progress__fill--xp" style="width: 45%"></div></div>
+              <div class="dash-progress-labels"><span>Накоплено</span><span>45 / 100</span></div>
+            </div>
+
+            <div class="shell-b__highlight shell-b__highlight--goal">
+              <div class="dash-head-split">
+                <div>
+                  <div class="dash-kicker" style="color: var(--mq-emerald)">Цель</div>
+                  <h2 class="dash-title">Победа в сценарии</h2>
+                  <p class="dash-sub">2 из 3 целей</p>
+                </div>
+                <span class="dash-badge">Почти</span>
+              </div>
+              <ul class="dash-goal-list">
+                <li class="dash-goal-item">
+                  <div class="dash-goal-item__row">
+                    <span class="dash-goal-item__name">Подушка ≥ 3× обязательств</span>
+                    <span class="dash-goal-item__status">Выполнено</span>
+                  </div>
+                  <div class="dash-progress"><div class="dash-progress__fill" style="width: 100%"></div></div>
+                </li>
+                <li class="dash-goal-item">
+                  <div class="dash-goal-item__row">
+                    <span class="dash-goal-item__name">Поток ≥ 0</span>
+                    <span class="dash-goal-item__status" style="color: var(--text-muted)">В работе</span>
+                  </div>
+                  <div class="dash-progress"><div class="dash-progress__fill" style="width: 40%"></div></div>
+                </li>
+              </ul>
+            </div>
+
+            <div class="shell-b__block">
+              <div class="dash-block-head">
+                <span class="dash-block-title">Финансы</span>
+                <button type="button" class="dash-link">Детали</button>
+              </div>
+              <div class="dash-grid2">
+                <div class="dash-mini">
+                  <div class="dash-mini__icon dash-mini__icon--violet">₽</div>
+                  <div class="dash-mini__label">Баланс</div>
+                  <div class="dash-mini__value">42 150 ₽</div>
+                </div>
+                <div class="dash-mini">
+                  <div class="dash-mini__icon dash-mini__icon--emerald">🛡</div>
+                  <div class="dash-mini__label">Подушка</div>
+                  <div class="dash-mini__value">18 000 ₽</div>
+                </div>
+                <div class="dash-mini">
+                  <div class="dash-mini__icon dash-mini__icon--sky">↗</div>
+                  <div class="dash-mini__label">Чистый поток</div>
+                  <div class="dash-mini__value">+3 200</div>
+                </div>
+                <div class="dash-mini">
+                  <div class="dash-mini__icon dash-mini__icon--amber">📅</div>
+                  <div class="dash-mini__label">Расходы</div>
+                  <div class="dash-mini__value">9 600</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="shell-b__neutral">
+              <div class="dash-actions-head">
+                <div>
+                  <h2 class="dash-title" style="margin-top: 0">Действия периода</h2>
+                  <p class="dash-sub">Управляй денежным потоком</p>
+                </div>
+                <span class="dash-xp-tag">XP +10</span>
+              </div>
+              <div class="dash-action-grid">
+                <button type="button" class="dash-action dash-action--primary">Зарплата</button>
+                <button type="button" class="dash-action">В подушку</button>
+                <button type="button" class="dash-action">Снять</button>
+                <button type="button" class="dash-action">Инвестировать</button>
+              </div>
+            </div>
+
+            <div class="shell-b__neutral">
+              <div class="dash-head-split">
+                <div>
+                  <div class="dash-kicker">Уровень</div>
+                  <h2 class="dash-title" style="margin-top: 4px">Финансовый стратег</h2>
+                </div>
+                <div class="dash-score">
+                  <div class="dash-score__label">Очки</div>
+                  <div class="dash-score__value">1 240</div>
+                </div>
+              </div>
+              <div class="dash-bars">
+                <div>
+                  <div class="dash-bar-row"><span>Доход</span><span>50 000 ₽</span></div>
+                  <div class="dash-bar-track"><div class="dash-bar-fill dash-bar-fill--emerald" style="width: 100%"></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </article>
+      </section>
+
+      <!-- ═══════════════ C ═══════════════ -->
+      <section class="lab-section" id="variant-c">
+        <div class="lab-section__label">
+          <span class="lab-section__id">C</span>
+          <span class="lab-section__title">Flat H — accent-полоска (как страховки / активы)</span>
+        </div>
+        <p class="lab-section__note">
+          Одна общая белая коробка; внутри секции с полоской 4px слева. Без градиентного фона карточек.
+          Визуально ближе к Finance → единый язык портфеля.
+        </p>
+        <article class="lab-phone">
+          <p class="lab-phone__hint">Акцент = полоска, не заливка всей карточки</p>
+          <div class="shell-c__wrap lab-stack" style="gap: 0">
+            <div class="shell-c__panel">
+              <div class="shell-c__accent shell-c__accent--sky" aria-hidden></div>
+              <div class="shell-c__body">
+                <div class="dash-head-split">
+                  <div>
+                    <div class="dash-kicker">Герой</div>
+                    <h2 class="dash-title">Уровень 3</h2>
+                    <p class="dash-sub">Опыт к следующему уровню</p>
+                  </div>
+                  <span class="dash-chip-xp">XP</span>
+                </div>
+                <div class="dash-progress"><div class="dash-progress__fill dash-progress__fill--xp" style="width: 45%"></div></div>
+                <div class="dash-progress-labels"><span>Накоплено</span><span>45 / 100</span></div>
+              </div>
+            </div>
+
+            <div class="shell-c__panel">
+              <div class="shell-c__accent shell-c__accent--emerald" aria-hidden></div>
+              <div class="shell-c__body">
+                <div class="dash-head-split">
+                  <div>
+                    <div class="dash-kicker">Цель</div>
+                    <h2 class="dash-title">Победа в сценарии</h2>
+                    <p class="dash-sub">2 из 3 целей · Почти</p>
+                  </div>
+                  <span class="dash-badge">2/3</span>
+                </div>
+                <ul class="dash-goal-list">
+                  <li class="dash-goal-item">
+                    <div class="dash-goal-item__row">
+                      <span class="dash-goal-item__name">Подушка ≥ 3×</span>
+                      <span class="dash-goal-item__status">✓</span>
+                    </div>
+                    <div class="dash-progress"><div class="dash-progress__fill" style="width: 100%"></div></div>
+                  </li>
+                  <li class="dash-goal-item">
+                    <div class="dash-goal-item__row">
+                      <span class="dash-goal-item__name">Поток ≥ 0</span>
+                      <span class="dash-goal-item__status" style="color: var(--text-muted)">…</span>
+                    </div>
+                    <div class="dash-progress"><div class="dash-progress__fill" style="width: 40%"></div></div>
+                  </li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="shell-c__panel shell-c__block">
+              <div class="shell-c__accent shell-c__accent--violet" aria-hidden></div>
+              <div class="shell-c__body">
+                <div class="dash-block-head" style="margin-bottom: 8px">
+                  <span class="dash-block-title">Финансы</span>
+                  <button type="button" class="dash-link">Детали</button>
+                </div>
+                <div class="dash-grid2">
+                  <div class="dash-mini">
+                    <div class="dash-mini__icon dash-mini__icon--violet">₽</div>
+                    <div class="dash-mini__label">Баланс</div>
+                    <div class="dash-mini__value">42 150 ₽</div>
+                  </div>
+                  <div class="dash-mini">
+                    <div class="dash-mini__icon dash-mini__icon--emerald">🛡</div>
+                    <div class="dash-mini__label">Подушка</div>
+                    <div class="dash-mini__value">18 000 ₽</div>
+                  </div>
+                  <div class="dash-mini">
+                    <div class="dash-mini__icon dash-mini__icon--sky">↗</div>
+                    <div class="dash-mini__label">Поток</div>
+                    <div class="dash-mini__value">+3 200</div>
+                  </div>
+                  <div class="dash-mini">
+                    <div class="dash-mini__icon dash-mini__icon--amber">📅</div>
+                    <div class="dash-mini__label">Расходы</div>
+                    <div class="dash-mini__value">9 600</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="shell-c__panel">
+              <div class="shell-c__accent shell-c__accent--neutral" aria-hidden></div>
+              <div class="shell-c__body">
+                <h2 class="dash-title" style="margin-top: 0">Действия периода</h2>
+                <p class="dash-sub">Управляй денежным потоком</p>
+                <div class="dash-action-grid">
+                  <button type="button" class="dash-action shell-c__action">Зарплата</button>
+                  <button type="button" class="dash-action shell-c__action">В подушку</button>
+                  <button type="button" class="dash-action shell-c__action">Снять</button>
+                  <button type="button" class="dash-action shell-c__action">Инвестировать</button>
+                </div>
+              </div>
+            </div>
+
+            <div class="shell-c__panel">
+              <div class="shell-c__accent shell-c__accent--neutral" aria-hidden></div>
+              <div class="shell-c__body">
+                <div class="dash-head-split">
+                  <div>
+                    <div class="dash-kicker">Стратег</div>
+                    <h2 class="dash-title" style="margin-top: 4px">Финансовый стратег</h2>
+                  </div>
+                  <div class="dash-score">
+                    <div class="dash-score__label">Очки</div>
+                    <div class="dash-score__value">1 240</div>
+                  </div>
+                </div>
+                <div class="dash-bars">
+                  <div>
+                    <div class="dash-bar-row"><span>Доход</span><span>50 000 ₽</span></div>
+                    <div class="dash-bar-track"><div class="dash-bar-fill dash-bar-fill--emerald" style="width: 100%"></div></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </article>
+      </section>
+    </main>
+
+    <script>
+      document.querySelectorAll('[data-theme-btn]').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          const theme = btn.getAttribute('data-theme-btn');
+          document.documentElement.setAttribute('data-theme', theme);
+          document.querySelectorAll('[data-theme-btn]').forEach((b) => b.classList.toggle('is-active', b === btn));
+        });
+      });
+
+      document.querySelectorAll('[data-shell-d-toggle]').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          const root = btn.closest('[data-shell-d]');
+          if (!root) return;
+          const open = root.classList.toggle('is-expanded');
+          btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+        });
+      });
+    </script>
+  </body>
+</html>
