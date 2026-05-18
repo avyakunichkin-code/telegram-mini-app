@@ -40,3 +40,24 @@ Interpret creatively and make unexpected choices that feel genuinely designed fo
 **IMPORTANT**: Match implementation complexity to the aesthetic vision. Maximalist designs need elaborate code with extensive animations and effects. Minimalist or refined designs need restraint, precision, and careful attention to spacing, typography, and subtle details. Elegance comes from executing the vision well.
 
 Remember: Claude is capable of extraordinary creative work. Don't hold back, show what can truly be created when thinking outside the box and committing fully to a distinctive vision.
+
+## Money Quest (этот репозиторий)
+
+Для UI **Money Quest** не подставляй «универсальную» эстетику скилла вместо канона продукта. Сначала сверяйся с брендом и спеками:
+
+| Источник | Путь |
+|----------|------|
+| Брендбук (текст) | [`docs/reference/brandbook/BRANDBOOK.md`](../../../../docs/reference/brandbook/BRANDBOOK.md) |
+| Брендбук (печать / PDF) | [`docs/reference/brandbook/brandbook-print.html`](../../../../docs/reference/brandbook/brandbook-print.html) |
+| Контракт экранов TMA | [`docs/specs/SPEC_FRONTEND_UI.md`](../../../../docs/specs/SPEC_FRONTEND_UI.md) |
+| Токены и MQX в коде | [`frontend-react/src/index.css`](../../src/index.css) |
+
+**Обязательно для TMA:**
+
+- Палитра: **Quest Violet** `#6D28D9` для primary CTA, табов и нижнего меню; **Signal Emerald** / **Danger** / **Warning Amber** — только по смыслу данных (не «радуга»).
+- Тема Telegram: `tg-theme-*` для фона и текста; премиум-слой **MQX** (`MqxShell`, `mqx-hero`, `mqx-card`, `--mqx-glass-*`) — см. брендбук §5.
+- Типографика в приложении: **системный стек**, шкала `--mq-fs-body` (15px) / `--mq-fs-caption` (12px) / `--mq-fs-small` (11px); **не** подключать Inter как основной шрифт TMA без продуктового решения.
+- **Inter** и выразительные маркетинговые приёмы скилла — для лендинга, `brandbook-print.html` и материалов вне клиента Telegram.
+- Видимый UI — **русский**, короткий активный залог; без EN kickers в production.
+
+Новые игровые экраны — только паттерны `*Premium.jsx` и `mqx-*` (см. `.cursor/rules/money-quest-frontend-core.mdc`).
