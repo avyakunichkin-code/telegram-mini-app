@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="" data-i18n-attr="content:meta.description" />
+    <title data-i18n="meta.title">Money Quest</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <script type="module" crossorigin src="/telegram-mini-app/landing/assets/index-DxBshRfo.js"></script>
+    <link rel="stylesheet" crossorigin href="/telegram-mini-app/landing/assets/index-BN_I11A2.css">
+  </head>
+  <body>
+    <a class="mq-skip" href="#main" data-i18n="a11y.skip">Перейти к содержанию</a>
+
+    <header class="mq-header">
+      <a class="mq-logo" href="/" aria-label="Money Quest">
+        <span class="mq-logo__mark" aria-hidden="true">MQ</span>
+        <span class="mq-logo__name">Money Quest</span>
+      </a>
+      <nav class="mq-nav" aria-label="Main">
+        <a href="#how" data-i18n="nav.how">Как это работает</a>
+        <a href="#learn" data-i18n="nav.learn">Чему учит</a>
+        <a href="#partners" data-i18n="nav.partners">Партнёрам</a>
+        <a href="#faq" data-i18n="nav.faq">Вопросы</a>
+      </nav>
+      <div class="mq-lang" role="group" aria-label="Language">
+        <button type="button" class="mq-lang__btn is-active" data-lang="ru" data-i18n="lang.ru">RU</button>
+        <button type="button" class="mq-lang__btn" data-lang="en" data-i18n="lang.en">EN</button>
+      </div>
+    </header>
+
+    <main id="main">
+      <section class="mq-hero" aria-labelledby="hero-title">
+        <div class="mq-hero__grid">
+          <div class="mq-hero__copy mq-reveal">
+            <p class="mq-eyebrow" data-i18n="hero.eyebrow">Telegram Mini App</p>
+            <h1 id="hero-title" data-i18n="hero.title">Финансы как игра</h1>
+            <p class="mq-lead" data-i18n="hero.subtitle">Проживайте условные месяцы</p>
+            <p class="mq-status">
+              <span class="mq-status__dot" aria-hidden="true"></span>
+              <span data-i18n="hero.status">Скоро в Telegram</span>
+            </p>
+            <div class="mq-hero__actions">
+              <a class="mq-btn mq-btn--primary" href="#how" data-i18n="hero.ctaPrimary">Как устроена игра</a>
+              <a class="mq-btn mq-btn--ghost" href="#partners" data-i18n="hero.ctaPartners">Для партнёров</a>
+            </div>
+          </div>
+
+          <div class="mq-hero__visual mq-reveal mq-reveal--delay" aria-hidden="true">
+            <div class="mq-phone">
+              <div class="mq-phone__notch"></div>
+              <div class="mq-phone__screen" id="hero-demo">
+                <div class="mq-phone__bar">
+                  <span class="mq-phone__pill">MQ</span>
+                  <span class="mq-phone__period">
+                    <span data-i18n="hero.periodLabel">Период</span>
+                    <strong>3</strong>
+                  </span>
+                </div>
+                <div class="mq-phone__timer" id="hero-timer" data-demo-timer>04:12</div>
+                <div class="mq-phone__cards">
+                  <div class="mq-phone__card mq-phone__card--cash">
+                    <span data-i18n="hero.demo.cashLabel">Cash</span>
+                    <strong id="demo-cash" data-demo-cash>42 500 ₽</strong>
+                  </div>
+                  <div class="mq-phone__card mq-phone__card--safe">
+                    <span data-i18n="hero.demo.fundLabel">Подушка</span>
+                    <strong data-i18n="peek.mock.safety">18 000 ₽</strong>
+                  </div>
+                </div>
+                <button type="button" class="mq-phone__btn" id="demo-salary" disabled tabindex="-1">
+                  <span data-i18n="hero.demo.salaryBtn">Получить зарплату</span>
+                </button>
+                <div class="mq-phone__toast" id="demo-toast" hidden>
+                  <span data-i18n="hero.demo.toastSalary">Зарплата зачислена</span>
+                </div>
+                <div class="mq-phone__event-panel" id="demo-event" hidden>
+                  <p class="mq-phone__event-title" data-i18n="hero.demo.eventTitle">Непредвиденный расход</p>
+                  <div class="mq-phone__choices">
+                    <button type="button" class="mq-phone__choice" id="demo-choice-a" disabled tabindex="-1">
+                      <span data-i18n="hero.demo.eventChoiceA">Оплатить сейчас</span>
+                    </button>
+                    <button type="button" class="mq-phone__choice" id="demo-choice-b" disabled tabindex="-1">
+                      <span data-i18n="hero.demo.eventChoiceB">Отложить</span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="how" class="mq-section mq-section--mist">
+        <div class="mq-wrap">
+          <header class="mq-section__head mq-reveal">
+            <h2 data-i18n="how.title">За минуту — суть цикла</h2>
+            <p data-i18n="how.subtitle">Один игровой месяц</p>
+          </header>
+          <ol class="mq-steps" id="how-steps"></ol>
+        </div>
+      </section>
+
+      <section id="learn" class="mq-section">
+        <div class="mq-wrap">
+          <header class="mq-section__head mq-reveal">
+            <h2 data-i18n="learn.title">Чему учит</h2>
+            <p data-i18n="learn.subtitle">Не курс</p>
+          </header>
+          <div class="mq-cards" id="learn-cards"></div>
+        </div>
+      </section>
+
+      <section class="mq-section mq-section--dark" aria-labelledby="peek-title">
+        <div class="mq-wrap mq-peek">
+          <header class="mq-section__head mq-reveal">
+            <h2 id="peek-title" data-i18n="peek.title">Интерфейс</h2>
+            <p data-i18n="peek.subtitle">MQX</p>
+          </header>
+          <p class="mq-peek__period mq-reveal" data-i18n="peek.mock.period">Период 3</p>
+        </div>
+      </section>
+
+      <section class="mq-section mq-section--mist">
+        <div class="mq-wrap">
+          <header class="mq-section__head mq-reveal">
+            <h2 data-i18n="modes.title">Два режима</h2>
+          </header>
+          <div class="mq-modes">
+            <article class="mq-mode mq-reveal">
+              <span class="mq-mode__badge mq-mode__badge--live" data-i18n="modes.game.badge">Доступно</span>
+              <h3 data-i18n="modes.game.title">Game</h3>
+              <p data-i18n="modes.game.text">Шаблон</p>
+            </article>
+            <article class="mq-mode mq-mode--muted mq-reveal mq-reveal--delay">
+              <span class="mq-mode__badge" data-i18n="modes.plan.badge">Скоро</span>
+              <h3 data-i18n="modes.plan.title">Plan</h3>
+              <p data-i18n="modes.plan.text">План</p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section id="partners" class="mq-section mq-section--partners">
+        <div class="mq-wrap">
+          <header class="mq-section__head mq-reveal">
+            <h2 data-i18n="partners.title">Партнёрам</h2>
+            <p data-i18n="partners.subtitle">Edutainment</p>
+          </header>
+          <div class="mq-partners-grid" id="partners-points"></div>
+          <p class="mq-partners-cta mq-reveal">
+            <a
+              class="mq-btn mq-btn--primary"
+              href="mailto:hello@moneyquest.app"
+              data-contact-href
+              data-i18n="partners.cta"
+              >Связаться с командой</a
+            >
+          </p>
+        </div>
+      </section>
+
+      <section id="faq" class="mq-section mq-section--mist">
+        <div class="mq-wrap mq-faq-wrap">
+          <header class="mq-section__head mq-reveal">
+            <h2 data-i18n="faq.title">Вопросы</h2>
+          </header>
+          <div class="mq-faq" id="faq-list"></div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="mq-footer">
+      <div class="mq-wrap mq-footer__inner">
+        <p class="mq-footer__brand" data-i18n="footer.tagline">Money Quest · MQ</p>
+        <p class="mq-footer__legal" data-i18n="footer.legal">Не является рекомендацией</p>
+        <p class="mq-footer__year" data-i18n="footer.year">© 2026</p>
+      </div>
+    </footer>
+
+  </body>
+</html>
