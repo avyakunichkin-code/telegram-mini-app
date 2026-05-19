@@ -463,11 +463,27 @@ body {
   padding: 10px 12px;
 }
 
-.dh-h3p__main {
+.dh-h3p__row1 {
   display: grid;
   grid-template-columns: auto 1fr auto;
   align-items: start;
   gap: 10px;
+}
+
+.dh-h3p__row2 {
+  margin-top: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.dh-h3p__row2-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 6px;
+  flex-shrink: 0;
 }
 
 .dh-h3p__logo {
@@ -514,24 +530,19 @@ body {
   margin-top: 6px;
 }
 
-.dh-h3p__aside {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  gap: 6px;
-}
-
 .dh-h3p__controls {
   display: flex;
   gap: 6px;
+  align-items: center;
 }
 
 .dh-h3p__period {
-  text-align: right;
+  text-align: left;
   font-size: 14px;
   font-weight: 800;
   color: rgba(255, 255, 255, 0.95);
   line-height: 1.15;
+  flex-shrink: 0;
 }
 
 .dh-h3p__period span {
@@ -543,6 +554,3 @@ body {
   color: rgba(245, 243, 255, 0.65);
 }
 
-.dh-h3p__bottom {
-  margin-top: 10px;
-}

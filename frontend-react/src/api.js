@@ -60,11 +60,15 @@ async function apiCall(endpoint, method = 'GET', data = null) {
   if (authToken) headers['Authorization'] = `Bearer ${authToken}`;
 
   const options = { method, headers };
-  if (data && (method === 'POST' || method === 'PUT')) {
+  if (data && (method === 'POST' || method === 'PUT' || method === 'PATCH')) {
     options.body = JSON.stringify(data);
   }
 
   const response = await fetch(`${API_BASE}${endpoint}`, options);
+
+  if (response.status === 204) {
+    return null;
+  }
 
   // Пытаемся распарсить тело ответа (может быть JSON или текст)
   let responseBody;
@@ -142,6 +146,21 @@ export const API = {
     },
     getExpenses() {
         return apiCall('/api/game/expenses');
+    },
+    listExpenseCategories() {
+        return apiCall('/api/game/expenses/categories');
+    },
+    listExpenseLines() {
+        return apiCall('/api/game/expenses/lines');
+    },
+    createExpenseLine(payload) {
+        return apiCall('/api/game/expenses/lines', 'POST', payload);
+    },
+    patchExpenseLine(lineId, payload) {
+        return apiCall(`/api/game/expenses/lines/${lineId}`, 'PATCH', payload);
+    },
+    deleteExpenseLine(lineId) {
+        return apiCall(`/api/game/expenses/lines/${lineId}`, 'DELETE');
     },
     getFinanceAnalyticsTimeseries(limit = 48) {
         const q = limit ? `?limit=${encodeURIComponent(limit)}` : '';

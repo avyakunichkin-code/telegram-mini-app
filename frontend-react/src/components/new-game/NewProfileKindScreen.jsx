@@ -7,14 +7,24 @@ import { IllustrationGame, IllustrationPlan } from './icons/ModeIllustrations';
 /**
  * Шаг 1: название сохранения + выбор типа (Game → дальше / Plan → заглушка).
  */
-export function NewProfileKindScreen({ profileName, onProfileNameChange, onChooseGame, onBack }) {
-  const handleGame = () => {
+export function NewProfileKindScreen({ profileName, onProfileNameChange, onChooseGame, onChoosePlan, onBack }) {
+  const requireName = () => {
     const name = profileName.trim();
     if (!name) {
       showNotification('Введите название сохранения', 'error');
-      return;
+      return null;
     }
-    onChooseGame(name);
+    return name;
+  };
+
+  const handleGame = () => {
+    const name = requireName();
+    if (name) onChooseGame(name);
+  };
+
+  const handlePlan = () => {
+    const name = requireName();
+    if (name) onChoosePlan(name);
   };
 
   return (
@@ -24,7 +34,7 @@ export function NewProfileKindScreen({ profileName, onProfileNameChange, onChoos
           sectionLabel="Новая игра"
           rightPill="Шаг 1"
           title="Сохранение"
-          subtitle="Назовите слот и выберите тип: симулятор или личный план (скоро)."
+          subtitle="Назовите слот и выберите тип: симулятор с шаблонами или личный план."
         />
       }
     >
@@ -49,7 +59,7 @@ export function NewProfileKindScreen({ profileName, onProfileNameChange, onChoos
         <div className="mq-enter-item mqx-card">
           <div className="mqx-card__kicker">Тип</div>
           <div className="mqx-card__title">Режим</div>
-          <div className="mqx-card__sub">Игра — готовые сценарии. План — свой ввод (в разработке).</div>
+          <div className="mqx-card__sub">Игра — готовые сценарии. План — свои цифры и статьи расходов.</div>
 
           <div className="mq-profile-mode-grid" role="group" aria-label="Выбор режима сохранения">
             <button type="button" className="mq-profile-mode-card mq-profile-mode-card--game" onClick={handleGame}>
@@ -58,20 +68,15 @@ export function NewProfileKindScreen({ profileName, onProfileNameChange, onChoos
               <span className="mq-profile-mode-card__desc">Симулятор с шаблонами и событиями периода.</span>
             </button>
 
-            <div
-              className="mq-profile-mode-card mq-profile-mode-card--plan mq-profile-mode-card--soon"
-              role="group"
-              aria-label="Режим План скоро будет доступен"
-            >
-              <span className="mq-profile-mode-card__badge mq-profile-mode-card__badge--soon">Скоро</span>
+            <button type="button" className="mq-profile-mode-card mq-profile-mode-card--plan" onClick={handlePlan}>
               <IllustrationPlan className="mq-profile-mode-card__art mq-profile-mode-card__art--plan" />
               <span className="mq-profile-mode-card__title">План</span>
               <span className="mq-profile-mode-card__desc">Свои цифры и статьи без игровых шаблонов.</span>
-            </div>
+            </button>
           </div>
 
           <p className="mq-profile-mode-footnote">
-            Чтобы задать всё вручную, дождитесь режима «План». В «Игре» доступны только каталожные старты.
+            В «Плане» вы задаёте бюджет жизни вручную. В «Игре» старт только из каталога шаблонов.
           </p>
         </div>
 

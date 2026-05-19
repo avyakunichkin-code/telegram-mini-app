@@ -65,6 +65,16 @@ _DEFAULT_SHARES: dict[str, float] = {
 }
 
 
+def default_plan_expense_budget(monthly_salary: float, *, lifestyle_share: float = 0.55) -> dict[str, float]:
+    """Стартовый бюджет Plan: доля зарплаты по категориям (_DEFAULT_SHARES)."""
+    salary = max(0.0, float(monthly_salary or 0))
+    if salary <= 0:
+        return {k: 0.0 for k in _DEFAULT_SHARES}
+    target = round(salary * lifestyle_share, 2)
+    rough = {k: round(target * share) for k, share in _DEFAULT_SHARES.items()}
+    return _normalize_sum(rough, target)
+
+
 def expense_budget_for_template(
     template_key: str | None,
     base_monthly: float,

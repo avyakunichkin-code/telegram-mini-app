@@ -327,15 +327,21 @@ body {
 }
 
 .mq-game-shell .mqx-frame > .mq-stack--game-tab > .mq-enter-item--fill {
-  flex: 1 1 auto;
+  flex: 1 1 0%;
   min-height: 0;
   display: flex;
   flex-direction: column;
   overflow: hidden;
 }
 
+.mq-game-shell .mqx-screen.mqx-screen--game,
+.mq-game-shell .mqx-screen.mqx-screen--game > .mqx-frame {
+  flex: 1 1 0%;
+  min-height: 0;
+}
+
 .mqx-tab-page {
-  flex: 1 1 auto;
+  flex: 1 1 0%;
   min-height: 0;
   display: flex;
   flex-direction: column;
@@ -343,13 +349,15 @@ body {
 }
 
 .mqx-tab-page__scroll.mqx-content {
-  flex: 1 1 auto;
+  flex: 1 1 0%;
   min-height: 0;
+  display: block;
   overflow-x: hidden;
   overflow-y: auto;
   overscroll-behavior-y: contain;
   -webkit-overflow-scrolling: touch;
   scrollbar-width: thin;
+  touch-action: pan-y;
 }
 
 .mqx-tab-page__scroll.mqx-content--dash-flat {
@@ -725,12 +733,30 @@ body {
   flex-shrink: 0;
 }
 
-.mqx-hero-compact__main {
+.mqx-hero-compact__row1 {
   position: relative;
   display: grid;
   grid-template-columns: auto 1fr auto;
   align-items: start;
   gap: 10px;
+}
+
+.mqx-hero-compact__row2 {
+  position: relative;
+  margin-top: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  min-width: 0;
+}
+
+.mqx-hero-compact__row2-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 6px;
+  flex-shrink: 0;
 }
 
 .mqx-hero-compact__logo {
@@ -788,16 +814,10 @@ body {
   background: linear-gradient(90deg, var(--mq-emerald), #34d399);
 }
 
-.mqx-hero-compact__aside {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  gap: 6px;
-}
-
 .mqx-hero-compact__controls {
   display: flex;
   gap: 6px;
+  align-items: center;
 }
 
 .mqx-hero--compact .mqx-btn--icon {
@@ -812,8 +832,9 @@ body {
 }
 
 .mqx-hero-compact__period {
-  text-align: right;
+  text-align: left;
   line-height: 1.15;
+  flex-shrink: 0;
 }
 
 .mqx-hero-compact__period-label {
@@ -833,14 +854,10 @@ body {
   font-variant-numeric: tabular-nums;
 }
 
-.mqx-hero-compact__pills {
-  margin-top: 10px;
-  gap: 6px;
-}
-
-.mqx-hero-compact__pills .mqx-pill {
+.mqx-hero-compact__row2 .mqx-pill {
   padding: 7px 10px;
   font-size: 12px;
+  white-space: nowrap;
 }
 
 .mqx-pill {
@@ -3297,6 +3314,82 @@ body {
 
 .mqx-analytics-cashflow--after-charts .mqx-analytics-cf-fill--amber {
   background: linear-gradient(90deg, #fbbf24, #f97316);
+}
+
+/* E1: редактор Plan */
+.mqx-plan-expense-editor {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.mqx-plan-expense-editor__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.mqx-plan-expense-editor__hint {
+  margin: 0;
+  font-size: var(--mq-fs-caption);
+  color: color-mix(in srgb, var(--mqx-ink) 70%, transparent);
+  line-height: 1.35;
+  flex: 1 1 12rem;
+}
+
+.mqx-plan-expense-editor__total {
+  text-align: right;
+}
+
+.mqx-plan-expense-editor__total-label {
+  font-size: var(--mq-fs-caption);
+  color: color-mix(in srgb, var(--mqx-ink) 65%, transparent);
+}
+
+.mqx-plan-expense-editor__total-value {
+  font-weight: 700;
+  font-size: 1.1rem;
+}
+
+.mqx-plan-expense-editor__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.mqx-plan-expense-editor__lines-edit {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.mqx-plan-expense-editor__line-edit {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 8px;
+  align-items: center;
+}
+
+.mqx-plan-expense-editor__line-edit-meta {
+  grid-column: 1 / -1;
+}
+
+.mqx-plan-expense-editor__line-edit-title {
+  font-weight: 600;
+  display: block;
+}
+
+.mqx-plan-expense-editor__line-edit-cat {
+  font-size: var(--mq-fs-caption);
+  color: color-mix(in srgb, var(--mqx-ink) 65%, transparent);
 }
 
 /* E1: расходы на жизнеобеспечение */

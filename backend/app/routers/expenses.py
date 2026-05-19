@@ -1,25 +1,49 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
 from ..auth import get_current_user
 from ..database import get_db
-from ..expenses import burn_breakdown_for_api, compute_monthly_burn
+from ..expenses import (
+    burn_breakdown_for_api,
+    compute_monthly_burn,
+    create_plan_expense_line,
+    ensure_expense_category_catalog,
+    line_to_overview_item,
+    revoke_plan_expense_line,
+    update_plan_expense_line,
+    _category_titles,
+)
 from ..game_time import get_active_game_profile, sync_time
-from ..models import FinanceAsset, FinanceLiability, FinanceSalary
-from ..schemas import ExpensesSnapshotResponse, MonthlyBurnBreakdown
+from ..models import ExpenseCategoryDefinition, FinanceAsset, FinanceLiability, FinanceSalary, ProfileExpenseLine
+from ..schemas import (
+    ExpenseCategoryPublic,
+    ExpenseLineCreate,
+    ExpenseLineResponse,
+    ExpenseLineUpdate,
+    ExpensesSnapshotResponse,
+    MonthlyBurnBreakdown,
+)
 
 router = APIRouter(prefix="/api/game/expenses", tags=["expenses"])
 
 
-@router.get("", response_model=ExpensesSnapshotResponse)
-async def get_expenses_snapshot(
-    current_user=Depends(get_current_user),
-    db: Session = Depends(get_db),
-):
-    """Снимок burn rate и разбивка по категориям для активной партии."""
-    profile = get_active_game_profile(db, current_user.id)
-    sync_time(profile)
+def _line_response(db: Session, row: ProfileExpenseLine) -> ExpenseLineResponse:
+    titles = _category_titles(db)
+    view = line_to_overview_item(row, titles)
+    return ExpenseLineResponse(
+        id=view.id,
+        category_key=view.category_key,
+        category_title=view.category_title,
+        title=view.title,
+        amount_monthly=view.amount_monthly,
+        tier=view.tier,
+        source_kind=view.source_kind,
+        expires_period_index=view.expires_period_index,
+    )
 
+
+def _expenses_snapshot(db: Session, profile) -> ExpensesSnapshotResponse:
+    sync_time(profile)
     salary = db.query(FinanceSalary).filter(FinanceSalary.game_profile_id == profile.id).first()
     monthly_income = float(salary.monthly_amount if salary else 0)
 
@@ -54,3 +78,137 @@ async def get_expenses_snapshot(
         total_monthly_outflow=round(total_monthly_outflow, 2),
         expense_to_income_ratio=expense_to_income_ratio,
     )
+
+
+@router.get("/categories", response_model=list[ExpenseCategoryPublic])
+async def list_expense_categories(
+    current_user=Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    """Справочник категорий расходов (для редактора Plan)."""
+    del current_user
+    ensure_expense_category_catalog(db)
+    rows = (
+        db.query(ExpenseCategoryDefinition)
+        .filter(ExpenseCategoryDefinition.is_active == 1)
+        .order_by(ExpenseCategoryDefinition.sort_order.asc())
+        .all()
+    )
+    return [
+        ExpenseCategoryPublic(
+            category_key=r.category_key,
+            title=r.title,
+            default_tier=str(r.default_tier or "must"),
+            sort_order=int(r.sort_order or 100),
+        )
+        for r in rows
+    ]
+
+
+@router.get("", response_model=ExpensesSnapshotResponse)
+async def get_expenses_snapshot(
+    current_user=Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    """Снимок burn rate и разбивка по категориям для активной партии."""
+    profile = get_active_game_profile(db, current_user.id)
+    return _expenses_snapshot(db, profile)
+
+
+@router.get("/lines", response_model=list[ExpenseLineResponse])
+async def list_expense_lines(
+    current_user=Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    profile = get_active_game_profile(db, current_user.id)
+    sync_time(profile)
+    burn = compute_monthly_burn(db, profile)
+    titles = _category_titles(db)
+    return [
+        ExpenseLineResponse(
+            id=ln.id,
+            category_key=ln.category_key,
+            category_title=ln.category_title,
+            title=ln.title,
+            amount_monthly=ln.amount_monthly,
+            tier=ln.tier,
+            source_kind=ln.source_kind,
+            expires_period_index=ln.expires_period_index,
+        )
+        for ln in burn.lines
+    ]
+
+
+@router.post("/lines", response_model=ExpenseLineResponse)
+async def create_expense_line(
+    payload: ExpenseLineCreate,
+    current_user=Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    profile = get_active_game_profile(db, current_user.id)
+    sync_time(profile)
+    line = create_plan_expense_line(
+        db,
+        profile,
+        category_key=payload.category_key.strip(),
+        amount_monthly=payload.amount_monthly,
+        title=payload.title,
+    )
+    db.commit()
+    db.refresh(line)
+    return _line_response(db, line)
+
+
+@router.patch("/lines/{line_id}", response_model=ExpenseLineResponse)
+async def patch_expense_line(
+    line_id: int,
+    payload: ExpenseLineUpdate,
+    current_user=Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    profile = get_active_game_profile(db, current_user.id)
+    sync_time(profile)
+    line = (
+        db.query(ProfileExpenseLine)
+        .filter(
+            ProfileExpenseLine.id == line_id,
+            ProfileExpenseLine.game_profile_id == profile.id,
+            ProfileExpenseLine.is_active == 1,
+        )
+        .first()
+    )
+    if not line:
+        raise HTTPException(status_code=404, detail="Expense line not found")
+    update_plan_expense_line(
+        db,
+        profile,
+        line,
+        category_key=payload.category_key,
+        amount_monthly=payload.amount_monthly,
+        title=payload.title,
+    )
+    db.commit()
+    db.refresh(line)
+    return _line_response(db, line)
+
+
+@router.delete("/lines/{line_id}", status_code=204)
+async def delete_expense_line(
+    line_id: int,
+    current_user=Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    profile = get_active_game_profile(db, current_user.id)
+    line = (
+        db.query(ProfileExpenseLine)
+        .filter(
+            ProfileExpenseLine.id == line_id,
+            ProfileExpenseLine.game_profile_id == profile.id,
+            ProfileExpenseLine.is_active == 1,
+        )
+        .first()
+    )
+    if not line:
+        raise HTTPException(status_code=404, detail="Expense line not found")
+    revoke_plan_expense_line(db, profile, line)
+    db.commit()

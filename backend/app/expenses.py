@@ -329,6 +329,133 @@ def burn_breakdown_for_api(snapshot: BurnSnapshot) -> dict[str, Any]:
     }
 
 
+def assert_plan_profile(profile: GameProfile) -> None:
+    from fastapi import HTTPException
+
+    if str(getattr(profile, "save_kind", "game") or "game").lower() != "plan":
+        raise HTTPException(
+            status_code=403,
+            detail="Expense line editing is only available in Plan mode",
+        )
+
+
+def sync_profile_lifestyle_base_from_lines(db: Session, profile: GameProfile) -> float:
+    """Пересчитывает base_monthly_lifestyle_expense из суммы активных статей (без legacy delta)."""
+    period_index = max(1, int(profile.period_index or 1))
+    rows = _active_lines_query(db, profile.id, period_index).all()
+    total = round(sum(max(0.0, float(r.amount_monthly or 0)) for r in rows), 2)
+    profile.base_monthly_lifestyle_expense = total
+    db.flush()
+    return total
+
+
+def line_to_overview_item(row: ProfileExpenseLine, titles: dict[str, str]) -> ExpenseLineView:
+    cat_title = titles.get(row.category_key, row.category_key)
+    display = (row.title_override or "").strip() or cat_title
+    return ExpenseLineView(
+        id=int(row.id),
+        category_key=row.category_key,
+        category_title=cat_title,
+        title=display,
+        amount_monthly=round(max(0.0, float(row.amount_monthly or 0)), 2),
+        tier=str(row.tier or "must"),
+        source_kind=str(row.source_kind or "template"),
+        expires_period_index=int(row.expires_period_index)
+        if row.expires_period_index is not None
+        else None,
+    )
+
+
+def create_plan_expense_line(
+    db: Session,
+    profile: GameProfile,
+    *,
+    category_key: str,
+    amount_monthly: float,
+    title: str | None = None,
+) -> ProfileExpenseLine:
+    assert_plan_profile(profile)
+    ensure_expense_category_catalog(db)
+    period_index = max(1, int(profile.period_index or 1))
+    tier_row = (
+        db.query(ExpenseCategoryDefinition)
+        .filter(ExpenseCategoryDefinition.category_key == category_key)
+        .first()
+    )
+    if not tier_row:
+        category_key = "other"
+        tier_row = (
+            db.query(ExpenseCategoryDefinition)
+            .filter(ExpenseCategoryDefinition.category_key == "other")
+            .first()
+        )
+    line = ProfileExpenseLine(
+        game_profile_id=profile.id,
+        category_key=category_key,
+        amount_monthly=round(max(0.0, float(amount_monthly)), 2),
+        title_override=(title or "").strip() or None,
+        source_kind="plan",
+        source_ref="manual",
+        tier=tier_row.default_tier if tier_row else "must",
+        created_period_index=period_index,
+        expires_period_index=None,
+        is_active=1,
+    )
+    db.add(line)
+    db.flush()
+    sync_profile_lifestyle_base_from_lines(db, profile)
+    return line
+
+
+def update_plan_expense_line(
+    db: Session,
+    profile: GameProfile,
+    line: ProfileExpenseLine,
+    *,
+    category_key: str | None = None,
+    amount_monthly: float | None = None,
+    title: str | None = None,
+) -> ProfileExpenseLine:
+    assert_plan_profile(profile)
+    if line.game_profile_id != profile.id:
+        from fastapi import HTTPException
+
+        raise HTTPException(status_code=404, detail="Expense line not found")
+    if line.source_kind not in ("plan", "manual"):
+        from fastapi import HTTPException
+
+        raise HTTPException(status_code=403, detail="Only plan-owned lines can be edited")
+    if category_key is not None:
+        ensure_expense_category_catalog(db)
+        ck = category_key.strip() or "other"
+        if not db.query(ExpenseCategoryDefinition).filter(ExpenseCategoryDefinition.category_key == ck).first():
+            ck = "other"
+        line.category_key = ck
+    if amount_monthly is not None:
+        line.amount_monthly = round(max(0.0, float(amount_monthly)), 2)
+    if title is not None:
+        line.title_override = title.strip() or None
+    db.flush()
+    sync_profile_lifestyle_base_from_lines(db, profile)
+    return line
+
+
+def revoke_plan_expense_line(db: Session, profile: GameProfile, line: ProfileExpenseLine) -> None:
+    assert_plan_profile(profile)
+    if line.game_profile_id != profile.id:
+        from fastapi import HTTPException
+
+        raise HTTPException(status_code=404, detail="Expense line not found")
+    if line.source_kind not in ("plan", "manual"):
+        from fastapi import HTTPException
+
+        raise HTTPException(status_code=403, detail="Only plan-owned lines can be removed")
+    line.is_active = 0
+    line.revoked_at = datetime.utcnow()
+    db.flush()
+    sync_profile_lifestyle_base_from_lines(db, profile)
+
+
 def lifestyle_period_breakdown(snapshot: BurnSnapshot) -> list[dict[str, Any]]:
     """Строки для game_period breakdown."""
     if snapshot.by_category:

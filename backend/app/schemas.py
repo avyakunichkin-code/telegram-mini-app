@@ -138,6 +138,36 @@ class MonthlyBurnBreakdown(BaseModel):
     by_category: List[ExpenseCategoryBurnItem] = Field(default_factory=list)
 
 
+class ExpenseCategoryPublic(BaseModel):
+    category_key: str
+    title: str
+    default_tier: str = "must"
+    sort_order: int = 100
+
+
+class ExpenseLineCreate(BaseModel):
+    category_key: str
+    amount_monthly: float = Field(ge=0)
+    title: Optional[str] = None
+
+
+class ExpenseLineUpdate(BaseModel):
+    category_key: Optional[str] = None
+    amount_monthly: Optional[float] = Field(default=None, ge=0)
+    title: Optional[str] = None
+
+
+class ExpenseLineResponse(BaseModel):
+    id: int
+    category_key: str
+    category_title: str
+    title: str
+    amount_monthly: float
+    tier: str = "must"
+    source_kind: str = "plan"
+    expires_period_index: Optional[int] = None
+
+
 class ExpensesSnapshotResponse(BaseModel):
     period_index: int
     total: float
@@ -200,6 +230,7 @@ class FinanceOverview(BaseModel):
     avg_net_cashflow_6p_n: int = 0
     victory: Optional[VictoryOverview] = None
     character_unlocks: List[CharacterUnlockOverview] = Field(default_factory=list)
+    save_kind: str = "game"
 
 
 class AnalyticsTimeseriesPoint(BaseModel):
@@ -335,6 +366,7 @@ class GameStartRequest(BaseModel):
     monthly_amount: Optional[float] = None
     assets: List[AssetCreate] = Field(default_factory=list)
     liabilities: List[LiabilityCreate] = Field(default_factory=list)
+    expense_budget: dict[str, float] = Field(default_factory=dict)
 
     @model_validator(mode="after")
     def normalize_game_start(self):

@@ -1,12 +1,14 @@
 import { useState } from 'react';
 import { FinanceSection, FINANCE_TABS } from './FinanceSection';
-import { ExpensesBudgetBlock } from './mqx';
+import { ExpensesBudgetBlock, PlanExpenseEditor } from './mqx';
 import { MqxTabHero } from './MqxTabHero';
 
 export function FinancePremium({ overview, refreshOverview }) {
   const [financeTab, setFinanceTab] = useState('portfolio');
 
   if (!overview) return null;
+
+  const isPlan = overview.save_kind === 'plan';
 
   return (
     <div className="mqx-tab-page">
@@ -21,7 +23,11 @@ export function FinancePremium({ overview, refreshOverview }) {
       />
 
       <main className="mqx-content mqx-tab-page__scroll mqx-capital-page">
-        <ExpensesBudgetBlock overview={overview} />
+        {isPlan ? (
+          <PlanExpenseEditor refreshOverview={refreshOverview} />
+        ) : (
+          <ExpensesBudgetBlock overview={overview} />
+        )}
 
         <section className="mqx-card mqx-capital-card">
           <h2 className="mqx-capital-card__title">Разделы</h2>

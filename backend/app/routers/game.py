@@ -22,7 +22,7 @@ from ..schemas import (
     PeriodCloseBreakdownItem,
     PeriodCloseSummary,
 )
-from ..expense_template_defaults import expense_budget_for_template
+from ..expense_template_defaults import default_plan_expense_budget, expense_budget_for_template
 from ..expenses import ensure_expense_category_catalog, seed_expense_lines_from_budget
 from ..game_start_validation import validate_game_start_request
 from ..game_time import (
@@ -278,7 +278,35 @@ async def start_new_game(
     )
     db.add(start_transaction)
 
-    if base_monthly_lifestyle > 0:
+    if save_kind == "plan":
+        raw_budget = payload.expense_budget or {}
+        budget = {
+            str(k): max(0.0, float(v))
+            for k, v in raw_budget.items()
+            if max(0.0, float(v or 0)) > 0
+        }
+        if not budget and monthly_salary > 0:
+            budget = default_plan_expense_budget(monthly_salary)
+        budget_total = round(sum(budget.values()), 2)
+        if budget_total > 0:
+            new_profile.base_monthly_lifestyle_expense = budget_total
+        starter_params = {
+            "expense_budget": budget,
+            "cash_balance": cash_balance,
+            "monthly_salary": monthly_salary,
+        }
+        new_profile.starter_params_json = json.dumps(starter_params, ensure_ascii=False)
+        if budget:
+            ensure_expense_category_catalog(db)
+            seed_expense_lines_from_budget(
+                db,
+                new_profile,
+                budget,
+                period_index=1,
+                source_kind="plan",
+                source_ref="wizard",
+            )
+    elif base_monthly_lifestyle > 0:
         ensure_expense_category_catalog(db)
         budget = expense_budget_for_template(
             starter_template_key,

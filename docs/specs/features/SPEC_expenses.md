@@ -162,7 +162,23 @@ related:
 
 ---
 
-## 8. Product decisions (зафиксировано)
+## 8. Plan Mode (волна D)
+
+| ID | Реализация |
+|----|------------|
+| E1-410 | Этот раздел + `EXPENSES_SYSTEM.md` §8 |
+| E1-411 | `POST /api/game/start` с `expense_budget`; CRUD `/api/game/expenses/lines` только при `save_kind=plan` |
+| E1-412 | Мастер `BaseParamsScreen` + `PlanExpenseEditor` во вкладке «Финансы» |
+
+**Старт Plan:** игрок задаёт `cash_balance`, `monthly_salary`, `expense_budget` (категория → ₽/мес). Пустой бюджет при зарплате > 0 → автоподстановка ~55% зарплаты по долям категорий (`default_plan_expense_budget`). Создаются `profile_expense_lines` с `source_kind=plan`; `starter_params_json` хранит снимок бюджета.
+
+**В игре (Plan):** `GET /api/game/expenses/categories`; `POST/PATCH/DELETE /api/game/expenses/lines` — только для `save_kind=plan`; после изменений пересчитывается `base_monthly_lifestyle_expense`. Game — только чтение (`GET /api/game/expenses`).
+
+**UI:** плитка «План» в `NewProfileKindScreen` → `BaseParamsScreen` → редактор категорий; в сессии — `PlanExpenseEditor` вместо read-only `ExpensesBudgetBlock`.
+
+---
+
+## 9. Product decisions (зафиксировано)
 
 | Тема | Решение |
 |------|---------|
@@ -175,9 +191,10 @@ related:
 
 ---
 
-## 9. История
+## 10. История
 
 | Дата | Изменение |
 |------|-----------|
 | 2026-05-19 | v0.1: узкий lifestyle aggregate |
 | 2026-05-19 | **v1.0 draft:** полный слой жизнеобеспечения, матрица слоёв, волны A–D |
+| 2026-05-19 | **Волна D:** Plan CRUD, мастер бюджета, `save_kind` в overview |

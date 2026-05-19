@@ -15,6 +15,8 @@ export { MqxLevelBlock } from './layout/MqxLevelBlock';
 export { MqxPeriodActions } from './layout/MqxPeriodActions';
 export { MqxPeriodDashboard } from './layout/MqxPeriodDashboard';
 export { ExpensesBudgetBlock } from './layout/ExpensesBudgetBlock';
+export { PlanExpenseBudgetEditor } from './layout/PlanExpenseBudgetEditor';
+export { PlanExpenseEditor } from './layout/PlanExpenseEditor';
 export { MqxCard } from './layout/MqxCard';
 export { MqxCardHeader } from './layout/MqxCardHeader';
 export { MqxGoalBadge } from './layout/MqxGoalBadge';
