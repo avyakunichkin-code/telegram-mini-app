@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="ru" data-theme="light">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Money Quest — hero дашборда</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <header class="lab-header">
+      <div>
+        <h1>Dashboard — компактная шапка (hero)</h1>
+        <p>
+          Проблема: текущий hero ~220–260px (бренд + таймер 28px + колонка кнопок + Lottie 56px + pills).
+          Цель: ~100–120px, сохранить таймер, play/pause, прогресс периода, pills. Выберите вариант → MQX.
+        </p>
+      </div>
+      <div class="lab-theme" role="group" aria-label="Тема">
+        <button type="button" class="is-active" data-theme-btn="light">Светлая</button>
+        <button type="button" data-theme-btn="dark">Тёмная</button>
+      </div>
+    </header>
+
+    <main class="lab-wrap">
+      <section class="lab-section lab-section--featured">
+        <div class="lab-section__label">
+          <span class="lab-section__id">H1 ★</span>
+          <span class="lab-section__title">Command strip — рекомендуем</span>
+        </div>
+        <p class="lab-section__note">
+          Убираем «Money Quest / Финансы как игра». Одна строка: период + таймер + иконки play/pause.
+          Lottie сжат до 48×32, прогресс — тонкая полоса. Pills снизу.
+        </p>
+        <article class="lab-phone">
+          <header class="dh-hero dh-h1">
+            <div class="dh-hero__glow" aria-hidden></motion.div>
+            <div class="dh-h1__row">
+              <div class="dh-chip">Период<strong>#4</strong></div>
+              <div class="dh-timer">08:42</div>
+              <div class="dh-h1__controls">
+                <button type="button" class="dh-btn dh-btn--icon dh-btn--play" aria-label="Играть">▶</button>
+                <button type="button" class="dh-btn dh-btn--icon dh-btn--pause" aria-label="Пауза">⏸</button>
+              </div>
+            </div>
+            <div class="dh-h1__track">
+              <div class="dh-lottie" aria-hidden>Lottie</div>
+              <div>
+                <div class="dh-progress" aria-hidden><div class="dh-progress__fill"></motion.div></div>
+              </div>
+            </div>
+            <div class="dh-h1__bottom dh-pills">
+              <button type="button" class="dh-pill">Следующий период</button>
+              <button type="button" class="dh-pill dh-pill--badge">События<span class="dh-pill__dot">2</span></button>
+            </div>
+          </header>
+          <div class="lab-phone__body">↓ flat-стек дашборда (D′)</div>
+        </article>
+        <span class="lab-size">≈ 118 px hero</span>
+      </section>
+
+      <section class="lab-section">
+        <div class="lab-section__label">
+          <span class="lab-section__id">H2</span>
+          <span class="lab-section__title">Mascot chip + таймер</span>
+        </div>
+        <p class="lab-section__note">Lottie как квадрат 40px слева от таймера; кнопки справа. Без отдельного блока «цикл месяца».</p>
+        <article class="lab-phone">
+          <header class="dh-hero dh-h2">
+            <div class="dh-hero__glow" aria-hidden></motion.div>
+            <div class="dh-h2__main">
+              <div class="dh-lottie dh-h2__mascot" aria-hidden>MQ</div>
+              <div class="dh-h2__timer-block">
+                <div class="dh-timer">08:42<small>до конца периода</small></div>
+                <div class="dh-h2__meta">Период #4 · идёт</div>
+              </div>
+              <div class="dh-h2__actions">
+                <button type="button" class="dh-btn dh-btn--icon dh-btn--play">▶</button>
+                <button type="button" class="dh-btn dh-btn--icon dh-btn--pause">⏸</button>
+              </div>
+            </div>
+            <div class="dh-h2__bottom dh-pills">
+              <button type="button" class="dh-pill">Следующий период</button>
+              <button type="button" class="dh-pill dh-pill--badge">События<span class="dh-pill__dot">2</span></button>
+            </div>
+          </header>
+          <div class="lab-phone__body">↓ контент</div>
+        </article>
+        <span class="lab-size">≈ 108 px</span>
+      </section>
+
+      <section class="lab-section">
+        <div class="lab-section__label">
+          <span class="lab-section__id">H3</span>
+          <span class="lab-section__title">Одна строка + progress bar</span>
+        </div>
+        <p class="lab-section__note">Самый плоский: без Lottie в hero. Прогресс периода в центре.</p>
+        <article class="lab-phone">
+          <header class="dh-hero dh-h3">
+            <div class="dh-hero__glow" aria-hidden></motion.div>
+            <div class="dh-h3__row">
+              <div class="dh-h3__period"><span>Период</span>#4</div>
+              <div class="dh-h3__bar-wrap">
+                <div class="dh-h3__bar-label">Прогресс месяца · 42%</div>
+                <div class="dh-progress"><div class="dh-progress__fill"></motion.div></div>
+              </div>
+              <div class="dh-timer" style="font-size:18px">08:42</div>
+              <button type="button" class="dh-btn dh-btn--icon dh-btn--play">▶</button>
+              <button type="button" class="dh-btn dh-btn--icon dh-btn--pause">⏸</button>
+            </div>
+            <div class="dh-h3__bottom dh-pills">
+              <button type="button" class="dh-pill">Следующий период</button>
+              <button type="button" class="dh-pill dh-pill--badge">События<span class="dh-pill__dot">2</span></button>
+            </div>
+          </header>
+          <div class="lab-phone__body">↓ контент</div>
+        </article>
+        <span class="lab-size">≈ 96 px</span>
+      </section>
+
+      <section class="lab-section">
+        <div class="lab-section__label">
+          <span class="lab-section__id">H0</span>
+          <span class="lab-section__title">Текущий prod (справочно)</span>
+        </div>
+        <p class="lab-section__note">Бренд + крупный таймер + колонка кнопок + полный блок Lottie.</p>
+        <article class="lab-phone">
+          <header class="dh-hero dh-h0">
+            <div class="dh-hero__glow" aria-hidden></motion.div>
+            <div class="dh-h0__top">
+              <div>
+                <div class="dh-h0__brand">Money Quest</div>
+                <div class="dh-h0__title">Финансы как игра</div>
+              </div>
+              <div class="dh-chip">Период<strong>#4</strong></div>
+            </div>
+            <div class="dh-h0__mid">
+              <div class="dh-h0__timer-box">
+                <small style="font-size:11px;opacity:.7">Игровое время</small>
+                <div class="dh-timer">08:42</div>
+              </div>
+              <div class="dh-h0__actions">
+                <button type="button" class="dh-btn dh-btn--play">Играть</button>
+                <button type="button" class="dh-btn dh-btn--pause">Пауза</button>
+              </div>
+            </div>
+            <div class="dh-h0__lottie">
+              <div style="font-size:10px;opacity:.65;text-transform:uppercase">Цикл месяца</div>
+              <div class="dh-lottie">Lottie 56px</div>
+            </div>
+            <div class="dh-h0__bottom dh-pills">
+              <button type="button" class="dh-pill">Следующий период</button>
+              <button type="button" class="dh-pill dh-pill--badge">События<span class="dh-pill__dot">2</span></button>
+            </div>
+          </header>
+          <div class="lab-phone__body">↓ контент</div>
+        </article>
+        <span class="lab-size">≈ 240 px — слишком много</span>
+      </section>
+    </main>
+
+    <script>
+      document.querySelectorAll('[data-theme-btn]').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          const theme = btn.getAttribute('data-theme-btn');
+          document.documentElement.setAttribute('data-theme', theme);
+          document.querySelectorAll('[data-theme-btn]').forEach((b) => b.classList.toggle('is-active', b === btn));
+        });
+      });
+    </script>
+  </body>
+</html>

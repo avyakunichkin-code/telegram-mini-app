@@ -1,5 +1,7 @@
 """Контрактные тесты: старт игры, идемпотентность, overview."""
 
+import pytest
+
 from app.models import FinanceSalary, GameProfile
 
 
@@ -70,6 +72,15 @@ class TestGameFlowAndIdempotency:
         assert ov["victory"] is not None
         assert ov["victory"]["template_key"] == "mq_game_basic_v1"
         assert ov["total_monthly_income"] >= 50000
+        assert ov["monthly_burn_total"] == pytest.approx(9600.0, abs=1.0)
+        assert ov["monthly_burn_breakdown"] is not None
+        assert len(ov["monthly_burn_breakdown"]["by_category"]) >= 5
+
+        expenses = client.get("/api/game/expenses", headers=auth_headers)
+        assert expenses.status_code == 200
+        ex = expenses.json()
+        assert ex["total"] == pytest.approx(9600.0, abs=1.0)
+        assert ex["total_monthly_outflow"] >= ex["total"]
 
     def test_contribute_idempotency_key(self, client, auth_headers):
         client.post(

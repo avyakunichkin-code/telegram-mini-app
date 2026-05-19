@@ -6,6 +6,8 @@ from sqlalchemy import inspect, text
 
 from app.database import engine, Base
 from app.victory_seeds import VICTORY_CONFIG_BY_TEMPLATE_KEY, victory_config_json_for_template
+from app.expense_template_defaults import expense_budget_for_template
+from app.expenses import ensure_expense_category_catalog
 from app.routers import (
     auth_router,
     users_router,
@@ -17,6 +19,7 @@ from app.routers import (
     invest_router,
     insurance_router,
     achievements_router,
+    expenses_router,
     admin_router,
 )
 
@@ -265,15 +268,18 @@ def ensure_schema_compatibility() -> None:
         with engine.begin() as connection:
             for seed in GAME_STARTER_TEMPLATE_SEEDS:
                 tk = seed["template_key"]
+                bp = dict(seed["blueprint"])
+                base_exp = float(seed["base_expense"])
+                bp["expense_budget"] = expense_budget_for_template(tk, base_exp, bp)
                 connection.execute(
                     stmt,
                     {
                         "template_key": tk,
                         "title": seed["title"],
                         "difficulty_rank": int(seed["difficulty_rank"]),
-                        "base_expense": float(seed["base_expense"]),
+                        "base_expense": base_exp,
                         "sort_order": int(seed["sort_order"]),
-                        "blueprint_json": json.dumps(seed["blueprint"], ensure_ascii=False),
+                        "blueprint_json": json.dumps(bp, ensure_ascii=False),
                     },
                 )
             update_victory = text(
@@ -296,6 +302,18 @@ def ensure_schema_compatibility() -> None:
 # Создаём/обновляем таблицы
 Base.metadata.create_all(bind=engine)
 ensure_schema_compatibility()
+
+from app.database import SessionLocal
+
+_db_boot = SessionLocal()
+try:
+    ensure_expense_category_catalog(_db_boot)
+    _db_boot.commit()
+except Exception:
+    _db_boot.rollback()
+finally:
+    _db_boot.close()
+
 print("✅ Таблицы созданы/проверены")
 
 app = FastAPI(title="Telegram Mini App API", version="2.0.0")
@@ -326,6 +344,7 @@ app.include_router(events_router)
 app.include_router(invest_router)
 app.include_router(insurance_router)
 app.include_router(achievements_router)
+app.include_router(expenses_router)
 app.include_router(admin_router)
 
 

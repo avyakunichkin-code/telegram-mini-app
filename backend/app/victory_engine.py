@@ -24,9 +24,9 @@ class VictoryEvaluationInput:
     net_monthly_cashflow: float
     character_level: int
     monthly_salary: float
-    monthly_burn_total: float = 0
     avg_net_cashflow_6p: float
     avg_net_cashflow_6p_n: int
+    monthly_burn_total: float = 0
 
 
 @dataclass(frozen=True)

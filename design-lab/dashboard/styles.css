@@ -1,0 +1,459 @@
+:root {
+  --mq-violet: #6d28d9;
+  --mq-violet-deep: #5b21b6;
+  --mq-emerald: #059669;
+  --mq-sky: #0ea5e9;
+  --surface: #fff;
+  --mq-mist: #f5f6f8;
+  --text: #0f1115;
+  --text-muted: #6b7280;
+  --glass-border: rgba(15, 17, 21, 0.1);
+  --font: system-ui, 'Segoe UI', Roboto, sans-serif;
+  --hero-grad: linear-gradient(135deg, #6d28d9 0%, #5b21b6 52%, #4338ca 100%);
+}
+
+[data-theme='dark'] {
+  --surface: #1e1f26;
+  --text: #f3f4f6;
+  --text-muted: #9ca3af;
+  --glass-border: rgba(255, 255, 255, 0.1);
+  --mq-mist: #121318;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: var(--font);
+  font-size: 15px;
+  line-height: 1.45;
+  color: var(--text);
+  background: var(--mq-mist);
+}
+
+.lab-header {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  padding: 14px 20px;
+  background: color-mix(in srgb, var(--mq-mist) 92%, transparent);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--glass-border);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.lab-header h1 { margin: 0; font-size: 1.125rem; font-weight: 800; }
+.lab-header p { margin: 4px 0 0; font-size: 13px; color: var(--text-muted); max-width: 44rem; }
+
+.lab-theme button {
+  border: 1px solid var(--glass-border);
+  background: var(--surface);
+  padding: 8px 12px;
+  border-radius: 10px;
+  font-weight: 650;
+  cursor: pointer;
+}
+
+.lab-theme button.is-active {
+  background: color-mix(in srgb, var(--mq-violet) 12%, var(--surface));
+}
+
+.lab-wrap {
+  max-width: 920px;
+  margin: 0 auto;
+  padding: 20px 16px 48px;
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+
+.lab-section__label {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.lab-section__id {
+  font-size: 11px;
+  font-weight: 800;
+  padding: 3px 8px;
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--mq-violet) 14%, transparent);
+  color: var(--mq-violet-deep);
+}
+
+.lab-section--featured .lab-section__id {
+  background: color-mix(in srgb, var(--mq-emerald) 18%, transparent);
+  color: var(--mq-emerald);
+}
+
+.lab-section__title { font-size: 1rem; font-weight: 800; }
+.lab-section__note { margin: 0 0 12px; font-size: 13px; color: var(--text-muted); line-height: 1.45; }
+
+.lab-phone {
+  border-radius: 20px;
+  border: 1px solid var(--glass-border);
+  background: var(--surface);
+  overflow: hidden;
+  max-width: 400px;
+  box-shadow: 0 12px 40px rgba(15, 10, 40, 0.1);
+}
+
+.lab-phone__body {
+  padding: 12px;
+  font-size: 12px;
+  color: var(--text-muted);
+  border-top: 1px solid var(--glass-border);
+}
+
+.lab-size {
+  display: inline-block;
+  margin-top: 8px;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--mq-violet-deep);
+}
+
+/* —— Shared hero tokens —— */
+.dh-hero {
+  position: relative;
+  background: var(--hero-grad);
+  color: #fff;
+  overflow: hidden;
+}
+
+.dh-hero__glow {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 92% 0%, rgba(255, 255, 255, 0.2), transparent 42%);
+  pointer-events: none;
+}
+
+.dh-chip {
+  flex-shrink: 0;
+  border-radius: 10px;
+  padding: 5px 9px;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(245, 243, 255, 0.75);
+}
+
+.dh-chip strong {
+  display: block;
+  margin-top: 1px;
+  font-size: 14px;
+  letter-spacing: 0;
+  text-transform: none;
+  color: #fff;
+}
+
+.dh-timer {
+  font-size: 22px;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.02em;
+  line-height: 1;
+}
+
+.dh-timer small {
+  display: block;
+  margin-top: 2px;
+  font-size: 9px;
+  font-weight: 650;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(245, 243, 255, 0.65);
+}
+
+.dh-btn {
+  border: none;
+  border-radius: 10px;
+  padding: 8px 12px;
+  font-size: 13px;
+  font-weight: 700;
+  font-family: inherit;
+  cursor: pointer;
+}
+
+.dh-btn--play {
+  background: #fff;
+  color: #0b1020;
+}
+
+.dh-btn--pause {
+  background: rgba(255, 255, 255, 0.12);
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.dh-btn--icon {
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  display: grid;
+  place-items: center;
+  font-size: 14px;
+}
+
+.dh-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.dh-pill {
+  border-radius: 9px;
+  padding: 7px 10px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(0, 0, 0, 0.2);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 650;
+  font-family: inherit;
+  cursor: pointer;
+}
+
+.dh-pill--badge {
+  position: relative;
+  padding-right: 22px;
+}
+
+.dh-pill__dot {
+  position: absolute;
+  top: 4px;
+  right: 6px;
+  min-width: 16px;
+  height: 16px;
+  border-radius: 999px;
+  background: #f43f5e;
+  font-size: 10px;
+  font-weight: 800;
+  display: grid;
+  place-items: center;
+}
+
+.dh-lottie {
+  border-radius: 10px;
+  background: rgba(0, 0, 0, 0.22);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  display: grid;
+  place-items: center;
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.dh-progress {
+  height: 3px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.15);
+  overflow: hidden;
+}
+
+.dh-progress__fill {
+  height: 100%;
+  width: 42%;
+  background: linear-gradient(90deg, var(--mq-emerald), #34d399);
+  border-radius: inherit;
+}
+
+/* H0 — текущий (упрощённый макет) */
+.dh-h0 {
+  padding: 18px 16px 14px;
+}
+
+.dh-h0__brand {
+  font-size: 10px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: rgba(245, 243, 255, 0.7);
+}
+
+.dh-h0__title {
+  margin-top: 6px;
+  font-size: 24px;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+}
+
+.dh-h0__top {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.dh-h0__mid {
+  margin-top: 12px;
+  display: flex;
+  gap: 10px;
+}
+
+.dh-h0__timer-box {
+  flex: 1;
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: rgba(0, 0, 0, 0.22);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.dh-h0__timer-box .dh-timer {
+  font-size: 28px;
+  margin-top: 4px;
+}
+
+.dh-h0__actions {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.dh-h0__lottie {
+  margin-top: 10px;
+  padding: 8px 10px;
+}
+
+.dh-h0__lottie .dh-lottie {
+  margin-top: 6px;
+  height: 56px;
+  width: 100%;
+}
+
+.dh-h0__bottom {
+  margin-top: 10px;
+}
+
+/* H1 — command strip ★ */
+.dh-h1 {
+  padding: 10px 12px 10px;
+}
+
+.dh-h1__row {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.dh-h1__controls {
+  display: flex;
+  gap: 6px;
+  margin-left: auto;
+}
+
+.dh-h1__track {
+  margin-top: 8px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.dh-h1__track .dh-lottie {
+  width: 48px;
+  height: 32px;
+  flex-shrink: 0;
+}
+
+.dh-h1__track .dh-progress {
+  flex: 1;
+}
+
+.dh-h1__bottom {
+  margin-top: 8px;
+}
+
+/* H2 — timer + mascot chip */
+.dh-h2 {
+  padding: 10px 12px;
+}
+
+.dh-h2__main {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.dh-h2__mascot {
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  flex-shrink: 0;
+}
+
+.dh-h2__timer-block {
+  flex: 1;
+  min-width: 0;
+}
+
+.dh-h2__meta {
+  margin-top: 2px;
+  font-size: 11px;
+  color: rgba(245, 243, 255, 0.72);
+}
+
+.dh-h2__actions {
+  display: flex;
+  gap: 6px;
+}
+
+.dh-h2__bottom {
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+/* H3 — одна строка + pills */
+.dh-h3 {
+  padding: 10px 12px;
+}
+
+.dh-h3__row {
+  display: grid;
+  grid-template-columns: auto 1fr auto auto auto;
+  align-items: center;
+  gap: 8px;
+}
+
+.dh-h3__period {
+  font-size: 11px;
+  font-weight: 800;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.dh-h3__period span {
+  display: block;
+  font-size: 9px;
+  font-weight: 650;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(245, 243, 255, 0.6);
+}
+
+.dh-h3__bar-wrap {
+  min-width: 0;
+}
+
+.dh-h3__bar-wrap .dh-progress {
+  margin-top: 4px;
+}
+
+.dh-h3__bar-label {
+  font-size: 9px;
+  color: rgba(245, 243, 255, 0.6);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.dh-h3__bottom {
+  margin-top: 8px;
+}
