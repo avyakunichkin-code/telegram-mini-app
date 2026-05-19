@@ -1,3 +1,4 @@
+import logging
 from typing import List
 
 from fastapi import APIRouter, Depends, HTTPException
@@ -47,6 +48,8 @@ from ..schemas import (
     AnalyticsTimeseriesPoint,
     FinanceAnalyticsTimeseriesResponse,
 )
+
+logger = logging.getLogger(__name__)
 
 router = APIRouter(prefix="/api/finance", tags=["finance"])
 
@@ -477,7 +480,12 @@ async def finance_overview(
         db.commit()
         db.refresh(profile)
     except Exception:
+        logger.exception(
+            "Achievement unlock failed in finance overview profile_id=%s",
+            profile.id,
+        )
         db.rollback()
+        db.refresh(profile)
         newly_unlocked_raw = []
 
     salary = db.query(FinanceSalary).filter(FinanceSalary.game_profile_id == profile.id).first()

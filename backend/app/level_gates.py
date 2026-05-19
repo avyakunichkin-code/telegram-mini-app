@@ -11,6 +11,7 @@ from fastapi import HTTPException
 from .models import GameProfile
 
 # Целевая карта LEVEL_XP_SYSTEM §3
+UNLOCK_PERIOD_EVENTS = 2
 UNLOCK_DEPOSIT_OPEN = 3
 UNLOCK_BOND_BUY = 4
 UNLOCK_INSURANCE_BUY = 5
@@ -18,6 +19,7 @@ UNLOCK_ASSET_FROM_TEMPLATE = 6
 UNLOCK_LIABILITY_FROM_TEMPLATE = 6
 
 FEATURE_LABELS: dict[str, str] = {
+    "game.period_events": "События периода",
     "invest.deposit_open": "Вклад",
     "invest.bond_buy": "Облигации",
     "insurance.buy": "Страховка",
@@ -54,6 +56,7 @@ def require_character_level(profile: GameProfile, min_level: int, feature_key: s
 def character_unlocks_payload(profile: GameProfile) -> list[dict]:
     """Снимок для UI: какие механики открыты на текущем уровне."""
     gates = [
+        ("game.period_events", UNLOCK_PERIOD_EVENTS),
         ("invest.deposit_open", UNLOCK_DEPOSIT_OPEN),
         ("invest.bond_buy", UNLOCK_BOND_BUY),
         ("insurance.buy", UNLOCK_INSURANCE_BUY),

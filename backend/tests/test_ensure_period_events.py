@@ -22,8 +22,24 @@ def _add_def(db, key: str, *, tier: int = 1, cooldown: int = 0, repeat_policy: s
 
 
 class TestEnsurePeriodEvents:
-    def test_picks_only_tier_in_window_for_level_1(self, db_session):
-        profile = GameProfile(user_id=1, name="p", save_kind="game", is_active=1, level=1, period_index=1)
+    def test_level_1_skips_period_events(self, db_session):
+        profile = GameProfile(user_id=1, name="p0", save_kind="game", is_active=1, level=1, period_index=1)
+        db_session.add(profile)
+        db_session.commit()
+
+        _add_def(db_session, "tier1_only", tier=1)
+
+        ensure_period_events(db_session, profile.id, 1, "game")
+
+        count = (
+            db_session.query(EventInstance)
+            .filter(EventInstance.game_profile_id == profile.id, EventInstance.period_index == 1)
+            .count()
+        )
+        assert count == 0
+
+    def test_picks_only_tier_in_window_for_level_2(self, db_session):
+        profile = GameProfile(user_id=1, name="p", save_kind="game", is_active=1, level=2, period_index=1)
         db_session.add(profile)
         db_session.commit()
 

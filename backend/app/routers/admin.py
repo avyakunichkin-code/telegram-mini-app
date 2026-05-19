@@ -12,6 +12,7 @@ from sqlalchemy import func
 from sqlalchemy.orm import Session
 
 from ..admin_auth import require_admin_user
+from ..admin_onboarding_funnel import build_onboarding_funnel
 from ..database import get_db
 from ..models import GameProfile, NotificationLog, User
 
@@ -36,8 +37,25 @@ class AdminProfileRow(BaseModel):
     is_active: bool
     period_index: int
     cash_balance: float
+    onboarding_state: str = "brief_done"
+    onboarding_step: str = "farewell"
     created_at: Optional[datetime] = None
     updated_at: Optional[datetime] = None
+
+
+class AdminOnboardingFunnelStep(BaseModel):
+    step: str
+    label: str
+    current_count: int
+    reached_count: int
+
+
+class AdminOnboardingFunnel(BaseModel):
+    started_profiles: int
+    draft_profiles: int
+    brief_done_profiles: int
+    completion_rate_pct: float
+    steps: List[AdminOnboardingFunnelStep]
 
 
 class AdminNotificationRow(BaseModel):
@@ -54,6 +72,7 @@ class AdminWatchtowerResponse(BaseModel):
     users: List[AdminUserRow]
     profiles: List[AdminProfileRow]
     notifications: List[AdminNotificationRow]
+    onboarding_funnel: AdminOnboardingFunnel
 
 
 @router.get("/watchtower", response_model=AdminWatchtowerResponse)
@@ -113,11 +132,14 @@ async def admin_watchtower(
                 is_active=bool(p.is_active),
                 period_index=int(p.period_index),
                 cash_balance=round(float(p.cash_balance or 0), 2),
+                onboarding_state=str(getattr(p, "onboarding_state", "brief_done") or "brief_done"),
+                onboarding_step=str(getattr(p, "onboarding_step", "farewell") or "farewell"),
                 created_at=p.created_at,
                 updated_at=p.updated_at,
             )
             for p, username in profiles
         ],
+        onboarding_funnel=AdminOnboardingFunnel(**build_onboarding_funnel(db)),
         notifications=[
             AdminNotificationRow(
                 id=n.id,

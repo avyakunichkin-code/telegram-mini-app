@@ -159,22 +159,59 @@ async def patch_profile_onboarding(
     current_user=Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
+    from ..admin_notify import (
+        notify_onboarding_brief_done,
+        notify_onboarding_skipped,
+        notify_onboarding_step_reached,
+    )
+
     profile = get_active_game_profile(db, current_user.id)
+    prev_step = str(getattr(profile, "onboarding_step", "period_timer") or "period_timer")
+    prev_state = str(profile.onboarding_state or "draft")
+
+    if payload.onboarding_skip_count is not None:
+        skip = int(payload.onboarding_skip_count)
+        if skip not in (1, 2):
+            raise HTTPException(status_code=400, detail="onboarding_skip_count must be 1 or 2")
+        notify_onboarding_skipped(
+            db,
+            profile,
+            skip_count=skip,
+            step=prev_step,
+        )
+
     if payload.onboarding_state is not None:
         state = payload.onboarding_state.strip()
         if state not in _ONBOARDING_STATES:
             raise HTTPException(status_code=400, detail="Invalid onboarding_state")
         profile.onboarding_state = state
+
     if payload.onboarding_step is not None:
         step = payload.onboarding_step.strip()
         if step not in _ONBOARDING_STEPS:
             raise HTTPException(status_code=400, detail="Invalid onboarding_step")
         profile.onboarding_step = step
+
     db.commit()
     db.refresh(profile)
+
+    new_step = str(getattr(profile, "onboarding_step", "period_timer") or "period_timer")
+    new_state = str(profile.onboarding_state or "draft")
+
+    if payload.onboarding_step is not None and new_step != prev_step:
+        notify_onboarding_step_reached(
+            db,
+            profile,
+            step=new_step,
+            period_index=int(profile.period_index),
+        )
+
+    if new_state == "brief_done" and prev_state != "brief_done":
+        notify_onboarding_brief_done(db, profile)
+
     return OnboardingPatchResponse(
-        onboarding_state=str(profile.onboarding_state),
-        onboarding_step=str(getattr(profile, "onboarding_step", "period_timer") or "period_timer"),
+        onboarding_state=new_state,
+        onboarding_step=new_step,
     )
 
 

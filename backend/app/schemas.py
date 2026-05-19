@@ -345,6 +345,8 @@ class GameProfileResponse(BaseModel):
 class OnboardingPatchRequest(BaseModel):
     onboarding_state: Optional[str] = None
     onboarding_step: Optional[str] = None
+    """1 = пропуск шага; 2 = пропуск всего онбординга (ops-лог)."""
+    onboarding_skip_count: Optional[int] = None
 
 
 class OnboardingPatchResponse(BaseModel):

@@ -1,6 +1,10 @@
 # backend/app/game_period.py
 
+import logging
+
 from sqlalchemy.orm import Session
+
+logger = logging.getLogger(__name__)
 
 from .models import (
     GameProfile,
@@ -275,8 +279,15 @@ def process_period_end(db: Session, profile: GameProfile) -> dict:
     achievement_unlocks: list = []
     try:
         ensure_achievement_catalog(db)
-        achievement_unlocks = process_achievement_unlocks(db, profile)
+        with db.begin_nested():
+            achievement_unlocks = process_achievement_unlocks(db, profile)
     except Exception:
+        logger.exception(
+            "Achievement unlock failed after period end profile_id=%s period_index=%s",
+            profile.id,
+            period_index,
+        )
+        db.refresh(profile)
         achievement_unlocks = []
 
     xp_from_achievements = sum(int(item.get("xp_reward") or 0) for item in achievement_unlocks)

@@ -103,7 +103,11 @@
 - [x] P0 **[Backend]** `emit_admin_alert`, hooks: register, profile, game start, period (win/loss/milestone), Telegram ops.
 - [x] P0 **[Backend]** `GET /api/admin/watchtower` + allowlist `ADMIN_USER_IDS`.
 - [x] P0 **[Frontend]** Экран `#/admin` Watchtower (read-only).
-- [ ] P1 **[Backend+Frontend]** Player inbox (Phase 1 idea).
+- [ ] P1 **[Doc+Ops]** План ops-аналитики — [`PLAN_admin-analytics-ops.md`](../plans/PLAN_admin-analytics-ops.md).
+- [x] P1 **[Backend+Frontend]** A1: онбординг в Watchtower + emit brief_done/skip/step + воронка в `#/admin`.
+- [ ] P1 **[Backend+Frontend]** A2: `GET /api/admin/metrics/summary` + KPI карточки.
+- [ ] P1 **[Backend+Frontend]** A3: profile inspector.
+- [ ] P2 **[Backend+Frontend]** Player inbox (Phase 1 idea).
 - [ ] P2 **[Backend+Frontend]** Draft/publish контента и «отправить себе» (Phase 2 idea).
 - [ ] P2 **[Doc]** Spec [`SPEC_admin-and-notifications.md`](../specs/features/SPEC_admin-and-notifications.md).
 

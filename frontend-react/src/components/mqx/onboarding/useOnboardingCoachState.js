@@ -159,6 +159,8 @@ export function useOnboardingCoachState({ practiceMs = ONBOARDING_PRACTICE_MS, o
     salaryDone,
     cushionDone,
     isLast,
+    showScrim:
+      (phase === 'bubble' || phase === 'practice') && stepIndex < ONBOARDING_STEPS.length,
     showOverlay: phase === 'bubble' && stepIndex < ONBOARDING_STEPS.length,
     showCoach: phase !== 'done' && stepIndex < ONBOARDING_STEPS.length,
     handleSkip,

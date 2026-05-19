@@ -29,6 +29,9 @@ _KIND_EMOJI = {
     "game_won": "🏁",
     "game_lost": "💀",
     "period_milestone": "📅",
+    "onboarding_step_reached": "👣",
+    "onboarding_brief_done": "✅",
+    "onboarding_skipped": "⏭️",
 }
 
 
@@ -94,6 +97,7 @@ def emit_admin_alert(
     user_id: Optional[int] = None,
     game_profile_id: Optional[int] = None,
     dedupe_key: Optional[str] = None,
+    send_telegram: bool = True,
 ) -> Optional[NotificationLog]:
     """
     Записать алерт и отправить в Telegram (если настроено).
@@ -128,7 +132,11 @@ def emit_admin_alert(
         payload["_admin_link"] = _admin_link(f"/admin?profile={game_profile_id}")
 
     telegram_sent = 0
-    if config.OPS_TELEGRAM_BOT_TOKEN and config.OPS_TELEGRAM_CHAT_ID:
+    if (
+        send_telegram
+        and config.OPS_TELEGRAM_BOT_TOKEN
+        and config.OPS_TELEGRAM_CHAT_ID
+    ):
         if _send_telegram_message(_format_telegram_text(kind, payload)):
             telegram_sent = 1
 
@@ -270,6 +278,71 @@ def maybe_notify_game_won(db: Session, profile: GameProfile) -> None:
         user_id=profile.user_id,
         game_profile_id=profile.id,
         dedupe_key=f"game_won:{profile.id}",
+    )
+
+
+def notify_onboarding_step_reached(
+    db: Session,
+    profile: GameProfile,
+    *,
+    step: str,
+    period_index: int,
+) -> None:
+    emit_admin_alert(
+        db,
+        "onboarding_step_reached",
+        {
+            "name": profile.name,
+            "step": step,
+            "period_index": period_index,
+            "profile_id": profile.id,
+            "_admin_link": _admin_link(f"/admin?profile={profile.id}"),
+        },
+        user_id=profile.user_id,
+        game_profile_id=profile.id,
+        dedupe_key=f"onboarding_step:{profile.id}:{step}",
+        send_telegram=False,
+    )
+
+
+def notify_onboarding_brief_done(db: Session, profile: GameProfile) -> None:
+    emit_admin_alert(
+        db,
+        "onboarding_brief_done",
+        {
+            "name": profile.name,
+            "template": profile.starter_template_key or "manual",
+            "period_index": profile.period_index,
+            "profile_id": profile.id,
+            "_admin_link": _admin_link(f"/admin?profile={profile.id}"),
+        },
+        user_id=profile.user_id,
+        game_profile_id=profile.id,
+        dedupe_key=f"onboarding_brief_done:{profile.id}",
+    )
+
+
+def notify_onboarding_skipped(
+    db: Session,
+    profile: GameProfile,
+    *,
+    skip_count: int,
+    step: str,
+) -> None:
+    emit_admin_alert(
+        db,
+        "onboarding_skipped",
+        {
+            "name": profile.name,
+            "skip_count": skip_count,
+            "step": step,
+            "profile_id": profile.id,
+            "_admin_link": _admin_link(f"/admin?profile={profile.id}"),
+        },
+        user_id=profile.user_id,
+        game_profile_id=profile.id,
+        dedupe_key=f"onboarding_skipped:{profile.id}:{skip_count}",
+        send_telegram=skip_count >= 2,
     )
 
 

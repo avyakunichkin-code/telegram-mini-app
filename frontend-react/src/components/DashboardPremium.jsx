@@ -26,6 +26,7 @@ function pctClamp01(x) {
 export function DashboardPremium({
   overview,
   timeStatus,
+  eventsUnlocked = true,
   pendingEventsCount,
   onOpenEvents,
   setPlay,
@@ -187,8 +188,8 @@ export function DashboardPremium({
           onPlay={() => setPlay()}
           onPause={() => setPause()}
           onNextPeriod={onNextPeriod}
-          pendingEventsCount={pendingEventsCount}
-          onOpenEvents={onOpenEvents}
+          pendingEventsCount={eventsUnlocked ? pendingEventsCount : 0}
+          onOpenEvents={eventsUnlocked ? onOpenEvents : undefined}
         />
 
         <main className="mqx-content mqx-tab-page__scroll mqx-content--dash-flat">

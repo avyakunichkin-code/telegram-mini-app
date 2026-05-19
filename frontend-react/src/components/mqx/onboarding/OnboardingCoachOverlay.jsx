@@ -23,7 +23,7 @@ function ScrimPanels({ hole }) {
   };
 
   if (!hole) {
-    return <div className="mqx-onboarding-scrim mqx-onboarding-scrim--full" style={scrim} aria-hidden />;
+    return <div className="mqx-onboarding-scrim mqx-onboarding-scrim--full" style={{ ...scrim, inset: 0 }} aria-hidden />;
   }
 
   const { top, left, width, height } = hole;
@@ -41,7 +41,7 @@ function ScrimPanels({ hole }) {
 }
 
 /**
- * Spotlight + пузырь Монетки. Во время practice оверлей не рендерится (чистый UI).
+ * Spotlight + пузырь Монетки. variant=practice — затемнение и подсветка якоря без пузыря.
  */
 export function OnboardingCoachOverlay({
   open,
@@ -52,6 +52,7 @@ export function OnboardingCoachOverlay({
   onSkip,
   onContinue,
   finishLabel = 'Начать игру',
+  variant = 'bubble',
 }) {
   const [hole, setHole] = useState(null);
   const [bubbleStyle, setBubbleStyle] = useState({});
@@ -106,6 +107,7 @@ export function OnboardingCoachOverlay({
 
   if (!open || !step) return null;
 
+  const isPractice = variant === 'practice';
   const continueLabel =
     step.gate === 'finish' ? finishLabel : step.gate === 'practice' ? 'Понятно' : null;
 
@@ -126,26 +128,35 @@ export function OnboardingCoachOverlay({
         />
       ) : null}
 
-      <div className="mqx-onboarding-bubble-wrap" style={bubbleStyle}>
-        <article className="mqx-onboarding-bubble" aria-labelledby="mqx-onboarding-title">
-          <button type="button" className="mqx-onboarding-skip" onClick={onSkip}>
-            Пропустить
-            {skipPressCount === 1 ? ' (ещё раз — выйти)' : ''}
-          </button>
-          <MonetkaAvatar size={64} />
-          <h2 id="mqx-onboarding-title" className="mqx-onboarding-bubble__title">
-            {step.title}
-          </h2>
-          <p className="mqx-onboarding-bubble__body">{step.body}</p>
-          {continueLabel ? (
-            <MqxButton variant="primary" className="mqx-onboarding-bubble__cta" onClick={onContinue}>
-              {continueLabel}
-            </MqxButton>
-          ) : (
-            <p className="mqx-onboarding-bubble__wait">Сделай действие в игре ↓</p>
-          )}
-        </article>
-      </div>
+      {isPractice ? (
+        <div className="mqx-onboarding-practice-hint" aria-live="polite">
+          <span className="mqx-onboarding-practice-hint__label">Практика</span>
+          <span className="mqx-onboarding-practice-hint__sec">10 с · потыкай UI</span>
+        </div>
+      ) : null}
+
+      {!isPractice ? (
+        <div className="mqx-onboarding-bubble-wrap" style={bubbleStyle}>
+          <article className="mqx-onboarding-bubble" aria-labelledby="mqx-onboarding-title">
+            <button type="button" className="mqx-onboarding-skip" onClick={onSkip}>
+              Пропустить
+              {skipPressCount === 1 ? ' (ещё раз — выйти)' : ''}
+            </button>
+            <MonetkaAvatar size={64} />
+            <h2 id="mqx-onboarding-title" className="mqx-onboarding-bubble__title">
+              {step.title}
+            </h2>
+            <p className="mqx-onboarding-bubble__body">{step.body}</p>
+            {continueLabel ? (
+              <MqxButton variant="primary" className="mqx-onboarding-bubble__cta" onClick={onContinue}>
+                {continueLabel}
+              </MqxButton>
+            ) : (
+              <p className="mqx-onboarding-bubble__wait">Сделай действие в игре ↓</p>
+            )}
+          </article>
+        </div>
+      ) : null}
     </div>
   );
 }

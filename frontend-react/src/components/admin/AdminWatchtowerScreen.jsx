@@ -12,6 +12,66 @@ function formatDt(value) {
   }
 }
 
+function OnboardingBadge({ state }) {
+  const s = state || 'brief_done';
+  const draft = s === 'draft' || s === 'started';
+  return (
+    <span className={`admin-watchtower__badge ${draft ? 'admin-watchtower__badge--draft' : 'admin-watchtower__badge--done'}`}>
+      {draft ? 'coach' : 'готово'}
+    </span>
+  );
+}
+
+function OnboardingFunnel({ funnel }) {
+  if (!funnel) return null;
+  return (
+    <section className="mq-card admin-watchtower__block admin-watchtower__funnel">
+      <h2 className="admin-watchtower__block-title">Воронка онбординга</h2>
+      <div className="admin-watchtower__kpi-row">
+        <div className="admin-watchtower__kpi">
+          <span className="admin-watchtower__kpi-label">Стартов</span>
+          <strong>{funnel.started_profiles}</strong>
+        </div>
+        <div className="admin-watchtower__kpi">
+          <span className="admin-watchtower__kpi-label">В coach</span>
+          <strong>{funnel.draft_profiles}</strong>
+        </div>
+        <div className="admin-watchtower__kpi">
+          <span className="admin-watchtower__kpi-label">Завершили</span>
+          <strong>{funnel.brief_done_profiles}</strong>
+        </div>
+        <div className="admin-watchtower__kpi">
+          <span className="admin-watchtower__kpi-label">Конверсия</span>
+          <strong>{funnel.completion_rate_pct}%</strong>
+        </div>
+      </div>
+      <div className="admin-watchtower__table-wrap">
+        <table className="admin-watchtower__table admin-watchtower__table--funnel">
+          <thead>
+            <tr>
+              <th>Шаг</th>
+              <th>Сейчас (draft)</th>
+              <th>Дошли (лог)</th>
+            </tr>
+          </thead>
+          <tbody>
+            {(funnel.steps ?? []).map((row) => (
+              <tr key={row.step}>
+                <td>{row.label}</td>
+                <td>{row.current_count}</td>
+                <td>{row.reached_count}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <p className="mq-muted admin-watchtower__funnel-hint">
+        «Сейчас» — профили в coach на шаге. «Дошли» — уникальные profile_id в журнале (без Telegram на шагах).
+      </p>
+    </section>
+  );
+}
+
 function Table({ columns, rows, highlightId }) {
   if (!rows.length) {
     return <p className="mq-muted">Пока пусто</p>;
@@ -93,6 +153,16 @@ export function AdminWatchtowerScreen({ onBack }) {
       { key: 'name', label: 'Имя', render: (r) => r.name },
       { key: 'template', label: 'Шаблон', render: (r) => r.starter_template_key || '—' },
       { key: 'period', label: 'Период', render: (r) => r.period_index },
+      {
+        key: 'onboarding',
+        label: 'Coach',
+        render: (r) => (
+          <>
+            <OnboardingBadge state={r.onboarding_state} />
+            <span className="admin-watchtower__step-tag">{r.onboarding_step}</span>
+          </>
+        ),
+      },
       { key: 'cash', label: 'Cash', render: (r) => `${r.cash_balance} ₽` },
       { key: 'active', label: 'Активен', render: (r) => (r.is_active ? 'да' : 'нет') },
     ],
@@ -165,6 +235,8 @@ export function AdminWatchtowerScreen({ onBack }) {
 
       {!loading && !error && data ? (
         <>
+          <OnboardingFunnel funnel={data.onboarding_funnel} />
+
           <section className="mq-card admin-watchtower__block">
             <h2 className="admin-watchtower__block-title">Пользователи</h2>
             <Table columns={userColumns} rows={users} highlightId={highlightUser} />

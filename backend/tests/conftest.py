@@ -70,6 +70,21 @@ def auth_headers(test_user):
 
 
 @pytest.fixture()
+def admin_env(test_user, monkeypatch):
+    monkeypatch.setenv("ADMIN_USER_IDS", str(test_user.id))
+    from app.config import config
+
+    config.ADMIN_USER_IDS = {test_user.id}
+    monkeypatch.delenv("OPS_TELEGRAM_BOT_TOKEN", raising=False)
+    monkeypatch.delenv("OPS_TELEGRAM_CHAT_ID", raising=False)
+    from app import config as config_module
+
+    config_module.config.OPS_TELEGRAM_BOT_TOKEN = ""
+    config_module.config.OPS_TELEGRAM_CHAT_ID = ""
+    yield test_user
+
+
+@pytest.fixture()
 def seed_basic_template(db_session):
     db_session.add(
         GameStarterTemplate(

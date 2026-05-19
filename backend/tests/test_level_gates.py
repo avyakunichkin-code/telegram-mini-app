@@ -7,6 +7,7 @@ from app.level_gates import (
     UNLOCK_BOND_BUY,
     UNLOCK_DEPOSIT_OPEN,
     UNLOCK_INSURANCE_BUY,
+    UNLOCK_PERIOD_EVENTS,
     character_unlocks_payload,
     is_feature_unlocked,
     require_character_level,
@@ -20,6 +21,8 @@ def _profile(level: int) -> GameProfile:
 
 class TestLevelGates:
     def test_unlock_thresholds(self):
+        assert is_feature_unlocked(_profile(1), UNLOCK_PERIOD_EVENTS) is False
+        assert is_feature_unlocked(_profile(2), UNLOCK_PERIOD_EVENTS) is True
         p2 = _profile(2)
         assert is_feature_unlocked(p2, UNLOCK_DEPOSIT_OPEN) is False
         assert is_feature_unlocked(_profile(3), UNLOCK_DEPOSIT_OPEN) is True

@@ -11,21 +11,6 @@ from app.config import _resolve_admin_web_base_url
 from app.models import NotificationLog
 
 
-@pytest.fixture()
-def admin_env(test_user, monkeypatch):
-    monkeypatch.setenv("ADMIN_USER_IDS", str(test_user.id))
-    from app.config import config
-
-    config.ADMIN_USER_IDS = {test_user.id}
-    monkeypatch.delenv("OPS_TELEGRAM_BOT_TOKEN", raising=False)
-    monkeypatch.delenv("OPS_TELEGRAM_CHAT_ID", raising=False)
-    from app import config as config_module
-
-    config_module.config.OPS_TELEGRAM_BOT_TOKEN = ""
-    config_module.config.OPS_TELEGRAM_CHAT_ID = ""
-    yield test_user
-
-
 def test_admin_web_base_url_render_default(monkeypatch):
     monkeypatch.delenv("ADMIN_WEB_BASE_URL", raising=False)
     monkeypatch.delenv("PUBLIC_APP_URL", raising=False)
@@ -61,7 +46,11 @@ def test_emit_admin_alert_dedupe(db_session):
     assert db_session.query(NotificationLog).count() == 1
 
 
-def test_admin_watchtower_forbidden(client, auth_headers):
+def test_admin_watchtower_forbidden(client, auth_headers, monkeypatch):
+    monkeypatch.setenv("ADMIN_USER_IDS", "")
+    from app.config import config
+
+    config.ADMIN_USER_IDS = set()
     resp = client.get("/api/admin/watchtower", headers=auth_headers)
     assert resp.status_code == 403
 
@@ -74,6 +63,8 @@ def test_admin_watchtower_ok(client, admin_env, auth_headers):
     assert "users" in data
     assert "profiles" in data
     assert "notifications" in data
+    assert "onboarding_funnel" in data
+    assert len(data["onboarding_funnel"]["steps"]) == 5
     usernames = [u["username"] for u in data["users"]]
     assert admin_env.username in usernames
 

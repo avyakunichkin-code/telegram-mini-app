@@ -31,16 +31,13 @@ export function GameOnboardingLayer({
 
   const needsOnboarding = overview && DRAFT_STATES.has(overview.onboarding_state);
 
-  const persist = useCallback(
-    async (patch) => {
-      try {
-        await API.patchOnboarding(patch);
-      } catch {
-        /* не блокируем UX */
-      }
-    },
-    [],
-  );
+  const persist = useCallback(async (patch) => {
+    try {
+      await API.patchOnboarding(patch);
+    } catch {
+      /* не блокируем UX */
+    }
+  }, []);
 
   const coach = useOnboardingCoachState({
     onComplete: async () => {
@@ -49,7 +46,21 @@ export function GameOnboardingLayer({
     },
   });
 
-  const { restoreStepIndex, markSalaryDone, markCushionDone } = coach;
+  const { restoreStepIndex, markSalaryDone, markCushionDone, handleSkip } = coach;
+
+  const onSkip = useCallback(() => {
+    const nextSkip = coach.skipPressCount + 1;
+    handleSkip();
+    if (nextSkip >= 2) {
+      persist({
+        onboarding_skip_count: 2,
+        onboarding_state: 'brief_done',
+        onboarding_step: 'farewell',
+      }).then(() => refreshOverview?.());
+      return;
+    }
+    persist({ onboarding_skip_count: 1 });
+  }, [coach.skipPressCount, handleSkip, persist, refreshOverview]);
 
   useEffect(() => {
     if (!needsOnboarding) {
@@ -69,8 +80,8 @@ export function GameOnboardingLayer({
   }, [needsOnboarding, overview?.onboarding_step, periodStatus, restoreStepIndex]);
 
   useEffect(() => {
-    onOverlayVisibleChange?.(!!needsOnboarding && coach.showOverlay);
-  }, [needsOnboarding, coach.showOverlay, onOverlayVisibleChange]);
+    onOverlayVisibleChange?.(!!needsOnboarding && coach.showScrim);
+  }, [needsOnboarding, coach.showScrim, onOverlayVisibleChange]);
 
   useEffect(() => {
     if (!needsOnboarding || !coach.step?.id) return;
@@ -91,18 +102,19 @@ export function GameOnboardingLayer({
     markCushionDone();
   }, [needsOnboarding, periodStatus?.safety_fund_contribution, markCushionDone]);
 
-  if (!needsOnboarding || !coach.showCoach || !coach.showOverlay) {
+  if (!needsOnboarding || !coach.showCoach || !coach.showScrim) {
     return null;
   }
 
   return createPortal(
     <OnboardingCoachOverlay
       open
+      variant={coach.phase === 'practice' ? 'practice' : 'bubble'}
       step={coach.step}
       skipPressCount={coach.skipPressCount}
       rootRef={rootRef}
       anchor={coach.step?.anchor}
-      onSkip={coach.handleSkip}
+      onSkip={onSkip}
       onContinue={coach.handleBubbleContinue}
     />,
     document.body,

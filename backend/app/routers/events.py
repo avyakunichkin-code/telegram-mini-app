@@ -23,6 +23,7 @@ from ..models import EventChoice, EventDefinition, EventInstance, EventProfileCo
 from ..timeutil import utc_now_naive
 from ..expenses import add_expense_line_from_event
 from ..insurance_events import apply_insurance_claim_from_effects
+from ..level_gates import UNLOCK_PERIOD_EVENTS, character_level
 from ..mvp11_event_seeds import ensure_mvp11_event_catalog
 
 
@@ -218,6 +219,9 @@ def ensure_period_events(db: Session, game_profile_id: int, period_index: int, s
     if not profile:
         return
 
+    if character_level(profile) < UNLOCK_PERIOD_EVENTS:
+        return
+
     total_existing = (
         db.query(EventInstance)
         .filter(
@@ -336,6 +340,9 @@ async def get_pending_event(current_user=Depends(get_current_user), db: Session 
     profile = get_active_game_profile(db, current_user.id)
     sync_time(profile)
     _ensure_seed_events(db)
+
+    if character_level(profile) < UNLOCK_PERIOD_EVENTS:
+        return {"events": [], "event": None}
 
     ensure_period_events(db, profile.id, profile.period_index, profile.save_kind)
 

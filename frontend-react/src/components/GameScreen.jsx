@@ -29,6 +29,7 @@ export function GameScreen({ onLogout, onNewGame, onLoadGame }) {
   const {
     overview,
     timeStatus,
+    periodStatus,
     pendingEvents,
     loading,
     error,
@@ -49,12 +50,24 @@ export function GameScreen({ onLogout, onNewGame, onLoadGame }) {
 
   const closeEventsOverlay = useCallback(() => setEventsOpen(false), []);
 
+  const characterLevel = Math.max(1, Number(overview?.character_level) || 1);
+  const eventsUnlocked = characterLevel >= 2;
+  const inOnboarding =
+    overview && (overview.onboarding_state === 'draft' || overview.onboarding_state === 'started');
+
   useEffect(() => {
+    if (!eventsUnlocked || inOnboarding) return;
     if (eventsPromptTick > 0 && (pendingEvents?.length ?? 0) > 0) {
       // eslint-disable-next-line react-hooks/set-state-in-effect -- синхронизация с событиями бэкенда
       setEventsOpen(true);
     }
-  }, [eventsPromptTick, pendingEvents]);
+  }, [eventsPromptTick, pendingEvents, eventsUnlocked, inOnboarding]);
+
+  useEffect(() => {
+    if (!eventsUnlocked || inOnboarding) {
+      setEventsOpen(false);
+    }
+  }, [eventsUnlocked, inOnboarding]);
 
   useEffect(() => {
     if (onboardingOverlayVisible && activeTab !== 'dashboard') {
@@ -234,8 +247,9 @@ export function GameScreen({ onLogout, onNewGame, onLoadGame }) {
                   <DashboardPremium
                     overview={overview}
                     timeStatus={timeStatus}
-                    pendingEventsCount={pendingEvents?.length ?? 0}
-                    onOpenEvents={() => setEventsOpen(true)}
+                    eventsUnlocked={eventsUnlocked}
+                    pendingEventsCount={eventsUnlocked ? (pendingEvents?.length ?? 0) : 0}
+                    onOpenEvents={eventsUnlocked ? () => setEventsOpen(true) : undefined}
                     setPlay={setPlay}
                     setPause={setPause}
                     onNextPeriod={handleRequestNextPeriod}

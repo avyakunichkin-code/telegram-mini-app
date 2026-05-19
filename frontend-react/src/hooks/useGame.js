@@ -20,6 +20,8 @@ export function useGame() {
   const timerRef = useRef(null);
   const localRemainingRef = useRef(0);
   const lastSyncRef = useRef(Date.now());
+  const handlePeriodEndRef = useRef(null);
+  const startTimerRef = useRef(null);
 
   // Загрузка данных (можно повторить после ошибки)
   const loadData = useCallback(async () => {
@@ -84,7 +86,38 @@ export function useGame() {
     return data;
   }, []);
 
-  // Таймер
+  const applyPeriodTransition = useCallback(async (result) => {
+    if (!result) return result;
+    if (result.period_close) {
+      notifyPeriodCloseRewards(result.period_close);
+      setPeriodCloseSummary(result.period_close);
+    }
+    setTimeStatus(result);
+    localRemainingRef.current = result.seconds_until_next_period;
+    lastSyncRef.current = Date.now();
+    await refreshOverview();
+    await refreshPeriodStatus();
+    await refreshPendingEvent({ bumpOverlay: true });
+    if (result.time_state === 'play') {
+      startTimerRef.current?.();
+    }
+    return result;
+  }, [refreshOverview, refreshPeriodStatus, refreshPendingEvent]);
+
+  const handlePeriodEnd = useCallback(async () => {
+    const newTime = await API.setTimeNext();
+    await applyPeriodTransition(newTime);
+  }, [applyPeriodTransition]);
+
+  handlePeriodEndRef.current = handlePeriodEnd;
+
+  const stopTimer = useCallback(() => {
+    if (timerRef.current) {
+      clearInterval(timerRef.current);
+      timerRef.current = null;
+    }
+  }, []);
+
   const startTimer = useCallback(() => {
     if (timerRef.current) clearInterval(timerRef.current);
     if (!timeStatus || timeStatus.time_state !== 'play') return;
@@ -95,62 +128,25 @@ export function useGame() {
       const remaining = Math.max(0, timeStatus.seconds_until_next_period - elapsed);
       localRemainingRef.current = remaining;
 
-      // Обновляем UI через setTimeStatus (добавим поле remainingLocal)
-      setTimeStatus(prev => ({ ...prev, remainingLocal: remaining }));
+      setTimeStatus((prev) => ({ ...prev, remainingLocal: remaining }));
 
       if (remaining <= 0) {
-        // Период закончился – синхронизируем
         clearInterval(timerRef.current);
         timerRef.current = null;
-        handlePeriodEnd();
+        handlePeriodEndRef.current?.();
       }
     }, 1000);
   }, [timeStatus]);
 
-  const stopTimer = useCallback(() => {
-    if (timerRef.current) {
-      clearInterval(timerRef.current);
-      timerRef.current = null;
-    }
-  }, []);
-
-  const handlePeriodEnd = useCallback(async () => {
-    const newTime = await API.setTimeNext();
-    if (newTime) {
-      if (newTime.period_close) setPeriodCloseSummary(newTime.period_close);
-      setTimeStatus(newTime);
-      localRemainingRef.current = newTime.seconds_until_next_period;
-      lastSyncRef.current = Date.now();
-      await refreshOverview();
-      await refreshPeriodStatus();
-      await refreshPendingEvent({ bumpOverlay: true });
-      if (newTime.time_state === 'play') {
-        startTimer();
-      }
-    }
-  }, [refreshOverview, refreshPeriodStatus, refreshPendingEvent, startTimer]);
+  startTimerRef.current = startTimer;
 
   /** Ручной или подтверждённый переход (без window.confirm — его показывает GameScreen). */
   const advancePeriod = useCallback(async () => {
     stopTimer();
     const result = await API.setTimeNext();
-    if (result) {
-      if (result.period_close) {
-        notifyPeriodCloseRewards(result.period_close);
-        setPeriodCloseSummary(result.period_close);
-      }
-      setTimeStatus(result);
-      localRemainingRef.current = result.seconds_until_next_period;
-      lastSyncRef.current = Date.now();
-      await refreshOverview();
-      await refreshPeriodStatus();
-      await refreshPendingEvent({ bumpOverlay: true });
-      if (result.time_state === 'play') {
-        startTimer();
-      }
-    }
+    await applyPeriodTransition(result);
     return result;
-  }, [refreshOverview, refreshPeriodStatus, refreshPendingEvent, startTimer, stopTimer]);
+  }, [applyPeriodTransition, stopTimer]);
 
   // Действия времени
   const setPlay = useCallback(async () => {
