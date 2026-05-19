@@ -3,6 +3,7 @@ import { MonetkaAvatar } from './MonetkaAvatar';
 import { MqxButton } from '../primitives/MqxButton';
 
 const PAD = 8;
+const DEFAULT_BUBBLE_STYLE = { bottom: 24, left: 16, right: 16, maxWidth: 420, margin: '0 auto' };
 
 function clampRect(rect, pad = PAD) {
   if (!rect) return null;
@@ -15,15 +16,13 @@ function clampRect(rect, pad = PAD) {
 }
 
 function ScrimPanels({ hole }) {
-  const scrim = {
-    position: 'fixed',
-    background: 'rgba(8, 10, 22, 0.68)',
-    zIndex: 10050,
-    pointerEvents: 'auto',
-  };
-
   if (!hole) {
-    return <div className="mqx-onboarding-scrim mqx-onboarding-scrim--full" style={{ ...scrim, inset: 0 }} aria-hidden />;
+    return (
+      <div
+        className="mqx-onboarding-scrim mqx-onboarding-scrim--full"
+        aria-hidden
+      />
+    );
   }
 
   const { top, left, width, height } = hole;
@@ -32,10 +31,14 @@ function ScrimPanels({ hole }) {
 
   return (
     <>
-      <div style={{ ...scrim, top: 0, left: 0, right: 0, height: top }} aria-hidden />
-      <div style={{ ...scrim, top: bottom, left: 0, right: 0, bottom: 0 }} aria-hidden />
-      <div style={{ ...scrim, top, left: 0, width: left, height }} aria-hidden />
-      <div style={{ ...scrim, top, left: right, right: 0, height }} aria-hidden />
+      <div className="mqx-onboarding-scrim" style={{ top: 0, left: 0, right: 0, height: top }} aria-hidden />
+      <div
+        className="mqx-onboarding-scrim"
+        style={{ top: bottom, left: 0, right: 0, bottom: 0 }}
+        aria-hidden
+      />
+      <div className="mqx-onboarding-scrim" style={{ top, left: 0, width: left, height }} aria-hidden />
+      <div className="mqx-onboarding-scrim" style={{ top, left: right, right: 0, height }} aria-hidden />
     </>
   );
 }
@@ -55,7 +58,7 @@ export function OnboardingCoachOverlay({
   variant = 'bubble',
 }) {
   const [hole, setHole] = useState(null);
-  const [bubbleStyle, setBubbleStyle] = useState({});
+  const [bubbleStyle, setBubbleStyle] = useState(DEFAULT_BUBBLE_STYLE);
 
   useLayoutEffect(() => {
     if (!open || !rootRef?.current) {
@@ -66,12 +69,13 @@ export function OnboardingCoachOverlay({
     const measure = () => {
       if (!anchor) {
         setHole(null);
-        setBubbleStyle({ bottom: 24, left: 16, right: 16 });
+        setBubbleStyle(DEFAULT_BUBBLE_STYLE);
         return;
       }
       const el = rootRef.current.querySelector(`[data-onboarding-anchor="${anchor}"]`);
       if (!el) {
         setHole(null);
+        setBubbleStyle(DEFAULT_BUBBLE_STYLE);
         return;
       }
       const rect = clampRect(el.getBoundingClientRect());
@@ -110,9 +114,17 @@ export function OnboardingCoachOverlay({
   const isPractice = variant === 'practice';
   const continueLabel =
     step.gate === 'finish' ? finishLabel : step.gate === 'practice' ? 'Понятно' : null;
+  const skipLabel =
+    skipPressCount === 1 ? 'Пропустить (ещё раз — выйти из обучения)' : 'Пропустить шаг';
 
   return (
-    <div className="mqx-onboarding-root" role="presentation">
+    <div
+      className="mqx-onboarding-root"
+      role={isPractice ? 'presentation' : 'dialog'}
+      aria-modal={isPractice ? undefined : 'true'}
+      aria-labelledby={isPractice ? undefined : 'mqx-onboarding-title'}
+      aria-label={isPractice ? 'Практика: попробуй элементы интерфейса' : undefined}
+    >
       <ScrimPanels hole={hole} />
 
       {hole ? (
@@ -138,7 +150,12 @@ export function OnboardingCoachOverlay({
       {!isPractice ? (
         <div className="mqx-onboarding-bubble-wrap" style={bubbleStyle}>
           <article className="mqx-onboarding-bubble" aria-labelledby="mqx-onboarding-title">
-            <button type="button" className="mqx-onboarding-skip" onClick={onSkip}>
+            <button
+              type="button"
+              className="mqx-onboarding-skip"
+              onClick={onSkip}
+              aria-label={skipLabel}
+            >
               Пропустить
               {skipPressCount === 1 ? ' (ещё раз — выйти)' : ''}
             </button>

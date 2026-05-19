@@ -28,6 +28,8 @@ export function MqxPeriodActions({
           className="mqx-action mqx-action--primary"
           disabled={busy}
           data-onboarding-anchor="salary"
+          title="Получить зарплату за текущий период"
+          aria-label="Зарплата"
           onClick={onSalary}
         >
           {salaryLabel}
@@ -37,14 +39,29 @@ export function MqxPeriodActions({
           className="mqx-action"
           disabled={busy}
           data-onboarding-anchor="cushion"
+          title="Перевести деньги в подушку безопасности"
+          aria-label="В подушку"
           onClick={onContribute}
         >
           В подушку
         </button>
-        <button type="button" className="mqx-action" disabled={busy} onClick={onWithdraw}>
+        <button
+          type="button"
+          className="mqx-action"
+          disabled={busy}
+          title="Снять деньги из подушки на счёт"
+          aria-label="Снять из подушки"
+          onClick={onWithdraw}
+        >
           Снять
         </button>
-        <button type="button" className="mqx-action" onClick={onInvest}>
+        <button
+          type="button"
+          className="mqx-action"
+          title="Открыть раздел инвестиций"
+          aria-label="Инвестировать"
+          onClick={onInvest}
+        >
           Инвестировать
         </button>
       </div>

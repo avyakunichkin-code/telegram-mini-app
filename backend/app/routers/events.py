@@ -32,6 +32,8 @@ router = APIRouter(prefix="/api/game/events", tags=["events"])
 logger = logging.getLogger(__name__)
 
 EVENTS_PER_PERIOD = 3
+EVENTS_UNLOCK_INTRO_KEY = "mq11_events_unlock_intro"
+_PERIOD_EVENT_POOL_EXCLUDE_KEYS = frozenset({EVENTS_UNLOCK_INTRO_KEY})
 ALLOWED_EFFECT_KEYS = frozenset(
     {
         "cash_delta",
@@ -214,6 +216,72 @@ def record_event_profile_selection(
         )
 
 
+def ensure_events_unlock_intro(db: Session, profile: GameProfile) -> None:
+    """Разовое событие при первом доступе к колоде (уровень ≥ UNLOCK_PERIOD_EVENTS)."""
+    if character_level(profile) < UNLOCK_PERIOD_EVENTS:
+        return
+
+    definition = (
+        db.query(EventDefinition)
+        .filter(
+            EventDefinition.key == EVENTS_UNLOCK_INTRO_KEY,
+            EventDefinition.is_active == 1,
+        )
+        .first()
+    )
+    if not definition:
+        return
+
+    counter = _load_event_counter_map(db, profile.id).get(int(definition.id))
+    if not is_event_definition_eligible(
+        repeat_policy=getattr(definition, "repeat_policy", None),
+        repeat_max=getattr(definition, "repeat_max", None),
+        cooldown_periods=int(getattr(definition, "cooldown_periods", 0) or 0),
+        current_period_index=int(profile.period_index),
+        counter=counter,
+    ):
+        return
+
+    already = (
+        db.query(EventInstance)
+        .filter(
+            EventInstance.game_profile_id == profile.id,
+            EventInstance.definition_id == definition.id,
+        )
+        .first()
+    )
+    if already:
+        return
+
+    db.add(
+        EventInstance(
+            game_profile_id=profile.id,
+            period_index=int(profile.period_index),
+            definition_id=definition.id,
+            status="pending",
+        )
+    )
+    db.commit()
+
+
+def _period_pool_instance_count(
+    db: Session, game_profile_id: int, period_index: int, *, exclude_intro: bool = True
+) -> int:
+    q = db.query(EventInstance).filter(
+        EventInstance.game_profile_id == game_profile_id,
+        EventInstance.period_index == period_index,
+    )
+    if exclude_intro:
+        intro = (
+            db.query(EventDefinition.id)
+            .filter(EventDefinition.key == EVENTS_UNLOCK_INTRO_KEY)
+            .scalar()
+        )
+        if intro is not None:
+            q = q.filter(EventInstance.definition_id != int(intro))
+    return int(q.count())
+
+
 def ensure_period_events(db: Session, game_profile_id: int, period_index: int, save_kind: str) -> None:
     profile = db.query(GameProfile).filter(GameProfile.id == game_profile_id).first()
     if not profile:
@@ -222,15 +290,7 @@ def ensure_period_events(db: Session, game_profile_id: int, period_index: int, s
     if character_level(profile) < UNLOCK_PERIOD_EVENTS:
         return
 
-    total_existing = (
-        db.query(EventInstance)
-        .filter(
-            EventInstance.game_profile_id == game_profile_id,
-            EventInstance.period_index == period_index,
-        )
-        .count()
-    )
-    if total_existing > 0:
+    if _period_pool_instance_count(db, game_profile_id, period_index) >= EVENTS_PER_PERIOD:
         return
 
     defs_all = (
@@ -253,6 +313,8 @@ def ensure_period_events(db: Session, game_profile_id: int, period_index: int, s
 
     repeat_ok: list[EventDefinition] = []
     for d in defs_all:
+        if d.key in _PERIOD_EVENT_POOL_EXCLUDE_KEYS:
+            continue
         if not is_event_definition_eligible(
             repeat_policy=getattr(d, "repeat_policy", None),
             repeat_max=getattr(d, "repeat_max", None),
@@ -344,6 +406,7 @@ async def get_pending_event(current_user=Depends(get_current_user), db: Session 
     if character_level(profile) < UNLOCK_PERIOD_EVENTS:
         return {"events": [], "event": None}
 
+    ensure_events_unlock_intro(db, profile)
     ensure_period_events(db, profile.id, profile.period_index, profile.save_kind)
 
     insts = (

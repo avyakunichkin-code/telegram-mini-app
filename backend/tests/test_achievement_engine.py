@@ -104,3 +104,38 @@ class TestAchievementCriteria:
 
     def test_invalid_json_shape_false(self):
         assert evaluate_achievement_criteria(json.loads('{"type": "unknown_xyz"}'), _ctx()) is False
+
+
+class TestAchievementContext:
+    def test_build_context_includes_lifestyle_burn(self, db_session):
+        from app.achievement_engine import build_achievement_context
+        from app.expenses import ensure_expense_category_catalog, seed_expense_lines_from_budget
+        from app.expense_template_defaults import expense_budget_for_template
+        from app.models import GameProfile
+
+        ensure_expense_category_catalog(db_session)
+        profile = GameProfile(
+            user_id=1,
+            name="ach-ctx",
+            save_kind="game",
+            starter_template_key="mq_game_basic_v1",
+            base_monthly_lifestyle_expense=9600.0,
+            is_active=1,
+            period_index=1,
+            cash_balance=10_000.0,
+        )
+        db_session.add(profile)
+        db_session.commit()
+        budget = expense_budget_for_template("mq_game_basic_v1", 9600.0, {})
+        seed_expense_lines_from_budget(
+            db_session,
+            profile,
+            budget,
+            period_index=1,
+            source_kind="template",
+            source_ref="mq_game_basic_v1",
+        )
+        db_session.commit()
+
+        ctx = build_achievement_context(db_session, profile)
+        assert ctx.monthly_reference_expense >= 9600.0

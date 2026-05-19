@@ -52,7 +52,9 @@ class AchievementEvaluationContext:
     insurance_claims_count: int
 
 
-def monthly_reference_expense(profile: GameProfile, liabilities: list, assets: list) -> float:
+def monthly_reference_expense(
+    db: Session, profile: GameProfile, liabilities: list, assets: list
+) -> float:
     """Опорные месячные расходы: обязательства + обслуживание активов + «жизнь»."""
     liab_pay = sum(float(getattr(l, "monthly_payment", 0) or 0) for l in liabilities)
     maint = sum(float(getattr(a, "monthly_maintenance_cost", 0) or 0) for a in assets)
@@ -156,7 +158,7 @@ def build_achievement_context(db: Session, profile: GameProfile) -> AchievementE
     return AchievementEvaluationContext(
         safety_fund_balance=safety,
         cash_balance=cash,
-        monthly_reference_expense=monthly_reference_expense(profile, liabilities, assets),
+        monthly_reference_expense=monthly_reference_expense(db, profile, liabilities, assets),
         monthly_salary=monthly_salary,
         active_insurance_count=int(insurance_count),
         max_deposit_principal=max_dep,

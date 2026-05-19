@@ -75,6 +75,7 @@ npx serve .
 | 5 | `events/` — pill, карточка, оверлей (**внедрено**) | `EventCard`, `EventCarouselOverlay`, `MqxPill` |
 | 6 | `onboarding-guided/` — **★ утверждён** | `OnboardingCoach`, `MonetkaAvatar` |
 | 6b | `onboarding-brief/` — superseded | — |
+| 7 | `achievements-progress/` — level collapsible + монетки + каталог | `MqxAchievementCoin`, `AchievementsScreen` |
 
 Текущий статус: **примитивы**, **shell**, **события**, **портфель**, **страховки**, **row-actions (B)**, **VictoryGoalsPanel** в prod; дальше — `dashboard/` (hero), empty/error в shell.
 

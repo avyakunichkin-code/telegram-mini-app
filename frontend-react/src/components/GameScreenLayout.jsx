@@ -15,6 +15,8 @@ export function GameScreenLayout({ moodClass = '', overlays = null, children, ta
   );
 }
 
-export function GameScreenTabNav({ activeTab, setActiveTab }) {
-  return <BottomGameNav activeTab={activeTab} setActiveTab={setActiveTab} />;
+export function GameScreenTabNav({ activeTab, setActiveTab, lockTabs = false }) {
+  return (
+    <BottomGameNav activeTab={activeTab} setActiveTab={setActiveTab} lockTabs={lockTabs} />
+  );
 }

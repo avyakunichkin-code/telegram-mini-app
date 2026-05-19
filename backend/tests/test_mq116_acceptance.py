@@ -165,6 +165,15 @@ class TestPeriodEndEventSemantics:
 
 
 class TestMq116ApiIntegration:
+    def _active_profile(self, db_session, user_id: int = 1) -> GameProfile:
+        profile = (
+            db_session.query(GameProfile)
+            .filter(GameProfile.user_id == user_id, GameProfile.is_active == 1)
+            .first()
+        )
+        assert profile is not None
+        return profile
+
     def test_start_then_pending_events_from_seeded_catalog(self, client, auth_headers, db_session):
         start = client.post(
             "/api/game/start",
@@ -177,11 +186,20 @@ class TestMq116ApiIntegration:
         )
         assert start.status_code == 200
 
+        pending_l1 = client.get("/api/game/events/pending", headers=auth_headers)
+        assert pending_l1.status_code == 200
+        assert len(pending_l1.json().get("events") or []) == 0
+
+        profile = self._active_profile(db_session)
+        profile.level = 2
+        db_session.commit()
+
         pending = client.get("/api/game/events/pending", headers=auth_headers)
         assert pending.status_code == 200
         body = pending.json()
         events = body.get("events") or []
-        assert len(events) == EVENTS_PER_PERIOD
+        assert len(events) == EVENTS_PER_PERIOD + 1
+        assert events[0].get("key") == "mq11_events_unlock_intro"
         for ev in events:
             assert ev.get("key", "").startswith("mq11_") or ev.get("key") in {
                 "broken_phone",
@@ -212,6 +230,10 @@ class TestMq116ApiIntegration:
             },
         )
         client.post("/api/game/period/claim-salary", headers=auth_headers)
+
+        profile = self._active_profile(db_session)
+        profile.level = 2
+        db_session.commit()
 
         before = client.get("/api/finance/overview", headers=auth_headers).json()
         xp_before = int(before["character_xp"])

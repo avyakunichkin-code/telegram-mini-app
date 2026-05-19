@@ -48,11 +48,13 @@ export function PeriodCloseModal({ summary, onClose }) {
   const totalXp = Number(summary.xp_earned) || 0;
 
   return (
-    <Modal open onClose={onClose}>
-      <div className="mqx-modal">
+    <Modal open onClose={onClose} title="Итог месяца">
+      <div className="mqx-modal" role="document" aria-labelledby="mqx-period-close-title">
         <div className="mqx-card mqx-period-close">
           <div className="mqx-card__kicker mqx-card__kicker--violet">Период закрыт</div>
-          <h2 className="mqx-period-close__title">Итог месяца</h2>
+          <h2 id="mqx-period-close-title" className="mqx-period-close__title">
+            Итог месяца
+          </h2>
           <p className="mqx-period-close__lead">
             Списано: <MoneyText value={summary.total_spent} decimals={0} /> · Баланс:{' '}
             <MoneyText value={summary.new_balance} decimals={0} />

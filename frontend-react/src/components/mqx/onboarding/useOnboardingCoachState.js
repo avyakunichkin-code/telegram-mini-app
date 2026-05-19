@@ -159,9 +159,10 @@ export function useOnboardingCoachState({ practiceMs = ONBOARDING_PRACTICE_MS, o
     salaryDone,
     cushionDone,
     isLast,
-    showScrim:
-      (phase === 'bubble' || phase === 'practice') && stepIndex < ONBOARDING_STEPS.length,
+    /** Затемнение + пузырь — только фаза bubble (практика 10 с = чистый UI, см. CONTENT.md). */
     showOverlay: phase === 'bubble' && stepIndex < ONBOARDING_STEPS.length,
+    /** @deprecated используйте showOverlay; оставлено для совместимости демо */
+    showScrim: phase === 'bubble' && stepIndex < ONBOARDING_STEPS.length,
     showCoach: phase !== 'done' && stepIndex < ONBOARDING_STEPS.length,
     handleSkip,
     handleBubbleContinue,

@@ -322,6 +322,21 @@ MVP11_EVENT_SPECS: list[dict] = [
         ],
     },
     {
+        "key": "mq11_events_unlock_intro",
+        "title": "События месяца открылись",
+        "description": (
+            "Монетка: с 2-го уровня в каждом периоде появляются сюжетные ситуации — "
+            "решения влияют на деньги, подушку и опыт. Это разовая подсказка перед обычной колодой."
+        ),
+        "weight": 1,
+        "event_tier": 1,
+        "repeat_policy": "once_per_profile",
+        "choices": [
+            {"title": "Понятно, буду смотреть", "effects": {"xp_delta": 3}},
+            {"title": "Звучит интересно", "effects": {"xp_delta": 2}},
+        ],
+    },
+    {
         "key": "mq11_wedding_gift_once",
         "title": "Свадьба друга (разовый сценарий)",
         "description": "Приглашение на праздник — подарок и поездка.",

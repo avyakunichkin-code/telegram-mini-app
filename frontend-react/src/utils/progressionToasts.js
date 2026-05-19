@@ -1,25 +1,12 @@
 import { showNotification } from '../components/notifications';
+import { formatAchievementUnlockMessage } from './progressionToastMessages.js';
+
+export { formatAchievementUnlockMessage } from './progressionToastMessages.js';
 
 const UNLOCK_STAGGER_MS = 480;
 const TOAST_TTL_UNLOCK_MS = 3200;
 const TOAST_TTL_LEVEL_MS = 3800;
 const TOAST_TTL_MILESTONE_MS = 3000;
-
-/**
- * Один unlock достижения (или элемент newly_unlocked из API).
- */
-export function formatAchievementUnlockMessage(unlock) {
-  const title = String(unlock?.title || 'Достижение').trim();
-  const xp = Number(unlock?.xp_reward ?? unlock?.xp_gained) || 0;
-  let message = `Достижение: ${title}`;
-  if (xp > 0) {
-    message += ` · +${xp} XP`;
-  }
-  if (unlock?.level_up && unlock?.new_level) {
-    message += ` · уровень ${unlock.new_level}`;
-  }
-  return message;
-}
 
 /**
  * Серия тостов по списку unlock (с задержкой, чтобы не сливались).

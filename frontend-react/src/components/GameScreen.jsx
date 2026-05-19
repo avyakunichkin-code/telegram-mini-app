@@ -25,6 +25,7 @@ export function GameScreen({ onLogout, onNewGame, onLoadGame }) {
   const [salaryWarnOpen, setSalaryWarnOpen] = useState(false);
   const [eventsOpen, setEventsOpen] = useState(false);
   const [onboardingOverlayVisible, setOnboardingOverlayVisible] = useState(false);
+  const [queuedPeriodClose, setQueuedPeriodClose] = useState(null);
   const onboardingRootRef = useRef(null);
   const {
     overview,
@@ -75,15 +76,31 @@ export function GameScreen({ onLogout, onNewGame, onLoadGame }) {
     }
   }, [onboardingOverlayVisible, activeTab]);
 
+  useEffect(() => {
+    if (!periodCloseSummary || !inOnboarding) return;
+    setQueuedPeriodClose(periodCloseSummary);
+    dismissPeriodClose();
+  }, [periodCloseSummary, inOnboarding, dismissPeriodClose]);
+
+  const periodCloseToShow =
+    !inOnboarding && (periodCloseSummary ?? queuedPeriodClose);
+
+  const handleDismissPeriodClose = useCallback(() => {
+    dismissPeriodClose();
+    setQueuedPeriodClose(null);
+  }, [dismissPeriodClose]);
+
   const handleRequestNextPeriod = async () => {
-    try {
-      const st = await fetchPeriodStatus();
-      if (st && st.salary_claimed === false && st.can_claim_salary) {
-        setSalaryWarnOpen(true);
-        return;
+    if (!inOnboarding) {
+      try {
+        const st = await fetchPeriodStatus();
+        if (st && st.salary_claimed === false && st.can_claim_salary) {
+          setSalaryWarnOpen(true);
+          return;
+        }
+      } catch {
+        // если статус не получили — идём дальше без модалки
       }
-    } catch {
-      // если статус не получили — идём дальше без модалки
     }
     try {
       await advancePeriod();
@@ -186,7 +203,13 @@ export function GameScreen({ onLogout, onNewGame, onLoadGame }) {
   return (
     <GameScreenLayout
       moodClass={moodClass}
-      tabNav={<GameScreenTabNav activeTab={activeTab} setActiveTab={setActiveTab} />}
+      tabNav={(
+        <GameScreenTabNav
+          activeTab={activeTab}
+          setActiveTab={setActiveTab}
+          lockTabs={onboardingOverlayVisible}
+        />
+      )}
       overlays={(
         <>
           <Modal open={salaryWarnOpen} onClose={() => setSalaryWarnOpen(false)}>
@@ -280,8 +303,8 @@ export function GameScreen({ onLogout, onNewGame, onLoadGame }) {
           </div>
         </div>
       </div>
-      {periodCloseSummary ? (
-        <PeriodCloseModal summary={periodCloseSummary} onClose={dismissPeriodClose} />
+      {periodCloseToShow ? (
+        <PeriodCloseModal summary={periodCloseToShow} onClose={handleDismissPeriodClose} />
       ) : null}
 
       <GameOnboardingLayer

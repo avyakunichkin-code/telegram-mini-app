@@ -26,6 +26,7 @@ export function GameOnboardingLayer({
   onOverlayVisibleChange,
 }) {
   const hydratedRef = useRef(false);
+  const lastPersistedStepRef = useRef(null);
   const salarySyncedRef = useRef(false);
   const cushionSyncedRef = useRef(false);
 
@@ -52,39 +53,42 @@ export function GameOnboardingLayer({
     const nextSkip = coach.skipPressCount + 1;
     handleSkip();
     if (nextSkip >= 2) {
-      persist({
-        onboarding_skip_count: 2,
-        onboarding_state: 'brief_done',
-        onboarding_step: 'farewell',
-      }).then(() => refreshOverview?.());
+      // brief_done пишет onComplete из finishAll — здесь только skip_count
+      persist({ onboarding_skip_count: 2 });
       return;
     }
     persist({ onboarding_skip_count: 1 });
-  }, [coach.skipPressCount, handleSkip, persist, refreshOverview]);
+  }, [coach.skipPressCount, handleSkip, persist]);
 
   useEffect(() => {
     if (!needsOnboarding) {
       hydratedRef.current = false;
+      lastPersistedStepRef.current = null;
       salarySyncedRef.current = false;
       cushionSyncedRef.current = false;
       return;
     }
-    if (hydratedRef.current) return;
-    hydratedRef.current = true;
+    if (!periodStatus || hydratedRef.current) return;
 
-    const salaryDone = periodStatus?.salary_claimed === true;
-    const cushionDone = (periodStatus?.safety_fund_contribution ?? 0) > 0;
+    const salaryDone = periodStatus.salary_claimed === true;
+    const cushionDone = (periodStatus.safety_fund_contribution ?? 0) > 0;
     if (salaryDone) salarySyncedRef.current = true;
     if (cushionDone) cushionSyncedRef.current = true;
-    restoreStepIndex(stepIndexFromId(overview.onboarding_step), { salaryDone, cushionDone });
+
+    const stepId = overview.onboarding_step || 'period_timer';
+    restoreStepIndex(stepIndexFromId(stepId), { salaryDone, cushionDone });
+    hydratedRef.current = true;
+    lastPersistedStepRef.current = stepId;
   }, [needsOnboarding, overview?.onboarding_step, periodStatus, restoreStepIndex]);
 
   useEffect(() => {
-    onOverlayVisibleChange?.(!!needsOnboarding && coach.showScrim);
-  }, [needsOnboarding, coach.showScrim, onOverlayVisibleChange]);
+    onOverlayVisibleChange?.(!!needsOnboarding && coach.showOverlay);
+  }, [needsOnboarding, coach.showOverlay, onOverlayVisibleChange]);
 
   useEffect(() => {
-    if (!needsOnboarding || !coach.step?.id) return;
+    if (!needsOnboarding || !hydratedRef.current || !coach.step?.id) return;
+    if (lastPersistedStepRef.current === coach.step.id) return;
+    lastPersistedStepRef.current = coach.step.id;
     persist({ onboarding_step: coach.step.id });
   }, [needsOnboarding, coach.step?.id, coach.stepIndex, persist]);
 
@@ -102,14 +106,13 @@ export function GameOnboardingLayer({
     markCushionDone();
   }, [needsOnboarding, periodStatus?.safety_fund_contribution, markCushionDone]);
 
-  if (!needsOnboarding || !coach.showCoach || !coach.showScrim) {
+  if (!needsOnboarding || !coach.showOverlay || !coach.step) {
     return null;
   }
 
   return createPortal(
     <OnboardingCoachOverlay
       open
-      variant={coach.phase === 'practice' ? 'practice' : 'bubble'}
       step={coach.step}
       skipPressCount={coach.skipPressCount}
       rootRef={rootRef}

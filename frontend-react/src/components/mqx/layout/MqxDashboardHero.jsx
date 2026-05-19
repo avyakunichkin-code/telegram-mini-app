@@ -103,7 +103,12 @@ export function MqxDashboardHero({
               События
             </MqxPill>
           ) : null}
-          <MqxPill onClick={onNextPeriod} data-onboarding-anchor="next_period">
+          <MqxPill
+            onClick={onNextPeriod}
+            data-onboarding-anchor="next_period"
+            title="Закрыть текущий период и перейти к следующему"
+            aria-label="Следующий период"
+          >
             Следующий период
           </MqxPill>
         </div>

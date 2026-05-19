@@ -58,7 +58,7 @@ export function OnboardingCoachDemo() {
   };
 
   const overlay =
-    active && coach.showOverlay ? (
+    active && coach.showOverlay && coach.step ? (
       <OnboardingCoachOverlay
         open
         step={coach.step}
@@ -73,8 +73,8 @@ export function OnboardingCoachDemo() {
   return (
     <div className="mqx-onboarding-demo">
       <p className="mqx-catalog__lead" style={{ marginTop: 0 }}>
-        Прототип <strong>guided coach</strong> (5 шагов). После «Понятно» — <strong>10 с</strong> без подсказок и
-        затемнения (можно тыкать UI). Зарплату на практике после шага 1 тоже засчитываем. Skip: 1-й — шаг, 2-й — весь
+        Прототип <strong>guided coach</strong> (5 шагов). После «Понятно» — <strong>10 с</strong> без пузыря и
+        затемнения (чистый UI). Зарплату на практике после шага 1 тоже засчитываем. Skip: 1-й — шаг, 2-й — весь
         онбординг.
       </p>
 

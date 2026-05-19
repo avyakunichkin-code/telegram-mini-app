@@ -6,6 +6,7 @@ export function MonetkaAvatar({ size = 72, className = '' }) {
     <img
       src={monetkaSrc}
       alt=""
+      aria-hidden="true"
       width={size}
       height={size}
       className={['mqx-onboarding-monetka', className].filter(Boolean).join(' ')}

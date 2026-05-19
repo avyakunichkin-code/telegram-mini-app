@@ -7,7 +7,7 @@ const ITEMS = [
   { id: 'menu', label: 'Меню', Icon: IconMenu },
 ];
 
-export function BottomGameNav({ activeTab, setActiveTab }) {
+export function BottomGameNav({ activeTab, setActiveTab, lockTabs = false }) {
   return (
     <nav
       className="bottom-nav bottom-nav--icons"
@@ -20,7 +20,12 @@ export function BottomGameNav({ activeTab, setActiveTab }) {
           className={`tma-nav-icon-btn ${activeTab === id ? 'tma-nav-icon-btn--active' : ''}`}
           aria-label={label}
           aria-current={activeTab === id ? 'page' : undefined}
-          onClick={() => setActiveTab(id)}
+          title={label}
+          disabled={lockTabs && id !== 'dashboard'}
+          onClick={() => {
+            if (lockTabs && id !== 'dashboard') return;
+            setActiveTab(id);
+          }}
         >
           <Icon size={23} />
         </button>

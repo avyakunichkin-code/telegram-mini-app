@@ -103,7 +103,9 @@ body {
   --mqx-glass-softer: color-mix(in srgb, var(--tg-theme-bg-color, #ffffff) 64%, transparent);
   --mqx-shadow-soft: color-mix(in srgb, var(--mqx-ink) 13%, transparent);
   --mqx-shadow-card: color-mix(in srgb, var(--mqx-ink) 8%, transparent);
-  --mqx-onboarding-bubble-bg: var(--tg-theme-bg-color, #ffffff);
+  /* Coach: непрозрачная карточка (tg-theme-bg-color иногда совпадает с фоном страницы) */
+  --mqx-onboarding-bubble-bg: var(--mqx-glass-strong, #ffffff);
+  --mqx-onboarding-scrim-bg: rgba(8, 10, 22, 0.74);
   --mqx-onboarding-bubble-border: color-mix(
     in srgb,
     var(--tg-theme-hint-color, var(--mq-line)) 38%,
@@ -2205,8 +2207,18 @@ body {
 .mqx-onboarding-root {
   position: fixed;
   inset: 0;
-  z-index: 10040;
+  z-index: 11000;
   pointer-events: none;
+  isolation: isolate;
+}
+
+.mqx-onboarding-scrim {
+  position: fixed;
+  z-index: 11005;
+  pointer-events: auto;
+  background: var(--mqx-onboarding-scrim-bg);
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
 }
 
 .mqx-onboarding-scrim--full {
@@ -2215,7 +2227,7 @@ body {
 
 .mqx-onboarding-spotlight-ring {
   position: fixed;
-  z-index: 10055;
+  z-index: 11015;
   border-radius: 14px;
   border: 2px solid rgba(167, 139, 250, 0.95);
   box-shadow:
@@ -2229,7 +2241,7 @@ body {
   top: 12px;
   left: 50%;
   transform: translateX(-50%);
-  z-index: 10065;
+  z-index: 11025;
   display: flex;
   align-items: center;
   gap: 8px;
@@ -2258,7 +2270,7 @@ body {
 
 .mqx-onboarding-bubble-wrap {
   position: fixed;
-  z-index: 10060;
+  z-index: 11020;
   pointer-events: auto;
 }
 
@@ -2266,7 +2278,7 @@ body {
   position: relative;
   padding: 16px 16px 14px;
   border-radius: 18px;
-  background: var(--mqx-onboarding-bubble-bg);
+  background-color: var(--mqx-onboarding-bubble-bg);
   background-image: linear-gradient(
     165deg,
     color-mix(in srgb, var(--mq-violet, #6d28d9) 7%, var(--mqx-onboarding-bubble-bg)) 0%,

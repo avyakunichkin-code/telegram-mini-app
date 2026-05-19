@@ -2,7 +2,7 @@
 layer: spec
 status: approved
 owner: product
-last_reviewed: 2026-05-19
+last_reviewed: 2026-05-20
 tracks: achievements, m12, progression
 idea: ../../GAME.md
 foundation: ../../foundation/TARGET_PLAYER_AND_SESSION.md
@@ -46,6 +46,8 @@ related:
 | Победа | достижения как цели | **Нет** — только `victory_config_json` шаблона ([SPEC_victory-v2](SPEC_victory-v2.md) §Assumption 6) |
 | Plan Mode | те же цепочки | **Out of scope v1.0** — только `save_kind=game` |
 | Альтернативные ветки (долг / без долга) | одна цепочка «Кредиты» | **v1.0:** одна цепочка; ветвление — **v1.1** ([GAME §9.3](GAME.md) п.6) |
+| Размещение UI «Развитие» | 5-й таб / только меню / только дашборд | **Гибрид B+C:** раскрываемый блок **«Уровень»** на **Главной** + пункт **Меню** + полная страница достижений; **без** 5-го таба в `BottomGameNav` |
+| Визуал tier | текст / одна иконка | **Монетки** (металл по `tier_index`) + полный каталог на отдельной странице; утверждение в **design-lab** |
 
 ---
 
@@ -68,7 +70,13 @@ related:
 - [x] Движок: последовательная разблокировка tier в цепочке + `apply_character_xp` при unlock.
 - [x] Хуки оценки: конец периода (`process_period_end`), покупка актива из шаблона (`finance`), `GET /api/game/achievements`.
 - [x] `GET /api/game/achievements` — состояние цепочек + `newly_unlocked` за запрос.
-- [ ] UI: экран «Развитие», тост/оверлей при `newly_unlocked` и level-up (отдельные задачи FE).
+- [x] Unlock feedback: тосты при `newly_unlocked` / `period_close.achievement_unlocks` и level-up ([`progressionToasts.js`](../../../frontend-react/src/utils/progressionToasts.js)).
+- [ ] **Design-lab:** варианты раскрываемого блока «Уровень» + монеток + полной страницы ([`design-lab/achievements-progress/`](../../../design-lab/achievements-progress/)) — **утверждение до prod**.
+- [ ] **FE:** `MqxLevelBlock` collapsible на `DashboardPremium` (свёрнут / развёрнут).
+- [ ] **FE:** полоса **3–5 последних** монеток + ссылка «Все достижения →».
+- [ ] **FE:** страница **«Все достижения»** (цепочки из `GET /api/game/achievements`).
+- [ ] **FE:** пункт в `MenuPremium` «Развитие и достижения».
+- [ ] **API (если нет в ответе):** `recent_unlocks` или `unlocked_at` на tier для сортировки «последних».
 - [x] Unit-тесты критериев и контракта API-gates не пересекаются с этим spec.
 
 ---
@@ -288,6 +296,34 @@ return newly_unlocked
 
 **Не в v1.0:** progress 0..1 к следующему tier, `criteria` в ответе, пагинация.
 
+### 10.1.1. `recent_unlocks` (для полосы монеток на Главной)
+
+Для UI «последние 3–5 достижений» клиенту нужен стабильный порядок по времени unlock.
+
+**v1.0 FE (норматив):** в `AchievementsOverviewResponse` добавить:
+
+```json
+"recent_unlocks": [
+  {
+    "chain_key": "deposit",
+    "tier_key": "deposit_t1",
+    "tier_index": 1,
+    "title": "Первый вклад",
+    "xp_reward": 10,
+    "unlocked_at": "2026-05-20T12:00:00"
+  }
+]
+```
+
+| Правило | Значение |
+|---------|----------|
+| Источник | `profile_achievement_unlocks` + join `achievement_tier_definitions` |
+| Сортировка | `unlocked_at` **DESC** |
+| Лимит | **5** (UI показывает 3–5, по умолчанию 5) |
+| Дубликаты | Нет; только фактически разблокированные tier |
+
+**Допустимо до появления поля:** FE собирает список из `chains[].tiers[]` где `unlocked: true`, сортирует по `tier_index` / порядку цепочек — **временный** fallback; не заменяет `recent_unlocks` в prod.
+
 ### 10.2. Конец периода
 
 В payload `POST /api/game/time/next` (и внутренний результат `process_period_end`) поле:
@@ -308,14 +344,126 @@ getAchievements: () => apiCall('/api/game/achievements'),
 
 ---
 
-## 11. UX (scope FE, норматив поведения)
+## 11. UX — гибрид B+C (норматив FE)
+
+**Принцип:** Главная остаётся **компактной** в свёрнутом состоянии; глубина — по раскрытию блока «Уровень» и на отдельной странице. **Пятого таба** в `BottomGameNav` **нет**.
+
+Сверка: [SPEC_FRONTEND_UI.md](../SPEC_FRONTEND_UI.md), [DESIGN_WORKFLOW.md](../../../frontend-react/src/components/mqx/DESIGN_WORKFLOW.md), [frontend-design skill](../../../frontend-react/.agents/skills/frontend-design/SKILL.md) (канон MQX, не generic AI aesthetic).
+
+### 11.1. Информационная архитектура
+
+```text
+Главная (dashboard)
+  └─ MqxLevelBlock — collapsible
+       ├─ [свёрнут] уровень, XP-полоса, краткая подсказка (как сейчас + chevron)
+       └─ [развёрнут] + полоса монеток (3–5) + «Все достижения →»
+              └─► Страница «Все достижения» (полный каталог цепочек)
+
+Меню (menu)
+  └─ пункт «Развитие и достижения» ──► та же страница
+
+PeriodCloseModal (уже есть список unlock)
+  └─ (v1.0 опционально) ссылка «Все достижения →» — backlog, не блокер MVP UI
+```
+
+| Вход | Действие |
+|------|----------|
+| Главная, развёрнутый блок | Ссылка «Все достижения →» |
+| Меню | Строка-кнопка в карточке «Сценарий» или отдельная карточка «Прогресс» |
+| Тост после unlock | Без обязательного перехода; опционально tap → страница (backlog) |
+
+**Навигация страницы каталога:** полноэкранный слой внутри `GameScreen` **или** hash-route `#/game/achievements` с кнопкой «Назад» (уточняется при утверждении макета **P\*** в design-lab). Нижний таббар на странице каталога **остаётся** (возврат на предыдущий таб).
+
+### 11.2. Блок «Уровень» (collapsible)
+
+Базовый компонент: [`MqxLevelBlock`](../../../frontend-react/src/components/mqx/layout/MqxLevelBlock.jsx) → **`MqxLevelBlockCollapsible`** (имя после design-lab).
+
+| Состояние | Содержимое |
+|-----------|------------|
+| **Свёрнуто (default)** | `Уровень N` · `xp / need` · XP-meter · одна строка `progressHint` (из `buildLevelProgressHint`) · chevron ▼ |
+| **Развёрнуто** | Всё из свёрнутого + **полоса монеток** + ссылка «Все достижения →» + (опционально) 2 компактных bar доход/долги, если не перегружает высоту |
+
+**Поведение:**
+
+- Tap по заголовку / chevron — toggle; **не** открывает полную страницу.
+- Состояние expand **сохранять в `sessionStorage`** на ключ `mq.levelBlock.expanded` (сброс при новой партии — опционально).
+- `aria-expanded`, фокус-кольцо, hit-area ≥ 44px по вертикали заголовка.
+- При онбординге coach ([`SPEC_onboarding-tma`](SPEC_onboarding-tma.md)) — не перекрывать якорь уровня; раскрытие coach'ем — отдельный шаг backlog.
+
+### 11.3. Монетки достижений (achievement coins)
+
+Визуальная награда за unlock tier — **не** дублирует `gamification_level` / score overview.
+
+#### 11.3.1. Маппинг `tier_index` → «металл»
+
+Каталог v1.0: **4 tier** на цепочку. Визуальные уровни монетки:
+
+| `tier_index` | Металл / форма | Примечание |
+|--------------|----------------|------------|
+| 1 | **Бронза** | Круглая монета |
+| 2 | **Серебро** | Круглая монета |
+| 3 | **Золото** | Круглая монета |
+| 4 | **Платина** | Круглая монета, более «холодный» блик |
+| — | **Звезда** | **Не отдельный tier** в v1.0; допускается как **вариант отображения tier 4** в design-lab (монета-звезда) для цепочек с максимальным `xp_reward` — выбор в lab |
+
+**Стандартная монета** (нейтральная, locked/next): силуэт / приглушённый контур — для **не** разблокированных tier на полной странице (опционально в lab).
+
+#### 11.3.2. Размер и плотность
+
+| Параметр | Значение |
+|----------|----------|
+| Размер на Главной | **~20–24px** — в ряду с [`MqxStatIcon`](../../../frontend-react/src/components/mqx/metrics/) / метриками дашборда |
+| Зазор между монетками | 4–6px |
+| Количество в полосе | **3–5** последних по `recent_unlocks` (см. §10.1.1) |
+| Различимость | Разный **металл** (CSS/SVG), лёгкая тень; **без** мелкого текста на монете в полосе |
+| Tooltip / label | `title` tier при long-press или `aria-label` («Первый вклад, +10 XP») |
+
+#### 11.3.3. Пустое состояние полосы
+
+Если unlock ещё не было: текст-заглушка **«Пока нет достижений — закрой период с дисциплиной»** (короче в lab) или 3 серых placeholder-силуэта — выбор в design-lab.
+
+### 11.4. Страница «Все достижения»
+
+**Данные:** `GET /api/game/achievements` (после `process_achievement_unlocks`).
+
+**Структура (логика, не пиксели):**
+
+1. Шапка: уровень персонажа, XP, та же подсказка что на Главной.
+2. Список **6 цепочек** (`sort_order`): заголовок цепочки, `current_tier / max_tier`.
+3. Внутри цепочки — **4 tier** в порядке: монетка + title + description + `xp_reward` + badge `получено` / `закрыто`.
+4. Заблокированные tier — приглушены; **без** числового progress «осталось X» (v1.1, §12).
+
+**Не показывать:** сырой `criteria_json`, `chain_key` в UI.
+
+### 11.5. Меню
+
+В [`MenuPremium`](../../../frontend-react/src/components/MenuPremium.jsx) — кнопка **«Развитие и достижения»** (`mode="outline"`, иконка монеты/звезды после утверждения в lab), ведёт на ту же страницу, что и ссылка с Главной.
+
+### 11.6. Unlock feedback (уже в prod)
+
+| Событие | Поведение |
+|---------|-----------|
+| `newly_unlocked` в overview | Серия тостов |
+| `period_close.achievement_unlocks` | Тосты + список в модалке |
+| `level_up` | Тост «Уровень N!» |
+
+### 11.7. Design-lab → MQX → prod (обязательный пайплайн)
+
+| # | Этап | Артефакт |
+|---|------|----------|
+| 1 | Варианты | [`design-lab/achievements-progress/`](../../../design-lab/achievements-progress/) — 2–5 макетов блока **L\***, монет **C\***, страницы **P\*** |
+| 2 | Утверждение | Явная формулировка в чате + `APPROVED.md` в папке lab |
+| 3 | MQX | `MqxAchievementCoin`, `MqxLevelBlockCollapsible`, `MqxAchievementsStrip`, витрина `#/dev/mqx` |
+| 4 | Prod | `DashboardPremium`, `MenuPremium`, `AchievementsScreen` / route |
+
+**Запрещено** менять высоту/состав `DashboardPremium` в обход lab (исключение: hotfix a11y).
+
+### 11.8. Прочее
 
 | Элемент | Требование |
 |---------|------------|
-| Экран **«Развитие»** | Список цепочек, tier, `unlocked`, `xp_reward`; вход из нижней навигации или профиля |
-| Unlock feedback | При `newly_unlocked.length > 0` — тост с названием tier + XP; при `level_up` — акцент на новый уровень |
-| Блокировка механик | Использовать `overview.character_unlocks` + 403 `level_gate` ([LEVEL_XP §3](../gameplay/LEVEL_XP_SYSTEM.md)), не дублировать логику достижений |
-| Narrative | Заголовки/описания tier из БД; персонаж с репликами — backlog ([GAME §9.2](GAME.md)) |
+| Блокировка механик | `overview.character_unlocks` + 403 `level_gate` — не дублировать критерии достижений |
+| Narrative | title/description из API; реплики Монетки — backlog |
 
 ---
 
@@ -328,6 +476,8 @@ getAchievements: () => apiCall('/api/game/achievements'),
 | Альтернативные ветки долг / без долга | v1.1, отдельный дизайн |
 | Отзыв unlock при падении метрик | Усложняет UX и save-integrity |
 | `progress` / подсказка «осталось X до tier» | v1.1 UI |
+| 5-й таб «Развитие» в `BottomGameNav` | Гибрид B+C: хаб на Главной + Меню |
+| Пиксели / анимации монет без design-lab | Только утверждённые `mqx-*` |
 | Админ-редактор цепочек в Watchtower | Только сиды в коде |
 | Кросс-профильные / глобальные достижения | Только per `game_profile` |
 | Negative XP за «провал» tier | [LEVEL_XP §10](../gameplay/LEVEL_XP_SYSTEM.md) |
@@ -389,8 +539,23 @@ getAchievements: () => apiCall('/api/game/achievements'),
 
 ---
 
-## 18. История
+## 18. План поставки UI (после утверждения lab)
+
+| Задача | Acceptance | Verify |
+|--------|------------|--------|
+| DL-1 | 2–5 вариантов в `design-lab/achievements-progress/` | `npx serve .`, светлая/тёмная тема |
+| DL-2 | `APPROVED.md` с выбранными L/C/P | Чат + файл |
+| BE-1 | `recent_unlocks` в `GET /achievements` | pytest контракт |
+| MQX-1 | `MqxAchievementCoin` + strip в `#/dev/mqx` | Витрина |
+| FE-1 | Collapsible level block + strip на Главной | Ручной TMA 320px |
+| FE-2 | Страница каталога + пункт Меню | Навигация туда-обратно |
+| FE-3 | (опционально) ссылка из `PeriodCloseModal` | Клик → каталог |
+
+---
+
+## 19. История
 
 | Дата | Изменение |
 |------|-----------|
 | 2026-05-19 | Первая версия spec; синхронизация с реализованным движком и сидами v1.0 |
+| 2026-05-20 | UI: гибрид B+C, collapsible «Уровень», монетки tier, design-lab gate, `recent_unlocks` |
