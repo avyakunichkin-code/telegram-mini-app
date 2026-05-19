@@ -2171,11 +2171,110 @@ body {
   transform: scale(0.96);
 }
 
+@media (hover: hover) {
+  .mqx-fin-icon-btn--minus:hover:not(:disabled) {
+    background: color-mix(in srgb, var(--mq-danger-soft) 88%, var(--tg-theme-bg-color, #fff) 12%);
+    border-color: color-mix(in srgb, var(--mq-danger) 32%, var(--mq-line));
+  }
+
+  .mqx-fin-icon-btn--plus:hover:not(:disabled) {
+    filter: brightness(1.06);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .mqx-fin-icon-btn--plus:active,
   .mqx-fin-icon-btn--minus:active {
     transform: none;
   }
+}
+
+/* Row actions (канон B) — design-lab/row-actions */
+.mqx-row-action {
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  margin: 0;
+  padding: 0;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.mqx-row-action__glyph {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  font-size: 20px;
+  font-weight: 800;
+  line-height: 1;
+  transition:
+    background 0.15s ease,
+    border-color 0.15s ease,
+    transform 0.12s ease;
+}
+
+.mqx-row-action--add .mqx-row-action__glyph {
+  border: 1px solid var(--mq-violet-deep);
+  background: var(--mq-violet);
+  color: #fff;
+}
+
+.mqx-row-action--remove .mqx-row-action__glyph {
+  border: 1px solid color-mix(in srgb, var(--tg-theme-hint-color, var(--mq-line)) 70%, transparent);
+  background: var(--mqx-glass-strong);
+  color: rgba(220, 38, 38, 0.95);
+}
+
+.mqx-row-action:focus-visible .mqx-row-action__glyph {
+  outline: 2px solid var(--accent-border);
+  outline-offset: 2px;
+}
+
+.mqx-row-action:active:not(:disabled) .mqx-row-action__glyph {
+  transform: scale(0.96);
+}
+
+.mqx-row-action:disabled {
+  cursor: not-allowed;
+  opacity: 0.45;
+}
+
+@media (hover: hover) {
+  .mqx-row-action--remove:hover:not(:disabled) .mqx-row-action__glyph {
+    background: color-mix(in srgb, var(--mq-danger-soft) 88%, var(--tg-theme-bg-color, #fff) 12%);
+    border-color: color-mix(in srgb, var(--mq-danger) 32%, var(--mq-line));
+  }
+
+  .mqx-row-action--add:hover:not(:disabled) .mqx-row-action__glyph {
+    filter: brightness(1.06);
+  }
+}
+
+.mqx-fin-icon-btn.mqx-row-action,
+.mqx-fin-icon-btn.mqx-row-action .mqx-row-action__glyph {
+  width: 40px;
+  height: 40px;
+}
+
+.mqx-confirm-dialog {
+  padding: 16px;
+}
+
+.mqx-confirm-dialog__message {
+  margin: 10px 0 0;
+}
+
+.mqx-confirm-dialog__actions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 16px;
 }
 
 .mqx-fin-grid {

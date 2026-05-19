@@ -1,3 +1,5 @@
+import { MqxRowAction } from '../primitives/MqxRowAction';
+
 /**
  * Карточка позиции / шаблона портфеля: accent + заголовок + метрики + действие.
  * variant: asset | liability | insurance
@@ -27,9 +29,19 @@ export function CapitalPositionCard({
         {metrics}
       </div>
       {action ? (
-        <button type="button" className={action.className} aria-label={actionAriaLabel} onClick={action.onClick}>
-          {actionLabel}
-        </button>
+        actionLabel === '+' || actionLabel === '−' ? (
+          <MqxRowAction
+            variant={actionLabel === '+' ? 'add' : 'remove'}
+            ariaLabel={actionAriaLabel}
+            onClick={action.onClick}
+            disabled={action.disabled}
+            className={action.className}
+          />
+        ) : (
+          <button type="button" className={action.className} aria-label={actionAriaLabel} onClick={action.onClick}>
+            {actionLabel}
+          </button>
+        )
       ) : null}
     </article>
   );

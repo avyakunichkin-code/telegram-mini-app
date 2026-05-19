@@ -1,26 +1,28 @@
 import { InvestPositionMetrics } from '../metrics/InvestPositionMetrics';
+import { MqxFinListRow } from './MqxFinListRow';
+import { MqxRowAction } from '../primitives/MqxRowAction';
 
-export function InvestPositionRow({ position, onClose }) {
+export function InvestPositionRow({ position, onClose, onCloseRequest }) {
+  const handleRemove = onCloseRequest ?? onClose;
+
   return (
-    <div className="mqx-fin-row mqx-fin-row--positions mqx-fin-row--invest-pos">
-      <div className="mqx-fin-row__l">
-        <div className="mqx-fin-row__title">{position.title}</div>
+    <MqxFinListRow
+      className="mqx-fin-row--invest-pos"
+      title={position.title}
+      metrics={
         <InvestPositionMetrics
           principal={position.principal}
           annualRatePercent={position.annual_rate_percent}
           rateTone="pos"
         />
-      </div>
-      <div className="mqx-fin-row__r">
-        <button
-          type="button"
-          className="mqx-fin-icon-btn mqx-fin-icon-btn--minus"
-          aria-label="Закрыть позицию"
-          onClick={onClose}
-        >
-          −
-        </button>
-      </div>
-    </div>
+      }
+      trailing={
+        <MqxRowAction
+          variant="remove"
+          ariaLabel={`Закрыть позицию ${position.title}`}
+          onClick={handleRemove}
+        />
+      }
+    />
   );
 }

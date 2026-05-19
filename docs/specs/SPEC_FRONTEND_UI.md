@@ -141,6 +141,35 @@ export function ExampleBlock({ overview }) {
 - Фон/текст: `var(--tg-theme-*)` с fallback `--mq-*`.
 - Акцент кнопок: `--mq-accent-fill` / `--tgui--button_color` (см. `#root` в `index.css`).
 
+### Действия в строках (Row Actions) — канон MQX
+
+**Процесс:** варианты в [`design-lab/row-actions/`](../../design-lab/row-actions/) → утверждение → `mqx/primitives/` → витрина `#/dev/mqx` → prod. См. [`DESIGN_WORKFLOW.md`](../../frontend-react/src/components/mqx/DESIGN_WORKFLOW.md).
+
+**Утверждено (2026-05):** вариант **B** — компактная иконка **+** / **−**; подпись действия только в `aria-label`; для всех разрушающих действий — **подтверждение** (`MqxConfirmDialog`).
+
+| Компонент | Назначение | Где использовать |
+|-----------|------------|------------------|
+| `MqxRowAction` | Кнопка **+** (add) или **−** (remove), hit-area ≥ 44px | Списки позиций, шаблоны с «+», страховки, инвестиции |
+| `MqxFinListRow` | Компактная строка: заголовок, подзаголовок/метрики, trailing action | Режим «Позиции» (активы, долги, депозиты) |
+| `MqxConfirmDialog` | Подтверждение опасного действия (Modal) | Любое **−** / отмена полиса / закрытие позиции |
+| `useMqxConfirm` | Хук: `await confirm({ title, message })` | Экраны с удалением |
+| `CapitalPositionCard` | Карточка с accent + метриками + action | Только **каталог шаблонов** («Добавить»), не список позиций |
+
+**Запрещено в новом коде (premium):**
+
+- Текстовая кнопка **«Удалить»** в списках строк (допустима только внутри диалога подтверждения).
+- `Button mode="destructive"` в trailing списка позиций.
+- Класс `mqx-capital-delete-btn` для компактных строк (legacy; не расширять).
+
+**Платформы:**
+
+- **Touch (TMA):** `:active` + достаточная зона нажатия.
+- **Desktop / Telegram desktop / браузер:** `@media (hover: hover)` — подсветка **−** (фон danger-soft, border); `:focus-visible` — outline.
+
+**Вне scope до отдельного эпика:** Plan-мастер (`BaseParamsScreen`), `PlanExpenseEditor` — не менять при унификации финансов.
+
+**Витрина:** секция «Паттерны действий» в `#/dev/mqx` — все варианты + живые `MqxRowAction` / `MqxFinListRow` / confirm.
+
 ---
 
 ## Testing Strategy
@@ -289,6 +318,12 @@ flowchart TD
   - Acceptance: в новых PR нет `style={{ marginTop` в premium-компонентах.
   - Verify: grep в diff PR.
   - Files: `index.css`
+
+- [ ] **P1: Row actions — единый − и confirm**
+  - Acceptance: позиции портфеля/инвестиций/страховок — `MqxFinListRow` + `MqxRowAction`; любое удаление через `MqxConfirmDialog`.
+  - Verify: `#/dev/mqx` → «Паттерны действий»; ручной проход Финансы → Позиции.
+  - Files: `mqx/primitives/MqxRowAction.jsx`, `MqxFinListRow.jsx`, `MqxConfirmDialog.jsx`, `CapitalPortfolioPanels.jsx`, `index.css`
+  - Design: [`design-lab/row-actions/`](../../design-lab/row-actions/) — вариант **B** утверждён.
 
 ---
 

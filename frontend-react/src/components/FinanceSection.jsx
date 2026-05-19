@@ -13,6 +13,7 @@ import {
   LiabilityPositionMetrics,
   MqxModeButton,
   MqxSubtab,
+  useMqxConfirm,
 } from './mqx';
 import {
   BOND_ANNUAL_RATE_PERCENT,
@@ -44,6 +45,7 @@ export function FinanceSection({
   const [financeTabInternal, setFinanceTabInternal] = useState('invest');
   const financeTab = financeTabProp ?? financeTabInternal;
   const setFinanceTab = onFinanceTabChange ?? setFinanceTabInternal;
+  const { confirm, dialog } = useMqxConfirm();
   const [investPositions, setInvestPositions] = useState([]);
   const [policies, setPolicies] = useState([]);
   const [depositAmount, setDepositAmount] = useState(0);
@@ -130,6 +132,13 @@ export function FinanceSection({
   };
 
   const cancelInsurancePolicy = async (policyId) => {
+    const policy = policies.find((p) => p.id === policyId);
+    const ok = await confirm({
+      title: 'Отменить полис?',
+      message: policy ? `«${policy.title}» перестанет действовать.` : 'Полис перестанет действовать.',
+    });
+    if (!ok) return;
+
     setCancellingPolicyId(policyId);
     try {
       await API.cancelPolicy(policyId);
@@ -476,6 +485,14 @@ export function FinanceSection({
     }
   };
 
+  const requestCloseInvest = async (position) => {
+    const ok = await confirm({
+      title: 'Закрыть позицию?',
+      message: `«${position.title}» будет закрыта.`,
+    });
+    if (ok) await closeInvest(position.id);
+  };
+
   const closeInvest = async (id) => {
     try {
       await API.closeInvestPosition(id);
@@ -493,6 +510,7 @@ export function FinanceSection({
 
   return (
     <div className={`mqx-fin ${capitalLayout ? 'mqx-fin--capital' : ''}`}>
+      {dialog}
       {!hideSectionsCard ? (
         <div className="mqx-card mqx-fin-card">
           <div className="mqx-card__title">Разделы</div>
@@ -603,7 +621,7 @@ export function FinanceSection({
                       <InvestPositionRow
                         key={p.id}
                         position={p}
-                        onClose={() => void closeInvest(p.id)}
+                        onCloseRequest={() => void requestCloseInvest(p)}
                       />
                     ))
                   )}

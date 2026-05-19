@@ -16,8 +16,8 @@ export function InsurancePolicyRow({ policy, onCancel, busy }) {
       title={policy.title}
       metrics={<InsurancePolicyMetrics policy={policy} />}
       action={{
-        className: 'mqx-capital-delete-btn',
         onClick: () => !busy && onCancel(policy.id),
+        disabled: busy,
       }}
       actionLabel="−"
       actionAriaLabel={`Отменить полис ${policy.title}`}

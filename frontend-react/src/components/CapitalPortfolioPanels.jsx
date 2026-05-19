@@ -1,13 +1,17 @@
 import { API } from '../api';
 import { showNotification } from './notifications';
+import { MoneyText } from './MoneyText';
 import {
   AssetPositionMetrics,
   AssetTemplateMetrics,
   CapitalPositionCard,
   LiabilityPositionMetrics,
   LiabilityTemplateMetrics,
+  MqxFinListRow,
   MqxModeButton,
+  MqxRowAction,
   MqxSubtab,
+  useMqxConfirm,
 } from './mqx';
 
 const ASSET_KIND_LABELS = {
@@ -43,6 +47,24 @@ export function CapitalPortfolioPanels({
   handleDeleteLiability,
   addLiabilityFromTemplate,
 }) {
+  const { confirm, dialog } = useMqxConfirm();
+
+  const confirmDeleteAsset = async (asset) => {
+    const ok = await confirm({
+      title: 'Удалить актив?',
+      message: `«${asset.title}» будет снят с учёта.`,
+    });
+    if (ok) await handleDeleteAsset(asset.id);
+  };
+
+  const confirmDeleteLiability = async (liability) => {
+    const ok = await confirm({
+      title: 'Удалить обязательство?',
+      message: `«${liability.title}» будет закрыто и снято с учёта.`,
+    });
+    if (ok) await handleDeleteLiability(liability.id);
+  };
+
   return (
     <section
       className="mqx-card mqx-capital-card"
@@ -50,6 +72,8 @@ export function CapitalPortfolioPanels({
       id="finance-panel-portfolio"
       aria-labelledby="finance-tab-portfolio"
     >
+      {dialog}
+
       <h2 className="mqx-capital-card__title">{activeTabLabel}</h2>
 
       <div className="mqx-fin-subtabs mqx-capital-subtabs" role="tablist" aria-label="Портфель">
@@ -113,7 +137,6 @@ export function CapitalPortfolioPanels({
                       />
                     }
                     action={{
-                      className: 'mqx-fin-icon-btn mqx-fin-icon-btn--plus mqx-capital-add-btn',
                       onClick: async () => {
                         try {
                           await API.createAssetFromTemplate(t.key);
@@ -137,11 +160,16 @@ export function CapitalPortfolioPanels({
                 <div className="mqx-fin-empty">Нет активов</div>
               ) : (
                 ownedAssets.map((a) => (
-                  <CapitalPositionCard
+                  <MqxFinListRow
                     key={a.id}
-                    variant="asset"
-                    kicker={assetKindLabel(a.kind)}
                     title={a.title}
+                    subtitle={
+                      <>
+                        <MoneyText value={a.asset_value} decimals={0} /> · обслуж.{' '}
+                        <MoneyText value={a.monthly_maintenance_cost} decimals={0} />
+                        /мес
+                      </>
+                    }
                     metrics={
                       <AssetPositionMetrics
                         assetValue={a.asset_value}
@@ -149,12 +177,13 @@ export function CapitalPortfolioPanels({
                         monthlyIncome={a.monthly_income}
                       />
                     }
-                    action={{
-                      className: 'mqx-capital-delete-btn',
-                      onClick: () => void handleDeleteAsset(a.id),
-                    }}
-                    actionLabel="Удалить"
-                    actionAriaLabel={`Удалить актив ${a.title}`}
+                    trailing={
+                      <MqxRowAction
+                        variant="remove"
+                        ariaLabel={`Удалить актив ${a.title}`}
+                        onClick={() => void confirmDeleteAsset(a)}
+                      />
+                    }
                   />
                 ))
               )}
@@ -199,7 +228,6 @@ export function CapitalPortfolioPanels({
                       />
                     }
                     action={{
-                      className: 'mqx-fin-icon-btn mqx-fin-icon-btn--plus mqx-capital-add-btn',
                       onClick: () => void addLiabilityFromTemplate(t),
                     }}
                     actionLabel="+"
@@ -214,11 +242,15 @@ export function CapitalPortfolioPanels({
                 <div className="mqx-fin-empty">Нет обязательств</div>
               ) : (
                 ownedLiabilities.map((l) => (
-                  <CapitalPositionCard
+                  <MqxFinListRow
                     key={l.id}
-                    variant="liability"
-                    kicker="Долг"
                     title={l.title}
+                    subtitle={
+                      <>
+                        <MoneyText value={l.monthly_payment} decimals={0} />
+                        /мес · долг <MoneyText value={l.total_debt} decimals={0} />
+                      </>
+                    }
                     metrics={
                       <LiabilityPositionMetrics
                         totalDebt={l.total_debt}
@@ -227,12 +259,13 @@ export function CapitalPortfolioPanels({
                         overdueAmount={l.overdue_amount}
                       />
                     }
-                    action={{
-                      className: 'mqx-capital-delete-btn',
-                      onClick: () => void handleDeleteLiability(l.id),
-                    }}
-                    actionLabel="Удалить"
-                    actionAriaLabel={`Удалить долг ${l.title}`}
+                    trailing={
+                      <MqxRowAction
+                        variant="remove"
+                        ariaLabel={`Удалить долг ${l.title}`}
+                        onClick={() => void confirmDeleteLiability(l)}
+                      />
+                    }
                   />
                 ))
               )}

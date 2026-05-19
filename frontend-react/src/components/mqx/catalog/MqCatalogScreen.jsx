@@ -19,6 +19,7 @@ import {
   InsuranceSection,
   VictoryGoalsPanel,
   InvestPositionMetrics,
+  InvestPositionRow,
   LiabilityPositionMetrics,
   LiabilityTemplateMetrics,
   MetricInlineItem,
@@ -41,6 +42,10 @@ import {
   MqxStatMini,
   MqxSubtab,
   MqxModeButton,
+  MqxRowAction,
+  MqxFinListRow,
+  MqxConfirmDialog,
+  useMqxConfirm,
   EventCard,
 } from '../index';
 import { MoneyText } from '../../MoneyText';
@@ -70,6 +75,52 @@ function CatalogSection({ title, children }) {
 }
 
 /** Витрина MQX-компонентов (только dev: #/dev/mqx). */
+function RowActionsCatalogDemo() {
+  const { confirm, dialog } = useMqxConfirm();
+  const [confirmOpen, setConfirmOpen] = useState(false);
+
+  return (
+    <>
+      {dialog}
+      <p className="mqx-catalog__lead" style={{ marginTop: 0 }}>
+        Канон: <strong>+</strong> / <strong>−</strong>, подпись только в <code>aria-label</code>. Статичные
+        варианты: <code>design-lab/row-actions/</code>.
+      </p>
+      <div className="mqx-fin-list" style={{ maxWidth: 420, marginTop: 12 }}>
+        <MqxFinListRow
+          title="Кредитная карта"
+          subtitle="9 000 ₽/мес · долг 180 000 ₽"
+          trailing={
+            <MqxRowAction
+              variant="remove"
+              ariaLabel="Удалить долг"
+              onClick={async () => {
+                const ok = await confirm({
+                  title: 'Удалить обязательство?',
+                  message: '«Кредитная карта» будет закрыта.',
+                });
+                if (ok) setConfirmOpen(true);
+              }}
+            />
+          }
+        />
+        <MqxFinListRow
+          title="Шаблон: Ипотека"
+          subtitle="Долг 3 200 000 ₽"
+          trailing={<MqxRowAction variant="add" ariaLabel="Добавить" onClick={() => {}} />}
+        />
+      </div>
+      <MqxConfirmDialog
+        open={confirmOpen}
+        title="Пример"
+        message="Диалог после подтверждения в демо."
+        onConfirm={() => setConfirmOpen(false)}
+        onClose={() => setConfirmOpen(false)}
+      />
+    </>
+  );
+}
+
 export function MqCatalogScreen() {
   const [amount, setAmount] = useState(120000);
 
@@ -329,6 +380,10 @@ export function MqCatalogScreen() {
         </div>
       </CatalogSection>
 
+      <CatalogSection title="Паттерны действий (+ / −, confirm)">
+        <RowActionsCatalogDemo />
+      </CatalogSection>
+
       <CatalogSection title="Кнопки и вкладки">
         <div className="mqx-fin-subtabs-row" style={{ maxWidth: 360 }}>
           <MqxSubtab active>Активные</MqxSubtab>
@@ -354,16 +409,19 @@ export function MqCatalogScreen() {
         />
       </CatalogSection>
 
-      <CatalogSection title="Позиция актива">
-        <CapitalPositionCard
-          variant="asset"
-          kicker="Недвижимость"
+      <CatalogSection title="Позиция актива (компактная строка)">
+        <MqxFinListRow
           title="Квартира под сдачу"
+          subtitle={
+            <>
+              <MoneyText value={4200000} decimals={0} /> · обслуж. <MoneyText value={12000} decimals={0} />
+              /мес
+            </>
+          }
           metrics={
             <AssetPositionMetrics assetValue={4200000} monthlyMaintenanceCost={12000} monthlyIncome={35000} />
           }
-          action={{ className: 'mqx-capital-delete-btn', onClick: () => {} }}
-          actionLabel="Удалить"
+          trailing={<MqxRowAction variant="remove" ariaLabel="Удалить актив" onClick={() => {}} />}
         />
       </CatalogSection>
 
@@ -380,11 +438,15 @@ export function MqCatalogScreen() {
         />
       </CatalogSection>
 
-      <CatalogSection title="Позиция долга">
-        <CapitalPositionCard
-          variant="liability"
-          kicker="Долг"
+      <CatalogSection title="Позиция долга (компактная строка)">
+        <MqxFinListRow
           title="Кредитная карта"
+          subtitle={
+            <>
+              <MoneyText value={9000} decimals={0} />
+              /мес · долг <MoneyText value={180000} decimals={0} />
+            </>
+          }
           metrics={
             <LiabilityPositionMetrics
               totalDebt={180000}
@@ -393,21 +455,15 @@ export function MqCatalogScreen() {
               overdueAmount={4500}
             />
           }
-          action={{ className: 'mqx-capital-delete-btn', onClick: () => {} }}
-          actionLabel="Удалить"
+          trailing={<MqxRowAction variant="remove" ariaLabel="Удалить долг" onClick={() => {}} />}
         />
       </CatalogSection>
 
       <CatalogSection title="Позиция депозита">
-        <div className="mqx-fin-row mqx-fin-row--positions mqx-fin-row--invest-pos" style={{ maxWidth: 420 }}>
-          <div className="mqx-fin-row__l">
-            <div className="mqx-fin-row__title">Депозит 12% годовых</div>
-            <InvestPositionMetrics principal={250000} annualRatePercent={12} rateTone="pos" />
-          </div>
-          <button type="button" className="mqx-fin-icon-btn mqx-fin-icon-btn--minus">
-            −
-          </button>
-        </div>
+        <InvestPositionRow
+          position={{ id: 1, title: 'Депозит 12% годовых', principal: 250000, annual_rate_percent: 12 }}
+          onClose={() => {}}
+        />
       </CatalogSection>
 
       <CatalogSection title="Цели победы (Victory v2)">

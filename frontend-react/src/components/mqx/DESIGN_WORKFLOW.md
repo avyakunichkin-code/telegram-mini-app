@@ -74,7 +74,7 @@ npx serve .
 | 4 | `dashboard/` — герой, stat-иконки | DashboardPremium |
 | 5 | `events/` — pill, карточка, оверлей (**внедрено**) | `EventCard`, `EventCarouselOverlay`, `MqxPill` |
 
-Текущий статус: **примитивы**, **shell**, **события**, **портфель**, **страховки**, **VictoryGoalsPanel** в prod; дальше — `dashboard/` (hero), empty/error в shell.
+Текущий статус: **примитивы**, **shell**, **события**, **портфель**, **страховки**, **row-actions (B)**, **VictoryGoalsPanel** в prod; дальше — `dashboard/` (hero), empty/error в shell.
 
 ---
 
