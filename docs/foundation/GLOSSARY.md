@@ -9,7 +9,11 @@
 | **Подушка** | Резерв безопасности | `safety_fund_balance` |
 | **Обязательства** | Платежи по долгам + обслуживание активов | `total_monthly_obligations` |
 | **Просрочка** | Неоплаченный остаток по долгу | `overdue_amount` |
-| **Чистый денежный поток** | Доход − обязательные выплаты (MVP) | `net_monthly_cashflow` |
+| **Чистый денежный поток** | Доход − обязательства (долги + обслуживание активов); **без** burn жизни | `net_monthly_cashflow` |
+| **Расходы (burn)** | Ежемесячные траты на жизнеобеспечение (еда, жильё, …) | `monthly_burn_total`, `profile_expense_lines` *(E1)* |
+| **Статья расходов** | Строка бюджета: категория + сумма/мес | `profile_expense_lines` *(E1)* |
+| **monthly_reference_expense** | Obligations + burn (достижения) | achievement_engine *(E1)* |
+| **total_monthly_outflow** | Obligations + burn (подсказка «уйдёт за период») | overview *(E1)* |
 | **Победа MVP** | Подушка ≥ 3× обязательств, нет просрочки, поток ≥ 0; `win_reached` с 7-го периода | `GET /api/finance/overview` |
 | **save_kind** *(цель)* | Режим сохранения: `game` \| `plan` | заменит `GameProfile.mode` light/hardcore |
 | **Game** *(цель)* | Игра со стартовым шаблоном, агрегированные расходы, победа M из N | evolution §II |

@@ -10,6 +10,7 @@ from .achievement_seeds import ensure_achievement_catalog
 from .character_progression import apply_character_xp
 from .routers.events import ensure_period_events, expire_pending_events_for_closed_period, _ensure_seed_events
 from .routers.insurance import charge_premiums_for_period
+from .expenses import compute_monthly_burn, expire_expense_lines_for_period, lifestyle_period_breakdown
 
 
 def process_period_end(db: Session, profile: GameProfile) -> dict:
@@ -115,21 +116,32 @@ def process_period_end(db: Session, profile: GameProfile) -> dict:
             "unpaid": unpaid,
         })
 
-    # 3.4 Базовые расходы «жизни» (шаблон Game + при необходимости дельты на профиле)
-    lifestyle_total = float(getattr(profile, "base_monthly_lifestyle_expense", 0) or 0) + float(
-        getattr(profile, "delta_monthly_lifestyle_expense", 0) or 0
-    )
+    # 3.4 Расходы на жизнеобеспечение (статьи бюджета + legacy delta)
+    expire_expense_lines_for_period(db, profile, period_index)
+    burn_snapshot = compute_monthly_burn(db, profile)
+    lifestyle_total = float(burn_snapshot.total)
     if lifestyle_total > 0:
         adjust_balance(
             db=db,
             game_profile_id=profile.id,
             amount=-lifestyle_total,
             type=TRANSACTION_TYPES["LIFESTYLE_EXPENSE"],
-            description=f"Расходы «жизни» за период #{period_index}",
+            description=f"Расходы на жизнь за период #{period_index}",
             period_index=period_index,
         )
         db.refresh(profile)
-        breakdown.append({"type": "lifestyle", "title": "Расходы «жизни»", "amount": round(lifestyle_total, 2)})
+        cat_lines = lifestyle_period_breakdown(burn_snapshot)
+        if cat_lines:
+            breakdown.extend(cat_lines)
+            breakdown.append(
+                {
+                    "type": "lifestyle",
+                    "title": "Итого расходы на жизнь",
+                    "amount": round(lifestyle_total, 2),
+                }
+            )
+        else:
+            breakdown.append({"type": "lifestyle", "title": "Расходы «жизни»", "amount": round(lifestyle_total, 2)})
 
     # 3.5 Страховки: списываем премии (на MVP без просрочек — может уйти в минус)
     insurance_spend = 0.0

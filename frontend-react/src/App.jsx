@@ -15,7 +15,7 @@ import { AdminWatchtowerScreen } from './components/admin/AdminWatchtowerScreen'
 
 function GameAppFlowShell({ children }) {
   return (
-    <div className="app-shell mq-page" style={{ padding: '12px' }}>
+    <div className="app-shell mq-page">
       <div className="mq-page__decor" aria-hidden />
       {children}
     </div>
@@ -105,9 +105,10 @@ function GameApp() {
 
 function App() {
   return (
-    <AppRoot>   {/* <-- обязательно */}
+    <AppRoot className="mq-app-fill">
       <AuthProvider>
         <ToastHost />
+        <div className="mq-app-fill">
         <HashRouter>
           <Routes>
             <Route
@@ -140,7 +141,7 @@ function App() {
               <Route
                 path="/dev/mqx"
                 element={
-                  <div className="app-shell mq-page" style={{ padding: '12px' }}>
+                  <div className="app-shell mq-page">
                     <MqCatalogScreen />
                   </div>
                 }
@@ -150,7 +151,7 @@ function App() {
               path="/admin"
               element={
                 <AuthGuard>
-                  <div className="app-shell mq-page" style={{ padding: '12px' }}>
+                  <div className="app-shell mq-page">
                     <div className="mq-page__decor" aria-hidden />
                     <AdminWatchtowerScreen />
                   </div>
@@ -164,6 +165,7 @@ function App() {
             } />
           </Routes>
         </HashRouter>
+        </div>
       </AuthProvider>
     </AppRoot>
   );

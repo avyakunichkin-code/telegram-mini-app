@@ -6,6 +6,7 @@ from sqlalchemy.orm import Session
 
 from .models import FinanceAsset, FinanceLiability, FinanceSalary, GameProfile, GameStarterTemplate
 from .finance_analytics import avg_net_cashflow_last_closed_intervals
+from .expenses import compute_monthly_burn
 from .victory_engine import VictoryEvaluationInput, evaluate_victory, parse_victory_config
 from .victory_seeds import DEFAULT_TEMPLATE_KEY
 
@@ -47,6 +48,8 @@ def profile_win_reached(db: Session, profile: GameProfile) -> bool:
     else:
         raw_victory = None
 
+    monthly_burn_total = float(compute_monthly_burn(db, profile).total)
+
     victory_cfg = parse_victory_config(raw_victory, template_key=template_key)
     victory_result = evaluate_victory(
         victory_cfg,
@@ -59,6 +62,7 @@ def profile_win_reached(db: Session, profile: GameProfile) -> bool:
             net_monthly_cashflow=float(net_cashflow),
             character_level=max(1, int(getattr(profile, "level", 1) or 1)),
             monthly_salary=float(salary.monthly_amount if salary else 0),
+            monthly_burn_total=monthly_burn_total,
             avg_net_cashflow_6p=float(avg_cf_6),
             avg_net_cashflow_6p_n=int(avg_cf_n),
         ),

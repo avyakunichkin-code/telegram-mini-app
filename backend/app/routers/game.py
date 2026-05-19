@@ -20,6 +20,8 @@ from ..schemas import (
     LiabilityCreate,
     GameStarterTemplatePublic,
 )
+from ..expense_template_defaults import expense_budget_for_template
+from ..expenses import ensure_expense_category_catalog, seed_expense_lines_from_budget
 from ..game_start_validation import validate_game_start_request
 from ..game_time import (
     get_active_game_profile,
@@ -159,6 +161,7 @@ async def start_new_game(
 
     starter_template_key = None
     base_monthly_lifestyle = 0.0
+    blueprint: dict = {}
     period_duration_seconds = int(payload.period_duration_seconds)
     cash_balance = float(payload.cash_balance)
     monthly_salary = float(payload.monthly_salary)
@@ -173,16 +176,16 @@ async def start_new_game(
             .first()
         )
         try:
-            bp = json.loads(tmpl.blueprint_json or "{}")
+            blueprint = json.loads(tmpl.blueprint_json or "{}")
         except json.JSONDecodeError:
-            bp = {}
-        period_duration_seconds = int(bp.get("period_duration_seconds") or period_duration_seconds)
-        cash_balance = float(bp.get("cash_balance", cash_balance))
-        monthly_salary = float(bp.get("monthly_salary", monthly_salary))
+            blueprint = {}
+        period_duration_seconds = int(blueprint.get("period_duration_seconds") or period_duration_seconds)
+        cash_balance = float(blueprint.get("cash_balance", cash_balance))
+        monthly_salary = float(blueprint.get("monthly_salary", monthly_salary))
         starter_template_key = tk
         base_monthly_lifestyle = float(tmpl.base_monthly_lifestyle_expense or 0)
 
-        for a in bp.get("assets") or []:
+        for a in blueprint.get("assets") or []:
             if isinstance(a, dict):
                 assets_list.append(
                     AssetCreate(
@@ -193,7 +196,7 @@ async def start_new_game(
                         monthly_income=float(a.get("monthly_income") or 0),
                     )
                 )
-        for li in bp.get("liabilities") or []:
+        for li in blueprint.get("liabilities") or []:
             if isinstance(li, dict):
                 liabilities_list.append(
                     LiabilityCreate(
@@ -272,6 +275,22 @@ async def start_new_game(
         period_index=1
     )
     db.add(start_transaction)
+
+    if base_monthly_lifestyle > 0:
+        ensure_expense_category_catalog(db)
+        budget = expense_budget_for_template(
+            starter_template_key,
+            base_monthly_lifestyle,
+            blueprint if starter_template_key else None,
+        )
+        seed_expense_lines_from_budget(
+            db,
+            new_profile,
+            budget,
+            period_index=1,
+            source_kind="template",
+            source_ref=starter_template_key,
+        )
 
     db.commit()
 

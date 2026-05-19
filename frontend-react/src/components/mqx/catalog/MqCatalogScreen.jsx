@@ -28,8 +28,13 @@ import {
   MqxCard,
   MqxCardHeader,
   MqxChip,
+  MqxDashStack,
+  MqxDivider,
   MqxGoalBadge,
+  MqxLevelBlock,
+  MqxPeriodActions,
   MqxPeriodChip,
+  MqxPeriodDashboard,
   MqxPill,
   MqxProgress,
   MqxStatMini,
@@ -80,18 +85,46 @@ export function MqCatalogScreen() {
         </Link>
       </header>
 
-      <CatalogSection title="Shell — карточка и блоки">
-        <div className="mqx-stack" style={{ gap: 12, maxWidth: 420 }}>
-          <MqxCard variant="character">
-            <MqxCardHeader
-              kicker="Герой"
-              kickerTone="sky"
-              title="Уровень 3"
-              sub="Опыт к следующему уровню"
-              trailing={<MqxChip xp>XP</MqxChip>}
+      <CatalogSection title="Shell — D′ flat (утверждённый дашборд)">
+        <div style={{ maxWidth: 420 }}>
+          <MqxDashStack>
+            <MqxLevelBlock
+              level={3}
+              xp={45}
+              xpNeed={100}
+              xpFrac={0.45}
+              score={1240}
+              bars={[
+                { label: 'Доход', value: 50000, frac: 1, tone: 'mqx-bar--emerald' },
+                { label: 'Долги', value: 12000, frac: 0.24, tone: 'mqx-bar--rose' },
+              ]}
             />
-            <MqxProgress value={65} xp aria-label="Демо XP" />
-          </MqxCard>
+            <MqxDivider />
+            <MqxPeriodDashboard
+              victory={{
+                goals_met: 2,
+                goals_required: 3,
+                goals: [
+                  { key: 'a', title: 'Подушка ≥ 3×', met: true, enabled: true, progress: 1 },
+                  { key: 'b', title: 'Поток ≥ 0', met: false, enabled: true, progress: 0.4 },
+                ],
+              }}
+              financeCards={[
+                { title: 'Баланс', valueNode: <MoneyText value={42150} />, accent: 'mqx-accent--violet', icon: <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 10V7a5 5 0 0 1 10 0v3" /></svg> },
+                { title: 'Подушка', valueNode: <MoneyText value={18000} />, accent: 'mqx-accent--emerald', icon: <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3 20 7v6c0 5" /></svg> },
+                { title: 'Поток', valueNode: <MoneyText value={3200} />, accent: 'mqx-accent--sky', icon: <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 19V5" /></svg> },
+                { title: 'Расходы', valueNode: <MoneyText value={9600} />, accent: 'mqx-accent--amber', icon: <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 19V5" /></svg> },
+              ]}
+              onGoFinance={() => {}}
+            />
+            <MqxDivider />
+            <MqxPeriodActions onSalary={() => {}} onContribute={() => {}} onWithdraw={() => {}} onInvest={() => {}} />
+          </MqxDashStack>
+        </div>
+      </CatalogSection>
+
+      <CatalogSection title="Shell — legacy карточки">
+        <div className="mqx-stack" style={{ gap: 12, maxWidth: 420 }}>
           <MqxCard variant="goal">
             <MqxCardHeader
               layout="split"
@@ -129,7 +162,7 @@ export function MqCatalogScreen() {
         </div>
       </CatalogSection>
 
-      <CatalogSection title="События — pill и карточка">
+      <CatalogSection title="События — B′ flat + страховой случай">
         <div className="mqx-stack" style={{ gap: 12, maxWidth: 420 }}>
           <MqxPill events badge={2}>
             События
@@ -143,8 +176,9 @@ export function MqCatalogScreen() {
               idxInDeck: 0,
               deckLen: 2,
               choices: [
-                { id: 10, title: 'Оформить по полису ОСАГО', description: 'Выплата по страховке' },
-                { id: 11, title: 'Оплатить из своих (−45 000 ₽)' },
+                { id: 10, title: 'Оформить по полису ОСАГО', description: 'Выплата по страховке', insurance_claim: true, xp_delta: 4 },
+                { id: 11, title: 'Оплатить из своих (−45 000 ₽)', xp_delta: 2 },
+                { id: 12, title: 'Договориться без оформления', xp_delta: 1 },
               ],
             }}
             busyId={null}

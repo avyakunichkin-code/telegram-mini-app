@@ -146,7 +146,7 @@ export function AnalyticsPremium({ overview }) {
   const lastSafety = pts.length ? Number(pts[pts.length - 1]?.safety_fund_balance) : safety;
 
   return (
-    <>
+    <div className="mqx-tab-page">
       <MqxTabHero
         sectionLabel="Аналитика"
         rightPill={`Период #${overview.period_index}`}
@@ -154,7 +154,7 @@ export function AnalyticsPremium({ overview }) {
         subtitle="Рейтинг, цели, потоки и динамика — в одном стиле с главной."
       />
 
-      <main className="mqx-content mqx-analytics-page">
+      <main className="mqx-content mqx-tab-page__scroll mqx-analytics-page">
         <section className="mqx-card mqx-analytics-level">
           <div className="mqx-analytics-level__top">
             <div>
@@ -421,6 +421,6 @@ export function AnalyticsPremium({ overview }) {
           </div>
         </section>
       </main>
-    </>
+    </div>
   );
 }

@@ -3,16 +3,14 @@ import { Button, Modal } from '@telegram-apps/telegram-ui';
 import { MoneyText } from './MoneyText';
 import { showNotification } from './notifications';
 import {
-  MqxBlockSection,
   MqxButton,
-  MqxCard,
-  MqxCardHeader,
-  MqxChip,
+  MqxDashStack,
+  MqxDivider,
+  MqxLevelBlock,
+  MqxPeriodActions,
   MqxPeriodChip,
+  MqxPeriodDashboard,
   MqxPill,
-  MqxProgress,
-  MqxStatMini,
-  VictoryGoalsPanel,
 } from './mqx';
 
 const PeriodJourneyLottie = lazy(() => import('./PeriodJourneyLottie'));
@@ -79,7 +77,7 @@ export function DashboardPremium({
         ),
       },
       {
-        title: 'Чистый поток',
+        title: 'Поток',
         valueNode: <MoneyText value={formatSignedMoney(flow)} />,
         accent: 'mqx-accent--sky',
         icon: (
@@ -127,15 +125,13 @@ export function DashboardPremium({
     return { level, xp, need, frac: pctClamp01(frac) };
   }, [overview]);
 
-  const overviewBars = useMemo(() => {
+  const levelBars = useMemo(() => {
     const income = Number(overview?.total_monthly_income) || 0;
     const liab = Number(overview?.total_monthly_liabilities_payment) || 0;
-    const maint = Number(overview?.total_monthly_assets_maintenance) || 0;
-    const denom = Math.max(income, liab + maint, 1);
+    const denom = Math.max(income, liab, 1);
     return [
-      { label: 'Ежемесячный доход', value: income, frac: income / denom, tone: 'mqx-bar--emerald' },
-      { label: 'Платежи по долгам', value: liab, frac: liab / denom, tone: 'mqx-bar--rose' },
-      { label: 'Обслуживание активов', value: maint, frac: maint / denom, tone: 'mqx-bar--violet' },
+      { label: 'Доход', value: income, frac: income / denom, tone: 'mqx-bar--emerald' },
+      { label: 'Долги', value: liab, frac: liab / denom, tone: 'mqx-bar--rose' },
     ];
   }, [overview]);
 
@@ -168,6 +164,7 @@ export function DashboardPremium({
 
   return (
     <>
+    <div className="mqx-tab-page">
       <header className="mqx-hero">
           <div className="mqx-hero__glow" aria-hidden />
 
@@ -223,143 +220,50 @@ export function DashboardPremium({
           </div>
       </header>
 
-      <main className="mqx-content">
-          <MqxCard variant="character" ariaLabelledBy="mq-character-progress">
-            <MqxCardHeader
-              kicker="Герой"
-              kickerTone="sky"
-              title={`Уровень ${characterXp.level}`}
-              titleId="mq-character-progress"
-              sub="Опыт к следующему уровню"
-              trailing={(
-                <MqxChip xp aria-hidden>
-                  XP
-                </MqxChip>
-              )}
+      <main className="mqx-content mqx-tab-page__scroll mqx-content--dash-flat">
+          <MqxDashStack>
+            <MqxLevelBlock
+              level={characterXp.level}
+              xp={characterXp.xp}
+              xpNeed={characterXp.need}
+              xpFrac={characterXp.frac}
+              score={Number(overview?.score ?? 0)}
+              bars={levelBars}
             />
-            <div className="mqx-character__meter" role="group" aria-label="Прогресс опыта">
-              <MqxProgress value={Math.round(characterXp.frac * 100)} xp aria-label="Прогресс опыта" />
-              <div className="mqx-goal__row mqx-character__meter-labels">
-                <span>Накоплено</span>
-                <span>
-                  {characterXp.xp}
-                  {' '}
-                  / {characterXp.need}
-                </span>
-              </div>
-            </div>
-          </MqxCard>
-
-          <VictoryGoalsPanel victory={overview?.victory} legacyGoal={goal} />
-          <MqxBlockSection title="Финансы" actionLabel="Детали" onAction={onGoFinance}>
-            <div className="mqx-grid2">
-              {financeCards.map((c) => (
-                <MqxStatMini
-                  key={c.title}
-                  title={c.title}
-                  value={c.valueNode}
-                  icon={c.icon}
-                  accent={c.accent}
-                />
-              ))}
-            </div>
-          </MqxBlockSection>
-
-          <section className="mqx-card">
-            <div className="mqx-actions__head">
-              <div>
-                <div className="mqx-card__title">Действия периода</div>
-                <div className="mqx-card__sub">Управляй денежным потоком</div>
-              </div>
-              <div className="mqx-xp">XP +10</div>
-            </div>
-
-            <div className="mqx-grid2">
-              <button
-                type="button"
-                className="mqx-action mqx-action--primary"
-                disabled={busyAction !== null}
-                onClick={async () => {
-                  try {
-                    setBusyAction('salary');
-                    await claimSalary();
-                    showNotification('Зарплата получена', 'success');
-                  } catch (e) {
-                    showNotification(e?.detail || e?.message || 'Не удалось получить зарплату', 'error');
-                  } finally {
-                    setBusyAction(null);
-                  }
-                }}
-              >
-                Получить зарплату
-              </button>
-              <button
-                type="button"
-                className="mqx-action"
-                disabled={busyAction !== null}
-                onClick={() => {
-                  setAmountStr('');
-                  setMoneyModal('in');
-                }}
-              >
-                В подушку
-              </button>
-              <button
-                type="button"
-                className="mqx-action"
-                disabled={busyAction !== null}
-                onClick={() => {
-                  setAmountStr('');
-                  setMoneyModal('out');
-                }}
-              >
-                Снять
-              </button>
-              <button type="button" className="mqx-action" onClick={onGoFinance}>
-                Инвестировать
-              </button>
-            </div>
-          </section>
-
-          <section className="mqx-card">
-            <div className="mqx-analytics__head">
-              <div>
-                <div className="mqx-card__kicker">Уровень</div>
-                <div className="mqx-analytics__title">Финансовый стратег</div>
-              </div>
-              <div className="mqx-score">
-                <div className="mqx-score__label">Очки</div>
-                <div className="mqx-score__value">{Number(overview?.score ?? 0)}</div>
-              </div>
-            </div>
-
-            <div className="mqx-bars">
-              {overviewBars.map((b) => (
-                <div key={b.label}>
-                  <div className="mqx-bars__row">
-                    <span className="mqx-bars__label">{b.label}</span>
-                    <span className="mqx-bars__value">
-                      <MoneyText value={b.value} decimals={0} />
-                    </span>
-                  </div>
-                  <div className="mqx-bars__track">
-                    <div className={`mqx-bars__fill ${b.tone}`} style={{ width: `${Math.round(pctClamp01(b.frac) * 100)}%` }} />
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            <div className="mqx-xp-card">
-              <div className="mqx-xp-card__row">
-                <span>XP до следующего уровня</span>
-                <strong>{Number(overview?.xp_to_next_level ?? 0)} XP</strong>
-              </div>
-              <div className="mqx-xp-card__track">
-                <div className="mqx-xp-card__fill" style={{ width: '90%' }} />
-              </div>
-            </div>
-          </section>
+            <MqxDivider />
+            <MqxPeriodDashboard
+              victory={overview?.victory}
+              legacyGoal={goal}
+              financeCards={financeCards}
+              onGoFinance={onGoFinance}
+            />
+            <MqxDivider />
+            <MqxPeriodActions
+              busy={busyAction !== null}
+              onSalary={async () => {
+                try {
+                  setBusyAction('salary');
+                  await claimSalary();
+                  showNotification('Зарплата получена', 'success');
+                } catch (e) {
+                  showNotification(e?.detail || e?.message || 'Не удалось получить зарплату', 'error');
+                } finally {
+                  setBusyAction(null);
+                }
+              }}
+              onContribute={() => {
+                setAmountStr('');
+                setMoneyModal('in');
+              }}
+              onWithdraw={() => {
+                setAmountStr('');
+                setMoneyModal('out');
+              }}
+              onInvest={onGoFinance}
+            />
+          </MqxDashStack>
       </main>
+    </div>
 
       <Modal open={moneyModal !== null} onClose={() => setMoneyModal(null)}>
         <div className="mqx-modal">
@@ -391,4 +295,3 @@ export function DashboardPremium({
     </>
   );
 }
-

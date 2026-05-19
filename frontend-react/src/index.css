@@ -70,7 +70,9 @@ body {
 
 /* Основная оболочка TMA: колонка + «рамка приложения», компактная типографика */
 #root {
-  --tma-tabbar-height: 56px;
+  /* Реальная высота нижнего таббара (иконки + паддинги + safe-area) */
+  --tma-tabbar-height: 64px;
+  --tma-tabbar-inset: calc(var(--tma-tabbar-height) + env(safe-area-inset-bottom, 0px));
 
   /* Шкала типографики TMA: не добавлять на экран произвольные размеры (см. BRANDBOOK 4.5) */
   --mq-fs-body: 15px;
@@ -117,8 +119,11 @@ body {
   text-align: left;
   min-height: 100svh;
   min-height: 100dvh;
+  height: 100dvh;
+  max-height: 100dvh;
   display: flex;
   flex-direction: column;
+  overflow: hidden;
   box-sizing: border-box;
   font-size: 15px;
   line-height: 1.42;
@@ -296,6 +301,59 @@ body {
 .mqx-screen {
   min-height: 100%;
   padding: 8px 0 0;
+}
+
+/* В игре: без min-height 100% — иначе лишний скролл в mq-game-shell__main */
+.mq-game-shell .mqx-screen {
+  flex: 1 1 auto;
+  min-height: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.mq-game-shell .mqx-frame {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.mq-game-shell .mqx-frame > .mq-stack--game-tab {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.mq-game-shell .mqx-frame > .mq-stack--game-tab > .mq-enter-item--fill {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.mqx-tab-page {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.mqx-tab-page__scroll.mqx-content {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior-y: contain;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+}
+
+.mqx-tab-page__scroll.mqx-content--dash-flat {
+  gap: 0;
 }
 
 .mqx-frame {
@@ -697,6 +755,256 @@ body {
   flex-direction: column;
   gap: 14px;
   color: var(--mqx-ink);
+}
+
+.mqx-content--dash-flat {
+  gap: 0;
+}
+
+/* —— Dash stack D′ (flat, dividers, H2 + period + actions) —— */
+.mqx-dash-stack {
+  display: flex;
+  flex-direction: column;
+  border-radius: 16px;
+  overflow: hidden;
+  background: var(--mqx-glass-soft);
+  border: 1px solid color-mix(in srgb, var(--mqx-ink) 8%, transparent);
+}
+
+.mqx-dash-divider {
+  display: block;
+  height: 0;
+  margin: 0;
+  border: none;
+  border-top: 1px solid color-mix(in srgb, var(--mqx-ink) 9%, transparent);
+}
+
+.mqx-dash-divider--inset {
+  margin-left: 14px;
+  margin-right: 14px;
+}
+
+.mqx-level-block {
+  padding: 12px 14px 14px;
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, #0ea5e9 12%, var(--mqx-glass-soft)),
+    var(--mqx-glass-soft)
+  );
+}
+
+.mqx-level-block__head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.mqx-level-block__title {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+.mqx-level-block__sub {
+  margin: 2px 0 0;
+  font-size: 11px;
+  color: color-mix(in srgb, var(--mqx-ink) 55%, transparent);
+}
+
+.mqx-level-block__score-wrap {
+  text-align: right;
+  flex-shrink: 0;
+}
+
+.mqx-level-block__score-label {
+  font-size: 9px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: color-mix(in srgb, var(--mqx-ink) 55%, transparent);
+}
+
+.mqx-level-block__score {
+  font-size: 13px;
+  font-weight: 800;
+  color: #5b21b6;
+  font-variant-numeric: tabular-nums;
+}
+
+.mqx-level-block__meter {
+  margin-top: 8px;
+}
+
+.mqx-level-block__bars {
+  margin-top: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.mqx-level-block__bar-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 10px;
+  color: color-mix(in srgb, var(--mqx-ink) 55%, transparent);
+}
+
+.mqx-level-block__bar-track {
+  margin-top: 3px;
+  height: 4px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--mqx-ink) 10%, transparent);
+  overflow: hidden;
+}
+
+.mqx-level-block__bar-fill {
+  height: 100%;
+  border-radius: inherit;
+}
+
+.mqx-level-block__bar-fill.mqx-bar--emerald {
+  background: linear-gradient(90deg, #10b981, #34d399);
+}
+
+.mqx-level-block__bar-fill.mqx-bar--rose {
+  background: linear-gradient(90deg, #f43f5e, #fb7185);
+}
+
+.mqx-period-dash__toggle {
+  width: 100%;
+  border: none;
+  background: transparent;
+  padding: 12px 14px;
+  text-align: left;
+  cursor: pointer;
+  color: inherit;
+  font-family: inherit;
+}
+
+.mqx-period-dash__toggle:focus-visible {
+  outline: 2px solid var(--mq-violet, #7c3aed);
+  outline-offset: -2px;
+}
+
+.mqx-period-dash__compact-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.mqx-period-dash__title {
+  font-size: 14px;
+  font-weight: 800;
+}
+
+.mqx-period-dash__summary {
+  font-size: 11px;
+  color: color-mix(in srgb, var(--mqx-ink) 55%, transparent);
+  margin-top: 2px;
+}
+
+.mqx-period-dash__chevron {
+  flex-shrink: 0;
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  display: grid;
+  place-items: center;
+  background: color-mix(in srgb, var(--mq-violet, #7c3aed) 10%, transparent);
+  color: #5b21b6;
+  font-size: 14px;
+  transition: transform 0.2s ease;
+}
+
+.mqx-period-dash--expanded .mqx-period-dash__chevron {
+  transform: rotate(180deg);
+}
+
+.mqx-period-dash__chips {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 6px;
+}
+
+.mqx-period-dash__chip {
+  padding: 8px 6px;
+  border-radius: 10px;
+  background: color-mix(in srgb, var(--mqx-ink) 5%, transparent);
+  min-width: 0;
+}
+
+.mqx-period-dash__chip-label {
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: color-mix(in srgb, var(--mqx-ink) 55%, transparent);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.mqx-period-dash__chip-value {
+  margin-top: 3px;
+  font-size: 12px;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.mqx-period-dash__hint {
+  margin: 10px 0 0;
+  padding-top: 10px;
+  font-size: 11px;
+  color: color-mix(in srgb, var(--mqx-ink) 55%, transparent);
+  text-align: center;
+  border-top: 1px solid color-mix(in srgb, var(--mqx-ink) 7%, transparent);
+}
+
+.mqx-period-dash__expand {
+  padding: 0 14px 14px;
+  border-top: 1px solid color-mix(in srgb, var(--mqx-ink) 8%, transparent);
+}
+
+.mqx-period-dash--expanded .mqx-period-dash__chips,
+.mqx-period-dash--expanded .mqx-period-dash__hint {
+  display: none;
+}
+
+.mqx-period-dash__goals {
+  padding: 12px 0 4px;
+}
+
+.mqx-period-dash__finance {
+  padding-top: 12px;
+  margin-top: 8px;
+  border-top: 1px solid color-mix(in srgb, var(--mqx-ink) 8%, transparent);
+}
+
+.mqx-period-actions {
+  padding: 14px;
+}
+
+.mqx-dash-stack .mqx-mini {
+  border: none;
+  background: color-mix(in srgb, var(--mqx-ink) 5%, transparent);
+}
+
+.mqx-dash-stack .mqx-action:not(.mqx-action--primary) {
+  background: color-mix(in srgb, var(--mqx-ink) 4%, transparent);
+  border: 1px solid color-mix(in srgb, var(--mqx-ink) 10%, transparent);
+}
+
+.mqx-dash-stack .mqx-action--primary {
+  background: linear-gradient(165deg, var(--mq-violet, #7c3aed), var(--mq-violet-deep, #5b21b6));
+  color: #fff;
+  border-color: transparent;
+  box-shadow: 0 4px 14px color-mix(in srgb, var(--mq-violet, #7c3aed) 28%, transparent);
 }
 
 .mqx-auth {
@@ -3202,12 +3510,11 @@ code {
 }
 
 .bottom-nav {
-  position: fixed;
-  bottom: 0;
-  left: 50%;
-  transform: translateX(-50%);
+  position: relative;
+  flex-shrink: 0;
   width: 100%;
   max-width: 480px;
+  margin-inline: auto;
   box-sizing: border-box;
   background:
     linear-gradient(
@@ -3231,6 +3538,7 @@ code {
 
 .bottom-nav--icons {
   padding-top: 6px;
+  padding-bottom: calc(8px + env(safe-area-inset-bottom, 0px));
 }
 
 .tma-nav-icon-btn {
@@ -3775,7 +4083,8 @@ code {
 }
 
 .game-content {
-  padding-bottom: 80px; /* чтобы контент не перекрывался меню */
+  /* legacy: отступы таббара — см. .mq-game-shell__main */
+  padding-bottom: 0;
 }
 
 .spinner {
@@ -3981,6 +4290,83 @@ code {
   box-sizing: border-box;
   background: color-mix(in srgb, var(--tg-theme-secondary-bg-color, #eef0f8) 55%, transparent);
   border: 1px solid color-mix(in srgb, var(--tg-theme-hint-color, var(--mq-line)) 35%, transparent);
+}
+
+/* B′ flat + страховой случай */
+.mqx-events-card--flat {
+  padding: 4px 2px 0;
+  border: none;
+  background: transparent;
+}
+
+.mqx-events-panel--insurance.events-overlay-panel {
+  border-color: color-mix(in srgb, var(--mq-emerald) 28%, transparent);
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--mq-emerald) 8%, var(--tg-theme-bg-color, var(--bg))),
+    var(--tg-theme-bg-color, var(--bg))
+  );
+}
+
+.mqx-events-card__badge {
+  display: inline-flex;
+  align-items: center;
+  margin-bottom: 6px;
+  padding: 3px 8px;
+  border-radius: 999px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--mq-emerald);
+  background: color-mix(in srgb, var(--mq-emerald) 14%, transparent);
+}
+
+.mqx-events-card__kicker--insurance {
+  color: var(--mq-emerald);
+}
+
+.mqx-events-card__divider {
+  margin-top: 12px;
+  margin-bottom: 0;
+}
+
+.mqx-events-card--flat .mqx-events-card__choices {
+  gap: 0;
+  margin-top: 0;
+}
+
+button.mqx-events-choice--flat {
+  border: none;
+  border-radius: 0;
+  background: transparent;
+  padding: 12px 0;
+  border-bottom: 1px solid color-mix(in srgb, var(--mqx-ink) 8%, transparent);
+}
+
+button.mqx-events-choice--flat:last-child {
+  border-bottom: none;
+}
+
+button.mqx-events-choice--primary {
+  margin-top: 4px;
+  margin-bottom: 4px;
+  padding: 12px 14px;
+  border-radius: 12px;
+  border: none;
+  background: linear-gradient(165deg, #059669, #047857);
+  color: #fff;
+  box-shadow: 0 4px 14px color-mix(in srgb, var(--mq-emerald) 28%, transparent);
+}
+
+button.mqx-events-choice--primary .mqx-events-choice__desc {
+  color: color-mix(in srgb, #ecfdf5 92%, transparent);
+  opacity: 1;
+}
+
+button.mqx-events-choice--primary:active:not(:disabled) {
+  transform: translateY(1px);
+  box-shadow: none;
 }
 
 .mqx-events-card__kicker {
@@ -4376,6 +4762,27 @@ button.mqx-events-choice:active:not(:disabled) {
   box-sizing: border-box;
 }
 
+/* Игровой экран: таббар в потоке, прокрутка в main (не fixed overlay) */
+.mq-game-shell {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  padding: 0;
+}
+
+.mq-game-shell__main {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  padding: var(--mq-page-pad-y) var(--mq-page-pad-x);
+  padding-bottom: var(--mq-page-pad-y);
+  box-sizing: border-box;
+}
+
 .mq-page--center {
   display: grid;
   min-height: 60svh;
@@ -4383,11 +4790,36 @@ button.mqx-events-choice:active:not(:disabled) {
 }
 
 .mq-page--auth {
-  min-height: 100svh;
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   padding: calc(14px + env(safe-area-inset-top, 0)) 12px calc(22px + env(safe-area-inset-bottom, 0));
   box-sizing: border-box;
+}
+
+/* Стартовое меню / регистрация — прокрутка внутри #root, не body */
+.app-shell.mq-page:not(.mq-game-shell) {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  padding: var(--mq-page-pad-y) var(--mq-page-pad-x);
+  padding-bottom: calc(var(--mq-page-pad-y) + env(safe-area-inset-bottom, 0px));
+  box-sizing: border-box;
+}
+
+/* AppRoot → роутер → экран: колонка на всю высоту TMA */
+.mq-app-fill {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
 }
 
 .mq-auth-inner {

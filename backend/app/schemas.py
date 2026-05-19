@@ -113,6 +113,40 @@ class CharacterUnlockOverview(BaseModel):
     label: str = ""
 
 
+class ExpenseCategoryBurnItem(BaseModel):
+    category_key: str
+    title: str
+    amount: float
+    tier: str = "must"
+
+
+class ExpenseLineOverviewItem(BaseModel):
+    id: int
+    category_key: str
+    category_title: str
+    title: str
+    amount: float
+    tier: str = "must"
+    source_kind: str = "template"
+    expires_period_index: Optional[int] = None
+
+
+class MonthlyBurnBreakdown(BaseModel):
+    baseline: float = 0
+    legacy_delta: float = 0
+    lines: List[ExpenseLineOverviewItem] = Field(default_factory=list)
+    by_category: List[ExpenseCategoryBurnItem] = Field(default_factory=list)
+
+
+class ExpensesSnapshotResponse(BaseModel):
+    period_index: int
+    total: float
+    monthly_lifestyle_expense: float
+    breakdown: MonthlyBurnBreakdown
+    total_monthly_outflow: float = 0
+    expense_to_income_ratio: float = 0
+
+
 class VictoryOverview(BaseModel):
     schema_version: int = 1
     template_key: str = ""
@@ -132,8 +166,12 @@ class FinanceOverview(BaseModel):
     total_monthly_income: float
     total_monthly_liabilities_payment: float
     total_monthly_assets_maintenance: float
-    # Расходы «жизни» за период (base + delta); списываются в конце периода.
+    # Расходы на жизнеобеспечение (burn); списываются в конце периода.
     monthly_lifestyle_expense: float = 0
+    monthly_burn_total: float = 0
+    monthly_burn_breakdown: Optional[MonthlyBurnBreakdown] = None
+    total_monthly_outflow: float = 0
+    expense_to_income_ratio: float = 0
     net_monthly_cashflow: float
     liabilities_to_income_ratio: float
     gamification_level: str

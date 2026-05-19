@@ -56,9 +56,9 @@ def monthly_reference_expense(profile: GameProfile, liabilities: list, assets: l
     """Опорные месячные расходы: обязательства + обслуживание активов + «жизнь»."""
     liab_pay = sum(float(getattr(l, "monthly_payment", 0) or 0) for l in liabilities)
     maint = sum(float(getattr(a, "monthly_maintenance_cost", 0) or 0) for a in assets)
-    lifestyle = float(getattr(profile, "base_monthly_lifestyle_expense", 0) or 0) + float(
-        getattr(profile, "delta_monthly_lifestyle_expense", 0) or 0
-    )
+    from .expenses import compute_monthly_burn
+
+    lifestyle = float(compute_monthly_burn(db, profile).total)
     return liab_pay + maint + lifestyle
 
 

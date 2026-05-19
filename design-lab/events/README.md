@@ -1,26 +1,22 @@
-# Events — оверлей и карточка события
+# Events — оверлей и карточка
 
-**Статус:** внедрено в `frontend-react/src/components/mqx/events/` (prod-стили `mqx-events-*` уже были в `index.css`).
+**Статус:** **B′ утверждён** → внедрено в MQX (`EventCard`, `EventChoiceButton`).
 
-## Утверждённый паттерн (текущий prod)
+Запуск:
 
-| Блок | MQX |
-|------|-----|
-| Кнопка «События» на hero | `MqxPill` + `events` + `badge` |
-| Карточка события | `EventCard` |
-| Кнопка выбора | `EventChoiceButton` |
-| Оверлей + карусель | `EventCarouselOverlay` |
-| Точки / стрелки | `EventCarouselDots`, `EventCarouselNav` |
-| Шапка оверлея | `EventOverlayToolbar` |
+```bash
+cd design-lab/events
+npx serve .
+```
 
-Логика свайпа и слайдов: хук `useEventCarousel`.
+## Варианты
 
-## Витрина
+| ID | Идея |
+|----|------|
+| **A** | Текущий prod (рамка + violet outline) |
+| **B** | Flat D′ |
+| **B′ ★** | B + бейдж «Страховой случай» + emerald primary на выборе с полисом |
 
-`#/dev/mqx` → **События — pill и карточка**.
+## API
 
-## Не делаем (v1)
-
-- Отдельный HTML design-lab (UI уже стабилен в prod)
-- Замена `EventsTriggerButton` (legacy TGUI) — используйте `MqxPill`
-- Превью анимации карусели в каталоге (только в игре)
+`GET /api/game/events/pending` — у выбора с `insurance_claim` в effects: `"insurance_claim": true`, опционально `xp_delta`.

@@ -12,7 +12,6 @@ export function BottomGameNav({ activeTab, setActiveTab }) {
     <nav
       className="bottom-nav bottom-nav--icons"
       aria-label="Основные разделы"
-      style={{ paddingBottom: 'calc(8px + env(safe-area-inset-bottom, 0px))' }}
     >
       {ITEMS.map(({ id, label, Icon }) => (
         <button

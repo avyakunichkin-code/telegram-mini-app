@@ -136,6 +136,11 @@ body {
   box-shadow: 0 12px 40px rgba(15, 10, 40, 0.08);
 }
 
+.lab-phone--flat {
+  padding: 0;
+  overflow: hidden;
+}
+
 .lab-phone__hint {
   margin: 0 0 10px;
   font-size: 11px;
@@ -675,6 +680,90 @@ body {
   gap: 10px;
 }
 
+/* D′ flat: без рамок секций, только горизонтальные разделители */
+.lab-dash-stack--flat {
+  gap: 0;
+  border-radius: 14px;
+  overflow: hidden;
+  background: var(--surface);
+}
+
+.dash-hr {
+  display: block;
+  height: 0;
+  margin: 0 14px;
+  border: none;
+  border-top: 1px solid color-mix(in srgb, var(--text) 9%, transparent);
+}
+
+[data-theme='dark'] .dash-hr {
+  border-top-color: color-mix(in srgb, #fff 10%, transparent);
+}
+
+.lab-dash-stack--flat .level-compact {
+  border: none;
+  border-radius: 0;
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--mq-sky) 12%, var(--surface)),
+    var(--surface)
+  );
+}
+
+.lab-dash-stack--flat .shell-d {
+  border: none;
+  border-radius: 0;
+  background: transparent;
+}
+
+.lab-dash-stack--flat .shell-actions-card {
+  border: none;
+  border-radius: 0;
+  background: transparent;
+}
+
+.lab-dash-stack--flat .shell-d__chip {
+  border: none;
+  background: color-mix(in srgb, var(--text) 5%, transparent);
+}
+
+.lab-dash-stack--flat .dash-mini {
+  border: none;
+  background: color-mix(in srgb, var(--text) 5%, transparent);
+}
+
+.lab-dash-stack--flat .shell-goal-flat {
+  margin-top: 0;
+  padding: 12px 0 4px;
+  border: none;
+  background: transparent;
+  box-shadow: none;
+}
+
+.lab-dash-stack--flat .shell-d__expand {
+  border-top: 1px solid color-mix(in srgb, var(--text) 8%, transparent);
+  gap: 0;
+}
+
+.lab-dash-stack--flat .shell-d__expand-hint {
+  border-top: 1px solid color-mix(in srgb, var(--text) 7%, transparent);
+}
+
+.lab-dash-stack--flat .shell-d__expand-finance {
+  padding-top: 12px;
+  margin-top: 8px;
+  border-top: 1px solid color-mix(in srgb, var(--text) 8%, transparent);
+}
+
+.lab-dash-stack--flat .dash-action {
+  background: color-mix(in srgb, var(--text) 4%, transparent);
+  border: 1px solid color-mix(in srgb, var(--text) 8%, transparent);
+}
+
+.lab-dash-stack--flat .dash-action--primary {
+  border-color: transparent;
+}
+
 .lab-dash-stack__label {
   margin: 0 0 4px;
   font-size: 10px;
@@ -682,6 +771,11 @@ body {
   text-transform: uppercase;
   letter-spacing: 0.14em;
   color: var(--text-muted);
+}
+
+.lab-dash-stack--flat .lab-dash-stack__label {
+  padding: 10px 14px 0;
+  margin: 0;
 }
 
 /* Базовый sky-стиль «Уровень» (общий для H1–H3) */

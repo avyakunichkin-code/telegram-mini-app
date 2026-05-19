@@ -101,15 +101,14 @@
       <section class="lab-section lab-section--featured" id="variant-d-approved">
         <div class="lab-section__label">
           <span class="lab-section__id">D′ ★</span>
-          <span class="lab-section__title">Утверждённая раскладка (полный main)</span>
+          <span class="lab-section__title">Утверждённая раскладка — без рамок, разделители</span>
         </div>
         <p class="lab-section__note">
-          <strong>① Уровень</strong> (H2) → <strong>② сворачиваемый</strong> (цели + финансы) → <strong>③ действия</strong>.
-          См. <a href="./APPROVED-LAYOUT.md">APPROVED-LAYOUT.md</a>.
+          <strong>H2</strong> + <strong>D′</strong>: секции без box-border, между блоками <code>dash-hr</code>.
+          Раскройте «Дашборд периода», чтобы увидеть разделитель цели / финансы.
         </p>
-        <article class="lab-phone">
-          <div class="lab-dash-stack">
-            <p class="lab-dash-stack__label">① Уровень — всегда</p>
+        <article class="lab-phone lab-phone--flat">
+          <div class="lab-dash-stack lab-dash-stack--flat">
             <article class="level-compact level-h2">
               <div class="level-h2__head">
                 <div>
@@ -136,7 +135,8 @@
               </div>
             </article>
 
-            <p class="lab-dash-stack__label">② Дашборд периода — сворачивается</p>
+            <hr class="dash-hr" />
+
             <div class="shell-d" data-shell-d>
               <button type="button" class="shell-d__toggle" data-shell-d-toggle aria-expanded="false" aria-controls="shell-d-expand-approved">
                 <div class="shell-d__compact-top">
@@ -155,7 +155,7 @@
                 <p class="shell-d__expand-hint">Цели и финансы — нажмите, чтобы развернуть</p>
               </button>
               <div class="shell-d__expand" id="shell-d-expand-approved">
-                <div class="shell-b__highlight shell-b__highlight--goal" style="margin-top: 10px">
+                <div class="shell-goal-flat">
                   <div class="dash-head-split">
                     <div>
                       <div class="dash-kicker" style="color: var(--mq-emerald)">Цель</div>
@@ -189,7 +189,8 @@
               </div>
             </div>
 
-            <p class="lab-dash-stack__label">③ Действия — всегда</p>
+            <hr class="dash-hr" />
+
             <div class="shell-actions-card">
               <div class="dash-actions-head">
                 <div>

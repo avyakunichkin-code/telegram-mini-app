@@ -149,6 +149,43 @@ class LiabilityTemplate(Base):
     created_at = Column(DateTime, default=datetime.utcnow)
 
 
+class ExpenseCategoryDefinition(Base):
+    """Каталог категорий расходов на жизнеобеспечение (E1)."""
+
+    __tablename__ = "expense_category_definitions"
+
+    category_key = Column(String(40), primary_key=True)
+    title = Column(String(120), nullable=False)
+    default_tier = Column(String(20), nullable=False, default="must")
+    sort_order = Column(Integer, nullable=False, default=100)
+    icon_key = Column(String(40), nullable=True)
+    is_active = Column(Integer, nullable=False, default=1)
+    created_at = Column(DateTime, default=datetime.utcnow)
+
+
+class ProfileExpenseLine(Base):
+    """Статья месячного бюджета жизнеобеспечения на профиле."""
+
+    __tablename__ = "profile_expense_lines"
+
+    id = Column(Integer, primary_key=True, index=True)
+    game_profile_id = Column(Integer, ForeignKey("game_profiles.id"), nullable=False, index=True)
+    category_key = Column(String(40), ForeignKey("expense_category_definitions.category_key"), nullable=False)
+    amount_monthly = Column(Float, nullable=False, default=0)
+    title_override = Column(String(160), nullable=True)
+    source_kind = Column(String(20), nullable=False, default="template")
+    source_ref = Column(String(120), nullable=True)
+    tier = Column(String(20), nullable=False, default="must")
+    created_period_index = Column(Integer, nullable=False, default=1)
+    expires_period_index = Column(Integer, nullable=True)
+    revoked_at = Column(DateTime, nullable=True)
+    is_active = Column(Integer, nullable=False, default=1)
+    created_at = Column(DateTime, default=datetime.utcnow)
+
+    game_profile = relationship("GameProfile", backref="expense_lines")
+    category = relationship("ExpenseCategoryDefinition")
+
+
 class GameStarterTemplate(Base):
     """Стартовый шаблон Game Mode (blueprint JSON + базовые расходы «жизни»)."""
 

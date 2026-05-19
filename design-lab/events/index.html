@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="ru" data-theme="light">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Money Quest — события</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <header class="lab-header">
+      <div>
+        <h1>Events — оверлей и карточка</h1>
+        <p>
+          Одинаковые данные: <strong>ДТП</strong>, 3 выбора (ОСАГО / из своих / договориться).
+          После выбора в чате → MQX → prod. Стиль согласован с <strong>shell D′ flat</strong>.
+        </p>
+      </div>
+      <div class="lab-theme" role="group" aria-label="Тема">
+        <button type="button" class="is-active" data-theme-btn="light">Светлая</button>
+        <button type="button" data-theme-btn="dark">Тёмная</button>
+      </div>
+    </header>
+
+    <main class="lab-wrap">
+      <!-- B′ рекомендуемый -->
+      <section class="lab-section lab-section--featured" id="variant-b">
+        <div class="lab-section__label">
+          <span class="lab-section__id">B′ ★</span>
+          <span class="lab-section__title">Flat + страховой случай (рекомендуем)</span>
+        </div>
+        <p class="lab-section__note">
+          Как <strong>D′</strong>: без рамки у карточки, разделители между выборами.
+          Бейдж «Страховой случай», первый выбор — залитый emerald (полис).
+        </p>
+        <div class="lab-stage">
+          <div class="ev-panel ev-panel--c">
+            <div class="ev-toolbar">
+              <div>
+                <div class="ev-toolbar__title">События периода</div>
+                <p class="ev-toolbar__sub">Выбор применяется сразу. Закройте × — карточки останутся в «События».</p>
+              </div>
+              <button type="button" class="ev-close" aria-label="Закрыть">×</button>
+            </div>
+            <div class="ev-dots" aria-hidden>
+              <button type="button" class="ev-dot is-active"></button>
+              <button type="button" class="ev-dot"></button>
+            </div>
+            <article class="ev-card ev-card--flat">
+              <span class="ev-badge-insurance">Страховой случай</span>
+              <div class="ev-kicker ev-kicker--insurance">
+                Период #4
+                <span class="ev-kicker__sep">· карточка 1 из 2</span>
+              </div>
+              <h3 class="ev-card__title">ДТП</h3>
+              <p class="ev-card__desc">Небольшое столкновение. При ОСАГО страховая покроет ущерб третьим лицам.</p>
+              <hr class="ev-hr ev-hr--inset" />
+              <div class="ev-choices ev-choices--flat">
+                <button type="button" class="ev-choice ev-choice--primary">
+                  <span class="ev-choice__title">Оформить по полису ОСАГО</span>
+                  <span class="ev-choice__desc">Выплата по страховке · XP +4</span>
+                </button>
+                <button type="button" class="ev-choice ev-choice--flat">
+                  <span class="ev-choice__title">Оплатить из своих (−45 000 ₽)</span>
+                  <span class="ev-choice__desc">Списание с баланса · XP +2</span>
+                </button>
+                <button type="button" class="ev-choice ev-choice--flat">
+                  <span class="ev-choice__title">Договориться без оформления</span>
+                  <span class="ev-choice__desc">−12 000 ₽ · XP +1</span>
+                </button>
+              </div>
+            </article>
+            <p class="ev-nav-hint">← свайп · точки · стрелки (как в prod) →</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="lab-section" id="variant-b-plain">
+        <div class="lab-section__label">
+          <span class="lab-section__id">B</span>
+          <span class="lab-section__title">Flat без акцента страховки</span>
+        </div>
+        <p class="lab-section__note">Тот же flat, но все выборы одинаковые строки (без emerald primary).</p>
+        <div class="lab-stage">
+          <div class="ev-panel ev-panel--b">
+            <div class="ev-toolbar">
+              <div>
+                <div class="ev-toolbar__title">События периода</div>
+                <p class="ev-toolbar__sub">Выбор применяется сразу.</p>
+              </div>
+              <button type="button" class="ev-close">×</button>
+            </div>
+            <div class="ev-dots" aria-hidden>
+              <button type="button" class="ev-dot is-active"></button>
+              <button type="button" class="ev-dot"></button>
+            </div>
+            <article class="ev-card ev-card--flat">
+              <div class="ev-kicker">
+                Период #4
+                <span class="ev-kicker__sep">· карточка 1 из 2</span>
+              </div>
+              <h3 class="ev-card__title">ДТП</h3>
+              <p class="ev-card__desc">Небольшое столкновение. При ОСАГО страховая покроет ущерб третьим лицам.</p>
+              <hr class="ev-hr" />
+              <div class="ev-choices ev-choices--flat">
+                <button type="button" class="ev-choice ev-choice--flat">
+                  <span class="ev-choice__title">Оформить по полису ОСАГО</span>
+                  <span class="ev-choice__desc">Выплата по страховке</span>
+                </button>
+                <button type="button" class="ev-choice ev-choice--flat">
+                  <span class="ev-choice__title">Оплатить из своих (−45 000 ₽)</span>
+                </button>
+                <button type="button" class="ev-choice ev-choice--flat">
+                  <span class="ev-choice__title">Договориться без оформления</span>
+                </button>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="lab-section" id="variant-a">
+        <div class="lab-section__label">
+          <span class="lab-section__id">A</span>
+          <span class="lab-section__title">Текущий prod (рамка + violet outline)</span>
+        </div>
+        <p class="lab-section__note">Справочно — как сейчас в <code>mqx-events-card</code>.</p>
+        <div class="lab-stage">
+          <div class="ev-panel ev-panel--a">
+            <div class="ev-toolbar">
+              <div>
+                <div class="ev-toolbar__title">События периода</div>
+                <p class="ev-toolbar__sub">Выбор применяется сразу.</p>
+              </div>
+              <button type="button" class="ev-close">×</button>
+            </div>
+            <div class="ev-dots" aria-hidden>
+              <button type="button" class="ev-dot is-active"></button>
+              <button type="button" class="ev-dot"></button>
+            </div>
+            <article class="ev-card ev-card--boxed">
+              <div class="ev-kicker">
+                Период #4
+                <span class="ev-kicker__sep">· карточка 1 из 2</span>
+              </div>
+              <h3 class="ev-card__title">ДТП</h3>
+              <p class="ev-card__desc">Небольшое столкновение. При ОСАГО страховая покроет ущерб третьим лицам.</p>
+              <div class="ev-choices">
+                <button type="button" class="ev-choice">
+                  <span class="ev-choice__title">Оформить по полису ОСАГО</span>
+                  <span class="ev-choice__desc">Выплата по страховке</span>
+                </button>
+                <button type="button" class="ev-choice">
+                  <span class="ev-choice__title">Оплатить из своих (−45 000 ₽)</span>
+                </button>
+                <button type="button" class="ev-choice">
+                  <span class="ev-choice__title">Договориться без оформления</span>
+                </button>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <script>
+      document.querySelectorAll('[data-theme-btn]').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          const theme = btn.getAttribute('data-theme-btn');
+          document.documentElement.setAttribute('data-theme', theme);
+          document.querySelectorAll('[data-theme-btn]').forEach((b) => b.classList.toggle('is-active', b === btn));
+        });
+      });
+    </script>
+  </body>
+</html>

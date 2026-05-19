@@ -24,6 +24,7 @@ class VictoryEvaluationInput:
     net_monthly_cashflow: float
     character_level: int
     monthly_salary: float
+    monthly_burn_total: float = 0
     avg_net_cashflow_6p: float
     avg_net_cashflow_6p_n: int
 
@@ -181,6 +182,24 @@ def _evaluate_goal(goal: dict[str, Any], snap: VictoryEvaluationInput) -> Victor
         if min_cash > 0:
             progress = min(1.0, cash / min_cash)
             met = cash >= min_cash
+        else:
+            met = True
+            progress = 1.0
+
+    elif gtype == "expense_to_income_ratio":
+        max_ratio = float(goal.get("max_ratio", 1.0))
+        salary = max(1.0, float(snap.monthly_salary))
+        burn = max(0.0, float(snap.monthly_burn_total))
+        ratio = burn / salary
+        detail = {
+            "monthly_burn_total": burn,
+            "monthly_salary": salary,
+            "ratio": round(ratio, 4),
+            "max_ratio": max_ratio,
+        }
+        if max_ratio > 0:
+            progress = min(1.0, max(0.0, (max_ratio - ratio) / max_ratio))
+            met = ratio <= max_ratio
         else:
             met = True
             progress = 1.0

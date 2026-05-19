@@ -22,6 +22,7 @@ from ..game_time import get_active_game_profile, sync_time, get_seconds_until_ne
 from ..achievement_engine import process_achievement_unlocks
 from ..achievement_seeds import ensure_achievement_catalog
 from ..character_progression import character_xp_need_for_next_level
+from ..expenses import burn_breakdown_for_api, compute_monthly_burn
 from ..victory_engine import VictoryEvaluationInput, evaluate_victory, parse_victory_config
 from ..victory_seeds import DEFAULT_TEMPLATE_KEY
 from ..level_gates import (
@@ -38,6 +39,7 @@ from ..schemas import (
     AssetCreate,
     AssetResponse,
     FinanceOverview,
+    MonthlyBurnBreakdown,
     VictoryOverview,
     VictoryGoalOverview,
     CharacterUnlockOverview,
@@ -518,10 +520,15 @@ async def finance_overview(
     total_liability_payment = sum(l.monthly_payment for l in liabilities)
     total_asset_maintenance = sum(a.monthly_maintenance_cost for a in assets)
     total_monthly_obligations = total_liability_payment + total_asset_maintenance
-    monthly_lifestyle_expense = float(getattr(profile, "base_monthly_lifestyle_expense", 0) or 0) + float(
-        getattr(profile, "delta_monthly_lifestyle_expense", 0) or 0
-    )
+    burn_snapshot = compute_monthly_burn(db, profile)
+    monthly_burn_total = float(burn_snapshot.total)
+    monthly_lifestyle_expense = monthly_burn_total
+    burn_breakdown = MonthlyBurnBreakdown(**burn_breakdown_for_api(burn_snapshot))
     total_income = monthly_income + assets_income
+    total_monthly_outflow = total_monthly_obligations + monthly_burn_total
+    expense_to_income_ratio = (
+        round(monthly_burn_total / total_income, 4) if total_income > 0 else 0.0
+    )
     net_cashflow = total_income - total_monthly_obligations
     liabilities_ratio = (total_liability_payment / total_income * 100) if total_income > 0 else 0
     total_overdue_amount = sum(float(l.overdue_amount or 0) for l in liabilities_orm)
@@ -555,6 +562,7 @@ async def finance_overview(
             net_monthly_cashflow=float(net_cashflow),
             character_level=max(1, int(getattr(profile, "level", 1) or 1)),
             monthly_salary=float(salary.monthly_amount if salary else 0),
+            monthly_burn_total=monthly_burn_total,
             avg_net_cashflow_6p=float(avg_cf_6),
             avg_net_cashflow_6p_n=int(avg_cf_n),
         ),
@@ -600,6 +608,10 @@ async def finance_overview(
         total_monthly_liabilities_payment=round(total_liability_payment, 2),
         total_monthly_assets_maintenance=round(total_asset_maintenance, 2),
         monthly_lifestyle_expense=round(max(0.0, monthly_lifestyle_expense), 2),
+        monthly_burn_total=round(max(0.0, monthly_burn_total), 2),
+        monthly_burn_breakdown=burn_breakdown,
+        total_monthly_outflow=round(total_monthly_outflow, 2),
+        expense_to_income_ratio=expense_to_income_ratio,
         net_monthly_cashflow=round(net_cashflow, 2),
         liabilities_to_income_ratio=round(liabilities_ratio, 2),
         gamification_level=level,

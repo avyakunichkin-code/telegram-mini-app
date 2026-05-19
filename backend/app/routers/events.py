@@ -267,16 +267,28 @@ def serialize_instance_rows(db: Session, insts: list[EventInstance]) -> list[dic
             .order_by(EventChoice.id.asc())
             .all()
         )
+        choice_rows = []
+        for c in choices:
+            try:
+                effects = json.loads(c.effects_json or "{}")
+            except json.JSONDecodeError:
+                effects = {}
+            if not isinstance(effects, dict):
+                effects = {}
+            row = {"id": c.id, "title": c.title, "description": c.description}
+            if effects.get("insurance_claim"):
+                row["insurance_claim"] = True
+            xp_delta = effects.get("xp_delta")
+            if xp_delta:
+                row["xp_delta"] = int(xp_delta)
+            choice_rows.append(row)
         out.append({
             "id": inst.id,
             "period_index": inst.period_index,
             "key": definition.key,
             "title": definition.title,
             "description": definition.description,
-            "choices": [
-                {"id": c.id, "title": c.title, "description": c.description}
-                for c in choices
-            ],
+            "choices": choice_rows,
         })
     return out
 

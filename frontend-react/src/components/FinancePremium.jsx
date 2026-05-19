@@ -8,7 +8,7 @@ export function FinancePremium({ overview, refreshOverview }) {
   if (!overview) return null;
 
   return (
-    <>
+    <div className="mqx-tab-page">
       <MqxTabHero
         heroClassName="mqx-hero--capital"
         sectionLabel="Финансы"
@@ -19,7 +19,7 @@ export function FinancePremium({ overview, refreshOverview }) {
         subtitle="Инвестиции, страховки, активы и долги."
       />
 
-      <main className="mqx-content mqx-capital-page">
+      <main className="mqx-content mqx-tab-page__scroll mqx-capital-page">
         <section className="mqx-card mqx-capital-card">
           <h2 className="mqx-capital-card__title">Разделы</h2>
           <div className="mqx-fin-tabs mqx-capital-tabs" role="tablist" aria-label="Разделы финансов">
@@ -50,6 +50,6 @@ export function FinancePremium({ overview, refreshOverview }) {
           hideSectionsCard
         />
       </main>
-    </>
+    </div>
   );
 }

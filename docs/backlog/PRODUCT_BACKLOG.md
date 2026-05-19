@@ -34,6 +34,7 @@
 | **I1** | Страховки: продукт + объект | DB+Backend+Frontend | 🟡 0008 + UI в работе |
 | **α** | Pre-Alpha / Closed Alpha гейты | Doc+Frontend (метрики) | ⬜ см. GAME §11 |
 | **A0** | Admin Watchtower (MVP 1.2) | DB+Backend+Frontend | 🟡 Phase 0 в коде |
+| **E1** | **Расходы жизнеобеспечения** — категории, статьи бюджета, burn, UI | DB+Backend+Frontend+Content | ⬜ [EXPENSES_SYSTEM](../specs/gameplay/EXPENSES_SYSTEM.md) · [SPEC](../specs/features/SPEC_expenses.md) draft |
 
 > **Расхождение с GAME.md §0.2:** `cooldown_periods` и фильтр в `ensure_period_events` **уже в коде** (`game_rules.is_event_definition_eligible`, `events.py`, миграция 0007). В GAME.md пометить «не реализовано» — устарело.
 
@@ -106,6 +107,36 @@
 - [ ] P2 **[Doc]** Spec [`SPEC_admin-and-notifications.md`](../specs/features/SPEC_admin-and-notifications.md).
 
 **Env (backend):** `ADMIN_USER_IDS`, `OPS_TELEGRAM_BOT_TOKEN`, `OPS_TELEGRAM_CHAT_ID`; ссылки в TG — `ADMIN_WEB_BASE_URL` или `PUBLIC_APP_URL` (на Render без env — дефолт GitHub Pages).
+
+### Эпик E1 — расходы на жизнеобеспечение (полный слой)
+
+**Проблема:** в симуляторе отсутствует слой регулярных трат на жизнь (еда, жильё, одежда, связь…) — есть только скрытый агрегат `base + delta`.
+
+Идея (idea-refine): [`expenses-mechanic.md`](../vision/ideas/expenses-mechanic.md) · Канон: [`EXPENSES_SYSTEM.md`](../specs/gameplay/EXPENSES_SYSTEM.md) · Spec: [`SPEC_expenses.md`](../specs/features/SPEC_expenses.md) · Plan: [`PLAN_expenses.md`](../plans/PLAN_expenses.md) · **Чеклист слоёв:** [`EXPENSES_LAYER_CHECKLIST.md`](../specs/economy/EXPENSES_LAYER_CHECKLIST.md).
+
+#### Волна A — логическая правда (P0)
+
+- [ ] P0 **[DB] E1-110–111** — каталог категорий + `profile_expense_lines`.
+- [ ] P0 **[Backend] E1-112** — `expenses.py` (`compute_monthly_burn`, breakdown).
+- [ ] P0 **[DB+Backend] E1-114** — `expense_budget` во всех game templates (sum = base).
+- [ ] P0 **[Backend] E1-113** — `game/start` создаёт статьи из blueprint.
+- [ ] P0 **[Backend] E1-115** — `process_period_end` + breakdown по категориям.
+- [ ] P0 **[Backend] E1-116** — overview: burn, breakdown, `total_monthly_outflow`.
+- [ ] P1 **[Backend] E1-117** — backfill legacy профилей.
+- [ ] P1 **[Backend] E1-118** — achievements + victory hooks.
+
+#### Волна B — видимость (P1)
+
+- [ ] P1 **[Frontend] E1-210–214** — api, дашборд, экран «Расходы», итог периода, design-lab.
+
+#### Волна C — контент и цели (P1–P2)
+
+- [ ] P1 **[Backend] E1-310–311** — effects `expense_line` + сиды событий.
+- [ ] P1 **[Backend+FE] E1-312–314** — victory `expense_to_income_ratio`, analytics.
+
+#### Волна D — Plan Mode (P2, после Game)
+
+- [ ] P2 **[Spec+BE+FE] E1-410–412** — редактор статей, префилл.
 
 ### Экономика и давление
 

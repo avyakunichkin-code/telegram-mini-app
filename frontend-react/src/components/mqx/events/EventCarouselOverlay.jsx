@@ -5,6 +5,7 @@ import { EventCarouselDots } from './EventCarouselDots';
 import { EventCarouselNav } from './EventCarouselNav';
 import { EventOverlayToolbar } from './EventOverlayToolbar';
 import { useEventCarousel } from './useEventCarousel';
+import { eventHasInsuranceClaimChoice } from './eventDisplay';
 
 /**
  * Полноэкранный оверлей событий периода: карусель карточек, свайп, выбор.
@@ -48,6 +49,8 @@ export function EventCarouselOverlay({ open, onClose, events, onResolved }) {
 
   if (!open || n === 0) return null;
 
+  const insurancePanel = !!(current && eventHasInsuranceClaimChoice(current));
+
   return (
     <div
       className="mqx-events-overlay events-overlay-root"
@@ -57,7 +60,9 @@ export function EventCarouselOverlay({ open, onClose, events, onResolved }) {
     >
       <div className="mqx-events-backdrop events-overlay-backdrop" aria-hidden />
 
-      <div className="mqx-events-panel events-overlay-panel">
+      <div
+        className={`mqx-events-panel events-overlay-panel${insurancePanel ? ' mqx-events-panel--insurance' : ''}`}
+      >
         <EventOverlayToolbar onClose={onClose} />
 
         <EventCarouselDots

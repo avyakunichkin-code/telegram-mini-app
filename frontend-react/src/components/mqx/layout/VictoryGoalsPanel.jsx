@@ -8,7 +8,7 @@ import { VictoryGoalItem } from './VictoryGoalItem';
 /**
  * Панель целей победы v2 (M из N) + fallback на legacy подушку.
  */
-export function VictoryGoalsPanel({ victory, legacyGoal }) {
+export function VictoryGoalsPanel({ victory, legacyGoal, flat = false }) {
   const summary = useMemo(() => buildVictorySummary(victory, legacyGoal), [victory, legacyGoal]);
 
   const gateNote =
@@ -18,8 +18,8 @@ export function VictoryGoalsPanel({ victory, legacyGoal }) {
 
   const sub = [summary.subtitle, gateNote].filter(Boolean).join(' · ') || null;
 
-  return (
-    <MqxCard variant="goal" ariaLabelledBy="mq-victory-goals">
+  const body = (
+    <>
       <MqxCardHeader
         layout="split"
         kicker="Цель"
@@ -44,6 +44,20 @@ export function VictoryGoalsPanel({ victory, legacyGoal }) {
           ))}
         </ul>
       )}
+    </>
+  );
+
+  if (flat) {
+    return (
+      <div className="mqx-period-dash__goals" aria-labelledby="mq-victory-goals">
+        {body}
+      </div>
+    );
+  }
+
+  return (
+    <MqxCard variant="goal" ariaLabelledBy="mq-victory-goals">
+      {body}
     </MqxCard>
   );
 }

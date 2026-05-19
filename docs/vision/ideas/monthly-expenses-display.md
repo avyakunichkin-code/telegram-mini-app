@@ -1,5 +1,7 @@
 # Расходы «жизни» — отображение на слоях игры
 
+> **Эпик E1 (полный слой):** [expenses-mechanic.md](expenses-mechanic.md) → [EXPENSES_SYSTEM.md](../../specs/gameplay/EXPENSES_SYSTEM.md) → [SPEC_expenses.md](../../specs/features/SPEC_expenses.md). Этот файл — **UI/UX-очередь (волна B)** поверх API breakdown.
+
 ## Problem Statement
 
 **Как показывать игроку обязательные ежемесячные расходы «жизни» (база шаблона + дельта от событий), чтобы они были видны до закрытия периода и не путались с долгами/обслуживанием активов?**
@@ -30,7 +32,7 @@
 | 4 | MQX `MqxStatMini` + каталог | подпись «Расходы» в демо | backlog |
 | 5 | Analytics Premium | блок «Расходы жизни» рядом со стриком | backlog |
 | 6 | Закрытие периода UI | toast/итог: «Списано расходов жизни: N ₽» | backlog |
-| 7 | Victory / цели | отдельная цель «расходы ≤ X% дохода» — только в шаблоне | idea |
+| 7 | Victory / цели | отдельная цель «расходы ≤ X% дохода» — только в шаблоне | → эпик **E1** [SPEC_expenses §9](../../specs/features/SPEC_expenses.md) |
 
 ## Key Assumptions to Validate
 
