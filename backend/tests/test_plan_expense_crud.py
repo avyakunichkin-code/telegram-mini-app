@@ -7,25 +7,21 @@ import pytest
 from app.models import GameProfile, ProfileExpenseLine
 
 
-def _start_plan(client, auth_headers, *, budget=None, salary=80000):
-    payload = {
-        "profile_name": "Plan budget",
-        "save_kind": "plan",
-        "cash_balance": 50000,
-        "monthly_salary": salary,
-        "period_duration_seconds": 60,
-        "assets": [],
-        "liabilities": [],
-    }
-    if budget is not None:
-        payload["expense_budget"] = budget
-    return client.post("/api/game/start", headers=auth_headers, json=payload)
+def _start_plan(client, auth_headers, *, template_key="mq_plan_basic_v1"):
+    return client.post(
+        "/api/game/start",
+        headers=auth_headers,
+        json={
+            "profile_name": "Plan budget",
+            "save_kind": "plan",
+            "template_key": template_key,
+        },
+    )
 
 
 class TestPlanStartExpenses:
-    def test_plan_start_with_explicit_budget(self, client, auth_headers, db_session):
-        budget = {"housing": 15000, "food": 20000, "transport": 5000}
-        r = _start_plan(client, auth_headers, budget=budget)
+    def test_plan_start_from_template(self, client, auth_headers, db_session):
+        r = _start_plan(client, auth_headers)
         assert r.status_code == 200
         profile_id = r.json()["profile_id"]
 
@@ -38,7 +34,7 @@ class TestPlanStartExpenses:
             .filter(ProfileExpenseLine.game_profile_id == profile_id, ProfileExpenseLine.is_active == 1)
             .all()
         )
-        assert len(lines) == 3
+        assert len(lines) >= 5
         assert all(ln.source_kind == "plan" for ln in lines)
 
         ov = client.get("/api/finance/overview", headers=auth_headers)
@@ -46,21 +42,10 @@ class TestPlanStartExpenses:
         assert ov.json()["save_kind"] == "plan"
         assert ov.json()["monthly_burn_total"] == pytest.approx(40000.0, abs=1.0)
 
-    def test_plan_start_auto_budget_from_salary(self, client, auth_headers):
-        r = _start_plan(client, auth_headers, salary=100000)
-        assert r.status_code == 200
-        ex = client.get("/api/game/expenses", headers=auth_headers)
-        assert ex.status_code == 200
-        assert ex.json()["total"] == pytest.approx(55000.0, abs=500.0)
-
 
 class TestPlanExpenseCrud:
     def test_crud_lines_plan_only(self, client, auth_headers, db_session):
-        _start_plan(
-            client,
-            auth_headers,
-            budget={"food": 10000, "housing": 8000},
-        )
+        _start_plan(client, auth_headers)
 
         cats = client.get("/api/game/expenses/categories", headers=auth_headers)
         assert cats.status_code == 200
@@ -84,13 +69,13 @@ class TestPlanExpenseCrud:
         assert patched.json()["amount_monthly"] == 4500
 
         ov = client.get("/api/finance/overview", headers=auth_headers)
-        assert ov.json()["monthly_burn_total"] == pytest.approx(22500.0, abs=1.0)
+        assert ov.json()["monthly_burn_total"] == pytest.approx(44500.0, abs=1.0)
 
         deleted = client.delete(f"/api/game/expenses/lines/{line_id}", headers=auth_headers)
         assert deleted.status_code == 204
 
         ov2 = client.get("/api/finance/overview", headers=auth_headers)
-        assert ov2.json()["monthly_burn_total"] == pytest.approx(18000.0, abs=1.0)
+        assert ov2.json()["monthly_burn_total"] == pytest.approx(40000.0, abs=1.0)
 
     def test_game_profile_cannot_create_line(self, client, auth_headers):
         client.post(

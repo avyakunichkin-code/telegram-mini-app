@@ -239,7 +239,7 @@ def ensure_schema_compatibility() -> None:
         with engine.begin() as connection:
             for stmt in statements:
                 connection.execute(text(stmt))
-        print(f"✅ Схема обновлена: {len(statements)} изм.")
+        print(f"[OK] Схема обновлена: {len(statements)} изм.")
 
     # DROP legacy mode после появления save_kind (повторный inspect)
     inspector = inspect(engine)
@@ -248,7 +248,7 @@ def ensure_schema_compatibility() -> None:
         if "mode" in gp_cols and "save_kind" in gp_cols:
             with engine.begin() as connection:
                 connection.execute(text("ALTER TABLE game_profiles DROP COLUMN mode"))
-            print("✅ Удалена колонка game_profiles.mode (save_kind)")
+            print("[OK] Удалена колонка game_profiles.mode (save_kind)")
 
     # События: light/hardcore → game
     if "event_definitions" in inspector.get_table_names():
@@ -262,14 +262,22 @@ def ensure_schema_compatibility() -> None:
     # Каталог шаблонов старта Game (идемпотентно)
     inspector = inspect(engine)
     if "game_starter_templates" in inspector.get_table_names():
+        gst_cols = {item["name"] for item in inspector.get_columns("game_starter_templates")}
+        if "applies_to_save_kind" not in gst_cols:
+            with engine.begin() as connection:
+                connection.execute(
+                    text(
+                        "ALTER TABLE game_starter_templates ADD COLUMN applies_to_save_kind VARCHAR(20) NOT NULL DEFAULT 'game'"
+                    )
+                )
         stmt = text(
             """
             INSERT INTO game_starter_templates
               (template_key, title, difficulty_rank, base_monthly_lifestyle_expense,
-               blueprint_json, victory_config_json, is_active, sort_order)
+               blueprint_json, victory_config_json, is_active, sort_order, applies_to_save_kind)
             VALUES
               (:template_key, :title, :difficulty_rank, :base_expense,
-               :blueprint_json, '{}', 1, :sort_order)
+               :blueprint_json, '{}', 1, :sort_order, 'game')
             ON CONFLICT (template_key) DO NOTHING
             """
         )
@@ -322,7 +330,7 @@ except Exception:
 finally:
     _db_boot.close()
 
-print("✅ Таблицы созданы/проверены")
+print("[OK] Таблицы созданы/проверены")
 
 app = FastAPI(title="Telegram Mini App API", version="2.0.0")
 

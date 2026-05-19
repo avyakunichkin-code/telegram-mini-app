@@ -92,6 +92,27 @@ def seed_basic_template(db_session):
             sort_order=10,
         )
     )
+    db_session.add(
+        GameStarterTemplate(
+            template_key="mq_plan_basic_v1",
+            title="Plan: basic",
+            difficulty_rank=1,
+            base_monthly_lifestyle_expense=40000.0,
+            blueprint_json=json.dumps(
+                {
+                    "period_duration_seconds": 300,
+                    "cash_balance": 50000,
+                    "monthly_salary": 80000,
+                    "assets": [],
+                    "liabilities": [],
+                }
+            ),
+            victory_config_json="{}",
+            is_active=1,
+            sort_order=15,
+            applies_to_save_kind="plan",
+        )
+    )
     db_session.commit()
 
 

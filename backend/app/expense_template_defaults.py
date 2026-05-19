@@ -7,6 +7,9 @@ from __future__ import annotations
 
 from typing import Any
 
+from sqlalchemy.orm import Session
+
+
 # template_key -> { category_key: amount } — абсолютные суммы (не доли)
 EXPENSE_BUDGET_BY_TEMPLATE: dict[str, dict[str, float]] = {
     "mq_game_basic_v1": {
@@ -79,8 +82,13 @@ def expense_budget_for_template(
     template_key: str | None,
     base_monthly: float,
     blueprint: dict[str, Any] | None = None,
+    db: Session | None = None,
 ) -> dict[str, float]:
-    """Возвращает словарь category_key -> amount (≥ 0), сумма ≈ base_monthly."""
+    """Возвращает словарь category_key -> amount (≥ 0), сумма ≈ base_monthly.
+
+    Приоритет: ``blueprint.expense_budget`` → строки в БД ``game_starter_template_expense_allocations``
+    → пресеты Python ``EXPENSE_BUDGET_BY_TEMPLATE`` → доли ``_DEFAULT_SHARES``.
+    """
     bp = blueprint or {}
     raw = bp.get("expense_budget")
     if isinstance(raw, dict) and raw:
@@ -88,6 +96,21 @@ def expense_budget_for_template(
         return _normalize_sum(out, base_monthly)
 
     tk = (template_key or "").strip()
+    if db is not None and tk:
+        from .models import GameStarterTemplateExpenseAllocation
+
+        rows = (
+            db.query(GameStarterTemplateExpenseAllocation)
+            .filter(GameStarterTemplateExpenseAllocation.template_key == tk)
+            .all()
+        )
+        if rows:
+            weights = {str(r.category_key): max(0.0, float(r.weight or 0)) for r in rows}
+            total_w = sum(weights.values())
+            if total_w > 0:
+                rough = {k: float(base_monthly) * (weights[k] / total_w) for k in weights}
+                return _normalize_sum(rough, base_monthly)
+
     if tk in EXPENSE_BUDGET_BY_TEMPLATE:
         preset = dict(EXPENSE_BUDGET_BY_TEMPLATE[tk])
         if base_monthly > 0 and abs(sum(preset.values()) - base_monthly) > 0.01:

@@ -7,24 +7,14 @@ import { IllustrationGame, IllustrationPlan } from './icons/ModeIllustrations';
 /**
  * Шаг 1: название сохранения + выбор типа (Game → дальше / Plan → заглушка).
  */
-export function NewProfileKindScreen({ profileName, onProfileNameChange, onChooseGame, onChoosePlan, onBack }) {
-  const requireName = () => {
+export function NewProfileKindScreen({ profileName, onProfileNameChange, onChooseGame, onBack }) {
+  const handleGame = () => {
     const name = profileName.trim();
     if (!name) {
       showNotification('Введите название сохранения', 'error');
-      return null;
+      return;
     }
-    return name;
-  };
-
-  const handleGame = () => {
-    const name = requireName();
-    if (name) onChooseGame(name);
-  };
-
-  const handlePlan = () => {
-    const name = requireName();
-    if (name) onChoosePlan(name);
+    onChooseGame(name);
   };
 
   return (
@@ -68,15 +58,20 @@ export function NewProfileKindScreen({ profileName, onProfileNameChange, onChoos
               <span className="mq-profile-mode-card__desc">Симулятор с шаблонами и событиями периода.</span>
             </button>
 
-            <button type="button" className="mq-profile-mode-card mq-profile-mode-card--plan" onClick={handlePlan}>
+            <div
+              className="mq-profile-mode-card mq-profile-mode-card--plan mq-profile-mode-card--soon"
+              role="group"
+              aria-label="Режим План скоро будет доступен"
+            >
+              <span className="mq-profile-mode-card__badge mq-profile-mode-card__badge--soon">Скоро</span>
               <IllustrationPlan className="mq-profile-mode-card__art mq-profile-mode-card__art--plan" />
               <span className="mq-profile-mode-card__title">План</span>
               <span className="mq-profile-mode-card__desc">Свои цифры и статьи без игровых шаблонов.</span>
-            </button>
+            </div>
           </div>
 
           <p className="mq-profile-mode-footnote">
-            В «Плане» вы задаёте бюджет жизни вручную. В «Игре» старт только из каталога шаблонов.
+            Чтобы задать всё вручную, дождитесь режима «План». В «Игре» доступны только каталожные старты.
           </p>
         </div>
 

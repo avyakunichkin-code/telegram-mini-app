@@ -107,8 +107,9 @@ export const API = {
     activateGameProfile(id) {
         return apiCall(`/api/game/profiles/${id}/activate`, 'POST');
     },
-    listGameTemplates() {
-        return apiCall('/api/game/templates');
+    listGameTemplates(forSaveKind = null) {
+        const q = forSaveKind ? `?for_save_kind=${encodeURIComponent(forSaveKind)}` : '';
+        return apiCall(`/api/game/templates${q}`);
     },
     startNewGame(payload) {
         return apiCall('/api/game/start', 'POST', payload);

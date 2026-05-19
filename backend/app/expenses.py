@@ -118,7 +118,7 @@ def ensure_profile_expense_lines(db: Session, profile: GameProfile) -> None:
             except json.JSONDecodeError:
                 blueprint = {}
 
-    budget = expense_budget_for_template(template_key, base, blueprint)
+    budget = expense_budget_for_template(template_key, base, blueprint, db)
     seed_expense_lines_from_budget(
         db,
         profile,

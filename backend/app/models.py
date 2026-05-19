@@ -201,6 +201,25 @@ class GameStarterTemplate(Base):
     is_active = Column(Integer, nullable=False, default=1)
     sort_order = Column(Integer, nullable=False, default=100)
     created_at = Column(DateTime, default=datetime.utcnow)
+    # game — только каталог Game; plan — только Plan; any — оба (редко)
+    applies_to_save_kind = Column(String(20), nullable=False, default="game")
+
+
+class GameStarterTemplateExpenseAllocation(Base):
+    """Доли категорий для шаблона: сумма weight по template_key = 1 → суммы = base_monthly × weight."""
+
+    __tablename__ = "game_starter_template_expense_allocations"
+    __table_args__ = (UniqueConstraint("template_key", "category_key", name="uq_gst_exp_alloc_cat"),)
+
+    id = Column(Integer, primary_key=True, index=True)
+    template_key = Column(
+        String(80),
+        ForeignKey("game_starter_templates.template_key", ondelete="CASCADE"),
+        nullable=False,
+        index=True,
+    )
+    category_key = Column(String(64), nullable=False)
+    weight = Column(Float, nullable=False)
 
 
 # ==================== СОБЫТИЯ (MVP) ====================
