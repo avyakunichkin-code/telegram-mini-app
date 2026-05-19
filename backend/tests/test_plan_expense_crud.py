@@ -7,16 +7,16 @@ import pytest
 from app.models import GameProfile, ProfileExpenseLine
 
 
-def _start_plan(client, auth_headers, *, template_key="mq_plan_basic_v1"):
-    return client.post(
-        "/api/game/start",
-        headers=auth_headers,
-        json={
-            "profile_name": "Plan budget",
-            "save_kind": "plan",
-            "template_key": template_key,
-        },
-    )
+def _start_plan(client, auth_headers, *, template_key="mq_plan_basic_v1", budget=None):
+    payload = {
+        "profile_name": "Plan budget",
+        "save_kind": "plan",
+    }
+    if template_key:
+        payload["template_key"] = template_key
+    if budget is not None:
+        payload["expense_budget"] = budget
+    return client.post("/api/game/start", headers=auth_headers, json=payload)
 
 
 class TestPlanStartExpenses:
@@ -40,6 +40,24 @@ class TestPlanStartExpenses:
         ov = client.get("/api/finance/overview", headers=auth_headers)
         assert ov.status_code == 200
         assert ov.json()["save_kind"] == "plan"
+        assert ov.json()["monthly_burn_total"] == pytest.approx(40000.0, abs=1.0)
+
+    def test_plan_start_with_explicit_budget(self, client, auth_headers, db_session):
+        budget = {"housing": 15000, "food": 20000, "transport": 5000}
+        r = _start_plan(client, auth_headers, template_key=None, budget=budget)
+        assert r.status_code == 200
+        profile_id = r.json()["profile_id"]
+
+        lines = (
+            db_session.query(ProfileExpenseLine)
+            .filter(ProfileExpenseLine.game_profile_id == profile_id, ProfileExpenseLine.is_active == 1)
+            .all()
+        )
+        assert len(lines) == 3
+        assert all(ln.source_kind == "plan" for ln in lines)
+        assert all(ln.source_ref == "wizard" for ln in lines)
+
+        ov = client.get("/api/finance/overview", headers=auth_headers)
         assert ov.json()["monthly_burn_total"] == pytest.approx(40000.0, abs=1.0)
 
 

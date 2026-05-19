@@ -5,7 +5,8 @@ import { MqxTabHero } from '../MqxTabHero';
 import { IllustrationGame, IllustrationPlan } from './icons/ModeIllustrations';
 
 /**
- * Шаг 1: название сохранения + выбор типа (Game → дальше / Plan → заглушка).
+ * Шаг 1: название сохранения + выбор типа.
+ * Game → `GameTemplatePickScreen`; Plan → `BaseParamsScreen` (пока заглушка «Скоро»).
  */
 export function NewProfileKindScreen({ profileName, onProfileNameChange, onChooseGame, onBack }) {
   const handleGame = () => {

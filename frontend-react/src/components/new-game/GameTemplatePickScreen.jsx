@@ -8,23 +8,22 @@ import { GameStarterPicker } from '../GameStarterPicker';
 import { DEFAULT_PERIOD_DURATION_SECONDS, normalizeStarterTemplate } from '../../config/gameDefaults';
 
 /**
- * Шаг 2: шаблон старта из каталога (Game/Plan).
+ * Шаг 2 (Game): шаблон старта из каталога.
+ * Plan использует `BaseParamsScreen`, не этот экран.
  * Длительность периода — в `DEFAULT_PERIOD_DURATION_SECONDS`.
  */
-export function GameTemplatePickScreen({ profileName, saveKind = 'game', onBack, onJumpToGame }) {
+export function GameTemplatePickScreen({ profileName, onBack, onJumpToGame }) {
   const [templates, setTemplates] = useState([]);
   const [loading, setLoading] = useState(true);
   const [starting, setStarting] = useState(false);
   const [selectedKey, setSelectedKey] = useState(null);
-
-  const isPlan = saveKind === 'plan';
 
   useEffect(() => {
     let cancelled = false;
     (async () => {
       setLoading(true);
       try {
-        const rows = await API.listGameTemplates(isPlan ? 'plan' : 'game');
+        const rows = await API.listGameTemplates('game');
         if (cancelled) return;
         const raw = Array.isArray(rows) ? rows : [];
         const list = raw.map(normalizeStarterTemplate).filter(Boolean);
@@ -59,7 +58,7 @@ export function GameTemplatePickScreen({ profileName, saveKind = 'game', onBack,
     try {
       await API.startNewGame({
         profile_name: profileName.trim(),
-        save_kind: isPlan ? 'plan' : 'game',
+        save_kind: 'game',
         template_key: selectedKey,
         period_duration_seconds: DEFAULT_PERIOD_DURATION_SECONDS,
       });
@@ -77,10 +76,8 @@ export function GameTemplatePickScreen({ profileName, saveKind = 'game', onBack,
         <MqxTabHero
           sectionLabel="Новая игра"
           rightPill="Шаг 2"
-          title={isPlan ? 'Шаблон плана' : 'Шаблон игры'}
-          subtitle={isPlan
-            ? 'Выберите стартовый сценарий плана. Дальше — можно редактировать статьи расходов в «Финансах».'
-            : 'Один тап по сценарию и старт партии. Длительность периода сейчас фиксируется в конфиге клиента.'}
+          title="Шаблон игры"
+          subtitle="Один тап по сценарию и старт партии. Длительность периода сейчас фиксируется в конфиге клиента."
         />
       }
     >
@@ -88,9 +85,7 @@ export function GameTemplatePickScreen({ profileName, saveKind = 'game', onBack,
         <div className="mq-enter-item mqx-card">
           <div className="mqx-card__kicker">Профиль</div>
           <div className="mqx-card__title">{profileName.trim() || 'Без названия'}</div>
-          <div className="mqx-card__sub">
-            Режим: {isPlan ? 'план' : 'игра'} · тип сохранения менять нельзя.
-          </div>
+          <div className="mqx-card__sub">Режим: игра · тип сохранения менять нельзя.</div>
         </div>
 
         <div className="mq-enter-item mqx-card">

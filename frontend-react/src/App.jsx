@@ -8,6 +8,7 @@ import { RegisterForm } from './components/RegisterForm';
 import { StartMenuScreen } from './components/StartMenuScreen';
 import { NewProfileKindScreen } from './components/new-game/NewProfileKindScreen';
 import { GameTemplatePickScreen } from './components/new-game/GameTemplatePickScreen';
+import { BaseParamsScreen } from './components/BaseParamsScreen';
 import { GameScreen } from './components/GameScreen';
 import { ToastHost } from './components/ToastHost';
 import { MqCatalogScreen } from './components/mqx/catalog/MqCatalogScreen';
@@ -24,7 +25,7 @@ function GameAppFlowShell({ children }) {
 
 function GameApp() {
   const navigate = useNavigate();
-  const [screen, setScreen] = useState('start'); // start | newProfileKind | gameTemplates | game
+  const [screen, setScreen] = useState('start'); // start | newProfileKind | gameTemplates | planSetup | game
   const [newGameProfileName, setNewGameProfileName] = useState('');
   const { logout } = useAuth();
 
@@ -38,7 +39,16 @@ function GameApp() {
     setScreen('gameTemplates');
   };
 
+  const handleChoosePlanMode = (name) => {
+    setNewGameProfileName(name);
+    setScreen('planSetup');
+  };
+
   const handleBackFromTemplates = () => {
+    setScreen('newProfileKind');
+  };
+
+  const handleBackFromPlanSetup = () => {
     setScreen('newProfileKind');
   };
 
@@ -83,9 +93,21 @@ function GameApp() {
       <GameAppFlowShell>
         <GameTemplatePickScreen
           profileName={newGameProfileName}
-          saveKind="game"
           onBack={handleBackFromTemplates}
           onJumpToGame={handleGameStarted}
+        />
+      </GameAppFlowShell>
+    );
+  }
+
+  if (screen === 'planSetup') {
+    return (
+      <GameAppFlowShell>
+        <BaseParamsScreen
+          profileName={newGameProfileName}
+          saveKind="plan"
+          onBack={handleBackFromPlanSetup}
+          onGameStarted={handleGameStarted}
         />
       </GameAppFlowShell>
     );

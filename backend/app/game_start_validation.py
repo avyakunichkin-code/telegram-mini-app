@@ -21,31 +21,32 @@ def validate_game_start_request(payload: GameStartRequest, db: Session) -> None:
         raise HTTPException(status_code=400, detail="save_kind must be 'game' or 'plan'")
 
     tk = (payload.template_key or "").strip()
-    if not tk:
+    if save_kind == "game" and not tk:
         raise HTTPException(
             status_code=400,
-            detail="template_key is required — выберите стартовый шаблон из каталога",
+            detail="game saves require template_key (starter template from catalog)",
         )
 
-    tmpl = (
-        db.query(GameStarterTemplate)
-        .filter(GameStarterTemplate.template_key == tk, GameStarterTemplate.is_active == 1)
-        .first()
-    )
-    if not tmpl:
-        raise HTTPException(status_code=404, detail="starter template not found")
+    if tk:
+        tmpl = (
+            db.query(GameStarterTemplate)
+            .filter(GameStarterTemplate.template_key == tk, GameStarterTemplate.is_active == 1)
+            .first()
+        )
+        if not tmpl:
+            raise HTTPException(status_code=404, detail="starter template not found")
 
-    applies = (getattr(tmpl, "applies_to_save_kind", None) or "game").strip().lower()
-    if save_kind == "game" and applies not in ("game", "any"):
-        raise HTTPException(
-            status_code=400,
-            detail="This starter template is only for Plan mode",
-        )
-    if save_kind == "plan" and applies not in ("plan", "any"):
-        raise HTTPException(
-            status_code=400,
-            detail="This starter template is only for Game mode",
-        )
+        applies = (getattr(tmpl, "applies_to_save_kind", None) or "game").strip().lower()
+        if save_kind == "game" and applies not in ("game", "any"):
+            raise HTTPException(
+                status_code=400,
+                detail="This starter template is only for Plan mode",
+            )
+        if save_kind == "plan" and applies not in ("plan", "any"):
+            raise HTTPException(
+                status_code=400,
+                detail="This starter template is only for Game mode",
+            )
 
     if payload.period_duration_seconds < 10:
         raise HTTPException(status_code=400, detail="period_duration_seconds must be >= 10")

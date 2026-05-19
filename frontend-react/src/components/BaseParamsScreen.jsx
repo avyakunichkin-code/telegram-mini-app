@@ -10,6 +10,7 @@ import { defaultPlanExpenseBudget, sumExpenseBudget } from '../utils/planExpense
 import { MqxShell } from './MqxShell';
 import { MqxTabHero } from './MqxTabHero';
 
+/** Мастер старта Plan: cash, зарплата, статьи расходов (без game-шаблонов каталога). */
 export function BaseParamsScreen({
   profileName,
   saveKind = 'game',
