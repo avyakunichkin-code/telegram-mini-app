@@ -25,6 +25,7 @@
 2. Premium-вкладки игры (`DashboardPremium`, `FinancePremium`, `AnalyticsPremium`, `MenuPremium`) — **эталон**; legacy `*Section.jsx` не расширяем, только поддерживаем до удаления.
 3. Язык интерфейса — **русский**; латиница допустима в терминах API/коде, не в видимых подписях.
 4. TMA: одна колонка `#root` max-width 480px, нижний таббар с safe-area.
+5. **Компонентная база MQX:** новые или существенно меняющие внешний вид элементы в `mqx/` и на premium-экранах проходят цикл из [`DESIGN_WORKFLOW.md`](../../frontend-react/src/components/mqx/DESIGN_WORKFLOW.md); этапы не пропускаются без явного согласования (исключение: багфикс/hotfix). Правило дублируется в `.cursor/rules/money-quest-frontend-mqx.mdc` и [`agents/CURSOR_SKILLS.md`](../agents/CURSOR_SKILLS.md).
 
 ---
 
@@ -145,13 +146,25 @@ export function ExampleBlock({ overview }) {
 
 **Процесс:** варианты в [`design-lab/row-actions/`](../../design-lab/row-actions/) → утверждение → `mqx/primitives/` → витрина `#/dev/mqx` → prod. См. [`DESIGN_WORKFLOW.md`](../../frontend-react/src/components/mqx/DESIGN_WORKFLOW.md).
 
-**Утверждено (2026-05):** вариант **B** — компактная иконка **+** / **−**; подпись действия только в `aria-label`; для всех разрушающих действий — **подтверждение** (`MqxConfirmDialog`).
+**Утверждено (2026-05):** вариант **B** — компактная кнопка **+** / удаление; по умолчанию **корзина** (`IconMetricTrash`, **F2**); символ **−** — `MqxRowAction` **`removeVisual="minus"`** (**F1**). Подпись действия только в `aria-label`; для всех разрушающих действий — **подтверждение** (`MqxConfirmDialog`). **E2:** если в строке есть `*PositionMetrics` / `MetricsRow` с иконками (`MetricInlineItem`), **не дублировать** те же суммы в `subtitle` у `MqxFinListRow`.
+
+### Порядок и формат метрик в строке (`MetricsRow` / `MetricInlineItem`)
+
+Слева направо (пропускайте отсутствующие слоты):
+
+1. **Основная сумма** (`glyph="coin"`) — остаток / стоимость / лимит, если применимо.
+2. **Исходящие платежи** (`glyph="down"`, `tone="neg"`) — один или несколько слотов (например регулярный платёж, затем просрочка).
+3. **Доход** (`glyph="up"`, `tone="pos"`), если есть.
+4. **Процентная ставка** (`glyph="percent"`) — **только число** без суффикса `%`; смысл «проценты годовых» задаёт глиф и **цвет**: платим — `tone="neg"`, получаем — `tone="pos"`.
+5. **Специфика страховок и прочее** (`term`, дополнительные суммы) — после блока ставки.
+
+**Суммы в ₽:** в подписи значения **не** добавлять `/мес`; пояснение «за период» / соответствие помесячной модели игры — в **`tip`** (`title` у `MetricInlineItem`, нативная подсказка при наведении / long-press).
 
 | Компонент | Назначение | Где использовать |
 |-----------|------------|------------------|
-| `MqxRowAction` | Кнопка **+** (add) или **−** (remove), hit-area ≥ 44px | Списки позиций, шаблоны с «+», страховки, инвестиции |
+| `MqxRowAction` | **+** (add) или **корзина** по умолчанию / **−** при `removeVisual="minus"`, hit-area ≥ 44px | Списки позиций, шаблоны с «+», страховки, инвестиции |
 | `MqxFinListRow` | Компактная строка: заголовок, подзаголовок/метрики, trailing action | Режим «Позиции» (активы, долги, депозиты) |
-| `MqxConfirmDialog` | Подтверждение опасного действия (Modal) | Любое **−** / отмена полиса / закрытие позиции |
+| `MqxConfirmDialog` | Подтверждение опасного действия (Modal) | Любое удаление / отмена полиса / закрытие позиции |
 | `useMqxConfirm` | Хук: `await confirm({ title, message })` | Экраны с удалением |
 | `CapitalPositionCard` | Карточка с accent + метриками + action | Только **каталог шаблонов** («Добавить»), не список позиций |
 
@@ -164,7 +177,12 @@ export function ExampleBlock({ overview }) {
 **Платформы:**
 
 - **Touch (TMA):** `:active` + достаточная зона нажатия.
-- **Desktop / Telegram desktop / браузер:** `@media (hover: hover)` — подсветка **−** (фон danger-soft, border); `:focus-visible` — outline.
+- **Desktop / Telegram desktop / браузер:** `@media (hover: hover)` — подсветка кнопки удаления (фон danger-soft, border); `:focus-visible` — outline.
+
+**Иконки в строке:**
+
+- В полоске метрик — только глифы **`coin` | `down` | `up` | `percent` | `term`** в `MetricInlineItem` / [`FinanceMetricIcons.jsx`](../../frontend-react/src/components/mqx/icons/FinanceMetricIcons.jsx).
+- В кнопке удаления по умолчанию **корзина** (`IconMetricTrash`, **F2**); символ **−** — при **`removeVisual="minus"`** (**F1**); сравнение в `design-lab/row-actions`, витрина `#/dev/mqx`.
 
 **Вне scope до отдельного эпика:** Plan-мастер (`BaseParamsScreen`), `PlanExpenseEditor` — не менять при унификации финансов.
 
@@ -319,11 +337,11 @@ flowchart TD
   - Verify: grep в diff PR.
   - Files: `index.css`
 
-- [ ] **P1: Row actions — единый − и confirm**
-  - Acceptance: позиции портфеля/инвестиций/страховок — `MqxFinListRow` + `MqxRowAction`; любое удаление через `MqxConfirmDialog`.
+- [ ] **P1: Row actions — корзина (F2), confirm и метрики**
+  - Acceptance: позиции портфеля/инвестиций/страховок — `MqxFinListRow` + `MqxRowAction` (по умолчанию корзина); любое удаление через `MqxConfirmDialog`; метрики — порядок и формат из spec (без `/мес` и без `%` в значении ставки).
   - Verify: `#/dev/mqx` → «Паттерны действий»; ручной проход Финансы → Позиции.
-  - Files: `mqx/primitives/MqxRowAction.jsx`, `MqxFinListRow.jsx`, `MqxConfirmDialog.jsx`, `CapitalPortfolioPanels.jsx`, `index.css`
-  - Design: [`design-lab/row-actions/`](../../design-lab/row-actions/) — вариант **B** утверждён.
+  - Files: `mqx/primitives/MqxRowAction.jsx`, `mqx/metrics/*`, `MqxFinListRow.jsx`, `MqxConfirmDialog.jsx`, `CapitalPortfolioPanels.jsx`, `index.css`
+  - Design: [`design-lab/row-actions/`](../../design-lab/row-actions/) — **B** + **F2** утверждены.
 
 ---
 

@@ -1,7 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy import or_
 from sqlalchemy.orm import Session
-from datetime import datetime
 from typing import List, Optional
 import json
 
@@ -26,6 +25,7 @@ from ..schemas import (
 from ..expense_template_defaults import default_plan_expense_budget, expense_budget_for_template
 from ..expenses import ensure_expense_category_catalog, seed_expense_lines_from_budget
 from ..game_start_validation import validate_game_start_request
+from ..timeutil import utc_now_naive
 from ..game_time import (
     get_active_game_profile,
     sync_time,
@@ -276,7 +276,7 @@ async def start_new_game(
         negative_periods_count=0,
         period_index=1,
         time_state="pause",
-        period_anchor_at=datetime.utcnow(),
+        period_anchor_at=utc_now_naive(),
         base_params_locked=1,
         onboarding_state="started",
     )

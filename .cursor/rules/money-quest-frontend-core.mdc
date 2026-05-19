@@ -13,6 +13,7 @@ alwaysApply: false
 - **Новый игровой UI** — только `*Premium.jsx` + `mqx-*` (`DashboardPremium`, `FinancePremium`, `AnalyticsPremium`).
 - **Не расширять** legacy `*Section.jsx` (`premium === false`); багфиксы — минимальный diff.
 - Общие примитивы — `frontend-react/src/components/mqx/`.
+- **Компонентная база MQX:** новые/переработанные блоки UI в `mqx/` и крупные визуальные изменения на premium-экранах — **только по согласованному FLOW** в [`frontend-react/src/components/mqx/DESIGN_WORKFLOW.md`](frontend-react/src/components/mqx/DESIGN_WORKFLOW.md) (`design-lab` → утверждение → `mqx/` → `#/dev/mqx` → prod). Исключения: мелкий багфикс/hotfix без смены дизайна. Правило с `globs` на JSX/CSS: см. `money-quest-frontend-mqx.mdc`.
 
 ## Язык и контент
 

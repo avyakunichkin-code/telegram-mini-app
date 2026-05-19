@@ -1,8 +1,8 @@
-from datetime import datetime
 from sqlalchemy import Column, Integer, String, DateTime, Text, ForeignKey, Float, UniqueConstraint
 from sqlalchemy.orm import relationship
 
 from .database import Base
+from .timeutil import utc_now_naive
 
 
 class User(Base):
@@ -14,7 +14,7 @@ class User(Base):
     hashed_password = Column(String(200), nullable=False)
     full_name = Column(String(100))
     telegram_id = Column(Integer, unique=True, nullable=True)
-    created_at = Column(DateTime, default=datetime.utcnow)
+    created_at = Column(DateTime, default=utc_now_naive)
 
 
 class ApiIdempotencyRecord(Base):
@@ -29,7 +29,7 @@ class ApiIdempotencyRecord(Base):
     idempotency_key = Column(String(128), nullable=False)
     status_code = Column(Integer, nullable=False, default=200)
     response_json = Column(Text, nullable=False, default="{}")
-    created_at = Column(DateTime, default=datetime.utcnow)
+    created_at = Column(DateTime, default=utc_now_naive)
 
 
 # ==================== Игровые модели (партия = game_profile) ====================
@@ -54,7 +54,7 @@ class GameProfile(Base):
     time_state = Column(String(20), nullable=False, default="pause")
     period_index = Column(Integer, nullable=False, default=1)
     period_duration_seconds = Column(Integer, nullable=False, default=300)
-    period_anchor_at = Column(DateTime, nullable=False, default=datetime.utcnow)
+    period_anchor_at = Column(DateTime, nullable=False, default=utc_now_naive)
     base_params_locked = Column(Integer, nullable=False, default=0)
     onboarding_state = Column(String(30), nullable=False, default="draft")
     # НОВЫЕ ПОЛЯ:
@@ -64,8 +64,8 @@ class GameProfile(Base):
     last_period_salary_claimed = Column(Integer, nullable=False, default=0)
     clean_period_streak = Column(Integer, nullable=False, default=0)
 
-    created_at = Column(DateTime, default=datetime.utcnow)
-    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    created_at = Column(DateTime, default=utc_now_naive)
+    updated_at = Column(DateTime, default=utc_now_naive, onupdate=utc_now_naive)
 
     user = relationship("User", backref="game_profiles")
     finance_salary = relationship("FinanceSalary", back_populates="game_profile", uselist=False, cascade="all, delete-orphan")
@@ -82,7 +82,7 @@ class FinanceSalary(Base):
     game_profile_id = Column(Integer, ForeignKey("game_profiles.id"), nullable=False, unique=True, index=True)
     monthly_amount = Column(Float, nullable=False, default=0)
     monthly_receipts_count = Column(Integer, nullable=False, default=1)
-    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    updated_at = Column(DateTime, default=utc_now_naive, onupdate=utc_now_naive)
     game_profile = relationship("GameProfile", back_populates="finance_salary")
 
 
@@ -98,7 +98,7 @@ class FinanceLiability(Base):
     overdue_amount = Column(Float, nullable=False, default=0)  # сумма просрочки (неоплаченная часть)
     overdue_periods = Column(Integer, nullable=False, default=0)  # сколько периодов подряд есть просрочка
     is_active = Column(Integer, nullable=False, default=1)   # НОВОЕ
-    created_at = Column(DateTime, default=datetime.utcnow)
+    created_at = Column(DateTime, default=utc_now_naive)
     game_profile = relationship("GameProfile", back_populates="finance_liabilities")
 
 
@@ -113,7 +113,7 @@ class FinanceAsset(Base):
     monthly_maintenance_cost = Column(Float, nullable=False, default=0)
     monthly_income = Column(Float, nullable=False, default=0)  # доход от аренды/купоны/проценты
     is_active = Column(Integer, nullable=False, default=1)   # НОВОЕ
-    created_at = Column(DateTime, default=datetime.utcnow)
+    created_at = Column(DateTime, default=utc_now_naive)
     game_profile = relationship("GameProfile", back_populates="finance_assets")
 
 
@@ -131,7 +131,7 @@ class AssetTemplate(Base):
     monthly_income = Column(Float, nullable=False, default=0)
     is_active = Column(Integer, nullable=False, default=1)
     sort_order = Column(Integer, nullable=False, default=100)
-    created_at = Column(DateTime, default=datetime.utcnow)
+    created_at = Column(DateTime, default=utc_now_naive)
 
 
 class LiabilityTemplate(Base):
@@ -146,7 +146,7 @@ class LiabilityTemplate(Base):
     annual_rate_percent = Column(Float, nullable=False)
     is_active = Column(Integer, nullable=False, default=1)
     sort_order = Column(Integer, nullable=False, default=100)
-    created_at = Column(DateTime, default=datetime.utcnow)
+    created_at = Column(DateTime, default=utc_now_naive)
 
 
 class ExpenseCategoryDefinition(Base):
@@ -160,7 +160,7 @@ class ExpenseCategoryDefinition(Base):
     sort_order = Column(Integer, nullable=False, default=100)
     icon_key = Column(String(40), nullable=True)
     is_active = Column(Integer, nullable=False, default=1)
-    created_at = Column(DateTime, default=datetime.utcnow)
+    created_at = Column(DateTime, default=utc_now_naive)
 
 
 class ProfileExpenseLine(Base):
@@ -180,7 +180,7 @@ class ProfileExpenseLine(Base):
     expires_period_index = Column(Integer, nullable=True)
     revoked_at = Column(DateTime, nullable=True)
     is_active = Column(Integer, nullable=False, default=1)
-    created_at = Column(DateTime, default=datetime.utcnow)
+    created_at = Column(DateTime, default=utc_now_naive)
 
     game_profile = relationship("GameProfile", backref="expense_lines")
     category = relationship("ExpenseCategoryDefinition")
@@ -200,7 +200,7 @@ class GameStarterTemplate(Base):
     victory_config_json = Column(Text, nullable=False, default="{}")
     is_active = Column(Integer, nullable=False, default=1)
     sort_order = Column(Integer, nullable=False, default=100)
-    created_at = Column(DateTime, default=datetime.utcnow)
+    created_at = Column(DateTime, default=utc_now_naive)
     # game — только каталог Game; plan — только Plan; any — оба (редко)
     applies_to_save_kind = Column(String(20), nullable=False, default="game")
 
@@ -245,7 +245,7 @@ class EventDefinition(Base):
     repeat_policy = Column(String(32), nullable=False, default="repeatable")  # repeatable | once_per_profile | max_per_profile
     repeat_max = Column(Integer, nullable=True)
     cooldown_periods = Column(Integer, nullable=False, default=0)
-    created_at = Column(DateTime, default=datetime.utcnow)
+    created_at = Column(DateTime, default=utc_now_naive)
 
     choices = relationship("EventChoice", back_populates="definition", cascade="all, delete-orphan")
     profile_counters = relationship("EventProfileCounter", back_populates="definition", cascade="all, delete-orphan")
@@ -272,7 +272,7 @@ class EventProfileCounter(Base):
     definition_id = Column(Integer, ForeignKey("event_definitions.id"), primary_key=True, nullable=False)
     times_selected = Column(Integer, nullable=False, default=0)
     last_selected_period_index = Column(Integer, nullable=True)
-    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    updated_at = Column(DateTime, default=utc_now_naive, onupdate=utc_now_naive)
 
     definition = relationship("EventDefinition", back_populates="profile_counters")
 
@@ -286,7 +286,7 @@ class EventInstance(Base):
     definition_id = Column(Integer, ForeignKey("event_definitions.id"), nullable=False, index=True)
     status = Column(String(20), nullable=False, default="pending")  # pending/selected/expired
     selected_choice_id = Column(Integer, ForeignKey("event_choices.id"), nullable=True)
-    created_at = Column(DateTime, default=datetime.utcnow)
+    created_at = Column(DateTime, default=utc_now_naive)
     resolved_at = Column(DateTime, nullable=True)
 
 
@@ -304,7 +304,7 @@ class InvestmentPosition(Base):
     started_period = Column(Integer, nullable=False)
     last_accrued_period = Column(Integer, nullable=False)
     is_active = Column(Integer, nullable=False, default=1)
-    created_at = Column(DateTime, default=datetime.utcnow)
+    created_at = Column(DateTime, default=utc_now_naive)
 
 
 # ==================== СТРАХОВКИ (EASY MVP) ====================
@@ -326,7 +326,7 @@ class InsurancePolicy(Base):
     expires_period_index = Column(Integer, nullable=True)
     claimed_period_index = Column(Integer, nullable=True)
     is_active = Column(Integer, nullable=False, default=1)
-    created_at = Column(DateTime, default=datetime.utcnow)
+    created_at = Column(DateTime, default=utc_now_naive)
 
 
 
@@ -345,7 +345,7 @@ class PeriodSnapshot(Base):
     completed_at = Column(DateTime, nullable=True)
     net_savings = Column(Float, nullable=False, default=0)
     xp_earned = Column(Integer, nullable=False, default=0)
-    created_at = Column(DateTime, default=datetime.utcnow)
+    created_at = Column(DateTime, default=utc_now_naive)
     game_profile = relationship("GameProfile", back_populates="period_snapshots")
 
 
@@ -364,7 +364,7 @@ class PeriodEconomyClosing(Base):
     safety_fund_balance = Column(Float, nullable=False, default=0)
     total_overdue_amount = Column(Float, nullable=False, default=0)
     monthly_burn_total = Column(Float, nullable=False, default=0)
-    closed_at = Column(DateTime, default=datetime.utcnow)
+    closed_at = Column(DateTime, default=utc_now_naive)
 
 
 class Transaction(Base):
@@ -376,7 +376,7 @@ class Transaction(Base):
     type = Column(String(50), nullable=False)
     description = Column(Text, nullable=True)
     period_index = Column(Integer, nullable=False)
-    timestamp = Column(DateTime, default=datetime.utcnow)
+    timestamp = Column(DateTime, default=utc_now_naive)
 
     game_profile = relationship("GameProfile", back_populates="transactions")
 
@@ -395,7 +395,7 @@ class AchievementChain(Base):
     max_tier = Column(Integer, nullable=False, default=1)
     is_active = Column(Integer, nullable=False, default=1)
     sort_order = Column(Integer, nullable=False, default=100)
-    created_at = Column(DateTime, default=datetime.utcnow)
+    created_at = Column(DateTime, default=utc_now_naive)
 
     tiers = relationship(
         "AchievementTierDefinition",
@@ -430,7 +430,7 @@ class ProfileAchievementUnlock(Base):
     tier_definition_id = Column(
         Integer, ForeignKey("achievement_tier_definitions.id"), primary_key=True, nullable=False
     )
-    unlocked_at = Column(DateTime, default=datetime.utcnow)
+    unlocked_at = Column(DateTime, default=utc_now_naive)
     period_index = Column(Integer, nullable=False, default=1)
 
     tier_definition = relationship("AchievementTierDefinition", back_populates="unlocks")
@@ -449,4 +449,4 @@ class NotificationLog(Base):
     game_profile_id = Column(Integer, ForeignKey("game_profiles.id"), nullable=True, index=True)
     payload_json = Column(Text, nullable=False, default="{}")
     telegram_sent = Column(Integer, nullable=False, default=0)
-    created_at = Column(DateTime, default=datetime.utcnow, index=True)
+    created_at = Column(DateTime, default=utc_now_naive, index=True)

@@ -51,6 +51,7 @@ Remember: Claude is capable of extraordinary creative work. Don't hold back, sho
 | Брендбук (печать / PDF) | [`docs/reference/brandbook/brandbook-print.html`](../../../../docs/reference/brandbook/brandbook-print.html) |
 | Контракт экранов TMA | [`docs/specs/SPEC_FRONTEND_UI.md`](../../../../docs/specs/SPEC_FRONTEND_UI.md) |
 | Токены и MQX в коде | [`frontend-react/src/index.css`](../../src/index.css) |
+| **FLOW компонентной базы MQX (обязательно)** | [`src/components/mqx/DESIGN_WORKFLOW.md`](../../../src/components/mqx/DESIGN_WORKFLOW.md) — не обходить без явного согласования; исключение: багфикс/hotfix без смены дизайна |
 
 **Обязательно для TMA:**
 

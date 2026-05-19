@@ -17,6 +17,14 @@ Build production-quality user interfaces that are accessible, performant, and vi
 - Adding interactivity or state management
 - Fixing visual or UX issues
 
+## Money Quest — компонентная база MQX (этот репозиторий)
+
+Если задача касается **`frontend-react/src/components/mqx/`**, новых классов `mqx-*` в `index.css` или **нового визуального паттерна** на `*Premium.jsx`:
+
+1. **Сначала прочитай и следуй** [`frontend-react/src/components/mqx/DESIGN_WORKFLOW.md`](../../../frontend-react/src/components/mqx/DESIGN_WORKFLOW.md): варианты в `design-lab/<тема>/` → выбор → **явное утверждение в чате** → реализация в `mqx/` + секция `#/dev/mqx` → перенос в prod.
+2. **Не начинай** с правок игровых экранов, минуя этот цикл (исключение: **минимальный багфикс / hotfix** без смены дизайна — см. тот же документ).
+3. Правила Cursor: `money-quest-frontend-mqx.mdc`, `money-quest-frontend-core.mdc`; контракт UI: [`docs/specs/SPEC_FRONTEND_UI.md`](../../../docs/specs/SPEC_FRONTEND_UI.md).
+
 ## Component Architecture
 
 ### File Structure
@@ -326,3 +334,4 @@ After building UI:
 - [ ] Loading, error, and empty states all handled
 - [ ] Follows the project's design system (spacing, colors, typography)
 - [ ] No accessibility warnings in dev tools or axe-core
+- [ ] **Money Quest:** при новых/крупных изменениях MQX — пройден [`DESIGN_WORKFLOW.md`](../../../frontend-react/src/components/mqx/DESIGN_WORKFLOW.md) (если это не согласованный hotfix без смены дизайна)

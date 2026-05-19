@@ -1,6 +1,7 @@
 :root {
   --mq-violet: #6d28d9;
   --mq-violet-deep: #5b21b6;
+  --mq-emerald: #059669;
   --mq-danger: #dc2626;
   --mq-danger-soft: #fff1f2;
   --mq-ink: #0f1115;
@@ -9,14 +10,19 @@
   --glass: rgba(255, 255, 255, 0.72);
   --glass-border: rgba(15, 17, 21, 0.1);
   --text-muted: #6b7280;
+  /* явные цвета текста для страницы (не зависят от Telegram) */
+  --lab-text: #0f1115;
+  --lab-text-soft: #4b5563;
 }
 
 [data-theme='dark'] {
-  --mq-mist: #0f1115;
-  --glass: rgba(30, 31, 38, 0.85);
-  --glass-border: rgba(255, 255, 255, 0.12);
-  --mq-danger-soft: rgba(190, 18, 60, 0.15);
-  --text-muted: #9ca3af;
+  --mq-mist: #12131a;
+  --glass: rgba(28, 30, 38, 0.92);
+  --glass-border: rgba(255, 255, 255, 0.14);
+  --mq-danger-soft: rgba(254, 202, 202, 0.12);
+  --text-muted: #a1a7b3;
+  --lab-text: #f3f4f6;
+  --lab-text-soft: #c4c9d4;
 }
 
 * {
@@ -28,7 +34,7 @@ body {
   font-family: system-ui, 'Segoe UI', Roboto, sans-serif;
   font-size: 15px;
   background: var(--mq-mist);
-  color: var(--mq-ink);
+  color: var(--lab-text);
 }
 
 .lab-header {
@@ -36,8 +42,49 @@ body {
   border-bottom: 1px solid var(--glass-border);
   position: sticky;
   top: 0;
-  background: color-mix(in srgb, var(--mq-mist) 92%, transparent);
+  background: color-mix(in srgb, var(--mq-mist) 94%, transparent);
   backdrop-filter: blur(8px);
+}
+
+.lab-header h1 {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: var(--lab-text);
+}
+
+.lab-header p,
+.lab-section-desc {
+  color: var(--text-muted);
+}
+
+.lab-theme-row {
+  margin-top: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+[data-theme-btn] {
+  font: inherit;
+  font-size: 13px;
+  font-weight: 700;
+  padding: 8px 14px;
+  border-radius: 10px;
+  cursor: pointer;
+  border: 1px solid var(--glass-border);
+  background: var(--glass);
+  color: var(--lab-text);
+}
+
+[data-theme-btn]:hover {
+  border-color: color-mix(in srgb, var(--mq-violet) 35%, var(--glass-border));
+}
+
+[data-theme-btn].is-active {
+  background: var(--mq-violet);
+  border-color: var(--mq-violet-deep);
+  color: #fff;
 }
 
 .lab-wrap {
@@ -47,6 +94,12 @@ body {
   display: flex;
   flex-direction: column;
   gap: 28px;
+}
+
+.lab-section-desc {
+  margin: 6px 0 0;
+  font-size: 13px;
+  line-height: 1.45;
 }
 
 .lab-section__id {
@@ -63,12 +116,16 @@ body {
 }
 
 .lab-section__id--ok {
-  background: var(--mq-emerald, #059669);
+  background: var(--mq-emerald);
+}
+
+.lab-section__id--pick {
+  background: color-mix(in srgb, var(--mq-violet) 55%, var(--lab-text));
 }
 
 .lab-row {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: 12px;
   padding: 12px 14px;
   border-radius: 14px;
@@ -83,12 +140,82 @@ body {
 
 .lab-row__title {
   font-weight: 750;
+  color: var(--lab-text);
 }
 
 .lab-row__sub {
   font-size: 12px;
-  color: var(--text-muted);
+  color: var(--lab-text-soft);
   margin-top: 4px;
+}
+
+/* Полоска метрик — те же глифы, что `FinanceMetricIcons` + `MetricInlineItem` */
+.lab-metrics {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px 14px;
+  margin-top: 8px;
+}
+
+.lab-inline {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: color-mix(in srgb, var(--lab-text) 88%, transparent);
+}
+
+.lab-inline--neg {
+  color: var(--mq-danger);
+}
+
+.lab-inline--pos {
+  color: var(--mq-emerald);
+}
+
+.lab-glyph {
+  display: grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  flex-shrink: 0;
+  color: #7c3aed;
+}
+
+.lab-glyph svg {
+  width: 16px;
+  height: 16px;
+}
+
+.lab-glyph--down {
+  color: var(--mq-danger);
+}
+
+.lab-glyph--up {
+  color: var(--mq-emerald);
+}
+
+.lab-glyph--pct {
+  color: var(--mq-danger);
+}
+
+.lab-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.lab-compare-label {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-muted);
 }
 
 /* A — wide delete */
@@ -103,7 +230,12 @@ body {
   cursor: pointer;
 }
 
-/* B — approved compact minus */
+[data-theme='dark'] .btn-a-del {
+  color: #fecdd3;
+  border-color: rgba(251, 113, 133, 0.35);
+}
+
+/* B — compact + / − */
 .btn-b {
   width: 40px;
   height: 40px;
@@ -124,6 +256,15 @@ body {
   color: #fff;
 }
 
+.btn-b--icon {
+  color: rgba(220, 38, 38, 0.95);
+}
+
+.btn-b--icon svg {
+  width: 18px;
+  height: 18px;
+}
+
 @media (hover: hover) {
   .btn-b:not(.btn-b--add):hover {
     background: var(--mq-danger-soft);
@@ -141,13 +282,17 @@ body {
   border-radius: 999px;
   border: 1px solid rgba(220, 38, 38, 0.35);
   background: transparent;
-  color: #dc2626;
+  color: #f87171;
   font-size: 20px;
   font-weight: 800;
   cursor: pointer;
 }
 
-/* D — mixed prod */
+[data-theme='dark'] .btn-c {
+  color: #fca5a5;
+}
+
+/* D — mixed prod sizes */
 .btn-d-plus {
   width: 34px;
   height: 34px;

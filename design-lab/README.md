@@ -15,7 +15,7 @@
 | [shell/](shell/) | **варианты A/B/C** — обсуждение | Дашборд main; `cd shell && npx serve .` |
 | `dashboard/` | план | Герой, stat-блоки |
 | [events/](events/) | **внедрено в prod** | EventCard, EventCarouselOverlay, MqxPill |
-| [row-actions/](row-actions/) | **утверждён B → prod** | MqxRowAction, MqxFinListRow, MqxConfirmDialog |
+| [row-actions/](row-actions/) | **B + F2 → prod** | MqxRowAction (корзина по умолчанию), MqxFinListRow, confirm; порядок метрик — в spec |
 
 ## Как работать
 

@@ -10,7 +10,7 @@
 
 | Скилл | Зачем в этом репозитории |
 |-------|---------------------------|
-| **frontend-ui-engineering** | MQX, Telegram UI, карточки, a11y-паттерны |
+| **frontend-ui-engineering** | MQX, Telegram UI, карточки, a11y-паттерны; **при работе с `mqx/` и новыми UI-паттернами — строго по FLOW** в [`frontend-react/src/components/mqx/DESIGN_WORKFLOW.md`](../../frontend-react/src/components/mqx/DESIGN_WORKFLOW.md) |
 | **spec-driven-development** | Новые фичи и контракты — сначала spec (`docs/specs/`) |
 | **incremental-implementation** | Крупные изменения по шагам без монолитных PR |
 | **debugging-and-error-recovery** | Периодная экономика, race на overview, ошибки API |
@@ -65,6 +65,8 @@
 - **Skills** — процедуры по запросу («проведи ревью», «напиши spec»).
 
 Спека UI: [`docs/specs/SPEC_FRONTEND_UI.md`](../specs/SPEC_FRONTEND_UI.md).
+
+**MQX / компонентная база:** правила `money-quest-frontend-mqx.mdc` и скилл **frontend-ui-engineering** обязаны отсылать к единому процессу [`DESIGN_WORKFLOW.md`](../../frontend-react/src/components/mqx/DESIGN_WORKFLOW.md) — варианты в `design-lab/` → утверждение → `mqx/` → `#/dev/mqx` → prod (не пропускать этапы без явного согласования или исключения «багфикс/hotfix»).
 
 ---
 

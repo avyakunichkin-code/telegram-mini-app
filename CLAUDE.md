@@ -100,6 +100,7 @@
 - `frontend-react/src/components/BottomGameNav.jsx` + `icons/NavIcons.jsx` — нижняя навигация.
 - `frontend-react/src/components/AnalyticsSection.jsx` / **AnalyticsPremium**, **DashboardPremium** — обзор и цели; spec: [`docs/specs/SPEC_ANALYTICS.md`](docs/specs/SPEC_ANALYTICS.md).
 - `frontend-react/src/components/ToastHost.jsx` + `notifications.js` — тосты вместо `alert`.
+- `frontend-react/src/components/mqx/` — компонентная база MQX; **новые или существенно меняющие вид** UI-паттерны — только по согласованному циклу в [`DESIGN_WORKFLOW.md`](frontend-react/src/components/mqx/DESIGN_WORKFLOW.md) (`design-lab` → утверждение → `mqx/` → `#/dev/mqx` → prod; исключение: багфикс/hotfix).
 - Поток **новой игры:** `StartMenuScreen` → **`NewProfileKindScreen`** (имя + плитки **Игра / План**; Plan неактивен) → **`GameTemplatePickScreen`** (каталог шаблонов + длительность периода + создание профиля) → **`GameScreen`**. **`BaseParamsScreen`** остаётся в коде под будущий мастер **Plan**, не используется для старта Game. Переиспользуемый выбор шаблона: `GameStarterPicker` (опция ручного сценария для Game выключена).
 
 ---

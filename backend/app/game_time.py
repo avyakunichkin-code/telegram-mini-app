@@ -1,10 +1,11 @@
-from datetime import datetime, timedelta
+from datetime import timedelta
 from typing import Tuple
 
 from fastapi import HTTPException
 from sqlalchemy.orm import Session
 
 from .models import GameProfile
+from .timeutil import utc_now_naive
 
 
 def get_active_game_profile(db: Session, user_id: int) -> GameProfile:
@@ -31,7 +32,7 @@ def sync_time(profile: GameProfile) -> Tuple[int, float]:
     if profile.time_state != "play":
         return 0, 0.0
 
-    now = datetime.utcnow()
+    now = utc_now_naive()
     elapsed = (now - profile.period_anchor_at).total_seconds()
 
     if elapsed < profile.period_duration_seconds:
@@ -54,7 +55,7 @@ def set_time_state(profile: GameProfile, state: str) -> None:
     # При переключении в play синхронизируем время
     if normalized == "play" and profile.time_state != "play":
         sync_time(profile)
-        profile.period_anchor_at = datetime.utcnow()
+        profile.period_anchor_at = utc_now_naive()
 
     profile.time_state = normalized
 
@@ -63,7 +64,7 @@ def next_period(profile: GameProfile) -> None:
     """Принудительный переход к следующему периоду"""
     sync_time(profile)  # Сначала синхронизируем
     profile.period_index += 1
-    profile.period_anchor_at = datetime.utcnow()
+    profile.period_anchor_at = utc_now_naive()
 
 
 def set_period_duration(profile: GameProfile, seconds: int) -> None:
@@ -71,7 +72,7 @@ def set_period_duration(profile: GameProfile, seconds: int) -> None:
         raise HTTPException(status_code=400, detail="period_duration_seconds must be >= 10")
     profile.period_duration_seconds = seconds
     if profile.time_state == "play":
-        profile.period_anchor_at = datetime.utcnow()
+        profile.period_anchor_at = utc_now_naive()
 
 
 def get_seconds_until_next(profile: GameProfile) -> int:
@@ -79,7 +80,7 @@ def get_seconds_until_next(profile: GameProfile) -> int:
     if profile.time_state != "play":
         return profile.period_duration_seconds
 
-    now = datetime.utcnow()
+    now = utc_now_naive()
     elapsed = (now - profile.period_anchor_at).total_seconds()
     remaining = profile.period_duration_seconds - elapsed
     return max(0, int(remaining))

@@ -64,3 +64,19 @@ export function IconMetricPercent({ size = 16 }) {
     </svg>
   );
 }
+
+/** Удаление / закрытие — канон по умолчанию в `MqxRowAction` (F2); символ «−» — `removeVisual="minus"` (F1). */
+export function IconMetricTrash({ size = 18 }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" aria-hidden>
+      <path
+        stroke="currentColor"
+        strokeWidth="1.75"
+        strokeLinecap="round"
+        d="M9 3h6l1 2h4v2H4V5h4l1-2Z"
+      />
+      <path stroke="currentColor" strokeWidth="1.75" d="M6 7v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V7" />
+      <path stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" d="M10 11v6M14 11v6" />
+    </svg>
+  );
+}

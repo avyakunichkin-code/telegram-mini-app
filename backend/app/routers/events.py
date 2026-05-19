@@ -2,7 +2,6 @@ import json
 import logging
 import math
 import random
-from datetime import datetime
 
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy import or_
@@ -21,6 +20,7 @@ from ..game_rules import (
 from ..database import get_db
 from ..game_time import get_active_game_profile, sync_time
 from ..models import EventChoice, EventDefinition, EventInstance, EventProfileCounter, GameProfile
+from ..timeutil import utc_now_naive
 from ..expenses import add_expense_line_from_event
 from ..insurance_events import apply_insurance_claim_from_effects
 from ..mvp11_event_seeds import ensure_mvp11_event_catalog
@@ -490,7 +490,7 @@ async def choose_event(
 
     inst.status = "selected"
     inst.selected_choice_id = int(choice_id)
-    inst.resolved_at = datetime.utcnow()
+    inst.resolved_at = utc_now_naive()
     record_event_profile_selection(db, profile.id, int(inst.definition_id), int(profile.period_index))
     db.commit()
 

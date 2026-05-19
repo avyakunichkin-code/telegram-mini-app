@@ -1,7 +1,6 @@
 # backend/app/game_period.py
 
 from sqlalchemy.orm import Session
-from datetime import datetime
 
 from .models import GameProfile, FinanceAsset, FinanceLiability, Transaction, InvestmentPosition, PeriodEconomyClosing
 from .balance_utils import adjust_balance, add_transaction, TRANSACTION_TYPES
@@ -11,6 +10,7 @@ from .character_progression import apply_character_xp
 from .routers.events import ensure_period_events, expire_pending_events_for_closed_period, _ensure_seed_events
 from .routers.insurance import charge_premiums_for_period
 from .expenses import compute_monthly_burn, expire_expense_lines_for_period, lifestyle_period_breakdown
+from .timeutil import utc_now_naive
 
 
 def process_period_end(db: Session, profile: GameProfile) -> dict:
@@ -243,7 +243,7 @@ def process_period_end(db: Session, profile: GameProfile) -> dict:
     # 7. Увеличиваем номер периода
     closed_period_index = int(period_index)
     profile.period_index += 1
-    profile.period_anchor_at = datetime.utcnow()
+    profile.period_anchor_at = utc_now_naive()
 
     db.commit()
     db.refresh(profile)

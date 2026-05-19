@@ -713,13 +713,16 @@ export function FinanceSection({
                             </button>
                             {expanded ? (
                               <div className="mqx-fin-acc-body">
-                                <div className="mqx-fin-acc-meta">
+                                <div
+                                  className="mqx-fin-acc-meta"
+                                  title="Суммы в модели совпадают с помесячным списанием и начислением в конце каждого периода"
+                                >
                                   Стоимость: <MoneyText value={t.asset_value} decimals={0} /> · Обслуживание:{' '}
-                                  <MoneyText value={t.monthly_maintenance_cost} decimals={0} />/мес
+                                  <MoneyText value={t.monthly_maintenance_cost} decimals={0} />
                                   {Number(t.monthly_income) > 0 ? (
                                     <>
                                       {' '}
-                                      · Доход: <MoneyText value={t.monthly_income} decimals={0} />/мес
+                                      · Доход: <MoneyText value={t.monthly_income} decimals={0} />
                                     </>
                                   ) : null}
                                 </div>
@@ -756,9 +759,9 @@ export function FinanceSection({
                         <div key={a.id} className="mqx-fin-row mqx-fin-row--positions">
                           <div className="mqx-fin-row__l">
                             <div className="mqx-fin-row__title">{a.title}</div>
-                            <div className="mqx-fin-row__sub">
+                            <div className="mqx-fin-row__sub" title="Суммы за период (в модели — как ежемесячные)">
                               <MoneyText value={a.asset_value} decimals={0} /> · обслуж.{' '}
-                              <MoneyText value={a.monthly_maintenance_cost} decimals={0} />/мес
+                              <MoneyText value={a.monthly_maintenance_cost} decimals={0} />
                             </div>
                           </div>
                           <button
@@ -819,9 +822,9 @@ export function FinanceSection({
                           </button>
                           {expanded ? (
                             <div className="mqx-fin-acc-body">
-                              <div className="mqx-fin-acc-meta">
-                                Долг: <MoneyText value={t.total_debt} decimals={0} /> · Ставка: {t.annual_rate_percent}% ·
-                                платёж <MoneyText value={t.monthly_payment} decimals={0} />/мес
+                              <div className="mqx-fin-acc-meta" title="Платёж и ставка за период (в модели — ежемесячный платёж)">
+                                Долг: <MoneyText value={t.total_debt} decimals={0} /> · Ставка: {t.annual_rate_percent} · платёж{' '}
+                                <MoneyText value={t.monthly_payment} decimals={0} />
                               </div>
                               <button
                                 type="button"
@@ -846,9 +849,12 @@ export function FinanceSection({
                         <div key={l.id} className="mqx-fin-row mqx-fin-row--positions">
                           <div className="mqx-fin-row__l">
                             <div className="mqx-fin-row__title">{l.title}</div>
-                            <div className="mqx-fin-row__sub">
-                              <MoneyText value={l.monthly_payment} decimals={0} />/мес · долг{' '}
-                              <MoneyText value={l.total_debt} decimals={0} />
+                            <div
+                              className="mqx-fin-row__sub"
+                              title="Остаток долга и платёж за период (в модели — ежемесячный платёж)"
+                            >
+                              Долг <MoneyText value={l.total_debt} decimals={0} /> · платёж{' '}
+                              <MoneyText value={l.monthly_payment} decimals={0} />
                             </div>
                           </div>
                           <button

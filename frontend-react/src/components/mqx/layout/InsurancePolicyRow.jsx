@@ -2,7 +2,7 @@ import { findInsuranceCatalogItem, insuranceAccentClass } from '../../../constan
 import { InsurancePolicyMetrics } from '../metrics/InsurancePolicyMetrics';
 import { CapitalPositionCard } from './CapitalPositionCard';
 
-/** Активный полис — та же сетка H, кнопка «−» (отмена). */
+/** Активный полис — та же сетка H, удаление (корзина по канону F2). */
 export function InsurancePolicyRow({ policy, onCancel, busy }) {
   const catalog = findInsuranceCatalogItem(policy.kind);
   const accent = insuranceAccentClass(policy.product ?? catalog.product);

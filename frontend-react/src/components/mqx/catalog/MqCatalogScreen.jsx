@@ -83,13 +83,21 @@ function RowActionsCatalogDemo() {
     <>
       {dialog}
       <p className="mqx-catalog__lead" style={{ marginTop: 0 }}>
-        Канон: <strong>+</strong> / <strong>−</strong>, подпись только в <code>aria-label</code>. Статичные
-        варианты: <code>design-lab/row-actions/</code>.
+        Канон: <strong>+</strong> / <strong>корзина</strong> по умолчанию (<code>MqxRowAction</code>); символ <strong>−</strong> —{' '}
+        <code>removeVisual=&quot;minus&quot;</code>. Метрики: <code>coin | down | up | percent | term</code> — порядок и суммы без{' '}
+        <code>/мес</code>, см. spec. Статика: <code>design-lab/row-actions/</code>.
       </p>
       <div className="mqx-fin-list" style={{ maxWidth: 420, marginTop: 12 }}>
         <MqxFinListRow
           title="Кредитная карта"
-          subtitle="9 000 ₽/мес · долг 180 000 ₽"
+          metrics={
+            <LiabilityPositionMetrics
+              totalDebt={180000}
+              monthlyPayment={9000}
+              annualRatePercent={24}
+              overdueAmount={4500}
+            />
+          }
           trailing={
             <MqxRowAction
               variant="remove"
@@ -103,6 +111,18 @@ function RowActionsCatalogDemo() {
               }}
             />
           }
+        />
+        <MqxFinListRow
+          title="Квартира под сдачу"
+          metrics={
+            <AssetPositionMetrics assetValue={4200000} monthlyMaintenanceCost={12000} monthlyIncome={35000} />
+          }
+          trailing={<MqxRowAction variant="remove" ariaLabel="Удалить актив" onClick={() => {}} />}
+        />
+        <MqxFinListRow
+          title="Вариант F1 — символ −"
+          metrics={<AssetPositionMetrics assetValue={100000} monthlyMaintenanceCost={500} monthlyIncome={0} />}
+          trailing={<MqxRowAction variant="remove" removeVisual="minus" ariaLabel="Удалить" onClick={() => {}} />}
         />
         <MqxFinListRow
           title="Шаблон: Ипотека"
@@ -323,11 +343,11 @@ export function MqCatalogScreen() {
           <MetricInlineItem tip="Доход" glyph="up" tone="pos">
             35 000
           </MetricInlineItem>
-          <MetricInlineItem tip="Ставка (получаем)" glyph="percent" tone="pos">
-            12%
+          <MetricInlineItem tip="Годовая ставка — получаем %" glyph="percent" tone="pos">
+            12
           </MetricInlineItem>
-          <MetricInlineItem tip="Ставка (платим)" glyph="percent" tone="neg">
-            18%
+          <MetricInlineItem tip="Годовая ставка — платим %" glyph="percent" tone="neg">
+            18
           </MetricInlineItem>
         </MetricsRow>
       </CatalogSection>
@@ -412,12 +432,6 @@ export function MqCatalogScreen() {
       <CatalogSection title="Позиция актива (компактная строка)">
         <MqxFinListRow
           title="Квартира под сдачу"
-          subtitle={
-            <>
-              <MoneyText value={4200000} decimals={0} /> · обслуж. <MoneyText value={12000} decimals={0} />
-              /мес
-            </>
-          }
           metrics={
             <AssetPositionMetrics assetValue={4200000} monthlyMaintenanceCost={12000} monthlyIncome={35000} />
           }
@@ -441,12 +455,6 @@ export function MqCatalogScreen() {
       <CatalogSection title="Позиция долга (компактная строка)">
         <MqxFinListRow
           title="Кредитная карта"
-          subtitle={
-            <>
-              <MoneyText value={9000} decimals={0} />
-              /мес · долг <MoneyText value={180000} decimals={0} />
-            </>
-          }
           metrics={
             <LiabilityPositionMetrics
               totalDebt={180000}
@@ -461,7 +469,7 @@ export function MqCatalogScreen() {
 
       <CatalogSection title="Позиция депозита">
         <InvestPositionRow
-          position={{ id: 1, title: 'Депозит 12% годовых', principal: 250000, annual_rate_percent: 12 }}
+          position={{ id: 1, title: 'Депозит · 12 годовых', principal: 250000, annual_rate_percent: 12 }}
           onClose={() => {}}
         />
       </CatalogSection>

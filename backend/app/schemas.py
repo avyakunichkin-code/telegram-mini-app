@@ -373,10 +373,10 @@ class GameStartRequest(BaseModel):
         sk = (self.save_kind or "game").strip().lower()
         if sk not in ("game", "plan"):
             raise ValueError("save_kind must be 'game' or 'plan'")
-        updates: dict = {"save_kind": sk}
+        self.save_kind = sk
         if self.monthly_salary in (0, 0.0) and self.monthly_amount is not None:
-            updates["monthly_salary"] = float(self.monthly_amount)
-        return self.model_copy(update=updates)
+            self.monthly_salary = float(self.monthly_amount)
+        return self
 
 
 class GameStartResponse(BaseModel):

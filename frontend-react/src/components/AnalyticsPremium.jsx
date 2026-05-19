@@ -282,7 +282,7 @@ export function AnalyticsPremium({ overview }) {
                     <SparkLineSvg
                       series={pts.map((p) => Number(p.monthly_burn_total) || 0)}
                       title="Расходы на жизнь (закрытия)"
-                      subtitle={`${Math.round(burn)} ₽/мес сейчас`}
+                      subtitle={`${Math.round(burn)} ₽`}
                       accent="amber"
                       dark
                       height={48}
@@ -313,9 +313,8 @@ export function AnalyticsPremium({ overview }) {
             <MqxCashflowBar
               label="Доход"
               amountNode={
-                <span>
-                  <MoneyText value={income} decimals={0} />{' '}
-                  <span className="mqx-analytics-cf-suffix">/мес</span>
+                <span title="Сумма за период игры (в модели — помесячный доход)">
+                  <MoneyText value={income} decimals={0} />
                 </span>
               }
               fraction={income / denom}
@@ -324,9 +323,8 @@ export function AnalyticsPremium({ overview }) {
             <MqxCashflowBar
               label="Платежи по долгам"
               amountNode={
-                <span>
-                  <MoneyText value={liabPay} decimals={0} />{' '}
-                  <span className="mqx-analytics-cf-suffix">/мес</span>
+                <span title="Сумма за период игры (в модели — помесячные платежи)">
+                  <MoneyText value={liabPay} decimals={0} />
                 </span>
               }
               fraction={liabPay / denom}
@@ -335,9 +333,8 @@ export function AnalyticsPremium({ overview }) {
             <MqxCashflowBar
               label="Обслуживание активов"
               amountNode={
-                <span>
-                  <MoneyText value={maintenance} decimals={0} />{' '}
-                  <span className="mqx-analytics-cf-suffix">/мес</span>
+                <span title="Сумма за период игры (в модели — помесячное обслуживание)">
+                  <MoneyText value={maintenance} decimals={0} />
                 </span>
               }
               fraction={maintenance / denom}
@@ -347,10 +344,11 @@ export function AnalyticsPremium({ overview }) {
               <MqxCashflowBar
                 label="Расходы на жизнь"
                 amountNode={
-                  <span>
-                    <MoneyText value={burn} decimals={0} />{' '}
+                  <span title="Расходы на жизнь за период и доля от дохода">
+                    <MoneyText value={burn} decimals={0} />
                     <span className="mqx-analytics-cf-suffix">
-                      /мес · {expenseRatioPct.toFixed(0)}% дохода
+                      {' '}
+                      · {expenseRatioPct.toFixed(0)}% дохода
                     </span>
                   </span>
                 }

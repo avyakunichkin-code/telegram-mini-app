@@ -6,13 +6,13 @@ from __future__ import annotations
 
 import json
 from dataclasses import dataclass, field
-from datetime import datetime
 from typing import Any
 
 from sqlalchemy.orm import Session
 
 from .expense_template_defaults import expense_budget_for_template
 from .models import ExpenseCategoryDefinition, GameProfile, GameStarterTemplate, ProfileExpenseLine
+from .timeutil import utc_now_naive
 
 
 @dataclass(frozen=True)
@@ -248,7 +248,7 @@ def expire_expense_lines_for_period(db: Session, profile: GameProfile, period_in
     )
     for row in rows:
         row.is_active = 0
-        row.revoked_at = datetime.utcnow()
+        row.revoked_at = utc_now_naive()
     if rows:
         db.flush()
     return len(rows)
@@ -451,7 +451,7 @@ def revoke_plan_expense_line(db: Session, profile: GameProfile, line: ProfileExp
 
         raise HTTPException(status_code=403, detail="Only plan-owned lines can be removed")
     line.is_active = 0
-    line.revoked_at = datetime.utcnow()
+    line.revoked_at = utc_now_naive()
     db.flush()
     sync_profile_lifestyle_base_from_lines(db, profile)
 

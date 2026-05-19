@@ -6,6 +6,19 @@ alwaysApply: false
 
 # Frontend — MQX и вёрстка
 
+## Компонентная база MQX — обязательный FLOW
+
+**Жёсткое правило:** любая работа с **новой** или **существенно меняющей внешний вид** компонентной базой (`frontend-react/src/components/mqx/`, новые `mqx-*` в `index.css`, новые визуальные паттерны на `*Premium.jsx`) **обязана** следовать согласованному циклу в:
+
+**[`frontend-react/src/components/mqx/DESIGN_WORKFLOW.md`](frontend-react/src/components/mqx/DESIGN_WORKFLOW.md)**
+
+Кратко: **задача → варианты в `design-lab/<тема>/` → выбор → явное «утверждаем X» в чате → React в `mqx/` + секция в `#/dev/mqx` → внедрение в prod (один сценарий за PR).**
+
+- **Запрещено** сразу править игровые экраны, минуя `design-lab` и утверждение (исключения: **минимальный багфикс / hotfix** без смены дизайна — см. тот же документ).
+- Контракт UI и паттерны: [`docs/specs/SPEC_FRONTEND_UI.md`](docs/specs/SPEC_FRONTEND_UI.md).
+
+Если пользователь просит «сразу в код» — **напомни про FLOW** и предложи сначала этап `design-lab` или сослаться на уже утверждённый вариант.
+
 ## Токены (не hex в JSX)
 
 `--mq-violet`, `--mq-violet-deep`, `--mq-emerald`, `--mq-ink`, `--mq-line`, `--mq-fs-body` (15px), `--mq-fs-caption` (12px).

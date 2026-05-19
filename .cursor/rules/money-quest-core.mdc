@@ -10,7 +10,7 @@ alwaysApply: true
 - **Целевая концепция и план работ**: [`docs/vision/ideas/money-quest-evolution-after-mvp.md`](docs/vision/ideas/money-quest-evolution-after-mvp.md) (часть II).
 - **Черновик баланса (победа / поражение / ограничения MVP)**: [`docs/vision/ideas/game-balance-thresholds-and-constraints.md`](docs/vision/ideas/game-balance-thresholds-and-constraints.md).
 Приоритет скиллов и что удалено из проекта по смыслу — [`docs/agents/CURSOR_SKILLS.md`](docs/agents/CURSOR_SKILLS.md).
-- **Frontend UI/UX**: [`docs/specs/SPEC_FRONTEND_UI.md`](docs/specs/SPEC_FRONTEND_UI.md); правила `.cursor/rules/money-quest-frontend-*.mdc`.
+- **Frontend UI/UX**: [`docs/specs/SPEC_FRONTEND_UI.md`](docs/specs/SPEC_FRONTEND_UI.md); правила `.cursor/rules/money-quest-frontend-*.mdc`. **Компонентная база MQX** — обязательный процесс в [`frontend-react/src/components/mqx/DESIGN_WORKFLOW.md`](frontend-react/src/components/mqx/DESIGN_WORKFLOW.md) (не обходить без явного исключения «багфикс/hotfix»).
 - **Миграции БД**: SQL в `backend/migrations/`, без Alembic; на Windows — `backend/migrate.ps1` при наличии `psql` и `DATABASE_URL`.
 
 При смене контракта API синхронизируй `frontend-react/src/api.js` и типичные вызовы в хуках/экранах.

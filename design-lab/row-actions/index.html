@@ -3,24 +3,73 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Money Quest — row actions</title>
+    <title>Money Quest — row actions + метрики</title>
     <link rel="stylesheet" href="./styles.css" />
   </head>
   <body>
     <header class="lab-header">
-      <h1>Действия в строках (+ / −)</h1>
-      <p style="margin: 8px 0 0; font-size: 13px; color: var(--text-muted)">
-        Утверждён <strong>вариант B</strong>. Hover — только при <code>hover: hover</code> (desktop).
-      </p>
-      <div style="margin-top: 10px; display: flex; gap: 8px">
-        <button type="button" data-theme-btn="light">Светлая</button>
+      <h1>Строки: действия + иконки метрик</h1>
+      <p>Тема страницы (имитация TMA). Проверьте <strong>тёмную</strong>: текст и кнопки переключения должны читаться.</p>
+      <div class="lab-theme-row">
+        <button type="button" class="is-active" data-theme-btn="light">Светлая</button>
         <button type="button" data-theme-btn="dark">Тёмная</button>
       </div>
     </header>
 
     <main class="lab-wrap">
+      <!-- SVG-глифы = копия `frontend-react/.../FinanceMetricIcons.jsx` -->
+      <svg xmlns="http://www.w3.org/2000/svg" width="0" height="0" style="position: absolute" aria-hidden="true">
+        <defs>
+          <symbol id="ico-coin" viewBox="0 0 24 24">
+            <ellipse cx="8" cy="7" rx="5" ry="2.2" stroke="currentColor" stroke-width="1.75" fill="none" />
+            <path d="M3 7v4c0 1.2 2.2 2.2 5 2.2s5-1 5-2.2V7" stroke="currentColor" stroke-width="1.75" fill="none" />
+            <ellipse cx="14" cy="13" rx="5" ry="2.2" stroke="currentColor" stroke-width="1.75" fill="none" />
+            <path d="M9 13v4c0 1.2 2.2 2.2 5 2.2s5-1 5-2.2v-4" stroke="currentColor" stroke-width="1.75" fill="none" />
+          </symbol>
+          <symbol id="ico-down" viewBox="0 0 24 24">
+            <path stroke="currentColor" stroke-width="2.25" stroke-linecap="round" d="M12 5v10" fill="none" />
+            <path
+              stroke="currentColor"
+              stroke-width="2.25"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M8 13l4 4 4-4"
+              fill="none"
+            />
+          </symbol>
+          <symbol id="ico-up" viewBox="0 0 24 24">
+            <path stroke="currentColor" stroke-width="2.25" stroke-linecap="round" d="M12 19V9" fill="none" />
+            <path
+              stroke="currentColor"
+              stroke-width="2.25"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M8 11l4-4 4 4"
+              fill="none"
+            />
+          </symbol>
+          <symbol id="ico-pct" viewBox="0 0 24 24">
+            <circle cx="7" cy="7" r="2.25" stroke="currentColor" stroke-width="1.85" fill="none" />
+            <circle cx="17" cy="17" r="2.25" stroke="currentColor" stroke-width="1.85" fill="none" />
+            <path stroke="currentColor" stroke-width="1.85" stroke-linecap="round" d="M5 19L19 5" fill="none" />
+          </symbol>
+          <symbol id="ico-trash" viewBox="0 0 24 24">
+            <path
+              stroke="currentColor"
+              stroke-width="1.75"
+              stroke-linecap="round"
+              d="M9 3h6l1 2h4v2H4V5h4l1-2Z"
+              fill="none"
+            />
+            <path stroke="currentColor" stroke-width="1.75" d="M6 7v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V7" fill="none" />
+            <path stroke="currentColor" stroke-width="1.75" stroke-linecap="round" d="M10 11v6M14 11v6" fill="none" />
+          </symbol>
+        </defs>
+      </svg>
+
       <section>
-        <p><span class="lab-section__id">A</span> Широкая «Удалить» — legacy, не использовать</p>
+        <p><span class="lab-section__id">A</span> Широкая «Удалить» — legacy</p>
+        <p class="lab-section-desc">Не использовать в списках позиций.</p>
         <div class="lab-row" style="margin-top: 10px">
           <div class="lab-row__l">
             <div class="lab-row__title">Квартира под сдачу</div>
@@ -31,9 +80,8 @@
       </section>
 
       <section>
-        <p>
-          <span class="lab-section__id lab-section__id--ok">B</span> Компактный + / − (prod)
-        </p>
+        <p><span class="lab-section__id">B</span> Только + / − (без метрик)</p>
+        <p class="lab-section-desc">Кнопка действия; смысл в aria-label.</p>
         <div class="lab-row" style="margin-top: 10px">
           <div class="lab-row__l">
             <div class="lab-row__title">Шаблон: Ипотека</div>
@@ -51,6 +99,128 @@
       </section>
 
       <section>
+        <p><span class="lab-section__id">E1</span> Дубль: подпись + метрики с иконками</p>
+        <p class="lab-section-desc">Суммы повторяются — шумнее, зато без hover видно цифры.</p>
+        <div class="lab-row" style="margin-top: 10px">
+          <div class="lab-row__l">
+            <div class="lab-row__title">Квартира под сдачу</div>
+            <div class="lab-row__sub">4 200 000 ₽ · обслуж. 12 000 ₽/мес · доход 35 000 ₽/мес</div>
+            <div class="lab-metrics">
+              <span class="lab-inline">
+                <span class="lab-glyph" aria-hidden="true"><svg width="16" height="16"><use href="#ico-coin" /></svg></span>
+                4 200 000 ₽
+              </span>
+              <span class="lab-inline lab-inline--neg">
+                <span class="lab-glyph lab-glyph--down" aria-hidden="true"><svg width="16" height="16"><use href="#ico-down" /></svg></span>
+                12 000 ₽
+              </span>
+              <span class="lab-inline lab-inline--pos">
+                <span class="lab-glyph lab-glyph--up" aria-hidden="true"><svg width="16" height="16"><use href="#ico-up" /></svg></span>
+                35 000 ₽
+              </span>
+            </div>
+          </div>
+          <button type="button" class="btn-b" aria-label="Удалить актив">−</button>
+        </div>
+      </section>
+
+      <section>
+        <p>
+          <span class="lab-section__id lab-section__id--pick">E2</span>
+          Компактно: заголовок + метрики с иконками (без дубля)
+        </p>
+        <p class="lab-section-desc">
+          <strong>Рекомендация к утверждению:</strong> как в prod — <code>MetricsRow</code> + <code>MetricInlineItem</code>
+          (глифы coin / down / up / percent / term из <code>FinanceMetricIcons.jsx</code>).
+        </p>
+        <div class="lab-row" style="margin-top: 10px">
+          <div class="lab-row__l">
+            <div class="lab-row__title">Квартира под сдачу</div>
+            <div class="lab-metrics">
+              <span class="lab-inline">
+                <span class="lab-glyph" aria-hidden="true"><svg width="16" height="16"><use href="#ico-coin" /></svg></span>
+                4 200 000 ₽
+              </span>
+              <span class="lab-inline lab-inline--neg">
+                <span class="lab-glyph lab-glyph--down" aria-hidden="true"><svg width="16" height="16"><use href="#ico-down" /></svg></span>
+                12 000 ₽
+              </span>
+              <span class="lab-inline lab-inline--pos">
+                <span class="lab-glyph lab-glyph--up" aria-hidden="true"><svg width="16" height="16"><use href="#ico-up" /></svg></span>
+                35 000 ₽
+              </span>
+            </div>
+          </div>
+          <button type="button" class="btn-b" aria-label="Удалить актив">−</button>
+        </div>
+        <div class="lab-row" style="margin-top: 8px">
+          <div class="lab-row__l">
+            <div class="lab-row__title">Кредитная карта</div>
+            <div class="lab-metrics">
+              <span class="lab-inline lab-inline--neg">
+                <span class="lab-glyph lab-glyph--down" aria-hidden="true"><svg width="16" height="16"><use href="#ico-down" /></svg></span>
+                9 000 ₽/мес
+              </span>
+              <span class="lab-inline">
+                <span class="lab-glyph" aria-hidden="true"><svg width="16" height="16"><use href="#ico-coin" /></svg></span>
+                180 000 ₽
+              </span>
+              <span class="lab-inline lab-inline--neg">
+                <span class="lab-glyph lab-glyph--pct" aria-hidden="true"><svg width="16" height="16"><use href="#ico-pct" /></svg></span>
+                24%
+              </span>
+            </div>
+          </div>
+          <button type="button" class="btn-b" aria-label="Удалить долг">−</button>
+        </div>
+      </section>
+
+      <section>
+        <p><span class="lab-section__id">F</span> Кнопка удаления: «−» vs иконка корзины</p>
+        <p class="lab-section-desc">Минус компактнее; корзина узнаваемее на десктопе. Выберите один вариант для prod.</p>
+        <div class="lab-row" style="margin-top: 10px">
+          <div class="lab-row__l">
+            <div class="lab-row__title">Вариант F1 — минус (канон B)</div>
+            <div class="lab-metrics">
+              <span class="lab-inline">
+                <span class="lab-glyph" aria-hidden="true"><svg width="16" height="16"><use href="#ico-coin" /></svg></span>
+                250 000 ₽
+              </span>
+              <span class="lab-inline lab-inline--pos">
+                <span class="lab-glyph lab-glyph--pct" aria-hidden="true"><svg width="16" height="16"><use href="#ico-pct" /></svg></span>
+                12%
+              </span>
+            </div>
+          </div>
+          <div class="lab-actions">
+            <span class="lab-compare-label">F1</span>
+            <button type="button" class="btn-b" aria-label="Закрыть позицию">−</button>
+          </div>
+        </div>
+        <div class="lab-row" style="margin-top: 8px">
+          <div class="lab-row__l">
+            <div class="lab-row__title">Вариант F2 — корзина</div>
+            <div class="lab-metrics">
+              <span class="lab-inline">
+                <span class="lab-glyph" aria-hidden="true"><svg width="16" height="16"><use href="#ico-coin" /></svg></span>
+                250 000 ₽
+              </span>
+              <span class="lab-inline lab-inline--pos">
+                <span class="lab-glyph lab-glyph--pct" aria-hidden="true"><svg width="16" height="16"><use href="#ico-pct" /></svg></span>
+                12%
+              </span>
+            </div>
+          </div>
+          <div class="lab-actions">
+            <span class="lab-compare-label">F2</span>
+            <button type="button" class="btn-b btn-b--icon" aria-label="Закрыть позицию">
+              <svg width="18" height="18" aria-hidden="true"><use href="#ico-trash" /></svg>
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <section>
         <p><span class="lab-section__id">C</span> Круглый outline −</p>
         <div class="lab-row" style="margin-top: 10px">
           <div class="lab-row__l">
@@ -61,7 +231,7 @@
       </section>
 
       <section>
-        <p><span class="lab-section__id">D</span> Mix как в Finance сейчас</p>
+        <p><span class="lab-section__id">D</span> Размеры как в старом Finance (34px)</p>
         <div class="lab-row" style="margin-top: 10px">
           <div class="lab-row__l">
             <div class="lab-row__title">Депозит 12%</div>
@@ -75,6 +245,9 @@
       document.querySelectorAll('[data-theme-btn]').forEach((btn) => {
         btn.addEventListener('click', () => {
           document.documentElement.dataset.theme = btn.dataset.themeBtn;
+          document.querySelectorAll('[data-theme-btn]').forEach((b) => {
+            b.classList.toggle('is-active', b === btn);
+          });
         });
       });
     </script>

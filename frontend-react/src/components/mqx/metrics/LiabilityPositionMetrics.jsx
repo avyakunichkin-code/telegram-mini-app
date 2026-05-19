@@ -12,20 +12,20 @@ export function LiabilityPositionMetrics({
 
   return (
     <MetricsRow className="mqx-asset-metrics-inline--position">
-      <MetricInlineItem tip="Остаток долга" glyph="coin">
+      <MetricInlineItem tip="Остаток долга (тело)" glyph="coin">
         <MoneyText value={totalDebt} decimals={0} />
       </MetricInlineItem>
-      <MetricInlineItem tip="Платёж в месяц" glyph="down" tone="neg">
+      <MetricInlineItem tip="Платёж за период (списание в конце периода; в модели совпадает с ежемесячным платежом)" glyph="down" tone="neg">
         <MoneyText value={monthlyPayment} decimals={0} />
       </MetricInlineItem>
-      <MetricInlineItem tip="Ставка годовых" glyph="percent" tone="neg">
-        {Number(annualRatePercent)}%
-      </MetricInlineItem>
       {showOverdue ? (
-        <MetricInlineItem tip="Просрочка" glyph="down" tone="neg">
+        <MetricInlineItem tip="Просрочка к доплате за период" glyph="down" tone="neg">
           <MoneyText value={overdueAmount} decimals={0} />
         </MetricInlineItem>
       ) : null}
+      <MetricInlineItem tip="Годовая ставка — платим проценты по долгу" glyph="percent" tone="neg">
+        {Number(annualRatePercent)}
+      </MetricInlineItem>
     </MetricsRow>
   );
 }

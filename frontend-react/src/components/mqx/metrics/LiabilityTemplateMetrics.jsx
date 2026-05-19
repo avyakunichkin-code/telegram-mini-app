@@ -8,11 +8,11 @@ export function LiabilityTemplateMetrics({ totalDebt, monthlyPayment, annualRate
       <MetricInlineItem tip="Сумма долга" glyph="coin">
         <MoneyText value={totalDebt} decimals={0} />
       </MetricInlineItem>
-      <MetricInlineItem tip="Платёж в месяц" glyph="down" tone="neg">
+      <MetricInlineItem tip="Платёж за период (списание в конце периода; в модели — ежемесячный платёж)" glyph="down" tone="neg">
         <MoneyText value={monthlyPayment} decimals={0} />
       </MetricInlineItem>
-      <MetricInlineItem tip="Ставка годовых (платим %)" glyph="percent" tone="neg">
-        {Number(annualRatePercent)}%
+      <MetricInlineItem tip="Годовая ставка — платим проценты по долгу" glyph="percent" tone="neg">
+        {Number(annualRatePercent)}
       </MetricInlineItem>
     </MetricsRow>
   );

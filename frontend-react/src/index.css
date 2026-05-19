@@ -1835,6 +1835,15 @@ body {
   border-color: rgba(37, 99, 235, 0.22);
 }
 
+.mqx-invest-rate--neg {
+  background: rgba(220, 38, 38, 0.08);
+  border-color: rgba(220, 38, 38, 0.22);
+}
+
+.mqx-invest-rate__val--neg {
+  color: var(--mq-danger, #dc2626);
+}
+
 .mqx-invest-rate__val {
   font-size: 14px;
   font-weight: 800;
@@ -2229,6 +2238,15 @@ body {
   border: 1px solid color-mix(in srgb, var(--tg-theme-hint-color, var(--mq-line)) 70%, transparent);
   background: var(--mqx-glass-strong);
   color: rgba(220, 38, 38, 0.95);
+}
+
+.mqx-row-action--remove-icon .mqx-row-action__glyph {
+  font-size: 0;
+  line-height: 0;
+}
+
+.mqx-row-action--remove-icon .mqx-row-action__glyph svg {
+  display: block;
 }
 
 .mqx-row-action:focus-visible .mqx-row-action__glyph {

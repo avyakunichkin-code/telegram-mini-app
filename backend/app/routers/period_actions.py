@@ -1,7 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException, Request
 from fastapi.responses import JSONResponse
 from sqlalchemy.orm import Session
-from datetime import datetime
 
 from ..auth import get_current_user
 from ..balance_utils import adjust_balance, TRANSACTION_TYPES, adjust_safety_fund_balance
@@ -11,6 +10,7 @@ from ..models import GameProfile, PeriodSnapshot, FinanceSalary, FinanceLiabilit
 from ..schemas import SafetyFundContribution, PeriodStatusResponse, PeriodSummaryResponse
 from ..game_time import get_active_game_profile, sync_time, get_seconds_until_next
 from ..idempotency import read_idempotency_key, run_idempotent
+from ..timeutil import utc_now_naive
 
 router = APIRouter(prefix="/api/game/period", tags=["period"])
 
@@ -260,13 +260,13 @@ async def complete_period(
 
     # Отмечаем период как завершённый
     snapshot.is_completed = 1
-    snapshot.completed_at = datetime.utcnow()
+    snapshot.completed_at = utc_now_naive()
     snapshot.net_savings = net_savings
     snapshot.xp_earned = xp_earned
 
     # Инкрементируем период
     profile.period_index += 1
-    profile.period_anchor_at = datetime.utcnow()
+    profile.period_anchor_at = utc_now_naive()
 
     db.commit()
 

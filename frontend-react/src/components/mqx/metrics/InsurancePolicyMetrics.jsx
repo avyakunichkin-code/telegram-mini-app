@@ -14,13 +14,13 @@ export function InsurancePolicyMetrics({ policy }) {
 
   return (
     <MetricsRow className="mqx-ins-metrics">
-      <MetricInlineItem tip="Оплата за период" glyph="down" tone="neg">
-        <MoneyText value={policy.monthly_premium} decimals={0} />
-      </MetricInlineItem>
-      <MetricInlineItem tip="Сумма выплаты" glyph="coin">
+      <MetricInlineItem tip="Лимит выплаты / покрытие по полису" glyph="coin">
         <MoneyText value={payout} decimals={0} />
       </MetricInlineItem>
-      <MetricInlineItem tip="Срок" glyph="term">
+      <MetricInlineItem tip="Премия за период (списание в конце периода)" glyph="down" tone="neg">
+        <MoneyText value={policy.monthly_premium} decimals={0} />
+      </MetricInlineItem>
+      <MetricInlineItem tip="Срок действия (периоды игры)" glyph="term">
         {term}
       </MetricInlineItem>
     </MetricsRow>

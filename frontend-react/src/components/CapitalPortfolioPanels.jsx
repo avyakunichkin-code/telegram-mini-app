@@ -1,6 +1,5 @@
 import { API } from '../api';
 import { showNotification } from './notifications';
-import { MoneyText } from './MoneyText';
 import {
   AssetPositionMetrics,
   AssetTemplateMetrics,
@@ -163,13 +162,6 @@ export function CapitalPortfolioPanels({
                   <MqxFinListRow
                     key={a.id}
                     title={a.title}
-                    subtitle={
-                      <>
-                        <MoneyText value={a.asset_value} decimals={0} /> · обслуж.{' '}
-                        <MoneyText value={a.monthly_maintenance_cost} decimals={0} />
-                        /мес
-                      </>
-                    }
                     metrics={
                       <AssetPositionMetrics
                         assetValue={a.asset_value}
@@ -245,12 +237,6 @@ export function CapitalPortfolioPanels({
                   <MqxFinListRow
                     key={l.id}
                     title={l.title}
-                    subtitle={
-                      <>
-                        <MoneyText value={l.monthly_payment} decimals={0} />
-                        /мес · долг <MoneyText value={l.total_debt} decimals={0} />
-                      </>
-                    }
                     metrics={
                       <LiabilityPositionMetrics
                         totalDebt={l.total_debt}

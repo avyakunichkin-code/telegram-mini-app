@@ -6,13 +6,13 @@ import { MetricsRow } from './MetricsRow';
 export function InsurancePlanMetrics({ monthlyPremium, payoutAmount, termPeriods }) {
   return (
     <MetricsRow className="mqx-ins-metrics">
-      <MetricInlineItem tip="Оплата за период" glyph="down" tone="neg">
-        <MoneyText value={monthlyPremium} decimals={0} />
-      </MetricInlineItem>
-      <MetricInlineItem tip="Сумма выплаты при случае" glyph="coin">
+      <MetricInlineItem tip="Сумма выплаты при случае (лимит)" glyph="coin">
         <MoneyText value={payoutAmount} decimals={0} />
       </MetricInlineItem>
-      <MetricInlineItem tip="Срок действия" glyph="term">
+      <MetricInlineItem tip="Премия за период (списание в конце периода)" glyph="down" tone="neg">
+        <MoneyText value={monthlyPremium} decimals={0} />
+      </MetricInlineItem>
+      <MetricInlineItem tip="Срок действия (число периодов)" glyph="term">
         {termPeriods} пер.
       </MetricInlineItem>
     </MetricsRow>

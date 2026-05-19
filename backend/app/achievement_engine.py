@@ -7,7 +7,6 @@ from __future__ import annotations
 import json
 import logging
 from dataclasses import dataclass
-from datetime import datetime
 from typing import Any
 
 from sqlalchemy.orm import Session
@@ -25,6 +24,7 @@ from .models import (
     ProfileAchievementUnlock,
     Transaction,
 )
+from .timeutil import utc_now_naive
 
 logger = logging.getLogger(__name__)
 
@@ -345,7 +345,7 @@ def process_achievement_unlocks(db: Session, profile: GameProfile) -> list[dict[
                 ProfileAchievementUnlock(
                     game_profile_id=profile.id,
                     tier_definition_id=int(tier_def.id),
-                    unlocked_at=datetime.utcnow(),
+                    unlocked_at=utc_now_naive(),
                     period_index=int(profile.period_index),
                 )
             )
