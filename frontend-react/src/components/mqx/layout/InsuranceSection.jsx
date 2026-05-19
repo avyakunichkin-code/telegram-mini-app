@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Button } from '@telegram-apps/telegram-ui';
 import { MqxModeButton } from '../primitives/MqxModeButton';
+import { MqxCapitalEmpty } from '../primitives/MqxCapitalEmpty';
 import { MqxSectionSeg } from '../primitives/MqxSectionSeg';
 import { InsurancePolicyRow } from './InsurancePolicyRow';
 import { InsuranceProductPicker } from './InsuranceProductPicker';
@@ -25,7 +26,15 @@ export function InsuranceSection({
   const policiesList = (
     <div className="mqx-capital-position-list">
       {policies.length === 0 ? (
-        <div className="mqx-fin-empty">Нет активных полисов</div>
+        useSectionSeg ? (
+          <MqxCapitalEmpty
+            message="Нет активных полисов"
+            actionLabel="Оформить полис"
+            onAction={() => setUiMode('picker')}
+          />
+        ) : (
+          <div className="mqx-fin-empty">Нет активных полисов</div>
+        )
       ) : (
         policies.map((p) => (
           <InsurancePolicyRow

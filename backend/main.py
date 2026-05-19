@@ -154,6 +154,21 @@ def ensure_schema_compatibility() -> None:
         statements.append("ALTER TABLE game_profiles ADD COLUMN onboarding_state VARCHAR(30) NOT NULL DEFAULT 'draft'")
     if "clean_period_streak" not in columns:
         statements.append("ALTER TABLE game_profiles ADD COLUMN clean_period_streak INTEGER NOT NULL DEFAULT 0")
+    if "progression_milestones_awarded" not in columns:
+        statements.append(
+            "ALTER TABLE game_profiles ADD COLUMN progression_milestones_awarded TEXT NOT NULL DEFAULT '[]'"
+        )
+
+    if "period_snapshots" in inspector.get_table_names():
+        ps_cols = {item["name"] for item in inspector.get_columns("period_snapshots")}
+        if "safety_contribute_xp_grants" not in ps_cols:
+            statements.append(
+                "ALTER TABLE period_snapshots ADD COLUMN safety_contribute_xp_grants INTEGER NOT NULL DEFAULT 0"
+            )
+        if "safety_withdraw_xp_grants" not in ps_cols:
+            statements.append(
+                "ALTER TABLE period_snapshots ADD COLUMN safety_withdraw_xp_grants INTEGER NOT NULL DEFAULT 0"
+            )
 
     # ---- finance_liabilities ----
     if "finance_liabilities" in inspector.get_table_names():

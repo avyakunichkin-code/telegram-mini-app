@@ -12,6 +12,7 @@ import {
   ExpensesBudgetBlock,
   InsuranceSection,
   LiabilityPositionMetrics,
+  MqxCapitalEmpty,
   MqxModeButton,
   MqxSectionSeg,
   MqxSubtab,
@@ -559,6 +560,7 @@ export function FinanceSection({
       />
       {investUiMode === 'form' ? (
         <InvestProductForm
+          embedded
           productId={investProductTab}
           productTitle={investProductTab === 'deposit' ? 'Депозит' : 'Облигации'}
           amount={investProductTab === 'deposit' ? depositAmount : bondAmount}
@@ -571,11 +573,13 @@ export function FinanceSection({
           onSubmit={() => void (investProductTab === 'deposit' ? openDeposit() : openBond())}
         />
       ) : (
-        <div className="mqx-fin-list" style={{ marginTop: 8 }}>
+        <div className="mqx-capital-position-list">
           {selectedInvestPositions.length === 0 ? (
-            <div className="mqx-fin-empty">
-              Нет позиций: {investProductTab === 'deposit' ? 'депозитов' : 'облигаций'}
-            </div>
+            <MqxCapitalEmpty
+              message={`Нет позиций: ${investProductTab === 'deposit' ? 'депозитов' : 'облигаций'}`}
+              actionLabel="Оформить"
+              onAction={() => setInvestUiMode('form')}
+            />
           ) : (
             selectedInvestPositions.map((p) => (
               <InvestPositionRow
@@ -680,6 +684,9 @@ export function FinanceSection({
         <h2 className={capitalLayout ? 'mqx-capital-card__title' : 'mqx-card__title'}>{activeTabLabel}</h2>
 
         {financeTab === 'invest' ? (
+          capitalLayout ? (
+            investCapitalBlock
+          ) : (
           <>
             <div className="mqx-fin-subtabs mqx-fin-subtabs-row" role="tablist" aria-label="Инструмент">
               <MqxSubtab
@@ -745,6 +752,7 @@ export function FinanceSection({
               </>
             )}
           </>
+          )
         ) : null}
 
         {financeTab === 'insurance' ? (
@@ -755,6 +763,7 @@ export function FinanceSection({
             onBuy={buyInsurancePlan}
             onCancel={cancelInsurancePolicy}
             intro="Премия списывается в конце периода. При страховом случае — полная сумма выплаты, полис закрывается."
+            useSectionSeg={capitalLayout}
           />
         ) : null}
 

@@ -13,9 +13,26 @@ from dataclasses import dataclass
 MIN_PERIOD_INDEX_FOR_WIN = 7
 MVP_SAFETY_FUND_OBLIGATIONS_MULTIPLIER = 3.0
 
-# --- XP / уровень персонажа (числа настраиваемые) ---
-XP_NEED_BASE = 100
-XP_NEED_PER_LEVEL_STEP = 50
+# --- XP / уровень персонажа (v2: balance-xp-evening-session.md) ---
+CHARACTER_MAX_LEVEL = 12
+XP_TOTAL_TO_MAX_LEVEL = 2500
+# need(L) для перехода L → L+1; сумма = 2500
+XP_NEED_BY_LEVEL: tuple[int, ...] = (
+    30,
+    45,
+    65,
+    95,
+    140,
+    200,
+    280,
+    380,
+    500,
+    650,
+    115,
+)
+# Устаревшие константы (линейная v1) — только для совместимости тестов/миграций
+XP_NEED_BASE = XP_NEED_BY_LEVEL[0]
+XP_NEED_PER_LEVEL_STEP = XP_NEED_BY_LEVEL[1] - XP_NEED_BY_LEVEL[0]
 
 # --- События ---
 EVENT_TIER_WINDOW_BELOW_LEVEL = 2
@@ -31,7 +48,20 @@ MANDATORY_GATE_BLOCKS_PERIOD_END = "blocks_period_end"
 
 def character_xp_need_for_next_level(level: int) -> int:
     L = max(1, int(level))
-    return XP_NEED_BASE + max(0, L - 1) * XP_NEED_PER_LEVEL_STEP
+    if L >= CHARACTER_MAX_LEVEL:
+        return 0
+    idx = L - 1
+    if idx < len(XP_NEED_BY_LEVEL):
+        return int(XP_NEED_BY_LEVEL[idx])
+    return int(XP_NEED_BY_LEVEL[-1])
+
+
+def character_xp_cumulative_to_reach_level(level: int) -> int:
+    """Накопительный XP для входа на уровень level (level 1 → 0)."""
+    target = max(1, min(int(level), CHARACTER_MAX_LEVEL))
+    if target <= 1:
+        return 0
+    return sum(int(x) for x in XP_NEED_BY_LEVEL[: target - 1])
 
 
 def apply_xp_to_character_state(level: int, xp: int, delta: int) -> tuple[int, int, dict]:
@@ -56,18 +86,20 @@ def apply_xp_to_character_state(level: int, xp: int, delta: int) -> tuple[int, i
 
     cur_xp += int(delta)
     level_up = False
-    xp_for_next = character_xp_need_for_next_level(cur_level)
-    while cur_xp >= xp_for_next:
+    while cur_level < CHARACTER_MAX_LEVEL:
+        xp_for_next = character_xp_need_for_next_level(cur_level)
+        if xp_for_next <= 0 or cur_xp < xp_for_next:
+            break
         cur_level += 1
         cur_xp -= xp_for_next
         level_up = True
-        xp_for_next = character_xp_need_for_next_level(cur_level)
 
     return cur_level, cur_xp, {
         "xp_gained": delta,
         "level_up": level_up,
         "new_level": cur_level if level_up else None,
         "character_xp_need_for_next": character_xp_need_for_next_level(cur_level),
+        "at_max_level": cur_level >= CHARACTER_MAX_LEVEL,
     }
 
 

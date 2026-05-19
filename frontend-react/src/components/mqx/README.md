@@ -42,6 +42,9 @@ mqx/
     EventCard, EventChoiceButton
     EventCarouselOverlay, EventCarouselDots, EventCarouselNav
     EventOverlayToolbar, useEventCarousel
+  onboarding/
+    OnboardingCoach, OnboardingCoachOverlay, MonetkaAvatar
+    onboardingSteps.js, useOnboardingCoachState
   catalog/MqCatalogScreen.jsx
   index.js
 ```

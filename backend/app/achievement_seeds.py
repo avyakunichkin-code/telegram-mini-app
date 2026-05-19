@@ -9,13 +9,30 @@ from sqlalchemy.orm import Session
 from .achievement_engine import CRITERIA_SCHEMA_VERSION
 from .models import AchievementChain, AchievementTierDefinition
 
+# Синхронизация: docs/vision/ideas/balance-xp-evening-session.md
+ACHIEVEMENT_XP_BASE = 26
+ACHIEVEMENT_XP_TIER_EXPONENT = 1.42
+
+
+def achievement_tier_xp(tier_index: int, *, chain_multiplier: float = 1.0) -> int:
+    tier = max(1, min(4, int(tier_index)))
+    raw = ACHIEVEMENT_XP_BASE * (tier**ACHIEVEMENT_XP_TIER_EXPONENT) * float(chain_multiplier)
+    return max(1, int(round(raw)))
+
 
 def _crit(ctype: str, **kwargs) -> str:
     payload = {"schema_version": CRITERIA_SCHEMA_VERSION, "type": ctype, **kwargs}
     return json.dumps(payload, ensure_ascii=False)
 
 
-def _tier(tier_index: int, tier_key: str, title: str, description: str, xp: int, criteria_json: str) -> dict:
+def _tier(
+    tier_index: int,
+    tier_key: str,
+    title: str,
+    description: str,
+    xp: int,
+    criteria_json: str,
+) -> dict:
     return {
         "tier_index": tier_index,
         "tier_key": tier_key,
@@ -26,6 +43,22 @@ def _tier(tier_index: int, tier_key: str, title: str, description: str, xp: int,
     }
 
 
+def _chain_tiers(chain_mult: float, specs: list[tuple]) -> list[dict]:
+    out = []
+    for tier_index, tier_key, title, description, crit in specs:
+        out.append(
+            _tier(
+                tier_index,
+                tier_key,
+                title,
+                description,
+                achievement_tier_xp(tier_index, chain_multiplier=chain_mult),
+                crit,
+            )
+        )
+    return out
+
+
 ACHIEVEMENT_CHAIN_SPECS: list[dict] = [
     {
         "chain_key": "safety_fund",
@@ -33,12 +66,15 @@ ACHIEVEMENT_CHAIN_SPECS: list[dict] = [
         "title": "Подушка безопасности",
         "description": "Накопите резерв в месяцах расходов.",
         "sort_order": 10,
-        "tiers": [
-            _tier(1, "safety_fund_t1", "Первая подушка", "Подушка ≥ 1 месяца расходов", 15, _crit("safety_fund_months", months_multiplier=1)),
-            _tier(2, "safety_fund_t2", "Защита на квартал", "Подушка ≥ 3 месяцев расходов", 40, _crit("safety_fund_months", months_multiplier=3)),
-            _tier(3, "safety_fund_t3", "Полгода спокойствия", "Подушка ≥ 6 месяцев расходов", 100, _crit("safety_fund_months", months_multiplier=6)),
-            _tier(4, "safety_fund_t4", "Годовой запас", "Подушка ≥ 12 месяцев расходов", 250, _crit("safety_fund_months", months_multiplier=12)),
-        ],
+        "tiers": _chain_tiers(
+            1.08,
+            [
+                (1, "safety_fund_t1", "Первая подушка", "Подушка ≥ 1 месяца расходов", _crit("safety_fund_months", months_multiplier=1)),
+                (2, "safety_fund_t2", "Защита на квартал", "Подушка ≥ 3 месяцев расходов", _crit("safety_fund_months", months_multiplier=3)),
+                (3, "safety_fund_t3", "Полгода спокойствия", "Подушка ≥ 6 месяцев расходов", _crit("safety_fund_months", months_multiplier=6)),
+                (4, "safety_fund_t4", "Годовой запас", "Подушка ≥ 12 месяцев расходов", _crit("safety_fund_months", months_multiplier=12)),
+            ],
+        ),
     },
     {
         "chain_key": "deposit",
@@ -46,19 +82,21 @@ ACHIEVEMENT_CHAIN_SPECS: list[dict] = [
         "title": "Вклад",
         "description": "Дисциплина сбережений через депозит.",
         "sort_order": 20,
-        "tiers": [
-            _tier(1, "deposit_t1", "Первый вклад", "Открыть вклад от 1 000 ₽", 10, _crit("deposit_opened", min_principal=1000)),
-            _tier(2, "deposit_t2", "Серьёзный вклад", "Сумма вклада ≥ 2 зарплат", 30, _crit("deposit_principal_vs_salary", salary_multiplier=2)),
-            _tier(3, "deposit_t3", "Капитализация", "Накопленные % ≥ 10 000 ₽", 80, _crit("deposit_accrued_interest", min_interest=10_000)),
-            _tier(
-                4,
-                "deposit_t4",
-                "Покрытие статьи",
-                "Проценты по вкладу ≥ 10% месячных расходов",
-                200,
-                _crit("deposit_monthly_income_ratio", min_ratio=0.1),
-            ),
-        ],
+        "tiers": _chain_tiers(
+            0.92,
+            [
+                (1, "deposit_t1", "Первый вклад", "Открыть вклад от 1 000 ₽", _crit("deposit_opened", min_principal=1000)),
+                (2, "deposit_t2", "Серьёзный вклад", "Сумма вклада ≥ 2 зарплат", _crit("deposit_principal_vs_salary", salary_multiplier=2)),
+                (3, "deposit_t3", "Капитализация", "Накопленные % ≥ 10 000 ₽", _crit("deposit_accrued_interest", min_interest=10_000)),
+                (
+                    4,
+                    "deposit_t4",
+                    "Покрытие статьи",
+                    "Проценты по вкладу ≥ 10% месячных расходов",
+                    _crit("deposit_monthly_income_ratio", min_ratio=0.1),
+                ),
+            ],
+        ),
     },
     {
         "chain_key": "insurance",
@@ -66,12 +104,15 @@ ACHIEVEMENT_CHAIN_SPECS: list[dict] = [
         "title": "Страховки",
         "description": "Защита от редких крупных рисков.",
         "sort_order": 30,
-        "tiers": [
-            _tier(1, "insurance_t1", "Первый полис", "Оформить любую страховку", 10, _crit("insurance_active_count", min_count=1)),
-            _tier(2, "insurance_t2", "Две линии защиты", "Два разных полиса", 30, _crit("insurance_active_count", min_count=2)),
-            _tier(3, "insurance_t3", "Выплата сработала", "Хотя бы одна страховая выплата", 70, _crit("insurance_claimed_count", min_count=1)),
-            _tier(4, "insurance_t4", "Долгий покой", "24 периода без просрочки при активной страховке", 150, _crit("insured_clean_streak", min_periods=24)),
-        ],
+        "tiers": _chain_tiers(
+            0.95,
+            [
+                (1, "insurance_t1", "Первый полис", "Оформить любую страховку", _crit("insurance_active_count", min_count=1)),
+                (2, "insurance_t2", "Две линии защиты", "Два разных полиса", _crit("insurance_active_count", min_count=2)),
+                (3, "insurance_t3", "Выплата сработала", "Хотя бы одна страховая выплата", _crit("insurance_claimed_count", min_count=1)),
+                (4, "insurance_t4", "Долгий покой", "24 периода без просрочки при активной страховке", _crit("insured_clean_streak", min_periods=24)),
+            ],
+        ),
     },
     {
         "chain_key": "credit",
@@ -79,12 +120,15 @@ ACHIEVEMENT_CHAIN_SPECS: list[dict] = [
         "title": "Кредиты",
         "description": "Дисциплина обслуживания долгов.",
         "sort_order": 40,
-        "tiers": [
-            _tier(1, "credit_t1", "Платёж в срок", "Нет просрочки по обязательствам", 10, _crit("no_overdue")),
-            _tier(2, "credit_t2", "Закрытие долга", "Полностью закрыть одно обязательство", 40, _crit("liabilities_closed_count", min_count=1)),
-            _tier(3, "credit_t3", "Дисциплина", "3 периода подряд без просрочки", 100, _crit("clean_period_streak", min_periods=3)),
-            _tier(4, "credit_t4", "Крупный выход", "Закрыть крупный долг (≥ 300 000 ₽)", 300, _crit("liability_close_payment", min_amount=300_000)),
-        ],
+        "tiers": _chain_tiers(
+            1.08,
+            [
+                (1, "credit_t1", "Платёж в срок", "Нет просрочки по обязательствам", _crit("no_overdue")),
+                (2, "credit_t2", "Закрытие долга", "Полностью закрыть одно обязательство", _crit("liabilities_closed_count", min_count=1)),
+                (3, "credit_t3", "Дисциплина", "3 периода подряд без просрочки", _crit("clean_period_streak", min_periods=3)),
+                (4, "credit_t4", "Крупный выход", "Закрыть крупный долг (≥ 300 000 ₽)", _crit("liability_close_payment", min_amount=300_000)),
+            ],
+        ),
     },
     {
         "chain_key": "investment",
@@ -92,12 +136,15 @@ ACHIEVEMENT_CHAIN_SPECS: list[dict] = [
         "title": "Инвестиции",
         "description": "Облигации и пассивный доход (без акций в scope).",
         "sort_order": 50,
-        "tiers": [
-            _tier(1, "investment_t1", "Первая бумага", "Купить облигацию", 15, _crit("bond_count", min_count=1)),
-            _tier(2, "investment_t2", "Портфель облигаций", "Три облигации в портфеле", 50, _crit("bond_count", min_count=3)),
-            _tier(3, "investment_t3", "Пассивный поток", "Пассивный доход > 5% расходов", 120, _crit("passive_income_ratio", min_ratio=0.05)),
-            _tier(4, "investment_t4", "Сильный пассив", "Пассивный доход > 30% расходов", 300, _crit("passive_income_ratio", min_ratio=0.30)),
-        ],
+        "tiers": _chain_tiers(
+            1.0,
+            [
+                (1, "investment_t1", "Первая бумага", "Купить облигацию", _crit("bond_count", min_count=1)),
+                (2, "investment_t2", "Портфель облигаций", "Три облигации в портфеле", _crit("bond_count", min_count=3)),
+                (3, "investment_t3", "Пассивный поток", "Пассивный доход > 5% расходов", _crit("passive_income_ratio", min_ratio=0.05)),
+                (4, "investment_t4", "Сильный пассив", "Пассивный доход > 30% расходов", _crit("passive_income_ratio", min_ratio=0.30)),
+            ],
+        ),
     },
     {
         "chain_key": "capital",
@@ -105,12 +152,15 @@ ACHIEVEMENT_CHAIN_SPECS: list[dict] = [
         "title": "Капитал",
         "description": "Чистая ликвидная позиция.",
         "sort_order": 60,
-        "tiers": [
-            _tier(1, "capital_t1", "В плюсе", "Чистый капитал > 0", 10, _crit("liquid_net_worth", min_amount=1)),
-            _tier(2, "capital_t2", "Полгода дохода", "Ликвидность > 6 месяцев дохода", 50, _crit("liquid_vs_salary_months", min_months=6)),
-            _tier(3, "capital_t3", "Два года дохода", "Ликвидность > 24 месяцев дохода", 150, _crit("liquid_vs_salary_months", min_months=24)),
-            _tier(4, "capital_t4", "Капитал 100k", "Ликвидность ≥ 100 000 ₽", 500, _crit("liquid_net_worth", min_amount=100_000)),
-        ],
+        "tiers": _chain_tiers(
+            1.0,
+            [
+                (1, "capital_t1", "В плюсе", "Чистый капитал > 0", _crit("liquid_net_worth", min_amount=1)),
+                (2, "capital_t2", "Полгода дохода", "Ликвидность > 6 месяцев дохода", _crit("liquid_vs_salary_months", min_months=6)),
+                (3, "capital_t3", "Два года дохода", "Ликвидность > 24 месяцев дохода", _crit("liquid_vs_salary_months", min_months=24)),
+                (4, "capital_t4", "Капитал 100k", "Ликвидность ≥ 100 000 ₽", _crit("liquid_net_worth", min_amount=100_000)),
+            ],
+        ),
     },
 ]
 

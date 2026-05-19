@@ -1,14 +1,16 @@
 ---
 layer: plan
 status: draft
-last_reviewed: 2026-05-19
+last_reviewed: 2026-05-20
 spec: ../specs/features/SPEC_onboarding-tma.md
 epic: O1
 ---
 
 # Plan: Онбординг TMA (O1)
 
-**Принцип:** больше времени на утверждение в design-lab, меньше переделок в prod.
+**Принцип:** утвердить в design-lab, затем MQX → prod.
+
+**Поворот 2026-05-20:** вместо Mission Brief (3 карточки) — **guided coach** на `GameScreen` ([`onboarding-guided/`](../../design-lab/onboarding-guided/)).
 
 ---
 
@@ -17,62 +19,56 @@ epic: O1
 | # | Документ | Статус | Когда трогать |
 |---|----------|--------|----------------|
 | 1 | [`onboarding-tma-mission-brief.md`](../vision/ideas/onboarding-tma-mission-brief.md) | draft | Продукт, scope |
-| 2 | [`CHARACTER_MONETKA.md`](../reference/CHARACTER_MONETKA.md) | draft | После выбора варианта с персонажем |
-| 3 | [`design-lab/onboarding-brief/`](../../design-lab/onboarding-brief/) | **раунд 1** | **Сейчас** — выбор A–F |
-| 4 | [`SPEC_onboarding-tma.md`](../specs/features/SPEC_onboarding-tma.md) | draft → approved | После «утверждаем X» |
+| 2 | [`CHARACTER_MONETKA.md`](../reference/CHARACTER_MONETKA.md) | approved | Тон Монетки |
+| 3 | [`design-lab/onboarding-guided/`](../../design-lab/onboarding-guided/) | **★ утверждён** | Копирайт, APPROVED |
+| 3b | [`design-lab/onboarding-brief/`](../../design-lab/onboarding-brief/) | superseded | Архив |
+| 4 | [`SPEC_onboarding-tma.md`](../specs/features/SPEC_onboarding-tma.md) | approved | Guided coach |
 | 5 | `PLAN_onboarding-tma.md` (этот файл) | draft | Дорожная карта |
-| 6 | [`PRODUCT_BACKLOG.md`](../backlog/PRODUCT_BACKLOG.md) | O1 секция | Задачи P0/P1 |
-| 7 | [`TRACEABILITY.md`](../TRACEABILITY.md) | O1 строка | Статус эпика |
+| 6 | [`PRODUCT_BACKLOG.md`](../backlog/PRODUCT_BACKLOG.md) | O1 | Задачи |
+| 7 | [`TRACEABILITY.md`](../TRACEABILITY.md) | O1 | Статус |
 | 8 | [`TMA_USER_FLOWS.md`](../foundation/TMA_USER_FLOWS.md) | чеклист | После внедрения |
-| 9 | [`SPEC_FRONTEND_UI.md`](../specs/SPEC_FRONTEND_UI.md) | при необходимости | § онбординг-оверлей |
-| 10 | [`PRE_ALPHA_PLAYTEST_PROTOCOL.md`](../foundation/PRE_ALPHA_PLAYTEST_PROTOCOL.md) | §3 онбординг | Перед плейтестом |
-
-**Не в волне 1:** coach marks spec, отдельный `design-lab/onboarding-coachmarks/`.
 
 ---
 
 ## Фазы
 
-### Фаза 0 — Утверждение (текущая)
+### Фаза 0 — Утверждение ✅
 
-| Шаг | Действие | Готово когда |
-|-----|----------|--------------|
-| 0.1 | Пройти `cd design-lab/onboarding-brief && npx serve .` | Просмотрены A–F, light/dark |
-| 0.2 | Утвердить вариант + копирайт 3 шагов с Монеткой | В чате: «Утверждаем **X**» |
-| 0.3 | Заполнить § «Утверждённый вариант» в `CHARACTER_MONETKA.md` | ID варианта зафиксирован |
-| 0.4 | Spec → `approved` | SPEC_onboarding-tma без открытых вопросов |
-
-**Выход из фазы 0:** явное утверждение. **Код prod не начинаем.**
+- ~~Mission Brief A~~ superseded.
+- **2026-05-20:** guided coach 5 шагов — [`onboarding-guided/APPROVED.md`](../../design-lab/onboarding-guided/APPROVED.md).
 
 ---
 
-### Фаза 1 — Mission Brief (MVP O1)
+### Фаза 1 — Guided coach (текущая)
 
 | # | Задача | Слой |
 |---|--------|------|
-| 1.1 | MQX: `MissionBriefOverlay` (+ Монетка SVG/CSS) | Frontend |
+| 1.0 | Автостарт **простейшего** шаблона после Game Mode (если ещё нет) | Frontend+Backend |
+| 1.1 | MQX: `OnboardingCoach` + spotlight + `MonetkaBubble` | Frontend |
 | 1.2 | `#/dev/mqx` секция | Frontend |
-| 1.3 | `onboarding_state`: `draft` на start, PATCH `brief_done` | Backend |
-| 1.4 | Поле в overview; показ оверлея на GameScreen при `draft` | Frontend |
-| 1.5 | pytest + `npm run build` | QA |
+| 1.3 | `onboarding_state` + `onboarding_step`; PATCH | Backend |
+| 1.4 | Поля в overview; coach на `GameScreen` при `draft` | Frontend |
+| 1.5 | Гейты: 10 с (шаги 1,3), salary, cushion; skip×2 | Frontend |
+| 1.6 | `data-onboarding-anchor` на целевых элементах | Frontend |
+| 1.7 | pytest + `npm run build` | QA |
 
 ---
 
-### Фаза 2 — Меню «Повторить обучение»
+### Фаза 2 — Повтор и метрики (отложено)
 
 | # | Задача |
 |---|--------|
-| 2.1 | Пункт в `MenuPremium` |
-| 2.2 | Показ брифа без смены `brief_done` (локальный `replay` или флаг сессии) |
+| 2.1 | «Повторить обучение» в меню — **после** изучения поведения |
+| 2.2 | События аналитики: шаг, skip, время до `brief_done` |
 
 ---
 
-### Фаза 3 — Coach marks (отдельно)
+### Фаза 3 — Доработки по плейтесту
 
 | # | Задача |
 |---|--------|
-| 3.1 | `design-lab/onboarding-coachmarks/` (2 подсказки, период 1) |
-| 3.2 | Утверждение → MQX → prod |
+| 3.1 | Настраиваемая длительность практики (сейчас 10 с фикс) |
+| 3.2 | Опционально: события / цель победы отдельным шагом |
 
 ---
 
@@ -80,14 +76,14 @@ epic: O1
 
 | Фаза | Срок |
 |------|------|
-| 0 | 1–3 дня (обсуждение, без кода) |
-| 1 | 2–3 дня после 0 |
-| 2 | 0.5 дня |
-| 3 | 2 дня (отдельный спринт) |
+| 0 | ✅ |
+| 1 | 3–4 дня |
+| 2 | TBD |
+| 3 | по плейтесту |
 
 ---
 
 ## Зависимости
 
 - MQ-116 ✅
-- Pre-Alpha плейтест: желателен **фаза 1**, не блокер если есть текстовый бриф в протоколе
+- Pre-Alpha: желателен **фаза 1** до плейтеста

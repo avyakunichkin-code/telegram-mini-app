@@ -1,35 +1,40 @@
 ---
 layer: spec
-status: draft
+status: approved
 owner: product+frontend
-last_reviewed: 2026-05-19
+last_reviewed: 2026-05-20
 tracks: O1, pre-alpha, onboarding
 idea: ../../vision/ideas/onboarding-tma-mission-brief.md
-design_lab: ../../../design-lab/onboarding-brief/
+design_lab: ../../../design-lab/onboarding-guided/
 character: ../../reference/CHARACTER_MONETKA.md
 ---
 
-# Spec: Онбординг TMA (Mission Brief + Монетка)
+# Spec: Онбординг TMA (Guided Coach + Монетка)
 
 ## Objective
 
-Дать **минимальное** вводное обучение в тоне **игры-квеста**: период, зарплата, подушка, события. Наставник — персонаж **Монетка**.
+Дать **минимальное интерактивное** обучение на живом дашборде: **одна механика на шаг**, короткий текст Монетки, практика на реальных кнопках. Наставник — **Монетка**.
 
-**Успех (Pre-Alpha):** бриф за **< 60 с** или skip; меньше вопросов «зачем подушка» в опросе ([`PRE_ALPHA_PLAYTEST_PROTOCOL.md`](../../foundation/PRE_ALPHA_PLAYTEST_PROTOCOL.md) §6).
+**Успех (Pre-Alpha):** игрок за первую сессию понимает период/таймер, зарплату, «Следующий период», подушку; онбординг можно пройти или выйти за **< 2 мин**; меньше вопросов «зачем подушка» в опросе.
 
-**Волна 1 (O1):** только Mission Brief. **Coach marks — волна 2** (отдельный design-lab).
+**Заменяет (2026-05-20):** Mission Brief из 3 полноэкранных карточек + видео — см. [`design-lab/onboarding-brief/`](../../../design-lab/onboarding-brief/) (superseded).
 
 ---
 
-## Продуктовые решения (зафиксировано)
+## Продуктовые решения (зафиксировано 2026-05-20)
 
 | Тема | Решение |
 |------|---------|
-| Когда показывать | После **первой успешной загрузки `overview`** на `GameScreen` |
+| Когда показывать | Только **первая игра** после выбора **Game Mode**; партия **автостартует** с **самым простым** шаблоном каталога |
 | Повтор при новой игре | **Не показывать** автоматически (`brief_done` на профиле) |
-| Повтор вручную | **«Повторить обучение»** в меню — бриф без смены `brief_done` |
-| Персонаж | **Монетка** — [`CHARACTER_MONETKA.md`](../../reference/CHARACTER_MONETKA.md) |
-| Визуал | Варианты **A–F** в [`design-lab/onboarding-brief/`](../../../design-lab/onboarding-brief/) → утверждение → MQX |
+| Повтор вручную | **Отложено** — сначала проще; поведение изучим по метрикам (фаза 2 плана) |
+| Персонаж | **Монетка** — PNG [`CHARACTER_MONETKA.md`](../../reference/CHARACTER_MONETKA.md) |
+| Паттерн | **Guided coach** — spotlight + пузырь на `GameScreen` |
+| Зарплата 0 в шаблоне | **Не сценарий онбординга** — считается **багом** данных/шаблона |
+| «Следующий период» до зарплаты | **Не блокировать**; порядок подсказок сохраняем; при переходе без зарплаты — **существующее** модальное предупреждение |
+| Практика | Шаги **1 и 3:** **10 с** фикс без пузыря, затем авто-переход |
+| Skip | **1-е** «Пропустить» = пропуск **шага**; **2-е** = пропуск **всего** онбординга → `brief_done` |
+| Подушка (шаг 4) | Засчитывается **любая** успешная сумма пополнения |
 
 ---
 
@@ -37,12 +42,16 @@ character: ../../reference/CHARACTER_MONETKA.md
 
 | Слой | Паттерн |
 |------|---------|
-| Brief | 3 шага, полноэкранный оверлей поверх дашборда, MQX + Монетка |
-| Навигация | Точки 1–3, «Далее», на последнем — «Начать первый месяц» |
-| Skip | Всегда видим («Пропустить») |
-| Coach marks | **Out of scope v1** |
+| Coach | 5 шагов на приглушённом дашборде; **spotlight** на целевой элемент |
+| Персонаж | Монетка в пузыре рядом с подсветкой |
+| Текст | **Заголовок** + **2–4 предложения** — одна механика |
+| Практика | Пузырь скрывается → **10 с** (шаги 1, 3) или ждём **действие** (шаги 2, 4) |
+| Финиш | Шаг 5 — прощание, CTA **«Начать игру»** |
+| Skip | Кнопка «Пропустить» на каждом шаге (логика см. выше) |
 
-**Запрещено:** блокировка кнопок игры до конца текста; финтех-лекции; показ брифа на каждой новой партии.
+**Запрещено в копирайте:** называть «Следующий период» **«Дальше»**; рассказывать про «Следующий период» **до** шага 3; пачкать несколько механик в одном шаге.
+
+**Out of scope v1:** видео в онбординге; coach marks «волна 2» как отдельный продукт; Plan Mode onboarding.
 
 ---
 
@@ -50,104 +59,116 @@ character: ../../reference/CHARACTER_MONETKA.md
 
 ```mermaid
 flowchart TD
-  A[POST /game/start] --> B[GameScreen грузит overview]
-  B --> C{onboarding_state == draft?}
-  C -->|да| D[Mission Brief + Монетка]
-  C -->|нет| E[Игра]
-  D -->|Skip / Finish| F[PATCH brief_done]
-  F --> E
-  G[Меню: Повторить обучение] --> D
+  A[Выбор Game Mode] --> B[Автостарт простейшего шаблона]
+  B --> C[GameScreen + overview]
+  C --> D{onboarding_state == draft?}
+  D -->|да| E[Guided coach шаг 1..5]
+  D -->|нет| F[Игра]
+  E -->|Шаг 5 / 2x Skip| G[PATCH brief_done]
+  G --> F
 ```
 
-1. Создание профиля → `onboarding_state = draft`.
-2. `GameScreen`: после `overview` — если `draft`, показать оверлей (подложка — приглушённый дашборд).
-3. Skip или финиш → `PATCH` → `brief_done` → оверлей снять.
-4. Вторая новая игра с новым профилем — снова `draft` только у **нового** профиля; у профиля с `brief_done` бриф не автопоказывается.
-5. Меню: «Повторить обучение» — показать бриф **без** PATCH (сессионный флаг UI).
+1. Пользователь выбирает **Игра** → создаётся профиль с `onboarding_state = draft`, `onboarding_step = 0` (или `period_timer`).
+2. `GameScreen`: после `overview` — если `draft`, запуск coach с текущего шага.
+3. Переходы шагов — по таблице ниже; прогресс **сохранять** на сервере (пережить refresh).
+4. Шаг 5 или второй Skip → `brief_done`.
+5. Вторая игра / тот же профиль после `brief_done` — coach **не** автопоказывается.
 
 ---
 
-## Content (3 шага — черновик с Монеткой)
+## Шаги и гейты
 
-| Шаг | Заголовок | Реплика Монетки (пример) |
-|-----|-----------|--------------------------|
-| 1 | Месяц за месяцем | «Привет! Я **Монетка**. Игра идёт **периодами** — как месяцы. Таймер можно поставить на паузу.» |
-| 2 | Зарплата и подушка | «Зарплату **забираешь сам** до конца периода. **Подушка** — твой запас, когда месяц жмёт.» |
-| 3 | Ситуации и цель | «В шапке — **События**: пару решений за период. На главной видна **цель**. Погнали?» |
+| # | `onboarding_step` | Тема | Spotlight | Переход |
+|---|-------------------|------|-----------|---------|
+| 1 | `period_timer` | Период, таймер, ▶/⏸ | Hero (таймер, пауза, № периода) | **10 с** после скрытия пузыря |
+| 2 | `salary` | **Зарплата** | Кнопка «Зарплата» | Успешный `POST claim-salary` |
+| 3 | `next_period` | **Следующий период** | Pill в hero | **10 с** после скрытия пузыря; только после шага 2 |
+| 4 | `safety_fund` | **В подушку** | Кнопка «В подушку» | Успешный `POST contribute-to-safety-fund` (любая сумма > 0) |
+| 5 | `farewell` | Прощание | — | CTA «Начать игру» → `brief_done` |
 
-Финальный CTA: **«Начать первый месяц»**.
+**Детекция гейтов (frontend):**
+
+- Шаг 2: `periodStatus.salary_claimed === true` после `claimSalary`.
+- Шаг 4: `periodStatus.safety_fund_contribution > 0` или рост `safety_fund_balance` / флаг в ответе contribute.
+
+**Таймер онбординга:** рекомендуется **пауза периода**, пока виден пузырь; на 10 с практики — снять паузу (уточнить в MQX при реализации).
 
 ---
 
-## Design-lab (до кода)
+## Content
 
-Утвердить один из вариантов в [`design-lab/onboarding-brief/README.md`](../../../design-lab/onboarding-brief/README.md):
+Канон текстов: [`design-lab/onboarding-guided/CONTENT.md`](../../../design-lab/onboarding-guided/CONTENT.md).
 
-| ID | Кратко |
-|----|--------|
-| A | Без персонажа |
-| B | Монетка + bubble (рекомендуем к обсуждению) |
-| C | Компактный avatar |
-| D | Дневник квеста |
-| E | Сцена + карточка |
-| F | Лента 3 глав |
+**Голос Монетки:** игривый напарник, «только что поняла»; мягкий задор; женский род. [`CHARACTER_MONETKA.md`](../../reference/CHARACTER_MONETKA.md).
 
-**Gate:** без «утверждаем **X**» — фазы 1–2 плана не стартуют.
+---
+
+## Design-lab
+
+**Утверждено 2026-05-20:** guided coach — [`design-lab/onboarding-guided/APPROVED.md`](../../../design-lab/onboarding-guided/APPROVED.md).
+
+**Superseded:** [`design-lab/onboarding-brief/`](../../../design-lab/onboarding-brief/) (layout A, 3 карточки + видео).
 
 ---
 
 ## Data Model
 
-| `onboarding_state` | Смысл |
-|--------------------|--------|
-| `draft` | Автопоказ брифа при первом overview |
-| `brief_done` | Автопоказ больше не нужен |
+| Поле | Смысл |
+|------|--------|
+| `onboarding_state` | `draft` \| `brief_done` |
+| `onboarding_step` | `period_timer` \| `salary` \| `next_period` \| `safety_fund` \| `farewell` (nullable при `brief_done`) |
 
-Заменить текущее `started` при `POST /game/start` на `draft`.
+При `POST /game/start` (первая игра): `onboarding_state = draft`, `onboarding_step = period_timer`.
+
+**Skip-счётчик:** хранить в UI-сессии (не в БД): `skip_press_count` 0→1 (шаг) → 2 (весь онбординг).
 
 ---
 
 ## API
 
-| Method | Path | Body |
-|--------|------|------|
-| `GET` | `/api/finance/overview` (или профиль) | — → `onboarding_state` |
-| `PATCH` | `/api/game/profile/onboarding` | `{ "onboarding_state": "brief_done" }` |
+| Method | Path | Body / response |
+|--------|------|-----------------|
+| `GET` | `/api/finance/overview` (или профиль) | `onboarding_state`, `onboarding_step` |
+| `PATCH` | `/api/game/profile/onboarding` | `{ "onboarding_state": "brief_done" }` или `{ "onboarding_step": "salary" }` |
 
 ---
 
-## Frontend (после утверждения design-lab)
+## Frontend (реализация)
 
-- `MissionBriefOverlay` + `MonetkaAvatar` (SVG/CSS по утверждённому варианту).
-- Точка входа: `GameScreen.jsx` — `useEffect` после `overview` и `onboarding_state === 'draft'`.
-- Меню: `MenuPremium` — «Повторить обучение».
+- `OnboardingCoach` + `MonetkaBubble` + spotlight (MQX).
+- Точка входа: `GameScreen.jsx` — после `overview`, `draft`.
+- `data-onboarding-anchor` на hero, `MqxPeriodActions`, pills (для spotlight).
+- Повтор из меню — **не в v1** (см. план фаза 2).
 - Каталог: `#/dev/mqx`.
 
 ---
 
 ## Tests
 
-- Backend: start → `draft`; PATCH; overview field.
-- Manual: light/dark, 320px, skip, menu replay.
+- Backend: start → `draft` + step; PATCH step; PATCH `brief_done`; overview fields.
+- Frontend/manual: шаг 1→5, 10 с таймер, гейт зарплаты, гейт подушки, skip×2, skip×1 на шаге, предупреждение зарплаты без блокировки кнопки.
 
 ---
 
 ## Success Criteria (O1 v1)
 
-- [ ] Утверждён вариант design-lab + Монетка.
-- [ ] Один автопоказ на профиль; menu replay работает.
+- [x] Утверждён guided coach (5 шагов).
+- [ ] Автопоказ только на первой игре (Game Mode + простейший шаблон).
+- [ ] Skip: шаг / весь онбординг.
 - [ ] `pytest -q`, `npm run build` OK.
 
 ---
 
 ## Explicit Non-Goals (v1)
 
-- Coach marks периода 1.
-- Plan onboarding.
-- CMS / A/B / Amplitude.
+- Mission Brief 3 карточки + видео.
+- Жёсткая блокировка «Следующий период».
+- «Повторить обучение» в меню.
+- Plan onboarding; CMS / A/B.
 
 ---
 
 ### История
 
-2026-05-19: решения продукта (overview, Монетка, menu replay, поэтапно); design-lab A–F.
+2026-05-19: approved layout A (Mission Brief) — superseded 2026-05-20.  
+2026-05-20: **approved** guided coach 5 шагов — [`onboarding-guided/APPROVED.md`](../../../design-lab/onboarding-guided/APPROVED.md).

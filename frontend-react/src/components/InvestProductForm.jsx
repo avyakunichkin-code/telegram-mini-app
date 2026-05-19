@@ -14,11 +14,21 @@ export function InvestProductForm({
   submitLabel = 'Открыть',
   amountLabel = 'Сумма',
   showTitle = false,
+  embedded = false,
 }) {
   const canSubmit = amount > 0 && amount <= maxCash;
 
   return (
-    <article className={`mqx-invest-form mqx-invest-form--d mqx-invest-form--${productId}`}>
+    <article
+      className={[
+        'mqx-invest-form',
+        'mqx-invest-form--d',
+        `mqx-invest-form--${productId}`,
+        embedded && 'mqx-invest-form--embedded',
+      ]
+        .filter(Boolean)
+        .join(' ')}
+    >
       <div className="mqx-invest-form__body">
         {showTitle && productTitle ? (
           <div className="mqx-invest-form__title">{productTitle}</div>

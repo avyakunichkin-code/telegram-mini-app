@@ -27,11 +27,18 @@ export function MqxPeriodActions({
           type="button"
           className="mqx-action mqx-action--primary"
           disabled={busy}
+          data-onboarding-anchor="salary"
           onClick={onSalary}
         >
           {salaryLabel}
         </button>
-        <button type="button" className="mqx-action" disabled={busy} onClick={onContribute}>
+        <button
+          type="button"
+          className="mqx-action"
+          disabled={busy}
+          data-onboarding-anchor="cushion"
+          onClick={onContribute}
+        >
           В подушку
         </button>
         <button type="button" className="mqx-action" disabled={busy} onClick={onWithdraw}>

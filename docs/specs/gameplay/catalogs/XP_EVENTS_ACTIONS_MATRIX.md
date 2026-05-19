@@ -33,17 +33,15 @@ execution_spec: ../features/SPEC_mvp-11-progression-events.md
 
 | Источник | Тип | Якорь в коде | XP (baseline) | event_tier | Разблок (цель) | Статус |
 |----------|-----|---------------|---------------|-------------|----------------|---------|
-| `period_close_base` | `period_close` | `period_actions`: начисление за закрытие снимком | см. смешение `period_close` блока ниже в §2.1 | — | — | coded |
-| `period_close_salary_bonus` | `period_close` | там же (+20 если зарплата забрана) | +20 при условии | — | — | coded |
-| `period_close_savings_bonus` | `period_close` | там же `min(30, savings/1000)` | переменное | — | — | coded |
-| `period_end_ticks` | `period_close` | `game_period.py` закрытие периода (базово) | базово +5 паттерн | — | — | coded |
-| `claim_salary` | `api_action` | `period_actions` claim | +10 в одном пути см. файл | — | 1 | coded |
-| `safety_contribute` | `api_action` | `period_actions` | +10 | — | 1–2 (`LEVEL_XP_SYSTEM §3`) | coded |
-| `safety_withdraw` | `api_action` | `period_actions` | +5 | — | 1 | coded |
+| `period_close_base` | `period_close` | `progression_xp` → `process_period_end` | **12** | — | — | coded |
+| `period_close_salary_bonus` | `period_close` | там же | **+10** если зарплата за период | — | — | coded |
+| `period_close_savings_bonus` | `period_close` | там же | **+0…20** (`contrib/2000`, cap 20) | — | — | coded |
+| `template_milestone` | `period_close` | `progression_xp` milestone 1/3/7 | **20 / 25 / 30** once | — | — | coded |
+| `claim_salary` | `api_action` | `period_actions` claim | **0** (бонус в close) | — | 1 | coded |
+| `safety_contribute` | `api_action` | `period_actions` | **3**, max **2**/период | — | 1–2 | coded |
+| `safety_withdraw` | `api_action` | `period_actions` | **1**, max **1**/период | — | 1 | coded |
 
-### 2.1. Известная неоднородность (должен снять рефактор MQ-113)
-
-Разные блоки в `period_actions.py` задают числа напрямую. После вынесения в **единый модуль начисления** замените этот подраздел **одной** строкой в таблице с точным ключом конфига константы (напр. `XP_PERIOD_CLOSE_PAYLOAD` как dict).
+Канон v2: [`balance-xp-evening-session.md`](../../../vision/ideas/balance-xp-evening-session.md).
 
 ---
 
@@ -82,4 +80,5 @@ execution_spec: ../features/SPEC_mvp-11-progression-events.md
 
 ### История
 
-2026-05-17 — создание каталога и привязка к MVP 11.
+2026-05-17 — создание каталога и привязка к MVP 11.  
+2026-05-19 — XP v2: единый `period_close`, milestone, капы подушки.

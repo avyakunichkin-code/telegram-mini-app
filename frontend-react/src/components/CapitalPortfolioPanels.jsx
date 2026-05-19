@@ -8,6 +8,7 @@ import {
   LiabilityTemplateMetrics,
   MqxFinListRow,
   MqxRowAction,
+  MqxCapitalEmpty,
   MqxSectionSeg,
   useMqxConfirm,
 } from './mqx';
@@ -86,7 +87,11 @@ export function CapitalPropertyPanel({
       ) : (
         <div className="mqx-capital-position-list">
           {ownedAssets.length === 0 ? (
-            <div className="mqx-fin-empty">Нет активов</div>
+            <MqxCapitalEmpty
+              message="Нет активов в портфеле"
+              actionLabel="Добавить из каталога"
+              onAction={() => setSectionMode('add')}
+            />
           ) : (
             ownedAssets.map((a) => (
               <MqxFinListRow
@@ -176,7 +181,11 @@ export function CapitalLiabilitiesPanel({
       ) : (
         <div className="mqx-capital-position-list">
           {ownedLiabilities.length === 0 ? (
-            <div className="mqx-fin-empty">Нет обязательств</div>
+            <MqxCapitalEmpty
+              message="Нет обязательств"
+              actionLabel="Добавить из каталога"
+              onAction={() => setSectionMode('add')}
+            />
           ) : (
             ownedLiabilities.map((l) => (
               <MqxFinListRow

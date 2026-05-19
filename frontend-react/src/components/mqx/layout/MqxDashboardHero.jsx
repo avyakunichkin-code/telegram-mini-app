@@ -31,7 +31,7 @@ export function MqxDashboardHero({
   const progressPct = Math.round(progressFrac * 100);
 
   return (
-    <header className="mqx-hero mqx-hero--compact">
+    <header className="mqx-hero mqx-hero--compact" data-onboarding-anchor="hero">
       <div className="mqx-hero__glow" aria-hidden />
 
       <div className="mqx-hero-compact__row1">
@@ -103,7 +103,9 @@ export function MqxDashboardHero({
               События
             </MqxPill>
           ) : null}
-          <MqxPill onClick={onNextPeriod}>Следующий период</MqxPill>
+          <MqxPill onClick={onNextPeriod} data-onboarding-anchor="next_period">
+            Следующий период
+          </MqxPill>
         </div>
       </div>
     </header>

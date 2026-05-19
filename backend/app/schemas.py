@@ -209,7 +209,7 @@ class FinanceOverview(BaseModel):
     xp_to_next_level: int
     character_level: int = 1
     character_xp: int = 0
-    character_xp_need_for_next: int = 100
+    character_xp_need_for_next: int = 30
     time_state: str
     period_index: int
     period_duration_seconds: int

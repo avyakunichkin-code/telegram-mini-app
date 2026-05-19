@@ -3,13 +3,14 @@
 import pytest
 
 from app.game_rules import (
+    CHARACTER_MAX_LEVEL,
     EVENT_TIER_WINDOW_BELOW_LEVEL,
     MIN_PERIOD_INDEX_FOR_WIN,
     MVP_SAFETY_FUND_OBLIGATIONS_MULTIPLIER,
     REPEAT_POLICY_MAX_PER_PROFILE,
     REPEAT_POLICY_ONCE_PER_PROFILE,
-    XP_NEED_BASE,
-    XP_NEED_PER_LEVEL_STEP,
+    XP_NEED_BY_LEVEL,
+    XP_TOTAL_TO_MAX_LEVEL,
     EventProfileCounterSnapshot,
     apply_xp_to_character_state,
     character_xp_need_for_next_level,
@@ -24,15 +25,17 @@ from app.game_rules import (
 
 
 class TestXpProgression:
-    def test_need_formula_uses_constants(self):
-        assert character_xp_need_for_next_level(1) == XP_NEED_BASE
-        assert character_xp_need_for_next_level(2) == XP_NEED_BASE + XP_NEED_PER_LEVEL_STEP
+    def test_need_table_matches_v2(self):
+        assert sum(XP_NEED_BY_LEVEL) == XP_TOTAL_TO_MAX_LEVEL
+        assert character_xp_need_for_next_level(1) == XP_NEED_BY_LEVEL[0]
         assert character_xp_need_for_next_level(0) == character_xp_need_for_next_level(1)
+        assert character_xp_need_for_next_level(CHARACTER_MAX_LEVEL) == 0
 
-    def test_need_is_monotonic_with_level(self):
-        needs = [character_xp_need_for_next_level(L) for L in range(1, 8)]
-        assert needs == sorted(needs)
-        assert len(set(needs)) == len(needs)
+    def test_need_grows_with_level_phantom_finale_smaller(self):
+        needs = [character_xp_need_for_next_level(L) for L in range(1, CHARACTER_MAX_LEVEL)]
+        assert needs[:-1] == sorted(needs[:-1])
+        assert needs[-1] == 115
+        assert needs[-2] == 650
 
     def test_negative_delta_rejected(self):
         with pytest.raises(ValueError, match="delta must be >= 0"):
@@ -66,6 +69,11 @@ class TestXpProgression:
         assert level == 3
         assert xp == 0
         assert info["level_up"] is True
+
+    def test_stops_at_max_level(self):
+        level, xp, info = apply_xp_to_character_state(CHARACTER_MAX_LEVEL - 1, 0, 10_000)
+        assert level == CHARACTER_MAX_LEVEL
+        assert info.get("at_max_level") is True
 
 
 class TestEventTierWindow:

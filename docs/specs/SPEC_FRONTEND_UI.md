@@ -266,7 +266,7 @@ export function ExampleBlock({ overview }) {
 ### P1 (единый UX)
 
 - [ ] На каждой вкладке `GameScreen` ровно один `h1` в hero.
-- [ ] `FinancePremium`: инвестиции и страховки визуально в том же `mqx-capital-*`, что портфель.
+- [x] `FinancePremium`: инвестиции и страховки визуально в том же `mqx-capital-*`, что портфель (форма embedded, `MqxSectionSeg`, `MqxCapitalEmpty`).
 - [ ] `BottomGameNav`: подписи под иконками **или** tooltip при первом визите (решение зафиксировать в PR).
 - [ ] `MenuPremium` не выбивается по плотности контента (минимум: тот же hero-стиль или явный «служебный» экран).
 

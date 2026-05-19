@@ -51,7 +51,7 @@
 ## Чеклист доработки (коротко)
 
 - [x] Выбор **Game / Plan** (Plan — заглушка) и поток **шаблонов** вместо `light` / `hardcore` (см. [`SPEC_game-plan.md`](../specs/features/SPEC_game-plan.md)).
-- [ ] Онбординг: **Mission Brief** (3 карточки) до первого периода — эпик **O1**, [`SPEC_onboarding-tma.md`](../specs/features/SPEC_onboarding-tma.md).
+- [ ] Онбординг: **Guided coach** (5 шагов на дашборде, первая игра Game Mode) — эпик **O1**, [`SPEC_onboarding-tma.md`](../specs/features/SPEC_onboarding-tma.md).
 - [ ] Локализованные подписи типов активов / событий (не сырое поле API).
 - [ ] Прогресс цели победы визуально на главной (в т.ч. после перехода на **M из N** целей из шаблона).
 - [ ] Пустые состояния вкладки «Финансы».

@@ -63,6 +63,7 @@ class GameProfile(Base):
     negative_periods_count = Column(Integer, nullable=False, default=0)
     last_period_salary_claimed = Column(Integer, nullable=False, default=0)
     clean_period_streak = Column(Integer, nullable=False, default=0)
+    progression_milestones_awarded = Column(Text, nullable=False, default="[]")
 
     created_at = Column(DateTime, default=utc_now_naive)
     updated_at = Column(DateTime, default=utc_now_naive, onupdate=utc_now_naive)
@@ -345,6 +346,8 @@ class PeriodSnapshot(Base):
     completed_at = Column(DateTime, nullable=True)
     net_savings = Column(Float, nullable=False, default=0)
     xp_earned = Column(Integer, nullable=False, default=0)
+    safety_contribute_xp_grants = Column(Integer, nullable=False, default=0)
+    safety_withdraw_xp_grants = Column(Integer, nullable=False, default=0)
     created_at = Column(DateTime, default=utc_now_naive)
     game_profile = relationship("GameProfile", back_populates="period_snapshots")
 

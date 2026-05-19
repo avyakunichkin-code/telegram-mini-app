@@ -42,11 +42,14 @@ import {
   MqxStatMini,
   MqxSubtab,
   MqxModeButton,
+  MqxSectionSeg,
+  MqxCapitalEmpty,
   MqxRowAction,
   MqxFinListRow,
   MqxConfirmDialog,
   useMqxConfirm,
   EventCard,
+  OnboardingCoachDemo,
 } from '../index';
 import { MoneyText } from '../../MoneyText';
 import { INSURANCE_PLANS } from '../../../constants/insuranceProducts';
@@ -156,6 +159,10 @@ export function MqCatalogScreen() {
           ← В игру
         </Link>
       </header>
+
+      <CatalogSection title="Онбординг — Guided coach (O1 ★)">
+        <OnboardingCoachDemo />
+      </CatalogSection>
 
       <CatalogSection title="Hero — H3′ compact (дашборд)">
         <div style={{ maxWidth: 420, borderRadius: 16, overflow: 'hidden' }}>
@@ -402,6 +409,20 @@ export function MqCatalogScreen() {
 
       <CatalogSection title="Паттерны действий (+ / −, confirm)">
         <RowActionsCatalogDemo />
+      </CatalogSection>
+
+      <CatalogSection title="Сегмент раздела (MqxSectionSeg)">
+        <p className="mqx-catalog__lead" style={{ marginTop: 0, marginBottom: 12 }}>
+          Канон B на странице капитала: «Оформить / Добавить | Мои (N)» внутри карточки раздела.
+        </p>
+        <MqxSectionSeg mode="add" onModeChange={() => {}} addLabel="Добавить" mineLabel="Мои" mineCount={2} />
+        <div style={{ marginTop: 12 }}>
+          <MqxCapitalEmpty
+            message="Нет позиций в этом разделе"
+            actionLabel="Добавить из каталога"
+            onAction={() => {}}
+          />
+        </div>
       </CatalogSection>
 
       <CatalogSection title="Кнопки и вкладки">

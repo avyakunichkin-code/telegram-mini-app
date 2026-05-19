@@ -73,7 +73,8 @@ npx serve .
 | 3 | `finance-insurance/` — **внедрено** | `InsuranceSection`, `Insurance*Card/Row/Picker`, Finance |
 | 4 | `dashboard/` — герой, stat-иконки | DashboardPremium |
 | 5 | `events/` — pill, карточка, оверлей (**внедрено**) | `EventCard`, `EventCarouselOverlay`, `MqxPill` |
-| 6 | `onboarding-brief/` — Mission Brief + **Монетка** | `MissionBriefOverlay`, `MonetkaAvatar` |
+| 6 | `onboarding-guided/` — **★ утверждён** | `OnboardingCoach`, `MonetkaAvatar` |
+| 6b | `onboarding-brief/` — superseded | — |
 
 Текущий статус: **примитивы**, **shell**, **события**, **портфель**, **страховки**, **row-actions (B)**, **VictoryGoalsPanel** в prod; дальше — `dashboard/` (hero), empty/error в shell.
 

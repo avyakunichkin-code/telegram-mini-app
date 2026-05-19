@@ -33,7 +33,7 @@
 | **V2** | Victory M из N | DB+Backend+Frontend+Doc | ⬜ `victory_config` — задел в данных |
 | **I1** | Страховки: продукт + объект | DB+Backend+Frontend | 🟡 0008 + UI в работе |
 | **α** | Pre-Alpha / Closed Alpha гейты | Doc+Frontend (метрики) | ⬜ см. GAME §11 |
-| **O1** | Онбординг TMA — Mission Brief (3 шага) | Frontend+Backend+Doc | 🟡 spec draft |
+| **O1** | Онбординг TMA — Guided coach + Монетка | Frontend+Backend+Doc | 🟡 design-lab ★ → MQX |
 | **A0** | Admin Watchtower (MVP 1.2) | DB+Backend+Frontend | 🟡 Phase 0 в коде |
 | **E1** | **Расходы жизнеобеспечения** — категории, статьи бюджета, burn, UI | DB+Backend+Frontend+Content | ⬜ [EXPENSES_SYSTEM](../specs/gameplay/EXPENSES_SYSTEM.md) · [SPEC](../specs/features/SPEC_expenses.md) draft |
 
@@ -186,15 +186,16 @@
 
 ### Эпик O1 — онбординг TMA (Pre-Alpha)
 
-Идея: [`onboarding-tma-mission-brief.md`](../vision/ideas/onboarding-tma-mission-brief.md) · Spec: [`SPEC_onboarding-tma.md`](../specs/features/SPEC_onboarding-tma.md) · Plan: [`PLAN_onboarding-tma.md`](../plans/PLAN_onboarding-tma.md)
+Идея: [`onboarding-tma-mission-brief.md`](../vision/ideas/onboarding-tma-mission-brief.md) · Spec: [`SPEC_onboarding-tma.md`](../specs/features/SPEC_onboarding-tma.md) · Plan: [`PLAN_onboarding-tma.md`](../plans/PLAN_onboarding-tma.md) · Lab: [`onboarding-guided/`](../design-lab/onboarding-guided/)
 
-- [ ] P0 **[Doc+Design]** **Раунд 1:** `design-lab/onboarding-brief/` — выбор варианта **A–F** + копирайт с **Монеткой** ([`CHARACTER_MONETKA.md`](../reference/CHARACTER_MONETKA.md)).
-- [ ] P0 **[Doc]** Spec O1 → `approved` после «утверждаем X».
-- [ ] P0 **[Frontend]** MQX overlay по утверждённому варианту ([`DESIGN_WORKFLOW.md`](../../frontend-react/src/components/mqx/DESIGN_WORKFLOW.md)).
-- [ ] P0 **[Backend]** `onboarding_state`: `draft` на start, `PATCH /api/game/profile/onboarding`, поле в overview.
-- [ ] P0 **[Frontend]** Показ брифа после `GameTemplatePick` / до игры; Skip + «Начать».
-- [ ] P1 **[Frontend]** Coach marks периода 1 — **волна 2** (отдельный design-lab).
-- [ ] P0 **[Frontend]** «Повторить обучение» в меню (фаза 2 плана O1).
+- [x] P0 **[Doc+Design]** Guided coach **5 шагов ★** — [`onboarding-guided/APPROVED.md`](../design-lab/onboarding-guided/APPROVED.md).
+- [x] P0 **[Doc]** Spec O1 → guided coach (2026-05-20).
+- [x] P0 **[Doc]** Ассет Монетки: [`docs/reference/assets/monetka-mascot.png`](../reference/assets/monetka-mascot.png).
+- [ ] P0 **[Product+Frontend]** Автостарт **простейшего** шаблона после Game Mode (первая игра).
+- [ ] P0 **[Frontend]** MQX `OnboardingCoach` + spotlight ([`DESIGN_WORKFLOW.md`](../../frontend-react/src/components/mqx/DESIGN_WORKFLOW.md)).
+- [ ] P0 **[Backend]** `onboarding_state` + `onboarding_step`; PATCH; overview.
+- [ ] P0 **[Frontend]** Coach на `GameScreen`: гейты 10 с / зарплата / подушка; skip×2; шаг 5 «Начать игру».
+- [ ] P1 **[Frontend]** «Повторить обучение» — фаза 2 (после метрик).
 
 ### Онбординг и обучение (GAME §3.4, §9.3, §11)
 
