@@ -1,7 +1,7 @@
 import { ApiError, formatApiErrorDetail } from '../api';
 import { enqueueToast } from './ToastHost';
 
-export function showNotification(message, type = 'info') {
+export function showNotification(message, type = 'info', options = {}) {
   let text;
   if (message == null) {
     text = 'Уведомление';
@@ -16,8 +16,12 @@ export function showNotification(message, type = 'info') {
   } else {
     text = formatApiErrorDetail(message, 'Уведомление');
   }
-  enqueueToast({
+  const toast = {
     type,
     message: text,
-  });
+  };
+  if (options.ttlMs != null) {
+    toast.ttlMs = options.ttlMs;
+  }
+  enqueueToast(toast);
 }

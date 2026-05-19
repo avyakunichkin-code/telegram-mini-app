@@ -1,4 +1,4 @@
-import { Button, Input } from '@telegram-apps/telegram-ui';
+import { Button, Input, Spinner } from '@telegram-apps/telegram-ui';
 import { showNotification } from '../notifications';
 import { MqxShell } from '../MqxShell';
 import { MqxTabHero } from '../MqxTabHero';

@@ -1,6 +1,10 @@
 // src/hooks/useGame.js
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { API, ApiError, formatApiErrorDetail } from '../api';
+import {
+  notifyAchievementUnlocks,
+  notifyPeriodCloseRewards,
+} from '../utils/progressionToasts';
 
 export function useGame() {
   const [overview, setOverview] = useState(null);
@@ -55,6 +59,9 @@ export function useGame() {
   const refreshOverview = useCallback(async () => {
     const data = await API.getOverview();
     setOverview(data);
+    if (data?.newly_unlocked?.length) {
+      notifyAchievementUnlocks(data.newly_unlocked);
+    }
   }, []);
 
   const refreshPeriodStatus = useCallback(async () => {
@@ -128,7 +135,10 @@ export function useGame() {
     stopTimer();
     const result = await API.setTimeNext();
     if (result) {
-      if (result.period_close) setPeriodCloseSummary(result.period_close);
+      if (result.period_close) {
+        notifyPeriodCloseRewards(result.period_close);
+        setPeriodCloseSummary(result.period_close);
+      }
       setTimeStatus(result);
       localRemainingRef.current = result.seconds_until_next_period;
       lastSyncRef.current = Date.now();

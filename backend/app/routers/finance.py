@@ -43,6 +43,7 @@ from ..schemas import (
     VictoryOverview,
     VictoryGoalOverview,
     CharacterUnlockOverview,
+    AchievementUnlockEvent,
     AnalyticsTimeseriesPoint,
     FinanceAnalyticsTimeseriesResponse,
 )
@@ -469,13 +470,15 @@ async def finance_overview(
     profile = get_active_game_profile(db, current_user.id)
     sync_time(profile)
 
+    newly_unlocked_raw: list = []
     try:
         ensure_achievement_catalog(db)
-        process_achievement_unlocks(db, profile)
+        newly_unlocked_raw = process_achievement_unlocks(db, profile) or []
         db.commit()
         db.refresh(profile)
     except Exception:
         db.rollback()
+        newly_unlocked_raw = []
 
     salary = db.query(FinanceSalary).filter(FinanceSalary.game_profile_id == profile.id).first()
     monthly_income = salary.monthly_amount if salary else 0
@@ -639,6 +642,11 @@ async def finance_overview(
         victory=victory_overview,
         character_unlocks=[
             CharacterUnlockOverview(**item) for item in character_unlocks_payload(profile)
+        ],
+        newly_unlocked=[
+            AchievementUnlockEvent(**item)
+            for item in newly_unlocked_raw
+            if isinstance(item, dict)
         ],
         save_kind=str(getattr(profile, "save_kind", "game") or "game"),
         onboarding_state=str(getattr(profile, "onboarding_state", "brief_done") or "brief_done"),

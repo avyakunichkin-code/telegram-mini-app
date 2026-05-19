@@ -230,6 +230,7 @@ class FinanceOverview(BaseModel):
     avg_net_cashflow_6p_n: int = 0
     victory: Optional[VictoryOverview] = None
     character_unlocks: List[CharacterUnlockOverview] = Field(default_factory=list)
+    newly_unlocked: List["AchievementUnlockEvent"] = Field(default_factory=list)
     save_kind: str = "game"
     onboarding_state: str = "brief_done"
     onboarding_step: str = "farewell"

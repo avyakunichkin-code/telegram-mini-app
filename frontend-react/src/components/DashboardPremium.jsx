@@ -151,8 +151,15 @@ export function DashboardPremium({
     try {
       setBusyAction(moneyModal === 'in' ? 'in' : 'out');
       if (moneyModal === 'in') {
-        await contributeToSafetyFund(amt);
-        showNotification('Подушка пополнена', 'success');
+        const res = await contributeToSafetyFund(amt);
+        const xpg = Number(res?.xp_gained) || 0;
+        if (res?.level_up && res?.new_level) {
+          showNotification(`Подушка пополнена · уровень ${res.new_level}`, 'success', { ttlMs: 3200 });
+        } else if (xpg > 0) {
+          showNotification(`Подушка +${xpg} XP`, 'success');
+        } else {
+          showNotification('Подушка пополнена', 'success');
+        }
       } else {
         await withdrawFromSafetyFund(amt);
         showNotification('С подушки снято', 'success');
@@ -215,8 +222,12 @@ export function DashboardPremium({
               onSalary={async () => {
                 try {
                   setBusyAction('salary');
-                  await claimSalary();
-                  showNotification('Зарплата получена', 'success');
+                  const salaryRes = await claimSalary();
+                  if (salaryRes?.level_up && salaryRes?.new_level) {
+                    showNotification(`Уровень ${salaryRes.new_level}!`, 'success', { ttlMs: 3200 });
+                  } else {
+                    showNotification('Зарплата на счёт · XP в конце месяца', 'success');
+                  }
                 } catch (e) {
                   showNotification(e?.detail || e?.message || 'Не удалось получить зарплату', 'error');
                 } finally {
