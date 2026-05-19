@@ -7,7 +7,7 @@ import { sanitizeIntInput, parseNumLoose } from '../../../utils/numberFields';
 /**
  * In-game редактор статей расходов (только save_kind=plan).
  */
-export function PlanExpenseEditor({ refreshOverview }) {
+export function PlanExpenseEditor({ refreshOverview, embedded = false }) {
   const [lines, setLines] = useState([]);
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -91,11 +91,16 @@ export function PlanExpenseEditor({ refreshOverview }) {
     }
   };
 
+  const Wrapper = embedded ? 'div' : 'section';
+  const wrapperClass = embedded
+    ? 'mqx-plan-expense-editor mqx-plan-expense-editor--embedded'
+    : 'mqx-card mqx-plan-expense-editor';
+
   if (loading) {
     return (
-      <section className="mqx-card mqx-plan-expense-editor" aria-label="Редактор бюджета">
+      <Wrapper className={wrapperClass} aria-label="Редактор бюджета">
         <p className="mqx-plan-expense-editor__hint">Загрузка статей…</p>
-      </section>
+      </Wrapper>
     );
   }
 
@@ -103,9 +108,9 @@ export function PlanExpenseEditor({ refreshOverview }) {
     categories.length > 0 ? categories : [{ category_key: 'food', title: 'Еда' }];
 
   return (
-    <section className="mqx-card mqx-plan-expense-editor" aria-label="Редактор бюджета Plan">
-      <div className="mqx-card__kicker mqx-card__kicker--amber">План</div>
-      <h2 className="mqx-expenses-budget__title">Редактор расходов</h2>
+    <Wrapper className={wrapperClass} aria-label="Редактор бюджета Plan">
+      {!embedded ? <div className="mqx-card__kicker mqx-card__kicker--amber">План</div> : null}
+      {!embedded ? <h2 className="mqx-expenses-budget__title">Редактор расходов</h2> : null}
       <p className="mqx-plan-expense-editor__hint">
         Изменения применяются сразу. Итого в месяц: <MoneyText value={total} decimals={0} />
       </p>
@@ -175,6 +180,6 @@ export function PlanExpenseEditor({ refreshOverview }) {
           + Добавить статью
         </Button>
       </div>
-    </section>
+    </Wrapper>
   );
 }

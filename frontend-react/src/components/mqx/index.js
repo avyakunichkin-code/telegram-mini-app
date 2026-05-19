@@ -48,6 +48,7 @@ export { MqxChip } from './primitives/MqxChip';
 export { MqxProgress } from './primitives/MqxProgress';
 export { MqxSubtab } from './primitives/MqxSubtab';
 export { MqxModeButton } from './primitives/MqxModeButton';
+export { MqxSectionSeg } from './primitives/MqxSectionSeg';
 export { MqxRowAction } from './primitives/MqxRowAction';
 export { MqxConfirmDialog } from './primitives/MqxConfirmDialog';
 export { MqxFinListRow } from './layout/MqxFinListRow';

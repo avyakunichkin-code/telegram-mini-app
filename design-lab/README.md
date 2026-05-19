@@ -16,6 +16,8 @@
 | `dashboard/` | план | Герой, stat-блоки |
 | [events/](events/) | **внедрено в prod** | EventCard, EventCarouselOverlay, MqxPill |
 | [row-actions/](row-actions/) | **B + F2 → prod** | MqxRowAction (корзина по умолчанию), MqxFinListRow, confirm; порядок метрик — в spec |
+| [capital-page/](capital-page/) | **IA утверждена → вариант A/B на выбор** | 5 табов, бюджет №2, имущество/обязательства строками |
+| [onboarding-brief/](onboarding-brief/) | **раунд 1 — выбор** | Mission Brief + **Монетка**, варианты A–F |
 
 ## Как работать
 

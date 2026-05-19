@@ -15,6 +15,7 @@ export function ExpensesBudgetBlock({
   topLimit = 5,
   showOutflow = true,
   defaultExpanded = false,
+  embedded = false,
 }) {
   const [expanded, setExpanded] = useState(defaultExpanded);
 
@@ -26,24 +27,28 @@ export function ExpensesBudgetBlock({
   const expenseRatio = Number(overview?.expense_to_income_ratio);
   const maxCat = topCategories.reduce((m, c) => Math.max(m, Number(c.amount) || 0), 0);
 
+  const wrapperClass = embedded
+    ? 'mqx-expenses-budget mqx-expenses-budget--embedded'
+    : 'mqx-card mqx-expenses-budget';
+
   if (burn <= 0 && topCategories.length === 0) {
     return (
-      <section className="mqx-card mqx-expenses-budget" aria-label="Расходы на жизнь">
-        <div className="mqx-card__kicker mqx-card__kicker--amber">Жизнеобеспечение</div>
-        <h2 className="mqx-expenses-budget__title">Расходы на жизнь</h2>
+      <div className={wrapperClass} aria-label="Расходы на жизнь">
+        {!embedded ? <div className="mqx-card__kicker mqx-card__kicker--amber">Жизнеобеспечение</div> : null}
+        {!embedded ? <h2 className="mqx-expenses-budget__title">Расходы на жизнь</h2> : null}
         <p className="mqx-expenses-budget__empty">Статьи бюджета появятся после старта игры из шаблона.</p>
-      </section>
+      </div>
     );
   }
 
   const showExpand = allLines.length > topCategories.length;
 
   return (
-    <section className="mqx-card mqx-expenses-budget" aria-label="Расходы на жизнь">
+    <div className={wrapperClass} aria-label="Расходы на жизнь">
       <div className="mqx-expenses-budget__head">
         <div>
-          <div className="mqx-card__kicker mqx-card__kicker--amber">Жизнеобеспечение</div>
-          <h2 className="mqx-expenses-budget__title">Расходы на жизнь</h2>
+          {!embedded ? <div className="mqx-card__kicker mqx-card__kicker--amber">Жизнеобеспечение</div> : null}
+          {!embedded ? <h2 className="mqx-expenses-budget__title">Расходы на жизнь</h2> : null}
           <p className="mqx-expenses-budget__sub">
             Списываются в конце периода
             {income > 0 ? (
@@ -118,6 +123,6 @@ export function ExpensesBudgetBlock({
           ) : null}
         </>
       ) : null}
-    </section>
+    </div>
   );
 }

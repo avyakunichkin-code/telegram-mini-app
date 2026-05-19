@@ -79,6 +79,56 @@ MVP11_EVENT_SPECS: list[dict] = [
         ],
     },
     {
+        "key": "mq11_transport_pass",
+        "title": "Проездной на месяц",
+        "description": "Транспортная карта: можно купить проездной или платить поездки по факту.",
+        "weight": 92,
+        "event_tier": 1,
+        "repeat_policy": "repeatable",
+        "choices": [
+            {"title": "Месячный проездной (−2 800 ₽)", "effects": {"cash_delta": -2800, "xp_delta": 2}},
+            {"title": "Пополнить баланс (−900 ₽)", "effects": {"cash_delta": -900, "xp_delta": 1}},
+            {"title": "Пока пешком", "effects": {"cash_delta": 0, "xp_delta": 2}},
+        ],
+    },
+    {
+        "key": "mq11_pharmacy_stock",
+        "title": "Аптечка и витамины",
+        "description": "Сезон простуд — стоит ли заранее собрать базовую аптечку.",
+        "weight": 78,
+        "event_tier": 1,
+        "repeat_policy": "repeatable",
+        "choices": [
+            {"title": "Полный набор (−3 200 ₽)", "effects": {"cash_delta": -3200, "xp_delta": 2}},
+            {"title": "Только необходимое (−1 100 ₽)", "effects": {"cash_delta": -1100, "xp_delta": 2}},
+            {"title": "Отложить", "effects": {"cash_delta": 0, "xp_delta": 1}},
+        ],
+    },
+    {
+        "key": "mq11_home_internet",
+        "title": "Интернет дома",
+        "description": "Провайдер предлагает повысить скорость или сменить тариф.",
+        "weight": 86,
+        "event_tier": 1,
+        "repeat_policy": "repeatable",
+        "choices": [
+            {
+                "title": "Тариф повыше (−1 490 ₽)",
+                "effects": {
+                    "cash_delta": -1490,
+                    "expense_line": {
+                        "category_key": "communications",
+                        "amount_monthly": 500,
+                        "title": "Интернет",
+                    },
+                    "xp_delta": 1,
+                },
+            },
+            {"title": "Оставить как есть", "effects": {"cash_delta": 0, "xp_delta": 2}},
+            {"title": "Перейти на более дешёвый", "effects": {"cash_delta": 0, "monthly_lifestyle_delta": -300, "xp_delta": 3}},
+        ],
+    },
+    {
         "key": "mq11_evening_course",
         "title": "Короткий курс по вечерам",
         "description": "Онлайн-курс по навыку, который может пригодиться на работе.",

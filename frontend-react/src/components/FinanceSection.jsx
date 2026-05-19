@@ -3,16 +3,19 @@ import { API } from '../api';
 import { showNotification } from './notifications';
 import { MoneyText } from './MoneyText';
 import { useEffect, useState } from 'react';
-import { CapitalPortfolioPanels } from './CapitalPortfolioPanels';
+import { CapitalLiabilitiesPanel, CapitalPropertyPanel } from './CapitalPortfolioPanels';
 import { InvestProductForm } from './InvestProductForm';
 import { InvestPositionRow } from './InvestPositionRow';
 import { InvestPositionMetrics } from './InvestPositionMetrics';
 import {
   AssetPositionMetrics,
+  ExpensesBudgetBlock,
   InsuranceSection,
   LiabilityPositionMetrics,
   MqxModeButton,
+  MqxSectionSeg,
   MqxSubtab,
+  PlanExpenseEditor,
   useMqxConfirm,
 } from './mqx';
 import {
@@ -21,11 +24,23 @@ import {
   DEPOSIT_ANNUAL_RATE_PERCENT,
 } from '../constants/investProducts';
 
-export const FINANCE_TABS = [
+export const FINANCE_TABS_LEGACY = [
   { id: 'invest', label: 'Инвестиции' },
   { id: 'insurance', label: 'Страховки' },
   { id: 'portfolio', label: 'Активы · долги' },
 ];
+
+/** Вкладки страницы «Управление капиталом» (premium, T2 wrap 3+2). */
+export const FINANCE_TABS_CAPITAL = [
+  { id: 'invest', label: 'Инвестиции' },
+  { id: 'budget', label: 'Бюджет' },
+  { id: 'insurance', label: 'Страховки' },
+  { id: 'property', label: 'Имущество' },
+  { id: 'liabilities', label: 'Обязательства' },
+];
+
+/** @deprecated Используйте FINANCE_TABS_LEGACY или FINANCE_TABS_CAPITAL */
+export const FINANCE_TABS = FINANCE_TABS_LEGACY;
 
 const DEPOSIT_HELP =
   'Депозит растёт в теле вклада. Увеличивается на 1/12 от ставки вклада каждый период.';
@@ -41,6 +56,7 @@ export function FinanceSection({
   financeTab: financeTabProp,
   onFinanceTabChange,
   hideSectionsCard = false,
+  capitalInline = false,
 }) {
   const [financeTabInternal, setFinanceTabInternal] = useState('invest');
   const financeTab = financeTabProp ?? financeTabInternal;
@@ -504,9 +520,130 @@ export function FinanceSection({
     }
   };
 
-  const activeTabLabel = FINANCE_TABS.find((t) => t.id === financeTab)?.label || 'Финансы';
+  const tabsCatalog = capitalInline ? FINANCE_TABS_CAPITAL : FINANCE_TABS_LEGACY;
+  const activeTabLabel = tabsCatalog.find((t) => t.id === financeTab)?.label || 'Финансы';
   const ownedAssets = overview.assets || [];
   const ownedLiabilities = overview.liabilities || [];
+  const isPlan = overview.save_kind === 'plan';
+  const investSegMode = investUiMode === 'form' ? 'add' : 'mine';
+  const propertySegMode = portfolioAssetsMode === 'positions' ? 'mine' : portfolioAssetsMode;
+  const liabilitiesSegMode = portfolioDebtsMode === 'positions' ? 'mine' : portfolioDebtsMode;
+
+  const investCapitalBlock = (
+    <>
+      <div className="mqx-fin-subtabs mqx-fin-subtabs-row" role="tablist" aria-label="Инструмент">
+        <MqxSubtab
+          role="tab"
+          aria-selected={investProductTab === 'deposit'}
+          active={investProductTab === 'deposit'}
+          onClick={() => setInvestProductTab('deposit')}
+        >
+          Депозиты
+        </MqxSubtab>
+        <MqxSubtab
+          role="tab"
+          aria-selected={investProductTab === 'bond'}
+          active={investProductTab === 'bond'}
+          onClick={() => setInvestProductTab('bond')}
+        >
+          Облигации
+        </MqxSubtab>
+      </div>
+      <div className="mqx-fin-longhelp">{selectedInvestSubtitle}</div>
+      <MqxSectionSeg
+        mode={investSegMode}
+        onModeChange={(m) => setInvestUiMode(m === 'add' ? 'form' : 'positions')}
+        addLabel="Оформить"
+        mineLabel="Позиции"
+        mineCount={selectedInvestPositions.length}
+      />
+      {investUiMode === 'form' ? (
+        <InvestProductForm
+          productId={investProductTab}
+          productTitle={investProductTab === 'deposit' ? 'Депозит' : 'Облигации'}
+          amount={investProductTab === 'deposit' ? depositAmount : bondAmount}
+          maxCash={maxCash}
+          annualRatePercent={
+            investProductTab === 'deposit' ? DEPOSIT_ANNUAL_RATE_PERCENT : BOND_ANNUAL_RATE_PERCENT
+          }
+          onAmountChange={investProductTab === 'deposit' ? setDepositAmount : setBondAmount}
+          submitLabel={investProductTab === 'deposit' ? 'Открыть депозит' : 'Купить облигации'}
+          onSubmit={() => void (investProductTab === 'deposit' ? openDeposit() : openBond())}
+        />
+      ) : (
+        <div className="mqx-fin-list" style={{ marginTop: 8 }}>
+          {selectedInvestPositions.length === 0 ? (
+            <div className="mqx-fin-empty">
+              Нет позиций: {investProductTab === 'deposit' ? 'депозитов' : 'облигаций'}
+            </div>
+          ) : (
+            selectedInvestPositions.map((p) => (
+              <InvestPositionRow
+                key={p.id}
+                position={p}
+                onCloseRequest={() => void requestCloseInvest(p)}
+              />
+            ))
+          )}
+        </div>
+      )}
+    </>
+  );
+
+  if (capitalLayout && capitalInline) {
+    return (
+      <div className="mqx-fin mqx-fin--capital">
+        {dialog}
+        <div
+          className="mqx-capital-card__panel"
+          role="tabpanel"
+          id={`finance-panel-${financeTab}`}
+          aria-labelledby={`finance-tab-${financeTab}`}
+        >
+          {financeTab === 'invest' ? investCapitalBlock : null}
+          {financeTab === 'budget' ? (
+            isPlan ? (
+              <PlanExpenseEditor embedded refreshOverview={refreshOverview} />
+            ) : (
+              <ExpensesBudgetBlock embedded overview={overview} />
+            )
+          ) : null}
+          {financeTab === 'insurance' ? (
+            <InsuranceSection
+              policies={policies}
+              buyingPlanKey={buyingPlanKey}
+              cancellingPolicyId={cancellingPolicyId}
+              onBuy={buyInsurancePlan}
+              onCancel={cancelInsurancePolicy}
+              intro="Премия списывается в конце периода. При страховом случае — полная сумма выплаты, полис закрывается."
+              useSectionSeg
+            />
+          ) : null}
+          {financeTab === 'property' ? (
+            <CapitalPropertyPanel
+              assetTemplates={assetTemplates}
+              ownedAssets={ownedAssets}
+              sectionMode={propertySegMode}
+              setSectionMode={(m) => setPortfolioAssetsMode(m === 'mine' ? 'positions' : m)}
+              refreshOverview={refreshOverview}
+              reloadExtra={reloadExtra}
+              handleDeleteAsset={handleDeleteAsset}
+            />
+          ) : null}
+          {financeTab === 'liabilities' ? (
+            <CapitalLiabilitiesPanel
+              liabilityTemplates={liabilityTemplates}
+              ownedLiabilities={ownedLiabilities}
+              sectionMode={liabilitiesSegMode}
+              setSectionMode={(m) => setPortfolioDebtsMode(m === 'mine' ? 'positions' : m)}
+              addLiabilityFromTemplate={addLiabilityFromTemplate}
+              handleDeleteLiability={handleDeleteLiability}
+            />
+          ) : null}
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className={`mqx-fin ${capitalLayout ? 'mqx-fin--capital' : ''}`}>
@@ -533,28 +670,7 @@ export function FinanceSection({
         </div>
       ) : null}
 
-      {financeTab === 'portfolio' && capitalLayout ? (
-        <CapitalPortfolioPanels
-          activeTabLabel={activeTabLabel}
-          portfolioTab={portfolioTab}
-          setPortfolioTab={setPortfolioTab}
-          setExpandedDebtTpl={setExpandedDebtTpl}
-          setExpandedAssetTpl={setExpandedAssetTpl}
-          portfolioAssetsMode={portfolioAssetsMode}
-          setPortfolioAssetsMode={setPortfolioAssetsMode}
-          portfolioDebtsMode={portfolioDebtsMode}
-          setPortfolioDebtsMode={setPortfolioDebtsMode}
-          assetTemplates={assetTemplates}
-          liabilityTemplates={liabilityTemplates}
-          ownedAssets={ownedAssets}
-          ownedLiabilities={ownedLiabilities}
-          refreshOverview={refreshOverview}
-          reloadExtra={reloadExtra}
-          handleDeleteAsset={handleDeleteAsset}
-          handleDeleteLiability={handleDeleteLiability}
-          addLiabilityFromTemplate={addLiabilityFromTemplate}
-        />
-      ) : (
+      {financeTab === 'portfolio' && capitalLayout ? null : (
       <div
         className={`mqx-card mqx-fin-card ${capitalLayout ? 'mqx-capital-card' : ''}`}
         role="tabpanel"

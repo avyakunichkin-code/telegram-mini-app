@@ -1,26 +1,27 @@
-import { findInsuranceCatalogItem, insuranceAccentClass } from '../../../constants/insuranceProducts';
+import { findInsuranceCatalogItem } from '../../../constants/insuranceProducts';
 import { InsurancePolicyMetrics } from '../metrics/InsurancePolicyMetrics';
-import { CapitalPositionCard } from './CapitalPositionCard';
+import { MqxFinListRow } from './MqxFinListRow';
+import { MqxRowAction } from '../primitives/MqxRowAction';
 
-/** Активный полис — та же сетка H, удаление (корзина по канону F2). */
+/** Активный полис — компактная строка (`MqxFinListRow`), как позиции инвестиций. */
 export function InsurancePolicyRow({ policy, onCancel, busy }) {
   const catalog = findInsuranceCatalogItem(policy.kind);
-  const accent = insuranceAccentClass(policy.product ?? catalog.product);
-  const kicker = `${catalog.product_label} · ${catalog.object_label}`;
+  const subtitle = `${catalog.product_label} · ${catalog.object_label}`;
 
   return (
-    <CapitalPositionCard
-      variant="insurance"
-      accentTone={accent}
-      kicker={kicker}
+    <MqxFinListRow
+      className="mqx-fin-row--ins-policy"
       title={policy.title}
+      subtitle={subtitle}
       metrics={<InsurancePolicyMetrics policy={policy} />}
-      action={{
-        onClick: () => !busy && onCancel(policy.id),
-        disabled: busy,
-      }}
-      actionLabel="−"
-      actionAriaLabel={`Отменить полис ${policy.title}`}
+      trailing={
+        <MqxRowAction
+          variant="remove"
+          ariaLabel={`Отменить полис ${policy.title}`}
+          disabled={busy}
+          onClick={() => onCancel(policy.id)}
+        />
+      }
     />
   );
 }

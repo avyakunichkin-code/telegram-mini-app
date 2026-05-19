@@ -1252,6 +1252,77 @@ body {
   gap: 10px;
 }
 
+/* T2: 5 разделов на 2 строках (3+2; при 6 — 3+3) */
+.mqx-capital-tabs.mqx-capital-tabs--wrap {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  grid-template-columns: unset;
+}
+
+.mqx-capital-tabs--wrap .mqx-capital-tab {
+  flex: 1 1 calc(33.333% - 6px);
+  min-width: 0;
+  text-align: center;
+  white-space: normal;
+  line-height: 1.2;
+  padding: 8px 6px;
+  font-size: 12px;
+}
+
+.mqx-capital-tabs--wrap .mqx-capital-tab:nth-child(n + 4) {
+  flex: 1 1 calc(50% - 6px);
+}
+
+.mqx-capital-card__panel {
+  margin-top: 14px;
+}
+
+.mqx-section-seg {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+  margin-top: 12px;
+  margin-bottom: 12px;
+  padding: 4px;
+  border-radius: 12px;
+  background: color-mix(in srgb, var(--tg-theme-hint-color, var(--mq-line)) 28%, transparent);
+}
+
+.mqx-section-seg__btn {
+  font: inherit;
+  font-size: 13px;
+  font-weight: 800;
+  padding: 9px 10px;
+  border-radius: 9px;
+  border: none;
+  background: transparent;
+  color: color-mix(in srgb, var(--mqx-ink) 55%, transparent);
+  cursor: pointer;
+}
+
+.mqx-section-seg__btn--active {
+  background: var(--tg-theme-bg-color, #fff);
+  color: color-mix(in srgb, var(--mqx-ink) 96%, transparent);
+  box-shadow: 0 1px 4px rgba(15, 17, 21, 0.06);
+}
+
+.mqx-expenses-budget--embedded {
+  margin-top: 0;
+  padding: 0;
+  box-shadow: none;
+  border: none;
+  background: transparent;
+}
+
+.mqx-plan-expense-editor--embedded {
+  margin-top: 0;
+  padding: 0;
+  box-shadow: none;
+  border: none;
+  background: transparent;
+}
+
 .mqx-capital-tab {
   border-radius: 14px;
   padding: 14px 12px;
@@ -1362,7 +1433,7 @@ body {
   color: color-mix(in srgb, var(--mqx-ink) 52%, transparent);
 }
 
-/* Asset template cards — design-lab variant H */
+/* Asset / liability / insurance rows — design-lab variant H (без карточной рамки) */
 .mqx-capital-template-row--asset-h,
 .mqx-capital-template-row--liability-h,
 .mqx-capital-template-row--insurance-h {
@@ -1370,7 +1441,11 @@ body {
   grid-template-columns: 4px 1fr auto;
   gap: 12px;
   align-items: start;
-  padding-left: 10px;
+  padding: 6px 6px 6px 10px;
+  border: none;
+  background: transparent;
+  border-radius: 0;
+  box-shadow: none;
 }
 
 .mqx-capital-template-row__accent {
@@ -1408,14 +1483,6 @@ body {
   );
 }
 
-.mqx-capital-template-row--insurance-h {
-  border: none;
-  background: transparent;
-  border-radius: 0;
-  padding: 6px 6px 6px 10px;
-  box-shadow: none;
-}
-
 .mqx-capital-template-row--insurance-h .mqx-capital-template-row__kicker {
   color: color-mix(in srgb, var(--mqx-ink) 52%, transparent);
 }
@@ -1427,8 +1494,20 @@ body {
 }
 
 .mqx-ins-plan-list .mqx-capital-template-row--insurance-h + .mqx-capital-template-row--insurance-h,
-.mqx-ins-policy-list .mqx-capital-template-row--insurance-h + .mqx-capital-template-row--insurance-h {
+.mqx-ins-policy-list .mqx-capital-template-row--insurance-h + .mqx-capital-template-row--insurance-h,
+.mqx-capital-template-list .mqx-capital-template-row--asset-h + .mqx-capital-template-row--asset-h,
+.mqx-capital-template-list .mqx-capital-template-row--liability-h + .mqx-capital-template-row--liability-h {
   margin-top: 4px;
+}
+
+/* Позиции (активы, долги, инвестиции, полисы) — без рамки, как тарифы страховок */
+.mqx-capital-position-list .mqx-fin-row,
+.mqx-capital-page .mqx-fin-list .mqx-fin-row {
+  border: none;
+  background: transparent;
+  border-radius: 0;
+  padding: 6px 10px 6px 12px;
+  box-shadow: none;
 }
 
 .mqx-capital-template-row__kicker {
@@ -2224,18 +2303,17 @@ body {
   line-height: 1;
   transition:
     background 0.15s ease,
-    border-color 0.15s ease,
     transform 0.12s ease;
 }
 
 .mqx-row-action--add .mqx-row-action__glyph {
-  border: 1px solid var(--mq-violet-deep);
+  border: none;
   background: var(--mq-violet);
   color: #fff;
 }
 
 .mqx-row-action--remove .mqx-row-action__glyph {
-  border: 1px solid color-mix(in srgb, var(--tg-theme-hint-color, var(--mq-line)) 70%, transparent);
+  border: none;
   background: var(--mqx-glass-strong);
   color: rgba(220, 38, 38, 0.95);
 }
@@ -2266,7 +2344,6 @@ body {
 @media (hover: hover) {
   .mqx-row-action--remove:hover:not(:disabled) .mqx-row-action__glyph {
     background: color-mix(in srgb, var(--mq-danger-soft) 88%, var(--tg-theme-bg-color, #fff) 12%);
-    border-color: color-mix(in srgb, var(--mq-danger) 32%, var(--mq-line));
   }
 
   .mqx-row-action--add:hover:not(:disabled) .mqx-row-action__glyph {
@@ -2274,7 +2351,15 @@ body {
   }
 }
 
-.mqx-fin-icon-btn.mqx-row-action,
+/* Legacy fin-icon-btn на MqxRowAction — без второй рамки (как btn-plus в capital-page lab) */
+.mqx-fin-icon-btn.mqx-row-action {
+  width: 44px;
+  height: 44px;
+  border: none;
+  background: transparent;
+  color: inherit;
+}
+
 .mqx-fin-icon-btn.mqx-row-action .mqx-row-action__glyph {
   width: 40px;
   height: 40px;

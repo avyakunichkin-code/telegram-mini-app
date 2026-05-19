@@ -1,38 +1,32 @@
 import { useState } from 'react';
-import { FinanceSection, FINANCE_TABS } from './FinanceSection';
-import { ExpensesBudgetBlock, PlanExpenseEditor } from './mqx';
+import { FinanceSection, FINANCE_TABS_CAPITAL } from './FinanceSection';
 import { MqxTabHero } from './MqxTabHero';
 
 export function FinancePremium({ overview, refreshOverview }) {
-  const [financeTab, setFinanceTab] = useState('portfolio');
+  const [financeTab, setFinanceTab] = useState('invest');
 
   if (!overview) return null;
-
-  const isPlan = overview.save_kind === 'plan';
 
   return (
     <div className="mqx-tab-page">
       <MqxTabHero
         heroClassName="mqx-hero--capital"
         sectionLabel="Финансы"
-        rightPill="3 вкладки"
+        rightPill="5 разделов"
         title="Управление капиталом"
         titleClassName="mqx-hero__title--capital"
         subtitleClassName="mqx-hero__sub--capital"
-        subtitle="Расходы на жизнь, инвестиции, страховки, активы и долги."
+        subtitle="Инвестиции, бюджет, страховки, имущество и обязательства."
       />
 
       <main className="mqx-content mqx-tab-page__scroll mqx-capital-page">
-        {isPlan ? (
-          <PlanExpenseEditor refreshOverview={refreshOverview} />
-        ) : (
-          <ExpensesBudgetBlock overview={overview} />
-        )}
-
         <section className="mqx-card mqx-capital-card">
-          <h2 className="mqx-capital-card__title">Разделы</h2>
-          <div className="mqx-fin-tabs mqx-capital-tabs" role="tablist" aria-label="Разделы финансов">
-            {FINANCE_TABS.map((t) => (
+          <div
+            className="mqx-fin-tabs mqx-capital-tabs mqx-capital-tabs--wrap"
+            role="tablist"
+            aria-label="Разделы капитала"
+          >
+            {FINANCE_TABS_CAPITAL.map((t) => (
               <button
                 key={t.id}
                 id={`finance-tab-${t.id}`}
@@ -47,17 +41,18 @@ export function FinancePremium({ overview, refreshOverview }) {
               </button>
             ))}
           </div>
-        </section>
 
-        <FinanceSection
-          overview={overview}
-          refreshOverview={refreshOverview}
-          premium
-          capitalLayout
-          financeTab={financeTab}
-          onFinanceTabChange={setFinanceTab}
-          hideSectionsCard
-        />
+          <FinanceSection
+            overview={overview}
+            refreshOverview={refreshOverview}
+            premium
+            capitalLayout
+            capitalInline
+            financeTab={financeTab}
+            onFinanceTabChange={setFinanceTab}
+            hideSectionsCard
+          />
+        </section>
       </main>
     </div>
   );

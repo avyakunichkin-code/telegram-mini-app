@@ -28,11 +28,12 @@
 | ID | Название | Слои | Статус |
 |----|----------|------|--------|
 | **G1** | Game / Plan, шаблоны старта | DB+Backend+Frontend | ✅ MQ-101–108 |
-| **M11** | MVP 1.1: tier, XP, события, HUD уровня | DB+Backend+Frontend | ✅ MQ-111–116 (код); приёмка / плейтест — ⬜ |
+| **M11** | MVP 1.1: tier, XP, события, HUD уровня | DB+Backend+Frontend | ✅ MQ-111–116; формальный плейтест Pre-Alpha — ⬜ |
 | **M12** | Достижения (цепочки из GAME §5) | DB+Backend+Frontend | 🟡 [SPEC_achievements](../specs/features/SPEC_achievements.md); BE ✅, FE «Развитие» ⬜ |
 | **V2** | Victory M из N | DB+Backend+Frontend+Doc | ⬜ `victory_config` — задел в данных |
 | **I1** | Страховки: продукт + объект | DB+Backend+Frontend | 🟡 0008 + UI в работе |
 | **α** | Pre-Alpha / Closed Alpha гейты | Doc+Frontend (метрики) | ⬜ см. GAME §11 |
+| **O1** | Онбординг TMA — Mission Brief (3 шага) | Frontend+Backend+Doc | 🟡 spec draft |
 | **A0** | Admin Watchtower (MVP 1.2) | DB+Backend+Frontend | 🟡 Phase 0 в коде |
 | **E1** | **Расходы жизнеобеспечения** — категории, статьи бюджета, burn, UI | DB+Backend+Frontend+Content | ⬜ [EXPENSES_SYSTEM](../specs/gameplay/EXPENSES_SYSTEM.md) · [SPEC](../specs/features/SPEC_expenses.md) draft |
 
@@ -72,7 +73,7 @@
 - [x] **MQ-113** — `character_progression.py`, единый `apply_character_xp`.
 - [x] **MQ-114** — whitelist `xp_delta`, `monthly_lifestyle_delta` в choose.
 - [x] **MQ-115** — `GET /finance/overview`: `character_*`, `avg_net_cashflow_6p`.
-- [ ] P0 **MQ-116 (приёмка)** — прогон сидов MVP 1.1 на чистой БД; контрактные тесты tier/cooldown/XP.
+- [x] P0 **MQ-116 (приёмка)** — прогон сидов MVP 1.1 на чистой БД; контрактные тесты tier/cooldown/XP (`test_mq116_acceptance.py`, `mvp11_catalog_contract.py`, `test_ensure_period_events.py`).
 
 ### Эпик M12 — достижения (из GAME §5)
 
@@ -183,9 +184,21 @@
 - [ ] P1 **[Frontend]** Level-up feedback (тост / оверлей) при смене `character_level`.
 - [ ] P2 **[Frontend] ⚠ spec** Бейджи `game` / `plan` и сложность шаблона в списке сохранений (GAME §12, §13).
 
+### Эпик O1 — онбординг TMA (Pre-Alpha)
+
+Идея: [`onboarding-tma-mission-brief.md`](../vision/ideas/onboarding-tma-mission-brief.md) · Spec: [`SPEC_onboarding-tma.md`](../specs/features/SPEC_onboarding-tma.md) · Plan: [`PLAN_onboarding-tma.md`](../plans/PLAN_onboarding-tma.md)
+
+- [ ] P0 **[Doc+Design]** **Раунд 1:** `design-lab/onboarding-brief/` — выбор варианта **A–F** + копирайт с **Монеткой** ([`CHARACTER_MONETKA.md`](../reference/CHARACTER_MONETKA.md)).
+- [ ] P0 **[Doc]** Spec O1 → `approved` после «утверждаем X».
+- [ ] P0 **[Frontend]** MQX overlay по утверждённому варианту ([`DESIGN_WORKFLOW.md`](../../frontend-react/src/components/mqx/DESIGN_WORKFLOW.md)).
+- [ ] P0 **[Backend]** `onboarding_state`: `draft` на start, `PATCH /api/game/profile/onboarding`, поле в overview.
+- [ ] P0 **[Frontend]** Показ брифа после `GameTemplatePick` / до игры; Skip + «Начать».
+- [ ] P1 **[Frontend]** Coach marks периода 1 — **волна 2** (отдельный design-lab).
+- [ ] P0 **[Frontend]** «Повторить обучение» в меню (фаза 2 плана O1).
+
 ### Онбординг и обучение (GAME §3.4, §9.3, §11)
 
-- [ ] P1 **[Frontend] + [Doc]** Онбординг **3 шага** перед первым периодом — [`TMA_USER_FLOWS.md`](../foundation/TMA_USER_FLOWS.md); сценарий не детализирован в spec.
+- [ ] P1 **[Frontend] + [Doc]** Онбординг **3 шага** — см. эпик **O1** выше (заменяет размытую строку).
 - [ ] P1 **[Frontend]** Пустые состояния с CTA («нет активов → шаблон»).
 - [ ] P2 **[Frontend]** Coach marks после первого входа.
 - [ ] P2 **[Frontend]** Глоссарий «?» на инструментах (вклад vs cash, купон, подушка) — GAME §9.3 п.1.
@@ -255,8 +268,8 @@
 - [x] P1 **[Doc]** [SPEC_achievements.md](../specs/features/SPEC_achievements.md) — цепочки, `criteria_json`, API, прокси v1.0.
 - [ ] P1 **[Doc]** **`PLAN_achievements.md`** + эпик **M12** в TRACEABILITY.
 - [ ] P1 **[Doc]** **`SPEC_victory-v2.md`** — M из N, поля config, UI прогресса целей.
-- [ ] P1 **[Doc]** Протокол **Pre-Alpha** плейтеста: чеклист готовности (GAME §11.1), опрос понимания вклад/подушка, критерий ~80% до 3–4 периода.
-- [ ] P2 **[Doc]** **`SPEC_onboarding-tma.md`** — 3 шага, coach marks, связь с TMA_USER_FLOWS.
+- [ ] P1 **[Doc]** Протокол **Pre-Alpha** плейтеста: чеклист готовности ([`GAME.md`](../../GAME.md) раздел 11.1), опрос понимания вклад/подушка, критерий ~80% до 3–4 периода — **черновик:** [`docs/foundation/PRE_ALPHA_PLAYTEST_PROTOCOL.md`](../foundation/PRE_ALPHA_PLAYTEST_PROTOCOL.md).
+- [x] P2 **[Doc]** **`SPEC_onboarding-tma.md`** — черновик: Mission Brief, API, non-goals.
 - [ ] P2 **[Doc]** **`SPEC_insurance-catalog.md`** — продукты, объекты, payout (синхрон с 0008 и design-lab).
 - [ ] P2 **[Doc]** Vision: **главы жизни** как кампании vs шаблоны (GAME §4).
 - [ ] P2 **[Doc]** Редактура текстов событий под тон бренда.

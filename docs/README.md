@@ -45,6 +45,7 @@
 | [`foundation/TMA_USER_FLOWS.md`](foundation/TMA_USER_FLOWS.md) | Потоки и боли Telegram Mini App |
 | [`foundation/TARGET_PLAYER_AND_SESSION.md`](foundation/TARGET_PLAYER_AND_SESSION.md) | ЦА MVP 1.1+, типичная сессия, рамки контента, паттерны копирайта событий |
 | [`foundation/GLOSSARY.md`](foundation/GLOSSARY.md) | Термины (период, подушка, save_kind, …) |
+| [`foundation/PRE_ALPHA_PLAYTEST_PROTOCOL.md`](foundation/PRE_ALPHA_PLAYTEST_PROTOCOL.md) | **Черновик** протокола плейтеста Pre-Alpha (10–20), опрос, чеклист перед волной |
 | [`foundation/MVP_AUDIT_VS_SPEC.md`](foundation/MVP_AUDIT_VS_SPEC.md) | Чеклист: текущий код vs SPEC_PRODUCT перед G1 |
 
 ### Gameplay (уровень, XP, связь событий)
@@ -73,6 +74,8 @@
 | [`specs/features/SPEC_mvp-11-progression-events.md`](specs/features/SPEC_mvp-11-progression-events.md) | MVP 1.1 — **`event_tier`**, **`repeat_policy`**, XP-события, `overview.character_*`, UI меты (**approved**); план — [`plans/PLAN_mvp-11-progression-events.md`](plans/PLAN_mvp-11-progression-events.md) |
 | [`specs/gameplay/EXPENSES_SYSTEM.md`](specs/gameplay/EXPENSES_SYSTEM.md) | Канон механики **расходов** (категории, burn, Game/Plan) |
 | [`specs/features/SPEC_expenses.md`](specs/features/SPEC_expenses.md) | Эпик **E1** — внедрение на всех слоях; чеклист — [`specs/economy/EXPENSES_LAYER_CHECKLIST.md`](specs/economy/EXPENSES_LAYER_CHECKLIST.md) |
+| [`specs/features/SPEC_onboarding-tma.md`](specs/features/SPEC_onboarding-tma.md) | Эпик **O1** — Mission Brief, 3 шага, Pre-Alpha |
+| [`reference/CHARACTER_MONETKA.md`](reference/CHARACTER_MONETKA.md) | Персонаж-наставник **Монетка** (онбординг) |
 
 ### Backlog и агенты
 
