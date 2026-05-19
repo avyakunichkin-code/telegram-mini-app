@@ -19,8 +19,11 @@ from ..schemas import (
     AssetCreate,
     LiabilityCreate,
     GameStarterTemplatePublic,
+    OnboardingPatchRequest,
+    OnboardingPatchResponse,
     PeriodCloseBreakdownItem,
     PeriodCloseSummary,
+    AchievementUnlockEvent,
 )
 from ..expense_template_defaults import default_plan_expense_budget, expense_budget_for_template
 from ..expenses import ensure_expense_category_catalog, seed_expense_lines_from_budget
@@ -142,6 +145,37 @@ async def create_game_profile(
         )
 
     return profile
+
+
+_ONBOARDING_STATES = frozenset({"draft", "brief_done"})
+_ONBOARDING_STEPS = frozenset(
+    {"period_timer", "salary", "next_period", "safety_fund", "farewell"}
+)
+
+
+@router.patch("/profile/onboarding", response_model=OnboardingPatchResponse)
+async def patch_profile_onboarding(
+    payload: OnboardingPatchRequest,
+    current_user=Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    profile = get_active_game_profile(db, current_user.id)
+    if payload.onboarding_state is not None:
+        state = payload.onboarding_state.strip()
+        if state not in _ONBOARDING_STATES:
+            raise HTTPException(status_code=400, detail="Invalid onboarding_state")
+        profile.onboarding_state = state
+    if payload.onboarding_step is not None:
+        step = payload.onboarding_step.strip()
+        if step not in _ONBOARDING_STEPS:
+            raise HTTPException(status_code=400, detail="Invalid onboarding_step")
+        profile.onboarding_step = step
+    db.commit()
+    db.refresh(profile)
+    return OnboardingPatchResponse(
+        onboarding_state=str(profile.onboarding_state),
+        onboarding_step=str(getattr(profile, "onboarding_step", "period_timer") or "period_timer"),
+    )
 
 
 @router.post("/profiles/{profile_id}/activate")
@@ -278,7 +312,8 @@ async def start_new_game(
         time_state="pause",
         period_anchor_at=utc_now_naive(),
         base_params_locked=1,
-        onboarding_state="started",
+        onboarding_state="draft",
+        onboarding_step="period_timer",
     )
     db.add(new_profile)
     db.commit()
@@ -446,13 +481,24 @@ def _period_close_summary(period_result: dict) -> PeriodCloseSummary:
         if isinstance(item, dict)
     ]
     new_level = period_result.get("new_level")
+    achievement_unlocks = [
+        AchievementUnlockEvent(**item)
+        for item in (period_result.get("achievement_unlocks") or [])
+        if isinstance(item, dict)
+    ]
     return PeriodCloseSummary(
         total_spent=round(float(period_result.get("total_spent") or 0), 2),
         new_balance=round(float(period_result.get("new_balance") or 0), 2),
         breakdown=breakdown,
         xp_earned=int(period_result.get("xp_earned") or 0),
+        xp_period_close=int(period_result.get("xp_period_close") or 0),
+        xp_milestone=int(period_result.get("xp_milestone") or 0),
+        milestone_title=period_result.get("milestone_title"),
+        xp_from_achievements=int(period_result.get("xp_from_achievements") or 0),
+        achievement_unlocks=achievement_unlocks,
         level_up=bool(period_result.get("level_up")),
         new_level=int(new_level) if new_level is not None else None,
+        character_level=int(period_result.get("character_level") or 1),
     )
 
 

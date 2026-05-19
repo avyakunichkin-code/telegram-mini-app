@@ -14,12 +14,12 @@ function clampRect(rect, pad = PAD) {
   };
 }
 
-function ScrimPanels({ hole, practice }) {
+function ScrimPanels({ hole }) {
   const scrim = {
     position: 'fixed',
     background: 'rgba(8, 10, 22, 0.68)',
     zIndex: 10050,
-    pointerEvents: practice ? 'none' : 'auto',
+    pointerEvents: 'auto',
   };
 
   if (!hole) {
@@ -41,13 +41,11 @@ function ScrimPanels({ hole, practice }) {
 }
 
 /**
- * Spotlight + пузырь Монетки (portal в document.body).
+ * Spotlight + пузырь Монетки. Во время practice оверлей не рендерится (чистый UI).
  */
 export function OnboardingCoachOverlay({
   open,
   step,
-  phase,
-  practiceLeftSec,
   skipPressCount,
   rootRef,
   anchor,
@@ -57,10 +55,6 @@ export function OnboardingCoachOverlay({
 }) {
   const [hole, setHole] = useState(null);
   const [bubbleStyle, setBubbleStyle] = useState({});
-
-  const isPractice = phase === 'practice';
-  const showBubble = open && phase === 'bubble' && step;
-  const showPracticeHint = open && isPractice;
 
   useLayoutEffect(() => {
     if (!open || !rootRef?.current) {
@@ -108,16 +102,16 @@ export function OnboardingCoachOverlay({
       window.removeEventListener('resize', measure);
       window.removeEventListener('scroll', measure, true);
     };
-  }, [open, anchor, rootRef, phase]);
+  }, [open, anchor, rootRef]);
 
-  if (!open) return null;
+  if (!open || !step) return null;
 
   const continueLabel =
-    step?.gate === 'finish' ? finishLabel : step?.gate === 'practice' ? 'Понятно' : null;
+    step.gate === 'finish' ? finishLabel : step.gate === 'practice' ? 'Понятно' : null;
 
   return (
     <div className="mqx-onboarding-root" role="presentation">
-      <ScrimPanels hole={hole} practice={isPractice} />
+      <ScrimPanels hole={hole} />
 
       {hole ? (
         <div
@@ -132,35 +126,26 @@ export function OnboardingCoachOverlay({
         />
       ) : null}
 
-      {showPracticeHint ? (
-        <div className="mqx-onboarding-practice-hint" role="status" aria-live="polite">
-          <span className="mqx-onboarding-practice-hint__label">Практика</span>
-          <span className="mqx-onboarding-practice-hint__sec">{practiceLeftSec} с</span>
-        </div>
-      ) : null}
-
-      {showBubble ? (
-        <div className="mqx-onboarding-bubble-wrap" style={bubbleStyle}>
-          <article className="mqx-onboarding-bubble" aria-labelledby="mqx-onboarding-title">
-            <button type="button" className="mqx-onboarding-skip" onClick={onSkip}>
-              Пропустить
-              {skipPressCount === 1 ? ' (ещё раз — выйти)' : ''}
-            </button>
-            <MonetkaAvatar size={64} />
-            <h2 id="mqx-onboarding-title" className="mqx-onboarding-bubble__title">
-              {step.title}
-            </h2>
-            <p className="mqx-onboarding-bubble__body">{step.body}</p>
-            {continueLabel ? (
-              <MqxButton variant="primary" className="mqx-onboarding-bubble__cta" onClick={onContinue}>
-                {continueLabel}
-              </MqxButton>
-            ) : (
-              <p className="mqx-onboarding-bubble__wait">Сделай действие в игре ↓</p>
-            )}
-          </article>
-        </div>
-      ) : null}
+      <div className="mqx-onboarding-bubble-wrap" style={bubbleStyle}>
+        <article className="mqx-onboarding-bubble" aria-labelledby="mqx-onboarding-title">
+          <button type="button" className="mqx-onboarding-skip" onClick={onSkip}>
+            Пропустить
+            {skipPressCount === 1 ? ' (ещё раз — выйти)' : ''}
+          </button>
+          <MonetkaAvatar size={64} />
+          <h2 id="mqx-onboarding-title" className="mqx-onboarding-bubble__title">
+            {step.title}
+          </h2>
+          <p className="mqx-onboarding-bubble__body">{step.body}</p>
+          {continueLabel ? (
+            <MqxButton variant="primary" className="mqx-onboarding-bubble__cta" onClick={onContinue}>
+              {continueLabel}
+            </MqxButton>
+          ) : (
+            <p className="mqx-onboarding-bubble__wait">Сделай действие в игре ↓</p>
+          )}
+        </article>
+      </div>
     </div>
   );
 }

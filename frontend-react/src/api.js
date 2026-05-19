@@ -114,6 +114,9 @@ export const API = {
     startNewGame(payload) {
         return apiCall('/api/game/start', 'POST', payload);
     },
+    patchOnboarding(payload) {
+        return apiCall('/api/game/profile/onboarding', 'PATCH', payload);
+    },
     // Время
     getTimeStatus() {
         return apiCall('/api/game/time');

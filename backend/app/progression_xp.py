@@ -30,6 +30,16 @@ TEMPLATE_MILESTONE_XP_BY_PERIOD: dict[int, int] = {
     7: 30,
 }
 
+TEMPLATE_MILESTONE_LABELS: dict[int, str] = {
+    1: "Первый месяц в игре",
+    3: "Ритм сложился",
+    7: "Середина пути",
+}
+
+
+def milestone_title_for_period(closed_period_index: int) -> str | None:
+    return TEMPLATE_MILESTONE_LABELS.get(int(closed_period_index))
+
 
 def compute_period_close_xp(*, salary_claimed: bool, safety_fund_contribution: float) -> int:
     xp = PERIOD_CLOSE_BASE_XP

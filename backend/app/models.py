@@ -57,6 +57,7 @@ class GameProfile(Base):
     period_anchor_at = Column(DateTime, nullable=False, default=utc_now_naive)
     base_params_locked = Column(Integer, nullable=False, default=0)
     onboarding_state = Column(String(30), nullable=False, default="draft")
+    onboarding_step = Column(String(40), nullable=False, default="period_timer")
     # НОВЫЕ ПОЛЯ:
     cash_balance = Column(Float, nullable=False, default=0)
     safety_fund_balance = Column(Float, nullable=False, default=0)

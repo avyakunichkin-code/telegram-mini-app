@@ -2202,18 +2202,6 @@ body {
 }
 
 /* —— Guided onboarding coach (O1) —— */
-:root {
-  --mqx-onboarding-bubble-bg: var(--tg-theme-bg-color, #ffffff);
-  --mqx-onboarding-bubble-border: color-mix(
-    in srgb,
-    var(--tg-theme-hint-color, var(--mq-line)) 38%,
-    var(--mq-violet, #6d28d9) 18%
-  );
-  --mqx-onboarding-bubble-shadow:
-    0 4px 6px rgba(0, 0, 0, 0.06),
-    0 20px 48px rgba(0, 0, 0, 0.22);
-}
-
 .mqx-onboarding-root {
   position: fixed;
   inset: 0;
@@ -3977,6 +3965,84 @@ body {
   font-size: var(--mq-fs-body-sm);
   font-weight: 600;
   color: var(--tg-theme-link-color, #2563eb);
+}
+
+.mqx-period-close__section--xp {
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: color-mix(in srgb, var(--tg-theme-link-color, #6d28d9) 8%, transparent);
+}
+
+.mqx-period-close__xp-lines {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.mqx-period-close__xp-line {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  font-size: var(--mq-fs-body-sm);
+}
+
+.mqx-period-close__xp-val {
+  font-weight: 600;
+  color: var(--tg-theme-link-color, #6d28d9);
+}
+
+.mqx-period-close__xp-total {
+  margin: 10px 0 0;
+  font-size: var(--mq-fs-body-sm);
+  font-weight: 700;
+  color: var(--tg-theme-text-color, #111);
+}
+
+.mqx-period-close__achievements {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.mqx-period-close__achievement {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 8px 10px;
+  border-radius: 10px;
+  background: color-mix(in srgb, var(--mqx-accent-emerald, #10b981) 10%, transparent);
+  border: 1px solid color-mix(in srgb, var(--mqx-accent-emerald, #10b981) 22%, transparent);
+}
+
+.mqx-period-close__achievement-title {
+  font-size: var(--mq-fs-body-sm);
+  font-weight: 600;
+}
+
+.mqx-period-close__achievement-xp {
+  font-size: var(--mq-fs-body-sm);
+  font-weight: 700;
+  color: var(--mqx-accent-emerald, #059669);
+  white-space: nowrap;
+}
+
+.mqx-level-block__hint {
+  margin: 8px 0 0;
+  font-size: var(--mq-fs-caption, 12px);
+  line-height: 1.35;
+  color: var(--tg-theme-hint-color, #6b7280);
+}
+
+.mqx-level-block__hint--max {
+  color: var(--tg-theme-link-color, #6d28d9);
+  font-weight: 600;
 }
 
 .mqx-card--analytics-dark {

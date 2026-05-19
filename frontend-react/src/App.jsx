@@ -1,4 +1,7 @@
 import { useState } from 'react';
+import { Spinner } from '@telegram-apps/telegram-ui';
+import { showNotification } from './components/notifications';
+import { startGameWithSimplestTemplate } from './utils/startGame';
 import { HashRouter, Routes, Route, useNavigate } from 'react-router-dom';
 import { AppRoot } from '@telegram-apps/telegram-ui';  // импортируем AppRoot
 import { AuthProvider, useAuth } from './context/AuthContext';
@@ -27,6 +30,7 @@ function GameApp() {
   const navigate = useNavigate();
   const [screen, setScreen] = useState('start'); // start | newProfileKind | gameTemplates | planSetup | game
   const [newGameProfileName, setNewGameProfileName] = useState('');
+  const [startingGame, setStartingGame] = useState(false);
   const { logout } = useAuth();
 
   const handleNewGame = () => {
@@ -34,9 +38,17 @@ function GameApp() {
     setScreen('newProfileKind');
   };
 
-  const handleChooseGameMode = (name) => {
+  const handleChooseGameMode = async (name) => {
     setNewGameProfileName(name);
-    setScreen('gameTemplates');
+    setStartingGame(true);
+    try {
+      await startGameWithSimplestTemplate(name);
+      setScreen('game');
+    } catch (error) {
+      showNotification(error?.detail || error?.message || 'Не удалось запустить игру', 'error');
+    } finally {
+      setStartingGame(false);
+    }
   };
 
   const handleChoosePlanMode = (name) => {
@@ -83,6 +95,7 @@ function GameApp() {
           onProfileNameChange={setNewGameProfileName}
           onChooseGame={handleChooseGameMode}
           onBack={handleBackFromProfileKind}
+          startingGame={startingGame}
         />
       </GameAppFlowShell>
     );

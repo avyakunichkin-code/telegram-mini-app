@@ -9,29 +9,22 @@ import { useOnboardingCoachState } from './useOnboardingCoachState';
  * @param {import('react').RefObject<HTMLElement>} props.rootRef — контейнер с data-onboarding-anchor
  * @param {() => void} [props.onComplete]
  * @param {number} [props.practiceMs]
- * @param {() => void} [props.onSalaryClaimed] — вызывается при гейте зарплаты (prod: API)
- * @param {() => void} [props.onCushionContributed]
  */
-export function OnboardingCoach({
-  active,
-  rootRef,
-  onComplete,
-  practiceMs,
-  onSalaryClaimed,
-  onCushionContributed,
-}) {
+export function OnboardingCoach({ active, rootRef, onComplete, practiceMs }) {
   const coach = useOnboardingCoachState({ practiceMs, onComplete });
 
   if (!active || !coach.showCoach) {
     return null;
   }
 
+  if (!coach.showOverlay) {
+    return null;
+  }
+
   const overlay = (
     <OnboardingCoachOverlay
-      open={active && coach.showCoach}
+      open
       step={coach.step}
-      phase={coach.phase}
-      practiceLeftSec={coach.practiceLeftSec}
       skipPressCount={coach.skipPressCount}
       rootRef={rootRef}
       anchor={coach.step?.anchor}

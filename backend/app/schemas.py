@@ -231,6 +231,8 @@ class FinanceOverview(BaseModel):
     victory: Optional[VictoryOverview] = None
     character_unlocks: List[CharacterUnlockOverview] = Field(default_factory=list)
     save_kind: str = "game"
+    onboarding_state: str = "brief_done"
+    onboarding_step: str = "farewell"
 
 
 class AnalyticsTimeseriesPoint(BaseModel):
@@ -256,8 +258,14 @@ class PeriodCloseSummary(BaseModel):
     new_balance: float = 0
     breakdown: List[PeriodCloseBreakdownItem] = Field(default_factory=list)
     xp_earned: int = 0
+    xp_period_close: int = 0
+    xp_milestone: int = 0
+    milestone_title: Optional[str] = None
+    xp_from_achievements: int = 0
+    achievement_unlocks: List["AchievementUnlockEvent"] = Field(default_factory=list)
     level_up: bool = False
     new_level: Optional[int] = None
+    character_level: int = 1
 
 
 class AchievementTierStatus(BaseModel):
@@ -330,6 +338,17 @@ class GameProfileResponse(BaseModel):
     period_duration_seconds: int
     base_params_locked: int
     onboarding_state: str
+    onboarding_step: str = "period_timer"
+
+
+class OnboardingPatchRequest(BaseModel):
+    onboarding_state: Optional[str] = None
+    onboarding_step: Optional[str] = None
+
+
+class OnboardingPatchResponse(BaseModel):
+    onboarding_state: str
+    onboarding_step: str
 
 
 class TimeConfigUpdate(BaseModel):

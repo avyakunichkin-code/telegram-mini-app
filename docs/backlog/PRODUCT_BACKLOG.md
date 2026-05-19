@@ -191,10 +191,10 @@
 - [x] P0 **[Doc+Design]** Guided coach **5 шагов ★** — [`onboarding-guided/APPROVED.md`](../design-lab/onboarding-guided/APPROVED.md).
 - [x] P0 **[Doc]** Spec O1 → guided coach (2026-05-20).
 - [x] P0 **[Doc]** Ассет Монетки: [`docs/reference/assets/monetka-mascot.png`](../reference/assets/monetka-mascot.png).
-- [ ] P0 **[Product+Frontend]** Автостарт **простейшего** шаблона после Game Mode (первая игра).
-- [ ] P0 **[Frontend]** MQX `OnboardingCoach` + spotlight ([`DESIGN_WORKFLOW.md`](../../frontend-react/src/components/mqx/DESIGN_WORKFLOW.md)).
-- [ ] P0 **[Backend]** `onboarding_state` + `onboarding_step`; PATCH; overview.
-- [ ] P0 **[Frontend]** Coach на `GameScreen`: гейты 10 с / зарплата / подушка; skip×2; шаг 5 «Начать игру».
+- [x] P0 **[Product+Frontend]** Автостарт **простейшего** шаблона после Game Mode (`startGameWithSimplestTemplate`).
+- [x] P0 **[Frontend]** MQX `OnboardingCoach` + `GameOnboardingLayer` на `GameScreen`.
+- [x] P0 **[Backend]** `onboarding_state` + `onboarding_step`; `PATCH /api/game/profile/onboarding`; overview.
+- [x] P0 **[Frontend]** Coach: практика 10 с без UI; гейты зарплата/подушка; skip×2; шаг 5 «Начать игру».
 - [ ] P1 **[Frontend]** «Повторить обучение» — фаза 2 (после метрик).
 
 ### Онбординг и обучение (GAME §3.4, §9.3, §11)

@@ -36,6 +36,7 @@ export function OnboardingCoachDemo() {
       setCash((c) => c + 50_000);
       setSalaryTaken(true);
     }
+    // Уже получена в периоде или только что получили — оба случая закрывают шаг.
     coach.markSalaryDone();
   };
 
@@ -57,12 +58,10 @@ export function OnboardingCoachDemo() {
   };
 
   const overlay =
-    active && coach.showCoach ? (
+    active && coach.showOverlay ? (
       <OnboardingCoachOverlay
         open
         step={coach.step}
-        phase={coach.phase}
-        practiceLeftSec={coach.practiceLeftSec}
         skipPressCount={coach.skipPressCount}
         rootRef={rootRef}
         anchor={coach.step?.anchor}
@@ -74,8 +73,9 @@ export function OnboardingCoachDemo() {
   return (
     <div className="mqx-onboarding-demo">
       <p className="mqx-catalog__lead" style={{ marginTop: 0 }}>
-        Прототип <strong>guided coach</strong> (5 шагов). Практика: <strong>10 с</strong> фикс. Skip: 1-й — шаг, 2-й —
-        весь онбординг. Lab: <code>design-lab/onboarding-guided/</code>.
+        Прототип <strong>guided coach</strong> (5 шагов). После «Понятно» — <strong>10 с</strong> без подсказок и
+        затемнения (можно тыкать UI). Зарплату на практике после шага 1 тоже засчитываем. Skip: 1-й — шаг, 2-й — весь
+        онбординг.
       </p>
 
       <div className="mqx-onboarding-demo__toolbar">

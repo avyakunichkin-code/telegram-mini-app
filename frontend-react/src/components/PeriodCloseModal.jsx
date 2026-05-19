@@ -6,6 +6,33 @@ function breakdownLabel(item) {
   return item.title || item.type;
 }
 
+function buildXpLines(summary) {
+  const lines = [];
+  const periodXp = Number(summary.xp_period_close) || 0;
+  const milestoneXp = Number(summary.xp_milestone) || 0;
+  const achievementXp = Number(summary.xp_from_achievements) || 0;
+
+  if (periodXp > 0) {
+    lines.push({ key: 'period', label: 'За месяц', xp: periodXp });
+  }
+  if (milestoneXp > 0) {
+    lines.push({
+      key: 'milestone',
+      label: summary.milestone_title || 'Веха пути',
+      xp: milestoneXp,
+    });
+  }
+  if (achievementXp > 0) {
+    lines.push({ key: 'achievements', label: 'Достижения', xp: achievementXp });
+  }
+
+  if (lines.length === 0 && Number(summary.xp_earned) > 0) {
+    lines.push({ key: 'total', label: 'Опыт', xp: Number(summary.xp_earned) });
+  }
+
+  return lines;
+}
+
 export function PeriodCloseModal({ summary, onClose }) {
   if (!summary) return null;
 
@@ -15,6 +42,10 @@ export function PeriodCloseModal({ summary, onClose }) {
   const otherRows = (summary.breakdown || []).filter(
     (row) => row.type !== 'expense_category' && row.type !== 'lifestyle',
   );
+
+  const xpLines = buildXpLines(summary);
+  const achievements = Array.isArray(summary.achievement_unlocks) ? summary.achievement_unlocks : [];
+  const totalXp = Number(summary.xp_earned) || 0;
 
   return (
     <Modal open onClose={onClose}>
@@ -59,11 +90,43 @@ export function PeriodCloseModal({ summary, onClose }) {
             </section>
           ) : null}
 
-          {summary.xp_earned > 0 ? (
-            <p className="mqx-period-close__xp">
-              +{summary.xp_earned} XP
-              {summary.level_up && summary.new_level ? ` · Уровень ${summary.new_level}` : ''}
-            </p>
+          {totalXp > 0 ? (
+            <section className="mqx-period-close__section mqx-period-close__section--xp" aria-label="Опыт за период">
+              <h3 className="mqx-period-close__section-title">Прогресс</h3>
+              {xpLines.length > 0 ? (
+                <ul className="mqx-period-close__xp-lines">
+                  {xpLines.map((line) => (
+                    <li key={line.key} className="mqx-period-close__xp-line">
+                      <span>{line.label}</span>
+                      <span className="mqx-period-close__xp-val">+{line.xp} XP</span>
+                    </li>
+                  ))}
+                </ul>
+              ) : null}
+              <p className="mqx-period-close__xp-total">
+                Всего +{totalXp} XP
+                {summary.level_up && summary.new_level
+                  ? ` · Уровень ${summary.new_level}`
+                  : ''}
+              </p>
+            </section>
+          ) : null}
+
+          {achievements.length > 0 ? (
+            <section className="mqx-period-close__section" aria-label="Новые достижения">
+              <h3 className="mqx-period-close__section-title">Достижения</h3>
+              <ul className="mqx-period-close__achievements">
+                {achievements.map((item) => (
+                  <li
+                    key={`${item.chain_key}-${item.tier_key}`}
+                    className="mqx-period-close__achievement"
+                  >
+                    <span className="mqx-period-close__achievement-title">{item.title}</span>
+                    <span className="mqx-period-close__achievement-xp">+{item.xp_reward} XP</span>
+                  </li>
+                ))}
+              </ul>
+            </section>
           ) : null}
 
           <div className="mq-modal-actions" style={{ marginTop: 16 }}>
@@ -72,7 +135,7 @@ export function PeriodCloseModal({ summary, onClose }) {
             </Button>
           </div>
         </div>
-        </div>
+      </div>
     </Modal>
   );
 }

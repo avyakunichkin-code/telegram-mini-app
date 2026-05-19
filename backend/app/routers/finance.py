@@ -641,6 +641,8 @@ async def finance_overview(
             CharacterUnlockOverview(**item) for item in character_unlocks_payload(profile)
         ],
         save_kind=str(getattr(profile, "save_kind", "game") or "game"),
+        onboarding_state=str(getattr(profile, "onboarding_state", "brief_done") or "brief_done"),
+        onboarding_step=str(getattr(profile, "onboarding_step", "farewell") or "farewell"),
     )
 
 

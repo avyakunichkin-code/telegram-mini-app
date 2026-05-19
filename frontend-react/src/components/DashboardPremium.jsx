@@ -3,6 +3,7 @@ import { Button, Modal } from '@telegram-apps/telegram-ui';
 import { MoneyText } from './MoneyText';
 import { showNotification } from './notifications';
 import { getMonthlyBurn } from '../utils/expensesDisplay';
+import { buildLevelProgressHint } from '../utils/levelProgressHint';
 import {
   MqxDashStack,
   MqxDashboardHero,
@@ -123,6 +124,11 @@ export function DashboardPremium({
     return { level, xp, need, frac: pctClamp01(frac) };
   }, [overview]);
 
+  const levelProgressHint = useMemo(
+    () => (overview ? buildLevelProgressHint(overview) : null),
+    [overview],
+  );
+
   const levelBars = useMemo(() => {
     const income = Number(overview?.total_monthly_income) || 0;
     const liab = Number(overview?.total_monthly_liabilities_payment) || 0;
@@ -187,6 +193,7 @@ export function DashboardPremium({
               xpFrac={characterXp.frac}
               score={Number(overview?.score ?? 0)}
               bars={levelBars}
+              progressHint={levelProgressHint}
             />
             <MqxDivider />
             <MqxPeriodDashboard

@@ -8,7 +8,7 @@ import { IllustrationGame, IllustrationPlan } from './icons/ModeIllustrations';
  * Шаг 1: название сохранения + выбор типа.
  * Game → `GameTemplatePickScreen`; Plan → `BaseParamsScreen` (пока заглушка «Скоро»).
  */
-export function NewProfileKindScreen({ profileName, onProfileNameChange, onChooseGame, onBack }) {
+export function NewProfileKindScreen({ profileName, onProfileNameChange, onChooseGame, onBack, startingGame = false }) {
   const handleGame = () => {
     const name = profileName.trim();
     if (!name) {
@@ -53,7 +53,12 @@ export function NewProfileKindScreen({ profileName, onProfileNameChange, onChoos
           <div className="mqx-card__sub">Игра — готовые сценарии. План — свои цифры и статьи расходов.</div>
 
           <div className="mq-profile-mode-grid" role="group" aria-label="Выбор режима сохранения">
-            <button type="button" className="mq-profile-mode-card mq-profile-mode-card--game" onClick={handleGame}>
+            <button
+              type="button"
+              className="mq-profile-mode-card mq-profile-mode-card--game"
+              disabled={startingGame}
+              onClick={handleGame}
+            >
               <IllustrationGame className="mq-profile-mode-card__art mq-profile-mode-card__art--game" />
               <span className="mq-profile-mode-card__title">Игра</span>
               <span className="mq-profile-mode-card__desc">Симулятор с шаблонами и событиями периода.</span>
@@ -72,8 +77,13 @@ export function NewProfileKindScreen({ profileName, onProfileNameChange, onChoos
           </div>
 
           <p className="mq-profile-mode-footnote">
-            Чтобы задать всё вручную, дождитесь режима «План». В «Игре» доступны только каталожные старты.
+            Режим «Игра» сразу запускает самый простой сценарий. Чтобы задать всё вручную — дождитесь «План».
           </p>
+          {startingGame ? (
+            <div style={{ display: 'flex', justifyContent: 'center', paddingTop: 12 }}>
+              <Spinner />
+            </div>
+          ) : null}
         </div>
 
         <div className="mq-enter-item mq-actions-stack">

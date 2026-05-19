@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { Spinner, Button, Modal } from '@telegram-apps/telegram-ui';
 import { useGame } from '../hooks/useGame';
 import { DashboardPremium } from './DashboardPremium';
@@ -12,6 +12,7 @@ import { MqxShell } from './MqxShell';
 import { MqxTabHero } from './MqxTabHero';
 import { GameScreenLayout, GameScreenTabNav } from './GameScreenLayout';
 import { PeriodCloseModal } from './PeriodCloseModal';
+import { GameOnboardingLayer } from './GameOnboardingLayer';
 
 /** Эмоциональный слой страницы: фон синхронизирован с «время идёт» / «пауза» / загрузка. */
 function gamePageMoodClass(timeStatus) {
@@ -23,6 +24,8 @@ export function GameScreen({ onLogout, onNewGame, onLoadGame }) {
   const [activeTab, setActiveTab] = useState('dashboard');
   const [salaryWarnOpen, setSalaryWarnOpen] = useState(false);
   const [eventsOpen, setEventsOpen] = useState(false);
+  const [onboardingOverlayVisible, setOnboardingOverlayVisible] = useState(false);
+  const onboardingRootRef = useRef(null);
   const {
     overview,
     timeStatus,
@@ -52,6 +55,12 @@ export function GameScreen({ onLogout, onNewGame, onLoadGame }) {
       setEventsOpen(true);
     }
   }, [eventsPromptTick, pendingEvents]);
+
+  useEffect(() => {
+    if (onboardingOverlayVisible && activeTab !== 'dashboard') {
+      setActiveTab('dashboard');
+    }
+  }, [onboardingOverlayVisible, activeTab]);
 
   const handleRequestNextPeriod = async () => {
     try {
@@ -221,19 +230,21 @@ export function GameScreen({ onLogout, onNewGame, onLoadGame }) {
           <div className="mq-stack mq-stack-animate mq-stack--tight mq-stack--game-tab">
             <div key={activeTab} className="mq-enter-item mq-enter-item--fill">
               {activeTab === 'dashboard' && (
-                <DashboardPremium
-                  overview={overview}
-                  timeStatus={timeStatus}
-                  pendingEventsCount={pendingEvents?.length ?? 0}
-                  onOpenEvents={() => setEventsOpen(true)}
-                  setPlay={setPlay}
-                  setPause={setPause}
-                  onNextPeriod={handleRequestNextPeriod}
-                  claimSalary={claimSalary}
-                  contributeToSafetyFund={contributeToSafetyFund}
-                  withdrawFromSafetyFund={withdrawFromSafetyFund}
-                  onGoFinance={() => setActiveTab('finance')}
-                />
+                <div ref={onboardingRootRef} className="mqx-onboarding-anchor-root">
+                  <DashboardPremium
+                    overview={overview}
+                    timeStatus={timeStatus}
+                    pendingEventsCount={pendingEvents?.length ?? 0}
+                    onOpenEvents={() => setEventsOpen(true)}
+                    setPlay={setPlay}
+                    setPause={setPause}
+                    onNextPeriod={handleRequestNextPeriod}
+                    claimSalary={claimSalary}
+                    contributeToSafetyFund={contributeToSafetyFund}
+                    withdrawFromSafetyFund={withdrawFromSafetyFund}
+                    onGoFinance={() => setActiveTab('finance')}
+                  />
+                </div>
               )}
 
               {activeTab === 'finance' && (
@@ -258,6 +269,14 @@ export function GameScreen({ onLogout, onNewGame, onLoadGame }) {
       {periodCloseSummary ? (
         <PeriodCloseModal summary={periodCloseSummary} onClose={dismissPeriodClose} />
       ) : null}
+
+      <GameOnboardingLayer
+        overview={overview}
+        periodStatus={periodStatus}
+        rootRef={onboardingRootRef}
+        refreshOverview={refreshOverview}
+        onOverlayVisibleChange={setOnboardingOverlayVisible}
+      />
     </GameScreenLayout>
   );
 }

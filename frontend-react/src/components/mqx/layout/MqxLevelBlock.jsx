@@ -11,6 +11,7 @@ export function MqxLevelBlock({
   xpFrac,
   score,
   bars = [],
+  progressHint = null,
 }) {
   return (
     <section className="mqx-level-block" aria-label={`Уровень ${level}`}>
@@ -32,6 +33,12 @@ export function MqxLevelBlock({
       <div className="mqx-level-block__meter">
         <MqxProgress value={Math.round(xpFrac * 100)} xp aria-label="Прогресс опыта" />
       </div>
+
+      {progressHint ? (
+        <p className={`mqx-level-block__hint mqx-level-block__hint--${progressHint.variant || 'progress'}`}>
+          {progressHint.text}
+        </p>
+      ) : null}
 
       {bars.length > 0 ? (
         <div className="mqx-level-block__bars">

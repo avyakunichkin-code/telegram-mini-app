@@ -17,6 +17,7 @@ from .achievement_seeds import ensure_achievement_catalog
 from .character_progression import apply_character_xp
 from .progression_xp import (
     compute_period_close_xp,
+    milestone_title_for_period,
     milestone_xp_for_closed_period,
     save_milestones_awarded,
 )
@@ -217,7 +218,8 @@ def process_period_end(db: Session, profile: GameProfile) -> dict:
         # Если баланс неотрицательный – сбрасываем счётчик
         profile.negative_periods_count = 0
 
-    # 5. XP за закрытие периода (единый пакет + milestone)
+    # 5. XP за закрытие периода (единый пакет + milestone + достижения)
+    level_before_xp = int(profile.level)
     snapshot = (
         db.query(PeriodSnapshot)
         .filter(
@@ -236,16 +238,15 @@ def process_period_end(db: Session, profile: GameProfile) -> dict:
         safety_fund_contribution=safety_contrib,
     )
     milestone_xp, milestones_list = milestone_xp_for_closed_period(profile, period_index)
+    milestone_title = milestone_title_for_period(period_index) if milestone_xp > 0 else None
     if milestone_xp > 0:
         save_milestones_awarded(profile, milestones_list)
 
-    total_period_xp = period_xp + milestone_xp
+    rhythm_xp = period_xp + milestone_xp
     if snapshot is not None:
-        snapshot.xp_earned = int(total_period_xp)
+        snapshot.xp_earned = int(rhythm_xp)
 
-    xp_info = apply_character_xp(profile, total_period_xp, db)
-    xp_earned = int(xp_info.get("xp_gained", 0) or 0)
-    level_up = bool(xp_info.get("level_up"))
+    apply_character_xp(profile, rhythm_xp, db)
 
     # 6. Сбрасываем флаг получения зарплаты (если он хранится в профиле)
     # Важно: НЕ сбрасываем в 0. Поле хранит номер периода, в котором брали зарплату.
@@ -277,6 +278,11 @@ def process_period_end(db: Session, profile: GameProfile) -> dict:
         achievement_unlocks = process_achievement_unlocks(db, profile)
     except Exception:
         achievement_unlocks = []
+
+    xp_from_achievements = sum(int(item.get("xp_reward") or 0) for item in achievement_unlocks)
+    total_xp_earned = int(rhythm_xp) + int(xp_from_achievements)
+    level_up = int(profile.level) > level_before_xp
+    new_level = int(profile.level) if level_up else None
 
     # 7. Увеличиваем номер периода
     closed_period_index = int(period_index)
@@ -314,8 +320,13 @@ def process_period_end(db: Session, profile: GameProfile) -> dict:
         "negative_streak": profile.negative_periods_count,
         "game_over": profile.is_active == 0,
         "overdue_added": round(total_overdue_added, 2),
-        "xp_earned": xp_earned,
+        "xp_earned": total_xp_earned,
+        "xp_period_close": int(period_xp),
+        "xp_milestone": int(milestone_xp),
+        "milestone_title": milestone_title,
+        "xp_from_achievements": int(xp_from_achievements),
         "level_up": level_up,
-        "new_level": xp_info.get("new_level"),
+        "new_level": new_level,
+        "character_level": int(profile.level),
         "achievement_unlocks": achievement_unlocks,
     }
