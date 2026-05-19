@@ -44,7 +44,7 @@ function ScrimPanels({ hole }) {
 }
 
 /**
- * Spotlight + пузырь Монетки. variant=practice — затемнение и подсветка якоря без пузыря.
+ * Spotlight + пузырь Монетки (фаза bubble). Практика 10 с — оверлей снимается в GameOnboardingLayer.
  */
 export function OnboardingCoachOverlay({
   open,

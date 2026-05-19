@@ -1,3 +1,4 @@
+import { asSafeReactText } from '../../../utils/displayText';
 import { truncateEventText } from './eventDisplay';
 
 /**
@@ -12,12 +13,15 @@ export function EventChoiceButton({ choice, disabled, onPick, variant = 'default
   ].filter(Boolean).join(' ');
 
   const xpHint = Number(choice?.xp_delta) > 0 ? `XP +${choice.xp_delta}` : null;
+  const choiceLabel = asSafeReactText(choice?.title, 'Вариант ответа');
 
   return (
     <button
       type="button"
       className={cls}
       disabled={disabled}
+      title={choiceLabel}
+      aria-label={choice.description ? `${choiceLabel}. ${asSafeReactText(choice.description, '')}` : choiceLabel}
       onClick={() => { void onPick(choice.id); }}
     >
       <span className="mqx-events-choice__title">{truncateEventText(choice.title, 96)}</span>

@@ -82,3 +82,14 @@ Spec допускает **P3** (таббар остаётся) или hash-route
 ```
 
 До строки «Утверждаем …» в чате — **не** внедрять в `frontend-react/src/components/*Premium.jsx`.
+
+---
+
+## Макеты (2026-05-20)
+
+```bash
+cd design-lab/achievements-progress
+npx serve .
+```
+
+Открыть `index.html`: секции **C** (монетки), **L0/L1/L2**, **P3** (каталог), **Меню**. L1 — клик по заголовку раскрывает блок.

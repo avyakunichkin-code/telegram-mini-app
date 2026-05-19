@@ -19,7 +19,8 @@ export function EventOverlayToolbar({
       <button
         type="button"
         className="mqx-events-close events-overlay-close"
-        aria-label="Закрыть"
+        aria-label="Закрыть окно событий"
+        title="Закрыть"
         onClick={onClose}
       >
         ×

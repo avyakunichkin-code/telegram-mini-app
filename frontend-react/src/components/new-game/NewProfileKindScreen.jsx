@@ -6,7 +6,7 @@ import { IllustrationGame, IllustrationPlan } from './icons/ModeIllustrations';
 
 /**
  * Шаг 1: название сохранения + выбор типа.
- * Game → `GameTemplatePickScreen`; Plan → `BaseParamsScreen` (пока заглушка «Скоро»).
+ * Game → автостарт простейшего шаблона (`startGameWithSimplestTemplate`); Plan → скоро.
  */
 export function NewProfileKindScreen({ profileName, onProfileNameChange, onChooseGame, onBack, startingGame = false }) {
   const handleGame = () => {
@@ -57,6 +57,8 @@ export function NewProfileKindScreen({ profileName, onProfileNameChange, onChoos
               type="button"
               className="mq-profile-mode-card mq-profile-mode-card--game"
               disabled={startingGame}
+              title="Симулятор с готовым сценарием и обучением Монетки"
+              aria-label="Режим Игра"
               onClick={handleGame}
             >
               <IllustrationGame className="mq-profile-mode-card__art mq-profile-mode-card__art--game" />
@@ -66,7 +68,7 @@ export function NewProfileKindScreen({ profileName, onProfileNameChange, onChoos
 
             <div
               className="mq-profile-mode-card mq-profile-mode-card--plan mq-profile-mode-card--soon"
-              role="group"
+              role="status"
               aria-label="Режим План скоро будет доступен"
             >
               <span className="mq-profile-mode-card__badge mq-profile-mode-card__badge--soon">Скоро</span>

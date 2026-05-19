@@ -35,6 +35,7 @@ export function FinancePremium({ overview, refreshOverview }) {
                 aria-selected={financeTab === t.id}
                 aria-controls={`finance-panel-${t.id}`}
                 className={`mqx-fin-tab mqx-capital-tab ${financeTab === t.id ? 'mqx-fin-tab--active mqx-capital-tab--active' : ''}`}
+                title={t.label}
                 onClick={() => setFinanceTab(t.id)}
               >
                 {t.label}

@@ -249,10 +249,16 @@ export function DashboardPremium({
         </main>
       </div>
 
-      <Modal open={moneyModal !== null} onClose={() => setMoneyModal(null)}>
-        <div className="mqx-modal">
+      <Modal
+        open={moneyModal !== null}
+        onClose={() => setMoneyModal(null)}
+        title={moneyModal === 'in' ? 'В подушку' : 'Снять с подушки'}
+      >
+        <div className="mqx-modal" role="document" aria-labelledby="mqx-safety-fund-modal-title">
           <div className="mqx-card">
-            <div className="mqx-card__title">{moneyModal === 'in' ? 'В подушку' : 'Снять с подушки'}</div>
+            <div id="mqx-safety-fund-modal-title" className="mqx-card__title">
+              {moneyModal === 'in' ? 'В подушку' : 'Снять с подушки'}
+            </div>
             <p className="mq-modal-lead" style={{ marginTop: 8 }}>Сумма</p>
             <label className="mq-field" style={{ marginTop: 6 }}>
               <span className="mq-field__label visually-hidden">Сумма</span>

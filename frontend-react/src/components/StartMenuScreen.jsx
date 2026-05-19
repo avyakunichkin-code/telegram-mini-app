@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { Button, Modal, Spinner } from '@telegram-apps/telegram-ui';
 import { useAuth } from '../context/AuthContext';
 import { API } from '../api';
+import { showNotification } from './notifications';
 import { MqxShell } from './MqxShell';
 import { MqxTabHero } from './MqxTabHero';
 import { MoneyText } from './MoneyText';
@@ -33,8 +34,8 @@ export function StartMenuScreen({ onNewGame, onLoadGame, onLogout }) {
     try {
       await API.activateGameProfile(profileId);
       if (onLoadGame) onLoadGame();
-    } catch {
-      // на MVP молча остаёмся на экране
+    } catch (e) {
+      showNotification(e?.detail || e?.message || 'Не удалось загрузить сохранение', 'error');
     }
   };
 
@@ -106,7 +107,12 @@ export function StartMenuScreen({ onNewGame, onLoadGame, onLogout }) {
                 <div className="mqx-fin-row__val">
                   <MoneyText value={Number(lastProfile.cash_balance || 0)} />
                 </div>
-                <Button mode="filled" size="s" onClick={() => handleActivate(lastProfile.id)}>
+                <Button
+                  mode="filled"
+                  size="s"
+                  title="Открыть это сохранение"
+                  onClick={() => handleActivate(lastProfile.id)}
+                >
                   Продолжить
                 </Button>
               </div>
@@ -135,10 +141,12 @@ export function StartMenuScreen({ onNewGame, onLoadGame, onLogout }) {
         </div>
       </div>
 
-      <Modal open={showLoadModal} onClose={() => setShowLoadModal(false)}>
-        <div className="mqx-modal">
+      <Modal open={showLoadModal} onClose={() => setShowLoadModal(false)} title="Все сохранения">
+        <div className="mqx-modal" role="document" aria-labelledby="mqx-load-profiles-title">
           <div className="mqx-card">
-            <div className="mqx-card__title">Все сохранения</div>
+            <div id="mqx-load-profiles-title" className="mqx-card__title">
+              Все сохранения
+            </div>
             <p className="mqx-card__sub">Выберите слот и нажмите «Загрузить».</p>
             <div className="mqx-fin-list" style={{ marginTop: 12 }}>
               {otherProfiles.map((profile) => (
@@ -151,6 +159,7 @@ export function StartMenuScreen({ onNewGame, onLoadGame, onLogout }) {
                     <Button
                       mode="filled"
                       size="s"
+                      title={`Загрузить сохранение «${profile.name}»`}
                       onClick={() => {
                         void handleActivate(profile.id);
                         setShowLoadModal(false);

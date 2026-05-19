@@ -10,7 +10,8 @@ export function EventCarouselDots({ items, activeIndex, sliding, disabled, onAct
           type="button"
           role="tab"
           className={`mqx-events-dot events-carousel-dot ${i === activeIndex && !sliding ? 'events-carousel-dot--active' : ''}`}
-          aria-label={`Карточка ${i + 1}`}
+          aria-label={ev.title ? `Событие ${i + 1}: ${ev.title}` : `Карточка ${i + 1}`}
+          title={ev.title ? String(ev.title) : undefined}
           aria-selected={i === activeIndex && !sliding}
           disabled={!!sliding || disabled}
           onClick={() => onActivate(i)}

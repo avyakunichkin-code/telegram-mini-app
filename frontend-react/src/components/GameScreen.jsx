@@ -212,11 +212,13 @@ export function GameScreen({ onLogout, onNewGame, onLoadGame }) {
       )}
       overlays={(
         <>
-          <Modal open={salaryWarnOpen} onClose={() => setSalaryWarnOpen(false)}>
-            <div className="mqx-modal">
+          <Modal open={salaryWarnOpen} onClose={() => setSalaryWarnOpen(false)} title="Следующий период">
+            <div className="mqx-modal" role="document" aria-labelledby="mqx-salary-warn-title">
               <div className="mqx-card">
                 <div className="mqx-card__kicker mqx-card__kicker--amber">Период</div>
-                <div className="mqx-card__title">Следующий период</div>
+                <div id="mqx-salary-warn-title" className="mqx-card__title">
+                  Следующий период
+                </div>
                 <p className="mqx-card__sub">Проверка перед сменой месяца в игре.</p>
                 <p className="mq-modal-lead" style={{ marginTop: 14 }}>Зарплата за этот период ещё не получена</p>
                 <p className="mq-modal-body">

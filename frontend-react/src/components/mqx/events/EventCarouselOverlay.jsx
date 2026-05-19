@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { showNotification } from '../../notifications';
 import { EventCard } from './EventCard';
 import { EventCarouselDots } from './EventCarouselDots';
@@ -35,6 +35,15 @@ export function EventCarouselOverlay({ open, onClose, events, onResolved }) {
   } = carousel;
 
   const navBlocked = !!slide || busyId !== null;
+
+  useEffect(() => {
+    if (!open) return undefined;
+    const onKeyDown = (e) => {
+      if (e.key === 'Escape') onClose();
+    };
+    window.addEventListener('keydown', onKeyDown);
+    return () => window.removeEventListener('keydown', onKeyDown);
+  }, [open, onClose]);
 
   const handlePick = async (eventInstanceId, choiceId) => {
     setBusyId(eventInstanceId);
