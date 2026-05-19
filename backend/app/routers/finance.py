@@ -668,6 +668,7 @@ async def finance_analytics_timeseries(
         FinanceLiability.is_active == 1,
     ).all()
     total_overdue_now = round(sum(float(l.overdue_amount or 0) for l in liabilities_orm), 2)
+    burn_now = round(float(compute_monthly_burn(db, profile).total), 2)
 
     points: List[AnalyticsTimeseriesPoint] = [
         AnalyticsTimeseriesPoint(
@@ -675,6 +676,7 @@ async def finance_analytics_timeseries(
             cash_balance=round(float(r.cash_balance), 2),
             safety_fund_balance=round(float(r.safety_fund_balance), 2),
             total_overdue_amount=round(float(r.total_overdue_amount), 2),
+            monthly_burn_total=round(float(getattr(r, "monthly_burn_total", 0) or 0), 2),
             is_projection=False,
         )
         for r in closings_rows
@@ -686,6 +688,7 @@ async def finance_analytics_timeseries(
             cash_balance=round(float(profile.cash_balance), 2),
             safety_fund_balance=round(float(profile.safety_fund_balance), 2),
             total_overdue_amount=total_overdue_now,
+            monthly_burn_total=burn_now,
             is_projection=True,
         )
     )

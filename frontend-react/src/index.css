@@ -719,6 +719,130 @@ body {
   justify-content: space-between;
 }
 
+/* Hero дашборда — компактный H3′ */
+.mqx-hero--compact {
+  padding: 10px 12px 10px;
+  flex-shrink: 0;
+}
+
+.mqx-hero-compact__main {
+  position: relative;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: start;
+  gap: 10px;
+}
+
+.mqx-hero-compact__logo {
+  padding-top: 2px;
+}
+
+.mqx-hero--compact .mq-logo rect {
+  fill: rgba(255, 255, 255, 0.14);
+}
+
+.mqx-hero--compact .mq-logo text {
+  fill: #fff;
+}
+
+.mqx-hero-compact__center {
+  min-width: 0;
+  padding-top: 2px;
+}
+
+.mqx-hero-compact__timer-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 6px 10px;
+}
+
+.mqx-hero-compact__timer {
+  font-size: 20px;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.02em;
+  color: #fff;
+  line-height: 1;
+}
+
+.mqx-hero-compact__progress-meta {
+  font-size: 10px;
+  font-weight: 650;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: rgba(245, 243, 255, 0.68);
+}
+
+.mqx-hero-compact__progress {
+  margin-top: 6px;
+  height: 4px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.18);
+  overflow: hidden;
+}
+
+.mqx-hero-compact__progress-fill {
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, var(--mq-emerald), #34d399);
+}
+
+.mqx-hero-compact__aside {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 6px;
+}
+
+.mqx-hero-compact__controls {
+  display: flex;
+  gap: 6px;
+}
+
+.mqx-hero--compact .mqx-btn--icon {
+  width: 36px;
+  height: 36px;
+  min-width: 36px;
+  padding: 0;
+  display: grid;
+  place-items: center;
+  font-size: 14px;
+  line-height: 1;
+}
+
+.mqx-hero-compact__period {
+  text-align: right;
+  line-height: 1.15;
+}
+
+.mqx-hero-compact__period-label {
+  display: block;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(245, 243, 255, 0.65);
+}
+
+.mqx-hero-compact__period-value {
+  display: block;
+  font-size: 14px;
+  font-weight: 800;
+  color: #fff;
+  font-variant-numeric: tabular-nums;
+}
+
+.mqx-hero-compact__pills {
+  margin-top: 10px;
+  gap: 6px;
+}
+
+.mqx-hero-compact__pills .mqx-pill {
+  padding: 7px 10px;
+  font-size: 12px;
+}
+
 .mqx-pill {
   border-radius: 10px;
   padding: 8px 11px;
@@ -3165,6 +3289,197 @@ body {
 
 .mqx-analytics-cf-fill--slate {
   background: linear-gradient(90deg, #94a3b8, #64748b);
+}
+
+.mqx-analytics-cf-fill--amber {
+  background: linear-gradient(90deg, #fbbf24, #f97316);
+}
+
+.mqx-analytics-cashflow--after-charts .mqx-analytics-cf-fill--amber {
+  background: linear-gradient(90deg, #fbbf24, #f97316);
+}
+
+/* E1: расходы на жизнеобеспечение */
+.mqx-expenses-budget {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.mqx-expenses-budget__head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.mqx-expenses-budget__title {
+  margin: 4px 0 0;
+  font-size: var(--mq-fs-title-sm, 1.05rem);
+  font-weight: 700;
+}
+
+.mqx-expenses-budget__sub,
+.mqx-expenses-budget__empty,
+.mqx-expenses-budget__outflow {
+  margin: 6px 0 0;
+  font-size: var(--mq-fs-caption);
+  color: color-mix(in srgb, var(--mqx-ink) 72%, transparent);
+  line-height: 1.35;
+}
+
+.mqx-expenses-budget__total {
+  text-align: right;
+  flex-shrink: 0;
+}
+
+.mqx-expenses-budget__total-label {
+  font-size: var(--mq-fs-caption);
+  color: color-mix(in srgb, var(--mqx-ink) 65%, transparent);
+}
+
+.mqx-expenses-budget__total-value {
+  font-size: 1.15rem;
+  font-weight: 700;
+  margin-top: 2px;
+}
+
+.mqx-expenses-budget__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.mqx-expenses-budget__row-top {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  font-size: var(--mq-fs-body-sm);
+}
+
+.mqx-expenses-budget__row-title {
+  font-weight: 600;
+}
+
+.mqx-expenses-budget__track {
+  margin-top: 6px;
+  height: 8px;
+  border-radius: 999px;
+  overflow: hidden;
+  background: color-mix(in srgb, var(--mqx-ink) 8%, transparent);
+}
+
+.mqx-expenses-budget__fill {
+  height: 100%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #fbbf24, #f97316);
+}
+
+.mqx-expenses-budget__toggle {
+  align-self: flex-start;
+  border: none;
+  background: none;
+  padding: 0;
+  font-size: var(--mq-fs-caption);
+  font-weight: 600;
+  color: var(--tg-theme-link-color, #2563eb);
+  cursor: pointer;
+}
+
+.mqx-expenses-budget__lines {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.mqx-expenses-budget__line {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  grid-template-rows: auto auto;
+  gap: 2px 10px;
+  padding: 8px 10px;
+  border-radius: 12px;
+  background: color-mix(in srgb, var(--tg-theme-secondary-bg-color, #f1f5f9) 55%, transparent);
+}
+
+.mqx-expenses-budget__line-title {
+  font-weight: 600;
+  font-size: var(--mq-fs-body-sm);
+}
+
+.mqx-expenses-budget__line-meta {
+  grid-column: 1;
+  font-size: var(--mq-fs-caption);
+  color: color-mix(in srgb, var(--mqx-ink) 65%, transparent);
+}
+
+.mqx-expenses-budget__line-amount {
+  grid-column: 2;
+  grid-row: 1 / span 2;
+  align-self: center;
+  font-weight: 700;
+}
+
+.mqx-dash-burn-hint {
+  margin: 0;
+  padding: 0 2px;
+  font-size: var(--mq-fs-caption);
+  line-height: 1.4;
+  color: color-mix(in srgb, var(--mqx-ink) 70%, transparent);
+}
+
+.mqx-period-close__title {
+  margin: 4px 0 0;
+  font-size: var(--mq-fs-title-sm, 1.05rem);
+  font-weight: 700;
+}
+
+.mqx-period-close__lead {
+  margin: 8px 0 0;
+  font-size: var(--mq-fs-body-sm);
+  color: color-mix(in srgb, var(--mqx-ink) 75%, transparent);
+}
+
+.mqx-period-close__section {
+  margin-top: 14px;
+}
+
+.mqx-period-close__section-title {
+  margin: 0 0 8px;
+  font-size: var(--mq-fs-caption);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: color-mix(in srgb, var(--mqx-ink) 65%, transparent);
+}
+
+.mqx-period-close__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.mqx-period-close__row {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  font-size: var(--mq-fs-body-sm);
+}
+
+.mqx-period-close__xp {
+  margin: 12px 0 0;
+  font-size: var(--mq-fs-body-sm);
+  font-weight: 600;
+  color: var(--tg-theme-link-color, #2563eb);
 }
 
 .mqx-card--analytics-dark {

@@ -21,6 +21,7 @@ from ..game_rules import (
 from ..database import get_db
 from ..game_time import get_active_game_profile, sync_time
 from ..models import EventChoice, EventDefinition, EventInstance, EventProfileCounter, GameProfile
+from ..expenses import add_expense_line_from_event
 from ..insurance_events import apply_insurance_claim_from_effects
 from ..mvp11_event_seeds import ensure_mvp11_event_catalog
 
@@ -31,8 +32,45 @@ logger = logging.getLogger(__name__)
 
 EVENTS_PER_PERIOD = 3
 ALLOWED_EFFECT_KEYS = frozenset(
-    {"cash_delta", "safety_delta", "xp_delta", "monthly_lifestyle_delta", "insurance_claim"}
+    {
+        "cash_delta",
+        "safety_delta",
+        "xp_delta",
+        "monthly_lifestyle_delta",
+        "monthly_expense_delta",
+        "expense_line",
+        "insurance_claim",
+    }
 )
+
+
+def _clamp_expense_line_amount(amount: float) -> float:
+    from ..game_rules import EVENT_LIFESTYLE_DELTA_ABS_CAP
+
+    cap = float(EVENT_LIFESTYLE_DELTA_ABS_CAP)
+    return max(-cap, min(cap, float(amount)))
+
+
+def _apply_expense_line_effect(db: Session, profile: GameProfile, raw: object, *, source_ref: str) -> None:
+    if not isinstance(raw, dict):
+        raise HTTPException(status_code=400, detail="expense_line must be an object")
+    category_key = str(raw.get("category_key") or "other").strip() or "other"
+    amount = _clamp_expense_line_amount(float(raw.get("amount_monthly", raw.get("amount", 0)) or 0))
+    if amount == 0:
+        return
+    title = raw.get("title")
+    expires = raw.get("expires_after_periods")
+    if expires is not None:
+        expires = int(expires)
+    add_expense_line_from_event(
+        db,
+        profile,
+        category_key=category_key,
+        amount_monthly=amount,
+        title=str(title).strip() if title else None,
+        expires_after_periods=expires,
+        source_ref=source_ref,
+    )
 
 
 def expire_pending_events_for_closed_period(db: Session, game_profile_id: int, closed_period_index: int) -> int:
@@ -370,7 +408,10 @@ async def choose_event(
     cash_delta = float(effects.get("cash_delta", 0) or 0)
     safety_delta = float(effects.get("safety_delta", 0) or 0)
     xp_delta = int(effects.get("xp_delta", 0) or 0)
-    monthly_lifestyle_delta = float(effects.get("monthly_lifestyle_delta", 0) or 0)
+    monthly_lifestyle_delta = float(effects.get("monthly_lifestyle_delta", 0) or 0) + float(
+        effects.get("monthly_expense_delta", 0) or 0
+    )
+    expense_line_spec = effects.get("expense_line")
     insurance_claim_spec = effects.get("insurance_claim")
     if insurance_claim_spec is not None and not isinstance(insurance_claim_spec, dict):
         raise HTTPException(status_code=400, detail="insurance_claim must be an object")
@@ -433,6 +474,14 @@ async def choose_event(
         profile.delta_monthly_lifestyle_expense = clamp_profile_lifestyle_delta(
             float(getattr(profile, "delta_monthly_lifestyle_expense", 0) or 0),
             monthly_lifestyle_delta,
+        )
+
+    if expense_line_spec is not None:
+        _apply_expense_line_effect(
+            db,
+            profile,
+            expense_line_spec,
+            source_ref=f"event:{inst.definition_id}:choice:{choice_id}",
         )
 
     xp_info = {"xp_gained": 0, "level_up": False, "new_level": None}

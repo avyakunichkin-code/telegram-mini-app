@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { FinanceSection, FINANCE_TABS } from './FinanceSection';
+import { ExpensesBudgetBlock } from './mqx';
 import { MqxTabHero } from './MqxTabHero';
 
 export function FinancePremium({ overview, refreshOverview }) {
@@ -16,10 +17,12 @@ export function FinancePremium({ overview, refreshOverview }) {
         title="Управление капиталом"
         titleClassName="mqx-hero__title--capital"
         subtitleClassName="mqx-hero__sub--capital"
-        subtitle="Инвестиции, страховки, активы и долги."
+        subtitle="Расходы на жизнь, инвестиции, страховки, активы и долги."
       />
 
       <main className="mqx-content mqx-tab-page__scroll mqx-capital-page">
+        <ExpensesBudgetBlock overview={overview} />
+
         <section className="mqx-card mqx-capital-card">
           <h2 className="mqx-capital-card__title">Разделы</h2>
           <div className="mqx-fin-tabs mqx-capital-tabs" role="tablist" aria-label="Разделы финансов">

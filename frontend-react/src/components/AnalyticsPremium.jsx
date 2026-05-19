@@ -5,6 +5,7 @@ import { MoneyText } from './MoneyText';
 import { SparkLineSvg, CashForecastSpark } from './AnalyticsCharts';
 import { IconPercentStat, IconOverdueStat, IconShieldStat, IconFlowStat } from './icons/StatIcons';
 import { MqStatRow } from './MqStatRow';
+import { getMonthlyBurn } from '../utils/expensesDisplay';
 import { MqxGoalBar, MqxCashflowBar, pctClamp01 } from './mqx/MqxMetricBars';
 import { MqxTabHero } from './MqxTabHero';
 
@@ -48,7 +49,9 @@ export function AnalyticsPremium({ overview }) {
     const income = Number(overview.total_monthly_income) || 0;
     const liabPay = Number(overview.total_monthly_liabilities_payment) || 0;
     const maintenance = Number(overview.total_monthly_assets_maintenance) || 0;
-    const denom = Math.max(income, liabPay + maintenance, 1);
+    const burn = getMonthlyBurn(overview);
+    const expenseRatioPct = income > 0 ? (burn / income) * 100 : 0;
+    const denom = Math.max(income, liabPay + maintenance + burn, 1);
 
     const cash = Number(overview.cash_balance) || 0;
     const safety = Number(overview.safety_fund_balance) || 0;
@@ -89,6 +92,8 @@ export function AnalyticsPremium({ overview }) {
       income,
       liabPay,
       maintenance,
+      burn,
+      expenseRatioPct,
       denom,
       cash,
       safety,
@@ -118,6 +123,8 @@ export function AnalyticsPremium({ overview }) {
     income,
     liabPay,
     maintenance,
+    burn,
+    expenseRatioPct,
     denom,
     cash,
     safety,
@@ -270,6 +277,18 @@ export function AnalyticsPremium({ overview }) {
                     height={52}
                   />
                 </div>
+                {pts.some((p) => Number(p.monthly_burn_total) > 0) ? (
+                  <div className="mqx-analytics-dark__spark-wrap">
+                    <SparkLineSvg
+                      series={pts.map((p) => Number(p.monthly_burn_total) || 0)}
+                      title="Расходы на жизнь (закрытия)"
+                      subtitle={`${Math.round(burn)} ₽/мес сейчас`}
+                      accent="amber"
+                      dark
+                      height={48}
+                    />
+                  </div>
+                ) : null}
                 <p className="mqx-analytics-dark__hint">История закрытых периодов и снимок текущего месяца.</p>
               </>
             ) : null}
@@ -324,6 +343,21 @@ export function AnalyticsPremium({ overview }) {
               fraction={maintenance / denom}
               fillClass="mqx-analytics-cf-fill--slate"
             />
+            {burn > 0 ? (
+              <MqxCashflowBar
+                label="Расходы на жизнь"
+                amountNode={
+                  <span>
+                    <MoneyText value={burn} decimals={0} />{' '}
+                    <span className="mqx-analytics-cf-suffix">
+                      /мес · {expenseRatioPct.toFixed(0)}% дохода
+                    </span>
+                  </span>
+                }
+                fraction={burn / denom}
+                fillClass="mqx-analytics-cf-fill--amber"
+              />
+            ) : null}
           </div>
           <div className="mqx-analytics-cashflow__hint" role="note">
             {(() => {

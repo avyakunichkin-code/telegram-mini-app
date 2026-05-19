@@ -19,6 +19,8 @@ from ..schemas import (
     AssetCreate,
     LiabilityCreate,
     GameStarterTemplatePublic,
+    PeriodCloseBreakdownItem,
+    PeriodCloseSummary,
 )
 from ..expense_template_defaults import expense_budget_for_template
 from ..expenses import ensure_expense_category_catalog, seed_expense_lines_from_budget
@@ -363,6 +365,28 @@ async def set_pause_mode(
     )
 
 
+def _period_close_summary(period_result: dict) -> PeriodCloseSummary:
+    breakdown = [
+        PeriodCloseBreakdownItem(
+            type=str(item.get("type") or "other"),
+            title=str(item.get("title") or ""),
+            amount=round(float(item.get("amount") or 0), 2),
+            category_key=item.get("category_key"),
+        )
+        for item in (period_result.get("breakdown") or [])
+        if isinstance(item, dict)
+    ]
+    new_level = period_result.get("new_level")
+    return PeriodCloseSummary(
+        total_spent=round(float(period_result.get("total_spent") or 0), 2),
+        new_balance=round(float(period_result.get("new_balance") or 0), 2),
+        breakdown=breakdown,
+        xp_earned=int(period_result.get("xp_earned") or 0),
+        level_up=bool(period_result.get("level_up")),
+        new_level=int(new_level) if new_level is not None else None,
+    )
+
+
 @router.post("/time/next", response_model=TimeStatusResponse)
 async def go_to_next_period(
         current_user=Depends(get_current_user),
@@ -392,6 +416,7 @@ async def go_to_next_period(
         period_index=profile.period_index,
         period_duration_seconds=profile.period_duration_seconds,
         seconds_until_next_period=get_seconds_until_next(profile),
+        period_close=_period_close_summary(period_result),
     )
 
 

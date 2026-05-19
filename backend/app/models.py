@@ -344,6 +344,7 @@ class PeriodEconomyClosing(Base):
     cash_balance = Column(Float, nullable=False, default=0)
     safety_fund_balance = Column(Float, nullable=False, default=0)
     total_overdue_amount = Column(Float, nullable=False, default=0)
+    monthly_burn_total = Column(Float, nullable=False, default=0)
     closed_at = Column(DateTime, default=datetime.utcnow)
 
 

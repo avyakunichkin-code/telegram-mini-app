@@ -44,6 +44,14 @@ export function goalProgressHintText(goal) {
   if (type === 'cash_balance_min') {
     return { kind: 'money_pair', current: d.cash_balance ?? 0, target: d.min_cash ?? 0 };
   }
+  if (type === 'expense_to_income_ratio') {
+    const ratio = Number(d.ratio);
+    const maxRatio = Number(d.max_ratio);
+    if (Number.isFinite(ratio) && Number.isFinite(maxRatio) && maxRatio > 0) {
+      return `${Math.round(ratio * 1000) / 10}% / ${Math.round(maxRatio * 100)}% дохода`;
+    }
+    return 'Доля расходов на жизнь';
+  }
   return `${Math.round(pctClamp01(goal.progress) * 100)}%`;
 }
 

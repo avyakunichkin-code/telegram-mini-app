@@ -1,19 +1,16 @@
-import { useMemo, useState, lazy, Suspense } from 'react';
+import { useMemo, useState } from 'react';
 import { Button, Modal } from '@telegram-apps/telegram-ui';
 import { MoneyText } from './MoneyText';
 import { showNotification } from './notifications';
+import { getMonthlyBurn } from '../utils/expensesDisplay';
 import {
-  MqxButton,
   MqxDashStack,
+  MqxDashboardHero,
   MqxDivider,
   MqxLevelBlock,
   MqxPeriodActions,
-  MqxPeriodChip,
   MqxPeriodDashboard,
-  MqxPill,
 } from './mqx';
-
-const PeriodJourneyLottie = lazy(() => import('./PeriodJourneyLottie'));
 
 function formatSignedMoney(n) {
   const v = Number(n) || 0;
@@ -42,6 +39,7 @@ export function DashboardPremium({
   const [amountStr, setAmountStr] = useState('');
   const [busyAction, setBusyAction] = useState(null); // 'salary'|'in'|'out'|null
 
+  const monthlyBurn = getMonthlyBurn(overview);
   const periodIndex = timeStatus?.period_index ?? overview?.period_index ?? 0;
   const remaining = timeStatus?.remainingLocal ?? timeStatus?.seconds_until_next_period ?? 0;
   const mm = String(Math.floor(remaining / 60)).padStart(2, '0');
@@ -51,7 +49,7 @@ export function DashboardPremium({
     const cash = Number(overview?.cash_balance) || 0;
     const safety = Number(overview?.safety_fund_balance) || 0;
     const flow = Number(overview?.net_monthly_cashflow) || 0;
-    const lifestyleExpense = Number(overview?.monthly_lifestyle_expense) || 0;
+    const lifestyleExpense = getMonthlyBurn(overview);
     return [
       {
         title: 'Баланс',
@@ -89,7 +87,7 @@ export function DashboardPremium({
         ),
       },
       {
-        title: 'Расходы',
+        title: 'На жизнь',
         valueNode: <MoneyText value={lifestyleExpense} />,
         accent: 'mqx-accent--amber',
         icon: (
@@ -164,63 +162,23 @@ export function DashboardPremium({
 
   return (
     <>
-    <div className="mqx-tab-page">
-      <header className="mqx-hero">
-          <div className="mqx-hero__glow" aria-hidden />
+      <div className="mqx-tab-page">
+        <MqxDashboardHero
+          periodIndex={periodIndex}
+          timerLabel="Прогресс месяца"
+          timerValue={`${mm}:${ss}`}
+          periodDurationSeconds={timeStatus?.period_duration_seconds}
+          remainingSeconds={remaining}
+          canPlay={canPlay}
+          canPause={canPause}
+          onPlay={() => setPlay()}
+          onPause={() => setPause()}
+          onNextPeriod={onNextPeriod}
+          pendingEventsCount={pendingEventsCount}
+          onOpenEvents={onOpenEvents}
+        />
 
-          <div className="mqx-hero__top">
-            <div>
-              <div className="mqx-hero__kicker">Money Quest</div>
-              <div className="mqx-hero__title">Финансы как игра</div>
-            </div>
-
-            <MqxPeriodChip value={`#${periodIndex}`} />
-          </div>
-
-          <div className="mqx-hero__mid">
-            <div className="mqx-timer">
-              <div className="mqx-timer__label">Игровое время</div>
-              <div className="mqx-timer__value">
-                {mm}:{ss}
-              </div>
-            </div>
-
-            <div className="mqx-hero-actions">
-              <MqxButton variant="hero-filled" disabled={!canPlay} onClick={() => setPlay()}>
-                Играть
-              </MqxButton>
-              <MqxButton variant="hero-outline" disabled={!canPause} onClick={() => setPause()}>
-                Пауза
-              </MqxButton>
-            </div>
-          </div>
-
-          <Suspense
-            fallback={
-              <div className="mq-period-boy mq-period-boy--lottie mq-period-boy--lottie-skeleton" aria-hidden>
-                <div className="mq-period-boy__label">Цикл месяца · Lottie</div>
-                <div className="mq-period-boy__lottie-wrap mq-period-boy__lottie-wrap--skeleton" />
-              </div>
-            }
-          >
-            <PeriodJourneyLottie
-              timeState={timeStatus?.time_state}
-              remainingSeconds={remaining}
-              periodDurationSeconds={timeStatus?.period_duration_seconds}
-            />
-          </Suspense>
-
-          <div className="mqx-hero__bottom">
-            <MqxPill onClick={onNextPeriod}>Следующий период</MqxPill>
-            {pendingEventsCount > 0 ? (
-              <MqxPill events badge={pendingEventsCount} onClick={onOpenEvents}>
-                События
-              </MqxPill>
-            ) : null}
-          </div>
-      </header>
-
-      <main className="mqx-content mqx-tab-page__scroll mqx-content--dash-flat">
+        <main className="mqx-content mqx-tab-page__scroll mqx-content--dash-flat">
           <MqxDashStack>
             <MqxLevelBlock
               level={characterXp.level}
@@ -237,8 +195,15 @@ export function DashboardPremium({
               financeCards={financeCards}
               onGoFinance={onGoFinance}
             />
+            {monthlyBurn > 0 ? (
+              <p className="mqx-dash-burn-hint" role="note">
+                Чистый поток — до расходов на жизнь. В конце периода спишется ещё{' '}
+                <MoneyText value={monthlyBurn} decimals={0} />.
+              </p>
+            ) : null}
             <MqxDivider />
             <MqxPeriodActions
+              xpLabel={`${characterXp.xp} / ${characterXp.need} XP`}
               busy={busyAction !== null}
               onSalary={async () => {
                 try {
@@ -262,8 +227,8 @@ export function DashboardPremium({
               onInvest={onGoFinance}
             />
           </MqxDashStack>
-      </main>
-    </div>
+        </main>
+      </div>
 
       <Modal open={moneyModal !== null} onClose={() => setMoneyModal(null)}>
         <div className="mqx-modal">

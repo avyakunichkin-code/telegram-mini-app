@@ -29,6 +29,7 @@ def process_period_end(db: Session, profile: GameProfile) -> dict:
     period_index = profile.period_index
     total_spend = 0.0
     breakdown = []
+    closed_burn_total = 0.0
     total_overdue_added = 0.0
     invest_income = 0.0
 
@@ -120,6 +121,7 @@ def process_period_end(db: Session, profile: GameProfile) -> dict:
     expire_expense_lines_for_period(db, profile, period_index)
     burn_snapshot = compute_monthly_burn(db, profile)
     lifestyle_total = float(burn_snapshot.total)
+    closed_burn_total = round(lifestyle_total, 2)
     if lifestyle_total > 0:
         adjust_balance(
             db=db,
@@ -225,6 +227,7 @@ def process_period_end(db: Session, profile: GameProfile) -> dict:
             cash_balance=float(profile.cash_balance),
             safety_fund_balance=float(profile.safety_fund_balance),
             total_overdue_amount=float(total_overdue_now),
+            monthly_burn_total=float(closed_burn_total),
         )
     )
 

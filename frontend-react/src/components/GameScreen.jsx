@@ -11,6 +11,7 @@ import { EventCarouselOverlay } from './EventDeck';
 import { MqxShell } from './MqxShell';
 import { MqxTabHero } from './MqxTabHero';
 import { GameScreenLayout, GameScreenTabNav } from './GameScreenLayout';
+import { PeriodCloseModal } from './PeriodCloseModal';
 
 /** Эмоциональный слой страницы: фон синхронизирован с «время идёт» / «пауза» / загрузка. */
 function gamePageMoodClass(timeStatus) {
@@ -39,6 +40,8 @@ export function GameScreen({ onLogout, onNewGame, onLoadGame }) {
     refreshOverview,
     refreshPendingEvent,
     eventsPromptTick,
+    periodCloseSummary,
+    dismissPeriodClose,
   } = useGame();
 
   const closeEventsOverlay = useCallback(() => setEventsOpen(false), []);
@@ -252,6 +255,9 @@ export function GameScreen({ onLogout, onNewGame, onLoadGame }) {
           </div>
         </div>
       </div>
+      {periodCloseSummary ? (
+        <PeriodCloseModal summary={periodCloseSummary} onClose={dismissPeriodClose} />
+      ) : null}
     </GameScreenLayout>
   );
 }

@@ -209,7 +209,24 @@ class AnalyticsTimeseriesPoint(BaseModel):
     cash_balance: float
     safety_fund_balance: float
     total_overdue_amount: float
+    monthly_burn_total: float = 0
     is_projection: bool = False
+
+
+class PeriodCloseBreakdownItem(BaseModel):
+    type: str
+    title: str
+    amount: float
+    category_key: Optional[str] = None
+
+
+class PeriodCloseSummary(BaseModel):
+    total_spent: float = 0
+    new_balance: float = 0
+    breakdown: List[PeriodCloseBreakdownItem] = Field(default_factory=list)
+    xp_earned: int = 0
+    level_up: bool = False
+    new_level: Optional[int] = None
 
 
 class AchievementTierStatus(BaseModel):
@@ -293,6 +310,7 @@ class TimeStatusResponse(BaseModel):
     period_index: int
     period_duration_seconds: int
     seconds_until_next_period: int
+    period_close: Optional[PeriodCloseSummary] = None
 
 
 class GameStarterTemplatePublic(BaseModel):

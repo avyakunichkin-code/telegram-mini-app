@@ -29,6 +29,7 @@ import {
   MqxCardHeader,
   MqxChip,
   MqxDashStack,
+  MqxDashboardHero,
   MqxDivider,
   MqxGoalBadge,
   MqxLevelBlock,
@@ -84,6 +85,25 @@ export function MqCatalogScreen() {
           ← В игру
         </Link>
       </header>
+
+      <CatalogSection title="Hero — H3′ compact (дашборд)">
+        <div style={{ maxWidth: 420, borderRadius: 16, overflow: 'hidden' }}>
+          <MqxDashboardHero
+            periodIndex={4}
+            timerLabel="Прогресс месяца"
+            timerValue="08:42"
+            periodDurationSeconds={600}
+            remainingSeconds={348}
+            canPlay
+            canPause={false}
+            onPlay={() => {}}
+            onPause={() => {}}
+            onNextPeriod={() => {}}
+            pendingEventsCount={2}
+            onOpenEvents={() => {}}
+          />
+        </div>
+      </CatalogSection>
 
       <CatalogSection title="Shell — D′ flat (утверждённый дашборд)">
         <div style={{ maxWidth: 420 }}>

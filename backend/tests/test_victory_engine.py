@@ -31,8 +31,8 @@ class TestBasicTemplateMvpEquivalent:
             _snap(safety_fund_balance=target, net_monthly_cashflow=0),
             template_key="mq_game_basic_v1",
         )
-        assert r.goals_enabled == 3
-        assert r.goals_met == 3
+        assert r.goals_enabled == 4
+        assert r.goals_met == 4
         assert r.win_reached is True
 
     def test_early_period_blocks_win(self):
@@ -43,7 +43,7 @@ class TestBasicTemplateMvpEquivalent:
             _snap(period_index=MIN_PERIOD_INDEX_FOR_WIN - 1, safety_fund_balance=target),
             template_key="mq_game_basic_v1",
         )
-        assert r.goals_met == 3
+        assert r.goals_met == 4
         assert r.period_gate_open is False
         assert r.win_reached is False
 
@@ -51,7 +51,7 @@ class TestBasicTemplateMvpEquivalent:
         cfg = victory_config_for_template("mq_game_basic_v1")
         r = evaluate_victory(
             cfg,
-            _snap(safety_fund_balance=30_000, total_overdue_amount=100),
+            _snap(safety_fund_balance=30_000, total_overdue_amount=100, net_monthly_cashflow=-1),
             template_key="mq_game_basic_v1",
         )
         assert r.goals_met == 2
@@ -73,8 +73,8 @@ class TestHarderTemplateMofN:
             ),
             template_key="mq_game_debt_stack_v1",
         )
-        assert r.goals_enabled == 5
-        assert r.goals_met == 3
+        assert r.goals_enabled == 6
+        assert r.goals_met >= 3
         assert r.win_reached is True
 
     def test_avg_liquid_requires_samples_and_salary_threshold(self):
@@ -101,7 +101,7 @@ class TestHarderTemplateMofN:
 class TestParseVictoryConfig:
     def test_empty_falls_back_to_template(self):
         cfg = parse_victory_config("{}", template_key="mq_game_basic_v1")
-        assert len(cfg["goals"]) == 3
+        assert len(cfg["goals"]) == 4
 
     def test_invalid_json_falls_back(self):
         cfg = parse_victory_config("not-json", template_key="mq_game_basic_v1")

@@ -195,6 +195,14 @@ def ensure_schema_compatibility() -> None:
                 "ALTER TABLE event_definitions ADD COLUMN prerequisites_json TEXT NOT NULL DEFAULT '{}'"
             )
 
+    # ---- period_economy_closings (E1 burn в аналитике) ----
+    if "period_economy_closings" in inspector.get_table_names():
+        pec_cols = {item["name"] for item in inspector.get_columns("period_economy_closings")}
+        if "monthly_burn_total" not in pec_cols:
+            statements.append(
+                "ALTER TABLE period_economy_closings ADD COLUMN monthly_burn_total DOUBLE PRECISION NOT NULL DEFAULT 0"
+            )
+
     # ---- finance_assets ----
     if "finance_assets" in inspector.get_table_names():
         asset_columns = {item["name"] for item in inspector.get_columns("finance_assets")}

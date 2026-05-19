@@ -10,6 +10,18 @@ from typing import Any
 VICTORY_SCHEMA_VERSION = 1
 DEFAULT_TEMPLATE_KEY = "mq_game_basic_v1"
 
+def _expense_ratio_goal(max_ratio: float) -> dict[str, Any]:
+    pct = int(round(max_ratio * 100))
+    return {
+        "key": "burn_ratio",
+        "type": "expense_to_income_ratio",
+        "title": f"Расходы на жизнь ≤ {pct}% дохода",
+        "max_ratio": max_ratio,
+        "required": False,
+        "enabled": True,
+    }
+
+
 _BASIC_GOALS: list[dict[str, Any]] = [
     {
         "key": "safety_3x",
@@ -33,6 +45,7 @@ _BASIC_GOALS: list[dict[str, Any]] = [
         "required": False,
         "enabled": True,
     },
+    _expense_ratio_goal(0.55),
 ]
 
 
@@ -88,6 +101,7 @@ def _harder_goals(min_cash: float) -> list[dict[str, Any]]:
             "required": False,
             "enabled": True,
         },
+        _expense_ratio_goal(0.48),
     ]
 
 

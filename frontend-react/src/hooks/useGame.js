@@ -11,6 +11,7 @@ export function useGame() {
   const [eventsPromptTick, setEventsPromptTick] = useState(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [periodCloseSummary, setPeriodCloseSummary] = useState(null);
 
   const timerRef = useRef(null);
   const localRemainingRef = useRef(0);
@@ -109,6 +110,7 @@ export function useGame() {
   const handlePeriodEnd = useCallback(async () => {
     const newTime = await API.setTimeNext();
     if (newTime) {
+      if (newTime.period_close) setPeriodCloseSummary(newTime.period_close);
       setTimeStatus(newTime);
       localRemainingRef.current = newTime.seconds_until_next_period;
       lastSyncRef.current = Date.now();
@@ -126,6 +128,7 @@ export function useGame() {
     stopTimer();
     const result = await API.setTimeNext();
     if (result) {
+      if (result.period_close) setPeriodCloseSummary(result.period_close);
       setTimeStatus(result);
       localRemainingRef.current = result.seconds_until_next_period;
       lastSyncRef.current = Date.now();
@@ -225,5 +228,7 @@ export function useGame() {
     refreshOverview,
     refreshPeriodStatus,
     refreshPendingEvent,
+    periodCloseSummary,
+    dismissPeriodClose: () => setPeriodCloseSummary(null),
   };
 }

@@ -140,6 +140,9 @@ export const API = {
     getOverview() {
         return apiCall('/api/finance/overview');
     },
+    getExpenses() {
+        return apiCall('/api/game/expenses');
+    },
     getFinanceAnalyticsTimeseries(limit = 48) {
         const q = limit ? `?limit=${encodeURIComponent(limit)}` : '';
         return apiCall(`/api/finance/analytics/timeseries${q}`);

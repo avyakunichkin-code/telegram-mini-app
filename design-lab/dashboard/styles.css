@@ -457,3 +457,92 @@ body {
 .dh-h3__bottom {
   margin-top: 8px;
 }
+
+/* H3′ — утверждённый prod: логотип слева, период под ▶⏸ справа */
+.dh-h3p {
+  padding: 10px 12px;
+}
+
+.dh-h3p__main {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: start;
+  gap: 10px;
+}
+
+.dh-h3p__logo {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.14);
+  display: grid;
+  place-items: center;
+  font-size: 13px;
+  font-weight: 800;
+  color: #fff;
+  letter-spacing: -0.04em;
+}
+
+.dh-h3p__center {
+  min-width: 0;
+  padding-top: 2px;
+}
+
+.dh-h3p__timer-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 6px 10px;
+}
+
+.dh-h3p__timer {
+  font-size: 20px;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+}
+
+.dh-h3p__meta {
+  font-size: 10px;
+  font-weight: 650;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: rgba(245, 243, 255, 0.68);
+}
+
+.dh-h3p__center .dh-progress {
+  margin-top: 6px;
+}
+
+.dh-h3p__aside {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 6px;
+}
+
+.dh-h3p__controls {
+  display: flex;
+  gap: 6px;
+}
+
+.dh-h3p__period {
+  text-align: right;
+  font-size: 14px;
+  font-weight: 800;
+  color: rgba(255, 255, 255, 0.95);
+  line-height: 1.15;
+}
+
+.dh-h3p__period span {
+  display: block;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(245, 243, 255, 0.65);
+}
+
+.dh-h3p__bottom {
+  margin-top: 10px;
+}

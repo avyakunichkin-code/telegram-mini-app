@@ -33,9 +33,36 @@ MVP11_EVENT_SPECS: list[dict] = [
         "event_tier": 1,
         "repeat_policy": "repeatable",
         "choices": [
-            {"title": "Один сервис (−599 ₽)", "effects": {"cash_delta": -599, "monthly_lifestyle_delta": 400}},
-            {"title": "Пакет «всё включено» (−1 290 ₽)", "effects": {"cash_delta": -1290, "monthly_lifestyle_delta": 900}},
-            {"title": "Отменить всё", "effects": {"cash_delta": 0, "monthly_lifestyle_delta": -500, "xp_delta": 4}},
+            {
+                "title": "Один сервис (−599 ₽)",
+                "effects": {
+                    "cash_delta": -599,
+                    "expense_line": {
+                        "category_key": "communications",
+                        "amount_monthly": 400,
+                        "title": "Стриминг",
+                    },
+                },
+            },
+            {
+                "title": "Пакет «всё включено» (−1 290 ₽)",
+                "effects": {
+                    "cash_delta": -1290,
+                    "expense_line": {
+                        "category_key": "communications",
+                        "amount_monthly": 900,
+                        "title": "Пакет подписок",
+                    },
+                },
+            },
+            {
+                "title": "Отменить всё",
+                "effects": {
+                    "cash_delta": 0,
+                    "monthly_lifestyle_delta": -500,
+                    "xp_delta": 4,
+                },
+            },
         ],
     },
     {
@@ -85,7 +112,17 @@ MVP11_EVENT_SPECS: list[dict] = [
         "event_tier": 3,
         "repeat_policy": "repeatable",
         "choices": [
-            {"title": "Подключить (+1 200 ₽/мес к «жизни»)", "effects": {"monthly_lifestyle_delta": 1200, "xp_delta": 2}},
+            {
+                "title": "Подключить (+1 200 ₽/мес)",
+                "effects": {
+                    "expense_line": {
+                        "category_key": "health",
+                        "amount_monthly": 1200,
+                        "title": "Доп. страховка",
+                    },
+                    "xp_delta": 2,
+                },
+            },
             {"title": "Только консультация", "effects": {"cash_delta": 0, "xp_delta": 2}},
             {"title": "Отказ", "effects": {"cash_delta": 0}},
         ],
@@ -111,7 +148,18 @@ MVP11_EVENT_SPECS: list[dict] = [
         "event_tier": 4,
         "repeat_policy": "repeatable",
         "choices": [
-            {"title": "Принять (+85 000 ₽ и дорожная «жизнь»)", "effects": {"cash_delta": 85000, "monthly_lifestyle_delta": 3500, "xp_delta": 15}},
+            {
+                "title": "Принять (+85 000 ₽ и дорожная «жизнь»)",
+                "effects": {
+                    "cash_delta": 85000,
+                    "expense_line": {
+                        "category_key": "housing",
+                        "amount_monthly": 3500,
+                        "title": "Релокация",
+                    },
+                    "xp_delta": 15,
+                },
+            },
             {"title": "Обсудить удалёнку", "effects": {"cash_delta": 12000, "xp_delta": 8}},
             {"title": "Остаться", "effects": {"cash_delta": 0, "xp_delta": 3}},
         ],
@@ -150,9 +198,27 @@ MVP11_EVENT_SPECS: list[dict] = [
         "event_tier": 5,
         "repeat_policy": "repeatable",
         "choices": [
-            {"title": "Переезд (−35 000 ₽, ниже «жизнь»)", "effects": {"cash_delta": -35000, "monthly_lifestyle_delta": -2500, "xp_delta": 14}},
+            {
+                "title": "Переезд (−35 000 ₽, ниже «жизнь»)",
+                "effects": {
+                    "cash_delta": -35000,
+                    "monthly_lifestyle_delta": -2500,
+                    "xp_delta": 14,
+                },
+            },
             {"title": "Пока остаться", "effects": {"cash_delta": 0, "xp_delta": 2}},
-            {"title": "Субаренда комнаты", "effects": {"cash_delta": 8000, "monthly_lifestyle_delta": 600, "xp_delta": 9}},
+            {
+                "title": "Субаренда комнаты",
+                "effects": {
+                    "cash_delta": 8000,
+                    "expense_line": {
+                        "category_key": "housing",
+                        "amount_monthly": 600,
+                        "title": "Субаренда",
+                    },
+                    "xp_delta": 9,
+                },
+            },
         ],
     },
     {
@@ -232,6 +298,18 @@ def ensure_mvp11_event_catalog(db: Session) -> None:
             existing.cooldown_periods = int(spec.get("cooldown_periods", 0) or 0)
             existing.mandatory_gate = str(spec.get("mandatory_gate", "none"))
             existing.weight = int(spec.get("weight", 100))
+            existing_choices = (
+                db.query(EventChoice)
+                .filter(EventChoice.definition_id == existing.id)
+                .order_by(EventChoice.id.asc())
+                .all()
+            )
+            for idx, ch in enumerate(spec.get("choices") or []):
+                if idx < len(existing_choices):
+                    existing_choices[idx].title = ch["title"]
+                    existing_choices[idx].effects_json = json.dumps(
+                        ch.get("effects", {}), ensure_ascii=False
+                    )
             continue
         ed = EventDefinition(
             key=spec["key"],
