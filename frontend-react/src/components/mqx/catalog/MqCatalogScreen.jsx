@@ -260,7 +260,7 @@ export function MqCatalogScreen() {
         </div>
       </CatalogSection>
 
-      <CatalogSection title="События — B′ flat + страховой случай">
+      <CatalogSection title="События — M2 пузырь + Монетка">
         <div className="mqx-stack" style={{ gap: 12, maxWidth: 420 }}>
           <MqxPill events badge={2}>
             События

@@ -13,6 +13,8 @@ export function InvestAmountControl({
   onChange,
   compact = false,
   rateSlot = null,
+  maxHint = null,
+  emptyHint = 'Нет средств на счёте',
 }) {
   const max = Math.max(0, Math.floor(Number(maxAmount) || 0));
   const value = clampInvestAmount(amount, max);
@@ -83,8 +85,8 @@ export function InvestAmountControl({
         <span>0</span>
         <span className="mqx-invest-amount__max">
           {disabled ? (
-            'Нет средств на счёте'
-          ) : (
+            emptyHint
+          ) : maxHint ?? (
             <>
               На счёте: <MoneyText value={max} decimals={0} />
             </>

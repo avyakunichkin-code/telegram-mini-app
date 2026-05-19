@@ -54,7 +54,7 @@ mqx/
 | Компонент | Назначение |
 |-----------|------------|
 | `MqxPill` + `events` | Кнопка «События» с badge на дашборде |
-| `EventCard` | Карточка: период, текст, выборы |
+| `EventCard` | M2: Монетка + пузырь с описанием, flat-выборы |
 | `EventChoiceButton` | Одна кнопка выбора |
 | `EventCarouselOverlay` | Полноэкранный оверлей с каруселью |
 | `EventCarouselDots` / `EventCarouselNav` | Навигация |

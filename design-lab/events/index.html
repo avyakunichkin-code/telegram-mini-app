@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Money Quest — события</title>
     <link rel="stylesheet" href="./styles.css" />
+    <link rel="stylesheet" href="./styles-monetka.css" />
   </head>
   <body>
     <header class="lab-header">
@@ -154,6 +155,272 @@
                 </button>
                 <button type="button" class="ev-choice">
                   <span class="ev-choice__title">Договориться без оформления</span>
+                </button>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <hr style="margin: 32px 0; border: none; border-top: 2px dashed color-mix(in srgb, #6d28d9 35%, transparent)" />
+
+      <header class="lab-header" style="position: static; margin-bottom: 0">
+        <div>
+          <h1>Раунд 2 — Монетка на карточке</h1>
+          <p>
+            PNG без фона · компактнее B′ · визуальные акценты. См. <code>IDEATION.md</code>.
+            Данные: <strong>ДТП</strong> (страховой) и <strong>Повышение на работе</strong> (обычное).
+          </p>
+        </div>
+      </header>
+
+      <!-- M6 featured insurance -->
+      <section class="lab-section lab-section--monetka lab-section--monetka-featured" id="variant-m6">
+        <div class="lab-section__label">
+          <span class="lab-section__id">M6 ★</span>
+          <span class="lab-section__title">Страховой бриф + halo</span>
+        </div>
+        <p class="lab-section__note">
+          Emerald-панель, пульс, Монетка 64px. Для <code>insurance_claim</code>. Выборы — как B′.
+        </p>
+        <div class="lab-stage">
+          <div class="ev-panel ev-panel--c">
+            <div class="ev-toolbar">
+              <div>
+                <div class="ev-toolbar__title">События периода</div>
+                <p class="ev-toolbar__sub">Страховой случай — акцент панели.</p>
+              </div>
+              <button type="button" class="ev-close" aria-label="Закрыть">×</button>
+            </div>
+            <article class="ev-m6">
+              <div class="ev-m6__badge-row">
+                <span class="ev-badge-insurance">Страховой случай</span>
+                <span class="ev-m6__spark" aria-hidden="true"></span>
+              </div>
+              <div class="ev-m6__main">
+                <div class="ev-m6__monetka-col">
+                  <img class="ev-monetka" src="./assets/monetka-mascot.png" width="64" height="64" alt="" />
+                  <span class="ev-m6__hint">Осторожно!</span>
+                </div>
+                <div>
+                  <div class="ev-m6__kicker">Период #4 · 1 из 2</div>
+                  <h3 class="ev-m6__title">ДТП</h3>
+                  <p class="ev-m6__desc">Небольшое столкновение. При ОСАГО страховая покроет ущерб третьим лицам.</p>
+                </div>
+                <div class="ev-m6__choices ev-choices ev-choices--flat">
+                  <button type="button" class="ev-choice ev-choice--primary">
+                    <span class="ev-choice__title">Оформить по полису ОСАГО</span>
+                    <span class="ev-choice__desc">Выплата по страховке · XP +4</span>
+                  </button>
+                  <button type="button" class="ev-choice ev-choice--flat">
+                    <span class="ev-choice__title">Оплатить из своих (−45 000 ₽)</span>
+                    <span class="ev-choice__desc">Списание с баланса · XP +2</span>
+                  </button>
+                  <button type="button" class="ev-choice ev-choice--flat">
+                    <span class="ev-choice__title">Договориться без оформления</span>
+                    <span class="ev-choice__desc">−12 000 ₽ · XP +1</span>
+                  </button>
+                </div>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="lab-section lab-section--monetka" id="variant-m1">
+        <div class="lab-section__label">
+          <span class="lab-section__id">M1</span>
+          <span class="lab-section__title">Компактный ряд</span>
+        </div>
+        <p class="lab-section__note">Монетка 58px слева, meta+title+desc справа, выборы flat на всю ширину. Универсальный default.</p>
+        <div class="lab-stage">
+          <div class="ev-panel ev-panel--b">
+            <div class="ev-toolbar">
+              <div>
+                <div class="ev-toolbar__title">События периода</div>
+                <p class="ev-toolbar__sub">Обычное событие.</p>
+              </div>
+              <button type="button" class="ev-close">×</button>
+            </div>
+            <article class="ev-card ev-card--flat ev-m1">
+              <div class="ev-m1__visual">
+                <img class="ev-monetka" src="./assets/monetka-mascot.png" width="58" height="58" alt="" />
+              </div>
+              <div>
+                <div class="ev-m1__meta">
+                  <span class="ev-m1__chip">Период #4</span>
+                  <span class="ev-m1__chip">1 / 2</span>
+                </div>
+                <h3 class="ev-m1__title">Повышение на работе</h3>
+                <p class="ev-m1__desc">Руководитель предложил новую должность с окладом выше. Нужно решить, принимать ли сейчас.</p>
+              </div>
+              <div class="ev-m1__choices ev-choices ev-choices--flat">
+                <button type="button" class="ev-choice ev-choice--flat">
+                  <span class="ev-choice__title">Принять повышение</span>
+                  <span class="ev-choice__desc">+доход с следующего периода · XP +3</span>
+                </button>
+                <button type="button" class="ev-choice ev-choice--flat">
+                  <span class="ev-choice__title">Попросить время на раздумья</span>
+                  <span class="ev-choice__desc">Без изменений · XP +1</span>
+                </button>
+                <button type="button" class="ev-choice ev-choice--flat">
+                  <span class="ev-choice__title">Отказаться</span>
+                  <span class="ev-choice__desc">Стабильность · XP +0</span>
+                </button>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="lab-section lab-section--monetka" id="variant-m2">
+        <div class="lab-section__label">
+          <span class="lab-section__id">M2</span>
+          <span class="lab-section__title">Реплика в пузыре</span>
+        </div>
+        <p class="lab-section__note">
+          <code>description</code> визуально в bubble (как coach). Заголовок события отдельно. Осторожно с тоном «Монетка говорит».
+        </p>
+        <div class="lab-stage">
+          <div class="ev-panel ev-panel--b">
+            <article class="ev-m2 ev-m2--insurance">
+              <div class="ev-m2__head">
+                <span class="ev-m2__kicker">Период #4 · страховой</span>
+                <span class="ev-badge-insurance">Страховой случай</span>
+              </div>
+              <h3 class="ev-m2__title">ДТП</h3>
+              <div class="ev-m2__bubble-row">
+                <div class="ev-m2__monetka-wrap">
+                  <img class="ev-monetka" src="./assets/monetka-mascot.png" width="50" height="50" alt="" />
+                </div>
+                <div class="ev-m2__bubble">
+                  <p>Небольшое столкновение. При ОСАГО страховая покроет ущерб третьим лицам.</p>
+                </div>
+              </div>
+              <div class="ev-choices ev-choices--flat" style="margin-top: 10px">
+                <button type="button" class="ev-choice ev-choice--primary">
+                  <span class="ev-choice__title">Оформить по полису ОСАГО</span>
+                  <span class="ev-choice__desc">Выплата по страховке · XP +4</span>
+                </button>
+                <button type="button" class="ev-choice ev-choice--flat">
+                  <span class="ev-choice__title">Оплатить из своих (−45 000 ₽)</span>
+                </button>
+                <button type="button" class="ev-choice ev-choice--flat">
+                  <span class="ev-choice__title">Договориться без оформления</span>
+                </button>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="lab-section lab-section--monetka" id="variant-m3">
+        <div class="lab-section__label">
+          <span class="lab-section__id">M3</span>
+          <span class="lab-section__title">Шапка-полоса</span>
+        </div>
+        <p class="lab-section__note">Gradient hero, Монетка на нижней кромке, icon pills (период / тип).</p>
+        <div class="lab-stage">
+          <div class="ev-panel ev-panel--b">
+            <article class="ev-m3">
+              <div class="ev-m3__hero ev-m3__hero--insurance">
+                <div class="ev-m3__hero-top">
+                  <span class="ev-m3__kicker">Страховой случай</span>
+                  <span class="ev-m3__deck">1 / 2</span>
+                </div>
+                <h3 class="ev-m3__title">ДТП</h3>
+                <img class="ev-monetka ev-m3__monetka" src="./assets/monetka-mascot.png" width="72" height="72" alt="" />
+              </div>
+              <div class="ev-m3__body">
+                <div class="ev-m3__icons">
+                  <span class="ev-m3__icon-pill">Период #4</span>
+                  <span class="ev-m3__icon-pill ev-m3__icon-pill--warn">Риск</span>
+                </div>
+                <p class="ev-m3__desc">Небольшое столкновение. При ОСАГО страховая покроет ущерб третьим лицам.</p>
+                <div class="ev-choices ev-choices--flat">
+                  <button type="button" class="ev-choice ev-choice--primary">
+                    <span class="ev-choice__title">Оформить по полису ОСАГО</span>
+                    <span class="ev-choice__desc">Выплата по страховке</span>
+                  </button>
+                  <button type="button" class="ev-choice ev-choice--flat">
+                    <span class="ev-choice__title">Оплатить из своих (−45 000 ₽)</span>
+                  </button>
+                  <button type="button" class="ev-choice ev-choice--flat">
+                    <span class="ev-choice__title">Договориться без оформления</span>
+                  </button>
+                </div>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="lab-section lab-section--monetka" id="variant-m4">
+        <div class="lab-section__label">
+          <span class="lab-section__id">M4</span>
+          <span class="lab-section__title">Колонка-визуал</span>
+        </div>
+        <p class="lab-section__note">Кольцо слева, контент и выборы справа — экономия по вертикали в центре.</p>
+        <div class="lab-stage">
+          <div class="ev-panel ev-panel--b">
+            <article class="ev-card ev-card--flat ev-m4">
+              <div class="ev-m4__rail">
+                <div class="ev-m4__ring">
+                  <img class="ev-monetka" src="./assets/monetka-mascot.png" width="54" height="54" alt="" />
+                </div>
+                <span class="ev-m4__period">Период<br />#4</span>
+              </div>
+              <div>
+                <h3 class="ev-m4__title">Повышение на работе</h3>
+                <p class="ev-m4__desc">Руководитель предложил новую должность с окладом выше.</p>
+              </div>
+              <div class="ev-m4__choices ev-choices ev-choices--flat">
+                <button type="button" class="ev-choice ev-choice--flat">
+                  <span class="ev-choice__title">Принять повышение</span>
+                  <span class="ev-choice__desc">+доход · XP +3</span>
+                </button>
+                <button type="button" class="ev-choice ev-choice--flat">
+                  <span class="ev-choice__title">Попросить время</span>
+                </button>
+                <button type="button" class="ev-choice ev-choice--flat">
+                  <span class="ev-choice__title">Отказаться</span>
+                </button>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="lab-section lab-section--monetka" id="variant-m5">
+        <div class="lab-section__label">
+          <span class="lab-section__id">M5</span>
+          <span class="lab-section__title">Ультра-компакт</span>
+        </div>
+        <p class="lab-section__note">Минимальная высота: Монетка 44px, мелкие выборы, рамка-карточка.</p>
+        <div class="lab-stage">
+          <div class="ev-panel ev-panel--b">
+            <article class="ev-m5">
+              <div class="ev-m5__top">
+                <img class="ev-monetka" src="./assets/monetka-mascot.png" width="44" height="44" alt="" />
+                <div class="ev-m5__headline">
+                  <div class="ev-m5__row1">
+                    <span class="ev-m5__tag">Период #4</span>
+                    <span class="ev-m5__tag">2 / 2</span>
+                  </div>
+                  <h3 class="ev-m5__title">Повышение на работе</h3>
+                </div>
+              </div>
+              <p class="ev-m5__desc">Руководитель предложил новую должность с окладом выше. Нужно решить, принимать ли сейчас.</p>
+              <div class="ev-m5__choices ev-choices ev-choices--flat">
+                <button type="button" class="ev-choice ev-choice--flat">
+                  <span class="ev-choice__title">Принять повышение</span>
+                  <span class="ev-choice__desc">+доход · XP +3</span>
+                </button>
+                <button type="button" class="ev-choice ev-choice--flat">
+                  <span class="ev-choice__title">Попросить время</span>
+                </button>
+                <button type="button" class="ev-choice ev-choice--flat">
+                  <span class="ev-choice__title">Отказаться</span>
                 </button>
               </div>
             </article>

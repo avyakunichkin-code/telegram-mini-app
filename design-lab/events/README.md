@@ -1,6 +1,6 @@
 # Events — оверлей и карточка
 
-**Статус:** **B′ утверждён** → внедрено в MQX (`EventCard`, `EventChoiceButton`).
+**Статус:** **M2 ★ утверждён** → prod (`EventCard`). Выборы — flat без emerald-кнопки.
 
 Запуск:
 
@@ -9,13 +9,26 @@ cd design-lab/events
 npx serve .
 ```
 
-## Варианты
+Открыть `index.html` — прокрутить до «Раунд 2». Ideation: [`IDEATION.md`](./IDEATION.md).
+
+## Раунд 1 (legacy)
 
 | ID | Идея |
 |----|------|
 | **A** | Текущий prod (рамка + violet outline) |
 | **B** | Flat D′ |
 | **B′ ★** | B + бейдж «Страховой случай» + emerald primary на выборе с полисом |
+
+## Раунд 2 — Монетка (PNG `assets/monetka-mascot.png`)
+
+| ID | Идея |
+|----|------|
+| **M6 ★** | Страховой бриф: emerald halo, пульс, Монетка 64px |
+| **M1** | Компактный ряд: Монетка слева, chips, desc 2 строки |
+| **M2** | Реплика в пузыре (description в bubble) |
+| **M3** | Шапка-полоса: gradient hero, Монетка на кромке |
+| **M4** | Колонка-визуал: кольцо + rail |
+| **M5** | Ультра-компакт: 44px, мелкие выборы |
 
 ## API
 

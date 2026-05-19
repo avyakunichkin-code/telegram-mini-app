@@ -17,6 +17,10 @@ async def register(user_data: UserRegister, db: Session = Depends(get_db)):
     existing = db.query(User).filter(User.username == user_data.username).first()
     if existing:
         raise HTTPException(status_code=400, detail="Username already exists")
+
+    email_taken = db.query(User).filter(User.email == user_data.email).first()
+    if email_taken:
+        raise HTTPException(status_code=400, detail="Email already registered")
     
     # Хешируем пароль
     hashed_password = get_password_hash(user_data.password)
@@ -59,8 +63,12 @@ async def register(user_data: UserRegister, db: Session = Depends(get_db)):
 async def login(user_data: UserLogin, db: Session = Depends(get_db)):
     """Вход в систему — не требует авторизации"""
     
-    user = db.query(User).filter(User.username == user_data.username).first()
-    
+    login_id = (user_data.username or "").strip()
+    if "@" in login_id:
+        user = db.query(User).filter(User.email == login_id.lower()).first()
+    else:
+        user = db.query(User).filter(User.username == login_id).first()
+
     if not user or not verify_password(user_data.password, user.hashed_password):
         raise HTTPException(status_code=401, detail="Invalid username or password")
     

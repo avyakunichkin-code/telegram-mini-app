@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react';
-import { Button, Modal } from '@telegram-apps/telegram-ui';
+import { Modal } from '@telegram-apps/telegram-ui';
 import { MoneyText } from './MoneyText';
+import { SafetyFundActionForm } from './SafetyFundActionForm';
 import { showNotification } from './notifications';
 import { getMonthlyBurn } from '../utils/expensesDisplay';
 import { buildLevelProgressHint } from '../utils/levelProgressHint';
@@ -38,7 +39,7 @@ export function DashboardPremium({
   onGoFinance,
 }) {
   const [moneyModal, setMoneyModal] = useState(null); // 'in' | 'out' | null
-  const [amountStr, setAmountStr] = useState('');
+  const [safetyAmount, setSafetyAmount] = useState(0);
   const [busyAction, setBusyAction] = useState(null); // 'salary'|'in'|'out'|null
 
   const monthlyBurn = getMonthlyBurn(overview);
@@ -143,9 +144,21 @@ export function DashboardPremium({
   const canPlay = timeStatus?.time_state !== 'play';
   const canPause = timeStatus?.time_state !== 'pause';
 
+  const safetyModalLimits = useMemo(() => {
+    const cash = Math.max(0, Math.floor(Number(overview?.cash_balance) || 0));
+    const safety = Math.max(0, Math.floor(Number(overview?.safety_fund_balance) || 0));
+    if (moneyModal === 'in') {
+      return { max: cash, chipValue: safety, chipHint: 'в подушке' };
+    }
+    if (moneyModal === 'out') {
+      return { max: safety, chipValue: cash, chipHint: 'на счёте' };
+    }
+    return { max: 0, chipValue: 0, chipHint: '' };
+  }, [moneyModal, overview]);
+
   const submitMoney = async () => {
-    const amt = Number(String(amountStr).replace(',', '.'));
-    if (!Number.isFinite(amt) || amt <= 0) {
+    const amt = safetyAmount;
+    if (!Number.isFinite(amt) || amt <= 0 || amt > safetyModalLimits.max) {
       showNotification('Введите корректную сумму', 'error');
       return;
     }
@@ -165,7 +178,7 @@ export function DashboardPremium({
         await withdrawFromSafetyFund(amt);
         showNotification('С подушки снято', 'success');
       }
-      setAmountStr('');
+      setSafetyAmount(0);
       setMoneyModal(null);
     } catch (e) {
       showNotification(e?.detail || e?.message || 'Не удалось выполнить действие', 'error');
@@ -176,7 +189,7 @@ export function DashboardPremium({
 
   return (
     <>
-      <div className="mqx-tab-page">
+      <div className="mqx-tab-page" data-onboarding-anchor="dashboard">
         <MqxDashboardHero
           periodIndex={periodIndex}
           timerLabel="Прогресс месяца"
@@ -236,11 +249,11 @@ export function DashboardPremium({
                 }
               }}
               onContribute={() => {
-                setAmountStr('');
+                setSafetyAmount(0);
                 setMoneyModal('in');
               }}
               onWithdraw={() => {
-                setAmountStr('');
+                setSafetyAmount(0);
                 setMoneyModal('out');
               }}
               onInvest={onGoFinance}
@@ -251,36 +264,25 @@ export function DashboardPremium({
 
       <Modal
         open={moneyModal !== null}
-        onClose={() => setMoneyModal(null)}
+        onClose={() => {
+          setMoneyModal(null);
+          setSafetyAmount(0);
+        }}
         title={moneyModal === 'in' ? 'В подушку' : 'Снять с подушки'}
       >
-        <div className="mqx-modal" role="document" aria-labelledby="mqx-safety-fund-modal-title">
-          <div className="mqx-card">
-            <div id="mqx-safety-fund-modal-title" className="mqx-card__title">
-              {moneyModal === 'in' ? 'В подушку' : 'Снять с подушки'}
-            </div>
-            <p className="mq-modal-lead" style={{ marginTop: 8 }}>Сумма</p>
-            <label className="mq-field" style={{ marginTop: 6 }}>
-              <span className="mq-field__label visually-hidden">Сумма</span>
-              <input
-                className="mq-field__input"
-                name={moneyModal === 'in' ? 'safety_fund_in' : 'safety_fund_out'}
-                inputMode="numeric"
-                value={amountStr}
-                placeholder="0"
-                onChange={(e) => setAmountStr(e.target.value)}
-              />
-            </label>
-            <div className="mq-modal-actions" style={{ marginTop: 16 }}>
-              <Button mode="filled" stretched disabled={busyAction !== null} onClick={submitMoney}>
-                Выполнить
-              </Button>
-              <Button mode="outline" stretched onClick={() => setMoneyModal(null)}>
-                Отмена
-              </Button>
-            </div>
-          </div>
-        </div>
+        {moneyModal ? (
+          <SafetyFundActionForm
+            mode={moneyModal}
+            amount={safetyAmount}
+            maxAmount={safetyModalLimits.max}
+            chipValue={safetyModalLimits.chipValue}
+            chipHint={safetyModalLimits.chipHint}
+            onAmountChange={setSafetyAmount}
+            onSubmit={submitMoney}
+            submitLabel={moneyModal === 'in' ? 'Перевести в подушку' : 'Снять на счёт'}
+            busy={busyAction === 'in' || busyAction === 'out'}
+          />
+        ) : null}
       </Modal>
     </>
   );

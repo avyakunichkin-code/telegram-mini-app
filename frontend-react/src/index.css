@@ -103,8 +103,8 @@ body {
   --mqx-glass-softer: color-mix(in srgb, var(--tg-theme-bg-color, #ffffff) 64%, transparent);
   --mqx-shadow-soft: color-mix(in srgb, var(--mqx-ink) 13%, transparent);
   --mqx-shadow-card: color-mix(in srgb, var(--mqx-ink) 8%, transparent);
-  /* Coach: непрозрачная карточка (tg-theme-bg-color иногда совпадает с фоном страницы) */
-  --mqx-onboarding-bubble-bg: var(--mqx-glass-strong, #ffffff);
+  /* Coach: непрозрачная карточка (не var(--tg-theme-bg-color) — сливается с фоном TMA) */
+  --mqx-onboarding-bubble-bg: color-mix(in srgb, #ffffff 90%, #ede9fe 10%);
   --mqx-onboarding-scrim-bg: rgba(8, 10, 22, 0.74);
   --mqx-onboarding-bubble-border: color-mix(
     in srgb,
@@ -359,6 +359,26 @@ body {
   overflow: hidden;
 }
 
+/* GameScreen: якорь онбординга и вкладки заполняют высоту → скролл в __scroll */
+.mq-game-shell .mq-enter-item--fill > .mqx-onboarding-anchor-root,
+.mq-game-shell .mq-enter-item--fill > .mqx-tab-page {
+  flex: 1 1 0%;
+  min-height: 0;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.mq-game-shell .mqx-onboarding-anchor-root > .mqx-tab-page {
+  flex: 1 1 0%;
+  min-height: 0;
+}
+
+.mq-game-shell .mqx-tab-page > .mqx-hero {
+  flex: 0 0 auto;
+}
+
 .mqx-tab-page__scroll.mqx-content {
   flex: 1 1 0%;
   min-height: 0;
@@ -369,6 +389,12 @@ body {
   -webkit-overflow-scrolling: touch;
   scrollbar-width: thin;
   touch-action: pan-y;
+}
+
+.mq-game-shell .mqx-tab-page__scroll.mqx-content {
+  /* явная зона прокрутки под hero + таббар в потоке */
+  max-height: none;
+  padding-bottom: 4px;
 }
 
 .mqx-tab-page__scroll.mqx-content--dash-flat {
@@ -1164,6 +1190,166 @@ body {
   display: grid;
   place-items: center;
   padding: 8px 0;
+}
+
+/* Auth — Монетка (design-lab/auth-flow вариант B) */
+.mqx-auth--monetka {
+  min-height: calc(100svh - 16px);
+  padding: 12px 14px 28px;
+  background: var(--tg-theme-secondary-bg-color, var(--mq-surface-b, #f5f6f8));
+}
+
+.mqx-auth-monetka {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  width: 100%;
+  max-width: 360px;
+  margin: 0 auto;
+}
+
+.mqx-auth-monetka__mascot {
+  margin: 0 !important;
+}
+
+.mqx-auth-monetka__bubble {
+  position: relative;
+  width: 100%;
+  padding: 16px;
+  border-radius: 20px;
+  background-color: #ffffff;
+  background-color: var(--mqx-onboarding-bubble-bg, #ffffff);
+  background-image: linear-gradient(
+    165deg,
+    color-mix(in srgb, var(--mq-violet, #6d28d9) 7%, var(--mqx-onboarding-bubble-bg)) 0%,
+    var(--mqx-onboarding-bubble-bg) 42%
+  );
+  border: 1px solid var(--mqx-onboarding-bubble-border);
+  box-shadow: var(--mqx-onboarding-bubble-shadow);
+}
+
+.mqx-auth-monetka__bubble::after {
+  content: '';
+  position: absolute;
+  top: -8px;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 8px solid transparent;
+  border-bottom-color: var(--mqx-onboarding-bubble-bg);
+  filter: drop-shadow(0 -1px 0 var(--mqx-onboarding-bubble-border));
+}
+
+.mqx-auth-monetka__title {
+  margin: 0 0 6px;
+  font-size: 1.05rem;
+  font-weight: 800;
+  line-height: 1.25;
+  text-align: center;
+  color: var(--mqx-ink);
+}
+
+.mqx-auth-monetka__subtitle {
+  margin: 0 0 14px;
+  font-size: 14px;
+  line-height: 1.45;
+  text-align: center;
+  color: color-mix(in srgb, var(--mqx-ink) 88%, var(--tg-theme-hint-color, #6b7280));
+}
+
+.mqx-auth-monetka__form {
+  margin: 0;
+}
+
+.mqx-auth-monetka__actions {
+  margin-top: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.mqx-auth-monetka__link {
+  margin: 12px 0 0;
+  text-align: center;
+  font-size: 14px;
+  color: var(--tg-theme-hint-color, #6b7280);
+}
+
+.mqx-auth-monetka__link button {
+  border: none;
+  background: none;
+  padding: 0;
+  font: inherit;
+  font-weight: 650;
+  color: var(--mq-violet-deep, #5b21b6);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  cursor: pointer;
+}
+
+.mqx-auth-monetka__bubble--wide {
+  max-width: min(100%, 360px);
+  text-align: left;
+}
+
+.mqx-auth-monetka__mode-grid {
+  margin-top: 14px;
+}
+
+.mqx-auth-monetka__loading {
+  display: flex;
+  justify-content: center;
+  padding: 24px 0;
+}
+
+.mqx-auth-monetka__empty {
+  margin: 8px 0 0;
+  font-size: 14px;
+  line-height: 1.45;
+  color: color-mix(in srgb, var(--mqx-ink) 75%, var(--tg-theme-hint-color, #6b7280));
+}
+
+.mqx-auth-monetka__bubble--wide .mq-game-template-picker {
+  margin-top: 4px;
+}
+
+.mqx-auth-monetka__bubble--wide .mq-game-catalog-label {
+  display: block;
+  margin-top: 4px;
+}
+
+/* Меню сохранений (Monetka bubble) */
+.mqx-start-menu__profile {
+  margin-top: 4px;
+  align-items: flex-start;
+}
+
+.mqx-start-menu__actions {
+  margin-top: 16px;
+}
+
+.mqx-start-menu__modal-list {
+  margin-top: 12px;
+}
+
+.mqx-start-menu__modal-row {
+  margin-top: 10px;
+}
+
+.mqx-start-menu__active-pill {
+  display: inline-block;
+  margin-left: 6px;
+  padding: 2px 7px;
+  border-radius: 999px;
+  font-size: 10px;
+  font-weight: 750;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  vertical-align: middle;
+  color: var(--mq-violet-deep, #5b21b6);
+  background: color-mix(in srgb, var(--mq-violet, #6d28d9) 12%, var(--tg-theme-bg-color, #fff));
+  border: 1px solid color-mix(in srgb, var(--mq-violet, #6d28d9) 28%, transparent);
 }
 
 .mqx-hero--tab {
@@ -2040,6 +2226,32 @@ body {
   border-bottom-color: rgba(37, 99, 235, 0.35);
 }
 
+.mqx-invest-form--safety-in .mqx-invest-rate {
+  background: rgba(5, 150, 105, 0.1);
+  border-color: rgba(5, 150, 105, 0.22);
+}
+
+.mqx-invest-form--safety-in .mqx-invest-rate__val {
+  color: var(--mq-emerald);
+}
+
+.mqx-invest-form--safety-in .mqx-invest-amount__field {
+  border-bottom-color: rgba(5, 150, 105, 0.35);
+}
+
+.mqx-invest-form--safety-out .mqx-invest-rate {
+  background: rgba(109, 40, 217, 0.1);
+  border-color: rgba(109, 40, 217, 0.22);
+}
+
+.mqx-invest-form--safety-out .mqx-invest-rate__val {
+  color: var(--mq-violet);
+}
+
+.mqx-invest-form--safety-out .mqx-invest-amount__field {
+  border-bottom-color: rgba(109, 40, 217, 0.35);
+}
+
 .mqx-invest-amount__input {
   flex: 1;
   min-width: 0;
@@ -2216,13 +2428,29 @@ body {
   position: fixed;
   z-index: 11005;
   pointer-events: auto;
-  background: var(--mqx-onboarding-scrim-bg);
+  background: rgba(8, 10, 22, 0.74);
+  background: var(--mqx-onboarding-scrim-bg, rgba(8, 10, 22, 0.74));
   backdrop-filter: blur(2px);
   -webkit-backdrop-filter: blur(2px);
 }
 
 .mqx-onboarding-scrim--full {
   inset: 0;
+}
+
+/* Spotlight: одна «дыра» + box-shadow вместо четырёх панелей (надёжнее в TMA) */
+.mqx-onboarding-scrim-hole {
+  position: fixed;
+  z-index: 11005;
+  pointer-events: none;
+  border-radius: 14px;
+  background: transparent;
+  box-shadow: 0 0 0 9999px rgba(8, 10, 22, 0.74);
+  box-shadow: 0 0 0 9999px var(--mqx-onboarding-scrim-bg, rgba(8, 10, 22, 0.74));
+}
+
+.mqx-onboarding-scrim-hole--dashboard {
+  border-radius: 18px;
 }
 
 .mqx-onboarding-spotlight-ring {
@@ -2247,7 +2475,8 @@ body {
   gap: 8px;
   padding: 8px 14px;
   border-radius: 999px;
-  background: var(--mqx-onboarding-bubble-bg);
+  background-color: #ffffff;
+  background-color: var(--mqx-onboarding-bubble-bg, #ffffff);
   border: 1px solid var(--mqx-onboarding-bubble-border);
   box-shadow: var(--mqx-onboarding-bubble-shadow);
   color: var(--mqx-ink);
@@ -2278,11 +2507,12 @@ body {
   position: relative;
   padding: 16px 16px 14px;
   border-radius: 18px;
-  background-color: var(--mqx-onboarding-bubble-bg);
+  background-color: #ffffff;
+  background-color: var(--mqx-onboarding-bubble-bg, #ffffff);
   background-image: linear-gradient(
     165deg,
-    color-mix(in srgb, var(--mq-violet, #6d28d9) 7%, var(--mqx-onboarding-bubble-bg)) 0%,
-    var(--mqx-onboarding-bubble-bg) 42%
+    color-mix(in srgb, var(--mq-violet, #6d28d9) 7%, #ffffff) 0%,
+    var(--mqx-onboarding-bubble-bg, #ffffff) 42%
   );
   border: 1px solid var(--mqx-onboarding-bubble-border);
   box-shadow: var(--mqx-onboarding-bubble-shadow);
@@ -5182,11 +5412,107 @@ code {
   border: 1px solid color-mix(in srgb, var(--tg-theme-hint-color, var(--mq-line)) 35%, transparent);
 }
 
-/* B′ flat + страховой случай */
+/* B′ flat (legacy) */
 .mqx-events-card--flat {
   padding: 4px 2px 0;
   border: none;
   background: transparent;
+}
+
+/* M2 — реплика в пузыре + Монетка (утверждено) */
+.mqx-events-card--m2 {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 2px 0 0;
+  border: none;
+  background: transparent;
+}
+
+.mqx-events-card__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.mqx-events-card--m2 .mqx-events-card__badge {
+  margin-bottom: 0;
+  flex-shrink: 0;
+}
+
+.mqx-events-card__title--m2 {
+  margin: 0;
+  font-size: calc(var(--mq-fs-body) + 2px);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+}
+
+.mqx-events-card__bubble-row {
+  display: grid;
+  grid-template-columns: 52px 1fr;
+  gap: 8px;
+  align-items: end;
+}
+
+.mqx-events-card__monetka-wrap {
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+}
+
+.mqx-events-card__monetka.mqx-onboarding-monetka {
+  width: 50px;
+  height: 50px;
+  object-fit: contain;
+}
+
+.mqx-events-card__bubble {
+  position: relative;
+  padding: 10px 12px;
+  border-radius: 14px 14px 14px 4px;
+  background: color-mix(in srgb, var(--mq-violet, #6d28d9) 10%, var(--tg-theme-bg-color, var(--bg)));
+  border: 1px solid color-mix(in srgb, var(--mq-violet, #6d28d9) 22%, transparent);
+  box-shadow: 0 6px 18px color-mix(in srgb, var(--mq-violet, #6d28d9) 12%, transparent);
+}
+
+.mqx-events-card__bubble::before {
+  content: '';
+  position: absolute;
+  left: -5px;
+  bottom: 10px;
+  width: 10px;
+  height: 10px;
+  background: inherit;
+  border-left: 1px solid color-mix(in srgb, var(--mq-violet, #6d28d9) 22%, transparent);
+  border-bottom: 1px solid color-mix(in srgb, var(--mq-violet, #6d28d9) 22%, transparent);
+  transform: rotate(45deg);
+  border-radius: 0 0 0 3px;
+}
+
+.mqx-events-card__bubble-text {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.4;
+  color: color-mix(in srgb, var(--mqx-ink, var(--tg-theme-text-color)) 90%, transparent);
+}
+
+.mqx-events-card--insurance .mqx-events-card__bubble {
+  background: color-mix(in srgb, var(--mq-emerald) 10%, var(--tg-theme-bg-color, var(--bg)));
+  border-color: color-mix(in srgb, var(--mq-emerald) 24%, transparent);
+  box-shadow: 0 6px 18px color-mix(in srgb, var(--mq-emerald) 10%, transparent);
+}
+
+.mqx-events-card--insurance .mqx-events-card__bubble::before {
+  border-left-color: color-mix(in srgb, var(--mq-emerald) 24%, transparent);
+  border-bottom-color: color-mix(in srgb, var(--mq-emerald) 24%, transparent);
+}
+
+.mqx-events-card--m2 .mqx-events-card__choices {
+  gap: 0;
+  margin-top: 2px;
 }
 
 .mqx-events-panel--insurance.events-overlay-panel {
@@ -5236,27 +5562,6 @@ button.mqx-events-choice--flat {
 
 button.mqx-events-choice--flat:last-child {
   border-bottom: none;
-}
-
-button.mqx-events-choice--primary {
-  margin-top: 4px;
-  margin-bottom: 4px;
-  padding: 12px 14px;
-  border-radius: 12px;
-  border: none;
-  background: linear-gradient(165deg, #059669, #047857);
-  color: #fff;
-  box-shadow: 0 4px 14px color-mix(in srgb, var(--mq-emerald) 28%, transparent);
-}
-
-button.mqx-events-choice--primary .mqx-events-choice__desc {
-  color: color-mix(in srgb, #ecfdf5 92%, transparent);
-  opacity: 1;
-}
-
-button.mqx-events-choice--primary:active:not(:disabled) {
-  transform: translateY(1px);
-  box-shadow: none;
 }
 
 .mqx-events-card__kicker {

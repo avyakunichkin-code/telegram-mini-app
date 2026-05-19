@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="ru" data-theme="light">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Money Quest — Dashboard: уровень + подушка (design-lab)</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <header class="lab-header">
+      
+        <h1>Dashboard — уровень-аккордеон и подушка (ползунок)</h1>
+        <p>
+          <strong>R1–R3</strong> — цели в «Уровень», дашборд периода без целей.
+          <strong>S1–S3</strong> — пополнение/снятие как в
+          <a href="../invest-forms/">invest-forms</a>.
+          См. также <a href="../dashboard-dual-accordion/">dashboard-dual-accordion</a> (D1–D5).
+        </p>
+      
+      <div class="lab-theme" role="group" aria-label="Тема">
+        <button type="button" class="is-active" data-theme-btn="light">Светлая</button>
+        <button type="button" data-theme-btn="dark">Тёмная</button>
+      </div>
+    </header>
+
+    <main class="lab-wrap">
+      <section class="lab-group">
+        <h2 class="lab-group__title">Структура главной (R)</h2>
+        <p class="lab-group__desc">
+          Два аккордеона: «Уровень» (с целями) и «Дашборд периода» (только финансы). Действия — снаружи.
+        </p>
+
+        <article class="lab-section" style="margin-bottom: 32px">
+          <div class="lab-section__label">
+            <span class="lab-section__id">R1</span>
+            <span class="lab-section__title">Канон — «Победа 2/3» в свёрнутом уровне</span>
+          </div>
+          <p class="lab-section__note">
+            Свёрнуто: XP, мета победы, очки, полоска XP, подсказка. Разворот: цели v2 + бары доход/долг.
+            Дашборд: chips → только «Финансы».
+          </p>
+          
+            <div class="lab-stage">
+              <div class="phone">
+                <div class="phone__scroll">
+                  <header class="hero">
+                    <div class="hero__logo"></div>
+                    <div class="hero__main">
+                      
+                        <div class="hero__row"><span>Период #4</span><span class="hero__timer">04:32</span></div>
+                        <div class="hero__bar"><i></i></div>
+                      
+                    </div>
+                    <button type="button" class="hero__btn" aria-label="Play">▶</button>
+                  </header>
+
+                  <article class="level-card">
+                    <button type="button" class="level-card__toggle" data-level-toggle aria-expanded="false">
+                      <div class="level-card__main">
+                        <h2 class="level-card__title">Уровень 3</h2>
+                        <p class="level-card__sub">120 / 200 XP</p>
+                        <p class="level-card__meta">Победа 2/3</p>
+                      </div>
+                      <div class="level-card__score-wrap">
+                        <div class="level-card__score-label">Очки</div>
+                        <div class="level-card__score">1 240</div>
+                      </div>
+                      <span class="level-card__chevron" aria-hidden="true">▼</span>
+                    </button>
+                    <div class="level-card__meter">
+                      <div class="dash-progress">
+                        <div class="dash-progress__fill--xp" style="width: 60%"></div>
+                      </div>
+                    </div>
+                    <p class="level-card__hint">Ещё 80 XP · на 4 ур. — «Облигации»</p>
+                    <div class="level-card__body">
+                      <div class="victory">
+                        <div class="victory__head">
+                          <div>
+                            <div class="victory__kicker">Цель</div>
+                            <div class="victory__title">Победа партии</div>
+                          </div>
+                          <span class="victory__badge">2 / 3</span>
+                        </div>
+                        <div class="victory__goal"><span>Подушка 3× обязательств</span><strong>да</strong></div>
+                        <div class="victory__goal"><span>Нет просрочки</span><strong>да</strong></div>
+                        <div class="victory__goal victory__goal--no"><span>Поток ≥ 0</span><strong>нет</strong></div>
+                      </div>
+                      <div class="level-bars">
+                        <div>
+                          <div class="level-bars__row"><span>Доход</span><span class="money">85 000</span></div>
+                          <div class="level-bars__track"><div class="level-bars__fill--emerald" style="width: 72%"></div></div>
+                        </div>
+                        <div>
+                          <div class="level-bars__row"><span>Долги</span><span class="money">24 000</span></div>
+                          <div class="level-bars__track"><div class="level-bars__fill--rose" style="width: 28%"></div></div>
+                        </div>
+                      </div>
+                    </div>
+                  </article>
+
+                  <section class="period-dash">
+                    <button type="button" class="period-dash__toggle" data-period-toggle aria-expanded="false">
+                      <div class="period-dash__top">
+                        <div>
+                          <div class="period-dash__title">Дашборд периода</div>
+                          <div class="period-dash__summary">54 200 ₽ · поток +12 400</div>
+                        </div>
+                        <span class="period-dash__chevron" aria-hidden="true">▼</span>
+                      </div>
+                      <div class="period-dash__chips">
+                        <div class="period-dash__chip"><div class="period-dash__chip-label">Баланс</div>
+                          
+                            <div class="period-dash__chip-value money">54 200</div>
+                          
+                        </div>
+                        <div class="period-dash__chip"><div class="period-dash__chip-label">Подушка</div><div class="period-dash__chip-value money">18 000</div></div>
+                        <div class="period-dash__chip"><div class="period-dash__chip-label">Поток</div><div class="period-dash__chip-value money">+12 400</div></div>
+                        <div class="period-dash__chip">
+                          <div class="period-dash__chip-label">На жизнь</div><div class="period-dash__chip-value money">9 600</div>
+                        </div>
+                      </div>
+                      <p class="period-dash__hint">Финансы — нажмите, чтобы развернуть</p>
+                    </button>
+                    <div class="period-dash__expand">
+                      <div class="block-title"><span>Финансы</span><a href="#">Детали →</a></div>
+                      <div class="stat-grid">
+                        
+                          <div class="stat-mini">
+                            <div class="stat-mini__ico"></div><div><div class="stat-mini__k">Баланс</div><div class="stat-mini__v money">54 200</div></div>
+                          </div>
+                          <div class="stat-mini"><div class="stat-mini__ico stat-mini__ico--emerald"></div><div><div class="stat-mini__k">Подушка</div><div class="stat-mini__v money">18 000</div></div></div>
+                          <div class="stat-mini"><div class="stat-mini__ico stat-mini__ico--sky"></div><div><div class="stat-mini__k">Поток</div>
+                            <div class="stat-mini__v money">+12 400</div>
+                          </div></div>
+                          <div class="stat-mini"><div class="stat-mini__ico stat-mini__ico--amber"></div><div><div class="stat-mini__k">На жизнь</div><div class="stat-mini__v money">9 600</div></div></div>
+                        
+                      </div>
+                    </div>
+                  </section>
+
+                  <section class="period-actions">
+                    <div class="period-actions__head">
+                      <div><h2 class="period-actions__title">Действия периода</h2><p class="period-actions__sub">Управляй денежным потоком</p></div>
+                      <span class="period-actions__xp">120 / 200 XP</span>
+                    </div>
+                    <div class="actions-grid">
+                      <button type="button" class="action-btn action-btn--primary">Зарплата</button>
+                      <button type="button" class="action-btn action-btn--ghost">В подушку</button>
+                      <button type="button" class="action-btn">Снять</button>
+                      <button type="button" class="action-btn">Инвестировать</button>
+                    </div>
+                  </section>
+                  <p class="burn-hint">В конце периода спишется ещё 9 600 ₽ на жизнь.</p>
+                </div>
+                <nav class="phone__nav" aria-hidden="true"><i class="active"></i><i></i><i></i><i></i></nav>
+              </div>
+            </div>
+          
+        </article>
+
+        <article class="lab-section" style="margin-bottom: 32px">
+          <div class="lab-section__label">
+            <span class="lab-section__id">R2</span>
+            <span class="lab-section__title">Компактный уровень (одна строка)</span>
+          </div>
+          <p class="lab-section__note">Меньше высоты в свёрнутом виде; очки и подсказка — только в развороте.</p>
+          <div class="lab-stage">
+            <div class="phone">
+              <div class="phone__scroll">
+                <header class="hero">
+                  <div class="hero__main"><div class="hero__row"><span>#4</span><span class="hero__timer">04:32</span></div><div class="hero__bar"><i></i></div></div>
+                  <button type="button" class="hero__btn">▶</button>
+                </header>
+
+                <article class="level-card level-card--compact">
+                  <button type="button" class="level-card__toggle" data-level-toggle aria-expanded="false">
+                    <div class="level-card__main">
+                      <h2 class="level-card__title" style="font-size: 13px">
+                        Ур. 3 · 120/200 XP · <span style="color: var(--mq-emerald)">Победа 2/3</span>
+                      </h2>
+                    </div>
+                    <span class="level-card__chevron">▼</span>
+                  </button>
+                  <div class="level-card__meter"><div class="dash-progress"><div class="dash-progress__fill--xp" style="width: 60%"></div></div></div>
+                  <div class="level-card__body">
+                    <div class="level-card__score-wrap" style="text-align: left; margin-bottom: 8px">
+                        <div class="level-card__score-label">Очки</div>
+                        <div class="level-card__score">1 240</div>
+                      </div>
+                      <div class="victory">
+                        <div class="victory__head"><div><div class="victory__kicker">Цель</div><div class="victory__title">Победа 2/3</div></div><span class="victory__badge">2/3</span></div>
+                        <div class="victory__goal victory__goal--no"><span>Поток ≥ 0</span><strong>нет</strong></div>
+                      </div>
+                      <div class="level-bars" style="margin-top: 8px">
+                        <div class="level-bars__row"><span>Доход / долги</span></div>
+                        <div class="level-bars__track"><div class="level-bars__fill--emerald" style="width: 72%"></div></div>
+                      </div>
+                    </div>
+                    <p class="level-card__hint">Ещё 80 XP до 4 уровня</p>
+                  
+                </article>
+
+                <section class="period-dash is-expanded">
+                  <button type="button" class="period-dash__toggle" data-period-toggle aria-expanded="true">
+                    <div class="period-dash__top"><div><div class="period-dash__title">Дашборд периода</div></div><span class="period-dash__chevron">▼</span></div>
+                  </button>
+                  <div class="period-dash__expand" style="display: block; border-top: none; padding-top: 0">
+                    <div class="block-title"><span>Финансы</span><a href="#">Детали →</a></div>
+                    <div class="stat-grid">
+                      <div class="stat-mini"><div class="stat-mini__ico"></div><div>
+                        <div class="stat-mini__k">Баланс</div><div class="stat-mini__v money">54k</div></div></div>
+                      <div class="stat-mini"><div class="stat-mini__ico stat-mini__ico--emerald"></div><div><div class="stat-mini__k">Подушка</div><div class="stat-mini__v money">18k</div></div></div>
+                      <div class="stat-mini"><div class="stat-mini__ico stat-mini__ico--sky"></div><div><div class="stat-mini__k">Поток</div><div class="stat-mini__v money">+12k</div></div></div>
+                      <div class="stat-mini"><div class="stat-mini__ico stat-mini__ico--amber"></div><div><div class="stat-mini__k">Жизнь</div><div class="stat-mini__v money">9.6k</div></div></div>
+                    </div>
+                  </div>
+                </section>
+
+                <section class="period-actions">
+                  <div class="actions-grid">
+                    <button type="button" class="action-btn action-btn--primary">Зарплата</button>
+                    <button type="button" class="action-btn action-btn--ghost">В подушку</button>
+                    <button type="button" class="action-btn">Снять</button>
+                    <button type="button" class="action-btn">Инвестировать</button>
+                  </div>
+                </section>
+              </div>
+              <nav class="phone__nav" aria-hidden="true"><i class="active"></i><i></i><i></i><i></i></nav>
+            </div>
+          </div>
+        </article>
+
+        <article class="lab-section">
+          <div class="lab-section__label">
+            <span class="lab-section__id">R3</span>
+            <span class="lab-section__title">Превью целей чипами (свёрнуто)</span>
+          </div>
+          <p class="lab-section__note">Вместо «Победа 2/3» — три чипа ✓✓✗; полный список в развороте.</p>
+          <div class="lab-stage">
+            <div class="phone">
+              <div class="phone__scroll">
+                <header class="hero"><div class="hero__main"><div class="hero__row"><span>#4</span><span class="hero__timer">04:32</span></div></div><button type="button" class="hero__btn">▶</button></header>
+
+                <article class="level-card">
+                  <button type="button" class="level-card__toggle" data-level-toggle aria-expanded="false">
+                    <div class="level-card__main">
+                      <h2 class="level-card__title">Уровень 3</h2>
+                      <p class="level-card__sub">120 / 200 XP</p>
+                      <div class="level-card__goal-chips">
+                        <span class="goal-chip">Подушка ✓</span>
+                        <span class="goal-chip">Просрочка ✓</span>
+                        <span class="goal-chip goal-chip--no">Поток ✗</span>
+                      </div>
+                    </div>
+                    <span class="level-card__chevron">▼</span>
+                  </button>
+                  <div class="level-card__meter"><div class="dash-progress"><div class="dash-progress__fill--xp" style="width: 60%"></div></div></div>
+                  <div class="level-card__body">
+                    <div class="victory">
+                      <div class="victory__goal"><span>Подушка 3× обязательств</span><strong>да</strong></div>
+                      <div class="victory__goal"><span>Нет просрочки</span><strong>да</strong></div>
+                      <div class="victory__goal victory__goal--no"><span>Поток ≥ 0</span><strong>нет</strong></div>
+                    </div>
+                  </div>
+                </article>
+
+                <section class="period-dash">
+                  <button type="button" class="period-dash__toggle" data-period-toggle aria-expanded="false">
+                    <div class="period-dash__top">
+                      <div><div class="period-dash__title">Дашборд периода</div><div class="period-dash__summary">Только финансы</div></div>
+                      <span class="period-dash__chevron">▼</span>
+                    </div>
+                    <div class="period-dash__chips">
+                      <div class="period-dash__chip">
+                        <div class="period-dash__chip-label">Баланс</div><div class="period-dash__chip-value money">54k</div>
+                      </div>
+                      <div class="period-dash__chip"><div class="period-dash__chip-label">Подушка</div><div class="period-dash__chip-value money">18k</div></div>
+                      <div class="period-dash__chip"><div class="period-dash__chip-label">Поток</div><div class="period-dash__chip-value money">+12k</div></div>
+                      <div class="period-dash__chip"><div class="period-dash__chip-label">Жизнь</div><div class="period-dash__chip-value money">9.6k</div></div>
+                    </div>
+                    <p class="period-dash__hint">Цели — в блоке «Уровень»</p>
+                  </button>
+                </section>
+
+                <section class="period-actions">
+                  <div class="actions-grid">
+                    <button type="button" class="action-btn action-btn--primary">Зарплата</button>
+                    <button type="button" class="action-btn action-btn--ghost">В подушку</button>
+                    <button type="button" class="action-btn">Снять</button>
+                    <button type="button" class="action-btn">Инвестировать</button>
+                  </div>
+                </section>
+              </div>
+              <nav class="phone__nav" aria-hidden="true"><i class="active"></i><i></i><i></i><i></i></nav>
+            </div>
+          </div>
+        </article>
+      </section>
+
+      <section class="lab-group">
+        <h2 class="lab-group__title">Подушка — сумма (S)</h2>
+        <p class="lab-group__desc">Как InvestAmountControl: ввод + ползунок. Нажмите «В подушку» в S1.</p>
+
+        <article class="lab-section" style="margin-bottom: 32px">
+          <div class="lab-section__label">
+            <span class="lab-section__id">S1</span>
+            <span class="lab-section__title">Паритет с инвестициями (фиолетовый ползунок)</span>
+          </div>
+          <p class="lab-section__note">Подчёркнутый ввод, шаг по max, «На счёте» / «В подушке».</p>
+          <div class="lab-stage">
+            <div class="phone phone--modal-demo">
+              <div class="phone__scroll">
+                <header class="hero">
+                  <div class="hero__main"><span>#4 · 04:32</span></div>
+                </header>
+                <section class="period-actions">
+                  <div class="s-demo-triggers">
+                    <button type="button" class="action-btn action-btn--ghost" data-open-modal>В подушку</button>
+                    <button type="button" class="action-btn" data-open-modal>Снять</button>
+                  </div>
+                </section>
+              </div>
+              
+                <div class="modal-scrim modal-scrim--center" data-modal hidden>
+                  <div class="modal-card" role="dialog" aria-labelledby="s1-title">
+                    <h3 class="modal-card__title" id="s1-title">В подушку</h3>
+                    <p class="modal-card__lead">Перевод с наличных в подушку безопасности</p>
+                    <div class="amount-block" data-amount-root data-amount-max="54200" data-amount-mode="contribute">
+                      <label class="amount-block__label" for="s1-amt">Сумма</label>
+                      <div class="amount-block__field">
+                        <input id="s1-amt" class="amount-block__input" type="text" inputmode="numeric" data-amount-input />
+                        <span class="amount-block__unit">₽</span>
+                      </div>
+                      <input type="range" class="amount-slider" data-amount-slider />
+                      <div class="amount-block__hint"><span>0</span><span data-amount-hint-max>На счёте: 54 200 ₽</span></div>
+                    </div>
+                    <div class="modal-actions">
+                      <button type="button" class="btn-primary">Выполнить</button>
+                      <button type="button" class="btn-ghost" data-close-modal>Отмена</button>
+                    </div>
+                  </div>
+                </div>
+              
+              <nav class="phone__nav" aria-hidden="true"><i class="active"></i><i></i><i></i><i></i></nav>
+            </div>
+          </div>
+        </article>
+
+        <article class="lab-section" style="margin-bottom: 32px">
+          <div class="lab-section__label">
+            <span class="lab-section__id">S2</span>
+            <span class="lab-section__title">Чипы 25% · 50% · Всё + emerald</span>
+          </div>
+          <p class="lab-section__note">Быстрый выбор доли; акцент подушки — emerald.</p>
+          <div class="lab-stage">
+            <div class="phone phone--modal-demo">
+              <div class="phone__scroll"><p class="muted" style="margin: 0">Модалка открыта (демо)</p></div>
+              <div class="modal-scrim modal-scrim--center">
+                <div class="modal-card">
+                  <h3 class="modal-card__title">Снять с подушки</h3>
+                  <p class="modal-card__lead">На счёт для трат в периоде</p>
+                  <div class="amount-block amount-block--emerald" data-amount-root data-amount-max="54200" data-amount-mode="withdraw">
+                    <div class="amount-presets">
+                      <button type="button" data-preset="25">25%</button>
+                      <button type="button" data-preset="50" class="is-on">50%</button>
+                      <button type="button" data-preset="max">Всё</button>
+                    </div>
+                    <label class="amount-block__label" for="s2-amt">Сумма</label>
+                    <div class="amount-block__field">
+                      <input id="s2-amt" class="amount-block__input" type="text" inputmode="numeric" data-amount-input />
+                      <span class="amount-block__unit">₽</span>
+                    </div>
+                    <input type="range" class="amount-slider" data-amount-slider />
+                    <div class="amount-block__hint"><span>0</span><span data-amount-hint-max>В подушке: 18 000 ₽</span></div>
+                  </div>
+                  <div class="modal-actions">
+                    <button type="button" class="btn-primary btn-primary--emerald">Снять на счёт</button>
+                    <button type="button" class="btn-ghost">Отмена</button>
+                  </div>
+                </div>
+              </div>
+              <nav class="phone__nav" aria-hidden="true"><i class="active"></i><i></i><i></i><i></i></nav>
+            </div>
+          </div>
+        </article>
+
+        <article class="lab-section">
+          <div class="lab-section__label">
+            <span class="lab-section__id">S3</span>
+            <span class="lab-section__title">Bottom sheet — крупная сумма</span>
+          </div>
+          <p class="lab-section__note">Лист снизу: hero-сумма, ползунок, балансы до/после.</p>
+          <div class="lab-stage">
+            <div class="phone phone--modal-demo">
+              <div class="phone__scroll" style="min-height: 200px"><header class="hero"><span class="muted">Фон игры</span></header></div>
+              <div class="modal-scrim">
+                
+                  <div class="modal-card modal-card--sheet">
+                    <h3 class="modal-card__title">В подушку</h3>
+                    
+                      <div class="modal-card__hero-amount">15 000 ₽</div>
+                    
+                    <div class="amount-block amount-block--emerald" data-amount-root data-amount-max="54200" data-amount-mode="contribute">
+                      <input type="range" class="amount-slider" data-amount-slider style="margin-top: 4px" />
+                      <label class="amount-block__label" for="s3-amt" style="margin-top: 10px">Точная сумма</label>
+                      <div class="amount-block__field">
+                        <input id="s3-amt" class="amount-block__input" type="text" inputmode="numeric" data-amount-input style="font-size: 18px" />
+                        <span class="amount-block__unit">₽</span>
+                      </div>
+                      <div class="amount-block__hint"><span>0</span><span data-amount-hint-max>На счёте: 54 200 ₽</span></div>
+                    </div>
+                    <div class="modal-card__balances">
+                      <div><span>Сейчас на счёте</span><strong class="money">54 200</strong></div>
+                      <div style="text-align: right"><span>После перевода</span><strong class="money">39 200</strong></div>
+                    </div>
+                    <div class="modal-actions">
+                      <button type="button" class="btn-primary btn-primary--emerald">Перевести</button>
+                      <button type="button" class="btn-ghost">Отмена</button>
+                    </div>
+                  </div>
+                
+              </div>
+              <nav class="phone__nav" aria-hidden="true"><i class="active"></i><i></i><i></i><i></i></nav>
+            </div>
+          </div>
+        </article>
+      </section>
+    </main>
+
+    <script src="./lab.js"></script>
+  </body>
+</html>

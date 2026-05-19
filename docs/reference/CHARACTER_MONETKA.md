@@ -45,11 +45,31 @@ role: onboarding_mascot
 | Элемент | Правило |
 |---------|---------|
 | **Форма** | Круглая монета, ручки и ножки, дружелюбный cartoon |
-| **Файл** | [`assets/monetka-mascot.png`](assets/monetka-mascot.png) — PNG, прозрачный фон |
+| **Формат** | **PNG**, прозрачный фон (`alpha`); WebP — позже при оптимизации бандла |
+| **Дефолт** | [`assets/monetka-mascot.png`](assets/monetka-mascot.png) — приветствие, общий UI |
+| **Позы** | Каталог [`assets/monetka-poses/`](assets/monetka-poses/) |
 | **В онбординге** | Над заголовком брифа, ~120px ([`design-lab/onboarding-brief`](../../design-lab/onboarding-brief/)) |
-| **Позы v1** | Одна PNG на все 3 экрана |
+| **Позы v1 (прод)** | Пока одна PNG на все 3 экрана брифа; каталог — для coach / auth / lab |
 
-**Недопустимо:** CSS-заглушка; ₽ на лице.
+**Недопустимо:** CSS-заглушка; ₽ на лице; UI-карточка, запечённая в PNG позы (пузырь рисуется CSS).
+
+### Именование файлов
+
+Шаблон: **`monetka-{pose}.png`**, kebab-case, латиница.
+
+| `pose` | Файл | Когда в UI |
+|--------|------|------------|
+| *(дефолт)* | [`monetka-mascot.png`](assets/monetka-mascot.png) | Старт, меню, онбординг-brief |
+| `sit-edge` | [`monetka-poses/monetka-sit-edge.png`](assets/monetka-poses/monetka-sit-edge.png) | «Сидит на краю» пузыря (`MonetkaBubbleScreen`, coach) — **только персонаж**, ноги свисают |
+| `laugh` | [`monetka-poses/monetka-laugh.png`](assets/monetka-poses/monetka-laugh.png) | Успех, шутка |
+| `joyful` | [`monetka-poses/monetka-joyful.png`](assets/monetka-poses/monetka-joyful.png) | Сильная радость, праздник |
+| `think` | [`monetka-poses/monetka-think.png`](assets/monetka-poses/monetka-think.png) | Объяснение механики, «интересно…» |
+| `wink` | [`monetka-poses/monetka-wink.png`](assets/monetka-poses/monetka-wink.png) | Подбодрить, «ты справишься» |
+| `alert` | [`monetka-poses/monetka-alert.png`](assets/monetka-poses/monetka-alert.png) | Важное правило, предупреждение |
+
+**Новая поза:** добавить `monetka-{pose}.png` в `assets/monetka-poses/` и строку в таблицу выше; в коде — prop `pose` у `MonetkaAvatar` (когда подключим).
+
+**Композиция `sit-edge`:** нижняя кромка монеты совпадает с верхом CSS-пузыря (`.mqx-auth-monetka__bubble`); карточка не входит в ассет.
 
 ---
 

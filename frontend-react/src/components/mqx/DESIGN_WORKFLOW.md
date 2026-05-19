@@ -76,7 +76,8 @@ npx serve .
 | 6 | `onboarding-guided/` — **★ утверждён** | `OnboardingCoach`, `MonetkaAvatar` |
 | 6b | `onboarding-brief/` — superseded | — |
 | 7 | `achievements-progress/` — level collapsible + монетки + каталог | `MqxAchievementCoin`, `AchievementsScreen` |
-| 8 | **`dashboard-home-v2/`** — финал Главной (10 компоновок) | `DashboardPremium` v2 |
+| 8 | `dashboard-home-v2/` — эксперименты компоновок (архив) | — |
+| 9 | **`dashboard-dual-accordion/`** — два аккордеона MQX (D1–D5) | `MqxLevelBlock` collapsible, `MqxPeriodDashboard` v2 |
 
 Текущий статус: **примитивы**, **shell**, **события**, **портфель**, **страховки**, **row-actions (B)**, **VictoryGoalsPanel** в prod; дальше — `dashboard/` (hero), empty/error в shell.
 

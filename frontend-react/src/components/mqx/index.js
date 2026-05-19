@@ -58,4 +58,6 @@ export { OnboardingCoach, useOnboardingCoachState } from './onboarding/Onboardin
 export { OnboardingCoachOverlay } from './onboarding/OnboardingCoachOverlay';
 export { OnboardingCoachDemo } from './onboarding/OnboardingCoachDemo';
 export { MonetkaAvatar } from './onboarding/MonetkaAvatar';
+export { AuthMonetkaScreen } from './auth/AuthMonetkaScreen';
+export { MonetkaBubbleScreen } from './layout/MonetkaBubbleScreen';
 export { ONBOARDING_STEPS, ONBOARDING_PRACTICE_MS } from './onboarding/onboardingSteps';
