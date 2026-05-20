@@ -88,8 +88,7 @@ export function buildVictorySummary(victory, legacyGoal) {
 
   let badge = 'В работе';
   if (win) badge = 'Победа';
-  else if (met >= required && required > 0 && gateOpen) badge = 'Почти';
-  else if (met >= required && required > 0 && !gateOpen) badge = 'Ждём период';
+  else if (met >= required && required > 0) badge = 'Почти';
 
   return {
     badge,
@@ -99,4 +98,23 @@ export function buildVictorySummary(victory, legacyGoal) {
     gateOpen,
     minPeriod: victory.min_period_index,
   };
+}
+
+/** Средний прогресс по включённым целям (0–1) для свёрнутой шкалы уровня. */
+export function goalsAggregateFrac(victory, legacyGoal) {
+  const summary = buildVictorySummary(victory, legacyGoal);
+  const goals = summary.goals.filter((g) => g.enabled !== false);
+  if (!goals.length) return 0;
+  const sum = goals.reduce((acc, g) => acc + (g.met ? 1 : pctClamp01(g.progress)), 0);
+  return sum / goals.length;
+}
+
+/** Подпись «M из N» для свёрнутого блока уровня. */
+export function goalsAggregateLabel(victory, legacyGoal) {
+  const summary = buildVictorySummary(victory, legacyGoal);
+  const goals = summary.goals.filter((g) => g.enabled !== false);
+  const met = goals.filter((g) => g.met).length;
+  const total = goals.length;
+  if (total === 0) return null;
+  return { met, total, line: `Цели: ${met} из ${total}` };
 }

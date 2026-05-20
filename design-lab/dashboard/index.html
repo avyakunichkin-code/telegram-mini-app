@@ -3,171 +3,237 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Money Quest — hero дашборда</title>
+    <title>Money Quest — Dashboard skins (design-lab)</title>
     <link rel="stylesheet" href="./styles.css" />
   </head>
   <body>
     <header class="lab-header">
       <div>
-        <h1>Dashboard — компактная шапка (hero)</h1>
-        <p>
-          Проблема: текущий hero ~220–260px (бренд + таймер 28px + колонка кнопок + Lottie 56px + pills).
-          Цель: ~100–120px, сохранить таймер, play/pause, прогресс периода, pills. Выберите вариант → MQX.
-        </p>
+        <h1>Dashboard — S5 Unified ★</h1>
+        <p id="layout-note">S5 Unified ★ — 2×2 финансы, inset-линии, единая страница, уровень градиентом. · L3.</p>
       </div>
-      <div class="lab-theme" role="group" aria-label="Тема">
-        <button type="button" class="is-active" data-theme-btn="light">Светлая</button>
-        <button type="button" data-theme-btn="dark">Тёмная</button>
+      <div class="lab-header__controls">
+        <div class="lab-skin" role="group" aria-label="Визуальный скин">
+          <span class="lab-layout__label">Скин</span>
+          <button type="button" class="is-active" data-skin-btn="s5">S5 ★</button>
+          <button type="button" data-skin-btn="s1">S1</button>
+          <button type="button" data-skin-btn="s2">S2</button>
+          <button type="button" data-skin-btn="s3">S3</button>
+        </div>
+        <div class="lab-layout" role="group" aria-label="Порядок блоков">
+          <span class="lab-layout__label">Порядок</span>
+          <button type="button" class="is-active" data-layout-btn="l3">L3</button>
+          <button type="button" data-layout-btn="v0">V0</button>
+        </div>
+        <button type="button" data-demo-long-sums>Длинные суммы</button>
+        <div class="lab-theme" role="group" aria-label="Тема">
+          <button type="button" class="is-active" data-theme-btn="light">Светлая</button>
+          <button type="button" data-theme-btn="dark">Тёмная</button>
+        </div>
       </div>
     </header>
 
-    <main class="lab-wrap">
-      <section class="lab-section lab-section--featured">
-        <div class="lab-section__label">
-          <span class="lab-section__id">H3′ ★</span>
-          <span class="lab-section__title">Одна строка + progress bar (утверждено)</span>
-        </div>
-        <p class="lab-section__note">
-          База H3: без Lottie и слогана. Логотип MQ — левый верхний угол; «Период #N» — справа под ▶⏸.
+    <main class="lab-main">
+      <p class="lab-intro">
+        <strong>S5 Unified</strong> — выбранное направление: финансы 2×2, кнопки как в S4 (без рамок), разделы только
+        inset-линиями, страница цельная (цветной hero → лёгкий градиент → белый футер), уровень — градиент без рамки.
+        См. <code>VARIANTS.md</code>.
+      </p>
+
+      <div id="lab-gallery" class="lab-gallery" aria-label="Сетка скинов S1–S4"></div>
+
+      <section class="lab-legend">
+        <h2>Скины</h2>
+        <ul>
+          <li><strong>S5 Unified ★</strong> — 2×2, inset-линии, единая страница + белый таббар</li>
+          <li><strong>S1–S3</strong> — предыдущие итерации для сравнения</li>
+        </ul>
+        <p class="lab-reset">
+          <button type="button" class="lab-reset-btn" onclick="labResetMonetka()">Сбросить Монетку</button>
         </p>
-        <article class="lab-phone">
-          <header class="dh-hero dh-h3p">
-            <div class="dh-hero__glow" aria-hidden></div>
-            <div class="dh-h3p__row1">
-              <div class="dh-h3p__logo" aria-hidden>MQ</div>
-              <div class="dh-h3p__center">
-                <div class="dh-h3p__timer-row">
-                  <span class="dh-timer dh-h3p__timer">08:42</span>
-                  <span class="dh-h3p__meta">Прогресс месяца · 42%</span>
-                </div>
-                <div class="dh-progress" aria-hidden><div class="dh-progress__fill" style="width:42%"></div></div>
-              </div>
-              <div class="dh-h3p__controls">
-                <button type="button" class="dh-btn dh-btn--icon dh-btn--play" aria-label="Играть">▶</button>
-                <button type="button" class="dh-btn dh-btn--icon dh-btn--pause" aria-label="Пауза">⏸</button>
-              </div>
-            </div>
-            <div class="dh-h3p__row2">
-              <div class="dh-h3p__period"><span>Период</span>#4</div>
-              <div class="dh-h3p__row2-actions dh-pills">
-                <button type="button" class="dh-pill dh-pill--badge">События<span class="dh-pill__dot">2</span></button>
-                <button type="button" class="dh-pill">Следующий период</button>
-              </div>
-            </div>
-          </header>
-          <div class="lab-phone__body">↓ flat-стек дашборда (D′)</div>
-        </article>
-        <span class="lab-size">≈ 104 px hero</span>
-      </section>
-
-      <section class="lab-section">
-        <div class="lab-section__label">
-          <span class="lab-section__id">H2</span>
-          <span class="lab-section__title">Mascot chip + таймер</span>
-        </div>
-        <p class="lab-section__note">Lottie как квадрат 40px слева от таймера; кнопки справа. Без отдельного блока «цикл месяца».</p>
-        <article class="lab-phone">
-          <header class="dh-hero dh-h2">
-            <div class="dh-hero__glow" aria-hidden></div>
-            <div class="dh-h2__main">
-              <div class="dh-lottie dh-h2__mascot" aria-hidden>MQ</div>
-              <div class="dh-h2__timer-block">
-                <div class="dh-timer">08:42<small>до конца периода</small></div>
-                <div class="dh-h2__meta">Период #4 · идёт</div>
-              </div>
-              <div class="dh-h2__actions">
-                <button type="button" class="dh-btn dh-btn--icon dh-btn--play">▶</button>
-                <button type="button" class="dh-btn dh-btn--icon dh-btn--pause">⏸</button>
-              </div>
-            </div>
-            <div class="dh-h2__bottom dh-pills">
-              <button type="button" class="dh-pill">Следующий период</button>
-              <button type="button" class="dh-pill dh-pill--badge">События<span class="dh-pill__dot">2</span></button>
-            </div>
-          </header>
-          <div class="lab-phone__body">↓ контент</div>
-        </article>
-        <span class="lab-size">≈ 108 px</span>
-      </section>
-
-      <section class="lab-section">
-        <div class="lab-section__label">
-          <span class="lab-section__id">H3</span>
-          <span class="lab-section__title">Одна строка + progress bar</span>
-        </div>
-        <p class="lab-section__note">Самый плоский: без Lottie в hero. Прогресс периода в центре.</p>
-        <article class="lab-phone">
-          <header class="dh-hero dh-h3">
-            <div class="dh-hero__glow" aria-hidden></div>
-            <div class="dh-h3__row">
-              <div class="dh-h3__period"><span>Период</span>#4</div>
-              <div class="dh-h3__bar-wrap">
-                <div class="dh-h3__bar-label">Прогресс месяца · 42%</div>
-                <div class="dh-progress"><div class="dh-progress__fill"></div></div>
-              </div>
-              <div class="dh-timer" style="font-size:18px">08:42</div>
-              <button type="button" class="dh-btn dh-btn--icon dh-btn--play">▶</button>
-              <button type="button" class="dh-btn dh-btn--icon dh-btn--pause">⏸</button>
-            </div>
-            <div class="dh-h3__bottom dh-pills">
-              <button type="button" class="dh-pill">Следующий период</button>
-              <button type="button" class="dh-pill dh-pill--badge">События<span class="dh-pill__dot">2</span></button>
-            </div>
-          </header>
-          <div class="lab-phone__body">↓ контент</div>
-        </article>
-        <span class="lab-size">≈ 96 px</span>
-      </section>
-
-      <section class="lab-section">
-        <div class="lab-section__label">
-          <span class="lab-section__id">H0</span>
-          <span class="lab-section__title">Текущий prod (справочно)</span>
-        </div>
-        <p class="lab-section__note">Бренд + крупный таймер + колонка кнопок + полный блок Lottie.</p>
-        <article class="lab-phone">
-          <header class="dh-hero dh-h0">
-            <div class="dh-hero__glow" aria-hidden></div>
-            <div class="dh-h0__top">
-              <div>
-                <div class="dh-h0__brand">Money Quest</div>
-                <div class="dh-h0__title">Финансы как игра</div>
-              </div>
-              <div class="dh-chip">Период<strong>#4</strong></div>
-            </div>
-            <div class="dh-h0__mid">
-              <div class="dh-h0__timer-box">
-                <small style="font-size:11px;opacity:.7">Игровое время</small>
-                <div class="dh-timer">08:42</div>
-              </div>
-              <div class="dh-h0__actions">
-                <button type="button" class="dh-btn dh-btn--play">Играть</button>
-                <button type="button" class="dh-btn dh-btn--pause">Пауза</button>
-              </div>
-            </div>
-            <div class="dh-h0__lottie">
-              <div style="font-size:10px;opacity:.65;text-transform:uppercase">Цикл месяца</div>
-              <div class="dh-lottie">Lottie 56px</div>
-            </div>
-            <div class="dh-h0__bottom dh-pills">
-              <button type="button" class="dh-pill">Следующий период</button>
-              <button type="button" class="dh-pill dh-pill--badge">События<span class="dh-pill__dot">2</span></button>
-            </div>
-          </header>
-          <div class="lab-phone__body">↓ контент</div>
-        </article>
-        <span class="lab-size">≈ 240 px — слишком много</span>
       </section>
     </main>
 
-    <script>
-      document.querySelectorAll('[data-theme-btn]').forEach((btn) => {
-        btn.addEventListener('click', () => {
-          const theme = btn.getAttribute('data-theme-btn');
-          document.documentElement.setAttribute('data-theme', theme);
-          document.querySelectorAll('[data-theme-btn]').forEach((b) => b.classList.toggle('is-active', b === btn));
-        });
-      });
-    </script>
+    <template id="footer-template">
+      <nav class="lab-bottom-nav bottom-nav--unified" aria-hidden="true">
+        <div class="bottom-nav__track">
+          <button type="button" class="bottom-nav__cell bottom-nav__cell--active" tabindex="-1">⌂</button>
+          <span class="bottom-nav__sep" aria-hidden="true"></span>
+          <button type="button" class="bottom-nav__cell" tabindex="-1">◎</button>
+          <span class="bottom-nav__sep" aria-hidden="true"></span>
+          <button type="button" class="bottom-nav__cell" tabindex="-1">↗</button>
+          <span class="bottom-nav__sep" aria-hidden="true"></span>
+          <button type="button" class="bottom-nav__cell" tabindex="-1">☰</button>
+        </div>
+      </nav>
+    </template>
+
+    <template id="hero-template">
+      <header class="mqx-hero mqx-hero--compact">
+        <div class="mqx-hero__glow" aria-hidden="true"></div>
+        <div class="mqx-hero-compact__row1">
+          <div class="mqx-hero-compact__logo" aria-hidden="true"><div class="mq-logo">MQ</div></div>
+          <div class="mqx-hero-compact__center">
+            <div class="mqx-hero-compact__timer-row">
+              <span class="mqx-hero-compact__timer">08:42</span>
+              <span class="mqx-hero-compact__progress-meta">Прогресс месяца · 42%</span>
+            </div>
+            <div class="mqx-hero-compact__progress" role="progressbar" aria-valuenow="42">
+              <div class="mqx-hero-compact__progress-fill" style="width: 42%"></div>
+            </div>
+          </div>
+          <div class="mqx-hero-compact__controls">
+            <button type="button" class="mqx-btn mqx-btn--icon mqx-btn--hero-filled" aria-label="Играть">▶</button>
+            <button type="button" class="mqx-btn mqx-btn--icon mqx-btn--hero-outline" aria-label="Пауза">⏸</button>
+          </div>
+        </div>
+        <div class="mqx-hero-compact__row2">
+          <div class="mqx-hero-compact__period">
+            <span class="mqx-hero-compact__period-label">Период</span>
+            <span class="mqx-hero-compact__period-value">#4</span>
+          </div>
+          <div class="mqx-hero-compact__row2-actions">
+            <button type="button" class="mqx-pill mqx-pill--events">События<span class="mqx-pill__badge">2</span></button>
+            <button type="button" class="mqx-pill">Следующий период</button>
+          </div>
+        </div>
+      </header>
+    </template>
+
+    <template id="dash-stack-template">
+      <section class="mqx-finance-static" data-block="period" aria-label="Финансы периода">
+        <h2 class="mqx-finance-static__title">Финансы периода</h2>
+        <div class="mqx-finance-static__chips">
+          <div class="mqx-finance-chip">
+            <div class="mqx-finance-chip__icon mqx-accent--violet" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><path d="M7 10V7a5 5 0 0 1 10 0v3"/><path d="M6 10h12v10a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V10Z"/><path d="M10 14h4"/></svg>
+            </div>
+            <div class="mqx-finance-chip__body">
+              <div class="mqx-finance-chip__label">Баланс</div>
+              <div class="mqx-finance-chip__value">42 150</div>
+            </div>
+          </div>
+          <div class="mqx-finance-chip">
+            <div class="mqx-finance-chip__icon mqx-accent--emerald" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><path d="M12 3 20 7v6c0 5-3.4 8.2-8 9-4.6-.8-8-4-8-9V7l8-4Z"/><path d="M9.5 12.2 11 13.7 14.6 10.1"/></svg>
+            </div>
+            <div class="mqx-finance-chip__body">
+              <div class="mqx-finance-chip__label">Подушка</div>
+              <div class="mqx-finance-chip__value">18 000</div>
+            </div>
+          </div>
+          <div class="mqx-finance-chip">
+            <div class="mqx-finance-chip__icon mqx-accent--sky" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><path d="M4 19V5"/><path d="M4 19h16"/><path d="M7 15l4-4 3 3 5-6"/></svg>
+            </div>
+            <div class="mqx-finance-chip__body">
+              <div class="mqx-finance-chip__label">Поток</div>
+              <div class="mqx-finance-chip__value mqx-finance-chip__value--pos">+3 200</div>
+            </div>
+          </div>
+          <div class="mqx-finance-chip" title="Расходы на жизнь за период">
+            <div class="mqx-finance-chip__icon mqx-accent--amber mqx-accent--expense" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+            </div>
+            <div class="mqx-finance-chip__body">
+              <div class="mqx-finance-chip__label">На жизнь</div>
+              <div class="mqx-finance-chip__value mqx-finance-chip__value--out">9 600</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="mqx-finance-monetka" data-finance-monetka hidden>
+          <button type="button" class="mqx-finance-monetka__close" data-monetka-dismiss aria-label="Закрыть">
+            <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+          </button>
+          <div class="mqx-finance-monetka__inner">
+            <img class="mqx-finance-monetka__img" src="../events/assets/monetka-mascot.png" width="44" height="44" alt="" />
+            <p class="mqx-finance-monetka__text">
+              Какой у тебя <strong>БАЛАНС</strong> карты? <strong>ПОДУШКА</strong> поможет в трудный день! <strong>ПОТОК</strong> — ты в плюсе? Сколько тратишь <strong>НА ЖИЗНЬ</strong>? Давай улучшим ✨
+            </p>
+          </div>
+        </div>
+
+        <button type="button" class="mqx-dash-link">Все финансы →</button>
+      </section>
+
+      <hr class="mqx-dash-divider mqx-dash-divider--inset" data-block="div-a" aria-hidden="true" />
+
+      <section class="mqx-period-actions" data-block="actions" aria-label="Действия периода">
+        <div class="mqx-actions__head">
+          <div>
+            <h2 class="mqx-card__title">Действия периода</h2>
+            <p class="mqx-card__sub">Управляй денежным потоком</p>
+          </div>
+        </div>
+        <div class="mqx-grid2 mqx-grid2--actions">
+          <button type="button" class="mqx-action mqx-action--primary">Зарплата</button>
+          <button type="button" class="mqx-action">В подушку</button>
+          <button type="button" class="mqx-action">Снять</button>
+          <button type="button" class="mqx-action">Инвестировать</button>
+        </div>
+      </section>
+
+      <div class="mqx-level-dash-bleed" data-block="level">
+      <section class="mqx-level-dash" aria-label="Уровень и развитие">
+        <button type="button" class="mqx-level-dash__toggle" data-level-toggle aria-expanded="false">
+          <div class="mqx-level-dash__toggle-inner">
+            <div class="mqx-level-dash__head-row">
+              <span class="mqx-level-dash__title">Уровень 3</span>
+              <span class="mqx-icon-chevron mqx-level-dash__chevron" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none"><path d="M8 10l4 4 4-4" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </span>
+            </div>
+            <div class="mqx-level-dash__xp-pinned">
+              <span class="mqx-level-dash__xp-label">45 / 100 XP</span>
+              <div class="mqx-progress mqx-progress--sm" aria-hidden="true">
+                <div class="mqx-progress__fill mqx-progress__fill--xp" style="width: 45%"></div>
+              </div>
+            </div>
+            <div class="mqx-level-dash__compact-collapsible">
+              <div class="mqx-level-dash__row">
+                <span class="mqx-level-dash__score">1 240 очков</span>
+              </div>
+              <div class="mqx-level-dash__goals-agg">
+                <span class="mqx-level-dash__goals-agg-label">Цели: 2 из 3</span>
+                <div class="mqx-progress mqx-progress--sm" aria-hidden="true">
+                  <div class="mqx-progress__fill" style="width: 67%"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </button>
+        <div class="mqx-level-dash__expand">
+          <p class="mqx-level-dash__hint">Ещё 55 XP до уровня 4 — зарплата и подушка дают опыт.</p>
+          <div class="mqx-level-dash__section" aria-label="Цели">
+            <div class="mqx-level-dash__section-head">
+              <span class="mqx-kicker mqx-kicker--violet">Цели</span>
+              <span class="mqx-badge">2 из 3</span>
+            </div>
+            <ul class="mqx-goal-list">
+              <li class="mqx-goal-item">
+                <div class="mqx-goal-item__row"><span>Подушка ≥ 3×</span><span class="mqx-goal-item__ok">✓</span></div>
+                <div class="mqx-progress"><div class="mqx-progress__fill" style="width: 100%"></div></div>
+              </li>
+              <li class="mqx-goal-item">
+                <div class="mqx-goal-item__row"><span>Поток ≥ 0</span><span class="mqx-goal-item__pending">…</span></div>
+                <div class="mqx-progress"><div class="mqx-progress__fill" style="width: 40%"></div></div>
+              </li>
+              <li class="mqx-goal-item">
+                <div class="mqx-goal-item__row"><span>Уровень 5</span><span class="mqx-goal-item__pending">3 / 5</span></div>
+                <div class="mqx-progress"><div class="mqx-progress__fill" style="width: 60%"></div></div>
+              </li>
+            </ul>
+          </div>
+          <div class="mqx-level-dash__section mqx-level-dash__section--muted">
+            <div class="mqx-level-dash__section-head"><span class="mqx-kicker">Достижения</span></div>
+            <p class="mqx-level-dash__placeholder">Скоро: цепочки и награды за период</p>
+          </div>
+        </div>
+      </section>
+      </div>
+    </template>
+
+    <script src="./lab.js"></script>
   </body>
 </html>

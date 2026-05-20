@@ -1,36 +1,14 @@
-# Dashboard — компактный hero
+# Dashboard — L3 + S5 Unified ★
 
-Запуск: `cd design-lab/dashboard && npx serve .`
+```bash
+cd design-lab/dashboard
+npx serve .
+```
 
-## Проблема (H0)
+Открыть `index.html` — **S5** крупно + S1–S3 для сравнения. **L3 / V0**, **«Длинные суммы»**, тема.
 
-Текущий `mqx-hero` на главной занимает **~240px** из-за:
+См. [`VARIANTS.md`](VARIANTS.md), [`APPROVED.md`](APPROVED.md), [`CONTENT.md`](CONTENT.md).
 
-| Элемент | Вклад в высоту |
-|---------|----------------|
-| Бренд «Money Quest» + слоган | ~50px |
-| Таймер 28px в отдельной плашке + колонка «Играть/Пауза» | ~80px |
-| Блок Lottie с подписью «Цикл месяца» | ~80px |
-| Pills | ~40px |
+## Prod
 
-На TMA это съедает половину экрана до flat-стека D′.
-
-## Варианты
-
-| ID | Идея | Высота | Lottie в hero |
-|----|------|--------|---------------|
-| **H0** | Текущий prod | ~240px | полный блок 56px |
-| **H1 ★** | Command strip: период + таймер + ▶⏸, полоса прогресса, мини-Lottie | ~118px | 48×32 |
-| **H2** | Mascot chip 40px + таймер | ~108px | 40×40 |
-| **H3** | Одна строка, progress bar, без Lottie | ~96px | нет |
-
-## Утверждено: **H3′** (H3 + логотип + период под кнопками)
-
-- База **H3**: одна строка, progress bar, без Lottie в hero.
-- **MqLogo** — левый верхний угол (вместо слогана «Money Quest / Финансы как игра»).
-- **«Период #N»** — справа под ▶⏸, не в левой колонке.
-- Таймер **20px** + метка «Прогресс месяца · N%»; pills снизу.
-
-## Внедрено в prod
-
-`MqxDashboardHero` (`mqx/layout/`), стили `mqx-hero--compact`, `DashboardPremium`.
+L3 в `DashboardPremium`; правки UX (XP при раскрытии, голубая шкала, шеврон-иконка, fit сумм) синхронизируются из lab.

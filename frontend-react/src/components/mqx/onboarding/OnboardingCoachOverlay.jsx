@@ -1,9 +1,9 @@
-import { useLayoutEffect, useState } from 'react';
+import { useLayoutEffect, useRef, useState } from 'react';
 import { MonetkaAvatar } from './MonetkaAvatar';
 import { MqxButton } from '../primitives/MqxButton';
 
 const PAD = 8;
-const DASHBOARD_CONTEXT_ANCHOR = 'dashboard';
+const TARGET_PAD = 10;
 const DEFAULT_BUBBLE_STYLE = { bottom: 24, left: 16, right: 16, maxWidth: 420, margin: '0 auto' };
 
 function clampRectToViewport(rect, pad = PAD) {
@@ -18,33 +18,27 @@ function clampRectToViewport(rect, pad = PAD) {
   return { top, left, width, height };
 }
 
-function getDashboardContextRect(rootEl) {
-  if (!rootEl) return null;
-  const page = rootEl.querySelector(`[data-onboarding-anchor="${DASHBOARD_CONTEXT_ANCHOR}"]`);
-  if (!page) return null;
-  return clampRectToViewport(page.getBoundingClientRect());
-}
-
 function getTargetRect(rootEl, anchor) {
   if (!rootEl || !anchor) return null;
   const el = rootEl.querySelector(`[data-onboarding-anchor="${anchor}"]`);
   if (!el) return null;
-  return clampRectToViewport(el.getBoundingClientRect());
+  return clampRectToViewport(el.getBoundingClientRect(), TARGET_PAD);
 }
 
-function ScrimPanels({ contextHole }) {
-  if (!contextHole) {
+/** Затемнение: «дыра» только на bubble; клики проходят сквозь scrim (pointer-events: none). */
+function ScrimHole({ hole }) {
+  if (!hole) {
     return <div className="mqx-onboarding-scrim mqx-onboarding-scrim--full" aria-hidden />;
   }
 
   return (
     <div
-      className="mqx-onboarding-scrim-hole mqx-onboarding-scrim-hole--dashboard"
+      className="mqx-onboarding-scrim-hole"
       style={{
-        top: contextHole.top,
-        left: contextHole.left,
-        width: contextHole.width,
-        height: contextHole.height,
+        top: hole.top,
+        left: hole.left,
+        width: hole.width,
+        height: hole.height,
       }}
       aria-hidden
     />
@@ -52,8 +46,9 @@ function ScrimPanels({ contextHole }) {
 }
 
 /**
- * Spotlight + пузырь Монетки (фаза bubble). Практика 10 с — оверлей снимается в GameOnboardingLayer.
- * Затемнение с «окном» на весь дашборд; кольцо — на целевой элемент шага.
+ * Spotlight + пузырь Монетки (фаза bubble).
+ * Практика — только подсказка сверху, без scrim.
+ * Подсветка: пузырь (дыра в scrim) + кольцо на целевом anchor (если есть).
  */
 export function OnboardingCoachOverlay({
   open,
@@ -66,13 +61,20 @@ export function OnboardingCoachOverlay({
   finishLabel = 'Начать игру',
   variant = 'bubble',
 }) {
-  const [contextHole, setContextHole] = useState(null);
+  const bubbleWrapRef = useRef(null);
+  const [bubbleHole, setBubbleHole] = useState(null);
   const [targetHole, setTargetHole] = useState(null);
   const [bubbleStyle, setBubbleStyle] = useState(DEFAULT_BUBBLE_STYLE);
 
+  const isPractice = variant === 'practice';
+  const continueLabel =
+    step.gate === 'finish' ? finishLabel : step.gate === 'practice' ? 'Понятно' : null;
+  const skipLabel =
+    skipPressCount === 1 ? 'Пропустить (ещё раз — выйти из обучения)' : 'Пропустить шаг';
+
   useLayoutEffect(() => {
     if (!open || !rootRef?.current) {
-      setContextHole(null);
+      setBubbleHole(null);
       setTargetHole(null);
       return undefined;
     }
@@ -80,20 +82,24 @@ export function OnboardingCoachOverlay({
     const root = rootRef.current;
 
     const measure = () => {
-      const dashboardRect = getDashboardContextRect(root);
       const targetRect = getTargetRect(root, anchor);
-      setContextHole(dashboardRect);
       setTargetHole(targetRect);
 
-      const bubbleAnchor = targetRect ?? dashboardRect;
-      if (!bubbleAnchor) {
+      const bubbleEl = bubbleWrapRef.current;
+      const bubbleRect = bubbleEl
+        ? clampRectToViewport(bubbleEl.getBoundingClientRect(), 6)
+        : null;
+      setBubbleHole(bubbleRect);
+
+      const layoutAnchor = targetRect ?? bubbleRect;
+      if (!layoutAnchor) {
         setBubbleStyle(DEFAULT_BUBBLE_STYLE);
         return;
       }
-      const preferBelow = bubbleAnchor.top + bubbleAnchor.height + 220 < window.innerHeight;
+      const preferBelow = layoutAnchor.top + layoutAnchor.height + 220 < window.innerHeight;
       if (preferBelow) {
         setBubbleStyle({
-          top: bubbleAnchor.top + bubbleAnchor.height + 12,
+          top: layoutAnchor.top + layoutAnchor.height + 12,
           left: 16,
           right: 16,
           maxWidth: 420,
@@ -101,7 +107,7 @@ export function OnboardingCoachOverlay({
         });
       } else {
         setBubbleStyle({
-          bottom: Math.max(16, window.innerHeight - bubbleAnchor.top + 12),
+          bottom: Math.max(16, window.innerHeight - layoutAnchor.top + 12),
           left: 16,
           right: 16,
           maxWidth: 420,
@@ -111,13 +117,24 @@ export function OnboardingCoachOverlay({
     };
 
     measure();
+    const raf = requestAnimationFrame(measure);
     window.addEventListener('resize', measure);
     window.addEventListener('scroll', measure, true);
+
+    const bubbleEl = bubbleWrapRef.current;
+    const ro =
+      bubbleEl && typeof ResizeObserver !== 'undefined'
+        ? new ResizeObserver(() => measure())
+        : null;
+    ro?.observe(bubbleEl);
+
     return () => {
+      cancelAnimationFrame(raf);
       window.removeEventListener('resize', measure);
       window.removeEventListener('scroll', measure, true);
+      ro?.disconnect();
     };
-  }, [open, anchor, rootRef]);
+  }, [open, anchor, rootRef, step?.id, isPractice]);
 
   useLayoutEffect(() => {
     if (!open || !anchor || !rootRef?.current) return;
@@ -127,11 +144,7 @@ export function OnboardingCoachOverlay({
 
   if (!open || !step) return null;
 
-  const isPractice = variant === 'practice';
-  const continueLabel =
-    step.gate === 'finish' ? finishLabel : step.gate === 'practice' ? 'Понятно' : null;
-  const skipLabel =
-    skipPressCount === 1 ? 'Пропустить (ещё раз — выйти из обучения)' : 'Пропустить шаг';
+  const scrimHole = isPractice ? null : bubbleHole;
 
   return (
     <div
@@ -141,9 +154,9 @@ export function OnboardingCoachOverlay({
       aria-labelledby={isPractice ? undefined : 'mqx-onboarding-title'}
       aria-label={isPractice ? 'Практика: попробуй элементы интерфейса' : undefined}
     >
-      <ScrimPanels contextHole={contextHole} />
+      {!isPractice ? <ScrimHole hole={scrimHole} /> : null}
 
-      {targetHole ? (
+      {!isPractice && targetHole ? (
         <div
           className="mqx-onboarding-spotlight-ring"
           style={{
@@ -164,7 +177,7 @@ export function OnboardingCoachOverlay({
       ) : null}
 
       {!isPractice ? (
-        <div className="mqx-onboarding-bubble-wrap" style={bubbleStyle}>
+        <div ref={bubbleWrapRef} className="mqx-onboarding-bubble-wrap" style={bubbleStyle}>
           <article className="mqx-onboarding-bubble" aria-labelledby="mqx-onboarding-title">
             <button
               type="button"

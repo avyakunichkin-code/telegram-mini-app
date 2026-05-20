@@ -17,12 +17,15 @@ function stepIndexFromId(stepId) {
 
 /**
  * Guided onboarding на GameScreen: coach + синхронизация с API.
+ * @param {(state: { visible: boolean, lockTabs: boolean }) => void} [onOverlayStateChange]
  */
 export function GameOnboardingLayer({
   overview,
   periodStatus,
   rootRef,
   refreshOverview,
+  onOverlayStateChange,
+  /** @deprecated use onOverlayStateChange */
   onOverlayVisibleChange,
 }) {
   const hydratedRef = useRef(false);
@@ -53,12 +56,35 @@ export function GameOnboardingLayer({
     const nextSkip = coach.skipPressCount + 1;
     handleSkip();
     if (nextSkip >= 2) {
-      // brief_done пишет onComplete из finishAll — здесь только skip_count
       persist({ onboarding_skip_count: 2 });
       return;
     }
     persist({ onboarding_skip_count: 1 });
   }, [coach.skipPressCount, handleSkip, persist]);
+
+  const portalOpen =
+    needsOnboarding &&
+    coach.showCoach &&
+    coach.step &&
+    (coach.showOverlay || coach.phase === 'practice');
+
+  const lockTabs =
+    needsOnboarding &&
+    coach.showOverlay &&
+    coach.step?.gate !== 'action';
+
+  useEffect(() => {
+    const state = { visible: !!portalOpen, lockTabs: !!lockTabs };
+    onOverlayStateChange?.(state);
+    onOverlayVisibleChange?.(state.visible);
+  }, [portalOpen, lockTabs, onOverlayStateChange, onOverlayVisibleChange]);
+
+  useEffect(() => {
+    if (needsOnboarding) return undefined;
+    onOverlayStateChange?.({ visible: false, lockTabs: false });
+    onOverlayVisibleChange?.(false);
+    return undefined;
+  }, [needsOnboarding, onOverlayStateChange, onOverlayVisibleChange]);
 
   useEffect(() => {
     if (!needsOnboarding) {
@@ -82,10 +108,6 @@ export function GameOnboardingLayer({
   }, [needsOnboarding, overview?.onboarding_step, periodStatus, restoreStepIndex]);
 
   useEffect(() => {
-    onOverlayVisibleChange?.(!!needsOnboarding && coach.showOverlay);
-  }, [needsOnboarding, coach.showOverlay, onOverlayVisibleChange]);
-
-  useEffect(() => {
     if (!needsOnboarding || !hydratedRef.current || !coach.step?.id) return;
     if (lastPersistedStepRef.current === coach.step.id) return;
     lastPersistedStepRef.current = coach.step.id;
@@ -106,13 +128,14 @@ export function GameOnboardingLayer({
     markCushionDone();
   }, [needsOnboarding, periodStatus?.safety_fund_contribution, markCushionDone]);
 
-  if (!needsOnboarding || !coach.showOverlay || !coach.step) {
+  if (!portalOpen) {
     return null;
   }
 
   return createPortal(
     <OnboardingCoachOverlay
       open
+      variant={coach.phase === 'practice' ? 'practice' : 'bubble'}
       step={coach.step}
       skipPressCount={coach.skipPressCount}
       rootRef={rootRef}

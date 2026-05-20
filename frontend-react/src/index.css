@@ -164,7 +164,7 @@ body {
 }
 
 /* Кнопки: всегда с рамкой; filled — заливка, outline/plain — остаются библиотечными */
-#root button:not(.tma-nav-icon-btn):not(.events-carousel-dot):not(.events-carousel-arrow):not(.events-overlay-close):not(.mqx-events-choice) {
+#root button:not(.tma-nav-icon-btn):not(.mqx-btn):not(.bottom-nav__cell):not(.mqx-dash-link):not(.mqx-finance-monetka__close):not(.mqx-action):not(.mqx-level-dash__toggle):not(.events-carousel-dot):not(.events-carousel-arrow):not(.events-overlay-close):not(.mqx-events-choice) {
   box-shadow: 0 0 0 1px var(--tgui--outline) inset;
 }
 
@@ -273,18 +273,18 @@ body {
 
 /* Hover/глубина для filled-кнопок (не трогаем outline/plain) */
 @media (hover: hover) {
-  #root button:not(.tma-nav-icon-btn):not(.events-carousel-dot):not(.events-carousel-arrow):not(.events-overlay-close):not(.mqx-events-choice) {
+  #root button:not(.tma-nav-icon-btn):not(.mqx-btn):not(.bottom-nav__cell):not(.mqx-dash-link):not(.mqx-finance-monetka__close):not(.mqx-action):not(.mqx-level-dash__toggle):not(.events-carousel-dot):not(.events-carousel-arrow):not(.events-overlay-close):not(.mqx-events-choice) {
     transition:
       background-color 0.14s ease,
       box-shadow 0.14s ease,
       transform 0.12s cubic-bezier(0.22, 1, 0.32, 1);
   }
-  #root button:not(.tma-nav-icon-btn):not(.events-carousel-dot):not(.events-carousel-arrow):not(.events-overlay-close):not(.mqx-events-choice):active:not(:disabled) {
+  #root button:not(.tma-nav-icon-btn):not(.mqx-btn):not(.bottom-nav__cell):not(.mqx-dash-link):not(.mqx-finance-monetka__close):not(.mqx-action):not(.mqx-level-dash__toggle):not(.events-carousel-dot):not(.events-carousel-arrow):not(.events-overlay-close):not(.mqx-events-choice):active:not(:disabled) {
     transform: scale(0.985);
   }
   /* filled у telegram-ui использует var(--tgui--button_color) — затемняем только его */
-  #root button:not(.tma-nav-icon-btn):not(.events-carousel-dot):not(.events-carousel-arrow):not(.events-overlay-close):not(.mqx-events-choice)[style*='--tgui--button_color'],
-  #root button:not(.tma-nav-icon-btn):not(.events-carousel-dot):not(.events-carousel-arrow):not(.events-overlay-close):not(.mqx-events-choice)[class*='tgui-']:where(:not(:disabled)) {
+  #root button:not(.tma-nav-icon-btn):not(.mqx-btn):not(.bottom-nav__cell):not(.mqx-dash-link):not(.mqx-finance-monetka__close):not(.mqx-action):not(.mqx-level-dash__toggle):not(.events-carousel-dot):not(.events-carousel-arrow):not(.events-overlay-close):not(.mqx-events-choice)[style*='--tgui--button_color'],
+  #root button:not(.tma-nav-icon-btn):not(.mqx-btn):not(.bottom-nav__cell):not(.mqx-dash-link):not(.mqx-finance-monetka__close):not(.mqx-action):not(.mqx-level-dash__toggle):not(.events-carousel-dot):not(.events-carousel-arrow):not(.events-overlay-close):not(.mqx-events-choice)[class*='tgui-']:where(:not(:disabled)) {
     /* оставляем библиотечные состояния; глубина достигается рамкой и лёгким transform */
   }
 }
@@ -866,6 +866,24 @@ body {
   place-items: center;
   font-size: 14px;
   line-height: 1;
+  box-shadow: none;
+}
+
+.mqx-hero-icon-pause {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  width: 12px;
+  height: 12px;
+}
+
+.mqx-hero-icon-pause > span {
+  display: block;
+  width: 3px;
+  height: 12px;
+  border-radius: 1px;
+  background: currentColor;
 }
 
 .mqx-hero-compact__period {
@@ -937,6 +955,210 @@ body {
 
 .mqx-content--dash-flat {
   gap: 0;
+}
+
+/* —— Dashboard unified (L3 + S5): сплошное тело hero→footer, inset-линии —— */
+.mq-game-shell .mq-game-shell__main {
+  padding: 0;
+}
+
+.mq-game-shell:has(.mqx-tab-page--dash-unified) {
+  overflow-x: hidden;
+  overflow-y: hidden;
+}
+
+.mq-game-shell:has(.mqx-tab-page--dash-unified) .mq-game-shell__main {
+  padding: 0;
+  background: transparent;
+  overflow-x: hidden;
+  overflow-y: hidden;
+}
+
+.mq-game-shell:has(.mqx-tab-page--dash-unified) .mqx-frame,
+.mq-game-shell:has(.mqx-tab-page--dash-unified) .mq-enter-item--fill {
+  overflow-x: hidden;
+  overflow-y: hidden;
+}
+
+.mq-game-shell .mqx-frame {
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+  background: transparent;
+}
+
+.mqx-tab-page--dash-unified {
+  --mqx-dash-inline-pad: 14px;
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 0%;
+  min-height: 0;
+  background: transparent;
+  overflow-x: hidden;
+  overflow-y: hidden;
+}
+
+.mqx-tab-page--dash-unified .mqx-hero.mqx-hero--compact {
+  flex: 0 0 auto;
+  border-radius: 0;
+}
+
+/* Единый фон контента: еле заметный градиент, без «коробки» */
+.mqx-tab-page--dash-unified .mqx-tab-page__scroll.mqx-content {
+  flex: 1 1 0%;
+  min-height: 0;
+  padding: 0 0 8px;
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior-x: none;
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--mq-violet, #6d28d9) 4%, var(--tg-theme-bg-color, #fff)) 0%,
+    var(--tg-theme-bg-color, #fff) 32%,
+    color-mix(in srgb, var(--mq-sky, #0ea5e9) 3%, var(--tg-theme-bg-color, #fff)) 100%
+  );
+}
+
+.mqx-dash-stack--unified,
+.mqx-tab-page--dash-unified .mqx-dash-stack {
+  display: flex;
+  flex-direction: column;
+  border: none;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  outline: none;
+  overflow: visible;
+}
+
+.mqx-tab-page--dash-unified .mqx-finance-static,
+.mqx-tab-page--dash-unified .mqx-period-actions {
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  outline: none;
+}
+
+.mqx-tab-page--dash-unified .mqx-finance-chip {
+  border: none;
+  background: color-mix(in srgb, var(--mqx-ink) 4%, transparent);
+}
+
+.mqx-tab-page--dash-unified .mqx-finance-chip__icon {
+  border: none;
+}
+
+.mqx-tab-page--dash-unified .mqx-finance-monetka {
+  border: none;
+  box-shadow: none;
+  margin-left: 14px;
+  margin-right: 14px;
+  background: color-mix(in srgb, var(--mq-violet, #7c3aed) 5%, transparent);
+}
+
+.mqx-tab-page--dash-unified .mqx-period-actions .mqx-action {
+  border: 1px solid color-mix(in srgb, var(--mqx-ink) 10%, transparent);
+  box-shadow: 0 1px 4px color-mix(in srgb, var(--mqx-ink) 7%, transparent);
+}
+
+.mqx-tab-page--dash-unified .mqx-period-actions .mqx-action:not(.mqx-action--primary) {
+  background: color-mix(in srgb, var(--mqx-ink) 5%, transparent);
+}
+
+.mqx-tab-page--dash-unified .mqx-period-actions .mqx-action:not(.mqx-action--primary):hover {
+  background: color-mix(in srgb, var(--mqx-ink) 8%, transparent);
+  border-color: color-mix(in srgb, var(--mqx-ink) 12%, transparent);
+}
+
+.mqx-tab-page--dash-unified .mqx-period-actions .mqx-action--primary {
+  border-color: transparent;
+  box-shadow:
+    0 2px 8px color-mix(in srgb, var(--mq-violet, #7c3aed) 22%, transparent),
+    0 4px 14px color-mix(in srgb, var(--mq-violet, #7c3aed) 28%, transparent);
+}
+
+/* Фон уровня на ширину стека; контент — только padding-inline (без отрицательных margin) */
+.mqx-tab-page--dash-unified .mqx-level-dash-bleed,
+.mqx-dash-stack--unified .mqx-level-dash-bleed {
+  position: relative;
+  width: 100%;
+  margin: 0;
+  padding-inline: var(--mqx-dash-inline-pad, 14px);
+  box-sizing: border-box;
+  background: transparent;
+}
+
+.mqx-tab-page--dash-unified .mqx-level-dash-bleed::before,
+.mqx-dash-stack--unified .mqx-level-dash-bleed::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--mq-sky, #0ea5e9) 10%, transparent) 0%,
+    color-mix(in srgb, var(--mq-violet, #7c3aed) 3%, transparent) 55%,
+    transparent 100%
+  );
+}
+
+.mqx-tab-page--dash-unified .mqx-level-dash-bleed > .mqx-level-dash,
+.mqx-dash-stack--unified .mqx-level-dash-bleed > .mqx-level-dash {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 100%;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+.mqx-tab-page--dash-unified .mqx-level-dash {
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+  outline: none;
+  background: transparent;
+  overflow: visible;
+  color: var(--mqx-ink);
+}
+
+.mqx-tab-page--dash-unified .mqx-level-dash::before {
+  display: none;
+}
+
+.mqx-tab-page--dash-unified .mqx-level-dash__toggle {
+  padding: 12px 0;
+  box-sizing: border-box;
+  background: transparent;
+}
+
+.mqx-tab-page--dash-unified .mqx-level-dash__expand {
+  padding: 0 0 14px;
+  box-sizing: border-box;
+  border: none;
+  border-top: none;
+  background: transparent;
+  box-shadow: none;
+}
+
+.mqx-tab-page--dash-unified .mqx-level-dash .mqx-progress {
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+.mqx-tab-page--dash-unified .mqx-dash-safety-panel {
+  padding: 0 var(--mqx-dash-inline-pad, 14px) 12px;
+}
+
+.mqx-tab-page--dash-unified .mqx-dash-safety-panel .mqx-invest-form {
+  margin-top: 0;
+}
+
+.mqx-tab-page--dash-unified .mqx-level-dash__section {
+  border-top: none;
+  padding-top: 10px;
 }
 
 /* —— Dash stack D′ (flat, dividers, H2 + period + actions) —— */
@@ -1048,6 +1270,357 @@ body {
 
 .mqx-level-block__bar-fill.mqx-bar--rose {
   background: linear-gradient(90deg, #f43f5e, #fb7185);
+}
+
+/* Finance period — static L3 */
+.mqx-finance-static {
+  padding: 12px 14px 14px;
+}
+
+.mqx-finance-static__title {
+  margin: 0 0 10px;
+  font-size: 14px;
+  font-weight: 800;
+}
+
+.mqx-finance-static__chips {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.mqx-finance-chip {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px;
+  border-radius: 12px;
+  background: color-mix(in srgb, var(--mqx-ink) 5%, transparent);
+  min-width: 0;
+}
+
+.mqx-finance-chip__icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.mqx-finance-chip__icon svg {
+  width: 18px;
+  height: 18px;
+  stroke: rgba(255, 255, 255, 0.92);
+  fill: none;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.mqx-finance-chip__body {
+  min-width: 0;
+  flex: 1;
+}
+
+.mqx-finance-chip__label {
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: color-mix(in srgb, var(--mqx-ink) 55%, transparent);
+}
+
+.mqx-finance-chip__value {
+  font-size: 13px;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  max-width: 100%;
+  line-height: 1.2;
+}
+
+.mqx-finance-chip__value--pos {
+  color: var(--mq-emerald, #10b981);
+}
+
+.mqx-finance-chip__value--out {
+  color: color-mix(in srgb, var(--mq-amber, #f59e0b) 85%, var(--mqx-ink));
+}
+
+.mqx-accent--expense svg path:last-child {
+  opacity: 0.85;
+}
+
+.mqx-finance-monetka {
+  position: relative;
+  margin: 10px 0 0;
+  padding: 8px 32px 8px 8px;
+  border-radius: 12px;
+  background: color-mix(in srgb, var(--mq-violet, #7c3aed) 6%, var(--mqx-glass-soft));
+  border: none;
+}
+
+.mqx-finance-monetka__close {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  width: 28px;
+  height: 28px;
+  margin: 0;
+  padding: 0;
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+  outline: none;
+  background: transparent;
+  color: color-mix(in srgb, var(--mqx-ink) 42%, transparent);
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+}
+
+.mqx-finance-monetka__inner {
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+}
+
+.mqx-finance-monetka__img {
+  width: 44px;
+  height: 44px;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
+.mqx-finance-monetka__text {
+  margin: 0;
+  font-size: 11px;
+  line-height: 1.45;
+  color: var(--mqx-ink);
+}
+
+.mqx-finance-monetka__text strong {
+  font-weight: 800;
+  letter-spacing: 0.02em;
+}
+
+.mqx-link--block {
+  display: block;
+  width: 100%;
+  margin-top: 10px;
+  text-align: center;
+}
+
+.mqx-dash-link {
+  display: block;
+  width: 100%;
+  margin-top: 10px;
+  padding: 0;
+  border: none;
+  box-shadow: none;
+  outline: none;
+  background: none;
+  font: inherit;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--mq-violet, #7c3aed);
+  text-align: center;
+  cursor: pointer;
+}
+
+.mqx-dash-link:hover {
+  text-decoration: underline;
+}
+
+/* Level dash accordion — L3 U-B */
+.mqx-level-dash {
+  border-radius: 14px;
+  overflow: hidden;
+  border: none;
+  background: color-mix(in srgb, var(--mq-sky, #0ea5e9) 6%, var(--mqx-glass-soft));
+}
+
+.mqx-tab-page--dash-unified .mqx-level-dash,
+.mqx-dash-stack--unified .mqx-level-dash {
+  border-radius: 0;
+  background: transparent;
+  overflow: visible;
+}
+
+.mqx-level-dash__toggle {
+  width: 100%;
+  margin: 0;
+  border: none;
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--mq-sky, #0ea5e9) 12%, var(--mqx-glass-soft)),
+    var(--mqx-glass-soft)
+  );
+  padding: 12px 14px;
+  text-align: left;
+  cursor: pointer;
+  color: inherit;
+  font: inherit;
+}
+
+/* Inset задаёт bleed; toggle/expand — без горизонтального padding */
+.mqx-level-dash-bleed .mqx-level-dash__toggle {
+  padding: 12px 0;
+  margin: 0;
+  background: transparent;
+}
+
+.mqx-level-dash-bleed .mqx-level-dash__expand {
+  padding: 0 0 14px;
+  margin: 0;
+}
+
+.mqx-level-dash__toggle:focus-visible {
+  outline: 2px solid var(--mq-violet, #7c3aed);
+  outline-offset: -2px;
+}
+
+.mqx-level-dash__toggle-inner {
+  min-width: 0;
+}
+
+.mqx-level-dash__head-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+}
+
+.mqx-level-dash__title {
+  font-size: 14px;
+  font-weight: 800;
+}
+
+.mqx-icon-chevron {
+  flex-shrink: 0;
+  width: 22px;
+  height: 22px;
+  display: grid;
+  place-items: center;
+  color: var(--mq-violet-deep, #5b21b6);
+  background: none;
+  border: none;
+  transition: transform 0.2s ease;
+}
+
+.mqx-icon-chevron svg {
+  width: 20px;
+  height: 20px;
+  display: block;
+}
+
+.mqx-level-dash--expanded .mqx-icon-chevron {
+  transform: rotate(180deg);
+}
+
+.mqx-level-dash__xp-pinned {
+  margin-top: 8px;
+}
+
+.mqx-level-dash__compact-collapsible {
+  margin-top: 6px;
+}
+
+.mqx-level-dash--expanded .mqx-level-dash__compact-collapsible {
+  display: none;
+}
+
+.mqx-level-dash__row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.mqx-level-dash__score {
+  font-size: 12px;
+  font-weight: 700;
+  color: color-mix(in srgb, var(--mqx-ink) 65%, transparent);
+}
+
+.mqx-level-dash__xp-line,
+.mqx-level-dash__goals-agg {
+  margin-top: 8px;
+}
+
+.mqx-level-dash__xp-label,
+.mqx-level-dash__goals-agg-label {
+  display: block;
+  font-size: 11px;
+  font-weight: 600;
+  color: color-mix(in srgb, var(--mqx-ink) 60%, transparent);
+  margin-bottom: 4px;
+}
+
+.mqx-progress--sm {
+  height: 4px;
+}
+
+.mqx-progress--sm .mqx-progress__fill {
+  border-radius: 2px;
+}
+
+.mqx-level-dash__expand {
+  padding: 0 14px 14px;
+  border-top: 1px solid color-mix(in srgb, var(--mqx-ink) 8%, transparent);
+  background: var(--mqx-glass-soft);
+}
+
+.mqx-tab-page--dash-unified .mqx-level-dash__toggle,
+.mqx-dash-stack--unified .mqx-level-dash__toggle {
+  background: transparent;
+}
+
+.mqx-tab-page--dash-unified .mqx-level-dash__expand,
+.mqx-dash-stack--unified .mqx-level-dash__expand {
+  border-top: none;
+  background: transparent;
+}
+
+.mqx-level-dash__section {
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid color-mix(in srgb, var(--mqx-ink) 7%, transparent);
+}
+
+.mqx-level-dash__section-title {
+  margin: 0 0 6px;
+  font-size: 12px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: color-mix(in srgb, var(--mqx-ink) 55%, transparent);
+}
+
+.mqx-level-dash__hint {
+  margin: 0;
+  font-size: 11px;
+  color: color-mix(in srgb, var(--mqx-ink) 60%, transparent);
+}
+
+.mqx-level-dash__hint--muted {
+  margin-top: 10px;
+}
+
+/* Unified: inset на bleed; перебивает базовый padding toggle 12px 14px */
+.mqx-tab-page--dash-unified .mqx-level-dash-bleed .mqx-level-dash__toggle,
+.mqx-dash-stack--unified .mqx-level-dash-bleed .mqx-level-dash__toggle {
+  padding: 12px 0;
+  background: transparent;
+}
+
+.mqx-tab-page--dash-unified .mqx-level-dash-bleed .mqx-level-dash__expand,
+.mqx-dash-stack--unified .mqx-level-dash-bleed .mqx-level-dash__expand {
+  padding: 0 0 14px;
+  border-top: none;
+  background: transparent;
+  box-shadow: none;
 }
 
 .mqx-period-dash__toggle {
@@ -2419,15 +2992,16 @@ body {
 .mqx-onboarding-root {
   position: fixed;
   inset: 0;
-  z-index: 11000;
+  z-index: 480;
   pointer-events: none;
   isolation: isolate;
 }
 
 .mqx-onboarding-scrim {
   position: fixed;
-  z-index: 11005;
-  pointer-events: auto;
+  inset: 0;
+  z-index: 481;
+  pointer-events: none;
   background: rgba(8, 10, 22, 0.74);
   background: var(--mqx-onboarding-scrim-bg, rgba(8, 10, 22, 0.74));
   backdrop-filter: blur(2px);
@@ -2438,24 +3012,20 @@ body {
   inset: 0;
 }
 
-/* Spotlight: одна «дыра» + box-shadow вместо четырёх панелей (надёжнее в TMA) */
+/* «Дыра» в затемнении (box-shadow); клики сквозь scrim — только пузырь перехватывает */
 .mqx-onboarding-scrim-hole {
   position: fixed;
-  z-index: 11005;
+  z-index: 482;
   pointer-events: none;
-  border-radius: 14px;
+  border-radius: 18px;
   background: transparent;
   box-shadow: 0 0 0 9999px rgba(8, 10, 22, 0.74);
   box-shadow: 0 0 0 9999px var(--mqx-onboarding-scrim-bg, rgba(8, 10, 22, 0.74));
 }
 
-.mqx-onboarding-scrim-hole--dashboard {
-  border-radius: 18px;
-}
-
 .mqx-onboarding-spotlight-ring {
   position: fixed;
-  z-index: 11015;
+  z-index: 483;
   border-radius: 14px;
   border: 2px solid rgba(167, 139, 250, 0.95);
   box-shadow:
@@ -2469,7 +3039,7 @@ body {
   top: 12px;
   left: 50%;
   transform: translateX(-50%);
-  z-index: 11025;
+  z-index: 485;
   display: flex;
   align-items: center;
   gap: 8px;
@@ -2499,8 +3069,14 @@ body {
 
 .mqx-onboarding-bubble-wrap {
   position: fixed;
-  z-index: 11020;
+  z-index: 484;
   pointer-events: auto;
+}
+
+/* Модалки (telegram-ui) — выше coach-оверлея (480) */
+body [class*='Modal'],
+body [class*='modal'] {
+  z-index: 600;
 }
 
 .mqx-onboarding-bubble {
@@ -3368,6 +3944,10 @@ body {
   height: 100%;
   border-radius: 999px;
   background: linear-gradient(90deg, #059669 0%, #34d399 52%, #2dd4bf 100%);
+}
+
+.mqx-progress__fill.mqx-progress__fill--xp {
+  background: linear-gradient(90deg, var(--mq-xp-sky, #38bdf8), var(--mq-xp-accent, #818cf8));
 }
 
 .mqx-block__head {
@@ -4659,6 +5239,76 @@ code {
 .bottom-nav--icons {
   padding-top: 6px;
   padding-bottom: calc(8px + env(safe-area-inset-bottom, 0px));
+}
+
+/* S5: разделители между вкладками, активная — заливка всей ячейки (без «пилюли») */
+.bottom-nav--unified {
+  padding: 0 0 env(safe-area-inset-bottom, 0px);
+  gap: 0;
+  background: var(--tg-theme-bg-color, #fff);
+  backdrop-filter: none;
+  border-top: 1px solid color-mix(in srgb, var(--mqx-ink, #0f1115) 8%, transparent);
+  box-shadow: none;
+}
+
+.bottom-nav--unified .bottom-nav__track {
+  display: flex;
+  align-items: stretch;
+  width: 100%;
+  min-height: 52px;
+}
+
+.bottom-nav--unified .bottom-nav__sep {
+  flex: 0 0 1px;
+  width: 1px;
+  margin: 0;
+  align-self: stretch;
+  background: color-mix(in srgb, var(--mqx-ink, #0f1115) 10%, transparent);
+  pointer-events: none;
+}
+
+.bottom-nav--unified .bottom-nav__cell {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  padding: 0;
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+  background: transparent;
+  color: color-mix(in srgb, var(--mqx-ink, #0f1115) 42%, transparent);
+  cursor: pointer;
+  transition:
+    background 0.15s ease,
+    color 0.15s ease,
+    transform 0.08s ease;
+}
+
+.bottom-nav--unified .bottom-nav__cell:active:not(:disabled) {
+  transform: scale(0.97);
+}
+
+.bottom-nav--unified .bottom-nav__cell--active {
+  color: #fff;
+  background: linear-gradient(165deg, var(--mq-violet, #7c3aed), var(--mq-violet-deep, #5b21b6));
+  box-shadow: none;
+}
+
+.bottom-nav--unified .bottom-nav__cell--active svg {
+  color: #fff;
+}
+
+.bottom-nav--unified .bottom-nav__cell:disabled {
+  opacity: 0.32;
+  cursor: not-allowed;
+}
+
+.bottom-nav--unified .bottom-nav__cell:focus-visible {
+  outline: 2px solid var(--mq-accent-link, var(--mq-violet, #7c3aed));
+  outline-offset: 1px;
 }
 
 .tma-nav-icon-btn {
@@ -6349,20 +6999,20 @@ button.mqx-events-choice:active:not(:disabled) {
 }
 
 /* Кнопки в контентной зоне: мягкая глубина (нижнее меню и оверлеи не трогаем) */
-#root button:not(.tma-nav-icon-btn):not(.events-carousel-dot):not(.events-carousel-arrow):not(
+#root button:not(.tma-nav-icon-btn):not(.mqx-btn):not(.bottom-nav__cell):not(.mqx-dash-link):not(.mqx-finance-monetka__close):not(.mqx-action):not(.mqx-level-dash__toggle):not(.events-carousel-dot):not(.events-carousel-arrow):not(
     .events-overlay-close
   ):not(.mqx-events-choice):focus-visible {
   outline: 2px solid color-mix(in srgb, var(--mq-accent-link), transparent 22%);
   outline-offset: 2px;
 }
 
-#root button:not(.tma-nav-icon-btn):not(.events-carousel-dot):not(.events-carousel-arrow):not(
+#root button:not(.tma-nav-icon-btn):not(.mqx-btn):not(.bottom-nav__cell):not(.mqx-dash-link):not(.mqx-finance-monetka__close):not(.mqx-action):not(.mqx-level-dash__toggle):not(.events-carousel-dot):not(.events-carousel-arrow):not(
     .events-overlay-close
   ):not(.mqx-events-choice):active:not(:disabled) {
   transform: scale(0.985);
 }
 
-#root button:not(.tma-nav-icon-btn):not(.events-carousel-dot):not(.events-carousel-arrow):not(
+#root button:not(.tma-nav-icon-btn):not(.mqx-btn):not(.bottom-nav__cell):not(.mqx-dash-link):not(.mqx-finance-monetka__close):not(.mqx-action):not(.mqx-level-dash__toggle):not(.events-carousel-dot):not(.events-carousel-arrow):not(
     .events-overlay-close
   ):not(.mqx-events-choice):not(:disabled) {
   transition:
@@ -6407,22 +7057,27 @@ button.mqx-events-choice:active:not(:disabled) {
   }
 }
 
-.bottom-nav button.tma-nav-icon-btn svg {
+.bottom-nav button.tma-nav-icon-btn svg,
+.bottom-nav--unified .bottom-nav__cell svg {
   transition:
     transform 0.28s cubic-bezier(0.22, 1, 0.32, 1),
-    opacity 0.22s ease;
+    opacity 0.22s ease,
+    color 0.15s ease;
 }
 
-.tma-nav-icon-btn:active svg {
+.tma-nav-icon-btn:active svg,
+.bottom-nav--unified .bottom-nav__cell:active:not(:disabled) svg {
   transform: scale(0.92);
 }
 
-.tma-nav-icon-btn--active svg {
+.tma-nav-icon-btn--active svg,
+.bottom-nav--unified .bottom-nav__cell--active svg {
   transform: translateY(-1px);
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .bottom-nav button.tma-nav-icon-btn svg {
+  .bottom-nav button.tma-nav-icon-btn svg,
+  .bottom-nav--unified .bottom-nav__cell svg {
     transition: none;
   }
 }
@@ -6550,4 +7205,31 @@ button.mqx-events-choice:active:not(:disabled) {
 .admin-watchtower__error {
   padding: 12px;
   margin-bottom: 12px;
+}
+
+/* Level unified: финальный слой — без margin-inline −14px, контент в колонке 14px */
+.mqx-dash-stack--unified .mqx-level-dash-bleed,
+.mqx-tab-page--dash-unified .mqx-level-dash-bleed {
+  width: 100%;
+  max-width: 100%;
+  margin: 0;
+  padding-inline: var(--mqx-dash-inline-pad, 14px);
+}
+
+.mqx-dash-stack--unified .mqx-level-dash-bleed .mqx-level-dash__toggle,
+.mqx-tab-page--dash-unified .mqx-level-dash-bleed .mqx-level-dash__toggle,
+.mqx-dash-stack--unified .mqx-level-dash-bleed .mqx-level-dash__expand,
+.mqx-tab-page--dash-unified .mqx-level-dash-bleed .mqx-level-dash__expand {
+  margin: 0;
+}
+
+.mqx-dash-stack--unified .mqx-level-dash-bleed .mqx-level-dash__toggle,
+.mqx-tab-page--dash-unified .mqx-level-dash-bleed .mqx-level-dash__toggle {
+  padding-block: 12px;
+  padding-inline: 0;
+}
+
+.mqx-dash-stack--unified .mqx-level-dash-bleed .mqx-level-dash__expand,
+.mqx-tab-page--dash-unified .mqx-level-dash-bleed .mqx-level-dash__expand {
+  padding: 0 0 14px;
 }

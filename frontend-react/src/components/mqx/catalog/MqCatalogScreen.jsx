@@ -33,7 +33,9 @@ import {
   MqxDashboardHero,
   MqxDivider,
   MqxGoalBadge,
+  MqxFinancePeriodBlock,
   MqxLevelBlock,
+  MqxLevelDash,
   MqxPeriodActions,
   MqxPeriodChip,
   MqxPeriodDashboard,
@@ -183,40 +185,50 @@ export function MqCatalogScreen() {
         </div>
       </CatalogSection>
 
-      <CatalogSection title="Shell — D′ flat (утверждённый дашборд)">
+      <CatalogSection title="Shell — L3 (утверждённый дашборд)">
         <div style={{ maxWidth: 420 }}>
           <MqxDashStack>
-            <MqxLevelBlock
+            <MqxFinancePeriodBlock
+              financeCards={[
+                { title: 'Баланс', valueNode: <MoneyText value={42150} />, accent: 'mqx-accent--violet', icon: <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 10V7a5 5 0 0 1 10 0v3" /></svg> },
+                { title: 'Подушка', valueNode: <MoneyText value={18000} />, accent: 'mqx-accent--emerald', icon: <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3 20 7v6c0 5" /></svg> },
+                { title: 'Поток', valueNode: <MoneyText value={3200} />, accent: 'mqx-accent--sky', valueTone: 'pos', icon: <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 19V5" /></svg> },
+                {
+                  title: 'На жизнь',
+                  valueNode: <MoneyText value={9600} />,
+                  accent: 'mqx-accent--amber',
+                  valueTone: 'out',
+                  expenseIcon: true,
+                  icon: (
+                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                      <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z" />
+                      <path d="M3 6h18" />
+                      <path d="M16 10a4 4 0 0 1-8 0" />
+                    </svg>
+                  ),
+                },
+              ]}
+              onGoFinance={() => {}}
+            />
+            <MqxDivider />
+            <MqxPeriodActions onSalary={() => {}} onContribute={() => {}} onWithdraw={() => {}} onInvest={() => {}} />
+            <MqxDivider />
+            <MqxLevelDash
               level={3}
               xp={45}
               xpNeed={100}
               xpFrac={0.45}
               score={1240}
-              bars={[
-                { label: 'Доход', value: 50000, frac: 1, tone: 'mqx-bar--emerald' },
-                { label: 'Долги', value: 12000, frac: 0.24, tone: 'mqx-bar--rose' },
-              ]}
-            />
-            <MqxDivider />
-            <MqxPeriodDashboard
               victory={{
                 goals_met: 2,
                 goals_required: 3,
                 goals: [
                   { key: 'a', title: 'Подушка ≥ 3×', met: true, enabled: true, progress: 1 },
                   { key: 'b', title: 'Поток ≥ 0', met: false, enabled: true, progress: 0.4 },
+                  { key: 'c', title: 'Без просрочек', met: true, enabled: true, progress: 1 },
                 ],
               }}
-              financeCards={[
-                { title: 'Баланс', valueNode: <MoneyText value={42150} />, accent: 'mqx-accent--violet', icon: <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 10V7a5 5 0 0 1 10 0v3" /></svg> },
-                { title: 'Подушка', valueNode: <MoneyText value={18000} />, accent: 'mqx-accent--emerald', icon: <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3 20 7v6c0 5" /></svg> },
-                { title: 'Поток', valueNode: <MoneyText value={3200} />, accent: 'mqx-accent--sky', icon: <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 19V5" /></svg> },
-                { title: 'Расходы', valueNode: <MoneyText value={9600} />, accent: 'mqx-accent--amber', icon: <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 19V5" /></svg> },
-              ]}
-              onGoFinance={() => {}}
             />
-            <MqxDivider />
-            <MqxPeriodActions onSalary={() => {}} onContribute={() => {}} onWithdraw={() => {}} onInvest={() => {}} />
           </MqxDashStack>
         </div>
       </CatalogSection>

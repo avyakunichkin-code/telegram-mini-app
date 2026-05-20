@@ -12,8 +12,7 @@
 | [invest-forms/](invest-forms/) | внедрено в prod | Формы депозита / облигаций |
 | [primitives/](primitives/) | **утверждено → prod** | Гибрид D+C+B/A; в `mqx/primitives/` |
 | [finance-insurance/](finance-insurance/) | **внедрено в prod** | B: каталог 2×2 + тарифы; карточки asset H |
-| [shell/](shell/) | **варианты A/B/C** — обсуждение | Дашборд main; `cd shell && npx serve .` |
-| `dashboard/` | план | Герой, stat-блоки |
+| [dashboard/](dashboard/) | **этап 1** | Main: V0 = prod, L1–L3 раскладка; `cd dashboard && npx serve .` |
 | [events/](events/) | **внедрено в prod** | EventCard, EventCarouselOverlay, MqxPill |
 | [row-actions/](row-actions/) | **B + F2 → prod** | MqxRowAction (корзина по умолчанию), MqxFinListRow, confirm; порядок метрик — в spec |
 | [capital-page/](capital-page/) | **IA утверждена → вариант A/B на выбор** | 5 табов, бюджет №2, имущество/обязательства строками |
@@ -22,8 +21,6 @@
 | [new-game-mode/](new-game-mode/) | **★ B → prod** | Шаг 1: имя + Игра / План |
 | [game-templates/](game-templates/) | **★ B → prod** | Шаг 2: каталог + быстрый старт |
 | [start-menu/](start-menu/) | **★ B → prod** | Меню сохранений после входа |
-| [dashboard-dual-accordion/](dashboard-dual-accordion/) | обсуждение | Два аккордеона D1–D5 (архив IA) |
-| [dashboard-restructure/](dashboard-restructure/) | **этап 1** | R1–R3 структура + S1–S3 подушка (ползунок) |
 | [onboarding-brief/](onboarding-brief/) | superseded | ~~Mission Brief 3 карточки + видео~~ |
 
 ## Как работать

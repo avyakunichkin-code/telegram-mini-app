@@ -76,13 +76,16 @@ export function MqxDashboardHero({
             ▶
           </MqxButton>
           <MqxButton
-            variant="hero-outline"
+            variant="hero-filled"
             className="mqx-btn--icon"
             disabled={!canPause}
             aria-label="Пауза"
             onClick={onPause}
           >
-            ⏸
+            <span className="mqx-hero-icon-pause" aria-hidden>
+              <span />
+              <span />
+            </span>
           </MqxButton>
         </div>
       </div>

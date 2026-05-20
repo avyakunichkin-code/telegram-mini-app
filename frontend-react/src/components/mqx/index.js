@@ -12,6 +12,8 @@ export { MqxDashboardHero } from './layout/MqxDashboardHero';
 export { MqxDashStack } from './layout/MqxDashStack';
 export { MqxDivider } from './primitives/MqxDivider';
 export { MqxLevelBlock } from './layout/MqxLevelBlock';
+export { MqxLevelDash } from './layout/MqxLevelDash';
+export { MqxFinancePeriodBlock } from './layout/MqxFinancePeriodBlock';
 export { MqxPeriodActions } from './layout/MqxPeriodActions';
 export { MqxPeriodDashboard } from './layout/MqxPeriodDashboard';
 export { ExpensesBudgetBlock } from './layout/ExpensesBudgetBlock';

@@ -2,7 +2,7 @@
  * Блок «Действия периода» (4 кнопки, «Зарплата» — primary).
  */
 export function MqxPeriodActions({
-  xpLabel = 'XP +10',
+  xpLabel,
   salaryLabel = 'Зарплата',
   busy = false,
   onSalary,
@@ -19,7 +19,7 @@ export function MqxPeriodActions({
           </h2>
           <p className="mqx-card__sub">Управляй денежным потоком</p>
         </div>
-        <div className="mqx-xp">{xpLabel}</div>
+        {xpLabel ? <div className="mqx-xp">{xpLabel}</div> : null}
       </div>
 
       <div className="mqx-grid2">
@@ -39,6 +39,7 @@ export function MqxPeriodActions({
           className="mqx-action"
           disabled={busy}
           data-onboarding-anchor="cushion"
+          data-money-trigger="in"
           title="Перевести деньги в подушку безопасности"
           aria-label="В подушку"
           onClick={onContribute}
@@ -49,6 +50,7 @@ export function MqxPeriodActions({
           type="button"
           className="mqx-action"
           disabled={busy}
+          data-money-trigger="out"
           title="Снять деньги из подушки на счёт"
           aria-label="Снять из подушки"
           onClick={onWithdraw}

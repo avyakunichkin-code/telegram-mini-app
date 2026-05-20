@@ -24,7 +24,7 @@ export function GameScreen({ onLogout, onNewGame, onLoadGame }) {
   const [activeTab, setActiveTab] = useState('dashboard');
   const [salaryWarnOpen, setSalaryWarnOpen] = useState(false);
   const [eventsOpen, setEventsOpen] = useState(false);
-  const [onboardingOverlayVisible, setOnboardingOverlayVisible] = useState(false);
+  const [onboardingUi, setOnboardingUi] = useState({ visible: false, lockTabs: false });
   const [queuedPeriodClose, setQueuedPeriodClose] = useState(null);
   const onboardingRootRef = useRef(null);
   const {
@@ -71,10 +71,16 @@ export function GameScreen({ onLogout, onNewGame, onLoadGame }) {
   }, [eventsUnlocked, inOnboarding]);
 
   useEffect(() => {
-    if (onboardingOverlayVisible && activeTab !== 'dashboard') {
+    if (onboardingUi.visible && activeTab !== 'dashboard') {
       setActiveTab('dashboard');
     }
-  }, [onboardingOverlayVisible, activeTab]);
+  }, [onboardingUi.visible, activeTab]);
+
+  useEffect(() => {
+    if (!inOnboarding) {
+      setOnboardingUi({ visible: false, lockTabs: false });
+    }
+  }, [inOnboarding]);
 
   useEffect(() => {
     if (!periodCloseSummary || !inOnboarding) return;
@@ -207,7 +213,7 @@ export function GameScreen({ onLogout, onNewGame, onLoadGame }) {
         <GameScreenTabNav
           activeTab={activeTab}
           setActiveTab={setActiveTab}
-          lockTabs={onboardingOverlayVisible}
+          lockTabs={onboardingUi.lockTabs}
         />
       )}
       overlays={(
@@ -314,7 +320,7 @@ export function GameScreen({ onLogout, onNewGame, onLoadGame }) {
         periodStatus={periodStatus}
         rootRef={onboardingRootRef}
         refreshOverview={refreshOverview}
-        onOverlayVisibleChange={setOnboardingOverlayVisible}
+        onOverlayStateChange={setOnboardingUi}
       />
     </GameScreenLayout>
   );
