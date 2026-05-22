@@ -538,10 +538,11 @@ def _period_close_summary(period_result: dict) -> PeriodCloseSummary:
     return PeriodCloseSummary(
         closed_period_index=int(period_result.get("closed_period_index") or 0),
         cash_delta=round(float(period_result.get("cash_delta") or 0), 2),
-        income_total=round(float(period_result.get("income_total") or 0), 2),
-        expense_total=round(float(period_result.get("expense_total") or 0), 2),
+        income_delta=round(float(period_result.get("income_delta") or 0), 2),
+        expense_delta=round(float(period_result.get("expense_delta") or 0), 2),
         safety_fund_delta=round(float(period_result.get("safety_fund_delta") or 0), 2),
         invest_capital_delta=round(float(period_result.get("invest_capital_delta") or 0), 2),
+        debt_delta=round(float(period_result.get("debt_delta") or 0), 2),
         total_spent=round(float(period_result.get("total_spent") or 0), 2),
         new_balance=round(float(period_result.get("new_balance") or 0), 2),
         breakdown=breakdown,

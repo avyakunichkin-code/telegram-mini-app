@@ -31,29 +31,52 @@ from .expenses import compute_monthly_burn, expire_expense_lines_for_period, lif
 from .timeutil import utc_now_naive
 
 
-def _aggregate_period_flows(
-    breakdown: list,
-    *,
-    salary_amount: float = 0,
-    salary_claimed: bool = False,
-) -> tuple[float, float]:
+def _total_debt_balance(db: Session, profile_id: int) -> float:
+    rows = (
+        db.query(FinanceLiability)
+        .filter(
+            FinanceLiability.game_profile_id == profile_id,
+            FinanceLiability.is_active == 1,
+        )
+        .all()
+    )
+    return round(sum(float(row.total_debt or 0) for row in rows), 2)
+
+
+def _period_income_rate(breakdown: list, snapshot: PeriodSnapshot | None) -> float:
+    """Уровень дохода за период: зарплата (если забрана) + пассивные поступления."""
     income = 0.0
+    if snapshot and int(snapshot.salary_claimed or 0) == 1:
+        income += float(snapshot.salary_amount or 0)
+    for item in breakdown or []:
+        if not isinstance(item, dict):
+            continue
+        kind = str(item.get("type") or "")
+        if kind in ("asset_income", "invest"):
+            income += float(item.get("amount") or 0)
+    return round(income, 2)
+
+
+def _period_expense_total(breakdown: list) -> float:
+    """Сумма расходов за период (списания с счёта по обязательствам жизни и активам)."""
     expense = 0.0
-    if salary_claimed and salary_amount > 0:
-        income += float(salary_amount)
     for item in breakdown or []:
         if not isinstance(item, dict):
             continue
         kind = str(item.get("type") or "")
         if kind == "liability":
             expense += float(item.get("paid") or 0)
-        elif kind in ("asset_income", "invest", "salary"):
-            income += float(item.get("amount") or 0)
         elif kind in ("lifestyle", "expense_category", "insurance"):
             expense += abs(float(item.get("amount") or 0))
         elif kind == "asset":
             expense += float(item.get("amount") or 0)
-    return round(income, 2), round(expense, 2)
+    return round(expense, 2)
+
+
+def _period_compare_delta(current: float, previous: float | None) -> float:
+    if previous is None:
+        return 0.0
+    return round(float(current) - float(previous), 2)
 
 
 def process_period_end(db: Session, profile: GameProfile) -> dict:
@@ -82,6 +105,7 @@ def process_period_end(db: Session, profile: GameProfile) -> dict:
         .all()
     )
     invest_before = round(sum(float(p.principal) for p in invest_positions), 2)
+    debt_before = _total_debt_balance(db, profile.id)
 
     total_spend = 0.0
     breakdown = []
@@ -284,11 +308,25 @@ def process_period_end(db: Session, profile: GameProfile) -> dict:
         ),
         2,
     )
-    income_total, expense_total = _aggregate_period_flows(
-        breakdown,
-        salary_amount=salary_amount,
-        salary_claimed=salary_claimed,
+    current_income_rate = _period_income_rate(breakdown, snapshot)
+    current_expense_total = _period_expense_total(breakdown)
+    debt_after = _total_debt_balance(db, profile.id)
+
+    prev_closing = (
+        db.query(PeriodEconomyClosing)
+        .filter(
+            PeriodEconomyClosing.game_profile_id == profile.id,
+            PeriodEconomyClosing.period_index == int(period_index) - 1,
+        )
+        .first()
     )
+    prev_income = float(prev_closing.period_income_rate) if prev_closing else None
+    prev_expense = float(prev_closing.period_expense_total) if prev_closing else None
+
+    income_delta = _period_compare_delta(current_income_rate, prev_income)
+    expense_delta = _period_compare_delta(current_expense_total, prev_expense)
+    debt_delta = round(debt_after - debt_before, 2)
+
     period_xp = compute_period_close_xp(
         salary_claimed=salary_claimed,
         safety_fund_contribution=safety_contrib,
@@ -323,6 +361,9 @@ def process_period_end(db: Session, profile: GameProfile) -> dict:
             safety_fund_balance=float(profile.safety_fund_balance),
             total_overdue_amount=float(total_overdue_now),
             monthly_burn_total=float(closed_burn_total),
+            period_income_rate=float(current_income_rate),
+            period_expense_total=float(current_expense_total),
+            total_debt_balance=float(debt_after),
         )
     )
 
@@ -379,10 +420,11 @@ def process_period_end(db: Session, profile: GameProfile) -> dict:
     return {
         "closed_period_index": closed_period_index,
         "cash_delta": round(float(profile.cash_balance) - cash_before, 2),
-        "income_total": income_total,
-        "expense_total": expense_total,
+        "income_delta": income_delta,
+        "expense_delta": expense_delta,
         "safety_fund_delta": round(float(profile.safety_fund_balance) - safety_before, 2),
         "invest_capital_delta": round(invest_after - invest_before, 2),
+        "debt_delta": debt_delta,
         "total_spent": total_spend,
         "breakdown": breakdown,
         "new_balance": profile.cash_balance,

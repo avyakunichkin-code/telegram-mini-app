@@ -69,6 +69,31 @@ class TestPeriodCloseSummaryMapping:
         assert summary.xp_milestone == 0
         assert summary.milestone_title is None
 
+    def test_maps_period_compare_deltas(self):
+        summary = _period_close_summary(
+            {
+                "closed_period_index": 2,
+                "cash_delta": 1500.0,
+                "income_delta": 5000.0,
+                "expense_delta": -1200.0,
+                "safety_fund_delta": 10000.0,
+                "invest_capital_delta": 25000.0,
+                "debt_delta": -8000.0,
+                "total_spent": 0,
+                "new_balance": 1000,
+                "xp_earned": 12,
+                "xp_period_close": 12,
+                "character_level": 1,
+            }
+        )
+        assert summary.closed_period_index == 2
+        assert summary.cash_delta == 1500.0
+        assert summary.income_delta == 5000.0
+        assert summary.expense_delta == -1200.0
+        assert summary.safety_fund_delta == 10000.0
+        assert summary.invest_capital_delta == 25000.0
+        assert summary.debt_delta == -8000.0
+
 
 class TestFinanceOverviewProgression:
     def test_overview_exposes_progression_and_newly_unlocked(self, client, auth_headers):

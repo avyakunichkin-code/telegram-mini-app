@@ -257,10 +257,11 @@ class PeriodCloseBreakdownItem(BaseModel):
 class PeriodCloseSummary(BaseModel):
     closed_period_index: int = 0
     cash_delta: float = 0
-    income_total: float = 0
-    expense_total: float = 0
+    income_delta: float = 0
+    expense_delta: float = 0
     safety_fund_delta: float = 0
     invest_capital_delta: float = 0
+    debt_delta: float = 0
     total_spent: float = 0
     new_balance: float = 0
     breakdown: List[PeriodCloseBreakdownItem] = Field(default_factory=list)

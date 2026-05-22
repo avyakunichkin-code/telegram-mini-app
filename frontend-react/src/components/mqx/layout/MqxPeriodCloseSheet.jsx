@@ -41,7 +41,7 @@ function DeltaArrow({ delta }) {
 
 function PeriodCloseRow({ row }) {
   const Icon = GLYPHS[row.glyph] || IconMetricCoins;
-  const tone = row.delta > 0 ? 'pos' : row.delta < 0 ? 'neg' : '';
+  const tone = row.tone || '';
 
   return (
     <li className="mqx-pclose-row">

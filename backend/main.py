@@ -256,6 +256,18 @@ def ensure_schema_compatibility() -> None:
             statements.append(
                 "ALTER TABLE period_economy_closings ADD COLUMN monthly_burn_total DOUBLE PRECISION NOT NULL DEFAULT 0"
             )
+        if "period_income_rate" not in pec_cols:
+            statements.append(
+                "ALTER TABLE period_economy_closings ADD COLUMN period_income_rate DOUBLE PRECISION NOT NULL DEFAULT 0"
+            )
+        if "period_expense_total" not in pec_cols:
+            statements.append(
+                "ALTER TABLE period_economy_closings ADD COLUMN period_expense_total DOUBLE PRECISION NOT NULL DEFAULT 0"
+            )
+        if "total_debt_balance" not in pec_cols:
+            statements.append(
+                "ALTER TABLE period_economy_closings ADD COLUMN total_debt_balance DOUBLE PRECISION NOT NULL DEFAULT 0"
+            )
 
     # ---- finance_assets ----
     if "finance_assets" in inspector.get_table_names():
