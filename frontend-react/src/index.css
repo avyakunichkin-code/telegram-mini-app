@@ -4236,12 +4236,14 @@ body [class*='modal'] {
   color: rgba(180, 83, 9, 0.98);
 }
 
-.mq-game-tier-badge--hard {
+.mq-game-tier-badge--hard,
+.mq-game-tier-badge--expert {
   background: rgba(234, 88, 12, 0.12);
   color: rgba(194, 65, 12, 0.98);
 }
 
-.mq-game-tier-badge--extreme {
+.mq-game-tier-badge--extreme,
+.mq-game-tier-badge--drive {
   background: var(--mq-danger-soft);
   color: rgba(185, 28, 28, 0.98);
 }
@@ -4255,11 +4257,13 @@ body [class*='modal'] {
     color: rgba(253, 224, 171, 0.96);
   }
 
-  .mq-game-tier-badge--hard {
+  .mq-game-tier-badge--hard,
+  .mq-game-tier-badge--expert {
     color: rgba(254, 215, 170, 0.96);
   }
 
-  .mq-game-tier-badge--extreme {
+  .mq-game-tier-badge--extreme,
+  .mq-game-tier-badge--drive {
     color: rgba(254, 202, 202, 0.96);
   }
 }
@@ -4342,11 +4346,13 @@ body [class*='modal'] {
   border-left: 3px solid var(--mq-warning, #d97706);
 }
 
-.mqx-scenario-strip--hard {
+.mqx-scenario-strip--hard,
+.mqx-scenario-strip--expert {
   border-left: 3px solid color-mix(in srgb, var(--mq-danger, #dc2626) 70%, var(--mq-warning));
 }
 
-.mqx-scenario-strip--extreme {
+.mqx-scenario-strip--extreme,
+.mqx-scenario-strip--drive {
   border-left: 3px solid var(--mq-danger, #dc2626);
 }
 
@@ -4378,7 +4384,9 @@ body [class*='modal'] {
 }
 
 .mqx-scenario-strip__icon-wrap--hard,
-.mqx-scenario-strip__icon-wrap--extreme {
+.mqx-scenario-strip__icon-wrap--expert,
+.mqx-scenario-strip__icon-wrap--extreme,
+.mqx-scenario-strip__icon-wrap--drive {
   color: var(--mq-violet-deep, #5b21b6);
   background: linear-gradient(
     145deg,

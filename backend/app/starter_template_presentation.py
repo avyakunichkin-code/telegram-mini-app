@@ -11,24 +11,18 @@ def _fmt_rub(value: float) -> str:
     return f"{n:,}".replace(",", " ")
 
 
-def _salary_label(monthly_salary: float) -> str:
+def _income_line(monthly_salary: float) -> str:
     s = float(monthly_salary or 0)
-    if s < 46000:
-        return "Скромная зарплата"
-    if s < 50000:
-        return "Средняя зарплата"
-    return "Зарплата выше среднего"
+    if s <= 0:
+        return ""
+    return f"Доход ~{_fmt_rub(s)} ₽/мес"
 
 
-def _expense_label(base_expense: float) -> str:
+def _expense_line(base_expense: float) -> str:
     e = float(base_expense or 0)
-    if e < 12000:
-        return "Небольшие расходы на жизнь"
-    if e < 17000:
-        return "Умеренные расходы на жизнь"
-    if e < 19000:
-        return "Расходы заметно выше базовых"
-    return "Высокие расходы на жизнь"
+    if e <= 0:
+        return ""
+    return f"Расходы на жизнь ~{_fmt_rub(e)} ₽/мес"
 
 
 def highlights_from_blueprint(
@@ -44,12 +38,15 @@ def highlights_from_blueprint(
 
     lines: list[str] = []
     salary = float(blueprint.get("monthly_salary") or 0)
-    if salary > 0:
-        lines.append(f"{_salary_label(salary)} (~{_fmt_rub(salary)} ₽/мес)")
-    if base_monthly_lifestyle_expense > 0:
-        lines.append(_expense_label(base_monthly_lifestyle_expense))
-    elif blueprint.get("base_monthly_lifestyle_expense"):
-        lines.append(_expense_label(float(blueprint["base_monthly_lifestyle_expense"])))
+    income = _income_line(salary)
+    if income:
+        lines.append(income)
+    expense_base = base_monthly_lifestyle_expense
+    if expense_base <= 0 and blueprint.get("base_monthly_lifestyle_expense"):
+        expense_base = float(blueprint["base_monthly_lifestyle_expense"])
+    expense = _expense_line(expense_base)
+    if expense:
+        lines.append(expense)
 
     assets = blueprint.get("assets") or []
     liabilities = blueprint.get("liabilities") or []
@@ -106,10 +103,10 @@ def compare_note_from_blueprint(blueprint: dict[str, Any], template_key: str) ->
     if isinstance(raw, str) and raw.strip():
         return raw.strip()
     notes = {
-        "mq_game_basic_v1": "Самый мягкий вход — освоить период без давления обязательств.",
-        "mq_game_tight_budget_v1": "Сложнее «Базового старта»: кредит и авто съедают подушку.",
-        "mq_game_mortgage_stress_v1": "После «Зарплаты до зарплаты»: ипотека давит сильнее.",
-        "mq_game_debt_stack_v1": "Максимум давления: два долга и почти пустой счёт.",
+        "mq_game_basic_v1": "Идеальный вход: почувствовать контроль над деньгами без спешки.",
+        "mq_game_tight_budget_v1": "Уже интереснее: машина и кредит — тренируешь баланс каждого периода.",
+        "mq_game_mortgage_stress_v1": "Ипотека и авто — для тех, кто любит вести несколько потоков платежей.",
+        "mq_game_debt_stack_v1": "Максимум решений за период — твой драйв, если любишь плотный ритм.",
     }
     return notes.get((template_key or "").strip())
 

@@ -1,12 +1,5 @@
 import { ScenarioSceneIcon } from '../icons/ScenarioSceneIcons';
-
-function tierFromRank(rank) {
-  const r = Number(rank);
-  if (r <= 1) return { label: 'Легко', slug: 'easy' };
-  if (r === 2) return { label: 'Средне', slug: 'mid' };
-  if (r === 3) return { label: 'Сложно', slug: 'hard' };
-  return { label: 'Экстрим', slug: 'extreme' };
-}
+import { tierFromRank } from '../../../utils/starterTemplateTier';
 
 /**
  * Выбор сценария: название + bullets старта + иконка ситуации (T2 strips ★).

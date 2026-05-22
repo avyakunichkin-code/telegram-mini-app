@@ -21,7 +21,7 @@ def test_highlights_derived_from_assets_and_liabilities():
         "liabilities": [{"title": "Кредит"}],
     }
     lines = highlights_from_blueprint(bp, base_monthly_lifestyle_expense=14800)
-    assert any("45" in x or "45 000" in x for x in lines)
+    assert any("Доход" in x and ("45" in x or "45 000" in x) for x in lines)
     assert any("Авто" in x for x in lines)
     assert any("Кредит" in x for x in lines)
 
@@ -29,4 +29,5 @@ def test_highlights_derived_from_assets_and_liabilities():
 def test_scenario_icon_and_compare_fallback():
     bp = {}
     assert scenario_icon_from_blueprint(bp, "mq_game_debt_stack_v1") == "debt_stack"
-    assert "давления" in (compare_note_from_blueprint(bp, "mq_game_debt_stack_v1") or "")
+    note = compare_note_from_blueprint(bp, "mq_game_debt_stack_v1") or ""
+    assert "драйв" in note.lower()
