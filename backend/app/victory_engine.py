@@ -27,6 +27,9 @@ class VictoryEvaluationInput:
     avg_net_cashflow_6p: float
     avg_net_cashflow_6p_n: int
     monthly_burn_total: float = 0
+    monthly_passive_income: float = 0
+    monthly_expenses_total: float = 0
+    owned_asset_kinds: frozenset[str] = frozenset()
 
 
 @dataclass(frozen=True)
@@ -203,6 +206,48 @@ def _evaluate_goal(goal: dict[str, Any], snap: VictoryEvaluationInput) -> Victor
         else:
             met = True
             progress = 1.0
+
+    elif gtype == "passive_income_monthly_min":
+        min_monthly = float(goal.get("min_monthly", 0))
+        current = float(snap.monthly_passive_income)
+        detail = {"monthly_passive_income": current, "min_monthly": min_monthly}
+        if min_monthly > 0:
+            progress = min(1.0, current / min_monthly)
+            met = current >= min_monthly
+        else:
+            met = True
+            progress = 1.0
+
+    elif gtype == "passive_income_net_monthly_min":
+        min_net = float(goal.get("min_net", 0))
+        current = float(snap.monthly_passive_income) - float(snap.monthly_expenses_total)
+        detail = {
+            "passive_net_monthly": round(current, 2),
+            "monthly_passive_income": float(snap.monthly_passive_income),
+            "monthly_expenses_total": float(snap.monthly_expenses_total),
+            "min_net": min_net,
+        }
+        if min_net > 0:
+            progress = min(1.0, max(0.0, current / min_net))
+            met = current >= min_net
+        else:
+            met = current >= 0
+            progress = 1.0 if met else 0.0
+
+    elif gtype == "asset_kind_any_owned":
+        required_any = goal.get("asset_kinds_any") or []
+        if not isinstance(required_any, list):
+            required_any = []
+        kinds_norm = {str(k).strip() for k in required_any if str(k).strip()}
+        owned = set(snap.owned_asset_kinds)
+        matched = kinds_norm & owned
+        detail = {
+            "asset_kinds_any": sorted(kinds_norm),
+            "owned_asset_kinds": sorted(owned),
+            "matched": sorted(matched),
+        }
+        met = bool(matched)
+        progress = 1.0 if met else 0.0
 
     else:
         detail = {"error": f"unknown_goal_type:{gtype}"}

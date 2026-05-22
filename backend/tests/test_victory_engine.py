@@ -1,4 +1,4 @@
-"""Тесты victory v2: M из N, типы целей, эквивалент MVP на basic config."""
+"""Тесты victory v2: M из N, типы целей, плейтест-конфиг."""
 
 from app.game_rules import MIN_PERIOD_INDEX_FOR_WIN
 from app.victory_engine import VictoryEvaluationInput, evaluate_victory, parse_victory_config
@@ -17,22 +17,31 @@ def _snap(**kwargs):
         monthly_salary=50_000.0,
         avg_net_cashflow_6p=0.0,
         avg_net_cashflow_6p_n=0,
+        monthly_burn_total=9_600.0,
+        monthly_passive_income=0.0,
+        monthly_expenses_total=19_600.0,
+        owned_asset_kinds=frozenset(),
     )
     defaults.update(kwargs)
     return VictoryEvaluationInput(**defaults)
 
 
-class TestBasicTemplateMvpEquivalent:
+class TestBasicPlaytestGoals:
     def test_all_three_goals_and_period_win(self):
         cfg = victory_config_for_template("mq_game_basic_v1")
+        assert cfg.get("playtest_mode") == "v1"
         target = 10_000.0 * 3
         r = evaluate_victory(
             cfg,
-            _snap(safety_fund_balance=target, net_monthly_cashflow=0),
+            _snap(
+                safety_fund_balance=target,
+                monthly_passive_income=100_000,
+                owned_asset_kinds=frozenset({"car_personal"}),
+            ),
             template_key="mq_game_basic_v1",
         )
-        assert r.goals_enabled == 4
-        assert r.goals_met == 4
+        assert r.goals_enabled == 3
+        assert r.goals_met == 3
         assert r.win_reached is True
 
     def test_early_period_blocks_win(self):
@@ -40,68 +49,92 @@ class TestBasicTemplateMvpEquivalent:
         target = 10_000.0 * 3
         r = evaluate_victory(
             cfg,
-            _snap(period_index=MIN_PERIOD_INDEX_FOR_WIN - 1, safety_fund_balance=target),
+            _snap(
+                period_index=MIN_PERIOD_INDEX_FOR_WIN - 1,
+                safety_fund_balance=target,
+                monthly_passive_income=100_000,
+                owned_asset_kinds=frozenset({"vehicle"}),
+            ),
             template_key="mq_game_basic_v1",
         )
-        assert r.goals_met == 4
+        assert r.goals_met == 3
         assert r.period_gate_open is False
         assert r.win_reached is False
 
-    def test_two_of_three_not_enough(self):
+    def test_missing_car_blocks_win(self):
         cfg = victory_config_for_template("mq_game_basic_v1")
         r = evaluate_victory(
             cfg,
-            _snap(safety_fund_balance=30_000, total_overdue_amount=100, net_monthly_cashflow=-1),
+            _snap(safety_fund_balance=30_000, monthly_passive_income=150_000),
             template_key="mq_game_basic_v1",
         )
         assert r.goals_met == 2
         assert r.win_reached is False
 
 
-class TestHarderTemplateMofN:
-    def test_three_of_five_wins(self):
+class TestHarderPlaytestGoals:
+    def test_all_five_goals_win(self):
         cfg = victory_config_for_template("mq_game_debt_stack_v1")
+        assert cfg.get("required_goals_met") == 5
         r = evaluate_victory(
             cfg,
             _snap(
                 safety_fund_balance=60_000,
-                total_overdue_amount=0,
-                net_monthly_cashflow=1,
-                character_level=5,
-                cash_balance=5_000,
-                avg_net_cashflow_6p=0,
+                total_monthly_obligations=10_000,
+                monthly_passive_income=400_000,
+                monthly_expenses_total=100_000,
+                monthly_burn_total=19_600,
+                character_level=10,
+                cash_balance=10_000_000,
+                owned_asset_kinds=frozenset({"rental_home", "vehicle"}),
             ),
             template_key="mq_game_debt_stack_v1",
         )
-        assert r.goals_enabled == 6
-        assert r.goals_met >= 3
+        assert r.goals_enabled == 5
+        assert r.goals_met == 5
         assert r.win_reached is True
 
-    def test_avg_liquid_requires_samples_and_salary_threshold(self):
+    def test_passive_net_goal_detail(self):
         cfg = victory_config_for_template("mq_game_tight_budget_v1")
         r = evaluate_victory(
             cfg,
             _snap(
                 safety_fund_balance=60_000,
-                total_overdue_amount=0,
-                net_monthly_cashflow=1,
-                character_level=5,
-                cash_balance=20_000,
-                monthly_salary=40_000,
-                avg_net_cashflow_6p=250_000,
-                avg_net_cashflow_6p_n=3,
+                monthly_passive_income=300_000,
+                monthly_expenses_total=40_000,
             ),
             template_key="mq_game_tight_budget_v1",
         )
-        avg_goal = next(g for g in r.goals if g.type == "avg_liquid_delta_6p")
-        assert avg_goal.met is True
-        assert r.goals_met >= 3
+        net_goal = next(g for g in r.goals if g.type == "passive_income_net_monthly_min")
+        assert net_goal.met is True
+        assert net_goal.detail["passive_net_monthly"] == 260_000
+
+
+class TestNewGoalTypes:
+    def test_passive_income_monthly_min(self):
+        cfg = {
+            "min_period_index_for_victory": 1,
+            "required_goals_met": 1,
+            "goals": [
+                {
+                    "key": "p",
+                    "type": "passive_income_monthly_min",
+                    "title": "Пассив",
+                    "min_monthly": 50_000,
+                }
+            ],
+        }
+        r = evaluate_victory(cfg, _snap(monthly_passive_income=49_999))
+        assert r.goals_met == 0
+        r2 = evaluate_victory(cfg, _snap(monthly_passive_income=50_000))
+        assert r2.goals_met == 1
 
 
 class TestParseVictoryConfig:
     def test_empty_falls_back_to_template(self):
         cfg = parse_victory_config("{}", template_key="mq_game_basic_v1")
-        assert len(cfg["goals"]) == 4
+        assert len(cfg["goals"]) == 3
+        assert cfg.get("playtest_mode") == "v1"
 
     def test_invalid_json_falls_back(self):
         cfg = parse_victory_config("not-json", template_key="mq_game_basic_v1")

@@ -24,8 +24,9 @@ from ..achievement_engine import process_achievement_unlocks
 from ..achievement_seeds import ensure_achievement_catalog
 from ..character_progression import character_xp_need_for_next_level
 from ..expenses import burn_breakdown_for_api, compute_monthly_burn
-from ..victory_engine import VictoryEvaluationInput, evaluate_victory, parse_victory_config
+from ..victory_engine import evaluate_victory, parse_victory_config
 from ..victory_seeds import DEFAULT_TEMPLATE_KEY
+from ..victory_snap import build_victory_evaluation_input
 from ..level_gates import (
     UNLOCK_ASSET_FROM_TEMPLATE,
     UNLOCK_LIABILITY_FROM_TEMPLATE,
@@ -562,23 +563,8 @@ async def finance_overview(
         raw_victory = None
 
     victory_cfg = parse_victory_config(raw_victory, template_key=template_key)
-    victory_result = evaluate_victory(
-        victory_cfg,
-        VictoryEvaluationInput(
-            period_index=int(profile.period_index),
-            safety_fund_balance=float(profile.safety_fund_balance),
-            cash_balance=float(profile.cash_balance),
-            total_monthly_obligations=float(total_monthly_obligations),
-            total_overdue_amount=float(total_overdue_amount),
-            net_monthly_cashflow=float(net_cashflow),
-            character_level=max(1, int(getattr(profile, "level", 1) or 1)),
-            monthly_salary=float(salary.monthly_amount if salary else 0),
-            monthly_burn_total=monthly_burn_total,
-            avg_net_cashflow_6p=float(avg_cf_6),
-            avg_net_cashflow_6p_n=int(avg_cf_n),
-        ),
-        template_key=template_key,
-    )
+    victory_snap = build_victory_evaluation_input(db, profile)
+    victory_result = evaluate_victory(victory_cfg, victory_snap, template_key=template_key)
     win_target_safety_fund = victory_result.win_target_safety_fund
     win_progress_safety_fund = victory_result.win_progress_safety_fund
     win_ready = victory_result.win_ready

@@ -20,6 +20,7 @@
 | [auth-flow/](auth-flow/) | **★ B → prod** | Вход / регистрация (Монетка) |
 | [new-game-mode/](new-game-mode/) | **★ B → prod** | Шаг 1: имя + Игра / План |
 | [game-templates/](game-templates/) | **★ B → prod** | Шаг 2: каталог + быстрый старт |
+| [period-close/](period-close/) | **этап 1** | Итог месяца: компактная выжимка + хвостик с периода 4 |
 | [start-menu/](start-menu/) | **★ B → prod** | Меню сохранений после входа |
 | [onboarding-brief/](onboarding-brief/) | superseded | ~~Mission Brief 3 карточки + видео~~ |
 

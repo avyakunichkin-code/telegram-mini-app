@@ -1881,6 +1881,12 @@ body {
   overflow-x: clip;
 }
 
+.app-shell.mq-page:has(.mqx-flow--monetka-dialog) {
+  overflow-y: auto;
+  padding-top: max(8px, env(safe-area-inset-top, 0px));
+  padding-bottom: max(8px, env(safe-area-inset-bottom, 0px));
+}
+
 .app-shell:has(.mqx-flow--monetka-dialog) .mqx-frame--flat-flow {
   min-height: 0;
 }
@@ -1888,12 +1894,14 @@ body {
 .mqx-screen:has(.mqx-flow--monetka-dialog) {
   min-width: 0;
   max-width: 100%;
+  min-height: 0;
+  padding: 0;
   overflow-x: clip;
 }
 
 .mqx-content.mqx-flow--monetka-dialog {
   padding: 0;
-  gap: 12px;
+  gap: 0;
   min-width: 0;
   max-width: 100%;
   overflow-x: clip;
@@ -1912,7 +1920,7 @@ body {
   max-width: 100%;
   min-width: 0;
   margin: 0;
-  padding: 4px 0 20px;
+  padding: 0 0 4px;
   box-sizing: border-box;
   overflow-x: clip;
 }
@@ -1928,7 +1936,7 @@ body {
   width: 100%;
   max-width: 100%;
   min-width: 0;
-  overflow: visible;
+  overflow: hidden;
 }
 
 .mqx-monetka-dialog__perch-head {
@@ -1936,7 +1944,7 @@ body {
   z-index: 2;
   width: fit-content;
   max-width: 100%;
-  margin: 0 0 -30px 6%;
+  margin: 0 0 -38px 10%;
   line-height: 0;
   pointer-events: none;
 }
@@ -1958,21 +1966,12 @@ body {
   width: 100%;
   max-width: 100%;
   box-sizing: border-box;
-  padding: 36px 12px 12px;
+  padding: 32px 12px 12px;
   padding-left: 14px;
-  overflow: hidden;
-  box-shadow: 0 2px 10px color-mix(in srgb, var(--mqx-ink) 8%, transparent),
-    0 6px 20px color-mix(in srgb, var(--mq-violet, #6d28d9) 10%, transparent);
 }
 
 .mqx-monetka-dialog__perch--sit-edge .mqx-monetka-dialog__speech {
-  padding: 24px 14px 14px clamp(96px, 32%, 132px);
-  text-align: left;
-}
-
-.mqx-monetka-dialog__perch--sit-edge .mqx-monetka-dialog__title,
-.mqx-monetka-dialog__perch--sit-edge .mqx-monetka-dialog__subtitle {
-  text-align: left;
+  padding-top: 34px;
 }
 
 .mqx-monetka-dialog__perch .mqx-monetka-dialog__speech::after {
@@ -1994,7 +1993,11 @@ body {
     var(--mqx-onboarding-bubble-bg, #ffffff) 42%
   );
   border: 1px solid var(--mqx-onboarding-bubble-border);
-  box-shadow: var(--mqx-onboarding-bubble-shadow);
+  box-shadow: none;
+}
+
+.mqx-flow--monetka-dialog .mqx-monetka-dialog__speech {
+  box-shadow: none;
 }
 
 .mqx-monetka-dialog__speech::after {
@@ -2005,7 +2008,7 @@ body {
   transform: translateX(-50%);
   border: 8px solid transparent;
   border-bottom-color: var(--mqx-onboarding-bubble-bg, #ffffff);
-  filter: drop-shadow(0 -1px 0 var(--mqx-onboarding-bubble-border));
+  filter: none;
 }
 
 .mqx-monetka-dialog__title {
