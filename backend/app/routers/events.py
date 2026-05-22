@@ -50,6 +50,7 @@ from ..event_chains import (
     resolve_choice_effects_for_definition,
 )
 from ..event_choice_impacts import build_choice_impacts
+from ..event_taxonomy import effective_event_weight, event_domain
 from ..mvp11_event_seeds import ensure_mvp11_event_catalog
 
 
@@ -139,7 +140,12 @@ def expire_pending_events_for_closed_period(db: Session, game_profile_id: int, c
     return int(updated or 0)
 
 
-def _weighted_sample_without_replacement(defs: list[EventDefinition], k: int) -> list[EventDefinition]:
+def _weighted_sample_without_replacement(
+    defs: list[EventDefinition],
+    k: int,
+    *,
+    counter_map: dict[int, EventProfileCounterSnapshot] | None = None,
+) -> list[EventDefinition]:
     """Взвешенная случайная выборка без повторов (ключ −ln(U)/weight)."""
     if k <= 0:
         return []
@@ -147,11 +153,41 @@ def _weighted_sample_without_replacement(defs: list[EventDefinition], k: int) ->
         return list(defs)
     scored = []
     for d in defs:
-        w = max(int(getattr(d, "weight", 100) or 100), 1)
+        if counter_map is not None:
+            w = effective_event_weight(d, counter_map.get(int(d.id)))
+        else:
+            w = max(int(getattr(d, "weight", 100) or 100), 1)
         u = max(random.random(), 1e-12)
         scored.append((-math.log(u) / w, d))
     scored.sort(key=lambda t: t[0], reverse=True)
     return [t[1] for t in scored[:k]]
+
+
+def _pick_diverse_period_events(
+    candidates: list[EventDefinition],
+    k: int,
+    counter_map: dict[int, EventProfileCounterSnapshot],
+) -> list[EventDefinition]:
+    """До k событий с разными event_domain, если кандидатов хватает."""
+    picked: list[EventDefinition] = []
+    remaining = list(candidates)
+    for _ in range(k):
+        if not remaining:
+            break
+        if picked:
+            used_domains = {event_domain(d) for d in picked}
+            pool = [d for d in remaining if event_domain(d) not in used_domains]
+            if not pool:
+                pool = remaining
+        else:
+            pool = remaining
+        batch = _weighted_sample_without_replacement(pool, 1, counter_map=counter_map)
+        if not batch:
+            break
+        choice = batch[0]
+        picked.append(choice)
+        remaining = [d for d in remaining if d.id != choice.id]
+    return picked
 
 
 def _def_tier(d: EventDefinition) -> int:
@@ -487,7 +523,7 @@ def ensure_period_events(db: Session, game_profile_id: int, period_index: int, s
     core = [d for d in repeat_ok if event_tier_in_core_window(_def_tier(d), L)]
 
     if len(core) >= base_k:
-        picked = _weighted_sample_without_replacement(core, base_k)
+        picked = _pick_diverse_period_events(core, base_k, counter_map)
     else:
         p1 = [d for d in repeat_ok if event_tier_in_fallback_primary(_def_tier(d), L)]
         if not p1:
@@ -496,7 +532,7 @@ def ensure_period_events(db: Session, game_profile_id: int, period_index: int, s
         if not p1:
             return
         kk = min(base_k, len(p1))
-        picked = _weighted_sample_without_replacement(p1, kk)
+        picked = _pick_diverse_period_events(p1, kk, counter_map)
 
     for d in picked:
         db.add(

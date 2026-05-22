@@ -32,6 +32,7 @@ import {
   MqxDashStack,
   MqxDashboardHero,
   MqxSaveKindPicker,
+  MqxStarterScenarioPicker,
   MqxDivider,
   MqxGoalBadge,
   MqxFinancePeriodBlock,
@@ -173,6 +174,49 @@ export function MqCatalogScreen() {
         </p>
         <div className="mqx-catalog-save-kind-demo">
           <MqxSaveKindPicker onSelectGame={() => {}} />
+        </div>
+      </CatalogSection>
+
+      <CatalogSection title="Новая игра — сценарии (I-Scene ★)">
+        <p className="mqx-catalog__lead">
+          Шаг 2: <code>MqxStarterScenarioPicker</code> compact + иллюстрации 56/40. Профи — P-C.
+        </p>
+        <div style={{ maxWidth: 420 }}>
+          <MqxStarterScenarioPicker
+            layout="compact"
+            value="mq_game_basic_v1"
+            onChange={() => {}}
+            templates={[
+              {
+                template_key: 'mq_game_basic_v1',
+                title: 'Студент',
+                difficulty_rank: 1,
+                scenario_icon: 'fresh_start',
+                highlights: ['Доход ~50 000 ₽/мес', 'Чистый старт — без долгов'],
+              },
+              {
+                template_key: 'mq_game_tight_budget_v1',
+                title: 'Профессионал',
+                difficulty_rank: 2,
+                scenario_icon: 'car_loan',
+                highlights: ['Доход ~45 000 ₽/мес', 'Авто + потребительский кредит'],
+              },
+              {
+                template_key: 'mq_game_mortgage_stress_v1',
+                title: 'Руководитель',
+                difficulty_rank: 3,
+                scenario_icon: 'home_mortgage',
+                highlights: ['Доход ~46 500 ₽/мес', 'Ипотека + авто'],
+              },
+              {
+                template_key: 'mq_game_debt_stack_v1',
+                title: 'Предприниматель',
+                difficulty_rank: 4,
+                scenario_icon: 'factory',
+                highlights: ['Доход ~43 500 ₽/мес', 'Ипотека + кредитная карта'],
+              },
+            ]}
+          />
         </div>
       </CatalogSection>
 

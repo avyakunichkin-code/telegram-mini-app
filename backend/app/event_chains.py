@@ -20,6 +20,7 @@ CHAIN_STATUS_COMPLETED = "completed"
 CHAIN_STATUS_CANCELLED = "cancelled"
 
 USED_CAR_CHAIN_KEY = "used_car_deal"
+FAMILY_MONEY_CHAIN_KEY = "family_money_refusal"
 USED_CAR_TEMPLATE_KEY = "car_personal"
 USED_CAR_DEFAULT_DISCOUNT = 0.25
 USED_CAR_DEPOSIT_AMOUNT = 50_000.0
@@ -27,6 +28,7 @@ USED_CAR_DEPOSIT_AMOUNT = 50_000.0
 CHAIN_FOLLOWUP_EXCLUDE_FROM_RANDOM_POOL = frozenset(
     {
         "mq11_used_car_deadline",
+        "mq11_family_money_callback",
     }
 )
 

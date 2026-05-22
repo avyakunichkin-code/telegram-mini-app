@@ -65,6 +65,7 @@
 | [`vision/ideas/game-balance-thresholds-and-constraints.md`](vision/ideas/game-balance-thresholds-and-constraints.md) | Черновик баланса: победа/поражение MVP, ограничения, пакеты для калибровки по шаблонам |
 | [`vision/ideas/event-catalog-qna-refine.md`](vision/ideas/event-catalog-qna-refine.md) | Q&A каталога событий, цепочки (авто, родственник) |
 | [`vision/ideas/event-types-and-taxonomy.md`](vision/ideas/event-types-and-taxonomy.md) | Типизация событий (домен, interaction, аналитика, informational «лотерея») |
+| [`vision/ideas/event-engagement-anti-fatigue.md`](vision/ideas/event-engagement-anti-fatigue.md) | Анти-усталость пула, конвейер контента, отдельные defs вместо variant B |
 
 ### Specs
 

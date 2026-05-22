@@ -32,9 +32,9 @@ tracks: events, gameplay, chains
 
 **In:** `event_profile_chains`, `enqueue_event`, `asset_from_template` (цена сделки), сиды `mq11_used_car_offer` + `mq11_used_car_deadline`, тесты, автомиграция в `main.py`.
 
-**Out (следующие спринты):** рефинанс (выключен до механики); informational «лотерея»; UI-таймер цепочки; ветки 3+ шагов.
+**Out (следующие спринты):** informational «лотерея»; UI-таймер цепочки; ветки 3+ шагов; контекстный пул first.
 
-**In (следующий спринт):** цепочка **родственник** (см. ниже); типизация событий — [`event-types-and-taxonomy.md`](event-types-and-taxonomy.md).
+**In (сделано / в коде):** цепочка **родственник**; `EVENT_TAXONOMY` + пул (домены, fatigue); см. [`event-engagement-anti-fatigue.md`](event-engagement-anti-fatigue.md).
 
 ## Not Doing (and Why)
 

@@ -9,7 +9,71 @@ import json
 
 from sqlalchemy.orm import Session
 
+from .event_taxonomy import build_metadata_json
 from .models import EventDefinition, EventChoice
+
+# metadata_json.event_domain / interaction_kind — см. docs/vision/ideas/event-types-and-taxonomy.md
+EVENT_TAXONOMY: dict[str, dict] = {
+    "mq11_groceries_discount": build_metadata_json(
+        event_domain="consumption", scenario_shape="soft_offer"
+    ),
+    "mq11_streaming_offer": build_metadata_json(
+        event_domain="consumption", scenario_shape="soft_offer"
+    ),
+    "mq11_gym_membership": build_metadata_json(
+        event_domain="consumption", scenario_shape="soft_offer"
+    ),
+    "mq11_transport_pass": build_metadata_json(
+        event_domain="consumption", scenario_shape="soft_offer"
+    ),
+    "mq11_pharmacy_stock": build_metadata_json(event_domain="health", scenario_shape="soft_offer"),
+    "mq11_home_internet": build_metadata_json(event_domain="housing", scenario_shape="soft_offer"),
+    "mq11_sprain_leg": build_metadata_json(
+        event_domain="health", scenario_shape="mandatory", interaction_kind="choice"
+    ),
+    "mq11_evening_course": build_metadata_json(
+        event_domain="investment_education", scenario_shape="soft_offer"
+    ),
+    "mq11_family_money_request": build_metadata_json(
+        event_domain="social_family", scenario_shape="chain"
+    ),
+    "mq11_family_money_callback": build_metadata_json(
+        event_domain="social_family",
+        interaction_kind="chain_followup",
+        scenario_shape="chain",
+    ),
+    "mq11_insurance_agent": build_metadata_json(
+        event_domain="insurance", scenario_shape="soft_offer"
+    ),
+    "mq11_used_car_offer": build_metadata_json(event_domain="auto", scenario_shape="chain"),
+    "mq11_used_car_deadline": build_metadata_json(
+        event_domain="auto", interaction_kind="chain_followup", scenario_shape="chain"
+    ),
+    "mq11_relocation_bonus": build_metadata_json(event_domain="housing", scenario_shape="soft_offer"),
+    "mq11_refinance_bank": build_metadata_json(
+        event_domain="credit_debt", scenario_shape="soft_offer"
+    ),
+    "mq11_investment_webinar": build_metadata_json(
+        event_domain="investment_education", scenario_shape="soft_offer"
+    ),
+    "mq11_downsize_flat": build_metadata_json(event_domain="housing", scenario_shape="soft_offer"),
+    "mq11_car_accident": build_metadata_json(
+        event_domain="auto",
+        scenario_shape="asset_linked",
+        extra={"secondary_domains": ["insurance"]},
+    ),
+    "mq11_home_water_damage": build_metadata_json(
+        event_domain="housing",
+        scenario_shape="asset_linked",
+        extra={"secondary_domains": ["insurance"]},
+    ),
+    "mq11_events_unlock_intro": build_metadata_json(
+        event_domain="meta", interaction_kind="intro", scenario_shape="narrative_once"
+    ),
+    "mq11_wedding_gift_once": build_metadata_json(
+        event_domain="social_family", scenario_shape="narrative_once"
+    ),
+}
 
 # Суммы в effects; на кнопках — короткий текст + impacts в API (см. event_choice_impacts).
 MVP11_EVENT_SPECS: list[dict] = [
@@ -20,6 +84,7 @@ MVP11_EVENT_SPECS: list[dict] = [
         "weight": 95,
         "event_tier": 1,
         "repeat_policy": "repeatable",
+        "cooldown_periods": 3,
         "choices": [
             {"title": "Купить только нужное", "effects": {"cash_delta": -1500, "xp_delta": 2}},
             {"title": "Запас на месяц", "effects": {"cash_delta": -4200, "xp_delta": 1}},
@@ -33,6 +98,7 @@ MVP11_EVENT_SPECS: list[dict] = [
         "weight": 85,
         "event_tier": 1,
         "repeat_policy": "repeatable",
+        "cooldown_periods": 3,
         "choices": [
             {
                 "title": "Один сервис",
@@ -69,6 +135,7 @@ MVP11_EVENT_SPECS: list[dict] = [
         "weight": 80,
         "event_tier": 1,
         "repeat_policy": "repeatable",
+        "cooldown_periods": 3,
         "choices": [
             {"title": "Продлить на год", "effects": {"cash_delta": -14900, "xp_delta": 3}},
             {"title": "Продлить на квартал", "effects": {"cash_delta": -4500, "xp_delta": 2}},
@@ -82,6 +149,7 @@ MVP11_EVENT_SPECS: list[dict] = [
         "weight": 92,
         "event_tier": 1,
         "repeat_policy": "repeatable",
+        "cooldown_periods": 3,
         "choices": [
             {"title": "Месячный проездной", "effects": {"cash_delta": -2800, "xp_delta": 2}},
             {"title": "Пополнить баланс карты", "effects": {"cash_delta": -900, "xp_delta": 1}},
@@ -95,6 +163,7 @@ MVP11_EVENT_SPECS: list[dict] = [
         "weight": 78,
         "event_tier": 1,
         "repeat_policy": "repeatable",
+        "cooldown_periods": 3,
         "choices": [
             {"title": "Полный набор", "effects": {"cash_delta": -3200, "xp_delta": 2}},
             {"title": "Только необходимое", "effects": {"cash_delta": -1100, "xp_delta": 2}},
@@ -120,6 +189,7 @@ MVP11_EVENT_SPECS: list[dict] = [
         "weight": 86,
         "event_tier": 1,
         "repeat_policy": "repeatable",
+        "cooldown_periods": 3,
         "choices": [
             {
                 "title": "Тариф повыше",
@@ -173,21 +243,54 @@ MVP11_EVENT_SPECS: list[dict] = [
         "repeat_policy": "repeatable",
         "choices": [
             {"title": "Записаться на курс", "effects": {"cash_delta": -8900, "xp_delta": 8}},
-            {"title": "Бесплатные материалы", "effects": {"cash_delta": 0, "xp_delta": 3}},
             {"title": "Отказаться", "effects": {"cash_delta": 0, "xp_delta": 1}},
         ],
     },
     {
         "key": "mq11_family_money_request",
         "title": "Просьба о помощи от родственника",
-        "description": "Близкий человек просит небольшую сумму в затруднительной ситуации.",
+        "description": (
+            "Близкий человек просит небольшую сумму в затруднительной ситуации. "
+            "Помощь — разовая; при отказе может снова обратиться через период."
+        ),
         "weight": 75,
         "event_tier": 2,
         "repeat_policy": "repeatable",
+        "cooldown_periods": 4,
         "choices": [
             {"title": "Помочь полностью", "effects": {"cash_delta": -15000, "xp_delta": 5}},
             {"title": "Помочь частично", "effects": {"cash_delta": -7000, "xp_delta": 4}},
-            {"title": "Отказаться вежливо", "effects": {"cash_delta": 0, "xp_delta": 1}},
+            {
+                "title": "Отказаться вежливо",
+                "description": "Через период родственник может снова попросить о большей сумме.",
+                "effects": {
+                    "cash_delta": 0,
+                    "xp_delta": 1,
+                    "enqueue_event": {
+                        "chain_key": "family_money_refusal",
+                        "followup_definition_key": "mq11_family_money_callback",
+                        "after_periods": 1,
+                        "context": {"branch": "refused_once"},
+                    },
+                },
+            },
+        ],
+    },
+    {
+        "key": "mq11_family_money_callback",
+        "title": "Родственник снова просит о помощи",
+        "description": (
+            "После вашего отказа ситуация не улучшилась — просят уже больше. "
+            "Можно помочь снова или твёрдо отказать."
+        ),
+        "weight": 1,
+        "event_tier": 2,
+        "repeat_policy": "once_per_profile",
+        "mandatory_gate": "none",
+        "choices": [
+            {"title": "Помочь полностью", "effects": {"cash_delta": -18000, "xp_delta": 5}},
+            {"title": "Помочь частично", "effects": {"cash_delta": -9000, "xp_delta": 4}},
+            {"title": "Твёрдый отказ", "effects": {"cash_delta": 0, "xp_delta": 1}},
         ],
     },
     {
@@ -343,6 +446,7 @@ MVP11_EVENT_SPECS: list[dict] = [
         "weight": 58,
         "event_tier": 5,
         "repeat_policy": "repeatable",
+        "is_active": 0,
         "prerequisites_json": {"min_active_liabilities": 1},
         "choices": [
             {"title": "Оформить пакет документов", "effects": {"cash_delta": -6500, "xp_delta": 12}},
@@ -359,7 +463,6 @@ MVP11_EVENT_SPECS: list[dict] = [
         "repeat_policy": "repeatable",
         "choices": [
             {"title": "Платное участие", "effects": {"cash_delta": -3490, "xp_delta": 6}},
-            {"title": "Бесплатная запись", "effects": {"cash_delta": 0, "xp_delta": 2}},
             {"title": "Не участвовать", "effects": {"cash_delta": 0, "xp_delta": 1}},
         ],
     },
@@ -478,9 +581,18 @@ MVP11_EVENT_SPECS: list[dict] = [
 ]
 
 
+def _metadata_for_spec(spec: dict) -> dict:
+    meta = dict(EVENT_TAXONOMY.get(spec["key"]) or {})
+    extra = spec.get("metadata_json")
+    if isinstance(extra, dict):
+        meta.update(extra)
+    return meta
+
+
 def ensure_mvp11_event_catalog(db: Session) -> None:
     """Добавляет отсутствующие определения и обновляет tier/repeat у существующих по ключу."""
     for spec in MVP11_EVENT_SPECS:
+        meta_json = json.dumps(_metadata_for_spec(spec), ensure_ascii=False)
         existing = db.query(EventDefinition).filter(EventDefinition.key == spec["key"]).first()
         if existing:
             existing.title = spec["title"]
@@ -491,6 +603,9 @@ def ensure_mvp11_event_catalog(db: Session) -> None:
             existing.cooldown_periods = int(spec.get("cooldown_periods", 0) or 0)
             existing.mandatory_gate = str(spec.get("mandatory_gate", "none"))
             existing.weight = int(spec.get("weight", 100))
+            existing.metadata_json = meta_json
+            if "is_active" in spec:
+                existing.is_active = int(spec.get("is_active", 1))
             if "prerequisites_json" in spec:
                 existing.prerequisites_json = json.dumps(
                     spec.get("prerequisites_json") or {}, ensure_ascii=False
@@ -527,13 +642,14 @@ def ensure_mvp11_event_catalog(db: Session) -> None:
             title=spec["title"],
             description=spec["description"],
             weight=int(spec.get("weight", 100)),
-            is_active=1,
+            is_active=int(spec.get("is_active", 1)),
             event_tier=int(spec.get("event_tier", 1)),
             repeat_policy=str(spec.get("repeat_policy", "repeatable")),
             repeat_max=spec.get("repeat_max"),
             cooldown_periods=int(spec.get("cooldown_periods", 0) or 0),
             mandatory_gate=str(spec.get("mandatory_gate", "none")),
             prerequisites_json=json.dumps(spec.get("prerequisites_json") or {}, ensure_ascii=False),
+            metadata_json=meta_json,
         )
         db.add(ed)
         db.flush()

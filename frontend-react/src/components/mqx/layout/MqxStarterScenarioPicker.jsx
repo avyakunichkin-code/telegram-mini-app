@@ -1,4 +1,4 @@
-import { ScenarioSceneIcon } from '../icons/ScenarioSceneIcons';
+import { ScenarioIllustrationIcon } from '../icons/ScenarioIllustrations';
 import { tierFromRank } from '../../../utils/starterTemplateTier';
 
 const COMPACT_MAX_BULLETS = 2;
@@ -25,7 +25,9 @@ export function MqxStarterScenarioPicker({
 
   return (
     <div
-      className={['mqx-scenario-picker', layoutCls].filter(Boolean).join(' ')}
+      className={['mqx-scenario-picker', 'mqx-scenario-picker--illus', layoutCls]
+        .filter(Boolean)
+        .join(' ')}
       role="radiogroup"
       aria-labelledby={labelledById}
       aria-disabled={disabled || undefined}
@@ -62,7 +64,7 @@ export function MqxStarterScenarioPicker({
               className={`mqx-scenario-strip__icon-wrap mqx-scenario-strip__icon-wrap--${tier.slug}`}
               aria-hidden
             >
-              <ScenarioSceneIcon iconKey={iconKey} className="mqx-scenario-strip__icon" />
+              <ScenarioIllustrationIcon iconKey={iconKey} />
             </span>
             <span className="mqx-scenario-strip__body">
               <span className="mqx-scenario-strip__head">

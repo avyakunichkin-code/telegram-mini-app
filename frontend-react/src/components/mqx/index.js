@@ -12,6 +12,13 @@ export { MqxDashboardHero } from './layout/MqxDashboardHero';
 export { MqxSaveKindPicker } from './layout/MqxSaveKindPicker';
 export { MqxStarterScenarioPicker } from './layout/MqxStarterScenarioPicker';
 export { ScenarioSceneIcon } from './icons/ScenarioSceneIcons';
+export {
+  ScenarioIllustrationIcon,
+  IllustrationScenarioStudent,
+  IllustrationScenarioProfessional,
+  IllustrationScenarioManager,
+  IllustrationScenarioEntrepreneur,
+} from './icons/ScenarioIllustrations';
 export { IllustrationGame, IllustrationPlan } from './icons/ModeIllustrations';
 export { MqxDashStack } from './layout/MqxDashStack';
 export { MqxDivider } from './primitives/MqxDivider';

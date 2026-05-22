@@ -146,6 +146,19 @@ tracks: events, gameplay, analytics
 
 ---
 
+## Варианты контента (согласовано 2026-05-22)
+
+**Не** хранить «variant B» в одной записи `EventDefinition` с общим заголовком — игроку кажется тот же попап с другими цифрами.
+
+**Делать:** отдельные **`key`** (`mq11_streaming_offer`, позже `mq11_streaming_price_hike`, …):
+
+- тот же `event_domain` и похожие `effects` (expense_line, cash_delta);
+- **другой** title/description и суммы;
+- общий `cooldown_periods` / tier по смыслу;
+- одна строка в `EVENT_TAXONOMY` на key.
+
+Конвейер добавления — [`event-engagement-anti-fatigue.md`](event-engagement-anti-fatigue.md) § «Система добавления событий».
+
 ## Open Questions
 
 - [ ] Один домен vs primary+secondary для ДТП/затопления в отчётах?

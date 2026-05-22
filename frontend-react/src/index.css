@@ -4198,7 +4198,7 @@ body [class*='modal'] {
 
 .mq-game-template-card--amber,
 .mq-game-template-card--mid {
-  border-left: 3px solid #a16207;
+  border-left: 3px solid #d4bc00;
 }
 
 .mq-game-template-card--orange,
@@ -4311,7 +4311,7 @@ body [class*='modal'] {
 
 .mqx-scenario-strip {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   gap: 12px;
   width: 100%;
   max-width: 100%;
@@ -4352,7 +4352,7 @@ body [class*='modal'] {
 
 .mqx-scenario-strip--amber,
 .mqx-scenario-strip--mid {
-  border-left: 3px solid #a16207;
+  border-left: 3px solid #d4bc00;
 }
 
 .mqx-scenario-strip--orange,
@@ -4369,10 +4369,12 @@ body [class*='modal'] {
 
 .mqx-scenario-strip__icon-wrap {
   flex-shrink: 0;
+  align-self: center;
   width: 48px;
   height: 48px;
-  display: grid;
-  place-items: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   border-radius: 12px;
   color: #fff;
   border: 1px solid rgba(255, 255, 255, 0.14);
@@ -4385,7 +4387,24 @@ body [class*='modal'] {
 
 .mqx-scenario-strip__icon-wrap--amber,
 .mqx-scenario-strip__icon-wrap--mid {
-  background: linear-gradient(135deg, #a16207, #ca8a04);
+  background: linear-gradient(135deg, #e6c200, #ffe800);
+  color: #2a2400;
+}
+
+.mqx-scenario-strip__icon-wrap--amber svg:not(.mqx-scenario-strip__icon--silhouette),
+.mqx-scenario-strip__icon-wrap--mid svg:not(.mqx-scenario-strip__icon--silhouette) {
+  stroke: rgba(32, 28, 0, 0.9);
+}
+
+.mqx-scenario-strip__icon-wrap--amber svg.mqx-scenario-strip__icon--silhouette,
+.mqx-scenario-strip__icon-wrap--mid svg.mqx-scenario-strip__icon--silhouette {
+  fill: rgba(32, 28, 0, 0.92);
+}
+
+.mqx-scenario-strip__icon-wrap--amber svg:not(.mqx-scenario-strip__icon--silhouette) circle[fill],
+.mqx-scenario-strip__icon-wrap--mid svg:not(.mqx-scenario-strip__icon--silhouette) circle[fill] {
+  fill: rgba(32, 28, 0, 0.9);
+  stroke: none;
 }
 
 .mqx-scenario-strip__icon-wrap--orange,
@@ -4401,9 +4420,15 @@ body [class*='modal'] {
 }
 
 .mqx-scenario-strip__icon-wrap .mqx-scenario-strip__icon,
-.mqx-scenario-strip__icon-wrap svg {
-  width: 22px;
-  height: 22px;
+.mqx-scenario-strip__icon-wrap > svg {
+  width: 28px;
+  height: 28px;
+  display: block;
+  flex-shrink: 0;
+  margin: 0;
+}
+
+.mqx-scenario-strip__icon-wrap svg:not(.mqx-scenario-strip__icon--silhouette) {
   stroke: rgba(255, 255, 255, 0.95);
   fill: none;
   stroke-width: 2;
@@ -4411,7 +4436,12 @@ body [class*='modal'] {
   stroke-linejoin: round;
 }
 
-.mqx-scenario-strip__icon-wrap svg circle[fill] {
+.mqx-scenario-strip__icon-wrap svg.mqx-scenario-strip__icon--silhouette {
+  fill: currentColor;
+  stroke: none;
+}
+
+.mqx-scenario-strip__icon-wrap svg:not(.mqx-scenario-strip__icon--silhouette) circle[fill] {
   fill: rgba(255, 255, 255, 0.95);
   stroke: none;
 }
@@ -4424,6 +4454,43 @@ body [class*='modal'] {
 .mqx-scenario-picker--compact .mqx-scenario-strip__icon-wrap {
   width: 44px;
   height: 44px;
+}
+
+/* I-Scene ★ — иллюстрации 56×56 / 40×40 (design-lab scenario-icons) */
+.mqx-scenario-picker--illus .mqx-scenario-strip__icon-wrap {
+  width: 56px;
+  height: 56px;
+  border-radius: 14px;
+}
+
+.mqx-scenario-picker--illus .mqx-scenario-strip__icon-wrap .mqx-scenario-illus,
+.mqx-scenario-picker--illus .mqx-scenario-strip__icon-wrap > svg.mqx-scenario-illus {
+  width: 40px;
+  height: 40px;
+  display: block;
+  flex-shrink: 0;
+  margin: 0;
+}
+
+.mqx-scenario-picker--illus .mqx-scenario-strip__icon-wrap svg.mqx-scenario-illus {
+  stroke: unset;
+  stroke-width: unset;
+  fill: none;
+}
+
+.mqx-scenario-picker--illus .mqx-scenario-strip__icon-wrap--amber svg.mqx-scenario-illus,
+.mqx-scenario-picker--illus .mqx-scenario-strip__icon-wrap--mid svg.mqx-scenario-illus {
+  color: #2a2400;
+}
+
+.mqx-scenario-picker--illus .mqx-scenario-strip__icon-wrap--amber svg.mqx-scenario-illus [fill],
+.mqx-scenario-picker--illus .mqx-scenario-strip__icon-wrap--mid svg.mqx-scenario-illus [fill] {
+  fill: currentColor;
+}
+
+.mqx-scenario-picker--compact.mqx-scenario-picker--illus .mqx-scenario-strip__icon-wrap {
+  width: 56px;
+  height: 56px;
 }
 
 .mqx-scenario-picker--compact .mqx-scenario-strip__title {
