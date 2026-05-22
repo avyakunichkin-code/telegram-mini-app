@@ -31,6 +31,31 @@ from .expenses import compute_monthly_burn, expire_expense_lines_for_period, lif
 from .timeutil import utc_now_naive
 
 
+def _aggregate_period_flows(
+    breakdown: list,
+    *,
+    salary_amount: float = 0,
+    salary_claimed: bool = False,
+) -> tuple[float, float]:
+    income = 0.0
+    expense = 0.0
+    if salary_claimed and salary_amount > 0:
+        income += float(salary_amount)
+    for item in breakdown or []:
+        if not isinstance(item, dict):
+            continue
+        kind = str(item.get("type") or "")
+        if kind == "liability":
+            expense += float(item.get("paid") or 0)
+        elif kind in ("asset_income", "invest", "salary"):
+            income += float(item.get("amount") or 0)
+        elif kind in ("lifestyle", "expense_category", "insurance"):
+            expense += abs(float(item.get("amount") or 0))
+        elif kind == "asset":
+            expense += float(item.get("amount") or 0)
+    return round(income, 2), round(expense, 2)
+
+
 def process_period_end(db: Session, profile: GameProfile) -> dict:
     """
     Выполняет завершение текущего периода:
@@ -45,6 +70,19 @@ def process_period_end(db: Session, profile: GameProfile) -> dict:
     Возвращает словарь со статистикой списаний.
     """
     period_index = profile.period_index
+    closed_period_index = int(period_index)
+    cash_before = float(profile.cash_balance)
+    safety_before = float(profile.safety_fund_balance)
+    invest_positions = (
+        db.query(InvestmentPosition)
+        .filter(
+            InvestmentPosition.game_profile_id == profile.id,
+            InvestmentPosition.is_active == 1,
+        )
+        .all()
+    )
+    invest_before = round(sum(float(p.principal) for p in invest_positions), 2)
+
     total_spend = 0.0
     breakdown = []
     closed_burn_total = 0.0
@@ -173,11 +211,7 @@ def process_period_end(db: Session, profile: GameProfile) -> dict:
         pass
 
     # 3.6 Инвестиции: начисления (депозит — капитализация, облигации — купон на баланс)
-    positions = (
-        db.query(InvestmentPosition)
-        .filter(InvestmentPosition.game_profile_id == profile.id, InvestmentPosition.is_active == 1)
-        .all()
-    )
+    positions = invest_positions
     for pos in positions:
         # начисляем только если прошёл период
         if int(pos.last_accrued_period) >= int(period_index):
@@ -236,7 +270,25 @@ def process_period_end(db: Session, profile: GameProfile) -> dict:
         (snapshot and int(snapshot.salary_claimed or 0) == 1)
         or int(getattr(profile, "last_period_salary_claimed", 0) or 0) == int(period_index)
     )
+    salary_amount = float(snapshot.salary_amount or 0) if snapshot else 0.0
     safety_contrib = float(snapshot.safety_fund_contribution or 0) if snapshot else 0.0
+    invest_after = round(
+        sum(
+            float(p.principal)
+            for p in db.query(InvestmentPosition)
+            .filter(
+                InvestmentPosition.game_profile_id == profile.id,
+                InvestmentPosition.is_active == 1,
+            )
+            .all()
+        ),
+        2,
+    )
+    income_total, expense_total = _aggregate_period_flows(
+        breakdown,
+        salary_amount=salary_amount,
+        salary_claimed=salary_claimed,
+    )
     period_xp = compute_period_close_xp(
         salary_claimed=salary_claimed,
         safety_fund_contribution=safety_contrib,
@@ -325,6 +377,12 @@ def process_period_end(db: Session, profile: GameProfile) -> dict:
         pass
 
     return {
+        "closed_period_index": closed_period_index,
+        "cash_delta": round(float(profile.cash_balance) - cash_before, 2),
+        "income_total": income_total,
+        "expense_total": expense_total,
+        "safety_fund_delta": round(float(profile.safety_fund_balance) - safety_before, 2),
+        "invest_capital_delta": round(invest_after - invest_before, 2),
         "total_spent": total_spend,
         "breakdown": breakdown,
         "new_balance": profile.cash_balance,

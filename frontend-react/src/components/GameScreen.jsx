@@ -11,7 +11,9 @@ import { EventCarouselOverlay } from './EventDeck';
 import { MqxShell } from './MqxShell';
 import { MqxTabHero } from './MqxTabHero';
 import { GameScreenLayout, GameScreenTabNav } from './GameScreenLayout';
-import { PeriodCloseModal } from './PeriodCloseModal';
+import { MqxPeriodCloseSheet, MqxPeriodCloseTail } from './mqx';
+import { PERIOD_CLOSE_AUTO_MAX } from '../constants/periodClose';
+import { shouldAutoOpenPeriodClose } from '../utils/periodCloseDisplay';
 import { GameOnboardingLayer } from './GameOnboardingLayer';
 
 /** Эмоциональный слой страницы: фон синхронизирован с «время идёт» / «пауза» / загрузка. */
@@ -26,6 +28,8 @@ export function GameScreen({ onLogout, onNewGame, onLoadGame }) {
   const [eventsOpen, setEventsOpen] = useState(false);
   const [onboardingUi, setOnboardingUi] = useState({ visible: false, lockTabs: false });
   const [queuedPeriodClose, setQueuedPeriodClose] = useState(null);
+  const [lastPeriodClose, setLastPeriodClose] = useState(null);
+  const [periodCloseOpen, setPeriodCloseOpen] = useState(false);
   const onboardingRootRef = useRef(null);
   const {
     overview,
@@ -88,13 +92,29 @@ export function GameScreen({ onLogout, onNewGame, onLoadGame }) {
     dismissPeriodClose();
   }, [periodCloseSummary, inOnboarding, dismissPeriodClose]);
 
-  const periodCloseToShow =
-    !inOnboarding && (periodCloseSummary ?? queuedPeriodClose);
-
-  const handleDismissPeriodClose = useCallback(() => {
-    dismissPeriodClose();
+  useEffect(() => {
+    if (!periodCloseSummary || inOnboarding) return;
+    const payload = periodCloseSummary;
+    setLastPeriodClose(payload);
     setQueuedPeriodClose(null);
-  }, [dismissPeriodClose]);
+    setPeriodCloseOpen(shouldAutoOpenPeriodClose(payload, PERIOD_CLOSE_AUTO_MAX));
+    dismissPeriodClose();
+  }, [periodCloseSummary, inOnboarding, dismissPeriodClose]);
+
+  useEffect(() => {
+    if (!queuedPeriodClose || inOnboarding) return;
+    setLastPeriodClose(queuedPeriodClose);
+    setQueuedPeriodClose(null);
+    setPeriodCloseOpen(shouldAutoOpenPeriodClose(queuedPeriodClose, PERIOD_CLOSE_AUTO_MAX));
+  }, [queuedPeriodClose, inOnboarding]);
+
+  const periodCloseForUi = lastPeriodClose;
+  const showPeriodCloseTail =
+    !inOnboarding && activeTab === 'dashboard' && periodCloseForUi && !periodCloseOpen;
+
+  const handleClosePeriodClose = useCallback(() => {
+    setPeriodCloseOpen(false);
+  }, []);
 
   const handleRequestNextPeriod = async () => {
     if (!inOnboarding) {
@@ -242,6 +262,18 @@ export function GameScreen({ onLogout, onNewGame, onLoadGame }) {
             </div>
           </Modal>
 
+          <MqxPeriodCloseSheet
+            summary={periodCloseForUi}
+            open={Boolean(periodCloseForUi && periodCloseOpen && !inOnboarding)}
+            onClose={handleClosePeriodClose}
+          />
+          {showPeriodCloseTail ? (
+            <MqxPeriodCloseTail
+              summary={periodCloseForUi}
+              onOpen={() => setPeriodCloseOpen(true)}
+            />
+          ) : null}
+
           <EventCarouselOverlay
             open={eventsOpen}
             onClose={closeEventsOverlay}
@@ -311,10 +343,6 @@ export function GameScreen({ onLogout, onNewGame, onLoadGame }) {
           </div>
         </div>
       </div>
-      {periodCloseToShow ? (
-        <PeriodCloseModal summary={periodCloseToShow} onClose={handleDismissPeriodClose} />
-      ) : null}
-
       <GameOnboardingLayer
         overview={overview}
         periodStatus={periodStatus}

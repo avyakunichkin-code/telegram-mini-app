@@ -80,7 +80,7 @@ npx serve .
 | 9 | **`dashboard-dual-accordion/`** — два аккордеона MQX (D1–D5) | `MqxLevelBlock` collapsible, `MqxPeriodDashboard` v2 |
 | 10 | **`new-game-mode/`** — R2 + I1 ★ | `MqxMonetkaDialogScreen`, `MqxSaveKindPicker`, `NewProfileKindScreen` |
 | 11 | **`game-templates/`** — compact + цвета ★; **`scenario-icons/`** — I-Scene ★, P-C | `MqxStarterScenarioPicker`, `ScenarioIllustrations`, `GameTemplatePickScreen` |
-| 12 | **`period-close/`** — итог месяца (3–5 вариантов + хвостик) | `PeriodCloseModal` → `MqxPeriodCloseSheet` |
+| 12 | **`period-close/`** — нижний лист + хвостик ★ | `MqxPeriodCloseSheet`, `MqxPeriodCloseTail` (заменяет `PeriodCloseModal`) |
 
 Текущий статус: **примитивы**, **shell**, **события**, **портфель**, **страховки**, **row-actions (B)**, **VictoryGoalsPanel** в prod; дальше — `dashboard/` (hero), empty/error в shell.
 

@@ -11,6 +11,8 @@ export { InvestPositionMetrics } from './metrics/InvestPositionMetrics';
 export { MqxDashboardHero } from './layout/MqxDashboardHero';
 export { MqxSaveKindPicker } from './layout/MqxSaveKindPicker';
 export { MqxStarterScenarioPicker } from './layout/MqxStarterScenarioPicker';
+export { MqxPeriodCloseSheet } from './layout/MqxPeriodCloseSheet';
+export { MqxPeriodCloseTail } from './layout/MqxPeriodCloseTail';
 export { ScenarioSceneIcon } from './icons/ScenarioSceneIcons';
 export {
   ScenarioIllustrationIcon,

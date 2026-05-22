@@ -10,7 +10,7 @@
 | **≥ 4** | Авто-всплытие **выключено**; внизу дашборда **«хвостик»** — тап открывает итог **прошлого** периода |
 | Закрыли итог | Данные остаются в `lastPeriodClose` до следующего закрытия; хвостик виден, пока есть что показать |
 
-Хвостик: подпись вида **«Период 3 · итоги»**, не перекрывает таббар.
+Хвостик: **«Итоги периода #N»** (+XP), не перекрывает таббар.
 
 ## Содержимое (краткая выжимка)
 
@@ -26,9 +26,9 @@
 
 Опционально одна строка **+XP** и бейдж достижения (если есть), без отдельных секций на полэкрана.
 
-### Задел API (prod, после утверждения UI)
+### API v2 — **в prod**
 
-Расширить `PeriodCloseSummary` в `backend/app/schemas.py`:
+`PeriodCloseSummary` в `backend/app/schemas.py`:
 
 - `closed_period_index: int`
 - `cash_before`, `cash_after` (или `cash_delta`)
@@ -50,9 +50,9 @@
 
 Рекомендация для TMA: **D** (механика хвостика) + тело **A** или **C**.
 
-## Prod (после «утверждаем X»)
+## Prod ★
 
-- `MqxPeriodCloseSheet` + `PeriodCloseTail` в `mqx/`
-- Логика в `GameScreen` / `useGame`: `AUTO_PERIOD_CLOSE_MAX = 3`
-- Удалить или сузить `PeriodCloseModal`
-- `#/dev/mqx` — секция витрины
+- `MqxPeriodCloseSheet` + `MqxPeriodCloseTail`
+- `GameScreen`: `PERIOD_CLOSE_AUTO_MAX = 3`
+- Строки: иконка + текст + стрелка + Δ (без блоков, без scroll)
+- `PeriodCloseModal` больше не используется
