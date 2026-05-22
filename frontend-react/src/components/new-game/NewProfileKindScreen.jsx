@@ -22,8 +22,6 @@ export function NewProfileKindScreen({ onChooseGame, onBack }) {
         sectionTitle="Режим игры"
         sectionTitleId="mqx-new-game-mode-heading"
         onSelectGame={onChooseGame}
-        gameDesc=""
-        planDesc=""
       />
 
       <div className="mqx-monetka-flow__actions">

@@ -170,7 +170,7 @@ export function MqCatalogScreen() {
 
       <CatalogSection title="Новая игра — выбор режима (R1 ★)">
         <p className="mqx-catalog__lead">
-          Шаг 1: имя слота + <code>MqxSaveKindPicker</code> (unified strips). План — заглушка «Скоро».
+          Шаг 1: <code>MqxSaveKindPicker</code> vivid (56/40, цветная полоска). План — «Скоро».
         </p>
         <div className="mqx-catalog-save-kind-demo">
           <MqxSaveKindPicker onSelectGame={() => {}} />

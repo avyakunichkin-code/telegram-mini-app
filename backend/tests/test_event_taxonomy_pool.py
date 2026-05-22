@@ -87,6 +87,22 @@ class TestEventTaxonomyPool:
         assert "mq11_refinance_bank" not in keys
 
 
+class TestConsumptionVariantsSeeded:
+    def test_four_variant_defs_present(self, catalog):
+        keys = (
+            "mq11_coffee_takeaway",
+            "mq11_clothing_clearance",
+            "mq11_food_delivery_promo",
+            "mq11_appliance_sale",
+        )
+        for key in keys:
+            row = catalog.query(EventDefinition).filter(EventDefinition.key == key).first()
+            assert row is not None, key
+            assert row.is_active == 1
+            meta = json.loads(row.metadata_json)
+            assert meta.get("event_domain") == "consumption"
+
+
 class TestFamilyMoneyChain:
     def test_refuse_schedules_callback_next_period(self, catalog):
         from app.event_chains import FAMILY_MONEY_CHAIN_KEY, ensure_scheduled_chain_events, get_active_chain

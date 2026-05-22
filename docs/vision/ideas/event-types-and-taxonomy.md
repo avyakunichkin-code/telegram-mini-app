@@ -82,6 +82,10 @@ tracks: events, gameplay, analytics
 | `mq11_streaming_offer` | `consumption` | `choice` | `soft_offer` |
 | `mq11_gym_membership` | `consumption` | `choice` | `soft_offer` |
 | `mq11_transport_pass` | `consumption` | `choice` | `soft_offer` |
+| `mq11_coffee_takeaway` | `consumption` | `choice` | `soft_offer` |
+| `mq11_clothing_clearance` | `consumption` | `choice` | `soft_offer` |
+| `mq11_food_delivery_promo` | `consumption` | `choice` | `soft_offer` |
+| `mq11_appliance_sale` | `consumption` | `choice` | `soft_offer` |
 | `mq11_pharmacy_stock` | `health` | `choice` | `soft_offer` |
 | `mq11_home_internet` | `housing` | `choice` | `soft_offer` |
 | `mq11_sprain_leg` | `health` | `choice` | `mandatory` |

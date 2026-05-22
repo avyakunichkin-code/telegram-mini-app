@@ -26,6 +26,18 @@ EVENT_TAXONOMY: dict[str, dict] = {
     "mq11_transport_pass": build_metadata_json(
         event_domain="consumption", scenario_shape="soft_offer"
     ),
+    "mq11_coffee_takeaway": build_metadata_json(
+        event_domain="consumption", scenario_shape="soft_offer"
+    ),
+    "mq11_clothing_clearance": build_metadata_json(
+        event_domain="consumption", scenario_shape="soft_offer"
+    ),
+    "mq11_food_delivery_promo": build_metadata_json(
+        event_domain="consumption", scenario_shape="soft_offer"
+    ),
+    "mq11_appliance_sale": build_metadata_json(
+        event_domain="consumption", scenario_shape="soft_offer"
+    ),
     "mq11_pharmacy_stock": build_metadata_json(event_domain="health", scenario_shape="soft_offer"),
     "mq11_home_internet": build_metadata_json(event_domain="housing", scenario_shape="soft_offer"),
     "mq11_sprain_leg": build_metadata_json(
@@ -154,6 +166,70 @@ MVP11_EVENT_SPECS: list[dict] = [
             {"title": "Месячный проездной", "effects": {"cash_delta": -2800, "xp_delta": 2}},
             {"title": "Пополнить баланс карты", "effects": {"cash_delta": -900, "xp_delta": 1}},
             {"title": "Ходить пешком", "effects": {"cash_delta": 0, "xp_delta": 2}},
+        ],
+    },
+    {
+        "key": "mq11_coffee_takeaway",
+        "title": "Кофе каждый день",
+        "description": "Кофейня у офиса предлагает абонемент на месяц — иначе платите по чашке.",
+        "weight": 82,
+        "event_tier": 1,
+        "repeat_policy": "repeatable",
+        "cooldown_periods": 3,
+        "choices": [
+            {"title": "Абонемент на месяц", "effects": {"cash_delta": -3200, "xp_delta": 2}},
+            {"title": "Пить реже, без абонемента", "effects": {"cash_delta": 0, "xp_delta": 3}},
+        ],
+    },
+    {
+        "key": "mq11_clothing_clearance",
+        "title": "Распродажа одежды",
+        "description": "Магазин закрывает сезон — скидки на базовый гардероб и «полный апгрейд».",
+        "weight": 76,
+        "event_tier": 1,
+        "repeat_policy": "repeatable",
+        "cooldown_periods": 3,
+        "choices": [
+            {"title": "Только необходимое", "effects": {"cash_delta": -2800, "xp_delta": 3}},
+            {"title": "Обновить гардероб", "effects": {"cash_delta": -6500, "xp_delta": 1}},
+        ],
+    },
+    {
+        "key": "mq11_food_delivery_promo",
+        "title": "Акция доставки еды",
+        "description": "Сервис доставки даёт скидку на неделю заказов — удобно, но дороже готовки дома.",
+        "weight": 88,
+        "event_tier": 1,
+        "repeat_policy": "repeatable",
+        "cooldown_periods": 3,
+        "choices": [
+            {
+                "title": "Неделя заказов",
+                "effects": {
+                    "cash_delta": -2400,
+                    "expense_line": {
+                        "category_key": "other",
+                        "amount_monthly": 3500,
+                        "title": "Доставка еды",
+                        "expires_after_periods": 1,
+                    },
+                    "xp_delta": 1,
+                },
+            },
+            {"title": "Готовить дома", "effects": {"cash_delta": 0, "xp_delta": 4}},
+        ],
+    },
+    {
+        "key": "mq11_appliance_sale",
+        "title": "Скидка на бытовую технику",
+        "description": "Ритейлер распродаёт мелкую технику — можно заменить износившуюся или отложить.",
+        "weight": 74,
+        "event_tier": 1,
+        "repeat_policy": "repeatable",
+        "cooldown_periods": 3,
+        "choices": [
+            {"title": "Купить нужное сейчас", "effects": {"cash_delta": -4500, "xp_delta": 2}},
+            {"title": "Отложить покупку", "effects": {"cash_delta": 0, "xp_delta": 2}},
         ],
     },
     {

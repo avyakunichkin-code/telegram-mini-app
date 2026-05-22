@@ -7,27 +7,33 @@ import { IllustrationGame, IllustrationPlan } from '../icons/ModeIllustrations';
 export function MqxSaveKindPicker({
   onSelectGame,
   gameTitle = 'Игра',
-  gameDesc = 'Готовые сценарии, события и цели победы.',
+  gameDesc = 'Игровой симулятор с элементами финансовой грамотности',
   planTitle = 'План',
-  planDesc = 'Свои цифры и статьи расходов.',
+  planDesc = 'Профессиональный инструмент финансового планирования с элементами игры',
   planSoon = true,
   sectionTitle = '',
   sectionTitleId = 'mqx-save-kind-heading',
   className = '',
+  vivid = true,
 }) {
   const gameWrapCls = [
     'mqx-save-kind__icon-wrap',
     'mqx-save-kind__icon-wrap--game',
-    'mqx-save-kind__icon-wrap--game-glow',
+    vivid ? 'mqx-save-kind__icon-wrap--game-vivid' : 'mqx-save-kind__icon-wrap--game-glow',
   ].join(' ');
   const planWrapCls = [
     'mqx-save-kind__icon-wrap',
     'mqx-save-kind__icon-wrap--plan',
-    'mqx-save-kind__icon-wrap--plan-emerald',
+    vivid ? 'mqx-save-kind__icon-wrap--plan-vivid' : 'mqx-save-kind__icon-wrap--plan-emerald',
   ].join(' ');
 
   return (
-    <div className={['mqx-save-kind', className].filter(Boolean).join(' ')} role="group" aria-labelledby={sectionTitle ? sectionTitleId : undefined} aria-label={sectionTitle ? undefined : 'Режим игры'}>
+    <div
+      className={['mqx-save-kind', vivid ? 'mqx-save-kind--vivid' : '', className].filter(Boolean).join(' ')}
+      role="group"
+      aria-labelledby={sectionTitle ? sectionTitleId : undefined}
+      aria-label={sectionTitle ? undefined : 'Режим игры'}
+    >
       {sectionTitle ? (
         <h2 id={sectionTitleId} className="mqx-save-kind__heading">
           {sectionTitle}

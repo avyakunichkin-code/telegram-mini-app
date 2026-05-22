@@ -71,6 +71,10 @@ tracks: events, gameplay, content-pipeline
 - **Жёсткий блок периода** для всех pending — ломает TMA-сессию.
 - **20 defs без системы** — только хаос в весах; сначала конвейер + домены.
 
+## Добавлено (2026-05-22)
+
+Четыре consumption-«двойника» (отдельные key): `mq11_coffee_takeaway`, `mq11_clothing_clearance`, `mq11_food_delivery_promo`, `mq11_appliance_sale` — миграция `0026`.
+
 ## Open Questions
 
 - Целевой размер каталога к MVP 1.2 (24? 36 defs)?
