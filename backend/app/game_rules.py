@@ -7,6 +7,7 @@
 
 from __future__ import annotations
 
+import json
 from dataclasses import dataclass
 
 # --- Победа MVP (числа настраиваемые) ---
@@ -35,6 +36,7 @@ XP_NEED_BASE = XP_NEED_BY_LEVEL[0]
 XP_NEED_PER_LEVEL_STEP = XP_NEED_BY_LEVEL[1] - XP_NEED_BY_LEVEL[0]
 
 # --- События ---
+EVENTS_PER_PERIOD = 2
 EVENT_TIER_WINDOW_BELOW_LEVEL = 2
 EVENT_LIFESTYLE_DELTA_ABS_CAP = 15000.0
 
@@ -127,6 +129,83 @@ def event_tier_in_fallback_primary(event_tier: int, character_level: int) -> boo
 class EventProfileCounterSnapshot:
     times_selected: int = 0
     last_selected_period_index: int | None = None
+
+
+@dataclass(frozen=True)
+class EventProfileContext:
+    """Снимок профиля для отбора событий (активы, долги, страховки)."""
+
+    active_asset_kinds: frozenset[str]
+    active_liability_count: int
+    active_insurance_claim_keys: frozenset[str]
+
+
+@dataclass(frozen=True)
+class EventPrerequisites:
+    """
+    Условия выпадения события (prerequisites_json).
+
+    active_asset_kinds_any — хотя бы один актив с kind из списка.
+    active_asset_kinds_all — все перечисленные kind должны быть среди активов.
+    min_active_liabilities / min_active_assets — нижние границы по числу активных записей.
+    requires_insurance_any — хотя бы один активный полис с product+insured_object из списка dict.
+    """
+
+    active_asset_kinds_any: frozenset[str] = frozenset()
+    active_asset_kinds_all: frozenset[str] = frozenset()
+    min_active_liabilities: int = 0
+    min_active_assets: int = 0
+    requires_insurance_any: tuple[tuple[str, str], ...] = ()
+
+
+def parse_event_prerequisites_json(raw: str | None) -> EventPrerequisites:
+    if not raw or not str(raw).strip():
+        return EventPrerequisites()
+    try:
+        data = json.loads(raw)
+    except json.JSONDecodeError:
+        return EventPrerequisites()
+    if not isinstance(data, dict):
+        return EventPrerequisites()
+
+    def _kind_set(key: str) -> frozenset[str]:
+        val = data.get(key)
+        if not isinstance(val, list):
+            return frozenset()
+        return frozenset(str(x).strip() for x in val if str(x).strip())
+
+    ins_specs: list[tuple[str, str]] = []
+    for item in data.get("requires_insurance_any") or []:
+        if isinstance(item, dict):
+            product = str(item.get("product") or "").strip()
+            insured = str(item.get("insured_object") or "").strip()
+            if product and insured:
+                ins_specs.append((product, insured))
+
+    return EventPrerequisites(
+        active_asset_kinds_any=_kind_set("active_asset_kinds_any"),
+        active_asset_kinds_all=_kind_set("active_asset_kinds_all"),
+        min_active_liabilities=max(0, int(data.get("min_active_liabilities") or 0)),
+        min_active_assets=max(0, int(data.get("min_active_assets") or 0)),
+        requires_insurance_any=tuple(ins_specs),
+    )
+
+
+def event_prerequisites_met(prereq: EventPrerequisites, ctx: EventProfileContext) -> bool:
+    kinds = ctx.active_asset_kinds
+    if prereq.active_asset_kinds_any and not (kinds & prereq.active_asset_kinds_any):
+        return False
+    if prereq.active_asset_kinds_all and not prereq.active_asset_kinds_all.issubset(kinds):
+        return False
+    if ctx.active_liability_count < prereq.min_active_liabilities:
+        return False
+    if len(kinds) < prereq.min_active_assets:
+        return False
+    for product, insured in prereq.requires_insurance_any:
+        key = f"{product}:{insured}"
+        if key not in ctx.active_insurance_claim_keys:
+            return False
+    return True
 
 
 def is_event_definition_eligible(

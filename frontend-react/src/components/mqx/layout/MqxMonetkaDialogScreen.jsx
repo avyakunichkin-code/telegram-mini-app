@@ -1,0 +1,43 @@
+import { MqxShell } from '../../MqxShell';
+import { MonetkaAvatar } from '../onboarding/MonetkaAvatar';
+
+/**
+ * Плоский flow (без рамки mqx-frame): Монетка + пузырь-подсказка, контент edge-to-edge.
+ * mascotOnBlock — Монетка «сидит» на верхней кромке пузыря (как в событиях M2).
+ */
+export function MqxMonetkaDialogScreen({
+  title,
+  subtitle,
+  titleId = 'mqx-monetka-dialog-title',
+  children,
+  mascotSize = 88,
+  mascotOnBlock = true,
+}) {
+  const speech = (
+    <div className="mqx-monetka-dialog__speech" aria-labelledby={titleId}>
+      <h1 id={titleId} className="mqx-monetka-dialog__title">
+        {title}
+      </h1>
+      {subtitle ? <div className="mqx-monetka-dialog__subtitle">{subtitle}</div> : null}
+    </div>
+  );
+
+  return (
+    <MqxShell contentClassName="mqx-flow mqx-flow--monetka-dialog" frameClassName="mqx-frame--flat-flow">
+      <div className="mqx-monetka-flow">
+        {mascotOnBlock ? (
+          <div className="mqx-monetka-dialog__perch">
+            <MonetkaAvatar size={mascotSize} className="mqx-monetka-dialog__perch-mascot" />
+            {speech}
+          </div>
+        ) : (
+          <>
+            <MonetkaAvatar size={mascotSize} className="mqx-monetka-flow__mascot" />
+            {speech}
+          </>
+        )}
+        <div className="mqx-monetka-flow__body">{children}</div>
+      </div>
+    </MqxShell>
+  );
+}

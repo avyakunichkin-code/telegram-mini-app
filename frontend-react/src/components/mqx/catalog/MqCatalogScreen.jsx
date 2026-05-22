@@ -31,6 +31,7 @@ import {
   MqxChip,
   MqxDashStack,
   MqxDashboardHero,
+  MqxSaveKindPicker,
   MqxDivider,
   MqxGoalBadge,
   MqxFinancePeriodBlock,
@@ -164,6 +165,15 @@ export function MqCatalogScreen() {
 
       <CatalogSection title="Онбординг — Guided coach (O1 ★)">
         <OnboardingCoachDemo />
+      </CatalogSection>
+
+      <CatalogSection title="Новая игра — выбор режима (R1 ★)">
+        <p className="mqx-catalog__lead">
+          Шаг 1: имя слота + <code>MqxSaveKindPicker</code> (unified strips). План — заглушка «Скоро».
+        </p>
+        <div className="mqx-catalog-save-kind-demo">
+          <MqxSaveKindPicker onSelectGame={() => {}} />
+        </div>
       </CatalogSection>
 
       <CatalogSection title="Hero — H3′ compact (дашборд)">

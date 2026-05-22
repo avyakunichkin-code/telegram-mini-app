@@ -134,6 +134,75 @@ function initMonetkaDismiss(root = document) {
   });
 }
 
+/** Панель подушки — как prod DashboardPremium (inline + закрытие по клику снаружи) */
+function initSafetyPanel(root = document) {
+  const panel = root.querySelector('[data-safety-panel]');
+  if (!panel) return;
+
+  const form = panel.querySelector('[data-safety-form]');
+  const slider = panel.querySelector('.mqx-invest-slider');
+  const input = panel.querySelector('.mqx-invest-amount__input');
+  const submit = panel.querySelector('.mqx-invest-form__submit');
+  const chipVal = panel.querySelector('.mqx-invest-rate__val');
+  const chipHint = panel.querySelector('.mqx-invest-rate__hint');
+  const maxHint = panel.querySelector('.mqx-invest-amount__max');
+
+  let mode = null;
+
+  const closePanel = () => {
+    mode = null;
+    panel.setAttribute('hidden', '');
+    if (slider) slider.value = '0';
+    if (input) input.value = '0';
+  };
+
+  const openPanel = (nextMode) => {
+    mode = nextMode;
+    panel.removeAttribute('hidden');
+    const isIn = mode === 'in';
+    form?.classList.toggle('mqx-invest-form--safety-in', isIn);
+    form?.classList.toggle('mqx-invest-form--safety-out', !isIn);
+    if (submit) submit.textContent = isIn ? 'Перевести в подушку' : 'Снять на счёт';
+    if (chipVal) chipVal.textContent = isIn ? '18к' : '42к';
+    if (chipHint) chipHint.textContent = isIn ? 'в подушке' : 'на счёте';
+    if (maxHint) maxHint.textContent = isIn ? 'На счёте: 42 150' : 'В подушке: 18 000';
+    if (slider) {
+      slider.max = isIn ? '42150' : '18000';
+      slider.value = '0';
+    }
+  };
+
+  root.querySelectorAll('[data-money-trigger]').forEach((btn) => {
+    if (btn.dataset.safetyBound) return;
+    btn.dataset.safetyBound = '1';
+    btn.addEventListener('click', () => {
+      const next = btn.getAttribute('data-money-trigger');
+      if (mode === next) closePanel();
+      else openPanel(next);
+    });
+  });
+
+  if (slider && input) {
+    slider.addEventListener('input', () => {
+      input.value = Number(slider.value).toLocaleString('ru-RU');
+    });
+  }
+
+  if (!root.dataset.safetyDismissBound) {
+    root.dataset.safetyDismissBound = '1';
+    root.addEventListener(
+      'pointerdown',
+      (e) => {
+        if (panel.hasAttribute('hidden')) return;
+        if (panel.contains(e.target)) return;
+        if (e.target.closest('[data-money-trigger]')) return;
+        closePanel();
+      },
+      true,
+    );
+  }
+}
+
 function initLongSumsDemo() {
   const btn = document.querySelector('[data-demo-long-sums]');
   if (!btn) return;
@@ -176,7 +245,7 @@ function initGallery() {
       <div class="lab-phone__shell${skin === 's5' ? ' lab-phone__shell--unified' : ''}">
         ${heroHtml}
         <div class="mqx-content mqx-content--dash-flat mqx-tab-page__scroll">
-          <div class="mqx-dash-stack" data-dash-stack data-layout="l3" data-skin="${skin}">
+          <div class="mqx-dash-stack${skin === 's5' ? ' mqx-dash-stack--unified' : ''}" data-dash-stack data-layout="l3" data-skin="${skin}">
             ${templateHtml}
           </div>
         </div>
@@ -187,6 +256,7 @@ function initGallery() {
     initLevelAccordion(article);
     initMonetkaDismiss(article);
     showFinanceMonetkaIfNeeded(article);
+    if (skin === 's5') initSafetyPanel(article);
   });
 
   requestAnimationFrame(() => fitChipValues(gallery));

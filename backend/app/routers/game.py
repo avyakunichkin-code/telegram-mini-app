@@ -7,6 +7,7 @@ import json
 from ..auth import get_current_user
 from ..database import get_db
 from ..game_period import process_period_end
+from .events import pending_mandatory_blocking_event_titles
 from ..models import GameProfile, FinanceSalary, FinanceAsset, FinanceLiability, Transaction, GameStarterTemplate
 from ..finance_helpers import monthly_interest_payment
 from ..schemas import (
@@ -547,6 +548,16 @@ async def go_to_next_period(
     profile = get_active_game_profile(db, current_user.id)
     if not profile:
         raise HTTPException(status_code=404, detail="Активный профиль не найден")
+
+    blocking = pending_mandatory_blocking_event_titles(
+        db, profile.id, int(profile.period_index)
+    )
+    if blocking:
+        titles = "», «".join(blocking[:3])
+        raise HTTPException(
+            status_code=400,
+            detail=f"Сначала примите решение по обязательным событиям: «{titles}».",
+        )
 
     # Завершаем текущий период
     period_result = process_period_end(db, profile)

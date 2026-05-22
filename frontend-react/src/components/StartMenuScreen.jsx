@@ -5,6 +5,7 @@ import { API } from '../api';
 import { showNotification } from './notifications';
 import { MonetkaBubbleScreen } from './mqx/layout/MonetkaBubbleScreen';
 import { MoneyText } from './MoneyText';
+import { suggestDefaultProfileName } from '../utils/suggestDefaultProfileName';
 
 function saveKindLabel(sk) {
   if (sk === 'game') return 'Игра';
@@ -128,7 +129,12 @@ export function StartMenuScreen({ onNewGame, onLoadGame, onLogout }) {
             ) : null}
 
             <div className="mqx-auth-monetka__actions mqx-start-menu__actions">
-              <Button mode="filled" stretched onClick={onNewGame} title="Создать новое сохранение">
+              <Button
+                mode="filled"
+                stretched
+                onClick={() => onNewGame?.(suggestDefaultProfileName(profiles))}
+                title="Создать новое сохранение"
+              >
                 Новая игра
               </Button>
               <Button

@@ -164,7 +164,7 @@ body {
 }
 
 /* Кнопки: всегда с рамкой; filled — заливка, outline/plain — остаются библиотечными */
-#root button:not(.tma-nav-icon-btn):not(.mqx-btn):not(.bottom-nav__cell):not(.mqx-dash-link):not(.mqx-finance-monetka__close):not(.mqx-action):not(.mqx-level-dash__toggle):not(.events-carousel-dot):not(.events-carousel-arrow):not(.events-overlay-close):not(.mqx-events-choice) {
+#root button:not(.tma-nav-icon-btn):not(.mqx-btn):not(.mqx-save-kind__row):not(.bottom-nav__cell):not(.mqx-dash-link):not(.mqx-finance-monetka__close):not(.mqx-action):not(.mqx-level-dash__toggle):not(.events-carousel-dot):not(.events-carousel-arrow):not(.events-overlay-close):not(.mqx-events-choice) {
   box-shadow: 0 0 0 1px var(--tgui--outline) inset;
 }
 
@@ -273,18 +273,18 @@ body {
 
 /* Hover/глубина для filled-кнопок (не трогаем outline/plain) */
 @media (hover: hover) {
-  #root button:not(.tma-nav-icon-btn):not(.mqx-btn):not(.bottom-nav__cell):not(.mqx-dash-link):not(.mqx-finance-monetka__close):not(.mqx-action):not(.mqx-level-dash__toggle):not(.events-carousel-dot):not(.events-carousel-arrow):not(.events-overlay-close):not(.mqx-events-choice) {
+  #root button:not(.tma-nav-icon-btn):not(.mqx-btn):not(.mqx-save-kind__row):not(.bottom-nav__cell):not(.mqx-dash-link):not(.mqx-finance-monetka__close):not(.mqx-action):not(.mqx-level-dash__toggle):not(.events-carousel-dot):not(.events-carousel-arrow):not(.events-overlay-close):not(.mqx-events-choice) {
     transition:
       background-color 0.14s ease,
       box-shadow 0.14s ease,
       transform 0.12s cubic-bezier(0.22, 1, 0.32, 1);
   }
-  #root button:not(.tma-nav-icon-btn):not(.mqx-btn):not(.bottom-nav__cell):not(.mqx-dash-link):not(.mqx-finance-monetka__close):not(.mqx-action):not(.mqx-level-dash__toggle):not(.events-carousel-dot):not(.events-carousel-arrow):not(.events-overlay-close):not(.mqx-events-choice):active:not(:disabled) {
+  #root button:not(.tma-nav-icon-btn):not(.mqx-btn):not(.mqx-save-kind__row):not(.bottom-nav__cell):not(.mqx-dash-link):not(.mqx-finance-monetka__close):not(.mqx-action):not(.mqx-level-dash__toggle):not(.events-carousel-dot):not(.events-carousel-arrow):not(.events-overlay-close):not(.mqx-events-choice):active:not(:disabled) {
     transform: scale(0.985);
   }
   /* filled у telegram-ui использует var(--tgui--button_color) — затемняем только его */
-  #root button:not(.tma-nav-icon-btn):not(.mqx-btn):not(.bottom-nav__cell):not(.mqx-dash-link):not(.mqx-finance-monetka__close):not(.mqx-action):not(.mqx-level-dash__toggle):not(.events-carousel-dot):not(.events-carousel-arrow):not(.events-overlay-close):not(.mqx-events-choice)[style*='--tgui--button_color'],
-  #root button:not(.tma-nav-icon-btn):not(.mqx-btn):not(.bottom-nav__cell):not(.mqx-dash-link):not(.mqx-finance-monetka__close):not(.mqx-action):not(.mqx-level-dash__toggle):not(.events-carousel-dot):not(.events-carousel-arrow):not(.events-overlay-close):not(.mqx-events-choice)[class*='tgui-']:where(:not(:disabled)) {
+  #root button:not(.tma-nav-icon-btn):not(.mqx-btn):not(.mqx-save-kind__row):not(.bottom-nav__cell):not(.mqx-dash-link):not(.mqx-finance-monetka__close):not(.mqx-action):not(.mqx-level-dash__toggle):not(.events-carousel-dot):not(.events-carousel-arrow):not(.events-overlay-close):not(.mqx-events-choice)[style*='--tgui--button_color'],
+  #root button:not(.tma-nav-icon-btn):not(.mqx-btn):not(.mqx-save-kind__row):not(.bottom-nav__cell):not(.mqx-dash-link):not(.mqx-finance-monetka__close):not(.mqx-action):not(.mqx-level-dash__toggle):not(.events-carousel-dot):not(.events-carousel-arrow):not(.events-overlay-close):not(.mqx-events-choice)[class*='tgui-']:where(:not(:disabled)) {
     /* оставляем библиотечные состояния; глубина достигается рамкой и лёгким transform */
   }
 }
@@ -1866,8 +1866,296 @@ body {
   text-align: left;
 }
 
-.mqx-auth-monetka__mode-grid {
+/* New-game flow: плоский экран + пузырь-подсказка (как unified dash, без рамки frame) */
+.mqx-frame--flat-flow {
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+  background: transparent;
+  min-height: calc(100svh - 24px);
+}
+
+.app-shell:has(.mqx-flow--monetka-dialog) .mqx-frame--flat-flow {
+  min-height: 0;
+}
+
+.mqx-flow--monetka-dialog {
+  padding: 0;
+  min-height: 0;
+}
+
+.mqx-monetka-flow {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 14px;
+  width: 100%;
+  max-width: 420px;
+  margin: 0 auto;
+  padding: 8px 14px 24px;
+  box-sizing: border-box;
+}
+
+.mqx-monetka-flow__mascot {
+  align-self: center;
+  margin: 0 !important;
+}
+
+/* Монетка «сидит» на пузыре */
+.mqx-monetka-dialog__perch {
+  position: relative;
+  width: 100%;
+  padding-top: 36px;
+}
+
+.mqx-monetka-dialog__perch-mascot {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  z-index: 2;
+  transform: translateX(-50%);
+  margin: 0 !important;
+  filter: drop-shadow(0 4px 10px color-mix(in srgb, var(--mq-violet, #6d28d9) 18%, transparent));
+}
+
+.mqx-monetka-dialog__perch .mqx-monetka-dialog__speech {
+  padding-top: 26px;
+}
+
+.mqx-monetka-dialog__perch .mqx-monetka-dialog__speech::after {
+  display: none;
+}
+
+.mqx-monetka-dialog__speech {
+  position: relative;
+  width: 100%;
+  padding: 14px 16px 12px;
+  border-radius: 18px;
+  background-color: var(--mqx-onboarding-bubble-bg, #ffffff);
+  background-image: linear-gradient(
+    165deg,
+    color-mix(in srgb, var(--mq-violet, #6d28d9) 7%, var(--mqx-onboarding-bubble-bg, #ffffff)) 0%,
+    var(--mqx-onboarding-bubble-bg, #ffffff) 42%
+  );
+  border: 1px solid var(--mqx-onboarding-bubble-border);
+  box-shadow: var(--mqx-onboarding-bubble-shadow);
+}
+
+.mqx-monetka-dialog__speech::after {
+  content: '';
+  position: absolute;
+  top: -8px;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 8px solid transparent;
+  border-bottom-color: var(--mqx-onboarding-bubble-bg, #ffffff);
+  filter: drop-shadow(0 -1px 0 var(--mqx-onboarding-bubble-border));
+}
+
+.mqx-monetka-dialog__title {
+  margin: 0 0 6px;
+  font-size: 1.05rem;
+  font-weight: 800;
+  line-height: 1.25;
+  text-align: center;
+  color: var(--mqx-ink);
+}
+
+.mqx-monetka-dialog__subtitle {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.45;
+  text-align: center;
+  color: color-mix(in srgb, var(--mqx-ink) 88%, var(--tg-theme-hint-color, #6b7280));
+}
+
+.mqx-monetka-dialog__subtitle p {
+  margin: 0 0 10px;
+}
+
+.mqx-monetka-dialog__subtitle p:last-child {
+  margin-bottom: 0;
+}
+
+.mqx-monetka-dialog__subtitle strong {
+  font-weight: 800;
+  color: color-mix(in srgb, var(--mq-violet-deep, #5b21b6) 88%, var(--mqx-ink));
+}
+
+.mqx-monetka-flow__body {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+}
+
+.mqx-monetka-flow__form {
+  margin: 0;
+}
+
+.mqx-monetka-flow__save-kind {
+  margin: 0;
+}
+
+.mqx-monetka-flow__actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 4px;
+}
+
+.mqx-monetka-flow__loading {
+  display: flex;
+  justify-content: center;
+  padding: 20px 0;
+}
+
+.mqx-monetka-flow__empty {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.45;
+  text-align: center;
+  color: color-mix(in srgb, var(--mqx-ink) 72%, var(--tg-theme-hint-color, #6b7280));
+}
+
+.mqx-monetka-flow .mq-game-catalog-label {
+  display: block;
+  margin: 0 0 6px;
+  font-size: 13px;
+  font-weight: 700;
+  color: color-mix(in srgb, var(--mqx-ink) 78%, var(--tg-theme-hint-color, #6b7280));
+}
+
+.mqx-monetka-flow .mq-game-template-picker {
+  margin: 0;
+}
+
+.mqx-auth-monetka__mode-grid,
+.mqx-auth-monetka__save-kind {
   margin-top: 14px;
+}
+
+/* Выбор режима сохранения — unified strips (S5-совместимо) */
+.mqx-save-kind {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.mqx-save-kind__row {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  margin: 0;
+  padding: 12px 12px 12px 10px;
+  border: none;
+  border-radius: 14px;
+  text-align: left;
+  font: inherit;
+  box-sizing: border-box;
+  transition:
+    background 0.15s ease,
+    transform 0.12s ease;
+}
+
+.mqx-save-kind__row--game {
+  cursor: pointer;
+  background: color-mix(in srgb, var(--mq-violet, #7c3aed) 6%, var(--tg-theme-bg-color, #fff));
+  box-shadow: none;
+}
+
+.mqx-save-kind__row--game:hover {
+  background: color-mix(in srgb, var(--mq-violet, #7c3aed) 10%, var(--tg-theme-bg-color, #fff));
+}
+
+.mqx-save-kind__row--game:active {
+  transform: scale(0.99);
+}
+
+.mqx-save-kind__row--game:focus-visible {
+  outline: 2px solid var(--mq-violet, #7c3aed);
+  outline-offset: 2px;
+}
+
+.mqx-save-kind__row--plan {
+  background: color-mix(in srgb, var(--mqx-ink, #0f1115) 4%, transparent);
+}
+
+.mqx-save-kind__row--soon {
+  opacity: 0.58;
+  filter: grayscale(0.25);
+  pointer-events: none;
+  cursor: not-allowed;
+}
+
+.mqx-save-kind__badge {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  padding: 3px 8px;
+  border-radius: 999px;
+  font-size: var(--mq-fs-small, 11px);
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  background: color-mix(in srgb, var(--mqx-ink) 8%, transparent);
+  border: 1px solid color-mix(in srgb, var(--mqx-ink) 12%, transparent);
+  color: color-mix(in srgb, var(--mqx-ink) 58%, transparent);
+}
+
+.mqx-save-kind__icon-wrap {
+  flex-shrink: 0;
+  width: 48px;
+  height: 48px;
+  display: grid;
+  place-items: center;
+  border-radius: 12px;
+}
+
+.mqx-save-kind__icon-wrap--game {
+  color: var(--mq-violet, #7c3aed);
+  background: color-mix(in srgb, var(--mq-violet, #7c3aed) 12%, transparent);
+}
+
+.mqx-save-kind__icon-wrap--plan {
+  color: color-mix(in srgb, var(--mq-violet-deep, #5b21b6) 80%, var(--mqx-ink));
+  background: color-mix(in srgb, var(--mqx-ink) 6%, transparent);
+}
+
+.mqx-save-kind__icon {
+  width: 36px;
+  height: 36px;
+}
+
+.mqx-save-kind__body {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.mqx-save-kind__title {
+  font-size: var(--mq-fs-body, 15px);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: color-mix(in srgb, var(--mqx-ink) 94%, transparent);
+}
+
+.mqx-save-kind__desc {
+  font-size: var(--mq-fs-caption, 12px);
+  line-height: 1.38;
+  color: color-mix(in srgb, var(--mqx-ink) 56%, transparent);
+}
+
+.mqx-save-kind__trail {
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  color: var(--mq-violet, #7c3aed);
+  opacity: 0.85;
 }
 
 .mqx-auth-monetka__loading {
@@ -2959,6 +3247,15 @@ body {
   font-size: 13px;
   font-weight: 700;
   color: var(--mq-violet);
+}
+
+.mqx-catalog-save-kind-demo {
+  max-width: 360px;
+  margin-top: 10px;
+  padding: 14px;
+  border-radius: 16px;
+  background: var(--mqx-glass-soft);
+  border: 1px solid color-mix(in srgb, var(--mqx-ink) 8%, transparent);
 }
 
 .mqx-catalog-section {
@@ -6284,6 +6581,17 @@ button.mqx-events-choice:active:not(:disabled) {
   font-weight: 680;
 }
 
+.mqx-events-choice__metrics {
+  margin-top: 6px;
+  flex-wrap: wrap;
+  gap: 8px 12px;
+}
+
+.mqx-events-choice__metrics .mqx-inline-metric__val {
+  font-size: var(--mq-fs-caption);
+  font-weight: 600;
+}
+
 .mqx-events-choice__desc {
   display: block;
   margin-top: 4px;
@@ -6999,20 +7307,20 @@ button.mqx-events-choice:active:not(:disabled) {
 }
 
 /* Кнопки в контентной зоне: мягкая глубина (нижнее меню и оверлеи не трогаем) */
-#root button:not(.tma-nav-icon-btn):not(.mqx-btn):not(.bottom-nav__cell):not(.mqx-dash-link):not(.mqx-finance-monetka__close):not(.mqx-action):not(.mqx-level-dash__toggle):not(.events-carousel-dot):not(.events-carousel-arrow):not(
+#root button:not(.tma-nav-icon-btn):not(.mqx-btn):not(.mqx-save-kind__row):not(.bottom-nav__cell):not(.mqx-dash-link):not(.mqx-finance-monetka__close):not(.mqx-action):not(.mqx-level-dash__toggle):not(.events-carousel-dot):not(.events-carousel-arrow):not(
     .events-overlay-close
   ):not(.mqx-events-choice):focus-visible {
   outline: 2px solid color-mix(in srgb, var(--mq-accent-link), transparent 22%);
   outline-offset: 2px;
 }
 
-#root button:not(.tma-nav-icon-btn):not(.mqx-btn):not(.bottom-nav__cell):not(.mqx-dash-link):not(.mqx-finance-monetka__close):not(.mqx-action):not(.mqx-level-dash__toggle):not(.events-carousel-dot):not(.events-carousel-arrow):not(
+#root button:not(.tma-nav-icon-btn):not(.mqx-btn):not(.mqx-save-kind__row):not(.bottom-nav__cell):not(.mqx-dash-link):not(.mqx-finance-monetka__close):not(.mqx-action):not(.mqx-level-dash__toggle):not(.events-carousel-dot):not(.events-carousel-arrow):not(
     .events-overlay-close
   ):not(.mqx-events-choice):active:not(:disabled) {
   transform: scale(0.985);
 }
 
-#root button:not(.tma-nav-icon-btn):not(.mqx-btn):not(.bottom-nav__cell):not(.mqx-dash-link):not(.mqx-finance-monetka__close):not(.mqx-action):not(.mqx-level-dash__toggle):not(.events-carousel-dot):not(.events-carousel-arrow):not(
+#root button:not(.tma-nav-icon-btn):not(.mqx-btn):not(.mqx-save-kind__row):not(.bottom-nav__cell):not(.mqx-dash-link):not(.mqx-finance-monetka__close):not(.mqx-action):not(.mqx-level-dash__toggle):not(.events-carousel-dot):not(.events-carousel-arrow):not(
     .events-overlay-close
   ):not(.mqx-events-choice):not(:disabled) {
   transition:

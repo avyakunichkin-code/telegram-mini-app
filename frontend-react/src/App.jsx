@@ -14,6 +14,7 @@ import { GameScreen } from './components/GameScreen';
 import { ToastHost } from './components/ToastHost';
 import { MqCatalogScreen } from './components/mqx/catalog/MqCatalogScreen';
 import { AdminWatchtowerScreen } from './components/admin/AdminWatchtowerScreen';
+import { suggestDefaultProfileName } from './utils/suggestDefaultProfileName';
 
 function GameAppFlowShell({ children }) {
   return (
@@ -30,8 +31,12 @@ function GameApp() {
   const [newGameProfileName, setNewGameProfileName] = useState('');
   const { logout } = useAuth();
 
-  const handleNewGame = () => {
-    setNewGameProfileName('');
+  const handleNewGame = (initialName) => {
+    const name =
+      typeof initialName === 'string' && initialName.trim()
+        ? initialName.trim()
+        : suggestDefaultProfileName([]);
+    setNewGameProfileName(name);
     setScreen('newProfileKind');
   };
 

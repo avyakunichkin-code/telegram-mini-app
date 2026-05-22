@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="ru" data-theme="light">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Money Quest — new-game mode (design-lab)</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <header class="lab-header">
+      <div>
+        <h1>Новая игра — выбор режима</h1>
+        <p id="lab-note"><strong>R2 Flat + dialog ★</strong> — prod. Пузырь только у подсказки; R1/B — архив.</p>
+      </div>
+      <div class="lab-theme" role="group" aria-label="Тема">
+        <button type="button" class="is-active" data-theme-btn="light">Светлая</button>
+        <button type="button" data-theme-btn="dark">Тёмная</button>
+      </div>
+    </header>
+
+    <main class="lab-gallery">
+      <article class="lab-phone" data-variant="r2">
+        <div class="lab-phone__tag">R2 ★ Flat + Monetka dialog</div>
+        <div class="lab-phone__shell lab-phone__shell--flat">
+          <div class="mqx-monetka-flow">
+            <div class="mqx-monetka-dialog__perch">
+              <div class="lab-mascot lab-mascot--perch" aria-hidden="true">🪙</div>
+              <section class="mqx-monetka-dialog__speech">
+                <h1 class="mqx-monetka-dialog__title">О, новое сохранение!</h1>
+                <div class="mqx-monetka-dialog__subtitle">
+                  <p>Слот уже подписан — можешь переименовать. Дальше выбери режим.</p>
+                  <p><strong>Игра</strong> — разные жизненные ситуации. <strong>План</strong> — скоро, обещают интересненькое!</p>
+                </div>
+              </section>
+            </div>
+            <label class="lab-field">
+              <span class="lab-field__label">Название сохранения</span>
+              <input class="lab-field__input" value="Моя игра - 1" />
+            </label>
+            <div class="mqx-save-kind">
+                <button type="button" class="mqx-save-kind__row mqx-save-kind__row--game">
+                  <span class="mqx-save-kind__icon-wrap mqx-save-kind__icon-wrap--game" aria-hidden>
+                    <svg class="mqx-save-kind__icon" viewBox="0 0 72 72" fill="none" aria-hidden>
+                      <path d="M14 46c0-8 6.5-14.5 14.5-14.5h25c8 0 14.5 6.5 14.5 14.5v2c0 3.5-2.5 6-6 6H20c-3.5 0-6-2.5-6-6v-2z" stroke="currentColor" stroke-width="2.25"/>
+                      <circle cx="26" cy="42" r="3" fill="currentColor"/>
+                      <circle cx="38" cy="42" r="3" fill="currentColor"/>
+                    </svg>
+                  </span>
+                  <span class="mqx-save-kind__body">
+                    <span class="mqx-save-kind__title">Игра</span>
+                    <span class="mqx-save-kind__desc">Готовые сценарии, события и цели победы.</span>
+                  </span>
+                  <span class="mqx-save-kind__trail" aria-hidden>›</span>
+                </button>
+                <div class="mqx-save-kind__row mqx-save-kind__row--plan mqx-save-kind__row--soon">
+                  <span class="mqx-save-kind__badge">Скоро</span>
+                  <span class="mqx-save-kind__icon-wrap mqx-save-kind__icon-wrap--plan" aria-hidden>
+                    <svg class="mqx-save-kind__icon" viewBox="0 0 72 72" fill="none" aria-hidden>
+                      <path d="M14 54V22h44v32H14z" stroke="currentColor" stroke-width="2.25"/>
+                      <rect x="22" y="46" width="10" height="8" rx="2" fill="currentColor" opacity="0.35"/>
+                    </svg>
+                  </span>
+                  <span class="mqx-save-kind__body">
+                    <span class="mqx-save-kind__title">План</span>
+                    <span class="mqx-save-kind__desc">Свои цифры и статьи расходов.</span>
+                  </span>
+                </div>
+              </div>
+            <button type="button" class="lab-btn lab-btn--outline">Назад</button>
+          </div>
+        </div>
+      </article>
+
+      <article class="lab-phone" data-variant="b">
+        <div class="lab-phone__tag">B · Плитки 2×2 (legacy)</div>
+        <div class="lab-phone__shell">
+          <div class="mqx-auth-monetka lab-auth">
+            <div class="lab-mascot" aria-hidden="true">🪙</div>
+            <section class="mqx-auth-monetka__bubble mqx-auth-monetka__bubble--wide">
+              <h1 class="mqx-auth-monetka__title">Интересно, как назовём эту партию?</h1>
+              <p class="mqx-auth-monetka__subtitle">Напишите название слота. Симулятор — кнопка «Игра».</p>
+              <label class="lab-field">
+                <span class="lab-field__label">Название сохранения</span>
+                <input class="lab-field__input" value="Учебный слот" />
+              </label>
+              <div class="mq-profile-mode-grid">
+                <button type="button" class="mq-profile-mode-card mq-profile-mode-card--game">
+                  <span class="mq-profile-mode-card__title">Игра</span>
+                  <span class="mq-profile-mode-card__desc">Симулятор с шаблонами и событиями.</span>
+                </button>
+                <div class="mq-profile-mode-card mq-profile-mode-card--plan mq-profile-mode-card--soon">
+                  <span class="mq-profile-mode-card__badge">Скоро</span>
+                  <span class="mq-profile-mode-card__title">План</span>
+                  <span class="mq-profile-mode-card__desc">Свои цифры и статьи расходов.</span>
+                </div>
+              </div>
+              <button type="button" class="lab-btn lab-btn--outline">Назад</button>
+            </section>
+          </div>
+        </div>
+      </article>
+    </main>
+
+    <script>
+      document.querySelectorAll('[data-theme-btn]').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          document.documentElement.setAttribute('data-theme', btn.getAttribute('data-theme-btn'));
+          document.querySelectorAll('[data-theme-btn]').forEach((b) => b.classList.toggle('is-active', b === btn));
+        });
+      });
+    </script>
+  </body>
+</html>

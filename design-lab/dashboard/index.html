@@ -83,8 +83,10 @@
             </div>
           </div>
           <div class="mqx-hero-compact__controls">
-            <button type="button" class="mqx-btn mqx-btn--icon mqx-btn--hero-filled" aria-label="Играть">▶</button>
-            <button type="button" class="mqx-btn mqx-btn--icon mqx-btn--hero-outline" aria-label="Пауза">⏸</button>
+            <button type="button" class="mqx-btn mqx-btn--filled mqx-btn--icon" aria-label="Играть">▶</button>
+            <button type="button" class="mqx-btn mqx-btn--filled mqx-btn--icon" aria-label="Пауза">
+              <span class="mqx-hero-icon-pause" aria-hidden="true"><span></span><span></span></span>
+            </button>
           </div>
         </div>
         <div class="mqx-hero-compact__row2">
@@ -168,11 +170,38 @@
         </div>
         <div class="mqx-grid2 mqx-grid2--actions">
           <button type="button" class="mqx-action mqx-action--primary">Зарплата</button>
-          <button type="button" class="mqx-action">В подушку</button>
-          <button type="button" class="mqx-action">Снять</button>
+          <button type="button" class="mqx-action" data-money-trigger="in">В подушку</button>
+          <button type="button" class="mqx-action" data-money-trigger="out">Снять</button>
           <button type="button" class="mqx-action">Инвестировать</button>
         </div>
       </section>
+
+      <div class="mqx-dash-safety-panel" data-safety-panel hidden>
+        <article class="mqx-invest-form mqx-invest-form--d mqx-invest-form--safety-in" data-safety-form>
+          <div class="mqx-invest-form__body">
+            <div class="mqx-invest-amount mqx-invest-amount--compact">
+              <div class="mqx-invest-amount__row">
+                <div class="mqx-invest-amount__row-main">
+                  <label class="mqx-invest-amount__label" for="lab-safety-amount">Сумма</label>
+                  <div class="mqx-invest-amount__field">
+                    <input id="lab-safety-amount" class="mqx-invest-amount__input" type="text" inputmode="numeric" value="0" readonly />
+                    <span class="mqx-invest-amount__unit">₽</span>
+                  </div>
+                </div>
+                <div class="mqx-invest-rate mqx-invest-rate--chip mqx-invest-rate--safety-in">
+                  <span class="mqx-invest-rate__val">18к</span>
+                  <span class="mqx-invest-rate__hint">в подушке</span>
+                </div>
+              </div>
+              <input class="mqx-invest-slider" type="range" min="0" max="42150" value="0" aria-label="Сумма перевода" />
+              <div class="mqx-invest-amount__range-hint">
+                <span class="mqx-invest-amount__max">На счёте: 42 150</span>
+              </div>
+            </div>
+            <button type="button" class="mqx-action mqx-action--primary mqx-invest-form__submit">Перевести в подушку</button>
+          </div>
+        </article>
+      </div>
 
       <div class="mqx-level-dash-bleed" data-block="level">
       <section class="mqx-level-dash" aria-label="Уровень и развитие">
@@ -204,7 +233,6 @@
           </div>
         </button>
         <div class="mqx-level-dash__expand">
-          <p class="mqx-level-dash__hint">Ещё 55 XP до уровня 4 — зарплата и подушка дают опыт.</p>
           <div class="mqx-level-dash__section" aria-label="Цели">
             <div class="mqx-level-dash__section-head">
               <span class="mqx-kicker mqx-kicker--violet">Цели</span>

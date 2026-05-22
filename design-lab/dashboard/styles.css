@@ -237,10 +237,48 @@ body {
   background: linear-gradient(90deg, var(--mq-emerald), #34d399);
 }
 
-.mqx-btn { border-radius: 10px; border: 1px solid transparent; font-weight: 700; cursor: pointer; }
-.mqx-btn--icon { width: 36px; height: 36px; padding: 0; font-size: 14px; }
-.mqx-btn--hero-filled { background: rgba(255, 255, 255, 0.95); color: var(--mq-violet-deep); }
-.mqx-btn--hero-outline { background: transparent; border-color: rgba(255, 255, 255, 0.35); color: #fff; }
+.mqx-btn {
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: none;
+}
+
+.mqx-btn--icon {
+  width: 36px;
+  height: 36px;
+  min-width: 36px;
+  padding: 0;
+  display: grid;
+  place-items: center;
+  font-size: 14px;
+  line-height: 1;
+}
+
+.mqx-btn--filled,
+.mqx-btn--hero-filled {
+  background: #fff;
+  border-color: rgba(255, 255, 255, 0.22);
+  color: #0b1020;
+}
+
+.mqx-hero-icon-pause {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  width: 12px;
+  height: 12px;
+}
+
+.mqx-hero-icon-pause > span {
+  display: block;
+  width: 3px;
+  height: 12px;
+  border-radius: 1px;
+  background: currentColor;
+}
 
 .mqx-hero-compact__period-label {
   display: block;
@@ -514,6 +552,7 @@ body {
 /* Level accordion — свёрнуто U-B */
 .mqx-level-dash__toggle {
   width: 100%;
+  margin: 0;
   border: none;
   background: linear-gradient(
     180deg,
@@ -525,6 +564,16 @@ body {
   cursor: pointer;
   color: inherit;
   font: inherit;
+}
+
+.mqx-level-dash-bleed .mqx-level-dash__toggle {
+  padding: 12px 0;
+  background: transparent;
+}
+
+.mqx-level-dash-bleed .mqx-level-dash__expand {
+  padding: 0 0 14px;
+  margin: 0;
 }
 
 .mqx-level-dash__toggle-inner { min-width: 0; }
@@ -573,12 +622,12 @@ body {
   gap: 8px;
 }
 
-.mqx-level-dash__title { font-size: 15px; font-weight: 800; }
+.mqx-level-dash__title { font-size: 14px; font-weight: 800; }
 
 .mqx-level-dash__score {
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 700;
-  color: var(--mq-violet-deep);
+  color: color-mix(in srgb, var(--mqx-ink) 65%, transparent);
   white-space: nowrap;
 }
 
@@ -595,11 +644,9 @@ body {
 
 .mqx-level-dash__goals-agg-label {
   display: block;
-  font-size: 10px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  color: color-mix(in srgb, var(--mqx-ink) 55%, transparent);
+  font-size: 11px;
+  font-weight: 600;
+  color: color-mix(in srgb, var(--mqx-ink) 60%, transparent);
   margin-bottom: 4px;
 }
 
@@ -694,6 +741,10 @@ body {
 }
 
 .mqx-progress__fill--xp {
+  background: linear-gradient(90deg, #38bdf8, #818cf8);
+}
+
+.mqx-progress__fill.mqx-progress__fill--xp {
   background: linear-gradient(90deg, #38bdf8, #818cf8);
 }
 
@@ -880,16 +931,19 @@ body {
 
 /* Нижняя панель — как prod bottom-nav--unified */
 .lab-bottom-nav.bottom-nav--unified {
-  padding: 4px 10px 12px;
+  padding: 0 0 12px;
+  gap: 0;
   background: var(--surface);
+  backdrop-filter: none;
   border-top: 1px solid color-mix(in srgb, var(--mqx-ink) 8%, transparent);
+  box-shadow: none;
 }
 
 .lab-bottom-nav .bottom-nav__track {
   display: flex;
   align-items: stretch;
   width: 100%;
-  min-height: 48px;
+  min-height: 52px;
 }
 
 .lab-bottom-nav .bottom-nav__sep {
@@ -947,8 +1001,13 @@ body {
   border: none;
 }
 
-.mqx-dash-stack[data-skin='s5'] .mqx-finance-monetka {
+.mqx-dash-stack[data-skin='s5'] .mqx-finance-monetka,
+.mqx-dash-stack--unified .mqx-finance-monetka {
   border: none;
+  box-shadow: none;
+  margin-left: 14px;
+  margin-right: 14px;
+  background: color-mix(in srgb, var(--mq-violet) 5%, transparent);
 }
 
 .mqx-dash-stack[data-skin='s5'] .mqx-period-actions .mqx-action {
@@ -971,65 +1030,13 @@ body {
   --mqx-dash-inline-pad: 14px;
 }
 
-/* S5: фон на ширину стека; контент — padding-inline на bleed (без −margin) */
-.mqx-dash-stack[data-skin='s5'] .mqx-level-dash-bleed {
-  position: relative;
-  width: 100%;
-  margin: 0;
-  padding-inline: var(--mqx-dash-inline-pad, 14px);
-  box-sizing: border-box;
-  background: transparent;
-}
-
-.mqx-dash-stack[data-skin='s5'] .mqx-level-dash-bleed::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-  pointer-events: none;
-  background: linear-gradient(
-    180deg,
-    color-mix(in srgb, var(--mq-sky) 10%, transparent) 0%,
-    color-mix(in srgb, var(--mq-violet) 3%, transparent) 55%,
-    transparent 100%
-  );
-}
-
-.mqx-dash-stack[data-skin='s5'] .mqx-level-dash-bleed > .mqx-level-dash {
-  position: relative;
-  z-index: 1;
-  width: 100%;
-  max-width: 100%;
-  margin: 0;
-  box-sizing: border-box;
-  background: transparent;
-  overflow: visible;
-  color: var(--mqx-ink);
-}
-
 .lab-phone__shell--unified .mqx-content--dash-flat {
   overflow-x: hidden;
   overflow-y: auto;
   padding: 0 0 8px;
 }
 
-.mqx-dash-stack[data-skin='s5'] .mqx-level-dash__toggle,
-.mqx-dash-stack[data-skin='s5'] .mqx-level-dash__expand {
-  background: transparent;
-  border: none;
-}
-
-.mqx-dash-stack[data-skin='s5'] .mqx-level-dash-bleed .mqx-level-dash__toggle {
-  padding: 12px 0;
-  box-sizing: border-box;
-}
-
-.mqx-dash-stack[data-skin='s5'] .mqx-level-dash-bleed .mqx-level-dash__expand {
-  padding: 0 0 14px;
-  box-sizing: border-box;
-}
-
-/* Шкалы — в колонке контента, не на всю ширину bleed */
+/* Шкалы — в колонке контента (см. также Prod parity в конце файла) */
 .mqx-dash-stack[data-skin='s5'] .mqx-level-dash .mqx-progress {
   width: 100%;
   max-width: 100%;
@@ -1049,4 +1056,203 @@ body {
   margin-left: 14px;
   margin-right: 14px;
   border-top-color: color-mix(in srgb, var(--mqx-ink) 7%, transparent);
+}
+
+/* --- Prod parity (S5 / mqx-dash-stack--unified) --- */
+
+.mqx-dash-stack--unified,
+.mqx-dash-stack[data-skin='s5'] {
+  --mqx-dash-inline-pad: 14px;
+}
+
+.mqx-dash-safety-panel[hidden] {
+  display: none !important;
+}
+
+.mqx-dash-stack--unified .mqx-dash-safety-panel,
+.mqx-dash-stack[data-skin='s5'] .mqx-dash-safety-panel {
+  padding: 0 var(--mqx-dash-inline-pad, 14px) 12px;
+}
+
+.mqx-dash-stack--unified .mqx-dash-safety-panel .mqx-invest-form,
+.mqx-dash-stack[data-skin='s5'] .mqx-dash-safety-panel .mqx-invest-form {
+  margin-top: 0;
+  padding: 12px;
+  border-radius: 14px;
+  background: color-mix(in srgb, var(--mqx-ink) 3%, var(--surface));
+  border: 1px solid color-mix(in srgb, var(--mqx-ink) 8%, transparent);
+}
+
+.mqx-invest-form__body {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.mqx-invest-amount__row {
+  display: flex;
+  align-items: flex-end;
+  gap: 12px;
+}
+
+.mqx-invest-amount__row-main {
+  flex: 1;
+  min-width: 0;
+}
+
+.mqx-invest-amount__label {
+  display: block;
+  font-size: 10px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: color-mix(in srgb, var(--mqx-ink) 48%, transparent);
+  margin-bottom: 4px;
+}
+
+.mqx-invest-amount__field {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  border-bottom: 2px solid rgba(5, 150, 105, 0.35);
+  padding-bottom: 4px;
+}
+
+.mqx-invest-form--safety-out .mqx-invest-amount__field {
+  border-bottom-color: rgba(109, 40, 217, 0.35);
+}
+
+.mqx-invest-amount__input {
+  flex: 1;
+  min-width: 0;
+  border: none;
+  background: transparent;
+  padding: 0;
+  font: inherit;
+  font-size: 18px;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  color: var(--mqx-ink);
+  outline: none;
+}
+
+.mqx-invest-amount__unit {
+  font-size: 14px;
+  font-weight: 700;
+  color: color-mix(in srgb, var(--mqx-ink) 45%, transparent);
+}
+
+.mqx-invest-rate--chip {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 6px 8px;
+  border-radius: 10px;
+  border: 1px solid rgba(5, 150, 105, 0.22);
+  background: rgba(5, 150, 105, 0.1);
+}
+
+.mqx-invest-form--safety-out .mqx-invest-rate--chip {
+  border-color: rgba(109, 40, 217, 0.22);
+  background: rgba(109, 40, 217, 0.1);
+}
+
+.mqx-invest-rate__val {
+  font-size: 13px;
+  font-weight: 800;
+  color: var(--mq-emerald);
+}
+
+.mqx-invest-form--safety-out .mqx-invest-rate__val {
+  color: var(--mq-violet);
+}
+
+.mqx-invest-rate__hint {
+  font-size: 9px;
+  color: color-mix(in srgb, var(--mqx-ink) 50%, transparent);
+}
+
+.mqx-invest-slider {
+  width: 100%;
+  margin-top: 8px;
+  height: 4px;
+  appearance: none;
+  background: color-mix(in srgb, var(--mqx-ink) 12%, transparent);
+  border-radius: 999px;
+}
+
+.mqx-invest-slider::-webkit-slider-thumb {
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--mq-violet);
+  border: 2px solid var(--surface);
+}
+
+.mqx-invest-amount__range-hint {
+  margin-top: 6px;
+  font-size: 11px;
+  color: color-mix(in srgb, var(--mqx-ink) 55%, transparent);
+}
+
+.mqx-invest-form__submit {
+  width: 100%;
+}
+
+.mqx-dash-stack--unified .mqx-level-dash-bleed,
+.mqx-dash-stack[data-skin='s5'] .mqx-level-dash-bleed {
+  position: relative;
+  width: 100%;
+  margin: 0;
+  padding-inline: var(--mqx-dash-inline-pad, 14px);
+  box-sizing: border-box;
+  background: transparent;
+}
+
+.mqx-dash-stack--unified .mqx-level-dash-bleed::before,
+.mqx-dash-stack[data-skin='s5'] .mqx-level-dash-bleed::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--mq-sky) 10%, transparent) 0%,
+    color-mix(in srgb, var(--mq-violet) 3%, transparent) 55%,
+    transparent 100%
+  );
+}
+
+.mqx-dash-stack--unified .mqx-level-dash-bleed > .mqx-level-dash,
+.mqx-dash-stack[data-skin='s5'] .mqx-level-dash-bleed > .mqx-level-dash {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  margin: 0;
+  border-radius: 0;
+  background: transparent;
+  overflow: visible;
+}
+
+.mqx-dash-stack--unified .mqx-level-dash-bleed .mqx-level-dash__toggle,
+.mqx-dash-stack[data-skin='s5'] .mqx-level-dash-bleed .mqx-level-dash__toggle {
+  padding-block: 12px;
+  padding-inline: 0;
+  margin: 0;
+  background: transparent;
+}
+
+.mqx-dash-stack--unified .mqx-level-dash-bleed .mqx-level-dash__expand,
+.mqx-dash-stack[data-skin='s5'] .mqx-level-dash-bleed .mqx-level-dash__expand {
+  padding: 0 0 14px;
+  margin: 0;
+  border-top: none;
+  background: transparent;
+}
+
+.lab-phone__shell--unified .mqx-content--dash-flat {
+  overflow-x: hidden;
+  overscroll-behavior-x: none;
 }

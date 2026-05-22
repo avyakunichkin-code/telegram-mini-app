@@ -4,6 +4,7 @@ import pytest
 
 from app.game_rules import (
     CHARACTER_MAX_LEVEL,
+    EVENTS_PER_PERIOD,
     EVENT_TIER_WINDOW_BELOW_LEVEL,
     MIN_PERIOD_INDEX_FOR_WIN,
     MVP_SAFETY_FUND_OBLIGATIONS_MULTIPLIER,
@@ -11,15 +12,19 @@ from app.game_rules import (
     REPEAT_POLICY_ONCE_PER_PROFILE,
     XP_NEED_BY_LEVEL,
     XP_TOTAL_TO_MAX_LEVEL,
+    EventProfileContext,
     EventProfileCounterSnapshot,
+    EventPrerequisites,
     apply_xp_to_character_state,
     character_xp_need_for_next_level,
     clamp_profile_lifestyle_delta,
     evaluate_mvp_victory,
+    event_prerequisites_met,
     event_tier_bounds,
     event_tier_in_core_window,
     event_tier_in_fallback_primary,
     is_event_definition_eligible,
+    parse_event_prerequisites_json,
     MvpVictoryInput,
 )
 
@@ -159,6 +164,43 @@ class TestEventEligibility:
             current_period_index=1,
             counter=None,
         )
+
+
+class TestEventPrerequisites:
+    def test_events_per_period_is_two(self):
+        assert EVENTS_PER_PERIOD == 2
+
+    def test_car_event_requires_vehicle_asset(self):
+        prereq = parse_event_prerequisites_json(
+            '{"active_asset_kinds_any":["car_personal","car_taxi"]}'
+        )
+        no_car = EventProfileContext(
+            active_asset_kinds=frozenset({"home"}),
+            active_liability_count=0,
+            active_insurance_claim_keys=frozenset(),
+        )
+        with_car = EventProfileContext(
+            active_asset_kinds=frozenset({"car_personal"}),
+            active_liability_count=0,
+            active_insurance_claim_keys=frozenset(),
+        )
+        assert not event_prerequisites_met(prereq, no_car)
+        assert event_prerequisites_met(prereq, with_car)
+
+    def test_refinance_requires_liability(self):
+        prereq = EventPrerequisites(min_active_liabilities=1)
+        ctx = EventProfileContext(
+            active_asset_kinds=frozenset(),
+            active_liability_count=0,
+            active_insurance_claim_keys=frozenset(),
+        )
+        assert not event_prerequisites_met(prereq, ctx)
+        ctx_ok = EventProfileContext(
+            active_asset_kinds=frozenset(),
+            active_liability_count=1,
+            active_insurance_claim_keys=frozenset(),
+        )
+        assert event_prerequisites_met(prereq, ctx_ok)
 
 
 class TestMvpVictory:

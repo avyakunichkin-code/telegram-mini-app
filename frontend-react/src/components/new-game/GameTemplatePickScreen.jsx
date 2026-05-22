@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { Button, Spinner } from '@telegram-apps/telegram-ui';
 import { API } from '../../api';
 import { showNotification } from '../notifications';
-import { MonetkaBubbleScreen } from '../mqx/layout/MonetkaBubbleScreen';
+import { MqxMonetkaDialogScreen } from '../mqx/layout/MqxMonetkaDialogScreen';
 import { GameStarterPicker } from '../GameStarterPicker';
 import { DEFAULT_PERIOD_DURATION_SECONDS, normalizeStarterTemplate } from '../../config/gameDefaults';
 import { startGameWithSimplestTemplate } from '../../utils/startGame';
@@ -90,22 +90,30 @@ export function GameTemplatePickScreen({ profileName, onBack, onJumpToGame }) {
   const busy = starting || quickStarting;
 
   return (
-    <MonetkaBubbleScreen
-      title="Отлично, осталось выбрать сценарий"
+    <MqxMonetkaDialogScreen
+      title="Сценарий — мой любимый момент!"
       subtitle={
-        trimmedName
-          ? `Слот «${trimmedName}». Чем проще метка — тем мягче старт. Лень выбирать — быстрый старт.`
-          : 'Чем проще метка — тем мягче старт. Лень выбирать — быстрый старт.'
+        <p>
+          {trimmedName ? (
+            <>
+              Слот «{trimmedName}» готов. Выбери, в какую жизнь нырнём — или жми <strong>быстрый старт</strong>, если
+              лень выбирать.
+            </>
+          ) : (
+            <>
+              Выбери, в какую жизнь нырнём — или жми <strong>быстрый старт</strong>, если лень выбирать.
+            </>
+          )}
+        </p>
       }
       titleId="mqx-new-game-templates-title"
-      bubbleClassName="mqx-auth-monetka__bubble--wide"
     >
       {loading ? (
-        <div className="mqx-auth-monetka__loading">
+        <div className="mqx-monetka-flow__loading">
           <Spinner />
         </div>
       ) : templates.length === 0 ? (
-        <p className="mqx-auth-monetka__empty">Шаблоны не загрузились. Проверьте сеть и попробуйте позже.</p>
+        <p className="mqx-monetka-flow__empty">Шаблоны не загрузились. Проверьте сеть и попробуйте позже.</p>
       ) : (
         <>
           <span id="mq-game-catalog-label-pick" className="mq-game-catalog-label">
@@ -122,7 +130,7 @@ export function GameTemplatePickScreen({ profileName, onBack, onJumpToGame }) {
         </>
       )}
 
-      <div className="mqx-auth-monetka__actions">
+      <div className="mqx-monetka-flow__actions">
         <Button
           type="button"
           mode="filled"
@@ -147,6 +155,6 @@ export function GameTemplatePickScreen({ profileName, onBack, onJumpToGame }) {
           Назад
         </Button>
       </div>
-    </MonetkaBubbleScreen>
+    </MqxMonetkaDialogScreen>
   );
 }

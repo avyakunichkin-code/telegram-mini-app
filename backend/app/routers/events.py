@@ -11,19 +11,34 @@ from ..auth import get_current_user
 from ..balance_utils import adjust_balance, adjust_safety_fund_balance, TRANSACTION_TYPES
 from ..character_progression import apply_character_xp
 from ..game_rules import (
+    EVENTS_PER_PERIOD,
+    MANDATORY_GATE_BLOCKS_PERIOD_END,
+    EventProfileContext,
     EventProfileCounterSnapshot,
     clamp_profile_lifestyle_delta,
+    event_prerequisites_met,
     event_tier_in_core_window,
     event_tier_in_fallback_primary,
     is_event_definition_eligible,
+    parse_event_prerequisites_json,
 )
 from ..database import get_db
 from ..game_time import get_active_game_profile, sync_time
-from ..models import EventChoice, EventDefinition, EventInstance, EventProfileCounter, GameProfile
+from ..models import (
+    EventChoice,
+    EventDefinition,
+    EventInstance,
+    EventProfileCounter,
+    FinanceAsset,
+    FinanceLiability,
+    GameProfile,
+    InsurancePolicy,
+)
 from ..timeutil import utc_now_naive
 from ..expenses import add_expense_line_from_event
-from ..insurance_events import apply_insurance_claim_from_effects
+from ..insurance_events import apply_insurance_claim_from_effects, find_policy_for_claim
 from ..level_gates import UNLOCK_PERIOD_EVENTS, character_level
+from ..event_choice_impacts import build_choice_impacts
 from ..mvp11_event_seeds import ensure_mvp11_event_catalog
 
 
@@ -31,7 +46,6 @@ router = APIRouter(prefix="/api/game/events", tags=["events"])
 
 logger = logging.getLogger(__name__)
 
-EVENTS_PER_PERIOD = 3
 EVENTS_UNLOCK_INTRO_KEY = "mq11_events_unlock_intro"
 _PERIOD_EVENT_POOL_EXCLUDE_KEYS = frozenset({EVENTS_UNLOCK_INTRO_KEY})
 ALLOWED_EFFECT_KEYS = frozenset(
@@ -41,6 +55,7 @@ ALLOWED_EFFECT_KEYS = frozenset(
         "xp_delta",
         "monthly_lifestyle_delta",
         "monthly_expense_delta",
+        "monthly_burn_delta_pct",
         "expense_line",
         "insurance_claim",
     }
@@ -74,6 +89,25 @@ def _apply_expense_line_effect(db: Session, profile: GameProfile, raw: object, *
         expires_after_periods=expires,
         source_ref=source_ref,
     )
+
+
+def pending_mandatory_blocking_event_titles(
+    db: Session, game_profile_id: int, period_index: int
+) -> list[str]:
+    """События с mandatory_gate=blocks_period_end, которые нужно закрыть выбором до конца периода."""
+    rows = (
+        db.query(EventInstance, EventDefinition)
+        .join(EventDefinition, EventDefinition.id == EventInstance.definition_id)
+        .filter(
+            EventInstance.game_profile_id == game_profile_id,
+            EventInstance.period_index == period_index,
+            EventInstance.status == "pending",
+            EventDefinition.mandatory_gate == MANDATORY_GATE_BLOCKS_PERIOD_END,
+        )
+        .order_by(EventInstance.id.asc())
+        .all()
+    )
+    return [str(defn.title) for _inst, defn in rows]
 
 
 def expire_pending_events_for_closed_period(db: Session, game_profile_id: int, closed_period_index: int) -> int:
@@ -114,7 +148,15 @@ def _ensure_seed_events(db: Session) -> None:
     has_any = db.query(EventDefinition).count() > 0
     if not has_any:
 
-        def add_event(key: str, title: str, description: str, choices: list[dict], weight: int = 100):
+        def add_event(
+            key: str,
+            title: str,
+            description: str,
+            choices: list[dict],
+            weight: int = 100,
+            *,
+            mandatory_gate: str = "none",
+        ):
             ed = EventDefinition(
                 key=key,
                 mode="any",
@@ -124,6 +166,7 @@ def _ensure_seed_events(db: Session) -> None:
                 is_active=1,
                 event_tier=1,
                 repeat_policy="repeatable",
+                mandatory_gate=mandatory_gate,
             )
             db.add(ed)
             db.flush()
@@ -140,12 +183,25 @@ def _ensure_seed_events(db: Session) -> None:
         add_event(
             key="broken_phone",
             title="Сломался телефон",
-            description="Телефон внезапно перестал включаться. Нужно решить, что делать.",
+            description="Телефон не включается — без связи сложно работать и оплачивать счета.",
             weight=120,
+            mandatory_gate="blocks_period_end",
             choices=[
-                {"title": "Починить (−3 000 ₽)", "effects": {"cash_delta": -3000}},
-                {"title": "Купить новый (−12 000 ₽)", "effects": {"cash_delta": -12000}},
-                {"title": "Отложить ремонт (0 ₽)", "effects": {"cash_delta": 0}},
+                {"title": "Починить в сервисе", "effects": {"cash_delta": -3000, "xp_delta": 2}},
+                {"title": "Купить новый", "effects": {"cash_delta": -12000, "xp_delta": 1}},
+                {
+                    "title": "Временный б/у аппарат",
+                    "effects": {
+                        "cash_delta": -4500,
+                        "expense_line": {
+                            "category_key": "communications",
+                            "amount_monthly": 800,
+                            "title": "Связь (б/у)",
+                            "expires_after_periods": 2,
+                        },
+                        "xp_delta": 1,
+                    },
+                },
             ],
         )
         add_event(
@@ -172,6 +228,73 @@ def _ensure_seed_events(db: Session) -> None:
         db.commit()
 
     ensure_mvp11_event_catalog(db)
+
+
+def _load_event_profile_context(db: Session, game_profile_id: int) -> EventProfileContext:
+    asset_kinds = {
+        str(row.kind).strip()
+        for row in db.query(FinanceAsset.kind)
+        .filter(
+            FinanceAsset.game_profile_id == game_profile_id,
+            FinanceAsset.is_active == 1,
+        )
+        .all()
+        if row.kind
+    }
+    liability_count = int(
+        db.query(FinanceLiability)
+        .filter(
+            FinanceLiability.game_profile_id == game_profile_id,
+            FinanceLiability.is_active == 1,
+        )
+        .count()
+    )
+    ins_keys: set[str] = set()
+    for row in (
+        db.query(InsurancePolicy.product, InsurancePolicy.insured_object)
+        .filter(
+            InsurancePolicy.game_profile_id == game_profile_id,
+            InsurancePolicy.is_active == 1,
+            InsurancePolicy.claimed_period_index.is_(None),
+        )
+        .all()
+    ):
+        product = str(row.product or "").strip()
+        insured = str(row.insured_object or "").strip()
+        if product and insured:
+            ins_keys.add(f"{product}:{insured}")
+    return EventProfileContext(
+        active_asset_kinds=frozenset(asset_kinds),
+        active_liability_count=liability_count,
+        active_insurance_claim_keys=frozenset(ins_keys),
+    )
+
+
+def _definition_prerequisites_met(d: EventDefinition, ctx: EventProfileContext) -> bool:
+    prereq = parse_event_prerequisites_json(getattr(d, "prerequisites_json", None))
+    return event_prerequisites_met(prereq, ctx)
+
+
+def _choice_available_for_profile(db: Session, profile: GameProfile, effects: dict) -> bool:
+    claim = effects.get("insurance_claim")
+    if not isinstance(claim, dict):
+        return True
+    kind = (claim.get("kind") or "").strip() or None
+    product = (claim.get("product") or "").strip() or None
+    insured_object = (claim.get("insured_object") or "").strip() or None
+    policy_id = claim.get("policy_id")
+    pid = int(policy_id) if policy_id is not None else None
+    return (
+        find_policy_for_claim(
+            db,
+            profile.id,
+            kind=kind,
+            product=product,
+            insured_object=insured_object,
+            policy_id=pid,
+        )
+        is not None
+    )
 
 
 def _load_event_counter_map(db: Session, game_profile_id: int) -> dict[int, EventProfileCounterSnapshot]:
@@ -310,10 +433,13 @@ def ensure_period_events(db: Session, game_profile_id: int, period_index: int, s
         return
 
     counter_map = _load_event_counter_map(db, game_profile_id)
+    profile_ctx = _load_event_profile_context(db, game_profile_id)
 
     repeat_ok: list[EventDefinition] = []
     for d in defs_all:
         if d.key in _PERIOD_EVENT_POOL_EXCLUDE_KEYS:
+            continue
+        if not _definition_prerequisites_met(d, profile_ctx):
             continue
         if not is_event_definition_eligible(
             repeat_policy=getattr(d, "repeat_policy", None),
@@ -359,7 +485,7 @@ def ensure_period_events(db: Session, game_profile_id: int, period_index: int, s
     db.commit()
 
 
-def serialize_instance_rows(db: Session, insts: list[EventInstance]) -> list[dict]:
+def serialize_instance_rows(db: Session, insts: list[EventInstance], *, profile: GameProfile | None = None) -> list[dict]:
     out = []
     for inst in insts:
         definition = db.query(EventDefinition).filter(EventDefinition.id == inst.definition_id).first()
@@ -379,12 +505,16 @@ def serialize_instance_rows(db: Session, insts: list[EventInstance]) -> list[dic
                 effects = {}
             if not isinstance(effects, dict):
                 effects = {}
+            if profile is not None and not _choice_available_for_profile(db, profile, effects):
+                continue
             row = {"id": c.id, "title": c.title, "description": c.description}
             if effects.get("insurance_claim"):
                 row["insurance_claim"] = True
             xp_delta = effects.get("xp_delta")
             if xp_delta:
                 row["xp_delta"] = int(xp_delta)
+            if profile is not None:
+                row["impacts"] = build_choice_impacts(db, profile, effects)
             choice_rows.append(row)
         out.append({
             "id": inst.id,
@@ -420,7 +550,7 @@ async def get_pending_event(current_user=Depends(get_current_user), db: Session 
         .all()
     )
 
-    events = serialize_instance_rows(db, insts)
+    events = serialize_instance_rows(db, insts, profile=profile)
 
     first = events[0] if events else None
 
@@ -481,6 +611,12 @@ async def choose_event(
     monthly_lifestyle_delta = float(effects.get("monthly_lifestyle_delta", 0) or 0) + float(
         effects.get("monthly_expense_delta", 0) or 0
     )
+    pct = effects.get("monthly_burn_delta_pct")
+    if pct is not None:
+        from ..expenses import compute_monthly_burn
+
+        burn_total = float(compute_monthly_burn(db, profile).total)
+        monthly_lifestyle_delta += round(burn_total * float(pct), 2)
     expense_line_spec = effects.get("expense_line")
     insurance_claim_spec = effects.get("insurance_claim")
     if insurance_claim_spec is not None and not isinstance(insurance_claim_spec, dict):

@@ -33,3 +33,13 @@
 
 - `DashboardPremium` → `mqx-tab-page--dash-unified`
 - Стили: `:has(.mqx-tab-page--dash-unified)` в `index.css`
+- **design-lab S5** — паритет с prod (2026-05): hero/pause, bleed+inset, safety panel, tabbar, XP gradient
+
+## Lab ↔ prod checklist
+
+| Элемент | Lab S5 | Prod |
+|--------|--------|------|
+| Hero pause | `\|\|` + filled | `MqxDashboardHero` |
+| Подушка | `[data-safety-panel]` | `DashboardPremium` inline |
+| Уровень inset | `padding-inline` на bleed | то же |
+| Таббар | `bottom-nav__cell--active` full | `BottomGameNav` |
