@@ -57,29 +57,33 @@ body {
 
 .mqx-monetka-dialog__perch {
   position: relative;
-  padding-top: 0;
+  min-width: 0;
+  max-width: 100%;
+  overflow: hidden;
+}
+
+.mqx-monetka-dialog__perch-head {
+  position: relative;
+  z-index: 2;
+  width: fit-content;
+  margin: 0 0 -38px 10%;
+  line-height: 0;
 }
 
 .lab-mascot--perch {
-  position: absolute;
-  left: var(--mqx-monetka-perch-left);
-  bottom: calc(100% - 6px);
-  transform: translateX(-44%);
-  margin: 0;
-  z-index: 2;
-  width: 108px;
+  width: 124px;
+  max-width: 34vw;
   height: auto;
-  max-height: 118px;
+  max-height: 132px;
   object-fit: contain;
   object-position: left bottom;
-  pointer-events: none;
   filter: drop-shadow(0 4px 12px color-mix(in srgb, var(--mq-violet) 22%, transparent));
 }
 
 .mqx-monetka-dialog__perch .mqx-monetka-dialog__speech {
-  padding-top: 48px;
-  padding-inline: 14px 16px;
-  padding-left: 18px;
+  padding: 40px 12px 12px 14px;
+  max-width: 100%;
+  box-sizing: border-box;
 }
 
 .mqx-monetka-dialog__perch .mqx-monetka-dialog__speech::after {

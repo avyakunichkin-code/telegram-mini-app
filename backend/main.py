@@ -33,6 +33,14 @@ GAME_STARTER_TEMPLATE_SEEDS = [
         "sort_order": 10,
         "blueprint": {
             "description": "Без долгов и обслуживания активов — чтобы освоить цикл периода без давления платежей.",
+            "scenario_icon": "fresh_start",
+            "compare_note": "Самый мягкий вход — освоить период без давления обязательств.",
+            "highlights": [
+                "Скромная зарплата (~50 000 ₽/мес)",
+                "Небольшие расходы на жизнь",
+                "Нет имущества и долгов на старте",
+                "На счёте ~15 000 ₽",
+            ],
             "period_duration_seconds": 300,
             "cash_balance": 15000,
             "monthly_salary": 50000,
@@ -48,6 +56,14 @@ GAME_STARTER_TEMPLATE_SEEDS = [
         "sort_order": 20,
         "blueprint": {
             "description": "Мало наличных на старте, потребительский кредит и авто с обслуживанием.",
+            "scenario_icon": "car_loan",
+            "compare_note": "Сложнее «Базового старта»: появились кредит и авто.",
+            "highlights": [
+                "Средняя зарплата (~45 000 ₽/мес)",
+                "Потребительский кредит",
+                "Авто: обслуживание каждый период",
+                "На счёте ~9 000 ₽",
+            ],
             "period_duration_seconds": 300,
             "cash_balance": 9000,
             "monthly_salary": 45000,
@@ -77,6 +93,14 @@ GAME_STARTER_TEMPLATE_SEEDS = [
         "sort_order": 30,
         "blueprint": {
             "description": "Высокий ипотечный платёж и машина: ошибки по кэшу быстро ощущаются.",
+            "scenario_icon": "home_mortgage",
+            "compare_note": "После «Зарплаты до зарплаты»: ипотека давит сильнее.",
+            "highlights": [
+                "Зарплата ~46 500 ₽/мес, но платёж по ипотеке высокий",
+                "Ипотека с первого периода",
+                "Авто + обслуживание",
+                "На счёте ~6 500 ₽",
+            ],
             "period_duration_seconds": 300,
             "cash_balance": 6500,
             "monthly_salary": 46500,
@@ -106,6 +130,14 @@ GAME_STARTER_TEMPLATE_SEEDS = [
         "sort_order": 40,
         "blueprint": {
             "description": "Два долга, «жизнь» дороже и почти пустой счёт — для опытных игроков.",
+            "scenario_icon": "debt_stack",
+            "compare_note": "Максимум давления: два долга и почти пустой счёт.",
+            "highlights": [
+                "Зарплата ~43 500 ₽/мес, расходы высокие",
+                "Ипотека + кредитная карта",
+                "Подержанное авто",
+                "На счёте ~4 500 ₽",
+            ],
             "period_duration_seconds": 300,
             "cash_balance": 4500,
             "monthly_salary": 43500,

@@ -10,6 +10,8 @@ export { LiabilityPositionMetrics } from './metrics/LiabilityPositionMetrics';
 export { InvestPositionMetrics } from './metrics/InvestPositionMetrics';
 export { MqxDashboardHero } from './layout/MqxDashboardHero';
 export { MqxSaveKindPicker } from './layout/MqxSaveKindPicker';
+export { MqxStarterScenarioPicker } from './layout/MqxStarterScenarioPicker';
+export { ScenarioSceneIcon } from './icons/ScenarioSceneIcons';
 export { IllustrationGame, IllustrationPlan } from './icons/ModeIllustrations';
 export { MqxDashStack } from './layout/MqxDashStack';
 export { MqxDivider } from './primitives/MqxDivider';

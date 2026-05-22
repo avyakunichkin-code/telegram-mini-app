@@ -25,10 +25,24 @@ export function normalizeStarterTemplate(raw) {
   const dr = Number(raw.difficulty_rank ?? raw.difficultyRank ?? 1);
   const difficulty_rank = Number.isFinite(dr) ? dr : 1;
   const description = raw.description ?? raw.summary ?? null;
+  const highlights = Array.isArray(raw.highlights)
+    ? raw.highlights.map((x) => String(x).trim()).filter(Boolean)
+    : [];
+  const scenario_icon =
+    typeof raw.scenario_icon === 'string' && raw.scenario_icon.trim()
+      ? raw.scenario_icon.trim()
+      : null;
+  const compare_note =
+    typeof raw.compare_note === 'string' && raw.compare_note.trim()
+      ? raw.compare_note.trim()
+      : null;
   return {
     template_key: String(template_key),
     title: String(title),
     difficulty_rank,
     description: typeof description === 'string' ? description : null,
+    highlights,
+    scenario_icon,
+    compare_note,
   };
 }

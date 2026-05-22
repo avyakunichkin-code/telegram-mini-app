@@ -50,19 +50,30 @@ def _validate_save_kind(save_kind: str) -> str:
 
 
 def _starter_template_public(row: GameStarterTemplate) -> GameStarterTemplatePublic:
+    from ..starter_template_presentation import (
+        compare_note_from_blueprint,
+        highlights_from_blueprint,
+        parse_blueprint_json,
+        scenario_icon_from_blueprint,
+    )
+
+    bp = parse_blueprint_json(row.blueprint_json)
     desc: Optional[str] = None
-    try:
-        bp = json.loads(row.blueprint_json or "{}")
-        raw = bp.get("description")
-        if isinstance(raw, str) and raw.strip():
-            desc = raw.strip()
-    except json.JSONDecodeError:
-        desc = None
+    raw = bp.get("description")
+    if isinstance(raw, str) and raw.strip():
+        desc = raw.strip()
+    tk = row.template_key
     return GameStarterTemplatePublic(
-        template_key=row.template_key,
+        template_key=tk,
         title=row.title,
         difficulty_rank=int(row.difficulty_rank or 1),
         description=desc,
+        highlights=highlights_from_blueprint(
+            bp,
+            base_monthly_lifestyle_expense=float(row.base_monthly_lifestyle_expense or 0),
+        ),
+        scenario_icon=scenario_icon_from_blueprint(bp, tk),
+        compare_note=compare_note_from_blueprint(bp, tk),
     )
 
 

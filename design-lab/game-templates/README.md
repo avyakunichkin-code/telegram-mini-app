@@ -1,28 +1,18 @@
-# Design-lab: Шаблоны игры (шаг 2)
+# Design-lab: Имя и сценарий (шаг 2)
 
-**Статус:** **B · Монетка** внедрён в prod (`GameTemplatePickScreen`).
+```bash
+cd design-lab/game-templates
+npx serve .
+```
+
+**T2 ★ Strips + SI1** — в prod (`MqxStarterScenarioPicker`).
 
 | Документ | Назначение |
 |----------|------------|
-| [`../../frontend-react/src/components/new-game/GameTemplatePickScreen.jsx`](../../frontend-react/src/components/new-game/GameTemplatePickScreen.jsx) | Prod |
-| [`../../frontend-react/src/components/GameStarterPicker.jsx`](../../frontend-react/src/components/GameStarterPicker.jsx) | Сетка карточек |
+| [`VARIANTS.md`](VARIANTS.md) | T1–T4, SI1–SI3 |
+| [`../new-game-mode/`](../new-game-mode/) | Шаг 1 — режим |
 
-## Prod (утверждено)
+## Prod
 
-- **Монетка** + пузырь; имя слота в подзаголовке, не в заголовке
-- Сетка шаблонов (`GameStarterPicker`) с метками сложности
-- **Начать игру** — выбранный шаблон
-- **Быстрый старт** — самый простой сценарий из каталога
-- **Назад** — к шагу 1
-
-## Варианты IA (история)
-
-| ID | Идея | Статус |
-|----|------|--------|
-| **F** | Полный каталог + кнопка старта | **★ prod** |
-| **Q** | Только быстрый старт (без каталога) | доступен как вторичная кнопка |
-| **A** | Premium hero + каталог в карточке | superseded |
-
-## Запуск prod
-
-`npm run dev` → меню → **Новая игра** → **Игра** → экран шаблонов.
+- `GameTemplatePickScreen` + `MqxStarterScenarioPicker`
+- API: `highlights`, `scenario_icon`, `compare_note` на `GET /api/game/templates`

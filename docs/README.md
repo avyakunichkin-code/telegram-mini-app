@@ -63,6 +63,8 @@
 | [`vision/ideas/money-quest-evolution-after-mvp.md`](vision/ideas/money-quest-evolution-after-mvp.md) | **Часть II** — Game/Plan, Q&A, план по слоям (источник истины для цели) |
 | [`vision/ideas/mvp-1-1-product-direction.md`](vision/ideas/mvp-1-1-product-direction.md) | MVP 1.1: закрытые ответы + направления доработки (перед spec эпика) |
 | [`vision/ideas/game-balance-thresholds-and-constraints.md`](vision/ideas/game-balance-thresholds-and-constraints.md) | Черновик баланса: победа/поражение MVP, ограничения, пакеты для калибровки по шаблонам |
+| [`vision/ideas/event-catalog-qna-refine.md`](vision/ideas/event-catalog-qna-refine.md) | Q&A каталога событий, цепочки (авто, родственник) |
+| [`vision/ideas/event-types-and-taxonomy.md`](vision/ideas/event-types-and-taxonomy.md) | Типизация событий (домен, interaction, аналитика, informational «лотерея») |
 
 ### Specs
 

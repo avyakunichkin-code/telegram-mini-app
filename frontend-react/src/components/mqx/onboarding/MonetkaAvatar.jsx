@@ -28,7 +28,11 @@ export function MonetkaAvatar({ size = 72, className = '', pose = 'default' }) {
       ]
         .filter(Boolean)
         .join(' ')}
-      style={sitEdge ? { width: size, height: 'auto' } : undefined}
+      style={
+        sitEdge
+          ? { width: size, maxWidth: '34vw', height: 'auto', minWidth: 0 }
+          : undefined
+      }
       draggable={false}
     />
   );

@@ -32,7 +32,9 @@ tracks: events, gameplay, chains
 
 **In:** `event_profile_chains`, `enqueue_event`, `asset_from_template` (цена сделки), сиды `mq11_used_car_offer` + `mq11_used_car_deadline`, тесты, автомиграция в `main.py`.
 
-**Out (следующие спринты):** цепочки рефинанс / родственник; UI-таймер цепочки; ветки 3+ шагов.
+**Out (следующие спринты):** рефинанс (выключен до механики); informational «лотерея»; UI-таймер цепочки; ветки 3+ шагов.
+
+**In (следующий спринт):** цепочка **родственник** (см. ниже); типизация событий — [`event-types-and-taxonomy.md`](event-types-and-taxonomy.md).
 
 ## Not Doing (and Why)
 
@@ -53,3 +55,14 @@ tracks: events, gameplay, chains
 | Скидка | 25% (`discount_rate: 0.25`) |
 | `after_periods` | 2 (в `enqueue_event`) |
 | Шаблон | `car_personal` |
+
+## Цепочка «родственник» (согласовано 2026-05-22)
+
+| Шаг | Ключ | Условие |
+|-----|------|---------|
+| Part 1 | `mq11_family_money_request` | Помощь −15k / −7k — **без цепочки** (безвозвратно) |
+| Part 1 → 2 | Отказ | `enqueue_event`, `chain_key: family_money_refusal`, **`after_periods: 1`** |
+| Part 2 | `mq11_family_money_callback` | Мягкое (`mandatory_gate: none`); суммы **18k / 9k** / твёрдый отказ |
+| После 2-го отказа | — | **Без штрафа** в MVP; позже — informational «лотерея» ([`event-types-and-taxonomy.md`](event-types-and-taxonomy.md)) |
+
+Рефинанс (`mq11_refinance_bank`): **не показывать** (`is_active: false`) до реальной механики рефинанса.

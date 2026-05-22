@@ -371,6 +371,9 @@ class GameStarterTemplatePublic(BaseModel):
     title: str
     difficulty_rank: int
     description: Optional[str] = None
+    highlights: List[str] = Field(default_factory=list)
+    scenario_icon: Optional[str] = None
+    compare_note: Optional[str] = None
 
 
 class GameStartRequest(BaseModel):

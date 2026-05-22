@@ -3,7 +3,7 @@ import { Button, Input, Spinner } from '@telegram-apps/telegram-ui';
 import { API } from '../../api';
 import { showNotification } from '../notifications';
 import { MqxMonetkaDialogScreen } from '../mqx/layout/MqxMonetkaDialogScreen';
-import { GameStarterPicker } from '../GameStarterPicker';
+import { MqxStarterScenarioPicker } from '../mqx/layout/MqxStarterScenarioPicker';
 import { DEFAULT_PERIOD_DURATION_SECONDS, normalizeStarterTemplate } from '../../config/gameDefaults';
 import { startGameWithSimplestTemplate } from '../../utils/startGame';
 
@@ -125,13 +125,12 @@ export function GameTemplatePickScreen({ profileName, onProfileNameChange, onBac
           <span id="mq-game-catalog-label-pick" className="mq-game-catalog-label">
             Сценарий
           </span>
-          <GameStarterPicker
+          <MqxStarterScenarioPicker
             templates={templates}
             value={selectedKey}
             onChange={(key) => setSelectedKey(key == null ? null : String(key))}
             disabled={loading || busy}
             labelledById="mq-game-catalog-label-pick"
-            showManualOption={false}
           />
         </>
       )}

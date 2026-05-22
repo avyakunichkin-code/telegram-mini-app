@@ -91,7 +91,11 @@
 ### События и контент (после M11)
 
 - [ ] P1 **[Backend]** Логика `mandatory_gate` (`blocks_period_end`) — колонка есть, поведение в `choose` / конец периода не описано в spec.
-- [ ] P2 **[Backend] ⚠ spec** Предикаты событий: страховка / актив / инвестиция; цепочки событий.
+- [x] P1 **[Backend]** Цепочки событий MVP: `event_profile_chains`, подержанное авто — миграции `0020`–`0021`, `event_chains.py`.
+- [ ] P1 **[Backend]** Цепочка **родственник** (отказ → callback 18k/9k, `after_periods: 1`); рефинанс `is_active: false` — [`event-catalog-qna-refine.md`](../vision/ideas/event-catalog-qna-refine.md).
+- [ ] P2 **[Doc→Spec]** Типизация событий (`event_domain`, `interaction_kind`) + аналитика вовлечённости — [`event-types-and-taxonomy.md`](../vision/ideas/event-types-and-taxonomy.md).
+- [ ] P3 **[Backend+Frontend]** Informational-событие «лотерея родственника» (без выбора, warning UI) после двойного отказа — там же § бэклог.
+- [ ] P2 **[Backend] ⚠ spec** Предикаты: страховка / инвестиция (активы и цепочки — частично ✅).
 - [ ] P2 **[Backend] ⚠ spec** Баланс 🟢🔴🟡 от **финансового здоровья**, не только от уровня (GAME §9.1 п.3).
 - [ ] P2 **[Backend] ⚠ spec** Макро-события (ставка, кризис) с 5–6 уровня (GAME §1.9, §9.3 п.7).
 

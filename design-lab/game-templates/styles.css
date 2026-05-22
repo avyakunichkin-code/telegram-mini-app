@@ -1,0 +1,154 @@
+@import url('../new-game-mode/styles.css');
+
+:root {
+  --mq-warning: #d97706;
+  --mq-danger: #dc2626;
+  --mq-emerald-soft: rgba(5, 150, 105, 0.12);
+  --mq-danger-soft: rgba(220, 38, 38, 0.12);
+  --accent: #7c3aed;
+  --accent-border: color-mix(in srgb, var(--mq-violet) 42%, transparent);
+  --accent-bg: color-mix(in srgb, var(--mq-violet) 10%, #fff);
+}
+
+.lab-main {
+  max-width: 440px;
+  margin: 0 auto;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+
+.lab-section h2 {
+  margin: 0 0 12px;
+  font-size: 15px;
+}
+
+.lab-phone {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.lab-grid-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.mq-game-template-card {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 12px;
+  border-radius: 12px;
+  border: 1px solid color-mix(in srgb, var(--mqx-ink) 14%, transparent);
+  background: var(--surface);
+  text-align: left;
+  font: inherit;
+  cursor: pointer;
+}
+
+.mq-game-template-card--selected {
+  border-color: var(--accent-border);
+  background: var(--accent-bg);
+}
+
+.mq-game-template-card--easy { border-left: 3px solid var(--mq-emerald); }
+.mq-game-template-card--mid { border-left: 3px solid var(--mq-warning); }
+
+.mq-game-template-card__title { font-weight: 800; font-size: 15px; }
+.mq-game-template-card__desc { font-size: 12px; opacity: 0.65; }
+
+/* strips — копия prod (сокращённо) */
+.mqx-scenario-strip {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  width: 100%;
+  padding: 12px 10px;
+  border: none;
+  border-radius: 14px;
+  text-align: left;
+  font: inherit;
+  cursor: pointer;
+  background: color-mix(in srgb, var(--mq-violet) 5%, var(--surface));
+}
+.mqx-scenario-strip--selected {
+  background: color-mix(in srgb, var(--mq-violet) 10%, var(--surface));
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--mq-violet) 28%, transparent);
+}
+.mqx-scenario-strip--easy { border-left: 3px solid var(--mq-emerald); }
+.mqx-scenario-strip--mid { border-left: 3px solid var(--mq-warning); }
+.mqx-scenario-strip__icon-wrap {
+  width: 52px;
+  height: 52px;
+  display: grid;
+  place-items: center;
+  border-radius: 14px;
+  font-size: 28px;
+  flex-shrink: 0;
+}
+.mqx-scenario-strip__icon-wrap--easy {
+  background: color-mix(in srgb, var(--mq-emerald) 14%, transparent);
+}
+.mqx-scenario-strip__icon-wrap--mid {
+  background: color-mix(in srgb, var(--mq-warning) 14%, transparent);
+}
+.mqx-scenario-strip__body { flex: 1; min-width: 0; }
+.mqx-scenario-strip__head { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 6px; }
+.mqx-scenario-strip__title { font-weight: 800; font-size: 15px; }
+.mqx-scenario-strip__list {
+  margin: 0;
+  padding-left: 1.1em;
+  font-size: 12px;
+  line-height: 1.42;
+}
+.mqx-scenario-strip__compare {
+  margin: 8px 0 0;
+  font-size: 11px;
+  font-weight: 650;
+  color: var(--mq-violet-deep);
+}
+.mqx-scenario-strip__trail { color: var(--mq-violet); font-size: 22px; align-self: center; }
+
+.mq-game-tier-badge {
+  display: inline-flex;
+  padding: 3px 8px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+.mq-game-tier-badge--easy { background: var(--mq-emerald-soft); color: #047857; }
+.mq-game-tier-badge--mid { background: rgba(217, 119, 6, 0.14); color: #b45309; }
+
+.lab-icon-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 12px;
+}
+.lab-icon-card {
+  padding: 12px;
+  border-radius: 14px;
+  border: 1px solid color-mix(in srgb, var(--mqx-ink) 10%, transparent);
+  text-align: center;
+}
+.lab-icon-card__tag { font-size: 12px; font-weight: 800; margin-bottom: 8px; }
+.lab-icon-card p { margin: 8px 0 0; font-size: 11px; opacity: 0.7; }
+.lab-icon-demo { margin: 0 auto; }
+.lab-emoji-tile {
+  width: 52px;
+  height: 52px;
+  margin: 0 auto;
+  border-radius: 14px;
+  display: grid;
+  place-items: center;
+  font-size: 22px;
+  background: linear-gradient(145deg, color-mix(in srgb, var(--mq-violet) 16%, transparent), transparent);
+}
+.lab-emoji-tile--lg {
+  width: 72px;
+  height: 72px;
+  font-size: 28px;
+}

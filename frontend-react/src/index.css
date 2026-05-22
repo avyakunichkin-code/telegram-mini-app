@@ -1873,14 +1873,33 @@ body {
   box-shadow: none;
   background: transparent;
   min-height: calc(100svh - 24px);
+  overflow: visible;
+  max-width: 100%;
+}
+
+.app-shell:has(.mqx-flow--monetka-dialog) {
+  overflow-x: clip;
 }
 
 .app-shell:has(.mqx-flow--monetka-dialog) .mqx-frame--flat-flow {
   min-height: 0;
 }
 
-.mqx-flow--monetka-dialog {
+.mqx-screen:has(.mqx-flow--monetka-dialog) {
+  min-width: 0;
+  max-width: 100%;
+  overflow-x: clip;
+}
+
+.mqx-content.mqx-flow--monetka-dialog {
   padding: 0;
+  gap: 12px;
+  min-width: 0;
+  max-width: 100%;
+  overflow-x: clip;
+}
+
+.mqx-flow--monetka-dialog {
   min-height: 0;
 }
 
@@ -1888,12 +1907,14 @@ body {
   display: flex;
   flex-direction: column;
   align-items: stretch;
-  gap: 14px;
+  gap: 12px;
   width: 100%;
-  max-width: 420px;
-  margin: 0 auto;
-  padding: 8px 14px 24px;
+  max-width: 100%;
+  min-width: 0;
+  margin: 0;
+  padding: 4px 0 20px;
   box-sizing: border-box;
+  overflow-x: clip;
 }
 
 .mqx-monetka-flow__mascot {
@@ -1901,42 +1922,48 @@ body {
   margin: 0 !important;
 }
 
-/* Монетка «сидит» на пузыре — слева, ножки не заходят на текст */
+/* Монетка на кромке пузыря: отрицательный margin, ноги в padding speech */
 .mqx-monetka-dialog__perch {
   position: relative;
   width: 100%;
-  padding-top: 0;
-  --mqx-monetka-perch-left: 22%;
+  max-width: 100%;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.mqx-monetka-dialog__perch-head {
+  position: relative;
+  z-index: 2;
+  width: fit-content;
+  max-width: 100%;
+  margin: 0 0 -38px 10%;
+  line-height: 0;
+  pointer-events: none;
 }
 
 .mqx-monetka-dialog__perch-mascot {
-  position: absolute;
-  top: 0;
-  left: var(--mqx-monetka-perch-left);
-  z-index: 2;
-  transform: translateX(-44%);
   margin: 0 !important;
-  pointer-events: none;
   filter: drop-shadow(0 4px 12px color-mix(in srgb, var(--mq-violet, #6d28d9) 22%, transparent));
 }
 
 .mqx-monetka-dialog__perch--sit-edge .mqx-monetka-dialog__perch-mascot.mqx-onboarding-monetka--sit-edge {
-  top: auto;
-  bottom: calc(100% - 6px);
-  transform: translateX(-44%);
   object-fit: contain;
   object-position: left bottom;
-  max-height: 118px;
+  max-height: 132px;
 }
 
 .mqx-monetka-dialog__perch .mqx-monetka-dialog__speech {
-  padding-top: 52px;
-  padding-inline: 14px 16px;
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  padding: 36px 12px 12px;
+  padding-left: 14px;
 }
 
 .mqx-monetka-dialog__perch--sit-edge .mqx-monetka-dialog__speech {
-  padding-top: 48px;
-  padding-left: 18px;
+  padding-top: 40px;
 }
 
 .mqx-monetka-dialog__perch .mqx-monetka-dialog__speech::after {
@@ -1946,8 +1973,11 @@ body {
 .mqx-monetka-dialog__speech {
   position: relative;
   width: 100%;
-  padding: 14px 16px 12px;
+  max-width: 100%;
+  min-width: 0;
+  padding: 14px 12px 12px;
   border-radius: 18px;
+  box-sizing: border-box;
   background-color: var(--mqx-onboarding-bubble-bg, #ffffff);
   background-image: linear-gradient(
     165deg,
@@ -1974,8 +2004,15 @@ body {
   font-size: 1.05rem;
   font-weight: 800;
   line-height: 1.25;
+  letter-spacing: -0.02em;
   text-align: center;
   color: var(--mqx-ink);
+}
+
+#root .mqx-monetka-dialog__title {
+  font-size: 1.05rem;
+  margin: 0 0 6px;
+  letter-spacing: -0.02em;
 }
 
 .mqx-monetka-dialog__subtitle {
@@ -1983,6 +2020,7 @@ body {
   font-size: 14px;
   line-height: 1.45;
   text-align: center;
+  overflow-wrap: anywhere;
   color: color-mix(in srgb, var(--mqx-ink) 88%, var(--tg-theme-hint-color, #6b7280));
 }
 
@@ -2004,10 +2042,20 @@ body {
   flex-direction: column;
   gap: 12px;
   width: 100%;
+  max-width: 100%;
+  min-width: 0;
 }
 
 .mqx-monetka-flow__form {
   margin: 0;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+}
+
+.mqx-monetka-flow__form [class*='tgui-'] {
+  max-width: 100%;
+  min-width: 0;
 }
 
 .mqx-monetka-flow__save-kind {
@@ -2057,6 +2105,9 @@ body {
   display: flex;
   flex-direction: column;
   gap: 8px;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
 }
 
 .mqx-save-kind__row {
@@ -3463,8 +3514,12 @@ body [class*='modal'] {
 }
 
 .mqx-onboarding-monetka--sit-edge {
+  display: block;
   margin: 0;
-  max-width: min(42vw, 132px);
+  width: 124px;
+  max-width: 34vw;
+  height: auto !important;
+  min-width: 0;
 }
 
 .mqx-onboarding-bubble__title {
@@ -4220,6 +4275,180 @@ body [class*='modal'] {
   font-size: var(--mq-fs-caption);
   line-height: 1.38;
   color: color-mix(in srgb, var(--mqx-ink) 58%, transparent);
+}
+
+/* Сценарии старта — T2 strips (название + bullets + иконка) */
+.mqx-scenario-picker {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+}
+
+.mqx-scenario-picker--grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 10px;
+}
+
+@media (min-width: 440px) {
+  .mqx-scenario-picker--grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.mqx-scenario-strip {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  margin: 0;
+  padding: 12px 10px 12px 10px;
+  border: none;
+  border-radius: 14px;
+  text-align: left;
+  font: inherit;
+  box-sizing: border-box;
+  cursor: pointer;
+  background: color-mix(in srgb, var(--mq-violet, #7c3aed) 5%, var(--tg-theme-bg-color, #fff));
+  transition:
+    background 0.15s ease,
+    transform 0.12s ease;
+}
+
+.mqx-scenario-strip--selected {
+  background: color-mix(in srgb, var(--mq-violet, #7c3aed) 10%, var(--tg-theme-bg-color, #fff));
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--mq-violet, #7c3aed) 28%, transparent);
+}
+
+.mqx-scenario-strip:active:not(:disabled) {
+  transform: scale(0.995);
+}
+
+.mqx-scenario-strip:focus-visible {
+  outline: 2px solid var(--mq-violet, #7c3aed);
+  outline-offset: 2px;
+}
+
+.mqx-scenario-strip--easy {
+  border-left: 3px solid var(--mq-emerald, #059669);
+}
+
+.mqx-scenario-strip--mid {
+  border-left: 3px solid var(--mq-warning, #d97706);
+}
+
+.mqx-scenario-strip--hard {
+  border-left: 3px solid color-mix(in srgb, var(--mq-danger, #dc2626) 70%, var(--mq-warning));
+}
+
+.mqx-scenario-strip--extreme {
+  border-left: 3px solid var(--mq-danger, #dc2626);
+}
+
+.mqx-scenario-strip__icon-wrap {
+  flex-shrink: 0;
+  width: 52px;
+  height: 52px;
+  display: grid;
+  place-items: center;
+  border-radius: 14px;
+}
+
+.mqx-scenario-strip__icon-wrap--easy {
+  color: var(--mq-emerald, #059669);
+  background: linear-gradient(
+    145deg,
+    color-mix(in srgb, var(--mq-emerald) 18%, transparent),
+    color-mix(in srgb, var(--mq-emerald) 6%, transparent)
+  );
+}
+
+.mqx-scenario-strip__icon-wrap--mid {
+  color: var(--mq-warning, #d97706);
+  background: linear-gradient(
+    145deg,
+    color-mix(in srgb, var(--mq-warning) 16%, transparent),
+    color-mix(in srgb, var(--mq-warning) 6%, transparent)
+  );
+}
+
+.mqx-scenario-strip__icon-wrap--hard,
+.mqx-scenario-strip__icon-wrap--extreme {
+  color: var(--mq-violet-deep, #5b21b6);
+  background: linear-gradient(
+    145deg,
+    color-mix(in srgb, var(--mq-violet) 18%, transparent),
+    color-mix(in srgb, var(--mq-violet-deep) 8%, transparent)
+  );
+}
+
+.mqx-scenario-strip__icon {
+  width: 40px;
+  height: 40px;
+}
+
+.mqx-scenario-strip__body {
+  flex: 1;
+  min-width: 0;
+}
+
+.mqx-scenario-strip__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+
+.mqx-scenario-strip__title {
+  font-size: var(--mq-fs-body, 15px);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: color-mix(in srgb, var(--mqx-ink) 94%, transparent);
+}
+
+.mqx-scenario-strip__list {
+  margin: 0;
+  padding: 0 0 0 1.1em;
+  font-size: var(--mq-fs-caption, 12px);
+  line-height: 1.42;
+  color: color-mix(in srgb, var(--mqx-ink) 78%, var(--tg-theme-hint-color, #6b7280));
+}
+
+.mqx-scenario-strip__list li {
+  margin: 0 0 3px;
+}
+
+.mqx-scenario-strip__list li:last-child {
+  margin-bottom: 0;
+}
+
+.mqx-scenario-strip__fallback {
+  margin: 0;
+  font-size: var(--mq-fs-caption, 12px);
+  line-height: 1.42;
+  color: color-mix(in srgb, var(--mqx-ink) 62%, transparent);
+}
+
+.mqx-scenario-strip__compare {
+  margin: 8px 0 0;
+  font-size: var(--mq-fs-small, 11px);
+  line-height: 1.38;
+  font-weight: 650;
+  color: color-mix(in srgb, var(--mq-violet-deep, #5b21b6) 72%, var(--mqx-ink));
+}
+
+.mqx-scenario-strip__trail {
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  align-self: center;
+  color: var(--mq-violet, #7c3aed);
 }
 
 .mqx-goal__top {
