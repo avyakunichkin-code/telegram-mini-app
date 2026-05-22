@@ -1,11 +1,11 @@
 /**
- * Уровень сценария для UI: цвет + короткий бейдж (без «сложно/экстрим»).
- * rank 1 — мягкий вход, 4 — максимум решений за период («драйв»).
+ * Цветовой уровень сценария (без текстовых бейджей): зелёный → красный.
+ * rank 1 — мягкий вход, 4 — максимум решений за период.
  */
 export function tierFromRank(rank) {
   const r = Number(rank);
-  if (r <= 1) return { label: 'Старт', slug: 'easy' };
-  if (r === 2) return { label: 'Ритм', slug: 'mid' };
-  if (r === 3) return { label: 'Эксперт', slug: 'expert' };
-  return { label: 'Драйв', slug: 'drive' };
+  if (r <= 1) return { slug: 'green' };
+  if (r === 2) return { slug: 'amber' };
+  if (r === 3) return { slug: 'orange' };
+  return { slug: 'red' };
 }

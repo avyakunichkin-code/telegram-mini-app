@@ -87,7 +87,7 @@ def scenario_icon_from_blueprint(blueprint: dict[str, Any], template_key: str) -
     if key == "mq_game_mortgage_stress_v1":
         return "home_mortgage"
     if key == "mq_game_debt_stack_v1":
-        return "debt_stack"
+        return "factory"
     if liabilities := blueprint.get("liabilities") or []:
         if len(liabilities) >= 2:
             return "debt_stack"

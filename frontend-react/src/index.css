@@ -4191,20 +4191,26 @@ body [class*='modal'] {
   background: color-mix(in srgb, var(--accent-bg) 55%, var(--tg-theme-secondary-bg-color, var(--bg)));
 }
 
+.mq-game-template-card--green,
 .mq-game-template-card--easy {
-  border-left: 3px solid var(--mq-emerald);
+  border-left: 3px solid #059669;
 }
 
+.mq-game-template-card--amber,
 .mq-game-template-card--mid {
-  border-left: 3px solid var(--mq-warning);
+  border-left: 3px solid #a16207;
 }
 
+.mq-game-template-card--orange,
+.mq-game-template-card--expert,
 .mq-game-template-card--hard {
-  border-left: 3px solid color-mix(in srgb, var(--mq-danger) 82%, var(--mq-warning));
+  border-left: 3px solid #f97316;
 }
 
+.mq-game-template-card--red,
+.mq-game-template-card--drive,
 .mq-game-template-card--extreme {
-  border-left: 3px solid var(--mq-danger);
+  border-left: 3px solid #dc2626;
 }
 
 .mq-game-template-card--manual {
@@ -4338,66 +4344,98 @@ body [class*='modal'] {
   outline-offset: 2px;
 }
 
+/* Уровни сценария: только цвет (без текстовых бейджей) */
+.mqx-scenario-strip--green,
 .mqx-scenario-strip--easy {
-  border-left: 3px solid var(--mq-emerald, #059669);
+  border-left: 3px solid #059669;
 }
 
+.mqx-scenario-strip--amber,
 .mqx-scenario-strip--mid {
-  border-left: 3px solid var(--mq-warning, #d97706);
+  border-left: 3px solid #a16207;
 }
 
-.mqx-scenario-strip--hard,
-.mqx-scenario-strip--expert {
-  border-left: 3px solid color-mix(in srgb, var(--mq-danger, #dc2626) 70%, var(--mq-warning));
+.mqx-scenario-strip--orange,
+.mqx-scenario-strip--expert,
+.mqx-scenario-strip--hard {
+  border-left: 3px solid #f97316;
 }
 
-.mqx-scenario-strip--extreme,
-.mqx-scenario-strip--drive {
-  border-left: 3px solid var(--mq-danger, #dc2626);
+.mqx-scenario-strip--red,
+.mqx-scenario-strip--drive,
+.mqx-scenario-strip--extreme {
+  border-left: 3px solid #dc2626;
 }
 
 .mqx-scenario-strip__icon-wrap {
   flex-shrink: 0;
-  width: 52px;
-  height: 52px;
+  width: 48px;
+  height: 48px;
   display: grid;
   place-items: center;
-  border-radius: 14px;
+  border-radius: 12px;
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.14);
 }
 
+.mqx-scenario-strip__icon-wrap--green,
 .mqx-scenario-strip__icon-wrap--easy {
-  color: var(--mq-emerald, #059669);
-  background: linear-gradient(
-    145deg,
-    color-mix(in srgb, var(--mq-emerald) 18%, transparent),
-    color-mix(in srgb, var(--mq-emerald) 6%, transparent)
-  );
+  background: linear-gradient(135deg, #10b981, #2dd4bf);
 }
 
+.mqx-scenario-strip__icon-wrap--amber,
 .mqx-scenario-strip__icon-wrap--mid {
-  color: var(--mq-warning, #d97706);
-  background: linear-gradient(
-    145deg,
-    color-mix(in srgb, var(--mq-warning) 16%, transparent),
-    color-mix(in srgb, var(--mq-warning) 6%, transparent)
-  );
+  background: linear-gradient(135deg, #a16207, #ca8a04);
 }
 
-.mqx-scenario-strip__icon-wrap--hard,
+.mqx-scenario-strip__icon-wrap--orange,
 .mqx-scenario-strip__icon-wrap--expert,
-.mqx-scenario-strip__icon-wrap--extreme,
-.mqx-scenario-strip__icon-wrap--drive {
-  color: var(--mq-violet-deep, #5b21b6);
-  background: linear-gradient(
-    145deg,
-    color-mix(in srgb, var(--mq-violet) 18%, transparent),
-    color-mix(in srgb, var(--mq-violet-deep) 8%, transparent)
-  );
+.mqx-scenario-strip__icon-wrap--hard {
+  background: linear-gradient(135deg, #f97316, #fdba74);
 }
 
-.mqx-scenario-strip__icon {
-  width: 40px;
-  height: 40px;
+.mqx-scenario-strip__icon-wrap--red,
+.mqx-scenario-strip__icon-wrap--drive,
+.mqx-scenario-strip__icon-wrap--extreme {
+  background: linear-gradient(135deg, #dc2626, #f87171);
+}
+
+.mqx-scenario-strip__icon-wrap .mqx-scenario-strip__icon,
+.mqx-scenario-strip__icon-wrap svg {
+  width: 22px;
+  height: 22px;
+  stroke: rgba(255, 255, 255, 0.95);
+  fill: none;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.mqx-scenario-strip__icon-wrap svg circle[fill] {
+  fill: rgba(255, 255, 255, 0.95);
+  stroke: none;
+}
+
+.mqx-scenario-picker--compact .mqx-scenario-strip {
+  padding: 10px 8px;
+  gap: 10px;
+}
+
+.mqx-scenario-picker--compact .mqx-scenario-strip__icon-wrap {
+  width: 44px;
+  height: 44px;
+}
+
+.mqx-scenario-picker--compact .mqx-scenario-strip__title {
+  font-size: 14px;
+}
+
+.mqx-scenario-picker--compact .mqx-scenario-strip__list {
+  font-size: 11px;
+}
+
+.mqx-scenario-picker--compact .mqx-scenario-strip__compare {
+  display: none;
 }
 
 .mqx-scenario-strip__body {

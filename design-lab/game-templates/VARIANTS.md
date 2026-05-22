@@ -1,25 +1,34 @@
-# Шаблоны сценария — варианты
+# Шаг 2 — утверждено (раунд 3)
 
-## Layout (карточки)
+## Экран ★
 
-| ID | Идея | Статус |
-|----|------|--------|
-| **T1** | Сетка 2×2 + абзац description (legacy) | архив |
-| **T2** ★ | **Strips** — иконка + название + bullets + compare | **prod** |
-| **T3** | Strips без compare, только bullets | альтернатива |
-| **T4** | Grid 2×2, bullets вместо абзаца | компакт |
+| Параметр | Значение |
+|----------|----------|
+| Layout | **B** compact, 2 bullets, без compare |
+| Заголовок Монетки | **Четыре ритма** |
+| Реплика | Ух ты, четыре жизни… Старт / Драйв в тексте (не в бейджах) |
+| Бейджи | **нет** — только цвет полоски + подложка иконки |
+| Цвета | green → amber → orange → red |
+| Иконки | **I2** flat chip (как финансы периода) |
 
-## Иконки ситуации (SI)
+## Иконки
 
-| ID | Стиль | Когда |
-|----|-------|-------|
-| **SI1** ★ | Outline SVG по типу жизни | **prod** |
-| **SI2** | Эмодзи в gradient-плитке | быстрый прототип |
-| **SI3** | Крупная сцена 72px слева | T4 layout |
+| ID | Стиль | Статус |
+|----|-------|--------|
+| I1 | Outline 72px | архив |
+| **I2 ★** | 24px белый штрих на градиенте | **prod** |
+| I3 | Filled glyph | альтернатива (`icons-variants.html`) |
 
-Ключи `scenario_icon`: `fresh_start` · `car_loan` · `home_mortgage` · `debt_stack`
+Ключи: `fresh_start` (студент) · `car_loan` · `home_mortgage` · `factory` (предприниматель)
 
-## Данные
+## Prod
 
-Bullets в `blueprint_json.highlights`; fallback — derive в `starter_template_presentation.py`.
-Миграция: `0022_game_template_scenario_highlights.sql`.
+- `GameTemplatePickScreen` — copy + `layout="compact"`
+- `MqxStarterScenarioPicker` — compact по умолчанию
+- `ScenarioSceneIcons.jsx` — I2
+- `starterTemplateTier.js` — slug: green/amber/orange/red
+- Миграция `0024_scenario_icon_factory.sql`
+
+## Архив раундов 1–2
+
+Старые макеты A–F, M1–M3 — в git history.

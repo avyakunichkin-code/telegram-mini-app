@@ -41,7 +41,6 @@ export function GameStarterPicker({
                 onChange(t.template_key);
               }}
             >
-              <span className={`mq-game-template-card__tier mq-game-tier-badge mq-game-tier-badge--${tier.slug}`}>{tier.label}</span>
               <span className="mq-game-template-card__title">{t.title}</span>
               {t.description ? (
                 <span className="mq-game-template-card__desc">{t.description}</span>

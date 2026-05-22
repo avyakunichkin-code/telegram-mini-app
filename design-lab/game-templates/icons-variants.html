@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="ru" data-theme="light">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Иконки сценария — варианты</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <header class="lab-header">
+      <div>
+        <h1>Иконки сценария (SI)</h1>
+        <p class="lab-intro">Утверждено: <strong>I2 ★</strong> — плоский штрих на яркой подложке (как финансы периода).</p>
+      </div>
+      <div class="lab-theme" role="group">
+        <button type="button" class="is-active" data-theme-btn="light">Светлая</button>
+        <button type="button" data-theme-btn="dark">Тёмная</button>
+      </div>
+    </header>
+    <main class="lab-main">
+      <section class="lab-section">
+        <h2>I2 ★ Flat chip (prod)</h2>
+        <div class="lab-icon-compare">
+          <div class="lab-icon-compare__item">
+            <div class="mqx-scenario-strip__icon-wrap mqx-scenario-strip__icon-wrap--green">
+              <svg class="mqx-scenario-strip__icon" viewBox="0 0 24 24" fill="none" aria-hidden>
+                <path d="M12 4 4 8v2l8 4 8-4V8l-8-4z" stroke="currentColor" stroke-width="2" stroke-linejoin="round" />
+                <path d="M6 12v4c0 2.2 2.7 4 6 4s6-1.8 6-4v-4" stroke="currentColor" stroke-width="2" />
+              </svg>
+            </div>
+            <span>Студент</span>
+          </div>
+          <div class="lab-icon-compare__item">
+            <div class="mqx-scenario-strip__icon-wrap mqx-scenario-strip__icon-wrap--amber">
+              <svg class="mqx-scenario-strip__icon" viewBox="0 0 24 24" fill="none" aria-hidden>
+                <path d="M5 16h14l-1.5-5H6.5L5 16z" stroke="currentColor" stroke-width="2" />
+                <circle cx="8" cy="16" r="1.5" fill="currentColor" />
+                <circle cx="16" cy="16" r="1.5" fill="currentColor" />
+              </svg>
+            </div>
+            <span>Профессионал</span>
+          </div>
+          <div class="lab-icon-compare__item">
+            <div class="mqx-scenario-strip__icon-wrap mqx-scenario-strip__icon-wrap--orange">
+              <svg class="mqx-scenario-strip__icon" viewBox="0 0 24 24" fill="none" aria-hidden>
+                <path d="M4 12 12 5l8 7v7H4v-7z" stroke="currentColor" stroke-width="2" />
+                <path d="M10 19v-5h4v5" stroke="currentColor" stroke-width="2" />
+              </svg>
+            </div>
+            <span>Руководитель</span>
+          </div>
+          <div class="lab-icon-compare__item">
+            <div class="mqx-scenario-strip__icon-wrap mqx-scenario-strip__icon-wrap--red">
+              <svg class="mqx-scenario-strip__icon" viewBox="0 0 24 24" fill="none" aria-hidden>
+                <path d="M3 19V11l4-2v2l5-4v10H3z" stroke="currentColor" stroke-width="2" />
+                <path d="M13 19V9h8v10h-8z" stroke="currentColor" stroke-width="2" />
+                <path d="M16 6V4M18 5h-4" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" />
+              </svg>
+            </div>
+            <span>Предприниматель</span>
+          </div>
+        </div>
+      </section>
+      <section class="lab-section">
+        <h2>I1 · Outline 72px (архив)</h2>
+        <p class="lab-section__note">Бледный контур на мягком градиенте — заменён на I2.</p>
+        <div class="lab-icon-compare lab-icon-compare--legacy">
+          <div class="lab-icon-legacy-wrap">🌱</div>
+          <div class="lab-icon-legacy-wrap">🚗</div>
+          <div class="lab-icon-legacy-wrap">🏠</div>
+          <div class="lab-icon-legacy-wrap">💳</div>
+        </div>
+      </section>
+      <section class="lab-section">
+        <h2>I3 · Filled glyph (альтернатива)</h2>
+        <p class="lab-section__note">Крупная заливка без штриха — тяжелее на маленьком экране.</p>
+        <div class="lab-icon-compare">
+          <div class="lab-icon-compare__item">
+            <div class="mqx-scenario-strip__icon-wrap mqx-scenario-strip__icon-wrap--green lab-icon-wrap--filled">
+              <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden>
+                <rect x="6" y="4" width="12" height="16" rx="2" fill="currentColor" />
+              </svg>
+            </div>
+            <span>Книга</span>
+          </div>
+          <div class="lab-icon-compare__item">
+            <div class="mqx-scenario-strip__icon-wrap mqx-scenario-strip__icon-wrap--red lab-icon-wrap--filled">
+              <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden>
+                <path d="M2 19h20V9H2v10zm4-8h5v6H6V11zm7 0h5v6h-5V11z" fill="currentColor" />
+              </svg>
+            </div>
+            <span>Завод filled</span>
+          </div>
+        </div>
+      </section>
+      <p><a href="./index.html">← Полный экран</a></p>
+    </main>
+    <script>
+      document.querySelectorAll('[data-theme-btn]').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          document.documentElement.setAttribute('data-theme', btn.getAttribute('data-theme-btn'));
+          document.querySelectorAll('[data-theme-btn]').forEach((b) => b.classList.toggle('is-active', b === btn));
+        });
+      });
+    </script>
+  </body>
+</html>

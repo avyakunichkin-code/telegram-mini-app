@@ -79,7 +79,7 @@ npx serve .
 | 8 | `dashboard-home-v2/` — эксперименты компоновок (архив) | — |
 | 9 | **`dashboard-dual-accordion/`** — два аккордеона MQX (D1–D5) | `MqxLevelBlock` collapsible, `MqxPeriodDashboard` v2 |
 | 10 | **`new-game-mode/`** — R2 + I1 ★ | `MqxMonetkaDialogScreen`, `MqxSaveKindPicker`, `NewProfileKindScreen` |
-| 11 | **`game-templates/`** — T2 strips + SI1 ★ | `MqxStarterScenarioPicker`, `GameTemplatePickScreen` |
+| 11 | **`game-templates/`** — compact B + I2 flat + цвета ★ | `MqxStarterScenarioPicker`, `GameTemplatePickScreen` |
 
 Текущий статус: **примитивы**, **shell**, **события**, **портфель**, **страховки**, **row-actions (B)**, **VictoryGoalsPanel** в prod; дальше — `dashboard/` (hero), empty/error в shell.
 

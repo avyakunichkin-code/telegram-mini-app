@@ -3,14 +3,17 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Шаблоны сценария — design-lab</title>
+    <title>Четыре ритма — утверждённый экран</title>
     <link rel="stylesheet" href="./styles.css" />
   </head>
   <body>
     <header class="lab-header">
       <div>
-        <h1>Имя и сценарий — варианты</h1>
-        <p><strong>T2 strips + SI1 ★</strong> в prod. Ниже — сравнение layout и иконок.</p>
+        <h1>Шаг 2 — утверждено ★</h1>
+        <p class="lab-intro">
+          <strong>B</strong> компакт · иконки I2 · без бейджей · зелёный → жёлтый → оранжевый → красный.
+          <a href="./icons-variants.html">Варианты иконок</a>
+        </p>
       </div>
       <div class="lab-theme" role="group">
         <button type="button" class="is-active" data-theme-btn="light">Светлая</button>
@@ -19,81 +22,126 @@
     </header>
 
     <main class="lab-main">
-      <section class="lab-section">
-        <h2>T2 ★ Strips — prod</h2>
-        <div class="lab-phone">
-          <button type="button" class="mqx-scenario-strip mqx-scenario-strip--easy mqx-scenario-strip--selected">
-            <span class="mqx-scenario-strip__icon-wrap mqx-scenario-strip__icon-wrap--easy" aria-hidden>🌱</span>
-            <span class="mqx-scenario-strip__body">
-              <span class="mqx-scenario-strip__head">
-                <span class="mqx-scenario-strip__title">Базовый старт</span>
-                <span class="mq-game-tier-badge mq-game-tier-badge--easy">Легко</span>
+      <div class="lab-phone__shell lab-phone__shell--narrow">
+        <div class="mqx-monetka-flow">
+          <div class="mqx-monetka-dialog__perch mqx-monetka-dialog__perch--sit-edge">
+            <div class="mqx-monetka-dialog__perch-head">
+              <img class="lab-mascot lab-mascot--perch" src="./assets/monetka-sit-edge.png" width="124" alt="" />
+            </div>
+            <section class="mqx-monetka-dialog__speech">
+              <h1 class="mqx-monetka-dialog__title">Четыре ритма</h1>
+              <div class="mqx-monetka-dialog__subtitle">
+                <p>
+                  Ух ты, четыре жизни с разным ритмом. Начни со <strong>Старта</strong> или сразу лови
+                  <strong>Драйв</strong> — ты сам выбираешь, насколько насыщенной будет игра.
+                </p>
+              </div>
+            </section>
+          </div>
+
+          <label class="lab-field">
+            <span class="lab-field__label">Название игры</span>
+            <input class="lab-field__input" type="text" value="Моя игра - 1" />
+          </label>
+
+          <span class="lab-catalog-label">Сценарий</span>
+          <div class="mqx-scenario-picker mqx-scenario-picker--compact">
+            <button type="button" class="mqx-scenario-strip mqx-scenario-strip--green mqx-scenario-strip--selected">
+              <span class="mqx-scenario-strip__icon-wrap mqx-scenario-strip__icon-wrap--green" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" aria-hidden>
+                  <path d="M12 4 4 8v2l8 4 8-4V8l-8-4z" stroke="currentColor" stroke-width="2" stroke-linejoin="round" />
+                  <path d="M6 12v4c0 2.2 2.7 4 6 4s6-1.8 6-4v-4" stroke="currentColor" stroke-width="2" />
+                </svg>
               </span>
-              <ul class="mqx-scenario-strip__list">
-                <li>Скромная зарплата (~50 000 ₽/мес)</li>
-                <li>Небольшие расходы на жизнь</li>
-                <li>Нет имущества и долгов на старте</li>
-                <li>На счёте ~15 000 ₽</li>
-              </ul>
-              <p class="mqx-scenario-strip__compare">Самый мягкий вход — освоить период без давления обязательств.</p>
-            </span>
-            <span class="mqx-scenario-strip__trail" aria-hidden>›</span>
-          </button>
-          <button type="button" class="mqx-scenario-strip mqx-scenario-strip--mid">
-            <span class="mqx-scenario-strip__icon-wrap mqx-scenario-strip__icon-wrap--mid" aria-hidden>🚗</span>
-            <span class="mqx-scenario-strip__body">
-              <span class="mqx-scenario-strip__head">
-                <span class="mqx-scenario-strip__title">Зарплата до зарплаты</span>
-                <span class="mq-game-tier-badge mq-game-tier-badge--mid">Средне</span>
+              <span class="mqx-scenario-strip__body">
+                <span class="mqx-scenario-strip__head">
+                  <span class="mqx-scenario-strip__title">Студент</span>
+                </span>
+                <ul class="mqx-scenario-strip__list">
+                  <li>Доход ~50 000 ₽/мес</li>
+                  <li>Чистый старт — без долгов</li>
+                  <li>На счёте ~15 000 ₽</li>
+                </ul>
               </span>
-              <ul class="mqx-scenario-strip__list">
-                <li>Средняя зарплата (~45 000 ₽/мес)</li>
-                <li>Потребительский кредит</li>
-                <li>Авто: обслуживание каждый период</li>
-                <li>На счёте ~9 000 ₽</li>
-              </ul>
-              <p class="mqx-scenario-strip__compare">Сложнее «Базового старта»: появились кредит и авто.</p>
-            </span>
-            <span class="mqx-scenario-strip__trail" aria-hidden>›</span>
-          </button>
+              <span class="mqx-scenario-strip__trail" aria-hidden="true">›</span>
+            </button>
+
+            <button type="button" class="mqx-scenario-strip mqx-scenario-strip--amber">
+              <span class="mqx-scenario-strip__icon-wrap mqx-scenario-strip__icon-wrap--amber" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" aria-hidden>
+                  <path d="M5 16h14l-1.5-5H6.5L5 16z" stroke="currentColor" stroke-width="2" />
+                  <circle cx="8" cy="16" r="1.5" fill="currentColor" />
+                  <circle cx="16" cy="16" r="1.5" fill="currentColor" />
+                </svg>
+              </span>
+              <span class="mqx-scenario-strip__body">
+                <span class="mqx-scenario-strip__head">
+                  <span class="mqx-scenario-strip__title">Профессионал</span>
+                </span>
+                <ul class="mqx-scenario-strip__list">
+                  <li>Доход ~45 000 ₽/мес</li>
+                  <li>Авто + потребительский кредит</li>
+                </ul>
+              </span>
+              <span class="mqx-scenario-strip__trail" aria-hidden="true">›</span>
+            </button>
+
+            <button type="button" class="mqx-scenario-strip mqx-scenario-strip--orange">
+              <span class="mqx-scenario-strip__icon-wrap mqx-scenario-strip__icon-wrap--orange" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" aria-hidden>
+                  <path d="M4 12 12 5l8 7v7H4v-7z" stroke="currentColor" stroke-width="2" />
+                  <path d="M10 19v-5h4v5" stroke="currentColor" stroke-width="2" />
+                </svg>
+              </span>
+              <span class="mqx-scenario-strip__body">
+                <span class="mqx-scenario-strip__head">
+                  <span class="mqx-scenario-strip__title">Руководитель</span>
+                </span>
+                <ul class="mqx-scenario-strip__list">
+                  <li>Доход ~46 500 ₽/мес</li>
+                  <li>Ипотека + авто</li>
+                </ul>
+              </span>
+              <span class="mqx-scenario-strip__trail" aria-hidden="true">›</span>
+            </button>
+
+            <button type="button" class="mqx-scenario-strip mqx-scenario-strip--red">
+              <span class="mqx-scenario-strip__icon-wrap mqx-scenario-strip__icon-wrap--red" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" aria-hidden>
+                  <path d="M3 19V11l4-2v2l5-4v10H3z" stroke="currentColor" stroke-width="2" stroke-linejoin="round" />
+                  <path d="M13 19V9h8v10h-8z" stroke="currentColor" stroke-width="2" />
+                  <path d="M16 6V4M18 5h-4" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" />
+                </svg>
+              </span>
+              <span class="mqx-scenario-strip__body">
+                <span class="mqx-scenario-strip__head">
+                  <span class="mqx-scenario-strip__title">Предприниматель</span>
+                </span>
+                <ul class="mqx-scenario-strip__list">
+                  <li>Доход ~43 500 ₽/мес</li>
+                  <li>Ипотека + кредитная карта</li>
+                </ul>
+              </span>
+              <span class="mqx-scenario-strip__trail" aria-hidden="true">›</span>
+            </button>
+          </div>
+
+          <div class="lab-actions">
+            <button type="button" class="lab-btn lab-btn--filled">Начать игру</button>
+            <button type="button" class="lab-btn lab-btn--outline">Быстрый старт</button>
+            <button type="button" class="lab-btn lab-btn--outline">Назад</button>
+          </div>
         </div>
-      </section>
+      </div>
 
       <section class="lab-section">
-        <h2>T1 · Legacy grid + абзац</h2>
-        <div class="lab-grid-2">
-          <button type="button" class="mq-game-template-card mq-game-template-card--easy mq-game-template-card--selected">
-            <span class="mq-game-tier-badge mq-game-tier-badge--easy">Легко</span>
-            <span class="mq-game-template-card__title">Базовый старт</span>
-            <span class="mq-game-template-card__desc">Без долгов и обслуживания активов — чтобы освоить цикл…</span>
-          </button>
-          <button type="button" class="mq-game-template-card mq-game-template-card--mid">
-            <span class="mq-game-tier-badge mq-game-tier-badge--mid">Средне</span>
-            <span class="mq-game-template-card__title">Зарплата до зарплаты</span>
-            <span class="mq-game-template-card__desc">Мало наличных, кредит и авто с обслуживанием.</span>
-          </button>
-        </div>
-      </section>
-
-      <section class="lab-section lab-section--icons">
-        <h2>Иконки ситуации</h2>
-        <div class="lab-icon-grid">
-          <div class="lab-icon-card">
-            <div class="lab-icon-card__tag">SI1 ★ Outline</div>
-            <div class="mqx-scenario-strip__icon-wrap mqx-scenario-strip__icon-wrap--easy lab-icon-demo">🪙</div>
-            <p>fresh_start · car_loan · home_mortgage · debt_stack</p>
-          </div>
-          <div class="lab-icon-card">
-            <div class="lab-icon-card__tag">SI2 · Emoji tile</div>
-            <div class="lab-emoji-tile">🏠💳</div>
-            <p>Быстро, но менее «MQ»</p>
-          </div>
-          <div class="lab-icon-card">
-            <div class="lab-icon-card__tag">SI3 · Крупная сцена</div>
-            <div class="lab-emoji-tile lab-emoji-tile--lg">👨‍👩‍👧📉</div>
-            <p>Для hero-карточек</p>
-          </div>
-        </div>
+        <h2>Цветовая шкала</h2>
+        <ul class="lab-section__note" style="padding-left: 1.2em; margin: 0">
+          <li><strong>Зелёный</strong> — Студент</li>
+          <li><strong>Тёмно-жёлтый</strong> (#a16207 → #ca8a04) — Профессионал</li>
+          <li><strong>Оранжевый</strong> (#f97316) — Руководитель</li>
+          <li><strong>Красный</strong> — Предприниматель (иконка завода)</li>
+        </ul>
       </section>
     </main>
 

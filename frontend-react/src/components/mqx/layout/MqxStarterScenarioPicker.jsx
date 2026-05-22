@@ -1,8 +1,11 @@
 import { ScenarioSceneIcon } from '../icons/ScenarioSceneIcons';
 import { tierFromRank } from '../../../utils/starterTemplateTier';
 
+const COMPACT_MAX_BULLETS = 2;
+
 /**
- * Выбор сценария: название + bullets старта + иконка ситуации (T2 strips ★).
+ * Выбор сценария: название + bullets + цветовая полоска и иконка на градиенте.
+ * layout: compact — 2 bullets, без compare (утверждённый шаг 2).
  */
 export function MqxStarterScenarioPicker({
   templates,
@@ -10,9 +13,15 @@ export function MqxStarterScenarioPicker({
   onChange,
   disabled = false,
   labelledById,
-  layout = 'strip',
+  layout = 'compact',
 }) {
-  const layoutCls = layout === 'grid' ? 'mqx-scenario-picker--grid' : 'mqx-scenario-picker--strip';
+  const isCompact = layout === 'compact';
+  const isGrid = layout === 'grid';
+  const layoutCls = isGrid
+    ? 'mqx-scenario-picker--grid'
+    : isCompact
+      ? 'mqx-scenario-picker--compact'
+      : 'mqx-scenario-picker--strip';
 
   return (
     <div
@@ -25,6 +34,7 @@ export function MqxStarterScenarioPicker({
         const sel = value === t.template_key;
         const tier = tierFromRank(t.difficulty_rank);
         const highlights = Array.isArray(t.highlights) ? t.highlights : [];
+        const visibleHighlights = isCompact ? highlights.slice(0, COMPACT_MAX_BULLETS) : highlights;
         const iconKey = t.scenario_icon || 'fresh_start';
 
         return (
@@ -48,26 +58,28 @@ export function MqxStarterScenarioPicker({
               onChange(t.template_key);
             }}
           >
-            <span className={`mqx-scenario-strip__icon-wrap mqx-scenario-strip__icon-wrap--${tier.slug}`} aria-hidden>
+            <span
+              className={`mqx-scenario-strip__icon-wrap mqx-scenario-strip__icon-wrap--${tier.slug}`}
+              aria-hidden
+            >
               <ScenarioSceneIcon iconKey={iconKey} className="mqx-scenario-strip__icon" />
             </span>
             <span className="mqx-scenario-strip__body">
               <span className="mqx-scenario-strip__head">
                 <span className="mqx-scenario-strip__title">{t.title}</span>
-                <span className={`mqx-scenario-strip__tier mq-game-tier-badge mq-game-tier-badge--${tier.slug}`}>
-                  {tier.label}
-                </span>
               </span>
-              {highlights.length > 0 ? (
+              {visibleHighlights.length > 0 ? (
                 <ul className="mqx-scenario-strip__list">
-                  {highlights.map((line) => (
+                  {visibleHighlights.map((line) => (
                     <li key={line}>{line}</li>
                   ))}
                 </ul>
               ) : t.description ? (
                 <p className="mqx-scenario-strip__fallback">{t.description}</p>
               ) : null}
-              {t.compare_note ? <p className="mqx-scenario-strip__compare">{t.compare_note}</p> : null}
+              {!isCompact && t.compare_note ? (
+                <p className="mqx-scenario-strip__compare">{t.compare_note}</p>
+              ) : null}
             </span>
             <span className="mqx-scenario-strip__trail" aria-hidden>
               <svg viewBox="0 0 24 24" width="20" height="20" fill="none">

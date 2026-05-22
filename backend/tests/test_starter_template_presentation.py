@@ -28,6 +28,6 @@ def test_highlights_derived_from_assets_and_liabilities():
 
 def test_scenario_icon_and_compare_fallback():
     bp = {}
-    assert scenario_icon_from_blueprint(bp, "mq_game_debt_stack_v1") == "debt_stack"
+    assert scenario_icon_from_blueprint(bp, "mq_game_debt_stack_v1") == "factory"
     note = compare_note_from_blueprint(bp, "mq_game_debt_stack_v1") or ""
     assert "драйв" in note.lower()

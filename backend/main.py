@@ -132,7 +132,7 @@ GAME_STARTER_TEMPLATE_SEEDS = [
         "sort_order": 40,
         "blueprint": {
             "description": "Два долга, плотный кэш и насыщенный период — максимум финансовых решений за цикл.",
-            "scenario_icon": "debt_stack",
+            "scenario_icon": "factory",
             "compare_note": "Максимум решений за период — твой драйв, если любишь плотный ритм.",
             "highlights": [
                 "Доход ~43 500 ₽/мес",

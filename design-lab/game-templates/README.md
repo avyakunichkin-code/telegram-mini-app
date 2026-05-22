@@ -1,18 +1,14 @@
-# Design-lab: Имя и сценарий (шаг 2)
+# Design-lab: Четыре ритма (шаг 2) ★
 
 ```bash
 cd design-lab/game-templates
 npx serve .
 ```
 
-**T2 ★ Strips + SI1** — в prod (`MqxStarterScenarioPicker`).
-
-| Документ | Назначение |
+| Страница | Содержание |
 |----------|------------|
-| [`VARIANTS.md`](VARIANTS.md) | T1–T4, SI1–SI3 |
-| [`../new-game-mode/`](../new-game-mode/) | Шаг 1 — режим |
+| [`index.html`](index.html) | Утверждённый экран |
+| [`icons-variants.html`](icons-variants.html) | I1 / I2 / I3 |
+| [`VARIANTS.md`](VARIANTS.md) | Сводка |
 
-## Prod
-
-- `GameTemplatePickScreen` + `MqxStarterScenarioPicker`
-- API: `highlights`, `scenario_icon`, `compare_note` на `GET /api/game/templates`
+Стили и `assets/` — в этой папке (self-contained для `npx serve`).

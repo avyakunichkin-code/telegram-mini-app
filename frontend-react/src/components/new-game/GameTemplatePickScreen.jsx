@@ -93,11 +93,11 @@ export function GameTemplatePickScreen({ profileName, onProfileNameChange, onBac
 
   return (
     <MqxMonetkaDialogScreen
-      title="Имя и сценарий"
+      title="Четыре ритма"
       subtitle={
         <p>
-          В <strong>ИГРЕ</strong> я видела готовые жизни — у каждой свой характер. Подпиши партию и выбери, куда
-          нырнуть; или жми <strong>быстрый старт</strong> — я сама подберу самый простой сценарий.
+          Ух ты, четыре жизни с разным ритмом. Начни со <strong>Старта</strong> или сразу лови <strong>Драйв</strong> —
+          ты сам выбираешь, насколько насыщенной будет игра.
         </p>
       }
       titleId="mqx-new-game-templates-title"
@@ -131,6 +131,7 @@ export function GameTemplatePickScreen({ profileName, onProfileNameChange, onBac
             onChange={(key) => setSelectedKey(key == null ? null : String(key))}
             disabled={loading || busy}
             labelledById="mq-game-catalog-label-pick"
+            layout="compact"
           />
         </>
       )}

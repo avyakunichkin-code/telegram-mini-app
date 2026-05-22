@@ -1,98 +1,75 @@
-/** Иконки жизненных ситуаций для карточек сценария (SI1 outline). */
+/**
+ * Иконки сценария старта — плоский однотонный штрих (как mqx-finance-chip на дашборде).
+ * viewBox 24×24, stroke currentColor на градиентной подложке.
+ */
 
-export function IconScenarioFreshStart({ className = '' }) {
+function IconFlat({ className, children }) {
   return (
-    <svg className={className} viewBox="0 0 72 72" width={72} height={72} aria-hidden fill="none">
-      <circle cx={36} cy={36} r={22} stroke="currentColor" strokeWidth={2.25} opacity={0.35} />
-      <path
-        d="M36 24v14M30 34h12"
-        stroke="currentColor"
-        strokeWidth={2.25}
-        strokeLinecap="round"
-      />
-      <circle cx={36} cy={40} r={9} fill="currentColor" opacity={0.18} />
-      <path
-        d="M24 52c4-6 8-9 12-9s8 3 12 9"
-        stroke="currentColor"
-        strokeWidth={1.75}
-        strokeLinecap="round"
-        opacity={0.55}
-      />
+    <svg className={className} viewBox="0 0 24 24" width={24} height={24} aria-hidden fill="none">
+      {children}
     </svg>
   );
 }
 
-export function IconScenarioCarLoan({ className = '' }) {
+/** Студент — учёба / первый бюджет */
+export function IconScenarioStudent({ className = '' }) {
   return (
-    <svg className={className} viewBox="0 0 72 72" width={72} height={72} aria-hidden fill="none">
+    <IconFlat className={className}>
+      <path d="M12 4 4 8v2l8 4 8-4V8l-8-4z" stroke="currentColor" strokeWidth="2" strokeLinejoin="round" />
+      <path d="M6 12v4c0 2.2 2.7 4 6 4s6-1.8 6-4v-4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+      <path d="M20 8v6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+    </IconFlat>
+  );
+}
+
+/** Профессионал — авто */
+export function IconScenarioCar({ className = '' }) {
+  return (
+    <IconFlat className={className}>
       <path
-        d="M16 44h40l-4-12H20l-4 12z"
+        d="M5 16h14l-1.5-5H6.5L5 16z"
         stroke="currentColor"
-        strokeWidth={2.25}
+        strokeWidth="2"
         strokeLinejoin="round"
       />
-      <circle cx={26} cy={44} r={4} stroke="currentColor" strokeWidth={2} />
-      <circle cx={46} cy={44} r={4} stroke="currentColor" strokeWidth={2} />
-      <path d="M44 28h8v6h-8z" fill="currentColor" opacity={0.35} />
-      <path
-        d="M48 20v4M52 22h-8"
-        stroke="currentColor"
-        strokeWidth={1.75}
-        strokeLinecap="round"
-        opacity={0.65}
-      />
-    </svg>
+      <circle cx="8" cy="16" r="1.5" fill="currentColor" />
+      <circle cx="16" cy="16" r="1.5" fill="currentColor" />
+      <path d="M14 8h3v3h-3z" stroke="currentColor" strokeWidth="1.75" />
+    </IconFlat>
   );
 }
 
-export function IconScenarioHomeMortgage({ className = '' }) {
+/** Руководитель — дом */
+export function IconScenarioHome({ className = '' }) {
   return (
-    <svg className={className} viewBox="0 0 72 72" width={72} height={72} aria-hidden fill="none">
-      <path d="M18 38 36 22l18 16v14H18V38z" stroke="currentColor" strokeWidth={2.25} strokeLinejoin="round" />
-      <rect x={30} y={40} width={12} height={12} rx={1.5} fill="currentColor" opacity={0.3} />
-      <path
-        d="M44 48h12v8H44z"
-        stroke="currentColor"
-        strokeWidth={1.75}
-        opacity={0.55}
-      />
-      <path
-        d="M22 52h32"
-        stroke="currentColor"
-        strokeWidth={1.5}
-        strokeLinecap="round"
-        opacity={0.4}
-      />
-    </svg>
+    <IconFlat className={className}>
+      <path d="M4 12 12 5l8 7v7H4v-7z" stroke="currentColor" strokeWidth="2" strokeLinejoin="round" />
+      <path d="M10 19v-5h4v5" stroke="currentColor" strokeWidth="2" strokeLinejoin="round" />
+    </IconFlat>
   );
 }
 
-export function IconScenarioDebtStack({ className = '' }) {
+/** Предприниматель — производство / завод */
+export function IconScenarioFactory({ className = '' }) {
   return (
-    <svg className={className} viewBox="0 0 72 72" width={72} height={72} aria-hidden fill="none">
-      <rect x={18} y={20} width={36} height={28} rx={4} stroke="currentColor" strokeWidth={2.25} />
-      <path d="M24 30h24M24 38h18" stroke="currentColor" strokeWidth={1.75} strokeLinecap="round" opacity={0.55} />
-      <rect x={44} y={44} width={14} height={14} rx={3} fill="currentColor" opacity={0.22} />
-      <path
-        d="M48 50v6M45 53h6"
-        stroke="currentColor"
-        strokeWidth={1.75}
-        strokeLinecap="round"
-        opacity={0.7}
-      />
-      <circle cx={28} cy={48} r={6} stroke="currentColor" strokeWidth={1.75} opacity={0.45} />
-    </svg>
+    <IconFlat className={className}>
+      <path d="M3 19V11l4-2v2l5-4v10H3z" stroke="currentColor" strokeWidth="2" strokeLinejoin="round" />
+      <path d="M13 19V9h8v10h-8z" stroke="currentColor" strokeWidth="2" strokeLinejoin="round" />
+      <path d="M16 6V4M18 5h-4" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" />
+      <path d="M16 13h3M16 16h3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+    </IconFlat>
   );
 }
 
 const ICON_BY_KEY = {
-  fresh_start: IconScenarioFreshStart,
-  car_loan: IconScenarioCarLoan,
-  home_mortgage: IconScenarioHomeMortgage,
-  debt_stack: IconScenarioDebtStack,
+  fresh_start: IconScenarioStudent,
+  car_loan: IconScenarioCar,
+  home_mortgage: IconScenarioHome,
+  debt_stack: IconScenarioFactory,
+  factory: IconScenarioFactory,
 };
 
 export function ScenarioSceneIcon({ iconKey, className = '' }) {
-  const C = ICON_BY_KEY[iconKey] || IconScenarioFreshStart;
+  const C = ICON_BY_KEY[iconKey] || IconScenarioStudent;
   return <C className={className} />;
 }
