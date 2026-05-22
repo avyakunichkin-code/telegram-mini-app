@@ -38,6 +38,17 @@ from ..timeutil import utc_now_naive
 from ..expenses import add_expense_line_from_event
 from ..insurance_events import apply_insurance_claim_from_effects, find_policy_for_claim
 from ..level_gates import UNLOCK_PERIOD_EVENTS, character_level
+from ..event_chains import (
+    CHAIN_FOLLOWUP_EXCLUDE_FROM_RANDOM_POOL,
+    USED_CAR_CHAIN_KEY,
+    apply_asset_from_template_effect,
+    apply_enqueue_event_effect,
+    choice_allowed_for_chain_branch,
+    complete_chain,
+    ensure_scheduled_chain_events,
+    get_active_chain,
+    resolve_choice_effects_for_definition,
+)
 from ..event_choice_impacts import build_choice_impacts
 from ..mvp11_event_seeds import ensure_mvp11_event_catalog
 
@@ -58,6 +69,10 @@ ALLOWED_EFFECT_KEYS = frozenset(
         "monthly_burn_delta_pct",
         "expense_line",
         "insurance_claim",
+        "enqueue_event",
+        "asset_from_template",
+        "used_car_action",
+        "requires_chain_branch",
     }
 )
 
@@ -394,6 +409,7 @@ def _period_pool_instance_count(
         EventInstance.game_profile_id == game_profile_id,
         EventInstance.period_index == period_index,
     )
+    exclude_def_ids: list[int] = []
     if exclude_intro:
         intro = (
             db.query(EventDefinition.id)
@@ -401,7 +417,13 @@ def _period_pool_instance_count(
             .scalar()
         )
         if intro is not None:
-            q = q.filter(EventInstance.definition_id != int(intro))
+            exclude_def_ids.append(int(intro))
+    for key in CHAIN_FOLLOWUP_EXCLUDE_FROM_RANDOM_POOL:
+        row = db.query(EventDefinition.id).filter(EventDefinition.key == key).scalar()
+        if row is not None:
+            exclude_def_ids.append(int(row))
+    if exclude_def_ids:
+        q = q.filter(EventInstance.definition_id.notin_(exclude_def_ids))
     return int(q.count())
 
 
@@ -412,6 +434,8 @@ def ensure_period_events(db: Session, game_profile_id: int, period_index: int, s
 
     if character_level(profile) < UNLOCK_PERIOD_EVENTS:
         return
+
+    ensure_scheduled_chain_events(db, game_profile_id, period_index)
 
     if _period_pool_instance_count(db, game_profile_id, period_index) >= EVENTS_PER_PERIOD:
         return
@@ -438,6 +462,8 @@ def ensure_period_events(db: Session, game_profile_id: int, period_index: int, s
     repeat_ok: list[EventDefinition] = []
     for d in defs_all:
         if d.key in _PERIOD_EVENT_POOL_EXCLUDE_KEYS:
+            continue
+        if d.key in CHAIN_FOLLOWUP_EXCLUDE_FROM_RANDOM_POOL:
             continue
         if not _definition_prerequisites_met(d, profile_ctx):
             continue
@@ -497,6 +523,12 @@ def serialize_instance_rows(db: Session, insts: list[EventInstance], *, profile:
             .order_by(EventChoice.id.asc())
             .all()
         )
+        chain_ctx: dict | None = None
+        if profile is not None and definition.key == "mq11_used_car_deadline":
+            chain_row = get_active_chain(db, profile.id, USED_CAR_CHAIN_KEY)
+            if chain_row:
+                chain_ctx = json.loads(chain_row.context_json or "{}")
+
         choice_rows = []
         for c in choices:
             try:
@@ -505,8 +537,14 @@ def serialize_instance_rows(db: Session, insts: list[EventInstance], *, profile:
                 effects = {}
             if not isinstance(effects, dict):
                 effects = {}
+            if chain_ctx and not choice_allowed_for_chain_branch(effects, chain_ctx):
+                continue
             if profile is not None and not _choice_available_for_profile(db, profile, effects):
                 continue
+            if profile is not None:
+                effects = resolve_choice_effects_for_definition(
+                    db, profile, definition.key, effects
+                )
             row = {"id": c.id, "title": c.title, "description": c.description}
             if effects.get("insurance_claim"):
                 row["insurance_claim"] = True
@@ -598,12 +636,24 @@ async def choose_event(
     if not isinstance(effects, dict):
         raise HTTPException(status_code=400, detail="Invalid effects_json shape")
 
+    definition = db.query(EventDefinition).filter(EventDefinition.id == inst.definition_id).first()
+    def_key = definition.key if definition else ""
+
+    effects = resolve_choice_effects_for_definition(db, profile, def_key, effects)
+
     unknown = set(effects.keys()) - ALLOWED_EFFECT_KEYS
     if unknown:
         raise HTTPException(
             status_code=400,
             detail=f"Unknown effect keys: {sorted(unknown)}",
         )
+
+    enqueue_spec = effects.get("enqueue_event")
+    if enqueue_spec is not None:
+        try:
+            apply_enqueue_event_effect(db, profile, enqueue_spec)
+        except ValueError as e:
+            raise HTTPException(status_code=400, detail=str(e) or "enqueue_event failed") from e
 
     cash_delta = float(effects.get("cash_delta", 0) or 0)
     safety_delta = float(effects.get("safety_delta", 0) or 0)
@@ -690,6 +740,25 @@ async def choose_event(
             source_ref=f"event:{inst.definition_id}:choice:{choice_id}",
         )
 
+    asset_spec = effects.get("asset_from_template")
+    asset_created = None
+    if asset_spec is not None:
+        try:
+            asset_created = apply_asset_from_template_effect(
+                db,
+                profile,
+                asset_spec,
+                period_index=int(profile.period_index),
+            )
+            db.refresh(profile)
+        except ValueError as e:
+            raise HTTPException(status_code=400, detail=str(e) or "Покупка актива недоступна") from e
+
+    if def_key == "mq11_used_car_deadline":
+        chain = get_active_chain(db, profile.id, USED_CAR_CHAIN_KEY)
+        if chain:
+            complete_chain(db, chain, period_index=int(profile.period_index))
+
     xp_info = {"xp_gained": 0, "level_up": False, "new_level": None}
     if xp_delta > 0:
         xp_info = apply_character_xp(profile, xp_delta, db)
@@ -708,5 +777,12 @@ async def choose_event(
     }
     if insurance_claim_result:
         response["insurance_claim"] = insurance_claim_result
+    if asset_created:
+        response["asset_created"] = {
+            "id": int(asset_created.id),
+            "title": asset_created.title,
+            "kind": asset_created.kind,
+            "asset_value": float(asset_created.asset_value),
+        }
     return response
 

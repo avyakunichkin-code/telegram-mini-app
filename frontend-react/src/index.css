@@ -1901,25 +1901,42 @@ body {
   margin: 0 !important;
 }
 
-/* Монетка «сидит» на пузыре */
+/* Монетка «сидит» на пузыре — слева, ножки не заходят на текст */
 .mqx-monetka-dialog__perch {
   position: relative;
   width: 100%;
-  padding-top: 36px;
+  padding-top: 0;
+  --mqx-monetka-perch-left: 22%;
 }
 
 .mqx-monetka-dialog__perch-mascot {
   position: absolute;
   top: 0;
-  left: 50%;
+  left: var(--mqx-monetka-perch-left);
   z-index: 2;
-  transform: translateX(-50%);
+  transform: translateX(-44%);
   margin: 0 !important;
-  filter: drop-shadow(0 4px 10px color-mix(in srgb, var(--mq-violet, #6d28d9) 18%, transparent));
+  pointer-events: none;
+  filter: drop-shadow(0 4px 12px color-mix(in srgb, var(--mq-violet, #6d28d9) 22%, transparent));
+}
+
+.mqx-monetka-dialog__perch--sit-edge .mqx-monetka-dialog__perch-mascot.mqx-onboarding-monetka--sit-edge {
+  top: auto;
+  bottom: calc(100% - 6px);
+  transform: translateX(-44%);
+  object-fit: contain;
+  object-position: left bottom;
+  max-height: 118px;
 }
 
 .mqx-monetka-dialog__perch .mqx-monetka-dialog__speech {
-  padding-top: 26px;
+  padding-top: 52px;
+  padding-inline: 14px 16px;
+}
+
+.mqx-monetka-dialog__perch--sit-edge .mqx-monetka-dialog__speech {
+  padding-top: 48px;
+  padding-left: 18px;
 }
 
 .mqx-monetka-dialog__perch .mqx-monetka-dialog__speech::after {
@@ -2114,14 +2131,47 @@ body {
   border-radius: 12px;
 }
 
+.mqx-save-kind__heading {
+  margin: 2px 0 4px;
+  padding: 0 2px;
+  font-size: var(--mq-fs-caption, 12px);
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--mqx-ink) 52%, var(--tg-theme-hint-color, #6b7280));
+}
+
 .mqx-save-kind__icon-wrap--game {
   color: var(--mq-violet, #7c3aed);
   background: color-mix(in srgb, var(--mq-violet, #7c3aed) 12%, transparent);
 }
 
+.mqx-save-kind__icon-wrap--game-glow {
+  background: linear-gradient(
+    145deg,
+    color-mix(in srgb, var(--mq-violet, #7c3aed) 22%, transparent),
+    color-mix(in srgb, var(--mq-violet-deep, #5b21b6) 8%, transparent)
+  );
+  box-shadow: 0 6px 18px color-mix(in srgb, var(--mq-violet, #7c3aed) 24%, transparent);
+}
+
 .mqx-save-kind__icon-wrap--plan {
   color: color-mix(in srgb, var(--mq-violet-deep, #5b21b6) 80%, var(--mqx-ink));
   background: color-mix(in srgb, var(--mqx-ink) 6%, transparent);
+}
+
+.mqx-save-kind__icon-wrap--plan-emerald {
+  color: var(--mq-emerald, #059669);
+  background: linear-gradient(
+    145deg,
+    color-mix(in srgb, var(--mq-emerald, #059669) 20%, transparent),
+    color-mix(in srgb, var(--mq-emerald, #059669) 7%, transparent)
+  );
+  box-shadow: 0 6px 18px color-mix(in srgb, var(--mq-emerald, #059669) 20%, transparent);
+}
+
+.mqx-save-kind__row--plan:not(.mqx-save-kind__row--soon) {
+  background: color-mix(in srgb, var(--mq-emerald, #059669) 5%, var(--tg-theme-bg-color, #fff));
 }
 
 .mqx-save-kind__icon {
@@ -3410,6 +3460,11 @@ body [class*='modal'] {
   display: block;
   margin: 4px auto 10px;
   object-fit: contain;
+}
+
+.mqx-onboarding-monetka--sit-edge {
+  margin: 0;
+  max-width: min(42vw, 132px);
 }
 
 .mqx-onboarding-bubble__title {

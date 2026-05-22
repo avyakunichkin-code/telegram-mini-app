@@ -67,7 +67,9 @@ role: onboarding_mascot
 | `wink` | [`monetka-poses/monetka-wink.png`](assets/monetka-poses/monetka-wink.png) | Подбодрить, «ты справишься» |
 | `alert` | [`monetka-poses/monetka-alert.png`](assets/monetka-poses/monetka-alert.png) | Важное правило, предупреждение |
 
-**Новая поза:** добавить `monetka-{pose}.png` в `assets/monetka-poses/` и строку в таблицу выше; в коде — prop `pose` у `MonetkaAvatar` (когда подключим).
+**Новая поза:** `monetka-{pose}.png` в `docs/reference/assets/monetka-poses/` → обработка (alpha) → `frontend-react/src/assets/monetka-poses/`; prop `pose` у `MonetkaAvatar`.
+
+**Prod `sit-edge`:** `MqxMonetkaDialogScreen` — `pose="sit-edge"`, низ монеты на кромке `.mqx-monetka-dialog__speech`.
 
 **Композиция `sit-edge`:** нижняя кромка монеты совпадает с верхом CSS-пузыря (`.mqx-auth-monetka__bubble`); карточка не входит в ассет.
 

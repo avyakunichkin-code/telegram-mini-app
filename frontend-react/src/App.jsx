@@ -40,8 +40,7 @@ function GameApp() {
     setScreen('newProfileKind');
   };
 
-  const handleChooseGameMode = (name) => {
-    setNewGameProfileName(name);
+  const handleChooseGameMode = () => {
     setScreen('gameTemplates');
   };
 
@@ -84,12 +83,7 @@ function GameApp() {
   if (screen === 'newProfileKind') {
     return (
       <GameAppFlowShell>
-        <NewProfileKindScreen
-          profileName={newGameProfileName}
-          onProfileNameChange={setNewGameProfileName}
-          onChooseGame={handleChooseGameMode}
-          onBack={handleBackFromProfileKind}
-        />
+        <NewProfileKindScreen onChooseGame={handleChooseGameMode} onBack={handleBackFromProfileKind} />
       </GameAppFlowShell>
     );
   }
@@ -99,6 +93,7 @@ function GameApp() {
       <GameAppFlowShell>
         <GameTemplatePickScreen
           profileName={newGameProfileName}
+          onProfileNameChange={setNewGameProfileName}
           onBack={handleBackFromTemplates}
           onJumpToGame={handleGameStarted}
         />

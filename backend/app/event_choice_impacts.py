@@ -104,4 +104,36 @@ def build_choice_impacts(db: Session, profile, effects: dict[str, Any]) -> list[
     if xp is not None and int(xp) > 0:
         impacts.append({"kind": "xp", "delta": int(xp), "tip": "Опыт"})
 
+    enqueue = effects.get("enqueue_event")
+    if isinstance(enqueue, dict):
+        after = int(enqueue.get("after_periods", 2) or 2)
+        impacts.append(
+            {
+                "kind": "term",
+                "delta": after,
+                "tip": f"Продолжение сюжета через {after} пер.",
+            }
+        )
+        if enqueue.get("chain_key") == "used_car_deal":
+            ctx = enqueue.get("context") if isinstance(enqueue.get("context"), dict) else {}
+            discount = float(ctx.get("discount_rate", 0.25))
+            impacts.append(
+                {
+                    "kind": "term",
+                    "delta": int(round(discount * 100)),
+                    "tip": f"Скидка на авто ~{int(round(discount * 100))}% при выкупе",
+                }
+            )
+
+    asset_spec = effects.get("asset_from_template")
+    if isinstance(asset_spec, dict) and asset_spec.get("purchase_price") is not None:
+        price = float(asset_spec["purchase_price"])
+        impacts.append(
+            {
+                "kind": "coin",
+                "delta": price,
+                "tip": "Стоимость актива после сделки",
+            }
+        )
+
     return impacts

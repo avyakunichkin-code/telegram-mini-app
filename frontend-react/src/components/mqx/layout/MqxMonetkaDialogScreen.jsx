@@ -10,8 +10,9 @@ export function MqxMonetkaDialogScreen({
   subtitle,
   titleId = 'mqx-monetka-dialog-title',
   children,
-  mascotSize = 88,
+  mascotSize = 108,
   mascotOnBlock = true,
+  mascotPose = 'sit-edge',
 }) {
   const speech = (
     <div className="mqx-monetka-dialog__speech" aria-labelledby={titleId}>
@@ -26,13 +27,17 @@ export function MqxMonetkaDialogScreen({
     <MqxShell contentClassName="mqx-flow mqx-flow--monetka-dialog" frameClassName="mqx-frame--flat-flow">
       <div className="mqx-monetka-flow">
         {mascotOnBlock ? (
-          <div className="mqx-monetka-dialog__perch">
-            <MonetkaAvatar size={mascotSize} className="mqx-monetka-dialog__perch-mascot" />
+          <div className="mqx-monetka-dialog__perch mqx-monetka-dialog__perch--sit-edge">
+            <MonetkaAvatar
+              pose={mascotPose}
+              size={mascotSize}
+              className="mqx-monetka-dialog__perch-mascot"
+            />
             {speech}
           </div>
         ) : (
           <>
-            <MonetkaAvatar size={mascotSize} className="mqx-monetka-flow__mascot" />
+            <MonetkaAvatar pose={mascotPose} size={mascotSize} className="mqx-monetka-flow__mascot" />
             {speech}
           </>
         )}

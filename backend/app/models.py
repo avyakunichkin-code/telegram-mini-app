@@ -292,6 +292,26 @@ class EventInstance(Base):
     resolved_at = Column(DateTime, nullable=True)
 
 
+class EventProfileChain(Base):
+    """Отложенное продолжение сюжета (enqueue_event → follow-up в due_period_index)."""
+
+    __tablename__ = "event_profile_chains"
+
+    id = Column(Integer, primary_key=True, index=True)
+    game_profile_id = Column(Integer, ForeignKey("game_profiles.id"), nullable=False, index=True)
+    chain_key = Column(String(80), nullable=False, index=True)
+    status = Column(String(24), nullable=False, default="scheduled")  # scheduled | surfaced | completed | cancelled
+    followup_definition_key = Column(String(80), nullable=False)
+    after_periods = Column(Integer, nullable=False, default=2)
+    due_period_index = Column(Integer, nullable=False, index=True)
+    context_json = Column(Text, nullable=False, default="{}")
+    surfaced_instance_id = Column(Integer, ForeignKey("event_instances.id"), nullable=True)
+    created_period_index = Column(Integer, nullable=False)
+    completed_period_index = Column(Integer, nullable=True)
+    created_at = Column(DateTime, default=utc_now_naive)
+    updated_at = Column(DateTime, default=utc_now_naive, onupdate=utc_now_naive)
+
+
 # ==================== ИНВЕСТИЦИИ (EASY MVP) ====================
 
 class InvestmentPosition(Base):

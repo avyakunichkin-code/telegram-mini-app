@@ -216,14 +216,103 @@ MVP11_EVENT_SPECS: list[dict] = [
     {
         "key": "mq11_used_car_offer",
         "title": "Предложение о подержанном авто",
-        "description": "Удачная сделка на авто с пробегом — нужен сразу платёж.",
+        "description": (
+            "Выгодная сделка на личный автомобиль с пробегом. "
+            "Можно внести задаток или взять паузу — финальное решение придёт через 2 периода."
+        ),
         "weight": 65,
         "event_tier": 3,
         "repeat_policy": "repeatable",
+        "cooldown_periods": 6,
+        "prerequisites_json": {"forbid_active_asset_kinds_any": ["car_personal", "car_taxi"]},
         "choices": [
-            {"title": "Внести задаток", "effects": {"cash_delta": -120000, "xp_delta": 10}},
-            {"title": "Попросить время на решение", "effects": {"cash_delta": 0, "xp_delta": 2}},
+            {
+                "title": "Внести задаток",
+                "description": "50 000 ₽ сейчас; выкуп со скидкой ~25% от цены в каталоге.",
+                "effects": {
+                    "cash_delta": -50000,
+                    "xp_delta": 5,
+                    "enqueue_event": {
+                        "chain_key": "used_car_deal",
+                        "followup_definition_key": "mq11_used_car_deadline",
+                        "after_periods": 2,
+                        "context": {
+                            "branch": "deposit",
+                            "deposit_amount": 50000,
+                            "template_key": "car_personal",
+                            "discount_rate": 0.25,
+                        },
+                    },
+                },
+            },
+            {
+                "title": "Попросить время на решение",
+                "description": "Без платежа сейчас; через 2 периода — финальный выбор.",
+                "effects": {
+                    "cash_delta": 0,
+                    "xp_delta": 2,
+                    "enqueue_event": {
+                        "chain_key": "used_car_deal",
+                        "followup_definition_key": "mq11_used_car_deadline",
+                        "after_periods": 2,
+                        "context": {
+                            "branch": "thinking",
+                            "deposit_amount": 0,
+                            "template_key": "car_personal",
+                            "discount_rate": 0.25,
+                        },
+                    },
+                },
+            },
             {"title": "Отказаться от сделки", "effects": {"cash_delta": 0, "xp_delta": 1}},
+        ],
+    },
+    {
+        "key": "mq11_used_car_deadline",
+        "title": "Пора решить: подержанное авто",
+        "description": (
+            "Срок по сделке истекает. Завершите покупку по скидочной цене "
+            "или откажитесь (задаток не вернётся, если уже платили)."
+        ),
+        "weight": 1,
+        "event_tier": 3,
+        "repeat_policy": "once_per_profile",
+        "mandatory_gate": "blocks_period_end",
+        "choices": [
+            {
+                "title": "Завершить покупку",
+                "description": "Доплата остатка; машина появится в активах.",
+                "effects": {
+                    "used_car_action": "complete_purchase",
+                    "requires_chain_branch": "deposit",
+                    "xp_delta": 10,
+                },
+            },
+            {
+                "title": "Завершить покупку",
+                "description": "Полная цена со скидкой; машина в активах.",
+                "effects": {
+                    "used_car_action": "complete_purchase",
+                    "requires_chain_branch": "thinking",
+                    "xp_delta": 10,
+                },
+            },
+            {
+                "title": "Отказаться (задаток не вернуть)",
+                "effects": {
+                    "used_car_action": "decline_with_deposit",
+                    "requires_chain_branch": "deposit",
+                    "xp_delta": 1,
+                },
+            },
+            {
+                "title": "Отказаться от покупки",
+                "effects": {
+                    "used_car_action": "decline",
+                    "requires_chain_branch": "thinking",
+                    "xp_delta": 2,
+                },
+            },
         ],
     },
     {

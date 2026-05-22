@@ -14,7 +14,8 @@ function impactTone(kind, delta) {
 function impactGlyph(kind) {
   if (kind === 'burn') return 'down';
   if (kind === 'insurance_payout') return 'up';
-  if (kind === 'xp') return 'term';
+  if (kind === 'xp' || kind === 'term') return 'term';
+  if (kind === 'coin') return 'coin';
   return 'coin';
 }
 

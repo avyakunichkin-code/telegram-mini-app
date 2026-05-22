@@ -1,27 +1,21 @@
-# Design-lab: Новая игра — режим (шаг 1)
+# Design-lab: новая игра — режим (шаг 1)
+
+Утверждённый референс prod.
 
 ```bash
 cd design-lab/new-game-mode
 npx serve .
 ```
 
-Открыть `index.html` — **R1** (prod) vs **B** (legacy плитки).
+Открыть `index.html`.
 
 | Документ | Назначение |
 |----------|------------|
-| [`VARIANTS.md`](VARIANTS.md) | A/B/R1 |
-| [`APPROVED.md`](APPROVED.md) | Утверждённый R1 |
-| [`../auth-flow/`](../auth-flow/) | Тот же skin пузыря Монетки |
+| [`APPROVED.md`](APPROVED.md) | Утверждённый R2 + I1 |
+| [`VARIANTS.md`](VARIANTS.md) | Сводка (без альтернатив) |
 
 ## Prod
 
-- **`MqxSaveKindPicker`** — MQX-компонент (`#/dev/mqx` при добавлении секции)
-- **`NewProfileKindScreen`** — шаг 1 потока новой игры
-- Следующий шаг: [`../game-templates/`](../game-templates/)
-
-## История
-
-| ID | Статус |
-|----|--------|
-| B · Монетка + плитки 2×2 | superseded → R1 |
-| R1 · Unified strips | **★ prod** |
+- `MqxMonetkaDialogScreen`, `MqxSaveKindPicker`, `NewProfileKindScreen`
+- `ModeIllustrations.jsx` — I1
+- Шаг 2: [`../game-templates/`](../game-templates/) (если есть)

@@ -78,7 +78,7 @@ npx serve .
 | 7 | `achievements-progress/` — level collapsible + монетки + каталог | `MqxAchievementCoin`, `AchievementsScreen` |
 | 8 | `dashboard-home-v2/` — эксперименты компоновок (архив) | — |
 | 9 | **`dashboard-dual-accordion/`** — два аккордеона MQX (D1–D5) | `MqxLevelBlock` collapsible, `MqxPeriodDashboard` v2 |
-| 10 | **`new-game-mode/`** — R1 unified strips ★ | `MqxSaveKindPicker`, `NewProfileKindScreen` |
+| 10 | **`new-game-mode/`** — R2 + I1 ★ | `MqxMonetkaDialogScreen`, `MqxSaveKindPicker`, `NewProfileKindScreen` |
 
 Текущий статус: **примитивы**, **shell**, **события**, **портфель**, **страховки**, **row-actions (B)**, **VictoryGoalsPanel** в prod; дальше — `dashboard/` (hero), empty/error в shell.
 

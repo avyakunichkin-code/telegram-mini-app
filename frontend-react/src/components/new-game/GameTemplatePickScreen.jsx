@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Button, Spinner } from '@telegram-apps/telegram-ui';
+import { Button, Input, Spinner } from '@telegram-apps/telegram-ui';
 import { API } from '../../api';
 import { showNotification } from '../notifications';
 import { MqxMonetkaDialogScreen } from '../mqx/layout/MqxMonetkaDialogScreen';
@@ -8,9 +8,9 @@ import { DEFAULT_PERIOD_DURATION_SECONDS, normalizeStarterTemplate } from '../..
 import { startGameWithSimplestTemplate } from '../../utils/startGame';
 
 /**
- * Шаг 2 (Game): шаблон старта из каталога или быстрый старт.
+ * Шаг 2 (Game): название игры + шаблон старта или быстрый старт.
  */
-export function GameTemplatePickScreen({ profileName, onBack, onJumpToGame }) {
+export function GameTemplatePickScreen({ profileName, onProfileNameChange, onBack, onJumpToGame }) {
   const [templates, setTemplates] = useState([]);
   const [loading, setLoading] = useState(true);
   const [starting, setStarting] = useState(false);
@@ -46,11 +46,16 @@ export function GameTemplatePickScreen({ profileName, onBack, onJumpToGame }) {
     };
   }, []);
 
-  const handleStart = async () => {
+  const ensureGameName = () => {
     if (!trimmedName) {
-      showNotification('Нет названия профиля — вернитесь назад.', 'error');
-      return;
+      showNotification('Введите название игры', 'error');
+      return false;
     }
+    return true;
+  };
+
+  const handleStart = async () => {
+    if (!ensureGameName()) return;
     if (!selectedKey) {
       showNotification('Выберите шаблон старта', 'error');
       return;
@@ -72,10 +77,7 @@ export function GameTemplatePickScreen({ profileName, onBack, onJumpToGame }) {
   };
 
   const handleQuickStart = async () => {
-    if (!trimmedName) {
-      showNotification('Нет названия профиля — вернитесь назад.', 'error');
-      return;
-    }
+    if (!ensureGameName()) return;
     setQuickStarting(true);
     try {
       await startGameWithSimplestTemplate(trimmedName);
@@ -91,23 +93,27 @@ export function GameTemplatePickScreen({ profileName, onBack, onJumpToGame }) {
 
   return (
     <MqxMonetkaDialogScreen
-      title="Сценарий — мой любимый момент!"
+      title="Имя и сценарий"
       subtitle={
         <p>
-          {trimmedName ? (
-            <>
-              Слот «{trimmedName}» готов. Выбери, в какую жизнь нырнём — или жми <strong>быстрый старт</strong>, если
-              лень выбирать.
-            </>
-          ) : (
-            <>
-              Выбери, в какую жизнь нырнём — или жми <strong>быстрый старт</strong>, если лень выбирать.
-            </>
-          )}
+          В <strong>ИГРЕ</strong> я видела готовые жизни — у каждой свой характер. Подпиши партию и выбери, куда
+          нырнуть; или жми <strong>быстрый старт</strong> — я сама подберу самый простой сценарий.
         </p>
       }
       titleId="mqx-new-game-templates-title"
     >
+      <div className="mqx-form mqx-monetka-flow__form">
+        <Input
+          id="new-game-profile-name"
+          name="profile_name"
+          header="Название игры"
+          value={profileName}
+          onChange={(e) => onProfileNameChange(e.target.value)}
+          autoComplete="off"
+          required
+        />
+      </div>
+
       {loading ? (
         <div className="mqx-monetka-flow__loading">
           <Spinner />
@@ -117,7 +123,7 @@ export function GameTemplatePickScreen({ profileName, onBack, onJumpToGame }) {
       ) : (
         <>
           <span id="mq-game-catalog-label-pick" className="mq-game-catalog-label">
-            Выберите шаблон
+            Сценарий
           </span>
           <GameStarterPicker
             templates={templates}

@@ -156,6 +156,7 @@ class EventPrerequisites:
     min_active_liabilities: int = 0
     min_active_assets: int = 0
     requires_insurance_any: tuple[tuple[str, str], ...] = ()
+    forbid_active_asset_kinds_any: frozenset[str] = frozenset()
 
 
 def parse_event_prerequisites_json(raw: str | None) -> EventPrerequisites:
@@ -185,6 +186,7 @@ def parse_event_prerequisites_json(raw: str | None) -> EventPrerequisites:
     return EventPrerequisites(
         active_asset_kinds_any=_kind_set("active_asset_kinds_any"),
         active_asset_kinds_all=_kind_set("active_asset_kinds_all"),
+        forbid_active_asset_kinds_any=_kind_set("forbid_active_asset_kinds_any"),
         min_active_liabilities=max(0, int(data.get("min_active_liabilities") or 0)),
         min_active_assets=max(0, int(data.get("min_active_assets") or 0)),
         requires_insurance_any=tuple(ins_specs),
@@ -193,6 +195,8 @@ def parse_event_prerequisites_json(raw: str | None) -> EventPrerequisites:
 
 def event_prerequisites_met(prereq: EventPrerequisites, ctx: EventProfileContext) -> bool:
     kinds = ctx.active_asset_kinds
+    if prereq.forbid_active_asset_kinds_any and (kinds & prereq.forbid_active_asset_kinds_any):
+        return False
     if prereq.active_asset_kinds_any and not (kinds & prereq.active_asset_kinds_any):
         return False
     if prereq.active_asset_kinds_all and not prereq.active_asset_kinds_all.issubset(kinds):
