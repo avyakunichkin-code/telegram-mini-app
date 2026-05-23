@@ -14,6 +14,7 @@
 | Specs | `docs/specs/`, `docs/specs/features/` |
 | Plans / Tasks | `docs/plans/`, `docs/tasks/` |
 | Backlog | `docs/backlog/` |
+| Marketing | `docs/marketing/` — посты, трекер, стратегия (вне dev-цикла) |
 | Reference | `docs/reference/` |
 
 Карта: [`README.md`](README.md). Трассировка: [`TRACEABILITY.md`](TRACEABILITY.md).

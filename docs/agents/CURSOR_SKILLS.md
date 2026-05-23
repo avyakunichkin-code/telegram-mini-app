@@ -37,6 +37,7 @@
 | **code-simplification** | После фазы роста `FinanceSection` и подобного |
 | **performance-optimization** | CLS/LCP TMA, тяжёлые списки, лишние ререндеры |
 | **idea-refine** | Продуктовые гипотезы до спеки (опционально bash-скрипт в папке — только Unix) |
+| **social-changelog-posts** | Посты в соцсети по коммитам/сессии, трекер тем, картинки с Монеткой; **не трогает код** — [`docs/marketing/`](../marketing/) |
 
 ---
 

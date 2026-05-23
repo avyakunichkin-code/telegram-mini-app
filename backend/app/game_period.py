@@ -31,6 +31,95 @@ from .expenses import compute_monthly_burn, expire_expense_lines_for_period, lif
 from .timeutil import utc_now_naive
 
 
+def _prev_period_closing(db: Session, profile_id: int, period_index: int) -> PeriodEconomyClosing | None:
+    if int(period_index) <= 1:
+        return None
+    return (
+        db.query(PeriodEconomyClosing)
+        .filter(
+            PeriodEconomyClosing.game_profile_id == profile_id,
+            PeriodEconomyClosing.period_index == int(period_index) - 1,
+        )
+        .first()
+    )
+
+
+def _transactions_for_period(db: Session, profile_id: int, period_index: int) -> list[Transaction]:
+    return (
+        db.query(Transaction)
+        .filter(
+            Transaction.game_profile_id == profile_id,
+            Transaction.period_index == int(period_index),
+        )
+        .all()
+    )
+
+
+def _cash_flow_from_transactions(db: Session, profile_id: int, period_index: int) -> float:
+    return round(
+        sum(float(t.amount) for t in _transactions_for_period(db, profile_id, period_index)),
+        2,
+    )
+
+
+def _cash_delta(db: Session, profile_id: int, period_index: int, cash_end: float) -> float:
+    """Изменение cash за весь период (зарплата, события, конец периода)."""
+    prev = _prev_period_closing(db, profile_id, period_index)
+    if prev is not None:
+        return round(float(cash_end) - float(prev.cash_balance), 2)
+    return _cash_flow_from_transactions(db, profile_id, period_index)
+
+
+def _safety_fund_flow_from_transactions(db: Session, profile_id: int, period_index: int) -> float:
+    delta = 0.0
+    for t in _transactions_for_period(db, profile_id, period_index):
+        typ = str(t.type or "")
+        if typ == TRANSACTION_TYPES["SAFETY_FUND_CONTRIBUTION"]:
+            delta += abs(float(t.amount))
+        elif typ == TRANSACTION_TYPES["SAFETY_FUND_WITHDRAWAL"]:
+            delta -= abs(float(t.amount))
+    return round(delta, 2)
+
+
+def _safety_fund_delta(db: Session, profile_id: int, period_index: int, safety_end: float) -> float:
+    """Чистое изменение подушки за период (взносы − снятия)."""
+    prev = _prev_period_closing(db, profile_id, period_index)
+    if prev is not None:
+        return round(float(safety_end) - float(prev.safety_fund_balance), 2)
+    return _safety_fund_flow_from_transactions(db, profile_id, period_index)
+
+
+def _invest_capital_flow(db: Session, profile_id: int, period_index: int) -> float:
+    """Приток/отток капитала в инвестициях (открытие/покупка/закрытие), без капитализации %."""
+    delta = 0.0
+    for t in _transactions_for_period(db, profile_id, period_index):
+        typ = str(t.type or "")
+        if typ in ("deposit_open", "bond_buy"):
+            delta += abs(float(t.amount))
+        elif typ == "invest_close":
+            delta -= abs(float(t.amount))
+    return round(delta, 2)
+
+
+def _debt_flow_from_transactions(db: Session, profile_id: int, period_index: int) -> float:
+    delta = 0.0
+    for t in _transactions_for_period(db, profile_id, period_index):
+        typ = str(t.type or "")
+        if typ == "liability_disbursement":
+            delta += abs(float(t.amount))
+        elif typ == "liability_close":
+            delta -= abs(float(t.amount))
+    return round(delta, 2)
+
+
+def _debt_delta(db: Session, profile_id: int, period_index: int, debt_end: float) -> float:
+    """Изменение суммы тел долгов за период (+ новый кредит, − закрытие)."""
+    prev = _prev_period_closing(db, profile_id, period_index)
+    if prev is not None:
+        return round(float(debt_end) - float(prev.total_debt_balance), 2)
+    return _debt_flow_from_transactions(db, profile_id, period_index)
+
+
 def _total_debt_balance(db: Session, profile_id: int) -> float:
     rows = (
         db.query(FinanceLiability)
@@ -60,13 +149,21 @@ def _period_income_rate(breakdown: list, snapshot: PeriodSnapshot | None) -> flo
 def _period_expense_total(breakdown: list) -> float:
     """Сумма расходов за период (списания с счёта по обязательствам жизни и активам)."""
     expense = 0.0
+    has_category_lines = any(
+        isinstance(item, dict) and str(item.get("type") or "") == "expense_category"
+        for item in (breakdown or [])
+    )
     for item in breakdown or []:
         if not isinstance(item, dict):
             continue
         kind = str(item.get("type") or "")
         if kind == "liability":
             expense += float(item.get("paid") or 0)
-        elif kind in ("lifestyle", "expense_category", "insurance"):
+        elif kind in ("expense_category", "insurance"):
+            expense += abs(float(item.get("amount") or 0))
+        elif kind == "lifestyle":
+            if has_category_lines:
+                continue
             expense += abs(float(item.get("amount") or 0))
         elif kind == "asset":
             expense += float(item.get("amount") or 0)
@@ -94,8 +191,6 @@ def process_period_end(db: Session, profile: GameProfile) -> dict:
     """
     period_index = profile.period_index
     closed_period_index = int(period_index)
-    cash_before = float(profile.cash_balance)
-    safety_before = float(profile.safety_fund_balance)
     invest_positions = (
         db.query(InvestmentPosition)
         .filter(
@@ -104,8 +199,6 @@ def process_period_end(db: Session, profile: GameProfile) -> dict:
         )
         .all()
     )
-    invest_before = round(sum(float(p.principal) for p in invest_positions), 2)
-    debt_before = _total_debt_balance(db, profile.id)
 
     total_spend = 0.0
     breakdown = []
@@ -296,36 +389,22 @@ def process_period_end(db: Session, profile: GameProfile) -> dict:
     )
     salary_amount = float(snapshot.salary_amount or 0) if snapshot else 0.0
     safety_contrib = float(snapshot.safety_fund_contribution or 0) if snapshot else 0.0
-    invest_after = round(
-        sum(
-            float(p.principal)
-            for p in db.query(InvestmentPosition)
-            .filter(
-                InvestmentPosition.game_profile_id == profile.id,
-                InvestmentPosition.is_active == 1,
-            )
-            .all()
-        ),
-        2,
-    )
     current_income_rate = _period_income_rate(breakdown, snapshot)
     current_expense_total = _period_expense_total(breakdown)
     debt_after = _total_debt_balance(db, profile.id)
+    cash_end = float(profile.cash_balance)
+    safety_end = float(profile.safety_fund_balance)
 
-    prev_closing = (
-        db.query(PeriodEconomyClosing)
-        .filter(
-            PeriodEconomyClosing.game_profile_id == profile.id,
-            PeriodEconomyClosing.period_index == int(period_index) - 1,
-        )
-        .first()
-    )
+    prev_closing = _prev_period_closing(db, profile.id, period_index)
     prev_income = float(prev_closing.period_income_rate) if prev_closing else None
     prev_expense = float(prev_closing.period_expense_total) if prev_closing else None
 
     income_delta = _period_compare_delta(current_income_rate, prev_income)
     expense_delta = _period_compare_delta(current_expense_total, prev_expense)
-    debt_delta = round(debt_after - debt_before, 2)
+    cash_delta = _cash_delta(db, profile.id, period_index, cash_end)
+    safety_fund_delta = _safety_fund_delta(db, profile.id, period_index, safety_end)
+    invest_capital_delta = _invest_capital_flow(db, profile.id, period_index)
+    debt_delta = _debt_delta(db, profile.id, period_index, debt_after)
 
     period_xp = compute_period_close_xp(
         salary_claimed=salary_claimed,
@@ -419,11 +498,11 @@ def process_period_end(db: Session, profile: GameProfile) -> dict:
 
     return {
         "closed_period_index": closed_period_index,
-        "cash_delta": round(float(profile.cash_balance) - cash_before, 2),
+        "cash_delta": cash_delta,
         "income_delta": income_delta,
         "expense_delta": expense_delta,
-        "safety_fund_delta": round(float(profile.safety_fund_balance) - safety_before, 2),
-        "invest_capital_delta": round(invest_after - invest_before, 2),
+        "safety_fund_delta": safety_fund_delta,
+        "invest_capital_delta": invest_capital_delta,
         "debt_delta": debt_delta,
         "total_spent": total_spend,
         "breakdown": breakdown,

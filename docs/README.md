@@ -20,6 +20,7 @@
 | **Decisions** | [`decisions/`](decisions/) | ADR — почему так |
 | **Backlog** | [`backlog/`](backlog/) | Приоритеты P0–P3 |
 | **Reference** | [`reference/`](reference/) | GDD, брендбук, investor deck |
+| **Marketing** | [`marketing/`](marketing/) | Посты, трекер тем, стиль, Telegram-публикация |
 | **Agents** | [`agents/`](agents/) | Cursor skills и приоритеты |
 
 ---
@@ -31,6 +32,7 @@
 | Разработчик / агент | `CLAUDE.md` → [`foundation/SPEC_PRODUCT.md`](foundation/SPEC_PRODUCT.md) → spec своей фичи |
 | Продукт | [`foundation/SPEC_PRODUCT.md`](foundation/SPEC_PRODUCT.md) + [Часть II (evolution)](vision/ideas/money-quest-evolution-after-mvp.md) |
 | UI/UX | [`specs/SPEC_FRONTEND_UI.md`](specs/SPEC_FRONTEND_UI.md) + [`reference/brandbook/BRANDBOOK.md`](reference/brandbook/BRANDBOOK.md) |
+| Маркетинг / посты | [`marketing/README.md`](marketing/README.md) + скилл **social-changelog-posts** |
 | Планирование | [`backlog/PRODUCT_BACKLOG.md`](backlog/PRODUCT_BACKLOG.md) + [`TRACEABILITY.md`](TRACEABILITY.md) |
 
 ---

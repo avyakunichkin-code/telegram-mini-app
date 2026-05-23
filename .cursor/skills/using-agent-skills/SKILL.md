@@ -34,6 +34,7 @@ Task arrives
     ├── Committing/branching? ─────────→ git-workflow-and-versioning
     ├── CI/CD pipeline work? ──────────→ ci-cd-and-automation *(в этом репозитории скилл не поставлен — см. `docs/agents/CURSOR_SKILLS.md` или глобальные скиллы Cursor)*
     ├── Writing docs/ADRs? ───────────→ documentation-and-adrs
+    ├── Social posts / dev changelog? → social-changelog-posts
     └── Deploying/launching? ─────────→ shipping-and-launch *(как выше — не в проекте)*
 ```
 
@@ -174,4 +175,5 @@ Not every task needs every skill. A bug fix might only need: `debugging-and-erro
 | Ship | git-workflow-and-versioning | Atomic commits, clean history |
 | Ship | ci-cd-and-automation | *(не в `.cursor/skills/` проекта)* см. `docs/agents/CURSOR_SKILLS.md` |
 | Ship | documentation-and-adrs | Document the why, not just the what |
+| Ship | social-changelog-posts | Посты по коммитам, артефакты в `docs/marketing/` |
 | Ship | shipping-and-launch | *(не в `.cursor/skills/` проекта)* см. `docs/agents/CURSOR_SKILLS.md` |
