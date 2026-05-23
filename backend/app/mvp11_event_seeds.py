@@ -610,7 +610,7 @@ MVP11_EVENT_SPECS: list[dict] = [
         "event_tier": 3,
         "repeat_policy": "repeatable",
         "mandatory_gate": "blocks_period_end",
-        "prerequisites_json": {"active_asset_kinds_any": ["home", "rental_home"]},
+        "prerequisites_json": {"active_asset_kinds_any": ["home", "house", "mansion"]},
         "choices": [
             {
                 "title": "Вызвать страховую (имущество)",

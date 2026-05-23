@@ -15,7 +15,9 @@ if TYPE_CHECKING:
 
 # Согласовано с каталогом активов и blueprint шаблонов (vehicle = legacy в сидах).
 CAR_ASSET_KINDS = frozenset({"car_personal", "car_taxi", "vehicle", "rental_car", "car"})
-RENTAL_HOME_ASSET_KINDS = frozenset({"rental_home"})
+RENTAL_HOME_ASSET_KINDS = frozenset(
+    {"rental_home", "rental_house", "rental_mansion"}
+)
 
 
 def compute_monthly_passive_income(db: Session, profile_id: int, *, period_index: int) -> float:

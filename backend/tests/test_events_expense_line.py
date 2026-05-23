@@ -20,7 +20,7 @@ def profile_with_lines(db_session, test_user):
         name="Event burn",
         save_kind="game",
         starter_template_key="mq_game_basic_v1",
-        base_monthly_lifestyle_expense=25000.0,
+        base_monthly_lifestyle_expense=37500.0,
         is_active=1,
         period_index=2,
         cash_balance=50000,
@@ -30,7 +30,7 @@ def profile_with_lines(db_session, test_user):
     db_session.add(profile)
     db_session.commit()
     db_session.refresh(profile)
-    budget = expense_budget_for_template("mq_game_basic_v1", 25000.0, {})
+    budget = expense_budget_for_template("mq_game_basic_v1", 37500.0, {})
     seed_expense_lines_from_budget(db_session, profile, budget, period_index=1)
     db_session.commit()
     return profile

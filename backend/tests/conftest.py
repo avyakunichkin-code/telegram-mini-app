@@ -91,7 +91,7 @@ def seed_basic_template(db_session):
             template_key="mq_game_basic_v1",
             title="Базовый старт",
             difficulty_rank=1,
-            base_monthly_lifestyle_expense=25000.0,
+            base_monthly_lifestyle_expense=37500.0,
             blueprint_json=json.dumps(
                 {
                     "period_duration_seconds": 300,

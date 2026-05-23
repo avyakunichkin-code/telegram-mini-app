@@ -383,7 +383,8 @@ async def start_new_game(
             asset_value=asset_data.asset_value,
             monthly_maintenance_cost=asset_data.monthly_maintenance_cost,
             monthly_income=float(getattr(asset_data, "monthly_income", 0) or 0),
-            is_active=1
+            has_tenants=int(getattr(asset_data, "has_tenants", 0) or 0),
+            is_active=1,
         )
         db.add(asset)
 

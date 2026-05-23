@@ -410,12 +410,14 @@ async def create_asset_from_template(
             period_index=int(game_profile.period_index),
         )
 
+    has_tenants = int(getattr(tpl_row, "has_tenants_default", 0) or 0)
     asset = FinanceAsset(
         title=tpl_row.title,
         kind=tpl_row.kind,
         asset_value=cost,
         monthly_maintenance_cost=float(tpl_row.monthly_maintenance_cost),
         monthly_income=float(tpl_row.monthly_income or 0),
+        has_tenants=has_tenants,
         game_profile_id=game_profile.id,
     )
     db.add(asset)

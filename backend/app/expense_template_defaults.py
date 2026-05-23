@@ -1,7 +1,7 @@
 """
 Доли расходов по категориям для game_starter_templates (E1).
 Сумма по категориям должна совпадать с base_monthly_lifestyle_expense шаблона.
-См. docs/vision/ideas/starter-template-balance-ladder.md
+Жильё/аренда/ЖКУ — в активах (owned / leased), не в burn. См. starter-template-balance-ladder.md
 """
 
 from __future__ import annotations
@@ -11,60 +11,59 @@ from typing import Any
 from sqlalchemy.orm import Session
 
 
-# template_key -> { category_key: amount } — абсолютные суммы (не доли)
+# template_key -> { category_key: amount } — без housing
 EXPENSE_BUDGET_BY_TEMPLATE: dict[str, dict[str, float]] = {
     "mq_game_basic_v1": {
-        "housing": 5500,
-        "food": 9500,
-        "transport": 2800,
-        "communications": 2200,
-        "health": 2200,
-        "clothing": 1800,
-        "leisure": 1000,
+        "housing": 0,
+        "food": 16600,
+        "transport": 5200,
+        "communications": 3500,
+        "health": 3900,
+        "clothing": 3100,
+        "leisure": 5200,
         "other": 0,
     },
     "mq_game_tight_budget_v1": {
-        "housing": 28000,
-        "food": 12000,
-        "transport": 4000,
-        "communications": 2500,
-        "health": 3000,
-        "clothing": 2500,
-        "leisure": 4000,
+        "housing": 0,
+        "food": 12150,
+        "transport": 3850,
+        "communications": 2575,
+        "health": 2860,
+        "clothing": 2210,
+        "leisure": 3855,
         "other": 0,
     },
     "mq_game_mortgage_stress_v1": {
-        # Ипотека в liabilities; housing = ЖКУ, быт, семья ~4 чел.
-        "housing": 32000,
-        "food": 24000,
-        "transport": 5000,
-        "communications": 2500,
-        "health": 3000,
-        "clothing": 2000,
-        "leisure": 2500,
+        "housing": 0,
+        "food": 19300,
+        "transport": 6100,
+        "communications": 4075,
+        "health": 4540,
+        "clothing": 3520,
+        "leisure": 6090,
         "other": 0,
     },
     "mq_game_debt_stack_v1": {
-        "housing": 38000,
-        "food": 32000,
-        "transport": 8000,
-        "communications": 4000,
-        "health": 5000,
-        "clothing": 4000,
-        "leisure": 17000,
+        "housing": 0,
+        "food": 40350,
+        "transport": 12750,
+        "communications": 8515,
+        "health": 9490,
+        "clothing": 7360,
+        "leisure": 12785,
         "other": 0,
     },
 }
 
-# Пропорции по умолчанию, если в blueprint нет expense_budget
+# Пропорции по умолчанию (без жилья — для Plan и fallback)
 _DEFAULT_SHARES: dict[str, float] = {
-    "housing": 0.14,
-    "food": 0.38,
-    "transport": 0.12,
-    "communications": 0.08,
-    "health": 0.09,
-    "clothing": 0.07,
-    "leisure": 0.12,
+    "housing": 0.0,
+    "food": 0.44,
+    "transport": 0.14,
+    "communications": 0.09,
+    "health": 0.10,
+    "clothing": 0.08,
+    "leisure": 0.15,
     "other": 0.0,
 }
 
@@ -140,7 +139,6 @@ def _normalize_sum(budget: dict[str, float], target: float) -> dict[str, float]:
         return out
     if abs(current - target) < 0.02:
         return {k: round(max(0.0, float(budget[k])), 2) for k in keys}
-    # масштабируем пропорционально
     scale = target / current
     scaled = {k: round(max(0.0, float(budget[k])) * scale, 2) for k in keys}
     diff = round(target - sum(scaled.values()), 2)

@@ -29,22 +29,22 @@ GAME_STARTER_TEMPLATE_SEEDS = [
         "template_key": "mq_game_basic_v1",
         "title": "Студент",
         "difficulty_rank": 1,
-        "base_expense": 25000.0,
+        "base_expense": 37500.0,
         "sort_order": 10,
         "blueprint": {
-            "description": "Первый бюджет без долгов: комфортный free flow и запас на счёте — освоить цикл периода.",
+            "description": "Первый бюджет без долгов и без жилья в старте — еда, транспорт, досуг; жильё выбираешь в игре.",
             "scenario_icon": "fresh_start",
-            "compare_note": "Идеальный вход: зарплата 50k, жизнь ~25k, без обязательств.",
+            "compare_note": "Зарплата ~62,5k, жизнь ~37,5k (без аренды), свободно ~25k.",
             "highlights": [
-                "Доход ~50 000 ₽/мес",
-                "Расходы на жизнь ~25 000 ₽/мес",
-                "Свободно ~25 000 ₽/мес после расходов",
-                "Чистый старт — без долгов и активов",
+                "Доход ~62 500 ₽/мес",
+                "Расходы на жизнь ~37 500 ₽/мес (без жилья)",
+                "Свободно ~25 000 ₽/мес",
+                "Без долгов и активов в старте",
                 "На счёте ~15 000 ₽",
             ],
             "period_duration_seconds": 300,
             "cash_balance": 15000,
-            "monthly_salary": 50000,
+            "monthly_salary": 62500,
             "assets": [],
             "liabilities": [],
         },
@@ -53,23 +53,31 @@ GAME_STARTER_TEMPLATE_SEEDS = [
         "template_key": "mq_game_tight_budget_v1",
         "title": "Профессионал",
         "difficulty_rank": 2,
-        "base_expense": 56000.0,
+        "base_expense": 27500.0,
         "sort_order": 20,
         "blueprint": {
-            "description": "Карьера и аренда: машина из каталога, автокредит, жильё снимаешь — free flow уже плотнее.",
+            "description": "Студия в аренде, машина и автокредит — жильё и авто как отдельные платежи, не в burn.",
             "scenario_icon": "car_loan",
-            "compare_note": "После Студента: авто 1,2 млн, обслуживание ~18k, аренда в бюджете жилья.",
+            "compare_note": "Аренда студии 22,5+5k, авто 18k + кредит ~12k, жизнь ~27,5k.",
             "highlights": [
                 "Доход ~100 000 ₽/мес",
-                "Расходы на жизнь ~56 000 ₽/мес (в т.ч. аренда ~28 000)",
-                "Авто: обслуживание ~18 000 ₽/мес + кредит ~12 000",
-                "Свободно ~14 000 ₽/мес после обязательств",
+                "Аренда студии ~27 500 ₽/мес",
+                "Авто + кредит ~30 000 ₽/мес",
+                "Расходы на жизнь ~27 500 ₽/мес",
+                "Свободно ~15 000 ₽/мес",
                 "На счёте ~25 000 ₽",
             ],
             "period_duration_seconds": 300,
             "cash_balance": 25000,
             "monthly_salary": 100000,
             "assets": [
+                {
+                    "title": "Студия (аренда)",
+                    "kind": "leased_dwelling",
+                    "asset_value": 0,
+                    "monthly_maintenance_cost": 27500,
+                    "monthly_income": 0,
+                },
                 {
                     "title": "Личная машина",
                     "kind": "car_personal",
@@ -91,17 +99,18 @@ GAME_STARTER_TEMPLATE_SEEDS = [
         "template_key": "mq_game_mortgage_stress_v1",
         "title": "Руководитель",
         "difficulty_rank": 3,
-        "base_expense": 68000.0,
+        "base_expense": 43625.0,
         "sort_order": 30,
         "blueprint": {
-            "description": "Семья: своя квартира, ипотека, два автомобиля — несколько потоков платежей и узкий free flow.",
+            "description": "Своя 2-комнатная, ипотека, два авто — содержание квартиры отдельно от burn.",
             "scenario_icon": "home_mortgage",
-            "compare_note": "Ипотека ~30k/мес, два авто по ~18k, жильё в burn ~32k на семью.",
+            "compare_note": "Квартира 10 млн, содержание 30k, ипотека ~30k, два авто 36k.",
             "highlights": [
                 "Доход ~150 000 ₽/мес",
-                "Расходы на жизнь ~68 000 ₽/мес",
-                "Квартира в активах, ипотека ~2,7 млн",
-                "Два автомобиля, обслуживание ~36 000 ₽/мес",
+                "2-комнатная + ипотека ~2,7 млн",
+                "Содержание квартиры ~30 000 ₽/мес",
+                "Два авто ~36 000 ₽/мес",
+                "Расходы на жизнь ~43 600 ₽/мес",
                 "Свободно ~10 000 ₽/мес",
                 "На счёте ~35 000 ₽",
             ],
@@ -110,10 +119,10 @@ GAME_STARTER_TEMPLATE_SEEDS = [
             "monthly_salary": 150000,
             "assets": [
                 {
-                    "title": "Квартира",
+                    "title": "2-комнатная квартира",
                     "kind": "home",
-                    "asset_value": 4500000,
-                    "monthly_maintenance_cost": 6000,
+                    "asset_value": 10000000,
+                    "monthly_maintenance_cost": 30000,
                     "monthly_income": 0,
                 },
                 {
@@ -144,18 +153,18 @@ GAME_STARTER_TEMPLATE_SEEDS = [
         "template_key": "mq_game_debt_stack_v1",
         "title": "Предприниматель",
         "difficulty_rank": 4,
-        "base_expense": 108000.0,
+        "base_expense": 91250.0,
         "sort_order": 40,
         "blueprint": {
-            "description": "Максимум инструментов: свой дом, арендная квартира, два авто, ипотека и карта — free flow около нуля.",
+            "description": "Ипотека на 2-комнатную, два авто и карта — без доходной недвижимости в старте.",
             "scenario_icon": "factory",
-            "compare_note": "Зарплата 200k, но обязательства ~95k; аренда даёт +35k к доходу актива.",
+            "compare_note": "Максимум долгов и авто; free flow около нуля.",
             "highlights": [
                 "Доход ~200 000 ₽/мес",
-                "Расходы на жизнь ~108 000 ₽/мес",
-                "Ипотека ~3,8 млн + кредитная карта",
-                "Два авто, доходная аренда +35 000 ₽/мес",
-                "Свободно ~−3 000 ₽/мес до дохода активов",
+                "2-комнатная, ипотека ~3,8 млн",
+                "Два авто + кредитная карта",
+                "Расходы на жизнь ~91 250 ₽/мес",
+                "Свободно ~−3 000 ₽/мес",
                 "На счёте ~45 000 ₽",
             ],
             "period_duration_seconds": 300,
@@ -163,18 +172,11 @@ GAME_STARTER_TEMPLATE_SEEDS = [
             "monthly_salary": 200000,
             "assets": [
                 {
-                    "title": "Жилая квартира",
+                    "title": "2-комнатная квартира",
                     "kind": "home",
-                    "asset_value": 4500000,
-                    "monthly_maintenance_cost": 6000,
+                    "asset_value": 10000000,
+                    "monthly_maintenance_cost": 30000,
                     "monthly_income": 0,
-                },
-                {
-                    "title": "Квартира под сдачу",
-                    "kind": "rental_home",
-                    "asset_value": 5200000,
-                    "monthly_maintenance_cost": 7000,
-                    "monthly_income": 35000,
                 },
                 {
                     "title": "Автомобиль",
@@ -314,6 +316,29 @@ def ensure_schema_compatibility() -> None:
             statements.append("ALTER TABLE finance_assets ADD COLUMN kind VARCHAR(50) NOT NULL DEFAULT 'generic'")
         if "monthly_income" not in asset_columns:
             statements.append("ALTER TABLE finance_assets ADD COLUMN monthly_income FLOAT NOT NULL DEFAULT 0")
+        if "has_tenants" not in asset_columns:
+            statements.append("ALTER TABLE finance_assets ADD COLUMN has_tenants INTEGER NOT NULL DEFAULT 0")
+
+    if "asset_templates" in inspector.get_table_names():
+        at_cols = {item["name"] for item in inspector.get_columns("asset_templates")}
+        if "estate_role" not in at_cols:
+            statements.append(
+                "ALTER TABLE asset_templates ADD COLUMN estate_role VARCHAR(20) NOT NULL DEFAULT 'owned'"
+            )
+        if "monthly_rent_cost" not in at_cols:
+            statements.append(
+                "ALTER TABLE asset_templates ADD COLUMN monthly_rent_cost DOUBLE PRECISION NOT NULL DEFAULT 0"
+            )
+        if "monthly_utilities_cost" not in at_cols:
+            statements.append(
+                "ALTER TABLE asset_templates ADD COLUMN monthly_utilities_cost DOUBLE PRECISION NOT NULL DEFAULT 0"
+            )
+        if "income_yield_annual" not in at_cols:
+            statements.append("ALTER TABLE asset_templates ADD COLUMN income_yield_annual DOUBLE PRECISION NULL")
+        if "has_tenants_default" not in at_cols:
+            statements.append(
+                "ALTER TABLE asset_templates ADD COLUMN has_tenants_default INTEGER NOT NULL DEFAULT 0"
+            )
 
     # ---- game_profiles: save_kind + шаблон (ADR-001 / эпик G1) ----
     if "game_profiles" in inspector.get_table_names():

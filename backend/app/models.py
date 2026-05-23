@@ -114,6 +114,7 @@ class FinanceAsset(Base):
     asset_value = Column(Float, nullable=False)
     monthly_maintenance_cost = Column(Float, nullable=False, default=0)
     monthly_income = Column(Float, nullable=False, default=0)  # доход от аренды/купоны/проценты
+    has_tenants = Column(Integer, nullable=False, default=0)  # 1 = доходная с арендаторами (задел под события)
     is_active = Column(Integer, nullable=False, default=1)   # НОВОЕ
     created_at = Column(DateTime, default=utc_now_naive)
     game_profile = relationship("GameProfile", back_populates="finance_assets")
@@ -131,6 +132,11 @@ class AssetTemplate(Base):
     asset_value = Column(Float, nullable=False)
     monthly_maintenance_cost = Column(Float, nullable=False, default=0)
     monthly_income = Column(Float, nullable=False, default=0)
+    estate_role = Column(String(20), nullable=False, default="owned")  # owned | income | leased
+    monthly_rent_cost = Column(Float, nullable=False, default=0)
+    monthly_utilities_cost = Column(Float, nullable=False, default=0)
+    income_yield_annual = Column(Float, nullable=True)
+    has_tenants_default = Column(Integer, nullable=False, default=0)
     is_active = Column(Integer, nullable=False, default=1)
     sort_order = Column(Integer, nullable=False, default=100)
     created_at = Column(DateTime, default=utc_now_naive)
