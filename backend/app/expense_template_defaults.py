@@ -1,6 +1,7 @@
 """
 Доли расходов по категориям для game_starter_templates (E1).
 Сумма по категориям должна совпадать с base_monthly_lifestyle_expense шаблона.
+См. docs/vision/ideas/starter-template-balance-ladder.md
 """
 
 from __future__ import annotations
@@ -13,44 +14,44 @@ from sqlalchemy.orm import Session
 # template_key -> { category_key: amount } — абсолютные суммы (не доли)
 EXPENSE_BUDGET_BY_TEMPLATE: dict[str, dict[str, float]] = {
     "mq_game_basic_v1": {
-        "housing": 1200,
-        "food": 3800,
-        "transport": 1100,
-        "communications": 900,
-        "health": 900,
-        "clothing": 700,
+        "housing": 5500,
+        "food": 9500,
+        "transport": 2800,
+        "communications": 2200,
+        "health": 2200,
+        "clothing": 1800,
         "leisure": 1000,
         "other": 0,
     },
     "mq_game_tight_budget_v1": {
-        "housing": 2200,
-        "food": 4200,
-        "transport": 1900,
-        "communications": 1100,
-        "health": 1400,
-        "clothing": 1100,
-        "leisure": 1900,
+        "housing": 28000,
+        "food": 12000,
+        "transport": 4000,
+        "communications": 2500,
+        "health": 3000,
+        "clothing": 2500,
+        "leisure": 4000,
         "other": 0,
     },
     "mq_game_mortgage_stress_v1": {
-        # Ипотека в liabilities; housing = ЖКУ/коммуналка
-        "housing": 1800,
-        "food": 4500,
-        "transport": 2000,
-        "communications": 1200,
-        "health": 1600,
-        "clothing": 1300,
-        "leisure": 2700,
+        # Ипотека в liabilities; housing = ЖКУ, быт, семья ~4 чел.
+        "housing": 32000,
+        "food": 24000,
+        "transport": 5000,
+        "communications": 2500,
+        "health": 3000,
+        "clothing": 2000,
+        "leisure": 2500,
         "other": 0,
     },
     "mq_game_debt_stack_v1": {
-        "housing": 2000,
-        "food": 4800,
-        "transport": 2200,
-        "communications": 1300,
-        "health": 1700,
-        "clothing": 1400,
-        "leisure": 3200,
+        "housing": 38000,
+        "food": 32000,
+        "transport": 8000,
+        "communications": 4000,
+        "health": 5000,
+        "clothing": 4000,
+        "leisure": 17000,
         "other": 0,
     },
 }

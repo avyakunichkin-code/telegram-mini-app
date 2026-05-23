@@ -1,7 +1,7 @@
 # Позитивный выбор сценария на старте (idea-refine)
 
 **Статус:** черновик направления (май 2026)  
-**Связано:** `GameTemplatePickScreen`, `starter_template_presentation.py`, MQX T2 strips
+**Связано:** `GameTemplatePickScreen`, `starter_template_presentation.py`, MQX T2 strips, [лестница баланса](starter-template-balance-ladder.md)
 
 ## Problem Statement (HMW)
 
