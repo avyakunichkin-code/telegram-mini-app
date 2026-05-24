@@ -1,5 +1,14 @@
 // src/api.js
-const API_BASE = import.meta.env.DEV ? '' : 'https://telegram-mini-app-zwfs.onrender.com';
+/** @type {string} fallback prod API (Render), пока нет VITE_API_BASE_URL в CI */
+const DEFAULT_PROD_API = 'https://telegram-mini-app-zwfs.onrender.com';
+
+function resolveApiBase() {
+  if (import.meta.env.DEV) return '';
+  const fromEnv = (import.meta.env.VITE_API_BASE_URL || '').trim().replace(/\/$/, '');
+  return fromEnv || DEFAULT_PROD_API;
+}
+
+const API_BASE = resolveApiBase();
 
 let authToken = localStorage.getItem('tg_miniapp_token');
 

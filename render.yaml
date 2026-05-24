@@ -1,0 +1,36 @@
+# Blueprint Render: API + PostgreSQL для Pre-Alpha / Closed Alpha.
+# Подключение: Dashboard → New → Blueprint → этот репозиторий.
+# После деплоя: env PUBLIC_APP_URL, CORS_*, SECRET_KEY, ADMIN_USER_IDS — см. docs/ops/DEPLOY.md
+
+databases:
+  - name: tvoy-hod-db
+    databaseName: tvoy_hod
+    user: tvoy_hod
+    plan: basic-256mb
+    region: frankfurt
+
+services:
+  - type: web
+    name: tvoy-hod-api
+    runtime: python
+    region: frankfurt
+    plan: starter
+    rootDir: backend
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn main:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /api/health
+    autoDeploy: true
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: tvoy-hod-db
+          property: connectionString
+      - key: SECRET_KEY
+        generateValue: true
+      - key: PYTHON_VERSION
+        value: "3.11.11"
+      # Заполните после выбора домена (Render → Environment):
+      # - PUBLIC_APP_URL=https://app.YOUR_DOMAIN/#
+      # - CORS_ALLOW_ORIGINS=https://app.YOUR_DOMAIN
+      # - ADMIN_USER_IDS=1
+      # - OPS_TELEGRAM_BOT_TOKEN / OPS_TELEGRAM_CHAT_ID (опционально)

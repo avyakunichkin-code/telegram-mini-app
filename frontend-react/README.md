@@ -33,7 +33,8 @@
 
 В режиме разработки базовый URL для `fetch` пустой (запросы идут на тот же origin, обычно с прокси Vite к backend или через настройку dev).
 
-Для production в [`src/api.js`](src/api.js) задан URL API по умолчанию (Render). Если понадобятся несколько окружений, вынесите базовый URL в переменную с префиксом **`VITE_`** (читает Vite через `import.meta.env`), измените [`src/api.js`](src/api.js) и задайте значение в CI или в `.env` (локально файл не коммитить — см. корневой `.gitignore`).
+Prod API: **`VITE_API_BASE_URL`** (см. [`.env.example`](.env.example)); fallback — Render URL в [`src/api.js`](src/api.js).  
+Деплой и домен: [`docs/ops/DEPLOY.md`](../docs/ops/DEPLOY.md). CI: GitHub Variables `VITE_API_BASE_URL`, `VITE_BASE_PATH`.
 
 ---
 

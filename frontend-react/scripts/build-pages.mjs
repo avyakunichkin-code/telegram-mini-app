@@ -13,7 +13,7 @@ const landingDist = join(landingRoot, 'dist');
 const appDist = join(frontendRoot, 'dist');
 const landingTarget = join(appDist, 'landing');
 
-const PAGES_BASE = '/telegram-mini-app/';
+const PAGES_BASE = (process.env.VITE_BASE_PATH || '/telegram-mini-app/').replace(/\/?$/, '/');
 const LANDING_BASE = `${PAGES_BASE}landing/`;
 
 function runNpm(script, cwd, extraEnv = {}) {

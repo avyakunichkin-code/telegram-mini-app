@@ -4,6 +4,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy import inspect, text
 
+from app.cors_settings import resolve_cors_allow_origin_regex, resolve_cors_allow_origins
 from app.database import engine, Base
 from app.victory_seeds import VICTORY_CONFIG_BY_TEMPLATE_KEY, victory_config_json_for_template
 from app.expense_template_defaults import expense_budget_for_template
@@ -468,20 +469,18 @@ print("[OK] Таблицы созданы/проверены")
 
 app = FastAPI(title="Telegram Mini App API", version="2.0.0")
 
-# CORS
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=[
-        "https://avyakunichkin-code.github.io",
-        "https://*.github.io",
-        "http://localhost:3000",
-        "http://localhost:8000",
-        "http://127.0.0.1:5500",
-    ],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
+# CORS — origins и regex из env (см. backend/.env.example, docs/ops/DEPLOY.md)
+_cors_kw: dict = {
+    "allow_origins": resolve_cors_allow_origins(),
+    "allow_credentials": True,
+    "allow_methods": ["*"],
+    "allow_headers": ["*"],
+}
+_cors_regex = resolve_cors_allow_origin_regex()
+if _cors_regex:
+    _cors_kw["allow_origin_regex"] = _cors_regex
+
+app.add_middleware(CORSMiddleware, **_cors_kw)
 
 # Регистрируем роутеры
 app.include_router(health_router)

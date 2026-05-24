@@ -1,0 +1,59 @@
+# Сборка Mini App + лендинг и публикация на GitHub Pages.
+# Variables (Settings → Actions): VITE_API_BASE_URL, VITE_BASE_PATH
+name: Deploy app to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'frontend-react/**'
+      - 'landing/**'
+      - '.github/workflows/deploy-app.yml'
+  workflow_dispatch:
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: |
+            frontend-react/package-lock.json
+            landing/package-lock.json
+
+      - name: Install landing dependencies
+        working-directory: landing
+        run: npm ci
+
+      - name: Build for Pages
+        working-directory: frontend-react
+        env:
+          VITE_API_BASE_URL: ${{ vars.VITE_API_BASE_URL || 'https://telegram-mini-app-zwfs.onrender.com' }}
+          VITE_BASE_PATH: ${{ vars.VITE_BASE_PATH || '/telegram-mini-app/' }}
+        run: |
+          npm ci
+          npm run build:pages
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: frontend-react/dist
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

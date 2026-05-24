@@ -111,28 +111,19 @@ Alembic не используется. Идемпотентные SQL-файлы
 
 ---
 
-## Деплой
+## Деплой (Pre-Alpha / prod)
 
-### Backend (например, Render)
+Пошагово: **[`docs/ops/DEPLOY.md`](docs/ops/DEPLOY.md)** — свой домен `app.*` + API `api.*`, Render без cold start, GitHub Actions, BotFather, smoke.
 
-1. PostgreSQL на Render (`DATABASE_URL` internal URL для сервиса)
-2. Web Service из репозитория  
-3. Переменные: `DATABASE_URL`, `SECRET_KEY`  
-4. Сборка: `pip install -r requirements.txt` (из каталога `backend`)  
-5. Старт из корня приложения backend: например `uvicorn main:app --host 0.0.0.0 --port 10000` (уточняйте в настройках Render под ваш Dockerfile/Root Directory)
+Кратко:
 
-### Frontend (GitHub Pages)
+| Слой | Куда |
+|------|------|
+| API + PostgreSQL | Render ([`render.yaml`](render.yaml), план Starter+) |
+| SPA + лендинг | GitHub Pages (workflow [`.github/workflows/deploy-app.yml`](.github/workflows/deploy-app.yml)) |
 
-Production URL статики задаётся в [`package.json`](frontend-react/package.json) (`homepage`). Сборка и выкладка:
-
-```bash
-cd frontend-react
-npm run deploy
-```
-
-(используется ветка/кэш `gh-pages`; не коммитьте содержимое `dist/` — артефакты сборки в `.gitignore`.)
-
-Базовый URL API для production по умолчанию задан в [`frontend-react/src/api.js`](frontend-react/src/api.js); для нескольких стендов удобнее вынести его в переменную с префиксом `VITE_` после правки `api.js`.
+Переменные сборки фронта: `VITE_API_BASE_URL`, `VITE_BASE_PATH` — см. [`frontend-react/.env.example`](frontend-react/.env.example).  
+Ручной деплой: `cd frontend-react && npm run deploy` (после export env).
 
 ---
 

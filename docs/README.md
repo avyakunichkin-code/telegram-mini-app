@@ -21,6 +21,7 @@
 | **Backlog** | [`backlog/`](backlog/) | Приоритеты P0–P3 |
 | **Reference** | [`reference/`](reference/) | GDD, брендбук, investor deck |
 | **Marketing** | [`marketing/`](marketing/) | Посты, трекер тем, стиль, Telegram-публикация |
+| **Ops** | [`ops/`](ops/) | Деплой prod / Pre-Alpha ([`ops/DEPLOY.md`](ops/DEPLOY.md)) |
 | **Agents** | [`agents/`](agents/) | Cursor skills и приоритеты |
 
 ---
