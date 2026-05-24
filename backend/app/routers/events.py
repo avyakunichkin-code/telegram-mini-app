@@ -9,7 +9,6 @@ from sqlalchemy.orm import Session
 
 from ..auth import get_current_user
 from ..balance_utils import adjust_balance, adjust_safety_fund_balance, TRANSACTION_TYPES
-from ..character_progression import apply_character_xp
 from ..game_rules import (
     EVENTS_PER_PERIOD,
     MANDATORY_GATE_BLOCKS_PERIOD_END,
@@ -37,7 +36,6 @@ from ..models import (
 from ..timeutil import utc_now_naive
 from ..expenses import add_expense_line_from_event
 from ..insurance_events import apply_insurance_claim_from_effects, find_policy_for_claim
-from ..level_gates import UNLOCK_PERIOD_EVENTS, character_level
 from ..event_chains import (
     CHAIN_FOLLOWUP_EXCLUDE_FROM_RANDOM_POOL,
     USED_CAR_CHAIN_KEY,
@@ -392,10 +390,7 @@ def record_event_profile_selection(
 
 
 def ensure_events_unlock_intro(db: Session, profile: GameProfile) -> None:
-    """Разовое событие при первом доступе к колоде (уровень ≥ UNLOCK_PERIOD_EVENTS)."""
-    if character_level(profile) < UNLOCK_PERIOD_EVENTS:
-        return
-
+    """Разовое intro-событие при первом доступе к колоде (с 1-го периода)."""
     definition = (
         db.query(EventDefinition)
         .filter(
@@ -469,9 +464,6 @@ def ensure_period_events(db: Session, game_profile_id: int, period_index: int, s
     if not profile:
         return
 
-    if character_level(profile) < UNLOCK_PERIOD_EVENTS:
-        return
-
     ensure_scheduled_chain_events(db, game_profile_id, period_index)
 
     if _period_pool_instance_count(db, game_profile_id, period_index) >= EVENTS_PER_PERIOD:
@@ -518,7 +510,7 @@ def ensure_period_events(db: Session, game_profile_id: int, period_index: int, s
         logger.error("ensure_period_events: repeat_ok empty profile=%s", game_profile_id)
         return
 
-    L = max(1, int(getattr(profile, "level", 1) or 1))
+    L = max(1, int(period_index))
     base_k = min(EVENTS_PER_PERIOD, len(repeat_ok))
 
     core = [d for d in repeat_ok if event_tier_in_core_window(_def_tier(d), L)]
@@ -585,9 +577,6 @@ def serialize_instance_rows(db: Session, insts: list[EventInstance], *, profile:
             row = {"id": c.id, "title": c.title, "description": c.description}
             if effects.get("insurance_claim"):
                 row["insurance_claim"] = True
-            xp_delta = effects.get("xp_delta")
-            if xp_delta:
-                row["xp_delta"] = int(xp_delta)
             if profile is not None:
                 row["impacts"] = build_choice_impacts(db, profile, effects)
             choice_rows.append(row)
@@ -612,9 +601,6 @@ async def get_pending_event(current_user=Depends(get_current_user), db: Session 
 
 def build_pending_events_payload(db: Session, profile: GameProfile) -> dict:
     _ensure_seed_events(db)
-
-    if character_level(profile) < UNLOCK_PERIOD_EVENTS:
-        return {"events": [], "event": None}
 
     ensure_events_unlock_intro(db, profile)
     ensure_period_events(db, profile.id, profile.period_index, profile.save_kind)
@@ -699,7 +685,6 @@ async def choose_event(
 
     cash_delta = float(effects.get("cash_delta", 0) or 0)
     safety_delta = float(effects.get("safety_delta", 0) or 0)
-    xp_delta = int(effects.get("xp_delta", 0) or 0)
     monthly_lifestyle_delta = float(effects.get("monthly_lifestyle_delta", 0) or 0) + float(
         effects.get("monthly_expense_delta", 0) or 0
     )
@@ -713,9 +698,6 @@ async def choose_event(
     insurance_claim_spec = effects.get("insurance_claim")
     if insurance_claim_spec is not None and not isinstance(insurance_claim_spec, dict):
         raise HTTPException(status_code=400, detail="insurance_claim must be an object")
-
-    if xp_delta < 0:
-        raise HTTPException(status_code=400, detail="xp_delta must be >= 0")
 
     if cash_delta < 0 and float(profile.cash_balance) < (-cash_delta) - 1e-6:
         raise HTTPException(status_code=400, detail="Недостаточно средств на счёте для этого выбора")
@@ -801,22 +783,13 @@ async def choose_event(
         if chain:
             complete_chain(db, chain, period_index=int(profile.period_index))
 
-    xp_info = {"xp_gained": 0, "level_up": False, "new_level": None}
-    if xp_delta > 0:
-        xp_info = apply_character_xp(profile, xp_delta, db)
-
     inst.status = "selected"
     inst.selected_choice_id = int(choice_id)
     inst.resolved_at = utc_now_naive()
     record_event_profile_selection(db, profile.id, int(inst.definition_id), int(profile.period_index))
     db.commit()
 
-    response = {
-        "status": "success",
-        "xp_gained": int(xp_info.get("xp_gained", 0) or 0),
-        "level_up": bool(xp_info.get("level_up")),
-        "new_level": xp_info.get("new_level"),
-    }
+    response = {"status": "success"}
     if insurance_claim_result:
         response["insurance_claim"] = insurance_claim_result
     if asset_created:

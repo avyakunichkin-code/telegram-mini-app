@@ -204,12 +204,6 @@ class FinanceOverview(BaseModel):
     expense_to_income_ratio: float = 0
     net_monthly_cashflow: float
     liabilities_to_income_ratio: float
-    gamification_level: str
-    score: int
-    xp_to_next_level: int
-    character_level: int = 1
-    character_xp: int = 0
-    character_xp_need_for_next: int = 30
     time_state: str
     period_index: int
     period_duration_seconds: int
@@ -229,7 +223,6 @@ class FinanceOverview(BaseModel):
     avg_net_cashflow_6p: float = 0.0
     avg_net_cashflow_6p_n: int = 0
     victory: Optional[VictoryOverview] = None
-    character_unlocks: List[CharacterUnlockOverview] = Field(default_factory=list)
     newly_unlocked: List["AchievementUnlockEvent"] = Field(default_factory=list)
     save_kind: str = "game"
     onboarding_state: str = "brief_done"
@@ -265,15 +258,7 @@ class PeriodCloseSummary(BaseModel):
     total_spent: float = 0
     new_balance: float = 0
     breakdown: List[PeriodCloseBreakdownItem] = Field(default_factory=list)
-    xp_earned: int = 0
-    xp_period_close: int = 0
-    xp_milestone: int = 0
-    milestone_title: Optional[str] = None
-    xp_from_achievements: int = 0
     achievement_unlocks: List["AchievementUnlockEvent"] = Field(default_factory=list)
-    level_up: bool = False
-    new_level: Optional[int] = None
-    character_level: int = 1
 
 
 class AchievementTierStatus(BaseModel):
@@ -300,16 +285,10 @@ class AchievementUnlockEvent(BaseModel):
     tier_key: str
     tier_index: int
     title: str
-    xp_reward: int = 0
-    xp_gained: int = 0
-    level_up: bool = False
-    new_level: Optional[int] = None
 
 
 class AchievementsOverviewResponse(BaseModel):
     period_index: int
-    character_level: int
-    character_xp: int
     chains: List[AchievementChainStatus] = Field(default_factory=list)
     newly_unlocked: List[AchievementUnlockEvent] = Field(default_factory=list)
 

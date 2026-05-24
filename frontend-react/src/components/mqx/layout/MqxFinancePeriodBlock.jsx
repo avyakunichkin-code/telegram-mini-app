@@ -27,7 +27,66 @@ function CloseIcon() {
 /**
  * Статичный блок «Финансы периода» (L3): chip + Монетка + ссылка в раздел финансов.
  */
-export function MqxFinancePeriodBlock({ financeCards = [], onGoFinance }) {
+function FinanceChip({ card, onFlowsNavigate }) {
+  const className = [
+    'mqx-finance-chip',
+    card.chipAction ? 'mqx-finance-chip--action' : '',
+  ]
+    .filter(Boolean)
+    .join(' ');
+
+  const inner = (
+    <>
+      <div
+        className={[
+          'mqx-finance-chip__icon',
+          card.accent,
+          card.expenseIcon ? 'mqx-accent--expense' : '',
+        ]
+          .filter(Boolean)
+          .join(' ')}
+        aria-hidden
+      >
+        {card.icon}
+      </div>
+      <div className="mqx-finance-chip__body">
+        <div className="mqx-finance-chip__label">{card.title}</div>
+        <div
+          className={[
+            'mqx-finance-chip__value',
+            card.valueTone ? `mqx-finance-chip__value--${card.valueTone}` : '',
+          ]
+            .filter(Boolean)
+            .join(' ')}
+        >
+          {card.valueNode}
+        </div>
+      </div>
+    </>
+  );
+
+  if (card.chipAction && onFlowsNavigate) {
+    return (
+      <button
+        type="button"
+        className={className}
+        title={card.titleHint}
+        aria-label={`${card.title}: открыть раздел`}
+        onClick={() => onFlowsNavigate(card.chipAction)}
+      >
+        {inner}
+      </button>
+    );
+  }
+
+  return (
+    <div className={className} title={card.titleHint}>
+      {inner}
+    </div>
+  );
+}
+
+export function MqxFinancePeriodBlock({ financeCards = [], onGoFinance, onFlowsNavigate }) {
   const [monetkaDismissed, setMonetkaDismissed] = useState(null);
   const chipsRef = useRef(null);
 
@@ -63,33 +122,7 @@ export function MqxFinancePeriodBlock({ financeCards = [], onGoFinance }) {
       <h2 className="mqx-finance-static__title">Финансы периода</h2>
       <div ref={chipsRef} className="mqx-finance-static__chips">
         {financeCards.map((c) => (
-          <div key={c.title} className="mqx-finance-chip" title={c.titleHint}>
-            <div
-              className={[
-                'mqx-finance-chip__icon',
-                c.accent,
-                c.expenseIcon ? 'mqx-accent--expense' : '',
-              ]
-                .filter(Boolean)
-                .join(' ')}
-              aria-hidden
-            >
-              {c.icon}
-            </div>
-            <div className="mqx-finance-chip__body">
-              <div className="mqx-finance-chip__label">{c.title}</div>
-              <div
-                className={[
-                  'mqx-finance-chip__value',
-                  c.valueTone ? `mqx-finance-chip__value--${c.valueTone}` : '',
-                ]
-                  .filter(Boolean)
-                  .join(' ')}
-              >
-                {c.valueNode}
-              </div>
-            </div>
-          </div>
+          <FinanceChip key={c.title} card={c} onFlowsNavigate={onFlowsNavigate} />
         ))}
       </div>
 

@@ -8,7 +8,6 @@ from ..game_time import get_active_game_profile, sync_time
 from ..balance_utils import adjust_balance
 from ..models import InvestmentPosition
 from ..idempotency import read_idempotency_key, run_idempotent
-from ..level_gates import UNLOCK_BOND_BUY, UNLOCK_DEPOSIT_OPEN, require_character_level
 
 
 router = APIRouter(prefix="/api/invest", tags=["invest"])
@@ -57,7 +56,6 @@ async def open_deposit(
     def _execute() -> dict:
         profile = get_active_game_profile(db, current_user.id)
         sync_time(profile)
-        require_character_level(profile, UNLOCK_DEPOSIT_OPEN, "invest.deposit_open")
         if profile.cash_balance < amount:
             raise HTTPException(status_code=400, detail="Недостаточно средств")
         adjust_balance(db, profile.id, -amount, "deposit_open", "Открытие депозита", profile.period_index)
@@ -108,7 +106,6 @@ async def buy_bond(
     def _execute() -> dict:
         profile = get_active_game_profile(db, current_user.id)
         sync_time(profile)
-        require_character_level(profile, UNLOCK_BOND_BUY, "invest.bond_buy")
         if profile.cash_balance < amount:
             raise HTTPException(status_code=400, detail="Недостаточно средств")
         adjust_balance(db, profile.id, -amount, "bond_buy", f"Покупка облигаций: {title}", profile.period_index)

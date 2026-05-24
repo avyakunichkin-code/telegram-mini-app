@@ -11,7 +11,6 @@ from typing import Any
 
 from sqlalchemy.orm import Session
 
-from .character_progression import apply_character_xp
 from .models import (
     AchievementChain,
     AchievementTierDefinition,
@@ -351,7 +350,6 @@ def process_achievement_unlocks(db: Session, profile: GameProfile) -> list[dict[
                     period_index=int(profile.period_index),
                 )
             )
-            xp_info = apply_character_xp(profile, int(tier_def.xp_reward or 0), db)
             unlocked_ids.add(int(tier_def.id))
             newly_unlocked.append(
                 {
@@ -359,10 +357,6 @@ def process_achievement_unlocks(db: Session, profile: GameProfile) -> list[dict[
                     "tier_key": tier_def.tier_key,
                     "tier_index": int(tier_def.tier_index),
                     "title": tier_def.title,
-                    "xp_reward": int(tier_def.xp_reward or 0),
-                    "xp_gained": int(xp_info.get("xp_gained", 0) or 0),
-                    "level_up": bool(xp_info.get("level_up")),
-                    "new_level": xp_info.get("new_level"),
                 }
             )
             progress = True

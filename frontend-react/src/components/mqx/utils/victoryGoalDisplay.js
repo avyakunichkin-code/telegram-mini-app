@@ -38,9 +38,6 @@ export function goalProgressHintText(goal) {
     }
     return n > 0 ? `Среднее: ${Math.round(avg)}` : 'Нужно больше периодов';
   }
-  if (type === 'character_level') {
-    return `Ур. ${d.character_level ?? 1} / ${d.min_level ?? 1}`;
-  }
   if (type === 'cash_balance_min') {
     return { kind: 'money_pair', current: d.cash_balance ?? 0, target: d.min_cash ?? 0 };
   }

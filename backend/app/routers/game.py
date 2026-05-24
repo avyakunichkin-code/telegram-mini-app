@@ -542,7 +542,6 @@ def _period_close_summary(period_result: dict) -> PeriodCloseSummary:
         for item in (period_result.get("breakdown") or [])
         if isinstance(item, dict)
     ]
-    new_level = period_result.get("new_level")
     achievement_unlocks = [
         AchievementUnlockEvent(**item)
         for item in (period_result.get("achievement_unlocks") or [])
@@ -559,15 +558,7 @@ def _period_close_summary(period_result: dict) -> PeriodCloseSummary:
         total_spent=round(float(period_result.get("total_spent") or 0), 2),
         new_balance=round(float(period_result.get("new_balance") or 0), 2),
         breakdown=breakdown,
-        xp_earned=int(period_result.get("xp_earned") or 0),
-        xp_period_close=int(period_result.get("xp_period_close") or 0),
-        xp_milestone=int(period_result.get("xp_milestone") or 0),
-        milestone_title=period_result.get("milestone_title"),
-        xp_from_achievements=int(period_result.get("xp_from_achievements") or 0),
         achievement_unlocks=achievement_unlocks,
-        level_up=bool(period_result.get("level_up")),
-        new_level=int(new_level) if new_level is not None else None,
-        character_level=int(period_result.get("character_level") or 1),
     )
 
 

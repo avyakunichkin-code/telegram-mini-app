@@ -22,7 +22,6 @@ from ..finance_helpers import monthly_interest_payment
 from ..game_time import get_active_game_profile, sync_time, get_seconds_until_next
 from ..expenses import compute_monthly_burn
 from ..finance_overview_build import build_finance_overview
-from ..level_gates import UNLOCK_ASSET_FROM_TEMPLATE, UNLOCK_LIABILITY_FROM_TEMPLATE, require_character_level
 from ..schemas import (
     SalaryProfileUpdate,
     SalaryProfileResponse,
@@ -34,7 +33,6 @@ from ..schemas import (
     MonthlyBurnBreakdown,
     VictoryOverview,
     VictoryGoalOverview,
-    CharacterUnlockOverview,
     AchievementUnlockEvent,
     AnalyticsTimeseriesPoint,
     FinanceAnalyticsTimeseriesResponse,
@@ -214,7 +212,6 @@ async def create_liability_from_template(
 
     game_profile = get_active_game_profile(db, current_user.id)
     sync_time(game_profile)
-    require_character_level(game_profile, UNLOCK_LIABILITY_FROM_TEMPLATE, "finance.liability_from_template")
     principal = float(tpl.total_debt)
     rate = float(tpl.annual_rate_percent)
     mp = monthly_interest_payment(principal, rate)
@@ -359,7 +356,6 @@ async def create_asset_from_template(
         raise HTTPException(status_code=404, detail="Template not found")
     game_profile = get_active_game_profile(db, current_user.id)
     sync_time(game_profile)
-    require_character_level(game_profile, UNLOCK_ASSET_FROM_TEMPLATE, "finance.asset_from_template")
 
     cost = float(tpl_row.asset_value)
     if cost > EPSILON:

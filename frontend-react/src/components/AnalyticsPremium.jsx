@@ -59,7 +59,7 @@ export function AnalyticsPremium({ overview }) {
     const obligations = Number(overview.total_monthly_obligations) || 0;
     const ratio = Number(overview.liabilities_to_income_ratio) || 0;
     const overdue = Number(overview.total_overdue_amount) || 0;
-    const score = Number(overview.score) || 0;
+    const streak = Number(overview.clean_period_streak) || 0;
 
     const winTarget = Number(overview.win_target_safety_fund) || 0;
     const cushionFrac = winTarget > 0 ? safety / winTarget : 0;
@@ -101,7 +101,7 @@ export function AnalyticsPremium({ overview }) {
       obligations,
       ratio,
       overdue,
-      score,
+      streak,
       winTarget,
       cushionFrac,
       capitalTarget,
@@ -132,7 +132,6 @@ export function AnalyticsPremium({ overview }) {
     obligations,
     ratio,
     overdue,
-    score,
     winTarget,
     cushionFrac,
     capitalTarget,
@@ -147,7 +146,6 @@ export function AnalyticsPremium({ overview }) {
     streak,
   } = model;
 
-  const scoreFillPct = Math.min(100, Math.max(0, score));
   const pts = ts?.points ?? [];
   const lastCash = pts.length ? Number(pts[pts.length - 1]?.cash_balance) : cash;
   const lastSafety = pts.length ? Number(pts[pts.length - 1]?.safety_fund_balance) : safety;
@@ -158,34 +156,25 @@ export function AnalyticsPremium({ overview }) {
         sectionLabel="Аналитика"
         rightPill={`Период #${overview.period_index}`}
         title="Финансовая картина"
-        subtitle="Рейтинг, цели, потоки и динамика — в одном стиле с главной."
+        subtitle="Цели, потоки и динамика — в одном стиле с главной."
       />
 
       <main className="mqx-content mqx-tab-page__scroll mqx-analytics-page">
         <section className="mqx-card mqx-analytics-level">
           <div className="mqx-analytics-level__top">
             <div>
-              <div className="mqx-card__kicker mqx-card__kicker--violet">Финансовый уровень</div>
-              <div className="mqx-analytics-level__title">{asSafeReactText(overview.gamification_level)}</div>
-              <p className="mqx-analytics-level__sub">Период игры #{overview.period_index} · чистых месяцев подряд: {streak}</p>
+              <div className="mqx-card__kicker mqx-card__kicker--violet">Сценарий</div>
+              <div className="mqx-analytics-level__title">Период #{overview.period_index}</div>
+              <p className="mqx-analytics-level__sub">Чистых месяцев подряд без просрочки: {streak}</p>
             </div>
-            <div className="mqx-analytics-level__score-chip" aria-label="Очки рейтинга">
-              <div className="mqx-analytics-level__score-label">Очки</div>
-              <div className="mqx-analytics-level__score-value">{score}</div>
+            <div className="mqx-analytics-level__score-chip" aria-label="Просрочка">
+              <div className="mqx-analytics-level__score-label">Просрочка</div>
+              <div className="mqx-analytics-level__score-value">
+                <MoneyText value={overdue} decimals={0} />
+              </div>
             </div>
           </div>
 
-          <div className="mqx-analytics-xp">
-            <div className="mqx-analytics-xp__row">
-              <span>Рейтинг MQ (до 100)</span>
-              <span className="mqx-analytics-xp__nums">
-                {score} / 100
-              </span>
-            </div>
-            <div className="mqx-analytics-xp__track">
-              <div className="mqx-analytics-xp__fill" style={{ width: `${scoreFillPct}%` }} />
-            </div>
-          </div>
         </section>
 
         <section className="mqx-card mqx-card--analytics-goals">

@@ -22,7 +22,6 @@ class VictoryEvaluationInput:
     total_monthly_obligations: float
     total_overdue_amount: float
     net_monthly_cashflow: float
-    character_level: int
     monthly_salary: float
     avg_net_cashflow_6p: float
     avg_net_cashflow_6p_n: int
@@ -170,13 +169,6 @@ def _evaluate_goal(goal: dict[str, Any], snap: VictoryEvaluationInput) -> Victor
         else:
             met = avg >= 0
             progress = 1.0 if met else 0.0
-
-    elif gtype == "character_level":
-        min_level = int(goal.get("min_level", 1))
-        level = max(1, int(snap.character_level))
-        detail = {"character_level": level, "min_level": min_level}
-        met = level >= min_level
-        progress = min(1.0, level / min_level) if min_level > 0 else 1.0
 
     elif gtype == "cash_balance_min":
         min_cash = float(goal.get("min_cash", 0))

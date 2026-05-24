@@ -68,9 +68,6 @@ export function MqxPeriodCloseSheet({ summary, open, onClose }) {
 
   const rows = periodCloseRows(summary);
   const title = periodCloseTitle(summary);
-  const totalXp = Number(summary.xp_earned) || 0;
-  const levelNote =
-    summary.level_up && summary.new_level ? ` · уровень ${summary.new_level}` : '';
 
   return (
     <div className="mqx-pclose-root" role="presentation">
@@ -92,11 +89,6 @@ export function MqxPeriodCloseSheet({ summary, open, onClose }) {
             <PeriodCloseRow key={row.key} row={row} />
           ))}
         </ul>
-        {totalXp > 0 ? (
-          <p className="mqx-pclose-sheet__xp">
-            +{totalXp} XP{levelNote}
-          </p>
-        ) : null}
       </section>
     </div>
   );

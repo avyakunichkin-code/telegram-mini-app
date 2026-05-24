@@ -28,8 +28,6 @@ async def get_achievements_overview(
     chains = serialize_achievements_for_profile(db, profile.id)
     return AchievementsOverviewResponse(
         period_index=int(profile.period_index),
-        character_level=max(1, int(profile.level or 1)),
-        character_xp=max(0, int(profile.xp or 0)),
         chains=chains,
         newly_unlocked=newly_unlocked,
     )

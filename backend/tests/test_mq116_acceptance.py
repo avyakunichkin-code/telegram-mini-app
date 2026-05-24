@@ -53,33 +53,32 @@ class TestEnsurePeriodEventsAcceptance:
         return d
 
     @pytest.mark.parametrize(
-        "level, period_index, allowed_tiers",
+        "period_index, allowed_tiers",
         [
-            (2, 1, {1, 2}),
-            (7, 3, {5, 6, 7}),
+            (1, {1}),
+            (10, {1}),
+            (11, {1, 2}),
+            (20, {1, 2}),
         ],
     )
-    def test_core_tier_window(self, db_session, level, period_index, allowed_tiers):
+    def test_core_tier_window(self, db_session, period_index, allowed_tiers):
         profile = GameProfile(
             user_id=1,
             name="tier-window",
             save_kind="game",
             is_active=1,
-            level=level,
             period_index=period_index,
         )
         db_session.add(profile)
         db_session.commit()
 
-        if level == 2:
-            for i in range(4):
-                self._add_def(db_session, f"tierwin_{level}_t1_{i}", tier=1)
-            for i in range(4):
-                self._add_def(db_session, f"tierwin_{level}_t2_{i}", tier=2)
-        else:
-            for t in (5, 6, 7):
-                for i in range(2):
-                    self._add_def(db_session, f"tierwin_{level}_{t}_{i}", tier=t)
+        for i in range(4):
+            self._add_def(db_session, f"tierwin_p{period_index}_t1_{i}", tier=1)
+        for i in range(4):
+            self._add_def(db_session, f"tierwin_p{period_index}_t2_{i}", tier=2)
+        if period_index >= 11:
+            for i in range(2):
+                self._add_def(db_session, f"tierwin_p{period_index}_t3_{i}", tier=3)
 
         ensure_period_events(db_session, profile.id, period_index, "game")
 
@@ -94,7 +93,7 @@ class TestEnsurePeriodEventsAcceptance:
         assert len(instances) == EVENTS_PER_PERIOD
         for inst in instances:
             d = db_session.query(EventDefinition).filter(EventDefinition.id == inst.definition_id).first()
-            assert event_tier_in_core_window(int(d.event_tier), level)
+            assert event_tier_in_core_window(int(d.event_tier), period_index)
             assert int(d.event_tier) in allowed_tiers
 
     def test_once_per_profile_allowed_after_expired_without_select(self, db_session):
@@ -103,7 +102,6 @@ class TestEnsurePeriodEventsAcceptance:
             name="once-expired",
             save_kind="game",
             is_active=1,
-            level=2,
             period_index=2,
         )
         db_session.add(profile)
@@ -186,14 +184,6 @@ class TestMq116ApiIntegration:
         )
         assert start.status_code == 200
 
-        pending_l1 = client.get("/api/game/events/pending", headers=auth_headers)
-        assert pending_l1.status_code == 200
-        assert len(pending_l1.json().get("events") or []) == 0
-
-        profile = self._active_profile(db_session)
-        profile.level = 2
-        db_session.commit()
-
         pending = client.get("/api/game/events/pending", headers=auth_headers)
         assert pending.status_code == 200
         body = pending.json()
@@ -219,44 +209,3 @@ class TestMq116ApiIntegration:
         mq11_in_db = [d for d in defs if d.key in ACTIVE_MQ11_KEYS]
         assert len(mq11_in_db) == len(ACTIVE_MQ11_KEYS)
 
-    def test_choose_event_updates_character_xp_in_overview(self, client, auth_headers, db_session):
-        client.post(
-            "/api/game/start",
-            headers=auth_headers,
-            json={
-                "profile_name": "MQ116 XP",
-                "save_kind": "game",
-                "template_key": "mq_game_basic_v1",
-            },
-        )
-        client.post("/api/game/period/claim-salary", headers=auth_headers)
-
-        profile = self._active_profile(db_session)
-        profile.level = 2
-        db_session.commit()
-
-        before = client.get("/api/finance/overview", headers=auth_headers).json()
-        xp_before = int(before["character_xp"])
-
-        pending = client.get("/api/game/events/pending", headers=auth_headers).json()
-        events = pending["events"]
-        assert events
-        assert events[0].get("event_domain")
-
-        target = next(
-            (e for e in events if any((c.get("xp_delta") or 0) > 0 for c in e.get("choices") or [])),
-            events[0],
-        )
-        choice = next(c for c in target["choices"] if (c.get("xp_delta") or 0) > 0)
-
-        choose = client.post(
-            f"/api/game/events/{target['id']}/choose",
-            headers=auth_headers,
-            json={"choice_id": choice["id"]},
-        )
-        assert choose.status_code == 200
-
-        after = client.get("/api/finance/overview", headers=auth_headers).json()
-        assert int(after["character_xp"]) >= xp_before
-        assert after["character_level"] >= before["character_level"]
-        assert int(after["character_xp_need_for_next"]) > 0

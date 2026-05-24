@@ -1,4 +1,4 @@
-"""Разовое событие открытия колоды на 2-м уровне."""
+﻿"""Сценарное событие «открытие колоды» — intro в первом периоде."""
 
 from app.models import EventDefinition, EventInstance, GameProfile
 from app.mvp11_event_seeds import ensure_mvp11_event_catalog
@@ -10,7 +10,7 @@ from app.routers.events import (
 
 
 class TestEventsUnlockIntro:
-    def test_spawns_once_at_level_2_not_in_random_pool(self, db_session):
+    def test_spawns_once_not_in_random_pool(self, db_session):
         ensure_mvp11_event_catalog(db_session)
 
         profile = GameProfile(
@@ -18,7 +18,6 @@ class TestEventsUnlockIntro:
             name="intro",
             save_kind="game",
             is_active=1,
-            level=2,
             period_index=1,
         )
         db_session.add(profile)
@@ -41,7 +40,6 @@ class TestEventsUnlockIntro:
         intro_instances = [i for i in instances if i.definition_id == intro_def.id]
         assert len(intro_instances) == 1
 
-        # Повторный вызов не дублирует intro
         ensure_events_unlock_intro(db_session, profile)
         intro_instances = (
             db_session.query(EventInstance)
@@ -53,7 +51,6 @@ class TestEventsUnlockIntro:
         )
         assert len(intro_instances) == 1
 
-        # Случайная тройка не включает intro
         random_defs = {
             db_session.query(EventDefinition).filter(EventDefinition.id == i.definition_id).first().key
             for i in instances
@@ -61,25 +58,3 @@ class TestEventsUnlockIntro:
         }
         assert EVENTS_UNLOCK_INTRO_KEY not in random_defs
         assert len(instances) == 1 + len(random_defs)
-
-    def test_level_1_no_intro(self, db_session):
-        ensure_mvp11_event_catalog(db_session)
-        profile = GameProfile(
-            user_id=1,
-            name="l1",
-            save_kind="game",
-            is_active=1,
-            level=1,
-            period_index=1,
-        )
-        db_session.add(profile)
-        db_session.commit()
-
-        ensure_events_unlock_intro(db_session, profile)
-
-        count = (
-            db_session.query(EventInstance)
-            .filter(EventInstance.game_profile_id == profile.id)
-            .count()
-        )
-        assert count == 0

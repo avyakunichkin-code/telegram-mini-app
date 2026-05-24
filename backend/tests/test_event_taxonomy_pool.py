@@ -57,7 +57,6 @@ class TestEventTaxonomyPool:
             name="refi-off",
             save_kind="game",
             is_active=1,
-            level=5,
             period_index=3,
             cash_balance=100_000,
         )
@@ -113,7 +112,6 @@ class TestFamilyMoneyChain:
             name="family",
             save_kind="game",
             is_active=1,
-            level=3,
             period_index=2,
             cash_balance=80_000,
         )

@@ -48,8 +48,6 @@ class GameProfile(Base):
     is_active = Column(Integer, nullable=False, default=0)
     is_archived = Column(Integer, nullable=False, default=0)
     league = Column(String(50), nullable=False, default="Bronze")
-    level = Column(Integer, nullable=False, default=1)
-    xp = Column(Integer, nullable=False, default=0)
     streak = Column(Integer, nullable=False, default=0)
     time_state = Column(String(20), nullable=False, default="pause")
     period_index = Column(Integer, nullable=False, default=1)

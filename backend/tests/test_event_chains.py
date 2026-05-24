@@ -54,7 +54,6 @@ class TestUsedCarChain:
             name="car-chain",
             save_kind="game",
             is_active=1,
-            level=3,
             period_index=1,
             cash_balance=200_000,
         )
@@ -106,7 +105,6 @@ class TestUsedCarChain:
             name="has-car",
             save_kind="game",
             is_active=1,
-            level=3,
             period_index=2,
         )
         db_session.add(profile)

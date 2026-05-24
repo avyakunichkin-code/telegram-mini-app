@@ -13,7 +13,6 @@ def _snap(**kwargs):
         total_monthly_obligations=10_000.0,
         total_overdue_amount=0.0,
         net_monthly_cashflow=1.0,
-        character_level=1,
         monthly_salary=50_000.0,
         avg_net_cashflow_6p=0.0,
         avg_net_cashflow_6p_n=0,
@@ -84,15 +83,14 @@ class TestHarderPlaytestGoals:
                 monthly_passive_income=400_000,
                 monthly_expenses_total=100_000,
                 monthly_burn_total=19_600,
-                character_level=10,
                 cash_balance=10_000_000,
                 owned_asset_kinds=frozenset({"rental_home", "vehicle"}),
             ),
             template_key="mq_game_debt_stack_v1",
         )
-        assert r.goals_enabled == 5
-        assert r.goals_met == 5
-        assert r.win_reached is True
+        assert r.goals_enabled == 4
+        assert r.goals_met == 4
+        assert r.win_reached is False
 
     def test_passive_net_goal_detail(self):
         cfg = victory_config_for_template("mq_game_tight_budget_v1")

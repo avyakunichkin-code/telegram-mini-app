@@ -18,13 +18,6 @@ from .models import (
 from .balance_utils import adjust_balance, add_transaction, TRANSACTION_TYPES
 from .achievement_engine import process_achievement_unlocks
 from .achievement_seeds import ensure_achievement_catalog
-from .character_progression import apply_character_xp
-from .progression_xp import (
-    compute_period_close_xp,
-    milestone_title_for_period,
-    milestone_xp_for_closed_period,
-    save_milestones_awarded,
-)
 from .routers.events import ensure_period_events, expire_pending_events_for_closed_period, _ensure_seed_events
 from .routers.insurance import charge_premiums_for_period
 from .expenses import compute_monthly_burn, expire_expense_lines_for_period, lifestyle_period_breakdown
@@ -373,8 +366,7 @@ def process_period_end(db: Session, profile: GameProfile) -> dict:
         # Если баланс неотрицательный – сбрасываем счётчик
         profile.negative_periods_count = 0
 
-    # 5. XP за закрытие периода (единый пакет + milestone + достижения)
-    level_before_xp = int(profile.level)
+    # 5. Снимок на конец периода для аналитики + счётчик «чистых» месяцев без просрочек
     snapshot = (
         db.query(PeriodSnapshot)
         .filter(
@@ -387,8 +379,6 @@ def process_period_end(db: Session, profile: GameProfile) -> dict:
         (snapshot and int(snapshot.salary_claimed or 0) == 1)
         or int(getattr(profile, "last_period_salary_claimed", 0) or 0) == int(period_index)
     )
-    salary_amount = float(snapshot.salary_amount or 0) if snapshot else 0.0
-    safety_contrib = float(snapshot.safety_fund_contribution or 0) if snapshot else 0.0
     current_income_rate = _period_income_rate(breakdown, snapshot)
     current_expense_total = _period_expense_total(breakdown)
     debt_after = _total_debt_balance(db, profile.id)
@@ -406,26 +396,9 @@ def process_period_end(db: Session, profile: GameProfile) -> dict:
     invest_capital_delta = _invest_capital_flow(db, profile.id, period_index)
     debt_delta = _debt_delta(db, profile.id, period_index, debt_after)
 
-    period_xp = compute_period_close_xp(
-        salary_claimed=salary_claimed,
-        safety_fund_contribution=safety_contrib,
-    )
-    milestone_xp, milestones_list = milestone_xp_for_closed_period(profile, period_index)
-    milestone_title = milestone_title_for_period(period_index) if milestone_xp > 0 else None
-    if milestone_xp > 0:
-        save_milestones_awarded(profile, milestones_list)
-
-    rhythm_xp = period_xp + milestone_xp
     if snapshot is not None:
-        snapshot.xp_earned = int(rhythm_xp)
+        snapshot.xp_earned = 0
 
-    apply_character_xp(profile, rhythm_xp, db)
-
-    # 6. Сбрасываем флаг получения зарплаты (если он хранится в профиле)
-    # Важно: НЕ сбрасываем в 0. Поле хранит номер периода, в котором брали зарплату.
-    # После увеличения period_index сравнение перестанет совпадать само.
-
-    # 6.5 Снимок на конец периода для аналитики + счётчик «чистых» месяцев без просрочек
     total_overdue_now = round(sum(float(li.overdue_amount or 0) for li in liabilities), 2)
     if total_overdue_now <= 1e-8:
         profile.clean_period_streak = int(getattr(profile, "clean_period_streak", 0) or 0) + 1
@@ -461,11 +434,6 @@ def process_period_end(db: Session, profile: GameProfile) -> dict:
         )
         db.refresh(profile)
         achievement_unlocks = []
-
-    xp_from_achievements = sum(int(item.get("xp_reward") or 0) for item in achievement_unlocks)
-    total_xp_earned = int(rhythm_xp) + int(xp_from_achievements)
-    level_up = int(profile.level) > level_before_xp
-    new_level = int(profile.level) if level_up else None
 
     # 7. Увеличиваем номер периода
     closed_period_index = int(period_index)
@@ -510,13 +478,5 @@ def process_period_end(db: Session, profile: GameProfile) -> dict:
         "negative_streak": profile.negative_periods_count,
         "game_over": profile.is_active == 0,
         "overdue_added": round(total_overdue_added, 2),
-        "xp_earned": total_xp_earned,
-        "xp_period_close": int(period_xp),
-        "xp_milestone": int(milestone_xp),
-        "milestone_title": milestone_title,
-        "xp_from_achievements": int(xp_from_achievements),
-        "level_up": level_up,
-        "new_level": new_level,
-        "character_level": int(profile.level),
         "achievement_unlocks": achievement_unlocks,
     }

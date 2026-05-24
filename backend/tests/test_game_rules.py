@@ -1,121 +1,70 @@
-"""Инварианты игровой логики (структура правил, не баланс продукта)."""
+﻿"""Компоненты игровой логики (структура правил, не баланс прогресса)."""
 
 import pytest
 
 from app.game_rules import (
-    CHARACTER_MAX_LEVEL,
     EVENTS_PER_PERIOD,
     EVENT_TIER_WINDOW_BELOW_LEVEL,
     MIN_PERIOD_INDEX_FOR_WIN,
     MVP_SAFETY_FUND_OBLIGATIONS_MULTIPLIER,
     REPEAT_POLICY_MAX_PER_PROFILE,
     REPEAT_POLICY_ONCE_PER_PROFILE,
-    XP_NEED_BY_LEVEL,
-    XP_TOTAL_TO_MAX_LEVEL,
     EventProfileContext,
     EventProfileCounterSnapshot,
     EventPrerequisites,
-    apply_xp_to_character_state,
-    character_xp_need_for_next_level,
     clamp_profile_lifestyle_delta,
     evaluate_mvp_victory,
     event_prerequisites_met,
     event_tier_bounds,
     event_tier_in_core_window,
     event_tier_in_fallback_primary,
+    event_tier_progression_level,
     is_event_definition_eligible,
     parse_event_prerequisites_json,
     MvpVictoryInput,
 )
 
 
-class TestXpProgression:
-    def test_need_table_matches_v2(self):
-        assert sum(XP_NEED_BY_LEVEL) == XP_TOTAL_TO_MAX_LEVEL
-        assert character_xp_need_for_next_level(1) == XP_NEED_BY_LEVEL[0]
-        assert character_xp_need_for_next_level(0) == character_xp_need_for_next_level(1)
-        assert character_xp_need_for_next_level(CHARACTER_MAX_LEVEL) == 0
-
-    def test_need_grows_with_level_phantom_finale_smaller(self):
-        needs = [character_xp_need_for_next_level(L) for L in range(1, CHARACTER_MAX_LEVEL)]
-        assert needs[:-1] == sorted(needs[:-1])
-        assert needs[-1] == 115
-        assert needs[-2] == 650
-
-    def test_negative_delta_rejected(self):
-        with pytest.raises(ValueError, match="delta must be >= 0"):
-            apply_xp_to_character_state(1, 0, -1)
-
-    def test_zero_delta_preserves_state(self):
-        level, xp, info = apply_xp_to_character_state(3, 40, 0)
-        assert level == 3
-        assert xp == 40
-        assert info["xp_gained"] == 0
-        assert info["level_up"] is False
-        assert info["new_level"] is None
-
-    def test_after_gain_xp_stays_below_next_threshold(self):
-        level, xp, info = apply_xp_to_character_state(1, 0, 10)
-        assert info["xp_gained"] == 10
-        assert xp < character_xp_need_for_next_level(level)
-
-    def test_single_level_up(self):
-        need = character_xp_need_for_next_level(1)
-        level, xp, info = apply_xp_to_character_state(1, 0, need)
-        assert level == 2
-        assert xp == 0
-        assert info["level_up"] is True
-        assert info["new_level"] == 2
-
-    def test_cascade_level_up(self):
-        need1 = character_xp_need_for_next_level(1)
-        need2 = character_xp_need_for_next_level(2)
-        level, xp, info = apply_xp_to_character_state(1, 0, need1 + need2)
-        assert level == 3
-        assert xp == 0
-        assert info["level_up"] is True
-
-    def test_stops_at_max_level(self):
-        level, xp, info = apply_xp_to_character_state(CHARACTER_MAX_LEVEL - 1, 0, 10_000)
-        assert level == CHARACTER_MAX_LEVEL
-        assert info.get("at_max_level") is True
-
-
 class TestEventTierWindow:
     @pytest.mark.parametrize(
-        "character_level, expected",
+        "period_index, expected_bounds, progression_level",
         [
-            (1, (1, 1)),
-            (2, (1, 2)),
-            (5, (3, 5)),
-            (7, (5, 7)),
+            (1, (1, 1), 1),
+            (10, (1, 1), 1),
+            (11, (1, 2), 2),
+            (20, (1, 2), 2),
+            (21, (1, 3), 3),
         ],
     )
-    def test_bounds(self, character_level, expected):
-        assert event_tier_bounds(character_level) == expected
+    def test_bounds_and_progression_level(self, period_index, expected_bounds, progression_level):
+        assert event_tier_progression_level(period_index) == progression_level
+        assert event_tier_bounds(period_index) == expected_bounds
         assert EVENT_TIER_WINDOW_BELOW_LEVEL == 2
 
     @pytest.mark.parametrize(
-        "tier, level, in_core",
+        "tier, period_index, in_core",
         [
             (1, 1, True),
             (2, 1, False),
-            (3, 5, True),
-            (5, 5, True),
-            (2, 5, False),
-            (1, 5, False),
-            (6, 5, False),
+            (1, 10, True),
+            (2, 10, False),
+            (1, 11, True),
+            (2, 11, True),
+            (3, 11, False),
+            (1, 21, True),
+            (3, 21, True),
         ],
     )
-    def test_core_window(self, tier, level, in_core):
-        assert event_tier_in_core_window(tier, level) is in_core
+    def test_core_window(self, tier, period_index, in_core):
+        assert event_tier_in_core_window(tier, period_index) is in_core
 
-    def test_fallback_primary_wider_than_core_at_high_level(self):
-        L = 6
+    def test_fallback_primary_wider_than_core_at_period_21(self):
+        period_index = 21
+        L = event_tier_progression_level(period_index)
         for tier in range(1, L + 1):
-            assert event_tier_in_fallback_primary(tier, L)
-        assert not event_tier_in_core_window(L + 1, L)
-        assert not event_tier_in_fallback_primary(L + 1, L)
+            assert event_tier_in_fallback_primary(tier, period_index)
+        assert not event_tier_in_core_window(L + 1, period_index)
+        assert not event_tier_in_fallback_primary(L + 1, period_index)
 
 
 class TestEventEligibility:

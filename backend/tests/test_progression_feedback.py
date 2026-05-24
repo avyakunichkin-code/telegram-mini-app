@@ -1,5 +1,5 @@
-"""
-Прогрессия XP v2 и обратная связь: period_close, overview.newly_unlocked, устойчивость достижений.
+﻿"""
+Прогрессия после удаления character XP: period_close без xp/level, overview без character_*.
 """
 
 from __future__ import annotations
@@ -10,64 +10,39 @@ import pytest
 
 from app.game_period import process_period_end
 from app.models import FinanceSalary, GameProfile, PeriodSnapshot
-from app.progression_xp import compute_period_close_xp
 from app.routers.game import _period_close_summary
 
 
 class TestPeriodCloseSummaryMapping:
-    def test_maps_xp_breakdown_and_achievements(self):
+    def test_maps_achievement_unlocks(self):
         summary = _period_close_summary(
             {
                 "total_spent": 9600.0,
                 "new_balance": 55400.0,
                 "breakdown": [{"type": "burn", "title": "Жизнь", "amount": 9600.0}],
-                "xp_earned": 50,
-                "xp_period_close": 22,
-                "xp_milestone": 20,
-                "milestone_title": "Первый шаг",
-                "xp_from_achievements": 8,
                 "achievement_unlocks": [
                     {
                         "chain_key": "safety",
                         "tier_key": "t1",
                         "tier_index": 1,
                         "title": "Подушка",
-                        "xp_reward": 8,
-                        "xp_gained": 8,
-                        "level_up": False,
-                        "new_level": None,
                     }
                 ],
-                "level_up": True,
-                "new_level": 2,
-                "character_level": 2,
             }
         )
-        assert summary.xp_period_close == 22
-        assert summary.xp_milestone == 20
-        assert summary.milestone_title == "Первый шаг"
-        assert summary.xp_from_achievements == 8
-        assert summary.xp_earned == 50
-        assert summary.level_up is True
-        assert summary.new_level == 2
-        assert summary.character_level == 2
+        assert summary.total_spent == 9600.0
+        assert summary.new_balance == 55400.0
         assert len(summary.achievement_unlocks) == 1
         assert summary.achievement_unlocks[0].title == "Подушка"
-        assert summary.achievement_unlocks[0].xp_reward == 8
 
     def test_empty_achievement_unlocks_default(self):
         summary = _period_close_summary(
             {
                 "total_spent": 0,
                 "new_balance": 1000,
-                "xp_earned": 12,
-                "xp_period_close": 12,
-                "character_level": 1,
             }
         )
         assert summary.achievement_unlocks == []
-        assert summary.xp_milestone == 0
-        assert summary.milestone_title is None
 
     def test_maps_period_compare_deltas(self):
         summary = _period_close_summary(
@@ -81,9 +56,6 @@ class TestPeriodCloseSummaryMapping:
                 "debt_delta": -8000.0,
                 "total_spent": 0,
                 "new_balance": 1000,
-                "xp_earned": 12,
-                "xp_period_close": 12,
-                "character_level": 1,
             }
         )
         assert summary.closed_period_index == 2
@@ -96,7 +68,7 @@ class TestPeriodCloseSummaryMapping:
 
 
 class TestFinanceOverviewProgression:
-    def test_overview_exposes_progression_and_newly_unlocked(self, client, auth_headers):
+    def test_overview_has_no_character_progression_fields(self, client, auth_headers):
         start = client.post(
             "/api/game/start",
             headers=auth_headers,
@@ -112,16 +84,17 @@ class TestFinanceOverviewProgression:
         assert overview.status_code == 200
         ov = overview.json()
 
-        assert ov["character_level"] >= 1
-        assert "character_xp" in ov
-        assert "character_xp_need_for_next" in ov
-        assert ov["character_xp_need_for_next"] > 0
-        assert "newly_unlocked" in ov
-        assert isinstance(ov["newly_unlocked"], list)
+        for key in (
+            "character_level",
+            "character_xp",
+            "character_xp_need_for_next",
+            "character_unlocks",
+        ):
+            assert key not in ov
 
 
 class TestTimeNextPeriodClose:
-    def test_time_next_returns_period_close_xp_fields(self, client, auth_headers, db_session):
+    def test_time_next_returns_period_close_without_xp(self, client, auth_headers, db_session):
         assert (
             client.post(
                 "/api/game/start",
@@ -152,18 +125,8 @@ class TestTimeNextPeriodClose:
         assert body["period_index"] == period_before + 1
         pc = body.get("period_close")
         assert pc is not None
-
-        expected_period_xp = compute_period_close_xp(
-            salary_claimed=True,
-            safety_fund_contribution=0.0,
-        )
-        rhythm_xp = expected_period_xp + 20
-        assert pc["xp_period_close"] == expected_period_xp
-        assert pc["xp_milestone"] == 20
-        assert pc["milestone_title"]
-        assert pc["xp_earned"] >= rhythm_xp
-        assert pc["xp_from_achievements"] == pc["xp_earned"] - rhythm_xp
-        assert pc["character_level"] >= 1
+        assert "xp_earned" not in pc
+        assert "character_level" not in pc
         assert isinstance(pc.get("achievement_unlocks"), list)
 
 
@@ -172,14 +135,12 @@ class TestGamePeriodAchievementResilience:
     def profile_ready_for_close(self, db_session):
         profile = GameProfile(
             user_id=1,
-            name="close-xp",
+            name="close-ach",
             save_kind="game",
             starter_template_key="mq_game_basic_v1",
             base_monthly_lifestyle_expense=9600.0,
             is_active=1,
             period_index=1,
-            level=1,
-            xp=0,
             cash_balance=50_000.0,
             safety_fund_balance=0.0,
             last_period_salary_claimed=1,
@@ -205,8 +166,6 @@ class TestGamePeriodAchievementResilience:
 
     def test_period_end_survives_achievement_failure(self, db_session, profile_ready_for_close):
         profile = profile_ready_for_close
-        level_before = int(profile.level)
-        xp_before = int(profile.xp or 0)
 
         with patch("app.game_period.process_achievement_unlocks", side_effect=RuntimeError("boom")):
             result = process_period_end(db_session, profile)
@@ -215,16 +174,9 @@ class TestGamePeriodAchievementResilience:
 
         assert profile.period_index == 2
         assert result["achievement_unlocks"] == []
-        assert result["xp_from_achievements"] == 0
-        rhythm_xp = int(result["xp_period_close"]) + int(result["xp_milestone"])
-        assert result["xp_earned"] == rhythm_xp
-        assert int(profile.xp or 0) > xp_before or int(profile.level) > level_before
 
-    def test_period_end_commits_rhythm_xp_when_achievements_ok(self, db_session, profile_ready_for_close):
+    def test_period_end_advances_period(self, db_session, profile_ready_for_close):
         profile = profile_ready_for_close
-        result = process_period_end(db_session, profile)
+        process_period_end(db_session, profile)
         db_session.refresh(profile)
-
-        expected_rhythm = compute_period_close_xp(salary_claimed=True, safety_fund_contribution=0.0) + 20
-        assert result["xp_period_close"] + result["xp_milestone"] == expected_rhythm
         assert int(profile.period_index) == 2

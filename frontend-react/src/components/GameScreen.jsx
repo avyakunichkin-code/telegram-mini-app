@@ -24,6 +24,8 @@ function gamePageMoodClass(timeStatus) {
 
 export function GameScreen({ onLogout, onNewGame, onLoadGame }) {
   const [activeTab, setActiveTab] = useState('dashboard');
+  /** @type {['income'|'expense'|null, function]} */
+  const [capitalFlowsOpen, setCapitalFlowsOpen] = useState(null);
   const [salaryWarnOpen, setSalaryWarnOpen] = useState(false);
   const [eventsOpen, setEventsOpen] = useState(false);
   const [onboardingUi, setOnboardingUi] = useState({ visible: false, lockTabs: false });
@@ -57,8 +59,7 @@ export function GameScreen({ onLogout, onNewGame, onLoadGame }) {
 
   const closeEventsOverlay = useCallback(() => setEventsOpen(false), []);
 
-  const characterLevel = Math.max(1, Number(overview?.character_level) || 1);
-  const eventsUnlocked = characterLevel >= 2;
+  const eventsUnlocked = true;
   const inOnboarding =
     overview && (overview.onboarding_state === 'draft' || overview.onboarding_state === 'started');
 
@@ -283,16 +284,12 @@ export function GameScreen({ onLogout, onNewGame, onLoadGame }) {
             onResolved={async (eventId, choiceId) => {
               const res = await API.chooseEvent(eventId, choiceId);
               const claim = res?.insurance_claim;
-              const xpg = Number(res?.xp_gained) || 0;
-              const lv = res?.level_up ? res?.new_level : null;
               if (claim?.applied && Number(claim.payout_amount) > 0) {
                 const title = claim.policy_title ? `${claim.policy_title}: ` : '';
                 showNotification(
                   `${title}выплата +${Math.round(Number(claim.payout_amount))} ₽`,
                   'success',
                 );
-              } else if (xpg > 0) {
-                showNotification(lv ? `+${xpg} XP · уровень ${lv}` : `+${xpg} XP`, 'success');
               } else {
                 showNotification('Решение применено', 'success');
               }
@@ -320,13 +317,25 @@ export function GameScreen({ onLogout, onNewGame, onLoadGame }) {
                     claimSalary={claimSalary}
                     contributeToSafetyFund={contributeToSafetyFund}
                     withdrawFromSafetyFund={withdrawFromSafetyFund}
-                    onGoFinance={() => setActiveTab('finance')}
+                    onGoFinance={() => {
+                      setCapitalFlowsOpen(null);
+                      setActiveTab('finance');
+                    }}
+                    onGoCapitalFlows={(section) => {
+                      setCapitalFlowsOpen(section);
+                      setActiveTab('finance');
+                    }}
                   />
                 </div>
               )}
 
               {activeTab === 'finance' && (
-                <FinancePremium overview={overview} refreshOverview={refreshOverview} />
+                <FinancePremium
+                  overview={overview}
+                  refreshOverview={refreshOverview}
+                  openFlowsSection={capitalFlowsOpen}
+                  onFlowsSectionOpened={() => setCapitalFlowsOpen(null)}
+                />
               )}
 
               {activeTab === 'analytics' && (

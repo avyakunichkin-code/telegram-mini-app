@@ -7,6 +7,7 @@ import { SafetyFundActionForm } from './SafetyFundActionForm';
 import { showNotification } from './notifications';
 
 import { getMonthlyBurn } from '../utils/expensesDisplay';
+import { CAPITAL_FLOWS_SECTION } from '../utils/capitalFlowsNav';
 
 import {
 
@@ -72,6 +73,8 @@ export function DashboardPremium({
 
   onGoFinance,
 
+  onGoCapitalFlows,
+
 }) {
 
   const [moneyModal, setMoneyModal] = useState(null); // 'in' | 'out' | null
@@ -135,6 +138,7 @@ export function DashboardPremium({
     return [
       {
         title: 'Доходы',
+        chipAction: CAPITAL_FLOWS_SECTION.income,
         titleHint: 'Чистый денежный поток за период (доходы минус обязательные платежи)',
         valueNode: <MoneyText value={formatSignedMoney(flow)} />,
         accent: 'mqx-accent--sky',
@@ -149,6 +153,7 @@ export function DashboardPremium({
       },
       {
         title: 'Расходы',
+        chipAction: CAPITAL_FLOWS_SECTION.expense,
         titleHint: 'Расходы на жизнь за период (без платежей по долгам)',
         valueNode: <MoneyText value={lifestyleExpense} />,
         accent: 'mqx-accent--amber',
@@ -217,29 +222,8 @@ export function DashboardPremium({
 
 
 
-  const characterXp = useMemo(() => {
-
-    const level = Math.max(1, Number(overview?.character_level) || 1);
-
-    const xp = Math.max(0, Number(overview?.character_xp) || 0);
-
-    const needRaw = overview?.character_xp_need_for_next;
-
-    const need = Number.isFinite(Number(needRaw)) && Number(needRaw) > 0 ? Number(needRaw) : 100;
-
-    const frac = need > 0 ? xp / need : 0;
-
-    return { level, xp, need, frac: pctClamp01(frac) };
-
-  }, [overview]);
-
-
-
   const canPlay = timeStatus?.time_state !== 'play';
-
   const canPause = timeStatus?.time_state !== 'pause';
-
-
 
   const safetyModalLimits = useMemo(() => {
 
@@ -284,22 +268,7 @@ export function DashboardPremium({
       if (moneyModal === 'in') {
 
         const res = await contributeToSafetyFund(amt);
-
-        const xpg = Number(res?.xp_gained) || 0;
-
-        if (res?.level_up && res?.new_level) {
-
-          showNotification(`Подушка пополнена · уровень ${res.new_level}`, 'success', { ttlMs: 3200 });
-
-        } else if (xpg > 0) {
-
-          showNotification(`Подушка +${xpg} XP`, 'success');
-
-        } else {
-
-          showNotification('Подушка пополнена', 'success');
-
-        }
+        showNotification('Подушка пополнена', 'success');
 
       } else {
 
@@ -365,7 +334,11 @@ export function DashboardPremium({
 
           <MqxDashStack className="mqx-dash-stack--unified">
 
-            <MqxFinancePeriodBlock financeCards={financeCards} onGoFinance={onGoFinance} />
+            <MqxFinancePeriodBlock
+              financeCards={financeCards}
+              onGoFinance={onGoFinance}
+              onFlowsNavigate={onGoCapitalFlows}
+            />
 
             <MqxDivider />
 
@@ -379,17 +352,8 @@ export function DashboardPremium({
 
                   setBusyAction('salary');
 
-                  const salaryRes = await claimSalary();
-
-                  if (salaryRes?.level_up && salaryRes?.new_level) {
-
-                    showNotification(`Уровень ${salaryRes.new_level}!`, 'success', { ttlMs: 3200 });
-
-                  } else {
-
-                    showNotification('Зарплата на счёт · XP в конце месяца', 'success');
-
-                  }
+                  await claimSalary();
+                  showNotification('Зарплата на счёт', 'success');
 
                 } catch (e) {
 
@@ -440,21 +404,9 @@ export function DashboardPremium({
             ) : null}
 
             <MqxLevelDash
-
-              level={characterXp.level}
-
-              xp={characterXp.xp}
-
-              xpNeed={characterXp.need}
-
-              xpFrac={characterXp.frac}
-
-              score={Number(overview?.score ?? 0)}
-
+              periodIndex={overview?.period_index}
               victory={overview?.victory}
-
               legacyGoal={goal}
-
             />
 
           </MqxDashStack>

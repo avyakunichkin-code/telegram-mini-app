@@ -263,11 +263,7 @@ export function MqCatalogScreen() {
             <MqxPeriodActions onSalary={() => {}} onContribute={() => {}} onWithdraw={() => {}} onInvest={() => {}} />
             <MqxDivider />
             <MqxLevelDash
-              level={3}
-              xp={45}
-              xpNeed={100}
-              xpFrac={0.45}
-              score={1240}
+              periodIndex={3}
               victory={{
                 goals_met: 2,
                 goals_required: 3,

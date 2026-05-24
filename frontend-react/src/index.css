@@ -1316,6 +1316,25 @@ body {
   min-width: 0;
 }
 
+button.mqx-finance-chip.mqx-finance-chip--action {
+  width: 100%;
+  border: none;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+  text-align: left;
+  -webkit-tap-highlight-color: transparent;
+}
+
+button.mqx-finance-chip.mqx-finance-chip--action:active {
+  background: color-mix(in srgb, var(--mqx-ink) 8%, transparent);
+}
+
+button.mqx-finance-chip.mqx-finance-chip--action:focus-visible {
+  outline: 2px solid color-mix(in srgb, var(--mqx-ink) 32%, transparent);
+  outline-offset: 2px;
+}
+
 .mqx-finance-chip__icon {
   width: 36px;
   height: 36px;
@@ -2495,6 +2514,147 @@ body {
   gap: 14px;
 }
 
+/* Управление капиталом — 6 аккордеонов (flows-round) */
+.mqx-capital-accordion-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.mqx-cap-sect {
+  --mqx-cap-sect-accent: color-mix(in srgb, var(--mqx-ink) 28%, var(--mqx-glass-border, var(--mq-line)));
+}
+
+.mqx-cap-sect__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 11px 14px 10px;
+  list-style: none;
+  cursor: pointer;
+  border-bottom: 1.5px solid var(--mqx-cap-sect-accent);
+  background: transparent;
+}
+
+.mqx-cap-sect__head::-webkit-details-marker {
+  display: none;
+}
+
+.mqx-cap-sect__head::after {
+  content: '';
+  width: 8px;
+  height: 8px;
+  flex-shrink: 0;
+  border-right: 2px solid color-mix(in srgb, var(--mqx-ink) 45%, transparent);
+  border-bottom: 2px solid color-mix(in srgb, var(--mqx-ink) 45%, transparent);
+  transform: rotate(45deg);
+  margin-right: 2px;
+  transition: transform 0.15s ease;
+}
+
+.mqx-cap-sect[open] > .mqx-cap-sect__head::after {
+  transform: rotate(-135deg);
+  margin-top: 4px;
+}
+
+.mqx-cap-sect__title {
+  font-size: 11px;
+  font-weight: 850;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  font-variant-numeric: tabular-nums;
+  line-height: 1.2;
+  color: var(--mqx-cap-sect-accent);
+}
+
+.mqx-cap-sect__meta {
+  font-size: 11px;
+  font-weight: 400;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  font-variant-numeric: tabular-nums;
+  line-height: 1.2;
+  color: var(--mqx-cap-sect-accent);
+}
+
+.mqx-cap-sect__body {
+  padding: 4px 14px 14px;
+}
+
+.mqx-cap-sect--in {
+  --mqx-cap-sect-accent: var(--mq-emerald, #059669);
+}
+
+.mqx-cap-sect--out {
+  --mqx-cap-sect-accent: color-mix(in srgb, #f59e0b 85%, var(--mqx-ink));
+}
+
+.mqx-cap-sect--neutral {
+  --mqx-cap-sect-accent: color-mix(in srgb, var(--mqx-ink) 28%, var(--mqx-glass-border, var(--mq-line)));
+}
+
+.mqx-cap-sect--neutral .mqx-cap-sect__title,
+.mqx-cap-sect--neutral .mqx-cap-sect__meta {
+  color: color-mix(in srgb, var(--mqx-ink) 88%, transparent);
+}
+
+.mqx-cap-flow-cat + .mqx-cap-flow-cat {
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid color-mix(in srgb, var(--mqx-glass-border, var(--mq-line)) 70%, transparent);
+}
+
+.mqx-cap-flow-cat__row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+  font-size: 14px;
+  font-weight: 400;
+  color: color-mix(in srgb, var(--mqx-ink) 96%, transparent);
+}
+
+.mqx-cap-flow-amt {
+  font-size: 14px;
+  font-weight: 400;
+  font-variant-numeric: tabular-nums;
+  flex-shrink: 0;
+}
+
+.mqx-cap-flow-amt--in {
+  color: var(--mq-emerald, #059669);
+}
+
+.mqx-cap-flow-amt--out {
+  color: color-mix(in srgb, #f59e0b 85%, var(--mqx-ink));
+}
+
+.mqx-cap-flow-lines {
+  margin-top: 6px;
+  padding-left: 10px;
+  border-left: 1px solid color-mix(in srgb, var(--mqx-glass-border, var(--mq-line)) 55%, transparent);
+}
+
+.mqx-cap-flow-line {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 400;
+  color: color-mix(in srgb, var(--mqx-ink) 72%, transparent);
+  padding: 3px 0;
+}
+
+.mqx-cap-flow-line--type {
+  color: color-mix(in srgb, var(--mqx-ink) 88%, transparent);
+}
+
+.mqx-cap-flow-group + .mqx-cap-flow-group {
+  margin-top: 4px;
+}
+
 .mqx-hero--capital {
   padding-bottom: 22px;
 }
@@ -2545,17 +2705,13 @@ body {
 }
 
 .mqx-capital-tabs--wrap .mqx-capital-tab {
-  flex: 1 1 calc(33.333% - 6px);
+  flex: 1 1 calc(50% - 6px);
   min-width: 0;
   text-align: center;
   white-space: normal;
   line-height: 1.2;
   padding: 8px 6px;
   font-size: 12px;
-}
-
-.mqx-capital-tabs--wrap .mqx-capital-tab:nth-child(n + 4) {
-  flex: 1 1 calc(50% - 6px);
 }
 
 .mqx-capital-card__panel {

@@ -5,14 +5,6 @@ from sqlalchemy.orm import Session
 from ..auth import get_current_user
 from ..balance_utils import adjust_balance, TRANSACTION_TYPES, adjust_safety_fund_balance
 from ..database import get_db
-from ..character_progression import apply_character_xp
-from ..progression_xp import (
-    compute_period_close_xp,
-    milestone_xp_for_closed_period,
-    save_milestones_awarded,
-    safety_contribute_xp_for_grant,
-    safety_withdraw_xp_for_grant,
-)
 from ..models import GameProfile, PeriodSnapshot, FinanceSalary, FinanceLiability, FinanceAsset
 from ..schemas import SafetyFundContribution, PeriodStatusResponse, PeriodSummaryResponse
 from ..game_time import get_active_game_profile, sync_time, get_seconds_until_next
@@ -106,20 +98,18 @@ def build_period_status(db: Session, profile: GameProfile) -> PeriodStatusRespon
     )
 
 
-def _salary_claim_response(profile: GameProfile, amount: float, new_balance: float, xp_apply: dict, *, already_claimed: bool) -> dict:
-    response = {
+def _salary_claim_response(profile: GameProfile, amount: float, new_balance: float, *, already_claimed: bool) -> dict:
+    return {
         "status": "success",
         "already_claimed": already_claimed,
         "amount": amount,
         "new_balance": new_balance,
-        "xp_gained": xp_apply.get("xp_gained", 0),
-        "level_up": xp_apply.get("level_up", False),
-        "new_level": xp_apply.get("new_level"),
-        "message": f"Вы получили зарплату: {amount:,.2f} ₽" if not already_claimed else f"Зарплата за период #{profile.period_index} уже получена",
+        "message": (
+            f"Вы получили зарплату: {amount:,.2f} ₽"
+            if not already_claimed
+            else f"Зарплата за период #{profile.period_index} уже получена"
+        ),
     }
-    if xp_apply.get("level_up") and not already_claimed:
-        response["message"] += f" Поздравляем! Вы достигли {profile.level} уровня!"
-    return response
 
 
 @router.post("/claim-salary")
@@ -139,7 +129,6 @@ async def claim_salary(
             profile,
             amount,
             float(profile.cash_balance),
-            {"xp_gained": 0, "level_up": False, "new_level": None},
             already_claimed=True,
         )
 
@@ -173,7 +162,6 @@ async def claim_salary(
         profile,
         amount,
         new_balance,
-        {"xp_gained": 0, "level_up": False, "new_level": None},
         already_claimed=False,
     )
 
@@ -219,29 +207,14 @@ async def contribute_to_safety_fund(
         db.refresh(profile)
         snapshot.safety_fund_total = profile.safety_fund_balance
         snapshot.safety_fund_contribution = float(snapshot.safety_fund_contribution or 0) + amount
-        grants = int(getattr(snapshot, "safety_contribute_xp_grants", 0) or 0)
-        xp_delta = safety_contribute_xp_for_grant(grants)
-        if xp_delta > 0:
-            snapshot.safety_contribute_xp_grants = grants + 1
-        xp_apply = apply_character_xp(profile, xp_delta, db) if xp_delta > 0 else {
-            "xp_gained": 0,
-            "level_up": False,
-            "new_level": None,
-        }
         db.commit()
-        response = {
+        return {
             "status": "success",
             "contributed": amount,
             "new_cash_balance": profile.cash_balance,
             "new_safety_fund_balance": new_safety_fund,
-            "xp_gained": xp_apply["xp_gained"],
-            "level_up": xp_apply["level_up"],
-            "new_level": xp_apply["new_level"],
             "message": f"Отложено {amount:,.2f} ₽ в подушку безопасности",
         }
-        if xp_apply["level_up"]:
-            response["message"] += f" Поздравляем! Вы достигли {profile.level} уровня!"
-        return response
 
     if idem_key:
         status, body = run_idempotent(
@@ -274,22 +247,11 @@ async def complete_period(
     # Рассчитываем чистые сбережения
     net_savings = snapshot.safety_fund_contribution
 
-    period_xp = compute_period_close_xp(
-        salary_claimed=snapshot.salary_claimed == 1,
-        safety_fund_contribution=float(snapshot.safety_fund_contribution or 0),
-    )
-    milestone_xp, milestones_list = milestone_xp_for_closed_period(profile, profile.period_index)
-    if milestone_xp > 0:
-        save_milestones_awarded(profile, milestones_list)
-    xp_earned = period_xp + milestone_xp
-
-    apply_character_xp(profile, xp_earned, db)
-
     # Отмечаем период как завершённый
     snapshot.is_completed = 1
     snapshot.completed_at = utc_now_naive()
     snapshot.net_savings = net_savings
-    snapshot.xp_earned = xp_earned
+    snapshot.xp_earned = 0
 
     # Инкрементируем период
     profile.period_index += 1
@@ -304,7 +266,7 @@ async def complete_period(
         safety_fund_contribution=snapshot.safety_fund_contribution,
         safety_fund_total=snapshot.safety_fund_total,
         net_savings=net_savings,
-        xp_earned=xp_earned,
+        xp_earned=0,
         required_actions_completed=True,
     )
 
@@ -349,26 +311,14 @@ async def withdraw_from_safety_fund(
             raise HTTPException(status_code=400, detail=str(e)) from e
         db.refresh(profile)
         snapshot.safety_fund_total = profile.safety_fund_balance
-        grants = int(getattr(snapshot, "safety_withdraw_xp_grants", 0) or 0)
-        xp_delta = safety_withdraw_xp_for_grant(grants)
-        xp_apply = {"xp_gained": 0, "level_up": False, "new_level": None}
-        if xp_delta > 0:
-            snapshot.safety_withdraw_xp_grants = grants + 1
-            xp_apply = apply_character_xp(profile, xp_delta, db)
         db.commit()
-        response = {
+        return {
             "status": "success",
             "withdrawn": amount,
             "new_cash_balance": profile.cash_balance,
             "new_safety_fund_balance": new_safety_fund,
-            "xp_gained": xp_apply.get("xp_gained", 0),
-            "level_up": xp_apply.get("level_up", False),
-            "new_level": xp_apply.get("new_level"),
             "message": f"Снято {amount:,.2f} ₽ с подушки безопасности",
         }
-        if xp_apply.get("level_up"):
-            response["message"] += f" Поздравляем! Вы достигли {profile.level} уровня!"
-        return response
 
     if idem_key:
         status, body = run_idempotent(

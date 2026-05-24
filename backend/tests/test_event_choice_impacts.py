@@ -14,7 +14,6 @@ def test_relocation_pct_raises_burn_about_28_percent(db_session):
         name="reloc",
         save_kind="game",
         is_active=1,
-        level=4,
         period_index=2,
         base_monthly_lifestyle_expense=10000.0,
     )

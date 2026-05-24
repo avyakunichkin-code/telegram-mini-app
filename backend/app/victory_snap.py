@@ -105,7 +105,6 @@ def build_victory_evaluation_input(db: Session, profile: GameProfile) -> Victory
         total_monthly_obligations=float(total_monthly_obligations),
         total_overdue_amount=float(total_overdue_amount),
         net_monthly_cashflow=float(net_cashflow),
-        character_level=max(1, int(getattr(profile, "level", 1) or 1)),
         monthly_salary=monthly_salary,
         monthly_burn_total=monthly_burn_total,
         avg_net_cashflow_6p=float(avg_cf_6),

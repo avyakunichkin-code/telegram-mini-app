@@ -14,30 +14,10 @@ from dataclasses import dataclass
 MIN_PERIOD_INDEX_FOR_WIN = 7
 MVP_SAFETY_FUND_OBLIGATIONS_MULTIPLIER = 3.0
 
-# --- XP / уровень персонажа (v2: balance-xp-evening-session.md) ---
-CHARACTER_MAX_LEVEL = 12
-XP_TOTAL_TO_MAX_LEVEL = 2500
-# need(L) для перехода L → L+1; сумма = 2500
-XP_NEED_BY_LEVEL: tuple[int, ...] = (
-    30,
-    45,
-    65,
-    95,
-    140,
-    200,
-    280,
-    380,
-    500,
-    650,
-    115,
-)
-# Устаревшие константы (линейная v1) — только для совместимости тестов/миграций
-XP_NEED_BASE = XP_NEED_BY_LEVEL[0]
-XP_NEED_PER_LEVEL_STEP = XP_NEED_BY_LEVEL[1] - XP_NEED_BY_LEVEL[0]
-
 # --- События ---
 EVENTS_PER_PERIOD = 2
 EVENT_TIER_WINDOW_BELOW_LEVEL = 2
+PERIODS_PER_EVENT_TIER = 10
 EVENT_LIFESTYLE_DELTA_ABS_CAP = 15000.0
 
 REPEAT_POLICY_REPEATABLE = "repeatable"
@@ -48,79 +28,28 @@ MANDATORY_GATE_NONE = "none"
 MANDATORY_GATE_BLOCKS_PERIOD_END = "blocks_period_end"
 
 
-def character_xp_need_for_next_level(level: int) -> int:
-    L = max(1, int(level))
-    if L >= CHARACTER_MAX_LEVEL:
-        return 0
-    idx = L - 1
-    if idx < len(XP_NEED_BY_LEVEL):
-        return int(XP_NEED_BY_LEVEL[idx])
-    return int(XP_NEED_BY_LEVEL[-1])
+def event_tier_progression_level(period_index: int) -> int:
+    """Доступный tier-банд: периоды 1–10 → 1, 11–20 → 2, …"""
+    p = max(1, int(period_index))
+    return (p - 1) // PERIODS_PER_EVENT_TIER + 1
 
 
-def character_xp_cumulative_to_reach_level(level: int) -> int:
-    """Накопительный XP для входа на уровень level (level 1 → 0)."""
-    target = max(1, min(int(level), CHARACTER_MAX_LEVEL))
-    if target <= 1:
-        return 0
-    return sum(int(x) for x in XP_NEED_BY_LEVEL[: target - 1])
-
-
-def apply_xp_to_character_state(level: int, xp: int, delta: int) -> tuple[int, int, dict]:
-    """
-    Начисляет XP (delta >= 0), каскад level-up. Без побочных эффектов.
-    Возвращает (new_level, new_xp, info_dict).
-    """
-    if delta < 0:
-        raise ValueError("apply_xp_to_character_state: delta must be >= 0")
-
-    cur_level = max(1, int(level))
-    cur_xp = max(0, int(xp))
-
-    if delta == 0:
-        need = character_xp_need_for_next_level(cur_level)
-        return cur_level, cur_xp, {
-            "xp_gained": 0,
-            "level_up": False,
-            "new_level": None,
-            "character_xp_need_for_next": need,
-        }
-
-    cur_xp += int(delta)
-    level_up = False
-    while cur_level < CHARACTER_MAX_LEVEL:
-        xp_for_next = character_xp_need_for_next_level(cur_level)
-        if xp_for_next <= 0 or cur_xp < xp_for_next:
-            break
-        cur_level += 1
-        cur_xp -= xp_for_next
-        level_up = True
-
-    return cur_level, cur_xp, {
-        "xp_gained": delta,
-        "level_up": level_up,
-        "new_level": cur_level if level_up else None,
-        "character_xp_need_for_next": character_xp_need_for_next_level(cur_level),
-        "at_max_level": cur_level >= CHARACTER_MAX_LEVEL,
-    }
-
-
-def event_tier_bounds(character_level: int) -> tuple[int, int]:
-    """Окно core-отбора: [max(1, L − window), L]."""
-    L = max(1, int(character_level))
+def event_tier_bounds(period_index: int) -> tuple[int, int]:
+    """Окно core-отбора: [max(1, L − window), L], L из period_index."""
+    L = event_tier_progression_level(period_index)
     lower = max(1, L - EVENT_TIER_WINDOW_BELOW_LEVEL)
     return lower, L
 
 
-def event_tier_in_core_window(event_tier: int, character_level: int) -> bool:
-    lo, hi = event_tier_bounds(character_level)
+def event_tier_in_core_window(event_tier: int, period_index: int) -> bool:
+    lo, hi = event_tier_bounds(period_index)
     t = max(1, int(event_tier or 1))
     return lo <= t <= hi
 
 
-def event_tier_in_fallback_primary(event_tier: int, character_level: int) -> bool:
+def event_tier_in_fallback_primary(event_tier: int, period_index: int) -> bool:
     """Fallback P1: tier ∈ [1, L]."""
-    L = max(1, int(character_level))
+    L = event_tier_progression_level(period_index)
     t = max(1, int(event_tier or 1))
     return 1 <= t <= L
 

@@ -9,16 +9,16 @@ import { InvestPositionRow } from './InvestPositionRow';
 import { InvestPositionMetrics } from './InvestPositionMetrics';
 import {
   AssetPositionMetrics,
-  ExpensesBudgetBlock,
   InsuranceSection,
   LiabilityPositionMetrics,
   MqxCapitalEmpty,
   MqxModeButton,
   MqxSectionSeg,
   MqxSubtab,
-  PlanExpenseEditor,
   useMqxConfirm,
 } from './mqx';
+import { CapitalPeriodFlowsBlock } from './mqx/layout/CapitalPeriodFlowsBlock';
+import { MqxCapitalSectionAccordion } from './mqx/layout/MqxCapitalSectionAccordion';
 import {
   BOND_ANNUAL_RATE_PERCENT,
   clampInvestAmount,
@@ -34,7 +34,6 @@ export const FINANCE_TABS_LEGACY = [
 /** Вкладки страницы «Управление капиталом» (premium, T2 wrap 3+2). */
 export const FINANCE_TABS_CAPITAL = [
   { id: 'invest', label: 'Инвестиции' },
-  { id: 'budget', label: 'Бюджет' },
   { id: 'insurance', label: 'Страховки' },
   { id: 'property', label: 'Имущество' },
   { id: 'liabilities', label: 'Обязательства' },
@@ -58,6 +57,8 @@ export function FinanceSection({
   onFinanceTabChange,
   hideSectionsCard = false,
   capitalInline = false,
+  capitalAccordion = false,
+  openFlowsSection = null,
 }) {
   const [financeTabInternal, setFinanceTabInternal] = useState('invest');
   const financeTab = financeTabProp ?? financeTabInternal;
@@ -525,7 +526,6 @@ export function FinanceSection({
   const activeTabLabel = tabsCatalog.find((t) => t.id === financeTab)?.label || 'Финансы';
   const ownedAssets = overview.assets || [];
   const ownedLiabilities = overview.liabilities || [];
-  const isPlan = overview.save_kind === 'plan';
   const investSegMode = investUiMode === 'form' ? 'add' : 'mine';
   const propertySegMode = portfolioAssetsMode === 'positions' ? 'mine' : portfolioAssetsMode;
   const liabilitiesSegMode = portfolioDebtsMode === 'positions' ? 'mine' : portfolioDebtsMode;
@@ -594,6 +594,62 @@ export function FinanceSection({
     </>
   );
 
+  if (capitalLayout && capitalAccordion) {
+    const investMeta = `${investPositions.length} поз.`;
+    const insuranceMeta = `${policies.length} полис.`;
+    const propertyMeta = `${ownedAssets.length} поз.`;
+    const liabilitiesMeta = `${ownedLiabilities.length} долг.`;
+
+    return (
+      <div className="mqx-fin mqx-fin--capital">
+        {dialog}
+        <div className="mqx-capital-accordion-stack">
+          <CapitalPeriodFlowsBlock
+            overview={overview}
+            investPositions={investPositions}
+            policies={policies}
+            openFlowsSection={openFlowsSection}
+          />
+          <MqxCapitalSectionAccordion title="Инвестиции" meta={investMeta}>
+            {investCapitalBlock}
+          </MqxCapitalSectionAccordion>
+          <MqxCapitalSectionAccordion title="Страховки" meta={insuranceMeta}>
+            <InsuranceSection
+              policies={policies}
+              buyingPlanKey={buyingPlanKey}
+              cancellingPolicyId={cancellingPolicyId}
+              onBuy={buyInsurancePlan}
+              onCancel={cancelInsurancePolicy}
+              intro="Премия списывается в конце периода. При страховом случае — полная сумма выплаты, полис закрывается."
+              useSectionSeg
+            />
+          </MqxCapitalSectionAccordion>
+          <MqxCapitalSectionAccordion title="Имущество" meta={propertyMeta}>
+            <CapitalPropertyPanel
+              assetTemplates={assetTemplates}
+              ownedAssets={ownedAssets}
+              sectionMode={propertySegMode}
+              setSectionMode={(m) => setPortfolioAssetsMode(m === 'mine' ? 'positions' : m)}
+              refreshOverview={refreshOverview}
+              reloadExtra={reloadExtra}
+              handleDeleteAsset={handleDeleteAsset}
+            />
+          </MqxCapitalSectionAccordion>
+          <MqxCapitalSectionAccordion title="Обязательства" meta={liabilitiesMeta}>
+            <CapitalLiabilitiesPanel
+              liabilityTemplates={liabilityTemplates}
+              ownedLiabilities={ownedLiabilities}
+              sectionMode={liabilitiesSegMode}
+              setSectionMode={(m) => setPortfolioDebtsMode(m === 'mine' ? 'positions' : m)}
+              addLiabilityFromTemplate={addLiabilityFromTemplate}
+              handleDeleteLiability={handleDeleteLiability}
+            />
+          </MqxCapitalSectionAccordion>
+        </div>
+      </div>
+    );
+  }
+
   if (capitalLayout && capitalInline) {
     return (
       <div className="mqx-fin mqx-fin--capital">
@@ -605,13 +661,6 @@ export function FinanceSection({
           aria-labelledby={`finance-tab-${financeTab}`}
         >
           {financeTab === 'invest' ? investCapitalBlock : null}
-          {financeTab === 'budget' ? (
-            isPlan ? (
-              <PlanExpenseEditor embedded refreshOverview={refreshOverview} />
-            ) : (
-              <ExpensesBudgetBlock embedded overview={overview} />
-            )
-          ) : null}
           {financeTab === 'insurance' ? (
             <InsuranceSection
               policies={policies}

@@ -7,16 +7,13 @@ from sqlalchemy.orm import Session
 
 from .achievement_engine import process_achievement_unlocks
 from .achievement_seeds import ensure_achievement_catalog
-from .character_progression import character_xp_need_for_next_level
 from .expenses import burn_breakdown_for_api, compute_monthly_burn
 from .finance_analytics import avg_net_cashflow_last_closed_intervals as _avg_net_cashflow_last_closed_intervals
 from .game_time import get_seconds_until_next
-from .level_gates import character_unlocks_payload
 from .models import FinanceAsset, FinanceLiability, FinanceSalary, GameProfile, GameStarterTemplate
 from .schemas import (
     AchievementUnlockEvent,
     AssetResponse,
-    CharacterUnlockOverview,
     FinanceOverview,
     LiabilityResponse,
     MonthlyBurnBreakdown,
@@ -29,32 +26,6 @@ from .victory_seeds import DEFAULT_TEMPLATE_KEY
 from .victory_snap import build_victory_evaluation_input
 
 logger = logging.getLogger(__name__)
-
-
-def _compute_gamification(net_cashflow: float, liabilities_ratio: float, assets_count: int) -> tuple[int, str, int]:
-    score = 0
-    if net_cashflow > 0:
-        score += min(50, int(net_cashflow // 1000) * 5)
-    if liabilities_ratio <= 20:
-        score += 30
-    elif liabilities_ratio <= 35:
-        score += 20
-    elif liabilities_ratio <= 50:
-        score += 10
-    score += min(20, assets_count * 5)
-    score = max(0, min(100, score))
-
-    if score >= 80:
-        level = "Финансовый стратег"
-    elif score >= 55:
-        level = "Уверенный планировщик"
-    elif score >= 30:
-        level = "Начинающий инвестор"
-    else:
-        level = "Финансовый новичок"
-
-    xp_to_next = 0 if score >= 100 else 100 - score
-    return score, level, xp_to_next
 
 
 def build_finance_overview(db: Session, profile: GameProfile) -> FinanceOverview:
@@ -140,8 +111,6 @@ def build_finance_overview(db: Session, profile: GameProfile) -> FinanceOverview
         1 for l in liabilities_orm if float(getattr(l, "overdue_amount", 0) or 0) > 0
     )
 
-    score, level, xp_to_next = _compute_gamification(net_cashflow, liabilities_ratio, len(assets))
-
     avg_cf_6, avg_cf_n = _avg_net_cashflow_last_closed_intervals(db, profile.id, max_intervals=6)
 
     template_key = getattr(profile, "starter_template_key", None) or DEFAULT_TEMPLATE_KEY
@@ -201,12 +170,6 @@ def build_finance_overview(db: Session, profile: GameProfile) -> FinanceOverview
         expense_to_income_ratio=expense_to_income_ratio,
         net_monthly_cashflow=round(net_cashflow, 2),
         liabilities_to_income_ratio=round(liabilities_ratio, 2),
-        gamification_level=level,
-        score=score,
-        xp_to_next_level=xp_to_next,
-        character_level=max(1, int(getattr(profile, "level", 1) or 1)),
-        character_xp=max(0, int(getattr(profile, "xp", 0) or 0)),
-        character_xp_need_for_next=character_xp_need_for_next_level(profile.level),
         time_state=profile.time_state,
         period_index=profile.period_index,
         period_duration_seconds=profile.period_duration_seconds,
@@ -224,9 +187,6 @@ def build_finance_overview(db: Session, profile: GameProfile) -> FinanceOverview
         avg_net_cashflow_6p=avg_cf_6,
         avg_net_cashflow_6p_n=avg_cf_n,
         victory=victory_overview,
-        character_unlocks=[
-            CharacterUnlockOverview(**item) for item in character_unlocks_payload(profile)
-        ],
         newly_unlocked=[
             AchievementUnlockEvent(**item)
             for item in newly_unlocked_raw

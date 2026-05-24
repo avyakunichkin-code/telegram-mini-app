@@ -129,7 +129,7 @@ export function OnboardingCoachDemo() {
             onInvest={() => {}}
           />
           <MqxDivider />
-          <MqxLevelDash level={1} xp={0} xpNeed={100} xpFrac={0} score={0} victory={{ goals_met: 0, goals_required: 3, goals: [] }} />
+          <MqxLevelDash periodIndex={1} victory={{ goals_met: 0, goals_required: 3, goals: [] }} />
         </MqxDashStack>
       </div>
 
