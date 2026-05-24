@@ -77,7 +77,8 @@ def validate_mvp11_db_catalog(db: Session, *, mq11_keys: set[str]) -> None:
     for key in mq11_keys:
         row = db.query(EventDefinition).filter(EventDefinition.key == key).first()
         assert row is not None, key
-        assert int(row.is_active or 0) == 1, key
+        expected_active = int(spec_by_key[key].get("is_active", 1))
+        assert int(row.is_active or 0) == expected_active, key
         assert int(row.event_tier) == int(spec_by_key[key]["event_tier"]), key
         assert str(row.repeat_policy) == str(spec_by_key[key].get("repeat_policy", "repeatable")), key
         choices = db.query(EventChoice).filter(EventChoice.definition_id == row.id).all()

@@ -23,7 +23,7 @@ def profile_with_budget(db_session):
         name="Burn test",
         save_kind="game",
         starter_template_key="mq_game_basic_v1",
-        base_monthly_lifestyle_expense=9600.0,
+        base_monthly_lifestyle_expense=37500.0,
         delta_monthly_lifestyle_expense=0,
         is_active=1,
         period_index=1,
@@ -34,7 +34,7 @@ def profile_with_budget(db_session):
     db_session.commit()
     db_session.refresh(profile)
 
-    budget = expense_budget_for_template("mq_game_basic_v1", 9600.0, {})
+    budget = expense_budget_for_template("mq_game_basic_v1", 37500.0, {})
     seed_expense_lines_from_budget(
         db_session,
         profile,
@@ -48,16 +48,16 @@ def profile_with_budget(db_session):
 
 
 def test_expense_budget_sums_to_base():
-    budget = expense_budget_for_template("mq_game_basic_v1", 9600.0, {})
-    assert sum(budget.values()) == pytest.approx(9600.0, abs=0.02)
-    assert budget["housing"] > 0
+    budget = expense_budget_for_template("mq_game_basic_v1", 37500.0, {})
+    assert sum(budget.values()) == pytest.approx(37500.0, abs=0.02)
+    assert budget["housing"] == 0
     assert budget["food"] > 0
 
 
 def test_compute_monthly_burn_from_lines(db_session, profile_with_budget):
     snap = compute_monthly_burn(db_session, profile_with_budget)
-    assert snap.total == pytest.approx(9600.0, abs=0.02)
-    assert snap.lines_sum == pytest.approx(9600.0, abs=0.02)
+    assert snap.total == pytest.approx(37500.0, abs=0.02)
+    assert snap.lines_sum == pytest.approx(37500.0, abs=0.02)
     assert len(snap.lines) >= 5
     assert len(snap.by_category) >= 5
 
@@ -66,7 +66,7 @@ def test_legacy_delta_added_to_lines(db_session, profile_with_budget):
     profile_with_budget.delta_monthly_lifestyle_expense = 400.0
     db_session.commit()
     snap = compute_monthly_burn(db_session, profile_with_budget)
-    assert snap.total == pytest.approx(10000.0, abs=0.02)
+    assert snap.total == pytest.approx(37900.0, abs=0.02)
     assert snap.legacy_delta == 400.0
 
 
@@ -77,8 +77,8 @@ def test_backfill_from_base_when_no_lines(db_session):
             template_key="mq_game_basic_v1",
             title="Базовый",
             difficulty_rank=1,
-            base_monthly_lifestyle_expense=9600.0,
-            blueprint_json=json.dumps({"expense_budget": expense_budget_for_template("mq_game_basic_v1", 9600.0, {})}),
+            base_monthly_lifestyle_expense=37500.0,
+            blueprint_json=json.dumps({"expense_budget": expense_budget_for_template("mq_game_basic_v1", 37500.0, {})}),
             victory_config_json="{}",
             is_active=1,
             sort_order=10,
@@ -89,7 +89,7 @@ def test_backfill_from_base_when_no_lines(db_session):
         name="Backfill",
         save_kind="game",
         starter_template_key="mq_game_basic_v1",
-        base_monthly_lifestyle_expense=9600.0,
+        base_monthly_lifestyle_expense=37500.0,
         is_active=1,
         period_index=1,
         cash_balance=5000,
@@ -98,7 +98,7 @@ def test_backfill_from_base_when_no_lines(db_session):
     db_session.commit()
 
     snap = compute_monthly_burn(db_session, profile)
-    assert snap.total == pytest.approx(9600.0, abs=0.02)
+    assert snap.total == pytest.approx(37500.0, abs=0.02)
     assert len(snap.lines) >= 5
 
 

@@ -3,7 +3,7 @@ import { MqxMonetkaDialogScreen } from '../mqx/layout/MqxMonetkaDialogScreen';
 import { MqxSaveKindPicker } from '../mqx/layout/MqxSaveKindPicker';
 
 /**
- * Шаг 1: новая игра — выбор режима (Игра / План). Имя партии — на шаге шаблонов.
+ * Шаг 1: новая игра — выбор режима (Игра / План). Название сохранения — на шаге шаблонов.
  */
 export function NewProfileKindScreen({ onChooseGame, onBack }) {
   return (
@@ -12,8 +12,8 @@ export function NewProfileKindScreen({ onChooseGame, onBack }) {
       title="Новая игра!"
       subtitle={
         <p>
-          Я слышала, что в режиме <strong>Игра</strong> можно выбирать различные жизненные ситуации, а в режиме{' '}
-          <strong>План</strong> будет что-то очень интересное
+          В режиме <strong>Игра</strong> — симулятор: выбираешь жизненную ситуацию и проходишь месяцы с деньгами. В{' '}
+          <strong>Плане</strong> — свой сценарий из реальных цифр (скоро).
         </p>
       }
       titleId="mqx-new-game-kind-title"

@@ -1,50 +1,50 @@
-import { useState } from 'react';
-import { Button, Input } from '@telegram-apps/telegram-ui';
+import { useCallback, useState } from 'react';
+import { Button } from '@telegram-apps/telegram-ui';
 import { formatApiErrorDetail } from '../api';
 import { useAuth } from '../context/AuthContext';
 import { deriveUsernameFromEmail } from '../utils/deriveUsernameFromEmail';
+import {
+  hasFieldErrors,
+  validateRegisterFields,
+} from '../utils/authFormValidation';
+import { AuthFormField } from './mqx/auth/AuthFormField';
 import { AuthMonetkaScreen } from './mqx/auth/AuthMonetkaScreen';
-
-function validateRegisterForm({ password, passwordConfirm, email }) {
-  const trimmedEmail = email.trim();
-
-  if (password.length < 6) {
-    return 'Пароль — не короче 6 символов';
-  }
-  if (password !== passwordConfirm) {
-    return 'Пароли не совпадают';
-  }
-  if (!trimmedEmail) {
-    return 'Укажите email';
-  }
-  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmedEmail)) {
-    return 'Введите корректный email';
-  }
-  return null;
-}
 
 export function RegisterForm({ onSwitchToLogin }) {
   const [password, setPassword] = useState('');
   const [passwordConfirm, setPasswordConfirm] = useState('');
   const [email, setEmail] = useState('');
-  const [error, setError] = useState('');
+  const [fieldErrors, setFieldErrors] = useState({});
+  const [submitError, setSubmitError] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { register } = useAuth();
+
+  const runValidation = useCallback(() => {
+    const errors = validateRegisterFields({
+      email,
+      password,
+      passwordConfirm,
+    });
+    setFieldErrors(errors);
+    return errors;
+  }, [email, password, passwordConfirm]);
+
+  const clearFieldError = (key) => {
+    setFieldErrors((prev) => {
+      if (!prev[key]) return prev;
+      const next = { ...prev };
+      delete next[key];
+      return next;
+    });
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (isSubmitting) return;
-    setError('');
+    setSubmitError('');
 
-    const validationError = validateRegisterForm({
-      password,
-      passwordConfirm,
-      email,
-    });
-    if (validationError) {
-      setError(validationError);
-      return;
-    }
+    const errors = runValidation();
+    if (hasFieldErrors(errors)) return;
 
     setIsSubmitting(true);
     try {
@@ -56,7 +56,7 @@ export function RegisterForm({ onSwitchToLogin }) {
       });
       window.location.href = `${import.meta.env.BASE_URL}#/`;
     } catch (err) {
-      setError(
+      setSubmitError(
         formatApiErrorDetail(
           err?.detail ?? err?.message,
           'Ошибка регистрации. Возможно, email уже занят.',
@@ -76,49 +76,62 @@ export function RegisterForm({ onSwitchToLogin }) {
     >
       <form onSubmit={handleSubmit} className="mqx-auth-monetka__form" noValidate>
         <div className="mqx-form">
-          <Input
+          <AuthFormField
             id="register-email"
             name="email"
-            header="Email"
+            label="Email"
             type="email"
             value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            onChange={(e) => {
+              setEmail(e.target.value);
+              clearFieldError('email');
+            }}
+            onBlur={runValidation}
+            error={fieldErrors.email}
+            placeholder="name@example.com"
             autoComplete="email"
             inputMode="email"
             required
           />
-          <Input
+          <AuthFormField
             id="register-password"
             name="password"
-            header="Пароль"
+            label="Пароль"
             type="password"
             value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            onChange={(e) => {
+              setPassword(e.target.value);
+              clearFieldError('password');
+            }}
+            onBlur={runValidation}
+            error={fieldErrors.password}
+            hint="Не короче 6 символов"
             placeholder="••••••"
             autoComplete="new-password"
             required
             minLength={6}
-            aria-describedby="register-password-hint"
           />
-          <p id="register-password-hint" className="mqx-field-inline-hint">
-            Не короче 6 символов
-          </p>
-          <Input
+          <AuthFormField
             id="register-password-confirm"
             name="password_confirm"
-            header="Повторите пароль"
+            label="Повторите пароль"
             type="password"
             value={passwordConfirm}
-            onChange={(e) => setPasswordConfirm(e.target.value)}
+            onChange={(e) => {
+              setPasswordConfirm(e.target.value);
+              clearFieldError('passwordConfirm');
+            }}
+            onBlur={runValidation}
+            error={fieldErrors.passwordConfirm}
             placeholder="••••••"
             autoComplete="new-password"
             required
           />
         </div>
 
-        {error ? (
+        {submitError ? (
           <div className="mq-form-alert" role="alert" style={{ marginTop: 12 }}>
-            {error}
+            {submitError}
           </div>
         ) : null}
 

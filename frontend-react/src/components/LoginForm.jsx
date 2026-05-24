@@ -1,25 +1,50 @@
-import { useState } from 'react';
-import { Button, Input } from '@telegram-apps/telegram-ui';
+import { useCallback, useState } from 'react';
+import { Button } from '@telegram-apps/telegram-ui';
 import { useAuth } from '../context/AuthContext';
+import { AuthFormField } from './mqx/auth/AuthFormField';
 import { AuthMonetkaScreen } from './mqx/auth/AuthMonetkaScreen';
+import {
+  hasFieldErrors,
+  validateLoginFields,
+} from '../utils/authFormValidation';
 
 export function LoginForm({ onSwitchToRegister }) {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
+  const [fieldErrors, setFieldErrors] = useState({});
+  const [submitError, setSubmitError] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { login } = useAuth();
+
+  const runValidation = useCallback(() => {
+    const errors = validateLoginFields({ username, password });
+    setFieldErrors(errors);
+    return errors;
+  }, [username, password]);
+
+  const clearFieldError = (key) => {
+    setFieldErrors((prev) => {
+      if (!prev[key]) return prev;
+      const next = { ...prev };
+      delete next[key];
+      return next;
+    });
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (isSubmitting) return;
-    setError('');
+    setSubmitError('');
+
+    const errors = runValidation();
+    if (hasFieldErrors(errors)) return;
+
     setIsSubmitting(true);
     try {
-      await login(username.trim(), password);
+      await login(username.trim().toLowerCase(), password);
       window.location.href = `${import.meta.env.BASE_URL}#/`;
     } catch {
-      setError('Неверный логин или пароль');
+      setSubmitError('Неверный email или пароль');
     } finally {
       setIsSubmitting(false);
     }
@@ -29,37 +54,49 @@ export function LoginForm({ onSwitchToRegister }) {
     <AuthMonetkaScreen
       showBrand
       title="Привет, я Монетка!"
-      subtitle="Помогу разобраться с финансами. Введи логин и пароль"
+      subtitle="Помогу разобраться с финансами. Введи email и пароль"
       titleId="mqx-login-monetka-title"
     >
       <form onSubmit={handleSubmit} className="mqx-auth-monetka__form" noValidate>
         <div className="mqx-form">
-          <Input
-            id="login-username"
-            name="username"
-            header="Логин"
+          <AuthFormField
+            id="login-email"
+            name="email"
+            label="Email"
+            type="email"
             value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            placeholder="логин или email"
-            autoComplete="username"
+            onChange={(e) => {
+              setUsername(e.target.value);
+              clearFieldError('username');
+            }}
+            onBlur={runValidation}
+            error={fieldErrors.username}
+            placeholder="name@mail.ru"
+            autoComplete="email"
+            inputMode="email"
             required
           />
-          <Input
+          <AuthFormField
             id="login-password"
             name="password"
-            header="Пароль"
+            label="Пароль"
             type="password"
             value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            onChange={(e) => {
+              setPassword(e.target.value);
+              clearFieldError('password');
+            }}
+            onBlur={runValidation}
+            error={fieldErrors.password}
             placeholder="••••••"
             autoComplete="current-password"
             required
           />
         </div>
 
-        {error ? (
+        {submitError ? (
           <div className="mq-form-alert" role="alert" style={{ marginTop: 12 }}>
-            {error}
+            {submitError}
           </div>
         ) : null}
 

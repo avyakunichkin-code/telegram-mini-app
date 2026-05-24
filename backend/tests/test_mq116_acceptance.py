@@ -22,6 +22,7 @@ from app.routers.events import (
 
 
 MQ11_KEYS = {s["key"] for s in MVP11_EVENT_SPECS}
+ACTIVE_MQ11_KEYS = {s["key"] for s in MVP11_EVENT_SPECS if int(s.get("is_active", 1)) == 1}
 
 
 class TestMvp11CatalogContract:
@@ -110,7 +111,6 @@ class TestEnsurePeriodEventsAcceptance:
 
         once = self._add_def(db_session, "once_expired_evt", tier=1, repeat_policy="once_per_profile")
         self._add_def(db_session, "fill_evt_a", tier=1)
-        self._add_def(db_session, "fill_evt_b", tier=1)
 
         db_session.add(
             EventInstance(
@@ -216,8 +216,8 @@ class TestMq116ApiIntegration:
             )
             .all()
         )
-        mq11_in_db = [d for d in defs if d.key in MQ11_KEYS]
-        assert len(mq11_in_db) == len(MVP11_EVENT_SPECS)
+        mq11_in_db = [d for d in defs if d.key in ACTIVE_MQ11_KEYS]
+        assert len(mq11_in_db) == len(ACTIVE_MQ11_KEYS)
 
     def test_choose_event_updates_character_xp_in_overview(self, client, auth_headers, db_session):
         client.post(

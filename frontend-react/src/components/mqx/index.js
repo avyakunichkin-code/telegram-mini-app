@@ -71,6 +71,7 @@ export { OnboardingCoachOverlay } from './onboarding/OnboardingCoachOverlay';
 export { OnboardingCoachDemo } from './onboarding/OnboardingCoachDemo';
 export { MonetkaAvatar } from './onboarding/MonetkaAvatar';
 export { AuthMonetkaScreen } from './auth/AuthMonetkaScreen';
+export { AuthFormField } from './auth/AuthFormField';
 export { MonetkaBubbleScreen } from './layout/MonetkaBubbleScreen';
 export { MqxMonetkaDialogScreen } from './layout/MqxMonetkaDialogScreen';
 export { ONBOARDING_STEPS, ONBOARDING_PRACTICE_MS } from './onboarding/onboardingSteps';

@@ -133,109 +133,58 @@ export function DashboardPremium({
     const lifestyleExpense = getMonthlyBurn(overview);
 
     return [
-
       {
-
-        title: 'Баланс',
-
-        valueNode: <MoneyText value={cash} />,
-
-        accent: 'mqx-accent--violet',
-
-        icon: (
-
-          <svg viewBox="0 0 24 24" aria-hidden="true">
-
-            <path d="M7 10V7a5 5 0 0 1 10 0v3" />
-
-            <path d="M6 10h12v10a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V10Z" />
-
-            <path d="M10 14h4" />
-
-          </svg>
-
-        ),
-
-      },
-
-      {
-
-        title: 'Подушка',
-
-        valueNode: <MoneyText value={safety} />,
-
-        accent: 'mqx-accent--emerald',
-
-        icon: (
-
-          <svg viewBox="0 0 24 24" aria-hidden="true">
-
-            <path d="M12 3 20 7v6c0 5-3.4 8.2-8 9-4.6-.8-8-4-8-9V7l8-4Z" />
-
-            <path d="M9.5 12.2 11 13.7 14.6 10.1" />
-
-          </svg>
-
-        ),
-
-      },
-
-      {
-
-        title: 'Поток',
-
+        title: 'Доходы',
+        titleHint: 'Чистый денежный поток за период (доходы минус обязательные платежи)',
         valueNode: <MoneyText value={formatSignedMoney(flow)} />,
-
         accent: 'mqx-accent--sky',
-
         valueTone: flow >= 0 ? 'pos' : 'out',
-
         icon: (
-
           <svg viewBox="0 0 24 24" aria-hidden="true">
-
             <path d="M4 19V5" />
-
             <path d="M4 19h16" />
-
             <path d="M7 15l4-4 3 3 5-6" />
-
           </svg>
-
         ),
-
       },
-
       {
-
-        title: 'На жизнь',
-
+        title: 'Расходы',
         titleHint: 'Расходы на жизнь за период (без платежей по долгам)',
-
         valueNode: <MoneyText value={lifestyleExpense} />,
-
         accent: 'mqx-accent--amber',
-
         valueTone: 'out',
-
         expenseIcon: true,
-
         icon: (
-
           <svg viewBox="0 0 24 24" aria-hidden="true">
-
             <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z" />
-
             <path d="M3 6h18" />
-
             <path d="M16 10a4 4 0 0 1-8 0" />
-
           </svg>
-
         ),
-
       },
-
+      {
+        title: 'Баланс',
+        valueNode: <MoneyText value={cash} />,
+        accent: 'mqx-accent--violet',
+        icon: (
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M7 10V7a5 5 0 0 1 10 0v3" />
+            <path d="M6 10h12v10a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V10Z" />
+            <path d="M10 14h4" />
+          </svg>
+        ),
+      },
+      {
+        title: 'Подушка',
+        valueNode: <MoneyText value={safety} />,
+        accent: 'mqx-accent--emerald',
+        icon: (
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M12 3 20 7v6c0 5-3.4 8.2-8 9-4.6-.8-8-4-8-9V7l8-4Z" />
+            <path d="M9.5 12.2 11 13.7 14.6 10.1" />
+          </svg>
+        ),
+      },
     ];
 
   }, [overview]);

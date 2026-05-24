@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="ru" data-theme="light">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>ТВОЙ ХОД — капитал: Доходы / Расходы</title>
+    <link rel="stylesheet" href="./lab-base.css" />
+  </head>
+  <body>
+    <header class="lab-header">
+      <h1>Управление капиталом — Доходы и Расходы</h1>
+      <p>
+        Первая строка страницы (над 5 разделами): два блока <strong>Доходы</strong> (sky) и
+        <strong>Расходы</strong> (amber). Внутри: <strong>итого</strong>, затем статьи и разбивка по типам
+        позиций. Данные — мок; агрегация в prod: <code>buildCapitalPeriodFlows.js</code>.
+      </p>
+      <div class="lab-theme-row">
+        <button type="button" class="is-active" data-theme-btn="light">Светлая</button>
+        <button type="button" data-theme-btn="dark">Тёмная</button>
+      </div>
+    </header>
+
+    <main class="lab-wrap lab-variants">
+      <!-- F1 -->
+      <section class="lab-variant">
+        <div class="lab-variant__head">
+          <h2><span class="lab-section__id">F1</span> Стек карточек — итого крупно, разбивка ниже</h2>
+          <p>Две полноширинные панели друг под другом. Лучше на узком TMA: не сжимает цифры.</p>
+        </div>
+        <article class="phone">
+          <div class="phone__hero">
+            <div class="phone__hero-kicker">Финансы</div>
+            <h2 class="phone__hero-title">Управление капиталом</h2>
+          </div>
+          <div class="phone__main">
+            <div class="cap-card" style="padding-top: 12px">
+              <div class="cap-flows cap-flows--f1">
+                <div class="cap-flows__row">
+                  <section class="flow-panel flow-panel--in" aria-label="Доходы за период">
+                    <header class="flow-panel__head">
+                      <span class="flow-panel__title">Доходы</span>
+                      <span class="flow-panel__chip">за период</span>
+                    </header>
+                    <div class="flow-total-row">
+                      <span class="flow-total-row__label">Итого</span>
+                      <span class="flow-total-row__value">88 400 ₽</span>
+                    </div>
+                    <div class="flow-panel__body">
+                      <div class="flow-article">
+                        <div class="flow-article__head"><span>Зарплата</span><span>45 000 ₽</span></div>
+                      </div>
+                      <div class="flow-article">
+                        <div class="flow-article__head"><span>Инвестиции</span><span>8 400 ₽</span></div>
+                        <ul class="flow-type-list">
+                          <li><span>Депозиты</span><span>2 400 ₽</span></li>
+                          <li><span>Облигации</span><span>6 000 ₽</span></li>
+                        </ul>
+                      </div>
+                      <div class="flow-article">
+                        <div class="flow-article__head"><span>Доходное имущество</span><span>35 000 ₽</span></div>
+                        <ul class="flow-type-list">
+                          <li><span>Аренда</span><span>35 000 ₽</span></li>
+                        </ul>
+                      </div>
+                    </div>
+                  </section>
+                  <section class="flow-panel flow-panel--out" aria-label="Расходы за период">
+                    <header class="flow-panel__head">
+                      <span class="flow-panel__title">Расходы</span>
+                      <span class="flow-panel__chip">за период</span>
+                    </header>
+                    <div class="flow-total-row">
+                      <span class="flow-total-row__label">Итого</span>
+                      <span class="flow-total-row__value">99 900 ₽</span>
+                    </div>
+                    <div class="flow-panel__body">
+                      <div class="flow-article">
+                        <div class="flow-article__head"><span>На жизнь</span><span>32 500 ₽</span></div>
+                        <ul class="flow-line-list">
+                          <li><span>Продукты</span><span>18 000 ₽</span></li>
+                          <li><span>Транспорт</span><span>6 500 ₽</span></li>
+                          <li><span>Досуг</span><span>8 000 ₽</span></li>
+                        </ul>
+                      </div>
+                      <div class="flow-article">
+                        <div class="flow-article__head"><span>Содержание имущества</span><span>13 000 ₽</span></div>
+                        <ul class="flow-type-list">
+                          <li><span>Жильё</span><span>6 000 ₽</span></li>
+                          <li><span>Авто</span><span>4 000 ₽</span></li>
+                          <li><span>Аренда (обсл.)</span><span>3 000 ₽</span></li>
+                        </ul>
+                      </div>
+                      <div class="flow-article">
+                        <div class="flow-article__head"><span>Платежи по обязательствам</span><span>51 000 ₽</span></div>
+                        <ul class="flow-line-list">
+                          <li><span>Ипотека</span><span>42 000 ₽</span></li>
+                          <li><span>Кредитная карта</span><span>9 000 ₽</span></li>
+                        </ul>
+                      </div>
+                      <div class="flow-article">
+                        <div class="flow-article__head"><span>Страховки</span><span>2 400 ₽</span></div>
+                        <ul class="flow-line-list">
+                          <li><span>ОСАГО — Стандарт</span><span>2 400 ₽</span></li>
+                        </ul>
+                      </div>
+                    </div>
+                  </section>
+                </div>
+              </div>
+              <div class="cap-flows-after">
+                <p class="cap-flows-after__label">Ниже — 5 разделов (как сейчас)</p>
+                <div class="cap-tabs cap-tabs--wrap cap-tabs-mini">
+                  <button type="button" class="cap-tab is-active">Инвестиции</button>
+                  <button type="button" class="cap-tab">Бюджет</button>
+                  <button type="button" class="cap-tab">Страховки</button>
+                  <button type="button" class="cap-tab">Имущество</button>
+                  <button type="button" class="cap-tab">Обязательства</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </article>
+      </section>
+
+      <!-- F2 -->
+      <section class="lab-variant">
+        <div class="lab-variant__head">
+          <h2><span class="lab-section__id">F2</span> Две колонки — как чипы на дашборде</h2>
+          <p>Первая строка 2×1: Доходы | Расходы. На &lt;360px схлопывается в столбик.</p>
+        </div>
+        <article class="phone">
+          <div class="phone__hero">
+            <div class="phone__hero-kicker">Финансы</div>
+            <h2 class="phone__hero-title">Управление капиталом</h2>
+          </div>
+          <div class="phone__main">
+            <div class="cap-card" style="padding-top: 12px">
+              <div class="cap-flows cap-flows--f2">
+                <div class="cap-flows__row">
+                  <section class="flow-panel flow-panel--in" aria-label="Доходы">
+                    <header class="flow-panel__head">
+                      <span class="flow-panel__title">Доходы</span>
+                    </header>
+                    <div class="flow-total-row">
+                      <span class="flow-total-row__label">Итого</span>
+                      <span class="flow-total-row__value flow-panel__total--hero">88 400 ₽</span>
+                    </div>
+                    <div class="flow-panel__body">
+                      <div class="flow-article">
+                        <div class="flow-article__head"><span>Зарплата</span><span>45 000 ₽</span></div>
+                      </div>
+                      <div class="flow-article">
+                        <div class="flow-article__head"><span>Инвестиции</span><span>8 400 ₽</span></div>
+                        <ul class="flow-type-list">
+                          <li><span>Депозиты</span><span>2 400 ₽</span></li>
+                          <li><span>Облигации</span><span>6 000 ₽</span></li>
+                        </ul>
+                      </div>
+                      <div class="flow-article">
+                        <div class="flow-article__head"><span>Доход. имущество</span><span>35 000 ₽</span></div>
+                        <ul class="flow-type-list">
+                          <li><span>Аренда</span><span>35 000 ₽</span></li>
+                        </ul>
+                      </div>
+                    </div>
+                  </section>
+                  <section class="flow-panel flow-panel--out" aria-label="Расходы">
+                    <header class="flow-panel__head">
+                      <span class="flow-panel__title">Расходы</span>
+                    </header>
+                    <div class="flow-total-row">
+                      <span class="flow-total-row__label">Итого</span>
+                      <span class="flow-total-row__value flow-panel__total--hero">99 900 ₽</span>
+                    </div>
+                    <div class="flow-panel__body">
+                      <div class="flow-article">
+                        <div class="flow-article__head"><span>На жизнь</span><span>32 500 ₽</span></div>
+                        <ul class="flow-line-list">
+                          <li><span>Продукты</span><span>18 000 ₽</span></li>
+                          <li><span>Транспорт</span><span>6 500 ₽</span></li>
+                        </ul>
+                      </div>
+                      <div class="flow-article">
+                        <div class="flow-article__head"><span>Содержание</span><span>13 000 ₽</span></div>
+                        <ul class="flow-type-list">
+                          <li><span>Жильё</span><span>6 000 ₽</span></li>
+                          <li><span>Авто</span><span>4 000 ₽</span></li>
+                        </ul>
+                      </div>
+                      <div class="flow-article">
+                        <div class="flow-article__head"><span>Обязательства</span><span>51 000 ₽</span></div>
+                        <ul class="flow-line-list">
+                          <li><span>Ипотека</span><span>42 000 ₽</span></li>
+                          <li><span>Кредитная карта</span><span>9 000 ₽</span></li>
+                        </ul>
+                      </div>
+                      <div class="flow-article">
+                        <div class="flow-article__head"><span>Страховки</span><span>2 400 ₽</span></div>
+                      </div>
+                    </div>
+                  </section>
+                </div>
+              </div>
+              <div class="cap-flows-after">
+                <p class="cap-flows-after__label">5 разделов</p>
+                <div class="cap-tabs cap-tabs--wrap cap-tabs-mini">
+                  <button type="button" class="cap-tab is-active">Инвестиции</button>
+                  <button type="button" class="cap-tab">Бюджет</button>
+                  <button type="button" class="cap-tab">Страховки</button>
+                  <button type="button" class="cap-tab">Имущество</button>
+                  <button type="button" class="cap-tab">Обязательства</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </article>
+      </section>
+
+      <!-- F3 -->
+      <section class="lab-variant">
+        <div class="lab-variant__head">
+          <h2><span class="lab-section__id">F3</span> Ledger — accent-полоса, итого в шапке</h2>
+          <p>Компактнее: сумма в header, статьи списком без второй «hero»-строки.</p>
+        </div>
+        <article class="phone">
+          <div class="phone__hero">
+            <div class="phone__hero-kicker">Финансы</div>
+            <h2 class="phone__hero-title">Управление капиталом</h2>
+          </div>
+          <div class="phone__main">
+            <div class="cap-card" style="padding-top: 12px">
+              <div class="cap-flows cap-flows--f3">
+                <div class="cap-flows__row">
+                  <section class="flow-panel flow-panel--in">
+                    <header class="flow-panel__head">
+                      <span class="flow-panel__title">Доходы</span>
+                      <span class="flow-total-row__value" style="font-size: 18px; border: none; margin: 0; padding: 0">88 400 ₽</span>
+                    </header>
+                    <div class="flow-panel__body">
+                      <div class="flow-article">
+                        <div class="flow-article__head"><span>Зарплата</span><span>45 000 ₽</span></div>
+                      </div>
+                      <div class="flow-article">
+                        <div class="flow-article__head"><span>Инвестиции</span><span>8 400 ₽</span></div>
+                        <ul class="flow-type-list">
+                          <li><span>Депозиты</span><span>2 400 ₽</span></li>
+                          <li><span>Облигации</span><span>6 000 ₽</span></li>
+                        </ul>
+                      </div>
+                      <div class="flow-article">
+                        <div class="flow-article__head"><span>Доходное имущество</span><span>35 000 ₽</span></div>
+                        <ul class="flow-type-list">
+                          <li><span>Аренда</span><span>35 000 ₽</span></li>
+                        </ul>
+                      </div>
+                    </div>
+                  </section>
+                  <section class="flow-panel flow-panel--out">
+                    <header class="flow-panel__head">
+                      <span class="flow-panel__title">Расходы</span>
+                      <span class="flow-total-row__value" style="font-size: 18px; border: none; margin: 0; padding: 0">99 900 ₽</span>
+                    </header>
+                    <div class="flow-panel__body">
+                      <div class="flow-article">
+                        <div class="flow-article__head"><span>На жизнь</span><span>32 500 ₽</span></div>
+                        <ul class="flow-line-list">
+                          <li><span>Продукты</span><span>18 000 ₽</span></li>
+                          <li><span>Транспорт</span><span>6 500 ₽</span></li>
+                          <li><span>Досуг</span><span>8 000 ₽</span></li>
+                        </ul>
+                      </div>
+                      <div class="flow-article">
+                        <div class="flow-article__head"><span>Содержание имущества</span><span>13 000 ₽</span></div>
+                        <ul class="flow-type-list">
+                          <li><span>Жильё</span><span>6 000 ₽</span></li>
+                          <li><span>Авто</span><span>4 000 ₽</span></li>
+                        </ul>
+                      </div>
+                      <div class="flow-article">
+                        <div class="flow-article__head"><span>Обязательства</span><span>51 000 ₽</span></div>
+                        <ul class="flow-line-list">
+                          <li><span>Ипотека</span><span>42 000 ₽</span></li>
+                          <li><span>Кредитная карта</span><span>9 000 ₽</span></li>
+                        </ul>
+                      </div>
+                      <div class="flow-article">
+                        <div class="flow-article__head"><span>Страховки</span><span>2 400 ₽</span></div>
+                      </div>
+                    </div>
+                  </section>
+                </div>
+              </div>
+              <div class="cap-flows-after">
+                <div class="cap-tabs cap-tabs--wrap cap-tabs-mini">
+                  <button type="button" class="cap-tab is-active">Инвестиции</button>
+                  <button type="button" class="cap-tab">Бюджет</button>
+                  <button type="button" class="cap-tab">Страховки</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </article>
+      </section>
+
+      <!-- F4 -->
+      <section class="lab-variant">
+        <div class="lab-variant__head">
+          <h2><span class="lab-section__id lab-section__id--ok">F4 ★</span> Градиентные карты + плашка итого</h2>
+          <p>Цвет сильнее (как hero), итого в отдельной плашке внутри карты — визуально «главное число».</p>
+        </div>
+        <article class="phone">
+          <div class="phone__hero">
+            <div class="phone__hero-kicker">Финансы</div>
+            <h2 class="phone__hero-title">Управление капиталом</h2>
+          </div>
+          <div class="phone__main">
+            <div class="cap-card" style="padding-top: 12px">
+              <div class="cap-flows cap-flows--f4">
+                <div class="cap-flows__row">
+                  <section class="flow-panel flow-panel--in">
+                    <header class="flow-panel__head">
+                      <span class="flow-panel__title">Доходы</span>
+                      <span class="flow-panel__chip">+ за период</span>
+                    </header>
+                    <div class="flow-total-row">
+                      <span class="flow-total-row__label">Итого доходов</span>
+                      <span class="flow-total-row__value">88 400 ₽</span>
+                    </div>
+                    <div class="flow-panel__body">
+                      <div class="flow-article">
+                        <div class="flow-article__head"><span>Зарплата</span><span>45 000 ₽</span></div>
+                      </div>
+                      <div class="flow-article">
+                        <div class="flow-article__head"><span>Инвестиции</span><span>8 400 ₽</span></div>
+                        <ul class="flow-type-list flow-type-list--nested">
+                          <li><span>Депозиты · 1 поз.</span><span>2 400 ₽</span></li>
+                          <li><span>Облигации · 2 поз.</span><span>6 000 ₽</span></li>
+                        </ul>
+                      </div>
+                      <div class="flow-article">
+                        <div class="flow-article__head"><span>Доходное имущество</span><span>35 000 ₽</span></div>
+                        <ul class="flow-type-list flow-type-list--nested">
+                          <li><span>Аренда · 1 поз.</span><span>35 000 ₽</span></li>
+                        </ul>
+                      </div>
+                    </div>
+                  </section>
+                  <section class="flow-panel flow-panel--out">
+                    <header class="flow-panel__head">
+                      <span class="flow-panel__title">Расходы</span>
+                      <span class="flow-panel__chip">− за период</span>
+                    </header>
+                    <div class="flow-total-row">
+                      <span class="flow-total-row__label">Итого расходов</span>
+                      <span class="flow-total-row__value">99 900 ₽</span>
+                    </div>
+                    <div class="flow-panel__body">
+                      <div class="flow-article">
+                        <div class="flow-article__head"><span>На жизнь</span><span>32 500 ₽</span></div>
+                        <ul class="flow-line-list flow-type-list--nested">
+                          <li><span>Продукты</span><span>18 000 ₽</span></li>
+                          <li><span>Транспорт</span><span>6 500 ₽</span></li>
+                          <li><span>Досуг</span><span>8 000 ₽</span></li>
+                        </ul>
+                      </div>
+                      <div class="flow-article">
+                        <div class="flow-article__head"><span>Содержание имущества</span><span>13 000 ₽</span></div>
+                        <ul class="flow-type-list flow-type-list--nested">
+                          <li><span>Жильё</span><span>6 000 ₽</span></li>
+                          <li><span>Авто</span><span>4 000 ₽</span></li>
+                          <li><span>Аренда (обсл.)</span><span>3 000 ₽</span></li>
+                        </ul>
+                      </div>
+                      <div class="flow-article">
+                        <div class="flow-article__head"><span>Платежи по обязательствам</span><span>51 000 ₽</span></div>
+                        <ul class="flow-line-list flow-type-list--nested">
+                          <li><span>Ипотека</span><span>42 000 ₽</span></li>
+                          <li><span>Кредитная карта</span><span>9 000 ₽</span></li>
+                        </ul>
+                      </div>
+                      <div class="flow-article">
+                        <div class="flow-article__head"><span>Страховки</span><span>2 400 ₽</span></div>
+                      </div>
+                    </div>
+                  </section>
+                </div>
+              </div>
+              <div class="cap-flows-after">
+                <div class="cap-tabs cap-tabs--wrap cap-tabs-mini">
+                  <button type="button" class="cap-tab is-active">Инвестиции</button>
+                  <button type="button" class="cap-tab">Бюджет</button>
+                  <button type="button" class="cap-tab">Страховки</button>
+                  <button type="button" class="cap-tab">Имущество</button>
+                  <button type="button" class="cap-tab">Обязательства</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </article>
+      </section>
+
+      <section class="lab-section">
+        <div class="lab-section__label">
+          <span class="lab-section__id lab-section__id--ok">✓</span>
+          <span>Модель данных (prod)</span>
+        </div>
+        <ul class="lab-section__note" style="padding-left: 1.2rem">
+          <li><strong>Доходы:</strong> зарплата (<code>overview.salary</code>); инвестиции — сумма <code>investMonthlyAccrual</code> по позициям, группы <code>deposit</code> / <code>bond</code>; доходное имущество — <code>assets[].monthly_income</code> по <code>kind</code>.</li>
+          <li><strong>Расходы:</strong> на жизнь — <code>monthly_burn_breakdown</code>; содержание — <code>monthly_maintenance_cost</code> по активам; обязательства — <code>monthly_payment</code>; страховки — <code>monthly_premium</code> полисов.</li>
+          <li>Утилита: <code>frontend-react/src/utils/buildCapitalPeriodFlows.js</code></li>
+        </ul>
+      </section>
+    </main>
+
+    <script>
+      document.querySelectorAll('[data-theme-btn]').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          const theme = btn.getAttribute('data-theme-btn');
+          document.documentElement.setAttribute('data-theme', theme);
+          document.querySelectorAll('[data-theme-btn]').forEach((b) => b.classList.toggle('is-active', b === btn));
+        });
+      });
+    </script>
+  </body>
+</html>

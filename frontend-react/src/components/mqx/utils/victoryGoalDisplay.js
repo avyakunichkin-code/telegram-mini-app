@@ -27,7 +27,7 @@ export function goalProgressHintText(goal) {
   }
   if (type === 'net_monthly_cashflow_nonneg') {
     const flow = Number(d.net_monthly_cashflow) || 0;
-    return flow >= 0 ? 'Поток ≥ 0' : `Поток: ${flow}`;
+    return flow >= 0 ? 'Доходы ≥ 0' : `Доходы: ${flow}`;
   }
   if (type === 'avg_liquid_delta_6p') {
     const n = Number(d.samples) || 0;

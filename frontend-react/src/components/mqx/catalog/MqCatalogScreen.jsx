@@ -239,11 +239,9 @@ export function MqCatalogScreen() {
           <MqxDashStack>
             <MqxFinancePeriodBlock
               financeCards={[
-                { title: 'Баланс', valueNode: <MoneyText value={42150} />, accent: 'mqx-accent--violet', icon: <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 10V7a5 5 0 0 1 10 0v3" /></svg> },
-                { title: 'Подушка', valueNode: <MoneyText value={18000} />, accent: 'mqx-accent--emerald', icon: <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3 20 7v6c0 5" /></svg> },
-                { title: 'Поток', valueNode: <MoneyText value={3200} />, accent: 'mqx-accent--sky', valueTone: 'pos', icon: <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 19V5" /></svg> },
+                { title: 'Доходы', valueNode: <MoneyText value={3200} />, accent: 'mqx-accent--sky', valueTone: 'pos', icon: <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 19V5" /></svg> },
                 {
-                  title: 'На жизнь',
+                  title: 'Расходы',
                   valueNode: <MoneyText value={9600} />,
                   accent: 'mqx-accent--amber',
                   valueTone: 'out',
@@ -256,6 +254,8 @@ export function MqCatalogScreen() {
                     </svg>
                   ),
                 },
+                { title: 'Баланс', valueNode: <MoneyText value={42150} />, accent: 'mqx-accent--violet', icon: <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 10V7a5 5 0 0 1 10 0v3" /></svg> },
+                { title: 'Подушка', valueNode: <MoneyText value={18000} />, accent: 'mqx-accent--emerald', icon: <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3 20 7v6c0 5" /></svg> },
               ]}
               onGoFinance={() => {}}
             />
@@ -273,7 +273,7 @@ export function MqCatalogScreen() {
                 goals_required: 3,
                 goals: [
                   { key: 'a', title: 'Подушка ≥ 3×', met: true, enabled: true, progress: 1 },
-                  { key: 'b', title: 'Поток ≥ 0', met: false, enabled: true, progress: 0.4 },
+                  { key: 'b', title: 'Доходы ≥ 0', met: false, enabled: true, progress: 0.4 },
                   { key: 'c', title: 'Без просрочек', met: true, enabled: true, progress: 1 },
                 ],
               }}
@@ -579,7 +579,7 @@ export function MqCatalogScreen() {
               {
                 key: 'cashflow',
                 type: 'net_monthly_cashflow_nonneg',
-                title: 'Поток ≥ 0',
+                title: 'Доходы ≥ 0',
                 met: false,
                 enabled: true,
                 progress: 0.4,

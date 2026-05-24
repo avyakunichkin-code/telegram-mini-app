@@ -33,6 +33,7 @@ npx serve .
 
 ## Связанные lab
 
+- [`flows-round/`](flows-round/) — **Доходы / Расходы** (первая строка страницы), 4 варианта F1–F4
 - [`row-actions/`](../row-actions/) — метрики, `MqxFinListRow`, корзина
 - [`finance-insurance/`](../finance-insurance/) — эталон страховок
 - [`invest-forms/`](../invest-forms/) — формы инвестиций

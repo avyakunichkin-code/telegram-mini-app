@@ -195,6 +195,21 @@ body {
   );
 }
 
+.mq-field__error {
+  font-size: var(--mq-fs-small);
+  line-height: 1.35;
+  font-weight: 550;
+  color: var(--tg-theme-destructive-text-color, var(--mq-danger));
+}
+
+.mq-field--invalid .mq-field__input {
+  border-bottom-color: color-mix(in srgb, var(--mq-danger) 72%, transparent);
+}
+
+.mqx-auth-monetka__form .mq-field__label {
+  color: color-mix(in srgb, var(--mqx-ink) 94%, var(--tg-theme-hint-color, #6b7280));
+}
+
 .mq-field__input {
   width: 100%;
   box-sizing: border-box;
