@@ -251,7 +251,6 @@ async def complete_period(
     snapshot.is_completed = 1
     snapshot.completed_at = utc_now_naive()
     snapshot.net_savings = net_savings
-    snapshot.xp_earned = 0
 
     # Инкрементируем период
     profile.period_index += 1
@@ -266,7 +265,6 @@ async def complete_period(
         safety_fund_contribution=snapshot.safety_fund_contribution,
         safety_fund_total=snapshot.safety_fund_total,
         net_savings=net_savings,
-        xp_earned=0,
         required_actions_completed=True,
     )
 

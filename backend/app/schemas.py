@@ -106,13 +106,6 @@ class VictoryGoalOverview(BaseModel):
     detail: dict = Field(default_factory=dict)
 
 
-class CharacterUnlockOverview(BaseModel):
-    feature: str
-    min_level: int
-    unlocked: bool
-    label: str = ""
-
-
 class ExpenseCategoryBurnItem(BaseModel):
     category_key: str
     title: str
@@ -266,7 +259,6 @@ class AchievementTierStatus(BaseModel):
     tier_index: int
     title: str
     description: str = ""
-    xp_reward: int = 0
     unlocked: bool = False
 
 
@@ -433,5 +425,4 @@ class PeriodSummaryResponse(BaseModel):
     safety_fund_contribution: float
     safety_fund_total: float
     net_savings: float
-    xp_earned: int
     required_actions_completed: bool

@@ -16,7 +16,7 @@ MVP_SAFETY_FUND_OBLIGATIONS_MULTIPLIER = 3.0
 
 # --- События ---
 EVENTS_PER_PERIOD = 2
-EVENT_TIER_WINDOW_BELOW_LEVEL = 2
+EVENT_TIER_WINDOW_BELOW_BAND = 2
 PERIODS_PER_EVENT_TIER = 10
 EVENT_LIFESTYLE_DELTA_ABS_CAP = 15000.0
 
@@ -37,7 +37,7 @@ def event_tier_progression_level(period_index: int) -> int:
 def event_tier_bounds(period_index: int) -> tuple[int, int]:
     """Окно core-отбора: [max(1, L − window), L], L из period_index."""
     L = event_tier_progression_level(period_index)
-    lower = max(1, L - EVENT_TIER_WINDOW_BELOW_LEVEL)
+    lower = max(1, L - EVENT_TIER_WINDOW_BELOW_BAND)
     return lower, L
 
 

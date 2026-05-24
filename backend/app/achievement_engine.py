@@ -403,7 +403,6 @@ def serialize_achievements_for_profile(db: Session, game_profile_id: int) -> lis
                     "tier_index": int(t.tier_index),
                     "title": t.title,
                     "description": t.description,
-                    "xp_reward": int(t.xp_reward or 0),
                     "unlocked": is_unlocked,
                 }
             )

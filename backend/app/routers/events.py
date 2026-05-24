@@ -510,17 +510,21 @@ def ensure_period_events(db: Session, game_profile_id: int, period_index: int, s
         logger.error("ensure_period_events: repeat_ok empty profile=%s", game_profile_id)
         return
 
-    L = max(1, int(period_index))
+    period_idx = max(1, int(period_index))
     base_k = min(EVENTS_PER_PERIOD, len(repeat_ok))
 
-    core = [d for d in repeat_ok if event_tier_in_core_window(_def_tier(d), L)]
+    core = [d for d in repeat_ok if event_tier_in_core_window(_def_tier(d), period_idx)]
 
     if len(core) >= base_k:
         picked = _pick_diverse_period_events(core, base_k, counter_map)
     else:
-        p1 = [d for d in repeat_ok if event_tier_in_fallback_primary(_def_tier(d), L)]
+        p1 = [d for d in repeat_ok if event_tier_in_fallback_primary(_def_tier(d), period_idx)]
         if not p1:
-            logger.error("ensure_period_events: fallback P1 empty profile=%s L=%s", game_profile_id, L)
+            logger.error(
+                "ensure_period_events: fallback P1 empty profile=%s period_index=%s",
+                game_profile_id,
+                period_idx,
+            )
             p1 = [d for d in repeat_ok if _def_tier(d) == 1]
         if not p1:
             return

@@ -100,10 +100,6 @@ def build_choice_impacts(db: Session, profile, effects: dict[str, Any]) -> list[
                     }
                 )
 
-    xp = effects.get("xp_delta")
-    if xp is not None and int(xp) > 0:
-        impacts.append({"kind": "xp", "delta": int(xp), "tip": "Опыт"})
-
     enqueue = effects.get("enqueue_event")
     if isinstance(enqueue, dict):
         after = int(enqueue.get("after_periods", 2) or 2)

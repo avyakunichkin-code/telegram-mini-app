@@ -375,10 +375,6 @@ def process_period_end(db: Session, profile: GameProfile) -> dict:
         )
         .first()
     )
-    salary_claimed = bool(
-        (snapshot and int(snapshot.salary_claimed or 0) == 1)
-        or int(getattr(profile, "last_period_salary_claimed", 0) or 0) == int(period_index)
-    )
     current_income_rate = _period_income_rate(breakdown, snapshot)
     current_expense_total = _period_expense_total(breakdown)
     debt_after = _total_debt_balance(db, profile.id)
@@ -395,9 +391,6 @@ def process_period_end(db: Session, profile: GameProfile) -> dict:
     safety_fund_delta = _safety_fund_delta(db, profile.id, period_index, safety_end)
     invest_capital_delta = _invest_capital_flow(db, profile.id, period_index)
     debt_delta = _debt_delta(db, profile.id, period_index, debt_after)
-
-    if snapshot is not None:
-        snapshot.xp_earned = 0
 
     total_overdue_now = round(sum(float(li.overdue_amount or 0) for li in liabilities), 2)
     if total_overdue_now <= 1e-8:
