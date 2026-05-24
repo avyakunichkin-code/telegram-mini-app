@@ -188,6 +188,14 @@ HashRouter (`#/game`) менять не нужно.
 | API 401 после деплоя | другой `SECRET_KEY` | Тестерам перелогиниться |
 | Пустая БД | миграции не прогнаны | `migrate.ps1` на prod `DATABASE_URL` |
 
+| Пустая БД | миграции не прогнаны | `migrate.ps1` на prod `DATABASE_URL` |
+
+---
+
+## 10. Производительность API (2026-05)
+
+После действий в игре клиент вызывает **`GET /api/game/bootstrap`** (один round-trip вместо трёх–четырёх). Ответ gzip-сжимается middleware. `/api/health` — только `SELECT 1`.
+
 ---
 
 *Связанные файлы: [`render.yaml`](../../render.yaml), [`frontend-react/.env.example`](../../frontend-react/.env.example), [`backend/.env.example`](../../backend/.env.example).*

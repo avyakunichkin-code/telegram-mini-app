@@ -10,6 +10,7 @@ from ..game_period import process_period_end
 from .events import pending_mandatory_blocking_event_titles
 from ..models import GameProfile, FinanceSalary, FinanceAsset, FinanceLiability, Transaction, GameStarterTemplate
 from ..finance_helpers import monthly_interest_payment
+from ..game_bootstrap import build_game_bootstrap
 from ..schemas import (
     GameProfileCreate,
     GameProfileResponse,
@@ -25,6 +26,7 @@ from ..schemas import (
     PeriodCloseBreakdownItem,
     PeriodCloseSummary,
     AchievementUnlockEvent,
+    GameBootstrapResponse,
 )
 from ..expense_template_defaults import default_plan_expense_budget, expense_budget_for_template
 from ..expenses import ensure_expense_category_catalog, seed_expense_lines_from_budget
@@ -40,6 +42,16 @@ from ..game_time import (
 )
 
 router = APIRouter(prefix="/api/game", tags=["game"])
+
+
+@router.get("/bootstrap", response_model=GameBootstrapResponse)
+async def game_bootstrap(
+    current_user=Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    """Overview + time + period + events одним запросом (Mini App cold start / refresh)."""
+    profile = get_active_game_profile(db, current_user.id)
+    return build_game_bootstrap(db, profile)
 
 
 def _validate_save_kind(save_kind: str) -> str:

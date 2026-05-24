@@ -606,6 +606,10 @@ def serialize_instance_rows(db: Session, insts: list[EventInstance], *, profile:
 async def get_pending_event(current_user=Depends(get_current_user), db: Session = Depends(get_db)):
     profile = get_active_game_profile(db, current_user.id)
     sync_time(profile)
+    return build_pending_events_payload(db, profile)
+
+
+def build_pending_events_payload(db: Session, profile: GameProfile) -> dict:
     _ensure_seed_events(db)
 
     if character_level(profile) < UNLOCK_PERIOD_EVENTS:

@@ -435,6 +435,18 @@ class PeriodStatusResponse(BaseModel):
     net_income_available: float
 
 
+class PendingEventsPayload(BaseModel):
+    events: List[dict] = Field(default_factory=list)
+    event: Optional[dict] = None
+
+
+class GameBootstrapResponse(BaseModel):
+    overview: FinanceOverview
+    time: TimeStatusResponse
+    period: PeriodStatusResponse
+    events: PendingEventsPayload
+
+
 class PeriodSummaryResponse(BaseModel):
     period_index: int
     salary_claimed: bool

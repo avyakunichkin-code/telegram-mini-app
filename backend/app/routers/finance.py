@@ -20,19 +20,9 @@ from ..balance_utils import adjust_balance, adjust_safety_fund_balance
 from ..finance_analytics import avg_net_cashflow_last_closed_intervals as _avg_net_cashflow_last_closed_intervals
 from ..finance_helpers import monthly_interest_payment
 from ..game_time import get_active_game_profile, sync_time, get_seconds_until_next
-from ..achievement_engine import process_achievement_unlocks
-from ..achievement_seeds import ensure_achievement_catalog
-from ..character_progression import character_xp_need_for_next_level
-from ..expenses import burn_breakdown_for_api, compute_monthly_burn
-from ..victory_engine import evaluate_victory, parse_victory_config
-from ..victory_seeds import DEFAULT_TEMPLATE_KEY
-from ..victory_snap import build_victory_evaluation_input
-from ..level_gates import (
-    UNLOCK_ASSET_FROM_TEMPLATE,
-    UNLOCK_LIABILITY_FROM_TEMPLATE,
-    character_unlocks_payload,
-    require_character_level,
-)
+from ..expenses import compute_monthly_burn
+from ..finance_overview_build import build_finance_overview
+from ..level_gates import UNLOCK_ASSET_FROM_TEMPLATE, UNLOCK_LIABILITY_FROM_TEMPLATE, require_character_level
 from ..schemas import (
     SalaryProfileUpdate,
     SalaryProfileResponse,
@@ -71,32 +61,6 @@ def _get_or_create_salary_profile(db: Session, game_profile_id: int) -> FinanceS
     db.commit()
     db.refresh(salary)
     return salary
-
-
-def _compute_gamification(net_cashflow: float, liabilities_ratio: float, assets_count: int) -> tuple[int, str, int]:
-    score = 0
-    if net_cashflow > 0:
-        score += min(50, int(net_cashflow // 1000) * 5)
-    if liabilities_ratio <= 20:
-        score += 30
-    elif liabilities_ratio <= 35:
-        score += 20
-    elif liabilities_ratio <= 50:
-        score += 10
-    score += min(20, assets_count * 5)
-    score = max(0, min(100, score))
-
-    if score >= 80:
-        level = "Финансовый стратег"
-    elif score >= 55:
-        level = "Уверенный планировщик"
-    elif score >= 30:
-        level = "Начинающий инвестор"
-    else:
-        level = "Финансовый новичок"
-
-    xp_to_next = 0 if score >= 100 else 100 - score
-    return score, level, xp_to_next
 
 
 @router.put("/salary", response_model=SalaryProfileResponse)
@@ -475,179 +439,7 @@ async def finance_overview(
 ):
     profile = get_active_game_profile(db, current_user.id)
     sync_time(profile)
-
-    newly_unlocked_raw: list = []
-    try:
-        ensure_achievement_catalog(db)
-        newly_unlocked_raw = process_achievement_unlocks(db, profile) or []
-        db.commit()
-        db.refresh(profile)
-    except Exception:
-        logger.exception(
-            "Achievement unlock failed in finance overview profile_id=%s",
-            profile.id,
-        )
-        db.rollback()
-        db.refresh(profile)
-        newly_unlocked_raw = []
-
-    salary = db.query(FinanceSalary).filter(FinanceSalary.game_profile_id == profile.id).first()
-    monthly_income = salary.monthly_amount if salary else 0
-
-    # Преобразуем обязательства в Pydantic-схемы
-    liabilities_orm = db.query(FinanceLiability).filter(
-        FinanceLiability.game_profile_id == profile.id,
-        FinanceLiability.is_active == 1
-    ).all()
-    liabilities = [
-        LiabilityResponse(
-            id=l.id,
-            title=l.title,
-            total_debt=l.total_debt,
-            annual_rate_percent=l.annual_rate_percent,
-            monthly_payment=l.monthly_payment,
-            overdue_amount=float(getattr(l, "overdue_amount", 0) or 0),
-            overdue_periods=int(getattr(l, "overdue_periods", 0) or 0),
-            created_at=l.created_at
-        ) for l in liabilities_orm
-    ]
-
-    # Преобразуем активы в Pydantic-схемы
-    assets_orm = db.query(FinanceAsset).filter(
-        FinanceAsset.game_profile_id == profile.id,
-        FinanceAsset.is_active == 1
-    ).all()
-    assets = [
-        AssetResponse(
-            id=a.id,
-            title=a.title,
-            kind=getattr(a, "kind", "generic") or "generic",
-            asset_value=a.asset_value,
-            monthly_maintenance_cost=a.monthly_maintenance_cost,
-            monthly_income=float(getattr(a, "monthly_income", 0) or 0),
-            created_at=a.created_at
-        ) for a in assets_orm
-    ]
-
-    assets_income = sum(float(a.monthly_income or 0) for a in assets_orm)
-
-    total_liability_payment = sum(l.monthly_payment for l in liabilities)
-    total_asset_maintenance = sum(a.monthly_maintenance_cost for a in assets)
-    total_monthly_obligations = total_liability_payment + total_asset_maintenance
-    burn_snapshot = compute_monthly_burn(db, profile)
-    monthly_burn_total = float(burn_snapshot.total)
-    monthly_lifestyle_expense = monthly_burn_total
-    burn_breakdown = MonthlyBurnBreakdown(**burn_breakdown_for_api(burn_snapshot))
-    total_income = monthly_income + assets_income
-    total_monthly_outflow = total_monthly_obligations + monthly_burn_total
-    expense_to_income_ratio = (
-        round(monthly_burn_total / total_income, 4) if total_income > 0 else 0.0
-    )
-    net_cashflow = total_income - total_monthly_obligations
-    liabilities_ratio = (total_liability_payment / total_income * 100) if total_income > 0 else 0
-    total_overdue_amount = sum(float(l.overdue_amount or 0) for l in liabilities_orm)
-    overdue_liabilities_count = sum(1 for l in liabilities_orm if float(getattr(l, "overdue_amount", 0) or 0) > 0)
-
-    score, level, xp_to_next = _compute_gamification(net_cashflow, liabilities_ratio, len(assets))
-
-    avg_cf_6, avg_cf_n = _avg_net_cashflow_last_closed_intervals(db, profile.id, max_intervals=6)
-
-    template_key = getattr(profile, "starter_template_key", None) or DEFAULT_TEMPLATE_KEY
-    template_row = (
-        db.query(GameStarterTemplate)
-        .filter(GameStarterTemplate.template_key == template_key)
-        .first()
-    )
-    if template_row:
-        template_key = template_row.template_key
-        raw_victory = template_row.victory_config_json
-    else:
-        raw_victory = None
-
-    victory_cfg = parse_victory_config(raw_victory, template_key=template_key)
-    victory_snap = build_victory_evaluation_input(db, profile)
-    victory_result = evaluate_victory(victory_cfg, victory_snap, template_key=template_key)
-    win_target_safety_fund = victory_result.win_target_safety_fund
-    win_progress_safety_fund = victory_result.win_progress_safety_fund
-    win_ready = victory_result.win_ready
-    win_reached = victory_result.win_reached
-
-    victory_overview = VictoryOverview(
-        schema_version=victory_result.schema_version,
-        template_key=victory_result.template_key,
-        min_period_index=victory_result.min_period_index,
-        period_gate_open=victory_result.period_gate_open,
-        goals_met=victory_result.goals_met,
-        goals_required=victory_result.goals_required,
-        goals_enabled=victory_result.goals_enabled,
-        win_reached=victory_result.win_reached,
-        goals=[
-            VictoryGoalOverview(
-                key=g.key,
-                type=g.type,
-                title=g.title,
-                required=g.required,
-                enabled=g.enabled,
-                met=g.met,
-                progress=g.progress,
-                detail=g.detail,
-            )
-            for g in victory_result.goals
-        ],
-    )
-
-    return FinanceOverview(
-        salary=SalaryProfileResponse(
-            monthly_amount=salary.monthly_amount if salary else 0,
-            monthly_receipts_count=salary.monthly_receipts_count if salary else 1
-        ),
-        liabilities=liabilities,
-        assets=assets,
-        total_monthly_income=round(total_income, 2),
-        total_monthly_liabilities_payment=round(total_liability_payment, 2),
-        total_monthly_assets_maintenance=round(total_asset_maintenance, 2),
-        monthly_lifestyle_expense=round(max(0.0, monthly_lifestyle_expense), 2),
-        monthly_burn_total=round(max(0.0, monthly_burn_total), 2),
-        monthly_burn_breakdown=burn_breakdown,
-        total_monthly_outflow=round(total_monthly_outflow, 2),
-        expense_to_income_ratio=expense_to_income_ratio,
-        net_monthly_cashflow=round(net_cashflow, 2),
-        liabilities_to_income_ratio=round(liabilities_ratio, 2),
-        gamification_level=level,
-        score=score,
-        xp_to_next_level=xp_to_next,
-        character_level=max(1, int(getattr(profile, "level", 1) or 1)),
-        character_xp=max(0, int(getattr(profile, "xp", 0) or 0)),
-        character_xp_need_for_next=character_xp_need_for_next_level(profile.level),
-        time_state=profile.time_state,
-        period_index=profile.period_index,
-        period_duration_seconds=profile.period_duration_seconds,
-        seconds_until_next_period=get_seconds_until_next(profile),
-        cash_balance=round(profile.cash_balance, 2),
-        safety_fund_balance=round(profile.safety_fund_balance, 2),
-        total_monthly_obligations=round(total_monthly_obligations, 2),
-        total_overdue_amount=round(total_overdue_amount, 2),
-        overdue_liabilities_count=overdue_liabilities_count,
-        win_target_safety_fund=round(win_target_safety_fund, 2),
-        win_progress_safety_fund=round(win_progress_safety_fund, 4),
-        win_ready=bool(win_ready),
-        win_reached=bool(win_reached),
-        clean_period_streak=int(getattr(profile, "clean_period_streak", 0) or 0),
-        avg_net_cashflow_6p=avg_cf_6,
-        avg_net_cashflow_6p_n=avg_cf_n,
-        victory=victory_overview,
-        character_unlocks=[
-            CharacterUnlockOverview(**item) for item in character_unlocks_payload(profile)
-        ],
-        newly_unlocked=[
-            AchievementUnlockEvent(**item)
-            for item in newly_unlocked_raw
-            if isinstance(item, dict)
-        ],
-        save_kind=str(getattr(profile, "save_kind", "game") or "game"),
-        onboarding_state=str(getattr(profile, "onboarding_state", "brief_done") or "brief_done"),
-        onboarding_step=str(getattr(profile, "onboarding_step", "farewell") or "farewell"),
-    )
+    return build_finance_overview(db, profile)
 
 
 @router.get("/analytics/timeseries", response_model=FinanceAnalyticsTimeseriesResponse)

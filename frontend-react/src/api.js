@@ -126,6 +126,9 @@ export const API = {
     patchOnboarding(payload) {
         return apiCall('/api/game/profile/onboarding', 'PATCH', payload);
     },
+    getGameBootstrap() {
+        return apiCall('/api/game/bootstrap');
+    },
     // Время
     getTimeStatus() {
         return apiCall('/api/game/time');

@@ -74,6 +74,10 @@ async def get_period_status(
     """Получает статус текущего периода — какие действия выполнены"""
     profile = get_active_game_profile(db, current_user.id)
     sync_time(profile)
+    return build_period_status(db, profile)
+
+
+def build_period_status(db: Session, profile: GameProfile) -> PeriodStatusResponse:
     snapshot = get_current_period_snapshot(db, profile)
 
     # Получаем зарплатную информацию

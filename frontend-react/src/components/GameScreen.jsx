@@ -47,6 +47,7 @@ export function GameScreen({ onLogout, onNewGame, onLoadGame }) {
     contributeToSafetyFund,
     withdrawFromSafetyFund,
     refreshOverview,
+    refreshGameState,
     refreshPendingEvent,
     eventsPromptTick,
     periodCloseSummary,
@@ -294,8 +295,7 @@ export function GameScreen({ onLogout, onNewGame, onLoadGame }) {
               } else {
                 showNotification('Решение применено', 'success');
               }
-              await refreshOverview();
-              await refreshPendingEvent();
+              await refreshGameState();
             }}
           />
         </>

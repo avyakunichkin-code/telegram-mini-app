@@ -2,6 +2,7 @@ import json
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from starlette.middleware.gzip import GZipMiddleware
 from sqlalchemy import inspect, text
 
 from app.cors_settings import resolve_cors_allow_origin_regex, resolve_cors_allow_origins
@@ -468,6 +469,8 @@ finally:
 print("[OK] Таблицы созданы/проверены")
 
 app = FastAPI(title="Telegram Mini App API", version="2.0.0")
+
+app.add_middleware(GZipMiddleware, minimum_size=500)
 
 # CORS — origins и regex из env (см. backend/.env.example, docs/ops/DEPLOY.md)
 _cors_kw: dict = {
