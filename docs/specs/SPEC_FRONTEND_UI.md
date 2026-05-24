@@ -1,4 +1,4 @@
-# Spec: Frontend UI/UX — Money Quest TMA
+# Spec: Frontend UI/UX — ТВОЙ ХОД TMA
 
 **Статус:** принят (аудит 2026-05)  
 **Связанные документы:** [`reference/brandbook/BRANDBOOK.md`](../reference/brandbook/BRANDBOOK.md), [`foundation/TMA_USER_FLOWS.md`](../foundation/TMA_USER_FLOWS.md), [`CLAUDE.md`](../../CLAUDE.md)  
@@ -8,7 +8,7 @@
 
 ## Objective
 
-Зафиксировать единые правила интерфейса Telegram Mini App **Money Quest**: визуальный язык MQX, доступность, состояния экрана и границы между кастомным UI и `@telegram-apps/telegram-ui`.
+Зафиксировать единые правила интерфейса Telegram Mini App **ТВОЙ ХОД**: визуальный язык MQX, доступность, состояния экрана и границы между кастомным UI и `@telegram-apps/telegram-ui`.
 
 **Пользователь:** игрок в TMA (мобильный, 320–480px, светлая/тёмная тема Telegram).
 

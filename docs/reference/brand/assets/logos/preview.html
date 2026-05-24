@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>ТВОЙ ХОД — логотипы (preview)</title>
+    <style>
+      :root {
+        --bg: #f3f4f6;
+        --card: #fff;
+        --ink: #111827;
+        --muted: #6b7280;
+      }
+      [data-theme='dark'] {
+        --bg: #0f1115;
+        --card: #1a1b22;
+        --ink: #f9fafb;
+        --muted: #9ca3af;
+      }
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        font-family: Inter, system-ui, sans-serif;
+        background: var(--bg);
+        color: var(--ink);
+        padding: 24px 16px 48px;
+      }
+      h1 { font-size: 1.35rem; margin: 0 0 8px; }
+      p { color: var(--muted); max-width: 52ch; line-height: 1.45; }
+      .toolbar {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin: 16px 0 24px;
+      }
+      .toolbar button {
+        padding: 8px 14px;
+        border-radius: 10px;
+        border: 1px solid color-mix(in srgb, var(--ink) 18%, transparent);
+        background: var(--card);
+        color: var(--ink);
+        cursor: pointer;
+        font: inherit;
+      }
+      .toolbar button.is-active {
+        background: #6d28d9;
+        color: #fff;
+        border-color: transparent;
+      }
+      .grid {
+        display: grid;
+        gap: 16px;
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      }
+      .card {
+        background: var(--card);
+        border-radius: 16px;
+        border: 1px solid color-mix(in srgb, var(--ink) 10%, transparent);
+        overflow: hidden;
+      }
+      .card__checker {
+        min-height: 140px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+        background-color: #e5e7eb;
+        background-image:
+          linear-gradient(45deg, #d1d5db 25%, transparent 25%),
+          linear-gradient(-45deg, #d1d5db 25%, transparent 25%),
+          linear-gradient(45deg, transparent 75%, #d1d5db 75%),
+          linear-gradient(-45deg, transparent 75%, #d1d5db 75%);
+        background-size: 20px 20px;
+        background-position: 0 0, 0 10px, 10px -10px, -10px 0;
+      }
+      [data-theme='dark'] .card__checker {
+        background-color: #1f2937;
+        background-image:
+          linear-gradient(45deg, #374151 25%, transparent 25%),
+          linear-gradient(-45deg, #374151 25%, transparent 25%),
+          linear-gradient(45deg, transparent 75%, #374151 75%),
+          linear-gradient(-45deg, transparent 75%, #374151 75%);
+      }
+      .card__checker--dark {
+        background: linear-gradient(160deg, #1e1b4b, #0f1115) !important;
+        background-image: none !important;
+      }
+      .card img {
+        max-width: 100%;
+        height: auto;
+        max-height: 120px;
+      }
+      .card--avatar img { max-height: 160px; }
+      .card__meta {
+        padding: 12px 14px 14px;
+        border-top: 1px solid color-mix(in srgb, var(--ink) 8%, transparent);
+      }
+      .card__meta strong { display: block; font-size: 14px; }
+      .card__meta span { font-size: 12px; color: var(--muted); }
+      .card__meta a { font-size: 12px; color: #6d28d9; }
+    </style>
+  </head>
+  <body data-theme="light">
+    <h1>Логотипы «ТВОЙ ХОД»</h1>
+    <p>
+      SVG с прозрачным фоном. Клетка — проверка прозрачности; тёмная плашка — как в TG/обложке.
+      См. <a href="./README.md">README.md</a>.
+    </p>
+    <div class="toolbar" role="group" aria-label="Фон страницы">
+      <button type="button" class="is-active" data-theme-btn="light">Светлая тема</button>
+      <button type="button" data-theme-btn="dark">Тёмная тема</button>
+    </div>
+    <div class="grid">
+      <article class="card">
+        <div class="card__checker"><img src="./L1-horizontal.svg" alt="L1" /></div>
+        <div class="card__meta">
+          <strong>L1 — горизонтально</strong>
+          <span>Без tagline · сайт, посты</span>
+          <a href="./L1-horizontal.svg" download>L1-horizontal.svg</a>
+        </div>
+      </article>
+      <article class="card">
+        <div class="card__checker"><img src="./L2-stacked.svg" alt="L2" /></div>
+        <div class="card__meta">
+          <strong>L2 — столбик</strong>
+          <span>Без tagline · узкие блоки</span>
+          <a href="./L2-stacked.svg" download>L2-stacked.svg</a>
+        </div>
+      </article>
+      <article class="card">
+        <div class="card__checker card__checker--dark"><img src="./L3-stacked-tagline.svg" alt="L3" /></div>
+        <div class="card__meta">
+          <strong>L3 — столбик + tagline</strong>
+          <span>С «Финансы как игра» · лендинг</span>
+          <a href="./L3-stacked-tagline.svg" download>L3-stacked-tagline.svg</a>
+        </div>
+      </article>
+      <article class="card">
+        <div class="card__checker"><img src="./L3-horizontal-tagline.svg" alt="L3h" /></div>
+        <div class="card__meta">
+          <strong>L3h — строка + tagline</strong>
+          <span>Широкий баннер</span>
+          <a href="./L3-horizontal-tagline.svg" download>L3-horizontal-tagline.svg</a>
+        </div>
+      </article>
+      <article class="card card--avatar">
+        <div class="card__checker card__checker--dark"><img src="./L4-monogram-avatar.svg" alt="L4" /></div>
+        <div class="card__meta">
+          <strong>L4 — монограмма ТХ</strong>
+          <span>Прозрачный · аватар TG</span>
+          <a href="./L4-monogram-avatar.svg" download>L4-monogram-avatar.svg</a>
+        </div>
+      </article>
+      <article class="card card--avatar">
+        <div class="card__checker"><img src="./L4-monogram-avatar-solid.svg" alt="L4 solid" /></div>
+        <div class="card__meta">
+          <strong>L4 solid — фиолетовый квадрат</strong>
+          <span>Если нужен непрозрачный аватар</span>
+          <a href="./L4-monogram-avatar-solid.svg" download>L4-monogram-avatar-solid.svg</a>
+        </div>
+      </article>
+    </div>
+    <script>
+      document.querySelectorAll('[data-theme-btn]').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          document.body.dataset.theme = btn.dataset.themeBtn;
+          document.querySelectorAll('[data-theme-btn]').forEach((b) => b.classList.toggle('is-active', b === btn));
+        });
+      });
+    </script>
+  </body>
+</html>

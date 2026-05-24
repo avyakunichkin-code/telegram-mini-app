@@ -69,8 +69,9 @@ export function RegisterForm({ onSwitchToLogin }) {
 
   return (
     <AuthMonetkaScreen
+      showBrand
       title="Привет, я Монетка!"
-      subtitle="Я тоже регистрировалась в первый раз. Теперь не могу оторваться. Регистрируйся! Я подожду"
+      subtitle="Я тоже регистрировалась в первый раз. Теперь не могу оторваться. Регистрируйся! Подожду"
       titleId="mqx-register-monetka-title"
     >
       <form onSubmit={handleSubmit} className="mqx-auth-monetka__form" noValidate>

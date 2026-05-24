@@ -34,9 +34,25 @@
 Запуск локально:
 
 ```bash
-cd design-lab/<тема>
+cd design-lab/<тема>/<раунд>   # или тема без подпапок
 npx serve .
 ```
+
+### Self-contained стили (обязательно)
+
+`serve` отдаёт **только текущую папку** — пути `../styles.css` в HTML дают **404**.
+
+| Файл в раунде | Роль |
+|---------------|------|
+| `lab-base.css` | Сборка общих стилей (`sync-lab.ps1`, не править руками) |
+| `styles.css` | Стили вариантов этого раунда |
+| `assets/monetka-mascot.png` | Копия маскота при необходимости |
+
+В `index.html` только `./lab-base.css`, `./styles.css`, `./assets/...`.
+
+**Events:** `design-lab/events/sync-all-rounds.ps1` или `.\sync-lab.ps1` в папке раунда.
+
+Правило Cursor: `money-quest-design-lab.mdc`. Скилл: `design-lab-mqx`.
 
 ---
 
@@ -71,18 +87,19 @@ npx serve .
 | 1 | `primitives/` — кнопки, pills, chips, progress | `mqx/primitives/` |
 | 2 | `shell/` — дашборд main (**D′ flat утверждён**) | **Внедрено:** `MqxDashStack`, `DashboardPremium` |
 | 3 | `finance-insurance/` — **внедрено** | `InsuranceSection`, `Insurance*Card/Row/Picker`, Finance |
-| 4 | `dashboard/` — герой, stat-иконки | DashboardPremium |
+| 4 | `dashboard/` — **S5 ★ в prod**; хвосты: empty/error, иконки | DashboardPremium |
 | 5 | `events/` — pill, карточка, оверлей (**внедрено**) | `EventCard`, `EventCarouselOverlay`, `MqxPill` |
 | 6 | `onboarding-guided/` — **★ утверждён** | `OnboardingCoach`, `MonetkaAvatar` |
 | 6b | `onboarding-brief/` — superseded | — |
 | 7 | `achievements-progress/` — level collapsible + монетки + каталог | `MqxAchievementCoin`, `AchievementsScreen` |
 | 8 | `dashboard-home-v2/` — эксперименты компоновок (архив) | — |
-| 9 | **`dashboard-dual-accordion/`** — два аккордеона MQX (D1–D5) | `MqxLevelBlock` collapsible, `MqxPeriodDashboard` v2 |
+| 9 | ~~`dashboard-dual-accordion/`~~ | superseded **S5**; не внедрять |
 | 10 | **`new-game-mode/`** — R2 + I1 ★ | `MqxMonetkaDialogScreen`, `MqxSaveKindPicker`, `NewProfileKindScreen` |
 | 11 | **`game-templates/`** — compact + цвета ★; **`scenario-icons/`** — I-Scene ★, P-C | `MqxStarterScenarioPicker`, `ScenarioIllustrations`, `GameTemplatePickScreen` |
-| 12 | **`period-close/`** — нижний лист + хвостик ★ | `MqxPeriodCloseSheet`, `MqxPeriodCloseTail` (заменяет `PeriodCloseModal`) |
+| 12 | **`period-close/`** — нижний лист + хвостик ★ | `MqxPeriodCloseSheet`, `MqxPeriodCloseTail` |
+| 13 | **`capital-page/`** — IA ★, вариант A/B | унификация `FinanceSection` → MQX |
 
-Текущий статус: **примитивы**, **shell**, **события**, **портфель**, **страховки**, **row-actions (B)**, **VictoryGoalsPanel** в prod; дальше — `dashboard/` (hero), empty/error в shell.
+Текущий статус: **дашборд S5**, **события L3 + оверлей O1**, **итог периода**, **новая игра**, **онбординг** в prod. Lab оверлея: [`design-lab/events/overlay-round/`](../../../../design-lab/events/overlay-round/). Дальше: **empty/error**, **капитал**.
 
 ---
 

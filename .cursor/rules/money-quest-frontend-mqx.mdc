@@ -1,5 +1,5 @@
 ---
-description: MQX layout, hero, карточки, цвета и telegram-ui в Money Quest
+description: MQX layout, hero, карточки, цвета и telegram-ui в ТВОЙ ХОД
 globs: frontend-react/**/*.{jsx,css}
 alwaysApply: false
 ---
@@ -13,6 +13,8 @@ alwaysApply: false
 **[`frontend-react/src/components/mqx/DESIGN_WORKFLOW.md`](frontend-react/src/components/mqx/DESIGN_WORKFLOW.md)**
 
 Кратко: **задача → варианты в `design-lab/<тема>/` → выбор → явное «утверждаем X» в чате → React в `mqx/` + секция в `#/dev/mqx` → внедрение в prod (один сценарий за PR).**
+
+**Design-lab стили:** каждый раунд self-contained (`./lab-base.css`, `sync-lab.ps1`) — см. `money-quest-design-lab.mdc` и скилл `design-lab-mqx`. Не использовать `../` в `index.html`.
 
 - **Запрещено** сразу править игровые экраны, минуя `design-lab` и утверждение (исключения: **минимальный багфикс / hotfix** без смены дизайна — см. тот же документ).
 - Контракт UI и паттерны: [`docs/specs/SPEC_FRONTEND_UI.md`](docs/specs/SPEC_FRONTEND_UI.md).

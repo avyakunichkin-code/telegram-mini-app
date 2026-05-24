@@ -1,4 +1,4 @@
-# Money Quest — Telegram Mini App
+# ТВОЙ ХОД — Telegram Mini App
 
 Игра по финансовой грамотности в формате Telegram Mini App: периоды («месяц»), подушка, обязательства, события, инвестиции и страховки MVP.
 

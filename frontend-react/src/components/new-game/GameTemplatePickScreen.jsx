@@ -93,6 +93,7 @@ export function GameTemplatePickScreen({ profileName, onProfileNameChange, onBac
 
   return (
     <MqxMonetkaDialogScreen
+      showBrand
       title="Четыре ритма"
       subtitle={
         <p>

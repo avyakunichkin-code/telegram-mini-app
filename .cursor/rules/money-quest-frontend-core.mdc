@@ -1,5 +1,5 @@
 ---
-description: Базовые правила UI Money Quest (React TMA, MQX, язык, состояния)
+description: Базовые правила UI ТВОЙ ХОД (React TMA, MQX, язык, состояния)
 globs: frontend-react/**/*.{jsx,js,css}
 alwaysApply: false
 ---

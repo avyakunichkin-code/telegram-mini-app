@@ -1,0 +1,508 @@
+:root {
+  --mq-violet: #7c3aed;
+  --mq-violet-deep: #5b21b6;
+  --mq-gold: #fbbf24;
+  --mq-gold-soft: #fcd34d;
+  --mqx-ink: #0f1115;
+  --surface: #fff;
+  --muted: #6b7280;
+  --game-bg: linear-gradient(165deg, #1e1b4b 0%, #0f1115 48%, #111827 100%);
+  --tagline-size: clamp(13px, 3.4vw, 15px);
+  --logo-w: min(220px, 78%);
+}
+
+[data-theme='dark'] {
+  --surface: #0f1115;
+  --mqx-ink: #f3f4f6;
+  --muted: #9ca3af;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  background: color-mix(in srgb, var(--mqx-ink) 4%, var(--surface));
+  color: var(--mqx-ink);
+  line-height: 1.45;
+}
+
+.lab-header {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 16px 20px;
+  border-bottom: 1px solid color-mix(in srgb, var(--mqx-ink) 10%, transparent);
+}
+
+.lab-header h1 {
+  margin: 0 0 6px;
+  font-size: 1.25rem;
+}
+
+.lab-header p {
+  margin: 0;
+  max-width: 62ch;
+  font-size: 14px;
+  color: var(--muted);
+}
+
+.lab-header a {
+  color: var(--mq-violet);
+}
+
+.lab-theme {
+  display: flex;
+  gap: 6px;
+}
+
+.lab-theme button {
+  padding: 8px 12px;
+  border-radius: 10px;
+  border: 1px solid color-mix(in srgb, var(--mqx-ink) 16%, transparent);
+  background: var(--surface);
+  color: var(--mqx-ink);
+  font: inherit;
+  cursor: pointer;
+}
+
+.lab-theme button.is-active {
+  background: var(--mq-violet);
+  color: #fff;
+  border-color: transparent;
+}
+
+.lab-wrap {
+  max-width: 1040px;
+  margin: 0 auto;
+  padding: 20px 16px 48px;
+}
+
+.lab-pick-banner {
+  margin: 0 0 20px;
+  padding: 12px 14px;
+  border-radius: 12px;
+  background: color-mix(in srgb, var(--mq-violet) 10%, var(--surface));
+  border: 1px solid color-mix(in srgb, var(--mq-violet) 28%, transparent);
+  font-size: 14px;
+}
+
+.lab-pick-banner code {
+  font-size: 12px;
+}
+
+.lab-section {
+  margin-bottom: 32px;
+}
+
+.lab-section__label {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 8px 12px;
+  margin-bottom: 8px;
+  padding: 8px 12px;
+  border-radius: 10px;
+  border: 1px solid color-mix(in srgb, var(--mqx-ink) 10%, transparent);
+}
+
+.lab-section__id {
+  font-weight: 700;
+  font-size: 13px;
+  letter-spacing: 0.04em;
+  color: var(--mq-violet);
+}
+
+.lab-section__title {
+  font-weight: 600;
+  font-size: 15px;
+}
+
+.lab-section__note {
+  margin: 0 0 14px;
+  font-size: 13px;
+  color: var(--muted);
+  max-width: 68ch;
+}
+
+.tl-grid {
+  display: grid;
+  gap: 14px;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+}
+
+.tl-card {
+  border-radius: 16px;
+  overflow: hidden;
+  border: 1px solid color-mix(in srgb, var(--mqx-ink) 10%, transparent);
+  background: var(--surface);
+}
+
+.tl-card__meta {
+  padding: 10px 12px 12px;
+  border-top: 1px solid color-mix(in srgb, var(--mqx-ink) 8%, transparent);
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.tl-card__meta strong {
+  display: block;
+  font-size: 13px;
+  color: var(--mqx-ink);
+  margin-bottom: 2px;
+}
+
+.tl-card__meta span {
+  display: block;
+  margin-top: 2px;
+}
+
+.tl-dual {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  min-height: 168px;
+}
+
+.tl-pane {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 18px 12px 16px;
+  text-align: center;
+}
+
+.tl-pane--dark {
+  background: var(--game-bg);
+}
+
+.tl-pane--light {
+  background: #f8fafc;
+  border-left: 1px solid color-mix(in srgb, var(--mqx-ink) 8%, transparent);
+}
+
+.tl-pane__badge {
+  position: absolute;
+  /* not used */
+}
+
+.tl-pane-label {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  opacity: 0.55;
+  margin: 0;
+}
+
+.tl-pane--dark .tl-pane-label {
+  color: #e5e7eb;
+}
+
+.tl-pane--light .tl-pane-label {
+  color: #6b7280;
+}
+
+.tl-lockup {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+}
+
+.tl-lockup__logo {
+  width: var(--logo-w);
+  height: auto;
+  display: block;
+}
+
+.tl-tagline {
+  margin: 0;
+  font-size: var(--tagline-size);
+  line-height: 1.25;
+  max-width: 92%;
+}
+
+/* —— T1: как в посте —— */
+.tl-t1 .tl-tagline {
+  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+}
+
+.tl-t1 .tl-pane--dark .tl-tagline {
+  color: #fff;
+}
+
+.tl-t1 .tl-pane--light .tl-tagline {
+  color: #374151;
+}
+
+/* —— T2: нейтральный UI —— */
+.tl-t2 .tl-tagline {
+  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  font-weight: 400;
+  letter-spacing: 0.01em;
+}
+
+.tl-t2 .tl-pane--dark .tl-tagline {
+  color: color-mix(in srgb, #fff 88%, #c4b5fd);
+}
+
+.tl-t2 .tl-pane--light .tl-tagline {
+  color: #4b5563;
+}
+
+/* —— T3: Nunito — дружелюбный —— */
+.tl-t3 .tl-tagline {
+  font-family: 'Nunito', system-ui, sans-serif;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+}
+
+.tl-t3 .tl-pane--dark .tl-tagline {
+  color: #fafafa;
+}
+
+.tl-t3 .tl-pane--light .tl-tagline {
+  color: #5b21b6;
+}
+
+/* —— T4: Manrope — геометрия —— */
+.tl-t4 .tl-tagline {
+  font-family: 'Manrope', system-ui, sans-serif;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+}
+
+.tl-t4 .tl-pane--dark .tl-tagline {
+  color: #e9d5ff;
+}
+
+.tl-t4 .tl-pane--light .tl-tagline {
+  color: #1f2937;
+}
+
+/* —— T5: Onest — кириллица —— */
+.tl-t5 .tl-tagline {
+  font-family: 'Onest', system-ui, sans-serif;
+  font-weight: 500;
+  letter-spacing: 0;
+}
+
+.tl-t5 .tl-pane--dark .tl-tagline {
+  color: #f3f4f6;
+}
+
+.tl-t5 .tl-pane--light .tl-tagline {
+  color: #374151;
+}
+
+/* —— T6: Montserrat — классический саб —— */
+.tl-t6 .tl-tagline {
+  font-family: 'Montserrat', system-ui, sans-serif;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: none;
+}
+
+.tl-t6 .tl-pane--dark .tl-tagline {
+  color: #fff;
+  opacity: 0.92;
+}
+
+.tl-t6 .tl-pane--light .tl-tagline {
+  color: #4c1d95;
+}
+
+/* —— T7: Inter — app-native —— */
+.tl-t7 .tl-tagline {
+  font-family: 'Inter', system-ui, sans-serif;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  font-feature-settings: 'liga' 1;
+}
+
+.tl-t7 .tl-pane--dark .tl-tagline {
+  color: #e5e7eb;
+}
+
+.tl-t7 .tl-pane--light .tl-tagline {
+  color: #111827;
+}
+
+/* —— T8: Raleway — лёгкий —— */
+.tl-t8 .tl-tagline {
+  font-family: 'Raleway', system-ui, sans-serif;
+  font-weight: 400;
+  letter-spacing: 0.03em;
+}
+
+.tl-t8 .tl-pane--dark .tl-tagline {
+  color: #f9fafb;
+}
+
+.tl-t8 .tl-pane--light .tl-tagline {
+  color: #6b7280;
+}
+
+/* —— T9: тень / свечение на тёмном —— */
+.tl-t9 .tl-tagline {
+  font-family: system-ui, sans-serif;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+}
+
+.tl-t9 .tl-pane--dark .tl-tagline {
+  color: #fff;
+  text-shadow:
+    0 1px 2px rgb(0 0 0 / 45%),
+    0 0 18px color-mix(in srgb, var(--mq-violet) 35%, transparent);
+}
+
+.tl-t9 .tl-pane--light .tl-tagline {
+  color: #1f2937;
+  text-shadow: 0 1px 0 rgb(255 255 255 / 80%);
+}
+
+/* —— T10: приглушённый фиолет —— */
+.tl-t10 .tl-tagline {
+  font-family: 'Manrope', system-ui, sans-serif;
+  font-weight: 500;
+}
+
+.tl-t10 .tl-pane--dark .tl-tagline {
+  color: #c4b5fd;
+}
+
+.tl-t10 .tl-pane--light .tl-tagline {
+  color: #7c3aed;
+}
+
+/* —— T11: акцент «игра» золотом —— */
+.tl-t11 .tl-tagline {
+  font-family: 'Nunito', system-ui, sans-serif;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+}
+
+.tl-t11 .tl-pane--dark .tl-tagline {
+  color: #e5e7eb;
+}
+
+.tl-t11 .tl-pane--light .tl-tagline {
+  color: #374151;
+}
+
+.tl-t11 .tl-tagline em {
+  font-style: normal;
+  color: var(--mq-gold);
+}
+
+.tl-t11 .tl-pane--light .tl-tagline em {
+  color: #d97706;
+}
+
+/* —— T12: малые капсы, широкий трекинг —— */
+.tl-t12 .tl-tagline {
+  font-family: 'Montserrat', system-ui, sans-serif;
+  font-weight: 600;
+  font-size: clamp(10px, 2.8vw, 11px);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.tl-t12 .tl-pane--dark .tl-tagline {
+  color: color-mix(in srgb, #fff 75%, #a78bfa);
+}
+
+.tl-t12 .tl-pane--light .tl-tagline {
+  color: #6b7280;
+}
+
+/* —— T13: курсив, мягкий тон —— */
+.tl-t13 .tl-tagline {
+  font-family: 'Raleway', system-ui, sans-serif;
+  font-weight: 400;
+  font-style: italic;
+  letter-spacing: 0.02em;
+}
+
+.tl-t13 .tl-pane--dark .tl-tagline {
+  color: color-mix(in srgb, #fff 82%, #ddd6fe);
+}
+
+.tl-t13 .tl-pane--light .tl-tagline {
+  color: #6b7280;
+}
+
+/* —— T14: pill — читаемость везде —— */
+.tl-t14 .tl-tagline {
+  font-family: 'Inter', system-ui, sans-serif;
+  font-weight: 500;
+  font-size: 13px;
+  padding: 6px 12px;
+  border-radius: 999px;
+  letter-spacing: -0.01em;
+}
+
+.tl-t14 .tl-pane--dark .tl-tagline {
+  color: #f9fafb;
+  background: color-mix(in srgb, #000 38%, transparent);
+  border: 1px solid color-mix(in srgb, #fff 12%, transparent);
+}
+
+.tl-t14 .tl-pane--light .tl-tagline {
+  color: #374151;
+  background: rgb(255 255 255 / 88%);
+  border: 1px solid color-mix(in srgb, var(--mq-violet) 12%, #e5e7eb);
+  box-shadow: 0 2px 8px rgb(0 0 0 / 6%);
+}
+
+/* —— T15: разделительная черта —— */
+.tl-t15 .tl-lockup {
+  gap: 10px;
+}
+
+.tl-t15 .tl-tagline {
+  font-family: system-ui, sans-serif;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  padding-top: 10px;
+  border-top: 1px solid color-mix(in srgb, currentColor 22%, transparent);
+  min-width: min(200px, 70%);
+}
+
+.tl-t15 .tl-pane--dark .tl-tagline {
+  color: #d1d5db;
+}
+
+.tl-t15 .tl-pane--light .tl-tagline {
+  color: #6b7280;
+}
+
+/* —— REF: вшито в G1 PNG —— */
+.tl-ref .tl-dual {
+  grid-template-columns: 1fr;
+}
+
+.tl-ref .tl-pane {
+  min-height: 200px;
+}
+
+.tl-ref .tl-lockup__logo {
+  width: min(280px, 90%);
+}
+
+.tl-ref__hint {
+  margin: 8px 0 0;
+  font-size: 12px;
+  color: var(--muted);
+  text-align: center;
+}

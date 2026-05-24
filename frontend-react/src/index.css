@@ -1,5 +1,5 @@
 :root {
-  /* Money Quest palette (fallback вне темы Telegram) — см. docs/reference/brandbook/BRANDBOOK.md */
+  /* ТВОЙ ХОД palette (fallback вне темы Telegram) — см. docs/reference/brandbook/BRANDBOOK.md */
   --mq-violet: #6d28d9;
   --mq-violet-deep: #5b21b6;
   --mq-emerald: #059669;
@@ -164,7 +164,7 @@ body {
 }
 
 /* Кнопки: всегда с рамкой; filled — заливка, outline/plain — остаются библиотечными */
-#root button:not(.tma-nav-icon-btn):not(.mqx-btn):not(.mqx-save-kind__row):not(.bottom-nav__cell):not(.mqx-dash-link):not(.mqx-finance-monetka__close):not(.mqx-action):not(.mqx-level-dash__toggle):not(.events-carousel-dot):not(.events-carousel-arrow):not(.events-overlay-close):not(.mqx-events-choice) {
+#root button:not(.tma-nav-icon-btn):not(.mqx-btn):not(.mqx-save-kind__row):not(.bottom-nav__cell):not(.mqx-dash-link):not(.mqx-finance-monetka__close):not(.mqx-action):not(.mqx-level-dash__toggle):not(.events-carousel-dot):not(.events-carousel-arrow):not(.events-overlay-close):not(.mqx-events-card__close):not(.mqx-events-choice) {
   box-shadow: 0 0 0 1px var(--tgui--outline) inset;
 }
 
@@ -273,18 +273,18 @@ body {
 
 /* Hover/глубина для filled-кнопок (не трогаем outline/plain) */
 @media (hover: hover) {
-  #root button:not(.tma-nav-icon-btn):not(.mqx-btn):not(.mqx-save-kind__row):not(.bottom-nav__cell):not(.mqx-dash-link):not(.mqx-finance-monetka__close):not(.mqx-action):not(.mqx-level-dash__toggle):not(.events-carousel-dot):not(.events-carousel-arrow):not(.events-overlay-close):not(.mqx-events-choice) {
+  #root button:not(.tma-nav-icon-btn):not(.mqx-btn):not(.mqx-save-kind__row):not(.bottom-nav__cell):not(.mqx-dash-link):not(.mqx-finance-monetka__close):not(.mqx-action):not(.mqx-level-dash__toggle):not(.events-carousel-dot):not(.events-carousel-arrow):not(.events-overlay-close):not(.mqx-events-card__close):not(.mqx-events-choice) {
     transition:
       background-color 0.14s ease,
       box-shadow 0.14s ease,
       transform 0.12s cubic-bezier(0.22, 1, 0.32, 1);
   }
-  #root button:not(.tma-nav-icon-btn):not(.mqx-btn):not(.mqx-save-kind__row):not(.bottom-nav__cell):not(.mqx-dash-link):not(.mqx-finance-monetka__close):not(.mqx-action):not(.mqx-level-dash__toggle):not(.events-carousel-dot):not(.events-carousel-arrow):not(.events-overlay-close):not(.mqx-events-choice):active:not(:disabled) {
+  #root button:not(.tma-nav-icon-btn):not(.mqx-btn):not(.mqx-save-kind__row):not(.bottom-nav__cell):not(.mqx-dash-link):not(.mqx-finance-monetka__close):not(.mqx-action):not(.mqx-level-dash__toggle):not(.events-carousel-dot):not(.events-carousel-arrow):not(.events-overlay-close):not(.mqx-events-card__close):not(.mqx-events-choice):active:not(:disabled) {
     transform: scale(0.985);
   }
   /* filled у telegram-ui использует var(--tgui--button_color) — затемняем только его */
-  #root button:not(.tma-nav-icon-btn):not(.mqx-btn):not(.mqx-save-kind__row):not(.bottom-nav__cell):not(.mqx-dash-link):not(.mqx-finance-monetka__close):not(.mqx-action):not(.mqx-level-dash__toggle):not(.events-carousel-dot):not(.events-carousel-arrow):not(.events-overlay-close):not(.mqx-events-choice)[style*='--tgui--button_color'],
-  #root button:not(.tma-nav-icon-btn):not(.mqx-btn):not(.mqx-save-kind__row):not(.bottom-nav__cell):not(.mqx-dash-link):not(.mqx-finance-monetka__close):not(.mqx-action):not(.mqx-level-dash__toggle):not(.events-carousel-dot):not(.events-carousel-arrow):not(.events-overlay-close):not(.mqx-events-choice)[class*='tgui-']:where(:not(:disabled)) {
+  #root button:not(.tma-nav-icon-btn):not(.mqx-btn):not(.mqx-save-kind__row):not(.bottom-nav__cell):not(.mqx-dash-link):not(.mqx-finance-monetka__close):not(.mqx-action):not(.mqx-level-dash__toggle):not(.events-carousel-dot):not(.events-carousel-arrow):not(.events-overlay-close):not(.mqx-events-card__close):not(.mqx-events-choice)[style*='--tgui--button_color'],
+  #root button:not(.tma-nav-icon-btn):not(.mqx-btn):not(.mqx-save-kind__row):not(.bottom-nav__cell):not(.mqx-dash-link):not(.mqx-finance-monetka__close):not(.mqx-action):not(.mqx-level-dash__toggle):not(.events-carousel-dot):not(.events-carousel-arrow):not(.events-overlay-close):not(.mqx-events-card__close):not(.mqx-events-choice)[class*='tgui-']:where(:not(:disabled)) {
     /* оставляем библиотечные состояния; глубина достигается рамкой и лёгким transform */
   }
 }
@@ -800,12 +800,14 @@ body {
   padding-top: 2px;
 }
 
-.mqx-hero--compact .mq-logo rect {
-  fill: rgba(255, 255, 255, 0.14);
+.mqx-hero--compact .mqx-brand-logo--compact {
+  height: 26px;
+  max-width: 140px;
 }
 
-.mqx-hero--compact .mq-logo text {
-  fill: #fff;
+.mqx-hero-tab__logo.mqx-brand-logo--compact {
+  height: 24px;
+  max-width: 128px;
 }
 
 .mqx-hero-compact__center {
@@ -1772,6 +1774,11 @@ body {
   background: var(--tg-theme-secondary-bg-color, var(--mq-surface-b, #f5f6f8));
 }
 
+.mqx-auth--brand-top {
+  place-items: start center;
+  padding-top: 20px;
+}
+
 .mqx-auth-monetka {
   display: flex;
   flex-direction: column;
@@ -1781,6 +1788,10 @@ body {
   width: 100%;
   max-width: 360px;
   margin: 0 auto;
+}
+
+.mqx-auth-monetka--brand-top {
+  justify-content: flex-start;
 }
 
 .mqx-auth-monetka__mascot {
@@ -1923,6 +1934,14 @@ body {
   padding: 0 0 4px;
   box-sizing: border-box;
   overflow-x: clip;
+}
+
+.mqx-monetka-flow--with-brand {
+  padding-top: 12px;
+}
+
+.mqx-monetka-flow--with-brand .mqx-monetka-flow__brand {
+  align-self: center;
 }
 
 .mqx-monetka-flow__mascot {
@@ -6910,8 +6929,43 @@ code {
   color: var(--tg-theme-hint-color, var(--text));
 }
 
-.mq-logo {
+.mq-logo,
+.mqx-brand-logo {
   flex-shrink: 0;
+  display: block;
+  width: auto;
+  height: auto;
+  background: transparent;
+}
+
+.mqx-brand-logo--compact {
+  height: 26px;
+  max-width: min(160px, 44vw);
+}
+
+.mqx-brand-logo--full {
+  width: min(300px, 92vw);
+  height: auto;
+  max-height: none;
+}
+
+.mqx-brand-mark {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  background: transparent;
+}
+
+.mqx-brand-mark--full {
+  margin: 0 0 10px;
+  padding: 0;
+}
+
+.mqx-auth-monetka__brand,
+.mqx-monetka-flow__brand {
+  margin-bottom: 6px;
 }
 
 .tma-bordered-inner {
@@ -6934,7 +6988,27 @@ code {
   justify-content: center;
   padding: 12px;
   padding-top: calc(12px + env(safe-area-inset-top, 0px));
+  padding-bottom: calc(12px + env(safe-area-inset-bottom, 0px));
   pointer-events: auto;
+  overflow: hidden;
+  overscroll-behavior: none;
+  touch-action: none;
+}
+
+/* Пока открыт оверлей событий — не прокручивать игру под ним */
+body.mqx-events-overlay-open,
+body.mqx-events-overlay-open #root {
+  overflow: hidden !important;
+  height: 100dvh;
+  max-height: 100dvh;
+}
+
+body.mqx-events-overlay-open .mq-game-shell,
+body.mqx-events-overlay-open .mq-game-shell__main,
+body.mqx-events-overlay-open .mqx-tab-page,
+body.mqx-events-overlay-open .mqx-tab-page__scroll {
+  overflow: hidden !important;
+  touch-action: none;
 }
 
 .events-overlay-backdrop {
@@ -6948,12 +7022,15 @@ code {
 .events-overlay-panel {
   position: relative;
   width: min(448px, 100%);
-  max-height: calc(92dvh - env(safe-area-inset-top, 0px));
+  max-height: min(92dvh, calc(100dvh - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px) - 24px));
+  min-height: 0;
   padding: 14px 14px 12px;
   border-radius: 16px;
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
+  overflow: hidden;
+  touch-action: pan-y;
   background: var(--tg-theme-bg-color, var(--bg));
   color: var(--tg-theme-text-color, var(--text));
   border: 1px solid color-mix(in srgb, var(--tg-theme-hint-color, var(--mq-line)) 40%, transparent);
@@ -6963,7 +7040,7 @@ code {
 .events-overlay-toolbar {
   display: flex;
   justify-content: space-between;
-  align-items: flex-start;
+  align-items: center;
   gap: 12px;
   margin-bottom: 8px;
 }
@@ -6973,6 +7050,26 @@ code {
   display: flex;
   flex-direction: column;
   gap: 4px;
+}
+
+.mqx-events-toolbar--l3 {
+  margin-bottom: 6px;
+}
+
+.mqx-events-toolbar__main {
+  min-width: 0;
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.mqx-events-toolbar__progress {
+  font-size: var(--mq-fs-caption);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.02em;
+  color: var(--tg-theme-hint-color, var(--mqx-ink-muted));
 }
 
 .events-overlay-title {
@@ -7004,7 +7101,7 @@ code {
   background: transparent;
 }
 
-/* Money Quest Premium — оверлей событий (наследует разметку events-overlay-*) */
+/* ТВОЙ ХОД Premium — оверлей событий (наследует разметку events-overlay-*) */
 .mqx-events-overlay {
   z-index: 530;
 }
@@ -7014,31 +7111,45 @@ code {
 }
 
 .mqx-events-panel.events-overlay-panel {
+  background: var(--tg-theme-bg-color, var(--bg));
+  border: 1px solid color-mix(in srgb, var(--tg-theme-hint-color, var(--mq-line)) 35%, transparent);
+  box-shadow: 0 20px 48px rgba(15, 10, 40, 0.22);
+}
+
+.mqx-events-panel--l3.events-overlay-panel {
+  padding: 14px 14px 12px;
   background: linear-gradient(
-    160deg,
-    color-mix(in srgb, var(--tg-theme-bg-color, var(--bg)) 92%, #6d28d9 8%),
-    var(--tg-theme-bg-color, var(--bg))
+    180deg,
+    var(--tg-theme-bg-color, #fff) 0%,
+    color-mix(in srgb, var(--tg-theme-bg-color, #fff) 94%, var(--tg-theme-hint-color, #e8e8ee) 6%) 100%
   );
-  border: 1px solid color-mix(in srgb, var(--mq-violet, #7c3aed) 38%, transparent);
-  box-shadow:
-    0 22px 60px rgba(15, 10, 40, 0.38),
-    0 0 0 1px color-mix(in srgb, #fff 6%, transparent) inset;
+  border: 1px solid color-mix(in srgb, var(--tg-theme-hint-color, var(--mq-line)) 28%, transparent);
+  box-shadow: 0 20px 48px rgba(15, 10, 40, 0.2);
 }
 
-.mqx-events-title {
-  background: linear-gradient(90deg, var(--tg-theme-text-color, var(--text)), var(--mq-violet, #7c3aed));
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
+.mqx-events-nav--l3.events-carousel-nav {
+  margin-top: 10px;
+  padding-top: 4px;
 }
 
-.mqx-events-sub {
-  max-width: 52ch;
+.mqx-events-nav--l3 .mqx-events-counter.events-carousel-counter {
+  font-size: var(--mq-fs-caption);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  color: var(--tg-theme-hint-color, var(--mqx-ink-muted));
 }
 
-.mqx-events-close {
-  border-radius: 14px;
-  background: color-mix(in srgb, var(--tg-theme-secondary-bg-color, #f4f4f8) 70%, transparent);
+.mqx-events-nav--l3 .mqx-events-arrow.events-carousel-arrow {
+  width: 44px;
+  height: 40px;
+  border: 1px solid color-mix(in srgb, var(--tg-theme-hint-color) 35%, transparent);
+  border-radius: 12px;
+  background: transparent;
+  color: var(--tg-theme-text-color, var(--text));
+}
+
+.mqx-events-nav__gap {
+  display: block;
 }
 
 .mqx-events-card {
@@ -7058,35 +7169,145 @@ code {
   background: transparent;
 }
 
-/* M2 — реплика в пузыре + Монетка (утверждено) */
+/* L3 ★ — domain band + labels + пузырь (бывш. M2) */
+.mqx-events-card--l3,
 .mqx-events-card--m2 {
+  --mqx-events-accent: var(--mq-violet, #6d28d9);
   display: flex;
   flex-direction: column;
-  gap: 10px;
-  padding: 2px 0 0;
-  border: none;
-  background: transparent;
+  gap: 0;
+  padding: 0;
+  margin: 0;
+  border: 1px solid color-mix(in srgb, var(--mqx-events-accent) 30%, transparent);
+  background: var(--tg-theme-bg-color, #fff);
+  border-radius: 14px;
+  overflow: visible;
+  box-sizing: border-box;
+  flex-shrink: 0;
 }
 
 .mqx-events-card__head {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: space-between;
   gap: 8px;
-  flex-wrap: wrap;
 }
 
-.mqx-events-card--m2 .mqx-events-card__badge {
-  margin-bottom: 0;
+.mqx-events-card__head .mqx-events-card__title--l3 {
+  flex: 1;
+  min-width: 0;
+  padding-right: 4px;
+}
+
+button.mqx-events-card__close {
+  flex-shrink: 0;
+  width: 28px;
+  height: 28px;
+  margin: -2px -2px 0 0;
+  padding: 0;
+  border: none;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  font-size: 22px;
+  font-weight: 400;
+  line-height: 1;
+  color: var(--tg-theme-hint-color, var(--mqx-ink-muted));
+  cursor: pointer;
+}
+
+button.mqx-events-card__close:active:not(:disabled) {
+  transform: none;
+  opacity: 0.65;
+}
+
+.mqx-events-card__band {
+  height: 4px;
+  flex-shrink: 0;
+  background: linear-gradient(
+    90deg,
+    var(--mqx-events-accent),
+    color-mix(in srgb, var(--mqx-events-accent) 55%, var(--tg-theme-bg-color, #fff))
+  );
+}
+
+.mqx-events-card__frame {
+  padding: 10px 12px 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.mqx-events-card__labels {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: stretch;
+  gap: 6px;
+}
+
+.mqx-events-domain-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  min-height: 22px;
+  padding: 4px 9px;
+  box-sizing: border-box;
+  border-radius: 999px;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--mqx-events-accent);
+  background: color-mix(in srgb, var(--mqx-events-accent) 12%, transparent);
+}
+
+.mqx-events-domain-pill__dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--mqx-events-accent);
   flex-shrink: 0;
 }
 
+.mqx-events-card__badge--inline {
+  display: inline-flex;
+  align-items: center;
+  min-height: 22px;
+  margin-bottom: 0;
+  padding: 4px 8px;
+  box-sizing: border-box;
+  flex-shrink: 0;
+}
+
+.mqx-events-card__title--l3,
 .mqx-events-card__title--m2 {
   margin: 0;
   font-size: calc(var(--mq-fs-body) + 2px);
   font-weight: 800;
   letter-spacing: -0.02em;
   line-height: 1.2;
+}
+
+.mqx-events-card--domain-consumption { --mqx-events-accent: #d97706; }
+.mqx-events-card--domain-housing { --mqx-events-accent: #4f46e5; }
+.mqx-events-card--domain-health { --mqx-events-accent: #e11d48; }
+.mqx-events-card--domain-insurance { --mqx-events-accent: #059669; }
+.mqx-events-card--domain-auto { --mqx-events-accent: #0284c7; }
+.mqx-events-card--domain-credit-debt { --mqx-events-accent: #5b21b6; }
+.mqx-events-card--domain-investment-education { --mqx-events-accent: #0d9488; }
+.mqx-events-card--domain-social-family { --mqx-events-accent: #7c3aed; }
+.mqx-events-card--domain-income-work { --mqx-events-accent: #64748b; }
+.mqx-events-card--domain-meta { --mqx-events-accent: #6d28d9; }
+
+.mqx-events-card--l3:not(.mqx-events-card--insurance) .mqx-events-card__bubble {
+  background: color-mix(in srgb, var(--mqx-events-accent) 10%, var(--tg-theme-bg-color, var(--bg)));
+  border-color: color-mix(in srgb, var(--mqx-events-accent) 22%, transparent);
+  box-shadow: 0 6px 18px color-mix(in srgb, var(--mqx-events-accent) 12%, transparent);
+}
+
+.mqx-events-card--l3:not(.mqx-events-card--insurance) .mqx-events-card__bubble::before {
+  border-left-color: color-mix(in srgb, var(--mqx-events-accent) 22%, transparent);
+  border-bottom-color: color-mix(in srgb, var(--mqx-events-accent) 22%, transparent);
 }
 
 .mqx-events-card__bubble-row {
@@ -7112,9 +7333,9 @@ code {
   position: relative;
   padding: 10px 12px;
   border-radius: 14px 14px 14px 4px;
-  background: color-mix(in srgb, var(--mq-violet, #6d28d9) 10%, var(--tg-theme-bg-color, var(--bg)));
-  border: 1px solid color-mix(in srgb, var(--mq-violet, #6d28d9) 22%, transparent);
-  box-shadow: 0 6px 18px color-mix(in srgb, var(--mq-violet, #6d28d9) 12%, transparent);
+  background: color-mix(in srgb, var(--mqx-events-accent, var(--mq-violet, #6d28d9)) 10%, var(--tg-theme-bg-color, var(--bg)));
+  border: 1px solid color-mix(in srgb, var(--mqx-events-accent, var(--mq-violet, #6d28d9)) 22%, transparent);
+  box-shadow: 0 6px 18px color-mix(in srgb, var(--mqx-events-accent, var(--mq-violet, #6d28d9)) 12%, transparent);
 }
 
 .mqx-events-card__bubble::before {
@@ -7125,8 +7346,8 @@ code {
   width: 10px;
   height: 10px;
   background: inherit;
-  border-left: 1px solid color-mix(in srgb, var(--mq-violet, #6d28d9) 22%, transparent);
-  border-bottom: 1px solid color-mix(in srgb, var(--mq-violet, #6d28d9) 22%, transparent);
+  border-left: 1px solid color-mix(in srgb, var(--mqx-events-accent, var(--mq-violet, #6d28d9)) 22%, transparent);
+  border-bottom: 1px solid color-mix(in srgb, var(--mqx-events-accent, var(--mq-violet, #6d28d9)) 22%, transparent);
   transform: rotate(45deg);
   border-radius: 0 0 0 3px;
 }
@@ -7149,25 +7370,17 @@ code {
   border-bottom-color: color-mix(in srgb, var(--mq-emerald) 24%, transparent);
 }
 
+.mqx-events-card--l3 .mqx-events-card__choices,
 .mqx-events-card--m2 .mqx-events-card__choices {
   gap: 0;
   margin-top: 2px;
-}
-
-.mqx-events-panel--insurance.events-overlay-panel {
-  border-color: color-mix(in srgb, var(--mq-emerald) 28%, transparent);
-  background: linear-gradient(
-    180deg,
-    color-mix(in srgb, var(--mq-emerald) 8%, var(--tg-theme-bg-color, var(--bg))),
-    var(--tg-theme-bg-color, var(--bg))
-  );
 }
 
 .mqx-events-card__badge {
   display: inline-flex;
   align-items: center;
   margin-bottom: 6px;
-  padding: 3px 8px;
+  padding: 4px 8px;
   border-radius: 999px;
   font-size: 10px;
   font-weight: 700;
@@ -7189,18 +7402,6 @@ code {
 .mqx-events-card--flat .mqx-events-card__choices {
   gap: 0;
   margin-top: 0;
-}
-
-button.mqx-events-choice--flat {
-  border: none;
-  border-radius: 0;
-  background: transparent;
-  padding: 12px 0;
-  border-bottom: 1px solid color-mix(in srgb, var(--mqx-ink) 8%, transparent);
-}
-
-button.mqx-events-choice--flat:last-child {
-  border-bottom: none;
 }
 
 .mqx-events-card__kicker {
@@ -7268,6 +7469,25 @@ button.mqx-events-choice:active:not(:disabled) {
   transform: translateY(1px);
 }
 
+/* L3 flat-выборы: без рамок и фона, разделители линиями (после базового .mqx-events-choice) */
+button.mqx-events-choice.mqx-events-choice--flat {
+  border: none;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  padding: 12px 0;
+  border-bottom: 1px solid color-mix(in srgb, var(--tg-theme-hint-color, var(--mq-line)) 32%, transparent);
+}
+
+button.mqx-events-choice.mqx-events-choice--flat:last-child {
+  border-bottom: none;
+}
+
+button.mqx-events-choice.mqx-events-choice--flat:active:not(:disabled) {
+  transform: none;
+  background: color-mix(in srgb, var(--tg-theme-hint-color, var(--mq-line)) 10%, transparent);
+}
+
 .mqx-events-choice__title {
   display: block;
   font-weight: 680;
@@ -7319,22 +7539,47 @@ button.mqx-events-choice:active:not(:disabled) {
 
 .event-carousel-viewport {
   position: relative;
-  flex: 1;
-  min-height: clamp(260px, 48vh, 420px);
-  max-height: min(58vh, 520px);
+  flex: 1 1 auto;
+  min-height: 0;
+  min-width: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+  touch-action: pan-y;
+}
+
+/* Без анимации: карточка в потоке → скролл viewport */
+.event-carousel-layer--base:not(.event-carousel-layer--dim) {
+  position: relative;
+  width: 100%;
+  z-index: 1;
+}
+
+/* Анимация слайда: слои поверх viewport, каждый со своим скроллом */
+.event-carousel-viewport--sliding {
   overflow: hidden;
-  touch-action: manipulation;
+}
+
+.event-carousel-viewport--sliding .event-carousel-layer--base.event-carousel-layer--dim,
+.event-carousel-viewport--sliding .event-carousel-layer--top {
+  position: absolute;
+  inset: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+  touch-action: pan-y;
 }
 
 .event-carousel-layer {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  flex-direction: column;
+  width: 100%;
+  box-sizing: border-box;
 }
 
-.event-carousel-layer--base {
+.event-carousel-layer--base.event-carousel-layer--dim {
   z-index: 1;
+  pointer-events: none;
 }
 
 .event-carousel-layer--top {
@@ -7435,10 +7680,6 @@ button.mqx-events-choice:active:not(:disabled) {
   max-height: 100%;
   overflow-x: hidden;
   overflow-y: auto;
-}
-
-.event-carousel-layer--base.event-carousel-layer--dim {
-  pointer-events: none;
 }
 
 .event-deck-card__meta {

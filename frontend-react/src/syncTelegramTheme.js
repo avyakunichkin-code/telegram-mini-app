@@ -1,6 +1,6 @@
 /**
  * Прокидывает themeParams клиента Telegram в CSS-переменные колонки #root.
- * Смешивается с палитрой Money Quest в index.css через color-mix.
+ * Смешивается с палитрой ТВОЙ ХОД в index.css через color-mix.
  */
 function normalizeHex(hex) {
   if (!hex || typeof hex !== 'string') return null;
@@ -33,7 +33,7 @@ export function syncTelegramThemeToRoot() {
   set('--tg-theme-bg-color', p.bg_color);
   set('--tg-theme-text-color', p.text_color);
   set('--tg-theme-hint-color', p.hint_color);
-  // В TMA мы оставляем фон/текст из темы Telegram, но CTA/акцент фиксируем брендом Money Quest.
+  // В TMA мы оставляем фон/текст из темы Telegram, но CTA/акцент фиксируем брендом ТВОЙ ХОД.
   // Это убирает конфликт «голубые кнопки + фиолетовое меню».
   rootEl.style.setProperty('--tg-theme-link-color', '#5B21B6');
   rootEl.style.setProperty('--tg-theme-button-color', '#6D28D9');

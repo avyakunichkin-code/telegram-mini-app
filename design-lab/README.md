@@ -12,7 +12,7 @@
 | [invest-forms/](invest-forms/) | внедрено в prod | Формы депозита / облигаций |
 | [primitives/](primitives/) | **утверждено → prod** | Гибрид D+C+B/A; в `mqx/primitives/` |
 | [finance-insurance/](finance-insurance/) | **внедрено в prod** | B: каталог 2×2 + тарифы; карточки asset H |
-| [dashboard/](dashboard/) | **этап 1** | Main: V0 = prod, L1–L3 раскладка; `cd dashboard && npx serve .` |
+| [dashboard/](dashboard/) | **★ S5 в prod** | L3+S5 Unified; хвосты: empty/error, иконки — см. one-pager |
 | [events/](events/) | **внедрено в prod** | EventCard, EventCarouselOverlay, MqxPill |
 | [row-actions/](row-actions/) | **B + F2 → prod** | MqxRowAction (корзина по умолчанию), MqxFinListRow, confirm; порядок метрик — в spec |
 | [capital-page/](capital-page/) | **IA утверждена → вариант A/B на выбор** | 5 табов, бюджет №2, имущество/обязательства строками |
@@ -20,16 +20,22 @@
 | [auth-flow/](auth-flow/) | **★ B → prod** | Вход / регистрация (Монетка) |
 | [new-game-mode/](new-game-mode/) | **★ B → prod** | Шаг 1: имя + Игра / План |
 | [game-templates/](game-templates/) | **★ B → prod** | Шаг 2: каталог + быстрый старт |
-| [period-close/](period-close/) | **этап 1** | Итог месяца: компактная выжимка + хвостик с периода 4 |
+| [period-close/](period-close/) | **★ в prod** | Иконки строк — lab-раунд B2 |
 | [start-menu/](start-menu/) | **★ B → prod** | Меню сохранений после входа |
 | [onboarding-brief/](onboarding-brief/) | superseded | ~~Mission Brief 3 карточки + видео~~ |
+| [brand-logo/](brand-logo/) | **★ → prod** | G1 старт, G2 hero; tagline в G1 |
 
 ## Как работать
 
 ```bash
-cd design-lab/<тема>
+cd design-lab/<тема>/<раунд>
+.\sync-lab.ps1          # если есть — пересобрать lab-base.css + assets
 npx serve .
 ```
+
+**Важно:** в HTML макета только пути `./` — не `../` (иначе стили 404). См. `money-quest-design-lab.mdc` и скилл `design-lab-mqx`.
+
+**Events:** `design-lab/events/sync-all-rounds.ps1` — все раунды сразу.
 
 В `README.md` каждой темы — таблица вариантов A, B, C… и что утверждено.
 

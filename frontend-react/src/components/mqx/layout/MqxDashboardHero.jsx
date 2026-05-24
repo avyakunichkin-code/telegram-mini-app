@@ -1,4 +1,4 @@
-import { MqLogo } from '../../MqLogo';
+import { BrandLogo } from '../../BrandLogo';
 import { MqxButton } from '../primitives/MqxButton';
 import { MqxPill } from '../primitives/MqxPill';
 
@@ -36,7 +36,7 @@ export function MqxDashboardHero({
 
       <div className="mqx-hero-compact__row1">
         <div className="mqx-hero-compact__logo" aria-hidden>
-          <MqLogo size={36} />
+          <BrandLogo variant="compact" />
         </div>
 
         <div className="mqx-hero-compact__center">

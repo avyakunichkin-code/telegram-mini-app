@@ -19,7 +19,7 @@ disable-model-invocation: true
 
 Проектные скиллы и приоритеты — [`docs/agents/CURSOR_SKILLS.md`](docs/agents/CURSOR_SKILLS.md). Дублировать доменные процедуры в `~/.cursor/skills-cursor/` не нужно.
 
-## Где лежат скиллы Money Quest
+## Где лежат скиллы ТВОЙ ХОД
 
 Все проектные скиллы — в каталоге:
 

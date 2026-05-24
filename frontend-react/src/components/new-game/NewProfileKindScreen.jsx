@@ -8,6 +8,7 @@ import { MqxSaveKindPicker } from '../mqx/layout/MqxSaveKindPicker';
 export function NewProfileKindScreen({ onChooseGame, onBack }) {
   return (
     <MqxMonetkaDialogScreen
+      showBrand
       title="Новая игра!"
       subtitle={
         <p>

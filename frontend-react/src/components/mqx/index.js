@@ -1,4 +1,4 @@
-/** Money Quest — MQX component library (UI kit). */
+/** ТВОЙ ХОД — MQX component library (UI kit). */
 
 export * from './icons/FinanceMetricIcons';
 export { MetricInlineItem } from './metrics/MetricInlineItem';
@@ -24,19 +24,15 @@ export {
 export { IllustrationGame, IllustrationPlan } from './icons/ModeIllustrations';
 export { MqxDashStack } from './layout/MqxDashStack';
 export { MqxDivider } from './primitives/MqxDivider';
-export { MqxLevelBlock } from './layout/MqxLevelBlock';
 export { MqxLevelDash } from './layout/MqxLevelDash';
 export { MqxFinancePeriodBlock } from './layout/MqxFinancePeriodBlock';
 export { MqxPeriodActions } from './layout/MqxPeriodActions';
-export { MqxPeriodDashboard } from './layout/MqxPeriodDashboard';
 export { ExpensesBudgetBlock } from './layout/ExpensesBudgetBlock';
 export { PlanExpenseBudgetEditor } from './layout/PlanExpenseBudgetEditor';
 export { PlanExpenseEditor } from './layout/PlanExpenseEditor';
 export { MqxCard } from './layout/MqxCard';
 export { MqxCardHeader } from './layout/MqxCardHeader';
 export { MqxGoalBadge } from './layout/MqxGoalBadge';
-export { MqxBlockSection } from './layout/MqxBlockSection';
-export { MqxStatMini } from './layout/MqxStatMini';
 export { VictoryGoalItem } from './layout/VictoryGoalItem';
 export { CapitalPositionCard } from './layout/CapitalPositionCard';
 export { InvestPositionRow } from './layout/InvestPositionRow';

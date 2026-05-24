@@ -1,9 +1,9 @@
+import { BrandLogo } from './BrandLogo';
+
 /**
- * Единый «таб-хиро» для потоков вне игрового дашборда: MQ‑пилюли, заголовок, подзаголовок.
- * Совпадает с экранами «Профили», «Финансы», «Аналитика», старт игры и авторизация.
+ * Единый «таб-хиро» для вкладок игры: логотип слева, заголовок, подзаголовок.
  */
-export function MqxTabHero({
-  sectionLabel,
+export function MqxTabHero({  sectionLabel,
   rightPill = null,
   title,
   subtitle = null,
@@ -16,7 +16,7 @@ export function MqxTabHero({
       <div className="mqx-hero__glow" aria-hidden />
       <div className="mqx-hero__top">
         <div className="mqx-hero-pills">
-          <span className="mqx-hero-pill mqx-hero-pill--brand">MQ</span>
+          <BrandLogo variant="compact" className="mqx-hero-tab__logo" />
           <span className="mqx-hero-pill">{sectionLabel}</span>
         </div>
         {rightPill ? <span className="mqx-hero-pill mqx-hero-pill--ghost">{rightPill}</span> : null}

@@ -24,26 +24,20 @@ import {
   LiabilityTemplateMetrics,
   MetricInlineItem,
   MetricsRow,
-  MqxBlockSection,
   MqxButton,
-  MqxCard,
-  MqxCardHeader,
   MqxChip,
   MqxDashStack,
   MqxDashboardHero,
   MqxSaveKindPicker,
   MqxStarterScenarioPicker,
   MqxDivider,
-  MqxGoalBadge,
   MqxFinancePeriodBlock,
-  MqxLevelBlock,
   MqxLevelDash,
   MqxPeriodActions,
+  MqxPeriodCloseSheet,
   MqxPeriodChip,
-  MqxPeriodDashboard,
   MqxPill,
   MqxProgress,
-  MqxStatMini,
   MqxSubtab,
   MqxModeButton,
   MqxSectionSeg,
@@ -156,8 +150,9 @@ export function MqCatalogScreen() {
       <header className="mqx-catalog__header">
         <h1>MQX — библиотека компонентов</h1>
         <p className="mqx-catalog__lead">
-          Живой каталог стандартизированных блоков Money Quest. Статичные эксперименты — в{' '}
-          <code>design-lab/</code>.
+          Только компоненты <strong>★ в production</strong>. Черновики и отклонённые варианты — в{' '}
+          <code>design-lab/</code>, не здесь. Аудит:{' '}
+          <code>docs/specs/UI_CONSISTENCY_AUDIT.md</code>.
         </p>
         <Link to="/" className="mqx-catalog__back">
           ← В игру
@@ -287,46 +282,31 @@ export function MqCatalogScreen() {
         </div>
       </CatalogSection>
 
-      <CatalogSection title="Shell — legacy карточки">
-        <div className="mqx-stack" style={{ gap: 12, maxWidth: 420 }}>
-          <MqxCard variant="goal">
-            <MqxCardHeader
-              layout="split"
-              kicker="Цель"
-              kickerTone="emerald"
-              title="Победа в сценарии"
-              sub="2 из 3 целей"
-              trailing={<MqxGoalBadge>Почти</MqxGoalBadge>}
-            />
-          </MqxCard>
-          <MqxBlockSection title="Финансы" actionLabel="Детали" onAction={() => {}}>
-            <div className="mqx-grid2">
-              <MqxStatMini
-                title="Баланс"
-                accent="mqx-accent--violet"
-                value={<MoneyText value={42000} />}
-                icon={(
-                  <svg viewBox="0 0 24 24" aria-hidden="true">
-                    <path d="M7 10V7a5 5 0 0 1 10 0v3" />
-                  </svg>
-                )}
-              />
-              <MqxStatMini
-                title="Подушка"
-                accent="mqx-accent--emerald"
-                value={<MoneyText value={18000} />}
-                icon={(
-                  <svg viewBox="0 0 24 24" aria-hidden="true">
-                    <path d="M12 3 20 7v6c0 5-3.4 8.2-8 9-4.6-.8-8-4-8-9V7l8-4Z" />
-                  </svg>
-                )}
-              />
-            </div>
-          </MqxBlockSection>
+      <CatalogSection title="Итог периода ★ (нижний лист)">
+        <p className="mqx-catalog__lead" style={{ marginTop: 0 }}>
+          <code>MqxPeriodCloseSheet</code> — 6 строк Δ, хвостик с периода 4. Lab: <code>design-lab/period-close/</code>.
+        </p>
+        <div style={{ maxWidth: 420, position: 'relative', minHeight: 280 }}>
+          <MqxPeriodCloseSheet
+            open
+            onClose={() => {}}
+            summary={{
+              closed_period_index: 3,
+              cash_delta: 1500,
+              income_delta: 5000,
+              expense_delta: -1200,
+              safety_fund_delta: 10000,
+              invest_capital_delta: 0,
+              debt_delta: -8000,
+              xp_earned: 32,
+              xp_period_close: 22,
+              xp_milestone: 0,
+            }}
+          />
         </div>
       </CatalogSection>
 
-      <CatalogSection title="События — M2 пузырь + Монетка">
+      <CatalogSection title="События ★ L3 — domain band + пузырь">
         <div className="mqx-stack" style={{ gap: 12, maxWidth: 420 }}>
           <MqxPill events badge={2}>
             События
@@ -334,14 +314,22 @@ export function MqCatalogScreen() {
           <EventCard
             event={{
               id: 1,
-              period_index: 4,
+              event_domain: 'auto',
               title: 'ДТП',
               description: 'Небольшое столкновение. При ОСАГО страховая покроет ущерб.',
-              idxInDeck: 0,
-              deckLen: 2,
               choices: [
-                { id: 10, title: 'Оформить по полису ОСАГО', description: 'Выплата по страховке', insurance_claim: true, xp_delta: 4 },
-                { id: 11, title: 'Оплатить из своих (−45 000 ₽)', xp_delta: 2 },
+                {
+                  id: 10,
+                  title: 'Оформить по полису ОСАГО',
+                  description: 'Выплата по страховке',
+                  insurance_claim: true,
+                  impacts: [{ kind: 'insurance_payout', delta: 45000 }, { kind: 'xp', delta: 4 }],
+                },
+                {
+                  id: 11,
+                  title: 'Оплатить из своих',
+                  impacts: [{ kind: 'cash', delta: -45000 }, { kind: 'xp', delta: 2 }],
+                },
                 { id: 12, title: 'Договориться без оформления', xp_delta: 1 },
               ],
             }}

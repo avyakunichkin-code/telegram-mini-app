@@ -1,15 +1,26 @@
 # Events — оверлей и карточка
 
-**Статус:** **M2 ★ утверждён** → prod (`EventCard`). Выборы — flat без emerald-кнопки.
+**Статус:** **L3 ★** карточка + **O1 ★** оверлей в prod.
 
-Запуск:
+| Раунд | Папка | Задача |
+|-------|--------|--------|
+| **1** | [`layout-round/`](layout-round/) | Компоновка L1–L5 → ★ **L3** |
+| **2** | [`domains-round/`](domains-round/) | Скины `event_domain` на L3 |
+| **3** | [`overlay-round/`](overlay-round/) | Окно: шапка, панель, навигация → ★ **O1** |
+| Архив | `index.html` | Раунды M1–M6, B′ (2026-05) |
 
-```bash
+```powershell
 cd design-lab/events
+.\sync-all-rounds.ps1          # lab-base.css + assets во всех раундах
+
+cd layout-round   # или overlay-round / domains-round
+.\sync-lab.ps1    # один раунд
 npx serve .
 ```
 
-Открыть `index.html` — прокрутить до «Раунд 2». Ideation: [`IDEATION.md`](./IDEATION.md).
+В `index.html` только `./lab-base.css` и `./styles.css` — без `../`.
+
+Ideation: [`IDEATION.md`](./IDEATION.md) · эпик: [`docs/vision/ideas/mqx-ui-unification.md`](../../docs/vision/ideas/mqx-ui-unification.md).
 
 ## Раунд 1 (legacy)
 

@@ -1,6 +1,6 @@
-# Money Quest — фронтенд (React + Vite)
+# ТВОЙ ХОД — фронтенд (React + Vite)
 
-Клиент Telegram Mini App для [Money Quest](../README.md). UI на React 18 и [`@telegram-apps/telegram-ui`](https://github.com/Telegram-Mini-Apps/TelegramUI).
+Клиент Telegram Mini App для [ТВОЙ ХОД](../README.md). UI на React 18 и [`@telegram-apps/telegram-ui`](https://github.com/Telegram-Mini-Apps/TelegramUI).
 
 ---
 

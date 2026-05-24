@@ -41,9 +41,9 @@ Interpret creatively and make unexpected choices that feel genuinely designed fo
 
 Remember: Claude is capable of extraordinary creative work. Don't hold back, show what can truly be created when thinking outside the box and committing fully to a distinctive vision.
 
-## Money Quest (этот репозиторий)
+## ТВОЙ ХОД (этот репозиторий)
 
-Для UI **Money Quest** не подставляй «универсальную» эстетику скилла вместо канона продукта. Сначала сверяйся с брендом и спеками:
+Для UI **ТВОЙ ХОД** не подставляй «универсальную» эстетику скилла вместо канона продукта. Сначала сверяйся с брендом и спеками:
 
 | Источник | Путь |
 |----------|------|

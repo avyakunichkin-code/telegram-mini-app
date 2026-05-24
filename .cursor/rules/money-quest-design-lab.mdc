@@ -1,0 +1,42 @@
+---
+description: Design-lab — self-contained стили, sync-lab, без ../ в HTML
+globs: design-lab/**/*
+alwaysApply: false
+---
+
+# Design-lab — стили и запуск
+
+Процесс MQX: [`frontend-react/src/components/mqx/DESIGN_WORKFLOW.md`](frontend-react/src/components/mqx/DESIGN_WORKFLOW.md).
+
+## Жёсткое правило: self-contained раунд
+
+`npx serve .` отдаёт **только текущую папку**. Пути вида `../styles.css`, `../layout-round/lab-base.css` в `index.html` → **404**, макет без стилей.
+
+### В каждом раунде (папка с `index.html`)
+
+| Обязательно | Запрещено |
+|-------------|-----------|
+| `./lab-base.css` (сгенерирован) | `../styles.css`, `../assets/...` |
+| `./styles.css` (только раунд) | Ручное редактирование `lab-base.css` |
+| `./assets/monetka-mascot.png` (копия) | Забыть `sync-lab.ps1` после правок родительских стилей |
+
+### После создания или изменения раунда
+
+1. Добавить `sync-lab.ps1` (вызов [`design-lab/events/_shared/sync-lab-round.ps1`](design-lab/events/_shared/sync-lab-round.ps1) или аналог в теме).
+2. **Запустить** sync и закоммитить сгенерированные `lab-base.css` + `assets/`.
+3. Проверить в браузере: `cd design-lab/<тема>/<раунд> && npx serve .` — нет 404 на CSS/PNG в Network.
+
+Для **events**: `design-lab/events/sync-all-rounds.ps1` пересобирает layout-round, overlay-round, domains-round.
+
+## Чеклист агента (перед «готово»)
+
+- [ ] В `index.html` только `./` для CSS и картинок
+- [ ] `sync-lab.ps1` выполнен, `lab-base.css` актуален
+- [ ] `assets/monetka-mascot.png` на месте (если нужна Монетка)
+- [ ] README раунда: команда запуска + `.\sync-lab.ps1`
+
+Скилл: **design-lab-mqx** (`.cursor/skills/design-lab-mqx/SKILL.md`).
+
+## Утверждение → prod
+
+Без явного «утверждаем X» в чате — не переносить в `mqx/` и prod. См. `money-quest-frontend-mqx.mdc`.

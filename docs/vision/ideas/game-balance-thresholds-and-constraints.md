@@ -1,4 +1,4 @@
-# Балансы, пороги и ограничения Money Quest
+# Балансы, пороги и ограничения ТВОЙ ХОД
 
 Сессия **idea-refine**: зафиксированные допущения, варианты и рекомендуемый набор рычагов для калибровки экономики и прогрессии. Связано с кодом MVP (`finance.py`, `game_period.py`) и спеки [`LEVEL_XP_SYSTEM`](../../specs/gameplay/LEVEL_XP_SYSTEM.md), [`SPEC_mvp-11-progression-events`](../../specs/features/SPEC_mvp-11-progression-events.md).
 

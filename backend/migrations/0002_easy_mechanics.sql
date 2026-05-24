@@ -1,4 +1,4 @@
--- Idempotent migration for Money Quest (PostgreSQL)
+-- Idempotent migration for ТВОЙ ХОД / money-quest (PostgreSQL)
 -- Adds: events, investments, insurance, asset income fields, overdue fields.
 -- Safe to run multiple times.
 

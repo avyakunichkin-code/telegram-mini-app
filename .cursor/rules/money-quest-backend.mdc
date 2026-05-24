@@ -1,5 +1,5 @@
 ---
-description: Соглашения по backend Money Quest (FastAPI, период, БД)
+description: Соглашения по backend ТВОЙ ХОД (FastAPI, период, БД)
 globs: backend/**/*.py
 alwaysApply: false
 ---

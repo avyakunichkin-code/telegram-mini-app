@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="Tvoy Hod monogram solid">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#6D28D9"/>
+      <stop offset="100%" stop-color="#4C1D95"/>
+    </linearGradient>
+    <style>
+      .mono { fill: #FACC15; font-family: Inter, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; font-weight: 800; font-size: 152px; letter-spacing: -0.02em; }
+      .mono-stroke { paint-order: stroke fill; stroke: #FFFFFF; stroke-width: 8px; }
+    </style>
+  </defs>
+  <rect width="512" height="512" rx="112" fill="url(#bg)"/>
+  <text class="mono mono-stroke" x="256" y="296" text-anchor="middle">&#1058;&#1061;</text>
+</svg>

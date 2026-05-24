@@ -3,7 +3,7 @@
     "skip": "Skip to content"
   },
   "meta": {
-    "title": "Money Quest — money skills as a game",
+    "title": "ТВОЙ ХОД — money skills as a game",
     "description": "Telegram Mini App: learn money management through timed periods, choices, and consequences — in a safe sandbox."
   },
   "lang": {
@@ -100,7 +100,7 @@
   },
   "partners": {
     "title": "Partners & investors",
-    "subtitle": "Money Quest is edutainment in Telegram: short sessions, growing content depth, and a clear learning frame.",
+    "subtitle": "ТВОЙ ХОД is edutainment in Telegram: short sessions, growing content depth, and a clear learning frame.",
     "points": [
       {
         "title": "Market",
@@ -148,8 +148,8 @@
     ]
   },
   "footer": {
-    "tagline": "Money Quest · MQ",
+    "tagline": "ТВОЙ ХОД · Finances as a game",
     "legal": "Not individual investment advice. A learning simulation.",
-    "year": "© 2026 Money Quest"
+    "year": "© 2026 ТВОЙ ХОД"
   }
 }

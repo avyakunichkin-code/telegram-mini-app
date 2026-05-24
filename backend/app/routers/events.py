@@ -594,6 +594,7 @@ def serialize_instance_rows(db: Session, insts: list[EventInstance], *, profile:
             "id": inst.id,
             "period_index": inst.period_index,
             "key": definition.key,
+            "event_domain": event_domain(definition),
             "title": definition.title,
             "description": definition.description,
             "choices": choice_rows,

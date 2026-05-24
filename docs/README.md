@@ -1,4 +1,4 @@
-# Документация Money Quest
+# Документация ТВОЙ ХОД
 
 Структура **вариант A** (слои зрелости): [`DOCUMENTATION_SYSTEM.md`](DOCUMENTATION_SYSTEM.md)  
 Шаблоны: [`templates/`](templates/) · Трассировка эпиков: [`TRACEABILITY.md`](TRACEABILITY.md)

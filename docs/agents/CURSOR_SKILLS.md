@@ -1,4 +1,4 @@
-# Agent Skills Money Quest — что использовать и когда
+# Agent Skills ТВОЙ ХОД — что использовать и когда
 
 Скиллы лежат в `.cursor/skills/` репозитория (проектные процедуры). Дополнительно доступны **глобальные** скиллы Cursor (`babysit`, `canvas`, `ci-investigator`, и т.д.) — их не дублируем в проекте.
 
@@ -11,6 +11,7 @@
 | Скилл | Зачем в этом репозитории |
 |-------|---------------------------|
 | **frontend-ui-engineering** | MQX, Telegram UI, карточки, a11y-паттерны; **при работе с `mqx/` и новыми UI-паттернами — строго по FLOW** в [`frontend-react/src/components/mqx/DESIGN_WORKFLOW.md`](../../frontend-react/src/components/mqx/DESIGN_WORKFLOW.md) |
+| **design-lab-mqx** | Макеты в `design-lab/`: self-contained CSS, `sync-lab.ps1`, без `../` в HTML; правило `money-quest-design-lab.mdc` |
 | **spec-driven-development** | Новые фичи и контракты — сначала spec (`docs/specs/`) |
 | **incremental-implementation** | Крупные изменения по шагам без монолитных PR |
 | **debugging-and-error-recovery** | Периодная экономика, race на overview, ошибки API |

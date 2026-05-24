@@ -25,7 +25,7 @@ function menuCopy({ loading, profileCount }) {
   if (loading) {
     return {
       title: 'Секунду, листаю полки',
-      subtitle: 'Подтягиваю ваши сохранения…',
+      subtitle: 'Подтягиваю твои сохранения…',
     };
   }
   if (profileCount === 0) {
@@ -39,7 +39,7 @@ function menuCopy({ loading, profileCount }) {
     subtitle:
       profileCount > 1
         ? 'Ниже последний слот — один тап. Остальные в «Все сохранения».'
-        : 'Ваш слот ниже — продолжить или начать новую партию.',
+        : 'Твой слот ниже — продолжить или начать новую партию.',
   };
 }
 
@@ -95,6 +95,7 @@ export function StartMenuScreen({ onNewGame, onLoadGame, onLogout }) {
   return (
     <>
       <MonetkaBubbleScreen
+        showBrand
         title={title}
         subtitle={subtitle}
         titleId="mqx-start-menu-title"

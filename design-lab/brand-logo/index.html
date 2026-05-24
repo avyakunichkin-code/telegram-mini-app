@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="ru" data-theme="light">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>ТВОЙ ХОД — логотип (design-lab)</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <header class="lab-header">
+      <div>
+        <h1>Логотип «ТВОЙ ХОД»</h1>
+        <p>
+          Эталон — кадр из поста
+          <a href="../../docs/marketing/posts/draft/draft_ep-000-author-why/image.png">draft_ep-000-author-why</a>.
+          В prod идут только вырезки с прозрачным фоном (без Монетки и сцены). После ★ — PNG в
+          <code>frontend-react/src/assets/brand/</code>. См. <code>VARIANTS.md</code>.
+        </p>
+      </div>
+      <div class="lab-theme" role="group" aria-label="Тема страницы">
+        <button type="button" class="is-active" data-theme-btn="light">Светлая</button>
+        <button type="button" data-theme-btn="dark">Тёмная</button>
+      </div>
+    </header>
+
+    <main class="lab-wrap">
+      <p class="lab-pick-banner">
+        ★ Утверждено: <strong>G1</strong> (старт + tagline) + <strong>G2</strong> (hero). В prod:
+        <code>frontend-react/src/assets/brand/logo-full.png</code>,
+        <code>logo-compact.png</code>.
+        Tagline — как в G1. См. <code>APPROVED.md</code>.
+      </p>
+
+      <section class="lab-section" id="ref">
+        <div class="lab-section__label">
+          <span class="lab-section__id">REF</span>
+          <span class="lab-section__title">Эталон из маркетинга (контекст)</span>
+        </div>
+        <p class="lab-section__note">
+          Полный баннер поста: 3D-надпись + tagline + сцена с Монеткой. Логотип для UI — только блок текста (G1/G2), не
+          кроп баннера.
+        </p>
+        <article class="lab-card">
+          <div class="lab-card__stage lab-card__stage--ref">
+            <img src="./assets/reference-ep-author-why.png" alt="Эталон: пост «Почему я делаю игру»" width="800" />
+          </div>
+          <div class="lab-card__meta"><strong>reference-ep-author-why.png</strong> Исходник для цвета, объёма и наклона букв.</div>
+        </article>
+      </section>
+
+      <section class="lab-section lab-section--featured" id="g1">
+        <div class="lab-section__label">
+          <span class="lab-section__id">G1</span>
+          <span class="lab-section__title">Полный lockup · стартовые экраны</span>
+        </div>
+        <p class="lab-section__note">
+          ТВОЙ ХОД + «Финансы как игра», прозрачный PNG. По центру на входе, регистрации, меню сохранений, новой игре.
+        </p>
+        <div class="lab-grid">
+          <article class="lab-card">
+            <div class="lab-card__stage lab-card__stage--checker lab-card__stage--logo">
+              <img src="./assets/G1-full-tagline.png" alt="G1 на прозрачном фоне" />
+            </div>
+            <div class="lab-card__meta"><strong>Прозрачность</strong> Клетка — проверка альфа-канала.</div>
+          </article>
+          <article class="lab-card">
+            <div class="lab-card__stage lab-card__stage--game lab-card__stage--logo">
+              <img src="./assets/G1-full-tagline.png" alt="G1 на тёмном фоне" />
+            </div>
+            <div class="lab-card__meta"><strong>Тёмный фон</strong> Как в TMA / обложке поста.</div>
+          </article>
+        </div>
+      </section>
+
+      <section class="lab-section lab-section--featured" id="g2">
+        <div class="lab-section__label">
+          <span class="lab-section__id">G2</span>
+          <span class="lab-section__title">Компактный · hero дашборда в игре</span>
+        </div>
+        <p class="lab-section__note">Только ТВОЙ ХОД, без tagline. Слева сверху в <code>MqxDashboardHero</code>, ~высота 36–44px по ширине.</p>
+        <div class="lab-grid">
+          <article class="lab-card">
+            <div class="lab-card__stage lab-card__stage--checker lab-card__stage--logo">
+              <img src="./assets/G2-compact-stacked.png" alt="G2 компактный" />
+            </div>
+            <div class="lab-card__meta"><strong>Прозрачность</strong></div>
+          </article>
+          <article class="lab-card">
+            <div class="lab-card__stage lab-card__stage--game lab-card__stage--logo">
+              <img src="./assets/G2-compact-stacked.png" alt="G2 на тёмном фоне" />
+            </div>
+            <div class="lab-card__meta"><strong>Тёмный фон</strong></div>
+          </article>
+        </div>
+      </section>
+
+      <section class="lab-section" id="context">
+        <div class="lab-section__label">
+          <span class="lab-section__id">CTX</span>
+          <span class="lab-section__title">Размещение в приложении (макет)</span>
+        </div>
+        <p class="lab-section__note">Не отдельные варианты — проверка масштаба G1/G2 в типичных фреймах телефона.</p>
+        <div class="lab-phones">
+          <div class="lab-phone lab-phone--start">
+            <span class="lab-phone__label">G1 · старт</span>
+            <img src="./assets/G1-full-tagline.png" alt="" width="280" height="auto" />
+          </div>
+          <div class="lab-phone lab-phone--hero">
+            <span class="lab-phone__label">G2 · hero</span>
+            <div class="lab-phone__hero">
+              <img src="./assets/G2-compact-stacked.png" alt="" width="118" />
+              <div class="lab-phone__hero-dummy" aria-hidden="true" title="Место под баланс / период"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="lab-section" id="legacy">
+        <div class="lab-section__label">
+          <span class="lab-section__id">LEG</span>
+          <span class="lab-section__title">Отклонено · плоский SVG (черновик)</span>
+        </div>
+        <p class="lab-section__note">
+          Ранний векторный набросок в <code>docs/reference/brand/assets/logos/</code> — не соответствует 3D-эталону поста.
+        </p>
+        <div class="lab-grid lab-legacy">
+          <article class="lab-card lab-legacy--dim">
+            <div class="lab-card__stage lab-card__stage--game lab-card__stage--logo">
+              <img src="./assets/legacy/L3-stacked-tagline-flat.svg" alt="L3 flat" />
+            </div>
+            <div class="lab-card__meta"><strong>L3 flat + tagline</strong> Не утверждать.</div>
+          </article>
+          <article class="lab-card lab-legacy--dim">
+            <div class="lab-card__stage lab-card__stage--game lab-card__stage--logo">
+              <img src="./assets/legacy/L2-stacked-flat.svg" alt="L2 flat" />
+            </div>
+            <div class="lab-card__meta"><strong>L2 flat</strong> Не утверждать.</div>
+          </article>
+        </div>
+      </section>
+    </main>
+
+    <script>
+      document.querySelectorAll('[data-theme-btn]').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          document.documentElement.setAttribute('data-theme', btn.getAttribute('data-theme-btn'));
+          document.querySelectorAll('[data-theme-btn]').forEach((b) => b.classList.toggle('is-active', b === btn));
+        });
+      });
+    </script>
+  </body>
+</html>

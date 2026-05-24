@@ -241,6 +241,7 @@ class TestMq116ApiIntegration:
         pending = client.get("/api/game/events/pending", headers=auth_headers).json()
         events = pending["events"]
         assert events
+        assert events[0].get("event_domain")
 
         target = next(
             (e for e in events if any((c.get("xp_delta") or 0) > 0 for c in e.get("choices") or [])),

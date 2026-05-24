@@ -1,3 +1,4 @@
+import { BrandMark } from '../../BrandMark';
 import { MqxShell } from '../../MqxShell';
 import { MonetkaAvatar } from '../onboarding/MonetkaAvatar';
 
@@ -13,6 +14,7 @@ export function MqxMonetkaDialogScreen({
   mascotSize = 124,
   mascotOnBlock = true,
   mascotPose = 'sit-edge',
+  showBrand = false,
 }) {
   const speech = (
     <div className="mqx-monetka-dialog__speech" aria-labelledby={titleId}>
@@ -25,7 +27,8 @@ export function MqxMonetkaDialogScreen({
 
   return (
     <MqxShell contentClassName="mqx-flow mqx-flow--monetka-dialog" frameClassName="mqx-frame--flat-flow">
-      <div className="mqx-monetka-flow">
+      <div className={['mqx-monetka-flow', showBrand && 'mqx-monetka-flow--with-brand'].filter(Boolean).join(' ')}>
+        {showBrand ? <BrandMark className="mqx-monetka-flow__brand" /> : null}
         {mascotOnBlock ? (
           <div className="mqx-monetka-dialog__perch mqx-monetka-dialog__perch--sit-edge">
             <div className="mqx-monetka-dialog__perch-head">

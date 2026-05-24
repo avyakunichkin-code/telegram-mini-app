@@ -1,4 +1,4 @@
-# MQX — UI kit Money Quest
+# MQX — UI kit ТВОЙ ХОД
 
 Канонические React-компоненты финансового UI (метрики с иконками, карточки портфеля, формы инвестиций, страховки, примитивы).
 
@@ -54,11 +54,11 @@ mqx/
 | Компонент | Назначение |
 |-----------|------------|
 | `MqxPill` + `events` | Кнопка «События» с badge на дашборде |
-| `EventCard` | M2: Монетка + пузырь с описанием, flat-выборы |
+| `EventCard` | L3 ★: domain band + pill, Монетка + пузырь, flat-выборы с impacts |
 | `EventChoiceButton` | Одна кнопка выбора |
 | `EventCarouselOverlay` | Полноэкранный оверлей с каруселью |
 | `EventCarouselDots` / `EventCarouselNav` | Навигация |
-| `EventOverlayToolbar` | Заголовок и закрытие |
+| `BrandLogo` / `BrandMark` | PNG G1/G2: `full` — старт по центру + tagline; `compact` — hero/табы, без фона |
 | `useEventCarousel` | Состояние свайпа/слайдов |
 
 Импорт: `import { EventCarouselOverlay } from './mqx';`  

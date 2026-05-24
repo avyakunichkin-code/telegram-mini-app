@@ -5,16 +5,16 @@ import {
   MqxDashStack,
   MqxDashboardHero,
   MqxDivider,
-  MqxLevelBlock,
+  MqxFinancePeriodBlock,
+  MqxLevelDash,
   MqxPeriodActions,
-  MqxPeriodDashboard,
 } from '../index';
 import { OnboardingCoachOverlay } from './OnboardingCoachOverlay';
 import { ONBOARDING_PRACTICE_MS, ONBOARDING_STEPS } from './onboardingSteps';
 import { useOnboardingCoachState } from './useOnboardingCoachState';
 import { MqxButton } from '../primitives/MqxButton';
 
-/** Интерактивная витрина guided onboarding в #/dev/mqx. */
+/** Интерактивная витрина guided onboarding в #/dev/mqx (стек как в DashboardPremium). */
 export function OnboardingCoachDemo() {
   const rootRef = useRef(null);
   const [active, setActive] = useState(true);
@@ -36,7 +36,6 @@ export function OnboardingCoachDemo() {
       setCash((c) => c + 50_000);
       setSalaryTaken(true);
     }
-    // Уже получена в периоде или только что получили — оба случая закрывают шаг.
     coach.markSalaryDone();
   };
 
@@ -73,9 +72,8 @@ export function OnboardingCoachDemo() {
   return (
     <div className="mqx-onboarding-demo">
       <p className="mqx-catalog__lead" style={{ marginTop: 0 }}>
-        Прототип <strong>guided coach</strong> (5 шагов). После «Понятно» — <strong>10 с</strong> без пузыря и
-        затемнения (чистый UI). Зарплату на практике после шага 1 тоже засчитываем. Skip: 1-й — шаг, 2-й — весь
-        онбординг.
+        Прототип <strong>guided coach</strong> (5 шагов). Стек дашборда — как в prod (S5 / L3). После «Понятно» —{' '}
+        <strong>10 с</strong> без пузыря. Skip: 1-й — шаг, 2-й — весь онбординг.
       </p>
 
       <div className="mqx-onboarding-demo__toolbar">
@@ -105,14 +103,7 @@ export function OnboardingCoachDemo() {
             pendingEventsCount={0}
           />
           <MqxDivider />
-          <MqxLevelBlock level={1} xp={0} xpNeed={100} xpFrac={0} score={0} bars={[]} />
-          <MqxDivider />
-          <MqxPeriodDashboard
-            victory={{
-              goals_met: 0,
-              goals_required: 3,
-              goals: [],
-            }}
+          <MqxFinancePeriodBlock
             financeCards={[
               {
                 title: 'Баланс',
@@ -137,6 +128,8 @@ export function OnboardingCoachDemo() {
             onWithdraw={() => {}}
             onInvest={() => {}}
           />
+          <MqxDivider />
+          <MqxLevelDash level={1} xp={0} xpNeed={100} xpFrac={0} score={0} victory={{ goals_met: 0, goals_required: 3, goals: [] }} />
         </MqxDashStack>
       </div>
 

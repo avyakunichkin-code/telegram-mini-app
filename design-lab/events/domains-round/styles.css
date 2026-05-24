@@ -1,0 +1,44 @@
+/* layout-round/styles.css подключается в index.html */
+
+.domains-grid {
+  display: grid;
+  gap: 14px;
+}
+
+@media (min-width: 640px) {
+  .domains-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 960px) {
+  .domains-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.domains-grid .ev-l3 {
+  max-width: none;
+}
+
+.domains-grid .ev-m2__title {
+  font-size: 15px;
+}
+
+.domains-grid .ev-m2__bubble p {
+  font-size: 12px;
+}
+
+.domains-grid .ev-choice--flat {
+  padding: 10px 0;
+}
+
+.ev--domain-credit { --ev-accent: #5b21b6; }
+.ev--domain-meta {
+  --ev-accent: var(--mq-violet);
+  background: color-mix(in srgb, var(--mq-violet) 4%, var(--surface));
+}
+
+.ev--domain-meta .ev-m2__bubble {
+  border-style: dashed;
+}

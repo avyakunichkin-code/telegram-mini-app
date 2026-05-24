@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="ru" data-theme="light">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Events — раунд 2: домены</title>
+    <link rel="stylesheet" href="./lab-base.css" />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <header class="lab-header">
+      <div>
+        <h1>Events — раунд 2: скины доменов</h1>
+        <p>
+          Превью на каркасе <strong>L3</strong> (замените после ★ из
+          <a href="../layout-round/">layout-round</a>). Одинаковая структура — разный акцент и подпись.
+        </p>
+      </div>
+      <div class="lab-theme" role="group" aria-label="Тема">
+        <button type="button" class="is-active" data-theme-btn="light">Светлая</button>
+        <button type="button" data-theme-btn="dark">Тёмная</button>
+      </div>
+    </header>
+
+    <main class="lab-wrap">
+      <p class="lab-pick-banner">
+        Проверьте, что домены узнаются без чтения заголовка. Страховой случай (ДТП) — домен <code>auto</code> + modifier
+        «Страховой случай». См. <code>DOMAIN_SKINS.md</code>.
+      </p>
+
+      <div class="domains-grid" id="domains-root"></div>
+    </main>
+
+    <script>
+      const SAMPLES = [
+        { domain: 'consumption', class: 'ev--domain-consumption', label: 'Повседневное', title: 'Кофе каждый день', desc: 'Абонемент на месяц у офиса.', period: '#2' },
+        { domain: 'housing', class: 'ev--domain-housing', label: 'Жильё и быт', title: 'Интернет дома', desc: 'Провайдер предлагает более быстрый тариф.', period: '#3' },
+        { domain: 'health', class: 'ev--domain-health', label: 'Здоровье', title: 'Растяжение', desc: 'Врач рекомендует пройти курс восстановления.', period: '#4' },
+        { domain: 'insurance', class: 'ev--domain-insurance', label: 'Страхование', title: 'Агент по полисам', desc: 'Предложение расширить покрытие.', period: '#5' },
+        { domain: 'auto', class: 'ev--domain-auto', label: 'Авто', title: 'ДТП', desc: 'Столкновение на парковке.', period: '#4', insurance: true },
+        { domain: 'credit_debt', class: 'ev--domain-credit', label: 'Кредиты', title: 'Предложение банка', desc: 'Рефинансирование под более низкий платёж.', period: '#6' },
+        { domain: 'investment_education', class: 'ev--domain-edu', label: 'Обучение', title: 'Вечерний курс', desc: 'Инвестиции для начинающих — 8 недель.', period: '#3' },
+        { domain: 'social_family', class: 'ev--domain-social', label: 'Семья', title: 'Просьба родственника', desc: 'Нужна помощь на срочные расходы.', period: '#4' },
+        { domain: 'meta', class: 'ev--domain-meta', label: 'Системное', title: 'Новые механики', desc: 'Разблокированы события и уровень 2.', period: '#1' },
+      ];
+
+      const root = document.getElementById('domains-root');
+      root.innerHTML = SAMPLES.map((s) => {
+        const bubbleStyle = s.insurance
+          ? ' style="background:color-mix(in srgb, var(--mq-emerald) 10%, var(--surface));border-color:color-mix(in srgb, var(--mq-emerald) 24%, transparent)"'
+          : '';
+        const insuranceBadge = s.insurance ? '<span class="ev-badge-insurance">Страховой случай</span>' : '';
+        return `
+        <article class="ev-l3 ${s.class}">
+          <div class="ev-l3__band" aria-hidden></div>
+          <div class="ev-l3__inner">
+            <div class="ev-l3__head">
+              <span class="ev-domain-pill"><span class="ev-domain-pill__dot"></span>${s.label}</span>
+              <span class="ev-l3__kicker">Период ${s.period}</span>
+            </div>
+            ${insuranceBadge}
+            <h3 class="ev-m2__title" style="margin:4px 0 0">${s.title}</h3>
+            <div class="ev-m2__bubble-row" style="margin-top:8px">
+              <div class="ev-m2__monetka-wrap">
+                <img class="ev-monetka" src="./assets/monetka-mascot.png" alt="" width="46" height="46" />
+              </div>
+              <div class="ev-m2__bubble"${bubbleStyle}><p>${s.desc}</p></div>
+            </div>
+            <div class="ev-choices ev-choices--flat" style="margin-top:8px">
+              <button type="button" class="ev-choice ev-choice--flat"><span class="ev-choice__title">Вариант A</span></button>
+              <button type="button" class="ev-choice ev-choice--flat"><span class="ev-choice__title">Вариант B</span></button>
+            </div>
+          </div>
+        </article>`;
+      }).join('');
+
+      document.querySelectorAll('[data-theme-btn]').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          const theme = btn.getAttribute('data-theme-btn');
+          document.documentElement.setAttribute('data-theme', theme);
+          document.querySelectorAll('[data-theme-btn]').forEach((b) => b.classList.toggle('is-active', b === btn));
+        });
+      });
+    </script>
+  </body>
+</html>

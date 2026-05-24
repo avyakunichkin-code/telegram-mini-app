@@ -83,7 +83,8 @@ export function useEventCarousel(events, { open, onClose, navigationLocked = fal
     (e, blocked) => {
       if (blocked || slide || animLock.current) return;
       if (e.target.closest('button, a, [role="button"]')) return;
-      touchStart.current = e.touches[0].clientX;
+      const t = e.touches[0];
+      touchStart.current = { x: t.clientX, y: t.clientY };
     },
     [slide],
   );
@@ -92,11 +93,12 @@ export function useEventCarousel(events, { open, onClose, navigationLocked = fal
     (e, blocked) => {
       const start = touchStart.current;
       touchStart.current = null;
-      if (start === null || slide || blocked) return;
-      const end = e.changedTouches[0]?.clientX;
-      if (end === undefined) return;
-      const dx = end - start;
-      if (Math.abs(dx) < CAROUSEL_EDGE) return;
+      if (!start || slide || blocked) return;
+      const endTouch = e.changedTouches[0];
+      if (!endTouch) return;
+      const dx = endTouch.clientX - start.x;
+      const dy = endTouch.clientY - start.y;
+      if (Math.abs(dx) < CAROUSEL_EDGE || Math.abs(dx) <= Math.abs(dy)) return;
       if (dx < 0) goNext();
       else goPrev();
     },

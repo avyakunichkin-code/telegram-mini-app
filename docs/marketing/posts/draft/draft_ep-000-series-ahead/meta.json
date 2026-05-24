@@ -1,0 +1,18 @@
+{
+  "ep": "000",
+  "part": "2/2",
+  "slug": "ep-000-series-ahead",
+  "pair_slug": "ep-000-author-why",
+  "arc": null,
+  "arc_title": "Пролог",
+  "layer": "author",
+  "voice": "first_person",
+  "image_headline": "НО БУДУТ ЗНАКИ...",
+  "image_subline": "Честная хроника — по коммитам",
+  "product_name": "ТВОЙ ХОД",
+  "image_tagline": "Финансы как игра",
+  "visual_pair": "ep-000-intro-desk-series",
+  "platforms": ["telegram"],
+  "approved_at": null,
+  "published_at": null
+}
