@@ -108,6 +108,11 @@ export function GameOnboardingLayer({
   }, [needsOnboarding, overview?.onboarding_step, periodStatus, restoreStepIndex]);
 
   useEffect(() => {
+    if (!needsOnboarding || overview?.onboarding_state !== 'draft') return;
+    persist({ onboarding_state: 'started' });
+  }, [needsOnboarding, overview?.onboarding_state, persist]);
+
+  useEffect(() => {
     if (!needsOnboarding || !hydratedRef.current || !coach.step?.id) return;
     if (lastPersistedStepRef.current === coach.step.id) return;
     lastPersistedStepRef.current = coach.step.id;
@@ -138,6 +143,7 @@ export function GameOnboardingLayer({
       variant={coach.phase === 'practice' ? 'practice' : 'bubble'}
       step={coach.step}
       skipPressCount={coach.skipPressCount}
+      practiceSecLeft={coach.practiceSecLeft}
       rootRef={rootRef}
       anchor={coach.step?.anchor}
       onSkip={onSkip}

@@ -166,6 +166,9 @@ ACHIEVEMENT_CHAIN_SPECS: list[dict] = [
 
 
 def ensure_achievement_catalog(db: Session) -> None:
+    """Сид каталога достижений. На read-path (overview/bootstrap) — только если цепочек ещё нет."""
+    if db.query(AchievementChain.id).limit(1).first() is not None:
+        return
     for spec in ACHIEVEMENT_CHAIN_SPECS:
         tiers = spec["tiers"]
         max_tier = max(int(t["tier_index"]) for t in tiers)

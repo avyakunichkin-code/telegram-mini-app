@@ -3644,6 +3644,7 @@ body [class*='modal'] {
   margin: 0 0 14px;
   font-size: 14px;
   line-height: 1.45;
+  white-space: pre-line;
   color: color-mix(in srgb, var(--mqx-ink) 88%, var(--tg-theme-hint-color, #6b7280));
 }
 

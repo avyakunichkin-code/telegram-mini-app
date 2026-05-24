@@ -60,6 +60,7 @@ export function OnboardingCoachOverlay({
   onContinue,
   finishLabel = 'Начать игру',
   variant = 'bubble',
+  practiceSecLeft = 0,
 }) {
   const bubbleWrapRef = useRef(null);
   const [bubbleHole, setBubbleHole] = useState(null);
@@ -172,7 +173,9 @@ export function OnboardingCoachOverlay({
       {isPractice ? (
         <div className="mqx-onboarding-practice-hint" aria-live="polite">
           <span className="mqx-onboarding-practice-hint__label">Практика</span>
-          <span className="mqx-onboarding-practice-hint__sec">10 с · потыкай UI</span>
+          <span className="mqx-onboarding-practice-hint__sec">
+            {practiceSecLeft > 0 ? `${practiceSecLeft} с` : '…'} · потыкай UI
+          </span>
         </div>
       ) : null}
 

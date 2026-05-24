@@ -665,8 +665,25 @@ def _metadata_for_spec(spec: dict) -> dict:
     return meta
 
 
+_MVP11_CATALOG_KEYS = frozenset(spec["key"] for spec in MVP11_EVENT_SPECS)
+
+
+def _mvp11_catalog_complete(db: Session) -> bool:
+    """Быстрый путь: полный активный каталог MVP 1.1 — не гоняем sync на каждый bootstrap."""
+    rows = (
+        db.query(EventDefinition.key, EventDefinition.is_active)
+        .filter(EventDefinition.key.in_(_MVP11_CATALOG_KEYS))
+        .all()
+    )
+    if len(rows) != len(_MVP11_CATALOG_KEYS):
+        return False
+    return all(int(active or 0) == 1 for _key, active in rows)
+
+
 def ensure_mvp11_event_catalog(db: Session) -> None:
     """Добавляет отсутствующие определения и обновляет tier/repeat у существующих по ключу."""
+    if _mvp11_catalog_complete(db):
+        return
     for spec in MVP11_EVENT_SPECS:
         meta_json = json.dumps(_metadata_for_spec(spec), ensure_ascii=False)
         existing = db.query(EventDefinition).filter(EventDefinition.key == spec["key"]).first()

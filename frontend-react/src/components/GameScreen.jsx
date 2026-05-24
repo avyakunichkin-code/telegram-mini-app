@@ -37,6 +37,7 @@ export function GameScreen({ onLogout, onNewGame, onLoadGame }) {
     periodStatus,
     pendingEvents,
     loading,
+    syncing,
     error,
     setPlay,
     setPause,
@@ -301,7 +302,7 @@ export function GameScreen({ onLogout, onNewGame, onLoadGame }) {
         </>
       )}
     >
-      <div className="mqx-screen mqx-screen--game">
+      <div className="mqx-screen mqx-screen--game" aria-busy={syncing || undefined}>
         <div className="mqx-frame">
           <div className="mq-stack mq-stack-animate mq-stack--tight mq-stack--game-tab">
             <div key={activeTab} className="mq-enter-item mq-enter-item--fill">

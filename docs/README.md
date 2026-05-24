@@ -49,6 +49,7 @@
 | [`foundation/TARGET_PLAYER_AND_SESSION.md`](foundation/TARGET_PLAYER_AND_SESSION.md) | ЦА MVP 1.1+, типичная сессия, рамки контента, паттерны копирайта событий |
 | [`foundation/GLOSSARY.md`](foundation/GLOSSARY.md) | Термины (период, подушка, save_kind, …) |
 | [`foundation/PRE_ALPHA_PLAYTEST_PROTOCOL.md`](foundation/PRE_ALPHA_PLAYTEST_PROTOCOL.md) | **Черновик** протокола плейтеста Pre-Alpha (10–20), опрос, чеклист перед волной |
+| [`foundation/PRE_ALPHA_PLAYTEST_WAVE0_RESULTS.md`](foundation/PRE_ALPHA_PLAYTEST_WAVE0_RESULTS.md) | Пилот wave-0 (n=1): итоги и правки после пробного тестера |
 | [`foundation/MVP_AUDIT_VS_SPEC.md`](foundation/MVP_AUDIT_VS_SPEC.md) | Чеклист: текущий код vs SPEC_PRODUCT перед G1 |
 
 ### Gameplay (уровень, XP, связь событий)

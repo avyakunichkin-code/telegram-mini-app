@@ -27,6 +27,7 @@ export function useOnboardingCoachState({ practiceMs = ONBOARDING_PRACTICE_MS, o
   const [skipPressCount, setSkipPressCount] = useState(0);
   const [salaryDone, setSalaryDone] = useState(false);
   const [cushionDone, setCushionDone] = useState(false);
+  const [practiceSecLeft, setPracticeSecLeft] = useState(0);
   const practiceTimerRef = useRef(null);
   const flagsRef = useRef({ salaryDone: false, cushionDone: false });
 
@@ -43,9 +44,10 @@ export function useOnboardingCoachState({ practiceMs = ONBOARDING_PRACTICE_MS, o
 
   const clearPracticeTimer = useCallback(() => {
     if (practiceTimerRef.current) {
-      clearTimeout(practiceTimerRef.current);
+      clearInterval(practiceTimerRef.current);
       practiceTimerRef.current = null;
     }
+    setPracticeSecLeft(0);
   }, []);
 
   const goNextStep = useCallback(() => {
@@ -72,10 +74,18 @@ export function useOnboardingCoachState({ practiceMs = ONBOARDING_PRACTICE_MS, o
     if (!step || step.gate !== 'practice') return;
     clearPracticeTimer();
     setPhase('practice');
-    practiceTimerRef.current = setTimeout(() => {
-      practiceTimerRef.current = null;
-      goNextStep();
-    }, practiceMs);
+    const totalSec = Math.max(1, Math.ceil(practiceMs / 1000));
+    setPracticeSecLeft(totalSec);
+    practiceTimerRef.current = setInterval(() => {
+      setPracticeSecLeft((prev) => {
+        if (prev <= 1) {
+          clearPracticeTimer();
+          goNextStep();
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
   }, [step, practiceMs, clearPracticeTimer, goNextStep]);
 
   const handleSkip = useCallback(() => {
@@ -159,7 +169,8 @@ export function useOnboardingCoachState({ practiceMs = ONBOARDING_PRACTICE_MS, o
     salaryDone,
     cushionDone,
     isLast,
-    /** Затемнение + пузырь — только фаза bubble (практика 10 с = чистый UI, см. CONTENT.md). */
+    practiceSecLeft,
+    /** Затемнение + пузырь — только фаза bubble (практика = чистый UI, см. CONTENT.md). */
     showOverlay: phase === 'bubble' && stepIndex < ONBOARDING_STEPS.length,
     /** @deprecated используйте showOverlay; оставлено для совместимости демо */
     showScrim: phase === 'bubble' && stepIndex < ONBOARDING_STEPS.length,

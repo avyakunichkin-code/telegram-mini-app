@@ -20,6 +20,8 @@ export function useGame() {
   /** Увеличивается только при загрузке/смене периода при наличии незакрытых событий (не после каждого выбора). */
   const [eventsPromptTick, setEventsPromptTick] = useState(0);
   const [loading, setLoading] = useState(true);
+  /** Фоновое обновление после действий — без полноэкранного спиннера. */
+  const [syncing, setSyncing] = useState(false);
   const [error, setError] = useState(null);
   const [periodCloseSummary, setPeriodCloseSummary] = useState(null);
 
@@ -47,9 +49,14 @@ export function useGame() {
 
   /** Один round-trip: overview + period + events (+ time). После мутаций в игре. */
   const refreshGameState = useCallback(async (opts) => {
-    const data = await API.getGameBootstrap();
-    applyBootstrapPayload(data, opts);
-    return data;
+    setSyncing(true);
+    try {
+      const data = await API.getGameBootstrap();
+      applyBootstrapPayload(data, opts);
+      return data;
+    } finally {
+      setSyncing(false);
+    }
   }, [applyBootstrapPayload]);
 
   const loadData = useCallback(async () => {
@@ -226,6 +233,7 @@ export function useGame() {
       remainingLocal: localRemainingRef.current,
     } : null,
     loading,
+    syncing,
     error,
     setPlay,
     setPause,
