@@ -294,9 +294,6 @@ export function MqCatalogScreen() {
               safety_fund_delta: 10000,
               invest_capital_delta: 0,
               debt_delta: -8000,
-              xp_earned: 32,
-              xp_period_close: 22,
-              xp_milestone: 0,
             }}
           />
         </div>
@@ -319,14 +316,14 @@ export function MqCatalogScreen() {
                   title: 'Оформить по полису ОСАГО',
                   description: 'Выплата по страховке',
                   insurance_claim: true,
-                  impacts: [{ kind: 'insurance_payout', delta: 45000 }, { kind: 'xp', delta: 4 }],
+                  impacts: [{ kind: 'insurance_payout', delta: 45000 }],
                 },
                 {
                   id: 11,
                   title: 'Оплатить из своих',
-                  impacts: [{ kind: 'cash', delta: -45000 }, { kind: 'xp', delta: 2 }],
+                  impacts: [{ kind: 'cash', delta: -45000 }],
                 },
-                { id: 12, title: 'Договориться без оформления', xp_delta: 1 },
+                { id: 12, title: 'Договориться без оформления' },
               ],
             }}
             busyId={null}

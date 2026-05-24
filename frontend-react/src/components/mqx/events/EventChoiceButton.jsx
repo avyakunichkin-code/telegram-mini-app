@@ -5,7 +5,6 @@ import { EventChoiceImpacts } from './EventChoiceImpacts';
 /** Кнопка выбора в карточке события (flat, без цветового акцента). */
 export function EventChoiceButton({ choice, disabled, onPick }) {
   const hasImpacts = Array.isArray(choice?.impacts) && choice.impacts.length > 0;
-  const xpHint = !hasImpacts && Number(choice?.xp_delta) > 0 ? `XP +${choice.xp_delta}` : null;
   const choiceLabel = asSafeReactText(choice?.title, 'Вариант ответа');
 
   return (
@@ -22,10 +21,7 @@ export function EventChoiceButton({ choice, disabled, onPick }) {
       {choice.description ? (
         <span className="mqx-events-choice__desc">
           {truncateEventText(choice.description, 180)}
-          {xpHint ? ` · ${xpHint}` : ''}
         </span>
-      ) : xpHint ? (
-        <span className="mqx-events-choice__desc">{xpHint}</span>
       ) : null}
     </button>
   );

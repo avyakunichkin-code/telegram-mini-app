@@ -14,17 +14,13 @@ function impactTone(kind, delta) {
 function impactGlyph(kind) {
   if (kind === 'burn') return 'down';
   if (kind === 'insurance_payout') return 'up';
-  if (kind === 'xp' || kind === 'term') return 'term';
+  if (kind === 'term') return 'term';
   if (kind === 'coin') return 'coin';
   return 'coin';
 }
 
 function formatImpactValue(imp) {
-  const kind = imp?.kind;
   const delta = Number(imp?.delta) || 0;
-  if (kind === 'xp') {
-    return `+${Math.abs(Math.round(delta))} XP`;
-  }
   const sign = delta > 0 ? '+' : '';
   return (
     <>

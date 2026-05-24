@@ -4,7 +4,7 @@ import pytest
 
 from app.game_rules import (
     EVENTS_PER_PERIOD,
-    EVENT_TIER_WINDOW_BELOW_LEVEL,
+    EVENT_TIER_WINDOW_BELOW_BAND,
     MIN_PERIOD_INDEX_FOR_WIN,
     MVP_SAFETY_FUND_OBLIGATIONS_MULTIPLIER,
     REPEAT_POLICY_MAX_PER_PROFILE,
@@ -39,7 +39,7 @@ class TestEventTierWindow:
     def test_bounds_and_progression_level(self, period_index, expected_bounds, progression_level):
         assert event_tier_progression_level(period_index) == progression_level
         assert event_tier_bounds(period_index) == expected_bounds
-        assert EVENT_TIER_WINDOW_BELOW_LEVEL == 2
+        assert EVENT_TIER_WINDOW_BELOW_BAND == 2
 
     @pytest.mark.parametrize(
         "tier, period_index, in_core",

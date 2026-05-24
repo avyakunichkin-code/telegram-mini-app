@@ -47,6 +47,31 @@ class TestEnsurePeriodEvents:
             for did in def_ids
         )
 
+    def test_period_11_allows_tier2_not_tier3(self, db_session):
+        profile = GameProfile(user_id=1, name="p11", save_kind="game", is_active=1, period_index=11)
+        db_session.add(profile)
+        db_session.commit()
+
+        _add_def(db_session, "tier1_evt", tier=1)
+        tier2 = _add_def(db_session, "tier2_evt", tier=2)
+        _add_def(db_session, "tier3_far", tier=3)
+
+        ensure_period_events(db_session, profile.id, 11, "game")
+
+        instances = (
+            db_session.query(EventInstance)
+            .filter(EventInstance.game_profile_id == profile.id, EventInstance.period_index == 11)
+            .all()
+        )
+        def_ids = {i.definition_id for i in instances}
+        assert len(def_ids) == EVENTS_PER_PERIOD
+        tiers = [
+            db_session.query(EventDefinition).filter(EventDefinition.id == did).first().event_tier
+            for did in def_ids
+        ]
+        assert tier2.id in def_ids
+        assert all(t <= 2 for t in tiers)
+
     def test_cooldown_excludes_recent_event(self, db_session):
         profile = GameProfile(user_id=1, name="p2", save_kind="game", is_active=1, period_index=11)
         db_session.add(profile)
