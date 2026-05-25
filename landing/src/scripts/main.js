@@ -1,4 +1,3 @@
-import { initHeroDemo, stopHeroDemo } from './demo-hero.js';
 import {
   applyStaticI18n,
   getLang,
@@ -7,6 +6,7 @@ import {
   setLangButtons,
   t,
 } from './i18n.js';
+import { screenPath } from './screens.js';
 
 const CONTACT_EMAIL = 'hello@moneyquest.app';
 
@@ -48,39 +48,45 @@ function renderLearnCards() {
 function renderFeatures() {
   const grid = document.getElementById('features-grid');
   if (!grid) return;
-  const items = t('features.items');
+  const items = t('features.showcase');
   if (!Array.isArray(items)) return;
+  const screens = t('peek.screens');
+  const theme = 'light';
   grid.innerHTML = items
     .map(
       (item, i) => `
-    <article class="mq-feature mq-reveal" style="--mq-delay:${i * 50}ms">
-      <span class="mq-feature__icon" aria-hidden="true">${escapeHtml(item.icon)}</span>
-      <h3>${escapeHtml(item.title)}</h3>
-      <p>${escapeHtml(item.text)}</p>
+    <article class="mq-showcase__item mq-reveal${i % 2 === 1 ? ' mq-showcase__item--reverse' : ''}" style="--mq-delay:${i * 60}ms">
+      <figure class="mq-showcase__shot">
+        <div class="mq-device__bezel">
+          <img src="${screenPath(item.screen, theme)}" width="320" height="640" alt="${escapeHtml(screens?.[item.screen] || item.title)}" loading="lazy" decoding="async" />
+        </div>
+      </figure>
+      <div class="mq-showcase__copy">
+        <h3>${escapeHtml(item.title)}</h3>
+        <p>${escapeHtml(item.text)}</p>
+      </div>
     </article>`
     )
     .join('');
 }
 
-function renderPeekPanels() {
-  const grid = document.getElementById('peek-grid');
-  if (!grid) return;
+function renderPeekStrip() {
+  const strip = document.getElementById('peek-strip');
+  if (!strip) return;
   const panels = t('peek.panels');
   if (!Array.isArray(panels)) return;
-  grid.innerHTML = panels
+  const screens = t('peek.screens');
+  const theme = 'light';
+  strip.innerHTML = panels
     .map(
       (panel, i) => `
-    <article class="mq-peek-card mq-reveal" style="--mq-delay:${i * 80}ms">
-      <span class="mq-peek-card__label">${escapeHtml(panel.label)}</span>
+    <article class="mq-screen-card mq-reveal" style="--mq-delay:${i * 70}ms">
+      <div class="mq-screen-card__frame">
+        <img src="${screenPath(panel.screen, theme)}" width="304" height="608" alt="${escapeHtml(screens?.[panel.screen] || panel.title)}" loading="lazy" decoding="async" />
+      </div>
+      <span class="mq-screen-card__label">${escapeHtml(panel.label)}</span>
       <h3>${escapeHtml(panel.title)}</h3>
       <p>${escapeHtml(panel.text)}</p>
-      ${
-        Array.isArray(panel.chips)
-          ? `<div class="mq-peek-card__chips">${panel.chips
-              .map((chip) => `<span class="mq-chip">${escapeHtml(chip)}</span>`)
-              .join('')}</div>`
-          : ''
-      }
     </article>`
     )
     .join('');
@@ -201,14 +207,27 @@ function wireReveal() {
   nodes.forEach((n) => io.observe(n));
 }
 
+function updateScreenAlts() {
+  const screens = t('peek.screens');
+  if (!screens) return;
+  document.querySelectorAll('[data-screen-id]').forEach((img) => {
+    const id = img.getAttribute('data-screen-id');
+    if (id && screens[id]) img.setAttribute('alt', screens[id]);
+  });
+  const heroShot = document.querySelector('.mq-device__shot');
+  if (heroShot && screens.dashboard) heroShot.setAttribute('alt', screens.dashboard);
+  const howShot = document.querySelector('.mq-inline-shot img');
+  if (howShot && screens.dashboard) howShot.setAttribute('alt', screens.dashboard);
+}
+
 async function setLocale(code) {
-  stopHeroDemo();
   await loadLocale(code);
   applyStaticI18n();
+  updateScreenAlts();
   renderHowSteps();
   renderFeatures();
   renderLearnCards();
-  renderPeekPanels();
+  renderPeekStrip();
   renderCoachPoints();
   renderModeLists();
   renderVictory();
@@ -216,7 +235,6 @@ async function setLocale(code) {
   renderFaq();
   setLangButtons(code);
   wireReveal();
-  initHeroDemo();
 }
 
 async function boot() {

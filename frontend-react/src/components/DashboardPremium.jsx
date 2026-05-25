@@ -58,6 +58,8 @@ export function DashboardPremium({
 
   timeStatus,
 
+  periodStatus = null,
+
   eventsUnlocked = true,
 
   pendingEventsCount,
@@ -121,6 +123,11 @@ export function DashboardPremium({
 
 
   const periodIndex = timeStatus?.period_index ?? overview?.period_index ?? 0;
+
+  const salaryClaimed = periodStatus?.salary_claimed === true;
+  const canClaimSalary = periodStatus?.can_claim_salary === true;
+  const salaryDisabled = busyAction !== null || salaryClaimed || (periodStatus != null && !canClaimSalary);
+  const salaryLabel = salaryClaimed ? 'Зарплата получена' : 'Зарплата';
 
   const remaining = timeStatus?.remainingLocal ?? timeStatus?.seconds_until_next_period ?? 0;
 
@@ -361,14 +368,34 @@ export function DashboardPremium({
 
               busy={busyAction !== null}
 
+              salaryLabel={salaryLabel}
+
+              salaryDisabled={salaryDisabled}
+
               onSalary={async () => {
+
+                if (salaryClaimed) {
+                  showNotification('Зарплата за этот период уже получена', 'info');
+                  return;
+                }
+                if (periodStatus != null && !canClaimSalary) {
+                  showNotification('Зарплату в этом периоде получить нельзя', 'info');
+                  return;
+                }
 
                 try {
 
                   setBusyAction('salary');
 
-                  await claimSalary();
-                  showNotification('Зарплата на счёт', 'success');
+                  const result = await claimSalary();
+                  if (result?.already_claimed) {
+                    showNotification(
+                      result.message || 'Зарплата за этот период уже получена',
+                      'info',
+                    );
+                  } else {
+                    showNotification('Зарплата на счёт', 'success');
+                  }
 
                 } catch (e) {
 

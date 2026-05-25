@@ -33,6 +33,7 @@ export function GameScreen({ onLogout, onNewGame, onLoadGame }) {
   const [lastPeriodClose, setLastPeriodClose] = useState(null);
   const [periodCloseOpen, setPeriodCloseOpen] = useState(false);
   const onboardingRootRef = useRef(null);
+  const lastOpenedEventsTickRef = useRef(0);
   const {
     overview,
     timeStatus,
@@ -65,11 +66,13 @@ export function GameScreen({ onLogout, onNewGame, onLoadGame }) {
 
   useEffect(() => {
     if (!eventsUnlocked || inOnboarding) return;
-    if (eventsPromptTick > 0 && (pendingEvents?.length ?? 0) > 0) {
-      // eslint-disable-next-line react-hooks/set-state-in-effect -- синхронизация с событиями бэкенда
+    if (eventsPromptTick <= lastOpenedEventsTickRef.current) return;
+    if ((pendingEvents?.length ?? 0) > 0) {
+      lastOpenedEventsTickRef.current = eventsPromptTick;
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- открытие только при новом bumpEvents
       setEventsOpen(true);
     }
-  }, [eventsPromptTick, pendingEvents, eventsUnlocked, inOnboarding]);
+  }, [eventsPromptTick, pendingEvents?.length, eventsUnlocked, inOnboarding]);
 
   useEffect(() => {
     if (!eventsUnlocked || inOnboarding) {
@@ -308,6 +311,7 @@ export function GameScreen({ onLogout, onNewGame, onLoadGame }) {
                   <DashboardPremium
                     overview={overview}
                     timeStatus={timeStatus}
+                    periodStatus={periodStatus}
                     eventsUnlocked={eventsUnlocked}
                     pendingEventsCount={eventsUnlocked ? (pendingEvents?.length ?? 0) : 0}
                     onOpenEvents={eventsUnlocked ? () => setEventsOpen(true) : undefined}

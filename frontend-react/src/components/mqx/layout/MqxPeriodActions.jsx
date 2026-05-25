@@ -1,6 +1,7 @@
 /** Блок «Действия периода» на дашборде («Зарплата» — primary). */
 export function MqxPeriodActions({
   salaryLabel = 'Зарплата',
+  salaryDisabled = false,
   busy = false,
   onSalary,
   onContribute,
@@ -22,9 +23,13 @@ export function MqxPeriodActions({
         <button
           type="button"
           className="mqx-action mqx-action--primary"
-          disabled={busy}
+          disabled={busy || salaryDisabled}
           data-onboarding-anchor="salary"
-          title="Получить зарплату за текущий период"
+          title={
+            salaryDisabled && salaryLabel !== 'Зарплата'
+              ? salaryLabel
+              : 'Получить зарплату за текущий период'
+          }
           aria-label="Зарплата"
           onClick={onSalary}
         >

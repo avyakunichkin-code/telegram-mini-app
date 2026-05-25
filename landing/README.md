@@ -60,3 +60,26 @@ npm run deploy
 | `public/brand/logo-compact.webp` (+ `.png`) | Шапка, футер — без tagline |
 
 Источник истины: `frontend-react/src/assets/brand/`. Плоские SVG L1–L4 **не используются**.
+
+## Скриншоты интерфейса (design-lab)
+
+PNG лежат в [`public/screens/`](public/screens/). На лендинге **тёмный блок → светлая тема UI**, **светлый блок → тёмная** (контраст рамки).
+
+| Файл | Экран |
+|------|--------|
+| `dashboard-light.png` / `dashboard-dark.png` | Дашборд S5 |
+| `capital-light.png` / `capital-dark.png` | Капитал |
+| `events-light.png` / `events-dark.png` | События L1 |
+
+Пересъём из design-lab (нужен Chromium Playwright):
+
+```bash
+cd landing
+npm install
+npx playwright install chromium
+npm run capture-screens
+```
+
+Подробности: [`public/screens/README.md`](public/screens/README.md), спека: [`docs/vision/ideas/landing-mqx-product-preview.md`](../docs/vision/ideas/landing-mqx-product-preview.md).
+
+**EN** использует те же PNG, что и RU (тексты в локалях, картинки общие).

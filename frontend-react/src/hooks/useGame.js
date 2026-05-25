@@ -5,6 +5,7 @@ import {
   notifyAchievementUnlocks,
   notifyPeriodCloseRewards,
 } from '../utils/progressionToasts';
+import { showNotification } from '../components/notifications';
 import { subscribeAppForeground, debounceForeground } from '../utils/appLifecycle';
 
 const FOREGROUND_RESYNC_MS = 400;
@@ -206,8 +207,12 @@ export function useGame() {
         if (evList.length > 0) setEventsPromptTick((t) => t + 1);
       }
       await maybeClosePeriodAfterResync(data);
-    } catch {
-      /* refreshGameState не бросает — на всякий случай */
+    } catch (err) {
+      const msg =
+        err instanceof ApiError
+          ? formatApiErrorDetail(err.detail, err.message)
+          : formatApiErrorDetail(err?.detail ?? err?.message, 'Не удалось обновить игру после возврата');
+      showNotification(msg, 'error');
     }
   }, [refreshGameState, maybeClosePeriodAfterResync, stopTimer]);
 

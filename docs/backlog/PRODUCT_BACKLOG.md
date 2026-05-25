@@ -229,13 +229,14 @@
 
 - [x] P1 **[Frontend] PW1-001** — `visibilitychange` / focus → `refreshGameState()` в `useGame`; сброс локального таймера от ответа API (`appLifecycle.js`, `useGame.js`).
 - [x] P1 **[Frontend] PW1-002** — debounce resync; `periodEndInFlightRef` — не дублировать `setTimeNext`.
-- [ ] P1 **[Doc] PW1-003** — чеклист приёмки: play → lock 2–5 мин → unlock (TMA + браузер).
+- [x] P1 **[Doc] PW1-003** — [`PW1_RESUME_PLAYTEST_CHECKLIST.md`](../foundation/PW1_RESUME_PLAYTEST_CHECKLIST.md); Pre-Alpha §3 + опрос §6.8.
+- [ ] P1 **[QA] PW1-004** — прогон A–D на 2 устройствах; PASS/FAIL в таблице прогона.
 
 #### Фаза 1 — installable PWA
 
-- [ ] P1 **[Frontend] PW1-101** — иконки 192/512 (maskable) из бренда.
-- [ ] P1 **[Frontend] PW1-102** — `vite-plugin-pwa`: manifest, service worker, precache статики.
-- [ ] P1 **[Frontend+Ops] PW1-103** — `start_url` / `base` / HashRouter; `theme-color`, apple-web-app meta.
+- [x] P1 **[Frontend] PW1-101** — `public/pwa/` иконки из `landing/public/brand/logo-compact.png`.
+- [x] P1 **[Frontend] PW1-102** — `vite-plugin-pwa`: manifest, SW, precache (`vite.config.js`).
+- [x] P1 **[Frontend+Ops] PW1-103** — `start_url` `…/#/`; meta + apple-touch; [`PWA_INSTALL.md`](../foundation/PWA_INSTALL.md).
 - [ ] P1 **[Backend+Ops] PW1-104** — CORS origin для prod PWA; `VITE_API_BASE_URL` в CI.
 - [ ] P2 **[Doc] PW1-105** — черновик `SPEC_pwa-standalone.md` после фазы 0.
 
@@ -341,7 +342,8 @@
 | P1 | UI: `character_unlocks`, 403 `level_gate` | Frontend | overview + FinanceSection |
 | P1 | Экран «Развитие» | Frontend | `achievements` API |
 | P1 | I1: каталог страховок в FinanceSection | Frontend | design-lab |
-| P1 | PW1 фаза 1: PWA manifest + SW | Frontend | после плейтеста фазы 0 |
+| P0 | PW1-004: прогон [`PW1_RESUME_PLAYTEST_CHECKLIST`](../foundation/PW1_RESUME_PLAYTEST_CHECKLIST.md) A–D | QA | блокер Pre-Alpha §3 |
+| P1 | PW1 фаза 1: PWA manifest + SW | Frontend | после PASS PW1-004 |
 
 ---
 

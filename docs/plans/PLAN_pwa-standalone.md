@@ -29,7 +29,8 @@ epic: PW1
 
 **Задача:** при возврате приложения на передний план пересинхронизировать игру с сервером.
 
-**Реализовано (2026-05-25):** `frontend-react/src/utils/appLifecycle.js`, правки `useGame.js` — остаётся плейтест PW1-003.
+**Реализовано (2026-05-25):** `frontend-react/src/utils/appLifecycle.js`, правки `useGame.js`.  
+**Плейтест:** [`PW1_RESUME_PLAYTEST_CHECKLIST.md`](../foundation/PW1_RESUME_PLAYTEST_CHECKLIST.md) — прогон A–D перед Pre-Alpha.
 
 | # | Задача | Слой | Детали |
 |---|--------|------|--------|
@@ -45,7 +46,9 @@ epic: PW1
 
 ---
 
-## Фаза 1 — Installable PWA (P1)
+## Фаза 1 — Installable PWA (P1) ✅ в коде (2026-05-25)
+
+Инструкция: [`PWA_INSTALL.md`](../foundation/PWA_INSTALL.md). После деплоя — Lighthouse / install на телефоне.
 
 | # | Задача | Слой |
 |---|--------|------|

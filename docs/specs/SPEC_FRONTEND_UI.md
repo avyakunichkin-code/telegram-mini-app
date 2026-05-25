@@ -1,7 +1,7 @@
 # Spec: Frontend UI/UX — ТВОЙ ХОД TMA
 
 **Статус:** принят (аудит 2026-05)  
-**Связанные документы:** [`reference/brandbook/BRANDBOOK.md`](../reference/brandbook/BRANDBOOK.md), [`foundation/TMA_USER_FLOWS.md`](../foundation/TMA_USER_FLOWS.md), [`CLAUDE.md`](../../CLAUDE.md)  
+**Связанные документы:** [`reference/brandbook/BRANDBOOK.md`](../reference/brandbook/BRANDBOOK.md) (identity), [`reference/brandbook/BRANDBOOK_MQX.md`](../reference/brandbook/BRANDBOOK_MQX.md) (MQX UI), [`foundation/TMA_USER_FLOWS.md`](../foundation/TMA_USER_FLOWS.md), [`CLAUDE.md`](../../CLAUDE.md)  
 Проектные Agent Skills и приоритеты — [`agents/CURSOR_SKILLS.md`](../agents/CURSOR_SKILLS.md).
 
 ---
@@ -73,7 +73,8 @@ frontend-react/src/
   api.js                # Контракт с backend
 docs/
   specs/SPEC_FRONTEND_UI.md           # Этот документ
-  reference/brandbook/BRANDBOOK.md  # Цвета, тон, типографика
+  reference/brandbook/BRANDBOOK.md      # Identity: лого, цвет, голос, Монетка
+  reference/brandbook/BRANDBOOK_MQX.md  # Product UI: MQX, токены, паттерны
   foundation/TMA_USER_FLOWS.md      # Потоки и боли
 .cursor/rules/
   money-quest-frontend-*.mdc  # Правила для агента

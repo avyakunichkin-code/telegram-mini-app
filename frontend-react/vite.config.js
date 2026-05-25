@@ -1,5 +1,12 @@
 import { defineConfig, loadEnv } from 'vite'
 import react from '@vitejs/plugin-react'
+import { VitePWA } from 'vite-plugin-pwa'
+
+const PWA_ICONS = [
+  { src: 'pwa/icon-192.png', sizes: '192x192', type: 'image/png', purpose: 'any' },
+  { src: 'pwa/icon-512.png', sizes: '512x512', type: 'image/png', purpose: 'any' },
+  { src: 'pwa/icon-512.png', sizes: '512x512', type: 'image/png', purpose: 'maskable' },
+]
 
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), '')
@@ -7,7 +14,34 @@ export default defineConfig(({ mode }) => {
   const apiTarget = (env.VITE_API_BASE_URL || 'https://telegram-mini-app-zwfs.onrender.com').replace(/\/$/, '')
 
   return {
-    plugins: [react()],
+    plugins: [
+      react(),
+      VitePWA({
+        registerType: 'autoUpdate',
+        includeAssets: ['favicon.svg', 'pwa/apple-touch-icon.png', 'pwa/icon-192.png', 'pwa/icon-512.png'],
+        manifest: {
+          name: 'ТВОЙ ХОД',
+          short_name: 'ТВОЙ ХОД',
+          description: 'Игра по финансовой грамотности — периоды, баланс, решения.',
+          theme_color: '#6D28D9',
+          background_color: '#F5F6F8',
+          display: 'standalone',
+          orientation: 'portrait',
+          lang: 'ru',
+          start_url: `${base}#/`,
+          scope: base,
+          icons: PWA_ICONS,
+        },
+        workbox: {
+          globPatterns: ['**/*.{js,css,html,ico,png,svg,webp,woff2}'],
+          navigateFallback: 'index.html',
+          navigateFallbackDenylist: [/^\/api/],
+        },
+        devOptions: {
+          enabled: mode === 'development',
+        },
+      }),
+    ],
     base,
     server: {
       proxy: {

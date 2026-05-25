@@ -1,0 +1,192 @@
+/* MQX-превью на лендинге — subset токенов prod (см. frontend-react/src/index.css) */
+
+.mq-device {
+  margin: 0;
+  width: min(390px, 100%);
+}
+
+.mq-device__bezel {
+  border-radius: 28px;
+  padding: 10px;
+  background: linear-gradient(160deg, #2a2d36, #12141a);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow:
+    0 24px 60px rgba(0, 0, 0, 0.45),
+    0 0 0 1px rgba(109, 40, 217, 0.2);
+}
+
+.mq-device__shot {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.mq-device__caption {
+  margin-top: 12px;
+  text-align: center;
+  font-size: 12px;
+  color: var(--mq-text-muted);
+}
+
+.mq-inline-shot {
+  margin: 0 auto 28px;
+  max-width: 280px;
+  padding: 8px;
+  border-radius: 20px;
+  background: #16171d;
+  border: 1px solid rgba(15, 17, 21, 0.12);
+  box-shadow: 0 16px 40px rgba(15, 17, 21, 0.12);
+}
+
+.mq-inline-shot img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 14px;
+}
+
+.mq-screen-strip {
+  display: flex;
+  gap: 16px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  padding: 4px 4px 20px;
+  -webkit-overflow-scrolling: touch;
+}
+
+.mq-screen-strip::-webkit-scrollbar {
+  height: 6px;
+}
+
+.mq-screen-strip::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 999px;
+}
+
+.mq-screen-card {
+  flex: 0 0 min(320px, 82vw);
+  scroll-snap-align: start;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.mq-screen-card__frame {
+  border-radius: 22px;
+  padding: 8px;
+  background: linear-gradient(160deg, #2a2d36, #12141a);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.35);
+}
+
+.mq-screen-card__frame img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 16px;
+}
+
+.mq-screen-card__label {
+  display: inline-block;
+  align-self: flex-start;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: #c4b5fd;
+  background: rgba(109, 40, 217, 0.25);
+}
+
+.mq-screen-card h3 {
+  margin: 0;
+  font-size: 1.0625rem;
+  font-weight: 600;
+}
+
+.mq-screen-card p {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--mq-text-muted);
+}
+
+.mq-section--peek {
+  background: var(--mq-ink-soft);
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.mq-showcase {
+  display: grid;
+  gap: 28px;
+}
+
+@media (min-width: 768px) {
+  .mq-showcase {
+    gap: 36px;
+  }
+}
+
+.mq-showcase__item {
+  display: grid;
+  gap: 20px;
+  align-items: center;
+}
+
+@media (min-width: 768px) {
+  .mq-showcase__item {
+    grid-template-columns: minmax(240px, 320px) 1fr;
+    gap: 28px;
+  }
+
+  .mq-showcase__item--reverse {
+    grid-template-columns: 1fr minmax(240px, 320px);
+  }
+
+  .mq-showcase__item--reverse .mq-showcase__shot {
+    order: 2;
+  }
+
+  .mq-showcase__item--reverse .mq-showcase__copy {
+    order: 1;
+  }
+}
+
+.mq-showcase__shot {
+  margin: 0;
+  max-width: 320px;
+}
+
+.mq-showcase__shot .mq-device__bezel {
+  padding: 8px;
+}
+
+.mq-showcase__copy h3 {
+  margin: 0 0 8px;
+  font-size: 1.125rem;
+}
+
+.mq-showcase__copy p {
+  margin: 0;
+  font-size: 15px;
+  line-height: 1.55;
+  color: var(--mq-text-muted);
+}
+
+.mq-section--on-light .mq-step {
+  background: color-mix(in srgb, #16171d 4%, #fff);
+  border-color: color-mix(in srgb, var(--mq-violet) 12%, var(--mq-line));
+}
+
+.mq-section--on-light .mq-card {
+  background: color-mix(in srgb, #16171d 3%, #fff);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mq-screen-strip {
+    scroll-snap-type: none;
+  }
+}

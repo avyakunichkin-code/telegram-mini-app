@@ -32,7 +32,7 @@
 |------|--------|
 | Разработчик / агент | `CLAUDE.md` → [`foundation/SPEC_PRODUCT.md`](foundation/SPEC_PRODUCT.md) → spec своей фичи |
 | Продукт | [`foundation/SPEC_PRODUCT.md`](foundation/SPEC_PRODUCT.md) + [Часть II (evolution)](vision/ideas/money-quest-evolution-after-mvp.md) |
-| UI/UX | [`specs/SPEC_FRONTEND_UI.md`](specs/SPEC_FRONTEND_UI.md) + [`reference/brandbook/BRANDBOOK.md`](reference/brandbook/BRANDBOOK.md) |
+| UI/UX | [`specs/SPEC_FRONTEND_UI.md`](specs/SPEC_FRONTEND_UI.md) + [`reference/brandbook/BRANDBOOK.md`](reference/brandbook/BRANDBOOK.md) + [`BRANDBOOK_MQX.md`](reference/brandbook/BRANDBOOK_MQX.md) |
 | Маркетинг / посты | [`marketing/README.md`](marketing/README.md) + скилл **social-changelog-posts** |
 | Планирование | [`backlog/PRODUCT_BACKLOG.md`](backlog/PRODUCT_BACKLOG.md) + [`TRACEABILITY.md`](TRACEABILITY.md) |
 
@@ -98,7 +98,9 @@
 | Документ | Содержание |
 |----------|------------|
 | [`reference/MONEY_QUEST_DESIGN_AND_GDD_OUTLINE.md`](reference/MONEY_QUEST_DESIGN_AND_GDD_OUTLINE.md) | GDD-оглавление |
-| [`reference/brandbook/BRANDBOOK.md`](reference/brandbook/BRANDBOOK.md) | Визуал и тон |
+| [`reference/brandbook/BRANDBOOK.md`](reference/brandbook/BRANDBOOK.md) | Brand Guidelines (identity) |
+| [`reference/brandbook/BRANDBOOK_MQX.md`](reference/brandbook/BRANDBOOK_MQX.md) | Product UI (MQX) |
+| [`reference/brandbook/assets/INDEX.md`](reference/brandbook/assets/INDEX.md) | Пакет лого и Монетки |
 | [`reference/investor-deck/INVESTOR_DECK.md`](reference/investor-deck/INVESTOR_DECK.md) | Investor deck |
 
 ---

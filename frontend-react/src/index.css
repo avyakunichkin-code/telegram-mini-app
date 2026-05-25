@@ -680,7 +680,8 @@ body {
   bottom: auto;
   left: 50%;
   transform: translateX(-50%);
-  width: min(200vw, 720px);
+  width: min(100vw, 720px);
+  max-width: 100%;
   height: clamp(300px, 56vh, 560px);
 }
 
@@ -2133,15 +2134,18 @@ button.mqx-finance-chip.mqx-finance-chip--action:focus-visible {
 }
 
 .mqx-auth {
-  min-height: calc(100svh - 32px);
+  min-height: 0;
   display: grid;
   place-items: center;
   padding: 8px 0;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
 }
 
 /* Auth — Монетка (design-lab/auth-flow вариант B) */
 .mqx-auth--monetka {
-  min-height: calc(100svh - 16px);
+  min-height: 0;
   padding: 12px 14px 28px;
   background: var(--tg-theme-secondary-bg-color, var(--mq-surface-b, #f5f6f8));
 }
@@ -2216,6 +2220,16 @@ button.mqx-finance-chip.mqx-finance-chip--action:focus-visible {
 
 .mqx-auth-monetka__form {
   margin: 0;
+}
+
+/* iOS/TMA: поля <16px вызывают авто-зум при фокусе — «страница 200%» */
+.mq-page--auth .mq-field__input {
+  font-size: 16px;
+}
+
+.mq-page--auth button,
+.mq-page--auth .tgui-button {
+  touch-action: manipulation;
 }
 
 .mqx-auth-monetka__actions {

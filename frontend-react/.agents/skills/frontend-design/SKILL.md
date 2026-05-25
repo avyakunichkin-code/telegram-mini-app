@@ -47,8 +47,12 @@ Remember: Claude is capable of extraordinary creative work. Don't hold back, sho
 
 | Источник | Путь |
 |----------|------|
-| Брендбук (текст) | [`docs/reference/brandbook/BRANDBOOK.md`](../../../../docs/reference/brandbook/BRANDBOOK.md) |
-| Брендбук (печать / PDF) | [`docs/reference/brandbook/brandbook-print.html`](../../../../docs/reference/brandbook/brandbook-print.html) |
+| **Brand Guidelines** (лого, цвет, голос, Монетка) | [`docs/reference/brandbook/BRANDBOOK.md`](../../../../docs/reference/brandbook/BRANDBOOK.md) |
+| **Product UI (MQX)** | [`docs/reference/brandbook/BRANDBOOK_MQX.md`](../../../../docs/reference/brandbook/BRANDBOOK_MQX.md) |
+| PDF Brand | [`brandbook-print.html`](../../../../docs/reference/brandbook/brandbook-print.html) |
+| PDF Product UI | [`brandbook-mqx-print.html`](../../../../docs/reference/brandbook/brandbook-mqx-print.html) |
+| Ассеты (G1, G2, ТХ, Монетка) | [`docs/reference/brandbook/assets/INDEX.md`](../../../../docs/reference/brandbook/assets/INDEX.md) |
+| Маскот (копирайт) | [`docs/reference/CHARACTER_MONETKA.md`](../../../../docs/reference/CHARACTER_MONETKA.md) |
 | Логотип prod (G1/G2 PNG) | [`frontend-react/src/assets/brand/`](../../src/assets/brand/) · лендинг: [`landing/public/brand/`](../../../../landing/public/brand/) — **без** плоских SVG L1–L4 |
 | Контракт экранов TMA | [`docs/specs/SPEC_FRONTEND_UI.md`](../../../../docs/specs/SPEC_FRONTEND_UI.md) |
 | Токены и MQX в коде | [`frontend-react/src/index.css`](../../src/index.css) |

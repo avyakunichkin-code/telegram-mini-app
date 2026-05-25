@@ -18,6 +18,7 @@
   },
   "nav": {
     "how": "How it works",
+    "peek": "Interface",
     "features": "Mechanics",
     "learn": "What you learn",
     "partners": "Partners",
@@ -27,7 +28,9 @@
     "eyebrow": "Telegram Mini App · financial literacy",
     "subtitle": "Play through simulated “months”: a timer, decisions, events, and period close — zero risk to your real wallet. Coach Monetka helps you get started.",
     "ctaPrimary": "How the game works",
+    "ctaPeek": "See the interface",
     "ctaFeatures": "All mechanics",
+    "screenCaption": "In-game dashboard — as in Telegram",
     "status": "Coming soon on Telegram",
     "monetkaQuote": "I'm Monetka — I'll help you read the numbers without panic.",
     "monetkaBubble": "Watch cash and your safety fund — they're honest",
@@ -67,34 +70,34 @@
   "features": {
     "title": "Inside a run",
     "subtitle": "Unified server-side economy: UI numbers match period-close math.",
-    "items": [
+    "showcase": [
       {
-        "icon": "⏱",
+        "screen": "dashboard",
         "title": "Period & timer",
         "text": "A game month with pause and “next” — life-like rhythm in a safe sandbox."
       },
       {
-        "icon": "💰",
+        "screen": "dashboard",
         "title": "Salary & safety fund",
         "text": "Income only on tap each period; safety fund is separate from cash and part of victory rules."
       },
       {
-        "icon": "🏠",
+        "screen": "capital",
         "title": "Capital management",
         "text": "Assets and liabilities from templates: income, upkeep, payments and overdue — clear, not jargon-heavy."
       },
       {
-        "icon": "🎲",
+        "screen": "events",
         "title": "Choice events",
         "text": "Up to three situations per period — consequences, not a “pick the quiz answer” test."
       },
       {
-        "icon": "📈",
+        "screen": "capital",
         "title": "Investments & insurance",
         "text": "Deposits, bonds, and policies: capitalization and premiums at period close in a simplified life model."
       },
       {
-        "icon": "🎯",
+        "screen": "dashboard",
         "title": "Goals & analytics",
         "text": "Dashboard, victory step chain, and period-close charts — see where the run is heading."
       }
@@ -133,30 +136,31 @@
   "peek": {
     "title": "In-game UI",
     "subtitle": "MQX layer on Telegram: one visual language across dashboard, finance, and events.",
+    "screens": {
+      "dashboard": "Screenshot of the YOUR MOVE dashboard",
+      "capital": "Screenshot of capital and finance screen",
+      "events": "Screenshot of the events carousel"
+    },
     "panels": [
       {
+        "screen": "dashboard",
         "label": "Dashboard",
         "title": "Period & goal",
-        "text": "Timer, salary, safety fund, and victory steps — on one screen.",
-        "chips": ["Period 3", "Goal", "Analytics"]
+        "text": "Timer, salary, safety fund, and victory steps — on one screen."
       },
       {
+        "screen": "capital",
         "label": "Capital",
         "title": "Period finances",
-        "text": "Income, expenses, investments, insurance, property, and liabilities — accordions without clutter.",
-        "chips": ["Safety fund", "Debts", "Assets"]
+        "text": "Income, expenses, investments, insurance, property, and liabilities — accordions without clutter."
       },
       {
+        "screen": "events",
         "label": "Events",
         "title": "Decision carousel",
         "text": "Compact choice cards; Monetka helps you read the situation, not replace it."
       }
-    ],
-    "mock": {
-      "period": "Period 3",
-      "cash": "42,500 ₽",
-      "safety": "18,000 ₽"
-    }
+    ]
   },
   "coach": {
     "title": "Monetka — your coach",
