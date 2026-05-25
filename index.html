@@ -3,11 +3,13 @@
 <head>
   <meta charset="UTF-8" />
   <script>
-    /* До React: HashRouter требует #/ (критично для iOS Safari и закладок без hash). */
+    /* HashRouter: #/ только на shell игры, не на /landing/ (там якоря #how, #faq). */
     (function () {
+      var p = location.pathname;
+      if (/\/landing(?:\/|$)/i.test(p)) return;
       var h = location.hash;
       if (!h || h === '#') {
-        location.replace(location.pathname + location.search + '#/');
+        location.replace(p + location.search + '#/');
       }
     })();
   </script>
@@ -48,9 +50,9 @@
       };
     }
   </script>
-  <script type="module" crossorigin src="/telegram-mini-app/assets/index-uXubwJUJ.js"></script>
+  <script type="module" crossorigin src="/telegram-mini-app/assets/index-BpG1z8Rm.js"></script>
   <link rel="stylesheet" crossorigin href="/telegram-mini-app/assets/index-CzFVZNWP.css">
-<link rel="manifest" href="/telegram-mini-app/manifest.webmanifest"><script id="vite-plugin-pwa:register-sw" src="/telegram-mini-app/registerSW.js"></script></head>
+<link rel="manifest" href="/telegram-mini-app/manifest.webmanifest"></head>
 <body>
 <div id="root"></div>
 <script async src="https://telegram.org/js/telegram-web-app.js"></script>
