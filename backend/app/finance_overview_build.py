@@ -140,10 +140,12 @@ def build_finance_overview(db: Session, profile: GameProfile) -> FinanceOverview
         mechanics_unlock=mechanics_unlock,
     )
 
+    # Норма подушки: ×3 всех текущих расходов за период (обязательства + burn).
+    pressure_monthly = total_monthly_outflow
     safety_baseline_target = 0.0
-    if total_monthly_obligations > 0:
+    if pressure_monthly > 0:
         safety_baseline_target = round(
-            total_monthly_obligations * float(MVP_SAFETY_FUND_OBLIGATIONS_MULTIPLIER),
+            pressure_monthly * float(MVP_SAFETY_FUND_OBLIGATIONS_MULTIPLIER),
             2,
         )
 

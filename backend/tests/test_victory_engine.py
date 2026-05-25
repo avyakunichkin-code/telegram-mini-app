@@ -71,7 +71,7 @@ class TestBasicTutorialChain:
         cfg = victory_config_for_template("mq_game_basic_v1")
         assert cfg.get("playtest_mode") == "tutorial"
         assert cfg.get("progression_mode") == PROGRESSION_CHAIN
-        assert len(cfg["goals"]) == 6
+        assert len(cfg["goals"]) == 5
 
     def test_starts_at_tutorial_salary(self):
         r = _eval_basic(_snap())
@@ -118,19 +118,19 @@ class TestBasicTutorialChain:
         passive = next(g for g in r.goals if g.key == "invest_income_15k")
         assert passive.detail.get("raw_met") is True
         assert passive.met is False
-        assert r.current_goal_key == "flow_nonneg"
+        assert r.current_goal_key == "safety_3x"
 
-    def test_all_six_chain_and_period_win(self):
+    def test_all_five_chain_and_period_win(self):
         r = _eval_basic(_tutorial_complete_snap())
-        assert r.goals_enabled == 6
-        assert r.goals_met == 6
-        assert r.goals_required == 6
+        assert r.goals_enabled == 5
+        assert r.goals_met == 5
+        assert r.goals_required == 5
         assert r.current_goal_key is None
         assert r.win_reached is True
 
     def test_early_period_blocks_win(self):
         r = _eval_basic(_tutorial_complete_snap(period_index=MIN_PERIOD_INDEX_FOR_WIN - 1))
-        assert r.goals_met == 6
+        assert r.goals_met == 5
         assert r.period_gate_open is False
         assert r.win_reached is False
         assert r.win_ready is True
@@ -173,10 +173,10 @@ def _harder_complete_snap(**kwargs):
 
 
 class TestHarderTutorialChain:
-    def test_config_has_nine_goals(self):
+    def test_config_has_seven_goals(self):
         cfg = victory_config_for_template("mq_game_tight_budget_v1")
         assert cfg.get("playtest_mode") == "tutorial"
-        assert len(cfg["goals"]) == 9
+        assert len(cfg["goals"]) == 7
 
     def test_debt_stack_finale_is_rental(self):
         cfg = victory_config_for_template("mq_game_debt_stack_v1")
@@ -187,25 +187,24 @@ class TestHarderTutorialChain:
         assert r.mechanics_effective["capital_liabilities"] is False
         assert r.current_goal_key == "tutorial_salary"
 
-    def test_no_overdue_requires_liabilities_unlock(self):
+    def test_liabilities_unlock_after_cushion(self):
         r = _eval_harder(
             "mq_game_mortgage_stress_v1",
             _snap(salary_ever_claimed=True, safety_ever_contributed=True),
         )
-        overdue = next(g for g in r.goals if g.key == "no_overdue")
-        assert overdue.available is True
         assert r.mechanics_effective["capital_liabilities"] is True
         assert r.mechanics_effective["capital_invest"] is False
+        assert r.current_goal_key == "safety_6x"
 
     def test_tight_budget_full_chain_win(self):
         r = _eval_harder("mq_game_tight_budget_v1", _harder_complete_snap())
-        assert r.goals_enabled == 9
-        assert r.goals_met == 9
+        assert r.goals_enabled == 7
+        assert r.goals_met == 7
         assert r.win_reached is True
 
     def test_debt_stack_full_chain_win(self):
         r = _eval_harder("mq_game_debt_stack_v1", _harder_complete_snap())
-        assert r.goals_met == 9
+        assert r.goals_met == 7
         assert r.win_reached is True
 
 
@@ -249,13 +248,13 @@ class TestNewGoalTypes:
 class TestParseVictoryConfig:
     def test_empty_falls_back_to_template(self):
         cfg = parse_victory_config("{}", template_key="mq_game_basic_v1")
-        assert len(cfg["goals"]) == 6
+        assert len(cfg["goals"]) == 5
         assert cfg.get("playtest_mode") == "tutorial"
         assert cfg.get("progression_mode") == PROGRESSION_CHAIN
 
     def test_invalid_json_falls_back(self):
         cfg = parse_victory_config("not-json", template_key="mq_game_basic_v1")
-        assert cfg["required_goals_met"] == 6
+        assert cfg["required_goals_met"] == 5
 
     def test_legacy_parallel_mode(self):
         cfg = VICTORY_CONFIG_LEGACY_BY_TEMPLATE_KEY["mq_game_basic_v1"]

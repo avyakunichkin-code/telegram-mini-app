@@ -64,7 +64,7 @@ export function periodCloseRows(summary) {
     { key: 'balance', label: 'Баланс', glyph: 'coin', delta: m.cashDelta },
     { key: 'income', label: 'Доходы', glyph: 'up', delta: m.incomeDelta },
     { key: 'expense', label: 'Расходы', glyph: 'down', delta: m.expenseDelta },
-    { key: 'safety', label: 'Подушка', glyph: 'coin', delta: m.safetyDelta },
+    { key: 'safety', label: 'Фин.подушка', glyph: 'coin', delta: m.safetyDelta },
     { key: 'invest', label: 'Инвестиции', glyph: 'percent', delta: m.investDelta },
     { key: 'debt', label: 'Долги', glyph: 'down', delta: m.debtDelta },
   ];

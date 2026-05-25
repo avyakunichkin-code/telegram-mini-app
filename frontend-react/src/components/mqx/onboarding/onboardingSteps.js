@@ -30,7 +30,7 @@ export const ONBOARDING_STEPS = [
   },
   {
     id: 'safety_fund',
-    title: 'Подушка',
+    title: 'Фин.подушка',
     body:
       '«В подушку» — запас на чёрный день. Есть лишнее на счёте — закинь хоть немного. Я подожду, пока нажмёшь.',
     anchor: 'cushion',

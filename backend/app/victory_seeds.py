@@ -13,7 +13,6 @@ from typing import Any
 from .mechanics_progression import (
     MECHANIC_CAPITAL_INVEST,
     MECHANIC_CAPITAL_INSURANCE,
-    MECHANIC_CAPITAL_LIABILITIES,
     MECHANIC_CAPITAL_PROPERTY,
     MECHANIC_DASHBOARD_CORE,
 )
@@ -126,14 +125,6 @@ _BASIC_TUTORIAL_CHAIN: list[dict[str, Any]] = [
         "enabled": True,
     },
     {
-        "key": "flow_nonneg",
-        "type": "net_monthly_cashflow_nonneg",
-        "title": "Стабильный денежный поток",
-        "requires_mechanics": [MECHANIC_DASHBOARD_CORE],
-        "required": False,
-        "enabled": True,
-    },
-    {
         "key": "safety_3x",
         "type": "safety_fund_months",
         "title": "Подушка ≥ 3× обязательств",
@@ -179,22 +170,6 @@ _HARDER_TUTORIAL_CORE: list[dict[str, Any]] = [
         "title": "Внести в подушку",
         "action": "safety_contributed",
         "requires_mechanics": [MECHANIC_DASHBOARD_CORE],
-        "required": False,
-        "enabled": True,
-    },
-    {
-        "key": "flow_nonneg",
-        "type": "net_monthly_cashflow_nonneg",
-        "title": "Стабильный денежный поток",
-        "requires_mechanics": [MECHANIC_DASHBOARD_CORE],
-        "required": False,
-        "enabled": True,
-    },
-    {
-        "key": "no_overdue",
-        "type": "no_overdue",
-        "title": "Без просрочки по долгам",
-        "requires_mechanics": [MECHANIC_CAPITAL_LIABILITIES],
         "required": False,
         "enabled": True,
     },

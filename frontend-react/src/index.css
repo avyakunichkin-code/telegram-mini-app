@@ -1384,7 +1384,7 @@ button.mqx-finance-chip.mqx-finance-chip--action:focus-visible {
   color: color-mix(in srgb, var(--mq-amber, #f59e0b) 85%, var(--mqx-ink));
 }
 
-/* Подушка — индикатор наполнения к цели ×3 (design-lab F1) */
+/* Фин.подушка — индикатор наполнения к норме ×3 (design-lab F1) */
 .mqx-finance-chip--cushion {
   position: relative;
   align-items: flex-start;

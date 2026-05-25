@@ -109,14 +109,13 @@ next_spec: specs/features/SPEC_template-victory-tutorial-chain.md
 |-----|-----|--------|----------------|
 | 1 | `action_once` | Забрать зарплату | Кнопка «Зарплата» |
 | 2 | `action_once` | Внести в подушку (любая сумма) | «В подушку» |
-| 3 | `net_monthly_cashflow_nonneg` | Поток ≥ 0 | Чтение дашборда / финансов |
-| 4 | `safety_fund_months` ×3 | Подушка к цели | Подушка + финансы |
-| 5 | `action_once` | Открыть депозит или купить облигации | Раздел инвестиций |
-| 6 | `passive_income_monthly_min` (порог ↓) | Доход с позиций | Удержание депозита/купонов |
+| 3 | `safety_fund_months` ×3 | Подушка к цели | Подушка + финансы |
+| 4 | `action_once` | Открыть депозит или купить облигации | Раздел инвестиций |
+| 5 | `passive_income_monthly_min` (порог ↓) | Доход с позиций | Удержание депозита/купонов |
 
 Победа: все шаги chain выполнены (или **M из N**, если позже ослабим — `required_goals_met` в JSON). `min_period_index_for_victory` оставить **7** или снизить до **5** только после смоука «быстрого» прохода.
 
-Для **тяжёлых** шаблонов (`tight_budget`, `mortgage_stress`, `debt_stack`) — 9 шагов: tutorial (зарплата, подушка) → поток → без просрочки → подушка ×6 → инвестиции → доход 80k → страховка → финал (10M cash или арендная квартира). `mechanics_unlock`: flows → liabilities → invest → insurance → property.
+Для **тяжёлых** шаблонов (`tight_budget`, `mortgage_stress`, `debt_stack`) — 7 шагов: tutorial (зарплата, подушка) → подушка ×6 → инвестиции → доход 80k → страховка → финал (10M cash или арендная квартира). Из chain убраны `no_overdue` и `flow_nonneg` (выполняются сами). `mechanics_unlock`: flows → liabilities → invest → insurance → property.
 
 ---
 

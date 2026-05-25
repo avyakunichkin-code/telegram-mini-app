@@ -8,7 +8,11 @@ import { showNotification } from './notifications';
 
 import { getMonthlyBurn } from '../utils/expensesDisplay';
 import { CAPITAL_FLOWS_SECTION } from '../utils/capitalFlowsNav';
-import { getSafetyFundFillFromOverview } from '../utils/safetyFundFill';
+import {
+  getSafetyFundFillFromOverview,
+  SAFETY_FUND_BASELINE_HINT,
+  SAFETY_FUND_CHIP_LABEL,
+} from '../utils/safetyFundFill';
 
 import {
 
@@ -182,12 +186,13 @@ export function DashboardPremium({
         ),
       },
       {
-        title: 'Подушка',
+        title: SAFETY_FUND_CHIP_LABEL,
         titleHint: cushionFill
-          ? `Подушка · ${cushionFill.percent}% от нормы (×3 текущих обязательств)`
-          : 'Подушка безопасности',
+          ? `${SAFETY_FUND_CHIP_LABEL} · ${cushionFill.percent}% от нормы (${SAFETY_FUND_BASELINE_HINT})`
+          : 'Финансовая подушка — запас на чёрный день',
         valueNode: <MoneyText value={safety} />,
         accent: 'mqx-accent--emerald',
+        cushionChip: true,
         cushionFill,
         icon: (
           <svg viewBox="0 0 24 24" aria-hidden="true">
@@ -274,7 +279,7 @@ export function DashboardPremium({
       if (moneyModal === 'in') {
 
         const res = await contributeToSafetyFund(amt);
-        showNotification('Подушка пополнена', 'success');
+        showNotification('Фин.подушка пополнена', 'success');
 
       } else {
 

@@ -1,21 +1,40 @@
 /**
  * Индикатор подушки — базовая норма финансовой безопасности, не цели сценария.
- * Норма пересчитывается из текущих обязательств (по умолчанию ×3).
+ * Норма = ×3 всех текущих расходов за период (обязательства + burn).
  */
 
 export const SAFETY_FUND_BASELINE_MULTIPLIER = 3;
 
+/** Короткая подпись chip на дашборде */
+export const SAFETY_FUND_CHIP_LABEL = 'Фин.подушка';
+
+/** Подсказка для chip: от чего считается полоска */
+export const SAFETY_FUND_BASELINE_HINT = '×3 всех расходов за период';
+
+/**
+ * Сумма расходов за период: платежи по долгам + обслуживание активов + «на жизнь» (burn).
+ * @param {{ total_monthly_outflow?: number, total_monthly_obligations?: number, monthly_burn_total?: number }} overview
+ */
+export function resolveMonthlyPressureForBaseline(overview) {
+  const outflow = Number(overview?.total_monthly_outflow);
+  if (Number.isFinite(outflow) && outflow > 0) return outflow;
+
+  const obligations = Number(overview?.total_monthly_obligations) || 0;
+  const burn = Number(overview?.monthly_burn_total) || 0;
+  return obligations + burn;
+}
+
 /**
  * Рекомендуемый объём подушки по текущим финансам (не victory / win_target).
- * @param {{ total_monthly_obligations?: number, safety_fund_baseline_target?: number }} overview
+ * @param {{ total_monthly_outflow?: number, total_monthly_obligations?: number, monthly_burn_total?: number, safety_fund_baseline_target?: number }} overview
  */
 export function resolveSafetyFundBaselineTarget(overview) {
   const fromApi = Number(overview?.safety_fund_baseline_target);
   if (Number.isFinite(fromApi) && fromApi > 0) return fromApi;
 
-  const obligations = Number(overview?.total_monthly_obligations) || 0;
-  if (obligations <= 0) return null;
-  return obligations * SAFETY_FUND_BASELINE_MULTIPLIER;
+  const pressure = resolveMonthlyPressureForBaseline(overview);
+  if (pressure <= 0) return null;
+  return pressure * SAFETY_FUND_BASELINE_MULTIPLIER;
 }
 
 /** @deprecated используй resolveSafetyFundBaselineTarget */

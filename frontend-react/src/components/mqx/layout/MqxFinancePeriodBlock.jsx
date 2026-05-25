@@ -7,7 +7,7 @@ export const MQ_DASH_FINANCE_MONETKA_KEY = 'mq-dash-finance-monetka-v1';
 const MONETKA_COPY = (
   <>
     Смотри <strong>ДОХОДЫ</strong> и <strong>РАСХОДЫ</strong> за период. <strong>БАЛАНС</strong> на карте и{' '}
-    <strong>ПОДУШКА</strong> — твой запас на чёрный день. Давай улучшим ✨
+    <strong>ФИН.ПОДУШКА</strong> — твой запас на чёрный день. Давай улучшим ✨
   </>
 );
 
@@ -50,7 +50,7 @@ function FinanceChip({ card, onFlowsNavigate }) {
   const className = [
     'mqx-finance-chip',
     card.chipAction ? 'mqx-finance-chip--action' : '',
-    card.cushionFill ? 'mqx-finance-chip--cushion' : '',
+    card.cushionChip ? 'mqx-finance-chip--cushion' : '',
   ]
     .filter(Boolean)
     .join(' ');
@@ -81,8 +81,11 @@ function FinanceChip({ card, onFlowsNavigate }) {
         >
           {card.valueNode}
         </div>
-        {card.cushionFill ? (
-          <CushionFillBar percent={card.cushionFill.percent} tier={card.cushionFill.tier} />
+        {card.cushionChip ? (
+          <CushionFillBar
+            percent={card.cushionFill?.percent ?? 0}
+            tier={card.cushionFill?.tier ?? 'low'}
+          />
         ) : null}
       </div>
     </>
