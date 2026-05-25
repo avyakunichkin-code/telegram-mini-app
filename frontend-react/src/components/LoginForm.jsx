@@ -55,7 +55,11 @@ export function LoginForm({ onSwitchToRegister }) {
       showBrand
       showLottieBackdrop
       title="Привет, я Монетка!"
-      subtitle="Помогу разобраться с финансами. Введи email и пароль"
+      subtitle={
+        <>
+          Помогу разобраться с финансами. Введи <span className="mqx-voice-em">email</span> и пароль
+        </>
+      }
       titleId="mqx-login-monetka-title"
     >
       <form onSubmit={handleSubmit} className="mqx-auth-monetka__form" noValidate>

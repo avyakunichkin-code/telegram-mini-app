@@ -61,12 +61,16 @@ def _validate_save_kind(save_kind: str) -> str:
     return normalized
 
 
-def _starter_template_public(row: GameStarterTemplate) -> GameStarterTemplatePublic:
+def _starter_template_public(
+    row: GameStarterTemplate,
+    *,
+    previous_granted=None,
+) -> GameStarterTemplatePublic:
     from ..starter_template_presentation import (
         compare_note_from_blueprint,
-        highlights_from_blueprint,
         parse_blueprint_json,
         scenario_icon_from_blueprint,
+        scenario_picker_highlights,
     )
 
     bp = parse_blueprint_json(row.blueprint_json)
@@ -80,13 +84,31 @@ def _starter_template_public(row: GameStarterTemplate) -> GameStarterTemplatePub
         title=row.title,
         difficulty_rank=int(row.difficulty_rank or 1),
         description=desc,
-        highlights=highlights_from_blueprint(
+        highlights=scenario_picker_highlights(
             bp,
+            tk,
             base_monthly_lifestyle_expense=float(row.base_monthly_lifestyle_expense or 0),
+            previous_granted=previous_granted,
         ),
         scenario_icon=scenario_icon_from_blueprint(bp, tk),
         compare_note=compare_note_from_blueprint(bp, tk),
     )
+
+
+def _starter_templates_public(rows: list[GameStarterTemplate]) -> list[GameStarterTemplatePublic]:
+    from ..starter_template_presentation import (
+        granted_capital_mechanics_from_blueprint,
+        parse_blueprint_json,
+    )
+
+    prev = frozenset()
+    out: list[GameStarterTemplatePublic] = []
+    for row in rows:
+        bp = parse_blueprint_json(row.blueprint_json)
+        item = _starter_template_public(row, previous_granted=prev)
+        out.append(item)
+        prev = granted_capital_mechanics_from_blueprint(bp, row.template_key)
+    return out
 
 
 @router.get("/templates", response_model=list[GameStarterTemplatePublic])
@@ -116,7 +138,7 @@ async def list_game_templates(
             )
         )
     rows = q.order_by(GameStarterTemplate.sort_order.asc(), GameStarterTemplate.id.asc()).all()
-    return [_starter_template_public(r) for r in rows]
+    return _starter_templates_public(rows)
 
 
 @router.get("/profiles", response_model=list[GameProfileResponse])

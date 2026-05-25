@@ -95,11 +95,11 @@ export function GameTemplatePickScreen({ profileName, onProfileNameChange, onBac
   return (
     <MqxMonetkaDialogScreen
       showBrand
-      title="Четыре ритма"
+      title="Выбери свою жизнь"
       subtitle={
         <p>
-          Ух ты, четыре жизни с разным ритмом. Начни со <strong>Старта</strong> или сразу лови <strong>Драйв</strong> —
-          ты сам выбираешь, насколько насыщенной будет игра.
+          Начни <span className="mqx-voice-em">студентом</span> с первой зарплатой или попробуй себя в роли{' '}
+          <span className="mqx-voice-em">предпринимателя</span> — с ипотекой, авто и плотным бюджетом.
         </p>
       }
       titleId="mqx-new-game-templates-title"

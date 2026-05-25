@@ -72,7 +72,11 @@ export function RegisterForm({ onSwitchToLogin }) {
       showBrand
       showLottieBackdrop
       title="Привет, я Монетка!"
-      subtitle="Я тоже регистрировалась в первый раз. Теперь не могу оторваться. Регистрируйся! Подожду"
+      subtitle={
+        <>
+          Регистрируйся по <span className="mqx-voice-em">email</span> — пригодится, если забудешь пароль.
+        </>
+      }
       titleId="mqx-register-monetka-title"
     >
       <form onSubmit={handleSubmit} className="mqx-auth-monetka__form" noValidate>

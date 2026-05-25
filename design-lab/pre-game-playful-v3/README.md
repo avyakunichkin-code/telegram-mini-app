@@ -1,16 +1,16 @@
-# Pre-game playful v3
+# Pre-game playful v3 ★ FINAL
 
-**Статус:** раунд на утверждение (2026-05-25)
+**Статус:** итоговый макет (2026-05-25)
 
 ## Идея раунда
 
-| # | Запрос | Решение в lab |
-|---|--------|----------------|
-| 1 | Монетка внутрь формы, логотип сверху | `pg-auth-logo` + `pg-auth-panel` с `pg-auth-panel__head` |
-| 2 | Шрифт чуть меньше | Заголовок `--mq-fs-heading` (14px), текст `--mq-fs-caption` (12px), подсказки `--mq-fs-small` (11px) |
-| 3 | Игривые подсказки | `pg-auth-hint` / `pg-flow-hint` |
-| 4 | Режим и шаблоны — chip, полоса слева | `mqx-pick-chip` (+ модификаторы `--violet`, `--green` …) |
-| 5 | Продолжение — выбор по названию | Copy в P3 + hint про «Все сохранения» |
+| # | Решение |
+|---|---------|
+| Auth | `pg-auth-panel`, logo сверху, email-only, подсказки в тексте Монетки (11px) |
+| P3 | `mqx-fin-row` + compact «Продолжить» справа внизу |
+| P4/P5 | Prod-иконки + **T-B glass** (`--tb-glass`) |
+| Заголовки секций | Чёрные, margin 20px / 12px |
+| P4 copy | Игра (жизни, инвестиции, квартира) · План — с новой строки |
 
 Сравнение: [`../pre-game-shell/`](../pre-game-shell/) (v2 — Монетка над пузырём).
 
@@ -21,6 +21,8 @@ cd design-lab/pre-game-playful-v3
 .\sync-lab.ps1
 npx serve .
 ```
+
+`index.html` подключает **lab-base.css** + **styles.css** (оверрайды раунда). Если правишь только `styles.css`, достаточно обновить страницу; после правок в родительских `auth-flow` / `game-templates` — снова `.\sync-lab.ps1`.
 
 `sync-lab.ps1` собирает: `type-scale-round` + `auth-flow` + `new-game-mode` + `styles.css`.
 

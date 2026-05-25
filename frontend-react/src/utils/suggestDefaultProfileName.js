@@ -1,16 +1,27 @@
-const DEFAULT_PREFIX = 'Моя игра - ';
-const NUMBERED_PATTERN = /^моя игра\s*-\s*(\d+)\s*$/i;
+const BASE_NAME = 'Моя игра';
+const LEGACY_NUMBERED = /^моя игра\s*-\s*(\d+)\s*$/i;
+const INDEXED = /^моя игра\s+(\d+)\s*$/i;
+
+function parseIndexedName(raw) {
+  let m = raw.match(INDEXED);
+  if (m) return Number.parseInt(m[1], 10) || 0;
+  m = raw.match(LEGACY_NUMBERED);
+  if (m) return Number.parseInt(m[1], 10) || 0;
+  return 0;
+}
 
 /**
- * Название игры по умолчанию: «Моя игра - N» (N = max среди таких имён + 1).
- * @param {Array<{ name?: string }>} profiles
+ * Название игры по умолчанию: «Моя игра N» (N растёт с числом сохранений и уже занятыми индексами).
+ * @param {Array<{ name?: string, save_kind?: string }>} profiles
  */
 export function suggestDefaultProfileName(profiles) {
+  const list = profiles || [];
   let maxN = 0;
-  for (const p of profiles || []) {
+  for (const p of list) {
     const raw = String(p?.name ?? '').trim();
-    const m = raw.match(NUMBERED_PATTERN);
-    if (m) maxN = Math.max(maxN, Number.parseInt(m[1], 10) || 0);
+    maxN = Math.max(maxN, parseIndexedName(raw));
   }
-  return `${DEFAULT_PREFIX}${maxN + 1}`;
+  const gameCount = list.filter((p) => (p?.save_kind || 'game') === 'game').length;
+  const next = Math.max(maxN, gameCount) + 1;
+  return `${BASE_NAME} ${next}`;
 }

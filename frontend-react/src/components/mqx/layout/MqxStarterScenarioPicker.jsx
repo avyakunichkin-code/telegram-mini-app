@@ -14,6 +14,7 @@ export function MqxStarterScenarioPicker({
   disabled = false,
   labelledById,
   layout = 'compact',
+  tbGlass = true,
 }) {
   const isCompact = layout === 'compact';
   const isGrid = layout === 'grid';
@@ -25,7 +26,12 @@ export function MqxStarterScenarioPicker({
 
   return (
     <div
-      className={['mqx-scenario-picker', 'mqx-scenario-picker--illus', layoutCls]
+      className={[
+        'mqx-scenario-picker',
+        'mqx-scenario-picker--illus',
+        layoutCls,
+        tbGlass ? 'mqx-scenario-picker--tb-glass' : '',
+      ]
         .filter(Boolean)
         .join(' ')}
       role="radiogroup"

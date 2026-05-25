@@ -316,9 +316,12 @@
   margin-bottom: 0;
 }
 
-.mqx-monetka-dialog__subtitle strong {
-  font-weight: 800;
-  color: color-mix(in srgb, var(--mq-violet-deep, #5b21b6) 88%, var(--mqx-ink));
+.mqx-monetka-dialog__subtitle strong,
+.mqx-monetka-dialog__subtitle .mqx-voice-em,
+.mqx-auth-monetka__subtitle .mqx-voice-em,
+.mqx-auth-monetka__subtitle strong {
+  font-weight: var(--mq-fw-heavy, 800);
+  color: var(--mq-warning, #d97706);
 }
 
 .mqx-monetka-flow__body {
@@ -620,6 +623,58 @@
 
 .mqx-save-kind--vivid .mqx-save-kind__body {
   gap: 4px;
+}
+
+/* T-B glass — плотный светлый фон (режим игры и сценарии старта) */
+.mqx-save-kind--tb-glass.mqx-save-kind--vivid .mqx-save-kind__row {
+  padding: 13px 12px 13px 10px;
+  border-radius: 16px;
+  backdrop-filter: blur(8px);
+  box-shadow:
+    0 0 0 1px color-mix(in srgb, var(--mqx-ink) 10%, transparent),
+    0 8px 20px color-mix(in srgb, var(--mq-violet) 8%, transparent);
+}
+
+.mqx-save-kind--tb-glass.mqx-save-kind--vivid .mqx-save-kind__row--game {
+  border-left: 4px solid var(--mq-violet);
+  background: color-mix(in srgb, var(--mq-violet) 5%, var(--surface, #fff));
+}
+
+.mqx-save-kind--tb-glass.mqx-save-kind--vivid .mqx-save-kind__row--plan:not(.mqx-save-kind__row--soon) {
+  border-left: 4px solid var(--mq-emerald);
+  background: color-mix(in srgb, var(--mq-emerald) 5%, var(--surface, #fff));
+}
+
+.mqx-scenario-picker--tb-glass .mqx-scenario-strip {
+  padding: 13px 12px 13px 10px;
+  border-radius: 16px;
+  backdrop-filter: blur(8px);
+  box-shadow:
+    0 0 0 1px color-mix(in srgb, var(--mqx-ink) 10%, transparent),
+    0 8px 20px color-mix(in srgb, var(--mq-violet) 8%, transparent);
+  background: color-mix(in srgb, var(--surface, #fff) 92%, transparent) !important;
+}
+
+.mqx-scenario-picker--tb-glass .mqx-scenario-strip--green {
+  border-left: 4px solid #059669;
+}
+
+.mqx-scenario-picker--tb-glass .mqx-scenario-strip--amber {
+  border-left: 4px solid #d4bc00;
+}
+
+.mqx-scenario-picker--tb-glass .mqx-scenario-strip--orange {
+  border-left: 4px solid #f97316;
+}
+
+.mqx-scenario-picker--tb-glass .mqx-scenario-strip--red {
+  border-left: 4px solid #dc2626;
+}
+
+.mqx-scenario-picker--tb-glass .mqx-scenario-strip--selected {
+  box-shadow:
+    0 0 0 1px color-mix(in srgb, var(--mq-violet) 28%, transparent),
+    0 8px 22px color-mix(in srgb, var(--mq-violet) 12%, transparent);
 }
 
 .mqx-auth-monetka__loading {

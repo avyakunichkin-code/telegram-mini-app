@@ -12,8 +12,8 @@ export function NewProfileKindScreen({ onChooseGame, onBack }) {
       title="Новая игра!"
       subtitle={
         <p>
-          В режиме <strong>Игра</strong> — симулятор: выбираешь жизненную ситуацию и проходишь месяцы с деньгами. В{' '}
-          <strong>Плане</strong> — свой сценарий из реальных цифр (скоро).
+          В режиме <span className="mqx-voice-em">Игра</span> — симулятор: выбираешь жизненную ситуацию и проходишь
+          месяцы с деньгами. В <span className="mqx-voice-em">Плане</span> — свой сценарий из реальных цифр (скоро).
         </p>
       }
       titleId="mqx-new-game-kind-title"

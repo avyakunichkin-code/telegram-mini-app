@@ -15,6 +15,7 @@ export function MqxSaveKindPicker({
   sectionTitleId = 'mqx-save-kind-heading',
   className = '',
   vivid = true,
+  tbGlass = true,
 }) {
   const gameWrapCls = [
     'mqx-save-kind__icon-wrap',
@@ -29,7 +30,14 @@ export function MqxSaveKindPicker({
 
   return (
     <div
-      className={['mqx-save-kind', vivid ? 'mqx-save-kind--vivid' : '', className].filter(Boolean).join(' ')}
+      className={[
+        'mqx-save-kind',
+        vivid ? 'mqx-save-kind--vivid' : '',
+        tbGlass ? 'mqx-save-kind--tb-glass' : '',
+        className,
+      ]
+        .filter(Boolean)
+        .join(' ')}
       role="group"
       aria-labelledby={sectionTitle ? sectionTitleId : undefined}
       aria-label={sectionTitle ? undefined : 'Режим игры'}

@@ -3,16 +3,16 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>ТВОЙ ХОД — pre-game playful v3</title>
+    <title>ТВОЙ ХОД — pre-game ★ FINAL</title>
+    <!-- lab-base.css = sync; styles.css = overrides (всегда актуальны, даже если sync при открытом serve) -->
     <link rel="stylesheet" href="./lab-base.css" />
+    <link rel="stylesheet" href="./styles.css" />
   </head>
   <body>
     <header class="lab-header">
       <div>
-        <h1>Pre-game playful v3</h1>
-        <p>
-          Монетка в карточке · логотип сверху · подсказки в тексте Монетки · chip M-A…D / T-A…D · оранжевые заголовки секций.
-        </p>
+        <h1>Pre-game playful v3 ★ FINAL</h1>
+        <p>Итоговые экраны: auth-panel · T-B glass · prod-иконки · «Продолжить» compact справа.</p>
       </div>
       <div class="lab-theme" role="group" aria-label="Тема">
         <button type="button" class="is-active" data-theme-btn="light">Светлая</button>
@@ -21,8 +21,8 @@
     </header>
 
     <p class="lab-pick-banner">
-      ★ Кандидат на prod: layout <strong>pg-auth-panel</strong> (P1–P3, P6) + <strong>mqx-pick-chip</strong> (P4–P5). Сравни с
-      <a href="../pre-game-shell/">pre-game-shell v2</a>.
+      ★ Кандидат в prod: <strong>pg-auth-panel</strong> + <strong>mqx-save-kind--tb-glass</strong> +
+      <strong>mqx-scenario-picker--tb-glass</strong>. Прокрути P1→P6.
     </p>
 
     <main class="lab-wrap">
@@ -30,9 +30,8 @@
       <section class="lab-section" id="p1">
         <div class="lab-section__label">
           <span class="lab-section__id">P1</span>
-          <span class="lab-section__title">Вход · логотип + Монетка в карточке</span>
+          <span class="lab-section__title">Вход · /login</span>
         </div>
-        <p class="lab-section__note">Голос Монетки: заголовок <code>--mq-fs-caption</code> (12px), текст <code>--mq-fs-small</code> (11px).</p>
         <div class="lab-stage">
           <article class="phone phone--pre-game">
             <div class="pg-app-shell mq-page mq-page--auth">
@@ -42,14 +41,14 @@
                   <img class="pg-auth-logo__img" src="./assets/logo-full.png" alt="ТВОЙ ХОД" width="220" height="48" />
                   <p class="pg-auth-logo__tag">Финансовая игра</p>
                 </header>
-                <section class="pg-auth-panel" aria-labelledby="p1-title">
+                <section class="pg-auth-panel">
                   <div class="pg-auth-panel__head">
                     <img class="pg-auth-panel__mascot" src="./assets/monetka-mascot.png" alt="" width="72" height="72" />
                     <div class="pg-auth-panel__voice">
-                      <h1 id="p1-title" class="pg-auth-panel__title">Привет, я Монетка!</h1>
+                      <h1 class="pg-auth-panel__title">Привет, я Монетка!</h1>
                       <p class="pg-auth-panel__subtitle">
-                        Помогу с финансами — введи <span class="pg-voice-em">email</span> и пароль. Пароль не подскажу, это не
-                        банкомат 🙂
+                        Помогу с деньгами — введи <span class="pg-voice-em">email</span> и пароль, и полетели. Пароль не
+                        подскажу: я же не банкомат 🙂
                       </p>
                     </div>
                   </div>
@@ -79,7 +78,7 @@
       <section class="lab-section" id="p2">
         <div class="lab-section__label">
           <span class="lab-section__id">P2</span>
-          <span class="lab-section__title">Регистрация</span>
+          <span class="lab-section__title">Регистрация · /register</span>
         </div>
         <div class="lab-stage">
           <article class="phone phone--pre-game">
@@ -88,7 +87,6 @@
               <div class="pg-auth-stack">
                 <header class="pg-auth-logo">
                   <img class="pg-auth-logo__img" src="./assets/logo-full.png" alt="ТВОЙ ХОД" width="220" height="48" />
-                  <p class="pg-auth-logo__tag">Финансовая игра</p>
                 </header>
                 <section class="pg-auth-panel">
                   <div class="pg-auth-panel__head">
@@ -96,8 +94,8 @@
                     <div class="pg-auth-panel__voice">
                       <h1 class="pg-auth-panel__title">Рада знакомству!</h1>
                       <p class="pg-auth-panel__subtitle">
-                        Регистрируйся по <span class="pg-voice-em">email</span> — пригодится, если забудешь пароль. Пароль от 6
-                        символов, без пробелов.
+                        Регистрируйся по <span class="pg-voice-em">email</span> — пригодится, если забудешь пароль.
+                        Пароль от 6 символов, без пробелов — так спокойнее.
                       </p>
                     </div>
                   </div>
@@ -122,7 +120,7 @@
       <section class="lab-section" id="p3">
         <div class="lab-section__label">
           <span class="lab-section__id">P3</span>
-          <span class="lab-section__title">Стартовое меню · выбор сохранения по названию</span>
+          <span class="lab-section__title">Стартовое меню</span>
         </div>
         <div class="lab-stage">
           <article class="phone phone--pre-game">
@@ -138,21 +136,21 @@
                     <div class="pg-auth-panel__voice">
                       <h1 class="pg-auth-panel__title">Продолжим с того же места?</h1>
                       <p class="pg-auth-panel__subtitle">
-                        Ниже — последний слот с кнопкой «Продолжить». В
-                        <span class="pg-voice-em">«Все сохранения»</span> можно выбрать любое прошлое сохранение по названию,
-                        которое ты сам давал.
+                        Ниже — последний слот: «Продолжить» справа внизу, как в приложении. А в
+                        <span class="pg-voice-em">«Все сохранения»</span> можно выбрать любую игру по названию, которое
+                        сам придумывал.
                       </p>
                     </div>
                   </div>
-                  <div class="pg-continue-slot">
-                    <div class="pg-continue-slot__row">
-                      <div>
-                        <div class="pg-continue-slot__name">Моя игра</div>
-                        <div class="pg-continue-slot__meta">Игра · период 4</div>
-                      </div>
-                      <div class="pg-continue-slot__cash">42 500 ₽</div>
+                  <div class="pg-continue-slot mqx-fin-row">
+                    <div class="mqx-fin-row__l">
+                      <div class="mqx-fin-row__title">Моя игра</div>
+                      <div class="mqx-fin-row__sub">Игра · период 4</div>
                     </div>
-                    <button type="button" class="mqx-btn mqx-btn--primary mqx-btn--stretched">Продолжить</button>
+                    <div class="mqx-fin-row__r">
+                      <div class="mqx-fin-row__val">42 500 ₽</div>
+                      <button type="button" class="mqx-btn mqx-btn--primary mqx-btn--compact">Продолжить</button>
+                    </div>
                   </div>
                   <div class="pg-actions">
                     <button type="button" class="mqx-btn mqx-btn--primary mqx-btn--stretched">Новая игра</button>
@@ -166,252 +164,191 @@
         </div>
       </section>
 
-      <!-- P4 Mode variants -->
+      <!-- P4 New game mode -->
       <section class="lab-section" id="p4">
         <div class="lab-section__label">
           <span class="lab-section__id">P4</span>
-          <span class="lab-section__title">Режим игры · 4 варианта chip</span>
+          <span class="lab-section__title">Новая игра · режим (T-B + prod icons)</span>
         </div>
-        <p class="lab-section__note">
-          Подсказка про <span class="pg-voice-em">Игра</span>/<span class="pg-voice-em">План</span> — в тексте Монетки. Заголовок секции —
-          оранжевый <code>--mq-warning</code>.
-        </p>
-        <div class="lab-pick-variants">
-          <div class="lab-pick-variant">
-            <span class="lab-pick-variant__tag">M-A · strip</span>
-            <div class="pg-flow-wrap">
-              <div class="mqx-monetka-dialog__perch mqx-monetka-dialog__perch--sit-edge">
-                <div class="mqx-monetka-dialog__perch-head">
-                  <img class="lab-mascot--perch" src="./assets/monetka-sit-edge.png" width="124" alt="" aria-hidden="true" />
-                </div>
-                <section class="mqx-monetka-dialog__speech">
-                  <h1 class="mqx-monetka-dialog__title">Новая игра!</h1>
-                  <div class="mqx-monetka-dialog__subtitle">
-                    <p>
-                      <span class="pg-voice-em">Игра</span> — готовые сценарии.
-                      <span class="pg-voice-em">План</span> скоро — свой бюджет с нуля.
-                    </p>
+        <div class="lab-stage">
+          <article class="phone phone--pre-game">
+            <div class="pg-app-shell mq-page">
+              <div class="mq-page__decor" aria-hidden="true"></div>
+              <div class="pg-flow-wrap">
+                <div class="mqx-monetka-dialog__perch mqx-monetka-dialog__perch--sit-edge">
+                  <div class="mqx-monetka-dialog__perch-head">
+                    <img class="lab-mascot--perch" src="./assets/monetka-sit-edge.png" width="124" alt="" aria-hidden="true" />
                   </div>
-                </section>
-              </div>
-              <h2 class="pg-pick-heading">Режим игры</h2>
-              <div class="pg-pick-list">
-                <button type="button" class="mqx-pick-chip mqx-pick-chip--violet">
-                  <span class="mqx-pick-chip__icon" aria-hidden>🎮</span>
-                  <span class="mqx-pick-chip__body">
-                    <span class="mqx-pick-chip__label">Игра</span>
-                    <span class="mqx-pick-chip__sub">Каталог жизненных ситуаций</span>
-                  </span>
-                  <span class="mqx-pick-chip__trail" aria-hidden>›</span>
-                </button>
-                <div class="mqx-pick-chip mqx-pick-chip--emerald mqx-pick-chip--soon">
-                  <span class="mqx-pick-chip__badge">Скоро</span>
-                  <span class="mqx-pick-chip__icon" aria-hidden>📋</span>
-                  <span class="mqx-pick-chip__body">
-                    <span class="mqx-pick-chip__label">План</span>
-                    <span class="mqx-pick-chip__sub">Свой бюджет с нуля</span>
-                  </span>
+                  <section class="mqx-monetka-dialog__speech">
+                    <h1 class="mqx-monetka-dialog__title">Новая игра!</h1>
+                    <div class="mqx-monetka-dialog__subtitle">
+                      <p>
+                        <span class="pg-voice-em">Игра</span> — попробуй себя в разных жизнях: от первой зарплаты до своей
+                        квартиры. Можно инвестировать, копить подушку и ловить финансовые сюрпризы.
+                      </p>
+                      <p>
+                        <span class="pg-voice-em">План</span> скоро — свой бюджет с нуля, без готового сценария.
+                      </p>
+                    </div>
+                  </section>
+                </div>
+                <div class="mqx-save-kind mqx-save-kind--vivid mqx-save-kind--tb-glass">
+                  <h2 class="mqx-save-kind__heading">Режим игры</h2>
+                  <button type="button" class="mqx-save-kind__row mqx-save-kind__row--game">
+                    <span class="mqx-save-kind__icon-wrap mqx-save-kind__icon-wrap--game mqx-save-kind__icon-wrap--game-vivid" aria-hidden>
+                      <svg class="mqx-save-kind__icon" viewBox="0 0 72 72" fill="none" aria-hidden>
+                        <path d="M23 24 Q36 12 49 24 Q58 36 49 50 Q36 60 23 50 Q14 36 23 24" stroke="currentColor" stroke-width="1.5" stroke-dasharray="3.5 3" opacity="0.32"/>
+                        <circle cx="22" cy="24" r="11" fill="currentColor" opacity="0.1"/>
+                        <path d="M22 19l-5 5h3v4h4v-4h3l-5-5z" fill="currentColor" opacity="0.75"/>
+                        <circle cx="50" cy="24" r="11" fill="currentColor" opacity="0.1"/>
+                        <rect x="44" y="22" width="12" height="8" rx="1.5" stroke="currentColor" stroke-width="1.75"/>
+                        <path d="M47 22v-2.5h6v2.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                        <circle cx="36" cy="52" r="11" fill="currentColor" opacity="0.1"/>
+                        <circle cx="36" cy="52" r="5.5" stroke="currentColor" stroke-width="1.75"/>
+                        <path d="M36 48.5v7M33.5 52h5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" opacity="0.85"/>
+                        <circle cx="36" cy="35" r="10" fill="currentColor" opacity="0.14"/>
+                        <circle cx="36" cy="32" r="4" fill="currentColor"/>
+                        <path d="M31 37c1.5 4 4.5 6 5 6s3.5-2 5-6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                      </svg>
+                    </span>
+                    <span class="mqx-save-kind__body">
+                      <span class="mqx-save-kind__title">Игра</span>
+                      <span class="mqx-save-kind__desc">Игровой симулятор с элементами финансовой грамотности</span>
+                    </span>
+                    <span class="mqx-save-kind__trail" aria-hidden>
+                      <svg viewBox="0 0 24 24" width="20" height="20" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2.25" stroke-linecap="round"/></svg>
+                    </span>
+                  </button>
+                  <div class="mqx-save-kind__row mqx-save-kind__row--plan mqx-save-kind__row--soon">
+                    <span class="mqx-save-kind__badge">Скоро</span>
+                    <span class="mqx-save-kind__icon-wrap mqx-save-kind__icon-wrap--plan mqx-save-kind__icon-wrap--plan-vivid" aria-hidden>
+                      <svg class="mqx-save-kind__icon" viewBox="0 0 72 72" fill="none" aria-hidden>
+                        <rect x="16" y="18" width="32" height="42" rx="4" stroke="currentColor" stroke-width="2.25"/>
+                        <path d="M26 18v-7h12v7" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                        <path d="M24 30h24M24 38h20M24 46h22" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" opacity="0.55"/>
+                        <rect x="48" y="16" width="16" height="14" rx="2.5" stroke="currentColor" stroke-width="1.75"/>
+                        <rect x="48" y="44" width="7" height="12" rx="1.5" fill="currentColor" opacity="0.38"/>
+                        <rect x="57" y="38" width="7" height="18" rx="1.5" fill="currentColor" opacity="0.52"/>
+                        <rect x="66" y="32" width="7" height="24" rx="1.5" fill="currentColor" opacity="0.68"/>
+                      </svg>
+                    </span>
+                    <span class="mqx-save-kind__body">
+                      <span class="mqx-save-kind__title">План</span>
+                      <span class="mqx-save-kind__desc">Профессиональный инструмент финансового планирования</span>
+                    </span>
+                  </div>
+                </div>
+                <div class="pg-actions">
+                  <button type="button" class="mqx-btn mqx-btn--secondary mqx-btn--stretched">Назад</button>
                 </div>
               </div>
             </div>
-          </div>
-          <div class="lab-pick-variant">
-            <span class="lab-pick-variant__tag">M-B · glass</span>
-            <div class="pg-flow-wrap">
-              <h2 class="pg-pick-heading">Режим игры</h2>
-              <div class="pg-pick-list">
-                <button type="button" class="mqx-pick-chip mqx-pick-chip--glass mqx-pick-chip--violet">
-                  <span class="mqx-pick-chip__icon" aria-hidden>🎮</span>
-                  <span class="mqx-pick-chip__body">
-                    <span class="mqx-pick-chip__label">Игра</span>
-                    <span class="mqx-pick-chip__sub">Стекло + полоса violet</span>
-                  </span>
-                  <span class="mqx-pick-chip__trail" aria-hidden>›</span>
-                </button>
-                <div class="mqx-pick-chip mqx-pick-chip--glass mqx-pick-chip--emerald mqx-pick-chip--soon">
-                  <span class="mqx-pick-chip__badge">Скоро</span>
-                  <span class="mqx-pick-chip__icon" aria-hidden>📋</span>
-                  <span class="mqx-pick-chip__body">
-                    <span class="mqx-pick-chip__label">План</span>
-                    <span class="mqx-pick-chip__sub">Мягкий фон, emerald</span>
-                  </span>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="lab-pick-variant">
-            <span class="lab-pick-variant__tag">M-C · soft halo</span>
-            <div class="pg-flow-wrap">
-              <h2 class="pg-pick-heading">Режим игры</h2>
-              <div class="pg-pick-list">
-                <button type="button" class="mqx-pick-chip mqx-pick-chip--soft mqx-pick-chip--violet">
-                  <span class="mqx-pick-chip__icon" aria-hidden>🎮</span>
-                  <span class="mqx-pick-chip__body">
-                    <span class="mqx-pick-chip__label">Игра</span>
-                    <span class="mqx-pick-chip__sub">Иконка в свечении, без полосы</span>
-                  </span>
-                  <span class="mqx-pick-chip__trail" aria-hidden>›</span>
-                </button>
-                <div class="mqx-pick-chip mqx-pick-chip--soft mqx-pick-chip--emerald mqx-pick-chip--soon">
-                  <span class="mqx-pick-chip__icon" aria-hidden>📋</span>
-                  <span class="mqx-pick-chip__body">
-                    <span class="mqx-pick-chip__label">План</span>
-                    <span class="mqx-pick-chip__sub">Скоро</span>
-                  </span>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="lab-pick-variant">
-            <span class="lab-pick-variant__tag">M-D · outline dot</span>
-            <div class="pg-flow-wrap">
-              <h2 class="pg-pick-heading">Режим игры</h2>
-              <div class="pg-pick-list">
-                <button type="button" class="mqx-pick-chip mqx-pick-chip--outline mqx-pick-chip--violet">
-                  <span class="mqx-pick-chip__body">
-                    <span class="mqx-pick-chip__label">Игра</span>
-                    <span class="mqx-pick-chip__sub">Контур + цветная точка слева</span>
-                  </span>
-                  <span class="mqx-pick-chip__trail" aria-hidden>›</span>
-                </button>
-                <div class="mqx-pick-chip mqx-pick-chip--outline mqx-pick-chip--emerald mqx-pick-chip--soon">
-                  <span class="mqx-pick-chip__body">
-                    <span class="mqx-pick-chip__label">План</span>
-                    <span class="mqx-pick-chip__sub">Скоро</span>
-                  </span>
-                </div>
-              </div>
-            </div>
-          </div>
+          </article>
         </div>
       </section>
 
-      <!-- P5 Templates variants -->
+      <!-- P5 Templates -->
       <section class="lab-section" id="p5">
         <div class="lab-section__label">
           <span class="lab-section__id">P5</span>
-          <span class="lab-section__title">Сценарий старта · 4 варианта chip</span>
+          <span class="lab-section__title">Шаблоны · сценарий старта (T-B + prod icons)</span>
         </div>
-        <p class="lab-section__note">Заголовок «Сценарий старта» — оранжевый, отступы 18/10. Полоса слева = сложность.</p>
-        <div class="lab-pick-variants">
-          <div class="lab-pick-variant">
-            <span class="lab-pick-variant__tag">T-A · strip</span>
-            <div class="pg-flow-wrap">
-              <div class="mqx-monetka-dialog__perch mqx-monetka-dialog__perch--sit-edge">
-                <div class="mqx-monetka-dialog__perch-head">
-                  <img class="lab-mascot--perch" src="./assets/monetka-sit-edge.png" width="124" alt="" aria-hidden="true" />
-                </div>
-                <section class="mqx-monetka-dialog__speech">
-                  <h1 class="mqx-monetka-dialog__title">Выбери сценарий</h1>
-                  <div class="mqx-monetka-dialog__subtitle">
-                    <p>Цвет слева — насколько жизнь «закручена». Сменить можно только новой игрой.</p>
+        <div class="lab-stage">
+          <article class="phone phone--pre-game">
+            <div class="pg-app-shell mq-page">
+              <div class="pg-flow-wrap">
+                <div class="mqx-monetka-dialog__perch mqx-monetka-dialog__perch--sit-edge">
+                  <div class="mqx-monetka-dialog__perch-head">
+                    <img class="lab-mascot--perch" src="./assets/monetka-sit-edge.png" width="124" alt="" aria-hidden="true" />
                   </div>
-                </section>
-              </div>
-              <h2 class="pg-pick-heading">Сценарий старта</h2>
-              <div class="pg-pick-list">
-                <button type="button" class="mqx-pick-chip mqx-pick-chip--green mqx-pick-chip--selected">
-                  <span class="mqx-pick-chip__body">
-                    <span class="mqx-pick-chip__label">Старт карьеры</span>
-                    <span class="mqx-pick-chip__sub">Средняя · 85 000 ₽ · подушка 30 000 ₽</span>
-                  </span>
-                </button>
-                <button type="button" class="mqx-pick-chip mqx-pick-chip--amber">
-                  <span class="mqx-pick-chip__body">
-                    <span class="mqx-pick-chip__label">Семья и ипотека</span>
-                    <span class="mqx-pick-chip__sub">Сложнее · больше платежей</span>
-                  </span>
-                </button>
-                <button type="button" class="mqx-pick-chip mqx-pick-chip--orange">
-                  <span class="mqx-pick-chip__body">
-                    <span class="mqx-pick-chip__label">Фриланс без подушки</span>
-                    <span class="mqx-pick-chip__sub">Эксперт · доход скачет</span>
-                  </span>
-                </button>
-              </div>
-            </div>
-          </div>
-          <div class="lab-pick-variant">
-            <span class="lab-pick-variant__tag">T-B · glass</span>
-            <div class="pg-flow-wrap">
-              <h2 class="pg-pick-heading">Сценарий старта</h2>
-              <div class="pg-pick-list">
-                <button type="button" class="mqx-pick-chip mqx-pick-chip--glass mqx-pick-chip--green mqx-pick-chip--selected">
-                  <span class="mqx-pick-chip__body">
-                    <span class="mqx-pick-chip__label">Старт карьеры</span>
-                    <span class="mqx-pick-chip__sub">Glass + green strip</span>
-                  </span>
-                </button>
-                <button type="button" class="mqx-pick-chip mqx-pick-chip--glass mqx-pick-chip--amber">
-                  <span class="mqx-pick-chip__body">
-                    <span class="mqx-pick-chip__label">Семья и ипотека</span>
-                    <span class="mqx-pick-chip__sub">Amber</span>
-                  </span>
-                </button>
-                <button type="button" class="mqx-pick-chip mqx-pick-chip--glass mqx-pick-chip--orange">
-                  <span class="mqx-pick-chip__body">
-                    <span class="mqx-pick-chip__label">Фриланс без подушки</span>
-                    <span class="mqx-pick-chip__sub">Orange</span>
-                  </span>
-                </button>
-              </div>
-            </div>
-          </div>
-          <div class="lab-pick-variant">
-            <span class="lab-pick-variant__tag">T-C · soft</span>
-            <div class="pg-flow-wrap">
-              <h2 class="pg-pick-heading">Сценарий старта</h2>
-              <div class="pg-pick-list">
-                <button type="button" class="mqx-pick-chip mqx-pick-chip--soft mqx-pick-chip--green mqx-pick-chip--selected">
-                  <span class="mqx-pick-chip__icon" aria-hidden>🌱</span>
-                  <span class="mqx-pick-chip__body">
-                    <span class="mqx-pick-chip__label">Старт карьеры</span>
-                    <span class="mqx-pick-chip__sub">Мягкое свечение иконки</span>
-                  </span>
-                </button>
-                <button type="button" class="mqx-pick-chip mqx-pick-chip--soft mqx-pick-chip--amber">
-                  <span class="mqx-pick-chip__icon" aria-hidden>🏠</span>
-                  <span class="mqx-pick-chip__body">
-                    <span class="mqx-pick-chip__label">Семья и ипотека</span>
-                    <span class="mqx-pick-chip__sub">Amber halo</span>
-                  </span>
-                </button>
-                <button type="button" class="mqx-pick-chip mqx-pick-chip--soft mqx-pick-chip--orange">
-                  <span class="mqx-pick-chip__icon" aria-hidden>⚡</span>
-                  <span class="mqx-pick-chip__body">
-                    <span class="mqx-pick-chip__label">Фриланс</span>
-                    <span class="mqx-pick-chip__sub">Orange halo</span>
-                  </span>
-                </button>
-              </div>
-            </div>
-          </div>
-          <div class="lab-pick-variant">
-            <span class="lab-pick-variant__tag">T-D · outline</span>
-            <div class="pg-flow-wrap">
-              <h2 class="pg-pick-heading">Сценарий старта</h2>
-              <div class="pg-pick-list">
-                <button type="button" class="mqx-pick-chip mqx-pick-chip--outline mqx-pick-chip--green mqx-pick-chip--selected">
-                  <span class="mqx-pick-chip__body">
-                    <span class="mqx-pick-chip__label">Старт карьеры</span>
-                    <span class="mqx-pick-chip__sub">Контур + зелёная точка</span>
-                  </span>
-                </button>
-                <button type="button" class="mqx-pick-chip mqx-pick-chip--outline mqx-pick-chip--amber">
-                  <span class="mqx-pick-chip__body">
-                    <span class="mqx-pick-chip__label">Семья и ипотека</span>
-                    <span class="mqx-pick-chip__sub">Amber dot</span>
-                  </span>
-                </button>
-                <button type="button" class="mqx-pick-chip mqx-pick-chip--outline mqx-pick-chip--orange">
-                  <span class="mqx-pick-chip__body">
-                    <span class="mqx-pick-chip__label">Фриланс</span>
-                    <span class="mqx-pick-chip__sub">Orange dot</span>
-                  </span>
-                </button>
+                  <section class="mqx-monetka-dialog__speech">
+                    <h1 class="mqx-monetka-dialog__title">Четыре ритма</h1>
+                    <div class="mqx-monetka-dialog__subtitle">
+                      <p>
+                        Ух ты, четыре жизни с разным темпом. Начни со <span class="pg-voice-em">Старта</span> или сразу лови
+                        <span class="pg-voice-em">Драйв</span> — ты сам решаешь, насколько насыщенной будет игра.
+                      </p>
+                    </div>
+                  </section>
+                </div>
+                <div class="mq-field" style="margin-top: 10px">
+                  <label>Название игры</label>
+                  <input class="mq-field__input" type="text" value="Моя игра" />
+                </div>
+                <span class="lab-catalog-label">Сценарий старта</span>
+                <div class="mqx-scenario-picker mqx-scenario-picker--compact mqx-scenario-picker--tb-glass">
+                  <button type="button" class="mqx-scenario-strip mqx-scenario-strip--green mqx-scenario-strip--selected">
+                    <span class="mqx-scenario-strip__icon-wrap mqx-scenario-strip__icon-wrap--green" aria-hidden>
+                      <svg viewBox="0 0 24 24" fill="none" aria-hidden>
+                        <path d="M12 4 4 8v2l8 4 8-4V8l-8-4z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+                        <path d="M6 12v4c0 2.2 2.7 4 6 4s6-1.8 6-4v-4" stroke="currentColor" stroke-width="2"/>
+                      </svg>
+                    </span>
+                    <span class="mqx-scenario-strip__body">
+                      <span class="mqx-scenario-strip__head"><span class="mqx-scenario-strip__title">Студент</span></span>
+                      <ul class="mqx-scenario-strip__list">
+                        <li>Доход ~50 000 ₽/мес</li>
+                        <li>Чистый старт — без долгов</li>
+                      </ul>
+                    </span>
+                    <span class="mqx-scenario-strip__trail" aria-hidden>›</span>
+                  </button>
+                  <button type="button" class="mqx-scenario-strip mqx-scenario-strip--amber">
+                    <span class="mqx-scenario-strip__icon-wrap mqx-scenario-strip__icon-wrap--amber" aria-hidden>
+                      <svg class="mqx-scenario-strip__icon--silhouette" viewBox="0 0 24 24" fill="currentColor" aria-hidden>
+                        <path d="M7 16.25V12.8l2.4-2.1h5.2l2.4 2.1v3.45H7z"/><circle cx="8.25" cy="17.1" r="2"/><circle cx="15.75" cy="17.1" r="2"/>
+                      </svg>
+                    </span>
+                    <span class="mqx-scenario-strip__body">
+                      <span class="mqx-scenario-strip__head"><span class="mqx-scenario-strip__title">Профессионал</span></span>
+                      <ul class="mqx-scenario-strip__list">
+                        <li>Доход ~45 000 ₽/мес</li>
+                        <li>Авто + потребительский кредит</li>
+                      </ul>
+                    </span>
+                    <span class="mqx-scenario-strip__trail" aria-hidden>›</span>
+                  </button>
+                  <button type="button" class="mqx-scenario-strip mqx-scenario-strip--orange">
+                    <span class="mqx-scenario-strip__icon-wrap mqx-scenario-strip__icon-wrap--orange" aria-hidden>
+                      <svg viewBox="0 0 24 24" fill="none" aria-hidden>
+                        <path d="M4 12 12 5l8 7v7H4v-7z" stroke="currentColor" stroke-width="2"/>
+                        <path d="M10 19v-5h4v5" stroke="currentColor" stroke-width="2"/>
+                      </svg>
+                    </span>
+                    <span class="mqx-scenario-strip__body">
+                      <span class="mqx-scenario-strip__head"><span class="mqx-scenario-strip__title">Руководитель</span></span>
+                      <ul class="mqx-scenario-strip__list">
+                        <li>Доход ~46 500 ₽/мес</li>
+                        <li>Ипотека + авто</li>
+                      </ul>
+                    </span>
+                    <span class="mqx-scenario-strip__trail" aria-hidden>›</span>
+                  </button>
+                  <button type="button" class="mqx-scenario-strip mqx-scenario-strip--red">
+                    <span class="mqx-scenario-strip__icon-wrap mqx-scenario-strip__icon-wrap--red" aria-hidden>
+                      <svg class="mqx-scenario-strip__icon--silhouette" viewBox="0 0 24 24" fill="currentColor" aria-hidden>
+                        <path d="M2.5 19.25V14.5l1.6-1.35 1.6 1.35 1.6-1.35 1.6 1.35 1.6-1.35 1.6 1.35V19.25H2.5z"/>
+                        <path d="M13.75 19.25V10h5.25v9.25H13.75z"/><circle cx="16.35" cy="7.35" r="2.15"/>
+                      </svg>
+                    </span>
+                    <span class="mqx-scenario-strip__body">
+                      <span class="mqx-scenario-strip__head"><span class="mqx-scenario-strip__title">Предприниматель</span></span>
+                      <ul class="mqx-scenario-strip__list">
+                        <li>Доход ~43 500 ₽/мес</li>
+                        <li>Ипотека + кредитная карта</li>
+                      </ul>
+                    </span>
+                    <span class="mqx-scenario-strip__trail" aria-hidden>›</span>
+                  </button>
+                </div>
+                <div class="pg-actions">
+                  <button type="button" class="mqx-btn mqx-btn--primary mqx-btn--stretched">Начать игру</button>
+                  <button type="button" class="mqx-btn mqx-btn--secondary mqx-btn--stretched">Быстрый старт</button>
+                  <button type="button" class="mqx-btn mqx-btn--ghost mqx-btn--stretched">Назад</button>
+                </div>
               </div>
             </div>
-          </div>
+          </article>
         </div>
       </section>
 
@@ -435,7 +372,7 @@
                     <div class="pg-auth-panel__voice">
                       <h1 class="pg-auth-panel__title">Секунду, листаю полки</h1>
                       <p class="pg-auth-panel__subtitle">
-                        Подтягиваю сохранения… обычно секунда. Пока жди — вспомни, как назвал последнюю игру 🙂
+                        Подтягиваю сохранения… обычно хватает секунды. Пока жди — вспомни, как назвал последнюю игру 🙂
                       </p>
                     </div>
                   </div>

@@ -1,28 +1,24 @@
-# Варианты — pre-game playful v3 (итерация 2)
+# ★ FINAL — pre-game playful v3
 
-## Auth (P1–P3, P6)
+## Auth (P1, P2, P3, P6)
 
-| Элемент | Токен |
-|---------|--------|
-| Заголовок Монетки | `--mq-fs-caption` (12px) |
-| Текст Монетки + подсказки | `--mq-fs-small` (11px), акцент `pg-voice-em` → `--mq-warning` |
-| Поля | Email (без логина) |
+- Layout: `pg-auth-panel` + logo `pg-auth-logo`
+- Голос: title 12px, body 11px; подсказки в `subtitle`
+- Email-only (без логина)
+- P3: `mqx-fin-row` + `mqx-btn--compact` «Продолжить» справа внизу
 
-Подсказки — **внутри** `pg-auth-panel__subtitle`, без отдельного блока.
+## P4 Режим
 
-P3: кнопка **Продолжить** внутри `pg-continue-slot`.
+- Иконки: prod `IllustrationGame` / `IllustrationPlan` (vivid wrap)
+- Стиль кнопок: **`mqx-save-kind--tb-glass`** (T-B glass)
+- Copy Монетки: Игра (жизни, инвестиции, квартира) + План с новой строки
 
-## Заголовки секций (P4–P5)
+## P5 Сценарии
 
-`pg-pick-heading` — uppercase, `--mq-fs-caption`, цвет `--mq-warning`, отступы **18px / 10px**.
+- Иконки: prod `mqx-scenario-strip` + градиентные wrap
+- Стиль: **`mqx-scenario-picker--tb-glass`**
+- Заголовок секции: «Сценарий старта», нейтральный, margin 20/12
 
-## Chip-picks (сравни в lab)
+## Заголовки секций
 
-| ID | Класс | Описание |
-|----|-------|----------|
-| **M-A / T-A** | `mqx-pick-chip` | Полоса слева 3px (как сейчас в prod vivid) |
-| **M-B / T-B** | `+ mqx-pick-chip--glass` | Стекло, полоса 4px, лёгкая тень |
-| **M-C / T-C** | `+ mqx-pick-chip--soft` | Без полосы, иконка/эмодзи в halo |
-| **M-D / T-D** | `+ mqx-pick-chip--outline` | Контур + цветная «точка» слева |
-
-После ★ выбрать пару (режим + шаблоны) или один стиль на оба экрана.
+Чёрные (`--mqx-ink` 52%), не оранжевые. Отступы: **20px сверху, 12px снизу**.
