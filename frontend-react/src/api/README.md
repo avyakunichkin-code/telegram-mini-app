@@ -11,6 +11,6 @@
 | `insurance.js` | `/api/insurance/*` |
 | `admin.js` | `/api/admin/*` |
 
-Импорт в приложении: `import { API } from '../api'` (barrel `src/api.js`).
+Импорт в приложении: `import { API } from '../api'` (агрегат в `src/api.js`, домены в `src/api/`).
 
 Добавление метода: доменный файл + при необходимости поле в `API` в `index.js`.

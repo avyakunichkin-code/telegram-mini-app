@@ -2,6 +2,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { Button, Spinner } from '@telegram-apps/telegram-ui';
 import { adminApi } from '../../api';
+import { AdminNav } from './AdminNav';
 
 function formatDt(value) {
   if (!value) return '—';
@@ -194,6 +195,7 @@ export function AdminWatchtowerScreen({ onBack }) {
 
   return (
     <div className="admin-watchtower mq-section">
+      <AdminNav />
       <header className="admin-watchtower__header">
         <div>
           <h1 className="mq-section__title">Watchtower</h1>
@@ -237,15 +239,17 @@ export function AdminWatchtowerScreen({ onBack }) {
         <>
           <OnboardingFunnel funnel={data.onboarding_funnel} />
 
-          <section className="mq-card admin-watchtower__block">
-            <h2 className="admin-watchtower__block-title">Пользователи</h2>
-            <Table columns={userColumns} rows={users} highlightId={highlightUser} />
-          </section>
+          <div className="admin-watchtower__panels admin-watchtower__panels--split">
+            <section className="mq-card admin-watchtower__block">
+              <h2 className="admin-watchtower__block-title">Пользователи</h2>
+              <Table columns={userColumns} rows={users} highlightId={highlightUser} />
+            </section>
 
-          <section className="mq-card admin-watchtower__block">
-            <h2 className="admin-watchtower__block-title">Профили</h2>
-            <Table columns={profileColumns} rows={profiles} highlightId={highlightProfile} />
-          </section>
+            <section className="mq-card admin-watchtower__block">
+              <h2 className="admin-watchtower__block-title">Профили</h2>
+              <Table columns={profileColumns} rows={profiles} highlightId={highlightProfile} />
+            </section>
+          </div>
 
           <section className="mq-card admin-watchtower__block">
             <h2 className="admin-watchtower__block-title">Журнал алертов</h2>

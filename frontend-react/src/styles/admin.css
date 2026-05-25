@@ -1,4 +1,160 @@
-﻿/* Admin Watchtower (MVP 1.2 A0) */
+﻿/* Desktop admin: снимаем TMA-рамку 480px только на #/admin */
+html[data-mq-layout='admin'] #root {
+  width: 100%;
+  max-width: none;
+  min-height: 100vh;
+  min-height: 100dvh;
+  height: auto;
+  max-height: none;
+  margin: 0;
+  border: none;
+  box-shadow: none;
+  overflow-x: clip;
+  overflow-y: auto;
+}
+
+html[data-mq-layout='admin'] .mq-app-fill {
+  flex: 1 1 auto;
+  min-height: 100vh;
+  min-height: 100dvh;
+  overflow: visible;
+}
+
+.mq-admin-web {
+  width: 100%;
+  min-height: 100vh;
+  min-height: 100dvh;
+  box-sizing: border-box;
+  background: var(--tg-theme-bg-color, var(--bg));
+  color: var(--tg-theme-text-color, var(--text));
+}
+
+.mq-admin-web__main {
+  width: 100%;
+  max-width: min(1280px, 100%);
+  margin-inline: auto;
+  padding: 20px clamp(16px, 3vw, 40px) 48px;
+  box-sizing: border-box;
+}
+
+.mq-admin-web__loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  min-height: 40vh;
+  padding: 48px 24px;
+}
+
+.mq-admin-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--mq-border-subtle, rgba(128, 128, 128, 0.25));
+}
+
+.mq-admin-nav__link {
+  padding: 6px 14px;
+  border-radius: 999px;
+  font-size: var(--mq-fs-caption);
+  font-weight: var(--mq-fw-bold, 700);
+  text-decoration: none;
+  color: color-mix(in srgb, var(--mqx-ink) 70%, transparent);
+  background: color-mix(in srgb, var(--mqx-ink) 5%, transparent);
+}
+
+.mq-admin-nav__link--active {
+  color: var(--mq-violet-deep, #5b21b6);
+  background: color-mix(in srgb, var(--mq-violet, #6d28d9) 14%, transparent);
+}
+
+.admin-catalogs__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 14px;
+}
+
+.admin-catalogs__card {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 16px;
+  text-decoration: none;
+  color: inherit;
+  transition: box-shadow 0.15s ease;
+}
+
+.admin-catalogs__card:hover {
+  box-shadow: 0 4px 16px color-mix(in srgb, var(--mq-violet, #6d28d9) 12%, transparent);
+}
+
+.admin-catalogs__card-title {
+  margin: 0;
+  font-size: var(--mq-fs-body);
+  font-weight: var(--mq-fw-heavy, 800);
+}
+
+.admin-catalogs__card-meta {
+  margin: 0;
+  font-size: var(--mq-fs-caption);
+}
+
+.admin-catalogs__card-cta {
+  margin-top: 4px;
+  font-size: var(--mq-fs-caption);
+  font-weight: var(--mq-fw-bold, 700);
+  color: var(--mq-violet, #6d28d9);
+}
+
+.admin-catalog-list__back {
+  margin: 0 0 6px;
+  font-size: var(--mq-fs-caption);
+}
+
+.admin-catalog-list__back a {
+  color: var(--mq-violet, #6d28d9);
+  text-decoration: none;
+}
+
+.admin-catalog-list__filters {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 12px 16px;
+  padding: 12px 14px;
+  margin-bottom: 14px;
+}
+
+.admin-catalog-list__search {
+  flex: 1 1 200px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.admin-catalog-list__search-label {
+  font-size: var(--mq-fs-small);
+  font-weight: var(--mq-fw-bold, 700);
+  opacity: 0.6;
+}
+
+.admin-catalog-list__check {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: var(--mq-fs-caption);
+  white-space: nowrap;
+}
+
+/* Admin Watchtower (MVP 1.2 A0) */
+.admin-watchtower {
+  width: 100%;
+}
+
 .admin-watchtower__header {
   display: flex;
   flex-wrap: wrap;
@@ -57,9 +213,24 @@
   margin-bottom: 14px;
 }
 
-@media (min-width: 520px) {
+@media (min-width: 640px) {
   .admin-watchtower__kpi-row {
     grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+.admin-watchtower__panels {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+@media (min-width: 960px) {
+  .admin-watchtower__panels--split {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: start;
+    gap: 16px;
   }
 }
 

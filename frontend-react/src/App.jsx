@@ -13,6 +13,9 @@ import { BaseParamsScreen } from './components/BaseParamsScreen';
 import { GameScreen } from './components/GameScreen';
 import { ToastHost } from './components/ToastHost';
 import { MqCatalogScreen } from './components/mqx/catalog/MqCatalogScreen';
+import { AdminWebShell } from './components/admin/AdminWebShell';
+import { AdminCatalogListScreen } from './components/admin/AdminCatalogListScreen';
+import { AdminCatalogsHub } from './components/admin/AdminCatalogsHub';
 import { AdminWatchtowerScreen } from './components/admin/AdminWatchtowerScreen';
 import { suggestDefaultProfileName } from './utils/suggestDefaultProfileName';
 
@@ -172,14 +175,17 @@ function App() {
               />
             ) : null}
             <Route
-              path="/admin"
+              path="/admin/*"
               element={
-                <AuthGuard>
-                  <div className="app-shell mq-page">
-                    <div className="mq-page__decor" aria-hidden />
-                    <AdminWatchtowerScreen />
-                  </div>
-                </AuthGuard>
+                <AdminWebShell>
+                  <AuthGuard layout="admin">
+                    <Routes>
+                      <Route index element={<AdminWatchtowerScreen />} />
+                      <Route path="catalogs" element={<AdminCatalogsHub />} />
+                      <Route path="catalogs/:catalogKey" element={<AdminCatalogListScreen />} />
+                    </Routes>
+                  </AuthGuard>
+                </AdminWebShell>
               }
             />
             <Route path="/" element={

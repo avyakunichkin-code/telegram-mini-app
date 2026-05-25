@@ -9,4 +9,19 @@ export const adminApi = {
     const query = qs.toString();
     return apiCall(`/api/admin/watchtower${query ? `?${query}` : ''}`);
   },
+
+  catalogs() {
+    return apiCall('/api/admin/catalogs');
+  },
+
+  catalogRows(catalogKey, params = {}) {
+    const qs = new URLSearchParams();
+    if (params.q) qs.set('q', params.q);
+    if (params.active_only) qs.set('active_only', 'true');
+    if (params.limit) qs.set('limit', String(params.limit));
+    const query = qs.toString();
+    return apiCall(
+      `/api/admin/catalogs/${encodeURIComponent(catalogKey)}/rows${query ? `?${query}` : ''}`,
+    );
+  },
 };

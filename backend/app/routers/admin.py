@@ -6,12 +6,13 @@ import json
 from datetime import datetime
 from typing import Any, List, Optional
 
-from fastapi import APIRouter, Depends, Query
+from fastapi import APIRouter, Depends, HTTPException, Query
 from pydantic import BaseModel
 from sqlalchemy import func
 from sqlalchemy.orm import Session
 
 from ..admin_auth import require_admin_user
+from ..admin_catalogs import fetch_catalog_rows, get_catalog_spec, list_catalog_meta
 from ..admin_onboarding_funnel import build_onboarding_funnel
 from ..database import get_db
 from ..models import GameProfile, NotificationLog, User
@@ -73,6 +74,62 @@ class AdminWatchtowerResponse(BaseModel):
     profiles: List[AdminProfileRow]
     notifications: List[AdminNotificationRow]
     onboarding_funnel: AdminOnboardingFunnel
+
+
+class AdminCatalogColumn(BaseModel):
+    key: str
+    label: str
+
+
+class AdminCatalogMeta(BaseModel):
+    key: str
+    title: str
+    columns: List[AdminCatalogColumn]
+
+
+class AdminCatalogRowsResponse(BaseModel):
+    catalog_key: str
+    title: str
+    columns: List[AdminCatalogColumn]
+    rows: List[dict[str, Any]]
+    total: int
+    limit: int
+
+
+@router.get("/catalogs", response_model=list[AdminCatalogMeta])
+async def admin_list_catalogs(
+    _admin: User = Depends(require_admin_user),
+):
+    return list_catalog_meta()
+
+
+@router.get("/catalogs/{catalog_key}/rows", response_model=AdminCatalogRowsResponse)
+async def admin_catalog_rows(
+    catalog_key: str,
+    q: str = Query("", max_length=120),
+    active_only: bool = Query(False),
+    limit: int = Query(200, ge=1, le=500),
+    _admin: User = Depends(require_admin_user),
+    db: Session = Depends(get_db),
+):
+    spec = get_catalog_spec(catalog_key)
+    if spec is None:
+        raise HTTPException(status_code=404, detail="Unknown catalog")
+    _, rows, total = fetch_catalog_rows(
+        db,
+        catalog_key,
+        q=q,
+        active_only=active_only,
+        limit=limit,
+    )
+    return AdminCatalogRowsResponse(
+        catalog_key=spec.key,
+        title=spec.title,
+        columns=[AdminCatalogColumn(key=c.key, label=c.label) for c in spec.columns],
+        rows=rows,
+        total=total,
+        limit=limit,
+    )
 
 
 @router.get("/watchtower", response_model=AdminWatchtowerResponse)
