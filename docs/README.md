@@ -81,6 +81,7 @@
 |----------|------------|
 | [`specs/SPEC_FRONTEND_UI.md`](specs/SPEC_FRONTEND_UI.md) | UI/UX MQX, a11y, границы |
 | [`specs/LANDING_SCREENSHOTS.md`](specs/LANDING_SCREENSHOTS.md) | PNG для лендинга, `capture-screens.mjs`, `UI_FOCUS`, чеклист перед deploy |
+| [`specs/SPEC_APP_SHELL.md`](specs/SPEC_APP_SHELL.md) | Pre-game оболочки, `MqxButton`, design-lab `pre-game-shell` |
 | [`specs/SPEC_ANALYTICS.md`](specs/SPEC_ANALYTICS.md) | Вкладка «Аналитика» и данные |
 | [`specs/features/SPEC_game-plan.md`](specs/features/SPEC_game-plan.md) | Эпик G1 — Game E2E, `save_kind`, ADR-001 (**implemented**) |
 | [`specs/features/SPEC_mvp-11-progression-events.md`](specs/features/SPEC_mvp-11-progression-events.md) | MVP 1.1 — **`event_tier`**, **`repeat_policy`**, cooldown; tier-окно от **`period_index`** (см. remove-character-xp); план — [`plans/PLAN_mvp-11-progression-events.md`](plans/PLAN_mvp-11-progression-events.md) |

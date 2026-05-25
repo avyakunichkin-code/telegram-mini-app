@@ -1,4 +1,5 @@
-import { Button, Modal } from '@telegram-apps/telegram-ui';
+import { Modal } from '@telegram-apps/telegram-ui';
+import { MqxButton } from './MqxButton';
 
 /** Подтверждение опасного действия (удаление, отмена полиса). */
 export function MqxConfirmDialog({
@@ -30,24 +31,24 @@ export function MqxConfirmDialog({
           </p>
         ) : null}
         <div className="mqx-confirm-dialog__actions">
-          <Button
-            mode="outline"
+          <MqxButton
+            variant="secondary"
             stretched
             disabled={busy}
             title="Отменить действие"
             onClick={onClose}
           >
             {cancelLabel}
-          </Button>
-          <Button
-            mode="filled"
+          </MqxButton>
+          <MqxButton
+            variant="destructive"
             stretched
             disabled={busy}
             title={confirmLabel}
             onClick={onConfirm}
           >
             {busy ? 'Подождите…' : confirmLabel}
-          </Button>
+          </MqxButton>
         </div>
       </div>
     </Modal>

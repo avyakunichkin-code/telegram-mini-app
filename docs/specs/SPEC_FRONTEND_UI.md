@@ -21,7 +21,7 @@
 
 ### Assumptions
 
-1. Целевой стек UI: React 18 + Vite, стили в `frontend-react/src/index.css`, компоненты в `frontend-react/src/components/`.
+1. Целевой стек UI: React 18 + Vite, стили в `frontend-react/src/styles/` (barrel `index.css`), компоненты в `frontend-react/src/components/`.
 2. Premium-вкладки игры (`DashboardPremium`, `FinancePremium`, `AnalyticsPremium`, `MenuPremium`) — **эталон**; legacy `*Section.jsx` не расширяем, только поддерживаем до удаления.
 3. Язык интерфейса — **русский**; латиница допустима в терминах API/коде, не в видимых подписях.
 4. TMA: одна колонка `#root` max-width 480px, нижний таббар с safe-area.
@@ -36,7 +36,7 @@
 | UI framework | React |
 | Сборка | Vite |
 | Библиотека форм/модалок | `@telegram-apps/telegram-ui` |
-| Стили | CSS (`index.css`), классы `mqx-*`, токены `--mq-*` |
+| Стили | CSS (`src/styles/`, импорт через `index.css`), классы `mqx-*`, токены `--mq-*` |
 | Роутинг | React Router (HashRouter) |
 | API | `frontend-react/src/api.js` |
 
@@ -69,7 +69,8 @@ frontend-react/src/
     mqx/                # Общие UI-примитивы (бары, и т.д.)
     icons/              # NavIcons, StatIcons
   hooks/                # useGame и др.
-  index.css             # Дизайн-система MQX + TMA shell
+  index.css             # @import barrel → styles/
+  styles/               # tokens, tma-base, mqx/*, shell, page, admin (см. styles/README.md)
   api.js                # Контракт с backend
 docs/
   specs/SPEC_FRONTEND_UI.md           # Этот документ
@@ -124,7 +125,7 @@ export function ExampleBlock({ overview }) {
 
 - `--mq-violet` `#6d28d9`, `--mq-violet-deep` `#5b21b6`
 - `--mq-emerald` `#059669`, `--mq-danger`, `--mq-warning`, `--mq-ink`, `--mq-line`
-- Типографика (`#root`, ★ type-scale-round): `--mq-fs-display` 26px, `--mq-fs-title` 20px, `--mq-fs-heading` 14px, `--mq-fs-body` 15px, `--mq-fs-caption` 12px, `--mq-fs-small` 11px, `--mq-fs-micro` 10px; веса `--mq-fw-regular|medium|bold|heavy`
+- Типографика (`#root`, ★ type-scale-round): `--mq-fs-display` 26px, `--mq-fs-stat` 34px (KPI), `--mq-fs-title` 20px, `--mq-fs-heading` 14px, `--mq-fs-body` 15px, `--mq-fs-caption` 12px, `--mq-fs-small` 11px, `--mq-fs-micro` 10px; веса `--mq-fw-regular|medium|bold|heavy`. В `index.css` для MQX — `var(--mq-fs-*)`, не сырые px (кроме auth input 16px и legacy `h1`).
 
 ### Паттерны экрана
 

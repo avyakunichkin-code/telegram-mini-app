@@ -1,5 +1,4 @@
 import { useCallback, useState } from 'react';
-import { Button } from '@telegram-apps/telegram-ui';
 import { formatApiErrorDetail } from '../api';
 import { useAuth } from '../context/AuthContext';
 import { deriveUsernameFromEmail } from '../utils/deriveUsernameFromEmail';
@@ -9,6 +8,7 @@ import {
 } from '../utils/authFormValidation';
 import { AuthFormField } from './mqx/auth/AuthFormField';
 import { AuthMonetkaScreen } from './mqx/auth/AuthMonetkaScreen';
+import { MqxButton } from './mqx/primitives/MqxButton';
 
 export function RegisterForm({ onSwitchToLogin }) {
   const [password, setPassword] = useState('');
@@ -70,6 +70,7 @@ export function RegisterForm({ onSwitchToLogin }) {
   return (
     <AuthMonetkaScreen
       showBrand
+      showLottieBackdrop
       title="Привет, я Монетка!"
       subtitle="Я тоже регистрировалась в первый раз. Теперь не могу оторваться. Регистрируйся! Подожду"
       titleId="mqx-register-monetka-title"
@@ -136,22 +137,22 @@ export function RegisterForm({ onSwitchToLogin }) {
         ) : null}
 
         <div className="mqx-auth-monetka__actions">
-          <Button
-            mode="filled"
+          <MqxButton
+            variant="primary"
             type="submit"
             stretched
             disabled={isSubmitting}
             title="Создать аккаунт и войти"
           >
             {isSubmitting ? 'Регистрация…' : 'Зарегистрироваться'}
-          </Button>
+          </MqxButton>
         </div>
 
         <p className="mqx-auth-monetka__link">
           Уже есть аккаунт?{' '}
-          <button type="button" title="Перейти к входу" onClick={onSwitchToLogin}>
+          <MqxButton type="button" variant="link" title="Перейти к входу" onClick={onSwitchToLogin}>
             Войти
-          </button>
+          </MqxButton>
         </p>
       </form>
     </AuthMonetkaScreen>

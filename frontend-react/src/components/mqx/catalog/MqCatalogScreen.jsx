@@ -444,12 +444,12 @@ export function MqCatalogScreen() {
           }}
         >
           <MqxChip xp>+120 XP</MqxChip>
-          <span style={{ fontSize: 13, opacity: 0.65 }}>Ур. 4 → 5</span>
+          <span style={{ fontSize: 'var(--mq-fs-caption)', opacity: 0.65 }}>Ур. 4 → 5</span>
         </div>
         <div style={{ maxWidth: 360, marginTop: 8 }}>
-          <div style={{ fontSize: 11, fontWeight: 700, opacity: 0.55, marginBottom: 4 }}>Цель</div>
+          <div style={{ fontSize: 'var(--mq-fs-small)', fontWeight: 700, opacity: 0.55, marginBottom: 4 }}>Цель</div>
           <MqxProgress value={62} aria-label="Прогресс цели" />
-          <div style={{ fontSize: 11, fontWeight: 700, opacity: 0.55, margin: '10px 0 4px' }}>XP</div>
+          <div style={{ fontSize: 'var(--mq-fs-small)', fontWeight: 700, opacity: 0.55, margin: '10px 0 4px' }}>XP</div>
           <MqxProgress value={62} xp aria-label="Прогресс опыта" />
         </div>
       </CatalogSection>
@@ -473,7 +473,24 @@ export function MqCatalogScreen() {
       </CatalogSection>
 
       <CatalogSection title="Кнопки и вкладки">
-        <div className="mqx-fin-subtabs-row" style={{ maxWidth: 360 }}>
+        <div className="mqx-stack" style={{ maxWidth: 360, gap: 8 }}>
+          <MqxButton variant="primary" stretched>
+            Primary
+          </MqxButton>
+          <MqxButton variant="secondary" stretched>
+            Secondary
+          </MqxButton>
+          <MqxButton variant="ghost" stretched>
+            Ghost
+          </MqxButton>
+          <MqxButton variant="destructive" stretched>
+            Destructive
+          </MqxButton>
+          <p className="mqx-catalog__note" style={{ margin: 0 }}>
+            Ссылка: <MqxButton variant="link">Создать аккаунт</MqxButton>
+          </p>
+        </div>
+        <div className="mqx-fin-subtabs-row" style={{ maxWidth: 360, marginTop: 16 }}>
           <MqxSubtab active>Активные</MqxSubtab>
           <MqxSubtab>В рамке</MqxSubtab>
         </div>

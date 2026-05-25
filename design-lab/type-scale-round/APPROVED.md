@@ -25,9 +25,11 @@
 
 Веса: `--mq-fw-regular` 400, `--mq-fw-medium` 550, `--mq-fw-bold` 700, `--mq-fw-heavy` 800.
 
-## Prod (W2 dashboard)
+## Prod
 
-- `frontend-react/src/index.css` — токены на `#root`, hero compact, finance chips, period actions, goal dash, pills.
+- **W2 dashboard** — hero compact, finance chips, period actions, goal dash, pills.
+- **W3+ глобально** — остальные `.mqx-*` в `index.css` (capital, analytics, events, onboarding, catalog…); KPI `--mq-fs-stat` 34px.
+- Исключения: `16px` только `:root` media и `.mq-page--auth .mq-field__input` (iOS zoom); legacy `h1` 56/36 вне MQX.
 
 ## Документация
 

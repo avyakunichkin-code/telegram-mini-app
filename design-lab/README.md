@@ -17,7 +17,8 @@
 | [row-actions/](row-actions/) | **B + F2 → prod** | MqxRowAction (корзина по умолчанию), MqxFinListRow, confirm; порядок метрик — в spec |
 | [capital-page/](capital-page/) | **IA утверждена → вариант A/B на выбор** | 5 табов, бюджет №2, имущество/обязательства строками |
 | [onboarding-guided/](onboarding-guided/) | **★ утверждён** → MQX | Guided coach, 5 шагов, spotlight |
-| [auth-flow/](auth-flow/) | **★ B → prod** | Вход / регистрация (Монетка) |
+| [pre-game-shell/](pre-game-shell/) | **★ на утверждение** | Оболочки + `mqx-btn` до партии (P1–P6) |
+| [auth-flow/](auth-flow/) | **★ B → prod** | Вход / регистрация (история вариантов A/B/C) |
 | [new-game-mode/](new-game-mode/) | **★ B → prod** | Шаг 1: имя + Игра / План |
 | [game-templates/](game-templates/) | **★ B → prod** | Шаг 2: каталог + быстрый старт |
 | [period-close/](period-close/) | **★ в prod** | Иконки строк — lab-раунд B2 |

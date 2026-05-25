@@ -5,7 +5,7 @@
 **Аудитория:** frontend, дизайн lab, агенты Cursor  
 
 **Связанные документы:**  
-[`BRANDBOOK.md`](BRANDBOOK.md) (identity, лого, голос, Монетка) · [`SPEC_FRONTEND_UI.md`](../../specs/SPEC_FRONTEND_UI.md) · [`DESIGN_WORKFLOW.md`](../../../frontend-react/src/components/mqx/DESIGN_WORKFLOW.md) · [`index.css`](../../../frontend-react/src/index.css)
+[`BRANDBOOK.md`](BRANDBOOK.md) (identity, лого, голос, Монетка) · [`SPEC_FRONTEND_UI.md`](../../specs/SPEC_FRONTEND_UI.md) · [`DESIGN_WORKFLOW.md`](../../../frontend-react/src/components/mqx/DESIGN_WORKFLOW.md) · стили [`styles/README.md`](../../../frontend-react/src/styles/README.md) (barrel [`index.css`](../../../frontend-react/src/index.css))
 
 **PDF:** [`brandbook-mqx-print.html`](brandbook-mqx-print.html) → печать **Product UI Guidelines**.
 
@@ -30,7 +30,8 @@
 | Финансы: порядок разделов | Capital | — | [`capital-page/flows-round/`](../../../design-lab/capital-page/flows-round/) | `FinancePremium` аккордеоны |
 | Цель на дашборде | G1 chain | 2026-05 | [`dashboard/goal-chain-round/`](../../../design-lab/dashboard/goal-chain-round/) | `MqxGoalDash` |
 | Лендинг (скрины UI) | — | 2026-05-25 | capture app / lab fallback | [`LANDING_SCREENSHOTS.md`](../../specs/LANDING_SCREENSHOTS.md) |
-| Шкала типографики MQX | type-scale | 2026-05-25 | [`type-scale-round/APPROVED.md`](../../../design-lab/type-scale-round/APPROVED.md) | `#root` в `index.css`, dashboard W2 |
+| Pre-game shell + кнопки | P1–P6 | 2026-05-25 | [`pre-game-shell/`](../../../design-lab/pre-game-shell/) | `MqxButton`, Bubble/Flow — [`SPEC_APP_SHELL.md`](../../specs/SPEC_APP_SHELL.md) |
+| Шкала типографики MQX | type-scale | 2026-05-25 | [`type-scale-round/APPROVED.md`](../../../design-lab/type-scale-round/APPROVED.md) | `#root` в `styles/tma-base.css`, dashboard в `styles/mqx/dashboard.css` |
 
 Mission Brief (3 карточки) — **superseded** guided onboarding.
 
@@ -77,6 +78,7 @@ Mission Brief (3 карточки) — **superseded** guided onboarding.
 | Токен | px | Роль |
 |-------|-----|------|
 | `--mq-fs-display` | 26 | Таймер hero compact |
+| `--mq-fs-stat` | 34 | Крупная KPI-цифра (аналитика), не считать в «4 уровнях» экрана |
 | `--mq-fs-title` | 20 | Крупные заголовки экрана |
 | `--mq-fs-heading` | 14 | Заголовки секций (`mqx-finance-static__title`) |
 | `--mq-fs-body` | 15 | Основной текст |

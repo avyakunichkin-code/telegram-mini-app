@@ -15,6 +15,7 @@
 | [`docs/specs/SPEC_ANALYTICS.md`](docs/specs/SPEC_ANALYTICS.md) | Экран аналитики и данные |
 | [`docs/specs/LANDING_SCREENSHOTS.md`](docs/specs/LANDING_SCREENSHOTS.md) | Скрины UI на лендинге: `capture-screens.mjs`, `UI_FOCUS`, пересъём |
 | [`landing/README.md`](landing/README.md) | Статический лендинг `/landing/` (Vite, локали, `public/screens/`) |
+| [`docs/specs/SPEC_APP_SHELL.md`](docs/specs/SPEC_APP_SHELL.md) | Pre-game: оболочки Bubble/Flow, `MqxButton` |
 | [`docs/reference/MONEY_QUEST_DESIGN_AND_GDD_OUTLINE.md`](docs/reference/MONEY_QUEST_DESIGN_AND_GDD_OUTLINE.md) | GDD-оглавление и анализ |
 | [`docs/vision/ideas/game-balance-thresholds-and-constraints.md`](docs/vision/ideas/game-balance-thresholds-and-constraints.md) | Черновик порогов баланса (победа, поражение, MVP-ограничения), idea-refine |
 

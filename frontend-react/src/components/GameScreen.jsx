@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { Spinner, Button, Modal } from '@telegram-apps/telegram-ui';
+import { Spinner, Modal } from '@telegram-apps/telegram-ui';
 import { useGame } from '../hooks/useGame';
 import { DashboardPremium } from './DashboardPremium';
 import { FinancePremium } from './FinancePremium';
@@ -12,6 +12,7 @@ import { MqxShell } from './MqxShell';
 import { MqxTabHero } from './MqxTabHero';
 import { GameScreenLayout, GameScreenTabNav } from './GameScreenLayout';
 import { MqxPeriodCloseSheet, MqxPeriodCloseTail } from './mqx';
+import { MqxButton } from './mqx/primitives/MqxButton';
 import { PERIOD_CLOSE_AUTO_MAX } from '../constants/periodClose';
 import { shouldAutoOpenPeriodClose } from '../utils/periodCloseDisplay';
 import { GameOnboardingLayer } from './GameOnboardingLayer';
@@ -257,12 +258,12 @@ export function GameScreen({ onLogout, onNewGame, onLoadGame }) {
                   Если перейти дальше, начисление за текущий месяц <strong>сгорит</strong>, как если не нажали «Получить зарплату».
                 </p>
                 <div className="mq-modal-actions" style={{ marginTop: 16 }}>
-                  <Button mode="filled" stretched onClick={confirmAdvanceWithSalaryLoss}>
+                  <MqxButton variant="primary" stretched onClick={confirmAdvanceWithSalaryLoss}>
                     Перейти без зарплаты
-                  </Button>
-                  <Button mode="outline" stretched onClick={() => setSalaryWarnOpen(false)}>
+                  </MqxButton>
+                  <MqxButton variant="secondary" stretched onClick={() => setSalaryWarnOpen(false)}>
                     Отмена
-                  </Button>
+                  </MqxButton>
                 </div>
               </div>
             </div>

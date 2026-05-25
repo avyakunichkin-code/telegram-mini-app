@@ -1,0 +1,151 @@
+﻿/* Admin Watchtower (MVP 1.2 A0) */
+.admin-watchtower__header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.admin-watchtower__actions {
+  display: flex;
+  gap: 8px;
+}
+
+.admin-watchtower__block {
+  margin-bottom: 12px;
+}
+
+.admin-watchtower__block-title {
+  margin: 0 0 10px;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.admin-watchtower__table-wrap {
+  overflow-x: auto;
+}
+
+.admin-watchtower__table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--mq-fs-caption);
+}
+
+.admin-watchtower__table th,
+.admin-watchtower__table td {
+  padding: 6px 8px;
+  text-align: left;
+  border-bottom: 1px solid var(--mq-border-subtle, rgba(128, 128, 128, 0.25));
+}
+
+.admin-watchtower__row--highlight {
+  background: color-mix(in srgb, var(--mq-accent, #7c5cff) 12%, transparent);
+}
+
+.admin-watchtower__loading {
+  display: flex;
+  justify-content: center;
+  padding: 24px;
+}
+
+.admin-watchtower__kpi-row {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+@media (min-width: 520px) {
+  .admin-watchtower__kpi-row {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+.admin-watchtower__kpi {
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: color-mix(in srgb, var(--mqx-ink) 4%, transparent);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.admin-watchtower__kpi-label {
+  font-size: var(--mq-fs-small);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  opacity: 0.55;
+}
+
+.admin-watchtower__kpi strong {
+  font-size: var(--mq-fs-title);
+  font-weight: 800;
+}
+
+.admin-watchtower__badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: var(--mq-fs-small);
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin-right: 6px;
+}
+
+.admin-watchtower__badge--draft {
+  background: color-mix(in srgb, var(--mq-violet, #6d28d9) 18%, transparent);
+  color: var(--mq-violet-deep, #5b21b6);
+}
+
+.admin-watchtower__badge--done {
+  background: color-mix(in srgb, var(--mq-emerald, #059669) 16%, transparent);
+  color: var(--mq-emerald, #059669);
+}
+
+.admin-watchtower__step-tag {
+  font-size: var(--mq-fs-small);
+  opacity: 0.7;
+  font-family: var(--mono, ui-monospace, monospace);
+}
+
+.admin-watchtower__funnel-hint {
+  margin: 10px 0 0;
+  font-size: var(--mq-fs-caption);
+  line-height: 1.4;
+}
+
+.admin-watchtower__error {
+  padding: 12px;
+  margin-bottom: 12px;
+}
+
+/* Level unified: финальный слой — без margin-inline −14px, контент в колонке 14px */
+.mqx-dash-stack--unified .mqx-level-dash-bleed,
+.mqx-tab-page--dash-unified .mqx-level-dash-bleed {
+  width: 100%;
+  max-width: 100%;
+  margin: 0;
+  padding-inline: var(--mqx-dash-inline-pad, 14px);
+}
+
+.mqx-dash-stack--unified .mqx-level-dash-bleed .mqx-level-dash__toggle,
+.mqx-tab-page--dash-unified .mqx-level-dash-bleed .mqx-level-dash__toggle,
+.mqx-dash-stack--unified .mqx-level-dash-bleed .mqx-level-dash__expand,
+.mqx-tab-page--dash-unified .mqx-level-dash-bleed .mqx-level-dash__expand {
+  margin: 0;
+}
+
+.mqx-dash-stack--unified .mqx-level-dash-bleed .mqx-level-dash__toggle,
+.mqx-tab-page--dash-unified .mqx-level-dash-bleed .mqx-level-dash__toggle {
+  padding-block: 12px;
+  padding-inline: 0;
+}
+
+.mqx-dash-stack--unified .mqx-level-dash-bleed .mqx-level-dash__expand,
+.mqx-tab-page--dash-unified .mqx-level-dash-bleed .mqx-level-dash__expand {
+  padding: 0 0 14px;
+}

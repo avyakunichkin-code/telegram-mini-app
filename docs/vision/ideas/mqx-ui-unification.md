@@ -89,6 +89,22 @@
 
 ---
 
+## Этап D — Pre-game shell + кнопки MQX (2026-05-25)
+
+**Утверждено:** два route login/register; только design-lab → prod; **`MqxButton` везде** в user flows.
+
+| Lab | Содержание |
+|-----|------------|
+| [`design-lab/pre-game-shell/`](../../../design-lab/pre-game-shell/) | P1–P6: bubble / flow / кнопки ★ |
+
+**Спека:** [`SPEC_APP_SHELL.md`](../../specs/SPEC_APP_SHELL.md) · **Идея:** [`mqx-app-shell-pre-game-unification.md`](mqx-app-shell-pre-game-unification.md)
+
+**Prod (первая волна):** Login, Register, StartMenu, New game, AuthGuard loading, MenuPremium, модалки GameScreen, `MqxConfirmDialog`.
+
+**Остаток TGUI `Button`:** Plan/BaseParams, InsuranceSection, Admin — отдельные PR.
+
+---
+
 ## Этап C — Капитал (после B, отдельное ★)
 
 - Утвердить **A или B** в [`design-lab/capital-page/`](../../../design-lab/capital-page/)

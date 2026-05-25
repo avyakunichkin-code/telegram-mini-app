@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react';
-import { Button, Input, Spinner } from '@telegram-apps/telegram-ui';
+import { Input, Spinner } from '@telegram-apps/telegram-ui';
 import { API } from '../../api';
 import { showNotification } from '../notifications';
 import { MqxMonetkaDialogScreen } from '../mqx/layout/MqxMonetkaDialogScreen';
 import { MqxStarterScenarioPicker } from '../mqx/layout/MqxStarterScenarioPicker';
+import { MqxButton } from '../mqx/primitives/MqxButton';
 import { DEFAULT_PERIOD_DURATION_SECONDS, normalizeStarterTemplate } from '../../config/gameDefaults';
 import { startGameWithSimplestTemplate } from '../../utils/startGame';
 
@@ -138,29 +139,36 @@ export function GameTemplatePickScreen({ profileName, onProfileNameChange, onBac
       )}
 
       <div className="mqx-monetka-flow__actions">
-        <Button
+        <MqxButton
           type="button"
-          mode="filled"
+          variant="primary"
           stretched
           disabled={loading || busy || !selectedKey}
           onClick={handleStart}
           title="Начать игру с выбранным шаблоном"
         >
           {starting ? 'Запуск…' : 'Начать игру'}
-        </Button>
-        <Button
+        </MqxButton>
+        <MqxButton
           type="button"
-          mode="outline"
+          variant="secondary"
           stretched
           disabled={loading || busy || templates.length === 0}
           onClick={handleQuickStart}
           title="Сразу начать с самым простым сценарием"
         >
           {quickStarting ? 'Быстрый старт…' : 'Быстрый старт'}
-        </Button>
-        <Button type="button" mode="plain" stretched onClick={onBack} disabled={busy} title="Вернуться к выбору режима">
+        </MqxButton>
+        <MqxButton
+          type="button"
+          variant="ghost"
+          stretched
+          onClick={onBack}
+          disabled={busy}
+          title="Вернуться к выбору режима"
+        >
           Назад
-        </Button>
+        </MqxButton>
       </div>
     </MqxMonetkaDialogScreen>
   );

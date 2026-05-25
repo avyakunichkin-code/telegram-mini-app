@@ -1,6 +1,6 @@
-import { Button } from '@telegram-apps/telegram-ui';
 import { MqxMonetkaDialogScreen } from '../mqx/layout/MqxMonetkaDialogScreen';
 import { MqxSaveKindPicker } from '../mqx/layout/MqxSaveKindPicker';
+import { MqxButton } from '../mqx/primitives/MqxButton';
 
 /**
  * Шаг 1: новая игра — выбор режима (Игра / План). Название сохранения — на шаге шаблонов.
@@ -26,9 +26,9 @@ export function NewProfileKindScreen({ onChooseGame, onBack }) {
       />
 
       <div className="mqx-monetka-flow__actions">
-        <Button type="button" mode="outline" stretched onClick={onBack} title="Вернуться в меню">
+        <MqxButton type="button" variant="secondary" stretched onClick={onBack} title="Вернуться в меню">
           Назад
-        </Button>
+        </MqxButton>
       </div>
     </MqxMonetkaDialogScreen>
   );

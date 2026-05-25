@@ -71,7 +71,9 @@
 
 **MQX / компонентная база:** правила `money-quest-frontend-mqx.mdc` и скилл **frontend-ui-engineering** обязаны отсылать к единому процессу [`DESIGN_WORKFLOW.md`](../../frontend-react/src/components/mqx/DESIGN_WORKFLOW.md) — варианты в `design-lab/` → утверждение → `mqx/` → `#/dev/mqx` → prod (не пропускать этапы без явного согласования или исключения «багфикс/hotfix»).
 
-**Лендинг / скрины:** после заметной смены UI в игре — `cd landing && npm run capture-screens` (app-режим), обновить `last_capture` в [`landing/public/screens/README.md`](../../landing/public/screens/README.md); не снимать с `design-lab/dashboard/index.html` или `capital-page/#phone-demo` ([`LANDING_SCREENSHOTS.md`](../specs/LANDING_SCREENSHOTS.md)).
+**Лендинг / скрины:** после заметной смене UI в игре — `cd landing && npm run capture-screens` (app-режим), обновить `last_capture` в [`landing/public/screens/README.md`](../../landing/public/screens/README.md); не снимать с `design-lab/dashboard/index.html` или `capital-page/#phone-demo` ([`LANDING_SCREENSHOTS.md`](../specs/LANDING_SCREENSHOTS.md)).
+
+**Pre-game UI:** оболочки и кнопки — [`SPEC_APP_SHELL.md`](../specs/SPEC_APP_SHELL.md), lab [`design-lab/pre-game-shell/`](../../design-lab/pre-game-shell/); CTA только `MqxButton`, не TGUI `Button`.
 
 ---
 

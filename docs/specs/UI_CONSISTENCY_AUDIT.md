@@ -24,10 +24,11 @@
 
 | Экран | Статус | Комментарий |
 |-------|--------|-------------|
-| Вход / регистрация | ★ B | `AuthMonetkaScreen` |
-| Стартовое меню | ★ B | `MenuPremium` / start flow |
-| Новая игра шаг 1 | ★ R1 | `MqxSaveKindPicker` |
-| Новая игра шаг 2 | ★ I-Scene | `MqxStarterScenarioPicker` |
+| Вход / регистрация | ★ D | `MonetkaBubbleScreen`, `MqxButton` — [`SPEC_APP_SHELL.md`](SPEC_APP_SHELL.md) |
+| Проверка сессии | ★ D | `AuthGuard` → Bubble (не TabHero) |
+| Стартовое меню | ★ D | `MonetkaBubbleScreen` + `MqxButton` |
+| Новая игра шаг 1 | ★ D | `MqxMonetkaDialogScreen` + `MqxSaveKindPicker` |
+| Новая игра шаг 2 | ★ D | `MqxMonetkaDialogScreen` + `MqxStarterScenarioPicker` |
 | Plan / Base params | 🗑 hold | Вне scope 2 недель |
 
 ---

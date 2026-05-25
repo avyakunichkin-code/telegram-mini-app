@@ -1,5 +1,5 @@
-import { Button } from '@telegram-apps/telegram-ui';
 import { MqxTabHero } from './MqxTabHero';
+import { MqxButton } from './mqx/primitives/MqxButton';
 
 export function MenuPremium({ onLogout, onNewGame, onLoadGame }) {
   return (
@@ -17,15 +17,15 @@ export function MenuPremium({ onLogout, onNewGame, onLoadGame }) {
           <div className="mqx-card__sub">Те же кнопки, что на стартовом экране, без смены визуального языка.</div>
 
           <div className="mq-actions-stack" style={{ marginTop: 14 }}>
-            <Button stretched mode="filled" onClick={onNewGame}>
+            <MqxButton variant="primary" stretched onClick={onNewGame}>
               Новая игра
-            </Button>
-            <Button stretched mode="outline" onClick={onLoadGame}>
+            </MqxButton>
+            <MqxButton variant="secondary" stretched onClick={onLoadGame}>
               Выбрать сохранение
-            </Button>
-            <Button stretched mode="plain" onClick={onLogout}>
+            </MqxButton>
+            <MqxButton variant="ghost" stretched onClick={onLogout}>
               Выйти из аккаунта
-            </Button>
+            </MqxButton>
           </div>
         </div>
       </main>
