@@ -1,0 +1,622 @@
+/* pre-game-playful-v3 — Монетка внутри карточки, logo сверху, chip-picks */
+
+:root {
+  --mqx-ink: var(--text, #0f1115);
+  --mq-fs-heading: 14px;
+  --mq-fs-body: 15px;
+  --mq-fs-caption: 12px;
+  --mq-fs-small: 11px;
+  --mq-fs-micro: 10px;
+  --mq-fw-bold: 700;
+  --mq-fw-heavy: 800;
+  --mq-warning: #d97706;
+  --mqx-voice-accent: var(--mq-warning);
+  --mqx-onboarding-bubble-bg: var(--surface, #fff);
+  --mqx-onboarding-bubble-border: color-mix(in srgb, var(--mq-violet) 18%, #e5e7eb);
+}
+
+[data-theme='dark'] {
+  --mqx-onboarding-bubble-bg: var(--surface);
+}
+
+.lab-pick-banner {
+  margin: 0 20px 16px;
+  padding: 12px 14px;
+  border-radius: 12px;
+  background: color-mix(in srgb, var(--mq-violet) 10%, var(--surface, #fff));
+  font-size: var(--mq-fs-caption);
+  line-height: 1.45;
+}
+
+.phone--pre-game {
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+  background: var(--surface-b);
+  min-height: 720px;
+}
+
+.pg-app-shell {
+  position: relative;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 680px;
+  padding: 14px 12px 22px;
+  box-sizing: border-box;
+}
+
+.mq-page__decor {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.mq-page__decor::before {
+  content: '';
+  position: absolute;
+  inset: -32% -8% auto -28%;
+  height: clamp(200px, 52vw, 380px);
+  background: radial-gradient(
+    ellipse 80% 70% at 70% 30%,
+    color-mix(in srgb, var(--mq-violet) 28%, transparent),
+    transparent 72%
+  );
+  opacity: 0.55;
+}
+
+.pg-auth-stack {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 400px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+/* Логотип над формой */
+.pg-auth-logo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 8px 0;
+}
+
+.pg-auth-logo__img {
+  width: min(220px, 72vw);
+  height: auto;
+  object-fit: contain;
+}
+
+.pg-auth-logo__tag {
+  margin: 0;
+  font-size: var(--mq-fs-micro);
+  font-weight: var(--mq-fw-bold);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--mqx-ink) 48%, transparent);
+}
+
+/* Карточка формы: Монетка внутри */
+.pg-auth-panel {
+  position: relative;
+  width: 100%;
+  padding: 12px 14px 16px;
+  border-radius: 20px;
+  background-color: var(--mqx-onboarding-bubble-bg);
+  background-image: linear-gradient(
+    165deg,
+    color-mix(in srgb, var(--mq-violet) 7%, var(--mqx-onboarding-bubble-bg)) 0%,
+    var(--mqx-onboarding-bubble-bg) 38%
+  );
+  border: 1px solid var(--mqx-onboarding-bubble-border);
+  box-shadow: 0 10px 28px color-mix(in srgb, var(--mq-violet) 12%, transparent);
+}
+
+.pg-auth-panel__head {
+  display: flex;
+  align-items: flex-end;
+  gap: 10px;
+  margin-bottom: 10px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid color-mix(in srgb, var(--mqx-ink) 8%, transparent);
+}
+
+.pg-auth-panel__mascot {
+  width: 72px;
+  height: 72px;
+  flex-shrink: 0;
+  object-fit: contain;
+  filter: drop-shadow(0 4px 10px color-mix(in srgb, var(--mq-violet) 20%, transparent));
+}
+
+.pg-auth-panel__voice {
+  flex: 1;
+  min-width: 0;
+}
+
+.pg-auth-panel__title {
+  margin: 0 0 3px;
+  font-size: var(--mq-fs-caption);
+  font-weight: var(--mq-fw-heavy);
+  line-height: 1.3;
+  letter-spacing: -0.01em;
+  color: var(--mqx-ink);
+}
+
+.pg-auth-panel__subtitle {
+  margin: 0;
+  font-size: var(--mq-fs-small);
+  line-height: 1.45;
+  color: color-mix(in srgb, var(--mqx-ink) 76%, var(--text-muted, #6b7280));
+}
+
+.pg-voice-em {
+  font-weight: var(--mq-fw-heavy);
+  color: color-mix(in srgb, var(--mqx-voice-accent) 92%, var(--mqx-ink));
+}
+
+.pg-flow-wrap .mqx-monetka-dialog__title {
+  font-size: var(--mq-fs-caption) !important;
+  margin-bottom: 4px;
+}
+
+.pg-flow-wrap .mqx-monetka-dialog__subtitle {
+  font-size: var(--mq-fs-small) !important;
+  line-height: 1.45;
+}
+
+.pg-flow-wrap .mqx-monetka-dialog__subtitle .pg-voice-em {
+  font-weight: var(--mq-fw-heavy);
+  color: color-mix(in srgb, var(--mqx-voice-accent) 90%, var(--mqx-ink));
+}
+
+.mq-field {
+  margin-bottom: 10px;
+}
+
+.mq-field label {
+  display: block;
+  margin-bottom: 4px;
+  font-size: var(--mq-fs-caption);
+  font-weight: 650;
+  color: var(--text-muted);
+}
+
+.mq-field__input {
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 12px;
+  border: 1px solid color-mix(in srgb, var(--mqx-ink) 12%, transparent);
+  font: inherit;
+  font-size: 16px;
+  background: var(--surface);
+  color: var(--mqx-ink);
+}
+
+.pg-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.mqx-btn {
+  appearance: none;
+  border-radius: 12px;
+  padding: 9px 12px;
+  min-width: 96px;
+  font-size: var(--mq-fs-body);
+  font-weight: var(--mq-fw-bold);
+  border: 1px solid color-mix(in srgb, var(--mqx-ink) 12%, transparent);
+  background: color-mix(in srgb, var(--mqx-ink) 4%, var(--surface, #fff));
+  color: var(--mqx-ink);
+  cursor: pointer;
+}
+
+.mqx-btn--primary {
+  background: var(--mq-violet);
+  border-color: var(--mq-violet-deep);
+  color: #fff;
+}
+
+.mqx-btn--secondary {
+  background: var(--surface, #fff);
+  border-color: color-mix(in srgb, var(--mq-violet) 35%, #e5e7eb);
+  color: var(--mq-violet-deep);
+}
+
+.mqx-btn--ghost {
+  background: transparent;
+  border-color: transparent;
+  color: color-mix(in srgb, var(--mqx-ink) 72%, transparent);
+}
+
+.mqx-btn--link {
+  display: inline;
+  min-width: 0;
+  padding: 0;
+  border: none;
+  background: none;
+  color: var(--mq-violet-deep);
+  font-size: var(--mq-fs-caption);
+  font-weight: 650;
+  text-decoration: underline;
+}
+
+.mqx-btn--stretched {
+  width: 100%;
+}
+
+.mqx-btn--compact {
+  min-width: 0;
+  padding: 7px 12px;
+  font-size: var(--mq-fs-small);
+}
+
+.pg-auth-panel__link {
+  margin: 10px 0 0;
+  text-align: center;
+  font-size: var(--mq-fs-caption);
+  color: var(--text-muted);
+}
+
+/* Слот продолжения + CTA внутри */
+.pg-continue-slot {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 10px 12px 12px;
+  margin-bottom: 12px;
+  border-radius: 14px;
+  border: 1px solid color-mix(in srgb, var(--mq-violet) 22%, transparent);
+  background: color-mix(in srgb, var(--mq-violet) 6%, var(--mqx-onboarding-bubble-bg));
+}
+
+.pg-continue-slot__row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.pg-continue-slot__name {
+  font-size: var(--mq-fs-body);
+  font-weight: var(--mq-fw-heavy);
+}
+
+.pg-continue-slot__meta {
+  font-size: var(--mq-fs-caption);
+  color: var(--text-muted);
+}
+
+.pg-continue-slot__cash {
+  font-size: var(--mq-fs-caption);
+  font-weight: var(--mq-fw-bold);
+  color: var(--mq-emerald);
+  white-space: nowrap;
+}
+
+/* Flow: perch + chip picks */
+.pg-flow-wrap {
+  position: relative;
+  z-index: 1;
+  max-width: 400px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.mqx-monetka-dialog__perch .mqx-monetka-dialog__speech {
+  padding-top: 34px;
+}
+
+.pg-pick-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+}
+
+.lab-pick-variants {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: center;
+}
+
+.lab-pick-variant {
+  width: min(100%, 360px);
+  flex: 1 1 300px;
+}
+
+.lab-pick-variant__tag {
+  display: inline-block;
+  margin-bottom: 8px;
+  padding: 4px 10px;
+  border-radius: 8px;
+  font-size: var(--mq-fs-micro);
+  font-weight: var(--mq-fw-heavy);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  background: color-mix(in srgb, var(--mq-violet) 12%, var(--surface));
+  color: var(--mq-violet-deep);
+}
+
+/* Chip-pick: как action-chip, но крупнее + полоса слева */
+.mqx-pick-chip {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  margin: 0;
+  padding: 14px 12px 14px 10px;
+  border: none;
+  border-radius: 14px;
+  text-align: left;
+  font: inherit;
+  cursor: pointer;
+  background: color-mix(in srgb, var(--mqx-ink) 4%, var(--surface, #fff));
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--mqx-ink) 8%, transparent);
+  transition: background 0.12s ease, transform 0.1s ease;
+}
+
+.mqx-pick-chip:active {
+  transform: scale(0.99);
+}
+
+.mqx-pick-chip--violet {
+  border-left: 3px solid var(--mq-violet);
+  background: color-mix(in srgb, var(--mq-violet) 7%, var(--surface, #fff));
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--mq-violet) 12%, transparent);
+}
+
+.mqx-pick-chip--emerald {
+  border-left: 3px solid var(--mq-emerald);
+  background: color-mix(in srgb, var(--mq-emerald) 6%, var(--surface, #fff));
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--mq-emerald) 10%, transparent);
+}
+
+.mqx-pick-chip--green {
+  border-left: 3px solid #059669;
+}
+
+.mqx-pick-chip--amber {
+  border-left: 3px solid #d4bc00;
+}
+
+.mqx-pick-chip--orange {
+  border-left: 3px solid #f97316;
+}
+
+.mqx-pick-chip--soon {
+  opacity: 0.58;
+  pointer-events: none;
+  filter: grayscale(0.2);
+}
+
+.mqx-pick-chip__icon {
+  flex-shrink: 0;
+  width: 44px;
+  height: 44px;
+  display: grid;
+  place-items: center;
+  border-radius: 12px;
+  font-size: 22px;
+  background: color-mix(in srgb, var(--mq-violet) 12%, transparent);
+}
+
+.mqx-pick-chip--violet .mqx-pick-chip__icon {
+  color: var(--mq-violet);
+  background: color-mix(in srgb, var(--mq-violet) 14%, transparent);
+}
+
+.mqx-pick-chip--emerald .mqx-pick-chip__icon {
+  color: var(--mq-emerald);
+  background: color-mix(in srgb, var(--mq-emerald) 14%, transparent);
+}
+
+.mqx-pick-chip__body {
+  flex: 1;
+  min-width: 0;
+}
+
+.mqx-pick-chip__label {
+  display: block;
+  font-size: var(--mq-fs-heading);
+  font-weight: var(--mq-fw-heavy);
+  letter-spacing: -0.02em;
+  color: var(--mqx-ink);
+}
+
+.mqx-pick-chip__sub {
+  display: block;
+  margin-top: 2px;
+  font-size: var(--mq-fs-caption);
+  line-height: 1.38;
+  color: color-mix(in srgb, var(--mqx-ink) 58%, transparent);
+}
+
+.mqx-pick-chip__trail {
+  flex-shrink: 0;
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--mq-violet-deep);
+  opacity: 0.75;
+}
+
+.mqx-pick-chip__badge {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  padding: 3px 8px;
+  border-radius: 999px;
+  font-size: var(--mq-fs-micro);
+  font-weight: var(--mq-fw-heavy);
+  text-transform: uppercase;
+  background: color-mix(in srgb, var(--mqx-ink) 8%, transparent);
+  color: color-mix(in srgb, var(--mqx-ink) 55%, transparent);
+}
+
+.mqx-pick-chip--selected {
+  outline: 2px solid color-mix(in srgb, var(--mq-violet) 35%, transparent);
+  outline-offset: 1px;
+}
+
+/* B — glass chip */
+.mqx-pick-chip--glass {
+  padding: 13px 12px;
+  border-radius: 16px;
+  background: color-mix(in srgb, var(--surface) 88%, transparent);
+  backdrop-filter: blur(8px);
+  box-shadow:
+    0 0 0 1px color-mix(in srgb, var(--mqx-ink) 10%, transparent),
+    0 8px 20px color-mix(in srgb, var(--mq-violet) 8%, transparent);
+}
+
+.mqx-pick-chip--glass.mqx-pick-chip--violet {
+  border-left: 4px solid var(--mq-violet);
+  background: color-mix(in srgb, var(--mq-violet) 5%, var(--surface));
+}
+
+.mqx-pick-chip--glass.mqx-pick-chip--emerald {
+  border-left: 4px solid var(--mq-emerald);
+}
+
+.mqx-pick-chip--glass.mqx-pick-chip--green {
+  border-left: 4px solid #059669;
+}
+
+.mqx-pick-chip--glass.mqx-pick-chip--amber {
+  border-left: 4px solid #d4bc00;
+}
+
+.mqx-pick-chip--glass.mqx-pick-chip--orange {
+  border-left: 4px solid #f97316;
+}
+
+/* C — soft halo (без полосы, иконка в круге) */
+.mqx-pick-chip--soft {
+  border-left: none;
+  padding-left: 12px;
+  background: color-mix(in srgb, var(--mqx-ink) 3%, var(--surface));
+  box-shadow: 0 2px 12px color-mix(in srgb, var(--mqx-ink) 6%, transparent);
+}
+
+.mqx-pick-chip--soft .mqx-pick-chip__icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 14px;
+  font-size: 24px;
+}
+
+.mqx-pick-chip--soft.mqx-pick-chip--violet .mqx-pick-chip__icon {
+  background: linear-gradient(145deg, color-mix(in srgb, var(--mq-violet) 28%, transparent), transparent);
+  box-shadow: 0 6px 16px color-mix(in srgb, var(--mq-violet) 22%, transparent);
+}
+
+.mqx-pick-chip--soft.mqx-pick-chip--emerald .mqx-pick-chip__icon {
+  background: linear-gradient(145deg, color-mix(in srgb, var(--mq-emerald) 26%, transparent), transparent);
+}
+
+.mqx-pick-chip--soft.mqx-pick-chip--green .mqx-pick-chip__icon {
+  background: linear-gradient(145deg, color-mix(in srgb, #059669 24%, transparent), transparent);
+}
+
+.mqx-pick-chip--soft.mqx-pick-chip--amber .mqx-pick-chip__icon {
+  background: linear-gradient(145deg, color-mix(in srgb, #d4bc00 28%, transparent), transparent);
+}
+
+.mqx-pick-chip--soft.mqx-pick-chip--orange .mqx-pick-chip__icon {
+  background: linear-gradient(145deg, color-mix(in srgb, #f97316 26%, transparent), transparent);
+}
+
+/* D — outline + цветная точка слева */
+.mqx-pick-chip--outline {
+  background: transparent;
+  border: 1.5px solid color-mix(in srgb, var(--mqx-ink) 12%, transparent);
+  border-left-width: 1.5px;
+  padding-left: 14px;
+  box-shadow: none;
+}
+
+.mqx-pick-chip--outline::before {
+  content: '';
+  position: absolute;
+  left: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 6px;
+  height: 32px;
+  border-radius: 999px;
+  background: var(--mq-violet);
+}
+
+.mqx-pick-chip--outline.mqx-pick-chip--emerald::before {
+  background: var(--mq-emerald);
+}
+
+.mqx-pick-chip--outline.mqx-pick-chip--green::before {
+  background: #059669;
+}
+
+.mqx-pick-chip--outline.mqx-pick-chip--amber::before {
+  background: #d4bc00;
+}
+
+.mqx-pick-chip--outline.mqx-pick-chip--orange::before {
+  background: #f97316;
+}
+
+.mqx-pick-chip--outline.mqx-pick-chip--violet,
+.mqx-pick-chip--outline.mqx-pick-chip--emerald,
+.mqx-pick-chip--outline.mqx-pick-chip--green,
+.mqx-pick-chip--outline.mqx-pick-chip--amber,
+.mqx-pick-chip--outline.mqx-pick-chip--orange {
+  border-left: 1.5px solid color-mix(in srgb, var(--mqx-ink) 12%, transparent);
+}
+
+.pg-pick-heading {
+  margin: 18px 0 10px;
+  padding: 0 2px;
+  font-size: var(--mq-fs-caption);
+  font-weight: var(--mq-fw-heavy);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--mqx-voice-accent) 88%, var(--mqx-ink));
+}
+
+.pg-pick-heading:first-of-type {
+  margin-top: 14px;
+}
+
+.pg-spinner {
+  width: 28px;
+  height: 28px;
+  margin: 16px auto;
+  border: 3px solid color-mix(in srgb, var(--mq-violet) 20%, transparent);
+  border-top-color: var(--mq-violet);
+  border-radius: 50%;
+  animation: pg-spin 0.8s linear infinite;
+}
+
+@keyframes pg-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.lab-mascot--perch {
+  width: 124px;
+  max-width: 34vw;
+  height: auto;
+  max-height: 132px;
+  object-fit: contain;
+  object-position: left bottom;
+  filter: drop-shadow(0 4px 12px color-mix(in srgb, var(--mq-violet) 22%, transparent));
+}

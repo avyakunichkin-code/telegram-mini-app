@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="ru" data-theme="light">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>ТВОЙ ХОД — pre-game playful v3</title>
+    <link rel="stylesheet" href="./lab-base.css" />
+  </head>
+  <body>
+    <header class="lab-header">
+      <div>
+        <h1>Pre-game playful v3</h1>
+        <p>
+          Монетка в карточке · логотип сверху · подсказки в тексте Монетки · chip M-A…D / T-A…D · оранжевые заголовки секций.
+        </p>
+      </div>
+      <div class="lab-theme" role="group" aria-label="Тема">
+        <button type="button" class="is-active" data-theme-btn="light">Светлая</button>
+        <button type="button" data-theme-btn="dark">Тёмная</button>
+      </div>
+    </header>
+
+    <p class="lab-pick-banner">
+      ★ Кандидат на prod: layout <strong>pg-auth-panel</strong> (P1–P3, P6) + <strong>mqx-pick-chip</strong> (P4–P5). Сравни с
+      <a href="../pre-game-shell/">pre-game-shell v2</a>.
+    </p>
+
+    <main class="lab-wrap">
+      <!-- P1 Login -->
+      <section class="lab-section" id="p1">
+        <div class="lab-section__label">
+          <span class="lab-section__id">P1</span>
+          <span class="lab-section__title">Вход · логотип + Монетка в карточке</span>
+        </div>
+        <p class="lab-section__note">Голос Монетки: заголовок <code>--mq-fs-caption</code> (12px), текст <code>--mq-fs-small</code> (11px).</p>
+        <div class="lab-stage">
+          <article class="phone phone--pre-game">
+            <div class="pg-app-shell mq-page mq-page--auth">
+              <div class="mq-page__decor" aria-hidden="true"></div>
+              <div class="pg-auth-stack">
+                <header class="pg-auth-logo">
+                  <img class="pg-auth-logo__img" src="./assets/logo-full.png" alt="ТВОЙ ХОД" width="220" height="48" />
+                  <p class="pg-auth-logo__tag">Финансовая игра</p>
+                </header>
+                <section class="pg-auth-panel" aria-labelledby="p1-title">
+                  <div class="pg-auth-panel__head">
+                    <img class="pg-auth-panel__mascot" src="./assets/monetka-mascot.png" alt="" width="72" height="72" />
+                    <div class="pg-auth-panel__voice">
+                      <h1 id="p1-title" class="pg-auth-panel__title">Привет, я Монетка!</h1>
+                      <p class="pg-auth-panel__subtitle">
+                        Помогу с финансами — введи <span class="pg-voice-em">email</span> и пароль. Пароль не подскажу, это не
+                        банкомат 🙂
+                      </p>
+                    </div>
+                  </div>
+                  <div class="mq-field">
+                    <label for="p1-email">Email</label>
+                    <input id="p1-email" class="mq-field__input" type="email" autocomplete="email" placeholder="name@mail.ru" />
+                  </div>
+                  <div class="mq-field">
+                    <label for="p1-pass">Пароль</label>
+                    <input id="p1-pass" class="mq-field__input" type="password" autocomplete="current-password" placeholder="••••••" />
+                  </div>
+                  <div class="pg-actions">
+                    <button type="button" class="mqx-btn mqx-btn--primary mqx-btn--stretched">Войти</button>
+                  </div>
+                  <p class="pg-auth-panel__link">
+                    Нет аккаунта?
+                    <button type="button" class="mqx-btn mqx-btn--link">Зарегистрироваться</button>
+                  </p>
+                </section>
+              </div>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <!-- P2 Register -->
+      <section class="lab-section" id="p2">
+        <div class="lab-section__label">
+          <span class="lab-section__id">P2</span>
+          <span class="lab-section__title">Регистрация</span>
+        </div>
+        <div class="lab-stage">
+          <article class="phone phone--pre-game">
+            <div class="pg-app-shell mq-page mq-page--auth">
+              <div class="mq-page__decor" aria-hidden="true"></div>
+              <div class="pg-auth-stack">
+                <header class="pg-auth-logo">
+                  <img class="pg-auth-logo__img" src="./assets/logo-full.png" alt="ТВОЙ ХОД" width="220" height="48" />
+                  <p class="pg-auth-logo__tag">Финансовая игра</p>
+                </header>
+                <section class="pg-auth-panel">
+                  <div class="pg-auth-panel__head">
+                    <img class="pg-auth-panel__mascot" src="./assets/monetka-mascot.png" alt="" width="72" height="72" />
+                    <div class="pg-auth-panel__voice">
+                      <h1 class="pg-auth-panel__title">Рада знакомству!</h1>
+                      <p class="pg-auth-panel__subtitle">
+                        Регистрируйся по <span class="pg-voice-em">email</span> — пригодится, если забудешь пароль. Пароль от 6
+                        символов, без пробелов.
+                      </p>
+                    </div>
+                  </div>
+                  <div class="mq-field"><label>Email *</label><input class="mq-field__input" type="email" placeholder="name@mail.ru" /></div>
+                  <div class="mq-field"><label>Пароль *</label><input class="mq-field__input" type="password" placeholder="••••••" /></div>
+                  <div class="mq-field"><label>Повторите пароль *</label><input class="mq-field__input" type="password" placeholder="••••••" /></div>
+                  <div class="pg-actions">
+                    <button type="button" class="mqx-btn mqx-btn--primary mqx-btn--stretched">Зарегистрироваться</button>
+                  </div>
+                  <p class="pg-auth-panel__link">
+                    Уже есть аккаунт?
+                    <button type="button" class="mqx-btn mqx-btn--link">Войти</button>
+                  </p>
+                </section>
+              </div>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <!-- P3 Start menu -->
+      <section class="lab-section" id="p3">
+        <div class="lab-section__label">
+          <span class="lab-section__id">P3</span>
+          <span class="lab-section__title">Стартовое меню · выбор сохранения по названию</span>
+        </div>
+        <div class="lab-stage">
+          <article class="phone phone--pre-game">
+            <div class="pg-app-shell mq-page">
+              <div class="mq-page__decor" aria-hidden="true"></div>
+              <div class="pg-auth-stack">
+                <header class="pg-auth-logo">
+                  <img class="pg-auth-logo__img" src="./assets/logo-full.png" alt="ТВОЙ ХОД" width="220" height="48" />
+                </header>
+                <section class="pg-auth-panel">
+                  <div class="pg-auth-panel__head">
+                    <img class="pg-auth-panel__mascot" src="./assets/monetka-mascot.png" alt="" width="72" height="72" />
+                    <div class="pg-auth-panel__voice">
+                      <h1 class="pg-auth-panel__title">Продолжим с того же места?</h1>
+                      <p class="pg-auth-panel__subtitle">
+                        Ниже — последний слот с кнопкой «Продолжить». В
+                        <span class="pg-voice-em">«Все сохранения»</span> можно выбрать любое прошлое сохранение по названию,
+                        которое ты сам давал.
+                      </p>
+                    </div>
+                  </div>
+                  <div class="pg-continue-slot">
+                    <div class="pg-continue-slot__row">
+                      <div>
+                        <div class="pg-continue-slot__name">Моя игра</div>
+                        <div class="pg-continue-slot__meta">Игра · период 4</div>
+                      </div>
+                      <div class="pg-continue-slot__cash">42 500 ₽</div>
+                    </div>
+                    <button type="button" class="mqx-btn mqx-btn--primary mqx-btn--stretched">Продолжить</button>
+                  </div>
+                  <div class="pg-actions">
+                    <button type="button" class="mqx-btn mqx-btn--primary mqx-btn--stretched">Новая игра</button>
+                    <button type="button" class="mqx-btn mqx-btn--secondary mqx-btn--stretched">Все сохранения (2)</button>
+                    <button type="button" class="mqx-btn mqx-btn--ghost mqx-btn--stretched">Выйти</button>
+                  </div>
+                </section>
+              </div>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <!-- P4 Mode variants -->
+      <section class="lab-section" id="p4">
+        <div class="lab-section__label">
+          <span class="lab-section__id">P4</span>
+          <span class="lab-section__title">Режим игры · 4 варианта chip</span>
+        </div>
+        <p class="lab-section__note">
+          Подсказка про <span class="pg-voice-em">Игра</span>/<span class="pg-voice-em">План</span> — в тексте Монетки. Заголовок секции —
+          оранжевый <code>--mq-warning</code>.
+        </p>
+        <div class="lab-pick-variants">
+          <div class="lab-pick-variant">
+            <span class="lab-pick-variant__tag">M-A · strip</span>
+            <div class="pg-flow-wrap">
+              <div class="mqx-monetka-dialog__perch mqx-monetka-dialog__perch--sit-edge">
+                <div class="mqx-monetka-dialog__perch-head">
+                  <img class="lab-mascot--perch" src="./assets/monetka-sit-edge.png" width="124" alt="" aria-hidden="true" />
+                </div>
+                <section class="mqx-monetka-dialog__speech">
+                  <h1 class="mqx-monetka-dialog__title">Новая игра!</h1>
+                  <div class="mqx-monetka-dialog__subtitle">
+                    <p>
+                      <span class="pg-voice-em">Игра</span> — готовые сценарии.
+                      <span class="pg-voice-em">План</span> скоро — свой бюджет с нуля.
+                    </p>
+                  </div>
+                </section>
+              </div>
+              <h2 class="pg-pick-heading">Режим игры</h2>
+              <div class="pg-pick-list">
+                <button type="button" class="mqx-pick-chip mqx-pick-chip--violet">
+                  <span class="mqx-pick-chip__icon" aria-hidden>🎮</span>
+                  <span class="mqx-pick-chip__body">
+                    <span class="mqx-pick-chip__label">Игра</span>
+                    <span class="mqx-pick-chip__sub">Каталог жизненных ситуаций</span>
+                  </span>
+                  <span class="mqx-pick-chip__trail" aria-hidden>›</span>
+                </button>
+                <div class="mqx-pick-chip mqx-pick-chip--emerald mqx-pick-chip--soon">
+                  <span class="mqx-pick-chip__badge">Скоро</span>
+                  <span class="mqx-pick-chip__icon" aria-hidden>📋</span>
+                  <span class="mqx-pick-chip__body">
+                    <span class="mqx-pick-chip__label">План</span>
+                    <span class="mqx-pick-chip__sub">Свой бюджет с нуля</span>
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="lab-pick-variant">
+            <span class="lab-pick-variant__tag">M-B · glass</span>
+            <div class="pg-flow-wrap">
+              <h2 class="pg-pick-heading">Режим игры</h2>
+              <div class="pg-pick-list">
+                <button type="button" class="mqx-pick-chip mqx-pick-chip--glass mqx-pick-chip--violet">
+                  <span class="mqx-pick-chip__icon" aria-hidden>🎮</span>
+                  <span class="mqx-pick-chip__body">
+                    <span class="mqx-pick-chip__label">Игра</span>
+                    <span class="mqx-pick-chip__sub">Стекло + полоса violet</span>
+                  </span>
+                  <span class="mqx-pick-chip__trail" aria-hidden>›</span>
+                </button>
+                <div class="mqx-pick-chip mqx-pick-chip--glass mqx-pick-chip--emerald mqx-pick-chip--soon">
+                  <span class="mqx-pick-chip__badge">Скоро</span>
+                  <span class="mqx-pick-chip__icon" aria-hidden>📋</span>
+                  <span class="mqx-pick-chip__body">
+                    <span class="mqx-pick-chip__label">План</span>
+                    <span class="mqx-pick-chip__sub">Мягкий фон, emerald</span>
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="lab-pick-variant">
+            <span class="lab-pick-variant__tag">M-C · soft halo</span>
+            <div class="pg-flow-wrap">
+              <h2 class="pg-pick-heading">Режим игры</h2>
+              <div class="pg-pick-list">
+                <button type="button" class="mqx-pick-chip mqx-pick-chip--soft mqx-pick-chip--violet">
+                  <span class="mqx-pick-chip__icon" aria-hidden>🎮</span>
+                  <span class="mqx-pick-chip__body">
+                    <span class="mqx-pick-chip__label">Игра</span>
+                    <span class="mqx-pick-chip__sub">Иконка в свечении, без полосы</span>
+                  </span>
+                  <span class="mqx-pick-chip__trail" aria-hidden>›</span>
+                </button>
+                <div class="mqx-pick-chip mqx-pick-chip--soft mqx-pick-chip--emerald mqx-pick-chip--soon">
+                  <span class="mqx-pick-chip__icon" aria-hidden>📋</span>
+                  <span class="mqx-pick-chip__body">
+                    <span class="mqx-pick-chip__label">План</span>
+                    <span class="mqx-pick-chip__sub">Скоро</span>
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="lab-pick-variant">
+            <span class="lab-pick-variant__tag">M-D · outline dot</span>
+            <div class="pg-flow-wrap">
+              <h2 class="pg-pick-heading">Режим игры</h2>
+              <div class="pg-pick-list">
+                <button type="button" class="mqx-pick-chip mqx-pick-chip--outline mqx-pick-chip--violet">
+                  <span class="mqx-pick-chip__body">
+                    <span class="mqx-pick-chip__label">Игра</span>
+                    <span class="mqx-pick-chip__sub">Контур + цветная точка слева</span>
+                  </span>
+                  <span class="mqx-pick-chip__trail" aria-hidden>›</span>
+                </button>
+                <div class="mqx-pick-chip mqx-pick-chip--outline mqx-pick-chip--emerald mqx-pick-chip--soon">
+                  <span class="mqx-pick-chip__body">
+                    <span class="mqx-pick-chip__label">План</span>
+                    <span class="mqx-pick-chip__sub">Скоро</span>
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- P5 Templates variants -->
+      <section class="lab-section" id="p5">
+        <div class="lab-section__label">
+          <span class="lab-section__id">P5</span>
+          <span class="lab-section__title">Сценарий старта · 4 варианта chip</span>
+        </div>
+        <p class="lab-section__note">Заголовок «Сценарий старта» — оранжевый, отступы 18/10. Полоса слева = сложность.</p>
+        <div class="lab-pick-variants">
+          <div class="lab-pick-variant">
+            <span class="lab-pick-variant__tag">T-A · strip</span>
+            <div class="pg-flow-wrap">
+              <div class="mqx-monetka-dialog__perch mqx-monetka-dialog__perch--sit-edge">
+                <div class="mqx-monetka-dialog__perch-head">
+                  <img class="lab-mascot--perch" src="./assets/monetka-sit-edge.png" width="124" alt="" aria-hidden="true" />
+                </div>
+                <section class="mqx-monetka-dialog__speech">
+                  <h1 class="mqx-monetka-dialog__title">Выбери сценарий</h1>
+                  <div class="mqx-monetka-dialog__subtitle">
+                    <p>Цвет слева — насколько жизнь «закручена». Сменить можно только новой игрой.</p>
+                  </div>
+                </section>
+              </div>
+              <h2 class="pg-pick-heading">Сценарий старта</h2>
+              <div class="pg-pick-list">
+                <button type="button" class="mqx-pick-chip mqx-pick-chip--green mqx-pick-chip--selected">
+                  <span class="mqx-pick-chip__body">
+                    <span class="mqx-pick-chip__label">Старт карьеры</span>
+                    <span class="mqx-pick-chip__sub">Средняя · 85 000 ₽ · подушка 30 000 ₽</span>
+                  </span>
+                </button>
+                <button type="button" class="mqx-pick-chip mqx-pick-chip--amber">
+                  <span class="mqx-pick-chip__body">
+                    <span class="mqx-pick-chip__label">Семья и ипотека</span>
+                    <span class="mqx-pick-chip__sub">Сложнее · больше платежей</span>
+                  </span>
+                </button>
+                <button type="button" class="mqx-pick-chip mqx-pick-chip--orange">
+                  <span class="mqx-pick-chip__body">
+                    <span class="mqx-pick-chip__label">Фриланс без подушки</span>
+                    <span class="mqx-pick-chip__sub">Эксперт · доход скачет</span>
+                  </span>
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="lab-pick-variant">
+            <span class="lab-pick-variant__tag">T-B · glass</span>
+            <div class="pg-flow-wrap">
+              <h2 class="pg-pick-heading">Сценарий старта</h2>
+              <div class="pg-pick-list">
+                <button type="button" class="mqx-pick-chip mqx-pick-chip--glass mqx-pick-chip--green mqx-pick-chip--selected">
+                  <span class="mqx-pick-chip__body">
+                    <span class="mqx-pick-chip__label">Старт карьеры</span>
+                    <span class="mqx-pick-chip__sub">Glass + green strip</span>
+                  </span>
+                </button>
+                <button type="button" class="mqx-pick-chip mqx-pick-chip--glass mqx-pick-chip--amber">
+                  <span class="mqx-pick-chip__body">
+                    <span class="mqx-pick-chip__label">Семья и ипотека</span>
+                    <span class="mqx-pick-chip__sub">Amber</span>
+                  </span>
+                </button>
+                <button type="button" class="mqx-pick-chip mqx-pick-chip--glass mqx-pick-chip--orange">
+                  <span class="mqx-pick-chip__body">
+                    <span class="mqx-pick-chip__label">Фриланс без подушки</span>
+                    <span class="mqx-pick-chip__sub">Orange</span>
+                  </span>
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="lab-pick-variant">
+            <span class="lab-pick-variant__tag">T-C · soft</span>
+            <div class="pg-flow-wrap">
+              <h2 class="pg-pick-heading">Сценарий старта</h2>
+              <div class="pg-pick-list">
+                <button type="button" class="mqx-pick-chip mqx-pick-chip--soft mqx-pick-chip--green mqx-pick-chip--selected">
+                  <span class="mqx-pick-chip__icon" aria-hidden>🌱</span>
+                  <span class="mqx-pick-chip__body">
+                    <span class="mqx-pick-chip__label">Старт карьеры</span>
+                    <span class="mqx-pick-chip__sub">Мягкое свечение иконки</span>
+                  </span>
+                </button>
+                <button type="button" class="mqx-pick-chip mqx-pick-chip--soft mqx-pick-chip--amber">
+                  <span class="mqx-pick-chip__icon" aria-hidden>🏠</span>
+                  <span class="mqx-pick-chip__body">
+                    <span class="mqx-pick-chip__label">Семья и ипотека</span>
+                    <span class="mqx-pick-chip__sub">Amber halo</span>
+                  </span>
+                </button>
+                <button type="button" class="mqx-pick-chip mqx-pick-chip--soft mqx-pick-chip--orange">
+                  <span class="mqx-pick-chip__icon" aria-hidden>⚡</span>
+                  <span class="mqx-pick-chip__body">
+                    <span class="mqx-pick-chip__label">Фриланс</span>
+                    <span class="mqx-pick-chip__sub">Orange halo</span>
+                  </span>
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="lab-pick-variant">
+            <span class="lab-pick-variant__tag">T-D · outline</span>
+            <div class="pg-flow-wrap">
+              <h2 class="pg-pick-heading">Сценарий старта</h2>
+              <div class="pg-pick-list">
+                <button type="button" class="mqx-pick-chip mqx-pick-chip--outline mqx-pick-chip--green mqx-pick-chip--selected">
+                  <span class="mqx-pick-chip__body">
+                    <span class="mqx-pick-chip__label">Старт карьеры</span>
+                    <span class="mqx-pick-chip__sub">Контур + зелёная точка</span>
+                  </span>
+                </button>
+                <button type="button" class="mqx-pick-chip mqx-pick-chip--outline mqx-pick-chip--amber">
+                  <span class="mqx-pick-chip__body">
+                    <span class="mqx-pick-chip__label">Семья и ипотека</span>
+                    <span class="mqx-pick-chip__sub">Amber dot</span>
+                  </span>
+                </button>
+                <button type="button" class="mqx-pick-chip mqx-pick-chip--outline mqx-pick-chip--orange">
+                  <span class="mqx-pick-chip__body">
+                    <span class="mqx-pick-chip__label">Фриланс</span>
+                    <span class="mqx-pick-chip__sub">Orange dot</span>
+                  </span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- P6 Loading -->
+      <section class="lab-section" id="p6">
+        <div class="lab-section__label">
+          <span class="lab-section__id">P6</span>
+          <span class="lab-section__title">Проверка сессии</span>
+        </div>
+        <div class="lab-stage">
+          <article class="phone phone--pre-game">
+            <div class="pg-app-shell mq-page mq-page--auth">
+              <div class="mq-page__decor" aria-hidden="true"></div>
+              <div class="pg-auth-stack">
+                <header class="pg-auth-logo">
+                  <img class="pg-auth-logo__img" src="./assets/logo-full.png" alt="ТВОЙ ХОД" width="220" height="48" />
+                </header>
+                <section class="pg-auth-panel">
+                  <div class="pg-auth-panel__head">
+                    <img class="pg-auth-panel__mascot" src="./assets/monetka-mascot.png" alt="" width="72" height="72" />
+                    <div class="pg-auth-panel__voice">
+                      <h1 class="pg-auth-panel__title">Секунду, листаю полки</h1>
+                      <p class="pg-auth-panel__subtitle">
+                        Подтягиваю сохранения… обычно секунда. Пока жди — вспомни, как назвал последнюю игру 🙂
+                      </p>
+                    </div>
+                  </div>
+                  <div class="pg-spinner" role="status" aria-label="Загрузка"></div>
+                </section>
+              </div>
+            </div>
+          </article>
+        </div>
+      </section>
+    </main>
+
+    <script>
+      document.querySelectorAll('[data-theme-btn]').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          const t = btn.getAttribute('data-theme-btn');
+          document.documentElement.setAttribute('data-theme', t);
+          document.querySelectorAll('[data-theme-btn]').forEach((b) => b.classList.toggle('is-active', b === btn));
+        });
+      });
+    </script>
+  </body>
+</html>

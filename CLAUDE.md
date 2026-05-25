@@ -18,6 +18,7 @@
 | [`docs/specs/SPEC_APP_SHELL.md`](docs/specs/SPEC_APP_SHELL.md) | Pre-game: оболочки Bubble/Flow, `MqxButton` |
 | [`docs/reference/MONEY_QUEST_DESIGN_AND_GDD_OUTLINE.md`](docs/reference/MONEY_QUEST_DESIGN_AND_GDD_OUTLINE.md) | GDD-оглавление и анализ |
 | [`docs/vision/ideas/game-balance-thresholds-and-constraints.md`](docs/vision/ideas/game-balance-thresholds-and-constraints.md) | Черновик порогов баланса (победа, поражение, MVP-ограничения), idea-refine |
+| [`docs/vision/ideas/project-structure-standardization.md`](docs/vision/ideas/project-structure-standardization.md) | Структура репо: screens/api/seeds, touch-it move-it (idea-refine) |
 
 ---
 
@@ -96,7 +97,8 @@
 
 ## Где что лежит (frontend)
 
-- `frontend-react/src/api.js` — `apiCall`, `ApiError` при `!ok`.
+- **Структура frontend:** [`frontend-react/ARCHITECTURE.md`](frontend-react/ARCHITECTURE.md) (`screens/`, `api/*`, `styles/`).
+- `frontend-react/src/api.js` — barrel → `api/` (`apiCall`, `API`, `ApiError`).
 - `frontend-react/src/hooks/useGame.js` — `overview`, `timeStatus`, `periodStatus`, таймер, переход периодов, `pendingEvents`.
 - `frontend-react/src/components/GameScreen.jsx` — шапка, события, оверлей карусели.
 - `frontend-react/src/components/EventDeck.jsx` — кнопка событий, `EventCarouselOverlay`, свайп/стрелки.

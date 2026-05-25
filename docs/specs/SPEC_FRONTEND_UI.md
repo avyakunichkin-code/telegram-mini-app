@@ -69,7 +69,10 @@ frontend-react/src/
     mqx/                # Общие UI-примитивы (бары, и т.д.)
     icons/              # NavIcons, StatIcons
   hooks/                # useGame и др.
+  ARCHITECTURE.md       # Карта screens/api/mqx (канон размещения кода)
   index.css             # @import barrel → styles/
+  api/                  # HTTP по доменам (зеркало backend routers)
+  screens/              # pre-game, plan, (цель) game tabs
   styles/               # tokens, tma-base, mqx/*, shell, page, admin (см. styles/README.md)
   api.js                # Контракт с backend
 docs/

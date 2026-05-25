@@ -74,6 +74,7 @@
 | [`vision/ideas/event-types-and-taxonomy.md`](vision/ideas/event-types-and-taxonomy.md) | Типизация событий (домен, interaction, аналитика, informational «лотерея») |
 | [`vision/ideas/event-engagement-anti-fatigue.md`](vision/ideas/event-engagement-anti-fatigue.md) | Анти-усталость пула, конвейер контента, отдельные defs вместо variant B |
 | [`vision/ideas/landing-mqx-product-preview.md`](vision/ideas/landing-mqx-product-preview.md) | Лендинг: hero, peek, контраст тем скринов |
+| [`vision/ideas/project-structure-standardization.md`](vision/ideas/project-structure-standardization.md) | Структура кода: `screens/`, `api/*`, seeds; границы без big-bang (после split CSS) |
 
 ### Specs
 
