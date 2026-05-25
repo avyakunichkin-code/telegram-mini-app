@@ -51,8 +51,14 @@ def _eval_basic(snap, **cfg_overrides):
     )
 
 
+def _safety_months_target(snap_kwargs: dict | None = None, *, mult: float = 3) -> float:
+    preview = _snap(**(snap_kwargs or {}))
+    pressure = float(preview.monthly_expenses_total) or float(preview.total_monthly_obligations)
+    return pressure * mult
+
+
 def _tutorial_complete_snap(**kwargs):
-    target = 10_000.0 * 3
+    target = _safety_months_target(kwargs, mult=3)
     defaults = dict(
         salary_ever_claimed=True,
         safety_ever_contributed=True,
@@ -156,7 +162,7 @@ def _eval_harder(template_key: str, snap, **cfg_overrides):
 
 
 def _harder_complete_snap(**kwargs):
-    target = 10_000.0 * 6
+    target = _safety_months_target(kwargs, mult=6)
     defaults = dict(
         salary_ever_claimed=True,
         safety_ever_contributed=True,
@@ -207,6 +213,58 @@ class TestHarderTutorialChain:
         r = _eval_harder("mq_game_debt_stack_v1", _harder_complete_snap())
         assert r.goals_met == 7
         assert r.win_reached is True
+
+
+class TestSafetyFundMonthsGoal:
+    def test_met_uses_total_outflow_when_obligations_zero(self):
+        cfg = {
+            "min_period_index_for_victory": 1,
+            "required_goals_met": 1,
+            "progression_mode": "parallel",
+            "goals": [
+                {
+                    "key": "safety_3x",
+                    "type": "safety_fund_months",
+                    "title": "Подушка ≥ 3× расходов",
+                    "months_multiplier": 3,
+                }
+            ],
+        }
+        snap = _snap(
+            total_monthly_obligations=0.0,
+            monthly_burn_total=10_000.0,
+            monthly_expenses_total=10_000.0,
+            safety_fund_balance=30_000.0,
+        )
+        r = evaluate_victory(cfg, snap, template_key="mq_game_basic_v1")
+        goal = r.goals[0]
+        assert goal.detail["pressure_monthly"] == 10_000.0
+        assert goal.detail["target"] == 30_000.0
+        assert goal.met is True
+
+    def test_not_met_when_cushion_only_covers_obligations_not_burn(self):
+        cfg = {
+            "min_period_index_for_victory": 1,
+            "required_goals_met": 1,
+            "progression_mode": "parallel",
+            "goals": [
+                {
+                    "key": "safety_3x",
+                    "type": "safety_fund_months",
+                    "title": "Подушка",
+                    "months_multiplier": 3,
+                }
+            ],
+        }
+        snap = _snap(
+            total_monthly_obligations=10_000.0,
+            monthly_burn_total=10_000.0,
+            monthly_expenses_total=20_000.0,
+            safety_fund_balance=30_000.0,
+        )
+        r = evaluate_victory(cfg, snap, template_key="mq_game_basic_v1")
+        assert r.goals[0].met is False
+        assert r.goals[0].detail["target"] == 60_000.0
 
 
 class TestNewGoalTypes:

@@ -567,11 +567,22 @@
 
 .mqx-hero-turn__actions-col {
   display: flex;
-  flex-direction: column;
-  align-items: stretch;
-  gap: 6px;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
   flex-shrink: 0;
-  min-width: 118px;
+  min-width: 0;
+  max-width: min(100%, 220px);
+}
+
+.mqx-hero-turn__actions-col .mqx-hero-turn__events-pill {
+  flex-shrink: 0;
+}
+
+.mqx-hero-turn__actions-col .mqx-hero-turn__cta-primary {
+  flex: 1 1 auto;
+  min-width: 0;
 }
 
 .mqx-hero-turn__cta-primary.mqx-btn {

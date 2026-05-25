@@ -7,6 +7,7 @@
 @import './styles/tma-base.css';
 @import './styles/mqx/layout.css';
 @import './styles/mqx/dashboard.css';
+@import './styles/mqx/juice.css';
 @import './styles/mqx/flows.css';
 @import './styles/mqx/finance.css';
 @import './styles/mqx/analytics.css';

@@ -165,9 +165,18 @@ def _evaluate_goal(goal: dict[str, Any], snap: VictoryEvaluationInput) -> Victor
 
     if gtype == "safety_fund_months":
         mult = float(goal.get("months_multiplier", 3))
-        target = obligations * mult
+        # Та же база, что у overview.safety_fund_baseline_target: обязательства + burn.
+        pressure = float(snap.monthly_expenses_total)
+        if pressure <= 0:
+            pressure = obligations
+        target = pressure * mult
         current = float(snap.safety_fund_balance)
-        detail = {"target": target, "current": current, "months_multiplier": mult}
+        detail = {
+            "target": target,
+            "current": current,
+            "months_multiplier": mult,
+            "pressure_monthly": pressure,
+        }
         if target > 0:
             progress = min(1.0, current / target)
             met = current >= target

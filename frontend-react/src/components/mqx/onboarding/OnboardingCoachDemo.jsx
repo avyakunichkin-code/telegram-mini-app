@@ -57,11 +57,13 @@ export function OnboardingCoachDemo() {
   };
 
   const overlay =
-    active && coach.showOverlay && coach.step ? (
+    active && coach.showCoach && coach.step ? (
       <OnboardingCoachOverlay
         open
+        variant={coach.phase === 'practice' ? 'practice' : 'bubble'}
         step={coach.step}
         skipPressCount={coach.skipPressCount}
+        practiceProgress={coach.practiceProgress}
         rootRef={rootRef}
         anchor={coach.step?.anchor}
         onSkip={coach.handleSkip}
@@ -73,7 +75,7 @@ export function OnboardingCoachDemo() {
     <div className="mqx-onboarding-demo">
       <p className="mqx-catalog__lead" style={{ marginTop: 0 }}>
         Прототип <strong>guided coach</strong> (5 шагов). Стек дашборда — как в prod (S5 / L3). После «Понятно» —{' '}
-        <strong>10 с</strong> без пузыря. Skip: 1-й — шаг, 2-й — весь онбординг.
+        <strong>~6 с</strong> без пузыря (полоска прогресса). Skip: 1-й — шаг, 2-й — весь онбординг.
       </p>
 
       <div className="mqx-onboarding-demo__toolbar">

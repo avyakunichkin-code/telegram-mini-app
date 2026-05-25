@@ -79,3 +79,7 @@ export { AuthFormField } from './auth/AuthFormField';
 export { MonetkaBubbleScreen } from './layout/MonetkaBubbleScreen';
 export { MqxMonetkaDialogScreen } from './layout/MqxMonetkaDialogScreen';
 export { ONBOARDING_STEPS, ONBOARDING_PRACTICE_MS } from './onboarding/onboardingSteps';
+export { MqxJuiceGainFeedback } from './juice/MqxJuiceGainFeedback';
+export { MqxPeriodCloseRitual } from './juice/MqxPeriodCloseRitual';
+export { MqxSalaryWarnModal } from './juice/MqxSalaryWarnModal';
+export { MqxJuiceCatalogDemo } from './juice/MqxJuiceCatalogDemo';

@@ -38,8 +38,10 @@ export function GameOnboardingLayer({
   const persist = useCallback(async (patch) => {
     try {
       await API.patchOnboarding(patch);
-    } catch {
-      /* не блокируем UX */
+    } catch (err) {
+      if (import.meta.env.DEV) {
+        console.warn('[onboarding] PATCH /api/game/profile/onboarding failed', patch, err);
+      }
     }
   }, []);
 
@@ -143,6 +145,7 @@ export function GameOnboardingLayer({
       skipPressCount={coach.skipPressCount}
       rootRef={rootRef}
       anchor={coach.step?.anchor}
+      practiceProgress={coach.practiceProgress}
       onSkip={onSkip}
       onContinue={coach.handleBubbleContinue}
     />,

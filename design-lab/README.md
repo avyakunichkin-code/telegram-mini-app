@@ -26,6 +26,7 @@
 | [start-menu/](start-menu/) | **★ B → prod** | Меню сохранений после входа |
 | [onboarding-brief/](onboarding-brief/) | superseded | ~~Mission Brief 3 карточки + видео~~ |
 | [brand-logo/](brand-logo/) | **★ → prod** | G1 старт, G2 hero; tagline в G1 |
+| [game-ui/juice-round/](game-ui/juice-round/) | **★ A+C+D → prod** | Gain, turn ritual, salary warn; B Risk — backlog |
 
 ## Как работать
 

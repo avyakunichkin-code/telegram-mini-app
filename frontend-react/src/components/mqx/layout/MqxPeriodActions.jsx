@@ -1,5 +1,3 @@
-import { MqxPeriodHint } from './MqxPeriodHint';
-
 function ActionChipIcon({ accent, children }) {
   return (
     <span className={`mqx-action-chip__icon ${accent}`} aria-hidden="true">
@@ -24,6 +22,7 @@ function ActionChip({ label, sub, icon, disabled, className = '', ...buttonProps
 /** Блок «Действия периода» — chip 2×2 (★ period-actions-round). */
 export function MqxPeriodActions({
   salaryDisabled = false,
+  salaryCelebrate = false,
   busy = false,
   onSalary,
   onContribute,
@@ -31,16 +30,22 @@ export function MqxPeriodActions({
   onInvest,
 }) {
   const salaryBusy = busy || salaryDisabled;
+  const salaryClass = [
+    'mqx-action-chip--salary',
+    'mqx-action-chip--primary',
+    salaryCelebrate ? 'mqx-juice-chip--celebrate' : '',
+  ]
+    .filter(Boolean)
+    .join(' ');
 
   return (
     <section className="mqx-period-actions mqx-period-actions--chips" aria-label="Действия периода">
       <h2 className="mqx-finance-static__title">Действия периода</h2>
-      <MqxPeriodHint />
       <div className="mqx-action-chips">
         <ActionChip
           label="Зарплата"
           sub="получить"
-          className="mqx-action-chip--salary"
+          className={salaryClass}
           disabled={salaryBusy}
           data-onboarding-anchor="salary"
           title={

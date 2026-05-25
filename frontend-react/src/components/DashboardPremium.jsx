@@ -27,6 +27,7 @@ import {
   MqxGoalDash,
 
   MqxPeriodActions,
+  MqxJuiceGainFeedback,
 
 } from './mqx';
 
@@ -105,8 +106,20 @@ export function DashboardPremium({
   const [safetyAmount, setSafetyAmount] = useState(0);
 
   const [busyAction, setBusyAction] = useState(null); // 'salary'|'in'|'out'|null
+  const [juiceBurstKey, setJuiceBurstKey] = useState(0);
+  const [juiceAmount, setJuiceAmount] = useState(0);
+  const [juiceToastVisible, setJuiceToastVisible] = useState(false);
+  const [salaryCelebrate, setSalaryCelebrate] = useState(false);
 
   const safetyPanelRef = useRef(null);
+  const juiceTimerRef = useRef(null);
+
+  useEffect(
+    () => () => {
+      if (juiceTimerRef.current) window.clearTimeout(juiceTimerRef.current);
+    },
+    [],
+  );
 
   const closeSafetyPanel = () => {
 
@@ -192,6 +205,7 @@ export function DashboardPremium({
       },
       {
         title: 'Баланс',
+        juiceTarget: 'balance',
         valueNode: <MoneyText value={cash} />,
         valueLabel: formatChipMoneyAria(cash),
         accent: 'mqx-accent--violet',
@@ -342,12 +356,19 @@ export function DashboardPremium({
 
         <main className="mqx-content mqx-tab-page__scroll mqx-content--dash-flat">
 
-          <MqxDashStack className="mqx-dash-stack--unified">
+          <MqxDashStack className="mqx-dash-stack--unified mqx-juice-host">
+            <MqxJuiceGainFeedback
+              burstKey={juiceBurstKey}
+              amount={juiceAmount}
+              toastVisible={juiceToastVisible}
+              toastMessage="Зарплата в кошелёк — ход стал сильнее"
+            />
 
             <MqxFinancePeriodBlock
               financeCards={financeCards}
               onGoFinance={onGoFinance}
               onFlowsNavigate={onGoCapitalFlows}
+              juiceGainActive={salaryCelebrate}
             />
 
             <MqxDivider />
@@ -357,13 +378,10 @@ export function DashboardPremium({
             <MqxDivider />
 
             <MqxPeriodActions
-
               busy={busyAction !== null}
-
               salaryDisabled={salaryDisabled}
-
+              salaryCelebrate={salaryCelebrate}
               onSalary={async () => {
-
                 if (salaryClaimed) {
                   showNotification('Зарплата за этот период уже получена', 'info');
                   return;
@@ -374,29 +392,35 @@ export function DashboardPremium({
                 }
 
                 try {
-
                   setBusyAction('salary');
-
                   const result = await claimSalary();
                   if (result?.already_claimed) {
                     showNotification(
                       result.message || 'Зарплата за этот период уже получена',
                       'info',
                     );
-                  } else {
-                    showNotification('Зарплата на счёт', 'success');
+                  } else if (result?.status === 'success') {
+                    const amount = Number(result.amount) || 0;
+                    if (amount > 0) {
+                      if (juiceTimerRef.current) window.clearTimeout(juiceTimerRef.current);
+                      setJuiceAmount(amount);
+                      setJuiceBurstKey((k) => k + 1);
+                      setSalaryCelebrate(true);
+                      setJuiceToastVisible(true);
+                      juiceTimerRef.current = window.setTimeout(() => {
+                        setSalaryCelebrate(false);
+                        setJuiceToastVisible(false);
+                        juiceTimerRef.current = null;
+                      }, 2400);
+                    } else {
+                      showNotification('Зарплата на счёт', 'success');
+                    }
                   }
-
                 } catch (e) {
-
                   showNotification(e?.detail || e?.message || 'Не удалось получить зарплату', 'error');
-
                 } finally {
-
                   setBusyAction(null);
-
                 }
-
               }}
 
               onContribute={() => {

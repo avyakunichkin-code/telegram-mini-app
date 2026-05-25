@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { Spinner, Modal } from '@telegram-apps/telegram-ui';
+import { Spinner } from '@telegram-apps/telegram-ui';
 import { useGame } from '../hooks/useGame';
 import { DashboardPremium } from './DashboardPremium';
 import { FinancePremium } from './FinancePremium';
@@ -11,8 +11,7 @@ import { EventCarouselOverlay } from './mqx/events/EventCarouselOverlay';
 import { MqxShell } from './MqxShell';
 import { MqxTabHero } from './MqxTabHero';
 import { GameScreenLayout, GameScreenTabNav } from './GameScreenLayout';
-import { MqxPeriodCloseSheet, MqxPeriodCloseTail } from './mqx';
-import { MqxButton } from './mqx/primitives/MqxButton';
+import { MqxPeriodCloseTail, MqxPeriodCloseRitual, MqxSalaryWarnModal } from './mqx';
 import { PERIOD_CLOSE_AUTO_MAX } from '../constants/periodClose';
 import { shouldAutoOpenPeriodClose } from '../utils/periodCloseDisplay';
 import { GameOnboardingLayer } from './GameOnboardingLayer';
@@ -243,31 +242,14 @@ export function GameScreen({ onLogout, onNewGame, onLoadGame }) {
       )}
       overlays={(
         <>
-          <Modal open={salaryWarnOpen} onClose={() => setSalaryWarnOpen(false)} title="Закрыть месяц">
-            <div className="mqx-modal" role="document" aria-labelledby="mqx-salary-warn-title">
-              <div className="mqx-card">
-                <div className="mqx-card__kicker mqx-card__kicker--amber">Период</div>
-                <div id="mqx-salary-warn-title" className="mqx-card__title">
-                  Закрыть месяц?
-                </div>
-                <p className="mqx-card__sub">Проверка перед закрытием месяца в игре.</p>
-                <p className="mq-modal-lead" style={{ marginTop: 14 }}>Зарплата за этот период ещё не получена</p>
-                <p className="mq-modal-body">
-                  Если перейти дальше, начисление за текущий месяц <strong>сгорит</strong>, как если не нажали «Получить зарплату».
-                </p>
-                <div className="mq-modal-actions" style={{ marginTop: 16 }}>
-                  <MqxButton variant="primary" stretched onClick={confirmAdvanceWithSalaryLoss}>
-                    Перейти без зарплаты
-                  </MqxButton>
-                  <MqxButton variant="secondary" stretched onClick={() => setSalaryWarnOpen(false)}>
-                    Отмена
-                  </MqxButton>
-                </div>
-              </div>
-            </div>
-          </Modal>
+          <MqxSalaryWarnModal
+            open={salaryWarnOpen && !inOnboarding}
+            salaryAmount={Number(periodStatus?.salary_amount) || 0}
+            onClose={() => setSalaryWarnOpen(false)}
+            onConfirmSkip={confirmAdvanceWithSalaryLoss}
+          />
 
-          <MqxPeriodCloseSheet
+          <MqxPeriodCloseRitual
             summary={periodCloseForUi}
             open={Boolean(periodCloseForUi && periodCloseOpen && !inOnboarding)}
             onClose={handleClosePeriodClose}

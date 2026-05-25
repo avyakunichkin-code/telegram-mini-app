@@ -96,7 +96,8 @@ npx serve .
 | 9 | ~~`dashboard-dual-accordion/`~~ | superseded **S5**; не внедрять |
 | 10 | **`new-game-mode/`** — R2 + I1 ★ | `MqxMonetkaDialogScreen`, `MqxSaveKindPicker`, `NewProfileKindScreen` |
 | 11 | **`game-templates/`** — compact + цвета ★; **`scenario-icons/`** — I-Scene ★, P-C | `MqxStarterScenarioPicker`, `ScenarioIllustrations`, `GameTemplatePickScreen` |
-| 12 | **`period-close/`** — нижний лист + хвостик ★ | `MqxPeriodCloseSheet`, `MqxPeriodCloseTail` |
+| 12 | **`period-close/`** — хвостик ★; итог — **`game-ui/juice-round` C** | `MqxPeriodCloseRitual`, `MqxPeriodCloseTail` (sheet legacy в каталоге) |
+| 13 | **`game-ui/juice-round/`** ★ A+C+D | `MqxJuiceGainFeedback`, `MqxPeriodCloseRitual`, `MqxSalaryWarnModal` |
 | 13 | **`capital-page/`** — IA ★, вариант A/B | унификация `FinanceSection` → MQX |
 
 Текущий статус: **дашборд S5**, **события L3 + оверлей O1**, **итог периода**, **новая игра**, **онбординг** в prod. Lab оверлея: [`design-lab/events/overlay-round/`](../../../../design-lab/events/overlay-round/). Дальше: **empty/error**, **капитал**.

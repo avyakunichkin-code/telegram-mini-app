@@ -60,6 +60,7 @@ export function OnboardingCoachOverlay({
   onContinue,
   finishLabel = 'Начать игру',
   variant = 'bubble',
+  practiceProgress = 0,
 }) {
   const bubbleWrapRef = useRef(null);
   const [bubbleHole, setBubbleHole] = useState(null);
@@ -172,6 +173,19 @@ export function OnboardingCoachOverlay({
       {isPractice ? (
         <div className="mqx-onboarding-practice-hint" aria-live="polite">
           <span className="mqx-onboarding-practice-hint__label">Попробуй элементы на экране</span>
+          <div
+            className="mqx-onboarding-practice-progress"
+            role="progressbar"
+            aria-label="Практика"
+            aria-valuemin={0}
+            aria-valuemax={100}
+            aria-valuenow={Math.round(practiceProgress * 100)}
+          >
+            <div
+              className="mqx-onboarding-practice-progress__fill"
+              style={{ transform: `scaleX(${practiceProgress})` }}
+            />
+          </div>
         </div>
       ) : null}
 

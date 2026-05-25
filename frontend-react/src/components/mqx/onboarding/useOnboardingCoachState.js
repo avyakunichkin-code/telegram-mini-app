@@ -33,6 +33,11 @@ export function useOnboardingCoachState({ practiceMs = ONBOARDING_PRACTICE_MS, o
 
   const step = getOnboardingStep(stepIndex);
   const isLast = stepIndex >= ONBOARDING_STEPS.length - 1;
+  const practiceTickSec = Math.max(1, Math.ceil(practiceMs / 1000));
+  const practiceProgress =
+    phase === 'practice'
+      ? Math.min(1, Math.max(0, (practiceTickSec - practiceSecLeft) / practiceTickSec))
+      : 0;
 
   const syncFlagsRef = useCallback(() => {
     flagsRef.current = { salaryDone, cushionDone };
@@ -170,6 +175,8 @@ export function useOnboardingCoachState({ practiceMs = ONBOARDING_PRACTICE_MS, o
     cushionDone,
     isLast,
     practiceSecLeft,
+    /** 0..1 — для полоски практики без цифр на экране */
+    practiceProgress,
     /** Затемнение + пузырь — только фаза bubble (практика = чистый UI, см. CONTENT.md). */
     showOverlay: phase === 'bubble' && stepIndex < ONBOARDING_STEPS.length,
     /** @deprecated используйте showOverlay; оставлено для совместимости демо */

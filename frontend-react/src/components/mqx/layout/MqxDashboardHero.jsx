@@ -36,6 +36,16 @@ export function MqxDashboardHero({
         </div>
 
         <div className="mqx-hero-turn__actions-col">
+          {onOpenEvents ? (
+            <MqxPill
+              events
+              badge={pendingEventsCount > 0 ? pendingEventsCount : undefined}
+              onClick={onOpenEvents}
+              className="mqx-hero-turn__events-pill"
+            >
+              События
+            </MqxPill>
+          ) : null}
           <MqxButton
             type="button"
             variant="hero-filled"
@@ -49,16 +59,6 @@ export function MqxDashboardHero({
             <CloseMonthIcon />
             Закрыть месяц
           </MqxButton>
-          {onOpenEvents ? (
-            <MqxPill
-              events
-              badge={pendingEventsCount > 0 ? pendingEventsCount : undefined}
-              onClick={onOpenEvents}
-              className="mqx-hero-turn__events-pill"
-            >
-              События
-            </MqxPill>
-          ) : null}
         </div>
       </div>
     </header>

@@ -27,11 +27,12 @@ function chipAriaLabel(card, onFlowsNavigate) {
 }
 
 /** Статичный блок «Финансы периода» (L3): 2×2 chips + ссылка в раздел финансов. */
-function FinanceChip({ card, onFlowsNavigate }) {
+function FinanceChip({ card, onFlowsNavigate, juiceGainActive = false }) {
   const className = [
     'mqx-finance-chip',
     card.chipAction ? 'mqx-finance-chip--action' : '',
     card.cushionChip ? 'mqx-finance-chip--cushion' : '',
+    card.juiceTarget === 'balance' && juiceGainActive ? 'mqx-juice-resource--gain' : '',
   ]
     .filter(Boolean)
     .join(' ');
@@ -72,6 +73,9 @@ function FinanceChip({ card, onFlowsNavigate }) {
     </>
   );
 
+  const juiceProps =
+    card.juiceTarget != null ? { 'data-mqx-juice-target': card.juiceTarget } : undefined;
+
   if (card.chipAction && onFlowsNavigate) {
     return (
       <button
@@ -80,6 +84,7 @@ function FinanceChip({ card, onFlowsNavigate }) {
         title={card.titleHint}
         aria-label={chipAriaLabel(card, onFlowsNavigate)}
         onClick={() => onFlowsNavigate(card.chipAction)}
+        {...juiceProps}
       >
         {inner}
       </button>
@@ -87,13 +92,23 @@ function FinanceChip({ card, onFlowsNavigate }) {
   }
 
   return (
-    <div className={className} title={card.titleHint} aria-label={chipAriaLabel(card, onFlowsNavigate)}>
+    <div
+      className={className}
+      title={card.titleHint}
+      aria-label={chipAriaLabel(card, onFlowsNavigate)}
+      {...juiceProps}
+    >
       {inner}
     </div>
   );
 }
 
-export function MqxFinancePeriodBlock({ financeCards = [], onGoFinance, onFlowsNavigate }) {
+export function MqxFinancePeriodBlock({
+  financeCards = [],
+  onGoFinance,
+  onFlowsNavigate,
+  juiceGainActive = false,
+}) {
   const chipsRef = useRef(null);
 
   useEffect(() => {
@@ -111,7 +126,12 @@ export function MqxFinancePeriodBlock({ financeCards = [], onGoFinance, onFlowsN
       <h2 className="mqx-finance-static__title">Финансы периода</h2>
       <div ref={chipsRef} className="mqx-finance-static__chips">
         {financeCards.map((c) => (
-          <FinanceChip key={c.title} card={c} onFlowsNavigate={onFlowsNavigate} />
+          <FinanceChip
+            key={c.title}
+            card={c}
+            onFlowsNavigate={onFlowsNavigate}
+            juiceGainActive={juiceGainActive && c.juiceTarget === 'balance'}
+          />
         ))}
       </div>
 

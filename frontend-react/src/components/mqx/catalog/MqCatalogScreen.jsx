@@ -48,6 +48,7 @@ import {
   useMqxConfirm,
   EventCard,
   OnboardingCoachDemo,
+  MqxJuiceCatalogDemo,
 } from '../index';
 import { MoneyText } from '../../MoneyText';
 import { INSURANCE_PLANS } from '../../../constants/insuranceProducts';
@@ -591,6 +592,10 @@ export function MqCatalogScreen() {
           }}
           legacyGoal={{ target: 60000, current: 40000, frac: 0.67, win: false, ready: false }}
         />
+      </CatalogSection>
+
+      <CatalogSection title="Game juice (A · C · D) ★">
+        <MqxJuiceCatalogDemo />
       </CatalogSection>
 
       <CatalogSection title="Форма депозита (variant D)">

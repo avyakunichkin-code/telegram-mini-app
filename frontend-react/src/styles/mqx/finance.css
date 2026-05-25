@@ -1292,10 +1292,12 @@
   transform: translateX(-50%);
   z-index: 485;
   display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 8px 14px;
-  border-radius: 999px;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 6px;
+  min-width: min(280px, calc(100vw - 32px));
+  padding: 8px 14px 10px;
+  border-radius: 16px;
   background-color: #ffffff;
   background-color: var(--mqx-onboarding-bubble-bg, #ffffff);
   border: 1px solid var(--mqx-onboarding-bubble-border);
@@ -1310,12 +1312,25 @@
   text-transform: uppercase;
   letter-spacing: 0.08em;
   opacity: 0.65;
+  text-align: center;
 }
 
-.mqx-onboarding-practice-hint__sec {
-  font-size: var(--mq-fs-body);
-  font-weight: 800;
-  color: rgba(109, 40, 217, 0.95);
+.mqx-onboarding-practice-progress {
+  height: 4px;
+  border-radius: 999px;
+  overflow: hidden;
+  background: color-mix(in srgb, var(--mq-violet, #6d28d9) 12%, transparent);
+}
+
+.mqx-onboarding-practice-progress__fill {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, rgba(109, 40, 217, 0.75), rgba(109, 40, 217, 0.95));
+  transform-origin: left center;
+  transition: transform 0.35s ease-out;
+  will-change: transform;
 }
 
 .mqx-onboarding-bubble-wrap {
