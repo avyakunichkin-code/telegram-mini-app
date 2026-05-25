@@ -1,4 +1,3 @@
-from datetime import timedelta
 from typing import Tuple
 
 from fastapi import HTTPException
@@ -26,25 +25,10 @@ def get_active_game_profile(db: Session, user_id: int) -> GameProfile:
 
 def sync_time(profile: GameProfile) -> Tuple[int, float]:
     """
-    Синхронизирует игровое время.
-    Возвращает (количество пройденных периодов, накопленный остаток секунд)
+    Пошаговый месяц (TB1): real-time не продвигает period_index.
+    Закрытие периода — только через process_period_end (POST /api/game/time/next).
     """
-    if profile.time_state != "play":
-        return 0, 0.0
-
-    now = utc_now_naive()
-    elapsed = (now - profile.period_anchor_at).total_seconds()
-
-    if elapsed < profile.period_duration_seconds:
-        return 0, elapsed
-
-    passed = int(elapsed // profile.period_duration_seconds)
-    remainder = elapsed % profile.period_duration_seconds
-
-    profile.period_index += passed
-    profile.period_anchor_at = now - timedelta(seconds=remainder)
-
-    return passed, remainder
+    return 0, 0.0
 
 
 def set_time_state(profile: GameProfile, state: str) -> None:
@@ -52,17 +36,15 @@ def set_time_state(profile: GameProfile, state: str) -> None:
     if normalized not in {"play", "pause"}:
         raise HTTPException(status_code=400, detail="time_state must be play or pause")
 
-    # При переключении в play синхронизируем время
     if normalized == "play" and profile.time_state != "play":
-        sync_time(profile)
         profile.period_anchor_at = utc_now_naive()
 
     profile.time_state = normalized
 
 
 def next_period(profile: GameProfile) -> None:
-    """Принудительный переход к следующему периоду"""
-    sync_time(profile)  # Сначала синхронизируем
+    """Legacy helper: инкремент периода без экономики. В prod используйте process_period_end."""
+    sync_time(profile)
     profile.period_index += 1
     profile.period_anchor_at = utc_now_naive()
 
@@ -76,11 +58,5 @@ def set_period_duration(profile: GameProfile, seconds: int) -> None:
 
 
 def get_seconds_until_next(profile: GameProfile) -> int:
-    """Возвращает количество секунд до конца текущего периода"""
-    if profile.time_state != "play":
-        return profile.period_duration_seconds
-
-    now = utc_now_naive()
-    elapsed = (now - profile.period_anchor_at).total_seconds()
-    remaining = profile.period_duration_seconds - elapsed
-    return max(0, int(remaining))
+    """Turn-based: авто-закрытия по времени нет."""
+    return 0

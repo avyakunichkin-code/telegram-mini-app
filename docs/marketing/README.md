@@ -14,7 +14,6 @@ last_reviewed: 2026-05-23
 |----------|------------|
 | [`CHANGELOG_TRACKER.md`](CHANGELOG_TRACKER.md) | 64 поста (пролог ep-000 в 2 частях), статусы **Утверждено** / **Опубликовано** |
 | [`NARRATIVE_PLAN.md`](NARRATIVE_PLAN.md) | Арки серии, ритм публикации |
-| [`STRUCTURE_PROPOSAL.md`](STRUCTURE_PROPOSAL.md) | **На согласовании:** арки → подтемы (механики/интерфейс) → посты |
 | [`POST_STYLE.md`](POST_STYLE.md) | Тон, структура, ограничения копирайта и визуала |
 | [`TELEGRAM_PUBLISHING.md`](TELEGRAM_PUBLISHING.md) | Публикация в канал через Bot API |
 | [`posts/`](posts/) | Утверждённые артефакты (текст + картинка) |

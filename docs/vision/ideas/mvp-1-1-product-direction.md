@@ -10,7 +10,7 @@ last_reviewed: 2026-05-17
 
 Конспект решений из продуктового диалога + **упакованные идеи** для следующего этапа (**spec → plan → задачи**). Канон по ЦА, сессии, последствиям и контентным табу уже в **[`foundation/TARGET_PLAYER_AND_SESSION.md`](../../foundation/TARGET_PLAYER_AND_SESSION.md)** — здесь не переписываем, только связываем с дорожкой 1.1.
 
-Техника **уровня и опыта** вынесена в отдельные артефакты: **[`LEVEL_XP_SYSTEM`](../../specs/gameplay/LEVEL_XP_SYSTEM.md)**, матрица **[`XP_EVENTS_ACTIONS_MATRIX`](../../specs/gameplay/catalogs/XP_EVENTS_ACTIONS_MATRIX.md)**, план **[`PLAN_level-xp-progression`](../../plans/PLAN_level-xp-progression.md)** (пересекается [`SPEC_mvp-11-progression-events`](../specs/features/SPEC_mvp-11-progression-events.md)).
+Прогрессия событий без character level/XP: **[`remove-character-xp-and-levels`](remove-character-xp-and-levels.md)**; реализация — [`SPEC_mvp-11-progression-events`](../specs/features/SPEC_mvp-11-progression-events.md).
 
 ---
 

@@ -29,13 +29,7 @@ export function useGame() {
   const [error, setError] = useState(null);
   const [periodCloseSummary, setPeriodCloseSummary] = useState(null);
 
-  const timerRef = useRef(null);
-  const localRemainingRef = useRef(0);
-  const secondsUntilNextRef = useRef(0);
-  const lastSyncRef = useRef(Date.now());
   const periodIndexRef = useRef(null);
-  const handlePeriodEndRef = useRef(null);
-  const startTimerRef = useRef(null);
   const periodEndInFlightRef = useRef(false);
   const loadingRef = useRef(true);
 
@@ -43,9 +37,6 @@ export function useGame() {
     setOverview(data.overview);
     if (updateTime && data.time) {
       setTimeStatus(data.time);
-      secondsUntilNextRef.current = data.time.seconds_until_next_period ?? 0;
-      localRemainingRef.current = secondsUntilNextRef.current;
-      lastSyncRef.current = Date.now();
       periodIndexRef.current = data.time.period_index ?? null;
     }
     setPeriodStatus(data.period);
@@ -127,74 +118,13 @@ export function useGame() {
       setPeriodCloseSummary(result.period_close);
     }
     setTimeStatus(result);
-    secondsUntilNextRef.current = result.seconds_until_next_period ?? 0;
-    localRemainingRef.current = secondsUntilNextRef.current;
-    lastSyncRef.current = Date.now();
     periodIndexRef.current = result.period_index ?? periodIndexRef.current;
     await refreshGameState({ bumpEvents: true, updateTime: false });
-    if (result.time_state === 'play') {
-      startTimerRef.current?.();
-    }
     return result;
   }, [refreshGameState]);
 
-  const handlePeriodEnd = useCallback(async () => {
-    if (periodEndInFlightRef.current) return;
-    periodEndInFlightRef.current = true;
-    stopTimerRef.current?.();
-    try {
-      const newTime = await API.setTimeNext();
-      await applyPeriodTransition(newTime);
-    } finally {
-      periodEndInFlightRef.current = false;
-    }
-  }, [applyPeriodTransition]);
-
-  handlePeriodEndRef.current = handlePeriodEnd;
-
-  const stopTimer = useCallback(() => {
-    if (timerRef.current) {
-      clearInterval(timerRef.current);
-      timerRef.current = null;
-    }
-  }, []);
-
-  const stopTimerRef = useRef(stopTimer);
-  stopTimerRef.current = stopTimer;
-
-  const startTimer = useCallback(() => {
-    if (timerRef.current) clearInterval(timerRef.current);
-    if (!timeStatus || timeStatus.time_state !== 'play') return;
-
-    timerRef.current = setInterval(() => {
-      const now = Date.now();
-      const elapsed = Math.floor((now - lastSyncRef.current) / 1000);
-      const remaining = Math.max(0, secondsUntilNextRef.current - elapsed);
-      localRemainingRef.current = remaining;
-
-      setTimeStatus((prev) => (prev ? { ...prev, remainingLocal: remaining } : prev));
-
-      if (remaining <= 0 && !periodEndInFlightRef.current) {
-        clearInterval(timerRef.current);
-        timerRef.current = null;
-        handlePeriodEndRef.current?.();
-      }
-    }, 1000);
-  }, [timeStatus]);
-
-  startTimerRef.current = startTimer;
-
-  const maybeClosePeriodAfterResync = useCallback(async (data) => {
-    const time = data?.time;
-    if (!time || time.time_state !== 'play') return;
-    if ((time.seconds_until_next_period ?? 0) > 0) return;
-    if (periodEndInFlightRef.current) return;
-    await handlePeriodEndRef.current?.();
-  }, []);
-
   const resyncAfterForeground = useCallback(async () => {
     if (loadingRef.current) return;
-    stopTimer();
     try {
       const prevIndex = periodIndexRef.current;
       const data = await refreshGameState();
@@ -206,7 +136,6 @@ export function useGame() {
         const evList = parsePendingEvents(data.events);
         if (evList.length > 0) setEventsPromptTick((t) => t + 1);
       }
-      await maybeClosePeriodAfterResync(data);
     } catch (err) {
       const msg =
         err instanceof ApiError
@@ -214,10 +143,9 @@ export function useGame() {
           : formatApiErrorDetail(err?.detail ?? err?.message, 'Не удалось обновить игру после возврата');
       showNotification(msg, 'error');
     }
-  }, [refreshGameState, maybeClosePeriodAfterResync, stopTimer]);
+  }, [refreshGameState]);
 
   const advancePeriod = useCallback(async () => {
-    stopTimer();
     if (periodEndInFlightRef.current) return;
     periodEndInFlightRef.current = true;
     try {
@@ -227,31 +155,7 @@ export function useGame() {
     } finally {
       periodEndInFlightRef.current = false;
     }
-  }, [applyPeriodTransition, stopTimer]);
-
-  const setPlay = useCallback(async () => {
-    const result = await API.setTimePlay();
-    if (result) {
-      setTimeStatus(result);
-      secondsUntilNextRef.current = result.seconds_until_next_period ?? 0;
-      localRemainingRef.current = secondsUntilNextRef.current;
-      lastSyncRef.current = Date.now();
-      periodIndexRef.current = result.period_index ?? periodIndexRef.current;
-      startTimer();
-    }
-  }, [startTimer]);
-
-  const setPause = useCallback(async () => {
-    const result = await API.setTimePause();
-    if (result) {
-      setTimeStatus(result);
-      secondsUntilNextRef.current = result.seconds_until_next_period ?? 0;
-      localRemainingRef.current = secondsUntilNextRef.current;
-      lastSyncRef.current = Date.now();
-      periodIndexRef.current = result.period_index ?? periodIndexRef.current;
-      stopTimer();
-    }
-  }, [stopTimer]);
+  }, [applyPeriodTransition]);
 
   const claimSalary = useCallback(async () => {
     const result = await API.claimSalary();
@@ -279,16 +183,7 @@ export function useGame() {
 
   useEffect(() => {
     loadData();
-    return () => stopTimer();
-  }, [loadData, stopTimer]);
-
-  useEffect(() => {
-    if (timeStatus && timeStatus.time_state === 'play') {
-      startTimer();
-    } else {
-      stopTimer();
-    }
-  }, [timeStatus, startTimer, stopTimer]);
+  }, [loadData]);
 
   useEffect(() => {
     const onForeground = debounceForeground(() => {
@@ -302,15 +197,10 @@ export function useGame() {
     periodStatus,
     pendingEvents,
     eventsPromptTick,
-    timeStatus: timeStatus ? {
-      ...timeStatus,
-      remainingLocal: localRemainingRef.current,
-    } : null,
+    timeStatus,
     loading,
     syncing,
     error,
-    setPlay,
-    setPause,
     advancePeriod,
     fetchPeriodStatus,
     reload: loadData,

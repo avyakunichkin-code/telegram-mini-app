@@ -1,8 +1,8 @@
 ﻿---
 layer: plan
-status: draft
+status: implemented
 spec: specs/features/SPEC_game-plan.md
-last_reviewed: 2026-05-17
+last_reviewed: 2026-05-26
 ---
 
 # Plan: эпик G1 — Game Mode, каталог шаблонов E2E, ADR-001

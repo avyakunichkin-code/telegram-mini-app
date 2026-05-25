@@ -1,6 +1,6 @@
 # Трекер тем для соцсетей
 
-Структура: [`STRUCTURE_PROPOSAL.md`](STRUCTURE_PROPOSAL.md) (утверждено) · стиль: [`POST_STYLE.md`](POST_STYLE.md).
+Структура: арки → слои (`mechanics` | `interface` | `product` | `visual` | `workshop`) → посты `ep-NNN-*` · стиль: [`POST_STYLE.md`](POST_STYLE.md).
 
 **Slug:** `ep-NNN-<слово>` · **Порядок:** блоками по слою внутри арки · **Слияние:** `+` = две тонкие темы в одном посте.
 

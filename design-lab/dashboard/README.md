@@ -17,6 +17,7 @@ npx serve .
 | [`../type-scale-round/`](../type-scale-round/) | Шкала типографики MQX (13→12, 9→10, hero 26/28) |
 | [`goal-chain-round/`](goal-chain-round/) | Блок «Цель» |
 | [`cushion-fill-round/`](cushion-fill-round/) | Индикатор подушки на chip |
+| [`hero-no-timer-round/`](hero-no-timer-round/) | Hero без таймера, primary «Закрыть месяц» (TB1) |
 
 ## Prod parity (S5)
 

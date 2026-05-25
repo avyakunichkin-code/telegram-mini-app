@@ -215,19 +215,11 @@ export function MqCatalogScreen() {
         </div>
       </CatalogSection>
 
-      <CatalogSection title="Hero — H3′ compact (дашборд)">
+      <CatalogSection title="Hero — H2 turn-based (дашборд)">
         <div style={{ maxWidth: 420, borderRadius: 16, overflow: 'hidden' }}>
           <MqxDashboardHero
             periodIndex={4}
-            timerLabel="Прогресс месяца"
-            timerValue="08:42"
-            periodDurationSeconds={600}
-            remainingSeconds={348}
-            canPlay
-            canPause={false}
-            onPlay={() => {}}
-            onPause={() => {}}
-            onNextPeriod={() => {}}
+            onCloseMonth={() => {}}
             pendingEventsCount={2}
             onOpenEvents={() => {}}
           />

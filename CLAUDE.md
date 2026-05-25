@@ -11,7 +11,7 @@
 | [`docs/decisions/ADR-002-victory-engine-and-template-config.md`](docs/decisions/ADR-002-victory-engine-and-template-config.md) | Движок победы, chain / parallel |
 | [`docs/decisions/ADR-004-mechanics-unlock-victory-chain.md`](docs/decisions/ADR-004-mechanics-unlock-victory-chain.md) | Разблокировка механик по целям |
 | [`docs/vision/ideas/remove-character-xp-and-levels.md`](docs/vision/ideas/remove-character-xp-and-levels.md) | **Канон прогрессии:** `event_tier` от `period_index`, без character level/XP |
-| [`docs/specs/gameplay/LEVEL_XP_SYSTEM.md`](docs/specs/gameplay/LEVEL_XP_SYSTEM.md) | ~~Уровень/XP~~ — **superseded** (архив) |
+| [`docs/vision/ideas/remove-character-xp-and-levels.md`](docs/vision/ideas/remove-character-xp-and-levels.md) | Прогрессия: `event_tier` от `period_index`, без level/XP |
 | [`docs/vision/ideas/tvoy-hod-evolution-after-mvp.md`](docs/vision/ideas/tvoy-hod-evolution-after-mvp.md) | **Часть II** — целевая концепция Game/Plan, шаблоны, победа из шаблона, Q&A, план по слоям |
 | [`docs/backlog/PRODUCT_BACKLOG.md`](docs/backlog/PRODUCT_BACKLOG.md) | Бэклог по слоям |
 | [`docs/foundation/TMA_USER_FLOWS.md`](docs/foundation/TMA_USER_FLOWS.md) | Потоки и боли TMA |

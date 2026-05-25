@@ -84,11 +84,9 @@ export function DashboardPremium({
 
   onOpenEvents,
 
-  setPlay,
-
-  setPause,
-
   onNextPeriod,
+
+  closeMonthDisabled = false,
 
   claimSalary,
 
@@ -145,14 +143,6 @@ export function DashboardPremium({
   const salaryClaimed = periodStatus?.salary_claimed === true;
   const canClaimSalary = periodStatus?.can_claim_salary === true;
   const salaryDisabled = busyAction !== null || salaryClaimed || (periodStatus != null && !canClaimSalary);
-
-  const remaining = timeStatus?.remainingLocal ?? timeStatus?.seconds_until_next_period ?? 0;
-
-  const mm = String(Math.floor(remaining / 60)).padStart(2, '0');
-
-  const ss = String(Math.floor(remaining % 60)).padStart(2, '0');
-
-
 
   const financeCards = useMemo(() => {
 
@@ -264,8 +254,6 @@ export function DashboardPremium({
 
 
 
-  const canPlay = timeStatus?.time_state !== 'play';
-  const canPause = timeStatus?.time_state !== 'pause';
 
   const safetyModalLimits = useMemo(() => {
 
@@ -343,31 +331,11 @@ export function DashboardPremium({
       <div className="mqx-tab-page mqx-tab-page--dash-unified">
 
         <MqxDashboardHero
-
           periodIndex={periodIndex}
-
-          timerLabel="Прогресс месяца"
-
-          timerValue={`${mm}:${ss}`}
-
-          periodDurationSeconds={timeStatus?.period_duration_seconds}
-
-          remainingSeconds={remaining}
-
-          canPlay={canPlay}
-
-          canPause={canPause}
-
-          onPlay={() => setPlay()}
-
-          onPause={() => setPause()}
-
-          onNextPeriod={onNextPeriod}
-
+          onCloseMonth={onNextPeriod}
+          closeMonthDisabled={closeMonthDisabled || busyAction !== null}
           pendingEventsCount={eventsUnlocked ? pendingEventsCount : 0}
-
           onOpenEvents={eventsUnlocked ? onOpenEvents : undefined}
-
         />
 
 

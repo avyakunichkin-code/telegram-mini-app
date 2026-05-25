@@ -89,10 +89,12 @@ docs/domains/economy/   docs/domains/ui/   docs/domains/api/
 
 | Было | Стало |
 |------|--------|
-| `docs/SPEC_PRODUCT.md` | `docs/foundation/SPEC_PRODUCT.md` (+ редирект в корне) |
+| `docs/SPEC_PRODUCT.md` | `docs/foundation/SPEC_PRODUCT.md` |
 | `docs/ideas/*.md` | `docs/vision/ideas/` |
 | `docs/PRODUCT_BACKLOG.md` | `docs/backlog/PRODUCT_BACKLOG.md` |
 | `docs/ANALYTICS_CONCEPT.md` | `docs/specs/SPEC_ANALYTICS.md` |
+
+Редиректы в корне `docs/` и папка `docs/ideas/` удалены 2026-05-26 — только канонические пути.
 | `docs/brandbook/`, `investor-deck/`, GDD | `docs/reference/` |
 | Эпик Game/Plan | `specs/features/SPEC_game-plan.md` + `plans/PLAN_game-plan.md` |
 

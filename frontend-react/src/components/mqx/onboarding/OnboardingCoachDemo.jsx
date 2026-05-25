@@ -91,15 +91,7 @@ export function OnboardingCoachDemo() {
         <MqxDashStack>
           <MqxDashboardHero
             periodIndex={1}
-            timerLabel="Прогресс месяца"
-            timerValue="04:58"
-            periodDurationSeconds={300}
-            remainingSeconds={298}
-            canPlay={false}
-            canPause
-            onPlay={() => {}}
-            onPause={() => {}}
-            onNextPeriod={() => {}}
+            onCloseMonth={() => {}}
             pendingEventsCount={0}
           />
           <MqxDivider />

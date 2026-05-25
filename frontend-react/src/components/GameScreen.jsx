@@ -17,10 +17,10 @@ import { PERIOD_CLOSE_AUTO_MAX } from '../constants/periodClose';
 import { shouldAutoOpenPeriodClose } from '../utils/periodCloseDisplay';
 import { GameOnboardingLayer } from './GameOnboardingLayer';
 
-/** Эмоциональный слой страницы: фон синхронизирован с «время идёт» / «пауза» / загрузка. */
+/** Эмоциональный слой страницы (TB1: без play/pause — активная партия = playing mood). */
 function gamePageMoodClass(timeStatus) {
   if (!timeStatus) return 'mq-page--mood-await';
-  return timeStatus.time_state === 'play' ? 'mq-page--mood-playing' : 'mq-page--mood-pause';
+  return 'mq-page--mood-playing';
 }
 
 export function GameScreen({ onLogout, onNewGame, onLoadGame }) {
@@ -43,8 +43,6 @@ export function GameScreen({ onLogout, onNewGame, onLoadGame }) {
     loading,
     syncing,
     error,
-    setPlay,
-    setPause,
     advancePeriod,
     fetchPeriodStatus,
     reload,
@@ -138,7 +136,7 @@ export function GameScreen({ onLogout, onNewGame, onLoadGame }) {
     try {
       await advancePeriod();
     } catch (e) {
-      showNotification(e?.detail || e?.message || 'Не удалось перейти к следующему периоду', 'error');
+      showNotification(e?.detail || e?.message || 'Не удалось закрыть месяц', 'error');
     }
   };
 
@@ -147,7 +145,7 @@ export function GameScreen({ onLogout, onNewGame, onLoadGame }) {
     try {
       await advancePeriod();
     } catch (e) {
-      showNotification(e?.detail || e?.message || 'Не удалось перейти к следующему периоду', 'error');
+      showNotification(e?.detail || e?.message || 'Не удалось закрыть месяц', 'error');
     }
   };
 
@@ -245,14 +243,14 @@ export function GameScreen({ onLogout, onNewGame, onLoadGame }) {
       )}
       overlays={(
         <>
-          <Modal open={salaryWarnOpen} onClose={() => setSalaryWarnOpen(false)} title="Следующий период">
+          <Modal open={salaryWarnOpen} onClose={() => setSalaryWarnOpen(false)} title="Закрыть месяц">
             <div className="mqx-modal" role="document" aria-labelledby="mqx-salary-warn-title">
               <div className="mqx-card">
                 <div className="mqx-card__kicker mqx-card__kicker--amber">Период</div>
                 <div id="mqx-salary-warn-title" className="mqx-card__title">
-                  Следующий период
+                  Закрыть месяц?
                 </div>
-                <p className="mqx-card__sub">Проверка перед сменой месяца в игре.</p>
+                <p className="mqx-card__sub">Проверка перед закрытием месяца в игре.</p>
                 <p className="mq-modal-lead" style={{ marginTop: 14 }}>Зарплата за этот период ещё не получена</p>
                 <p className="mq-modal-body">
                   Если перейти дальше, начисление за текущий месяц <strong>сгорит</strong>, как если не нажали «Получить зарплату».
@@ -316,9 +314,8 @@ export function GameScreen({ onLogout, onNewGame, onLoadGame }) {
                     eventsUnlocked={eventsUnlocked}
                     pendingEventsCount={eventsUnlocked ? (pendingEvents?.length ?? 0) : 0}
                     onOpenEvents={eventsUnlocked ? () => setEventsOpen(true) : undefined}
-                    setPlay={setPlay}
-                    setPause={setPause}
                     onNextPeriod={handleRequestNextPeriod}
+                    closeMonthDisabled={syncing}
                     claimSalary={claimSalary}
                     contributeToSafetyFund={contributeToSafetyFund}
                     withdrawFromSafetyFund={withdrawFromSafetyFund}

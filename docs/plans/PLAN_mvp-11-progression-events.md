@@ -10,7 +10,7 @@ backlog_mq: MQ-111 — MQ-116
 
 > **Устарело (2026-05-25):** срезы про **character XP**, **MQ-113** `apply_character_xp` и **level gates** не актуальны — [ADR-003](../decisions/ADR-003-remove-character-progression.md). Актуальная прогрессия событий: **`event_tier` от `period_index`** в [SPEC_mvp-11](../specs/features/SPEC_mvp-11-progression-events.md).
 
-Нарезка под **[`SPEC_mvp-11-progression-events`](../specs/features/SPEC_mvp-11-progression-events.md)** (approved). Архив XP: **[`PLAN_level-xp-progression`](PLAN_level-xp-progression.md)**, **[`LEVEL_XP_SYSTEM`](../specs/gameplay/LEVEL_XP_SYSTEM.md)**.
+Нарезка под **[`SPEC_mvp-11-progression-events`](../specs/features/SPEC_mvp-11-progression-events.md)** (**implemented**). Канон прогрессии: [remove-character-xp](../vision/ideas/remove-character-xp-and-levels.md).
 
 ---
 

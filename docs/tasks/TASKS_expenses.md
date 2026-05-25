@@ -8,6 +8,8 @@ checklist: ../specs/economy/EXPENSES_LAYER_CHECKLIST.md
 
 # Задачи E1 — Расходы (жизнеобеспечение)
 
+> **2026-05-26:** реализация **на паузе**. Сначала E1-R в [`PLAN_backlog_may2026.md`](../plans/PLAN_backlog_may2026.md) (R1→R2→R3, go/decision). Чекбоксы ниже — **после go**.
+
 Синхронизировать с [`EXPENSES_LAYER_CHECKLIST.md`](../specs/economy/EXPENSES_LAYER_CHECKLIST.md).
 
 ---

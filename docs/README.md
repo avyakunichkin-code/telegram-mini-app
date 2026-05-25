@@ -59,11 +59,11 @@
 
 | Документ | Содержание |
 |----------|-------------|
-| [`vision/ideas/remove-character-xp-and-levels.md`](vision/ideas/remove-character-xp-and-levels.md) | **Канон (2026-05-24):** без character level/XP; `event_tier` от `period_index`; механики с периода 1 |
+| [`vision/ideas/remove-character-xp-and-levels.md`](vision/ideas/remove-character-xp-and-levels.md) | **Канон:** без character level/XP; `event_tier` от `period_index`; механики с периода 1 |
 | [`vision/ideas/starter-template-mechanics-permissions.md`](vision/ideas/starter-template-mechanics-permissions.md) | `blueprint.mechanics` — какие разделы капитала доступны (basic v1: только инвестиции) |
-| [`specs/gameplay/LEVEL_XP_SYSTEM.md`](specs/gameplay/LEVEL_XP_SYSTEM.md) | ~~Механика `level`/`xp`~~ — **superseded**, архив |
-| [`specs/gameplay/catalogs/XP_EVENTS_ACTIONS_MATRIX.md`](specs/gameplay/catalogs/XP_EVENTS_ACTIONS_MATRIX.md) | ~~Матрица XP~~ — **superseded**, архив |
-| [`plans/PLAN_level-xp-progression.md`](plans/PLAN_level-xp-progression.md) | ~~API-gates по уровню~~ — **superseded** |
+| [`specs/features/SPEC_mvp-11-progression-events.md`](specs/features/SPEC_mvp-11-progression-events.md) | События: tier, repeat/cooldown (**implemented**) |
+
+Архив level/XP (только git history): `specs/gameplay/LEVEL_XP_SYSTEM.md`, `catalogs/XP_EVENTS_ACTIONS_MATRIX.md`, `plans/PLAN_level-xp-progression.md`.
 
 ### Vision
 
@@ -122,6 +122,6 @@
 
 ---
 
-## Устаревшие пути
+## Пути после миграции (май 2026)
 
-Файлы-редиректы в корне `docs/` (если есть) указывают на новое расположение после миграции мая 2026.
+Канонические пути — в таблице «Карта папок» выше. Старые `docs/SPEC_PRODUCT.md`, `docs/ideas/`, редиректы в корне `docs/` **удалены** (2026-05-26); при битой ссылке смотрите [`foundation/`](foundation/), [`vision/ideas/`](vision/ideas/), [`reference/`](reference/).

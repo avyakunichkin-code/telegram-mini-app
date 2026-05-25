@@ -35,8 +35,9 @@
 | **α** | Pre-Alpha / Closed Alpha гейты | Doc+Frontend (метрики) | ⬜ см. GAME §11 |
 | **O1** | Онбординг TMA — Guided coach + Монетка | Frontend+Backend+Doc | 🟡 design-lab ★ → MQX |
 | **A0** | Admin Watchtower (MVP 1.2) | DB+Backend+Frontend | 🟡 Phase 0 в коде |
-| **E1** | **Расходы жизнеобеспечения** — категории, статьи бюджета, burn, UI | DB+Backend+Frontend+Content | ⬜ [EXPENSES_SYSTEM](../specs/gameplay/EXPENSES_SYSTEM.md) · [SPEC](../specs/features/SPEC_expenses.md) draft |
-| **PW1** | PWA / standalone + стабильный resume (lock/unlock) | Frontend+Ops+Doc | ⬜ [idea](../vision/ideas/pwa-standalone-channel.md) · [PLAN](../plans/PLAN_pwa-standalone.md) |
+| **E1** | **Расходы жизнеобеспечения** — категории, статьи, burn, UI | DB+Backend+Frontend+Content | 🟡 **повторная аналитика** (E1-R) — реализация после go; [PLAN_backlog_may2026](../plans/PLAN_backlog_may2026.md) |
+| **PW1** | PWA / standalone + стабильный resume (lock/unlock) | Frontend+Ops+Doc | 🟡 фаза 0 ✅; QA PW1-004 ⬜; [PLAN](../plans/PLAN_pwa-standalone.md) |
+| **T1** | Пошаговый месяц без таймера (turn-based) | DB+Backend+Frontend+Doc | ⏸ **не в спринт** — [idea](../vision/ideas/turn-based-period-no-timer.md) · lab `hero-no-timer-round` |
 
 > **Расхождение с GAME.md §0.2:** `cooldown_periods` и фильтр в `ensure_period_events` **уже в коде** (`game_rules.is_event_definition_eligible`, `events.py`, миграция 0007). В GAME.md пометить «не реализовано» — устарело.
 
@@ -121,11 +122,19 @@
 
 ### Эпик E1 — расходы на жизнеобеспечение (полный слой)
 
+**Статус (2026-05-26):** реализация **на паузе** — сначала **повторная аналитика** E1-R ([`PLAN_backlog_may2026`](../plans/PLAN_backlog_may2026.md): E1-R1…R3). Волны A–D ниже — **после go**, не раньше.
+
 **Проблема:** в симуляторе отсутствует слой регулярных трат на жизнь (еда, жильё, одежда, связь…) — есть только скрытый агрегат `base + delta`.
 
 Идея (idea-refine): [`expenses-mechanic.md`](../vision/ideas/expenses-mechanic.md) · Канон: [`EXPENSES_SYSTEM.md`](../specs/gameplay/EXPENSES_SYSTEM.md) · Spec: [`SPEC_expenses.md`](../specs/features/SPEC_expenses.md) · Plan: [`PLAN_expenses.md`](../plans/PLAN_expenses.md) · **Чеклист слоёв:** [`EXPENSES_LAYER_CHECKLIST.md`](../specs/economy/EXPENSES_LAYER_CHECKLIST.md).
 
-#### Волна A — логическая правда (P0)
+#### E1-R — повторная аналитика (сейчас)
+
+- [ ] P0 **[Doc+Analytics] E1-R1** — снимок экономики: шаблоны × burn/outflow/victory до и после E1.
+- [ ] P0 **[Doc] E1-R2** — gap spec ↔ код ↔ UX; обновить SPEC + LAYER_CHECKLIST.
+- [ ] P0 **[Doc] E1-R3** — решение go / reshape / defer; обновить PLAN_expenses + TASKS_expenses.
+
+#### Волна A — логическая правда (P0, после E1-R go)
 
 - [ ] P0 **[DB] E1-110–111** — каталог категорий + `profile_expense_lines`.
 - [ ] P0 **[Backend] E1-112** — `expenses.py` (`compute_monthly_burn`, breakdown).
@@ -249,9 +258,20 @@
 - [ ] P3 **[Frontend] ⚠ spec** Персонаж с репликами (GAME §9.3 п.9).
 - [ ] P3 **[Frontend]** Настройки a11y (крупный шрифт, меньше анимаций).
 
+### Эпик T1 — пошаговый месяц без таймера (⏸ не в спринт май 2026)
+
+Идея: [`turn-based-period-no-timer.md`](../vision/ideas/turn-based-period-no-timer.md) · Lab ★: [`hero-no-timer-round/`](../../design-lab/dashboard/hero-no-timer-round/) · Задачи: [`PLAN_backlog_may2026`](../plans/PLAN_backlog_may2026.md) § T1.
+
+- [ ] P2 **[Backend] T1-1** — `sync_time` не увеличивает `period_index`; переход только через `process_period_end`.
+- [ ] P2 **[Frontend] T1-2** — hero H2: «Закрыть месяц» + pill «События»; убрать countdown / auto-next / play-pause.
+- [ ] P2 **[Doc] T1-3** — обновить UX-spec dashboard, PW1 checklist, онбординг шаг 1.
+
 ### Страховки (I1)
 
-- [ ] P1 **[Frontend]** Каталог продуктов / picker / карточки плана (design-lab → прод).
+Спринт: **I1-A** покупка · **I1-B** claim — см. [`PLAN_backlog_may2026`](../plans/PLAN_backlog_may2026.md) Task 1.3–1.4.
+
+- [ ] P1 **[Frontend] I1-A** — Каталог / picker / карточки плана; unlock `capital_insurance`; design-lab → прод.
+- [ ] P1 **[Backend+Frontend] I1-B** — Claim: `insurance_claim` в событиях, payout на cash, видимость в UI.
 - [ ] P2 **[Frontend]** Метрики полиса и сравнение планов в `FinanceSection`.
 
 ### Plan Mode UI
@@ -329,21 +349,30 @@
 | α Playtest | — | — | опрос/метрики | протокол |
 | A0 Watchtower | ✅ 0012 | 🟡 Phase 0 | 🟡 `#/admin` | idea |
 | PW1 PWA / resume | — | — | фаза 0–1 | idea+plan |
+| T1 Turn-based | — | ⏸ | ⏸ | idea + design-lab |
+
+**План нарезки (май 2026):** [`PLAN_backlog_may2026.md`](../plans/PLAN_backlog_may2026.md)
 
 ---
 
 ## В работу сейчас
 
-| Приоритет | Пункт | Слой | Ветка / заметка |
-|-----------|-------|------|-----------------|
-| P0 | A0: env TG + `ADMIN_USER_IDS` на Render | Backend | см. idea §Phase 0 |
-| P1 | M12: экран «Развитие» + unlock toasts | Frontend | [SPEC_achievements](../specs/features/SPEC_achievements.md) §11 |
-| P0 | Приёмка MQ-116 / тесты M11 | Backend | `pytest -q` ✅ 75 |
-| P1 | UI: `character_unlocks`, 403 `level_gate` | Frontend | overview + FinanceSection |
-| P1 | Экран «Развитие» | Frontend | `achievements` API |
-| P1 | I1: каталог страховок в FinanceSection | Frontend | design-lab |
-| P0 | PW1-004: прогон [`PW1_RESUME_PLAYTEST_CHECKLIST`](../foundation/PW1_RESUME_PLAYTEST_CHECKLIST.md) A–D | QA | блокер Pre-Alpha §3 |
-| P1 | PW1 фаза 1: PWA manifest + SW | Frontend | после PASS PW1-004 |
+Синхронизировано с [`PLAN_backlog_may2026.md`](../plans/PLAN_backlog_may2026.md) (2026-05-26).
+
+| Приоритет | Task ID | Пункт | Слой |
+|-----------|---------|-------|------|
+| P0 | 0.1 | Doc: GAME §0.2, TRACEABILITY, MVP_AUDIT — M11/cooldown | Doc |
+| P0 | 0.2 | PW1-004: прогон resume checklist A–D | QA |
+| P0 | 0.3 | Pre-Alpha пилот 10–20 (после 0.1–0.2) | Product |
+| P0 | E1-R1…R3 | Повторная аналитика E1 (без миграций) | Doc+Analytics |
+| P1 | 1.1 | Achievements API contract + pytest | Backend |
+| P1 | 1.2 | M12: экран «Развитие» (lab → MQX) | Frontend |
+| P1 | 1.3 | I1-A: покупка / каталог страховок | Frontend |
+| P1 | 1.4 | I1-B: claim payout + события + видимость в UI | Backend+Frontend |
+| P1 | 1.5 | PW1-104: CORS + `VITE_API_BASE_URL` prod | Ops |
+| P1 | 1.6 | A0 env Render (`ADMIN_*`, ops TG) | Ops |
+| P2 | 2.x | Watchtower metrics + inspector | Backend+Frontend |
+| ⏸ | T1-* | Turn-based без таймера | — отложено |
 
 ---
 
@@ -356,7 +385,8 @@
 | 2026-05-19 | **MVP 1.2 / A0:** эпик Admin Watchtower Phase 0 — `notification_log`, ops-алерты, `#/admin`. |
 | 2026-05-19 | **Q1** quality-release; **V2** victory engine; **M12** критерии достижений + API level-gates (`level_gates.py`, overview `character_unlocks`). |
 | 2026-05-25 | **PW1:** эпик PWA/standalone — драйвер нестабильный resume TMA при блокировке экрана; фаза 0 (lifecycle resync) перед install prompt. |
+| 2026-05-26 | **План май 2026:** [`PLAN_backlog_may2026`](../plans/PLAN_backlog_may2026.md); E1 → E1-R (аналитика); T1 в сводку (⏸); I1 → A/B; «В работу сейчас» пересобран. |
 
 ---
 
-*Последнее обновление: 2026-05-25 — эпик PW1 (PWA + resume).*
+*Последнее обновление: 2026-05-26 — PLAN_backlog_may2026, E1-R, T1.*
