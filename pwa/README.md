@@ -1,5 +1,11 @@
 # PWA icons
 
-Источник: `landing/public/brand/logo-compact.png` (бренд ТВОЙ ХОД).
+Источник: `src/assets/brand/logo-compact.png` (G2).
 
-Файлы копируются в сборку как есть; для отдельных 192×192 / maskable safe-zone — обновить ассеты и manifest в `vite.config.js`.
+Пересборка (квадрат, логотип по центру без растягивания):
+
+```bash
+python scripts/generate-brand-icons.py
+```
+
+Файлы: `icon-192.png`, `icon-512.png`, `apple-touch-icon.png` (180×180), `../favicon-32.png`, `../favicon-48.png`.
