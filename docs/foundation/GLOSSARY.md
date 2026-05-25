@@ -14,8 +14,9 @@
 | **Статья расходов** | Строка бюджета: категория + сумма/мес | `profile_expense_lines` *(E1)* |
 | **monthly_reference_expense** | Obligations + burn (достижения) | achievement_engine *(E1)* |
 | **total_monthly_outflow** | Obligations + burn (подсказка «уйдёт за период») | overview *(E1)* |
-| **Победа MVP** | Подушка ≥ 3× обязательств, нет просрочки, поток ≥ 0; `win_reached` с 7-го периода | `GET /api/finance/overview` |
-| **save_kind** *(цель)* | Режим сохранения: `game` \| `plan` | заменит `GameProfile.mode` light/hardcore |
+| **Победа MVP** | Упрощённое описание для игрока/онбординга: подушка, нет просрочки, поток ≥ 0; с 7-го периода. **В prod** победа считается движком **Victory v2** (M из N из `victory_config_json`) — см. [`SPEC_victory-v2`](../specs/features/SPEC_victory-v2.md), [ADR-002](../decisions/ADR-002-victory-engine-and-template-config.md) | `GET /api/finance/overview` → `win_reached`, блок `victory` |
+| **Victory v2** | Победа **M из N** целей из шаблона; `min_period_index_for_victory` (обычно 7); учебная цепочка на базовом шаблоне | `victory_engine.py`, `overview.victory` |
+| **save_kind** | Режим сохранения: `game` \| `plan`; **immutable** после создания | `GameProfile.save_kind`; [ADR-001](../decisions/ADR-001-save-kind-remove-light-hardcore.md) |
 | **Game** *(цель)* | Игра со стартовым шаблоном, агрегированные расходы, победа M из N | evolution §II |
 | **Plan** *(цель)* | Ручное планирование, статьи расходов | evolution §II |
 | **MQX** | Визуальный слой premium-вкладок (`mqx-*`) | см. [`SPEC_FRONTEND_UI.md`](../specs/SPEC_FRONTEND_UI.md) |

@@ -19,11 +19,11 @@
 
 ---
 
-## Verdict: **CONCERNS**
+## Verdict: **CONCERNS** → **ближе к PASS** (Q&A 2026-05-25)
 
-**PASS blocked by:** documentation drift (now addressed in doc-sync 2026-05-25), missing ADRs for decisions already in code (ADR-002/003 added), 2 failing pytest cases, no CI test workflow.
+**PASS blocked by:** нет CI pytest (решение Q&A: локальный pytest + `money-quest-backend.mdc`); открытые эпики Plan UI, E1, O1, M12.
 
-**Not FAIL:** core loop, G1, victory v2 backend, M11 tier, `save_kind` are implemented and aligned with code.
+**Снято с блокеров:** doc-sync GAME/GLOSSARY/TARGET_PLAYER; ADR-002/003; pytest **180 passed**; V2 UI P1 (`MqxGoalDash`) — закрыт в TRACEABILITY/backlog.
 
 ---
 

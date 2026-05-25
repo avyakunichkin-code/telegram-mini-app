@@ -22,7 +22,7 @@ platform: Telegram Mini App
 | B1 | **Touch target** ≥ 44×44 px для интерактивных элементов (chips, pills, icon buttons, row actions) | Ручной / инспектор на 320px |
 | B2 | **Не только цвет:** статус (плюс/минус, риск, выполнено) дублируется текстом, знаком, иконкой или паттерном | Ч/б скриншот читается |
 | B3 | **Контраст текста** на hero и карточках: основной текст на фоне ≥ 4.5:1 (ориентир WCAG AA для body) | Spot-check с токенами `--mq-ink` / hero |
-| B4 | **Семантика:** один `h1` на вкладку игры; секции — `h2`/`section` + `aria-label` где нет видимого заголовка | axe / вручную |
+| B4 | **Семантика:** вкладки игры **без `h1`** (hero/chips); секции — `h2` + `section` с `aria-label` | Согласовано с [`ux/screens/dashboard.md`](screens/dashboard.md) |
 | B5 | **Формы:** поля с `label` / `aria-label`; ошибки — текст + toast, не только цвет border |
 | B6 | **Progress:** `role="progressbar"` + `aria-valuenow` для таймера периода и fill подушки |
 | B7 | **Диалоги:** modal/sheet с `aria-modal`, заголовок связан с `aria-labelledby` |

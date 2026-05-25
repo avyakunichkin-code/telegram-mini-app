@@ -1,15 +1,5 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 import { fitChipValuesIn } from '../../../utils/fitChipValue';
-import { MonetkaAvatar } from '../onboarding/MonetkaAvatar';
-
-export const MQ_DASH_FINANCE_MONETKA_KEY = 'mq-dash-finance-monetka-v1';
-
-const MONETKA_COPY = (
-  <>
-    Смотри <strong>ДОХОДЫ</strong> и <strong>РАСХОДЫ</strong> за период. <strong>БАЛАНС</strong> на карте и{' '}
-    <strong>ФИН.ПОДУШКА</strong> — твой запас на чёрный день. Давай улучшим ✨
-  </>
-);
 
 function CushionFillBar({ percent, tier }) {
   return (
@@ -30,22 +20,13 @@ function CushionFillBar({ percent, tier }) {
   );
 }
 
-function CloseIcon() {
-  return (
-    <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
-      <path
-        d="M6 6l12 12M18 6 6 18"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-      />
-    </svg>
-  );
+function chipAriaLabel(card, onFlowsNavigate) {
+  const valuePart = card.valueLabel ? `, ${card.valueLabel}` : '';
+  const actionPart = card.chipAction && onFlowsNavigate ? ', открыть раздел' : '';
+  return `${card.title}${valuePart}${actionPart}`;
 }
 
-/**
- * Статичный блок «Финансы периода» (L3): chip + Монетка + ссылка в раздел финансов.
- */
+/** Статичный блок «Финансы периода» (L3): 2×2 chips + ссылка в раздел финансов. */
 function FinanceChip({ card, onFlowsNavigate }) {
   const className = [
     'mqx-finance-chip',
@@ -97,7 +78,7 @@ function FinanceChip({ card, onFlowsNavigate }) {
         type="button"
         className={className}
         title={card.titleHint}
-        aria-label={`${card.title}: открыть раздел`}
+        aria-label={chipAriaLabel(card, onFlowsNavigate)}
         onClick={() => onFlowsNavigate(card.chipAction)}
       >
         {inner}
@@ -106,23 +87,14 @@ function FinanceChip({ card, onFlowsNavigate }) {
   }
 
   return (
-    <div className={className} title={card.titleHint}>
+    <div className={className} title={card.titleHint} aria-label={chipAriaLabel(card, onFlowsNavigate)}>
       {inner}
     </div>
   );
 }
 
 export function MqxFinancePeriodBlock({ financeCards = [], onGoFinance, onFlowsNavigate }) {
-  const [monetkaDismissed, setMonetkaDismissed] = useState(null);
   const chipsRef = useRef(null);
-
-  useEffect(() => {
-    try {
-      setMonetkaDismissed(localStorage.getItem(MQ_DASH_FINANCE_MONETKA_KEY) === '1');
-    } catch {
-      setMonetkaDismissed(false);
-    }
-  }, []);
 
   useEffect(() => {
     const root = chipsRef.current;
@@ -134,15 +106,6 @@ export function MqxFinancePeriodBlock({ financeCards = [], onGoFinance, onFlowsN
     return () => ro.disconnect();
   }, [financeCards]);
 
-  const dismissMonetka = () => {
-    setMonetkaDismissed(true);
-    try {
-      localStorage.setItem(MQ_DASH_FINANCE_MONETKA_KEY, '1');
-    } catch {
-      /* storage unavailable */
-    }
-  };
-
   return (
     <section className="mqx-finance-static" aria-label="Финансы периода">
       <h2 className="mqx-finance-static__title">Финансы периода</h2>
@@ -151,23 +114,6 @@ export function MqxFinancePeriodBlock({ financeCards = [], onGoFinance, onFlowsN
           <FinanceChip key={c.title} card={c} onFlowsNavigate={onFlowsNavigate} />
         ))}
       </div>
-
-      {monetkaDismissed === false ? (
-        <div className="mqx-finance-monetka">
-          <button
-            type="button"
-            className="mqx-finance-monetka__close"
-            aria-label="Закрыть подсказку"
-            onClick={dismissMonetka}
-          >
-            <CloseIcon />
-          </button>
-          <div className="mqx-finance-monetka__inner">
-            <MonetkaAvatar size={44} className="mqx-finance-monetka__img" />
-            <p className="mqx-finance-monetka__text">{MONETKA_COPY}</p>
-          </div>
-        </div>
-      ) : null}
 
       {onGoFinance ? (
         <button type="button" className="mqx-dash-link" onClick={onGoFinance}>

@@ -292,7 +292,7 @@ export function AnalyticsPremium({ overview }) {
           <div className="mqx-analytics-cashflow__head">
             <div>
               <div className="mqx-card__kicker mqx-card__kicker--violet">Потоки месяца</div>
-              <h2 className="mqx-analytics-cashflow__title">Здоровье cashflow</h2>
+              <h2 className="mqx-analytics-cashflow__title">Здоровье чистого потока</h2>
             </div>
             <div className={`mqx-analytics-cashflow__pill ${net >= 0 ? 'mqx-analytics-cashflow__pill--pos' : 'mqx-analytics-cashflow__pill--neg'}`}>
               {formatSignedMoney(net)} ₽

@@ -1,13 +1,21 @@
 ---
 description: Соглашения по backend ТВОЙ ХОД (FastAPI, период, БД)
-globs: backend/**/*.py
+globs: backend/**/*.{py,sql}
 alwaysApply: false
 ---
 
 # Backend
 
 - **Конец периода и экономика**: `backend/app/game_period.py` (`process_period_end` и связанная логика).
-- **Модели**: `backend/app/models.py`; новые сущности — согласовать с SQL-миграциями и лёгкой автомиграцией в `backend/main.py`, если она уже есть для подобных полей.
+- **Модели**: `backend/app/models.py`; новые сущности — согласовать с SQL-миграциями ([`backend/migrations/README.md`](backend/migrations/README.md)) и лёгкой автомиграцией в `backend/main.py`, если она уже есть для подобных полей. Прогон SQL: `backend/migrate.ps1` (`DATABASE_URL`, `psql`).
+
+## `save_kind` (Game / Plan) — [ADR-001](docs/decisions/ADR-001-save-kind-remove-light-hardcore.md)
+
+- На профиле: **`save_kind`** — `game` | `plan`; **immutable** после создания. Legacy **`GameProfile.mode`** (`light`/`hardcore`) **не использовать** — колонка снята.
+- **Game:** старт только из каталога **`game_starter_templates`** (`starter_template_key`, blueprint, `base_monthly_lifestyle_expense`). API создания — `save_kind=game` + `template_key` (см. `backend/app/routers/game.py`).
+- **Plan:** зарезервирован в модели/API; полный мастер и UI — **MVP 2.0** ([`SPEC_game-plan`](docs/specs/features/SPEC_game-plan.md)). В G1 не возвращать выбор light/hardcore.
+- **События:** фильтр по **`EventDefinition.mode`**: `game` | `plan` | `any` в связке с **`profile.save_kind`**, не по legacy сложности профиля.
+- Изменения контракта профиля/событий → SQL-миграция + `models.py` + при необходимости `main.py` + **`frontend-react/src/api.js`** и экраны старта.
 - **Роутеры**: подключение в `backend/main.py`; префиксы API держать согласованными с фронтом (`/api/...`).
 - **Ошибки API**: предсказуемые статусы и тело ответа; фронт ожидает единый контракт ошибок через `apiCall` в `frontend-react/src/api.js`.
 - **Победа MVP** и дорожная карта режимов: `GET /api/finance/overview` (`win_reached` при `period_index >= 7`); spec эпика Game/Plan — [`docs/specs/features/SPEC_game-plan.md`](docs/specs/features/SPEC_game-plan.md).

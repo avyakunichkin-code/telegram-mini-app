@@ -42,6 +42,24 @@ function formatSignedMoney(n) {
 
 
 
+function formatChipMoneyAria(value, { tone } = {}) {
+
+  const n = Number(value) || 0;
+
+  const abs = Math.abs(n).toLocaleString('ru-RU', { maximumFractionDigits: 0 });
+
+  if (tone === 'pos' && n > 0) return `плюс ${abs} руб.`;
+
+  if (tone === 'out') return `${abs} руб.`;
+
+  if (n < 0) return `минус ${abs} руб.`;
+
+  return `${abs} руб.`;
+
+}
+
+
+
 function pctClamp01(x) {
 
   if (!Number.isFinite(x)) return 0;
@@ -154,6 +172,7 @@ export function DashboardPremium({
         titleHint:
           'Сумма доходов за период: зарплата и доход от активов (без вычета расходов и платежей по долгам)',
         valueNode: <MoneyText value={totalIncome} />,
+        valueLabel: formatChipMoneyAria(totalIncome, { tone: 'pos' }),
         accent: 'mqx-accent--sky',
         valueTone: 'pos',
         icon: (
@@ -169,6 +188,7 @@ export function DashboardPremium({
         chipAction: CAPITAL_FLOWS_SECTION.expense,
         titleHint: 'Расходы на жизнь за период (без платежей по долгам)',
         valueNode: <MoneyText value={lifestyleExpense} />,
+        valueLabel: formatChipMoneyAria(lifestyleExpense, { tone: 'out' }),
         accent: 'mqx-accent--amber',
         valueTone: 'out',
         expenseIcon: true,
@@ -183,6 +203,7 @@ export function DashboardPremium({
       {
         title: 'Баланс',
         valueNode: <MoneyText value={cash} />,
+        valueLabel: formatChipMoneyAria(cash),
         accent: 'mqx-accent--violet',
         icon: (
           <svg viewBox="0 0 24 24" aria-hidden="true">
@@ -198,6 +219,9 @@ export function DashboardPremium({
           ? `${SAFETY_FUND_CHIP_LABEL} · ${cushionFill.percent}% от нормы (${SAFETY_FUND_BASELINE_HINT})`
           : 'Финансовая подушка — запас на чёрный день',
         valueNode: <MoneyText value={safety} />,
+        valueLabel: cushionFill
+          ? `${formatChipMoneyAria(safety)}, наполнение ${cushionFill.percent}%`
+          : formatChipMoneyAria(safety),
         accent: 'mqx-accent--emerald',
         cushionChip: true,
         cushionFill,

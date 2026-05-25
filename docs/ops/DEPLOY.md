@@ -52,7 +52,7 @@ Resume после блокировки экрана (PW1): [`foundation/PW1_RESU
 | `OPS_TELEGRAM_BOT_TOKEN` / `OPS_TELEGRAM_CHAT_ID` | по желанию (Watchtower) |
 
 4. **Custom Domain** на Web Service: `api.YOUR_DOMAIN` → CNAME из панели Render.
-5. Миграции на prod (Windows, из `backend/`):
+5. Миграции на prod (Windows, из `backend/`): все `migrations/*.sql` по порядку — см. [`backend/migrations/README.md`](../../backend/migrations/README.md).
 
 ```powershell
 $env:DATABASE_URL = "<Internal Database URL из Render>"

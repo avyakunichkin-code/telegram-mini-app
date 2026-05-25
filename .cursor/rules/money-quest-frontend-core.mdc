@@ -31,10 +31,12 @@ alwaysApply: false
 - Не хардкодить прогресс (% в style) без полей из `overview`/API.
 - Смена API → синхронизировать `api.js` и хуки.
 
-## Поток старта
+## Поток старта и `save_kind`
 
-- Новая игра: **`NewProfileKindScreen`** → **`GameTemplatePickScreen`** → игра; **`DifficultyScreen`** удалён ([`SPEC_game-plan`](docs/specs/features/SPEC_game-plan.md)).
-- **`BaseParamsScreen`** остаётся под будущий **Plan** (ручной ввод); для **Game** ручной «свой сценарий» на экране выбора шаблона не показывается (`GameStarterPicker` без опции manual).
+- Ось сохранения: **`save_kind`** `game` | `plan` ([ADR-001](docs/decisions/ADR-001-save-kind-remove-light-hardcore.md)); legacy **`mode`** light/hardcore **не возвращать** в UI/API.
+- Новая **Game:** **`NewProfileKindScreen`** (плитка **Plan** намеренно неактивна) → **`GameTemplatePickScreen`** (`template_key`, `save_kind=game`) → игра; **`DifficultyScreen`** удалён ([`SPEC_game-plan`](docs/specs/features/SPEC_game-plan.md)).
+- **`BaseParamsScreen`** — только под будущий **Plan** (MVP 2.0); для **Game** ручной «свой сценарий» на экране шаблона не показывается (`GameStarterPicker` без manual).
+- Создание/список профилей — поля и тела запросов как в `api.js` / `routers/game.py`; при смене контракта синхронизировать **`api.js`**, хуки и экраны старта.
 
 ## Структура компонента
 

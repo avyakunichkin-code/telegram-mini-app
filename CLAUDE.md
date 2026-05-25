@@ -44,7 +44,7 @@
 - `backend/app/models.py` — `GameProfile` (`save_kind`, `starter_template_key`, `base_monthly_lifestyle_expense`, `delta_monthly_lifestyle_expense`, период и балансы); `GameStarterTemplate`; `FinanceSalary`, `FinanceAsset`, `FinanceLiability`, …; события `EventDefinition`, `EventChoice`, `EventInstance`; каталоги активов/долгов и др.
 - `backend/app/game_time.py` — синхронизация времени периода (anchor / duration).
 - `backend/app/game_period.py` — **главная экономика на конец периода:** обслуживание активов, доход активов, платежи по обязательствам и просрочка, премии страховок, инвестиции, поражение при трёх подряд периодах с отрицательным `cash`, события нового периода.
-- `backend/app/routers/finance.py` — **`GET /api/finance/overview`** (в т.ч. условие победы MVP и **`win_reached`** только при **`period_index >= 7`** — первые шесть периодов без победы).
+- `backend/app/finance_overview_build.py` + `backend/app/victory_engine.py` — **`GET /api/finance/overview`** (сборка в `routers/finance.py`): победа **Victory v2** из `victory_config_json` шаблона, блок **`victory`**, **`win_reached`**; ранний запрет периодов — `min_period_index_for_victory` (обычно **7**). См. [ADR-002](docs/decisions/ADR-002-victory-engine-and-template-config.md).
 
 ---
 
@@ -121,16 +121,18 @@
 
 ---
 
-## Победа (текущий MVP в коде)
+## Победа (prod: Victory v2)
 
-Считается в `GET /api/finance/overview` (`backend/app/routers/finance.py`):
+Считается в **`GET /api/finance/overview`** через **`victory_engine.evaluate_victory`** и конфиг **`game_starter_templates.victory_config_json`** ([ADR-002](docs/decisions/ADR-002-victory-engine-and-template-config.md), spec [`SPEC_victory-v2`](docs/specs/features/SPEC_victory-v2.md)):
 
-- подушка ≥ **3 ×** `total_monthly_obligations` (платежи по долгам + обслуживание активов);
-- `total_overdue_amount == 0`;
-- `net_monthly_cashflow >= 0`;
-- **`win_reached` = true` только если `period_index >= 7`** (периоды 1–6 победы нет — технический и продуктовый запрет).
+- **`progression_mode: chain`** (tutorial, все 4 Game-шаблона в prod): победа, когда **все шаги цепочки** выполнены и **`period_index >= min_period_index_for_victory`** (дефолт **7**).
+- **`progression_mode: parallel`** (legacy в `VICTORY_CONFIG_LEGACY_BY_TEMPLATE_KEY`): **M из N** среди `enabled` целей + то же ворота периода.
+- Блок **`overview.victory`** — цели, `met`, `progression_mode`, текущий шаг; legacy-поля `win_target_safety_fund` / `win_ready` — для UI подушки.
+- Разблокировка вкладок капитала по **`blueprint.mechanics_unlock`** после ключей целей — [ADR-004](docs/decisions/ADR-004-mechanics-unlock-victory-chain.md).
 
-**Дальше:** победа **M из N целей** из шаблона, средний cashflow за 6 периодов, пороги кэша/cashflow из шаблона — см. [`docs/vision/ideas/money-quest-evolution-after-mvp.md`](docs/vision/ideas/money-quest-evolution-after-mvp.md) §II.
+**Устаревшее (только тесты):** `evaluate_mvp_victory` в `game_rules.py` — AND «подушка 3× + нет просрочки + cashflow ≥ 0».
+
+**Идеи роста:** avg liquid за 6 периодов, новые типы целей — [`money-quest-evolution-after-mvp.md`](docs/vision/ideas/money-quest-evolution-after-mvp.md) §II.
 
 ---
 
@@ -138,8 +140,8 @@
 
 Без Alembic.
 
-- SQL: `backend/migrations/0002_easy_mechanics.sql`, `0003_asset_liability_templates_events.sql`, …
-- Windows: `backend/migrate.ps1` (нужны `psql` и `DATABASE_URL`).
+- Каталог: [`backend/migrations/`](backend/migrations/) — процедура и нумерация: [`backend/migrations/README.md`](backend/migrations/README.md).
+- Прогон: [`backend/migrate.ps1`](backend/migrate.ps1) (нужны `psql` и `DATABASE_URL`); дополнительно при старте API — лёгкая автомиграция в `backend/main.py`.
 
 ---
 

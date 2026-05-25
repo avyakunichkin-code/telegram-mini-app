@@ -29,16 +29,16 @@
 | Core loop периода | ✅ Готово | Таймер, `process_period_end`, поражение (3 периода cash < 0) |
 | Зарплата, подушка, финансы | ✅ Готово | Активы/долги из шаблонов, вклад, облигации, страховки |
 | События | ✅ MVP + 1.1 в коде | 3/период, tier-окно от `period_index`, lifestyle delta; `xp_delta` в сидах игнорируется |
-| Победа MVP | ✅ Готово | Overview; `win_reached` с 7-го периода |
+| Победа (Victory v2) | ✅ Backend | `victory_engine`, `victory_config_json`, `win_reached` с `min_period_index` (обычно 7); legacy MVP-AND — только тесты |
+| Victory v2 UI | ✅ P1 | `MqxGoalDash` + `overview.victory`; дальше — баланс/плейтест целей |
 | Game / Plan, шаблоны старта | ✅ G1 | `save_kind`, каталог шаблонов, blueprint; **Plan — заглушка в UI** |
-| character_level / XP | ✅ Снято | Нет level/xp в профиле и overview; см. [`remove-character-xp-and-levels.md`](docs/vision/ideas/remove-character-xp-and-levels.md) |
+| character_level / XP | ✅ Снято | [ADR-003](docs/decisions/ADR-003-remove-character-progression.md), [`remove-character-xp-and-levels.md`](docs/vision/ideas/remove-character-xp-and-levels.md) |
 | `cooldown_periods` | ✅ Готово | Поле, счётчики (`0007`), фильтр в `ensure_period_events` |
-| Достижения (UI + движок) | 🟡 В работе | `0009`, `achievement_engine`, API; UI «Развитие» и SPEC — backlog **M12** |
-| Victory v2 (M из N из шаблона) | ⬜ Vision | `victory_config` в данных — задел |
-| Онбординг 3 шага | ⬜ Backlog | [`TMA_USER_FLOWS.md`](docs/foundation/TMA_USER_FLOWS.md) |
+| Достижения (UI + движок) | 🟡 В работе | `0009`, `achievement_engine`, API; UI «Развитие» — backlog **M12** |
+| Онбординг (guided coach) | 🟡 В работе | [SPEC_onboarding-tma](docs/specs/features/SPEC_onboarding-tma.md), design-lab ★; см. [dashboard UX](docs/ux/screens/dashboard.md) |
 | Retention-метрики / Closed Alpha | ⬜ Не запущено | Нет валидации D1/D7 на 50–150 игроках |
 
-**Ближайшие приоритеты:** онбординг, victory v2 UI, шаблоны/flags капитала, плейтест Pre-Alpha → Closed Alpha. ~~UI level/XP~~ — снято.
+**Ближайшие приоритеты:** онбординг O1, полировка UI целей победы (V2), achievements M12, плейтест Pre-Alpha → Closed Alpha. ~~character level/XP~~ — снято ([ADR-003](docs/decisions/ADR-003-remove-character-progression.md)).
 
 **Связанные артефакты:** [`PRODUCT_BACKLOG.md`](docs/backlog/PRODUCT_BACKLOG.md), [`TRACEABILITY.md`](docs/TRACEABILITY.md), [`MVP_AUDIT_VS_SPEC.md`](docs/foundation/MVP_AUDIT_VS_SPEC.md).
 
@@ -269,24 +269,18 @@
 | 9 | Стратег | Налоги, ИИС, пенсия (**backlog**) | 1300 |
 | 10 | Свободный | Глобальная цель, песочница | — |
 
-**Фактическая формула порога в коде (v1):** `need(L) = 100 + max(0, L−1) × 50` — [`LEVEL_XP_SYSTEM.md`](docs/specs/gameplay/LEVEL_XP_SYSTEM.md). Таблица анкеты — **референс темпа**; при расхождении приоритет у спека и матрицы XP.
+> **Архив (superseded, 2026-05-24):** разделы §5.4–5.6 про character level/XP — исторический контекст анкеты. В коде: tier от **`period_index`**, XP снят — [`remove-character-xp-and-levels.md`](docs/vision/ideas/remove-character-xp-and-levels.md), [`LEVEL_XP_SYSTEM.md`](docs/specs/gameplay/LEVEL_XP_SYSTEM.md) (status: superseded).
 
-### 5.5. Источники XP в коде (сейчас)
+**Фактическая прогрессия событий (сейчас):** `event_tier` в окне от **`period_index`** — [`SPEC_mvp-11-progression-events.md`](docs/specs/features/SPEC_mvp-11-progression-events.md), `game_rules.event_tier_progression_level`.
 
-| Источник | Якорь |
-|----------|--------|
-| События | `effects_json.xp_delta` → `apply_character_xp` |
-| claim-salary, safety | `period_actions.py` |
-| Закрытие периода | `game_period.py` |
-| Достижения | ⬜ не подключены |
+### 5.5. Источники XP *(архив)*
 
-Матрица: [`XP_EVENTS_ACTIONS_MATRIX.md`](docs/specs/gameplay/catalogs/XP_EVENTS_ACTIONS_MATRIX.md).
+Снято: `xp_delta` в сидах событий **игнорируется**; `apply_character_xp` удалён. Достижения — без XP ([`SPEC_achievements.md`](docs/specs/features/SPEC_achievements.md)).
 
-### 5.6. Баланс темпа
+### 5.6. Баланс темпа *(архив + актуальное)*
 
-- Повторяющиеся действия — мало XP; пороговые вехи — крупные награды.
-- Окно **4–5+ периодов** между открытием механик.
-- **`event_tier ∈ [max(1, L−2), L]`**, без tier > L.
+- Окно **4–5+ периодов** между открытием механик в blueprint шаблона.
+- **`event_tier`** в окне от периода, не от character level.
 
 ---
 
@@ -502,7 +496,7 @@
 
 **Анкета:** достижения → XP → разблокировки; экран «Развитие».
 
-**ТВОЙ ХОД:** 🟡 `level`/`xp` в профиле, XP из событий/периода; **достижения и экран «Развитие» — ⬜**; API-gates — по плану.
+**ТВОЙ ХОД:** ✅ character XP/level сняты; 🟡 **достижения** (движок + API, UI M12); разблокировки механик — из blueprint шаблона, не level-gates.
 
 ### 10.6. Этап 5: Прототип 1–2 уровней для плейтеста (2–3 нед.)
 
@@ -514,7 +508,7 @@
 
 **Анкета:** уровни 3–4 (страховки, кредит), метафоры, пул событий, дневник, финальные уровни.
 
-**ТВОЙ ХОД:** ✅ Страховки, долги, шаблоны, аналитика; 🟡 прогрессия tier/XP; ⬜ дневник, cooldown, victory v2, Plan, главы-кампания.
+**ТВОЙ ХОД:** ✅ Страховки, долги, шаблоны, аналитика, **cooldown**, **Victory v2 backend**; 🟡 tier по периоду, UI целей; ⬜ дневник, Plan UI, главы-кампания.
 
 ### 10.8. Сводка: этап анкеты vs мы сейчас
 
@@ -547,8 +541,8 @@
 **Адаптация ТВОЙ ХОД для гейта:**
 
 - ✅ Цикл периода, зарплата, подушка, финансы, **3 события**, шаблоны старта.
-- 🟡 character_level / XP (частично); ⬜ экран достижений.
-- ✅ UI TMA выше «текст + кнопки»; ⬜ онбординг.
+- ✅ character XP/level сняты; 🟡 экран достижений (M12).
+- ✅ UI TMA выше «текст + кнопки»; 🟡 онбординг guided coach (O1).
 
 **Критерии перехода (анкета):**
 
@@ -576,7 +570,7 @@
 
 **ТВОЙ ХОД:**
 
-- 🟡 Tier/XP, сиды tier 1–5; ⬜ cooldown, дневник, полные API-gates.
+- ✅ Tier 1–5, **cooldown**; ⬜ дневник, product analytics; механики — blueprint, не level-gates.
 - ✅ Analytics section; ⬜ product analytics (Amplitude/Firebase).
 
 **Критерии перехода:**
@@ -662,11 +656,11 @@
 
 Краткая выжимка [`money-quest-evolution-after-mvp.md`](docs/vision/ideas/money-quest-evolution-after-mvp.md) §II:
 
-- **Victory v2:** M из N из шаблона, `avg_net_cashflow_6p`, пороги из `victory_config`.
-- **Plan mode:** мастер, `starter_params_json`, префилл снимка.
-- **События:** `mandatory_gate`, prerequisites, цепочки, связь со страховками/активами.
+- **Victory v2:** ✅ backend + P1 UI (`MqxGoalDash`); баланс целей в шаблонах — backlog.
+- **Plan mode:** мастер, `starter_params_json`, префилл снимка (MVP 2.0).
+- **События:** prerequisites, цепочки (частично в коде); `mandatory_gate` — backlog.
 - **Давление:** штрафы просрочки, налоги — после стабилизации контрактов.
-- **UI:** бейджи сохранений, прогресс целей на главной.
+- **UI:** бейджи `game`/`plan` в списке сохранений; E1 расходы по категориям.
 
 Детали — не дублировать здесь; см. spec/plan в `docs/`.
 
@@ -679,7 +673,9 @@
 | [`QUESTIONNAIRE.md`](QUESTIONNAIRE.md) | Первичный диалог, источник разд. 8–11 |
 | [`CLAUDE.md`](CLAUDE.md) | Онбординг агента, эндпоинты, MVP |
 | [`SPEC_PRODUCT.md`](docs/foundation/SPEC_PRODUCT.md) | Продукт и реализованный цикл |
-| [`LEVEL_XP_SYSTEM.md`](docs/specs/gameplay/LEVEL_XP_SYSTEM.md) | Норматив level/XP |
+| [`LEVEL_XP_SYSTEM.md`](docs/specs/gameplay/LEVEL_XP_SYSTEM.md) | ~~level/XP~~ — **superseded**, архив |
+| [`ADR-002`](docs/decisions/ADR-002-victory-engine-and-template-config.md) | Victory v2 |
+| [`ADR-003`](docs/decisions/ADR-003-remove-character-progression.md) | Снятие character XP |
 | [`SPEC_mvp-11-progression-events.md`](docs/specs/features/SPEC_mvp-11-progression-events.md) | События и tier |
 | [`SPEC_game-plan.md`](docs/specs/features/SPEC_game-plan.md) | Game/Plan, шаблоны |
 | [`SPEC_FRONTEND_UI.md`](docs/specs/SPEC_FRONTEND_UI.md) | UI/UX |

@@ -270,7 +270,7 @@ export function ExampleBlock({ overview }) {
 
 ### P1 (единый UX)
 
-- [ ] На каждой вкладке `GameScreen` ровно один `h1` в hero.
+- [x] ~~На каждой вкладке `GameScreen` ровно один `h1` в hero.~~ **Снято (2026-05-25):** TMA — `h2` на секциях + `aria-label`; см. [`ux/screens/dashboard.md`](../ux/screens/dashboard.md).
 - [x] `FinancePremium`: инвестиции и страховки визуально в том же `mqx-capital-*`, что портфель (форма embedded, `MqxSectionSeg`, `MqxCapitalEmpty`).
 - [ ] `BottomGameNav`: подписи под иконками **или** tooltip при первом визите (решение зафиксировать в PR).
 - [ ] `MenuPremium` не выбивается по плотности контента (минимум: тот же hero-стиль или явный «служебный» экран).
@@ -339,10 +339,7 @@ flowchart TD
   - Verify: grep по `frontend-react/src/components`.
   - Files: `AnalyticsPremium.jsx`, `CapitalPortfolioPanels.jsx`
 
-- [ ] **P1: h1 на всех табах**
-  - Acceptance: один `h1` в hero каждого `*Premium`.
-  - Verify: инспектор DOM / axe heading-order.
-  - Files: `DashboardPremium.jsx`, `AnalyticsPremium.jsx`, `MenuPremium.jsx`
+- [x] ~~**P1: h1 на всех табах**~~ — **не делаем**; заголовки через `h2` / `aria-label` на секциях.
 
 - [ ] **P1: Invest/Insurance — capital layout**
   - Acceptance: те же `mqx-capital-card`, lead, mode-кнопки, что у портфеля.

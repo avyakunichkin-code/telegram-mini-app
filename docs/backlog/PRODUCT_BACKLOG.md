@@ -30,7 +30,7 @@
 | **G1** | Game / Plan, шаблоны старта | DB+Backend+Frontend | ✅ MQ-101–108 |
 | **M11** | MVP 1.1: tier, события, cooldown | DB+Backend+Frontend | ✅ MQ-111–116; без character XP (2026-05-24); плейтест Pre-Alpha — ⬜ |
 | **M12** | Достижения (цепочки из GAME §5) | DB+Backend+Frontend | 🟡 [SPEC_achievements](../specs/features/SPEC_achievements.md); BE ✅, FE «Развитие» ⬜ |
-| **V2** | Victory M из N | DB+Backend+Frontend+Doc | 🟡 **backend ✅** (`victory_engine`); **UI** прогресса целей ⬜ |
+| **V2** | Victory M из N | DB+Backend+Frontend+Doc | ✅ **P1 закрыт**: `victory_engine` + `MqxGoalDash`; дальше — баланс/плейтест |
 | **I1** | Страховки: продукт + объект | DB+Backend+Frontend | 🟡 0008 + UI в работе |
 | **α** | Pre-Alpha / Closed Alpha гейты | Doc+Frontend (метрики) | ⬜ см. GAME §11 |
 | **O1** | Онбординг TMA — Guided coach + Монетка | Frontend+Backend+Doc | 🟡 design-lab ★ → MQX |
@@ -191,7 +191,7 @@
 ### MVP 1.1 / прогрессия
 
 - [ ] P1 **[Frontend]** Экран **«Развитие»**: достижения, цепочки, недавние unlock — GAME §10.5, §11.1; API achievements есть, UI ⬜.
-- [ ] P1 **[Frontend] V2** — UI целей из `overview.victory` ([`TRACEABILITY.md`](../TRACEABILITY.md) §После G1 п.5).
+- [x] P1 **[Frontend] V2** — UI целей из `overview.victory` (`MqxGoalDash`, `victoryGoalDisplay.js`) — architecture-review Q&A 2026-05-25.
 - [ ] P2 **[Frontend] ⚠ spec** Бейджи `game` / `plan` и сложность шаблона в списке сохранений (GAME §12, §13).
 
 ### Эпик O1 — онбординг TMA (Pre-Alpha)

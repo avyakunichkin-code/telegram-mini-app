@@ -1,6 +1,6 @@
 ---
 layer: ux
-status: draft
+status: approved
 last_reviewed: 2026-05-25
 platform: Telegram Mini App (touch-first, 320–480px)
 screen_id: dashboard
@@ -9,7 +9,7 @@ prod_route: GameScreen tab `dashboard`
 
 # UX Spec: Главная (Dashboard)
 
-> **Status:** Draft — OQ 1–5, 7 закрыты (2026-05-25); остаётся h1, EN-audit, ux-review  
+> **Status:** Approved — OQ 1–7 закрыты (2026-05-25); без `h1` на вкладках (решение продукта); EN-audit отложен  
 > **Author:** product + ux-review session  
 > **Last Updated:** 2026-05-25  
 > **Journey Phase(s):** активная партия (core loop), первая сессия (онбординг O1)  
@@ -95,7 +95,7 @@ App (HashRouter)
 | Зона | Компонент | CSS / режим |
 |------|-----------|-------------|
 | **Z0 Hero** | `MqxDashboardHero` | `mqx-hero--compact`, full width, градиент S5 |
-| **Z1 Финансы периода** | `MqxFinancePeriodBlock` | `mqx-finance-static`, 2×2 chips, опционально Монетка |
+| **Z1 Финансы периода** | `MqxFinancePeriodBlock` | `mqx-finance-static`, 2×2 chips, «Все финансы →» |
 | **Z2 Цель** | `MqxGoalDash` | `mqx-goal-dash`, аккордеон, bleed sky-фон |
 | **Z3 Действия** | `MqxPeriodActions` | `mqx-period-actions--chips`, 2×2 |
 | **Z3b Подушка inline** | `SafetyFundActionForm` | `mqx-dash-safety-panel`, условный рендер |
@@ -108,7 +108,7 @@ App (HashRouter)
 | Компонент | Паттерн / lab | Назначение |
 |-----------|---------------|------------|
 | `MqxDashboardHero` | dashboard S5 | Таймер, progress, play/pause, период, события, след. период |
-| `MqxFinancePeriodBlock` | dashboard L3 | 4 KPI chips, dismissible Монетка, ссылка в финансы |
+| `MqxFinancePeriodBlock` | dashboard L3 | 4 KPI chips, ссылка в финансы |
 | `MqxGoalDash` | goal-chain-round ★ · [`goal-path-stepper-round`](../../../design-lab/dashboard/goal-path-stepper-round/) (draft) | Цепочка победы v2 + guidance; свёрнуто — stepper из связанных узлов |
 | `MqxPeriodActions` | period-actions-round ★ | Зарплата, вложить, пополнить, снять |
 | `SafetyFundActionForm` | shared MQX | Сумма in/out подушки |
@@ -129,7 +129,6 @@ App (HashRouter)
 │ ├─────────┼─────────┤               │
 │ │ Баланс  │ Подушка │ [fill bar]    │
 │ └─────────┴─────────┘               │
-│ [Монетка: подсказка …] [×]          │
 │ Все финансы →                       │
 ├─────────────────────────────────────┤
 │ ▼ Цель · [название текущей цели]    │  Z2 (collapsed)
@@ -179,11 +178,6 @@ App (HashRouter)
 | Расходы | `monthly_lifestyle_expense` | Tap → finance, секция expense |
 | Баланс | `cash_balance` | Только просмотр |
 | Подушка | `safety_fund_balance` + fill % к норме | Просмотр + bar; действия в Z3 |
-
-| State | Поведение |
-|-------|-----------|
-| Монетка visible | `localStorage` key `mq-dash-finance-monetka-v1` ≠ `1` |
-| Монетка dismissed | Блок скрыт навсегда (device) |
 
 ### Цель (`MqxGoalDash`)
 
@@ -240,7 +234,6 @@ Skip: 1-й раз — шаг; 2-й — весь онбординг → `brief_do
 | Пополнить / Снять | tap | open inline panel |
 | Вложить | tap | finance tab |
 | Подушка submit | tap CTA | contribute/withdraw API |
-| Dismiss Монетка | tap × | localStorage dismiss |
 | Outside panel | pointerdown | close safety panel |
 
 **Focus order (рекомендуемый):** Hero controls → chips row-major → цель toggle → action chips → inline form fields.
@@ -299,7 +292,7 @@ Skip: 1-й раз — шаг; 2-й — весь онбординг → `brief_do
 | Onboarding | `onboarding_state`, `onboarding_step` | profile | PATCH onboarding | coach off |
 | Mechanics gate | `mechanics_effective.capital_invest` | template + goals | goal progress | **не на dashboard сегодня** |
 
-**UI не хранит** игровое состояние кроме: `moneyModal`, `safetyAmount`, `busyAction`, dismiss Монетки.
+**UI не хранит** игровое состояние кроме: `moneyModal`, `safetyAmount`, `busyAction`.
 
 ---
 
@@ -309,7 +302,7 @@ Skip: 1-й раз — шаг; 2-й — весь онбординг → `brief_do
 
 | Требование | Статус prod | Цель spec |
 |------------|-------------|-----------|
-| Один `h1` на вкладку | ❌ нет | `<h1>` в hero или visually-hidden + `h2` секций |
+| Заголовки вкладки | `h2` секций + `aria-label` на `<section>` | **Без `h1`** — решение продукта для TMA hero/chips |
 | `role="progressbar"` периода | ✅ | сохранить |
 | `aria-live="polite"` таймер | ✅ | сохранить |
 | Goal `aria-expanded` / `aria-controls` | ✅ | сохранить |
@@ -337,7 +330,7 @@ Skip: 1-й раз — шаг; 2-й — весь онбординг → `brief_do
 ## Acceptance Criteria
 
 1. При входе в игру активна вкладка «Главная»; hero показывает `period_index` и таймер, согласованные с API (после resync расхождение ≤1 с).
-2. На вкладке ровно **один** семантический заголовок уровня 1 (`h1` или эквивалент с `aria-level="1"`).
+2. Секции «Финансы периода» и «Действия периода» с `h2`; hero без обязательного `h1`.
 3. Chip «Расходы» показывает `monthly_lifestyle_expense` (base+delta), не просрочку и не долги.
 4. Chip «Доходы» показывает `total_monthly_income` (сумма доходов без вычета расходов); подпись «Доходы» сохраняется.
 5. «Зарплата» после успешного claim неактивна; повторный tap — info toast, не повторный POST.
@@ -360,31 +353,19 @@ Skip: 1-й раз — шаг; 2-й — весь онбординг → `brief_do
 | **OQ-3** | Практика шагов 1 и 4 (`period_timer`, `next_period`): **10 с** в коде, **без** обратного отсчёта и без упоминания секунд в тексте пузыря; подсказка «Попробуй элементы на экране» без таймера. |
 | **OQ-4** | Цель `tutorial_invest`: заголовок **«Положить деньги на депозит или купить облигацию»**; в цепочке **сразу после** «Внести в подушку», **до** `safety_3x`/`safety_6x`. Онбординг: шаги **3 = подушка**, **4 = след. период**. Chip «Вложить» ведёт в финансы (депозит/облигации). |
 | **OQ-5** | Блок **«Уровень» / character XP на главной снят** — канон [`remove-character-xp-and-levels.md`](../../vision/ideas/remove-character-xp-and-levels.md). SPEC_achievements §11 (коллапс «Уровень» на dashboard) — **не в MVP**; достижения через меню/отдельный экран, без 5-го таба. |
-| **OQ-6** | См. раздел ниже — **три независимых слоя подсказок**; отдельное продуктовое решение по сокращению шума в `draft` не зафиксировано. |
+| **OQ-6** | Подсказка **B** (Монетка под chips) **удалена** из prod — дублировала coach и цель. Остаются **A** (онбординг) и **C** (цель при раскрытии). |
 | **OQ-7** | Tier **Basic** — [`accessibility-requirements.md`](../accessibility-requirements.md). |
 
 ---
 
-## OQ-6: три слоя подсказок на главной (подробно)
+## Подсказки Монетки на главной (после OQ-6)
 
-На одном экране могут одновременно существовать **три разных механизма** — это не баг, но при первой игре даёт «много Монетки»:
+| Слой | Компонент | Когда |
+|------|-----------|--------|
+| **Coach (O1)** | `GameOnboardingLayer` | Первая игра (`draft` / `started`) |
+| **Цель** | `MqxGoalDash` → `GoalMonetkaGuidance` | При раскрытии аккордеона «Цель» |
 
-| # | Слой | Компонент | Когда виден | Зачем |
-|---|------|-----------|-------------|-------|
-| **A** | **Coach (O1)** | `GameOnboardingLayer` | Только `onboarding_state = draft/started` | Пошаговое обучение: таймер → зарплата → подушка → след. период. Spotlight + пузырь **поверх** UI. |
-| **B** | **Подсказка к 4 chips** | `MqxFinancePeriodBlock` → полоска Монетки | Пока игрок не нажал × и не записал dismiss в `localStorage` | Объяснить, что значат Доходы / Расходы / Баланс / Подушка. **Не** привязана к онбордингу. |
-| **C** | **Цель сценария** | `MqxGoalDash` → `GoalMonetkaGuidance` | Когда игрок **развернул** аккордеон «Цель» | Подсказка к **текущей** цели победы из шаблона (зарплата, подушка, депозит/облигация, …). |
-
-**Конфликты:**
-
-- Во время **A** слой **B** может появиться под coach — визуальный шум.
-- **C** может дублировать текст **A** (обе говорят про зарплату/подушку), если цель развёрнута.
-
-**Варианты на будущее (не реализовано):**
-
-1. При `inOnboarding` не показывать **B** (finance-Монетку).
-2. В `draft` держать **C** всегда свёрнутым до `brief_done`.
-3. Оставить как есть — игрок закрывает **B** один раз навсегда.
+~~Подсказка под 4 chips (finance-Монетка)~~ — **снята 2026-05-25** как устаревшая: coach + цель + `titleHint` на chips достаточно.
 
 ---
 
@@ -395,11 +376,12 @@ Skip: 1-й раз — шаг; 2-й — весь онбординг → `brief_do
 - [x] OQ-3: 10 с без видимого таймера; тексты без «N секунд»
 - [x] OQ-4: цель invest переименована и переставлена; онбординг 3↔4
 - [x] OQ-5: уровни сняты — отражено в spec
+- [x] OQ-6: finance-Монетка (B) удалена из `MqxFinancePeriodBlock`
 - [x] OQ-7: `accessibility-requirements.md`
-- [ ] P1: `h1` / heading semantics
-- [ ] P0: нет EN в видимых подписях dashboard-зоны
-- [ ] Миграция `0036_victory_invest_goal_order.sql` на окружениях с БД
-- [ ] Повторный `/ux-review screens/dashboard.md`
+- [x] Миграции `0036` / `0037` (на окружениях владельца)
+- [x] **Без `h1`** на вкладках — зафиксировано в spec
+- [ ] EN-audit dashboard — отложено
+- [ ] Повторный `/ux-review screens/dashboard.md` — по желанию
 
 ---
 

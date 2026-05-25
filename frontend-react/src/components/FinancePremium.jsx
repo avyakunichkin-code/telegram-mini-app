@@ -62,13 +62,19 @@ export function FinancePremium({
     const sectionId =
       openFlowsSection === 'expense' ? 'capital-flows-expense' : 'capital-flows-income';
     const frame = requestAnimationFrame(() => {
-      document.getElementById(sectionId)?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      const reduceMotion =
+        typeof window !== 'undefined' &&
+        window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      document.getElementById(sectionId)?.scrollIntoView({
+        behavior: reduceMotion ? 'auto' : 'smooth',
+        block: 'nearest',
+      });
       onFlowsSectionOpened?.();
     });
     return () => cancelAnimationFrame(frame);
   }, [openFlowsSection, onFlowsSectionOpened]);
 
-  const reloadExtra = async () => {
+  const reloadExtra = async ({ quiet = false } = {}) => {
     try {
       const [pos, pol, tpl, ltpl] = await Promise.all([
         API.listInvestPositions(),
@@ -80,13 +86,15 @@ export function FinancePremium({
       if (Array.isArray(pol)) setPolicies(pol);
       if (Array.isArray(tpl)) setAssetTemplates(tpl);
       if (Array.isArray(ltpl)) setLiabilityTemplates(ltpl);
-    } catch {
-      // не блокируем экран
+    } catch (e) {
+      if (!quiet) {
+        showNotification(e?.detail || e?.message || 'Не удалось обновить разделы капитала', 'error');
+      }
     }
   };
 
   useEffect(() => {
-    reloadExtra();
+    reloadExtra({ quiet: true });
   }, []);
 
   useEffect(() => {
@@ -248,7 +256,7 @@ export function FinancePremium({
         mode={investSegMode}
         onModeChange={(m) => setInvestUiMode(m === 'add' ? 'form' : 'positions')}
         addLabel="Оформить"
-        mineLabel="Позиции"
+        mineLabel="Мои"
         mineCount={selectedInvestPositions.length}
       />
       {investUiMode === 'form' ? (

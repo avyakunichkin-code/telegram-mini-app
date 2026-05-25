@@ -94,7 +94,7 @@ code {
   display: flex;
   align-items: stretch;
   width: 100%;
-  min-height: 52px;
+  min-height: 56px;
 }
 
 .bottom-nav--unified .bottom-nav__sep {
@@ -113,7 +113,7 @@ code {
   align-items: center;
   justify-content: center;
   margin: 0;
-  padding: 0;
+  padding: 5px 2px 4px;
   border: none;
   border-radius: 0;
   box-shadow: none;
@@ -124,6 +124,31 @@ code {
     background 0.15s ease,
     color 0.15s ease,
     transform 0.08s ease;
+}
+
+.bottom-nav--unified .bottom-nav__cell-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  min-width: 0;
+  max-width: 100%;
+}
+
+.bottom-nav--unified .bottom-nav__label {
+  font-size: 10px;
+  font-weight: 600;
+  line-height: 1.15;
+  letter-spacing: 0.01em;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.bottom-nav--unified .bottom-nav__cell--active .bottom-nav__label {
+  color: inherit;
 }
 
 .bottom-nav--unified .bottom-nav__cell:active:not(:disabled) {

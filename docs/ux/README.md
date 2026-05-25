@@ -6,6 +6,7 @@ Per-screen UX в конвейере [`DOCUMENTATION_SYSTEM.md`](../DOCUMENTATION
 
 | Экран | Файл | Статус |
 |-------|------|--------|
-| Главная (Dashboard) | [`screens/dashboard.md`](screens/dashboard.md) | Draft (2026-05-25) |
+| Главная (Dashboard) | [`screens/dashboard.md`](screens/dashboard.md) | Active (2026-05-25) |
+| Финансы (Капитал) | [`screens/finance.md`](screens/finance.md) | Draft (2026-05-25) |
 
-**Канон визуала:** [`design-lab/dashboard/APPROVED.md`](../../design-lab/dashboard/APPROVED.md) · **Код:** `frontend-react/src/components/DashboardPremium.jsx`
+**Канон визуала:** dashboard — [`design-lab/dashboard/APPROVED.md`](../../design-lab/dashboard/APPROVED.md); капитал — [`design-lab/capital-page/`](../../design-lab/capital-page/). **Код:** `DashboardPremium.jsx`, `FinancePremium.jsx`.

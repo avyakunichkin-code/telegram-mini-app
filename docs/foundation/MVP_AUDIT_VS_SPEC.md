@@ -22,7 +22,7 @@
 | Создание профиля **`save_kind` + шаблон Game** | `backend/app/routers/game.py`, `models.GameProfile` | OK | Legacy **`light` / `hardcore`** сняты ([ADR-001](../decisions/ADR-001-save-kind-remove-light-hardcore.md)) |
 | UI: поток новой игры без legacy сложности | `frontend-react` (`NewProfileKindScreen`, `GameTemplatePickScreen`) | OK | **`DifficultyScreen`** удалён |
 | Агрегированные «жизненные» расходы из шаблона + дельты событий | `base_monthly_lifestyle_expense` + дельты | PARTIAL | Полная модель статей — E1 draft |
-| Победа M из N, `avg_net_cashflow_6p` в целях | `victory_engine.py`, overview `victory` | OK | UI прогресса целей — backlog V2 |
+| Победа M из N, `avg_net_cashflow_6p` в целях | `victory_engine.py`, overview `victory`, `MqxGoalDash` | OK | P1 UI целей ✅; баланс/плейтест — backlog |
 
 ## Вывод для бэклога
 

@@ -99,15 +99,15 @@ npm run dev
 
 ## Миграции БД
 
-Alembic не используется. Идемпотентные SQL-файлы в [`backend/migrations/`](backend/migrations/):
+Alembic не используется. Идемпотентные SQL-файлы в [`backend/migrations/`](backend/migrations/) (нумерация `0002`…`0037+`, см. [`backend/migrations/README.md`](backend/migrations/README.md)).
 
-- `0002_easy_mechanics.sql`
-- `0003_asset_liability_templates_events.sql`
-- `0004_save_kind_game_templates.sql`
-- `0005_game_templates_catalog.sql`
-- `0006_event_tiers_repeat_policy.sql`
+Запуск под Windows (нужны `psql` и `DATABASE_URL`):
 
-Запуск под Windows (нужны `psql` и `DATABASE_URL`): [`backend/migrate.ps1`](backend/migrate.ps1).
+```powershell
+cd backend
+$env:DATABASE_URL = "postgresql://..."
+.\migrate.ps1
+```
 
 ---
 

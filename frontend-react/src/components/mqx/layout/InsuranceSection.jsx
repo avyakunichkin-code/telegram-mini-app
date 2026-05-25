@@ -76,7 +76,7 @@ export function InsuranceSection({
           <InsuranceProductPicker onBuy={onBuy} buyingPlanKey={buyingPlanKey} />
           <div className="mqx-invest-form-actions">
             <MqxModeButton onClick={() => setUiMode('policies')}>
-              Позиции{policies.length ? ` (${policies.length})` : ''}
+              Мои{policies.length ? ` (${policies.length})` : ''}
             </MqxModeButton>
           </div>
         </>

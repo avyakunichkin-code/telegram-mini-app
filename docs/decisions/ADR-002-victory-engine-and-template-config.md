@@ -17,9 +17,13 @@ deciders: проект (architecture-review retroactive, 2026-05-25)
 1. Хранить конфигурацию победы в **`game_starter_templates.victory_config_json`** (`schema_version: 1`).
 2. Единый движок **`victory_engine.evaluate_victory`** + сбор снимка **`victory_snap.build_victory_evaluation_input`**.
 3. **`GET /api/finance/overview`** (сборка в `finance_overview_build.py`) возвращает блок **`victory`** и **`win_reached`** из движка, не из MVP-хардкода.
-4. Формула: `win_reached = period_gate_open AND met_count >= required_goals_met` среди `enabled` целей; `min_period_index_for_victory` по умолчанию **7**.
-5. Сиды и fallback — **`victory_seeds.py`**; для `mq_game_basic_v1` допустима **tutorial chain** (`action_once`, `requires_mechanics`).
-6. Legacy `evaluate_mvp_victory` остаётся **только для unit-тестов** совместимости MVP.
+4. **Два режима оценки** (`progression_mode` в JSON):
+   - **`parallel`** (legacy / откат): `win_reached = period_gate_open AND met_count >= required_goals_met` среди `enabled` целей.
+   - **`chain`** (prod, `playtest_mode: tutorial`): цели идут **цепочкой** — шаг *n* засчитывается только после *n−1*; `win_reached = period_gate_open AND все enabled-цели цепочки выполнены`. Поле `required_goals_met` в chain-режиме **не** ограничивает победу (длина цепочки = знаменатель).
+5. `min_period_index_for_victory` по умолчанию **7** (`MIN_PERIOD_INDEX_FOR_WIN` в `backend/app/game_rules.py`).
+6. Сиды и fallback — **`victory_seeds.py`**; prod-конфиги: tutorial chain на всех четырёх шаблонах; откат — `VICTORY_CONFIG_LEGACY_BY_TEMPLATE_KEY` (`progression_mode: parallel`).
+7. Legacy `evaluate_mvp_victory` (AND подушка + просрочка + cashflow) — **только unit-тесты**, не overview.
+8. Миграции контента: `0036_victory_invest_goal_order.sql`, связка с [ADR-004](ADR-004-mechanics-unlock-victory-chain.md).
 
 ## Consequences
 
@@ -38,4 +42,5 @@ deciders: проект (architecture-review retroactive, 2026-05-25)
 
 - Spec: [`SPEC_victory-v2`](../specs/features/SPEC_victory-v2.md)
 - Code: `backend/app/victory_engine.py`, `finance_overview_build.py`, `profile_victory.py`, `victory_seeds.py`
+- ADR: [ADR-004](ADR-004-mechanics-unlock-victory-chain.md) — `mechanics_unlock` ↔ цели цепочки
 - Idea: [evolution §II](../vision/ideas/money-quest-evolution-after-mvp.md)
