@@ -25,6 +25,23 @@ class TestMechanicsFromBlueprint:
 
 
 class TestMechanicsInOverview:
+    def test_basic_new_profile_effective_invest_locked(self, client, auth_headers):
+        client.post(
+            "/api/game/start",
+            headers=auth_headers,
+            json={
+                "profile_name": "MechEff",
+                "save_kind": "game",
+                "template_key": "mq_game_basic_v1",
+            },
+        )
+        ov = client.get("/api/finance/overview", headers=auth_headers)
+        assert ov.status_code == 200
+        body = ov.json()
+        assert body["mechanics"]["capital_invest"] is True
+        eff = body.get("mechanics_effective") or {}
+        assert eff.get("capital_invest") is False
+
     def test_basic_template_overview_mechanics(self, client, auth_headers):
         start = client.post(
             "/api/game/start",

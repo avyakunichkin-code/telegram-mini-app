@@ -1,7 +1,8 @@
 """
 Конфиги победы по ключам game_starter_templates (victory_config_json).
 
-Временный режим плейтеста: ``playtest_mode: "v1"`` — вернуть канон из *_LEGACY при откате.
+Учебная цепочка (tutorial): action_once + requires_mechanics + mechanics_unlock в blueprint.
+Откат: VICTORY_CONFIG_LEGACY_BY_TEMPLATE_KEY и playtest_mode без tutorial.
 """
 
 from __future__ import annotations
@@ -9,11 +10,12 @@ from __future__ import annotations
 import json
 from typing import Any
 
+from .mechanics_progression import MECHANIC_CAPITAL_INVEST, MECHANIC_DASHBOARD_CORE
 from .victory_snap import RENTAL_HOME_ASSET_KINDS
 
 VICTORY_SCHEMA_VERSION = 1
 DEFAULT_TEMPLATE_KEY = "mq_game_basic_v1"
-PLAYTEST_MODE_TAG = "v2"
+PLAYTEST_MODE_TAG = "tutorial"
 
 
 def _expense_ratio_goal(max_ratio: float) -> dict[str, Any]:
@@ -96,13 +98,32 @@ def _harder_goals_legacy(min_cash: float) -> list[dict[str, Any]]:
     ]
 
 
-# --- Плейтест: цепочка целей (G1) ---
+# --- Учебная цепочка (basic) ---
 
-_BASIC_GOALS_CHAIN: list[dict[str, Any]] = [
+_BASIC_TUTORIAL_CHAIN: list[dict[str, Any]] = [
+    {
+        "key": "tutorial_salary",
+        "type": "action_once",
+        "title": "Забрать зарплату",
+        "action": "salary_claimed",
+        "requires_mechanics": [MECHANIC_DASHBOARD_CORE],
+        "required": False,
+        "enabled": True,
+    },
+    {
+        "key": "tutorial_cushion",
+        "type": "action_once",
+        "title": "Внести в подушку",
+        "action": "safety_contributed",
+        "requires_mechanics": [MECHANIC_DASHBOARD_CORE],
+        "required": False,
+        "enabled": True,
+    },
     {
         "key": "flow_nonneg",
         "type": "net_monthly_cashflow_nonneg",
         "title": "Стабильный денежный поток",
+        "requires_mechanics": [MECHANIC_DASHBOARD_CORE],
         "required": False,
         "enabled": True,
     },
@@ -111,21 +132,25 @@ _BASIC_GOALS_CHAIN: list[dict[str, Any]] = [
         "type": "safety_fund_months",
         "title": "Подушка ≥ 3× обязательств",
         "months_multiplier": 3,
+        "requires_mechanics": [MECHANIC_DASHBOARD_CORE],
         "required": False,
         "enabled": True,
     },
     {
-        "key": "no_overdue",
-        "type": "no_overdue",
-        "title": "Без просрочки",
+        "key": "tutorial_invest",
+        "type": "action_once",
+        "title": "Открыть депозит или облигацию",
+        "action": "invest_opened",
+        "requires_mechanics": [MECHANIC_CAPITAL_INVEST],
         "required": False,
         "enabled": True,
     },
     {
-        "key": "passive_income_100k",
+        "key": "invest_income_15k",
         "type": "passive_income_monthly_min",
-        "title": "Пассивный доход ≥ 100 000 ₽/мес",
-        "min_monthly": 100_000,
+        "title": "Доход с инвестиций ≥ 15 000 ₽/мес",
+        "min_monthly": 15_000,
+        "requires_mechanics": [MECHANIC_CAPITAL_INVEST],
         "required": False,
         "enabled": True,
     },
@@ -147,6 +172,7 @@ def _harder_goals_playtest() -> list[dict[str, Any]]:
             "type": "passive_income_net_monthly_min",
             "title": "Пассивный доход − расходы ≥ 250 000 ₽/мес",
             "min_net": 250_000,
+            "requires_mechanics": [MECHANIC_CAPITAL_INVEST],
             "required": False,
             "enabled": True,
         },
@@ -163,6 +189,7 @@ def _harder_goals_playtest() -> list[dict[str, Any]]:
             "type": "asset_kind_any_owned",
             "title": "Сдаваемая квартира в собственности",
             "asset_kinds_any": sorted(RENTAL_HOME_ASSET_KINDS),
+            "requires_mechanics": ["capital_property"],
             "required": False,
             "enabled": True,
         },
@@ -192,13 +219,15 @@ def _config(
 _HARDER_PLAYTEST = _harder_goals_playtest()
 
 VICTORY_CONFIG_BY_TEMPLATE_KEY: dict[str, dict[str, Any]] = {
-    DEFAULT_TEMPLATE_KEY: _config(required_goals_met=4, goals=list(_BASIC_GOALS_CHAIN)),
+    DEFAULT_TEMPLATE_KEY: _config(
+        required_goals_met=len(_BASIC_TUTORIAL_CHAIN),
+        goals=list(_BASIC_TUTORIAL_CHAIN),
+    ),
     "mq_game_tight_budget_v1": _config(required_goals_met=4, goals=list(_HARDER_PLAYTEST)),
     "mq_game_mortgage_stress_v1": _config(required_goals_met=4, goals=list(_HARDER_PLAYTEST)),
     "mq_game_debt_stack_v1": _config(required_goals_met=4, goals=list(_HARDER_PLAYTEST)),
 }
 
-# Для отката: подставить VICTORY_CONFIG_BY_TEMPLATE_KEY из LEGACY_* ниже.
 VICTORY_CONFIG_LEGACY_BY_TEMPLATE_KEY: dict[str, dict[str, Any]] = {
     DEFAULT_TEMPLATE_KEY: _config(
         required_goals_met=3,

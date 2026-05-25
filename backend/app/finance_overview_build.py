@@ -23,6 +23,7 @@ from .schemas import (
     VictoryOverview,
 )
 from .game_rules import MVP_SAFETY_FUND_OBLIGATIONS_MULTIPLIER
+from .mechanics_progression import capital_flags_for_api, resolve_template_and_unlock
 from .starter_mechanics import resolve_profile_mechanics
 from .victory_engine import evaluate_victory, parse_victory_config
 from .victory_seeds import DEFAULT_TEMPLATE_KEY
@@ -130,7 +131,14 @@ def build_finance_overview(db: Session, profile: GameProfile) -> FinanceOverview
 
     victory_cfg = parse_victory_config(raw_victory, template_key=template_key)
     victory_snap = build_victory_evaluation_input(db, profile)
-    victory_result = evaluate_victory(victory_cfg, victory_snap, template_key=template_key)
+    template_cap, mechanics_unlock, template_key = resolve_template_and_unlock(db, profile)
+    victory_result = evaluate_victory(
+        victory_cfg,
+        victory_snap,
+        template_key=template_key,
+        template_cap=template_cap,
+        mechanics_unlock=mechanics_unlock,
+    )
 
     safety_baseline_target = 0.0
     if total_monthly_obligations > 0:
@@ -145,6 +153,13 @@ def build_finance_overview(db: Session, profile: GameProfile) -> FinanceOverview
         capital_insurance=mech["capital_insurance"],
         capital_property=mech["capital_property"],
         capital_liabilities=mech["capital_liabilities"],
+    )
+    eff_cap = capital_flags_for_api(victory_result.mechanics_effective)
+    mechanics_effective_permissions = GameMechanicsPermissions(
+        capital_invest=eff_cap["capital_invest"],
+        capital_insurance=eff_cap["capital_insurance"],
+        capital_property=eff_cap["capital_property"],
+        capital_liabilities=eff_cap["capital_liabilities"],
     )
 
     victory_overview = VictoryOverview(
@@ -168,6 +183,8 @@ def build_finance_overview(db: Session, profile: GameProfile) -> FinanceOverview
                 met=g.met,
                 progress=g.progress,
                 detail=g.detail,
+                available=g.available,
+                blocked_reason=g.blocked_reason,
             )
             for g in victory_result.goals
         ],
@@ -217,4 +234,5 @@ def build_finance_overview(db: Session, profile: GameProfile) -> FinanceOverview
         onboarding_state=str(getattr(profile, "onboarding_state", "brief_done") or "brief_done"),
         onboarding_step=str(getattr(profile, "onboarding_step", "farewell") or "farewell"),
         mechanics=mechanics_permissions,
+        mechanics_effective=mechanics_effective_permissions,
     )

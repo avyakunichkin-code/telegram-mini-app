@@ -8,7 +8,16 @@ from typing import TYPE_CHECKING
 
 from .expenses import compute_monthly_burn
 from .finance_analytics import avg_net_cashflow_last_closed_intervals
-from .models import FinanceAsset, FinanceLiability, FinanceSalary, GameProfile, InvestmentPosition
+from .balance_utils import TRANSACTION_TYPES
+from .models import (
+    FinanceAsset,
+    FinanceLiability,
+    FinanceSalary,
+    GameProfile,
+    InvestmentPosition,
+    PeriodSnapshot,
+    Transaction,
+)
 
 if TYPE_CHECKING:
     from .victory_engine import VictoryEvaluationInput
@@ -58,6 +67,55 @@ def compute_monthly_passive_income(db: Session, profile_id: int, *, period_index
         deposit_monthly += principal * rate / 12.0
 
     return round(monthly_asset_income + bond_monthly + deposit_monthly, 2)
+
+
+def _salary_ever_claimed(db: Session, profile: GameProfile) -> bool:
+    if int(getattr(profile, "last_period_salary_claimed", 0) or 0) > 0:
+        return True
+    row = (
+        db.query(PeriodSnapshot.id)
+        .filter(
+            PeriodSnapshot.game_profile_id == profile.id,
+            PeriodSnapshot.salary_claimed == 1,
+        )
+        .first()
+    )
+    return row is not None
+
+
+def _safety_ever_contributed(db: Session, profile_id: int) -> bool:
+    snap = (
+        db.query(PeriodSnapshot.id)
+        .filter(
+            PeriodSnapshot.game_profile_id == profile_id,
+            PeriodSnapshot.safety_fund_contribution > 0,
+        )
+        .first()
+    )
+    if snap is not None:
+        return True
+    tx = (
+        db.query(Transaction.id)
+        .filter(
+            Transaction.game_profile_id == profile_id,
+            Transaction.type == TRANSACTION_TYPES["SAFETY_FUND_CONTRIBUTION"],
+        )
+        .first()
+    )
+    return tx is not None
+
+
+def _has_active_investment(db: Session, profile_id: int, kind: str) -> bool:
+    row = (
+        db.query(InvestmentPosition.id)
+        .filter(
+            InvestmentPosition.game_profile_id == profile_id,
+            InvestmentPosition.is_active == 1,
+            InvestmentPosition.kind == kind,
+        )
+        .first()
+    )
+    return row is not None
 
 
 def active_asset_kinds(db: Session, profile_id: int) -> frozenset[str]:
@@ -112,4 +170,8 @@ def build_victory_evaluation_input(db: Session, profile: GameProfile) -> Victory
         monthly_passive_income=monthly_passive,
         monthly_expenses_total=monthly_expenses_total,
         owned_asset_kinds=active_asset_kinds(db, profile.id),
+        salary_ever_claimed=_salary_ever_claimed(db, profile),
+        safety_ever_contributed=_safety_ever_contributed(db, profile.id),
+        has_active_deposit=_has_active_investment(db, profile.id, "deposit"),
+        has_active_bond=_has_active_investment(db, profile.id, "bond"),
     )

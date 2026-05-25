@@ -5,7 +5,7 @@ import {
   clampInvestAmount,
   DEPOSIT_ANNUAL_RATE_PERCENT,
 } from '../constants/investProducts';
-import { capitalPageSubtitle, getMechanicsFromOverview } from '../utils/starterMechanics';
+import { capitalPageSubtitle, getEffectiveMechanicsFromOverview } from '../utils/starterMechanics';
 import { CapitalLiabilitiesPanel, CapitalPropertyPanel } from './CapitalPortfolioPanels';
 import { InvestProductForm } from './InvestProductForm';
 import {
@@ -16,6 +16,7 @@ import {
   MqxSubtab,
   useMqxConfirm,
 } from './mqx';
+import { CapitalMonetkaGuidance } from './mqx/layout/CapitalMonetkaGuidance';
 import { CapitalPeriodFlowsBlock } from './mqx/layout/CapitalPeriodFlowsBlock';
 import { MqxCapitalSectionAccordion } from './mqx/layout/MqxCapitalSectionAccordion';
 import { MqxTabHero } from './MqxTabHero';
@@ -48,7 +49,7 @@ export function FinancePremium({
   const [portfolioAssetsMode, setPortfolioAssetsMode] = useState('add');
   const [portfolioDebtsMode, setPortfolioDebtsMode] = useState('add');
 
-  const mechanics = useMemo(() => getMechanicsFromOverview(overview), [overview]);
+  const mechanics = useMemo(() => getEffectiveMechanicsFromOverview(overview), [overview]);
   const capitalSectionsCount =
     2 +
     (mechanics.capital_invest ? 1 : 0) +
@@ -307,12 +308,16 @@ export function FinancePremium({
         <div className="mqx-fin mqx-fin--capital">
           {dialog}
           <div className="mqx-capital-accordion-stack">
+            <CapitalMonetkaGuidance />
             <CapitalPeriodFlowsBlock
               overview={overview}
               investPositions={investPositions}
               policies={policies}
               openFlowsSection={openFlowsSection}
             />
+            <p className="mqx-cap-actions-hint">
+              В разделах ниже доступны действия добавления и удаления.
+            </p>
             {mechanics.capital_invest ? (
               <MqxCapitalSectionAccordion title="Инвестиции" meta={investMeta}>
                 {investCapitalBlock}

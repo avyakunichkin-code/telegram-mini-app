@@ -7,17 +7,30 @@ const DEFAULT_MECHANICS = Object.freeze({
   capital_liabilities: true,
 });
 
-export function getMechanicsFromOverview(overview) {
-  const m = overview?.mechanics;
+function normalizeMechanics(m) {
   if (!m || typeof m !== 'object') {
     return { ...DEFAULT_MECHANICS };
   }
   return {
-    capital_invest: m.capital_invest !== false,
-    capital_insurance: m.capital_insurance !== false,
-    capital_property: m.capital_property !== false,
-    capital_liabilities: m.capital_liabilities !== false,
+    capital_invest: m.capital_invest === true,
+    capital_insurance: m.capital_insurance === true,
+    capital_property: m.capital_property === true,
+    capital_liabilities: m.capital_liabilities === true,
   };
+}
+
+/** Потолок шаблона (blueprint.mechanics). */
+export function getMechanicsFromOverview(overview) {
+  return normalizeMechanics(overview?.mechanics);
+}
+
+/** Реально доступные разделы после цепочки целей (overview.mechanics_effective). */
+export function getEffectiveMechanicsFromOverview(overview) {
+  const eff = overview?.mechanics_effective;
+  if (eff && typeof eff === 'object') {
+    return normalizeMechanics(eff);
+  }
+  return getMechanicsFromOverview(overview);
 }
 
 /** Подзаголовок страницы «Управление капиталом». */

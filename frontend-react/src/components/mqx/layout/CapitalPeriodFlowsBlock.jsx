@@ -93,7 +93,7 @@ export function CapitalPeriodFlowsBlock({
   }, [openFlowsSection]);
 
   const incomeOpen = expandedSection !== 'expense';
-  const expenseOpen = expandedSection === 'expense';
+  const expenseOpen = expandedSection !== 'income';
 
   return (
     <>

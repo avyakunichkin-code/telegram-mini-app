@@ -52,6 +52,36 @@ function guidanceForGoal(goal, view) {
     };
   }
 
+  if (type === 'action_once') {
+    const action = goal?.detail?.action || '';
+    if (action === 'salary_claimed' || key === 'tutorial_salary') {
+      return {
+        lead: [{ text: 'Нажми «Зарплата» в действиях периода — это первый шаг сценария.' }],
+        tips: ['Без зарплаты в периоде доход не засчитается в поток.'],
+      };
+    }
+    if (action === 'safety_contributed' || key === 'tutorial_cushion') {
+      return {
+        lead: [
+          { text: 'Переведи любую сумму в ' },
+          { highlight: 'подушку безопасности' },
+          { text: ' — кнопка «В подушку» на дашборде.' },
+        ],
+        tips: ['После этого откроется раздел инвестиций.'],
+      };
+    }
+    if (action === 'invest_opened' || key === 'tutorial_invest') {
+      return {
+        lead: [
+          { text: 'Открой ' },
+          { highlight: 'депозит или облигацию' },
+          { text: ' в «Управление капиталом» → Инвестиции.' },
+        ],
+        tips: ['Достаточно одной позиции — шаг засчитается сразу.'],
+      };
+    }
+  }
+
   if (type === 'safety_fund_months' || key === 'safety_3x' || key === 'safety_6x') {
     return {
       lead: [
@@ -99,18 +129,23 @@ function guidanceForGoal(goal, view) {
     };
   }
 
-  if (type === 'passive_income_monthly_min' || key === 'passive_income_100k') {
+  if (type === 'passive_income_monthly_min' || key === 'invest_income_15k' || key === 'passive_income_100k') {
+    const target = goal?.detail?.min_monthly;
+    const targetLabel =
+      typeof target === 'number' && target > 0
+        ? `${Math.round(target).toLocaleString('ru-RU')} ₽ в месяц`
+        : 'целевого уровня';
     return {
       lead: [
-        { text: 'Наращивай ' },
-        { highlight: 'инвестиции и доходные активы' },
-        { text: ', чтобы пассивный доход достиг ' },
-        { highlight: '100 000 ₽ в месяц' },
+        { text: 'Держи ' },
+        { highlight: 'депозит или облигации' },
+        { text: ', чтобы доход с инвестиций достиг ' },
+        { highlight: targetLabel },
         { text: '.' },
       ],
       tips: [
-        'Разделы «Инвестиции» и «Имущество» в управлении капиталом.',
-        'Доход от активов приходит в конце периода.',
+        'Только инвестиции в этом сценарии — без недвижимости.',
+        'Купоны и %% капитализируются в конце периода.',
       ],
     };
   }

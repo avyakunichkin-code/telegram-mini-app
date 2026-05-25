@@ -1,0 +1,13 @@
+{
+  "ep": "064",
+  "slug": "ep-064-cushion-norm",
+  "arc": 5,
+  "arc_title": "Не одна партия — целая карьера",
+  "layer": "interface",
+  "hook": "G",
+  "image_headline": "Норма подушки",
+  "commits": ["de02d8d"],
+  "platforms": ["telegram"],
+  "approved_at": null,
+  "published_at": null
+}

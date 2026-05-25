@@ -7,6 +7,7 @@ export function pctClamp01(x) {
 
 export function goalStatusLabel(goal) {
   if (!goal?.enabled) return 'Выкл';
+  if (goal.available === false) return 'Скоро';
   if (goal.met) return 'Выполнено';
   return 'В работе';
 }
@@ -40,6 +41,16 @@ export function goalProgressHintText(goal) {
   }
   if (type === 'cash_balance_min') {
     return { kind: 'money_pair', current: d.cash_balance ?? 0, target: d.min_cash ?? 0 };
+  }
+  if (type === 'action_once') {
+    const action = d.action || '';
+    if (action === 'salary_claimed') return 'Кнопка «Зарплата» на дашборде';
+    if (action === 'safety_contributed') return 'Перевод в подушку безопасности';
+    if (action === 'invest_opened' || action === 'invest_deposit_opened') {
+      return 'Депозит или облигация в разделе инвестиций';
+    }
+    if (action === 'invest_bond_bought') return 'Купить облигацию';
+    return goal.met ? 'Сделано' : 'Ожидает действия';
   }
   if (type === 'expense_to_income_ratio') {
     const ratio = Number(d.ratio);
@@ -98,7 +109,7 @@ export function buildVictorySummary(victory, legacyGoal) {
     badge,
     title: 'Победа в сценарии',
     subtitle,
-    goals: (victory.goals || []).filter((g) => g.enabled !== false),
+    goals: (victory.goals || []).filter((g) => g.enabled !== false && g.available !== false),
     gateOpen,
     minPeriod: victory.min_period_index,
   };

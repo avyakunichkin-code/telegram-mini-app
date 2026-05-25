@@ -44,9 +44,13 @@ export function VictoryGoalItem({ goal }) {
         className={met ? 'mqx-progress--done' : undefined}
       />
       <div className="mqx-goal__row mqx-victory-goals__hint">
-        <span>Прогресс</span>
+        <span>{goal.available === false && goal.blocked_reason ? 'Откроется' : 'Прогресс'}</span>
         <span>
-          <GoalProgressHint goal={goal} />
+          {goal.available === false && goal.blocked_reason ? (
+            goal.blocked_reason
+          ) : (
+            <GoalProgressHint goal={goal} />
+          )}
         </span>
       </div>
     </li>

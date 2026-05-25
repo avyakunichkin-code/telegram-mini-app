@@ -7,7 +7,9 @@ import { buildVictorySummary } from './victoryGoalDisplay';
  */
 export function buildGoalChainView(victory, legacyGoal) {
   const summary = buildVictorySummary(victory, legacyGoal);
-  const goals = summary.goals.filter((g) => g.enabled !== false);
+  const allGoals = (victory?.goals || summary.goals).filter((g) => g.enabled !== false);
+  const goals = allGoals.filter((g) => g.available !== false);
+  const lockedLater = allGoals.filter((g) => g.available === false);
   const total = goals.length;
 
   if (total === 0) {
@@ -40,6 +42,15 @@ export function buildGoalChainView(victory, legacyGoal) {
     else if (allMet && i === resolvedIndex) status = 'done';
     return { key: g.key, title: g.title, status };
   });
+
+  for (const g of lockedLater) {
+    chain.push({
+      key: g.key,
+      title: g.title,
+      status: 'locked',
+      blockedReason: g.blocked_reason || null,
+    });
+  }
 
   let phase = 'active';
   if (allMet) {

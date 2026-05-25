@@ -1,0 +1,13 @@
+{
+  "ep": "063",
+  "slug": "ep-063-goal-chain",
+  "arc": 5,
+  "arc_title": "Не одна партия — целая карьера",
+  "layer": "mechanics",
+  "hook": "C",
+  "image_headline": "Цель по шагам",
+  "commits": ["uncommitted-victory-chain", "0032"],
+  "platforms": ["telegram"],
+  "approved_at": null,
+  "published_at": null
+}

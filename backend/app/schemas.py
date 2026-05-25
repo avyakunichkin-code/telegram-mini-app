@@ -104,6 +104,8 @@ class VictoryGoalOverview(BaseModel):
     met: bool = False
     progress: float = 0.0
     detail: dict = Field(default_factory=dict)
+    available: bool = True
+    blocked_reason: Optional[str] = None
 
 
 class ExpenseCategoryBurnItem(BaseModel):
@@ -234,6 +236,7 @@ class FinanceOverview(BaseModel):
     onboarding_state: str = "brief_done"
     onboarding_step: str = "farewell"
     mechanics: GameMechanicsPermissions = Field(default_factory=GameMechanicsPermissions)
+    mechanics_effective: GameMechanicsPermissions = Field(default_factory=GameMechanicsPermissions)
 
 
 class AnalyticsTimeseriesPoint(BaseModel):

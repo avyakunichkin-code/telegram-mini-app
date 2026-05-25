@@ -13,6 +13,15 @@ from dataclasses import dataclass, field, replace
 from typing import Any
 
 from .game_rules import MIN_PERIOD_INDEX_FOR_WIN
+from .mechanics_progression import (
+    MECHANIC_DASHBOARD_CORE,
+    compute_mechanics_effective,
+    goal_mechanics_available,
+    goal_requires_list,
+    _template_allows_requires,
+)
+from .mechanics_progression import CAPITAL_MECHANIC_KEYS
+from .starter_mechanics import DEFAULT_MECHANICS
 from .victory_seeds import DEFAULT_TEMPLATE_KEY, victory_config_for_template
 
 VICTORY_SCHEMA_VERSION = 1
@@ -36,6 +45,10 @@ class VictoryEvaluationInput:
     monthly_passive_income: float = 0
     monthly_expenses_total: float = 0
     owned_asset_kinds: frozenset[str] = frozenset()
+    salary_ever_claimed: bool = False
+    safety_ever_contributed: bool = False
+    has_active_deposit: bool = False
+    has_active_bond: bool = False
 
 
 @dataclass(frozen=True)
@@ -48,6 +61,8 @@ class VictoryGoalResult:
     met: bool
     progress: float = 0.0
     detail: dict[str, Any] = field(default_factory=dict)
+    available: bool = True
+    blocked_reason: str | None = None
 
 
 @dataclass(frozen=True)
@@ -66,6 +81,7 @@ class VictoryEvaluationResult:
     win_target_safety_fund: float
     win_progress_safety_fund: float
     goals: tuple[VictoryGoalResult, ...]
+    mechanics_effective: dict[str, bool] = field(default_factory=dict)
 
 
 def parse_victory_config(raw: str | dict[str, Any] | None, *, template_key: str | None = None) -> dict[str, Any]:
@@ -109,6 +125,36 @@ def _evaluate_goal(goal: dict[str, Any], snap: VictoryEvaluationInput) -> Victor
             enabled=False,
             met=False,
             progress=0.0,
+            detail=detail,
+            available=False,
+            blocked_reason=None,
+        )
+
+    if gtype == "action_once":
+        action = str(goal.get("action") or "").strip()
+        detail = {"action": action}
+        met = False
+        if action == "salary_claimed":
+            met = bool(snap.salary_ever_claimed)
+        elif action == "safety_contributed":
+            met = bool(snap.safety_ever_contributed)
+        elif action == "invest_deposit_opened":
+            met = bool(snap.has_active_deposit)
+        elif action == "invest_bond_bought":
+            met = bool(snap.has_active_bond)
+        elif action == "invest_opened":
+            met = bool(snap.has_active_deposit or snap.has_active_bond)
+        else:
+            detail["error"] = f"unknown_action:{action}"
+        progress = 1.0 if met else 0.0
+        return VictoryGoalResult(
+            key=key,
+            type=gtype,
+            title=title,
+            required=required,
+            enabled=True,
+            met=met,
+            progress=progress,
             detail=detail,
         )
 
@@ -287,16 +333,24 @@ def _progression_mode(config: dict[str, Any]) -> str:
 
 def _apply_chain_progression(
     goal_results: list[VictoryGoalResult],
-) -> tuple[list[VictoryGoalResult], int, str | None]:
-    """Эффективный met по цепочке; raw_met в detail."""
+) -> tuple[list[VictoryGoalResult], int, str | None, set[str]]:
+    """Эффективный met по цепочке; raw_met в detail. Учитываются только available цели."""
     prior_ok = True
     out: list[VictoryGoalResult] = []
     current_key: str | None = None
     chain_met = 0
+    chain_met_keys: set[str] = set()
 
     for g in goal_results:
         if not g.enabled:
             out.append(g)
+            continue
+
+        if not g.available:
+            out.append(g)
+            if prior_ok and current_key is None:
+                current_key = g.key
+            prior_ok = False
             continue
 
         raw_met = g.met
@@ -308,12 +362,82 @@ def _apply_chain_progression(
             current_key = g.key
         if effective_met:
             chain_met += 1
+            chain_met_keys.add(g.key)
         else:
             prior_ok = False
 
         out.append(replace(g, met=effective_met, detail=detail))
 
-    return out, chain_met, current_key
+    return out, chain_met, current_key, chain_met_keys
+
+
+def _permissive_mechanics_context() -> tuple[dict[str, bool], list[dict[str, Any]]]:
+    cap = dict(DEFAULT_MECHANICS)
+    unlock = [{"after_goal": None, "grant": list(CAPITAL_MECHANIC_KEYS)}]
+    return cap, unlock
+
+
+def _apply_availability(
+    evaluated: list[VictoryGoalResult],
+    requires_by_key: dict[str, list[str]],
+    template_cap: dict[str, bool],
+    effective: dict[str, bool],
+) -> list[VictoryGoalResult]:
+    staged: list[VictoryGoalResult] = []
+    for g in evaluated:
+        if not g.enabled:
+            staged.append(g)
+            continue
+        req = requires_by_key.get(g.key, [MECHANIC_DASHBOARD_CORE])
+        if not _template_allows_requires(req, template_cap):
+            staged.append(
+                replace(
+                    g,
+                    enabled=False,
+                    available=False,
+                    blocked_reason=None,
+                    met=False,
+                )
+            )
+            continue
+        avail, reason = goal_mechanics_available(req, template_cap, effective)
+        staged.append(replace(g, available=avail, blocked_reason=reason))
+    return staged
+
+
+def _finalize_with_mechanics(
+    evaluated: list[VictoryGoalResult],
+    raw_goals: list[dict[str, Any]],
+    template_cap: dict[str, bool],
+    unlock_steps: list[dict[str, Any]],
+    *,
+    chain_mode: bool,
+) -> tuple[list[VictoryGoalResult], dict[str, bool], int, str | None]:
+    requires_by_key = {
+        str(g.get("key")): goal_requires_list(g) for g in raw_goals if isinstance(g, dict)
+    }
+    effective = compute_mechanics_effective(template_cap, unlock_steps, set())
+    chain_results = evaluated
+    goals_met = 0
+    current_key: str | None = None
+
+    for pass_i in range(4):
+        staged = _apply_availability(evaluated, requires_by_key, template_cap, effective)
+        if chain_mode:
+            chain_results, goals_met, current_key, chain_met_keys = _apply_chain_progression(staged)
+            new_effective = compute_mechanics_effective(template_cap, unlock_steps, chain_met_keys)
+            if pass_i > 0 and new_effective == effective:
+                effective = new_effective
+                break
+            effective = new_effective
+        else:
+            chain_results = staged
+            enabled_avail = [g for g in staged if g.enabled and g.available]
+            goals_met = sum(1 for g in enabled_avail if g.met)
+            current_key = next((g.key for g in enabled_avail if not g.met), None)
+            break
+
+    return chain_results, effective, goals_met, current_key
 
 
 def _safety_legacy_fields(goal_results: list[VictoryGoalResult]) -> tuple[float, float]:
@@ -332,30 +456,42 @@ def evaluate_victory(
     snap: VictoryEvaluationInput,
     *,
     template_key: str | None = None,
+    template_cap: dict[str, bool] | None = None,
+    mechanics_unlock: list[dict[str, Any]] | None = None,
 ) -> VictoryEvaluationResult:
     min_period = int(config.get("min_period_index_for_victory", MIN_PERIOD_INDEX_FOR_WIN))
     required_met = int(config.get("required_goals_met", 1))
     schema_version = int(config.get("schema_version", VICTORY_SCHEMA_VERSION))
     tk = (template_key or "").strip() or DEFAULT_TEMPLATE_KEY
 
+    if template_cap is None or mechanics_unlock is None:
+        default_cap, default_unlock = _permissive_mechanics_context()
+        template_cap = template_cap if template_cap is not None else default_cap
+        mechanics_unlock = mechanics_unlock if mechanics_unlock is not None else default_unlock
+
     progression = _progression_mode(config)
     raw_goals = config.get("goals") or []
-    goal_results = [_evaluate_goal(g, snap) for g in raw_goals if isinstance(g, dict)]
-    enabled = [g for g in goal_results if g.enabled]
-    goals_enabled = len(enabled)
-    current_goal_key: str | None = None
+    evaluated = [_evaluate_goal(g, snap) for g in raw_goals if isinstance(g, dict)]
+    chain_mode = progression == PROGRESSION_CHAIN
 
-    if progression == PROGRESSION_CHAIN:
-        goal_results, goals_met, current_goal_key = _apply_chain_progression(goal_results)
-        goals_required = goals_enabled
-        period_gate_open = int(snap.period_index) >= min_period
+    goal_results, mechanics_effective, goals_met, current_goal_key = _finalize_with_mechanics(
+        evaluated,
+        raw_goals,
+        template_cap,
+        mechanics_unlock,
+        chain_mode=chain_mode,
+    )
+
+    enabled_avail = [g for g in goal_results if g.enabled and g.available]
+    goals_enabled = len(enabled_avail)
+    goals_required = goals_enabled if chain_mode else required_met
+
+    period_gate_open = int(snap.period_index) >= min_period
+    if chain_mode:
         all_chain_met = goals_enabled > 0 and goals_met >= goals_enabled
         win_reached = period_gate_open and all_chain_met
         win_ready = all_chain_met and not period_gate_open
     else:
-        goals_met = sum(1 for g in enabled if g.met)
-        goals_required = required_met
-        period_gate_open = int(snap.period_index) >= min_period
         win_reached = period_gate_open and goals_met >= required_met and goals_enabled > 0
         win_ready = _compute_win_ready(goal_results, required_met)
 
@@ -376,4 +512,5 @@ def evaluate_victory(
         win_target_safety_fund=win_target,
         win_progress_safety_fund=win_progress,
         goals=tuple(goal_results),
+        mechanics_effective=mechanics_effective,
     )
