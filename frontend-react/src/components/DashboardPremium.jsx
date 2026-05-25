@@ -142,7 +142,7 @@ export function DashboardPremium({
 
     const safety = Number(overview?.safety_fund_balance) || 0;
 
-    const flow = Number(overview?.net_monthly_cashflow) || 0;
+    const totalIncome = Number(overview?.total_monthly_income) || 0;
 
     const lifestyleExpense = getMonthlyBurn(overview);
     const cushionFill = getSafetyFundFillFromOverview(overview);
@@ -151,10 +151,11 @@ export function DashboardPremium({
       {
         title: 'Доходы',
         chipAction: CAPITAL_FLOWS_SECTION.income,
-        titleHint: 'Чистый денежный поток за период (доходы минус обязательные платежи)',
-        valueNode: <MoneyText value={formatSignedMoney(flow)} />,
+        titleHint:
+          'Сумма доходов за период: зарплата и доход от активов (без вычета расходов и платежей по долгам)',
+        valueNode: <MoneyText value={totalIncome} />,
         accent: 'mqx-accent--sky',
-        valueTone: flow >= 0 ? 'pos' : 'out',
+        valueTone: 'pos',
         icon: (
           <svg viewBox="0 0 24 24" aria-hidden="true">
             <path d="M4 19V5" />

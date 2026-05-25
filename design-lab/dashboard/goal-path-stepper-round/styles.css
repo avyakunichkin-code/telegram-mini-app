@@ -1,0 +1,251 @@
+/* goal-path-stepper-round — связанные кружки в свёрнутом MqxGoalDash */
+
+/* —— Stepper track —— */
+.mqx-goal-path {
+  margin-top: 10px;
+  width: 100%;
+}
+
+.mqx-goal-path__track {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0;
+  width: 100%;
+  padding: 2px 0;
+}
+
+.mqx-goal-path__segment {
+  display: flex;
+  align-items: center;
+  flex: 1 1 0;
+  min-width: 0;
+}
+
+.mqx-goal-path__segment:first-child {
+  flex: 0 0 auto;
+}
+
+.mqx-goal-path__segment:last-child {
+  flex: 0 0 auto;
+}
+
+.mqx-goal-path__segment:last-child .mqx-goal-path__connector {
+  display: none;
+}
+
+.mqx-goal-path__node {
+  position: relative;
+  flex-shrink: 0;
+  width: 22px;
+  height: 22px;
+  border-radius: 999px;
+  display: grid;
+  place-items: center;
+  font-size: 10px;
+  font-weight: 800;
+  line-height: 1;
+  border: 2px solid color-mix(in srgb, var(--mqx-ink) 14%, transparent);
+  background: color-mix(in srgb, var(--mqx-ink) 5%, var(--mqx-glass-soft, #fff));
+  color: color-mix(in srgb, var(--mqx-ink) 45%, transparent);
+  box-sizing: border-box;
+}
+
+.mqx-goal-path__connector {
+  flex: 1 1 auto;
+  height: 2px;
+  min-width: 4px;
+  margin: 0 2px;
+  border-radius: 1px;
+  background: color-mix(in srgb, var(--mqx-ink) 12%, transparent);
+}
+
+/* done */
+.mqx-goal-path__segment--done .mqx-goal-path__node {
+  border-color: color-mix(in srgb, var(--mq-sky, #0ea5e9) 38%, transparent);
+  background: color-mix(in srgb, var(--mq-sky, #0ea5e9) 14%, transparent);
+  color: var(--mq-sky, #0ea5e9);
+}
+
+.mqx-goal-path__segment--done .mqx-goal-path__connector {
+  background: color-mix(in srgb, var(--mq-sky, #0ea5e9) 42%, transparent);
+}
+
+/* current */
+.mqx-goal-path__segment--current .mqx-goal-path__node {
+  width: 26px;
+  height: 26px;
+  font-size: 11px;
+  border-color: color-mix(in srgb, var(--mq-sky, #0ea5e9) 55%, transparent);
+  background: color-mix(in srgb, var(--mq-sky, #0ea5e9) 22%, transparent);
+  color: color-mix(in srgb, var(--mq-sky, #0ea5e9) 95%, var(--mqx-ink));
+  box-shadow:
+    0 0 0 3px color-mix(in srgb, var(--mq-sky, #0ea5e9) 18%, transparent),
+    0 2px 8px color-mix(in srgb, var(--mq-sky, #0ea5e9) 22%, transparent);
+}
+
+.mqx-goal-path__segment--current .mqx-goal-path__connector {
+  background: linear-gradient(
+    90deg,
+    color-mix(in srgb, var(--mq-sky, #0ea5e9) 48%, transparent) 0%,
+    color-mix(in srgb, var(--mqx-ink) 12%, transparent) 100%
+  );
+}
+
+/* locked */
+.mqx-goal-path__segment--locked .mqx-goal-path__node {
+  opacity: 0.38;
+  border-style: dashed;
+}
+
+.mqx-goal-path__segment--locked .mqx-goal-path__connector {
+  opacity: 0.35;
+}
+
+.mqx-goal-path__lock {
+  width: 9px;
+  height: 9px;
+  opacity: 0.7;
+}
+
+/* gate (победа с 7-го периода) */
+.mqx-goal-path__segment--gate .mqx-goal-path__node {
+  border-color: color-mix(in srgb, var(--mq-amber, #d97706) 40%, transparent);
+  background: color-mix(in srgb, var(--mq-amber, #d97706) 10%, transparent);
+  color: var(--mq-amber, #d97706);
+}
+
+/* —— Layout variants —— */
+
+/* P1: stepper под заголовком (default) */
+.mqx-goal-dash--path-p1 .mqx-goal-dash__head-text {
+  width: 100%;
+}
+
+/* P2: stepper над названием цели */
+.mqx-goal-dash--path-p2 .mqx-goal-dash__toggle-inner {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.mqx-goal-dash--path-p2 .mqx-goal-path {
+  order: -1;
+  margin-top: 0;
+  margin-bottom: 8px;
+}
+
+.mqx-goal-dash--path-p2 .mqx-goal-dash__head-row {
+  flex-wrap: wrap;
+}
+
+.mqx-goal-dash--path-p2 .mqx-goal-dash__current-title {
+  font-size: 14px;
+}
+
+/* P3 ★ prod: тропа под заголовком, без текста «Шаг K из N» */
+.mqx-goal-dash--path-p3 .mqx-goal-dash__path-row,
+.mqx-goal-dash--path-compact .mqx-goal-dash__path-row {
+  margin-top: 8px;
+  width: 100%;
+}
+
+.mqx-goal-dash--path-p3 .mqx-goal-path,
+.mqx-goal-dash--path-compact .mqx-goal-path {
+  width: 100%;
+}
+
+.mqx-goal-dash__gate-hint {
+  display: block;
+  margin-top: 4px;
+  font-size: 11px;
+  font-weight: 600;
+  color: color-mix(in srgb, var(--mq-amber, #d97706) 78%, var(--mqx-ink));
+  font-variant-numeric: tabular-nums;
+}
+
+.mqx-goal-dash--path-p3 .mqx-goal-path__node {
+  width: 18px;
+  height: 18px;
+  font-size: 9px;
+}
+
+.mqx-goal-dash--path-p3 .mqx-goal-path__segment--current .mqx-goal-path__node {
+  width: 20px;
+  height: 20px;
+}
+
+/* 7 steps — slightly smaller nodes */
+.mqx-goal-path--dense .mqx-goal-path__node {
+  width: 18px;
+  height: 18px;
+  font-size: 9px;
+}
+
+.mqx-goal-path--dense .mqx-goal-path__segment--current .mqx-goal-path__node {
+  width: 20px;
+  height: 20px;
+}
+
+.mqx-goal-path--dense .mqx-goal-path__connector {
+  min-width: 2px;
+  margin: 0 1px;
+}
+
+/* Screen reader only step labels */
+.mqx-goal-path__sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Lab */
+.lab-variant-tag {
+  display: inline-block;
+  margin: 0 0 8px;
+  padding: 4px 8px;
+  border-radius: 8px;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  background: color-mix(in srgb, var(--mq-sky, #0ea5e9) 14%, transparent);
+  color: color-mix(in srgb, var(--mq-sky, #0ea5e9) 88%, var(--mqx-ink));
+}
+
+.lab-variant-tag--rec {
+  background: color-mix(in srgb, var(--mq-emerald, #059669) 16%, transparent);
+  color: color-mix(in srgb, var(--mq-emerald, #059669) 90%, var(--mqx-ink));
+}
+
+.lab-legend {
+  margin: 0 0 12px;
+  padding: 10px 12px;
+  border-radius: 12px;
+  font-size: 12px;
+  line-height: 1.45;
+  background: color-mix(in srgb, var(--mqx-ink) 4%, transparent);
+}
+
+.lab-legend dl {
+  margin: 8px 0 0;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 4px 10px;
+}
+
+.lab-legend dt {
+  font-weight: 800;
+  font-size: 11px;
+}
+
+.lab-legend dd {
+  margin: 0;
+  color: var(--text-muted);
+}

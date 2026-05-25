@@ -14,11 +14,9 @@
 | **design-lab-mqx** | Макеты в `design-lab/`: self-contained CSS, `sync-lab.ps1`, без `../` в HTML; правило `money-quest-design-lab.mdc` |
 | **spec-driven-development** | Новые фичи и контракты — сначала spec (`docs/specs/`) |
 | **incremental-implementation** | Крупные изменения по шагам без монолитных PR |
-| **debugging-and-error-recovery** | Периодная экономика, race на overview, ошибки API |
 | **api-and-interface-design** | Эндпоинты `/api/...`, поля overview, синхронизация с `api.js` |
 | **test-driven-development** | Логика `game_period`, расчёты — регрессии дорого стоят |
 | **code-review-and-quality** | Перед merge UI и экономики |
-| **git-workflow-and-versioning** | Ветки, атомарные коммиты по пользовательским правилам |
 | **planning-and-task-breakdown** | Бэклог по слоям (docs), разбиение задач |
 | **context-engineering** | Длинные сессии агента, что класть в rules vs skills |
 | **using-agent-skills** | Навигация по каталогу скиллов |
@@ -31,7 +29,6 @@
 |-------|----------------|
 | **browser-testing-with-devtools** | Визуальная проверка TMA, DOM, сеть (нужен MCP Chrome DevTools) |
 | **documentation-and-adrs** | Архитектурные решения, изменение публичного API |
-| **source-driven-development** | Официальные доки telegram-ui / React при спорных паттернах |
 | **doubt-driven-development** | Высокие ставки: победа MVP, списания периода, деньги игрока |
 | **deprecation-and-migration** | Переход `mode` → `save_kind`, смена контрактов |
 | **security-and-hardening** | JWT, ввод пользователя, новые интеграции |
@@ -49,6 +46,9 @@
 |-------|------------------|
 | ~~**ci-cd-and-automation**~~ | В репозитории нет `.github/workflows`; скилл удалён из проекта — вернуть при появлении CI |
 | ~~**shipping-and-launch**~~ | MVP без формализованного релизного контура — вернуть перед продакшеном |
+| ~~**source-driven-development**~~ | Не использовался в сессиях; официальные доки — по запросу или WebFetch |
+| ~~**debugging-and-error-recovery**~~ | Не использовался; баги — воспроизведение в чате + `test-driven-development` |
+| ~~**git-workflow-and-versioning**~~ | Не использовался; коммиты — user rules в Cursor |
 
 Если CI или чеклист релиза появятся — восстановите папки из резервной копии Cursor Skill Hub или скопируйте из другого проекта.
 

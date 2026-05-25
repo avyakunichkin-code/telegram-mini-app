@@ -346,7 +346,9 @@ getAchievements: () => apiCall('/api/game/achievements'),
 
 ## 11. UX — гибрид B+C (норматив FE)
 
-**Принцип:** Главная остаётся **компактной** в свёрнутом состоянии; глубина — по раскрытию блока «Уровень» и на отдельной странице. **Пятого таба** в `BottomGameNav` **нет**.
+> **Статус 2026-05-25:** блок **«Уровень» / character XP на главной снят** — канон [`remove-character-xp-and-levels.md`](../../vision/ideas/remove-character-xp-and-levels.md). Ниже — **целевой UX достижений** без коллапса уровня на dashboard; вход — **Меню** и отдельная страница каталога. `MqxLevelBlock` удалён из prod.
+
+**Принцип:** Главная остаётся **компактной** (цель сценария + финансы периода); достижения — **не** на dashboard в MVP. **Пятого таба** в `BottomGameNav` **нет**.
 
 Сверка: [SPEC_FRONTEND_UI.md](../SPEC_FRONTEND_UI.md), [DESIGN_WORKFLOW.md](../../../frontend-react/src/components/mqx/DESIGN_WORKFLOW.md), [frontend-design skill](../../../frontend-react/.agents/skills/frontend-design/SKILL.md) (канон MQX, не generic AI aesthetic).
 

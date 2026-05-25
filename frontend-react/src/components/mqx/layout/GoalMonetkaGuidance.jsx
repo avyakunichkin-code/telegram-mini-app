@@ -73,11 +73,13 @@ function guidanceForGoal(goal, view) {
     if (action === 'invest_opened' || key === 'tutorial_invest') {
       return {
         lead: [
-          { text: 'Открой ' },
-          { highlight: 'депозит или облигацию' },
-          { text: ' в «Управление капиталом» → Инвестиции.' },
+          { text: 'Положи деньги на ' },
+          { highlight: 'депозит' },
+          { text: ' или ' },
+          { highlight: 'купи облигацию' },
+          { text: ' в «Финансы» → Инвестиции.' },
         ],
-        tips: ['Достаточно одной позиции — шаг засчитается сразу.'],
+        tips: ['Достаточно одной позиции — цель засчитается сразу, если уже сделал раньше.'],
       };
     }
     if (action === 'insurance_purchased' || key === 'tutorial_insurance') {

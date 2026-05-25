@@ -2,7 +2,7 @@
 layer: spec
 status: implemented
 owner: product
-last_reviewed: 2026-05-17
+last_reviewed: 2026-05-25
 tracks: save-kind, game-plan, victory-v2
 idea: vision/ideas/money-quest-evolution-after-mvp.md
 plan: plans/PLAN_game-plan.md
@@ -49,10 +49,14 @@ audit: foundation/MVP_AUDIT_VS_SPEC.md
 - [x] События и конец периода используют **новую семантику фильтра** (не `light`/`hardcore` профиля), согласованную с ADR.
 - [x] **Overview:** поля **`avg_net_cashflow_6p`** / **`avg_net_cashflow_6p_n`** присутствуют; условие победы MVP не сломано до включения victory v2 (**M из N**).
 
-**Отложено на MVP 2.0**
+**Реализовано после G1 (backend)**
+
+- [x] Победа **M из N** из `victory_config_json` — [`SPEC_victory-v2`](../specs/features/SPEC_victory-v2.md), `victory_engine.py`.
+
+**Отложено на MVP 2.0 / backlog**
 
 - [ ] `save_kind = plan`, мастер Plan, prefill из другого сохранения.
-- [ ] Полная победа **M из N** из шаблона и дополнительный контент каталога (сейчас **четыре** сида; целевой ориентир в концепции — до пяти сценариев).
+- [ ] UI прогресса целей победы; расширение каталога шаблонов (ориентир 5 сценариев).
 
 ---
 

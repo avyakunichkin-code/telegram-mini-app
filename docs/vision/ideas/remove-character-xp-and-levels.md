@@ -11,6 +11,7 @@ related_specs:
   - ../../specs/features/SPEC_victory-v2.md
   - ../../specs/features/SPEC_mvp-11-progression-events.md
   - ../../foundation/SPEC_PRODUCT.md
+adr: ../../decisions/ADR-003-remove-character-progression.md
 ---
 
 # Убрать уровень персонажа, XP и «геймификационный» рейтинг

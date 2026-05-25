@@ -13,8 +13,8 @@ from .models import GameProfile, NotificationLog
 ONBOARDING_FUNNEL_STEPS: list[tuple[str, str]] = [
     ("period_timer", "1. Период и таймер"),
     ("salary", "2. Зарплата"),
-    ("next_period", "3. Следующий период"),
-    ("safety_fund", "4. Подушка"),
+    ("safety_fund", "3. В подушку"),
+    ("next_period", "4. Следующий период"),
     ("farewell", "5. Финиш"),
 ]
 

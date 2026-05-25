@@ -61,9 +61,9 @@ export function GameScreen({ onLogout, onNewGame, onLoadGame }) {
 
   const closeEventsOverlay = useCallback(() => setEventsOpen(false), []);
 
-  const eventsUnlocked = true;
   const inOnboarding =
     overview && (overview.onboarding_state === 'draft' || overview.onboarding_state === 'started');
+  const eventsUnlocked = !inOnboarding;
 
   useEffect(() => {
     if (!eventsUnlocked || inOnboarding) return;

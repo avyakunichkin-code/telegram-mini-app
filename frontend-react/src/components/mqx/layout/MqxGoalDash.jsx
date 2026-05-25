@@ -2,6 +2,7 @@ import { useId, useMemo, useState } from 'react';
 
 import { buildGoalChainView } from '../utils/goalChainDisplay';
 import { GoalMonetkaGuidance } from './GoalMonetkaGuidance';
+import { MqxGoalPathStepper } from './MqxGoalPathStepper';
 
 function GoalChevron() {
   return (
@@ -42,18 +43,41 @@ function GoalChainList({ chain }) {
   );
 }
 
-/** Раздел «Цель» на дашборде: цепочка шагов, подсказка Монетки (G1). */
+function GoalDashHead({ view, showStepper }) {
+  return (
+    <div className="mqx-goal-dash__head-text">
+      <span className="mqx-goal-dash__kicker">Цель</span>
+      <span className="mqx-goal-dash__current-title">{view.headerTitle}</span>
+      {view.phase === 'gate' && view.minPeriod ? (
+        <span className="mqx-goal-dash__gate-hint">Победа с {view.minPeriod}-го периода</span>
+      ) : null}
+      {showStepper ? (
+        <div className="mqx-goal-dash__path-row">
+          <MqxGoalPathStepper
+            chain={view.chain}
+            phase={view.phase}
+            dense={view.total > 5}
+            ariaLabel={view.stepAriaLabel}
+          />
+        </div>
+      ) : null}
+    </div>
+  );
+}
+
+/** Раздел «Цель» на дашборде: тропа шагов + подсказка Монетки (G1). */
 export function MqxGoalDash({ victory, legacyGoal, defaultExpanded = false }) {
   const [expanded, setExpanded] = useState(defaultExpanded);
   const expandId = useId();
   const view = useMemo(() => buildGoalChainView(victory, legacyGoal), [victory, legacyGoal]);
+  const showStepper = view.chain.length > 0;
 
   if (view.phase === 'empty') return null;
 
   return (
     <div className="mqx-goal-dash-bleed">
       <section
-        className={`mqx-goal-dash${expanded ? ' mqx-goal-dash--expanded' : ''}`}
+        className={`mqx-goal-dash mqx-goal-dash--path-compact${expanded ? ' mqx-goal-dash--expanded' : ''}`}
         aria-label="Цель сценария"
       >
         <button
@@ -65,13 +89,7 @@ export function MqxGoalDash({ victory, legacyGoal, defaultExpanded = false }) {
         >
           <div className="mqx-goal-dash__toggle-inner">
             <div className="mqx-goal-dash__head-row">
-              <div className="mqx-goal-dash__head-text">
-                <span className="mqx-goal-dash__kicker">Цель</span>
-                <span className="mqx-goal-dash__current-title">{view.headerTitle}</span>
-                {view.stepLabel ? (
-                  <span className="mqx-goal-dash__step">{view.stepLabel}</span>
-                ) : null}
-              </div>
+              <GoalDashHead view={view} showStepper={showStepper} />
               <GoalChevron />
             </div>
           </div>

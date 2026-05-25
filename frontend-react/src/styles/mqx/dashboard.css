@@ -1157,6 +1157,152 @@ button.mqx-finance-chip.mqx-finance-chip--action:focus-visible {
   opacity: 0.42;
 }
 
+/* —— Тропа целей (свёрнутый stepper, P3 compact) —— */
+.mqx-goal-dash--path-compact .mqx-goal-dash__path-row {
+  margin-top: 8px;
+}
+
+.mqx-goal-dash__gate-hint {
+  display: block;
+  margin-top: 4px;
+  font-size: var(--mq-fs-small);
+  font-weight: var(--mq-fw-medium);
+  color: color-mix(in srgb, var(--mq-amber, #d97706) 78%, var(--mqx-ink));
+  font-variant-numeric: tabular-nums;
+}
+
+.mqx-goal-path {
+  width: 100%;
+}
+
+.mqx-goal-path__track {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 2px 0;
+}
+
+.mqx-goal-path__segment {
+  display: flex;
+  align-items: center;
+  flex: 1 1 0;
+  min-width: 0;
+}
+
+.mqx-goal-path__segment:first-child,
+.mqx-goal-path__segment:last-child {
+  flex: 0 0 auto;
+}
+
+.mqx-goal-path__segment:last-child .mqx-goal-path__connector {
+  display: none;
+}
+
+.mqx-goal-path__node {
+  position: relative;
+  flex-shrink: 0;
+  width: 22px;
+  height: 22px;
+  border-radius: 999px;
+  display: grid;
+  place-items: center;
+  font-size: var(--mq-fs-micro);
+  font-weight: 800;
+  line-height: 1;
+  border: 2px solid color-mix(in srgb, var(--mqx-ink) 14%, transparent);
+  background: color-mix(in srgb, var(--mqx-ink) 5%, var(--mqx-glass-soft, #fff));
+  color: color-mix(in srgb, var(--mqx-ink) 45%, transparent);
+  box-sizing: border-box;
+}
+
+.mqx-goal-path__connector {
+  flex: 1 1 auto;
+  height: 2px;
+  min-width: 4px;
+  margin: 0 2px;
+  border-radius: 1px;
+  background: color-mix(in srgb, var(--mqx-ink) 12%, transparent);
+}
+
+.mqx-goal-path__segment--done .mqx-goal-path__node {
+  border-color: color-mix(in srgb, var(--mq-sky, #0ea5e9) 38%, transparent);
+  background: color-mix(in srgb, var(--mq-sky, #0ea5e9) 14%, transparent);
+  color: var(--mq-sky, #0ea5e9);
+}
+
+.mqx-goal-path__segment--done .mqx-goal-path__connector {
+  background: color-mix(in srgb, var(--mq-sky, #0ea5e9) 42%, transparent);
+}
+
+.mqx-goal-path__segment--current .mqx-goal-path__node {
+  width: 26px;
+  height: 26px;
+  font-size: var(--mq-fs-small);
+  border-color: color-mix(in srgb, var(--mq-sky, #0ea5e9) 55%, transparent);
+  background: color-mix(in srgb, var(--mq-sky, #0ea5e9) 22%, transparent);
+  color: color-mix(in srgb, var(--mq-sky, #0ea5e9) 95%, var(--mqx-ink));
+  box-shadow:
+    0 0 0 3px color-mix(in srgb, var(--mq-sky, #0ea5e9) 18%, transparent),
+    0 2px 8px color-mix(in srgb, var(--mq-sky, #0ea5e9) 22%, transparent);
+}
+
+.mqx-goal-path__segment--current .mqx-goal-path__connector {
+  background: linear-gradient(
+    90deg,
+    color-mix(in srgb, var(--mq-sky, #0ea5e9) 48%, transparent) 0%,
+    color-mix(in srgb, var(--mqx-ink) 12%, transparent) 100%
+  );
+}
+
+.mqx-goal-path__segment--locked .mqx-goal-path__node {
+  opacity: 0.38;
+  border-style: dashed;
+}
+
+.mqx-goal-path__segment--locked .mqx-goal-path__connector {
+  opacity: 0.35;
+}
+
+.mqx-goal-path__segment--gate .mqx-goal-path__node {
+  border-color: color-mix(in srgb, var(--mq-amber, #d97706) 40%, transparent);
+  background: color-mix(in srgb, var(--mq-amber, #d97706) 10%, transparent);
+  color: var(--mq-amber, #d97706);
+}
+
+.mqx-goal-path__lock {
+  width: 9px;
+  height: 9px;
+}
+
+.mqx-goal-path--dense .mqx-goal-path__node {
+  width: 18px;
+  height: 18px;
+  font-size: 9px;
+}
+
+.mqx-goal-path--dense .mqx-goal-path__segment--current .mqx-goal-path__node {
+  width: 20px;
+  height: 20px;
+}
+
+.mqx-goal-path--dense .mqx-goal-path__connector {
+  min-width: 2px;
+  margin: 0 1px;
+}
+
+.mqx-goal-path__sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
 .mqx-period-dash__toggle {
   width: 100%;
   border: none;

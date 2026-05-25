@@ -81,8 +81,7 @@ GAME_STARTER_TEMPLATE_SEEDS = [
             ],
             "mechanics_unlock": [
                 {"after_goal": None, "grant": ["capital_flows"]},
-                {"after_goal": "tutorial_cushion", "grant": ["capital_liabilities"]},
-                {"after_goal": "safety_6x", "grant": ["capital_invest"]},
+                {"after_goal": "tutorial_cushion", "grant": ["capital_liabilities", "capital_invest"]},
                 {"after_goal": "tutorial_invest", "grant": ["capital_insurance"]},
                 {"after_goal": "tutorial_insurance", "grant": ["capital_property"]},
             ],
@@ -142,8 +141,7 @@ GAME_STARTER_TEMPLATE_SEEDS = [
             ],
             "mechanics_unlock": [
                 {"after_goal": None, "grant": ["capital_flows"]},
-                {"after_goal": "tutorial_cushion", "grant": ["capital_liabilities"]},
-                {"after_goal": "safety_6x", "grant": ["capital_invest"]},
+                {"after_goal": "tutorial_cushion", "grant": ["capital_liabilities", "capital_invest"]},
                 {"after_goal": "tutorial_invest", "grant": ["capital_insurance"]},
                 {"after_goal": "tutorial_insurance", "grant": ["capital_property"]},
             ],
@@ -207,8 +205,7 @@ GAME_STARTER_TEMPLATE_SEEDS = [
             ],
             "mechanics_unlock": [
                 {"after_goal": None, "grant": ["capital_flows"]},
-                {"after_goal": "tutorial_cushion", "grant": ["capital_liabilities"]},
-                {"after_goal": "safety_6x", "grant": ["capital_invest"]},
+                {"after_goal": "tutorial_cushion", "grant": ["capital_liabilities", "capital_invest"]},
                 {"after_goal": "tutorial_invest", "grant": ["capital_insurance"]},
                 {"after_goal": "tutorial_insurance", "grant": ["capital_property"]},
             ],

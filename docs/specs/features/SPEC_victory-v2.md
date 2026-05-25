@@ -2,11 +2,13 @@
 layer: spec
 status: approved
 owner: product
-last_reviewed: 2026-05-19
+last_reviewed: 2026-05-25
 tracks: victory-v2, game-plan
 idea: vision/ideas/money-quest-evolution-after-mvp.md
 related: specs/features/SPEC_game-plan.md
-adr: decisions/ADR-001-save-kind-remove-light-hardcore.md
+related_progression: vision/ideas/remove-character-xp-and-levels.md
+adr: decisions/ADR-001-save-kind-remove-light-hardcore.md, decisions/ADR-002-victory-engine-and-template-config.md
+supersedes_goal_types: character_level (removed 2026-05-24, migration 0031)
 ---
 
 # Spec: Victory v2 — M из N по шаблону
@@ -77,8 +79,14 @@ adr: decisions/ADR-001-save-kind-remove-light-hardcore.md
 | `no_overdue` | — | `total_overdue_amount <= 0` |
 | `net_monthly_cashflow_nonneg` | — | `net_monthly_cashflow >= 0` |
 | `avg_liquid_delta_6p` | `window` (default 6), `min_samples`, `salary_multiplier` **или** `min_avg` | `samples >= min_samples` и (`avg >= salary * multiplier` или `avg >= min_avg`) |
-| `character_level` | `min_level` | `profile.level >= min_level` |
 | `cash_balance_min` | `min_cash` | `cash_balance >= min_cash` |
+| `expense_to_income_ratio` | `max_ratio` | lifestyle burn ≤ доля дохода |
+| `action_once` | `action`, `requires_mechanics?` | флаг действия игрока (учебная цепочка) |
+| `passive_income_monthly_min` | `min_monthly` | пассивный доход ≥ порога |
+| `passive_income_net_monthly_min` | `min_net` | пассив − расходы ≥ порога |
+| `asset_kind_any_owned` | `asset_kinds_any[]` | владение активом вида из списка |
+
+> **`character_level`** удалён из движка и сидов (см. `0031_remove_character_progression.sql`, [`remove-character-xp-and-levels.md`](../../vision/ideas/remove-character-xp-and-levels.md)).
 
 **`avg_liquid_delta_6p`:** тот же алгоритм, что `avg_net_cashflow_6p` / `avg_net_cashflow_6p_n` в overview (интервалы между закрытиями периода).
 
@@ -120,14 +128,14 @@ win_reached = period_gate_open AND met_count >= required_goals_met
 
 ### `mq_game_tight_budget_v1`, `mq_game_mortgage_stress_v1`, `mq_game_debt_stack_v1`
 
-- 5 целей, `required_goals_met: 3`:
+- 5 целей (legacy harder) или **tutorial chain** на `mq_game_basic_v1` — см. `backend/app/victory_seeds.py`:
   1. подушка **6×** obligations  
   2. нет просрочки  
   3. `avg_liquid_delta_6p`: `window=6`, `min_samples=3`, `salary_multiplier=5`  
-  4. `character_level`: `min_level=5`  
+  4. `expense_to_income_ratio` (например `max_ratio: 0.48`) **или** шаги `action_once` в tutorial  
   5. `cash_balance_min`: `12000` / `15000` / `18000` соответственно  
 
-Цифры `min_cash` и `min_level` — черновик баланса; меняются в JSON без миграции схемы.
+Цифры `min_cash` и пороги — черновик баланса; меняются в JSON без миграции схемы.
 
 ---
 

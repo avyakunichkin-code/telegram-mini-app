@@ -77,9 +77,9 @@ class TestBasicTutorialChain:
         r = _eval_basic(_snap())
         assert r.current_goal_key == "tutorial_salary"
         assert r.goals_met == 0
-        assert r.mechanics_effective["capital_invest"] is False
+        assert r.mechanics_effective["capital_invest"] is True
 
-    def test_invest_goal_unavailable_until_cushion_done(self):
+    def test_invest_goal_available_after_salary_before_cushion_met(self):
         r = _eval_basic(
             _snap(
                 salary_ever_claimed=True,
@@ -87,11 +87,12 @@ class TestBasicTutorialChain:
                 monthly_passive_income=50_000,
             )
         )
+        assert r.current_goal_key == "tutorial_cushion"
         invest = next(g for g in r.goals if g.key == "tutorial_invest")
-        assert invest.available is False
-        assert invest.blocked_reason
+        assert invest.available is True
+        assert invest.met is False
         passive = next(g for g in r.goals if g.key == "invest_income_15k")
-        assert passive.available is False
+        assert passive.available is True
 
     def test_invest_unlocks_after_tutorial_cushion_met(self):
         r = _eval_basic(
@@ -118,7 +119,7 @@ class TestBasicTutorialChain:
         passive = next(g for g in r.goals if g.key == "invest_income_15k")
         assert passive.detail.get("raw_met") is True
         assert passive.met is False
-        assert r.current_goal_key == "safety_3x"
+        assert r.current_goal_key == "tutorial_invest"
 
     def test_all_five_chain_and_period_win(self):
         r = _eval_basic(_tutorial_complete_snap())
@@ -187,14 +188,14 @@ class TestHarderTutorialChain:
         assert r.mechanics_effective["capital_liabilities"] is False
         assert r.current_goal_key == "tutorial_salary"
 
-    def test_liabilities_unlock_after_cushion(self):
+    def test_liabilities_and_invest_unlock_after_cushion(self):
         r = _eval_harder(
             "mq_game_mortgage_stress_v1",
             _snap(salary_ever_claimed=True, safety_ever_contributed=True),
         )
         assert r.mechanics_effective["capital_liabilities"] is True
-        assert r.mechanics_effective["capital_invest"] is False
-        assert r.current_goal_key == "safety_6x"
+        assert r.mechanics_effective["capital_invest"] is True
+        assert r.current_goal_key == "tutorial_invest"
 
     def test_tight_budget_full_chain_win(self):
         r = _eval_harder("mq_game_tight_budget_v1", _harder_complete_snap())

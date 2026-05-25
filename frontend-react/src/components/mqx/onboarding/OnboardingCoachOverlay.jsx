@@ -172,10 +172,7 @@ export function OnboardingCoachOverlay({
 
       {isPractice ? (
         <div className="mqx-onboarding-practice-hint" aria-live="polite">
-          <span className="mqx-onboarding-practice-hint__label">Практика</span>
-          <span className="mqx-onboarding-practice-hint__sec">
-            {practiceSecLeft > 0 ? `${practiceSecLeft} с` : '…'} · потыкай UI
-          </span>
+          <span className="mqx-onboarding-practice-hint__label">Попробуй элементы на экране</span>
         </div>
       ) : null}
 

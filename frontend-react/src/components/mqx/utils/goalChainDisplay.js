@@ -18,7 +18,7 @@ export function buildGoalChainView(victory, legacyGoal) {
       currentIndex: -1,
       currentGoal: null,
       chain: [],
-      stepLabel: null,
+      stepAriaLabel: null,
       headerTitle: 'Цель не задана',
       phase: 'empty',
       nextGoalTitle: null,
@@ -60,16 +60,18 @@ export function buildGoalChainView(victory, legacyGoal) {
   }
 
   const stepNum = allMet ? total : resolvedIndex + 1;
-  const stepLabel = allMet
-    ? `Шаг ${total} из ${total}${phase === 'win' ? ' · победа' : ' · выполнено ✓'}`
-    : `Шаг ${stepNum} из ${total}`;
+  const doneCount = chain.filter((s) => s.status === 'done').length;
+  let stepAriaLabel = `Шаги сценария: ${doneCount} выполнено, активен шаг ${stepNum} из ${total}`;
+  if (phase === 'win') stepAriaLabel = `Все ${total} шагов выполнены, победа`;
+  else if (phase === 'gate') stepAriaLabel = `Все шаги выполнены, победа с ${summary.minPeriod ?? '—'}-го периода`;
+  else if (allMet) stepAriaLabel = `Все ${total} шагов выполнены`;
 
   return {
     total,
     currentIndex: resolvedIndex,
     currentGoal,
     chain,
-    stepLabel,
+    stepAriaLabel,
     headerTitle: allMet && phase === 'win' ? 'Победа в сценарии' : currentGoal?.title ?? 'Цель',
     phase,
     nextGoalTitle: nextGoal?.title ?? null,

@@ -28,9 +28,9 @@
 | ID | Название | Слои | Статус |
 |----|----------|------|--------|
 | **G1** | Game / Plan, шаблоны старта | DB+Backend+Frontend | ✅ MQ-101–108 |
-| **M11** | MVP 1.1: tier, XP, события, HUD уровня | DB+Backend+Frontend | ✅ MQ-111–116; формальный плейтест Pre-Alpha — ⬜ |
+| **M11** | MVP 1.1: tier, события, cooldown | DB+Backend+Frontend | ✅ MQ-111–116; без character XP (2026-05-24); плейтест Pre-Alpha — ⬜ |
 | **M12** | Достижения (цепочки из GAME §5) | DB+Backend+Frontend | 🟡 [SPEC_achievements](../specs/features/SPEC_achievements.md); BE ✅, FE «Развитие» ⬜ |
-| **V2** | Victory M из N | DB+Backend+Frontend+Doc | ⬜ `victory_config` — задел в данных |
+| **V2** | Victory M из N | DB+Backend+Frontend+Doc | 🟡 **backend ✅** (`victory_engine`); **UI** прогресса целей ⬜ |
 | **I1** | Страховки: продукт + объект | DB+Backend+Frontend | 🟡 0008 + UI в работе |
 | **α** | Pre-Alpha / Closed Alpha гейты | Doc+Frontend (метрики) | ⬜ см. GAME §11 |
 | **O1** | Онбординг TMA — Guided coach + Монетка | Frontend+Backend+Doc | 🟡 design-lab ★ → MQX |
@@ -56,7 +56,7 @@
 
 - [ ] P0 **[DB]** Бэкапы БД и проверка восстановления на staging.
 - [ ] P1 **[DB]** Alembic / версионируемые миграции — снижение дрейфа схемы (сейчас SQL + автодобавление в `main.py`).
-- [ ] P1 **[DB] ⚠ spec** Victory v2 — нормализовать схему `victory_config_json` (цели, M из N, `min_period_index_for_victory`) — evolution §II.3.
+- [x] P1 **[DB]** Victory v2 — `victory_config_json` в шаблонах, сиды 0010+, чистка `character_level` (0031).
 - [ ] P1 **[DB] ⚠ spec** Plan Mode — поля префилла / `starter_params_json` на шаблоне или снимке.
 - [ ] P2 **[DB] ⚠ spec** События: `prerequisites_json`, `chain_id`, веса 🟢🔴🟡 по уровню (GAME §7.3–7.4) — нет каталога колонок в spec.
 - [x] P2 **[DB]** Сиды достижений по GAME §5.3 (6×4) — `achievement_seeds.py`, [SPEC_achievements](../specs/features/SPEC_achievements.md) §7.
@@ -71,10 +71,10 @@
 
 - [x] Core loop, зарплата, подушка, финансы, инвестиции, страховки, победа MVP, поражение.
 - [x] **MQ-112** — `ensure_period_events`: tier \([L−2, L]\), `repeat_policy`, cooldown, fallback.
-- [x] **MQ-113** — `character_progression.py`, единый `apply_character_xp`.
-- [x] **MQ-114** — whitelist `xp_delta`, `monthly_lifestyle_delta` в choose.
-- [x] **MQ-115** — `GET /finance/overview`: `character_*`, `avg_net_cashflow_6p`.
-- [x] P0 **MQ-116 (приёмка)** — прогон сидов MVP 1.1 на чистой БД; контрактные тесты tier/cooldown/XP (`test_mq116_acceptance.py`, `mvp11_catalog_contract.py`, `test_ensure_period_events.py`).
+- [x] **MQ-113** — ~~character_progression~~ **снят**; tier от `period_index` ([`remove-character-xp`](../vision/ideas/remove-character-xp-and-levels.md)).
+- [x] **MQ-114** — whitelist эффектов в choose (`monthly_lifestyle_delta`); `xp_delta` **игнорируется**.
+- [x] **MQ-115** — overview: `avg_net_cashflow_6p`, блок **`victory`** (без `character_*`).
+- [x] P0 **MQ-116 (приёмка)** — tier/cooldown/repeat; без assert level/XP (`test_mq116_acceptance.py`, `test_ensure_period_events.py`).
 
 ### Эпик M12 — достижения (из GAME §5)
 
@@ -186,12 +186,12 @@
 
 - [x] HUD времени, модал конца периода, тосты, финансы по вкладкам, события (карусель).
 - [x] Поток Game: `NewProfileKindScreen` → `GameTemplatePickScreen` (Plan — заглушка).
-- [x] **MQ-108**, **MQ-116 (часть)** — блок уровень/XP на дашборде (`DashboardPremium`, `character_*` из overview).
+- [x] **MQ-108** — дашборд без legacy `character_*`; прогресс победы — см. V2 UI.
 
 ### MVP 1.1 / прогрессия
 
 - [ ] P1 **[Frontend]** Экран **«Развитие»**: достижения, цепочки, недавние unlock — GAME §10.5, §11.1; API achievements есть, UI ⬜.
-- [ ] P1 **[Frontend]** Level-up feedback (тост / оверлей) при смене `character_level`.
+- [ ] P1 **[Frontend] V2** — UI целей из `overview.victory` ([`TRACEABILITY.md`](../TRACEABILITY.md) §После G1 п.5).
 - [ ] P2 **[Frontend] ⚠ spec** Бейджи `game` / `plan` и сложность шаблона в списке сохранений (GAME §12, §13).
 
 ### Эпик O1 — онбординг TMA (Pre-Alpha)

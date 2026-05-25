@@ -34,8 +34,7 @@ DEFAULT_BASIC_UNLOCK: list[dict[str, Any]] = [
 
 DEFAULT_HARDER_UNLOCK: list[dict[str, Any]] = [
     {"after_goal": None, "grant": [MECHANIC_CAPITAL_FLOWS]},
-    {"after_goal": "tutorial_cushion", "grant": [MECHANIC_CAPITAL_LIABILITIES]},
-    {"after_goal": "safety_6x", "grant": [MECHANIC_CAPITAL_INVEST]},
+    {"after_goal": "tutorial_cushion", "grant": [MECHANIC_CAPITAL_LIABILITIES, MECHANIC_CAPITAL_INVEST]},
     {"after_goal": "tutorial_invest", "grant": [MECHANIC_CAPITAL_INSURANCE]},
     {"after_goal": "tutorial_insurance", "grant": [MECHANIC_CAPITAL_PROPERTY]},
 ]
