@@ -11,23 +11,26 @@
       href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
       rel="stylesheet"
     />
-    <script type="module" crossorigin src="/telegram-mini-app/landing/assets/index-Bgx9jA4-.js"></script>
-    <link rel="stylesheet" crossorigin href="/telegram-mini-app/landing/assets/index-CF3WRBxO.css">
+    <script type="module" crossorigin src="/telegram-mini-app/landing/assets/index-teS6zU_Q.js"></script>
+    <link rel="stylesheet" crossorigin href="/telegram-mini-app/landing/assets/index-DypkvOUt.css">
   </head>
   <body>
     <a class="mq-skip" href="#main" data-i18n="a11y.skip">Перейти к содержанию</a>
 
     <header class="mq-header">
       <a class="mq-logo" href="/" data-i18n-attr="aria-label:brand.name">
-        <img
-          class="mq-logo__img"
-          src="/telegram-mini-app/landing/brand/L1-horizontal.svg"
-          width="168"
-          height="40"
-          alt=""
-          data-i18n-attr="alt:brand.name"
-          decoding="async"
-        />
+        <picture>
+          <source srcset="/telegram-mini-app/landing/brand/logo-compact.webp" type="image/webp" />
+          <img
+            class="mq-logo__img mq-logo__img--compact"
+            src="/telegram-mini-app/landing/brand/logo-compact.png"
+            width="120"
+            height="48"
+            alt=""
+            data-i18n-attr="alt:brand.name"
+            decoding="async"
+          />
+        </picture>
       </a>
       <nav class="mq-nav" aria-label="Main">
         <a href="#how" data-i18n="nav.how">Как это работает</a>
@@ -48,9 +51,19 @@
         <div class="mq-hero__grid">
           <div class="mq-hero__copy mq-reveal">
             <p class="mq-eyebrow" data-i18n="hero.eyebrow">Telegram Mini App</p>
-            <h1 id="hero-title">
-              <span class="mq-hero__brand" data-i18n="brand.name">ТВОЙ ХОД</span>
-              <span class="mq-hero__tagline" data-i18n="brand.tagline">Финансы как игра</span>
+            <h1 id="hero-title" class="mq-hero__logo">
+              <picture>
+                <source srcset="/telegram-mini-app/landing/brand/logo-full.webp" type="image/webp" />
+                <img
+                  class="mq-hero__logo-img"
+                  src="/telegram-mini-app/landing/brand/logo-full.png"
+                  width="280"
+                  height="120"
+                  alt=""
+                  data-i18n-attr="alt:brand.logoAlt"
+                  decoding="async"
+                />
+              </picture>
             </h1>
             <p class="mq-lead" data-i18n="hero.subtitle">Проживайте условные месяцы</p>
             <blockquote class="mq-hero-quote">
@@ -255,14 +268,18 @@
 
       <section class="mq-cta-band" aria-labelledby="cta-band-title">
         <div class="mq-wrap mq-cta-band__inner mq-reveal">
-          <img
-            class="mq-cta-band__logo"
-            src="/telegram-mini-app/landing/brand/L3-stacked-tagline.svg"
-            width="200"
-            height="94"
-            alt=""
-            decoding="async"
-          />
+          <picture>
+            <source srcset="/telegram-mini-app/landing/brand/logo-full.webp" type="image/webp" />
+            <img
+              class="mq-cta-band__logo"
+              src="/telegram-mini-app/landing/brand/logo-full.png"
+              width="200"
+              height="86"
+              alt=""
+              data-i18n-attr="alt:brand.logoAlt"
+              decoding="async"
+            />
+          </picture>
           <div>
             <h2 id="cta-band-title" data-i18n="ctaBand.title">Готовы к первому ходу?</h2>
             <p data-i18n="ctaBand.text">Запуск в Telegram готовится</p>
@@ -274,14 +291,18 @@
 
     <footer class="mq-footer">
       <div class="mq-wrap mq-footer__inner">
-        <img
-          class="mq-footer__logo"
-          src="/telegram-mini-app/landing/brand/L1-horizontal.svg"
-          width="140"
-          height="34"
-          alt=""
-          decoding="async"
-        />
+        <picture>
+          <source srcset="/telegram-mini-app/landing/brand/logo-compact.webp" type="image/webp" />
+          <img
+            class="mq-footer__logo"
+            src="/telegram-mini-app/landing/brand/logo-compact.png"
+            width="120"
+            height="48"
+            alt=""
+            data-i18n-attr="alt:brand.name"
+            decoding="async"
+          />
+        </picture>
         <p class="mq-footer__brand" data-i18n="footer.tagline">ТВОЙ ХОД · Финансы как игра</p>
         <p class="mq-footer__legal" data-i18n="footer.legal">Не является рекомендацией</p>
         <p class="mq-footer__year" data-i18n="footer.year">© 2026</p>
