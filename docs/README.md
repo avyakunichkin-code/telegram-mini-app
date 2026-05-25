@@ -59,8 +59,8 @@
 
 | Документ | Содержание |
 |----------|-------------|
-| [`vision/ideas/remove-character-xp-and-levels.md`](vision/ideas/remove-character-xp-and-levels.md) | **Канон:** без character level/XP; `event_tier` от `period_index`; механики с периода 1 |
-| [`vision/ideas/starter-template-mechanics-permissions.md`](vision/ideas/starter-template-mechanics-permissions.md) | `blueprint.mechanics` — какие разделы капитала доступны (basic v1: только инвестиции) |
+| [`vision/ideas/remove-character-xp-and-levels.md`](vision/ideas/remove-character-xp-and-levels.md) | **Канон (implemented):** без level/XP; `event_tier` от `period_index` |
+| [`vision/ideas/starter-template-mechanics-permissions.md`](vision/ideas/starter-template-mechanics-permissions.md) | `blueprint.mechanics` — разделы капитала (**implemented**) |
 | [`specs/features/SPEC_mvp-11-progression-events.md`](specs/features/SPEC_mvp-11-progression-events.md) | События: tier, repeat/cooldown (**implemented**) |
 
 Архив level/XP (только git history): `specs/gameplay/LEVEL_XP_SYSTEM.md`, `catalogs/XP_EVENTS_ACTIONS_MATRIX.md`, `plans/PLAN_level-xp-progression.md`.

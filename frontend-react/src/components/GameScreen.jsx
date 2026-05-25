@@ -160,7 +160,7 @@ export function GameScreen({ onLogout, onNewGame, onLoadGame }) {
               sectionLabel="Игра"
               rightPill="Загрузка"
               title="Подключаемся"
-              subtitle="Таймер, баланс и события появятся в привычной рамке."
+              subtitle="Период, баланс и события появятся в привычной рамке."
             />
           }
         >

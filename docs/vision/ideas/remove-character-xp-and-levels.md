@@ -2,7 +2,7 @@
 layer: idea
 status: implemented
 owner: product
-last_reviewed: 2026-05-24
+last_reviewed: 2026-05-26
 implemented: 2026-05-24
 supersedes_in_spirit:
   - ../../specs/gameplay/LEVEL_XP_SYSTEM.md
@@ -109,4 +109,4 @@ adr: ../../decisions/ADR-003-remove-character-progression.md
 - [x] `LEVEL_XP_SYSTEM.md`, матрица XP, `PLAN_level-xp-progression` → **superseded**
 - [x] `docs/README.md`, `SPEC_PRODUCT.md` §7.2
 - [x] `GAME.md` §0 — сводка статуса (без character XP)
-- [ ] `PRODUCT_BACKLOG` — пометить MQ-111–115 / level-gates как superseded (отдельно при желании)
+- [x] `PRODUCT_BACKLOG` — M11 / MQ-111–116 и level-gates отмечены выполненными; character XP снят

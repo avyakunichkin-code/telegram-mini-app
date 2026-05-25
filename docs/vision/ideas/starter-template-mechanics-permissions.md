@@ -2,7 +2,8 @@
 layer: idea
 status: implemented
 owner: product
-last_reviewed: 2026-05-25
+last_reviewed: 2026-05-26
+implemented: 2026-05-25
 related_specs:
   - ../../foundation/SPEC_PRODUCT.md
   - remove-character-xp-and-levels.md

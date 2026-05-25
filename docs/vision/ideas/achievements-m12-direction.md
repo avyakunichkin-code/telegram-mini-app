@@ -1,12 +1,21 @@
+---
+layer: vision
+status: active
+last_reviewed: 2026-05-26
+supersedes_xp_direction: remove-character-xp-and-levels.md
+---
+
 # Achievements M12 — направление (idea-refine)
+
+> **Обновлено 2026-05-26:** без XP персонажа и level gates. Канон: [`SPEC_achievements`](../specs/features/SPEC_achievements.md), [`remove-character-xp-and-levels`](remove-character-xp-and-levels.md).
 
 ## Problem Statement
 
-**Как наградить осмысленные финансовые вехи в Game Mode, не смешивая их с победой партии и не делая XP полностью зависимым от рандома событий?**
+**Как наградить осмысленные финансовые вехи в Game Mode, не смешивая их с победой партии (Victory v2)?**
 
 ## Recommended Direction
 
-**Цепочки tier (1–4) по шести областям GAME §5.3**, каждая ступень даёт **разовый XP персонажа** и отображается на экране «Развитие». Критерии — **декларативный JSON** в БД; движок оценивает снимок экономики профиля. Победа остаётся в **Victory v2**; разблокировка механик — в **level gates**.
+**Цепочки tier (1–4) по шести областям GAME §5.3** (критерии в БД, без XP-награды). UI — экран «Развитие» / collapsible на дашборде. Разблокировка капитала — **`mechanics_unlock`** ([ADR-004](../../decisions/ADR-004-mechanics-unlock-victory-chain.md)), не level.
 
 Прокси для сложных анкетных формулировок (досрочка 30%, «голый шок») допустимы в v1.0 с явным backlog на точные метрики.
 
@@ -18,9 +27,9 @@
 
 ## MVP Scope (v1.0)
 
-**In:** 6×4 tier, движок, API, хуки периода/finance, XP, unit-тесты критериев.
+**In:** 6×4 tier, движок, API, хуки периода/finance, unit-тесты критериев, тосты.
 
-**Out:** UI «Развитие», альтернативные ветки, точный early repayment, Plan Mode, progress bar к следующему tier.
+**Out:** Полный UI каталога, альтернативные ветки, точный early repayment, Plan Mode.
 
 ## Not Doing (and Why)
 

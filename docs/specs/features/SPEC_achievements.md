@@ -2,12 +2,11 @@
 layer: spec
 status: approved
 owner: product
-last_reviewed: 2026-05-20
-tracks: achievements, m12, progression
+last_reviewed: 2026-05-26
+tracks: achievements, m12
 idea: ../../GAME.md
 foundation: ../../foundation/TARGET_PLAYER_AND_SESSION.md
 related:
-  - ../gameplay/LEVEL_XP_SYSTEM.md
   - SPEC_mvp-11-progression-events.md
   - SPEC_victory-v2.md
   - ../../../GAME.md
@@ -15,15 +14,14 @@ related:
 
 # Spec: Достижения (M12) — цепочки tier, экран «Развитие»
 
-> **Частично устарело (2026-05-25):** награда **XP персонажа** и гейты по **character level** **сняты** ([ADR-003](../../decisions/ADR-003-remove-character-progression.md)). Достижения остаются отдельно от **Victory v2** (цепочка целей победы). При правках spec опираться на код достижений без XP-наград.
+> **Prod (2026-05-24+):** достижения **без** награды character XP и **без** level gates ([ADR-003](../../decisions/ADR-003-remove-character-progression.md)). Разблокировка капитала — **`mechanics_unlock`** ([ADR-004](../../decisions/ADR-004-mechanics-unlock-victory-chain.md)). Отдельно от **Victory v2**.
 
 Норматив для **системы достижений** в Game Mode: цепочки из 1–4 ступеней, отдельно от **победы** (`victory_engine`) и блока **`overview.victory`**.
 
 Читать вместе с:
 
 - [GAME.md](../../../GAME.md) §5.2–5.3, §10.5 — продуктовая анкета и философия
-- [remove-character-xp-and-levels.md](../../vision/ideas/remove-character-xp-and-levels.md) — канон прогрессии (без level/XP)
-- [LEVEL_XP_SYSTEM.md](../gameplay/LEVEL_XP_SYSTEM.md) — **архив** (не использовать при разработке)
+- [remove-character-xp-and-levels.md](../../vision/ideas/remove-character-xp-and-levels.md) — канон прогрессии
 - [SPEC_victory-v2.md](SPEC_victory-v2.md) — победа по шаблону; достижения **не** входят в цели победы
 - [SPEC_mvp-11-progression-events.md](SPEC_mvp-11-progression-events.md) — события, `event_tier` от периода
 
@@ -33,7 +31,7 @@ related:
 
 **Как дать игроку ощущение глубины и «осмысленных вех», не превратив прогресс в кликер и не смешав его с победой партии?**
 
-Игрок должен видеть **понятные цепочки** (подушка → вклад → страховка → кредит → инвестиции → капитал), получать **заметный XP** за пороговые решения и открывать механики через **уровень персонажа** (отдельный слой).
+Игрок должен видеть **понятные цепочки** (подушка → вклад → страховка → кредит → инвестиции → капитал) и получать **заметный feedback** (тосты, монетки) за пороговые решения. Механики капитала — через **шаблон** и **Victory v2**, не через tier достижений.
 
 ---
 
@@ -41,7 +39,7 @@ related:
 
 | Вопрос | Варианты | Решение |
 |--------|----------|---------|
-| Роль достижений vs событий | A: только достижения → XP | **Гибрид:** XP из событий, периода, действий **и** достижений ([GAME §5.1](GAME.md)) |
+| Роль достижений vs событий | A: только достижения → XP | **Раздельно:** достижения без XP; события — tier от периода ([GAME §5](GAME.md), [remove-character-xp](../../vision/ideas/remove-character-xp-and-levels.md)) |
 | «Месяцы подушки» | obligations-only vs obligations+lifestyle | **`monthly_reference_expense`** = платежи по долгам + обслуживание активов + lifestyle (как «полные расходы месяца») |
 | Кредит tier 2 анкеты («досрочка ≥30%») | точный учёт погашений vs прокси | **v1.0 прокси:** `liabilities_closed_count` / `liability_close_payment`; точный % тела — **backlog** (нужен тип транзакции) |
 | Страховка tier 4 («24 мес. без голого шока») | трекинг событий-шоков vs дисциплина | **v1.0 прокси:** `insured_clean_streak` при активной страховке или прошлой выплате |
@@ -70,17 +68,16 @@ related:
 
 - [x] БД: `achievement_chains`, `achievement_tier_definitions`, `profile_achievement_unlocks` ([`0009_achievement_chains.sql`](../../../backend/migrations/0009_achievement_chains.sql)).
 - [x] Каталог **6 цепочек × 4 tier** по [GAME §5.3](GAME.md); сиды в `achievement_seeds.py` (без `type: stub`).
-- [x] Движок: последовательная разблокировка tier в цепочке + `apply_character_xp` при unlock.
+- [x] Движок: последовательная разблокировка tier в цепочке (без XP; `xp_reward` в БД — legacy, не применяется).
 - [x] Хуки оценки: конец периода (`process_period_end`), покупка актива из шаблона (`finance`), `GET /api/game/achievements`.
 - [x] `GET /api/game/achievements` — состояние цепочек + `newly_unlocked` за запрос.
-- [x] Unlock feedback: тосты при `newly_unlocked` / `period_close.achievement_unlocks` и level-up ([`progressionToasts.js`](../../../frontend-react/src/utils/progressionToasts.js)).
-- [ ] **Design-lab:** варианты раскрываемого блока «Уровень» + монеток + полной страницы ([`design-lab/achievements-progress/`](../../../design-lab/achievements-progress/)) — **утверждение до prod**.
-- [ ] **FE:** `MqxLevelBlock` collapsible на `DashboardPremium` (свёрнут / развёрнут).
+- [x] Unlock feedback: тосты при `newly_unlocked` / `period_close.achievement_unlocks` ([`progressionToasts.js`](../../../frontend-react/src/utils/progressionToasts.js)).
+- [ ] **Design-lab:** монетки + полная страница ([`design-lab/achievements-progress/`](../../../design-lab/achievements-progress/)) — **утверждение до prod** (без блока character level/XP).
 - [ ] **FE:** полоса **3–5 последних** монеток + ссылка «Все достижения →».
 - [ ] **FE:** страница **«Все достижения»** (цепочки из `GET /api/game/achievements`).
 - [ ] **FE:** пункт в `MenuPremium` «Развитие и достижения».
 - [ ] **API (если нет в ответе):** `recent_unlocks` или `unlocked_at` на tier для сортировки «последних».
-- [x] Unit-тесты критериев и контракта API-gates не пересекаются с этим spec.
+- [x] Unit-тесты критериев; 403 `mechanic_disabled` не смешивается с unlock tier.
 
 ---
 
@@ -89,13 +86,13 @@ related:
 1. **Один активный профиль** на пользователя — как в остальном API игры.
 2. **Tier строго по порядку:** нельзя получить tier 3 без tier 1–2 в той же `chain_key`.
 3. **Unlock идемпотентен:** повторная проверка не дублирует запись в `profile_achievement_unlocks`.
-4. **XP за tier начисляется один раз** при первом unlock; откат экономики **не** отзывает unlock (только forward progress).
+4. Unlock tier **идемпотентен**; откат экономики **не** отзывает unlock (только forward progress).
 5. **`criteria_json.schema_version = 1`** — неизвестный `type` → tier **не** выполняется (fail closed).
 6. **Зарплата** для порогов «N зарплат» / «N месяцев дохода» = `FinanceSalary.monthly_amount` на момент оценки (как Victory v2 B3).
 7. **Пассивный доход** = `monthly_income` активов + оценка купона облигаций (`principal × annual_rate / 12`).
 8. **Ликвидность** для цепочки «Капитал» = `cash_balance + safety_fund_balance` (без нереализованных активов).
 9. Контент цепочек редактируется через **сиды Python** (`ensure_achievement_catalog`); смена порогов **не** требует миграции схемы.
-10. Достижения **не блокируют** `process_period_end` и обслуживание blueprint-сущностей ([LEVEL_XP §8](../gameplay/LEVEL_XP_SYSTEM.md)).
+10. Достижения **не блокируют** `process_period_end` и обслуживание blueprint-сущностей; не дублируют 403 `mechanic_disabled` ([ADR-004](../../decisions/ADR-004-mechanics-unlock-victory-chain.md)).
 
 ---
 
@@ -118,7 +115,7 @@ related:
 - **Пороговые вехи** — осмысленные финансовые действия (подушка, инвестиции, отсутствие просрочки).
 - Темп открытия механик капитала задаётся **целями победы** и `mechanics_unlock`, не tier достижений.
 
-**XP-награды и кривая `need(L)`** — удалены из prod; исторические цифры — только в архиве [LEVEL_XP §4](../gameplay/LEVEL_XP_SYSTEM.md).
+Колонки **XP** в [GAME §5.3](GAME.md) — только анкета; в prod не начисляются.
 
 ---
 
@@ -220,7 +217,6 @@ for each active chain (sort_order):
   while next tier = max_unlocked_index + 1 exists:
     if evaluate(criteria_json, ctx):
       insert profile_achievement_unlock
-      apply_character_xp(profile, xp_reward)
       append to newly_unlocked
     else:
       break inner loop for this chain
@@ -255,8 +251,6 @@ return newly_unlocked
 ```json
 {
   "period_index": 4,
-  "character_level": 3,
-  "character_xp": 120,
   "chains": [
     {
       "chain_key": "safety_fund",
@@ -271,7 +265,6 @@ return newly_unlocked
           "tier_index": 1,
           "title": "Первая подушка",
           "description": "Подушка ≥ 1 месяца расходов",
-          "xp_reward": 15,
           "unlocked": true
         }
       ]
@@ -282,11 +275,7 @@ return newly_unlocked
       "chain_key": "deposit",
       "tier_key": "deposit_t1",
       "tier_index": 1,
-      "title": "Первый вклад",
-      "xp_reward": 10,
-      "xp_gained": 10,
-      "level_up": false,
-      "new_level": null
+      "title": "Первый вклад"
     }
   ]
 }
@@ -312,7 +301,6 @@ return newly_unlocked
     "tier_key": "deposit_t1",
     "tier_index": 1,
     "title": "Первый вклад",
-    "xp_reward": 10,
     "unlocked_at": "2026-05-20T12:00:00"
   }
 ]
@@ -358,48 +346,27 @@ getAchievements: () => apiCall('/api/game/achievements'),
 ### 11.1. Информационная архитектура
 
 ```text
-Главная (dashboard)
-  └─ MqxLevelBlock — collapsible
-       ├─ [свёрнут] уровень, XP-полоса, краткая подсказка (как сейчас + chevron)
-       └─ [развёрнут] + полоса монеток (3–5) + «Все достижения →»
-              └─► Страница «Все достижения» (полный каталог цепочек)
-
 Меню (menu)
-  └─ пункт «Развитие и достижения» ──► та же страница
+  └─ «Развитие и достижения» ──► страница каталога цепочек
 
-PeriodCloseModal (уже есть список unlock)
-  └─ (v1.0 опционально) ссылка «Все достижения →» — backlog, не блокер MVP UI
+PeriodCloseModal
+  └─ список unlock + тосты; (опционально) ссылка «Все достижения →»
+
+Главная (dashboard) — целевой v1.1
+  └─ полоса 3–5 монеток + «Все достижения →» (после design-lab, без MqxLevelBlock/XP)
 ```
 
 | Вход | Действие |
 |------|----------|
-| Главная, развёрнутый блок | Ссылка «Все достижения →» |
-| Меню | Строка-кнопка в карточке «Сценарий» или отдельная карточка «Прогресс» |
-| Тост после unlock | Без обязательного перехода; опционально tap → страница (backlog) |
+| Меню | «Развитие и достижения» → каталог |
+| Главная (после lab) | Полоса монеток + «Все достижения →» |
+| Тост после unlock | Без обязательного перехода; tap → страница — backlog |
 
-**Навигация страницы каталога:** полноэкранный слой внутри `GameScreen` **или** hash-route `#/game/achievements` с кнопкой «Назад» (уточняется при утверждении макета **P\*** в design-lab). Нижний таббар на странице каталога **остаётся** (возврат на предыдущий таб).
+**Навигация каталога:** слой в `GameScreen` или `#/game/achievements` — по макету **P\*** в design-lab.
 
-### 11.2. Блок «Уровень» (collapsible)
+### 11.2. Монетки достижений (achievement coins)
 
-Базовый компонент: [`MqxLevelBlock`](../../../frontend-react/src/components/mqx/layout/MqxLevelBlock.jsx) → **`MqxLevelBlockCollapsible`** (имя после design-lab).
-
-| Состояние | Содержимое |
-|-----------|------------|
-| **Свёрнуто (default)** | `Уровень N` · `xp / need` · XP-meter · одна строка `progressHint` (из `buildLevelProgressHint`) · chevron ▼ |
-| **Развёрнуто** | Всё из свёрнутого + **полоса монеток** + ссылка «Все достижения →» + (опционально) 2 компактных bar доход/долги, если не перегружает высоту |
-
-**Поведение:**
-
-- Tap по заголовку / chevron — toggle; **не** открывает полную страницу.
-- Состояние expand **сохранять в `sessionStorage`** на ключ `mq.levelBlock.expanded` (сброс при новой партии — опционально).
-- `aria-expanded`, фокус-кольцо, hit-area ≥ 44px по вертикали заголовка.
-- При онбординге coach ([`SPEC_onboarding-tma`](SPEC_onboarding-tma.md)) — не перекрывать якорь уровня; раскрытие coach'ем — отдельный шаг backlog.
-
-### 11.3. Монетки достижений (achievement coins)
-
-Визуальная награда за unlock tier — **не** дублирует `gamification_level` / score overview.
-
-#### 11.3.1. Маппинг `tier_index` → «металл»
+#### 11.2.1. Маппинг `tier_index` → «металл»
 
 Каталог v1.0: **4 tier** на цепочку. Визуальные уровни монетки:
 
@@ -409,11 +376,11 @@ PeriodCloseModal (уже есть список unlock)
 | 2 | **Серебро** | Круглая монета |
 | 3 | **Золото** | Круглая монета |
 | 4 | **Платина** | Круглая монета, более «холодный» блик |
-| — | **Звезда** | **Не отдельный tier** в v1.0; допускается как **вариант отображения tier 4** в design-lab (монета-звезда) для цепочек с максимальным `xp_reward` — выбор в lab |
+| — | **Звезда** | Опциональный вариант tier 4 в design-lab |
 
 **Стандартная монета** (нейтральная, locked/next): силуэт / приглушённый контур — для **не** разблокированных tier на полной странице (опционально в lab).
 
-#### 11.3.2. Размер и плотность
+#### 11.2.2. Размер и плотность
 
 | Параметр | Значение |
 |----------|----------|
@@ -421,53 +388,46 @@ PeriodCloseModal (уже есть список unlock)
 | Зазор между монетками | 4–6px |
 | Количество в полосе | **3–5** последних по `recent_unlocks` (см. §10.1.1) |
 | Различимость | Разный **металл** (CSS/SVG), лёгкая тень; **без** мелкого текста на монете в полосе |
-| Tooltip / label | `title` tier при long-press или `aria-label` («Первый вклад, +10 XP») |
+| Tooltip / label | `title` tier при long-press или `aria-label` (название tier) |
 
-#### 11.3.3. Пустое состояние полосы
+#### 11.2.3. Пустое состояние полосы
 
 Если unlock ещё не было: текст-заглушка **«Пока нет достижений — закрой период с дисциплиной»** (короче в lab) или 3 серых placeholder-силуэта — выбор в design-lab.
 
-### 11.4. Страница «Все достижения»
+### 11.3. Страница «Все достижения»
 
-**Данные:** `GET /api/game/achievements` (после `process_achievement_unlocks`).
+**Данные:** `GET /api/game/achievements`.
 
-**Структура (логика, не пиксели):**
+**Структура:** список **6 цепочек** × **4 tier** — монетка, title, description, badge получено/закрыто. **Без** character level/XP в шапке. **Без** сырого `criteria_json` / `chain_key` в UI. Progress «осталось X» — v1.1 (§12).
 
-1. Шапка: уровень персонажа, XP, та же подсказка что на Главной.
-2. Список **6 цепочек** (`sort_order`): заголовок цепочки, `current_tier / max_tier`.
-3. Внутри цепочки — **4 tier** в порядке: монетка + title + description + `xp_reward` + badge `получено` / `закрыто`.
-4. Заблокированные tier — приглушены; **без** числового progress «осталось X» (v1.1, §12).
-
-**Не показывать:** сырой `criteria_json`, `chain_key` в UI.
-
-### 11.5. Меню
+### 11.4. Меню
 
 В [`MenuPremium`](../../../frontend-react/src/components/MenuPremium.jsx) — кнопка **«Развитие и достижения»** (`mode="outline"`, иконка монеты/звезды после утверждения в lab), ведёт на ту же страницу, что и ссылка с Главной.
 
-### 11.6. Unlock feedback (уже в prod)
+### 11.5. Unlock feedback (уже в prod)
 
 | Событие | Поведение |
 |---------|-----------|
 | `newly_unlocked` в overview | Серия тостов |
 | `period_close.achievement_unlocks` | Тосты + список в модалке |
-| `level_up` | Тост «Уровень N!» |
+| ~~`level_up`~~ | **Снято** (ADR-003) |
 
-### 11.7. Design-lab → MQX → prod (обязательный пайплайн)
+### 11.6. Design-lab → MQX → prod (обязательный пайплайн)
 
 | # | Этап | Артефакт |
 |---|------|----------|
-| 1 | Варианты | [`design-lab/achievements-progress/`](../../../design-lab/achievements-progress/) — 2–5 макетов блока **L\***, монет **C\***, страницы **P\*** |
-| 2 | Утверждение | Явная формулировка в чате + `APPROVED.md` в папке lab |
-| 3 | MQX | `MqxAchievementCoin`, `MqxLevelBlockCollapsible`, `MqxAchievementsStrip`, витрина `#/dev/mqx` |
-| 4 | Prod | `DashboardPremium`, `MenuPremium`, `AchievementsScreen` / route |
+| 1 | Варианты | [`design-lab/achievements-progress/`](../../../design-lab/achievements-progress/) — монет **C\***, страницы **P\***, полоса на главной |
+| 2 | Утверждение | `APPROVED.md` в папке lab |
+| 3 | MQX | `MqxAchievementCoin`, `MqxAchievementsStrip`, витрина `#/dev/mqx` |
+| 4 | Prod | `MenuPremium`, `AchievementsScreen`; полоса на `DashboardPremium` после lab |
 
 **Запрещено** менять высоту/состав `DashboardPremium` в обход lab (исключение: hotfix a11y).
 
-### 11.8. Прочее
+### 11.7. Прочее
 
 | Элемент | Требование |
 |---------|------------|
-| Блокировка механик | `overview.character_unlocks` + 403 `level_gate` — не дублировать критерии достижений |
+| Блокировка механик | `overview.mechanics` + 403 `mechanic_disabled` — не дублировать критерии достижений |
 | Narrative | title/description из API; реплики Монетки — backlog |
 
 ---
@@ -485,7 +445,7 @@ PeriodCloseModal (уже есть список unlock)
 | Пиксели / анимации монет без design-lab | Только утверждённые `mqx-*` |
 | Админ-редактор цепочек в Watchtower | Только сиды в коде |
 | Кросс-профильные / глобальные достижения | Только per `game_profile` |
-| Negative XP за «провал» tier | [LEVEL_XP §10](../gameplay/LEVEL_XP_SYSTEM.md) |
+| Negative XP за «провал» tier | **Не делаем** (ADR-003) |
 
 ---
 
@@ -506,7 +466,7 @@ PeriodCloseModal (уже есть список unlock)
 | Файл | Покрытие |
 |------|----------|
 | `backend/tests/test_achievement_engine.py` | Каждый `type` из §8.1, границы, `stub` → false |
-| `backend/tests/test_api_level_gates.py` | Не путать 403 gate с достижениями |
+| `backend/tests/test_starter_mechanics.py` (и related) | 403 `mechanic_disabled` ≠ достижения |
 | *(backlog)* `test_achievements_api.py` | GET контракт, идемпотентность unlock |
 
 После изменения `ACHIEVEMENT_CHAIN_SPECS` или типов критериев: `cd backend && python -m pytest -q`.
@@ -531,7 +491,7 @@ PeriodCloseModal (уже есть список unlock)
 
 - [ ] Игрок за **12–18 периодов** активной игры получает **2–4** unlock без «фарма» одного действия.
 - [ ] Цепочка **credit** не тривиальна на шаблоне с ипотекой с первого месяца (прокси понятны в UI).
-- [ ] Суммарный XP достижений **не** ломает темп level 5 относительно событий.
+- [ ] Темп unlock **2–4** tier за 12–18 периодов без ощущения «фарма» одного действия (без привязки к character level).
 - [ ] Игроки различают **победу** и **достижения** (нет ощущения «два раза одно и то же»).
 
 ---
@@ -540,7 +500,7 @@ PeriodCloseModal (уже есть список unlock)
 
 - [PRODUCT_BACKLOG.md](../../backlog/PRODUCT_BACKLOG.md) — эпик M12
 - [TRACEABILITY.md](../../TRACEABILITY.md) — строка M12
-- [PLAN_level-xp-progression.md](../../plans/PLAN_level-xp-progression.md) — фазы gates + UX
+- ~~PLAN_level-xp-progression~~ — archived; gates → [ADR-004](../../decisions/ADR-004-mechanics-unlock-victory-chain.md)
 
 ---
 
@@ -552,7 +512,7 @@ PeriodCloseModal (уже есть список unlock)
 | DL-2 | `APPROVED.md` с выбранными L/C/P | Чат + файл |
 | BE-1 | `recent_unlocks` в `GET /achievements` | pytest контракт |
 | MQX-1 | `MqxAchievementCoin` + strip в `#/dev/mqx` | Витрина |
-| FE-1 | Collapsible level block + strip на Главной | Ручной TMA 320px |
+| FE-1 | Полоса монеток на Главной (после lab) | Ручной TMA 320px |
 | FE-2 | Страница каталога + пункт Меню | Навигация туда-обратно |
 | FE-3 | (опционально) ссылка из `PeriodCloseModal` | Клик → каталог |
 

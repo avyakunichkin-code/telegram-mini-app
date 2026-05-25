@@ -39,7 +39,7 @@
 | **PW1** | PWA / standalone + стабильный resume (lock/unlock) | Frontend+Ops+Doc | 🟡 фаза 0 ✅; QA PW1-004 ⬜; [PLAN](../plans/PLAN_pwa-standalone.md) |
 | **T1** | Пошаговый месяц без таймера (turn-based) | DB+Backend+Frontend+Doc | ⏸ **не в спринт** — [idea](../vision/ideas/turn-based-period-no-timer.md) · lab `hero-no-timer-round` |
 
-> **Расхождение с GAME.md §0.2:** `cooldown_periods` и фильтр в `ensure_period_events` **уже в коде** (`game_rules.is_event_definition_eligible`, `events.py`, миграция 0007). В GAME.md пометить «не реализовано» — устарело.
+> **GAME.md §0.2 / M11:** синхронизировано 2026-05-26 (Task 0.1): `cooldown_periods` ✅, MQ-116 → [`MVP_AUDIT_VS_SPEC`](../foundation/MVP_AUDIT_VS_SPEC.md) §M11.
 
 ---
 
@@ -239,7 +239,7 @@
 - [x] P1 **[Frontend] PW1-001** — `visibilitychange` / focus → `refreshGameState()` в `useGame`; сброс локального таймера от ответа API (`appLifecycle.js`, `useGame.js`).
 - [x] P1 **[Frontend] PW1-002** — debounce resync; `periodEndInFlightRef` — не дублировать `setTimeNext`.
 - [x] P1 **[Doc] PW1-003** — [`PW1_RESUME_PLAYTEST_CHECKLIST.md`](../foundation/PW1_RESUME_PLAYTEST_CHECKLIST.md); Pre-Alpha §3 + опрос §6.8.
-- [ ] P1 **[QA] PW1-004** — прогон A–D на 2 устройствах; PASS/FAIL в таблице прогона.
+- [ ] P1 **[QA] PW1-004** — прогон A–C на **2 TMA** (TB1, без таймера); §0a auto ✅ 2026-05-26; [checklist](../foundation/PW1_RESUME_PLAYTEST_CHECKLIST.md).
 
 #### Фаза 1 — installable PWA
 
@@ -297,9 +297,9 @@
 ### Есть spec / plan — вести и не дублировать в GAME
 
 - [x] G1 — [`SPEC_game-plan`](../specs/features/SPEC_game-plan.md), [`PLAN_game-plan`](../plans/PLAN_game-plan.md).
-- [x] M11 — [`SPEC_mvp-11-progression-events`](../specs/features/SPEC_mvp-11-progression-events.md) **approved**; [`LEVEL_XP_SYSTEM`](../specs/gameplay/LEVEL_XP_SYSTEM.md).
-- [ ] P0 **[Doc]** Обновить **GAME.md §0.2**: `cooldown_periods` ✅; M11 ✅; достижения 🟡; ссылка на этот бэклог.
-- [ ] P0 **[Doc]** Закрыть приёмку M11 в [`MVP_AUDIT_VS_SPEC`](../foundation/MVP_AUDIT_VS_SPEC.md) + статус **implemented** в TRACEABILITY.
+- [x] M11 — [`SPEC_mvp-11-progression-events`](../specs/features/SPEC_mvp-11-progression-events.md) **implemented**; character XP снят ([remove-character-xp](../vision/ideas/remove-character-xp-and-levels.md)).
+- [x] P0 **[Doc]** **GAME.md §0.2** и §5–6 синхронизированы (2026-05-26).
+- [x] P0 **[Doc]** Закрыть приёмку M11 в [`MVP_AUDIT_VS_SPEC`](../foundation/MVP_AUDIT_VS_SPEC.md) + статус **implemented** в TRACEABILITY — 2026-05-26 Task 0.1.
 
 ### Нужен spec или углубление (⚠ из GAME)
 
@@ -310,13 +310,13 @@
 | Plan Mode | §1.10, §13 | Spec мастера + префилл (отдельно от G1) |
 | `mandatory_gate` | §13 | Дополнение SPEC событий или ADR |
 | Онбординг 3 шага | §0.2, §12 | Spec UX + копирайт; чеклист Pre-Alpha §11.1 |
-| API-gates по уровню | §5.4, LEVEL_XP §8 | Матрица «уровень → эндпоинт» в LEVEL_XP или SPEC |
+| ~~API-gates по уровню~~ | — | **Снято** → `mechanics_unlock` ([ADR-004](../decisions/ADR-004-mechanics-unlock-victory-chain.md)) |
 | Штрафы просрочки | §13 | Idea → spec давления |
-| Налоги / ИИС / пенсия | §5.4 ур.9 | Idea-refine, вне MVP |
+| Налоги / ИИС / пенсия | анкета | Idea-refine, вне MVP |
 | Главы-кампания | §4.1–4.3 | Vision-doc; шаблоны как замена части «глав» |
 | Retention / α-гейты | §11 | **Doc:** протокол плейтеста Pre-Alpha (10–20), метрики D1/D7 для Closed Alpha |
 | Product analytics | §11.2 | Выбор Amplitude/Firebase/своё — ADR |
-| Темп XP анкета vs код | §5.4, §6.2 | Сверка таблицы анкеты с `need(L)` — decision log в LEVEL_XP |
+| ~~Темп XP анкета vs код~~ | — | **Не актуально** (level/XP сняты); темп сессии — [`TARGET_PLAYER_AND_SESSION`](../foundation/TARGET_PLAYER_AND_SESSION.md) |
 | Соц. механики | §8.1 | Idea: NPC, бенчмарки — низкий приоритет |
 | Монетизация Soft Launch | §11.3 | TBD product |
 
@@ -361,9 +361,8 @@
 
 | Приоритет | Task ID | Пункт | Слой |
 |-----------|---------|-------|------|
-| P0 | 0.1 | Doc: GAME §0.2, TRACEABILITY, MVP_AUDIT — M11/cooldown | Doc |
-| P0 | 0.2 | PW1-004: прогон resume checklist A–D | QA |
-| P0 | 0.3 | Pre-Alpha пилот 10–20 (после 0.1–0.2) | Product |
+| P0 | 0.2 | PW1-004: §0a ✅; **2× TMA** A–C — [checklist](../foundation/PW1_RESUME_PLAYTEST_CHECKLIST.md) | QA |
+| P0 | 0.3 | Pre-Alpha пилот 10–20 (после 0.2) | Product |
 | P0 | E1-R1…R3 | Повторная аналитика E1 (без миграций) | Doc+Analytics |
 | P1 | 1.1 | Achievements API contract + pytest | Backend |
 | P1 | 1.2 | M12: экран «Развитие» (lab → MQX) | Frontend |
@@ -386,6 +385,9 @@
 | 2026-05-19 | **Q1** quality-release; **V2** victory engine; **M12** критерии достижений + API level-gates (`level_gates.py`, overview `character_unlocks`). |
 | 2026-05-25 | **PW1:** эпик PWA/standalone — драйвер нестабильный resume TMA при блокировке экрана; фаза 0 (lifecycle resync) перед install prompt. |
 | 2026-05-26 | **План май 2026:** [`PLAN_backlog_may2026`](../plans/PLAN_backlog_may2026.md); E1 → E1-R (аналитика); T1 в сводку (⏸); I1 → A/B; «В работу сейчас» пересобран. |
+| 2026-05-26 | **Task 0.1:** GAME §0.2, MVP_AUDIT §M11, TRACEABILITY M11/E1/T1 — doc приёмка MQ-116. |
+| 2026-05-26 | **Task 0.2 (частично):** PW1 checklist TB1, `test:utils` + foreground debounce test; TMA 2× ⬜. |
+| 2026-05-26 | Документация: уборка `docs/`, `GAME.md` §5–6; M11/level-gates — история, не активный трек. |
 
 ---
 

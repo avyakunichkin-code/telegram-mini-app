@@ -1,0 +1,71 @@
+{
+  "username": "playtest_mplqz6my",
+  "findings": [
+    {
+      "level": "info",
+      "msg": "Аккаунт: playtest_mplqz6my"
+    },
+    {
+      "level": "info",
+      "msg": "Меню: Пока пусто на полке"
+    },
+    {
+      "level": "info",
+      "msg": "Быстрый старт"
+    },
+    {
+      "level": "info",
+      "msg": "В игровом UI"
+    },
+    {
+      "level": "info",
+      "msg": "Зарплата"
+    },
+    {
+      "level": "info",
+      "msg": "Онбординг шаг 1"
+    },
+    {
+      "level": "info",
+      "msg": "Онбординг шаг 2"
+    },
+    {
+      "level": "error",
+      "msg": "Console: Failed to load resource: the server responded with a status of 400 (Bad Request)"
+    },
+    {
+      "level": "error",
+      "msg": "Console: Failed to load resource: the server responded with a status of 400 (Bad Request)"
+    },
+    {
+      "level": "error",
+      "msg": "API 400 PATCH http://localhost:5173/api/game/profile/onboarding"
+    },
+    {
+      "level": "error",
+      "msg": "API 400 PATCH http://localhost:5173/api/game/profile/onboarding"
+    }
+  ],
+  "consoleMsgs": [
+    {
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 400 (Bad Request)"
+    },
+    {
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 400 (Bad Request)"
+    }
+  ],
+  "networkFails": [
+    {
+      "status": 400,
+      "url": "http://localhost:5173/api/game/profile/onboarding",
+      "method": "PATCH"
+    },
+    {
+      "status": 400,
+      "url": "http://localhost:5173/api/game/profile/onboarding",
+      "method": "PATCH"
+    }
+  ]
+}

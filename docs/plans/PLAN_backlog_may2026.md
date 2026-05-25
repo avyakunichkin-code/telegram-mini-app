@@ -26,28 +26,33 @@ source: ../backlog/PRODUCT_BACKLOG.md
 **Описание:** В [`GAME.md`](../../GAME.md) §0.2 и связанных doc всё ещё может фигурировать «cooldown не реализован» и незакрытая приёмка M11. Привести GAME, [`MVP_AUDIT_VS_SPEC.md`](../foundation/MVP_AUDIT_VS_SPEC.md) и [`TRACEABILITY.md`](../TRACEABILITY.md) в соответствие с кодом (`game_rules`, миграция 0007, `test_mq116_acceptance.py`).
 
 **Критерии приёмки:**
-- [ ] GAME.md §0.2: cooldown ✅, M11 ✅, достижения 🟡, ссылка на PRODUCT_BACKLOG
-- [ ] TRACEABILITY: эпик M11 / MQ-116 — implemented (или эквивалентный статус)
-- [ ] MVP_AUDIT: пункты tier/cooldown/repeat отмечены с отсылкой к тестам
+- [x] GAME.md §0.2: cooldown ✅, M11 ✅, достижения 🟡, ссылка на PRODUCT_BACKLOG
+- [x] TRACEABILITY: эпик M11 / MQ-116 — implemented (или эквивалентный статус)
+- [x] MVP_AUDIT: пункты tier/cooldown/repeat отмечены с отсылкой к тестам
 
 **Проверка:** ревью diff только в `docs/`; `pytest -q backend/tests/test_mq116_acceptance.py` (регрессия).
+
+**Статус:** ✅ выполнено 2026-05-26.
 
 **Зависимости:** нет · **Объём:** S (Doc)
 
 ---
 
-### Task 0.2: PW1-004 — прогон checklist resume (A–D)
+### Task 0.2: PW1-004 — прогон checklist resume (A–C, TB1)
 
-**Описание:** Ручной QA по [`PW1_RESUME_PLAYTEST_CHECKLIST.md`](../foundation/PW1_RESUME_PLAYTEST_CHECKLIST.md): блокировка экрана, возврат в TMA/PWA, смена вкладки, длинная пауза. Цель — подтвердить, что `visibilitychange` + `refreshGameState` не оставляют рассинхрон периода/таймера с сервером.
+**Описание:** Ручной QA по [`PW1_RESUME_PLAYTEST_CHECKLIST.md`](../foundation/PW1_RESUME_PLAYTEST_CHECKLIST.md) (TB1: без таймера). Автопроверка §0a + **2 прогона в Telegram TMA** (iOS + Android).
 
 **Критерии приёмки:**
-- [ ] Таблица прогона: 2 устройства (iOS + Android или iOS + desktop TMA), билд/коммит указан
-- [ ] Сценарии A–D пройдены с итогом PASS/FAIL по каждому
-- [ ] P0-баги (если есть) заведены с шагами воспроизведения
+- [x] Чеклист обновлён под TB1; §0a автотесты PASS (2026-05-26)
+- [ ] Таблица: **2 TMA-прогона**, commit/URL заполнены
+- [ ] Сценарии **A–C** PASS на обоих (D = N/A)
+- [ ] Итог §2: PASS / FAIL / PASS с оговорками
 
-**Проверка:** заполненный checklist в doc или комментарий в журнале беклога.
+**Проверка:** `npm run test:utils` в `frontend-react`; колонки «Прогон 1/2» в checklist.
 
-**Зависимости:** нет · **Объём:** S (QA)
+**Зависимости:** нет · **Объём:** S (QA) + ~15 мин ручной TMA
+
+**Статус:** 🟡 частично — автопроверка ✅; ожидает 2× TMA.
 
 ---
 
