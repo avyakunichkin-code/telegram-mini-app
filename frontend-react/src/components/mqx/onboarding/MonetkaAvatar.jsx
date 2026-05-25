@@ -2,14 +2,17 @@ import monetkaDefaultPng from '../../../assets/monetka-mascot.png';
 import monetkaDefaultWebp from '../../../assets/monetka-mascot.webp';
 import monetkaSitEdgePng from '../../../assets/monetka-poses/monetka-sit-edge.png';
 import monetkaSitEdgeWebp from '../../../assets/monetka-poses/monetka-sit-edge.webp';
+import monetkaWinkPng from '../../../assets/monetka-poses/monetka-wink.png';
+import monetkaWinkWebp from '../../../assets/monetka-poses/monetka-wink.webp';
 
 const POSE_SRC = {
   default: { webp: monetkaDefaultWebp, png: monetkaDefaultPng },
   'sit-edge': { webp: monetkaSitEdgeWebp, png: monetkaSitEdgePng },
+  wink: { webp: monetkaWinkWebp, png: monetkaWinkPng },
 };
 
 /**
- * @param {'default' | 'sit-edge'} [pose]
+ * @param {'default' | 'sit-edge' | 'wink'} [pose]
  * sit-edge — сидит на краю блока, ноги свисают (WebP + alpha, PNG fallback).
  */
 export function MonetkaAvatar({ size = 72, className = '', pose = 'default' }) {

@@ -24,7 +24,7 @@
 4. **Светлые секции** (#how, #learn, #modes) — карточки MQX + при необходимости тёмные скрины в рамке.
 5. **#partners** — без скринов, edutainment-тон.
 
-Источник скринов: `landing/scripts/capture-screens.mjs` → `landing/public/screens/`.
+Источник скринов: `landing/scripts/capture-screens.mjs` (по умолчанию живое приложение; fallback `goal-chain-round`, `flows-round`, events L1) → `landing/public/screens/`.
 
 ## Key Assumptions to Validate
 

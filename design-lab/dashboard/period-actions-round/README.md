@@ -1,6 +1,6 @@
-# Dashboard — period actions round
+# Dashboard — period actions round ★ FINAL
 
-Chip-действия, Монетка справа, варианты подписей и hub подушки.
+Утверждённый макет P1: chip 2×2, Монетка **wink** справа, amber-акценты в пузыре.
 
 ## Запуск
 

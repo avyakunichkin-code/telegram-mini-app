@@ -25,6 +25,23 @@
     });
   });
 
+  document.querySelectorAll('[data-toggle-hint]').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const hint = document.querySelector('[data-period-hint]');
+      if (!hint) return;
+      const hidden = hint.hasAttribute('hidden');
+      if (hidden) {
+        hint.removeAttribute('hidden');
+        btn.textContent = 'Скрыть подсказку';
+        btn.classList.remove('is-active');
+      } else {
+        hint.setAttribute('hidden', '');
+        btn.textContent = 'Показать подсказку';
+        btn.classList.add('is-active');
+      }
+    });
+  });
+
   document.querySelectorAll('[data-toggle-cushion]').forEach((btn) => {
     btn.addEventListener('click', () => {
       const card = btn.closest('.lab-variant-card');

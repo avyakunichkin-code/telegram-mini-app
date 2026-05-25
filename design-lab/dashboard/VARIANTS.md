@@ -1,6 +1,6 @@
 # Dashboard — визуальные скины (L3)
 
-**Открытый раунд:** [`period-actions-round/VARIANTS.md`](period-actions-round/VARIANTS.md) — chip-действия, Монетка справа, подписи.
+**★ Period actions:** [`period-actions-round/APPROVED.md`](period-actions-round/APPROVED.md) — chip 2×2, Монетка wink, подписи FINAL.
 
 Порядок блоков везде **L3**: финансы → цель → действия → уровень.
 

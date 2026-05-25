@@ -43,9 +43,12 @@ export function syncTelegramThemeToRoot() {
 
   try {
     const again = () => syncTelegramThemeToRoot();
-    tg.onEvent?.('themeChanged', again);
-    tg.onEvent?.('theme_changed', again);
-    if (typeof tg.onThemeChanged === 'function') tg.onThemeChanged?.(again);
+    if (typeof tg.onEvent === 'function') {
+      tg.onEvent('themeChanged', again);
+      tg.onEvent('theme_changed', again);
+    } else if (typeof tg.onThemeChanged === 'function') {
+      tg.onThemeChanged(again);
+    }
   } catch (_) {
     /* no-op */
   }

@@ -28,6 +28,7 @@ export { MqxLevelDash } from './layout/MqxLevelDash';
 export { MqxGoalDash } from './layout/MqxGoalDash';
 export { MqxFinancePeriodBlock } from './layout/MqxFinancePeriodBlock';
 export { MqxPeriodActions } from './layout/MqxPeriodActions';
+export { MqxPeriodHint } from './layout/MqxPeriodHint';
 export { ExpensesBudgetBlock } from './layout/ExpensesBudgetBlock';
 export { PlanExpenseBudgetEditor } from './layout/PlanExpenseBudgetEditor';
 export { PlanExpenseEditor } from './layout/PlanExpenseEditor';

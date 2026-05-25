@@ -3,14 +3,14 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>ТВОЙ ХОД — Действия периода (design-lab)</title>
+    <title>ТВОЙ ХОД — Действия периода ★ FINAL (design-lab)</title>
     <link rel="stylesheet" href="./lab-base.css" />
   </head>
   <body>
     <header class="lab-header">
       <div>
-        <h1>Дашборд — «Действия периода»</h1>
-        <p>Chip-паттерн как у финансов · Монетка справа от пузыря · варианты подписей · disabled зарплата.</p>
+        <h1>Дашборд — «Действия периода» ★ FINAL</h1>
+        <p>P1 chip · порядок 2×2 · Монетка wink справа · amber-акценты в пузыре.</p>
       </div>
       <div class="lab-header__controls">
         <div class="lab-theme" role="group" aria-label="Тема">
@@ -22,294 +22,186 @@
 
     <main class="lab-main">
       <p class="lab-round-note">
-        Контекст: S5 unified, блок после «Цель». Подзаголовок «Управляй денежным потоком» <strong>убираем</strong>.
-        Подсказка — спокойная полоска + <code>monetka-think</code> / <code>monetka-wink</code> <strong>справа</strong> от пузыря.
-        Зарплата после получения — <strong>disabled chip</strong>, текст кнопки не меняется.
+        <strong>Утверждено для prod:</strong> chip как у «Финансы периода», без подзаголовка секции.
+        Ряд 1: <strong>Зарплата</strong> (получить) · <strong>Вложить</strong> (депозиты/облигации).
+        Ряд 2: <strong>Пополнить</strong> (подушку) · <strong>Снять</strong> (с подушки).
+        Зарплата после получения — disabled chip, подпись «получить» остаётся.
       </p>
 
-      <div class="lab-variant-grid">
-        <!-- R0 -->
-        <article class="lab-variant-card">
-          <h2 class="lab-variant-card__label">R0 — сейчас в prod (кнопки 2×2)</h2>
-          <p class="lab-variant-card__hint">Рамки, card-заголовок — расхождение с chip-финансами.</p>
-          <div class="lab-phone">
-            <div class="lab-phone__shell lab-phone__shell--unified">
-              <div class="mqx-dash-stack mqx-dash-stack--unified" data-skin="s5">
-                <div class="mqx-finance-static" style="padding:12px 14px">
-                  <h2 class="mqx-finance-static__title">Финансы периода</h2>
-                  <div class="mqx-finance-static__chips">
-                    <div class="mqx-finance-chip"><div class="mqx-finance-chip__body"><div class="mqx-finance-chip__label">Баланс</div><div class="mqx-finance-chip__value">42 150</div></div></div>
-                    <div class="mqx-finance-chip"><div class="mqx-finance-chip__body"><div class="mqx-finance-chip__label">Подушка</div><div class="mqx-finance-chip__value">18 000</div></div></div>
-                    <div class="mqx-finance-chip"><div class="mqx-finance-chip__body"><div class="mqx-finance-chip__label">Поток</div><div class="mqx-finance-chip__value mqx-finance-chip__value--pos">+3 200</div></div></div>
-                    <div class="mqx-finance-chip"><div class="mqx-finance-chip__body"><div class="mqx-finance-chip__label">На жизнь</div><div class="mqx-finance-chip__value">9 600</div></div></div>
+      <article class="lab-variant-card lab-variant-card--final">
+        <h2 class="lab-variant-card__label">P1 ★ FINAL — действия периода</h2>
+        <div class="lab-variant-card__controls">
+          <button type="button" data-toggle-salary>Зарплата: доступна</button>
+          <button type="button" data-toggle-hint>Скрыть подсказку</button>
+        </div>
+        <div class="lab-phone lab-phone--final">
+          <div class="lab-phone__shell lab-phone__shell--unified">
+            <div class="mqx-dash-stack mqx-dash-stack--unified" data-skin="s5">
+              <section class="mqx-finance-static" aria-label="Финансы периода (контекст)">
+                <h2 class="mqx-finance-static__title">Финансы периода</h2>
+                <div class="mqx-finance-static__chips">
+                  <div class="mqx-finance-chip">
+                    <div class="mqx-finance-chip__icon mqx-accent--sky" aria-hidden="true">
+                      <svg viewBox="0 0 24 24"><path d="M4 19V5"/><path d="M4 19h16"/><path d="M7 15l4-4 3 3 5-6"/></svg>
+                    </div>
+                    <div class="mqx-finance-chip__body">
+                      <div class="mqx-finance-chip__label">Доходы</div>
+                      <div class="mqx-finance-chip__value mqx-finance-chip__value--pos">+12 400</div>
+                    </div>
+                  </div>
+                  <div class="mqx-finance-chip">
+                    <div class="mqx-finance-chip__icon mqx-accent--amber mqx-accent--expense" aria-hidden="true">
+                      <svg viewBox="0 0 24 24"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+                    </div>
+                    <div class="mqx-finance-chip__body">
+                      <div class="mqx-finance-chip__label">Расходы</div>
+                      <div class="mqx-finance-chip__value mqx-finance-chip__value--out">9 600</div>
+                    </div>
+                  </div>
+                  <div class="mqx-finance-chip">
+                    <div class="mqx-finance-chip__icon mqx-accent--violet" aria-hidden="true">
+                      <svg viewBox="0 0 24 24"><path d="M7 10V7a5 5 0 0 1 10 0v3"/><path d="M6 10h12v10a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V10Z"/></svg>
+                    </div>
+                    <div class="mqx-finance-chip__body">
+                      <div class="mqx-finance-chip__label">Баланс</div>
+                      <div class="mqx-finance-chip__value">42 150</div>
+                    </div>
+                  </div>
+                  <div class="mqx-finance-chip mqx-finance-chip--cushion">
+                    <div class="mqx-finance-chip__icon mqx-accent--emerald" aria-hidden="true">
+                      <svg viewBox="0 0 24 24"><path d="M12 3 20 7v6c0 5-3.4 8.2-8 9"/><path d="M9.5 12.2 11 13.7 14.6 10.1"/></svg>
+                    </div>
+                    <div class="mqx-finance-chip__body">
+                      <div class="mqx-finance-chip__label">Подушка</div>
+                      <div class="mqx-finance-chip__value">18 000</div>
+                    </div>
                   </div>
                 </div>
-                <hr class="mqx-dash-divider mqx-dash-divider--inset" aria-hidden="true" />
-                <section class="mqx-period-actions mqx-period-actions--legacy" aria-label="Действия периода">
-                  <div class="mqx-actions__head">
-                    <h2 class="mqx-card__title" style="margin:0">Действия периода</h2>
-                    <p class="mqx-card__sub">Управляй денежным потоком</p>
-                  </div>
-                  <div class="mqx-grid2 mqx-grid2--actions">
-                    <button type="button" class="mqx-action mqx-action--primary">Зарплата</button>
-                    <button type="button" class="mqx-action">В подушку</button>
-                    <button type="button" class="mqx-action">Снять</button>
-                    <button type="button" class="mqx-action">Инвестировать</button>
-                  </div>
-                </section>
-              </div>
+              </section>
+
+              <hr class="mqx-dash-divider mqx-dash-divider--inset" aria-hidden="true" />
+
+              <section class="mqx-goal-dash-bleed" aria-hidden="true" style="padding:8px 14px;opacity:.55">
+                <div class="mqx-goal-dash__toggle-inner" style="padding:8px 0">
+                  <span class="mqx-goal-dash__kicker">Цель</span>
+                  <span class="mqx-goal-dash__current-title">Подушка ≥ 3× обязательств</span>
+                </div>
+              </section>
+
+              <hr class="mqx-dash-divider mqx-dash-divider--inset" aria-hidden="true" />
+
+              <section class="mqx-period-actions mqx-period-actions--chips" aria-label="Действия периода">
+                <h2 class="mqx-finance-static__title">Действия периода</h2>
+
+                <div class="mqx-period-hint mqx-period-hint--wink" data-period-hint>
+                  <p class="mqx-period-hint__bubble">
+                    Нажми <strong>Зарплату</strong> — получишь доход за этот период.
+                  </p>
+                  <img
+                    class="mqx-period-hint__mascot"
+                    src="./assets/monetka-wink.png"
+                    width="48"
+                    height="48"
+                    alt=""
+                  />
+                </div>
+
+                <div class="mqx-action-chips">
+                  <button
+                    type="button"
+                    class="mqx-action-chip mqx-action-chip--salary"
+                    data-salary-chip
+                    data-onboarding-anchor="salary"
+                    title="Получить зарплату за текущий период"
+                  >
+                    <span class="mqx-action-chip__icon mqx-accent--violet" aria-hidden="true">
+                      <svg viewBox="0 0 24 24">
+                        <path d="M12 2v4" />
+                        <path d="M8 6h8" />
+                        <path d="M6 10h12v8a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2v-8Z" />
+                        <path d="M9 14h6" />
+                      </svg>
+                    </span>
+                    <span class="mqx-action-chip__body">
+                      <span class="mqx-action-chip__label">Зарплата</span>
+                      <span class="mqx-action-chip__sub mqx-action-chip__sub--phrase">получить</span>
+                    </span>
+                  </button>
+
+                  <button type="button" class="mqx-action-chip" title="Открыть вкладку: депозиты и облигации">
+                    <span class="mqx-action-chip__icon mqx-accent--amber" aria-hidden="true">
+                      <svg viewBox="0 0 24 24">
+                        <path d="M4 19V5" />
+                        <path d="M4 19h16" />
+                        <path d="M7 15l4-4 3 3 5-6" />
+                      </svg>
+                    </span>
+                    <span class="mqx-action-chip__body">
+                      <span class="mqx-action-chip__label">Вложить</span>
+                      <span class="mqx-action-chip__sub mqx-action-chip__sub--phrase">депозиты/облигации</span>
+                    </span>
+                  </button>
+
+                  <button
+                    type="button"
+                    class="mqx-action-chip"
+                    data-money-trigger="in"
+                    data-onboarding-anchor="cushion"
+                    title="Перевести деньги с карты в подушку"
+                  >
+                    <span class="mqx-action-chip__icon mqx-accent--emerald" aria-hidden="true">
+                      <svg viewBox="0 0 24 24">
+                        <path d="M12 19V5" />
+                        <path d="M19 12 12 19 5 12" />
+                      </svg>
+                    </span>
+                    <span class="mqx-action-chip__body">
+                      <span class="mqx-action-chip__label">Пополнить</span>
+                      <span class="mqx-action-chip__sub mqx-action-chip__sub--phrase">подушку</span>
+                    </span>
+                  </button>
+
+                  <button
+                    type="button"
+                    class="mqx-action-chip"
+                    data-money-trigger="out"
+                    title="Снять деньги с подушки на счёт"
+                  >
+                    <span class="mqx-action-chip__icon mqx-accent--sky" aria-hidden="true">
+                      <svg viewBox="0 0 24 24">
+                        <path d="M12 5v14" />
+                        <path d="M8 9l4-4 4 4" />
+                      </svg>
+                    </span>
+                    <span class="mqx-action-chip__body">
+                      <span class="mqx-action-chip__label">Снять</span>
+                      <span class="mqx-action-chip__sub mqx-action-chip__sub--phrase">с подушки</span>
+                    </span>
+                  </button>
+                </div>
+              </section>
             </div>
           </div>
-        </article>
+        </div>
+      </article>
 
-        <!-- P1 -->
-        <article class="lab-variant-card">
-          <h2 class="lab-variant-card__label">P1 ★ — chip + ясные подписи (4 ячейки)</h2>
-          <p class="lab-variant-card__hint">Зарплата · На подушку · На счёт · Капитал (вкладка Финансы).</p>
-          <div class="lab-variant-card__controls">
-            <button type="button" data-toggle-salary>Зарплата: доступна</button>
-          </div>
-          <div class="lab-phone">
-            <div class="lab-phone__shell lab-phone__shell--unified">
-              <div class="mqx-dash-stack mqx-dash-stack--unified" data-skin="s5">
-                <hr class="mqx-dash-divider mqx-dash-divider--inset" aria-hidden="true" />
-                <section class="mqx-period-actions mqx-period-actions--chips" aria-label="Действия периода">
-                  <h2 class="mqx-finance-static__title">Действия периода</h2>
-                  <div class="mqx-period-hint">
-                    <p class="mqx-period-hint__bubble">
-                      <strong>Зарплата</strong> — раз в период. <strong>На подушку</strong> — с карты в запас.
-                      <strong>На счёт</strong> — обратно на траты.
-                    </p>
-                    <img class="mqx-period-hint__mascot" src="./assets/monetka-think.png" width="52" height="52" alt="" />
-                  </div>
-                  <div class="mqx-action-chips">
-                    <button type="button" class="mqx-action-chip mqx-action-chip--salary" data-salary-chip>
-                      <span class="mqx-action-chip__icon mqx-accent--violet" aria-hidden="true">
-                        <svg viewBox="0 0 24 24"><path d="M12 2v4"/><path d="M8 6h8"/><path d="M6 10h12v8a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2v-8Z"/><path d="M9 14h6"/></svg>
-                      </span>
-                      <span class="mqx-action-chip__body"><span class="mqx-action-chip__label">Зарплата</span></span>
-                    </button>
-                    <button type="button" class="mqx-action-chip">
-                      <span class="mqx-action-chip__icon mqx-accent--emerald" aria-hidden="true">
-                        <svg viewBox="0 0 24 24"><path d="M12 3 20 7v6c0 5-3.4 8.2-8 9"/><path d="M12 11v6"/><path d="M9 14h6"/></svg>
-                      </span>
-                      <span class="mqx-action-chip__body">
-                        <span class="mqx-action-chip__label">На подушку</span>
-                        <span class="mqx-action-chip__sub">с карты</span>
-                      </span>
-                    </button>
-                    <button type="button" class="mqx-action-chip">
-                      <span class="mqx-action-chip__icon mqx-accent--sky" aria-hidden="true">
-                        <svg viewBox="0 0 24 24"><path d="M12 19V5"/><path d="M8 9l4-4 4 4"/></svg>
-                      </span>
-                      <span class="mqx-action-chip__body">
-                        <span class="mqx-action-chip__label">На счёт</span>
-                        <span class="mqx-action-chip__sub">из подушки</span>
-                      </span>
-                    </button>
-                    <button type="button" class="mqx-action-chip">
-                      <span class="mqx-action-chip__icon mqx-accent--amber" aria-hidden="true">
-                        <svg viewBox="0 0 24 24"><path d="M4 19V5"/><path d="M4 19h16"/><path d="M7 15l4-4 3 3 5-6"/></svg>
-                      </span>
-                      <span class="mqx-action-chip__body">
-                        <span class="mqx-action-chip__label">Капитал</span>
-                        <span class="mqx-action-chip__sub">вкладка →</span>
-                      </span>
-                    </button>
-                  </div>
-                </section>
-              </div>
-            </div>
-          </div>
-        </article>
+      <details class="lab-archive" style="margin-top:24px">
+        <summary>Архив раунда (R0, черновики P2–P4)</summary>
+        <p class="lab-variant-card__hint" style="margin:12px 0">
+          Старые варианты сняты с витрины. См. git-историю <code>period-actions-round/index.html</code> или
+          <code>VARIANTS.md</code>.
+        </p>
+      </details>
 
-        <!-- P2 -->
-        <article class="lab-variant-card">
-          <h2 class="lab-variant-card__label">P2 — одна «Подушка» + депозит / облигация</h2>
-          <p class="lab-variant-card__hint">Hub открывает «Пополнить / Вывести»; инвестиции — две отдельные chip.</p>
-          <div class="lab-variant-card__controls">
-            <button type="button" data-toggle-salary>Зарплата: доступна</button>
-            <button type="button" data-toggle-cushion>Открыть подушку</button>
-          </div>
-          <div class="lab-phone">
-            <div class="lab-phone__shell lab-phone__shell--unified">
-              <div class="mqx-dash-stack mqx-dash-stack--unified" data-skin="s5">
-                <section class="mqx-period-actions mqx-period-actions--chips" aria-label="Действия периода">
-                  <h2 class="mqx-finance-static__title">Действия периода</h2>
-                  <div class="mqx-period-hint mqx-period-hint--wink">
-                    <p class="mqx-period-hint__bubble">
-                      Нажми <strong>Подушка</strong> — выбери пополнить или вывести. <strong>Депозит</strong> и
-                      <strong>Облигация</strong> — быстрый старт вложений.
-                    </p>
-                    <img class="mqx-period-hint__mascot" src="./assets/monetka-wink.png" width="48" height="48" alt="" />
-                  </div>
-                  <div class="mqx-action-chips">
-                    <button type="button" class="mqx-action-chip mqx-action-chip--salary" data-salary-chip>
-                      <span class="mqx-action-chip__icon mqx-accent--violet" aria-hidden="true">
-                        <svg viewBox="0 0 24 24"><path d="M12 2v4"/><path d="M8 6h8"/><path d="M6 10h12v8a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2v-8Z"/></svg>
-                      </span>
-                      <span class="mqx-action-chip__body"><span class="mqx-action-chip__label">Зарплата</span></span>
-                    </button>
-                    <button type="button" class="mqx-action-chip mqx-action-chip--hub" data-cushion-hub>
-                      <span class="mqx-action-chip__icon mqx-accent--emerald" aria-hidden="true">
-                        <svg viewBox="0 0 24 24"><path d="M12 3 20 7v6c0 5-3.4 8.2-8 9"/><path d="M9.5 12.2 11 13.7 14.6 10.1"/></svg>
-                      </span>
-                      <span class="mqx-action-chip__body">
-                        <span class="mqx-action-chip__label">Подушка</span>
-                        <span class="mqx-action-chip__sub">пополнить · снять</span>
-                      </span>
-                    </button>
-                    <button type="button" class="mqx-action-chip">
-                      <span class="mqx-action-chip__icon mqx-accent--sky" aria-hidden="true">
-                        <svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M7 9h4"/><path d="M7 13h10"/></svg>
-                      </span>
-                      <span class="mqx-action-chip__body"><span class="mqx-action-chip__label">Депозит</span></span>
-                    </button>
-                    <button type="button" class="mqx-action-chip">
-                      <span class="mqx-action-chip__icon mqx-accent--amber" aria-hidden="true">
-                        <svg viewBox="0 0 24 24"><path d="M6 20V4"/><path d="M6 20h12"/><path d="M10 16l2-8 2 8"/></svg>
-                      </span>
-                      <span class="mqx-action-chip__body"><span class="mqx-action-chip__label">Облигация</span></span>
-                    </button>
-                  </div>
-                  <div class="mqx-period-cushion-sheet" data-cushion-sheet hidden>
-                    <div class="mqx-period-cushion-sheet__row">
-                      <button type="button" class="mqx-period-cushion-sheet__btn mqx-period-cushion-sheet__btn--in">Пополнить с карты</button>
-                      <button type="button" class="mqx-period-cushion-sheet__btn mqx-period-cushion-sheet__btn--out">Вывести на счёт</button>
-                    </div>
-                  </div>
-                </section>
-              </div>
-            </div>
-          </div>
-        </article>
-
-        <!-- P3 -->
-        <article class="lab-variant-card">
-          <h2 class="lab-variant-card__label">P3 — короткие глаголы + стрелки в подписи</h2>
-          <p class="lab-variant-card__hint">Получить · Перевести ↓ · Перевести ↑ · Инвестиции.</p>
-          <div class="lab-variant-card__controls">
-            <button type="button" data-toggle-salary>Зарплата: получена (демо)</button>
-          </div>
-          <div class="lab-phone">
-            <div class="lab-phone__shell lab-phone__shell--unified">
-              <div class="mqx-dash-stack mqx-dash-stack--unified" data-skin="s5">
-                <section class="mqx-period-actions mqx-period-actions--chips" aria-label="Действия периода">
-                  <h2 class="mqx-finance-static__title">Действия периода</h2>
-                  <div class="mqx-period-hint">
-                    <p class="mqx-period-hint__bubble">Серые chip — уже сделано в этом периоде. Текст на кнопке не меняем.</p>
-                    <img class="mqx-period-hint__mascot" src="./assets/monetka-think.png" width="52" height="52" alt="" />
-                  </div>
-                  <div class="mqx-action-chips">
-                    <button type="button" class="mqx-action-chip mqx-action-chip--salary is-disabled" data-salary-chip disabled>
-                      <span class="mqx-action-chip__icon mqx-accent--violet" aria-hidden="true">
-                        <svg viewBox="0 0 24 24"><path d="M12 2v4"/><path d="M8 6h8"/><path d="M6 10h12v8a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2v-8Z"/></svg>
-                      </span>
-                      <span class="mqx-action-chip__body"><span class="mqx-action-chip__label">Зарплата</span></span>
-                    </button>
-                    <button type="button" class="mqx-action-chip">
-                      <span class="mqx-action-chip__icon mqx-accent--emerald" aria-hidden="true">
-                        <svg viewBox="0 0 24 24"><path d="M12 19V5"/><path d="M19 12 12 19 5 12"/></svg>
-                      </span>
-                      <span class="mqx-action-chip__body">
-                        <span class="mqx-action-chip__label">Перевести</span>
-                        <span class="mqx-action-chip__sub">на подушку</span>
-                      </span>
-                    </button>
-                    <button type="button" class="mqx-action-chip">
-                      <span class="mqx-action-chip__icon mqx-accent--sky" aria-hidden="true">
-                        <svg viewBox="0 0 24 24"><path d="M12 5v14"/><path d="M19 12 12 5 5 12"/></svg>
-                      </span>
-                      <span class="mqx-action-chip__body">
-                        <span class="mqx-action-chip__label">Перевести</span>
-                        <span class="mqx-action-chip__sub">на счёт</span>
-                      </span>
-                    </button>
-                    <button type="button" class="mqx-action-chip">
-                      <span class="mqx-action-chip__icon mqx-accent--amber" aria-hidden="true">
-                        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><path d="M12 8v8"/><path d="M8 12h8"/></svg>
-                      </span>
-                      <span class="mqx-action-chip__body"><span class="mqx-action-chip__label">Инвестиции</span></span>
-                    </button>
-                  </div>
-                </section>
-              </div>
-            </div>
-          </div>
-        </article>
-
-        <!-- P4 -->
-        <article class="lab-variant-card">
-          <h2 class="lab-variant-card__label">P4 — 3 в ряд + раскрытие подушки (компакт)</h2>
-          <p class="lab-variant-card__hint">Меньше плиток в сетке; депозит/облигация — вторая строка 2×1.</p>
-          <div class="lab-variant-card__controls">
-            <button type="button" data-toggle-cushion>Открыть подушку</button>
-          </div>
-          <div class="lab-phone">
-            <div class="lab-phone__shell lab-phone__shell--unified">
-              <div class="mqx-dash-stack mqx-dash-stack--unified" data-skin="s5">
-                <section class="mqx-period-actions mqx-period-actions--chips" aria-label="Действия периода">
-                  <h2 class="mqx-finance-static__title">Действия периода</h2>
-                  <div class="mqx-period-hint mqx-period-hint--wink">
-                    <p class="mqx-period-hint__bubble">Три главных действия в один ряд — удобно на узком экране.</p>
-                    <img class="mqx-period-hint__mascot" src="./assets/monetka-wink.png" width="48" height="48" alt="" />
-                  </div>
-                  <div class="mqx-action-chips mqx-action-chips--3col">
-                    <button type="button" class="mqx-action-chip mqx-action-chip--salary">
-                      <span class="mqx-action-chip__icon mqx-accent--violet" aria-hidden="true">
-                        <svg viewBox="0 0 24 24"><path d="M12 2v4"/><path d="M8 6h8"/><path d="M6 10h12v8a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2v-8Z"/></svg>
-                      </span>
-                      <span class="mqx-action-chip__body"><span class="mqx-action-chip__label">Зарплата</span></span>
-                    </button>
-                    <button type="button" class="mqx-action-chip mqx-action-chip--hub" data-cushion-hub>
-                      <span class="mqx-action-chip__icon mqx-accent--emerald" aria-hidden="true">
-                        <svg viewBox="0 0 24 24"><path d="M12 3 20 7v6c0 5-3.4 8.2-8 9"/></svg>
-                      </span>
-                      <span class="mqx-action-chip__body"><span class="mqx-action-chip__label">Подушка</span></span>
-                    </button>
-                    <button type="button" class="mqx-action-chip">
-                      <span class="mqx-action-chip__icon mqx-accent--amber" aria-hidden="true">
-                        <svg viewBox="0 0 24 24"><path d="M4 19V5"/><path d="M7 15l4-4 3 3 5-6"/></svg>
-                      </span>
-                      <span class="mqx-action-chip__body"><span class="mqx-action-chip__label">Вложить</span></span>
-                    </button>
-                  </div>
-                  <div class="mqx-period-cushion-sheet" data-cushion-sheet hidden>
-                    <div class="mqx-period-cushion-sheet__row">
-                      <button type="button" class="mqx-period-cushion-sheet__btn mqx-period-cushion-sheet__btn--in">С карты → подушка</button>
-                      <button type="button" class="mqx-period-cushion-sheet__btn mqx-period-cushion-sheet__btn--out">Подушка → счёт</button>
-                    </div>
-                  </div>
-                  <div class="mqx-action-chips" style="margin-top:8px">
-                    <button type="button" class="mqx-action-chip">
-                      <span class="mqx-action-chip__icon mqx-accent--sky" aria-hidden="true">
-                        <svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/></svg>
-                      </span>
-                      <span class="mqx-action-chip__body"><span class="mqx-action-chip__label">Депозит</span></span>
-                    </button>
-                    <button type="button" class="mqx-action-chip">
-                      <span class="mqx-action-chip__icon mqx-accent--amber" aria-hidden="true">
-                        <svg viewBox="0 0 24 24"><path d="M6 20V4"/><path d="M10 16l2-8 2 8"/></svg>
-                      </span>
-                      <span class="mqx-action-chip__body"><span class="mqx-action-chip__label">Облигация</span></span>
-                    </button>
-                  </div>
-                </section>
-              </div>
-            </div>
-          </div>
-        </article>
-      </div>
-
-      <section class="lab-legend" style="margin-top:28px">
-        <h2>Как смотреть</h2>
+      <section class="lab-legend" style="margin-top:20px">
+        <h2>Prod checklist</h2>
         <ul>
-          <li><strong>R0</strong> — эталон «было» для сравнения.</li>
-          <li><strong>P1</strong> — базовый chip + понятные направления денег (рекомендуемый старт).</li>
-          <li><strong>P2 / P4</strong> — hub «Подушка» + отдельные депозит/облигация.</li>
-          <li><strong>P3</strong> — disabled зарплата без смены текста.</li>
+          <li><code>MqxPeriodActionChip</code> + <code>MqxPeriodHint</code> (wink)</li>
+          <li><code>strong</code> в пузыре — amber как <code>mqx-goal-monetka__text strong</code></li>
+          <li>Панель суммы — по <code>data-money-trigger</code> для Пополнить / Снять (как сейчас)</li>
+          <li>Вложить → вкладка Финансы / блок инвестиций</li>
         </ul>
-        <p>См. <code>VARIANTS.md</code>, <code>CONTENT.md</code>.</p>
+        <p>См. <a href="./APPROVED.md">APPROVED.md</a>, <code>CONTENT.md</code>.</p>
       </section>
     </main>
 

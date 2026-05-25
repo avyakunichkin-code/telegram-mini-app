@@ -67,11 +67,11 @@ PNG лежат в [`public/screens/`](public/screens/). На лендинге **
 
 | Файл | Экран |
 |------|--------|
-| `dashboard-light.png` / `dashboard-dark.png` | Дашборд S5 |
-| `capital-light.png` / `capital-dark.png` | Капитал |
-| `events-light.png` / `events-dark.png` | События L1 |
+| `dashboard-light.png` / `dashboard-dark.png` | Дашборд: финансы 2×2, цель, действия |
+| `capital-light.png` / `capital-dark.png` | Капитал: аккордеоны доходы/расходы/… |
+| `events-light.png` / `events-dark.png` | События L3 (карточка) |
 
-Пересъём из design-lab (нужен Chromium Playwright):
+Пересъём (Playwright; по умолчанию — **живое приложение**, иначе lab):
 
 ```bash
 cd landing

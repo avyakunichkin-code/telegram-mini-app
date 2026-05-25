@@ -14,6 +14,7 @@ npx serve .
 | Раунд | Тема |
 |-------|------|
 | [`period-actions-round/`](period-actions-round/) | Chip-действия, Монетка справа, подписи кнопок |
+| [`../type-scale-round/`](../type-scale-round/) | Шкала типографики MQX (13→12, 9→10, hero 26/28) |
 | [`goal-chain-round/`](goal-chain-round/) | Блок «Цель» |
 | [`cushion-fill-round/`](cushion-fill-round/) | Индикатор подушки на chip |
 

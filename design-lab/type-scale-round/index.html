@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="ru" data-theme="light">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>ТВОЙ ХОД — Type scale MQX (design-lab)</title>
+    <link rel="stylesheet" href="./lab-base.css" />
+  </head>
+  <body>
+    <header class="lab-header">
+      <div>
+        <h1>MQX — шкала типографики</h1>
+        <p>13px→12 · 9px→10 · сравнение hero 26/28 · S5 dashboard в контексте.</p>
+      </div>
+      <div class="lab-header__controls">
+        <div class="lab-theme" role="group" aria-label="Тема">
+          <button type="button" class="is-active" data-theme-btn="light">Светлая</button>
+          <button type="button" data-theme-btn="dark">Тёмная</button>
+        </div>
+      </div>
+    </header>
+
+    <main class="lab-type-page">
+      <p class="lab-decisions">
+        <strong>Зафиксировано:</strong> суммы и вторичный текст <strong>13px → 12px</strong> (caption);
+        kicker chip <strong>9px → 10px</strong> (micro). Hero display — выбрать на секции 2 (26 или 28).
+        После ★ — перенос токенов в <code>#root</code> и миграция <code>index.css</code>.
+      </p>
+
+      <section class="lab-section">
+        <h2>1. Шкала токенов</h2>
+        <p>Не больше 4 визуальных уровней на экране; вес отдельно от размера.</p>
+        <table class="lab-scale-table" aria-label="Шкала типографики">
+          <thead>
+            <tr>
+              <th>Токен</th>
+              <th>px</th>
+              <th>Weight</th>
+              <th>Пример</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>--mq-fs-display-a</code></td>
+              <td>26</td>
+              <td>800</td>
+              <td><span class="lab-scale-specimen lab-scale-specimen--display-a">08:42</span></td>
+            </tr>
+            <tr>
+              <td><code>--mq-fs-display-b</code></td>
+              <td>28</td>
+              <td>800</td>
+              <td><span class="lab-scale-specimen lab-scale-specimen--display-b">08:42</span></td>
+            </tr>
+            <tr>
+              <td><code>--mq-fs-title</code></td>
+              <td>20</td>
+              <td>800</td>
+              <td><span class="lab-scale-specimen lab-scale-specimen--title">+12 400 ₽</span></td>
+            </tr>
+            <tr>
+              <td><code>--mq-fs-heading</code></td>
+              <td>14</td>
+              <td>800</td>
+              <td><span class="lab-scale-specimen lab-scale-specimen--heading">Финансы периода</span></td>
+            </tr>
+            <tr>
+              <td><code>--mq-fs-body</code></td>
+              <td>15</td>
+              <td>400</td>
+              <td><span class="lab-scale-specimen lab-scale-specimen--body">Основной текст и кнопки</span></td>
+            </tr>
+            <tr>
+              <td><code>--mq-fs-caption</code></td>
+              <td>12</td>
+              <td>400</td>
+              <td><span class="lab-scale-specimen lab-scale-specimen--caption">Было 13px — округлили</span></td>
+            </tr>
+            <tr>
+              <td><code>--mq-fs-small</code></td>
+              <td>11</td>
+              <td>700</td>
+              <td><span class="lab-scale-specimen lab-scale-specimen--small">Зарплата</span></td>
+            </tr>
+            <tr>
+              <td><code>--mq-fs-micro</code></td>
+              <td>10</td>
+              <td>400</td>
+              <td><span class="lab-scale-specimen lab-scale-specimen--micro">получить · доходы</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section class="lab-section">
+        <h2>2. Chip: 9/13 → 10/12</h2>
+        <p>Финансы 2×2 и действия периода — одна логика подписи и суммы.</p>
+        <div class="lab-chip-compare">
+          <div class="lab-chip-compare__col lab-chip-old">
+            <h3>Было (prod)</h3>
+            <div class="mqx-finance-chip" style="display:flex;gap:8px;padding:8px;border-radius:12px;background:color-mix(in srgb,var(--mqx-ink) 4%,transparent)">
+              <div class="mqx-finance-chip__body">
+                <div class="mqx-finance-chip__label">Доходы</div>
+                <div class="mqx-finance-chip__value">+12 400</div>
+              </div>
+            </div>
+          </div>
+          <div class="lab-chip-compare__col lab-chip-new">
+            <h3>★ Целевое</h3>
+            <div class="mqx-finance-chip" style="display:flex;gap:8px;padding:8px;border-radius:12px;background:color-mix(in srgb,var(--mqx-ink) 4%,transparent)">
+              <div class="mqx-finance-chip__body">
+                <div class="mqx-finance-chip__label">Доходы</div>
+                <div class="mqx-finance-chip__value">+12 400</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="lab-section lab-hero-ab">
+        <h2>3. Hero timer: 26px vs 28px</h2>
+        <p data-display-note>Сравни таймер «08:42» в шапке дашборда (compact hero). Выбери вариант кнопкой.</p>
+        <div class="lab-pick-btns" role="group" aria-label="Размер display">
+          <button type="button" class="is-active" data-pick-display="a">Display A — 26px</button>
+          <button type="button" data-pick-display="b">Display B — 28px</button>
+        </div>
+        <div class="lab-compare-row">
+          <div class="lab-compare-card">
+            <p class="lab-compare-card__tag">A · 26px</p>
+            <div class="lab-phone">
+              <div class="lab-phone__shell">
+                <header class="mqx-hero mqx-hero--compact" data-hero-display data-display="a">
+                  <div class="mqx-hero-compact__row1">
+                    <div class="mq-logo" aria-hidden="true">MQ</div>
+                    <div class="mqx-hero-compact__center">
+                      <div class="mqx-hero-compact__timer-row">
+                        <span class="mqx-hero-compact__timer">08:42</span>
+                        <span class="mqx-hero-compact__progress-meta">Прогресс · 42%</span>
+                      </div>
+                      <div class="mqx-hero-compact__progress"><div class="mqx-hero-compact__progress-fill" style="width:42%"></div></div>
+                    </div>
+                    <div class="mqx-hero-compact__controls">
+                      <button type="button" class="mqx-btn mqx-btn--filled mqx-btn--icon" aria-label="Пауза">‖</button>
+                    </div>
+                  </div>
+                  <div class="mqx-hero-compact__row2">
+                    <div class="mqx-hero-compact__period">
+                      <span class="mqx-hero-compact__period-label">Период</span>
+                      <span class="mqx-hero-compact__period-value">#4</span>
+                    </div>
+                    <div class="mqx-hero-compact__row2-actions">
+                      <button type="button" class="mqx-pill">События <span class="mqx-pill__badge">2</span></button>
+                    </div>
+                  </div>
+                </header>
+              </div>
+            </div>
+          </div>
+          <div class="lab-compare-card">
+            <p class="lab-compare-card__tag">B · 28px</p>
+            <div class="lab-phone">
+              <div class="lab-phone__shell">
+                <header class="mqx-hero mqx-hero--compact" data-hero-display data-display="b">
+                  <div class="mqx-hero-compact__row1">
+                    <div class="mq-logo" aria-hidden="true">MQ</div>
+                    <div class="mqx-hero-compact__center">
+                      <div class="mqx-hero-compact__timer-row">
+                        <span class="mqx-hero-compact__timer">08:42</span>
+                        <span class="mqx-hero-compact__progress-meta">Прогресс · 42%</span>
+                      </div>
+                      <div class="mqx-hero-compact__progress"><div class="mqx-hero-compact__progress-fill" style="width:42%"></div></div>
+                    </div>
+                    <div class="mqx-hero-compact__controls">
+                      <button type="button" class="mqx-btn mqx-btn--filled mqx-btn--icon" aria-label="Пауза">‖</button>
+                    </div>
+                  </div>
+                  <div class="mqx-hero-compact__row2">
+                    <div class="mqx-hero-compact__period">
+                      <span class="mqx-hero-compact__period-label">Период</span>
+                      <span class="mqx-hero-compact__period-value">#4</span>
+                    </div>
+                    <div class="mqx-hero-compact__row2-actions">
+                      <button type="button" class="mqx-pill">События <span class="mqx-pill__badge">2</span></button>
+                    </div>
+                  </div>
+                </header>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="lab-section">
+        <h2>4. S5 dashboard — целевая шкала в контексте</h2>
+        <p>Финансы + цель + действия (★ period-actions FINAL).</p>
+        <div class="lab-phone lab-dash-tokens">
+          <div class="lab-phone__shell lab-phone__shell--unified">
+            <header class="mqx-hero mqx-hero--compact">
+              <div class="mqx-hero-compact__row1">
+                <div class="mq-logo" aria-hidden="true">MQ</div>
+                <div class="mqx-hero-compact__center">
+                  <div class="mqx-hero-compact__timer-row">
+                    <span class="mqx-hero-compact__timer" style="font-size:var(--mq-fs-display)">08:42</span>
+                    <span class="mqx-hero-compact__progress-meta">Прогресс месяца · 42%</span>
+                  </div>
+                  <div class="mqx-hero-compact__progress"><div class="mqx-hero-compact__progress-fill" style="width:42%"></div></div>
+                </div>
+              </div>
+            </header>
+            <div class="mqx-dash-stack mqx-dash-stack--unified" data-skin="s5">
+              <section class="mqx-finance-static" style="padding:12px 14px">
+                <h2 class="mqx-finance-static__title">Финансы периода</h2>
+                <div class="mqx-finance-static__chips">
+                  <div class="mqx-finance-chip">
+                    <div class="mqx-finance-chip__body">
+                      <div class="mqx-finance-chip__label">Доходы</div>
+                      <div class="mqx-finance-chip__value mqx-finance-chip__value--pos">+12 400</div>
+                    </div>
+                  </div>
+                  <div class="mqx-finance-chip">
+                    <div class="mqx-finance-chip__body">
+                      <div class="mqx-finance-chip__label">Расходы</div>
+                      <div class="mqx-finance-chip__value">9 600</div>
+                    </div>
+                  </div>
+                  <div class="mqx-finance-chip">
+                    <div class="mqx-finance-chip__body">
+                      <div class="mqx-finance-chip__label">Баланс</div>
+                      <div class="mqx-finance-chip__value">42 150</div>
+                    </div>
+                  </div>
+                  <div class="mqx-finance-chip">
+                    <div class="mqx-finance-chip__body">
+                      <div class="mqx-finance-chip__label">Подушка</div>
+                      <div class="mqx-finance-chip__value">18 000</div>
+                    </div>
+                  </div>
+                </div>
+              </section>
+              <hr class="mqx-dash-divider mqx-dash-divider--inset" aria-hidden="true" />
+              <div class="mqx-goal-dash-bleed" style="padding:8px 14px">
+                <span class="mqx-goal-dash__kicker">Цель</span>
+                <span class="mqx-goal-dash__current-title">Подушка ≥ 3× обязательств</span>
+              </div>
+              <hr class="mqx-dash-divider mqx-dash-divider--inset" aria-hidden="true" />
+              <section class="mqx-period-actions mqx-period-actions--chips">
+                <h2 class="mqx-finance-static__title">Действия периода</h2>
+                <div class="mqx-period-hint mqx-period-hint--wink">
+                  <p class="mqx-period-hint__bubble">Нажми <strong>Зарплату</strong> — получишь доход за этот период.</p>
+                  <img class="mqx-period-hint__mascot" src="../dashboard/period-actions-round/assets/monetka-wink.png" width="48" height="48" alt="" />
+                </div>
+                <div class="mqx-action-chips">
+                  <button type="button" class="mqx-action-chip mqx-action-chip--salary">
+                    <span class="mqx-action-chip__body">
+                      <span class="mqx-action-chip__label">Зарплата</span>
+                      <span class="mqx-action-chip__sub mqx-action-chip__sub--phrase">получить</span>
+                    </span>
+                  </button>
+                  <button type="button" class="mqx-action-chip">
+                    <span class="mqx-action-chip__body">
+                      <span class="mqx-action-chip__label">Вложить</span>
+                      <span class="mqx-action-chip__sub mqx-action-chip__sub--phrase">депозиты/облигации</span>
+                    </span>
+                  </button>
+                  <button type="button" class="mqx-action-chip">
+                    <span class="mqx-action-chip__body">
+                      <span class="mqx-action-chip__label">Пополнить</span>
+                      <span class="mqx-action-chip__sub mqx-action-chip__sub--phrase">подушку</span>
+                    </span>
+                  </button>
+                  <button type="button" class="mqx-action-chip">
+                    <span class="mqx-action-chip__body">
+                      <span class="mqx-action-chip__label">Снять</span>
+                      <span class="mqx-action-chip__sub mqx-action-chip__sub--phrase">с подушки</span>
+                    </span>
+                  </button>
+                </div>
+              </section>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <script src="./lab.js"></script>
+  </body>
+</html>
