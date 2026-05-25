@@ -11,6 +11,25 @@ const MONETKA_COPY = (
   </>
 );
 
+function CushionFillBar({ percent, tier }) {
+  return (
+    <div
+      className="mqx-cushion-fill"
+      role="progressbar"
+      aria-valuenow={percent}
+      aria-valuemin={0}
+      aria-valuemax={100}
+      aria-label={`Наполнение подушки ${percent}%`}
+    >
+      <span
+        className="mqx-cushion-fill__bar"
+        style={{ width: `${percent}%` }}
+        data-tier={tier}
+      />
+    </div>
+  );
+}
+
 function CloseIcon() {
   return (
     <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
@@ -31,6 +50,7 @@ function FinanceChip({ card, onFlowsNavigate }) {
   const className = [
     'mqx-finance-chip',
     card.chipAction ? 'mqx-finance-chip--action' : '',
+    card.cushionFill ? 'mqx-finance-chip--cushion' : '',
   ]
     .filter(Boolean)
     .join(' ');
@@ -61,6 +81,9 @@ function FinanceChip({ card, onFlowsNavigate }) {
         >
           {card.valueNode}
         </div>
+        {card.cushionFill ? (
+          <CushionFillBar percent={card.cushionFill.percent} tier={card.cushionFill.tier} />
+        ) : null}
       </div>
     </>
   );

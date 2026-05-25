@@ -1,9 +1,10 @@
 ---
 layer: spec
 domain: gameplay
-status: draft
+status: superseded
+superseded_by: ../../vision/ideas/remove-character-xp-and-levels.md
 owner: product
-last_reviewed: 2026-05-17
+last_reviewed: 2026-05-24
 related_specs:
   - ../features/SPEC_mvp-11-progression-events.md
   - ../../foundation/TARGET_PLAYER_AND_SESSION.md
@@ -12,9 +13,11 @@ catalog: catalogs/XP_EVENTS_ACTIONS_MATRIX.md
 
 # Система уровней персонажа и опыта (Game Mode)
 
-Живой **дизайн-документ**: формулы, источники XP, дорожная карта разблокировки механик и связь с **`event_tier`**. Изменять баланс **здесь и в матрице** [`catalogs/XP_EVENTS_ACTIONS_MATRIX.md`](catalogs/XP_EVENTS_ACTIONS_MATRIX.md), затем синхронизировать код (**константы / сиды**) и смежные спеки.
+> **Superseded (2026-05-24).** Механика снята в коде: нет `GameProfile.level`/`xp`, нет `character_*` и геймификационного score в overview, нет API-gates по уровню. **Актуально:** [`remove-character-xp-and-levels.md`](../../vision/ideas/remove-character-xp-and-levels.md) — `event_tier` привязан к **`period_index`** (10 периодов = 1 band), механики с 1-го периода, достижения без XP. Ниже — **архив** для истории баланса; не использовать при разработке.
 
-**Инвариант:** `GameProfile.level` и `GameProfile.xp` описывают **ролевой рост игрока**; строка **`gamification_level`** и **`score`** в `FinanceOverview` — **отдельная** финансовая условная градация, не управляет выпадением событий ([`SPEC_mvp-11-progression-events` §3](../features/SPEC_mvp-11-progression-events.md)).
+Живой **дизайн-документ** *(архив)*: формулы, источники XP, дорожная карта разблокировки механик и связь с **`event_tier`**. Матрица: [`catalogs/XP_EVENTS_ACTIONS_MATRIX.md`](catalogs/XP_EVENTS_ACTIONS_MATRIX.md) — тоже superseded.
+
+**Было (до снятия):** `GameProfile.level` / `xp` — ролевой рост; `gamification_level` / `score` в overview — отдельный слой, не управлял событиями.
 
 ---
 

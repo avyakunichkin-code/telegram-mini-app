@@ -1,13 +1,16 @@
 ---
 layer: plan
-status: draft
+status: superseded
+superseded_by: ../vision/ideas/remove-character-xp-and-levels.md
 spec_formula: specs/gameplay/LEVEL_XP_SYSTEM.md
 spec_execution: specs/features/SPEC_mvp-11-progression-events.md
 matrix: specs/gameplay/catalogs/XP_EVENTS_ACTIONS_MATRIX.md
-last_reviewed: 2026-05-17
+last_reviewed: 2026-05-24
 ---
 
 # Plan: прогрессия уровней, XP и разблокировка механик
+
+> **Superseded (2026-05-24).** План не выполняется: см. [`remove-character-xp-and-levels.md`](../vision/ideas/remove-character-xp-and-levels.md). Ограничения механик — через шаблоны старта, не через level-gates.
 
 Связанные артефакты:
 

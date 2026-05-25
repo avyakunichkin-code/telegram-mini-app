@@ -7,7 +7,8 @@
 | [`docs/README.md`](docs/README.md) | Оглавление папки `docs/` и слои документации |
 | [`docs/DOCUMENTATION_SYSTEM.md`](docs/DOCUMENTATION_SYSTEM.md) | Конвейер idea → spec → plan → tasks |
 | [`docs/foundation/SPEC_PRODUCT.md`](docs/foundation/SPEC_PRODUCT.md) | Продукт, цикл, экономика MVP, ссылки на рост |
-| [`docs/specs/gameplay/LEVEL_XP_SYSTEM.md`](docs/specs/gameplay/LEVEL_XP_SYSTEM.md) | Уровень/XP игрока, разблокировки, источники опыта (канон игровой меты) |
+| [`docs/vision/ideas/remove-character-xp-and-levels.md`](docs/vision/ideas/remove-character-xp-and-levels.md) | **Канон прогрессии:** `event_tier` от `period_index`, без character level/XP |
+| [`docs/specs/gameplay/LEVEL_XP_SYSTEM.md`](docs/specs/gameplay/LEVEL_XP_SYSTEM.md) | ~~Уровень/XP~~ — **superseded** (архив) |
 | [`docs/vision/ideas/money-quest-evolution-after-mvp.md`](docs/vision/ideas/money-quest-evolution-after-mvp.md) | **Часть II** — целевая концепция Game/Plan, шаблоны, победа из шаблона, Q&A, план по слоям |
 | [`docs/backlog/PRODUCT_BACKLOG.md`](docs/backlog/PRODUCT_BACKLOG.md) | Бэклог по слоям |
 | [`docs/foundation/TMA_USER_FLOWS.md`](docs/foundation/TMA_USER_FLOWS.md) | Потоки и боли TMA |
@@ -96,7 +97,7 @@
 - `frontend-react/src/hooks/useGame.js` — `overview`, `timeStatus`, `periodStatus`, таймер, переход периодов, `pendingEvents`.
 - `frontend-react/src/components/GameScreen.jsx` — шапка, события, оверлей карусели.
 - `frontend-react/src/components/EventDeck.jsx` — кнопка событий, `EventCarouselOverlay`, свайп/стрелки.
-- `frontend-react/src/components/FinanceSection.jsx` — инвестиции, страховки, шаблоны, долги, активы; вкладки `.mq-tablist`.
+- `frontend-react/src/components/FinancePremium.jsx` — вкладка «Финансы»: доходы/расходы, инвестиции, страховки, имущество, обязательства (аккордеоны по `overview.mechanics`).
 - `frontend-react/src/components/BottomGameNav.jsx` + `icons/NavIcons.jsx` — нижняя навигация.
 - `frontend-react/src/components/AnalyticsSection.jsx` / **AnalyticsPremium**, **DashboardPremium** — обзор и цели; spec: [`docs/specs/SPEC_ANALYTICS.md`](docs/specs/SPEC_ANALYTICS.md).
 - `frontend-react/src/components/ToastHost.jsx` + `notifications.js` — тосты вместо `alert`.

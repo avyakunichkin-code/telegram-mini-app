@@ -15,7 +15,7 @@
 | Действия за период | Одно «стратегическое» действие в месяц | **Несколько** действий: зарплата, подушка, финансы, события, инвестиции, страховки |
 | Инвестиции | Акции, ETF на высоких уровнях | **Только вклад и облигации** в MVP и ближайшем горизонте |
 | Числа в UI | «Только метафоры, без цифр» | **Цифры + иконки/полоски**; ползунки для сумм |
-| Источники XP | В основном достижения | **События** (`xp_delta`), **действия периода**, **закрытие периода** + **достижения** (целевой слой) |
+| Источники XP / level | В основном достижения | **Снято (2026-05-24):** нет character XP/level; достижения без XP; tier событий от **периода** |
 | Старт игры | Сценарии-«главы» | **Каталог `game_starter_templates`** + новая партия; «главы» — опциональный слой кампании |
 | Повтор событий | Кулдауны в рекомендациях | **`repeat_policy`** в БД + план **`cooldown_periods`** |
 
@@ -28,17 +28,17 @@
 | Стек | ✅ Готово | FastAPI, PostgreSQL, React + Vite, Telegram Mini App |
 | Core loop периода | ✅ Готово | Таймер, `process_period_end`, поражение (3 периода cash < 0) |
 | Зарплата, подушка, финансы | ✅ Готово | Активы/долги из шаблонов, вклад, облигации, страховки |
-| События | ✅ MVP + 1.1 в коде | 3/период, tier-окно, `xp_delta`, lifestyle delta; сиды MVP 1.1 |
+| События | ✅ MVP + 1.1 в коде | 3/период, tier-окно от `period_index`, lifestyle delta; `xp_delta` в сидах игнорируется |
 | Победа MVP | ✅ Готово | Overview; `win_reached` с 7-го периода |
 | Game / Plan, шаблоны старта | ✅ G1 | `save_kind`, каталог шаблонов, blueprint; **Plan — заглушка в UI** |
-| character_level / XP | 🟡 Частично | MQ-111–115 в коде; HUD уровня на дашборде; API-gates и экран «Развитие» — backlog |
+| character_level / XP | ✅ Снято | Нет level/xp в профиле и overview; см. [`remove-character-xp-and-levels.md`](docs/vision/ideas/remove-character-xp-and-levels.md) |
 | `cooldown_periods` | ✅ Готово | Поле, счётчики (`0007`), фильтр в `ensure_period_events` |
 | Достижения (UI + движок) | 🟡 В работе | `0009`, `achievement_engine`, API; UI «Развитие» и SPEC — backlog **M12** |
 | Victory v2 (M из N из шаблона) | ⬜ Vision | `victory_config` в данных — задел |
 | Онбординг 3 шага | ⬜ Backlog | [`TMA_USER_FLOWS.md`](docs/foundation/TMA_USER_FLOWS.md) |
 | Retention-метрики / Closed Alpha | ⬜ Не запущено | Нет валидации D1/D7 на 50–150 игроках |
 
-**Ближайшие приоритеты:** закрыть MVP 1.1 (прогрессия, UI level/XP), `cooldown_periods`, онбординг, плейтест Pre-Alpha → Closed Alpha.
+**Ближайшие приоритеты:** онбординг, victory v2 UI, шаблоны/flags капитала, плейтест Pre-Alpha → Closed Alpha. ~~UI level/XP~~ — снято.
 
 **Связанные артефакты:** [`PRODUCT_BACKLOG.md`](docs/backlog/PRODUCT_BACKLOG.md), [`TRACEABILITY.md`](docs/TRACEABILITY.md), [`MVP_AUDIT_VS_SPEC.md`](docs/foundation/MVP_AUDIT_VS_SPEC.md).
 
@@ -134,11 +134,11 @@
 
 ### 2.4. Бесконечная цель и прогрессия
 
-Ступени финансовой зрелости (`character_level`) + победа из шаблона + **новая партия** с другим шаблоном.
+Победа из шаблона + рост сложности событий по **периоду** (`event_tier`) + **новая партия** с другим шаблоном. ~~`character_level`~~ — снят.
 
 ### 2.5. События без «гнева рандома»
 
-Предвестники (целевое), tier-окно, веса, **cooldown**, XP за выбор, обязательные вехи на первом проходе (backlog).
+Предвестники (целевое), tier-окно от периода, веса, **cooldown**, обязательные вехи на первом проходе (backlog).
 
 ### 2.6. Второй шанс
 

@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { MoneyText } from '../../MoneyText';
 import { buildCapitalPeriodFlows } from '../../../utils/buildCapitalPeriodFlows';
 import { MqxCapitalSectionAccordion } from './MqxCapitalSectionAccordion';
@@ -84,8 +84,16 @@ export function CapitalPeriodFlowsBlock({
 
   if (!overview) return null;
 
-  const incomeOpen = openFlowsSection !== 'expense';
-  const expenseOpen = openFlowsSection === 'expense';
+  const [expandedSection, setExpandedSection] = useState(null);
+
+  useEffect(() => {
+    if (openFlowsSection === 'income' || openFlowsSection === 'expense') {
+      setExpandedSection(openFlowsSection);
+    }
+  }, [openFlowsSection]);
+
+  const incomeOpen = expandedSection !== 'expense';
+  const expenseOpen = expandedSection === 'expense';
 
   return (
     <>

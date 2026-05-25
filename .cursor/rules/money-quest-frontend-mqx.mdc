@@ -53,5 +53,5 @@ alwaysApply: false
 
 ## Finance
 
-- Вкладки «Разделы» — в `FinancePremium`; `FinanceSection` с `hideSectionsCard` + `capitalLayout`.
+- Вкладка «Финансы» — один экран `FinancePremium.jsx` (hero + аккордеоны капитала по `overview.mechanics`).
 - Портфель — `CapitalPortfolioPanels.jsx`; invest/insurance выровнять под тот же capital-стиль (см. spec P1).

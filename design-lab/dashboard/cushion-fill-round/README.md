@@ -25,4 +25,4 @@ npx serve .
 ## Данные (prod)
 
 - Текущая сумма: `overview.safety_fund_balance`
-- Цель: `overview.win_target_safety_fund` (3 × `total_monthly_obligations`)
+- Норма: `overview.safety_fund_baseline_target` или 3 × `total_monthly_obligations` (не `win_target_safety_fund`)

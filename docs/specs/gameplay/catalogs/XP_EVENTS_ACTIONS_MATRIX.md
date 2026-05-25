@@ -1,17 +1,20 @@
 ---
 layer: spec
 catalog: xp-sources
-status: draft
-last_reviewed: 2026-05-17
+status: superseded
+superseded_by: ../../../vision/ideas/remove-character-xp-and-levels.md
+last_reviewed: 2026-05-24
 authoritative_formula: ../LEVEL_XP_SYSTEM.md
 execution_spec: ../features/SPEC_mvp-11-progression-events.md
 ---
 
 # Матрица источников опыта: действия API и события
 
-**Назначение:** один список, по которому балансируются **XP** и (опционально) **уровень разблокировки механики**. Любое изменение в коде должно находить здесь строку или добавлять новую строку до merge.
+> **Superseded (2026-05-24).** Начисление character XP и гейты по уровню удалены. Таблица ниже — **архив** baseline; в runtime `xp_delta` в сидах событий игнорируется.
 
-Формула порога уровней и принципы — **[`LEVEL_XP_SYSTEM.md`](../LEVEL_XP_SYSTEM.md)**.
+**Назначение *(архив)*:** список baseline XP и разблокировок до снятия прогрессии. Актуальная прогрессия контента — **`event_tier`** от **`period_index`**: [`remove-character-xp-and-levels.md`](../../../vision/ideas/remove-character-xp-and-levels.md).
+
+Формула порога уровней *(архив)* — **[`LEVEL_XP_SYSTEM.md`](../LEVEL_XP_SYSTEM.md)** (superseded).
 
 ---
 

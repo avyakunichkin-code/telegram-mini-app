@@ -49,6 +49,12 @@ GAME_STARTER_TEMPLATE_SEEDS = [
             "monthly_salary": 62500,
             "assets": [],
             "liabilities": [],
+            "mechanics": {
+                "capital_invest": True,
+                "capital_insurance": False,
+                "capital_property": False,
+                "capital_liabilities": False,
+            },
         },
     },
     {

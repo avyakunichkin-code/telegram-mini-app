@@ -18,9 +18,12 @@ from .schemas import (
     LiabilityResponse,
     MonthlyBurnBreakdown,
     SalaryProfileResponse,
+    GameMechanicsPermissions,
     VictoryGoalOverview,
     VictoryOverview,
 )
+from .game_rules import MVP_SAFETY_FUND_OBLIGATIONS_MULTIPLIER
+from .starter_mechanics import resolve_profile_mechanics
 from .victory_engine import evaluate_victory, parse_victory_config
 from .victory_seeds import DEFAULT_TEMPLATE_KEY
 from .victory_snap import build_victory_evaluation_input
@@ -129,11 +132,28 @@ def build_finance_overview(db: Session, profile: GameProfile) -> FinanceOverview
     victory_snap = build_victory_evaluation_input(db, profile)
     victory_result = evaluate_victory(victory_cfg, victory_snap, template_key=template_key)
 
+    safety_baseline_target = 0.0
+    if total_monthly_obligations > 0:
+        safety_baseline_target = round(
+            total_monthly_obligations * float(MVP_SAFETY_FUND_OBLIGATIONS_MULTIPLIER),
+            2,
+        )
+
+    mech = resolve_profile_mechanics(db, profile)
+    mechanics_permissions = GameMechanicsPermissions(
+        capital_invest=mech["capital_invest"],
+        capital_insurance=mech["capital_insurance"],
+        capital_property=mech["capital_property"],
+        capital_liabilities=mech["capital_liabilities"],
+    )
+
     victory_overview = VictoryOverview(
         schema_version=victory_result.schema_version,
         template_key=victory_result.template_key,
         min_period_index=victory_result.min_period_index,
         period_gate_open=victory_result.period_gate_open,
+        progression_mode=victory_result.progression_mode,
+        current_goal_key=victory_result.current_goal_key,
         goals_met=victory_result.goals_met,
         goals_required=victory_result.goals_required,
         goals_enabled=victory_result.goals_enabled,
@@ -181,6 +201,7 @@ def build_finance_overview(db: Session, profile: GameProfile) -> FinanceOverview
         overdue_liabilities_count=overdue_liabilities_count,
         win_target_safety_fund=round(victory_result.win_target_safety_fund, 2),
         win_progress_safety_fund=round(victory_result.win_progress_safety_fund, 4),
+        safety_fund_baseline_target=safety_baseline_target,
         win_ready=bool(victory_result.win_ready),
         win_reached=bool(victory_result.win_reached),
         clean_period_streak=int(getattr(profile, "clean_period_streak", 0) or 0),
@@ -195,4 +216,5 @@ def build_finance_overview(db: Session, profile: GameProfile) -> FinanceOverview
         save_kind=str(getattr(profile, "save_kind", "game") or "game"),
         onboarding_state=str(getattr(profile, "onboarding_state", "brief_done") or "brief_done"),
         onboarding_step=str(getattr(profile, "onboarding_step", "farewell") or "farewell"),
+        mechanics=mechanics_permissions,
     )
