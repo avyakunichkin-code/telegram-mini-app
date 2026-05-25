@@ -1,7 +1,7 @@
 # cushion-fill-round — варианты индикатора подушки
 
 **Контекст:** chip «Подушка» в блоке «Финансы периода» (дашборд S5, 2×2).  
-**Метрика:** `fill% = safety_fund_balance / win_target_safety_fund × 100` (цель ×3 обязательств).
+**Метрика:** `fill% = safety_fund_balance / (3 × total_monthly_obligations) × 100` — норма безопасности, не цель сценария.
 
 ## Пороги цвета
 

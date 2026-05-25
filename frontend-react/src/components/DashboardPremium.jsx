@@ -184,7 +184,7 @@ export function DashboardPremium({
       {
         title: 'Подушка',
         titleHint: cushionFill
-          ? `Подушка безопасности · ${cushionFill.percent}% от цели (×3 обязательств)`
+          ? `Подушка · ${cushionFill.percent}% от нормы (×3 текущих обязательств)`
           : 'Подушка безопасности',
         valueNode: <MoneyText value={safety} />,
         accent: 'mqx-accent--emerald',

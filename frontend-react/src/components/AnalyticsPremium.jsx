@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { API, ApiError, formatApiErrorDetail } from '../api';
 import { asSafeReactText } from '../utils/displayText';
 import { MoneyText } from './MoneyText';
+import { resolveSafetyFundBaselineTarget } from '../utils/safetyFundFill';
 import { SparkLineSvg, CashForecastSpark } from './AnalyticsCharts';
 import { IconPercentStat, IconOverdueStat, IconShieldStat, IconFlowStat } from './icons/StatIcons';
 import { MqStatRow } from './MqStatRow';
@@ -61,8 +62,9 @@ export function AnalyticsPremium({ overview }) {
     const overdue = Number(overview.total_overdue_amount) || 0;
     const streak = Number(overview.clean_period_streak) || 0;
 
-    const winTarget = Number(overview.win_target_safety_fund) || 0;
-    const cushionFrac = winTarget > 0 ? safety / winTarget : 0;
+    const cushionBaseline = resolveSafetyFundBaselineTarget(overview) || 0;
+    const cushionFrac = cushionBaseline > 0 ? safety / cushionBaseline : 0;
+    const winTarget = cushionBaseline;
 
     const capitalTarget = Math.max(winTarget * 1.25, cash * 1.15, obligations * 6, 1);
     const capitalFrac = cash / capitalTarget;

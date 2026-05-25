@@ -12,7 +12,7 @@ import json
 from dataclasses import dataclass, field, replace
 from typing import Any
 
-from .game_rules import MIN_PERIOD_INDEX_FOR_WIN, MVP_SAFETY_FUND_OBLIGATIONS_MULTIPLIER
+from .game_rules import MIN_PERIOD_INDEX_FOR_WIN
 from .victory_seeds import DEFAULT_TEMPLATE_KEY, victory_config_for_template
 
 VICTORY_SCHEMA_VERSION = 1
@@ -316,23 +316,14 @@ def _apply_chain_progression(
     return out, chain_met, current_key
 
 
-def _safety_legacy_fields(
-    goal_results: list[VictoryGoalResult],
-    snap: VictoryEvaluationInput,
-) -> tuple[float, float]:
+def _safety_legacy_fields(goal_results: list[VictoryGoalResult]) -> tuple[float, float]:
     for g in goal_results:
         if g.enabled and g.type == "safety_fund_months":
             target = float(g.detail.get("target", 0))
             current = float(g.detail.get("current", 0))
-            if target > 0:
-                return target, min(1.0, current / target)
-
-    obligations = float(snap.total_monthly_obligations)
-    if obligations > 0:
-        target = obligations * float(MVP_SAFETY_FUND_OBLIGATIONS_MULTIPLIER)
-        current = float(snap.safety_fund_balance)
-        return target, min(1.0, current / target)
-
+            if target <= 0:
+                return 0.0, 0.0
+            return target, min(1.0, current / target)
     return 0.0, 0.0
 
 
@@ -368,7 +359,7 @@ def evaluate_victory(
         win_reached = period_gate_open and goals_met >= required_met and goals_enabled > 0
         win_ready = _compute_win_ready(goal_results, required_met)
 
-    win_target, win_progress = _safety_legacy_fields(goal_results, snap)
+    win_target, win_progress = _safety_legacy_fields(goal_results)
 
     return VictoryEvaluationResult(
         schema_version=schema_version,

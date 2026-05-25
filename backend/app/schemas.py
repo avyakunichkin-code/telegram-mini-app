@@ -219,6 +219,8 @@ class FinanceOverview(BaseModel):
     overdue_liabilities_count: int = 0
     win_target_safety_fund: float = 0
     win_progress_safety_fund: float = 0
+    # Норма подушки для UI (×3 обязательств сейчас), не привязана к victory goals
+    safety_fund_baseline_target: float = 0
     win_ready: bool = False
     win_reached: bool = False
     clean_period_streak: int = 0

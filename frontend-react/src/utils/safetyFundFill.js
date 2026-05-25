@@ -1,18 +1,25 @@
 /**
- * Наполнение подушки относительно цели (×3 обязательств / win_target_safety_fund).
+ * Индикатор подушки — базовая норма финансовой безопасности, не цели сценария.
+ * Норма пересчитывается из текущих обязательств (по умолчанию ×3).
  */
 
-export const SAFETY_FUND_TARGET_MULTIPLIER = 3;
+export const SAFETY_FUND_BASELINE_MULTIPLIER = 3;
 
-/** Цель подушки: API или 3× обязательств (как MVP). */
-export function resolveSafetyFundTarget(overview) {
-  let target = Number(overview?.win_target_safety_fund) || 0;
-  if (target <= 0) {
-    const obligations = Number(overview?.total_monthly_obligations) || 0;
-    if (obligations > 0) target = obligations * SAFETY_FUND_TARGET_MULTIPLIER;
-  }
-  return target > 0 ? target : null;
+/**
+ * Рекомендуемый объём подушки по текущим финансам (не victory / win_target).
+ * @param {{ total_monthly_obligations?: number, safety_fund_baseline_target?: number }} overview
+ */
+export function resolveSafetyFundBaselineTarget(overview) {
+  const fromApi = Number(overview?.safety_fund_baseline_target);
+  if (Number.isFinite(fromApi) && fromApi > 0) return fromApi;
+
+  const obligations = Number(overview?.total_monthly_obligations) || 0;
+  if (obligations <= 0) return null;
+  return obligations * SAFETY_FUND_BASELINE_MULTIPLIER;
 }
+
+/** @deprecated используй resolveSafetyFundBaselineTarget */
+export const resolveSafetyFundTarget = resolveSafetyFundBaselineTarget;
 
 /** @returns {number|null} 0–100 или null, если цель не задана */
 export function getSafetyFundFillPercent(balance, target) {
@@ -38,11 +45,11 @@ export function getSafetyFundFillTier(percent) {
 }
 
 /**
- * @param {{ safety_fund_balance?: number, win_target_safety_fund?: number, total_monthly_obligations?: number }} overview
+ * @param {{ safety_fund_balance?: number, total_monthly_obligations?: number, safety_fund_baseline_target?: number }} overview
  * @returns {{ percent: number, tier: SafetyFundFillTier, target: number } | null}
  */
 export function getSafetyFundFillFromOverview(overview) {
-  const target = resolveSafetyFundTarget(overview);
+  const target = resolveSafetyFundBaselineTarget(overview);
   if (target == null) return null;
   const percent = getSafetyFundFillPercent(overview?.safety_fund_balance, target);
   if (percent == null) return null;
