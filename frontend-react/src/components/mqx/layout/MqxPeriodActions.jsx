@@ -57,15 +57,17 @@ export function MqxPeriodActions({
         >
           Снять
         </button>
-        <button
-          type="button"
-          className="mqx-action"
-          title="Открыть раздел инвестиций"
-          aria-label="Инвестировать"
-          onClick={onInvest}
-        >
-          Инвестировать
-        </button>
+        {onInvest ? (
+          <button
+            type="button"
+            className="mqx-action"
+            title="Открыть раздел инвестиций"
+            aria-label="Инвестировать"
+            onClick={onInvest}
+          >
+            Инвестировать
+          </button>
+        ) : null}
       </div>
     </section>
   );

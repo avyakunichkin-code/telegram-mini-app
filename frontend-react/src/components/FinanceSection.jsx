@@ -3,7 +3,7 @@ import { API } from '../api';
 import { showNotification } from './notifications';
 import { MoneyText } from './MoneyText';
 import { useEffect, useMemo, useState } from 'react';
-import { getMechanicsFromOverview } from '../utils/starterMechanics';
+import { filterFinanceTabs, getMechanicsFromOverview } from '../utils/starterMechanics';
 import { CapitalLiabilitiesPanel, CapitalPropertyPanel } from './CapitalPortfolioPanels';
 import { InvestProductForm } from './InvestProductForm';
 import { InvestPositionRow } from './InvestPositionRow';
@@ -89,6 +89,18 @@ export function FinanceSection({
     () => mechanicsProp ?? getMechanicsFromOverview(overview),
     [mechanicsProp, overview],
   );
+
+  const tabsCatalog = useMemo(() => {
+    const base = capitalInline ? FINANCE_TABS_CAPITAL : FINANCE_TABS_LEGACY;
+    return filterFinanceTabs(base, mechanics);
+  }, [capitalInline, mechanics]);
+
+  useEffect(() => {
+    if (!tabsCatalog.length) return;
+    if (!tabsCatalog.some((t) => t.id === financeTab)) {
+      setFinanceTab(tabsCatalog[0].id);
+    }
+  }, [tabsCatalog, financeTab, setFinanceTab]);
 
   const reloadExtra = async () => {
     try {
@@ -198,7 +210,7 @@ export function FinanceSection({
           <div className="mq-slot-intro">Вкладки: инвестиции, страховки, активы и долги.</div>
           <div className="mq-tabs-wrap mq-fin-wrap">
             <div className="mq-tablist mq-tablist--2x2" role="tablist" aria-label="Разделы финансов">
-              {FINANCE_TABS.map((t) => (
+              {tabsCatalog.map((t) => (
                 <button
                   key={t.id}
                   id={`finance-tab-${t.id}`}
@@ -217,7 +229,7 @@ export function FinanceSection({
         </div>
 
         <div key={financeTab} className="mq-enter-item mq-tab-panel-reveal mq-fin-shell">
-          {financeTab === 'invest' && (
+          {financeTab === 'invest' && mechanics.capital_invest && (
             <div role="tabpanel" id="finance-panel-invest" aria-labelledby="finance-tab-invest">
               <Section header="Инвестиции">
                 <div className="mq-slot-intro">{DEPOSIT_HELP}</div>
@@ -316,7 +328,7 @@ export function FinanceSection({
             </div>
           )}
 
-          {financeTab === 'insurance' && (
+          {financeTab === 'insurance' && mechanics.capital_insurance && (
             <div role="tabpanel" id="finance-panel-insurance" aria-labelledby="finance-tab-insurance">
               <Section header="Страховки">
                 <Cell multiline>
@@ -332,7 +344,8 @@ export function FinanceSection({
             </div>
           )}
 
-          {financeTab === 'portfolio' && (
+          {financeTab === 'portfolio' &&
+            (mechanics.capital_property || mechanics.capital_liabilities) && (
             <div role="tabpanel" id="finance-panel-portfolio" aria-labelledby="finance-tab-portfolio">
               <>
                 <Section header="Шаблоны активов">
@@ -529,7 +542,6 @@ export function FinanceSection({
     }
   };
 
-  const tabsCatalog = capitalInline ? FINANCE_TABS_CAPITAL : FINANCE_TABS_LEGACY;
   const activeTabLabel = tabsCatalog.find((t) => t.id === financeTab)?.label || 'Финансы';
   const ownedAssets = overview.assets || [];
   const ownedLiabilities = overview.liabilities || [];
@@ -675,8 +687,8 @@ export function FinanceSection({
           id={`finance-panel-${financeTab}`}
           aria-labelledby={`finance-tab-${financeTab}`}
         >
-          {financeTab === 'invest' ? investCapitalBlock : null}
-          {financeTab === 'insurance' ? (
+          {financeTab === 'invest' && mechanics.capital_invest ? investCapitalBlock : null}
+          {financeTab === 'insurance' && mechanics.capital_insurance ? (
             <InsuranceSection
               policies={policies}
               buyingPlanKey={buyingPlanKey}
@@ -687,7 +699,7 @@ export function FinanceSection({
               useSectionSeg
             />
           ) : null}
-          {financeTab === 'property' ? (
+          {financeTab === 'property' && mechanics.capital_property ? (
             <CapitalPropertyPanel
               assetTemplates={assetTemplates}
               ownedAssets={ownedAssets}
@@ -698,7 +710,7 @@ export function FinanceSection({
               handleDeleteAsset={handleDeleteAsset}
             />
           ) : null}
-          {financeTab === 'liabilities' ? (
+          {financeTab === 'liabilities' && mechanics.capital_liabilities ? (
             <CapitalLiabilitiesPanel
               liabilityTemplates={liabilityTemplates}
               ownedLiabilities={ownedLiabilities}
@@ -720,7 +732,7 @@ export function FinanceSection({
         <div className="mqx-card mqx-fin-card">
           <div className="mqx-card__title">Разделы</div>
           <div className="mqx-fin-tabs" role="tablist" aria-label="Разделы финансов">
-          {FINANCE_TABS.map((t) => (
+          {tabsCatalog.map((t) => (
             <button
               key={t.id}
               id={`finance-tab-${t.id}`}
@@ -747,7 +759,7 @@ export function FinanceSection({
       >
         <h2 className={capitalLayout ? 'mqx-capital-card__title' : 'mqx-card__title'}>{activeTabLabel}</h2>
 
-        {financeTab === 'invest' ? (
+        {financeTab === 'invest' && mechanics.capital_invest ? (
           capitalLayout ? (
             investCapitalBlock
           ) : (
@@ -819,7 +831,7 @@ export function FinanceSection({
           )
         ) : null}
 
-        {financeTab === 'insurance' ? (
+        {financeTab === 'insurance' && mechanics.capital_insurance ? (
           <InsuranceSection
             policies={policies}
             buyingPlanKey={buyingPlanKey}
@@ -831,7 +843,9 @@ export function FinanceSection({
           />
         ) : null}
 
-        {financeTab === 'portfolio' && !capitalLayout ? (
+        {financeTab === 'portfolio' &&
+          !capitalLayout &&
+          (mechanics.capital_property || mechanics.capital_liabilities) ? (
           <>
             <div className="mqx-fin-subtabs mqx-fin-subtabs-row" role="tablist" aria-label="Портфель">
               <MqxSubtab

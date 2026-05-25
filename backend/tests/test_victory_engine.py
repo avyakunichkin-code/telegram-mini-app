@@ -142,6 +142,28 @@ class TestHarderGoalChain:
         assert r.current_goal_key == "safety_6x"
 
 
+class TestSafetyFundTargetFallback:
+    def test_win_target_from_obligations_without_safety_goal(self):
+        cfg = {
+            "min_period_index_for_victory": 1,
+            "required_goals_met": 1,
+            "progression_mode": "parallel",
+            "goals": [
+                {
+                    "key": "flow",
+                    "type": "net_monthly_cashflow_nonneg",
+                    "title": "Поток",
+                }
+            ],
+        }
+        r = evaluate_victory(
+            cfg,
+            _snap(total_monthly_obligations=10_000, safety_fund_balance=15_000),
+        )
+        assert r.win_target_safety_fund == 30_000
+        assert r.win_progress_safety_fund == 0.5
+
+
 class TestNewGoalTypes:
     def test_passive_income_monthly_min_parallel(self):
         cfg = {

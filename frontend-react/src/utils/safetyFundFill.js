@@ -2,6 +2,18 @@
  * Наполнение подушки относительно цели (×3 обязательств / win_target_safety_fund).
  */
 
+export const SAFETY_FUND_TARGET_MULTIPLIER = 3;
+
+/** Цель подушки: API или 3× обязательств (как MVP). */
+export function resolveSafetyFundTarget(overview) {
+  let target = Number(overview?.win_target_safety_fund) || 0;
+  if (target <= 0) {
+    const obligations = Number(overview?.total_monthly_obligations) || 0;
+    if (obligations > 0) target = obligations * SAFETY_FUND_TARGET_MULTIPLIER;
+  }
+  return target > 0 ? target : null;
+}
+
 /** @returns {number|null} 0–100 или null, если цель не задана */
 export function getSafetyFundFillPercent(balance, target) {
   const goal = Number(target) || 0;
@@ -26,16 +38,15 @@ export function getSafetyFundFillTier(percent) {
 }
 
 /**
- * @param {{ safety_fund_balance?: number, win_target_safety_fund?: number }} overview
- * @returns {{ percent: number, tier: SafetyFundFillTier } | null}
+ * @param {{ safety_fund_balance?: number, win_target_safety_fund?: number, total_monthly_obligations?: number }} overview
+ * @returns {{ percent: number, tier: SafetyFundFillTier, target: number } | null}
  */
 export function getSafetyFundFillFromOverview(overview) {
-  const percent = getSafetyFundFillPercent(
-    overview?.safety_fund_balance,
-    overview?.win_target_safety_fund,
-  );
+  const target = resolveSafetyFundTarget(overview);
+  if (target == null) return null;
+  const percent = getSafetyFundFillPercent(overview?.safety_fund_balance, target);
   if (percent == null) return null;
   const tier = getSafetyFundFillTier(percent);
   if (!tier) return null;
-  return { percent, tier };
+  return { percent, tier, target };
 }

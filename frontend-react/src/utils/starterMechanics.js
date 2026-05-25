@@ -20,6 +20,25 @@ export function getMechanicsFromOverview(overview) {
   };
 }
 
+const TAB_MECHANIC_KEY = Object.freeze({
+  invest: 'capital_invest',
+  insurance: 'capital_insurance',
+  property: 'capital_property',
+  liabilities: 'capital_liabilities',
+});
+
+/** Вкладки/разделы капитала, разрешённые шаблоном. */
+export function filterFinanceTabs(tabs, mechanics) {
+  return tabs.filter((t) => {
+    if (t.id === 'portfolio') {
+      return mechanics.capital_property || mechanics.capital_liabilities;
+    }
+    const key = TAB_MECHANIC_KEY[t.id];
+    if (!key) return true;
+    return mechanics[key];
+  });
+}
+
 /** Подзаголовок страницы «Управление капиталом». */
 export function capitalPageSubtitle(mechanics) {
   const parts = ['Доходы и расходы за период'];

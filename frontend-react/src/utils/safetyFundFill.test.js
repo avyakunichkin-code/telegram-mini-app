@@ -3,6 +3,7 @@ import {
   getSafetyFundFillPercent,
   getSafetyFundFillTier,
   getSafetyFundFillFromOverview,
+  resolveSafetyFundTarget,
 } from './safetyFundFill.js';
 
 assert.equal(getSafetyFundFillPercent(0, 0), null);
@@ -18,6 +19,14 @@ const fill = getSafetyFundFillFromOverview({
   safety_fund_balance: 27000,
   win_target_safety_fund: 54000,
 });
-assert.deepEqual(fill, { percent: 50, tier: 'mid-high' });
+assert.deepEqual(fill, { percent: 50, tier: 'mid-high', target: 54000 });
+
+assert.equal(resolveSafetyFundTarget({ win_target_safety_fund: 0, total_monthly_obligations: 18000 }), 54000);
+const fillFallback = getSafetyFundFillFromOverview({
+  safety_fund_balance: 27000,
+  win_target_safety_fund: 0,
+  total_monthly_obligations: 18000,
+});
+assert.deepEqual(fillFallback, { percent: 50, tier: 'mid-high', target: 54000 });
 
 console.log('safetyFundFill.test.js OK');

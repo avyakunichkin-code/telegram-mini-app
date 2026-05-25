@@ -1387,11 +1387,20 @@ button.mqx-finance-chip.mqx-finance-chip--action:focus-visible {
 /* Подушка — индикатор наполнения к цели ×3 (design-lab F1) */
 .mqx-finance-chip--cushion {
   position: relative;
+  align-items: flex-start;
+}
+
+.mqx-finance-chip--cushion .mqx-finance-chip__icon {
+  margin-top: 1px;
+}
+
+.mqx-finance-chip--cushion .mqx-finance-chip__body {
+  width: 100%;
 }
 
 .mqx-cushion-fill {
   margin-top: 5px;
-  height: 4px;
+  height: 5px;
   border-radius: 999px;
   background: color-mix(in srgb, var(--mqx-ink) 12%, transparent);
   overflow: hidden;
