@@ -8,9 +8,9 @@ import {
 import { capitalPageSubtitle, getMechanicsFromOverview } from '../utils/starterMechanics';
 import { CapitalLiabilitiesPanel, CapitalPropertyPanel } from './CapitalPortfolioPanels';
 import { InvestProductForm } from './InvestProductForm';
-import { InvestPositionRow } from './InvestPositionRow';
 import {
   InsuranceSection,
+  InvestPositionRow,
   MqxCapitalEmpty,
   MqxSectionSeg,
   MqxSubtab,

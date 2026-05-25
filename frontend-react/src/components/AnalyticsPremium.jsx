@@ -1,6 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
 import { API, ApiError, formatApiErrorDetail } from '../api';
-import { asSafeReactText } from '../utils/displayText';
 import { MoneyText } from './MoneyText';
 import { resolveSafetyFundBaselineTarget } from '../utils/safetyFundFill';
 import { SparkLineSvg, CashForecastSpark } from './AnalyticsCharts';
