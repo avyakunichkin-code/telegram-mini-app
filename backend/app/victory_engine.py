@@ -49,6 +49,7 @@ class VictoryEvaluationInput:
     safety_ever_contributed: bool = False
     has_active_deposit: bool = False
     has_active_bond: bool = False
+    has_active_insurance: bool = False
 
 
 @dataclass(frozen=True)
@@ -144,6 +145,8 @@ def _evaluate_goal(goal: dict[str, Any], snap: VictoryEvaluationInput) -> Victor
             met = bool(snap.has_active_bond)
         elif action == "invest_opened":
             met = bool(snap.has_active_deposit or snap.has_active_bond)
+        elif action == "insurance_purchased":
+            met = bool(snap.has_active_insurance)
         else:
             detail["error"] = f"unknown_action:{action}"
         progress = 1.0 if met else 0.0
@@ -436,6 +439,12 @@ def _finalize_with_mechanics(
             goals_met = sum(1 for g in enabled_avail if g.met)
             current_key = next((g.key for g in enabled_avail if not g.met), None)
             break
+
+    if chain_mode:
+        chain_met_keys = {g.key for g in chain_results if g.enabled and g.met}
+        effective = compute_mechanics_effective(template_cap, unlock_steps, chain_met_keys)
+        staged = _apply_availability(evaluated, requires_by_key, template_cap, effective)
+        chain_results, goals_met, current_key, _ = _apply_chain_progression(staged)
 
     return chain_results, effective, goals_met, current_key
 

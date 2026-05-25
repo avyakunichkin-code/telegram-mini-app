@@ -14,6 +14,7 @@ from .models import (
     FinanceLiability,
     FinanceSalary,
     GameProfile,
+    InsurancePolicy,
     InvestmentPosition,
     PeriodSnapshot,
     Transaction,
@@ -105,6 +106,18 @@ def _safety_ever_contributed(db: Session, profile_id: int) -> bool:
     return tx is not None
 
 
+def _has_active_insurance(db: Session, profile_id: int) -> bool:
+    row = (
+        db.query(InsurancePolicy.id)
+        .filter(
+            InsurancePolicy.game_profile_id == profile_id,
+            InsurancePolicy.is_active == 1,
+        )
+        .first()
+    )
+    return row is not None
+
+
 def _has_active_investment(db: Session, profile_id: int, kind: str) -> bool:
     row = (
         db.query(InvestmentPosition.id)
@@ -174,4 +187,5 @@ def build_victory_evaluation_input(db: Session, profile: GameProfile) -> Victory
         safety_ever_contributed=_safety_ever_contributed(db, profile.id),
         has_active_deposit=_has_active_investment(db, profile.id, "deposit"),
         has_active_bond=_has_active_investment(db, profile.id, "bond"),
+        has_active_insurance=_has_active_insurance(db, profile.id),
     )

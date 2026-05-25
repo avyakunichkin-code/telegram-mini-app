@@ -80,6 +80,16 @@ function guidanceForGoal(goal, view) {
         tips: ['Достаточно одной позиции — шаг засчитается сразу.'],
       };
     }
+    if (action === 'insurance_purchased' || key === 'tutorial_insurance') {
+      return {
+        lead: [
+          { text: 'Оформи ' },
+          { highlight: 'страховой полис' },
+          { text: ' в разделе «Страховки».' },
+        ],
+        tips: ['После этого откроется покупка имущества из каталога.'],
+      };
+    }
   }
 
   if (type === 'safety_fund_months' || key === 'safety_3x' || key === 'safety_6x') {

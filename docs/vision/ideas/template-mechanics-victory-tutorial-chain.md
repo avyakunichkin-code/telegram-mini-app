@@ -116,7 +116,7 @@ next_spec: specs/features/SPEC_template-victory-tutorial-chain.md
 
 Победа: все шаги chain выполнены (или **M из N**, если позже ослабим — `required_goals_met` в JSON). `min_period_index_for_victory` оставить **7** или снизить до **5** только после смоука «быстрого» прохода.
 
-Для **тяжёлых** шаблонов — тот же каркас, но `mechanics_unlock` добавляет insurance → property → liabilities после финансовых tutorial-целей.
+Для **тяжёлых** шаблонов (`tight_budget`, `mortgage_stress`, `debt_stack`) — 9 шагов: tutorial (зарплата, подушка) → поток → без просрочки → подушка ×6 → инвестиции → доход 80k → страховка → финал (10M cash или арендная квартира). `mechanics_unlock`: flows → liabilities → invest → insurance → property.
 
 ---
 

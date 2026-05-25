@@ -1,8 +1,8 @@
 """Тесты victory: учебная цепочка (tutorial) и parallel (legacy)."""
 
 from app.game_rules import MIN_PERIOD_INDEX_FOR_WIN
-from app.mechanics_progression import TEMPLATE_MECHANICS_UNLOCK_PRESETS
-from app.starter_mechanics import BASIC_V1_MECHANICS
+from app.mechanics_progression import DEFAULT_HARDER_UNLOCK, TEMPLATE_MECHANICS_UNLOCK_PRESETS
+from app.starter_mechanics import BASIC_V1_MECHANICS, DEFAULT_MECHANICS
 from app.victory_engine import (
     PROGRESSION_CHAIN,
     VictoryEvaluationInput,
@@ -33,6 +33,7 @@ def _snap(**kwargs):
         safety_ever_contributed=False,
         has_active_deposit=False,
         has_active_bond=False,
+        has_active_insurance=False,
     )
     defaults.update(kwargs)
     return VictoryEvaluationInput(**defaults)
@@ -141,24 +142,70 @@ class TestBasicTutorialChain:
         assert r.current_goal_key == "tutorial_cushion"
 
 
-class TestHarderGoalChain:
-    def test_all_four_goals_win(self):
+def _eval_harder(template_key: str, snap, **cfg_overrides):
+    cfg = victory_config_for_template(template_key)
+    cfg = {**cfg, **cfg_overrides}
+    return evaluate_victory(
+        cfg,
+        snap,
+        template_key=template_key,
+        template_cap=dict(DEFAULT_MECHANICS),
+        mechanics_unlock=list(DEFAULT_HARDER_UNLOCK),
+    )
+
+
+def _harder_complete_snap(**kwargs):
+    target = 10_000.0 * 6
+    defaults = dict(
+        salary_ever_claimed=True,
+        safety_ever_contributed=True,
+        safety_fund_balance=target,
+        net_monthly_cashflow=1.0,
+        total_overdue_amount=0.0,
+        has_active_deposit=True,
+        has_active_insurance=True,
+        monthly_passive_income=100_000.0,
+        cash_balance=10_000_000.0,
+        owned_asset_kinds=frozenset({"rental_home"}),
+    )
+    defaults.update(kwargs)
+    return _snap(**defaults)
+
+
+class TestHarderTutorialChain:
+    def test_config_has_nine_goals(self):
+        cfg = victory_config_for_template("mq_game_tight_budget_v1")
+        assert cfg.get("playtest_mode") == "tutorial"
+        assert len(cfg["goals"]) == 9
+
+    def test_debt_stack_finale_is_rental(self):
         cfg = victory_config_for_template("mq_game_debt_stack_v1")
-        r = evaluate_victory(
-            cfg,
-            _snap(
-                safety_fund_balance=60_000,
-                total_monthly_obligations=10_000,
-                monthly_passive_income=400_000,
-                monthly_expenses_total=100_000,
-                monthly_burn_total=19_600,
-                cash_balance=10_000_000,
-                owned_asset_kinds=frozenset({"rental_home", "vehicle"}),
-            ),
-            template_key="mq_game_debt_stack_v1",
+        assert cfg["goals"][-1]["key"] == "rental_home_owned"
+
+    def test_liabilities_locked_until_cushion(self):
+        r = _eval_harder("mq_game_tight_budget_v1", _snap())
+        assert r.mechanics_effective["capital_liabilities"] is False
+        assert r.current_goal_key == "tutorial_salary"
+
+    def test_no_overdue_requires_liabilities_unlock(self):
+        r = _eval_harder(
+            "mq_game_mortgage_stress_v1",
+            _snap(salary_ever_claimed=True, safety_ever_contributed=True),
         )
-        assert r.goals_enabled == 4
-        assert r.goals_met == 4
+        overdue = next(g for g in r.goals if g.key == "no_overdue")
+        assert overdue.available is True
+        assert r.mechanics_effective["capital_liabilities"] is True
+        assert r.mechanics_effective["capital_invest"] is False
+
+    def test_tight_budget_full_chain_win(self):
+        r = _eval_harder("mq_game_tight_budget_v1", _harder_complete_snap())
+        assert r.goals_enabled == 9
+        assert r.goals_met == 9
+        assert r.win_reached is True
+
+    def test_debt_stack_full_chain_win(self):
+        r = _eval_harder("mq_game_debt_stack_v1", _harder_complete_snap())
+        assert r.goals_met == 9
         assert r.win_reached is True
 
 

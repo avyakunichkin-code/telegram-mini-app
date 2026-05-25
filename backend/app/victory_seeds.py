@@ -10,7 +10,13 @@ from __future__ import annotations
 import json
 from typing import Any
 
-from .mechanics_progression import MECHANIC_CAPITAL_INVEST, MECHANIC_DASHBOARD_CORE
+from .mechanics_progression import (
+    MECHANIC_CAPITAL_INVEST,
+    MECHANIC_CAPITAL_INSURANCE,
+    MECHANIC_CAPITAL_LIABILITIES,
+    MECHANIC_CAPITAL_PROPERTY,
+    MECHANIC_DASHBOARD_CORE,
+)
 from .victory_snap import RENTAL_HOME_ASSET_KINDS
 
 VICTORY_SCHEMA_VERSION = 1
@@ -157,43 +163,107 @@ _BASIC_TUTORIAL_CHAIN: list[dict[str, Any]] = [
 ]
 
 
-def _harder_goals_playtest() -> list[dict[str, Any]]:
-    return [
-        {
-            "key": "safety_6x",
-            "type": "safety_fund_months",
-            "title": "Подушка ≥ 6× обязательств",
-            "months_multiplier": 6,
-            "required": False,
-            "enabled": True,
-        },
-        {
-            "key": "passive_net_250k",
-            "type": "passive_income_net_monthly_min",
-            "title": "Пассивный доход − расходы ≥ 250 000 ₽/мес",
-            "min_net": 250_000,
-            "requires_mechanics": [MECHANIC_CAPITAL_INVEST],
-            "required": False,
-            "enabled": True,
-        },
-        {
-            "key": "cash_10m",
-            "type": "cash_balance_min",
-            "title": "Наличные ≥ 10 000 000 ₽",
-            "min_cash": 10_000_000,
-            "required": False,
-            "enabled": True,
-        },
-        {
-            "key": "rental_home_owned",
-            "type": "asset_kind_any_owned",
-            "title": "Сдаваемая квартира в собственности",
-            "asset_kinds_any": sorted(RENTAL_HOME_ASSET_KINDS),
-            "requires_mechanics": ["capital_property"],
-            "required": False,
-            "enabled": True,
-        },
-    ]
+_HARDER_TUTORIAL_CORE: list[dict[str, Any]] = [
+    {
+        "key": "tutorial_salary",
+        "type": "action_once",
+        "title": "Забрать зарплату",
+        "action": "salary_claimed",
+        "requires_mechanics": [MECHANIC_DASHBOARD_CORE],
+        "required": False,
+        "enabled": True,
+    },
+    {
+        "key": "tutorial_cushion",
+        "type": "action_once",
+        "title": "Внести в подушку",
+        "action": "safety_contributed",
+        "requires_mechanics": [MECHANIC_DASHBOARD_CORE],
+        "required": False,
+        "enabled": True,
+    },
+    {
+        "key": "flow_nonneg",
+        "type": "net_monthly_cashflow_nonneg",
+        "title": "Стабильный денежный поток",
+        "requires_mechanics": [MECHANIC_DASHBOARD_CORE],
+        "required": False,
+        "enabled": True,
+    },
+    {
+        "key": "no_overdue",
+        "type": "no_overdue",
+        "title": "Без просрочки по долгам",
+        "requires_mechanics": [MECHANIC_CAPITAL_LIABILITIES],
+        "required": False,
+        "enabled": True,
+    },
+    {
+        "key": "safety_6x",
+        "type": "safety_fund_months",
+        "title": "Подушка ≥ 6× обязательств",
+        "months_multiplier": 6,
+        "requires_mechanics": [MECHANIC_DASHBOARD_CORE],
+        "required": False,
+        "enabled": True,
+    },
+    {
+        "key": "tutorial_invest",
+        "type": "action_once",
+        "title": "Открыть депозит или облигацию",
+        "action": "invest_opened",
+        "requires_mechanics": [MECHANIC_CAPITAL_INVEST],
+        "required": False,
+        "enabled": True,
+    },
+    {
+        "key": "invest_income_80k",
+        "type": "passive_income_monthly_min",
+        "title": "Доход с инвестиций ≥ 80 000 ₽/мес",
+        "min_monthly": 80_000,
+        "requires_mechanics": [MECHANIC_CAPITAL_INVEST],
+        "required": False,
+        "enabled": True,
+    },
+    {
+        "key": "tutorial_insurance",
+        "type": "action_once",
+        "title": "Оформить страховку",
+        "action": "insurance_purchased",
+        "requires_mechanics": [MECHANIC_CAPITAL_INSURANCE],
+        "required": False,
+        "enabled": True,
+    },
+]
+
+_HARDER_FINALE_CASH_10M: dict[str, Any] = {
+    "key": "cash_10m",
+    "type": "cash_balance_min",
+    "title": "Наличные ≥ 10 000 000 ₽",
+    "min_cash": 10_000_000,
+    "requires_mechanics": [MECHANIC_DASHBOARD_CORE],
+    "required": False,
+    "enabled": True,
+}
+
+_HARDER_FINALE_RENTAL: dict[str, Any] = {
+    "key": "rental_home_owned",
+    "type": "asset_kind_any_owned",
+    "title": "Сдаваемая квартира в собственности",
+    "asset_kinds_any": sorted(RENTAL_HOME_ASSET_KINDS),
+    "requires_mechanics": [MECHANIC_CAPITAL_PROPERTY],
+    "required": False,
+    "enabled": True,
+}
+
+
+def _harder_tutorial_chain(template_key: str) -> list[dict[str, Any]]:
+    goals = list(_HARDER_TUTORIAL_CORE)
+    if template_key == "mq_game_debt_stack_v1":
+        goals.append(dict(_HARDER_FINALE_RENTAL))
+    else:
+        goals.append(dict(_HARDER_FINALE_CASH_10M))
+    return goals
 
 
 def _config(
@@ -216,16 +286,23 @@ def _config(
     return cfg
 
 
-_HARDER_PLAYTEST = _harder_goals_playtest()
-
 VICTORY_CONFIG_BY_TEMPLATE_KEY: dict[str, dict[str, Any]] = {
     DEFAULT_TEMPLATE_KEY: _config(
         required_goals_met=len(_BASIC_TUTORIAL_CHAIN),
         goals=list(_BASIC_TUTORIAL_CHAIN),
     ),
-    "mq_game_tight_budget_v1": _config(required_goals_met=4, goals=list(_HARDER_PLAYTEST)),
-    "mq_game_mortgage_stress_v1": _config(required_goals_met=4, goals=list(_HARDER_PLAYTEST)),
-    "mq_game_debt_stack_v1": _config(required_goals_met=4, goals=list(_HARDER_PLAYTEST)),
+    "mq_game_tight_budget_v1": _config(
+        required_goals_met=len(_harder_tutorial_chain("mq_game_tight_budget_v1")),
+        goals=_harder_tutorial_chain("mq_game_tight_budget_v1"),
+    ),
+    "mq_game_mortgage_stress_v1": _config(
+        required_goals_met=len(_harder_tutorial_chain("mq_game_mortgage_stress_v1")),
+        goals=_harder_tutorial_chain("mq_game_mortgage_stress_v1"),
+    ),
+    "mq_game_debt_stack_v1": _config(
+        required_goals_met=len(_harder_tutorial_chain("mq_game_debt_stack_v1")),
+        goals=_harder_tutorial_chain("mq_game_debt_stack_v1"),
+    ),
 }
 
 VICTORY_CONFIG_LEGACY_BY_TEMPLATE_KEY: dict[str, dict[str, Any]] = {

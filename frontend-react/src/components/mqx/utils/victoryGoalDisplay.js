@@ -50,6 +50,7 @@ export function goalProgressHintText(goal) {
       return 'Депозит или облигация в разделе инвестиций';
     }
     if (action === 'invest_bond_bought') return 'Купить облигацию';
+    if (action === 'insurance_purchased') return 'Купить полис в разделе страховок';
     return goal.met ? 'Сделано' : 'Ожидает действия';
   }
   if (type === 'expense_to_income_ratio') {
