@@ -20,8 +20,12 @@ npx serve .
 | `CONTENT.md` | Примеры copy «как достичь» |
 | `VARIANTS.md` | G1 vs G2, парадигма |
 
-## Следующий шаг
+## Prod и лендинг
 
-1. Утвердить **G1** (или G2).  
-2. Согласовать цепочку в `GOAL_CHAIN_DRAFT.md`.  
-3. Spec + backend + `MqxGoalDash` в prod.
+- **Prod:** `MqxGoalDash` в `DashboardPremium` (между финансами и действиями).
+- **Лендинг:** fallback-источник PNG дашборда для `landing/scripts/capture-screens.mjs --source=lab`. Спека: [`docs/specs/LANDING_SCREENSHOTS.md`](../../../docs/specs/LANDING_SCREENSHOTS.md).
+
+## Следующий шаг (контент)
+
+1. Согласовать цепочку в `GOAL_CHAIN_DRAFT.md` с шаблонами Game.  
+2. Поддерживать паритет lab ↔ prod при смене copy/цепочки.

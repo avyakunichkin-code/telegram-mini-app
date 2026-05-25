@@ -4,13 +4,13 @@
 |---------|----------|
 | 13px суммы/вторичный | → **12px** `--mq-fs-caption` |
 | 9px kicker chip | → **10px** `--mq-fs-micro` |
-| Hero display | **A 26px** vs **B 28px** — выбор в lab §3 |
+| Hero display | **★ A 26px** (отклонён B 28px) |
 
 ## Целевая шкала
 
 | Токен | px |
 |-------|-----|
-| `--mq-fs-display` | 26 или 28 (после выбора) |
+| `--mq-fs-display` | **26** |
 | `--mq-fs-title` | 20 |
 | `--mq-fs-heading` | 14 |
 | `--mq-fs-body` | 15 |

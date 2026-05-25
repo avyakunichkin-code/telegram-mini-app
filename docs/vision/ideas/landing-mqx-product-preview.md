@@ -1,7 +1,8 @@
 # Лендинг — превью продукта (MQX)
 
 **Статус:** в работе (вариант A)  
-**Дата:** май 2026
+**Дата:** май 2026  
+**Операционная спека:** [`specs/LANDING_SCREENSHOTS.md`](../../specs/LANDING_SCREENSHOTS.md)
 
 ## Problem Statement
 
@@ -12,7 +13,7 @@
 | Вопрос | Решение |
 |--------|---------|
 | Аудитория | Игровой hero + отдельный нейтральный блок «Партнёрам» |
-| Скрины | Экспорт из design-lab / prod; **RU UI** в EN-локали тоже |
+| Скрины | `capture-screens.mjs`: **app** (prod UI) → fallback **lab**; **RU UI** в EN-локали тоже |
 | Контраст тем | **Тёмный блок → светлый скрин; светлый блок → тёмный скрин** |
 | Layout | **A** (скролл + витрина); **C** (табы) — только если A не зайдёт |
 
@@ -24,13 +25,14 @@
 4. **Светлые секции** (#how, #learn, #modes) — карточки MQX + при необходимости тёмные скрины в рамке.
 5. **#partners** — без скринов, edutainment-тон.
 
-Источник скринов: `landing/scripts/capture-screens.mjs` (по умолчанию живое приложение; fallback `goal-chain-round`, `flows-round`, events L1) → `landing/public/screens/`.
+Источник скринов: [`landing/scripts/capture-screens.mjs`](../../../landing/scripts/capture-screens.mjs) → [`landing/public/screens/`](../../../landing/public/screens/). Подробно: [`specs/LANDING_SCREENSHOTS.md`](../../specs/LANDING_SCREENSHOTS.md).
 
 ## Key Assumptions to Validate
 
-- [ ] Скрин S5 дашборда узнаётся без подписи «это игра» (5-секундный тест).
+- [ ] Скрин дашборда (финансы + цель) узнаётся без подписи «это игра» (5-секундный тест).
 - [ ] Контраст light-on-dark / dark-on-light не режет глаз на мобиле.
-- [ ] Скрины не устареют до публичного запуска (дата в `landing/public/screens/README.md`).
+- [x] Пайплайн пересъёма задокументирован; дата последнего кадра — `landing/public/screens/README.md` (2026-05-25).
+- [ ] Перед публичным запуском — пересъём в **app**-режиме (не только lab-fallback).
 
 ## MVP Scope
 
@@ -42,7 +44,8 @@
 - Вариант C (табы как в игре) — до оценки A.
 - Отдельные EN-скрины — дублируем RU.
 - design-lab раунд целого лендинга — только пересъём при смене UI.
+- Съём с устаревших lab-витрин (`dashboard/index`, `capital-page/#phone-demo`) — см. антипаттерны в `LANDING_SCREENSHOTS.md`.
 
 ## Open Questions
 
-- Обновлять скрины автоматически в CI или вручную перед релизом?
+- Обновлять скрины автоматически в CI или вручную перед релизом? (**сейчас:** вручную по чеклисту в `LANDING_SCREENSHOTS.md` § «Перед публикацией»)

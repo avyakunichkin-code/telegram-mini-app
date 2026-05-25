@@ -20,13 +20,16 @@ npx serve .
 
 ## Prod parity (S5)
 
-Витрина **синхронизирована** с `DashboardPremium` + `index.css` (`mqx-tab-page--dash-unified`):
+**Канон дашборда в prod:** `goal-chain-round` + `period-actions-round` (не галерея `index.html` с блоком «Уровень»).
+
+Витрина синхронизирована с `DashboardPremium` + `index.css` (`mqx-tab-page--dash-unified`):
 
 - Hero: Play + Pause (`mqx-btn--filled`), пауза `||`
-- Финансы 2×2, `mqx-dash-link`, Монетка
-- Действия: вторичные с border/shadow; **панель подушки** inline + закрытие по клику снаружи
-- Уровень: `mqx-level-dash-bleed` (фон full-width, контент `padding-inline: 14px`, без `margin-inline: -14px`)
+- Финансы 2×2 (`MqxFinancePeriodBlock`), `mqx-dash-link`, Монетка
+- **Цель:** `MqxGoalDash` — между финансами и действиями ([`goal-chain-round/`](goal-chain-round/))
+- Действия: `MqxPeriodActions`; панель подушки inline
 - Таббар: `bottom-nav--unified`, активная ячейка без «пилюли»
-- Класс стека в S5: `mqx-dash-stack--unified` (как в prod)
+
+**Лендинг:** PNG дашборда — [`goal-chain-round/`](goal-chain-round/) или app-capture; см. [`docs/specs/LANDING_SCREENSHOTS.md`](../../docs/specs/LANDING_SCREENSHOTS.md).
 
 Дальнейшие правки UI дашборда — сначала lab, затем перенос в `frontend-react`.

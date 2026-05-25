@@ -80,6 +80,6 @@ npx playwright install chromium
 npm run capture-screens
 ```
 
-Подробности: [`public/screens/README.md`](public/screens/README.md), спека: [`docs/vision/ideas/landing-mqx-product-preview.md`](../docs/vision/ideas/landing-mqx-product-preview.md).
+Подробности: [`public/screens/README.md`](public/screens/README.md). Спеки: [`docs/specs/LANDING_SCREENSHOTS.md`](../docs/specs/LANDING_SCREENSHOTS.md), идея: [`docs/vision/ideas/landing-mqx-product-preview.md`](../docs/vision/ideas/landing-mqx-product-preview.md).
 
 **EN** использует те же PNG, что и RU (тексты в локалях, картинки общие).

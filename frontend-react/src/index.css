@@ -74,10 +74,21 @@ body {
   --tma-tabbar-height: 64px;
   --tma-tabbar-inset: calc(var(--tma-tabbar-height) + env(safe-area-inset-bottom, 0px));
 
-  /* Шкала типографики TMA: не добавлять на экран произвольные размеры (см. BRANDBOOK 4.5) */
+  /* Шкала типографики MQX (type-scale-round ★, display A = 26px) */
+  --mq-fs-display: 26px;
+  --mq-fs-title: 20px;
+  --mq-fs-heading: 14px;
   --mq-fs-body: 15px;
   --mq-fs-caption: 12px;
   --mq-fs-small: 11px;
+  --mq-fs-micro: 10px;
+  --mq-fw-regular: 400;
+  --mq-fw-medium: 550;
+  --mq-fw-bold: 700;
+  --mq-fw-heavy: 800;
+  --mq-lh-tight: 1.15;
+  --mq-lh-body: 1.42;
+  --mq-lh-relaxed: 1.45;
 
   /*
    * Основная заливка CTA и ссылки: Quest Violet (бренд), без «голубого» акцента клиента Telegram.
@@ -839,8 +850,8 @@ body {
 }
 
 .mqx-hero-compact__timer {
-  font-size: 20px;
-  font-weight: 800;
+  font-size: var(--mq-fs-display);
+  font-weight: var(--mq-fw-heavy);
   font-variant-numeric: tabular-nums;
   letter-spacing: -0.02em;
   color: #fff;
@@ -848,8 +859,8 @@ body {
 }
 
 .mqx-hero-compact__progress-meta {
-  font-size: 10px;
-  font-weight: 650;
+  font-size: var(--mq-fs-caption);
+  font-weight: var(--mq-fw-medium);
   letter-spacing: 0.04em;
   text-transform: uppercase;
   color: rgba(245, 243, 255, 0.68);
@@ -912,8 +923,8 @@ body {
 
 .mqx-hero-compact__period-label {
   display: block;
-  font-size: 9px;
-  font-weight: 700;
+  font-size: var(--mq-fs-micro);
+  font-weight: var(--mq-fw-bold);
   letter-spacing: 0.12em;
   text-transform: uppercase;
   color: rgba(245, 243, 255, 0.65);
@@ -921,15 +932,15 @@ body {
 
 .mqx-hero-compact__period-value {
   display: block;
-  font-size: 14px;
-  font-weight: 800;
+  font-size: var(--mq-fs-heading);
+  font-weight: var(--mq-fw-heavy);
   color: #fff;
   font-variant-numeric: tabular-nums;
 }
 
 .mqx-hero-compact__row2 .mqx-pill {
   padding: 7px 10px;
-  font-size: 12px;
+  font-size: var(--mq-fs-caption);
   white-space: nowrap;
 }
 
@@ -939,7 +950,7 @@ body {
   border: 1px solid rgba(255, 255, 255, 0.2);
   background: rgba(0, 0, 0, 0.2);
   color: rgba(255, 255, 255, 0.92);
-  font-size: 13px;
+  font-size: var(--mq-fs-caption);
   font-weight: 700;
   cursor: pointer;
 }
@@ -1091,9 +1102,9 @@ body {
   margin: 0;
   padding: 10px 12px;
   border-radius: 14px;
-  font-size: 12px;
-  font-weight: 400;
-  line-height: 1.45;
+  font-size: var(--mq-fs-caption);
+  font-weight: var(--mq-fw-regular);
+  line-height: var(--mq-lh-relaxed);
   color: color-mix(in srgb, var(--mqx-ink) 90%, transparent);
   background: color-mix(in srgb, var(--mq-violet, #6d28d9) 5%, var(--tg-theme-bg-color, #fff));
   border: 1px solid color-mix(in srgb, var(--mqx-ink) 8%, transparent);
@@ -1129,8 +1140,8 @@ body {
 .mqx-period-actions--chips .mqx-finance-static__title {
   margin: 0 0 8px;
   padding: 0;
-  font-size: 14px;
-  font-weight: 800;
+  font-size: var(--mq-fs-heading);
+  font-weight: var(--mq-fw-heavy);
 }
 
 .mqx-action-chips {
@@ -1213,8 +1224,8 @@ body {
 
 .mqx-action-chip__label {
   display: block;
-  font-size: 11px;
-  font-weight: 700;
+  font-size: var(--mq-fs-small);
+  font-weight: var(--mq-fw-bold);
   line-height: 1.2;
   letter-spacing: -0.01em;
 }
@@ -1222,8 +1233,8 @@ body {
 .mqx-action-chip__sub--phrase {
   display: block;
   margin-top: 2px;
-  font-size: 10px;
-  font-weight: 400;
+  font-size: var(--mq-fs-micro);
+  font-weight: var(--mq-fw-regular);
   line-height: 1.2;
   letter-spacing: 0;
   text-transform: none;
@@ -1432,8 +1443,8 @@ body {
 
 .mqx-finance-static__title {
   margin: 0 0 10px;
-  font-size: 14px;
-  font-weight: 800;
+  font-size: var(--mq-fs-heading);
+  font-weight: var(--mq-fw-heavy);
 }
 
 .mqx-finance-static__chips {
@@ -1497,15 +1508,16 @@ button.mqx-finance-chip.mqx-finance-chip--action:focus-visible {
 }
 
 .mqx-finance-chip__label {
-  font-size: 9px;
+  font-size: var(--mq-fs-micro);
+  font-weight: var(--mq-fw-medium);
   text-transform: uppercase;
   letter-spacing: 0.05em;
   color: color-mix(in srgb, var(--mqx-ink) 55%, transparent);
 }
 
 .mqx-finance-chip__value {
-  font-size: 13px;
-  font-weight: 800;
+  font-size: var(--mq-fs-caption);
+  font-weight: var(--mq-fw-heavy);
   font-variant-numeric: tabular-nums;
   white-space: nowrap;
   max-width: 100%;
@@ -1935,8 +1947,8 @@ button.mqx-finance-chip.mqx-finance-chip--action:focus-visible {
 
 .mqx-goal-dash__kicker {
   display: block;
-  font-size: 11px;
-  font-weight: 850;
+  font-size: var(--mq-fs-micro);
+  font-weight: var(--mq-fw-bold);
   letter-spacing: 0.06em;
   text-transform: uppercase;
   color: color-mix(in srgb, var(--mq-sky, #0ea5e9) 82%, var(--mqx-ink));
@@ -1945,8 +1957,8 @@ button.mqx-finance-chip.mqx-finance-chip--action:focus-visible {
 .mqx-goal-dash__current-title {
   display: block;
   margin-top: 4px;
-  font-size: 15px;
-  font-weight: 850;
+  font-size: var(--mq-fs-caption);
+  font-weight: var(--mq-fw-bold);
   letter-spacing: -0.02em;
   line-height: 1.2;
   color: color-mix(in srgb, var(--mqx-ink) 96%, transparent);
@@ -1955,8 +1967,8 @@ button.mqx-finance-chip.mqx-finance-chip--action:focus-visible {
 .mqx-goal-dash__step {
   display: block;
   margin-top: 4px;
-  font-size: 11px;
-  font-weight: 600;
+  font-size: var(--mq-fs-small);
+  font-weight: var(--mq-fw-medium);
   color: color-mix(in srgb, var(--mqx-ink) 52%, transparent);
   font-variant-numeric: tabular-nums;
 }

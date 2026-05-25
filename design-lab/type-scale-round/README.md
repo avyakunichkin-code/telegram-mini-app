@@ -29,8 +29,6 @@ sync-lab.cmd
 3. Hero A/B (26 vs 28)  
 4. S5 dashboard с целевой шкалой  
 
-## После ★
+## ★ FINAL (2026-05-25)
 
-- Добавить токены в `#root` (`frontend-react/src/index.css`)  
-- Заменить сырые `font-size: Npx` волной W2 (dashboard)  
-- Обновить `BRANDBOOK_MQX.md` §5  
+Display **A = 26px**. Prod: `#root` + dashboard W2 в `frontend-react/src/index.css`. См. [`APPROVED.md`](APPROVED.md).

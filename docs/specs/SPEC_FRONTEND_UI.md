@@ -124,7 +124,7 @@ export function ExampleBlock({ overview }) {
 
 - `--mq-violet` `#6d28d9`, `--mq-violet-deep` `#5b21b6`
 - `--mq-emerald` `#059669`, `--mq-danger`, `--mq-warning`, `--mq-ink`, `--mq-line`
-- `--mq-fs-body` 15px, `--mq-fs-caption` 12px, `--mq-fs-small` 11px
+- Типографика (`#root`, ★ type-scale-round): `--mq-fs-display` 26px, `--mq-fs-title` 20px, `--mq-fs-heading` 14px, `--mq-fs-body` 15px, `--mq-fs-caption` 12px, `--mq-fs-small` 11px, `--mq-fs-micro` 10px; веса `--mq-fw-regular|medium|bold|heavy`
 
 ### Паттерны экрана
 
@@ -260,7 +260,7 @@ export function ExampleBlock({ overview }) {
 
 ### P0 (блокеры качества)
 
-- [x] На главной нет прогресса character XP (снят с overview; `MqxLevelDash` — период и цели).
+- [x] На главной нет прогресса character XP (снят с overview; блок **Цель** — `MqxGoalDash`, цепочка победы).
 - [ ] Нет видимых EN-подписей (`Positions`, `cashflow` в kicker и т.п.) — только RU.
 - [ ] Вкладка «Инвестиции» открывается без `ReferenceError` (константы help, импорты).
 

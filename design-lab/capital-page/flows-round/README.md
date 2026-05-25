@@ -26,3 +26,4 @@ npx serve .
 
 - IA страницы: [`../README.md`](../README.md)
 - Агрегация prod: `frontend-react/src/utils/buildCapitalPeriodFlows.js`
+- **Лендинг:** fallback PNG капитала — этот раунд (не `../index.html` `#phone-demo`). Спека: [`docs/specs/LANDING_SCREENSHOTS.md`](../../../docs/specs/LANDING_SCREENSHOTS.md)

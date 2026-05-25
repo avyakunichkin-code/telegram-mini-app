@@ -1,6 +1,6 @@
 # UI Consistency Audit — ТВОЙ ХОД TMA
 
-**Дата:** 2026-05-23  
+**Дата:** 2026-05-25  
 **Цель:** карта экранов и компонентов для эпика [mqx-ui-unification](../vision/ideas/mqx-ui-unification.md).  
 **Легенда:** ★ prod MQX · ⚠ hybrid · 🗑 удалить/архив · 📋 lab открыт
 
@@ -10,11 +10,11 @@
 
 | Экран | Файл | Статус | Комментарий |
 |-------|------|--------|-------------|
-| Главная | `DashboardPremium.jsx` | ★ | S5 Unified, `MqxDashStack`, `MqxLevelDash` |
+| Главная | `DashboardPremium.jsx` | ★ | S5 Unified, `MqxFinancePeriodBlock`, `MqxGoalDash`, `MqxPeriodActions` |
 | Финансы | `FinancePremium.jsx` → `FinanceSection.jsx` | ⚠ | Обёртка MQX, тело legacy — **главная боль** |
 | Аналитика | `AnalyticsPremium.jsx` | ⚠ | Hero MQX; строки `MqStatRow`, бары `MqxMetricBars` |
 | Меню | `MenuPremium.jsx` | ★ | В основном MQX |
-| События (оверлей) | `EventDeck` → `EventCarouselOverlay` | ★ M2 | Доделки: E2–E6 в one-pager |
+| События (оверлей) | `EventDeck` → `EventCarouselOverlay` | ★ L3 | `EventCard`, domain band; лендинг: [`LANDING_SCREENSHOTS.md`](LANDING_SCREENSHOTS.md) |
 | Итог периода | `MqxPeriodCloseSheet` / `Tail` | ★ | Иконки строк — 📋 lab |
 | Онбординг | `GameOnboardingLayer` + coach | ★ | Guided ★ |
 
@@ -47,10 +47,10 @@
 
 | Компонент | Замена | Действие |
 |-----------|--------|----------|
-| `MqxPeriodDashboard` | `MqxFinancePeriodBlock` + `MqxLevelDash` | Удалён |
+| `MqxPeriodDashboard` | `MqxFinancePeriodBlock` + `MqxGoalDash` | Удалён |
 | `MqxBlockSection` | `mqx-capital-card` / dash stack | Удалён |
 | `MqxStatMini` | `mqx-dash-link` 2×2 | Удалён |
-| `MqxLevelBlock` | `MqxLevelDash` | Удалён |
+| `MqxLevelBlock` | `MqxGoalDash` (ранее level-dash) | Удалён |
 
 **Остаётся в MQX (prod):** см. `#/dev/mqx` после чистки — секции с пометкой ★ в каталоге.
 

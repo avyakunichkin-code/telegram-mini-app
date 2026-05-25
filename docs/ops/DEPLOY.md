@@ -120,6 +120,8 @@ npm run build:pages
 npx gh-pages -d dist
 ```
 
+**Лендинг и скрины UI:** если менялся видимый MQX в игре — перед `build:pages` переснять PNG ([`specs/LANDING_SCREENSHOTS.md`](../specs/LANDING_SCREENSHOTS.md)): `cd landing && npm run capture-screens` (предпочтительно при запущенных dev + backend).
+
 ---
 
 ## 4. Telegram BotFather

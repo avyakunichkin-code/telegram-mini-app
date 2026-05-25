@@ -39,6 +39,7 @@
 | **performance-optimization** | CLS/LCP TMA, тяжёлые списки, лишние ререндеры |
 | **idea-refine** | Продуктовые гипотезы до спеки (опционально bash-скрипт в папке — только Unix) |
 | **social-changelog-posts** | Посты в соцсети по коммитам/сессии, трекер тем, картинки с Монеткой; **не трогает код** — [`docs/marketing/`](../marketing/) |
+| **code-review-and-quality** | Перед merge; для лендинга после смены MQX — сверка со [`LANDING_SCREENSHOTS.md`](../specs/LANDING_SCREENSHOTS.md) |
 
 ---
 
@@ -69,6 +70,8 @@
 Спека UI: [`docs/specs/SPEC_FRONTEND_UI.md`](../specs/SPEC_FRONTEND_UI.md).
 
 **MQX / компонентная база:** правила `money-quest-frontend-mqx.mdc` и скилл **frontend-ui-engineering** обязаны отсылать к единому процессу [`DESIGN_WORKFLOW.md`](../../frontend-react/src/components/mqx/DESIGN_WORKFLOW.md) — варианты в `design-lab/` → утверждение → `mqx/` → `#/dev/mqx` → prod (не пропускать этапы без явного согласования или исключения «багфикс/hotfix»).
+
+**Лендинг / скрины:** после заметной смены UI в игре — `cd landing && npm run capture-screens` (app-режим), обновить `last_capture` в [`landing/public/screens/README.md`](../../landing/public/screens/README.md); не снимать с `design-lab/dashboard/index.html` или `capital-page/#phone-demo` ([`LANDING_SCREENSHOTS.md`](../specs/LANDING_SCREENSHOTS.md)).
 
 ---
 

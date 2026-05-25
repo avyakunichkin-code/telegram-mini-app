@@ -35,7 +35,7 @@
 - [x] Таблица аудита: [`UI_CONSISTENCY_AUDIT.md`](../../specs/UI_CONSISTENCY_AUDIT.md)
 - [x] Удалить неиспользуемые `*Section.jsx`, `PeriodCloseModal.jsx`
 - [x] Убрать из `#/dev/mqx` legacy-блоки (`MqxPeriodDashboard`, старые stat-cards)
-- [x] Онбординг-демо на стеке prod (`MqxFinancePeriodBlock` + `MqxLevelDash`)
+- [x] Онбординг-демо на стеке prod (`MqxFinancePeriodBlock` + `MqxGoalDash`)
 - [x] Синхронизировать статусы в `design-lab/README.md` и `DESIGN_WORKFLOW.md`
 
 ---
@@ -58,8 +58,8 @@
 По [`design-lab/dashboard/APPROVED.md`](../../../design-lab/dashboard/APPROVED.md):
 
 - **L3 + S5 Unified** в `DashboardPremium` (`mqx-tab-page--dash-unified`)
-- Hero, 2×2 финансы, действия, уровень-аккордеон, таббар без «пилюли»
-- Lab S5 в паритете с prod
+- Hero, 2×2 финансы, **цель** (`MqxGoalDash`), действия, таббар без «пилюли»
+- Lab: [`goal-chain-round`](../../../design-lab/dashboard/goal-chain-round/) в паритете с prod; лендинг — [`LANDING_SCREENSHOTS.md`](../../specs/LANDING_SCREENSHOTS.md)
 
 ### Дашборд — что ещё разобрать (кандидаты в lab)
 

@@ -27,7 +27,10 @@
 | Dashboard unified | S5 + L3 | 2026-05 | [`dashboard/APPROVED.md`](../../../design-lab/dashboard/APPROVED.md) | `DashboardPremium`, `mqx-tab-page--dash-unified` |
 | Guided onboarding | 5 шагов | 2026-05-20 | [`onboarding-guided/APPROVED.md`](../../../design-lab/onboarding-guided/APPROVED.md) | `OnboardingCoach` |
 | New game mode pick | R2 + I1 | 2026-05-20 | [`new-game-mode/APPROVED.md`](../../../design-lab/new-game-mode/APPROVED.md) | `NewProfileKindScreen`, `MqxSaveKindPicker` |
-| Финансы: порядок разделов | Capital | — | [`capital-page/`](../../../design-lab/capital-page/) | `FinancePremium` аккордеоны |
+| Финансы: порядок разделов | Capital | — | [`capital-page/flows-round/`](../../../design-lab/capital-page/flows-round/) | `FinancePremium` аккордеоны |
+| Цель на дашборде | G1 chain | 2026-05 | [`dashboard/goal-chain-round/`](../../../design-lab/dashboard/goal-chain-round/) | `MqxGoalDash` |
+| Лендинг (скрины UI) | — | 2026-05-25 | capture app / lab fallback | [`LANDING_SCREENSHOTS.md`](../../specs/LANDING_SCREENSHOTS.md) |
+| Шкала типографики MQX | type-scale | 2026-05-25 | [`type-scale-round/APPROVED.md`](../../../design-lab/type-scale-round/APPROVED.md) | `#root` в `index.css`, dashboard W2 |
 
 Mission Brief (3 карточки) — **superseded** guided onboarding.
 
@@ -69,9 +72,23 @@ Mission Brief (3 карточки) — **superseded** guided onboarding.
 
 ## 5. Типографика TMA
 
-На `#root`: `--mq-fs-body` **15px**, `--mq-fs-caption` **12px**, `--mq-fs-small` **11px**. Системный стек платформы; **не** подключать Inter в TMA без продуктового решения.
+На `#root` (★ type-scale-round, display **A = 26px**):
 
-Не более **четырёх** текстовых уровней на экране.
+| Токен | px | Роль |
+|-------|-----|------|
+| `--mq-fs-display` | 26 | Таймер hero compact |
+| `--mq-fs-title` | 20 | Крупные заголовки экрана |
+| `--mq-fs-heading` | 14 | Заголовки секций (`mqx-finance-static__title`) |
+| `--mq-fs-body` | 15 | Основной текст |
+| `--mq-fs-caption` | 12 | Суммы в chip, pill, подсказка периода |
+| `--mq-fs-small` | 11 | Подписи chip действий |
+| `--mq-fs-micro` | 10 | Kicker (label chip, «Период») |
+
+Веса: `--mq-fw-regular` 400, `--mq-fw-medium` 550, `--mq-fw-bold` 700, `--mq-fw-heavy` 800.  
+Межстрочные: `--mq-lh-tight` 1.15, `--mq-lh-body` 1.42, `--mq-lh-relaxed` 1.45.
+
+Системный стек платформы; **не** подключать Inter в TMA без продуктового решения.  
+Не более **четырёх** текстовых уровней на одном экране (иерархия, не считая tabular-цифры).
 
 ---
 

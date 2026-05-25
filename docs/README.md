@@ -33,6 +33,7 @@
 | Разработчик / агент | `CLAUDE.md` → [`foundation/SPEC_PRODUCT.md`](foundation/SPEC_PRODUCT.md) → spec своей фичи |
 | Продукт | [`foundation/SPEC_PRODUCT.md`](foundation/SPEC_PRODUCT.md) + [Часть II (evolution)](vision/ideas/money-quest-evolution-after-mvp.md) |
 | UI/UX | [`specs/SPEC_FRONTEND_UI.md`](specs/SPEC_FRONTEND_UI.md) + [`reference/brandbook/BRANDBOOK.md`](reference/brandbook/BRANDBOOK.md) + [`BRANDBOOK_MQX.md`](reference/brandbook/BRANDBOOK_MQX.md) |
+| Лендинг / скрины MQX | [`specs/LANDING_SCREENSHOTS.md`](specs/LANDING_SCREENSHOTS.md) + [`landing/README.md`](../landing/README.md) |
 | Маркетинг / посты | [`marketing/README.md`](marketing/README.md) + скилл **social-changelog-posts** |
 | Планирование | [`backlog/PRODUCT_BACKLOG.md`](backlog/PRODUCT_BACKLOG.md) + [`TRACEABILITY.md`](TRACEABILITY.md) |
 
@@ -72,12 +73,14 @@
 | [`vision/ideas/event-catalog-qna-refine.md`](vision/ideas/event-catalog-qna-refine.md) | Q&A каталога событий, цепочки (авто, родственник) |
 | [`vision/ideas/event-types-and-taxonomy.md`](vision/ideas/event-types-and-taxonomy.md) | Типизация событий (домен, interaction, аналитика, informational «лотерея») |
 | [`vision/ideas/event-engagement-anti-fatigue.md`](vision/ideas/event-engagement-anti-fatigue.md) | Анти-усталость пула, конвейер контента, отдельные defs вместо variant B |
+| [`vision/ideas/landing-mqx-product-preview.md`](vision/ideas/landing-mqx-product-preview.md) | Лендинг: hero, peek, контраст тем скринов |
 
 ### Specs
 
 | Документ | Содержание |
 |----------|------------|
 | [`specs/SPEC_FRONTEND_UI.md`](specs/SPEC_FRONTEND_UI.md) | UI/UX MQX, a11y, границы |
+| [`specs/LANDING_SCREENSHOTS.md`](specs/LANDING_SCREENSHOTS.md) | PNG для лендинга, `capture-screens.mjs`, `UI_FOCUS`, чеклист перед deploy |
 | [`specs/SPEC_ANALYTICS.md`](specs/SPEC_ANALYTICS.md) | Вкладка «Аналитика» и данные |
 | [`specs/features/SPEC_game-plan.md`](specs/features/SPEC_game-plan.md) | Эпик G1 — Game E2E, `save_kind`, ADR-001 (**implemented**) |
 | [`specs/features/SPEC_mvp-11-progression-events.md`](specs/features/SPEC_mvp-11-progression-events.md) | MVP 1.1 — **`event_tier`**, **`repeat_policy`**, cooldown; tier-окно от **`period_index`** (см. remove-character-xp); план — [`plans/PLAN_mvp-11-progression-events.md`](plans/PLAN_mvp-11-progression-events.md) |

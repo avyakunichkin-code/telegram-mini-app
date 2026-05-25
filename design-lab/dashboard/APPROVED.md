@@ -1,13 +1,14 @@
 # Dashboard — утверждено (L3 + S5 Unified)
 
-**Витрина:** `design-lab/dashboard/` · скин **S5 Unified**.
+**Витрина:** `design-lab/dashboard/` · скин **S5 Unified**.  
+**Лендинг (скрин):** [`goal-chain-round/`](goal-chain-round/) — не `index.html` (там устаревший «Уровень»).
 
 ## Порядок (L3)
 
 1. Hero (цветной, на всю ширину)
 2. Финансы — **2×2** chip + Монетка + «Все финансы →»
-3. Действия — 4 кнопки (вторичные **без рамок**, как S4 Strip)
-4. Уровень — аккордеон U-B, **градиент без рамки**, сверху inset-линия
+3. **Цель** — аккордеон `MqxGoalDash`, цепочка шагов победы ([`goal-chain-round/`](goal-chain-round/))
+4. Действия — 4 кнопки (`MqxPeriodActions`)
 
 ## Страница (S5)
 
@@ -21,25 +22,26 @@
 ## Без объёма
 
 - Нет border/box-shadow у `mqx-frame` и `mqx-dash-stack` в игре
-- Акцент только цветом (hero, уровень, активный таб)
+- Акцент только цветом (hero, цель, активный таб)
 
 ## UX (сохранено)
 
-- XP: голубой градиент, виден при раскрытии уровня
+- Цель: sky-фон раздела, Монетка + пузырь «как достичь»
 - Шеврон: иконка без фона
 - Суммы: уменьшение шрифта, без переноса
 
 ## Prod
 
 - `DashboardPremium` → `mqx-tab-page--dash-unified`
+- `MqxFinancePeriodBlock` → `MqxGoalDash` → `MqxPeriodActions`
 - Стили: `:has(.mqx-tab-page--dash-unified)` в `index.css`
-- **design-lab S5** — паритет с prod (2026-05): hero/pause, bleed+inset, safety panel, tabbar, XP gradient
+- **design-lab** `goal-chain-round` — паритет с prod для лендинга и макетов
 
 ## Lab ↔ prod checklist
 
-| Элемент | Lab S5 | Prod |
-|--------|--------|------|
+| Элемент | Lab | Prod |
+|--------|-----|------|
 | Hero pause | `\|\|` + filled | `MqxDashboardHero` |
-| Подушка | `[data-safety-panel]` | `DashboardPremium` inline |
-| Уровень inset | `padding-inline` на bleed | то же |
+| Подушка | chip + действия | `DashboardPremium` |
+| Цель | `mqx-goal-dash` | `MqxGoalDash` |
 | Таббар | `bottom-nav__cell--active` full | `BottomGameNav` |
