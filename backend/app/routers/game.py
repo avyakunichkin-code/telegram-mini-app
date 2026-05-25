@@ -193,7 +193,7 @@ async def create_game_profile(
     return profile
 
 
-_ONBOARDING_STATES = frozenset({"draft", "brief_done"})
+_ONBOARDING_STATES = frozenset({"draft", "started", "brief_done"})
 _ONBOARDING_STEPS = frozenset(
     {"period_timer", "salary", "next_period", "safety_fund", "farewell"}
 )

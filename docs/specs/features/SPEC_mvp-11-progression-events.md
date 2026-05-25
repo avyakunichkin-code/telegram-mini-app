@@ -178,16 +178,9 @@ plan: ../../plans/PLAN_mvp-11-progression-events.md
 
 ---
 
-## 11. Рефакторинг кода XP
+## 11. Архив: рефакторинг XP
 
-Выделить модуль например **`backend/app/character_progression.py`** (`apply_character_xp(game_profile, delta: int, db)` → сохранённые изменения).
-
-Заменить дубль логики в:
-
-- `game_period.py` (конец периода);
-- `period_actions.py` (зарплата, переводы, прочее где уже XP).
-
-При расхождении поведений в разных участках исторического кода — **нормативом считает** этот spec и поведение, совпадающее с утилитой после рефакторинга (**регрессии ловят тестом**).
+**Снято (ADR-003).** Модуль `character_progression` / `apply_character_xp` не в prod. Исторический текст — git history этого spec.
 
 ---
 

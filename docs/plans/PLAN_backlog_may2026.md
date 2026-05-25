@@ -12,7 +12,7 @@ source: ../backlog/PRODUCT_BACKLOG.md
 
 | # | Решение |
 |---|---------|
-| 1 | **T1** (turn-based без таймера) — **не** в ближайший спринт; эпик в беклоге, реализация после α |
+| 1 | **T1 / TB1** — ✅ реализован 2026-05-26; follow-up **TB1.1** (чипы плана) — backlog |
 | 2 | **I1** — два явных трека: покупка/каталог и выплата (claim); см. фазу 1 ниже |
 | 3 | **E1** — **пауза реализации**; сначала повторная аналитика (фаза E1-R) |
 | 4 | Обновить [`PRODUCT_BACKLOG.md`](../backlog/PRODUCT_BACKLOG.md): T1, «В работу сейчас», статус E1 |
@@ -279,17 +279,16 @@ source: ../backlog/PRODUCT_BACKLOG.md
 
 ---
 
-## Фаза T1 — Turn-based период (отложено)
+## Фаза T1 — Turn-based период (✅ TB1, 2026-05-26)
 
-**Не в спринт май 2026.** Эпик в беклоге для трассировки; старт после α и решения по таймеру из отчёта 0.3.
+| ID | Задача | Статус |
+|----|--------|--------|
+| T1-1 | BE: `sync_time` не двигает `period_index` | ✅ |
+| T1-2 | FE: hero H2, «Закрыть месяц» | ✅ |
+| T1-3 | Doc + PW1 checklist | ✅ |
+| TB1.1 | Чипы плана месяца в hero | backlog |
 
-| ID | Задача (кратко) | Когда |
-|----|-----------------|--------|
-| T1-1 | BE: `sync_time` не двигает `period_index` | После α |
-| T1-2 | FE: hero H2, убрать countdown/auto-next | После T1-1 |
-| T1-3 | Doc + PW1 checklist под turn-based | После T1-2 |
-
-См. [`turn-based-period-no-timer.md`](../vision/ideas/turn-based-period-no-timer.md).
+См. [`PLAN_turn-based-period-no-timer.md`](PLAN_turn-based-period-no-timer.md), [`turn-based-period-no-timer.md`](../vision/ideas/turn-based-period-no-timer.md).
 
 ---
 
@@ -299,7 +298,7 @@ source: ../backlog/PRODUCT_BACKLOG.md
 0.1 → 0.2 → [1.1 ‖ 1.3 ‖ 1.6] → 1.2, 1.4 → 1.5 → 0.3
 [E1-R1 → E1-R2 → E1-R3]  // параллельно с 1.x, не блокирует α
 2.x — после 0.3
-T1 — по отдельному решению
+TB1.1 — чипы плана (опционально после α)
 ```
 
 ---
@@ -308,4 +307,5 @@ T1 — по отдельному решению
 
 | Дата | Запись |
 |------|--------|
-| 2026-05-26 | План создан; E1 → E1-R; T1 отложен; I1 разбит на A/B |
+| 2026-05-26 | TB1 (T1) implemented в prod + docs |
+| 2026-05-26 | План создан; E1 → E1-R; T1 отложен → позже закрыт TB1; I1 разбит на A/B |

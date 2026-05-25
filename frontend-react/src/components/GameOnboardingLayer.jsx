@@ -56,7 +56,7 @@ export function GameOnboardingLayer({
     const nextSkip = coach.skipPressCount + 1;
     handleSkip();
     if (nextSkip >= 2) {
-      persist({ onboarding_skip_count: 2 });
+      persist({ onboarding_skip_count: 2, onboarding_state: 'brief_done', onboarding_step: 'farewell' });
       return;
     }
     persist({ onboarding_skip_count: 1 });
@@ -68,10 +68,8 @@ export function GameOnboardingLayer({
     coach.step &&
     (coach.showOverlay || coach.phase === 'practice');
 
-  const lockTabs =
-    needsOnboarding &&
-    coach.showOverlay &&
-    coach.step?.gate !== 'action';
+  /** Табы заблокированы на всём coach (включая практику и action-шаги на главной). */
+  const lockTabs = needsOnboarding && coach.showCoach;
 
   useEffect(() => {
     const state = { visible: !!portalOpen, lockTabs: !!lockTabs };
@@ -143,7 +141,6 @@ export function GameOnboardingLayer({
       variant={coach.phase === 'practice' ? 'practice' : 'bubble'}
       step={coach.step}
       skipPressCount={coach.skipPressCount}
-      practiceSecLeft={coach.practiceSecLeft}
       rootRef={rootRef}
       anchor={coach.step?.anchor}
       onSkip={onSkip}

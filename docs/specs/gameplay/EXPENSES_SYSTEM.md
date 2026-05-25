@@ -7,7 +7,6 @@ last_reviewed: 2026-05-19
 related:
   - ../features/SPEC_expenses.md
   - ../../vision/ideas/expenses-mechanic.md
-  - ../gameplay/LEVEL_XP_SYSTEM.md
   - ../../foundation/SPEC_PRODUCT.md
 ---
 

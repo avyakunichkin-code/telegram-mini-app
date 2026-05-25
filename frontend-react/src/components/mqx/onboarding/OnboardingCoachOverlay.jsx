@@ -60,7 +60,6 @@ export function OnboardingCoachOverlay({
   onContinue,
   finishLabel = 'Начать игру',
   variant = 'bubble',
-  practiceSecLeft = 0,
 }) {
   const bubbleWrapRef = useRef(null);
   const [bubbleHole, setBubbleHole] = useState(null);

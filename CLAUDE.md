@@ -28,7 +28,7 @@
 ### Коротко о продукте
 
 - **ТВОЙ ХОД** — Telegram Mini App: **игра по финансовой грамотности** с периодами («месяц»), балансами, обязательствами, событиями.
-- **Core loop:** период с таймером → действия игрока → конец периода (`process_period_end`: списания, доходы, просрочки, инвестиции, страховки, снимки, новые события) → следующий период.
+- **Core loop (TB1):** открытый период → действия игрока → **«Закрыть месяц»** (`time/next` → `process_period_end`: списания, доходы, просрочки, инвестиции, страховки, снимки, новые события) → следующий период.
 - **Текущий MVP:** зарплата по кнопке (пропуск периода → выплата за период не повторяется), подушка, активы/долги из шаблонов БД, до трёх событий на период, инвестиции и страховки.
 - **Режимы сохранения:** **`save_kind`**: `game` \| `plan` (immutable после создания). **Game** — старт из каталога **`game_starter_templates`** (`starter_template_key`, blueprint, `base_monthly_lifestyle_expense`), без экрана ручных базовых параметров на входе. **Plan** — заложен в API и модели; в UI пока заглушка «Скоро» (мастер и префилл — MVP 2.0). Legacy **`light` / `hardcore`** и **`DifficultyScreen`** сняты; фильтр событий использует семантику **`game` / `plan` / `any`** на **`EventDefinition.mode`** в связке с **`profile.save_kind`** ([ADR-001](docs/decisions/ADR-001-save-kind-remove-light-hardcore.md)).
 
@@ -69,7 +69,7 @@
 
 ### Финансы / обзор
 
-- `GET /api/finance/overview` — главные цифры, прогресс победы MVP, `clean_period_streak`, таймер периода; поля **`avg_net_cashflow_6p`** / **`avg_net_cashflow_6p_n`** (задел под victory v2)
+- `GET /api/finance/overview` — главные цифры, прогресс победы, `clean_period_streak`, `period_index`; поля **`avg_net_cashflow_6p`** / **`avg_net_cashflow_6p_n`**
 - `GET /api/finance/analytics/timeseries` — ряд закрытий периодов + текущая проекция
 - `GET /api/finance/asset-templates`
 - `POST /api/finance/assets/from-template`
@@ -102,7 +102,7 @@
 
 - **Структура frontend:** [`frontend-react/ARCHITECTURE.md`](frontend-react/ARCHITECTURE.md) (`screens/`, `api/*`, `styles/`).
 - `frontend-react/src/api.js` — barrel → `api/` (`apiCall`, `API`, `ApiError`).
-- `frontend-react/src/hooks/useGame.js` — `overview`, `timeStatus`, `periodStatus`, таймер, переход периодов, `pendingEvents`.
+- `frontend-react/src/hooks/useGame.js` — `overview`, `timeStatus`, `periodStatus`, закрытие месяца (`advancePeriod`), foreground resync, `pendingEvents`.
 - `frontend-react/src/components/GameScreen.jsx` — шапка, события, оверлей карусели.
 - `frontend-react/src/components/EventDeck.jsx` — кнопка событий, `EventCarouselOverlay`, свайп/стрелки.
 - `frontend-react/src/components/FinancePremium.jsx` — вкладка «Финансы»: доходы/расходы, инвестиции, страховки, имущество, обязательства (аккордеоны по `overview.mechanics`).

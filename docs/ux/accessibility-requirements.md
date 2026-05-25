@@ -24,7 +24,7 @@ platform: Telegram Mini App
 | B3 | **Контраст текста** на hero и карточках: основной текст на фоне ≥ 4.5:1 (ориентир WCAG AA для body) | Spot-check с токенами `--mq-ink` / hero |
 | B4 | **Семантика:** вкладки игры **без `h1`** (hero/chips); секции — `h2` + `section` с `aria-label` | Согласовано с [`ux/screens/dashboard.md`](screens/dashboard.md) |
 | B5 | **Формы:** поля с `label` / `aria-label`; ошибки — текст + toast, не только цвет border |
-| B6 | **Progress:** `role="progressbar"` + `aria-valuenow` для таймера периода и fill подушки |
+| B6 | **Progress:** `role="progressbar"` + `aria-valuenow` для fill подушки и прочих bar (TB1: таймер периода снят) |
 | B7 | **Диалоги:** modal/sheet с `aria-modal`, заголовок связан с `aria-labelledby` |
 | B8 | **Табы:** `role="tablist"` / `tab` / `aria-selected` / `aria-controls` где используются подтабы |
 | B9 | **Язык UI:** видимые подписи на русском (латиница только в терминах бренда/API при необходимости) |
@@ -33,7 +33,7 @@ platform: Telegram Mini App
 
 ## Рекомендуется (не блокер MVP)
 
-- `aria-live="polite"` для таймера и тостов с важным состоянием.
+- `aria-live="polite"` для тостов с важным состоянием (период без real-time таймера, TB1).
 - Текстовые дубли для bar-chart в аналитике (сумма + %).
 - `prefers-reduced-motion`: уважать для крупных анимаций входа (если добавляются).
 

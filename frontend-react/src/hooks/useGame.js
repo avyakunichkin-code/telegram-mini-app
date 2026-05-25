@@ -44,7 +44,9 @@ export function useGame() {
     setPendingEvents(evList);
     if (bumpEvents && evList.length > 0) setEventsPromptTick((t) => t + 1);
     if (data.overview?.newly_unlocked?.length) {
-      notifyAchievementUnlocks(data.overview.newly_unlocked);
+      notifyAchievementUnlocks(data.overview.newly_unlocked, {
+        onboardingState: data.overview.onboarding_state,
+      });
     }
     return data;
   }, []);
@@ -88,7 +90,9 @@ export function useGame() {
     const data = await API.getOverview();
     setOverview(data);
     if (data?.newly_unlocked?.length) {
-      notifyAchievementUnlocks(data.newly_unlocked);
+      notifyAchievementUnlocks(data.newly_unlocked, {
+        onboardingState: data.onboarding_state,
+      });
     }
   }, []);
 
@@ -111,17 +115,22 @@ export function useGame() {
     return data;
   }, []);
 
-  const applyPeriodTransition = useCallback(async (result) => {
-    if (!result) return result;
-    if (result.period_close) {
-      notifyPeriodCloseRewards(result.period_close);
-      setPeriodCloseSummary(result.period_close);
-    }
-    setTimeStatus(result);
-    periodIndexRef.current = result.period_index ?? periodIndexRef.current;
-    await refreshGameState({ bumpEvents: true, updateTime: false });
-    return result;
-  }, [refreshGameState]);
+  const applyPeriodTransition = useCallback(
+    async (result) => {
+      if (!result) return result;
+      if (result.period_close) {
+        notifyPeriodCloseRewards(result.period_close, {
+          onboardingState: overview?.onboarding_state,
+        });
+        setPeriodCloseSummary(result.period_close);
+      }
+      setTimeStatus(result);
+      periodIndexRef.current = result.period_index ?? periodIndexRef.current;
+      await refreshGameState({ bumpEvents: true, updateTime: false });
+      return result;
+    },
+    [refreshGameState, overview?.onboarding_state],
+  );
 
   const resyncAfterForeground = useCallback(async () => {
     if (loadingRef.current) return;

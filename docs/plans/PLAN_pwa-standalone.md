@@ -35,10 +35,10 @@ epic: PW1
 | # | Задача | Слой | Детали |
 |---|--------|------|--------|
 | 0.1 | Хук `useAppForeground` | Frontend | `document.visibilitychange`, `window.focus`, опционально `pageshow` (bfcache) |
-| 0.2 | Resync в `useGame` | Frontend | При foreground: `API.getGameBootstrap()`; сброс `lastSyncRef`, перезапуск таймера от `seconds_until_next_period` |
-| 0.3 | Защита от двойного `setTimeNext` | Frontend | Debounce resync; если сервер уже закрыл период — показать `period_close`, не дублировать POST |
-| 0.4 | Тест/чеклист | Doc | Сценарий: play → lock 2–5 мин → unlock; сравнить таймер с `GET /api/game/time` |
-| 0.5 | Опционально: pause при hidden | Product | Обсудить: авто-pause при уходе в фон (снижает сюрприз «период прошёл в кармане») — отдельное продуктовое решение |
+| 0.2 | Resync в `useGame` | Frontend | При foreground: `API.getGameBootstrap()` + overview; сброс `lastSyncRef`; **без** клиентского секундомера (TB1) |
+| 0.3 | Защита от двойного `setTimeNext` | Frontend | Debounce resync; не вызывать `time/next` из resync; при расхождении — обновить UI из API |
+| 0.4 | Тест/чеклист | Doc | Сценарий: lock 2–5 мин → unlock; `period_index` и балансы = API; AFK **не** закрывает месяц ([`PW1_RESUME_PLAYTEST_CHECKLIST`](../foundation/PW1_RESUME_PLAYTEST_CHECKLIST.md)) |
+| 0.5 | ~~pause при hidden~~ | — | **N/A после TB1** — период не тикает по времени |
 
 **Файлы:** `frontend-react/src/hooks/useGame.js`, новый `useAppForeground.js` (или утилита в `utils/appLifecycle.js`).
 
@@ -105,7 +105,7 @@ flowchart LR
 
 ## Приёмка эпика (MVP PW1)
 
-- [ ] После lock/unlock в TMA таймер совпадает с API в пределах 1 с.
+- [ ] После lock/unlock в TMA `period_index`, cash и overview совпадают с API (без auto-next по времени, TB1).
 - [ ] После lock/unlock overview/events не «застревают» на старых значениях.
 - [ ] Chrome: «Установить приложение» доступно на prod URL.
 - [ ] Установленная PWA открывает игру, логин JWT работает, игра доходит до конца периода.

@@ -1,7 +1,7 @@
 ---
 layer: plan
-status: in_progress
-last_reviewed: 2026-05-25
+status: implemented
+last_reviewed: 2026-05-26
 idea: ../vision/ideas/turn-based-period-no-timer.md
 epic: TB1
 design_lab: ../../design-lab/dashboard/hero-no-timer-round/
@@ -56,9 +56,9 @@ Onboarding + docs + landing demo (если есть таймер)
 
 **Acceptance criteria:**
 
-- [ ] Нет 404 на CSS/assets в Network
-- [ ] На макете явная **primary** кнопка закрытия месяца и вторичная «События»
-- [ ] Нет цифр MM:SS и полосы «прогресс % времени»
+- [x] Нет 404 на CSS/assets в Network
+- [x] На макете явная **primary** кнопка закрытия месяца и вторичная «События»
+- [x] Нет цифр MM:SS и полосы «прогресс % времени»
 
 **Verification:** `cd design-lab/dashboard/hero-no-timer-round && npx serve .`
 
@@ -75,14 +75,14 @@ Onboarding + docs + landing demo (если есть таймер)
 
 **Acceptance criteria:**
 
-- [ ] Профиль в `play` 20 минут AFK: `period_index` не меняется без `time/next`
-- [ ] `POST /api/game/time/next` по-прежнему вызывает `process_period_end` и инкрементирует период
-- [ ] `get_seconds_until_next` возвращает предсказуемое значение (0 или deprecated constant) — зафиксировать в комментарии к контракту
+- [x] Профиль в `play` 20 минут AFK: `period_index` не меняется без `time/next`
+- [x] `POST /api/game/time/next` по-прежнему вызывает `process_period_end` и инкрементирует период
+- [x] `get_seconds_until_next` возвращает предсказуемое значение (0 или deprecated constant) — зафиксировать в комментарии к контракту
 
 **Verification:**
 
-- [ ] `pytest backend/tests/test_game_bootstrap.py -q`
-- [ ] Новый тест `test_sync_time_does_not_advance_period_index_without_next`
+- [x] `pytest backend/tests/test_game_bootstrap.py -q`
+- [x] Новый тест `test_sync_time_does_not_advance_period_index_without_next`
 
 **Dependencies:** Task 0.3 (можно параллельно)  
 **Files:** `backend/app/game_time.py`, `backend/tests/test_game_time.py` (new)  
@@ -94,8 +94,8 @@ Onboarding + docs + landing demo (если есть таймер)
 
 **Acceptance criteria:**
 
-- [ ] `GET /api/game/bootstrap` и `GET /api/game/time` не вводят клиент в заблуждение (0 или отсутствие поля задокументировано)
-- [ ] Существующие тесты зелёные
+- [x] `GET /api/game/bootstrap` и `GET /api/game/time` не вводят клиент в заблуждение (0 или отсутствие поля задокументировано)
+- [x] Существующие тесты зелёные
 
 **Verification:** `pytest backend/tests/ -q -k "bootstrap or game_time"`  
 **Dependencies:** Task 1  
@@ -107,7 +107,7 @@ Onboarding + docs + landing demo (если есть таймер)
 
 **Acceptance criteria:**
 
-- [ ] Новая партия: зарплата и period status доступны без POST `time/play`
+- [x] Новая партия: зарплата и period status доступны без POST `time/play`
 
 **Verification:** `pytest backend/tests/test_mq116_acceptance.py -q` (при необходимости поправить)  
 **Dependencies:** Task 1  
@@ -117,8 +117,8 @@ Onboarding + docs + landing demo (если есть таймер)
 
 ### Checkpoint: Backend
 
-- [ ] Все backend-тесты TB1 зелёные
-- [ ] Ручной smoke: старт → claim salary → next → period_index +1, есть period_close
+- [x] Все backend-тесты TB1 зелёные
+- [x] Ручной smoke: старт → claim salary → next → period_index +1, есть period_close
 
 ---
 
@@ -130,9 +130,9 @@ Onboarding + docs + landing demo (если есть таймер)
 
 **Acceptance criteria:**
 
-- [ ] Нет `setInterval` 1s в `useGame`
-- [ ] Возврат из фона не триггерит лишний `setTimeNext`
-- [ ] `advancePeriod` по-прежнему показывает sheet итога периода
+- [x] Нет `setInterval` 1s в `useGame`
+- [x] Возврат из фона не триггерит лишний `setTimeNext`
+- [x] `advancePeriod` по-прежнему показывает sheet итога периода
 
 **Verification:** Ручной: открыть игру, подождать 6+ мин — период **не** закрывается сам  
 **Dependencies:** Task 2  
@@ -145,10 +145,10 @@ Onboarding + docs + landing demo (если есть таймер)
 
 **Acceptance criteria:**
 
-- [ ] Визуально соответствует **H2** в lab (не H1/H3)
-- [ ] Текст кнопки: **«Закрыть месяц»** (не «Следующий период»)
-- [ ] `data-onboarding-anchor="next_period"` на primary CTA
-- [ ] a11y: `aria-label="Закрыть месяц и перейти к следующему периоду"` (или согласованный вариант)
+- [x] Визуально соответствует **H2** в lab (не H1/H3)
+- [x] Текст кнопки: **«Закрыть месяц»** (не «Следующий период»)
+- [x] `data-onboarding-anchor="next_period"` на primary CTA
+- [x] a11y: `aria-label="Закрыть месяц и перейти к следующему периоду"` (или согласованный вариант)
 
 **Verification:** `#/game` ручной + dev/mqx при наличии  
 **Dependencies:** Task 0.3, Task 4  
@@ -161,8 +161,8 @@ Onboarding + docs + landing demo (если есть таймер)
 
 **Acceptance criteria:**
 
-- [ ] Нет видимых ▶/⏸ на дашборде
-- [ ] Страница не «мигает» mood при загрузке
+- [x] Нет видимых ▶/⏸ на дашборде
+- [x] Страница не «мигает» mood при загрузке
 
 **Dependencies:** Task 5  
 **Scope:** S
@@ -173,7 +173,7 @@ Onboarding + docs + landing demo (если есть таймер)
 
 **Acceptance criteria:**
 
-- [ ] В UI создания игры нет «5 минут = месяц»
+- [x] В UI создания игры нет «5 минут = месяц»
 
 **Dependencies:** Task 5  
 **Scope:** XS
@@ -182,8 +182,8 @@ Onboarding + docs + landing demo (если есть таймер)
 
 ### Checkpoint: Frontend core
 
-- [ ] Полный цикл: зарплата → подушка → событие → закрыть месяц → sheet
-- [ ] Онбординг проходит без упоминания таймера (Task 8)
+- [x] Полный цикл: зарплата → подушка → событие → закрыть месяц → sheet
+- [x] Онбординг проходит без упоминания таймера (Task 8)
 
 ---
 
@@ -195,7 +195,7 @@ Onboarding + docs + landing demo (если есть таймер)
 
 **Acceptance criteria:**
 
-- [ ] Тексты не содержат «таймер», «⏸», «▶», «секунд», «дождаться нуля»
+- [x] Тексты не содержат «таймер», «⏸», «▶», «секунд», «дождаться нуля»
 
 **Dependencies:** Task 5  
 **Scope:** S
@@ -206,7 +206,7 @@ Onboarding + docs + landing demo (если есть таймер)
 
 **Acceptance criteria:**
 
-- [ ] Описан пошаговый месяц без real-time таймера
+- [x] Описан пошаговый месяц без real-time таймера
 
 **Dependencies:** Task 8  
 **Scope:** S
@@ -222,9 +222,9 @@ Onboarding + docs + landing demo (если есть таймер)
 
 ### Checkpoint: Complete
 
-- [ ] Design-lab ★ FINAL отражён в prod hero
-- [ ] pytest backend + ручной TMA чеклист (ниже)
-- [ ] Docs синхронизированы
+- [x] Design-lab ★ FINAL отражён в prod hero
+- [x] pytest backend + ручной TMA чеклист (ниже)
+- [x] Docs синхронизированы
 
 ## Manual Test Checklist (TMA)
 

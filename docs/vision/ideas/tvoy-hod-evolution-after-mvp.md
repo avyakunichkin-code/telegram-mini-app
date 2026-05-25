@@ -72,7 +72,7 @@ next_spec: specs/features/SPEC_game-plan.md
 
 ## Снимок реализации (якорь)
 
-- **Цикл:** период с таймером → действия (зарплата по кнопке, подушка, активы/долги из шаблонов, события, инвестиции, страховки) → `process_period_end` в `backend/app/game_period.py` (обслуживание активов, доход активов, долги и просрочка, премии страховок, инвестиции, поражение при трёх отрицательных периодах подряд, снимки, новые события).
+- **Цикл (TB1):** открытый период → действия (зарплата по кнопке, подушка, активы/долги из шаблонов, события, инвестиции, страховки) → явное **«Закрыть месяц»** (`time/next`) → `process_period_end` в `backend/app/game_period.py` (обслуживание активов, доход активов, долги и просрочка, премии страховок, инвестиции, поражение при трёх отрицательных периодах подряд, снимки, новые события).
 - **Победа (prod):** Victory v2 в `GET /api/finance/overview` — `victory_config_json` шаблона, **`progression_mode: chain`** (tutorial): все шаги цепочки + `period_index >= 7`; legacy parallel (M из N) — `VICTORY_CONFIG_LEGACY_BY_TEMPLATE_KEY`. См. [ADR-002](../../decisions/ADR-002-victory-engine-and-template-config.md), [SPEC_victory-v2](../../specs/features/SPEC_victory-v2.md). Старое правило «3× подушка AND просрочка AND cashflow» — только `evaluate_mvp_victory` в тестах.
 - **Фронт:** `StartMenuScreen` → **`NewProfileKindScreen`** → **`GameTemplatePickScreen`** → `GameScreen` (ветка Game); **`BaseParamsScreen`** зарезервирован под Plan; финансы, аналитика, премиум-дашборд; события оверлеем.
 

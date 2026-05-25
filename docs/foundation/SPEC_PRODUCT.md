@@ -49,7 +49,7 @@ doc_sync: foundation/DOC_SYNC_LOG.md
 | Долги | `FinanceLiability` (тело, ставка, платёж, просрочка) |
 | Расширения MVP | `InvestmentPosition`, `InsurancePolicy`, события (`EventDefinition` / `EventChoice` / `EventInstance`) |
 
-**Экраны (frontend):** главный дашборд (таймер, зарплата, подушка, переход периода, события), финансы (инвестиции, страховки, активы и долги), аналитика, меню. Навигация: `BottomGameNav`.
+**Экраны (frontend):** главный дашборд (период #N, «Закрыть месяц», зарплата, подушка, события), финансы, аналитика, меню. Навигация: `BottomGameNav`.
 
 ---
 

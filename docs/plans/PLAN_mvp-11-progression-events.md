@@ -1,6 +1,6 @@
 ---
 layer: plan
-status: draft
+status: implemented
 tracks: progression, events-levels, xp, mvp-1-1
 spec_sprint: ../specs/features/SPEC_mvp-11-progression-events.md
 backlog_mq: MQ-111 — MQ-116

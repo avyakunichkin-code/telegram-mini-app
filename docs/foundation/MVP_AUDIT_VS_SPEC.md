@@ -13,7 +13,7 @@
 
 | Тема (foundation) | Где в коде | Статус | Комментарий |
 |---------------------|------------|--------|-------------|
-| Период, play/pause, anchor | `backend/app/game_time.py` | OK | — |
+| Период TB1: закрытие через `time/next`, без auto-bump | `backend/app/game_time.py` | OK | `sync_time` не меняет `period_index`; play/pause не в TMA UI |
 | Конец периода: активы → долги → страховки → инвестиции → поражение 3× минус cash → снимок → события (без character XP) | `backend/app/game_period.py` | OK | XP/level сняты 2026-05-24 |
 | Зарплата по кнопке, пропуск периода | `period_actions`, `game_period` | OK | Детали в SPEC_PRODUCT §3.2 |
 | Победа v2: `chain` tutorial / legacy `parallel` | `victory_engine.py`, `victory_seeds.py`, overview | OK | Legacy `evaluate_mvp_victory` (AND MVP) — только тесты |
@@ -35,7 +35,7 @@
 | Каталог MVP 1.1 в БД (`event_tier`, `repeat_policy`, `cooldown_periods`) | `test_mq116_acceptance.py` → `TestMvp11CatalogContract` | OK |
 | `ensure_period_events`: окно tier, cooldown, repeat | `test_ensure_period_events.py`, `TestEnsurePeriodEventsAcceptance` | OK |
 | Без assert character level/XP в приёмке | SPEC + [remove-character-xp](../vision/ideas/remove-character-xp-and-levels.md) | OK |
-| `GAME.md` §0.2 отражает cooldown/M11 | §0.2, §7.8 | OK (2026-05-26) |
+| `GAME.md` / `dashboard.md` отражают TB1 + M11 | SPEC §3.1, ux dashboard | OK (2026-05-26) |
 
 **Не входит в MQ-116:** плейтест Pre-Alpha 10–20 игроков — [`PRE_ALPHA_PLAYTEST_PROTOCOL.md`](PRE_ALPHA_PLAYTEST_PROTOCOL.md), Task **0.3**.
 

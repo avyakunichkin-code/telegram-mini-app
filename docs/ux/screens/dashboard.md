@@ -1,7 +1,7 @@
 ---
 layer: ux
 status: approved
-last_reviewed: 2026-05-25
+last_reviewed: 2026-05-26
 platform: Telegram Mini App (touch-first, 320–480px)
 screen_id: dashboard
 prod_route: GameScreen tab `dashboard`
@@ -15,7 +15,7 @@ prod_route: GameScreen tab `dashboard`
 > **Journey Phase(s):** активная партия (core loop), первая сессия (онбординг O1)  
 > **Template:** UX Spec (адаптация studio → `docs/ux/screens/`)
 
-**Связанные документы:** [`TMA_USER_FLOWS.md`](../../foundation/TMA_USER_FLOWS.md) · [`SPEC_FRONTEND_UI.md`](../../specs/SPEC_FRONTEND_UI.md) · [`SPEC_victory-v2.md`](../../specs/features/SPEC_victory-v2.md) · [ADR-002](../../decisions/ADR-002-victory-engine-and-template-config.md) · [ADR-004](../../decisions/ADR-004-mechanics-unlock-victory-chain.md) · [`SPEC_onboarding-tma.md`](../../specs/features/SPEC_onboarding-tma.md) · [`design-lab/dashboard/APPROVED.md`](../../../design-lab/dashboard/APPROVED.md)
+**Связанные документы:** [`TMA_USER_FLOWS.md`](../../foundation/TMA_USER_FLOWS.md) · [`SPEC_PRODUCT` §3.1](../../foundation/SPEC_PRODUCT.md) · [TB1 idea](../../vision/ideas/turn-based-period-no-timer.md) · [`SPEC_FRONTEND_UI.md`](../../specs/SPEC_FRONTEND_UI.md) · [`SPEC_victory-v2.md`](../../specs/features/SPEC_victory-v2.md) · [ADR-002](../../decisions/ADR-002-victory-engine-and-template-config.md) · [ADR-004](../../decisions/ADR-004-mechanics-unlock-victory-chain.md) · [`SPEC_onboarding-tma.md`](../../specs/features/SPEC_onboarding-tma.md) · [`design-lab/dashboard/hero-no-timer-round/`](../../../design-lab/dashboard/hero-no-timer-round/)
 
 **Реализация:** `DashboardPremium.jsx`, `MqxDashboardHero`, `MqxFinancePeriodBlock`, `MqxGoalDash`, `MqxPeriodActions`; оболочка и оверлеи — `GameScreen.jsx`.
 
@@ -40,11 +40,11 @@ prod_route: GameScreen tab `dashboard`
 |----------|----------------|
 | **Первая игра Game** после выбора шаблона | `onboarding_state = draft` → guided coach поверх того же дашборда; табы заблокированы (кроме главной). |
 | **Повторный заход** в ту же партию | Coach не показывается (`brief_done`); полный доступ к 4 табам. |
-| **Возврат из Telegram** | Таймер и баланс должны resync (PW1); mood-фон страницы: play / pause / await. |
+| **Возврат из Telegram** | Resync overview/period/events (PW1); без авто-закрытия месяца по времени (TB1). |
 | **После закрытия периода** | Tail/sheet итога периода (`GameScreen`), не внутри `DashboardPremium`. |
 | **Кампания vs исследователь** | Один экран для обоих: кампания смотрит на цель/цепочку; исследователь — на chips и быстрые действия ([`TARGET_PLAYER_AND_SESSION.md`](../../foundation/TARGET_PLAYER_AND_SESSION.md) §6). |
 
-**Эмоциональное состояние:** любопытство + лёгкое давление времени; без «финтех-страха» — короткие подсказки Монетки, не лекции.
+**Эмоциональное состояние:** любопытство + давление **решений** (зарплата, события, закрытие месяца), не секундомера; без «финтех-страха».
 
 ---
 
@@ -75,7 +75,7 @@ App (HashRouter)
 | **Выход** | «Все финансы →» | `setActiveTab('finance')` |
 | **Выход** | «Вложить» | finance → Инвестиции (депозит / облигации) |
 | **Выход** | Pill «События» | `EventCarouselOverlay` (родитель `GameScreen`) |
-| **Выход** | «Следующий период» | `advancePeriod` (+ modal предупреждения о зарплате вне онбординга) |
+| **Выход** | **«Закрыть месяц»** | `advancePeriod` / `POST time/next` (+ modal о зарплате вне онбординга) |
 | **Выход** | (план M12) «Все достижения →» | страница каталога достижений — **не в prod** |
 
 ---
@@ -84,7 +84,7 @@ App (HashRouter)
 
 ### Information Hierarchy
 
-1. **Время и управление периодом** (hero) — highest: таймер, play/pause, № периода, события, закрытие месяца.  
+1. **Период и закрытие месяца** (hero H2) — highest: «Месяц открыт», № периода, primary **«Закрыть месяц»**, pill «События».  
 2. **Снимок денег за период** (2×2 chips) — scan за 2–3 с.  
 3. **Прогресс сценария** (цель, свёрнуто по умолчанию) — мотивация, не блокирует действия.  
 4. **Действия периода** (2×2 chips) — primary motor loop.  
@@ -107,7 +107,7 @@ App (HashRouter)
 
 | Компонент | Паттерн / lab | Назначение |
 |-----------|---------------|------------|
-| `MqxDashboardHero` | dashboard S5 | Таймер, progress, play/pause, период, события, след. период |
+| `MqxDashboardHero` | hero-no-timer-round ★ **H2** | Период #N, «Закрыть месяц», pill «События» (без таймера) |
 | `MqxFinancePeriodBlock` | dashboard L3 | 4 KPI chips, ссылка в финансы |
 | `MqxGoalDash` | goal-chain-round ★ · [`goal-path-stepper-round`](../../../design-lab/dashboard/goal-path-stepper-round/) (draft) | Цепочка победы v2 + guidance; свёрнуто — stepper из связанных узлов |
 | `MqxPeriodActions` | period-actions-round ★ | Зарплата, вложить, пополнить, снять |
@@ -118,10 +118,10 @@ App (HashRouter)
 
 ```text
 ┌─────────────────────────────────────┐
-│ [logo]  MM:SS  Прогресс месяца · N% │  Z0 Hero
-│         [=========>        ]        │
-│                    [▶] [⏸]          │
-│ Период #3    [События 2] [След. пер.]│
+│ [logo]  Месяц открыт                 │  Z0 Hero (H2)
+│         Период #3                     │
+│              [Закрыть месяц    ]      │
+│              [ События (2)    ]      │
 ├─────────────────────────────────────┤
 │ Финансы периода                     │  Z1
 │ ┌─────────┬─────────┐               │
@@ -160,13 +160,13 @@ App (HashRouter)
 | **Ready** | данные есть | `DashboardPremium` |
 | **Syncing** | `syncing` | `aria-busy` на shell; *желательно* не блокировать chips (backlog) |
 
-### Hero
+### Hero (TB1)
 
 | State | Отображение |
 |-------|-------------|
-| Play | `canPause=true`, mood playing |
-| Pause | `canPlay=true`, mood pause |
-| События 0 | Pill «События» без badge |
+| Месяц открыт | Статус + `period_index`; нет MM:SS и progress % |
+| Закрыть месяц | Primary CTA; disabled при `busy` / game over / гейтах периода |
+| События 0 | Pill без badge |
 | События N>0 | Badge N; tap → overlay |
 | Онбординг | Pill «События» **скрыт** (`eventsUnlocked = !inOnboarding`) |
 
@@ -223,10 +223,8 @@ Skip: 1-й раз — шаг; 2-й — весь онбординг → `brief_do
 
 | Элемент | Жест | Результат |
 |---------|------|-----------|
-| ▶ / ⏸ | tap | `POST` play/pause |
-| Progress bar | — | display only |
+| Закрыть месяц | tap | warn modal (если зарплата не взята) → `advancePeriod` |
 | События | tap | open overlay |
-| Следующий период | tap | warn modal (если зарплата не взята) → advance |
 | Finance chip (action) | tap | finance + flows section |
 | «Все финансы →» | tap | finance tab |
 | Цель toggle | tap | expand/collapse |
@@ -245,7 +243,6 @@ Skip: 1-й раз — шаг; 2-й — весь онбординг → `brief_do
 | Действие игрока | Client | Product analytics (рекомендуется) |
 |-----------------|--------|-----------------------------------|
 | Открытие вкладки | — | `screen_view` `dashboard` |
-| Play / Pause | API time | `period_timer_toggle` |
 | Claim salary | API | `salary_claimed` |
 | Contribute / withdraw cushion | API | `safety_fund_in` / `out` |
 | Next period | API | `period_advanced` |
@@ -263,8 +260,6 @@ Skip: 1-й раз — шаг; 2-й — весь онбординг → `brief_do
 | Переход | Поведение |
 |---------|-----------|
 | Смена таба | `mq-enter-item` на контенте таба |
-| Mood background | `mq-page--mood-playing` \| `pause` \| `await` |
-| Hero progress fill | width % без layout thrash |
 | Goal expand | CSS chevron + expand region |
 | Coach overlay | scrim + spotlight (portal) |
 | Period close tail | slide-in tail (GameScreen) |
@@ -277,9 +272,9 @@ Skip: 1-й раз — шаг; 2-й — весь онбординг → `brief_do
 
 | UI element | API / model | Owner | Update trigger | Null / empty |
 |------------|-------------|-------|----------------|--------------|
-| `period_index` | `timeStatus` / `overview` | backend game_time | poll, resync, period end | 0 |
-| Timer MM:SS | `remainingLocal` / `seconds_until_next_period` | game_time | 1s tick, visibility resync | `00:00` |
-| Progress % | `period_duration_seconds`, remaining | derived | same | 0% |
+| `period_index` | `timeStatus` / `overview` | backend game_time | resync, period end | 0 |
+| Статус «Месяц открыт» | константа UX (TB1) | — | — | — |
+| ~~Timer / progress %~~ | **не в UI** (legacy API может отдавать 0) | — | — | — |
 | Доходы chip | `overview.total_monthly_income` | finance overview | refreshOverview | 0 |
 | Lifestyle chip | `overview.monthly_lifestyle_expense` | finance overview | refresh | 0 |
 | Чистый поток (не chip) | `overview.net_monthly_cashflow` | finance overview | refresh | Аналитика, цели |
@@ -304,8 +299,7 @@ Skip: 1-й раз — шаг; 2-й — весь онбординг → `brief_do
 | Требование | Статус prod | Цель spec |
 |------------|-------------|-----------|
 | Заголовки вкладки | `h2` секций + `aria-label` на `<section>` | **Без `h1`** — решение продукта для TMA hero/chips |
-| `role="progressbar"` периода | ✅ | сохранить |
-| `aria-live="polite"` таймер | ✅ | сохранить |
+| Primary CTA «Закрыть месяц» | `aria-label` + title | ✅ |
 | Goal `aria-expanded` / `aria-controls` | ✅ | сохранить |
 | Chips: имя + сумма для SR | ⚠ частично | `aria-label` с значением |
 | Tone pos/neg только цветом | ⚠ | дублировать знак в `MoneyText` |
@@ -317,10 +311,10 @@ Skip: 1-й раз — шаг; 2-й — весь онбординг → `brief_do
 
 | Элемент | RU (prod) | Max chars (guideline) | Notes |
 |---------|-----------|----------------------|-------|
-| Hero timer label | «Прогресс месяца» | 24 | |
+| Hero status | «Месяц открыт» | 16 | |
+| CTA | «Закрыть месяц» | 18 | не «Следующий период» / «Дальше» |
 | Section titles | «Финансы периода», «Действия периода» | 28 | |
-| Chip «Доходы» | «Доходы» | 16 | значение = `total_monthly_income`, не net cashflow |
-| Pill «Следующий период» | 18 | не сокращать до «Дальше» в онбординге |
+| Chip «Доходы» | «Доходы» | 16 | значение = `total_monthly_income` |
 | Toasts | RU | 80 | |
 | **Запрещено в UI** | EN: cashflow, Positions, Forecast | — | P0 SPEC_FRONTEND_UI |
 
@@ -330,18 +324,18 @@ Skip: 1-й раз — шаг; 2-й — весь онбординг → `brief_do
 
 ## Acceptance Criteria
 
-1. При входе в игру активна вкладка «Главная»; hero показывает `period_index` и таймер, согласованные с API (после resync расхождение ≤1 с).
+1. При входе в игру активна вкладка «Главная»; hero показывает `period_index`, «Месяц открыт», CTA «Закрыть месяц» (без таймера и play/pause).
 2. Секции «Финансы периода» и «Действия периода» с `h2`; hero без обязательного `h1`.
 3. Chip «Расходы» показывает `monthly_lifestyle_expense` (base+delta), не просрочку и не долги.
 4. Chip «Доходы» показывает `total_monthly_income` (сумма доходов без вычета расходов); подпись «Доходы» сохраняется.
 5. «Зарплата» после успешного claim неактивна; повторный tap — info toast, не повторный POST.
-6. «Следующий период» при незабранной доступной зарплате вне онбординга открывает modal; в онбординге шаг `next_period` (4) — без блокировки (SPEC_onboarding-tma).
+6. «Закрыть месяц» при незабранной доступной зарплате вне онбординга открывает modal; в онбординге шаг `next_period` (4) — без блокировки (SPEC_onboarding-tma).
 7. `MqxGoalDash`: при `victory.goals` — свёрнутый заголовок «Шаг K из N»; цель `tutorial_invest` — «Положить деньги на депозит или купить облигацию»; при `win_reached` — фаза победы.
 8. Pill «События» при N>0 открывает overlay; при `inOnboarding` pill **не показывается**.
 9. Пополнение подушки: сумма ∈ (0, cash] → success toast, панель закрывается, балансы обновляются.
 10. На ширине 320px все 8 chips (4+4) без горизонтального скролла; длинные суммы ужимаются (`fitChipValuesIn`).
 11. Guided coach: шаги 1→5 проходимы на живом UI; второй Skip → `brief_done`; табы locked на шагах с overlay.
-12. `npm run build` без регрессий; ручной smoke: зарплата → подушка → след. период → события.
+12. `npm run build` без регрессий; ручной smoke: зарплата → подушка → **закрыть месяц** → события; 6+ мин AFK **не** меняет `period_index` без кнопки (TB1).
 
 ---
 
@@ -381,6 +375,7 @@ Skip: 1-й раз — шаг; 2-й — весь онбординг → `brief_do
 - [x] OQ-7: `accessibility-requirements.md`
 - [x] Миграции `0036` / `0037` (на окружениях владельца)
 - [x] **Без `h1`** на вкладках — зафиксировано в spec
+- [x] **TB1:** hero без таймера/play-pause; CTA «Закрыть месяц»; AC #12 smoke AFK
 - [ ] EN-audit dashboard — отложено
 - [ ] Повторный `/ux-review screens/dashboard.md` — по желанию
 

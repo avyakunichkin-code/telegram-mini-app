@@ -37,7 +37,7 @@
 | **A0** | Admin Watchtower (MVP 1.2) | DB+Backend+Frontend | 🟡 Phase 0 в коде |
 | **E1** | **Расходы жизнеобеспечения** — категории, статьи, burn, UI | DB+Backend+Frontend+Content | 🟡 **повторная аналитика** (E1-R) — реализация после go; [PLAN_backlog_may2026](../plans/PLAN_backlog_may2026.md) |
 | **PW1** | PWA / standalone + стабильный resume (lock/unlock) | Frontend+Ops+Doc | 🟡 фаза 0 ✅; QA PW1-004 ⬜; [PLAN](../plans/PLAN_pwa-standalone.md) |
-| **T1** | Пошаговый месяц без таймера (turn-based) | DB+Backend+Frontend+Doc | ⏸ **не в спринт** — [idea](../vision/ideas/turn-based-period-no-timer.md) · lab `hero-no-timer-round` |
+| **T1** | Пошаговый месяц без таймера (TB1) | DB+Backend+Frontend+Doc | ✅ **implemented** — [idea](../vision/ideas/turn-based-period-no-timer.md) · [plan](../plans/PLAN_turn-based-period-no-timer.md) · TB1.1 чипы — backlog |
 
 > **GAME.md §0.2 / M11:** синхронизировано 2026-05-26 (Task 0.1): `cooldown_periods` ✅, MQ-116 → [`MVP_AUDIT_VS_SPEC`](../foundation/MVP_AUDIT_VS_SPEC.md) §M11.
 
@@ -232,11 +232,11 @@
 
 ### Эпик PW1 — PWA / standalone + resume после блокировки экрана
 
-**Проблема:** в TMA при lock/unlock таймер и состояние расходятся с сервером; WebView троттлит таймеры. См. [`pwa-standalone-channel.md`](../vision/ideas/pwa-standalone-channel.md) · Plan: [`PLAN_pwa-standalone.md`](../plans/PLAN_pwa-standalone.md).
+**Проблема:** в TMA при lock/unlock UI и балансы расходятся с сервером (TB1: без секундомера, но resync всё ещё нужен). См. [`pwa-standalone-channel.md`](../vision/ideas/pwa-standalone-channel.md) · Plan: [`PLAN_pwa-standalone.md`](../plans/PLAN_pwa-standalone.md).
 
 #### Фаза 0 — lifecycle (улучшает TMA сразу)
 
-- [x] P1 **[Frontend] PW1-001** — `visibilitychange` / focus → `refreshGameState()` в `useGame`; сброс локального таймера от ответа API (`appLifecycle.js`, `useGame.js`).
+- [x] P1 **[Frontend] PW1-001** — `visibilitychange` / focus → `refreshGameState()` в `useGame` (`appLifecycle.js`, `useGame.js`); TB1: без клиентского секундомера.
 - [x] P1 **[Frontend] PW1-002** — debounce resync; `periodEndInFlightRef` — не дублировать `setTimeNext`.
 - [x] P1 **[Doc] PW1-003** — [`PW1_RESUME_PLAYTEST_CHECKLIST.md`](../foundation/PW1_RESUME_PLAYTEST_CHECKLIST.md); Pre-Alpha §3 + опрос §6.8.
 - [ ] P1 **[QA] PW1-004** — прогон A–C на **2 TMA** (TB1, без таймера); §0a auto ✅ 2026-05-26; [checklist](../foundation/PW1_RESUME_PLAYTEST_CHECKLIST.md).
@@ -258,13 +258,14 @@
 - [ ] P3 **[Frontend] ⚠ spec** Персонаж с репликами (GAME §9.3 п.9).
 - [ ] P3 **[Frontend]** Настройки a11y (крупный шрифт, меньше анимаций).
 
-### Эпик T1 — пошаговый месяц без таймера (⏸ не в спринт май 2026)
+### Эпик T1 — пошаговый месяц без таймера (✅ TB1, 2026-05-26)
 
-Идея: [`turn-based-period-no-timer.md`](../vision/ideas/turn-based-period-no-timer.md) · Lab ★: [`hero-no-timer-round/`](../../design-lab/dashboard/hero-no-timer-round/) · Задачи: [`PLAN_backlog_may2026`](../plans/PLAN_backlog_may2026.md) § T1.
+Идея: [`turn-based-period-no-timer.md`](../vision/ideas/turn-based-period-no-timer.md) · Plan: [`PLAN_turn-based-period-no-timer.md`](../plans/PLAN_turn-based-period-no-timer.md) · Lab ★: [`hero-no-timer-round/`](../../design-lab/dashboard/hero-no-timer-round/).
 
-- [ ] P2 **[Backend] T1-1** — `sync_time` не увеличивает `period_index`; переход только через `process_period_end`.
-- [ ] P2 **[Frontend] T1-2** — hero H2: «Закрыть месяц» + pill «События»; убрать countdown / auto-next / play-pause.
-- [ ] P2 **[Doc] T1-3** — обновить UX-spec dashboard, PW1 checklist, онбординг шаг 1.
+- [x] P2 **[Backend] T1-1** — `sync_time` не увеличивает `period_index`; переход через `time/next` → `process_period_end`.
+- [x] P2 **[Frontend] T1-2** — hero H2: «Закрыть месяц» + pill «События»; без countdown / auto-next / play-pause.
+- [x] P2 **[Doc] T1-3** — `dashboard.md`, SPEC §3.1, TRACEABILITY, GLOSSARY, PW1 checklist (TB1).
+- [ ] P2 **TB1.1** — чипы плана месяца в hero (отдельный эпик, не блокер TB1).
 
 ### Страховки (I1)
 
@@ -280,7 +281,7 @@
 
 ### Дизайн / бренд
 
-- [ ] P1 **[Frontend]** Статусные цвета просрочки / успех / таймер по BRANDBOOK.
+- [ ] P1 **[Frontend]** Статусные цвета просрочки / успех / предупреждения по BRANDBOOK.
 - [ ] P1 **[Frontend]** `tabular-nums` для всех KPI.
 - [ ] P2 **[Frontend]** Согласование Quest Violet с `tg-theme` на hero-кнопках.
 - [ ] P3 **[Frontend]** Hero / онбординг-иллюстрация; паттерн «сетка периода».
@@ -349,7 +350,7 @@
 | α Playtest | — | — | опрос/метрики | протокол |
 | A0 Watchtower | ✅ 0012 | 🟡 Phase 0 | 🟡 `#/admin` | idea |
 | PW1 PWA / resume | — | — | фаза 0–1 | idea+plan |
-| T1 Turn-based | — | ⏸ | ⏸ | idea + design-lab |
+| T1 Turn-based (TB1) | ✅ sync_time | ✅ hero H2 | ✅ | idea + plan + dashboard UX |
 
 **План нарезки (май 2026):** [`PLAN_backlog_may2026.md`](../plans/PLAN_backlog_may2026.md)
 
@@ -371,7 +372,7 @@
 | P1 | 1.5 | PW1-104: CORS + `VITE_API_BASE_URL` prod | Ops |
 | P1 | 1.6 | A0 env Render (`ADMIN_*`, ops TG) | Ops |
 | P2 | 2.x | Watchtower metrics + inspector | Backend+Frontend |
-| ⏸ | T1-* | Turn-based без таймера | — отложено |
+| — | T1 / TB1.1 | TB1 ✅; чипы плана — backlog | Frontend |
 
 ---
 
@@ -385,10 +386,11 @@
 | 2026-05-19 | **Q1** quality-release; **V2** victory engine; **M12** критерии достижений + API level-gates (`level_gates.py`, overview `character_unlocks`). |
 | 2026-05-25 | **PW1:** эпик PWA/standalone — драйвер нестабильный resume TMA при блокировке экрана; фаза 0 (lifecycle resync) перед install prompt. |
 | 2026-05-26 | **План май 2026:** [`PLAN_backlog_may2026`](../plans/PLAN_backlog_may2026.md); E1 → E1-R (аналитика); T1 в сводку (⏸); I1 → A/B; «В работу сейчас» пересобран. |
+| 2026-05-26 | **TB1:** T1 implemented — backend `sync_time`, hero «Закрыть месяц», docs dashboard/SPEC/TRACEABILITY. |
 | 2026-05-26 | **Task 0.1:** GAME §0.2, MVP_AUDIT §M11, TRACEABILITY M11/E1/T1 — doc приёмка MQ-116. |
 | 2026-05-26 | **Task 0.2 (частично):** PW1 checklist TB1, `test:utils` + foreground debounce test; TMA 2× ⬜. |
 | 2026-05-26 | Документация: уборка `docs/`, `GAME.md` §5–6; M11/level-gates — история, не активный трек. |
 
 ---
 
-*Последнее обновление: 2026-05-26 — PLAN_backlog_may2026, E1-R, T1.*
+*Последнее обновление: 2026-05-26 — TB1 implemented, PLAN_backlog_may2026, E1-R.*

@@ -62,6 +62,8 @@
 | [`vision/ideas/remove-character-xp-and-levels.md`](vision/ideas/remove-character-xp-and-levels.md) | **Канон (implemented):** без level/XP; `event_tier` от `period_index` |
 | [`vision/ideas/starter-template-mechanics-permissions.md`](vision/ideas/starter-template-mechanics-permissions.md) | `blueprint.mechanics` — разделы капитала (**implemented**) |
 | [`specs/features/SPEC_mvp-11-progression-events.md`](specs/features/SPEC_mvp-11-progression-events.md) | События: tier, repeat/cooldown (**implemented**) |
+| [`vision/ideas/turn-based-period-no-timer.md`](vision/ideas/turn-based-period-no-timer.md) | **TB1 (implemented):** период без real-time таймера; закрытие «Закрыть месяц» |
+| [`ux/screens/dashboard.md`](ux/screens/dashboard.md) | UX главной вкладки (hero H2, chips, онбординг) |
 
 Архив level/XP (только git history): `specs/gameplay/LEVEL_XP_SYSTEM.md`, `catalogs/XP_EVENTS_ACTIONS_MATRIX.md`, `plans/PLAN_level-xp-progression.md`.
 

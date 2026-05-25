@@ -1,7 +1,8 @@
 ---
 layer: vision
-status: draft
-last_reviewed: 2026-05-25
+status: implemented
+last_reviewed: 2026-05-26
+implemented: 2026-05-26
 ---
 
 # Пошаговый месяц без таймера (turn-based period)
@@ -25,6 +26,8 @@ last_reviewed: 2026-05-25
 Play/Pause и `period_duration_seconds` в MVP **не показываем**; поле в БД можно оставить deprecated для обратной совместимости API.
 
 **Design-lab ★ FINAL:** [`design-lab/dashboard/hero-no-timer-round/`](../../../design-lab/dashboard/hero-no-timer-round/) — **H2**, CTA **«Закрыть месяц»**.
+
+**Статус реализации (2026-05-26):** prod — `game_time.sync_time`, `MqxDashboardHero`, docs [`dashboard.md`](../../ux/screens/dashboard.md), [`PLAN_turn-based-period-no-timer.md`](../../plans/PLAN_turn-based-period-no-timer.md). **Follow-up:** эпик **TB1.1** (чипы плана в hero).
 
 ## Key Assumptions to Validate
 
