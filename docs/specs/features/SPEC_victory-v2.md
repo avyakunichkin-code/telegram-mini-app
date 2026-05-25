@@ -1,13 +1,13 @@
----
+﻿---
 layer: spec
 status: approved
 owner: product
 last_reviewed: 2026-05-25
 tracks: victory-v2, game-plan
-idea: vision/ideas/money-quest-evolution-after-mvp.md
+idea: vision/ideas/tvoy-hod-evolution-after-mvp.md
 related: specs/features/SPEC_game-plan.md
 related_progression: vision/ideas/remove-character-xp-and-levels.md
-adr: decisions/ADR-001-save-kind-remove-light-hardcore.md, decisions/ADR-002-victory-engine-and-template-config.md
+adr: decisions/ADR-001-save-kind-remove-light-hardcore.md, decisions/ADR-002-victory-engine-and-template-config.md, decisions/ADR-004-mechanics-unlock-victory-chain.md
 supersedes_goal_types: character_level (removed 2026-05-24, migration 0031)
 ---
 
@@ -32,8 +32,8 @@ supersedes_goal_types: character_level (removed 2026-05-24, migration 0031)
 **Success criteria**
 
 - [ ] `GET /api/finance/overview` считает победу по `victory_config_json` шаблона профиля (`starter_template_key`).
-- [ ] Базовый шаблон эквивалентен MVP (3 цели, M=3, период ≥ 7).
-- [ ] Жёсткие шаблоны: 5 целей, M=3 (подушка 6×, просрочка, avg liquid, уровень, кэш).
+- [x] Prod: tutorial **chain** на всех Game-шаблонах (`victory_seeds.py`, миграции `0036`/`0037`).
+- [x] Legacy parallel (M из N) — `VICTORY_CONFIG_LEGACY_BY_TEMPLATE_KEY` для отката.
 - [ ] Блок `victory` в overview + сохранены legacy-поля `win_*` для UI подушки.
 - [ ] Unit-тесты на парсинг config и оценку целей.
 
@@ -63,7 +63,8 @@ supersedes_goal_types: character_level (removed 2026-05-24, migration 0031)
 |------|-----|----------|
 | `schema_version` | int | Сейчас только `1` |
 | `min_period_index_for_victory` | int | Победа недоступна при `period_index` ниже (дефолт **7**) |
-| `required_goals_met` | int | **M** — сколько целей из включённых должно быть выполнено |
+| `required_goals_met` | int | **M** в режиме **`parallel`**; в **`chain`** не ограничивает победу (нужны все шаги цепочки) |
+| `progression_mode` | string | `chain` (prod tutorial) или `parallel` (legacy M из N) |
 | `goals[]` | array | Список целей |
 | `goals[].key` | string | Стабильный id для API/UI |
 | `goals[].type` | string | См. таблицу типов |
@@ -96,15 +97,27 @@ supersedes_goal_types: character_level (removed 2026-05-24, migration 0031)
 
 ## Логика победы
 
+**Ворота периода (оба режима):** `period_gate_open = period_index >= min_period_index_for_victory`.
+
+### `progression_mode: parallel` (legacy)
+
 ```
 enabled_goals = [g for g in goals if g.enabled]
-N = len(enabled_goals)
 met_count = count(g.met for g in enabled_goals)
-period_gate_open = period_index >= min_period_index_for_victory
 win_reached = period_gate_open AND met_count >= required_goals_met
 ```
 
-`required` на целях в v2.0 не меняет формулу.
+### `progression_mode: chain` (prod, tutorial)
+
+Цели обрабатываются **по порядку** в `goals[]`: шаг *i* может стать `met` только если шаг *i−1* уже `met`. Победа:
+
+```
+win_reached = period_gate_open AND all(enabled goals in chain are met)
+```
+
+`required_goals_met` в chain-режиме **игнорируется** для `win_reached` (в сидах обычно = длине цепочки для ясности).
+
+`required` на целях в v2.0 не меняет формулу ни в одном режиме.
 
 ### Legacy `win_ready` (совместимость UI)
 
@@ -119,23 +132,30 @@ win_reached = period_gate_open AND met_count >= required_goals_met
 
 ---
 
-## Сиды шаблонов (контент v1)
+## Сиды шаблонов (контент prod)
 
-### `mq_game_basic_v1` — эквивалент MVP
+Источник: `backend/app/victory_seeds.py` (`VICTORY_CONFIG_BY_TEMPLATE_KEY`). Откат: `VICTORY_CONFIG_LEGACY_BY_TEMPLATE_KEY` (`progression_mode: parallel`).
 
-- 3 цели: подушка **3×** obligations, нет просрочки, cashflow ≥ 0  
-- `required_goals_met: 3`
+### `mq_game_basic_v1` — tutorial chain (5 шагов)
 
-### `mq_game_tight_budget_v1`, `mq_game_mortgage_stress_v1`, `mq_game_debt_stack_v1`
+1. `tutorial_salary` → 2. `tutorial_cushion` → 3. `tutorial_invest` → 4. `safety_3x` → 5. `invest_income_15k`  
+`progression_mode: chain`, `min_period_index_for_victory: 7`
 
-- 5 целей (legacy harder) или **tutorial chain** на `mq_game_basic_v1` — см. `backend/app/victory_seeds.py`:
-  1. подушка **6×** obligations  
-  2. нет просрочки  
-  3. `avg_liquid_delta_6p`: `window=6`, `min_samples=3`, `salary_multiplier=5`  
-  4. `expense_to_income_ratio` (например `max_ratio: 0.48`) **или** шаги `action_once` в tutorial  
-  5. `cash_balance_min`: `12000` / `15000` / `18000` соответственно  
+### `mq_game_tight_budget_v1`, `mq_game_mortgage_stress_v1`
 
-Цифры `min_cash` и пороги — черновик баланса; меняются в JSON без миграции схемы.
+7 шагов: tutorial (зарплата, подушка, инвест) → `safety_6x` → `invest_income_80k` → `tutorial_insurance` → финал `cash_balance_min` (10M ₽)
+
+### `mq_game_debt_stack_v1`
+
+То же ядро + финал `rental_home_owned` (сдаваемая недвижимость)
+
+### `mechanics_unlock` (жёсткие шаблоны)
+
+После `tutorial_cushion` — liabilities + invest; после `tutorial_invest` — insurance; после `tutorial_insurance` — property ([ADR-004](../../decisions/ADR-004-mechanics-unlock-victory-chain.md), миграция `0037_*`). **`mq_game_basic_v1`:** invest с первого периода.
+
+### Legacy parallel (откат плейтеста)
+
+`mq_game_basic_v1`: 3× подушка + no_overdue + flow_nonneg + burn_ratio; harder: 6× + avg_liquid + cash_floor + burn_ratio, `required_goals_met: 3`.
 
 ---
 
@@ -203,6 +223,6 @@ win_reached = period_gate_open AND met_count >= required_goals_met
 
 ## Связанные документы
 
-- [evolution §II.3](../../vision/ideas/money-quest-evolution-after-mvp.md)
+- [evolution §II.3](../../vision/ideas/tvoy-hod-evolution-after-mvp.md)
 - [SPEC_game-plan](SPEC_game-plan.md) — задел `victory_config_json`
 - [GAME.md](../../../GAME.md) § победа

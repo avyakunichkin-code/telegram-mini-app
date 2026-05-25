@@ -1,4 +1,4 @@
----
+﻿---
 status: accepted
 date: 2026-05-24
 deciders: проект (architecture-review retroactive, 2026-05-25)
@@ -43,4 +43,4 @@ deciders: проект (architecture-review retroactive, 2026-05-25)
 - Spec: [`SPEC_victory-v2`](../specs/features/SPEC_victory-v2.md)
 - Code: `backend/app/victory_engine.py`, `finance_overview_build.py`, `profile_victory.py`, `victory_seeds.py`
 - ADR: [ADR-004](ADR-004-mechanics-unlock-victory-chain.md) — `mechanics_unlock` ↔ цели цепочки
-- Idea: [evolution §II](../vision/ideas/money-quest-evolution-after-mvp.md)
+- Idea: [evolution §II](../vision/ideas/tvoy-hod-evolution-after-mvp.md)

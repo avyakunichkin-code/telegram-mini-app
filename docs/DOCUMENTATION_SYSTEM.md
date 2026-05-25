@@ -1,4 +1,4 @@
-# Система документации ТВОЙ ХОД
+﻿# Система документации ТВОЙ ХОД
 
 Как хранить знания о продукте и превращать их в **спеки → планы → задачи → разработку**.  
 Скиллы: **idea-refine** (идеи), **spec-driven-development** (спеки), **planning-and-task-breakdown** (задачи).
@@ -55,7 +55,7 @@ docs/
   reference/                     # вне dev-цикла
     brandbook/
     investor-deck/
-    MONEY_QUEST_DESIGN_AND_GDD_OUTLINE.md
+    TVOY_HOD_DESIGN_AND_GDD_OUTLINE.md
 ```
 
 **Плюсы:** прозрачный pipeline, агенту понятно «на какой фазе документ».  

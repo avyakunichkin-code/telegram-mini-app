@@ -32,7 +32,7 @@
 - Подушка безопасности, активы и обязательства из шаблонов БД, до трёх событий с выбором на период
 - Инвестиции MVP: депозит (капитализация), облигации (купоны на cash)
 - Страховки MVP: покупка и ежемесячная премия
-- Прогресс персонажа: **XP** и **уровень** (отдельно от условной финансовой градации в overview — см. [`docs/specs/gameplay/LEVEL_XP_SYSTEM.md`](docs/specs/gameplay/LEVEL_XP_SYSTEM.md))
+- Прогрессия: **tier событий** от `period_index`; character XP/level сняты ([ADR-003](docs/decisions/ADR-003-remove-character-progression.md)); достижения — backlog M12
 - Интеграция Telegram Web App (тема, viewport)
 
 Подробнее по эндпоинтам и папкам: [`CLAUDE.md`](CLAUDE.md).

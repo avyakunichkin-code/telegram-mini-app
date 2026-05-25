@@ -1,4 +1,4 @@
-# Agent Skills ТВОЙ ХОД — что использовать и когда
+﻿# Agent Skills ТВОЙ ХОД — что использовать и когда
 
 Скиллы лежат в `.cursor/skills/` репозитория (проектные процедуры). Дополнительно доступны **глобальные** скиллы Cursor (`babysit`, `canvas`, `ci-investigator`, и т.д.) — их не дублируем в проекте.
 
@@ -11,7 +11,7 @@
 | Скилл | Зачем в этом репозитории |
 |-------|---------------------------|
 | **frontend-ui-engineering** | MQX, Telegram UI, карточки, a11y-паттерны; **при работе с `mqx/` и новыми UI-паттернами — строго по FLOW** в [`frontend-react/src/components/mqx/DESIGN_WORKFLOW.md`](../../frontend-react/src/components/mqx/DESIGN_WORKFLOW.md) |
-| **design-lab-mqx** | Макеты в `design-lab/`: self-contained CSS, `sync-lab.ps1`, без `../` в HTML; правило `money-quest-design-lab.mdc` |
+| **design-lab-mqx** | Макеты в `design-lab/`: self-contained CSS, `sync-lab.ps1`, без `../` в HTML; правило `tvoy-hod-design-lab.mdc` |
 | **spec-driven-development** | Новые фичи и контракты — сначала spec (`docs/specs/`) |
 | **incremental-implementation** | Крупные изменения по шагам без монолитных PR |
 | **api-and-interface-design** | Эндпоинты `/api/...`, поля overview, синхронизация с `api.js` |
@@ -69,7 +69,7 @@
 
 Спека UI: [`docs/specs/SPEC_FRONTEND_UI.md`](../specs/SPEC_FRONTEND_UI.md).
 
-**MQX / компонентная база:** правила `money-quest-frontend-mqx.mdc` и скилл **frontend-ui-engineering** обязаны отсылать к единому процессу [`DESIGN_WORKFLOW.md`](../../frontend-react/src/components/mqx/DESIGN_WORKFLOW.md) — варианты в `design-lab/` → утверждение → `mqx/` → `#/dev/mqx` → prod (не пропускать этапы без явного согласования или исключения «багфикс/hotfix»).
+**MQX / компонентная база:** правила `tvoy-hod-frontend-mqx.mdc` и скилл **frontend-ui-engineering** обязаны отсылать к единому процессу [`DESIGN_WORKFLOW.md`](../../frontend-react/src/components/mqx/DESIGN_WORKFLOW.md) — варианты в `design-lab/` → утверждение → `mqx/` → `#/dev/mqx` → prod (не пропускать этапы без явного согласования или исключения «багфикс/hotfix»).
 
 **Лендинг / скрины:** после заметной смене UI в игре — `cd landing && npm run capture-screens` (app-режим), обновить `last_capture` в [`landing/public/screens/README.md`](../../landing/public/screens/README.md); не снимать с `design-lab/dashboard/index.html` или `capital-page/#phone-demo` ([`LANDING_SCREENSHOTS.md`](../specs/LANDING_SCREENSHOTS.md)).
 

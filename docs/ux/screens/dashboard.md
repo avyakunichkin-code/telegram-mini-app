@@ -15,7 +15,7 @@ prod_route: GameScreen tab `dashboard`
 > **Journey Phase(s):** активная партия (core loop), первая сессия (онбординг O1)  
 > **Template:** UX Spec (адаптация studio → `docs/ux/screens/`)
 
-**Связанные документы:** [`TMA_USER_FLOWS.md`](../../foundation/TMA_USER_FLOWS.md) · [`SPEC_FRONTEND_UI.md`](../../specs/SPEC_FRONTEND_UI.md) · [`SPEC_APP_SHELL.md`](../../specs/SPEC_APP_SHELL.md) (режим Game.Play) · [`SPEC_onboarding-tma.md`](../../specs/features/SPEC_onboarding-tma.md) · [`SPEC_achievements.md`](../../specs/features/SPEC_achievements.md) §11 · [`design-lab/dashboard/APPROVED.md`](../../../design-lab/dashboard/APPROVED.md)
+**Связанные документы:** [`TMA_USER_FLOWS.md`](../../foundation/TMA_USER_FLOWS.md) · [`SPEC_FRONTEND_UI.md`](../../specs/SPEC_FRONTEND_UI.md) · [`SPEC_victory-v2.md`](../../specs/features/SPEC_victory-v2.md) · [ADR-002](../../decisions/ADR-002-victory-engine-and-template-config.md) · [ADR-004](../../decisions/ADR-004-mechanics-unlock-victory-chain.md) · [`SPEC_onboarding-tma.md`](../../specs/features/SPEC_onboarding-tma.md) · [`design-lab/dashboard/APPROVED.md`](../../../design-lab/dashboard/APPROVED.md)
 
 **Реализация:** `DashboardPremium.jsx`, `MqxDashboardHero`, `MqxFinancePeriodBlock`, `MqxGoalDash`, `MqxPeriodActions`; оболочка и оверлеи — `GameScreen.jsx`.
 
@@ -186,8 +186,8 @@ App (HashRouter)
 | `empty` | Секция не рендерится |
 | `active` | Свёрнут: kicker «Цель», title, «Шаг K из N» |
 | `expanded` | Монетка guidance + цепочка `ol` |
-| `gate` | Все цели met, победа с периода `minPeriod` |
-| `win` | «Победа в сценарии» |
+| `gate` | Все шаги цепочки `met`, но `period_index < min_period_index_for_victory` (ждём 7-й период) |
+| `win` | `win_reached` — «Победа в сценарии» |
 
 ### Действия периода
 
@@ -195,7 +195,7 @@ App (HashRouter)
 |---------|----------------|
 | Зарплата | `salary_claimed` или `!can_claim_salary` или `busy` |
 | Пополнить / Снять | `busy` |
-| Вложить | `busy` или нет `onInvest` |
+| Вложить | `busy`, нет `onInvest`, или `!overview.mechanics.capital_invest` (403 `mechanic_disabled`) |
 
 | State | UI |
 |-------|-----|
@@ -285,12 +285,13 @@ Skip: 1-й раз — шаг; 2-й — весь онбординг → `brief_do
 | Чистый поток (не chip) | `overview.net_monthly_cashflow` | finance overview | refresh | Аналитика, цели |
 | Cash | `overview.cash_balance` | profile | refresh | 0 |
 | Safety + bar | `safety_fund_balance`, win target / norm utils | finance overview | contribute, period end | bar hidden if no norm |
-| Victory chain | `overview.victory` | victory_engine | refresh | hide Z2 |
-| Legacy goal fallback | `win_target_safety_fund`, `win_ready`, `win_reached` | finance overview | refresh | used if no v2 goals |
+| Victory chain | `overview.victory` (`goals`, `progression_mode`, `current_goal_key`) | victory_engine | refresh | hide Z2 if пусто |
+| Legacy поля подушки | `win_target_safety_fund`, `win_progress_safety_fund`, `win_ready` | finance overview | refresh | дублируют первую `safety_fund_months` для bar/chips |
+| `win_reached` | overview | victory_engine | refresh | фаза `win` в `MqxGoalDash` |
 | Salary gating | `periodStatus.salary_claimed`, `can_claim_salary` | period API | claim, period end | disable + toast |
 | Pending events count | `pendingEvents.length` | events API | refresh | no badge |
 | Onboarding | `onboarding_state`, `onboarding_step` | profile | PATCH onboarding | coach off |
-| Mechanics gate | `mechanics_effective.capital_invest` | template + goals | goal progress | **не на dashboard сегодня** |
+| Mechanics gate | `overview.mechanics.capital_invest` (и др.) | `starter_mechanics` + `mechanics_unlock` | goal progress, refresh | chip «Вложить»; см. ADR-004 |
 
 **UI не хранит** игровое состояние кроме: `moneyModal`, `safetyAmount`, `busyAction`.
 

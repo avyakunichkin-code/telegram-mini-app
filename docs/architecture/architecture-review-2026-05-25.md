@@ -1,4 +1,4 @@
-# Architecture Review Report
+﻿# Architecture Review Report
 
 **Date:** 2026-05-25  
 **Project:** ТВОЙ ХОД (Telegram Mini App)  
@@ -21,7 +21,7 @@
 
 ## Verdict: **CONCERNS** → **ближе к PASS** (Q&A 2026-05-25)
 
-**PASS blocked by:** нет CI pytest (решение Q&A: локальный pytest + `money-quest-backend.mdc`); открытые эпики Plan UI, E1, O1, M12.
+**PASS blocked by:** нет CI pytest (решение Q&A: локальный pytest + `tvoy-hod-backend.mdc`); открытые эпики Plan UI, E1, O1, M12.
 
 **Снято с блокеров:** doc-sync GAME/GLOSSARY/TARGET_PLAYER; ADR-002/003; pytest **180 passed**; V2 UI P1 (`MqxGoalDash`) — закрыт в TRACEABILITY/backlog.
 
@@ -59,17 +59,30 @@
 
 ---
 
-## Required follow-ups (post doc-sync)
+## Q&A resolutions (2026-05-25, session 2)
 
-1. Fix `tests/test_victory_engine.py` (2 failures).
-2. Frontend: `overview.victory` progress UI (V2 backlog).
-3. Optional: `docs/architecture/tr-registry.yaml` for stable TR-IDs across reviews.
+| # | Тема | Решение |
+|---|------|---------|
+| 1 | GAME.md drift | **Синхронизировать** §0.2, §5.4–6, §10–11, §13–14 |
+| 2 | GLOSSARY победа | **MVP** = игроко-понятное; **Victory v2** = prod + ADR-002 |
+| 3 | GLOSSARY save_kind | Поле immutable, не «заменит mode» |
+| 4 | TARGET_PLAYER | Крючки: цели победы + achievements/tier, без level |
+| 5 | V2 UI | **P1 закрыт** (`MqxGoalDash`) |
+| 6 | CI | **Не добавлять** workflow; усилить локальный pytest |
+| 7 | PLAN_mvp-11 MQ-113 | **Superseded** + ADR-003 |
+| 8 | dashboard UX | **status: approved** |
+
+## Required follow-ups (остаток)
+
+1. Plan Mode UI (MVP 2.0), E1 expenses, O1 onboarding prod, M12 achievements UI.
+2. Optional: `docs/architecture/tr-registry.yaml` for stable TR-IDs.
+3. Плейтест Pre-Alpha / product analytics.
 
 ---
 
 ## Doc-sync applied (2026-05-25)
 
-- `docs/vision/ideas/money-quest-evolution-after-mvp.md`
+- `docs/vision/ideas/tvoy-hod-evolution-after-mvp.md`
 - `docs/foundation/SPEC_PRODUCT.md`
 - `docs/specs/features/SPEC_victory-v2.md`
 - `docs/foundation/MVP_AUDIT_VS_SPEC.md`

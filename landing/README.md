@@ -29,7 +29,7 @@ npm run preview
 
 ## Контакты для партнёров
 
-Замените email в [`src/scripts/main.js`](src/scripts/main.js) (`CONTACT_EMAIL`) и при необходимости `href` в `index.html`.
+Контакт: `hello@tvoyhod.app` в [`src/scripts/main.js`](src/scripts/main.js) (`CONTACT_EMAIL`) и `href` в `index.html` (синхронизировать при смене домена).
 
 Ссылка на бота **намеренно отсутствует** (статус «Скоро в Telegram»). Когда будете готовы — добавьте CTA в локали и hero, не трогая модуль игры.
 

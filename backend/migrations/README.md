@@ -53,4 +53,7 @@ for f in migrations/*.sql; do psql "$DATABASE_URL" -v ON_ERROR_STOP=1 -f "$f"; d
 ## Связанные решения
 
 - **`save_kind` / Game vs Plan:** [`docs/decisions/ADR-001-save-kind-remove-light-hardcore.md`](../../docs/decisions/ADR-001-save-kind-remove-light-hardcore.md), миграция `0004_save_kind_game_templates.sql`.
+- **Victory v2 / tutorial chain:** [`docs/decisions/ADR-002-victory-engine-and-template-config.md`](../../docs/decisions/ADR-002-victory-engine-and-template-config.md) — `0036_victory_invest_goal_order.sql` (порядок целей в JSON).
+- **Разблокировка механик:** [`docs/decisions/ADR-004-mechanics-unlock-victory-chain.md`](../../docs/decisions/ADR-004-mechanics-unlock-victory-chain.md) — `0037_harder_invest_unlock_after_cushion.sql`.
+- **Снятие XP/level:** [`docs/decisions/ADR-003-remove-character-progression.md`](../../docs/decisions/ADR-003-remove-character-progression.md) — `0031_remove_character_progression.sql`.
 - Эпик G1: [`docs/specs/features/SPEC_game-plan.md`](../../docs/specs/features/SPEC_game-plan.md).

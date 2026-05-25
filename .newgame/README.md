@@ -8,6 +8,7 @@
 |------|------------|
 | [`game-concept.md`](game-concept.md) | Игровой концепт после `/brainstorm` (май 2026) |
 | [`prototypes/month-02-paper-prototype.md`](prototypes/month-02-paper-prototype.md) | Бумажный разбор одного месяца (план → burst → отчёт) |
+| [`prototypes/month-03-delayed-salary.md`](prototypes/month-03-delayed-salary.md) | Месяц 3: задержка зарплаты (−20k), сломанный Ритм, урок про резерв |
 
 ## Статус
 

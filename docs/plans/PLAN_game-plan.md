@@ -1,4 +1,4 @@
----
+﻿---
 layer: plan
 status: draft
 spec: specs/features/SPEC_game-plan.md
@@ -9,7 +9,7 @@ last_reviewed: 2026-05-17
 
 **Spec (implemented):** [`SPEC_game-plan`](../specs/features/SPEC_game-plan.md)  
 **ADR:** [`ADR-001`](../decisions/ADR-001-save-kind-remove-light-hardcore.md)  
-**Тяжёлый детальный план по слоям БД/API:** [evolution §II.3](../vision/ideas/money-quest-evolution-after-mvp.md#ii3-план-доработок-по-слоям) (ориентир; G1 режет scope: Game only, Plan в MVP 2.0).
+**Тяжёлый детальный план по слоям БД/API:** [evolution §II.3](../vision/ideas/tvoy-hod-evolution-after-mvp.md#ii3-план-доработок-по-слоям) (ориентир; G1 режет scope: Game only, Plan в MVP 2.0).
 
 ## Summary
 

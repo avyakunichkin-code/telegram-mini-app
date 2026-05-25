@@ -1,4 +1,4 @@
-# Раунд 1 — компоновка карточки события
+﻿# Раунд 1 — компоновка карточки события
 
 **Цель:** выбрать **каркас** (слоты и порядок), не финальные цвета доменов.  
 **Данные:** одинаковые для всех вариантов — «ДТП» (страховой) и «Кофе каждый день» (consumption).
@@ -32,7 +32,7 @@ cd design-lab/events/layout-round
 npx serve .
 ```
 
-Self-contained: только `./` в HTML. Общий sync: `design-lab/events/sync-all-rounds.ps1`. Правило: `money-quest-design-lab.mdc`.
+Self-contained: только `./` в HTML. Общий sync: `design-lab/events/sync-all-rounds.ps1`. Правило: `tvoy-hod-design-lab.mdc`.
 
 ## После ★ компоновки
 

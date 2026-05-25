@@ -1,4 +1,4 @@
----
+﻿---
 layer: foundation
 status: active
 last_reviewed: 2026-05-17
@@ -9,7 +9,7 @@ audience_note: MVP 1.1+ — ориентиры для событий, прока
 
 Единые **продуктовые допущения**, на которые должны опираться спеки событий, прокачки, UX копирайта и экономики. При изменении решений править этот файл и связанные spec.
 
-Высокоуровневое видение Game/Plan и сложность шаблонов остаются в **[`vision/ideas/money-quest-evolution-after-mvp.md`](../vision/ideas/money-quest-evolution-after-mvp.md)** (часть II).
+Высокоуровневое видение Game/Plan и сложность шаблонов остаются в **[`vision/ideas/tvoy-hod-evolution-after-mvp.md`](../vision/ideas/tvoy-hod-evolution-after-mvp.md)** (часть II).
 
 ---
 
@@ -83,5 +83,5 @@ audience_note: MVP 1.1+ — ориентиры для событий, прока
 
 - [`SPEC_PRODUCT.md`](SPEC_PRODUCT.md) — цикл продукта, педагогический базис MVP
 - [`TMA_USER_FLOWS.md`](TMA_USER_FLOWS.md) — пользовательские потоки
-- [`money-quest-evolution-after-mvp.md`](../vision/ideas/money-quest-evolution-after-mvp.md) — цели Game/Plan, события, уровни (концепция)
+- [`tvoy-hod-evolution-after-mvp.md`](../vision/ideas/tvoy-hod-evolution-after-mvp.md) — цели Game/Plan, события, шаблоны (без character level)
 - [`mvp-1-1-product-direction.md`](../vision/ideas/mvp-1-1-product-direction.md) — направления MVP 1.1 после закрытых ответов (идеи → spec)

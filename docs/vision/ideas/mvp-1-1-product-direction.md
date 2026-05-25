@@ -1,4 +1,4 @@
----
+﻿---
 layer: vision
 idea_refine_output: consolidated
 foundation_ref: ../../foundation/TARGET_PLAYER_AND_SESSION.md
@@ -114,4 +114,4 @@ last_reviewed: 2026-05-17
 2. **План исполнения:** **[`plans/PLAN_mvp-11-progression-events.md`](../plans/PLAN_mvp-11-progression-events.md)** — см. столбцы в плане; порядок **MQ-111** → … → **MQ-116**.
 3. Задачи **MQ-111–116** в **[`PRODUCT_BACKLOG.md`](../backlog/PRODUCT_BACKLOG.md)** и строка **M11** в **[`TRACEABILITY.md`](../TRACEABILITY.md)**.
 
-Целевая концепция по Game/Plan, уровням событий и победе — **[money-quest-evolution-after-mvp.md](money-quest-evolution-after-mvp.md)** §II.
+Целевая концепция по Game/Plan, уровням событий и победе — **[tvoy-hod-evolution-after-mvp.md](tvoy-hod-evolution-after-mvp.md)** §II.

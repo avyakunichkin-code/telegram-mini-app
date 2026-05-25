@@ -1,4 +1,4 @@
----
+﻿---
 name: frontend-ui-engineering
 description: Builds production-quality UIs. Use when building or modifying user-facing interfaces. Use when creating components, implementing layouts, managing state, or when the output needs to look and feel production-quality rather than AI-generated.
 ---
@@ -23,8 +23,8 @@ Build production-quality user interfaces that are accessible, performant, and vi
 
 1. **Сначала прочитай и следуй** [`frontend-react/src/components/mqx/DESIGN_WORKFLOW.md`](../../../frontend-react/src/components/mqx/DESIGN_WORKFLOW.md): варианты в `design-lab/<тема>/` → выбор → **явное утверждение в чате** → реализация в `mqx/` + секция `#/dev/mqx` → перенос в prod.
 2. **Не начинай** с правок игровых экранов, минуя этот цикл (исключение: **минимальный багфикс / hotfix** без смены дизайна — см. тот же документ).
-3. **Design-lab HTML/CSS:** скилл **design-lab-mqx** + правило `money-quest-design-lab.mdc` — `sync-lab.ps1`, только `./` пути, без 404 на стили.
-4. Правила Cursor: `money-quest-frontend-mqx.mdc`, `money-quest-frontend-core.mdc`; контракт UI: [`docs/specs/SPEC_FRONTEND_UI.md`](../../../docs/specs/SPEC_FRONTEND_UI.md).
+3. **Design-lab HTML/CSS:** скилл **design-lab-mqx** + правило `tvoy-hod-design-lab.mdc` — `sync-lab.ps1`, только `./` пути, без 404 на стили.
+4. Правила Cursor: `tvoy-hod-frontend-mqx.mdc`, `tvoy-hod-frontend-core.mdc`; контракт UI: [`docs/specs/SPEC_FRONTEND_UI.md`](../../../docs/specs/SPEC_FRONTEND_UI.md).
 
 ## Component Architecture
 

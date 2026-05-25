@@ -1,4 +1,4 @@
----
+﻿---
 description: Design-lab — self-contained стили, sync-lab, без ../ в HTML
 globs: design-lab/**/*
 alwaysApply: false
@@ -39,4 +39,4 @@ alwaysApply: false
 
 ## Утверждение → prod
 
-Без явного «утверждаем X» в чате — не переносить в `mqx/` и prod. См. `money-quest-frontend-mqx.mdc`.
+Без явного «утверждаем X» в чате — не переносить в `mqx/` и prod. См. `tvoy-hod-frontend-mqx.mdc`.

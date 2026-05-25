@@ -1,4 +1,4 @@
----
+﻿---
 layer: idea
 status: refined
 owner: product
@@ -8,7 +8,7 @@ converges_to:
   - ../../specs/features/SPEC_expenses.md
   - ../../plans/PLAN_expenses.md
 related:
-  - money-quest-evolution-after-mvp.md
+  - tvoy-hod-evolution-after-mvp.md
   - monthly-expenses-display.md
   - ../foundation/SPEC_PRODUCT.md
 ---

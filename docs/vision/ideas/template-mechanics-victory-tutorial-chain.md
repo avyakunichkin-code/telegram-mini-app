@@ -1,4 +1,4 @@
----
+﻿---
 layer: idea
 status: draft
 owner: product
@@ -7,7 +7,7 @@ related_specs:
   - ../../foundation/SPEC_PRODUCT.md
   - starter-template-mechanics-permissions.md
   - game-balance-thresholds-and-constraints.md
-  - money-quest-evolution-after-mvp.md
+  - tvoy-hod-evolution-after-mvp.md
 idea_refine: true
 next_spec: specs/features/SPEC_template-victory-tutorial-chain.md
 ---

@@ -197,4 +197,4 @@ MonthOutput:
 ## Связанные файлы
 
 - [`../game-concept.md`](../game-concept.md) — петля 5 минут, столпы, MVP
-- Следующий шаг: [`month-03-delayed-salary.md`](month-03-delayed-salary.md) (опционально) или JSON-фикстура для `MonthSimulator`
+- Следующий шаг: [`month-03-delayed-salary.md`](month-03-delayed-salary.md) · далее Месяц 4 или JSON-фикстура для `MonthSimulator`

@@ -1,4 +1,4 @@
----
+﻿---
 name: design-lab-mqx
 description: Design-lab rounds for MQX — self-contained HTML/CSS, sync-lab scripts, serve without broken ../ paths. Use when creating or editing design-lab/, layout variants, or before saying a lab mockup is ready for review.
 ---
@@ -74,8 +74,8 @@ npx serve .
 
 ## Rules
 
-- Cursor rule: `money-quest-design-lab.mdc`
-- MQX prod flow: `money-quest-frontend-mqx.mdc`
+- Cursor rule: `tvoy-hod-design-lab.mdc`
+- MQX prod flow: `tvoy-hod-frontend-mqx.mdc`
 
 ## Checklist (перед «готово»)
 

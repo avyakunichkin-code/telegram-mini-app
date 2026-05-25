@@ -1,8 +1,8 @@
----
+﻿---
 layer: spec
 status: approved
 owner: product
-last_reviewed: 2026-05-17
+last_reviewed: 2026-05-25
 tracks: progression, events-levels, xp, mvp-1-1
 idea: ../../vision/ideas/mvp-1-1-product-direction.md
 foundation: ../../foundation/TARGET_PLAYER_AND_SESSION.md
@@ -12,18 +12,19 @@ plan_progression: ../../plans/PLAN_level-xp-progression.md
 plan: ../../plans/PLAN_mvp-11-progression-events.md
 ---
 
-# Spec: MVP 1.1 — события по уровню, прокачка персонажа, связка UX
+# Spec: MVP 1.1 — события по tier, repeat/cooldown, связка UX
 
-Спецификация **полного вертикального среза** после эпика G1: события **привязаны к системе уровней персонажа** (окно выпадания как в части II концепции), расширение **эффектов выборов событий** (XP и при необходимости дельта «жизни»), выведение **числового уровня и XP профиля** в API и главный игровой UI, техническое объединение **дублирующегося расчёта XP** из роутов и конца периода.
+> **Прогрессия (2026-05-25):** character **level/XP сняты** ([ADR-003](../../decisions/ADR-003-remove-character-progression.md)). **Актуально в prod:** `event_tier` от **`period_index`**, `repeat_policy`, cooldown, `xp_delta` **игнорируется**. Разделы про `character_*` в overview и MQ-113/115 — **исторический контекст**; не реализовывать заново.
+
+Спецификация среза после G1: отбор событий по **`event_tier`**, политики повторов, истечение pending в конце периода, lifestyle-дельты.
 
 Читать вместе с:
 
 - [`mvp-1-1-product-direction`](../../vision/ideas/mvp-1-1-product-direction.md)
-- [`TARGET_PLAYER_AND_SESSION`](../../foundation/TARGET_PLAYER_AND_SESSION.md)
-- [`money-quest-evolution-after-mvp §II`](../../vision/ideas/money-quest-evolution-after-mvp.md)
-- **[`LEVEL_XP_SYSTEM`](../../specs/gameplay/LEVEL_XP_SYSTEM.md)** — модель уровней, разблокировки, темп, система начисления
-- **[`XP_EVENTS_ACTIONS_MATRIX`](../../specs/gameplay/catalogs/XP_EVENTS_ACTIONS_MATRIX.md)** — перечень действий API и событий с XP
-- **[`PLAN_level-xp-progression`](../../plans/PLAN_level-xp-progression.md)** — фазы после MVP 11 (константы, гейты, UX-баланс)
+- [`remove-character-xp-and-levels`](../../vision/ideas/remove-character-xp-and-levels.md) — **канон**
+- [`tvoy-hod-evolution-after-mvp §II`](../../vision/ideas/tvoy-hod-evolution-after-mvp.md)
+- ~~[`LEVEL_XP_SYSTEM`](../gameplay/LEVEL_XP_SYSTEM.md)~~ — архив
+- [`PLAN_mvp-11-progression-events`](../../plans/PLAN_mvp-11-progression-events.md)
 
 ---
 

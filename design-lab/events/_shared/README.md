@@ -1,4 +1,4 @@
-# Design-lab events — общие скрипты
+﻿# Design-lab events — общие скрипты
 
 ## Почему `sync-lab`
 
@@ -27,4 +27,4 @@ cd design-lab/events
 
 ## Агентам
 
-См. `.cursor/rules/money-quest-design-lab.mdc` и скилл `design-lab-mqx`.
+См. `.cursor/rules/tvoy-hod-design-lab.mdc` и скилл `design-lab-mqx`.

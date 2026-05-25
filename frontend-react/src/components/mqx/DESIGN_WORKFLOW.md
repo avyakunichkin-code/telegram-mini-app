@@ -1,4 +1,4 @@
-# MQX — процесс дизайна и внедрения
+﻿# MQX — процесс дизайна и внедрения
 
 Согласованный цикл: **сначала варианты → выбор → (при необходимости ещё раунд) → утверждение → только потом код в приложении.**
 
@@ -52,7 +52,7 @@ npx serve .
 
 **Events:** `design-lab/events/sync-all-rounds.ps1` или `.\sync-lab.ps1` в папке раунда.
 
-Правило Cursor: `money-quest-design-lab.mdc`. Скилл: `design-lab-mqx`.
+Правило Cursor: `tvoy-hod-design-lab.mdc`. Скилл: `design-lab-mqx`.
 
 ---
 

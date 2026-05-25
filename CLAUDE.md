@@ -1,4 +1,4 @@
-## ТВОЙ ХОД — контекст проекта (для быстрого онбординга агента)
+﻿## ТВОЙ ХОД — контекст проекта (для быстрого онбординга агента)
 
 Этот файл нужен, чтобы «загрузить контекст с нуля»: что это за проект, какие сущности, где логика, как запускать и как продолжать разработку.
 
@@ -6,17 +6,20 @@
 |----------|------------|
 | [`docs/README.md`](docs/README.md) | Оглавление папки `docs/` и слои документации |
 | [`docs/DOCUMENTATION_SYSTEM.md`](docs/DOCUMENTATION_SYSTEM.md) | Конвейер idea → spec → plan → tasks |
-| [`docs/foundation/SPEC_PRODUCT.md`](docs/foundation/SPEC_PRODUCT.md) | Продукт, цикл, экономика MVP, ссылки на рост |
+| [`docs/foundation/SPEC_PRODUCT.md`](docs/foundation/SPEC_PRODUCT.md) | Продукт, цикл, экономика; §7.1 — Victory v2 в prod |
+| [`docs/foundation/DOC_SYNC_LOG.md`](docs/foundation/DOC_SYNC_LOG.md) | Журнал синхронизации docs ↔ prod |
+| [`docs/decisions/ADR-002-victory-engine-and-template-config.md`](docs/decisions/ADR-002-victory-engine-and-template-config.md) | Движок победы, chain / parallel |
+| [`docs/decisions/ADR-004-mechanics-unlock-victory-chain.md`](docs/decisions/ADR-004-mechanics-unlock-victory-chain.md) | Разблокировка механик по целям |
 | [`docs/vision/ideas/remove-character-xp-and-levels.md`](docs/vision/ideas/remove-character-xp-and-levels.md) | **Канон прогрессии:** `event_tier` от `period_index`, без character level/XP |
 | [`docs/specs/gameplay/LEVEL_XP_SYSTEM.md`](docs/specs/gameplay/LEVEL_XP_SYSTEM.md) | ~~Уровень/XP~~ — **superseded** (архив) |
-| [`docs/vision/ideas/money-quest-evolution-after-mvp.md`](docs/vision/ideas/money-quest-evolution-after-mvp.md) | **Часть II** — целевая концепция Game/Plan, шаблоны, победа из шаблона, Q&A, план по слоям |
+| [`docs/vision/ideas/tvoy-hod-evolution-after-mvp.md`](docs/vision/ideas/tvoy-hod-evolution-after-mvp.md) | **Часть II** — целевая концепция Game/Plan, шаблоны, победа из шаблона, Q&A, план по слоям |
 | [`docs/backlog/PRODUCT_BACKLOG.md`](docs/backlog/PRODUCT_BACKLOG.md) | Бэклог по слоям |
 | [`docs/foundation/TMA_USER_FLOWS.md`](docs/foundation/TMA_USER_FLOWS.md) | Потоки и боли TMA |
 | [`docs/specs/SPEC_ANALYTICS.md`](docs/specs/SPEC_ANALYTICS.md) | Экран аналитики и данные |
 | [`docs/specs/LANDING_SCREENSHOTS.md`](docs/specs/LANDING_SCREENSHOTS.md) | Скрины UI на лендинге: `capture-screens.mjs`, `UI_FOCUS`, пересъём |
 | [`landing/README.md`](landing/README.md) | Статический лендинг `/landing/` (Vite, локали, `public/screens/`) |
 | [`docs/specs/SPEC_APP_SHELL.md`](docs/specs/SPEC_APP_SHELL.md) | Pre-game: оболочки Bubble/Flow, `MqxButton` |
-| [`docs/reference/MONEY_QUEST_DESIGN_AND_GDD_OUTLINE.md`](docs/reference/MONEY_QUEST_DESIGN_AND_GDD_OUTLINE.md) | GDD-оглавление и анализ |
+| [`docs/reference/TVOY_HOD_DESIGN_AND_GDD_OUTLINE.md`](docs/reference/TVOY_HOD_DESIGN_AND_GDD_OUTLINE.md) | GDD-оглавление и анализ |
 | [`docs/vision/ideas/game-balance-thresholds-and-constraints.md`](docs/vision/ideas/game-balance-thresholds-and-constraints.md) | Черновик порогов баланса (победа, поражение, MVP-ограничения), idea-refine |
 | [`docs/vision/ideas/project-structure-standardization.md`](docs/vision/ideas/project-structure-standardization.md) | Структура репо: screens/api/seeds, touch-it move-it (idea-refine) |
 
@@ -132,7 +135,7 @@
 
 **Устаревшее (только тесты):** `evaluate_mvp_victory` в `game_rules.py` — AND «подушка 3× + нет просрочки + cashflow ≥ 0».
 
-**Идеи роста:** avg liquid за 6 периодов, новые типы целей — [`money-quest-evolution-after-mvp.md`](docs/vision/ideas/money-quest-evolution-after-mvp.md) §II.
+**Идеи роста:** avg liquid за 6 периодов, новые типы целей — [`tvoy-hod-evolution-after-mvp.md`](docs/vision/ideas/tvoy-hod-evolution-after-mvp.md) §II.
 
 ---
 

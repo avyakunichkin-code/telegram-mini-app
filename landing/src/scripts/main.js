@@ -9,7 +9,7 @@ import {
 import { themeForSection } from './screens.js';
 import { uiCropHtml } from './ui-crop.js';
 
-const CONTACT_EMAIL = 'hello@moneyquest.app';
+const CONTACT_EMAIL = 'hello@tvoyhod.app';
 
 function renderHowSteps() {
   const list = document.getElementById('how-steps');

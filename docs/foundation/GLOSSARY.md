@@ -15,7 +15,8 @@
 | **monthly_reference_expense** | Obligations + burn (достижения) | achievement_engine *(E1)* |
 | **total_monthly_outflow** | Obligations + burn (подсказка «уйдёт за период») | overview *(E1)* |
 | **Победа MVP** | Упрощённое описание для игрока/онбординга: подушка, нет просрочки, поток ≥ 0; с 7-го периода. **В prod** победа считается движком **Victory v2** (M из N из `victory_config_json`) — см. [`SPEC_victory-v2`](../specs/features/SPEC_victory-v2.md), [ADR-002](../decisions/ADR-002-victory-engine-and-template-config.md) | `GET /api/finance/overview` → `win_reached`, блок `victory` |
-| **Victory v2** | Победа **M из N** целей из шаблона; `min_period_index_for_victory` (обычно 7); учебная цепочка на базовом шаблоне | `victory_engine.py`, `overview.victory` |
+| **Victory v2** | Победа по `victory_config_json`: в prod **`progression_mode: chain`** (все шаги по порядку) или legacy **`parallel`** (M из N); `min_period_index_for_victory` (обычно 7) | `victory_engine.py`, `overview.victory`, [ADR-002](../decisions/ADR-002-victory-engine-and-template-config.md) |
+| **mechanics_unlock** | Выдача флагов `capital_*` после ключей целей цепочки победы | `blueprint_json`, [ADR-004](../decisions/ADR-004-mechanics-unlock-victory-chain.md) |
 | **save_kind** | Режим сохранения: `game` \| `plan`; **immutable** после создания | `GameProfile.save_kind`; [ADR-001](../decisions/ADR-001-save-kind-remove-light-hardcore.md) |
 | **Game** *(цель)* | Игра со стартовым шаблоном, агрегированные расходы, победа M из N | evolution §II |
 | **Plan** *(цель)* | Ручное планирование, статьи расходов | evolution §II |

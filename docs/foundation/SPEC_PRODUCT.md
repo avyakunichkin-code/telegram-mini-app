@@ -1,7 +1,8 @@
----
+﻿---
 layer: foundation
 status: active
 last_reviewed: 2026-05-25
+doc_sync: foundation/DOC_SYNC_LOG.md
 ---
 
 # ТВОЙ ХОД — продуктовая спецификация (идея и текущее состояние)
@@ -12,15 +13,15 @@ last_reviewed: 2026-05-25
 
 ## 0. Дорожная карта концепции (актуально)
 
-Целевое развитие — кратко ниже; **детали, Q&A и план по слоям** только в **[`docs/vision/ideas/money-quest-evolution-after-mvp.md`](../vision/ideas/money-quest-evolution-after-mvp.md) — часть II** (не дублировать здесь):
+Целевое развитие — кратко ниже; **детали, Q&A и план по слоям** только в **[`docs/vision/ideas/tvoy-hod-evolution-after-mvp.md`](../vision/ideas/tvoy-hod-evolution-after-mvp.md) — часть II** (не дублировать здесь):
 
 - два **режима сохранения** (**Game** / **Plan**), без смены режима у существующего профиля;
-- **Game:** старт с **шаблонов** (первый запуск — один базовый шаблон; повторная «новая игра» — 4–5 шаблонов сложности), агрегированные «жизненные» расходы + дельты из **событий** в БД, прогрессия уровня и **достижений**, победа **M из N целей** из шаблона (в т.ч. средний чистый cashflow за **6** периодов, пороги кэша/cashflow по шаблону);
+- **Game:** старт с **шаблонов** (первый запуск — один базовый шаблон; повторная «новая игра» — 4 шаблона сложности), агрегированные «жизненные» расходы + дельты из **событий** в БД, **достижения** (без character XP), победа по **`victory_config_json`** шаблона — в prod **цепочка целей** (`progression_mode: chain`) или legacy **M из N** (`parallel`); пороги cashflow/подушки/инвестиций — в JSON шаблона ([ADR-002](../decisions/ADR-002-victory-engine-and-template-config.md));
 - **Plan:** ручное планирование, статьи расходов, опция префилла **только стартового снимка** из выбранного сохранения;
-- **победа в первые 6 периодов запрещена** (в коде: `win_reached` только при `period_index >= 7`);
+- **победа в первые 6 периодов запрещена** (в коде: `min_period_index_for_victory`, обычно **7** — см. `game_rules.MIN_PERIOD_INDEX_FOR_WIN`);
 - устаревшая пара **`light` / `hardcore`** заменена на **`save_kind`** и шаблоны — см. [ADR-001](../decisions/ADR-001-save-kind-remove-light-hardcore.md) и [`specs/features/SPEC_game-plan.md`](../specs/features/SPEC_game-plan.md).
 
-Ниже **§1–11** описывают **уже реализованный** цикл и MVP-победу, если не оговорено иное. **§12** — направления улучшения модели (логика, данные, механики, математика), без обязательства ближайшей реализации.
+Ниже **§1–11** описывают **уже реализованный** цикл; **§7.1** — победа в prod (**Victory v2**). Упрощённое правило «подушка 3× + просрочка + cashflow» — **legacy** (тесты). **§12** — направления улучшения модели, без обязательства ближайшей реализации.
 
 ---
 
@@ -128,18 +129,26 @@ last_reviewed: 2026-05-25
 
 ## 7. Победа, метрики, аналитика
 
-### 7.1. Победа (MVP)
+### 7.1. Победа (prod: Victory v2)
 
-Считается в `GET /api/finance/overview`:
+**Источник правды:** `backend/app/victory_engine.py`, сборка overview — `finance_overview_build.py`; конфиг — **`game_starter_templates.victory_config_json`** ([`SPEC_victory-v2`](../specs/features/SPEC_victory-v2.md), [ADR-002](../decisions/ADR-002-victory-engine-and-template-config.md)).
 
-- `safety_fund_balance >= 3 * total_monthly_obligations` (обязательства = платежи по долгам + обслуживание активов);
-- `total_overdue_amount == 0`;
-- `net_monthly_cashflow >= 0`;
-- **`win_reached` не бывает `true` при `period_index < 7`** — в первые шесть игровых периодов победа технически и по продукту недоступна (см. `MIN_PERIOD_INDEX_FOR_WIN` в `backend/app/routers/finance.py`).
+| Режим | Когда | `win_reached` |
+|--------|--------|----------------|
+| **`chain`** | Prod (tutorial на всех Game-шаблонах) | `period_index >= min_period_index_for_victory` **и** все шаги цепочки `goals[]` выполнены по порядку |
+| **`parallel`** | Legacy / откат (`VICTORY_CONFIG_LEGACY_BY_TEMPLATE_KEY`) | Ворота периода **и** `met_count >= required_goals_met` среди `enabled` |
 
-Дополнительно в профиле ведётся **`clean_period_streak`** — серия периодов без просрочек (мотивация и аналитика).
+- Дефолт ворот периода: **`min_period_index_for_victory = 7`** (`MIN_PERIOD_INDEX_FOR_WIN` в `backend/app/game_rules.py`).
+- Ответ API: блок **`victory`** + **`win_reached`**; для UI подушки сохранены **`win_target_safety_fund`**, **`win_ready`**, **`win_progress_safety_fund`** (из первой цели `safety_fund_months`, если есть).
+- **Разблокировка механик** капитала (инвестиции, страховки, …) — по **`blueprint.mechanics_unlock`** и выполненным ключам целей ([ADR-004](../decisions/ADR-004-mechanics-unlock-victory-chain.md)).
 
-**Целевая модель (Game):** несколько целей из шаблона, «M из N», средний чистый cashflow за последние 6 периодов — см. [evolution §II](../vision/ideas/money-quest-evolution-after-mvp.md#часть-ii--полная-концепция-после-обсуждения-qa-и-план-работ).
+**Пример prod (`mq_game_basic_v1`):** цепочка — зарплата → подушка → инвестиция → подушка 3× → пассивный доход с инвестиций ≥ 15k (см. `victory_seeds.py`, миграция `0036_*`).
+
+**Legacy MVP (не overview):** `evaluate_mvp_victory` — одновременно подушка ≥ 3× обязательств, нет просрочки, `net_monthly_cashflow >= 0`; только unit-тесты.
+
+Дополнительно: **`clean_period_streak`** — серия периодов без просрочек (мотивация и аналитика).
+
+**Дальше (баланс / контент):** новые типы целей, `avg_liquid_delta_6p`, откат tutorial → `parallel` — [evolution §II](../vision/ideas/tvoy-hod-evolution-after-mvp.md).
 
 ### 7.2. Прогрессия и мотивация (без character XP)
 
@@ -192,7 +201,7 @@ last_reviewed: 2026-05-25
 
 ## 12. Улучшения: логика, сущности, механики, математика
 
-Раздел фиксирует **качество и согласованность** текущей модели: что усилит реализм, обучаемость и поддерживаемость кода. Часть пересекается с [`PRODUCT_BACKLOG.md`](../backlog/PRODUCT_BACKLOG.md) и [evolution §II](../vision/ideas/money-quest-evolution-after-mvp.md); здесь акцент на **логике и цифрах**.
+Раздел фиксирует **качество и согласованность** текущей модели: что усилит реализм, обучаемость и поддерживаемость кода. Часть пересекается с [`PRODUCT_BACKLOG.md`](../backlog/PRODUCT_BACKLOG.md) и [evolution §II](../vision/ideas/tvoy-hod-evolution-after-mvp.md); здесь акцент на **логике и цифрах**.
 
 ### 12.1. Логика и согласованность правил
 

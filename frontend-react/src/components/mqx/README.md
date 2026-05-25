@@ -1,8 +1,8 @@
-# MQX — UI kit ТВОЙ ХОД
+﻿# MQX — UI kit ТВОЙ ХОД
 
 Канонические React-компоненты финансового UI (метрики с иконками, карточки портфеля, формы инвестиций, страховки, примитивы).
 
-**Обязательный FLOW (для агента и людей):** новые или существенно меняющие вид паттерны — **только** по циклу в [`DESIGN_WORKFLOW.md`](./DESIGN_WORKFLOW.md): `design-lab/` → выбор → **явное утверждение** → `mqx/` + `#/dev/mqx` → prod. Не пропускать этапы без согласования (исключение: минимальный багфикс/hotfix без смены дизайна). То же зафиксировано в `.cursor/rules/money-quest-frontend-mqx.mdc`, скилле **frontend-ui-engineering** и [`docs/agents/CURSOR_SKILLS.md`](../../../../docs/agents/CURSOR_SKILLS.md).
+**Обязательный FLOW (для агента и людей):** новые или существенно меняющие вид паттерны — **только** по циклу в [`DESIGN_WORKFLOW.md`](./DESIGN_WORKFLOW.md): `design-lab/` → выбор → **явное утверждение** → `mqx/` + `#/dev/mqx` → prod. Не пропускать этапы без согласования (исключение: минимальный багфикс/hotfix без смены дизайна). То же зафиксировано в `.cursor/rules/tvoy-hod-frontend-mqx.mdc`, скилле **frontend-ui-engineering** и [`docs/agents/CURSOR_SKILLS.md`](../../../../docs/agents/CURSOR_SKILLS.md).
 
 ## Как смотреть все компоненты
 

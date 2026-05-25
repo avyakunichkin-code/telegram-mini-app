@@ -1,4 +1,4 @@
----
+﻿---
 name: frontend-design
 description: Create distinctive, production-grade frontend interfaces with high design quality. Use this skill when the user asks to build web components, pages, artifacts, posters, or applications (examples include websites, landing pages, dashboards, React components, HTML/CSS layouts, or when styling/beautifying any web UI). Generates creative, polished code and UI design that avoids generic AI aesthetics.
 license: Complete terms in LICENSE.txt
@@ -66,7 +66,7 @@ Remember: Claude is capable of extraordinary creative work. Don't hold back, sho
 - **Inter** и выразительные маркетинговые приёмы скилла — для лендинга, `brandbook-print.html` и материалов вне клиента Telegram.
 - Видимый UI — **русский**, короткий активный залог; без EN kickers в production.
 
-Новые игровые экраны — только паттерны `*Premium.jsx` и `mqx-*` (см. `.cursor/rules/money-quest-frontend-core.mdc`).
+Новые игровые экраны — только паттерны `*Premium.jsx` и `mqx-*` (см. `.cursor/rules/tvoy-hod-frontend-core.mdc`).
 
 ### Капитал MQX (портфель, страховки, новые подразделы «Финансы»)
 

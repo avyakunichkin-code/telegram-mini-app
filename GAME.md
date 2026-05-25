@@ -1,4 +1,4 @@
-# Игра по финансовой грамотности — дизайн-документ (GAME)
+﻿# Игра по финансовой грамотности — дизайн-документ (GAME)
 
 Широкое описание продукта **ТВОЙ ХОД**: синтез [`QUESTIONNAIRE.md`](QUESTIONNAIRE.md), [`docs/foundation/SPEC_PRODUCT.md`](docs/foundation/SPEC_PRODUCT.md), кода и целевого видения. Документ для **концептуализации и последующей детализации** — не замена точечных спеков.
 
@@ -77,13 +77,13 @@
 
 1. **Доходы (в т.ч. по действию игрока):** зарплата по кнопке; в конце периода — проценты вклада, купоны облигаций, доход активов.
 2. **Автоматические списания:** обслуживание активов, платежи по долгам (+ просрочка), премии страховок, базовые «жизненные» расходы (`base_monthly_lifestyle_expense` + дельта).
-3. **События:** до **трёх** карточек с выбором; эффекты на cash, подушку, lifestyle, XP.
+3. **События:** до **трёх** карточек с выбором; эффекты на cash, подушку, lifestyle (`xp_delta` в сидах **игнорируется**).
 4. **Действия игрока (несколько):** подушка, покупки из каталогов, инвестиции, страховки — пока открыт период.
 5. **Конец периода:** `process_period_end` → новый `period_index`, снимок аналитики, генерация событий следующего периода.
 
 ### 1.5. Активы и пассивы
 
-Учить отличать **актив, работающий на капитал**, от **потребительской траты**. Blueprint шаблона может выдать ипотеку с первого дня — **уровень не блокирует уже существующие обязательства**, только **новые** дорогие действия ([`LEVEL_XP_SYSTEM.md` §8](docs/specs/gameplay/LEVEL_XP_SYSTEM.md)).
+Учить отличать **актив, работающий на капитал**, от **потребительской траты**. Blueprint может выдать ипотеку с первого дня; **новые** разделы капитала (инвестиции, страховки…) — через **`mechanics_unlock`** после шагов цели победы ([ADR-004](docs/decisions/ADR-004-mechanics-unlock-victory-chain.md)), не через character level.
 
 ### 1.6. Кредитование
 
@@ -95,9 +95,15 @@
 
 ### 1.8. Цели и победа
 
-**MVP (код):** подушка ≥ 3× ежемесячных обязательств; `total_overdue_amount == 0`; `net_monthly_cashflow >= 0`; **`win_reached` только при `period_index >= 7`**.
+**Prod:** [`victory_engine`](backend/app/victory_engine.py) + `victory_config_json` шаблона ([ADR-002](docs/decisions/ADR-002-victory-engine-and-template-config.md), [SPEC_victory-v2](docs/specs/features/SPEC_victory-v2.md)):
 
-**Целевое (vision):** победа **M из N** целей из `victory_config` шаблона; средний чистый cashflow за 6 периодов; пороги cash/cashflow из шаблона — [`money-quest-evolution-after-mvp.md`](docs/vision/ideas/money-quest-evolution-after-mvp.md) §II.
+- **`progression_mode: chain`** (tutorial на всех Game-шаблонах): все шаги цепочки выполнены + `period_index >= min_period_index_for_victory` (обычно **7**).
+- **`progression_mode: parallel`** (откат): **M из N** среди enabled-целей + ворота периода.
+- UI: `MqxGoalDash` + `overview.victory`.
+
+**Legacy (только unit-тесты):** `evaluate_mvp_victory` — AND «подушка 3× + нет просрочки + cashflow ≥ 0».
+
+Детали пулов целей и cashflow — [`tvoy-hod-evolution-after-mvp.md`](docs/vision/ideas/tvoy-hod-evolution-after-mvp.md) §II.
 
 Дополнительные **концептуальные** критерии из анкеты: финансовая независимость (пассив > расходов), чистый капитал до порога, прохождение без «долговой ямы», индекс финансового здоровья.
 
@@ -370,7 +376,7 @@
 
 ## 8. Анализ концепции (Octalysis и SWOT)
 
-*Полный текст из анкеты; пометки **[MQ]** — актуализация под ТВОЙ ХОД.*
+*Полный текст из анкеты; пометки **[ТХ]** — актуализация под ТВОЙ ХОД.*
 
 ### 8.1. Octalysis Framework
 
@@ -654,7 +660,7 @@
 
 ## 13. Целевое развитие (куда движемся)
 
-Краткая выжимка [`money-quest-evolution-after-mvp.md`](docs/vision/ideas/money-quest-evolution-after-mvp.md) §II:
+Краткая выжимка [`tvoy-hod-evolution-after-mvp.md`](docs/vision/ideas/tvoy-hod-evolution-after-mvp.md) §II:
 
 - **Victory v2:** ✅ backend + P1 UI (`MqxGoalDash`); баланс целей в шаблонах — backlog.
 - **Plan mode:** мастер, `starter_params_json`, префилл снимка (MVP 2.0).
@@ -676,6 +682,7 @@
 | [`LEVEL_XP_SYSTEM.md`](docs/specs/gameplay/LEVEL_XP_SYSTEM.md) | ~~level/XP~~ — **superseded**, архив |
 | [`ADR-002`](docs/decisions/ADR-002-victory-engine-and-template-config.md) | Victory v2 |
 | [`ADR-003`](docs/decisions/ADR-003-remove-character-progression.md) | Снятие character XP |
+| [`ADR-004`](docs/decisions/ADR-004-mechanics-unlock-victory-chain.md) | `mechanics_unlock` по целям |
 | [`SPEC_mvp-11-progression-events.md`](docs/specs/features/SPEC_mvp-11-progression-events.md) | События и tier |
 | [`SPEC_game-plan.md`](docs/specs/features/SPEC_game-plan.md) | Game/Plan, шаблоны |
 | [`SPEC_FRONTEND_UI.md`](docs/specs/SPEC_FRONTEND_UI.md) | UI/UX |
