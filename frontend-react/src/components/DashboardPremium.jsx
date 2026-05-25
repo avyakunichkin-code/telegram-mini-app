@@ -127,7 +127,6 @@ export function DashboardPremium({
   const salaryClaimed = periodStatus?.salary_claimed === true;
   const canClaimSalary = periodStatus?.can_claim_salary === true;
   const salaryDisabled = busyAction !== null || salaryClaimed || (periodStatus != null && !canClaimSalary);
-  const salaryLabel = salaryClaimed ? 'Зарплата получена' : 'Зарплата';
 
   const remaining = timeStatus?.remainingLocal ?? timeStatus?.seconds_until_next_period ?? 0;
 
@@ -367,8 +366,6 @@ export function DashboardPremium({
             <MqxPeriodActions
 
               busy={busyAction !== null}
-
-              salaryLabel={salaryLabel}
 
               salaryDisabled={salaryDisabled}
 

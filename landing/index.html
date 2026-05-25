@@ -18,7 +18,7 @@
     <a class="mq-skip" href="#main" data-i18n="a11y.skip">Перейти к содержанию</a>
 
     <header class="mq-header">
-      <a class="mq-logo" href="/" data-i18n-attr="aria-label:brand.name">
+      <a class="mq-logo" href="." data-i18n-attr="aria-label:brand.name">
         <picture>
           <source srcset="/brand/logo-compact.webp" type="image/webp" />
           <img
@@ -102,22 +102,12 @@
                 <span data-i18n="hero.monetkaBubble">Смотри на цифры — они честные</span>
               </figcaption>
             </figure>
-            <figure class="mq-device mq-device--app" data-screen-theme="light">
-              <div class="mq-device__bezel">
-                <img
-                  class="mq-device__shot"
-                  src="/screens/dashboard-light.png"
-                  width="390"
-                  height="780"
-                  alt=""
-                  data-i18n-attr="alt:peek.screens.dashboard"
-                  decoding="async"
-                />
-              </div>
-              <figcaption class="mq-device__caption" data-i18n="hero.screenCaption">
+            <div class="mq-hero__crop-wrap">
+              <div class="mq-hero__crop-slot" id="hero-crop-slot" aria-hidden="true"></div>
+              <p class="mq-hero__crop-caption" data-i18n="hero.screenCaption">
                 Дашборд в игре — как в Telegram
-              </figcaption>
-            </figure>
+              </p>
+            </div>
           </div>
         </div>
       </section>
@@ -128,17 +118,6 @@
             <h2 data-i18n="how.title">За минуту — суть цикла</h2>
             <p data-i18n="how.subtitle">Один игровой месяц</p>
           </header>
-          <figure class="mq-inline-shot mq-reveal" data-screen-theme="dark">
-            <img
-              src="/screens/dashboard-dark.png"
-              width="280"
-              height=""
-              alt=""
-              data-i18n-attr="alt:peek.screens.dashboard"
-              loading="lazy"
-              decoding="async"
-            />
-          </figure>
           <ol class="mq-steps" id="how-steps"></ol>
         </div>
       </section>

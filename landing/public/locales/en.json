@@ -72,34 +72,24 @@
     "subtitle": "Unified server-side economy: UI numbers match period-close math.",
     "showcase": [
       {
-        "screen": "dashboard",
-        "title": "Period & timer",
-        "text": "A game month with pause and “next” — life-like rhythm in a safe sandbox."
+        "focus": "dashboard.period",
+        "title": "Period, salary & safety fund",
+        "text": "Timer, cash, and action buttons in one monthly rhythm — income only on tap; safety fund stays separate from cash."
       },
       {
-        "screen": "dashboard",
-        "title": "Salary & safety fund",
-        "text": "Income only on tap each period; safety fund is separate from cash and part of victory rules."
-      },
-      {
-        "screen": "capital",
+        "focus": "capital.summary",
         "title": "Capital management",
         "text": "Assets and liabilities from templates: income, upkeep, payments and overdue — clear, not jargon-heavy."
       },
       {
-        "screen": "events",
+        "focus": "events.card",
         "title": "Choice events",
         "text": "Up to three situations per period — consequences, not a “pick the quiz answer” test."
       },
       {
-        "screen": "capital",
-        "title": "Investments & insurance",
-        "text": "Deposits, bonds, and policies: capitalization and premiums at period close in a simplified life model."
-      },
-      {
-        "screen": "dashboard",
+        "focus": "dashboard.goal",
         "title": "Goals & analytics",
-        "text": "Dashboard, victory step chain, and period-close charts — see where the run is heading."
+        "text": "Victory step chain and period overview — see where the run is heading without a separate “win screen.”"
       }
     ]
   },
@@ -136,26 +126,29 @@
   "peek": {
     "title": "In-game UI",
     "subtitle": "MQX layer on Telegram: one visual language across dashboard, finance, and events.",
-    "screens": {
-      "dashboard": "Screenshot of the YOUR MOVE dashboard",
-      "capital": "Screenshot of capital and finance screen",
-      "events": "Screenshot of the events carousel"
+    "screenAlts": {
+      "dashboard.period": "Dashboard crop: period and balances",
+      "dashboard.cash": "Dashboard crop: salary and safety fund",
+      "dashboard.goal": "Dashboard crop: victory goal",
+      "capital.summary": "Capital screen crop: income and obligations",
+      "capital.invest": "Capital screen crop: investments and insurance",
+      "events.card": "Event choice card"
     },
     "panels": [
       {
-        "screen": "dashboard",
+        "focus": "dashboard.period",
         "label": "Dashboard",
         "title": "Period & goal",
         "text": "Timer, salary, safety fund, and victory steps — on one screen."
       },
       {
-        "screen": "capital",
+        "focus": "capital.summary",
         "label": "Capital",
         "title": "Period finances",
         "text": "Income, expenses, investments, insurance, property, and liabilities — accordions without clutter."
       },
       {
-        "screen": "events",
+        "focus": "events.card",
         "label": "Events",
         "title": "Decision carousel",
         "text": "Compact choice cards; Monetka helps you read the situation, not replace it."

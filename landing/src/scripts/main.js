@@ -6,7 +6,8 @@ import {
   setLangButtons,
   t,
 } from './i18n.js';
-import { screenPath } from './screens.js';
+import { themeForSection } from './screens.js';
+import { uiCropHtml } from './ui-crop.js';
 
 const CONTACT_EMAIL = 'hello@moneyquest.app';
 
@@ -45,22 +46,39 @@ function renderLearnCards() {
     .join('');
 }
 
+function screenAlt(focusKey) {
+  const alts = t('peek.screenAlts');
+  return alts?.[focusKey] || '';
+}
+
+function renderHeroCrop() {
+  const slot = document.getElementById('hero-crop-slot');
+  if (!slot) return;
+  const theme = themeForSection(true);
+  slot.innerHTML = uiCropHtml('dashboard.period', theme, {
+    alt: screenAlt('dashboard.period'),
+    className: 'mq-ui-crop--hero',
+    loading: 'eager',
+  });
+  slot.removeAttribute('aria-hidden');
+}
+
 function renderFeatures() {
   const grid = document.getElementById('features-grid');
   if (!grid) return;
   const items = t('features.showcase');
   if (!Array.isArray(items)) return;
-  const screens = t('peek.screens');
-  const theme = 'light';
+  const theme = themeForSection(true);
   grid.innerHTML = items
     .map(
       (item, i) => `
     <article class="mq-showcase__item mq-reveal${i % 2 === 1 ? ' mq-showcase__item--reverse' : ''}" style="--mq-delay:${i * 60}ms">
-      <figure class="mq-showcase__shot">
-        <div class="mq-device__bezel">
-          <img src="${screenPath(item.screen, theme)}" width="320" height="640" alt="${escapeHtml(screens?.[item.screen] || item.title)}" loading="lazy" decoding="async" />
-        </div>
-      </figure>
+      <div class="mq-showcase__shot">
+        ${uiCropHtml(item.focus, theme, {
+          alt: screenAlt(item.focus) || item.title,
+          className: 'mq-ui-crop--feature',
+        })}
+      </div>
       <div class="mq-showcase__copy">
         <h3>${escapeHtml(item.title)}</h3>
         <p>${escapeHtml(item.text)}</p>
@@ -75,15 +93,15 @@ function renderPeekStrip() {
   if (!strip) return;
   const panels = t('peek.panels');
   if (!Array.isArray(panels)) return;
-  const screens = t('peek.screens');
-  const theme = 'light';
+  const theme = themeForSection(true);
   strip.innerHTML = panels
     .map(
       (panel, i) => `
     <article class="mq-screen-card mq-reveal" style="--mq-delay:${i * 70}ms">
-      <div class="mq-screen-card__frame">
-        <img src="${screenPath(panel.screen, theme)}" width="304" height="608" alt="${escapeHtml(screens?.[panel.screen] || panel.title)}" loading="lazy" decoding="async" />
-      </div>
+      ${uiCropHtml(panel.focus, theme, {
+        alt: screenAlt(panel.focus) || panel.title,
+        className: 'mq-ui-crop--strip',
+      })}
       <span class="mq-screen-card__label">${escapeHtml(panel.label)}</span>
       <h3>${escapeHtml(panel.title)}</h3>
       <p>${escapeHtml(panel.text)}</p>
@@ -207,23 +225,10 @@ function wireReveal() {
   nodes.forEach((n) => io.observe(n));
 }
 
-function updateScreenAlts() {
-  const screens = t('peek.screens');
-  if (!screens) return;
-  document.querySelectorAll('[data-screen-id]').forEach((img) => {
-    const id = img.getAttribute('data-screen-id');
-    if (id && screens[id]) img.setAttribute('alt', screens[id]);
-  });
-  const heroShot = document.querySelector('.mq-device__shot');
-  if (heroShot && screens.dashboard) heroShot.setAttribute('alt', screens.dashboard);
-  const howShot = document.querySelector('.mq-inline-shot img');
-  if (howShot && screens.dashboard) howShot.setAttribute('alt', screens.dashboard);
-}
-
 async function setLocale(code) {
   await loadLocale(code);
+  renderHeroCrop();
   applyStaticI18n();
-  updateScreenAlts();
   renderHowSteps();
   renderFeatures();
   renderLearnCards();

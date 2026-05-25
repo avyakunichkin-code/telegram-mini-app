@@ -26,8 +26,8 @@ export function MqxPeriodActions({
           disabled={busy || salaryDisabled}
           data-onboarding-anchor="salary"
           title={
-            salaryDisabled && salaryLabel !== 'Зарплата'
-              ? salaryLabel
+            salaryDisabled
+              ? 'Зарплата за этот период уже получена или недоступна'
               : 'Получить зарплату за текущий период'
           }
           aria-label="Зарплата"

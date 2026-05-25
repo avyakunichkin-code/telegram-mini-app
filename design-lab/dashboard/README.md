@@ -9,6 +9,14 @@ npx serve .
 
 См. [`VARIANTS.md`](VARIANTS.md), [`APPROVED.md`](APPROVED.md), [`CONTENT.md`](CONTENT.md).
 
+## Раунды
+
+| Раунд | Тема |
+|-------|------|
+| [`period-actions-round/`](period-actions-round/) | Chip-действия, Монетка справа, подписи кнопок |
+| [`goal-chain-round/`](goal-chain-round/) | Блок «Цель» |
+| [`cushion-fill-round/`](cushion-fill-round/) | Индикатор подушки на chip |
+
 ## Prod parity (S5)
 
 Витрина **синхронизирована** с `DashboardPremium` + `index.css` (`mqx-tab-page--dash-unified`):

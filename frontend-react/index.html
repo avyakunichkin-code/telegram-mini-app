@@ -2,6 +2,17 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8" />
+  <script>
+    /* HashRouter: #/ только на shell игры, не на /landing/ (там якоря #how, #faq). */
+    (function () {
+      var p = location.pathname;
+      if (/\/landing(?:\/|$)/i.test(p)) return;
+      var h = location.hash;
+      if (!h || h === '#') {
+        location.replace(p + location.search + '#/');
+      }
+    })();
+  </script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
   <meta name="description" content="Игра по финансовой грамотности — периоды, баланс, решения." />
   <meta name="theme-color" content="#6D28D9" />
@@ -10,12 +21,9 @@
   <link rel="icon" type="image/svg+xml" href="favicon.svg" />
   <link rel="apple-touch-icon" href="pwa/apple-touch-icon.png" />
   <title>ТВОЙ ХОД</title>
-  <!-- Подключаем настоящий SDK Telegram (для реального окружения) -->
-  <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <script>
-    // Эмуляция для локальной разработки (если Telegram WebApp не загрузился)
+    // Эмуляция Telegram WebApp вне клиента (Safari / PWA). SDK подключается внизу страницы.
     if (!window.Telegram?.WebApp) {
-      console.log('🔧 Эмуляция Telegram WebApp (локальный режим)');
       window.Telegram = window.Telegram || {};
       window.Telegram.WebApp = {
         initData: '',
@@ -46,5 +54,6 @@
 <body>
 <div id="root"></div>
 <script type="module" src="/src/main.jsx"></script>
+<script async src="https://telegram.org/js/telegram-web-app.js"></script>
 </body>
 </html>
