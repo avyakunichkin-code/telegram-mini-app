@@ -29,8 +29,7 @@ ALL_MECHANIC_KEYS = (
 )
 
 DEFAULT_BASIC_UNLOCK: list[dict[str, Any]] = [
-    {"after_goal": None, "grant": [MECHANIC_CAPITAL_FLOWS]},
-    {"after_goal": "tutorial_cushion", "grant": [MECHANIC_CAPITAL_INVEST]},
+    {"after_goal": None, "grant": [MECHANIC_CAPITAL_FLOWS, MECHANIC_CAPITAL_INVEST]},
 ]
 
 DEFAULT_HARDER_UNLOCK: list[dict[str, Any]] = [

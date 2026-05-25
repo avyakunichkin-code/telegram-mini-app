@@ -70,8 +70,7 @@ export function RegisterForm({ onSwitchToLogin }) {
   return (
     <AuthMonetkaScreen
       showBrand
-      showLottieBackdrop
-      title="Привет, я Монетка!"
+      title="Рада знакомству!"
       subtitle={
         <>
           Регистрируйся по <span className="mqx-voice-em">email</span> — пригодится, если забудешь пароль.
@@ -140,7 +139,7 @@ export function RegisterForm({ onSwitchToLogin }) {
           </div>
         ) : null}
 
-        <div className="mqx-auth-monetka__actions">
+        <div className="pg-actions">
           <MqxButton
             variant="primary"
             type="submit"

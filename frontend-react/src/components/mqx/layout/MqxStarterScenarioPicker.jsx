@@ -11,6 +11,8 @@ export function MqxStarterScenarioPicker({
   templates,
   value,
   onChange,
+  /** Клик по сценарию (например сразу старт игры). onChange вызывается перед onPick. */
+  onPick,
   disabled = false,
   labelledById,
   layout = 'compact',
@@ -63,7 +65,9 @@ export function MqxStarterScenarioPicker({
               ev.preventDefault();
               ev.stopPropagation();
               if (disabled) return;
-              onChange(t.template_key);
+              const key = t.template_key;
+              onChange?.(key);
+              onPick?.(key);
             }}
           >
             <span

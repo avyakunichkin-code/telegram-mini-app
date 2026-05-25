@@ -236,9 +236,9 @@
 
 .mqx-action-chip__label {
   display: block;
-  font-size: var(--mq-fs-small);
+  font-size: var(--mq-fs-heading);
   font-weight: var(--mq-fw-bold);
-  line-height: 1.2;
+  line-height: 1.25;
   letter-spacing: -0.01em;
 }
 

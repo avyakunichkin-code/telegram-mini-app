@@ -19,7 +19,13 @@ export default defineConfig(({ mode }) => {
       VitePWA({
         registerType: 'autoUpdate',
         injectRegister: false,
-        includeAssets: ['favicon.svg', 'pwa/apple-touch-icon.png', 'pwa/icon-192.png', 'pwa/icon-512.png'],
+        includeAssets: [
+          'favicon-32.png',
+          'favicon-48.png',
+          'pwa/apple-touch-icon.png',
+          'pwa/icon-192.png',
+          'pwa/icon-512.png',
+        ],
         manifest: {
           name: 'ТВОЙ ХОД',
           short_name: 'ТВОЙ ХОД',
@@ -35,7 +41,7 @@ export default defineConfig(({ mode }) => {
         },
         workbox: {
           // HashRouter: без NavigationRoute — иначе iOS Safari часто отдаёт пустую/старую страницу.
-          globPatterns: ['**/*.{js,css,html,ico,svg,woff2}', 'pwa/**/*.png', 'favicon.svg'],
+          globPatterns: ['**/*.{js,css,html,ico,svg,woff2}', 'pwa/**/*.png', 'favicon-*.png'],
           globIgnores: [
             '**/assets/monetka-*.png',
             '**/assets/monetka-*.webp',

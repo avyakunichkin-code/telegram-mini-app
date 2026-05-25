@@ -40,7 +40,7 @@ class TestMechanicsInOverview:
         body = ov.json()
         assert body["mechanics"]["capital_invest"] is True
         eff = body.get("mechanics_effective") or {}
-        assert eff.get("capital_invest") is False
+        assert eff.get("capital_invest") is True
 
     def test_basic_template_overview_mechanics(self, client, auth_headers):
         start = client.post(

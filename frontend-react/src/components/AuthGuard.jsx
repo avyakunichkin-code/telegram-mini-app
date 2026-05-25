@@ -10,7 +10,6 @@ export function AuthGuard({ children }) {
       <div className="app-shell mq-page mq-page--auth">
         <div className="mq-page__decor" aria-hidden />
         <MonetkaBubbleScreen
-          showLottieBackdrop
           title="Секунду, листаю полки"
           subtitle="Подтягиваю твои сохранения… обычно это занимает секунду."
           titleId="mqx-auth-loading-title"

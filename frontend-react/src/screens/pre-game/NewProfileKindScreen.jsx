@@ -8,13 +8,17 @@ import { MqxButton } from '../../components/mqx/primitives/MqxButton';
 export function NewProfileKindScreen({ onChooseGame, onBack }) {
   return (
     <MqxMonetkaDialogScreen
-      showBrand
       title="Новая игра!"
       subtitle={
-        <p>
-          В режиме <span className="mqx-voice-em">Игра</span> — симулятор: выбираешь жизненную ситуацию и проходишь
-          месяцы с деньгами. В <span className="mqx-voice-em">Плане</span> — свой сценарий из реальных цифр (скоро).
-        </p>
+        <>
+          <p>
+            <span className="mqx-voice-em">Игра</span> — попробуй себя в разных жизнях: от первой зарплаты до своей
+            квартиры. Можно инвестировать, копить подушку и ловить финансовые сюрпризы.
+          </p>
+          <p>
+            <span className="mqx-voice-em">План</span> скоро — свой бюджет с нуля, без готового сценария.
+          </p>
+        </>
       }
       titleId="mqx-new-game-kind-title"
     >
@@ -25,7 +29,7 @@ export function NewProfileKindScreen({ onChooseGame, onBack }) {
         onSelectGame={onChooseGame}
       />
 
-      <div className="mqx-monetka-flow__actions">
+      <div className="pg-actions mqx-monetka-flow__actions">
         <MqxButton type="button" variant="secondary" stretched onClick={onBack} title="Вернуться в меню">
           Назад
         </MqxButton>

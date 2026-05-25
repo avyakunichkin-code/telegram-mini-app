@@ -1,50 +1,37 @@
-import { BrandMark } from '../../BrandMark';
-import { AuthHeroBackdrop } from '../../AuthHeroBackdrop';
-import { MqxShell } from '../../MqxShell';
+import { BrandLogo } from '../../BrandLogo';
 import { MonetkaAvatar } from '../onboarding/MonetkaAvatar';
 
 /**
- * Экран с Монеткой и пузырём-карточкой (auth, меню). Без внешней рамки mqx-frame.
+ * Pre-game / auth: design-lab pg-auth-panel (логотип сверху, Монетка в шапке карточки).
+ * Без MqxShell — та же вложенность, что P1–P3 в design-lab (pg-auth-stack в shell).
+ * @see design-lab/pre-game-playful-v3/index.html P1–P3
  */
 export function MonetkaBubbleScreen({
   title,
   subtitle,
   titleId = 'mqx-monetka-bubble-title',
   children,
-  shellClassName = 'mqx-auth mqx-auth--monetka',
-  bubbleClassName = '',
   showBrand = false,
-  showLottieBackdrop = false,
-  frameClassName = 'mqx-frame--pre-game',
 }) {
-  const bubbleCls = ['mqx-auth-monetka__bubble', bubbleClassName].filter(Boolean).join(' ');
-  const shellCls = [
-    shellClassName,
-    showBrand && 'mqx-auth--brand-top',
-    showLottieBackdrop && 'mqx-auth--lottie-bg',
-  ]
-    .filter(Boolean)
-    .join(' ');
-  const monetkaCls = ['mqx-auth-monetka', showBrand && 'mqx-auth-monetka--brand-top'].filter(Boolean).join(' ');
-
-  const monetkaBlock = (
-    <div className={monetkaCls}>
-      {showBrand ? <BrandMark className="mqx-auth-monetka__brand" /> : null}
-      <MonetkaAvatar size={112} className="mqx-auth-monetka__mascot" />
-      <section className={bubbleCls} aria-labelledby={titleId}>
-        <h1 id={titleId} className="mqx-auth-monetka__title">
-          {title}
-        </h1>
-        {subtitle ? <p className="mqx-auth-monetka__subtitle">{subtitle}</p> : null}
+  return (
+    <div className="pg-auth-stack">
+      {showBrand ? (
+        <header className="pg-auth-logo">
+          <BrandLogo variant="full" className="pg-auth-logo__img" />
+        </header>
+      ) : null}
+      <section className="pg-auth-panel" aria-labelledby={titleId}>
+        <div className="pg-auth-panel__head">
+          <MonetkaAvatar size={72} className="pg-auth-panel__mascot" />
+          <div className="pg-auth-panel__voice">
+            <h1 id={titleId} className="pg-auth-panel__title">
+              {title}
+            </h1>
+            {subtitle ? <div className="pg-auth-panel__subtitle">{subtitle}</div> : null}
+          </div>
+        </div>
         {children}
       </section>
     </div>
-  );
-
-  return (
-    <MqxShell contentClassName={shellCls} frameClassName={frameClassName}>
-      {showLottieBackdrop ? <AuthHeroBackdrop /> : null}
-      {showLottieBackdrop ? <div className="mq-auth-foreground">{monetkaBlock}</div> : monetkaBlock}
-    </MqxShell>
   );
 }

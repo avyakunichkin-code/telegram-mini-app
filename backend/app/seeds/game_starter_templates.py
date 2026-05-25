@@ -31,8 +31,7 @@ GAME_STARTER_TEMPLATE_SEEDS = [
                 "capital_liabilities": False,
             },
             "mechanics_unlock": [
-                {"after_goal": None, "grant": ["capital_flows"]},
-                {"after_goal": "tutorial_cushion", "grant": ["capital_invest"]},
+                {"after_goal": None, "grant": ["capital_flows", "capital_invest"]},
             ],
         },
     },

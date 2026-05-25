@@ -38,8 +38,7 @@ def test_scenario_picker_highlights_salary_and_tiers():
     basic = {
         "monthly_salary": 62500,
         "mechanics_unlock": [
-            {"after_goal": None, "grant": ["capital_flows"]},
-            {"after_goal": "tutorial_cushion", "grant": ["capital_invest"]},
+            {"after_goal": None, "grant": ["capital_flows", "capital_invest"]},
         ],
     }
     lines = scenario_picker_highlights(basic, "mq_game_basic_v1")

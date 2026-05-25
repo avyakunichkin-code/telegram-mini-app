@@ -15,11 +15,7 @@ function saveKindLabel(sk) {
 }
 
 function profileSubtitle(p) {
-  const kind = saveKindLabel(p.save_kind);
-  let extra = '';
-  if (p.starter_template_key) extra = ` · ${p.starter_template_key}`;
-  else if (p.save_kind === 'game') extra = ' · без шаблона';
-  return `Период ${p.period_index} · ${kind}${extra}`;
+  return `${saveKindLabel(p.save_kind)} · период ${p.period_index}`;
 }
 
 function menuCopy({ loading, profileCount }) {
@@ -38,10 +34,13 @@ function menuCopy({ loading, profileCount }) {
   }
   return {
     title: 'Продолжим с того же места?',
-    subtitle:
-      profileCount > 1
-        ? 'Ниже последний слот — один тап. Остальные в «Все сохранения».'
-        : 'Твой слот ниже — продолжить или завести новое сохранение.',
+    subtitle: (
+      <p>
+        Ниже — последний слот: «Продолжить» справа внизу, как в приложении. А в{' '}
+        <span className="mqx-voice-em">«Все сохранения»</span> можно выбрать любую игру по названию, которое сам
+        придумывал.
+      </p>
+    ),
   };
 }
 
@@ -96,14 +95,7 @@ export function StartMenuScreen({ onNewGame, onLoadGame, onLogout }) {
 
   return (
     <>
-      <MonetkaBubbleScreen
-        showBrand
-        showLottieBackdrop
-        title={title}
-        subtitle={subtitle}
-        titleId="mqx-start-menu-title"
-        bubbleClassName="mqx-auth-monetka__bubble--wide"
-      >
+      <MonetkaBubbleScreen showBrand title={title} subtitle={subtitle} titleId="mqx-start-menu-title">
         {loading ? (
           <div className="mqx-auth-monetka__loading">
             <Spinner />
@@ -111,7 +103,7 @@ export function StartMenuScreen({ onNewGame, onLoadGame, onLogout }) {
         ) : (
           <>
             {primaryProfile ? (
-              <div className="mqx-start-menu__profile mqx-fin-row">
+              <div className="pg-continue-slot mqx-fin-row mqx-start-menu__profile">
                 <div className="mqx-fin-row__l">
                   <div className="mqx-fin-row__title">{primaryProfile.name}</div>
                   <div className="mqx-fin-row__sub">{profileSubtitle(primaryProfile)}</div>
@@ -132,7 +124,7 @@ export function StartMenuScreen({ onNewGame, onLoadGame, onLogout }) {
               </div>
             ) : null}
 
-            <div className="mqx-auth-monetka__actions mqx-start-menu__actions">
+            <div className="pg-actions mqx-start-menu__actions">
               <MqxButton
                 variant="primary"
                 stretched

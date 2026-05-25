@@ -53,7 +53,6 @@ export function LoginForm({ onSwitchToRegister }) {
   return (
     <AuthMonetkaScreen
       showBrand
-      showLottieBackdrop
       title="Привет, я Монетка!"
       subtitle={
         <>
@@ -105,7 +104,7 @@ export function LoginForm({ onSwitchToRegister }) {
           </div>
         ) : null}
 
-        <div className="mqx-auth-monetka__actions">
+        <div className="pg-actions">
           <MqxButton
             variant="primary"
             type="submit"

@@ -59,17 +59,26 @@
   width: auto;
   height: auto;
   background: transparent;
+  object-fit: contain;
+  object-position: center;
 }
 
+/* G2 — hero / табы (эталон design-lab: ~36–44px по высоте, без растягивания) */
 .mqx-brand-logo--compact {
-  height: 26px;
-  max-width: min(160px, 44vw);
+  aspect-ratio: 3 / 2;
+  height: 34px;
+  width: auto;
+  max-width: min(168px, 48vw);
+  object-position: left center;
 }
 
+/* G1 — стартовые экраны: ширина по контейнеру, пропорции 3:2 из мастера */
 .mqx-brand-logo--full {
-  width: min(300px, 92vw);
+  aspect-ratio: 3 / 2;
+  width: auto;
   height: auto;
-  max-height: none;
+  max-width: min(280px, 92vw);
+  max-height: 140px;
 }
 
 .mqx-brand-mark {
