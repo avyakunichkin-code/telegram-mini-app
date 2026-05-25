@@ -175,11 +175,22 @@ class VictoryOverview(BaseModel):
     template_key: str = ""
     min_period_index: int = 7
     period_gate_open: bool = False
+    progression_mode: str = "chain"
+    current_goal_key: Optional[str] = None
     goals_met: int = 0
     goals_required: int = 0
     goals_enabled: int = 0
     win_reached: bool = False
     goals: List[VictoryGoalOverview] = Field(default_factory=list)
+
+
+class GameMechanicsPermissions(BaseModel):
+    """Разрешения разделов «Управление капиталом» из blueprint шаблона."""
+
+    capital_invest: bool = True
+    capital_insurance: bool = True
+    capital_property: bool = True
+    capital_liabilities: bool = True
 
 
 class FinanceOverview(BaseModel):
@@ -220,6 +231,7 @@ class FinanceOverview(BaseModel):
     save_kind: str = "game"
     onboarding_state: str = "brief_done"
     onboarding_step: str = "farewell"
+    mechanics: GameMechanicsPermissions = Field(default_factory=GameMechanicsPermissions)
 
 
 class AnalyticsTimeseriesPoint(BaseModel):

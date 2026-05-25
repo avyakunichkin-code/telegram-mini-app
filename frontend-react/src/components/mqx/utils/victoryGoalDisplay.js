@@ -82,15 +82,22 @@ export function buildVictorySummary(victory, legacyGoal) {
   const required = Number(victory.goals_required) || 0;
   const win = !!victory.win_reached;
   const gateOpen = victory.period_gate_open !== false;
+  const isChain = victory.progression_mode === 'chain';
 
   let badge = 'В работе';
   if (win) badge = 'Победа';
   else if (met >= required && required > 0) badge = 'Почти';
 
+  let subtitle = null;
+  if (required > 0) {
+    subtitle = isChain ? `Шаг ${Math.min(met + 1, required)} из ${required}` : `${met} из ${required} целей`;
+    if (isChain && met >= required) subtitle = `Шаг ${required} из ${required}`;
+  }
+
   return {
     badge,
     title: 'Победа в сценарии',
-    subtitle: required > 0 ? `${met} из ${required} целей` : null,
+    subtitle,
     goals: (victory.goals || []).filter((g) => g.enabled !== false),
     gateOpen,
     minPeriod: victory.min_period_index,

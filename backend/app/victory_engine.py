@@ -1,17 +1,24 @@
 """
-Движок победы v2: M из N целей из victory_config_json шаблона.
+Движок победы v2: цели из victory_config_json шаблона.
+
+Режимы:
+- ``chain`` — цепочка: цель засчитывается только после предыдущих; победа — все шаги по порядку.
+- ``parallel`` — M из N (legacy): любые цели из списка.
 """
 
 from __future__ import annotations
 
 import json
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, replace
 from typing import Any
 
 from .game_rules import MIN_PERIOD_INDEX_FOR_WIN
 from .victory_seeds import DEFAULT_TEMPLATE_KEY, victory_config_for_template
 
 VICTORY_SCHEMA_VERSION = 1
+
+PROGRESSION_CHAIN = "chain"
+PROGRESSION_PARALLEL = "parallel"
 
 
 @dataclass(frozen=True)
@@ -49,6 +56,8 @@ class VictoryEvaluationResult:
     template_key: str
     min_period_index: int
     period_gate_open: bool
+    progression_mode: str
+    current_goal_key: str | None
     goals_met: int
     goals_required: int
     goals_enabled: int
@@ -271,6 +280,42 @@ def _compute_win_ready(goal_results: list[VictoryGoalResult], required_met: int)
     return met_count >= max(0, required_met - 1)
 
 
+def _progression_mode(config: dict[str, Any]) -> str:
+    mode = str(config.get("progression_mode") or PROGRESSION_CHAIN).strip().lower()
+    return mode if mode in (PROGRESSION_CHAIN, PROGRESSION_PARALLEL) else PROGRESSION_CHAIN
+
+
+def _apply_chain_progression(
+    goal_results: list[VictoryGoalResult],
+) -> tuple[list[VictoryGoalResult], int, str | None]:
+    """Эффективный met по цепочке; raw_met в detail."""
+    prior_ok = True
+    out: list[VictoryGoalResult] = []
+    current_key: str | None = None
+    chain_met = 0
+
+    for g in goal_results:
+        if not g.enabled:
+            out.append(g)
+            continue
+
+        raw_met = g.met
+        effective_met = raw_met and prior_ok
+        detail = dict(g.detail)
+        detail["raw_met"] = raw_met
+
+        if current_key is None and not effective_met:
+            current_key = g.key
+        if effective_met:
+            chain_met += 1
+        else:
+            prior_ok = False
+
+        out.append(replace(g, met=effective_met, detail=detail))
+
+    return out, chain_met, current_key
+
+
 def _safety_legacy_fields(goal_results: list[VictoryGoalResult]) -> tuple[float, float]:
     for g in goal_results:
         if g.enabled and g.type == "safety_fund_months":
@@ -293,15 +338,27 @@ def evaluate_victory(
     schema_version = int(config.get("schema_version", VICTORY_SCHEMA_VERSION))
     tk = (template_key or "").strip() or DEFAULT_TEMPLATE_KEY
 
+    progression = _progression_mode(config)
     raw_goals = config.get("goals") or []
     goal_results = [_evaluate_goal(g, snap) for g in raw_goals if isinstance(g, dict)]
     enabled = [g for g in goal_results if g.enabled]
     goals_enabled = len(enabled)
-    goals_met = sum(1 for g in enabled if g.met)
+    current_goal_key: str | None = None
 
-    period_gate_open = int(snap.period_index) >= min_period
-    win_reached = period_gate_open and goals_met >= required_met and goals_enabled > 0
-    win_ready = _compute_win_ready(goal_results, required_met)
+    if progression == PROGRESSION_CHAIN:
+        goal_results, goals_met, current_goal_key = _apply_chain_progression(goal_results)
+        goals_required = goals_enabled
+        period_gate_open = int(snap.period_index) >= min_period
+        all_chain_met = goals_enabled > 0 and goals_met >= goals_enabled
+        win_reached = period_gate_open and all_chain_met
+        win_ready = all_chain_met and not period_gate_open
+    else:
+        goals_met = sum(1 for g in enabled if g.met)
+        goals_required = required_met
+        period_gate_open = int(snap.period_index) >= min_period
+        win_reached = period_gate_open and goals_met >= required_met and goals_enabled > 0
+        win_ready = _compute_win_ready(goal_results, required_met)
+
     win_target, win_progress = _safety_legacy_fields(goal_results)
 
     return VictoryEvaluationResult(
@@ -309,8 +366,10 @@ def evaluate_victory(
         template_key=tk,
         min_period_index=min_period,
         period_gate_open=period_gate_open,
+        progression_mode=progression,
+        current_goal_key=current_goal_key,
         goals_met=goals_met,
-        goals_required=required_met,
+        goals_required=goals_required,
         goals_enabled=goals_enabled,
         win_reached=win_reached,
         win_ready=win_ready,

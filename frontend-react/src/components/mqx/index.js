@@ -25,6 +25,7 @@ export { IllustrationGame, IllustrationPlan } from './icons/ModeIllustrations';
 export { MqxDashStack } from './layout/MqxDashStack';
 export { MqxDivider } from './primitives/MqxDivider';
 export { MqxLevelDash } from './layout/MqxLevelDash';
+export { MqxGoalDash } from './layout/MqxGoalDash';
 export { MqxFinancePeriodBlock } from './layout/MqxFinancePeriodBlock';
 export { MqxPeriodActions } from './layout/MqxPeriodActions';
 export { ExpensesBudgetBlock } from './layout/ExpensesBudgetBlock';

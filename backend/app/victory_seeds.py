@@ -9,11 +9,11 @@ from __future__ import annotations
 import json
 from typing import Any
 
-from .victory_snap import CAR_ASSET_KINDS, RENTAL_HOME_ASSET_KINDS
+from .victory_snap import RENTAL_HOME_ASSET_KINDS
 
 VICTORY_SCHEMA_VERSION = 1
 DEFAULT_TEMPLATE_KEY = "mq_game_basic_v1"
-PLAYTEST_MODE_TAG = "v1"
+PLAYTEST_MODE_TAG = "v2"
 
 
 def _expense_ratio_goal(max_ratio: float) -> dict[str, Any]:
@@ -96,9 +96,16 @@ def _harder_goals_legacy(min_cash: float) -> list[dict[str, Any]]:
     ]
 
 
-# --- Плейтест (временно) ---
+# --- Плейтест: цепочка целей (G1) ---
 
-_BASIC_GOALS_PLAYTEST: list[dict[str, Any]] = [
+_BASIC_GOALS_CHAIN: list[dict[str, Any]] = [
+    {
+        "key": "flow_nonneg",
+        "type": "net_monthly_cashflow_nonneg",
+        "title": "Стабильный денежный поток",
+        "required": False,
+        "enabled": True,
+    },
     {
         "key": "safety_3x",
         "type": "safety_fund_months",
@@ -108,18 +115,17 @@ _BASIC_GOALS_PLAYTEST: list[dict[str, Any]] = [
         "enabled": True,
     },
     {
-        "key": "passive_income_100k",
-        "type": "passive_income_monthly_min",
-        "title": "Пассивный доход ≥ 100 000 ₽/мес",
-        "min_monthly": 100_000,
+        "key": "no_overdue",
+        "type": "no_overdue",
+        "title": "Без просрочки",
         "required": False,
         "enabled": True,
     },
     {
-        "key": "car_owned",
-        "type": "asset_kind_any_owned",
-        "title": "Машина в собственности",
-        "asset_kinds_any": sorted(CAR_ASSET_KINDS),
+        "key": "passive_income_100k",
+        "type": "passive_income_monthly_min",
+        "title": "Пассивный доход ≥ 100 000 ₽/мес",
+        "min_monthly": 100_000,
         "required": False,
         "enabled": True,
     },
@@ -169,11 +175,13 @@ def _config(
     goals: list[dict[str, Any]],
     min_period: int = 7,
     playtest_mode: str | None = PLAYTEST_MODE_TAG,
+    progression_mode: str = "chain",
 ) -> dict[str, Any]:
     cfg: dict[str, Any] = {
         "schema_version": VICTORY_SCHEMA_VERSION,
         "min_period_index_for_victory": min_period,
         "required_goals_met": required_goals_met,
+        "progression_mode": progression_mode,
         "goals": goals,
     }
     if playtest_mode:
@@ -184,10 +192,10 @@ def _config(
 _HARDER_PLAYTEST = _harder_goals_playtest()
 
 VICTORY_CONFIG_BY_TEMPLATE_KEY: dict[str, dict[str, Any]] = {
-    DEFAULT_TEMPLATE_KEY: _config(required_goals_met=3, goals=list(_BASIC_GOALS_PLAYTEST)),
-    "mq_game_tight_budget_v1": _config(required_goals_met=5, goals=list(_HARDER_PLAYTEST)),
-    "mq_game_mortgage_stress_v1": _config(required_goals_met=5, goals=list(_HARDER_PLAYTEST)),
-    "mq_game_debt_stack_v1": _config(required_goals_met=5, goals=list(_HARDER_PLAYTEST)),
+    DEFAULT_TEMPLATE_KEY: _config(required_goals_met=4, goals=list(_BASIC_GOALS_CHAIN)),
+    "mq_game_tight_budget_v1": _config(required_goals_met=4, goals=list(_HARDER_PLAYTEST)),
+    "mq_game_mortgage_stress_v1": _config(required_goals_met=4, goals=list(_HARDER_PLAYTEST)),
+    "mq_game_debt_stack_v1": _config(required_goals_met=4, goals=list(_HARDER_PLAYTEST)),
 }
 
 # Для отката: подставить VICTORY_CONFIG_BY_TEMPLATE_KEY из LEGACY_* ниже.
@@ -196,21 +204,25 @@ VICTORY_CONFIG_LEGACY_BY_TEMPLATE_KEY: dict[str, dict[str, Any]] = {
         required_goals_met=3,
         goals=list(_BASIC_GOALS_LEGACY),
         playtest_mode=None,
+        progression_mode="parallel",
     ),
     "mq_game_tight_budget_v1": _config(
         required_goals_met=3,
         goals=_harder_goals_legacy(12_000),
         playtest_mode=None,
+        progression_mode="parallel",
     ),
     "mq_game_mortgage_stress_v1": _config(
         required_goals_met=3,
         goals=_harder_goals_legacy(15_000),
         playtest_mode=None,
+        progression_mode="parallel",
     ),
     "mq_game_debt_stack_v1": _config(
         required_goals_met=3,
         goals=_harder_goals_legacy(18_000),
         playtest_mode=None,
+        progression_mode="parallel",
     ),
 }
 

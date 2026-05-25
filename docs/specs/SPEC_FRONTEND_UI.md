@@ -259,7 +259,7 @@ export function ExampleBlock({ overview }) {
 
 ### P0 (блокеры качества)
 
-- [ ] На главной прогресс XP привязан к `overview` или блок скрыт.
+- [x] На главной нет прогресса character XP (снят с overview; `MqxLevelDash` — период и цели).
 - [ ] Нет видимых EN-подписей (`Positions`, `cashflow` в kicker и т.п.) — только RU.
 - [ ] Вкладка «Инвестиции» открывается без `ReferenceError` (константы help, импорты).
 
@@ -292,7 +292,7 @@ export function ExampleBlock({ overview }) {
 |---|--------|----------|
 | 1 | Подписи под иконками таббара vs только `aria-label`? | Продукт |
 | 2 | Единый hero на `MenuPremium` или оставить «лёгкую» карточку? | Продукт |
-| 3 | Поле XP/level в API для главной — есть ли в overview? | Backend + UI |
+| 3 | ~~XP/level в overview~~ | **Закрыто:** полей нет; канон — [`remove-character-xp-and-levels.md`](../vision/ideas/remove-character-xp-and-levels.md) |
 | 4 | Срок sunset legacy `*Section.jsx`? | Команда |
 
 ---
@@ -303,7 +303,7 @@ export function ExampleBlock({ overview }) {
 
 ```mermaid
 flowchart TD
-  P0[P0: XP + i18n + баги]
+  P0[P0: i18n + баги]
   DS[CSS: spacing utilities]
   FIN[Finance: capital invest/insurance]
   REF[Refactor FinanceSection]
@@ -327,10 +327,7 @@ flowchart TD
 
 # Tasks (Phase 3)
 
-- [ ] **P0: XP на главной**
-  - Acceptance: полоса от реальных полей `overview` или блок удалён.
-  - Verify: визуально при score 0 / 50 / 100; `npm run build`.
-  - Files: `DashboardPremium.jsx`
+- [x] **P0: XP на главной** — снят (2026-05-24); не возвращать без нового ADR.
 
 - [ ] **P0: Локализация kickers**
   - Acceptance: нет `Positions`, `cashflow`, `Forecast` в видимом UI.

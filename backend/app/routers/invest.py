@@ -8,6 +8,7 @@ from ..game_time import get_active_game_profile, sync_time
 from ..balance_utils import adjust_balance
 from ..models import InvestmentPosition
 from ..idempotency import read_idempotency_key, run_idempotent
+from ..starter_mechanics import MECHANIC_CAPITAL_INVEST, require_capital_mechanic
 
 
 router = APIRouter(prefix="/api/invest", tags=["invest"])
@@ -56,6 +57,7 @@ async def open_deposit(
     def _execute() -> dict:
         profile = get_active_game_profile(db, current_user.id)
         sync_time(profile)
+        require_capital_mechanic(db, profile, MECHANIC_CAPITAL_INVEST)
         if profile.cash_balance < amount:
             raise HTTPException(status_code=400, detail="Недостаточно средств")
         adjust_balance(db, profile.id, -amount, "deposit_open", "Открытие депозита", profile.period_index)
@@ -106,6 +108,7 @@ async def buy_bond(
     def _execute() -> dict:
         profile = get_active_game_profile(db, current_user.id)
         sync_time(profile)
+        require_capital_mechanic(db, profile, MECHANIC_CAPITAL_INVEST)
         if profile.cash_balance < amount:
             raise HTTPException(status_code=400, detail="Недостаточно средств")
         adjust_balance(db, profile.id, -amount, "bond_buy", f"Покупка облигаций: {title}", profile.period_index)
@@ -140,6 +143,7 @@ async def buy_bond(
 async def close_position(position_id: int, current_user=Depends(get_current_user), db: Session = Depends(get_db)):
     profile = get_active_game_profile(db, current_user.id)
     sync_time(profile)
+    require_capital_mechanic(db, profile, MECHANIC_CAPITAL_INVEST)
 
     pos = (
         db.query(InvestmentPosition)

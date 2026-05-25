@@ -1,6 +1,7 @@
-import { useEffect } from 'react';
+import { useEffect, useMemo } from 'react';
 import { FinanceSection } from './FinanceSection';
 import { MqxTabHero } from './MqxTabHero';
+import { capitalPageSubtitle, getMechanicsFromOverview } from '../utils/starterMechanics';
 
 export function FinancePremium({
   overview,
@@ -19,6 +20,14 @@ export function FinancePremium({
     return () => cancelAnimationFrame(frame);
   }, [openFlowsSection, onFlowsSectionOpened]);
 
+  const mechanics = useMemo(() => getMechanicsFromOverview(overview), [overview]);
+  const capitalSectionsCount =
+    2 +
+    (mechanics.capital_invest ? 1 : 0) +
+    (mechanics.capital_insurance ? 1 : 0) +
+    (mechanics.capital_property ? 1 : 0) +
+    (mechanics.capital_liabilities ? 1 : 0);
+
   if (!overview) return null;
 
   return (
@@ -26,11 +35,11 @@ export function FinancePremium({
       <MqxTabHero
         heroClassName="mqx-hero--capital"
         sectionLabel="Финансы"
-        rightPill="6 разделов"
+        rightPill={`${capitalSectionsCount} разделов`}
         title="Управление капиталом"
         titleClassName="mqx-hero__title--capital"
         subtitleClassName="mqx-hero__sub--capital"
-        subtitle="Доходы и расходы за период · инвестиции, страховки, имущество, обязательства."
+        subtitle={capitalPageSubtitle(mechanics)}
       />
 
       <main className="mqx-content mqx-tab-page__scroll mqx-capital-page">
@@ -42,6 +51,7 @@ export function FinancePremium({
           capitalAccordion
           hideSectionsCard
           openFlowsSection={openFlowsSection}
+          mechanics={mechanics}
         />
       </main>
     </div>

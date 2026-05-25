@@ -19,6 +19,6 @@
 | **Game** *(цель)* | Игра со стартовым шаблоном, агрегированные расходы, победа M из N | evolution §II |
 | **Plan** *(цель)* | Ручное планирование, статьи расходов | evolution §II |
 | **MQX** | Визуальный слой premium-вкладок (`mqx-*`) | см. [`SPEC_FRONTEND_UI.md`](../specs/SPEC_FRONTEND_UI.md) |
-| **event_tier** | Сложность сценария для отбора по уровню игрока (не тема) | `event_definitions.event_tier`, [`LEVEL_XP_SYSTEM.md`](../specs/gameplay/LEVEL_XP_SYSTEM.md) |
+| **event_tier** | Сложность сценария; окно выпадения от **периода** (10 периодов = 1 band), не тема | `event_definitions.event_tier`, `game_rules.event_tier_progression_level(period_index)`, [`remove-character-xp-and-levels.md`](../vision/ideas/remove-character-xp-and-levels.md) |
 | **event_domain** *(план)* | Тема события: авто, страховка, семья… — для пула и аналитики | idea: [`event-types-and-taxonomy.md`](../vision/ideas/event-types-and-taxonomy.md) |
 | **interaction_kind** *(план)* | Форма UX: `choice`, `informational`, `chain_followup`, `intro` | там же |

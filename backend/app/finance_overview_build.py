@@ -18,9 +18,11 @@ from .schemas import (
     LiabilityResponse,
     MonthlyBurnBreakdown,
     SalaryProfileResponse,
+    GameMechanicsPermissions,
     VictoryGoalOverview,
     VictoryOverview,
 )
+from .starter_mechanics import resolve_profile_mechanics
 from .victory_engine import evaluate_victory, parse_victory_config
 from .victory_seeds import DEFAULT_TEMPLATE_KEY
 from .victory_snap import build_victory_evaluation_input
@@ -129,11 +131,21 @@ def build_finance_overview(db: Session, profile: GameProfile) -> FinanceOverview
     victory_snap = build_victory_evaluation_input(db, profile)
     victory_result = evaluate_victory(victory_cfg, victory_snap, template_key=template_key)
 
+    mech = resolve_profile_mechanics(db, profile)
+    mechanics_permissions = GameMechanicsPermissions(
+        capital_invest=mech["capital_invest"],
+        capital_insurance=mech["capital_insurance"],
+        capital_property=mech["capital_property"],
+        capital_liabilities=mech["capital_liabilities"],
+    )
+
     victory_overview = VictoryOverview(
         schema_version=victory_result.schema_version,
         template_key=victory_result.template_key,
         min_period_index=victory_result.min_period_index,
         period_gate_open=victory_result.period_gate_open,
+        progression_mode=victory_result.progression_mode,
+        current_goal_key=victory_result.current_goal_key,
         goals_met=victory_result.goals_met,
         goals_required=victory_result.goals_required,
         goals_enabled=victory_result.goals_enabled,
@@ -195,4 +207,5 @@ def build_finance_overview(db: Session, profile: GameProfile) -> FinanceOverview
         save_kind=str(getattr(profile, "save_kind", "game") or "game"),
         onboarding_state=str(getattr(profile, "onboarding_state", "brief_done") or "brief_done"),
         onboarding_step=str(getattr(profile, "onboarding_step", "farewell") or "farewell"),
+        mechanics=mechanics_permissions,
     )

@@ -1,8 +1,13 @@
-"""Тесты victory v2: M из N, типы целей, плейтест-конфиг."""
+"""Тесты victory v2: цепочка целей и parallel (legacy)."""
 
 from app.game_rules import MIN_PERIOD_INDEX_FOR_WIN
-from app.victory_engine import VictoryEvaluationInput, evaluate_victory, parse_victory_config
-from app.victory_seeds import victory_config_for_template
+from app.victory_engine import (
+    PROGRESSION_CHAIN,
+    VictoryEvaluationInput,
+    evaluate_victory,
+    parse_victory_config,
+)
+from app.victory_seeds import VICTORY_CONFIG_LEGACY_BY_TEMPLATE_KEY, victory_config_for_template
 
 
 def _snap(**kwargs):
@@ -25,56 +30,83 @@ def _snap(**kwargs):
     return VictoryEvaluationInput(**defaults)
 
 
-class TestBasicPlaytestGoals:
-    def test_all_three_goals_and_period_win(self):
+def _chain_complete_snap(**kwargs):
+    target = 10_000.0 * 3
+    defaults = dict(
+        safety_fund_balance=target,
+        net_monthly_cashflow=1.0,
+        total_overdue_amount=0.0,
+        monthly_passive_income=100_000,
+    )
+    defaults.update(kwargs)
+    return _snap(**defaults)
+
+
+class TestBasicGoalChain:
+    def test_config_is_chain_v2(self):
         cfg = victory_config_for_template("mq_game_basic_v1")
-        assert cfg.get("playtest_mode") == "v1"
-        target = 10_000.0 * 3
+        assert cfg.get("playtest_mode") == "v2"
+        assert cfg.get("progression_mode") == PROGRESSION_CHAIN
+        assert len(cfg["goals"]) == 4
+
+    def test_passive_early_does_not_count_until_prior_steps(self):
+        cfg = victory_config_for_template("mq_game_basic_v1")
         r = evaluate_victory(
             cfg,
-            _snap(
-                safety_fund_balance=target,
-                monthly_passive_income=100_000,
-                owned_asset_kinds=frozenset({"car_personal"}),
-            ),
+            _snap(monthly_passive_income=150_000, safety_fund_balance=0, net_monthly_cashflow=1.0),
             template_key="mq_game_basic_v1",
         )
-        assert r.goals_enabled == 3
-        assert r.goals_met == 3
+        passive = next(g for g in r.goals if g.key == "passive_income_100k")
+        assert passive.detail["raw_met"] is True
+        assert passive.met is False
+        assert r.current_goal_key == "safety_3x"
+        assert r.goals_met == 1
+
+    def test_all_four_chain_and_period_win(self):
+        cfg = victory_config_for_template("mq_game_basic_v1")
+        r = evaluate_victory(
+            cfg,
+            _chain_complete_snap(),
+            template_key="mq_game_basic_v1",
+        )
+        assert r.goals_enabled == 4
+        assert r.goals_met == 4
+        assert r.goals_required == 4
+        assert r.current_goal_key is None
         assert r.win_reached is True
 
     def test_early_period_blocks_win(self):
         cfg = victory_config_for_template("mq_game_basic_v1")
-        target = 10_000.0 * 3
         r = evaluate_victory(
             cfg,
-            _snap(
-                period_index=MIN_PERIOD_INDEX_FOR_WIN - 1,
-                safety_fund_balance=target,
-                monthly_passive_income=100_000,
-                owned_asset_kinds=frozenset({"vehicle"}),
-            ),
+            _chain_complete_snap(period_index=MIN_PERIOD_INDEX_FOR_WIN - 1),
             template_key="mq_game_basic_v1",
         )
-        assert r.goals_met == 3
+        assert r.goals_met == 4
         assert r.period_gate_open is False
         assert r.win_reached is False
+        assert r.win_ready is True
 
-    def test_missing_car_blocks_win(self):
+    def test_missing_flow_blocks_later_steps(self):
         cfg = victory_config_for_template("mq_game_basic_v1")
         r = evaluate_victory(
             cfg,
-            _snap(safety_fund_balance=30_000, monthly_passive_income=150_000),
+            _snap(
+                net_monthly_cashflow=-100.0,
+                safety_fund_balance=30_000,
+                monthly_passive_income=200_000,
+            ),
             template_key="mq_game_basic_v1",
         )
-        assert r.goals_met == 2
+        assert r.current_goal_key == "flow_nonneg"
+        assert r.goals_met == 0
         assert r.win_reached is False
 
 
-class TestHarderPlaytestGoals:
-    def test_all_five_goals_win(self):
+class TestHarderGoalChain:
+    def test_all_four_goals_win(self):
         cfg = victory_config_for_template("mq_game_debt_stack_v1")
-        assert cfg.get("required_goals_met") == 5
+        assert cfg.get("progression_mode") == PROGRESSION_CHAIN
         r = evaluate_victory(
             cfg,
             _snap(
@@ -90,29 +122,32 @@ class TestHarderPlaytestGoals:
         )
         assert r.goals_enabled == 4
         assert r.goals_met == 4
-        assert r.win_reached is False
+        assert r.win_reached is True
 
     def test_passive_net_goal_detail(self):
         cfg = victory_config_for_template("mq_game_tight_budget_v1")
         r = evaluate_victory(
             cfg,
             _snap(
-                safety_fund_balance=60_000,
+                safety_fund_balance=30_000,
+                total_monthly_obligations=10_000,
                 monthly_passive_income=300_000,
                 monthly_expenses_total=40_000,
             ),
             template_key="mq_game_tight_budget_v1",
         )
         net_goal = next(g for g in r.goals if g.type == "passive_income_net_monthly_min")
-        assert net_goal.met is True
-        assert net_goal.detail["passive_net_monthly"] == 260_000
+        assert net_goal.detail["raw_met"] is True
+        assert net_goal.met is False
+        assert r.current_goal_key == "safety_6x"
 
 
 class TestNewGoalTypes:
-    def test_passive_income_monthly_min(self):
+    def test_passive_income_monthly_min_parallel(self):
         cfg = {
             "min_period_index_for_victory": 1,
             "required_goals_met": 1,
+            "progression_mode": "parallel",
             "goals": [
                 {
                     "key": "p",
@@ -131,9 +166,20 @@ class TestNewGoalTypes:
 class TestParseVictoryConfig:
     def test_empty_falls_back_to_template(self):
         cfg = parse_victory_config("{}", template_key="mq_game_basic_v1")
-        assert len(cfg["goals"]) == 3
-        assert cfg.get("playtest_mode") == "v1"
+        assert len(cfg["goals"]) == 4
+        assert cfg.get("playtest_mode") == "v2"
+        assert cfg.get("progression_mode") == PROGRESSION_CHAIN
 
     def test_invalid_json_falls_back(self):
         cfg = parse_victory_config("not-json", template_key="mq_game_basic_v1")
-        assert cfg["required_goals_met"] == 3
+        assert cfg["required_goals_met"] == 4
+
+    def test_legacy_parallel_mode(self):
+        cfg = VICTORY_CONFIG_LEGACY_BY_TEMPLATE_KEY["mq_game_basic_v1"]
+        r = evaluate_victory(
+            cfg,
+            _chain_complete_snap(monthly_passive_income=0),
+            template_key="mq_game_basic_v1",
+        )
+        assert r.progression_mode == "parallel"
+        assert r.goals_met >= 2

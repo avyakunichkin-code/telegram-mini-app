@@ -9,6 +9,7 @@ from ..game_time import get_active_game_profile, sync_time
 from ..insurance_catalog import list_catalog, list_grid_catalog, list_plans, resolve_plan, resolve_product_object
 from ..models import InsurancePolicy
 from ..idempotency import read_idempotency_key, run_idempotent
+from ..starter_mechanics import MECHANIC_CAPITAL_INSURANCE, require_capital_mechanic
 
 
 router = APIRouter(prefix="/api/insurance", tags=["insurance"])
@@ -100,6 +101,7 @@ async def buy_policy(
     def _execute() -> dict:
         profile = get_active_game_profile(db, current_user.id)
         sync_time(profile)
+        require_capital_mechanic(db, profile, MECHANIC_CAPITAL_INSURANCE)
         started = int(profile.period_index or 1)
         expires = started + term_periods
         policy = InsurancePolicy(

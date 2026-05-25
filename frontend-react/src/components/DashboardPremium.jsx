@@ -20,7 +20,7 @@ import {
 
   MqxFinancePeriodBlock,
 
-  MqxLevelDash,
+  MqxGoalDash,
 
   MqxPeriodActions,
 
@@ -348,6 +348,10 @@ export function DashboardPremium({
 
             <MqxDivider />
 
+            <MqxGoalDash victory={overview?.victory} legacyGoal={goal} />
+
+            <MqxDivider />
+
             <MqxPeriodActions
 
               busy={busyAction !== null}
@@ -408,12 +412,6 @@ export function DashboardPremium({
                 />
               </div>
             ) : null}
-
-            <MqxLevelDash
-              periodIndex={overview?.period_index}
-              victory={overview?.victory}
-              legacyGoal={goal}
-            />
 
           </MqxDashStack>
 

@@ -1,6 +1,6 @@
-# Черновик цепочки целей — `mq_game_basic_v1` (на согласование)
+# Цепочка целей — `mq_game_basic_v1` (внедрено в backend v2)
 
-После утверждения design-lab **G1** — зафиксировать порядок и тексты «как достичь» в `victory_config` / отдельном `goal_chain_json` у шаблона.
+`progression_mode: "chain"` в `victory_config_json`; сиды `victory_seeds.py`, миграция `0032_victory_goal_chain.sql`.
 
 ## Парадигма
 

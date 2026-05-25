@@ -52,13 +52,15 @@
 | [`foundation/PRE_ALPHA_PLAYTEST_WAVE0_RESULTS.md`](foundation/PRE_ALPHA_PLAYTEST_WAVE0_RESULTS.md) | Пилот wave-0 (n=1): итоги и правки после пробного тестера |
 | [`foundation/MVP_AUDIT_VS_SPEC.md`](foundation/MVP_AUDIT_VS_SPEC.md) | Чеклист: текущий код vs SPEC_PRODUCT перед G1 |
 
-### Gameplay (уровень, XP, связь событий)
+### Gameplay (прогрессия контента, события)
 
 | Документ | Содержание |
 |----------|-------------|
-| [`specs/gameplay/LEVEL_XP_SYSTEM.md`](specs/gameplay/LEVEL_XP_SYSTEM.md) | Механика `level`/`xp`, порог need(L), разблокировки, принципы начисления |
-| [`specs/gameplay/catalogs/XP_EVENTS_ACTIONS_MATRIX.md`](specs/gameplay/catalogs/XP_EVENTS_ACTIONS_MATRIX.md) | Перечень действий API и событий с XP baseline |
-| [`plans/PLAN_level-xp-progression.md`](plans/PLAN_level-xp-progression.md) | Фазы после MVP 11: константы, API-гейты, UX-баланс |
+| [`vision/ideas/remove-character-xp-and-levels.md`](vision/ideas/remove-character-xp-and-levels.md) | **Канон (2026-05-24):** без character level/XP; `event_tier` от `period_index`; механики с периода 1 |
+| [`vision/ideas/starter-template-mechanics-permissions.md`](vision/ideas/starter-template-mechanics-permissions.md) | `blueprint.mechanics` — какие разделы капитала доступны (basic v1: только инвестиции) |
+| [`specs/gameplay/LEVEL_XP_SYSTEM.md`](specs/gameplay/LEVEL_XP_SYSTEM.md) | ~~Механика `level`/`xp`~~ — **superseded**, архив |
+| [`specs/gameplay/catalogs/XP_EVENTS_ACTIONS_MATRIX.md`](specs/gameplay/catalogs/XP_EVENTS_ACTIONS_MATRIX.md) | ~~Матрица XP~~ — **superseded**, архив |
+| [`plans/PLAN_level-xp-progression.md`](plans/PLAN_level-xp-progression.md) | ~~API-gates по уровню~~ — **superseded** |
 
 ### Vision
 
@@ -78,7 +80,7 @@
 | [`specs/SPEC_FRONTEND_UI.md`](specs/SPEC_FRONTEND_UI.md) | UI/UX MQX, a11y, границы |
 | [`specs/SPEC_ANALYTICS.md`](specs/SPEC_ANALYTICS.md) | Вкладка «Аналитика» и данные |
 | [`specs/features/SPEC_game-plan.md`](specs/features/SPEC_game-plan.md) | Эпик G1 — Game E2E, `save_kind`, ADR-001 (**implemented**) |
-| [`specs/features/SPEC_mvp-11-progression-events.md`](specs/features/SPEC_mvp-11-progression-events.md) | MVP 1.1 — **`event_tier`**, **`repeat_policy`**, XP-события, `overview.character_*`, UI меты (**approved**); план — [`plans/PLAN_mvp-11-progression-events.md`](plans/PLAN_mvp-11-progression-events.md) |
+| [`specs/features/SPEC_mvp-11-progression-events.md`](specs/features/SPEC_mvp-11-progression-events.md) | MVP 1.1 — **`event_tier`**, **`repeat_policy`**, cooldown; tier-окно от **`period_index`** (см. remove-character-xp); план — [`plans/PLAN_mvp-11-progression-events.md`](plans/PLAN_mvp-11-progression-events.md) |
 | [`specs/gameplay/EXPENSES_SYSTEM.md`](specs/gameplay/EXPENSES_SYSTEM.md) | Канон механики **расходов** (категории, burn, Game/Plan) |
 | [`specs/features/SPEC_expenses.md`](specs/features/SPEC_expenses.md) | Эпик **E1** — внедрение на всех слоях; чеклист — [`specs/economy/EXPENSES_LAYER_CHECKLIST.md`](specs/economy/EXPENSES_LAYER_CHECKLIST.md) |
 | [`specs/features/SPEC_onboarding-tma.md`](specs/features/SPEC_onboarding-tma.md) | Эпик **O1** — Mission Brief, 3 шага, Pre-Alpha |

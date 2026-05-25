@@ -1,8 +1,9 @@
 ---
 layer: idea
-status: agreed
+status: implemented
 owner: product
 last_reviewed: 2026-05-24
+implemented: 2026-05-24
 supersedes_in_spirit:
   - ../../specs/gameplay/LEVEL_XP_SYSTEM.md
   - ../../plans/PLAN_level-xp-progression.md
@@ -27,12 +28,20 @@ related_specs:
 | 7 | БД | Колонки `game_profiles.level`, `game_profiles.xp` — **удалить** (мало игроков) |
 | 8 | Plan | **Не трогаем** в этом цикле; уровней там тоже не будет, когда дойдём до Plan UI |
 
-### Стартовый шаблон (следующий шаг после снятия level-gates)
+### Стартовый шаблон — `blueprint.mechanics` (реализовано 2026-05-24)
 
-Не в scope первых PR, но зафиксировано направление:
+Ключи в `game_starter_templates.blueprint_json`:
 
-- **Базовый функционал:** периоды, зарплата, подушка.
-- **Капитал в `mq_game_basic_v1`:** только **депозит + облигации** (страховки, каталог активов/долгов — через blueprint/flags шаблона, не через level).
+| Ключ | Раздел на «Управление капиталом» |
+|------|----------------------------------|
+| `capital_invest` | Инвестиции (депозит, облигации) |
+| `capital_insurance` | Страховки |
+| `capital_property` | Имущество (каталог активов) |
+| `capital_liabilities` | Обязательства |
+
+**Всегда включены** (не в flags): доходы и расходы за период; на дашборде — период, зарплата, подушка.
+
+**`mq_game_basic_v1`:** только `capital_invest: true`, остальные capital-флаги `false`. Код: `backend/app/starter_mechanics.py`, поле `overview.mechanics`, API 403 `mechanic_disabled`.
 
 ---
 
@@ -87,8 +96,16 @@ related_specs:
 
 ## Критерии готовности
 
-- [ ] Новая игра: события с периода 1, депозит/облигация/страховка/каталог без 403 level.
-- [ ] Нигде в UI нет XP, level персонажа, score, gamification_level.
-- [ ] Выбор события / подушка / зарплата не меняют level/xp в БД (колонок нет).
-- [ ] Victory без цели «уровень N».
-- [ ] `pytest` зелёный; `npm run build` зелёный.
+- [x] Новая игра: события с периода 1, депозит/облигация/страховка/каталог без 403 level.
+- [x] Нигде в prod UI нет XP, level персонажа, score, gamification_level (каталог `#/dev/mqx` — демо-примитивы, не prod).
+- [x] Выбор события / подушка / зарплата не меняют level/xp в БД (колонки сняты миграцией `0031`).
+- [x] Victory без цели «уровень N».
+- [x] `pytest` зелёный; `npm run build` зелёный.
+- [x] `GET /api/game/profiles` без полей `level`/`xp` в `GameProfileResponse` (фикс сериализации списка сохранений).
+
+### Документация (этот PR)
+
+- [x] `LEVEL_XP_SYSTEM.md`, матрица XP, `PLAN_level-xp-progression` → **superseded**
+- [x] `docs/README.md`, `SPEC_PRODUCT.md` §7.2
+- [x] `GAME.md` §0 — сводка статуса (без character XP)
+- [ ] `PRODUCT_BACKLOG` — пометить MQ-111–115 / level-gates как superseded (отдельно при желании)

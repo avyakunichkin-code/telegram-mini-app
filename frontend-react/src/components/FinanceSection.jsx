@@ -2,7 +2,8 @@ import { Button, Cell, Input, List, Section, Select } from '@telegram-apps/teleg
 import { API } from '../api';
 import { showNotification } from './notifications';
 import { MoneyText } from './MoneyText';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
+import { getMechanicsFromOverview } from '../utils/starterMechanics';
 import { CapitalLiabilitiesPanel, CapitalPropertyPanel } from './CapitalPortfolioPanels';
 import { InvestProductForm } from './InvestProductForm';
 import { InvestPositionRow } from './InvestPositionRow';
@@ -59,6 +60,7 @@ export function FinanceSection({
   capitalInline = false,
   capitalAccordion = false,
   openFlowsSection = null,
+  mechanics: mechanicsProp = null,
 }) {
   const [financeTabInternal, setFinanceTabInternal] = useState('invest');
   const financeTab = financeTabProp ?? financeTabInternal;
@@ -82,6 +84,11 @@ export function FinanceSection({
   const [portfolioDebtsMode, setPortfolioDebtsMode] = useState('add');
   const [expandedAssetTpl, setExpandedAssetTpl] = useState(null);
   const [expandedDebtTpl, setExpandedDebtTpl] = useState(null);
+
+  const mechanics = useMemo(
+    () => mechanicsProp ?? getMechanicsFromOverview(overview),
+    [mechanicsProp, overview],
+  );
 
   const reloadExtra = async () => {
     try {
@@ -610,41 +617,49 @@ export function FinanceSection({
             policies={policies}
             openFlowsSection={openFlowsSection}
           />
-          <MqxCapitalSectionAccordion title="Инвестиции" meta={investMeta}>
-            {investCapitalBlock}
-          </MqxCapitalSectionAccordion>
-          <MqxCapitalSectionAccordion title="Страховки" meta={insuranceMeta}>
-            <InsuranceSection
-              policies={policies}
-              buyingPlanKey={buyingPlanKey}
-              cancellingPolicyId={cancellingPolicyId}
-              onBuy={buyInsurancePlan}
-              onCancel={cancelInsurancePolicy}
-              intro="Премия списывается в конце периода. При страховом случае — полная сумма выплаты, полис закрывается."
-              useSectionSeg
-            />
-          </MqxCapitalSectionAccordion>
-          <MqxCapitalSectionAccordion title="Имущество" meta={propertyMeta}>
-            <CapitalPropertyPanel
-              assetTemplates={assetTemplates}
-              ownedAssets={ownedAssets}
-              sectionMode={propertySegMode}
-              setSectionMode={(m) => setPortfolioAssetsMode(m === 'mine' ? 'positions' : m)}
-              refreshOverview={refreshOverview}
-              reloadExtra={reloadExtra}
-              handleDeleteAsset={handleDeleteAsset}
-            />
-          </MqxCapitalSectionAccordion>
-          <MqxCapitalSectionAccordion title="Обязательства" meta={liabilitiesMeta}>
-            <CapitalLiabilitiesPanel
-              liabilityTemplates={liabilityTemplates}
-              ownedLiabilities={ownedLiabilities}
-              sectionMode={liabilitiesSegMode}
-              setSectionMode={(m) => setPortfolioDebtsMode(m === 'mine' ? 'positions' : m)}
-              addLiabilityFromTemplate={addLiabilityFromTemplate}
-              handleDeleteLiability={handleDeleteLiability}
-            />
-          </MqxCapitalSectionAccordion>
+          {mechanics.capital_invest ? (
+            <MqxCapitalSectionAccordion title="Инвестиции" meta={investMeta}>
+              {investCapitalBlock}
+            </MqxCapitalSectionAccordion>
+          ) : null}
+          {mechanics.capital_insurance ? (
+            <MqxCapitalSectionAccordion title="Страховки" meta={insuranceMeta}>
+              <InsuranceSection
+                policies={policies}
+                buyingPlanKey={buyingPlanKey}
+                cancellingPolicyId={cancellingPolicyId}
+                onBuy={buyInsurancePlan}
+                onCancel={cancelInsurancePolicy}
+                intro="Премия списывается в конце периода. При страховом случае — полная сумма выплаты, полис закрывается."
+                useSectionSeg
+              />
+            </MqxCapitalSectionAccordion>
+          ) : null}
+          {mechanics.capital_property ? (
+            <MqxCapitalSectionAccordion title="Имущество" meta={propertyMeta}>
+              <CapitalPropertyPanel
+                assetTemplates={assetTemplates}
+                ownedAssets={ownedAssets}
+                sectionMode={propertySegMode}
+                setSectionMode={(m) => setPortfolioAssetsMode(m === 'mine' ? 'positions' : m)}
+                refreshOverview={refreshOverview}
+                reloadExtra={reloadExtra}
+                handleDeleteAsset={handleDeleteAsset}
+              />
+            </MqxCapitalSectionAccordion>
+          ) : null}
+          {mechanics.capital_liabilities ? (
+            <MqxCapitalSectionAccordion title="Обязательства" meta={liabilitiesMeta}>
+              <CapitalLiabilitiesPanel
+                liabilityTemplates={liabilityTemplates}
+                ownedLiabilities={ownedLiabilities}
+                sectionMode={liabilitiesSegMode}
+                setSectionMode={(m) => setPortfolioDebtsMode(m === 'mine' ? 'positions' : m)}
+                addLiabilityFromTemplate={addLiabilityFromTemplate}
+                handleDeleteLiability={handleDeleteLiability}
+              />
+            </MqxCapitalSectionAccordion>
+          ) : null}
         </div>
       </div>
     );

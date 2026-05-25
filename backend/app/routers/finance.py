@@ -22,6 +22,11 @@ from ..finance_helpers import monthly_interest_payment
 from ..game_time import get_active_game_profile, sync_time, get_seconds_until_next
 from ..expenses import compute_monthly_burn
 from ..finance_overview_build import build_finance_overview
+from ..starter_mechanics import (
+    MECHANIC_CAPITAL_LIABILITIES,
+    MECHANIC_CAPITAL_PROPERTY,
+    require_capital_mechanic,
+)
 from ..schemas import (
     SalaryProfileUpdate,
     SalaryProfileResponse,
@@ -212,6 +217,7 @@ async def create_liability_from_template(
 
     game_profile = get_active_game_profile(db, current_user.id)
     sync_time(game_profile)
+    require_capital_mechanic(db, game_profile, MECHANIC_CAPITAL_LIABILITIES)
     principal = float(tpl.total_debt)
     rate = float(tpl.annual_rate_percent)
     mp = monthly_interest_payment(principal, rate)
@@ -356,6 +362,7 @@ async def create_asset_from_template(
         raise HTTPException(status_code=404, detail="Template not found")
     game_profile = get_active_game_profile(db, current_user.id)
     sync_time(game_profile)
+    require_capital_mechanic(db, game_profile, MECHANIC_CAPITAL_PROPERTY)
 
     cost = float(tpl_row.asset_value)
     if cost > EPSILON:
