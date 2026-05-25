@@ -309,8 +309,6 @@ class GameProfileResponse(BaseModel):
     is_active: int
     is_archived: int
     league: str
-    level: int
-    xp: int
     streak: int
     time_state: str
     period_index: int

@@ -1384,6 +1384,59 @@ button.mqx-finance-chip.mqx-finance-chip--action:focus-visible {
   color: color-mix(in srgb, var(--mq-amber, #f59e0b) 85%, var(--mqx-ink));
 }
 
+/* Подушка — индикатор наполнения к цели ×3 (design-lab F1) */
+.mqx-finance-chip--cushion {
+  position: relative;
+}
+
+.mqx-cushion-fill {
+  margin-top: 5px;
+  height: 4px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--mqx-ink) 12%, transparent);
+  overflow: hidden;
+}
+
+.mqx-cushion-fill__bar {
+  display: block;
+  height: 100%;
+  min-width: 2px;
+  border-radius: inherit;
+  transition: width 0.35s ease, background-color 0.25s ease;
+}
+
+.mqx-cushion-fill__bar[data-tier='low'] {
+  background: #dc2626;
+}
+
+.mqx-cushion-fill__bar[data-tier='mid-low'] {
+  background: #ea580c;
+}
+
+.mqx-cushion-fill__bar[data-tier='mid-high'] {
+  background: #ca8a04;
+}
+
+.mqx-cushion-fill__bar[data-tier='high'] {
+  background: #16a34a;
+}
+
+[data-theme='dark'] .mqx-cushion-fill__bar[data-tier='low'] {
+  background: #f87171;
+}
+
+[data-theme='dark'] .mqx-cushion-fill__bar[data-tier='mid-low'] {
+  background: #fb923c;
+}
+
+[data-theme='dark'] .mqx-cushion-fill__bar[data-tier='mid-high'] {
+  background: #facc15;
+}
+
+[data-theme='dark'] .mqx-cushion-fill__bar[data-tier='high'] {
+  background: #4ade80;
+}
+
 .mqx-accent--expense svg path:last-child {
   opacity: 0.85;
 }

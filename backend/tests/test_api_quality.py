@@ -111,3 +111,28 @@ class TestGameFlowAndIdempotency:
 
         overview = client.get("/api/finance/overview", headers=auth_headers).json()
         assert overview["safety_fund_balance"] == 1000
+
+
+class TestGameProfilesList:
+    def test_list_profiles_serializes_without_level_xp(self, client, auth_headers):
+        create = client.post(
+            "/api/game/profiles",
+            headers=auth_headers,
+            json={"name": "Slot A", "save_kind": "game"},
+        )
+        assert create.status_code == 200
+        body = create.json()
+        assert "level" not in body
+        assert "xp" not in body
+        assert body["name"] == "Slot A"
+
+        listed = client.get("/api/game/profiles", headers=auth_headers)
+        assert listed.status_code == 200
+        profiles = listed.json()
+        assert isinstance(profiles, list)
+        assert len(profiles) >= 1
+        first = profiles[0]
+        assert "level" not in first
+        assert "xp" not in first
+        assert "period_index" in first
+        assert "cash_balance" in first

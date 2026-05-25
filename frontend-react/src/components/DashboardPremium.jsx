@@ -8,6 +8,7 @@ import { showNotification } from './notifications';
 
 import { getMonthlyBurn } from '../utils/expensesDisplay';
 import { CAPITAL_FLOWS_SECTION } from '../utils/capitalFlowsNav';
+import { getSafetyFundFillFromOverview } from '../utils/safetyFundFill';
 
 import {
 
@@ -134,6 +135,7 @@ export function DashboardPremium({
     const flow = Number(overview?.net_monthly_cashflow) || 0;
 
     const lifestyleExpense = getMonthlyBurn(overview);
+    const cushionFill = getSafetyFundFillFromOverview(overview);
 
     return [
       {
@@ -181,8 +183,12 @@ export function DashboardPremium({
       },
       {
         title: 'Подушка',
+        titleHint: cushionFill
+          ? `Подушка безопасности · ${cushionFill.percent}% от цели (×3 обязательств)`
+          : 'Подушка безопасности',
         valueNode: <MoneyText value={safety} />,
         accent: 'mqx-accent--emerald',
+        cushionFill,
         icon: (
           <svg viewBox="0 0 24 24" aria-hidden="true">
             <path d="M12 3 20 7v6c0 5-3.4 8.2-8 9-4.6-.8-8-4-8-9V7l8-4Z" />
