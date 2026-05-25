@@ -10,9 +10,9 @@
     <link
       href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
       rel="stylesheet"
-    />
-    <script type="module" crossorigin src="/telegram-mini-app/landing/assets/index-teS6zU_Q.js"></script>
-    <link rel="stylesheet" crossorigin href="/telegram-mini-app/landing/assets/index-DypkvOUt.css">
+    />
+    <script type="module" crossorigin src="/telegram-mini-app/landing/assets/index-DiglTxPK.js"></script>
+    <link rel="stylesheet" crossorigin href="/telegram-mini-app/landing/assets/index-DQbYgiwH.css">
   </head>
   <body>
     <a class="mq-skip" href="#main" data-i18n="a11y.skip">Перейти к содержанию</a>
@@ -34,6 +34,7 @@
       </a>
       <nav class="mq-nav" aria-label="Main">
         <a href="#how" data-i18n="nav.how">Как это работает</a>
+        <a href="#peek" data-i18n="nav.peek">Интерфейс</a>
         <a href="#features" data-i18n="nav.features">Механики</a>
         <a href="#learn" data-i18n="nav.learn">Чему учит</a>
         <a href="#partners" data-i18n="nav.partners">Партнёрам</a>
@@ -83,7 +84,7 @@
             </p>
             <div class="mq-hero__actions">
               <a class="mq-btn mq-btn--primary" href="#how" data-i18n="hero.ctaPrimary">Как устроена игра</a>
-              <a class="mq-btn mq-btn--ghost" href="#features" data-i18n="hero.ctaFeatures">Все механики</a>
+              <a class="mq-btn mq-btn--ghost" href="#peek" data-i18n="hero.ctaPeek">Смотреть интерфейс</a>
             </div>
           </div>
 
@@ -101,71 +102,58 @@
                 <span data-i18n="hero.monetkaBubble">Смотри на цифры — они честные</span>
               </figcaption>
             </figure>
-            <div class="mq-phone">
-              <div class="mq-phone__notch"></div>
-              <div class="mq-phone__screen" id="hero-demo">
-                <div class="mq-phone__bar">
-                  <span class="mq-phone__pill" data-i18n="brand.short">ТХ</span>
-                  <span class="mq-phone__period">
-                    <span data-i18n="hero.periodLabel">Период</span>
-                    <strong>3</strong>
-                  </span>
-                </div>
-                <div class="mq-phone__timer" id="hero-timer" data-demo-timer>04:12</div>
-                <div class="mq-phone__cards">
-                  <div class="mq-phone__card mq-phone__card--cash">
-                    <span data-i18n="hero.demo.cashLabel">Cash</span>
-                    <strong id="demo-cash" data-demo-cash>42 500 ₽</strong>
-                  </div>
-                  <div class="mq-phone__card mq-phone__card--safe">
-                    <span data-i18n="hero.demo.fundLabel">Подушка</span>
-                    <strong data-i18n="peek.mock.safety">18 000 ₽</strong>
-                  </div>
-                </div>
-                <button type="button" class="mq-phone__btn" id="demo-salary" disabled tabindex="-1">
-                  <span data-i18n="hero.demo.salaryBtn">Получить зарплату</span>
-                </button>
-                <div class="mq-phone__toast" id="demo-toast" hidden>
-                  <span data-i18n="hero.demo.toastSalary">Зарплата зачислена</span>
-                </div>
-                <div class="mq-phone__event-panel" id="demo-event" hidden>
-                  <p class="mq-phone__event-title" data-i18n="hero.demo.eventTitle">Непредвиденный расход</p>
-                  <div class="mq-phone__choices">
-                    <button type="button" class="mq-phone__choice" id="demo-choice-a" disabled tabindex="-1">
-                      <span data-i18n="hero.demo.eventChoiceA">Оплатить сейчас</span>
-                    </button>
-                    <button type="button" class="mq-phone__choice" id="demo-choice-b" disabled tabindex="-1">
-                      <span data-i18n="hero.demo.eventChoiceB">Отложить</span>
-                    </button>
-                  </div>
-                </div>
+            <figure class="mq-device mq-device--app" data-screen-theme="light">
+              <div class="mq-device__bezel">
+                <img
+                  class="mq-device__shot"
+                  src="/telegram-mini-app/landing/screens/dashboard-light.png"
+                  width="390"
+                  height="780"
+                  alt=""
+                  data-i18n-attr="alt:peek.screens.dashboard"
+                  decoding="async"
+                />
               </div>
-            </div>
+              <figcaption class="mq-device__caption" data-i18n="hero.screenCaption">
+                Дашборд в игре — как в Telegram
+              </figcaption>
+            </figure>
           </div>
         </div>
       </section>
 
-      <section id="how" class="mq-section mq-section--mist">
+      <section id="how" class="mq-section mq-section--mist mq-section--on-light">
         <div class="mq-wrap">
           <header class="mq-section__head mq-reveal">
             <h2 data-i18n="how.title">За минуту — суть цикла</h2>
             <p data-i18n="how.subtitle">Один игровой месяц</p>
           </header>
+          <figure class="mq-inline-shot mq-reveal" data-screen-theme="dark">
+            <img
+              src="/telegram-mini-app/landing/screens/dashboard-dark.png"
+              width="280"
+              height=""
+              alt=""
+              data-i18n-attr="alt:peek.screens.dashboard"
+              loading="lazy"
+              decoding="async"
+            />
+          </figure>
           <ol class="mq-steps" id="how-steps"></ol>
         </div>
       </section>
 
-      <section id="features" class="mq-section mq-section--features">
+      <section id="features" class="mq-section mq-section--features mq-section--on-dark">
         <div class="mq-wrap">
           <header class="mq-section__head mq-reveal">
             <h2 data-i18n="features.title">Что внутри партии</h2>
             <p data-i18n="features.subtitle">Единая экономика на сервере</p>
           </header>
-          <div class="mq-features" id="features-grid"></div>
+          <div class="mq-showcase" id="features-grid"></div>
         </div>
       </section>
 
-      <section id="learn" class="mq-section mq-section--mist">
+      <section id="learn" class="mq-section mq-section--mist mq-section--on-light">
         <div class="mq-wrap">
           <header class="mq-section__head mq-reveal">
             <h2 data-i18n="learn.title">Чему учит</h2>
@@ -175,13 +163,13 @@
         </div>
       </section>
 
-      <section class="mq-section mq-section--dark" aria-labelledby="peek-title">
+      <section id="peek" class="mq-section mq-section--peek mq-section--on-dark" aria-labelledby="peek-title">
         <div class="mq-wrap">
           <header class="mq-section__head mq-reveal mq-section__head--center">
             <h2 id="peek-title" data-i18n="peek.title">Интерфейс</h2>
             <p data-i18n="peek.subtitle">MQX</p>
           </header>
-          <div class="mq-peek-grid" id="peek-grid"></div>
+          <div class="mq-screen-strip mq-reveal" id="peek-strip" data-screen-theme="light"></div>
         </div>
       </section>
 
@@ -228,7 +216,7 @@
         </div>
       </section>
 
-      <section class="mq-section mq-section--victory" aria-labelledby="victory-title">
+      <section class="mq-section mq-section--victory mq-section--on-dark" aria-labelledby="victory-title">
         <div class="mq-wrap mq-victory">
           <header class="mq-section__head mq-reveal">
             <h2 id="victory-title" data-i18n="victory.title">Цель партии</h2>

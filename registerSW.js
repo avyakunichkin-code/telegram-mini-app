@@ -1,0 +1,1 @@
+if('serviceWorker' in navigator) {window.addEventListener('load', () => {navigator.serviceWorker.register('/telegram-mini-app/sw.js', { scope: '/telegram-mini-app/' })})}
