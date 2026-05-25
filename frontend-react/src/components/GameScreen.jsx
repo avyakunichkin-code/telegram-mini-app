@@ -7,7 +7,7 @@ import { AnalyticsPremium } from './AnalyticsPremium';
 import { MenuPremium } from './MenuPremium';
 import { showNotification } from './notifications';
 import { API, formatApiErrorDetail } from '../api';
-import { EventCarouselOverlay } from './EventDeck';
+import { EventCarouselOverlay } from './mqx/events/EventCarouselOverlay';
 import { MqxShell } from './MqxShell';
 import { MqxTabHero } from './MqxTabHero';
 import { GameScreenLayout, GameScreenTabNav } from './GameScreenLayout';

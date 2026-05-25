@@ -1,8 +1,5 @@
-/**
- * Блок «Действия периода» (4 кнопки, «Зарплата» — primary).
- */
+/** Блок «Действия периода» на дашборде («Зарплата» — primary). */
 export function MqxPeriodActions({
-  xpLabel,
   salaryLabel = 'Зарплата',
   busy = false,
   onSalary,
@@ -19,7 +16,6 @@ export function MqxPeriodActions({
           </h2>
           <p className="mqx-card__sub">Управляй денежным потоком</p>
         </div>
-        {xpLabel ? <div className="mqx-xp">{xpLabel}</div> : null}
       </div>
 
       <div className="mqx-grid2">

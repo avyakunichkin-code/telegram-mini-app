@@ -62,7 +62,7 @@ mqx/
 | `useEventCarousel` | Состояние свайпа/слайдов |
 
 Импорт: `import { EventCarouselOverlay } from './mqx';`  
-Legacy: `EventDeck.jsx` реэкспортирует те же компоненты.
+События: `EventCarouselOverlay` из `mqx/events/` (в `GameScreen` — прямой импорт).
 
 ## Shell (prod)
 
