@@ -1,5 +1,9 @@
 # Скрины UI для лендинга
 
+**Последняя пересъёмка:** 2026-05-25 (режим `lab`; app — при запущенных `frontend-react` dev + backend).
+
+**Спека:** [`docs/specs/LANDING_SCREENSHOTS.md`](../../../docs/specs/LANDING_SCREENSHOTS.md)
+
 | Файл | Тема UI | Использование на лендинге |
 |------|---------|---------------------------|
 | `dashboard-light.png` | светлая | Тёмные секции — **кроп** через `object-position` |
@@ -18,7 +22,7 @@ cd landing
 npm run capture-screens
 ```
 
-**По умолчанию** — из **живого приложения** (как на проде): логин, партия, вкладки «Главная» / «Финансы», карточка события из `#/dev/mqx`.
+**По умолчанию** — из **живого приложения** (как на проде): логин → партия → «Главная» / «Финансы» → карточка из `#/dev/mqx`.
 
 Нужны:
 
@@ -37,4 +41,10 @@ npm run capture-screens
 node scripts/capture-screens.mjs --source=lab
 ```
 
-Источники lab: `design-lab/dashboard/goal-chain-round`, `capital-page/flows-round`, `events/layout-round` (L1).
+| PNG | Lab-источник |
+|-----|----------------|
+| dashboard | `design-lab/dashboard/goal-chain-round` |
+| capital | `design-lab/capital-page/flows-round` |
+| events | `design-lab/events/layout-round` (L1, `#l1 .ev-card-shell`) |
+
+**Устаревшие источники (не использовать):** `design-lab/dashboard/index.html` (S5 + «Уровень»), `capital-page/#phone-demo`.
