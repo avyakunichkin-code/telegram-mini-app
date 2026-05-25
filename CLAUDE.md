@@ -97,7 +97,7 @@
 - `frontend-react/src/hooks/useGame.js` — `overview`, `timeStatus`, `periodStatus`, таймер, переход периодов, `pendingEvents`.
 - `frontend-react/src/components/GameScreen.jsx` — шапка, события, оверлей карусели.
 - `frontend-react/src/components/EventDeck.jsx` — кнопка событий, `EventCarouselOverlay`, свайп/стрелки.
-- `frontend-react/src/components/FinanceSection.jsx` — инвестиции, страховки, шаблоны, долги, активы; вкладки `.mq-tablist`.
+- `frontend-react/src/components/FinancePremium.jsx` — вкладка «Финансы»: доходы/расходы, инвестиции, страховки, имущество, обязательства (аккордеоны по `overview.mechanics`).
 - `frontend-react/src/components/BottomGameNav.jsx` + `icons/NavIcons.jsx` — нижняя навигация.
 - `frontend-react/src/components/AnalyticsSection.jsx` / **AnalyticsPremium**, **DashboardPremium** — обзор и цели; spec: [`docs/specs/SPEC_ANALYTICS.md`](docs/specs/SPEC_ANALYTICS.md).
 - `frontend-react/src/components/ToastHost.jsx` + `notifications.js` — тосты вместо `alert`.

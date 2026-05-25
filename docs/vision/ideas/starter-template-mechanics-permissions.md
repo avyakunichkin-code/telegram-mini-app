@@ -36,5 +36,5 @@ related_specs:
 
 ## Frontend
 
-- `FinanceSection` — скрывает аккордеоны по `overview.mechanics`
+- `FinancePremium` — скрывает аккордеоны по `overview.mechanics`
 - Переход с дашборда «Расходы» → раскрывает блок расходов (локальный state в `CapitalPeriodFlowsBlock`)
