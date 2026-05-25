@@ -7,7 +7,7 @@ export function AuthGuard({ children }) {
   const { user, loading } = useAuth();
   if (loading) {
     return (
-      <div className="app-shell mq-page mq-page--auth">
+      <div className="app-shell mq-page pg-app-shell mq-page--auth">
         <div className="mq-page__decor" aria-hidden />
         <MonetkaBubbleScreen
           title="Секунду, листаю полки"

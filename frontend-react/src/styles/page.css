@@ -50,47 +50,48 @@
   place-items: center;
 }
 
-.mq-page--auth {
+/*
+ * Pre-game / auth — одна оболочка (design-lab pg-app-shell).
+ * Не смешивать с .mq-page--auth layout: там только типографика полей.
+ */
+.app-shell.mq-page.pg-app-shell {
   flex: 1 1 auto;
   min-height: 0;
-  overflow-x: hidden;
-  overflow-y: auto;
-  -webkit-overflow-scrolling: touch;
+  position: relative;
   display: flex;
   flex-direction: column;
   align-items: stretch;
+  box-sizing: border-box;
   padding: calc(14px + env(safe-area-inset-top, 0px))
-    max(12px, env(safe-area-inset-right, 0px))
-    calc(22px + env(safe-area-inset-bottom, 0px))
-    max(12px, env(safe-area-inset-left, 0px));
-  box-sizing: border-box;
-}
-
-/* Стартовое меню / регистрация — прокрутка внутри #root, не body */
-.app-shell.mq-page:not(.mq-game-shell) {
-  flex: 1 1 auto;
-  min-height: 0;
-  overflow-x: hidden;
+    12px
+    calc(22px + env(safe-area-inset-bottom, 0px));
+  overflow-x: clip;
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
-  display: flex;
-  flex-direction: column;
-  align-items: stretch;
-  padding: var(--mq-page-pad-y)
-    max(var(--mq-page-pad-x), env(safe-area-inset-right, 0px))
-    calc(var(--mq-page-pad-y) + env(safe-area-inset-bottom, 0px))
-    max(var(--mq-page-pad-x), env(safe-area-inset-left, 0px));
-  box-sizing: border-box;
+  scrollbar-gutter: auto;
 }
 
-/* Pre-game: pg-auth-stack / pg-flow-wrap — на всю ширину shell (центрирование внутри max-width) */
-.mq-page--auth > .pg-auth-stack,
-.app-shell.mq-page:not(.mq-game-shell) > .pg-auth-stack,
-.app-shell.mq-page:not(.mq-game-shell) > .pg-flow-wrap {
+.pg-app-shell > .pg-auth-stack,
+.pg-app-shell > .pg-flow-wrap {
   flex: 0 0 auto;
   width: 100%;
   max-width: 100%;
   min-width: 0;
+  box-sizing: border-box;
+}
+
+/* Прочие не-игровые экраны без pg-app-shell (например /dev/mqx) */
+.app-shell.mq-page:not(.mq-game-shell):not(.pg-app-shell) {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  padding: var(--mq-page-pad-y) var(--mq-page-pad-x);
+  padding-bottom: calc(var(--mq-page-pad-y) + env(safe-area-inset-bottom, 0px));
   box-sizing: border-box;
 }
 
@@ -127,6 +128,10 @@
   pointer-events: none;
   overflow: hidden;
   border-radius: inherit;
+}
+
+.pg-app-shell .mq-page__decor::before {
+  inset: -32% -20% auto -20%;
 }
 
 .mq-page__decor::before {

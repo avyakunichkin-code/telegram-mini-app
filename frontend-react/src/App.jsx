@@ -18,7 +18,7 @@ import { suggestDefaultProfileName } from './utils/suggestDefaultProfileName';
 
 function GameAppFlowShell({ children }) {
   return (
-    <div className="app-shell mq-page">
+    <div className="app-shell mq-page pg-app-shell">
       <div className="mq-page__decor" aria-hidden />
       {children}
     </div>
@@ -138,7 +138,7 @@ function App() {
             <Route
               path="/login"
               element={
-                <div className="app-shell mq-page mq-page--auth">
+                <div className="app-shell mq-page pg-app-shell mq-page--auth">
                   <div className="mq-page__decor" aria-hidden />
                   <LoginForm
                     onSwitchToRegister={() => {
@@ -151,7 +151,7 @@ function App() {
             <Route
               path="/register"
               element={
-                <div className="app-shell mq-page mq-page--auth">
+                <div className="app-shell mq-page pg-app-shell mq-page--auth">
                   <div className="mq-page__decor" aria-hidden />
                   <RegisterForm
                     onSwitchToLogin={() => {

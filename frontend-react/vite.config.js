@@ -5,7 +5,8 @@ import { VitePWA } from 'vite-plugin-pwa'
 const PWA_ICONS = [
   { src: 'pwa/icon-192.png', sizes: '192x192', type: 'image/png', purpose: 'any' },
   { src: 'pwa/icon-512.png', sizes: '512x512', type: 'image/png', purpose: 'any' },
-  { src: 'pwa/icon-512.png', sizes: '512x512', type: 'image/png', purpose: 'maskable' },
+  { src: 'pwa/icon-192-maskable.png', sizes: '192x192', type: 'image/png', purpose: 'maskable' },
+  { src: 'pwa/icon-512-maskable.png', sizes: '512x512', type: 'image/png', purpose: 'maskable' },
 ]
 
 export default defineConfig(({ mode }) => {
@@ -25,6 +26,9 @@ export default defineConfig(({ mode }) => {
           'pwa/apple-touch-icon.png',
           'pwa/icon-192.png',
           'pwa/icon-512.png',
+          'pwa/icon-192-maskable.png',
+          'pwa/icon-512-maskable.png',
+          'favicon-192.png',
         ],
         manifest: {
           name: 'ТВОЙ ХОД',
@@ -41,7 +45,7 @@ export default defineConfig(({ mode }) => {
         },
         workbox: {
           // HashRouter: без NavigationRoute — иначе iOS Safari часто отдаёт пустую/старую страницу.
-          globPatterns: ['**/*.{js,css,html,ico,svg,woff2}', 'pwa/**/*.png', 'favicon-*.png'],
+          globPatterns: ['**/*.{js,css,html,ico,svg,woff2}', 'pwa/**/*.png', 'favicon*.png'],
           globIgnores: [
             '**/assets/monetka-*.png',
             '**/assets/monetka-*.webp',
