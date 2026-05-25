@@ -15,7 +15,7 @@ npx serve .
 
 | Файл | Описание |
 |------|----------|
-| [`index.html`](index.html) | Витрина REF, G1, G2, контекст, legacy |
+| [`index.html`](index.html) | Витрина REF, G1, G2, контекст |
 | [`VARIANTS.md`](VARIANTS.md) | Таблица вариантов и правила prod |
 | `assets/reference-ep-author-why.png` | Копия эталона из маркетинга |
 | `assets/G1-full-tagline.png` | Полный lockup |

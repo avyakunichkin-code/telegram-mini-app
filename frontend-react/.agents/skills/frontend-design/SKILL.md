@@ -49,6 +49,7 @@ Remember: Claude is capable of extraordinary creative work. Don't hold back, sho
 |----------|------|
 | Брендбук (текст) | [`docs/reference/brandbook/BRANDBOOK.md`](../../../../docs/reference/brandbook/BRANDBOOK.md) |
 | Брендбук (печать / PDF) | [`docs/reference/brandbook/brandbook-print.html`](../../../../docs/reference/brandbook/brandbook-print.html) |
+| Логотип prod (G1/G2 PNG) | [`frontend-react/src/assets/brand/`](../../src/assets/brand/) · лендинг: [`landing/public/brand/`](../../../../landing/public/brand/) — **без** плоских SVG L1–L4 |
 | Контракт экранов TMA | [`docs/specs/SPEC_FRONTEND_UI.md`](../../../../docs/specs/SPEC_FRONTEND_UI.md) |
 | Токены и MQX в коде | [`frontend-react/src/index.css`](../../src/index.css) |
 | **FLOW компонентной базы MQX (обязательно)** | [`src/components/mqx/DESIGN_WORKFLOW.md`](../../../src/components/mqx/DESIGN_WORKFLOW.md) — не обходить без явного согласования; исключение: багфикс/hotfix без смены дизайна |

@@ -14,6 +14,7 @@
 | **U1** | Frontend MQX / a11y | — | [SPEC_FRONTEND_UI](specs/SPEC_FRONTEND_UI.md) | — | Tasks в spec §Plan | spec active |
 | **E1** | Расходы жизнеобеспечения — категории, статьи, burn | [expenses-mechanic](vision/ideas/expenses-mechanic.md) | [EXPENSES_SYSTEM](specs/gameplay/EXPENSES_SYSTEM.md) + [SPEC_expenses](specs/features/SPEC_expenses.md) **draft** | [PLAN_expenses](plans/PLAN_expenses.md) | [E1 в backlog](backlog/PRODUCT_BACKLOG.md) | **spec draft**; код — legacy aggregate only |
 | **O1** | Онбординг TMA — Guided coach + Монетка | [onboarding-tma-mission-brief](vision/ideas/onboarding-tma-mission-brief.md) | [SPEC_onboarding-tma](specs/features/SPEC_onboarding-tma.md) **approved** | [PLAN_onboarding-tma](plans/PLAN_onboarding-tma.md) | [O1 в backlog](backlog/PRODUCT_BACKLOG.md) | [onboarding-guided](design-lab/onboarding-guided/) ★; MQX + API ⬜ |
+| **PW1** | PWA / standalone + resume (lock/unlock) | [pwa-standalone-channel](vision/ideas/pwa-standalone-channel.md) | ⚠ SPEC_pwa-standalone — нет | [PLAN_pwa-standalone](plans/PLAN_pwa-standalone.md) | [PW1 в backlog](backlog/PRODUCT_BACKLOG.md) | **idea**; фаза 0 — resync в `useGame` ⬜ |
 
 **Статусы:** `idea` → `spec draft` → `spec approved` → `in dev` → `implemented`
 

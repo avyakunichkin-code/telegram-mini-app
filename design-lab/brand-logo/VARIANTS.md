@@ -9,7 +9,6 @@
 | **REF** | `assets/reference-ep-author-why.png` | Контекст / цвет / наклон букв | эталон поста |
 | **G1** | `assets/G1-full-tagline.png` | Стартовые экраны: по центру, **с** «Финансы как игра» | **кандидат ★** |
 | **G2** | `assets/G2-compact-stacked.png` | Hero в игре: слева, **без** tagline | **кандидат ★** |
-| LEG | `assets/legacy/*-flat.svg` | Плоский SVG из docs | **отклонить** |
 
 ## Prod после утверждения
 
@@ -30,4 +29,4 @@
 
 Напишите в чат, например: **«★ G1 + G2 + T7»** или укажите правки (размер tagline, наклон, контраст на тёмном).
 
-До ★ prod может оставаться на interim flat SVG — не считать финалом.
+Плоские SVG-черновики удалены; prod — только G1/G2 PNG из `frontend-react/src/assets/brand/`.

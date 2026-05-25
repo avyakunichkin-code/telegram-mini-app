@@ -45,6 +45,86 @@ function renderLearnCards() {
     .join('');
 }
 
+function renderFeatures() {
+  const grid = document.getElementById('features-grid');
+  if (!grid) return;
+  const items = t('features.items');
+  if (!Array.isArray(items)) return;
+  grid.innerHTML = items
+    .map(
+      (item, i) => `
+    <article class="mq-feature mq-reveal" style="--mq-delay:${i * 50}ms">
+      <span class="mq-feature__icon" aria-hidden="true">${escapeHtml(item.icon)}</span>
+      <h3>${escapeHtml(item.title)}</h3>
+      <p>${escapeHtml(item.text)}</p>
+    </article>`
+    )
+    .join('');
+}
+
+function renderPeekPanels() {
+  const grid = document.getElementById('peek-grid');
+  if (!grid) return;
+  const panels = t('peek.panels');
+  if (!Array.isArray(panels)) return;
+  grid.innerHTML = panels
+    .map(
+      (panel, i) => `
+    <article class="mq-peek-card mq-reveal" style="--mq-delay:${i * 80}ms">
+      <span class="mq-peek-card__label">${escapeHtml(panel.label)}</span>
+      <h3>${escapeHtml(panel.title)}</h3>
+      <p>${escapeHtml(panel.text)}</p>
+      ${
+        Array.isArray(panel.chips)
+          ? `<div class="mq-peek-card__chips">${panel.chips
+              .map((chip) => `<span class="mq-chip">${escapeHtml(chip)}</span>`)
+              .join('')}</div>`
+          : ''
+      }
+    </article>`
+    )
+    .join('');
+}
+
+function renderCoachPoints() {
+  const list = document.getElementById('coach-points');
+  if (!list) return;
+  const points = t('coach.points');
+  if (!Array.isArray(points)) return;
+  list.innerHTML = points
+    .map((text, i) => `<li class="mq-reveal" style="--mq-delay:${i * 60}ms">${escapeHtml(text)}</li>`)
+    .join('');
+}
+
+function renderModeLists() {
+  const gameList = document.getElementById('mode-game-points');
+  const planList = document.getElementById('mode-plan-points');
+  const gamePoints = t('modes.game.points');
+  const planPoints = t('modes.plan.points');
+  if (gameList && Array.isArray(gamePoints)) {
+    gameList.innerHTML = gamePoints.map((text) => `<li>${escapeHtml(text)}</li>`).join('');
+  }
+  if (planList && Array.isArray(planPoints)) {
+    planList.innerHTML = planPoints.map((text) => `<li>${escapeHtml(text)}</li>`).join('');
+  }
+}
+
+function renderVictory() {
+  const list = document.getElementById('victory-points');
+  if (!list) return;
+  const points = t('victory.points');
+  if (!Array.isArray(points)) return;
+  list.innerHTML = points
+    .map(
+      (text, i) => `
+    <li class="mq-victory__item mq-reveal" style="--mq-delay:${i * 70}ms">
+      <span class="mq-victory__check" aria-hidden="true">✓</span>
+      <span>${escapeHtml(text)}</span>
+    </li>`
+    )
+    .join('');
+}
+
 function renderPartners() {
   const grid = document.getElementById('partners-points');
   if (!grid) return;
@@ -126,7 +206,12 @@ async function setLocale(code) {
   await loadLocale(code);
   applyStaticI18n();
   renderHowSteps();
+  renderFeatures();
   renderLearnCards();
+  renderPeekPanels();
+  renderCoachPoints();
+  renderModeLists();
+  renderVictory();
   renderPartners();
   renderFaq();
   setLangButtons(code);

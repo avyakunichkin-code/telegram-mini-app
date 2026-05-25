@@ -5,6 +5,9 @@ import {
   notifyAchievementUnlocks,
   notifyPeriodCloseRewards,
 } from '../utils/progressionToasts';
+import { subscribeAppForeground, debounceForeground } from '../utils/appLifecycle';
+
+const FOREGROUND_RESYNC_MS = 400;
 
 function parsePendingEvents(eventPayload) {
   if (!eventPayload) return [];
@@ -27,16 +30,22 @@ export function useGame() {
 
   const timerRef = useRef(null);
   const localRemainingRef = useRef(0);
+  const secondsUntilNextRef = useRef(0);
   const lastSyncRef = useRef(Date.now());
+  const periodIndexRef = useRef(null);
   const handlePeriodEndRef = useRef(null);
   const startTimerRef = useRef(null);
+  const periodEndInFlightRef = useRef(false);
+  const loadingRef = useRef(true);
 
   const applyBootstrapPayload = useCallback((data, { bumpEvents = false, updateTime = true } = {}) => {
     setOverview(data.overview);
     if (updateTime && data.time) {
       setTimeStatus(data.time);
-      localRemainingRef.current = data.time.seconds_until_next_period;
+      secondsUntilNextRef.current = data.time.seconds_until_next_period ?? 0;
+      localRemainingRef.current = secondsUntilNextRef.current;
       lastSyncRef.current = Date.now();
+      periodIndexRef.current = data.time.period_index ?? null;
     }
     setPeriodStatus(data.period);
     const evList = parsePendingEvents(data.events);
@@ -45,6 +54,7 @@ export function useGame() {
     if (data.overview?.newly_unlocked?.length) {
       notifyAchievementUnlocks(data.overview.newly_unlocked);
     }
+    return data;
   }, []);
 
   /** Один round-trip: overview + period + events (+ time). После мутаций в игре. */
@@ -61,6 +71,7 @@ export function useGame() {
 
   const loadData = useCallback(async () => {
     setLoading(true);
+    loadingRef.current = true;
     try {
       const data = await API.getGameBootstrap();
       applyBootstrapPayload(data, { bumpEvents: true });
@@ -77,6 +88,7 @@ export function useGame() {
       setError(msg);
     } finally {
       setLoading(false);
+      loadingRef.current = false;
     }
   }, [applyBootstrapPayload]);
 
@@ -114,8 +126,10 @@ export function useGame() {
       setPeriodCloseSummary(result.period_close);
     }
     setTimeStatus(result);
-    localRemainingRef.current = result.seconds_until_next_period;
+    secondsUntilNextRef.current = result.seconds_until_next_period ?? 0;
+    localRemainingRef.current = secondsUntilNextRef.current;
     lastSyncRef.current = Date.now();
+    periodIndexRef.current = result.period_index ?? periodIndexRef.current;
     await refreshGameState({ bumpEvents: true, updateTime: false });
     if (result.time_state === 'play') {
       startTimerRef.current?.();
@@ -124,8 +138,15 @@ export function useGame() {
   }, [refreshGameState]);
 
   const handlePeriodEnd = useCallback(async () => {
-    const newTime = await API.setTimeNext();
-    await applyPeriodTransition(newTime);
+    if (periodEndInFlightRef.current) return;
+    periodEndInFlightRef.current = true;
+    stopTimerRef.current?.();
+    try {
+      const newTime = await API.setTimeNext();
+      await applyPeriodTransition(newTime);
+    } finally {
+      periodEndInFlightRef.current = false;
+    }
   }, [applyPeriodTransition]);
 
   handlePeriodEndRef.current = handlePeriodEnd;
@@ -137,6 +158,9 @@ export function useGame() {
     }
   }, []);
 
+  const stopTimerRef = useRef(stopTimer);
+  stopTimerRef.current = stopTimer;
+
   const startTimer = useCallback(() => {
     if (timerRef.current) clearInterval(timerRef.current);
     if (!timeStatus || timeStatus.time_state !== 'play') return;
@@ -144,12 +168,12 @@ export function useGame() {
     timerRef.current = setInterval(() => {
       const now = Date.now();
       const elapsed = Math.floor((now - lastSyncRef.current) / 1000);
-      const remaining = Math.max(0, timeStatus.seconds_until_next_period - elapsed);
+      const remaining = Math.max(0, secondsUntilNextRef.current - elapsed);
       localRemainingRef.current = remaining;
 
-      setTimeStatus((prev) => ({ ...prev, remainingLocal: remaining }));
+      setTimeStatus((prev) => (prev ? { ...prev, remainingLocal: remaining } : prev));
 
-      if (remaining <= 0) {
+      if (remaining <= 0 && !periodEndInFlightRef.current) {
         clearInterval(timerRef.current);
         timerRef.current = null;
         handlePeriodEndRef.current?.();
@@ -159,19 +183,55 @@ export function useGame() {
 
   startTimerRef.current = startTimer;
 
+  const maybeClosePeriodAfterResync = useCallback(async (data) => {
+    const time = data?.time;
+    if (!time || time.time_state !== 'play') return;
+    if ((time.seconds_until_next_period ?? 0) > 0) return;
+    if (periodEndInFlightRef.current) return;
+    await handlePeriodEndRef.current?.();
+  }, []);
+
+  const resyncAfterForeground = useCallback(async () => {
+    if (loadingRef.current) return;
+    stopTimer();
+    try {
+      const prevIndex = periodIndexRef.current;
+      const data = await refreshGameState();
+      if (
+        prevIndex != null &&
+        data?.time?.period_index != null &&
+        prevIndex !== data.time.period_index
+      ) {
+        const evList = parsePendingEvents(data.events);
+        if (evList.length > 0) setEventsPromptTick((t) => t + 1);
+      }
+      await maybeClosePeriodAfterResync(data);
+    } catch {
+      /* refreshGameState не бросает — на всякий случай */
+    }
+  }, [refreshGameState, maybeClosePeriodAfterResync, stopTimer]);
+
   const advancePeriod = useCallback(async () => {
     stopTimer();
-    const result = await API.setTimeNext();
-    await applyPeriodTransition(result);
-    return result;
+    if (periodEndInFlightRef.current) return;
+    periodEndInFlightRef.current = true;
+    try {
+      const result = await API.setTimeNext();
+      await applyPeriodTransition(result);
+      return result;
+    } finally {
+      periodEndInFlightRef.current = false;
+    }
   }, [applyPeriodTransition, stopTimer]);
 
   const setPlay = useCallback(async () => {
     const result = await API.setTimePlay();
     if (result) {
       setTimeStatus(result);
-      localRemainingRef.current = result.seconds_until_next_period;
+      secondsUntilNextRef.current = result.seconds_until_next_period ?? 0;
+      localRemainingRef.current = secondsUntilNextRef.current;
       lastSyncRef.current = Date.now();
+      periodIndexRef.current = result.period_index ?? periodIndexRef.current;
       startTimer();
     }
   }, [startTimer]);
@@ -180,8 +240,10 @@ export function useGame() {
     const result = await API.setTimePause();
     if (result) {
       setTimeStatus(result);
-      localRemainingRef.current = result.seconds_until_next_period;
+      secondsUntilNextRef.current = result.seconds_until_next_period ?? 0;
+      localRemainingRef.current = secondsUntilNextRef.current;
       lastSyncRef.current = Date.now();
+      periodIndexRef.current = result.period_index ?? periodIndexRef.current;
       stopTimer();
     }
   }, [stopTimer]);
@@ -222,6 +284,13 @@ export function useGame() {
       stopTimer();
     }
   }, [timeStatus, startTimer, stopTimer]);
+
+  useEffect(() => {
+    const onForeground = debounceForeground(() => {
+      resyncAfterForeground();
+    }, FOREGROUND_RESYNC_MS);
+    return subscribeAppForeground(onForeground);
+  }, [resyncAfterForeground]);
 
   return {
     overview,

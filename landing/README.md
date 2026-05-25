@@ -51,3 +51,12 @@ npm run deploy
 ## Бренд
 
 Палитра и тон: [`docs/reference/brandbook/BRANDBOOK.md`](../docs/reference/brandbook/BRANDBOOK.md).
+
+Логотипы на лендинге — те же, что в приложении (**G1** / **G2**):
+
+| Файл | Назначение |
+|------|------------|
+| `public/brand/logo-full.webp` (+ `.png`) | Hero, CTA — с tagline |
+| `public/brand/logo-compact.webp` (+ `.png`) | Шапка, футер — без tagline |
+
+Источник истины: `frontend-react/src/assets/brand/`. Плоские SVG L1–L4 **не используются**.

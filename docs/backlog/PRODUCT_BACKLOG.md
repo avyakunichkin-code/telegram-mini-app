@@ -36,6 +36,7 @@
 | **O1** | Онбординг TMA — Guided coach + Монетка | Frontend+Backend+Doc | 🟡 design-lab ★ → MQX |
 | **A0** | Admin Watchtower (MVP 1.2) | DB+Backend+Frontend | 🟡 Phase 0 в коде |
 | **E1** | **Расходы жизнеобеспечения** — категории, статьи бюджета, burn, UI | DB+Backend+Frontend+Content | ⬜ [EXPENSES_SYSTEM](../specs/gameplay/EXPENSES_SYSTEM.md) · [SPEC](../specs/features/SPEC_expenses.md) draft |
+| **PW1** | PWA / standalone + стабильный resume (lock/unlock) | Frontend+Ops+Doc | ⬜ [idea](../vision/ideas/pwa-standalone-channel.md) · [PLAN](../plans/PLAN_pwa-standalone.md) |
 
 > **Расхождение с GAME.md §0.2:** `cooldown_periods` и фильтр в `ensure_period_events` **уже в коде** (`game_rules.is_event_definition_eligible`, `events.py`, миграция 0007). В GAME.md пометить «не реализовано» — устарело.
 
@@ -219,6 +220,29 @@
 - [ ] P2 **[Frontend]** Skeleton / shimmer первой загрузки.
 - [ ] P2 **[Frontend]** Единая шапка с балансами при смене вкладки.
 - [ ] P2 **[Frontend]** Офлайн / retry при таймауте TMA.
+
+### Эпик PW1 — PWA / standalone + resume после блокировки экрана
+
+**Проблема:** в TMA при lock/unlock таймер и состояние расходятся с сервером; WebView троттлит таймеры. См. [`pwa-standalone-channel.md`](../vision/ideas/pwa-standalone-channel.md) · Plan: [`PLAN_pwa-standalone.md`](../plans/PLAN_pwa-standalone.md).
+
+#### Фаза 0 — lifecycle (улучшает TMA сразу)
+
+- [x] P1 **[Frontend] PW1-001** — `visibilitychange` / focus → `refreshGameState()` в `useGame`; сброс локального таймера от ответа API (`appLifecycle.js`, `useGame.js`).
+- [x] P1 **[Frontend] PW1-002** — debounce resync; `periodEndInFlightRef` — не дублировать `setTimeNext`.
+- [ ] P1 **[Doc] PW1-003** — чеклист приёмки: play → lock 2–5 мин → unlock (TMA + браузер).
+
+#### Фаза 1 — installable PWA
+
+- [ ] P1 **[Frontend] PW1-101** — иконки 192/512 (maskable) из бренда.
+- [ ] P1 **[Frontend] PW1-102** — `vite-plugin-pwa`: manifest, service worker, precache статики.
+- [ ] P1 **[Frontend+Ops] PW1-103** — `start_url` / `base` / HashRouter; `theme-color`, apple-web-app meta.
+- [ ] P1 **[Backend+Ops] PW1-104** — CORS origin для prod PWA; `VITE_API_BASE_URL` в CI.
+- [ ] P2 **[Doc] PW1-105** — черновик `SPEC_pwa-standalone.md` после фазы 0.
+
+#### Фаза 2 — standalone UX (позже)
+
+- [ ] P2 **[Frontend] PW1-201** — `isTelegramEnvironment()` + безопасные обёртки TG API.
+- [ ] P2 **[Frontend] PW1-202** — копирайт и баннер «Установить» / «Открыть в браузере».
 - [ ] P3 **[Frontend] ⚠ spec** Дневник персонажа (постфактум, GAME §3.7).
 - [ ] P3 **[Frontend] ⚠ spec** «Быстрый период» для ветеранов (GAME §6.3).
 - [ ] P3 **[Frontend] ⚠ spec** Персонаж с репликами (GAME §9.3 п.9).
@@ -303,6 +327,7 @@
 | I1 Insurance | ✅ 0008 | 🟡 claim | 🟡 catalog UI | ⚠ SPEC |
 | α Playtest | — | — | опрос/метрики | протокол |
 | A0 Watchtower | ✅ 0012 | 🟡 Phase 0 | 🟡 `#/admin` | idea |
+| PW1 PWA / resume | — | — | фаза 0–1 | idea+plan |
 
 ---
 
@@ -316,6 +341,7 @@
 | P1 | UI: `character_unlocks`, 403 `level_gate` | Frontend | overview + FinanceSection |
 | P1 | Экран «Развитие» | Frontend | `achievements` API |
 | P1 | I1: каталог страховок в FinanceSection | Frontend | design-lab |
+| P1 | PW1 фаза 1: PWA manifest + SW | Frontend | после плейтеста фазы 0 |
 
 ---
 
@@ -327,7 +353,8 @@
 | 2026-05-19 | Синхронизация с [`GAME.md`](../../GAME.md): слои DB/BE/FE/Doc; M11 отмечен выполненным в коде; заведены M12, V2, I1, α; пробелы ⚠ spec; исправлена устаревшая пометка про cooldown. |
 | 2026-05-19 | **MVP 1.2 / A0:** эпик Admin Watchtower Phase 0 — `notification_log`, ops-алерты, `#/admin`. |
 | 2026-05-19 | **Q1** quality-release; **V2** victory engine; **M12** критерии достижений + API level-gates (`level_gates.py`, overview `character_unlocks`). |
+| 2026-05-25 | **PW1:** эпик PWA/standalone — драйвер нестабильный resume TMA при блокировке экрана; фаза 0 (lifecycle resync) перед install prompt. |
 
 ---
 
-*Последнее обновление: 2026-05-19 — бэклог по GAME.md и фактическому коду (M11, cooldown, achievements WIP).*
+*Последнее обновление: 2026-05-25 — эпик PW1 (PWA + resume).*

@@ -275,12 +275,3 @@ body {
   background: color-mix(in srgb, #fff 8%, transparent);
   border: 1px dashed color-mix(in srgb, #fff 18%, transparent);
 }
-
-.lab-legacy img {
-  max-height: 88px;
-  opacity: 0.92;
-}
-
-.lab-legacy--dim {
-  opacity: 0.55;
-}

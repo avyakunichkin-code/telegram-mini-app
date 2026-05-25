@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>ТВОЙ ХОД — Брендбук v1.1</title>
+  <title>ТВОЙ ХОД — Брендбук v1.2</title>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
 
@@ -368,7 +368,7 @@
 
   <header class="cover">
     <p class="cover-tag">Финансы как игра</p>
-    <div class="version">Брендбук v1.1</div>
+    <div class="version">Брендбук v1.2</div>
     <h1>ТВОЙ ХОД</h1>
     <p>Обучающая игра про личные финансы: периоды, решения и последствия. Единый визуальный язык для <strong>игрового</strong> и <strong>планировочного</strong> режимов.</p>
     <p style="margin-top: 5mm; font-size: 10pt;"><strong>Применение:</strong> Telegram Mini App (эталон MQX), веб-лендинг, соцсети, печать, партнёрские материалы.</p>
@@ -377,8 +377,10 @@
 
   <p class="meta">
     Источник: <code>docs/reference/brandbook/BRANDBOOK.md</code> ·
-    Реализация TMA: <code>frontend-react/src/index.css</code>, <code>syncTelegramTheme.js</code> ·
-    Контракт экранов: <code>docs/specs/SPEC_FRONTEND_UI.md</code>
+    Маскот: <code>docs/reference/CHARACTER_MONETKA.md</code> ·
+    Лого prod: <code>frontend-react/src/assets/brand/logo-full.png</code>, <code>logo-compact.png</code> ·
+    TMA: <code>index.css</code>, <code>BrandLogo.jsx</code> ·
+    <code>SPEC_FRONTEND_UI.md</code>
   </p>
 
   <h2>1. Принципы бренда</h2>
@@ -387,36 +389,38 @@
     <tbody>
       <tr><td><strong>Характер</strong></td><td>Уверенный, понятный, без снисходительности — «наставник, а не банковский робот».</td></tr>
       <tr><td><strong>Тон</strong></td><td>Короткие формулировки, активный залог («Получи зарплату»).</td></tr>
-      <tr><td><strong>Избегаем</strong></td><td>Паники, жаргона без расшифровки, обещаний быстрого обогащения.</td></tr>
+      <tr><td><strong>Маскот</strong></td><td><strong>Монетка</strong> — напарница, только «ты»; см. CHARACTER_MONETKA.md</td></tr>
+      <tr><td><strong>Tagline</strong></td><td><strong>Финансы как игра</strong> — в маркетинге и G1</td></tr>
+      <tr><td><strong>Избегаем</strong></td><td>Паники, жаргона, «Вы/клиент», Money Quest / MQ, плоский SVG-лого</td></tr>
     </tbody>
   </table>
 
   <h2>2. Логотип и знак</h2>
-  <p><strong>MQ</strong> (монограмма) + словесное <strong>ТВОЙ ХОД</strong> (оба слова с заглавной). Tagline опционально: «Финансы как игра» — не крупнее 40% высоты логоблока.</p>
+  <p><strong>ТВОЙ ХОД</strong> — 3D lockup (растр PNG): <strong>ТВОЙ</strong> Coin Gold <code>#EAB308</code>, <strong>ХОД</strong> Quest Violet <code>#6D28D9</code>. Монограмма <strong>ТХ</strong> — только pill/chip. Плоские SVG L1–L4 и <strong>MQ</strong> / Money Quest — <strong>сняты</strong>.</p>
+
+  <table>
+    <thead><tr><th>ID</th><th>Файл prod</th><th>Где</th></tr></thead>
+    <tbody>
+      <tr><td><strong>G1</strong></td><td><code>logo-full.png</code></td><td>Старт, auth, меню — по центру + tagline</td></tr>
+      <tr><td><strong>G2</strong></td><td><code>logo-compact.png</code></td><td>Hero в игре, табы — слева, без tagline</td></tr>
+      <tr><td><strong>ТХ</strong></td><td>текст / chip</td><td>Узкие метки, не шапка приложения</td></tr>
+    </tbody>
+  </table>
 
   <div class="logo-row">
-    <div class="logo-panel">
-      <p style="font-size:7.5pt;color:var(--slate);margin:0 0 2mm;">Светлый фон · основной</p>
-      <svg width="200" height="56" aria-label="ТВОЙ ХОД logo light" role="img">
-        <defs>
-          <linearGradient id="gq" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" style="stop-color:#7C3AED"/>
-            <stop offset="100%" style="stop-color:#5B21B6"/>
-          </linearGradient>
-        </defs>
-        <rect rx="12" ry="12" width="52" height="52" fill="url(#gq)"/>
-        <text x="26" y="36" font-family="Inter, sans-serif" font-weight="700" font-size="26" fill="#fff" text-anchor="middle">MQ</text>
-        <text x="64" y="28" font-family="Inter, sans-serif" font-weight="700" font-size="22" fill="#111827">ТВОЙ ХОД</text>
-        <text x="64" y="44" font-family="Inter, sans-serif" font-weight="400" font-size="11" fill="#6B7280">Финансы как игра</text>
+    <div class="logo-panel dark">
+      <p style="font-size:7.5pt;opacity:.9;margin:0 0 2mm;">Схема lockup (эталон — PNG G1/G2)</p>
+      <svg width="220" height="64" aria-label="Схема логотипа ТВОЙ ХОД" role="img">
+        <text x="0" y="32" font-family="Inter, sans-serif" font-weight="800" font-size="28" fill="#EAB308">ТВОЙ</text>
+        <text x="108" y="32" font-family="Inter, sans-serif" font-weight="800" font-size="28" fill="#6D28D9">ХОД</text>
+        <text x="0" y="52" font-family="Inter, sans-serif" font-weight="500" font-size="11" fill="#D1D5DB">Финансы как игра · G1</text>
       </svg>
     </div>
-    <div class="logo-panel dark">
-      <p style="font-size:7.5pt;opacity:.8;margin:0 0 2mm;">Тёмный фон · инверс</p>
-      <svg width="200" height="56" aria-label="ТВОЙ ХОД logo dark" role="img">
-        <rect rx="12" ry="12" width="52" height="52" fill="#FFFFFF" fill-opacity=".12" stroke="#9CA3AF" stroke-width="1"/>
-        <text x="26" y="36" font-family="Inter, sans-serif" font-weight="700" font-size="26" fill="#F9FAFB" text-anchor="middle">MQ</text>
-        <text x="64" y="28" font-family="Inter, sans-serif" font-weight="700" font-size="22" fill="#F9FAFB">ТВОЙ ХОД</text>
-        <text x="64" y="44" font-family="Inter, sans-serif" font-weight="400" font-size="11" fill="#D1D5DB">Финансы как игра</text>
+    <div class="logo-panel">
+      <p style="font-size:7.5pt;color:var(--slate);margin:0 0 2mm;">Монограмма ТХ</p>
+      <svg width="80" height="56" aria-label="Монограмма ТХ" role="img">
+        <rect rx="10" ry="10" width="56" height="56" fill="#6D28D9"/>
+        <text x="28" y="38" font-family="Inter, sans-serif" font-weight="700" font-size="22" fill="#fff" text-anchor="middle">ТХ</text>
       </svg>
     </div>
   </div>
@@ -425,10 +429,11 @@
   <table>
     <thead><tr><th>Носитель</th><th>Минимум</th></tr></thead>
     <tbody>
-      <tr><td>TMA header (монограмма)</td><td><strong>24 px</strong> высота</td></tr>
-      <tr><td>Аватар соцсетей</td><td><strong>108×108 px</strong> содержательной части во кропе</td></tr>
-      <tr><td>Печать визитки</td><td><strong>8 mm</strong> высота монограммы</td></tr>
-      <tr><td>Clear space</td><td><strong>≥ ½</strong> высоты монограммы со всех сторон</td></tr>
+      <tr><td>TMA compact (G2)</td><td><strong>~36–44 px</strong> по макету hero</td></tr>
+      <tr><td>Старт full (G1)</td><td><strong>~240–280 px</strong> ширина на 390px</td></tr>
+      <tr><td>Монограмма ТХ</td><td><strong>24 px</strong> высота глифа</td></tr>
+      <tr><td>Аватар соцсетей</td><td><strong>108×108 px</strong> во кропе</td></tr>
+      <tr><td>Clear space</td><td><strong>≥ ½</strong> высоты знака со всех сторон</td></tr>
     </tbody>
   </table>
 
@@ -438,7 +443,8 @@
 
   <h2 class="page-break">3. Цветовая палитра</h2>
   <div class="swatches">
-    <div class="swatch"><div class="swatch-color" style="background:#6D28D9"></div><div class="swatch-info"><strong>Quest Violet</strong><br/>#6D28D9 · CTA</div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#6D28D9"></div><div class="swatch-info"><strong>Quest Violet</strong><br/>#6D28D9 · «ХОД», CTA</div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#EAB308"></div><div class="swatch-info"><strong>Coin Gold</strong><br/>#EAB308 · «ТВОЙ»</div></div>
     <div class="swatch"><div class="swatch-color" style="background:#5B21B6"></div><div class="swatch-info"><strong>Violet Deep</strong><br/>#5B21B6 · hover</div></div>
     <div class="swatch"><div class="swatch-color" style="background:#059669"></div><div class="swatch-info"><strong>Signal Emerald</strong><br/>#059669 · плюс</div></div>
     <div class="swatch"><div class="swatch-color" style="background:#0F1115"></div><div class="swatch-info"><strong>Ink</strong><br/>#0F1115 · заголовки</div></div>
@@ -498,7 +504,8 @@
       <tr><td>Колонка</td><td><code>#root</code> max 480px</td><td>Одна колонка TMA</td></tr>
       <tr><td>Рама</td><td><code>mqx-screen</code> → <code>mqx-frame</code></td><td>Поверхности <code>--mqx-surface-*</code></td></tr>
       <tr><td>Оболочка</td><td><code>MqxShell</code></td><td>header + <code>mqx-content</code></td></tr>
-      <tr><td>Таб-hero</td><td><code>MqxTabHero</code></td><td>Пилюля MQ + контекст раздела</td></tr>
+      <tr><td>Таб-hero</td><td><code>MqxTabHero</code></td><td><code>BrandLogo</code> G2 + контекст раздела</td></tr>
+      <tr><td>Старт</td><td><code>BrandMark</code></td><td>G1 full + tagline</td></tr>
     </tbody>
   </table>
 
@@ -545,6 +552,10 @@
 
   <h3>Скругления (ориентир)</h3>
   <p style="font-size:9pt;"><code>.mqx-frame</code> ~18 px · крупные карточки ~22 px · кнопки hero ~14 px · межстрочный body <strong>1.42</strong> при 15 px.</p>
+  <p><strong>Финансы (капитал):</strong> Доходы → Расходы → Инвестиции → Страховки → Имущество → Обязательства; «Добавить | Мои» внутри карточки раздела.</p>
+
+  <h3>Монетка (маскот)</h3>
+  <p>PNG с прозрачностью; позы <code>monetka-{pose}.png</code>; реплика в CSS-пузыре. Только «ты». Канон: <code>CHARACTER_MONETKA.md</code>.</p>
 
   <h2>6. Макеты</h2>
 
@@ -552,7 +563,7 @@
     <div class="mock-title">Визитка 90 × 50 mm</div>
     <div class="bizcard">
       <div style="display:flex;align-items:center;gap:3.5mm;">
-        <div style="width:13mm;height:13mm;border-radius:4px;background:#6D28D9;color:#fff;font-weight:700;display:flex;align-items:center;justify-content:center;font-size:9pt;">MQ</div>
+        <div style="width:13mm;height:13mm;border-radius:4px;background:#6D28D9;color:#fff;font-weight:700;display:flex;align-items:center;justify-content:center;font-size:8pt;">ТХ</div>
         <div><div style="font-weight:700;font-size:10.5pt;">ТВОЙ ХОД</div><div style="font-size:7.5pt;color:var(--slate);">Финансы как игра</div></div>
       </div>
       <div style="font-size:7.5pt;line-height:1.35;"><strong>Имя Фамилия</strong> · Роль<br/>email · t.me/… · QR</div>
@@ -563,7 +574,7 @@
   <div class="mock">
     <div class="mock-title">Баннер 1200 × 628</div>
     <div class="banner">
-      <div style="font-weight:800;font-size:16pt;color:var(--violet-deep);">MQ</div>
+      <div style="font-weight:800;font-size:14pt;"><span style="color:#EAB308">ТВОЙ</span> <span style="color:var(--violet-deep)">ХОД</span></div>
       <div>
         <div style="font-size:12pt;font-weight:700;">Играй в месяц за 10 минут</div>
         <div style="font-size:8.5pt;color:var(--slate);margin-top:1mm;">Периоды, решения и последствия</div>
@@ -574,7 +585,7 @@
 
   <div class="mock">
     <div class="mock-title">Пост 1080 × 1080</div>
-    <p style="font-size:9pt;">Верх: MQ. Центр: одно обещание. Низ: Line. Текст ≤25% поля.</p>
+    <p style="font-size:9pt;">Верх: G1/G2 или ТХ. Центр: одно обещание. Низ: Line. Монетка — опционально.</p>
     <svg width="100%" viewBox="0 0 200 200" style="border:1px solid var(--line);border-radius:2mm;background:var(--mist);">
       <defs>
         <pattern id="pat" width="8" height="8" patternUnits="userSpaceOnUse">
@@ -583,7 +594,8 @@
       </defs>
       <rect width="200" height="200" fill="url(#pat)"/>
       <rect x="52" y="48" width="96" height="96" rx="16" fill="#6D28D9"/>
-      <text x="100" y="108" fill="#fff" font-family="Inter,sans-serif" font-size="42" font-weight="700" text-anchor="middle">MQ</text>
+      <text x="100" y="100" fill="#EAB308" font-family="Inter,sans-serif" font-size="32" font-weight="800" text-anchor="middle">ТВОЙ</text>
+      <text x="100" y="132" fill="#fff" font-family="Inter,sans-serif" font-size="32" font-weight="800" text-anchor="middle">ХОД</text>
       <rect x="0" y="170" width="200" height="30" fill="#059669"/>
     </svg>
   </div>
@@ -622,7 +634,7 @@
   <div class="export-box">
     <strong>§10. Экспорт в PDF</strong><br/>
     <strong>A.</strong> Откройте этот файл в Chrome / Edge → <strong>Ctrl+P</strong> → «Сохранить как PDF» → включите <strong>«Фоновая графика»</strong>.<br/>
-    <strong>B.</strong> Pandoc: <code>pandoc docs/reference/brandbook/BRANDBOOK.md -o MoneyQuest-Brandbook.pdf --pdf-engine=xelatex</code><br/>
+    <strong>B.</strong> Pandoc: <code>pandoc docs/reference/brandbook/BRANDBOOK.md -o TvoyHod-Brandbook.pdf --pdf-engine=xelatex</code><br/>
     <strong>C.</strong> Расширение Markdown PDF в Cursor / VS Code из <code>BRANDBOOK.md</code>.
   </div>
 

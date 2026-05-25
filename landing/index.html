@@ -8,7 +8,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
       rel="stylesheet"
     />
     <link rel="stylesheet" href="/src/styles/main.css" />
@@ -17,12 +17,23 @@
     <a class="mq-skip" href="#main" data-i18n="a11y.skip">Перейти к содержанию</a>
 
     <header class="mq-header">
-      <a class="mq-logo" href="/" aria-label="ТВОЙ ХОД">
-        <span class="mq-logo__mark" aria-hidden="true">MQ</span>
-        <span class="mq-logo__name">ТВОЙ ХОД</span>
+      <a class="mq-logo" href="/" data-i18n-attr="aria-label:brand.name">
+        <picture>
+          <source srcset="/brand/logo-compact.webp" type="image/webp" />
+          <img
+            class="mq-logo__img mq-logo__img--compact"
+            src="/brand/logo-compact.png"
+            width="120"
+            height="48"
+            alt=""
+            data-i18n-attr="alt:brand.name"
+            decoding="async"
+          />
+        </picture>
       </a>
       <nav class="mq-nav" aria-label="Main">
         <a href="#how" data-i18n="nav.how">Как это работает</a>
+        <a href="#features" data-i18n="nav.features">Механики</a>
         <a href="#learn" data-i18n="nav.learn">Чему учит</a>
         <a href="#partners" data-i18n="nav.partners">Партнёрам</a>
         <a href="#faq" data-i18n="nav.faq">Вопросы</a>
@@ -35,27 +46,65 @@
 
     <main id="main">
       <section class="mq-hero" aria-labelledby="hero-title">
+        <div class="mq-hero__glow" aria-hidden="true"></div>
         <div class="mq-hero__grid">
           <div class="mq-hero__copy mq-reveal">
             <p class="mq-eyebrow" data-i18n="hero.eyebrow">Telegram Mini App</p>
-            <h1 id="hero-title" data-i18n="hero.title">Финансы как игра</h1>
+            <h1 id="hero-title" class="mq-hero__logo">
+              <picture>
+                <source srcset="/brand/logo-full.webp" type="image/webp" />
+                <img
+                  class="mq-hero__logo-img"
+                  src="/brand/logo-full.png"
+                  width="280"
+                  height="120"
+                  alt=""
+                  data-i18n-attr="alt:brand.logoAlt"
+                  decoding="async"
+                />
+              </picture>
+            </h1>
             <p class="mq-lead" data-i18n="hero.subtitle">Проживайте условные месяцы</p>
+            <blockquote class="mq-hero-quote">
+              <img
+                class="mq-hero-quote__avatar"
+                src="/monetka/monetka-mascot.webp"
+                width="44"
+                height="44"
+                alt=""
+                decoding="async"
+              />
+              <p data-i18n="hero.monetkaQuote">Я Монетка — подскажу, с чего начать.</p>
+            </blockquote>
             <p class="mq-status">
               <span class="mq-status__dot" aria-hidden="true"></span>
               <span data-i18n="hero.status">Скоро в Telegram</span>
             </p>
             <div class="mq-hero__actions">
               <a class="mq-btn mq-btn--primary" href="#how" data-i18n="hero.ctaPrimary">Как устроена игра</a>
-              <a class="mq-btn mq-btn--ghost" href="#partners" data-i18n="hero.ctaPartners">Для партнёров</a>
+              <a class="mq-btn mq-btn--ghost" href="#features" data-i18n="hero.ctaFeatures">Все механики</a>
             </div>
           </div>
 
-          <div class="mq-hero__visual mq-reveal mq-reveal--delay" aria-hidden="true">
+          <div class="mq-hero__stage mq-reveal mq-reveal--delay">
+            <figure class="mq-monetka-hero" aria-hidden="true">
+              <img
+                class="mq-monetka-hero__img"
+                src="/monetka/monetka-mascot.webp"
+                width="200"
+                height="200"
+                alt=""
+                decoding="async"
+              />
+              <figcaption class="mq-monetka-hero__bubble">
+                <span data-i18n="hero.monetkaBubble">Смотри на цифры — они честные</span>
+              </figcaption>
+            </figure>
             <div class="mq-phone">
               <div class="mq-phone__notch"></div>
               <div class="mq-phone__screen" id="hero-demo">
                 <div class="mq-phone__bar">
-                  <span class="mq-phone__pill">MQ</span>
+                  <span class="mq-phone__pill" data-i18n="brand.short">ТХ</span>
                   <span class="mq-phone__period">
                     <span data-i18n="hero.periodLabel">Период</span>
                     <strong>3</strong>
@@ -105,7 +154,17 @@
         </div>
       </section>
 
-      <section id="learn" class="mq-section">
+      <section id="features" class="mq-section mq-section--features">
+        <div class="mq-wrap">
+          <header class="mq-section__head mq-reveal">
+            <h2 data-i18n="features.title">Что внутри партии</h2>
+            <p data-i18n="features.subtitle">Единая экономика на сервере</p>
+          </header>
+          <div class="mq-features" id="features-grid"></div>
+        </div>
+      </section>
+
+      <section id="learn" class="mq-section mq-section--mist">
         <div class="mq-wrap">
           <header class="mq-section__head mq-reveal">
             <h2 data-i18n="learn.title">Чему учит</h2>
@@ -116,12 +175,32 @@
       </section>
 
       <section class="mq-section mq-section--dark" aria-labelledby="peek-title">
-        <div class="mq-wrap mq-peek">
-          <header class="mq-section__head mq-reveal">
+        <div class="mq-wrap">
+          <header class="mq-section__head mq-reveal mq-section__head--center">
             <h2 id="peek-title" data-i18n="peek.title">Интерфейс</h2>
             <p data-i18n="peek.subtitle">MQX</p>
           </header>
-          <p class="mq-peek__period mq-reveal" data-i18n="peek.mock.period">Период 3</p>
+          <div class="mq-peek-grid" id="peek-grid"></div>
+        </div>
+      </section>
+
+      <section class="mq-section mq-section--monetka" aria-labelledby="coach-title">
+        <div class="mq-wrap mq-coach">
+          <div class="mq-coach__visual mq-reveal">
+            <img
+              class="mq-coach__img"
+              src="/monetka/monetka-mascot.webp"
+              width="160"
+              height="160"
+              alt=""
+              decoding="async"
+            />
+          </div>
+          <div class="mq-coach__copy mq-reveal mq-reveal--delay">
+            <h2 id="coach-title" data-i18n="coach.title">Монетка — ваш наставник</h2>
+            <p class="mq-coach__lead" data-i18n="coach.lead">Короткие подсказки</p>
+            <ul class="mq-coach__list" id="coach-points"></ul>
+          </div>
         </div>
       </section>
 
@@ -129,19 +208,32 @@
         <div class="mq-wrap">
           <header class="mq-section__head mq-reveal">
             <h2 data-i18n="modes.title">Два режима</h2>
+            <p data-i18n="modes.subtitle">Один визуальный язык</p>
           </header>
           <div class="mq-modes">
             <article class="mq-mode mq-reveal">
               <span class="mq-mode__badge mq-mode__badge--live" data-i18n="modes.game.badge">Доступно</span>
-              <h3 data-i18n="modes.game.title">Game</h3>
+              <h3 data-i18n="modes.game.title">Игра</h3>
               <p data-i18n="modes.game.text">Шаблон</p>
+              <ul class="mq-mode__list" id="mode-game-points"></ul>
             </article>
             <article class="mq-mode mq-mode--muted mq-reveal mq-reveal--delay">
               <span class="mq-mode__badge" data-i18n="modes.plan.badge">Скоро</span>
-              <h3 data-i18n="modes.plan.title">Plan</h3>
+              <h3 data-i18n="modes.plan.title">План</h3>
               <p data-i18n="modes.plan.text">План</p>
+              <ul class="mq-mode__list" id="mode-plan-points"></ul>
             </article>
           </div>
+        </div>
+      </section>
+
+      <section class="mq-section mq-section--victory" aria-labelledby="victory-title">
+        <div class="mq-wrap mq-victory">
+          <header class="mq-section__head mq-reveal">
+            <h2 id="victory-title" data-i18n="victory.title">Цель партии</h2>
+            <p data-i18n="victory.subtitle">Победа — не угадайка</p>
+          </header>
+          <ul class="mq-victory__list" id="victory-points"></ul>
         </div>
       </section>
 
@@ -172,10 +264,44 @@
           <div class="mq-faq" id="faq-list"></div>
         </div>
       </section>
+
+      <section class="mq-cta-band" aria-labelledby="cta-band-title">
+        <div class="mq-wrap mq-cta-band__inner mq-reveal">
+          <picture>
+            <source srcset="/brand/logo-full.webp" type="image/webp" />
+            <img
+              class="mq-cta-band__logo"
+              src="/brand/logo-full.png"
+              width="200"
+              height="86"
+              alt=""
+              data-i18n-attr="alt:brand.logoAlt"
+              decoding="async"
+            />
+          </picture>
+          <div>
+            <h2 id="cta-band-title" data-i18n="ctaBand.title">Готовы к первому ходу?</h2>
+            <p data-i18n="ctaBand.text">Запуск в Telegram готовится</p>
+          </div>
+          <a class="mq-btn mq-btn--primary" href="#faq" data-i18n="ctaBand.btn">Частые вопросы</a>
+        </div>
+      </section>
     </main>
 
     <footer class="mq-footer">
       <div class="mq-wrap mq-footer__inner">
+        <picture>
+          <source srcset="/brand/logo-compact.webp" type="image/webp" />
+          <img
+            class="mq-footer__logo"
+            src="/brand/logo-compact.png"
+            width="120"
+            height="48"
+            alt=""
+            data-i18n-attr="alt:brand.name"
+            decoding="async"
+          />
+        </picture>
         <p class="mq-footer__brand" data-i18n="footer.tagline">ТВОЙ ХОД · Финансы как игра</p>
         <p class="mq-footer__legal" data-i18n="footer.legal">Не является рекомендацией</p>
         <p class="mq-footer__year" data-i18n="footer.year">© 2026</p>
