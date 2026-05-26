@@ -56,6 +56,12 @@ export const gameApi = {
   withdrawFromSafetyFund(payload) {
     return apiCall('/api/game/period/withdraw-from-safety-fund', 'POST', payload);
   },
+  treatSelf(payload) {
+    return apiCall('/api/game/period/treat-self', 'POST', payload);
+  },
+  getNeedsGuide() {
+    return apiCall('/api/game/needs/guide');
+  },
   getExpenses() {
     return apiCall('/api/game/expenses');
   },

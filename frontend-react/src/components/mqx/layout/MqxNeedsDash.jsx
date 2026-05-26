@@ -72,7 +72,9 @@ function NeedsBarRow({ axis, value }) {
 export function MqxNeedsDash({
   needs,
   needsZeroPeriodsStreak = 0,
-  onImprove,
+  treatSelf = null,
+  onTreatSelf,
+  onHelp,
   className = '',
 }) {
   const values = useMemo(() => pickAxisValues(needs), [needs]);
@@ -120,16 +122,30 @@ export function MqxNeedsDash({
           }}
         >
           <span className="mqx-needs__title">Самочувствие</span>
-          <button
-            type="button"
-            className="mqx-needs__improve-link"
-            onClick={(e) => {
-              e.stopPropagation();
-              onImprove?.();
-            }}
-          >
-            как улучшить?
-          </button>
+          {!expanded ? (
+            <button
+              type="button"
+              className="mqx-needs__improve-link"
+              onClick={(e) => {
+                e.stopPropagation();
+                onHelp?.();
+              }}
+            >
+              как улучшить →
+            </button>
+          ) : (
+            <button
+              type="button"
+              className="mqx-needs__help"
+              aria-label="Помощь"
+              onClick={(e) => {
+                e.stopPropagation();
+                onHelp?.();
+              }}
+            >
+              ?
+            </button>
+          )}
           <svg
             className="mqx-needs__chevron"
             viewBox="0 0 24 24"
@@ -146,30 +162,30 @@ export function MqxNeedsDash({
           <NeedsBarRow axis={min} value={values[min.key]} />
         </div>
 
-        <button
-          type="button"
-          className="mqx-needs__improve-cta"
-          aria-label="Улучшить"
-          onClick={(e) => {
-            e.stopPropagation();
-            onImprove?.();
-          }}
-        >
-          <svg className="mqx-needs__improve-icon" viewBox="0 0 24 24" aria-hidden="true">
-            <path d="M12 4v15" stroke="currentColor" strokeLinecap="round" />
-            <path
-              d="M7 9l5-5 5 5"
-              stroke="currentColor"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-          </svg>
-        </button>
-
         <div className="mqx-needs__expanded">
           {AXES.map((a) => (
             <NeedsBarRow key={a.key} axis={a} value={values[a.key]} />
           ))}
+          {treatSelf ? (
+            <div className="mqx-needs__actions">
+              <button
+                type="button"
+                className="mqx-needs__treat"
+                disabled={!treatSelf.available}
+                title={
+                  treatSelf.available
+                    ? 'Порадовать себя'
+                    : `Доступно через ${treatSelf.cooldown_periods_remaining} периодов`
+                }
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onTreatSelf?.();
+                }}
+              >
+                Порадовать себя
+              </button>
+            </div>
+          ) : null}
         </div>
       </div>
     </section>

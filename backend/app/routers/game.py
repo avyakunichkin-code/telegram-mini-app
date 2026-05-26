@@ -616,9 +616,16 @@ async def go_to_next_period(
     period_result = process_period_end(db, profile)
 
     if period_result["game_over"]:
+        reason = str(period_result.get("defeat_reason") or "")
+        if reason == "needs_depletion":
+            msg = "Игра окончена. Поражение: потребности были на нуле 3 месяца подряд. Начните новую игру."
+        elif reason == "cash_negative_streak":
+            msg = "Игра окончена. Вы трижды подряд имели отрицательный баланс. Начните новую игру."
+        else:
+            msg = "Игра окончена. Начните новую игру."
         raise HTTPException(
             status_code=400,
-            detail="Игра окончена. Вы трижды подряд имели отрицательный баланс. Начните новую игру."
+            detail=msg,
         )
 
     # Обновляем состояние времени

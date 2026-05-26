@@ -11,6 +11,14 @@ from .expenses import burn_breakdown_for_api, compute_monthly_burn
 from .finance_analytics import avg_net_cashflow_last_closed_intervals as _avg_net_cashflow_last_closed_intervals
 from .game_time import get_seconds_until_next
 from .models import FinanceAsset, FinanceLiability, FinanceSalary, GameProfile, GameStarterTemplate
+import json
+
+from .needs_engine import (
+    needs_values_from_profile,
+    normalize_treat_self_options,
+    parse_needs_config,
+    treat_self_availability,
+)
 from .schemas import (
     AchievementUnlockEvent,
     AssetResponse,
@@ -19,6 +27,10 @@ from .schemas import (
     MonthlyBurnBreakdown,
     SalaryProfileResponse,
     GameMechanicsPermissions,
+    NeedsMetaOverview,
+    NeedsOverview,
+    TreatSelfOverview,
+    TreatSelfOptionOverview,
     VictoryGoalOverview,
     VictoryOverview,
 )
@@ -123,9 +135,14 @@ def build_finance_overview(db: Session, profile: GameProfile) -> FinanceOverview
         .filter(GameStarterTemplate.template_key == template_key)
         .first()
     )
+    blueprint: dict = {}
     if template_row:
         template_key = template_row.template_key
         raw_victory = template_row.victory_config_json
+        try:
+            blueprint = json.loads(template_row.blueprint_json or "{}")
+        except Exception:
+            blueprint = {}
     else:
         raw_victory = None
 
@@ -192,6 +209,48 @@ def build_finance_overview(db: Session, profile: GameProfile) -> FinanceOverview
         ],
     )
 
+    # ---- Character needs (Z-NEEDS) ----
+    needs_cfg = None
+    if str(getattr(profile, "save_kind", "game") or "game") == "game":
+        needs_cfg = parse_needs_config(blueprint)
+
+    needs = None
+    needs_meta = None
+    treat_self = None
+    if needs_cfg:
+        nv = needs_values_from_profile(profile)
+        needs = NeedsOverview(**nv)
+        needs_meta = NeedsMetaOverview(
+            character_label=needs_cfg.get("character_label"),
+            consequence_profile=str(needs_cfg.get("consequence_profile") or "standard"),
+            thresholds=dict(needs_cfg.get("thresholds") or {}),
+            player_support=dict(needs_cfg.get("player_support") or {}),
+        )
+        ts_av = treat_self_availability(
+            needs_cfg,
+            period_index=int(profile.period_index or 0),
+            last_period_index=int(getattr(profile, "treat_self_last_period_index", 0) or 0),
+        )
+        options_norm = normalize_treat_self_options(
+            needs_cfg,
+            monthly_salary=float(monthly_income or 0),
+        )
+        treat_self = TreatSelfOverview(
+            available=bool(ts_av.get("available")),
+            cooldown_periods_remaining=int(ts_av.get("cooldown_periods_remaining") or 0),
+            options=[
+                TreatSelfOptionOverview(
+                    id=str(o.get("id") or ""),
+                    title=str(o.get("title") or ""),
+                    subtitle=o.get("subtitle"),
+                    cost=float(o.get("cost") or 0),
+                    needs_delta=NeedsOverview(**(o.get("needs_delta") or {})),
+                )
+                for o in options_norm
+                if isinstance(o, dict)
+            ],
+        )
+
     return FinanceOverview(
         salary=SalaryProfileResponse(
             monthly_amount=salary.monthly_amount if salary else 0,
@@ -232,6 +291,10 @@ def build_finance_overview(db: Session, profile: GameProfile) -> FinanceOverview
             for item in newly_unlocked_raw
             if isinstance(item, dict)
         ],
+        needs=needs,
+        needs_meta=needs_meta,
+        treat_self=treat_self,
+        needs_zero_periods_streak=int(getattr(profile, "needs_zero_periods_streak", 0) or 0),
         save_kind=str(getattr(profile, "save_kind", "game") or "game"),
         onboarding_state=str(getattr(profile, "onboarding_state", "brief_done") or "brief_done"),
         onboarding_step=str(getattr(profile, "onboarding_step", "farewell") or "farewell"),

@@ -10,6 +10,7 @@ from ..routers.insurance import router as insurance_router
 from ..routers.achievements import router as achievements_router
 from ..routers.expenses import router as expenses_router
 from ..routers.admin import router as admin_router
+from ..routers.needs import router as needs_router
 
 __all__ = [
     "auth_router",
@@ -24,4 +25,5 @@ __all__ = [
     "achievements_router",
     "expenses_router",
     "admin_router",
+    "needs_router",
 ]

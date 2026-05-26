@@ -190,6 +190,18 @@ export function useGame() {
     return result;
   }, [refreshGameState]);
 
+  const treatSelf = useCallback(async (optionId) => {
+    const result = await API.treatSelf({ option_id: optionId });
+    if (result && result.status === 'success') {
+      await refreshGameState();
+    }
+    return result;
+  }, [refreshGameState]);
+
+  const getNeedsGuide = useCallback(async () => {
+    return API.getNeedsGuide();
+  }, []);
+
   useEffect(() => {
     loadData();
   }, [loadData]);
@@ -216,6 +228,8 @@ export function useGame() {
     claimSalary,
     contributeToSafetyFund,
     withdrawFromSafetyFund,
+    treatSelf,
+    getNeedsGuide,
     refreshOverview,
     refreshPeriodStatus,
     refreshPendingEvent,

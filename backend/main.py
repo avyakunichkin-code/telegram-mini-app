@@ -23,6 +23,7 @@ from app.routers import (
     achievements_router,
     expenses_router,
     admin_router,
+    needs_router,
 )
 
 from app.seeds.game_starter_templates import GAME_STARTER_TEMPLATE_SEEDS
@@ -330,6 +331,7 @@ app.include_router(insurance_router)
 app.include_router(achievements_router)
 app.include_router(expenses_router)
 app.include_router(admin_router)
+app.include_router(needs_router)
 
 
 @app.get("/")

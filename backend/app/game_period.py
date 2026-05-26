@@ -3,6 +3,7 @@
 import logging
 
 from sqlalchemy.orm import Session
+import json
 
 logger = logging.getLogger(__name__)
 
@@ -14,6 +15,8 @@ from .models import (
     InvestmentPosition,
     PeriodEconomyClosing,
     PeriodSnapshot,
+    FinanceSalary,
+    GameStarterTemplate,
 )
 from .balance_utils import adjust_balance, add_transaction, TRANSACTION_TYPES
 from .achievement_engine import process_achievement_unlocks
@@ -22,6 +25,12 @@ from .routers.events import ensure_period_events, expire_pending_events_for_clos
 from .routers.insurance import charge_premiums_for_period
 from .expenses import compute_monthly_burn, expire_expense_lines_for_period, lifestyle_period_breakdown
 from .timeutil import utc_now_naive
+from .needs_engine import (
+    apply_decay,
+    needs_values_from_profile,
+    parse_needs_config,
+    set_profile_needs,
+)
 
 
 def _prev_period_closing(db: Session, profile_id: int, period_index: int) -> PeriodEconomyClosing | None:
@@ -198,6 +207,8 @@ def process_period_end(db: Session, profile: GameProfile) -> dict:
     closed_burn_total = 0.0
     total_overdue_added = 0.0
     invest_income = 0.0
+    defeat_reason = None
+    needs_result = None
 
     # 1. Собираем активные активы
     assets = db.query(FinanceAsset).filter(
@@ -354,6 +365,7 @@ def process_period_end(db: Session, profile: GameProfile) -> dict:
         if profile.negative_periods_count >= 3:
             # Поражение: блокируем профиль
             profile.is_active = 0
+            defeat_reason = "cash_negative_streak"
             add_transaction(
                 db=db,
                 game_profile_id=profile.id,
@@ -365,6 +377,88 @@ def process_period_end(db: Session, profile: GameProfile) -> dict:
     else:
         # Если баланс неотрицательный – сбрасываем счётчик
         profile.negative_periods_count = 0
+
+    # 4.2 Character needs: decay + distressed penalty + defeat streak (ADR-005)
+    try:
+        if str(getattr(profile, "save_kind", "game") or "game") == "game" and int(profile.is_active or 0) == 1:
+            tk = str(getattr(profile, "starter_template_key", "") or "")
+            if tk:
+                tmpl = (
+                    db.query(GameStarterTemplate)
+                    .filter(GameStarterTemplate.template_key == tk)
+                    .first()
+                )
+            else:
+                tmpl = None
+
+            blueprint = {}
+            if tmpl is not None:
+                try:
+                    blueprint = json.loads(tmpl.blueprint_json or "{}")
+                except Exception:
+                    blueprint = {}
+            cfg = parse_needs_config(blueprint)
+            if cfg:
+                before = needs_values_from_profile(profile)
+                dec = apply_decay(cfg, before)
+                set_profile_needs(profile, dec.after)
+
+                # streak: any axis == 0 after decay
+                if dec.has_zero_after:
+                    profile.needs_zero_periods_streak = int(getattr(profile, "needs_zero_periods_streak", 0) or 0) + 1
+                else:
+                    profile.needs_zero_periods_streak = 0
+
+                # distressed penalty (< distressed threshold) — может сработать и при нуле
+                distressed_thr = int(cfg.get("thresholds", {}).get("distressed") or 30)
+                is_distressed = any(float(dec.after[k]) < float(distressed_thr) for k in dec.after.keys())
+                if is_distressed:
+                    salary = (
+                        db.query(FinanceSalary)
+                        .filter(FinanceSalary.game_profile_id == profile.id)
+                        .first()
+                    )
+                    monthly_salary = float(salary.monthly_amount) if salary else 0.0
+                    cons = cfg.get("consequences") if isinstance(cfg.get("consequences"), dict) else {}
+                    pct = float(cons.get("distressed_cash_penalty_pct_salary") or 0)
+                    min_pen = float(cons.get("distressed_cash_penalty_min") or 0)
+                    penalty = max(monthly_salary * pct, min_pen)
+                    penalty = round(float(penalty), 2)
+                    if penalty > 0:
+                        adjust_balance(
+                            db=db,
+                            game_profile_id=profile.id,
+                            amount=-penalty,
+                            type=TRANSACTION_TYPES["PERIOD_PENALTY"],
+                            description=f"Штраф за истощение потребностей (период #{period_index})",
+                            period_index=period_index,
+                        )
+                        db.refresh(profile)
+
+                # defeat: streak >= 3
+                if int(getattr(profile, "needs_zero_periods_streak", 0) or 0) >= 3:
+                    profile.is_active = 0
+                    defeat_reason = "needs_depletion"
+                    add_transaction(
+                        db=db,
+                        game_profile_id=profile.id,
+                        amount=0,
+                        type=TRANSACTION_TYPES["GAME_OVER"],
+                        description=f"Поражение: потребности на нуле 3 месяца подряд (период #{period_index})",
+                        period_index=period_index,
+                    )
+
+                needs_result = {
+                    "before": before,
+                    "after": dec.after,
+                    "decay": dec.decay,
+                    "min_axis": dec.min_axis,
+                    "has_zero": dec.has_zero_after,
+                    "streak": int(getattr(profile, "needs_zero_periods_streak", 0) or 0),
+                }
+    except Exception:
+        logger.exception("Needs processing failed profile_id=%s period_index=%s", profile.id, period_index)
+        db.refresh(profile)
 
     # 5. Снимок на конец периода для аналитики + счётчик «чистых» месяцев без просрочек
     snapshot = (
@@ -470,6 +564,8 @@ def process_period_end(db: Session, profile: GameProfile) -> dict:
         "new_balance": profile.cash_balance,
         "negative_streak": profile.negative_periods_count,
         "game_over": profile.is_active == 0,
+        "defeat_reason": defeat_reason,
+        "needs": needs_result,
         "overdue_added": round(total_overdue_added, 2),
         "achievement_unlocks": achievement_unlocks,
     }

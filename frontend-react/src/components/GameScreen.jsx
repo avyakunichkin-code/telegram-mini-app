@@ -48,6 +48,8 @@ export function GameScreen({ onLogout, onNewGame, onLoadGame }) {
     claimSalary,
     contributeToSafetyFund,
     withdrawFromSafetyFund,
+    treatSelf,
+    getNeedsGuide,
     refreshOverview,
     refreshGameState,
     refreshPendingEvent,
@@ -301,6 +303,8 @@ export function GameScreen({ onLogout, onNewGame, onLoadGame }) {
                     claimSalary={claimSalary}
                     contributeToSafetyFund={contributeToSafetyFund}
                     withdrawFromSafetyFund={withdrawFromSafetyFund}
+                    treatSelf={treatSelf}
+                    getNeedsGuide={getNeedsGuide}
                     onGoFinance={() => {
                       setCapitalFlowsOpen(null);
                       setActiveTab('finance');

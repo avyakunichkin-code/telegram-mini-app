@@ -195,6 +195,34 @@ class GameMechanicsPermissions(BaseModel):
     capital_liabilities: bool = True
 
 
+class NeedsOverview(BaseModel):
+    comfort: float = 0
+    status: float = 0
+    social: float = 0
+    health: float = 0
+
+
+class NeedsMetaOverview(BaseModel):
+    character_label: Optional[str] = None
+    consequence_profile: str = "standard"
+    thresholds: dict = Field(default_factory=dict)
+    player_support: dict = Field(default_factory=dict)
+
+
+class TreatSelfOptionOverview(BaseModel):
+    id: str
+    title: str
+    subtitle: Optional[str] = None
+    cost: float = 0
+    needs_delta: NeedsOverview = Field(default_factory=NeedsOverview)
+
+
+class TreatSelfOverview(BaseModel):
+    available: bool = False
+    cooldown_periods_remaining: int = 0
+    options: List[TreatSelfOptionOverview] = Field(default_factory=list)
+
+
 class FinanceOverview(BaseModel):
     salary: SalaryProfileResponse
     liabilities: List[LiabilityResponse]
@@ -232,6 +260,11 @@ class FinanceOverview(BaseModel):
     avg_net_cashflow_6p_n: int = 0
     victory: Optional[VictoryOverview] = None
     newly_unlocked: List["AchievementUnlockEvent"] = Field(default_factory=list)
+    # Character needs (Z-NEEDS)
+    needs: Optional[NeedsOverview] = None
+    needs_meta: Optional[NeedsMetaOverview] = None
+    treat_self: Optional[TreatSelfOverview] = None
+    needs_zero_periods_streak: int = 0
     save_kind: str = "game"
     onboarding_state: str = "brief_done"
     onboarding_step: str = "farewell"
@@ -406,6 +439,23 @@ class GameStartResponse(BaseModel):
 
 class SafetyFundContribution(BaseModel):
     amount: float
+
+
+class TreatSelfRequest(BaseModel):
+    option_id: str
+
+
+class TreatSelfResponse(BaseModel):
+    status: str = "success"
+    option_id: str
+    cost: float = 0
+    needs_after: Optional[NeedsOverview] = None
+    message: str = ""
+
+
+class NeedsGuideResponse(BaseModel):
+    maintenance: List[str] = Field(default_factory=list)
+    critical: List[str] = Field(default_factory=list)
 
 
 class PeriodStatusResponse(BaseModel):

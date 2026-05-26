@@ -6,10 +6,25 @@ from ..auth import get_current_user
 from ..balance_utils import adjust_balance, TRANSACTION_TYPES, adjust_safety_fund_balance
 from ..database import get_db
 from ..models import GameProfile, PeriodSnapshot, FinanceSalary, FinanceLiability, FinanceAsset
-from ..schemas import SafetyFundContribution, PeriodStatusResponse, PeriodSummaryResponse
+from ..schemas import (
+    SafetyFundContribution,
+    PeriodStatusResponse,
+    PeriodSummaryResponse,
+    TreatSelfRequest,
+    TreatSelfResponse,
+)
 from ..game_time import get_active_game_profile, sync_time, get_seconds_until_next
 from ..idempotency import read_idempotency_key, run_idempotent
 from ..timeutil import utc_now_naive
+from ..needs_engine import (
+    needs_values_from_profile,
+    normalize_treat_self_options,
+    parse_needs_config,
+    set_profile_needs,
+    treat_self_availability,
+)
+from ..models import GameStarterTemplate
+import json
 
 router = APIRouter(prefix="/api/game/period", tags=["period"])
 
@@ -323,6 +338,103 @@ async def withdraw_from_safety_fund(
             db,
             user_id=current_user.id,
             route_key="period.withdraw_safety_fund",
+            idempotency_key=idem_key,
+            handler=_execute,
+        )
+        return JSONResponse(status_code=status, content=body)
+    return _execute()
+
+
+@router.post("/treat-self", response_model=TreatSelfResponse)
+async def treat_self(
+    request: Request,
+    payload: TreatSelfRequest,
+    current_user=Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    """«Порадовать себя»: списание с cash + needs_delta, с кулдауном по периодам (ADR-006)."""
+    option_id = (payload.option_id or "").strip()
+    if not option_id:
+        raise HTTPException(status_code=400, detail="option_id is required")
+
+    idem_key = read_idempotency_key(request)
+
+    def _execute() -> dict:
+        profile = get_active_game_profile(db, current_user.id)
+        sync_time(profile)
+        if str(getattr(profile, "save_kind", "game") or "game") != "game":
+            raise HTTPException(status_code=400, detail="Недоступно в Plan")
+
+        tk = str(getattr(profile, "starter_template_key", "") or "")
+        tmpl = (
+            db.query(GameStarterTemplate)
+            .filter(GameStarterTemplate.template_key == tk)
+            .first()
+            if tk
+            else None
+        )
+        blueprint = {}
+        if tmpl is not None:
+            try:
+                blueprint = json.loads(tmpl.blueprint_json or "{}")
+            except Exception:
+                blueprint = {}
+
+        cfg = parse_needs_config(blueprint)
+        if not cfg:
+            raise HTTPException(status_code=400, detail="Потребности отключены для этого персонажа")
+
+        period_index = int(profile.period_index or 0)
+        last_pi = int(getattr(profile, "treat_self_last_period_index", 0) or 0)
+        av = treat_self_availability(cfg, period_index=period_index, last_period_index=last_pi)
+        if not bool(av.get("available")):
+            rem = int(av.get("cooldown_periods_remaining") or 0)
+            raise HTTPException(status_code=400, detail=f"Можно снова через {rem} периодов")
+
+        salary = db.query(FinanceSalary).filter(FinanceSalary.game_profile_id == profile.id).first()
+        monthly_salary = float(salary.monthly_amount) if salary else 0.0
+        options = normalize_treat_self_options(cfg, monthly_salary=monthly_salary)
+        opt = next((o for o in options if str(o.get("id") or "") == option_id), None)
+        if opt is None:
+            raise HTTPException(status_code=400, detail="Неизвестная опция")
+
+        cost = float(opt.get("cost") or 0)
+        if cost <= 0:
+            raise HTTPException(status_code=400, detail="Некорректная стоимость")
+        if float(profile.cash_balance or 0) < cost:
+            raise HTTPException(status_code=400, detail="Не хватает средств на карте")
+
+        adjust_balance(
+            db=db,
+            game_profile_id=profile.id,
+            amount=-cost,
+            type="treat_self",
+            description=f"Порадовать себя: {opt.get('title')}",
+            period_index=period_index,
+        )
+        db.refresh(profile)
+
+        before = needs_values_from_profile(profile)
+        delta = opt.get("needs_delta") if isinstance(opt.get("needs_delta"), dict) else {}
+        after = {k: float(before.get(k) or 0) + float(delta.get(k) or 0) for k in before.keys()}
+        set_profile_needs(profile, after)
+        profile.treat_self_last_period_index = period_index
+        db.commit()
+        db.refresh(profile)
+
+        return {
+            "status": "success",
+            "option_id": option_id,
+            "cost": round(cost, 2),
+            "needs_after": needs_values_from_profile(profile),
+            "message": "Самочувствие улучшилось",
+        }
+
+    if idem_key:
+        status, body = run_idempotent(
+            db,
+            user_id=current_user.id,
+            route_key="period.treat_self",
             idempotency_key=idem_key,
             handler=_execute,
         )

@@ -25,6 +25,8 @@ import {
   MqxFinancePeriodBlock,
 
   MqxNeedsDash,
+  MqxNeedsHelpSheet,
+  MqxTreatSelfSheet,
 
   MqxGoalDash,
 
@@ -96,6 +98,8 @@ export function DashboardPremium({
   contributeToSafetyFund,
 
   withdrawFromSafetyFund,
+  treatSelf,
+  getNeedsGuide,
 
   onGoFinance,
 
@@ -112,6 +116,8 @@ export function DashboardPremium({
   const [juiceAmount, setJuiceAmount] = useState(0);
   const [juiceToastVisible, setJuiceToastVisible] = useState(false);
   const [salaryCelebrate, setSalaryCelebrate] = useState(false);
+  const [needsHelpOpen, setNeedsHelpOpen] = useState(false);
+  const [treatOpen, setTreatOpen] = useState(false);
 
   const safetyPanelRef = useRef(null);
   const juiceTimerRef = useRef(null);
@@ -378,7 +384,9 @@ export function DashboardPremium({
             <MqxNeedsDash
               needs={overview?.needs}
               needsZeroPeriodsStreak={overview?.needs_zero_periods_streak ?? overview?.needsZeroPeriodsStreak ?? 0}
-              onImprove={() => showNotification('Скоро', 'info')}
+              treatSelf={overview?.treat_self}
+              onHelp={() => setNeedsHelpOpen(true)}
+              onTreatSelf={() => setTreatOpen(true)}
             />
 
             <MqxDivider />
@@ -475,6 +483,17 @@ export function DashboardPremium({
 
       </div>
 
+      <MqxNeedsHelpSheet
+        open={needsHelpOpen}
+        onClose={() => setNeedsHelpOpen(false)}
+        loadGuide={getNeedsGuide}
+      />
+      <MqxTreatSelfSheet
+        open={treatOpen}
+        onClose={() => setTreatOpen(false)}
+        treatSelf={treatSelf}
+        treatSelfState={overview?.treat_self}
+      />
     </>
 
   );
