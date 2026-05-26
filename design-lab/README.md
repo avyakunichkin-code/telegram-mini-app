@@ -27,6 +27,7 @@
 | [onboarding-brief/](onboarding-brief/) | superseded | ~~Mission Brief 3 карточки + видео~~ |
 | [brand-logo/](brand-logo/) | **★ → prod** | G1 старт, G2 hero; tagline в G1 |
 | [game-ui/juice-round/](game-ui/juice-round/) | **★ A+C+D → prod** | Gain, turn ritual, salary warn; B Risk — backlog |
+| [character-needs/](character-needs/) | **dashboard-needs-round готов** | Z-NEEDS A–D; treat-self / events — следующие раунды |
 
 ## Как работать
 

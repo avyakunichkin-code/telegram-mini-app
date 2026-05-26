@@ -86,9 +86,10 @@ App (HashRouter)
 
 1. **Период и закрытие месяца** (hero H2) — highest: «Месяц открыт», № периода, primary **«Закрыть месяц»**, pill «События».  
 2. **Снимок денег за период** (2×2 chips) — scan за 2–3 с.  
-3. **Прогресс сценария** (цель, свёрнуто по умолчанию) — мотивация, не блокирует действия.  
-4. **Действия периода** (2×2 chips) — primary motor loop.  
-5. **Inline-панель подушки** — только после выбора «Пополнить» / «Снять».
+3. **Самочувствие** (Z-NEEDS, compact) — четыре потребности; детали по раскрытию — см. [`character-needs-dashboard.md`](character-needs-dashboard.md) (фаза 1, после онбординга).  
+4. **Прогресс сценария** (цель, свёрнуто по умолчанию) — мотивация, не блокирует действия.  
+5. **Действия периода** (2×2 chips) — primary motor loop.  
+6. **Inline-панель подушки** — только после выбора «Пополнить» / «Снять».
 
 ### Layout Zones
 
@@ -96,6 +97,7 @@ App (HashRouter)
 |------|-----------|-------------|
 | **Z0 Hero** | `MqxDashboardHero` | `mqx-hero--compact`, full width, градиент S5 |
 | **Z1 Финансы периода** | `MqxFinancePeriodBlock` | `mqx-finance-static`, 2×2 chips, «Все финансы →» |
+| **Z-NEEDS** | `MqxNeedsSummary` + `MqxNeedsBars` | compact accordion; treat-self + help — [`character-needs-dashboard.md`](character-needs-dashboard.md) |
 | **Z2 Цель** | `MqxGoalDash` | `mqx-goal-dash`, аккордеон, bleed sky-фон |
 | **Z3 Действия** | `MqxPeriodActions` | `mqx-period-actions--chips`, 2×2 |
 | **Z3b Подушка inline** | `SafetyFundActionForm` | `mqx-dash-safety-panel`, условный рендер |
@@ -130,6 +132,8 @@ App (HashRouter)
 │ │ Баланс  │ Подушка │ [fill bar]    │
 │ └─────────┴─────────┘               │
 │ Все финансы →                       │
+├─────────────────────────────────────┤
+│ ▼ Самочувствие · compact / 4 bars   │  Z-NEEDS (phase 1)
 ├─────────────────────────────────────┤
 │ ▼ Цель · [название текущей цели]    │  Z2 (collapsed)
 │     (●)—(●)—(◉)—(○)—(○)  stepper    │  без «Шаг K из N»

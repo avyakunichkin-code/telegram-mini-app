@@ -530,9 +530,9 @@
 .mqx-hero-turn__row-single {
   position: relative;
   display: grid;
-  grid-template-columns: auto minmax(0, 1fr) auto;
+  grid-template-columns: auto minmax(0, 1fr) max-content;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
 }
 
 .mqx-hero-turn__period-block {
@@ -570,10 +570,10 @@
   flex-direction: row;
   align-items: center;
   justify-content: flex-end;
-  gap: 8px;
+  gap: 6px;
   flex-shrink: 0;
-  min-width: 0;
-  max-width: min(100%, 220px);
+  width: max-content;
+  max-width: none;
 }
 
 .mqx-hero-turn__actions-col .mqx-hero-turn__events-pill {
@@ -581,8 +581,7 @@
 }
 
 .mqx-hero-turn__actions-col .mqx-hero-turn__cta-primary {
-  flex: 1 1 auto;
-  min-width: 0;
+  flex: 0 0 auto;
 }
 
 .mqx-hero-turn__cta-primary.mqx-btn {
@@ -591,7 +590,8 @@
   justify-content: center;
   gap: 6px;
   min-height: 40px;
-  padding: 0 12px;
+  padding: 0 10px;
+  white-space: nowrap;
   border: none;
   border-radius: 12px;
   font-size: var(--mq-fs-caption);

@@ -26,6 +26,7 @@ export { MqxDashStack } from './layout/MqxDashStack';
 export { MqxDivider } from './primitives/MqxDivider';
 export { MqxLevelDash } from './layout/MqxLevelDash';
 export { MqxGoalDash } from './layout/MqxGoalDash';
+export { MqxNeedsDash } from './layout/MqxNeedsDash';
 export { MqxFinancePeriodBlock } from './layout/MqxFinancePeriodBlock';
 export { MqxPeriodActions } from './layout/MqxPeriodActions';
 export { MqxPeriodHint } from './layout/MqxPeriodHint';

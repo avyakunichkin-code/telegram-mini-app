@@ -33,7 +33,7 @@
 |------|--------|
 | Разработчик / агент | `CLAUDE.md` → [`foundation/SPEC_PRODUCT.md`](foundation/SPEC_PRODUCT.md) → spec своей фичи |
 | Продукт | [`foundation/SPEC_PRODUCT.md`](foundation/SPEC_PRODUCT.md) + [Часть II (evolution)](vision/ideas/tvoy-hod-evolution-after-mvp.md) |
-| UI/UX | [`specs/SPEC_FRONTEND_UI.md`](specs/SPEC_FRONTEND_UI.md) + [`ux/screens/`](ux/screens/) + [`reference/brandbook/BRANDBOOK.md`](reference/brandbook/BRANDBOOK.md) + [`BRANDBOOK_MQX.md`](reference/brandbook/BRANDBOOK_MQX.md) |
+| UI/UX | [`specs/SPEC_FRONTEND_UI.md`](specs/SPEC_FRONTEND_UI.md) + [`ux/screens/`](ux/screens/) + [`ux/CHARACTER_NEEDS_UX.md`](ux/CHARACTER_NEEDS_UX.md) + [`reference/brandbook/BRANDBOOK.md`](reference/brandbook/BRANDBOOK.md) + [`BRANDBOOK_MQX.md`](reference/brandbook/BRANDBOOK_MQX.md) |
 | Лендинг / скрины MQX | [`specs/LANDING_SCREENSHOTS.md`](specs/LANDING_SCREENSHOTS.md) + [`landing/README.md`](../landing/README.md) |
 | Маркетинг / посты | [`marketing/README.md`](marketing/README.md) + скилл **social-changelog-posts** |
 | Планирование | [`backlog/PRODUCT_BACKLOG.md`](backlog/PRODUCT_BACKLOG.md) + [`TRACEABILITY.md`](TRACEABILITY.md) |

@@ -24,6 +24,8 @@ import {
 
   MqxFinancePeriodBlock,
 
+  MqxNeedsDash,
+
   MqxGoalDash,
 
   MqxPeriodActions,
@@ -369,6 +371,14 @@ export function DashboardPremium({
               onGoFinance={onGoFinance}
               onFlowsNavigate={onGoCapitalFlows}
               juiceGainActive={salaryCelebrate}
+            />
+
+            <MqxDivider />
+
+            <MqxNeedsDash
+              needs={overview?.needs}
+              needsZeroPeriodsStreak={overview?.needs_zero_periods_streak ?? overview?.needsZeroPeriodsStreak ?? 0}
+              onImprove={() => showNotification('Скоро', 'info')}
             />
 
             <MqxDivider />

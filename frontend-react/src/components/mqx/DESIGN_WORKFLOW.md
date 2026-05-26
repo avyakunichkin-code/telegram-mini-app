@@ -99,6 +99,7 @@ npx serve .
 | 12 | **`period-close/`** — хвостик ★; итог — **`game-ui/juice-round` C** | `MqxPeriodCloseRitual`, `MqxPeriodCloseTail` (sheet legacy в каталоге) |
 | 13 | **`game-ui/juice-round/`** ★ A+C+D | `MqxJuiceGainFeedback`, `MqxPeriodCloseRitual`, `MqxSalaryWarnModal` |
 | 13 | **`capital-page/`** — IA ★, вариант A/B | унификация `FinanceSection` → MQX |
+| 14 | **`character-needs/`** — dashboard Z-NEEDS, treat-self, events chips | `MqxNeedsSummary`, `MqxNeedsBars`, `MqxTreatSelfSheet`, … |
 
 Текущий статус: **дашборд S5**, **события L3 + оверлей O1**, **итог периода**, **новая игра**, **онбординг** в prod. Lab оверлея: [`design-lab/events/overlay-round/`](../../../../design-lab/events/overlay-round/). Дальше: **empty/error**, **капитал**.
 

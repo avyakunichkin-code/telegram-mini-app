@@ -15,6 +15,7 @@
 | 2026-05-26 | TB1 в prod | `game_time.sync_time`, hero H2 «Закрыть месяц»; `dashboard.md`, SPEC §3.1/§52, GLOSSARY, TMA flows, TRACEABILITY T1, backlog, idea/plan status |
 | 2026-05-26 | Дочистка TB1 в docs | `SPEC_onboarding-tma`, `GAME.md` §12, `CLAUDE.md`, PW1 plan, Pre-Alpha опрос, evolution §снимок, balance-thresholds, hero-compact → superseded |
 | 2026-05-26 | GAME.md §5–6 | Сжаты level/XP; канон → remove-character-xp + ADR-003/004; пошаговый период в §0–1 |
+| 2026-05-26 | Character needs (pre-code) | UX пакет: `docs/ux/CHARACTER_NEEDS_UX.md` + 6 screen specs; `design-lab/character-needs/`; ADR-005/006 + SPEC; architecture TR-needs-004 |
 
 ## Источник правды по темам
 
