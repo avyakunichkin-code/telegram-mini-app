@@ -1,6 +1,6 @@
 import { BrandLogo } from './BrandLogo';
 
-/** Логотип по центру (compact G2 — без подписи «Финансы как игра»). */
+/** Логотип по центру (compact G2 или full G1). */
 export function BrandMark({ className = '', variant = 'compact' }) {
   const v = variant === 'full' ? 'full' : 'compact';
   return (

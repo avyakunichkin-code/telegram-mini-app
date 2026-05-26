@@ -372,21 +372,21 @@ export function DashboardPremium({
               toastMessage="Зарплата в кошелёк — ход стал сильнее"
             />
 
-            <MqxFinancePeriodBlock
-              financeCards={financeCards}
-              onGoFinance={onGoFinance}
-              onFlowsNavigate={onGoCapitalFlows}
-              juiceGainActive={salaryCelebrate}
-            />
-
-            <MqxDivider />
-
             <MqxNeedsDash
               needs={overview?.needs}
               needsZeroPeriodsStreak={overview?.needs_zero_periods_streak ?? overview?.needsZeroPeriodsStreak ?? 0}
               treatSelf={overview?.treat_self}
               onHelp={() => setNeedsHelpOpen(true)}
               onTreatSelf={() => setTreatOpen(true)}
+            />
+
+            <MqxDivider />
+
+            <MqxFinancePeriodBlock
+              financeCards={financeCards}
+              onGoFinance={onGoFinance}
+              onFlowsNavigate={onGoCapitalFlows}
+              juiceGainActive={salaryCelebrate}
             />
 
             <MqxDivider />

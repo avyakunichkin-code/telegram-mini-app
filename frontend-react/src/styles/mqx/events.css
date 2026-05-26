@@ -81,49 +81,6 @@
   max-height: 140px;
 }
 
-/* Full lockup (G1) — клонируем "Финансы как игра" как текст */
-.mqx-brand-logo-full-wrap {
-  position: relative;
-  display: block;
-  flex-shrink: 0;
-}
-
-/* Срезаем из raster-лого нижнюю часть с оригинальной подписью. */
-.mqx-brand-logo--full-top {
-  clip-path: inset(0 0 30% 0);
-}
-
-.mqx-brand-logo-full__tagline {
-  position: absolute;
-  left: 50%;
-  bottom: 10%;
-  transform: translateX(-50%) skewX(-12deg);
-
-  font-size: clamp(11px, 2.2vw, 20px);
-  font-weight: 900;
-  letter-spacing: -0.02em;
-  white-space: nowrap;
-  text-align: center;
-  line-height: 1.05;
-  user-select: none;
-  pointer-events: none;
-
-  /* Фиолетовая 3D-стилистика "как у ХОД" (приближение). */
-  background: linear-gradient(180deg, #a78bfa 0%, var(--mq-violet, #6d28d9) 45%, var(--mq-violet-deep, #5b21b6) 100%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-
-  text-shadow:
-    0 1px 0 rgba(255, 255, 255, 0.35),
-    0 2px 0 rgba(67, 56, 202, 0.22),
-    0 4px 0 rgba(15, 17, 21, 0.20),
-    0 10px 20px rgba(0, 0, 0, 0.25);
-
-  /* лёгкая внешняя обводка для читаемости на фоне */
-  -webkit-text-stroke: 0.5px rgba(255, 255, 255, 0.08);
-}
-
 .mqx-brand-mark {
   display: flex;
   flex-direction: column;

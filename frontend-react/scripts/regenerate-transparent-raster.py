@@ -13,6 +13,7 @@ DOCS_ASSETS = Path(__file__).resolve().parents[2] / "docs" / "reference" / "asse
 RASTER_TARGETS = [
     FRONTEND_ASSETS / "monetka-mascot.png",
     FRONTEND_ASSETS / "monetka-poses" / "monetka-sit-edge.png",
+    FRONTEND_ASSETS / "character-needs" / "student-mascot.png",
     FRONTEND_ASSETS / "brand" / "logo-compact.png",
     FRONTEND_ASSETS / "brand" / "logo-full.png",
     DOCS_ASSETS / "monetka-mascot.png",
