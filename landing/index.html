@@ -11,8 +11,8 @@
       href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
       rel="stylesheet"
     />
-    <script type="module" crossorigin src="/telegram-mini-app/landing/assets/index-Dfryz_dC.js"></script>
-    <link rel="stylesheet" crossorigin href="/telegram-mini-app/landing/assets/index-Bp_vlQTE.css">
+    <script type="module" crossorigin src="/telegram-mini-app/landing/assets/index-CAzcaQLx.js"></script>
+    <link rel="stylesheet" crossorigin href="/telegram-mini-app/landing/assets/index-C18vvOBK.css">
   </head>
   <body>
     <a class="mq-skip" href="#main" data-i18n="a11y.skip">Перейти к содержанию</a>
@@ -53,18 +53,21 @@
           <div class="mq-hero__copy mq-reveal">
             <p class="mq-eyebrow" data-i18n="hero.eyebrow">Telegram Mini App</p>
             <h1 id="hero-title" class="mq-hero__logo">
-              <picture>
-                <source srcset="/telegram-mini-app/landing/brand/logo-full.webp" type="image/webp" />
-                <img
-                  class="mq-hero__logo-img"
-                  src="/telegram-mini-app/landing/brand/logo-full.png"
-                  width="280"
-                  height="120"
-                  alt=""
-                  data-i18n-attr="alt:brand.logoAlt"
-                  decoding="async"
-                />
-              </picture>
+              <div class="mq-lockup-full mq-hero__logo-img" aria-hidden="true">
+                <picture class="mq-lockup-full__picture">
+                  <source srcset="/telegram-mini-app/landing/brand/logo-full.webp" type="image/webp" />
+                  <img
+                    class="mq-lockup-full__img-top"
+                    src="/telegram-mini-app/landing/brand/logo-full.png"
+                    width="280"
+                    height="120"
+                    alt=""
+                    decoding="async"
+                    draggable="false"
+                  />
+                </picture>
+                <span class="mq-lockup-full__tagline" aria-hidden="true">Финансы как игра</span>
+              </div>
             </h1>
             <p class="mq-lead" data-i18n="hero.subtitle">Проживайте условные месяцы</p>
             <blockquote class="mq-hero-quote">
@@ -235,18 +238,21 @@
 
       <section class="mq-cta-band" aria-labelledby="cta-band-title">
         <div class="mq-wrap mq-cta-band__inner mq-reveal">
-          <picture>
-            <source srcset="/telegram-mini-app/landing/brand/logo-full.webp" type="image/webp" />
-            <img
-              class="mq-cta-band__logo"
-              src="/telegram-mini-app/landing/brand/logo-full.png"
-              width="200"
-              height="86"
-              alt=""
-              data-i18n-attr="alt:brand.logoAlt"
-              decoding="async"
-            />
-          </picture>
+          <div class="mq-cta-band__logo mq-lockup-full" aria-hidden="true">
+            <picture class="mq-lockup-full__picture">
+              <source srcset="/telegram-mini-app/landing/brand/logo-full.webp" type="image/webp" />
+              <img
+                class="mq-lockup-full__img-top"
+                src="/telegram-mini-app/landing/brand/logo-full.png"
+                width="200"
+                height="86"
+                alt=""
+                decoding="async"
+                draggable="false"
+              />
+            </picture>
+            <span class="mq-lockup-full__tagline" aria-hidden="true">Финансы как игра</span>
+          </div>
           <div>
             <h2 id="cta-band-title" data-i18n="ctaBand.title">Готовы к первому ходу?</h2>
             <p data-i18n="ctaBand.text">Запуск в Telegram готовится</p>
