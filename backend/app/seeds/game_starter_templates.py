@@ -33,6 +33,33 @@ GAME_STARTER_TEMPLATE_SEEDS = [
             "mechanics_unlock": [
                 {"after_goal": None, "grant": ["capital_flows", "capital_invest"]},
             ],
+            "needs": {
+                "enabled": True,
+                "character_label": "Студент",
+                "initial": {"comfort": 72, "status": 48, "social": 58, "health": 76},
+                "periods_to_empty_target": 14,
+                "thresholds": {"low": 40, "distressed": 30},
+                "consequence_profile": "soft",
+                "consequences": {
+                    "distressed_cash_penalty_pct_salary": 0.02,
+                    "distressed_cash_penalty_min": 1000,
+                },
+                "player_support": {"proactive_hints": True, "rescue_event_bias": 1.2},
+                "treat_self": {
+                    "cooldown_periods": 15,
+                    "default_cost_pct_salary": 0.08,
+                    "cost_min": 2000,
+                    "cost_max": 25000,
+                    "options": [
+                        {
+                            "id": "picnic_friends",
+                            "title": "Отгул: пикник с друзьями",
+                            "subtitle": "Отдых и общение",
+                            "needs_delta": {"social": 22, "health": 18, "comfort": 6, "status": 4},
+                        }
+                    ],
+                },
+            },
         },
     },
     {
@@ -85,6 +112,33 @@ GAME_STARTER_TEMPLATE_SEEDS = [
                 {"after_goal": "tutorial_invest", "grant": ["capital_insurance"]},
                 {"after_goal": "tutorial_insurance", "grant": ["capital_property"]},
             ],
+            "needs": {
+                "enabled": True,
+                "character_label": "Профессионал",
+                "initial": {"comfort": 65, "status": 35, "social": 52, "health": 60},
+                "periods_to_empty_target": 12,
+                "thresholds": {"low": 40, "distressed": 30},
+                "consequence_profile": "standard",
+                "consequences": {
+                    "distressed_cash_penalty_pct_salary": 0.04,
+                    "distressed_cash_penalty_min": 2000,
+                },
+                "player_support": {"proactive_hints": False, "rescue_event_bias": 1.0},
+                "treat_self": {
+                    "cooldown_periods": 15,
+                    "default_cost_pct_salary": 0.08,
+                    "cost_min": 2000,
+                    "cost_max": 25000,
+                    "options": [
+                        {
+                            "id": "deep_focus",
+                            "title": "День фокуса",
+                            "subtitle": "Собраться и перевести дух",
+                            "needs_delta": {"status": 18, "comfort": 12, "social": 6, "health": 8},
+                        }
+                    ],
+                },
+            },
         },
     },
     {
@@ -145,6 +199,33 @@ GAME_STARTER_TEMPLATE_SEEDS = [
                 {"after_goal": "tutorial_invest", "grant": ["capital_insurance"]},
                 {"after_goal": "tutorial_insurance", "grant": ["capital_property"]},
             ],
+            "needs": {
+                "enabled": True,
+                "character_label": "Руководитель",
+                "initial": {"comfort": 55, "status": 60, "social": 45, "health": 28},
+                "periods_to_empty_target": 12,
+                "thresholds": {"low": 40, "distressed": 30},
+                "consequence_profile": "standard",
+                "consequences": {
+                    "distressed_cash_penalty_pct_salary": 0.04,
+                    "distressed_cash_penalty_min": 2000,
+                },
+                "player_support": {"proactive_hints": False, "rescue_event_bias": 1.0},
+                "treat_self": {
+                    "cooldown_periods": 15,
+                    "default_cost_pct_salary": 0.08,
+                    "cost_min": 2000,
+                    "cost_max": 25000,
+                    "options": [
+                        {
+                            "id": "family_outing",
+                            "title": "Теплый выход",
+                            "subtitle": "Время с близкими и восстановление",
+                            "needs_delta": {"social": 10, "health": 16, "comfort": 8, "status": 12},
+                        }
+                    ],
+                },
+            },
         },
     },
     {
@@ -209,6 +290,33 @@ GAME_STARTER_TEMPLATE_SEEDS = [
                 {"after_goal": "tutorial_invest", "grant": ["capital_insurance"]},
                 {"after_goal": "tutorial_insurance", "grant": ["capital_property"]},
             ],
+            "needs": {
+                "enabled": True,
+                "character_label": "Предприниматель",
+                "initial": {"comfort": 50, "status": 32, "social": 22, "health": 40},
+                "periods_to_empty_target": 10,
+                "thresholds": {"low": 40, "distressed": 30},
+                "consequence_profile": "hard",
+                "consequences": {
+                    "distressed_cash_penalty_pct_salary": 0.06,
+                    "distressed_cash_penalty_min": 3000,
+                },
+                "player_support": {"proactive_hints": False, "rescue_event_bias": 1.0},
+                "treat_self": {
+                    "cooldown_periods": 15,
+                    "default_cost_pct_salary": 0.08,
+                    "cost_min": 2000,
+                    "cost_max": 25000,
+                    "options": [
+                        {
+                            "id": "quiet_evening",
+                            "title": "Тихий вечер",
+                            "subtitle": "Снять напряжение и восстановиться",
+                            "needs_delta": {"comfort": 10, "status": 8, "social": 6, "health": 14},
+                        }
+                    ],
+                },
+            },
         },
     },
 ]

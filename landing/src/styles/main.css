@@ -244,9 +244,58 @@ a {
 
 .mq-hero__logo-img {
   display: block;
+  position: relative;
+  overflow: visible;
   width: min(280px, 88vw);
-  height: auto;
+  aspect-ratio: 280 / 120;
   filter: drop-shadow(0 12px 28px rgba(0, 0, 0, 0.35));
+}
+
+/* Lockup full (G1): вырезаем нижнюю часть из raster-лого и рисуем tagline текстом */
+.mq-lockup-full {
+  --mq-lockup-full-top-clip: 30%;
+}
+
+.mq-lockup-full__picture {
+  position: absolute;
+  inset: 0;
+}
+
+.mq-lockup-full__img-top {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: center;
+  clip-path: inset(0 0 var(--mq-lockup-full-top-clip) 0);
+}
+
+.mq-lockup-full__tagline {
+  position: absolute;
+  left: 50%;
+  bottom: 10%;
+  transform: translateX(-50%) skewX(-12deg);
+
+  font-size: clamp(12px, 2.4vw, 20px);
+  font-weight: 900;
+  letter-spacing: -0.02em;
+  line-height: 1.05;
+  white-space: nowrap;
+  text-align: center;
+  user-select: none;
+  pointer-events: none;
+
+  background: linear-gradient(180deg, #a78bfa 0%, var(--mq-violet) 45%, var(--mq-violet-deep) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+
+  text-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.35),
+    0 2px 0 rgba(67, 56, 202, 0.22),
+    0 4px 0 rgba(15, 17, 21, 0.20),
+    0 10px 20px rgba(0, 0, 0, 0.25);
+
+  -webkit-text-stroke: 0.5px rgba(255, 255, 255, 0.08);
 }
 
 .mq-hero-quote {
@@ -1179,9 +1228,10 @@ a {
 }
 
 .mq-cta-band__logo {
+  position: relative;
   display: block;
-  height: auto;
   width: min(200px, 42vw);
+  aspect-ratio: 100 / 43;
   max-height: 88px;
   filter: drop-shadow(0 8px 20px rgba(0, 0, 0, 0.25));
 }
