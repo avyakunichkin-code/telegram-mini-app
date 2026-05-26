@@ -32,6 +32,7 @@ from ..expense_template_defaults import default_plan_expense_budget, expense_bud
 from ..expenses import ensure_expense_category_catalog, seed_expense_lines_from_budget
 from ..game_start_validation import validate_game_start_request
 from ..timeutil import utc_now_naive
+from ..needs_engine import parse_needs_config, set_profile_needs
 from ..game_time import (
     get_active_game_profile,
     sync_time,
@@ -398,6 +399,14 @@ async def start_new_game(
         onboarding_state="draft",
         onboarding_step="period_timer",
     )
+    # Character needs init (Game only, from blueprint.needs.initial)
+    try:
+        if save_kind == "game":
+            needs_cfg = parse_needs_config(blueprint)
+            if needs_cfg:
+                set_profile_needs(new_profile, needs_cfg.get("initial") or {})
+    except Exception:
+        pass
     db.add(new_profile)
     db.commit()
     db.refresh(new_profile)

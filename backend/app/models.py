@@ -63,6 +63,13 @@ class GameProfile(Base):
     last_period_salary_claimed = Column(Integer, nullable=False, default=0)
     clean_period_streak = Column(Integer, nullable=False, default=0)
     progression_milestones_awarded = Column(Text, nullable=False, default="[]")
+    # Character needs (ADR-005)
+    need_comfort = Column(Float, nullable=False, default=0)
+    need_status = Column(Float, nullable=False, default=0)
+    need_social = Column(Float, nullable=False, default=0)
+    need_health = Column(Float, nullable=False, default=0)
+    needs_zero_periods_streak = Column(Integer, nullable=False, default=0)
+    treat_self_last_period_index = Column(Integer, nullable=False, default=0)
 
     created_at = Column(DateTime, default=utc_now_naive)
     updated_at = Column(DateTime, default=utc_now_naive, onupdate=utc_now_naive)

@@ -54,6 +54,23 @@ def ensure_schema_compatibility() -> None:
         statements.append(
             "ALTER TABLE game_profiles ADD COLUMN progression_milestones_awarded TEXT NOT NULL DEFAULT '[]'"
         )
+    # ---- character needs (ADR-005/006) ----
+    if "need_comfort" not in columns:
+        statements.append("ALTER TABLE game_profiles ADD COLUMN need_comfort DOUBLE PRECISION NOT NULL DEFAULT 0")
+    if "need_status" not in columns:
+        statements.append("ALTER TABLE game_profiles ADD COLUMN need_status DOUBLE PRECISION NOT NULL DEFAULT 0")
+    if "need_social" not in columns:
+        statements.append("ALTER TABLE game_profiles ADD COLUMN need_social DOUBLE PRECISION NOT NULL DEFAULT 0")
+    if "need_health" not in columns:
+        statements.append("ALTER TABLE game_profiles ADD COLUMN need_health DOUBLE PRECISION NOT NULL DEFAULT 0")
+    if "needs_zero_periods_streak" not in columns:
+        statements.append(
+            "ALTER TABLE game_profiles ADD COLUMN needs_zero_periods_streak INTEGER NOT NULL DEFAULT 0"
+        )
+    if "treat_self_last_period_index" not in columns:
+        statements.append(
+            "ALTER TABLE game_profiles ADD COLUMN treat_self_last_period_index INTEGER NOT NULL DEFAULT 0"
+        )
 
     if "period_snapshots" in inspector.get_table_names():
         ps_cols = {item["name"] for item in inspector.get_columns("period_snapshots")}
