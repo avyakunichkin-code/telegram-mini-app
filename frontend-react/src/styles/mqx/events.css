@@ -644,6 +644,10 @@ button.mqx-events-choice.mqx-events-choice--flat:active:not(:disabled) {
   opacity: 0.82;
 }
 
+.mqx-events-choice__needs.mqx-needs-delta-chips {
+  margin-top: 6px;
+}
+
 .mqx-events-arrow.events-carousel-arrow {
   background: color-mix(in srgb, var(--mq-violet, #7c3aed) 18%, transparent);
 }

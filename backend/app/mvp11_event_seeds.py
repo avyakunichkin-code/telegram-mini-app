@@ -149,9 +149,26 @@ MVP11_EVENT_SPECS: list[dict] = [
         "repeat_policy": "repeatable",
         "cooldown_periods": 3,
         "choices": [
-            {"title": "Продлить на год", "effects": {"cash_delta": -14900, "xp_delta": 3}},
-            {"title": "Продлить на квартал", "effects": {"cash_delta": -4500, "xp_delta": 2}},
-            {"title": "Не продлевать", "effects": {"cash_delta": 0, "xp_delta": 1}},
+            {
+                "title": "Продлить на год",
+                "effects": {
+                    "cash_delta": -14900,
+                    "xp_delta": 3,
+                    "needs_delta": {"health": 12, "comfort": 5, "status": 2},
+                },
+            },
+            {
+                "title": "Продлить на квартал",
+                "effects": {
+                    "cash_delta": -4500,
+                    "xp_delta": 2,
+                    "needs_delta": {"health": 6, "comfort": 2},
+                },
+            },
+            {
+                "title": "Не продлевать",
+                "effects": {"cash_delta": 0, "xp_delta": 1, "needs_delta": {"health": -3}},
+            },
         ],
     },
     {
@@ -334,14 +351,29 @@ MVP11_EVENT_SPECS: list[dict] = [
         "repeat_policy": "repeatable",
         "cooldown_periods": 4,
         "choices": [
-            {"title": "Помочь полностью", "effects": {"cash_delta": -15000, "xp_delta": 5}},
-            {"title": "Помочь частично", "effects": {"cash_delta": -7000, "xp_delta": 4}},
+            {
+                "title": "Помочь полностью",
+                "effects": {
+                    "cash_delta": -15000,
+                    "xp_delta": 5,
+                    "needs_delta": {"social": 14, "comfort": -3},
+                },
+            },
+            {
+                "title": "Помочь частично",
+                "effects": {
+                    "cash_delta": -7000,
+                    "xp_delta": 4,
+                    "needs_delta": {"social": 8, "health": 2},
+                },
+            },
             {
                 "title": "Отказаться вежливо",
                 "description": "Через период родственник может снова попросить о большей сумме.",
                 "effects": {
                     "cash_delta": 0,
                     "xp_delta": 1,
+                    "needs_delta": {"social": -6, "comfort": -2},
                     "enqueue_event": {
                         "chain_key": "family_money_refusal",
                         "followup_definition_key": "mq11_family_money_callback",

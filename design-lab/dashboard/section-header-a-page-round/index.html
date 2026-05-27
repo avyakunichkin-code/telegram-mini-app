@@ -60,7 +60,7 @@
             </header>
 
             <main class="mqx-content mqx-content--dash-flat">
-              <!-- 0) Состояние / needs (канон dashboard-needs-round) -->
+              <!-- 0) Потребности / Z-NEEDS (канон dashboard-needs-round) -->
               <div class="mqx-sect-kicker-row" data-sect-head-lite data-sect="state">
                 <div class="mqx-sect-kicker mqx-sect-kicker--muted">Потребности</div>
                 <div class="mqx-sect-kicker-row__r">
@@ -82,7 +82,7 @@
                   data-needs-block
                   data-lab-variant="v4"
                   data-improve-style="ghost"
-                  aria-label="Самочувствие (контент)"
+                  aria-label="Потребности (контент)"
                 >
                   <div class="mqx-needs-risk" data-needs-risk role="alert"></div>
                   <div class="mqx-needs-body">
@@ -183,44 +183,35 @@
                 </div>
 
                 <div class="mqx-goal-dash-bleed">
-                  <section class="mqx-goal-dash" aria-label="Цель">
+                  <section class="mqx-goal-dash mqx-goal-dash--path-p1" aria-label="Цель сценария">
                     <button type="button" class="mqx-goal-dash__toggle" data-goal-toggle aria-expanded="false">
                       <div class="mqx-goal-dash__toggle-inner">
                         <div class="mqx-goal-dash__head-row">
                           <div class="mqx-goal-dash__head-text">
                             <span class="mqx-goal-dash__kicker">Цель</span>
                             <span class="mqx-goal-dash__current-title">Подушка ≥ 3× обязательств</span>
-                            <div class="mqx-goal-dash__path-row">
-                              <div class="mqx-goal-path" role="group" aria-label="Шаги сценария: 1 выполнено, активен шаг 2 из 4">
-                                <div class="mqx-goal-path__track">
-                                  <div class="mqx-goal-path__segment mqx-goal-path__segment--done">
-                                    <span class="mqx-goal-path__node" aria-hidden="true">✓</span>
-                                    <span class="mqx-goal-path__sr">Стабильный денежный поток</span>
-                                    <span class="mqx-goal-path__connector" aria-hidden="true"></span>
-                                  </div>
-                                  <div class="mqx-goal-path__segment mqx-goal-path__segment--current">
-                                    <span class="mqx-goal-path__node" aria-hidden="true">2</span>
-                                    <span class="mqx-goal-path__sr">Подушка ≥ 3× обязательств</span>
-                                    <span class="mqx-goal-path__connector" aria-hidden="true"></span>
-                                  </div>
-                                  <div class="mqx-goal-path__segment mqx-goal-path__segment--locked">
-                                    <span class="mqx-goal-path__node" aria-hidden="true">3</span>
-                                    <span class="mqx-goal-path__sr">Без просрочки</span>
-                                    <span class="mqx-goal-path__connector" aria-hidden="true"></span>
-                                  </div>
-                                  <div class="mqx-goal-path__segment mqx-goal-path__segment--locked">
-                                    <span class="mqx-goal-path__node" aria-hidden="true">4</span>
-                                    <span class="mqx-goal-path__sr">Пассивный доход ≥ 100 000 ₽/мес</span>
-                                  </div>
+                            <div class="mqx-goal-path" role="group" aria-label="Шаги сценария: 1 выполнено, активен шаг 2 из 4">
+                              <div class="mqx-goal-path__track">
+                                <div class="mqx-goal-path__segment mqx-goal-path__segment--done">
+                                  <span class="mqx-goal-path__node" aria-hidden="true">✓</span>
+                                  <span class="mqx-goal-path__sr">Стабильный денежный поток</span>
+                                  <span class="mqx-goal-path__connector" aria-hidden="true"></span>
+                                </div>
+                                <div class="mqx-goal-path__segment mqx-goal-path__segment--current">
+                                  <span class="mqx-goal-path__node" aria-hidden="true">2</span>
+                                  <span class="mqx-goal-path__sr">Подушка ≥ 3× обязательств</span>
+                                  <span class="mqx-goal-path__connector" aria-hidden="true"></span>
+                                </div>
+                                <div class="mqx-goal-path__segment mqx-goal-path__segment--locked">
+                                  <span class="mqx-goal-path__node" aria-hidden="true">3</span>
+                                  <span class="mqx-goal-path__sr">Без просрочки</span>
+                                  <span class="mqx-goal-path__connector" aria-hidden="true"></span>
+                                </div>
+                                <div class="mqx-goal-path__segment mqx-goal-path__segment--locked">
+                                  <span class="mqx-goal-path__node" aria-hidden="true">4</span>
+                                  <span class="mqx-goal-path__sr">Пассивный доход ≥ 100 000 ₽/мес</span>
                                 </div>
                               </div>
-                              <button
-                                type="button"
-                                class="mqx-mini-help mqx-mini-help--goal"
-                                data-help="Цель: цепочка победы из шаблона. Свёрнуто — только дорожка шагов; развёрнуто — советы и список."
-                              >
-                                ?
-                              </button>
                             </div>
                           </div>
                           <span class="mqx-icon-chevron mqx-goal-dash__chevron" aria-hidden="true">

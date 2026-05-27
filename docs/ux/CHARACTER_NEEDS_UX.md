@@ -12,6 +12,15 @@ platform: Telegram Mini App (touch-first, 320–480px)
 
 **Следующий шаг:** design-lab → [`design-lab/character-needs/`](../../design-lab/character-needs/).
 
+## Терминология (нейминг)
+
+| Контекст | Термин |
+|----------|--------|
+| Механика, эпик CN1, design-lab, планирование | **Потребности** (Z-NEEDS) |
+| Prod UI, заголовок секции (до CN1-020) | **Самочувствие** — рабочий копирайт; целевой — «Потребности» |
+| Тех.ключи | `need_*`, `needs_*`, `needs_delta` — без переименования |
+| Не про эту механику | `onboarding_state`, empty/loading UI state, React state в hooks |
+
 ---
 
 ## Цель UX-слоя

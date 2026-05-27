@@ -186,7 +186,7 @@ source: ../backlog/PRODUCT_BACKLOG.md
 
 ---
 
-## Трек CN1 — Состояние персонажа (Z‑NEEDS) (P1–P2)
+## Трек CN1 — Потребности персонажа (Z‑NEEDS) (P1–P2)
 
 > Документы: spec [`SPEC_game-character-needs`](../specs/features/SPEC_game-character-needs.md) · ADR-005/006 (`docs/decisions/`) · UX master [`CHARACTER_NEEDS_UX`](../ux/CHARACTER_NEEDS_UX.md).
 

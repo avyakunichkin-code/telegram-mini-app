@@ -1,38 +1,8 @@
-import { useMemo, useState } from 'react';
+import { useState } from 'react';
 
 import { showNotification } from '../../notifications';
+import { NeedsDeltaChips } from '../needs/NeedsDeltaChips';
 import { MqxButton } from '../primitives/MqxButton';
-
-function NeedsDeltaRow({ delta }) {
-  const items = useMemo(() => {
-    if (!delta) return [];
-    const map = [
-      ['comfort', 'Комфорт'],
-      ['status', 'Статус'],
-      ['social', 'Связи'],
-      ['health', 'Здоровье'],
-    ];
-    return map
-      .map(([k, label]) => {
-        const v = Number(delta[k]);
-        if (!Number.isFinite(v) || v === 0) return null;
-        return { key: k, label, value: v };
-      })
-      .filter(Boolean);
-  }, [delta]);
-
-  if (!items.length) return null;
-
-  return (
-    <div className="mqx-treat__delta">
-      {items.map((it) => (
-        <span key={it.key} className="mqx-treat__delta-chip">
-          +{Math.round(it.value)} {it.label}
-        </span>
-      ))}
-    </div>
-  );
-}
 
 export function MqxTreatSelfSheet({ open, onClose, treatSelf, treatSelfState }) {
   const options = treatSelfState?.options || [];
@@ -93,7 +63,7 @@ export function MqxTreatSelfSheet({ open, onClose, treatSelf, treatSelfState }) 
                 <div className="mqx-treat__card-title">{o.title}</div>
                 {o.subtitle ? <div className="mqx-treat__card-sub">{o.subtitle}</div> : null}
               </div>
-              <NeedsDeltaRow delta={o.needs_delta} />
+              <NeedsDeltaChips delta={o.needs_delta} className="mqx-treat__delta" />
               <div className="mqx-treat__cost">−{Math.round(Number(o.cost) || 0).toLocaleString('ru-RU')} ₽</div>
             </button>
           ))}

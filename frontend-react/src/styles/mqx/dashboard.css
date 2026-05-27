@@ -620,15 +620,31 @@
   gap: 6px;
 }
 
-.mqx-treat__delta-chip {
+.mqx-treat__delta-chip,
+.mqx-needs-delta-chip {
   display: inline-flex;
   align-items: center;
   padding: 4px 8px;
   border-radius: 999px;
-  background: color-mix(in srgb, var(--mq-emerald, #059669) 10%, transparent);
-  color: color-mix(in srgb, var(--mq-emerald, #059669) 92%, var(--mqx-ink));
   font-size: 12px;
   font-weight: 700;
+}
+
+.mqx-needs-delta-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.mqx-needs-delta-chip--pos,
+.mqx-treat__delta-chip {
+  background: color-mix(in srgb, var(--mq-emerald, #059669) 10%, transparent);
+  color: color-mix(in srgb, var(--mq-emerald, #059669) 92%, var(--mqx-ink));
+}
+
+.mqx-needs-delta-chip--neg {
+  background: color-mix(in srgb, var(--mq-amber, #d97706) 12%, transparent);
+  color: color-mix(in srgb, var(--mq-amber, #d97706) 90%, var(--mqx-ink));
 }
 
 .mqx-treat__cost {

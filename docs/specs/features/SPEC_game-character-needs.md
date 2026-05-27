@@ -274,9 +274,9 @@ available = enabled AND period open AND (
 - если все значения 0 → допускается (в UI чипы не показываем)
 
 ### Статус реализации
-На текущий момент (см. код):
-- `needs_delta` **реализован** для `treat-self` (ADR-006) — `POST /api/game/period/treat-self`, `backend/app/routers/period_actions.py`
-- для **событий** `needs_delta` должен быть добавлен как effect key и применяться в `choose` (см. backlog CN1-011)
+- `needs_delta` для **treat-self** (ADR-006): `POST /api/game/period/treat-self`, `period_actions.py`
+- `needs_delta` для **событий** (CN1-012): ключ в `ALLOWED_EFFECT_KEYS`, применение в `POST /api/game/events/{id}/choose`, превью в `GET /api/game/events/pending` (`choice.needs_delta`), чипы в `EventChoiceButton`
+- Контент playtest: `mq11_gym_membership`, `mq11_family_money_request` (сиды + миграция `0040_event_needs_delta_content.sql`)
 
 ---
 

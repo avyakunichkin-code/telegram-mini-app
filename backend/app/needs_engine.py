@@ -111,6 +111,39 @@ def set_profile_needs(profile, values: dict[str, float]) -> None:
     setattr(profile, "need_health", _clamp_need(values.get("health", 0)))
 
 
+def parse_needs_delta(raw: object) -> dict[str, float]:
+    """Нормализует needs_delta из effects_json; ValueError при неверной форме."""
+    if raw is None:
+        return {k: 0.0 for k in AXES}
+    if not isinstance(raw, dict):
+        raise ValueError("needs_delta must be an object")
+    unknown = set(raw.keys()) - set(AXES)
+    if unknown:
+        raise ValueError(f"unknown needs_delta keys: {sorted(unknown)}")
+    out: dict[str, float] = {}
+    for k in AXES:
+        try:
+            n = float(raw.get(k, 0) or 0)
+        except (TypeError, ValueError) as e:
+            raise ValueError(f"needs_delta.{k} must be a number") from e
+        if not math.isfinite(n):
+            raise ValueError(f"needs_delta.{k} must be finite")
+        if abs(n) > 100:
+            raise ValueError(f"needs_delta.{k} out of range [-100, 100]")
+        out[k] = round(n, 1)
+    return out
+
+
+def apply_needs_delta(profile, delta: dict[str, float]) -> dict[str, float]:
+    """Применяет дельту к колонкам need_* на профиле; возвращает значения после clamp."""
+    before = needs_values_from_profile(profile)
+    after = {
+        k: _clamp_need(float(before.get(k) or 0) + float(delta.get(k) or 0)) for k in AXES
+    }
+    set_profile_needs(profile, after)
+    return after
+
+
 @dataclass(frozen=True)
 class NeedsDecayResult:
     before: dict[str, float]

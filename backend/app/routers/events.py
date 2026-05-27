@@ -31,6 +31,7 @@ from ..models import (
     FinanceAsset,
     FinanceLiability,
     GameProfile,
+    GameStarterTemplate,
     InsurancePolicy,
 )
 from ..timeutil import utc_now_naive
@@ -50,6 +51,7 @@ from ..event_chains import (
 from ..event_choice_impacts import build_choice_impacts
 from ..event_taxonomy import effective_event_weight, event_domain
 from ..mvp11_event_seeds import ensure_mvp11_event_catalog
+from ..needs_engine import apply_needs_delta, parse_needs_config, parse_needs_delta
 
 
 router = APIRouter(prefix="/api/game/events", tags=["events"])
@@ -72,8 +74,29 @@ ALLOWED_EFFECT_KEYS = frozenset(
         "asset_from_template",
         "used_car_action",
         "requires_chain_branch",
+        "needs_delta",
     }
 )
+
+
+def _needs_config_for_profile(db: Session, profile: GameProfile) -> dict | None:
+    if str(getattr(profile, "save_kind", "game") or "game") != "game":
+        return None
+    tk = str(getattr(profile, "starter_template_key", "") or "").strip()
+    if not tk:
+        return None
+    tmpl = (
+        db.query(GameStarterTemplate)
+        .filter(GameStarterTemplate.template_key == tk)
+        .first()
+    )
+    if not tmpl:
+        return None
+    try:
+        blueprint = json.loads(tmpl.blueprint_json or "{}")
+    except json.JSONDecodeError:
+        blueprint = {}
+    return parse_needs_config(blueprint)
 
 
 def _clamp_expense_line_amount(amount: float) -> float:
@@ -583,6 +606,13 @@ def serialize_instance_rows(db: Session, insts: list[EventInstance], *, profile:
                 row["insurance_claim"] = True
             if profile is not None:
                 row["impacts"] = build_choice_impacts(db, profile, effects)
+                if _needs_config_for_profile(db, profile) and effects.get("needs_delta") is not None:
+                    try:
+                        nd = parse_needs_delta(effects.get("needs_delta"))
+                        if any(abs(v) >= 1e-6 for v in nd.values()):
+                            row["needs_delta"] = nd
+                    except ValueError:
+                        pass
             choice_rows.append(row)
         out.append({
             "id": inst.id,
@@ -781,6 +811,17 @@ async def choose_event(
             db.refresh(profile)
         except ValueError as e:
             raise HTTPException(status_code=400, detail=str(e) or "Покупка актива недоступна") from e
+
+    needs_delta_spec = effects.get("needs_delta")
+    if needs_delta_spec is not None:
+        try:
+            delta = parse_needs_delta(needs_delta_spec)
+        except ValueError as e:
+            raise HTTPException(status_code=400, detail=str(e) or "invalid needs_delta") from e
+        if any(abs(v) >= 1e-6 for v in delta.values()):
+            cfg = _needs_config_for_profile(db, profile)
+            if cfg:
+                apply_needs_delta(profile, delta)
 
     if def_key == "mq11_used_car_deadline":
         chain = get_active_chain(db, profile.id, USED_CAR_CHAIN_KEY)

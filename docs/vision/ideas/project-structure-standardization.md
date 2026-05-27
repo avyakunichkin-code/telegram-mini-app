@@ -59,7 +59,7 @@ backend/
 1. **Экран с роутом или шагом flow** → `screens/<flow>/` (новое). Legacy в `components/` не расширять.
 2. **Видимый UI-паттерн MQX** → `components/mqx/` по [`DESIGN_WORKFLOW.md`](../../../frontend-react/src/components/mqx/DESIGN_WORKFLOW.md); стили → `styles/mqx/<domain>.css`.
 3. **HTTP к backend** → `api/<domain>.js`; домен = имя роутера (`game`, `finance`, `events`, …).
-4. **Состояние и polling игры** → `hooks/game/` (и аналоги); не раздувать `useGame.js` без необходимости.
+4. **Состояние (onboarding) и polling игры** → `hooks/game/` (и аналоги); не раздувать `useGame.js` без необходимости.
 5. **В spec фичи одна строка трассировки:** Screen · API · CSS module (шаблон ниже).
 
 ```markdown

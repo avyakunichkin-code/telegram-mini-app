@@ -46,7 +46,7 @@ idea_refine: true
 
 1. **Оверлей на `GameScreen`** после первого `overview` — **Mission Brief** из **3 карточек** (свайп или «Далее»), MQX, **Монетка** в утверждённой компоновке.
 2. **Coach marks** — **не в волне 1**; отдельный раунд design-lab / spec после приёмки брифа.
-3. **Состояние** — `onboarding_state`: `draft` → `brief_done`; меню сбрасывает показ брифа без смены state (или `replay` — в spec).
+3. **Состояние онбординга** — `onboarding_state`: `draft` → `brief_done`; меню сбрасывает показ брифа без смены state (или `replay` — в spec).
 4. **Визуал** — [`design-lab/onboarding-brief/`](../../../design-lab/onboarding-brief/) → MQX → prod.
 
 ### Три шага брифа (копирайт черновик)

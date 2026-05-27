@@ -32,7 +32,7 @@
 | **M12** | Достижения (цепочки из GAME §5) | DB+Backend+Frontend | 🟡 [SPEC_achievements](../specs/features/SPEC_achievements.md); BE ✅, FE «Развитие» ⬜ |
 | **V2** | Victory M из N | DB+Backend+Frontend+Doc | ✅ **P1 закрыт**: `victory_engine` + `MqxGoalDash`; дальше — баланс/плейтест |
 | **I1** | Страховки: продукт + объект | DB+Backend+Frontend | 🟡 0008 + UI в работе |
-| **CN1** | Состояние персонажа (Z‑NEEDS): decay, treat-self, поражение | DB+Backend+Frontend+Doc | 🟡 ядро ✅ (колонки/overview/UI); контент и полировка ⬜ |
+| **CN1** | Потребности персонажа (Z‑NEEDS): decay, treat-self, поражение | DB+Backend+Frontend+Doc | 🟡 ядро ✅ (колонки/overview/UI); контент и полировка ⬜ |
 | **α** | Pre-Alpha / Closed Alpha гейты | Doc+Frontend (метрики) | ⬜ см. GAME §11 |
 | **O1** | Онбординг TMA — Guided coach + Монетка | Frontend+Backend+Doc | 🟡 design-lab ★ → MQX |
 | **A0** | Admin Watchtower (MVP 1.2) | DB+Backend+Frontend | 🟡 Phase 0 в коде |
@@ -91,7 +91,7 @@
 - [x] P1 **[Backend]** Движок **M из N** по `victory_config_json`; `avg_liquid_delta_6p` / зарплата в порогах — `victory_engine.py`, миграция `0010`, `test_victory_engine.py`.
 - [x] P1 **[Backend]** `min_period_index_for_victory` из шаблона (дефолт 7) — в overview `victory.*`.
 
-### Эпик CN1 — состояние персонажа (Z‑NEEDS)
+### Эпик CN1 — потребности персонажа (Z‑NEEDS)
 
 Документы и решения:
 - Spec: [`SPEC_game-character-needs`](../specs/features/SPEC_game-character-needs.md)
