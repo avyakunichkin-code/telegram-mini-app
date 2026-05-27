@@ -85,6 +85,16 @@ EVENT_TAXONOMY: dict[str, dict] = {
     "mq11_wedding_gift_once": build_metadata_json(
         event_domain="social_family", scenario_shape="narrative_once"
     ),
+    "mq11_rescue_friend_call": build_metadata_json(
+        event_domain="social_family",
+        scenario_shape="rescue",
+        extra={"is_rescue": True, "rescue_axes": ["social"]},
+    ),
+    "mq11_rescue_easy_walk": build_metadata_json(
+        event_domain="health",
+        scenario_shape="rescue",
+        extra={"is_rescue": True, "rescue_axes": ["health", "comfort"]},
+    ),
 }
 
 # Суммы в effects; на кнопках — короткий текст + impacts в API (см. event_choice_impacts).
@@ -137,6 +147,52 @@ MVP11_EVENT_SPECS: list[dict] = [
             {
                 "title": "Отменить все подписки",
                 "effects": {"cash_delta": 0, "monthly_lifestyle_delta": -500, "xp_delta": 4},
+            },
+        ],
+    },
+    {
+        "key": "mq11_rescue_friend_call",
+        "title": "Позвонить другу",
+        "description": "Пять минут разговора помогают выдохнуть и собраться с мыслями.",
+        "weight": 35,
+        "event_tier": 1,
+        "repeat_policy": "repeatable",
+        "cooldown_periods": 3,
+        "choices": [
+            {
+                "title": "Созвониться",
+                "effects": {
+                    "cash_delta": 0,
+                    "xp_delta": 1,
+                    "needs_delta": {"social": 10, "health": 4},
+                },
+            },
+            {
+                "title": "Отложить",
+                "effects": {"cash_delta": 0, "xp_delta": 1, "needs_delta": {"social": -4}},
+            },
+        ],
+    },
+    {
+        "key": "mq11_rescue_easy_walk",
+        "title": "Небольшая прогулка",
+        "description": "Иногда лучшее решение — сменить обстановку и пройтись.",
+        "weight": 35,
+        "event_tier": 1,
+        "repeat_policy": "repeatable",
+        "cooldown_periods": 3,
+        "choices": [
+            {
+                "title": "Прогуляться",
+                "effects": {
+                    "cash_delta": 0,
+                    "xp_delta": 1,
+                    "needs_delta": {"health": 9, "comfort": 6},
+                },
+            },
+            {
+                "title": "Остаться дома",
+                "effects": {"cash_delta": 0, "xp_delta": 1, "needs_delta": {"health": -3}},
             },
         ],
     },

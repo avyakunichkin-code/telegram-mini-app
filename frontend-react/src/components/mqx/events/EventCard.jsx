@@ -17,6 +17,8 @@ export function EventCard({
   const disabled = busyId !== null;
   const choices = event?.choices || [];
   const insuranceEvent = eventHasInsuranceClaimChoice(event);
+  const recommended = event?.recommended === true;
+  const recommendedForNeed = asSafeReactText(event?.recommended_for_need, '');
   const description = asSafeReactText(event.description);
   const domain = eventDomainTheme(event);
 
@@ -55,6 +57,15 @@ export function EventCard({
             <span className="mqx-events-domain-pill__dot" aria-hidden />
             {domain.label}
           </span>
+          {recommended ? (
+            <span
+              className="mqx-events-card__badge mqx-events-card__badge--inline mqx-events-card__badge--recommended"
+              title={asSafeReactText(event?.recommended_hint, 'Рекомендуемое событие')}
+            >
+              Рекомендуемое
+              {recommendedForNeed ? ` · ${recommendedForNeed}` : ''}
+            </span>
+          ) : null}
           {insuranceEvent ? (
             <span className="mqx-events-card__badge mqx-events-card__badge--inline">Страховой случай</span>
           ) : null}

@@ -49,9 +49,9 @@ from ..event_chains import (
     resolve_choice_effects_for_definition,
 )
 from ..event_choice_impacts import build_choice_impacts
-from ..event_taxonomy import effective_event_weight, event_domain
+from ..event_taxonomy import effective_event_weight, event_domain, parse_event_metadata
 from ..mvp11_event_seeds import ensure_mvp11_event_catalog
-from ..needs_engine import apply_needs_delta, parse_needs_config, parse_needs_delta
+from ..needs_engine import AXES as NEEDS_AXES, apply_needs_delta, needs_values_from_profile, parse_needs_config, parse_needs_delta
 
 
 router = APIRouter(prefix="/api/game/events", tags=["events"])
@@ -97,6 +97,67 @@ def _needs_config_for_profile(db: Session, profile: GameProfile) -> dict | None:
     except json.JSONDecodeError:
         blueprint = {}
     return parse_needs_config(blueprint)
+
+
+NEEDS_AXIS_LABELS: dict[str, str] = {
+    "comfort": "Комфорт",
+    "status": "Статус",
+    "social": "Связи",
+    "health": "Здоровье",
+}
+
+
+def _needs_rescue_min_axis(needs_cfg: dict | None, profile: GameProfile) -> str | None:
+    """Ось с минимальным значением, если игрок в зоне rescue (distressed или 0); иначе None."""
+    if not needs_cfg:
+        return None
+    thresholds = needs_cfg.get("thresholds") if isinstance(needs_cfg.get("thresholds"), dict) else {}
+    distressed_thr = int(thresholds.get("distressed") or 30)
+    before = needs_values_from_profile(profile)
+    has_zero = any(float(before.get(k) or 0) <= 0.0 for k in NEEDS_AXES)
+    is_distressed = any(
+        0.0 < float(before.get(k) or 0) < float(distressed_thr) for k in NEEDS_AXES
+    )
+    if not (has_zero or is_distressed):
+        return None
+    return min(NEEDS_AXES, key=lambda k: float(before.get(k) or 0))
+
+
+def _event_rescue_matches_min_axis(defn: EventDefinition, min_axis: str) -> bool:
+    meta = parse_event_metadata(getattr(defn, "metadata_json", None))
+    if meta.get("is_rescue") is not True:
+        return False
+    rescue_axes = meta.get("rescue_axes")
+    if isinstance(rescue_axes, list) and rescue_axes:
+        return min_axis in {str(x) for x in rescue_axes}
+    return True
+
+
+def _rescue_weight_multiplier(
+    defn: EventDefinition,
+    *,
+    needs_cfg: dict | None,
+    profile: GameProfile,
+) -> float:
+    """
+    Если needs просели, усиливаем rescue-события (content) через rescue_event_bias.
+    Rescue-событие помечаем в metadata_json: {"is_rescue": true, "rescue_axes": ["social", ...]}.
+    """
+    min_axis = _needs_rescue_min_axis(needs_cfg, profile)
+    if not min_axis or not _event_rescue_matches_min_axis(defn, min_axis):
+        return 1.0
+    before = needs_values_from_profile(profile)
+    has_zero = any(float(before.get(k) or 0) <= 0.0 for k in NEEDS_AXES)
+    bias = float(needs_cfg.get("player_support", {}).get("rescue_event_bias") or 1.0)
+    severity = 2.0 if has_zero else 1.5
+    return max(1.0, bias * severity)
+
+
+def _order_events_recommended_first(events: list[dict]) -> list[dict]:
+    """Рекомендуемые (по min-оси) — в начале списка, остальные — в исходном порядке."""
+    indexed = list(enumerate(events))
+    indexed.sort(key=lambda t: (0 if t[1].get("recommended") else 1, t[0]))
+    return [e for _, e in indexed]
 
 
 def _clamp_expense_line_amount(amount: float) -> float:
@@ -166,6 +227,7 @@ def _weighted_sample_without_replacement(
     k: int,
     *,
     counter_map: dict[int, EventProfileCounterSnapshot] | None = None,
+    weight_multiplier_by_id: dict[int, float] | None = None,
 ) -> list[EventDefinition]:
     """Взвешенная случайная выборка без повторов (ключ −ln(U)/weight)."""
     if k <= 0:
@@ -178,6 +240,10 @@ def _weighted_sample_without_replacement(
             w = effective_event_weight(d, counter_map.get(int(d.id)))
         else:
             w = max(int(getattr(d, "weight", 100) or 100), 1)
+        if weight_multiplier_by_id is not None:
+            mult = float(weight_multiplier_by_id.get(int(d.id), 1.0) or 1.0)
+            if mult > 1.0:
+                w = max(1, int(round(float(w) * mult)))
         u = max(random.random(), 1e-12)
         scored.append((-math.log(u) / w, d))
     scored.sort(key=lambda t: t[0], reverse=True)
@@ -188,6 +254,8 @@ def _pick_diverse_period_events(
     candidates: list[EventDefinition],
     k: int,
     counter_map: dict[int, EventProfileCounterSnapshot],
+    *,
+    weight_multiplier_by_id: dict[int, float] | None = None,
 ) -> list[EventDefinition]:
     """До k событий с разными event_domain, если кандидатов хватает."""
     picked: list[EventDefinition] = []
@@ -202,7 +270,12 @@ def _pick_diverse_period_events(
                 pool = remaining
         else:
             pool = remaining
-        batch = _weighted_sample_without_replacement(pool, 1, counter_map=counter_map)
+        batch = _weighted_sample_without_replacement(
+            pool,
+            1,
+            counter_map=counter_map,
+            weight_multiplier_by_id=weight_multiplier_by_id,
+        )
         if not batch:
             break
         choice = batch[0]
@@ -510,6 +583,10 @@ def ensure_period_events(db: Session, game_profile_id: int, period_index: int, s
 
     counter_map = _load_event_counter_map(db, game_profile_id)
     profile_ctx = _load_event_profile_context(db, game_profile_id)
+    needs_cfg = _needs_config_for_profile(db, profile)
+    rescue_mult_by_id: dict[int, float] | None = None
+    if needs_cfg:
+        rescue_mult_by_id = {int(d.id): _rescue_weight_multiplier(d, needs_cfg=needs_cfg, profile=profile) for d in defs_all}
 
     repeat_ok: list[EventDefinition] = []
     for d in defs_all:
@@ -539,7 +616,7 @@ def ensure_period_events(db: Session, game_profile_id: int, period_index: int, s
     core = [d for d in repeat_ok if event_tier_in_core_window(_def_tier(d), period_idx)]
 
     if len(core) >= base_k:
-        picked = _pick_diverse_period_events(core, base_k, counter_map)
+        picked = _pick_diverse_period_events(core, base_k, counter_map, weight_multiplier_by_id=rescue_mult_by_id)
     else:
         p1 = [d for d in repeat_ok if event_tier_in_fallback_primary(_def_tier(d), period_idx)]
         if not p1:
@@ -552,7 +629,7 @@ def ensure_period_events(db: Session, game_profile_id: int, period_index: int, s
         if not p1:
             return
         kk = min(base_k, len(p1))
-        picked = _pick_diverse_period_events(p1, kk, counter_map)
+        picked = _pick_diverse_period_events(p1, kk, counter_map, weight_multiplier_by_id=rescue_mult_by_id)
 
     for d in picked:
         db.add(
@@ -567,8 +644,17 @@ def ensure_period_events(db: Session, game_profile_id: int, period_index: int, s
     db.commit()
 
 
-def serialize_instance_rows(db: Session, insts: list[EventInstance], *, profile: GameProfile | None = None) -> list[dict]:
+def serialize_instance_rows(
+    db: Session,
+    insts: list[EventInstance],
+    *,
+    profile: GameProfile | None = None,
+    needs_cfg: dict | None = None,
+) -> list[dict]:
     out = []
+    min_axis: str | None = None
+    if profile is not None and needs_cfg is not None:
+        min_axis = _needs_rescue_min_axis(needs_cfg, profile)
     for inst in insts:
         definition = db.query(EventDefinition).filter(EventDefinition.id == inst.definition_id).first()
         if not definition:
@@ -614,7 +700,7 @@ def serialize_instance_rows(db: Session, insts: list[EventInstance], *, profile:
                     except ValueError:
                         pass
             choice_rows.append(row)
-        out.append({
+        row = {
             "id": inst.id,
             "period_index": inst.period_index,
             "key": definition.key,
@@ -622,7 +708,14 @@ def serialize_instance_rows(db: Session, insts: list[EventInstance], *, profile:
             "title": definition.title,
             "description": definition.description,
             "choices": choice_rows,
-        })
+        }
+        if min_axis and _event_rescue_matches_min_axis(definition, min_axis):
+            row["recommended"] = True
+            row["recommended_for_need"] = NEEDS_AXIS_LABELS.get(min_axis, min_axis)
+            row["recommended_hint"] = (
+                f"Рекомендуемое событие — помогает поднять «{row['recommended_for_need']}»"
+            )
+        out.append(row)
     return out
 
 
@@ -650,14 +743,23 @@ def build_pending_events_payload(db: Session, profile: GameProfile) -> dict:
         .all()
     )
 
-    events = serialize_instance_rows(db, insts, profile=profile)
+    needs_cfg = _needs_config_for_profile(db, profile)
+    events = serialize_instance_rows(db, insts, profile=profile, needs_cfg=needs_cfg)
+    events = _order_events_recommended_first(events)
 
     first = events[0] if events else None
+    min_axis = _needs_rescue_min_axis(needs_cfg, profile) if needs_cfg else None
 
-    return {
+    payload: dict = {
         "events": events,
         "event": first,
     }
+    if min_axis:
+        payload["needs_rescue_focus"] = {
+            "axis": min_axis,
+            "label": NEEDS_AXIS_LABELS.get(min_axis, min_axis),
+        }
+    return payload
 
 
 @router.post("/{event_id}/choose")

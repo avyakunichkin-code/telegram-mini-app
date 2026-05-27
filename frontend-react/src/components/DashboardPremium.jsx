@@ -140,6 +140,12 @@ export function DashboardPremium({
 
     if (!moneyModal) return undefined;
 
+    // Панель появляется внизу: мягко подскроллим к ней, чтобы не требовать ручного скролла.
+    // Важно: делаем после рендера, иначе scrollIntoView может попасть в старую разметку.
+    const raf = window.requestAnimationFrame(() => {
+      safetyPanelRef.current?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    });
+
     const onPointerDown = (e) => {
 
       if (safetyPanelRef.current?.contains(e.target)) return;
@@ -152,7 +158,10 @@ export function DashboardPremium({
 
     document.addEventListener('pointerdown', onPointerDown, true);
 
-    return () => document.removeEventListener('pointerdown', onPointerDown, true);
+    return () => {
+      window.cancelAnimationFrame(raf);
+      document.removeEventListener('pointerdown', onPointerDown, true);
+    };
 
   }, [moneyModal]);
 

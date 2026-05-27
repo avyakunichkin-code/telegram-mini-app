@@ -5,9 +5,9 @@
     "name": "Dashboard (S5 Unified)",
     "prod_entry": "frontend-react/src/components/DashboardPremium.jsx",
     "canonical_page_round": {
-      "path": "design-lab/dashboard/section-header-a-page-round/",
+      "path": "design-lab/dashboard/parity-generated-page-round/",
       "status": "approved",
-      "notes": "Prod-parity page. Must NOT be maintained by manual CSS concatenation across multiple rounds."
+      "notes": "Prod-parity page generated from manifest. Avoid manual CSS concatenation across multiple rounds."
     }
   },
   "blocks": [

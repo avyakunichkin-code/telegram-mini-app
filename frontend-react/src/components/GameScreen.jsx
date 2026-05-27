@@ -34,6 +34,7 @@ export function GameScreen({ onLogout, onNewGame, onLoadGame }) {
   const [periodCloseOpen, setPeriodCloseOpen] = useState(false);
   const onboardingRootRef = useRef(null);
   const lastOpenedEventsTickRef = useRef(0);
+  const deferredEventsTickRef = useRef(0);
   const {
     overview,
     timeStatus,
@@ -68,17 +69,54 @@ export function GameScreen({ onLogout, onNewGame, onLoadGame }) {
     if (!eventsUnlocked || inOnboarding) return;
     if (eventsPromptTick <= lastOpenedEventsTickRef.current) return;
     if ((pendingEvents?.length ?? 0) > 0) {
+      // Если поверх есть статистика закрытия периода — не открываем события,
+      // а откладываем автопоказ до закрытия статистики.
+      if (lastPeriodClose && (periodCloseOpen || showPeriodCloseTail)) {
+        deferredEventsTickRef.current = eventsPromptTick;
+        return;
+      }
+
       lastOpenedEventsTickRef.current = eventsPromptTick;
       // eslint-disable-next-line react-hooks/set-state-in-effect -- открытие только при новом bumpEvents
       setEventsOpen(true);
     }
-  }, [eventsPromptTick, pendingEvents?.length, eventsUnlocked, inOnboarding]);
+  }, [
+    eventsPromptTick,
+    pendingEvents?.length,
+    eventsUnlocked,
+    inOnboarding,
+    lastPeriodClose,
+    periodCloseOpen,
+    showPeriodCloseTail,
+  ]);
 
   useEffect(() => {
     if (!eventsUnlocked || inOnboarding) {
       setEventsOpen(false);
     }
   }, [eventsUnlocked, inOnboarding]);
+
+  useEffect(() => {
+    if (!eventsUnlocked || inOnboarding) return;
+    if ((pendingEvents?.length ?? 0) <= 0) return;
+    if (lastPeriodClose && (periodCloseOpen || showPeriodCloseTail)) return;
+
+    const deferredTick = deferredEventsTickRef.current;
+    if (deferredTick > lastOpenedEventsTickRef.current && deferredTick <= eventsPromptTick) {
+      deferredEventsTickRef.current = 0;
+      lastOpenedEventsTickRef.current = deferredTick;
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- однократный автопоказ
+      setEventsOpen(true);
+    }
+  }, [
+    eventsPromptTick,
+    pendingEvents?.length,
+    eventsUnlocked,
+    inOnboarding,
+    lastPeriodClose,
+    periodCloseOpen,
+    showPeriodCloseTail,
+  ]);
 
   useEffect(() => {
     if (onboardingUi.visible && activeTab !== 'dashboard') {
@@ -297,7 +335,17 @@ export function GameScreen({ onLogout, onNewGame, onLoadGame }) {
                     periodStatus={periodStatus}
                     eventsUnlocked={eventsUnlocked}
                     pendingEventsCount={eventsUnlocked ? (pendingEvents?.length ?? 0) : 0}
-                    onOpenEvents={eventsUnlocked ? () => setEventsOpen(true) : undefined}
+                    onOpenEvents={
+                      eventsUnlocked
+                        ? () => {
+                            if (lastPeriodClose && (periodCloseOpen || showPeriodCloseTail)) {
+                              setPeriodCloseOpen(true);
+                              return;
+                            }
+                            setEventsOpen(true);
+                          }
+                        : undefined
+                    }
                     onNextPeriod={handleRequestNextPeriod}
                     closeMonthDisabled={syncing}
                     claimSalary={claimSalary}

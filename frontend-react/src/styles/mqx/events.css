@@ -523,6 +523,14 @@ button.mqx-events-card__close:active:not(:disabled) {
   background: color-mix(in srgb, var(--mq-emerald) 14%, transparent);
 }
 
+.mqx-events-card__badge--recommended {
+  color: color-mix(in srgb, var(--mq-violet, #6d28d9) 92%, var(--mqx-ink));
+  background: color-mix(in srgb, var(--mq-violet, #6d28d9) 14%, transparent);
+  text-transform: none;
+  letter-spacing: 0;
+  font-size: 11px;
+}
+
 .mqx-events-card__kicker--insurance {
   color: var(--mq-emerald);
 }
