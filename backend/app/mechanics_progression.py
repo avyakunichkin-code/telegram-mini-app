@@ -46,14 +46,20 @@ TEMPLATE_MECHANICS_UNLOCK_PRESETS: dict[str, list[dict[str, Any]]] = {
     "mq_game_debt_stack_v1": list(DEFAULT_HARDER_UNLOCK),
 }
 
+# Временный режим: все механики капитала доступны сразу у всех, кроме basic.
+# Цепочка DEFAULT_HARDER_UNLOCK остаётся как заготовка для возврата.
+UNLOCK_ALL_MECHANICS_IMMEDIATELY_EXCEPT_BASIC = True
+
 
 def mechanics_unlock_from_blueprint(
     blueprint: dict[str, Any], template_key: str | None
 ) -> list[dict[str, Any]]:
+    tk = (template_key or "").strip()
+    if UNLOCK_ALL_MECHANICS_IMMEDIATELY_EXCEPT_BASIC and tk and tk != "mq_game_basic_v1":
+        return [{"after_goal": None, "grant": [MECHANIC_CAPITAL_FLOWS, *CAPITAL_MECHANIC_KEYS]}]
     raw = blueprint.get("mechanics_unlock")
     if isinstance(raw, list) and raw:
         return [s for s in raw if isinstance(s, dict)]
-    tk = (template_key or "").strip()
     if tk in TEMPLATE_MECHANICS_UNLOCK_PRESETS:
         return list(TEMPLATE_MECHANICS_UNLOCK_PRESETS[tk])
     return [{"after_goal": None, "grant": [MECHANIC_CAPITAL_FLOWS, *CAPITAL_MECHANIC_KEYS]}]

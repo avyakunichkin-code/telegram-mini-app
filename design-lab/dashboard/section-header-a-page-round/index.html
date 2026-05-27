@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="ru" data-theme="light">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>ТВОЙ ХОД — Dashboard page (Section Header A)</title>
+    <link rel="stylesheet" href="./lab-base.css" />
+  </head>
+  <body>
+    <header class="lab-header">
+      <div>
+        <h1>Dashboard: страница целиком + новый Section Header (A)</h1>
+        <p>
+          Цель: до внедрения в prod увидеть “реальную” страницу дашборда, где заголовки секций унифицированы (A, без счётчика, ? меньше).
+        </p>
+      </div>
+      <div class="lab-header__controls">
+        <div class="lab-theme" role="group" aria-label="Тема">
+          <button type="button" class="is-active" data-theme-btn="light">Светлая</button>
+          <button type="button" data-theme-btn="dark">Тёмная</button>
+        </div>
+      </div>
+    </header>
+
+    <main class="lab-main">
+      <div class="lab-phone lab-phone--featured">
+        <div class="lab-phone__shell lab-phone__shell--unified">
+          <div class="mqx-dash-stack mqx-dash-stack--unified" data-skin="s5">
+            <!-- Hero (как в прод по ощущениям) -->
+            <header class="mqx-hero mqx-hero--compact mqx-hero--turn" aria-label="Период и закрытие месяца">
+              <div class="mqx-hero__glow" aria-hidden></div>
+              <div class="mqx-hero-turn__row-single">
+                <div class="mqx-hero-compact__logo" aria-hidden>
+                  <div
+                    class="mqx-brand-logo mqx-brand-logo--compact"
+                    style="height: 34px; width: 110px; background: rgba(255, 255, 255, 0.18); border-radius: 8px"
+                  ></div>
+                </div>
+                <div class="mqx-hero-turn__period-block">
+                  <span class="mqx-hero-turn__status-hint" style="margin: 0 0 2px">Месяц открыт</span>
+                  <span class="mqx-hero-turn__period-label">Период</span>
+                  <span class="mqx-hero-turn__period-value">#7</span>
+                </div>
+                <div class="mqx-hero-turn__actions-col">
+                  <button type="button" class="mqx-hero-turn__cta-primary mqx-hero-turn__cta-primary--wide">Закрыть месяц</button>
+                  <button type="button" class="mqx-hero-turn__events-pill" style="align-self: center">
+                    События <span class="mqx-hero-turn__events-badge">0</span>
+                  </button>
+                </div>
+              </div>
+            </header>
+
+            <main class="mqx-content mqx-content--dash-flat">
+              <!-- Needs / Самочувствие -->
+              <section class="mqx-sect-block" aria-label="Самочувствие">
+                <div class="mqx-sect-head-a">
+                  <div class="mqx-sect-head-a__l">
+                    <div class="mqx-sect-head-a__kicker mqx-sect-head-a__kicker--sky">Самочувствие</div>
+                    <div class="mqx-sect-head-a__title">Баланс ресурсов</div>
+                    <div class="mqx-sect-head-a__sub">Держи самочувствие в зелёной зоне, чтобы ход был сильнее.</div>
+                  </div>
+                  <div class="mqx-sect-head-a__r">
+                    <button type="button" class="mqx-sect-head-a__help" aria-label="Справка по самочувствию">?</button>
+                  </div>
+                </div>
+                <div class="mqx-demo-ul" aria-label="Показатели">
+                  <div class="mqx-demo-row">
+                    <div class="mqx-demo-row__l">
+                      <div class="mqx-demo-row__t">Энергия</div>
+                      <div class="mqx-demo-row__s">0 периодов в нуле</div>
+                    </div>
+                    <div class="mqx-demo-row__v">72%</div>
+                  </div>
+                  <div class="mqx-demo-row">
+                    <div class="mqx-demo-row__l">
+                      <div class="mqx-demo-row__t">Стресс</div>
+                      <div class="mqx-demo-row__s">Снижай через “побаловать себя”</div>
+                    </div>
+                    <div class="mqx-demo-row__v mqx-demo-row__v--warn">высокий</div>
+                  </div>
+                </div>
+              </section>
+
+              <hr class="mqx-sect-divider" />
+
+              <!-- Finance block (приближено к реальности, но без попытки копировать весь prod) -->
+              <section class="mqx-sect-block" aria-label="Потоки месяца">
+                <div class="mqx-sect-head-a">
+                  <div class="mqx-sect-head-a__l">
+                    <div class="mqx-sect-head-a__kicker mqx-sect-head-a__kicker--emerald">Финансы</div>
+                    <div class="mqx-sect-head-a__title">Потоки месяца</div>
+                    <div class="mqx-sect-head-a__sub">Доходы, расходы и баланс — в одном месте.</div>
+                  </div>
+                  <div class="mqx-sect-head-a__r">
+                    <button type="button" class="mqx-sect-head-a__help" aria-label="Справка по потокам">?</button>
+                  </div>
+                </div>
+                <div class="mqx-demo-ul" aria-label="Потоки">
+                  <div class="mqx-demo-row">
+                    <div class="mqx-demo-row__l"><div class="mqx-demo-row__t">Доходы</div></div>
+                    <div class="mqx-demo-row__v mqx-demo-row__v--pos">+74 000 ₽</div>
+                  </div>
+                  <div class="mqx-demo-row">
+                    <div class="mqx-demo-row__l"><div class="mqx-demo-row__t">Расходы</div></div>
+                    <div class="mqx-demo-row__v">56 000 ₽</div>
+                  </div>
+                  <div class="mqx-demo-row">
+                    <div class="mqx-demo-row__l"><div class="mqx-demo-row__t">Баланс</div></div>
+                    <div class="mqx-demo-row__v">18 000 ₽</div>
+                  </div>
+                  <div class="mqx-demo-row">
+                    <div class="mqx-demo-row__l"><div class="mqx-demo-row__t">Подушка</div></div>
+                    <div class="mqx-demo-row__v">0 ₽</div>
+                  </div>
+                </div>
+              </section>
+
+              <hr class="mqx-sect-divider" />
+
+              <!-- Goal block -->
+              <section class="mqx-sect-block" aria-label="Цели">
+                <div class="mqx-sect-head-a">
+                  <div class="mqx-sect-head-a__l">
+                    <div class="mqx-sect-head-a__kicker">Цель</div>
+                    <div class="mqx-sect-head-a__title">Цепочка сценария</div>
+                    <div class="mqx-sect-head-a__sub">Следующий шаг — подушка безопасности. Выполняй цели по порядку.</div>
+                  </div>
+                  <div class="mqx-sect-head-a__r">
+                    <button type="button" class="mqx-sect-head-a__help" aria-label="Справка по целям">?</button>
+                  </div>
+                </div>
+                <div class="mqx-demo-ul" aria-label="Шаги цепочки">
+                  <div class="mqx-demo-row">
+                    <div class="mqx-demo-row__l">
+                      <div class="mqx-demo-row__t">Подушка безопасности</div>
+                      <div class="mqx-demo-row__s">0 / 84 000 ₽</div>
+                    </div>
+                    <div class="mqx-demo-row__v">0%</div>
+                  </div>
+                </div>
+              </section>
+
+              <hr class="mqx-sect-divider" />
+
+              <!-- Period actions -->
+              <section class="mqx-sect-block" aria-label="Действия месяца">
+                <div class="mqx-sect-head-a">
+                  <div class="mqx-sect-head-a__l">
+                    <div class="mqx-sect-head-a__kicker mqx-sect-head-a__kicker--amber">Действия</div>
+                    <div class="mqx-sect-head-a__title">Ходы месяца</div>
+                    <div class="mqx-sect-head-a__sub">Зарплата, подушка и завершение периода — рядом.</div>
+                  </div>
+                  <div class="mqx-sect-head-a__r">
+                    <button type="button" class="mqx-sect-head-a__help" aria-label="Справка по действиям">?</button>
+                  </div>
+                </div>
+                <div class="mqx-demo-ul" aria-label="Действия">
+                  <div class="mqx-demo-row">
+                    <div class="mqx-demo-row__l">
+                      <div class="mqx-demo-row__t">Получить зарплату</div>
+                      <div class="mqx-demo-row__s">Доступно 1 раз за период</div>
+                    </div>
+                    <div class="mqx-demo-row__v mqx-demo-row__v--pos">+40 000 ₽</div>
+                  </div>
+                  <div class="mqx-demo-row">
+                    <div class="mqx-demo-row__l">
+                      <div class="mqx-demo-row__t">Пополнить подушку</div>
+                      <div class="mqx-demo-row__s">Перевод со счёта</div>
+                    </div>
+                    <div class="mqx-demo-row__v">—</div>
+                  </div>
+                  <div class="mqx-demo-row">
+                    <div class="mqx-demo-row__l">
+                      <div class="mqx-demo-row__t">Закрыть месяц</div>
+                      <div class="mqx-demo-row__s">Списания, доходы, события следующего периода</div>
+                    </div>
+                    <div class="mqx-demo-row__v mqx-demo-row__v--warn">важно</div>
+                  </div>
+                </div>
+              </section>
+
+              <div style="height: 14px"></div>
+            </main>
+
+            <!-- Bottom nav (эскиз) -->
+            <footer class="lab-bottom-nav bottom-nav--unified" aria-label="Навигация">
+              <div class="bottom-nav__track">
+                <button class="bottom-nav__cell bottom-nav__cell--active" type="button" aria-label="Дашборд">⌂</button>
+                <span class="bottom-nav__sep" aria-hidden="true"></span>
+                <button class="bottom-nav__cell" type="button" aria-label="Финансы">₽</button>
+                <span class="bottom-nav__sep" aria-hidden="true"></span>
+                <button class="bottom-nav__cell" type="button" aria-label="Аналитика">≋</button>
+                <span class="bottom-nav__sep" aria-hidden="true"></span>
+                <button class="bottom-nav__cell" type="button" aria-label="Меню">⋯</button>
+              </div>
+            </footer>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <script>
+      document.querySelectorAll('[data-theme-btn]').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          const t = btn.getAttribute('data-theme-btn')
+          document.documentElement.setAttribute('data-theme', t)
+          document.querySelectorAll('[data-theme-btn]').forEach((b) => b.classList.toggle('is-active', b === btn))
+        })
+      })
+    </script>
+  </body>
+</html>
+

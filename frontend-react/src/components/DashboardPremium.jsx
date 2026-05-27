@@ -6,7 +6,6 @@ import { SafetyFundActionForm } from './SafetyFundActionForm';
 
 import { showNotification } from './notifications';
 
-import { getMonthlyBurn } from '../utils/expensesDisplay';
 import { CAPITAL_FLOWS_SECTION } from '../utils/capitalFlowsNav';
 import {
   getSafetyFundFillFromOverview,
@@ -173,7 +172,7 @@ export function DashboardPremium({
 
     const totalIncome = Number(overview?.total_monthly_income) || 0;
 
-    const lifestyleExpense = getMonthlyBurn(overview);
+    const totalOutflow = Number(overview?.total_monthly_outflow) || 0;
     const cushionFill = getSafetyFundFillFromOverview(overview);
 
     return [
@@ -197,9 +196,10 @@ export function DashboardPremium({
       {
         title: 'Расходы',
         chipAction: CAPITAL_FLOWS_SECTION.expense,
-        titleHint: 'Расходы на жизнь за период (без платежей по долгам)',
-        valueNode: <MoneyText value={lifestyleExpense} />,
-        valueLabel: formatChipMoneyAria(lifestyleExpense, { tone: 'out' }),
+        titleHint:
+          'Сумма расходов за период: расходы на жизнь + платежи по обязательствам + содержание имущества',
+        valueNode: <MoneyText value={totalOutflow} />,
+        valueLabel: formatChipMoneyAria(totalOutflow, { tone: 'out' }),
         accent: 'mqx-accent--amber',
         valueTone: 'out',
         expenseIcon: true,

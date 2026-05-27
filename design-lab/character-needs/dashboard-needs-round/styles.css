@@ -27,13 +27,13 @@
 .mqx-needs-risk {
   display: none;
   margin: 0 -12px 0;
-  padding: 8px 12px;
+  padding: 6px 12px;
   font-size: 12px;
-  font-weight: 500;
-  line-height: 1.35;
+  font-weight: 450;
+  line-height: 1.3;
   text-align: center;
-  background: color-mix(in srgb, var(--needs-zero) 10%, var(--surface));
-  border-bottom: 1px solid color-mix(in srgb, var(--needs-zero) 28%, transparent);
+  background: color-mix(in srgb, var(--needs-zero) 6%, var(--surface));
+  border-bottom: 1px solid color-mix(in srgb, var(--needs-zero) 18%, transparent);
   color: var(--needs-zero);
 }
 
@@ -71,7 +71,7 @@
   grid-column: 2 / 4;
   grid-row: 1;
   display: flex;
-  align-items: center;
+  align-items: baseline;
   gap: 6px;
   width: 100%;
   padding: 8px 0 2px;
@@ -108,17 +108,23 @@
   padding: 0;
   border: none;
   background: transparent;
+  text-decoration: none;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.mqx-needs-improve-link:hover,
+.mqx-needs-improve-link:focus-visible {
   text-decoration: underline;
   text-underline-offset: 2px;
   text-decoration-color: color-mix(in srgb, var(--mq-violet) 55%, transparent);
-  cursor: pointer;
-  -webkit-tap-highlight-color: transparent;
 }
 
 .mqx-needs-block__chevron {
   width: 18px;
   height: 18px;
   flex-shrink: 0;
+  align-self: center;
   color: var(--text-muted);
   transition: transform 0.2s ease;
   margin-left: auto;
@@ -205,6 +211,32 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  -webkit-tap-highlight-color: transparent;
+  box-shadow:
+    0 1px 2px color-mix(in srgb, var(--mqx-ink) 8%, transparent),
+    inset 0 0 0 1px color-mix(in srgb, var(--mqx-ink) 12%, transparent);
+  transition:
+    transform 0.14s ease,
+    box-shadow 0.14s ease,
+    background-color 0.14s ease;
+}
+
+.mqx-needs-improve-chip:hover:not(:disabled) {
+  box-shadow:
+    0 2px 4px color-mix(in srgb, var(--mqx-ink) 10%, transparent),
+    inset 0 0 0 1px color-mix(in srgb, var(--mqx-ink) 16%, transparent);
+}
+
+.mqx-needs-improve-chip:active:not(:disabled) {
+  transform: translateY(1px) scale(0.97);
+  box-shadow:
+    inset 0 1px 2px color-mix(in srgb, var(--mqx-ink) 14%, transparent),
+    inset 0 0 0 1px color-mix(in srgb, var(--mqx-ink) 14%, transparent);
+}
+
+.mqx-needs-improve-chip:focus-visible {
+  outline: 2px solid color-mix(in srgb, var(--mq-violet) 48%, transparent);
+  outline-offset: 2px;
 }
 
 .mqx-needs-block.is-expanded .mqx-needs-improve-chip {
@@ -323,6 +355,32 @@
   align-items: center;
   justify-content: center;
   border-radius: 12px;
+  -webkit-tap-highlight-color: transparent;
+  box-shadow:
+    0 1px 2px color-mix(in srgb, var(--mqx-ink) 8%, transparent),
+    inset 0 0 0 1px color-mix(in srgb, var(--mqx-ink) 12%, transparent);
+  transition:
+    transform 0.14s ease,
+    box-shadow 0.14s ease,
+    background-color 0.14s ease;
+}
+
+.mqx-needs-improve:hover:not(:disabled) {
+  box-shadow:
+    0 2px 4px color-mix(in srgb, var(--mqx-ink) 10%, transparent),
+    inset 0 0 0 1px color-mix(in srgb, var(--mqx-ink) 16%, transparent);
+}
+
+.mqx-needs-improve:active:not(:disabled) {
+  transform: translateY(1px) scale(0.97);
+  box-shadow:
+    inset 0 1px 2px color-mix(in srgb, var(--mqx-ink) 14%, transparent),
+    inset 0 0 0 1px color-mix(in srgb, var(--mqx-ink) 14%, transparent);
+}
+
+.mqx-needs-improve:focus-visible {
+  outline: 2px solid color-mix(in srgb, var(--mq-violet) 48%, transparent);
+  outline-offset: 2px;
 }
 
 .mqx-needs-improve--link {
@@ -355,10 +413,13 @@
   text-decoration: none;
 }
 
-.mqx-needs-improve:disabled {
+.mqx-needs-improve:disabled,
+.mqx-needs-improve-chip:disabled {
   opacity: 0.35;
   cursor: not-allowed;
   text-decoration: none;
+  transform: none;
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--mqx-ink) 6%, transparent);
 }
 
 /* —— Micro-variants for collapsed header + CTA —— */
@@ -381,10 +442,13 @@
 }
 
 .mqx-needs-block[data-lab-variant='v4'] .mqx-needs-improve-link {
-  text-decoration: underline;
-  text-underline-offset: 2px;
-  text-decoration-color: color-mix(in srgb, var(--mq-violet) 65%, transparent);
   font-weight: 600;
+  text-decoration: none;
+}
+
+.mqx-needs-block[data-lab-variant='v4'] .mqx-needs-improve-link:hover,
+.mqx-needs-block[data-lab-variant='v4'] .mqx-needs-improve-link:focus-visible {
+  text-decoration-color: color-mix(in srgb, var(--mq-violet) 65%, transparent);
 }
 
 .mqx-needs-block[data-lab-variant='v1'] .mqx-needs-improve-chip {

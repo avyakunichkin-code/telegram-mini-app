@@ -104,6 +104,7 @@ async def create_liability(
 
     game_profile = get_active_game_profile(db, current_user.id)
     sync_time(game_profile)
+    require_capital_mechanic(db, game_profile, MECHANIC_CAPITAL_LIABILITIES)
     mp = monthly_interest_payment(payload.total_debt, payload.annual_rate_percent)
     liability = FinanceLiability(
         title=(payload.title or "Обязательство").strip() or "Обязательство",
@@ -258,6 +259,7 @@ async def create_asset(
 
     game_profile = get_active_game_profile(db, current_user.id)
     sync_time(game_profile)
+    require_capital_mechanic(db, game_profile, MECHANIC_CAPITAL_PROPERTY)
     if int(game_profile.base_params_locked) == 1 and payload.asset_value > EPSILON:
         if float(game_profile.cash_balance) + EPSILON < float(payload.asset_value):
             raise HTTPException(status_code=400, detail="Недостаточно средств на счёте для покупки актива")
