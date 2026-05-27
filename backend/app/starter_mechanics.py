@@ -80,6 +80,7 @@ def resolve_profile_mechanics_effective(db: Session, profile: GameProfile) -> di
     """Флаги разделов капитала с учётом цепочки целей (mechanics_unlock)."""
     from .mechanics_progression import capital_flags_for_api, resolve_template_and_unlock
     from .victory_engine import evaluate_victory, parse_victory_config
+    from .victory_goals_store import override_config_goals_from_db
     from .victory_snap import build_victory_evaluation_input
 
     template_cap, unlock_steps, template_key = resolve_template_and_unlock(db, profile)
@@ -90,6 +91,7 @@ def resolve_profile_mechanics_effective(db: Session, profile: GameProfile) -> di
     )
     raw_victory = row.victory_config_json if row else None
     victory_cfg = parse_victory_config(raw_victory, template_key=template_key)
+    victory_cfg = override_config_goals_from_db(db, template_key=template_key, victory_cfg=victory_cfg)
     snap = build_victory_evaluation_input(db, profile)
     result = evaluate_victory(
         victory_cfg,

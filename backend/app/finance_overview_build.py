@@ -38,6 +38,7 @@ from .game_rules import MVP_SAFETY_FUND_OBLIGATIONS_MULTIPLIER
 from .mechanics_progression import capital_flags_for_api, resolve_template_and_unlock
 from .starter_mechanics import resolve_profile_mechanics
 from .victory_engine import evaluate_victory, parse_victory_config
+from .victory_goals_store import override_config_goals_from_db
 from .victory_seeds import DEFAULT_TEMPLATE_KEY
 from .victory_snap import build_victory_evaluation_input
 
@@ -147,6 +148,7 @@ def build_finance_overview(db: Session, profile: GameProfile) -> FinanceOverview
         raw_victory = None
 
     victory_cfg = parse_victory_config(raw_victory, template_key=template_key)
+    victory_cfg = override_config_goals_from_db(db, template_key=template_key, victory_cfg=victory_cfg)
     victory_snap = build_victory_evaluation_input(db, profile)
     template_cap, mechanics_unlock, template_key = resolve_template_and_unlock(db, profile)
     victory_result = evaluate_victory(

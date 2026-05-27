@@ -1,5 +1,18 @@
 /* section-header-a-page-round — "реальная" страница Dashboard с новым Section Header A */
 
+:root {
+  /* Needs tokens (required by dashboard-needs-round/styles.css) */
+  --needs-ok: #059669;
+  --needs-low: #d97706;
+  --needs-distressed: #ea580c;
+  --needs-zero: #dc2626;
+  --needs-track: color-mix(in srgb, var(--mqx-ink) 8%, transparent);
+}
+
+[data-theme='dark'] {
+  --needs-track: color-mix(in srgb, var(--mqx-ink) 14%, transparent);
+}
+
 .mqx-sect-head-a {
   display: flex;
   align-items: flex-start;
@@ -89,57 +102,8 @@
   padding-bottom: 6px;
 }
 
-.mqx-sect-divider {
-  border: none;
-  border-top: 1px solid color-mix(in srgb, var(--mqx-ink) 9%, transparent);
-  margin: 0 var(--mqx-dash-inline-pad, 14px);
-}
-
-/* Demo: underline-only rows (no background) */
-.mqx-demo-ul {
-  padding: 0 var(--mqx-dash-inline-pad, 14px) 10px;
-}
-
-.mqx-demo-row {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 10px;
-  padding: 10px 0;
-}
-
-.mqx-demo-row + .mqx-demo-row {
-  border-top: 1px solid color-mix(in srgb, var(--mqx-ink) 8%, transparent);
-}
-
-.mqx-demo-row__l {
-  min-width: 0;
-}
-
-.mqx-demo-row__t {
-  font-size: 13px;
-  font-weight: 800;
-  color: var(--mqx-ink);
-}
-
-.mqx-demo-row__s {
-  margin-top: 2px;
-  font-size: 11px;
-  color: color-mix(in srgb, var(--mqx-ink) 55%, transparent);
-}
-
-.mqx-demo-row__v {
-  font-size: 13px;
-  font-weight: 900;
-  color: var(--mqx-ink);
-  white-space: nowrap;
-}
-
-.mqx-demo-row__v--pos {
-  color: var(--mq-emerald);
-}
-
-.mqx-demo-row__v--warn {
-  color: var(--mq-amber);
+/* Lift finance title: we now use Section Header A */
+.mqx-finance-static__title {
+  display: none;
 }
 

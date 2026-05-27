@@ -13,6 +13,7 @@ npx serve .
 
 | Раунд | Тема |
 |-------|------|
+| [`../character-needs/dashboard-needs-round/`](../character-needs/dashboard-needs-round/) | **Состояние** (needs) на дашборде — `MqxNeedsDash` |
 | [`period-actions-round/`](period-actions-round/) | Chip-действия, Монетка справа, подписи кнопок |
 | [`../type-scale-round/`](../type-scale-round/) | Шкала типографики MQX (13→12, 9→10, hero 26/28) |
 | [`goal-chain-round/`](goal-chain-round/) | Блок «Цель» |
@@ -21,11 +22,13 @@ npx serve .
 
 ## Prod parity (S5)
 
-**Канон дашборда в prod:** `goal-chain-round` + `period-actions-round` (не галерея `index.html` с блоком «Уровень»).
+**Канон дашборда в prod:** `../character-needs/dashboard-needs-round/` + `goal-chain-round` + `period-actions-round`
+(не галерея `index.html` с блоком «Уровень»).
 
 Витрина синхронизирована с `DashboardPremium` + `index.css` (`mqx-tab-page--dash-unified`):
 
 - Hero: Play + Pause (`mqx-btn--filled`), пауза `||`
+- **Состояние:** `MqxNeedsDash` — сразу после hero (канон: [`../character-needs/dashboard-needs-round/`](../character-needs/dashboard-needs-round/))
 - Финансы 2×2 (`MqxFinancePeriodBlock`), `mqx-dash-link`, Монетка
 - **Цель:** `MqxGoalDash` — между финансами и действиями ([`goal-chain-round/`](goal-chain-round/))
 - Действия: `MqxPeriodActions`; панель подушки inline

@@ -109,7 +109,7 @@ _BASIC_TUTORIAL_CHAIN: list[dict[str, Any]] = [
     {
         "key": "tutorial_salary",
         "type": "action_once",
-        "title": "Забрать зарплату",
+        "title": "Забрать зарплату (первый ход)",
         "action": "salary_claimed",
         "requires_mechanics": [MECHANIC_DASHBOARD_CORE],
         "required": False,
@@ -118,7 +118,7 @@ _BASIC_TUTORIAL_CHAIN: list[dict[str, Any]] = [
     {
         "key": "tutorial_cushion",
         "type": "action_once",
-        "title": "Внести в подушку",
+        "title": "Подушка: внести любую сумму (фундамент безопасности)",
         "action": "safety_contributed",
         "requires_mechanics": [MECHANIC_DASHBOARD_CORE],
         "required": False,
@@ -127,7 +127,7 @@ _BASIC_TUTORIAL_CHAIN: list[dict[str, Any]] = [
     {
         "key": "tutorial_invest",
         "type": "action_once",
-        "title": "Положить деньги на депозит или купить облигацию",
+        "title": "Инвестиции: открыть депозит или купить облигацию (можно от 1 000 ₽)",
         "action": "invest_opened",
         "requires_mechanics": [MECHANIC_CAPITAL_INVEST],
         "required": False,
@@ -136,7 +136,7 @@ _BASIC_TUTORIAL_CHAIN: list[dict[str, Any]] = [
     {
         "key": "safety_3x",
         "type": "safety_fund_months",
-        "title": "Подушка ≥ 3× обязательств",
+        "title": "Подушка ≥ 3× текущих расходов за период",
         "months_multiplier": 3,
         "requires_mechanics": [MECHANIC_DASHBOARD_CORE],
         "required": False,
@@ -158,7 +158,7 @@ _HARDER_TUTORIAL_CORE: list[dict[str, Any]] = [
     {
         "key": "tutorial_salary",
         "type": "action_once",
-        "title": "Забрать зарплату",
+        "title": "Забрать зарплату (первый ход)",
         "action": "salary_claimed",
         "requires_mechanics": [MECHANIC_DASHBOARD_CORE],
         "required": False,
@@ -167,7 +167,7 @@ _HARDER_TUTORIAL_CORE: list[dict[str, Any]] = [
     {
         "key": "tutorial_cushion",
         "type": "action_once",
-        "title": "Внести в подушку",
+        "title": "Подушка: внести любую сумму (фундамент безопасности)",
         "action": "safety_contributed",
         "requires_mechanics": [MECHANIC_DASHBOARD_CORE],
         "required": False,
@@ -176,16 +176,25 @@ _HARDER_TUTORIAL_CORE: list[dict[str, Any]] = [
     {
         "key": "tutorial_invest",
         "type": "action_once",
-        "title": "Положить деньги на депозит или купить облигацию",
+        "title": "Инвестиции: открыть депозит или купить облигацию (можно от 1 000 ₽)",
         "action": "invest_opened",
         "requires_mechanics": [MECHANIC_CAPITAL_INVEST],
         "required": False,
         "enabled": True,
     },
     {
+        "key": "tutorial_insurance",
+        "type": "action_once",
+        "title": "Страховка: оформить любой полис (понять премии и выплаты)",
+        "action": "insurance_purchased",
+        "requires_mechanics": [MECHANIC_CAPITAL_INSURANCE],
+        "required": False,
+        "enabled": True,
+    },
+    {
         "key": "safety_6x",
         "type": "safety_fund_months",
-        "title": "Подушка ≥ 6× обязательств",
+        "title": "Подушка ≥ 6× текущих расходов за период",
         "months_multiplier": 6,
         "requires_mechanics": [MECHANIC_DASHBOARD_CORE],
         "required": False,
@@ -197,15 +206,6 @@ _HARDER_TUTORIAL_CORE: list[dict[str, Any]] = [
         "title": "Доход с инвестиций ≥ 80 000 ₽/мес",
         "min_monthly": 80_000,
         "requires_mechanics": [MECHANIC_CAPITAL_INVEST],
-        "required": False,
-        "enabled": True,
-    },
-    {
-        "key": "tutorial_insurance",
-        "type": "action_once",
-        "title": "Оформить страховку",
-        "action": "insurance_purchased",
-        "requires_mechanics": [MECHANIC_CAPITAL_INSURANCE],
         "required": False,
         "enabled": True,
     },
@@ -234,10 +234,10 @@ _HARDER_FINALE_RENTAL: dict[str, Any] = {
 
 def _harder_tutorial_chain(template_key: str) -> list[dict[str, Any]]:
     goals = list(_HARDER_TUTORIAL_CORE)
-    if template_key == "mq_game_debt_stack_v1":
-        goals.append(dict(_HARDER_FINALE_RENTAL))
-    else:
-        goals.append(dict(_HARDER_FINALE_CASH_10M))
+    # Временный финал: "наличные" для всех harder-шаблонов.
+    # Причина: цель "сдаваемая квартира" легко эксплойтится (нет связи ипотека↔объект,
+    # нет первоначальных взносов/лимитов, можно брать много ипотек и купить что угодно).
+    goals.append(dict(_HARDER_FINALE_CASH_10M))
     return goals
 
 

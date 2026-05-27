@@ -6,9 +6,10 @@
 ## Порядок (L3)
 
 1. Hero (цветной, на всю ширину)
-2. Финансы — **2×2** chip + Монетка + «Все финансы →»
-3. **Цель** — аккордеон `MqxGoalDash`, цепочка шагов победы ([`goal-chain-round/`](goal-chain-round/))
-4. Действия — 4 кнопки (`MqxPeriodActions`)
+2. **Состояние** — блок самочувствия / needs (`MqxNeedsDash`) *(в prod уже есть; канон должен это включать)*
+3. Финансы — **2×2** chip + Монетка + «Все финансы →»
+4. **Цель** — аккордеон `MqxGoalDash`, цепочка шагов победы ([`goal-chain-round/`](goal-chain-round/))
+5. Действия — 4 кнопки (`MqxPeriodActions`)
 
 ## Страница (S5)
 
@@ -33,9 +34,10 @@
 ## Prod
 
 - `DashboardPremium` → `mqx-tab-page--dash-unified`
-- `MqxFinancePeriodBlock` → `MqxGoalDash` → `MqxPeriodActions`
+- `MqxNeedsDash` → `MqxFinancePeriodBlock` → `MqxGoalDash` → `MqxPeriodActions`
 - Стили: `:has(.mqx-tab-page--dash-unified)` в `index.css`
 - **design-lab** `goal-chain-round` — паритет с prod для лендинга и макетов
+- **design-lab** `../character-needs/dashboard-needs-round/` — паритет блока «Состояние» (needs)
 
 ## Lab ↔ prod checklist
 

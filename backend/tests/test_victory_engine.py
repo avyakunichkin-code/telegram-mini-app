@@ -185,9 +185,9 @@ class TestHarderTutorialChain:
         assert cfg.get("playtest_mode") == "tutorial"
         assert len(cfg["goals"]) == 7
 
-    def test_debt_stack_finale_is_rental(self):
+    def test_debt_stack_finale_is_cash(self):
         cfg = victory_config_for_template("mq_game_debt_stack_v1")
-        assert cfg["goals"][-1]["key"] == "rental_home_owned"
+        assert cfg["goals"][-1]["key"] == "cash_10m"
 
     def test_liabilities_locked_until_cushion(self):
         r = _eval_harder("mq_game_tight_budget_v1", _snap())
