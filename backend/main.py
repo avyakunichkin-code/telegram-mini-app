@@ -283,6 +283,21 @@ def ensure_schema_compatibility() -> None:
                     },
                 )
 
+    # Optional lint: if victory_goals table exists, report issues.
+    # This is non-blocking by default to avoid breaking boot on incomplete DBs.
+    inspector = inspect(engine)
+    if "victory_goals" in inspector.get_table_names():
+        from app.database import SessionLocal
+        from app.victory_goals_lint import lint_victory_goals
+
+        db = SessionLocal()
+        try:
+            issues = lint_victory_goals(db)
+            for i in issues:
+                print(f"[victory_goals][{i.severity}] template={i.template_key} goal={i.goal_key or '-'}: {i.message}")
+        finally:
+            db.close()
+
 
 # Создаём/обновляем таблицы
 Base.metadata.create_all(bind=engine)

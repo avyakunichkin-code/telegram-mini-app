@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ru" data-theme="light">
+<html lang="ru" data-theme="light" data-sections="lite-plain">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -9,12 +9,18 @@
   <body>
     <header class="lab-header">
       <div>
-        <h1>Dashboard: страница целиком + новый Section Header (A)</h1>
+        <h1>Dashboard: страница целиком + секции (сравнение)</h1>
         <p>
-          Цель: до внедрения в prod увидеть “реальную” страницу дашборда, где заголовки секций унифицированы (A, без счётчика, ? меньше).
+          Цель: сравнить варианты оформления секций на реальной странице (актуальный канон блоков).
         </p>
       </div>
       <div class="lab-header__controls">
+        <div class="lab-theme" role="group" aria-label="Заголовки секций">
+          <button type="button" class="is-active" data-sections-btn="lite-plain">V1: текст</button>
+          <button type="button" data-sections-btn="lite-line">V2: линия</button>
+          <button type="button" data-sections-btn="lite-pill">V3: плашка</button>
+          <button type="button" data-sections-btn="a">A (отменён)</button>
+        </div>
         <div class="lab-theme" role="group" aria-label="Тема">
           <button type="button" class="is-active" data-theme-btn="light">Светлая</button>
           <button type="button" data-theme-btn="dark">Тёмная</button>
@@ -26,41 +32,51 @@
       <div class="lab-phone lab-phone--featured">
         <div class="lab-phone__shell lab-phone__shell--unified">
           <div class="mqx-dash-stack mqx-dash-stack--unified" data-skin="s5">
-            <!-- Hero (канон dashboard styles.css) -->
-            <header class="mqx-hero mqx-hero--compact" aria-label="Период и закрытие месяца">
-              <div class="mqx-hero__glow" aria-hidden="true"></div>
-              <div class="mqx-hero-compact__row1">
-                <div class="mqx-hero-compact__logo" aria-hidden="true"><div class="mq-logo">MQ</div></div>
-                <div class="mqx-hero-compact__center">
-                  <div class="mqx-hero-compact__timer-row">
-                    <span class="mqx-hero-compact__timer">08:42</span>
-                    <span class="mqx-hero-compact__progress-meta">Прогресс месяца · 42%</span>
-                  </div>
-                  <div class="mqx-hero-compact__progress" role="progressbar" aria-valuenow="42">
-                    <div class="mqx-hero-compact__progress-fill" style="width: 42%"></div>
-                  </div>
+            <!-- Hero (актуальный канон: без таймера / play-pause) -->
+            <header class="mqx-hero mqx-hero--compact mqx-hero--turn" aria-label="Период и закрытие месяца">
+              <div class="mqx-hero__glow" aria-hidden></div>
+              <div class="mqx-hero-turn__row-single">
+                <div class="mqx-hero-compact__logo" aria-hidden>
+                  <div
+                    class="mqx-brand-logo mqx-brand-logo--compact"
+                    style="height: 34px; width: 100px; background: rgba(255, 255, 255, 0.2); border-radius: 8px"
+                  ></div>
                 </div>
-                <div class="mqx-hero-compact__controls">
-                  <button type="button" class="mqx-btn mqx-btn--filled mqx-btn--icon" aria-label="Играть">▶</button>
-                  <button type="button" class="mqx-btn mqx-btn--filled mqx-btn--icon" aria-label="Пауза">
-                    <span class="mqx-hero-icon-pause" aria-hidden="true"><span></span><span></span></span>
+                <div class="mqx-hero-turn__period-block">
+                  <span class="mqx-hero-turn__status-hint" style="margin: 0 0 2px">Месяц открыт</span>
+                  <span class="mqx-hero-turn__period-label">Период</span>
+                  <span class="mqx-hero-turn__period-value">#7</span>
+                </div>
+                <div class="mqx-hero-turn__actions-col">
+                  <button type="button" class="mqx-hero-turn__cta-primary mqx-hero-turn__cta-primary--wide">
+                    Закрыть месяц
                   </button>
-                </div>
-              </div>
-              <div class="mqx-hero-compact__row2">
-                <div class="mqx-hero-compact__period">
-                  <span class="mqx-hero-compact__period-label">Период</span>
-                  <span class="mqx-hero-compact__period-value">#7</span>
-                </div>
-                <div class="mqx-hero-compact__row2-actions">
-                  <button type="button" class="mqx-pill mqx-pill--events">События<span class="mqx-pill__badge">0</span></button>
-                  <button type="button" class="mqx-pill">Следующий период</button>
+                  <button type="button" class="mqx-hero-turn__events-pill" style="align-self: center">
+                    События
+                    <span class="mqx-hero-turn__events-badge">0</span>
+                  </button>
                 </div>
               </div>
             </header>
 
             <main class="mqx-content mqx-content--dash-flat">
               <!-- 0) Состояние / needs (канон dashboard-needs-round) -->
+              <div class="mqx-sect-kicker-row" data-sect-head-lite data-sect="state">
+                <div class="mqx-sect-kicker mqx-sect-kicker--muted">Потребности</div>
+                <div class="mqx-sect-kicker-row__r">
+                  <button type="button" class="mqx-needs-improve-text" data-needs-improve aria-label="Улучшить">
+                    Улучшить
+                  </button>
+                  <button
+                    type="button"
+                    class="mqx-mini-help"
+                    data-help="Потребности: важные шкалы, которые влияют на решения и риск поражения."
+                    aria-label="Подсказка: потребности"
+                  >
+                    ?
+                  </button>
+                </div>
+              </div>
                 <section
                   class="mqx-needs-block"
                   data-needs-block
@@ -73,36 +89,19 @@
                     <div class="mqx-needs-avatar" aria-hidden="true">
                       <img src="./assets/student-mascot.png" alt="" />
                     </div>
-                    <div class="mqx-needs-block__header" role="button" tabindex="0" aria-expanded="false">
-                      <span class="mqx-needs-block__title">Самочувствие</span>
-                      <button type="button" class="mqx-needs-improve-link" data-needs-improve-link>как улучшить?</button>
-                      <svg
-                        class="mqx-needs-block__chevron"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        stroke-width="2"
-                        aria-hidden
-                      >
-                        <path d="m6 9 6 6 6-6" />
-                      </svg>
-                    </div>
-                    <div class="mqx-needs-compact" data-needs-compact></div>
-                    <button type="button" class="mqx-needs-improve-chip" data-needs-improve aria-label="Улучшить">
-                      <svg class="mqx-needs-improve-icon" viewBox="0 0 24 24" aria-hidden="true">
-                        <path d="M12 4v15" stroke-linecap="round" />
-                        <path d="M7 9l5-5 5 5" stroke-linecap="round" stroke-linejoin="round" />
-                      </svg>
-                    </button>
-                    <div class="mqx-needs-expanded" data-needs-expanded></div>
+                    <div class="mqx-needs-expanded mqx-needs-expanded--always" data-needs-expanded></div>
                   </div>
                 </section>
 
               <hr class="mqx-dash-divider mqx-dash-divider--inset" aria-hidden="true" />
 
-              <!-- 1) Финансы периода (канон dashboard styles.css), с Section Header A поверх -->
-              <section class="mqx-sect-block" aria-label="Финансы периода (с новым заголовком секции)">
-                <div class="mqx-sect-head-a">
+              <!-- 1) Финансы периода -->
+              <section class="mqx-sect-block" aria-label="Финансы периода">
+                <div class="mqx-sect-kicker-row" data-sect-head-lite data-sect="finance">
+                  <div class="mqx-sect-kicker mqx-sect-kicker--muted">Финансы</div>
+                  <button type="button" class="mqx-mini-help" data-help="Финансы периода: доходы, расходы, баланс и подушка.">?</button>
+                </div>
+                <div class="mqx-sect-head-a" data-sect-head="a">
                   <div class="mqx-sect-head-a__l">
                     <div class="mqx-sect-head-a__kicker mqx-sect-head-a__kicker--emerald">Финансы</div>
                     <div class="mqx-sect-head-a__title">Финансы периода</div>
@@ -116,6 +115,24 @@
                 <section class="mqx-finance-static" data-block="period" aria-label="Финансы периода (контент)">
                   <div class="mqx-finance-static__chips">
                     <div class="mqx-finance-chip">
+                      <div class="mqx-finance-chip__icon mqx-accent--sky" aria-hidden="true">
+                        <svg viewBox="0 0 24 24"><path d="M4 19V5"/><path d="M4 19h16"/><path d="M7 15l4-4 3 3 5-6"/></svg>
+                      </div>
+                      <div class="mqx-finance-chip__body">
+                        <div class="mqx-finance-chip__label">Доходы</div>
+                        <div class="mqx-finance-chip__value mqx-finance-chip__value--pos">+12 400</div>
+                      </div>
+                    </div>
+                    <div class="mqx-finance-chip">
+                      <div class="mqx-finance-chip__icon mqx-accent--amber mqx-accent--expense" aria-hidden="true">
+                        <svg viewBox="0 0 24 24"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+                      </div>
+                      <div class="mqx-finance-chip__body">
+                        <div class="mqx-finance-chip__label">Расходы</div>
+                        <div class="mqx-finance-chip__value mqx-finance-chip__value--out">9 600</div>
+                      </div>
+                    </div>
+                    <div class="mqx-finance-chip">
                       <div class="mqx-finance-chip__icon mqx-accent--violet" aria-hidden="true">
                         <svg viewBox="0 0 24 24"><path d="M7 10V7a5 5 0 0 1 10 0v3"/><path d="M6 10h12v10a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V10Z"/><path d="M10 14h4"/></svg>
                       </div>
@@ -124,31 +141,13 @@
                         <div class="mqx-finance-chip__value">42 150</div>
                       </div>
                     </div>
-                    <div class="mqx-finance-chip">
+                    <div class="mqx-finance-chip mqx-finance-chip--cushion">
                       <div class="mqx-finance-chip__icon mqx-accent--emerald" aria-hidden="true">
-                        <svg viewBox="0 0 24 24"><path d="M12 3 20 7v6c0 5-3.4 8.2-8 9-4.6-.8-8-4-8-9V7l8-4Z"/><path d="M9.5 12.2 11 13.7 14.6 10.1"/></svg>
+                        <svg viewBox="0 0 24 24"><path d="M12 3 20 7v6c0 5-3.4 8.2-8 9"/><path d="M9.5 12.2 11 13.7 14.6 10.1"/></svg>
                       </div>
                       <div class="mqx-finance-chip__body">
                         <div class="mqx-finance-chip__label">Подушка</div>
                         <div class="mqx-finance-chip__value">18 000</div>
-                      </div>
-                    </div>
-                    <div class="mqx-finance-chip">
-                      <div class="mqx-finance-chip__icon mqx-accent--sky" aria-hidden="true">
-                        <svg viewBox="0 0 24 24"><path d="M4 19V5"/><path d="M4 19h16"/><path d="M7 15l4-4 3 3 5-6"/></svg>
-                      </div>
-                      <div class="mqx-finance-chip__body">
-                        <div class="mqx-finance-chip__label">Поток</div>
-                        <div class="mqx-finance-chip__value mqx-finance-chip__value--pos">+3 200</div>
-                      </div>
-                    </div>
-                    <div class="mqx-finance-chip" title="Расходы на жизнь за период">
-                      <div class="mqx-finance-chip__icon mqx-accent--amber mqx-accent--expense" aria-hidden="true">
-                        <svg viewBox="0 0 24 24"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
-                      </div>
-                      <div class="mqx-finance-chip__body">
-                        <div class="mqx-finance-chip__label">На жизнь</div>
-                        <div class="mqx-finance-chip__value mqx-finance-chip__value--out">9 600</div>
                       </div>
                     </div>
                   </div>
@@ -169,9 +168,10 @@
 
               <hr class="mqx-dash-divider mqx-dash-divider--inset" aria-hidden="true" />
 
-              <!-- 2) Цель (канон goal-chain-round), с Section Header A поверх -->
-              <section class="mqx-sect-block" aria-label="Цель (с новым заголовком секции)">
-                <div class="mqx-sect-head-a">
+              <!-- 2) Цель -->
+              <section class="mqx-sect-block" aria-label="Цель">
+                <!-- Важно: у цели заголовок остаётся внутри блока (mqx-goal-dash__kicker) -->
+                <div class="mqx-sect-head-a" data-sect-head="a">
                   <div class="mqx-sect-head-a__l">
                     <div class="mqx-sect-head-a__kicker">Цель</div>
                     <div class="mqx-sect-head-a__title">Цепочка сценария</div>
@@ -183,14 +183,45 @@
                 </div>
 
                 <div class="mqx-goal-dash-bleed">
-                  <section class="mqx-goal-dash" aria-label="Цель сценария (контент)">
-                    <button type="button" class="mqx-goal-dash__toggle" aria-expanded="false">
+                  <section class="mqx-goal-dash" aria-label="Цель">
+                    <button type="button" class="mqx-goal-dash__toggle" data-goal-toggle aria-expanded="false">
                       <div class="mqx-goal-dash__toggle-inner">
                         <div class="mqx-goal-dash__head-row">
                           <div class="mqx-goal-dash__head-text">
                             <span class="mqx-goal-dash__kicker">Цель</span>
                             <span class="mqx-goal-dash__current-title">Подушка ≥ 3× обязательств</span>
-                            <span class="mqx-goal-dash__step">Шаг 2 из 4</span>
+                            <div class="mqx-goal-dash__path-row">
+                              <div class="mqx-goal-path" role="group" aria-label="Шаги сценария: 1 выполнено, активен шаг 2 из 4">
+                                <div class="mqx-goal-path__track">
+                                  <div class="mqx-goal-path__segment mqx-goal-path__segment--done">
+                                    <span class="mqx-goal-path__node" aria-hidden="true">✓</span>
+                                    <span class="mqx-goal-path__sr">Стабильный денежный поток</span>
+                                    <span class="mqx-goal-path__connector" aria-hidden="true"></span>
+                                  </div>
+                                  <div class="mqx-goal-path__segment mqx-goal-path__segment--current">
+                                    <span class="mqx-goal-path__node" aria-hidden="true">2</span>
+                                    <span class="mqx-goal-path__sr">Подушка ≥ 3× обязательств</span>
+                                    <span class="mqx-goal-path__connector" aria-hidden="true"></span>
+                                  </div>
+                                  <div class="mqx-goal-path__segment mqx-goal-path__segment--locked">
+                                    <span class="mqx-goal-path__node" aria-hidden="true">3</span>
+                                    <span class="mqx-goal-path__sr">Без просрочки</span>
+                                    <span class="mqx-goal-path__connector" aria-hidden="true"></span>
+                                  </div>
+                                  <div class="mqx-goal-path__segment mqx-goal-path__segment--locked">
+                                    <span class="mqx-goal-path__node" aria-hidden="true">4</span>
+                                    <span class="mqx-goal-path__sr">Пассивный доход ≥ 100 000 ₽/мес</span>
+                                  </div>
+                                </div>
+                              </div>
+                              <button
+                                type="button"
+                                class="mqx-mini-help mqx-mini-help--goal"
+                                data-help="Цель: цепочка победы из шаблона. Свёрнуто — только дорожка шагов; развёрнуто — советы и список."
+                              >
+                                ?
+                              </button>
+                            </div>
                           </div>
                           <span class="mqx-icon-chevron mqx-goal-dash__chevron" aria-hidden="true">
                             <svg viewBox="0 0 24 24" fill="none" width="20" height="20">
@@ -206,9 +237,13 @@
 
               <hr class="mqx-dash-divider mqx-dash-divider--inset" aria-hidden="true" />
 
-              <!-- 3) Действия периода (канон period-actions-round), с Section Header A поверх -->
-              <section class="mqx-sect-block" aria-label="Действия периода (с новым заголовком секции)">
-                <div class="mqx-sect-head-a">
+              <!-- 3) Действия периода -->
+              <section class="mqx-sect-block" aria-label="Действия периода">
+                <div class="mqx-sect-kicker-row" data-sect-head-lite data-sect="actions">
+                  <div class="mqx-sect-kicker mqx-sect-kicker--muted">Действия</div>
+                  <button type="button" class="mqx-mini-help" data-help="Действия периода: ключевые ходы месяца — зарплата, подушка, вложения.">?</button>
+                </div>
+                <div class="mqx-sect-head-a" data-sect-head="a">
                   <div class="mqx-sect-head-a__l">
                     <div class="mqx-sect-head-a__kicker mqx-sect-head-a__kicker--amber">Действия</div>
                     <div class="mqx-sect-head-a__title">Действия периода</div>
@@ -221,7 +256,13 @@
 
                 <section class="mqx-period-actions mqx-period-actions--chips" aria-label="Действия периода (контент)">
                   <div class="mqx-action-chips">
-                    <button type="button" class="mqx-action-chip mqx-action-chip--salary" title="Получить зарплату за текущий период">
+                    <button
+                      type="button"
+                      class="mqx-action-chip mqx-action-chip--salary"
+                      data-salary-chip
+                      data-onboarding-anchor="salary"
+                      title="Получить зарплату за текущий период"
+                    >
                       <span class="mqx-action-chip__icon mqx-accent--violet" aria-hidden="true">
                         <svg viewBox="0 0 24 24">
                           <path d="M12 2v4" />
@@ -250,7 +291,13 @@
                       </span>
                     </button>
 
-                    <button type="button" class="mqx-action-chip" title="Перевести деньги с карты в подушку">
+                    <button
+                      type="button"
+                      class="mqx-action-chip"
+                      data-money-trigger="in"
+                      data-onboarding-anchor="cushion"
+                      title="Перевести деньги с карты в подушку"
+                    >
                       <span class="mqx-action-chip__icon mqx-accent--emerald" aria-hidden="true">
                         <svg viewBox="0 0 24 24">
                           <path d="M12 19V5" />
@@ -263,7 +310,7 @@
                       </span>
                     </button>
 
-                    <button type="button" class="mqx-action-chip" title="Снять деньги с подушки на счёт">
+                    <button type="button" class="mqx-action-chip" data-money-trigger="out" title="Снять деньги с подушки на счёт">
                       <span class="mqx-action-chip__icon mqx-accent--sky" aria-hidden="true">
                         <svg viewBox="0 0 24 24">
                           <path d="M12 5v14" />
@@ -285,13 +332,25 @@
             <!-- Bottom nav (эскиз) -->
             <footer class="lab-bottom-nav bottom-nav--unified" aria-label="Навигация">
               <div class="bottom-nav__track">
-                <button class="bottom-nav__cell bottom-nav__cell--active" type="button" aria-label="Дашборд">⌂</button>
+                <button class="bottom-nav__cell bottom-nav__cell--active" type="button" aria-label="Дашборд">
+                  <span class="bottom-nav__icon" aria-hidden="true">⌂</span>
+                  <span class="bottom-nav__label">Дашборд</span>
+                </button>
                 <span class="bottom-nav__sep" aria-hidden="true"></span>
-                <button class="bottom-nav__cell" type="button" aria-label="Финансы">◎</button>
+                <button class="bottom-nav__cell" type="button" aria-label="Финансы">
+                  <span class="bottom-nav__icon" aria-hidden="true">◎</span>
+                  <span class="bottom-nav__label">Финансы</span>
+                </button>
                 <span class="bottom-nav__sep" aria-hidden="true"></span>
-                <button class="bottom-nav__cell" type="button" aria-label="Аналитика">↗</button>
+                <button class="bottom-nav__cell" type="button" aria-label="Аналитика">
+                  <span class="bottom-nav__icon" aria-hidden="true">↗</span>
+                  <span class="bottom-nav__label">Аналитика</span>
+                </button>
                 <span class="bottom-nav__sep" aria-hidden="true"></span>
-                <button class="bottom-nav__cell" type="button" aria-label="Меню">☰</button>
+                <button class="bottom-nav__cell" type="button" aria-label="Меню">
+                  <span class="bottom-nav__icon" aria-hidden="true">☰</span>
+                  <span class="bottom-nav__label">Меню</span>
+                </button>
               </div>
             </footer>
           </div>
@@ -308,7 +367,46 @@
         })
       })
     </script>
+    <script>
+      document.querySelectorAll('[data-sections-btn]').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          const v = btn.getAttribute('data-sections-btn')
+          document.documentElement.setAttribute('data-sections', v)
+          document.querySelectorAll('[data-sections-btn]').forEach((b) => b.classList.toggle('is-active', b === btn))
+        })
+      })
+    </script>
     <script src="./needs-lab.js"></script>
+    <script>
+      document.querySelectorAll('[data-goal-toggle]').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          const section = btn.closest('.mqx-goal-dash')
+          if (!section) return
+          const open = section.classList.toggle('mqx-goal-dash--expanded')
+          btn.setAttribute('aria-expanded', String(open))
+        })
+      })
+    </script>
+    <script>
+      const help = document.createElement('div')
+      help.className = 'mqx-help-pop'
+      help.innerHTML = '<div class="mqx-help-pop__card"><div class="mqx-help-pop__text"></div><button type="button" class="mqx-help-pop__close">Закрыть</button></div>'
+      document.body.appendChild(help)
+      const textNode = help.querySelector('.mqx-help-pop__text')
+      const closeBtn = help.querySelector('.mqx-help-pop__close')
+      function closeHelp() { help.classList.remove('is-open'); if (textNode) textNode.textContent = '' }
+      closeBtn?.addEventListener('click', closeHelp)
+      help.addEventListener('click', (e) => { if (e.target === help) closeHelp() })
+      document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeHelp() })
+      document.querySelectorAll('[data-help]').forEach((btn) => {
+        btn.addEventListener('click', (e) => {
+          e.stopPropagation()
+          const msg = btn.getAttribute('data-help') || ''
+          if (textNode) textNode.textContent = msg
+          help.classList.add('is-open')
+        })
+      })
+    </script>
   </body>
 </html>
 

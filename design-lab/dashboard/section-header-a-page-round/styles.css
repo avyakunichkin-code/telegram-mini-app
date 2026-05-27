@@ -13,6 +13,101 @@
   --needs-track: color-mix(in srgb, var(--mqx-ink) 14%, transparent);
 }
 
+/* Lite section headings (canonical): single typographic system */
+.mqx-sect-kicker-row {
+  padding: 10px var(--mqx-dash-inline-pad, 14px) 6px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.mqx-sect-kicker-row__r {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+/* Hard clamp: keep everything inside the phone tile */
+.lab-phone--featured {
+  width: 100%;
+}
+
+.lab-phone__shell {
+  width: 100%;
+}
+
+.mqx-sect-kicker {
+  display: inline-flex;
+  align-items: center;
+  font-size: 11px;
+  font-weight: 850;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--mqx-ink) 52%, transparent);
+}
+
+.mqx-sect-kicker--muted {
+  color: color-mix(in srgb, var(--mqx-ink) 52%, transparent);
+}
+
+/* Small help button near headings */
+.mqx-mini-help {
+  width: 22px;
+  height: 22px;
+  border-radius: 999px;
+  border: 1px solid color-mix(in srgb, var(--mqx-ink) 12%, transparent);
+  background: color-mix(in srgb, var(--mqx-ink) 4%, transparent);
+  color: color-mix(in srgb, var(--mqx-ink) 72%, transparent);
+  font-weight: 900;
+  font-size: 12px;
+  line-height: 1;
+  padding: 0;
+  cursor: pointer;
+}
+
+.mqx-mini-help:active {
+  transform: translateY(1px);
+}
+
+.mqx-mini-help--goal {
+  align-self: flex-start;
+  margin-top: 2px;
+}
+
+/* Variants: V1 text only */
+html[data-sections='lite-plain'] [data-sect-head-lite] {
+  display: block;
+}
+
+/* Variants: V2 line accent */
+html[data-sections='lite-line'] [data-sect-head-lite] {
+  display: block;
+}
+
+html[data-sections='lite-line'] .mqx-sect-kicker-row {
+  padding: 10px var(--mqx-dash-inline-pad, 14px) 6px;
+  border-left: 2px solid color-mix(in srgb, var(--mqx-ink) 16%, transparent);
+  padding-left: calc(var(--mqx-dash-inline-pad, 14px) - 2px + 10px);
+}
+
+/* Variants: V3 pill */
+html[data-sections='lite-pill'] [data-sect-head-lite] {
+  display: block;
+}
+
+html[data-sections='lite-pill'] .mqx-sect-kicker-row {
+  padding: 8px var(--mqx-dash-inline-pad, 14px) 6px;
+}
+
+html[data-sections='lite-pill'] .mqx-sect-kicker {
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--mqx-ink) 4%, transparent);
+  border: 1px solid color-mix(in srgb, var(--mqx-ink) 10%, transparent);
+}
+
 .mqx-sect-head-a {
   display: flex;
   align-items: flex-start;
@@ -102,8 +197,130 @@
   padding-bottom: 6px;
 }
 
-/* Lift finance title: we now use Section Header A */
-.mqx-finance-static__title {
+/* Sections variants */
+html[data-sections='lite-plain'] [data-sect-head='a'] { display: none; }
+html[data-sections='lite-line'] [data-sect-head='a'] { display: none; }
+html[data-sections='lite-pill'] [data-sect-head='a'] { display: none; }
+html[data-sections='lite-plain'] [data-sect-head-lite] { display: block; }
+html[data-sections='lite-line'] [data-sect-head-lite] { display: block; }
+html[data-sections='lite-pill'] [data-sect-head-lite] { display: block; }
+html[data-sections='a'] [data-sect-head='a'] { display: flex; }
+html[data-sections='a'] [data-sect-head-lite] { display: none; }
+
+/* Needs header is replaced by section header row (kicker) */
+html[data-sections^='lite'] .mqx-needs-block__header {
   display: none;
+}
+
+/* Needs: canonical "always visible" variant tweaks for this page-round */
+html[data-sections^='lite'] .mqx-needs-block.is-expanded .mqx-needs-expanded,
+html[data-sections^='lite'] .mqx-needs-expanded--always {
+  display: block;
+}
+
+html[data-sections^='lite'] .mqx-needs-compact {
+  display: none;
+}
+
+html[data-sections^='lite'] .mqx-needs-block__chevron,
+html[data-sections^='lite'] .mqx-needs-improve-link {
+  display: none;
+}
+
+html[data-sections^='lite'] .mqx-needs-improve-text {
+  font: inherit;
+  font-size: 11px;
+  font-weight: 650;
+  letter-spacing: 0.02em;
+  color: var(--mq-violet);
+  background: transparent;
+  border: 1px solid color-mix(in srgb, var(--mq-violet) 22%, transparent);
+  padding: 4px 8px;
+  border-radius: 999px;
+  cursor: pointer;
+}
+
+html[data-sections^='lite'] .mqx-needs-improve-text:active {
+  transform: translateY(1px);
+}
+
+/* Help popover (design-lab only) */
+.mqx-help-pop {
+  position: fixed;
+  inset: 0;
+  display: none;
+  align-items: flex-end;
+  justify-content: center;
+  padding: 18px;
+  background: color-mix(in srgb, var(--mqx-ink) 36%, transparent);
+  z-index: 999;
+}
+
+.mqx-help-pop.is-open {
+  display: flex;
+}
+
+.mqx-help-pop__card {
+  width: min(440px, 100%);
+  border-radius: 16px;
+  padding: 12px 12px 10px;
+  background: var(--surface);
+  border: 1px solid color-mix(in srgb, var(--mqx-ink) 10%, transparent);
+  box-shadow: 0 12px 36px color-mix(in srgb, var(--mqx-ink) 18%, transparent);
+}
+
+.mqx-help-pop__text {
+  font-size: 13px;
+  line-height: 1.45;
+  color: color-mix(in srgb, var(--mqx-ink) 86%, transparent);
+}
+
+.mqx-help-pop__close {
+  margin-top: 10px;
+  width: 100%;
+  font: inherit;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 10px 12px;
+  border-radius: 12px;
+  border: 1px solid color-mix(in srgb, var(--mqx-ink) 12%, transparent);
+  background: color-mix(in srgb, var(--mqx-ink) 4%, transparent);
+  cursor: pointer;
+}
+
+
+/* Goal header "Цель" should keep its own UI, but font should match */
+html[data-sections^='lite'] .mqx-goal-dash__kicker {
+  font-size: 11px;
+  font-weight: 850;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--mq-sky, #0ea5e9) 82%, var(--mqx-ink));
+}
+
+/* Bottom nav labels (page-round only; prod nav has labels) */
+.lab-bottom-nav .bottom-nav__cell {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  padding: 8px 0 6px;
+  font-size: 18px; /* icon size */
+}
+
+.lab-bottom-nav .bottom-nav__icon {
+  line-height: 1;
+}
+
+.lab-bottom-nav .bottom-nav__label {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: color-mix(in srgb, var(--mqx-ink) 55%, transparent);
+}
+
+.lab-bottom-nav .bottom-nav__cell--active .bottom-nav__label {
+  color: color-mix(in srgb, #fff 88%, transparent);
 }
 

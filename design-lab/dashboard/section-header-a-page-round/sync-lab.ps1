@@ -5,10 +5,18 @@ $out = Join-Path $round "lab-base.css"
 $tmp = Join-Path $round "lab-base.css.tmp"
 
 $needsRound = Join-Path $parent "..\\character-needs\\dashboard-needs-round"
+$heroRound = Join-Path $parent "hero-no-timer-round"
+$goalRound = Join-Path $parent "goal-chain-round"
+$goalPathRound = Join-Path $parent "goal-path-stepper-round"
+$actionsRound = Join-Path $parent "period-actions-round"
 
 $sources = @(
     (Join-Path $parent "styles.css"),
+    (Join-Path $heroRound "styles.css"),
     (Join-Path $needsRound "styles.css"),
+    (Join-Path $goalRound "styles.css"),
+    (Join-Path $goalPathRound "styles.css"),
+    (Join-Path $actionsRound "styles.css"),
     (Join-Path $round "styles.css")
 )
 
@@ -35,6 +43,8 @@ $assets = Join-Path $round "assets"
 New-Item -ItemType Directory -Force -Path $assets | Out-Null
 $png = Join-Path $parent "goal-chain-round\assets\monetka-mascot.png"
 Copy-Item $png (Join-Path $assets "monetka-mascot.png") -Force
+$wink = Join-Path $actionsRound "assets\monetka-wink.png"
+Copy-Item $wink (Join-Path $assets "monetka-wink.png") -Force
 
 # Assets (Needs mascot)
 $student = Join-Path $needsRound "assets\student-mascot.png"
@@ -42,5 +52,6 @@ Copy-Item $student (Join-Path $assets "student-mascot.png") -Force
 
 Write-Host "OK: $out"
 Write-Host "OK: assets/monetka-mascot.png"
+Write-Host "OK: assets/monetka-wink.png"
 Write-Host "OK: assets/student-mascot.png"
 

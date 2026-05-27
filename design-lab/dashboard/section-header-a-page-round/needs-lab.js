@@ -31,13 +31,6 @@
     return 'Норма';
   }
 
-  function minAxis(values) {
-    let min = AXES[0];
-    AXES.forEach((a) => {
-      if (values[a.key] < values[min.key]) min = a;
-    });
-    return min;
-  }
 
   function renderBarRow(axis, value) {
     const z = zone(value);
@@ -52,53 +45,11 @@
       </div>`;
   }
 
-  function renderCompactRow(axis, value) {
-    const z = zone(value);
-    const pct = Math.max(0, Math.min(100, value));
-    return `
-      <div class="mqx-needs-bar-row">
-        <span class="mqx-needs-bar-label">${axis.label}</span>
-        <div class="mqx-needs-bar-track" role="progressbar" aria-valuenow="${pct}" aria-valuemin="0" aria-valuemax="100" aria-label="${axis.label}, ${zoneLabel(z)}">
-          <span class="mqx-needs-bar-fill" data-zone="${z}" style="width:${pct}%"></span>
-        </div>
-        <span class="mqx-needs-zone-text" data-zone="${z}">${zoneLabel(z)}</span>
-      </div>`;
-  }
-
-  function renderImprove(improveStyle) {
-    const iconSvg = `
-      <svg class="mqx-needs-improve-icon" viewBox="0 0 24 24" aria-hidden="true">
-        <path d="M12 4v15" stroke-linecap="round" />
-        <path d="M7 9l5-5 5 5" stroke-linecap="round" stroke-linejoin="round" />
-      </svg>
-    `;
-    const classMap = {
-      link: 'mqx-needs-improve mqx-needs-improve--link',
-      row: 'mqx-needs-improve mqx-needs-improve--subtle-row',
-      ghost: 'mqx-needs-improve mqx-needs-improve--ghost-center',
-    };
-    const cls = classMap[improveStyle] || classMap.link;
-
-    return `
-      <div class="mqx-needs-improve-zone">
-        <button type="button" class="${cls}" aria-label="Улучшить">
-          ${iconSvg}
-          <span class="mqx-needs-sr-only">Улучшить</span>
-        </button>
-      </div>`;
-  }
-
   function renderPanels(block, values, improveStyle) {
-    const min = minAxis(values);
-    const compactHost = block.querySelector('[data-needs-compact]');
     const expandedHost = block.querySelector('[data-needs-expanded]');
-
-    if (compactHost) {
-      compactHost.innerHTML = renderCompactRow(min, values[min.key]);
-    }
     if (expandedHost) {
       const bars = AXES.map((a) => renderBarRow(a, values[a.key])).join('');
-      expandedHost.innerHTML = bars + renderImprove(improveStyle);
+      expandedHost.innerHTML = bars;
     }
   }
 
@@ -119,14 +70,7 @@
     }
   }
 
-  function setExpanded(block, expanded) {
-    block.classList.toggle('is-expanded', expanded);
-    const header = block.querySelector('.mqx-needs-block__header');
-    if (header) header.setAttribute('aria-expanded', expanded ? 'true' : 'false');
-  }
-
   function renderBlock(block, presetKey) {
-    const wasExpanded = block.classList.contains('is-expanded');
     const preset = PRESETS[presetKey];
     const values = {
       comfort: preset.comfort,
@@ -137,11 +81,9 @@
     const improveStyle = block.dataset.improveStyle || 'link';
     renderPanels(block, values, improveStyle);
     updateRisk(block, preset);
-    setExpanded(block, wasExpanded);
   }
 
   function bindBlock(block) {
-    const header = block.querySelector('.mqx-needs-block__header');
     const help = block.querySelector('[data-needs-help]');
     const improveLink = block.querySelector('[data-needs-improve-link]');
     const improveChip = block.querySelector('[data-needs-improve]');
@@ -162,20 +104,7 @@
       });
     }
 
-    if (header) {
-      header.addEventListener('click', (e) => {
-        if (e.target.closest('[data-needs-help]')) return;
-        if (e.target.closest('[data-needs-improve-link]')) return;
-        setExpanded(block, !block.classList.contains('is-expanded'));
-      });
-      header.addEventListener('keydown', (e) => {
-        if (e.key !== 'Enter' && e.key !== ' ') return;
-        if (e.target.closest('[data-needs-help]')) return;
-        if (e.target.closest('[data-needs-improve-link]')) return;
-        e.preventDefault();
-        setExpanded(block, !block.classList.contains('is-expanded'));
-      });
-    }
+    // No accordion in this round: needs are always visible.
   }
 
   let currentPreset = 'distressed';

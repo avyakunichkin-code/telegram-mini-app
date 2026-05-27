@@ -238,6 +238,48 @@ available = enabled AND period open AND (
 
 ---
 
+## События: влияние на потребности (`needs_delta`)
+
+> UX отображения чипов на кнопках выбора: [`docs/ux/screens/character-needs-events.md`](../../ux/screens/character-needs-events.md)
+
+### Цель
+Сделать “жизнь” управляемой через **выборы в событиях**: игрок видит `needs_delta` **до** нажатия и получает изменение шкал **после** успешного выбора.
+
+### Контракт данных (контент / БД)
+В `EventChoice.effects_json` добавляется ключ `needs_delta`:
+
+```json
+{
+  "cash_delta": -3000,
+  "needs_delta": { "comfort": 0, "status": -4, "social": 10, "health": 6 }
+}
+```
+
+Правила:
+- ключи только из осей: `comfort | status | social | health`
+- значения — числа (могут быть отрицательными/положительными)
+- итоговые шкалы clamp в диапазон 0–100 с округлением до 1 знака (как в `needs_engine`)
+- показывать в UI только ненулевые оси (см. UX spec)
+
+### Серверное применение (choose)
+При `POST /api/game/events/{event_id}/choose`:
+- если в `effects_json` есть `needs_delta` — применить его к текущим needs профиля:
+  - `after = before + needs_delta` по осям
+  - `set_profile_needs(profile, after)` (clamp/round — как в `needs_engine`)
+- затем вернуть обновлённый overview, чтобы UI синхронизировался по “единому источнику правды”.
+
+### Валидация
+- если `needs_delta` не объект → 400
+- если в объекте есть неизвестные ключи → 400
+- если все значения 0 → допускается (в UI чипы не показываем)
+
+### Статус реализации
+На текущий момент (см. код):
+- `needs_delta` **реализован** для `treat-self` (ADR-006) — `POST /api/game/period/treat-self`, `backend/app/routers/period_actions.py`
+- для **событий** `needs_delta` должен быть добавлен как effect key и применяться в `choose` (см. backlog CN1-011)
+
+---
+
 ## Справочник помощи (player support)
 
 **Не** подменяет события; статический контент + доступ с дашборда («?» / «Как поддерживать баланс»).

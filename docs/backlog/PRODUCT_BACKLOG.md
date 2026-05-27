@@ -32,6 +32,7 @@
 | **M12** | Достижения (цепочки из GAME §5) | DB+Backend+Frontend | 🟡 [SPEC_achievements](../specs/features/SPEC_achievements.md); BE ✅, FE «Развитие» ⬜ |
 | **V2** | Victory M из N | DB+Backend+Frontend+Doc | ✅ **P1 закрыт**: `victory_engine` + `MqxGoalDash`; дальше — баланс/плейтест |
 | **I1** | Страховки: продукт + объект | DB+Backend+Frontend | 🟡 0008 + UI в работе |
+| **CN1** | Состояние персонажа (Z‑NEEDS): decay, treat-self, поражение | DB+Backend+Frontend+Doc | 🟡 ядро ✅ (колонки/overview/UI); контент и полировка ⬜ |
 | **α** | Pre-Alpha / Closed Alpha гейты | Doc+Frontend (метрики) | ⬜ см. GAME §11 |
 | **O1** | Онбординг TMA — Guided coach + Монетка | Frontend+Backend+Doc | 🟡 design-lab ★ → MQX |
 | **A0** | Admin Watchtower (MVP 1.2) | DB+Backend+Frontend | 🟡 Phase 0 в коде |
@@ -89,6 +90,26 @@
 
 - [x] P1 **[Backend]** Движок **M из N** по `victory_config_json`; `avg_liquid_delta_6p` / зарплата в порогах — `victory_engine.py`, миграция `0010`, `test_victory_engine.py`.
 - [x] P1 **[Backend]** `min_period_index_for_victory` из шаблона (дефолт 7) — в overview `victory.*`.
+
+### Эпик CN1 — состояние персонажа (Z‑NEEDS)
+
+Документы и решения:
+- Spec: [`SPEC_game-character-needs`](../specs/features/SPEC_game-character-needs.md)
+- ADR: [`ADR-005`](../decisions/ADR-005-character-needs-state-and-defeat.md), [`ADR-006`](../decisions/ADR-006-treat-self-options-and-cooldown.md)
+- UX: [`CHARACTER_NEEDS_UX`](../ux/CHARACTER_NEEDS_UX.md), экраны `docs/ux/screens/character-needs-*.md`
+- Lab: `design-lab/character-needs/` (дашборд needs, treat-self и т.п.)
+
+Скоуп (фаза 1): decay 0–100, последствия distressed, treat-self с кулдауном, поражение при 0 три периода подряд, обзор/дашборд/подсказки.
+
+Очередь (CN1):
+- [ ] P0 **[Doc]** CN1-001 — Свести в один “каноничный” one-pager правила needs (decay/thresholds/defeat/treat-self), чтобы не расползалось между spec/ADR/UX.
+- [ ] P1 **[Content+DB]** CN1-010 — Довести `blueprint.needs.treat_self.options[]` до 3–4 вариантов на персонажа (с разными акцентами comfort/status/social/health).
+- [ ] P1 **[Backend+Content]** CN1-011 — Rescue-события + `rescue_event_bias`: добавить/настроить 1–2 rescue-события (trade-off cash/долг) и проверить, что bias реально влияет на вероятность/частоту их выпадения.
+- [ ] P1 **[Backend+Frontend+Doc]** CN1-012 — События → needs: поддержать `needs_delta` в `EventChoice.effects_json` (контракт, whitelist/валидация, применение на `choose`) + UI-отображение чипов (см. UX `character-needs-events.md`).
+- [ ] P1 **[Frontend]** CN1-020 — Полировка дашборда needs: пустые/ошибочные состояния, явный CTA “Порадовать себя”, доступность справки.
+- [ ] P1 **[Frontend+UX/Copy]** CN1-021 — Тексты/тон: объяснить distressed и риск поражения без “наказания ради наказания” (бренд, поддержка игрока).
+- [ ] P1 **[Backend+Frontend]** CN1-022 — Экран/оверлей поражения по needs (3 периода подряд на нуле): понятная причина, что делать дальше, и “повторить/новая игра”.
+- [ ] P2 **[Balance+Doc]** CN1-030 — Плейтест-подбор `periods_to_empty_target` (10–15) и штрафов distressed (soft/standard/hard), фиксировать результаты в журнале (DOC_SYNC_LOG или отдельный отчёт).
 
 ### События и контент (после M11)
 

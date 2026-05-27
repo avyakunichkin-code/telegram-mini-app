@@ -186,6 +186,110 @@ source: ../backlog/PRODUCT_BACKLOG.md
 
 ---
 
+## Трек CN1 — Состояние персонажа (Z‑NEEDS) (P1–P2)
+
+> Документы: spec [`SPEC_game-character-needs`](../specs/features/SPEC_game-character-needs.md) · ADR-005/006 (`docs/decisions/`) · UX master [`CHARACTER_NEEDS_UX`](../ux/CHARACTER_NEEDS_UX.md).
+
+### Task CN1-001: Каноничный one-pager правил needs
+
+**Описание:** собрать в один короткий документ “правило игры” для needs (decay, пороги, поражение, treat-self, связь с событиями) — чтобы проверять детали без прыжков между ADR/spec/UX.
+
+**Смотреть:**  
+- ADR-005: [`ADR-005-character-needs-state-and-defeat.md`](../decisions/ADR-005-character-needs-state-and-defeat.md)  
+- ADR-006: [`ADR-006-treat-self-options-and-cooldown.md`](../decisions/ADR-006-treat-self-options-and-cooldown.md)  
+- Spec: [`SPEC_game-character-needs.md`](../specs/features/SPEC_game-character-needs.md)
+
+**Критерии приёмки:**
+- [ ] 1–2 страницы: правила + числа (где playtest) + “что считается поражением”
+- [ ] Ссылки на исходные ADR/spec/UX
+
+---
+
+### Task CN1-010: Контент treat-self (3–4 опции на персонажа)
+
+**Описание:** расширить `blueprint_json.needs.treat_self.options[]` до 3–4 вариантов на персонажа (разные акценты по осям), чтобы sheet выбора имел смысл.
+
+**Смотреть:**  
+- ADR-006: варианты, кулдаун, стоимость  
+- Spec: [`SPEC_game-character-needs.md`](../specs/features/SPEC_game-character-needs.md) раздел «Порадовать себя»
+
+**Критерии приёмки:**
+- [ ] На каждом шаблоне game needs: `options.length >= 3` (или чётко зафиксировать исключения)
+- [ ] У каждой опции: `id`, `title`, `needs_delta`, cost-правила (как в ADR/spec)
+
+---
+
+### Task CN1-011: Rescue-события и проверка `rescue_event_bias`
+
+**Описание:** добавить/настроить 1–2 “rescue” события, которые поднимают needs с денежным trade-off, и проверить, что `player_support.rescue_event_bias` реально влияет на выборку.
+
+**Смотреть:**  
+- Spec: [`SPEC_game-character-needs.md`](../specs/features/SPEC_game-character-needs.md) (контент/события/needs_delta)  
+- UX: [`character-needs-events.md`](../ux/screens/character-needs-events.md)
+
+**Критерии приёмки:**
+- [ ] Есть 1–2 rescue-события, которые **поднимают needs** и имеют понятный trade-off по cash/обязательствам
+- [ ] Проверка bias: в плейтесте/скрипте видно отличие частоты выпадения rescue-событий при разных `rescue_event_bias`
+
+---
+
+### Task CN1-012: Поддержать `needs_delta` в effects событий (контракт + применение)
+
+**Описание:** зафиксировать и реализовать поддержку `needs_delta` как эффекта события: whitelist, валидация и применение на `choose`, чтобы UI мог честно показывать чипы до выбора.
+
+**Смотреть:**  
+- Spec: [`SPEC_game-character-needs.md`](../specs/features/SPEC_game-character-needs.md) раздел «События: влияние на потребности (`needs_delta`)»  
+- UX spec: [`character-needs-events.md`](../ux/screens/character-needs-events.md)  
+- Кодовые точки (для реализации, когда дойдём): `backend/app/routers/events.py` (allowed effects + choose), `backend/app/event_choice_impacts.py` (preview), `backend/app/needs_engine.py` (clamp/set)
+
+**Критерии приёмки:**
+- [ ] `needs_delta` разрешён/валидируется и применяется на `choose`
+- [ ] Контентные события с `needs_delta` есть в каталоге
+- [ ] UI показывает чипы по UX-канону и после выбора значения needs совпадают с сервером
+
+---
+
+### Task CN1-020/021: Полировка Z-NEEDS UI и копирайта
+
+**Описание:** привести UI needs к UX-канону: compact/expand, help sheet, treat-self CTA, риск поражения (streak), тексты и тон.
+
+**Смотреть:**  
+- UX master: [`CHARACTER_NEEDS_UX.md`](../ux/CHARACTER_NEEDS_UX.md)  
+- UX экраны: [`character-needs-dashboard.md`](../ux/screens/character-needs-dashboard.md), [`character-needs-help.md`](../ux/screens/character-needs-help.md), [`character-needs-treat-self.md`](../ux/screens/character-needs-treat-self.md)
+
+**Критерии приёмки:**
+- [ ] На главной: compact Z‑NEEDS + раскрытие в 4 бара
+- [ ] Help sheet доступен всегда; treat-self корректно disabled на cooldown
+- [ ] Copy соответствует UX-решениям (без обвиняющего тона)
+
+---
+
+### Task CN1-022: Предупреждения периода и поражение по needs (UI)
+
+**Описание:** предупреждение перед “Закрыть месяц” при distressed/zero-streak и корректный экран поражения `needs_depletion`.
+
+**Смотреть:**  
+- UX spec: [`character-needs-period-defeat.md`](../ux/screens/character-needs-period-defeat.md)
+
+**Критерии приёмки:**
+- [ ] Warning modal при триггерах (distressed / zero streak)
+- [ ] При `needs_depletion` показывается defeat UI, не обычный успех
+
+---
+
+### Task CN1-030: Баланс decay/штрафов (playtest 10–15 периодов)
+
+**Описание:** плейтест и подбор параметров (`periods_to_empty_target`, штрафы distressed по профилям soft/standard/hard), зафиксировать выводы.
+
+**Смотреть:**  
+- ADR-005: decay и поражение  
+- Spec: [`SPEC_game-character-needs.md`](../specs/features/SPEC_game-character-needs.md) (assumptions + open questions)
+
+**Критерии приёмки:**
+- [ ] Короткий отчёт с цифрами и решением “какие значения оставляем”
+
+---
+
 ## Фаза E1-R — Повторная аналитика расходов (до любого E1-110)
 
 **Статус эпика E1:** реализация **заморожена** до завершения E1-R. Существующие [`PLAN_expenses.md`](PLAN_expenses.md) и [`TASKS_expenses.md`](../tasks/TASKS_expenses.md) остаются черновиком порядка работ **после** аналитики.
