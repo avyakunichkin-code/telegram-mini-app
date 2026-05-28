@@ -10,7 +10,14 @@ from .achievement_seeds import ensure_achievement_catalog
 from .expenses import burn_breakdown_for_api, compute_monthly_burn
 from .finance_analytics import avg_net_cashflow_last_closed_intervals as _avg_net_cashflow_last_closed_intervals
 from .game_time import get_seconds_until_next
-from .models import FinanceAsset, FinanceLiability, FinanceSalary, GameProfile, GameStarterTemplate
+from .models import (
+    FinanceAsset,
+    FinanceLiability,
+    FinanceSalary,
+    GameProfile,
+    GameStarterTemplate,
+    InvestmentPosition,
+)
 import json
 
 from .needs_engine import (
@@ -109,6 +116,28 @@ def build_finance_overview(db: Session, profile: GameProfile) -> FinanceOverview
 
     assets_income = sum(float(a.monthly_income or 0) for a in assets_orm)
 
+    # Инвестиции: доход за один период (1/12 годовой ставки) по активным позициям.
+    # Для deposit: начисление капитализируется на principal в конце периода, но в UI это тоже "доход за период".
+    # Для bond: купон начисляется на баланс в конце периода.
+    invest_income = 0.0
+    try:
+        invest_rows = (
+            db.query(InvestmentPosition)
+            .filter(
+                InvestmentPosition.game_profile_id == profile.id,
+                InvestmentPosition.is_active == 1,
+            )
+            .all()
+        )
+        for pos in invest_rows:
+            principal = float(getattr(pos, "principal", 0) or 0)
+            annual_rate = float(getattr(pos, "annual_rate_percent", 0) or 0)
+            if principal <= 0 or annual_rate <= 0:
+                continue
+            invest_income += principal * (annual_rate / 100.0) / 12.0
+    except Exception:
+        invest_income = 0.0
+
     total_liability_payment = sum(l.monthly_payment for l in liabilities)
     total_asset_maintenance = sum(a.monthly_maintenance_cost for a in assets)
     total_monthly_obligations = total_liability_payment + total_asset_maintenance
@@ -116,7 +145,7 @@ def build_finance_overview(db: Session, profile: GameProfile) -> FinanceOverview
     monthly_burn_total = float(burn_snapshot.total)
     monthly_lifestyle_expense = monthly_burn_total
     burn_breakdown = MonthlyBurnBreakdown(**burn_breakdown_for_api(burn_snapshot))
-    total_income = monthly_income + assets_income
+    total_income = monthly_income + assets_income + invest_income
     total_monthly_outflow = total_monthly_obligations + monthly_burn_total
     expense_to_income_ratio = (
         round(monthly_burn_total / total_income, 4) if total_income > 0 else 0.0
