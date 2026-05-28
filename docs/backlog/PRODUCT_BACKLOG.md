@@ -61,7 +61,7 @@
 - [x] P1 **[DB]** Victory v2 — `victory_config_json` в шаблонах, сиды 0010+, чистка `character_level` (0031).
 - [ ] P1 **[DB] ⚠ spec** Plan Mode — поля префилла / `starter_params_json` на шаблоне или снимке.
 - [ ] P2 **[DB] ⚠ spec** События: `prerequisites_json`, `chain_id`, веса 🟢🔴🟡 по уровню (GAME §7.3–7.4) — нет каталога колонок в spec.
-- [x] P2 **[DB]** Сиды достижений по GAME §5.3 (6×4) — `achievement_seeds.py`, [SPEC_achievements](../specs/features/SPEC_achievements.md) §7.
+- [x] P2 **[DB]** Сиды достижений по GAME §5.3 (6×4) — `achievements/seeds.py`, [SPEC_achievements](../specs/features/SPEC_achievements.md) §7.
 - [ ] P2 **[DB]** Расширить сиды событий до 20–25 на tier (рекомендация GAME §8.3) + значения `cooldown_periods` в контенте.
 - [ ] P3 **[DB] ⚠ spec** Журнал аудита / product events — таблица или внешняя аналитика.
 
@@ -80,15 +80,15 @@
 
 ### Эпик M12 — достижения (из GAME §5)
 
-- [x] **[Backend]** `achievement_engine.py`, хуки в `game_period`, `finance`, `GET /api/achievements` (черновик).
-- [x] P0 **[Backend]** Критерии `criteria_json` по tier из GAME §5.3 (без `stub` в сидах); `test_achievement_engine.py`.
+- [x] **[Backend]** `achievements/engine.py`, хуки в `game_period`, `finance`, `GET /api/achievements` (черновик).
+- [x] P0 **[Backend]** Критерии `criteria_json` по tier из GAME §5.3 (без `stub` в сидах); `test_achievements/engine.py`.
 - [ ] P1 **[Backend]** Стабильный контракт `GET /api/achievements` + синхронизация `api.js`; интеграционные тесты с БД.
 - [x] P1 **[Backend]** API-gates по `character_level` — `level_gates.py`, invest/insurance/finance from-template, `character_unlocks` в overview; `test_level_gates.py`, `test_api_level_gates.py`.
 - [ ] P2 **[Backend] ⚠ spec** Альтернативные ветки достижений (долговой vs бездолговой путь, GAME §9.3 п.6).
 
 ### Эпик V2 — победа из шаблона
 
-- [x] P1 **[Backend]** Движок **M из N** по `victory_config_json`; `avg_liquid_delta_6p` / зарплата в порогах — `victory_engine.py`, миграция `0010`, `test_victory_engine.py`.
+- [x] P1 **[Backend]** Движок **M из N** по `victory_config_json`; `avg_liquid_delta_6p` / зарплата в порогах — `victory/engine.py`, миграция `0010`, `test_victory_engine.py`.
 - [x] P1 **[Backend]** `min_period_index_for_victory` из шаблона (дефолт 7) — в overview `victory.*`.
 
 ### Эпик CN1 — потребности персонажа (Z‑NEEDS)
@@ -158,7 +158,7 @@
 #### Волна A — логическая правда (P0, после E1-R go)
 
 - [ ] P0 **[DB] E1-110–111** — каталог категорий + `profile_expense_lines`.
-- [ ] P0 **[Backend] E1-112** — `expenses.py` (`compute_monthly_burn`, breakdown).
+- [ ] P0 **[Backend] E1-112** — `finance/expenses.py` (`compute_monthly_burn`, breakdown).
 - [ ] P0 **[DB+Backend] E1-114** — `expense_budget` во всех game templates (sum = base).
 - [ ] P0 **[Backend] E1-113** — `game/start` создаёт статьи из blueprint.
 - [ ] P0 **[Backend] E1-115** — `process_period_end` + breakdown по категориям.
@@ -200,7 +200,7 @@
 - [ ] P2 **[Backend]** Единый формат ошибок API (`code`, `message`, `details`).
 - [ ] P2 **[Backend]** Rate limit на чувствительные эндпоинты.
 - [ ] P2 **[Backend]** Healthcheck с latency PostgreSQL.
-- [ ] P2 **[Backend]** Юнит-тесты `game_period.py` на фикстурах.
+- [ ] P2 **[Backend]** Юнит-тесты `game/period.py` на фикстурах.
 - [ ] P3 **[Backend]** Версионирование `/api/v1`, OpenAPI/SDK.
 
 ### Страховки (I1)
@@ -355,7 +355,7 @@
 ### Контент (можно помечать как Doc+DB)
 
 - [ ] P2 **[Doc] + [DB]** Распределение событий 🟢🔴🟡 по уровням — таблица GAME §7.3 в каталоге контента.
-- [ ] P2 **[Doc] + [DB]** Примеры tier 1–2 из GAME §7.6–7.7 — gap-анализ vs `mvp11_event_seeds.py`.
+- [ ] P2 **[Doc] + [DB]** Примеры tier 1–2 из GAME §7.6–7.7 — gap-анализ vs `events/mvp11_seeds.py`.
 
 ---
 

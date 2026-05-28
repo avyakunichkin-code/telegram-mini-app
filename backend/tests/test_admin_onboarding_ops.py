@@ -1,7 +1,7 @@
 """Ops-аналитика онбординга: PATCH + emit + funnel."""
 
-from app.admin_notify import emit_admin_alert
-from app.admin_onboarding_funnel import build_onboarding_funnel
+from app.admin.notify import emit_admin_alert
+from app.admin.onboarding_funnel import build_onboarding_funnel
 from app.models import GameProfile, NotificationLog
 
 
@@ -91,7 +91,7 @@ def test_step_reached_no_telegram(db_session, monkeypatch):
         sent.append(text)
         return True
 
-    monkeypatch.setattr("app.admin_notify._send_telegram_message", fake_send)
+    monkeypatch.setattr("app.admin.notify._send_telegram_message", fake_send)
 
     profile = GameProfile(
         user_id=1,

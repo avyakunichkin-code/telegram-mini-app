@@ -1,8 +1,8 @@
 # Балансы, пороги и ограничения ТВОЙ ХОД
 
-> **Статус (2026-05-25):** раздел **«Канон MVP»** ниже частично **устарел**. **Prod:** победа — [`victory_engine`](../../../backend/app/victory_engine.py) + `victory_config_json` ([ADR-002](../../decisions/ADR-002-victory-engine-and-template-config.md)); прогрессия событий — **`event_tier` от `period_index`** ([`remove-character-xp-and-levels.md`](remove-character-xp-and-levels.md)); механики капитала — **`mechanics_unlock`** ([ADR-004](../../decisions/ADR-004-mechanics-unlock-victory-chain.md)). [`LEVEL_XP_SYSTEM`](../../specs/gameplay/LEVEL_XP_SYSTEM.md) — архив.
+> **Статус (2026-05-25):** раздел **«Канон MVP»** ниже частично **устарел**. **Prod:** победа — [`victory_engine`](../../../backend/app/victory/engine.py) + `victory_config_json` ([ADR-002](../../decisions/ADR-002-victory-engine-and-template-config.md)); прогрессия событий — **`event_tier` от `period_index`** ([`remove-character-xp-and-levels.md`](remove-character-xp-and-levels.md)); механики капитала — **`mechanics_unlock`** ([ADR-004](../../decisions/ADR-004-mechanics-unlock-victory-chain.md)). [`LEVEL_XP_SYSTEM`](../../specs/gameplay/LEVEL_XP_SYSTEM.md) — архив.
 
-Сессия **idea-refine**: зафиксированные допущения, варианты и рекомендуемый набор рычагов для калибровки экономики. Связано с `game_period.py`, [`SPEC_mvp-11-progression-events`](../../specs/features/SPEC_mvp-11-progression-events.md).
+Сессия **idea-refine**: зафиксированные допущения, варианты и рекомендуемый набор рычагов для калибровки экономики. Связано с `game/period.py`, [`SPEC_mvp-11-progression-events`](../../specs/features/SPEC_mvp-11-progression-events.md).
 
 ---
 
@@ -28,12 +28,12 @@
 
 | Зона | Правило | Где |
 |------|---------|-----|
-| Победа (`win_reached`) | **`victory_config_json`**; prod: **`progression_mode: chain`** — все шаги цепочки + `period_index >= 7` | `victory_engine.py`, `finance_overview_build.py`, [ADR-002](../../decisions/ADR-002-victory-engine-and-template-config.md) |
+| Победа (`win_reached`) | **`victory_config_json`**; prod: **`progression_mode: chain`** — все шаги цепочки + `period_index >= 7` | `victory/engine.py`, `finance/overview_build.py`, [ADR-002](../../decisions/ADR-002-victory-engine-and-template-config.md) |
 | Legacy MVP (тесты) | AND: подушка 3×, нет просрочки, cashflow ≥ 0, период ≥ 7 | `game_rules.evaluate_mvp_victory` |
-| Поражение | **3 подряд** закрытых периода с отрицательным **cash** — профиль блокируется | `game_period.py` |
-| Обязательства | Платятся из cash; недоплата — в просрочку **без штрафов** в MVP | `game_period.py` |
+| Поражение | **3 подряд** закрытых периода с отрицательным **cash** — профиль блокируется | `game/period.py` |
+| Обязательства | Платятся из cash; недоплата — в просрочку **без штрафов** в MVP | `game/period.py` |
 | Зарплата | По кнопке **раз в период**; не забрал до конца — за период не повторяется | [`CLAUDE.md`](../../../CLAUDE.md) |
-| События | До **трёх** на период; **`event_tier`** от **`period_index`** | `game_rules.py`, [remove-character-xp](remove-character-xp-and-levels.md) |
+| События | До **трёх** на период; **`event_tier`** от **`period_index`** | `game/rules.py`, [remove-character-xp](remove-character-xp-and-levels.md) |
 | Механики капитала | **`mechanics_unlock`** после ключей целей | [ADR-004](../../decisions/ADR-004-mechanics-unlock-victory-chain.md) |
 
 ---
@@ -45,7 +45,7 @@
 | Реализм | Множитель подушки 4–6×; позже штрафы за просрочку и жесть по новым кредитам при малой подушке | «Хард» шаблоны, второй режим после метрик отвалов |
 | Обучение | Мягче первые месяцы, явные предупреждения на 2-й негативный период подряд | Онбординг и высокий отвал до 5-го периода |
 | Сессионность TMA | Укладываться в один заход Telegram: понятная граница месяца (TB1, «Закрыть месяц») и не перегружать решениями на экран | [`TARGET_PLAYER_AND_SESSION.md`](../foundation/TARGET_PLAYER_AND_SESSION.md), [`dashboard.md`](../ux/screens/dashboard.md) |
-| Цепочка целей + механики | Tutorial `action_once` + `mechanics_unlock` по шаблону | `victory_seeds.py`, миграции `0036`/`0037` |
+| Цепочка целей + механики | Tutorial `action_once` + `mechanics_unlock` по шаблону | `victory/seeds.py`, миграции `0036`/`0037` |
 | ~~Персонаж + XP~~ | **Снято** | [ADR-003](../../decisions/ADR-003-remove-character-progression.md) |
 | Инвестконтуры | Минимальный вход, лимит открытых позиций, умеренный кулдаун на «перезапуск» сделки | Когда экономика MVP стабильна |
 

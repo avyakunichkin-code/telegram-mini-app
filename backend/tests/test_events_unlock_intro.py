@@ -1,7 +1,7 @@
 ﻿"""Сценарное событие «открытие колоды» — intro в первом периоде."""
 
 from app.models import EventDefinition, EventInstance, GameProfile
-from app.mvp11_event_seeds import ensure_mvp11_event_catalog
+from app.events.mvp11_seeds import ensure_mvp11_event_catalog
 from app.routers.events import (
     EVENTS_UNLOCK_INTRO_KEY,
     ensure_events_unlock_intro,

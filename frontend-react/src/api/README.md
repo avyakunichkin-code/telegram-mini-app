@@ -5,7 +5,9 @@
 | Модуль | Роуты |
 |--------|--------|
 | `auth.js` | `/api/register`, `/api/login`, `/api/user/me` |
-| `game.js` | `/api/game/*`, period, events, achievements, expenses |
+| `game.js` | `/api/game/*`, period, achievements (+ re-export expenses, events) |
+| `events.js` | `/api/game/events/*` |
+| `expenses.js` | `/api/game/expenses/*` |
 | `finance.js` | `/api/finance/*` |
 | `invest.js` | `/api/invest/*` |
 | `insurance.js` | `/api/insurance/*` |

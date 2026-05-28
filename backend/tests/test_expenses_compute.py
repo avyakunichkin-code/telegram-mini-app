@@ -6,8 +6,8 @@ import json
 
 import pytest
 
-from app.expense_template_defaults import expense_budget_for_template
-from app.expenses import (
+from app.finance.expense_defaults import expense_budget_for_template
+from app.finance.expenses import (
     compute_monthly_burn,
     ensure_expense_category_catalog,
     seed_expense_lines_from_budget,
@@ -103,7 +103,7 @@ def test_backfill_from_base_when_no_lines(db_session):
 
 
 def test_victory_expense_to_income_ratio_goal():
-    from app.victory_engine import VictoryEvaluationInput, evaluate_victory, parse_victory_config
+    from app.victory.engine import VictoryEvaluationInput, evaluate_victory, parse_victory_config
 
     cfg = parse_victory_config(
         {

@@ -67,7 +67,7 @@ related:
 ### 3.3. Success criteria
 
 - [x] БД: `achievement_chains`, `achievement_tier_definitions`, `profile_achievement_unlocks` ([`0009_achievement_chains.sql`](../../../backend/migrations/0009_achievement_chains.sql)).
-- [x] Каталог **6 цепочек × 4 tier** по [GAME §5.3](GAME.md); сиды в `achievement_seeds.py` (без `type: stub`).
+- [x] Каталог **6 цепочек × 4 tier** по [GAME §5.3](GAME.md); сиды в `achievements/seeds.py` (без `type: stub`).
 - [x] Движок: последовательная разблокировка tier в цепочке (без XP; `xp_reward` в БД — legacy, не применяется).
 - [x] Хуки оценки: конец периода (`process_period_end`), покупка актива из шаблона (`finance`), `GET /api/game/achievements`.
 - [x] `GET /api/game/achievements` — состояние цепочек + `newly_unlocked` за запрос.
@@ -131,7 +131,7 @@ related:
 
 ### 7.2. Каталог v1.0 (контент)
 
-Источник правды: `backend/app/achievement_seeds.py` → `ACHIEVEMENT_CHAIN_SPECS`.
+Источник правды: `backend/app/achievements/seeds.py` → `ACHIEVEMENT_CHAIN_SPECS`.
 
 | `chain_key` | Категория | Tier 1 → 4 (кратко) | Σ XP |
 |-------------|-----------|---------------------|------|
@@ -465,8 +465,8 @@ PeriodCloseModal
 
 | Файл | Покрытие |
 |------|----------|
-| `backend/tests/test_achievement_engine.py` | Каждый `type` из §8.1, границы, `stub` → false |
-| `backend/tests/test_starter_mechanics.py` (и related) | 403 `mechanic_disabled` ≠ достижения |
+| `backend/tests/test_achievements/engine.py` | Каждый `type` из §8.1, границы, `stub` → false |
+| `backend/tests/test_starters/mechanics.py` (и related) | 403 `mechanic_disabled` ≠ достижения |
 | *(backlog)* `test_achievements_api.py` | GET контракт, идемпотентность unlock |
 
 После изменения `ACHIEVEMENT_CHAIN_SPECS` или типов критериев: `cd backend && python -m pytest -q`.
@@ -477,11 +477,11 @@ PeriodCloseModal
 
 | Модуль | Назначение |
 |--------|------------|
-| `backend/app/achievement_engine.py` | Контекст, `evaluate_achievement_criteria`, unlock, serialize |
-| `backend/app/achievement_seeds.py` | Каталог 6×4 |
+| `backend/app/achievements/engine.py` | Контекст, `evaluate_achievement_criteria`, unlock, serialize |
+| `backend/app/achievements/seeds.py` | Каталог 6×4 |
 | `backend/migrations/0009_achievement_chains.sql` | DDL |
 | `backend/app/routers/achievements.py` | `GET /api/game/achievements` |
-| `backend/app/game_period.py` | Хук конца периода |
+| `backend/app/game/period.py` | Хук конца периода |
 | `backend/app/routers/finance.py` | Хук после asset from template |
 | `backend/app/schemas.py` | `AchievementsOverviewResponse` |
 

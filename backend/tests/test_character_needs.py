@@ -3,7 +3,7 @@ from __future__ import annotations
 import json
 
 from app.models import EventChoice, EventDefinition, EventInstance, GameProfile
-from app.needs_engine import parse_needs_delta
+from app.needs.engine import parse_needs_delta
 
 
 def _patch_template_needs(db_session, template_key: str = "mq_game_basic_v1"):

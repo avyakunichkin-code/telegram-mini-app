@@ -11,7 +11,7 @@
 | Слой | Сейчас |
 |------|--------|
 | **Профиль** | `base_monthly_lifestyle_expense` (шаблон), `delta_monthly_lifestyle_expense` (события) |
-| **Конец периода** | Списание `LIFESTYLE_EXPENSE` одной суммой в `game_period.py` |
+| **Конец периода** | Списание `LIFESTYLE_EXPENSE` одной суммой в `game/period.py` |
 | **Overview API** | **`monthly_lifestyle_expense`** = base + delta (добавлено) |
 | **Chip «Доходы» на дашборде** | **`total_monthly_income`** (зарплата + доход активов), **без** вычета расходов и платежей по долгам |
 | **Чистый поток** | `net_monthly_cashflow` — отдельно (аналитика, цели); **не** в chip «Доходы» |

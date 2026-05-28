@@ -71,7 +71,7 @@ Onboarding + docs + landing demo (если есть таймер)
 
 #### Task 1: `sync_time` без авто-инкремента периода
 
-**Description:** В `backend/app/game_time.py` функция `sync_time` в режиме `play` **не увеличивает** `period_index` и **не сдвигает** anchor по прошествии N×duration. Опционально: при `play` трактовать как `pause` для elapsed (или no-op для index). Документировать в docstring: переход только через `process_period_end`.
+**Description:** В `backend/app/game/time.py` функция `sync_time` в режиме `play` **не увеличивает** `period_index` и **не сдвигает** anchor по прошествии N×duration. Опционально: при `play` трактовать как `pause` для elapsed (или no-op для index). Документировать в docstring: переход только через `process_period_end`.
 
 **Acceptance criteria:**
 
@@ -85,7 +85,7 @@ Onboarding + docs + landing demo (если есть таймер)
 - [x] Новый тест `test_sync_time_does_not_advance_period_index_without_next`
 
 **Dependencies:** Task 0.3 (можно параллельно)  
-**Files:** `backend/app/game_time.py`, `backend/tests/test_game_time.py` (new)  
+**Files:** `backend/app/game/time.py`, `backend/tests/test_game/time.py` (new)  
 **Scope:** S
 
 #### Task 2: Контракт API time / bootstrap

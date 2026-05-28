@@ -4,7 +4,7 @@ import json
 
 import pytest
 
-from app.event_chains import (
+from app.events.chains import (
     USED_CAR_CHAIN_KEY,
     USED_CAR_DEPOSIT_AMOUNT,
     ensure_scheduled_chain_events,
@@ -14,7 +14,7 @@ from app.event_chains import (
     schedule_event_chain,
 )
 from app.models import AssetTemplate, EventChoice, EventDefinition, EventInstance, FinanceAsset, GameProfile
-from app.mvp11_event_seeds import ensure_mvp11_event_catalog
+from app.events.mvp11_seeds import ensure_mvp11_event_catalog
 
 
 @pytest.fixture()

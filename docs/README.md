@@ -102,6 +102,16 @@
 | [`backlog/PRODUCT_BACKLOG.md`](backlog/PRODUCT_BACKLOG.md) | Бэклог P0–P3 |
 | [`agents/CURSOR_SKILLS.md`](agents/CURSOR_SKILLS.md) | Приоритет Agent Skills |
 
+### Decisions (ADR)
+
+| Документ | Содержание |
+|----------|------------|
+| [`decisions/ADR-007-backend-domain-packages.md`](decisions/ADR-007-backend-domain-packages.md) | **Структура backend:** `app/{game,finance,victory,…}/`, `services/` |
+| [`decisions/ADR-002-victory-engine-and-template-config.md`](decisions/ADR-002-victory-engine-and-template-config.md) | Victory v2, `victory_config_json` |
+| [`decisions/ADR-001-save-kind-remove-light-hardcore.md`](decisions/ADR-001-save-kind-remove-light-hardcore.md) | `save_kind` game/plan |
+
+Полный список: [`decisions/`](decisions/).
+
 ### Reference
 
 | Документ | Содержание |

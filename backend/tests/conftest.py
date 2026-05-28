@@ -20,7 +20,7 @@ import app.models  # noqa: F401
 from app.auth import create_access_token, get_current_user, get_password_hash  # noqa: E402
 from app.database import Base, get_db  # noqa: E402
 from app.models import GameStarterTemplate, User  # noqa: E402
-from app.victory_seeds import victory_config_json_for_template  # noqa: E402
+from app.victory.seeds import victory_config_json_for_template  # noqa: E402
 from main import app  # noqa: E402
 
 

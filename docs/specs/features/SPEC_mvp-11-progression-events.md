@@ -29,7 +29,7 @@ plan: ../../plans/PLAN_mvp-11-progression-events.md
 
 | Вопрос | Решение |
 |--------|---------|
-| Отбор событий | **`event_tier`** на определении; окно: \(\texttt{event\_tier} \in [\max(1,\, L-2),\; L]\), где \(L = \lfloor(\texttt{period\_index}-1)/10\rfloor + 1\) ([`game_rules.event_tier_progression_level`](../../../backend/app/game_rules.py)). Плюс фильтр **`mode`** \(\sim\) **`save_kind`**. |
+| Отбор событий | **`event_tier`** на определении; окно: \(\texttt{event\_tier} \in [\max(1,\, L-2),\; L]\), где \(L = \lfloor(\texttt{period\_index}-1)/10\rfloor + 1\) ([`game_rules.event_tier_progression_level`](../../../backend/app/game/rules.py)). Плюс фильтр **`mode`** \(\sim\) **`save_kind`**. |
 | Повторы | Контент **по умолчанию repeatable** в первой волне; **в БД и бекенде** колонка **`repeat_policy`** + исключение при **`once_per_profile`** (архитектурная готовность). |
 
 ---

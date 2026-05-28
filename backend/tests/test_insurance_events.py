@@ -4,7 +4,7 @@ import json
 
 import pytest
 
-from app.insurance_events import apply_insurance_claim_from_effects, find_policy_for_claim
+from app.events.insurance_hooks import apply_insurance_claim_from_effects, find_policy_for_claim
 from app.models import EventChoice, EventDefinition, EventInstance, GameProfile, InsurancePolicy
 
 

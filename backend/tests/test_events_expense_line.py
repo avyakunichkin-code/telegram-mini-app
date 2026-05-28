@@ -6,10 +6,10 @@ import json
 
 import pytest
 
-from app.expense_template_defaults import expense_budget_for_template
-from app.expenses import compute_monthly_burn, ensure_expense_category_catalog, seed_expense_lines_from_budget
+from app.finance.expense_defaults import expense_budget_for_template
+from app.finance.expenses import compute_monthly_burn, ensure_expense_category_catalog, seed_expense_lines_from_budget
 from app.models import EventChoice, EventDefinition, EventInstance, GameProfile, ProfileExpenseLine
-from app.mvp11_event_seeds import ensure_mvp11_event_catalog
+from app.events.mvp11_seeds import ensure_mvp11_event_catalog
 
 
 @pytest.fixture()

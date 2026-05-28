@@ -10,10 +10,10 @@ import json
 import pytest
 from sqlalchemy import or_
 
-from app.game_rules import event_tier_in_core_window
+from app.game.rules import event_tier_in_core_window
 from app.models import EventChoice, EventDefinition, EventInstance, GameProfile
-from app.mvp11_catalog_contract import validate_mvp11_db_catalog, validate_mvp11_specs
-from app.mvp11_event_seeds import MVP11_EVENT_SPECS, ensure_mvp11_event_catalog
+from app.events.mvp11_contract import validate_mvp11_db_catalog, validate_mvp11_specs
+from app.events.mvp11_seeds import MVP11_EVENT_SPECS, ensure_mvp11_event_catalog
 from app.routers.events import (
     EVENTS_PER_PERIOD,
     ensure_period_events,

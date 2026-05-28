@@ -308,7 +308,7 @@ class NeedsGuideOverview(BaseModel):
 - Если полоска **на нуле** — счётчик риска; **три месяца подряд на нуле** = поражение.
 - Студент: читай подсказки на дашборде; Предприниматель: планируй траты на события заранее.
 
-Контент хранить в `backend/app/needs_guide_content.py` или JSON в repo; per-locale позже.
+Контент хранить в `backend/app/needs/guide_content.py` или JSON в repo; per-locale позже.
 
 ---
 

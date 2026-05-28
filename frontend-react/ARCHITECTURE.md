@@ -74,7 +74,7 @@ src/
 | Frontend | Backend |
 |----------|---------|
 | `api/game.js` | `app/routers/game.py`, `period_actions.py`, `events.py` |
-| `api/finance.js` | `app/routers/finance.py`, `expenses.py` |
+| `api/finance.js` | `app/routers/finance.py`, `app/routers/expenses.py` |
 | `api/invest.js` | `app/routers/invest.py` |
 | `api/insurance.js` | `app/routers/insurance.py` |
 | Seeds каталога Game | `app/seeds/game_starter_templates.py` |

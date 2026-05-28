@@ -2,9 +2,9 @@
 
 import json
 
-from app.event_choice_impacts import build_choice_impacts, resolve_lifestyle_delta_from_effects
+from app.events.choice_impacts import build_choice_impacts, resolve_lifestyle_delta_from_effects
 from app.models import EventChoice, EventDefinition, EventInstance, GameProfile
-from app.mvp11_event_seeds import ensure_mvp11_event_catalog
+from app.events.mvp11_seeds import ensure_mvp11_event_catalog
 
 
 def test_relocation_pct_raises_burn_about_28_percent(db_session):

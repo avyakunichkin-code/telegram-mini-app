@@ -56,7 +56,7 @@ tracks: events, gameplay, content-pipeline
 
 | Шаг | Действие |
 |-----|----------|
-| 1 | Скопировать **шаблон spec** из `mvp11_event_seeds.py` (key, tier, domain, 2–3 choices, effects). |
+| 1 | Скопировать **шаблон spec** из `events/mvp11_seeds.py` (key, tier, domain, 2–3 choices, effects). |
 | 2 | Новый **уникальный `key`** (`mq11_streaming_offer_b` — новый текст, те же effect-типы). |
 | 3 | Строка в **`EVENT_TAXONOMY`** с тем же `event_domain`, при необходимости другой `event_tier`. |
 | 4 | `cooldown_periods` ≥ 2 для repeatable. |

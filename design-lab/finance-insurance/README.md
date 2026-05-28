@@ -4,7 +4,7 @@
 
 Модель: **продукт × объект** (`mortgage_life`, `auto_liability` …), поля **сумма выплаты**, **оплата за период**, **срок (периодов)**. При страховом случае — полная выплата, полис закрывается (без частичного лимита).
 
-Канон API/каталога: `backend/app/insurance_catalog.py`, идея: `docs/vision/ideas/insurance-product-parameters.md`.
+Канон API/каталога: `backend/app/starters/insurance_catalog.py`, идея: `docs/vision/ideas/insurance-product-parameters.md`.
 
 ## Открыть
 

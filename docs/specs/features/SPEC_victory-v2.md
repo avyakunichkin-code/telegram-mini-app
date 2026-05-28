@@ -32,7 +32,7 @@ supersedes_goal_types: character_level (removed 2026-05-24, migration 0031)
 **Success criteria**
 
 - [ ] `GET /api/finance/overview` считает победу по `victory_config_json` шаблона профиля (`starter_template_key`).
-- [x] Prod: tutorial **chain** на всех Game-шаблонах (`victory_seeds.py`, миграции `0036`/`0037`).
+- [x] Prod: tutorial **chain** на всех Game-шаблонах (`victory/seeds.py`, миграции `0036`/`0037`).
 - [x] Legacy parallel (M из N) — `VICTORY_CONFIG_LEGACY_BY_TEMPLATE_KEY` для отката.
 - [ ] Блок `victory` в overview + сохранены legacy-поля `win_*` для UI подушки.
 - [ ] Unit-тесты на парсинг config и оценку целей.
@@ -134,7 +134,7 @@ win_reached = period_gate_open AND all(enabled goals in chain are met)
 
 ## Сиды шаблонов (контент prod)
 
-Источник: `backend/app/victory_seeds.py` (`VICTORY_CONFIG_BY_TEMPLATE_KEY`). Откат: `VICTORY_CONFIG_LEGACY_BY_TEMPLATE_KEY` (`progression_mode: parallel`).
+Источник: `backend/app/victory/seeds.py` (`VICTORY_CONFIG_BY_TEMPLATE_KEY`). Откат: `VICTORY_CONFIG_LEGACY_BY_TEMPLATE_KEY` (`progression_mode: parallel`).
 
 ### `mq_game_basic_v1` — tutorial chain (5 шагов)
 
@@ -211,13 +211,13 @@ win_reached = period_gate_open AND all(enabled goals in chain are met)
 
 | Модуль | Назначение |
 |--------|------------|
-| `backend/app/victory_engine.py` | Парсинг config, оценка целей, M из N |
-| `backend/app/victory_seeds.py` | JSON по `template_key` |
+| `backend/app/victory/engine.py` | Парсинг config, оценка целей, M из N |
+| `backend/app/victory/seeds.py` | JSON по `template_key` |
 | `backend/migrations/0010_victory_config_seeds.sql` | UPDATE существующих строк каталога |
 | `backend/app/routers/finance.py` | Подключение движка в overview |
 | `backend/tests/test_victory_engine.py` | Тесты |
 
-`evaluate_mvp_victory` в `game_rules.py` остаётся для unit-тестов MVP-инвариантов; production overview использует `victory_engine`.
+`evaluate_mvp_victory` в `game/rules.py` остаётся для unit-тестов MVP-инвариантов; production overview использует `victory_engine`.
 
 ---
 

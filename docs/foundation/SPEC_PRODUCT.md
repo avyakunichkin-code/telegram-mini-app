@@ -73,7 +73,7 @@ doc_sync: foundation/DOC_SYNC_LOG.md
 
 ### 3.3. Конец периода (`process_period_end`)
 
-Реализация: `backend/app/game_period.py`. Последовательность по смыслу:
+Реализация: `backend/app/game/period.py`. Последовательность по смыслу:
 
 1. Списание **обслуживания активов** с `cash` (допускается отрицательный баланс как «неизбежные траты» на MVP).
 2. Начисление **дохода от активов** (`monthly_income`) на `cash`.
@@ -131,18 +131,18 @@ doc_sync: foundation/DOC_SYNC_LOG.md
 
 ### 7.1. Победа (prod: Victory v2)
 
-**Источник правды:** `backend/app/victory_engine.py`, сборка overview — `finance_overview_build.py`; конфиг — **`game_starter_templates.victory_config_json`** ([`SPEC_victory-v2`](../specs/features/SPEC_victory-v2.md), [ADR-002](../decisions/ADR-002-victory-engine-and-template-config.md)).
+**Источник правды:** `backend/app/victory/engine.py`, сборка overview — `finance/overview_build.py`; конфиг — **`game_starter_templates.victory_config_json`** ([`SPEC_victory-v2`](../specs/features/SPEC_victory-v2.md), [ADR-002](../decisions/ADR-002-victory-engine-and-template-config.md)).
 
 | Режим | Когда | `win_reached` |
 |--------|--------|----------------|
 | **`chain`** | Prod (tutorial на всех Game-шаблонах) | `period_index >= min_period_index_for_victory` **и** все шаги цепочки `goals[]` выполнены по порядку |
 | **`parallel`** | Legacy / откат (`VICTORY_CONFIG_LEGACY_BY_TEMPLATE_KEY`) | Ворота периода **и** `met_count >= required_goals_met` среди `enabled` |
 
-- Дефолт ворот периода: **`min_period_index_for_victory = 7`** (`MIN_PERIOD_INDEX_FOR_WIN` в `backend/app/game_rules.py`).
+- Дефолт ворот периода: **`min_period_index_for_victory = 7`** (`MIN_PERIOD_INDEX_FOR_WIN` в `backend/app/game/rules.py`).
 - Ответ API: блок **`victory`** + **`win_reached`**; для UI подушки сохранены **`win_target_safety_fund`**, **`win_ready`**, **`win_progress_safety_fund`** (из первой цели `safety_fund_months`, если есть).
 - **Разблокировка механик** капитала (инвестиции, страховки, …) — по **`blueprint.mechanics_unlock`** и выполненным ключам целей ([ADR-004](../decisions/ADR-004-mechanics-unlock-victory-chain.md)).
 
-**Пример prod (`mq_game_basic_v1`):** цепочка — зарплата → подушка → инвестиция → подушка 3× → пассивный доход с инвестиций ≥ 15k (см. `victory_seeds.py`, миграция `0036_*`).
+**Пример prod (`mq_game_basic_v1`):** цепочка — зарплата → подушка → инвестиция → подушка 3× → пассивный доход с инвестиций ≥ 15k (см. `victory/seeds.py`, миграция `0036_*`).
 
 **Legacy MVP (не overview):** `evaluate_mvp_victory` — одновременно подушка ≥ 3× обязательств, нет просрочки, `net_monthly_cashflow >= 0`; только unit-тесты.
 

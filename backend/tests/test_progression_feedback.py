@@ -8,9 +8,9 @@ from unittest.mock import patch
 
 import pytest
 
-from app.game_period import process_period_end
+from app.game.period import process_period_end
 from app.models import FinanceSalary, GameProfile, PeriodSnapshot
-from app.routers.game import _period_close_summary
+from app.services.game.time import period_close_summary as _period_close_summary
 
 
 class TestPeriodCloseSummaryMapping:
@@ -167,7 +167,7 @@ class TestGamePeriodAchievementResilience:
     def test_period_end_survives_achievement_failure(self, db_session, profile_ready_for_close):
         profile = profile_ready_for_close
 
-        with patch("app.game_period.process_achievement_unlocks", side_effect=RuntimeError("boom")):
+        with patch("app.game.period.process_achievement_unlocks", side_effect=RuntimeError("boom")):
             result = process_period_end(db_session, profile)
 
         db_session.refresh(profile)

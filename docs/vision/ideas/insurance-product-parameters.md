@@ -25,7 +25,7 @@
 | health | life | health_life | Страхование здоровья (legacy) |
 | property | property | property_property | Страхование имущества (legacy) |
 
-Код: `backend/app/insurance_catalog.py`, миграция `backend/migrations/0008_insurance_product_object.sql`.
+Код: `backend/app/starters/insurance_catalog.py`, миграция `backend/migrations/0008_insurance_product_object.sql`.
 
 ## MVP Scope (форма UI)
 

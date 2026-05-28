@@ -48,10 +48,12 @@ frontend-react/src/
   components/mqx/           # без изменений: примитивы, layout, DESIGN_WORKFLOW
 
 backend/
-  app/routers/              # без изменений: публичный API
-  app/seeds/                # вынести из main.py каталоги и bootstrap-данные
-  app/game_period.py, …     # доменная логика — файлы по смыслу (не обязательно domains/)
-  main.py                   # только wiring + lifespan
+  app/routers/              # HTTP
+  app/services/<domain>/      # use-cases под API
+  app/{game,finance,victory,events,needs,…}/  # доменная логика — [ADR-007](../../decisions/ADR-007-backend-domain-packages.md)
+  app/seeds/                # bootstrap-данные для main.py
+  app/models.py, schemas.py # платформа (корень app/)
+  main.py                   # wiring + lifespan
 ```
 
 ### Пять правил размещения (канон для агентов)
@@ -74,7 +76,7 @@ backend/
 
 - **Screen / Shell / MQX:** `GameScreen` + `MqxShell`; вкладки — `*Premium.jsx` как оркестраторы данных.
 - **Barrel + порядок импортов:** как `index.css` — один вход, предсказуемый каскад.
-- **Backend routers + толстые модули:** `game_period.py`, `finance_overview_build.py` — искать логику по имени файла, не по «слою service».
+- **Backend routers + толстые модули:** `game/period.py`, `finance/overview_build.py` — искать логику по имени файла, не по «слою service».
 
 ### Пилоты (порядок внедрения)
 

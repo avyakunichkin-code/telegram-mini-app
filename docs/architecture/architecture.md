@@ -96,7 +96,7 @@
 
 ## Module Ownership
 
-### `needs_engine` (новый: `backend/app/needs_engine.py`)
+### `needs_engine` (новый: `backend/app/needs/engine.py`)
 
 | | |
 |--|--|
@@ -360,7 +360,7 @@ needs_config          GameProfile              events.choose
 ## MVP Implementation Order (для программиста)
 
 1. Migration: колонки `need_*`, `treat_self_last_period_index`; seed `blueprint_json.needs` для 4 Game-шаблонов.
-2. `needs_config.py` + `needs_engine.py` + unit tests.
+2. `needs_config.py` + `needs/engine.py` + unit tests.
 3. Hook `process_period_end` + defeat/penalty path для `hard`.
 4. `POST treat-self` + расширение `period/status` и overview.
 5. `needs_delta` в events + 1–2 seed events.
@@ -414,4 +414,4 @@ needs_config          GameProfile              events.choose
 - Vision: [`docs/vision/ideas/game-character-needs-foundation.md`](../vision/ideas/game-character-needs-foundation.md)
 - Следующий шаг: **`docs/specs/features/SPEC_game-character-needs.md`** (формулы, точные пороги, copy)
 - UI: [`docs/specs/SPEC_FRONTEND_UI.md`](../specs/SPEC_FRONTEND_UI.md), MQX workflow
-- Период: `backend/app/game_period.py`, `backend/app/routers/period_actions.py`
+- Период: `backend/app/game/period.py`, `backend/app/routers/period_actions.py`

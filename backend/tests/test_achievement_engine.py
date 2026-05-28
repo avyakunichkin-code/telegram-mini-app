@@ -2,7 +2,7 @@
 
 import json
 
-from app.achievement_engine import (
+from app.achievements.engine import (
     AchievementEvaluationContext,
     CRITERIA_SCHEMA_VERSION,
     evaluate_achievement_criteria,
@@ -108,9 +108,9 @@ class TestAchievementCriteria:
 
 class TestAchievementContext:
     def test_build_context_includes_lifestyle_burn(self, db_session):
-        from app.achievement_engine import build_achievement_context
-        from app.expenses import ensure_expense_category_catalog, seed_expense_lines_from_budget
-        from app.expense_template_defaults import expense_budget_for_template
+        from app.achievements.engine import build_achievement_context
+        from app.finance.expenses import ensure_expense_category_catalog, seed_expense_lines_from_budget
+        from app.finance.expense_defaults import expense_budget_for_template
         from app.models import GameProfile
 
         ensure_expense_category_catalog(db_session)

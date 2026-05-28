@@ -34,7 +34,7 @@ tasks: ../tasks/TASKS_expenses.md
 flowchart TD
   E110[E1-110 category catalog + migration]
   E111[E1-111 profile_expense_lines model]
-  E112[E1-112 expenses.py domain]
+  E112[E1-112 finance/expenses.py domain]
   E113[E1-113 game/start lines from blueprint]
   E114[E1-114 template seeds expense_budget]
   E115[E1-115 game_period burn + breakdown]
@@ -61,7 +61,7 @@ flowchart TD
 |----|--------|-----|
 | E1-110 | `expense_category_definitions` + migration 0013 | 8 категорий в БД |
 | E1-111 | `profile_expense_lines` + ORM | FK, индексы |
-| E1-112 | `expenses.py` — `BurnSnapshot`, compute, CRUD | unit tests |
+| E1-112 | `finance/expenses.py` — `BurnSnapshot`, compute, CRUD | unit tests |
 | E1-113 | `game/start` — создать lines из `expense_budget` | тест на каждый template |
 | E1-114 | Сиды: `expense_budget` во всех game templates | sum = base_monthly_lifestyle |
 | E1-115 | `game_period` — burn, breakdown, expiry | integration test |

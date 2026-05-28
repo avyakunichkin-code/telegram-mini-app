@@ -42,7 +42,7 @@ adr: ../../decisions/ADR-003-remove-character-progression.md
 
 **Всегда включены** (не в flags): доходы и расходы за период; на дашборде — период, зарплата, подушка.
 
-**`mq_game_basic_v1`:** только `capital_invest: true`, остальные capital-флаги `false`. Код: `backend/app/starter_mechanics.py`, поле `overview.mechanics`, API 403 `mechanic_disabled`.
+**`mq_game_basic_v1`:** только `capital_invest: true`, остальные capital-флаги `false`. Код: `backend/app/starters/mechanics.py`, поле `overview.mechanics`, API 403 `mechanic_disabled`.
 
 ---
 
@@ -55,7 +55,7 @@ adr: ../../decisions/ADR-003-remove-character-progression.md
 3. **XP:** удалить вызовы `apply_character_xp` (события, period_actions, game_period, achievements).
 4. **`xp_delta`:** игнорировать в `choose event` (не начислять); опционально убрать из ответа pending/choices UI.
 5. **`event_tier`:** в `ensure_period_events` передавать **`period_index`** вместо `character_level` в `event_tier_in_core_window` / fallback (переименовать параметр в коде → `progression_index` или явный alias).
-6. **Victory:** убрать goal `character_level` из `victory_seeds.py` + SQL-миграция для существующих `victory_config_json`; удалить ветку в `victory_engine.py`.
+6. **Victory:** убрать goal `character_level` из `victory/seeds.py` + SQL-миграция для существующих `victory_config_json`; удалить ветку в `victory/engine.py`.
 7. **Overview:** не считать `_compute_gamification`; убрать поля `gamification_level`, `score`, `xp_to_next_level`, `character_*`, `character_unlocks` из `FinanceOverview` (или одним PR с фронтом).
 8. **Миграция:** `ALTER TABLE game_profiles DROP COLUMN level, DROP COLUMN xp` (+ убрать `progression_milestones_awarded` если только под XP — проверить).
 9. **Модули:** удалить или свести к no-op: `character_progression.py`, `level_gates.py` (если не нужны для template flags позже — переименовать позже в `feature_gates`).

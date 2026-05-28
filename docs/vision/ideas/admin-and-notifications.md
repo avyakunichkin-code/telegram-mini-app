@@ -115,7 +115,7 @@ profile_id=7 name=… template=starter_easy period=12
 
 - [`backend/app/routers/auth.py`](../../../backend/app/routers/auth.py) — register
 - [`backend/app/routers/game.py`](../../../backend/app/routers/game.py) — create profile, start
-- [`backend/app/game_period.py`](../../../backend/app/game_period.py) — defeat; при победе — там же или [`finance.py`](../../../backend/app/routers/finance.py) при первом `win_reached`
+- [`backend/app/game/period.py`](../../../backend/app/game/period.py) — defeat; при победе — там же или [`finance.py`](../../../backend/app/routers/finance.py) при первом `win_reached`
 
 ---
 
@@ -137,7 +137,7 @@ profile_id=7 name=… template=starter_easy period=12
 **Цель:** «хоть что-то видно» + TG при каждом важном действии игрока.
 
 - Env: `OPS_TELEGRAM_BOT_TOKEN`, `OPS_TELEGRAM_CHAT_ID`, `ADMIN_TELEGRAM_IDS`.
-- Backend: `app/admin_notify.py` — `emit_admin_alert(kind, payload)`; таблица `notification_log` (audience, kind, payload_json, created_at) — для истории и отладки.
+- Backend: `app/admin/notify.py` — `emit_admin_alert(kind, payload)`; таблица `notification_log` (audience, kind, payload_json, created_at) — для истории и отладки.
 - Подключить 5–6 hooks (таблица выше).
 - Веб: одна страница **read-only** — последние пользователи и профили (можно без отдельного UI-фреймворка: таблица + ссылка `profile_id`). Auth: allowlist по JWT user id.
 - **Не делать:** CRUD контента, player inbox, draft/publish.

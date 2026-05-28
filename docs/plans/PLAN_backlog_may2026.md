@@ -94,7 +94,7 @@ source: ../backlog/PRODUCT_BACKLOG.md
 
 **Зависимости:** нет · **Объём:** M (Backend + api.js)
 
-**Файлы:** `backend/app/routers/` achievements, `test_achievement_engine.py`, `api/game.js`
+**Файлы:** `backend/app/routers/` achievements, `test_achievements/engine.py`, `api/game.js`
 
 ---
 
@@ -240,7 +240,7 @@ source: ../backlog/PRODUCT_BACKLOG.md
 **Смотреть:**  
 - Spec: [`SPEC_game-character-needs.md`](../specs/features/SPEC_game-character-needs.md) раздел «События: влияние на потребности (`needs_delta`)»  
 - UX spec: [`character-needs-events.md`](../ux/screens/character-needs-events.md)  
-- Кодовые точки (для реализации, когда дойдём): `backend/app/routers/events.py` (allowed effects + choose), `backend/app/event_choice_impacts.py` (preview), `backend/app/needs_engine.py` (clamp/set)
+- Кодовые точки (для реализации, когда дойдём): `backend/app/routers/events.py` (allowed effects + choose), `backend/app/events/choice_impacts.py` (preview), `backend/app/needs/engine.py` (clamp/set)
 
 **Критерии приёмки:**
 - [ ] `needs_delta` разрешён/валидируется и применяется на `choose`

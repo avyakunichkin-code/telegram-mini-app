@@ -51,7 +51,7 @@ audit: foundation/MVP_AUDIT_VS_SPEC.md
 
 **Реализовано после G1 (backend)**
 
-- [x] Победа **M из N** из `victory_config_json` — [`SPEC_victory-v2`](../specs/features/SPEC_victory-v2.md), `victory_engine.py`.
+- [x] Победа **M из N** из `victory_config_json` — [`SPEC_victory-v2`](../specs/features/SPEC_victory-v2.md), `victory/engine.py`.
 
 **Отложено на MVP 2.0 / backlog**
 

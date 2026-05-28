@@ -72,7 +72,7 @@ next_spec: specs/features/SPEC_game-plan.md
 
 ## Снимок реализации (якорь)
 
-- **Цикл (TB1):** открытый период → действия (зарплата по кнопке, подушка, активы/долги из шаблонов, события, инвестиции, страховки) → явное **«Закрыть месяц»** (`time/next`) → `process_period_end` в `backend/app/game_period.py` (обслуживание активов, доход активов, долги и просрочка, премии страховок, инвестиции, поражение при трёх отрицательных периодах подряд, снимки, новые события).
+- **Цикл (TB1):** открытый период → действия (зарплата по кнопке, подушка, активы/долги из шаблонов, события, инвестиции, страховки) → явное **«Закрыть месяц»** (`time/next`) → `process_period_end` в `backend/app/game/period.py` (обслуживание активов, доход активов, долги и просрочка, премии страховок, инвестиции, поражение при трёх отрицательных периодах подряд, снимки, новые события).
 - **Победа (prod):** Victory v2 в `GET /api/finance/overview` — `victory_config_json` шаблона, **`progression_mode: chain`** (tutorial): все шаги цепочки + `period_index >= 7`; legacy parallel (M из N) — `VICTORY_CONFIG_LEGACY_BY_TEMPLATE_KEY`. См. [ADR-002](../../decisions/ADR-002-victory-engine-and-template-config.md), [SPEC_victory-v2](../../specs/features/SPEC_victory-v2.md). Старое правило «3× подушка AND просрочка AND cashflow» — только `evaluate_mvp_victory` в тестах.
 - **Фронт:** `StartMenuScreen` → **`NewProfileKindScreen`** → **`GameTemplatePickScreen`** → `GameScreen` (ветка Game); **`BaseParamsScreen`** зарезервирован под Plan; финансы, аналитика, премиум-дашборд; события оверлеем.
 
@@ -104,7 +104,7 @@ next_spec: specs/features/SPEC_game-plan.md
 - **Без уровня/XP персонажа** — см. [`remove-character-xp-and-levels.md`](remove-character-xp-and-levels.md).
 - **Достижения:** многоуровневые цепочки tier; **XP за tier не начисляется**.
 - **События:** `event_tier` от **`period_index`** (10 периодов = 1 band); пул **[L−2, L]** + cooldown/repeat ([`SPEC_mvp-11-progression-events`](../../specs/features/SPEC_mvp-11-progression-events.md)).
-- **Разблокировка механик:** `game_starter_templates.blueprint_json.mechanics` (`starter_mechanics.py`), не character level.
+- **Разблокировка механик:** `game_starter_templates.blueprint_json.mechanics` (`starters/mechanics.py`), не character level.
 - **Обязательные события** (в плане): **смесь** — часть блокирует период, часть только финансовые последствия; предикаты (авто, страховка, временные расходы).
 - **`xp_delta` в данных событий** игнорируется; мотивация — достижения и цели победы из шаблона.
 
@@ -123,7 +123,7 @@ next_spec: specs/features/SPEC_game-plan.md
   3. Средний **чистый денежный поток** за последние **K = 6** периодов **≥ порога** от **стартовой зарплаты** (коэффициент задаётся шаблоном, для «лёгкого» обсуждалось **×5**).
   4. **Кэш на счёте** ≥ целевого порога (глобальная цифра типа «25 млн» заменяется на **порог из шаблона** для гибкости).
   5. Покупка **инвестиционной недвижимости** (или другая финальная механика из шаблона).
-- **Ранний выигрыш запрещён:** в первые **6 игровых периодов** победа **невозможна** — `min_period_index_for_victory` (дефолт **7**, `MIN_PERIOD_INDEX_FOR_WIN` в `backend/app/game_rules.py`). В prod: `victory_engine` + `victory_config_json`; режим **chain** (все шаги цепочки) или legacy **parallel** (M из N).
+- **Ранний выигрыш запрещён:** в первые **6 игровых периодов** победа **невозможна** — `min_period_index_for_victory` (дефолт **7**, `MIN_PERIOD_INDEX_FOR_WIN` в `backend/app/game/rules.py`). В prod: `victory_engine` + `victory_config_json`; режим **chain** (все шаги цепочки) или legacy **parallel** (M из N).
 
 #### Cashflow (цель 3)
 
@@ -191,11 +191,11 @@ next_spec: specs/features/SPEC_game-plan.md
 
 | Шаг | Задача | Файлы / зона |
 |-----|--------|----------------|
-| 2.1 | Агрегат **`monthly_lifestyle_total`** = база шаблона + дельты (+ временные до `expires`) | `game_period.py`, хелперы |
+| 2.1 | Агрегат **`monthly_lifestyle_total`** = база шаблона + дельты (+ временные до `expires`) | `game/period.py`, хелперы |
 | 2.2 | Расчёт **среднего чистого cashflow за 6 периодов** из `PeriodEconomyClosing` / транзакций | Новый хелпер + кэш в overview |
-| 2.3 | Движок **условий победы** по `victory_config` шаблона; **`min_period_index_for_victory`** (дефолт 7) | ✅ `finance_overview_build.py`, `victory_engine.py` ([`SPEC_victory-v2`](../../specs/features/SPEC_victory-v2.md)) |
+| 2.3 | Движок **условий победы** по `victory_config` шаблона; **`min_period_index_for_victory`** (дефолт 7) | ✅ `finance/overview_build.py`, `victory/engine.py` ([`SPEC_victory-v2`](../../specs/features/SPEC_victory-v2.md)) |
 | 2.4 | ~~**XP / уровень**~~ | **Superseded** [`remove-character-xp`](remove-character-xp-and-levels.md) (2026-05-24) |
-| 2.5 | **Генерация событий:** `event_tier` ∈ [L−2, L], предикаты, `repeat_policy` | ✅ M11 — `events.py`, `game_period.py` |
+| 2.5 | **Генерация событий:** `event_tier` ∈ [L−2, L], предикаты, `repeat_policy` | ✅ M11 — `events.py`, `game/period.py` |
 | 2.6 | Применение эффектов выбора события: единая функция | Снизит дублирование и ошибки |
 
 #### 3) API

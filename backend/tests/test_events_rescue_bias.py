@@ -6,7 +6,7 @@ from app.routers.events import (
     _order_events_recommended_first,
     serialize_instance_rows,
 )
-from app.event_taxonomy import build_metadata_json
+from app.events.taxonomy import build_metadata_json
 
 
 def _patch_template_needs(db_session, template_key: str = "mq_game_basic_v1"):

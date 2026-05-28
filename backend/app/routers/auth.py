@@ -38,7 +38,7 @@ async def register(user_data: UserRegister, db: Session = Depends(get_db)):
     db.refresh(new_user)
 
     try:
-        from ..admin_notify import notify_user_registered
+        from ..admin.notify import notify_user_registered
 
         notify_user_registered(db, new_user)
     except Exception:

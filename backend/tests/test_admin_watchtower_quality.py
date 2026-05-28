@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import pytest
 
-from app.admin_notify import _admin_link, emit_admin_alert
+from app.admin.notify import _admin_link, emit_admin_alert
 from app.auth import get_password_hash
 from app.config import _resolve_admin_web_base_url
 from app.models import GameProfile, NotificationLog, User
@@ -36,7 +36,7 @@ def test_emit_admin_alert_does_not_commit_parent_session_pending(db_session, mon
 
     monkeypatch.setattr(db_session, "commit", tracked_commit)
     monkeypatch.setattr(
-        "app.admin_notify._send_telegram_message",
+        "app.admin.notify._send_telegram_message",
         lambda _text: False,
     )
 
@@ -78,7 +78,7 @@ def test_emit_admin_alert_does_not_commit_parent_session_pending(db_session, mon
 
 def test_emit_admin_alert_commits_when_session_clean(db_session, monkeypatch):
     monkeypatch.setattr(
-        "app.admin_notify._send_telegram_message",
+        "app.admin.notify._send_telegram_message",
         lambda _text: False,
     )
     row = emit_admin_alert(
@@ -133,7 +133,7 @@ def test_watchtower_profile_counts_match_profiles(client, admin_env, auth_header
 
 def test_dedupe_race_returns_none_without_raising(db_session, monkeypatch):
     monkeypatch.setattr(
-        "app.admin_notify._send_telegram_message",
+        "app.admin.notify._send_telegram_message",
         lambda _text: False,
     )
     first = emit_admin_alert(

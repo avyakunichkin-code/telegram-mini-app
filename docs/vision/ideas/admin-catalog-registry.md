@@ -62,7 +62,7 @@ next_spec: specs/features/SPEC_admin-and-notifications.md
 ### C0 ✅ (реализовано 2026-05-25)
 
 - API: `GET /api/admin/catalogs`, `GET /api/admin/catalogs/{key}/rows`
-- Backend: [`admin_catalogs.py`](../../../backend/app/admin_catalogs.py)
+- Backend: [`admin_catalogs.py`](../../../backend/app/admin/catalogs.py)
 - UI: `#/admin/catalogs`, `#/admin/catalogs/{key}` — хаб + таблица + поиск + «только активные»
 - Тесты: [`test_admin_catalogs.py`](../../../backend/tests/test_admin_catalogs.py)
 

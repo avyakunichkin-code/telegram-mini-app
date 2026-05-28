@@ -40,7 +40,7 @@ spec: ../features/SPEC_expenses.md
 
 ## 2. Backend — домен
 
-- [ ] `backend/app/expenses.py`
+- [ ] `backend/app/finance/expenses.py`
   - [ ] `compute_monthly_burn(db, profile) -> BurnSnapshot`
   - [ ] `lines_by_category`, `total`, `must_total`, `discretionary_total`
   - [ ] `add_line`, `revoke_line`, `expire_lines_for_period`

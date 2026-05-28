@@ -1,6 +1,6 @@
 """Разрешения механик из blueprint шаблона."""
 
-from app.starter_mechanics import (
+from app.starters.mechanics import (
     BASIC_V1_MECHANICS,
     mechanics_from_blueprint,
     resolve_profile_mechanics,

@@ -3,7 +3,7 @@
 import pytest
 from fastapi import HTTPException
 
-from app.game_start_validation import validate_game_start_request
+from app.game.start_validation import validate_game_start_request
 from app.models import GameStarterTemplate
 from app.schemas import GameStartRequest
 

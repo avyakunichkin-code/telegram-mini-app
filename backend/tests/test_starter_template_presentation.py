@@ -1,4 +1,4 @@
-from app.starter_template_presentation import (
+from app.starters.template_presentation import (
     compare_note_from_blueprint,
     highlights_from_blueprint,
     scenario_icon_from_blueprint,
@@ -55,7 +55,7 @@ def test_scenario_picker_highlights_salary_and_tiers():
             {"after_goal": "tutorial_insurance", "grant": ["capital_property"]},
         ],
     }
-    from app.starter_template_presentation import granted_capital_mechanics_from_blueprint
+    from app.starters.template_presentation import granted_capital_mechanics_from_blueprint
 
     prev = granted_capital_mechanics_from_blueprint(basic, "mq_game_basic_v1")
     pro_lines = scenario_picker_highlights(

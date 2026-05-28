@@ -1,3 +1,4 @@
+import logging
 import os
 from dotenv import load_dotenv
 
@@ -52,7 +53,8 @@ class Config:
     def get_database_url(cls) -> str:
         url = cls.DATABASE_URL
         if not url:
-            print("⚠️ DATABASE_URL не установлен, использую SQLite")
+            # Use ASCII-only message: avoids encoding issues (cp1251) and noisy stdout on imports/tests.
+            logging.getLogger(__name__).warning("DATABASE_URL is not set; falling back to SQLite.")
             return "sqlite:///./test.db"
         
         # Для PostgreSQL на Render

@@ -7,7 +7,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
-from app.victory_seeds import VICTORY_CONFIG_BY_TEMPLATE_KEY
+from app.victory.seeds import VICTORY_CONFIG_BY_TEMPLATE_KEY
 
 KEYS = (
     "mq_game_basic_v1",

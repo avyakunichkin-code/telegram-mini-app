@@ -1,15 +1,15 @@
 """Тесты victory: учебная цепочка (tutorial) и parallel (legacy)."""
 
-from app.game_rules import MIN_PERIOD_INDEX_FOR_WIN
-from app.mechanics_progression import DEFAULT_HARDER_UNLOCK, TEMPLATE_MECHANICS_UNLOCK_PRESETS
-from app.starter_mechanics import BASIC_V1_MECHANICS, DEFAULT_MECHANICS
-from app.victory_engine import (
+from app.game.rules import MIN_PERIOD_INDEX_FOR_WIN
+from app.victory.mechanics_progression import DEFAULT_HARDER_UNLOCK, TEMPLATE_MECHANICS_UNLOCK_PRESETS
+from app.starters.mechanics import BASIC_V1_MECHANICS, DEFAULT_MECHANICS
+from app.victory.engine import (
     PROGRESSION_CHAIN,
     VictoryEvaluationInput,
     evaluate_victory,
     parse_victory_config,
 )
-from app.victory_seeds import VICTORY_CONFIG_LEGACY_BY_TEMPLATE_KEY, victory_config_for_template
+from app.victory.seeds import VICTORY_CONFIG_LEGACY_BY_TEMPLATE_KEY, victory_config_for_template
 
 BASIC_UNLOCK = TEMPLATE_MECHANICS_UNLOCK_PRESETS["mq_game_basic_v1"]
 

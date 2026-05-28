@@ -20,7 +20,7 @@ MVP 1.1 вводил **уровень персонажа**, **XP** (период
 
 1. **Удалить** `GameProfile.level`, `GameProfile.xp` и начисление XP в `game_period`, событиях, достижениях.
 2. **Убрать** из `GET /api/finance/overview` поля `character_*`, `gamification_level`, `score`, `xp_to_next_level`.
-3. **Снять** API-gates `require_character_level` (инвестиции, страховки, активы) — доступ через **`blueprint.mechanics`** (`starter_mechanics.py`, 403 `mechanic_disabled`).
+3. **Снять** API-gates `require_character_level` (инвестиции, страховки, активы) — доступ через **`blueprint.mechanics`** (`starters/mechanics.py`, 403 `mechanic_disabled`).
 4. **`event_tier`:** L = `(period_index - 1) // 10 + 1`; окно событий **[max(1, L−2), L]** (M11).
 5. **Victory:** удалить тип цели **`character_level`** из `victory_engine` и JSON шаблонов (миграция **`0031_remove_character_progression.sql`**).
 6. **`xp_delta`** в `event_choices` — **игнорировать** (данные в БД можно оставить).

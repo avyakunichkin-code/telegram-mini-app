@@ -96,7 +96,7 @@
 
 ### 1.8. Цели и победа
 
-**Prod:** [`victory_engine`](backend/app/victory_engine.py) + `victory_config_json` шаблона ([ADR-002](docs/decisions/ADR-002-victory-engine-and-template-config.md), [SPEC_victory-v2](docs/specs/features/SPEC_victory-v2.md)):
+**Prod:** [`victory_engine`](backend/app/victory/engine.py) + `victory_config_json` шаблона ([ADR-002](docs/decisions/ADR-002-victory-engine-and-template-config.md), [SPEC_victory-v2](docs/specs/features/SPEC_victory-v2.md)):
 
 - **`progression_mode: chain`** (tutorial на всех Game-шаблонах): все шаги цепочки выполнены + `period_index >= min_period_index_for_victory` (обычно **7**).
 - **`progression_mode: parallel`** (откат): **M из N** среди enabled-целей + ворота периода.
@@ -282,7 +282,7 @@
 | Тема | Решение |
 |------|---------|
 | Спека | [`SPEC_mvp-11-progression-events.md`](docs/specs/features/SPEC_mvp-11-progression-events.md) |
-| Сиды | [`mvp11_event_seeds.py`](backend/app/mvp11_event_seeds.py) |
+| Сиды | [`events/mvp11_seeds.py`](backend/app/events/mvp11_seeds.py) |
 | Pending без выбора | → `expired` в `process_period_end` |
 
 Шаблон карточки, доли 🟢🔴🟡 и примеры tier 1–2 из анкеты — [`QUESTIONNAIRE.md`](QUESTIONNAIRE.md) (ориентир баланса, не character level).

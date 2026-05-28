@@ -11,7 +11,7 @@ related: ../specs/SPEC_ANALYTICS.md
 
 **Принцип:** при низком DAU ценность — **видеть каждого игрока и воронку**, а не BI-дашборды. Реализация **вертикальными срезами**: метрика → emit → лог → строка в `/admin` → (опционально) Telegram.
 
-**Уже есть (A0):** [`admin_notify.py`](../../backend/app/admin_notify.py), `notification_log`, `GET /api/admin/watchtower`, `#/admin`, hooks: register, profile, game_start, win/loss, period_milestone.
+**Уже есть (A0):** [`admin/notify.py`](../../backend/app/admin/notify.py), `notification_log`, `GET /api/admin/watchtower`, `#/admin`, hooks: register, profile, game_start, win/loss, period_milestone.
 
 **Не путать с:** вкладка «Аналитика» у игрока — [`SPEC_ANALYTICS.md`](../specs/SPEC_ANALYTICS.md) (графики для игрока). Этот план — **ops / продукт** для solo-dev.
 

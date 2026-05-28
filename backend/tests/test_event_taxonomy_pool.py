@@ -4,10 +4,10 @@ import json
 
 import pytest
 
-from app.event_taxonomy import effective_event_weight, event_domain
-from app.game_rules import EventProfileCounterSnapshot
+from app.events.taxonomy import effective_event_weight, event_domain
+from app.game.rules import EventProfileCounterSnapshot
 from app.models import EventDefinition, GameProfile
-from app.mvp11_event_seeds import ensure_mvp11_event_catalog
+from app.events.mvp11_seeds import ensure_mvp11_event_catalog
 from app.routers.events import _pick_diverse_period_events, ensure_period_events
 
 
@@ -104,8 +104,8 @@ class TestConsumptionVariantsSeeded:
 
 class TestFamilyMoneyChain:
     def test_refuse_schedules_callback_next_period(self, catalog):
-        from app.event_chains import FAMILY_MONEY_CHAIN_KEY, ensure_scheduled_chain_events, get_active_chain
-        from app.event_chains import schedule_event_chain
+        from app.events.chains import FAMILY_MONEY_CHAIN_KEY, ensure_scheduled_chain_events, get_active_chain
+        from app.events.chains import schedule_event_chain
 
         profile = GameProfile(
             user_id=2,

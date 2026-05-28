@@ -1,7 +1,7 @@
 ﻿"""MQ-116: отбор событий — tier-окно по period_index, cooldown, repeat_policy."""
 
 from app.models import EventDefinition, EventInstance, EventProfileCounter, FinanceAsset, GameProfile
-from app.mvp11_event_seeds import ensure_mvp11_event_catalog
+from app.events.mvp11_seeds import ensure_mvp11_event_catalog
 from app.routers.events import EVENTS_PER_PERIOD, ensure_period_events
 
 

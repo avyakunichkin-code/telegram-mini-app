@@ -72,8 +72,8 @@ related:
 |------|-------------------|
 | **Product / GDD** | SPEC_PRODUCT §12, evolution §II, GLOSSARY |
 | **DB** | `expense_category_definitions`, `profile_expense_lines`, миграция `0013+`, blueprint `expense_budget` |
-| **Domain** | `expenses.py`, `compute_monthly_burn`, expiry, clamp |
-| **Period** | `game_period.py` списание + breakdown |
+| **Domain** | `finance/expenses.py`, `compute_monthly_burn`, expiry, clamp |
+| **Period** | `game/period.py` списание + breakdown |
 | **API** | overview, `GET /game/expenses`, period end payload, `api.js` |
 | **Events** | effects whitelist, сиды, авторский гайд |
 | **Templates** | все `game_starter_templates` — разбивка + чеклист жильё/ипотека |

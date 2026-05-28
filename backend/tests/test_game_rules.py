@@ -2,7 +2,7 @@
 
 import pytest
 
-from app.game_rules import (
+from app.game.rules import (
     EVENTS_PER_PERIOD,
     EVENT_TIER_WINDOW_BELOW_BAND,
     MIN_PERIOD_INDEX_FOR_WIN,

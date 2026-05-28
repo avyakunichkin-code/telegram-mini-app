@@ -18,7 +18,7 @@ checklist: ../specs/economy/EXPENSES_LAYER_CHECKLIST.md
 
 - [ ] E1-110 — migration categories + `expense_category_definitions`
 - [ ] E1-111 — migration `profile_expense_lines` + models
-- [ ] E1-112 — `expenses.py` domain + tests
+- [ ] E1-112 — `finance/expenses.py` domain + tests
 - [ ] E1-113 — `game/start` creates lines from blueprint
 - [ ] E1-114 — template seeds `expense_budget` for all starters
 - [ ] E1-115 — `game_period` burn charge + category breakdown

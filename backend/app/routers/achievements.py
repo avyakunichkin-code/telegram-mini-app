@@ -1,11 +1,11 @@
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 
-from ..achievement_engine import process_achievement_unlocks, serialize_achievements_for_profile
-from ..achievement_seeds import ensure_achievement_catalog
+from ..achievements.engine import process_achievement_unlocks, serialize_achievements_for_profile
+from ..achievements.seeds import ensure_achievement_catalog
 from ..auth import get_current_user
 from ..database import get_db
-from ..game_time import get_active_game_profile, sync_time
+from ..game.time import get_active_game_profile, sync_time
 from ..schemas import AchievementsOverviewResponse
 
 router = APIRouter(prefix="/api/game/achievements", tags=["achievements"])

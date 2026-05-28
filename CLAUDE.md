@@ -10,6 +10,7 @@
 | [`docs/foundation/DOC_SYNC_LOG.md`](docs/foundation/DOC_SYNC_LOG.md) | Журнал синхронизации docs ↔ prod |
 | [`docs/decisions/ADR-002-victory-engine-and-template-config.md`](docs/decisions/ADR-002-victory-engine-and-template-config.md) | Движок победы, chain / parallel |
 | [`docs/decisions/ADR-004-mechanics-unlock-victory-chain.md`](docs/decisions/ADR-004-mechanics-unlock-victory-chain.md) | Разблокировка механик по целям |
+| [`docs/decisions/ADR-007-backend-domain-packages.md`](docs/decisions/ADR-007-backend-domain-packages.md) | Доменные пакеты `app/{game,finance,victory,…}/` + `services/` |
 | [`docs/vision/ideas/remove-character-xp-and-levels.md`](docs/vision/ideas/remove-character-xp-and-levels.md) | **Канон прогрессии:** `event_tier` от `period_index`, без character level/XP |
 | [`docs/vision/ideas/remove-character-xp-and-levels.md`](docs/vision/ideas/remove-character-xp-and-levels.md) | Прогрессия: `event_tier` от `period_index`, без level/XP |
 | [`docs/vision/ideas/tvoy-hod-evolution-after-mvp.md`](docs/vision/ideas/tvoy-hod-evolution-after-mvp.md) | **Часть II** — целевая концепция Game/Plan, шаблоны, победа из шаблона, Q&A, план по слоям |
@@ -43,11 +44,15 @@
 
 ## Где что лежит (backend)
 
+Карта слоёв: [`backend/app/README.md`](backend/app/README.md), use-cases API: [`backend/app/services/README.md`](backend/app/services/README.md).
+
 - `backend/main.py` — `Base.metadata.create_all`, лёгкая автомиграция отдельных колонок (без Alembic), подключение роутеров.
-- `backend/app/models.py` — `GameProfile` (`save_kind`, `starter_template_key`, `base_monthly_lifestyle_expense`, `delta_monthly_lifestyle_expense`, период и балансы); `GameStarterTemplate`; `FinanceSalary`, `FinanceAsset`, `FinanceLiability`, …; события `EventDefinition`, `EventChoice`, `EventInstance`; каталоги активов/долгов и др.
-- `backend/app/game_time.py` — синхронизация времени периода (anchor / duration).
-- `backend/app/game_period.py` — **главная экономика на конец периода:** обслуживание активов, доход активов, платежи по обязательствам и просрочка, премии страховок, инвестиции, поражение при трёх подряд периодах с отрицательным `cash`, события нового периода.
-- `backend/app/finance_overview_build.py` + `backend/app/victory_engine.py` — **`GET /api/finance/overview`** (сборка в `routers/finance.py`): победа **Victory v2** из `victory_config_json` шаблона, блок **`victory`**, **`win_reached`**; ранний запрет периодов — `min_period_index_for_victory` (обычно **7**). См. [ADR-002](docs/decisions/ADR-002-victory-engine-and-template-config.md).
+- `backend/app/models.py`, `schemas.py`, `auth.py`, `database.py` — платформа (корень `app/`).
+- `backend/app/routers/` — HTTP; `backend/app/services/` — тонкие use-cases под эндпоинты.
+- `backend/app/game/time.py` — синхронизация времени периода (anchor / duration).
+- `backend/app/game/period.py` — **главная экономика на конец периода:** обслуживание активов, доход активов, платежи по обязательствам и просрочка, премии страховок, инвестиции, поражение при трёх подряд периодах с отрицательным `cash`, события нового периода.
+- `backend/app/finance/overview_build.py` + `backend/app/victory/engine.py` — **`GET /api/finance/overview`** (сборка в `routers/finance.py` → `services/finance/overview.py`): победа **Victory v2** из `victory_config_json` шаблона; см. [ADR-002](docs/decisions/ADR-002-victory-engine-and-template-config.md).
+- Доменные пакеты: `game/`, `finance/`, `victory/`, `events/`, `needs/`, `achievements/`, `starters/`, `admin/`, `seeds/`.
 
 ---
 
@@ -133,7 +138,7 @@
 - Блок **`overview.victory`** — цели, `met`, `progression_mode`, текущий шаг; legacy-поля `win_target_safety_fund` / `win_ready` — для UI подушки.
 - Разблокировка вкладок капитала по **`blueprint.mechanics_unlock`** после ключей целей — [ADR-004](docs/decisions/ADR-004-mechanics-unlock-victory-chain.md).
 
-**Устаревшее (только тесты):** `evaluate_mvp_victory` в `game_rules.py` — AND «подушка 3× + нет просрочки + cashflow ≥ 0».
+**Устаревшее (только тесты):** `evaluate_mvp_victory` в `game/rules.py` — AND «подушка 3× + нет просрочки + cashflow ≥ 0».
 
 **Идеи роста:** avg liquid за 6 периодов, новые типы целей — [`tvoy-hod-evolution-after-mvp.md`](docs/vision/ideas/tvoy-hod-evolution-after-mvp.md) §II.
 

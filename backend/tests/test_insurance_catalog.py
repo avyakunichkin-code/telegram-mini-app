@@ -1,6 +1,6 @@
 import pytest
 
-from app.insurance_catalog import (
+from app.starters.insurance_catalog import (
     insurance_kind,
     legacy_kind_to_pair,
     list_catalog,

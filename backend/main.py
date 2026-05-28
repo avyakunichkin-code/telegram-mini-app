@@ -7,9 +7,9 @@ from sqlalchemy import inspect, text
 
 from app.cors_settings import resolve_cors_allow_origin_regex, resolve_cors_allow_origins
 from app.database import engine, Base
-from app.victory_seeds import VICTORY_CONFIG_BY_TEMPLATE_KEY, victory_config_json_for_template
-from app.expense_template_defaults import expense_budget_for_template
-from app.expenses import ensure_expense_category_catalog
+from app.victory.seeds import VICTORY_CONFIG_BY_TEMPLATE_KEY, victory_config_json_for_template
+from app.finance.expense_defaults import expense_budget_for_template
+from app.finance.expenses import ensure_expense_category_catalog
 from app.routers import (
     auth_router,
     users_router,
@@ -288,7 +288,7 @@ def ensure_schema_compatibility() -> None:
     inspector = inspect(engine)
     if "victory_goals" in inspector.get_table_names():
         from app.database import SessionLocal
-        from app.victory_goals_lint import lint_victory_goals
+        from app.victory.goals_lint import lint_victory_goals
 
         db = SessionLocal()
         try:

@@ -91,16 +91,16 @@ SQL: save_kind, шаблоны, миграция event filter, удаление 
 
 ### MQ-106 — События: фильтр по `save_kind`, снять `profile.mode`
 
-- **Acceptance:** `ensure_period_events` и связка из `game_period.py` не используют light/hardcore профиля; фильтр согласован с ADR.
+- **Acceptance:** `ensure_period_events` и связка из `game/period.py` не используют light/hardcore профиля; фильтр согласован с ADR.
 - **Verify:** pytest на выбор событий для нового профиля; ручной период.
-- **Files:** `backend/app/routers/events.py`, `backend/app/game_period.py`.
+- **Files:** `backend/app/routers/events.py`, `backend/app/game/period.py`.
 - **Estimate:** M · **Depends:** MQ-102, MQ-103
 
 ### MQ-107 — Конец периода: `base_monthly_lifestyle_expense` + дельта (минимум)
 
 - **Acceptance:** в `process_period_end` учитываются базовая «жизнь» из шаблона и поле дельты на профиле (списание на `cash` или эквивалент, не ломая остальной цикл).
 - **Verify:** pytest или сценарий 2 периода; cash согласован с ожиданием.
-- **Files:** `backend/app/game_period.py`, хелперы.
+- **Files:** `backend/app/game/period.py`, хелперы.
 - **Estimate:** M · **Depends:** MQ-105
 
 ### MQ-108 — Frontend: старт без `DifficultyScreen`, новый контракт

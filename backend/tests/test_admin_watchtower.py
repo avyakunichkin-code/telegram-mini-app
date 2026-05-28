@@ -6,7 +6,7 @@ import os
 
 import pytest
 
-from app.admin_notify import _admin_link, emit_admin_alert
+from app.admin.notify import _admin_link, emit_admin_alert
 from app.config import _resolve_admin_web_base_url
 from app.models import NotificationLog
 

@@ -6,7 +6,10 @@ alwaysApply: false
 
 # Backend
 
-- **Конец периода и экономика**: `backend/app/game_period.py` (`process_period_end` и связанная логика).
+Карта слоёв: [`backend/app/README.md`](backend/app/README.md), [`backend/app/services/README.md`](backend/app/services/README.md) — [ADR-007](docs/decisions/ADR-007-backend-domain-packages.md).
+
+- **Конец периода и экономика**: `backend/app/game/period.py` (`process_period_end` и связанная логика).
+- **HTTP / use-cases**: `backend/app/routers/`, `backend/app/services/<domain>/`.
 - **Модели**: `backend/app/models.py`; новые сущности — согласовать с SQL-миграциями ([`backend/migrations/README.md`](backend/migrations/README.md)) и лёгкой автомиграцией в `backend/main.py`, если она уже есть для подобных полей. Прогон SQL: `backend/migrate.ps1` (`DATABASE_URL`, `psql`).
 
 ## `save_kind` (Game / Plan) — [ADR-001](docs/decisions/ADR-001-save-kind-remove-light-hardcore.md)
@@ -19,11 +22,11 @@ alwaysApply: false
 - **Роутеры**: подключение в `backend/main.py`; префиксы API держать согласованными с фронтом (`/api/...`).
 - **Ошибки API**: предсказуемые статусы и тело ответа; фронт ожидает единый контракт ошибок через `apiCall` в `frontend-react/src/api.js`.
 - **Победа MVP** и дорожная карта режимов: `GET /api/finance/overview` (`win_reached` при `period_index >= 7`); spec эпика Game/Plan — [`docs/specs/features/SPEC_game-plan.md`](docs/specs/features/SPEC_game-plan.md).
-- **Инварианты логики (XP, tier-окно, победа MVP):** `backend/app/game_rules.py` — чистые функции; числовые константы там же. Роутеры не дублируют условия победы/XP вручную.
+- **Инварианты логики (tier-окно, победа):** `backend/app/game/rules.py`; победа v2 — `backend/app/victory/engine.py`. Роутеры не дублируют условия победы вручную.
 
 ## Локальные тесты (без CI)
 
-После правок в `backend/` (особенно `game_rules.py`, `game_period.py`, `character_progression.py`, `routers/events.py`, `routers/finance.py`) **запускай** и в ответе пользователю **напоминай**, если не запускал:
+После правок в `backend/` (особенно `game/`, `victory/`, `events/`, `routers/`, `services/`) **запускай** и в ответе пользователю **напоминай**, если не запускал:
 
 ```bash
 cd backend && python -m pytest -q

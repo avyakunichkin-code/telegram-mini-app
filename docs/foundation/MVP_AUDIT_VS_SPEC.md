@@ -13,18 +13,18 @@
 
 | Тема (foundation) | Где в коде | Статус | Комментарий |
 |---------------------|------------|--------|-------------|
-| Период TB1: закрытие через `time/next`, без auto-bump | `backend/app/game_time.py` | OK | `sync_time` не меняет `period_index`; play/pause не в TMA UI |
-| Конец периода: активы → долги → страховки → инвестиции → поражение 3× минус cash → снимок → события (без character XP) | `backend/app/game_period.py` | OK | XP/level сняты 2026-05-24 |
+| Период TB1: закрытие через `time/next`, без auto-bump | `backend/app/game/time.py` | OK | `sync_time` не меняет `period_index`; play/pause не в TMA UI |
+| Конец периода: активы → долги → страховки → инвестиции → поражение 3× минус cash → снимок → события (без character XP) | `backend/app/game/period.py` | OK | XP/level сняты 2026-05-24 |
 | Зарплата по кнопке, пропуск периода | `period_actions`, `game_period` | OK | Детали в SPEC_PRODUCT §3.2 |
-| Победа v2: `chain` tutorial / legacy `parallel` | `victory_engine.py`, `victory_seeds.py`, overview | OK | Legacy `evaluate_mvp_victory` (AND MVP) — только тесты |
-| `mechanics_unlock` по целям (жёсткие шаблоны) | `starter_mechanics.py`, `0037_*` | OK | [ADR-004](../decisions/ADR-004-mechanics-unlock-victory-chain.md) |
+| Победа v2: `chain` tutorial / legacy `parallel` | `victory/engine.py`, `victory/seeds.py`, overview | OK | Legacy `evaluate_mvp_victory` (AND MVP) — только тесты |
+| `mechanics_unlock` по целям (жёсткие шаблоны) | `starters/mechanics.py`, `0037_*` | OK | [ADR-004](../decisions/ADR-004-mechanics-unlock-victory-chain.md) |
 | До трёх событий на период, выбор с эффектами | `backend/app/routers/events.py`, `ensure_period_events` | OK | Фильтр `EventDefinition.mode` в семантике **`game` / `plan` / `any`** и **`profile.save_kind`** ([ADR-001](../decisions/ADR-001-save-kind-remove-light-hardcore.md)) |
-| **M11:** tier-окно, `repeat_policy`, `cooldown_periods` | `game_rules.py`, `events.py`, миграция `0007` | OK | Приёмка **MQ-116**: `backend/tests/test_mq116_acceptance.py`, `test_ensure_period_events.py`; spec [SPEC_mvp-11](../specs/features/SPEC_mvp-11-progression-events.md) **approved** |
+| **M11:** tier-окно, `repeat_policy`, `cooldown_periods` | `game/rules.py`, `events.py`, миграция `0007` | OK | Приёмка **MQ-116**: `backend/tests/test_mq116_acceptance.py`, `test_ensure_period_events.py`; spec [SPEC_mvp-11](../specs/features/SPEC_mvp-11-progression-events.md) **approved** |
 | Инвестиции / страховки | `routers/invest.py`, `insurance.py` | OK | На уровне MVP; расширения — backlog |
 | Создание профиля **`save_kind` + шаблон Game** | `backend/app/routers/game.py`, `models.GameProfile` | OK | Legacy **`light` / `hardcore`** сняты ([ADR-001](../decisions/ADR-001-save-kind-remove-light-hardcore.md)) |
 | UI: поток новой игры без legacy сложности | `frontend-react` (`NewProfileKindScreen`, `GameTemplatePickScreen`) | OK | **`DifficultyScreen`** удалён |
 | Агрегированные «жизненные» расходы из шаблона + дельты событий | `base_monthly_lifestyle_expense` + дельты | PARTIAL | Полная модель статей — E1 draft |
-| Победа M из N, `avg_net_cashflow_6p` в целях | `victory_engine.py`, overview `victory`, `MqxGoalDash` | OK | P1 UI целей ✅; баланс/плейтест — backlog |
+| Победа M из N, `avg_net_cashflow_6p` в целях | `victory/engine.py`, overview `victory`, `MqxGoalDash` | OK | P1 UI целей ✅; баланс/плейтест — backlog |
 
 ## MVP 1.1 (M11) — приёмка документации
 

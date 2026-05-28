@@ -51,7 +51,7 @@
 
 | Check | Result |
 |-------|--------|
-| Victory source of truth | `finance_overview_build.py` + `victory_engine.py` |
+| Victory source of truth | `finance/overview_build.py` + `victory/engine.py` |
 | Character progression | Removed (`0031_remove_character_progression.sql`) |
 | Event filter | `save_kind` + `event_tier` from `period_index` |
 | Tests | 178 passed, 2 failed (tutorial victory chain) |

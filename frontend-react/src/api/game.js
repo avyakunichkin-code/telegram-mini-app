@@ -1,4 +1,6 @@
 import { apiCall } from './client.js';
+import { expensesApi } from './expenses.js';
+import { eventsApi } from './events.js';
 
 export const gameApi = {
   getGameProfiles() {
@@ -38,12 +40,7 @@ export const gameApi = {
   getPeriodStatus() {
     return apiCall('/api/game/period/status');
   },
-  getPendingEvent() {
-    return apiCall('/api/game/events/pending');
-  },
-  chooseEvent(eventId, choiceId) {
-    return apiCall(`/api/game/events/${eventId}/choose`, 'POST', { choice_id: choiceId });
-  },
+  ...eventsApi,
   getAchievements() {
     return apiCall('/api/game/achievements');
   },
@@ -62,22 +59,5 @@ export const gameApi = {
   getNeedsGuide() {
     return apiCall('/api/game/needs/guide');
   },
-  getExpenses() {
-    return apiCall('/api/game/expenses');
-  },
-  listExpenseCategories() {
-    return apiCall('/api/game/expenses/categories');
-  },
-  listExpenseLines() {
-    return apiCall('/api/game/expenses/lines');
-  },
-  createExpenseLine(payload) {
-    return apiCall('/api/game/expenses/lines', 'POST', payload);
-  },
-  patchExpenseLine(lineId, payload) {
-    return apiCall(`/api/game/expenses/lines/${lineId}`, 'PATCH', payload);
-  },
-  deleteExpenseLine(lineId) {
-    return apiCall(`/api/game/expenses/lines/${lineId}`, 'DELETE');
-  },
+  ...expensesApi,
 };

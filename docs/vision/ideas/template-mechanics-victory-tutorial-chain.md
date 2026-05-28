@@ -16,7 +16,7 @@ next_spec: specs/features/SPEC_template-victory-tutorial-chain.md
 
 Сессия **idea-refine** (май 2026). Выбор продукта: **узкий учебник**, **быстрое прохождение**, при этом игрок **хотя бы раз использует каждую открытую механику**. Список целей и пороги — **редактируемые в данных шаблона**, не зашиты в код.
 
-Опора: уже есть `blueprint.mechanics`, `victory_config_json` с `progression_mode: chain`, движок в `victory_engine.py`, UI целей на дашборде.
+Опора: уже есть `blueprint.mechanics`, `victory_config_json` с `progression_mode: chain`, движок в `victory/engine.py`, UI целей на дашборде.
 
 ---
 

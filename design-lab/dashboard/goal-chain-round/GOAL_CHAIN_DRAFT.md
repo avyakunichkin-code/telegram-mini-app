@@ -1,6 +1,6 @@
 # Цепочка целей — `mq_game_basic_v1` (внедрено в backend v2)
 
-`progression_mode: "chain"` в `victory_config_json`; сиды `victory_seeds.py`, миграция `0032_victory_goal_chain.sql`.
+`progression_mode: "chain"` в `victory_config_json`; сиды `victory/seeds.py`, миграция `0032_victory_goal_chain.sql`.
 
 ## Парадигма
 

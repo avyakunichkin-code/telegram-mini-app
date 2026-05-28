@@ -47,7 +47,7 @@ deciders: продукт (сессия character needs)
 
 ## Consequences
 
-- Нужны миграция SQL, `needs_engine.py`, хук в `game_period.py`, расширение overview.
+- Нужны миграция SQL, `needs/engine.py`, хук в `game/period.py`, расширение overview.
 - Баланс чисел (`periods_to_empty_target`, штрафы) — **playtest**; формулы зафиксированы в [SPEC_game-character-needs](../specs/features/SPEC_game-character-needs.md).
 - Поражение по cash (`negative_periods_count`) остаётся **независимым** каналом.
 

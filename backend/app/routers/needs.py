@@ -3,8 +3,8 @@ from sqlalchemy.orm import Session
 
 from ..auth import get_current_user
 from ..database import get_db
-from ..game_time import get_active_game_profile
-from ..needs_guide_content import CRITICAL, MAINTENANCE
+from ..game.time import get_active_game_profile
+from ..needs.guide_content import CRITICAL, MAINTENANCE
 from ..schemas import NeedsGuideResponse
 
 router = APIRouter(prefix="/api/game/needs", tags=["needs"])

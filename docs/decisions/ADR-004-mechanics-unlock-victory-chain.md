@@ -41,7 +41,7 @@ deciders: продукт / разработка (синхронизация docs
 
 ## Связанные артефакты
 
-- Code: `backend/app/starter_mechanics.py`, `backend/app/mechanics_progression.py`, `victory_engine.py` (`chain_met_keys`)
+- Code: `backend/app/starters/mechanics.py`, `backend/app/victory/mechanics_progression.py`, `victory/engine.py` (`chain_met_keys`)
 - Seeds: `backend/app/seeds/game_starter_templates.py`
 - Migrations: `0036_victory_invest_goal_order.sql`, `0037_harder_invest_unlock_after_cushion.sql`
 - Idea: [`starter-template-mechanics-permissions.md`](../vision/ideas/starter-template-mechanics-permissions.md)

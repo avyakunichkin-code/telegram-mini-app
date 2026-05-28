@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from unittest.mock import MagicMock
 
-from app.game_period import (
+from app.game.period import (
     _cash_delta,
     _debt_delta,
     _invest_capital_flow,

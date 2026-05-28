@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from datetime import timedelta
 
-from app.game_time import get_seconds_until_next, sync_time
+from app.game.time import get_seconds_until_next, sync_time
 from app.models import GameProfile
 from app.timeutil import utc_now_naive
 

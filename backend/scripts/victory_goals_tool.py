@@ -21,7 +21,7 @@ from typing import Any
 from sqlalchemy import text
 
 from app.database import SessionLocal
-from app.victory_goals_lint import lint_victory_goals
+from app.victory.goals_lint import lint_victory_goals
 
 
 def _dump(db, *, template_keys: list[str] | None = None) -> dict[str, Any]:

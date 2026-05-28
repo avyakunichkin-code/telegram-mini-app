@@ -11,9 +11,9 @@ from pydantic import BaseModel
 from sqlalchemy import func
 from sqlalchemy.orm import Session
 
-from ..admin_auth import require_admin_user
-from ..admin_catalogs import fetch_catalog_rows, get_catalog_spec, list_catalog_meta
-from ..admin_onboarding_funnel import build_onboarding_funnel
+from ..admin.auth import require_admin_user
+from ..admin.catalogs import fetch_catalog_rows, get_catalog_spec, list_catalog_meta
+from ..admin.onboarding_funnel import build_onboarding_funnel
 from ..database import get_db
 from ..models import GameProfile, NotificationLog, User
 

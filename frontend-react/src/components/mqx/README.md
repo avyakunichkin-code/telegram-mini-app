@@ -89,7 +89,7 @@ mqx/
 | `InsurancePlanMetrics` | **монеты** выплата · **↓** премия · **⏱** срок (порядок: сумма → платёж → специфика) |
 | `InsurancePolicyMetrics` | То же для активного полиса |
 
-Данные: `constants/insuranceProducts.js` (синхрон с `backend/app/insurance_catalog.py`), покупка через `plan_key` в API.
+Данные: `constants/insuranceProducts.js` (синхрон с `backend/app/starters/insurance_catalog.py`), покупка через `plan_key` в API.
 
 Карточки: `CapitalPositionCard` с `variant="insurance"`, `accentTone`: `auto` | `mortgage` | `default`.
 
