@@ -1,0 +1,183 @@
+/* cushion-fill-round — индикатор наполнения подушки (цель ×3 обязательств) */
+
+:root {
+  --cushion-fill-low: #dc2626;
+  --cushion-fill-mid-low: #ea580c;
+  --cushion-fill-mid-high: #ca8a04;
+  --cushion-fill-high: #16a34a;
+}
+
+[data-theme='dark'] {
+  --cushion-fill-low: #f87171;
+  --cushion-fill-mid-low: #fb923c;
+  --cushion-fill-mid-high: #facc15;
+  --cushion-fill-high: #4ade80;
+}
+
+/* —— Lab chrome —— */
+.lab-wrap {
+  max-width: 420px;
+  margin: 0 auto;
+  padding: 0 14px 32px;
+}
+
+.lab-round-title {
+  margin: 0 0 6px;
+  font-size: 1.05rem;
+  font-weight: 850;
+}
+
+.lab-round-note {
+  margin: 0 0 14px;
+  font-size: 13px;
+  color: var(--text-muted);
+  line-height: 1.45;
+}
+
+.lab-tier-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0 0 16px;
+  font-size: 11px;
+}
+
+.lab-tier-legend span {
+  padding: 4px 8px;
+  border-radius: 8px;
+  font-weight: 650;
+  background: color-mix(in srgb, var(--mqx-ink) 6%, transparent);
+}
+
+.lab-tier-legend .t-low { color: var(--cushion-fill-low); }
+.lab-tier-legend .t-mid-low { color: var(--cushion-fill-mid-low); }
+.lab-tier-legend .t-mid-high { color: var(--cushion-fill-mid-high); }
+.lab-tier-legend .t-high { color: var(--cushion-fill-high); }
+
+.lab-section {
+  margin-top: 22px;
+}
+
+.lab-section h3 {
+  margin: 0 0 10px;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.lab-demo-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 8px;
+}
+
+.lab-demo-grid--2 {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+/* —— F1 ★: полоска под суммой —— */
+.mqx-finance-chip--cushion {
+  position: relative;
+}
+
+.mqx-cushion-fill {
+  margin-top: 5px;
+  height: 4px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--mqx-ink) 12%, transparent);
+  overflow: hidden;
+}
+
+.mqx-cushion-fill__bar {
+  display: block;
+  height: 100%;
+  min-width: 2px;
+  border-radius: inherit;
+  transition: width 0.35s ease, background-color 0.25s ease;
+}
+
+.mqx-cushion-fill__bar[data-tier='low'] {
+  background: var(--cushion-fill-low);
+}
+
+.mqx-cushion-fill__bar[data-tier='mid-low'] {
+  background: var(--cushion-fill-mid-low);
+}
+
+.mqx-cushion-fill__bar[data-tier='mid-high'] {
+  background: var(--cushion-fill-mid-high);
+}
+
+.mqx-cushion-fill__bar[data-tier='high'] {
+  background: var(--cushion-fill-high);
+}
+
+.mqx-cushion-fill__hint {
+  margin-top: 3px;
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  color: color-mix(in srgb, var(--mqx-ink) 48%, transparent);
+  font-variant-numeric: tabular-nums;
+}
+
+/* —— F2: заливка фона chip снизу (сравнение) —— */
+.mqx-finance-chip--cushion-bg .mqx-finance-chip__body {
+  position: relative;
+  z-index: 0;
+}
+
+.mqx-finance-chip--cushion-bg .mqx-finance-chip__label,
+.mqx-finance-chip--cushion-bg .mqx-finance-chip__value {
+  position: relative;
+  z-index: 1;
+}
+
+.mqx-cushion-fill--bg {
+  position: absolute;
+  inset: 0;
+  margin-top: 0;
+  height: auto;
+  border-radius: 8px;
+  background: transparent;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.mqx-cushion-fill--bg .mqx-cushion-fill__bar {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  height: var(--cushion-pct, 0%);
+  min-width: 0;
+  opacity: 0.22;
+  border-radius: 8px 8px 10px 10px;
+}
+
+.mqx-dash-stack--unified .mqx-finance-chip--cushion-bg {
+  overflow: hidden;
+}
+
+/* Контекст: блок «Финансы периода» S5 */
+.mqx-finance-static__title {
+  margin: 0 0 10px;
+  font-size: 11px;
+  font-weight: 850;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--mqx-ink) 55%, transparent);
+}
+
+.mqx-finance-static__chips {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.mqx-dash-stack--unified {
+  padding: 14px 0 0;
+}

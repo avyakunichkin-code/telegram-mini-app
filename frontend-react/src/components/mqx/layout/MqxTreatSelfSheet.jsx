@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { showNotification } from '../../notifications';
 import { NeedsDeltaChips } from '../needs/NeedsDeltaChips';
@@ -15,6 +15,14 @@ export function MqxTreatSelfSheet({ open, onClose, treatSelf, treatSelfState }) 
   const cooldown = Number(treatSelfState?.cooldown_periods_remaining) || 0;
 
   if (!open) return null;
+
+  useEffect(() => {
+    if (!open) return;
+    if (busy) return;
+    if (selectedId) return;
+    if (options.length <= 0) return;
+    setSelectedId(String(options[0]?.id || ''));
+  }, [open, busy, selectedId, options]);
 
   const confirmDisabled = busy || !available || !selected?.id;
 
@@ -72,9 +80,6 @@ export function MqxTreatSelfSheet({ open, onClose, treatSelf, treatSelfState }) 
         <div className="mqx-sheet__actions">
           <MqxButton stretched disabled={confirmDisabled} onClick={onConfirm}>
             {busy ? 'Подождите…' : 'Подтвердить'}
-          </MqxButton>
-          <MqxButton variant="secondary" stretched disabled={busy} onClick={onClose}>
-            Отмена
           </MqxButton>
         </div>
       </section>

@@ -36,13 +36,11 @@ npm run design-lab:build
 | [capital-page/](capital-page/) | **IA утверждена → вариант A/B на выбор** | 5 табов, бюджет №2, имущество/обязательства строками |
 | [onboarding-guided/](onboarding-guided/) | **★ утверждён** → MQX | Guided coach, 5 шагов, spotlight |
 | [pre-game-shell/](pre-game-shell/) | v2 (сравнение) | Монетка над пузырём, TGS, без frame |
-| [pre-game-playful-v3/](pre-game-playful-v3/) | **★ на утверждение** | Монетка в карточке, logo сверху, chip-picks, подсказки (P1–P6) |
 | [auth-flow/](auth-flow/) | **★ B → prod** | Вход / регистрация (история вариантов A/B/C) |
 | [new-game-mode/](new-game-mode/) | **★ B → prod** | Шаг 1: имя + Игра / План |
 | [game-templates/](game-templates/) | **★ B → prod** | Шаг 2: каталог + быстрый старт |
 | [period-close/](period-close/) | **★ в prod** | Иконки строк — lab-раунд B2 |
 | [start-menu/](start-menu/) | **★ B → prod** | Меню сохранений после входа |
-| [onboarding-brief/](onboarding-brief/) | superseded | ~~Mission Brief 3 карточки + видео~~ |
 | [brand-logo/](brand-logo/) | **★ → prod** | G1 старт, G2 hero; tagline в G1 |
 | [game-ui/juice-round/](game-ui/juice-round/) | **★ A+C+D → prod** | Gain, turn ritual, salary warn; B Risk — backlog |
 | [character-needs/](character-needs/) | **dashboard-needs-round готов** | Z-NEEDS A–D; treat-self / events — следующие раунды |

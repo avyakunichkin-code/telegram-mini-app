@@ -290,6 +290,7 @@ export function GameScreen({ onLogout, onNewGame, onLoadGame }) {
             events={pendingEvents}
             onResolved={async (eventId, choiceId) => {
               const res = await API.chooseEvent(eventId, choiceId);
+              const needsBefore = res?.needs_before;
               const needsAfter = res?.needs_after;
               const claim = res?.insurance_claim;
               if (claim?.applied && Number(claim.payout_amount) > 0) {
@@ -299,7 +300,27 @@ export function GameScreen({ onLogout, onNewGame, onLoadGame }) {
                   'success',
                 );
               } else if (needsAfter && typeof needsAfter === 'object') {
-                showNotification('Самочувствие изменилось', 'success');
+                const labels = {
+                  comfort: 'Комфорт',
+                  status: 'Статус',
+                  social: 'Связи',
+                  health: 'Здоровье',
+                };
+                const deltas = [];
+                if (needsBefore && typeof needsBefore === 'object') {
+                  for (const key of Object.keys(labels)) {
+                    const before = Number(needsBefore?.[key]);
+                    const after = Number(needsAfter?.[key]);
+                    if (!Number.isFinite(before) || !Number.isFinite(after)) continue;
+                    const d = Math.round((after - before) * 10) / 10;
+                    if (Math.abs(d) < 1e-6) continue;
+                    deltas.push(`${labels[key]} ${d > 0 ? `+${d}` : String(d)}`);
+                  }
+                }
+                showNotification(
+                  deltas.length ? `Самочувствие: ${deltas.join(', ')}` : 'Самочувствие изменилось',
+                  'success',
+                );
               } else {
                 showNotification('Решение применено', 'success');
               }

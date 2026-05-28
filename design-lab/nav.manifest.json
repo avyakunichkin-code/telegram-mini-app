@@ -2,7 +2,7 @@
   "schema_version": 1,
   "title": "ТВОЙ ХОД — Design Lab",
   "subtitle": "Единая навигация по витринам, блокам и prod parity. Не ищите index.html по папкам вручную.",
-  "canon_sources": ["dashboard/canon.manifest.json"],
+  "canon_sources": ["dashboard/canon.manifest.json", "finance/canon.manifest.json"],
   "discover": {
     "enabled": true,
     "exclude_path_contains": ["parity-generated-page-round/blocks/"]
@@ -10,33 +10,11 @@
   "sections": [
     {
       "id": "dashboard-extra",
-      "title": "Dashboard — эксперименты и архив",
+      "title": "Сервис / сравнение",
       "items": [
         {
-          "label": "S5 галерея (legacy, не prod parity)",
-          "path": "dashboard/index.html",
-          "kind": "lab",
-          "status": "superseded"
-        },
-        {
-          "label": "Section headers (A–D)",
-          "path": "section-headers/index.html",
-          "kind": "lab"
-        },
-        {
-          "label": "Section header page-round (ручной, архив)",
-          "path": "dashboard/section-header-a-page-round/index.html",
-          "kind": "lab",
-          "status": "superseded"
-        },
-        {
-          "label": "Goal chain (лендинг / сравнение)",
-          "path": "dashboard/goal-chain-round/index.html",
-          "kind": "lab"
-        },
-        {
-          "label": "Goal path stepper",
-          "path": "dashboard/goal-path-stepper-round/index.html",
+          "label": "Сравнение baseline vs current (Dashboard + Финансы)",
+          "path": "compare-prod/index.html",
           "kind": "lab"
         },
         {
@@ -86,7 +64,6 @@
       "title": "Pre-game / старт",
       "items": [
         { "label": "Pre-game shell v2", "path": "pre-game-shell/index.html", "kind": "lab" },
-        { "label": "Pre-game playful v3", "path": "pre-game-playful-v3/index.html", "kind": "lab" },
         { "label": "Auth flow", "path": "auth-flow/index.html", "kind": "lab", "status": "approved" },
         { "label": "New game mode", "path": "new-game-mode/index.html", "kind": "lab", "status": "approved" },
         { "label": "Game templates", "path": "game-templates/index.html", "kind": "lab", "status": "approved" },

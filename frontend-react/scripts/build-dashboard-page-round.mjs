@@ -67,8 +67,36 @@ function patchBlockForEmbed(blockDirAbs) {
   let html = fs.readFileSync(indexPath, 'utf8')
   if (!/<base\s/i.test(html)) {
     html = html.replace(/<head(\s[^>]*)?>/i, (match) => `${match}\n    <base href="./" />`)
-    fs.writeFileSync(indexPath, html, 'utf8')
   }
+
+  // Add prod-like embed mode: hide lab chrome when `?embed=1` is present.
+  if (!/data-embed-style/i.test(html)) {
+    html = html.replace(
+      /<\/head>/i,
+      [
+        '    <style data-embed-style>',
+        '      html[data-embed="1"] .lab-header,',
+        '      html[data-embed="1"] .lab-round-note,',
+        '      html[data-embed="1"] .lab-variant-card__label,',
+        '      html[data-embed="1"] .lab-variant-card__idea,',
+        '      html[data-embed="1"] .lab-variant-grid > *:not(:first-child) { display: none !important; }',
+        '      html[data-embed="1"] .lab-main { padding: 0 !important; }',
+        '      html[data-embed="1"] body { padding: 0 !important; }',
+        '    </style>',
+        '    <script>',
+        '      (function(){',
+        "        try {",
+        "          var p = new URLSearchParams(location.search);",
+        "          if (p.get('embed') === '1') document.documentElement.setAttribute('data-embed','1');",
+        "        } catch (e) {}",
+        '      })();',
+        '    </script>',
+        '  </head>',
+      ].join('\n'),
+    )
+  }
+
+  fs.writeFileSync(indexPath, html, 'utf8')
 }
 
 function copyDir(srcAbs, dstAbs) {
@@ -120,7 +148,7 @@ function buildIndexHtml({ title, blocks }) {
             <div class="pgx-kicker">${safeLabel}</div>
             <a class="pgx-link" href="./blocks/${b.id}/index.html" target="_blank" rel="noreferrer">Открыть отдельно</a>
           </header>
-          <iframe class="pgx-frame" title="${safeLabel}" src="./blocks/${b.id}/index.html" style="height:${h}px"></iframe>
+          <iframe class="pgx-frame" title="${safeLabel}" src="./blocks/${b.id}/index.html?embed=1" style="height:${h}px"></iframe>
         </section>
       `.trim()
     })

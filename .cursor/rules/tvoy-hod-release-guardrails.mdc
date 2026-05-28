@@ -1,0 +1,49 @@
+---
+description: Pre-release checks: guardrails + design-lab parity
+alwaysApply: true
+---
+
+# Pre-release / выкатка — обязательные проверки
+
+Перед тем как «выкатываться» (релиз/деплой/мерж в ветку релиза) нужно прогонять guardrails и обновлять design-lab parity.
+
+## Обязательное (каждый раз)
+
+### 1) Guardrails
+
+Из `frontend-react/`:
+
+```bash
+npm run check:guardrails
+```
+
+Ожидаемо включает:
+- boundaries/quarantine
+- canon sync
+- `check:dashboard-canon`
+- `check:finance-canon`
+
+### 2) Design-lab parity + навигатор
+
+Из `frontend-react/`:
+
+```bash
+npm run design-lab:build
+```
+
+Это пересобирает:
+- `design-lab/dashboard/parity-generated-page-round/`
+- `design-lab/finance/parity-generated-page-round/`
+- `design-lab/index.html` (design-lab dashboard)
+
+## Опционально (когда нужно сравнение)
+
+Если нужно сравнить “как было” vs “как стало” (baseline vs current):
+
+```bash
+npm run design-lab:freeze-baseline
+```
+
+Открыть сравнение:
+- `design-lab/compare-prod/index.html`
+

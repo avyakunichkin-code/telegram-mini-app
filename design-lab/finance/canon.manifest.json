@@ -1,0 +1,70 @@
+{
+  "schema_version": 1,
+  "theme": "finance",
+  "page_parity": {
+    "name": "Финансы — page parity (MVP)",
+    "prod_entry": "frontend-react/src/components/FinancePremium.jsx",
+    "canonical_page_round": {
+      "path": "design-lab/finance/parity-generated-page-round/",
+      "status": "approved",
+      "notes": "Generated from manifest. Top: finance-insurance (page-ish). Then key blocks embedded as iframes."
+    }
+  },
+  "blocks": [
+    {
+      "id": "finance-page",
+      "kind": "page-block",
+      "prod_component": "FinancePremium",
+      "status": "approved",
+      "canonical_rounds": [
+        { "path": "design-lab/finance-insurance/", "status": "approved" }
+      ]
+    },
+    {
+      "id": "invest-forms",
+      "kind": "page-block",
+      "prod_component": "InvestProductForm",
+      "status": "approved",
+      "canonical_rounds": [
+        { "path": "design-lab/invest-forms/", "status": "approved" }
+      ]
+    },
+    {
+      "id": "asset-cards",
+      "kind": "page-block",
+      "prod_component": "Asset cards",
+      "status": "approved",
+      "canonical_rounds": [
+        { "path": "design-lab/asset-cards/", "status": "approved" }
+      ]
+    },
+    {
+      "id": "row-actions",
+      "kind": "page-block",
+      "prod_component": "Row actions",
+      "status": "approved",
+      "canonical_rounds": [
+        { "path": "design-lab/row-actions/", "status": "approved" }
+      ]
+    },
+    {
+      "id": "capital-page",
+      "kind": "page-block",
+      "prod_component": "Capital page",
+      "status": "approved",
+      "canonical_rounds": [
+        { "path": "design-lab/capital-page/", "status": "approved" }
+      ]
+    }
+  ],
+  "page_order_prod_components": [
+    "MqxTabHero",
+    "CapitalMonetkaGuidance",
+    "CapitalPeriodFlowsBlock",
+    "MqxCapitalSectionAccordion(title=\"Инвестиции\")",
+    "MqxCapitalSectionAccordion(title=\"Страховки\")",
+    "MqxCapitalSectionAccordion(title=\"Имущество\")",
+    "MqxCapitalSectionAccordion(title=\"Обязательства\")"
+  ]
+}
+

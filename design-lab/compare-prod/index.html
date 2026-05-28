@@ -1,0 +1,256 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Design-lab — сравнение baseline vs current</title>
+    <style>
+      :root { color-scheme: light dark; }
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        font-family: system-ui, "Segoe UI", Roboto, sans-serif;
+        background: #0f1115;
+        color: #f3f4f6;
+      }
+      .wrap { max-width: 1200px; margin: 0 auto; padding: 18px 14px 40px; }
+      h1 { margin: 0 0 10px; font-size: 18px; }
+      .sub { margin: 0 0 14px; color: #9ca3af; font-size: 13px; line-height: 1.4; }
+      .topbar {
+        position: sticky;
+        top: 0;
+        z-index: 5;
+        margin: 0 0 12px;
+        padding: 10px 12px;
+        border-radius: 14px;
+        border: 1px solid rgba(255,255,255,.10);
+        background: rgba(15,17,21,.82);
+        backdrop-filter: blur(10px);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+        flex-wrap: wrap;
+      }
+      .tabs { display: flex; gap: 8px; flex-wrap: wrap; }
+      .chip {
+        appearance: none;
+        border: 1px solid rgba(255,255,255,.14);
+        background: rgba(255,255,255,.06);
+        color: inherit;
+        padding: 6px 10px;
+        border-radius: 999px;
+        font-size: 12px;
+        text-decoration: none;
+        cursor: pointer;
+      }
+      .chip:hover { border-color: rgba(109,40,217,.55); background: rgba(109,40,217,.12); }
+      .tog { display: flex; align-items: center; gap: 8px; font-size: 12px; color: #cbd5e1; }
+      .tog input { transform: translateY(1px); }
+      .grid { display: grid; grid-template-columns: repeat(12, 1fr); gap: 12px; }
+      .card {
+        grid-column: span 12;
+        border-radius: 14px;
+        border: 1px solid rgba(255,255,255,.10);
+        background: rgba(255,255,255,.04);
+        overflow: hidden;
+      }
+      .head {
+        padding: 10px 12px;
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        gap: 10px;
+        border-bottom: 1px solid rgba(255,255,255,.08);
+        background: rgba(0,0,0,.18);
+      }
+      .k { font-size: 12px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; opacity: .9; }
+      .links { display: flex; gap: 8px; flex-wrap: wrap; justify-content: flex-end; }
+      .btn {
+        appearance: none;
+        border: 1px solid rgba(255,255,255,.14);
+        background: rgba(255,255,255,.06);
+        color: inherit;
+        padding: 6px 10px;
+        border-radius: 10px;
+        font-size: 12px;
+        text-decoration: none;
+      }
+      .btn:hover { border-color: rgba(109,40,217,.55); background: rgba(109,40,217,.12); }
+      .cols { display: grid; grid-template-columns: repeat(12, 1fr); gap: 0; }
+      .col { grid-column: span 6; border-right: 1px solid rgba(255,255,255,.06); }
+      .col:last-child { border-right: none; }
+      .col__title { padding: 8px 12px; font-size: 12px; color: #9ca3af; border-bottom: 1px solid rgba(255,255,255,.06); }
+      iframe { width: 100%; border: 0; height: 780px; background: transparent; display: block; }
+      .empty { padding: 16px 12px; color: #9ca3af; font-size: 13px; }
+      @media (max-width: 980px) {
+        .col { grid-column: span 12; border-right: none; border-bottom: 1px solid rgba(255,255,255,.06); }
+        iframe { height: 820px; }
+      }
+      code { font-family: ui-monospace, Consolas, monospace; font-size: 12px; }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <h1>Сравнение: baseline (условный «prod») vs current</h1>
+      <p class="sub">
+        Baseline создаётся командой <code>cd frontend-react && npm run design-lab:freeze-baseline</code>.
+        Это фиксирует текущие generated parity страницы в <code>design-lab/_baseline/</code>.
+      </p>
+
+      <div class="topbar">
+        <div class="tabs">
+          <a class="chip" href="#dashboard">Dashboard</a>
+          <a class="chip" href="#finance">Финансы</a>
+        </div>
+        <label class="tog">
+          <input id="syncScroll" type="checkbox" checked />
+          синхронный скролл (baseline ↔ current)
+        </label>
+      </div>
+
+      <div class="grid">
+        <div class="card" data-page="dashboard" id="dashboard">
+          <div class="head">
+            <div class="k">Dashboard</div>
+            <div class="links">
+              <button class="btn" type="button" data-jump="dashboard" data-to="top">К началу</button>
+              <a class="btn" href="../dashboard/parity-generated-page-round/index.html" target="_blank" rel="noreferrer">Открыть current</a>
+              <a class="btn" href="../_baseline/dashboard/index.html" target="_blank" rel="noreferrer">Открыть baseline</a>
+            </div>
+          </div>
+          <div class="cols">
+            <div class="col">
+              <div class="col__title">baseline</div>
+              <iframe data-frame="dashboard-baseline" src="../_baseline/dashboard/index.html"></iframe>
+            </div>
+            <div class="col">
+              <div class="col__title">current</div>
+              <iframe data-frame="dashboard-current" src="../dashboard/parity-generated-page-round/index.html"></iframe>
+            </div>
+          </div>
+        </div>
+
+        <div class="card" data-page="finance" id="finance">
+          <div class="head">
+            <div class="k">Финансы</div>
+            <div class="links">
+              <button class="btn" type="button" data-jump="finance" data-to="top">К началу</button>
+              <a class="btn" href="../finance/parity-generated-page-round/index.html" target="_blank" rel="noreferrer">Открыть current</a>
+              <a class="btn" href="../_baseline/finance/index.html" target="_blank" rel="noreferrer">Открыть baseline</a>
+            </div>
+          </div>
+          <div class="cols">
+            <div class="col">
+              <div class="col__title">baseline</div>
+              <iframe data-frame="finance-baseline" src="../_baseline/finance/index.html"></iframe>
+            </div>
+            <div class="col">
+              <div class="col__title">current</div>
+              <iframe data-frame="finance-current" src="../finance/parity-generated-page-round/index.html"></iframe>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="head">
+            <div class="k">Примечание</div>
+            <div class="links"></div>
+          </div>
+          <div class="empty">
+            Если baseline ещё не создан, ссылки в колонке baseline будут 404 — просто выполните freeze-baseline.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const syncToggle = document.getElementById('syncScroll');
+
+      function getScrollElement(doc) {
+        // Most rounds scroll in <body>, but be defensive.
+        return doc.scrollingElement || doc.documentElement || doc.body;
+      }
+
+      function setScrollTopSafe(frame, top) {
+        try {
+          const doc = frame.contentWindow?.document;
+          if (!doc) return;
+          const el = getScrollElement(doc);
+          el.scrollTop = top;
+        } catch (e) {}
+      }
+
+      function readScrollTopSafe(frame) {
+        try {
+          const doc = frame.contentWindow?.document;
+          if (!doc) return null;
+          const el = getScrollElement(doc);
+          return el.scrollTop || 0;
+        } catch (e) {
+          return null;
+        }
+      }
+
+      function wirePair(baselineFrame, currentFrame) {
+        let lock = false;
+
+        function onBaselineScroll() {
+          if (!syncToggle.checked) return;
+          if (lock) return;
+          const top = readScrollTopSafe(baselineFrame);
+          if (top == null) return;
+          lock = true;
+          setScrollTopSafe(currentFrame, top);
+          setTimeout(() => { lock = false; }, 0);
+        }
+
+        function onCurrentScroll() {
+          if (!syncToggle.checked) return;
+          if (lock) return;
+          const top = readScrollTopSafe(currentFrame);
+          if (top == null) return;
+          lock = true;
+          setScrollTopSafe(baselineFrame, top);
+          setTimeout(() => { lock = false; }, 0);
+        }
+
+        function attach() {
+          try {
+            const bd = baselineFrame.contentWindow?.document;
+            const cd = currentFrame.contentWindow?.document;
+            if (!bd || !cd) return;
+            bd.addEventListener('scroll', onBaselineScroll, { passive: true });
+            cd.addEventListener('scroll', onCurrentScroll, { passive: true });
+          } catch (e) {}
+        }
+
+        baselineFrame.addEventListener('load', attach);
+        currentFrame.addEventListener('load', attach);
+        attach();
+      }
+
+      const dashBase = document.querySelector('iframe[data-frame=\"dashboard-baseline\"]');
+      const dashCur = document.querySelector('iframe[data-frame=\"dashboard-current\"]');
+      const finBase = document.querySelector('iframe[data-frame=\"finance-baseline\"]');
+      const finCur = document.querySelector('iframe[data-frame=\"finance-current\"]');
+
+      if (dashBase && dashCur) wirePair(dashBase, dashCur);
+      if (finBase && finCur) wirePair(finBase, finCur);
+
+      document.addEventListener('click', (e) => {
+        const btn = e.target.closest && e.target.closest('[data-jump]');
+        if (!btn) return;
+        const page = btn.getAttribute('data-jump');
+        const to = btn.getAttribute('data-to');
+        if (to !== 'top') return;
+
+        const base = document.querySelector(`iframe[data-frame=\"${page}-baseline\"]`);
+        const cur = document.querySelector(`iframe[data-frame=\"${page}-current\"]`);
+        if (base) setScrollTopSafe(base, 0);
+        if (cur) setScrollTopSafe(cur, 0);
+      });
+    </script>
+  </body>
+</html>
+

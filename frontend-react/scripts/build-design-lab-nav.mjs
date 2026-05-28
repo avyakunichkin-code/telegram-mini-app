@@ -14,25 +14,11 @@ function stripDesignLabPrefix(p) {
   return norm.startsWith('design-lab/') ? norm.slice('design-lab/'.length) : norm
 }
 
-function kindLabel(kind) {
-  switch (kind) {
-    case 'page-parity':
-      return 'PAGE'
-    case 'block':
-      return 'BLOCK'
-    case 'lab':
-      return 'LAB'
-    case 'doc':
-      return 'DOC'
-    default:
-      return kind?.toUpperCase() ?? 'LINK'
-  }
-}
-
-function statusBadge(status) {
-  if (!status || status === 'approved') return status === 'approved' ? '★' : ''
-  if (status === 'superseded') return 'архив'
-  return status
+function themeTitle(theme) {
+  if (!theme) return 'Канон'
+  if (theme === 'dashboard') return 'Dashboard'
+  if (theme === 'finance') return 'Финансы'
+  return theme
 }
 
 function expandCanonSource(repoRoot, designLabRoot, manifestRel) {
@@ -42,6 +28,7 @@ function expandCanonSource(repoRoot, designLabRoot, manifestRel) {
   const canon = readJson(abs)
   const theme = canon.theme ?? path.dirname(manifestRel)
   const items = []
+  const sectionTitle = `${themeTitle(theme)} — канон (prod parity)`
 
   const pageRound = canon.page_parity?.canonical_page_round
   if (pageRound?.path) {
@@ -49,7 +36,7 @@ function expandCanonSource(repoRoot, designLabRoot, manifestRel) {
     items.push({
       id: `${theme}-page-parity`,
       sectionId: `${theme}-canon`,
-      sectionTitle: `Dashboard — канон (prod parity)`,
+      sectionTitle,
       label: canon.page_parity?.name ?? 'Страница целиком (generated parity)',
       href: `${href.replace(/\/$/, '')}/index.html`,
       kind: 'page-parity',
@@ -67,7 +54,7 @@ function expandCanonSource(repoRoot, designLabRoot, manifestRel) {
       items.push({
         id: `${theme}-block-${block.id}-${href}`,
         sectionId: `${theme}-canon`,
-        sectionTitle: `Dashboard — канон (prod parity)`,
+        sectionTitle,
         label: `${block.prod_component ?? block.id} — ${path.basename(href.replace(/\/$/, ''))}`,
         href: `${href.replace(/\/$/, '')}/index.html`,
         kind: 'block',
@@ -151,6 +138,15 @@ function dedupeItems(items) {
   return out
 }
 
+function escapeHtml(s) {
+  return String(s)
+    .replaceAll('&', '&amp;')
+    .replaceAll('<', '&lt;')
+    .replaceAll('>', '&gt;')
+    .replaceAll('"', '&quot;')
+    .replaceAll("'", '&#039;')
+}
+
 function buildHtml({ title, subtitle, items }) {
   const payload = JSON.stringify(items)
   return `<!doctype html>
@@ -169,7 +165,7 @@ function buildHtml({ title, subtitle, items }) {
         color: #f3f4f6;
         line-height: 1.45;
       }
-      .wrap { max-width: 920px; margin: 0 auto; padding: 20px 16px 48px; }
+      .wrap { max-width: 980px; margin: 0 auto; padding: 20px 16px 48px; }
       h1 { margin: 0 0 8px; font-size: 22px; }
       .sub { margin: 0 0 16px; color: #9ca3af; font-size: 14px; }
       .toolbar {
@@ -201,6 +197,47 @@ function buildHtml({ title, subtitle, items }) {
       .pill--block { color: #bae6fd; border-color: rgba(14,165,233,.35); }
       .pill--lab { color: #e9d5ff; border-color: rgba(168,85,247,.35); }
       .pill--doc { color: #fde68a; border-color: rgba(245,158,11,.35); }
+      .quick {
+        display: grid;
+        grid-template-columns: repeat(12, 1fr);
+        gap: 10px;
+        margin: 14px 0 18px;
+      }
+      .quick__card {
+        grid-column: span 6;
+        border-radius: 14px;
+        border: 1px solid rgba(255,255,255,.10);
+        background: rgba(255,255,255,.04);
+        overflow: hidden;
+      }
+      .quick__head {
+        padding: 10px 12px;
+        display: flex;
+        align-items: baseline;
+        justify-content: space-between;
+        gap: 10px;
+        border-bottom: 1px solid rgba(255,255,255,.08);
+        background: rgba(0,0,0,.18);
+      }
+      .quick__title { font-size: 13px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; opacity: .92; }
+      .quick__actions { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; justify-content: flex-end; }
+      .btn {
+        appearance: none;
+        border: 1px solid rgba(255,255,255,.14);
+        background: rgba(255,255,255,.06);
+        color: inherit;
+        padding: 6px 10px;
+        border-radius: 10px;
+        font-size: 12px;
+        text-decoration: none;
+        cursor: pointer;
+      }
+      .btn:hover { border-color: rgba(109,40,217,.55); background: rgba(109,40,217,.12); }
+      .quick__frame { display: block; width: 100%; border: 0; background: transparent; height: 440px; }
+      @media (max-width: 860px) {
+        .quick__card { grid-column: span 12; }
+        .quick__frame { height: 520px; }
+      }
       .section { margin: 18px 0 22px; }
       .section h2 {
         margin: 0 0 10px;
@@ -238,14 +275,27 @@ function buildHtml({ title, subtitle, items }) {
       <p class="sub">${subtitle}</p>
       <div class="toolbar">
         <input class="search" id="q" type="search" placeholder="Поиск: hero, needs, events, parity…" autofocus />
-        <span class="pill">npm run design-lab:build-nav</span>
+        <button class="btn" type="button" data-quick-filter="page">Page parity</button>
+        <button class="btn" type="button" data-quick-filter="canon">Канон blocks</button>
+        <button class="btn" type="button" data-quick-filter="all">Все витрины</button>
+        <span class="pill">npm run design-lab:build</span>
       </div>
+      <div id="quick"></div>
       <div id="root"></div>
       <p class="gen">Сгенерировано <code>frontend-react/scripts/build-design-lab-nav.mjs</code> · источник <code>design-lab/nav.manifest.json</code></p>
     </div>
     <script>
+      function escapeHtml(s) {
+        return String(s)
+          .replaceAll('&', '&amp;')
+          .replaceAll('<', '&lt;')
+          .replaceAll('>', '&gt;')
+          .replaceAll('"', '&quot;')
+          .replaceAll("'", '&#039;');
+      }
       const ITEMS = ${payload};
       const root = document.getElementById('root');
+      const quick = document.getElementById('quick');
       const input = document.getElementById('q');
 
       function groupBySection(items) {
@@ -256,6 +306,43 @@ function buildHtml({ title, subtitle, items }) {
           map.get(key).items.push(it);
         }
         return [...map.values()];
+      }
+
+      function firstPageParity(themeHint) {
+        const pick = ITEMS.find(it =>
+          it.kind === 'page-parity' &&
+          (it.sectionId || '').includes(themeHint)
+        );
+        return pick || null;
+      }
+
+      function renderQuick() {
+        const dash = firstPageParity('dashboard');
+        const fin = firstPageParity('finance');
+
+        const mkCard = (title, item) => {
+          if (!item) {
+            return '<div class=\"quick__card\"><div class=\"quick__head\"><div class=\"quick__title\">' + title + '</div><div class=\"quick__actions\"></div></div><div class=\"empty\">Нет ссылки в каноне</div></div>';
+          }
+          return '' +
+            '<div class=\"quick__card\">' +
+              '<div class=\"quick__head\">' +
+                '<div class=\"quick__title\">' + title + '</div>' +
+                '<div class=\"quick__actions\">' +
+                  '<span class=\"pill pill--page-parity\">PAGE</span>' +
+                  '<a class=\"btn\" href=\"./' + item.href + '\" target=\"_blank\" rel=\"noreferrer\">Открыть</a>' +
+                  '<button class=\"btn\" type=\"button\" data-set-q=\"' + escapeHtml(item.sectionTitle) + '\">Фильтр</button>' +
+                '</div>' +
+              '</div>' +
+              '<iframe class=\"quick__frame\" title=\"' + escapeHtml(title) + '\" src=\"./' + item.href + '\"></iframe>' +
+            '</div>';
+        };
+
+        quick.innerHTML =
+          '<div class=\"quick\">' +
+            mkCard('Dashboard — default', dash) +
+            mkCard('Финансы — default', fin) +
+          '</div>';
       }
 
       function render(items) {
@@ -287,7 +374,27 @@ function buildHtml({ title, subtitle, items }) {
         render(hit);
       }
 
+      document.addEventListener('click', (e) => {
+        const btn = e.target && e.target.closest && e.target.closest('[data-set-q]');
+        if (btn) {
+          input.value = btn.getAttribute('data-set-q') || '';
+          filter();
+          input.focus();
+          return;
+        }
+        const f = e.target && e.target.closest && e.target.closest('[data-quick-filter]');
+        if (f) {
+          const kind = f.getAttribute('data-quick-filter');
+          if (kind === 'page') input.value = 'page parity';
+          else if (kind === 'canon') input.value = 'канон';
+          else input.value = '';
+          filter();
+          input.focus();
+        }
+      });
+
       input.addEventListener('input', filter);
+      renderQuick();
       render(ITEMS);
     </script>
   </body>
@@ -343,10 +450,22 @@ function main() {
   })
 
   fs.writeFileSync(outIndex, html, 'utf8')
-  // directoryListing must stay default (true) at hub root — otherwise GET / won't serve index.html.
+  // Make hub root always render `index.html` (avoid directory listing).
+  // Filesystem still has precedence for static assets.
   fs.writeFileSync(
     path.join(designLabRoot, 'serve.json'),
-    `${JSON.stringify({ cleanUrls: false }, null, 2)}\n`,
+    `${JSON.stringify(
+      {
+        cleanUrls: false,
+        directoryListing: false,
+        rewrites: [
+          { source: '/', destination: '/index.html' },
+          { source: '/**', destination: '/index.html' },
+        ],
+      },
+      null,
+      2,
+    )}\n`,
     'utf8',
   )
 

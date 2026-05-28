@@ -1,0 +1,625 @@
+:root {
+  --mq-violet: #6d28d9;
+  --mq-emerald: #059669;
+  --mq-danger: #dc2626;
+  --mq-ink: #0f1115;
+  --mq-line: #e5e7eb;
+  --mq-mist: #f5f6f8;
+  --mq-slate: #6b7280;
+  --mq-radius: 18px;
+  --mq-font: 'Inter', system-ui, 'Segoe UI', Roboto, sans-serif;
+  --surface: #fff;
+  --surface-2: #f9fafb;
+  --text: #0f1115;
+  --text-muted: #6b7280;
+  --glass: rgba(255, 255, 255, 0.72);
+  --glass-border: rgba(15, 17, 21, 0.08);
+}
+
+[data-theme='dark'] {
+  --surface: #1e1f26;
+  --surface-2: #16171d;
+  --text: #f3f4f6;
+  --text-muted: #9ca3af;
+  --glass: rgba(30, 31, 38, 0.85);
+  --glass-border: rgba(255, 255, 255, 0.08);
+  --mq-line: #2e303a;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: var(--mq-font);
+  font-size: 15px;
+  line-height: 1.45;
+  color: var(--text);
+  background: var(--mq-mist);
+}
+
+[data-theme='dark'] body {
+  background: #0f1115;
+}
+
+.lab-header {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  padding: 14px 20px;
+  background: rgba(245, 246, 248, 0.92);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--glass-border);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+[data-theme='dark'] .lab-header {
+  background: rgba(15, 17, 21, 0.92);
+}
+
+.lab-header h1 {
+  margin: 0;
+  font-size: 1.125rem;
+  font-weight: 700;
+}
+
+.lab-header p {
+  margin: 4px 0 0;
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.lab-theme {
+  display: flex;
+  gap: 6px;
+  padding: 3px;
+  border-radius: 999px;
+  background: var(--surface);
+  border: 1px solid var(--glass-border);
+}
+
+.lab-theme button {
+  border: 0;
+  background: transparent;
+  font: inherit;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 6px 12px;
+  border-radius: 999px;
+  cursor: pointer;
+  color: var(--text-muted);
+}
+
+.lab-theme button.is-active {
+  background: var(--mq-violet);
+  color: #fff;
+}
+
+.lab-wrap {
+  max-width: 480px;
+  margin: 0 auto;
+  padding: 20px 16px 48px;
+}
+
+.lab-section {
+  margin-bottom: 28px;
+}
+
+.lab-section__label {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.lab-section__id {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--mq-violet);
+}
+
+.lab-section__title {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.lab-section__note {
+  margin: 0 0 10px;
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+/* —— Card shell (MQX-like) —— */
+.mq-card {
+  padding: 14px;
+  border-radius: var(--mq-radius);
+  border: 1px solid var(--glass-border);
+  background: var(--glass);
+  box-shadow: 0 8px 24px rgba(15, 17, 21, 0.06);
+}
+
+.mq-card__head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.mq-card__kicker {
+  font-size: 10px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: rgba(109, 40, 217, 0.85);
+}
+
+.mq-card__title {
+  margin-top: 4px;
+  font-size: 16px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+.mq-card__meta-text {
+  margin-top: 8px;
+  font-size: 12px;
+  line-height: 1.45;
+  color: var(--text-muted);
+}
+
+.mq-card__add {
+  flex-shrink: 0;
+  width: 44px;
+  height: 44px;
+  border: 0;
+  border-radius: 14px;
+  background: var(--mq-violet);
+  color: #fff;
+  font-size: 22px;
+  font-weight: 600;
+  cursor: default;
+}
+
+/* —— Icon frame primitives —— */
+.mq-metric-icon {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 12px;
+  border: 1px solid var(--glass-border);
+  background: var(--surface-2);
+  color: var(--text-muted);
+}
+
+.mq-metric-icon svg {
+  width: 18px;
+  height: 18px;
+}
+
+.mq-metric-icon--coin {
+  color: #7c3aed;
+  background: rgba(109, 40, 217, 0.1);
+  border-color: rgba(109, 40, 217, 0.22);
+}
+
+.mq-metric-icon--down {
+  color: var(--mq-danger);
+  background: rgba(220, 38, 38, 0.1);
+  border-color: rgba(220, 38, 38, 0.25);
+}
+
+.mq-metric-icon--up {
+  color: var(--mq-emerald);
+  background: rgba(5, 150, 105, 0.12);
+  border-color: rgba(5, 150, 105, 0.28);
+}
+
+.mq-metric-icon--sm {
+  width: 30px;
+  height: 30px;
+  border-radius: 10px;
+}
+
+.mq-metric-icon--sm svg {
+  width: 15px;
+  height: 15px;
+}
+
+/* Variant A — icon tiles */
+.mq-metrics-row {
+  display: flex;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.mq-metric-tile {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 4px;
+  border-radius: 14px;
+  border: 1px solid var(--glass-border);
+  background: var(--surface-2);
+}
+
+.mq-metric-tile__value {
+  font-size: 11px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  text-align: center;
+  line-height: 1.2;
+}
+
+.mq-metric-tile__hint {
+  font-size: 9px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+/* Variant B — compact strip */
+.mq-metrics-strip {
+  display: flex;
+  gap: 6px;
+  margin-top: 10px;
+  flex-wrap: wrap;
+}
+
+.mq-metric-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 8px 4px 4px;
+  border-radius: 999px;
+  border: 1px solid var(--glass-border);
+  background: var(--surface-2);
+  font-size: 11px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Variant C — rows */
+.mq-metrics-list {
+  margin-top: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.mq-metric-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.mq-metric-row__body {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.mq-metric-row__label {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.mq-metric-row__value {
+  font-size: 13px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Variant D — hero value */
+.mq-hero-metric {
+  margin-top: 10px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.mq-hero-metric__value {
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  font-variant-numeric: tabular-nums;
+}
+
+.mq-hero-metric__chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 10px;
+}
+
+/* Variant E — accent bar */
+.mq-card--accent {
+  display: grid;
+  grid-template-columns: 4px 1fr auto;
+  gap: 12px;
+  align-items: start;
+  padding-left: 12px;
+}
+
+.mq-card__accent {
+  align-self: stretch;
+  border-radius: 4px;
+  background: linear-gradient(180deg, var(--mq-violet), var(--mq-emerald));
+}
+
+.mq-metrics-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.mq-mini-metric {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px;
+  border-radius: 12px;
+  background: var(--surface-2);
+  border: 1px solid var(--glass-border);
+}
+
+.mq-mini-metric__text {
+  min-width: 0;
+}
+
+.mq-mini-metric__label {
+  font-size: 10px;
+  color: var(--text-muted);
+}
+
+.mq-mini-metric__value {
+  font-size: 12px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Variant F — 2x2 + net */
+.mq-metrics-2x2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.mq-cell-metric {
+  padding: 10px;
+  border-radius: 14px;
+  border: 1px solid var(--glass-border);
+  background: var(--surface-2);
+  text-align: center;
+}
+
+.mq-cell-metric .mq-metric-icon {
+  margin: 0 auto 6px;
+}
+
+.mq-cell-metric__value {
+  font-size: 12px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.mq-cell-metric--net {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  background: rgba(5, 150, 105, 0.08);
+  border-color: rgba(5, 150, 105, 0.22);
+}
+
+.mq-cell-metric--net .mq-metric-icon {
+  background: rgba(5, 150, 105, 0.15);
+}
+
+.mq-val--pos {
+  color: var(--mq-emerald);
+}
+
+.mq-val--neg {
+  color: var(--mq-danger);
+}
+
+/* —— Series 2: flat inline metrics (G–K) —— */
+
+.lab-divider {
+  margin: 32px 0 20px;
+  padding-top: 20px;
+  border-top: 2px dashed var(--mq-violet);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--mq-violet);
+  line-height: 1.45;
+}
+
+.lab-section--featured .lab-section__id {
+  color: #b45309;
+}
+
+.mq-card--flat .mq-mini-metric,
+.mq-card--flat .mq-metric-tile,
+.mq-card--flat .mq-cell-metric,
+.mq-card--flat .mq-metric-chip {
+  background: transparent;
+  border-color: transparent;
+}
+
+.mq-card--accent.mq-card--flat {
+  align-items: stretch;
+}
+
+.mq-card__accent-body {
+  flex: 1;
+  min-width: 0;
+}
+
+.mq-metric-icon--xs {
+  width: 28px;
+  height: 28px;
+  border-radius: 9px;
+}
+
+.mq-metric-icon--xs svg {
+  width: 14px;
+  height: 14px;
+}
+
+.mq-metric-icon--flow {
+  color: var(--mq-emerald);
+  background: rgba(5, 150, 105, 0.1);
+  border-color: rgba(5, 150, 105, 0.22);
+}
+
+.mq-metrics-inline {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px 14px;
+  margin-top: 10px;
+}
+
+.mq-metrics-inline--spread {
+  justify-content: space-between;
+  gap: 8px 6px;
+}
+
+.mq-metrics-inline--dots .mq-inline-metric:not(:last-child)::after {
+  content: '·';
+  margin-left: 14px;
+  color: var(--text-muted);
+  font-weight: 700;
+  pointer-events: none;
+}
+
+.mq-inline-metric {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  cursor: default;
+  outline: none;
+}
+
+.mq-inline-metric__val {
+  font-size: 12px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.mq-inline-metric[data-tip]::before {
+  content: attr(data-tip);
+  position: absolute;
+  left: 50%;
+  bottom: calc(100% + 8px);
+  transform: translateX(-50%) translateY(4px);
+  padding: 5px 8px;
+  border-radius: 8px;
+  background: var(--mq-ink);
+  color: #f9fafb;
+  font-size: 10px;
+  font-weight: 600;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.15s ease, transform 0.15s ease;
+  z-index: 5;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+}
+
+.mq-inline-metric[data-tip]:hover::before,
+.mq-inline-metric[data-tip]:focus-visible::before {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+.mq-metric-glyph {
+  display: grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  flex-shrink: 0;
+}
+
+.mq-metric-glyph svg {
+  width: 16px;
+  height: 16px;
+}
+
+.mq-metric-glyph--coin {
+  color: #7c3aed;
+}
+
+.mq-metric-glyph--down {
+  color: var(--mq-danger);
+}
+
+.mq-metric-glyph--up {
+  color: var(--mq-emerald);
+}
+
+.mq-metrics-rows-compact {
+  margin-top: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.mq-metric-row-compact {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  position: relative;
+  outline: none;
+}
+
+.mq-metric-row-compact__val {
+  font-size: 13px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.mq-metric-row-compact[data-tip]::before {
+  content: attr(data-tip);
+  position: absolute;
+  left: 0;
+  bottom: calc(100% + 6px);
+  padding: 4px 8px;
+  border-radius: 8px;
+  background: var(--mq-ink);
+  color: #f9fafb;
+  font-size: 10px;
+  font-weight: 600;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.15s ease;
+  z-index: 5;
+}
+
+.mq-metric-row-compact[data-tip]:hover::before,
+.mq-metric-row-compact[data-tip]:focus-visible::before {
+  opacity: 1;
+}

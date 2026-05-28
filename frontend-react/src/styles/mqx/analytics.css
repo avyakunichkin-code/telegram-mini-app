@@ -762,6 +762,12 @@
   box-shadow: 0 6px 20px color-mix(in srgb, var(--mq-violet, #7c3aed) 32%, transparent);
 }
 
+/* Bottom-sheets (needs/treat-self) должны быть выше хвостика итогов периода. */
+.mqx-sheet-root ~ .mqx-pclose-tail,
+.mqx-sheet-root .mqx-pclose-tail {
+  display: none;
+}
+
 .mqx-pclose-tail__dot {
   width: 6px;
   height: 6px;
