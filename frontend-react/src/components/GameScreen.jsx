@@ -290,6 +290,7 @@ export function GameScreen({ onLogout, onNewGame, onLoadGame }) {
             events={pendingEvents}
             onResolved={async (eventId, choiceId) => {
               const res = await API.chooseEvent(eventId, choiceId);
+              const needsAfter = res?.needs_after;
               const claim = res?.insurance_claim;
               if (claim?.applied && Number(claim.payout_amount) > 0) {
                 const title = claim.policy_title ? `${claim.policy_title}: ` : '';
@@ -297,6 +298,8 @@ export function GameScreen({ onLogout, onNewGame, onLoadGame }) {
                   `${title}выплата +${Math.round(Number(claim.payout_amount))} ₽`,
                   'success',
                 );
+              } else if (needsAfter && typeof needsAfter === 'object') {
+                showNotification('Самочувствие изменилось', 'success');
               } else {
                 showNotification('Решение применено', 'success');
               }

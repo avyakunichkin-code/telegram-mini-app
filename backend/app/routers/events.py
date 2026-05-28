@@ -915,6 +915,8 @@ async def choose_event(
             raise HTTPException(status_code=400, detail=str(e) or "Покупка актива недоступна") from e
 
     needs_delta_spec = effects.get("needs_delta")
+    needs_before = None
+    needs_after = None
     if needs_delta_spec is not None:
         try:
             delta = parse_needs_delta(needs_delta_spec)
@@ -923,7 +925,8 @@ async def choose_event(
         if any(abs(v) >= 1e-6 for v in delta.values()):
             cfg = _needs_config_for_profile(db, profile)
             if cfg:
-                apply_needs_delta(profile, delta)
+                needs_before = needs_values_from_profile(profile)
+                needs_after = apply_needs_delta(profile, delta)
 
     if def_key == "mq11_used_car_deadline":
         chain = get_active_chain(db, profile.id, USED_CAR_CHAIN_KEY)
@@ -937,6 +940,9 @@ async def choose_event(
     db.commit()
 
     response = {"status": "success"}
+    if needs_after is not None:
+        response["needs_before"] = needs_before
+        response["needs_after"] = needs_after
     if insurance_claim_result:
         response["insurance_claim"] = insurance_claim_result
     if asset_created:
