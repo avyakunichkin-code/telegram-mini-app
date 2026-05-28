@@ -9,6 +9,8 @@ cd design-lab/dashboard/parity-generated-page-round
 npx serve .
 ```
 
+В папке есть `serve.json` (`cleanUrls: false`, `directoryListing: false`). Iframe грузят `blocks/*/index.html`.
+
 Пересборка:
 
 ```bash

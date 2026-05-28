@@ -32,6 +32,7 @@ export function SafetyFundActionForm({
   onSubmit,
   submitLabel,
   busy = false,
+  autoFocus = false,
 }) {
   const productId = mode === 'in' ? 'safety-in' : 'safety-out';
   const canSubmit = amount > 0 && amount <= maxAmount && !busy;
@@ -45,6 +46,7 @@ export function SafetyFundActionForm({
           amount={amount}
           maxAmount={maxAmount}
           onChange={onAmountChange}
+          autoFocus={autoFocus}
           compact
           rateSlot={<SafetyFundBalanceChip value={chipValue} hint={chipHint} variant={productId} />}
           maxHint={

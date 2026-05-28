@@ -4,6 +4,24 @@
 
 Правила: [`frontend-react/src/components/mqx/DESIGN_WORKFLOW.md`](../frontend-react/src/components/mqx/DESIGN_WORKFLOW.md).
 
+## Навигатор (не ищите файлы по папкам)
+
+```bash
+cd design-lab
+npx serve .
+```
+
+Откройте **`http://localhost:3000/`** — сгенерированный хаб `index.html` (поиск, Dashboard parity, все round’ы).
+
+Пересборка хаба и dashboard parity:
+
+```bash
+cd frontend-react
+npm run design-lab:build
+```
+
+Конфиг ссылок: [`nav.manifest.json`](nav.manifest.json) · канон дашборда: [`dashboard/canon.manifest.json`](dashboard/canon.manifest.json).
+
 ## Папки
 
 | Папка | Статус | Содержание |

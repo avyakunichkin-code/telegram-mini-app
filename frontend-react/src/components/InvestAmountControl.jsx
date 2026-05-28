@@ -1,3 +1,4 @@
+import { useEffect, useRef } from 'react';
 import { MoneyText } from './MoneyText';
 import { clampInvestAmount, investAmountStep } from '../constants/investProducts';
 
@@ -15,11 +16,21 @@ export function InvestAmountControl({
   rateSlot = null,
   maxHint = null,
   emptyHint = 'Нет средств на счёте',
+  autoFocus = false,
 }) {
+  const inputRef = useRef(null);
   const max = Math.max(0, Math.floor(Number(maxAmount) || 0));
   const value = clampInvestAmount(amount, max);
   const step = investAmountStep(max);
   const disabled = max <= 0;
+
+  useEffect(() => {
+    if (!autoFocus || disabled) return undefined;
+    const timer = window.setTimeout(() => {
+      inputRef.current?.focus({ preventScroll: true });
+    }, 180);
+    return () => window.clearTimeout(timer);
+  }, [autoFocus, disabled]);
 
   const setValue = (next) => {
     onChange(clampInvestAmount(next, max));
@@ -28,6 +39,7 @@ export function InvestAmountControl({
   const field = (
     <div className="mqx-invest-amount__field">
       <input
+        ref={inputRef}
         id={id}
         type="text"
         inputMode="numeric"

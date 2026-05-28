@@ -1,0 +1,115 @@
+{
+  "schema_version": 1,
+  "title": "ТВОЙ ХОД — Design Lab",
+  "subtitle": "Единая навигация по витринам, блокам и prod parity. Не ищите index.html по папкам вручную.",
+  "canon_sources": ["dashboard/canon.manifest.json"],
+  "discover": {
+    "enabled": true,
+    "exclude_path_contains": ["parity-generated-page-round/blocks/"]
+  },
+  "sections": [
+    {
+      "id": "dashboard-extra",
+      "title": "Dashboard — эксперименты и архив",
+      "items": [
+        {
+          "label": "S5 галерея (legacy, не prod parity)",
+          "path": "dashboard/index.html",
+          "kind": "lab",
+          "status": "superseded"
+        },
+        {
+          "label": "Section headers (A–D)",
+          "path": "section-headers/index.html",
+          "kind": "lab"
+        },
+        {
+          "label": "Section header page-round (ручной, архив)",
+          "path": "dashboard/section-header-a-page-round/index.html",
+          "kind": "lab",
+          "status": "superseded"
+        },
+        {
+          "label": "Goal chain (лендинг / сравнение)",
+          "path": "dashboard/goal-chain-round/index.html",
+          "kind": "lab"
+        },
+        {
+          "label": "Goal path stepper",
+          "path": "dashboard/goal-path-stepper-round/index.html",
+          "kind": "lab"
+        },
+        {
+          "label": "Type scale MQX",
+          "path": "type-scale-round/index.html",
+          "kind": "lab"
+        }
+      ]
+    },
+    {
+      "id": "character-needs",
+      "title": "Потребности (character-needs)",
+      "items": [
+        {
+          "label": "Dashboard needs (Z-NEEDS)",
+          "path": "character-needs/dashboard-needs-round/index.html",
+          "kind": "lab",
+          "status": "approved"
+        }
+      ]
+    },
+    {
+      "id": "events",
+      "title": "События",
+      "items": [
+        { "label": "Events — обзор", "path": "events/index.html", "kind": "lab" },
+        { "label": "Overlay O1", "path": "events/overlay-round/index.html", "kind": "lab", "status": "approved" },
+        { "label": "Layout", "path": "events/layout-round/index.html", "kind": "lab" },
+        { "label": "Domains", "path": "events/domains-round/index.html", "kind": "lab" }
+      ]
+    },
+    {
+      "id": "finance-capital",
+      "title": "Финансы / капитал",
+      "items": [
+        { "label": "Finance + insurance", "path": "finance-insurance/index.html", "kind": "lab", "status": "approved" },
+        { "label": "Capital page", "path": "capital-page/index.html", "kind": "lab" },
+        { "label": "Capital — orient", "path": "capital-page/orient-round/index.html", "kind": "lab" },
+        { "label": "Capital — flows", "path": "capital-page/flows-round/index.html", "kind": "lab" },
+        { "label": "Invest forms", "path": "invest-forms/index.html", "kind": "lab", "status": "approved" },
+        { "label": "Asset cards", "path": "asset-cards/index.html", "kind": "lab", "status": "approved" },
+        { "label": "Row actions", "path": "row-actions/index.html", "kind": "lab", "status": "approved" }
+      ]
+    },
+    {
+      "id": "pre-game",
+      "title": "Pre-game / старт",
+      "items": [
+        { "label": "Pre-game shell v2", "path": "pre-game-shell/index.html", "kind": "lab" },
+        { "label": "Pre-game playful v3", "path": "pre-game-playful-v3/index.html", "kind": "lab" },
+        { "label": "Auth flow", "path": "auth-flow/index.html", "kind": "lab", "status": "approved" },
+        { "label": "New game mode", "path": "new-game-mode/index.html", "kind": "lab", "status": "approved" },
+        { "label": "Game templates", "path": "game-templates/index.html", "kind": "lab", "status": "approved" },
+        { "label": "Scenario icons", "path": "game-templates/scenario-icons/index.html", "kind": "lab" }
+      ]
+    },
+    {
+      "id": "game-ui",
+      "title": "Игровой UI",
+      "items": [
+        { "label": "Period close", "path": "period-close/index.html", "kind": "lab", "status": "approved" },
+        { "label": "Juice round", "path": "game-ui/juice-round/index.html", "kind": "lab", "status": "approved" },
+        { "label": "Achievements", "path": "achievements-progress/index.html", "kind": "lab" }
+      ]
+    },
+    {
+      "id": "primitives-brand",
+      "title": "Примитивы и бренд",
+      "items": [
+        { "label": "Primitives MQX", "path": "primitives/index.html", "kind": "lab", "status": "approved" },
+        { "label": "Brand logo", "path": "brand-logo/index.html", "kind": "lab", "status": "approved" },
+        { "label": "Brand tagline round", "path": "brand-logo/tagline-round/index.html", "kind": "lab" }
+      ]
+    }
+  ]
+}

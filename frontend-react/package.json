@@ -14,6 +14,8 @@
     "check:dashboard-canon": "node scripts/check-dashboard-canon.mjs",
     "check:guardrails": "npm run check:boundaries && npm run check:components-quarantine && npm run check:canon-sync && npm run check:dashboard-canon",
     "design-lab:build-dashboard-page-round": "node scripts/build-dashboard-page-round.mjs",
+    "design-lab:build-nav": "node scripts/build-design-lab-nav.mjs",
+    "design-lab:build": "npm run design-lab:build-dashboard-page-round && npm run design-lab:build-nav",
     "test:utils": "node --test src/utils/*.test.js src/hooks/useGameForeground.test.js",
     "preview": "vite preview",
     "build:pages": "node scripts/build-pages.mjs",

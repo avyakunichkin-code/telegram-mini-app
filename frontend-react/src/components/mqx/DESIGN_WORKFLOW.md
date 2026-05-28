@@ -34,9 +34,19 @@
 Запуск локально:
 
 ```bash
-cd design-lab/<тема>/<раунд>   # или тема без подпапок
+cd design-lab
+npx serve .
+# → корневой index.html — навигатор по всем витринам и prod parity
+```
+
+Или точечно:
+
+```bash
+cd design-lab/<тема>/<раунд>
 npx serve .
 ```
+
+Пересборка навигатора и dashboard parity: `cd frontend-react && npm run design-lab:build`
 
 ### Self-contained стили (обязательно)
 

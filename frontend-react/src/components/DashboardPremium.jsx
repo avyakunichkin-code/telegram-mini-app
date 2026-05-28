@@ -482,6 +482,7 @@ export function DashboardPremium({
                   onSubmit={submitMoney}
                   submitLabel={moneyModal === 'in' ? 'Перевести в подушку' : 'Снять на счёт'}
                   busy={busyAction === 'in' || busyAction === 'out'}
+                  autoFocus
                 />
               </div>
             ) : null}

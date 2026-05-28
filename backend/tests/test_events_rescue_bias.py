@@ -42,7 +42,7 @@ def test_order_events_recommended_first():
     assert [e["id"] for e in ordered] == [2, 4, 1, 3]
 
 
-def test_recommended_flag_and_sort_in_pending_payload(db_session, test_user):
+def test_recommended_flag_and_sort_in_pending_payload(db_session, test_user, seed_basic_template):
     _patch_template_needs(db_session)
     profile = GameProfile(
         user_id=test_user.id,
@@ -137,7 +137,7 @@ def test_recommended_flag_and_sort_in_pending_payload(db_session, test_user):
     assert events[1].get("recommended") is not True
 
 
-def test_rescue_events_exposed_in_pending(client, auth_headers, db_session):
+def test_rescue_events_exposed_in_pending(client, auth_headers, db_session, seed_basic_template):
     _patch_template_needs(db_session)
     start = client.post(
         "/api/game/start",

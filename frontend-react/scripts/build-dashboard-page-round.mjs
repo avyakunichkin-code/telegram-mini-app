@@ -59,6 +59,18 @@ function prepareOutputDir(outRoundDir, outBlocksDir, blockIds) {
   return { mode: 'in-place', warnings }
 }
 
+/** Ensure relative assets (./lab-base.css) resolve inside iframe even if serve rewrites URLs. */
+function patchBlockForEmbed(blockDirAbs) {
+  const indexPath = path.join(blockDirAbs, 'index.html')
+  if (!fs.existsSync(indexPath)) return
+
+  let html = fs.readFileSync(indexPath, 'utf8')
+  if (!/<base\s/i.test(html)) {
+    html = html.replace(/<head(\s[^>]*)?>/i, (match) => `${match}\n    <base href="./" />`)
+    fs.writeFileSync(indexPath, html, 'utf8')
+  }
+}
+
 function copyDir(srcAbs, dstAbs) {
   fs.cpSync(srcAbs, dstAbs, {
     recursive: true,
@@ -234,6 +246,7 @@ function main() {
     }
     rmSafe(dst)
     copyDir(src, dst)
+    patchBlockForEmbed(dst)
   }
 
   const html = buildIndexHtml({
@@ -242,6 +255,18 @@ function main() {
   })
 
   fs.writeFileSync(path.join(outRoundDir, 'index.html'), html, 'utf8')
+  fs.writeFileSync(
+    path.join(outRoundDir, 'serve.json'),
+    `${JSON.stringify(
+      {
+        cleanUrls: false,
+        directoryListing: false,
+      },
+      null,
+      2,
+    )}\n`,
+    'utf8',
+  )
   fs.writeFileSync(
     path.join(outRoundDir, 'README.md'),
     [
@@ -255,6 +280,8 @@ function main() {
       'cd design-lab/dashboard/parity-generated-page-round',
       'npx serve .',
       '```',
+      '',
+      'В папке есть `serve.json` (`cleanUrls: false`, `directoryListing: false`). Iframe грузят `blocks/*/index.html`.',
       '',
       'Пересборка:',
       '',
