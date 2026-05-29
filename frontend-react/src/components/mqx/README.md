@@ -30,7 +30,7 @@ mqx/
     MqxCard, MqxCardHeader            — оболочка карточки и шапка
     MqxGoalBadge, MqxBlockSection     — бейдж цели, секция с заголовком
     MqxStatMini                       — плитка stat 2×2
-    VictoryGoalItem, VictoryGoalsPanel — цели победы v2
+    MqxGoalDash, VictoryGoalItem — цели победы v2 (G1 ★)
     CapitalPositionCard               — asset | liability | insurance
     InsuranceCatalogGrid              — сетка 2×2 типов
     InsurancePlanCard                 — тариф (+)
@@ -54,7 +54,7 @@ mqx/
 | Компонент | Назначение |
 |-----------|------------|
 | `MqxPill` + `events` | Кнопка «События» с badge на дашборде |
-| `EventCard` | L3 ★: domain band + pill, Монетка + пузырь, flat-выборы с impacts |
+| `EventCard` | L3 ★: domain band + pill, Монетка + пузырь; E2 halo (страховка); E5 clamp/scroll |
 | `EventChoiceButton` | Одна кнопка выбора |
 | `EventCarouselOverlay` | Полноэкранный оверлей с каруселью |
 | `EventCarouselDots` / `EventCarouselNav` | Навигация |
@@ -73,7 +73,7 @@ mqx/
 | `MqxGoalBadge` | Статус цели на дашборде |
 | `MqxBlockSection` | Блок «Финансы» с ссылкой действия |
 | `MqxStatMini` | Иконка + подпись + значение в `mqx-grid2` |
-| `VictoryGoalsPanel` | M из N целей победы (+ legacy подушка) |
+| `MqxGoalDash` | Цель на дашборде: stepper + Монетка (G1 ★) |
 
 Утилиты: `utils/victoryGoalDisplay.js` (без React).
 

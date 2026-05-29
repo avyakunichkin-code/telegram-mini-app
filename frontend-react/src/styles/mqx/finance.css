@@ -522,18 +522,6 @@
   box-shadow: none;
 }
 
-.mqx-capital-empty {
-  padding: 20px 8px;
-  text-align: center;
-}
-
-.mqx-capital-empty__msg {
-  margin: 0;
-  font-size: var(--mq-fs-caption);
-  line-height: 1.45;
-  color: color-mix(in srgb, var(--mqx-ink) 52%, transparent);
-}
-
 .mqx-capital-empty__cta {
   margin-top: 12px;
   font: inherit;
@@ -1692,15 +1680,6 @@ body [class*='modal'] {
 .mqx-fin-list {
   display: grid;
   gap: 10px;
-}
-
-.mqx-fin-empty {
-  padding: 10px 12px;
-  border-radius: 12px;
-  background: color-mix(in srgb, var(--mqx-ink) 3%, transparent);
-  border: 1px dashed color-mix(in srgb, var(--tg-theme-hint-color, var(--mq-line)) 78%, transparent);
-  color: color-mix(in srgb, var(--mqx-ink) 55%, transparent);
-  font-size: var(--mq-fs-caption);
 }
 
 .mqx-fin-row {

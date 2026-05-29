@@ -1,5 +1,4 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { Spinner } from '@telegram-apps/telegram-ui';
 import { useGame } from '../hooks/useGame';
 import { DashboardPremium } from './DashboardPremium';
 import { FinancePremium } from './FinancePremium';
@@ -11,7 +10,7 @@ import { EventCarouselOverlay } from './mqx/events/EventCarouselOverlay';
 import { MqxShell } from './MqxShell';
 import { MqxTabHero } from './MqxTabHero';
 import { GameScreenLayout, GameScreenTabNav } from './GameScreenLayout';
-import { MqxPeriodCloseTail, MqxPeriodCloseRitual, MqxSalaryWarnModal } from './mqx';
+import { MqxPeriodCloseTail, MqxPeriodCloseRitual, MqxSalaryWarnModal, MqxStateError, MqxStateSkeleton } from './mqx';
 import { PERIOD_CLOSE_AUTO_MAX } from '../constants/periodClose';
 import { shouldAutoOpenPeriodClose } from '../utils/periodCloseDisplay';
 import { GameOnboardingLayer } from './GameOnboardingLayer';
@@ -186,8 +185,11 @@ export function GameScreen({ onLogout, onNewGame, onLoadGame }) {
             />
           }
         >
-          <div className="mqx-card" style={{ display: 'grid', placeItems: 'center', minHeight: 140, padding: 28 }}>
-            <Spinner />
+          <div className="mqx-card" style={{ padding: 14 }}>
+            <MqxStateSkeleton variant="chips" label="Финансы периода" />
+            <div style={{ marginTop: 16 }}>
+              <MqxStateSkeleton variant="rows" rows={2} label="Цели и действия" />
+            </div>
           </div>
         </MqxShell>
       </GameScreenLayout>
@@ -209,14 +211,12 @@ export function GameScreen({ onLogout, onNewGame, onLoadGame }) {
         >
           <div className="mq-stack mq-stack--tight mq-stack-animate">
             <div className="mqx-card mq-enter-item">
-              <div className="mqx-card__kicker">Сеть или API</div>
-              <div className="mqx-card__title">Что-то пошло не так</div>
-              <p className="mqx-card__sub">{formatApiErrorDetail(error, 'Не удалось загрузить данные')}</p>
-              <div className="mq-actions-stack" style={{ marginTop: 16 }}>
-                <Button stretched mode="filled" onClick={() => reload()}>
-                  Повторить загрузку
-                </Button>
-              </div>
+              <MqxStateError
+                title="Не удалось загрузить"
+                message={formatApiErrorDetail(error, 'Проверьте сеть и попробуйте снова')}
+                retryLabel="Повторить загрузку"
+                onRetry={() => reload()}
+              />
             </div>
           </div>
         </MqxShell>

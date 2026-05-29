@@ -26,15 +26,11 @@ export function InsuranceSection({
   const policiesList = (
     <div className="mqx-capital-position-list">
       {policies.length === 0 ? (
-        useSectionSeg ? (
-          <MqxCapitalEmpty
-            message="Нет активных полисов"
-            actionLabel="Оформить полис"
-            onAction={() => setUiMode('picker')}
-          />
-        ) : (
-          <div className="mqx-fin-empty">Нет активных полисов</div>
-        )
+        <MqxCapitalEmpty
+          message="Нет активных полисов"
+          actionLabel="Оформить полис"
+          onAction={() => setUiMode('picker')}
+        />
       ) : (
         policies.map((p) => (
           <InsurancePolicyRow

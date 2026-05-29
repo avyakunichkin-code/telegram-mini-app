@@ -17,7 +17,7 @@ import {
   InsurancePolicyRow,
   InsuranceProductPicker,
   InsuranceSection,
-  VictoryGoalsPanel,
+  MqxGoalDash,
   InvestPositionMetrics,
   InvestPositionRow,
   LiabilityPositionMetrics,
@@ -32,7 +32,6 @@ import {
   MqxStarterScenarioPicker,
   MqxDivider,
   MqxFinancePeriodBlock,
-  MqxLevelDash,
   MqxPeriodActions,
   MqxPeriodCloseSheet,
   MqxPeriodChip,
@@ -50,6 +49,9 @@ import {
   OnboardingCoachDemo,
   MqxJuiceCatalogDemo,
 } from '../index';
+import { MqxStatesCatalogDemo } from './MqxStatesCatalogDemo';
+import { MqxEventsTailsCatalogDemo } from './MqxEventsTailsCatalogDemo';
+import { CATALOG_LEGACY_GOAL_DEMO, CATALOG_VICTORY_DEMO } from './catalogVictoryDemo';
 import { MoneyText } from '../../MoneyText';
 import { INSURANCE_PLANS } from '../../../constants/insuranceProducts';
 
@@ -255,18 +257,7 @@ export function MqCatalogScreen() {
             <MqxDivider />
             <MqxPeriodActions onSalary={() => {}} onContribute={() => {}} onWithdraw={() => {}} onInvest={() => {}} />
             <MqxDivider />
-            <MqxLevelDash
-              periodIndex={3}
-              victory={{
-                goals_met: 2,
-                goals_required: 3,
-                goals: [
-                  { key: 'a', title: 'Подушка ≥ 3×', met: true, enabled: true, progress: 1 },
-                  { key: 'b', title: 'Доходы ≥ 0', met: false, enabled: true, progress: 0.4 },
-                  { key: 'c', title: 'Без просрочек', met: true, enabled: true, progress: 1 },
-                ],
-              }}
-            />
+            <MqxGoalDash victory={CATALOG_VICTORY_DEMO} legacyGoal={CATALOG_LEGACY_GOAL_DEMO} />
           </MqxDashStack>
         </div>
       </CatalogSection>
@@ -290,6 +281,10 @@ export function MqCatalogScreen() {
             }}
           />
         </div>
+      </CatalogSection>
+
+      <CatalogSection title="События — E2 / E5 (хвосты) ★">
+        <MqxEventsTailsCatalogDemo />
       </CatalogSection>
 
       <CatalogSection title="События ★ L3 — domain band + пузырь">
@@ -453,16 +448,10 @@ export function MqCatalogScreen() {
 
       <CatalogSection title="Сегмент раздела (MqxSectionSeg)">
         <p className="mqx-catalog__lead" style={{ marginTop: 0, marginBottom: 12 }}>
-          Канон B на странице капитала: «Оформить / Добавить | Мои (N)» внутри карточки раздела.
+          Канон B на странице капитала: «Оформить / Добавить | Мои (N)» внутри карточки раздела. Пустое состояние — см.
+          секцию «Состояния UI».
         </p>
         <MqxSectionSeg mode="add" onModeChange={() => {}} addLabel="Добавить" mineLabel="Мои" mineCount={2} />
-        <div style={{ marginTop: 12 }}>
-          <MqxCapitalEmpty
-            message="Нет позиций в этом разделе"
-            actionLabel="Добавить из каталога"
-            onAction={() => {}}
-          />
-        </div>
       </CatalogSection>
 
       <CatalogSection title="Кнопки и вкладки">
@@ -552,50 +541,22 @@ export function MqCatalogScreen() {
         />
       </CatalogSection>
 
-      <CatalogSection title="Цели победы (Victory v2)">
-        <VictoryGoalsPanel
-          victory={{
-            goals_met: 2,
-            goals_required: 3,
-            period_gate_open: true,
-            win_reached: false,
-            min_period_index: 7,
-            goals: [
-              {
-                key: 'safety_3x',
-                type: 'safety_fund_months',
-                title: 'Подушка ≥ 3× обязательств',
-                met: true,
-                enabled: true,
-                progress: 1,
-                detail: { current: 90000, target: 60000 },
-              },
-              {
-                key: 'no_overdue',
-                type: 'no_overdue',
-                title: 'Без просрочек',
-                met: true,
-                enabled: true,
-                progress: 1,
-                detail: { total_overdue_amount: 0 },
-              },
-              {
-                key: 'cashflow',
-                type: 'net_monthly_cashflow_nonneg',
-                title: 'Доходы ≥ 0',
-                met: false,
-                enabled: true,
-                progress: 0.4,
-                detail: { net_monthly_cashflow: -2000 },
-              },
-            ],
-          }}
-          legacyGoal={{ target: 60000, current: 40000, frac: 0.67, win: false, ready: false }}
-        />
+      <CatalogSection title="Цель на дашборде (MqxGoalDash · G1 ★)">
+        <p className="mqx-catalog__lead" style={{ marginTop: 0 }}>
+          Канон B4: один паттерн целей — <code>MqxGoalDash</code> (не <code>MqxLevelDash</code> / плоская карточка). Lab:{' '}
+          <code>design-lab/dashboard/goal-chain-round/</code>.
+        </p>
+        <div style={{ maxWidth: 420 }}>
+          <MqxGoalDash victory={CATALOG_VICTORY_DEMO} legacyGoal={CATALOG_LEGACY_GOAL_DEMO} defaultExpanded />
+        </div>
       </CatalogSection>
 
       <CatalogSection title="Game juice (A · C · D) ★">
         <MqxJuiceCatalogDemo />
+      </CatalogSection>
+
+      <CatalogSection title="Состояния UI (empty · error · loading) ★">
+        <MqxStatesCatalogDemo />
       </CatalogSection>
 
       <CatalogSection title="Форма депозита (variant D)">

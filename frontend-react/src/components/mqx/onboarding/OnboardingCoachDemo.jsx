@@ -6,7 +6,7 @@ import {
   MqxDashboardHero,
   MqxDivider,
   MqxFinancePeriodBlock,
-  MqxLevelDash,
+  MqxGoalDash,
   MqxPeriodActions,
 } from '../index';
 import { OnboardingCoachOverlay } from './OnboardingCoachOverlay';
@@ -123,7 +123,17 @@ export function OnboardingCoachDemo() {
             onInvest={() => {}}
           />
           <MqxDivider />
-          <MqxLevelDash periodIndex={1} victory={{ goals_met: 0, goals_required: 3, goals: [] }} />
+          <MqxGoalDash
+            victory={{
+              goals_met: 0,
+              goals_required: 2,
+              current_goal_key: 'safety',
+              goals: [
+                { key: 'safety', title: 'Подушка 3×', met: false, enabled: true, progress: 0.2 },
+                { key: 'cashflow', title: 'Доходы ≥ 0', met: false, enabled: true, progress: 0 },
+              ],
+            }}
+          />
         </MqxDashStack>
       </div>
 

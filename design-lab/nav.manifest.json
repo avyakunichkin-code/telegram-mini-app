@@ -43,7 +43,8 @@
         { "label": "Events — обзор", "path": "events/index.html", "kind": "lab" },
         { "label": "Overlay O1", "path": "events/overlay-round/index.html", "kind": "lab", "status": "approved" },
         { "label": "Layout", "path": "events/layout-round/index.html", "kind": "lab" },
-        { "label": "Domains", "path": "events/domains-round/index.html", "kind": "lab" }
+        { "label": "Domains", "path": "events/domains-round/index.html", "kind": "lab" },
+        { "label": "Tails E2/E5", "path": "events/tails-round/index.html", "kind": "lab", "status": "approved" }
       ]
     },
     {
@@ -76,6 +77,12 @@
       "items": [
         { "label": "Period close", "path": "period-close/index.html", "kind": "lab", "status": "approved" },
         { "label": "Juice round", "path": "game-ui/juice-round/index.html", "kind": "lab", "status": "approved" },
+        {
+          "label": "UI states + icons (B1-B3)",
+          "path": "ui-states-unified/states-icons-round/index.html",
+          "kind": "lab",
+          "status": "approved"
+        },
         { "label": "Achievements", "path": "achievements-progress/index.html", "kind": "lab" }
       ]
     },

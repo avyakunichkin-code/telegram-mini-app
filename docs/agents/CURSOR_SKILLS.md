@@ -24,6 +24,8 @@
 | [`docs/templates/TASK_SLICE.md`](../templates/TASK_SLICE.md) | MQ-*: `phase`, `tier`, `skill`, `satellites`, `next_skill` |
 | [`docs/templates/PLAN_FEATURE.md`](../templates/PLAN_FEATURE.md) | PLAN: `epic_id`, spec, `next_skill` |
 | [`docs/TRACEABILITY.md`](../TRACEABILITY.md) | Обновлять после нарезки плана |
+| [`DESIGN_IMPROVEMENTS_BACKLOG.md`](DESIGN_IMPROVEMENTS_BACKLOG.md) | UI-идеи **вне** скиллов до spec (D1–D12) |
+| [`DESIGN_LAB_NAVIGATION.md`](DESIGN_LAB_NAVIGATION.md) | Хаб vs round vs page parity vs `#/dev/mqx` |
 
 ---
 
@@ -45,7 +47,7 @@
 | Скилл | Зачем |
 |-------|--------|
 | **frontend-ui-engineering** | MQX, TMA UI; новые паттерны — [`DESIGN_WORKFLOW.md`](../../frontend-react/src/components/mqx/DESIGN_WORKFLOW.md) |
-| **design-lab-mqx** | `design-lab/`, self-contained CSS, `sync-lab` |
+| **design-lab-mqx** | `design-lab/` — **хаб** `nav.manifest` + rounds; см. `DESIGN_LAB_NAVIGATION.md` |
 | **spec-driven-development** | Spec в `docs/specs/` до кода |
 | **incremental-implementation** | Срезы без монолитных PR |
 | **api-and-interface-design** | `/api/...`, `api.js`, контракты |

@@ -6,7 +6,20 @@ alwaysApply: false
 
 # Design-lab — стили и запуск
 
-Процесс MQX: [`frontend-react/src/components/mqx/DESIGN_WORKFLOW.md`](frontend-react/src/components/mqx/DESIGN_WORKFLOW.md).
+Процесс MQX: [`frontend-react/src/components/mqx/DESIGN_WORKFLOW.md`](frontend-react/src/components/mqx/DESIGN_WORKFLOW.md).  
+**Куда смотреть / когда что:** [`docs/agents/DESIGN_LAB_NAVIGATION.md`](docs/agents/DESIGN_LAB_NAVIGATION.md).
+
+## Навигация (хаб — по умолчанию)
+
+| Цель | Куда |
+|------|------|
+| Обзор, поиск, ссылки на все раунды | `cd design-lab && npx serve .` → **`/`** (из `nav.manifest.json`) |
+| Один раунд (отладка 404) | `design-lab/<тема>/<round>/` + `sync-lab.ps1` + `serve` |
+| Композиция страницы Dashboard/Finance | `*/parity-generated-page-round/` после `npm run design-lab:build` |
+| Утверждённый React | `#/dev/mqx` |
+
+После правки **`design-lab/nav.manifest.json`**: `cd frontend-react && npm run design-lab:build-nav`.  
+**Не править** `design-lab/index.html` вручную.
 
 ## Жёсткое правило: self-contained раунд
 
@@ -24,16 +37,18 @@ alwaysApply: false
 
 1. Добавить `sync-lab.ps1` (вызов [`design-lab/events/_shared/sync-lab-round.ps1`](design-lab/events/_shared/sync-lab-round.ps1) или аналог в теме).
 2. **Запустить** sync и закоммитить сгенерированные `lab-base.css` + `assets/`.
-3. Проверить в браузере: `cd design-lab/<тема>/<раунд> && npx serve .` — нет 404 на CSS/PNG в Network.
+3. Проверить: Network без 404 (локально в round **или** через хаб `cd design-lab && npx serve .`).
+4. Добавить round в `nav.manifest.json` → `cd frontend-react && npm run design-lab:build-nav`.
 
-Для **events**: `design-lab/events/sync-all-rounds.ps1` пересобирает layout-round, overlay-round, domains-round.
+Для **events**: `design-lab/events/sync-all-rounds.ps1` — все раунды, включая `tails-round`.
 
 ## Чеклист агента (перед «готово»)
 
 - [ ] В `index.html` только `./` для CSS и картинок
 - [ ] `sync-lab.ps1` выполнен, `lab-base.css` актуален
 - [ ] `assets/monetka-mascot.png` на месте (если нужна Монетка)
-- [ ] README раунда: команда запуска + `.\sync-lab.ps1`
+- [ ] README раунда: хаб + `sync-lab` (не только `serve` в round)
+- [ ] `nav.manifest.json` + `design-lab:build-nav` для нового round
 
 Скилл: **design-lab-mqx** (`.cursor/skills/design-lab-mqx/SKILL.md`).
 

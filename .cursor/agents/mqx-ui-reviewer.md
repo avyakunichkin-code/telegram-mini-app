@@ -63,20 +63,30 @@ When **CONCERNS** (canon follow-up), list exact files to update: `design-lab/<th
 - [ ] Path matches change size (table above)
 - [ ] New pattern exists in `mqx/` and/or lab before prod
 
+### Unification (см. `docs/specs/UI_CONSISTENCY_AUDIT.md`)
+
+- [ ] **Finance / Analytics:** крупный визуал только через `capital-page` lab или согласованный hotfix
+- [ ] Не перерисовывает ★ S5 dashboard / L3 events без lab-обоснования
+- [ ] Empty/error не третьим ad-hoc стилем — `MqxCapitalEmpty` / будущий единый блок (B1)
+- [ ] Идеи из `docs/agents/DESIGN_IMPROVEMENTS_BACKLOG.md` D1–D12 без spec → **NEEDS REVISION** или вынести в follow-up doc
+
 ### MQX
 
 - [ ] Tokens/CSS vars, not new hex in JSX
 - [ ] `mqx-hero` + `main.mqx-content` on game tabs
 - [ ] No new inline `marginTop` hacks in premium
 - [ ] No expansion of legacy `*Section.jsx`
+- [ ] Capital: `MqxFinListRow` + row actions; не текстовое «Удалить» в списке (`SPEC_FRONTEND_UI`)
 
 ### Design-lab
 
 - [ ] `./` only in `index.html`; `sync-lab` if styles changed
+- [ ] Раунд: 2–5 вариантов, русский, одинаковые тест-данные (если lab в PR)
 
 ### Content
 
 - [ ] Russian UI; `<MoneyText />`; loading/empty/error; no `alert`
+- [ ] Touch targets ≥44px на новых интерактивах (Basic a11y)
 
 ---
 

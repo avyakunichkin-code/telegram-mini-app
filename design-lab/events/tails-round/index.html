@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="ru" data-theme="light">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Events — tails E2 + E5</title>
+    <link rel="stylesheet" href="./lab-base.css" />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <header class="lab-header">
+      <div>
+        <h1>Events — хвосты E2 / E5</h1>
+        <p>L3 ★ + <strong>E2-B</strong> (M6 halo) + <strong>E5-B</strong> (clamp / scroll). См. <code>VARIANTS.md</code>, <code>APPROVED.md</code>.</p>
+      </div>
+      <div class="lab-theme" role="group" aria-label="Тема">
+        <button type="button" class="is-active" data-theme-btn="light">Светлая</button>
+        <button type="button" data-theme-btn="dark">Тёмная</button>
+      </div>
+    </header>
+
+    <main class="lab-wrap">
+      <section class="lab-section lab-section--featured">
+        <div class="lab-section__label">
+          <span class="lab-section__id">E2-B</span>
+          <span class="lab-section__title">Страховой случай + halo</span>
+        </div>
+        <div class="ev-card-shell" style="max-width: 400px">
+          <article class="ev-l3 ev-l3--insurance ev--domain-auto">
+            <div class="ev-l3__band" aria-hidden></div>
+            <div class="ev-l3__frame">
+              <div class="ev-l3__labels">
+                <span class="ev-pill"><span class="ev-pill__dot"></span>Авто</span>
+                <span class="ev-badge-ins"><span class="ev-badge-ins__pulse" aria-hidden></span>Страховой случай</span>
+              </div>
+              <h3 class="ev-l3__title">ДТП на перекрёстке с повреждением бампера и фары</h3>
+              <div class="ev-l3__bubble-row">
+                <img class="ev-monetka" src="./assets/monetka-mascot.png" alt="" width="56" height="56" />
+                <div class="ev-l3__bubble ev-l3__bubble--scroll">
+                  <p>
+                    Небольшое столкновение на мокрой дороге. При действующем полисе ОСАГО страховая компания покроет ремонт
+                    в пределах лимита. Если оформить случай по полису, не придётся платить крупную сумму из кошелька сразу.
+                    Важно успеть подать документы в срок, указанный в договоре.
+                  </p>
+                </div>
+              </div>
+              <div class="ev-choices">
+                <button type="button" class="ev-choice">
+                  <span class="ev-choice__title">Оформить по полису ОСАГО и получить выплату на ремонт</span>
+                  <span class="ev-choice__desc">Страховая возьмёт расходы на себя в рамках лимита полиса</span>
+                </button>
+                <button type="button" class="ev-choice">
+                  <span class="ev-choice__title">Оплатить из своих</span>
+                  <span class="ev-choice__desc">−45 000 ₽</span>
+                </button>
+              </div>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section class="lab-section">
+        <div class="lab-section__label">
+          <span class="lab-section__id">E5-B</span>
+          <span class="lab-section__title">Длинный consumption (без halo)</span>
+        </div>
+        <div class="ev-card-shell" style="max-width: 400px">
+          <article class="ev-l3 ev--domain-auto" style="--ev-accent: #d97706">
+            <div class="ev-l3__band" aria-hidden></div>
+            <div class="ev-l3__frame">
+              <div class="ev-l3__labels">
+                <span class="ev-pill"><span class="ev-pill__dot"></span>Расходы</span>
+              </div>
+              <h3 class="ev-l3__title">Кофе каждый день у офиса — привычка съедает бюджет</h3>
+              <div class="ev-l3__bubble-row">
+                <img class="ev-monetka" src="./assets/monetka-mascot.png" alt="" width="50" height="50" />
+                <div class="ev-l3__bubble ev-l3__bubble--scroll">
+                  <p>
+                    Коллеги зовут в кофейню по пути на работу. Чашка 250–350 ₽ каждый будний день — за месяц набегает заметная
+                    сумма. Можно взять абонемент со скидкой или заваривать кофе дома и брать с собой в термосе.
+                  </p>
+                </div>
+              </div>
+              <div class="ev-choices">
+                <button type="button" class="ev-choice">
+                  <span class="ev-choice__title">Взять абонемент на месяц (−4 500 ₽/мес)</span>
+                </button>
+                <button type="button" class="ev-choice">
+                  <span class="ev-choice__title">Пока без абонемента — плачу по чашке</span>
+                  <span class="ev-choice__desc">Риск перерасхода на мелочи в течение периода</span>
+                </button>
+              </div>
+            </div>
+          </article>
+        </div>
+      </section>
+    </main>
+
+    <script>
+      document.querySelectorAll('[data-theme-btn]').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          const theme = btn.getAttribute('data-theme-btn');
+          document.documentElement.setAttribute('data-theme', theme);
+          document.querySelectorAll('[data-theme-btn]').forEach((b) => b.classList.toggle('is-active', b === btn));
+        });
+      });
+    </script>
+  </body>
+</html>

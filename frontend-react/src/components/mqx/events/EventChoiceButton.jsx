@@ -1,6 +1,5 @@
 import { asSafeReactText } from '../../../utils/displayText';
 import { NeedsDeltaChips } from '../needs/NeedsDeltaChips';
-import { truncateEventText } from './eventDisplay';
 import { EventChoiceImpacts } from './EventChoiceImpacts';
 
 /** Кнопка выбора в карточке события (flat, без цветового акцента). */
@@ -18,15 +17,13 @@ export function EventChoiceButton({ choice, disabled, onPick }) {
       aria-label={choice.description ? `${choiceLabel}. ${asSafeReactText(choice.description, '')}` : choiceLabel}
       onClick={() => { void onPick(choice.id); }}
     >
-      <span className="mqx-events-choice__title">{truncateEventText(choice.title, 96)}</span>
+      <span className="mqx-events-choice__title">{choiceLabel}</span>
       {hasImpacts ? <EventChoiceImpacts impacts={choice.impacts} /> : null}
       {hasNeedsDelta ? (
         <NeedsDeltaChips delta={choice.needs_delta} className="mqx-events-choice__needs" />
       ) : null}
       {choice.description ? (
-        <span className="mqx-events-choice__desc">
-          {truncateEventText(choice.description, 180)}
-        </span>
+        <span className="mqx-events-choice__desc">{asSafeReactText(choice.description)}</span>
       ) : null}
     </button>
   );

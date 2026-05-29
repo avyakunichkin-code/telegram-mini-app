@@ -13,10 +13,26 @@ allowed-tools: Read, Glob, Grep, Write, Shell
 
 - [`frontend-react/src/components/mqx/DESIGN_WORKFLOW.md`](../../../frontend-react/src/components/mqx/DESIGN_WORKFLOW.md)
 - [`docs/specs/SPEC_FRONTEND_UI.md`](../../../docs/specs/SPEC_FRONTEND_UI.md)
-- [`design-lab/dashboard/APPROVED.md`](../../../design-lab/dashboard/APPROVED.md)
+- [`docs/specs/UI_CONSISTENCY_AUDIT.md`](../../../docs/specs/UI_CONSISTENCY_AUDIT.md) — что ★ / ⚠ / 📋 lab
+- [`docs/vision/ideas/mqx-ui-unification.md`](../../../docs/vision/ideas/mqx-ui-unification.md) — волны A/B/C
+- [`design-lab/dashboard/APPROVED.md`](../../../design-lab/dashboard/APPROVED.md) (и `APPROVED.md` **темы раунда**, если есть)
 - [`.cursor/rules/tvoy-hod-design-lab.mdc`](../../../.cursor/rules/tvoy-hod-design-lab.mdc), [`.cursor/rules/tvoy-hod-canon-sync.mdc`](../../../.cursor/rules/tvoy-hod-canon-sync.mdc)
+- **[`docs/agents/DESIGN_LAB_NAVIGATION.md`](../../../docs/agents/DESIGN_LAB_NAVIGATION.md)** — хаб vs round vs parity vs `#/dev/mqx` (**прочитать при сомнении «куда смотреть»**)
+- Отложенные идеи без spec: [`docs/agents/DESIGN_IMPROVEMENTS_BACKLOG.md`](../../../docs/agents/DESIGN_IMPROVEMENTS_BACKLOG.md)
 
 **Куда писать:** `design-lab/<тема>/`. **Дальше:** `frontend-ui-engineering`.
+
+## Навигация (обязательно)
+
+| Задача | Действие |
+|--------|----------|
+| Показать/сравнить макеты | **`cd design-lab && npx serve .`** → хаб `/` (поиск), не `serve` в подпапке раунда |
+| Новый раунд в хабе | Пункт в `design-lab/nav.manifest.json` → `cd frontend-react && npm run design-lab:build-nav` |
+| Блоки дашборда на одной странице | `dashboard/parity-generated-page-round/` (генерится `design-lab:build`) |
+| Блоки финансов на одной странице | `finance/parity-generated-page-round/` |
+| После ★ в React | `#/dev/mqx` |
+
+Полная таблица: [`DESIGN_LAB_NAVIGATION.md`](../../../docs/agents/DESIGN_LAB_NAVIGATION.md).
 
 ## When to use
 
@@ -66,8 +82,13 @@ cd design-lab/events/overlay-round
 
 ### 3. Verify
 
+**Ревью для человека:** хаб `cd design-lab && npx serve .` → ссылка на раунд из навигации.
+
+**Отладка раунда (404 CSS):**
+
 ```powershell
 cd design-lab/<тема>/<round>
+.\sync-lab.ps1
 npx serve .
 ```
 
@@ -84,11 +105,30 @@ npx serve .
 | `layout-round` | `.\sync-lab.ps1` | `events/styles.css` + `styles-monetka.css` |
 | `overlay-round` | `.\sync-lab.ps1` | то же |
 | `domains-round` | `.\sync-lab.ps1` | + `layout-round/styles.css` (`-WithLayoutStyles`) |
+| `tails-round` | `.\sync-lab.ps1` | `events/styles.css` + monetka (E2/E5) |
+
+После нового раунда events: добавить в `nav.manifest.json` → `npm run design-lab:build-nav`.
 
 ## Rules
 
 - Cursor rule: `tvoy-hod-design-lab.mdc`
 - MQX prod flow: `tvoy-hod-frontend-mqx.mdc`
+
+## Качество раунда (из DESIGN_WORKFLOW — обязательно)
+
+| Правило | Деталь |
+|---------|--------|
+| Варианты | **2–5** на один блок (A, B, C…), не больше |
+| Данные | **Одинаковые** тестовые суммы/копирайт во всех вариантах |
+| Язык | Видимый текст **на русском** |
+| Бренд | Только канон: Quest Violet, emerald/danger по смыслу; токены из `styles/tma-base.css` / lab-base, **без новых hex** в вариантах |
+| Подписи | В `README.md` раунда: идея каждого варианта + команда `npx serve .` + `.\sync-lab.ps1` |
+| Тема TG | Светлая и тёмная — если экран в prod зависит от `tg-theme-*`, проверить оба |
+| Не перерисовывать ★ | S5 dashboard, L3 events, pre-game ★ — новый lab только для **хвостов** (empty/error, capital, icons), см. unification |
+
+**Приоритет lab (пока ⚠ в prod):** `capital-page/`, **[`ui-states-unified/`](../../../design-lab/ui-states-unified/)** (B1+B2+B3 brief) — не открывать параллельно 3+ крупных тем без запроса.
+
+**Не предлагать в lab без явного запроса:** `dashboard-dual-accordion` (superseded), идеи из backlog D1–D12 без spec.
 
 ## Checklist (перед «готово»)
 
@@ -98,6 +138,10 @@ npx serve .
 - [ ] lab-base.css и assets закоммичены
 - [ ] serve . — стили и Монетка на месте
 - [ ] README раунда обновлён (запуск + sync)
+- [ ] Новый round — пункт в `nav.manifest.json` + `design-lab:build-nav`
+- [ ] Пользователю — ссылка через **хаб**, не только локальный `serve` в round
+- [ ] 2–5 вариантов, одинаковые тест-данные, русские подписи
+- [ ] Не дублирует уже ★ prod без пометки «полировка / хвост»
 ```
 
 ---

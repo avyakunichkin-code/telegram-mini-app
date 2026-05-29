@@ -44,6 +44,18 @@ cd backend && python -m pytest -q
 - `design-lab/<theme>/APPROVED.md` актуален
 - prod parity round соответствует prod
 
+### 4b. Design QA (ручной, если менялся `frontend-react/` UI)
+
+См. также `frontend-ui-engineering` → Definition of Done.
+
+| # | Проверка |
+|---|----------|
+| Q1 | **320px** и **~390px** — нет обрезания таббара / hero |
+| Q2 | **Тёмная тема** Telegram — нет «белого острова» на MQX-карточках |
+| Q3 | Игра: **4 вкладки** + события + закрытие периода (smoke) |
+| Q4 | `#/dev/mqx` — новые компоненты в каталоге (если не hotfix) |
+| Q5 | Finance не регресснул к legacy-паттернам без lab (⚠ зона) |
+
 ### 5. Docs (если менялось поведение)
 
 - `DOC_SYNC_LOG.md` или ADR при необходимости

@@ -56,7 +56,8 @@ code-review-and-quality
 design-lab/<theme>/    design-lab-mqx  →  mqx/ + prod   frontend-ui-engineering
 ```
 
-Канон процесса: [`frontend-react/src/components/mqx/DESIGN_WORKFLOW.md`](../../frontend-react/src/components/mqx/DESIGN_WORKFLOW.md).
+Канон процесса: [`frontend-react/src/components/mqx/DESIGN_WORKFLOW.md`](../../frontend-react/src/components/mqx/DESIGN_WORKFLOW.md).  
+Навигация lab (хаб / round / parity): [`DESIGN_LAB_NAVIGATION.md`](DESIGN_LAB_NAVIGATION.md).
 
 ## API
 

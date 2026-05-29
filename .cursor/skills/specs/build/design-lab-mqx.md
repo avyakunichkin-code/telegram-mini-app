@@ -25,7 +25,8 @@
 
 - [ ] Нет `../` на стили/ассеты в `index.html`.
 - [ ] Не правит `lab-base.css` вручную (AUTO).
-- [ ] «Прочитай сначала» включает APPROVED.md и rules `.mdc`.
+- [ ] «Прочитай сначала» включает APPROVED.md, UI_CONSISTENCY_AUDIT, rules `.mdc`.
+- [ ] Раунд: 2–5 вариантов, русский, одинаковые тест-данные (если применимо).
 
 ---
 
@@ -56,7 +57,7 @@
 
 ### Expected behavior
 
-1. must_read: DESIGN_WORKFLOW, SPEC_FRONTEND_UI, `design-lab/dashboard/APPROVED.md`, оба rules `.mdc`.
+1. must_read: DESIGN_WORKFLOW, DESIGN_LAB_NAVIGATION, SPEC_FRONTEND_UI, `design-lab/dashboard/APPROVED.md`, оба rules `.mdc`.
 2. writes_to: `design-lab/`. next_skill: `frontend-ui-engineering`.
 
 ### Assertions

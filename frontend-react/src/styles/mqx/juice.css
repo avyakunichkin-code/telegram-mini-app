@@ -213,9 +213,13 @@
   border-radius: 8px;
   display: grid;
   place-items: center;
-  font-size: 14px;
   flex-shrink: 0;
+  color: #fff;
   background: color-mix(in srgb, #fff 16%, transparent);
+}
+
+.mqx-juice-ritual__beat-icon svg {
+  display: block;
 }
 
 .mqx-juice-ritual__beat-icon--pos {

@@ -6,7 +6,8 @@ import { MqxGoalBadge } from './MqxGoalBadge';
 import { VictoryGoalItem } from './VictoryGoalItem';
 
 /**
- * Панель целей победы v2 (M из N) + fallback на legacy подушку.
+ * Плоский список целей M из N (карточка). На дашборде — только {@link MqxGoalDash}.
+ * @deprecated Публичный UI: `MqxGoalDash` (G1). Оставлено для внутренних/аналитических раскладок.
  */
 export function VictoryGoalsPanel({ victory, legacyGoal, flat = false }) {
   const summary = useMemo(() => buildVictorySummary(victory, legacyGoal), [victory, legacyGoal]);

@@ -1,6 +1,19 @@
+import {
+  IconMetricCoins,
+  IconMetricShield,
+  IconMetricTrendDown,
+  IconMetricTrendUp,
+} from '../icons/FinanceMetricIcons';
 import { periodCloseRitualBeats, periodCloseRitualPeriodLabel } from '../../../utils/periodCloseRitual';
 
-/** ★ juice C — ритуал «ход завершён» вместо компактной таблицы. */
+const RITUAL_ICON = {
+  up: IconMetricTrendUp,
+  down: IconMetricTrendDown,
+  coin: IconMetricCoins,
+  shield: IconMetricShield,
+};
+
+/** ★ juice C — ритуал «ход завершён»; иконки beats ★ S4-A. */
 export function MqxPeriodCloseRitual({ summary, open, onClose }) {
   if (!summary || !open) return null;
 
@@ -22,27 +35,30 @@ export function MqxPeriodCloseRitual({ summary, open, onClose }) {
         </h2>
         <p className="mqx-juice-ritual__period">{periodLabel}</p>
         <ul className="mqx-juice-ritual__beats">
-          {beats.map((beat) => (
-            <li key={beat.id}>
-              <span
-                className={`mqx-juice-ritual__beat-icon${
-                  beat.tone === 'pos'
-                    ? ' mqx-juice-ritual__beat-icon--pos'
-                    : beat.tone === 'neg'
-                      ? ' mqx-juice-ritual__beat-icon--neg'
-                      : ''
-                }`}
-                aria-hidden="true"
-              >
-                {beat.icon}
-              </span>
-              <span>
-                {beat.lead}
-                {beat.emphasis ? <strong>{beat.emphasis}</strong> : null}
-                {beat.tail}
-              </span>
-            </li>
-          ))}
+          {beats.map((beat) => {
+            const Icon = RITUAL_ICON[beat.icon] || IconMetricCoins;
+            return (
+              <li key={beat.id}>
+                <span
+                  className={`mqx-juice-ritual__beat-icon${
+                    beat.tone === 'pos'
+                      ? ' mqx-juice-ritual__beat-icon--pos'
+                      : beat.tone === 'neg'
+                        ? ' mqx-juice-ritual__beat-icon--neg'
+                        : ''
+                  }`}
+                  aria-hidden="true"
+                >
+                  <Icon size={18} />
+                </span>
+                <span>
+                  {beat.lead}
+                  {beat.emphasis ? <strong>{beat.emphasis}</strong> : null}
+                  {beat.tail}
+                </span>
+              </li>
+            );
+          })}
         </ul>
         <button type="button" className="mqx-juice-ritual__dismiss" onClick={onClose}>
           Дальше

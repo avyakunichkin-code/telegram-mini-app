@@ -9,6 +9,8 @@ import {
   MqxFinListRow,
   MqxRowAction,
   MqxCapitalEmpty,
+  MqxStateError,
+  MqxStateSkeleton,
   MqxSectionSeg,
   useMqxConfirm,
 } from './mqx';
@@ -27,6 +29,7 @@ export function CapitalPropertyPanel({
   refreshOverview,
   reloadExtra,
   handleDeleteAsset,
+  extraLoading = false,
 }) {
   const { confirm, dialog } = usePortfolioConfirm();
 
@@ -51,8 +54,14 @@ export function CapitalPropertyPanel({
       />
       {sectionMode === 'add' ? (
         <div className="mqx-capital-template-list">
-          {assetTemplates.length === 0 ? (
-            <div className="mqx-fin-empty">Шаблоны не загружены</div>
+          {extraLoading ? (
+            <MqxStateSkeleton variant="rows" rows={2} />
+          ) : assetTemplates.length === 0 ? (
+            <MqxStateError
+              title="Шаблоны не загружены"
+              message="Проверьте сеть и попробуйте снова"
+              onRetry={() => void reloadExtra?.()}
+            />
           ) : (
             assetTemplates.map((t) => (
               <CapitalPositionCard
@@ -86,7 +95,9 @@ export function CapitalPropertyPanel({
         </div>
       ) : (
         <div className="mqx-capital-position-list">
-          {ownedAssets.length === 0 ? (
+          {extraLoading ? (
+            <MqxStateSkeleton variant="rows" rows={3} />
+          ) : ownedAssets.length === 0 ? (
             <MqxCapitalEmpty
               message="Нет активов в портфеле"
               actionLabel="Добавить из каталога"
@@ -128,6 +139,8 @@ export function CapitalLiabilitiesPanel({
   setSectionMode,
   addLiabilityFromTemplate,
   handleDeleteLiability,
+  reloadExtra,
+  extraLoading = false,
 }) {
   const { confirm, dialog } = usePortfolioConfirm();
 
@@ -154,8 +167,14 @@ export function CapitalLiabilitiesPanel({
       />
       {sectionMode === 'add' ? (
         <div className="mqx-capital-template-list">
-          {liabilityTemplates.length === 0 ? (
-            <div className="mqx-fin-empty">Шаблоны не загружены</div>
+          {extraLoading ? (
+            <MqxStateSkeleton variant="rows" rows={2} />
+          ) : liabilityTemplates.length === 0 ? (
+            <MqxStateError
+              title="Шаблоны не загружены"
+              message="Проверьте сеть и попробуйте снова"
+              onRetry={() => void reloadExtra?.()}
+            />
           ) : (
             liabilityTemplates.map((t) => (
               <CapitalPositionCard
@@ -180,7 +199,9 @@ export function CapitalLiabilitiesPanel({
         </div>
       ) : (
         <div className="mqx-capital-position-list">
-          {ownedLiabilities.length === 0 ? (
+          {extraLoading ? (
+            <MqxStateSkeleton variant="rows" rows={3} />
+          ) : ownedLiabilities.length === 0 ? (
             <MqxCapitalEmpty
               message="Нет обязательств"
               actionLabel="Добавить из каталога"

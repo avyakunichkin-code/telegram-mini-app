@@ -22,6 +22,8 @@ npm run design-lab:build
 
 Конфиг ссылок: [`nav.manifest.json`](nav.manifest.json) · канон дашборда: [`dashboard/canon.manifest.json`](dashboard/canon.manifest.json).
 
+**Когда что использовать (хаб / round / parity / dev):** [`docs/agents/DESIGN_LAB_NAVIGATION.md`](../docs/agents/DESIGN_LAB_NAVIGATION.md).
+
 ## Папки
 
 | Папка | Статус | Содержание |
@@ -44,6 +46,7 @@ npm run design-lab:build
 | [brand-logo/](brand-logo/) | **★ → prod** | G1 старт, G2 hero; tagline в G1 |
 | [game-ui/juice-round/](game-ui/juice-round/) | **★ A+C+D → prod** | Gain, turn ritual, salary warn; B Risk — backlog |
 | [character-needs/](character-needs/) | **dashboard-needs-round готов** | Z-NEEDS A–D; treat-self / events — следующие раунды |
+| [ui-states-unified/states-icons-round/](ui-states-unified/states-icons-round/) | **★ в prod** | S1 C′, S2 B, S3 B/C, S4 A, S5 D0 |
 
 ## Как работать
 

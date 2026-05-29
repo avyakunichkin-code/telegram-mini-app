@@ -123,7 +123,7 @@ npx serve .
 | 13 | **`capital-page/`** — IA ★, вариант A/B | унификация `FinanceSection` → MQX |
 | 14 | **`character-needs/`** — dashboard Z-NEEDS, treat-self, events chips | `MqxNeedsSummary`, `MqxNeedsBars`, `MqxTreatSelfSheet`, … |
 
-Текущий статус: **дашборд S5**, **события L3 + оверлей O1**, **итог периода**, **новая игра**, **онбординг** в prod. Lab оверлея: [`design-lab/events/overlay-round/`](../../../../design-lab/events/overlay-round/). Дальше: **empty/error**, **капитал**.
+Текущий статус: **дашборд S5**, **события L3 + оверлей O1**, **итог периода**, **новая игра**, **онбординг**, **ui-states ★** в prod. Lab оверлея: [`design-lab/events/overlay-round/`](../../../../design-lab/events/overlay-round/). Дальше: **капитал** (волна C).
 
 ---
 

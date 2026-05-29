@@ -6,8 +6,8 @@ function formatMoneyAbs(n) {
 }
 
 /**
- * 2–4 «удара» истории для ритуала закрытия хода (★ juice C).
- * @returns {{ id: string, tone: 'pos'|'neg'|'neutral', icon: string, lead: string, emphasis?: string, tail: string }[]}
+ * 2–4 «удара» истории для ритуала закрытия хода (★ juice C + icons S4-A).
+ * @returns {{ id: string, tone: 'pos'|'neg'|'neutral', icon: 'up'|'down'|'coin'|'shield', lead: string, emphasis?: string, tail: string }[]}
  */
 export function periodCloseRitualBeats(summary) {
   const m = derivePeriodCloseMetrics(summary);
@@ -19,7 +19,7 @@ export function periodCloseRitualBeats(summary) {
     beats.push({
       id: 'income',
       tone: 'pos',
-      icon: '+',
+      icon: 'up',
       lead: 'Доходы ',
       emphasis: `+${formatMoneyAbs(m.incomeDelta)} ₽`,
       tail: ' — деньги пришли в этот ход',
@@ -30,7 +30,7 @@ export function periodCloseRitualBeats(summary) {
     beats.push({
       id: 'expense',
       tone: 'neg',
-      icon: '!',
+      icon: 'down',
       lead: 'Расходы и платежи ',
       emphasis: `−${formatMoneyAbs(m.expenseDelta)} ₽`,
       tail: ' — часть прироста ушла на жизнь и долги',
@@ -39,7 +39,7 @@ export function periodCloseRitualBeats(summary) {
     beats.push({
       id: 'cash',
       tone: 'neg',
-      icon: '!',
+      icon: 'down',
       lead: 'Наличные ',
       emphasis: `−${formatMoneyAbs(m.cashDelta)} ₽`,
       tail: ' за ход — баланс просел',
@@ -50,7 +50,7 @@ export function periodCloseRitualBeats(summary) {
     beats.push({
       id: 'cash-pos',
       tone: 'pos',
-      icon: '+',
+      icon: 'coin',
       lead: 'Наличные ',
       emphasis: `+${formatMoneyAbs(m.cashDelta)} ₽`,
       tail: ' — итог хода в плюс',
@@ -62,7 +62,7 @@ export function periodCloseRitualBeats(summary) {
     beats.push({
       id: 'safety',
       tone: m.safetyDelta > 0 ? 'pos' : 'neutral',
-      icon: m.safetyDelta > 0 ? '+' : '◎',
+      icon: 'shield',
       lead: 'Подушка ',
       emphasis: `${sign}${formatMoneyAbs(m.safetyDelta)} ₽`,
       tail: ` — запас на чёрный день ${m.safetyDelta > 0 ? 'вырос' : 'изменился'}`,
@@ -71,7 +71,7 @@ export function periodCloseRitualBeats(summary) {
     beats.push({
       id: 'safety-hold',
       tone: 'neutral',
-      icon: '◎',
+      icon: 'shield',
       lead: '',
       tail: 'Подушка держится — запас на чёрный день без сюрпризов',
     });

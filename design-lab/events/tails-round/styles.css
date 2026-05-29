@@ -1,0 +1,196 @@
+/* tails-round — E2-B + E5-B on L3 skeleton */
+
+.ev-l3 {
+  --ev-accent: var(--mq-violet, #6d28d9);
+  display: flex;
+  flex-direction: column;
+  border: 1px solid color-mix(in srgb, var(--ev-accent) 30%, transparent);
+  border-radius: 14px;
+  background: var(--surface);
+  overflow: hidden;
+}
+
+.ev-l3__band {
+  height: 4px;
+  background: linear-gradient(90deg, var(--ev-accent), color-mix(in srgb, var(--ev-accent) 55%, var(--surface)));
+}
+
+.ev-l3__frame {
+  padding: 10px 12px 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.ev-l3__labels {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.ev-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 9px;
+  border-radius: 999px;
+  font-size: 10px;
+  font-weight: 800;
+  text-transform: uppercase;
+  color: var(--ev-accent);
+  background: color-mix(in srgb, var(--ev-accent) 12%, transparent);
+}
+
+.ev-pill__dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--ev-accent);
+}
+
+.ev-l3__title {
+  margin: 0;
+  font-size: 17px;
+  font-weight: 800;
+  line-height: 1.2;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.ev-l3__bubble-row {
+  display: grid;
+  grid-template-columns: 52px 1fr;
+  gap: 8px;
+  align-items: end;
+}
+
+.ev-l3__bubble {
+  padding: 10px 12px;
+  border-radius: 14px 14px 14px 4px;
+  border: 1px solid color-mix(in srgb, var(--ev-accent) 22%, transparent);
+  background: color-mix(in srgb, var(--ev-accent) 10%, var(--surface));
+}
+
+.ev-l3__bubble p {
+  margin: 0;
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+.ev-l3__bubble--scroll {
+  max-height: 5.6em;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+}
+
+.ev-badge-ins {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 8px;
+  border-radius: 999px;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--mq-emerald);
+  background: color-mix(in srgb, var(--mq-emerald) 14%, transparent);
+}
+
+.ev-badge-ins__pulse {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--mq-emerald);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--mq-emerald) 22%, transparent);
+  animation: ev-ins-pulse 2s ease-in-out infinite;
+}
+
+@keyframes ev-ins-pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.65; transform: scale(0.92); }
+}
+
+/* E2-B insurance halo */
+.ev-l3--insurance {
+  position: relative;
+  border-color: color-mix(in srgb, var(--mq-emerald) 28%, transparent);
+  background: linear-gradient(
+    165deg,
+    color-mix(in srgb, var(--mq-emerald) 10%, var(--surface)),
+    var(--surface)
+  );
+}
+
+.ev-l3--insurance::before {
+  content: '';
+  position: absolute;
+  top: -36px;
+  right: -16px;
+  width: 110px;
+  height: 110px;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--mq-emerald) 16%, transparent);
+  filter: blur(22px);
+  pointer-events: none;
+}
+
+.ev-l3--insurance .ev-l3__frame {
+  position: relative;
+  z-index: 1;
+}
+
+.ev-l3--insurance .ev-l3__bubble {
+  background: color-mix(in srgb, var(--mq-emerald) 10%, var(--surface));
+  border-color: color-mix(in srgb, var(--mq-emerald) 24%, transparent);
+}
+
+.ev-l3--insurance .ev-l3__bubble-row {
+  grid-template-columns: 58px 1fr;
+}
+
+.ev-l3--insurance .ev-monetka {
+  width: 56px;
+  height: 56px;
+  filter: drop-shadow(0 6px 12px color-mix(in srgb, var(--mq-emerald) 28%, transparent));
+}
+
+.ev--domain-auto { --ev-accent: #0284c7; }
+
+.ev-choice {
+  display: block;
+  width: 100%;
+  text-align: left;
+  padding: 10px 0;
+  border: none;
+  border-bottom: 1px solid color-mix(in srgb, var(--line) 32%, transparent);
+  background: transparent;
+  font: inherit;
+  cursor: pointer;
+}
+
+.ev-choice:last-child { border-bottom: none; }
+
+.ev-choice__title {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  font-weight: 680;
+}
+
+.ev-choice__desc {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  margin-top: 4px;
+  font-size: 12px;
+  opacity: 0.82;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ev-badge-ins__pulse { animation: none; }
+}

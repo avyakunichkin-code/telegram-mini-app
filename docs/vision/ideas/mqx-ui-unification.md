@@ -68,7 +68,9 @@
 | B1 | **Empty / error / loading** на shell и вкладках | Единые `mqx-capital-empty` / скелетоны | «Чужие» спиннеры и пустые экраны |
 | B2 | **Иконки итога периода** (6 строк) | Заменить временные `FinanceMetricIcons` | Визуальный разрыв с метриками капитала |
 | B3 | **Stat-иконки 2×2** на главной | Согласовать с `FinanceMetricIcons` / StatIcons | Разный стиль chip-иконок |
-| B4 | **VictoryGoalsPanel** vs блок уровня | Один паттерн целей (v2) | Дублирование смысла |
+
+**Lab brief (единый раунд B1+B2+B3):** [`design-lab/ui-states-unified/`](../../../design-lab/ui-states-unified/) → `states-icons-round/` (HTML после утверждения brief).
+| B4 | **VictoryGoalsPanel** vs блок уровня | ★ `MqxGoalDash` (G1); `MqxLevelDash` удалён | — |
 
 **Не делаем в B:** перекомпоновку S5, новый hero, dual-accordion (`dashboard-dual-accordion` — архив идеи).
 
@@ -79,10 +81,10 @@
 | # | Тема | Статус | Предлагаемый шаг |
 |---|------|--------|------------------|
 | E1 | Карточка L3 | ★ prod | — |
-| E2 | **Страховой случай (M6 halo)** | Частично (badge + emerald bubble) | Lab: нужен ли полный halo панели |
+| E2 | **Страховой случай (M6 halo)** | ★ E2-B prod | [`tails-round`](../../../design-lab/events/tails-round/) |
 | E3 | **EventChoiceImpacts** / XP на кнопках | ★ prod | — |
 | E4 | **Оверлей карусели** (toolbar, dots, свайп) | ★ O1 L3 shell | — |
-| E5 | **Длинные тексты** (line-clamp, скролл) | Открыто | Один раунд lab «длинное событие» |
+| E5 | **Длинные тексты** (line-clamp, скролл) | ★ E5-B prod | [`tails-round`](../../../design-lab/events/tails-round/) |
 | E6 | **Consumption-события** (0026) | Контент есть | Визуальная категория (иконка/kicker), не новый layout |
 
 **Не делаем:** M1/M5 ультра-компакт без ★; отдельный LLM-текст от Монетки; Монетка на каждой кнопке выбора.

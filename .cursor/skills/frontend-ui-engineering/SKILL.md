@@ -12,8 +12,12 @@ allowed-tools: Read, Glob, Grep, Write
 
 - [`frontend-react/src/components/mqx/DESIGN_WORKFLOW.md`](../../../frontend-react/src/components/mqx/DESIGN_WORKFLOW.md) — **целиком** для новых паттернов
 - [`docs/specs/SPEC_FRONTEND_UI.md`](../../../docs/specs/SPEC_FRONTEND_UI.md)
+- [`docs/specs/UI_CONSISTENCY_AUDIT.md`](../../../docs/specs/UI_CONSISTENCY_AUDIT.md)
+- [`docs/reference/brandbook/BRANDBOOK_MQX.md`](../../../docs/reference/brandbook/BRANDBOOK_MQX.md)
+- [`docs/ux/accessibility-requirements.md`](../../../docs/ux/accessibility-requirements.md)
 - [`frontend-react/ARCHITECTURE.md`](../../../frontend-react/ARCHITECTURE.md)
 - [`CLAUDE.md`](../../../CLAUDE.md)
+- Идеи **без** spec пока: [`docs/agents/DESIGN_IMPROVEMENTS_BACKLOG.md`](../../../docs/agents/DESIGN_IMPROVEMENTS_BACKLOG.md)
 
 **Куда писать:** `frontend-react/src/components/mqx/`, экраны `*Premium.jsx`, `frontend-react/src/styles/`. **Дальше:** `design-lab-mqx`, `browser-testing-with-devtools`, `code-review-and-quality`.
 
@@ -38,7 +42,59 @@ Build production-quality user interfaces that are accessible, performant, and vi
 3. **Design-lab HTML/CSS:** скилл **design-lab-mqx** + правило `tvoy-hod-design-lab.mdc` — `sync-lab.ps1`, только `./` пути, без 404 на стили.
 4. Правила Cursor: `tvoy-hod-frontend-mqx.mdc`, `tvoy-hod-frontend-core.mdc`; контракт UI: [`docs/specs/SPEC_FRONTEND_UI.md`](../../../docs/specs/SPEC_FRONTEND_UI.md).
 
+## ТВОЙ ХОД — приоритеты UI (2026, нормативно)
+
+Секции ниже с Tailwind/Generic **не заменяют** этот блок для `frontend-react/`.
+
+### Визуальная целостность (волна C)
+
+| Вкладка / зона | Статус | Действие агента |
+|----------------|--------|-----------------|
+| Главная, события, pre-game, онбординг | ★ в prod | Не перекомпоновывать без lab; только hotfix или хвосты (empty/error) |
+| **Финансы** | ⚠ гибрид | Новый UI → `design-lab/capital-page/` → ★ → `mqx/`; паттерн капитала из `SPEC_FRONTEND_UI` § capital |
+| **Аналитика** | ⚠ | Согласовать метрики с дашбордом через lab, не новый `MqStatRow`-стиль в одном PR |
+| Legacy `*Section.jsx` | quarantine | **Не расширять** |
+
+Подробно: [`mqx-ui-unification.md`](../../../docs/vision/ideas/mqx-ui-unification.md), [`UI_CONSISTENCY_AUDIT.md`](../../../docs/specs/UI_CONSISTENCY_AUDIT.md).
+
+### TMA и сессия
+
+- Колонка `#root` max **480px**, нижний таббар + `env(safe-area-inset-bottom)`.
+- Фон/текст: `var(--tg-theme-*)` → `--mqx-surface-*`; CTA — **Quest Violet** (`--mq-accent-fill`), не «голубой» TG по умолчанию.
+- Типографика: только `var(--mq-fs-*)` из `#root` (`tma-base.css`), не сырые `px` в новом MQX.
+- Сессия **1–3 мин** ([`TARGET_PLAYER_AND_SESSION.md`](../../../docs/foundation/TARGET_PLAYER_AND_SESSION.md)): не добавлять плотность «все инструменты сразу» без unlock / lab; один якорь на экран (cash, цель, период).
+
+### Состояния экрана (обязательно при async)
+
+| Состояние | Паттерн в проекте |
+|-----------|-------------------|
+| Loading | Скелет / `Spinner` telegram-ui; не пустой экран |
+| Empty | `MqxCapitalEmpty` и аналоги; русский текст + действие |
+| Error | Toast + возможность retry; не `alert` |
+| Disabled | Визуал + `aria-disabled` / `disabled` |
+
+Эпик унификации empty/error: B1 в unification — до отдельного ★ не изобретать третий стиль пустого экрана.
+
+### Definition of Done (UI-PR)
+
+```
+- [ ] Новый видимый паттерн: lab ★ или hotfix без смены дизайна (запись в чате)
+- [ ] Компонент в mqx/ + секция #/dev/mqx (если не hotfix)
+- [ ] Canon Sync: APPROVED.md + parity round при крупном изменении
+- [ ] Ручная проверка: 320px, тёмная тема TG, 4 вкладки игры
+- [ ] a11y Basic: touch ≥44px, статус не только цветом (см. accessibility-requirements)
+- [ ] npm run build; release-tma чеклист перед merge в release
+```
+
+### Отложено (не внедрять «из аудита» без spec)
+
+Motion tokens, haptic, баннер «сейчас», простой/полный режим финансов, juice B, sparklines, новый display-font — список **D1–D12** в [`DESIGN_IMPROVEMENTS_BACKLOG.md`](../../../docs/agents/DESIGN_IMPROVEMENTS_BACKLOG.md).
+
+---
+
 ## Component Architecture
+
+> **Примечание:** примеры ниже — общие React-паттерны. Стили в этом репозитории — **CSS `mqx-*`**, не Tailwind.
 
 ### File Structure
 
@@ -136,6 +192,18 @@ Global store (Zustand, Redux)    → Complex client state shared app-wide
 
 ## Design System Adherence
 
+### ТВОЙ ХОД MQX (вместо generic palette)
+
+| Вместо | Использовать |
+|--------|----------------|
+| `#7c3aed`, `purple-600` | `var(--mq-violet)`, `--mq-accent-fill` |
+| Tailwind spacing | Классы `mqx-*`, отступы из `styles/mqx/` |
+| `toLocaleString` в JSX | `<MoneyText />` |
+| Текст «Удалить» в списке | `MqxRowAction` + `useMqxConfirm` (`SPEC_FRONTEND_UI`) |
+| Новый hex в компоненте | Токен в `styles/` |
+
+Градиенты: **hero + один primary CTA на экран** — ок; не размазывать violet gradient на каждую секцию (`SPEC_FRONTEND_UI`).
+
 ### Avoid the AI Aesthetic
 
 AI-generated UI has recognizable patterns. Avoid all of them:
@@ -183,7 +251,9 @@ Don't skip heading levels. Don't use heading styles for non-heading content.
 - Ensure sufficient contrast (4.5:1 for normal text, 3:1 for large text)
 - Don't rely solely on color to convey information (use icons, text, or patterns too)
 
-## Accessibility (WCAG 2.1 AA)
+## Accessibility
+
+**Канон проекта:** [`docs/ux/accessibility-requirements.md`](../../../docs/ux/accessibility-requirements.md) (Basic tier). Ниже — общие напоминания; при конфликте побеждает Basic tier.
 
 Every component must meet these standards:
 
@@ -348,6 +418,8 @@ After building UI:
 - [ ] Follows the project's design system (spacing, colors, typography)
 - [ ] No accessibility warnings in dev tools or axe-core
 - [ ] **ТВОЙ ХОД:** при новых/крупных изменениях MQX — пройден [`DESIGN_WORKFLOW.md`](../../../frontend-react/src/components/mqx/DESIGN_WORKFLOW.md) (если это не согласованный hotfix без смены дизайна)
+- [ ] **ТВОЙ ХОД:** 320px + тёмная тема; Finance/Analytics не ухудшили ⚠→★ без lab
+- [ ] Нет пунктов из `DESIGN_IMPROVEMENTS_BACKLOG` D* без spec
 
 ---
 

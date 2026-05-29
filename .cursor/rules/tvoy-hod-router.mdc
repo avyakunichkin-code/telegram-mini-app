@@ -77,7 +77,7 @@ Studio/GDD: только [`.cursor/skills/_archived/`](.cursor/skills/_archived/
 |------|--------|
 | `tvoy-hod-backend.mdc` | `backend/**` |
 | `tvoy-hod-frontend-*.mdc` | `frontend-react/**` |
-| `tvoy-hod-design-lab.mdc` | `design-lab/**` |
+| `tvoy-hod-design-lab.mdc` | `design-lab/**` — хаб `nav.manifest` → `design-lab:build-nav`; см. `docs/agents/DESIGN_LAB_NAVIGATION.md` |
 | `tvoy-hod-canon-sync.mdc` | утверждённый UI → prod |
 | `tvoy-hod-release-guardrails.mdc` | перед PR / выкаткой |
 

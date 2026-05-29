@@ -65,6 +65,44 @@ export function IconMetricPercent({ size = 16 }) {
   );
 }
 
+/** Фин.подушка / защита. */
+export function IconMetricShield({ size = 16 }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" aria-hidden>
+      <path
+        stroke="currentColor"
+        strokeWidth="1.75"
+        strokeLinejoin="round"
+        d="M12 3 20 7v6c0 5-3.4 8.2-8 9-4.6-.8-8-4-8-9V7l8-4Z"
+        fill="none"
+      />
+      <path
+        stroke="currentColor"
+        strokeWidth="1.75"
+        strokeLinecap="round"
+        d="M9.5 12.2 11 13.7 14.6 10.1"
+        fill="none"
+      />
+    </svg>
+  );
+}
+
+/** Предупреждение / ошибка секции. */
+export function IconMetricWarn({ size = 16 }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" aria-hidden>
+      <path
+        stroke="currentColor"
+        strokeWidth="1.75"
+        strokeLinejoin="round"
+        d="M12 3 22 20H2L12 3Z"
+        fill="none"
+      />
+      <path stroke="currentColor" strokeWidth="2" strokeLinecap="round" d="M12 9v5M12 17h.01" fill="none" />
+    </svg>
+  );
+}
+
 /** Удаление / закрытие — канон по умолчанию в `MqxRowAction` (F2); символ «−» — `removeVisual="minus"` (F1). */
 export function IconMetricTrash({ size = 18 }) {
   return (

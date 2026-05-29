@@ -1,0 +1,180 @@
+/* ★ ui-states-unified — empty / error / loading */
+
+.mqx-capital-empty--inline {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 0;
+  text-align: left;
+}
+
+.mqx-capital-empty__icon {
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+  border-radius: 12px;
+  display: grid;
+  place-items: center;
+  color: var(--mq-violet-deep);
+  background: color-mix(in srgb, var(--mq-violet) 14%, transparent);
+}
+
+.mqx-capital-empty--inline .mqx-capital-empty__cta {
+  margin-top: 0;
+  flex: 1;
+  min-height: 44px;
+  max-width: 100%;
+}
+
+.mqx-state-error {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  padding: 14px 12px;
+  border-radius: 14px;
+  background: color-mix(in srgb, var(--mq-danger) 8%, var(--mqx-glass-softer));
+  border: 1px solid color-mix(in srgb, var(--mq-danger) 22%, transparent);
+}
+
+.mqx-state-error__icon {
+  width: 32px;
+  height: 32px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  color: var(--mq-danger);
+  background: color-mix(in srgb, var(--mq-danger) 14%, transparent);
+}
+
+.mqx-state-error__body {
+  flex: 1;
+  min-width: 0;
+}
+
+.mqx-state-error__title {
+  margin: 0;
+  font-size: var(--mq-fs-heading);
+  font-weight: 800;
+  color: var(--mqx-ink);
+}
+
+.mqx-state-error__sub {
+  margin: 4px 0 0;
+  font-size: var(--mq-fs-caption);
+  line-height: 1.45;
+  color: color-mix(in srgb, var(--mqx-ink) 58%, transparent);
+}
+
+.mqx-state-error__btn {
+  margin-top: 12px;
+  width: 100%;
+  min-height: 44px;
+  padding: 10px 18px;
+  border: none;
+  border-radius: 12px;
+  font: inherit;
+  font-size: var(--mq-fs-heading);
+  font-weight: 800;
+  background: var(--mq-violet);
+  color: #fff;
+  cursor: pointer;
+}
+
+.mqx-state-error__btn:active {
+  transform: scale(0.98);
+}
+
+.mqx-state-skeleton__label {
+  margin: 0 0 10px;
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: color-mix(in srgb, var(--mqx-ink) 50%, transparent);
+}
+
+.mqx-state-skeleton__rows {
+  display: grid;
+  gap: 10px;
+}
+
+.mqx-state-skeleton__row {
+  height: 52px;
+  border-radius: 12px;
+  background: linear-gradient(
+    90deg,
+    color-mix(in srgb, var(--mqx-ink) 6%, transparent) 0%,
+    color-mix(in srgb, var(--mqx-ink) 10%, transparent) 50%,
+    color-mix(in srgb, var(--mqx-ink) 6%, transparent) 100%
+  );
+  background-size: 200% 100%;
+  animation: mqx-state-shimmer 1.2s ease-in-out infinite;
+}
+
+.mqx-state-skeleton__chips {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.mqx-state-skeleton__chip {
+  height: 56px;
+  border-radius: 12px;
+  background: linear-gradient(
+    90deg,
+    color-mix(in srgb, var(--mqx-ink) 5%, transparent) 0%,
+    color-mix(in srgb, var(--mqx-ink) 9%, transparent) 50%,
+    color-mix(in srgb, var(--mqx-ink) 5%, transparent) 100%
+  );
+  background-size: 200% 100%;
+  animation: mqx-state-shimmer 1.2s ease-in-out infinite;
+}
+
+@keyframes mqx-state-shimmer {
+  0% {
+    background-position: 100% 0;
+  }
+  100% {
+    background-position: -100% 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mqx-state-skeleton__row,
+  .mqx-state-skeleton__chip {
+    animation: none;
+  }
+}
+
+/* #/dev/mqx — витрина ui-states */
+.mqx-catalog-states__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 16px;
+  margin-top: 12px;
+}
+
+.mqx-catalog-states__label {
+  margin: 0 0 8px;
+  font-size: var(--mq-fs-heading);
+  font-weight: 800;
+  color: var(--mqx-ink, var(--text));
+}
+
+.mqx-catalog-states__panel {
+  padding: 12px;
+  border-radius: 16px;
+  background: var(--mqx-glass-softer, rgba(255, 255, 255, 0.72));
+  border: 1px solid color-mix(in srgb, var(--mqx-ink, #0f1115) 8%, transparent);
+}
+
+.mqx-catalog-states__ritual-host {
+  position: relative;
+  max-width: 360px;
+  min-height: 320px;
+  margin-top: 12px;
+  border-radius: 22px;
+  overflow: hidden;
+  border: 1px solid color-mix(in srgb, var(--mqx-ink, #0f1115) 10%, transparent);
+}

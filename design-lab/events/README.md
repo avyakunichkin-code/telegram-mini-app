@@ -7,15 +7,29 @@
 | **1** | [`layout-round/`](layout-round/) | Компоновка L1–L5 → ★ **L3** |
 | **2** | [`domains-round/`](domains-round/) | Скины `event_domain` на L3 |
 | **3** | [`overlay-round/`](overlay-round/) | Окно: шапка, панель, навигация → ★ **O1** |
+| **4** | [`tails-round/`](tails-round/) | E2 halo + E5 длинные тексты → ★ prod |
 | Архив | `index.html` | Раунды M1–M6, B′ (2026-05) |
+
+**Навигатор (основной способ):**
+
+```powershell
+cd design-lab
+npx serve .
+# http://localhost:3000/ — хаб из nav.manifest.json (поиск, parity, все раунды)
+```
+
+Пересборка хаба после правок `nav.manifest.json`:
+
+```powershell
+cd frontend-react
+npm run design-lab:build-nav
+```
+
+**Синк раундов events:**
 
 ```powershell
 cd design-lab/events
-.\sync-all-rounds.ps1          # lab-base.css + assets во всех раундах
-
-cd layout-round   # или overlay-round / domains-round
-.\sync-lab.ps1    # один раунд
-npx serve .
+.\sync-all-rounds.ps1
 ```
 
 В `index.html` только `./lab-base.css` и `./styles.css` — без `../`.

@@ -250,7 +250,11 @@ skills:
       must_read:
         - frontend-react/src/components/mqx/DESIGN_WORKFLOW.md
         - docs/specs/SPEC_FRONTEND_UI.md
+        - docs/specs/UI_CONSISTENCY_AUDIT.md
+        - docs/vision/ideas/mqx-ui-unification.md
         - design-lab/dashboard/APPROVED.md
+        - docs/agents/DESIGN_IMPROVEMENTS_BACKLOG.md
+        - docs/agents/DESIGN_LAB_NAVIGATION.md
         - .cursor/rules/tvoy-hod-design-lab.mdc
         - .cursor/rules/tvoy-hod-canon-sync.mdc
       writes_to:
@@ -322,8 +326,12 @@ skills:
       must_read:
         - frontend-react/src/components/mqx/DESIGN_WORKFLOW.md
         - docs/specs/SPEC_FRONTEND_UI.md
+        - docs/specs/UI_CONSISTENCY_AUDIT.md
+        - docs/reference/brandbook/BRANDBOOK_MQX.md
+        - docs/ux/accessibility-requirements.md
         - frontend-react/ARCHITECTURE.md
         - CLAUDE.md
+        - docs/agents/DESIGN_IMPROVEMENTS_BACKLOG.md
       writes_to:
         - frontend-react/src/components/mqx/
         - frontend-react/src/components/

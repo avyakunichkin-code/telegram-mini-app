@@ -12,6 +12,7 @@ import {
   InsuranceSection,
   InvestPositionRow,
   MqxCapitalEmpty,
+  MqxStateSkeleton,
   MqxSectionSeg,
   MqxSubtab,
   useMqxConfirm,
@@ -48,6 +49,7 @@ export function FinancePremium({
   const [investUiMode, setInvestUiMode] = useState('form');
   const [portfolioAssetsMode, setPortfolioAssetsMode] = useState('add');
   const [portfolioDebtsMode, setPortfolioDebtsMode] = useState('add');
+  const [extraLoading, setExtraLoading] = useState(true);
 
   const mechanics = useMemo(() => getEffectiveMechanicsFromOverview(overview), [overview]);
   const capitalSectionsCount =
@@ -75,6 +77,7 @@ export function FinancePremium({
   }, [openFlowsSection, onFlowsSectionOpened]);
 
   const reloadExtra = async ({ quiet = false } = {}) => {
+    setExtraLoading(true);
     try {
       const [pos, pol, tpl, ltpl] = await Promise.all([
         API.listInvestPositions(),
@@ -90,6 +93,8 @@ export function FinancePremium({
       if (!quiet) {
         showNotification(e?.detail || e?.message || 'Не удалось обновить разделы капитала', 'error');
       }
+    } finally {
+      setExtraLoading(false);
     }
   };
 
@@ -275,10 +280,12 @@ export function FinancePremium({
         />
       ) : (
         <div className="mqx-capital-position-list">
-          {selectedInvestPositions.length === 0 ? (
+          {extraLoading ? (
+            <MqxStateSkeleton variant="rows" rows={3} />
+          ) : selectedInvestPositions.length === 0 ? (
             <MqxCapitalEmpty
               message={`Нет позиций: ${investProductTab === 'deposit' ? 'депозитов' : 'облигаций'}`}
-              actionLabel="Оформить"
+              actionLabel={investProductTab === 'deposit' ? 'Открыть депозит' : 'Купить облигации'}
               onAction={() => setInvestUiMode('form')}
             />
           ) : (
@@ -354,6 +361,7 @@ export function FinancePremium({
                   refreshOverview={refreshOverview}
                   reloadExtra={reloadExtra}
                   handleDeleteAsset={handleDeleteAsset}
+                  extraLoading={extraLoading}
                 />
               </MqxCapitalSectionAccordion>
             ) : null}
@@ -366,6 +374,8 @@ export function FinancePremium({
                   setSectionMode={(m) => setPortfolioDebtsMode(m === 'mine' ? 'positions' : m)}
                   addLiabilityFromTemplate={addLiabilityFromTemplate}
                   handleDeleteLiability={handleDeleteLiability}
+                  reloadExtra={reloadExtra}
+                  extraLoading={extraLoading}
                 />
               </MqxCapitalSectionAccordion>
             ) : null}

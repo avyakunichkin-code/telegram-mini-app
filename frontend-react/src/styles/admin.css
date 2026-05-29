@@ -293,30 +293,3 @@ html[data-mq-layout='admin'] .mq-app-fill {
   padding: 12px;
   margin-bottom: 12px;
 }
-
-/* Level unified: финальный слой — без margin-inline −14px, контент в колонке 14px */
-.mqx-dash-stack--unified .mqx-level-dash-bleed,
-.mqx-tab-page--dash-unified .mqx-level-dash-bleed {
-  width: 100%;
-  max-width: 100%;
-  margin: 0;
-  padding-inline: var(--mqx-dash-inline-pad, 14px);
-}
-
-.mqx-dash-stack--unified .mqx-level-dash-bleed .mqx-level-dash__toggle,
-.mqx-tab-page--dash-unified .mqx-level-dash-bleed .mqx-level-dash__toggle,
-.mqx-dash-stack--unified .mqx-level-dash-bleed .mqx-level-dash__expand,
-.mqx-tab-page--dash-unified .mqx-level-dash-bleed .mqx-level-dash__expand {
-  margin: 0;
-}
-
-.mqx-dash-stack--unified .mqx-level-dash-bleed .mqx-level-dash__toggle,
-.mqx-tab-page--dash-unified .mqx-level-dash-bleed .mqx-level-dash__toggle {
-  padding-block: 12px;
-  padding-inline: 0;
-}
-
-.mqx-dash-stack--unified .mqx-level-dash-bleed .mqx-level-dash__expand,
-.mqx-tab-page--dash-unified .mqx-level-dash-bleed .mqx-level-dash__expand {
-  padding: 0 0 14px;
-}

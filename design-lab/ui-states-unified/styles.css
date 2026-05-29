@@ -1,0 +1,212 @@
+/* design-lab/ui-states-unified — общие токены MQX + каркас витрины */
+
+:root {
+  --mq-violet: #6d28d9;
+  --mq-violet-deep: #5b21b6;
+  --mq-emerald: #059669;
+  --mq-danger: #dc2626;
+  --mq-warning: #d97706;
+  --mq-sky: #0ea5e9;
+  --mq-amber: #d97706;
+  --mq-ink: #0f1115;
+  --mq-line: #e5e7eb;
+  --mq-mist: #f5f6f8;
+  --mqx-ink: #0f1115;
+  --mqx-glass-soft: rgba(255, 255, 255, 0.88);
+  --mqx-glass-softer: rgba(255, 255, 255, 0.72);
+  --surface: #fff;
+  --text: #0f1115;
+  --text-muted: #6b7280;
+  --glass-border: rgba(15, 17, 21, 0.1);
+  --font: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --mq-fs-caption: 12px;
+  --mq-fs-heading: 14px;
+  --mq-fs-body: 15px;
+}
+
+[data-theme='dark'] {
+  --surface: #1e1f26;
+  --text: #f3f4f6;
+  --text-muted: #9ca3af;
+  --mq-mist: #121318;
+  --mqx-ink: #f3f4f6;
+  --mqx-glass-soft: rgba(30, 31, 38, 0.92);
+  --mqx-glass-softer: rgba(30, 31, 38, 0.78);
+  --glass-border: rgba(255, 255, 255, 0.1);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font);
+  font-size: var(--mq-fs-body);
+  line-height: 1.42;
+  color: var(--text);
+  background: var(--mq-mist);
+}
+
+.lab-header {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  padding: 14px 18px;
+  background: color-mix(in srgb, var(--mq-mist) 92%, transparent);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--glass-border);
+}
+
+.lab-header h1 {
+  margin: 0;
+  font-size: 1.125rem;
+  font-weight: 800;
+}
+
+.lab-header p {
+  margin: 6px 0 0;
+  font-size: 13px;
+  color: var(--text-muted);
+  max-width: 42rem;
+}
+
+.lab-header__row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+  margin-top: 12px;
+}
+
+.lab-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.lab-nav a {
+  font-size: 12px;
+  font-weight: 700;
+  padding: 6px 10px;
+  border-radius: 8px;
+  text-decoration: none;
+  color: var(--text);
+  border: 1px solid var(--glass-border);
+  background: var(--mqx-glass-soft);
+}
+
+.lab-nav a:hover {
+  border-color: color-mix(in srgb, var(--mq-violet) 40%, var(--glass-border));
+}
+
+[data-theme-btn] {
+  font: inherit;
+  font-size: 13px;
+  font-weight: 700;
+  padding: 8px 14px;
+  border-radius: 10px;
+  cursor: pointer;
+  border: 1px solid var(--glass-border);
+  background: var(--mqx-glass-soft);
+  color: var(--text);
+}
+
+[data-theme-btn].is-active {
+  background: var(--mq-violet);
+  border-color: var(--mq-violet-deep);
+  color: #fff;
+}
+
+.lab-main {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px 16px 48px;
+}
+
+.lab-section {
+  margin-bottom: 40px;
+  scroll-margin-top: 88px;
+}
+
+.lab-section > h2 {
+  margin: 0 0 4px;
+  font-size: 1.05rem;
+  font-weight: 800;
+}
+
+.lab-section > p.lab-lead {
+  margin: 0 0 16px;
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.lab-compare {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 16px;
+}
+
+.lab-col {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.lab-col__id {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 28px;
+  height: 22px;
+  padding: 0 8px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 800;
+  background: color-mix(in srgb, var(--mq-violet) 14%, transparent);
+  color: var(--mq-violet-deep);
+}
+
+[data-theme='dark'] .lab-col__id {
+  color: #c4b5fd;
+}
+
+.lab-col__note {
+  margin: 0;
+  font-size: 11px;
+  color: var(--text-muted);
+  line-height: 1.35;
+}
+
+.lab-phone {
+  width: 100%;
+  max-width: 280px;
+  border-radius: 22px;
+  border: 1px solid var(--glass-border);
+  background: var(--surface);
+  overflow: hidden;
+  box-shadow: 0 8px 28px color-mix(in srgb, var(--mq-ink) 8%, transparent);
+}
+
+.lab-phone__inner {
+  padding: 12px;
+  min-height: 120px;
+  background: var(--surface);
+  color: var(--mqx-ink);
+}
+
+.lab-panel-title {
+  margin: 0 0 10px;
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-muted);
+}
+
+.lab-capital-card {
+  border-radius: 16px;
+  padding: 12px;
+  background: var(--mqx-glass-softer);
+  border: 1px solid color-mix(in srgb, var(--glass-border) 80%, transparent);
+}

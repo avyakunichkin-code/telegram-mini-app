@@ -106,7 +106,7 @@
 }
 
 /* Кнопки: всегда с рамкой; filled — заливка, outline/plain — остаются библиотечными */
-#root button:not(.tma-nav-icon-btn):not(.mqx-btn):not(.mqx-save-kind__row):not(.bottom-nav__cell):not(.mqx-dash-link):not(.mqx-finance-monetka__close):not(.mqx-capital-monetka__close):not(.mqx-action):not(.mqx-action-chip):not(.mqx-level-dash__toggle):not(.mqx-goal-dash__toggle):not(.events-carousel-dot):not(.events-carousel-arrow):not(.events-overlay-close):not(.mqx-events-card__close):not(.mqx-events-choice) {
+#root button:not(.tma-nav-icon-btn):not(.mqx-btn):not(.mqx-save-kind__row):not(.bottom-nav__cell):not(.mqx-dash-link):not(.mqx-finance-monetka__close):not(.mqx-capital-monetka__close):not(.mqx-action):not(.mqx-action-chip):not(.mqx-goal-dash__toggle):not(.events-carousel-dot):not(.events-carousel-arrow):not(.events-overlay-close):not(.mqx-events-card__close):not(.mqx-events-choice) {
   box-shadow: 0 0 0 1px var(--tgui--outline) inset;
 }
 
@@ -230,18 +230,18 @@
 
 /* Hover/глубина для filled-кнопок (не трогаем outline/plain) */
 @media (hover: hover) {
-  #root button:not(.tma-nav-icon-btn):not(.mqx-btn):not(.mqx-save-kind__row):not(.bottom-nav__cell):not(.mqx-dash-link):not(.mqx-finance-monetka__close):not(.mqx-capital-monetka__close):not(.mqx-action):not(.mqx-action-chip):not(.mqx-level-dash__toggle):not(.mqx-goal-dash__toggle):not(.events-carousel-dot):not(.events-carousel-arrow):not(.events-overlay-close):not(.mqx-events-card__close):not(.mqx-events-choice) {
+  #root button:not(.tma-nav-icon-btn):not(.mqx-btn):not(.mqx-save-kind__row):not(.bottom-nav__cell):not(.mqx-dash-link):not(.mqx-finance-monetka__close):not(.mqx-capital-monetka__close):not(.mqx-action):not(.mqx-action-chip):not(.mqx-goal-dash__toggle):not(.events-carousel-dot):not(.events-carousel-arrow):not(.events-overlay-close):not(.mqx-events-card__close):not(.mqx-events-choice) {
     transition:
       background-color 0.14s ease,
       box-shadow 0.14s ease,
       transform 0.12s cubic-bezier(0.22, 1, 0.32, 1);
   }
-  #root button:not(.tma-nav-icon-btn):not(.mqx-btn):not(.mqx-save-kind__row):not(.bottom-nav__cell):not(.mqx-dash-link):not(.mqx-finance-monetka__close):not(.mqx-capital-monetka__close):not(.mqx-action):not(.mqx-action-chip):not(.mqx-level-dash__toggle):not(.mqx-goal-dash__toggle):not(.events-carousel-dot):not(.events-carousel-arrow):not(.events-overlay-close):not(.mqx-events-card__close):not(.mqx-events-choice):active:not(:disabled) {
+  #root button:not(.tma-nav-icon-btn):not(.mqx-btn):not(.mqx-save-kind__row):not(.bottom-nav__cell):not(.mqx-dash-link):not(.mqx-finance-monetka__close):not(.mqx-capital-monetka__close):not(.mqx-action):not(.mqx-action-chip):not(.mqx-goal-dash__toggle):not(.events-carousel-dot):not(.events-carousel-arrow):not(.events-overlay-close):not(.mqx-events-card__close):not(.mqx-events-choice):active:not(:disabled) {
     transform: scale(0.985);
   }
   /* filled у telegram-ui использует var(--tgui--button_color) — затемняем только его */
-  #root button:not(.tma-nav-icon-btn):not(.mqx-btn):not(.mqx-save-kind__row):not(.bottom-nav__cell):not(.mqx-dash-link):not(.mqx-finance-monetka__close):not(.mqx-capital-monetka__close):not(.mqx-action):not(.mqx-action-chip):not(.mqx-level-dash__toggle):not(.mqx-goal-dash__toggle):not(.events-carousel-dot):not(.events-carousel-arrow):not(.events-overlay-close):not(.mqx-events-card__close):not(.mqx-events-choice)[style*='--tgui--button_color'],
-  #root button:not(.tma-nav-icon-btn):not(.mqx-btn):not(.mqx-save-kind__row):not(.bottom-nav__cell):not(.mqx-dash-link):not(.mqx-finance-monetka__close):not(.mqx-capital-monetka__close):not(.mqx-action):not(.mqx-action-chip):not(.mqx-level-dash__toggle):not(.mqx-goal-dash__toggle):not(.events-carousel-dot):not(.events-carousel-arrow):not(.events-overlay-close):not(.mqx-events-card__close):not(.mqx-events-choice)[class*='tgui-']:where(:not(:disabled)) {
+  #root button:not(.tma-nav-icon-btn):not(.mqx-btn):not(.mqx-save-kind__row):not(.bottom-nav__cell):not(.mqx-dash-link):not(.mqx-finance-monetka__close):not(.mqx-capital-monetka__close):not(.mqx-action):not(.mqx-action-chip):not(.mqx-goal-dash__toggle):not(.events-carousel-dot):not(.events-carousel-arrow):not(.events-overlay-close):not(.mqx-events-card__close):not(.mqx-events-choice)[style*='--tgui--button_color'],
+  #root button:not(.tma-nav-icon-btn):not(.mqx-btn):not(.mqx-save-kind__row):not(.bottom-nav__cell):not(.mqx-dash-link):not(.mqx-finance-monetka__close):not(.mqx-capital-monetka__close):not(.mqx-action):not(.mqx-action-chip):not(.mqx-goal-dash__toggle):not(.events-carousel-dot):not(.events-carousel-arrow):not(.events-overlay-close):not(.mqx-events-card__close):not(.mqx-events-choice)[class*='tgui-']:where(:not(:disabled)) {
     /* оставляем библиотечные состояния; глубина достигается рамкой и лёгким transform */
   }
 }

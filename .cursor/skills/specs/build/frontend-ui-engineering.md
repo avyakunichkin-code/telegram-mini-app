@@ -25,7 +25,9 @@
 
 - [ ] Явная отсылка к DESIGN_WORKFLOW (не только «сделай красиво»).
 - [ ] Не добавляет `href="../"` в lab HTML.
-- [ ] «Прочитай сначала» содержит SPEC_FRONTEND_UI и ARCHITECTURE.
+- [ ] «Прочитай сначала» содержит SPEC_FRONTEND_UI, UI_CONSISTENCY_AUDIT, ARCHITECTURE.
+- [ ] Finance/Analytics ⚠: не новый визуал в prod без lab (волна C).
+- [ ] Не внедряет D1–D12 из DESIGN_IMPROVEMENTS_BACKLOG без spec.
 
 ---
 

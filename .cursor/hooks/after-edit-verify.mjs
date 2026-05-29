@@ -73,9 +73,25 @@ if (
   );
 }
 
-if (/design-lab\//.test(filePath) && /styles\.css$/.test(filePath)) {
+if (/design-lab\/nav\.manifest\.json$/.test(filePath)) {
   hints.push(
-    'ТВОЙ ХОД hook: правка styles в design-lab — запусти `sync-lab.ps1` в раунде; только `./` пути в index.html.',
+    'ТВОЙ ХОД hook: nav.manifest — пересобери хаб: `cd frontend-react && npm run design-lab:build-nav`. Полный parity: `npm run design-lab:build`. См. `docs/agents/DESIGN_LAB_NAVIGATION.md`.',
+  );
+} else if (
+  /design-lab\/[^/]+\/canon\.manifest\.json$/.test(filePath) ||
+  /design-lab\/dashboard\/canon\.manifest\.json$/.test(filePath) ||
+  /design-lab\/finance\/canon\.manifest\.json$/.test(filePath)
+) {
+  hints.push(
+    'ТВОЙ ХОД hook: canon.manifest — `cd frontend-react && npm run design-lab:build` (page parity). См. `docs/agents/DESIGN_LAB_NAVIGATION.md`.',
+  );
+} else if (/design-lab\/[^/]+\/[^/]+\/index\.html$/.test(filePath)) {
+  hints.push(
+    'ТВОЙ ХОД hook: новый/изменённый round — добавь ссылку в `design-lab/nav.manifest.json`, затем `npm run design-lab:build-nav`. Ревью через хаб `cd design-lab && npx serve .`, не только serve в round.',
+  );
+} else if (/design-lab\//.test(filePath) && /styles\.css$/.test(filePath)) {
+  hints.push(
+    'ТВОЙ ХОД hook: правка styles в design-lab — `sync-lab.ps1` в раунде; только `./` в index.html. Обзор: хаб `design-lab/` + `DESIGN_LAB_NAVIGATION.md`.',
   );
 }
 
