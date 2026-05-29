@@ -1,0 +1,88 @@
+---
+description: Роутер агента — карта проекта, фаза → скилл, primary + satellites
+alwaysApply: true
+---
+
+# ТВОЙ ХОД — роутер агента
+
+## Карта проекта
+
+- **Код и API**: [`CLAUDE.md`](CLAUDE.md)
+- **Продукт**: [`docs/foundation/SPEC_PRODUCT.md`](docs/foundation/SPEC_PRODUCT.md)
+- **Конвейер docs**: [`docs/agents/SKILL_DOC_MAP.md`](docs/agents/SKILL_DOC_MAP.md), [`docs/DOCUMENTATION_SYSTEM.md`](docs/DOCUMENTATION_SYSTEM.md)
+- **Скиллы**: [`docs/agents/CURSOR_SKILLS.md`](docs/agents/CURSOR_SKILLS.md), [`docs/agents/SKILLS_PHASE_CONTENT_AND_DATA.md`](docs/agents/SKILLS_PHASE_CONTENT_AND_DATA.md), [`.cursor/skills/catalog.yaml`](.cursor/skills/catalog.yaml) (`tier`)
+- **Баланс / пороги**: [`docs/vision/ideas/game-balance-thresholds-and-constraints.md`](docs/vision/ideas/game-balance-thresholds-and-constraints.md)
+- **MQX**: [`frontend-react/src/components/mqx/DESIGN_WORKFLOW.md`](frontend-react/src/components/mqx/DESIGN_WORKFLOW.md) — читать **целиком** перед новым UI (исключение: hotfix без смены дизайна)
+
+**При конфликте источников:** код + тесты → `docs/specs/features/SPEC_*.md` → `SPEC_PRODUCT.md` → `docs/vision/ideas/`.
+
+Studio/GDD: только [`.cursor/skills/_archived/`](.cursor/skills/_archived/) по явному запросу.
+
+## Фаза: контент и данные (приоритет сейчас)
+
+`catalog.yaml` → **`tier: core`** — primary по умолчанию. **`tier: support`** — plan / review / ADR. **`tier: deferred`** — только по запросу (perf, release, TMA runtime, …). Полная карта: [`SKILLS_PHASE_CONTENT_AND_DATA.md`](docs/agents/SKILLS_PHASE_CONTENT_AND_DATA.md).
+
+| Ось | Core | Не путать с |
+|-----|------|-------------|
+| Концепт + контракт | idea-refine, spec-driven-development | studio `_archived/` |
+| Данные (события) | create-event, event-analysis | game-economy (движок периода) |
+| Механики | game-economy-and-victory | create-event (YAML карточек) |
+| FE↔BE | api-and-interface-design | incremental без spec |
+| Поверхность | design-lab-mqx → frontend-ui-engineering | lab без canon-sync в prod |
+| Границы доменов | documentation-and-adrs (support) | код без ADR при споре «кто владелец» |
+
+**Satellites обязательны:** create-event → TDD; game-economy → TDD + doubt-driven-development; крупный diff → economy-reviewer / mqx-ui-reviewer.
+
+## Фаза → primary skill
+
+| Ситуация | Primary | Куда писать |
+|----------|---------|-------------|
+| Сырая гипотеза | **idea-refine** | `docs/vision/ideas/` |
+| Контракт / фича до кода | **spec-driven-development** | `docs/specs/features/` |
+| Spec → задачи | **planning-and-task-breakdown** | `docs/plans/`, `docs/tasks/` |
+| Код срезами | **incremental-implementation** | `backend/`, `frontend-react/` |
+| Экономика периода, победа | **game-economy-and-victory** | `backend/app/game/`, `victory/`, seeds |
+| **Создать / доработать событие** | **create-event** (`/create-event`) | `data/events/mvp11`, brief, persona |
+| **Анализ каталога событий** (read-only) | **event-analysis** (`/event-analysis`) | отчёт; satellite → create-event |
+| **Прогон баланса 30–40 периодов** | **balance-playtest** (`/balance-playtest`) | `docs/balance/reports/`; baseline diff |
+| API / контракты | **api-and-interface-design** | routers, `api.js` |
+| UI prod (MQX) | **frontend-ui-engineering** | `mqx/`, `*Premium.jsx` |
+| Макет в lab | **design-lab-mqx** | `design-lab/<theme>/` |
+| Регрессии / баги в логике | **test-driven-development** | `backend/tests/` |
+| Перед merge | **code-review-and-quality** | read-only |
+| Неясно какой скилл | **using-agent-skills** | — |
+
+**`tier: deferred`** (явный вызов): `browser-testing-with-devtools`, `security-and-hardening`, `performance-optimization`, `deprecation-and-migration`, `release-tma`, `telegram-mini-app-runtime`, `social-changelog-posts`, `code-simplification`, `context-engineering`.
+
+**`tier: support`:** `planning-and-task-breakdown` (epic), `code-review-and-quality` (merge), `documentation-and-adrs` (граница доменов). **`doubt-driven-development`** — deferred, но satellite для game-economy.
+
+Скилл с `status: active` — блок **«Прочитай сначала»** в `SKILL.md` до процедуры.
+
+## Primary + satellites (обязательные пары)
+
+Один **primary**; **satellites** открывай и следуй им в той же задаче:
+
+| Primary | Satellites |
+|---------|------------|
+| incremental-implementation | test-driven-development |
+| game-economy-and-victory | test-driven-development, doubt-driven-development, balance-playtest (крупный баланс) |
+| create-event (крупный YAML) | balance-playtest (опционально) |
+| api-and-interface-design | test-driven-development (если меняется поведение) |
+| frontend-ui-engineering | design-lab-mqx (новый/смена UI), browser-testing-with-devtools (интерактив) |
+| design-lab-mqx | — (canon: rule `tvoy-hod-canon-sync.mdc` + skill) |
+
+## Контекстные rules (не alwaysApply)
+
+| Rule | Когда |
+|------|--------|
+| `tvoy-hod-backend.mdc` | `backend/**` |
+| `tvoy-hod-frontend-*.mdc` | `frontend-react/**` |
+| `tvoy-hod-design-lab.mdc` | `design-lab/**` |
+| `tvoy-hod-canon-sync.mdc` | утверждённый UI → prod |
+| `tvoy-hod-release-guardrails.mdc` | перед PR / выкаткой |
+
+**Hooks:** `.cursor/hooks.json` — напоминания после правок economy/UI/lab.
+
+**Subagents:** [`.cursor/agents/`](.cursor/agents/) — `economy-reviewer`, `economy-balance-runner`, `mqx-ui-reviewer` (после крупных diff; см. `catalog.yaml` → `agents:`).
+
+При смене API: `frontend-react/src/api.js` + хуки/экраны.

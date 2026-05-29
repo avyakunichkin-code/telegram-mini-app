@@ -1,0 +1,33 @@
+events:
+- definition_key: mq11_insurance_agent
+  event_domain: insurance
+  title: Страховой агент
+  description: Предлагают расширить покрытие с небольшой ежемесячной доплатой.
+  weight: 70
+  event_tier: 3
+  repeat_policy: repeatable
+  scenario_shape: soft_offer
+  choices:
+  - title: Подключить доп. покрытие
+    effects:
+      expense_line:
+        category_key: health
+        amount_monthly: 1200
+        title: Доп. страховка
+      xp_delta: 2
+      needs_delta:
+        comfort: 6
+        health: 4
+  - title: Только консультация
+    effects:
+      cash_delta: 0
+      xp_delta: 2
+      needs_delta:
+        comfort: 2
+  - title: Отказ
+    effects:
+      cash_delta: 0
+      xp_delta: 1
+      needs_delta:
+        comfort: -4
+        health: -2

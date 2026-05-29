@@ -1,0 +1,19 @@
+# Эталоны balance playtest (см. docs/balance/README.md)
+# Каждая запись: один файл JSON + параметры simulate
+
+version: 1
+defaults:
+  template_key: mq_game_basic_v1
+  periods: 40
+  rng_seed: 42
+
+baselines:
+  - id: main__student_tutorial_40p
+    file: main__student_tutorial_40p.json
+    policy: tutorial
+    description: Студент, онбординг-бот (max Δcash), 40p
+
+  - id: main__student_safety_first_40p
+    file: main__student_safety_first_40p.json
+    policy: safety_first
+    description: Студент, приоритет подушки до baseline target, 40p

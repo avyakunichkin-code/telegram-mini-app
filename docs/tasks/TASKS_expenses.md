@@ -1,9 +1,10 @@
 ---
 layer: tasks
-epic: E1
+epic_id: E1
 spec: ../specs/features/SPEC_expenses.md
 plan: ../plans/PLAN_expenses.md
 checklist: ../specs/economy/EXPENSES_LAYER_CHECKLIST.md
+traceability: ../TRACEABILITY.md
 ---
 
 # Задачи E1 — Расходы (жизнеобеспечение)
@@ -16,7 +17,7 @@ checklist: ../specs/economy/EXPENSES_LAYER_CHECKLIST.md
 
 ## Волна A — Backend
 
-- [ ] E1-110 — migration categories + `expense_category_definitions`
+- [ ] E1-110 — migration categories + `expense_category_definitions` — **phase:** `build` · **skill:** `incremental-implementation` · **next:** `test-driven-development`
 - [ ] E1-111 — migration `profile_expense_lines` + models
 - [ ] E1-112 — `finance/expenses.py` domain + tests
 - [ ] E1-113 — `game/start` creates lines from blueprint

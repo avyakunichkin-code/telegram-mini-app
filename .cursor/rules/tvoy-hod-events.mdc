@@ -1,0 +1,29 @@
+---
+description: События — каталог, seeds, tier, персоны; вызывать /create-event
+globs: backend/app/events/**,backend/app/services/events/**,backend/app/routers/events.py,backend/tests/test_event*,backend/migrations/*event*,docs/vision/ideas/event*.md,docs/templates/EVENT_BRIEF.md
+alwaysApply: false
+---
+
+# События (контент + движок)
+
+**Создание / доработка:** скилл **`create-event`** (`/create-event`) — не писать seed «с нуля» без brief.
+
+Канон: [`SPEC_mvp-11-progression-events.md`](docs/specs/features/SPEC_mvp-11-progression-events.md), [`data/events/mvp11/`](data/events/mvp11/), sync — [`mvp11_seeds.py`](backend/app/events/mvp11_seeds.py).
+
+## Инварианты
+
+- **Отдельный `definition_key`** на вариант (не `variants[]` в одной записи).
+- **Студент** (`mq_game_basic_v1`) vs **Профессионал** (`mq_game_tight_budget_v1`) — разный копирайт/суммы/needs; см. [`persona-profiles.md`](.cursor/skills/create-event/persona-profiles.md).
+- `audience_json` по template — **ещё не в prod**; до фазы 2 — `prerequisites_json` + naming.
+- Effects только из `ALLOWED_EFFECT_KEYS`; burn preview — `choice_impacts`.
+- После изменений: `cd backend && python -m pytest -q -k event`
+
+## Не смешивать
+
+| Задача | Инструмент |
+|--------|------------|
+| Новое событие, баланс, needs | **create-event** (`/create-event`) |
+| Обзор каталога, gaps, дубли | **event-analysis** (`/event-analysis`) — read-only |
+| Карточка / lab | design-lab-mqx, mqx-ui-reviewer |
+| PR / diff events + economy | economy-reviewer |
+| period.py, victory | game-economy-and-victory |

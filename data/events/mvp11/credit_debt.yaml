@@ -1,0 +1,32 @@
+events:
+- definition_key: mq11_refinance_bank
+  event_domain: credit_debt
+  title: Предложение рефинансирования
+  description: Банк предлагает объединить платежи под новую ставку.
+  weight: 58
+  event_tier: 5
+  repeat_policy: repeatable
+  scenario_shape: soft_offer
+  is_active: 0
+  prerequisites:
+    min_active_liabilities: 1
+  choices:
+  - title: Оформить пакет документов
+    effects:
+      cash_delta: -6500
+      xp_delta: 12
+      needs_delta:
+        comfort: 8
+        status: 3
+  - title: Только консультация
+    effects:
+      cash_delta: 0
+      xp_delta: 4
+      needs_delta:
+        comfort: 3
+  - title: Отклонить предложение
+    effects:
+      cash_delta: 0
+      xp_delta: 1
+      needs_delta:
+        comfort: -4

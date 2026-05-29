@@ -188,10 +188,15 @@ flowchart LR
 **Вход:** plan.  
 **Выход:** секция **Tasks** в том же `PLAN_*.md` или `docs/tasks/TASKS_<slug>.md`.
 
-Формат задачи (копировать в plan/backlog):
+Шаблоны: [`templates/PLAN_FEATURE.md`](templates/PLAN_FEATURE.md), [`templates/TASK_SLICE.md`](templates/TASK_SLICE.md).
+
+Формат задачи (копировать в plan / `docs/tasks/`):
 
 ```markdown
 ### MQ-042 — Краткое название
+- **Phase:** build
+- **Skill:** incremental-implementation
+- **Next skill:** test-driven-development
 - **Spec:** specs/features/SPEC_save-kind.md §3.2
 - **Acceptance:** …
 - **Verify:** `pytest …` / ручной сценарий / `npm run build`
@@ -199,6 +204,10 @@ flowchart LR
 - **Estimate:** S | M | L
 - **Depends:** MQ-041
 ```
+
+`phase`: `define` | `build` | `verify` | `ship` — маппинг на Agent Skills: [`agents/SKILL_DOC_MAP.md`](agents/SKILL_DOC_MAP.md).
+
+После нарезки задач обновить строку эпика в [`TRACEABILITY.md`](TRACEABILITY.md) (колонки Plan / Backlog / Статус).
 
 **Связь с бэклогом:** в `PRODUCT_BACKLOG.md` каждый пункт:
 
@@ -278,7 +287,8 @@ Spec отвечает на **что**; ADR на **почему так**.
 |------|------------|
 | `IDEA_ONEPAGER.md` | выход idea-refine |
 | `SPEC_FEATURE.md` | фича целиком |
-| `PLAN_FEATURE.md` | план + tasks |
+| `PLAN_FEATURE.md` | план (`epic_id`, `next_skill`, срезы) |
+| `TASK_SLICE.md` | одна MQ-* (`phase`, `tier`, `skill`, `satellites`, `next_skill`) |
 | `ADR.md` | архитектурное решение |
 | `TRACE_ROW.md` | строка матрицы трассировки |
 

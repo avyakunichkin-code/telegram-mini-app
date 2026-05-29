@@ -1,56 +1,119 @@
 ﻿# Agent Skills ТВОЙ ХОД — что использовать и когда
 
-Скиллы лежат в `.cursor/skills/` репозитория (проектные процедуры). Дополнительно доступны **глобальные** скиллы Cursor (`babysit`, `canvas`, `ci-investigator`, и т.д.) — их не дублируем в проекте.
+**Активные** скиллы: `.cursor/skills/<name>/` (см. [`catalog.yaml`](../../.cursor/skills/catalog.yaml): `status` + **`tier`**; на 2026-05-29: **14 active**, **11 optional**).
 
-Ориентир по стеку: **FastAPI + PostgreSQL + React TMA**, см. [`CLAUDE.md`](../../CLAUDE.md).
+**Текущая фаза (контент + данные):** [`SKILLS_PHASE_CONTENT_AND_DATA.md`](SKILLS_PHASE_CONTENT_AND_DATA.md) — `tier: core` / `support` / `deferred` / `archived`.
+
+**Архив** (не удалены, не автоподключаются): [`.cursor/skills/_archived/`](../../.cursor/skills/_archived/) — studio/GDD-наследие.
+
+Глобальные скиллы Cursor (`babysit`, `canvas`, `ci-investigator`, …) в проект не дублируем.
+
+Ориентир по стеку: [`CLAUDE.md`](../../CLAUDE.md).
+
+**Интеграция с docs (2026-05-28):**
+
+| Артефакт | Назначение |
+|----------|------------|
+| [`SKILL_DOC_MAP.md`](SKILL_DOC_MAP.md) | Конвейер фаза → скилл → папки docs |
+| [`catalog.yaml`](../../.cursor/skills/catalog.yaml) → `context:` | `must_read`, `writes_to`, `next_skill` на скилл |
+| `SKILL.md` → **Прочитай сначала** | Те же пути для агента при явном вызове |
+| `.cursor/rules/tvoy-hod-router.mdc` | Роутер: фаза → primary skill + satellites (alwaysApply) |
+| `.cursor/hooks.json` | Напоминания pytest / guardrails / sync-lab после правок |
+| [`.cursor/agents/`](../../.cursor/agents/) | Subagents `economy-reviewer`, `economy-balance-runner`, `mqx-ui-reviewer` |
+| [`docs/balance/README.md`](../balance/README.md) | Симуляция 40p, baseline JSON, diff |
+| [`docs/templates/TASK_SLICE.md`](../templates/TASK_SLICE.md) | MQ-*: `phase`, `tier`, `skill`, `satellites`, `next_skill` |
+| [`docs/templates/PLAN_FEATURE.md`](../templates/PLAN_FEATURE.md) | PLAN: `epic_id`, spec, `next_skill` |
+| [`docs/TRACEABILITY.md`](../TRACEABILITY.md) | Обновлять после нарезки плана |
 
 ---
 
-## Высокая ценность (часто)
+## Фаза: контент и данные (`tier`)
 
-| Скилл | Зачем в этом репозитории |
-|-------|---------------------------|
-| **frontend-ui-engineering** | MQX, Telegram UI, карточки, a11y-паттерны; **при работе с `mqx/` и новыми UI-паттернами — строго по FLOW** в [`frontend-react/src/components/mqx/DESIGN_WORKFLOW.md`](../../frontend-react/src/components/mqx/DESIGN_WORKFLOW.md) |
-| **design-lab-mqx** | Макеты в `design-lab/`: self-contained CSS, `sync-lab.ps1`, без `../` в HTML; правило `tvoy-hod-design-lab.mdc` |
-| **spec-driven-development** | Новые фичи и контракты — сначала spec (`docs/specs/`) |
-| **incremental-implementation** | Крупные изменения по шагам без монолитных PR |
-| **api-and-interface-design** | Эндпоинты `/api/...`, поля overview, синхронизация с `api.js` |
-| **test-driven-development** | Логика `game_period`, расчёты — регрессии дорого стоят |
-| **code-review-and-quality** | Перед merge UI и экономики |
-| **planning-and-task-breakdown** | Бэклог по слоям (docs), разбиение задач |
-| **context-engineering** | Длинные сессии агента, что класть в rules vs skills |
-| **using-agent-skills** | Навигация по каталогу скиллов |
+| `tier` | Скиллы | Когда |
+|--------|--------|--------|
+| **core** | idea-refine, spec-driven-development, create-event, event-analysis, game-economy-and-victory, api-and-interface-design, design-lab-mqx, frontend-ui-engineering, incremental-implementation, test-driven-development, using-agent-skills | Primary по умолчанию |
+| **support** | planning-and-task-breakdown, code-review-and-quality, documentation-and-adrs, skill-test, balance-playtest | Epic, merge, ADR; `/balance-playtest` после баланса |
+| **deferred** | все `status: optional` кроме documentation-and-adrs | Явный запрос; doubt — satellite для economy |
+| **archived** | `_archived/*` | Studio/GDD вручную |
+
+Подробно: [`SKILLS_PHASE_CONTENT_AND_DATA.md`](SKILLS_PHASE_CONTENT_AND_DATA.md).
 
 ---
 
-## Средняя ценность (по ситуации)
+## Высокая ценность (`status: active`)
 
-| Скилл | Когда включать |
+| Скилл | Зачем |
+|-------|--------|
+| **frontend-ui-engineering** | MQX, TMA UI; новые паттерны — [`DESIGN_WORKFLOW.md`](../../frontend-react/src/components/mqx/DESIGN_WORKFLOW.md) |
+| **design-lab-mqx** | `design-lab/`, self-contained CSS, `sync-lab` |
+| **spec-driven-development** | Spec в `docs/specs/` до кода |
+| **incremental-implementation** | Срезы без монолитных PR |
+| **api-and-interface-design** | `/api/...`, `api.js`, контракты |
+| **test-driven-development** | Регрессии экономики/периода |
+| **create-event** | **`/create-event`** — авторинг событий, Student/Professional, needs, burn |
+| **event-analysis** | **`/event-analysis`** — read-only обзор YAML-каталога, gaps, баланс-ориентиры |
+| **game-economy-and-victory** | `period.py`, Victory v2, баланс движка (не контент карточек) |
+| **balance-playtest** (`/balance-playtest`) | 40 периодов, JSON, diff к baseline; subagent `economy-balance-runner` |
+| **code-review-and-quality** | Перед merge |
+| **planning-and-task-breakdown** | Задачи из spec |
+| **idea-refine** | `docs/vision/ideas/` до spec |
+| **using-agent-skills** | Выбор скилла по фазе |
+| **skill-test** | `audit` / `static` / `spec` / `category` |
+
+---
+
+## Средняя ценность (`status: optional`, `tier: deferred` или `support`)
+
+| Скилл | `tier` | Когда |
+|-------|--------|--------|
+| **documentation-and-adrs** | support | ADR, граница доменов, публичный API |
+| **browser-testing-with-devtools** | deferred | DOM/сеть TMA (Chrome DevTools MCP) |
+| **doubt-driven-development** | deferred | Satellite для game-economy; иначе высокие ставки |
+| **deprecation-and-migration** | deferred | Смена контрактов, `save_kind` |
+| **security-and-hardening** | deferred | JWT, ввод, интеграции |
+| **code-simplification** | deferred | Рефакторинг после роста UI |
+| **performance-optimization** | deferred | CLS/LCP, ререндеры |
+| **context-engineering** | deferred | Rules vs skills, объём контекста |
+| **social-changelog-posts** | deferred | Посты → `docs/marketing/` |
+| **release-tma** | deferred | Guardrails + design-lab:build перед выкаткой |
+| **telegram-mini-app-runtime** | deferred | WebApp SDK, initData, viewport TMA |
+| **project-cursor-skills-layout** | meta | Rules vs skills, контракт `SKILL.md` |
+
+---
+
+## Удалённые из репозитория (не восстанавливать в `_archived`)
+
+Эти скиллы **не лежат** в `.cursor/skills/` и **не переносятся** в архив — для MVP не нужны. При появлении CI/релиза — взять из Skill Hub или другого проекта заново.
+
+| Бывший скилл | Замена в ТВОЙ ХОД |
+|--------------|-------------------|
+| ci-cd-and-automation | Нет CI в репо; глобальные Cursor / будущий workflow |
+| shipping-and-launch | Skill **`release-tma`** + `tvoy-hod-release-guardrails.mdc` |
+| source-driven-development | `spec-driven-development` + docs |
+| debugging-and-error-recovery | Воспроизведение + `test-driven-development` |
+| git-workflow-and-versioning | User rules Cursor |
+
+---
+
+## Архив studio/GDD (`.cursor/skills/_archived/`)
+
+`disable-model-invocation: true` — только явный вызов. В каждом `SKILL.md` — баннер **АРХИВ (ТВОЙ ХОД)** (маппинг `design/gdd/` → `docs/`, studio → active-скиллы). Specs: `specs/_archived/studio/`.
+
+| Скилл | Когда вручную |
 |-------|----------------|
-| **browser-testing-with-devtools** | Визуальная проверка TMA, DOM, сеть (нужен MCP Chrome DevTools) |
-| **documentation-and-adrs** | Архитектурные решения, изменение публичного API |
-| **doubt-driven-development** | Высокие ставки: победа MVP, списания периода, деньги игрока |
-| **deprecation-and-migration** | Переход `mode` → `save_kind`, смена контрактов |
-| **security-and-hardening** | JWT, ввод пользователя, новые интеграции |
-| **code-simplification** | После фазы роста `FinanceSection` и подобного |
-| **performance-optimization** | CLS/LCP TMA, тяжёлые списки, лишние ререндеры |
-| **idea-refine** | Продуктовые гипотезы до спеки (опционально bash-скрипт в папке — только Unix) |
-| **social-changelog-posts** | Посты в соцсети по коммитам/сессии, трекер тем, картинки с Монеткой; **не трогает код** — [`docs/marketing/`](../marketing/) |
-| **code-review-and-quality** | Перед merge; для лендинга после смены MQX — сверка со [`LANDING_SCREENSHOTS.md`](../specs/LANDING_SCREENSHOTS.md) |
+| **brainstorm** | Идея с нуля, дивергенция |
+| **design-system** | GDD одной системы |
+| **ux-design** | UX-spec экрана |
+| **ux-review** | Gate UX: APPROVED / NEEDS REVISION |
+| **design-review** | Ревью GDD |
+| **team-ui** | Пайплайн UX → visual → code |
+| **create-architecture** | Мастер architecture doc |
+| **architecture-review** | GDD ↔ ADR |
+| **code-review** | Узкий code review (есть **code-review-and-quality**) |
+| **onboard** | Онбординг по роли |
+| **retrospective** | Ретро спринта |
 
----
-
-## Низкая ценность в ближайшее время
-
-| Скилл | Почему отложено |
-|-------|------------------|
-| ~~**ci-cd-and-automation**~~ | В репозитории нет `.github/workflows`; скилл удалён из проекта — вернуть при появлении CI |
-| ~~**shipping-and-launch**~~ | MVP без формализованного релизного контура — вернуть перед продакшеном |
-| ~~**source-driven-development**~~ | Не использовался в сессиях; официальные доки — по запросу или WebFetch |
-| ~~**debugging-and-error-recovery**~~ | Не использовался; баги — воспроизведение в чате + `test-driven-development` |
-| ~~**git-workflow-and-versioning**~~ | Не использовался; коммиты — user rules в Cursor |
-
-Если CI или чеклист релиза появятся — восстановите папки из резервной копии Cursor Skill Hub или скопируйте из другого проекта.
+Для продуктовых идей в этом репо чаще: **idea-refine** → **spec-driven-development** (не studio-цепочка).
 
 ---
 
@@ -58,23 +121,30 @@
 
 | Скилл | Назначение |
 |-------|------------|
-| **project-cursor-skills-layout** | Где лежат Rules vs Skills в этом репозитории (`disable-model-invocation`: не дергать модель без нужды) |
+| **project-cursor-skills-layout** | Пути, контракт, `catalog.yaml`, `_archived/` |
+| **skill-test** | Линтер и audit скиллов |
+| **using-agent-skills** | Дерево active/optional |
 
 ---
 
-## Связка Rules ↔ Skills
+## Rules ↔ Skills
 
-- **Rules** (`.cursor/rules/*.mdc`) — постоянные или по маске файлов (frontend/backend).
-- **Skills** — процедуры по запросу («проведи ревью», «напиши spec»).
+- **Rules** (`.cursor/rules/*.mdc`) — постоянный контекст.
+- **Skills** — процедуры по запросу.
 
-Спека UI: [`docs/specs/SPEC_FRONTEND_UI.md`](../specs/SPEC_FRONTEND_UI.md).
-
-**MQX / компонентная база:** правила `tvoy-hod-frontend-mqx.mdc` и скилл **frontend-ui-engineering** обязаны отсылать к единому процессу [`DESIGN_WORKFLOW.md`](../../frontend-react/src/components/mqx/DESIGN_WORKFLOW.md) — варианты в `design-lab/` → утверждение → `mqx/` → `#/dev/mqx` → prod (не пропускать этапы без явного согласования или исключения «багфикс/hotfix»).
-
-**Лендинг / скрины:** после заметной смене UI в игре — `cd landing && npm run capture-screens` (app-режим), обновить `last_capture` в [`landing/public/screens/README.md`](../../landing/public/screens/README.md); не снимать с `design-lab/dashboard/index.html` или `capital-page/#phone-demo` ([`LANDING_SCREENSHOTS.md`](../specs/LANDING_SCREENSHOTS.md)).
-
-**Pre-game UI:** оболочки и кнопки — [`SPEC_APP_SHELL.md`](../specs/SPEC_APP_SHELL.md), lab [`design-lab/pre-game-shell/`](../../design-lab/pre-game-shell/); CTA только `MqxButton`, не TGUI `Button`.
+UI: [`SPEC_FRONTEND_UI.md`](../specs/SPEC_FRONTEND_UI.md). MQX: [`DESIGN_WORKFLOW.md`](../../frontend-react/src/components/mqx/DESIGN_WORKFLOW.md).
 
 ---
 
-*Обновляйте таблицы при появлении CI, релизного процесса или нового домена (например Canvas SDK).*
+## Skill-test
+
+| Путь | Назначение |
+|------|------------|
+| [`catalog.yaml`](../../.cursor/skills/catalog.yaml) | `status`, `priority`, `spec`, `context`, `archived_root` |
+| [`specs/`](../../.cursor/skills/specs/) | Behavioral specs |
+| [`_static-check.mjs`](../../.cursor/skills/skill-test/_static-check.mjs) | Static (только корень `skills/`, без `_archived`) |
+| [`_context-check.mjs`](../../.cursor/skills/skill-test/_context-check.mjs) | Context: `catalog.context` ↔ «Прочитай сначала» ↔ `SKILL_DOC_MAP` |
+
+---
+
+*Обновляйте при смене набора active/optional или возврате скилла из `_archived/`.*

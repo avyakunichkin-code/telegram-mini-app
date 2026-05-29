@@ -19,6 +19,14 @@
 
 **Статусы:** `idea` → `spec draft` → `spec approved` → `in dev` → `implemented`
 
+### Задачи и `phase` (для агентов)
+
+При появлении `PLAN_*` или `TASKS_*` для эпика:
+
+1. В frontmatter плана: `epic_id` = ID из таблицы выше (`E1`, `M11`, …), `spec`, `next_skill: incremental-implementation`.
+2. В каждой задаче MQ-*: `phase` + `skill` + `next_skill` — шаблон [`templates/TASK_SLICE.md`](templates/TASK_SLICE.md).
+3. После нарезки — проверить, что колонка **Plan** в этой таблице ссылается на актуальный `PLAN_*.md`.
+
 ---
 
 ## После G1

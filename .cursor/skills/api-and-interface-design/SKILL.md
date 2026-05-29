@@ -1,9 +1,22 @@
 ---
 name: api-and-interface-design
 description: Guides stable API and interface design. Use when designing APIs, module boundaries, or any public interface. Use when creating REST or GraphQL endpoints, defining type contracts between modules, or establishing boundaries between frontend and backend.
+argument-hint: "[focus: endpoint | module | contract]"
+user-invocable: true
+allowed-tools: Read, Glob, Grep, Write, AskUserQuestion
 ---
 
 # API and Interface Design
+
+## Прочитай сначала (ТВОЙ ХОД)
+
+- [`CLAUDE.md`](../../../CLAUDE.md)
+- [`docs/DOCUMENTATION_SYSTEM.md`](../../../docs/DOCUMENTATION_SYSTEM.md)
+- [`backend/app/README.md`](../../../backend/app/README.md)
+- [`backend/app/services/README.md`](../../../backend/app/services/README.md)
+- [`frontend-react/src/api.js`](../../../frontend-react/src/api.js)
+
+**Куда писать:** `backend/app/routers/`, `backend/app/schemas.py`, `frontend-react/src/api/`, при необходимости `docs/specs/features/`. **Дальше:** `incremental-implementation`, `documentation-and-adrs`.
 
 ## Overview
 
@@ -292,3 +305,18 @@ After designing an API:
 - [ ] New fields are additive and optional (backward compatible)
 - [ ] Naming follows consistent conventions across all endpoints
 - [ ] API documentation or types are committed alongside the implementation
+
+---
+
+## Итог (Verdict)
+
+В конце работы явно укажи результат: **PASS**, **FAIL**, **CONCERNS**, **COMPLETE** или **APPROVED** — в зависимости от типа задачи.
+
+## Согласование изменений
+
+Перед созданием или изменением файлов в репозитории спроси: «Могу записать …?» — если пользователь не дал явное «делай» / «запиши».
+
+## Следующий шаг
+
+`spec-driven-development` → `incremental-implementation`; при смене контракта — `documentation-and-adrs`.
+

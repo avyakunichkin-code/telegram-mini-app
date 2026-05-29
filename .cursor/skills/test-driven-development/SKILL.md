@@ -1,9 +1,21 @@
 ---
 name: test-driven-development
 description: Drives development with tests. Use when implementing any logic, fixing any bug, or changing any behavior. Use when you need to prove that code works, when a bug report arrives, or when you're about to modify existing functionality.
+argument-hint: "[bug, behavior, or test file focus]"
+user-invocable: true
+allowed-tools: Read, Glob, Grep, Write, Shell
 ---
 
 # Test-Driven Development
+
+## Прочитай сначала (ТВОЙ ХОД)
+
+- [`CLAUDE.md`](../../../CLAUDE.md)
+- [`docs/specs/features/`](../../../docs/specs/features/)
+- [`backend/app/game/period.py`](../../../backend/app/game/period.py) — экономика периода
+- [`backend/app/README.md`](../../../backend/app/README.md)
+
+**Куда писать:** `backend/tests/`, `frontend-react/src/` (затронутые модули). **Дальше:** `code-review-and-quality`.
 
 ## Overview
 
@@ -381,3 +393,7 @@ After completing any implementation:
 - [ ] Coverage hasn't decreased (if tracked)
 
 **Note:** Run each test command after a change that could affect the result. After a clean run, don't repeat the same command unless the code has changed since — re-running on unchanged code adds no confidence.
+
+## Следующий шаг
+
+`code-review-and-quality` перед merge.

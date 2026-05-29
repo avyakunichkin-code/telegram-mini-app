@@ -83,7 +83,7 @@ doc_sync: foundation/DOC_SYNC_LOG.md
 6. Если `cash_balance < 0` — рост `negative_periods_count`; три периода подряд — **поражение** (`is_active = 0`); иначе счётчик сбрасывается.
 7. Запись **снимка** в `PeriodEconomyClosing` для аналитики.
 8. Увеличение `period_index`, обновление якоря времени.
-9. **События** нового периода: `ensure_period_events` — до **трёх** сценариев; фильтр **`EventDefinition.mode`** (`game` / `plan` / `any`) + **`profile.save_kind`**; tier от **`period_index`** (см. §7.2, [`remove-character-xp-and-levels.md`](../vision/ideas/remove-character-xp-and-levels.md)); без дозаполнения после ответов в том же периоде.
+9. **События** нового периода: `ensure_period_events` — **два** сценария (`EVENTS_PER_PERIOD` в `game/rules.py`; [ADR-009](../decisions/ADR-009-metrics-dictionary-tb1.md)); фильтр **`EventDefinition.mode`** (`game` / `plan` / `any`) + **`profile.save_kind`**; tier от **`period_index`** (см. §7.2, [`remove-character-xp-and-levels.md`](../vision/ideas/remove-character-xp-and-levels.md)); без дозаполнения после ответов в том же периоде.
 
 **Итог цикла:** жить период → принимать решения → на границе месяца экономика **автоматически** применяет расходы/доходы/просрочки → новый период с новыми (или оставшимися) событиями.
 

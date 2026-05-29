@@ -1,9 +1,20 @@
 ---
 name: documentation-and-adrs
 description: Records decisions and documentation. Use when making architectural decisions, changing public APIs, shipping features, or when you need to record context that future engineers and agents will need to understand the codebase.
+argument-hint: "[topic, decision, or ADR title]"
+user-invocable: true
+allowed-tools: Read, Glob, Grep, Write
 ---
 
 # Documentation and ADRs
+
+## Прочитай сначала (ТВОЙ ХОД)
+
+- [`docs/DOCUMENTATION_SYSTEM.md`](../../../docs/DOCUMENTATION_SYSTEM.md)
+- [`docs/foundation/DOC_SYNC_LOG.md`](../../../docs/foundation/DOC_SYNC_LOG.md)
+- [`docs/decisions/`](../../../docs/decisions/)
+
+**Куда писать:** `docs/decisions/`, `DOC_SYNC_LOG`. **Дальше:** —
 
 ## Overview
 
@@ -276,3 +287,18 @@ After documenting:
 - [ ] Known gotchas are documented inline where they matter
 - [ ] No commented-out code remains
 - [ ] Rules files (CLAUDE.md etc.) are current and accurate
+
+---
+
+## Итог (Verdict)
+
+В конце работы явно укажи результат: **PASS**, **FAIL**, **CONCERNS**, **COMPLETE** или **APPROVED** — в зависимости от типа задачи.
+
+## Согласование изменений
+
+Перед созданием или изменением файлов в репозитории спроси: «Могу записать …?» — если пользователь не дал явное «делай» / «запиши».
+
+## Следующий шаг
+
+`code-review-and-quality` при изменении публичного API; см. `docs/decisions/`.
+

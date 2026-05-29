@@ -37,7 +37,9 @@ for f in migrations/*.sql; do psql "$DATABASE_URL" -v ON_ERROR_STOP=1 -f "$f"; d
 
 | Ситуация | Где |
 |----------|-----|
-| Новая таблица, сиды, массовый UPDATE каталога | **`.sql`** в `migrations/` |
+| Новая таблица, индексы, **схема** `event_*` | **`.sql`** в `migrations/` |
+| **Новое/изменённое событие** (контент каталога) | **`data/events/mvp11/*.yaml`** → sync в БД ([ADR-008](../../docs/decisions/ADR-008-events-catalog-single-source.md)); **не** `INSERT` в миграциях |
+| Массовый одноразовый backfill каталога (legacy) | **`.sql`** только по отдельному решению |
 | Одна колонка на существующей таблице, как у `save_kind` | **`.sql`** + дублирующий guard в **`main.py`** (dev/prod без пропуска psql) |
 | Только dev-окружение, временный костыль | Избегать; предпочитать SQL |
 
@@ -56,4 +58,5 @@ for f in migrations/*.sql; do psql "$DATABASE_URL" -v ON_ERROR_STOP=1 -f "$f"; d
 - **Victory v2 / tutorial chain:** [`docs/decisions/ADR-002-victory-engine-and-template-config.md`](../../docs/decisions/ADR-002-victory-engine-and-template-config.md) — `0036_victory_invest_goal_order.sql` (порядок целей в JSON).
 - **Разблокировка механик:** [`docs/decisions/ADR-004-mechanics-unlock-victory-chain.md`](../../docs/decisions/ADR-004-mechanics-unlock-victory-chain.md) — `0037_harder_invest_unlock_after_cushion.sql`.
 - **Снятие XP/level:** [`docs/decisions/ADR-003-remove-character-progression.md`](../../docs/decisions/ADR-003-remove-character-progression.md) — `0031_remove_character_progression.sql`.
+- **Каталог событий (канон):** [`docs/decisions/ADR-008-events-catalog-single-source.md`](../../docs/decisions/ADR-008-events-catalog-single-source.md).
 - Эпик G1: [`docs/specs/features/SPEC_game-plan.md`](../../docs/specs/features/SPEC_game-plan.md).

@@ -1,0 +1,47 @@
+events:
+- definition_key: mq11_evening_course
+  event_domain: investment_education
+  title: Короткий курс по вечерам
+  description: Онлайн-курс по навыку, который может пригодиться на работе.
+  weight: 88
+  event_tier: 2
+  repeat_policy: repeatable
+  scenario_shape: soft_offer
+  choices:
+  - title: Записаться на курс
+    effects:
+      cash_delta: -8900
+      xp_delta: 8
+      needs_delta:
+        status: 10
+        comfort: 3
+        health: -3
+  - title: Отказаться
+    effects:
+      cash_delta: 0
+      xp_delta: 1
+      needs_delta:
+        status: -3
+        comfort: 1
+- definition_key: mq11_investment_webinar
+  event_domain: investment_education
+  title: Вебинар по инвестициям
+  description: Платный вебинар с обещанием «простой стратегии».
+  weight: 62
+  event_tier: 4
+  repeat_policy: repeatable
+  scenario_shape: soft_offer
+  choices:
+  - title: Платное участие
+    effects:
+      cash_delta: -3490
+      xp_delta: 6
+      needs_delta:
+        status: 6
+        comfort: 2
+  - title: Не участвовать
+    effects:
+      cash_delta: 0
+      xp_delta: 1
+      needs_delta:
+        status: -2

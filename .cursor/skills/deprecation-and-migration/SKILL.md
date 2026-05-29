@@ -1,9 +1,19 @@
 ---
 name: deprecation-and-migration
 description: Manages deprecation and migration. Use when removing old systems, APIs, or features. Use when migrating users from one implementation to another. Use when deciding whether to maintain or sunset existing code.
+argument-hint: "[api, field, or feature to deprecate]"
+user-invocable: true
+allowed-tools: Read, Glob, Grep, Write
 ---
 
 # Deprecation and Migration
+
+## Прочитай сначала (ТВОЙ ХОД)
+
+- [`docs/decisions/`](../../../docs/decisions/)
+- [`backend/migrations/README.md`](../../../backend/migrations/README.md)
+
+**Куда писать:** `backend/migrations/`, `docs/decisions/`. **Дальше:** `documentation-and-adrs`.
 
 ## Overview
 
@@ -204,3 +214,18 @@ After completing a deprecation:
 - [ ] Old code, tests, documentation, and configuration are fully removed
 - [ ] No references to the deprecated system remain in the codebase
 - [ ] Deprecation notices are removed (they served their purpose)
+
+---
+
+## Итог (Verdict)
+
+В конце работы явно укажи результат: **PASS**, **FAIL**, **CONCERNS**, **COMPLETE** или **APPROVED** — в зависимости от типа задачи.
+
+## Согласование изменений
+
+Перед созданием или изменением файлов в репозитории спроси: «Могу записать …?» — если пользователь не дал явное «делай» / «запиши».
+
+## Следующий шаг
+
+`documentation-and-adrs` + `test-driven-development` для регрессий.
+

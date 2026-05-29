@@ -1,0 +1,139 @@
+events:
+- definition_key: mq11_home_internet
+  event_domain: housing
+  title: Интернет дома
+  description: Провайдер предлагает повысить скорость или сменить тариф.
+  weight: 86
+  event_tier: 1
+  repeat_policy: repeatable
+  scenario_shape: soft_offer
+  cooldown_periods: 3
+  choices:
+  - title: Тариф повыше
+    effects:
+      cash_delta: -1490
+      expense_line:
+        category_key: communications
+        amount_monthly: 500
+        title: Интернет
+      xp_delta: 1
+      needs_delta:
+        comfort: 6
+        status: 2
+  - title: Оставить как есть
+    effects:
+      cash_delta: 0
+      xp_delta: 2
+      needs_delta:
+        comfort: 1
+  - title: Перейти на более дешёвый
+    effects:
+      cash_delta: 0
+      monthly_lifestyle_delta: -300
+      xp_delta: 3
+      needs_delta:
+        comfort: -4
+- definition_key: mq11_relocation_bonus
+  event_domain: housing
+  title: Смена города по работе
+  description: 'Работодатель предлагает релокацию: бонус на переезд и заметно более дорогая жизнь в новом
+    городе.'
+  weight: 55
+  event_tier: 4
+  repeat_policy: repeatable
+  scenario_shape: soft_offer
+  choices:
+  - title: Переехать в новый город
+    effects:
+      cash_delta: 35000
+      monthly_burn_delta_pct: 0.28
+      xp_delta: 15
+      needs_delta:
+        status: 12
+        comfort: 6
+        social: -4
+    description: Бонус на переезд; расходы на жизнь вырастут примерно на четверть.
+  - title: Договориться об удалёнке
+    effects:
+      cash_delta: 12000
+      xp_delta: 8
+      needs_delta:
+        comfort: 8
+        status: 4
+  - title: Остаться в текущем городе
+    effects:
+      cash_delta: 0
+      xp_delta: 3
+      needs_delta:
+        comfort: 3
+        status: -4
+- definition_key: mq11_downsize_flat
+  event_domain: housing
+  title: Переезд в квартиру меньше
+  description: Можно снизить аренду, но нужны расходы на переезд.
+  weight: 52
+  event_tier: 5
+  repeat_policy: repeatable
+  scenario_shape: soft_offer
+  choices:
+  - title: Переехать в квартиру меньше
+    effects:
+      cash_delta: -35000
+      monthly_lifestyle_delta: -2500
+      xp_delta: 14
+      needs_delta:
+        comfort: -8
+        status: -3
+  - title: Пока остаться
+    effects:
+      cash_delta: 0
+      xp_delta: 2
+      needs_delta:
+        comfort: 2
+  - title: Сдать комнату в субаренду
+    effects:
+      cash_delta: 8000
+      expense_line:
+        category_key: housing
+        amount_monthly: 600
+        title: Субаренда
+      xp_delta: 9
+      needs_delta:
+        comfort: -4
+        social: -3
+        status: 2
+- definition_key: mq11_home_water_damage
+  event_domain: housing
+  title: Затопило квартиру
+  description: 'Прорвало трубу — пострадало ваше жильё. Нужно восстановить квартиру: через страховку имущества
+    или полностью за свой счёт.'
+  weight: 50
+  event_tier: 3
+  repeat_policy: repeatable
+  scenario_shape: asset_linked
+  extra:
+    secondary_domains:
+    - insurance
+  mandatory_gate: blocks_period_end
+  prerequisites:
+    active_asset_kinds_any:
+    - home
+    - house
+    - mansion
+  choices:
+  - title: Вызвать страховую (имущество)
+    effects:
+      insurance_claim:
+        product: property
+        insured_object: property
+      xp_delta: 4
+      needs_delta:
+        comfort: 8
+        health: 2
+  - title: Ремонт за свой счёт
+    effects:
+      cash_delta: -80000
+      xp_delta: 2
+      needs_delta:
+        comfort: 6
+        health: -2

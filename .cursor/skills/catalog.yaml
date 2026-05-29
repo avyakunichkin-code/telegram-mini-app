@@ -1,0 +1,710 @@
+# ТВОЙ ХОД — каталог Agent Skills для /skill-test и выбора скиллов агентом
+#
+# status:
+#   active   — MVP-цикл; автоподключение уместно
+#   optional — по ситуации; не предлагать без явного запроса (tier: deferred)
+#   archived — studio/GDD; disable-model-invocation; только явный /skill-name
+#
+# tier (фаза «контент и данные», см. docs/agents/SKILLS_PHASE_CONTENT_AND_DATA.md):
+#   core     — primary в текущей фазе
+#   support  — satellite или primary по ситуации (plan, review, ADR)
+#   deferred — полезно позже (бывший «optional по умолчанию»)
+#   meta     — каталог, skill-test, layout
+#   archived — папка _archived/
+#
+# context (на каждый скилл):
+#   must_read    — открыть до процедуры (пути от корня репо)
+#   writes_to    — куда писать артефакты
+#   next_skill   — типичный следующий скилл в конвейере
+#
+version: 1
+updated: "2026-05-29"
+skills_root: .cursor/skills
+archived_root: .cursor/skills/_archived
+specs_root: .cursor/skills/specs
+specs_archived_root: .cursor/skills/specs/_archived
+results_root: .cursor/skills/results
+template: .cursor/skills/templates/skill-test-spec.md
+
+skills:
+  balance-playtest:
+    category: verify
+    priority: medium
+    status: active
+    tier: support
+    spec: .cursor/skills/specs/verify/balance-playtest.md
+    context:
+      must_read:
+        - docs/balance/README.md
+        - docs/decisions/ADR-009-metrics-dictionary-tb1.md
+        - backend/scripts/balance_simulate.py
+        - backend/scripts/balance_diff.py
+      writes_to:
+        - docs/balance/reports/
+        - docs/balance/baselines/
+      next_skill:
+        - game-economy-and-victory
+        - test-driven-development
+    last_static: "2026-05-29"
+    last_static_result: PENDING
+
+  api-and-interface-design:
+    category: api
+    priority: high
+    status: active
+    tier: core
+    spec: .cursor/skills/specs/api/api-and-interface-design.md
+    context:
+      must_read:
+        - CLAUDE.md
+        - docs/DOCUMENTATION_SYSTEM.md
+        - backend/app/README.md
+        - backend/app/services/README.md
+        - frontend-react/src/api.js
+      writes_to:
+        - backend/app/routers/
+        - backend/app/schemas.py
+        - frontend-react/src/api/
+        - docs/specs/features/
+      next_skill:
+        - incremental-implementation
+        - documentation-and-adrs
+    last_static: "2026-05-28"
+    last_static_result: COMPLIANT
+
+  architecture-review:
+    category: studio
+    priority: studio
+    status: archived
+    tier: archived
+    spec: .cursor/skills/specs/_archived/studio/architecture-review.md
+    last_static: "2026-05-28"
+    last_static_result: COMPLIANT
+
+  brainstorm:
+    category: studio
+    priority: studio
+    status: archived
+    tier: archived
+    spec: .cursor/skills/specs/_archived/studio/brainstorm.md
+    last_static: "2026-05-28"
+    last_static_result: COMPLIANT
+
+  browser-testing-with-devtools:
+    category: verify
+    priority: medium
+    status: optional
+    tier: deferred
+    spec: .cursor/skills/specs/verify/browser-testing-with-devtools.md
+    context:
+      must_read:
+        - docs/specs/SPEC_FRONTEND_UI.md
+        - frontend-react/src/components/mqx/DESIGN_WORKFLOW.md
+      writes_to: []
+      next_skill:
+        - code-review-and-quality
+    last_static: "2026-05-28"
+    last_static_result: COMPLIANT
+
+  code-review:
+    category: review
+    priority: studio
+    status: archived
+    tier: archived
+    spec: .cursor/skills/specs/review/code-review.md
+    last_static: "2026-05-28"
+    last_static_result: COMPLIANT
+
+  code-review-and-quality:
+    category: review
+    priority: high
+    status: active
+    tier: support
+    spec: .cursor/skills/specs/review/code-review-and-quality.md
+    context:
+      must_read:
+        - CLAUDE.md
+        - docs/specs/features/
+        - docs/foundation/SPEC_PRODUCT.md
+      writes_to: []
+      next_skill:
+        - incremental-implementation
+    last_static: "2026-05-28"
+    last_static_result: COMPLIANT
+
+  create-event:
+    category: build
+    priority: high
+    status: active
+    tier: core
+    spec: .cursor/skills/specs/build/create-event.md
+    context:
+      must_read:
+        - .cursor/skills/create-event/persona-profiles.md
+        - docs/templates/EVENT_BRIEF.md
+        - data/events/README.md
+        - data/events/mvp11/catalog.yaml
+        - docs/specs/features/SPEC_mvp-11-progression-events.md
+        - docs/vision/ideas/event-engagement-anti-fatigue.md
+        - backend/app/events/constants.py
+      writes_to:
+        - data/events/mvp11/
+        - docs/vision/ideas/event-briefs/
+      next_skill:
+        - test-driven-development
+    last_static: "2026-05-29"
+    last_static_result: COMPLIANT
+
+  event-analysis:
+    category: build
+    priority: medium
+    status: active
+    tier: core
+    spec: .cursor/skills/specs/build/event-analysis.md
+    context:
+      must_read:
+        - data/events/README.md
+        - data/events/mvp11/catalog.yaml
+        - .cursor/skills/create-event/persona-profiles.md
+        - docs/templates/EVENT_CATALOG_ANALYSIS.md
+        - docs/specs/features/SPEC_mvp-11-progression-events.md
+        - docs/vision/ideas/game-balance-thresholds-and-constraints.md
+        - docs/decisions/ADR-008-events-catalog-single-source.md
+      writes_to:
+        - docs/vision/analysis/
+      next_skill:
+        - create-event
+    last_static: "2026-05-29"
+    last_static_result: pending
+
+  code-simplification:
+    category: build
+    priority: medium
+    status: optional
+    tier: deferred
+    spec: .cursor/skills/specs/review/code-simplification.md
+    context:
+      must_read:
+        - CLAUDE.md
+      writes_to:
+        - backend/
+        - frontend-react/
+      next_skill:
+        - test-driven-development
+    last_static: "2026-05-28"
+    last_static_result: COMPLIANT
+
+  context-engineering:
+    category: meta
+    priority: high
+    status: optional
+    tier: deferred
+    spec: .cursor/skills/specs/meta/context-engineering.md
+    context:
+      must_read:
+        - docs/DOCUMENTATION_SYSTEM.md
+        - docs/agents/CURSOR_SKILLS.md
+        - CLAUDE.md
+        - .cursor/rules/
+      writes_to:
+        - .cursor/rules/
+      next_skill:
+        - using-agent-skills
+    last_static: "2026-05-28"
+    last_static_result: COMPLIANT
+
+  create-architecture:
+    category: studio
+    priority: studio
+    status: archived
+    tier: archived
+    spec: .cursor/skills/specs/_archived/studio/create-architecture.md
+    last_static: "2026-05-28"
+    last_static_result: COMPLIANT
+
+  deprecation-and-migration:
+    category: ship
+    priority: medium
+    status: optional
+    tier: deferred
+    spec: .cursor/skills/specs/ship/deprecation-and-migration.md
+    context:
+      must_read:
+        - docs/decisions/
+        - backend/migrations/README.md
+      writes_to:
+        - backend/migrations/
+        - docs/decisions/
+      next_skill:
+        - documentation-and-adrs
+    last_static: "2026-05-28"
+    last_static_result: COMPLIANT
+
+  design-lab-mqx:
+    category: build
+    priority: high
+    status: active
+    tier: core
+    spec: .cursor/skills/specs/build/design-lab-mqx.md
+    context:
+      must_read:
+        - frontend-react/src/components/mqx/DESIGN_WORKFLOW.md
+        - docs/specs/SPEC_FRONTEND_UI.md
+        - design-lab/dashboard/APPROVED.md
+        - .cursor/rules/tvoy-hod-design-lab.mdc
+        - .cursor/rules/tvoy-hod-canon-sync.mdc
+      writes_to:
+        - design-lab/
+      next_skill:
+        - frontend-ui-engineering
+    last_static: "2026-05-28"
+    last_static_result: COMPLIANT
+
+  design-review:
+    category: studio
+    priority: studio
+    status: archived
+    tier: archived
+    spec: .cursor/skills/specs/_archived/studio/design-review.md
+    last_static: "2026-05-28"
+    last_static_result: COMPLIANT
+
+  design-system:
+    category: studio
+    priority: studio
+    status: archived
+    tier: archived
+    spec: .cursor/skills/specs/_archived/studio/design-system.md
+    last_static: "2026-05-28"
+    last_static_result: COMPLIANT
+
+  documentation-and-adrs:
+    category: ship
+    priority: medium
+    status: optional
+    tier: support
+    spec: .cursor/skills/specs/ship/documentation-and-adrs.md
+    context:
+      must_read:
+        - docs/DOCUMENTATION_SYSTEM.md
+        - docs/foundation/DOC_SYNC_LOG.md
+        - docs/decisions/
+      writes_to:
+        - docs/decisions/
+        - docs/foundation/DOC_SYNC_LOG.md
+      next_skill: []
+    last_static: "2026-05-28"
+    last_static_result: COMPLIANT
+
+  doubt-driven-development:
+    category: verify
+    priority: medium
+    status: optional
+    tier: deferred
+    spec: .cursor/skills/specs/verify/doubt-driven-development.md
+    context:
+      must_read:
+        - docs/specs/features/
+        - CLAUDE.md
+      writes_to: []
+      next_skill:
+        - incremental-implementation
+    last_static: "2026-05-28"
+    last_static_result: COMPLIANT
+
+  frontend-ui-engineering:
+    category: build
+    priority: high
+    status: active
+    tier: core
+    spec: .cursor/skills/specs/build/frontend-ui-engineering.md
+    context:
+      must_read:
+        - frontend-react/src/components/mqx/DESIGN_WORKFLOW.md
+        - docs/specs/SPEC_FRONTEND_UI.md
+        - frontend-react/ARCHITECTURE.md
+        - CLAUDE.md
+      writes_to:
+        - frontend-react/src/components/mqx/
+        - frontend-react/src/components/
+        - frontend-react/src/styles/
+      next_skill:
+        - design-lab-mqx
+        - browser-testing-with-devtools
+        - code-review-and-quality
+    last_static: "2026-05-28"
+    last_static_result: COMPLIANT
+
+  game-economy-and-victory:
+    category: build
+    priority: high
+    status: active
+    tier: core
+    spec: .cursor/skills/specs/build/game-economy-and-victory.md
+    context:
+      must_read:
+        - CLAUDE.md
+        - docs/specs/features/SPEC_victory-v2.md
+        - docs/decisions/ADR-002-victory-engine-and-template-config.md
+        - docs/decisions/ADR-004-mechanics-unlock-victory-chain.md
+        - docs/vision/ideas/game-balance-thresholds-and-constraints.md
+        - backend/app/game/period.py
+        - backend/app/victory/engine.py
+      writes_to:
+        - backend/app/game/
+        - backend/app/victory/
+        - backend/app/events/
+        - backend/app/seeds/
+        - backend/migrations/
+        - docs/specs/features/
+      next_skill:
+        - test-driven-development
+        - code-review-and-quality
+        - documentation-and-adrs
+    last_static: "2026-05-29"
+    last_static_result: COMPLIANT
+
+  idea-refine:
+    category: define
+    priority: medium
+    status: active
+    tier: core
+    spec: .cursor/skills/specs/define/idea-refine.md
+    context:
+      must_read:
+        - docs/DOCUMENTATION_SYSTEM.md
+        - docs/foundation/SPEC_PRODUCT.md
+        - docs/vision/ideas/tvoy-hod-evolution-after-mvp.md
+        - docs/backlog/PRODUCT_BACKLOG.md
+      writes_to:
+        - docs/vision/ideas/
+      next_skill:
+        - spec-driven-development
+    last_static: "2026-05-28"
+    last_static_result: COMPLIANT
+  # full behavioral spec (не stub)
+
+  incremental-implementation:
+    category: build
+    priority: high
+    status: active
+    tier: core
+    spec: .cursor/skills/specs/build/incremental-implementation.md
+    context:
+      must_read:
+        - CLAUDE.md
+        - docs/specs/features/
+        - docs/plans/
+        - docs/tasks/
+        - backend/app/README.md
+        - frontend-react/ARCHITECTURE.md
+      writes_to:
+        - backend/
+        - frontend-react/
+      next_skill:
+        - test-driven-development
+        - code-review-and-quality
+    last_static: "2026-05-28"
+    last_static_result: COMPLIANT
+
+  onboard:
+    category: studio
+    priority: studio
+    status: archived
+    tier: archived
+    spec: .cursor/skills/specs/_archived/studio/onboard.md
+    last_static: "2026-05-28"
+    last_static_result: COMPLIANT
+
+  performance-optimization:
+    category: verify
+    priority: medium
+    status: optional
+    tier: deferred
+    spec: .cursor/skills/specs/verify/performance-optimization.md
+    context:
+      must_read:
+        - frontend-react/ARCHITECTURE.md
+        - CLAUDE.md
+      writes_to:
+        - frontend-react/
+        - backend/
+      next_skill:
+        - test-driven-development
+    last_static: "2026-05-28"
+    last_static_result: COMPLIANT
+
+  planning-and-task-breakdown:
+    category: define
+    priority: high
+    status: active
+    tier: support
+    spec: .cursor/skills/specs/define/planning-and-task-breakdown.md
+    context:
+      must_read:
+        - docs/DOCUMENTATION_SYSTEM.md
+        - docs/specs/features/
+        - docs/foundation/SPEC_PRODUCT.md
+        - docs/TRACEABILITY.md
+        - docs/templates/PLAN_FEATURE.md
+        - docs/templates/TASK_SLICE.md
+        - docs/agents/SKILL_DOC_MAP.md
+      writes_to:
+        - docs/plans/
+        - docs/tasks/
+        - docs/TRACEABILITY.md
+      next_skill:
+        - incremental-implementation
+    last_static: "2026-05-28"
+    last_static_result: COMPLIANT
+
+  project-cursor-skills-layout:
+    category: meta
+    priority: meta
+    status: optional
+    tier: meta
+    spec: .cursor/skills/specs/meta/project-cursor-skills-layout.md
+    context:
+      must_read:
+        - docs/agents/CURSOR_SKILLS.md
+        - .cursor/skills/catalog.yaml
+        - docs/agents/SKILL_DOC_MAP.md
+      writes_to:
+        - .cursor/skills/
+        - docs/agents/
+      next_skill:
+        - using-agent-skills
+        - skill-test
+    last_static: "2026-05-28"
+    last_static_result: COMPLIANT
+
+  release-tma:
+    category: ship
+    priority: medium
+    status: optional
+    tier: deferred
+    spec: .cursor/skills/specs/ship/release-tma.md
+    context:
+      must_read:
+        - .cursor/rules/tvoy-hod-release-guardrails.mdc
+        - .cursor/rules/tvoy-hod-canon-sync.mdc
+        - docs/foundation/DOC_SYNC_LOG.md
+      writes_to: []
+      next_skill:
+        - code-review-and-quality
+    last_static: "2026-05-29"
+    last_static_result: COMPLIANT
+
+  retrospective:
+    category: studio
+    priority: studio
+    status: archived
+    tier: archived
+    spec: .cursor/skills/specs/_archived/studio/retrospective.md
+    last_static: "2026-05-28"
+    last_static_result: COMPLIANT
+
+  security-and-hardening:
+    category: verify
+    priority: medium
+    status: optional
+    tier: deferred
+    spec: .cursor/skills/specs/verify/security-and-hardening.md
+    context:
+      must_read:
+        - backend/app/auth.py
+        - CLAUDE.md
+      writes_to:
+        - backend/
+        - frontend-react/
+      next_skill:
+        - documentation-and-adrs
+    last_static: "2026-05-28"
+    last_static_result: COMPLIANT
+
+  skill-test:
+    category: meta
+    priority: meta
+    status: active
+    tier: meta
+    spec: .cursor/skills/specs/meta/skill-test.md
+    context:
+      must_read:
+        - .cursor/skills/catalog.yaml
+        - .cursor/skills/quality-rubric.md
+        - docs/agents/CURSOR_SKILLS.md
+      writes_to:
+        - .cursor/skills/results/
+      next_skill: []
+    last_static: "2026-05-28"
+    last_static_result: COMPLIANT
+
+  social-changelog-posts:
+    category: ship
+    priority: medium
+    status: optional
+    tier: deferred
+    spec: .cursor/skills/specs/ship/social-changelog-posts.md
+    context:
+      must_read:
+        - docs/foundation/DOC_SYNC_LOG.md
+        - docs/marketing/
+      writes_to:
+        - docs/marketing/
+      next_skill: []
+    last_static: "2026-05-28"
+    last_static_result: COMPLIANT
+
+  spec-driven-development:
+    category: define
+    priority: high
+    status: active
+    tier: core
+    spec: .cursor/skills/specs/define/spec-driven-development.md
+    context:
+      must_read:
+        - docs/DOCUMENTATION_SYSTEM.md
+        - docs/foundation/SPEC_PRODUCT.md
+        - docs/vision/ideas/
+        - docs/decisions/
+      writes_to:
+        - docs/specs/features/
+      next_skill:
+        - planning-and-task-breakdown
+        - api-and-interface-design
+        - game-economy-and-victory
+    last_static: "2026-05-28"
+    last_static_result: COMPLIANT
+
+  telegram-mini-app-runtime:
+    category: verify
+    priority: medium
+    status: optional
+    tier: deferred
+    spec: .cursor/skills/specs/verify/telegram-mini-app-runtime.md
+    context:
+      must_read:
+        - docs/specs/SPEC_APP_SHELL.md
+        - docs/specs/SPEC_FRONTEND_UI.md
+        - docs/foundation/TMA_USER_FLOWS.md
+      writes_to:
+        - frontend-react/src/
+      next_skill:
+        - browser-testing-with-devtools
+    last_static: "2026-05-29"
+    last_static_result: COMPLIANT
+
+  team-ui:
+    category: studio
+    priority: studio
+    status: archived
+    tier: archived
+    spec: .cursor/skills/specs/_archived/studio/team-ui.md
+    last_static: "2026-05-28"
+    last_static_result: COMPLIANT
+
+  test-driven-development:
+    category: build
+    priority: high
+    status: active
+    tier: core
+    spec: .cursor/skills/specs/build/test-driven-development.md
+    context:
+      must_read:
+        - CLAUDE.md
+        - docs/specs/features/
+        - backend/app/game/period.py
+        - backend/app/README.md
+      writes_to:
+        - backend/tests/
+        - frontend-react/src/
+      next_skill:
+        - code-review-and-quality
+    last_static: "2026-05-28"
+    last_static_result: COMPLIANT
+
+  using-agent-skills:
+    category: meta
+    priority: high
+    status: active
+    tier: core
+    spec: .cursor/skills/specs/meta/using-agent-skills.md
+    context:
+      must_read:
+        - docs/agents/CURSOR_SKILLS.md
+        - docs/agents/SKILLS_PHASE_CONTENT_AND_DATA.md
+        - docs/agents/SKILL_DOC_MAP.md
+        - docs/templates/TASK_SLICE.md
+        - .cursor/skills/catalog.yaml
+        - CLAUDE.md
+      writes_to: []
+      next_skill: []
+    last_static: "2026-05-28"
+    last_static_result: COMPLIANT
+
+  ux-design:
+    category: studio
+    priority: studio
+    status: archived
+    tier: archived
+    spec: .cursor/skills/specs/_archived/studio/ux-design.md
+    last_static: "2026-05-28"
+    last_static_result: COMPLIANT
+
+  ux-review:
+    category: studio
+    priority: studio
+    status: archived
+    tier: archived
+    spec: .cursor/skills/specs/_archived/studio/ux-review.md
+    last_static: "2026-05-28"
+    last_static_result: COMPLIANT
+
+agents:
+  economy-balance-runner:
+    agent_file: .cursor/agents/economy-balance-runner.md
+    description: >-
+      Runs balance_simulate + balance_diff vs baseline; regression verdict on
+      40-period metrics. Complements economy-reviewer; not a pytest substitute
+    subagent_type: shell
+    readonly: false
+    must_read:
+      - docs/balance/README.md
+      - docs/decisions/ADR-009-metrics-dictionary-tb1.md
+      - backend/scripts/balance_simulate.py
+    trigger_globs:
+      - backend/app/game/**
+      - backend/app/victory/**
+      - backend/app/events/**
+      - data/events/mvp11/**
+      - backend/app/seeds/**
+  economy-reviewer:
+    agent_file: .cursor/agents/economy-reviewer.md
+    description: >-
+      Read-only economy review; traces balance number changes; NEEDS REVISION
+      without green backend pytest when game/victory/events data or logic changed
+    subagent_type: generalPurpose
+    readonly: true
+    must_read:
+      - backend/app/game/period.py
+      - backend/app/victory/engine.py
+      - docs/specs/features/SPEC_victory-v2.md
+      - docs/decisions/ADR-002-victory-engine-and-template-config.md
+    trigger_globs:
+      - backend/app/game/**
+      - backend/app/victory/**
+  mqx-ui-reviewer:
+    agent_file: .cursor/agents/mqx-ui-reviewer.md
+    description: >-
+      Read-only MQX/lab review; large UI needs lab+prod+APPROVED in one PR;
+      small tweaks allow canon follow-up; does not run pytest or review economy
+    subagent_type: generalPurpose
+    readonly: true
+    must_read:
+      - frontend-react/src/components/mqx/DESIGN_WORKFLOW.md
+      - docs/specs/SPEC_FRONTEND_UI.md
+      - design-lab/dashboard/APPROVED.md
+    trigger_globs:
+      - frontend-react/src/components/mqx/**
+      - frontend-react/src/components/*Premium.jsx
+      - design-lab/**

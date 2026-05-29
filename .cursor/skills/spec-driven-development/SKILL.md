@@ -1,9 +1,23 @@
 ---
 name: spec-driven-development
 description: Creates specs before coding. Use when starting a new project, feature, or significant change and no specification exists yet. Use when requirements are unclear, ambiguous, or only exist as a vague idea.
+argument-hint: "[feature name or docs/specs path]"
+user-invocable: true
+allowed-tools: Read, Glob, Grep, Write, AskUserQuestion
 ---
 
 # Spec-Driven Development
+
+## Прочитай сначала (ТВОЙ ХОД)
+
+Из **корня репо** (см. `catalog.yaml` → `spec-driven-development.context`):
+
+- [`docs/DOCUMENTATION_SYSTEM.md`](../../../docs/DOCUMENTATION_SYSTEM.md)
+- [`docs/foundation/SPEC_PRODUCT.md`](../../../docs/foundation/SPEC_PRODUCT.md)
+- [`docs/vision/ideas/`](../../../docs/vision/ideas/)
+- [`docs/decisions/`](../../../docs/decisions/)
+
+**Куда писать:** `docs/specs/features/`. **Дальше:** `planning-and-task-breakdown`, при API — `api-and-interface-design`.
 
 ## Overview
 
@@ -198,3 +212,18 @@ Before proceeding to implementation, confirm:
 - [ ] Success criteria are specific and testable
 - [ ] Boundaries (Always/Ask First/Never) are defined
 - [ ] The spec is saved to a file in the repository
+
+---
+
+## Итог (Verdict)
+
+В конце работы явно укажи результат: **PASS**, **FAIL**, **CONCERNS**, **COMPLETE** или **APPROVED** — в зависимости от типа задачи.
+
+## Согласование изменений
+
+Перед созданием или изменением файлов в репозитории спроси: «Могу записать …?» — если пользователь не дал явное «делай» / «запиши».
+
+## Следующий шаг
+
+`planning-and-task-breakdown` → `incremental-implementation`.
+

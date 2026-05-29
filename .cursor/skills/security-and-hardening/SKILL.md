@@ -1,9 +1,19 @@
 ---
 name: security-and-hardening
 description: Hardens code against vulnerabilities. Use when handling user input, authentication, data storage, or external integrations. Use when building any feature that accepts untrusted data, manages user sessions, or interacts with third-party services.
+argument-hint: "[surface: auth | input | api | storage]"
+user-invocable: true
+allowed-tools: Read, Glob, Grep, Write
 ---
 
 # Security and Hardening
+
+## Прочитай сначала (ТВОЙ ХОД)
+
+- [`backend/app/auth.py`](../../../backend/app/auth.py)
+- [`CLAUDE.md`](../../../CLAUDE.md)
+
+**Куда писать:** `backend/`, `frontend-react/`. **Дальше:** `documentation-and-adrs`.
 
 ## Overview
 
@@ -347,3 +357,18 @@ After implementing security-relevant code:
 - [ ] Security headers present in response (check with browser DevTools)
 - [ ] Error responses don't expose internal details
 - [ ] Rate limiting active on auth endpoints
+
+---
+
+## Итог (Verdict)
+
+В конце работы явно укажи результат: **PASS**, **FAIL**, **CONCERNS**, **COMPLETE** или **APPROVED** — в зависимости от типа задачи.
+
+## Согласование изменений
+
+Перед созданием или изменением файлов в репозитории спроси: «Могу записать …?» — если пользователь не дал явное «делай» / «запиши».
+
+## Следующий шаг
+
+`code-review-and-quality`; критичные находки — блокер до merge.
+

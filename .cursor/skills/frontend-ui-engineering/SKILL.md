@@ -1,9 +1,21 @@
 ﻿---
 name: frontend-ui-engineering
 description: Builds production-quality UIs. Use when building or modifying user-facing interfaces. Use when creating components, implementing layouts, managing state, or when the output needs to look and feel production-quality rather than AI-generated.
+argument-hint: "[screen, component, or MQX pattern]"
+user-invocable: true
+allowed-tools: Read, Glob, Grep, Write
 ---
 
 # Frontend UI Engineering
+
+## Прочитай сначала (ТВОЙ ХОД)
+
+- [`frontend-react/src/components/mqx/DESIGN_WORKFLOW.md`](../../../frontend-react/src/components/mqx/DESIGN_WORKFLOW.md) — **целиком** для новых паттернов
+- [`docs/specs/SPEC_FRONTEND_UI.md`](../../../docs/specs/SPEC_FRONTEND_UI.md)
+- [`frontend-react/ARCHITECTURE.md`](../../../frontend-react/ARCHITECTURE.md)
+- [`CLAUDE.md`](../../../CLAUDE.md)
+
+**Куда писать:** `frontend-react/src/components/mqx/`, экраны `*Premium.jsx`, `frontend-react/src/styles/`. **Дальше:** `design-lab-mqx`, `browser-testing-with-devtools`, `code-review-and-quality`.
 
 ## Overview
 
@@ -336,3 +348,18 @@ After building UI:
 - [ ] Follows the project's design system (spacing, colors, typography)
 - [ ] No accessibility warnings in dev tools or axe-core
 - [ ] **ТВОЙ ХОД:** при новых/крупных изменениях MQX — пройден [`DESIGN_WORKFLOW.md`](../../../frontend-react/src/components/mqx/DESIGN_WORKFLOW.md) (если это не согласованный hotfix без смены дизайна)
+
+---
+
+## Итог (Verdict)
+
+В конце работы явно укажи результат: **PASS**, **FAIL**, **CONCERNS**, **COMPLETE** или **APPROVED** — в зависимости от типа задачи.
+
+## Согласование изменений
+
+Перед созданием или изменением файлов в репозитории спроси: «Могу записать …?» — если пользователь не дал явное «делай» / «запиши».
+
+## Следующий шаг
+
+Новый визуальный паттерн → `design-lab-mqx` → `DESIGN_WORKFLOW.md`; проверка — `browser-testing-with-devtools`.
+

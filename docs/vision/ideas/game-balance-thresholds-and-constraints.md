@@ -33,7 +33,7 @@
 | Поражение | **3 подряд** закрытых периода с отрицательным **cash** — профиль блокируется | `game/period.py` |
 | Обязательства | Платятся из cash; недоплата — в просрочку **без штрафов** в MVP | `game/period.py` |
 | Зарплата | По кнопке **раз в период**; не забрал до конца — за период не повторяется | [`CLAUDE.md`](../../../CLAUDE.md) |
-| События | До **трёх** на период; **`event_tier`** от **`period_index`** | `game/rules.py`, [remove-character-xp](remove-character-xp-and-levels.md) |
+| События | **2** на период (`EVENTS_PER_PERIOD`); **`event_tier`** от **`period_index`** | `game/rules.py`, [ADR-009](../../decisions/ADR-009-metrics-dictionary-tb1.md) |
 | Механики капитала | **`mechanics_unlock`** после ключей целей | [ADR-004](../../decisions/ADR-004-mechanics-unlock-victory-chain.md) |
 
 ---

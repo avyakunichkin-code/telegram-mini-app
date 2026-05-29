@@ -1,7 +1,9 @@
 ---
 description: Pre-release checks: guardrails + design-lab parity
-alwaysApply: true
+alwaysApply: false
 ---
+
+> Вызывать перед PR/выкаткой. Skill: **`release-tma`**. Hook не дублирует — только напоминания после правок UI/lab.
 
 # Pre-release / выкатка — обязательные проверки
 

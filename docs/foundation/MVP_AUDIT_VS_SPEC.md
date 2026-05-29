@@ -18,7 +18,7 @@
 | Зарплата по кнопке, пропуск периода | `period_actions`, `game_period` | OK | Детали в SPEC_PRODUCT §3.2 |
 | Победа v2: `chain` tutorial / legacy `parallel` | `victory/engine.py`, `victory/seeds.py`, overview | OK | Legacy `evaluate_mvp_victory` (AND MVP) — только тесты |
 | `mechanics_unlock` по целям (жёсткие шаблоны) | `starters/mechanics.py`, `0037_*` | OK | [ADR-004](../decisions/ADR-004-mechanics-unlock-victory-chain.md) |
-| До трёх событий на период, выбор с эффектами | `backend/app/routers/events.py`, `ensure_period_events` | OK | Фильтр `EventDefinition.mode` в семантике **`game` / `plan` / `any`** и **`profile.save_kind`** ([ADR-001](../decisions/ADR-001-save-kind-remove-light-hardcore.md)) |
+| **Два** события на период (`EVENTS_PER_PERIOD=2`), выбор с эффектами | `game/rules.py`, `ensure_period_events` | OK | [ADR-009](../decisions/ADR-009-metrics-dictionary-tb1.md); anti-fatigue — 2/период |
 | **M11:** tier-окно, `repeat_policy`, `cooldown_periods` | `game/rules.py`, `events.py`, миграция `0007` | OK | Приёмка **MQ-116**: `backend/tests/test_mq116_acceptance.py`, `test_ensure_period_events.py`; spec [SPEC_mvp-11](../specs/features/SPEC_mvp-11-progression-events.md) **approved** |
 | Инвестиции / страховки | `routers/invest.py`, `insurance.py` | OK | На уровне MVP; расширения — backlog |
 | Создание профиля **`save_kind` + шаблон Game** | `backend/app/routers/game.py`, `models.GameProfile` | OK | Legacy **`light` / `hardcore`** сняты ([ADR-001](../decisions/ADR-001-save-kind-remove-light-hardcore.md)) |

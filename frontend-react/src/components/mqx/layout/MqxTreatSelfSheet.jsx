@@ -14,8 +14,6 @@ export function MqxTreatSelfSheet({ open, onClose, treatSelf, treatSelfState }) 
   const available = treatSelfState?.available !== false;
   const cooldown = Number(treatSelfState?.cooldown_periods_remaining) || 0;
 
-  if (!open) return null;
-
   useEffect(() => {
     if (!open) return;
     if (busy) return;
@@ -39,6 +37,8 @@ export function MqxTreatSelfSheet({ open, onClose, treatSelf, treatSelfState }) 
       setBusy(false);
     }
   };
+
+  if (!open) return null;
 
   return (
     <div className="mqx-sheet-root" role="presentation">

@@ -1,6 +1,7 @@
 ---
 description: Обновление канона design-lab после утверждений и релизов UI
-alwaysApply: true
+alwaysApply: false
+globs: design-lab/**/*,frontend-react/src/components/**/*Premium.jsx
 ---
 
 # Канон design-lab должен догонять prod

@@ -1,11 +1,15 @@
 ---
 layer: plan
+epic_id: E1
+phase: define
 status: draft
 tracks: expenses, e1, economy
 spec: ../specs/features/SPEC_expenses.md
 gameplay: ../specs/gameplay/EXPENSES_SYSTEM.md
 checklist: ../specs/economy/EXPENSES_LAYER_CHECKLIST.md
 tasks: ../tasks/TASKS_expenses.md
+traceability: ../TRACEABILITY.md
+next_skill: incremental-implementation
 ---
 
 # План эпика E1: Расходы на жизнеобеспечение

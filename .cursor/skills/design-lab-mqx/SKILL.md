@@ -1,9 +1,22 @@
 ﻿---
 name: design-lab-mqx
 description: Design-lab rounds for MQX — self-contained HTML/CSS, sync-lab scripts, serve without broken ../ paths. Use when creating or editing design-lab/, layout variants, or before saying a lab mockup is ready for review.
+argument-hint: "[design-lab theme or round path]"
+user-invocable: true
+allowed-tools: Read, Glob, Grep, Write, Shell
 ---
 
+
 # Design-lab MQX
+
+## Прочитай сначала (ТВОЙ ХОД)
+
+- [`frontend-react/src/components/mqx/DESIGN_WORKFLOW.md`](../../../frontend-react/src/components/mqx/DESIGN_WORKFLOW.md)
+- [`docs/specs/SPEC_FRONTEND_UI.md`](../../../docs/specs/SPEC_FRONTEND_UI.md)
+- [`design-lab/dashboard/APPROVED.md`](../../../design-lab/dashboard/APPROVED.md)
+- [`.cursor/rules/tvoy-hod-design-lab.mdc`](../../../.cursor/rules/tvoy-hod-design-lab.mdc), [`.cursor/rules/tvoy-hod-canon-sync.mdc`](../../../.cursor/rules/tvoy-hod-canon-sync.mdc)
+
+**Куда писать:** `design-lab/<тема>/`. **Дальше:** `frontend-ui-engineering`.
 
 ## When to use
 
@@ -86,3 +99,18 @@ npx serve .
 - [ ] serve . — стили и Монетка на месте
 - [ ] README раунда обновлён (запуск + sync)
 ```
+
+---
+
+## Итог (Verdict)
+
+В конце работы явно укажи результат: **PASS**, **FAIL**, **CONCERNS**, **COMPLETE** или **APPROVED** — в зависимости от типа задачи.
+
+## Согласование изменений
+
+Перед созданием или изменением файлов в репозитории спроси: «Могу записать …?» — если пользователь не дал явное «делай» / «запиши».
+
+## Следующий шаг
+
+Утверждённый раунд → `frontend-ui-engineering` + canon sync (`tvoy-hod-canon-sync`).
+

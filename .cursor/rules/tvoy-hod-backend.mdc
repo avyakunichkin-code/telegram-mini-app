@@ -21,7 +21,7 @@ alwaysApply: false
 - Изменения контракта профиля/событий → SQL-миграция + `models.py` + при необходимости `main.py` + **`frontend-react/src/api.js`** и экраны старта.
 - **Роутеры**: подключение в `backend/main.py`; префиксы API держать согласованными с фронтом (`/api/...`).
 - **Ошибки API**: предсказуемые статусы и тело ответа; фронт ожидает единый контракт ошибок через `apiCall` в `frontend-react/src/api.js`.
-- **Победа MVP** и дорожная карта режимов: `GET /api/finance/overview` (`win_reached` при `period_index >= 7`); spec эпика Game/Plan — [`docs/specs/features/SPEC_game-plan.md`](docs/specs/features/SPEC_game-plan.md).
+- **Победа (prod: Victory v2):** `GET /api/finance/overview` → `win_reached` и блок `victory` из `victory/engine.py` + `victory_config_json` шаблона (`chain` | `parallel`, gate `min_period_index_for_victory`, обычно 7). Spec: [`SPEC_victory-v2.md`](docs/specs/features/SPEC_victory-v2.md), [ADR-002](docs/decisions/ADR-002-victory-engine-and-template-config.md). Game/Plan: [`SPEC_game-plan.md`](docs/specs/features/SPEC_game-plan.md).
 - **Инварианты логики (tier-окно, победа):** `backend/app/game/rules.py`; победа v2 — `backend/app/victory/engine.py`. Роутеры не дублируют условия победы вручную.
 
 ## Локальные тесты (без CI)

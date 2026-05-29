@@ -1,7 +1,7 @@
 ---
 name: skill-test
-description: "Validate skill files for structural compliance and behavioral correctness. Three modes: static (linter), spec (behavioral), audit (coverage report)."
-argument-hint: "static [skill-name | all] | spec [skill-name] | category [skill-name | all] | audit"
+description: "Validate skill files for structural compliance and behavioral correctness. Modes: static, spec, category, context, audit."
+argument-hint: "static [skill-name | all] | spec [skill-name] | category [skill-name | all] | context [skill-name | all] | audit"
 user-invocable: true
 allowed-tools: Read, Glob, Grep, Write
 model: sonnet
@@ -9,17 +9,26 @@ model: sonnet
 
 # Skill Test
 
-Validates `.claude/skills/*/SKILL.md` files for structural compliance and
-behavioral correctness. No external dependencies — runs entirely within the
-existing skill/hook/template architecture.
+## Прочитай сначала (ТВОЙ ХОД)
 
-**Four modes:**
+- [`.cursor/skills/catalog.yaml`](../catalog.yaml) — `context`, `status`, `spec`
+- [`.cursor/skills/quality-rubric.md`](../quality-rubric.md)
+- [`docs/agents/CURSOR_SKILLS.md`](../../../docs/agents/CURSOR_SKILLS.md)
+
+**Куда писать:** `.cursor/skills/results/`.
+
+Validates project Agent Skills in `.cursor/skills/*/SKILL.md` (ТВОЙ ХОД) for
+structural compliance. Legacy path `.claude/skills/` — только если каталог есть.
+Контракт полей: см. `project-cursor-skills-layout`.
+
+**Five modes:**
 
 | Mode | Command | Purpose | Token Cost |
 |------|---------|---------|------------|
 | `static` | `/skill-test static [name\|all]` | Structural linter — 7 compliance checks per skill | Low (~1k/skill) |
 | `spec` | `/skill-test spec [name]` | Behavioral verifier — evaluates assertions in test spec | Medium (~5k/skill) |
 | `category` | `/skill-test category [name\|all]` | Category rubric — checks skill against its category-specific metrics | Low (~2k/skill) |
+| `context` | `/skill-test context [name\|all]` | `catalog.context` ↔ «Прочитай сначала» ↔ `SKILL_DOC_MAP` | Low (~1k total) |
 | `audit` | `/skill-test audit` | Coverage report — skills, agent specs, last test dates | Low (~3k total) |
 
 ---
@@ -29,10 +38,12 @@ existing skill/hook/template architecture.
 Determine mode from the first argument:
 
 - `static [name]` → run 7 structural checks on one skill
-- `static all` → run 7 structural checks on all skills (Glob `.claude/skills/*/SKILL.md`)
+- `static all` → run 7 structural checks on all skills (Glob `.cursor/skills/*/SKILL.md`, fallback `.claude/skills/`)
 - `spec [name]` → read skill + test spec, evaluate assertions
-- `category [name]` → run category-specific rubric from `CCGS Skill Testing Framework/quality-rubric.md`
+- `category [name]` → run category-specific rubric from `.cursor/skills/quality-rubric.md`
 - `category all` → run category rubric for every skill that has a `category:` in catalog
+- `context [name]` → align `catalog.context`, «Прочитай сначала», paths on disk, `SKILL_DOC_MAP`
+- `context all` → context check for every skill in catalog (run script below)
 - `audit` (or no argument) → read catalog, list all skills and agents, show coverage
 
 If argument is missing or unrecognized, output usage and stop.
@@ -139,15 +150,13 @@ Aggregate Verdict: N WARNINGS / N FAILURES
 
 ### Step 1 — Locate Files
 
-Find skill at `.claude/skills/[name]/SKILL.md`.
-Look up the spec path from `CCGS Skill Testing Framework/catalog.yaml` — use the
-`spec:` field for the matching skill entry.
+Find skill at `.cursor/skills/[name]/SKILL.md`, or `.cursor/skills/_archived/[name]/SKILL.md` if `status: archived` in catalog (fallback `.claude/skills/`).
+Look up the spec path from `.cursor/skills/catalog.yaml` — field `spec:`.
 
 If either is missing:
-- Missing skill: "Skill '[name]' not found in `.claude/skills/`."
-- Missing spec path in catalog: "No spec path set for '[name]' in catalog.yaml."
-- Spec file not found at path: "Spec file missing at [path]. Run `/skill-test audit`
-  to see coverage gaps."
+- Missing skill: "Skill '[name]' not found in `.cursor/skills/`."
+- Missing spec path in catalog: "No spec path set for '[name]' in `.cursor/skills/catalog.yaml`."
+- Spec file not found at path: "Spec file missing at [path]. Run `/skill-test audit`."
 
 ### Step 2 — Read Both Files
 
@@ -205,14 +214,47 @@ Overall Verdict: FAIL (1 case failed, 1 warning)
 
 ### Step 5 — Offer to Write Results
 
-"May I write these results to `CCGS Skill Testing Framework/results/skill-test-spec-[name]-[date].md`
-and update `CCGS Skill Testing Framework/catalog.yaml`?"
+"May I write these results to `.cursor/skills/results/skill-test-spec-[name]-[date].md`
+and update `.cursor/skills/catalog.yaml` (`last_spec`, `last_spec_result`)?"
 
 If yes:
 - Write results file to `CCGS Skill Testing Framework/results/`
 - Update the skill's entry in `CCGS Skill Testing Framework/catalog.yaml`:
   - `last_spec: [date]`
   - `last_spec_result: PASS|PARTIAL|FAIL`
+
+---
+
+## Phase 2E: Context Mode — catalog ↔ SKILL ↔ docs
+
+Проверяет, что интеграция с репозиторием ТВОЙ ХОД не разъехалась.
+
+### Step 1 — Run script (из корня репо)
+
+```bash
+node .cursor/skills/skill-test/_context-check.mjs
+```
+
+Для одного скилла: отфильтруй вывод по имени или временно закомментируй остальные в каталоге (предпочтительно `context all`).
+
+### Step 2 — Что проверяется
+
+| Check | FAIL | WARN |
+|-------|------|------|
+| `context:` в catalog | active/optional без блока | archived без context — OK |
+| «Прочитай сначала» | нет у `status: active` | нет у optional |
+| `must_read` | путь не в SKILL (включая basename для `.mdc`) | только вне блока «Прочитай» |
+| `writes_to` / `next_skill` | — | не упомянуты в SKILL |
+| `SKILL_DOC_MAP.md` | нет pipeline-скилла или catalog | — |
+| Пути на диске | — | `must_read` не существует |
+
+### Step 3 — Output
+
+Скрипт печатает таблицу и `Summary: N COMPLIANT, N WARNINGS, N NON-COMPLIANT`. Exit code `1` при NON-COMPLIANT или ошибках карты.
+
+### Step 4 — Offer to write results
+
+«Могу записать отчёт в `.cursor/skills/results/skill-test-context-[date].md` и обновить в `catalog.yaml` поля `last_context`, `last_context_result`?»
 
 ---
 
@@ -276,21 +318,19 @@ Fix: Add TD-PHASE-GATE, PR-PHASE-GATE, and AD-PHASE-GATE to the full-mode direct
 
 ### Step 1 — Read Catalog
 
-Read `CCGS Skill Testing Framework/catalog.yaml`. If missing, note that catalog doesn't exist
-yet (first-run state).
+Read `.cursor/skills/catalog.yaml`. If missing, note first-run state and Glob skills only.
 
 ### Step 2 — Enumerate All Skills and Agents
 
-Glob `.claude/skills/*/SKILL.md` to get the complete list of skills.
+Glob `.cursor/skills/*/SKILL.md` and `.cursor/skills/_archived/*/SKILL.md` for the complete list (use `catalog.yaml` for `status`).
 Extract skill name from each path (directory name).
 
-Also read the `agents:` section from `CCGS Skill Testing Framework/catalog.yaml` to get the
-complete list of agents.
+Also read the `agents:` section from `.cursor/skills/catalog.yaml` (often empty in ТВОЙ ХОД).
 
 ### Step 3 — Build Skill Coverage Table
 
 For each skill:
-- Check if a spec file exists (use the `spec:` path from catalog, or glob `CCGS Skill Testing Framework/skills/*/[name].md`)
+- Check if a spec file exists (use `spec:` from catalog, or glob `.cursor/skills/specs/*/[name].md`)
 - Look up `last_static`, `last_static_result`, `last_spec`, `last_spec_result`,
   `last_category`, `last_category_result`, `category` from catalog (or mark as
   "never" / "—" if not in catalog)
@@ -354,4 +394,4 @@ After any mode completes, offer contextual follow-up:
 - After `spec [name]` FAIL: "Review the failing assertions and update the skill
   or the test spec to resolve the mismatch."
 - After `audit`: "Start with the critical-priority gaps. Use the spec template
-  at `CCGS Skill Testing Framework/templates/skill-test-spec.md` to create new specs."
+  at `.cursor/skills/templates/skill-test-spec.md` to create new specs."

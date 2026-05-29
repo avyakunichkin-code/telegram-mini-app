@@ -1,9 +1,19 @@
 ---
 name: doubt-driven-development
 description: Subjects every non-trivial decision to a fresh-context adversarial review before it stands. Use when correctness matters more than speed, when working in unfamiliar code, when stakes are high (production, security-sensitive logic, irreversible operations), or any time a confident output would be cheaper to verify now than to debug later.
+argument-hint: "[decision, diff, or hypothesis to challenge]"
+user-invocable: true
+allowed-tools: Read, Glob, Grep, AskUserQuestion
 ---
 
 # Doubt-Driven Development
+
+## Прочитай сначала (ТВОЙ ХОД)
+
+- [`docs/specs/features/`](../../../docs/specs/features/)
+- [`CLAUDE.md`](../../../CLAUDE.md)
+
+**Куда писать:** — (ревью). **Дальше:** `incremental-implementation`.
 
 ## Overview
 
@@ -240,3 +250,20 @@ After applying doubt-driven development:
 - [ ] In interactive mode, cross-model was **explicitly offered** to the user (regardless of artifact stakes) and the response was acknowledged in the output
 - [ ] In non-interactive mode, cross-model was skipped and the skip was announced
 - [ ] Any external CLI invocation was preceded by a PATH check, a working-binary test, syntax confirmation with the user, and explicit authorization to run
+
+---
+
+## Итог (Verdict)
+
+В конце работы явно укажи результат: **PASS**, **FAIL**, **CONCERNS**, **COMPLETE** или **APPROVED** — в зависимости от типа задачи.
+
+## Согласование изменений
+
+По умолчанию только чтение и отчёт; правки в репозитории — только по явной просьбе пользователя.
+
+**Safety / high stakes:** для экономики периода, денег игрока, JWT и необратимых операций — явно перечисли **risk** и что может пойти не так, прежде чем рекомендовать внедрение.
+
+## Следующий шаг
+
+После разбора — `incremental-implementation` или уточнение spec.
+

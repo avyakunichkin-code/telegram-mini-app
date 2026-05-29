@@ -1,9 +1,20 @@
 ---
 name: code-review-and-quality
 description: Conducts multi-axis code review. Use before merging any change. Use when reviewing code written by yourself, another agent, or a human. Use when you need to assess code quality across multiple dimensions before it enters the main branch.
+argument-hint: "[paths, PR scope, or "staged"]"
+user-invocable: true
+allowed-tools: Read, Glob, Grep, AskUserQuestion
 ---
 
 # Code Review and Quality
+
+## Прочитай сначала (ТВОЙ ХОД)
+
+- [`CLAUDE.md`](../../../CLAUDE.md)
+- [`docs/specs/features/`](../../../docs/specs/features/) — по области изменения
+- [`docs/foundation/SPEC_PRODUCT.md`](../../../docs/foundation/SPEC_PRODUCT.md)
+
+**Куда писать:** никуда (только ревью). **Дальше:** правки через `incremental-implementation`.
 
 ## Overview
 
@@ -345,3 +356,18 @@ After review is complete:
 - [ ] Tests pass
 - [ ] Build succeeds
 - [ ] The verification story is documented (what changed, how it was verified)
+
+---
+
+## Итог (Verdict)
+
+В конце работы явно укажи результат: **PASS**, **FAIL**, **CONCERNS**, **COMPLETE** или **APPROVED** — в зависимости от типа задачи.
+
+## Согласование изменений
+
+По умолчанию только чтение и отчёт; правки в репозитории — только по явной просьбе пользователя.
+
+## Следующий шаг
+
+Исправления → `incremental-implementation` / `test-driven-development`; перед merge — повторный review.
+

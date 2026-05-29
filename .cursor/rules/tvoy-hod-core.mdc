@@ -1,16 +1,10 @@
 ﻿---
-description: Карта проекта ТВОЙ ХОД и куда смотреть агенту
-alwaysApply: true
+description: "[legacy] Карта проекта — см. tvoy-hod-router.mdc"
+alwaysApply: false
 ---
 
-# ТВОЙ ХОД — ориентиры
+# ТВОЙ ХОД — ориентиры (legacy)
 
-- **Онбординг и карта кода**: сначала [`CLAUDE.md`](CLAUDE.md) (стек, папки, эндпоинты, экономика периода).
-- **Продукт и MVP**: [`docs/foundation/SPEC_PRODUCT.md`](docs/foundation/SPEC_PRODUCT.md) (раздел 0 — дорожная карта Game/Plan).
-- **Целевая концепция и план работ**: [`docs/vision/ideas/tvoy-hod-evolution-after-mvp.md`](docs/vision/ideas/tvoy-hod-evolution-after-mvp.md) (часть II).
-- **Черновик баланса (победа / поражение / ограничения MVP)**: [`docs/vision/ideas/game-balance-thresholds-and-constraints.md`](docs/vision/ideas/game-balance-thresholds-and-constraints.md).
-Приоритет скиллов и что удалено из проекта по смыслу — [`docs/agents/CURSOR_SKILLS.md`](docs/agents/CURSOR_SKILLS.md).
-- **Frontend UI/UX**: [`docs/specs/SPEC_FRONTEND_UI.md`](docs/specs/SPEC_FRONTEND_UI.md); правила `.cursor/rules/tvoy-hod-frontend-*.mdc`, **design-lab** — `tvoy-hod-design-lab.mdc` + скилл `design-lab-mqx`. **Компонентная база MQX** — обязательный процесс в [`frontend-react/src/components/mqx/DESIGN_WORKFLOW.md`](frontend-react/src/components/mqx/DESIGN_WORKFLOW.md): перед новым/существенно меняющим вид паттерном **прочитать этот файл целиком**, не только краткое резюме в rules (исключение: багфикс/hotfix без смены дизайна).
-- **Миграции БД**: SQL в `backend/migrations/` ([`README.md`](backend/migrations/README.md)), без Alembic; на Windows — [`backend/migrate.ps1`](backend/migrate.ps1) при наличии `psql` и `DATABASE_URL`.
+**Актуальный alwaysApply-роутер:** [`tvoy-hod-router.mdc`](tvoy-hod-router.mdc).
 
-При смене контракта API синхронизируй `frontend-react/src/api.js` и типичные вызовы в хуках/экранах.
+Кратко: [`CLAUDE.md`](CLAUDE.md), [`docs/agents/SKILL_DOC_MAP.md`](docs/agents/SKILL_DOC_MAP.md), MQX — [`DESIGN_WORKFLOW.md`](../frontend-react/src/components/mqx/DESIGN_WORKFLOW.md).
