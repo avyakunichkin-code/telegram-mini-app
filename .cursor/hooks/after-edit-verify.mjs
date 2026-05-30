@@ -48,14 +48,36 @@ if (/data\/events\/mvp11\//.test(filePath)) {
   hints.push(balancePlaytestHint);
 } else if (/backend\/app\/(game|victory)\//.test(filePath)) {
   hints.push(
-    'ТВОЙ ХОД hook: экономика/победа — `test-driven-development` + `doubt-driven-development`; `cd backend && python -m pytest -q`. Primary: `game-economy-and-victory`.',
+    'ТВОЙ ХОД hook: экономика/победа — `game-economy-and-victory`; satellites: `test-driven-development`, `critical-test-scenarios`, `doubt-driven-development`; `cd backend && python -m pytest -q`.',
   );
   hints.push(balancePlaytestHint);
+} else if (/backend\/app\/routers\//.test(filePath)) {
+  hints.push(
+    'ТВОЙ ХОД hook: API — skill `/critical-tests` (gate G3): минимум integration test на контракт JSON; satellite `test-driven-development`.',
+  );
 } else if (/backend\/app\/seeds\//.test(filePath)) {
   hints.push(
     'ТВОЙ ХОД hook: seeds/шаблоны — проверь victory_config_json и starter templates; pytest + balance playtest.',
   );
   hints.push(balancePlaytestHint);
+}
+
+if (/backend\/tests\//.test(filePath)) {
+  hints.push(
+    'ТВОЙ ХОД hook: тесты — `backend/tests/README.md`; skill `/critical-tests`. Запуск: `cd backend && python -m pytest -q`.',
+  );
+}
+
+if (/frontend-react\/src\/.*__tests__\//.test(filePath)) {
+  hints.push(
+    'ТВОЙ ХОД hook: FE contract tests — `cd frontend-react && npm run test:unit`. Skill: `/critical-tests`.',
+  );
+}
+
+if (/docs\/specs\/features\//.test(filePath)) {
+  hints.push(
+    'ТВОЙ ХОД hook: spec — § Critical scenarios (CS-*) до кода; skill `/critical-tests`.',
+  );
 }
 
 if (/backend\/migrations\//.test(filePath) && /\.sql$/.test(filePath)) {
@@ -69,7 +91,7 @@ if (
   /frontend-react\/src\/components\/mqx\//.test(filePath)
 ) {
   hints.push(
-    'ТВОЙ ХОД hook: MQX/prod UI — следуй DESIGN_WORKFLOW; если визуал новый — сначала design-lab. Перед PR: `cd frontend-react && npm run check:guardrails`.',
+    'ТВОЙ ХОД hook: MQX/prod UI — DESIGN_WORKFLOW; новый визуал — design-lab. Контракт display/helpers — `/critical-tests`. PR: `npm run check:guardrails`.',
   );
 }
 

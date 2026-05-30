@@ -29,7 +29,7 @@ export function MqxTreatSelfSheet({ open, onClose, treatSelf, treatSelfState }) 
     try {
       setBusy(true);
       await treatSelf(selected.id);
-      showNotification('Самочувствие улучшилось', 'success');
+      showNotification('Потребности улучшились', 'success');
       onClose?.();
     } catch (e) {
       showNotification(e?.detail || e?.message || 'Не удалось выполнить действие', 'error');

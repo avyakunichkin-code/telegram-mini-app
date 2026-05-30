@@ -32,7 +32,7 @@ prod_route: GameScreen tab `dashboard` → Z-NEEDS
 | Первая игра, coach активен | Z-NEEDS **скрыт** до `brief_done` (не отвлекать от O1) |
 | Сразу после coach | Intro-баннер ([`CHARACTER_NEEDS_UX.md`](../CHARACTER_NEEDS_UX.md) § Onboarding), затем compact Z-NEEDS |
 | Обычная сессия | Compact; раскрытие по tap |
-| Любая шкала <40, soft | Опциональный баннер «Проверь самочувствие» (dismissible) |
+| Любая шкала <40, soft | Опциональный баннер «Проверь потребности» (dismissible) |
 | `needs_zero_periods_streak > 0` | Critical banner «N из 3 месяцев…» |
 | Plan / `needs.enabled: false` | Секция не рендерится |
 
@@ -64,7 +64,7 @@ GameScreen → dashboard
 
 | Подзона | Содержание |
 |---------|------------|
-| **Header row** | `Самочувствие` + ссылка `как улучшить →` (collapsed) / `?` в кружке (expanded) |
+| **Header row** | `Потребности` + ссылка `как улучшить →` (collapsed) / `?` в кружке (expanded) |
 | **Compact row** | Min value label + мини-bar или 4-dot strip + статус-текст |
 | **Expanded** | `MqxNeedsBars` ×4 |
 | **Footer actions** | `[Порадовать себя]` `[?]` — горизонтально, min 44px height |
@@ -77,7 +77,7 @@ GameScreen → dashboard
 ```text
 │ ⚠ Риск: 2 из 3 месяцев с нулём на «Связи»     │  bleed (если streak)
 ├───────────────────────────────────────────────┤
-│ ▼ Самочувствие                            ⌄   │
+│ ▼ Потребности                            ⌄   │
 │ [👤]  Связи    ███░░░░░░░     Истощение       │  цветной текст, не бейдж
 ├───────────────────────────────────────────────┤
 ```
@@ -85,7 +85,7 @@ GameScreen → dashboard
 **Expanded:**
 
 ```text
-│ ▲ Самочувствие                                │
+│ ▲ Потребности                                │
 │ [👤]  Комфорт   ████████░░    Норма           │
 │       Статус    █████░░░░░    Норма           │
 │       Связи     ███░░░░░░░    Истощение       │
@@ -157,7 +157,7 @@ GameScreen → dashboard
 
 ## Accessibility
 
-- Секция: `<section aria-labelledby="needs-title">`, `h2` «Самочувствие».
+- Секция: `<section aria-labelledby="needs-title">`, `h2` «Потребности».
 - Каждый bar: `aria-valuenow`, `aria-valuemin="0"`, `aria-valuemax="100"`, `aria-label="Связи, 28 из 100, низко"`.
 - Critical banner: `role="alert"` или `aria-live="polite"` при появлении.
 - Кнопки footer ≥44×44px.

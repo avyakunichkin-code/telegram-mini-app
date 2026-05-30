@@ -16,14 +16,12 @@ events:
   - title: Созвониться
     effects:
       cash_delta: 0
-      xp_delta: 1
       needs_delta:
         social: 10
         health: 4
   - title: Отложить
     effects:
       cash_delta: 0
-      xp_delta: 1
       needs_delta:
         social: -4
 - definition_key: mq11_friend_outing_student
@@ -44,7 +42,6 @@ events:
   - title: Сходить в кино
     effects:
       cash_delta: -3200
-      xp_delta: 2
       needs_delta:
         social: 20
         health: 10
@@ -52,7 +49,6 @@ events:
   - title: Погулять и выпить кофе
     effects:
       cash_delta: -1400
-      xp_delta: 2
       needs_delta:
         social: 14
         health: 6
@@ -60,7 +56,6 @@ events:
   - title: Отложить — занят учёбой
     effects:
       cash_delta: 0
-      xp_delta: 1
       needs_delta:
         social: -5
 - definition_key: mq11_wedding_gift_once
@@ -75,7 +70,6 @@ events:
   - title: Подарок и поездка
     effects:
       cash_delta: -22000
-      xp_delta: 6
       needs_delta:
         social: 16
         status: 6
@@ -83,14 +77,12 @@ events:
   - title: Только подарок
     effects:
       cash_delta: -8000
-      xp_delta: 5
       needs_delta:
         social: 12
         status: 3
   - title: Поздравить дистанционно
     effects:
       cash_delta: -2000
-      xp_delta: 3
       needs_delta:
         social: 4
         comfort: -2

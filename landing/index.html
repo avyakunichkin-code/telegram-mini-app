@@ -33,10 +33,9 @@
         </picture>
       </a>
       <nav class="mq-nav" aria-label="Main">
-        <a href="#how" data-i18n="nav.how">Как это работает</a>
-        <a href="#peek" data-i18n="nav.peek">Интерфейс</a>
+        <a href="#how" data-i18n="nav.how">Как играть</a>
         <a href="#features" data-i18n="nav.features">Механики</a>
-        <a href="#learn" data-i18n="nav.learn">Чему учит</a>
+        <a href="#peek" data-i18n="nav.peek">Интерфейс</a>
         <a href="#partners" data-i18n="nav.partners">Партнёрам</a>
         <a href="#faq" data-i18n="nav.faq">Вопросы</a>
       </nav>
@@ -86,7 +85,14 @@
               <span data-i18n="hero.status">Скоро в Telegram</span>
             </p>
             <div class="mq-hero__actions">
-              <a class="mq-btn mq-btn--primary" href="#how" data-i18n="hero.ctaPrimary">Как устроена игра</a>
+              <a
+                class="mq-btn mq-btn--primary"
+                href="https://avyakunichkin-code.github.io/telegram-mini-app/#/"
+                data-play-href
+                data-i18n="hero.ctaPlay"
+                >Играть в браузере</a
+              >
+              <a class="mq-btn mq-btn--ghost" href="#how" data-i18n="hero.ctaPrimary">Как устроена игра</a>
               <a class="mq-btn mq-btn--ghost" href="#peek" data-i18n="hero.ctaPeek">Смотреть интерфейс</a>
             </div>
           </div>
@@ -112,6 +118,16 @@
               </p>
             </div>
           </div>
+        </div>
+      </section>
+
+      <section id="audience" class="mq-section mq-section--audience mq-section--on-light" aria-labelledby="audience-title">
+        <div class="mq-wrap">
+          <header class="mq-section__head mq-reveal">
+            <h2 id="audience-title" data-i18n="audience.title">Если узнаёте себя</h2>
+            <p data-i18n="audience.subtitle">Не курс</p>
+          </header>
+          <div class="mq-audience-grid" id="audience-cards"></div>
         </div>
       </section>
 
@@ -254,10 +270,19 @@
             <span class="mq-lockup-full__tagline" aria-hidden="true">Финансы как игра</span>
           </div>
           <div>
-            <h2 id="cta-band-title" data-i18n="ctaBand.title">Готовы к первому ходу?</h2>
-            <p data-i18n="ctaBand.text">Запуск в Telegram готовится</p>
+            <h2 id="cta-band-title" data-i18n="ctaBand.title">Сделайте первый ход</h2>
+            <p data-i18n="ctaBand.text">Четыре игровых месяца</p>
           </div>
-          <a class="mq-btn mq-btn--primary" href="#faq" data-i18n="ctaBand.btn">Частые вопросы</a>
+          <div class="mq-cta-band__actions">
+            <a
+              class="mq-btn mq-btn--primary"
+              href="https://avyakunichkin-code.github.io/telegram-mini-app/#/"
+              data-play-href
+              data-i18n="ctaBand.btnPlay"
+              >Открыть игру</a
+            >
+            <a class="mq-btn mq-btn--ghost" href="#faq" data-i18n="ctaBand.btnFaq">Частые вопросы</a>
+          </div>
         </div>
       </section>
     </main>

@@ -12,12 +12,10 @@ events:
   choices:
   - title: Понятно, буду смотреть
     effects:
-      xp_delta: 3
       needs_delta:
         comfort: 2
   - title: Звучит интересно
     effects:
-      xp_delta: 2
       needs_delta:
         comfort: 3
         social: 2

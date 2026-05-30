@@ -11,6 +11,7 @@
 
 | Слой | Путь | Назначение |
 |------|------|------------|
+| **Handbook** | [`handbook/`](handbook/) | **Проектная документация для людей:** GDD, путеводитель, role-guides |
 | **Система** | [`DOCUMENTATION_SYSTEM.md`](DOCUMENTATION_SYSTEM.md) | Конвейер idea → spec → plan → tasks |
 | **Foundation** | [`foundation/`](foundation/) | Продукт «как есть», потоки, термины |
 | **Vision** | [`vision/ideas/`](vision/ideas/) | Идеи и целевое направление (idea-refine) |
@@ -31,8 +32,12 @@
 
 | Роль | Читать |
 |------|--------|
-| Разработчик / агент | `CLAUDE.md` → [`foundation/SPEC_PRODUCT.md`](foundation/SPEC_PRODUCT.md) → spec своей фичи |
-| Продукт | [`foundation/SPEC_PRODUCT.md`](foundation/SPEC_PRODUCT.md) + [Часть II (evolution)](vision/ideas/tvoy-hod-evolution-after-mvp.md) |
+| **Любой человек (старт)** | [`handbook/README.md`](handbook/README.md) → [`handbook/GAME.md`](handbook/GAME.md) |
+| Разработчик / агент | `CLAUDE.md` → [`foundation/SPEC_PRODUCT.md`](foundation/SPEC_PRODUCT.md) → spec своей фичи · [`handbook/roles/engineering.md`](handbook/roles/engineering.md) |
+| Продукт | [`handbook/roles/product.md`](handbook/roles/product.md) · [`foundation/SPEC_PRODUCT.md`](foundation/SPEC_PRODUCT.md) + [Часть II (evolution)](vision/ideas/tvoy-hod-evolution-after-mvp.md) |
+| Геймдизайн | [`handbook/roles/game-design.md`](handbook/roles/game-design.md) · [`handbook/GAME.md`](handbook/GAME.md) |
+| Плейтест | [`handbook/PLAYER_EXPERIENCE.md`](handbook/PLAYER_EXPERIENCE.md) · [`handbook/roles/playtest.md`](handbook/roles/playtest.md) · [`foundation/PRE_ALPHA_PLAYTEST_PROTOCOL.md`](foundation/PRE_ALPHA_PLAYTEST_PROTOCOL.md) |
+| Маркетинг | [`handbook/ADVISOR_FUNNEL_AUDIENCE.md`](handbook/ADVISOR_FUNNEL_AUDIENCE.md) · [`handbook/roles/marketing.md`](handbook/roles/marketing.md) · [`landing/README.md`](../landing/README.md) |
 | UI/UX | [`specs/SPEC_FRONTEND_UI.md`](specs/SPEC_FRONTEND_UI.md) + [`ux/screens/`](ux/screens/) + [`ux/CHARACTER_NEEDS_UX.md`](ux/CHARACTER_NEEDS_UX.md) + [`reference/brandbook/BRANDBOOK.md`](reference/brandbook/BRANDBOOK.md) + [`BRANDBOOK_MQX.md`](reference/brandbook/BRANDBOOK_MQX.md) |
 | Лендинг / скрины MQX | [`specs/LANDING_SCREENSHOTS.md`](specs/LANDING_SCREENSHOTS.md) + [`landing/README.md`](../landing/README.md) |
 | Маркетинг / посты | [`marketing/README.md`](marketing/README.md) + скилл **social-changelog-posts** |
@@ -48,7 +53,7 @@
 |----------|------------|
 | [`foundation/SPEC_PRODUCT.md`](foundation/SPEC_PRODUCT.md) | Продукт, цикл, экономика MVP; **раздел 0** — краткая дорожная карта Game/Plan |
 | [`foundation/TMA_USER_FLOWS.md`](foundation/TMA_USER_FLOWS.md) | Потоки и боли Telegram Mini App |
-| [`foundation/TARGET_PLAYER_AND_SESSION.md`](foundation/TARGET_PLAYER_AND_SESSION.md) | ЦА MVP 1.1+, типичная сессия, рамки контента, паттерны копирайта событий |
+| [`foundation/TARGET_PLAYER_AND_SESSION.md`](foundation/TARGET_PLAYER_AND_SESSION.md) | ЦА **30+**, умная игра; сессия, рамки контента, копирайт событий |
 | [`foundation/GLOSSARY.md`](foundation/GLOSSARY.md) | Термины (период, подушка, save_kind, …) |
 | [`foundation/PRE_ALPHA_PLAYTEST_PROTOCOL.md`](foundation/PRE_ALPHA_PLAYTEST_PROTOCOL.md) | **Черновик** протокола плейтеста Pre-Alpha (10–20), опрос, чеклист перед волной |
 | [`foundation/PRE_ALPHA_PLAYTEST_WAVE0_RESULTS.md`](foundation/PRE_ALPHA_PLAYTEST_WAVE0_RESULTS.md) | Пилот wave-0 (n=1): итоги и правки после пробного тестера |
@@ -59,9 +64,15 @@
 
 | Документ | Содержание |
 |----------|-------------|
+| [`handbook/EVENTS.md`](handbook/EVENTS.md) | **Публично:** роль событий, trade-off, потребности, повторы, плейтест |
+| [`handbook/EVENTS_TERMS_RU.md`](handbook/EVENTS_TERMS_RU.md) | Глоссарий кодов каталога (spec/партнёр) |
 | [`vision/ideas/remove-character-xp-and-levels.md`](vision/ideas/remove-character-xp-and-levels.md) | **Канон (implemented):** без level/XP; `event_tier` от `period_index` |
 | [`vision/ideas/starter-template-mechanics-permissions.md`](vision/ideas/starter-template-mechanics-permissions.md) | `blueprint.mechanics` — разделы капитала (**implemented**) |
 | [`specs/features/SPEC_mvp-11-progression-events.md`](specs/features/SPEC_mvp-11-progression-events.md) | События: tier, repeat/cooldown (**implemented**) |
+| [`specs/features/SPEC_event-system-v2-slots-and-taxonomy.md`](specs/features/SPEC_event-system-v2-slots-and-taxonomy.md) | Слоты, content_class (**draft**) |
+| [`agents/EVENTS_AGENT.md`](agents/EVENTS_AGENT.md) | Authoring: `/create-event`, balance rules, `/event-analysis` |
+| [`vision/ideas/event-choice-balance-tradeoffs.md`](vision/ideas/event-choice-balance-tradeoffs.md) | Продуктовое «нет free lunch» |
+| [`vision/ideas/event-repeat-and-state-ladder.md`](vision/ideas/event-repeat-and-state-ladder.md) | Повтор, downgrade жилья/тарифа (команда) |
 | [`vision/ideas/turn-based-period-no-timer.md`](vision/ideas/turn-based-period-no-timer.md) | **TB1 (implemented):** период без real-time таймера; закрытие «Закрыть месяц» |
 | [`ux/screens/dashboard.md`](ux/screens/dashboard.md) | UX главной вкладки (hero H2, chips, онбординг) |
 
@@ -93,6 +104,7 @@
 | [`specs/gameplay/EXPENSES_SYSTEM.md`](specs/gameplay/EXPENSES_SYSTEM.md) | Канон механики **расходов** (категории, burn, Game/Plan) |
 | [`specs/features/SPEC_expenses.md`](specs/features/SPEC_expenses.md) | Эпик **E1** — внедрение на всех слоях; чеклист — [`specs/economy/EXPENSES_LAYER_CHECKLIST.md`](specs/economy/EXPENSES_LAYER_CHECKLIST.md) |
 | [`specs/features/SPEC_onboarding-tma.md`](specs/features/SPEC_onboarding-tma.md) | Эпик **O1** — Mission Brief, 3 шага, Pre-Alpha |
+| [`specs/features/SPEC_telegram-bots-and-notifications.md`](specs/features/SPEC_telegram-bots-and-notifications.md) | **TG:** player + ops боты, каталог `kind`, webhook, initData, digest (draft) |
 | [`reference/CHARACTER_MONETKA.md`](reference/CHARACTER_MONETKA.md) | Персонаж-наставник **Монетка** (онбординг) |
 
 ### Backlog и агенты

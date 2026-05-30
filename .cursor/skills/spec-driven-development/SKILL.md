@@ -114,7 +114,7 @@ Don't silently fill in ambiguous requirements. The spec's entire purpose is to s
 [Example snippet + key conventions]
 
 ## Testing Strategy
-[Framework, test locations, coverage requirements, test levels]
+[Framework, test locations — **not 100% coverage**; table **Critical scenarios (min gate)** CS-1… per `docs/templates/SPEC_FEATURE.md`; skill `/critical-tests`]
 
 ## Boundaries
 - Always: [...]

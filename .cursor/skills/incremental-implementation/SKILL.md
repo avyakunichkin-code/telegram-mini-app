@@ -17,7 +17,7 @@ allowed-tools: Read, Glob, Grep, Write, Shell
 - [`backend/app/README.md`](../../../backend/app/README.md)
 - [`frontend-react/ARCHITECTURE.md`](../../../frontend-react/ARCHITECTURE.md)
 
-**Куда писать:** `backend/`, `frontend-react/`. **Дальше:** `test-driven-development`, `code-review-and-quality`.
+**Куда писать:** `backend/`, `frontend-react/`. **Дальше:** `critical-test-scenarios`, `test-driven-development`, `code-review-and-quality`.
 
 ## Overview
 

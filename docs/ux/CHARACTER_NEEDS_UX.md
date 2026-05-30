@@ -17,7 +17,7 @@ platform: Telegram Mini App (touch-first, 320–480px)
 | Контекст | Термин |
 |----------|--------|
 | Механика, эпик CN1, design-lab, планирование | **Потребности** (Z-NEEDS) |
-| Prod UI, заголовок секции (до CN1-020) | **Самочувствие** — рабочий копирайт; целевой — «Потребности» |
+| Prod UI, заголовок секции | **Потребности** |
 | Тех.ключи | `need_*`, `needs_*`, `needs_delta` — без переименования |
 | Не про эту механику | `onboarding_state`, empty/loading UI state, React state в hooks |
 
@@ -82,7 +82,7 @@ platform: Telegram Mini App (touch-first, 320–480px)
 | `health` | Здоровье |
 | treat_self CTA | Порадовать себя |
 | help CTA | Помощь (иконка `?` + `aria-label="Помощь по потребностям"`) |
-| section title | Самочувствие |
+| section title | Потребности |
 | zero streak | «Риск поражения: N из 3 месяцев с нулём на шкале» |
 | defeat title | Поражение: потребности на нуле три месяца подряд |
 

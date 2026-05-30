@@ -10,7 +10,7 @@ import { themeForSection } from './screens.js';
 import { uiCropHtml } from './ui-crop.js';
 
 const CONTACT_EMAIL = 'hello@tvoyhod.app';
-
+const GAME_URL = 'https://avyakunichkin-code.github.io/telegram-mini-app/#/';
 function renderHowSteps() {
   const list = document.getElementById('how-steps');
   if (!list) return;
@@ -26,6 +26,22 @@ function renderHowSteps() {
         <p>${escapeHtml(step.text)}</p>
       </div>
     </li>`
+    )
+    .join('');
+}
+
+function renderAudienceCards() {
+  const grid = document.getElementById('audience-cards');
+  if (!grid) return;
+  const cards = t('audience.cards');
+  if (!Array.isArray(cards)) return;
+  grid.innerHTML = cards
+    .map(
+      (card, i) => `
+    <article class="mq-audience-card mq-reveal" style="--mq-delay:${i * 70}ms">
+      <h3>${escapeHtml(card.title)}</h3>
+      <p>${escapeHtml(card.text)}</p>
+    </article>`
     )
     .join('');
 }
@@ -194,6 +210,14 @@ function wireContact() {
   if (link) link.setAttribute('href', `mailto:${CONTACT_EMAIL}`);
 }
 
+function wirePlayLinks() {
+  document.querySelectorAll('[data-play-href]').forEach((el) => {
+    el.setAttribute('href', GAME_URL);
+    el.setAttribute('target', '_blank');
+    el.setAttribute('rel', 'noopener noreferrer');
+  });
+}
+
 function wireLangSwitcher(onChange) {
   document.querySelectorAll('[data-lang]').forEach((btn) => {
     btn.addEventListener('click', () => {
@@ -229,6 +253,7 @@ async function setLocale(code) {
   await loadLocale(code);
   renderHeroCrop();
   applyStaticI18n();
+  renderAudienceCards();
   renderHowSteps();
   renderFeatures();
   renderLearnCards();
@@ -238,12 +263,14 @@ async function setLocale(code) {
   renderVictory();
   renderPartners();
   renderFaq();
+  wirePlayLinks();
   setLangButtons(code);
   wireReveal();
 }
 
 async function boot() {
   wireContact();
+  wirePlayLinks();
   const initial = initLang();
   await setLocale(initial);
   wireLangSwitcher(setLocale);

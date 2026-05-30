@@ -38,7 +38,7 @@ tracks: events, gameplay, content-pipeline
 - `event_taxonomy.py`, `metadata_json` в сидах (`EVENT_TAXONOMY`).
 - Цепочка `family_money_refusal` (18k/9k, `after_periods: 1`).
 - Ротация доменов и fatigue weight в `ensure_period_events`.
-- `cooldown_periods: 3` на базовые consumption defs.
+- `cooldown_periods: 3` на базовые **consumption** defs (класс **D** — не путать с **B** housing/downgrade: там ≥ 12, [`event-repeat-and-state-ladder.md`](event-repeat-and-state-ladder.md)).
 - Рефинанс `is_active: 0`.
 - Урезание выборов: вебинар, вечерний курс (2 кнопки).
 
@@ -59,7 +59,7 @@ tracks: events, gameplay, content-pipeline
 | 1 | Скопировать **шаблон spec** из `events/mvp11_seeds.py` (key, tier, domain, 2–3 choices, effects). |
 | 2 | Новый **уникальный `key`** (`mq11_streaming_offer_b` — новый текст, те же effect-типы). |
 | 3 | Строка в **`EVENT_TAXONOMY`** с тем же `event_domain`, при необходимости другой `event_tier`. |
-| 4 | `cooldown_periods` ≥ 2 для repeatable. |
+| 4 | `cooldown_periods` ≥ 2 для repeatable **consumption (класс D)**; **жильё/downgrade (класс B)** — ≥ 12, см. [`event-balance-rules.md`](../../.cursor/skills/create-event/event-balance-rules.md) §10 |
 | 5 | Идемпотентный сид + при необходимости SQL-миграция для prod БД. |
 | 6 | Строка в матрице XP / Q&A doc при нетривиальном балансе. |
 

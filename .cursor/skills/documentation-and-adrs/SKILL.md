@@ -300,5 +300,6 @@ After documenting:
 
 ## Следующий шаг
 
-`code-review-and-quality` при изменении публичного API; см. `docs/decisions/`.
+`code-review-and-quality` при изменении публичного API; см. `docs/decisions/`.  
+Narrative / GDD / плейтест-пакет → **`project-handbook-documentation`** (`docs/handbook/`).
 

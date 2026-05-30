@@ -2,6 +2,8 @@
 
 Цель: **не 100% coverage**, а проверки, которые ловят регрессии продукта (экономика, события, победа, контракты API).
 
+**Agent skill:** [`/critical-tests`](../../.cursor/skills/critical-test-scenarios/SKILL.md) — min gate G1–G4, выбор сценариев, конвейер spec → MQ-* → pytest/vitest.
+
 ## Пирамида
 
 ```
@@ -57,10 +59,10 @@ tests/
 ## Приоритеты дополнения (backlog)
 
 1. **Events FE↔BE:** `event_domain`, `insurance_claim` в `GET /pending` (unit + integration) — ★ добавлено
-2. **Period close:** cashflow после `time/next` с обязательствами и просрочкой
-3. **Victory v2:** chain vs parallel по template_key
-4. **Plan mode:** когда активируется UI — CRUD plan expenses
-5. **Property-based (опционально):** `cash` не уходит в NaN при choose (hypothesis)
+2. **Period close:** cashflow после `time/next` с обязательствами и просрочкой — ★ `unit/game/test_period_close_obligations.py`, `integration/api/test_time_next_cashflow.py`
+3. **Victory v2:** chain vs parallel по template_key — ★ `unit/victory/test_progression_modes.py`, `integration/api/test_overview_victory_contract.py`
+4. **Plan mode:** CRUD plan expenses — ★ `integration/api/test_plan_expenses_contract.py` (legacy `test_plan_expense_crud.py` удалён)
+5. **Property-lite:** cash finite (choose, salary, safety) — ★ `test_choose_cash_property_lite.py`, `unit/game/test_period_money_property_lite.py`
 
 ## Запуск
 

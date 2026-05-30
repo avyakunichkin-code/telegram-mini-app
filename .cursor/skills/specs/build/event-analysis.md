@@ -14,15 +14,19 @@
 ### Expected behavior
 
 1. Read-only; не правит YAML.
-2. Запускает `event_catalog_report.py` и/или rg по `data/events/mvp11/`.
-3. Отчёт: домены, tier, персоны, gaps; verdict GAPS или HEALTHY.
-4. Рекомендации → `/create-event`, не автозапись.
+2. Читает SPEC_event-system-v2; rg content_class / event_slot / audience.
+3. Запускает event_catalog_report.py и/или pytest.
+4. Отчёт: домены, tier, content_class coverage, EVT1 engine gap, persona gaps.
+5. Verdict GAPS или HEALTHY.
+6. Рекомендации → `/create-event`.
 
 ### Assertions
 
 - [ ] Нет Write в YAML без явного запроса.
-- [ ] Упоминает persona-profiles / salary %.
-- [ ] Не путает с economy-reviewer.
+- [ ] Таблица или упоминание content_class × persona.
+- [ ] Блок trade-off / free-lunch scan (event-balance-rules §1–4).
+- [ ] Блок repeat/lifecycle §10 и axis §11 при scope all.
+- [ ] Не путает с economy-reviewer / create-event implement.
 
 ---
 

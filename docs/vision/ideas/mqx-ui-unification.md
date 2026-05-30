@@ -82,7 +82,7 @@
 |---|------|--------|------------------|
 | E1 | Карточка L3 | ★ prod | — |
 | E2 | **Страховой случай (M6 halo)** | ★ E2-B prod | [`tails-round`](../../../design-lab/events/tails-round/) |
-| E3 | **EventChoiceImpacts** / XP на кнопках | ★ prod | — |
+| E3 | **EventChoiceImpacts** на кнопках (cash, needs, burn) | ★ prod | — |
 | E4 | **Оверлей карусели** (toolbar, dots, свайп) | ★ O1 L3 shell | — |
 | E5 | **Длинные тексты** (line-clamp, скролл) | ★ E5-B prod | [`tails-round`](../../../design-lab/events/tails-round/) |
 | E6 | **Consumption-события** (0026) | Контент есть | Визуальная категория (иконка/kicker), не новый layout |

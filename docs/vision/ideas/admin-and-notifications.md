@@ -4,7 +4,7 @@ status: active
 last_reviewed: 2026-05-19
 phase_0: implemented
 idea_refine: true
-next_spec: specs/features/SPEC_admin-and-notifications.md
+next_spec: specs/features/SPEC_telegram-bots-and-notifications.md
 ---
 
 # Админка и уведомления (игрок + ops)

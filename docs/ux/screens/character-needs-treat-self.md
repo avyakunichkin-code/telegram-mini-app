@@ -96,7 +96,7 @@ parent: dashboard-needs
 | Title | Порадовать себя |
 | Subtitle | Списание с карты. Не заменяет события — запасной путь. |
 | Confirm | Подтвердить |
-| Success toast | Самочувствие улучшилось |
+| Success toast | Потребности улучшились |
 | Cooldown hint (disabled CTA) | Доступно через N периодов |
 
 ---

@@ -119,7 +119,7 @@ tracks: events, gameplay, analytics
 | `interaction_kind` | `informational` |
 | `event_domain` | `social_family` |
 | Триггер | `requires_chain_branch` / закрытая цепочка `family_money_refusal` с веткой «двойной отказ» |
-| Эффекты | Нет `cash_delta`; опционально `xp_delta: 0` |
+| Эффекты | Нет `cash_delta`; effects пустые или narrative-only |
 | UI | Вариант карточки **warning / «упущенная возможность»** (красный акцент MQX) |
 | Повтор | `once_per_profile` |
 

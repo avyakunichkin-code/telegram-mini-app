@@ -14,20 +14,17 @@ events:
         category_key: health
         amount_monthly: 1200
         title: Доп. страховка
-      xp_delta: 2
       needs_delta:
         comfort: 6
         health: 4
   - title: Только консультация
     effects:
       cash_delta: 0
-      xp_delta: 2
       needs_delta:
         comfort: 2
   - title: Отказ
     effects:
       cash_delta: 0
-      xp_delta: 1
       needs_delta:
         comfort: -4
         health: -2

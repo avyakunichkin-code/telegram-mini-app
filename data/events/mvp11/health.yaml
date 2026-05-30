@@ -12,14 +12,12 @@ events:
   - title: Полный набор
     effects:
       cash_delta: -3200
-      xp_delta: 2
       needs_delta:
         health: 10
         comfort: 3
   - title: Только необходимое
     effects:
       cash_delta: -1100
-      xp_delta: 2
       needs_delta:
         health: 6
   - title: Обойтись без покупок
@@ -30,7 +28,6 @@ events:
         amount_monthly: 450
         title: Лекарства по мере болезни
         expires_after_periods: 1
-      xp_delta: 1
       needs_delta:
         health: -8
         comfort: -3
@@ -48,14 +45,12 @@ events:
   - title: Травмпункт и перевязки
     effects:
       cash_delta: -8500
-      xp_delta: 3
       needs_delta:
         health: 14
         comfort: 4
   - title: МРТ и ортез
     effects:
       cash_delta: -24000
-      xp_delta: 5
       needs_delta:
         health: 18
         comfort: 8
@@ -67,7 +62,6 @@ events:
         amount_monthly: 2800
         title: Лечение ноги
         expires_after_periods: 2
-      xp_delta: 1
       needs_delta:
         health: -12
         comfort: -8
@@ -89,13 +83,11 @@ events:
   - title: Прогуляться
     effects:
       cash_delta: 0
-      xp_delta: 1
       needs_delta:
         health: 9
         comfort: 6
   - title: Остаться дома
     effects:
       cash_delta: 0
-      xp_delta: 1
       needs_delta:
         health: -3

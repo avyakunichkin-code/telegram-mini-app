@@ -29,18 +29,31 @@
 |----|----------|------|--------|
 | **G1** | Game / Plan, шаблоны старта | DB+Backend+Frontend | ✅ MQ-101–108 |
 | **M11** | MVP 1.1: tier, события, cooldown | DB+Backend+Frontend | ✅ MQ-111–116; без character XP (2026-05-24); плейтест Pre-Alpha — ⬜ |
-| **M12** | Достижения (цепочки из GAME §5) | DB+Backend+Frontend | 🟡 [SPEC_achievements](../specs/features/SPEC_achievements.md); BE ✅, FE «Развитие» ⬜ |
+| **M12** | Достижения / «Развитие» | DB+Backend+Frontend | ⏸ **idea-refine** (2026-05-30): после снятия XP роль UI под вопросом; BE в коде, FE не в scope α |
 | **V2** | Victory M из N | DB+Backend+Frontend+Doc | ✅ **P1 закрыт**: `victory_engine` + `MqxGoalDash`; дальше — баланс/плейтест |
 | **I1** | Страховки: продукт + объект | DB+Backend+Frontend | 🟡 0008 + UI в работе |
-| **CN1** | Потребности персонажа (Z‑NEEDS): decay, treat-self, поражение | DB+Backend+Frontend+Doc | 🟡 ядро ✅ (колонки/overview/UI); контент и полировка ⬜ |
+| **CN1** | Потребности персонажа (Z‑NEEDS) | DB+Backend+Frontend+Doc | 🟡 ядро ✅ в prod; **доработка контента/UI ⏸** до пересмотра SPEC (2026-05-30) |
 | **α** | Pre-Alpha / Closed Alpha гейты | Doc+Frontend (метрики) | ⬜ см. GAME §11 |
 | **O1** | Онбординг TMA — Guided coach + Монетка | Frontend+Backend+Doc | 🟡 design-lab ★ → MQX |
 | **A0** | Admin Watchtower (MVP 1.2) | DB+Backend+Frontend | 🟡 Phase 0 в коде |
-| **E1** | **Расходы жизнеобеспечения** — категории, статьи, burn, UI | DB+Backend+Frontend+Content | 🟡 **повторная аналитика** (E1-R) — реализация после go; [PLAN_backlog_may2026](../plans/PLAN_backlog_may2026.md) |
-| **PW1** | PWA / standalone + стабильный resume (lock/unlock) | Frontend+Ops+Doc | 🟡 фаза 0 ✅; QA PW1-004 ⬜; [PLAN](../plans/PLAN_pwa-standalone.md) |
+| **TG1** | Telegram: боты, ops, player notify | Ops+Backend+Frontend | ⬜ [`TELEGRAM_BACKLOG.md`](TELEGRAM_BACKLOG.md) |
+| **E1** | **Расходы жизнеобеспечения** — категории, статьи, burn, UI | DB+Backend+Frontend+Content | ⏸ **ждём описание + doc**; E1-R и код — после spec ([PLAN](../plans/PLAN_backlog_may2026.md)) |
+| **PW1** | PWA / standalone + стабильный resume (lock/unlock) | Frontend+Ops+Doc | 🟡 фаза 0–1 ✅; **PW1-004 PASS** (2026-05-30); [PLAN](../plans/PLAN_pwa-standalone.md) |
+| **AF1** | Воронка «игра → советник» (гипотеза) | Doc+Marketing+Frontend | 🟡 handbook; **Pre-Alpha: без CTA советника** (2026-05-30) |
 | **T1** | Пошаговый месяц без таймера (TB1) | DB+Backend+Frontend+Doc | ✅ **implemented** — [idea](../vision/ideas/turn-based-period-no-timer.md) · [plan](../plans/PLAN_turn-based-period-no-timer.md) · TB1.1 чипы — backlog |
 
 > **GAME.md §0.2 / M11:** синхронизировано 2026-05-26 (Task 0.1): `cooldown_periods` ✅, MQ-116 → [`MVP_AUDIT_VS_SPEC`](../foundation/MVP_AUDIT_VS_SPEC.md) §M11.
+
+### Решения продукта (2026-05-30)
+
+| Тема | Решение |
+|------|---------|
+| **PW1 resume** | PASS — TMA lock/unlock проверен, блокер α снят |
+| **CN1 treat-self / polish** | Не в sprint до пересмотра [`SPEC_game-character-needs`](../specs/features/SPEC_game-character-needs.md) и one-pager |
+| **M12 «Развитие»** | ⏸ idea-refine с нуля — см. [`achievements-m12-direction.md`](../vision/ideas/achievements-m12-direction.md); экран FE **не** в Pre-Alpha |
+| **E1 расходы** | Нужны, но **ждём описание и документацию**; миграции не начинать |
+| **Advisor CTA** | **100% без** CTA на советника в Pre-Alpha (только внешний опрос) |
+| **Plan Mode** | MVP 2.0, **не** в ближайших волнах |
 
 ---
 
@@ -80,9 +93,11 @@
 
 ### Эпик M12 — достижения (из GAME §5)
 
+> **⏸ 2026-05-30:** после снятия character XP/level экран «Развитие» и место достижений в продукте — **на проработку с нуля** ([`achievements-m12-direction.md`](../vision/ideas/achievements-m12-direction.md)). Код BE/API остаётся; новый UI и spec — **не** до idea-refine + обновления SPEC. Pre-Alpha: тосты при unlock допустимы, отдельный экран — **out**.
+
 - [x] **[Backend]** `achievements/engine.py`, хуки в `game_period`, `finance`, `GET /api/achievements` (черновик).
 - [x] P0 **[Backend]** Критерии `criteria_json` по tier из GAME §5.3 (без `stub` в сидах); `test_achievements/engine.py`.
-- [ ] P1 **[Backend]** Стабильный контракт `GET /api/achievements` + синхронизация `api.js`; интеграционные тесты с БД.
+- [ ] P2 **[Backend] ⏸ M12** Стабильный контракт `GET /api/achievements` — **после** idea-refine / нового SPEC (не блокер α).
 - [x] P1 **[Backend]** API-gates по `character_level` — `level_gates.py`, invest/insurance/finance from-template, `character_unlocks` в overview; `test_level_gates.py`, `test_api_level_gates.py`.
 - [ ] P2 **[Backend] ⚠ spec** Альтернативные ветки достижений (долговой vs бездолговой путь, GAME §9.3 п.6).
 
@@ -101,27 +116,54 @@
 
 Скоуп (фаза 1): decay 0–100, последствия distressed, treat-self с кулдауном, поражение при 0 три периода подряд, обзор/дашборд/подсказки.
 
+> **⏸ 2026-05-30:** контент treat-self, rescue, polish UI и defeat-screen — **не в sprint** до пересмотра SPEC и one-pager (CN1-001). Ядро в prod играбельно для α.
+
 Очередь (CN1):
-- [ ] P0 **[Doc]** CN1-001 — Свести в один “каноничный” one-pager правила needs (decay/thresholds/defeat/treat-self), чтобы не расползалось между spec/ADR/UX.
-- [ ] P1 **[Content+DB]** CN1-010 — Довести `blueprint.needs.treat_self.options[]` до 3–4 вариантов на персонажа (с разными акцентами comfort/status/social/health).
-- [ ] P1 **[Backend+Content]** CN1-011 — Rescue-события + `rescue_event_bias`: добавить/настроить 1–2 rescue-события (trade-off cash/долг) и проверить, что bias реально влияет на вероятность/частоту их выпадения.
-- [ ] P1 **[Backend+Frontend+Doc]** CN1-012 — События → needs: поддержать `needs_delta` в `EventChoice.effects_json` (контракт, whitelist/валидация, применение на `choose`) + UI-отображение чипов (см. UX `character-needs-events.md`).
-- [ ] P1 **[Frontend]** CN1-020 — Полировка дашборда needs: пустые/ошибочные состояния, явный CTA “Порадовать себя”, доступность справки.
-- [ ] P1 **[Frontend+UX/Copy]** CN1-021 — Тексты/тон: объяснить distressed и риск поражения без “наказания ради наказания” (бренд, поддержка игрока).
-- [ ] P1 **[Backend+Frontend]** CN1-022 — Экран/оверлей поражения по needs (3 периода подряд на нуле): понятная причина, что делать дальше, и “повторить/новая игра”.
-- [ ] P2 **[Balance+Doc]** CN1-030 — Плейтест-подбор `periods_to_empty_target` (10–15) и штрафов distressed (soft/standard/hard), фиксировать результаты в журнале (DOC_SYNC_LOG или отдельный отчёт).
+- [ ] P0 **[Doc]** CN1-001 — **gate:** каноничный one-pager + пересмотр [`SPEC_game-character-needs`](../specs/features/SPEC_game-character-needs.md) (decay/thresholds/defeat/treat-self).
+- [ ] P2 **[Content+DB] ⏸ CN1-010** — `treat_self.options[]` 3–4 на персонажа — **после** CN1-001 / SPEC.
+- [ ] P2 **[Backend+Content] ⏸ CN1-011** — Rescue-события + `rescue_event_bias` — **после** SPEC.
+- [x] P1 **[Backend+Frontend+Doc] CN1-012** — `needs_delta` в событиях (whitelist, choose, чипы FE); контент 0040.
+- [ ] P2 **[Frontend] ⏸ CN1-020** — Полировка дашборда needs — **после** SPEC.
+- [ ] P2 **[Frontend+UX/Copy] ⏸ CN1-021** — Тексты distressed / тон — **после** SPEC.
+- [ ] P2 **[Backend+Frontend] ⏸ CN1-022** — Defeat UI по needs — **после** SPEC.
+- [ ] P2 **[Balance+Doc] ⏸ CN1-030** — Плейтест decay/штрафов — **после** SPEC + волны α.
 
-### События и контент (после M11)
+### Эпик EVT1 — система событий v2 (слоты, типы, цепочки, global)
 
-- [ ] P1 **[Backend]** Логика `mandatory_gate` (`blocks_period_end`) — колонка есть, поведение в `choose` / конец периода не описано в spec.
-- [x] P1 **[Backend]** Цепочки событий MVP: `event_profile_chains`, подержанное авто — миграции `0020`–`0021`, `event_chains.py`.
-- [x] P1 **[Backend]** Цепочка **родственник** (18k/9k, `after_periods: 1`); рефинанс `is_active: false`; миграция `0025` — [`event-catalog-qna-refine.md`](../vision/ideas/event-catalog-qna-refine.md).
-- [x] P1 **[Backend]** Пул: ротация `event_domain`, fatigue weight, кулдауны consumption; `EVENT_TAXONOMY` в сидах — [`event-engagement-anti-fatigue.md`](../vision/ideas/event-engagement-anti-fatigue.md).
-- [ ] P2 **[Doc→Spec]** Аналитика вовлечённости по `event_domain` — [`event-types-and-taxonomy.md`](../vision/ideas/event-types-and-taxonomy.md).
-- [ ] P3 **[Backend+Frontend]** Informational-событие «лотерея родственника» (без выбора, warning UI) после двойного отказа — там же § бэклог.
-- [ ] P2 **[Backend] ⚠ spec** Предикаты: страховка / инвестиция (активы и цепочки — частично ✅).
-- [ ] P2 **[Backend] ⚠ spec** Баланс 🟢🔴🟡 от **финансового здоровья**, не только от уровня (GAME §9.1 п.3).
-- [ ] P2 **[Backend] ⚠ spec** Макро-события (ставка, кризис) с 5–6 уровня (GAME §1.9, §9.3 п.7).
+**Spec (draft):** [`SPEC_event-system-v2-slots-and-taxonomy.md`](../specs/features/SPEC_event-system-v2-slots-and-taxonomy.md)  
+**Handbook:** [`EVENTS.md`](../handbook/EVENTS.md) (публично) · [`EVENTS_TERMS_RU.md`](../handbook/EVENTS_TERMS_RU.md) (коды) · authoring: [`EVENTS_AGENT.md`](../agents/EVENTS_AGENT.md)  
+**Связь:** M11-D, CN1-011 (rescue), Pre-Alpha demo coverage.
+
+**Целевая модель периода:** до **2** `period_choice` + до **1** informational + до **1** `needs_risk` (вероятностно) + chain + до **1** global (max ~5; типично 2–3).
+
+| Приоритет | ID | Задача | Acceptance |
+|-----------|-----|--------|------------|
+| 🔴 P0 | EVT1-001 | **Approve spec** v2 (слоты, audience, global) | Sign-off на [`SPEC_event-system-v2-slots-and-taxonomy.md`](../specs/features/SPEC_event-system-v2-slots-and-taxonomy.md) |
+| 🔴 P0 | EVT1-010 | **Doc** — `EVENTS.md` + `EVENTS_TERMS_RU` + GLOSSARY: типы, слоты, trade-off (публично); lifecycle/axis — `EVENTS_AGENT` | §1–§6 handbook; без `.cursor` в публичных docs |
+| 🔴 P0 | EVT1-020 | **DB** — `audience_template_keys`, `content_class`, `event_slot` (колонки или canon metadata + миграция) | Сиды читают поля; default `all` / `period_choice` |
+| 🔴 P0 | EVT1-030 | **Backend** — мульти-слот `ensure_period_events` (choice=2 отдельно от informational/needs_risk/global) | CS-1…CS-3 pytest |
+| 🔴 P0 | EVT1-031 | **Backend** — `prerequisites_json` v2 + seed validator (`profile`≠`all`) | CS-6; «квартира+ипотека+нет страховки» |
+| 🔴 P0 | EVT1-040 | **Frontend** — informational UI (1 кнопка, отдельная карточка/слот) | ≥1 informational в ручном прогоне |
+| 🔴 P0 | EVT1-050 | **Content** — 2–3 informational (цепочки + триггеры механик) | YAML в `data/events/mvp11/` |
+| 🟡 P1 | EVT1-060 | **Backend+Content** — `needs_risk`: вероятность, эпизоды просадки, отдельный слот | CS-3; `event_profile_needs_risk_episodes` |
+| 🟡 P1 | EVT1-070 | **Backend** — планировщик `global_macro` (period≥10, cooldown 10–15) | CS-5 pytest |
+| 🟡 P1 | EVT1-080 | **Content** — 2 global macro (ставка ↑/↓ или локальный кризис) | informational + metadata `economy_patch` stub |
+| 🟡 P1 | EVT1-090 | **Content+Backend** — ≥3 цепочки с отсылкой к выбору в тексте | family_money, used_car + 1 новая (курсы→коллега) |
+| 🟡 P1 | EVT1-091 | **API** — `event_slot`, `chain_context`, `period_slots_summary` в pending | FE может группировать |
+| 🟡 P1 | EVT1-100 | **Content** — demo coverage: universal + profile + instrumental по 2+ на Student/Pro | Чеклист для α |
+| 🟡 P1 | EVT1-105 | **Content+Analysis** — ребаланс каталога: §1–4 (baseline 31→0) + **§10 lifecycle** + **§11 axis** | `/event-analysis` all; YAML по EVENT_BRIEF |
+| 🟡 P1 | EVT1-106 | **Backend** — `balance_contract.py` + pytest (**§1/§3** only: free lunch, Pareto) | CS-7; §10/§11 — ручной audit |
+| 🟢 P2 | EVT1-110 | **Backend** — баланс 🟢🔴🟡 от фин. здоровья (не tier) | [`event-types-and-taxonomy.md`](../vision/ideas/event-types-and-taxonomy.md) |
+| 🟢 P2 | EVT1-120 | **Analytics** — вовлечённость по `event_domain` | Watchtower / export |
+| 🟢 P2 | EVT1-130 | **Economy** — применение `economy_patch` от macro к ставкам | Отдельный slice после stub |
+
+**Legacy (закрыто / перенесено в EVT1):**
+
+- [x] P1 **[Backend]** Цепочки MVP: `event_profile_chains`, авто, родственник — миграции `0020`–`0025`.
+- [x] P1 **[Backend]** Пул: ротация `event_domain`, fatigue, кулдауны — `EVENT_TAXONOMY`.
+- [x] P1 **[Backend]** `mandatory_gate` `blocks_period_end` — prod в `mandatory.py` + `time/next`.
+- [ ] ~~P3 informational лотерея~~ → **EVT1-050** (отдельный слот).
+- [ ] ~~P2 макро 5–6 lvl~~ → **EVT1-070/080/130** (period 10+, cooldown 10–15).
 
 ### Эпик A0 — Admin Watchtower (MVP 1.2)
 
@@ -137,13 +179,13 @@
 - [ ] P1 **[Backend+Frontend]** A3: profile inspector.
 - [ ] P2 **[Backend+Frontend]** Player inbox (Phase 1 idea).
 - [ ] P2 **[Backend+Frontend]** Draft/publish контента и «отправить себе» (Phase 2 idea).
-- [ ] P2 **[Doc]** Spec [`SPEC_admin-and-notifications.md`](../specs/features/SPEC_admin-and-notifications.md).
+- [ ] P2 **[Doc]** Spec [`SPEC_telegram-bots-and-notifications.md`](../specs/features/SPEC_telegram-bots-and-notifications.md) · бэклог [`TELEGRAM_BACKLOG.md`](TELEGRAM_BACKLOG.md).
 
 **Env (backend):** `ADMIN_USER_IDS`, `OPS_TELEGRAM_BOT_TOKEN`, `OPS_TELEGRAM_CHAT_ID`; ссылки в TG — `ADMIN_WEB_BASE_URL` или `PUBLIC_APP_URL` (на Render без env — дефолт GitHub Pages).
 
 ### Эпик E1 — расходы на жизнеобеспечение (полный слой)
 
-**Статус (2026-05-26):** реализация **на паузе** — сначала **повторная аналитика** E1-R ([`PLAN_backlog_may2026`](../plans/PLAN_backlog_may2026.md): E1-R1…R3). Волны A–D ниже — **после go**, не раньше.
+**Статус (2026-05-30):** реализация **на паузе** — сначала **описание фичи и документация**, затем E1-R ([`PLAN_backlog_may2026`](../plans/PLAN_backlog_may2026.md): E1-R1…R3). Волны A–D — **после go**, не раньше.
 
 **Проблема:** в симуляторе отсутствует слой регулярных трат на жизнь (еда, жильё, одежда, связь…) — есть только скрытый агрегат `base + delta`.
 
@@ -220,7 +262,7 @@
 
 ### MVP 1.1 / прогрессия
 
-- [ ] P1 **[Frontend]** Экран **«Развитие»**: достижения, цепочки, недавние unlock — GAME §10.5, §11.1; API achievements есть, UI ⬜.
+- [ ] P3 **[Frontend] ⏸ M12** Экран **«Развитие»** — **out of Pre-Alpha**; idea-refine [`achievements-m12-direction.md`](../vision/ideas/achievements-m12-direction.md).
 - [x] P1 **[Frontend] V2** — UI целей из `overview.victory` (`MqxGoalDash`, `victoryGoalDisplay.js`) — architecture-review Q&A 2026-05-25.
 - [ ] P2 **[Frontend] ⚠ spec** Бейджи `game` / `plan` и сложность шаблона в списке сохранений (GAME §12, §13).
 
@@ -260,7 +302,7 @@
 - [x] P1 **[Frontend] PW1-001** — `visibilitychange` / focus → `refreshGameState()` в `useGame` (`appLifecycle.js`, `useGame.js`); TB1: без клиентского секундомера.
 - [x] P1 **[Frontend] PW1-002** — debounce resync; `periodEndInFlightRef` — не дублировать `setTimeNext`.
 - [x] P1 **[Doc] PW1-003** — [`PW1_RESUME_PLAYTEST_CHECKLIST.md`](../foundation/PW1_RESUME_PLAYTEST_CHECKLIST.md); Pre-Alpha §3 + опрос §6.8.
-- [ ] P1 **[QA] PW1-004** — прогон A–C на **2 TMA** (TB1, без таймера); §0a auto ✅ 2026-05-26; [checklist](../foundation/PW1_RESUME_PLAYTEST_CHECKLIST.md).
+- [x] P1 **[QA] PW1-004** — resume TMA lock/unlock PASS (2026-05-30, product); §0a auto ✅ 2026-05-26; [checklist](../foundation/PW1_RESUME_PLAYTEST_CHECKLIST.md).
 
 #### Фаза 1 — installable PWA
 
@@ -365,11 +407,12 @@
 |------|----|---------|----------|-----|
 | G1 Game/Plan | ✅ | ✅ | ✅ Plan stub | ✅ |
 | M11 Progression | ✅ | ✅ | 🟡 приёмка UI | ✅ |
-| M12 Achievements | 🟡 0009 | ✅ criteria + gates | ⬜ Развитие | ✅ SPEC |
+| M12 Achievements | 🟡 0009 | ✅ engine (legacy) | ⏸ UI idea-refine | ⏸ SPEC пересмотр |
 | V2 Victory | ✅ 0010 | ✅ engine | прогресс целей | ✅ SPEC |
 | I1 Insurance | ✅ 0008 | 🟡 claim | 🟡 catalog UI | ⚠ SPEC |
 | α Playtest | — | — | опрос/метрики | протокол |
 | A0 Watchtower | ✅ 0012 | 🟡 Phase 0 | 🟡 `#/admin` | idea |
+| TG1 Telegram | — | ⬜ этапы 0–1 | ⬜ player bot | [TELEGRAM_BACKLOG](TELEGRAM_BACKLOG.md) |
 | PW1 PWA / resume | — | — | фаза 0–1 | idea+plan |
 | T1 Turn-based (TB1) | ✅ sync_time | ✅ hero H2 | ✅ | idea + plan + dashboard UX |
 
@@ -379,21 +422,26 @@
 
 ## В работу сейчас
 
-Синхронизировано с [`PLAN_backlog_may2026.md`](../plans/PLAN_backlog_may2026.md) (2026-05-26).
+Синхронизировано с решениями **2026-05-30** и [`PLAN_backlog_may2026.md`](../plans/PLAN_backlog_may2026.md).
 
 | Приоритет | Task ID | Пункт | Слой |
 |-----------|---------|-------|------|
-| P0 | 0.2 | PW1-004: §0a ✅; **2× TMA** A–C — [checklist](../foundation/PW1_RESUME_PLAYTEST_CHECKLIST.md) | QA |
-| P0 | 0.3 | Pre-Alpha пилот 10–20 (после 0.2) | Product |
-| P0 | E1-R1…R3 | Повторная аналитика E1 (без миграций) | Doc+Analytics |
-| P1 | 1.1 | Achievements API contract + pytest | Backend |
-| P1 | 1.2 | M12: экран «Развитие» (lab → MQX) | Frontend |
-| P1 | 1.3 | I1-A: покупка / каталог страховок | Frontend |
-| P1 | 1.4 | I1-B: claim payout + события + видимость в UI | Backend+Frontend |
-| P1 | 1.5 | PW1-104: CORS + `VITE_API_BASE_URL` prod | Ops |
-| P1 | 1.6 | A0 env Render (`ADMIN_*`, ops TG) | Ops |
-| P2 | 2.x | Watchtower metrics + inspector | Backend+Frontend |
-| — | T1 / TB1.1 | TB1 ✅; чипы плана — backlog | Frontend |
+| **P0** | **0.3** | **Pre-Alpha волна 1:** ops-лист, опрос, 10–20 приглашений, отчёт — [`PRE_ALPHA_WAVE1_OPS`](../foundation/PRE_ALPHA_WAVE1_OPS.md) | Product |
+| P1 | 1.3 | I1-A: приёмка покупки / каталога страховок | Frontend |
+| P1 | 1.4 | I1-B: видимость claim в UI после события | Frontend |
+| P1 | 1.5 | PW1-104: CORS ✅; проверить `VITE_API_BASE_URL` в CI | Ops |
+| P1 | 1.6 | A0 env Render (`ADMIN_*`, ops TG) + **TG-001…005** | Ops |
+| P1 | 1.7 | **TG1** player bot: BotFather + webhook `/start` (этап 1) | Ops+Backend |
+| — | CN1-001 | One-pager + пересмотр SPEC needs (**gate** для CN1 контента) | Doc |
+| — | M12 | Idea-refine «Развитие» — [`achievements-m12-direction`](../vision/ideas/achievements-m12-direction.md) | Doc |
+| — | E1 | Описание фичи + doc (**gate** для E1-R) | Doc |
+| ⏸ | E1-R, M12 FE, CN1-010+ | После gate-доков | — |
+| ⏸ | Plan Mode | MVP 2.0 | — |
+| ⏸ | AF1 CTA | **Нет** in-app CTA советника в Pre-Alpha | — |
+| P2 | 2.x | Watchtower metrics + inspector (после α) | Backend+Frontend |
+| — | TB1.1 | Чипы плана месяца — backlog | Frontend |
+
+**Закрыто:** PW1-004 ✅ (2026-05-30).
 
 ---
 
@@ -409,9 +457,10 @@
 | 2026-05-26 | **План май 2026:** [`PLAN_backlog_may2026`](../plans/PLAN_backlog_may2026.md); E1 → E1-R (аналитика); T1 в сводку (⏸); I1 → A/B; «В работу сейчас» пересобран. |
 | 2026-05-26 | **TB1:** T1 implemented — backend `sync_time`, hero «Закрыть месяц», docs dashboard/SPEC/TRACEABILITY. |
 | 2026-05-26 | **Task 0.1:** GAME §0.2, MVP_AUDIT §M11, TRACEABILITY M11/E1/T1 — doc приёмка MQ-116. |
-| 2026-05-26 | **Task 0.2 (частично):** PW1 checklist TB1, `test:utils` + foreground debounce test; TMA 2× ⬜. |
+| 2026-05-30 | **TG1:** бэклог Telegram — [`TELEGRAM_BACKLOG.md`](TELEGRAM_BACKLOG.md), spec [`SPEC_telegram-bots-and-notifications.md`](../specs/features/SPEC_telegram-bots-and-notifications.md). |
+| 2026-05-30 | **Решения продукта:** PW1-004 PASS; M12/CN1/E1 ⏸ до doc; Plan MVP 2.0; Pre-Alpha **без CTA советника**; «В работу сейчас» → α + I1. |
 | 2026-05-26 | Документация: уборка `docs/`, `GAME.md` §5–6; M11/level-gates — история, не активный трек. |
 
 ---
 
-*Последнее обновление: 2026-05-26 — TB1 implemented, PLAN_backlog_may2026, E1-R.*
+*Последнее обновление: 2026-05-30 — решения Pre-Alpha, PW1-004 PASS, M12/CN1/E1 gates.*

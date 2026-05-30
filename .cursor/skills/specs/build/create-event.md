@@ -13,16 +13,21 @@
 
 ### Expected behavior
 
-1. Читает persona-profiles + EVENT_BRIEF.
-2. Предлагает brief и черновик кнопок с needs social/health.
-3. Новый unique key, запись в data/events/mvp11/<domain>.yaml (events:).
-4. pytest -k event.
-5. **Verdict: COMPLETE**.
+1. Читает persona-profiles + SPEC_event-system-v2 + EVENT_BRIEF.
+2. Указывает content_class, event_slot, audience_template_keys.
+3. Предлагает brief и черновик кнопок с needs social/health.
+4. Новый unique key, запись в data/events/mvp11/<domain>.yaml.
+5. pytest -k event.
+6. **Verdict: COMPLETE**.
 
 ### Assertions
 
 - [ ] Отдельный key; не variants[].
-- [ ] Упоминает ограничение audience_json / prereq.
+- [ ] profile + audience all — отклоняется / не предлагается.
+- [ ] audience = фильтр; universal pair = два key + два audience.
+- [ ] Каждый choice: needs+ ⇒ cash− или burn или needs− (event-balance-rules §1).
+- [ ] lifecycle_class / cooldown для downgrade-событий (§10).
+- [ ] needs_axis_map по теме (§11).
 
 ---
 

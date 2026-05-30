@@ -15,7 +15,9 @@ allowed-tools: Read, Glob, Grep, Write, Shell
 - [`backend/app/game/period.py`](../../../backend/app/game/period.py) — экономика периода
 - [`backend/app/README.md`](../../../backend/app/README.md)
 
-**Куда писать:** `backend/tests/`, `frontend-react/src/` (затронутые модули). **Дальше:** `code-review-and-quality`.
+**Куда писать:** `backend/tests/`, `frontend-react/src/` (затронутые модули). **Дальше:** `critical-test-scenarios` (gate на срез), `code-review-and-quality`.
+
+**Связанный скилл:** для *что покрыть* и min gate G1–G4 — [`critical-test-scenarios`](../critical-test-scenarios/SKILL.md) (`/critical-tests`).
 
 ## Overview
 

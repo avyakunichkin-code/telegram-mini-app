@@ -97,7 +97,8 @@
 | design-lab-mqx | Поверхность (lab) |
 | frontend-ui-engineering | Поверхность (prod) |
 | incremental-implementation | Доставка срезами |
-| test-driven-development | Регрессии (satellite → часто обязателен) |
+| test-driven-development | RED-GREEN одного теста (satellite) |
+| critical-test-scenarios | Критичные сценарии, min gate G1–G4 |
 | using-agent-skills | Выбор скилла |
 
 ### `tier: support` (`status: active`)
@@ -132,7 +133,7 @@
 | frontend-ui-engineering | design-lab-mqx (новый UI), api-and-interface-design (новые поля) |
 | design-lab-mqx | tvoy-hod-canon-sync (rule) |
 | spec-driven-development | documentation-and-adrs (если новый домен) |
-| incremental-implementation | test-driven-development |
+| incremental-implementation | test-driven-development, critical-test-scenarios |
 
 Subagents после крупного diff: **economy-reviewer**, **mqx-ui-reviewer** ([`catalog.yaml`](../../.cursor/skills/catalog.yaml) → `agents:`).
 

@@ -64,6 +64,7 @@ def validate_mvp11_specs(specs: list[dict]) -> None:
             effects = ch.get("effects") or {}
             unknown = set(effects.keys()) - ALLOWED_EFFECT_KEYS
             assert not unknown, f"{spec['key']}: unknown effect keys {unknown}"
+            assert "xp_delta" not in effects, f"{spec['key']}: xp_delta removed (ADR-003)"
 
 
 def validate_mvp11_db_catalog(db: Session, *, mq11_keys: set[str]) -> None:

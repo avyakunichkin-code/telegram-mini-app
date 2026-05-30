@@ -18,16 +18,21 @@ mvp11/
 
 ## Добавить событие
 
-1. Выбрать domain-файл (или `chains/`, `meta/`).
-2. Добавить элемент в массив `events:` (поле `definition_key` уникально в каталоге).
-3. `cd backend && python -m pytest -q -k event`
-4. Перезапустить backend (YAML кэшируется при старте процесса).
+1. Заполнить [`docs/templates/EVENT_BRIEF.md`](../docs/templates/EVENT_BRIEF.md) — **`lifecycle_class` (§10)**, **`needs_axis_map` (§11)**.
+2. Выбрать domain-файл (или `chains/`, `meta/`).
+3. Добавить элемент в массив `events:` (`definition_key` уникален).
+4. `repeat_policy` / `cooldown_periods` / `repeat_max` — по таблице lifecycle в brief.
+5. `cd backend && python -m pytest -q -k event`
+6. Перезапустить backend (YAML кэшируется при старте).
 
-Шаблон полей — [`docs/templates/EVENT_BRIEF.md`](../docs/templates/EVENT_BRIEF.md). Brief в `docs/vision/ideas/event-briefs/` **опционален**; желателен для новых событий, цепочек и спорного баланса.
+**Баланс:** [`.cursor/skills/create-event/event-balance-rules.md`](../.cursor/skills/create-event/event-balance-rules.md) · [`EVENTS_AGENT.md`](../docs/agents/EVENTS_AGENT.md)
+
+Brief в `docs/vision/ideas/event-briefs/` **опционален**; **обязателен** для downgrade/housing, цепочек и спорного trade-off.
 
 ## Разобрать каталог (без правок)
 
-- **`/event-analysis`** — read-only отчёт: [`EVENTS_AGENT.md`](../docs/agents/EVENTS_AGENT.md)
+- **`/event-analysis`** scope **all** — trade-off + **§10 lifecycle** + **§11 axis** — [`EVENTS_AGENT.md`](../docs/agents/EVENTS_AGENT.md)
+- Шаблон отчёта: [`EVENT_CATALOG_ANALYSIS.md`](../docs/templates/EVENT_CATALOG_ANALYSIS.md)
 - CLI: `cd backend && python scripts/event_catalog_report.py`
 
 ## Именование

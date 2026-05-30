@@ -83,6 +83,6 @@ def treat_self(db: Session, profile: GameProfile, option_id: str) -> dict:
         "option_id": option_id,
         "cost": round(cost, 2),
         "needs_after": needs_values_from_profile(profile),
-        "message": "Самочувствие улучшилось",
+        "message": "Потребности улучшились",
     }
 

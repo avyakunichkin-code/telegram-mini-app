@@ -22,5 +22,14 @@
 | **Plan** *(цель)* | Ручное планирование, статьи расходов | evolution §II |
 | **MQX** | Визуальный слой premium-вкладок (`mqx-*`) | см. [`SPEC_FRONTEND_UI.md`](../specs/SPEC_FRONTEND_UI.md) |
 | **event_tier** | Сложность сценария; окно выпадения от **периода** (10 периодов = 1 band), не тема | `event_definitions.event_tier`, `game_rules.event_tier_progression_level(period_index)`, [`remove-character-xp-and-levels.md`](../vision/ideas/remove-character-xp-and-levels.md) |
-| **event_domain** *(план)* | Тема события: авто, страховка, семья… — для пула и аналитики | idea: [`event-types-and-taxonomy.md`](../vision/ideas/event-types-and-taxonomy.md) |
-| **interaction_kind** *(план)* | Форма UX: `choice`, `informational`, `chain_followup`, `intro` | там же |
+| **event_domain** | **Тематическая область** карточки (еда, авто, семья…) — для пула и аналитики; не путать с глубиной | `metadata_json.event_domain`; см. [`handbook/EVENTS_TERMS_RU.md`](../handbook/EVENTS_TERMS_RU.md) |
+| **scenario_shape** | **Форма сценария**: мягкое предложение, цепочка, привязка к имуществу… | `metadata_json.scenario_shape`; там же |
+| **interaction_kind** | **Вид взаимодействия**: выбор, сообщение, продолжение цепочки, вводное | `metadata_json.interaction_kind`; там же |
+| **Цепочка событий** | Решение в прошлом месяце → отложенная карточка-продолжение | `enqueue_event`, `event_profile_chains`; [`EVENTS_TERMS_RU.md`](../handbook/EVENTS_TERMS_RU.md) §3 |
+| **mandatory_gate** | **Блокировка закрытия месяца** до выбора (`blocks_period_end`) | `event_definitions.mandatory_gate`; [`EVENTS_TERMS_RU.md`](../handbook/EVENTS_TERMS_RU.md) §4 |
+| **prerequisites_json** | **Условия появления** (есть машина, полис, …) | `event_definitions.prerequisites_json` |
+| **Trade-off события** | Нет «бесплатных» needs+: рост потребностей оплачивается cash/burn; отказ часто с needs− | [`handbook/EVENTS.md`](../handbook/EVENTS.md), [`event-choice-balance-tradeoffs.md`](../vision/ideas/event-choice-balance-tradeoffs.md) |
+| **Lifecycle события** | Правила повтора: разовый сюжет, редкая оптимизация расходов, бытовое consumption | `repeat_policy`, `cooldown_periods`; [`EVENTS_TERMS_RU.md`](../handbook/EVENTS_TERMS_RU.md) §2.5; authoring — [`EVENTS_AGENT.md`](../agents/EVENTS_AGENT.md) |
+| **needs_axis_map** | Главная ось `needs_delta` по теме карточки (жильё→comfort, семья→social, …) | [`EVENTS.md`](../handbook/EVENTS.md) § потребности; authoring — [`EVENTS_AGENT.md`](../agents/EVENTS_AGENT.md) |
+| **repeat_policy** | Повторяемость определения в партии: `repeatable`, `once_per_profile`, `max_per_profile` | `event_definitions.repeat_policy`, [`SPEC_mvp-11-progression-events.md`](../specs/features/SPEC_mvp-11-progression-events.md) |
+| **cooldown_periods** | Минимум периодов между повторной **выдачей** того же definition после выбора | `event_definitions.cooldown_periods` |

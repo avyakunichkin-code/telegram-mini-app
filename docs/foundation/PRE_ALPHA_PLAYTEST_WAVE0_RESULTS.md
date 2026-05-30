@@ -36,8 +36,8 @@ audience_note: Пилот n=1 (пробный тестер). Следующая 
 
 ## Открыто на следующую волну
 
-- [ ] Опрос §6 из [`PRE_ALPHA_PLAYTEST_PROTOCOL.md`](PRE_ALPHA_PLAYTEST_PROTOCOL.md) для 10–20 человек
-- [ ] Зафиксировать билд (commit/tag) в таблице волны
+- [x] Опрос — текст [`templates/PRE_ALPHA_SURVEY_COPY.md`](templates/PRE_ALPHA_SURVEY_COPY.md); развернуть URL в [`PRE_ALPHA_WAVE1_OPS.md`](PRE_ALPHA_WAVE1_OPS.md)
+- [ ] Зафиксировать билд (commit/tag) в ops-листе перед рассылкой
 - [ ] События: доля периодов с выбором (не только свайп)
 
 ---

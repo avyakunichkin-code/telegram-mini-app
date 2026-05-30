@@ -186,7 +186,7 @@ export function MqxNeedsDash({
           >
             <div className="mqx-needs-block__head-text">
               <h2 id="needs-title" className="mqx-needs-block__title mqx-finance-static__title">
-                Самочувствие
+                Потребности
               </h2>
               {!expanded ? (
                 <p className="mqx-needs-block__summary" data-status={status}>
@@ -236,7 +236,7 @@ export function MqxNeedsDash({
                   <button
                     type="button"
                     className="mqx-needs-help-btn"
-                    aria-label="Как улучшить самочувствие"
+                    aria-label="Как улучшить потребности"
                     onClick={openHelp}
                   >
                     ?

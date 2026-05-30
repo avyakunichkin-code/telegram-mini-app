@@ -1,9 +1,10 @@
 ---
 layer: idea
-status: implemented
+status: implemented-archive
 owner: product
-last_reviewed: 2026-05-26
+last_reviewed: 2026-05-30
 implemented: 2026-05-24
+note: Историческая запись ADR-003. Не дизайн-док для новых фич; xp_delta в каталоге запрещён.
 supersedes_in_spirit:
   - ../../specs/gameplay/LEVEL_XP_SYSTEM.md
   - ../../plans/PLAN_level-xp-progression.md

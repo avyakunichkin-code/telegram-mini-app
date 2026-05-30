@@ -318,7 +318,7 @@ export function GameScreen({ onLogout, onNewGame, onLoadGame }) {
                   }
                 }
                 showNotification(
-                  deltas.length ? `Самочувствие: ${deltas.join(', ')}` : 'Самочувствие изменилось',
+                  deltas.length ? `Потребности: ${deltas.join(', ')}` : 'Потребности изменились',
                   'success',
                 );
               } else {

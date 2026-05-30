@@ -31,7 +31,11 @@ npm run preview
 
 Контакт: `hello@tvoyhod.app` в [`src/scripts/main.js`](src/scripts/main.js) (`CONTACT_EMAIL`) и `href` в `index.html` (синхронизировать при смене домена).
 
-Ссылка на бота **намеренно отсутствует** (статус «Скоро в Telegram»). Когда будете готовы — добавьте CTA в локали и hero, не трогая модуль игры.
+**Игра (Pre-Alpha):** кнопки «Играть» ведут на  
+`https://avyakunichkin-code.github.io/telegram-mini-app/#/` (браузер / PWA).  
+Публичный бот в Telegram — в подготовке; в hero указан статус Pre-Alpha.
+
+**Платные услуги / советник:** на лендинге **не показываем** (канон воронки — [`docs/handbook/ADVISOR_FUNNEL_AUDIENCE.md`](../docs/handbook/ADVISOR_FUNNEL_AUDIENCE.md), только handbook).
 
 ## Деплой на GitHub Pages (вместе с игрой)
 

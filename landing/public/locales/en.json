@@ -9,93 +9,100 @@
     "short": "ТХ"
   },
   "meta": {
-    "title": "ТВОЙ ХОД — finances as a game",
-    "description": "Telegram Mini App: learn money management through timed periods, choices, and consequences — with coach Monetka, in a safe sandbox."
+    "title": "ТВОЙ ХОД — a smart game about your money decisions",
+    "description": "Simulated months for adults 30+: salary, safety fund, events, needs, and consequences — zero risk to your real account. Telegram, browser, or PWA."
   },
   "lang": {
     "ru": "RU",
     "en": "EN"
   },
   "nav": {
-    "how": "How it works",
-    "peek": "Interface",
+    "how": "How to play",
     "features": "Mechanics",
-    "learn": "What you learn",
+    "peek": "Interface",
     "partners": "Partners",
     "faq": "FAQ"
   },
   "hero": {
-    "eyebrow": "Telegram Mini App · financial literacy",
-    "subtitle": "Play through simulated “months”: a timer, decisions, events, and period close — zero risk to your real wallet. Coach Monetka helps you get started.",
+    "eyebrow": "Smart game · ages 30+ · Telegram, browser, PWA",
+    "subtitle": "Test financial decisions in a safe sandbox: game “months”, honest numbers, and consequences — no risk to your real wallet. Spot blind spots before life charges full price.",
+    "ctaPlay": "Play in browser",
     "ctaPrimary": "How the game works",
     "ctaPeek": "See the interface",
-    "ctaFeatures": "All mechanics",
-    "screenCaption": "In-game dashboard — as in Telegram",
-    "status": "Coming soon on Telegram",
-    "monetkaQuote": "I'm Monetka — I'll help you read the numbers without panic.",
-    "monetkaBubble": "Watch cash and your safety fund — they're honest",
-    "periodLabel": "Period",
-    "demo": {
-      "cashLabel": "Cash",
-      "fundLabel": "Safety fund",
-      "salaryBtn": "Claim salary",
-      "toastSalary": "Salary deposited",
-      "eventTitle": "Unexpected expense",
-      "eventChoiceA": "Pay now",
-      "eventChoiceB": "Take a loan"
-    }
+    "screenCaption": "In-game dashboard — same screens in Telegram and PWA",
+    "status": "Pre-Alpha: play in browser now · Telegram launch in preparation",
+    "monetkaQuote": "I'm Monetka — I'll help you read the numbers without panic or lectures.",
+    "monetkaBubble": "A mistake in-game is a lesson. In life, better to see it early"
+  },
+  "audience": {
+    "title": "Sound familiar?",
+    "subtitle": "Not a course or “get rich in a week”. For people who earn fine but want a clear picture, not chaos in their head.",
+    "cards": [
+      {
+        "title": "Income without calm",
+        "text": "Money comes in, but it's unclear if goals, mortgage, and “living now” fit — with a background hum of anxiety."
+      },
+      {
+        "title": "Afraid to get it wrong",
+        "text": "Deposits, bonds, insurance — heard the theory, fear the wrong move in life. In the game, mistakes are free."
+      },
+      {
+        "title": "No time for a course",
+        "text": "You want trade-offs and outcomes, not 40 hours of video. One visit — a few minutes; a run — at your pace."
+      }
+    ]
   },
   "how": {
-    "title": "The loop in one minute",
-    "subtitle": "One game month = limited time + explicit actions + period close with consequences.",
+    "title": "Core loop in one minute",
+    "subtitle": "The period does not tick down by the clock — you close the month when ready. Pause and leaving the app keep progress.",
     "steps": [
       {
-        "title": "The period runs",
-        "text": "A countdown sets the pace. Pause keeps progress — no need to stare at the screen for hours."
+        "title": "Open month",
+        "text": "Claim salary on tap (miss before close — no pay that month), open events, top up the safety fund, visit Finance and Needs."
       },
       {
-        "title": "You decide",
-        "text": "Salary on tap, safety fund, capital, choice events — each action moves the balance."
+        "title": "Two life events",
+        "text": "Choice cards — not a quiz, but trade-offs for cash, obligations, and four need bars (comfort, status, social, health)."
       },
       {
-        "title": "The month closes",
-        "text": "Debt payments, overdue amounts, asset income, insurance premiums and investments. Mistakes sting but stay educational."
+        "title": "Close the month",
+        "text": "Debt payments, asset income, insurance and investments apply. Overdue and negative cash sting — but stay educational."
       },
       {
-        "title": "Next period",
-        "text": "Up to three events per month, analytics snapshots, and victory checks — no win before period seven."
+        "title": "Toward victory",
+        "text": "Goal chain from your template (Victory v2), period analytics. Win usually not before period seven — time to learn."
       }
     ]
   },
   "features": {
     "title": "Inside a run",
-    "subtitle": "Unified server-side economy: UI numbers match period-close math.",
+    "subtitle": "Unified server economy: UI numbers match month-close math.",
     "showcase": [
       {
         "focus": "dashboard.period",
-        "title": "Period, salary & safety fund",
-        "text": "Timer, cash, and action buttons in one monthly rhythm — income only on tap; safety fund stays separate from cash."
+        "title": "Period, cash & safety fund",
+        "text": "Salary only on tap; safety fund separate from cash — one monthly rhythm on the dashboard."
       },
       {
         "focus": "capital.summary",
-        "title": "Capital management",
-        "text": "Assets and liabilities from templates: income, upkeep, payments and overdue — clear, not jargon-heavy."
+        "title": "Period finances",
+        "text": "Template assets and liabilities, deposits and bonds, insurance — clear consequences, not jargon for show."
       },
       {
         "focus": "events.card",
         "title": "Choice events",
-        "text": "Up to three situations per period — consequences, not a “pick the quiz answer” test."
+        "text": "Two events per period — life situations with balance and habit consequences."
       },
       {
         "focus": "dashboard.goal",
         "title": "Goals & analytics",
-        "text": "Victory step chain and period overview — see where the run is heading without a separate “win screen.”"
+        "text": "Victory v2 step chain and closed-period overview — see where the run is heading."
       }
     ]
   },
   "learn": {
     "title": "What the simulation teaches",
-    "subtitle": "Not a slide course — a habit of thinking about money through outcomes.",
+    "subtitle": "A habit of thinking in outcomes — respecting your intelligence.",
     "cards": [
       {
         "title": "Safety fund",
@@ -103,33 +110,33 @@
       },
       {
         "title": "Obligations",
-        "text": "Payments and overdue — clear, without “get rich in a week” toxicity."
+        "text": "Payments and overdue — without scare tactics or glamorized “quick cash”."
+      },
+      {
+        "title": "Needs",
+        "text": "Comfort, status, social, health — “treat yourself” and burnout also have a price in numbers."
       },
       {
         "title": "Events",
-        "text": "Choices with consequences: sometimes there is no perfect option, only trade-offs."
+        "text": "Sometimes there is no perfect option — only trade-offs between now and later."
       },
       {
         "title": "Discipline",
         "text": "Income doesn't auto-deposit — miss an action in a period, and it shows."
       },
       {
-        "title": "Capital",
-        "text": "Assets earn but cost upkeep; debt is not an abstract number."
-      },
-      {
-        "title": "Risk & buffer",
-        "text": "Insurance and investments in simplified form — understand trade-offs, not memorize terms."
+        "title": "Capital & risk",
+        "text": "Investments and insurance simplified — understand choices, don't memorize terms."
       }
     ]
   },
   "peek": {
     "title": "In-game UI",
-    "subtitle": "MQX layer on Telegram: one visual language across dashboard, finance, and events.",
+    "subtitle": "MQX: one visual language on dashboard, finance, and events — in Telegram and browser.",
     "screenAlts": {
       "dashboard.period": "Dashboard crop: period and balances",
       "dashboard.cash": "Dashboard crop: salary and safety fund",
-      "dashboard.goal": "Dashboard crop: victory goal",
+      "dashboard.goal": "Dashboard crop: run goal",
       "capital.summary": "Capital screen crop: income and obligations",
       "capital.invest": "Capital screen crop: investments and insurance",
       "events.card": "Event choice card"
@@ -138,86 +145,86 @@
       {
         "focus": "dashboard.period",
         "label": "Dashboard",
-        "title": "Period & goal",
-        "text": "Timer, salary, safety fund, and victory steps — on one screen."
+        "title": "Period & balances",
+        "text": "Cash, safety fund, needs, and Close month — on one screen."
       },
       {
         "focus": "capital.summary",
-        "label": "Capital",
-        "title": "Period finances",
-        "text": "Income, expenses, investments, insurance, property, and liabilities — accordions without clutter."
+        "label": "Finance",
+        "title": "Period capital",
+        "text": "Income, expenses, property, debt, investments, insurance — without clutter."
       },
       {
         "focus": "events.card",
         "label": "Events",
-        "title": "Decision carousel",
+        "title": "Month decisions",
         "text": "Compact choice cards; Monetka helps you read the situation, not replace it."
       }
     ]
   },
   "coach": {
-    "title": "Monetka — your coach",
-    "lead": "Not a bank bot or “app voice”. Short hints where first glance is hard.",
+    "title": "Monetka — partner, not a bank bot",
+    "lead": "Short hints where the first glance is hard — no baby talk, no lecturing.",
     "points": [
-      "On sign-in and new run — who Monetka is and what to do next.",
-      "On the dashboard — how to read period finances and why obligations matter.",
-      "In capital — what you can buy, open, and close without extra noise.",
-      "In goals — victory steps in plain language, without lecturing."
+      "At run start — what to do in the first month.",
+      "On the dashboard — cash, safety fund, and needs.",
+      "In finance — what to open, buy, and close without noise.",
+      "In goals — victory steps in plain language."
     ]
   },
   "modes": {
     "title": "Two save modes",
-    "subtitle": "One brand and MQX — different ways to start a run.",
+    "subtitle": "One brand — different ways to start a run.",
     "game": {
-      "badge": "Available",
+      "badge": "In game",
       "title": "Game",
-      "text": "Quick start from scenario templates — no manual setup of every parameter upfront.",
+      "text": "Quick start from templates: student, professional, mortgage, debt stack — no manual setup of every parameter.",
       "points": [
-        "Template sets opening balance, lifestyle, and difficulty",
-        "Events and economy filtered for game mode",
-        "MVP victory: safety fund, obligations, cashflow"
+        "Template sets opening state, lifestyle, and victory goal chain",
+        "Events and economy for game mode",
+        "Victory v2: template goals; win usually not before period seven"
       ]
     },
     "plan": {
       "badge": "Soon",
       "title": "Plan",
-      "text": "Your scenario and conscious “what if” — input wizard and prefill in development.",
+      "text": "Your budget and “what if” — input wizard on the roadmap (MVP 2.0).",
       "points": [
         "Manual expense planning",
-        "Prefill from a chosen save",
+        "Prefill from a save",
         "Same period loop and consequences"
       ]
     }
   },
   "victory": {
-    "title": "Run goal",
-    "subtitle": "Victory isn't a guess: rules are visible in finance overview; no win in the first six periods — time to learn.",
+    "title": "Win and loss — transparent",
+    "subtitle": "Rules are visible in finance overview; the game doesn't punish by surprise.",
     "points": [
-      "Safety fund ≥ 3× monthly obligations (debt payments + asset upkeep)",
-      "No accumulated overdue on liabilities",
-      "Net monthly cashflow is not negative",
-      "Win counts from period seven — early luck doesn't skip the lesson"
+      "Victory (Victory v2): goal chain from your run template — safety fund, investments, cashflow, etc.; usually not before period seven",
+      "Loss (cash): three months in a row with negative cash after close",
+      "Loss (needs): any of four need bars at zero for three months in a row",
+      "Mistakes in the simulator are lessons; the same patterns cost more in life"
     ]
   },
   "partners": {
-    "title": "Partners & investors",
-    "subtitle": "ТВОЙ ХОД is edutainment in Telegram: short sessions, growing content, mascot Monetka, and a clear learning frame.",
+    "title": "Partners: channels & corporate pilots",
+    "subtitle": "ТВОЙ ХОД is edutainment for adults 30+: short sessions, growing depth, mascot Monetka, honest pedagogy.",
     "points": [
       {
-        "title": "Market",
-        "text": "Financial literacy for ages 14–35: gaming habits plus demand for useful, non-dry learning."
+        "title": "Audience",
+        "text": "30+, “smart game” with substance: IT, management, families with mortgage — no grind for levels."
       },
       {
-        "title": "Product",
-        "text": "Period core loop, starter templates, events, capital, investments and insurance — unified server-side economy."
+        "title": "Channels",
+        "text": "Telegram Mini App, browser, PWA — one product. The landing leads into the free simulation."
       },
       {
-        "title": "Monetization",
-        "text": "Game / Plan modes, difficulty templates, expandable content — details on request."
+        "title": "Stage",
+        "text": "Pre-Alpha → Closed Alpha. Wellbeing / literacy pilots for companies — on request."
       },
       {
         "title": "Compliance",
-        "text": "Educational simulation, not investment advice; tone without scare tactics or predatory lending glam."
+        "text": "Educational simulation, not investment advice. No payday loans, collectors, or gambling loops in content."
       }
     ],
     "cta": "Contact the team"
@@ -227,38 +234,39 @@
     "items": [
       {
         "q": "Is this real money?",
-        "a": "No. All amounts and operations live inside the game simulation."
+        "a": "No. All amounts live inside the game simulation."
       },
       {
-        "q": "Who is Monetka?",
-        "a": "ТВОЙ ХОД's in-game coach: short hints at start, on the dashboard, in capital, and in goals. She doesn't make decisions for you."
+        "q": "Who is it for?",
+        "a": "Adults 30+ who want a meaningful game with a finance theme — not a dry course or endless grind."
+      },
+      {
+        "q": "Where can I play now?",
+        "a": "In the browser or as PWA via Play on this site. Public Telegram launch is in preparation."
       },
       {
         "q": "How long is a session?",
-        "a": "A typical visit is a few minutes; a full run spans several game “months” as interest grows."
+        "a": "A typical visit is 1–3 minutes; a run spans several “months” when you want. Months don't auto-close on a timer."
       },
       {
         "q": "Can you lose?",
-        "a": "Yes. Three periods in a row with negative cash — game over. It's part of learning: outcomes show in numbers."
+        "a": "Yes: three periods in a row with negative cash, or three with a need bar at zero. Outcomes show in numbers."
       },
       {
         "q": "How do you win?",
-        "a": "Safety fund ≥ 3× obligations, no overdue, non-negative cashflow — and not before period seven. Details in finance overview."
+        "a": "Complete the Victory v2 goal chain from your template; usually not before period seven. Details in in-game finance overview."
       },
       {
         "q": "Is this financial advice?",
-        "a": "No. The product is educational; real-life decisions are yours alone."
-      },
-      {
-        "q": "When can I try it on Telegram?",
-        "a": "Public Mini App launch is in preparation; this site does not link to the bot yet."
+        "a": "No. The product is educational; real-life decisions are yours."
       }
     ]
   },
   "ctaBand": {
-    "title": "Ready for your first move?",
-    "text": "Telegram launch is in preparation — explore the mechanics here for now.",
-    "btn": "FAQ"
+    "title": "Take your first move in the simulator",
+    "text": "Four game months are enough to feel the loop. We'll announce Telegram separately.",
+    "btnPlay": "Open the game",
+    "btnFaq": "FAQ"
   },
   "footer": {
     "tagline": "ТВОЙ ХОД · Finances as a game",

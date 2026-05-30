@@ -42,7 +42,7 @@ plan: ../../plans/PLAN_mvp-11-progression-events.md
 
 ### 2.2. Кто (Who)
 
-Игрок **Game Mode** (новички и экспериментаторы — см. [`TARGET_PLAYER_AND_SESSION`](../../foundation/TARGET_PLAYER_AND_SESSION.md)).
+Игрок **Game Mode** — ЦА **30+**, умная игра; архетипы «кампания» и «исследователь» — [`TARGET_PLAYER_AND_SESSION`](../../foundation/TARGET_PLAYER_AND_SESSION.md) §6.
 
 ### 2.3. Success criteria
 

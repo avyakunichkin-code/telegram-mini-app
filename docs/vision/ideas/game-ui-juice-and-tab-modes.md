@@ -22,7 +22,7 @@
 ## Key Assumptions to Validate
 
 - [ ] Bold-анимации не тормозят WebView Telegram на mid-range Android
-- [ ] Игроки 14–35 воспринимают juice как «игра», не как несерьёзный банк
+- [ ] ЦА **30+** воспринимает juice как «умная игра», не как несерьёзный банк
 - [ ] `prefers-reduced-motion` достаточно для доступности
 
 ---

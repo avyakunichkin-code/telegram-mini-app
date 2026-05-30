@@ -22,14 +22,12 @@ events:
       insurance_claim:
         product: auto
         insured_object: liability
-      xp_delta: 4
       needs_delta:
         comfort: 6
         health: 2
   - title: Оплатить ремонт из своих
     effects:
       cash_delta: -45000
-      xp_delta: 2
       needs_delta:
         comfort: -10
         health: -4

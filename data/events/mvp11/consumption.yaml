@@ -12,21 +12,18 @@ events:
   - title: Купить только нужное
     effects:
       cash_delta: -1500
-      xp_delta: 2
       needs_delta:
         comfort: 3
         health: 2
   - title: Запас на месяц
     effects:
       cash_delta: -4200
-      xp_delta: 1
       needs_delta:
         comfort: 6
         health: 3
   - title: Обойтись без покупок
     effects:
       cash_delta: 0
-      xp_delta: 3
       needs_delta:
         comfort: -4
         health: -2
@@ -64,7 +61,6 @@ events:
     effects:
       cash_delta: 0
       monthly_lifestyle_delta: -500
-      xp_delta: 4
       needs_delta:
         comfort: 2
         social: -3
@@ -81,7 +77,6 @@ events:
   - title: Продлить на год
     effects:
       cash_delta: -14900
-      xp_delta: 3
       needs_delta:
         health: 12
         comfort: 5
@@ -89,14 +84,12 @@ events:
   - title: Продлить на квартал
     effects:
       cash_delta: -4500
-      xp_delta: 2
       needs_delta:
         health: 6
         comfort: 2
   - title: Не продлевать
     effects:
       cash_delta: 0
-      xp_delta: 1
       needs_delta:
         health: -3
 - definition_key: mq11_transport_pass
@@ -112,20 +105,17 @@ events:
   - title: Месячный проездной
     effects:
       cash_delta: -2800
-      xp_delta: 2
       needs_delta:
         comfort: 5
         health: 2
   - title: Пополнить баланс карты
     effects:
       cash_delta: -900
-      xp_delta: 1
       needs_delta:
         comfort: 3
   - title: Ходить пешком
     effects:
       cash_delta: 0
-      xp_delta: 2
       needs_delta:
         health: 5
         comfort: -2
@@ -142,7 +132,6 @@ events:
   - title: Абонемент на месяц
     effects:
       cash_delta: -3200
-      xp_delta: 2
       needs_delta:
         comfort: 5
         social: 4
@@ -150,7 +139,6 @@ events:
   - title: Пить реже, без абонемента
     effects:
       cash_delta: 0
-      xp_delta: 3
       needs_delta:
         comfort: 2
         status: 1
@@ -167,14 +155,12 @@ events:
   - title: Только необходимое
     effects:
       cash_delta: -2800
-      xp_delta: 3
       needs_delta:
         status: 4
         comfort: 3
   - title: Обновить гардероб
     effects:
       cash_delta: -6500
-      xp_delta: 1
       needs_delta:
         status: 10
         comfort: 6
@@ -197,14 +183,12 @@ events:
         amount_monthly: 3500
         title: Доставка еды
         expires_after_periods: 1
-      xp_delta: 1
       needs_delta:
         comfort: 7
         health: -2
   - title: Готовить дома
     effects:
       cash_delta: 0
-      xp_delta: 4
       needs_delta:
         health: 5
         comfort: 2
@@ -221,13 +205,11 @@ events:
   - title: Купить нужное сейчас
     effects:
       cash_delta: -4500
-      xp_delta: 2
       needs_delta:
         comfort: 7
         health: 2
   - title: Отложить покупку
     effects:
       cash_delta: 0
-      xp_delta: 2
       needs_delta:
         comfort: -3

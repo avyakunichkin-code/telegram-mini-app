@@ -9,6 +9,7 @@
 
 | Слой | Папка |
 |------|--------|
+| **Handbook** | `docs/handbook/` — GDD и пакет для людей (скилл **project-handbook-documentation**) |
 | Foundation | `docs/foundation/` |
 | Vision | `docs/vision/ideas/` |
 | Specs | `docs/specs/`, `docs/specs/features/` |

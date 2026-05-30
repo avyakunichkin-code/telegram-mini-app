@@ -3,52 +3,145 @@ name: create-event
 description: >-
   Creates and extends game events (EventDefinition seeds, choices, effects, chains).
   Use for /create-event or when adding scenarios for Student vs Professional personas,
-  needs_delta, burn preview, and balance. Not a reviewer — co-author with checklists.
-argument-hint: "[persona: student|professional, idea, or definition_key to clone]"
+  content_class, event_slot, audience, needs_risk, global macro, needs_delta, burn preview.
+  Not a reviewer — co-author with checklists. Engine v2 fields — author in YAML; loader EVT1.
+argument-hint: "[persona: student|professional, content_class, idea, or definition_key to clone]"
 user-invocable: true
 allowed-tools: Read, Glob, Grep, Write, Shell
 ---
 
 # Create Event (/create-event)
 
-Помощник **авторинга** событий ТВОЙ ХОД. Вызывай: **`/create-event`**, «создать событие», «новое событие для студента».
+Помощник **авторинга** событий ТВОЙ ХОД. Вызывай: **`/create-event`**, «создать событие», «informational для цепочки», «global для студента».
 
-**Не путать с:** **`/event-analysis`** (read-only обзор каталога) · `economy-reviewer` (ревью diff) · `mqx-ui-reviewer` (карточка UI).
+**Не путать с:** **`/event-analysis`** (read-only обзор) · `game-economy-and-victory` (движок слотов) · `economy-reviewer` (ревью diff).
+
+> **2026-05-30:** канон типов и слотов — [`SPEC_event-system-v2-slots-and-taxonomy.md`](../../../docs/specs/features/SPEC_event-system-v2-slots-and-taxonomy.md). **Движок EVT1 ещё не в prod** — новые поля **закладываем в YAML**; loader/фильтр — отдельная задача. **Не начинать implement движка** из этого скилла без явного запроса.
 
 ## Прочитай сначала
 
-- [`.cursor/skills/create-event/persona-profiles.md`](persona-profiles.md) — **Студент** / **Профессионал**, burn, needs
+- [`SPEC_event-system-v2-slots-and-taxonomy.md`](../../../docs/specs/features/SPEC_event-system-v2-slots-and-taxonomy.md) — **content_class, event_slot, audience, needs_risk, global**
+- [`docs/handbook/EVENTS_TERMS_RU.md`](../../../docs/handbook/EVENTS_TERMS_RU.md) — «переводчик» для команды
+- [`.cursor/skills/create-event/persona-profiles.md`](persona-profiles.md) — Студент / Профессионал, burn, needs
 - [`docs/templates/EVENT_BRIEF.md`](../../../docs/templates/EVENT_BRIEF.md)
-- [`data/events/mvp11/`](../../../data/events/mvp11/) — канон YAML (образец по домену)
+- [`data/events/mvp11/`](../../../data/events/mvp11/) — канон YAML
 - [`data/events/README.md`](../../../data/events/README.md)
-- [`docs/specs/features/SPEC_mvp-11-progression-events.md`](../../../docs/specs/features/SPEC_mvp-11-progression-events.md)
+- [`docs/specs/features/SPEC_mvp-11-progression-events.md`](../../../docs/specs/features/SPEC_mvp-11-progression-events.md) — tier, pool (legacy 2 choice)
 - [`docs/vision/ideas/event-engagement-anti-fatigue.md`](../../../docs/vision/ideas/event-engagement-anti-fatigue.md)
+- [`docs/vision/ideas/event-repeat-and-state-ladder.md`](../../../docs/vision/ideas/event-repeat-and-state-ladder.md) — повтор, cooldown, лестница жилья/тарифа
 - [`docs/vision/ideas/event-types-and-taxonomy.md`](../../../docs/vision/ideas/event-types-and-taxonomy.md)
 - [`backend/app/events/constants.py`](../../../backend/app/events/constants.py) — `ALLOWED_EFFECT_KEYS`
 - [`backend/app/events/choice_impacts.py`](../../../backend/app/events/choice_impacts.py) — burn preview
+- **[`event-balance-rules.md`](event-balance-rules.md)** — **trade-off, Pareto, lifecycle §10, оси needs §11, MCE §12**
+- [`docs/vision/ideas/event-choice-balance-tradeoffs.md`](../../../docs/vision/ideas/event-choice-balance-tradeoffs.md) — продуктовое обоснование
 
-**Satellites:** `test-driven-development` (обязательно pytest); при сомнении в дублях/gaps — **`/event-analysis`**; при UI — `design-lab-mqx`.
+**Satellites:** `test-driven-development` (pytest); перед merge каталога или крупного YAML — **`/event-analysis`** (§10/§11); при дублях/gaps — analysis; UI informational → `design-lab-mqx`.
+
+---
+
+## Правила §10 (lifecycle) и §11 (оси needs) — обязательны
+
+Полный текст: [`event-balance-rules.md`](event-balance-rules.md) §10–§11 · [`EVENT_BRIEF.md`](../../../docs/templates/EVENT_BRIEF.md) §1 (таблица A–D).
+
+| § | В brief | В YAML |
+|---|---------|--------|
+| **10** | `lifecycle_class` A/B/C/D | `repeat_policy`, `cooldown_periods`, `repeat_max` |
+| **11** | `needs_axis_map` | `needs_delta` по матрице домена |
+
+**Перед записью housing/consumption с −lifestyle:** класс **B** или **A**, не голый `repeatable` без cooldown.
+
+---
 
 ## Канон и БД ([ADR-008](../../../docs/decisions/ADR-008-events-catalog-single-source.md))
 
-- **В git:** `data/events/mvp11/*.yaml` — domain-файлы, массив `events:`; оглавление `catalog.yaml`.
-- **Loader:** `backend/app/events/mvp11_catalog.py` (кэш при старте процесса).
-- **В БД:** `ensure_mvp11_event_catalog()` в `mvp11_seeds.py` — upsert из YAML.
+- **В git:** `data/events/mvp11/*.yaml` — массив `events:`; `catalog.yaml`.
+- **Loader:** `backend/app/events/mvp11_catalog.py` — upsert через `mvp11_seeds.py`.
 - **Не писать** контент в `migrations/*.sql`.
-- После правки YAML — **перезапуск backend** локально; на prod — деплой.
-- Brief: `docs/vision/ideas/event-briefs/` — опционален ([`data/events/README.md`](../../../data/events/README.md)).
+- После правки YAML — перезапуск backend; на prod — деплой.
+
+---
+
+## Модель события (обязательно при авторинге)
+
+### 1. `content_class` — ровно одна «природа» (либо-либо)
+
+| Значение | Когда выбирать | `audience_template_keys` |
+|----------|----------------|---------------------------|
+| `universal` | повседневное, не ролевой сюжет | `["all"]` **или** один ключ *(вариант текста)* |
+| `profile` | сюжет **характерен для роли** (курсы, одногруппники) | **только** ключ(и) шаблона; **`all` запрещён** |
+| `instrumental` | из состояния игры (машина, полис, подушка…) | обычно `["all"]` |
+| `needs_risk` | риск при просадке потребностей &lt; 33% | по оси + опционально ключ |
+| `global` | макро/локальная экономика | **отдельная запись на шаблон**, не `all` |
+
+**Инварианты:**
+
+- Одна запись = **один** `content_class` (не «профильное + по машине»; v2+ combo — позже).
+- **`profile` + `audience: ["all"]`** — **ошибка автора**; валидатор EVT1 отклонит.
+- **Не путать:** `audience` = **кому показывать** (фильтр), не «стилистика». Два текста под студента/про при одной механике → **две** записи `universal` с разным `audience`, не `profile`.
+
+### 2. `event_slot` — очередь периода
+
+| `event_slot` | Лимит | Заменяет 2 игровых choice? |
+|--------------|-------|----------------------------|
+| `period_choice` | 2 | да (это «обычные 2 события») |
+| `informational` | 1 | **нет** |
+| `needs_risk` | 1 (вероятностно) | **нет** |
+| `chain_followup` | по цепочке | **нет** |
+| `global_macro` | 1 (cooldown) | **нет** |
+
+**По умолчанию** для soft_offer / mandatory / instrumental choice → `period_choice`.
+
+### 3. YAML — целевые поля (top-level)
+
+```yaml
+definition_key: mq11_example
+content_class: universal          # обязательно в новых событиях
+event_slot: period_choice
+audience_template_keys:
+  - mq_game_basic_v1              # или [all] — см. таблицу выше
+event_domain: consumption
+scenario_shape: soft_offer
+interaction_kind: choice
+# prerequisites: { ... }           # instrumental / tier / period
+# extra:                          # needs_risk_axes, global_schedule, …
+#   needs_risk_axes: [social]
+```
+
+Пока loader не читает top-level `content_class` / `audience` / `event_slot` — **дублируй в `extra`** для `metadata_json` **и** оставь top-level для канона (EVT1 подхватит). Существующие события без полей — не трогать массово без `/event-analysis`.
+
+**Prod сейчас:** loader требует **≥2 choices** даже для informational — временно: две кнопки («Понятно» / «Закрыть») или одна с дублем до правки loader (EVT1).
+
+### 4. `needs_risk` (не legacy rescue bias)
+
+- **`content_class: needs_risk`**, **`event_slot: needs_risk`**.
+- **`extra.needs_risk_axes`:** `[social]` | `[health]` | …
+- Триггер в движке (EVT1): ось &lt; 33%, **вероятность** ↑ при падении; **1 раз за эпизод просадки** по оси.
+- **Не** смешивать с `extra.is_rescue` / `rescue_event_bias` в pool of 2 — legacy до EVT1-060.
+
+### 5. `global`
+
+- Отдельный key на шаблон: `macro_rate_up_student` / `macro_rate_up_pro`.
+- `event_slot: global_macro`, `interaction_kind: informational`.
+- `prerequisites.min_period_index: 10`, `extra.global_schedule: { min_periods_between: 10, max_periods_between: 15 }`.
+- Cooldown **на партию** (`game_profile_id`); новая игра — сброс.
+
+### 6. Informational
+
+- `event_slot: informational`, `interaction_kind: informational`.
+- Триггеры: цепочка (`enqueue_event`), механика (первый депозит), tier/period — в brief указать **источник**, не random pool of 2.
 
 ---
 
 ## Роль
 
-Ты **соавтор контента**, не ревьюер. Помогаешь:
+Соавтор контента. Помогаешь:
 
-1. Не забыть поля (tier, mode, taxonomy, repeat, cooldown, prereq).
-2. Сгенерировать **копирайт и цифры** под персону (тон, salary, needs, burn).
-3. Дать **парный** вариант (студент / профессионал) с **разными keys**.
-4. Добавить событие в нужный `data/events/mvp11/<domain>.yaml` (массив `events:`).
-5. Предложить тест и прогнать pytest.
+1. Выбрать **content_class + event_slot + audience** (чеклист §Модель).
+2. Не забыть tier, mode, taxonomy, **lifecycle class (§10)**, `repeat_policy`, `cooldown_periods`, `repeat_max`, prereq.
+3. Копирайт и цифры под персону (persona-profiles).
+4. Парные варианты — **разные keys**, правильный class (`universal` vs `profile`).
+5. Цепочки с **отсылкой к прошлому выбору** в title/description follow-up.
+6. Запись в `data/events/mvp11/` + pytest.
 
 ---
 
@@ -56,46 +149,52 @@ allowed-tools: Read, Glob, Grep, Write, Shell
 
 ### 0. Уточни у пользователя (если не сказано)
 
-- Персона: **student** (`mq_game_basic_v1`) | **professional** (`mq_game_tight_budget_v1`) | **обе**
+- **content_class:** universal | profile | instrumental | needs_risk | global | informational-followup
+- **event_slot:** period_choice | informational | needs_risk | chain_followup | global_macro
+- Персона / **audience:** student (`mq_game_basic_v1`) | pro (`mq_game_tight_budget_v1`) | all
 - Идея одним предложением
-- Механика: soft_offer | mandatory | chain | клон существующего key
+- Триггер (random pool | chain | needs | mechanic | global schedule)
 
 ### 1. Event Brief
 
-Заполни [`EVENT_BRIEF`](../../../docs/templates/EVENT_BRIEF.md) (в чате или `docs/vision/ideas/event-briefs/<key>.md`).
+Заполни [`EVENT_BRIEF`](../../../docs/templates/EVENT_BRIEF.md): добавь строки **content_class**, **event_slot**, **audience**, **триггер**.
 
-### 2. Выбери образец
+### 2. Образец
 
-Найди ближайший event в `data/events/mvp11/<domain>.yaml` (тот же `event_domain` / shape). При крупном домене или риске дубля — сначала **`/event-analysis`** по scope. **Вариант B = новый `definition_key`**, не массив variants.
+Ближайший event в `data/events/mvp11/` с тем же **content_class** и domain. Крупный scope → сначала **`/event-analysis`**.
 
-### 3. Персона и фильтр пула
+### 3. Персона и audience (не prereq-hack)
 
-| Персона | template_key | Персонализация сейчас |
-|---------|--------------|------------------------|
-| Студент | `mq_game_basic_v1` | тон, суммы от ~62.5k, needs social/health, без авто-prereq |
-| Профессионал | `mq_game_tight_budget_v1` | тон карьера, ~100k, needs status/comfort, prereq `car_personal` / `leased_dwelling` |
+| Персона | template_key | Класс / audience |
+|---------|--------------|------------------|
+| Студент | `mq_game_basic_v1` | profile → только этот key; universal skin → key + audience student |
+| Профессионал | `mq_game_tight_budget_v1` | то же для pro |
 
-**audience_json по template** — запланировано (architecture § Фаза 2), в prod **нет**. До внедрения:
+**До EVT1 в prod:** старый обход — `prerequisites_json` (car forbid/any). **Новые события** — пиши **`audience_template_keys`**; если событие **строго** template-only без поля в YAML — **BLOCKED** до EVT1-020.
 
-- события «только для про» → `prerequisites_json.active_asset_kinds_any: ["car_personal"]` и т.п.;
-- «только студент» → `forbid_active_asset_kinds_any: ["car_personal"]` или отдельные keys без car prereq у про-веток.
-
-Сообщи пользователю, если событие должно быть **строго** template-only — нужна задача на движок (filter в `ensure_period_events`).
+**Instrumental «только про»:** `content_class: instrumental`, `audience: [all]`, prereq `car_personal` — не profile.
 
 ### 4. Effects и баланс
 
-- Только ключи из `ALLOWED_EFFECT_KEYS`.
-- **`needs_delta`:** 1–3 оси, см. persona-profiles; rescue — `metadata_json.is_rescue` + `rescue_axes`.
-- **`cash_delta`:** ориентир % от `monthly_salary` (таблица в persona-profiles).
-- **`monthly_burn_delta_pct`:** объясни игроку рост burn; прикинь `burn_now * pct` для персоны.
-- Цепочки: `enqueue_event`, отдельный followup key — [`event-catalog-qna-refine.md`](../../../docs/vision/ideas/event-catalog-qna-refine.md).
+- Только `ALLOWED_EFFECT_KEYS`.
+- **Обязательно:** [`event-balance-rules.md`](event-balance-rules.md):
+  - §1–3: trade-off, отказ, Pareto;
+  - §4: needs_risk;
+  - §10: **lifecycle** — не бесконечный downgrade/переезд (`once` / `max_per_profile` / cooldown ≥ 12);
+  - §11: **главная ось needs** по теме (жильё → comfort, семья → social, …);
+  - §12: MCE — подсказка `cash` под целевой needs+ (ручная правка YAML).
+- **`needs_delta`:** §11 + persona-profiles; в brief — `needs_axis_map`.
+- **`repeat_policy` / `cooldown_periods`:** класс A/B/C из §10; см. [`event-repeat-and-state-ladder.md`](../../../docs/vision/ideas/event-repeat-and-state-ladder.md).
+- **`cash_delta`:** % от salary; каждые +10 needs ≈ 3–8% salary или burn.
+- Цепочки: `enqueue_event`, follow-up с отсылкой — [`event-catalog-qna-refine.md`](../../../docs/vision/ideas/event-catalog-qna-refine.md).
+
+**Перед записью YAML:** мысленный тест «игрок жмёт только плюсы» и **«могу ли снова удешевить без сюжета»**; impacts по каждой кнопке (§6.1). **Нет `xp_delta`.**
 
 ### 5. Код (канон → БД)
 
-1. Выбрать файл в `data/events/mvp11/` (или новый domain-файл + строка в `catalog.yaml` `includes`)
-2. Добавить объект в `events:` (`definition_key`, `event_domain`, `title`, `choices`, …)
-3. Опционально: brief в `docs/vision/ideas/event-briefs/<key>.md`
-4. SQL-миграция контента — **не использовать** (ADR-008)
+1. Файл: domain / `chains/` / `meta/` (+ `catalog.yaml` includes)
+2. Объект в `events:` со всеми полями §Модель
+3. Опционально: `docs/vision/ideas/event-briefs/<key>.md`
 
 ### 6. Verify
 
@@ -103,51 +202,50 @@ allowed-tools: Read, Glob, Grep, Write, Shell
 cd backend && python -m pytest -q -k "event"
 ```
 
-При новом key — добавь или расширь тест (pool, choose, impacts).
-
 ---
 
 ## Генерация пары Student / Professional
 
-Если пользователь просит «одну механику, два профиля»:
-
-1. Опиши общую механику (домен, tier, 2–3 choice structure).
-2. Сгенерируй **два** brief + **два** key (`_student`, `_pro`).
-3. Суммы и needs_delta масштабируй по salary и persona-profiles.
-4. Pro-версия: лексика «офис / встреча / аренда», student — «учёба / друзья / общежитие».
+1. Общая механика → **`content_class: universal`** (если не ролевой сюжет) **или** **`profile`** (если разный сюжет).
+2. Два key, два **`audience_template_keys`**, разный текст и sums.
+3. **Не** один key с `audience: all` для «профильного» сюжета.
 
 ---
 
-## Детали, которые нельзя забыть
+## Чеклист перед записью
 
-- [ ] `event_tier` в окне прогрессии ([`SPEC_mvp-11`](../../../docs/specs/features/SPEC_mvp-11-progression-events.md))
-- [ ] `mode: game` (plan — отдельно)
-- [ ] `repeat_policy` + `cooldown_periods` для repeatable
-- [ ] 2–3 choice; у soft_offer отказ = 0 ₽ где уместно
-- [ ] `impacts` честные (cash, burn, needs) — см. choice_impacts
-- [ ] Отдельный key для варианта контента
-- [ ] Brief сохранён или вставлен в чат
+- [ ] `content_class` — один из пяти; **profile ≠ all**
+- [ ] `event_slot` согласован с class (global → global_macro, …)
+- [ ] `audience_template_keys` — фильтр, не стилистика
+- [ ] `event_tier`, `mode: game`; lifecycle §10 (A/B/C/D + cooldown / repeat_max)
+- [ ] instrumental → `prerequisites` (AND); не подменять profile
+- [ ] needs_risk → axes в extra; не полагаться на rescue bias
+- [ ] chain follow-up → отсылка к выбору в description
+- [ ] 2+ choices (prod loader); informational — workaround если одна кнопка
+- [ ] **Баланс:** trade-off, Pareto, отказ, needs_risk, **needs_axis_map §11**
 
 ---
 
 ## Согласование
 
-Перед записью в репо: **Могу записать** событие(я) в `data/events/mvp11/` (и опционально brief)?
+Перед записью: **Могу записать** в `data/events/mvp11/` (и brief)?
 
-Покажи пользователю **черновик карточки** (title, description, кнопки с суммами и needs) до записи.
+Покажи **черновик** (class, slot, audience, title, кнопки) до Write.
 
 ---
 
 ## Verdict
 
-**COMPLETE** — brief + код + pytest green  
-**CONCERNS** — код есть, pytest не гоняли или нет brief  
-**BLOCKED** — нужен фильтр по template в движке (опиши задачу)
+| Verdict | Когда |
+|---------|--------|
+| **COMPLETE** | brief + YAML + pytest green |
+| **CONCERNS** | YAML без pytest или без brief |
+| **BLOCKED** | нужен EVT1 (audience filter / multi-slot / needs_risk engine) — опиши задачу, не кодируй движок |
 
 ---
 
 ## Следующий шаг
 
-- Ещё события → снова `/create-event`
-- UI карточки → `design-lab-mqx` + `mqx-ui-reviewer` по запросу
-- Движок пула → `game-economy-and-victory` или отдельная spec-задача на `audience_json`
+- Обзор каталога → `/event-analysis`
+- Движок слотов → `game-economy-and-victory` + EVT1 в беклоге
+- UI informational → `design-lab-mqx`

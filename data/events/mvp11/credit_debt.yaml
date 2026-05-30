@@ -14,19 +14,16 @@ events:
   - title: Оформить пакет документов
     effects:
       cash_delta: -6500
-      xp_delta: 12
       needs_delta:
         comfort: 8
         status: 3
   - title: Только консультация
     effects:
       cash_delta: 0
-      xp_delta: 4
       needs_delta:
         comfort: 3
   - title: Отклонить предложение
     effects:
       cash_delta: 0
-      xp_delta: 1
       needs_delta:
         comfort: -4

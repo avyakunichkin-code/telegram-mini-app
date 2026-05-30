@@ -140,7 +140,7 @@ Before looking at code, understand the intent:
 
 ### Step 2: Review the Tests First
 
-Tests reveal intent and coverage:
+Tests reveal intent and coverage. For **behavioral** changes, apply min gate from [`critical-test-scenarios`](../../critical-test-scenarios/SKILL.md) (G1 happy, G2 boundary, G3 FE↔BE contract, G4 business invariant):
 
 ```
 - Do tests exist for the change?
@@ -148,7 +148,11 @@ Tests reveal intent and coverage:
 - Are edge cases covered?
 - Do tests have descriptive names?
 - Would the tests catch a regression if the code changed?
+- If spec lists CS-* / MQ-* critical_scenarios — are they implemented?
+- CONCERNS if only status_code asserts on new API fields used by FE
 ```
+
+**Куда писать:** никуда (только ревью). **Satellite при пробелах:** `critical-test-scenarios`.
 
 ### Step 3: Review the Implementation
 

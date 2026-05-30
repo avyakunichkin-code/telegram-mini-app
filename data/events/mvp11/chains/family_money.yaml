@@ -13,21 +13,18 @@ events:
   - title: Помочь полностью
     effects:
       cash_delta: -15000
-      xp_delta: 5
       needs_delta:
         social: 14
         comfort: -3
   - title: Помочь частично
     effects:
       cash_delta: -7000
-      xp_delta: 4
       needs_delta:
         social: 8
         health: 2
   - title: Отказаться вежливо
     effects:
       cash_delta: 0
-      xp_delta: 1
       needs_delta:
         social: -6
         comfort: -2
@@ -53,21 +50,18 @@ events:
   - title: Помочь полностью
     effects:
       cash_delta: -18000
-      xp_delta: 5
       needs_delta:
         social: 12
         comfort: -4
   - title: Помочь частично
     effects:
       cash_delta: -9000
-      xp_delta: 4
       needs_delta:
         social: 7
         health: 1
   - title: Твёрдый отказ
     effects:
       cash_delta: 0
-      xp_delta: 1
       needs_delta:
         social: -8
         comfort: -3

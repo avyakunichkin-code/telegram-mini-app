@@ -16,21 +16,18 @@ events:
         category_key: communications
         amount_monthly: 500
         title: Интернет
-      xp_delta: 1
       needs_delta:
         comfort: 6
         status: 2
   - title: Оставить как есть
     effects:
       cash_delta: 0
-      xp_delta: 2
       needs_delta:
         comfort: 1
   - title: Перейти на более дешёвый
     effects:
       cash_delta: 0
       monthly_lifestyle_delta: -300
-      xp_delta: 3
       needs_delta:
         comfort: -4
 - definition_key: mq11_relocation_bonus
@@ -47,7 +44,6 @@ events:
     effects:
       cash_delta: 35000
       monthly_burn_delta_pct: 0.28
-      xp_delta: 15
       needs_delta:
         status: 12
         comfort: 6
@@ -56,14 +52,12 @@ events:
   - title: Договориться об удалёнке
     effects:
       cash_delta: 12000
-      xp_delta: 8
       needs_delta:
         comfort: 8
         status: 4
   - title: Остаться в текущем городе
     effects:
       cash_delta: 0
-      xp_delta: 3
       needs_delta:
         comfort: 3
         status: -4
@@ -80,14 +74,12 @@ events:
     effects:
       cash_delta: -35000
       monthly_lifestyle_delta: -2500
-      xp_delta: 14
       needs_delta:
         comfort: -8
         status: -3
   - title: Пока остаться
     effects:
       cash_delta: 0
-      xp_delta: 2
       needs_delta:
         comfort: 2
   - title: Сдать комнату в субаренду
@@ -97,7 +89,6 @@ events:
         category_key: housing
         amount_monthly: 600
         title: Субаренда
-      xp_delta: 9
       needs_delta:
         comfort: -4
         social: -3
@@ -126,14 +117,12 @@ events:
       insurance_claim:
         product: property
         insured_object: property
-      xp_delta: 4
       needs_delta:
         comfort: 8
         health: 2
   - title: Ремонт за свой счёт
     effects:
       cash_delta: -80000
-      xp_delta: 2
       needs_delta:
         comfort: 6
         health: -2

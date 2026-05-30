@@ -1,6 +1,6 @@
 ﻿# Agent Skills ТВОЙ ХОД — что использовать и когда
 
-**Активные** скиллы: `.cursor/skills/<name>/` (см. [`catalog.yaml`](../../.cursor/skills/catalog.yaml): `status` + **`tier`**; на 2026-05-29: **14 active**, **11 optional**).
+**Активные** скиллы: `.cursor/skills/<name>/` (см. [`catalog.yaml`](../../.cursor/skills/catalog.yaml): `status` + **`tier`**; на 2026-05-29: **15 active**, **11 optional**).
 
 **Текущая фаза (контент + данные):** [`SKILLS_PHASE_CONTENT_AND_DATA.md`](SKILLS_PHASE_CONTENT_AND_DATA.md) — `tier: core` / `support` / `deferred` / `archived`.
 
@@ -33,7 +33,7 @@
 
 | `tier` | Скиллы | Когда |
 |--------|--------|--------|
-| **core** | idea-refine, spec-driven-development, create-event, event-analysis, game-economy-and-victory, api-and-interface-design, design-lab-mqx, frontend-ui-engineering, incremental-implementation, test-driven-development, using-agent-skills | Primary по умолчанию |
+| **core** | idea-refine, spec-driven-development, create-event, event-analysis, game-economy-and-victory, api-and-interface-design, design-lab-mqx, frontend-ui-engineering, incremental-implementation, test-driven-development, critical-test-scenarios, using-agent-skills | Primary по умолчанию |
 | **support** | planning-and-task-breakdown, code-review-and-quality, documentation-and-adrs, skill-test, balance-playtest | Epic, merge, ADR; `/balance-playtest` после баланса |
 | **deferred** | все `status: optional` кроме documentation-and-adrs | Явный запрос; doubt — satellite для economy |
 | **archived** | `_archived/*` | Studio/GDD вручную |
@@ -51,9 +51,10 @@
 | **spec-driven-development** | Spec в `docs/specs/` до кода |
 | **incremental-implementation** | Срезы без монолитных PR |
 | **api-and-interface-design** | `/api/...`, `api.js`, контракты |
-| **test-driven-development** | Регрессии экономики/периода |
-| **create-event** | **`/create-event`** — авторинг событий, Student/Professional, needs, burn |
-| **event-analysis** | **`/event-analysis`** — read-only обзор YAML-каталога, gaps, баланс-ориентиры |
+| **test-driven-development** | RED-GREEN одного теста, баги |
+| **critical-test-scenarios** (`/critical-tests`) | Критичные сценарии, gate G1–G4, backlog suite |
+| **create-event** | **`/create-event`** — brief (`lifecycle_class`, `needs_axis_map`), YAML, §10–§11 |
+| **event-analysis** | **`/event-analysis`** — read-only: gaps, **§10 lifecycle**, **§11 axis**, trade-off |
 | **game-economy-and-victory** | `period.py`, Victory v2, баланс движка (не контент карточек) |
 | **balance-playtest** (`/balance-playtest`) | 40 периодов, JSON, diff к baseline; subagent `economy-balance-runner` |
 | **code-review-and-quality** | Перед merge |
@@ -68,6 +69,7 @@
 
 | Скилл | `tier` | Когда |
 |-------|--------|--------|
+| **project-handbook-documentation** | support | Пакет `docs/handbook/`: GDD, brief, плейтест, матрица фич (`/project-handbook-documentation`) |
 | **documentation-and-adrs** | support | ADR, граница доменов, публичный API |
 | **browser-testing-with-devtools** | deferred | DOM/сеть TMA (Chrome DevTools MCP) |
 | **doubt-driven-development** | deferred | Satellite для game-economy; иначе высокие ставки |

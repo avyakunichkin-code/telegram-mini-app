@@ -17,7 +17,6 @@ events:
   - title: Внести задаток
     effects:
       cash_delta: -50000
-      xp_delta: 5
       needs_delta:
         status: 8
         comfort: 6
@@ -34,7 +33,6 @@ events:
   - title: Попросить время на решение
     effects:
       cash_delta: 0
-      xp_delta: 2
       needs_delta:
         status: 3
         comfort: 2
@@ -51,7 +49,6 @@ events:
   - title: Отказаться от сделки
     effects:
       cash_delta: 0
-      xp_delta: 1
       needs_delta:
         comfort: 1
 - definition_key: mq11_used_car_deadline
@@ -70,7 +67,6 @@ events:
     effects:
       used_car_action: complete_purchase
       requires_chain_branch: deposit
-      xp_delta: 10
       needs_delta:
         status: 12
         comfort: 10
@@ -79,7 +75,6 @@ events:
     effects:
       used_car_action: complete_purchase
       requires_chain_branch: thinking
-      xp_delta: 10
       needs_delta:
         status: 12
         comfort: 10
@@ -88,7 +83,6 @@ events:
     effects:
       used_car_action: decline_with_deposit
       requires_chain_branch: deposit
-      xp_delta: 1
       needs_delta:
         comfort: -8
         status: -4
@@ -96,6 +90,5 @@ events:
     effects:
       used_car_action: decline
       requires_chain_branch: thinking
-      xp_delta: 2
       needs_delta:
         comfort: 1
