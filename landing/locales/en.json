@@ -20,7 +20,6 @@
     "how": "How to play",
     "features": "Mechanics",
     "peek": "Interface",
-    "advisor": "Expert review",
     "partners": "Partners",
     "faq": "FAQ"
   },
@@ -207,34 +206,6 @@
       "Mistakes in the simulator are lessons; the same patterns cost more in life"
     ]
   },
-  "advisor": {
-    "title": "Spotted a blind zone in the game?",
-    "subtitle": "After a few game months, many need not another course but a plan for their banks, debt, and goals. We work with financial advisors — one partner today, a network under one standard in preparation.",
-    "lead": "The game shows the pattern for free. A human review — when you're ready to move insights into real life.",
-    "packages": [
-      {
-        "badge": "Stabilize",
-        "title": "First step",
-        "price": "from ₽45,000",
-        "text": "If cash and debt “burned” in the sim: crisis plan, payment schedule, what to do in the next 90 days."
-      },
-      {
-        "badge": "Order",
-        "title": "Picture & plan",
-        "price": "from ₽75,000",
-        "text": "Income is fine, chaos isn't: one view of assets and goals, spending rules, investments and safety fund — for your household."
-      },
-      {
-        "badge": "Expert",
-        "title": "Second opinion",
-        "price": "custom",
-        "text": "You already have a broker and deposits — structure, tax, and risk check without “finance 101”."
-      }
-    ],
-    "note": "The advisor doesn't sell the game or decide for you. We don't provide individual investment advice — partner services are under a separate agreement.",
-    "cta": "Request a review",
-    "ctaPlay": "Play 4 months first"
-  },
   "partners": {
     "title": "Partners: channels & corporate pilots",
     "subtitle": "ТВОЙ ХОД is edutainment for adults 30+: short sessions, growing depth, mascot Monetka, honest pedagogy.",
@@ -245,7 +216,7 @@
       },
       {
         "title": "Channels",
-        "text": "Telegram Mini App, browser, PWA — one product. Landing → game → segmentation → advisor (B2B2C)."
+        "text": "Telegram Mini App, browser, PWA — one product. The landing leads into the free simulation."
       },
       {
         "title": "Stage",
@@ -286,12 +257,8 @@
         "a": "Complete the Victory v2 goal chain from your template; usually not before period seven. Details in in-game finance overview."
       },
       {
-        "q": "What is the advisor review?",
-        "a": "A separate partner service (from ₽45,000). The game surfaces patterns; the advisor builds a plan for your real life."
-      },
-      {
         "q": "Is this financial advice?",
-        "a": "The game is education. Life decisions and any advisor contract are yours."
+        "a": "No. The product is educational; real-life decisions are yours."
       }
     ]
   },
@@ -299,11 +266,11 @@
     "title": "Take your first move in the simulator",
     "text": "Four game months are enough to feel the loop. We'll announce Telegram separately.",
     "btnPlay": "Open the game",
-    "btnAdvisor": "Advisor review"
+    "btnFaq": "FAQ"
   },
   "footer": {
     "tagline": "ТВОЙ ХОД · Finances as a game",
-    "legal": "Not individual investment advice. A learning simulation. Financial advisor services are provided by a partner under a separate agreement.",
+    "legal": "Not individual investment advice. A learning simulation.",
     "year": "© 2026 ТВОЙ ХОД"
   }
 }
