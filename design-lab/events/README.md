@@ -7,7 +7,7 @@
 | **1** | [`layout-round/`](layout-round/) | Компоновка L1–L5 → ★ **L3** |
 | **2** | [`domains-round/`](domains-round/) | Скины `event_domain` на L3 |
 | **3** | [`overlay-round/`](overlay-round/) | Окно: шапка, панель, навигация → ★ **O1** |
-| **4** | [`tails-round/`](tails-round/) | E2 halo + E5 длинные тексты → ★ prod |
+| **4** | [`tails-round/`](tails-round/) | E2 halo + E5 длинные тексты → ★ prod · канон [`tails-round/APPROVED.md`](tails-round/APPROVED.md) |
 | Архив | `index.html` | Раунды M1–M6, B′ (2026-05) |
 
 **Навигатор (основной способ):**

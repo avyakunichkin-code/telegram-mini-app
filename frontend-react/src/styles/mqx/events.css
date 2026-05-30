@@ -496,19 +496,19 @@ button.mqx-events-card__close:active:not(:disabled) {
   color: color-mix(in srgb, var(--mqx-ink, var(--tg-theme-text-color)) 90%, transparent);
 }
 
-/* E5-B — длинное описание: скролл внутри пузыря */
-.mqx-events-card__bubble--scroll {
+/* E5-B — см. design-lab/events/tails-round/APPROVED.md § E5-B */
+.mqx-events-card--l3 .mqx-events-card__bubble {
   max-height: 5.6em;
   overflow-y: auto;
   overscroll-behavior: contain;
   -webkit-overflow-scrolling: touch;
 }
 
-.mqx-events-card__bubble--scroll .mqx-events-card__bubble-text {
+.mqx-events-card--l3 .mqx-events-card__bubble-text {
   padding-right: 2px;
 }
 
-/* E2-B — M6 halo на карточке L3 (страховой случай) */
+/* E2-B — см. design-lab/events/tails-round/APPROVED.md § E2-B */
 .mqx-events-card--l3.mqx-events-card--insurance {
   position: relative;
   overflow: hidden;

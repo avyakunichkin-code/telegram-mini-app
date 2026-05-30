@@ -52,22 +52,12 @@ import {
 import { MqxStatesCatalogDemo } from './MqxStatesCatalogDemo';
 import { MqxEventsTailsCatalogDemo } from './MqxEventsTailsCatalogDemo';
 import { CATALOG_LEGACY_GOAL_DEMO, CATALOG_VICTORY_DEMO } from './catalogVictoryDemo';
+import { CATALOG_EVENTS_L3_BASELINE } from './catalogEventsDemo';
+import { CATALOG_INSURANCE_POLICY, catalogInsurancePlan } from './catalogInsuranceDemo';
+import { CATALOG_PERIOD_CLOSE_SHEET } from './catalogStatesDemo';
 import { MoneyText } from '../../MoneyText';
-import { INSURANCE_PLANS } from '../../../constants/insuranceProducts';
 
-const DEMO_POLICY = {
-  id: 1,
-  kind: 'auto_liability',
-  product: 'auto',
-  title: 'ОСАГО — Стандарт',
-  monthly_premium: 2400,
-  payout_amount: 400000,
-  term_periods: 12,
-  started_period_index: 3,
-  expires_period_index: 15,
-};
-
-const DEMO_PLAN = INSURANCE_PLANS.find((p) => p.plan_key === 'auto_liability_standard') ?? INSURANCE_PLANS[0];
+const CATALOG_INSURANCE_PLAN = catalogInsurancePlan();
 
 function CatalogSection({ title, children }) {
   return (
@@ -270,15 +260,7 @@ export function MqCatalogScreen() {
           <MqxPeriodCloseSheet
             open
             onClose={() => {}}
-            summary={{
-              closed_period_index: 3,
-              cash_delta: 1500,
-              income_delta: 5000,
-              expense_delta: -1200,
-              safety_fund_delta: 10000,
-              invest_capital_delta: 0,
-              debt_delta: -8000,
-            }}
+            summary={CATALOG_PERIOD_CLOSE_SHEET}
           />
         </div>
       </CatalogSection>
@@ -293,27 +275,7 @@ export function MqCatalogScreen() {
             События
           </MqxPill>
           <EventCard
-            event={{
-              id: 1,
-              event_domain: 'auto',
-              title: 'ДТП',
-              description: 'Небольшое столкновение. При ОСАГО страховая покроет ущерб.',
-              choices: [
-                {
-                  id: 10,
-                  title: 'Оформить по полису ОСАГО',
-                  description: 'Выплата по страховке',
-                  insurance_claim: true,
-                  impacts: [{ kind: 'insurance_payout', delta: 45000 }],
-                },
-                {
-                  id: 11,
-                  title: 'Оплатить из своих',
-                  impacts: [{ kind: 'cash', delta: -45000 }],
-                },
-                { id: 12, title: 'Договориться без оформления' },
-              ],
-            }}
+            event={CATALOG_EVENTS_L3_BASELINE}
             busyId={null}
             onPick={() => {}}
           />
@@ -349,16 +311,16 @@ export function MqCatalogScreen() {
       <CatalogSection title="Страховки — метрики (asset H)">
         <InsurancePlanMetrics monthlyPremium={2400} payoutAmount={400000} termPeriods={12} />
         <div style={{ marginTop: 10 }}>
-          <InsurancePolicyMetrics policy={DEMO_POLICY} />
+          <InsurancePolicyMetrics policy={CATALOG_INSURANCE_POLICY} />
         </div>
       </CatalogSection>
 
       <CatalogSection title="Страховки — тариф (InsurancePlanCard)">
-        <InsurancePlanCard plan={DEMO_PLAN} onBuy={() => {}} />
+        <InsurancePlanCard plan={CATALOG_INSURANCE_PLAN} onBuy={() => {}} />
       </CatalogSection>
 
       <CatalogSection title="Страховки — активный полис (InsurancePolicyRow)">
-        <InsurancePolicyRow policy={DEMO_POLICY} onCancel={() => {}} />
+        <InsurancePolicyRow policy={CATALOG_INSURANCE_POLICY} onCancel={() => {}} />
       </CatalogSection>
 
       <CatalogSection title="Страховки — блок (InsuranceProductPicker)">
@@ -367,7 +329,7 @@ export function MqCatalogScreen() {
 
       <CatalogSection title="Страховки — экран (InsuranceSection)">
         <InsuranceSection
-          policies={[DEMO_POLICY]}
+          policies={[CATALOG_INSURANCE_POLICY]}
           onBuy={() => {}}
           onCancel={() => {}}
           intro={null}

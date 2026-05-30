@@ -25,6 +25,8 @@ cd design-lab/events
 
 После правок `design-lab/events/styles*.css` или `layout-round/styles.css` — пересобрать затронутые раунды.
 
+Раунды с разметкой `ev-l3__` (domains, tails) автоматически включают `layout-round/styles.css` в `lab-base.css` — флаг `-WithLayoutStyles` не обязателен.
+
 ## Агентам
 
 См. `.cursor/rules/tvoy-hod-design-lab.mdc` и скилл `design-lab-mqx`.

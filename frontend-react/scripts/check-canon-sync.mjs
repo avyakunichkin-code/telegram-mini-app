@@ -42,6 +42,11 @@ function isCanonTouch(p) {
   if (!path.startsWith('design-lab/')) return false
   // Canon docs or parity pages
   if (path.endsWith('APPROVED.md') || path.endsWith('README.md')) return true
+  if (path.includes('events/tails-round/styles.css')) return true
+  if (path.endsWith('catalogEventsTailsDemo.js')) return true
+  if (path.endsWith('catalogEventsDemo.js')) return true
+  if (path.endsWith('catalogStatesDemo.js')) return true
+  if (path.endsWith('catalogInsuranceDemo.js')) return true
   if (path.includes('page-round/')) return true
   // Any new/updated round with index.html is acceptable as a canon-sync artifact
   if (path.endsWith('/index.html')) return true

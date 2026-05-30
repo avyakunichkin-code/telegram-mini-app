@@ -5,14 +5,7 @@ import { MqxStateError } from '../primitives/MqxStateError';
 import { MqxStateSkeleton } from '../primitives/MqxStateSkeleton';
 import { MqxPeriodCloseRitual } from '../juice/MqxPeriodCloseRitual';
 import { MqxButton } from '../primitives/MqxButton';
-
-const DEMO_PERIOD_CLOSE = {
-  closed_period_index: 3,
-  cash_delta: 3500,
-  income_delta: 12400,
-  expense_delta: 8900,
-  safety_fund_delta: 0,
-};
+import { CATALOG_PERIOD_CLOSE_RITUAL } from './catalogStatesDemo';
 
 /** Витрина ★ ui-states-unified для #/dev/mqx */
 export function MqxStatesCatalogDemo() {
@@ -73,7 +66,7 @@ export function MqxStatesCatalogDemo() {
           Показать ритуал закрытия
         </MqxButton>
         <div className="mqx-catalog-states__ritual-host">
-          <MqxPeriodCloseRitual summary={DEMO_PERIOD_CLOSE} open={ritualOpen} onClose={() => setRitualOpen(false)} />
+          <MqxPeriodCloseRitual summary={CATALOG_PERIOD_CLOSE_RITUAL} open={ritualOpen} onClose={() => setRitualOpen(false)} />
         </div>
       </div>
     </div>

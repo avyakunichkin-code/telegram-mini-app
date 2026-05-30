@@ -2,7 +2,7 @@ import { asSafeReactText } from '../../../utils/displayText';
 import { MonetkaAvatar } from '../onboarding/MonetkaAvatar';
 import { EventChoiceButton } from './EventChoiceButton';
 import { eventDomainTheme } from './eventDomainDisplay';
-import { eventDescriptionNeedsScroll, eventHasInsuranceClaimChoice } from './eventDisplay';
+import { eventHasInsuranceClaimChoice } from './eventDisplay';
 
 /**
  * Карточка события L3 ★: полоса домена, заголовок (+ × в оверлее), лейблы, пузырь, flat-выборы.
@@ -21,7 +21,6 @@ export function EventCard({
   const recommendedForNeed = asSafeReactText(event?.recommended_for_need, '');
   const description = asSafeReactText(event.description);
   const titleText = asSafeReactText(event.title);
-  const bubbleScroll = eventDescriptionNeedsScroll(description);
   const domain = eventDomainTheme(event);
 
   return (
@@ -41,7 +40,7 @@ export function EventCard({
           <h3
             id={titleId}
             className="mqx-events-card__title mqx-events-card__title--l3"
-            title={titleText.length > 48 ? titleText : undefined}
+            title={titleText}
           >
             {titleText}
           </h3>
@@ -85,14 +84,7 @@ export function EventCard({
             <div className="mqx-events-card__monetka-wrap">
               <MonetkaAvatar size={50} className="mqx-events-card__monetka" />
             </div>
-            <div
-              className={[
-                'mqx-events-card__bubble',
-                bubbleScroll && 'mqx-events-card__bubble--scroll',
-              ]
-                .filter(Boolean)
-                .join(' ')}
-            >
+            <div className="mqx-events-card__bubble">
               <p className="mqx-events-card__bubble-text">{description}</p>
             </div>
           </div>

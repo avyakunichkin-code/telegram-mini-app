@@ -915,20 +915,42 @@ body {
   padding: 10px 12px 4px;
 }
 
-.ev-l3__head,
+.ev-l3-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.ev-l3-close {
+  width: 28px;
+  height: 28px;
+  margin: -2px -2px 0 0;
+  padding: 0;
+  border: none;
+  background: transparent;
+  font-size: 22px;
+  line-height: 1;
+  color: var(--text-muted);
+  cursor: pointer;
+}
+
 .ev-l3__labels {
   display: flex;
   flex-wrap: wrap;
-  align-items: center;
+  align-items: stretch;
   gap: 6px;
-  margin-bottom: 6px;
+  margin-bottom: 8px;
 }
 
 .ev-domain-pill {
   display: inline-flex;
   align-items: center;
   gap: 5px;
-  padding: 3px 9px;
+  min-height: 22px;
+  padding: 4px 9px;
+  box-sizing: border-box;
   border-radius: 999px;
   font-size: 10px;
   font-weight: 800;
