@@ -33,6 +33,7 @@ function zoneLabel(z) {
 
 function pickAxisValues(needs) {
   if (!needs || typeof needs !== 'object') return null;
+  if (needs.enabled === false) return null;
   const values = {};
   for (const a of AXES) {
     const n = Number(needs[a.key]);
@@ -49,20 +50,29 @@ function minAxis(values) {
   return min;
 }
 
-function ImproveIcon() {
-  return (
-    <svg className="mqx-needs-improve-icon" viewBox="0 0 24 24" aria-hidden="true">
-      <path d="M12 4v15" strokeLinecap="round" />
-      <path d="M7 9l5-5 5 5" strokeLinecap="round" strokeLinejoin="round" />
-    </svg>
-  );
+function overallStatus(values) {
+  let worst = 'ok';
+  for (const a of AXES) {
+    const z = zone(values[a.key]);
+    if (z === 'zero') return 'zero';
+    if (z === 'distressed') worst = 'distressed';
+    else if (z === 'low' && worst === 'ok') worst = 'low';
+  }
+  return worst;
 }
 
-function NeedsBarRow({ axis, value }) {
+function overallStatusCopy(status) {
+  if (status === 'zero') return 'Критично';
+  if (status === 'distressed') return 'Истощение';
+  if (status === 'low') return 'Есть просадка';
+  return 'Всё в норме';
+}
+
+function NeedsBarRow({ axis, value, compact = false }) {
   const pct = clampPct(value);
   const z = zone(value);
   return (
-    <div className="mqx-needs-bar-row">
+    <div className={`mqx-needs-bar-row${compact ? ' mqx-needs-bar-row--compact' : ''}`}>
       <span className="mqx-needs-bar-label">{axis.label}</span>
       <div
         className="mqx-needs-bar-track"
@@ -70,7 +80,7 @@ function NeedsBarRow({ axis, value }) {
         aria-valuenow={pct}
         aria-valuemin={0}
         aria-valuemax={100}
-        aria-label={`${axis.label}, ${zoneLabel(z)}`}
+        aria-label={`${axis.label}, ${pct} из 100, ${zoneLabel(z).toLowerCase()}`}
       >
         <span className="mqx-needs-bar-fill" data-zone={z} style={{ width: `${pct}%` }} />
       </div>
@@ -78,22 +88,6 @@ function NeedsBarRow({ axis, value }) {
         {zoneLabel(z)}
       </span>
     </div>
-  );
-}
-
-function ImproveChipButton({ disabled, title, onClick }) {
-  return (
-    <button
-      type="button"
-      className="mqx-needs-improve-chip"
-      aria-label="Улучшить"
-      disabled={disabled}
-      title={title}
-      onClick={onClick}
-    >
-      <ImproveIcon />
-      <span className="mqx-needs-sr-only">Улучшить</span>
-    </button>
   );
 }
 
@@ -109,15 +103,19 @@ export function MqxNeedsDash({
   const [expanded, setExpanded] = useState(false);
 
   const min = useMemo(() => (values ? minAxis(values) : null), [values]);
+  const status = useMemo(() => (values ? overallStatus(values) : 'ok'), [values]);
 
   if (!values || !min) return null;
 
   const streak = Number(needsZeroPeriodsStreak) || 0;
   const showRisk = streak > 0;
   const treatAvailable = Boolean(treatSelf?.available);
-  const treatTitle = treatAvailable
-    ? 'Улучшить самочувствие'
-    : `Доступно через ${treatSelf?.cooldown_periods_remaining ?? 0} периодов`;
+  const cooldown = Number(treatSelf?.cooldown_periods_remaining) || 0;
+  const treatHint = treatAvailable
+    ? 'Списание с карты · редкий запасной путь'
+    : cooldown > 0
+      ? `Доступно через ${cooldown} периодов`
+      : 'Сейчас недоступно';
 
   const openTreat = (e) => {
     e.stopPropagation();
@@ -143,7 +141,7 @@ export function MqxNeedsDash({
         .filter(Boolean)
         .join(' ')}
       data-lab-variant="v4"
-      aria-label="Самочувствие"
+      aria-labelledby="needs-title"
     >
       <div
         className={['mqx-needs-risk', showRisk && 'is-visible'].filter(Boolean).join(' ')}
@@ -171,66 +169,82 @@ export function MqxNeedsDash({
           </picture>
         </div>
 
-        <div
-          className="mqx-needs-block__header"
-          role="button"
-          tabIndex={0}
-          aria-expanded={expanded ? 'true' : 'false'}
-          onClick={toggleExpanded}
-          onKeyDown={(e) => {
-            if (e.key !== 'Enter' && e.key !== ' ') return;
-            if (e.target.closest('.mqx-needs-improve-link')) return;
-            e.preventDefault();
-            toggleExpanded();
-          }}
-        >
-          <span className="mqx-needs-block__title">Самочувствие</span>
-          <button type="button" className="mqx-needs-improve-link" onClick={openHelp}>
-            как улучшить →
-          </button>
-          <svg
-            className="mqx-needs-block__chevron"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            aria-hidden="true"
+        <div className="mqx-needs-main">
+          <div
+            className="mqx-needs-block__header"
+            role="button"
+            tabIndex={0}
+            aria-expanded={expanded ? 'true' : 'false'}
+            aria-controls="needs-panel"
+            onClick={toggleExpanded}
+            onKeyDown={(e) => {
+              if (e.key !== 'Enter' && e.key !== ' ') return;
+              if (e.target.closest('.mqx-needs-improve-link, .mqx-needs-help-btn')) return;
+              e.preventDefault();
+              toggleExpanded();
+            }}
           >
-            <path d="m6 9 6 6 6-6" />
-          </svg>
-        </div>
-
-        <div className="mqx-needs-compact">
-          <NeedsBarRow axis={min} value={values[min.key]} />
-        </div>
-
-        {!expanded ? (
-          <ImproveChipButton
-            disabled={!treatAvailable}
-            title={treatTitle}
-            onClick={openTreat}
-          />
-        ) : null}
-
-        <div className="mqx-needs-expanded">
-          {AXES.map((a) => (
-            <NeedsBarRow key={a.key} axis={a} value={values[a.key]} />
-          ))}
-          {treatSelf ? (
-            <div className="mqx-needs-improve-zone">
-              <button
-                type="button"
-                className="mqx-needs-improve mqx-needs-improve--ghost-center"
-                aria-label="Улучшить"
-                disabled={!treatAvailable}
-                title={treatTitle}
-                onClick={openTreat}
-              >
-                <ImproveIcon />
-                <span className="mqx-needs-sr-only">Улучшить</span>
-              </button>
+            <div className="mqx-needs-block__head-text">
+              <h2 id="needs-title" className="mqx-needs-block__title mqx-finance-static__title">
+                Самочувствие
+              </h2>
+              {!expanded ? (
+                <p className="mqx-needs-block__summary" data-status={status}>
+                  {overallStatusCopy(status)}
+                </p>
+              ) : null}
             </div>
-          ) : null}
+            {!expanded ? (
+              <button type="button" className="mqx-needs-improve-link" onClick={openHelp}>
+                как улучшить →
+              </button>
+            ) : null}
+            <svg
+              className="mqx-needs-block__chevron"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              aria-hidden="true"
+            >
+              <path d="m6 9 6 6 6-6" />
+            </svg>
+          </div>
+
+          <div id="needs-panel" className="mqx-needs-panel">
+            {!expanded ? (
+              <div className="mqx-needs-compact">
+                <NeedsBarRow axis={min} value={values[min.key]} compact />
+              </div>
+            ) : (
+              <div className="mqx-needs-expanded">
+                {AXES.map((a) => (
+                  <NeedsBarRow key={a.key} axis={a} value={values[a.key]} />
+                ))}
+                <div className="mqx-needs-footer">
+                  {treatSelf ? (
+                    <button
+                      type="button"
+                      className="mqx-needs-treat-btn"
+                      disabled={!treatAvailable}
+                      title={treatHint}
+                      onClick={openTreat}
+                    >
+                      Порадовать себя
+                    </button>
+                  ) : null}
+                  <button
+                    type="button"
+                    className="mqx-needs-help-btn"
+                    aria-label="Как улучшить самочувствие"
+                    onClick={openHelp}
+                  >
+                    ?
+                  </button>
+                </div>
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </section>

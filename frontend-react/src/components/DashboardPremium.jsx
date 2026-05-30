@@ -2,9 +2,8 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 
 import { MoneyText } from './MoneyText';
 
-import { SafetyFundActionForm } from './SafetyFundActionForm';
-
 import { showNotification } from './notifications';
+import { suggestSafetyFundAmount } from '../utils/safetyFundAmount';
 
 import { CAPITAL_FLOWS_SECTION } from '../utils/capitalFlowsNav';
 import {
@@ -31,6 +30,7 @@ import {
 
   MqxPeriodActions,
   MqxJuiceGainFeedback,
+  MqxSafetyFundSheet,
 
 } from './mqx';
 
@@ -118,7 +118,6 @@ export function DashboardPremium({
   const [needsHelpOpen, setNeedsHelpOpen] = useState(false);
   const [treatOpen, setTreatOpen] = useState(false);
 
-  const safetyPanelRef = useRef(null);
   const juiceTimerRef = useRef(null);
 
   useEffect(
@@ -135,37 +134,6 @@ export function DashboardPremium({
     setSafetyAmount(0);
 
   };
-
-  useEffect(() => {
-
-    if (!moneyModal) return undefined;
-
-    // Панель появляется внизу: мягко подскроллим к ней, чтобы не требовать ручного скролла.
-    // Важно: делаем после рендера, иначе scrollIntoView может попасть в старую разметку.
-    const raf = window.requestAnimationFrame(() => {
-      safetyPanelRef.current?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-    });
-
-    const onPointerDown = (e) => {
-
-      if (safetyPanelRef.current?.contains(e.target)) return;
-
-      if (e.target.closest('[data-money-trigger]')) return;
-
-      closeSafetyPanel();
-
-    };
-
-    document.addEventListener('pointerdown', onPointerDown, true);
-
-    return () => {
-      window.cancelAnimationFrame(raf);
-      document.removeEventListener('pointerdown', onPointerDown, true);
-    };
-
-  }, [moneyModal]);
-
-
 
   const periodIndex = timeStatus?.period_index ?? overview?.period_index ?? 0;
 
@@ -286,35 +254,22 @@ export function DashboardPremium({
 
 
 
-  const safetyModalLimits = useMemo(() => {
+  const cashBalance = Math.max(0, Math.floor(Number(overview?.cash_balance) || 0));
+  const safetyBalance = Math.max(0, Math.floor(Number(overview?.safety_fund_balance) || 0));
+  const cushionFill = getSafetyFundFillFromOverview(overview);
 
-    const cash = Math.max(0, Math.floor(Number(overview?.cash_balance) || 0));
-
-    const safety = Math.max(0, Math.floor(Number(overview?.safety_fund_balance) || 0));
-
-    if (moneyModal === 'in') {
-
-      return { max: cash, chipValue: safety, chipHint: 'в подушке' };
-
-    }
-
-    if (moneyModal === 'out') {
-
-      return { max: safety, chipValue: cash, chipHint: 'на счёте' };
-
-    }
-
-    return { max: 0, chipValue: 0, chipHint: '' };
-
-  }, [moneyModal, overview]);
-
-
+  const openSafetySheet = (mode) => {
+    const max = mode === 'in' ? cashBalance : safetyBalance;
+    setSafetyAmount(suggestSafetyFundAmount(max));
+    setMoneyModal(mode);
+  };
 
   const submitMoney = async () => {
 
     const amt = safetyAmount;
 
-    if (!Number.isFinite(amt) || amt <= 0 || amt > safetyModalLimits.max) {
+    const max = moneyModal === 'in' ? cashBalance : safetyBalance;
+    if (!Number.isFinite(amt) || amt <= 0 || amt > max) {
 
       showNotification('Введите корректную сумму', 'error');
 
@@ -406,6 +361,7 @@ export function DashboardPremium({
 
             <MqxPeriodActions
               busy={busyAction !== null}
+              activeMoneyMode={moneyModal}
               salaryDisabled={salaryDisabled}
               salaryCelebrate={salaryCelebrate}
               onSalary={async () => {
@@ -450,42 +406,13 @@ export function DashboardPremium({
                 }
               }}
 
-              onContribute={() => {
+              onContribute={() => openSafetySheet('in')}
 
-                setSafetyAmount(0);
-
-                setMoneyModal('in');
-
-              }}
-
-              onWithdraw={() => {
-
-                setSafetyAmount(0);
-
-                setMoneyModal('out');
-
-              }}
+              onWithdraw={() => openSafetySheet('out')}
 
               onInvest={onGoFinance}
 
             />
-
-            {moneyModal ? (
-              <div ref={safetyPanelRef} className="mqx-dash-safety-panel">
-                <SafetyFundActionForm
-                  mode={moneyModal}
-                  amount={safetyAmount}
-                  maxAmount={safetyModalLimits.max}
-                  chipValue={safetyModalLimits.chipValue}
-                  chipHint={safetyModalLimits.chipHint}
-                  onAmountChange={setSafetyAmount}
-                  onSubmit={submitMoney}
-                  submitLabel={moneyModal === 'in' ? 'Перевести в подушку' : 'Снять на счёт'}
-                  busy={busyAction === 'in' || busyAction === 'out'}
-                  autoFocus
-                />
-              </div>
-            ) : null}
 
           </MqxDashStack>
 
@@ -503,6 +430,19 @@ export function DashboardPremium({
         onClose={() => setTreatOpen(false)}
         treatSelf={treatSelf}
         treatSelfState={overview?.treat_self}
+      />
+      <MqxSafetyFundSheet
+        open={moneyModal != null}
+        mode={moneyModal || 'in'}
+        onModeChange={(next) => openSafetySheet(next)}
+        onClose={closeSafetyPanel}
+        amount={safetyAmount}
+        onAmountChange={setSafetyAmount}
+        onSubmit={submitMoney}
+        busy={busyAction === 'in' || busyAction === 'out'}
+        cashBalance={cashBalance}
+        safetyBalance={safetyBalance}
+        cushionFillPercent={cushionFill?.percent ?? null}
       />
     </>
 

@@ -37,7 +37,7 @@
 - `MqxNeedsDash` → `MqxFinancePeriodBlock` → `MqxGoalDash` → `MqxPeriodActions`
 - Стили: `:has(.mqx-tab-page--dash-unified)` в `index.css`
 - **design-lab** `goal-chain-round` — паритет с prod для лендинга и макетов
-- **design-lab** `../character-needs/dashboard-needs-round/` — паритет блока «Потребности» (Z-NEEDS)
+- **design-lab** `../character-needs/dashboard-needs-v5-round/` — **★ канон** Z-NEEDS (summary, footer, UX-01); v1–v4: `dashboard-needs-round/`
 
 ## Lab ↔ prod checklist
 

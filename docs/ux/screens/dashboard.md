@@ -85,22 +85,22 @@ App (HashRouter)
 ### Information Hierarchy
 
 1. **Период и закрытие месяца** (hero H2) — highest: «Месяц открыт», № периода, primary **«Закрыть месяц»**, pill «События».  
-2. **Снимок денег за период** (2×2 chips) — scan за 2–3 с.  
-3. **Самочувствие** (Z-NEEDS, compact) — четыре потребности; детали по раскрытию — см. [`character-needs-dashboard.md`](character-needs-dashboard.md) (фаза 1, после онбординга).  
+2. **Самочувствие** (Z-NEEDS, compact) — четыре потребности; детали по раскрытию — см. [`character-needs-dashboard.md`](character-needs-dashboard.md) (фаза 1, после онбординга).  
+3. **Снимок денег за период** (2×2 chips) — scan за 2–3 с.  
 4. **Прогресс сценария** (цель, свёрнуто по умолчанию) — мотивация, не блокирует действия.  
 5. **Действия периода** (2×2 chips) — primary motor loop.  
-6. **Inline-панель подушки** — только после выбора «Пополнить» / «Снять».
+6. **Sheet подушки** — только после «Пополнить» / «Снять» (`MqxSafetyFundSheet`).
 
 ### Layout Zones
 
 | Зона | Компонент | CSS / режим |
 |------|-----------|-------------|
 | **Z0 Hero** | `MqxDashboardHero` | `mqx-hero--compact`, full width, градиент S5 |
+| **Z-NEEDS** | `MqxNeedsDash` | compact accordion; treat-self + help — [`character-needs-dashboard.md`](character-needs-dashboard.md) |
 | **Z1 Финансы периода** | `MqxFinancePeriodBlock` | `mqx-finance-static`, 2×2 chips, «Все финансы →» |
-| **Z-NEEDS** | `MqxNeedsSummary` + `MqxNeedsBars` | compact accordion; treat-self + help — [`character-needs-dashboard.md`](character-needs-dashboard.md) |
 | **Z2 Цель** | `MqxGoalDash` | `mqx-goal-dash`, аккордеон, bleed sky-фон |
 | **Z3 Действия** | `MqxPeriodActions` | `mqx-period-actions--chips`, 2×2 |
-| **Z3b Подушка inline** | `SafetyFundActionForm` | `mqx-dash-safety-panel`, условный рендер |
+| **Z3b Подушка sheet** | `MqxSafetyFundSheet` | bottom sheet, условный рендер |
 | **Scroll** | `main.mqx-content--dash-flat` | вертикальный стек, inset-разделители (`MqxDivider`) |
 
 **Вне тела dashboard (GameScreen):** modal зарплаты, sheet/tail итога периода, overlay событий, слой `GameOnboardingLayer`.
@@ -125,6 +125,8 @@ App (HashRouter)
 │              [Закрыть месяц    ]      │
 │              [ События (2)    ]      │
 ├─────────────────────────────────────┤
+│ ▼ Самочувствие · compact / 4 bars   │  Z-NEEDS (phase 1)
+├─────────────────────────────────────┤
 │ Финансы периода                     │  Z1
 │ ┌─────────┬─────────┐               │
 │ │ Доходы  │ Расходы │               │
@@ -132,8 +134,6 @@ App (HashRouter)
 │ │ Баланс  │ Подушка │ [fill bar]    │
 │ └─────────┴─────────┘               │
 │ Все финансы →                       │
-├─────────────────────────────────────┤
-│ ▼ Самочувствие · compact / 4 bars   │  Z-NEEDS (phase 1)
 ├─────────────────────────────────────┤
 │ ▼ Цель · [название текущей цели]    │  Z2 (collapsed)
 │     (●)—(●)—(◉)—(○)—(○)  stepper    │  без «Шаг K из N»
@@ -203,8 +203,8 @@ App (HashRouter)
 
 | State | UI |
 |-------|-----|
-| `moneyModal=in` | Inline panel, max = cash |
-| `moneyModal=out` | Inline panel, max = safety fund |
+| `moneyModal=in` | Sheet `MqxSafetyFundSheet`, max = cash |
+| `moneyModal=out` | Sheet `MqxSafetyFundSheet`, max = safety fund |
 | `busyAction` | Все chips disabled |
 
 ### Онбординг (overlay)

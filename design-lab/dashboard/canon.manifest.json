@@ -30,14 +30,14 @@
       "status": "approved",
       "canonical_rounds": [
         {
-          "path": "design-lab/character-needs/dashboard-needs-round/",
+          "path": "design-lab/character-needs/dashboard-needs-v5-round/",
           "status": "approved"
         }
       ],
       "invariants": [
-        "Needs summary is always visible (no accordion collapse).",
-        "Section label uses lite/plain heading style (no dots/pills).",
-        "\"Улучшить\" action is in the header row."
+        "Z-NEEDS immediately after hero, before finance (UX-01).",
+        "Collapsed: mascot + title + status summary + min-axis bar + «как улучшить →» (no improve chip).",
+        "Expanded: 4 bars + footer «Порадовать себя» + «?» (help)."
       ]
     },
     {

@@ -28,6 +28,7 @@ export { MqxGoalDash } from './layout/MqxGoalDash';
 export { MqxNeedsDash } from './layout/MqxNeedsDash';
 export { MqxTreatSelfSheet } from './layout/MqxTreatSelfSheet';
 export { MqxNeedsHelpSheet } from './layout/MqxNeedsHelpSheet';
+export { MqxSafetyFundSheet } from './layout/MqxSafetyFundSheet';
 export { MqxFinancePeriodBlock } from './layout/MqxFinancePeriodBlock';
 export { MqxPeriodActions } from './layout/MqxPeriodActions';
 export { MqxPeriodHint } from './layout/MqxPeriodHint';

@@ -85,14 +85,16 @@ if (/design-lab\/nav\.manifest\.json$/.test(filePath)) {
   hints.push(
     'ТВОЙ ХОД hook: canon.manifest — `cd frontend-react && npm run design-lab:build` (page parity). См. `docs/agents/DESIGN_LAB_NAVIGATION.md`.',
   );
-} else if (/design-lab\/[^/]+\/[^/]+\/index\.html$/.test(filePath)) {
+} else if (/design-lab\//.test(filePath) && /\/(index\.html|styles\.css|lab-base\.css)$/.test(filePath)) {
+  const isRoundHtml = /\/[^/]+-round\/index\.html$/.test(filePath) || /parity-generated-page-round\/blocks\//.test(filePath);
   hints.push(
-    'ТВОЙ ХОД hook: новый/изменённый round — добавь ссылку в `design-lab/nav.manifest.json`, затем `npm run design-lab:build-nav`. Ревью через хаб `cd design-lab && npx serve .`, не только serve в round.',
+    'ТВОЙ ХОД hook: design-lab round — index.html только `./lab-base.css` (без `../`). После styles.css: `./sync-lab.sh` (bash) или `.\\sync-lab.ps1` (не `./sync-lab.ps1` в bash). Проверка: `cd frontend-react && npm run design-lab:check-rounds`.',
   );
-} else if (/design-lab\//.test(filePath) && /styles\.css$/.test(filePath)) {
-  hints.push(
-    'ТВОЙ ХОД hook: правка styles в design-lab — `sync-lab.ps1` в раунде; только `./` в index.html. Обзор: хаб `design-lab/` + `DESIGN_LAB_NAVIGATION.md`.',
-  );
+  if (isRoundHtml) {
+    hints.push(
+      'ТВОЙ ХОД hook: новый round — пункт в `design-lab/nav.manifest.json`, затем `npm run design-lab:build-nav`. Ревью: `cd design-lab && npx serve .` (хаб), не serve только в подпапке без build.',
+    );
+  }
 }
 
 if (hints.length === 0) {

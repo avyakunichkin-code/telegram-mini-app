@@ -29,10 +29,15 @@
       "title": "Потребности (character-needs)",
       "items": [
         {
-          "label": "Dashboard needs (Z-NEEDS)",
-          "path": "character-needs/dashboard-needs-round/index.html",
+          "label": "Dashboard needs v5 ★ (prod parity)",
+          "path": "character-needs/dashboard-needs-v5-round/index.html",
           "kind": "lab",
           "status": "approved"
+        },
+        {
+          "label": "Dashboard needs v1–v4 (архив)",
+          "path": "character-needs/dashboard-needs-round/index.html",
+          "kind": "lab"
         }
       ]
     },

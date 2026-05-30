@@ -13,7 +13,7 @@ prod_route: GameScreen tab `dashboard` → Z-NEEDS
 > **Status:** Approved (базовые решения UX-01…UX-08)  
 > **Parent:** [`dashboard.md`](dashboard.md)  
 > **Product:** [`SPEC_game-character-needs.md`](../../specs/features/SPEC_game-character-needs.md)  
-> **Lab:** [`design-lab/character-needs/dashboard-needs-round/`](../../../design-lab/character-needs/dashboard-needs-round/) — **v2 E1–E3** ([`VARIANTS.md`](../../../design-lab/character-needs/dashboard-needs-round/VARIANTS.md))
+> **Lab:** [`design-lab/character-needs/dashboard-needs-v5-round/`](../../../design-lab/character-needs/dashboard-needs-v5-round/) — **v5 ★ prod** ([`APPROVED.md`](../../../design-lab/character-needs/dashboard-needs-v5-round/APPROVED.md)); v1–v4: [`dashboard-needs-round/`](../../../design-lab/character-needs/dashboard-needs-round/)
 
 ---
 
@@ -43,8 +43,8 @@ prod_route: GameScreen tab `dashboard` → Z-NEEDS
 ```text
 GameScreen → dashboard
   Z0 Hero
-  Z1 Финансы периода
   Z-NEEDS  ← этот spec
+  Z1 Финансы периода
   Z2 Цель
   Z3 Действия периода
 ```
@@ -166,7 +166,7 @@ GameScreen → dashboard
 
 ## Acceptance Criteria
 
-1. Z-NEEDS между Z1 и Z2; при `needs.enabled` секция видна на 320px.
+1. Z-NEEDS сразу после hero, до Z1; при `needs.enabled` секция видна на 320px.
 2. По умолчанию collapsed; expand показывает 4 подписанных бара.
 3. При streak≥1 показывается баннер с текстом «N из 3 месяцев».
 4. Treat-self disabled при кулдауне с читаемой причиной.

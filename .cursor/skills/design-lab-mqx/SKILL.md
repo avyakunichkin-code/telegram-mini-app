@@ -40,8 +40,13 @@ allowed-tools: Read, Glob, Grep, Write, Shell
 - Правки `design-lab/**/styles.css` или родительских `styles.css` / `styles-monetka.css`
 - Пользователь видит «голый» HTML без стилей в lab
 - Перед сдачей макета на утверждение
+- **Перед prod-кодом**, если другой скилл (frontend-ui-engineering, frontend-design) собирается менять UX в `*Premium.jsx` / `mqx/` — **сначала этот скилл**, lab, утверждение
 
 Полный продуктовый цикл: [`frontend-react/src/components/mqx/DESIGN_WORKFLOW.md`](../../../frontend-react/src/components/mqx/DESIGN_WORKFLOW.md).
+
+## ⛔ Gate: без lab — без prod
+
+Агент **не имеет права** менять компоновку/паттерны в prod, пока нет lab-раунда (или обновлённого `APPROVED.md` + parity) и явного утверждения пользователя. Retroactive: если prod уже изменён — создать parity round и синхронизировать docs в том же PR.
 
 ## Why styles break
 
@@ -70,13 +75,13 @@ design-lab/<тема>/<round>/
 
 **Events** (есть общий скрипт):
 
-```powershell
+```bash
 cd design-lab/events
-.\sync-all-rounds.ps1
-# или из папки раунда:
-cd design-lab/events/overlay-round
-.\sync-lab.ps1
+# overlay-round и др.:
+cd overlay-round && ./sync-lab.sh
 ```
+
+PowerShell (events): `.\sync-all-rounds.ps1` в `design-lab/events/`.
 
 **Другая тема** — скопировать паттерн из [`design-lab/events/_shared/sync-lab-round.ps1`](../../../design-lab/events/_shared/sync-lab-round.ps1) или inline-сборка `lab-base.css` из локальных `../styles.css` **в файл внутри раунда**.
 
@@ -86,13 +91,24 @@ cd design-lab/events/overlay-round
 
 **Отладка раунда (404 CSS):**
 
-```powershell
+```bash
 cd design-lab/<тема>/<round>
-.\sync-lab.ps1
+./sync-lab.sh          # bash / Git Bash — не ./sync-lab.ps1
 npx serve .
 ```
 
+PowerShell: `.\sync-lab.ps1`. Без PowerShell в PATH: `cd frontend-react && npm run design-lab:sync-round -- design-lab/<тема>/<round>`.
+
 В DevTools → Network: нет 404 на `.css` и `.png`.
+
+**Автопроверка (CI / guardrails):**
+
+```bash
+cd frontend-react
+npm run design-lab:check-rounds
+```
+
+Скрипт `scripts/check-design-lab-rounds.mjs`: нет `href="../…css"`, канон и parity-блоки с `sync-lab.ps1` имеют актуальный `lab-base.css`. Входит в `design-lab:build` и `check:guardrails`.
 
 ### 4. Commit
 
@@ -105,7 +121,7 @@ npx serve .
 | `layout-round` | `.\sync-lab.ps1` | `events/styles.css` + `styles-monetka.css` |
 | `overlay-round` | `.\sync-lab.ps1` | то же |
 | `domains-round` | `.\sync-lab.ps1` | + `layout-round/styles.css` (`-WithLayoutStyles`) |
-| `tails-round` | `.\sync-lab.ps1` | `events/styles.css` + monetka (E2/E5) |
+| `tails-round` | `.\sync-lab.ps1` | + `layout-round/styles.css` (auto при `ev-l3__` в index) + дельты E2/E5 в `styles.css` |
 
 После нового раунда events: добавить в `nav.manifest.json` → `npm run design-lab:build-nav`.
 

@@ -1,27 +1,20 @@
-# Round: Dashboard Z-NEEDS
+# Dashboard — Z-NEEDS v5 (prod parity)
 
-**UX:** [`docs/ux/screens/character-needs-dashboard.md`](../../../docs/ux/screens/character-needs-dashboard.md)
+**Утверждённый** паттерн после UX-полировки 2026-05-30. См. [`APPROVED.md`](./APPROVED.md).
 
-## Варианты (нарисовать 2–4)
+## Запуск
 
-| ID | Compact | Expanded | Заметка |
-|----|---------|----------|---------|
-| **A** | Одна полоска = min(4) | 4 labeled bars | Минимум высоты |
-| **B** | 4 micro-bars 4×16px | 4 full bars | Скан осей без expand |
-| **C** | Текст «Связи 28%» + icon row | 4 bars | Максимум читаемости |
-| **D** | A + risk banner full-bleed | как A | Акцент на streak |
-
-**Рекомендация продукта (pre-lab):** B compact + A expanded — уточнить на review.
-
-## Lab (готово к review)
-
-- [x] `index.html` + `styles.css` + `sync-lab.ps1` + `lab.js`
-- [x] Варианты A–D, переключатель состояний и темы
-- [x] Collapsed / expanded на карточке
-
-```powershell
-.\sync-lab.ps1
+```bash
+cd design-lab/character-needs/dashboard-needs-v5-round
+./sync-lab.ps1
 npx serve .
 ```
 
-См. [`VARIANTS.md`](VARIANTS.md).
+Или хаб: `cd design-lab && npx serve .` → пункт «Z-NEEDS v5».
+
+## Prod
+
+- `MqxNeedsDash.jsx`
+- `frontend-react/src/styles/mqx/dashboard.css` (`.mqx-needs-*`)
+
+Предыдущие варианты v1–v4: [`../dashboard-needs-round/`](../dashboard-needs-round/).

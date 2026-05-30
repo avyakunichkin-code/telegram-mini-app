@@ -58,6 +58,18 @@ Remember: Claude is capable of extraordinary creative work. Don't hold back, sho
 | Токены и MQX в коде | [`frontend-react/src/index.css`](../../src/index.css) |
 | **FLOW компонентной базы MQX (обязательно)** | [`src/components/mqx/DESIGN_WORKFLOW.md`](../../../src/components/mqx/DESIGN_WORKFLOW.md) — не обходить без явного согласования; исключение: багфикс/hotfix без смены дизайна |
 
+## ⛔ Design-lab перед prod (обязательно)
+
+Для **ТВОЙ ХОД** скилл frontend-design **не заменяет** design-lab. Любое изменение видимого UI (layout, новые блоки, порядок секций, footer/CTA, accordion) — **сначала** `design-lab/<тема>/` + скилл **design-lab-mqx**, **явное утверждение в чате**, **потом** `mqx/` и `*Premium.jsx`.
+
+Порядок для агента:
+
+1. Прочитать `DESIGN_WORKFLOW.md` и UX-spec экрана (`docs/ux/screens/`).
+2. Сделать или обновить lab-раунд; показать пользователю через хаб `cd design-lab && npx serve .`.
+3. После «утверждаем X» — React + Canon Sync (`APPROVED.md`, parity round).
+
+**Hotfix без lab:** только если diff не меняет компоновку и не вводит новых `mqx-*` паттернов (копирайт, мелкий баг, токен цвета).
+
 **Обязательно для TMA:**
 
 - Палитра: **Quest Violet** `#6D28D9` для primary CTA, табов и нижнего меню; **Signal Emerald** / **Danger** / **Warning Amber** — только по смыслу данных (не «радуга»).

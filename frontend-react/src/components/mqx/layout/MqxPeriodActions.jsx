@@ -24,6 +24,7 @@ export function MqxPeriodActions({
   salaryDisabled = false,
   salaryCelebrate = false,
   busy = false,
+  activeMoneyMode = null,
   onSalary,
   onContribute,
   onWithdraw,
@@ -89,6 +90,7 @@ export function MqxPeriodActions({
           label="Пополнить"
           sub="подушку"
           disabled={busy}
+          className={activeMoneyMode === 'in' ? 'mqx-action-chip--active-mode' : ''}
           data-onboarding-anchor="cushion"
           data-money-trigger="in"
           title="Перевести деньги с карты в подушку"
@@ -108,6 +110,7 @@ export function MqxPeriodActions({
           label="Снять"
           sub="с подушки"
           disabled={busy}
+          className={activeMoneyMode === 'out' ? 'mqx-action-chip--active-mode' : ''}
           data-money-trigger="out"
           title="Снять деньги с подушки на счёт"
           aria-label="Снять с подушки"

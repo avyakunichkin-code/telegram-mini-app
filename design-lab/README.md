@@ -13,12 +13,26 @@ npx serve .
 
 Откройте **`http://localhost:3000/`** — сгенерированный хаб `index.html` (поиск, Dashboard parity, все round’ы).
 
-Пересборка хаба и dashboard parity:
+Пересборка хаба и dashboard parity (**только из `frontend-react/`** — в `design-lab/` нет `package.json`):
 
 ```bash
 cd frontend-react
-npm run design-lab:build
+npm run design-lab:check-rounds   # self-contained CSS (./lab-base.css, без ../)
+npm run design-lab:build            # check → parity → check
+# или только дашборд:
+npm run design-lab:build-dashboard-page-round
 ```
+
+После правки `styles.css` в round:
+
+```bash
+cd design-lab/<тема>/<round>
+./sync-lab.sh          # bash / Git Bash / WSL
+# или PowerShell: .\sync-lab.ps1
+# или: cd frontend-react && npm run design-lab:sync-round -- design-lab/<тема>/<round>
+```
+
+Затем `cd frontend-react && npm run design-lab:check-rounds`.
 
 Конфиг ссылок: [`nav.manifest.json`](nav.manifest.json) · канон дашборда: [`dashboard/canon.manifest.json`](dashboard/canon.manifest.json).
 

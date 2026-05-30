@@ -1,5 +1,6 @@
 import fs from 'node:fs'
 import path from 'node:path'
+import { printValidationResult, validateDesignLabRounds } from './lib/validate-design-lab-rounds.mjs'
 
 function posixPath(p) {
   return p.replaceAll('\\', '/')
@@ -306,6 +307,12 @@ function main() {
   console.log(
     `OK: built ${posixPath(path.relative(repoRoot, outRoundDir))} from finance canon manifest.`,
   )
+
+  const parityCheck = validateDesignLabRounds(repoRoot, {
+    parityThemes: ['finance'],
+    includeAllSyncRounds: false,
+  })
+  printValidationResult(parityCheck)
 }
 
 main()

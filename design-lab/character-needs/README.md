@@ -8,7 +8,8 @@
 
 | Папка | Приоритет | Варианты (план) | UX spec |
 |-------|-----------|-----------------|---------|
-| [`dashboard-needs-round/`](dashboard-needs-round/) | **P0** · **lab готов** | A–D compact/expand | [`character-needs-dashboard.md`](../../docs/ux/screens/character-needs-dashboard.md) |
+| [`dashboard-needs-v5-round/`](dashboard-needs-v5-round/) | **P0** · **★ prod** | v5 summary + footer | [`character-needs-dashboard.md`](../../docs/ux/screens/character-needs-dashboard.md) |
+| [`dashboard-needs-round/`](dashboard-needs-round/) | архив | A–D compact/expand | то же |
 | [`treat-self-round/`](treat-self-round/) | **P0** | A card+confirm, B sticky cost | [`character-needs-treat-self.md`](../../docs/ux/screens/character-needs-treat-self.md) |
 | [`help-sheet-round/`](help-sheet-round/) | P1 | A accordion, B flat sections | [`character-needs-help.md`](../../docs/ux/screens/character-needs-help.md) |
 | [`events-needs-chips-round/`](events-needs-chips-round/) | **P0** | A/B/C chips on choices | [`character-needs-events.md`](../../docs/ux/screens/character-needs-events.md) |
@@ -42,9 +43,10 @@
 ## Запуск
 
 ```powershell
-cd design-lab/character-needs/dashboard-needs-round
-.\sync-lab.ps1   # после создания скрипта по образцу events/
+cd design-lab/character-needs/dashboard-needs-v5-round
+.\sync-lab.ps1
 npx serve .
+# или хаб: cd design-lab && npx serve .
 ```
 
 ## После утверждения

@@ -1,5 +1,6 @@
 import fs from 'node:fs'
 import path from 'node:path'
+import { printValidationResult, validateDesignLabRounds } from './lib/validate-design-lab-rounds.mjs'
 
 function posixPath(p) {
   return p.replaceAll('\\', '/')
@@ -125,7 +126,7 @@ function iframeHeightForBlockId(blockId) {
     case 'hero':
       return 260
     case 'needs':
-      return 420
+      return 480
     case 'finance':
       return 520
     case 'goal':
@@ -333,6 +334,13 @@ function main() {
   console.log(
     `OK: built ${posixPath(path.relative(repoRoot, outRoundDir))} from dashboard canon manifest.`,
   )
+
+  const parityCheck = validateDesignLabRounds(repoRoot, {
+    parityThemes: ['dashboard'],
+    includeAllSyncRounds: false,
+    canonOnly: false,
+  })
+  printValidationResult(parityCheck)
 }
 
 main()
