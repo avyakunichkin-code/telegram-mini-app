@@ -51,13 +51,21 @@ def period_close_summary(period_result: dict) -> PeriodCloseSummary:
     )
 
 
-def _time_status_response(profile: GameProfile, *, period_close=None) -> TimeStatusResponse:
+def _time_status_response(
+    profile: GameProfile,
+    *,
+    period_close=None,
+    game_over: bool = False,
+    defeat_reason: str | None = None,
+) -> TimeStatusResponse:
     return TimeStatusResponse(
         time_state=profile.time_state,
         period_index=profile.period_index,
         period_duration_seconds=profile.period_duration_seconds,
         seconds_until_next_period=get_seconds_until_next(profile),
         period_close=period_close,
+        game_over=game_over,
+        defeat_reason=defeat_reason,
     )
 
 
@@ -104,14 +112,13 @@ def go_to_next_period(db: Session, user_id: int) -> TimeStatusResponse:
     period_result = process_period_end(db, profile)
 
     if period_result["game_over"]:
-        reason = str(period_result.get("defeat_reason") or "")
-        if reason == "needs_depletion":
-            msg = "Игра окончена. Поражение: потребности были на нуле 3 месяца подряд. Начните новую игру."
-        elif reason == "cash_negative_streak":
-            msg = "Игра окончена. Вы трижды подряд имели отрицательный баланс. Начните новую игру."
-        else:
-            msg = "Игра окончена. Начните новую игру."
-        raise HTTPException(status_code=400, detail=msg)
+        reason = str(period_result.get("defeat_reason") or "") or None
+        return _time_status_response(
+            profile,
+            period_close=period_close_summary(period_result),
+            game_over=True,
+            defeat_reason=reason,
+        )
 
     sync_time(profile)
     set_time_state(profile, "pause")

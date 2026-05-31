@@ -56,7 +56,7 @@ def test_validate_profile_cannot_use_audience_all():
 def test_mvp11_catalog_specs_have_taxonomy_fields():
     clear_mvp11_catalog_cache()
     specs, _ = load_mvp11_catalog(force_reload=True)
-    assert len(specs) == 28
+    assert len(specs) == 32
     for spec in specs:
         assert spec.get("content_class") in {
             "universal",

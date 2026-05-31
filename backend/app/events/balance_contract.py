@@ -67,10 +67,32 @@ def _has_future_money_cost(effects: dict[str, Any]) -> bool:
     return False
 
 
+def _monthly_burn_delta_rub(effects: dict[str, Any]) -> float:
+    """Суммарная дельта burn в ₽/мес из явных полей (без pct — нужен профиль)."""
+    delta = float(effects.get("monthly_lifestyle_delta", 0) or 0)
+    delta += float(effects.get("monthly_expense_delta", 0) or 0)
+    line = effects.get("expense_line")
+    if isinstance(line, dict):
+        delta += float(line.get("amount_monthly", line.get("amount", 0)) or 0)
+    return delta
+
+
+def _burn_axis_score(effects: dict[str, Any]) -> float:
+    """Выше = лучше для игрока: экономия burn ↑, рост burn ↓."""
+    delta = _monthly_burn_delta_rub(effects)
+    if delta < -1e-6:
+        return abs(delta) / 500.0
+    if delta > 1e-6:
+        return -delta / 500.0
+    pct = effects.get("monthly_burn_delta_pct")
+    if pct is not None and float(pct or 0) > 1e-6:
+        return -2.0
+    return 0.0
+
+
 def _choice_vector(effects: dict[str, Any]) -> tuple[float, float, float]:
-    """cash, needs_plus, burn_flag (0/1 lower is better for burn cost)."""
-    burn_penalty = 1.0 if _has_future_money_cost(effects) else 0.0
-    return (_cash(effects), _needs_sum_positive(effects), -burn_penalty)
+    """cash, needs_plus, burn_score (выше = лучше)."""
+    return (_cash(effects), _needs_sum_positive(effects), _burn_axis_score(effects))
 
 
 def _pareto_dominates(a: dict[str, Any], b: dict[str, Any]) -> bool:
@@ -148,6 +170,17 @@ def validate_event_spec(spec: dict[str, Any]) -> list[BalanceViolation]:
                         ti,
                         "pareto_dominates",
                         f"dominates «{tj}» (better cash, needs+, lower burn cost)",
+                    )
+                )
+            elif _pareto_dominates(eb, ea):
+                ti = str(choices[i].get("title") or i)
+                tj = str(choices[j].get("title") or j)
+                violations.append(
+                    BalanceViolation(
+                        key,
+                        tj,
+                        "pareto_dominates",
+                        f"dominates «{ti}» (better cash, needs+, lower burn cost)",
                     )
                 )
     return violations

@@ -10,7 +10,14 @@ import { EventCarouselOverlay } from './mqx/events/EventCarouselOverlay';
 import { MqxShell } from './MqxShell';
 import { MqxTabHero } from './MqxTabHero';
 import { GameScreenLayout, GameScreenTabNav } from './GameScreenLayout';
-import { MqxPeriodCloseTail, MqxPeriodCloseRitual, MqxSalaryWarnModal, MqxStateError, MqxStateSkeleton } from './mqx';
+import {
+  MqxPeriodCloseTail,
+  MqxPeriodCloseRitual,
+  MqxSalaryWarnModal,
+  MqxGameOverModal,
+  MqxStateError,
+  MqxStateSkeleton,
+} from './mqx';
 import { PERIOD_CLOSE_AUTO_MAX } from '../constants/periodClose';
 import { shouldAutoOpenPeriodClose } from '../utils/periodCloseDisplay';
 import { GameOnboardingLayer } from './GameOnboardingLayer';
@@ -56,6 +63,8 @@ export function GameScreen({ onLogout, onNewGame, onLoadGame }) {
     eventsPromptTick,
     periodCloseSummary,
     dismissPeriodClose,
+    gameSessionStatus,
+    defeatInfo,
   } = useGame();
 
   const closeEventsOverlay = useCallback(() => setEventsOpen(false), []);
@@ -270,6 +279,14 @@ export function GameScreen({ onLogout, onNewGame, onLoadGame }) {
             salaryAmount={Number(periodStatus?.salary_amount) || 0}
             onClose={() => setSalaryWarnOpen(false)}
             onConfirmSkip={confirmAdvanceWithSalaryLoss}
+          />
+
+          <MqxGameOverModal
+            open={gameSessionStatus === 'defeated'}
+            defeatReason={defeatInfo?.reason}
+            defeatPeriodIndex={defeatInfo?.periodIndex}
+            onNewGame={onNewGame}
+            onMenu={onLoadGame}
           />
 
           <MqxPeriodCloseRitual

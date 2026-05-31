@@ -41,8 +41,8 @@ GAME_STARTER_TEMPLATE_SEEDS = [
                 "thresholds": {"low": 40, "distressed": 30},
                 "consequence_profile": "soft",
                 "consequences": {
-                    "distressed_cash_penalty_pct_salary": 0.02,
-                    "distressed_cash_penalty_min": 1000,
+                    "distressed_cash_penalty_pct_salary": 0,
+                    "distressed_cash_penalty_min": 0,
                 },
                 "player_support": {"proactive_hints": True, "rescue_event_bias": 1.2},
                 "treat_self": {
@@ -120,8 +120,8 @@ GAME_STARTER_TEMPLATE_SEEDS = [
                 "thresholds": {"low": 40, "distressed": 30},
                 "consequence_profile": "standard",
                 "consequences": {
-                    "distressed_cash_penalty_pct_salary": 0.04,
-                    "distressed_cash_penalty_min": 2000,
+                    "distressed_cash_penalty_pct_salary": 0,
+                    "distressed_cash_penalty_min": 0,
                 },
                 "player_support": {"proactive_hints": False, "rescue_event_bias": 1.0},
                 "treat_self": {
@@ -207,8 +207,8 @@ GAME_STARTER_TEMPLATE_SEEDS = [
                 "thresholds": {"low": 40, "distressed": 30},
                 "consequence_profile": "standard",
                 "consequences": {
-                    "distressed_cash_penalty_pct_salary": 0.04,
-                    "distressed_cash_penalty_min": 2000,
+                    "distressed_cash_penalty_pct_salary": 0,
+                    "distressed_cash_penalty_min": 0,
                 },
                 "player_support": {"proactive_hints": False, "rescue_event_bias": 1.0},
                 "treat_self": {
@@ -298,8 +298,8 @@ GAME_STARTER_TEMPLATE_SEEDS = [
                 "thresholds": {"low": 40, "distressed": 30},
                 "consequence_profile": "hard",
                 "consequences": {
-                    "distressed_cash_penalty_pct_salary": 0.06,
-                    "distressed_cash_penalty_min": 3000,
+                    "distressed_cash_penalty_pct_salary": 0,
+                    "distressed_cash_penalty_min": 0,
                 },
                 "player_support": {"proactive_hints": False, "rescue_event_bias": 1.0},
                 "treat_self": {

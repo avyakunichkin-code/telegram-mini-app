@@ -5,9 +5,20 @@
 **Rubric:** `.cursor/skills/quality-rubric.md`  
 **Script:** `.cursor/skills/skill-test/_category-check.mjs`
 
-## Summary
+## Summary (after fixes, re-run)
 
-**38 COMPLIANT, 2 WARNINGS, 0 NON-COMPLIANT** (40 skills)
+**40 COMPLIANT, 0 WARNINGS, 0 NON-COMPLIANT**
+
+## Fixes applied (2026-05-31)
+
+| Skill | Change |
+|-------|--------|
+| balance-playtest | **Evidence-based** + **Safety** (JSON/diff, security gate) |
+| telegram-mini-app-runtime | **Safety** (initData, auth, WebView) |
+
+## Initial run
+
+**38 COMPLIANT, 2 WARNINGS, 0 NON-COMPLIANT**
 
 ## By category
 

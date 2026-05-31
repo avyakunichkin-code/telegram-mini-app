@@ -6,7 +6,7 @@ from sqlalchemy.orm import Session
 from ..auth import get_current_user
 from ..database import get_db
 from ..game.bootstrap import build_game_bootstrap
-from ..game.time import get_active_game_profile
+from ..game.time import resolve_game_session
 from ..schemas import (
     GameProfileCreate,
     GameProfileResponse,
@@ -44,8 +44,16 @@ async def game_bootstrap(
     db: Session = Depends(get_db),
 ):
     """Overview + time + period + events одним запросом (Mini App cold start / refresh)."""
-    profile = get_active_game_profile(db, current_user.id)
-    return build_game_bootstrap(db, profile)
+    profile, session_status, defeat_reason, defeat_period_index = resolve_game_session(
+        db, current_user.id
+    )
+    return build_game_bootstrap(
+        db,
+        profile,
+        game_session_status=session_status,
+        defeat_reason=defeat_reason,
+        defeat_period_index=defeat_period_index,
+    )
 
 
 @router.get("/templates", response_model=list[GameStarterTemplatePublic])

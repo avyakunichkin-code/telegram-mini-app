@@ -50,7 +50,7 @@ skills:
     last_context: "2026-05-31"
     last_context_result: COMPLIANT
     last_category: "2026-05-31"
-    last_category_result: WARNINGS
+    last_category_result: COMPLIANT
 
   api-and-interface-design:
     category: api
@@ -191,6 +191,8 @@ skills:
     last_context_result: COMPLIANT
     last_category: "2026-05-31"
     last_category_result: COMPLIANT
+    last_spec: "2026-05-31"
+    last_spec_result: PASS
 
   event-analysis:
     category: build
@@ -495,6 +497,8 @@ skills:
     last_context_result: COMPLIANT
     last_category: "2026-05-31"
     last_category_result: COMPLIANT
+    last_spec: "2026-05-31"
+    last_spec_result: PASS
 
   idea-refine:
     category: define
@@ -777,7 +781,7 @@ skills:
     last_context: "2026-05-31"
     last_context_result: COMPLIANT
     last_category: "2026-05-31"
-    last_category_result: WARNINGS
+    last_category_result: COMPLIANT
 
   team-ui:
     category: studio

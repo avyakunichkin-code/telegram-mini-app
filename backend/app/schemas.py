@@ -223,6 +223,17 @@ class TreatSelfOverview(BaseModel):
     options: List[TreatSelfOptionOverview] = Field(default_factory=list)
 
 
+class PeriodClosePreview(BaseModel):
+    """Оценка итога месяца до нажатия «Закрыть месяц»."""
+
+    estimated_cash_after_close: float = 0
+    estimated_charges_total: float = 0
+    negative_periods_count: int = 0
+    would_be_negative_after_close: bool = False
+    defeat_if_close_negative: bool = False
+    needs_distressed_penalty_estimate: float = 0
+
+
 class FinanceOverview(BaseModel):
     salary: SalaryProfileResponse
     liabilities: List[LiabilityResponse]
@@ -270,6 +281,9 @@ class FinanceOverview(BaseModel):
     onboarding_step: str = "farewell"
     mechanics: GameMechanicsPermissions = Field(default_factory=GameMechanicsPermissions)
     mechanics_effective: GameMechanicsPermissions = Field(default_factory=GameMechanicsPermissions)
+    negative_periods_count: int = 0
+    period_close_preview: Optional[PeriodClosePreview] = None
+    profile_is_active: bool = True
 
 
 class AnalyticsTimeseriesPoint(BaseModel):
@@ -390,6 +404,8 @@ class TimeStatusResponse(BaseModel):
     period_duration_seconds: int
     seconds_until_next_period: int
     period_close: Optional[PeriodCloseSummary] = None
+    game_over: bool = False
+    defeat_reason: Optional[str] = None
 
 
 class GameStarterTemplatePublic(BaseModel):
@@ -481,6 +497,9 @@ class GameBootstrapResponse(BaseModel):
     time: TimeStatusResponse
     period: PeriodStatusResponse
     events: PendingEventsPayload
+    game_session_status: str = "active"  # active | defeated
+    defeat_reason: Optional[str] = None
+    defeat_period_index: Optional[int] = None
 
 
 class PeriodSummaryResponse(BaseModel):

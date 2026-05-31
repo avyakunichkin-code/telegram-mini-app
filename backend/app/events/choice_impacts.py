@@ -48,12 +48,21 @@ def build_choice_impacts(db: Session, profile, effects: dict[str, Any]) -> list[
         )
 
     safety = float(effects.get("safety_delta", 0) or 0)
-    if abs(safety) >= 1e-6:
+    safety_grant = float(effects.get("safety_grant", 0) or 0)
+    if abs(safety_grant) >= 1e-6:
+        impacts.append(
+            {
+                "kind": "safety",
+                "delta": round(safety_grant, 2),
+                "tip": "Подушка (без списания со счёта)",
+            }
+        )
+    elif abs(safety) >= 1e-6:
         impacts.append(
             {
                 "kind": "safety",
                 "delta": round(safety, 2),
-                "tip": "Подушка",
+                "tip": "Подушка (со счёта)" if safety > 0 else "Подушка",
             }
         )
 

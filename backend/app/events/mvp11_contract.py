@@ -11,6 +11,7 @@ from typing import Iterable
 from sqlalchemy.orm import Session
 
 from ..models import EventChoice, EventDefinition
+from .balance_contract import validate_mvp11_balance
 from .constants import ALLOWED_EFFECT_KEYS
 from .taxonomy import serialize_audience_template_keys, validate_event_taxonomy
 
@@ -71,6 +72,12 @@ def validate_mvp11_specs(specs: list[dict]) -> None:
             audience_keys=list(spec.get("audience_template_keys") or ["all"]),
             event_key=str(spec["key"]),
         )
+
+    balance_violations = validate_mvp11_balance(specs)
+    assert not balance_violations, (
+        f"trade-off balance violations: {len(balance_violations)}. "
+        f"Sample: {balance_violations[:5]}"
+    )
 
 
 def validate_mvp11_db_catalog(db: Session, *, mq11_keys: set[str]) -> None:

@@ -31,6 +31,7 @@ import {
   MqxPeriodActions,
   MqxJuiceGainFeedback,
   MqxSafetyFundSheet,
+  MqxPeriodCloseRiskBanner,
 
 } from './mqx';
 
@@ -358,6 +359,11 @@ export function DashboardPremium({
             <MqxGoalDash victory={overview?.victory} legacyGoal={goal} />
 
             <MqxDivider />
+
+            <MqxPeriodCloseRiskBanner
+              preview={overview?.period_close_preview}
+              periodIndex={periodIndex}
+            />
 
             <MqxPeriodActions
               busy={busyAction !== null}

@@ -5,6 +5,7 @@ includes:
 - health.yaml
 - housing.yaml
 - social_family.yaml
+- social_status.yaml
 - investment_education.yaml
 - insurance.yaml
 - auto.yaml

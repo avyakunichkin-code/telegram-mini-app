@@ -28,6 +28,8 @@ export function useGame() {
   const [syncing, setSyncing] = useState(false);
   const [error, setError] = useState(null);
   const [periodCloseSummary, setPeriodCloseSummary] = useState(null);
+  const [gameSessionStatus, setGameSessionStatus] = useState('active');
+  const [defeatInfo, setDefeatInfo] = useState(null);
 
   const periodIndexRef = useRef(null);
   const periodEndInFlightRef = useRef(false);
@@ -47,6 +49,16 @@ export function useGame() {
       notifyAchievementUnlocks(data.overview.newly_unlocked, {
         onboardingState: data.overview.onboarding_state,
       });
+    }
+    const sessionStatus = data.game_session_status || data.gameSessionStatus || 'active';
+    setGameSessionStatus(sessionStatus);
+    if (sessionStatus === 'defeated') {
+      setDefeatInfo({
+        reason: data.defeat_reason || data.defeatReason || 'unknown',
+        periodIndex: data.defeat_period_index ?? data.defeatPeriodIndex ?? null,
+      });
+    } else {
+      setDefeatInfo(null);
     }
     return data;
   }, []);
@@ -123,6 +135,13 @@ export function useGame() {
           onboardingState: overview?.onboarding_state,
         });
         setPeriodCloseSummary(result.period_close);
+      }
+      if (result.game_over) {
+        setGameSessionStatus('defeated');
+        setDefeatInfo({
+          reason: result.defeat_reason || 'unknown',
+          periodIndex: result.period_index ?? periodIndexRef.current,
+        });
       }
       setTimeStatus(result);
       periodIndexRef.current = result.period_index ?? periodIndexRef.current;
@@ -236,5 +255,7 @@ export function useGame() {
     refreshGameState,
     periodCloseSummary,
     dismissPeriodClose: () => setPeriodCloseSummary(null),
+    gameSessionStatus,
+    defeatInfo,
   };
 }

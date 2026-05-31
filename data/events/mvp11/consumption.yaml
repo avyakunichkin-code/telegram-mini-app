@@ -117,8 +117,9 @@ events:
     effects:
       cash_delta: 0
       needs_delta:
-        health: 5
-        comfort: -2
+        health: 2
+        comfort: -3
+        social: -1
 - definition_key: mq11_coffee_takeaway
   event_domain: consumption
   title: Кофе каждый день

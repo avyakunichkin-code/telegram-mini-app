@@ -329,7 +329,7 @@ def _ensure_seed_events(db: Session) -> None:
         weight=60,
         choices=[
             {"title": "Забрать на баланс (+5 000 ₽)", "effects": {"cash_delta": 5000}},
-            {"title": "Сразу в подушку (+5 000 ₽)", "effects": {"safety_delta": 5000}},
+            {"title": "Сразу в подушку (+5 000 ₽)", "effects": {"safety_grant": 5000}},
         ],
     )
     add_event(
@@ -778,6 +778,7 @@ def choose_event(db: Session, profile: GameProfile, event_id: int, choice_id: in
 
     cash_delta = float(effects.get("cash_delta", 0) or 0)
     safety_delta = float(effects.get("safety_delta", 0) or 0)
+    safety_grant = float(effects.get("safety_grant", 0) or 0)
     monthly_lifestyle_delta = float(effects.get("monthly_lifestyle_delta", 0) or 0) + float(
         effects.get("monthly_expense_delta", 0) or 0
     )
@@ -816,6 +817,18 @@ def choose_event(db: Session, profile: GameProfile, event_id: int, choice_id: in
                 amount=cash_delta,
                 type="event_cash",
                 description=f"Событие: {choice.title}",
+                period_index=profile.period_index,
+            )
+            db.refresh(profile)
+
+        if safety_grant > 0:
+            from ...finance.balance_utils import grant_safety_fund_balance
+
+            grant_safety_fund_balance(
+                db=db,
+                game_profile_id=profile.id,
+                amount=safety_grant,
+                description=f"Событие (зачисление в подушку): {choice.title}",
                 period_index=profile.period_index,
             )
             db.refresh(profile)

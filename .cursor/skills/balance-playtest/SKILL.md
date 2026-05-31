@@ -24,6 +24,10 @@ allowed-tools: Read, Glob, Grep, Shell
 
 **Мантра:** *Скрипт считает числа · Skill запускает и читает diff · Subagent выносит verdict.*
 
+**Evidence-based:** вердикт только по JSON-отчёту, `balance_diff` и exit code — не «на глаз»; воспроизведение через `balance_playtest.py` / manifest.
+
+**Safety:** не merge по балансу при флаге REGRESSION; обновление baseline — только по явному согласию; не трактовать сдвиг метрик как «лучше» без продукта; при риске ложного PASS — **security** gate через pytest + `economy-reviewer`.
+
 ## Прочитай сначала
 
 - [`docs/balance/README.md`](../../../docs/balance/README.md)

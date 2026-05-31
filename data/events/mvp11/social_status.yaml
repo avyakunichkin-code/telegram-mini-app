@@ -1,0 +1,122 @@
+events:
+- definition_key: mq11_tax_refund_once
+  content_class: universal
+  event_slot: period_choice
+  audience_template_keys:
+  - all
+  event_domain: income_bonus
+  title: Налоговый вычет
+  description: Вам одобрили небольшой налоговый вычет — можно забрать на счёт или сразу отложить в подушку.
+  weight: 28
+  event_tier: 2
+  repeat_policy: once_per_profile
+  scenario_shape: soft_offer
+  choices:
+  - title: Забрать на баланс (+5 000 ₽)
+    effects:
+      cash_delta: 5000
+      needs_delta:
+        comfort: 4
+        status: -2
+  - title: Сразу в подушку (+5 000 ₽)
+    effects:
+      safety_grant: 5000
+      needs_delta:
+        comfort: 8
+        status: 2
+        social: -3
+- definition_key: mq11_status_networking
+  content_class: universal
+  event_slot: period_choice
+  audience_template_keys:
+  - all
+  event_domain: social_status
+  title: Приглашение на нетворкинг
+  description: Коллеги зовут на встречу профессионального сообщества — полезно для репутации, но есть взнос и время.
+  weight: 72
+  event_tier: 1
+  repeat_policy: repeatable
+  cooldown_periods: 4
+  scenario_shape: soft_offer
+  choices:
+  - title: Пойти (взнос и ужин)
+    effects:
+      cash_delta: -4500
+      needs_delta:
+        status: 14
+        social: 10
+  - title: Онлайн-участие
+    effects:
+      cash_delta: -1200
+      needs_delta:
+        status: 8
+        social: 5
+  - title: Отказаться
+    effects:
+      cash_delta: 0
+      needs_delta:
+        status: -4
+        social: -3
+- definition_key: mq11_social_family_help
+  content_class: universal
+  event_slot: period_choice
+  audience_template_keys:
+  - all
+  event_domain: social_family
+  title: Родители просят помочь
+  description: Близкие просят поддержать крупный платёж — отказ бьёт по отношениям, помощь бьёт по бюджету.
+  weight: 78
+  event_tier: 1
+  repeat_policy: repeatable
+  cooldown_periods: 5
+  scenario_shape: tradeoff
+  choices:
+  - title: Перевести 8 000 ₽
+    effects:
+      cash_delta: -8000
+      needs_delta:
+        social: 18
+        status: 4
+  - title: Частично — 3 500 ₽
+    effects:
+      cash_delta: -3500
+      needs_delta:
+        social: 10
+  - title: Отказать сейчас
+    effects:
+      cash_delta: 0
+      needs_delta:
+        social: -10
+        comfort: -3
+- definition_key: mq11_status_wardrobe
+  content_class: profile
+  event_slot: period_choice
+  audience_template_keys:
+  - mq_game_professional_v1
+  - mq_game_manager_v1
+  event_domain: social_status
+  title: Обновить деловой гардероб
+  description: Внешний вид влияет на переговоры и самоощущение — можно вложиться или обойтись.
+  weight: 65
+  event_tier: 2
+  repeat_policy: repeatable
+  cooldown_periods: 6
+  scenario_shape: soft_offer
+  choices:
+  - title: Купить костюм
+    effects:
+      cash_delta: -15000
+      needs_delta:
+        status: 16
+        comfort: 6
+  - title: Аксессуары и уход
+    effects:
+      cash_delta: -4500
+      needs_delta:
+        status: 8
+        comfort: 3
+  - title: Пока не тратиться
+    effects:
+      cash_delta: 0
+      needs_delta:
+        status: -5

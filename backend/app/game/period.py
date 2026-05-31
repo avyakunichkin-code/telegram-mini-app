@@ -382,7 +382,7 @@ def process_period_end(db: Session, profile: GameProfile) -> dict:
         # Если баланс неотрицательный – сбрасываем счётчик
         profile.negative_periods_count = 0
 
-    # 4.2 Character needs: decay + distressed penalty + defeat streak (ADR-005)
+    # 4.2 Character needs: decay + defeat streak (ADR-005); cash-штраф за distressed — отключён
     try:
         if str(getattr(profile, "save_kind", "game") or "game") == "game" and int(profile.is_active or 0) == 1:
             tk = str(getattr(profile, "starter_template_key", "") or "")
@@ -412,32 +412,6 @@ def process_period_end(db: Session, profile: GameProfile) -> dict:
                     profile.needs_zero_periods_streak = int(getattr(profile, "needs_zero_periods_streak", 0) or 0) + 1
                 else:
                     profile.needs_zero_periods_streak = 0
-
-                # distressed penalty (< distressed threshold) — может сработать и при нуле
-                distressed_thr = int(cfg.get("thresholds", {}).get("distressed") or 30)
-                is_distressed = any(float(dec.after[k]) < float(distressed_thr) for k in dec.after.keys())
-                if is_distressed:
-                    salary = (
-                        db.query(FinanceSalary)
-                        .filter(FinanceSalary.game_profile_id == profile.id)
-                        .first()
-                    )
-                    monthly_salary = float(salary.monthly_amount) if salary else 0.0
-                    cons = cfg.get("consequences") if isinstance(cfg.get("consequences"), dict) else {}
-                    pct = float(cons.get("distressed_cash_penalty_pct_salary") or 0)
-                    min_pen = float(cons.get("distressed_cash_penalty_min") or 0)
-                    penalty = max(monthly_salary * pct, min_pen)
-                    penalty = round(float(penalty), 2)
-                    if penalty > 0:
-                        adjust_balance(
-                            db=db,
-                            game_profile_id=profile.id,
-                            amount=-penalty,
-                            type=TRANSACTION_TYPES["PERIOD_PENALTY"],
-                            description=f"Штраф за истощение потребностей (период #{period_index})",
-                            period_index=period_index,
-                        )
-                        db.refresh(profile)
 
                 # defeat: streak >= 3
                 if int(getattr(profile, "needs_zero_periods_streak", 0) or 0) >= 3:

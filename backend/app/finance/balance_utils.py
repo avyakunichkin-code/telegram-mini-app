@@ -175,3 +175,29 @@ def adjust_safety_fund_balance(
         )
     db.flush()
     return profile.safety_fund_balance
+
+
+def grant_safety_fund_balance(
+    db: Session,
+    game_profile_id: int,
+    amount: float,
+    description: str,
+    period_index: int,
+) -> float:
+    """Зачисление в подушку без списания с cash (бонусы, вычеты, события)."""
+    if amount <= 0:
+        raise ValueError("grant amount must be positive")
+    profile = db.query(GameProfile).filter(GameProfile.id == game_profile_id).first()
+    if not profile:
+        raise ValueError(f"GameProfile with id {game_profile_id} not found")
+    profile.safety_fund_balance = float(profile.safety_fund_balance or 0) + float(amount)
+    add_transaction(
+        db=db,
+        game_profile_id=game_profile_id,
+        amount=float(amount),
+        type=TRANSACTION_TYPES["SAFETY_FUND_CONTRIBUTION"],
+        description=description,
+        period_index=period_index,
+    )
+    db.flush()
+    return profile.safety_fund_balance

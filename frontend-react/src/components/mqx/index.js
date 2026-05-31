@@ -32,6 +32,7 @@ export { MqxSafetyFundSheet } from './layout/MqxSafetyFundSheet';
 export { MqxFinancePeriodBlock } from './layout/MqxFinancePeriodBlock';
 export { MqxPeriodActions } from './layout/MqxPeriodActions';
 export { MqxPeriodHint } from './layout/MqxPeriodHint';
+export { MqxPeriodCloseRiskBanner } from './layout/MqxPeriodCloseRiskBanner';
 export { ExpensesBudgetBlock } from './layout/ExpensesBudgetBlock';
 export { PlanExpenseBudgetEditor } from './layout/PlanExpenseBudgetEditor';
 export { PlanExpenseEditor } from './layout/PlanExpenseEditor';
@@ -86,4 +87,5 @@ export { ONBOARDING_STEPS, ONBOARDING_PRACTICE_MS } from './onboarding/onboardin
 export { MqxJuiceGainFeedback } from './juice/MqxJuiceGainFeedback';
 export { MqxPeriodCloseRitual } from './juice/MqxPeriodCloseRitual';
 export { MqxSalaryWarnModal } from './juice/MqxSalaryWarnModal';
+export { MqxGameOverModal } from './juice/MqxGameOverModal';
 export { MqxJuiceCatalogDemo } from './juice/MqxJuiceCatalogDemo';

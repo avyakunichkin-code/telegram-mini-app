@@ -25,6 +25,8 @@ allowed-tools: Read, Glob, Grep, Write, Shell
 
 TMA — не обычный браузер: viewport, safe area, `Telegram.WebApp`, theme, back button, haptic. Не дублировать разбор ошибок API — `apiCall` / `ApiError`.
 
+**Safety:** не логировать и не коммитить `initData`/JWT; не ослаблять auth/валидацию без ADR; в WebView — осторожно с shell-изменениями, влияющими на security и UX закрытия.
+
 ## When to Use
 
 - Инициализация WebApp, `initData`, theme params

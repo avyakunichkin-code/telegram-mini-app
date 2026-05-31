@@ -11,14 +11,25 @@ from ..services.period.status import build_period_status
 from ..schemas import GameBootstrapResponse, PendingEventsPayload, TimeStatusResponse
 
 
-def build_game_bootstrap(db: Session, profile: GameProfile) -> GameBootstrapResponse:
+def build_game_bootstrap(
+    db: Session,
+    profile: GameProfile,
+    *,
+    game_session_status: str = "active",
+    defeat_reason: str | None = None,
+    defeat_period_index: int | None = None,
+) -> GameBootstrapResponse:
     sync_time(profile)
     db.commit()
     db.refresh(profile)
 
     overview = build_finance_overview(db, profile)
     period = build_period_status(db, profile)
-    events_raw = build_pending_events_payload(db, profile)
+    events_raw = (
+        build_pending_events_payload(db, profile)
+        if game_session_status == "active" and int(profile.is_active or 0) == 1
+        else {"events": [], "event": None}
+    )
     time = TimeStatusResponse(
         time_state=profile.time_state,
         period_index=profile.period_index,
@@ -30,4 +41,7 @@ def build_game_bootstrap(db: Session, profile: GameProfile) -> GameBootstrapResp
         time=time,
         period=period,
         events=PendingEventsPayload(**events_raw),
+        game_session_status=game_session_status,
+        defeat_reason=defeat_reason,
+        defeat_period_index=defeat_period_index,
     )
