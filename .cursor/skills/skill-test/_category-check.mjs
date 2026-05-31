@@ -20,8 +20,8 @@ function hasField(fm, key) {
 }
 
 function parseCatalogSkills(text) {
-  // Minimal YAML-ish parser: supports CRLF/LF.
-  const mSkills = text.match(/(?:^|\r?\n)skills:\r?\n([\s\S]*)$/);
+  // Minimal YAML-ish parser: supports CRLF/LF; stops before `agents:`.
+  const mSkills = text.match(/(?:^|\r?\n)skills:\r?\n([\s\S]*?)(?:\r?\nagents:|\s*$)/);
   const skillsBlock = mSkills ? mSkills[1] : '';
   const names = [...skillsBlock.matchAll(/^\s{2}([\w-]+):\s*$/gm)].map((m) => m[1]);
   const get = (name, key) => {
@@ -80,7 +80,20 @@ const out = [];
 
 for (const name of names) {
   const category = get(name, 'category') ?? 'unknown';
-  const skillPath = path.join(ROOT, name, 'SKILL.md');
+  const status = get(name, 'status') ?? 'active';
+  const skillPath =
+    status === 'archived'
+      ? path.join(ROOT, '_archived', name, 'SKILL.md')
+      : path.join(ROOT, name, 'SKILL.md');
+  if (!fs.existsSync(skillPath)) {
+    out.push({
+      name,
+      category,
+      verdict: 'NON-COMPLIANT',
+      warns: [`SKILL.md missing at ${skillPath}`],
+    });
+    continue;
+  }
   const content = stripBom(fs.readFileSync(skillPath, 'utf8'));
   const { fm, body } = parseFrontmatter(content);
 
@@ -133,6 +146,7 @@ for (const name of names) {
 
 const compliant = out.filter((x) => x.verdict === 'COMPLIANT').length;
 const warnings = out.filter((x) => x.verdict === 'WARNINGS').length;
+const nonCompliant = out.filter((x) => x.verdict === 'NON-COMPLIANT').length;
 
 console.log(`=== Skill Category Check: all (${out.length}) ===`);
 console.log(`Rubric: ${RUBRIC_PATH}`);
@@ -142,7 +156,7 @@ for (const r of out) {
   console.log(`${r.name.padEnd(32)} ${String(r.category).padEnd(10)} ${r.verdict}${first}`);
 }
 console.log('');
-console.log(`Summary: ${compliant} COMPLIANT, ${warnings} WARNINGS`);
+console.log(`Summary: ${compliant} COMPLIANT, ${warnings} WARNINGS, ${nonCompliant} NON-COMPLIANT`);
 console.log('');
 console.log('--- WARNINGS DETAILS ---');
 for (const r of out.filter((x) => x.warns.length)) {

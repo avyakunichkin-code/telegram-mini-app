@@ -258,6 +258,10 @@ class EventDefinition(Base):
     repeat_policy = Column(String(32), nullable=False, default="repeatable")  # repeatable | once_per_profile | max_per_profile
     repeat_max = Column(Integer, nullable=True)
     cooldown_periods = Column(Integer, nullable=False, default=0)
+    # EVT1-020: таксономия v2 (см. SPEC_event-system-v2-slots-and-taxonomy)
+    content_class = Column(String(32), nullable=False, default="universal")
+    event_slot = Column(String(32), nullable=False, default="period_choice")
+    audience_template_keys = Column(Text, nullable=False, default='["all"]')
     created_at = Column(DateTime, default=utc_now_naive)
 
     choices = relationship("EventChoice", back_populates="definition", cascade="all, delete-orphan")

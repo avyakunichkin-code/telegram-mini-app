@@ -12,6 +12,7 @@ from sqlalchemy.orm import Session
 
 from ..models import EventChoice, EventDefinition
 from .constants import ALLOWED_EFFECT_KEYS
+from .taxonomy import serialize_audience_template_keys, validate_event_taxonomy
 
 # TARGET_PLAYER_AND_SESSION §3 — подстроки в title/description (нижний регистр).
 FORBIDDEN_CONTENT_SUBSTRINGS: tuple[str, ...] = (
@@ -65,6 +66,11 @@ def validate_mvp11_specs(specs: list[dict]) -> None:
             unknown = set(effects.keys()) - ALLOWED_EFFECT_KEYS
             assert not unknown, f"{spec['key']}: unknown effect keys {unknown}"
             assert "xp_delta" not in effects, f"{spec['key']}: xp_delta removed (ADR-003)"
+        validate_event_taxonomy(
+            content_class_value=str(spec.get("content_class", "universal")),
+            audience_keys=list(spec.get("audience_template_keys") or ["all"]),
+            event_key=str(spec["key"]),
+        )
 
 
 def validate_mvp11_db_catalog(db: Session, *, mq11_keys: set[str]) -> None:
@@ -82,6 +88,11 @@ def validate_mvp11_db_catalog(db: Session, *, mq11_keys: set[str]) -> None:
         assert int(row.is_active or 0) == expected_active, key
         assert int(row.event_tier) == int(spec_by_key[key]["event_tier"]), key
         assert str(row.repeat_policy) == str(spec_by_key[key].get("repeat_policy", "repeatable")), key
+        assert str(row.content_class) == str(spec_by_key[key].get("content_class", "universal")), key
+        assert str(row.event_slot) == str(spec_by_key[key].get("event_slot", "period_choice")), key
+        assert row.audience_template_keys == serialize_audience_template_keys(
+            list(spec_by_key[key].get("audience_template_keys") or ["all"])
+        ), key
         choices = db.query(EventChoice).filter(EventChoice.definition_id == row.id).all()
         assert len(choices) >= MIN_CHOICES_PER_DEF, key
         for c in choices:

@@ -54,7 +54,7 @@ audience: product, playtest, partners
 | Поражение: 3 периода шкала = 0 | 🟡 | [ADR-005](../decisions/ADR-005-character-needs-state-and-defeat.md) |
 | Каталог событий MVP 1.1 | ✅ | `data/events/mvp11/` |
 | Продуктовая глава событий (trade-off, повторы) | ✅ | [`EVENTS.md`](EVENTS.md) |
-| Сверка каталога с trade-off / lifecycle / axis | 🟡 | EVT1-105, `/event-analysis` |
+| Сверка каталога с trade-off / lifecycle / axis | ✅ | EVT1-105 (2026-05-30): pytest balance baseline **0** |
 | Достижения (движок) | 🟡 | UI «Развитие» — M12 |
 | Character level / XP | ⬜ | Снято навсегда [ADR-003](../decisions/ADR-003-remove-character-progression.md) |
 

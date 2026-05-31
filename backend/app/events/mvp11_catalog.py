@@ -10,7 +10,7 @@ from typing import Any
 
 import yaml
 
-from .taxonomy import DEFAULT_INTERACTION_KIND, build_metadata_json
+from .taxonomy import DEFAULT_INTERACTION_KIND, build_metadata_json, infer_taxonomy_from_yaml
 
 def _resolve_catalog_dir() -> Path:
     """data/events/mvp11 от корня репо (Render клонирует весь репо, rootDir=backend)."""
@@ -96,6 +96,11 @@ def _yaml_event_to_spec_and_meta(event: dict[str, Any]) -> tuple[dict[str, Any],
     if len(choices_out) < 2:
         raise ValueError(f"{key}: need at least 2 choices")
     spec["choices"] = choices_out
+
+    tax = infer_taxonomy_from_yaml(event)
+    spec["content_class"] = tax["content_class"]
+    spec["event_slot"] = tax["event_slot"]
+    spec["audience_template_keys"] = tax["audience_template_keys"]
     return spec, meta
 
 

@@ -19,6 +19,8 @@ allowed-tools: Read, Glob, Grep, Write, Shell
 
 **Satellite:** `browser-testing-with-devtools` для DOM и сети в WebView.
 
+**Дальше:** `browser-testing-with-devtools` (см. `catalog.yaml` → `next_skill`).
+
 ## Overview
 
 TMA — не обычный браузер: viewport, safe area, `Telegram.WebApp`, theme, back button, haptic. Не дублировать разбор ошибок API — `apiCall` / `ApiError`.

@@ -33,6 +33,8 @@
 | 2026-05-30 | Лендинг: ЦА 30+, Victory v2, советник, PWA play | `landing/` locales, `index.html`, §audience/advisor; TB1 (без таймера), 2 события/период |
 | 2026-05-30 | **Решения Pre-Alpha backlog** | PW1-004 PASS; M12/CN1/E1 ⏸ до doc; Plan MVP 2.0; без CTA советника — `PRODUCT_BACKLOG.md` §решения 2026-05-30 |
 | 2026-05-30 | Handbook: глава **EVENTS.md** | Trade-off, потребности, повторы (публично); authoring → `EVENTS_AGENT`; `GLOSSARY`, `GAME`, `TARGET_PLAYER`, `FEATURE_STATUS` |
+| 2026-05-30 | **EVT1-105** ребаланс `data/events/mvp11/` | Lifecycle: downsize/internet B, relocation A; trade-off 31→0; `balance_contract` skip insurance/used_car Pareto; baseline 0 |
+| 2026-05-30 | **EVT1-020** taxonomy columns | `event_definitions`: content_class, event_slot, audience_template_keys; migration `0041`; pool filter |
 
 ## Источник правды по темам
 

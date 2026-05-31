@@ -11,6 +11,7 @@ from sqlalchemy.orm import Session, joinedload
 
 from ..models import EventDefinition, EventChoice
 from .mvp11_catalog import load_mvp11_catalog
+from .taxonomy import audience_template_keys, serialize_audience_template_keys
 
 MVP11_EVENT_SPECS, EVENT_TAXONOMY = load_mvp11_catalog()
 
@@ -94,6 +95,11 @@ def _definition_snapshot_from_spec(spec: dict, row: EventDefinition | None) -> d
         "metadata_json": _json_canon(_metadata_for_spec(spec)),
         "prerequisites_json": _target_prerequisites_json(spec, row),
         "is_active": _target_is_active(spec, row),
+        "content_class": str(spec.get("content_class", "universal")),
+        "event_slot": str(spec.get("event_slot", "period_choice")),
+        "audience_template_keys": serialize_audience_template_keys(
+            list(spec.get("audience_template_keys") or ["all"])
+        ),
         "choices": _choice_snapshots_from_spec(spec),
     }
 
@@ -117,6 +123,9 @@ def _definition_snapshot_from_row(row: EventDefinition, choices: list[EventChoic
         "metadata_json": _json_canon(meta),
         "prerequisites_json": _target_prerequisites_json({}, row),
         "is_active": int(row.is_active or 0),
+        "content_class": str(getattr(row, "content_class", None) or "universal"),
+        "event_slot": str(getattr(row, "event_slot", None) or "period_choice"),
+        "audience_template_keys": serialize_audience_template_keys(audience_template_keys(row)),
         "choices": _choice_snapshots_from_row(choices),
     }
 
@@ -170,6 +179,11 @@ def _sync_mvp11_spec(db: Session, spec: dict, existing: EventDefinition | None) 
         existing.mandatory_gate = str(spec.get("mandatory_gate", "none"))
         existing.weight = int(spec.get("weight", 100))
         existing.metadata_json = meta_json
+        existing.content_class = str(spec.get("content_class", "universal"))
+        existing.event_slot = str(spec.get("event_slot", "period_choice"))
+        existing.audience_template_keys = serialize_audience_template_keys(
+            list(spec.get("audience_template_keys") or ["all"])
+        )
         if "is_active" in spec:
             existing.is_active = int(spec.get("is_active", 1))
         if "prerequisites_json" in spec:
@@ -211,6 +225,11 @@ def _sync_mvp11_spec(db: Session, spec: dict, existing: EventDefinition | None) 
         mandatory_gate=str(spec.get("mandatory_gate", "none")),
         prerequisites_json=json.dumps(spec.get("prerequisites_json") or {}, ensure_ascii=False),
         metadata_json=meta_json,
+        content_class=str(spec.get("content_class", "universal")),
+        event_slot=str(spec.get("event_slot", "period_choice")),
+        audience_template_keys=serialize_audience_template_keys(
+            list(spec.get("audience_template_keys") or ["all"])
+        ),
     )
     db.add(ed)
     db.flush()

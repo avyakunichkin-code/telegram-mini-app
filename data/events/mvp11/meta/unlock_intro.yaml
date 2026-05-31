@@ -11,11 +11,6 @@ events:
   scenario_shape: narrative_once
   choices:
   - title: Понятно, буду смотреть
-    effects:
-      needs_delta:
-        comfort: 2
+    effects: {}
   - title: Звучит интересно
-    effects:
-      needs_delta:
-        comfort: 3
-        social: 2
+    effects: {}

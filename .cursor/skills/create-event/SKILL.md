@@ -32,10 +32,12 @@ allowed-tools: Read, Glob, Grep, Write, Shell
 - [`docs/vision/ideas/event-types-and-taxonomy.md`](../../../docs/vision/ideas/event-types-and-taxonomy.md)
 - [`backend/app/events/constants.py`](../../../backend/app/events/constants.py) — `ALLOWED_EFFECT_KEYS`
 - [`backend/app/events/choice_impacts.py`](../../../backend/app/events/choice_impacts.py) — burn preview
-- **[`event-balance-rules.md`](event-balance-rules.md)** — **trade-off, Pareto, lifecycle §10, оси needs §11, MCE §12**
+- [`.cursor/skills/create-event/event-balance-rules.md`](event-balance-rules.md) — **trade-off, Pareto, lifecycle §10, оси needs §11, MCE §12**
 - [`docs/vision/ideas/event-choice-balance-tradeoffs.md`](../../../docs/vision/ideas/event-choice-balance-tradeoffs.md) — продуктовое обоснование
 
 **Satellites:** `test-driven-development` (pytest); перед merge каталога или крупного YAML — **`/event-analysis`** (§10/§11); при дублях/gaps — analysis; UI informational → `design-lab-mqx`.
+
+**Дальше:** `test-driven-development` (см. `catalog.yaml` → `next_skill`).
 
 ---
 

@@ -17,7 +17,7 @@ allowed-tools: Read, Glob, Grep, Write, AskUserQuestion
 - [`docs/vision/ideas/`](../../../docs/vision/ideas/)
 - [`docs/decisions/`](../../../docs/decisions/)
 
-**Куда писать:** `docs/specs/features/`. **Дальше:** `planning-and-task-breakdown`, при API — `api-and-interface-design`.
+**Куда писать:** `docs/specs/features/`. **Дальше:** `planning-and-task-breakdown`, при API — `api-and-interface-design`, при экономике/победе — `game-economy-and-victory`.
 
 ## Overview
 

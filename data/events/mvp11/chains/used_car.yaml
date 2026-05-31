@@ -34,8 +34,9 @@ events:
     effects:
       cash_delta: 0
       needs_delta:
-        status: 3
-        comfort: 2
+        status: -1
+        comfort: -2
+        social: -2
       enqueue_event:
         chain_key: used_car_deal
         followup_definition_key: mq11_used_car_deadline
@@ -50,7 +51,8 @@ events:
     effects:
       cash_delta: 0
       needs_delta:
-        comfort: 1
+        comfort: -2
+        status: -2
 - definition_key: mq11_used_car_deadline
   event_domain: auto
   title: 'Пора решить: подержанное авто'
@@ -67,17 +69,19 @@ events:
     effects:
       used_car_action: complete_purchase
       requires_chain_branch: deposit
+      cash_delta: -3000
       needs_delta:
-        status: 12
-        comfort: 10
+        status: 6
+        comfort: 4
     description: Доплата остатка; машина появится в активах.
   - title: Завершить покупку
     effects:
       used_car_action: complete_purchase
       requires_chain_branch: thinking
+      cash_delta: -3000
       needs_delta:
-        status: 12
-        comfort: 10
+        status: 6
+        comfort: 4
     description: Полная цена со скидкой; машина в активах.
   - title: Отказаться (задаток не вернуть)
     effects:
@@ -91,4 +95,5 @@ events:
       used_car_action: decline
       requires_chain_branch: thinking
       needs_delta:
-        comfort: 1
+        comfort: -3
+        status: -2

@@ -123,6 +123,18 @@ def ensure_schema_compatibility() -> None:
             statements.append(
                 "ALTER TABLE event_definitions ADD COLUMN prerequisites_json TEXT NOT NULL DEFAULT '{}'"
             )
+        if "content_class" not in ed_cols:
+            statements.append(
+                "ALTER TABLE event_definitions ADD COLUMN content_class VARCHAR(32) NOT NULL DEFAULT 'universal'"
+            )
+        if "event_slot" not in ed_cols:
+            statements.append(
+                "ALTER TABLE event_definitions ADD COLUMN event_slot VARCHAR(32) NOT NULL DEFAULT 'period_choice'"
+            )
+        if "audience_template_keys" not in ed_cols:
+            statements.append(
+                'ALTER TABLE event_definitions ADD COLUMN audience_template_keys TEXT NOT NULL DEFAULT \'["all"]\''
+            )
 
     # ---- period_economy_closings (E1 burn в аналитике) ----
     if "period_economy_closings" in inspector.get_table_names():

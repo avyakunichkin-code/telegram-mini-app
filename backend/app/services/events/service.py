@@ -47,7 +47,13 @@ from ...events.chains import (
     resolve_choice_effects_for_definition,
 )
 from ...events.choice_impacts import build_choice_impacts
-from ...events.taxonomy import effective_event_weight, event_domain, parse_event_metadata
+from ...events.taxonomy import (
+    audience_matches,
+    effective_event_weight,
+    event_domain,
+    event_slot,
+    parse_event_metadata,
+)
 from ...events.mvp11_seeds import ensure_mvp11_event_catalog
 from ...needs.engine import AXES as NEEDS_AXES, apply_needs_delta, needs_values_from_profile, parse_needs_config, parse_needs_delta
 
@@ -556,6 +562,10 @@ def ensure_period_events(db: Session, game_profile_id: int, period_index: int, s
 
     repeat_ok: list[EventDefinition] = []
     for d in defs_all:
+        if event_slot(d) != "period_choice":
+            continue
+        if not audience_matches(d, profile):
+            continue
         if d.key in _PERIOD_EVENT_POOL_EXCLUDE_KEYS:
             continue
         if d.key in CHAIN_FOLLOWUP_EXCLUDE_FROM_RANDOM_POOL:

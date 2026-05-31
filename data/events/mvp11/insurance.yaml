@@ -21,7 +21,8 @@ events:
     effects:
       cash_delta: 0
       needs_delta:
-        comfort: 2
+        comfort: 0
+        status: -1
   - title: Отказ
     effects:
       cash_delta: 0

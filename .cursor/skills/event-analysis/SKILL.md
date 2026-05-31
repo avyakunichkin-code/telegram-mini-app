@@ -42,7 +42,11 @@ allowed-tools: Read, Glob, Grep, Shell
 - [`.cursor/skills/create-event/event-balance-rules.md`](../create-event/event-balance-rules.md) — **аудит trade-off**
 - [`docs/vision/ideas/event-choice-balance-tradeoffs.md`](../../../docs/vision/ideas/event-choice-balance-tradeoffs.md)
 
+**Куда писать:** `docs/vision/analysis/` (сохранение отчёта — только по запросу).
+
 **Satellites:** gaps с правками → **`/create-event`**; **EVT1-105** — scope **all** (§1–4 + **§10** + **§11**); merge diff → **`economy-reviewer`**.
+
+**Дальше:** `create-event` (см. `catalog.yaml` → `next_skill`).
 
 ---
 

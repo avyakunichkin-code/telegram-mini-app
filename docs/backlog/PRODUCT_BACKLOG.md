@@ -140,7 +140,7 @@
 |-----------|-----|--------|------------|
 | 🔴 P0 | EVT1-001 | **Approve spec** v2 (слоты, audience, global) | Sign-off на [`SPEC_event-system-v2-slots-and-taxonomy.md`](../specs/features/SPEC_event-system-v2-slots-and-taxonomy.md) |
 | 🔴 P0 | EVT1-010 | **Doc** — `EVENTS.md` + `EVENTS_TERMS_RU` + GLOSSARY: типы, слоты, trade-off (публично); lifecycle/axis — `EVENTS_AGENT` | §1–§6 handbook; без `.cursor` в публичных docs |
-| 🔴 P0 | EVT1-020 | **DB** — `audience_template_keys`, `content_class`, `event_slot` (колонки или canon metadata + миграция) | Сиды читают поля; default `all` / `period_choice` |
+| [x] P0 | EVT1-020 | **DB** — `audience_template_keys`, `content_class`, `event_slot` | `0041` + seeds; фильтр пула `period_choice` + audience |
 | 🔴 P0 | EVT1-030 | **Backend** — мульти-слот `ensure_period_events` (choice=2 отдельно от informational/needs_risk/global) | CS-1…CS-3 pytest |
 | 🔴 P0 | EVT1-031 | **Backend** — `prerequisites_json` v2 + seed validator (`profile`≠`all`) | CS-6; «квартира+ипотека+нет страховки» |
 | 🔴 P0 | EVT1-040 | **Frontend** — informational UI (1 кнопка, отдельная карточка/слот) | ≥1 informational в ручном прогоне |
@@ -151,8 +151,8 @@
 | 🟡 P1 | EVT1-090 | **Content+Backend** — ≥3 цепочки с отсылкой к выбору в тексте | family_money, used_car + 1 новая (курсы→коллега) |
 | 🟡 P1 | EVT1-091 | **API** — `event_slot`, `chain_context`, `period_slots_summary` в pending | FE может группировать |
 | 🟡 P1 | EVT1-100 | **Content** — demo coverage: universal + profile + instrumental по 2+ на Student/Pro | Чеклист для α |
-| 🟡 P1 | EVT1-105 | **Content+Analysis** — ребаланс каталога: §1–4 (baseline 31→0) + **§10 lifecycle** + **§11 axis** | `/event-analysis` all; YAML по EVENT_BRIEF |
-| 🟡 P1 | EVT1-106 | **Backend** — `balance_contract.py` + pytest (**§1/§3** only: free lunch, Pareto) | CS-7; §10/§11 — ручной audit |
+| [x] P1 | EVT1-105 | **Content+Analysis** — ребаланс каталога: §1–4 (baseline 31→0) + **§10 lifecycle** + **§11 axis** | 2026-05-30: `mvp11` YAML + `balance_contract` |
+| [x] P1 | EVT1-106 | **Backend** — `balance_contract.py` + pytest (**§1/§3**; skip insurance/used_car Pareto) | baseline **0**; §10/§11 — audit в EVT1-105 |
 | 🟢 P2 | EVT1-110 | **Backend** — баланс 🟢🔴🟡 от фин. здоровья (не tier) | [`event-types-and-taxonomy.md`](../vision/ideas/event-types-and-taxonomy.md) |
 | 🟢 P2 | EVT1-120 | **Analytics** — вовлечённость по `event_domain` | Watchtower / export |
 | 🟢 P2 | EVT1-130 | **Economy** — применение `economy_patch` от macro к ставкам | Отдельный slice после stub |

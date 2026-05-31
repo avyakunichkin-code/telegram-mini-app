@@ -15,16 +15,21 @@ events:
   choices:
   - title: Созвониться
     effects:
-      cash_delta: 0
+      cash_delta: -400
       needs_delta:
-        social: 10
-        health: 4
+        social: 8
+        comfort: 2
   - title: Отложить
     effects:
       cash_delta: 0
       needs_delta:
-        social: -4
+        social: -5
+        comfort: -2
 - definition_key: mq11_friend_outing_student
+  content_class: profile
+  event_slot: period_choice
+  audience_template_keys:
+  - mq_game_basic_v1
   event_domain: social_family
   title: Подруга зовёт погулять
   description: 'Подруга пишет: «Выберемся вечером?» Можно сходить вместе — или честно сказать, что завал

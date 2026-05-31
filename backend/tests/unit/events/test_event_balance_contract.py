@@ -3,8 +3,8 @@
 from app.events.balance_contract import validate_mvp11_balance
 from app.events.mvp11_catalog import clear_mvp11_catalog_cache, load_mvp11_catalog
 
-# До EVT1-105 ребаланса каталога — gate на регрессию (новые free lunch), не на ноль.
-BASELINE_MAX_VIOLATIONS = 31
+# EVT1-105: каталог без free lunch / pareto (кроме insurance/used_car — см. balance_contract).
+BASELINE_MAX_VIOLATIONS = 0
 
 
 def test_mvp11_balance_no_new_regressions():

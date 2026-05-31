@@ -18,7 +18,7 @@
 #   next_skill   — типичный следующий скилл в конвейере
 #
 version: 1
-updated: "2026-05-30"
+updated: "2026-05-31"
 skills_root: .cursor/skills
 archived_root: .cursor/skills/_archived
 specs_root: .cursor/skills/specs
@@ -45,8 +45,12 @@ skills:
       next_skill:
         - game-economy-and-victory
         - test-driven-development
-    last_static: "2026-05-29"
-    last_static_result: PENDING
+    last_static: "2026-05-31"
+    last_static_result: COMPLIANT
+    last_context: "2026-05-31"
+    last_context_result: COMPLIANT
+    last_category: "2026-05-31"
+    last_category_result: WARNINGS
 
   api-and-interface-design:
     category: api
@@ -69,8 +73,12 @@ skills:
       next_skill:
         - incremental-implementation
         - documentation-and-adrs
-    last_static: "2026-05-28"
+    last_static: "2026-05-31"
     last_static_result: COMPLIANT
+    last_context: "2026-05-31"
+    last_context_result: COMPLIANT
+    last_category: "2026-05-31"
+    last_category_result: COMPLIANT
 
   architecture-review:
     category: studio
@@ -78,8 +86,12 @@ skills:
     status: archived
     tier: archived
     spec: .cursor/skills/specs/_archived/studio/architecture-review.md
-    last_static: "2026-05-28"
+    last_static: "2026-05-31"
     last_static_result: COMPLIANT
+    last_context: "2026-05-31"
+    last_context_result: COMPLIANT
+    last_category: "2026-05-31"
+    last_category_result: COMPLIANT
 
   brainstorm:
     category: studio
@@ -87,8 +99,12 @@ skills:
     status: archived
     tier: archived
     spec: .cursor/skills/specs/_archived/studio/brainstorm.md
-    last_static: "2026-05-28"
+    last_static: "2026-05-31"
     last_static_result: COMPLIANT
+    last_context: "2026-05-31"
+    last_context_result: COMPLIANT
+    last_category: "2026-05-31"
+    last_category_result: COMPLIANT
 
   browser-testing-with-devtools:
     category: verify
@@ -103,8 +119,12 @@ skills:
       writes_to: []
       next_skill:
         - code-review-and-quality
-    last_static: "2026-05-28"
+    last_static: "2026-05-31"
     last_static_result: COMPLIANT
+    last_context: "2026-05-31"
+    last_context_result: COMPLIANT
+    last_category: "2026-05-31"
+    last_category_result: COMPLIANT
 
   code-review:
     category: review
@@ -112,8 +132,12 @@ skills:
     status: archived
     tier: archived
     spec: .cursor/skills/specs/review/code-review.md
-    last_static: "2026-05-28"
+    last_static: "2026-05-31"
     last_static_result: COMPLIANT
+    last_context: "2026-05-31"
+    last_context_result: COMPLIANT
+    last_category: "2026-05-31"
+    last_category_result: COMPLIANT
 
   code-review-and-quality:
     category: review
@@ -129,8 +153,12 @@ skills:
       writes_to: []
       next_skill:
         - incremental-implementation
-    last_static: "2026-05-28"
+    last_static: "2026-05-31"
     last_static_result: COMPLIANT
+    last_context: "2026-05-31"
+    last_context_result: COMPLIANT
+    last_category: "2026-05-31"
+    last_category_result: COMPLIANT
 
   create-event:
     category: build
@@ -157,8 +185,12 @@ skills:
         - docs/vision/ideas/event-briefs/
       next_skill:
         - test-driven-development
-    last_static: "2026-05-29"
+    last_static: "2026-05-31"
     last_static_result: COMPLIANT
+    last_context: "2026-05-31"
+    last_context_result: COMPLIANT
+    last_category: "2026-05-31"
+    last_category_result: COMPLIANT
 
   event-analysis:
     category: build
@@ -185,8 +217,12 @@ skills:
         - docs/vision/analysis/
       next_skill:
         - create-event
-    last_static: "2026-05-29"
-    last_static_result: pending
+    last_static: "2026-05-31"
+    last_static_result: COMPLIANT
+    last_context: "2026-05-31"
+    last_context_result: COMPLIANT
+    last_category: "2026-05-31"
+    last_category_result: COMPLIANT
 
   code-simplification:
     category: build
@@ -202,8 +238,12 @@ skills:
         - frontend-react/
       next_skill:
         - test-driven-development
-    last_static: "2026-05-28"
+    last_static: "2026-05-31"
     last_static_result: COMPLIANT
+    last_context: "2026-05-31"
+    last_context_result: COMPLIANT
+    last_category: "2026-05-31"
+    last_category_result: COMPLIANT
 
   context-engineering:
     category: meta
@@ -221,8 +261,12 @@ skills:
         - .cursor/rules/
       next_skill:
         - using-agent-skills
-    last_static: "2026-05-28"
+    last_static: "2026-05-31"
     last_static_result: COMPLIANT
+    last_context: "2026-05-31"
+    last_context_result: COMPLIANT
+    last_category: "2026-05-31"
+    last_category_result: COMPLIANT
 
   create-architecture:
     category: studio
@@ -230,8 +274,12 @@ skills:
     status: archived
     tier: archived
     spec: .cursor/skills/specs/_archived/studio/create-architecture.md
-    last_static: "2026-05-28"
+    last_static: "2026-05-31"
     last_static_result: COMPLIANT
+    last_context: "2026-05-31"
+    last_context_result: COMPLIANT
+    last_category: "2026-05-31"
+    last_category_result: COMPLIANT
 
   deprecation-and-migration:
     category: ship
@@ -248,8 +296,12 @@ skills:
         - docs/decisions/
       next_skill:
         - documentation-and-adrs
-    last_static: "2026-05-28"
+    last_static: "2026-05-31"
     last_static_result: COMPLIANT
+    last_context: "2026-05-31"
+    last_context_result: COMPLIANT
+    last_category: "2026-05-31"
+    last_category_result: COMPLIANT
 
   design-lab-mqx:
     category: build
@@ -272,8 +324,12 @@ skills:
         - design-lab/
       next_skill:
         - frontend-ui-engineering
-    last_static: "2026-05-28"
+    last_static: "2026-05-31"
     last_static_result: COMPLIANT
+    last_context: "2026-05-31"
+    last_context_result: COMPLIANT
+    last_category: "2026-05-31"
+    last_category_result: COMPLIANT
 
   design-review:
     category: studio
@@ -281,8 +337,12 @@ skills:
     status: archived
     tier: archived
     spec: .cursor/skills/specs/_archived/studio/design-review.md
-    last_static: "2026-05-28"
+    last_static: "2026-05-31"
     last_static_result: COMPLIANT
+    last_context: "2026-05-31"
+    last_context_result: COMPLIANT
+    last_category: "2026-05-31"
+    last_category_result: COMPLIANT
 
   design-system:
     category: studio
@@ -290,8 +350,12 @@ skills:
     status: archived
     tier: archived
     spec: .cursor/skills/specs/_archived/studio/design-system.md
-    last_static: "2026-05-28"
+    last_static: "2026-05-31"
     last_static_result: COMPLIANT
+    last_context: "2026-05-31"
+    last_context_result: COMPLIANT
+    last_category: "2026-05-31"
+    last_category_result: COMPLIANT
 
   documentation-and-adrs:
     category: ship
@@ -309,8 +373,12 @@ skills:
         - docs/foundation/DOC_SYNC_LOG.md
       next_skill:
         - project-handbook-documentation
-    last_static: "2026-05-28"
+    last_static: "2026-05-31"
     last_static_result: COMPLIANT
+    last_context: "2026-05-31"
+    last_context_result: COMPLIANT
+    last_category: "2026-05-31"
+    last_category_result: COMPLIANT
 
   project-handbook-documentation:
     category: ship
@@ -337,8 +405,12 @@ skills:
       next_skill:
         - documentation-and-adrs
         - spec-driven-development
-    last_static: "2026-05-30"
-    last_static_result: PENDING
+    last_static: "2026-05-31"
+    last_static_result: COMPLIANT
+    last_context: "2026-05-31"
+    last_context_result: COMPLIANT
+    last_category: "2026-05-31"
+    last_category_result: COMPLIANT
 
   doubt-driven-development:
     category: verify
@@ -353,8 +425,12 @@ skills:
       writes_to: []
       next_skill:
         - incremental-implementation
-    last_static: "2026-05-28"
+    last_static: "2026-05-31"
     last_static_result: COMPLIANT
+    last_context: "2026-05-31"
+    last_context_result: COMPLIANT
+    last_category: "2026-05-31"
+    last_category_result: COMPLIANT
 
   frontend-ui-engineering:
     category: build
@@ -380,8 +456,12 @@ skills:
         - design-lab-mqx
         - browser-testing-with-devtools
         - code-review-and-quality
-    last_static: "2026-05-28"
+    last_static: "2026-05-31"
     last_static_result: COMPLIANT
+    last_context: "2026-05-31"
+    last_context_result: COMPLIANT
+    last_category: "2026-05-31"
+    last_category_result: COMPLIANT
 
   game-economy-and-victory:
     category: build
@@ -409,8 +489,12 @@ skills:
         - test-driven-development
         - code-review-and-quality
         - documentation-and-adrs
-    last_static: "2026-05-29"
+    last_static: "2026-05-31"
     last_static_result: COMPLIANT
+    last_context: "2026-05-31"
+    last_context_result: COMPLIANT
+    last_category: "2026-05-31"
+    last_category_result: COMPLIANT
 
   idea-refine:
     category: define
@@ -428,8 +512,12 @@ skills:
         - docs/vision/ideas/
       next_skill:
         - spec-driven-development
-    last_static: "2026-05-28"
+    last_static: "2026-05-31"
     last_static_result: COMPLIANT
+    last_context: "2026-05-31"
+    last_context_result: COMPLIANT
+    last_category: "2026-05-31"
+    last_category_result: COMPLIANT
   # full behavioral spec (не stub)
 
   incremental-implementation:
@@ -453,8 +541,12 @@ skills:
         - critical-test-scenarios
         - test-driven-development
         - code-review-and-quality
-    last_static: "2026-05-28"
+    last_static: "2026-05-31"
     last_static_result: COMPLIANT
+    last_context: "2026-05-31"
+    last_context_result: COMPLIANT
+    last_category: "2026-05-31"
+    last_category_result: COMPLIANT
 
   onboard:
     category: studio
@@ -462,8 +554,12 @@ skills:
     status: archived
     tier: archived
     spec: .cursor/skills/specs/_archived/studio/onboard.md
-    last_static: "2026-05-28"
+    last_static: "2026-05-31"
     last_static_result: COMPLIANT
+    last_context: "2026-05-31"
+    last_context_result: COMPLIANT
+    last_category: "2026-05-31"
+    last_category_result: COMPLIANT
 
   performance-optimization:
     category: verify
@@ -480,8 +576,12 @@ skills:
         - backend/
       next_skill:
         - test-driven-development
-    last_static: "2026-05-28"
+    last_static: "2026-05-31"
     last_static_result: COMPLIANT
+    last_context: "2026-05-31"
+    last_context_result: COMPLIANT
+    last_category: "2026-05-31"
+    last_category_result: COMPLIANT
 
   planning-and-task-breakdown:
     category: define
@@ -504,8 +604,12 @@ skills:
         - docs/TRACEABILITY.md
       next_skill:
         - incremental-implementation
-    last_static: "2026-05-28"
+    last_static: "2026-05-31"
     last_static_result: COMPLIANT
+    last_context: "2026-05-31"
+    last_context_result: COMPLIANT
+    last_category: "2026-05-31"
+    last_category_result: COMPLIANT
 
   project-cursor-skills-layout:
     category: meta
@@ -524,8 +628,12 @@ skills:
       next_skill:
         - using-agent-skills
         - skill-test
-    last_static: "2026-05-28"
+    last_static: "2026-05-31"
     last_static_result: COMPLIANT
+    last_context: "2026-05-31"
+    last_context_result: COMPLIANT
+    last_category: "2026-05-31"
+    last_category_result: COMPLIANT
 
   release-tma:
     category: ship
@@ -541,8 +649,12 @@ skills:
       writes_to: []
       next_skill:
         - code-review-and-quality
-    last_static: "2026-05-29"
+    last_static: "2026-05-31"
     last_static_result: COMPLIANT
+    last_context: "2026-05-31"
+    last_context_result: COMPLIANT
+    last_category: "2026-05-31"
+    last_category_result: COMPLIANT
 
   retrospective:
     category: studio
@@ -550,8 +662,12 @@ skills:
     status: archived
     tier: archived
     spec: .cursor/skills/specs/_archived/studio/retrospective.md
-    last_static: "2026-05-28"
+    last_static: "2026-05-31"
     last_static_result: COMPLIANT
+    last_context: "2026-05-31"
+    last_context_result: COMPLIANT
+    last_category: "2026-05-31"
+    last_category_result: COMPLIANT
 
   security-and-hardening:
     category: verify
@@ -568,8 +684,12 @@ skills:
         - frontend-react/
       next_skill:
         - documentation-and-adrs
-    last_static: "2026-05-28"
+    last_static: "2026-05-31"
     last_static_result: COMPLIANT
+    last_context: "2026-05-31"
+    last_context_result: COMPLIANT
+    last_category: "2026-05-31"
+    last_category_result: COMPLIANT
 
   skill-test:
     category: meta
@@ -585,8 +705,12 @@ skills:
       writes_to:
         - .cursor/skills/results/
       next_skill: []
-    last_static: "2026-05-28"
+    last_static: "2026-05-31"
     last_static_result: COMPLIANT
+    last_context: "2026-05-31"
+    last_context_result: COMPLIANT
+    last_category: "2026-05-31"
+    last_category_result: COMPLIANT
 
   social-changelog-posts:
     category: ship
@@ -601,8 +725,12 @@ skills:
       writes_to:
         - docs/marketing/
       next_skill: []
-    last_static: "2026-05-28"
+    last_static: "2026-05-31"
     last_static_result: COMPLIANT
+    last_context: "2026-05-31"
+    last_context_result: COMPLIANT
+    last_category: "2026-05-31"
+    last_category_result: COMPLIANT
 
   spec-driven-development:
     category: define
@@ -622,8 +750,12 @@ skills:
         - planning-and-task-breakdown
         - api-and-interface-design
         - game-economy-and-victory
-    last_static: "2026-05-28"
+    last_static: "2026-05-31"
     last_static_result: COMPLIANT
+    last_context: "2026-05-31"
+    last_context_result: COMPLIANT
+    last_category: "2026-05-31"
+    last_category_result: COMPLIANT
 
   telegram-mini-app-runtime:
     category: verify
@@ -640,8 +772,12 @@ skills:
         - frontend-react/src/
       next_skill:
         - browser-testing-with-devtools
-    last_static: "2026-05-29"
+    last_static: "2026-05-31"
     last_static_result: COMPLIANT
+    last_context: "2026-05-31"
+    last_context_result: COMPLIANT
+    last_category: "2026-05-31"
+    last_category_result: WARNINGS
 
   team-ui:
     category: studio
@@ -649,8 +785,12 @@ skills:
     status: archived
     tier: archived
     spec: .cursor/skills/specs/_archived/studio/team-ui.md
-    last_static: "2026-05-28"
+    last_static: "2026-05-31"
     last_static_result: COMPLIANT
+    last_context: "2026-05-31"
+    last_context_result: COMPLIANT
+    last_category: "2026-05-31"
+    last_category_result: COMPLIANT
 
   critical-test-scenarios:
     category: build
@@ -670,8 +810,12 @@ skills:
         - frontend-react/src/
       next_skill:
         - code-review-and-quality
-    last_static: "2026-05-29"
+    last_static: "2026-05-31"
     last_static_result: COMPLIANT
+    last_context: "2026-05-31"
+    last_context_result: COMPLIANT
+    last_category: "2026-05-31"
+    last_category_result: COMPLIANT
 
   test-driven-development:
     category: build
@@ -692,8 +836,12 @@ skills:
       next_skill:
         - critical-test-scenarios
         - code-review-and-quality
-    last_static: "2026-05-28"
+    last_static: "2026-05-31"
     last_static_result: COMPLIANT
+    last_context: "2026-05-31"
+    last_context_result: COMPLIANT
+    last_category: "2026-05-31"
+    last_category_result: COMPLIANT
 
   using-agent-skills:
     category: meta
@@ -711,8 +859,12 @@ skills:
         - CLAUDE.md
       writes_to: []
       next_skill: []
-    last_static: "2026-05-28"
+    last_static: "2026-05-31"
     last_static_result: COMPLIANT
+    last_context: "2026-05-31"
+    last_context_result: COMPLIANT
+    last_category: "2026-05-31"
+    last_category_result: COMPLIANT
 
   ux-design:
     category: studio
@@ -720,8 +872,12 @@ skills:
     status: archived
     tier: archived
     spec: .cursor/skills/specs/_archived/studio/ux-design.md
-    last_static: "2026-05-28"
+    last_static: "2026-05-31"
     last_static_result: COMPLIANT
+    last_context: "2026-05-31"
+    last_context_result: COMPLIANT
+    last_category: "2026-05-31"
+    last_category_result: COMPLIANT
 
   ux-review:
     category: studio
@@ -729,8 +885,12 @@ skills:
     status: archived
     tier: archived
     spec: .cursor/skills/specs/_archived/studio/ux-review.md
-    last_static: "2026-05-28"
+    last_static: "2026-05-31"
     last_static_result: COMPLIANT
+    last_context: "2026-05-31"
+    last_context_result: COMPLIANT
+    last_category: "2026-05-31"
+    last_category_result: COMPLIANT
 
 agents:
   economy-balance-runner:

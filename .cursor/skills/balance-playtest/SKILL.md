@@ -33,6 +33,8 @@ allowed-tools: Read, Glob, Grep, Shell
 
 **Satellites:** после правок движка → **`test-driven-development`** + **`economy-reviewer`**; спорные цифры → **`doubt-driven-development`**.
 
+**Дальше:** `game-economy-and-victory`, `test-driven-development` (см. `catalog.yaml` → `next_skill`).
+
 ## Параметры (по умолчанию)
 
 | Параметр | Default |
@@ -79,6 +81,8 @@ Baseline для `safety_first`: `main__student_safety_first_40p.json`.
 **Не** решать «30000 лучше 20000» без продукта — только «сдвиг относительно baseline».
 
 ### 4. Verdict
+
+Итог для пользователя и `catalog`: **PASS** (OK) · **CONCERNS** (REVIEW) · **FAIL** (REGRESSION LIKELY). Baseline принят явно → **COMPLIANT** с новым эталоном; без согласования на merge → **NON-COMPLIANT** по процессу.
 
 ```text
 ## Balance playtest — VERDICT: OK | REVIEW | REGRESSION LIKELY

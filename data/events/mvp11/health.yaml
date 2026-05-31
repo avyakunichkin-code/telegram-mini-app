@@ -82,12 +82,13 @@ events:
   choices:
   - title: Прогуляться
     effects:
-      cash_delta: 0
+      cash_delta: -800
       needs_delta:
-        health: 9
-        comfort: 6
+        health: 7
+        comfort: 5
   - title: Остаться дома
     effects:
       cash_delta: 0
       needs_delta:
-        health: -3
+        health: -4
+        comfort: -3

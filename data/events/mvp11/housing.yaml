@@ -5,9 +5,10 @@ events:
   description: Провайдер предлагает повысить скорость или сменить тариф.
   weight: 86
   event_tier: 1
-  repeat_policy: repeatable
+  repeat_policy: max_per_profile
+  repeat_max: 2
   scenario_shape: soft_offer
-  cooldown_periods: 3
+  cooldown_periods: 12
   choices:
   - title: Тариф повыше
     effects:
@@ -23,7 +24,7 @@ events:
     effects:
       cash_delta: 0
       needs_delta:
-        comfort: 1
+        comfort: -1
   - title: Перейти на более дешёвый
     effects:
       cash_delta: 0
@@ -37,38 +38,43 @@ events:
     городе.'
   weight: 55
   event_tier: 4
-  repeat_policy: repeatable
+  repeat_policy: once_per_profile
   scenario_shape: soft_offer
   choices:
   - title: Переехать в новый город
     effects:
-      cash_delta: 35000
+      cash_delta: 28000
       monthly_burn_delta_pct: 0.28
       needs_delta:
-        status: 12
-        comfort: 6
-        social: -4
+        status: 10
+        comfort: 5
+        social: -6
     description: Бонус на переезд; расходы на жизнь вырастут примерно на четверть.
   - title: Договориться об удалёнке
     effects:
-      cash_delta: 12000
+      cash_delta: 15000
+      monthly_burn_delta_pct: 0.05
       needs_delta:
         comfort: 8
         status: 4
+        social: 4
   - title: Остаться в текущем городе
     effects:
       cash_delta: 0
       needs_delta:
-        comfort: 3
+        comfort: -2
         status: -4
+        social: 2
 - definition_key: mq11_downsize_flat
   event_domain: housing
   title: Переезд в квартиру меньше
   description: Можно снизить аренду, но нужны расходы на переезд.
   weight: 52
   event_tier: 5
-  repeat_policy: repeatable
+  repeat_policy: max_per_profile
+  repeat_max: 1
   scenario_shape: soft_offer
+  cooldown_periods: 12
   choices:
   - title: Переехать в квартиру меньше
     effects:
@@ -81,7 +87,8 @@ events:
     effects:
       cash_delta: 0
       needs_delta:
-        comfort: 2
+        comfort: -2
+        status: -1
   - title: Сдать комнату в субаренду
     effects:
       cash_delta: 8000
@@ -94,6 +101,10 @@ events:
         social: -3
         status: 2
 - definition_key: mq11_home_water_damage
+  content_class: instrumental
+  event_slot: period_choice
+  audience_template_keys:
+  - all
   event_domain: housing
   title: Затопило квартиру
   description: 'Прорвало трубу — пострадало ваше жильё. Нужно восстановить квартиру: через страховку имущества
@@ -114,12 +125,13 @@ events:
   choices:
   - title: Вызвать страховую (имущество)
     effects:
+      cash_delta: -5000
       insurance_claim:
         product: property
         insured_object: property
       needs_delta:
-        comfort: 8
-        health: 2
+        comfort: 6
+        health: 1
   - title: Ремонт за свой счёт
     effects:
       cash_delta: -80000

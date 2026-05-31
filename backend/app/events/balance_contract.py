@@ -43,6 +43,15 @@ def _cash(effects: dict[str, Any]) -> float:
     return float(effects.get("cash_delta", 0) or 0)
 
 
+def _has_insurance_claim(effects: dict[str, Any]) -> bool:
+    return isinstance(effects.get("insurance_claim"), dict)
+
+
+def _has_special_engine_action(effects: dict[str, Any]) -> bool:
+    """Оплата/покупка обрабатывается движком — не сравниваем Pareto по needs+ без cash."""
+    return effects.get("used_car_action") is not None
+
+
 def _has_future_money_cost(effects: dict[str, Any]) -> bool:
     if effects.get("monthly_burn_delta_pct") not in (None, 0, 0.0):
         return float(effects.get("monthly_burn_delta_pct") or 0) > 0
@@ -125,6 +134,10 @@ def validate_event_spec(spec: dict[str, Any]) -> list[BalanceViolation]:
     for i, ea in enumerate(effect_list):
         for j, eb in enumerate(effect_list):
             if i >= j:
+                continue
+            if _has_insurance_claim(ea) or _has_insurance_claim(eb):
+                continue
+            if _has_special_engine_action(ea) or _has_special_engine_action(eb):
                 continue
             if _pareto_dominates(ea, eb):
                 ti = str(choices[i].get("title") or i)
