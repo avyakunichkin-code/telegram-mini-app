@@ -846,6 +846,8 @@ skills:
     last_context_result: COMPLIANT
     last_category: "2026-05-31"
     last_category_result: COMPLIANT
+    last_spec: "2026-05-31"
+    last_spec_result: PASS
 
   using-agent-skills:
     category: meta

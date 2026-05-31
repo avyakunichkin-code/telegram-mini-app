@@ -21,11 +21,11 @@ events:
     effects:
       cash_delta: 0
       needs_delta:
-        comfort: 0
-        status: -1
+        comfort: -3
+        social: -2
   - title: Отказ
     effects:
       cash_delta: 0
       needs_delta:
         comfort: -4
-        health: -2
+        health: -1

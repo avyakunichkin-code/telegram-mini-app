@@ -16,7 +16,7 @@ allowed-tools: Read, Glob, Grep, Write, Shell
 
 **Не путать с:** **`/event-analysis`** (read-only обзор) · `game-economy-and-victory` (движок слотов) · `economy-reviewer` (ревью diff).
 
-> **2026-05-30:** канон типов и слотов — [`SPEC_event-system-v2-slots-and-taxonomy.md`](../../../docs/specs/features/SPEC_event-system-v2-slots-and-taxonomy.md). **Движок EVT1 ещё не в prod** — новые поля **закладываем в YAML**; loader/фильтр — отдельная задача. **Не начинать implement движка** из этого скилла без явного запроса.
+> **2026-05-30:** канон типов — [`SPEC_event-system-v2-slots-and-taxonomy.md`](../../../docs/specs/features/SPEC_event-system-v2-slots-and-taxonomy.md). **EVT1-020 (taxonomy колонки + фильтр пула `period_choice`/audience)** — в prod. **EVT1-030 (multi-slot: informational / needs_risk / global_macro)** — отдельная задача; новые поля в YAML закладываем заранее.
 
 ## Прочитай сначала
 
@@ -172,7 +172,9 @@ interaction_kind: choice
 | Студент | `mq_game_basic_v1` | profile → только этот key; universal skin → key + audience student |
 | Профессионал | `mq_game_tight_budget_v1` | то же для pro |
 
-**До EVT1 в prod:** старый обход — `prerequisites_json` (car forbid/any). **Новые события** — пиши **`audience_template_keys`**; если событие **строго** template-only без поля в YAML — **BLOCKED** до EVT1-020.
+**До EVT1-030 в prod:** multi-slot и needs_risk engine — **не** implement из этого скилла без явного запроса.
+
+**Audience (EVT1-020 в prod):** пиши **`audience_template_keys`** в YAML; **`profile` + `all`** — ошибка (`validate_event_taxonomy`). Старый обход — `prerequisites_json` (car forbid/any) для instrumental.
 
 **Instrumental «только про»:** `content_class: instrumental`, `audience: [all]`, prereq `car_personal` — не profile.
 
@@ -201,8 +203,11 @@ interaction_kind: choice
 ### 6. Verify
 
 ```bash
+cd backend && python -m pytest -q tests/unit/events/test_event_balance_contract.py tests/test_mvp11_yaml_catalog.py
 cd backend && python -m pytest -q -k "event"
 ```
+
+**Gate trade-off:** `validate_mvp11_balance` вызывается из `validate_mvp11_specs` — каталог с Pareto/free lunch **не проходит** `test_mvp11_yaml_loads_full_catalog`. После правок YAML — обязательно оба набора выше.
 
 ---
 
@@ -224,7 +229,8 @@ cd backend && python -m pytest -q -k "event"
 - [ ] needs_risk → axes в extra; не полагаться на rescue bias
 - [ ] chain follow-up → отсылка к выбору в description
 - [ ] 2+ choices (prod loader); informational — workaround если одна кнопка
-- [ ] **Баланс:** trade-off, Pareto, отказ, needs_risk, **needs_axis_map §11**
+- [ ] **Баланс:** trade-off §1, Pareto §3 (порядок choices не спасает), отказ §2, needs_risk §4, **needs_axis_map §11**
+- [ ] `pytest tests/unit/events/test_event_balance_contract.py` — **0** violations (baseline)
 
 ---
 

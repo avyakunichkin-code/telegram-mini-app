@@ -26,6 +26,7 @@
 - [ ] profile + audience all — отклоняется / не предлагается.
 - [ ] audience = фильтр; universal pair = два key + два audience.
 - [ ] Каждый choice: needs+ ⇒ cash− или burn или needs− (event-balance-rules §1).
+- [ ] `pytest tests/unit/events/test_event_balance_contract.py` — 0 violations; Pareto двусторонний (§3.1).
 - [ ] lifecycle_class / cooldown для downgrade-событий (§10).
 - [ ] needs_axis_map по теме (§11).
 

@@ -396,6 +396,23 @@ After completing any implementation:
 
 **Note:** Run each test command after a change that could affect the result. After a clean run, don't repeat the same command unless the code has changed since — re-running on unchanged code adds no confidence.
 
+## Критичные зоны (ТВОЙ ХОД)
+
+Для **`backend/app/game/period.py`**, **`backend/app/victory/`**, **`backend/app/finance/`** reproduction test **обязателен** — не optional hotfix. Регрессия здесь ломает core loop и победу; «почини без теста» не принимается без явного продуктового риска.
+
+## Verdict
+
+| Verdict | Когда |
+|---------|--------|
+| **PASS** | failing test → minimal fix → pytest green |
+| **CONCERNS** | пользователь настаивает на hotfix без теста в критичной зоне (`period`, `victory`, finance overview) — зафиксируй риск, предложи минимальный тест |
+| **FAIL** | код/тесты записаны без reproduction test на баг в критичной зоне |
+
+## Согласование
+
+Перед записью в репо (тесты в `backend/tests/`, prod-код в `backend/` / `frontend-react/`): **May I write** / **Могу записать** тест и фикс? — если пользователь не дал явное «делай» / «запиши».
+
 ## Следующий шаг
 
-`code-review-and-quality` перед merge.
+- [`critical-test-scenarios`](../critical-test-scenarios/SKILL.md) — gate G1–G4 на срез
+- [`code-review-and-quality`](../code-review-and-quality/SKILL.md) — перед merge

@@ -90,9 +90,18 @@ def _burn_axis_score(effects: dict[str, Any]) -> float:
     return 0.0
 
 
-def _choice_vector(effects: dict[str, Any]) -> tuple[float, float, float]:
-    """cash, needs_plus, burn_score (выше = лучше)."""
-    return (_cash(effects), _needs_sum_positive(effects), _burn_axis_score(effects))
+def _has_enqueue_event(effects: dict[str, Any]) -> bool:
+    return isinstance(effects.get("enqueue_event"), dict)
+
+
+def _choice_vector(effects: dict[str, Any]) -> tuple[float, float, float, float]:
+    """cash, needs+, needs_minus (выше = лучше), burn_score (выше = лучше)."""
+    return (
+        _cash(effects),
+        _needs_sum_positive(effects),
+        _needs_sum_negative(effects),
+        _burn_axis_score(effects),
+    )
 
 
 def _pareto_dominates(a: dict[str, Any], b: dict[str, Any]) -> bool:
@@ -160,6 +169,8 @@ def validate_event_spec(spec: dict[str, Any]) -> list[BalanceViolation]:
             if _has_insurance_claim(ea) or _has_insurance_claim(eb):
                 continue
             if _has_special_engine_action(ea) or _has_special_engine_action(eb):
+                continue
+            if _has_enqueue_event(ea) or _has_enqueue_event(eb):
                 continue
             if _pareto_dominates(ea, eb):
                 ti = str(choices[i].get("title") or i)

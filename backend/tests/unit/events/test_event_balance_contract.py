@@ -1,6 +1,6 @@
 """Trade-off контракт выборов событий (EVT1-106 baseline)."""
 
-from app.events.balance_contract import validate_mvp11_balance
+from app.events.balance_contract import validate_event_spec, validate_mvp11_balance
 from app.events.mvp11_catalog import clear_mvp11_catalog_cache, load_mvp11_catalog
 
 # EVT1-105: каталог без free lunch / pareto (кроме insurance/used_car — см. balance_contract).
@@ -25,3 +25,17 @@ def test_mvp11_balance_no_xp_delta_in_yaml():
     specs, _ = load_mvp11_catalog(force_reload=True)
     xp = [v for v in validate_mvp11_balance(specs) if v.code == "forbidden_effect"]
     assert not xp, xp
+
+
+def test_pareto_checks_both_directions():
+    """Регрессия: «отказ» позже в списке choices тоже должен ловиться."""
+    spec = {
+        "key": "test_transport_order",
+        "choices": [
+            {"title": "Дорого", "effects": {"cash_delta": -2800, "needs_delta": {"comfort": 5}}},
+            {"title": "Дешевле", "effects": {"cash_delta": -900, "needs_delta": {"comfort": 3}}},
+            {"title": "Отказ", "effects": {"cash_delta": 0, "needs_delta": {"health": 5}}},
+        ],
+    }
+    violations = validate_event_spec(spec)
+    assert any(v.code == "pareto_dominates" for v in violations), violations

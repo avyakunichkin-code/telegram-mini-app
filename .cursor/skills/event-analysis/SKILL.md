@@ -44,7 +44,7 @@ allowed-tools: Read, Glob, Grep, Shell
 
 **Куда писать:** `docs/vision/analysis/` (сохранение отчёта — только по запросу).
 
-**Satellites:** gaps с правками → **`/create-event`**; **EVT1-105** — scope **all** (§1–4 + **§10** + **§11**); merge diff → **`economy-reviewer`**.
+**Satellites:** gaps с правками → **`/create-event`**; **EVT1-105** — scope **all** (§1–4 + **§10** + **§11**); **balance_contract** — baseline **0**, gate в `mvp11_contract`; merge diff → **`economy-reviewer`**.
 
 **Дальше:** `create-event` (см. `catalog.yaml` → `next_skill`).
 
@@ -136,13 +136,25 @@ cd backend && python -c "from app.events.mvp11_catalog import load_mvp11_catalog
 
 См. [`event-balance-rules.md`](../create-event/event-balance-rules.md) §1–4, §6.
 
-1. **Free lunch scan:** choices с `needs_delta` &gt; 0 и `cash_delta >= 0` без burn — список keys (**CONCERNS** если много в tier-1 soft_offer).
-2. **Отказ:** soft_offer с «не тратить» — есть ли needs− или только 0/0?
-3. **Pareto:** в каждом событии с 3 choice — есть ли доминирующая кнопка?
+1. **Free lunch scan:** choices с `needs_delta` &gt; 0 и `cash_delta >= 0` без burn — список keys (**CONCERNS** если много в tier-1 soft_offer). Дублирует код `free_lunch` в `balance_contract`.
+2. **Отказ:** soft_offer с «не тратить» — есть ли needs− или только 0/0? **CONCERNS**, если needs+ при cash ≥ 0 (автомат) или «консультация» строго лучше «отказа» по Pareto.
+3. **Pareto:** не дублируй ручной обход — **источник истины** `validate_mvp11_balance`; вручную только edge cases вне автомата (§3.1 skips: insurance, used_car, enqueue).
 4. **needs_risk / is_rescue:** «бесплатное» восстановление needs?
 5. **% salary:** max \|cash\| vs 62.5k / 100k (persona-profiles).
 6. **Рекомендация:** keys на `/create-event` ребаланс + brief `balance_notes`.
-7. **Автолинт:** `pytest tests/unit/events/test_event_balance_contract.py` — сравнить с baseline 31; после EVT1-105 → 0.
+7. **Автолинт (обязательно):**
+
+```bash
+cd backend && python -m pytest tests/unit/events/test_event_balance_contract.py tests/test_mvp11_yaml_catalog.py -q
+```
+
+Baseline **0** violations. Gate: `validate_mvp11_specs` → `validate_mvp11_balance`. Регрессия: `test_pareto_checks_both_directions` — порядок choices в YAML.
+
+**Диагностика нарушений:**
+
+```bash
+cd backend && python -c "from app.events.balance_contract import validate_mvp11_balance; from app.events.mvp11_catalog import load_mvp11_catalog; v=validate_mvp11_balance(load_mvp11_catalog()[0]); print(len(v)); [print(x) for x in v]"
+```
 
 ```bash
 rg "cash_delta: 0" data/events/mvp11/ -A8 | rg -B2 "needs_delta"

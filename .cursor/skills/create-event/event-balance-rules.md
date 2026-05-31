@@ -61,10 +61,20 @@
 
 ## 3. Нет доминирующего выбора
 
-Проверка **Pareto** по каждой паре кнопок в событии (cash, сумма needs+, burn):
+Проверка **Pareto** по **каждой паре** кнопок **в обе стороны** (порядок в `choices:` не важен).
 
-- Выбор **A доминирует B**, если: cash_A ≥ cash_B **и** needs_A ≥ needs_B **и** burn_A ≤ burn_B, и хотя бы одно неравенство строгое.
-- Если доминирование есть → **перебаланс** (поднять цену «хорошего», усилить минус отказа, снизить needs на «дешёвом»).
+**Вектор сравнения** (по каждой оси **выше = лучше** для игрока):
+
+| Ось | Как считается |
+|-----|----------------|
+| cash | `cash_delta` |
+| needs+ | сумма **положительных** значений по осям `needs_delta` |
+| needs− | сумма **отрицательных** значений (ближе к 0 = лучше) |
+| burn | явная **экономия** (`monthly_lifestyle_delta` &lt; 0, −`expense_line`) ↑; **рост** burn ↑ штраф; `monthly_burn_delta_pct` &gt; 0 — фикс. штраф без профиля |
+
+**A доминирует B**, если по всем осям A ≥ B и хотя бы одно неравенство строгое → **перебаланс** (поднять цену «хорошего», усилить минус отказа, снизить needs на «дешёвом»).
+
+**Типичная ошибка:** отказ **последним** в YAML с `cash_delta: 0` и `needs+` выше, чем у платной кнопки — линтер ловит это после fix 2026-05-30 (двусторонний Pareto).
 
 **Типичная здоровая тройка (tier-1 consumption):**
 
@@ -73,6 +83,36 @@
 | Дешёво | −3…−8% salary | умеренный + | разумный компромисс |
 | Дорого | −10…−15% salary | сильный + | «хочу максимум» |
 | Отказ | 0 | −2…−8 суммарно | экономия с одиночеством/скукой |
+
+### 3.1. Автомат `balance_contract.py` (EVT1-106)
+
+| Код | Правило |
+|-----|---------|
+| `free_lunch` | §1 — needs+ без cash−, burn+ и без compensating needs− |
+| `pareto_dominates` | §3 — доминирование по 4D-вектору (см. выше) |
+| `forbidden_effect` | `xp_delta` запрещён |
+
+**Пропуск Pareto (намеренно):**
+
+| Условие | Почему |
+|---------|--------|
+| `insurance_claim` в choice | выплата полиса не в YAML |
+| `used_car_action` | cash/asset подставляет движок |
+| `enqueue_event` у **любого** choice в паре | отложенный исход цепочки; сравниваем trade-off в **первом** звене |
+
+**Где enforced:**
+
+- `pytest tests/unit/events/test_event_balance_contract.py` — baseline **0**
+- `validate_mvp11_specs()` → `validate_mvp11_balance()` — gate каталога (`test_mvp11_yaml_catalog`)
+
+**Диагностика:**
+
+```bash
+cd backend && python -m pytest tests/unit/events/test_event_balance_contract.py -q
+cd backend && python -c "from app.events.balance_contract import validate_mvp11_balance; from app.events.mvp11_catalog import load_mvp11_catalog; v=validate_mvp11_balance(load_mvp11_catalog()[0]); print(len(v)); [print(x) for x in v[:10]]"
+```
+
+**Не покрывает автоматом:** §2 отказ (эвристика в `/event-analysis`), §10 lifecycle, §11 axis map, точная величина `monthly_burn_delta_pct` без профиля.
 
 ---
 
@@ -303,7 +343,7 @@ rg "cash_delta: 0" data/events/mvp11/ -A6 | rg "needs_delta"
 
 Флаг **CONCERNS**, если у tier-1 soft_offer &gt;30% choices с needs+ при cash ≥ 0.
 
-**Автомат:** `backend/app/events/balance_contract.py` + `pytest tests/unit/events/test_event_balance_contract.py` — EVT1-106.
+**Автомат:** `backend/app/events/balance_contract.py` — §1/§3 (см. §3.1); gate в `mvp11_contract.validate_mvp11_specs`. Baseline pytest **0**. §10/§11 — ручной audit ниже.
 
 **Ручной скан повторов:**
 

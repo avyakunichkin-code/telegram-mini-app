@@ -33,8 +33,15 @@ alwaysApply: false
 
 | Проверка | Где |
 |----------|-----|
-| free lunch, Pareto, `xp_delta` | `balance_contract.py` + pytest |
+| free lunch, Pareto (4D, **обе стороны**), `xp_delta` | `balance_contract.py` + pytest; gate `validate_mvp11_specs` |
+| skip Pareto: `insurance_claim`, `used_car_action`, `enqueue_event` | §3.1 `event-balance-rules.md` |
 | lifecycle §10, axis §11 | `/event-analysis` + brief; **не** в pytest (пока) |
+
+После изменений:
+
+```bash
+cd backend && python -m pytest -q tests/unit/events/test_event_balance_contract.py tests/test_mvp11_yaml_catalog.py
+```
 
 ## Не смешивать
 

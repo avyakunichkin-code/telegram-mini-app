@@ -86,6 +86,12 @@ cd backend && python -m pytest -q
 cd backend && python -m pytest -q
 ```
 
+При правках **`data/events/mvp11/`** или `balance_contract.py` — дополнительно:
+
+```bash
+cd backend && python -m pytest -q tests/unit/events/test_event_balance_contract.py tests/test_mvp11_yaml_catalog.py
+```
+
 Упомяни в ответе пользователю результат pytest, если не запускал.
 
 При изменении `victory_config_json` в сидах — проверь tutorial chain и `mechanics_unlock` ([ADR-004](docs/decisions/ADR-004-mechanics-unlock-victory-chain.md)).

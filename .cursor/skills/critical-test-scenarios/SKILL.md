@@ -120,7 +120,7 @@ review gate                     code-review-and-quality
 | `period.py`, victory engine | `tests/unit/game/`, `tests/unit/victory/` | `unit` |
 | End-to-end игрок | `tests/acceptance/` | `acceptance`, часто `slow` |
 | `eventDisplay.js`, MQX helpers | `frontend-react/src/.../__tests__/*.contract.test.js` | vitest |
-| YAML `data/events/mvp11/` | существующие `test_mvp11_*` + `-k event` | — |
+| YAML `data/events/mvp11/` | `test_mvp11_yaml_catalog` + `test_event_balance_contract` (trade-off gate, baseline 0) + `-k event` | — |
 
 **Legacy:** корневые `tests/test_*.py` не трогать без причины; **новые** — только в подпапках.  
 **Fixtures:** общий setup → `tests/fixtures/` (профиль, полис, шаблон).

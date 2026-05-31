@@ -21,10 +21,11 @@ events:
     effects:
       cash_delta: 0
       needs_delta:
-        comfort: -1
-        status: -1
+        comfort: -2
+        status: -3
   - title: Отклонить предложение
     effects:
       cash_delta: 0
       needs_delta:
-        comfort: -4
+        comfort: -3
+        status: -2

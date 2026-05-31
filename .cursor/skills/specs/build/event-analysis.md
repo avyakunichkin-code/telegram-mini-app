@@ -24,7 +24,8 @@
 
 - [ ] Нет Write в YAML без явного запроса.
 - [ ] Таблица или упоминание content_class × persona.
-- [ ] Блок trade-off / free-lunch scan (event-balance-rules §1–4).
+- [ ] Блок trade-off / free-lunch scan (event-balance-rules §1–4, §3.1 automaton).
+- [ ] Запуск `pytest tests/unit/events/test_event_balance_contract.py` — baseline 0.
 - [ ] Блок repeat/lifecycle §10 и axis §11 при scope all.
 - [ ] Не путает с economy-reviewer / create-event implement.
 
