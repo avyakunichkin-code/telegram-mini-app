@@ -11,7 +11,7 @@ idea_refine: true
 
 **Как помочь новичку в ТВОЙ ХОД за первый заход понять цикл «период → действия → конец месяца» и зачем нужны зарплата и подушка — без ощущения финтех-лекции и без перегруза перед Pre-Alpha плейтестом?**
 
-Контекст: TMA, сессии **1–3 мин** сейчас, цель роста до **10–15 мин** плотной игры ([`TARGET_PLAYER_AND_SESSION.md`](../../foundation/TARGET_PLAYER_AND_SESSION.md)). В БД уже есть `game_profiles.onboarding_state`, UI онбординга нет.
+Контекст: TMA, **новичок 5–10 мин/период**, **опытный 1–3 мин**; плейтест **≥5 периодов**; победа **~40–60** ([`TARGET_PLAYER_AND_SESSION.md`](../../foundation/TARGET_PLAYER_AND_SESSION.md) §2). В БД уже есть `game_profiles.onboarding_state`, UI онбординга нет.
 
 ---
 

@@ -31,14 +31,14 @@
 | **M11** | MVP 1.1: tier, события, cooldown | DB+Backend+Frontend | ✅ MQ-111–116; без character XP (2026-05-24); плейтест Pre-Alpha — ⬜ |
 | **M12** | Достижения / «Развитие» | DB+Backend+Frontend | ⏸ **idea-refine** (2026-05-30): после снятия XP роль UI под вопросом; BE в коде, FE не в scope α |
 | **V2** | Victory M из N | DB+Backend+Frontend+Doc | ✅ **P1 закрыт**: `victory_engine` + `MqxGoalDash`; дальше — баланс/плейтест |
-| **I1** | Страховки: продукт + объект | DB+Backend+Frontend | 🟡 0008 + UI в работе |
+| **I1** | Страховки: продукт + объект | DB+Backend+Frontend | ✅ I1-A/B (2026-06-01): покупка, claim, тесты |
 | **CN1** | Потребности персонажа (Z‑NEEDS) | DB+Backend+Frontend+Doc | 🟡 ядро ✅ в prod; **доработка контента/UI ⏸** до пересмотра SPEC (2026-05-30) |
 | **α** | Pre-Alpha / Closed Alpha гейты | Doc+Frontend (метрики) | ⬜ см. GAME §11 |
 | **O1** | Онбординг TMA — Guided coach + Монетка | Frontend+Backend+Doc | 🟡 design-lab ★ → MQX |
 | **A0** | Admin Watchtower (MVP 1.2) | DB+Backend+Frontend | 🟡 Phase 0 в коде |
 | **TG1** | Telegram: боты, ops, player notify | Ops+Backend+Frontend | ⬜ [`TELEGRAM_BACKLOG.md`](TELEGRAM_BACKLOG.md) |
 | **E1** | **Расходы жизнеобеспечения** — категории, статьи, burn, UI | DB+Backend+Frontend+Content | ⏸ **ждём описание + doc**; E1-R и код — после spec ([PLAN](../plans/PLAN_backlog_may2026.md)) |
-| **PW1** | PWA / standalone + стабильный resume (lock/unlock) | Frontend+Ops+Doc | 🟡 фаза 0–1 ✅; **PW1-004 PASS** (2026-05-30); [PLAN](../plans/PLAN_pwa-standalone.md) |
+| **PW1** | PWA / standalone + стабильный resume (lock/unlock) | Frontend+Ops+Doc | 🟡 фаза 0–1 ✅; **PW1-004/104 PASS**; [PLAN](../plans/PLAN_pwa-standalone.md) |
 | **AF1** | Воронка «игра → советник» (гипотеза) | Doc+Marketing+Frontend | 🟡 handbook; **Pre-Alpha: без CTA советника** (2026-05-30) |
 | **T1** | Пошаговый месяц без таймера (TB1) | DB+Backend+Frontend+Doc | ✅ **implemented** — [idea](../vision/ideas/turn-based-period-no-timer.md) · [plan](../plans/PLAN_turn-based-period-no-timer.md) · TB1.1 чипы — backlog |
 
@@ -105,6 +105,8 @@
 
 - [x] P1 **[Backend]** Движок **M из N** по `victory_config_json`; `avg_liquid_delta_6p` / зарплата в порогах — `victory/engine.py`, миграция `0010`, `test_victory_engine.py`.
 - [x] P1 **[Backend]** `min_period_index_for_victory` из шаблона (дефолт 7) — в overview `victory.*`.
+- [ ] P1 **[Doc+Balance] V2-BAL** — Согласовать пороги chain-целей и копирайт с фактической экономикой (**~20–30** первые шаги, **~40–60** полная победа; см. [`TARGET_PLAYER_AND_SESSION`](../foundation/TARGET_PLAYER_AND_SESSION.md) §2.1); balance-playtest + правки `victory_config_json` шаблонов.
+- [x] P1 **[Backend]** Снять period gate (`min_period_index_for_victory`) — `victory/engine.py`, миграция `0042`, seeds (2026-06).
 
 ### Эпик CN1 — потребности персонажа (Z‑NEEDS)
 
@@ -247,8 +249,8 @@
 
 ### Страховки (I1)
 
-- [ ] P1 **[Backend]** Завершить claim payout по `payout_amount`, деактивация полиса (`0008` комментарий).
-- [ ] P2 **[Backend]** Связка страховых событий с `product` / `insured_object`.
+- [x] P1 **[Backend]** Claim payout по `payout_amount`, деактивация полиса — `insurance_hooks.py`, `test_insurance_events.py` (2026-06-01).
+- [ ] P2 **[Backend]** Связка страховых событий с `product` / `insured_object` (контент `auto.yaml`, `housing.yaml`).
 
 ---
 
@@ -309,7 +311,7 @@
 - [x] P1 **[Frontend] PW1-101** — `public/pwa/` иконки из `landing/public/brand/logo-compact.png`.
 - [x] P1 **[Frontend] PW1-102** — `vite-plugin-pwa`: manifest, SW, precache (`vite.config.js`).
 - [x] P1 **[Frontend+Ops] PW1-103** — `start_url` `…/#/`; meta + apple-touch; [`PWA_INSTALL.md`](../foundation/PWA_INSTALL.md).
-- [ ] P1 **[Backend+Ops] PW1-104** — CORS origin для prod PWA; `VITE_API_BASE_URL` в CI.
+- [x] P1 **[Backend+Ops] PW1-104** — CORS origin для prod PWA; `VITE_API_BASE_URL` в CI (`deploy-app.yml` + приёмка: install Safari iOS → игра, 2026-06-01).
 - [ ] P2 **[Doc] PW1-105** — черновик `SPEC_pwa-standalone.md` после фазы 0.
 
 #### Фаза 2 — standalone UX (позже)
@@ -334,8 +336,8 @@
 
 Спринт: **I1-A** покупка · **I1-B** claim — см. [`PLAN_backlog_may2026`](../plans/PLAN_backlog_may2026.md) Task 1.3–1.4.
 
-- [ ] P1 **[Frontend] I1-A** — Каталог / picker / карточки плана; unlock `capital_insurance`; design-lab → прод.
-- [ ] P1 **[Backend+Frontend] I1-B** — Claim: `insurance_claim` в событиях, payout на cash, видимость в UI.
+- [x] P1 **[Frontend] I1-A** — Каталог / picker / карточки плана; unlock `capital_insurance`; locked hint + тосты ApiError (2026-06-01).
+- [x] P1 **[Backend+Frontend] I1-B** — Claim: `insurance_claim` в событиях, payout на cash, тост + pytest buy/claim/cancel (2026-06-01).
 - [ ] P2 **[Frontend]** Метрики полиса и сравнение планов в `FinanceSection`.
 
 ### Plan Mode UI
@@ -409,7 +411,7 @@
 | M11 Progression | ✅ | ✅ | 🟡 приёмка UI | ✅ |
 | M12 Achievements | 🟡 0009 | ✅ engine (legacy) | ⏸ UI idea-refine | ⏸ SPEC пересмотр |
 | V2 Victory | ✅ 0010 | ✅ engine | прогресс целей | ✅ SPEC |
-| I1 Insurance | ✅ 0008 | 🟡 claim | 🟡 catalog UI | ⚠ SPEC |
+| I1 Insurance | ✅ 0008 | ✅ buy/claim | ✅ catalog UI | ⚠ SPEC |
 | α Playtest | — | — | опрос/метрики | протокол |
 | A0 Watchtower | ✅ 0012 | 🟡 Phase 0 | 🟡 `#/admin` | idea |
 | TG1 Telegram | — | ⬜ этапы 0–1 | ⬜ player bot | [TELEGRAM_BACKLOG](TELEGRAM_BACKLOG.md) |
@@ -426,10 +428,7 @@
 
 | Приоритет | Task ID | Пункт | Слой |
 |-----------|---------|-------|------|
-| **P0** | **0.3** | **Pre-Alpha волна 1:** ops-лист, опрос, 10–20 приглашений, отчёт — [`PRE_ALPHA_WAVE1_OPS`](../foundation/PRE_ALPHA_WAVE1_OPS.md) | Product |
-| P1 | 1.3 | I1-A: приёмка покупки / каталога страховок | Frontend |
-| P1 | 1.4 | I1-B: видимость claim в UI после события | Frontend |
-| P1 | 1.5 | PW1-104: CORS ✅; проверить `VITE_API_BASE_URL` в CI | Ops |
+| **P0** | **0.3** | **Pre-Alpha PA-W1-2026-06:** деплой → опрос → 10–20 приглашений — [`PRE_ALPHA_WAVE1_OPS`](PRE_ALPHA_WAVE1_OPS.md) | Product |
 | P1 | 1.6 | A0 env Render (`ADMIN_*`, ops TG) + **TG-001…005** | Ops |
 | P1 | 1.7 | **TG1** player bot: BotFather + webhook `/start` (этап 1) | Ops+Backend |
 | — | CN1-001 | One-pager + пересмотр SPEC needs (**gate** для CN1 контента) | Doc |
@@ -441,7 +440,7 @@
 | P2 | 2.x | Watchtower metrics + inspector (после α) | Backend+Frontend |
 | — | TB1.1 | Чипы плана месяца — backlog | Frontend |
 
-**Закрыто:** PW1-004 ✅ (2026-05-30).
+**Закрыто:** PW1-004 ✅ (2026-05-30); PW1-104 ✅ (2026-06-01); **I1-A / I1-B** ✅ (2026-06-01).
 
 ---
 
@@ -459,8 +458,10 @@
 | 2026-05-26 | **Task 0.1:** GAME §0.2, MVP_AUDIT §M11, TRACEABILITY M11/E1/T1 — doc приёмка MQ-116. |
 | 2026-05-30 | **TG1:** бэклог Telegram — [`TELEGRAM_BACKLOG.md`](TELEGRAM_BACKLOG.md), spec [`SPEC_telegram-bots-and-notifications.md`](../specs/features/SPEC_telegram-bots-and-notifications.md). |
 | 2026-05-30 | **Решения продукта:** PW1-004 PASS; M12/CN1/E1 ⏸ до doc; Plan MVP 2.0; Pre-Alpha **без CTA советника**; «В работу сейчас» → α + I1. |
+| 2026-06-01 | **PW1-104 PASS:** prod PWA (Safari iOS, «На экран Домой») → login → игра; CI `VITE_API_BASE_URL` в `deploy-app.yml`. |
+| 2026-06-01 | **Pre-Alpha PA-W1:** ops-лист обновлён, smoke 2026-06-01, шаблон [`PRE_ALPHA_WAVE1_RESULTS.md`](PRE_ALPHA_WAVE1_RESULTS.md). |
 | 2026-05-26 | Документация: уборка `docs/`, `GAME.md` §5–6; M11/level-gates — история, не активный трек. |
 
 ---
 
-*Последнее обновление: 2026-05-30 — решения Pre-Alpha, PW1-004 PASS, M12/CN1/E1 gates.*
+*Последнее обновление: 2026-06-01 — PW1-104 PASS (PWA prod).*

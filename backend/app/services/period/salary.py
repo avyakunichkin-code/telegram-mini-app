@@ -1,9 +1,13 @@
+import logging
+
 from fastapi import HTTPException
 from sqlalchemy.orm import Session
 
 from ...finance.balance_utils import TRANSACTION_TYPES, adjust_balance
 from ...models import FinanceSalary, GameProfile
 from .snapshot import get_current_period_snapshot
+
+logger = logging.getLogger(__name__)
 
 
 def claim_salary(db: Session, profile: GameProfile) -> dict:
@@ -42,6 +46,20 @@ def claim_salary(db: Session, profile: GameProfile) -> dict:
     profile.last_period_salary_claimed = period_index
     snapshot.salary_claimed = 1
     snapshot.salary_amount = amount
+
+    first_claim = period_index == 1
+    try:
+        from ..admin.notify import notify_salary_claimed
+
+        notify_salary_claimed(
+            db,
+            profile,
+            period_index=period_index,
+            amount=amount,
+            first_claim=first_claim,
+        )
+    except Exception:
+        logger.exception("Admin notify failed after salary claim profile_id=%s", profile.id)
 
     # Бонус XP за зарплату начисляется при закрытии периода (period_close_salary).
     db.commit()

@@ -4,6 +4,7 @@
 
 | Дата | Что в prod | Что исправили в docs |
 |------|------------|----------------------|
+| 2026-06-01 | — | Добавлен снимок [`PROJECT_META.md`](PROJECT_META.md): LOC, файлы, эпики, бэклог, git-сроки |
 | 2026-05-24 | Сняты `level`/`xp`, victory без `character_level` | ADR-003, баннеры в evolution, LEVEL_XP superseded |
 | 2026-05-24 | Victory v2 в `finance_overview_build` | ADR-002, GLOSSARY, TRACEABILITY |
 | 2026-05-25 | `progression_mode: chain` + tutorial goals на всех шаблонах | ADR-002 §формула, SPEC_victory-v2, SPEC_PRODUCT §7.1, CLAUDE.md |
@@ -32,6 +33,11 @@
 | 2026-05-30 | Handbook: воронка «игра → финсоветник» | `ADVISOR_FUNNEL_AUDIENCE.md`; `README`, `roles/marketing`, `MONETIZATION` §гипотеза; лендинг + партнёр |
 | 2026-05-30 | Лендинг: ЦА 30+, Victory v2, советник, PWA play | `landing/` locales, `index.html`, §audience/advisor; TB1 (без таймера), 2 события/период |
 | 2026-05-30 | **Решения Pre-Alpha backlog** | PW1-004 PASS; M12/CN1/E1 ⏸ до doc; Plan MVP 2.0; без CTA советника — `PRODUCT_BACKLOG.md` §решения 2026-05-30 |
+| 2026-06-01 | PW1-104 PASS | Prod PWA (Safari iOS install) + CI `VITE_API_BASE_URL` — `PRODUCT_BACKLOG.md`, `PLAN_backlog_may2026.md` Task 1.5 |
+| 2026-06-01 | I1-A / I1-B PASS | Insurance locked hint, buy/cancel/claim, `test_insurance_events.py` |
+| 2026-06-01 | Pre-Alpha PA-W1 | `PRE_ALPHA_WAVE1_OPS.md`, `PRE_ALPHA_WAVE1_RESULTS.md` |
+| 2026-06-01 | **Victory: снят period gate** | `victory/engine.py`, seeds, `0042`, schemas; победа только по целям; docs TARGET, SPEC_PRODUCT | `TARGET_PLAYER_AND_SESSION` §2: опытный **1–3 мин/период**, победа **40–60**; KPI v1.1: PA-T1 **≥5**, PA-T1s **≥8**; протокол, опрос, PLAYER_EXPERIENCE |
+| 2026-06-01 | **Темп сессии и 7 периодов** | (superseded v2 выше) `TARGET_PLAYER_AND_SESSION` §2–2.1 |
 | 2026-05-30 | Handbook: глава **EVENTS.md** | Trade-off, потребности, повторы (публично); authoring → `EVENTS_AGENT`; `GLOSSARY`, `GAME`, `TARGET_PLAYER`, `FEATURE_STATUS` |
 | 2026-05-30 | **EVT1-105** ребаланс `data/events/mvp11/` | Lifecycle: downsize/internet B, relocation A; trade-off 31→0; `balance_contract` skip insurance/used_car Pareto; baseline 0 |
 | 2026-05-30 | **EVT1-020** taxonomy columns | `event_definitions`: content_class, event_slot, audience_template_keys; migration `0041`; pool filter |

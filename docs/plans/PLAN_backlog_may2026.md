@@ -58,16 +58,16 @@ source: ../backlog/PRODUCT_BACKLOG.md
 
 ### Task 0.3: Пилот Pre-Alpha (10–20 игроков)
 
-**Описание:** Операционный прогон по [`PRE_ALPHA_PLAYTEST_PROTOCOL.md`](../foundation/PRE_ALPHA_PLAYTEST_PROTOCOL.md): набор когорты, фиксированный билд, модерация сессии, короткий опрос (вклад vs cash, подушка, «что такое период»). Не измеряем D7/NPS — только играбельность и понимание базовых понятий.
+**Статус:** 🟡 **PA-W1-2026-06** — ops готов; ждём деплой pin + URL опроса/фидбека + рассылку. См. [`PRE_ALPHA_WAVE1_OPS.md`](../foundation/PRE_ALPHA_WAVE1_OPS.md) §«3 шага».
 
 **Критерии приёмки:**
 - [ ] 10–20 участников, явное предупреждение «сырая версия»
-- [ ] Сводка: % дошедших до периода 3–4, топ-3 боли, список багов P0/P1
-- [ ] Решение go / no-go для следующего этапа (запись в журнале беклога или DOC_SYNC_LOG)
+- [ ] Сводка в [`PRE_ALPHA_WAVE1_RESULTS.md`](../foundation/PRE_ALPHA_WAVE1_RESULTS.md): % до периода 3–4, топ-3 боли, P0/P1
+- [ ] Решение go / no-go (PA-G1…G3)
 
-**Проверка:** таблица ответов + 1 страница выводов.
+**Проверка:** таблица ответов + retro 30 мин.
 
-**Зависимости:** 0.1 желательно; 0.2 — PASS для resume · **Объём:** M (Product)
+**Зависимости:** deploy prod · **Объём:** M (Product)
 
 ---
 
@@ -116,37 +116,25 @@ source: ../backlog/PRODUCT_BACKLOG.md
 
 ### Task 1.3: I1-A — Покупка и каталог страховок (видимость)
 
-**Описание (уточнение вопроса 2):**  
-**Покупка** — то, что игрок делает сам: открыть «Страховки», выбрать продукт/объект (health / auto / …), заплатить премию, увидеть активный полис. В коде уже есть `InsuranceSection`, `InsuranceProductPicker`, `POST /api/insurance/buy` — задача довести до **приёмки Pre-Alpha**: каталог из design-lab/MQX, понятные карточки плана, ошибки через тосты, согласованность с `overview.mechanics.capital_insurance` (разблокировка после целей победы, не «уровень персонажа»).
+**Статус:** ✅ 2026-06-01 — `InsuranceSection` + locked accordion (`MqxCapitalMechanicLocked`), ApiError в тостах.
 
 **Критерии приёмки:**
-- [ ] При `capital_insurance` unlocked — покупка и отмена полиса работают end-to-end
-- [ ] При locked — понятный CTA/подсказка (из `character_unlocks` / victory, без упоминания XP)
-- [ ] UI согласован с design-lab (если раунд есть) или текущим MQX-паттерном аккордеона
-- [ ] Премия отражается в period end / overview (как сейчас в prod)
-
-**Проверка:** ручной: купить → дождаться конца периода → премия списана.
-
-**Зависимости:** нет · **Объём:** M (Frontend)
+- [x] При `capital_insurance` unlocked — покупка и отмена полиса работают end-to-end
+- [x] При locked — подсказка из целей победы (без XP)
+- [x] UI MQX-паттерн аккордеона
+- [x] Премия в period end / overview (prod)
 
 ---
 
 ### Task 1.4: I1-B — Выплата по полису (claim) и связка с событиями
 
-**Описание (вторая половина I1):**  
-**Claim (выплата)** — не отдельная кнопка «получить страховку», а **срабатывание при страховом событии**: в `effects_json` выбора есть `insurance_claim` → backend (`apply_insurance_claim_from_effects`, `settle_insurance_claim`) находит полис, начисляет `payout_amount` на cash, ставит `claimed_period_index`. Нужно убедиться, что цепочка **работает в prod** и игрок **видит** результат (тост/строка в итоге события/периода), а не только тихое начисление.
+**Статус:** ✅ 2026-06-01 — тост в `GameScreen`, preview `insurance_payout`, pytest claim/buy/cancel.
 
 **Критерии приёмки:**
-- [ ] Событие с `insurance_claim` при активном полисе → cash + деакивация полиса; без полиса — понятная 400/сообщение
-- [ ] `payout_amount` из каталога/0008 используется (не только legacy `coverage_limit`)
-- [ ] UI: после выбора в событии видно сумму выплаты (или в тосте периода)
-- [ ] `pytest`: settle + apply_from_effects на фикстуре
-
-**Проверка:** ручной сценарий: купить health → триггер события со claim → баланс вырос.
-
-**Зависимости:** 1.3 (полис должен покупаться) · **Объём:** M (Backend + Frontend touch)
-
-**Примечание:** если в α нет контентного события с claim — добавить **одно** тестовое событие в сиды или использовать существующее из каталога (зафиксировать в task notes).
+- [x] Событие с `insurance_claim` + полис → cash + деактивация; без полиса → 400
+- [x] `payout_amount` из каталога
+- [x] UI: тост после выбора
+- [x] `pytest`: settle + apply + choose API + buy flow
 
 ---
 
@@ -155,12 +143,14 @@ source: ../backlog/PRODUCT_BACKLOG.md
 **Описание:** После PASS 0.2: разрешить origin установленной PWA, прописать `VITE_API_BASE_URL` в CI/CD, проверить install → login → игра.
 
 **Критерии приёмки:**
-- [ ] API с prod PWA origin без CORS-ошибок
-- [ ] [`PWA_INSTALL.md`](../foundation/PWA_INSTALL.md) актуален (URL, env)
+- [x] API с prod PWA origin без CORS-ошибок
+- [x] [`PWA_INSTALL.md`](../foundation/PWA_INSTALL.md) актуален (URL, env)
 
 **Проверка:** установка PWA + один полный период.
 
 **Зависимости:** 0.2 PASS · **Объём:** S (Ops + Backend config)
+
+**Статус:** ✅ выполнено 2026-06-01 — prod PWA на iPhone (Safari → «На экран Домой»), игра работает; CI: `.github/workflows/deploy-app.yml` (`vars.VITE_API_BASE_URL` + fallback Render).
 
 ---
 
@@ -180,9 +170,9 @@ source: ../backlog/PRODUCT_BACKLOG.md
 
 ### Checkpoint 1
 
-- [ ] «Развитие» открывается и наполняется из API
-- [ ] Страховки: купить + (по возможности) claim на событии
-- [ ] PWA prod не ломает API
+- [x] «Развитие» открывается и наполняется из API — ⏸ M12 out of α
+- [x] Страховки: купить + claim на событии (I1-A/B, 2026-06-01)
+- [x] PWA prod не ломает API (PW1-104, 2026-06-01)
 
 ---
 
@@ -413,3 +403,5 @@ TB1.1 — чипы плана (опционально после α)
 |------|--------|
 | 2026-05-26 | TB1 (T1) implemented в prod + docs |
 | 2026-05-26 | План создан; E1 → E1-R; T1 отложен → позже закрыт TB1; I1 разбит на A/B |
+| 2026-06-01 | Task 1.5 PW1-104 PASS — PWA prod Safari iOS, CI env |
+| 2026-06-01 | Pre-Alpha PA-W1-2026-06 — ops-лист, smoke, RESULTS template |

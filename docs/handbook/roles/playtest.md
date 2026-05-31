@@ -73,7 +73,7 @@ last_reviewed: 2026-05-30
 
 ## KPI волны (команда, не участник)
 
-Канон: [`KPI_AND_PHASES.md`](../KPI_AND_PHASES.md) — gate **PA-G1..G3**, target **PA-T1** (≥60% до 3-го периода).
+Канон: [`KPI_AND_PHASES.md`](../KPI_AND_PHASES.md) — gate **PA-G1..G3**, target **PA-T1** (≥50% закрыли **≥5** периодов), **PA-T1s** (≥25% с **≥8**).
 
 ## Что не в фокусе этой волны
 - NPS, D1/D7, конкуренты  

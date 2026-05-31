@@ -4,7 +4,7 @@ export const CATALOG_VICTORY_DEMO = {
   goals_required: 3,
   period_gate_open: true,
   win_reached: false,
-  min_period_index: 7,
+  min_period_index: 1,
   current_goal_key: 'cashflow',
   goals: [
     {

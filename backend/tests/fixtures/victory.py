@@ -57,7 +57,6 @@ THREE_STEP_GOALS = [
 
 def three_step_config(*, progression_mode: str, required_goals_met: int = 2) -> dict:
     return {
-        "min_period_index_for_victory": MIN_PERIOD_INDEX_FOR_WIN,
         "required_goals_met": required_goals_met,
         "progression_mode": progression_mode,
         "goals": list(THREE_STEP_GOALS),

@@ -12,7 +12,6 @@ import json
 from dataclasses import dataclass, field, replace
 from typing import Any
 
-from ..game.rules import MIN_PERIOD_INDEX_FOR_WIN
 from ..victory.mechanics_progression import (
     MECHANIC_DASHBOARD_CORE,
     compute_mechanics_effective,
@@ -477,7 +476,6 @@ def evaluate_victory(
     template_cap: dict[str, bool] | None = None,
     mechanics_unlock: list[dict[str, Any]] | None = None,
 ) -> VictoryEvaluationResult:
-    min_period = int(config.get("min_period_index_for_victory", MIN_PERIOD_INDEX_FOR_WIN))
     required_met = int(config.get("required_goals_met", 1))
     schema_version = int(config.get("schema_version", VICTORY_SCHEMA_VERSION))
     tk = (template_key or "").strip() or DEFAULT_TEMPLATE_KEY
@@ -504,14 +502,17 @@ def evaluate_victory(
     goals_enabled = len(enabled_avail)
     goals_required = goals_enabled if chain_mode else required_met
 
-    period_gate_open = int(snap.period_index) >= min_period
+    # Победа только по целям; ворота по номеру периода сняты (2026-06).
+    period_gate_open = True
+    min_period = 1
+
     if chain_mode:
         all_chain_met = goals_enabled > 0 and goals_met >= goals_enabled
-        win_reached = period_gate_open and all_chain_met
-        win_ready = all_chain_met and not period_gate_open
+        win_reached = all_chain_met
+        win_ready = goals_met >= max(0, goals_enabled - 1) and not win_reached
     else:
-        win_reached = period_gate_open and goals_met >= required_met and goals_enabled > 0
-        win_ready = _compute_win_ready(goal_results, required_met)
+        win_reached = goals_met >= required_met and goals_enabled > 0
+        win_ready = _compute_win_ready(goal_results, required_met) and not win_reached
 
     win_target, win_progress = _safety_legacy_fields(goal_results)
 

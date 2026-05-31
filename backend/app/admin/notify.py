@@ -19,6 +19,7 @@ from sqlalchemy.orm import Session
 from ..config import _resolve_admin_web_base_url
 from ..models import GameProfile, NotificationLog, User
 from ..victory.profile import profile_win_reached
+from .notify_messages import format_alert_message_ru
 
 logger = logging.getLogger(__name__)
 
@@ -29,6 +30,8 @@ _KIND_EMOJI = {
     "game_won": "🏁",
     "game_lost": "💀",
     "period_milestone": "📅",
+    "period_closed": "📆",
+    "salary_claimed": "💰",
     "onboarding_step_reached": "👣",
     "onboarding_brief_done": "✅",
     "onboarding_skipped": "⏭️",
@@ -45,19 +48,7 @@ def _admin_link(path: str) -> str:
 
 
 def _format_telegram_text(kind: str, payload: dict[str, Any]) -> str:
-    emoji = _KIND_EMOJI.get(kind, "ℹ️")
-    lines = [f"{emoji} {kind}"]
-    for key in sorted(payload.keys()):
-        if key.startswith("_"):
-            continue
-        val = payload[key]
-        if val is None or val == "":
-            continue
-        lines.append(f"{key}={val}")
-    link = payload.get("_admin_link")
-    if link:
-        lines.append(f"→ {link}")
-    return "\n".join(lines)
+    return format_alert_message_ru(kind, payload)[:4096]
 
 
 def _send_telegram_message(text: str) -> bool:
@@ -238,7 +229,7 @@ def notify_game_lost(db: Session, profile: GameProfile, *, period_index: int) ->
 
 
 def notify_period_milestone(db: Session, profile: GameProfile, *, closed_period_index: int) -> None:
-    if closed_period_index not in (1, 3, 7):
+    if closed_period_index not in (3, 5, 8):
         return
     emit_admin_alert(
         db,
@@ -253,6 +244,25 @@ def notify_period_milestone(db: Session, profile: GameProfile, *, closed_period_
         user_id=profile.user_id,
         game_profile_id=profile.id,
         dedupe_key=f"period_milestone:{profile.id}:{closed_period_index}",
+        send_telegram=closed_period_index in (5, 8),
+    )
+
+
+def notify_period_closed(db: Session, profile: GameProfile, *, closed_period_index: int) -> None:
+    emit_admin_alert(
+        db,
+        "period_closed",
+        {
+            "name": profile.name,
+            "closed_period": closed_period_index,
+            "next_period": int(profile.period_index),
+            "profile_id": profile.id,
+            "_admin_link": _admin_link(f"/admin?profile={profile.id}"),
+        },
+        user_id=profile.user_id,
+        game_profile_id=profile.id,
+        dedupe_key=f"period_closed:{profile.id}:{closed_period_index}",
+        send_telegram=False,
     )
 
 
@@ -346,8 +356,35 @@ def notify_onboarding_skipped(
     )
 
 
+def notify_salary_claimed(
+    db: Session,
+    profile: GameProfile,
+    *,
+    period_index: int,
+    amount: float,
+    first_claim: bool,
+) -> None:
+    emit_admin_alert(
+        db,
+        "salary_claimed",
+        {
+            "name": profile.name,
+            "period_index": period_index,
+            "amount": round(float(amount), 2),
+            "first_claim": first_claim,
+            "profile_id": profile.id,
+            "_admin_link": _admin_link(f"/admin?profile={profile.id}"),
+        },
+        user_id=profile.user_id,
+        game_profile_id=profile.id,
+        dedupe_key=f"salary_claimed:{profile.id}:{period_index}",
+        send_telegram=first_claim,
+    )
+
+
 def process_period_admin_alerts(db: Session, profile: GameProfile, *, closed_period_index: int) -> None:
     """Хуки после commit конца периода (profile уже с новым period_index)."""
+    notify_period_closed(db, profile, closed_period_index=closed_period_index)
     notify_period_milestone(db, profile, closed_period_index=closed_period_index)
     if profile.is_active == 0:
         notify_game_lost(db, profile, period_index=closed_period_index)

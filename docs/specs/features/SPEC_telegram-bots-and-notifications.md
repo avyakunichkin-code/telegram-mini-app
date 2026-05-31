@@ -174,9 +174,13 @@ flowchart TB
 
 | kind | Trigger | Audience | Log | TG admin | TG player | dedupe_key |
 |------|---------|----------|-----|----------|-----------|------------|
-| `period_milestone` | после `process_period_end`, closed ∈ {1,3,7} | admin | ✅ | ✅ | ❌ | `period_milestone:{profile_id}:{closed}` |
-| `salary_claimed` | `POST claim-salary` | admin | ✅ | ❌ | ❌ | — (T3: log-only для воронки) |
-| `period_closed` | `POST time/next` success | admin | ✅ | ❌ | ❌ | `period_closed:{profile_id}:{closed}` |
+| `period_milestone` | после `process_period_end`, closed ∈ **{3,5,8}** | admin | ✅ | ✅* | ❌ | `period_milestone:{profile_id}:{closed}` |
+
+\* TG только при closed **5** или **8**; **3** — log-only.
+| `period_closed` | после каждого `process_period_end` | admin | ✅ | ❌ | ❌ | `period_closed:{profile_id}:{closed}` |
+| `salary_claimed` | `POST claim-salary` | admin | ✅ | ✅* | ❌ | `salary_claimed:{profile_id}:{period}` |
+
+\* TG только при **первой** зарплате в партии (`period_index=1`); остальные — log-only.
 | `game_won` | `profile_win_reached` first true | admin + player | ✅ | ✅ | ✅ T2 | `game_won:{profile_id}` |
 | `game_lost` | `is_active=0` defeat | admin + player | ✅ | ✅ | ✅ T2 | `game_lost:{profile_id}` |
 

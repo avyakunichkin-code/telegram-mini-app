@@ -245,13 +245,11 @@ def _config(
     *,
     required_goals_met: int,
     goals: list[dict[str, Any]],
-    min_period: int = 7,
     playtest_mode: str | None = PLAYTEST_MODE_TAG,
     progression_mode: str = "chain",
 ) -> dict[str, Any]:
     cfg: dict[str, Any] = {
         "schema_version": VICTORY_SCHEMA_VERSION,
-        "min_period_index_for_victory": min_period,
         "required_goals_met": required_goals_met,
         "progression_mode": progression_mode,
         "goals": goals,

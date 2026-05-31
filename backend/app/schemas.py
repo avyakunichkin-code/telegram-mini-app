@@ -175,8 +175,8 @@ class ExpensesSnapshotResponse(BaseModel):
 class VictoryOverview(BaseModel):
     schema_version: int = 1
     template_key: str = ""
-    min_period_index: int = 7
-    period_gate_open: bool = False
+    min_period_index: int = 1
+    period_gate_open: bool = True
     progression_mode: str = "chain"
     current_goal_key: Optional[str] = None
     goals_met: int = 0

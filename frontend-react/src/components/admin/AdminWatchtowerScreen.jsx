@@ -172,11 +172,19 @@ export function AdminWatchtowerScreen({ onBack }) {
 
   const notificationColumns = useMemo(
     () => [
-      { key: 'id', label: 'ID', render: (r) => r.id },
-      { key: 'kind', label: 'Тип', render: (r) => r.kind },
-      { key: 'profile', label: 'Профиль', render: (r) => r.game_profile_id ?? '—' },
-      { key: 'tg', label: 'TG', render: (r) => (r.telegram_sent ? '✓' : '—') },
       { key: 'when', label: 'Когда', render: (r) => formatDt(r.created_at) },
+      { key: 'kind', label: 'Тип', render: (r) => r.kind_label || r.kind },
+      {
+        key: 'summary',
+        label: 'Событие',
+        render: (r) => (
+          <span className="admin-watchtower__alert-summary">
+            {(r.summary || r.kind).split('\n')[0]}
+          </span>
+        ),
+      },
+      { key: 'profile', label: 'Профиль', render: (r) => r.game_profile_id ?? '—' },
+      { key: 'tg', label: 'В TG', render: (r) => (r.telegram_sent ? '✓' : '—') },
     ],
     [],
   );

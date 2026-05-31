@@ -18,7 +18,7 @@ doc_sync: foundation/DOC_SYNC_LOG.md
 - два **режима сохранения** (**Game** / **Plan**), без смены режима у существующего профиля;
 - **Game:** старт с **шаблонов** (первый запуск — один базовый шаблон; повторная «новая игра» — 4 шаблона сложности), агрегированные «жизненные» расходы + дельты из **событий** в БД, **достижения** (без character XP), победа по **`victory_config_json`** шаблона — в prod **цепочка целей** (`progression_mode: chain`) или legacy **M из N** (`parallel`); пороги cashflow/подушки/инвестиций — в JSON шаблона ([ADR-002](../decisions/ADR-002-victory-engine-and-template-config.md));
 - **Plan:** ручное планирование, статьи расходов, опция префилла **только стартового снимка** из выбранного сохранения;
-- **победа в первые 6 периодов запрещена** (в коде: `min_period_index_for_victory`, обычно **7** — см. `game_rules.MIN_PERIOD_INDEX_FOR_WIN`);
+- **победа** — только по целям Victory v2 (chain / parallel); ворота по номеру периода **сняты** (2026-06);
 - устаревшая пара **`light` / `hardcore`** заменена на **`save_kind`** и шаблоны — см. [ADR-001](../decisions/ADR-001-save-kind-remove-light-hardcore.md) и [`specs/features/SPEC_game-plan.md`](../specs/features/SPEC_game-plan.md).
 
 Ниже **§1–11** описывают **уже реализованный** цикл; **§7.1** — победа в prod (**Victory v2**). Упрощённое правило «подушка 3× + просрочка + cashflow» — **legacy** (тесты). **§12** — направления улучшения модели, без обязательства ближайшей реализации.
@@ -137,10 +137,10 @@ doc_sync: foundation/DOC_SYNC_LOG.md
 
 | Режим | Когда | `win_reached` |
 |--------|--------|----------------|
-| **`chain`** | Prod (tutorial на всех Game-шаблонах) | `period_index >= min_period_index_for_victory` **и** все шаги цепочки `goals[]` выполнены по порядку |
+| **`chain`** | Prod (tutorial на всех Game-шаблонах) | все шаги цепочки `goals[]` выполнены по порядку |
 | **`parallel`** | Legacy / откат (`VICTORY_CONFIG_LEGACY_BY_TEMPLATE_KEY`) | Ворота периода **и** `met_count >= required_goals_met` среди `enabled` |
 
-- Дефолт ворот периода: **`min_period_index_for_victory = 7`** (`MIN_PERIOD_INDEX_FOR_WIN` в `backend/app/game/rules.py`).
+- Победа определяется **только целями** шаблона; поле `min_period_index_for_victory` в JSON **игнорируется** (миграция `0042`).
 - Ответ API: блок **`victory`** + **`win_reached`**; для UI подушки сохранены **`win_target_safety_fund`**, **`win_ready`**, **`win_progress_safety_fund`** (из первой цели `safety_fund_months`, если есть).
 - **Разблокировка механик** капитала (инвестиции, страховки, …) — по **`blueprint.mechanics_unlock`** и выполненным ключам целей ([ADR-004](../decisions/ADR-004-mechanics-unlock-victory-chain.md)).
 
@@ -261,6 +261,6 @@ doc_sync: foundation/DOC_SYNC_LOG.md
 
 ## 13. Целевой игрок, длительность заходов и контентные рамки (MVP 1.1+)
 
-Каноничные решения продукта (ЦА **30+**, умная игра; типичная сессия ~1–3 мин сейчас и рост до 10–15 мин; избегаемые темы; мотивация победа + мета без character level; паттерны текста событий) собраны в **[`foundation/TARGET_PLAYER_AND_SESSION.md`](TARGET_PLAYER_AND_SESSION.md)** и должны проверяться при спецификации событий, прокачки и нового контента.
+Каноничные решения продукта (ЦА **30+**, умная игра; темп: опытный **1–3 мин/период**, новичок **5–10 мин**; плейтест **≥5 периодов**; полная победа **~40–60 периодов**; избегаемые темы; мотивация победа + мета без character level; паттерны текста событий) собраны в **[`foundation/TARGET_PLAYER_AND_SESSION.md`](TARGET_PLAYER_AND_SESSION.md)** и должны проверяться при спецификации событий, прокачки и нового контента.
 
 ---

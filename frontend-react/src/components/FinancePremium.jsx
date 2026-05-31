@@ -5,13 +5,14 @@ import {
   clampInvestAmount,
   DEPOSIT_ANNUAL_RATE_PERCENT,
 } from '../constants/investProducts';
-import { capitalPageSubtitle, getEffectiveMechanicsFromOverview } from '../utils/starterMechanics';
+import { capitalPageSubtitle, capitalLockHint, capitalSectionState, getEffectiveMechanicsFromOverview } from '../utils/starterMechanics';
 import { CapitalLiabilitiesPanel, CapitalPropertyPanel } from './CapitalPortfolioPanels';
 import { InvestProductForm } from './InvestProductForm';
 import {
   InsuranceSection,
   InvestPositionRow,
   MqxCapitalEmpty,
+  MqxCapitalMechanicLocked,
   MqxStateSkeleton,
   MqxSectionSeg,
   MqxSubtab,
@@ -52,10 +53,18 @@ export function FinancePremium({
   const [extraLoading, setExtraLoading] = useState(true);
 
   const mechanics = useMemo(() => getEffectiveMechanicsFromOverview(overview), [overview]);
+  const insuranceSectionState = useMemo(
+    () => capitalSectionState(overview, 'capital_insurance'),
+    [overview],
+  );
+  const insuranceLockHint = useMemo(
+    () => (insuranceSectionState === 'locked' ? capitalLockHint(overview) : null),
+    [insuranceSectionState, overview],
+  );
   const capitalSectionsCount =
     2 +
     (mechanics.capital_invest ? 1 : 0) +
-    (mechanics.capital_insurance ? 1 : 0) +
+    (insuranceSectionState !== 'hidden' ? 1 : 0) +
     (mechanics.capital_property ? 1 : 0) +
     (mechanics.capital_liabilities ? 1 : 0);
 
@@ -141,7 +150,7 @@ export function FinancePremium({
       await refreshOverview();
       await reloadExtra();
     } catch (e) {
-      showNotification(e?.detail || e?.message || 'Не удалось оформить полис', 'error');
+      showNotification(e, 'error');
     } finally {
       setBuyingPlanKey(null);
     }
@@ -161,7 +170,7 @@ export function FinancePremium({
       showNotification('Полис отменён', 'success');
       await reloadExtra();
     } catch (e) {
-      showNotification(e?.detail || e?.message || 'Не удалось отменить полис', 'error');
+      showNotification(e, 'error');
     } finally {
       setCancellingPolicyId(null);
     }
@@ -338,7 +347,7 @@ export function FinancePremium({
                 {investCapitalBlock}
               </MqxCapitalSectionAccordion>
             ) : null}
-            {mechanics.capital_insurance ? (
+            {insuranceSectionState === 'open' ? (
               <MqxCapitalSectionAccordion title="Страховки" meta={insuranceMeta}>
                 <InsuranceSection
                   policies={policies}
@@ -349,6 +358,11 @@ export function FinancePremium({
                   intro="Премия списывается в конце периода. При страховом случае — полная сумма выплаты, полис закрывается."
                   useSectionSeg
                 />
+              </MqxCapitalSectionAccordion>
+            ) : null}
+            {insuranceSectionState === 'locked' ? (
+              <MqxCapitalSectionAccordion title="Страховки" meta="скоро">
+                <MqxCapitalMechanicLocked hint={insuranceLockHint} />
               </MqxCapitalSectionAccordion>
             ) : null}
             {mechanics.capital_property ? (

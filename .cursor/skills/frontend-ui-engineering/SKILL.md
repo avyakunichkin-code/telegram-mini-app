@@ -80,7 +80,7 @@ Build production-quality user interfaces that are accessible, performant, and vi
 - Колонка `#root` max **480px**, нижний таббар + `env(safe-area-inset-bottom)`.
 - Фон/текст: `var(--tg-theme-*)` → `--mqx-surface-*`; CTA — **Quest Violet** (`--mq-accent-fill`), не «голубой» TG по умолчанию.
 - Типографика: только `var(--mq-fs-*)` из `#root` (`tma-base.css`), не сырые `px` в новом MQX.
-- Сессия **1–3 мин** ([`TARGET_PLAYER_AND_SESSION.md`](../../../docs/foundation/TARGET_PLAYER_AND_SESSION.md)): не добавлять плотность «все инструменты сразу» без unlock / lab; один якорь на экран (cash, цель, период).
+- Темп сессии ([`TARGET_PLAYER_AND_SESSION.md`](../../../docs/foundation/TARGET_PLAYER_AND_SESSION.md) §2): **целевой** период **1–3 мин** (опытный); не раздувать экран без unlock; один якорь на экран (cash, цель, период).
 
 ### Состояния экрана (обязательно при async)
 

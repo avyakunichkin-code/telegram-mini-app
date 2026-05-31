@@ -14,6 +14,7 @@ from sqlalchemy.orm import Session
 from ..admin.auth import require_admin_user
 from ..admin.catalogs import fetch_catalog_rows, get_catalog_spec, list_catalog_meta
 from ..admin.onboarding_funnel import build_onboarding_funnel
+from ..admin.notify_messages import format_alert_message_ru, kind_label_ru
 from ..database import get_db
 from ..models import GameProfile, NotificationLog, User
 
@@ -62,6 +63,8 @@ class AdminOnboardingFunnel(BaseModel):
 class AdminNotificationRow(BaseModel):
     id: int
     kind: str
+    kind_label: str
+    summary: str
     user_id: Optional[int] = None
     game_profile_id: Optional[int] = None
     payload: dict[str, Any]
@@ -201,6 +204,8 @@ async def admin_watchtower(
             AdminNotificationRow(
                 id=n.id,
                 kind=n.kind,
+                kind_label=kind_label_ru(n.kind),
+                summary=format_alert_message_ru(n.kind, _parse_payload(n.payload_json)),
                 user_id=n.user_id,
                 game_profile_id=n.game_profile_id,
                 payload=_parse_payload(n.payload_json),

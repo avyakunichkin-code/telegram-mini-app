@@ -37,7 +37,8 @@ audience_note: Пилот n=1 (пробный тестер). Следующая 
 ## Открыто на следующую волну
 
 - [x] Опрос — текст [`templates/PRE_ALPHA_SURVEY_COPY.md`](templates/PRE_ALPHA_SURVEY_COPY.md); развернуть URL в [`PRE_ALPHA_WAVE1_OPS.md`](PRE_ALPHA_WAVE1_OPS.md)
-- [ ] Зафиксировать билд (commit/tag) в ops-листе перед рассылкой
+- [ ] Зафиксировать билд (commit/tag) в ops-листе **перед рассылкой** — см. PA-W1 §«3 шага»
+- [ ] Волна 1 (10–20) — [`PRE_ALPHA_WAVE1_OPS.md`](PRE_ALPHA_WAVE1_OPS.md) · результаты → [`PRE_ALPHA_WAVE1_RESULTS.md`](PRE_ALPHA_WAVE1_RESULTS.md)
 - [ ] События: доля периодов с выбором (не только свайп)
 
 ---

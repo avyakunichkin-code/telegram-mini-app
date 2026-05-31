@@ -135,12 +135,12 @@ class TestBasicTutorialChain:
         assert r.current_goal_key is None
         assert r.win_reached is True
 
-    def test_early_period_blocks_win(self):
-        r = _eval_basic(_tutorial_complete_snap(period_index=MIN_PERIOD_INDEX_FOR_WIN - 1))
+    def test_early_period_allows_win_when_chain_complete(self):
+        r = _eval_basic(_tutorial_complete_snap(period_index=1))
         assert r.goals_met == 5
-        assert r.period_gate_open is False
-        assert r.win_reached is False
-        assert r.win_ready is True
+        assert r.period_gate_open is True
+        assert r.win_reached is True
+        assert r.win_ready is False
 
     def test_action_once_salary(self):
         r = _eval_basic(_snap(salary_ever_claimed=True))

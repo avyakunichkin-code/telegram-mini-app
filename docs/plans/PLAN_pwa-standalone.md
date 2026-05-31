@@ -56,8 +56,8 @@ epic: PW1
 | 1.2 | `vite-plugin-pwa`: manifest, precache статики | Frontend |
 | 1.3 | `start_url` под `base` + HashRouter (`/telegram-mini-app/#/`) | Frontend |
 | 1.4 | Meta: `theme-color`, apple-mobile-web-app | Frontend |
-| 1.5 | CORS: origin prod PWA в `CORS_ALLOW_ORIGINS` / `PUBLIC_APP_URL` | Backend + Ops |
-| 1.6 | `VITE_API_BASE_URL` в CI для PWA-сборки | Ops |
+| 1.5 | CORS: origin prod PWA в `CORS_ALLOW_ORIGINS` / `PUBLIC_APP_URL` | Backend + Ops | ✅ |
+| 1.6 | `VITE_API_BASE_URL` в CI для PWA-сборки | Ops | ✅ 2026-06-01 |
 | 1.7 | Lighthouse PWA audit на staging | QA |
 
 **Оценка:** 1–2 дня.

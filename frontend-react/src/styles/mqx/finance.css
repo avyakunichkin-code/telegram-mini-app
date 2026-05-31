@@ -872,6 +872,17 @@
   color: color-mix(in srgb, var(--mqx-ink) 58%, transparent);
 }
 
+.mqx-capital-mechanic-locked {
+  margin: 0;
+  padding: 12px 14px;
+  border-radius: 12px;
+  font-size: var(--mq-fs-caption);
+  line-height: 1.45;
+  color: color-mix(in srgb, var(--mqx-ink) 62%, transparent);
+  background: color-mix(in srgb, var(--tg-theme-hint-color, #999) 12%, transparent);
+  border: 1px dashed color-mix(in srgb, var(--tg-theme-hint-color, #999) 35%, transparent);
+}
+
 .mqx-fin-subtabs-row {
   display: grid;
   grid-template-columns: 1fr 1fr;

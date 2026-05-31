@@ -8,8 +8,6 @@ from __future__ import annotations
 
 import pytest
 
-from app.game.rules import MIN_PERIOD_INDEX_FOR_WIN
-
 
 pytestmark = pytest.mark.integration
 
@@ -58,8 +56,8 @@ class TestOverviewVictoryContract:
         assert victory["progression_mode"] == "chain"
         assert victory["current_goal_key"] == "tutorial_salary"
         assert victory["win_reached"] is False
-        assert victory["period_gate_open"] is False
-        assert victory["min_period_index"] == MIN_PERIOD_INDEX_FOR_WIN
+        assert victory["period_gate_open"] is True
+        assert victory["min_period_index"] == 1
         assert victory["goals_enabled"] == len(victory["goals"]) == 5
         assert victory["goals_required"] == 5
         assert victory["goals_met"] == 0

@@ -8,7 +8,6 @@ from __future__ import annotations
 
 import pytest
 
-from app.game.rules import MIN_PERIOD_INDEX_FOR_WIN
 from app.victory.engine import PROGRESSION_CHAIN, PROGRESSION_PARALLEL, evaluate_victory
 from app.victory.seeds import (
     VICTORY_CONFIG_BY_TEMPLATE_KEY,
@@ -50,29 +49,17 @@ class TestChainVsParallelSemantics:
         assert result.win_reached is True
         assert result.current_goal_key == "step_b"
 
-    def test_chain_win_requires_all_enabled_steps_and_period_gate(self):
+    def test_chain_win_requires_all_enabled_steps(self):
         cfg = three_step_config(progression_mode=PROGRESSION_CHAIN, required_goals_met=3)
         snap = skipped_middle_snap(
             has_active_deposit=True,
-            period_index=MIN_PERIOD_INDEX_FOR_WIN,
+            period_index=1,
         )
         result = evaluate_victory(cfg, snap, template_key="mq_game_basic_v1")
 
         assert result.goals_met == 3
         assert result.win_reached is True
-
-    def test_chain_early_period_blocks_win_even_when_steps_met(self):
-        cfg = three_step_config(progression_mode=PROGRESSION_CHAIN, required_goals_met=3)
-        snap = skipped_middle_snap(
-            has_active_deposit=True,
-            period_index=MIN_PERIOD_INDEX_FOR_WIN - 1,
-        )
-        result = evaluate_victory(cfg, snap, template_key="mq_game_basic_v1")
-
-        assert result.goals_met == 3
-        assert result.period_gate_open is False
-        assert result.win_reached is False
-        assert result.win_ready is True
+        assert result.period_gate_open is True
 
 
 class TestVictoryConfigByTemplateKey:

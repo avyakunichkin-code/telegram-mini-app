@@ -42,3 +42,39 @@ export function capitalPageSubtitle(mechanics) {
   if (mechanics.capital_liabilities) parts.push('обязательства');
   return `${parts.join(' · ')}.`;
 }
+
+const CAPITAL_MECHANIC_KEYS = [
+  'capital_invest',
+  'capital_insurance',
+  'capital_property',
+  'capital_liabilities',
+];
+
+/** `open` | `locked` | `hidden` — шаблон vs effective для раздела капитала. */
+export function capitalSectionState(overview, mechanicKey) {
+  if (!CAPITAL_MECHANIC_KEYS.includes(mechanicKey)) return 'hidden';
+  const templateCap = getMechanicsFromOverview(overview);
+  const effective = getEffectiveMechanicsFromOverview(overview);
+  if (!templateCap[mechanicKey]) return 'hidden';
+  if (effective[mechanicKey]) return 'open';
+  return 'locked';
+}
+
+/** Подсказка для заблокированного раздела (цели победы, без XP/уровня). */
+export function capitalLockHint(overview) {
+  const victory = overview?.victory;
+  if (!victory) {
+    return 'Раздел откроется после предыдущих шагов сценария — см. цели на главной.';
+  }
+  const goals = victory.goals || [];
+  const currentKey = victory.current_goal_key;
+  const currentGoal = goals.find((g) => g.key === currentKey);
+  if (currentGoal?.title) {
+    return `Сначала выполните цель «${currentGoal.title}» — раздел откроется на следующем шаге.`;
+  }
+  const pending = goals.find((g) => g.enabled !== false && !g.met && g.available !== false);
+  if (pending?.title) {
+    return `Продолжайте сценарий: «${pending.title}». Раздел откроется по цепочке целей.`;
+  }
+  return 'Раздел откроется после предыдущих шагов сценария — см. цели на главной.';
+}

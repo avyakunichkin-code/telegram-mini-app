@@ -42,6 +42,7 @@ export { MqxGoalBadge } from './layout/MqxGoalBadge';
 export { VictoryGoalItem } from './layout/VictoryGoalItem';
 export { CapitalPositionCard } from './layout/CapitalPositionCard';
 export { MqxCapitalSectionAccordion } from './layout/MqxCapitalSectionAccordion';
+export { MqxCapitalMechanicLocked } from './layout/MqxCapitalMechanicLocked';
 export { CapitalPeriodFlowsBlock } from './layout/CapitalPeriodFlowsBlock';
 export { InvestPositionRow } from './layout/InvestPositionRow';
 export { InsuranceCatalogGrid } from './layout/InsuranceCatalogGrid';
