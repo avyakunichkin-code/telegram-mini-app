@@ -43,6 +43,18 @@ export { CapitalPositionCard } from './layout/CapitalPositionCard';
 export { MqxCapitalSectionAccordion } from './layout/MqxCapitalSectionAccordion';
 export { MqxCapitalMechanicLocked } from './layout/MqxCapitalMechanicLocked';
 export { CapitalPeriodFlowsBlock } from './layout/CapitalPeriodFlowsBlock';
+export { MqxCapitalPageModeSeg } from './layout/MqxCapitalPageModeSeg';
+export {
+  formatDebtCount,
+  MqxCapitalMetaCount,
+  MqxCapitalMetaLiab,
+  MqxCapitalMetaSum,
+} from './layout/MqxCapitalSectionMeta';
+export { MqxCapitalActionGrid } from './layout/MqxCapitalActionGrid';
+export { MqxCapitalSheet } from './layout/MqxCapitalSheet';
+export { MqxCapitalDetailEmpty } from './layout/MqxCapitalDetailEmpty';
+export { CapitalDetailsPanel } from './layout/CapitalDetailsPanel';
+export { CapitalActionsPanel } from './layout/CapitalActionsPanel';
 export { InvestPositionRow } from './layout/InvestPositionRow';
 export { InsuranceCatalogGrid } from './layout/InsuranceCatalogGrid';
 export { InsurancePlanCard } from './layout/InsurancePlanCard';
@@ -69,6 +81,7 @@ export { MqxSubtab } from './primitives/MqxSubtab';
 export { MqxModeButton } from './primitives/MqxModeButton';
 export { MqxSectionSeg } from './primitives/MqxSectionSeg';
 export { MqxCapitalEmpty } from './primitives/MqxCapitalEmpty';
+export { MqxCapitalTextRowAction } from './primitives/MqxCapitalTextRowAction';
 export { MqxStateError } from './primitives/MqxStateError';
 export { MqxStateSkeleton } from './primitives/MqxStateSkeleton';
 export { MqxRowAction } from './primitives/MqxRowAction';

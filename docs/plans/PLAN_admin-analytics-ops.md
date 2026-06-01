@@ -119,12 +119,12 @@ related: ../specs/SPEC_ANALYTICS.md
 
 **O2 (2026-06):** воронка A1 переведена на `User.guidance_*` и beats curriculum (8 шагов), не O1 coach steps.
 
-### Фаза A3 — Карточка профиля (2 дня)
+### Фаза A3 — Карточка профиля (2 дня) ✅
 
 | # | Задача |
 |---|--------|
-| A3.1 | `GET /api/admin/profiles/{id}` — профиль + последние N записей log + period closings |
-| A3.2 | UI: клик по строке → inspector (query `?profile=` уже есть — расширить) |
+| A3.1 | `GET /api/admin/profiles/{id}` — профиль, user, economy, closings, activity log |
+| A3.2 | UI: клик по строке / `?profile=` → inspector panel на Watchtower |
 
 ### Фаза A4 — Вовлечение в лог (по мере надобности)
 

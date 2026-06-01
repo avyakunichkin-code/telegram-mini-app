@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { MoneyText } from '../../MoneyText';
 import { buildCapitalPeriodFlows } from '../../../utils/buildCapitalPeriodFlows';
+import { MqxCapitalMetaSum } from './MqxCapitalSectionMeta';
 import { MqxCapitalSectionAccordion } from './MqxCapitalSectionAccordion';
 
 function FlowLines({ article, tone }) {
@@ -48,7 +49,7 @@ function FlowSide({ side, tone, title, open, sectionId }) {
   return (
     <MqxCapitalSectionAccordion
       title={title}
-      meta={<MoneyText value={total} decimals={0} />}
+      meta={<MqxCapitalMetaSum value={total} decimals={0} />}
       tone={tone}
       open={open}
       sectionId={sectionId}
@@ -97,20 +98,22 @@ export function CapitalPeriodFlowsBlock({
 
   return (
     <>
-      <FlowSide
-        side={flows.income}
-        tone="in"
-        title="Доходы"
-        open={incomeOpen}
-        sectionId="capital-flows-income"
-      />
-      <FlowSide
-        side={flows.expense}
-        tone="out"
-        title="Расходы"
-        open={expenseOpen}
-        sectionId="capital-flows-expense"
-      />
+      <div className="mqx-cap-flows-pinned">
+        <FlowSide
+          side={flows.income}
+          tone="in"
+          title="Доходы"
+          open={incomeOpen}
+          sectionId="capital-flows-income"
+        />
+        <FlowSide
+          side={flows.expense}
+          tone="out"
+          title="Расходы"
+          open={expenseOpen}
+          sectionId="capital-flows-expense"
+        />
+      </div>
     </>
   );
 }

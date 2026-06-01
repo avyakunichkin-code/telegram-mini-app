@@ -1,6 +1,16 @@
 import { apiCall } from './client.js';
 
 export const adminApi = {
+  profileDetail(profileId, params = {}) {
+    const qs = new URLSearchParams();
+    if (params.log_limit) qs.set('log_limit', String(params.log_limit));
+    if (params.closing_limit) qs.set('closing_limit', String(params.closing_limit));
+    const query = qs.toString();
+    return apiCall(
+      `/api/admin/profiles/${encodeURIComponent(String(profileId))}${query ? `?${query}` : ''}`,
+    );
+  },
+
   metricsSummary(params = {}) {
     const qs = new URLSearchParams();
     if (params.days) qs.set('days', String(params.days));

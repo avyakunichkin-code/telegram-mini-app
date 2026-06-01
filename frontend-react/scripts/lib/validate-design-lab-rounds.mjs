@@ -21,6 +21,12 @@ function isBaselineDir(absDir) {
   return posix(absDir).includes('/design-lab/_baseline/')
 }
 
+function hasSyncLabScript(roundDirAbs) {
+  return ['sync-lab.sh', 'sync-lab.ps1', 'sync-lab.cmd'].some((name) =>
+    fs.existsSync(path.join(roundDirAbs, name)),
+  )
+}
+
 function findSyncLabRoundDirs(repoRoot, { skipParityBlocks = false } = {}) {
   const designLab = path.join(repoRoot, 'design-lab')
   const out = []
@@ -39,7 +45,7 @@ function findSyncLabRoundDirs(repoRoot, { skipParityBlocks = false } = {}) {
         if (!isBaselineDir(abs)) walk(abs)
         continue
       }
-      if (ent.name === 'sync-lab.ps1' || ent.name === 'sync-lab.cmd') {
+      if (ent.name === 'sync-lab.sh' || ent.name === 'sync-lab.ps1' || ent.name === 'sync-lab.cmd') {
         if (skipParityBlocks && isParityBlockDir(abs)) continue
         out.push(path.dirname(abs))
       }
@@ -92,12 +98,11 @@ function validateRoundDir(roundDirAbs, repoRoot, { label, enforceFreshLabBase = 
   const indexPath = path.join(roundDirAbs, 'index.html')
   const labBasePath = path.join(roundDirAbs, 'lab-base.css')
   const stylesPath = path.join(roundDirAbs, 'styles.css')
-  const syncPath = path.join(roundDirAbs, 'sync-lab.ps1')
-  const hasSyncLab = fs.existsSync(syncPath)
+  const hasSyncLab = hasSyncLabScript(roundDirAbs)
 
   if (!fs.existsSync(indexPath)) {
     if (hasSyncLab) {
-      errors.push(`${tag}: нет index.html (ожидается в раунде с sync-lab.ps1)`)
+      errors.push(`${tag}: нет index.html (ожидается в раунде с sync-lab.sh / sync-lab.ps1)`)
     }
     return { errors, warnings }
   }
@@ -137,13 +142,13 @@ function validateRoundDir(roundDirAbs, repoRoot, { label, enforceFreshLabBase = 
       const stat = fs.statSync(labBasePath)
       if (stat.size < MIN_LAB_BASE_BYTES) {
         errors.push(
-          `${tag}: lab-base.css слишком мал (${stat.size} B) — пересоберите sync-lab.ps1.`,
+          `${tag}: lab-base.css слишком мал (${stat.size} B) — пересоберите ./sync-lab.sh.`,
         )
       }
       const head = fs.readFileSync(labBasePath, 'utf8').slice(0, 120)
       if (!head.includes('Auto-generated') && !head.includes('sync-lab')) {
         warnings.push(
-          `${tag}: lab-base.css не похож на вывод sync-lab — не редактируйте вручную, запустите sync-lab.ps1.`,
+          `${tag}: lab-base.css не похож на вывод sync-lab — не редактируйте вручную, запустите ./sync-lab.sh.`,
         )
       }
     }
@@ -240,9 +245,8 @@ export function validateDesignLabRounds(repoRoot, opts = {}) {
         errors.push(`Канон: папка раунда не найдена: ${posix(path.relative(repoRoot, dir))}`)
         continue
       }
-      const syncPath = path.join(dir, 'sync-lab.ps1')
       const labBasePath = path.join(dir, 'lab-base.css')
-      if (!fs.existsSync(syncPath) && !fs.existsSync(labBasePath)) {
+      if (!hasSyncLabScript(dir) && !fs.existsSync(labBasePath)) {
         continue
       }
       const r = validateRoundDir(dir, repoRoot, {
@@ -274,7 +278,7 @@ export function printValidationResult(result, { failOnWarnings = false } = {}) {
         'Design-lab rounds check failed.',
         '',
         'Self-contained раунды: index.html → только ./lab-base.css (без ../).',
-        'После правки styles.css: ./sync-lab.sh или .\\sync-lab.ps1 в папке раунда (bash не запускает .ps1 напрямую).',
+        'После правки styles.css: ./sync-lab.sh в папке раунда (предпочтительно; legacy: .\\sync-lab.ps1).',
         'Перед parity: cd frontend-react && npm run design-lab:build',
         '',
         ...result.errors.map((e) => `- ${e}`),

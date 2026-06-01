@@ -9,13 +9,18 @@ export function MqxCapitalSectionAccordion({
   open,
   defaultOpen = false,
   sectionId,
+  className = '',
   children,
 }) {
   const toneClass = tone ? `mqx-cap-sect--${tone}` : 'mqx-cap-sect--neutral';
   const openAttr = open !== undefined ? open : defaultOpen || undefined;
 
   return (
-    <details id={sectionId} className={`mqx-cap-sect ${toneClass}`} open={openAttr}>
+    <details
+      id={sectionId}
+      className={['mqx-cap-sect', toneClass, className].filter(Boolean).join(' ')}
+      open={openAttr}
+    >
       <summary className="mqx-cap-sect__head">
         <span className="mqx-cap-sect__title">{title}</span>
         {meta != null && meta !== '' ? (

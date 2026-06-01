@@ -3,6 +3,8 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import { Button, Spinner } from '@telegram-apps/telegram-ui';
 import { adminApi } from '../../api';
 import { AdminNav } from './AdminNav';
+import { AdminProfileInspectorPanel } from './AdminProfileInspectorPanel';
+import { GuidanceBadge } from './AdminGuidanceBadge';
 
 function formatDt(value) {
   if (!value) return '—';
@@ -11,21 +13,6 @@ function formatDt(value) {
   } catch {
     return String(value);
   }
-}
-
-function GuidanceBadge({ completed }) {
-  if (completed) {
-    return (
-      <span className="admin-watchtower__badge admin-watchtower__badge--done">
-        guidance ✓
-      </span>
-    );
-  }
-  return (
-    <span className="admin-watchtower__badge admin-watchtower__badge--draft">
-      guidance
-    </span>
-  );
 }
 
 function OnboardingFunnel({ funnel }) {
@@ -120,7 +107,7 @@ function MetricsSummary({ summary }) {
   );
 }
 
-function Table({ columns, rows, highlightId }) {
+function Table({ columns, rows, highlightId, onRowClick }) {
   if (!rows.length) {
     return <p className="mq-muted">Пока пусто</p>;
   }
@@ -138,11 +125,26 @@ function Table({ columns, rows, highlightId }) {
           {rows.map((row) => (
             <tr
               key={row._key}
-              className={
+              className={[
                 highlightId != null && row._id === highlightId
                   ? 'admin-watchtower__row--highlight'
+                  : null,
+                onRowClick ? 'admin-watchtower__row--clickable' : null,
+              ]
+                .filter(Boolean)
+                .join(' ') || undefined}
+              onClick={onRowClick ? () => onRowClick(row) : undefined}
+              onKeyDown={
+                onRowClick
+                  ? (e) => {
+                      if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        onRowClick(row);
+                      }
+                    }
                   : undefined
               }
+              tabIndex={onRowClick ? 0 : undefined}
             >
               {columns.map((col) => (
                 <td key={col.key}>{col.render(row)}</td>
@@ -157,7 +159,7 @@ function Table({ columns, rows, highlightId }) {
 
 export function AdminWatchtowerScreen({ onBack }) {
   const navigate = useNavigate();
-  const [searchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
   const highlightProfile = searchParams.get('profile');
   const highlightUser = searchParams.get('user');
 
@@ -250,6 +252,15 @@ export function AdminWatchtowerScreen({ onBack }) {
     _id: String(n.id),
   }));
 
+  const openProfile = useCallback(
+    (row) => {
+      const next = new URLSearchParams(searchParams);
+      next.set('profile', String(row.id));
+      setSearchParams(next, { replace: true });
+    },
+    [searchParams, setSearchParams],
+  );
+
   return (
     <div className="admin-watchtower mq-section">
       <AdminNav />
@@ -292,6 +303,8 @@ export function AdminWatchtowerScreen({ onBack }) {
         </div>
       ) : null}
 
+      <AdminProfileInspectorPanel />
+
       {!loading && !error && data ? (
         <>
           <MetricsSummary summary={data.metrics_summary} />
@@ -305,7 +318,12 @@ export function AdminWatchtowerScreen({ onBack }) {
 
             <section className="mq-card admin-watchtower__block">
               <h2 className="admin-watchtower__block-title">Профили</h2>
-              <Table columns={profileColumns} rows={profiles} highlightId={highlightProfile} />
+              <Table
+                columns={profileColumns}
+                rows={profiles}
+                highlightId={highlightProfile}
+                onRowClick={openProfile}
+              />
             </section>
           </div>
 

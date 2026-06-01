@@ -6,38 +6,24 @@ import {
   DEPOSIT_ANNUAL_RATE_PERCENT,
 } from '../constants/investProducts';
 import { capitalPageSubtitle, capitalLockHint, capitalSectionState, getEffectiveMechanicsFromOverview } from '../utils/starterMechanics';
-import { CapitalLiabilitiesPanel, CapitalPropertyPanel } from './CapitalPortfolioPanels';
-import { InvestProductForm } from './InvestProductForm';
-import {
-  InsuranceSection,
-  InvestPositionRow,
-  MqxCapitalEmpty,
-  MqxCapitalMechanicLocked,
-  MqxStateSkeleton,
-  MqxSectionSeg,
-  MqxSubtab,
-  useMqxConfirm,
-} from './mqx';
-import { CapitalMonetkaGuidance } from './mqx/layout/CapitalMonetkaGuidance';
+import { useMqxConfirm } from './mqx';
+import { CapitalActionsPanel } from './mqx/layout/CapitalActionsPanel';
+import { CapitalDetailsPanel } from './mqx/layout/CapitalDetailsPanel';
 import { CapitalPeriodFlowsBlock } from './mqx/layout/CapitalPeriodFlowsBlock';
-import { MqxCapitalSectionAccordion } from './mqx/layout/MqxCapitalSectionAccordion';
+import { MqxCapitalPageModeSeg } from './mqx/layout/MqxCapitalPageModeSeg';
 import { MqxTabHero } from './MqxTabHero';
 import { showNotification } from './notifications';
 
-const DEPOSIT_HELP =
-  'Депозит растёт в теле вклада. Увеличивается на 1/12 от ставки вклада каждый период.';
-
-const BOND_HELP =
-  'Облигации платят купон на счёт. 1/12 от ставки добавляется на счёт автоматически в начале каждого периода.';
-
-/** Вкладка «Финансы»: управление капиталом (аккордеоны по mechanics шаблона). */
+/** Вкладка «Финансы»: потоки → Детали|Действия → позиции или сетка действий. */
 export function FinancePremium({
   overview,
   refreshOverview,
   openFlowsSection = null,
   onFlowsSectionOpened,
 }) {
-  const { confirm, dialog } = useMqxConfirm();
+  const { dialog } = useMqxConfirm();
+  const [pageMode, setPageMode] = useState('details');
+  const [openSheet, setOpenSheet] = useState(null);
   const [investPositions, setInvestPositions] = useState([]);
   const [policies, setPolicies] = useState([]);
   const [depositAmount, setDepositAmount] = useState(0);
@@ -46,10 +32,6 @@ export function FinancePremium({
   const [cancellingPolicyId, setCancellingPolicyId] = useState(null);
   const [assetTemplates, setAssetTemplates] = useState([]);
   const [liabilityTemplates, setLiabilityTemplates] = useState([]);
-  const [investProductTab, setInvestProductTab] = useState('deposit');
-  const [investUiMode, setInvestUiMode] = useState('form');
-  const [portfolioAssetsMode, setPortfolioAssetsMode] = useState('add');
-  const [portfolioDebtsMode, setPortfolioDebtsMode] = useState('add');
   const [extraLoading, setExtraLoading] = useState(true);
 
   const mechanics = useMemo(() => getEffectiveMechanicsFromOverview(overview), [overview]);
@@ -61,12 +43,6 @@ export function FinancePremium({
     () => (insuranceSectionState === 'locked' ? capitalLockHint(overview) : null),
     [insuranceSectionState, overview],
   );
-  const capitalSectionsCount =
-    2 +
-    (mechanics.capital_invest ? 1 : 0) +
-    (insuranceSectionState !== 'hidden' ? 1 : 0) +
-    (mechanics.capital_property ? 1 : 0) +
-    (mechanics.capital_liabilities ? 1 : 0);
 
   useEffect(() => {
     if (!openFlowsSection) return undefined;
@@ -111,10 +87,6 @@ export function FinancePremium({
     reloadExtra({ quiet: true });
   }, []);
 
-  useEffect(() => {
-    setInvestUiMode('form');
-  }, [investProductTab]);
-
   const maxCash = Math.max(0, Math.floor(Number(overview?.cash_balance) || 0));
 
   useEffect(() => {
@@ -149,6 +121,7 @@ export function FinancePremium({
       showNotification('Полис оформлен', 'success');
       await refreshOverview();
       await reloadExtra();
+      setOpenSheet(null);
     } catch (e) {
       showNotification(e, 'error');
     } finally {
@@ -157,13 +130,6 @@ export function FinancePremium({
   };
 
   const cancelInsurancePolicy = async (policyId) => {
-    const policy = policies.find((p) => p.id === policyId);
-    const ok = await confirm({
-      title: 'Отменить полис?',
-      message: policy ? `«${policy.title}» перестанет действовать.` : 'Полис перестанет действовать.',
-    });
-    if (!ok) return;
-
     setCancellingPolicyId(policyId);
     try {
       await API.cancelPolicy(policyId);
@@ -181,22 +147,29 @@ export function FinancePremium({
       await API.createLiabilityFromTemplate(t.key);
       showNotification('Обязательство добавлено: сумма зачислена на счёт', 'success');
       await refreshOverview();
+      await reloadExtra();
+      setOpenSheet(null);
     } catch (e) {
       showNotification(e?.detail || e?.message || 'Не удалось добавить долг', 'error');
     }
   };
 
+  const addAssetFromTemplate = async (t) => {
+    try {
+      await API.createAssetFromTemplate(t.key);
+      showNotification('Актив добавлен', 'success');
+      await refreshOverview();
+      await reloadExtra();
+      setOpenSheet(null);
+    } catch (e) {
+      showNotification(e?.detail || e?.message || 'Не удалось добавить актив', 'error');
+    }
+  };
+
   if (!overview) return null;
 
-  const depositPositions = investPositions.filter((p) => p.kind === 'deposit');
-  const bondPositions = investPositions.filter((p) => p.kind === 'bond');
-  const selectedInvestSubtitle = investProductTab === 'deposit' ? DEPOSIT_HELP : BOND_HELP;
-  const selectedInvestPositions = investProductTab === 'deposit' ? depositPositions : bondPositions;
   const ownedAssets = overview.assets || [];
   const ownedLiabilities = overview.liabilities || [];
-  const investSegMode = investUiMode === 'form' ? 'add' : 'mine';
-  const propertySegMode = portfolioAssetsMode === 'positions' ? 'mine' : portfolioAssetsMode;
-  const liabilitiesSegMode = portfolioDebtsMode === 'positions' ? 'mine' : portfolioDebtsMode;
 
   const openDeposit = async () => {
     try {
@@ -205,6 +178,7 @@ export function FinancePremium({
       setDepositAmount(0);
       await refreshOverview();
       await reloadExtra();
+      setOpenSheet(null);
     } catch (e) {
       showNotification(e?.detail || e?.message || 'Не удалось открыть депозит', 'error');
     }
@@ -221,6 +195,7 @@ export function FinancePremium({
       setBondAmount(0);
       await refreshOverview();
       await reloadExtra();
+      setOpenSheet(null);
     } catch (e) {
       showNotification(e?.detail || e?.message || 'Не удалось добавить облигации', 'error');
     }
@@ -237,84 +212,17 @@ export function FinancePremium({
     }
   };
 
-  const requestCloseInvest = async (position) => {
-    const ok = await confirm({
-      title: 'Закрыть позицию?',
-      message: `«${position.title}» будет закрыта.`,
-    });
-    if (ok) await closeInvest(position.id);
+  const handleGotoAction = (sheetId) => {
+    setPageMode('actions');
+    setOpenSheet(sheetId);
   };
 
-  const investCapitalBlock = (
-    <>
-      <div className="mqx-fin-subtabs mqx-fin-subtabs-row" role="tablist" aria-label="Инструмент">
-        <MqxSubtab
-          role="tab"
-          aria-selected={investProductTab === 'deposit'}
-          active={investProductTab === 'deposit'}
-          onClick={() => setInvestProductTab('deposit')}
-        >
-          Депозиты
-        </MqxSubtab>
-        <MqxSubtab
-          role="tab"
-          aria-selected={investProductTab === 'bond'}
-          active={investProductTab === 'bond'}
-          onClick={() => setInvestProductTab('bond')}
-        >
-          Облигации
-        </MqxSubtab>
-      </div>
-      <div className="mqx-fin-longhelp">{selectedInvestSubtitle}</div>
-      <MqxSectionSeg
-        mode={investSegMode}
-        onModeChange={(m) => setInvestUiMode(m === 'add' ? 'form' : 'positions')}
-        addLabel="Оформить"
-        mineLabel="Мои"
-        mineCount={selectedInvestPositions.length}
-      />
-      {investUiMode === 'form' ? (
-        <InvestProductForm
-          embedded
-          productId={investProductTab}
-          productTitle={investProductTab === 'deposit' ? 'Депозит' : 'Облигации'}
-          amount={investProductTab === 'deposit' ? depositAmount : bondAmount}
-          maxCash={maxCash}
-          annualRatePercent={
-            investProductTab === 'deposit' ? DEPOSIT_ANNUAL_RATE_PERCENT : BOND_ANNUAL_RATE_PERCENT
-          }
-          onAmountChange={investProductTab === 'deposit' ? setDepositAmount : setBondAmount}
-          submitLabel={investProductTab === 'deposit' ? 'Открыть депозит' : 'Купить облигации'}
-          onSubmit={() => void (investProductTab === 'deposit' ? openDeposit() : openBond())}
-        />
-      ) : (
-        <div className="mqx-capital-position-list">
-          {extraLoading ? (
-            <MqxStateSkeleton variant="rows" rows={3} />
-          ) : selectedInvestPositions.length === 0 ? (
-            <MqxCapitalEmpty
-              message={`Нет позиций: ${investProductTab === 'deposit' ? 'депозитов' : 'облигаций'}`}
-              actionLabel={investProductTab === 'deposit' ? 'Открыть депозит' : 'Купить облигации'}
-              onAction={() => setInvestUiMode('form')}
-            />
-          ) : (
-            selectedInvestPositions.map((p) => (
-              <InvestPositionRow
-                key={p.id}
-                position={p}
-                onCloseRequest={() => void requestCloseInvest(p)}
-              />
-            ))
-          )}
-        </div>
-      )}
-    </>
-  );
-
-  const investMeta = `${investPositions.length} поз.`;
-  const insuranceMeta = `${policies.length} полис.`;
-  const propertyMeta = `${ownedAssets.length} поз.`;
-  const liabilitiesMeta = `${ownedLiabilities.length} долг.`;
+  const capitalSectionsCount =
+    2 +
+    (mechanics.capital_invest ? 1 : 0) +
+    (insuranceSectionState !== 'hidden' ? 1 : 0) +
+    (mechanics.capital_property ? 1 : 0) +
+    (mechanics.capital_liabilities ? 1 : 0);
 
   return (
     <div className="mqx-tab-page">
@@ -332,67 +240,58 @@ export function FinancePremium({
         <div className="mqx-fin mqx-fin--capital">
           {dialog}
           <div className="mqx-capital-accordion-stack">
-            <CapitalMonetkaGuidance />
             <CapitalPeriodFlowsBlock
               overview={overview}
               investPositions={investPositions}
               policies={policies}
               openFlowsSection={openFlowsSection}
             />
-            <p className="mqx-cap-actions-hint">
-              В разделах ниже доступны действия добавления и удаления.
-            </p>
-            {mechanics.capital_invest ? (
-              <MqxCapitalSectionAccordion title="Инвестиции" meta={investMeta}>
-                {investCapitalBlock}
-              </MqxCapitalSectionAccordion>
-            ) : null}
-            {insuranceSectionState === 'open' ? (
-              <MqxCapitalSectionAccordion title="Страховки" meta={insuranceMeta}>
-                <InsuranceSection
-                  policies={policies}
-                  buyingPlanKey={buyingPlanKey}
-                  cancellingPolicyId={cancellingPolicyId}
-                  onBuy={buyInsurancePlan}
-                  onCancel={cancelInsurancePolicy}
-                  intro="Премия списывается в конце периода. При страховом случае — полная сумма выплаты, полис закрывается."
-                  useSectionSeg
-                />
-              </MqxCapitalSectionAccordion>
-            ) : null}
-            {insuranceSectionState === 'locked' ? (
-              <MqxCapitalSectionAccordion title="Страховки" meta="скоро">
-                <MqxCapitalMechanicLocked hint={insuranceLockHint} />
-              </MqxCapitalSectionAccordion>
-            ) : null}
-            {mechanics.capital_property ? (
-              <MqxCapitalSectionAccordion title="Имущество" meta={propertyMeta}>
-                <CapitalPropertyPanel
-                  assetTemplates={assetTemplates}
-                  ownedAssets={ownedAssets}
-                  sectionMode={propertySegMode}
-                  setSectionMode={(m) => setPortfolioAssetsMode(m === 'mine' ? 'positions' : m)}
-                  refreshOverview={refreshOverview}
-                  reloadExtra={reloadExtra}
-                  handleDeleteAsset={handleDeleteAsset}
-                  extraLoading={extraLoading}
-                />
-              </MqxCapitalSectionAccordion>
-            ) : null}
-            {mechanics.capital_liabilities ? (
-              <MqxCapitalSectionAccordion title="Обязательства" meta={liabilitiesMeta}>
-                <CapitalLiabilitiesPanel
-                  liabilityTemplates={liabilityTemplates}
-                  ownedLiabilities={ownedLiabilities}
-                  sectionMode={liabilitiesSegMode}
-                  setSectionMode={(m) => setPortfolioDebtsMode(m === 'mine' ? 'positions' : m)}
-                  addLiabilityFromTemplate={addLiabilityFromTemplate}
-                  handleDeleteLiability={handleDeleteLiability}
-                  reloadExtra={reloadExtra}
-                  extraLoading={extraLoading}
-                />
-              </MqxCapitalSectionAccordion>
-            ) : null}
+
+            <MqxCapitalPageModeSeg mode={pageMode} onModeChange={setPageMode} />
+
+            {pageMode === 'details' ? (
+              <CapitalDetailsPanel
+                mechanics={mechanics}
+                insuranceSectionState={insuranceSectionState}
+                insuranceLockHint={insuranceLockHint}
+                investPositions={investPositions}
+                policies={policies}
+                ownedAssets={ownedAssets}
+                ownedLiabilities={ownedLiabilities}
+                extraLoading={extraLoading}
+                onCloseInvest={closeInvest}
+                onCancelPolicy={cancelInsurancePolicy}
+                cancellingPolicyId={cancellingPolicyId}
+                onDeleteAsset={handleDeleteAsset}
+                onDeleteLiability={handleDeleteLiability}
+                onGotoAction={handleGotoAction}
+              />
+            ) : (
+              <CapitalActionsPanel
+                mechanics={mechanics}
+                insuranceSectionState={insuranceSectionState}
+                assetTemplates={assetTemplates}
+                liabilityTemplates={liabilityTemplates}
+                extraLoading={extraLoading}
+                reloadExtra={reloadExtra}
+                openSheet={openSheet}
+                onOpenSheet={setOpenSheet}
+                onCloseSheet={() => setOpenSheet(null)}
+                depositAmount={depositAmount}
+                bondAmount={bondAmount}
+                maxCash={maxCash}
+                depositRate={DEPOSIT_ANNUAL_RATE_PERCENT}
+                bondRate={BOND_ANNUAL_RATE_PERCENT}
+                onDepositAmountChange={setDepositAmount}
+                onBondAmountChange={setBondAmount}
+                onOpenDeposit={openDeposit}
+                onOpenBond={openBond}
+                onBuyInsurance={buyInsurancePlan}
+                buyingPlanKey={buyingPlanKey}
+                onAddAssetFromTemplate={addAssetFromTemplate}
+                onAddLiabilityFromTemplate={addLiabilityFromTemplate}
+              />
+            )}
           </div>
         </div>
       </main>

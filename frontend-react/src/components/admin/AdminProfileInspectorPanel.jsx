@@ -1,8 +1,8 @@
 import { useCallback, useEffect, useState } from 'react';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 import { Button, Spinner } from '@telegram-apps/telegram-ui';
 import { adminApi } from '../../api';
-import { GuidanceBadge } from './AdminWatchtowerScreen.shared';
+import { GuidanceBadge } from './AdminGuidanceBadge';
 
 function formatDt(value) {
   if (!value) return '—';
@@ -29,7 +29,6 @@ function Stat({ label, value, sub }) {
 }
 
 export function AdminProfileInspectorPanel() {
-  const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
   const profileId = searchParams.get('profile');
 
