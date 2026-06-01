@@ -223,8 +223,12 @@ def test_needs_guide_endpoint(client, auth_headers):
     g = client.get("/api/game/needs/guide", headers=auth_headers)
     assert g.status_code == 200
     body = g.json()
+    assert body.get("title") == "Потребности"
+    sections = body.get("sections") or []
+    assert len(sections) >= 4
+    headings = {s["heading"] for s in sections}
+    assert "Что это" in headings
+    assert "Кнопка «Улучшить»" in headings
     assert isinstance(body["maintenance"], list)
     assert isinstance(body["critical"], list)
-    assert len(body["maintenance"]) >= 1
-    assert len(body["critical"]) >= 1
 

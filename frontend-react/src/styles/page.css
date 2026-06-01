@@ -440,20 +440,20 @@
 }
 
 /* Кнопки в контентной зоне: мягкая глубина (нижнее меню и оверлеи не трогаем) */
-#root button:not(.tma-nav-icon-btn):not(.mqx-btn):not(.mqx-save-kind__row):not(.bottom-nav__cell):not(.mqx-dash-link):not(.mqx-needs-help-link):not(.mqx-needs-action--treat):not(.mqx-finance-monetka__close):not(.mqx-capital-monetka__close):not(.mqx-action):not(.mqx-action-chip):not(.mqx-goal-dash__toggle):not(.events-carousel-dot):not(.events-carousel-arrow):not(
+#root button:not(.tma-nav-icon-btn):not(.mqx-btn):not(.mqx-save-kind__row):not(.bottom-nav__cell):not(.mqx-dash-link):not(.mqx-needs-help-link):not(.mqx-needs-action--treat):not(.mqx-help-icon-btn):not(.mqx-treat-heart-btn):not(.mqx-finance-monetka__close):not(.mqx-capital-monetka__close):not(.mqx-action):not(.mqx-action-chip):not(.mqx-goal-dash__toggle):not(.events-carousel-dot):not(.events-carousel-arrow):not(
     .events-overlay-close
   ):not(.mqx-events-choice):focus-visible {
   outline: 2px solid color-mix(in srgb, var(--mq-accent-link), transparent 22%);
   outline-offset: 2px;
 }
 
-#root button:not(.tma-nav-icon-btn):not(.mqx-btn):not(.mqx-save-kind__row):not(.bottom-nav__cell):not(.mqx-dash-link):not(.mqx-needs-help-link):not(.mqx-needs-action--treat):not(.mqx-finance-monetka__close):not(.mqx-capital-monetka__close):not(.mqx-action):not(.mqx-action-chip):not(.mqx-goal-dash__toggle):not(.events-carousel-dot):not(.events-carousel-arrow):not(
+#root button:not(.tma-nav-icon-btn):not(.mqx-btn):not(.mqx-save-kind__row):not(.bottom-nav__cell):not(.mqx-dash-link):not(.mqx-needs-help-link):not(.mqx-needs-action--treat):not(.mqx-help-icon-btn):not(.mqx-treat-heart-btn):not(.mqx-finance-monetka__close):not(.mqx-capital-monetka__close):not(.mqx-action):not(.mqx-action-chip):not(.mqx-goal-dash__toggle):not(.events-carousel-dot):not(.events-carousel-arrow):not(
     .events-overlay-close
   ):not(.mqx-events-choice):active:not(:disabled) {
   transform: scale(0.985);
 }
 
-#root button:not(.tma-nav-icon-btn):not(.mqx-btn):not(.mqx-save-kind__row):not(.bottom-nav__cell):not(.mqx-dash-link):not(.mqx-needs-help-link):not(.mqx-needs-action--treat):not(.mqx-finance-monetka__close):not(.mqx-capital-monetka__close):not(.mqx-action):not(.mqx-action-chip):not(.mqx-goal-dash__toggle):not(.events-carousel-dot):not(.events-carousel-arrow):not(
+#root button:not(.tma-nav-icon-btn):not(.mqx-btn):not(.mqx-save-kind__row):not(.bottom-nav__cell):not(.mqx-dash-link):not(.mqx-needs-help-link):not(.mqx-needs-action--treat):not(.mqx-help-icon-btn):not(.mqx-treat-heart-btn):not(.mqx-finance-monetka__close):not(.mqx-capital-monetka__close):not(.mqx-action):not(.mqx-action-chip):not(.mqx-goal-dash__toggle):not(.events-carousel-dot):not(.events-carousel-arrow):not(
     .events-overlay-close
   ):not(.mqx-events-choice):not(:disabled) {
   transition:

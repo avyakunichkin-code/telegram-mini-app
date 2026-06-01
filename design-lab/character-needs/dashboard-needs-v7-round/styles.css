@@ -60,7 +60,7 @@
   border: none;
   background: none;
   font: inherit;
-  font-size: var(--mq-fs-caption, 12px);
+  font-size: var(--mq-fs-micro, 11px);
   font-weight: 600;
   line-height: 1.25;
   color: var(--mq-violet, #6d28d9);
@@ -99,6 +99,126 @@
   color: color-mix(in srgb, var(--mqx-ink) 55%, transparent);
   background: color-mix(in srgb, var(--mqx-ink) 4%, transparent);
   box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--mqx-ink) 12%, transparent);
+  cursor: pointer;
+}
+
+/* e1–e3: книга без фона + сердце (см. prod dashboard.css) */
+.mqx-help-icon-btn {
+  position: relative;
+  flex-shrink: 0;
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  margin: 0;
+  border: none;
+  box-shadow: none;
+  outline: none;
+  background: transparent;
+  color: color-mix(in srgb, var(--mq-violet, #6d28d9) 92%, var(--mqx-ink));
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.mqx-help-icon-btn:hover,
+.mqx-help-icon-btn:focus-visible {
+  color: var(--mq-violet-deep, #5b21b6);
+}
+
+.mqx-help-icon-btn:focus-visible {
+  outline: 2px solid color-mix(in srgb, var(--mq-violet, #6d28d9) 32%, transparent);
+  outline-offset: 2px;
+  border-radius: 6px;
+}
+
+.mqx-help-icon-btn svg {
+  width: 17px;
+  height: 17px;
+}
+
+.mqx-help-icon-btn--inside svg {
+  width: 16px;
+  height: 16px;
+}
+
+.mqx-help-icon-btn__badge {
+  position: absolute;
+  right: 3px;
+  bottom: 4px;
+  min-width: 8px;
+  height: 8px;
+  padding: 0 1px;
+  border-radius: 999px;
+  font-size: 6.5px;
+  font-weight: 800;
+  line-height: 8px;
+  text-align: center;
+  color: var(--mq-violet-deep, #5b21b6);
+  pointer-events: none;
+  background: color-mix(in srgb, var(--mq-violet, #6d28d9) 14%, transparent);
+}
+
+.mqx-treat-heart-btn {
+  flex-shrink: 0;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border: none;
+  font: inherit;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.mqx-treat-heart-btn svg {
+  width: 16px;
+  height: 16px;
+}
+
+.mqx-needs-section[data-actions='e1'] .mqx-treat-heart-btn {
+  border-radius: 9px;
+  color: var(--mq-emerald, #059669);
+  background: color-mix(in srgb, var(--mq-emerald, #059669) 10%, transparent);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--mq-emerald, #059669) 26%, transparent);
+}
+
+.mqx-needs-section[data-actions='e2'] .mqx-treat-heart-btn--ghost {
+  width: 30px;
+  height: 30px;
+  background: transparent;
+  box-shadow: none;
+  color: var(--mq-emerald, #059669);
+}
+
+.mqx-needs-section[data-actions='e3'] .mqx-treat-heart-btn--dot,
+.mqx-needs-section[data-actions='e2e3'] .mqx-treat-heart-btn--dot {
+  width: 26px;
+  height: 26px;
+  border-radius: 999px;
+  color: #fff;
+  background: linear-gradient(145deg, var(--mq-emerald, #059669), #047857);
+  box-shadow: 0 1px 5px color-mix(in srgb, var(--mq-emerald, #059669) 22%, transparent);
+}
+
+.mqx-needs-section[data-actions='e2e3'] .mqx-treat-heart-btn--dot svg {
+  width: 14px;
+  height: 14px;
+}
+
+.mqx-needs-section[data-actions='e3'] .mqx-treat-heart-btn--dot svg {
+  width: 14px;
+  height: 14px;
+}
+
+.mqx-treat-heart-btn.is-disabled {
+  opacity: 0.45;
+  color: color-mix(in srgb, var(--mqx-ink) 50%, transparent);
+  background: color-mix(in srgb, var(--mqx-ink) 4%, transparent);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--mqx-ink) 10%, transparent);
   cursor: pointer;
 }
 

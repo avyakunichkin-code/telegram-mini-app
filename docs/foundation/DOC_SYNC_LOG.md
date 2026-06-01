@@ -4,6 +4,7 @@
 
 | Дата | Что в prod | Что исправили в docs |
 |------|------------|----------------------|
+| 2026-06-01 | **Z-NEEDS v7-e2e3** + справочник 4 раздела | `MqxNeedsDash` e2+e3; `guide_content.py` + `sections[]`; `MqxNeedsHelpSheet`; lab v7-e2e3 ★ |
 | 2026-06-01 | **GE1 Run Finale в prod** | `MqxRunFinale`, bootstrap `run_finale`, defeat archive, `player_run_feedback`, Watchtower «Отзывы с финала» | [`SPEC_game-run-finale`](../specs/features/SPEC_game-run-finale.md), idea → spec, `PRODUCT_BACKLOG` GE1 |
 | 2026-06-01 | **Портреты 4 персонажей** на `GameTemplatePickScreen` + `MqxNeedsDash` | `persona-portraits-round/APPROVED.md`, `character-portraits/`, `npm run persona-portraits:process`; docs: `BRANDBOOK_MQX`, `FEATURE_STATUS`, `SPEC_FRONTEND_UI` §pre-game, `character-pick` / `character-needs-dashboard`, `UI_CONSISTENCY_AUDIT`, `scenario-icons` → архив |
 | 2026-06-01 | — (lab only) | **GE1 Run Finale:** idea [`game-run-finale-pre-alpha`](../vision/ideas/game-run-finale-pre-alpha.md), `design-lab/run-finale/`, эпик в `PRODUCT_BACKLOG` |

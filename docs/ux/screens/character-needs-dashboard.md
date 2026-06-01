@@ -59,7 +59,7 @@ GameScreen → dashboard
 2. **Bleed-баннер риска** (если `needs_zero_periods_streak > 0`).  
 3. **Портрет** слева + **4 шкалы** справа (всегда видимы; accordion снят).  
 4. **Без summary** («Есть просадка» / «Истощение» под заголовком) — статус только в подписи справа от бара.  
-5. **Действия** в шапке секции (v7-A prod): «Подсказки» (справка) + «Улучшить» (treat-self); альтернативы — lab v7-B/C/D. Система справки: [`contextual-help-system.md`](../../vision/ideas/contextual-help-system.md).
+5. **Действия** в шапке (★ **v7-e2e3**): иконка книги с «?» → sheet [`character-needs-help.md`](character-needs-help.md); сердце → treat-self. Lab: v7-A…D, e1–e3.
 
 ### Layout Zones
 

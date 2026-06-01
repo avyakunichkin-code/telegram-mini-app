@@ -554,7 +554,14 @@ class TreatSelfResponse(BaseModel):
     message: str = ""
 
 
+class NeedsGuideSection(BaseModel):
+    heading: str
+    items: List[str] = Field(default_factory=list)
+
+
 class NeedsGuideResponse(BaseModel):
+    title: str = "Потребности"
+    sections: List[NeedsGuideSection] = Field(default_factory=list)
     maintenance: List[str] = Field(default_factory=list)
     critical: List[str] = Field(default_factory=list)
 

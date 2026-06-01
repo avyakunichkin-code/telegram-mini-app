@@ -3,6 +3,18 @@ import { useEffect, useState } from 'react';
 import { showNotification } from '../../notifications';
 import { MqxButton } from '../primitives/MqxButton';
 
+function fallbackGuideSections(guide) {
+  if (!guide) return [];
+  const blocks = [];
+  if (guide.maintenance?.length) {
+    blocks.push({ heading: 'Как пополнить', items: guide.maintenance });
+  }
+  if (guide.critical?.length) {
+    blocks.push({ heading: 'Если просело', items: guide.critical });
+  }
+  return blocks;
+}
+
 export function MqxNeedsHelpSheet({ open, onClose, loadGuide }) {
   const [busy, setBusy] = useState(false);
   const [guide, setGuide] = useState(null);
@@ -40,31 +52,24 @@ export function MqxNeedsHelpSheet({ open, onClose, loadGuide }) {
           ×
         </button>
         <h2 id="mqx-needs-help-title" className="mqx-sheet__title">
-          Как поддерживать баланс
+          {guide?.title || 'Потребности'}
         </h2>
 
         {busy && !guide ? (
           <p className="mqx-sheet__sub">Загружаем…</p>
         ) : (
           <div className="mqx-sheet__body">
-            <div className="mqx-sheet__section">
-              <h3 className="mqx-sheet__h3">Повседневно</h3>
-              <ul className="mqx-sheet__list">
-                {(guide?.maintenance || []).map((t, i) => (
-                  // eslint-disable-next-line react/no-array-index-key -- статический список с сервера
-                  <li key={i}>{t}</li>
-                ))}
-              </ul>
-            </div>
-            <div className="mqx-sheet__section">
-              <h3 className="mqx-sheet__h3">Если просело</h3>
-              <ul className="mqx-sheet__list">
-                {(guide?.critical || []).map((t, i) => (
-                  // eslint-disable-next-line react/no-array-index-key -- статический список с сервера
-                  <li key={i}>{t}</li>
-                ))}
-              </ul>
-            </div>
+            {(guide?.sections?.length ? guide.sections : fallbackGuideSections(guide)).map((block) => (
+              <div key={block.heading} className="mqx-sheet__section">
+                <h3 className="mqx-sheet__h3">{block.heading}</h3>
+                <ul className="mqx-sheet__list">
+                  {(block.items || []).map((t, i) => (
+                    // eslint-disable-next-line react/no-array-index-key -- статический список с сервера
+                    <li key={i}>{t}</li>
+                  ))}
+                </ul>
+              </div>
+            ))}
           </div>
         )}
 

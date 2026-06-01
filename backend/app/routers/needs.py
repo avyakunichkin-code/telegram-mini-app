@@ -4,8 +4,8 @@ from sqlalchemy.orm import Session
 from ..auth import get_current_user
 from ..database import get_db
 from ..game.time import get_active_game_profile
-from ..needs.guide_content import CRITICAL, MAINTENANCE
-from ..schemas import NeedsGuideResponse
+from ..needs.guide_content import CRITICAL, GUIDE_TITLE, MAINTENANCE, SECTIONS
+from ..schemas import NeedsGuideResponse, NeedsGuideSection
 
 router = APIRouter(prefix="/api/game/needs", tags=["needs"])
 
@@ -19,6 +19,8 @@ async def get_needs_guide(
     # Фиксируем наличие профиля (в будущем можно делать вариации по consequence_profile).
     get_active_game_profile(db, current_user.id)
     return NeedsGuideResponse(
+        title=GUIDE_TITLE,
+        sections=[NeedsGuideSection(**block) for block in SECTIONS],
         maintenance=list(MAINTENANCE),
         critical=list(CRITICAL),
     )

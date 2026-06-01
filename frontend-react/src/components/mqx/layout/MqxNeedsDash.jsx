@@ -79,7 +79,7 @@ function NeedsBarRow({ axis, value }) {
   );
 }
 
-/** @typedef {'a' | 'e1' | 'e2' | 'e3'} MqxNeedsActionsVariant */
+/** @typedef {'a' | 'e1' | 'e2' | 'e3' | 'e2e3'} MqxNeedsActionsVariant */
 
 function NeedsHeadActions({
   variant,
@@ -152,6 +152,25 @@ function NeedsHeadActions({
     );
   }
 
+  if (variant === 'e2e3') {
+    return (
+      <div className="mqx-needs-actions">
+        <button
+          type="button"
+          className="mqx-help-icon-btn mqx-help-icon-btn--badge"
+          onClick={() => onHelp?.()}
+          aria-label={helpLabel}
+        >
+          <IconHelpBookWithBadge size={17} />
+          <span className="mqx-help-icon-btn__badge" aria-hidden="true">
+            ?
+          </span>
+        </button>
+        {treatBtn('mqx-treat-heart-btn mqx-treat-heart-btn--dot', { filled: true })}
+      </div>
+    );
+  }
+
   return (
     <div className="mqx-needs-actions">
       <button type="button" className="mqx-needs-help-link" onClick={() => onHelp?.()}>
@@ -179,7 +198,7 @@ function NeedsHeadActions({
 
 /**
  * Z-NEEDS v7: заголовок секции снаружи, 4 шкалы без accordion.
- * Lab: design-lab/character-needs/dashboard-needs-v7-round/ (e1–e3 иконки, v7-A архив).
+ * Lab: design-lab/character-needs/dashboard-needs-v7-round/ · prod: e2e3 (книга+? + сердце-точка).
  */
 export function MqxNeedsDash({
   needs,
@@ -189,7 +208,7 @@ export function MqxNeedsDash({
   onTreatSelf,
   onHelp,
   /** @type {MqxNeedsActionsVariant} */
-  actionsVariant = 'e1',
+  actionsVariant = 'e2e3',
   className = '',
 }) {
   const values = useMemo(() => pickAxisValues(needs), [needs]);
@@ -215,38 +234,21 @@ export function MqxNeedsDash({
   return (
     <section
       className={['mqx-needs-section', className].filter(Boolean).join(' ')}
-      data-actions="a"
+      data-actions={actionsVariant}
       aria-labelledby="needs-section-title"
     >
       <div className="mqx-needs-section__head">
         <h2 id="needs-section-title" className="mqx-finance-static__title">
           Потребности
         </h2>
-        <div className="mqx-needs-actions">
-          <button type="button" className="mqx-needs-help-link" onClick={() => onHelp?.()}>
-            Подсказки
-            <span className="mqx-needs-help-link__arrow" aria-hidden="true">
-              →
-            </span>
-          </button>
-          {treatSelf ? (
-            <button
-              type="button"
-              className={[
-                'mqx-needs-action',
-                'mqx-needs-action--treat',
-                !treatAvailable && 'is-disabled',
-              ]
-                .filter(Boolean)
-                .join(' ')}
-              aria-disabled={!treatAvailable}
-              aria-label={treatAvailable ? 'Улучшить потребности' : treatLockedHint}
-              onClick={handleTreatClick}
-            >
-              Улучшить
-            </button>
-          ) : null}
-        </div>
+        <NeedsHeadActions
+          variant={actionsVariant}
+          onHelp={onHelp}
+          treatSelf={treatSelf}
+          treatAvailable={treatAvailable}
+          treatLockedHint={treatLockedHint}
+          onTreatClick={handleTreatClick}
+        />
       </div>
 
       <div className="mqx-needs-block">
