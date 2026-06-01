@@ -245,10 +245,10 @@ export function CapitalDetailsPanel({
             ) : ownedLiabilities.length === 0 ? (
               <MqxCapitalDetailEmpty
                 actionLabel="+ Добавить"
-                onAction={() => onGotoAction('mortgage')}
+                onAction={() => onGotoAction('credit')}
               >
-                Здесь только <strong>активные долги</strong>. Ипотека — «Недвижимость», кредит —{' '}
-                <strong>«Кредит»</strong>.
+                Здесь только <strong>активные долги</strong>. Ипотека — плитка{' '}
+                <strong>«Ипотека»</strong>, потребительский — <strong>«Кредит»</strong>.
               </MqxCapitalDetailEmpty>
             ) : (
               ownedLiabilities.map((l) => {

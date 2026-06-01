@@ -1,11 +1,36 @@
+/** Порядок: инвестиции → имущество (cash / в кредит) → страховки → потреб. кредит. */
 const ACTION_TILES = [
   { id: 'deposit', icon: '🏦', title: 'Депозит', iconClass: '' },
   { id: 'bond', icon: '📈', title: 'Облигации', iconClass: 'mqx-cap-act-row__icon--bond' },
-  { id: 'realestate', icon: '🏠', title: 'Недвижимость', iconClass: 'mqx-cap-act-row__icon--prop' },
-  { id: 'car', icon: '🚗', title: 'Авто', iconClass: 'mqx-cap-act-row__icon--car' },
+  {
+    id: 'realestate',
+    icon: '🏡',
+    title: 'Жильё',
+    subtitle: 'Наличными',
+    iconClass: 'mqx-cap-act-row__icon--prop',
+  },
+  {
+    id: 'mortgage',
+    icon: '🏠',
+    title: 'Ипотека',
+    subtitle: 'С взносом',
+    iconClass: 'mqx-cap-act-row__icon--debt',
+  },
+  {
+    id: 'car',
+    icon: '🚗',
+    title: 'Авто',
+    subtitle: 'Cash · кредит',
+    iconClass: 'mqx-cap-act-row__icon--car',
+  },
   { id: 'insurance', icon: '🛡', title: 'Страховки', iconClass: 'mqx-cap-act-row__icon--ins' },
-  { id: 'mortgage', icon: '🏠', title: 'Ипотека', iconClass: 'mqx-cap-act-row__icon--debt' },
-  { id: 'credit', icon: '💳', title: 'Кредит', iconClass: 'mqx-cap-act-row__icon--credit' },
+  {
+    id: 'credit',
+    icon: '💳',
+    title: 'Кредит',
+    subtitle: 'На счёт · до 2',
+    iconClass: 'mqx-cap-act-row__icon--credit',
+  },
 ];
 
 /**
@@ -35,7 +60,12 @@ export function MqxCapitalActionGrid({ visibleIds, onOpenSheet }) {
           <span className={['mqx-cap-act-row__icon', tile.iconClass].filter(Boolean).join(' ')}>
             {tile.icon}
           </span>
-          <span className="mqx-cap-act-row__title">{tile.title}</span>
+          <span className="mqx-cap-act-tile__text">
+            <span className="mqx-cap-act-row__title">{tile.title}</span>
+            {tile.subtitle ? (
+              <span className="mqx-cap-act-row__subtitle">{tile.subtitle}</span>
+            ) : null}
+          </span>
         </button>
       ))}
     </div>
