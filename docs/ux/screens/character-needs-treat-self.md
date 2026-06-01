@@ -7,7 +7,9 @@ screen_id: treat-self-sheet
 parent: dashboard-needs
 ---
 
-# UX Spec: «Порадовать себя» (bottom sheet)
+# UX Spec: «Улучшить» / treat-self (bottom sheet)
+
+> **Prod UI:** кнопка **сердце** в Z-NEEDS (v7-e3); механика и API — `treat_self` / ADR-006. В копирайте справки — «Улучшить»; в legacy spec — «Порадовать себя».
 
 > **ADR:** [006](../../decisions/ADR-006-treat-self-options-and-cooldown.md)  
 > **Lab:** [`design-lab/character-needs/treat-self-round/`](../../../design-lab/character-needs/treat-self-round/)

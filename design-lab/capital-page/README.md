@@ -1,4 +1,4 @@
-# Страница «Управление капиталом» — IA и компоновка
+# Страница «Капитал» — IA и компоновка
 
 Этап 1 MQX: статика до React. Правила: [`DESIGN_WORKFLOW.md`](../../frontend-react/src/components/mqx/DESIGN_WORKFLOW.md).
 
@@ -43,7 +43,7 @@ npx serve .
 
 ## Prod (2026-06)
 
-- **`details-actions-round` v2** в `FinancePremium`: потоки → **Детали \| Действия** → позиции или сетка плиток + `MqxCapitalSheet`.
+- **`details-actions-round` v2** в `FinancePremium`: hero **«Капитал»**; потоки → **Детали \| Действия** → позиции или сетка плиток + `MqxCapitalSheet`; нейтральная типографика в «Детали», liabilities — muted red.
 - Компоненты: `CapitalDetailsPanel`, `CapitalActionsPanel`, `MqxCapitalPageModeSeg`, meta M5/M7/M8.
 - Lab sync: **`./sync-lab.sh`** (bash); PowerShell-скрипт в этом раунде не используется.
 

@@ -14,7 +14,7 @@ import { MqxCapitalPageModeSeg } from './mqx/layout/MqxCapitalPageModeSeg';
 import { MqxTabHero } from './MqxTabHero';
 import { showNotification } from './notifications';
 
-/** Вкладка «Финансы»: потоки → Детали|Действия → позиции или сетка действий. */
+/** Вкладка «Капитал»: потоки → Детали|Действия → позиции или сетка действий. */
 export function FinancePremium({
   overview,
   refreshOverview,
@@ -217,20 +217,11 @@ export function FinancePremium({
     setOpenSheet(sheetId);
   };
 
-  const capitalSectionsCount =
-    2 +
-    (mechanics.capital_invest ? 1 : 0) +
-    (insuranceSectionState !== 'hidden' ? 1 : 0) +
-    (mechanics.capital_property ? 1 : 0) +
-    (mechanics.capital_liabilities ? 1 : 0);
-
   return (
     <div className="mqx-tab-page">
       <MqxTabHero
         heroClassName="mqx-hero--capital"
-        sectionLabel="Финансы"
-        rightPill={`${capitalSectionsCount} разделов`}
-        title="Управление капиталом"
+        title="Капитал"
         titleClassName="mqx-hero__title--capital"
         subtitleClassName="mqx-hero__sub--capital"
         subtitle={capitalPageSubtitle(mechanics)}

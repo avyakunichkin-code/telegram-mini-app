@@ -35,10 +35,12 @@
 | **CN1** | Потребности персонажа (Z‑NEEDS) | DB+Backend+Frontend+Doc | 🟡 ядро ✅ в prod; **доработка контента/UI ⏸** до пересмотра SPEC (2026-05-30) |
 | **α** | Pre-Alpha / Closed Alpha гейты | Doc+Backend (метрики) | 🟡 KPI v1.2 + протокол ✅; **волна PA-W1** ⬜ |
 | **O1** | Онбординг TMA — Guided coach + Монетка | Frontend+Backend+Doc | ✅ P0 в prod |
-| **A0** | Admin Watchtower (MVP 1.2) | DB+Backend+Frontend | 🟡 Phase 0 + RU notify + A1; **A2 KPI** ⬜ |
+| **A0** | Admin Watchtower / Ops cockpit | DB+Backend+Frontend | 🟡 A1–A4 ✅ · каталоги C0 ✅ · [**ADMIN_BACKLOG**](ADMIN_BACKLOG.md) · идея [admin-platform-evolution](../vision/ideas/admin-platform-evolution.md) |
 | **TG1** | Telegram: боты, ops, player notify | Ops+Backend+Frontend | 🟡 ops-alerts ✅; **env + player bot** ⬜ |
 | **E1** | **Расходы жизнеобеспечения** — категории, статьи, burn, UI | DB+Backend+Frontend+Content | ⏸ **ждём описание + doc**; E1-R и код — после spec ([PLAN](../plans/PLAN_backlog_may2026.md)) |
 | **PW1** | PWA / standalone + стабильный resume (lock/unlock) | Frontend+Ops+Doc | 🟡 фаза 0–1 ✅; **PW1-004/104 PASS**; [PLAN](../plans/PLAN_pwa-standalone.md) |
+| **WD1** | Полноразмерный веб (desktop / wide layout) | Frontend+Doc+Ops | ⬜ idea ✅; [PLAN](../plans/PLAN_desktop-wide-web.md); **CA 50–100** |
+| **AC1** | Связка аккаунтов TG ↔ email | Backend+Frontend | ⬜ в фокусе; после WD1 v1 / TG2; нет spec |
 | **AF1** | Воронка «игра → советник» (гипотеза) | Doc+Marketing+Frontend | 🟡 handbook; **Pre-Alpha: без CTA советника** (2026-05-30) |
 | **T1** | Пошаговый месяц без таймера (TB1) | DB+Backend+Frontend+Doc | ✅ **implemented** — [idea](../vision/ideas/turn-based-period-no-timer.md) · [plan](../plans/PLAN_turn-based-period-no-timer.md) · TB1.1 чипы — backlog |
 | **GE1** | Run Finale — финал партии, feedback, бейджи сохранений | DB+Backend+Frontend+Doc | 🟢 v1 prod · [SPEC_game-run-finale](../specs/features/SPEC_game-run-finale.md) · idea [game-run-finale-pre-alpha](../vision/ideas/game-run-finale-pre-alpha.md) · lab `run-finale/` |
@@ -55,6 +57,8 @@
 | **E1 расходы** | Нужны, но **ждём описание и документацию**; миграции не начинать |
 | **Advisor CTA** | **100% без** CTA на советника в Pre-Alpha (только внешний опрос) |
 | **Plan Mode** | MVP 2.0, **не** в ближайших волнах |
+| **WD1 wide web** | Четвёртый канал UX: полноширинный layout **в дополнение** к TMA/PWA; цель — **Closed Alpha 50–100** на своём домене; лендинг/FAQ **не** блокер |
+| **AC1 TG+email** | Отложить реализацию; держать в traceability до роста каналов |
 
 ---
 
@@ -168,9 +172,9 @@
 - [ ] ~~P3 informational лотерея~~ → **EVT1-050** (отдельный слот).
 - [ ] ~~P2 макро 5–6 lvl~~ → **EVT1-070/080/130** (period 10+, cooldown 10–15).
 
-### Эпик A0 — Admin Watchtower (MVP 1.2)
+### Эпик A0 — Admin Watchtower / Ops cockpit
 
-Идея: [`admin-and-notifications.md`](../vision/ideas/admin-and-notifications.md) · Phase 0 = ops-наблюдаемость при низком DAU.
+**Детальный бэклог:** [`ADMIN_BACKLOG.md`](ADMIN_BACKLOG.md) · **дорожная карта 1–3 мес:** [`admin-platform-evolution.md`](../vision/ideas/admin-platform-evolution.md) · план [`PLAN_admin-analytics-ops.md`](../plans/PLAN_admin-analytics-ops.md).
 
 - [x] P0 **[DB]** `notification_log` — миграция `0012_notification_log.sql`.
 - [x] P0 **[Backend]** `emit_admin_alert`, hooks: register, profile, game start, period (win/loss/milestone), Telegram ops.
@@ -178,10 +182,14 @@
 - [x] P0 **[Backend]** `GET /api/admin/watchtower` + allowlist `ADMIN_USER_IDS`.
 - [x] P0 **[Frontend]** Экран `#/admin` Watchtower (read-only).
 - [x] P1 **[Frontend]** Watchtower: колонка «Событие» (`summary`, `kind_label` из API).
-- [ ] P1 **[Doc+Ops]** План ops-аналитики — [`PLAN_admin-analytics-ops.md`](../plans/PLAN_admin-analytics-ops.md).
-- [x] P1 **[Backend+Frontend]** A1: онбординг в Watchtower + emit brief_done/skip/step + воронка в `#/admin`.
-- [ ] P1 **[Backend+Frontend]** A2: `GET /api/admin/metrics/summary` + KPI карточки (PA-A* без SQL).
-- [ ] P1 **[Backend+Frontend]** A3: profile inspector.
+- [x] P1 **[Doc+Ops]** План ops-аналитики — [`PLAN_admin-analytics-ops.md`](../plans/PLAN_admin-analytics-ops.md).
+- [x] P1 **[Backend+Frontend]** A1: guidance funnel + stuck в `#/admin`.
+- [x] P1 **[Backend+Frontend]** A2: `GET /api/admin/metrics/summary` + KPI карточки.
+- [x] P1 **[Backend+Frontend]** A3: profile inspector (`?profile=`).
+- [x] P1 **[Backend+Frontend]** A4: stuck scan, first_salary/safety emits, GE1 `run_feedback` в WT.
+- [x] P1 **[Backend+Frontend]** C0: Catalog registry read-only (`#/admin/catalogs`).
+- [ ] P1 **[Backend+Frontend]** **AQ-01…AQ-07** — quick wins (фильтры, KPI+, CSV, inspector+) → [`ADMIN_BACKLOG.md`](ADMIN_BACKLOG.md).
+- [ ] P1 **[Backend+Frontend]** C1–C2: правка каталогов (clone, PATCH, choices).
 - [ ] P2 **[Backend+Frontend]** Player inbox (Phase 1 idea).
 - [ ] P2 **[Backend+Frontend]** Draft/publish контента и «отправить себе» (Phase 2 idea).
 - [x] P2 **[Doc]** Spec [`SPEC_telegram-bots-and-notifications.md`](../specs/features/SPEC_telegram-bots-and-notifications.md) · бэклог [`TELEGRAM_BACKLOG.md`](TELEGRAM_BACKLOG.md).
@@ -321,6 +329,44 @@
 
 - [ ] P2 **[Frontend] PW1-201** — `isTelegramEnvironment()` + безопасные обёртки TG API.
 - [ ] P2 **[Frontend] PW1-202** — копирайт и баннер «Установить» / «Открыть в браузере».
+
+### Эпик WD1 — полноразмерный веб (desktop / wide)
+
+**Смысл:** тот же SPA и API, layout **не 480px по центру** — широкий viewport для браузера на ноутбуке. **Не заменяет** TMA/PWA. Идея: [`desktop-wide-web-channel.md`](../vision/ideas/desktop-wide-web-channel.md) · Plan: [`PLAN_desktop-wide-web.md`](../plans/PLAN_desktop-wide-web.md).
+
+**Зависимости:** ops домена CA ([`DEPLOY.md`](../ops/DEPLOY.md)); PW1 resync ✅; design-lab → spec → код.
+
+#### Фаза 0 — lab + spec
+
+- [ ] P1 **[Doc+Frontend] WD1-001** — design-lab `wide-game-shell/` (дашборд + nav + finance).
+- [ ] P1 **[Doc] WD1-002** — черновик `SPEC_desktop-wide-web.md` (breakpoints, экраны v1, Not Doing).
+- [ ] P1 **[Product] WD1-003** — sign-off макета перед prod-кодом.
+
+#### Фаза 1 — layout foundation
+
+- [ ] P1 **[Frontend] WD1-101** — layout mode (`wide` / narrow), shell `#root`.
+- [ ] P1 **[Frontend] WD1-102** — токены и CSS wide (gutters, grid).
+- [ ] P1 **[Frontend] WD1-103** — `BottomGameNav` (или замена) для wide.
+- [ ] P1 **[QA] WD1-104** — регрессия 390px / TMA narrow default.
+
+#### Фаза 2 — P0 экраны (блокер CA wide)
+
+- [ ] P1 **[Frontend] WD1-201** — Dashboard / hero / события в wide.
+- [ ] P1 **[Frontend] WD1-202** — Finance в wide.
+- [ ] P1 **[Frontend] WD1-203** — Auth / start / template pick на wide.
+
+#### Фаза 3 — Closed Alpha 50–100
+
+- [ ] P1 **[QA] WD1-301** — smoke desktop 1280+ на prod domain.
+- [ ] P1 **[Doc] WD1-302** — инструкция канала «широкий браузер» для волны CA.
+- [ ] P1 **[Ops] WD1-303** — URL игры на `app.*` в приглашении (с эпиком α).
+
+#### Фаза 4 — после CA
+
+- [ ] P2 **[Frontend] WD1-401** — analytics, capital и прочие экраны в wide.
+- [ ] P2 **[Backend+Frontend] AC1-001** — связка TG ↔ email (отдельно от WD1; см. [`TELEGRAM_BACKLOG.md`](TELEGRAM_BACKLOG.md)).
+- [ ] P3 **[Marketing+Doc] WD1-501** — FAQ / privacy / about на лендинге (не для первого набора).
+
 - [ ] P3 **[Frontend] ⚠ spec** Дневник персонажа (постфактум, GAME §3.7).
 - [ ] P3 **[Frontend] ⚠ spec** «Быстрый период» для ветеранов (GAME §6.3).
 - [ ] P3 **[Frontend] ⚠ spec** Персонаж с репликами (GAME §9.3 п.9).
@@ -419,6 +465,8 @@
 | A0 Watchtower | ✅ 0012 | 🟡 notify RU | 🟡 `#/admin` | idea+spec |
 | TG1 Telegram | — | 🟡 ops code | ⬜ player bot | [TELEGRAM_BACKLOG](TELEGRAM_BACKLOG.md) |
 | PW1 PWA / resume | — | — | фаза 0–1 | idea+plan |
+| WD1 wide web | — | — | ⬜ CA 50–100 | [PLAN_desktop-wide-web](../plans/PLAN_desktop-wide-web.md) |
+| AC1 TG+email | — | ⬜ link | ⬜ | [TELEGRAM_BACKLOG](TELEGRAM_BACKLOG.md) |
 | T1 Turn-based (TB1) | ✅ sync_time | ✅ hero H2 | ✅ | idea + plan + dashboard UX |
 
 **План нарезки (май 2026):** [`PLAN_backlog_may2026.md`](../plans/PLAN_backlog_may2026.md)
@@ -431,7 +479,8 @@
 
 | Приоритет | Task ID | Пункт | Слой |
 |-----------|---------|-------|------|
-| **P0** | **0.3** | **Pre-Alpha PA-W1-2026-06:** деплой → опрос (+Q11) → 10–20 приглашений — [`PRE_ALPHA_WAVE1_OPS`](PRE_ALPHA_WAVE1_OPS.md) · отзывы [`PRE_ALPHA_PLAYTEST_FEEDBACK`](PRE_ALPHA_PLAYTEST_FEEDBACK.md) | Product |
+| — | — | **PA-W1** Pre-Alpha волна — отложено | Product |
+| **P1** | **AQ** | **Admin quick wins:** фильтры WT, `run_outcome`, KPI defeats/feedback, CSV — [`ADMIN_BACKLOG`](ADMIN_BACKLOG.md) | Backend+Frontend |
 | P1 | 1.6 | A0 env Render (`ADMIN_*`, ops TG) + **TG-001…005** | Ops |
 | P1 | 1.7 | **TG1** player bot: BotFather + webhook `/start` (этап 1) | Ops+Backend |
 | — | CN1-001 | One-pager + пересмотр SPEC needs (**gate** для CN1 контента) | Doc |
@@ -440,10 +489,11 @@
 | ⏸ | E1-R, M12 FE, CN1-010+ | После gate-доков | — |
 | ⏸ | Plan Mode | MVP 2.0 | — |
 | ⏸ | AF1 CTA | **Нет** in-app CTA советника в Pre-Alpha | — |
+| P2 | **WD1-001** | design-lab `wide-game-shell` → spec (после AQ/TG1) | Frontend+Doc |
 | P2 | 2.x | Watchtower metrics + inspector (после α) | Backend+Frontend |
 | P2 | α-FB-03 | Повторы событий: cooldown / state ladder — [`event-repeat-and-state-ladder`](../vision/ideas/event-repeat-and-state-ladder.md) | Content+BE |
 | P2 | α-FB-04 | Log `event_chosen` + доля осмысленных выборов (не только carousel) | BE |
-| P2 | α-FB-06/08 | Empty states «Финансы» + RU labels kind + IA капитала | Frontend |
+| P2 | α-FB-06/08 | Empty states «Капитал» + RU labels kind + IA капитала | Frontend |
 | ~~P1~~ ✅ | **O2** onboarding | [`SPEC_onboarding-o2`](../specs/features/SPEC_onboarding-o2.md) — strip, user-once, auto Студент (**core prod 2026-06-01**); replay — backlog | Frontend+BE |
 | P1 | α-FB-15/18 | Preview расходов + richer period close (связь **E1-115**) | BE+FE |
 | P2 | α-FB-13 | First-run подсказки «характеристики» / needs | Frontend |
@@ -471,8 +521,9 @@
 | 2026-06-01 | **Pre-Alpha PA-W1:** ops-лист, KPI v1.2 (PA-T* / PA-A*), RESULTS template, SQL-срез. |
 | 2026-06-01 | **Playtest feedback register** | [`PRE_ALPHA_PLAYTEST_FEEDBACK.md`](PRE_ALPHA_PLAYTEST_FEEDBACK.md) α-FB-01…19; INT-2 сырые заметки; Q11 опрос |
 | 2026-06-01 | **Victory:** period gate снят (`0042`); TARGET/KPI v1.1→v1.2. |
+| 2026-06-01 | **WD1:** полноразмерный веб (desktop/wide) — idea approved, [`PLAN_desktop-wide-web`](../plans/PLAN_desktop-wide-web.md), CA 50–100; **AC1** TG↔email в фокусе. |
 | 2026-05-26 | Документация: уборка `docs/`, `GAME.md` §5–6; M11/level-gates — история, не активный трек. |
 
 ---
 
-*Последнее обновление: 2026-06-01 — sync backlog с KPI v1.2, notify RU, victory gate.*
+*Последнее обновление: 2026-06-01 — WD1 wide web + AC1 в бэклоге.*

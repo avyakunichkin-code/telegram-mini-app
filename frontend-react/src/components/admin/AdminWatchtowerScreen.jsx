@@ -6,6 +6,14 @@ import { AdminNav } from './AdminNav';
 import { AdminProfileInspectorPanel } from './AdminProfileInspectorPanel';
 import { GuidanceBadge } from './AdminGuidanceBadge';
 
+const PROFILE_FILTERS = [
+  { id: '', label: 'Все' },
+  { id: 'stuck', label: 'Застрял' },
+  { id: 'guidance_draft', label: 'Guidance draft' },
+  { id: 'defeat', label: 'Поражение' },
+  { id: 'victory', label: 'Победа' },
+];
+
 function formatDt(value) {
   if (!value) return '—';
   try {
@@ -96,6 +104,18 @@ function MetricsSummary({ summary }) {
           <span className="admin-watchtower__kpi-sub">+{summary.wins_recent} за {days}д</span>
         </div>
         <div className="admin-watchtower__kpi">
+          <span className="admin-watchtower__kpi-label">Поражения</span>
+          <strong>{summary.defeats_total ?? 0}</strong>
+          <span className="admin-watchtower__kpi-sub">
+            +{summary.defeats_recent ?? 0} за {days}д
+          </span>
+        </div>
+        <div className="admin-watchtower__kpi">
+          <span className="admin-watchtower__kpi-label">Отзывы</span>
+          <strong>{summary.run_feedback_recent ?? 0}</strong>
+          <span className="admin-watchtower__kpi-sub">за {days}д</span>
+        </div>
+        <div className="admin-watchtower__kpi">
           <span className="admin-watchtower__kpi-label">Ср. период</span>
           <strong>{summary.avg_period_index_active}</strong>
           <span className="admin-watchtower__kpi-sub">
@@ -162,16 +182,23 @@ export function AdminWatchtowerScreen({ onBack }) {
   const [searchParams, setSearchParams] = useSearchParams();
   const highlightProfile = searchParams.get('profile');
   const highlightUser = searchParams.get('user');
+  const profileFilter = searchParams.get('profile_filter') || '';
+  const profileSearch = searchParams.get('q') || '';
 
   const [data, setData] = useState(null);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [exporting, setExporting] = useState(null);
 
   const load = useCallback(async () => {
     setLoading(true);
     setError(null);
     try {
-      const payload = await adminApi.watchtower();
+      const payload = await adminApi.watchtower({
+        profile_limit: 80,
+        profile_filter: profileFilter || undefined,
+        q: profileSearch || undefined,
+      });
       setData(payload);
     } catch (e) {
       setError(e?.detail || e?.message || 'Не удалось загрузить Watchtower');
@@ -179,11 +206,21 @@ export function AdminWatchtowerScreen({ onBack }) {
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [profileFilter, profileSearch]);
 
   useEffect(() => {
     load();
   }, [load]);
+
+  const setProfileFilter = useCallback(
+    (nextFilter) => {
+      const next = new URLSearchParams(searchParams);
+      if (nextFilter) next.set('profile_filter', nextFilter);
+      else next.delete('profile_filter');
+      setSearchParams(next, { replace: true });
+    },
+    [searchParams, setSearchParams],
+  );
 
   const userColumns = useMemo(
     () => [
@@ -216,6 +253,34 @@ export function AdminWatchtowerScreen({ onBack }) {
         ),
       },
       { key: 'cash', label: 'Cash', render: (r) => `${r.cash_balance} ₽` },
+      {
+        key: 'outcome',
+        label: 'Исход',
+        render: (r) =>
+          r.run_outcome ? (
+            <span
+              className={
+                r.run_outcome === 'victory'
+                  ? 'admin-watchtower__badge admin-watchtower__badge--win'
+                  : 'admin-watchtower__badge admin-watchtower__badge--loss'
+              }
+            >
+              {r.run_outcome_label || r.run_outcome}
+            </span>
+          ) : (
+            '—'
+          ),
+      },
+      {
+        key: 'archived',
+        label: 'Архив',
+        render: (r) =>
+          r.is_archived ? (
+            <span className="admin-watchtower__badge admin-watchtower__badge--archived">да</span>
+          ) : (
+            '—'
+          ),
+      },
       {
         key: 'stuck',
         label: 'Застрял',
@@ -331,6 +396,44 @@ export function AdminWatchtowerScreen({ onBack }) {
           </p>
         </div>
         <div className="admin-watchtower__actions">
+          <Button
+            size="s"
+            mode="bezeled"
+            disabled={!!exporting}
+            onClick={async () => {
+              setExporting('profiles');
+              try {
+                await adminApi.exportProfilesCsv({
+                  limit: 500,
+                  profile_filter: profileFilter || undefined,
+                  q: profileSearch || undefined,
+                });
+              } catch (e) {
+                setError(e?.message || 'CSV профилей');
+              } finally {
+                setExporting(null);
+              }
+            }}
+          >
+            {exporting === 'profiles' ? '…' : 'CSV профили'}
+          </Button>
+          <Button
+            size="s"
+            mode="bezeled"
+            disabled={!!exporting}
+            onClick={async () => {
+              setExporting('feedback');
+              try {
+                await adminApi.exportRunFeedbackCsv({ limit: 500 });
+              } catch (e) {
+                setError(e?.message || 'CSV отзывов');
+              } finally {
+                setExporting(null);
+              }
+            }}
+          >
+            {exporting === 'feedback' ? '…' : 'CSV отзывы'}
+          </Button>
           <Button size="s" mode="bezeled" onClick={load} disabled={loading}>
             Обновить
           </Button>
@@ -377,6 +480,23 @@ export function AdminWatchtowerScreen({ onBack }) {
 
             <section className="mq-card admin-watchtower__block">
               <h2 className="admin-watchtower__block-title">Профили</h2>
+              <div className="admin-watchtower__filters" role="toolbar" aria-label="Фильтр профилей">
+                {PROFILE_FILTERS.map((f) => (
+                  <button
+                    key={f.id || 'all'}
+                    type="button"
+                    className={[
+                      'admin-watchtower__filter-chip',
+                      profileFilter === f.id ? 'admin-watchtower__filter-chip--active' : null,
+                    ]
+                      .filter(Boolean)
+                      .join(' ')}
+                    onClick={() => setProfileFilter(f.id)}
+                  >
+                    {f.label}
+                  </button>
+                ))}
+              </div>
               <Table
                 columns={profileColumns}
                 rows={profiles}

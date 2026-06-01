@@ -28,7 +28,7 @@ prod_route: GameScreen tab `dashboard`
 1. Понять, **где он в «месяце»** (номер периода, статус «месяц открыт», кнопка **«Закрыть месяц»**).
 2. Увидеть **ключевые деньги**: поток месяца, расходы на жизнь, наличные, подушка.
 3. Сделать **1–2 действия**: зарплата, пополнение/снятие подушки, при необходимости — события и закрытие периода.
-4. Понять **следующий шаг к победе** (текущая цель сценария, шаг K из N) без чтения всей вкладки «Финансы».
+4. Понять **следующий шаг к победе** (текущая цель сценария, шаг K из N) без ухода на вкладку **«Капитал»**.
 
 Формулировка с позиции игрока: *«Я открыл игру и хочу быстро понять, что делать в этом месяце и насколько я близок к своей цели».*
 
@@ -72,7 +72,7 @@ App (HashRouter)
 | **Вход** | Онбординг `lockTabs` | Принудительный возврат на dashboard |
 | **Выход** | `BottomGameNav` | finance / analytics / menu |
 | **Выход** | Chip «Доходы» / «Расходы» | `setActiveTab('finance')` + `capitalFlowsOpen` = income \| expense |
-| **Выход** | «Все финансы →» | `setActiveTab('finance')` |
+| **Выход** | «Весь капитал →» | `setActiveTab('finance')` |
 | **Выход** | «Вложить» | finance → Инвестиции (депозит / облигации) |
 | **Выход** | Pill «События» | `EventCarouselOverlay` (родитель `GameScreen`) |
 | **Выход** | **«Закрыть месяц»** | `advancePeriod` / `POST time/next` (+ modal о зарплате вне онбординга) |
@@ -85,7 +85,7 @@ App (HashRouter)
 ### Information Hierarchy
 
 1. **Период и закрытие месяца** (hero H2) — highest: «Месяц открыт», № периода, primary **«Закрыть месяц»**, pill «События».  
-2. **Потребности** (Z-NEEDS, compact) — четыре потребности; детали по раскрытию — см. [`character-needs-dashboard.md`](character-needs-dashboard.md) (фаза 1, после онбординга).  
+2. **Потребности** (Z-NEEDS v7) — четыре шкалы всегда видимы; справка и treat в шапке — см. [`character-needs-dashboard.md`](character-needs-dashboard.md).  
 3. **Снимок денег за период** (2×2 chips) — scan за 2–3 с.  
 4. **Прогресс сценария** (цель, свёрнуто по умолчанию) — мотивация, не блокирует действия.  
 5. **Действия периода** (2×2 chips) — primary motor loop.  
@@ -96,8 +96,8 @@ App (HashRouter)
 | Зона | Компонент | CSS / режим |
 |------|-----------|-------------|
 | **Z0 Hero** | `MqxDashboardHero` | `mqx-hero--compact`, full width, градиент S5 |
-| **Z-NEEDS** | `MqxNeedsDash` | compact accordion; treat-self + help — [`character-needs-dashboard.md`](character-needs-dashboard.md) |
-| **Z1 Финансы периода** | `MqxFinancePeriodBlock` | `mqx-finance-static`, 2×2 chips, «Все финансы →» |
+| **Z-NEEDS** | `MqxNeedsDash` | v7-e2e3: книга+? / сердце; [`character-needs-dashboard.md`](character-needs-dashboard.md) |
+| **Z1 Финансы периода** | `MqxFinancePeriodBlock` | `mqx-finance-static`, 2×2 chips, «Весь капитал →» |
 | **Z2 Цель** | `MqxGoalDash` | `mqx-goal-dash`, аккордеон, bleed sky-фон |
 | **Z3 Действия** | `MqxPeriodActions` | `mqx-period-actions--chips`, 2×2 |
 | **Z3b Подушка sheet** | `MqxSafetyFundSheet` | bottom sheet, условный рендер |
@@ -110,7 +110,7 @@ App (HashRouter)
 | Компонент | Паттерн / lab | Назначение |
 |-----------|---------------|------------|
 | `MqxDashboardHero` | hero-no-timer-round ★ **H2** | Период #N, «Закрыть месяц», pill «События» (без таймера) |
-| `MqxFinancePeriodBlock` | dashboard L3 | 4 KPI chips, ссылка в финансы |
+| `MqxFinancePeriodBlock` | dashboard L3 | 4 KPI chips, ссылка «Весь капитал →» |
 | `MqxGoalDash` | goal-chain-round ★ · [`goal-path-stepper-round`](../../../design-lab/dashboard/goal-path-stepper-round/) (draft) | Цепочка победы v2 + guidance; свёрнуто — stepper из связанных узлов |
 | `MqxPeriodActions` | period-actions-round ★ | Зарплата, вложить, пополнить, снять |
 | `SafetyFundActionForm` | shared MQX | Сумма in/out подушки |
@@ -125,7 +125,7 @@ App (HashRouter)
 │              [Закрыть месяц    ]      │
 │              [ События (2)    ]      │
 ├─────────────────────────────────────┤
-│ ▼ Потребности · compact / 4 bars   │  Z-NEEDS (phase 1)
+│ Потребности          [📖?] [♥]    │  Z-NEEDS v7 (4 bars)
 ├─────────────────────────────────────┤
 │ Финансы периода                     │  Z1
 │ ┌─────────┬─────────┐               │
@@ -133,7 +133,7 @@ App (HashRouter)
 │ ├─────────┼─────────┤               │
 │ │ Баланс  │ Подушка │ [fill bar]    │
 │ └─────────┴─────────┘               │
-│ Все финансы →                       │
+│ Весь капитал →                      │
 ├─────────────────────────────────────┤
 │ ▼ Цель · [название текущей цели]    │  Z2 (collapsed)
 │     (●)—(●)—(◉)—(○)—(○)  stepper    │  без «Шаг K из N»
@@ -146,7 +146,7 @@ App (HashRouter)
 │ └─────────┴─────────┘               │
 │ [inline форма подушки — optional]   │  Z3b
 └─────────────────────────────────────┘
-│ [Главная][Финансы][Аналитика][Меню] │  BottomGameNav
+│ [Главная][Капитал][Аналитика][Меню] │  BottomGameNav
 └─────────────────────────────────────┘
 ```
 
@@ -230,7 +230,7 @@ Skip: 1-й раз — шаг; 2-й — весь онбординг → `brief_do
 | Закрыть месяц | tap | warn modal (если зарплата не взята) → `advancePeriod` |
 | События | tap | open overlay |
 | Finance chip (action) | tap | finance + flows section |
-| «Все финансы →» | tap | finance tab |
+| «Весь капитал →» | tap | finance tab (Капитал) |
 | Цель toggle | tap | expand/collapse |
 | Зарплата | tap | `claim-salary` + toasts |
 | Пополнить / Снять | tap | open inline panel |

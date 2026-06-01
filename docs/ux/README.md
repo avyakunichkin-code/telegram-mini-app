@@ -7,7 +7,7 @@ Per-screen UX в конвейере [`DOCUMENTATION_SYSTEM.md`](../DOCUMENTATION
 | Экран / тема | Файл | Статус |
 |--------------|------|--------|
 | Главная (Dashboard) | [`screens/dashboard.md`](screens/dashboard.md) | Active (2026-05-25) |
-| Финансы (Капитал) | [`screens/finance.md`](screens/finance.md) | Draft (2026-05-25) |
+| Капитал | [`screens/finance.md`](screens/finance.md) | Draft (2026-06-02) |
 | **Потребности (сводка)** | [`CHARACTER_NEEDS_UX.md`](CHARACTER_NEEDS_UX.md) | **Approved (2026-05-26)** |
 | Потребности на главной | [`screens/character-needs-dashboard.md`](screens/character-needs-dashboard.md) | Approved |
 | «Порадовать себя» | [`screens/character-needs-treat-self.md`](screens/character-needs-treat-self.md) | Approved |

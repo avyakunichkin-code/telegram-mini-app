@@ -346,7 +346,6 @@
   padding: 0;
   background: transparent;
   border: none;
-  border-bottom: 1px solid color-mix(in srgb, var(--mqx-ink) 10%, transparent);
 }
 
 .mqx-needs-block.is-bleed-risk {

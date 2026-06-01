@@ -302,6 +302,32 @@ html[data-mq-layout='admin'] .mq-app-fill {
   color: var(--mq-danger, #dc2626);
 }
 
+.admin-watchtower__badge--archived {
+  background: color-mix(in srgb, var(--mq-muted-fg, #64748b) 18%, transparent);
+  color: var(--mq-muted-fg, #64748b);
+}
+
+.admin-watchtower__filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 10px;
+}
+
+.admin-watchtower__filter-chip {
+  padding: 4px 10px;
+  border-radius: 999px;
+  border: 1px solid color-mix(in srgb, var(--mq-border, #e2e8f0) 80%, transparent);
+  background: transparent;
+  font-size: var(--mq-fs-small);
+  cursor: pointer;
+}
+
+.admin-watchtower__filter-chip--active {
+  border-color: var(--mq-violet, #6d28d9);
+  background: color-mix(in srgb, var(--mq-violet, #6d28d9) 12%, transparent);
+}
+
 .admin-watchtower__block-hint {
   margin: -4px 0 12px;
   font-size: var(--mq-fs-caption);
@@ -500,4 +526,65 @@ html[data-mq-layout='admin'] .mq-app-fill {
   margin-top: 4px;
   font-size: var(--mq-fs-small);
   opacity: 0.55;
+}
+
+.admin-inspector__feedback {
+  margin-bottom: 14px;
+  padding: 12px;
+  border-radius: 12px;
+  background: color-mix(in srgb, var(--mqx-ink) 4%, transparent);
+}
+
+.admin-inspector__feedback-meta {
+  margin: 0 0 8px;
+  font-size: var(--mq-fs-caption);
+}
+
+.admin-inspector__feedback-comment {
+  margin: 0;
+  white-space: pre-wrap;
+  line-height: 1.4;
+}
+
+.admin-inspector__feedback-reason {
+  margin: 8px 0 0;
+  font-size: var(--mq-fs-small);
+}
+
+.admin-inspector__sparkline {
+  display: flex;
+  align-items: flex-end;
+  gap: 4px;
+  height: 56px;
+  margin-bottom: 10px;
+  padding: 4px 0;
+}
+
+.admin-inspector__spark-bar {
+  flex: 1;
+  min-width: 6px;
+  max-width: 20px;
+  border-radius: 4px 4px 0 0;
+  background: color-mix(in srgb, var(--mq-emerald, #059669) 55%, transparent);
+}
+
+.admin-inspector__spark-bar--neg {
+  background: color-mix(in srgb, var(--mq-danger, #dc2626) 45%, transparent);
+}
+
+.admin-inspector__log-filter {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
+  font-size: var(--mq-fs-caption);
+}
+
+.admin-inspector__log-filter select {
+  flex: 1;
+  max-width: 240px;
+  padding: 4px 8px;
+  border-radius: 8px;
+  border: 1px solid color-mix(in srgb, var(--mq-border, #e2e8f0) 80%, transparent);
+  font: inherit;
 }

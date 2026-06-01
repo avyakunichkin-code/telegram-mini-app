@@ -4,7 +4,12 @@
 
 | Дата | Что в prod | Что исправили в docs |
 |------|------------|----------------------|
+| 2026-06-01 | — (product) | **WD1** полноразмерный веб-канал: idea [`desktop-wide-web-channel`](../vision/ideas/desktop-wide-web-channel.md), [`PLAN_desktop-wide-web`](../plans/PLAN_desktop-wide-web.md), эпик **AC1** TG↔email в фокусе; CA **50–100**, свой домен |
+| 2026-06-02 | **Док-свип (завершение):** «Капитал», v7-e2e3, help `sections[]` | handbook, TMA flows, analytics, landing shots, UI audit, TEAM_UPDATE, backlog, brandbook MQX, design-lab nav/README, `contextual-help-system`, ADR-004, vision ideas |
+| 2026-06-01 | **Док-свип:** вкладка **«Капитал»**, Z-NEEDS v7, help API | `finance.md`, `dashboard.md`, `character-needs-*`, `SPEC_*`, handbook, ADR-004, `CLAUDE.md`, design-lab README, `contextual-help-system` |
+| 2026-06-01 | **Вкладка «Капитал»** (было «Финансы» / «Управление капиталом») | `BottomGameNav`, `FinancePremium`, «Весь капитал →»; без pill «N разделов»; детали — нейтральный текст, обязательства приглушённо красные |
 | 2026-06-01 | **Z-NEEDS v7-e2e3** + справочник 4 раздела | `MqxNeedsDash` e2+e3; `guide_content.py` + `sections[]`; `MqxNeedsHelpSheet`; lab v7-e2e3 ★ |
+| 2026-06-01 | — | **Admin:** [`ADMIN_BACKLOG.md`](../backlog/ADMIN_BACKLOG.md), идея [admin-platform-evolution](../vision/ideas/admin-platform-evolution.md) (1–3 мес); A0 в PRODUCT_BACKLOG синхронизирован с prod |
 | 2026-06-01 | **GE1 Run Finale в prod** | `MqxRunFinale`, bootstrap `run_finale`, defeat archive, `player_run_feedback`, Watchtower «Отзывы с финала» | [`SPEC_game-run-finale`](../specs/features/SPEC_game-run-finale.md), idea → spec, `PRODUCT_BACKLOG` GE1 |
 | 2026-06-01 | **Портреты 4 персонажей** на `GameTemplatePickScreen` + `MqxNeedsDash` | `persona-portraits-round/APPROVED.md`, `character-portraits/`, `npm run persona-portraits:process`; docs: `BRANDBOOK_MQX`, `FEATURE_STATUS`, `SPEC_FRONTEND_UI` §pre-game, `character-pick` / `character-needs-dashboard`, `UI_CONSISTENCY_AUDIT`, `scenario-icons` → архив |
 | 2026-06-01 | — (lab only) | **GE1 Run Finale:** idea [`game-run-finale-pre-alpha`](../vision/ideas/game-run-finale-pre-alpha.md), `design-lab/run-finale/`, эпик в `PRODUCT_BACKLOG` |

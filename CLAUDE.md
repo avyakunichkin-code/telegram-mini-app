@@ -72,7 +72,7 @@
 - `POST /api/game/period/withdraw-from-safety-fund`
 - `GET /api/game/period/status`
 
-### Финансы / обзор
+### Капитал / обзор
 
 - `GET /api/finance/overview` — главные цифры, прогресс победы, `clean_period_streak`, `period_index`; поля **`avg_net_cashflow_6p`** / **`avg_net_cashflow_6p_n`**
 - `GET /api/finance/analytics/timeseries` — ряд закрытий периодов + текущая проекция
@@ -110,7 +110,7 @@
 - `frontend-react/src/hooks/useGame.js` — `overview`, `timeStatus`, `periodStatus`, закрытие месяца (`advancePeriod`), foreground resync, `pendingEvents`.
 - `frontend-react/src/components/GameScreen.jsx` — шапка, события, оверлей карусели.
 - `frontend-react/src/components/EventDeck.jsx` — кнопка событий, `EventCarouselOverlay`, свайп/стрелки.
-- `frontend-react/src/components/FinancePremium.jsx` — вкладка «Финансы»: потоки Доходы/Расходы → **Детали \| Действия** (позиции vs сетка+sheet); см. [`docs/ux/screens/finance.md`](docs/ux/screens/finance.md).
+- `frontend-react/src/components/FinancePremium.jsx` — вкладка **«Капитал»** (`activeTab=finance`): потоки Доходы/Расходы → **Детали \| Действия**; см. [`docs/ux/screens/finance.md`](docs/ux/screens/finance.md).
 - `frontend-react/src/components/BottomGameNav.jsx` + `icons/NavIcons.jsx` — нижняя навигация.
 - `frontend-react/src/components/AnalyticsSection.jsx` / **AnalyticsPremium**, **DashboardPremium** — обзор и цели; spec: [`docs/specs/SPEC_ANALYTICS.md`](docs/specs/SPEC_ANALYTICS.md).
 - `frontend-react/src/components/ToastHost.jsx` + `notifications.js` — тосты вместо `alert`.

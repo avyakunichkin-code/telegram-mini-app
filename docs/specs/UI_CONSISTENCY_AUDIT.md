@@ -1,6 +1,6 @@
 # UI Consistency Audit — ТВОЙ ХОД TMA
 
-**Дата:** 2026-06-01  
+**Дата:** 2026-06-02  
 **Цель:** карта экранов и компонентов для эпика [mqx-ui-unification](../vision/ideas/mqx-ui-unification.md).  
 **Легенда:** ★ prod MQX · ⚠ hybrid · 🗑 удалить/архив · 📋 lab открыт
 
@@ -11,7 +11,7 @@
 | Экран | Файл | Статус | Комментарий |
 |-------|------|--------|-------------|
 | Главная | `DashboardPremium.jsx` | ★ | S5 Unified, `MqxFinancePeriodBlock`, `MqxGoalDash`, `MqxPeriodActions` |
-| Финансы | `FinancePremium.jsx` | ★ | Details \| Actions v2 (2026-06); `CapitalDetailsPanel` / `CapitalActionsPanel` |
+| Капитал | `FinancePremium.jsx` | ★ | Title «Капитал»; Details \| Actions v2; нейтральные детали, liabilities muted red |
 | Аналитика | `AnalyticsPremium.jsx` | ⚠ | Hero MQX; строки `MqStatRow`, бары `MqxMetricBars` |
 | Меню | `MenuPremium.jsx` | ★ | В основном MQX |
 | События (оверлей) | `EventDeck` → `EventCarouselOverlay` | ★ L3 | `EventCard`, domain band; лендинг: [`LANDING_SCREENSHOTS.md`](LANDING_SCREENSHOTS.md) |

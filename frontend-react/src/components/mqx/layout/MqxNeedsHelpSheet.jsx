@@ -20,14 +20,21 @@ export function MqxNeedsHelpSheet({ open, onClose, loadGuide }) {
   const [guide, setGuide] = useState(null);
 
   useEffect(() => {
-    if (!open || guide || busy) return;
-    if (!loadGuide) return;
+    if (!open) {
+      setGuide(null);
+      setBusy(false);
+      return undefined;
+    }
+    if (!loadGuide) return undefined;
+
     let cancelled = false;
     setBusy(true);
+    setGuide(null);
+
     loadGuide()
       .then((data) => {
         if (cancelled) return;
-        setGuide(data);
+        setGuide(data ?? null);
       })
       .catch((e) => {
         if (cancelled) return;
@@ -37,10 +44,11 @@ export function MqxNeedsHelpSheet({ open, onClose, loadGuide }) {
         if (cancelled) return;
         setBusy(false);
       });
+
     return () => {
       cancelled = true;
     };
-  }, [open, guide, busy, loadGuide]);
+  }, [open, loadGuide]);
 
   if (!open) return null;
 

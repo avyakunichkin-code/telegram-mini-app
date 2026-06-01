@@ -33,7 +33,7 @@ export function getEffectiveMechanicsFromOverview(overview) {
   return getMechanicsFromOverview(overview);
 }
 
-/** Подзаголовок страницы «Управление капиталом». */
+/** Подзаголовок страницы «Капитал». */
 export function capitalPageSubtitle(mechanics) {
   const parts = ['Доходы и расходы за период'];
   if (mechanics.capital_invest) parts.push('инвестиции');

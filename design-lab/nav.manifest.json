@@ -13,7 +13,7 @@
       "title": "Сервис / сравнение",
       "items": [
         {
-          "label": "Сравнение baseline vs current (Dashboard + Финансы)",
+          "label": "Сравнение baseline vs current (Dashboard + Капитал)",
           "path": "compare-prod/index.html",
           "kind": "lab"
         },
@@ -29,8 +29,8 @@
       "title": "Потребности (character-needs)",
       "items": [
         {
-          "label": "Dashboard needs v5 ★ (prod parity)",
-          "path": "character-needs/dashboard-needs-v5-round/index.html",
+          "label": "Dashboard needs v7-e2e3 ★ (prod parity)",
+          "path": "character-needs/dashboard-needs-v7-round/index.html",
           "kind": "lab",
           "status": "approved"
         },

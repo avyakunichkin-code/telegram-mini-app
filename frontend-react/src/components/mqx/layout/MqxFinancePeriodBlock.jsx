@@ -26,7 +26,7 @@ function chipAriaLabel(card, onFlowsNavigate) {
   return `${card.title}${valuePart}${actionPart}`;
 }
 
-/** Статичный блок «Финансы периода» (L3): 2×2 chips + ссылка в раздел финансов. */
+/** Статичный блок «Финансы периода» (L3): 2×2 chips + ссылка на вкладку «Капитал». */
 function FinanceChip({ card, onFlowsNavigate, juiceGainActive = false }) {
   const className = [
     'mqx-finance-chip',
@@ -137,7 +137,7 @@ export function MqxFinancePeriodBlock({
 
       {onGoFinance ? (
         <button type="button" className="mqx-dash-link" onClick={onGoFinance}>
-          Все финансы →
+          Весь капитал →
         </button>
       ) : null}
     </section>

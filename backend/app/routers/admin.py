@@ -7,17 +7,20 @@ from datetime import datetime
 from typing import Any, List, Optional
 
 from fastapi import APIRouter, Depends, HTTPException, Query
+from fastapi.responses import StreamingResponse
 from pydantic import BaseModel
 from sqlalchemy import func
 from sqlalchemy.orm import Session
 
 from ..admin.auth import require_admin_user
 from ..admin.catalogs import fetch_catalog_rows, get_catalog_spec, list_catalog_meta
+from ..admin.csv_export import profiles_csv_rows, run_feedback_csv_rows, stream_csv
 from ..admin.metrics_summary import build_metrics_summary
-from ..admin.onboarding_funnel import build_onboarding_funnel, user_guidance_admin_fields
+from ..admin.watchtower_profiles import build_admin_profile_row, fetch_profile_rows
+from ..admin.onboarding_funnel import build_onboarding_funnel
 from ..admin.profile_inspector import build_profile_inspector
 from ..admin.run_feedback import build_run_feedback_rows
-from ..admin.stuck_scan import profile_stuck_kind, scan_stuck_and_emit
+from ..admin.stuck_scan import scan_stuck_and_emit
 from ..admin.notify_messages import format_alert_message_ru, kind_label_ru
 from ..database import get_db
 from ..models import GameProfile, NotificationLog, User
@@ -41,6 +44,9 @@ class AdminProfileRow(BaseModel):
     save_kind: str
     starter_template_key: Optional[str] = None
     is_active: bool
+    is_archived: bool = False
+    run_outcome: Optional[str] = None
+    run_outcome_label: Optional[str] = None
     period_index: int
     cash_balance: float
     onboarding_state: str = "brief_done"
@@ -111,6 +117,20 @@ class AdminMetricsSummary(BaseModel):
     wins_recent: int
     avg_period_index_active: float
     game_started_recent: int
+    defeats_total: int = 0
+    defeats_recent: int = 0
+    run_feedback_recent: int = 0
+
+
+class AdminLatestRunFeedback(BaseModel):
+    id: int
+    outcome: str
+    outcome_label: str
+    template_key: Optional[str] = None
+    period_index: int
+    defeat_reason: Optional[str] = None
+    comment: str
+    created_at: Optional[datetime] = None
 
 
 class AdminWatchtowerResponse(BaseModel):
@@ -207,6 +227,7 @@ class AdminProfileInspectorResponse(BaseModel):
     economy: AdminProfileInspectorEconomy
     period_closings: List[AdminPeriodClosingRow]
     activity_log: List[AdminActivityLogRow]
+    latest_run_feedback: Optional[AdminLatestRunFeedback] = None
 
 
 @router.get("/catalogs", response_model=list[AdminCatalogMeta])
@@ -273,22 +294,62 @@ async def admin_metrics_summary(
     return AdminMetricsSummary(**build_metrics_summary(db, days=days))
 
 
+@router.get("/export/profiles.csv")
+async def admin_export_profiles_csv(
+    limit: int = Query(500, ge=1, le=2000),
+    q: str = Query("", max_length=120),
+    profile_filter: str = Query("", max_length=32),
+    stuck_only: bool = Query(False),
+    _admin: User = Depends(require_admin_user),
+    db: Session = Depends(get_db),
+):
+    rows = profiles_csv_rows(
+        db,
+        limit=limit,
+        q=q,
+        profile_filter=profile_filter,
+        stuck_only=stuck_only,
+    )
+    return StreamingResponse(
+        stream_csv(rows),
+        media_type="text/csv; charset=utf-8",
+        headers={"Content-Disposition": 'attachment; filename="profiles.csv"'},
+    )
+
+
+@router.get("/export/run-feedback.csv")
+async def admin_export_run_feedback_csv(
+    limit: int = Query(500, ge=1, le=2000),
+    _admin: User = Depends(require_admin_user),
+    db: Session = Depends(get_db),
+):
+    rows = run_feedback_csv_rows(db, limit=limit)
+    return StreamingResponse(
+        stream_csv(rows),
+        media_type="text/csv; charset=utf-8",
+        headers={"Content-Disposition": 'attachment; filename="run-feedback.csv"'},
+    )
+
+
 @router.get("/watchtower", response_model=AdminWatchtowerResponse)
 async def admin_watchtower(
     user_limit: int = Query(50, ge=1, le=200),
     profile_limit: int = Query(50, ge=1, le=200),
     notification_limit: int = Query(100, ge=1, le=500),
     run_feedback_limit: int = Query(50, ge=1, le=200),
+    q: str = Query("", max_length=120),
+    profile_filter: str = Query("", max_length=32),
+    stuck_only: bool = Query(False),
     _admin: User = Depends(require_admin_user),
     db: Session = Depends(get_db),
 ):
     users = db.query(User).order_by(User.id.desc()).limit(user_limit).all()
-    profiles = (
-        db.query(GameProfile, User)
-        .join(User, User.id == GameProfile.user_id)
-        .order_by(GameProfile.updated_at.desc())
-        .limit(profile_limit)
-        .all()
+    profiles = fetch_profile_rows(
+        db,
+        limit=profile_limit,
+        q=q,
+        profile_filter=profile_filter,
+        stuck_only=stuck_only,
     )
     notifications = (
         db.query(NotificationLog)
@@ -330,23 +391,7 @@ async def admin_watchtower(
             for u in users
         ],
         profiles=[
-            AdminProfileRow(
-                id=p.id,
-                user_id=p.user_id,
-                username=user.username,
-                name=p.name,
-                save_kind=p.save_kind,
-                starter_template_key=p.starter_template_key,
-                is_active=bool(p.is_active),
-                period_index=int(p.period_index),
-                cash_balance=round(float(p.cash_balance or 0), 2),
-                onboarding_state=str(getattr(p, "onboarding_state", "brief_done") or "brief_done"),
-                onboarding_step=str(getattr(p, "onboarding_step", "farewell") or "farewell"),
-                **user_guidance_admin_fields(user),
-                created_at=p.created_at,
-                updated_at=p.updated_at,
-                stuck_kind=profile_stuck_kind(p, user),
-            )
+            AdminProfileRow(**build_admin_profile_row(p, user))
             for p, user in profiles
         ],
         onboarding_funnel=AdminOnboardingFunnel(**build_onboarding_funnel(db)),

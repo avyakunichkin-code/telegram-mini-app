@@ -26,7 +26,7 @@ audience: frontend, design-lab, agents
 |-------|-------|------------|-------|
 | **PreGame.Bubble** | `MonetkaBubbleScreen` | `mqx-auth-monetka`, `mqx-frame--pre-game`, TGS (`showLottieBackdrop`) | Login, Register, Start menu, AuthGuard loading |
 | **PreGame.Flow** | `MqxMonetkaDialogScreen` | `mqx-flow--monetka-dialog`, `mqx-frame--flat-flow` | New game: режим, шаблон |
-| **Game.TabHero** | `MqxShell` + `MqxTabHero` | `mqx-tab-page` | Финансы, аналитика, меню в игре |
+| **Game.TabHero** | `MqxShell` + `MqxTabHero` | `mqx-tab-page` | Капитал, аналитика, меню в игре |
 | **Game.Play** | `GameScreenLayout` | `mqx-tab-page--dash-unified`, без рамки контента | Дашборд S5 |
 
 **Запрещено:** `MqxTabHero` на auth-формах и проверке токена.

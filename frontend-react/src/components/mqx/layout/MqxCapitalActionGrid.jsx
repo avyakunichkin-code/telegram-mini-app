@@ -3,7 +3,7 @@ const ACTION_TILES = [
   { id: 'bond', icon: '📈', title: 'Облигации', iconClass: 'mqx-cap-act-row__icon--bond' },
   { id: 'realestate', icon: '🏠', title: 'Недвижимость', iconClass: 'mqx-cap-act-row__icon--prop' },
   { id: 'car', icon: '🚗', title: 'Авто', iconClass: 'mqx-cap-act-row__icon--car' },
-  { id: 'insurance', icon: '🛡', title: 'Страховки', iconClass: 'mqx-cap-act-row__icon--ins', highlight: true },
+  { id: 'insurance', icon: '🛡', title: 'Страховки', iconClass: 'mqx-cap-act-row__icon--ins' },
   { id: 'mortgage', icon: '🏠', title: 'Ипотека', iconClass: 'mqx-cap-act-row__icon--debt' },
   { id: 'credit', icon: '💳', title: 'Кредит', iconClass: 'mqx-cap-act-row__icon--credit' },
 ];

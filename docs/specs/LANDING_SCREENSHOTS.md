@@ -24,7 +24,7 @@ audience: frontend, marketing, agents
 | Файл | Содержимое кадра |
 |------|------------------|
 | `dashboard-light.png` / `dashboard-dark.png` | Hero + «Финансы периода» (chips) + «Цель» + «Действия периода» |
-| `capital-light.png` / `capital-dark.png` | Вкладка «Финансы»: аккордеоны (доходы/расходы/…) |
+| `capital-light.png` / `capital-dark.png` | Вкладка «Капитал»: потоки → Детали \| Действия |
 | `events-light.png` / `events-dark.png` | Карточка события L3 (пузырь Монетки, выборы) |
 
 **Локали:** тексты в `landing/public/locales/*.json`; **картинки общие** для RU и EN.
@@ -46,7 +46,7 @@ npm run capture-screens
 
 1. `POST /api/login` → токен в `localStorage`
 2. Продолжить сохранение → `GameScreen`
-3. Снять дашборд и вкладку «Финансы»
+3. Снять дашборд и вкладку «Капитал»
 4. Карточка события — `#/dev/mqx` (только **dev**, не production build)
 
 | Переменная | По умолчанию |

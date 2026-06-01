@@ -1,7 +1,7 @@
 ---
 layer: ux
 status: approved
-last_reviewed: 2026-06-01
+last_reviewed: 2026-06-02
 platform: Telegram Mini App
 screen_id: dashboard-needs
 parent: dashboard
@@ -65,45 +65,34 @@ GameScreen → dashboard
 
 | Подзона | Содержание |
 |---------|------------|
-| **Header row** | `Потребности` + ссылка `как улучшить →` (collapsed) / `?` в кружке (expanded) |
-| **Compact row** | Min value label + мини-bar или 4-dot strip + статус-текст |
-| **Expanded** | `MqxNeedsBars` ×4 |
-| **Footer actions** | `[Порадовать себя]` `[?]` — горизонтально, min 44px height |
-| **Banners** | Над compact или под header: risk / soft hint |
+| **Header row** | `h2` «Потребности» + **книга с бейджем «?»** (справка) + **сердце** (treat-self, v7-e3) |
+| **Risk bleed** | Полноширинный баннер при `needs_zero_periods_streak > 0` |
+| **Body** | `PersonaPortrait` (`dash`) + **4 шкалы** всегда (`MqxNeedsBars`) |
+| **Разделитель** | Только `MqxDivider` после секции (без `border-bottom` у блока) |
 
-### ASCII Wireframe
-
-**Collapsed (default):**
+### ASCII Wireframe (prod v7-e2e3)
 
 ```text
 │ ⚠ Риск: 2 из 3 месяцев с нулём на «Связи»     │  bleed (если streak)
 ├───────────────────────────────────────────────┤
-│ ▼ Потребности                            ⌄   │
-│ [👤]  Связи    ███░░░░░░░     Истощение       │  цветной текст, не бейдж
-├───────────────────────────────────────────────┤
-```
-
-**Expanded:**
-
-```text
-│ ▲ Потребности                                │
+│ Потребности                        [📖?] [♥]  │
 │ [👤]  Комфорт   ████████░░    Норма           │
-│       Статус    █████░░░░░    Норма           │
+│       Статус    █████░░░░░    Низко           │
 │       Связи     ███░░░░░░░    Истощение       │
 │       Здоровье  ██████░░░░    Норма           │
-│                    [Порадовать себя]  ( ? )   │  справа, компактно
+├───────────────────────────────────────────────┤  MqxDivider
 ```
 
 ### Component Inventory
 
 | Компонент | Lab / MQX | Примечание |
 |-----------|-----------|------------|
-| `MqxNeedsDash` | dashboard-needs-v5-round | accordion + портрет по `templateKey` |
-| `PersonaPortrait` | persona-portraits-round | `size="dash"` в аватаре Z-NEEDS |
-| `MqxNeedsBars` | то же | `role="progressbar"` per bar |
-| `MqxNeedsRiskBanner` | то же | optional |
-| `MqxNeedsIntroBanner` | needs-intro-banner-round | post-onboarding |
-| Footer CTA | treat-self + help specs | |
+| `MqxNeedsDash` | dashboard-needs-v7-round ★ **e2e3** | `actionsVariant="e2e3"` |
+| `PersonaPortrait` | persona-portraits-round | `size="dash"` |
+| `IconHelpBook` + badge | `MqxContextHelpIcons.jsx` | без фона/рамки у кнопки |
+| `IconTreatHeart` | то же | emerald-точка; disabled → toast cooldown |
+| `MqxNeedsHelpSheet` | help-sheet-round | `GET /api/game/needs/guide` → 4 `sections` |
+| `MqxTreatSelfSheet` | treat-self-round | `POST treat-self` |
 
 ---
 
@@ -113,14 +102,11 @@ GameScreen → dashboard
 |-------|---------|-----|
 | **Hidden** | `!needs.enabled` | Нет секции |
 | **Hidden onboarding** | `inOnboarding` | Нет секции |
-| **Collapsed default** | ready | Compact row |
-| **Expanded** | user toggled | 4 bars |
-| **All ok** | all ≥40 | «Всё в норме» (зелёный/neutral текст + ✓) |
-| **Low** | any <40, none <30 | «Есть просадка» |
-| **Distressed** | any <30, >0 | «Истощение» + иконка |
-| **Zero** | any ==0 | Подсветка оси + critical banner if streak |
-| **Treat unavailable** | cooldown / no cash | CTA disabled + hint «через N периодов» / «не хватает средств» |
-| **Treat available** | API `treat_self.available` | CTA enabled |
+| **Default** | `needs.enabled` | 4 bars + портрет |
+| **Zone labels** | per bar | Норма / Низко / Истощение / Критично (справа от бара) |
+| **Zero + streak** | `needs_zero_periods_streak > 0` | Bleed risk banner |
+| **Treat unavailable** | cooldown | Сердце `aria-disabled`; tap → toast «Разблокируется через N периодов» |
+| **Treat available** | `treat_self.available` | Сердце → `MqxTreatSelfSheet` |
 
 ### Цвета зон (не единственный канал)
 
@@ -137,9 +123,8 @@ GameScreen → dashboard
 
 | Действие | Результат | Feedback |
 |----------|-----------|----------|
-| Tap header/chevron | toggle expanded | `aria-expanded` |
-| Tap «Порадовать себя» | open [`character-needs-treat-self`](character-needs-treat-self.md) sheet | — |
-| Tap «?» | open [`character-needs-help`](character-needs-help.md) sheet | — |
+| Tap книга «?» | open [`character-needs-help`](character-needs-help.md) | `MqxNeedsHelpSheet` |
+| Tap сердце | treat sheet или toast если cooldown | [`character-needs-treat-self`](character-needs-treat-self.md) |
 | Dismiss intro banner | hide + persist flag | fade out |
 | Dismiss soft hint | hide until next period or forever (product: **until next period**) | — |
 
@@ -169,22 +154,19 @@ GameScreen → dashboard
 ## Acceptance Criteria
 
 1. Z-NEEDS сразу после hero, до Z1; при `needs.enabled` секция видна на 320px.
-2. По умолчанию collapsed; expand показывает 4 подписанных бара.
-3. При streak≥1 показывается баннер с текстом «N из 3 месяцев».
-4. Treat-self disabled при кулдауне с читаемой причиной.
-5. Soft + `proactive_hints`: баннер при <40 (если не dismissed).
-6. Hard: без proactive баннера; «?» доступен.
+2. Всегда 4 подписанных бара; accordion снят (v7).
+3. При streak≥1 — bleed-баннер «N из 3 месяцев».
+4. Справка: 4 раздела из `needs/guide`; заголовок sheet «Потребности».
+5. Сердце disabled → toast с cooldown (не блокирующий `disabled` без feedback).
+6. Один `MqxDivider` после секции (без двойной линии).
 7. Не рендерится в онбординге и при `needs.enabled: false`.
 
 ---
 
-## Design-lab variants (ожидаемые)
+## Design-lab
 
-| ID | Идея |
-|----|------|
-| A | Compact = одна суммарная полоска min |
-| B | Compact = 4 micro-bars в ряд |
-| C | Compact = текст + emoji-иконки осей |
-| D | Banners внутри card vs full-bleed strip |
-
-Утверждение — в `design-lab/character-needs/dashboard-needs-round/VARIANTS.md`.
+| ID | Статус |
+|----|--------|
+| **v7-e2e3** | ★ **prod** — книга e2 + сердце e3 |
+| v7-A…D, e1–e3 | архив сравнения — [`dashboard-needs-v7-round/VARIANTS.md`](../../../design-lab/character-needs/dashboard-needs-v7-round/VARIANTS.md) |
+| v5/v6 | архив |

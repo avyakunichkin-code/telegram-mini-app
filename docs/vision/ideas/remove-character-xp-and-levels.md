@@ -34,7 +34,7 @@ adr: ../../decisions/ADR-003-remove-character-progression.md
 
 Ключи в `game_starter_templates.blueprint_json`:
 
-| Ключ | Раздел на «Управление капиталом» |
+| Ключ | Раздел на вкладке «Капитал» |
 |------|----------------------------------|
 | `capital_invest` | Инвестиции (депозит, облигации) |
 | `capital_insurance` | Страховки |

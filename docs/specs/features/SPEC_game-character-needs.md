@@ -282,33 +282,34 @@ available = enabled AND period open AND (
 
 ## Справочник помощи (player support)
 
-**Не** подменяет события; статический контент + доступ с дашборда («?» / «Как поддерживать баланс»).
+**Не** подменяет события; статический контент + доступ с дашборда (иконка **книга+?** в Z-NEEDS v7-e2).
 
 ### API
 
-`GET /api/game/needs/guide` или блок в overview:
+`GET /api/game/needs/guide`:
 
 ```python
-class NeedsGuideOverview(BaseModel):
-    maintenance: list[str]   # как держать шкалы в норме
-    critical: list[str]     # что делать при <30% и при нуле
+class NeedsGuideSection(BaseModel):
+    heading: str
+    items: list[str]
+
+class NeedsGuideResponse(BaseModel):
+    title: str = "Потребности"
+    sections: list[NeedsGuideSection]
+    maintenance: list[str]  # legacy
+    critical: list[str]     # legacy
 ```
 
-### Содержание (черновик для контента)
+### Содержание (prod, `guide_content.py`)
 
-**Поддержание (maintenance):**
+| Раздел | Тема |
+|--------|------|
+| **Что это** | 4 шкалы, отдельно от cash |
+| **Почему снижаются** | decay, события, пороги 30% / ноль / поражение |
+| **Как пополнить** | события, `needs_delta`, проверка перед закрытием месяца |
+| **Кнопка «Улучшить»** | treat-self, кулдаун ~15 периодов, не замена событиям |
 
-- Закрывай события — они чаще всего поднимают нужные шкалы.
-- «Порадовать себя» — редкий запасной путь (раз в ~15 месяцев), не замена событиям.
-- Следи за четырьмя полосками до закрытия месяца.
-
-**Критика (critical):**
-
-- Если полоска **ниже 30%** — в следующем месяце возможен штраф с карты.
-- Если полоска **на нуле** — счётчик риска; **три месяца подряд на нуле** = поражение.
-- Студент: читай подсказки на дашборде; Предприниматель: планируй траты на события заранее.
-
-Контент хранить в `backend/app/needs/guide_content.py` или JSON в repo; per-locale позже.
+UX: [`character-needs-help.md`](../../ux/screens/character-needs-help.md).
 
 ---
 
@@ -353,9 +354,9 @@ Body: `{ "option_id": string }` — обязателен.
 
 **UX (approved):** [`docs/ux/CHARACTER_NEEDS_UX.md`](../../ux/CHARACTER_NEEDS_UX.md) · экраны в [`docs/ux/screens/`](../../ux/screens/) · lab [`design-lab/character-needs/`](../../../design-lab/character-needs/).
 
-- `MqxNeedsSummary` + `MqxNeedsBars` — зона **Z-NEEDS** на главной (compact → expand), пороги 40 / 30 / 0.
-- «Порадовать себя» → **bottom sheet** + confirm ([`character-needs-treat-self.md`](../../ux/screens/character-needs-treat-self.md)).
-- **«Помощь» (`?`)** → sheet со `needs_guide`.
+- `MqxNeedsDash` v7 — **Z-NEEDS** на главной: 4 шкалы всегда, портрет `PersonaPortrait`; пороги 40 / 30 / 0.
+- **Сердце** → treat-self sheet ([`character-needs-treat-self.md`](../../ux/screens/character-needs-treat-self.md)); UI «Улучшить».
+- **Книга+?** → `MqxNeedsHelpSheet` + `needs/guide` ([`character-needs-help.md`](../../ux/screens/character-needs-help.md)).
 - **Студент:** баннер при <40 (`proactive_hints`); **Предприниматель:** без баннера.
 - События: чипы `needs_delta` на choices ([`character-needs-events.md`](../../ux/screens/character-needs-events.md)).
 - Закрытие месяца / defeat — [`character-needs-period-defeat.md`](../../ux/screens/character-needs-period-defeat.md).

@@ -8,7 +8,7 @@ from typing import Any
 from sqlalchemy import func
 from sqlalchemy.orm import Session
 
-from ..models import GameProfile, NotificationLog, User
+from ..models import GameProfile, NotificationLog, PlayerRunFeedback, User
 from ..timeutil import utc_now_naive
 
 
@@ -103,6 +103,28 @@ def build_metrics_summary(db: Session, *, days: int = 7) -> dict[str, Any]:
         or 0
     )
 
+    defeats_total = int(
+        db.query(func.count(GameProfile.id))
+        .filter(GameProfile.run_outcome == "defeat")
+        .scalar()
+        or 0
+    )
+    defeats_recent = int(
+        db.query(func.count(GameProfile.id))
+        .filter(
+            GameProfile.run_outcome == "defeat",
+            GameProfile.updated_at >= since,
+        )
+        .scalar()
+        or 0
+    )
+    run_feedback_recent = int(
+        db.query(func.count(PlayerRunFeedback.id))
+        .filter(PlayerRunFeedback.created_at >= since)
+        .scalar()
+        or 0
+    )
+
     return {
         "window_days": window_days,
         "users_total": users_total,
@@ -118,4 +140,7 @@ def build_metrics_summary(db: Session, *, days: int = 7) -> dict[str, Any]:
         "wins_recent": wins_recent,
         "avg_period_index_active": avg_period_index,
         "game_started_recent": game_started_recent,
+        "defeats_total": defeats_total,
+        "defeats_recent": defeats_recent,
+        "run_feedback_recent": run_feedback_recent,
     }

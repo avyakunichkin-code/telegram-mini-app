@@ -1,7 +1,7 @@
 ---
 layer: handbook
 status: active
-last_reviewed: 2026-06-01
+last_reviewed: 2026-06-02
 audience: product, playtest, partners
 ---
 
@@ -30,7 +30,7 @@ audience: product, playtest, partners
 
 ---
 
-## Финансы и инструменты
+## Капитал и инструменты
 
 | Фича | Статус | Комментарий |
 |------|--------|-------------|
@@ -39,7 +39,7 @@ audience: product, playtest, partners
 | Активы из шаблонов | ✅ | |
 | Вклад, облигации | ✅ | |
 | Страховки | ✅ | |
-| UI вкладки «Финансы» (Детали \| Действия) | ✅ | 2026-06; [`finance.md`](../ux/screens/finance.md) |
+| UI вкладки «Капитал» (Детали \| Действия) | ✅ | 2026-06; [`finance.md`](../ux/screens/finance.md) |
 | `mechanics_unlock` по целям победы | ✅ | [ADR-004](../decisions/ADR-004-mechanics-unlock-victory-chain.md) |
 | Статьи расходов (E1) | 🟡 | Агрегат lifestyle есть; полная модель — backlog |
 | Акции, ETF, биржа | ⬜ | Вне scope |
@@ -52,8 +52,9 @@ audience: product, playtest, partners
 | Фича | Статус | Комментарий |
 |------|--------|-------------|
 | Выбор персонажа (шаг 2 Game) + растровые портреты | ✅ | [`character-pick.md`](../ux/screens/character-pick.md); lab ★ [`persona-portraits-round`](../../../design-lab/game-templates/persona-portraits-round/) |
-| Портрет на Z-NEEDS по `template_key` | ✅ | `MqxNeedsDash` + `PersonaPortrait` size `dash` |
-| Потребности (4 шкалы), decay, treat-self | 🟡 | BE + UI; spec draft |
+| Портрет на Z-NEEDS по `template_key` | ✅ | `MqxNeedsDash` v7-e2e3 + `PersonaPortrait` size `dash` |
+| Справочник потребностей (4 раздела) | ✅ | `GET /api/game/needs/guide`, `MqxNeedsHelpSheet` |
+| Потребности (4 шкалы), decay, treat-self | ✅ | UI «Улучшить» (сердце); spec approved |
 | Поражение: 3 периода шкала = 0 | 🟡 | [ADR-005](../decisions/ADR-005-character-needs-state-and-defeat.md) |
 | Каталог событий MVP 1.1 | ✅ | `data/events/mvp11/` |
 | Продуктовая глава событий (trade-off, повторы) | ✅ | [`EVENTS.md`](EVENTS.md) |

@@ -2602,12 +2602,9 @@ body [class*='modal'] {
   box-shadow: 0 1px 4px rgba(15, 17, 21, 0.06);
 }
 
-.mqx-cap-mode-seg .mqx-cap-page-seg__btn.is-active:first-child {
-  color: rgba(91, 33, 182, 0.98);
-}
-
+.mqx-cap-mode-seg .mqx-cap-page-seg__btn.is-active:first-child,
 .mqx-cap-mode-seg .mqx-cap-page-seg__btn.is-active:last-child {
-  color: #0284c7;
+  color: var(--mqx-ink);
 }
 
 .mqx-cap-meta-v5 {
@@ -2842,26 +2839,28 @@ body [class*='modal'] {
   padding-bottom: 8px;
 }
 
-.mqx-cap-sect--invest {
-  --mqx-cap-sect-accent: #0284c7;
+/* Детали капитала: нейтральные заголовки; только обязательства — приглушённый красный */
+.mqx-capital-page .mqx-cap-sect--invest,
+.mqx-capital-page .mqx-cap-sect--insurance,
+.mqx-capital-page .mqx-cap-sect--property {
+  --mqx-cap-sect-accent: color-mix(in srgb, var(--mqx-ink) 22%, var(--mqx-glass-border, var(--mq-line)));
 }
 
-.mqx-cap-sect--insurance {
-  --mqx-cap-sect-accent: #2563eb;
+.mqx-capital-page .mqx-cap-sect--invest .mqx-cap-sect__title,
+.mqx-capital-page .mqx-cap-sect--insurance .mqx-cap-sect__title,
+.mqx-capital-page .mqx-cap-sect--property .mqx-cap-sect__title,
+.mqx-capital-page .mqx-cap-sect--invest .mqx-cap-sect__meta,
+.mqx-capital-page .mqx-cap-sect--insurance .mqx-cap-sect__meta,
+.mqx-capital-page .mqx-cap-sect--property .mqx-cap-sect__meta {
+  color: color-mix(in srgb, var(--mqx-ink) 88%, transparent);
 }
 
-.mqx-cap-sect--property {
-  --mqx-cap-sect-accent: color-mix(in srgb, #0284c7 85%, var(--mqx-ink));
+.mqx-capital-page .mqx-cap-sect--liabilities {
+  --mqx-cap-sect-accent: color-mix(in srgb, #b91c1c 45%, var(--mqx-glass-border, var(--mq-line)));
 }
 
-.mqx-cap-sect--liabilities {
-  --mqx-cap-sect-accent: var(--mq-danger, #dc2626);
-}
-
-.mqx-cap-sect--invest .mqx-cap-sect__title,
-.mqx-cap-sect--insurance .mqx-cap-sect__title,
-.mqx-cap-sect--property .mqx-cap-sect__title,
-.mqx-cap-sect--liabilities .mqx-cap-sect__title {
-  color: var(--mqx-cap-sect-accent);
+.mqx-capital-page .mqx-cap-sect--liabilities .mqx-cap-sect__title,
+.mqx-capital-page .mqx-cap-sect--liabilities .mqx-cap-sect__meta {
+  color: color-mix(in srgb, #b91c1c 70%, var(--mqx-ink));
 }
 

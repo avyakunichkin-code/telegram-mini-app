@@ -3,7 +3,7 @@ import { IconChartUp, IconCoins, IconHome, IconMenu } from './icons/NavIcons';
 
 const ITEMS = [
   { id: 'dashboard', label: 'Главная', Icon: IconHome },
-  { id: 'finance', label: 'Финансы', Icon: IconCoins },
+  { id: 'finance', label: 'Капитал', Icon: IconCoins },
   { id: 'analytics', label: 'Аналитика', Icon: IconChartUp },
   { id: 'menu', label: 'Меню', Icon: IconMenu },
 ];

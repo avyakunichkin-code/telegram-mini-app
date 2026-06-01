@@ -7,7 +7,8 @@ from typing import Any
 
 from sqlalchemy.orm import Session
 
-from ..models import GameProfile, NotificationLog, PeriodEconomyClosing, User
+from ..models import GameProfile, NotificationLog, PeriodEconomyClosing, PlayerRunFeedback, User
+from .run_feedback import OUTCOME_LABEL_RU
 from ..victory.profile import profile_win_reached
 from .notify_messages import format_alert_message_ru, kind_label_ru
 from .onboarding_funnel import _parse_progress, user_guidance_admin_fields
@@ -58,6 +59,27 @@ def build_profile_inspector(
         win_reached = profile_win_reached(db, profile)
     except Exception:
         win_reached = False
+
+    latest_feedback = (
+        db.query(PlayerRunFeedback)
+        .filter(PlayerRunFeedback.game_profile_id == profile.id)
+        .order_by(PlayerRunFeedback.id.desc())
+        .first()
+    )
+    latest_run_feedback = None
+    if latest_feedback is not None:
+        outcome = str(latest_feedback.outcome or "")
+        comment = str(latest_feedback.comment or "").strip()
+        latest_run_feedback = {
+            "id": latest_feedback.id,
+            "outcome": outcome,
+            "outcome_label": OUTCOME_LABEL_RU.get(outcome, outcome or "—"),
+            "template_key": latest_feedback.template_key,
+            "period_index": int(latest_feedback.period_index or 0),
+            "defeat_reason": latest_feedback.defeat_reason,
+            "comment": comment,
+            "created_at": latest_feedback.created_at,
+        }
 
     return {
         "profile": {
@@ -110,6 +132,7 @@ def build_profile_inspector(
             _activity_log_row(log)
             for log in logs
         ],
+        "latest_run_feedback": latest_run_feedback,
     }
 
 
