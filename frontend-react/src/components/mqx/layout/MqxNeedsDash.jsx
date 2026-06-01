@@ -235,6 +235,7 @@ export function MqxNeedsDash({
     <section
       className={['mqx-needs-section', className].filter(Boolean).join(' ')}
       data-actions={actionsVariant}
+      data-onboarding-anchor="needs"
       aria-labelledby="needs-section-title"
     >
       <div className="mqx-needs-section__head">

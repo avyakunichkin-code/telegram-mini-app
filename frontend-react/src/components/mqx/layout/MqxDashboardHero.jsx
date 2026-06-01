@@ -35,6 +35,7 @@ export function MqxDashboardHero({
               badge={pendingEventsCount > 0 ? pendingEventsCount : undefined}
               onClick={onOpenEvents}
               className="mqx-hero-turn__events-pill"
+              data-onboarding-anchor="events"
             >
               События
             </MqxPill>

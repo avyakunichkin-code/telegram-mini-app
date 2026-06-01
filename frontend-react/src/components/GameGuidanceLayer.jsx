@@ -1,10 +1,12 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { API } from '../api';
 import {
   bumpGuidanceSessionDismissCount,
   getGuidanceSessionDismissCount,
   resetGuidanceSessionDismissCount,
 } from '../guidance/sessionDismiss';
+import { useGuidanceAnchorFocus } from '../guidance/useGuidanceAnchorFocus';
+import { MqxGuidanceAnchorLink } from './mqx/guidance/MqxGuidanceAnchorLink';
 import { MqxGuidanceStrip } from './mqx/guidance/MqxGuidanceStrip';
 
 /**
@@ -15,7 +17,10 @@ export function GameGuidanceLayer({
   guidance,
   refreshOverview,
   onOverlayStateChange,
+  scrollRootRef = null,
 }) {
+  const stripRef = useRef(null);
+  const [stripHeightPx, setStripHeightPx] = useState(0);
   const [dismissedNudgeId, setDismissedNudgeId] = useState(null);
   const [sessionDismissCount, setSessionDismissCount] = useState(() =>
     getGuidanceSessionDismissCount(),
@@ -48,6 +53,43 @@ export function GameGuidanceLayer({
     });
   }, [visible, showCurriculum, onOverlayStateChange]);
 
+  useGuidanceAnchorFocus({
+    rootRef: scrollRootRef,
+    beatId: showCurriculum ? guidance?.beat_id : null,
+    active: showCurriculum && visible,
+    stripHeightPx,
+  });
+
+  useEffect(() => {
+    if (!visible) {
+      setStripHeightPx(0);
+      document.documentElement.style.removeProperty('--mqx-guidance-scroll-pad');
+      return undefined;
+    }
+
+    const node = stripRef.current;
+    if (!node) return undefined;
+
+    const apply = () => {
+      const h = Math.ceil(node.getBoundingClientRect().height);
+      setStripHeightPx(h);
+      const tabRaw = getComputedStyle(document.documentElement).getPropertyValue('--tma-tabbar-inset');
+      const tab = parseFloat(tabRaw) || 64;
+      document.documentElement.style.setProperty(
+        '--mqx-guidance-scroll-pad',
+        `calc(${h}px + ${tab}px + 20px)`,
+      );
+    };
+
+    apply();
+    const ro = new ResizeObserver(apply);
+    ro.observe(node);
+    return () => {
+      ro.disconnect();
+      document.documentElement.style.removeProperty('--mqx-guidance-scroll-pad');
+    };
+  }, [visible, guidance?.beat_id, guidance?.view_index, guidance?.title, guidance?.body]);
+
   useEffect(() => {
     if (guidance?.show_curriculum === false && !guidance?.nudge_id) {
       resetGuidanceSessionDismissCount();
@@ -78,7 +120,9 @@ export function GameGuidanceLayer({
   if (showNudge) {
     return (
       <MqxGuidanceStrip
+        ref={stripRef}
         mode="nudge"
+        showMascot
         title={guidance.nudge_title}
         body={guidance.nudge_body}
         showNav={false}
@@ -101,10 +145,19 @@ export function GameGuidanceLayer({
     sessionDismissCount === 1 ? 'Ещё раз — пропустить всё обучение' : undefined;
 
   return (
-    <MqxGuidanceStrip
-      mode="curriculum"
-      title={guidance.title}
-      body={guidance.body}
+    <>
+      <MqxGuidanceAnchorLink
+        stripRef={stripRef}
+        scrollRootRef={scrollRootRef}
+        beatId={guidance.beat_id}
+        active={showCurriculum && visible}
+      />
+      <MqxGuidanceStrip
+        ref={stripRef}
+        mode="curriculum"
+        showMascot
+        title={guidance.title}
+        body={guidance.body}
       moduleStep={guidance.module_step}
       moduleStepCount={guidance.module_step_count}
       viewIndex={guidance.view_index}
@@ -130,6 +183,7 @@ export function GameGuidanceLayer({
           ? () => patch({ action: 'advance_read', beat_id: guidance.beat_id })
           : undefined
       }
-    />
+      />
+    </>
   );
 }

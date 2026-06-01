@@ -414,6 +414,7 @@ export function GameScreen({ onLogout, onNewGame, onLoadGame }) {
       <GameGuidanceLayer
         guidance={guidance}
         refreshOverview={refreshOverview}
+        scrollRootRef={onboardingRootRef}
         onOverlayStateChange={setOnboardingUi}
       />
     </GameScreenLayout>

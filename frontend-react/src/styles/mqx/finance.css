@@ -1,9 +1,9 @@
 ﻿/* --- Finance / Capital Management Premium --- */
 .mqx-capital-page {
-  padding-top: 10px;
+  padding-top: 6px;
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 12px;
 }
 
 /* Управление капиталом — 6 аккордеонов (flows-round) */
@@ -228,19 +228,35 @@
 }
 
 .mqx-hero--capital {
-  padding-bottom: 22px;
+  padding: 10px 14px 10px;
+}
+
+.mqx-hero--capital.mqx-hero--inline-title .mqx-hero__top--inline-title {
+  align-items: center;
+}
+
+.mqx-hero--capital .mqx-hero__brand-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+  flex: 1;
 }
 
 .mqx-hero__title--capital {
-  margin-top: 18px;
-  font-size: clamp(28px, 7vw, 34px);
-  line-height: 1.02;
+  margin-top: 0;
+  font-size: clamp(22px, 5.8vw, 28px);
+  line-height: 1.05;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .mqx-hero__sub--capital {
-  margin-top: 10px;
-  max-width: 85%;
-  line-height: 1.45;
+  margin-top: 6px;
+  max-width: 100%;
+  font-size: var(--mq-fs-small);
+  line-height: 1.38;
 }
 
 .mqx-capital-card {
@@ -2835,8 +2851,146 @@ body [class*='modal'] {
   background: color-mix(in srgb, rgba(109, 40, 217, 0.9) 6%, var(--mqx-glass-strong, rgba(255, 255, 255, 0.72)));
 }
 
-.mqx-sheet--capital .mqx-sheet__body {
-  padding-bottom: 8px;
+.mqx-sheet--capital {
+  display: flex;
+  flex-direction: column;
+  max-height: min(78vh, calc(100dvh - env(safe-area-inset-top, 0px) - 64px));
+  overflow: hidden;
+  padding-bottom: calc(12px + env(safe-area-inset-bottom, 0px));
+}
+
+.mqx-sheet--capital .mqx-sheet__head {
+  position: relative;
+  flex-shrink: 0;
+  padding-right: 40px;
+}
+
+.mqx-sheet--capital .mqx-sheet__close {
+  top: 0;
+  right: 0;
+}
+
+.mqx-sheet--capital .mqx-sheet__title {
+  font-size: var(--mq-fs-body);
+  line-height: 1.2;
+}
+
+.mqx-sheet--capital .mqx-sheet__sub {
+  margin-top: 4px;
+  font-size: var(--mq-fs-micro);
+  line-height: 1.35;
+}
+
+.mqx-sheet--capital .mqx-sheet__body--scroll {
+  flex: 1 1 auto;
+  min-height: 0;
+  margin-top: 8px;
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+  padding-bottom: 4px;
+}
+
+/* Компактные строки каталога (недвижимость, авто, долги) в sheet и на странице */
+.mqx-sheet--capital .mqx-capital-template-list,
+.mqx-capital-page .mqx-capital-template-list {
+  margin-top: 8px;
+  gap: 2px;
+}
+
+.mqx-sheet--capital .mqx-capital-template-row--asset-h,
+.mqx-sheet--capital .mqx-capital-template-row--liability-h,
+.mqx-capital-page .mqx-capital-template-row--asset-h,
+.mqx-capital-page .mqx-capital-template-row--liability-h {
+  gap: 8px;
+  padding: 4px 4px 4px 8px;
+}
+
+.mqx-sheet--capital .mqx-capital-template-row__accent,
+.mqx-capital-page .mqx-capital-template-row__accent {
+  min-height: 38px;
+  border-radius: 3px;
+}
+
+.mqx-sheet--capital .mqx-capital-template-row__title,
+.mqx-capital-page .mqx-capital-template-row__title {
+  font-size: var(--mq-fs-body);
+  font-weight: 800;
+  letter-spacing: -0.01em;
+}
+
+.mqx-sheet--capital .mqx-capital-template-row--asset-h .mqx-capital-template-row__title,
+.mqx-capital-page .mqx-capital-template-row--asset-h .mqx-capital-template-row__title {
+  margin-top: 2px;
+}
+
+.mqx-sheet--capital .mqx-asset-metrics-inline,
+.mqx-capital-page .mqx-asset-metrics-inline {
+  margin-top: 5px;
+  gap: 5px 9px;
+}
+
+.mqx-sheet--capital .mqx-inline-metric__val,
+.mqx-capital-page .mqx-inline-metric__val {
+  font-size: var(--mq-fs-small);
+  font-weight: 700;
+}
+
+.mqx-sheet--capital .mqx-metric-glyph,
+.mqx-capital-page .mqx-metric-glyph {
+  width: 18px;
+  height: 18px;
+}
+
+.mqx-sheet--capital .mqx-metric-glyph svg,
+.mqx-capital-page .mqx-metric-glyph svg {
+  width: 14px;
+  height: 14px;
+}
+
+.mqx-sheet--capital .mqx-row-action,
+.mqx-capital-page .mqx-capital-template-list .mqx-row-action {
+  width: 36px;
+  height: 36px;
+}
+
+.mqx-sheet--capital .mqx-row-action__glyph,
+.mqx-capital-page .mqx-capital-template-list .mqx-row-action__glyph {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  font-size: var(--mq-fs-body);
+}
+
+.mqx-sheet--capital .mqx-capital-template-list .mqx-capital-template-row--asset-h + .mqx-capital-template-row--asset-h,
+.mqx-sheet--capital .mqx-capital-template-list .mqx-capital-template-row--liability-h + .mqx-capital-template-row--liability-h,
+.mqx-capital-page .mqx-capital-template-list .mqx-capital-template-row--asset-h + .mqx-capital-template-row--asset-h,
+.mqx-capital-page .mqx-capital-template-list .mqx-capital-template-row--liability-h + .mqx-capital-template-row--liability-h {
+  margin-top: 0;
+}
+
+.mqx-sheet--capital .mqx-capital-position-list,
+.mqx-capital-page .mqx-capital-position-list {
+  margin-top: 8px;
+  gap: 2px;
+}
+
+.mqx-sheet--capital .mqx-capital-position-list .mqx-fin-row,
+.mqx-capital-page .mqx-capital-position-list .mqx-fin-row {
+  padding: 4px 8px 4px 10px;
+}
+
+.mqx-sheet--capital .mqx-capital-position-list .mqx-fin-row__title,
+.mqx-capital-page .mqx-capital-position-list .mqx-fin-row__title {
+  font-size: var(--mq-fs-small);
+  font-weight: 800;
+}
+
+.mqx-sheet--capital .mqx-capital-position-list .mqx-asset-metrics-inline,
+.mqx-capital-page .mqx-capital-position-list .mqx-asset-metrics-inline {
+  margin-top: 4px;
+  gap: 4px 8px;
 }
 
 /* Детали капитала: нейтральные заголовки; только обязательства — приглушённый красный */

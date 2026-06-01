@@ -881,3 +881,7 @@
 .mqx-hero-pill--ghost {
   background: rgba(255, 255, 255, 0.10);
 }
+
+.mqx-hero--inline-title .mqx-hero__brand-title .mqx-hero__title {
+  margin-top: 0;
+}

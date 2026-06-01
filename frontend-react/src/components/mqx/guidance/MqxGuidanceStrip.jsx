@@ -1,4 +1,5 @@
 import { useMemo } from 'react';
+import { MonetkaAvatar } from '../brand/MonetkaAvatar';
 import { MqxButton } from '../primitives/MqxButton';
 
 function renderBody(text) {
@@ -16,11 +17,13 @@ function renderBody(text) {
 }
 
 /**
- * O2 bottom guidance strip — без PNG Монетки, над tab bar.
- * Toolbar: навигация слева; зелёный чек + крестик справа (variant A ★).
+ * O2 bottom guidance strip над tab bar.
+ * Curriculum: Монетка sit-edge у заголовка; toolbar variant A ★.
  */
 export function MqxGuidanceStrip({
+  ref,
   mode = 'curriculum',
+  showMascot = true,
   title,
   body,
   moduleStep = 1,
@@ -43,9 +46,11 @@ export function MqxGuidanceStrip({
 
   const prevDisabled = viewIndex <= 0;
   const nextDisabled = viewIndex >= lastCompletedIndex + 1;
+  const mascotOn = showMascot && Boolean(title);
 
   return (
     <aside
+      ref={ref}
       className={`mqx-guidance-strip ${className}`.trim()}
       role="region"
       aria-label={mode === 'nudge' ? 'Подсказка' : 'Обучение'}
@@ -94,8 +99,21 @@ export function MqxGuidanceStrip({
           </button>
         </div>
       </div>
-      {title ? <h2 className="mqx-guidance-strip__title mqx-voice-em">{title}</h2> : null}
-      {body ? <p className="mqx-guidance-strip__body mqx-voice-em">{renderBody(body)}</p> : null}
+      {title ? (
+        <div className="mqx-guidance-strip__title-row">
+          {mascotOn ? (
+            <div className="mqx-guidance-strip__perch" aria-hidden="true">
+              <MonetkaAvatar
+                pose="sit-edge"
+                size={54}
+                className="mqx-guidance-strip__mascot"
+              />
+            </div>
+          ) : null}
+          <h2 className="mqx-guidance-strip__title">{title}</h2>
+        </div>
+      ) : null}
+      {body ? <p className="mqx-guidance-strip__body">{renderBody(body)}</p> : null}
       {dismissHint ? <p className="mqx-guidance-strip__hint">{dismissHint}</p> : null}
       {onContinue ? (
         <MqxButton variant="primary" className="mqx-guidance-strip__cta" onClick={onContinue}>

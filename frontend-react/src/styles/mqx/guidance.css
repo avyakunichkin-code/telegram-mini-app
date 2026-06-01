@@ -6,8 +6,8 @@
   z-index: 510;
   margin: 0 auto;
   max-width: var(--mqx-content-max, 480px);
-  padding: 12px 16px calc(12px + env(safe-area-inset-bottom, 0px));
-  border-radius: 16px 16px 0 0;
+  padding: 8px 14px calc(8px + env(safe-area-inset-bottom, 0px));
+  border-radius: 14px 14px 0 0;
   background: var(--mqx-onboarding-bubble-bg, color-mix(in srgb, #fff 92%, #ede9fe 8%));
   border: 1px solid var(--mqx-onboarding-bubble-border, rgba(120, 100, 200, 0.2));
   box-shadow: var(--mqx-onboarding-bubble-shadow, 0 -8px 32px rgba(20, 24, 48, 0.12));
@@ -29,8 +29,8 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 8px;
-  margin-bottom: 8px;
+  gap: 6px;
+  margin-bottom: 4px;
 }
 
 .mqx-guidance-strip__toolbar-end {
@@ -84,18 +84,59 @@
   cursor: default;
 }
 
+.mqx-guidance-strip__title-row {
+  display: flex;
+  align-items: flex-end;
+  gap: 2px;
+  margin: 0 0 4px;
+  min-width: 0;
+}
+
+.mqx-guidance-strip__perch {
+  flex: 0 0 auto;
+  width: 50px;
+  margin: -4px 0 -2px;
+  line-height: 0;
+  pointer-events: none;
+}
+
+.mqx-guidance-strip__mascot.mqx-onboarding-monetka--sit-edge {
+  width: 54px !important;
+  max-width: none;
+  max-height: 62px;
+  object-fit: contain;
+  object-position: left bottom;
+  filter: drop-shadow(0 3px 8px color-mix(in srgb, var(--mq-violet, #6d28d9) 18%, transparent));
+}
+
 .mqx-guidance-strip__title {
-  margin: 0 0 6px;
-  font-size: 17px;
-  font-weight: 700;
-  line-height: 1.25;
+  flex: 1 1 auto;
+  margin: 0;
+  min-width: 0;
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1.3;
+  color: var(--tg-theme-text-color, #111);
 }
 
 .mqx-guidance-strip__body {
-  margin: 0 0 10px;
-  font-size: 14px;
-  line-height: 1.45;
+  margin: 0 0 8px;
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 1.4;
+  color: var(--tg-theme-text-color, #111);
   white-space: pre-line;
+}
+
+.mqx-guidance-strip__body strong {
+  font-weight: 700;
+  color: var(--tg-theme-text-color, #111);
+}
+
+.mqx-guidance-strip__body em {
+  font-style: normal;
+  font-weight: 700;
+  color: var(--tg-theme-text-color, #111);
 }
 
 .mqx-guidance-strip__check {
@@ -115,21 +156,82 @@
 
 .mqx-guidance-strip__cta {
   width: 100%;
+  min-height: 40px;
 }
 
 .mqx-guidance-strip__hint {
-  margin: -4px 0 10px;
-  font-size: 12px;
+  margin: -2px 0 6px;
+  font-size: 11px;
   line-height: 1.35;
   color: var(--tg-theme-hint-color, #8e8e93);
 }
 
 .mqx-page--guidance-active .mq-game-shell__main {
-  padding-bottom: calc(var(--tma-tabbar-inset, 64px) + 180px);
+  padding-bottom: 0;
+}
+
+.mqx-page--guidance-active .mqx-tab-page__scroll.mqx-content {
+  scroll-padding-bottom: var(--mqx-guidance-scroll-pad, calc(200px + env(safe-area-inset-bottom, 0px)));
+  padding-bottom: var(--mqx-guidance-scroll-pad, calc(200px + env(safe-area-inset-bottom, 0px)));
 }
 
 .mqx-page--guidance-active .mqx-guidance-strip {
   z-index: 545;
+}
+
+/* Якорь шага curriculum: кольцо + «палец» */
+.mqx-onboarding-anchor--focus {
+  position: relative;
+  z-index: 5;
+  outline: 2px solid color-mix(in srgb, var(--mq-violet, #6d28d9) 72%, transparent);
+  outline-offset: 3px;
+  border-radius: 12px;
+  animation: mqx-onboarding-anchor-pulse 1.6s ease-in-out infinite;
+}
+
+.mqx-action-chip.mqx-onboarding-anchor--focus,
+.mqx-pill.mqx-onboarding-anchor--focus,
+.mqx-hero-turn__cta-primary.mqx-onboarding-anchor--focus {
+  border-radius: 14px;
+}
+
+.mqx-guidance-anchor-link {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 508;
+  overflow: visible;
+}
+
+.mqx-guidance-anchor-link__path {
+  fill: none;
+  stroke: color-mix(in srgb, var(--mq-violet, #6d28d9) 62%, #fff 38%);
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-dasharray: 7 6;
+  animation: mqx-guidance-link-dash 1.1s linear infinite;
+}
+
+.mqx-guidance-anchor-link__dot {
+  fill: color-mix(in srgb, var(--mq-violet, #6d28d9) 75%, transparent);
+}
+
+@keyframes mqx-guidance-link-dash {
+  to {
+    stroke-dashoffset: -26;
+  }
+}
+
+@keyframes mqx-onboarding-anchor-pulse {
+  0%,
+  100% {
+    outline-color: color-mix(in srgb, var(--mq-violet, #6d28d9) 55%, transparent);
+  }
+  50% {
+    outline-color: color-mix(in srgb, var(--mq-violet, #6d28d9) 88%, transparent);
+  }
 }
 
 /* #/dev/mqx — strip внутри phone mockup, не fixed viewport */

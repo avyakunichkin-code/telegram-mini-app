@@ -221,6 +221,7 @@ export function FinancePremium({
     <div className="mqx-tab-page">
       <MqxTabHero
         heroClassName="mqx-hero--capital"
+        inlineTitle
         title="Капитал"
         titleClassName="mqx-hero__title--capital"
         subtitleClassName="mqx-hero__sub--capital"
