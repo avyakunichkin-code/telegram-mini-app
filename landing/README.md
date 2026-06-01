@@ -60,7 +60,7 @@ npm run deploy
 
 | Файл | Назначение |
 |------|------------|
-| `public/brand/logo-full.webp` (+ `.png`) | Hero, CTA — с tagline |
+| `public/brand/logo-full.webp` (+ `.png`) | Hero, CTA — G1 с 3D tagline в растре |
 | `public/brand/logo-compact.webp` (+ `.png`) | Шапка, футер — без tagline |
 
 Источник истины: `frontend-react/src/assets/brand/`. Плоские SVG L1–L4 **не используются**.

@@ -5,7 +5,8 @@ from pydantic import BaseModel, ConfigDict, Field, field_validator, model_valida
 
 # Auth
 class UserRegister(BaseModel):
-    username: str = Field(min_length=2, max_length=50)
+    # Устарело: username выводится на сервере из email; поле оставлено для совместимости клиентов.
+    username: Optional[str] = Field(default=None, min_length=2, max_length=50)
     password: str = Field(min_length=6, max_length=128)
     password_confirm: str = Field(min_length=6, max_length=128)
     email: str = Field(min_length=5, max_length=100)

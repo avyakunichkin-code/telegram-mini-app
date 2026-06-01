@@ -1,7 +1,6 @@
 import { useCallback, useState } from 'react';
 import { formatApiErrorDetail } from '../api';
 import { useAuth } from '../context/AuthContext';
-import { deriveUsernameFromEmail } from '../utils/deriveUsernameFromEmail';
 import {
   hasFieldErrors,
   validateRegisterFields,
@@ -49,7 +48,6 @@ export function RegisterForm({ onSwitchToLogin }) {
     setIsSubmitting(true);
     try {
       await register({
-        username: deriveUsernameFromEmail(email),
         password,
         password_confirm: passwordConfirm,
         email: email.trim(),

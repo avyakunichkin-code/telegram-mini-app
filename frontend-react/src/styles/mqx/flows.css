@@ -18,12 +18,13 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 4px;
-  padding: 4px 8px 0;
+  padding: 4px 8px 6px;
 }
 
 .pg-auth-logo .mqx-brand-logo--full {
   max-width: min(280px, 92%);
+  filter: drop-shadow(0 10px 22px color-mix(in srgb, var(--mq-violet, #6d28d9) 22%, transparent))
+    drop-shadow(0 4px 12px rgba(0, 0, 0, 0.2));
 }
 
 .pg-auth-panel {

@@ -436,7 +436,6 @@ export function DashboardPremium({
       <MqxSafetyFundSheet
         open={moneyModal != null}
         mode={moneyModal || 'in'}
-        onModeChange={(next) => openSafetySheet(next)}
         onClose={closeSafetyPanel}
         amount={safetyAmount}
         onAmountChange={setSafetyAmount}
@@ -444,7 +443,6 @@ export function DashboardPremium({
         busy={busyAction === 'in' || busyAction === 'out'}
         cashBalance={cashBalance}
         safetyBalance={safetyBalance}
-        cushionFillPercent={cushionFill?.percent ?? null}
       />
     </>
 

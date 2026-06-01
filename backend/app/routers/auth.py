@@ -5,6 +5,7 @@ from ..database import get_db
 from ..models import User
 from ..schemas import UserRegister, UserLogin, Token
 from ..auth import get_password_hash, verify_password, create_access_token
+from ..auth_username import allocate_username_from_email
 
 router = APIRouter(prefix="/api", tags=["auth"])
 
@@ -13,20 +14,17 @@ router = APIRouter(prefix="/api", tags=["auth"])
 async def register(user_data: UserRegister, db: Session = Depends(get_db)):
     """Регистрация нового пользователя — не требует авторизации"""
     
-    # Проверяем, существует ли пользователь
-    existing = db.query(User).filter(User.username == user_data.username).first()
-    if existing:
-        raise HTTPException(status_code=400, detail="Username already exists")
-
     email_taken = db.query(User).filter(User.email == user_data.email).first()
     if email_taken:
         raise HTTPException(status_code=400, detail="Email already registered")
-    
+
+    username = allocate_username_from_email(db, user_data.email)
+
     # Хешируем пароль
     hashed_password = get_password_hash(user_data.password)
 
     new_user = User(
-        username=user_data.username.strip(),
+        username=username,
         email=user_data.email,
         full_name=user_data.full_name,
         hashed_password=hashed_password,

@@ -72,13 +72,13 @@
   object-position: left center;
 }
 
-/* G1 — стартовые экраны: ширина по контейнеру, пропорции 3:2 из мастера */
+/* G1 — lockup + tagline в растре (пропорции мастера ~402×280 @ h280) */
 .mqx-brand-logo--full {
-  aspect-ratio: 3 / 2;
+  aspect-ratio: 402 / 280;
   width: auto;
   height: auto;
   max-width: min(280px, 92vw);
-  max-height: 140px;
+  max-height: min(200px, 54vw);
 }
 
 .mqx-brand-mark {

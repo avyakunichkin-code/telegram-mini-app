@@ -1,9 +1,8 @@
 import { InvestAmountControl } from './InvestAmountControl';
 import { MoneyText } from './MoneyText';
 import { MqxModeButton } from './mqx';
-import { safetyFundAmountPresets } from '../utils/safetyFundAmount';
 
-/** Пополнение / снятие подушки — сумма, пресеты, подтверждение. */
+/** Пополнение / снятие подушки — компактная форма (как депозит / облигации). */
 export function SafetyFundActionForm({
   mode,
   amount,
@@ -18,9 +17,6 @@ export function SafetyFundActionForm({
   const productId = mode === 'in' ? 'safety-in' : 'safety-out';
   const canSubmit = amount > 0 && amount <= maxAmount && !busy;
   const isIn = mode === 'in';
-  const max = Math.max(0, Math.floor(Number(maxAmount) || 0));
-  const presets = safetyFundAmountPresets(max);
-  const value = Math.max(0, Math.floor(Number(amount) || 0));
 
   return (
     <article
@@ -29,29 +25,11 @@ export function SafetyFundActionForm({
         'mqx-invest-form--d',
         `mqx-invest-form--${productId}`,
         embedded && 'mqx-invest-form--embedded',
-        'mqx-safety-form',
       ]
         .filter(Boolean)
         .join(' ')}
     >
       <div className="mqx-invest-form__body">
-        {presets.length > 0 ? (
-          <div className="mqx-safety-presets" role="group" aria-label="Быстрый выбор суммы">
-            {presets.map((preset) => (
-              <button
-                key={preset.label}
-                type="button"
-                className={`mqx-safety-preset${value === preset.value ? ' is-active' : ''}`}
-                disabled={busy}
-                aria-pressed={value === preset.value}
-                onClick={() => onAmountChange(preset.value)}
-              >
-                {preset.label}
-              </button>
-            ))}
-          </div>
-        ) : null}
-
         <InvestAmountControl
           id={`safety-fund-amount-${mode}`}
           label="Сумма"
@@ -59,7 +37,7 @@ export function SafetyFundActionForm({
           maxAmount={maxAmount}
           onChange={onAmountChange}
           autoFocus={autoFocus}
-          compact={false}
+          compact
           maxHint={
             <>
               {isIn ? 'На счёте' : 'В подушке'}: <MoneyText value={maxAmount} decimals={0} />

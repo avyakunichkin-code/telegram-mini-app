@@ -4,6 +4,6 @@
 |------|-----|-----------|
 | Стартовые экраны | G1 | `frontend-react/src/assets/brand/logo-full.png` |
 | Игровой hero / табы | G2 | `frontend-react/src/assets/brand/logo-compact.png` |
-| Tagline | как в G1 | Запечён в PNG «Финансы как игра» |
+| Tagline | как в G1 | 3D в lockup «Финансы как игра» (violet + gold, как ХОД) |
 
 Правила: прозрачный фон; старт — по центру сверху (full); игра — слева сверху, без tagline (compact).
