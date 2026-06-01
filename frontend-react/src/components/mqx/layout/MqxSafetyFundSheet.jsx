@@ -1,3 +1,6 @@
+import { useEffect } from 'react';
+import { createPortal } from 'react-dom';
+
 import { MoneyText } from '../../MoneyText';
 import { SafetyFundActionForm } from '../../SafetyFundActionForm';
 import { MqxSubtab } from '../primitives/MqxSubtab';
@@ -34,6 +37,22 @@ export function MqxSafetyFundSheet({
   safetyBalance = 0,
   cushionFillPercent = null,
 }) {
+  useEffect(() => {
+    if (!open) return undefined;
+    const body = document.body;
+    const root = document.getElementById('root');
+    const prevBody = body.style.overflow;
+    const prevRoot = root?.style.overflow ?? '';
+    body.classList.add('mqx-safety-sheet-open');
+    body.style.overflow = 'hidden';
+    if (root) root.style.overflow = 'hidden';
+    return () => {
+      body.classList.remove('mqx-safety-sheet-open');
+      body.style.overflow = prevBody;
+      if (root) root.style.overflow = prevRoot;
+    };
+  }, [open]);
+
   if (!open) return null;
 
   const isIn = mode === 'in';
@@ -48,8 +67,8 @@ export function MqxSafetyFundSheet({
   const submitLabel = isIn ? 'Перевести в подушку' : 'Снять на счёт';
   const titleId = 'mqx-safety-sheet-title';
 
-  return (
-    <div className="mqx-sheet-root" role="presentation">
+  const sheet = (
+    <div className="mqx-sheet-root mqx-sheet-root--portal" role="presentation">
       <button
         type="button"
         className="mqx-sheet-scrim"
@@ -147,4 +166,6 @@ export function MqxSafetyFundSheet({
       </section>
     </div>
   );
+
+  return createPortal(sheet, document.body);
 }

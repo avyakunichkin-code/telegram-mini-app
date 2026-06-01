@@ -44,6 +44,7 @@
 | **AF1** | Воронка «игра → советник» (гипотеза) | Doc+Marketing+Frontend | 🟡 handbook; **Pre-Alpha: без CTA советника** (2026-05-30) |
 | **T1** | Пошаговый месяц без таймера (TB1) | DB+Backend+Frontend+Doc | ✅ **implemented** — [idea](../vision/ideas/turn-based-period-no-timer.md) · [plan](../plans/PLAN_turn-based-period-no-timer.md) · TB1.1 чипы — backlog |
 | **GE1** | Run Finale — финал партии, feedback, бейджи сохранений | DB+Backend+Frontend+Doc | 🟢 v1 prod · [SPEC_game-run-finale](../specs/features/SPEC_game-run-finale.md) · idea [game-run-finale-pre-alpha](../vision/ideas/game-run-finale-pre-alpha.md) · lab `run-finale/` |
+| **DL1** | **Реалистичный долг** — актив↔кредит↔страховка, аннуитет, срок, prepay | DB+Backend+Frontend+Doc | ⬜ **перед PA-W2** · [idea](../vision/ideas/debt-liability-capital-graph.md) · [SPEC](../specs/features/SPEC_debt-liability-capital-graph.md) draft · [PLAN](../plans/PLAN_debt-liability-capital-graph.md) · [TASKS](../tasks/TASKS_debt-liability-capital-graph.md) |
 
 > **GAME.md §0.2 / M11:** синхронизировано 2026-05-26 (Task 0.1): `cooldown_periods` ✅, MQ-116 → [`MVP_AUDIT_VS_SPEC`](../foundation/MVP_AUDIT_VS_SPEC.md) §M11.
 
@@ -262,6 +263,52 @@
 
 - [x] P1 **[Backend]** Claim payout по `payout_amount`, деактивация полиса — `insurance_hooks.py`, `test_insurance_events.py` (2026-06-01).
 - [ ] P2 **[Backend]** Связка страховых событий с `product` / `insured_object` (контент `auto.yaml`, `housing.yaml`).
+
+### Эпик DL1 — реалистичный долг и граф капитала (перед PA-W2)
+
+> **Контекст:** ипотека сейчас зачисляется на cash; платёж — только %; страховка без `finance_assets.id`. План волн: [`PLAN_debt-liability-capital-graph`](../plans/PLAN_debt-liability-capital-graph.md). Задачи: [`TASKS_debt-liability-capital-graph`](../tasks/TASKS_debt-liability-capital-graph.md).
+
+**Волна 0 — контракт**
+
+- [x] P0 **[Doc] DL1-100** — ADR-010: пути A (secured bundle) / B (cash + ≤2 consumer), продажа с payoff — [`ADR-010`](../decisions/ADR-010-liability-asset-insurance-graph.md) **accepted** 2026-06-01.
+- [ ] P0 **[Doc] DL1-101** — Spec [`SPEC_debt-liability-capital-graph`](../specs/features/SPEC_debt-liability-capital-graph.md) → **approved** (§4.4 golden, §11 test gate).
+- [x] P0 **[Backend] DL1-105** — `finance/annuity.py` + `test_dl1_annuity_golden.py` (V1–V5, 10 tests green).
+
+**Волна A — схема (без смены UX)**
+
+- [ ] P1 **[DB] DL1-110** — `finance_liabilities`: `liability_kind`, `secured_asset_id`, `term_periods`, `payment_mode`, …
+- [ ] P1 **[DB] DL1-111** — `insurance_policies.insured_asset_id`.
+- [ ] P1 **[Backend] DL1-112** — API/schemas + legacy backfill + `test_liability_legacy_compat.py`.
+
+**Волна B — целевой кредит (анти-эксплойт)**
+
+- [ ] P0 **[Backend] DL1-120** — Ипотека/автокредит: выдача не на свободный cash; bundled asset+loan.
+- [ ] P1 **[DB+Backend] DL1-121** — Шаблоны пар mortgage↔home, auto_loan↔car.
+- [ ] P1 **[Backend] DL1-122** — Один secured-кредит на актив.
+
+**Волна C — страховка на объект**
+
+- [ ] P0 **[Backend] DL1-130** — `buy_policy`: нельзя КАСКО/имущество без актива нужного `kind`.
+- [ ] P1 **[Backend] DL1-131** — Каталог: `eligible_assets` для планов на объект.
+
+**Волна D — срок + аннуитет**
+
+- [ ] P0 **[Backend] DL1-140–141** — Аннуитет в `period_end`; тело убывает; автозакрытие по сроку.
+- [ ] P1 **[Doc+Balance] DL1-143** — balance-playtest tutorial + 1 шаблон vs baseline.
+
+**Волна E — частичное погашение**
+
+- [ ] P1 **[Backend] DL1-150** — `POST /liabilities/{id}/prepay`.
+
+**Волна F + Frontend**
+
+- [ ] P1 **[Backend] DL1-170** — Регрессия истечения полиса (срок уже в модели).
+- [ ] P1 **[Frontend] DL1-160** — Капитал: актив у долга/полиса, prepay, «осталось N периодов».
+
+**После MVP DL1**
+
+- [ ] P2 **[Backend] DL1-200** — DTI / лимит нового долга (GD-18).
+- [ ] P2 **[Content] DL1-210** — События с предикатом `insured_asset_id` (GD-11).
 
 ---
 

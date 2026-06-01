@@ -16,15 +16,19 @@ from ..schemas import (
     LiabilityResponse,
     AssetCreate,
     AssetResponse,
+    SecuredAcquisitionResponse,
     FinanceOverview,
     FinanceAnalyticsTimeseriesResponse,
 )
 from ..services.finance.salary import upsert_salary_profile as service_upsert_salary_profile
+from ..finance.liability_present import liability_to_response
+from ..services.finance.acquisitions import create_secured_acquisition
 from ..services.finance.liabilities import (
     create_liability as service_create_liability,
     list_liabilities as service_list_liabilities,
     delete_liability as service_delete_liability,
     create_liability_from_template as service_create_liability_from_template,
+    prepay_liability as service_prepay_liability,
 )
 from ..services.finance.assets import (
     create_asset as service_create_asset,
@@ -68,7 +72,8 @@ async def create_liability(
     game_profile = get_active_game_profile(db, current_user.id)
     sync_time(game_profile)
     require_capital_mechanic(db, game_profile, MECHANIC_CAPITAL_LIABILITIES)
-    return service_create_liability(db, game_profile, payload)
+    row = service_create_liability(db, game_profile, payload)
+    return liability_to_response(row)
 
 
 @router.get("/liabilities", response_model=list[LiabilityResponse])
@@ -78,7 +83,8 @@ async def list_liabilities(
 ):
     game_profile = get_active_game_profile(db, current_user.id)
     sync_time(game_profile)
-    return service_list_liabilities(db, game_profile)
+    rows = service_list_liabilities(db, game_profile)
+    return [liability_to_response(r) for r in rows]
 
 
 @router.get("/transactions")
@@ -103,6 +109,55 @@ async def delete_liability(
     return service_delete_liability(db, game_profile, liability_id)
 
 
+@router.post("/acquisitions/secured", response_model=SecuredAcquisitionResponse)
+async def create_secured_acquisition_route(
+    payload: dict,
+    current_user=Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    game_profile = get_active_game_profile(db, current_user.id)
+    sync_time(game_profile)
+    require_capital_mechanic(db, game_profile, MECHANIC_CAPITAL_LIABILITIES)
+    require_capital_mechanic(db, game_profile, MECHANIC_CAPITAL_PROPERTY)
+    result = create_secured_acquisition(
+        db,
+        game_profile,
+        liability_key=(payload.get("liability_key") or payload.get("key") or "").strip(),
+        asset_key=(payload.get("asset_key") or "").strip(),
+        down_payment=payload.get("down_payment"),
+    )
+    asset = result["asset"]
+    liability = result["liability"]
+    return SecuredAcquisitionResponse(
+        asset=AssetResponse(
+            id=asset.id,
+            title=asset.title,
+            kind=asset.kind,
+            asset_value=asset.asset_value,
+            monthly_maintenance_cost=asset.monthly_maintenance_cost,
+            monthly_income=float(asset.monthly_income or 0),
+            created_at=asset.created_at,
+            acquisition_mode=getattr(asset, "acquisition_mode", None) or "secured",
+        ),
+        liability=liability_to_response(liability),
+    )
+
+
+@router.post("/liabilities/{liability_id}/prepay", response_model=LiabilityResponse)
+async def prepay_liability_route(
+    liability_id: int,
+    payload: dict,
+    current_user=Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    game_profile = get_active_game_profile(db, current_user.id)
+    sync_time(game_profile)
+    require_capital_mechanic(db, game_profile, MECHANIC_CAPITAL_LIABILITIES)
+    amount = float(payload.get("amount") or 0)
+    row = service_prepay_liability(db, game_profile, liability_id, amount)
+    return liability_to_response(row)
+
+
 @router.post("/liabilities/from-template", response_model=LiabilityResponse)
 async def create_liability_from_template(
     payload: dict,
@@ -113,7 +168,8 @@ async def create_liability_from_template(
     sync_time(game_profile)
     require_capital_mechanic(db, game_profile, MECHANIC_CAPITAL_LIABILITIES)
     key = (payload.get("key") or "").strip()
-    return service_create_liability_from_template(db, game_profile, key=key)
+    row = service_create_liability_from_template(db, game_profile, key=key)
+    return liability_to_response(row)
 
 
 @router.post("/assets", response_model=AssetResponse)

@@ -75,6 +75,13 @@ class LiabilityResponse(BaseModel):
     overdue_amount: float = 0
     overdue_periods: int = 0
     created_at: datetime
+    liability_kind: Optional[str] = None
+    secured_asset_id: Optional[int] = None
+    term_periods: Optional[int] = None
+    periods_paid: int = 0
+    original_principal: Optional[float] = None
+    payment_mode: Optional[str] = None
+    remaining_periods: Optional[int] = None
 
 
 class AssetCreate(BaseModel):
@@ -93,6 +100,12 @@ class AssetResponse(BaseModel):
     monthly_maintenance_cost: float
     monthly_income: float
     created_at: datetime
+    acquisition_mode: Optional[str] = "cash"
+
+
+class SecuredAcquisitionResponse(BaseModel):
+    asset: AssetResponse
+    liability: LiabilityResponse
 
 
 class VictoryGoalOverview(BaseModel):

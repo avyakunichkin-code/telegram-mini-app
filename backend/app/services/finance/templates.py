@@ -1,5 +1,6 @@
 from sqlalchemy.orm import Session
 
+from ...finance.annuity import monthly_payment as annuity_monthly_payment
 from ...finance.helpers import monthly_interest_payment
 from ...models import AssetTemplate, LiabilityTemplate
 
@@ -35,7 +36,11 @@ def list_liability_templates(db: Session) -> list[dict]:
     for t in rows:
         td = float(t.total_debt)
         ar = float(t.annual_rate_percent)
-        mp = monthly_interest_payment(td, ar)
+        term = int(getattr(t, "term_periods", 0) or 0)
+        if term > 0:
+            mp = annuity_monthly_payment(td, ar, term)
+        else:
+            mp = monthly_interest_payment(td, ar)
         out.append(
             {
                 "key": t.template_key,
@@ -43,6 +48,9 @@ def list_liability_templates(db: Session) -> list[dict]:
                 "total_debt": td,
                 "annual_rate_percent": ar,
                 "monthly_payment": mp,
+                "liability_kind": getattr(t, "liability_kind", None),
+                "disbursement_mode": getattr(t, "disbursement_mode", None),
+                "term_periods": term if term > 0 else None,
             }
         )
     return out

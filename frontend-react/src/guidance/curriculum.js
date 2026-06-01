@@ -71,7 +71,7 @@ export const CURRICULUM = [
     gate: 'read',
     title: 'Характеристики',
     body:
-      'Четыре шкалы — баланс жизни: комфорт, статус, общение, здоровье. Кнопка **?** подскажет подробнее; **«Побаловать себя»** — мягкий способ поднять шкалу.',
+      'Четыре шкалы — баланс жизни: комфорт, статус, связи, здоровье. Справа в шапке: **книга с «?»** — справочник по шкалам; **сердце** — улучшить потребности, когда доступно.',
   },
   {
     id: 'p3_farewell',
@@ -89,4 +89,16 @@ export function isP1GuidanceComplete(guidance) {
   if (!guidance) return true;
   if (!guidance.show_curriculum) return true;
   return (guidance.completed_beats || []).includes('p1_close');
+}
+
+/** События и pill «События» — после P1, в т.ч. во время curriculum P2/P3 (SPEC_onboarding-o2). */
+export function areGameEventsUnlocked(guidance, onboardingState) {
+  return isP1GuidanceComplete(guidance) || onboardingState === 'brief_done';
+}
+
+/** Итоги периода не откладываем на очередь — после закрытия P1 / с периода 2. */
+export function shouldDeferPeriodCloseDuringGuidance(guidance, periodIndex) {
+  if (!guidance?.show_curriculum) return false;
+  if (isP1GuidanceComplete(guidance)) return false;
+  return Number(periodIndex) <= 1;
 }

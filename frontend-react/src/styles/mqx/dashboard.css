@@ -665,6 +665,15 @@
   z-index: 560;
 }
 
+.mqx-sheet-root--portal .mqx-sheet {
+  left: var(--mqx-dash-inline-pad, 14px);
+  right: var(--mqx-dash-inline-pad, 14px);
+  width: auto;
+  max-width: var(--mqx-content-max, 480px);
+  margin-inline: auto;
+  box-sizing: border-box;
+}
+
 .mqx-sheet-scrim {
   position: absolute;
   inset: 0;

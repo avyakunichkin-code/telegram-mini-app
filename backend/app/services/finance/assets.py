@@ -81,6 +81,7 @@ def create_asset_from_template(db: Session, profile: GameProfile, *, key: str) -
         monthly_maintenance_cost=float(tpl_row.monthly_maintenance_cost),
         monthly_income=float(tpl_row.monthly_income or 0),
         has_tenants=has_tenants,
+        acquisition_mode="cash",
         game_profile_id=profile.id,
     )
     db.add(asset)
@@ -90,29 +91,7 @@ def create_asset_from_template(db: Session, profile: GameProfile, *, key: str) -
 
 
 def delete_asset(db: Session, profile: GameProfile, asset_id: int) -> dict:
-    asset = (
-        db.query(FinanceAsset)
-        .filter(
-            FinanceAsset.id == asset_id,
-            FinanceAsset.game_profile_id == profile.id,
-        )
-        .first()
-    )
-    if not asset:
-        raise HTTPException(status_code=404, detail="Asset not found")
+    from .asset_sale import sell_asset
 
-    sale = float(asset.asset_value or 0)
-    if sale > EPSILON:
-        adjust_balance(
-            db=db,
-            game_profile_id=profile.id,
-            amount=sale,
-            type="asset_sale",
-            description=f"Продажа актива: {asset.title}",
-            period_index=int(profile.period_index),
-        )
-
-    db.delete(asset)
-    db.commit()
-    return {"status": "success", "deleted_id": asset_id}
+    return sell_asset(db, profile, asset_id)
 

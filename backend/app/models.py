@@ -127,6 +127,12 @@ class FinanceLiability(Base):
     monthly_payment = Column(Float, nullable=False)
     overdue_amount = Column(Float, nullable=False, default=0)  # сумма просрочки (неоплаченная часть)
     overdue_periods = Column(Integer, nullable=False, default=0)  # сколько периодов подряд есть просрочка
+    liability_kind = Column(String(32), nullable=False, default="unsecured")
+    secured_asset_id = Column(Integer, ForeignKey("finance_assets.id"), nullable=True, index=True)
+    term_periods = Column(Integer, nullable=True)
+    periods_paid = Column(Integer, nullable=False, default=0)
+    original_principal = Column(Float, nullable=True)
+    payment_mode = Column(String(32), nullable=False, default="interest_only")
     is_active = Column(Integer, nullable=False, default=1)   # НОВОЕ
     created_at = Column(DateTime, default=utc_now_naive)
     game_profile = relationship("GameProfile", back_populates="finance_liabilities")
@@ -143,6 +149,7 @@ class FinanceAsset(Base):
     monthly_maintenance_cost = Column(Float, nullable=False, default=0)
     monthly_income = Column(Float, nullable=False, default=0)  # доход от аренды/купоны/проценты
     has_tenants = Column(Integer, nullable=False, default=0)  # 1 = доходная с арендаторами (задел под события)
+    acquisition_mode = Column(String(16), nullable=False, default="cash")  # cash | secured
     is_active = Column(Integer, nullable=False, default=1)   # НОВОЕ
     created_at = Column(DateTime, default=utc_now_naive)
     game_profile = relationship("GameProfile", back_populates="finance_assets")
@@ -180,6 +187,12 @@ class LiabilityTemplate(Base):
     title = Column(String(160), nullable=False)
     total_debt = Column(Float, nullable=False)
     annual_rate_percent = Column(Float, nullable=False)
+    liability_kind = Column(String(32), nullable=False, default="consumer")
+    term_periods = Column(Integer, nullable=True)
+    disbursement_mode = Column(String(32), nullable=False, default="to_cash")
+    linked_asset_template_key = Column(String(80), nullable=True)
+    down_payment_amount = Column(Float, nullable=False, default=0)
+    requires_asset_kind = Column(String(50), nullable=True)
     is_active = Column(Integer, nullable=False, default=1)
     sort_order = Column(Integer, nullable=False, default=100)
     created_at = Column(DateTime, default=utc_now_naive)
@@ -385,6 +398,7 @@ class InsurancePolicy(Base):
     started_period_index = Column(Integer, nullable=True)
     expires_period_index = Column(Integer, nullable=True)
     claimed_period_index = Column(Integer, nullable=True)
+    insured_asset_id = Column(Integer, ForeignKey("finance_assets.id"), nullable=True, index=True)
     is_active = Column(Integer, nullable=False, default=1)
     created_at = Column(DateTime, default=utc_now_naive)
 

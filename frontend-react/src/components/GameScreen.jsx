@@ -21,7 +21,10 @@ import {
 import { PERIOD_CLOSE_AUTO_MAX } from '../constants/periodClose';
 import { shouldAutoOpenPeriodClose } from '../utils/periodCloseDisplay';
 import { GameGuidanceLayer } from './GameGuidanceLayer';
-import { isP1GuidanceComplete } from '../guidance/curriculum';
+import {
+  areGameEventsUnlocked,
+  shouldDeferPeriodCloseDuringGuidance,
+} from '../guidance/curriculum';
 
 /** Эмоциональный слой страницы (TB1: без play/pause — активная партия = playing mood). */
 function gamePageMoodClass(timeStatus) {
@@ -74,39 +77,43 @@ export function GameScreen({ onLogout, onNewGame, onLoadGame }) {
 
   const guidance = overview?.guidance;
   const inGuidanceCurriculum = guidance?.show_curriculum === true;
-  const p1GuidanceDone =
-    isP1GuidanceComplete(guidance) || overview?.onboarding_state === 'brief_done';
-  const eventsUnlocked = !inGuidanceCurriculum && p1GuidanceDone;
+  const p1GuidanceDone = areGameEventsUnlocked(guidance, overview?.onboarding_state);
+  const eventsUnlocked = p1GuidanceDone;
   const inOnboarding = inGuidanceCurriculum;
+  const deferPeriodCloseInGuidance = shouldDeferPeriodCloseDuringGuidance(
+    guidance,
+    overview?.period_index,
+  );
   const periodCloseForUi = lastPeriodClose;
   const showPeriodCloseTail =
     !inOnboarding && activeTab === 'dashboard' && periodCloseForUi && !periodCloseOpen;
 
   // Итоги периода — до эффектов событий: в одном коммите сначала выставляем periodCloseOpen.
   useEffect(() => {
-    if (!periodCloseSummary || !inOnboarding) return;
-    setQueuedPeriodClose(periodCloseSummary);
-    dismissPeriodClose();
-  }, [periodCloseSummary, inOnboarding, dismissPeriodClose]);
-
-  useEffect(() => {
-    if (!periodCloseSummary || inOnboarding) return;
+    if (!periodCloseSummary) return;
     const payload = periodCloseSummary;
+
+    if (inOnboarding && deferPeriodCloseInGuidance) {
+      setQueuedPeriodClose(payload);
+      dismissPeriodClose();
+      return;
+    }
+
     setLastPeriodClose(payload);
     setQueuedPeriodClose(null);
     setPeriodCloseOpen(shouldAutoOpenPeriodClose(payload, PERIOD_CLOSE_AUTO_MAX));
     dismissPeriodClose();
-  }, [periodCloseSummary, inOnboarding, dismissPeriodClose]);
+  }, [periodCloseSummary, inOnboarding, deferPeriodCloseInGuidance, dismissPeriodClose]);
 
   useEffect(() => {
-    if (!queuedPeriodClose || inOnboarding) return;
+    if (!queuedPeriodClose || deferPeriodCloseInGuidance) return;
     setLastPeriodClose(queuedPeriodClose);
     setQueuedPeriodClose(null);
     setPeriodCloseOpen(shouldAutoOpenPeriodClose(queuedPeriodClose, PERIOD_CLOSE_AUTO_MAX));
-  }, [queuedPeriodClose, inOnboarding]);
+  }, [queuedPeriodClose, deferPeriodCloseInGuidance]);
 
   useEffect(() => {
-    if (!eventsUnlocked || inOnboarding) return;
+    if (!eventsUnlocked) return;
     if (eventsPromptTick <= lastOpenedEventsTickRef.current) return;
     if ((pendingEvents?.length ?? 0) > 0) {
       // Пока открыт лист итогов — откладываем автопоказ событий (хвостик не блокирует).
@@ -119,16 +126,16 @@ export function GameScreen({ onLogout, onNewGame, onLoadGame }) {
       // eslint-disable-next-line react-hooks/set-state-in-effect -- открытие только при новом bumpEvents
       setEventsOpen(true);
     }
-  }, [eventsPromptTick, pendingEvents?.length, eventsUnlocked, inOnboarding, periodCloseOpen]);
+  }, [eventsPromptTick, pendingEvents?.length, eventsUnlocked, periodCloseOpen]);
 
   useEffect(() => {
-    if (!eventsUnlocked || inOnboarding) {
+    if (!eventsUnlocked) {
       setEventsOpen(false);
     }
-  }, [eventsUnlocked, inOnboarding]);
+  }, [eventsUnlocked]);
 
   useEffect(() => {
-    if (!eventsUnlocked || inOnboarding) return;
+    if (!eventsUnlocked) return;
     if ((pendingEvents?.length ?? 0) <= 0) return;
     if (periodCloseOpen) return;
 
@@ -139,7 +146,7 @@ export function GameScreen({ onLogout, onNewGame, onLoadGame }) {
       // eslint-disable-next-line react-hooks/set-state-in-effect -- однократный автопоказ после итогов
       setEventsOpen(true);
     }
-  }, [eventsPromptTick, pendingEvents?.length, eventsUnlocked, inOnboarding, periodCloseOpen]);
+  }, [eventsPromptTick, pendingEvents?.length, eventsUnlocked, periodCloseOpen]);
 
   useEffect(() => {
     if (onboardingUi.visible && activeTab !== 'dashboard') {
@@ -299,7 +306,7 @@ export function GameScreen({ onLogout, onNewGame, onLoadGame }) {
 
           <MqxPeriodCloseRitual
             summary={periodCloseForUi}
-            open={Boolean(periodCloseForUi && periodCloseOpen && !inOnboarding)}
+            open={Boolean(periodCloseForUi && periodCloseOpen)}
             onClose={handleClosePeriodClose}
           />
           {showPeriodCloseTail ? (

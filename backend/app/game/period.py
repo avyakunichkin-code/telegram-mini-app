@@ -27,6 +27,9 @@ from ..services.events.service import (
     _ensure_seed_events,
 )
 from ..services.insurance.service import charge_premiums_for_period
+from ..finance.liability_kinds import PAYMENT_MODE_ANNUITY, effective_payment_mode
+from ..finance.annuity import split_full_payment
+from ..constants import EPSILON
 from ..finance.expenses import compute_monthly_burn, expire_expense_lines_for_period, lifestyle_period_breakdown
 from ..timeutil import utc_now_naive
 from ..needs.engine import (
@@ -273,10 +276,9 @@ def process_period_end(db: Session, profile: GameProfile) -> dict:
         previous_overdue = float(getattr(liability, "overdue_amount", 0) or 0)
         due_total = monthly_due + previous_overdue
 
-        # Платим сколько можем, но не уходим в минус из-за обязательств
         available = max(0.0, float(profile.cash_balance))
         paid = min(available, due_total)
-        unpaid = due_total - paid
+        unpaid = round(due_total - paid, 2)
 
         if paid > 0:
             adjust_balance(
@@ -289,12 +291,29 @@ def process_period_end(db: Session, profile: GameProfile) -> dict:
             )
             db.refresh(profile)
 
-        liability.overdue_amount = float(unpaid)
-        if unpaid > 0:
-            liability.overdue_periods = int(getattr(liability, "overdue_periods", 0) or 0) + 1
-            total_overdue_added += unpaid
-        else:
+        full_payment = unpaid <= EPSILON and paid + EPSILON >= due_total
+        if full_payment:
+            if effective_payment_mode(liability) == PAYMENT_MODE_ANNUITY:
+                _interest, _principal, new_debt = split_full_payment(
+                    float(liability.total_debt),
+                    float(liability.annual_rate_percent),
+                    monthly_due,
+                )
+                liability.total_debt = new_debt
+                liability.periods_paid = int(getattr(liability, "periods_paid", 0) or 0) + 1
+                term = int(getattr(liability, "term_periods", 0) or 0)
+                if new_debt <= EPSILON or (term > 0 and liability.periods_paid >= term):
+                    liability.is_active = 0
+                    liability.total_debt = 0.0
+            liability.overdue_amount = 0.0
             liability.overdue_periods = 0
+        else:
+            liability.overdue_amount = float(unpaid)
+            if unpaid > EPSILON:
+                liability.overdue_periods = int(getattr(liability, "overdue_periods", 0) or 0) + 1
+                total_overdue_added += unpaid
+            else:
+                liability.overdue_periods = 0
 
         breakdown.append({
             "type": "liability",

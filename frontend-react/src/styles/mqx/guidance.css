@@ -1,12 +1,14 @@
 .mqx-guidance-strip {
   position: fixed;
-  left: 0;
-  right: 0;
+  left: var(--mqx-dash-inline-pad, 14px);
+  right: var(--mqx-dash-inline-pad, 14px);
   bottom: calc(var(--tma-tabbar-inset, 64px) + 4px);
   z-index: 510;
-  margin: 0 auto;
+  width: auto;
   max-width: var(--mqx-content-max, 480px);
-  padding: 8px 14px calc(8px + env(safe-area-inset-bottom, 0px));
+  margin-inline: auto;
+  padding: 8px 12px calc(8px + env(safe-area-inset-bottom, 0px));
+  box-sizing: border-box;
   border-radius: 14px 14px 0 0;
   background: var(--mqx-onboarding-bubble-bg, color-mix(in srgb, #fff 92%, #ede9fe 8%));
   border: 1px solid var(--mqx-onboarding-bubble-border, rgba(120, 100, 200, 0.2));
@@ -179,6 +181,21 @@
   z-index: 545;
 }
 
+/* Sheet подушки (portal) — над полоской обучения, не перекрывается ею */
+body.mqx-page--guidance-active .mqx-sheet-root--portal .mqx-sheet {
+  left: var(--mqx-dash-inline-pad, 14px);
+  right: var(--mqx-dash-inline-pad, 14px);
+  width: auto;
+  max-width: var(--mqx-content-max, 480px);
+  margin-inline: auto;
+  bottom: var(--mqx-guidance-strip-lift, calc(200px + var(--tma-tabbar-inset, 64px)));
+  max-height: min(78vh, calc(100dvh - var(--mqx-guidance-strip-lift, 220px) - 12px));
+}
+
+body.mqx-page--guidance-active .mqx-sheet-root--portal {
+  z-index: 560;
+}
+
 /* Якорь шага curriculum: кольцо + «палец» */
 .mqx-onboarding-anchor--focus {
   position: relative;
@@ -191,8 +208,19 @@
 
 .mqx-action-chip.mqx-onboarding-anchor--focus,
 .mqx-pill.mqx-onboarding-anchor--focus,
-.mqx-hero-turn__cta-primary.mqx-onboarding-anchor--focus {
+.mqx-hero-turn__cta-primary.mqx-onboarding-anchor--focus,
+.mqx-needs-section__head.mqx-onboarding-anchor--focus {
   border-radius: 14px;
+}
+
+/* Hero / «Закрыть месяц» — фиолетовый фон, кольцо белое */
+.mqx-hero.mqx-onboarding-anchor--focus,
+.mqx-hero-turn__cta-primary.mqx-onboarding-anchor--focus {
+  outline-color: #fff;
+  box-shadow:
+    0 0 0 1px color-mix(in srgb, var(--mq-violet-deep, #4c1d95) 40%, transparent),
+    0 2px 12px color-mix(in srgb, #000 22%, transparent);
+  animation: mqx-onboarding-anchor-pulse-light 1.6s ease-in-out infinite;
 }
 
 .mqx-guidance-anchor-link {
@@ -231,6 +259,16 @@
   }
   50% {
     outline-color: color-mix(in srgb, var(--mq-violet, #6d28d9) 88%, transparent);
+  }
+}
+
+@keyframes mqx-onboarding-anchor-pulse-light {
+  0%,
+  100% {
+    outline-color: rgba(255, 255, 255, 0.78);
+  }
+  50% {
+    outline-color: #fff;
   }
 }
 

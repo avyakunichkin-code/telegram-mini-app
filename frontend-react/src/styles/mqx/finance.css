@@ -2892,105 +2892,248 @@ body [class*='modal'] {
   padding-bottom: 4px;
 }
 
-/* Компактные строки каталога (недвижимость, авто, долги) в sheet и на странице */
-.mqx-sheet--capital .mqx-capital-template-list,
-.mqx-capital-page .mqx-capital-template-list {
-  margin-top: 8px;
-  gap: 2px;
+/* Единая плотность строк: страница «Капитал» + bottom sheets */
+.mqx-capital-page,
+.mqx-sheet--capital {
+  --mqx-cap-row-title-fs: 11px;
+  --mqx-cap-row-metric-fs: 10px;
+  --mqx-cap-row-action: 32px;
+  --mqx-cap-row-action-glyph: 28px;
+  --mqx-cap-row-accent-min: 34px;
 }
 
+.mqx-capital-page .mqx-capital-template-list,
+.mqx-capital-page .mqx-capital-position-list,
+.mqx-capital-page .mqx-ins-plan-list,
+.mqx-capital-page .mqx-ins-policy-list,
+.mqx-sheet--capital .mqx-capital-template-list,
+.mqx-sheet--capital .mqx-capital-position-list,
+.mqx-sheet--capital .mqx-ins-plan-list,
+.mqx-sheet--capital .mqx-ins-policy-list,
+.mqx-sheet--capital .mqx-ins-picker {
+  margin-top: 6px;
+  gap: 1px;
+}
+
+.mqx-capital-page .mqx-capital-template-row--asset-h,
+.mqx-capital-page .mqx-capital-template-row--liability-h,
+.mqx-capital-page .mqx-capital-template-row--insurance-h,
 .mqx-sheet--capital .mqx-capital-template-row--asset-h,
 .mqx-sheet--capital .mqx-capital-template-row--liability-h,
-.mqx-capital-page .mqx-capital-template-row--asset-h,
-.mqx-capital-page .mqx-capital-template-row--liability-h {
-  gap: 8px;
-  padding: 4px 4px 4px 8px;
+.mqx-sheet--capital .mqx-capital-template-row--insurance-h {
+  gap: 7px;
+  padding: 3px 3px 3px 7px;
 }
 
-.mqx-sheet--capital .mqx-capital-template-row__accent,
-.mqx-capital-page .mqx-capital-template-row__accent {
-  min-height: 38px;
+.mqx-capital-page .mqx-capital-template-row__accent,
+.mqx-sheet--capital .mqx-capital-template-row__accent {
+  min-height: var(--mqx-cap-row-accent-min);
   border-radius: 3px;
 }
 
-.mqx-sheet--capital .mqx-capital-template-row__title,
-.mqx-capital-page .mqx-capital-template-row__title {
-  font-size: var(--mq-fs-body);
+.mqx-capital-page .mqx-capital-template-row__title,
+.mqx-sheet--capital .mqx-capital-template-row__title {
+  font-size: var(--mqx-cap-row-title-fs);
   font-weight: 800;
   letter-spacing: -0.01em;
+  line-height: 1.2;
 }
 
+.mqx-capital-page .mqx-capital-template-row--asset-h .mqx-capital-template-row__title,
+.mqx-capital-page .mqx-capital-template-row--insurance-h .mqx-capital-template-row__title,
 .mqx-sheet--capital .mqx-capital-template-row--asset-h .mqx-capital-template-row__title,
-.mqx-capital-page .mqx-capital-template-row--asset-h .mqx-capital-template-row__title {
-  margin-top: 2px;
+.mqx-sheet--capital .mqx-capital-template-row--insurance-h .mqx-capital-template-row__title {
+  margin-top: 1px;
 }
 
-.mqx-sheet--capital .mqx-asset-metrics-inline,
-.mqx-capital-page .mqx-asset-metrics-inline {
-  margin-top: 5px;
-  gap: 5px 9px;
+.mqx-capital-page .mqx-capital-template-row__kicker,
+.mqx-sheet--capital .mqx-capital-template-row__kicker {
+  font-size: 9px;
+  letter-spacing: 0.1em;
 }
 
-.mqx-sheet--capital .mqx-inline-metric__val,
-.mqx-capital-page .mqx-inline-metric__val {
-  font-size: var(--mq-fs-small);
-  font-weight: 700;
+.mqx-capital-page .mqx-capital-template-row--insurance-h .mqx-capital-template-row__title,
+.mqx-sheet--capital .mqx-capital-template-row--insurance-h .mqx-capital-template-row__title {
+  font-size: var(--mqx-cap-row-title-fs);
 }
 
-.mqx-sheet--capital .mqx-metric-glyph,
-.mqx-capital-page .mqx-metric-glyph {
-  width: 18px;
-  height: 18px;
-}
-
-.mqx-sheet--capital .mqx-metric-glyph svg,
-.mqx-capital-page .mqx-metric-glyph svg {
-  width: 14px;
-  height: 14px;
-}
-
-.mqx-sheet--capital .mqx-row-action,
-.mqx-capital-page .mqx-capital-template-list .mqx-row-action {
-  width: 36px;
-  height: 36px;
-}
-
-.mqx-sheet--capital .mqx-row-action__glyph,
-.mqx-capital-page .mqx-capital-template-list .mqx-row-action__glyph {
-  width: 32px;
-  height: 32px;
-  border-radius: 8px;
-  font-size: var(--mq-fs-body);
-}
-
-.mqx-sheet--capital .mqx-capital-template-list .mqx-capital-template-row--asset-h + .mqx-capital-template-row--asset-h,
-.mqx-sheet--capital .mqx-capital-template-list .mqx-capital-template-row--liability-h + .mqx-capital-template-row--liability-h,
-.mqx-capital-page .mqx-capital-template-list .mqx-capital-template-row--asset-h + .mqx-capital-template-row--asset-h,
-.mqx-capital-page .mqx-capital-template-list .mqx-capital-template-row--liability-h + .mqx-capital-template-row--liability-h {
+.mqx-capital-page .mqx-capital-template-list .mqx-capital-template-row + .mqx-capital-template-row,
+.mqx-capital-page .mqx-ins-plan-list .mqx-capital-template-row + .mqx-capital-template-row,
+.mqx-sheet--capital .mqx-capital-template-list .mqx-capital-template-row + .mqx-capital-template-row,
+.mqx-sheet--capital .mqx-ins-plan-list .mqx-capital-template-row + .mqx-capital-template-row {
   margin-top: 0;
 }
 
-.mqx-sheet--capital .mqx-capital-position-list,
-.mqx-capital-page .mqx-capital-position-list {
-  margin-top: 8px;
-  gap: 2px;
+.mqx-capital-page .mqx-fin-row,
+.mqx-sheet--capital .mqx-fin-row {
+  padding: 3px 7px 3px 9px;
 }
 
-.mqx-sheet--capital .mqx-capital-position-list .mqx-fin-row,
-.mqx-capital-page .mqx-capital-position-list .mqx-fin-row {
-  padding: 4px 8px 4px 10px;
-}
-
-.mqx-sheet--capital .mqx-capital-position-list .mqx-fin-row__title,
-.mqx-capital-page .mqx-capital-position-list .mqx-fin-row__title {
-  font-size: var(--mq-fs-small);
+.mqx-capital-page .mqx-fin-row__title,
+.mqx-sheet--capital .mqx-fin-row__title {
+  font-size: var(--mqx-cap-row-title-fs);
   font-weight: 800;
+  line-height: 1.2;
 }
 
-.mqx-sheet--capital .mqx-capital-position-list .mqx-asset-metrics-inline,
-.mqx-capital-page .mqx-capital-position-list .mqx-asset-metrics-inline {
+.mqx-capital-page .mqx-fin-row__sub,
+.mqx-sheet--capital .mqx-fin-row__sub {
+  margin-top: 2px;
+  font-size: var(--mqx-cap-row-metric-fs);
+  line-height: 1.25;
+}
+
+.mqx-capital-page .mqx-asset-metrics-inline,
+.mqx-capital-page .mqx-ins-metrics,
+.mqx-sheet--capital .mqx-asset-metrics-inline,
+.mqx-sheet--capital .mqx-ins-metrics {
+  margin-top: 3px;
+  gap: 4px 7px;
+}
+
+.mqx-capital-page .mqx-inline-metric__val,
+.mqx-sheet--capital .mqx-inline-metric__val {
+  font-size: var(--mqx-cap-row-metric-fs);
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.mqx-capital-page .mqx-metric-glyph,
+.mqx-sheet--capital .mqx-metric-glyph {
+  width: 16px;
+  height: 16px;
+}
+
+.mqx-capital-page .mqx-metric-glyph svg,
+.mqx-sheet--capital .mqx-metric-glyph svg {
+  width: 12px;
+  height: 12px;
+}
+
+.mqx-capital-page .mqx-row-action,
+.mqx-sheet--capital .mqx-row-action {
+  width: var(--mqx-cap-row-action);
+  height: var(--mqx-cap-row-action);
+}
+
+.mqx-capital-page .mqx-row-action__glyph,
+.mqx-sheet--capital .mqx-row-action__glyph {
+  width: var(--mqx-cap-row-action-glyph);
+  height: var(--mqx-cap-row-action-glyph);
+  border-radius: 7px;
+  font-size: var(--mq-fs-small);
+}
+
+.mqx-capital-page .mqx-cap-row-action,
+.mqx-sheet--capital .mqx-cap-row-action {
+  padding: 3px 6px;
+  font-size: 9px;
+  border-radius: 6px;
+}
+
+.mqx-capital-page .mqx-ins-catalog {
+  gap: 6px;
+}
+
+.mqx-capital-page .mqx-ins-catalog__item,
+.mqx-sheet--capital .mqx-ins-catalog__item {
+  padding: 7px 8px;
+  border-radius: 10px;
+}
+
+.mqx-capital-page .mqx-ins-catalog__product,
+.mqx-sheet--capital .mqx-ins-catalog__product {
+  font-size: 9px;
+}
+
+.mqx-capital-page .mqx-ins-catalog__object,
+.mqx-sheet--capital .mqx-ins-catalog__object {
+  font-size: var(--mqx-cap-row-title-fs);
+}
+
+.mqx-capital-page .mqx-ins-catalog__hint,
+.mqx-sheet--capital .mqx-ins-catalog__hint {
+  font-size: 9px;
+  margin-top: 2px;
+}
+
+.mqx-capital-page .mqx-ins-picker__heading,
+.mqx-sheet--capital .mqx-ins-picker__heading {
+  font-size: var(--mqx-cap-row-title-fs);
+}
+
+.mqx-capital-page .mqx-ins-picker__hint,
+.mqx-sheet--capital .mqx-ins-picker__hint {
+  font-size: var(--mqx-cap-row-metric-fs);
+}
+
+.mqx-capital-page .mqx-cap-flow-cat__row,
+.mqx-capital-page .mqx-cap-flow-line {
+  font-size: var(--mqx-cap-row-title-fs);
+  padding: 2px 0;
+}
+
+.mqx-capital-page .mqx-cap-flow-amt {
+  font-size: var(--mqx-cap-row-title-fs);
+}
+
+.mqx-capital-page .mqx-cap-flow-lines {
   margin-top: 4px;
-  gap: 4px 8px;
+  padding-left: 8px;
+}
+
+.mqx-capital-page .mqx-cap-flow-cat + .mqx-cap-flow-cat {
+  margin-top: 6px;
+  padding-top: 6px;
+}
+
+.mqx-capital-page .mqx-cap-sect__head {
+  padding: 8px 12px 7px;
+}
+
+.mqx-capital-page .mqx-cap-sect__title,
+.mqx-capital-page .mqx-cap-sect__meta {
+  font-size: var(--mqx-cap-row-metric-fs);
+}
+
+.mqx-capital-page .mqx-cap-sect__body {
+  padding: 2px 12px 10px;
+}
+
+.mqx-capital-page .mqx-cap-act-list--wrap {
+  gap: 5px;
+}
+
+.mqx-capital-page .mqx-cap-act-list--wrap .mqx-cap-act-row,
+.mqx-capital-page .mqx-cap-act-list--wrap .mqx-cap-act-tile {
+  min-height: 56px;
+  padding: 8px 5px 7px;
+  gap: 4px;
+}
+
+.mqx-capital-page .mqx-cap-act-list--wrap .mqx-cap-act-row__icon {
+  width: 26px;
+  height: 26px;
+  font-size: 12px;
+}
+
+.mqx-capital-page .mqx-cap-act-list--wrap .mqx-cap-act-row__title {
+  font-size: 10px;
+}
+
+.mqx-capital-page .mqx-capital-lead,
+.mqx-capital-page .mqx-cap-detail-empty__text {
+  font-size: var(--mqx-cap-row-metric-fs);
+  line-height: 1.35;
+}
+
+.mqx-capital-page .mqx-cap-detail-empty {
+  padding: 10px;
+}
+
+.mqx-capital-page .mqx-cap-add-cta {
+  font-size: var(--mqx-cap-row-title-fs);
+  padding: 7px 12px;
 }
 
 /* Детали капитала: нейтральные заголовки; только обязательства — приглушённый красный */

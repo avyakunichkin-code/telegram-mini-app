@@ -3,7 +3,8 @@ from sqlalchemy.orm import Session
 
 from ...finance.balance_utils import adjust_balance
 from ...starters.insurance_catalog import list_catalog, list_grid_catalog, list_plans, resolve_plan, resolve_product_object
-from ...models import GameProfile, InsurancePolicy
+from ...finance.liability_kinds import ASSET_KIND_FOR_AUTO
+from ...models import FinanceAsset, GameProfile, InsurancePolicy
 from ...starters.mechanics import MECHANIC_CAPITAL_INSURANCE, require_capital_mechanic
 
 
@@ -23,6 +24,7 @@ def policy_to_dict(row: InsurancePolicy) -> dict:
         "expires_period_index": row.expires_period_index,
         "claimed_period_index": row.claimed_period_index,
         "is_active": bool(row.is_active),
+        "insured_asset_id": row.insured_asset_id,
     }
 
 
@@ -80,9 +82,62 @@ def _parse_buy_payload(payload: dict):
     return spec, title, monthly_premium, payout_amount, term_periods
 
 
+def _requires_insured_asset(product: str, insured_object: str) -> bool:
+    if product == "auto":
+        return True
+    if product == "mortgage" and insured_object == "property":
+        return True
+    if product == "property":
+        return True
+    return False
+
+
+def _asset_matches_product(asset: FinanceAsset, product: str) -> bool:
+    kind = (asset.kind or "").strip().lower()
+    if product == "auto":
+        return kind in ASSET_KIND_FOR_AUTO or kind.startswith("car")
+    if product in ("mortgage", "property"):
+        return kind in ("home", "house", "rental_home", "leased_dwelling") or kind.startswith("apt")
+    return True
+
+
+def _resolve_insured_asset_id(
+    db: Session, profile: GameProfile, payload: dict, product: str, insured_object: str
+) -> int | None:
+    if not _requires_insured_asset(product, insured_object):
+        return None
+    raw = payload.get("insured_asset_id")
+    if raw is None:
+        raise HTTPException(
+            status_code=400,
+            detail="insured_asset_id is required for this insurance product",
+        )
+    try:
+        asset_id = int(raw)
+    except (TypeError, ValueError) as e:
+        raise HTTPException(status_code=400, detail="insured_asset_id must be integer") from e
+    asset = (
+        db.query(FinanceAsset)
+        .filter(
+            FinanceAsset.id == asset_id,
+            FinanceAsset.game_profile_id == profile.id,
+            FinanceAsset.is_active == 1,
+        )
+        .first()
+    )
+    if not asset:
+        raise HTTPException(status_code=400, detail="Insured asset not found")
+    if not _asset_matches_product(asset, product):
+        raise HTTPException(status_code=400, detail="Asset kind does not match insurance product")
+    return asset_id
+
+
 def buy_policy(db: Session, profile: GameProfile, payload: dict) -> dict:
     spec, title, monthly_premium, payout_amount, term_periods = _parse_buy_payload(payload)
     require_capital_mechanic(db, profile, MECHANIC_CAPITAL_INSURANCE)
+    insured_asset_id = _resolve_insured_asset_id(
+        db, profile, payload, spec.product, spec.insured_object
+    )
     started = int(profile.period_index or 1)
     expires = started + term_periods
     policy = InsurancePolicy(
@@ -98,6 +153,7 @@ def buy_policy(db: Session, profile: GameProfile, payload: dict) -> dict:
         started_period_index=started,
         expires_period_index=expires,
         claimed_period_index=None,
+        insured_asset_id=insured_asset_id,
         is_active=1,
     )
     db.add(policy)

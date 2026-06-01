@@ -83,19 +83,9 @@ def build_finance_overview(db: Session, profile: GameProfile) -> FinanceOverview
         )
         .all()
     )
-    liabilities = [
-        LiabilityResponse(
-            id=l.id,
-            title=l.title,
-            total_debt=l.total_debt,
-            annual_rate_percent=l.annual_rate_percent,
-            monthly_payment=l.monthly_payment,
-            overdue_amount=float(getattr(l, "overdue_amount", 0) or 0),
-            overdue_periods=int(getattr(l, "overdue_periods", 0) or 0),
-            created_at=l.created_at,
-        )
-        for l in liabilities_orm
-    ]
+    from .liability_present import liability_to_response
+
+    liabilities = [liability_to_response(l) for l in liabilities_orm]
 
     assets_orm = (
         db.query(FinanceAsset)
@@ -114,6 +104,7 @@ def build_finance_overview(db: Session, profile: GameProfile) -> FinanceOverview
             monthly_maintenance_cost=a.monthly_maintenance_cost,
             monthly_income=float(getattr(a, "monthly_income", 0) or 0),
             created_at=a.created_at,
+            acquisition_mode=getattr(a, "acquisition_mode", None) or "cash",
         )
         for a in assets_orm
     ]

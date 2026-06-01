@@ -19,6 +19,7 @@
 | **PW1** | PWA / standalone + resume (lock/unlock) | [pwa-standalone-channel](vision/ideas/pwa-standalone-channel.md) | ⚠ SPEC_pwa-standalone — нет | [PLAN_pwa-standalone](plans/PLAN_pwa-standalone.md) · [PWA_INSTALL](foundation/PWA_INSTALL.md) | [PW1 в backlog](backlog/PRODUCT_BACKLOG.md) | **in dev** фаза 1 install ✅; PW1-004 ✅ |
 | **WD1** | Полноразмерный веб (desktop / wide layout) | [desktop-wide-web-channel](vision/ideas/desktop-wide-web-channel.md) **approved** | ⚠ SPEC_desktop-wide-web — нет | [PLAN_desktop-wide-web](plans/PLAN_desktop-wide-web.md) | [WD1 в backlog](backlog/PRODUCT_BACKLOG.md) | **idea approved** → lab + spec; CA **50–100** |
 | **AC1** | Связка аккаунтов TG ↔ email | — | ⚠ нет | [TELEGRAM_BACKLOG](backlog/TELEGRAM_BACKLOG.md) TG-2xx | AC1 в backlog | **отложено**; в фокусе после WD1 v1 |
+| **DL1** | Реалистичный долг: граф актив↔долг↔страховка, аннуитет, prepay | [debt-liability-capital-graph](vision/ideas/debt-liability-capital-graph.md) **approved** | [SPEC_debt-liability-capital-graph](specs/features/SPEC_debt-liability-capital-graph.md) **draft** | [PLAN_debt-liability-capital-graph](plans/PLAN_debt-liability-capital-graph.md) | [DL1 в backlog](backlog/PRODUCT_BACKLOG.md) | **ADR-010 accepted** (пути A/B, продажа); spec draft; волны A→F; **до PA-W2** |
 
 **Статусы:** `idea` → `spec draft` → `spec approved` → `in dev` → `implemented`
 

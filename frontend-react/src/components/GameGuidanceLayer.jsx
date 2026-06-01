@@ -64,6 +64,7 @@ export function GameGuidanceLayer({
     if (!visible) {
       setStripHeightPx(0);
       document.documentElement.style.removeProperty('--mqx-guidance-scroll-pad');
+      document.documentElement.style.removeProperty('--mqx-guidance-strip-lift');
       return undefined;
     }
 
@@ -75,10 +76,9 @@ export function GameGuidanceLayer({
       setStripHeightPx(h);
       const tabRaw = getComputedStyle(document.documentElement).getPropertyValue('--tma-tabbar-inset');
       const tab = parseFloat(tabRaw) || 64;
-      document.documentElement.style.setProperty(
-        '--mqx-guidance-scroll-pad',
-        `calc(${h}px + ${tab}px + 20px)`,
-      );
+      const lift = `calc(${h}px + ${tab}px + 4px)`;
+      document.documentElement.style.setProperty('--mqx-guidance-scroll-pad', `calc(${lift} + 16px)`);
+      document.documentElement.style.setProperty('--mqx-guidance-strip-lift', lift);
     };
 
     apply();
@@ -87,6 +87,7 @@ export function GameGuidanceLayer({
     return () => {
       ro.disconnect();
       document.documentElement.style.removeProperty('--mqx-guidance-scroll-pad');
+      document.documentElement.style.removeProperty('--mqx-guidance-strip-lift');
     };
   }, [visible, guidance?.beat_id, guidance?.view_index, guidance?.title, guidance?.body]);
 

@@ -31,6 +31,7 @@ from ...models import (
     GameProfile,
     GameStarterTemplate,
     InsurancePolicy,
+    User,
 )
 from ...timeutil import utc_now_naive
 from ...finance.expenses import add_expense_line_from_event
@@ -460,8 +461,17 @@ def record_event_profile_selection(
         )
 
 
+def _o2_guidance_replaces_events_intro(db: Session, profile: GameProfile) -> bool:
+    """O2 p2_events_intro заменяет mq11_events_unlock_intro (SPEC_onboarding-o2)."""
+    user = db.query(User).filter(User.id == profile.user_id).first()
+    return user is not None and int(getattr(user, "guidance_completed", 0) or 0) == 0
+
+
 def ensure_events_unlock_intro(db: Session, profile: GameProfile) -> None:
     """Разовое intro-событие при первом доступе к колоде (с 1-го периода)."""
+    if _o2_guidance_replaces_events_intro(db, profile):
+        return
+
     definition = (
         db.query(EventDefinition)
         .filter(
@@ -699,7 +709,9 @@ def serialize_instance_rows(
 def build_pending_events_payload(db: Session, profile: GameProfile) -> dict:
     _ensure_seed_events(db)
 
-    ensure_events_unlock_intro(db, profile)
+    o2_intro = _o2_guidance_replaces_events_intro(db, profile)
+    if not o2_intro:
+        ensure_events_unlock_intro(db, profile)
     ensure_period_events(db, profile.id, profile.period_index, profile.save_kind)
 
     insts = (
@@ -715,6 +727,8 @@ def build_pending_events_payload(db: Session, profile: GameProfile) -> dict:
 
     needs_cfg = _needs_config_for_profile(db, profile)
     events = serialize_instance_rows(db, insts, profile=profile, needs_cfg=needs_cfg)
+    if o2_intro:
+        events = [e for e in events if e.get("key") != EVENTS_UNLOCK_INTRO_KEY]
     events = _order_events_recommended_first(events)
 
     first = events[0] if events else None

@@ -110,6 +110,61 @@ def ensure_schema_compatibility() -> None:
             statements.append("ALTER TABLE finance_liabilities ADD COLUMN overdue_amount FLOAT NOT NULL DEFAULT 0")
         if "overdue_periods" not in liab_columns:
             statements.append("ALTER TABLE finance_liabilities ADD COLUMN overdue_periods INTEGER NOT NULL DEFAULT 0")
+        if "liability_kind" not in liab_columns:
+            statements.append(
+                "ALTER TABLE finance_liabilities ADD COLUMN liability_kind VARCHAR(32) NOT NULL DEFAULT 'unsecured'"
+            )
+        if "secured_asset_id" not in liab_columns:
+            statements.append("ALTER TABLE finance_liabilities ADD COLUMN secured_asset_id INTEGER NULL")
+        if "term_periods" not in liab_columns:
+            statements.append("ALTER TABLE finance_liabilities ADD COLUMN term_periods INTEGER NULL")
+        if "periods_paid" not in liab_columns:
+            statements.append(
+                "ALTER TABLE finance_liabilities ADD COLUMN periods_paid INTEGER NOT NULL DEFAULT 0"
+            )
+        if "original_principal" not in liab_columns:
+            statements.append("ALTER TABLE finance_liabilities ADD COLUMN original_principal FLOAT NULL")
+        if "payment_mode" not in liab_columns:
+            statements.append(
+                "ALTER TABLE finance_liabilities ADD COLUMN payment_mode VARCHAR(32) NOT NULL DEFAULT 'interest_only'"
+            )
+
+    if "finance_assets" in inspector.get_table_names():
+        asset_columns = {item["name"] for item in inspector.get_columns("finance_assets")}
+        if "acquisition_mode" not in asset_columns:
+            statements.append(
+                "ALTER TABLE finance_assets ADD COLUMN acquisition_mode VARCHAR(16) NOT NULL DEFAULT 'cash'"
+            )
+
+    if "insurance_policies" in inspector.get_table_names():
+        pol_columns = {item["name"] for item in inspector.get_columns("insurance_policies")}
+        if "insured_asset_id" not in pol_columns:
+            statements.append("ALTER TABLE insurance_policies ADD COLUMN insured_asset_id INTEGER NULL")
+
+    if "liability_templates" in inspector.get_table_names():
+        tpl_columns = {item["name"] for item in inspector.get_columns("liability_templates")}
+        if "liability_kind" not in tpl_columns:
+            statements.append(
+                "ALTER TABLE liability_templates ADD COLUMN liability_kind VARCHAR(32) NOT NULL DEFAULT 'consumer'"
+            )
+        if "term_periods" not in tpl_columns:
+            statements.append("ALTER TABLE liability_templates ADD COLUMN term_periods INTEGER NULL")
+        if "disbursement_mode" not in tpl_columns:
+            statements.append(
+                "ALTER TABLE liability_templates ADD COLUMN disbursement_mode VARCHAR(32) NOT NULL DEFAULT 'to_cash'"
+            )
+        if "linked_asset_template_key" not in tpl_columns:
+            statements.append(
+                "ALTER TABLE liability_templates ADD COLUMN linked_asset_template_key VARCHAR(80) NULL"
+            )
+        if "down_payment_amount" not in tpl_columns:
+            statements.append(
+                "ALTER TABLE liability_templates ADD COLUMN down_payment_amount FLOAT NOT NULL DEFAULT 0"
+            )
+        if "requires_asset_kind" not in tpl_columns:
+            statements.append(
+                "ALTER TABLE liability_templates ADD COLUMN requires_asset_kind VARCHAR(50) NULL"
+            )
 
     # ---- event_definitions (расширение без запуска 0003) ----
     if "event_definitions" in inspector.get_table_names():
