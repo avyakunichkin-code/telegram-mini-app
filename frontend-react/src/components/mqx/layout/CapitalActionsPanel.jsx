@@ -21,12 +21,12 @@ const CAR_KINDS = new Set(['car_personal', 'car_taxi']);
 const SHEET_COPY = {
   deposit: {
     title: 'Депозит',
-    subtitle: 'Депозит растёт в теле вклада. Увеличивается на 1/12 от ставки вклада каждый период.',
+    subtitle: 'Проценты (1/12 годовой ставки) капитализируются в сумму вклада при закрытии периода.',
   },
   bond: {
     title: 'Облигации',
     subtitle:
-      'Облигации платят купон на счёт. 1/12 от ставки добавляется на счёт автоматически в начале каждого периода.',
+      'Купон (1/12 годовой ставки) зачисляется на счёт при закрытии периода.',
   },
   realestate: {
     title: 'Жильё',
@@ -34,7 +34,7 @@ const SHEET_COPY = {
   },
   car: {
     title: 'Авто',
-    subtitle: 'За наличные или автокредит с первым взносом (связка ниже).',
+    subtitle: 'Покупка за наличные. Автокредит — в разделе «Кредит».',
   },
   insurance: {
     title: 'Страховки',
@@ -45,8 +45,8 @@ const SHEET_COPY = {
     subtitle: 'Первый взнос с счёта, кредит на остаток. Сумма кредита на счёт не зачисляется.',
   },
   credit: {
-    title: 'Потребительский кредит',
-    subtitle: 'До 2 активных кредитов; сумма зачисляется на счёт. Ипотека — в «Недвижимость».',
+    title: 'Кредиты',
+    subtitle: 'Автокредит, потребительский кредит (до 2). Ипотека — отдельная плитка.',
   },
 };
 
@@ -195,21 +195,7 @@ export function CapitalActionsPanel({
       case 'realestate':
         return renderTemplateList(propertyTemplates, 'asset', onAddAssetFromTemplate);
       case 'car':
-        return (
-          <>
-            <SecuredAcquisitionList
-              bundles={filterBundlesForSheet(securedBundles, 'car')}
-              onAcquire={onSecuredAcquisition}
-              busyKey={securedAcquireBusyKey}
-            />
-            {carTemplates.length > 0 ? (
-              <>
-                <p className="mqx-capital-sheet-section-label">За наличные</p>
-                {renderTemplateList(carTemplates, 'asset', onAddAssetFromTemplate)}
-              </>
-            ) : null}
-          </>
-        );
+        return renderTemplateList(carTemplates, 'asset', onAddAssetFromTemplate);
       case 'insurance':
         return (
           <InsuranceProductPicker
@@ -227,7 +213,21 @@ export function CapitalActionsPanel({
           />
         );
       case 'credit':
-        return renderTemplateList(creditTemplates, 'liability', onAddLiabilityFromTemplate);
+        return (
+          <>
+            <SecuredAcquisitionList
+              bundles={filterBundlesForSheet(securedBundles, 'car')}
+              onAcquire={onSecuredAcquisition}
+              busyKey={securedAcquireBusyKey}
+            />
+            {creditTemplates.length > 0 ? (
+              <>
+                <p className="mqx-capital-sheet-section-label">Потребительские</p>
+                {renderTemplateList(creditTemplates, 'liability', onAddLiabilityFromTemplate)}
+              </>
+            ) : null}
+          </>
+        );
       default:
         return null;
     }

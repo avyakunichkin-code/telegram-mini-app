@@ -44,6 +44,20 @@ class TestPeriodCloseSummaryMapping:
         )
         assert summary.achievement_unlocks == []
 
+    def test_maps_period_highlights(self):
+        summary = _period_close_summary(
+            {
+                "total_spent": 0,
+                "new_balance": 1000,
+                "period_highlights": [
+                    {"key": "expenses", "label": "Расходы списаны", "amount": 30_000},
+                    {"key": "bond_coupons", "label": "Купоны", "amount": 500},
+                ],
+            }
+        )
+        assert len(summary.period_highlights) == 2
+        assert summary.period_highlights[0].key == "expenses"
+
     def test_maps_period_compare_deltas(self):
         summary = _period_close_summary(
             {

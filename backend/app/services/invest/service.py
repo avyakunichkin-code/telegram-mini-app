@@ -32,15 +32,16 @@ def open_deposit(db: Session, profile: GameProfile, *, amount: float, annual_rat
     if float(profile.cash_balance or 0) < amount:
         raise HTTPException(status_code=400, detail="Недостаточно средств")
 
-    adjust_balance(db, profile.id, -amount, "deposit_open", "Открытие депозита", profile.period_index)
+    period = int(profile.period_index or 1)
+    adjust_balance(db, profile.id, -amount, "deposit_open", "Открытие депозита", period)
     pos = InvestmentPosition(
         game_profile_id=profile.id,
         kind="deposit",
         title=f"Депозит {annual_rate_percent:.1f}% годовых",
         principal=amount,
         annual_rate_percent=annual_rate_percent,
-        started_period=profile.period_index,
-        last_accrued_period=profile.period_index,
+        started_period=period,
+        last_accrued_period=max(0, period - 1),
         is_active=1,
     )
     db.add(pos)
@@ -54,15 +55,16 @@ def buy_bond(db: Session, profile: GameProfile, *, amount: float, annual_rate_pe
     if float(profile.cash_balance or 0) < amount:
         raise HTTPException(status_code=400, detail="Недостаточно средств")
 
-    adjust_balance(db, profile.id, -amount, "bond_buy", f"Покупка облигаций: {title}", profile.period_index)
+    period = int(profile.period_index or 1)
+    adjust_balance(db, profile.id, -amount, "bond_buy", f"Покупка облигаций: {title}", period)
     pos = InvestmentPosition(
         game_profile_id=profile.id,
         kind="bond",
         title=title,
         principal=amount,
         annual_rate_percent=annual_rate_percent,
-        started_period=profile.period_index,
-        last_accrued_period=profile.period_index,
+        started_period=period,
+        last_accrued_period=max(0, period - 1),
         is_active=1,
     )
     db.add(pos)

@@ -156,9 +156,45 @@ def _period_income_rate(breakdown: list, snapshot: PeriodSnapshot | None) -> flo
         if not isinstance(item, dict):
             continue
         kind = str(item.get("type") or "")
-        if kind in ("asset_income", "invest"):
+        if kind in ("asset_income", "invest", "bond_coupon"):
             income += float(item.get("amount") or 0)
     return round(income, 2)
+
+
+def _build_period_highlights(
+    *,
+    expense_total: float,
+    bond_coupons: float,
+    deposit_interest: float,
+) -> list[dict]:
+    """Ключевые итоги периода для UI (без детализации расходов)."""
+    highlights: list[dict] = []
+    if expense_total > EPSILON:
+        highlights.append(
+            {
+                "key": "expenses",
+                "label": "Расходы списаны",
+                "amount": round(expense_total, 2),
+            }
+        )
+    if bond_coupons > EPSILON:
+        highlights.append(
+            {
+                "key": "bond_coupons",
+                "label": "Купоны по облигациям на счёт",
+                "amount": round(bond_coupons, 2),
+            }
+        )
+    if deposit_interest > EPSILON:
+        highlights.append(
+            {
+                "key": "deposit_interest",
+                "label": "Проценты на депозитах",
+                "amount": round(deposit_interest, 2),
+                "note": "капитализированы",
+            }
+        )
+    return highlights
 
 
 def _period_expense_total(breakdown: list) -> float:
@@ -220,6 +256,8 @@ def process_period_end(db: Session, profile: GameProfile) -> dict:
     closed_burn_total = 0.0
     total_overdue_added = 0.0
     invest_income = 0.0
+    deposit_interest_total = 0.0
+    bond_coupon_total = 0.0
     defeat_reason = None
     needs_result = None
 
@@ -361,31 +399,47 @@ def process_period_end(db: Session, profile: GameProfile) -> dict:
         pass
 
     # 3.6 Инвестиции: начисления (депозит — капитализация, облигации — купон на баланс)
+    deposit_interest_total = 0.0
+    bond_coupon_total = 0.0
     positions = invest_positions
     for pos in positions:
-        # начисляем только если прошёл период
-        if int(pos.last_accrued_period) >= int(period_index):
+        last_accrued = int(pos.last_accrued_period or 0)
+        if last_accrued >= int(period_index):
             continue
-        periods_to_accrue = int(period_index) - int(pos.last_accrued_period)
+        periods_to_accrue = int(period_index) - last_accrued
         if periods_to_accrue <= 0:
             continue
 
         monthly_rate = float(pos.annual_rate_percent) / 100.0 / 12.0
         if pos.kind == "deposit":
-            # капитализация на principal
             interest = float(pos.principal) * monthly_rate * periods_to_accrue
             pos.principal = float(pos.principal) + interest
+            deposit_interest_total += interest
             invest_income += interest
         elif pos.kind == "bond":
-            # купон на баланс
             coupon = float(pos.principal) * monthly_rate * periods_to_accrue
             if coupon != 0:
                 adjust_balance(db, profile.id, +coupon, "bond_coupon", f"Купон: {pos.title}", period_index)
                 db.refresh(profile)
+                bond_coupon_total += coupon
                 invest_income += coupon
         pos.last_accrued_period = int(period_index)
-    if invest_income != 0:
-        breakdown.append({"type": "invest", "title": "Доход от инвестиций", "amount": round(invest_income, 2)})
+    if deposit_interest_total > EPSILON:
+        breakdown.append(
+            {
+                "type": "deposit_interest",
+                "title": "Проценты на депозитах",
+                "amount": round(deposit_interest_total, 2),
+            }
+        )
+    if bond_coupon_total > EPSILON:
+        breakdown.append(
+            {
+                "type": "bond_coupon",
+                "title": "Купоны по облигациям",
+                "amount": round(bond_coupon_total, 2),
+            }
+        )
 
     # 4. Проверка отрицательного баланса
     if profile.cash_balance < 0:
@@ -595,4 +649,9 @@ def process_period_end(db: Session, profile: GameProfile) -> dict:
         "needs": needs_result,
         "overdue_added": round(total_overdue_added, 2),
         "achievement_unlocks": achievement_unlocks,
+        "period_highlights": _build_period_highlights(
+            expense_total=current_expense_total,
+            bond_coupons=bond_coupon_total,
+            deposit_interest=deposit_interest_total,
+        ),
     }

@@ -14,6 +14,7 @@ from ...events.mandatory import pending_mandatory_blocking_event_titles
 from ...schemas import (
     AchievementUnlockEvent,
     PeriodCloseBreakdownItem,
+    PeriodCloseHighlight,
     PeriodCloseSummary,
     TimeConfigUpdate,
     TimeStatusResponse,
@@ -55,6 +56,11 @@ def period_close_summary(period_result: dict) -> PeriodCloseSummary:
         for item in (period_result.get("achievement_unlocks") or [])
         if isinstance(item, dict)
     ]
+    period_highlights = [
+        PeriodCloseHighlight(**item)
+        for item in (period_result.get("period_highlights") or [])
+        if isinstance(item, dict)
+    ]
     return PeriodCloseSummary(
         closed_period_index=int(period_result.get("closed_period_index") or 0),
         cash_delta=round(float(period_result.get("cash_delta") or 0), 2),
@@ -67,6 +73,7 @@ def period_close_summary(period_result: dict) -> PeriodCloseSummary:
         new_balance=round(float(period_result.get("new_balance") or 0), 2),
         overdue_added=round(float(period_result.get("overdue_added") or 0), 2),
         breakdown=breakdown,
+        period_highlights=period_highlights,
         achievement_unlocks=achievement_unlocks,
     )
 

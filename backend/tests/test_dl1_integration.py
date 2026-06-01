@@ -58,7 +58,7 @@ def test_secured_acquisition_no_cash_disbursement(auth_client):
     cash_before = float(profile.cash_balance)
     resp = client.post(
         "/api/finance/acquisitions/secured",
-        json={"liability_key": "mortgage", "asset_key": "apt_2br"},
+        json={"liability_key": "mortgage", "asset_key": "apt_1br"},
         headers=headers,
     )
     assert resp.status_code == 200, resp.text
@@ -66,10 +66,10 @@ def test_secured_acquisition_no_cash_disbursement(auth_client):
     assert body["asset"]["acquisition_mode"] == "secured"
     assert body["liability"]["liability_kind"] == "mortgage"
     assert body["liability"]["secured_asset_id"] == body["asset"]["id"]
-    assert body["liability"]["total_debt"] == 8_000_000.0
+    assert body["liability"]["total_debt"] == 4_000_000.0
 
     db.refresh(profile)
-    assert float(profile.cash_balance) == cash_before - 2_000_000.0
+    assert float(profile.cash_balance) == cash_before - 1_000_000.0
     disb = (
         db.query(Transaction)
         .filter(
@@ -129,7 +129,7 @@ def test_asset_sale_with_mortgage_payoff(auth_client):
     client, db, profile, headers = auth_client
     created = client.post(
         "/api/finance/acquisitions/secured",
-        json={"liability_key": "mortgage", "asset_key": "apt_2br"},
+        json={"liability_key": "mortgage", "asset_key": "apt_1br"},
         headers=headers,
     ).json()
     asset_id = created["asset"]["id"]
@@ -158,7 +158,7 @@ def test_prepay_reduces_debt(auth_client):
     client, db, _profile, headers = auth_client
     created = client.post(
         "/api/finance/acquisitions/secured",
-        json={"liability_key": "mortgage", "asset_key": "apt_2br"},
+        json={"liability_key": "mortgage", "asset_key": "apt_1br"},
         headers=headers,
     ).json()
     _apply_golden_v1_after_p2(db, created["asset"]["id"], created["liability"]["id"])

@@ -18,3 +18,16 @@ def test_upsert_car_loan_secured_metadata(db_session):
     assert row.linked_asset_template_key == "car_personal"
     assert int(row.term_periods) == 60
     assert float(row.down_payment_amount) == 300_000.0
+
+
+def test_upsert_mortgage_apt_1br(db_session):
+    upsert_capital_liability_catalog(db_session)
+    row = (
+        db_session.query(LiabilityTemplate)
+        .filter(LiabilityTemplate.template_key == "mortgage")
+        .first()
+    )
+    assert row is not None
+    assert row.linked_asset_template_key == "apt_1br"
+    assert float(row.down_payment_amount) == 1_000_000.0
+    assert float(row.total_debt) == 4_000_000.0
