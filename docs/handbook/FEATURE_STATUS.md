@@ -80,7 +80,7 @@ audience: product, playtest, partners
 
 | Фича | Статус | Комментарий |
 |------|--------|-------------|
-| Mission Brief / онбординг O1 | 🟡 | [SPEC_onboarding-tma](../specs/features/SPEC_onboarding-tma.md) |
+| Онбординг O2 (Progressive Guidance) | ✅ | [SPEC_onboarding-o2](../specs/features/SPEC_onboarding-o2.md) |
 | Экран аналитики | ✅ | [SPEC_ANALYTICS](../specs/SPEC_ANALYTICS.md) |
 | Balance playtest (headless) | ✅ | [`docs/balance/`](../balance/README.md) |
 | Ops-алерты + Watchtower `#/admin` | 🟡 | RU-тексты в TG; KPI summary (PA-A*) — backlog A2 |

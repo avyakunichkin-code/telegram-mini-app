@@ -1,22 +1,406 @@
-/* v5 round — prod parity hooks; блок .mqx-needs-* подтягивается sync-lab из prod dashboard.css */
+/* v7 — заголовок секции снаружи, 4 шкалы всегда, без accordion */
 
-:root {
-  --mq-fs-body: 15px;
-  --mq-fs-small: 13px;
-  --mq-fs-caption: 12px;
-  --tg-theme-bg-color: var(--surface, #fff);
+.lab-variant-grid--v7 {
+  display: grid;
+  gap: 28px;
 }
 
-.lab-phone__shell {
-  padding: 12px;
-  border-radius: 16px;
-  background: var(--mqx-glass-soft, #f8f9fb);
-  border: 1px solid color-mix(in srgb, var(--mqx-ink) 8%, transparent);
+.mqx-needs-section {
+  padding: 12px 14px 14px;
 }
 
-.lab-round-note {
-  font-size: 13px;
-  line-height: 1.45;
+.mqx-needs-section__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 10px;
+  min-height: 28px;
+}
+
+.mqx-needs-section__head .mqx-finance-static__title {
+  margin: 0;
+  flex: 1;
+  min-width: 0;
+}
+
+/* —— Action placement variants —— */
+
+.mqx-needs-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.mqx-needs-action {
+  font: inherit;
+  cursor: pointer;
+  border: none;
+  -webkit-tap-highlight-color: transparent;
+  transition:
+    background 0.14s ease,
+    box-shadow 0.14s ease,
+    opacity 0.14s ease;
+}
+
+.mqx-needs-action:disabled {
+  opacity: 0.42;
+  cursor: not-allowed;
+}
+
+/* A: link + compact treat in section head (prod) */
+.mqx-needs-help-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  padding: 2px 0;
+  margin: 0;
+  border: none;
+  background: none;
+  font: inherit;
+  font-size: var(--mq-fs-micro, 11px);
+  font-weight: 600;
+  line-height: 1.25;
+  color: var(--mq-violet, #6d28d9);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-color: color-mix(in srgb, var(--mq-violet, #6d28d9) 45%, transparent);
+  cursor: pointer;
+  white-space: nowrap;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.mqx-needs-help-link:hover,
+.mqx-needs-help-link:focus-visible {
+  text-decoration-color: var(--mq-violet, #6d28d9);
+}
+
+.mqx-needs-help-link__arrow {
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.mqx-needs-section[data-actions='a'] .mqx-needs-action--treat {
+  min-height: 26px;
+  padding: 3px 8px;
+  border-radius: 8px;
+  font-size: var(--mq-fs-micro, 11px);
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  color: var(--mq-emerald, #059669);
+  background: color-mix(in srgb, var(--mq-emerald, #059669) 10%, transparent);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--mq-emerald, #059669) 28%, transparent);
+}
+
+.mqx-needs-section[data-actions='a'] .mqx-needs-action--treat.is-disabled {
+  opacity: 0.48;
+  color: color-mix(in srgb, var(--mqx-ink) 55%, transparent);
+  background: color-mix(in srgb, var(--mqx-ink) 4%, transparent);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--mqx-ink) 12%, transparent);
+  cursor: pointer;
+}
+
+/* e1–e3: книга без фона + сердце (см. prod dashboard.css) */
+.mqx-help-icon-btn {
+  position: relative;
+  flex-shrink: 0;
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  margin: 0;
+  border: none;
+  box-shadow: none;
+  outline: none;
+  background: transparent;
+  color: color-mix(in srgb, var(--mq-violet, #6d28d9) 92%, var(--mqx-ink));
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.mqx-help-icon-btn:hover,
+.mqx-help-icon-btn:focus-visible {
+  color: var(--mq-violet-deep, #5b21b6);
+}
+
+.mqx-help-icon-btn:focus-visible {
+  outline: 2px solid color-mix(in srgb, var(--mq-violet, #6d28d9) 32%, transparent);
+  outline-offset: 2px;
+  border-radius: 6px;
+}
+
+.mqx-help-icon-btn svg {
+  width: 17px;
+  height: 17px;
+}
+
+.mqx-help-icon-btn--inside svg {
+  width: 16px;
+  height: 16px;
+}
+
+.mqx-help-icon-btn__badge {
+  position: absolute;
+  right: 3px;
+  bottom: 4px;
+  min-width: 8px;
+  height: 8px;
+  padding: 0 1px;
+  border-radius: 999px;
+  font-size: 6.5px;
+  font-weight: 800;
+  line-height: 8px;
+  text-align: center;
+  color: var(--mq-violet-deep, #5b21b6);
+  pointer-events: none;
+  background: color-mix(in srgb, var(--mq-violet, #6d28d9) 14%, transparent);
+}
+
+.mqx-treat-heart-btn {
+  flex-shrink: 0;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border: none;
+  font: inherit;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.mqx-treat-heart-btn svg {
+  width: 16px;
+  height: 16px;
+}
+
+.mqx-needs-section[data-actions='e1'] .mqx-treat-heart-btn {
+  border-radius: 9px;
+  color: var(--mq-emerald, #059669);
+  background: color-mix(in srgb, var(--mq-emerald, #059669) 10%, transparent);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--mq-emerald, #059669) 26%, transparent);
+}
+
+.mqx-needs-section[data-actions='e2'] .mqx-treat-heart-btn--ghost {
+  width: 30px;
+  height: 30px;
+  background: transparent;
+  box-shadow: none;
+  color: var(--mq-emerald, #059669);
+}
+
+.mqx-needs-section[data-actions='e3'] .mqx-treat-heart-btn--dot,
+.mqx-needs-section[data-actions='e2e3'] .mqx-treat-heart-btn--dot {
+  width: 26px;
+  height: 26px;
+  border-radius: 999px;
+  color: #fff;
+  background: linear-gradient(145deg, var(--mq-emerald, #059669), #047857);
+  box-shadow: 0 1px 5px color-mix(in srgb, var(--mq-emerald, #059669) 22%, transparent);
+}
+
+.mqx-needs-section[data-actions='e2e3'] .mqx-treat-heart-btn--dot svg {
+  width: 14px;
+  height: 14px;
+}
+
+.mqx-needs-section[data-actions='e3'] .mqx-treat-heart-btn--dot svg {
+  width: 14px;
+  height: 14px;
+}
+
+.mqx-treat-heart-btn.is-disabled {
+  opacity: 0.45;
+  color: color-mix(in srgb, var(--mqx-ink) 50%, transparent);
+  background: color-mix(in srgb, var(--mqx-ink) 4%, transparent);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--mqx-ink) 10%, transparent);
+  cursor: pointer;
+}
+
+/* B: foot row under bars */
+.mqx-needs-section[data-actions='b'] .mqx-needs-section__head .mqx-needs-actions {
+  display: none;
+}
+
+.mqx-needs-section[data-actions='b'] .mqx-needs-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid color-mix(in srgb, var(--mqx-ink) 8%, transparent);
+}
+
+.mqx-needs-section[data-actions='b'] .mqx-needs-action--ghost {
+  padding: 4px 0;
+  font-size: var(--mq-fs-small, 13px);
+  font-weight: 600;
+  color: var(--mq-violet, #6d28d9);
+  background: transparent;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-color: color-mix(in srgb, var(--mq-violet) 40%, transparent);
+}
+
+.mqx-needs-section[data-actions='b'] .mqx-needs-action--treat {
+  padding: 8px 14px;
+  border-radius: 12px;
+  font-size: var(--mq-fs-small, 13px);
+  font-weight: 750;
+  color: var(--mq-emerald, #059669);
+  background: color-mix(in srgb, var(--mq-emerald) 12%, transparent);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--mq-emerald) 28%, transparent);
+}
+
+/* C: icon-only in head */
+.mqx-needs-section[data-actions='c'] .mqx-needs-action {
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  border-radius: 12px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: color-mix(in srgb, var(--mqx-ink) 5%, transparent);
   color: color-mix(in srgb, var(--mqx-ink) 72%, transparent);
-  margin-bottom: 16px;
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--mqx-ink) 10%, transparent);
+}
+
+.mqx-needs-section[data-actions='c'] .mqx-needs-action--treat {
+  color: var(--mq-emerald, #059669);
+  background: color-mix(in srgb, var(--mq-emerald) 10%, transparent);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--mq-emerald) 24%, transparent);
+}
+
+.mqx-needs-section[data-actions='c'] .mqx-needs-action svg {
+  width: 18px;
+  height: 18px;
+}
+
+.mqx-needs-section[data-actions='c'] .mqx-needs-action__label {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+}
+
+/* D: dock under portrait */
+.mqx-needs-section[data-actions='d'] .mqx-needs-section__head .mqx-needs-actions {
+  display: none;
+}
+
+.mqx-needs-section[data-actions='d'] .mqx-needs-avatar-col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  flex: 0 0 56px;
+}
+
+.mqx-needs-section[data-actions='d'] .mqx-needs-dock {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  width: 100%;
+}
+
+.mqx-needs-section[data-actions='d'] .mqx-needs-dock .mqx-needs-action {
+  width: 100%;
+  min-height: 34px;
+  padding: 0 8px;
+  border-radius: 10px;
+  font-size: 10px;
+  font-weight: 700;
+  line-height: 1.15;
+  text-align: center;
+  background: color-mix(in srgb, var(--mqx-ink) 5%, transparent);
+  color: color-mix(in srgb, var(--mqx-ink) 78%, transparent);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--mqx-ink) 10%, transparent);
+}
+
+.mqx-needs-section[data-actions='d'] .mqx-needs-dock .mqx-needs-action--treat {
+  color: var(--mq-emerald, #059669);
+  background: color-mix(in srgb, var(--mq-emerald) 12%, transparent);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--mq-emerald) 26%, transparent);
+}
+
+/* —— Flat body (all variants) —— */
+.mqx-needs-section .mqx-needs-block {
+  margin: 0;
+  padding: 0;
+  border-bottom: none;
+}
+
+.mqx-needs-section .mqx-needs-risk {
+  margin: 0 0 8px;
+  border-radius: 10px;
+}
+
+.mqx-needs-section .mqx-needs-body {
+  display: flex;
+  gap: 10px;
+  align-items: stretch;
+}
+
+.mqx-needs-section .mqx-needs-avatar {
+  flex: 0 0 52px;
+  min-height: 0;
+  padding: 0;
+  align-items: flex-end;
+}
+
+.mqx-needs-section[data-actions='d'] .mqx-needs-body > .mqx-needs-avatar {
+  display: none;
+}
+
+.mqx-needs-section .mqx-needs-avatar__img {
+  max-height: 104px;
+}
+
+.mqx-needs-section .mqx-needs-bars {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 7px;
+  padding: 2px 0 4px;
+}
+
+.mqx-needs-section .mqx-needs-bar-row {
+  margin-bottom: 0;
+}
+
+.mqx-needs-section .mqx-needs-bar-track {
+  height: 5px;
+}
+
+.mqx-needs-section .mqx-needs-bar-label {
+  flex: 0 0 52px;
+  font-size: 11px;
+}
+
+.mqx-needs-section .mqx-needs-zone-text {
+  font-size: 11px;
+  min-width: 4.8rem;
+  text-align: right;
+}
+
+.mqx-needs-foot {
+  display: none;
+}
+
+.mqx-needs-section .mqx-needs-block__header,
+.mqx-needs-section .mqx-needs-block__summary,
+.mqx-needs-section .mqx-needs-improve-link,
+.mqx-needs-section .mqx-needs-block__chevron,
+.mqx-needs-section .mqx-needs-footer {
+  display: none !important;
 }

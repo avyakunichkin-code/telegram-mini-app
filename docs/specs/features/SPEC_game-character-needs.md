@@ -296,8 +296,6 @@ class NeedsGuideSection(BaseModel):
 class NeedsGuideResponse(BaseModel):
     title: str = "Потребности"
     sections: list[NeedsGuideSection]
-    maintenance: list[str]  # legacy
-    critical: list[str]     # legacy
 ```
 
 ### Содержание (prod, `guide_content.py`)

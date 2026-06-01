@@ -125,6 +125,19 @@ def build_metrics_summary(db: Session, *, days: int = 7) -> dict[str, Any]:
         or 0
     )
 
+    profiles_period_3_plus_total = int(
+        db.query(func.count(GameProfile.id))
+        .filter(GameProfile.period_index >= 3)
+        .scalar()
+        or 0
+    )
+    profiles_period_3_plus_active = int(
+        db.query(func.count(GameProfile.id))
+        .filter(GameProfile.is_active == 1, GameProfile.period_index >= 3)
+        .scalar()
+        or 0
+    )
+
     return {
         "window_days": window_days,
         "users_total": users_total,
@@ -143,4 +156,6 @@ def build_metrics_summary(db: Session, *, days: int = 7) -> dict[str, Any]:
         "defeats_total": defeats_total,
         "defeats_recent": defeats_recent,
         "run_feedback_recent": run_feedback_recent,
+        "profiles_period_3_plus_total": profiles_period_3_plus_total,
+        "profiles_period_3_plus_active": profiles_period_3_plus_active,
     }

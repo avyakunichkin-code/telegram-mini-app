@@ -51,7 +51,18 @@ alwaysApply: false
 - Hero + один primary CTA на экран — ок.
 - Не вешать новый violet-gradient на каждую секцию подряд.
 
-## Finance
+## Капитал (вкладка `finance`)
 
-- Вкладка «Финансы» — один экран `FinancePremium.jsx` (hero + аккордеоны капитала по `overview.mechanics`).
-- Портфель — `CapitalPortfolioPanels.jsx`; invest/insurance выровнять под тот же capital-стиль (см. spec P1).
+- Label в таббаре: **«Капитал»**; экран — `FinancePremium.jsx` (`mqx-capital-page`).
+- Hero: title **«Капитал»**; без kicker «Финансы», без pill «N разделов».
+- Порядок: **Доходы / Расходы** → сегмент **Детали \| Действия** → `CapitalDetailsPanel` или `CapitalActionsPanel` + `MqxCapitalSheet` (не legacy-аккордеоны разделов).
+- Типографика (2026-06): сегмент Детали/Действия — `var(--mqx-ink)`; в **Детали** заголовки нейтральные, только обязательства — muted red; доходы/расходы в потоках не перекрашивать.
+- Сетка действий: плитки без `highlight` на страховках; ипотека и кредит — отдельные плитки.
+- UX/spec: [`docs/ux/screens/finance.md`](docs/ux/screens/finance.md), lab ★ [`design-lab/capital-page/details-actions-round/`](design-lab/capital-page/details-actions-round/).
+
+## Z-NEEDS (главная)
+
+- `MqxNeedsDash` **v7-e2e3** (`actionsVariant` по умолчанию): **книга+?** → `MqxNeedsHelpSheet` + `GET /api/game/needs/guide` (`sections[]`); **сердце** → treat-self (UI «Улучшить»).
+- Четыре шкалы всегда видимы; портрет — `PersonaPortrait` size `dash`.
+- Lab ★: [`design-lab/character-needs/dashboard-needs-v7-round/`](design-lab/character-needs/dashboard-needs-v7-round/); v5 — архив.
+- UX: [`docs/ux/screens/character-needs-dashboard.md`](docs/ux/screens/character-needs-dashboard.md), help: [`character-needs-help.md`](docs/ux/screens/character-needs-help.md).

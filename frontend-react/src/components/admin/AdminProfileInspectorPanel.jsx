@@ -211,6 +211,24 @@ export function AdminProfileInspectorPanel() {
             ) : null}
           </div>
 
+          {(detail.pending_events ?? []).length > 0 ? (
+            <div className="admin-inspector__pending">
+              <h3 className="admin-inspector__panel-title">События в периоде (pending)</h3>
+              <ul className="admin-inspector__pending-list">
+                {detail.pending_events.map((ev) => (
+                  <li key={ev.id} className="admin-inspector__pending-item">
+                    <strong>{ev.title}</strong>
+                    <span className="mq-muted">
+                      #{ev.id}
+                      {ev.event_slot ? ` · ${ev.event_slot}` : ''}
+                      {ev.content_class ? ` · ${ev.content_class}` : ''}
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ) : null}
+
           {fb ? (
             <div className="admin-inspector__feedback mq-card">
               <h3 className="admin-inspector__panel-title">Последний отзыв с финала</h3>

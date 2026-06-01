@@ -1,10 +1,12 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { Button, Spinner } from '@telegram-apps/telegram-ui';
 import { adminApi } from '../../api';
-import { AdminNav } from './AdminNav';
-import { AdminProfileInspectorPanel } from './AdminProfileInspectorPanel';
+import { AdminAttentionQueue } from './AdminAttentionQueue';
+import { AdminPageHeader } from './AdminPageHeader';
+import { AdminTable, formatAdminDt } from './adminTable';
 import { GuidanceBadge } from './AdminGuidanceBadge';
+import { notificationProfileId } from './adminUtils';
 
 const PROFILE_FILTERS = [
   { id: '', label: 'Все' },
@@ -14,14 +16,13 @@ const PROFILE_FILTERS = [
   { id: 'victory', label: 'Победа' },
 ];
 
-function formatDt(value) {
-  if (!value) return '—';
-  try {
-    return new Date(value).toLocaleString('ru-RU');
-  } catch {
-    return String(value);
-  }
-}
+const WATCHTOWER_TAB_LABELS = {
+  overview: 'Обзор',
+  players: 'Игроки',
+  alerts: 'Алерты',
+  feedback: 'Отзывы',
+  guidance: 'Guidance',
+};
 
 function OnboardingFunnel({ funnel }) {
   if (!funnel) return null;
@@ -116,6 +117,13 @@ function MetricsSummary({ summary }) {
           <span className="admin-watchtower__kpi-sub">за {days}д</span>
         </div>
         <div className="admin-watchtower__kpi">
+          <span className="admin-watchtower__kpi-label">Период ≥3</span>
+          <strong>{summary.profiles_period_3_plus_active ?? 0}</strong>
+          <span className="admin-watchtower__kpi-sub">
+            всего {summary.profiles_period_3_plus_total ?? 0}
+          </span>
+        </div>
+        <div className="admin-watchtower__kpi">
           <span className="admin-watchtower__kpi-label">Ср. период</span>
           <strong>{summary.avg_period_index_active}</strong>
           <span className="admin-watchtower__kpi-sub">
@@ -127,65 +135,17 @@ function MetricsSummary({ summary }) {
   );
 }
 
-function Table({ columns, rows, highlightId, onRowClick }) {
-  if (!rows.length) {
-    return <p className="mq-muted">Пока пусто</p>;
-  }
-  return (
-    <div className="admin-watchtower__table-wrap">
-      <table className="admin-watchtower__table">
-        <thead>
-          <tr>
-            {columns.map((col) => (
-              <th key={col.key}>{col.label}</th>
-            ))}
-          </tr>
-        </thead>
-        <tbody>
-          {rows.map((row) => (
-            <tr
-              key={row._key}
-              className={[
-                highlightId != null && row._id === highlightId
-                  ? 'admin-watchtower__row--highlight'
-                  : null,
-                onRowClick ? 'admin-watchtower__row--clickable' : null,
-              ]
-                .filter(Boolean)
-                .join(' ') || undefined}
-              onClick={onRowClick ? () => onRowClick(row) : undefined}
-              onKeyDown={
-                onRowClick
-                  ? (e) => {
-                      if (e.key === 'Enter' || e.key === ' ') {
-                        e.preventDefault();
-                        onRowClick(row);
-                      }
-                    }
-                  : undefined
-              }
-              tabIndex={onRowClick ? 0 : undefined}
-            >
-              {columns.map((col) => (
-                <td key={col.key}>{col.render(row)}</td>
-              ))}
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
-  );
-}
-
 export function AdminWatchtowerScreen({ onBack }) {
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
+  const activeTab = searchParams.get('tab') || 'overview';
   const highlightProfile = searchParams.get('profile');
   const highlightUser = searchParams.get('user');
   const profileFilter = searchParams.get('profile_filter') || '';
   const profileSearch = searchParams.get('q') || '';
 
   const [data, setData] = useState(null);
+  const [searchDraft, setSearchDraft] = useState(profileSearch);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
   const [exporting, setExporting] = useState(null);
@@ -212,6 +172,22 @@ export function AdminWatchtowerScreen({ onBack }) {
     load();
   }, [load]);
 
+  useEffect(() => {
+    setSearchDraft(profileSearch);
+  }, [profileSearch]);
+
+  const applyProfileSearch = useCallback(
+    (e) => {
+      e?.preventDefault?.();
+      const next = new URLSearchParams(searchParams);
+      const q = searchDraft.trim();
+      if (q) next.set('q', q);
+      else next.delete('q');
+      setSearchParams(next, { replace: true });
+    },
+    [searchDraft, searchParams, setSearchParams],
+  );
+
   const setProfileFilter = useCallback(
     (nextFilter) => {
       const next = new URLSearchParams(searchParams);
@@ -228,7 +204,7 @@ export function AdminWatchtowerScreen({ onBack }) {
       { key: 'username', label: 'Логин', render: (r) => r.username },
       { key: 'telegram', label: 'TG', render: (r) => r.telegram_id ?? '—' },
       { key: 'profiles', label: 'Профили', render: (r) => r.profiles_count },
-      { key: 'created', label: 'Создан', render: (r) => formatDt(r.created_at) },
+      { key: 'created', label: 'Создан', render: (r) => formatAdminDt(r.created_at) },
     ],
     [],
   );
@@ -238,7 +214,22 @@ export function AdminWatchtowerScreen({ onBack }) {
       { key: 'id', label: 'ID', render: (r) => r.id },
       { key: 'user', label: 'User', render: (r) => r.username },
       { key: 'name', label: 'Имя', render: (r) => r.name },
-      { key: 'template', label: 'Шаблон', render: (r) => r.starter_template_key || '—' },
+      {
+        key: 'template',
+        label: 'Шаблон',
+        render: (r) =>
+          r.starter_template_key ? (
+            <Link
+              to={`/admin/catalogs/starters?highlight=${encodeURIComponent(r.starter_template_key)}`}
+              className="admin-inspector__link"
+              onClick={(e) => e.stopPropagation()}
+            >
+              {r.starter_template_key}
+            </Link>
+          ) : (
+            '—'
+          ),
+      },
       { key: 'period', label: 'Период', render: (r) => r.period_index },
       {
         key: 'guidance',
@@ -302,7 +293,7 @@ export function AdminWatchtowerScreen({ onBack }) {
 
   const notificationColumns = useMemo(
     () => [
-      { key: 'when', label: 'Когда', render: (r) => formatDt(r.created_at) },
+      { key: 'when', label: 'Когда', render: (r) => formatAdminDt(r.created_at) },
       { key: 'kind', label: 'Тип', render: (r) => r.kind_label || r.kind },
       {
         key: 'summary',
@@ -313,10 +304,32 @@ export function AdminWatchtowerScreen({ onBack }) {
           </span>
         ),
       },
-      { key: 'profile', label: 'Профиль', render: (r) => r.game_profile_id ?? '—' },
+      {
+        key: 'profile',
+        label: 'Профиль',
+        render: (r) => {
+          const pid = notificationProfileId(r);
+          return pid ? (
+            <button
+              type="button"
+              className="admin-inspector__link"
+              onClick={(e) => {
+                e.stopPropagation();
+                const next = new URLSearchParams(searchParams);
+                next.set('profile', String(pid));
+                setSearchParams(next, { replace: true });
+              }}
+            >
+              #{pid}
+            </button>
+          ) : (
+            '—'
+          );
+        },
+      },
       { key: 'tg', label: 'В TG', render: (r) => (r.telegram_sent ? '✓' : '—') },
     ],
-    [],
+    [searchParams, setSearchParams],
   );
 
   const users = (data?.users ?? []).map((u) => ({ ...u, _key: `u-${u.id}`, _id: String(u.id) }));
@@ -333,7 +346,7 @@ export function AdminWatchtowerScreen({ onBack }) {
 
   const runFeedbackColumns = useMemo(
     () => [
-      { key: 'when', label: 'Когда', render: (r) => formatDt(r.created_at) },
+      { key: 'when', label: 'Когда', render: (r) => formatAdminDt(r.created_at) },
       { key: 'user', label: 'Игрок', render: (r) => `${r.username} (#${r.user_id})` },
       {
         key: 'profile',
@@ -376,25 +389,26 @@ export function AdminWatchtowerScreen({ onBack }) {
     _id: String(r.id),
   }));
 
-  const openProfile = useCallback(
-    (row) => {
+  const openProfileId = useCallback(
+    (profileId) => {
       const next = new URLSearchParams(searchParams);
-      next.set('profile', String(row.id));
+      next.set('profile', String(profileId));
       setSearchParams(next, { replace: true });
     },
     [searchParams, setSearchParams],
   );
 
+  const openProfile = useCallback(
+    (row) => openProfileId(row.id),
+    [openProfileId],
+  );
+
   return (
     <div className="admin-watchtower mq-section">
-      <AdminNav />
-      <header className="admin-watchtower__header">
-        <div>
-          <h1 className="mq-section__title">Watchtower</h1>
-          <p className="mq-muted mq-section__subtitle">
-            MVP 1.2 · ops-алерты и последние игроки (только admin)
-          </p>
-        </div>
+      <AdminPageHeader
+        title="Watchtower"
+        subtitle={`${WATCHTOWER_TAB_LABELS[activeTab] ?? activeTab} · MVP 1.2 · ops (только admin)`}
+      >
         <div className="admin-watchtower__actions">
           <Button
             size="s"
@@ -448,7 +462,25 @@ export function AdminWatchtowerScreen({ onBack }) {
             К игре
           </Button>
         </div>
-      </header>
+      </AdminPageHeader>
+
+      <nav className="mq-admin-watchtower-tabs" aria-label="Раздел Watchtower">
+        {Object.entries(WATCHTOWER_TAB_LABELS).map(([id, label]) => {
+          const next = new URLSearchParams(searchParams);
+          next.set('tab', id);
+          const active = activeTab === id;
+          return (
+            <Link
+              key={id}
+              to={{ pathname: '/admin', search: `?${next.toString()}` }}
+              className={`mq-admin-watchtower-tabs__tab${active ? ' mq-admin-watchtower-tabs__tab--active' : ''}`}
+              aria-current={active ? 'page' : undefined}
+            >
+              {label}
+            </Link>
+          );
+        })}
+      </nav>
 
       {loading ? (
         <div className="admin-watchtower__loading">
@@ -465,71 +497,129 @@ export function AdminWatchtowerScreen({ onBack }) {
         </div>
       ) : null}
 
-      <AdminProfileInspectorPanel />
-
       {!loading && !error && data ? (
         <>
-          <MetricsSummary summary={data.metrics_summary} />
-          <OnboardingFunnel funnel={data.onboarding_funnel} />
+          {activeTab === 'overview' ? (
+            <>
+              <MetricsSummary summary={data.metrics_summary} />
+              <section className="mq-card admin-watchtower__block admin-attention">
+                <h2 className="admin-watchtower__block-title">Очередь внимания</h2>
+                <p className="mq-muted admin-watchtower__block-hint">
+                  Застрявшие, поражения и свежие отзывы — клик открывает inspector сверху.
+                </p>
+                <AdminAttentionQueue
+                  profiles={data.profiles ?? []}
+                  runFeedback={data.run_feedback ?? []}
+                  onOpenProfile={openProfileId}
+                />
+              </section>
+            </>
+          ) : null}
 
-          <div className="admin-watchtower__panels admin-watchtower__panels--split">
-            <section className="mq-card admin-watchtower__block">
-              <h2 className="admin-watchtower__block-title">Пользователи</h2>
-              <Table columns={userColumns} rows={users} highlightId={highlightUser} />
-            </section>
+          {activeTab === 'guidance' ? (
+            <OnboardingFunnel funnel={data.onboarding_funnel} />
+          ) : null}
 
+          {activeTab === 'players' ? (
+            <div className="admin-watchtower__panels admin-watchtower__panels--split">
+              <section className="mq-card admin-watchtower__block">
+                <h2 className="admin-watchtower__block-title">Пользователи</h2>
+                <AdminTable columns={userColumns} rows={users} highlightId={highlightUser} />
+              </section>
+
+              <section className="mq-card admin-watchtower__block">
+                <h2 className="admin-watchtower__block-title">Профили</h2>
+                <form className="admin-watchtower__search" onSubmit={applyProfileSearch}>
+                  <input
+                    className="mq-field__input"
+                    type="search"
+                    value={searchDraft}
+                    onChange={(e) => setSearchDraft(e.target.value)}
+                    placeholder="Логин или имя профиля…"
+                    aria-label="Поиск профилей"
+                  />
+                  <Button size="s" type="submit">
+                    Найти
+                  </Button>
+                  {profileSearch ? (
+                    <Button
+                      size="s"
+                      mode="plain"
+                      type="button"
+                      onClick={() => {
+                        setSearchDraft('');
+                        const next = new URLSearchParams(searchParams);
+                        next.delete('q');
+                        setSearchParams(next, { replace: true });
+                      }}
+                    >
+                      Сброс
+                    </Button>
+                  ) : null}
+                </form>
+                <div
+                  className="admin-watchtower__filters"
+                  role="toolbar"
+                  aria-label="Фильтр профилей"
+                >
+                  {PROFILE_FILTERS.map((f) => (
+                    <button
+                      key={f.id || 'all'}
+                      type="button"
+                      className={[
+                        'admin-watchtower__filter-chip',
+                        profileFilter === f.id ? 'admin-watchtower__filter-chip--active' : null,
+                      ]
+                        .filter(Boolean)
+                        .join(' ')}
+                      onClick={() => setProfileFilter(f.id)}
+                    >
+                      {f.label}
+                    </button>
+                  ))}
+                </div>
+                <AdminTable
+                  columns={profileColumns}
+                  rows={profiles}
+                  highlightId={highlightProfile}
+                  onRowClick={openProfile}
+                />
+              </section>
+            </div>
+          ) : null}
+
+          {activeTab === 'alerts' ? (
             <section className="mq-card admin-watchtower__block">
-              <h2 className="admin-watchtower__block-title">Профили</h2>
-              <div className="admin-watchtower__filters" role="toolbar" aria-label="Фильтр профилей">
-                {PROFILE_FILTERS.map((f) => (
-                  <button
-                    key={f.id || 'all'}
-                    type="button"
-                    className={[
-                      'admin-watchtower__filter-chip',
-                      profileFilter === f.id ? 'admin-watchtower__filter-chip--active' : null,
-                    ]
-                      .filter(Boolean)
-                      .join(' ')}
-                    onClick={() => setProfileFilter(f.id)}
-                  >
-                    {f.label}
-                  </button>
-                ))}
-              </div>
-              <Table
-                columns={profileColumns}
-                rows={profiles}
-                highlightId={highlightProfile}
-                onRowClick={openProfile}
+              <h2 className="admin-watchtower__block-title">Журнал алертов</h2>
+              <AdminTable
+                columns={notificationColumns}
+                rows={notifications}
+                onRowClick={(r) => {
+                  const pid = notificationProfileId(r);
+                  if (pid) openProfileId(pid);
+                }}
               />
             </section>
-          </div>
+          ) : null}
 
-          <section className="mq-card admin-watchtower__block">
-            <h2 className="admin-watchtower__block-title">Журнал алертов</h2>
-            <Table columns={notificationColumns} rows={notifications} />
-          </section>
-
-          <section className="mq-card admin-watchtower__block">
-            <h2 className="admin-watchtower__block-title">Отзывы с финала партии</h2>
-            <p className="mq-muted admin-watchtower__block-hint">
-              GE1 · комментарии с экрана победы/поражения ({runFeedback.length})
-            </p>
-            {runFeedback.length === 0 ? (
-              <p className="mq-muted">Пока нет отзывов.</p>
-            ) : (
-              <Table
+          {activeTab === 'feedback' ? (
+            <section className="mq-card admin-watchtower__block">
+              <h2 className="admin-watchtower__block-title">Отзывы с финала партии</h2>
+              <p className="mq-muted admin-watchtower__block-hint">
+                GE1 · комментарии с экрана победы/поражения ({runFeedback.length})
+              </p>
+              <AdminTable
                 columns={runFeedbackColumns}
                 rows={runFeedback}
+                emptyText="Пока нет отзывов."
                 onRowClick={(r) => {
                   const next = new URLSearchParams(searchParams);
                   next.set('profile', String(r.game_profile_id));
                   setSearchParams(next, { replace: true });
                 }}
               />
-            )}
-          </section>
+            </section>
+          ) : null}
         </>
       ) : null}
     </div>

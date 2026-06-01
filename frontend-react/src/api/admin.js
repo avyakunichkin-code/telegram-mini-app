@@ -78,6 +78,32 @@ export const adminApi = {
     return apiCall('/api/admin/catalogs');
   },
 
+  catalogCreate(catalogKey, body = {}) {
+    return apiCall(`/api/admin/catalogs/${encodeURIComponent(catalogKey)}/rows`, 'POST', body);
+  },
+
+  catalogDetail(catalogKey, rowId) {
+    return apiCall(
+      `/api/admin/catalogs/${encodeURIComponent(catalogKey)}/rows/${encodeURIComponent(String(rowId))}`,
+    );
+  },
+
+  catalogPatch(catalogKey, rowId, body) {
+    return apiCall(
+      `/api/admin/catalogs/${encodeURIComponent(catalogKey)}/rows/${encodeURIComponent(String(rowId))}`,
+      'PATCH',
+      body,
+    );
+  },
+
+  catalogClone(catalogKey, rowId) {
+    return apiCall(
+      `/api/admin/catalogs/${encodeURIComponent(catalogKey)}/rows/${encodeURIComponent(String(rowId))}/clone`,
+      'POST',
+      {},
+    );
+  },
+
   catalogRows(catalogKey, params = {}) {
     const qs = new URLSearchParams();
     if (params.q) qs.set('q', params.q);

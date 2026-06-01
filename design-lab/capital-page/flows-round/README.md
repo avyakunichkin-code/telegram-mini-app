@@ -1,29 +1,10 @@
-# flows-round — 6 аккордеонов «Управление капиталом»
+# flows-round — CSS для Доходы/Расходы
 
-Единая страница: Доходы · Расходы · Инвестиции · Страховки · Имущество · Обязательства. Accent — линия **снизу** summary (1.5px). См. [`VARIANTS.md`](VARIANTS.md).
+**Не отдельная страница lab.** Папка хранит только `styles.css` — его подключает [`../details-actions-round/sync-lab.sh`](../details-actions-round/sync-lab.sh) (канон Капитала в prod).
 
-## Запуск
+Полный макет: [`../details-actions-round/`](../details-actions-round/).
 
-```powershell
-cd design-lab/capital-page/flows-round
-.\sync-lab.sh
-npx serve .
-```
+## Prod
 
-Открыть `http://localhost:3000` (или порт serve). Переключить светлую/тёмную тему в шапке lab.
-
-## Sync
-
-После правок `styles.css` или родительского `../styles.css`:
-
-```powershell
-.\sync-lab.sh
-```
-
-Коммитить `lab-base.css` вместе с `index.html` и `styles.css`.
-
-## Связь
-
-- IA страницы: [`../README.md`](../README.md)
-- Агрегация prod: `frontend-react/src/utils/buildCapitalPeriodFlows.js`
-- **Лендинг:** fallback PNG капитала — этот раунд (не `../index.html` `#phone-demo`). Спека: [`docs/specs/LANDING_SCREENSHOTS.md`](../../../docs/specs/LANDING_SCREENSHOTS.md)
+- `CapitalPeriodFlowsBlock`, `buildCapitalPeriodFlows.js`
+- Скрин лендинга «capital»: [`details-actions-round/`](../details-actions-round/) — см. [`docs/specs/LANDING_SCREENSHOTS.md`](../../../docs/specs/LANDING_SCREENSHOTS.md)

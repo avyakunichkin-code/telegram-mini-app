@@ -11,13 +11,13 @@
 
 ---
 
-## Инвентарь prod (2026-06-01)
+## Инвентарь prod (2026-06-02)
 
 | Модуль | Backend | Frontend | Примечание |
 |--------|---------|----------|------------|
-| Watchtower | `GET /watchtower` | `AdminWatchtowerScreen` | users, profiles, notifications, funnel, KPI |
-| KPI summary | `GET /metrics/summary` | карточки сверху | окно 7d |
-| Profile inspector | `GET /profiles/{id}` | `AdminProfileInspectorPanel` | economy, closings, activity log |
+| Watchtower | `GET /watchtower` | `AdminWatchtowerScreen` | users, profiles, notifications, funnel, KPI, фильтры, CSV |
+| KPI summary | `GET /metrics/summary` | карточки сверху | окно 7d; победы, поражения, отзывы |
+| Profile inspector | `GET /profiles/{id}` | `AdminProfileInspectorPanel` | closings, sparkline, feedback, pending events |
 | Stuck scan | `stuck_scan.py` | бейдж в таблице | onboarding / player stuck |
 | Ops alerts + TG | `notify.py`, `notification_log` | — | dedupe, RU тексты |
 | Run feedback (GE1) | `player_run_feedback` | секция Watchtower | POST из игры |
@@ -37,20 +37,20 @@
 
 ## Quick wins (≤ 0.5–1 день каждый, высокий ROI)
 
-| ID | Задача | Слой | Effort |
+| ID | Задача | Слой | Статус |
 |----|--------|------|--------|
-| **AQ-01** | Колонка `run_outcome` (+ archived) в таблице профилей Watchtower | BE+FE | S |
-| **AQ-02** | Пресеты фильтра профилей: «Застрял», «Онбординг draft», «Поражение», «Победа» | FE (+ query params опц.) | S |
-| **AQ-03** | KPI: `defeats_total` / `defeats_recent`, `run_feedback_recent` в `metrics_summary` | BE+FE | S |
-| **AQ-04** | Inspector: блок «Последний отзыв с финала» (`player_run_feedback`) | BE+FE | S |
-| **AQ-05** | Inspector: простой sparkline/таблица по `period_closings` (cash, overdue) | FE | S |
-| **AQ-06** | `GET /watchtower?stuck_only=1` или клиентский фильтр по `stuck_kind` | FE | S |
-| **AQ-07** | Export CSV: профили (видимые колонки) и `run_feedback` | BE | S |
-| **AQ-08** | Activity log в inspector: фильтр по `kind` (dropdown) | FE | S |
-| **AQ-09** | Копировать `profile_id` / `user_id` в буфер (кнопка в inspector) | FE | XS |
-| **AQ-10** | Ссылка из строки события в каталоге → `#/admin?profile=` если есть `game_profile_id` в payload | FE | XS |
+| **AQ-01** | Колонка `run_outcome` (+ archived) в таблице профилей Watchtower | BE+FE | ✅ 2026-06-02 |
+| **AQ-02** | Пресеты фильтра профилей: «Застрял», «Онбординг draft», «Поражение», «Победа» | BE+FE | ✅ |
+| **AQ-03** | KPI: `defeats_total` / `defeats_recent`, `run_feedback_recent` в `metrics_summary` | BE+FE | ✅ |
+| **AQ-04** | Inspector: блок «Последний отзыв с финала» (`player_run_feedback`) | BE+FE | ✅ |
+| **AQ-05** | Inspector: sparkline по `period_closings` (cash) | FE | ✅ |
+| **AQ-06** | `profile_filter=stuck` / `stuck_only` на API | BE+FE | ✅ |
+| **AQ-07** | Export CSV: профили и `run_feedback` | BE+FE | ✅ |
+| **AQ-08** | Activity log в inspector: фильтр по `kind` | FE | ✅ |
+| **AQ-09** | Копировать `profile_id` / `user_id` в буфер | FE | ✅ |
+| **AQ-10** | Ссылка из журнала алертов → inspector (`game_profile_id` / payload) | FE | ✅ 2026-06-02 |
 
-**Рекомендуемый порядок:** AQ-01 → AQ-02 → AQ-03 → AQ-04 → AQ-07.
+**Следующий срез:** **C2e** (choices), **A7** (ops playbook).
 
 ---
 
@@ -58,12 +58,12 @@
 
 | ID | Задача | Слой | Зависимости |
 |----|--------|------|-------------|
-| **A1-UX** | Единая «Очередь внимания» (вкладка или свёрнутый блок): stuck + defeat 48h + feedback без ответа | FE | AQ-02, AQ-04 |
-| **A2+** | `metrics_summary`: profiles с `period_index≥3`, avg period **только active**, game_started_recent | BE | — |
-| **A3+** | Inspector: pending events (id, title, slot) из БД | BE+FE | — |
-| **A4+** | Emit `event_chosen` в `notification_log` only (α-FB-04) | BE | — |
-| **A5** | Profile row: `template_key` → link `/admin/catalogs/starters?highlight=` | FE | C0 |
-| **A6** | Watchtower: поиск по `username` / `profile name` (клиент или `q` на API) | BE+FE | M |
+| **A1-UX** | «Очередь внимания»: stuck + defeat + свежие отзывы | FE | ✅ 2026-06-02 |
+| **A2+** | `metrics_summary`: `profiles_period_3_plus_*` | BE+FE | ✅ |
+| **A3+** | Inspector: pending events (id, title, slot) | BE+FE | ✅ |
+| **A4+** | Emit `event_chosen` в `notification_log` only (α-FB-04) | BE | ✅ 2026-06-02 |
+| **A5** | Profile row: `template_key` → link `/admin/catalogs/starters?highlight=` | FE | ✅ |
+| **A6** | Watchtower: поиск `q` по username / имени профиля | BE+FE | ✅ |
 | **A7** | Док: «Ops playbook» — 5 сценариев разбора (застрял, loss, win, feedback, контент) | Doc | — |
 
 ---
@@ -73,9 +73,9 @@
 | ID | Задача | Слой | Статус |
 |----|--------|------|--------|
 | **C0** | Read-only списки 4 каталогов | BE+FE | ✅ |
-| **C1** | `POST` create, `POST .../clone`, default `is_active=0` | BE+FE | ⬜ |
-| **C2** | `PATCH` скаляры + JSON validate (`blueprint_json`, `victory_config_json`, `effects`) | BE | ⬜ |
-| **C2-UI** | Редактор: вкладки «Основное» + «JSON» + validate errors | FE | ⬜ |
+| **C1** | `POST` create, `POST .../clone`, default `is_active=0` | BE+FE | ✅ 2026-06-02 |
+| **C2** | `PATCH` скаляры + JSON validate (`blueprint_json`, `victory_config_json`, …) | BE | ✅ 2026-06-02 |
+| **C2-UI** | Редактор: вкладки «Основное» + «JSON» + validate errors | FE | ✅ |
 | **C2e** | Event choices: list / add / delete | BE+FE | ⬜ |
 | **C3** | «Открыть в справочнике» из inspector по `event_key` pending | FE | C0 |
 
@@ -105,7 +105,7 @@
 |----|--------|------|
 | **TG-ops** | Env Render + smoke TG + `#/admin` allowlist | Ops |
 
-Для **следующей dev-сессии на админку** трактуем **AQ-01…AQ-04** как практический P0.
+Quick wins **AQ-01…AQ-09** закрыты (2026-06-02). Практический P0 сейчас: **A1-UX**, **A3+**, **A6** (UI поиска).
 
 ---
 
@@ -140,7 +140,10 @@
 | Дата | Изменение |
 |------|-----------|
 | 2026-06-01 | Создан ADMIN_BACKLOG; идея [`admin-platform-evolution.md`](../vision/ideas/admin-platform-evolution.md); GE1 feedback в WT |
+| 2026-06-02 | **AQ-01…AQ-10** + **A1-UX, A2+, A3+, A5, A6**: очередь внимания, поиск, pending events, KPI period≥3, ссылки каталог/алерты |
+| 2026-06-02 | **A4+** `event_chosen` log-only; **C1** `catalog_write.py`, POST create/clone, UI «Пустой черновик» / «Дублировать» |
+| 2026-06-02 | **C2 / C2-UI:** GET/PATCH row, `catalog_validate.py`, редактор `#/admin/catalogs/{key}/edit/{id}` |
 
 ---
 
-*Последнее обновление: 2026-06-01.*
+*Последнее обновление: 2026-06-02.*

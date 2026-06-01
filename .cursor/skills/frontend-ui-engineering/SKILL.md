@@ -69,7 +69,8 @@ Build production-quality user interfaces that are accessible, performant, and vi
 | Вкладка / зона | Статус | Действие агента |
 |----------------|--------|-----------------|
 | Главная, события, pre-game, онбординг | ★ в prod | Не перекомпоновывать без lab; только hotfix или хвосты (empty/error) |
-| **Финансы** | ★ v2 prod | Паттерн **Детали \| Действия** + sheets — [`details-actions-round`](../../../design-lab/capital-page/details-actions-round/); UX: [`finance.md`](../../../docs/ux/screens/finance.md); новые изменения layout → lab сначала |
+| **Z-NEEDS** (главная) | ★ v7-e2e3 | `MqxNeedsDash`: книга+? → help `sections[]`; сердце → treat-self («Улучшить»); lab [`dashboard-needs-v7-round`](../../../design-lab/character-needs/dashboard-needs-v7-round/); UX: [`character-needs-dashboard.md`](../../../docs/ux/screens/character-needs-dashboard.md) |
+| **Капитал** (tab `finance`) | ★ v2 prod | Hero «Капитал»; **Детали \| Действия** + sheets — [`details-actions-round`](../../../design-lab/capital-page/details-actions-round/); UX: [`finance.md`](../../../docs/ux/screens/finance.md); детали — нейтральный текст, liabilities muted red; layout → lab сначала |
 | **Аналитика** | ⚠ | Согласовать метрики с дашбордом через lab, не новый `MqStatRow`-стиль в одном PR |
 | Legacy `*Section.jsx` | quarantine | **Не расширять** |
 

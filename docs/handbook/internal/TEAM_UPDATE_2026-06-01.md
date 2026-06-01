@@ -105,8 +105,6 @@ confidentiality: team-only
 | **incremental-implementation** | Без правок — общий процесс |
 | **mqx-ui-unification** (idea) | Частично закрыт этап C для Finance; Analytics — по-прежнему ⚠ |
 
-Устаревшие формулировки («FinancePremium → FinanceSection legacy») убраны из audit и skills — `FinanceSection` в prod больше не используется.
-
 ---
 
 ## Где править дальше

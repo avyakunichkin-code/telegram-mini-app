@@ -53,7 +53,7 @@
       "prod_component": "Capital page",
       "status": "approved",
       "canonical_rounds": [
-        { "path": "design-lab/capital-page/", "status": "approved" }
+        { "path": "design-lab/capital-page/details-actions-round/", "status": "approved" }
       ]
     }
   ],

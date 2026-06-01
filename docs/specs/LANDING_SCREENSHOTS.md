@@ -69,10 +69,10 @@ node scripts/capture-screens.mjs --source=lab
 | PNG | Lab-источник | Селектор |
 |-----|--------------|----------|
 | dashboard | [`design-lab/dashboard/goal-chain-round/`](../../design-lab/dashboard/goal-chain-round/) | `.lab-states:first-of-type .mqx-dash-stack--unified` |
-| capital | [`design-lab/capital-page/flows-round/`](../../design-lab/capital-page/flows-round/) | `.phone` |
+| capital | [`design-lab/capital-page/details-actions-round/`](../../design-lab/capital-page/details-actions-round/) | `.phone` |
 | events | [`design-lab/events/layout-round/`](../../design-lab/events/layout-round/) | `#l1 .ev-card-shell:first-child` |
 
-**Не использовать для лендинга:** `design-lab/dashboard/index.html` (галерея S1–S5 с устаревшим блоком «Уровень»), `capital-page/index.html` `#phone-demo` (старые табы).
+**Не использовать для лендинга:** `design-lab/dashboard/index.html` (галерея S1–S5 с устаревшим блоком «Уровень»). Hub `capital-page/index.html` удалён (2026-06-01).
 
 ---
 

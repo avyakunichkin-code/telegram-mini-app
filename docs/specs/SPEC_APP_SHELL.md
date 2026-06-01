@@ -94,5 +94,5 @@ Login и register — **раздельные route**, без табов.
 ## 7. Не в scope
 
 - Plan / `BaseParamsScreen`
-- Полная замена `FinanceSection`
+- Расширение вкладки «Капитал» (`FinancePremium`) — не legacy `FinanceSection`
 - CI-скриншоты лендинга

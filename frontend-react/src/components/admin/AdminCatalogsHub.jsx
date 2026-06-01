@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Button, Spinner } from '@telegram-apps/telegram-ui';
 import { adminApi } from '../../api';
-import { AdminNav } from './AdminNav';
+import { AdminPageHeader } from './AdminPageHeader';
 
 export function AdminCatalogsHub() {
   const [catalogs, setCatalogs] = useState([]);
@@ -29,20 +29,14 @@ export function AdminCatalogsHub() {
 
   return (
     <div className="admin-catalogs mq-section">
-      <AdminNav />
-      <header className="admin-watchtower__header">
-        <div>
-          <h1 className="mq-section__title">Справочники</h1>
-          <p className="mq-muted mq-section__subtitle">
-            C0 · просмотр списков (события, стартеры, активы, долги)
-          </p>
-        </div>
-        <div className="admin-watchtower__actions">
-          <Button size="s" mode="bezeled" onClick={load} disabled={loading}>
-            Обновить
-          </Button>
-        </div>
-      </header>
+      <AdminPageHeader
+        title="Справочники"
+        subtitle="C0–C1 · просмотр, черновики и дублирование (события, стартеры, активы, долги)"
+      >
+        <Button size="s" mode="bezeled" onClick={load} disabled={loading}>
+          Обновить
+        </Button>
+      </AdminPageHeader>
 
       {loading ? (
         <div className="admin-watchtower__loading">

@@ -76,7 +76,6 @@
 
 | Место | Проблема | Эпик |
 |-------|---------|------|
-| ~~`FinanceSection`~~ | Удалён из prod | — |
 | `AnalyticsPremium` | `MqStatRow` | D |
 | `InvestProductForm` | Вне `mqx/` | C (инвестиции) |
 

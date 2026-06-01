@@ -83,7 +83,7 @@ mqx/
 | `MqxCard` | `variant`: default \| goal \| character |
 | `MqxCardHeader` | kicker + title + sub + `trailing`; `layout`: stack \| split |
 | `MqxGoalBadge` | Статус цели на дашборде |
-| `MqxBlockSection` | Блок «Финансы» с ссылкой действия |
+| `MqxBlockSection` | Секция с заголовком и ссылкой действия (напр. «Финансы периода» на главной) |
 | `MqxStatMini` | Иконка + подпись + значение в `mqx-grid2` |
 | `MqxGoalDash` | Цель на дашборде: stepper + Монетка (G1 ★) |
 

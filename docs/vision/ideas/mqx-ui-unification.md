@@ -119,7 +119,7 @@
 
 - [ ] Игроку не мешает Монетка на **каждой** карточке события (M2) — playtest
 - [ ] Удаление legacy `*Section` не ломает ни один маршрут (grep + smoke)
-- [x] ~~`FinanceSection`~~ — снят; капитал в `FinancePremium` + MQX panels (2026-06)
+- [x] Капитал в `FinancePremium` + Details \| Actions (2026-06)
 
 ---
 

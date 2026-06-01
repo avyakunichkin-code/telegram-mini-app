@@ -33,14 +33,11 @@ parent: dashboard-needs
     { "heading": "Почему снижаются", "items": ["…"] },
     { "heading": "Как пополнить", "items": ["…"] },
     { "heading": "Кнопка «Улучшить»", "items": ["…"] }
-  ],
-  "maintenance": ["…"],
-  "critical": ["…"]
+  ]
 }
 ```
 
-- `sections` — **канон** для UI.
-- `maintenance` / `critical` — legacy для старых клиентов; FE fallback если `sections` пуст.
+Контент: `backend/app/needs/guide_content.py`.
 
 ---
 

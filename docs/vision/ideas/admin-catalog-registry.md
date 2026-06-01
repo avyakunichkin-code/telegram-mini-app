@@ -66,13 +66,17 @@ next_spec: specs/features/SPEC_admin-and-notifications.md
 - UI: `#/admin/catalogs`, `#/admin/catalogs/{key}` — хаб + таблица + поиск + «только активные»
 - Тесты: [`test_admin_catalogs.py`](../../../backend/tests/test_admin_catalogs.py)
 
-### C1 (следующий)
+### C1 ✅ (2026-06-02)
 
-- `POST` create, `POST .../clone`, `is_active=0` по умолчанию
+- `POST /api/admin/catalogs/{key}/rows` — пустой черновик (`is_active=0`)
+- `POST .../rows/{id}/clone` — копия + choices / expense allocations для starters
+- UI: «Пустой черновик», «Дублировать» в `#/admin/catalogs/{key}`
 
-### C2
+### C2 ✅ (2026-06-02)
 
-- `PATCH` скаляры + `*_json` с серверной валидацией
+- `GET/PATCH /api/admin/catalogs/{key}/rows/{id}`
+- Валидация: `blueprint_json`, `victory_config_json`, `metadata_json`, `effects` (контракт ключей)
+- UI: `#/admin/catalogs/{key}/edit/{id}` — вкладки Основное | JSON
 
 ### C2e
 

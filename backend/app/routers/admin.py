@@ -13,6 +13,9 @@ from sqlalchemy import func
 from sqlalchemy.orm import Session
 
 from ..admin.auth import require_admin_user
+from ..admin.catalog_detail import get_catalog_row_detail
+from ..admin.catalog_patch import patch_catalog_row
+from ..admin.catalog_write import clone_catalog_row, create_catalog_row
 from ..admin.catalogs import fetch_catalog_rows, get_catalog_spec, list_catalog_meta
 from ..admin.csv_export import profiles_csv_rows, run_feedback_csv_rows, stream_csv
 from ..admin.metrics_summary import build_metrics_summary
@@ -120,6 +123,15 @@ class AdminMetricsSummary(BaseModel):
     defeats_total: int = 0
     defeats_recent: int = 0
     run_feedback_recent: int = 0
+    profiles_period_3_plus_total: int = 0
+    profiles_period_3_plus_active: int = 0
+
+
+class AdminPendingEventRow(BaseModel):
+    id: int
+    title: str
+    event_slot: Optional[str] = None
+    content_class: Optional[str] = None
 
 
 class AdminLatestRunFeedback(BaseModel):
@@ -160,6 +172,29 @@ class AdminCatalogRowsResponse(BaseModel):
     rows: List[dict[str, Any]]
     total: int
     limit: int
+
+
+class AdminCatalogCreateRequest(BaseModel):
+    template_key: Optional[str] = None
+    key: Optional[str] = None
+    title: Optional[str] = None
+
+
+class AdminCatalogRowMutationResponse(BaseModel):
+    catalog_key: str
+    id: int
+    template_key: Optional[str] = None
+    key: Optional[str] = None
+
+
+class AdminCatalogRowDetailResponse(BaseModel):
+    row: dict[str, Any]
+
+
+class AdminCatalogPatchResponse(BaseModel):
+    ok: bool
+    row: Optional[dict[str, Any]] = None
+    errors: dict[str, list[str]] = {}
 
 
 class AdminProfileInspectorUser(BaseModel):
@@ -228,6 +263,7 @@ class AdminProfileInspectorResponse(BaseModel):
     period_closings: List[AdminPeriodClosingRow]
     activity_log: List[AdminActivityLogRow]
     latest_run_feedback: Optional[AdminLatestRunFeedback] = None
+    pending_events: List[AdminPendingEventRow] = []
 
 
 @router.get("/catalogs", response_model=list[AdminCatalogMeta])
@@ -264,6 +300,106 @@ async def admin_catalog_rows(
         total=total,
         limit=limit,
     )
+
+
+@router.post("/catalogs/{catalog_key}/rows", response_model=AdminCatalogRowMutationResponse)
+async def admin_catalog_create_row(
+    catalog_key: str,
+    body: AdminCatalogCreateRequest,
+    _admin: User = Depends(require_admin_user),
+    db: Session = Depends(get_db),
+):
+    if get_catalog_spec(catalog_key) is None:
+        raise HTTPException(status_code=404, detail="Unknown catalog")
+    try:
+        result = create_catalog_row(
+            db,
+            catalog_key,
+            template_key=body.template_key,
+            key=body.key or body.template_key,
+            title=body.title,
+        )
+        db.commit()
+    except KeyError:
+        raise HTTPException(status_code=404, detail="Unknown catalog") from None
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+    return AdminCatalogRowMutationResponse(
+        catalog_key=catalog_key,
+        id=int(result["id"]),
+        template_key=result.get("template_key"),
+        key=result.get("key"),
+    )
+
+
+@router.post(
+    "/catalogs/{catalog_key}/rows/{row_id}/clone",
+    response_model=AdminCatalogRowMutationResponse,
+)
+async def admin_catalog_clone_row(
+    catalog_key: str,
+    row_id: int,
+    _admin: User = Depends(require_admin_user),
+    db: Session = Depends(get_db),
+):
+    if get_catalog_spec(catalog_key) is None:
+        raise HTTPException(status_code=404, detail="Unknown catalog")
+    try:
+        result = clone_catalog_row(db, catalog_key, row_id)
+        db.commit()
+    except LookupError:
+        raise HTTPException(status_code=404, detail="Row not found") from None
+    except KeyError:
+        raise HTTPException(status_code=404, detail="Unknown catalog") from None
+    return AdminCatalogRowMutationResponse(
+        catalog_key=catalog_key,
+        id=int(result["id"]),
+        template_key=result.get("template_key"),
+        key=result.get("key"),
+    )
+
+
+@router.get("/catalogs/{catalog_key}/rows/{row_id}", response_model=AdminCatalogRowDetailResponse)
+async def admin_catalog_row_detail(
+    catalog_key: str,
+    row_id: int,
+    _admin: User = Depends(require_admin_user),
+    db: Session = Depends(get_db),
+):
+    if get_catalog_spec(catalog_key) is None:
+        raise HTTPException(status_code=404, detail="Unknown catalog")
+    try:
+        detail = get_catalog_row_detail(db, catalog_key, row_id)
+    except KeyError:
+        raise HTTPException(status_code=404, detail="Unknown catalog") from None
+    if detail is None:
+        raise HTTPException(status_code=404, detail="Row not found")
+    return AdminCatalogRowDetailResponse(row=detail)
+
+
+@router.patch("/catalogs/{catalog_key}/rows/{row_id}", response_model=AdminCatalogPatchResponse)
+async def admin_catalog_patch_row(
+    catalog_key: str,
+    row_id: int,
+    body: dict[str, Any],
+    _admin: User = Depends(require_admin_user),
+    db: Session = Depends(get_db),
+):
+    if get_catalog_spec(catalog_key) is None:
+        raise HTTPException(status_code=404, detail="Unknown catalog")
+    try:
+        detail, errors = patch_catalog_row(db, catalog_key, row_id, body)
+    except LookupError:
+        raise HTTPException(status_code=404, detail="Row not found") from None
+    except KeyError:
+        raise HTTPException(status_code=404, detail="Unknown catalog") from None
+    if errors:
+        raise HTTPException(
+            status_code=422,
+            detail={"message": "Validation failed", "errors": errors},
+        )
+    db.commit()
+    return AdminCatalogPatchResponse(ok=True, row=detail, errors={})
 
 
 @router.get("/profiles/{profile_id}", response_model=AdminProfileInspectorResponse)

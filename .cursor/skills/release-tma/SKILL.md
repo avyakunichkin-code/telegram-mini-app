@@ -56,7 +56,8 @@ cd backend && python -m pytest -q
 | Q2 | **Тёмная тема** Telegram — нет «белого острова» на MQX-карточках |
 | Q3 | Игра: **4 вкладки** + события + закрытие периода (smoke) |
 | Q4 | `#/dev/mqx` — новые компоненты в каталоге (если не hotfix) |
-| Q5 | Finance не регресснул к legacy-паттернам без lab (⚠ зона) |
+| Q5 | **Капитал:** Details \| Actions, hero «Капитал», нет legacy-аккордеонов без lab |
+| Q6 | **Z-NEEDS:** help sheet грузит `sections[]`; e2e3 affordance; treat-self сердце |
 
 ### 5. Docs (если менялось поведение)
 

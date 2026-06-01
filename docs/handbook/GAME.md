@@ -41,7 +41,7 @@ audience: product, game-design, partners, playtest
 | **Потребности (Z-NEEDS)** | 🟡 | BE + UI на дашборде; [SPEC](../specs/features/SPEC_game-character-needs.md) draft |
 | `mechanics_unlock` | ✅ | [ADR-004](../decisions/ADR-004-mechanics-unlock-victory-chain.md) |
 | Достижения | 🟡 | Движок + API; UI «Развитие» — M12 |
-| Онбординг O1 | 🟡 | [SPEC_onboarding-tma](../specs/features/SPEC_onboarding-tma.md) |
+| Онбординг O2 | ✅ | [SPEC_onboarding-o2](../specs/features/SPEC_onboarding-o2.md) |
 | Balance playtest | ✅ | [`docs/balance/`](../balance/README.md) |
 | Pre-Alpha 10–20 | 🟡 | [Протокол](../foundation/PRE_ALPHA_PLAYTEST_PROTOCOL.md) · [Ops](../foundation/PRE_ALPHA_WAVE1_OPS.md) · [5 мин](PLAYER_EXPERIENCE.md) |
 | Closed Alpha D1/D7 | ⬜ | KPI лайт: D7 gate **≥8%** — [`KPI_AND_PHASES.md`](KPI_AND_PHASES.md) |

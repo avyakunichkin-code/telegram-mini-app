@@ -60,7 +60,7 @@
 
 - Unified auth tabs (вариант C)
 - `BaseParamsScreen` / Plan
-- `FinanceSection` (волна C)
+- `FinancePremium` / «Капитал» (волна C)
 - Admin Watchtower
 - Замена `Input` / `Modal` TGUI
 

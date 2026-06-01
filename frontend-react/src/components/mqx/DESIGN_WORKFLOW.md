@@ -130,9 +130,9 @@ npx serve .
 | 12 | **`period-close/`** — хвостик ★; итог — **`game-ui/juice-round` C** | `MqxPeriodCloseRitual`, `MqxPeriodCloseTail` (sheet legacy в каталоге) |
 | 13 | **`game-ui/juice-round/`** ★ A+C+D | `MqxJuiceGainFeedback`, `MqxPeriodCloseRitual`, `MqxSalaryWarnModal` |
 | 13 | **`capital-page/details-actions-round/`** ★ v2 | `FinancePremium`: Детали \| Действия + sheets |
-| 14 | **`character-needs/`** — dashboard Z-NEEDS, treat-self, events chips | `MqxNeedsSummary`, `MqxNeedsBars`, `MqxTreatSelfSheet`, … |
+| 14 | **`character-needs/dashboard-needs-v7-round/`** ★ e2e3 | `MqxNeedsDash`, `MqxNeedsHelpSheet`, `MqxTreatSelfSheet`, events chips |
 
-Текущий статус: **дашборд S5**, **события L3 + оверлей O1**, **итог периода**, **новая игра**, **онбординг**, **ui-states ★**, **финансы Details \| Actions v2 ★** в prod. Lab оверлея: [`design-lab/events/overlay-round/`](../../../../design-lab/events/overlay-round/). Дальше: **аналитика** (волна C хвост).
+Текущий статус: **дашборд S5** + **Z-NEEDS v7-e2e3 ★**, **события L3 + оверлей O1**, **итог периода**, **новая игра**, **онбординг**, **ui-states ★**, **Капитал** (Details \| Actions v2 ★) в prod. Lab оверлея: [`design-lab/events/overlay-round/`](../../../../design-lab/events/overlay-round/). Дальше: **аналитика** (волна C хвост).
 
 ---
 

@@ -218,10 +218,8 @@ export function ExampleBlock({ overview }) {
 | Бюджет | **Не в плане** |
 | Страховки (sheet) | Каталог 2×2 + тарифы H (без seg «Оформить \| Мои» в аккордеоне) |
 | Имущество / долги (sheet) | Каталог строк + **+**; ипотека отдельно от прочих кредитов |
-| Снято с prod | `CapitalMonetkaGuidance`, `.mqx-cap-actions-hint`, `MqxSectionSeg` внутри аккордеонов капитала; pill «N разделов» в hero; kicker «Финансы»; highlight страховок в сетке действий |
+| Снято с prod | `CapitalMonetkaGuidance`, `.mqx-cap-actions-hint`, `MqxSectionSeg` «Добавить \| Мои», pill «N разделов», kicker «Финансы», highlight страховок; **`FinanceSection.jsx`** |
 | Типографика (2026-06) | Hero **«Капитал»**; сегмент Детали/Действия — `var(--mqx-ink)`; **Детали:** заголовки нейтральные, только обязательства — muted red (`.mqx-capital-page`) |
-
-**Legacy (до v2):** сегмент **«Добавить \| Мои (N)»** внутри аккордеона — заменён режимом Детали/Действия + sheets.
 
 ### Pre-game: портреты персонажей
 
@@ -268,7 +266,7 @@ Lab ★: [`design-lab/game-templates/persona-portraits-round/`](../../design-lab
 
 ### Never
 
-- Расширять `FinanceSection` legacy-ветку (`premium === false`) новыми фичами.
+- Возвращать **`FinanceSection`** или паттерн «Добавить \| Мои» внутри аккордеонов капитала (снято 2026-06).
 - Хардкодить прогресс-бары без данных API (пример: XP 90%).
 - Дублировать нижний таббар внутри страницы.
 - Inline hex/Tailwind в новых компонентах (в проекте нет Tailwind).
@@ -293,7 +291,6 @@ Lab ★: [`design-lab/game-templates/persona-portraits-round/`](../../design-lab
 
 ### P2 (поддерживаемость)
 
-- [ ] `FinanceSection` разбит: portfolio / invest / insurance — отдельные модули.
 - [ ] Новые отступы без голого `style={{ marginTop: N }}`.
 - [ ] Документ spec обновляется при смене паттернов.
 
@@ -314,39 +311,11 @@ Lab ★: [`design-lab/game-templates/persona-portraits-round/`](../../design-lab
 | 1 | Подписи под иконками таббара vs только `aria-label`? | Продукт |
 | 2 | Единый hero на `MenuPremium` или оставить «лёгкую» карточку? | Продукт |
 | 3 | ~~XP/level в overview~~ | **Закрыто:** полей нет; канон — [`remove-character-xp-and-levels.md`](../vision/ideas/remove-character-xp-and-levels.md) |
-| 4 | Срок sunset legacy `*Section.jsx`? | Команда |
+| 4 | ~~Sunset `FinanceSection`~~ | **Закрыто (2026-06):** снят; капитал — `FinancePremium` + Details \| Actions |
 
 ---
 
-# Plan (Phase 2)
-
-## Компоненты и порядок
-
-```mermaid
-flowchart TD
-  P0[P0: i18n + баги]
-  DS[CSS: spacing utilities]
-  FIN[Finance: capital invest/insurance]
-  REF[Refactor FinanceSection]
-  NAV[Nav labels]
-  MENU[Menu tab polish]
-  P0 --> DS
-  P0 --> FIN
-  FIN --> REF
-  DS --> NAV
-  NAV --> MENU
-```
-
-| Этап | Риск | Митигация |
-|------|------|-----------|
-| P0 | Низкий | Малый diff, сразу `npm run build` |
-| Finance capital parity | Средний | Переиспользовать `mqx-capital-mode-grid`, не копировать логику API |
-| FinanceSection split | Средний | Вынос по одному табу, без смены props контракта |
-| Nav labels | Низкий | CSS-only + короткие RU подписи |
-
----
-
-# Tasks (Phase 3)
+# Tasks (backlog UI)
 
 - [x] **P0: XP на главной** — снят (2026-05-24); не возвращать без нового ADR.
 
@@ -357,20 +326,10 @@ flowchart TD
 
 - [x] ~~**P1: h1 на всех табах**~~ — **не делаем**; заголовки через `h2` / `aria-label` на секциях.
 
-- [ ] **P1: Invest/Insurance — capital layout**
-  - Acceptance: те же `mqx-capital-card`, lead, mode-кнопки, что у портфеля.
-  - Verify: ручной проход вкладок.
-  - Files: `FinanceSection.jsx`, `index.css`
-
 - [ ] **P1: Таббар — подписи**
   - Acceptance: RU подпись 10–11px под иконкой или documented tooltip.
   - Verify: 320px, не перекрывает safe-area.
   - Files: `BottomGameNav.jsx`, `index.css`
-
-- [ ] **P2: Вынести InvestPanel / InsurancePanel**
-  - Acceptance: `FinanceSection.jsx` &lt; 400 строк; поведение без регрессий.
-  - Verify: build + чеклист Success Criteria §Капитал.
-  - Files: `components/finance/*.jsx`, `FinanceSection.jsx`
 
 - [ ] **P2: Утилиты отступов**
   - Acceptance: в новых PR нет `style={{ marginTop` в premium-компонентах.

@@ -15,7 +15,7 @@ prod_route: GameScreen tab `dashboard`
 > **Journey Phase(s):** активная партия (core loop), первая сессия (онбординг O1)  
 > **Template:** UX Spec (адаптация studio → `docs/ux/screens/`)
 
-**Связанные документы:** [`TMA_USER_FLOWS.md`](../../foundation/TMA_USER_FLOWS.md) · [`SPEC_PRODUCT` §3.1](../../foundation/SPEC_PRODUCT.md) · [TB1 idea](../../vision/ideas/turn-based-period-no-timer.md) · [`SPEC_FRONTEND_UI.md`](../../specs/SPEC_FRONTEND_UI.md) · [`SPEC_victory-v2.md`](../../specs/features/SPEC_victory-v2.md) · [ADR-002](../../decisions/ADR-002-victory-engine-and-template-config.md) · [ADR-004](../../decisions/ADR-004-mechanics-unlock-victory-chain.md) · [`SPEC_onboarding-tma.md`](../../specs/features/SPEC_onboarding-tma.md) · [`design-lab/dashboard/hero-no-timer-round/`](../../../design-lab/dashboard/hero-no-timer-round/)
+**Связанные документы:** [`TMA_USER_FLOWS.md`](../../foundation/TMA_USER_FLOWS.md) · [`SPEC_PRODUCT` §3.1](../../foundation/SPEC_PRODUCT.md) · [TB1 idea](../../vision/ideas/turn-based-period-no-timer.md) · [`SPEC_FRONTEND_UI.md`](../../specs/SPEC_FRONTEND_UI.md) · [`SPEC_victory-v2.md`](../../specs/features/SPEC_victory-v2.md) · [ADR-002](../../decisions/ADR-002-victory-engine-and-template-config.md) · [ADR-004](../../decisions/ADR-004-mechanics-unlock-victory-chain.md) · [`SPEC_onboarding-o2.md`](../../specs/features/SPEC_onboarding-o2.md) · [`design-lab/dashboard/hero-no-timer-round/`](../../../design-lab/dashboard/hero-no-timer-round/)
 
 **Реализация:** `DashboardPremium.jsx`, `MqxDashboardHero`, `MqxFinancePeriodBlock`, `MqxGoalDash`, `MqxPeriodActions`; оболочка и оверлеи — `GameScreen.jsx`.
 
@@ -278,7 +278,7 @@ Skip: 1-й раз — шаг; 2-й — весь онбординг → `brief_do
 |------------|-------------|-------|----------------|--------------|
 | `period_index` | `timeStatus` / `overview` | backend game_time | resync, period end | 0 |
 | Статус «Месяц открыт» | константа UX (TB1) | — | — | — |
-| ~~Timer / progress %~~ | **не в UI** (legacy API может отдавать 0) | — | — | — |
+| Timer / progress % | **не в UI** (TB1) | — | — | — |
 | Доходы chip | `overview.total_monthly_income` | finance overview | refreshOverview | 0 |
 | Lifestyle chip | `overview.monthly_lifestyle_expense` | finance overview | refresh | 0 |
 | Чистый поток (не chip) | `overview.net_monthly_cashflow` | finance overview | refresh | Аналитика, цели |
@@ -307,7 +307,7 @@ Skip: 1-й раз — шаг; 2-й — весь онбординг → `brief_do
 | Goal `aria-expanded` / `aria-controls` | ✅ | сохранить |
 | Chips: имя + сумма для SR | ⚠ частично | `aria-label` с значением |
 | Tone pos/neg только цветом | ⚠ | дублировать знак в `MoneyText` |
-| Coach focus trap | ⚠ | документировать в O1 spec |
+| Guidance strip | ⚠ | [`SPEC_onboarding-o2.md`](../../specs/features/SPEC_onboarding-o2.md) |
 
 ---
 
@@ -333,12 +333,12 @@ Skip: 1-й раз — шаг; 2-й — весь онбординг → `brief_do
 3. Chip «Расходы» показывает `monthly_lifestyle_expense` (base+delta), не просрочку и не долги.
 4. Chip «Доходы» показывает `total_monthly_income` (сумма доходов без вычета расходов); подпись «Доходы» сохраняется.
 5. «Зарплата» после успешного claim неактивна; повторный tap — info toast, не повторный POST.
-6. «Закрыть месяц» при незабранной доступной зарплате вне онбординга открывает modal; в онбординге шаг `next_period` (4) — без блокировки (SPEC_onboarding-tma).
+6. «Закрыть месяц» при незабранной доступной зарплате вне онбординга открывает modal; в онбординге O2 — по curriculum ([`SPEC_onboarding-o2.md`](../../specs/features/SPEC_onboarding-o2.md)).
 7. `MqxGoalDash`: при `victory.goals` — свёрнутый заголовок «Шаг K из N»; цель `tutorial_invest` — «Положить деньги на депозит или купить облигацию»; при `win_reached` — фаза победы.
 8. Pill «События» при N>0 открывает overlay; при `inOnboarding` pill **не показывается**.
 9. Пополнение подушки: сумма ∈ (0, cash] → success toast, панель закрывается, балансы обновляются.
 10. На ширине 320px все 8 chips (4+4) без горизонтального скролла; длинные суммы ужимаются (`fitChipValuesIn`).
-11. Guided coach: шаги 1→5 проходимы на живом UI; второй Skip → `brief_done`; табы locked на шагах с overlay.
+11. O2 guidance: strip по curriculum; dismiss / completion по [`SPEC_onboarding-o2.md`](../../specs/features/SPEC_onboarding-o2.md).
 12. `npm run build` без регрессий; ручной smoke: зарплата → подушка → **закрыть месяц** → события; 6+ мин AFK **не** меняет `period_index` без кнопки (TB1).
 
 ---
@@ -357,14 +357,14 @@ Skip: 1-й раз — шаг; 2-й — весь онбординг → `brief_do
 
 ---
 
-## Подсказки Монетки на главной (после OQ-6)
+## Подсказки Монетки на главной
 
 | Слой | Компонент | Когда |
 |------|-----------|--------|
-| **Coach (O1)** | `GameOnboardingLayer` | Первая игра (`draft` / `started`) |
+| **O2** | `MqxGuidanceStrip` | Первые периоды ([`SPEC_onboarding-o2.md`](../../specs/features/SPEC_onboarding-o2.md)) |
 | **Цель** | `MqxGoalDash` → `GoalMonetkaGuidance` | При раскрытии аккордеона «Цель» |
 
-~~Подсказка под 4 chips (finance-Монетка)~~ — **снята 2026-05-25** как устаревшая: coach + цель + `titleHint` на chips достаточно.
+Подсказка под chips «Финансы периода» **не используется** (снята 2026-05-25).
 
 ---
 

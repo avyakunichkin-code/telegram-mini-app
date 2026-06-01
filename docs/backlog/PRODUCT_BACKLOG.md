@@ -3,7 +3,7 @@
 Живой список работ по слоям **DB / Backend / Frontend / Doc**. Источник идей для этой итерации: **[`GAME.md`](../../GAME.md)** (синтез анкеты, кода, Pre-Alpha → Closed Alpha).
 
 **Трассировка эпиков:** [`TRACEABILITY.md`](../TRACEABILITY.md)  
-**Связанные документы:** [`CLAUDE.md`](../../CLAUDE.md), [evolution §II](../vision/ideas/tvoy-hod-evolution-after-mvp.md), [`foundation/SPEC_PRODUCT.md`](../foundation/SPEC_PRODUCT.md), [`foundation/TMA_USER_FLOWS.md`](../foundation/TMA_USER_FLOWS.md), [`specs/SPEC_ANALYTICS.md`](../specs/SPEC_ANALYTICS.md), [`specs/SPEC_FRONTEND_UI.md`](../specs/SPEC_FRONTEND_UI.md).
+**Связанные документы:** [`CLAUDE.md`](../../CLAUDE.md), [evolution §II](../vision/ideas/tvoy-hod-evolution-after-mvp.md), [`GAME_DESIGN_ROADMAP_2026.md`](../vision/GAME_DESIGN_ROADMAP_2026.md) (геймдизайн, сравнение с рынком, фазы 12–18 мес.), [`foundation/SPEC_PRODUCT.md`](../foundation/SPEC_PRODUCT.md), [`foundation/TMA_USER_FLOWS.md`](../foundation/TMA_USER_FLOWS.md), [`specs/SPEC_ANALYTICS.md`](../specs/SPEC_ANALYTICS.md), [`specs/SPEC_FRONTEND_UI.md`](../specs/SPEC_FRONTEND_UI.md).
 
 ---
 
@@ -387,7 +387,7 @@
 
 - [x] P1 **[Frontend] I1-A** — Каталог / picker / карточки плана; unlock `capital_insurance`; locked hint + тосты ApiError (2026-06-01).
 - [x] P1 **[Backend+Frontend] I1-B** — Claim: `insurance_claim` в событиях, payout на cash, тост + pytest buy/claim/cancel (2026-06-01).
-- [ ] P2 **[Frontend]** Метрики полиса и сравнение планов в `FinanceSection`.
+- [ ] P2 **[Frontend]** Метрики полиса и сравнение планов во вкладке «Капитал» (`FinancePremium` / sheets).
 
 ### Plan Mode UI
 

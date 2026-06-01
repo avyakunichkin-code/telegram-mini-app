@@ -13,7 +13,9 @@ import { BaseParamsScreen } from './components/BaseParamsScreen';
 import { GameScreen } from './components/GameScreen';
 import { ToastHost } from './components/ToastHost';
 import { MqCatalogScreen } from './components/mqx/catalog/MqCatalogScreen';
+import { AdminLayout } from './components/admin/AdminLayout';
 import { AdminWebShell } from './components/admin/AdminWebShell';
+import { AdminCatalogEditorScreen } from './components/admin/AdminCatalogEditorScreen';
 import { AdminCatalogListScreen } from './components/admin/AdminCatalogListScreen';
 import { AdminCatalogsHub } from './components/admin/AdminCatalogsHub';
 import { AdminWatchtowerScreen } from './components/admin/AdminWatchtowerScreen';
@@ -226,9 +228,15 @@ function App() {
                 <AdminWebShell>
                   <AuthGuard layout="admin">
                     <Routes>
-                      <Route index element={<AdminWatchtowerScreen />} />
-                      <Route path="catalogs" element={<AdminCatalogsHub />} />
-                      <Route path="catalogs/:catalogKey" element={<AdminCatalogListScreen />} />
+                      <Route element={<AdminLayout />}>
+                        <Route index element={<AdminWatchtowerScreen />} />
+                        <Route path="catalogs" element={<AdminCatalogsHub />} />
+                        <Route path="catalogs/:catalogKey" element={<AdminCatalogListScreen />} />
+                        <Route
+                          path="catalogs/:catalogKey/edit/:rowId"
+                          element={<AdminCatalogEditorScreen />}
+                        />
+                      </Route>
                     </Routes>
                   </AuthGuard>
                 </AdminWebShell>

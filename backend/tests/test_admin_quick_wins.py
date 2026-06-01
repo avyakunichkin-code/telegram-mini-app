@@ -115,3 +115,12 @@ def test_export_run_feedback_csv(client, admin_env, auth_headers, db_session, te
     resp = client.get("/api/admin/export/run-feedback.csv", headers=auth_headers)
     assert resp.status_code == 200
     assert "export me" in resp.text
+
+
+def test_metrics_summary_period_3_plus(client, admin_env, auth_headers, db_session, test_user):
+    create_game_profile(db_session, user_id=test_user.id, period_index=4, name="Deep")
+    resp = client.get("/api/admin/metrics/summary", headers=auth_headers)
+    assert resp.status_code == 200
+    data = resp.json()
+    assert data["profiles_period_3_plus_total"] >= 1
+    assert "profiles_period_3_plus_active" in data

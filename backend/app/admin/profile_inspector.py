@@ -8,6 +8,7 @@ from typing import Any
 from sqlalchemy.orm import Session
 
 from ..models import GameProfile, NotificationLog, PeriodEconomyClosing, PlayerRunFeedback, User
+from ..services.events.service import build_pending_events_payload
 from .run_feedback import OUTCOME_LABEL_RU
 from ..victory.profile import profile_win_reached
 from .notify_messages import format_alert_message_ru, kind_label_ru
@@ -66,6 +67,8 @@ def build_profile_inspector(
         .order_by(PlayerRunFeedback.id.desc())
         .first()
     )
+    pending_events = _pending_events_admin(db, profile)
+
     latest_run_feedback = None
     if latest_feedback is not None:
         outcome = str(latest_feedback.outcome or "")
@@ -133,7 +136,35 @@ def build_profile_inspector(
             for log in logs
         ],
         "latest_run_feedback": latest_run_feedback,
+        "pending_events": pending_events,
     }
+
+
+def _pending_events_admin(db: Session, profile: GameProfile) -> list[dict[str, Any]]:
+    try:
+        payload = build_pending_events_payload(db, profile)
+    except Exception:
+        return []
+    events = payload.get("events") if isinstance(payload, dict) else None
+    if not isinstance(events, list):
+        return []
+    out: list[dict[str, Any]] = []
+    for raw in events:
+        if not isinstance(raw, dict):
+            continue
+        event_id = raw.get("id")
+        title = raw.get("title") or raw.get("name")
+        if event_id is None or not title:
+            continue
+        out.append(
+            {
+                "id": int(event_id),
+                "title": str(title),
+                "event_slot": raw.get("event_slot"),
+                "content_class": raw.get("content_class"),
+            }
+        )
+    return out
 
 
 def _activity_log_row(log: NotificationLog) -> dict[str, Any]:

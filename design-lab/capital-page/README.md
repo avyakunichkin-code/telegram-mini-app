@@ -2,51 +2,37 @@
 
 Этап 1 MQX: статика до React. Правила: [`DESIGN_WORKFLOW.md`](../../frontend-react/src/components/mqx/DESIGN_WORKFLOW.md).
 
-## Утверждено (2026-05)
+## Канон prod (2026-06)
 
 | Решение | Детали |
 |---------|--------|
-| **Цель захода** | В первую очередь **действие** (оформить / добавить) |
-| **Порядок разделов** | **Доходы → Расходы → Инвестиции → Страховки → Имущество → Обязательства** (без «Бюджет») |
-| **Сводка периода** | **Доходы / Расходы** сверху — см. [`flows-round/`](flows-round/) |
-| **Страховки** | Без изменений каталога: сетка 2×2 + тарифы H |
-| **Имущество / Обязательства** | Каталог — **строки** (accent + title + метрики + **+**), без kickers |
-| **Каталог ↔ позиции (B) ★** | Сегмент **«Добавить \| Мои (N)»** вверху **карточки раздела** (после lead), не в hero; по умолчанию **«Добавить»** — **в prod** (`MqxSectionSeg`) |
-| **Навигация T2 ★** | Перенос на 2 строки (3+2); при 6 разделах — 3+3 — **в prod** (`.mqx-capital-tabs--wrap`) |
-| **Kickеры** | Не показывать сырой `kind` и не дублировать название раздела |
+| **Экран** | `FinancePremium`, hero **«Капитал»**, `mqx-capital-page` |
+| **Порядок** | **Доходы / Расходы** → **Детали \| Действия** → позиции или сетка + sheet |
+| **Детали** | Аккордеоны позиций (инвестиции → страховки → имущество → обязательства); meta M8/M5 |
+| **Действия** | `MqxCapitalActionGrid` + `MqxCapitalSheet`; ипотека и кредит раздельно |
+| **Lab ★** | [`details-actions-round/`](details-actions-round/) — sync `./sync-lab.sh` |
 
-## Навигация по 5 разделам (320px TMA) — утверждено **T2**
+UX: [`docs/ux/screens/finance.md`](../../docs/ux/screens/finance.md).
 
-| ID | Идея | Статус |
-|----|------|--------|
-| T1 | Горизонтальный скролл | Отклонено |
-| **T2** | Перенос 2×2 (4 таба) | **Prod** |
-| T3 | Сетка 3+2, шрифт 11px | Запасной вариант в lab |
-| T4 | Группы «Деньги» / «Активы» | Запасной вариант в lab |
+## CSS-пакет (не отдельная витрина)
+
+| Папка | Назначение |
+|-------|------------|
+| [`flows-round/styles.css`](flows-round/styles.css) | Стили блока Доходы/Расходы; подключается из `details-actions-round/sync-lab.sh` |
+
+Раунды `orient-round`, `actions-round`, hub `index.html` (6 аккордеонов / «Управление капиталом») удалены **2026-06-01** — git history.
 
 ## Запуск
 
 ```bash
-cd design-lab/capital-page
+cd design-lab/capital-page/details-actions-round
+./sync-lab.sh
 npx serve .
+# хаб: cd design-lab && npx serve .
 ```
 
 ## Связанные lab
 
-- [`flows-round/`](flows-round/) — аккордеоны **Доходы / Расходы** (в prod)
-- [`orient-round/`](orient-round/) — **сводка + ориентация** O1–O4 (здоровье капитала, без бюджета)
-- [`actions-round/`](actions-round/) — все варианты redesign V0–V8
-- [`details-actions-round/`](details-actions-round/) — **★ Детали | Действия** + sheet (текущий кандидат)
-- [`row-actions/`](../row-actions/) — метрики, `MqxFinListRow`, корзина
-- [`finance-insurance/`](../finance-insurance/) — эталон страховок
+- [`row-actions/`](../row-actions/) — `MqxFinListRow`, метрики
+- [`finance-insurance/`](../finance-insurance/) — каталог страховок
 - [`invest-forms/`](../invest-forms/) — формы инвестиций
-
-## Prod (2026-06)
-
-- **`details-actions-round` v2** в `FinancePremium`: hero **«Капитал»**; потоки → **Детали \| Действия** → позиции или сетка плиток + `MqxCapitalSheet`; нейтральная типографика в «Детали», liabilities — muted red.
-- Компоненты: `CapitalDetailsPanel`, `CapitalActionsPanel`, `MqxCapitalPageModeSeg`, meta M5/M7/M8.
-- Lab sync: **`./sync-lab.sh`** (bash); PowerShell-скрипт в этом раунде не используется.
-
-## Prod (устарело, до 2026-06)
-
-- ~~4 аккордеона с `MqxSectionSeg` «Добавить \| Мои» внутри~~ — заменено режимом Детали/Действия.

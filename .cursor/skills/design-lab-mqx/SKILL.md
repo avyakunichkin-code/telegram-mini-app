@@ -29,7 +29,7 @@ allowed-tools: Read, Glob, Grep, Write, Shell
 | Показать/сравнить макеты | **`cd design-lab && npx serve .`** → хаб `/` (поиск), не `serve` в подпапке раунда |
 | Новый раунд в хабе | Пункт в `design-lab/nav.manifest.json` → `cd frontend-react && npm run design-lab:build-nav` |
 | Блоки дашборда на одной странице | `dashboard/parity-generated-page-round/` (генерится `design-lab:build`) |
-| Блоки финансов на одной странице | `finance/parity-generated-page-round/` |
+| Блоки **Капитала** на одной странице | `finance/parity-generated-page-round/` |
 | После ★ в React | `#/dev/mqx` |
 
 Полная таблица: [`DESIGN_LAB_NAVIGATION.md`](../../../docs/agents/DESIGN_LAB_NAVIGATION.md).
@@ -132,6 +132,7 @@ npm run design-lab:check-rounds
 | `domains-round` | то же | + `layout-round/styles.css` при `ev-l3__` |
 | `tails-round` | то же | + layout при необходимости |
 | `capital-page/details-actions-round` | нативный `./sync-lab.sh` | flows + локальный `styles.css` |
+| `character-needs/dashboard-needs-v7-round` | нативный `./sync-lab.sh` | `dashboard.css` (needs e2e3) |
 | `game-templates/persona-portraits-round` | нативный `./sync-lab.sh` | game-templates + picker из prod |
 
 После нового раунда events: добавить в `nav.manifest.json` → `npm run design-lab:build-nav`.
@@ -153,7 +154,7 @@ npm run design-lab:check-rounds
 | Тема TG | Светлая и тёмная — если экран в prod зависит от `tg-theme-*`, проверить оба |
 | Не перерисовывать ★ | S5 dashboard, L3 events, pre-game ★ — новый lab только для **хвостов** (empty/error, capital, icons), см. unification |
 
-**Приоритет lab:** **[`ui-states-unified/`](../../../design-lab/ui-states-unified/)** (B1+B2+B3 brief); `capital-page/details-actions-round` ★ в prod — только parity/hotfix. Не открывать параллельно 3+ крупных тем без запроса.
+**Приоритет lab:** **[`ui-states-unified/`](../../../design-lab/ui-states-unified/)** (B1+B2+B3 brief); **`capital-page/details-actions-round`** и **`character-needs/dashboard-needs-v7-round`** ★ в prod — только parity/hotfix. Не открывать параллельно 3+ крупных тем без запроса.
 
 **Не предлагать в lab без явного запроса:** `dashboard-dual-accordion` (superseded), идеи из backlog D1–D12 без spec.
 

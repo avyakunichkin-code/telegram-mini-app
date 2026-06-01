@@ -9,14 +9,13 @@
 | Папка | Приоритет | Варианты (план) | UX spec |
 |-------|-----------|-----------------|---------|
 | [`dashboard-needs-v7-round/`](dashboard-needs-v7-round/) | **★ prod** | v7-e2e3: книга+? + сердце; 4 шкалы всегда | [`character-needs-dashboard.md`](../../docs/ux/screens/character-needs-dashboard.md) |
-| [`dashboard-needs-v5-round/`](dashboard-needs-v5-round/) | архив | v5 summary + footer (до 2026-06) | то же |
-| [`dashboard-needs-v6-round/`](dashboard-needs-v6-round/) | архив | glass / ring / strip | — |
-| [`dashboard-needs-round/`](dashboard-needs-round/) | архив | A–D compact/expand | то же |
 | [`treat-self-round/`](treat-self-round/) | **P0** | A card+confirm, B sticky cost | [`character-needs-treat-self.md`](../../docs/ux/screens/character-needs-treat-self.md) |
 | [`help-sheet-round/`](help-sheet-round/) | prod content | 4 flat sections (API) | [`character-needs-help.md`](../../docs/ux/screens/character-needs-help.md) |
 | [`events-needs-chips-round/`](events-needs-chips-round/) | **P0** | A/B/C chips on choices | [`character-needs-events.md`](../../docs/ux/screens/character-needs-events.md) |
 | [`needs-intro-banner-round/`](needs-intro-banner-round/) | P1 | post-onboarding intro | [`CHARACTER_NEEDS_UX.md`](../../docs/ux/CHARACTER_NEEDS_UX.md) § Onboarding |
 | [`defeat-round/`](defeat-round/) | P1 | align with cash defeat | [`character-needs-period-defeat.md`](../../docs/ux/screens/character-needs-period-defeat.md) |
+
+Архивные раунды v1–v6 удалены из репо **2026-06-01** (история — git).
 
 **Копирайт персонажей:** [`../game-templates/`](../game-templates/) — см. [`character-pick.md`](../../docs/ux/screens/character-pick.md).
 

@@ -17,7 +17,7 @@ from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
 from ..config import _resolve_admin_web_base_url
-from ..models import GameProfile, NotificationLog, User
+from ..models import EventChoice, EventDefinition, EventInstance, GameProfile, NotificationLog, User
 from ..victory.profile import profile_win_reached
 from .notify_messages import format_alert_message_ru
 
@@ -39,6 +39,7 @@ _KIND_EMOJI = {
     "onboarding_step_reached": "👣",
     "onboarding_brief_done": "✅",
     "onboarding_skipped": "⏭️",
+    "event_chosen": "🃏",
 }
 
 
@@ -309,6 +310,36 @@ def maybe_notify_game_won(db: Session, profile: GameProfile) -> None:
         user_id=profile.user_id,
         game_profile_id=profile.id,
         dedupe_key=f"game_won:{profile.id}",
+    )
+
+
+def notify_event_chosen(
+    db: Session,
+    profile: GameProfile,
+    *,
+    definition: EventDefinition | None,
+    choice: EventChoice,
+    event_instance: EventInstance,
+) -> None:
+    """α-FB-04 / A4+: log-only — осмысленный выбор в событии (без Telegram)."""
+    user = db.query(User).filter(User.id == profile.user_id).first()
+    emit_admin_alert(
+        db,
+        "event_chosen",
+        {
+            "name": profile.name,
+            "username": user.username if user else "—",
+            "event_key": definition.key if definition else "",
+            "event_title": definition.title if definition else "",
+            "choice_title": choice.title,
+            "period_index": int(profile.period_index or 1),
+            "instance_id": int(event_instance.id),
+            "profile_id": profile.id,
+            "_admin_link": _admin_link(f"/admin?profile={profile.id}"),
+        },
+        user_id=profile.user_id,
+        game_profile_id=profile.id,
+        send_telegram=False,
     )
 
 

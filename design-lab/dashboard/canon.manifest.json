@@ -30,14 +30,14 @@
       "status": "approved",
       "canonical_rounds": [
         {
-          "path": "design-lab/character-needs/dashboard-needs-v5-round/",
+          "path": "design-lab/character-needs/dashboard-needs-v7-round/",
           "status": "approved"
         }
       ],
       "invariants": [
         "Z-NEEDS immediately after hero, before finance (UX-01).",
-        "Collapsed: mascot + title + status summary + min-axis bar + «как улучшить →» (no improve chip).",
-        "Expanded: 4 bars + footer «Порадовать себя» + «?» (help)."
+        "v7-e2e3: 4 bars always visible; header book+? → help sheet; heart → treat-self.",
+        "No collapsed summary / expand accordion (superseded v5)."
       ]
     },
     {

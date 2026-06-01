@@ -5,6 +5,12 @@
 | Дата | Что в prod | Что исправили в docs |
 |------|------------|----------------------|
 | 2026-06-01 | — (product) | **WD1** полноразмерный веб-канал: idea [`desktop-wide-web-channel`](../vision/ideas/desktop-wide-web-channel.md), [`PLAN_desktop-wide-web`](../plans/PLAN_desktop-wide-web.md), эпик **AC1** TG↔email в фокусе; CA **50–100**, свой домен |
+| 2026-06-02 | **Admin C2:** PATCH каталогов + JSON validate; редактор Основное/JSON | `catalog_patch.py`, `AdminCatalogEditorScreen` |
+| 2026-06-02 | **Admin A4+ / C1:** `event_chosen` в `notification_log` (без TG); каталоги POST create + clone (`is_active=0`) | `notify_event_chosen`, `catalog_write.py`, `#/admin/catalogs` |
+| 2026-06-02 | **Admin AQ + P1 срез:** Watchtower фильтры/KPI/CSV/очередь; inspector pending+feedback | [`ADMIN_BACKLOG.md`](../backlog/ADMIN_BACKLOG.md), `watchtower_profiles.py`, `AdminAttentionQueue` |
+| 2026-06-02 | **design-lab:** удалены архивные раунды | v1–v6 needs, `actions-round`, `orient-round`, hub `capital-page/index.html`, витрина `flows-round` (остался `styles.css`); canon → v7 + `details-actions-round`; `npm run design-lab:build` |
+| 2026-06-02 | **Чистка legacy в docs** | Сняты O1/hero-compact тела; FinanceSection tasks; needs accordion/v5; capital «Добавить\|Мои»; help maintenance/critical в UX |
+| 2026-06-02 | **Скиллы / rules / agents:** Капитал + Z-NEEDS v7 | `frontend-ui-engineering`, `design-lab-mqx`, `release-tma`, `tvoy-hod-frontend-mqx.mdc`, `tvoy-hod-canon-sync.mdc`, `catalog.yaml`, `DESIGN_WORKFLOW.md`, `DESIGN_LAB_NAVIGATION`, `frontend-design` skill |
 | 2026-06-02 | **Док-свип (завершение):** «Капитал», v7-e2e3, help `sections[]` | handbook, TMA flows, analytics, landing shots, UI audit, TEAM_UPDATE, backlog, brandbook MQX, design-lab nav/README, `contextual-help-system`, ADR-004, vision ideas |
 | 2026-06-01 | **Док-свип:** вкладка **«Капитал»**, Z-NEEDS v7, help API | `finance.md`, `dashboard.md`, `character-needs-*`, `SPEC_*`, handbook, ADR-004, `CLAUDE.md`, design-lab README, `contextual-help-system` |
 | 2026-06-01 | **Вкладка «Капитал»** (было «Финансы» / «Управление капиталом») | `BottomGameNav`, `FinancePremium`, «Весь капитал →»; без pill «N разделов»; детали — нейтральный текст, обязательства приглушённо красные |

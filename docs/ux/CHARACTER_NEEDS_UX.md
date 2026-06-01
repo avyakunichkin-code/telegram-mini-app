@@ -1,7 +1,7 @@
 ---
 layer: ux
 status: approved
-last_reviewed: 2026-05-26
+last_reviewed: 2026-06-02
 feature: character-needs-phase-1
 platform: Telegram Mini App (touch-first, 320–480px)
 ---
@@ -34,11 +34,11 @@ platform: Telegram Mini App (touch-first, 320–480px)
 | ID | Решение | Обоснование |
 |----|---------|-------------|
 | **UX-01** | Блок потребностей на **главной** сразу **после hero**, **до** «Финансы периода» (зона **Z-NEEDS** → Z1) | Жизнь персонажа — первый контекст месяца; деньги — второй слой; цель и действия ниже |
-| **UX-02** | **Compact:** маскот слева (52×56) + **одна** горизонтальная шкала min-оси; **4 бара** — только в expand | Без вертикальных столбцов; без дубля статуса в collapsed |
+| **UX-02** | **v7:** `PersonaPortrait` (`dash`) слева + **4 шкалы** справа **всегда**; accordion снят | Статус справа от бара; без summary «Есть просадка» |
 | **UX-03** | Зоны: **≥40** норма · **<40** низко · **<30** истощение · **0** критично; справа от бара — **цветной текст** (жирный), не отдельный бейдж | Basic tier: бар + текст достаточно |
-| **UX-04** | **«Порадовать себя»** — всегда **bottom sheet** с подтверждением; при **1 опции** — одна карточка + «Подтвердить» / «Отмена» | Игрок видит цену и `needs_delta` до списания |
-| **UX-05** | **Treat-self и «?»** только **внутри раскрытого** аккордеона, справа; компактные (pill / link + ? в кружке 22–26px) | В collapsed — только маскот + одна шкала |
-| **UX-06** | **«Помощь»** (`?`) → sheet со справочником (`maintenance` + `critical`); **обязательна для всех** персонажей | Hard без проактивных toast всё равно имеет путь |
+| **UX-04** | **«Улучшить»** (сердце, treat-self) — **bottom sheet** + confirm; при **1 опции** — одна карточка | Игрок видит цену и `needs_delta` до списания |
+| **UX-05** | **Справка + действие** в шапке секции (★ **v7-e2e3**): **книга+?** → help; **сердце** → treat-self | Не текстовые «Подсказки»/«Улучшить» (v7-A снят) |
+| **UX-06** | Справка → `MqxNeedsHelpSheet`, **`GET needs/guide`** → `title` + **4 `sections`** | Обязательна для всех персонажей |
 | **UX-07** | **Студент (soft):** баннер при любой шкале **<40** (один раз за период или dismiss); **hard:** без баннера | `proactive_hints` из blueprint |
 | **UX-08** | **Риск поражения:** при `needs_zero_periods_streak > 0` — баннер уровня critical в Z-NEEDS («N из 3 месяцев на нуле») | Игрок видит счётчик до game over |
 | **UX-09** | **Закрытие месяца:** не блокировать; при `is_distressed` или `has_zero` — **предупреждение** в том же паттерне, что зарплата (`MqxSalaryWarnModal` family) | Согласовано с TB1 и onboarding |
@@ -54,7 +54,7 @@ platform: Telegram Mini App (touch-first, 320–480px)
 
 | Тема | UX spec | Design-lab (план) |
 |------|---------|-------------------|
-| Блок на главной | [`screens/character-needs-dashboard.md`](screens/character-needs-dashboard.md) | `dashboard-needs-round/` |
+| Блок на главной | [`screens/character-needs-dashboard.md`](screens/character-needs-dashboard.md) | `dashboard-needs-v7-round/` ★ |
 | «Порадовать себя» | [`screens/character-needs-treat-self.md`](screens/character-needs-treat-self.md) | `treat-self-round/` |
 | Справочник помощи | [`screens/character-needs-help.md`](screens/character-needs-help.md) | `help-sheet-round/` |
 | События + needs_delta | [`screens/character-needs-events.md`](screens/character-needs-events.md) | `events-needs-chips-round/` (в `design-lab/events/`) |
@@ -68,7 +68,7 @@ platform: Telegram Mini App (touch-first, 320–480px)
 
 ## HUD-философия (needs)
 
-**Adaptive minimal:** на главной всегда виден **компактный** индикатор жизни; детали и действия — по раскрытию или sheet. Не дублировать 4 полные полоски на каждом табе. Аналитика и финансы — **без** needs в фазе 1.
+**Adaptive minimal:** на главной — портрет + 4 шкалы и affordance в шапке; без отдельного экрана. Аналитика и вкладка «Капитал» — **без** needs в фазе 1.
 
 ---
 
@@ -80,8 +80,8 @@ platform: Telegram Mini App (touch-first, 320–480px)
 | `status` | Статус |
 | `social` | Связи |
 | `health` | Здоровье |
-| treat_self CTA | Порадовать себя |
-| help CTA | Помощь (иконка `?` + `aria-label="Помощь по потребностям"`) |
+| treat_self CTA (UI) | Улучшить (иконка сердца; `aria-label` по смыслу) |
+| help CTA (UI) | Подсказки (книга+?; `aria-label="Подсказки"`) |
 | section title | Потребности |
 | zero streak | «Риск поражения: N из 3 месяцев с нулём на шкале» |
 | defeat title | Поражение: потребности на нуле три месяца подряд |
@@ -104,35 +104,31 @@ platform: Telegram Mini App (touch-first, 320–480px)
 
 | Компонент | Назначение |
 |-----------|------------|
-| `MqxNeedsSummary` | Compact: min + chevron + optional warning |
+| `MqxNeedsDash` | Z-NEEDS v7-e2e3: header actions + portrait + bars |
 | `MqxNeedsBars` | 4 progress bars, зоны, labels |
 | `MqxNeedsRiskBanner` | zero streak / distressed hint |
 | `MqxTreatSelfSheet` | bottom sheet выбора/confirm |
-| `MqxNeedsHelpSheet` | справочник |
+| `MqxNeedsHelpSheet` | справочник (`sections[]`) |
 | `MqxNeedsDeltaChips` | на EventCard choices |
 
 Витрина: `#/dev/mqx` до подключения в `DashboardPremium`.
 
 ---
 
-## Open questions (только playtest / lab)
+## Open questions (только playtest / баланс)
 
 | ID | Тема | Где решать |
 |----|------|------------|
-| LQ-01 | Маскот v1 / v2 / v3 | lab + prod asset |
-| LQ-02 | Treat: pill vs outline vs text link | E1–E3 |
-| LQ-03 | Help: 26px vs 22px vs violet ring | E1–E3 |
-| LQ-04 | Treat-self sheet (следующий раунд) | treat-self-round |
-| PQ-* | Числа баланса | SPEC §Open questions |
+| PQ-* | Числа баланса, decay, treat cooldown | SPEC §Open questions |
 
 ---
 
 ## Acceptance (сквозные, QA)
 
-1. При `needs.enabled` на главной видна зона Z-NEEDS (compact); без enabled — зоны нет.
-2. Раскрытие accordion показывает 4 бара с подписями RU и `aria-valuenow`.
-3. Treat-self: sheet → confirm → POST; при кулдауне кнопка disabled + подпись «через N мес.».
-4. Help sheet открывается с любого персонажа; тексты soft/hard различаются где задано в контенте.
+1. При `needs.enabled` на главной видна Z-NEEDS (4 бара + шапка); без enabled — зоны нет.
+2. Всегда 4 бара с подписями RU и `aria-valuenow`; без accordion.
+3. Treat-self: сердце → sheet → confirm → POST; при кулдауне — toast «через N периодов» (не молчаливый disabled).
+4. Help: книга+? → sheet с 4 разделами `sections[]`; заголовок «Потребности».
 5. Событие с `needs_delta`: чипы на choice; после выбора — обновление overview needs.
 6. Закрытие месяца при `has_zero`: предупреждение; при streak≥3 после close — game over UI.
 7. После `brief_done` один раз intro-баннер; dismiss скрывает навсегда для профиля.

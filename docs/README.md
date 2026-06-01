@@ -88,6 +88,7 @@
 | Документ | Содержание |
 |----------|------------|
 | [`vision/ideas/tvoy-hod-evolution-after-mvp.md`](vision/ideas/tvoy-hod-evolution-after-mvp.md) | **Часть II** — Game/Plan, Q&A, план по слоям (источник истины для цели) |
+| [`vision/GAME_DESIGN_ROADMAP_2026.md`](vision/GAME_DESIGN_ROADMAP_2026.md) | Геймдизайн: сравнение с рынком, идеи механик (GD-xxx), roadmap по фазам |
 | [`vision/ideas/mvp-1-1-product-direction.md`](vision/ideas/mvp-1-1-product-direction.md) | MVP 1.1: закрытые ответы + направления доработки (перед spec эпика) |
 | [`vision/ideas/game-balance-thresholds-and-constraints.md`](vision/ideas/game-balance-thresholds-and-constraints.md) | Черновик баланса: победа/поражение MVP, ограничения, пакеты для калибровки по шаблонам |
 | [`vision/ideas/event-catalog-qna-refine.md`](vision/ideas/event-catalog-qna-refine.md) | Q&A каталога событий, цепочки (авто, родственник) |
@@ -108,7 +109,7 @@
 | [`specs/features/SPEC_mvp-11-progression-events.md`](specs/features/SPEC_mvp-11-progression-events.md) | MVP 1.1 — **`event_tier`**, **`repeat_policy`**, cooldown; tier-окно от **`period_index`** (см. remove-character-xp); план — [`plans/PLAN_mvp-11-progression-events.md`](plans/PLAN_mvp-11-progression-events.md) |
 | [`specs/gameplay/EXPENSES_SYSTEM.md`](specs/gameplay/EXPENSES_SYSTEM.md) | Канон механики **расходов** (категории, burn, Game/Plan) |
 | [`specs/features/SPEC_expenses.md`](specs/features/SPEC_expenses.md) | Эпик **E1** — внедрение на всех слоях; чеклист — [`specs/economy/EXPENSES_LAYER_CHECKLIST.md`](specs/economy/EXPENSES_LAYER_CHECKLIST.md) |
-| [`specs/features/SPEC_onboarding-tma.md`](specs/features/SPEC_onboarding-tma.md) | Эпик **O1** — Mission Brief, 3 шага, Pre-Alpha |
+| [`specs/features/SPEC_onboarding-o2.md`](specs/features/SPEC_onboarding-o2.md) | Эпик **O2** — Progressive Guidance (prod) |
 | [`specs/features/SPEC_telegram-bots-and-notifications.md`](specs/features/SPEC_telegram-bots-and-notifications.md) | **TG:** player + ops боты, каталог `kind`, webhook, initData, digest (draft) |
 | [`reference/CHARACTER_MONETKA.md`](reference/CHARACTER_MONETKA.md) | Персонаж-наставник **Монетка** (онбординг) |
 

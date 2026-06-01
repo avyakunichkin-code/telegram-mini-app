@@ -916,6 +916,19 @@ def choose_event(db: Session, profile: GameProfile, event_id: int, choice_id: in
     except Exception:
         pass
 
+    try:
+        from ...admin.notify import notify_event_chosen
+
+        notify_event_chosen(
+            db,
+            profile,
+            definition=definition,
+            choice=choice,
+            event_instance=inst,
+        )
+    except Exception:
+        pass
+
     response = {"status": "success"}
     if needs_after is not None:
         response["needs_before"] = needs_before

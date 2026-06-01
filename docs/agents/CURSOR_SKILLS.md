@@ -26,6 +26,7 @@
 | [`docs/TRACEABILITY.md`](../TRACEABILITY.md) | Обновлять после нарезки плана |
 | [`DESIGN_IMPROVEMENTS_BACKLOG.md`](DESIGN_IMPROVEMENTS_BACKLOG.md) | UI-идеи **вне** скиллов до spec (D1–D12) |
 | [`DESIGN_LAB_NAVIGATION.md`](DESIGN_LAB_NAVIGATION.md) | Хаб vs round vs page parity vs `#/dev/mqx` |
+| [`docs/foundation/DOC_SYNC_LOG.md`](../foundation/DOC_SYNC_LOG.md) | Журнал prod ↔ docs/skills (2026-06: **Капитал**, Z-NEEDS v7) |
 
 ---
 
@@ -46,8 +47,8 @@
 
 | Скилл | Зачем |
 |-------|--------|
-| **frontend-ui-engineering** | MQX, TMA UI; новые паттерны — [`DESIGN_WORKFLOW.md`](../../frontend-react/src/components/mqx/DESIGN_WORKFLOW.md) |
-| **design-lab-mqx** | `design-lab/` — **хаб** `nav.manifest` + rounds; см. `DESIGN_LAB_NAVIGATION.md` |
+| **frontend-ui-engineering** | MQX, TMA UI; prod **Капитал** (Details \| Actions), **Z-NEEDS v7-e2e3** — [`DESIGN_WORKFLOW.md`](../../frontend-react/src/components/mqx/DESIGN_WORKFLOW.md) |
+| **design-lab-mqx** | `design-lab/` — хаб `nav.manifest`; ★ `capital-page/details-actions-round`, `character-needs/dashboard-needs-v7-round` — `DESIGN_LAB_NAVIGATION.md` |
 | **spec-driven-development** | Spec в `docs/specs/` до кода |
 | **incremental-implementation** | Срезы без монолитных PR |
 | **api-and-interface-design** | `/api/...`, `api.js`, контракты |

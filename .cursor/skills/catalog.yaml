@@ -318,6 +318,8 @@ skills:
         - docs/specs/UI_CONSISTENCY_AUDIT.md
         - docs/vision/ideas/mqx-ui-unification.md
         - design-lab/dashboard/APPROVED.md
+        - design-lab/capital-page/details-actions-round/README.md
+        - design-lab/character-needs/dashboard-needs-v7-round/VARIANTS.md
         - docs/agents/DESIGN_IMPROVEMENTS_BACKLOG.md
         - docs/agents/DESIGN_LAB_NAVIGATION.md
         - .cursor/rules/tvoy-hod-design-lab.mdc
@@ -446,6 +448,8 @@ skills:
         - docs/specs/SPEC_FRONTEND_UI.md
         - docs/specs/UI_CONSISTENCY_AUDIT.md
         - docs/reference/brandbook/BRANDBOOK_MQX.md
+        - docs/ux/screens/finance.md
+        - docs/ux/screens/character-needs-dashboard.md
         - docs/ux/accessibility-requirements.md
         - frontend-react/ARCHITECTURE.md
         - CLAUDE.md

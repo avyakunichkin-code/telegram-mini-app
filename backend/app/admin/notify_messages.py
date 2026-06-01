@@ -24,6 +24,7 @@ _KIND_LABEL_RU: dict[str, str] = {
     "onboarding_step_reached": "Онбординг: шаг",
     "onboarding_brief_done": "Онбординг завершён",
     "onboarding_skipped": "Пропуск онбординга",
+    "event_chosen": "Выбор в событии",
 }
 
 
@@ -76,6 +77,16 @@ def format_alert_message_ru(kind: str, payload: dict[str, Any]) -> str:
             "📁 Создано сохранение",
             f"Название: «{name}»",
             f"Режим: {save_ru}",
+            link,
+        )
+
+    if kind == "event_chosen":
+        return _lines(
+            "🃏 Игрок выбрал вариант в событии",
+            f"Партия: «{name}»",
+            f"Событие: {p.get('event_title') or '—'} ({p.get('event_key') or '—'})",
+            f"Вариант: {p.get('choice_title') or '—'}",
+            f"Месяц №{p.get('period_index', '—')}",
             link,
         )
 

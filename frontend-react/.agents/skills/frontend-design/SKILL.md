@@ -86,4 +86,11 @@ Remember: Claude is capable of extraordinary creative work. Don't hold back, sho
 - **Детали:** только позиции; meta **M8** (icon+count), обязательства **M5**; **`MqxCapitalTextRowAction`** («Закрыть» / «Продать» / «Отменить»).
 - **Действия:** **`MqxCapitalActionGrid`** (сетка 3×) + **`MqxCapitalSheet`**; каталог в sheet — **`CapitalPositionCard`**, страховки — **`InsuranceProductPicker`**, инвестиции — **`InvestProductForm`**.
 - **Ипотека и кредит** — отдельные плитки и sheets (`mortgage` vs остальные `liability_templates`).
+- Hero и таббар: **«Капитал»** (не «Финансы» / «Управление капиталом»); без pill «N разделов»; детали — нейтральный текст, liabilities muted red.
 - Новый layout — только через lab → [`DESIGN_WORKFLOW.md`](../../../src/components/mqx/DESIGN_WORKFLOW.md); см. [`docs/ux/screens/finance.md`](../../../../docs/ux/screens/finance.md).
+
+### Z-NEEDS на главной (prod v7-e2e3, 2026-06)
+
+- **`MqxNeedsDash`:** книга+? → справочник (`sections[]`); сердце → treat-self (UI «Улучшить»); 4 шкалы всегда + `PersonaPortrait` dash.
+- Lab ★: [`design-lab/character-needs/dashboard-needs-v7-round/`](../../../../design-lab/character-needs/dashboard-needs-v7-round/).
+- UX: [`docs/ux/screens/character-needs-dashboard.md`](../../../../docs/ux/screens/character-needs-dashboard.md).
