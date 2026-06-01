@@ -13,7 +13,6 @@ const CATALOG_LINKS = [
 
 const WATCHTOWER_TABS = [
   { id: 'overview', label: 'Обзор' },
-  { id: 'players', label: 'Игроки' },
   { id: 'alerts', label: 'Алерты' },
   { id: 'feedback', label: 'Отзывы' },
   { id: 'guidance', label: 'Guidance' },
@@ -95,6 +94,12 @@ export function AdminLayout() {
             {WATCHTOWER_TABS.map((t) => (
               <WatchtowerTabLink key={t.id} tabId={t.id} label={t.label} />
             ))}
+            <NavLink to="/admin/users" className="mq-admin-sidebar__sublink">
+              Игроки
+            </NavLink>
+            <NavLink to="/admin/profiles" className="mq-admin-sidebar__sublink">
+              Профили
+            </NavLink>
           </div>
         </nav>
 

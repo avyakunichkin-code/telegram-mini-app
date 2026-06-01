@@ -4,6 +4,7 @@ import { Button, Spinner } from '@telegram-apps/telegram-ui';
 import { adminApi } from '../../api';
 import { formatApiErrorDetail } from '../../api/client';
 import { AdminPageHeader } from './AdminPageHeader';
+import { AdminEventChoicesEditorPersisted } from './AdminEventChoicesEditor';
 
 const SCALAR_FIELDS = {
   liabilities: [
@@ -92,6 +93,8 @@ export function AdminCatalogEditorScreen() {
   const scalarFields = SCALAR_FIELDS[catalogKey] ?? [];
   const jsonFields = JSON_FIELDS[catalogKey] ?? [];
   const hasJson = jsonFields.length > 0;
+  const isEvents = catalogKey === 'events';
+  const eventChoices = row?.choices ?? [];
 
   const load = useCallback(async () => {
     if (!catalogKey || !rowId) return;
@@ -203,7 +206,7 @@ export function AdminCatalogEditorScreen() {
 
       {!loading && draft ? (
         <>
-          {hasJson ? (
+          {hasJson || isEvents ? (
             <div className="admin-catalog-editor__tabs" role="tablist">
               <button
                 type="button"
@@ -215,20 +218,36 @@ export function AdminCatalogEditorScreen() {
               >
                 Основное
               </button>
-              <button
-                type="button"
-                role="tab"
-                className={
-                  tab === 'json' ? 'admin-catalog-editor__tab--active' : 'admin-catalog-editor__tab'
-                }
-                onClick={() => setTab('json')}
-              >
-                JSON
-              </button>
+              {isEvents ? (
+                <button
+                  type="button"
+                  role="tab"
+                  className={
+                    tab === 'choices'
+                      ? 'admin-catalog-editor__tab--active'
+                      : 'admin-catalog-editor__tab'
+                  }
+                  onClick={() => setTab('choices')}
+                >
+                  Варианты ({eventChoices.length})
+                </button>
+              ) : null}
+              {hasJson ? (
+                <button
+                  type="button"
+                  role="tab"
+                  className={
+                    tab === 'json' ? 'admin-catalog-editor__tab--active' : 'admin-catalog-editor__tab'
+                  }
+                  onClick={() => setTab('json')}
+                >
+                  JSON
+                </button>
+              ) : null}
             </div>
           ) : null}
 
-          {(tab === 'basic' || !hasJson) && (
+          {(tab === 'basic' || (!hasJson && !isEvents)) && (
             <section className="mq-card admin-catalog-editor__panel">
               <div className="admin-catalog-editor__fields">
                 {scalarFields.map((field) => (
@@ -272,6 +291,15 @@ export function AdminCatalogEditorScreen() {
               </div>
             </section>
           )}
+
+          {tab === 'choices' && isEvents ? (
+            <AdminEventChoicesEditorPersisted
+              eventId={rowId}
+              initialChoices={eventChoices}
+              disabled={saving || loading}
+              onReload={load}
+            />
+          ) : null}
 
           {tab === 'json' && hasJson ? (
             <section className="mq-card admin-catalog-editor__panel">

@@ -7,6 +7,7 @@ from typing import Any
 from sqlalchemy.orm import Session
 
 from ..models import AssetTemplate, EventDefinition, GameStarterTemplate, LiabilityTemplate
+from .catalog_choices import list_event_choices
 from .catalogs import get_catalog_spec
 
 
@@ -91,6 +92,7 @@ def get_catalog_row_detail(db: Session, catalog_key: str, row_id: int) -> dict[s
             "audience_template_keys": row.audience_template_keys or '["all"]',
             "metadata_json": row.metadata_json or "{}",
             "prerequisites_json": row.prerequisites_json or "{}",
+            "choices": list_event_choices(db, int(row.id)),
         }
 
     raise KeyError(catalog_key)

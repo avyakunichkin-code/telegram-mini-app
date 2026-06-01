@@ -78,8 +78,54 @@ export const adminApi = {
     return apiCall('/api/admin/catalogs');
   },
 
+  users(params = {}) {
+    const qs = new URLSearchParams();
+    if (params.q) qs.set('q', params.q);
+    if (params.limit) qs.set('limit', String(params.limit));
+    const query = qs.toString();
+    return apiCall(`/api/admin/users${query ? `?${query}` : ''}`);
+  },
+
+  profiles(params = {}) {
+    const qs = new URLSearchParams();
+    if (params.user_id) qs.set('user_id', String(params.user_id));
+    if (params.q) qs.set('q', params.q);
+    if (params.profile_filter) qs.set('profile_filter', params.profile_filter);
+    if (params.stuck_only) qs.set('stuck_only', 'true');
+    if (params.limit) qs.set('limit', String(params.limit));
+    const query = qs.toString();
+    return apiCall(`/api/admin/profiles${query ? `?${query}` : ''}`);
+  },
+
   catalogCreate(catalogKey, body = {}) {
     return apiCall(`/api/admin/catalogs/${encodeURIComponent(catalogKey)}/rows`, 'POST', body);
+  },
+
+  eventChoices(eventId) {
+    return apiCall(`/api/admin/catalogs/events/rows/${encodeURIComponent(String(eventId))}/choices`);
+  },
+
+  eventChoiceCreate(eventId, body) {
+    return apiCall(
+      `/api/admin/catalogs/events/rows/${encodeURIComponent(String(eventId))}/choices`,
+      'POST',
+      body,
+    );
+  },
+
+  eventChoicePatch(eventId, choiceId, body) {
+    return apiCall(
+      `/api/admin/catalogs/events/rows/${encodeURIComponent(String(eventId))}/choices/${encodeURIComponent(String(choiceId))}`,
+      'PATCH',
+      body,
+    );
+  },
+
+  eventChoiceDelete(eventId, choiceId) {
+    return apiCall(
+      `/api/admin/catalogs/events/rows/${encodeURIComponent(String(eventId))}/choices/${encodeURIComponent(String(choiceId))}`,
+      'DELETE',
+    );
   },
 
   catalogDetail(catalogKey, rowId) {

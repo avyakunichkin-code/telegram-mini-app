@@ -183,6 +183,12 @@ export function AdminCatalogListScreen() {
         }
       >
         <div className="admin-watchtower__actions">
+          <Link
+            to={`/admin/catalogs/${catalogKey}/new`}
+            className="admin-inspector__link admin-catalog-list__create-link"
+          >
+            Создать…
+          </Link>
           <Button size="s" mode="bezeled" onClick={handleCreateDraft} disabled={loading || mutating}>
             {mutating ? '…' : 'Пустой черновик'}
           </Button>

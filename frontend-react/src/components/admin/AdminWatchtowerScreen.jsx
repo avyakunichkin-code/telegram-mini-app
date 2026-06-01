@@ -5,23 +5,13 @@ import { adminApi } from '../../api';
 import { AdminAttentionQueue } from './AdminAttentionQueue';
 import { AdminPageHeader } from './AdminPageHeader';
 import { formatAdminDt } from './adminFormat';
+import { useAdminNotificationColumns } from './adminPlayerColumns';
 import { AdminTable } from './adminTable';
-import { AdminFilterBar } from './ui/AdminFilterBar';
 import { AdminKpiGrid } from './ui/AdminKpiGrid';
-import { GuidanceBadge } from './AdminGuidanceBadge';
 import { notificationProfileId } from './adminUtils';
-
-const PROFILE_FILTERS = [
-  { id: '', label: 'Все' },
-  { id: 'stuck', label: 'Застрял' },
-  { id: 'guidance_draft', label: 'Guidance draft' },
-  { id: 'defeat', label: 'Поражение' },
-  { id: 'victory', label: 'Победа' },
-];
 
 const WATCHTOWER_TAB_LABELS = {
   overview: 'Обзор',
-  players: 'Игроки',
   alerts: 'Алерты',
   feedback: 'Отзывы',
   guidance: 'Guidance',
@@ -136,12 +126,8 @@ export function AdminWatchtowerScreen({ onBack }) {
   const [searchParams, setSearchParams] = useSearchParams();
   const activeTab = searchParams.get('tab') || 'overview';
   const highlightProfile = searchParams.get('profile');
-  const highlightUser = searchParams.get('user');
-  const profileFilter = searchParams.get('profile_filter') || '';
-  const profileSearch = searchParams.get('q') || '';
 
   const [data, setData] = useState(null);
-  const [searchDraft, setSearchDraft] = useState(profileSearch);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
   const [exporting, setExporting] = useState(null);
@@ -152,8 +138,6 @@ export function AdminWatchtowerScreen({ onBack }) {
     try {
       const payload = await adminApi.watchtower({
         profile_limit: 80,
-        profile_filter: profileFilter || undefined,
-        q: profileSearch || undefined,
       });
       setData(payload);
     } catch (e) {
@@ -162,232 +146,14 @@ export function AdminWatchtowerScreen({ onBack }) {
     } finally {
       setLoading(false);
     }
-  }, [profileFilter, profileSearch]);
+  }, []);
 
   useEffect(() => {
     load();
   }, [load]);
 
-  useEffect(() => {
-    setSearchDraft(profileSearch);
-  }, [profileSearch]);
+  const notificationColumns = useAdminNotificationColumns({ searchParams, setSearchParams });
 
-  const applyProfileSearch = useCallback(
-    (e) => {
-      e?.preventDefault?.();
-      const next = new URLSearchParams(searchParams);
-      const q = searchDraft.trim();
-      if (q) next.set('q', q);
-      else next.delete('q');
-      setSearchParams(next, { replace: true });
-    },
-    [searchDraft, searchParams, setSearchParams],
-  );
-
-  const setProfileFilter = useCallback(
-    (nextFilter) => {
-      const next = new URLSearchParams(searchParams);
-      if (nextFilter) next.set('profile_filter', nextFilter);
-      else next.delete('profile_filter');
-      setSearchParams(next, { replace: true });
-    },
-    [searchParams, setSearchParams],
-  );
-
-  const userColumns = useMemo(
-    () => [
-      { key: 'id', label: 'ID', render: (r) => r.id, sortable: true, sortValue: (r) => r.id },
-      {
-        key: 'username',
-        label: 'Логин',
-        render: (r) => r.username,
-        sortable: true,
-        sortValue: (r) => r.username ?? '',
-      },
-      { key: 'telegram', label: 'TG', render: (r) => r.telegram_id ?? '—' },
-      {
-        key: 'profiles',
-        label: 'Профили',
-        render: (r) => r.profiles_count,
-        sortable: true,
-        sortValue: (r) => r.profiles_count ?? 0,
-      },
-      {
-        key: 'created',
-        label: 'Создан',
-        render: (r) => formatAdminDt(r.created_at),
-        sortable: true,
-        sortValue: (r) => (r.created_at ? new Date(r.created_at).getTime() : 0),
-      },
-    ],
-    [],
-  );
-
-  const profileColumns = useMemo(
-    () => [
-      { key: 'id', label: 'ID', render: (r) => r.id, sortable: true, sortValue: (r) => r.id },
-      {
-        key: 'user',
-        label: 'User',
-        render: (r) => r.username,
-        sortable: true,
-        sortValue: (r) => r.username ?? '',
-      },
-      {
-        key: 'name',
-        label: 'Имя',
-        render: (r) => r.name,
-        sortable: true,
-        sortValue: (r) => r.name ?? '',
-      },
-      {
-        key: 'template',
-        label: 'Шаблон',
-        render: (r) =>
-          r.starter_template_key ? (
-            <Link
-              to={`/admin/catalogs/starters?highlight=${encodeURIComponent(r.starter_template_key)}`}
-              className="admin-inspector__link"
-              onClick={(e) => e.stopPropagation()}
-            >
-              {r.starter_template_key}
-            </Link>
-          ) : (
-            '—'
-          ),
-      },
-      {
-        key: 'period',
-        label: 'Период',
-        render: (r) => r.period_index,
-        sortable: true,
-        sortValue: (r) => r.period_index ?? 0,
-      },
-      {
-        key: 'guidance',
-        label: 'Guidance',
-        render: (r) => (
-          <>
-            <GuidanceBadge completed={r.guidance_completed} />
-            {r.guidance_current_beat ? (
-              <span className="admin-watchtower__step-tag">{r.guidance_current_beat}</span>
-            ) : null}
-          </>
-        ),
-      },
-      {
-        key: 'cash',
-        label: 'Cash',
-        render: (r) => `${r.cash_balance} ₽`,
-        sortable: true,
-        sortValue: (r) => Number(r.cash_balance) || 0,
-      },
-      {
-        key: 'outcome',
-        label: 'Исход',
-        render: (r) =>
-          r.run_outcome ? (
-            <span
-              className={
-                r.run_outcome === 'victory'
-                  ? 'admin-watchtower__badge admin-watchtower__badge--win'
-                  : 'admin-watchtower__badge admin-watchtower__badge--loss'
-              }
-            >
-              {r.run_outcome_label || r.run_outcome}
-            </span>
-          ) : (
-            '—'
-          ),
-      },
-      {
-        key: 'archived',
-        label: 'Архив',
-        render: (r) =>
-          r.is_archived ? (
-            <span className="admin-watchtower__badge admin-watchtower__badge--archived">да</span>
-          ) : (
-            '—'
-          ),
-      },
-      {
-        key: 'stuck',
-        label: 'Застрял',
-        render: (r) =>
-          r.stuck_kind === 'onboarding_stuck' ? (
-            <span className="admin-watchtower__badge admin-watchtower__badge--stuck">
-              онбординг
-            </span>
-          ) : r.stuck_kind === 'player_stuck' ? (
-            <span className="admin-watchtower__badge admin-watchtower__badge--stuck">игра</span>
-          ) : (
-            '—'
-          ),
-      },
-      { key: 'active', label: 'Активен', render: (r) => (r.is_active ? 'да' : 'нет') },
-    ],
-    [],
-  );
-
-  const notificationColumns = useMemo(
-    () => [
-      {
-        key: 'when',
-        label: 'Когда',
-        render: (r) => formatAdminDt(r.created_at),
-        sortable: true,
-        sortValue: (r) => (r.created_at ? new Date(r.created_at).getTime() : 0),
-      },
-      {
-        key: 'kind',
-        label: 'Тип',
-        render: (r) => r.kind_label || r.kind,
-        sortable: true,
-        sortValue: (r) => r.kind_label || r.kind || '',
-      },
-      {
-        key: 'summary',
-        label: 'Событие',
-        render: (r) => (
-          <span className="admin-watchtower__alert-summary">
-            {(r.summary || r.kind).split('\n')[0]}
-          </span>
-        ),
-      },
-      {
-        key: 'profile',
-        label: 'Профиль',
-        render: (r) => {
-          const pid = notificationProfileId(r);
-          return pid ? (
-            <button
-              type="button"
-              className="admin-inspector__link"
-              onClick={(e) => {
-                e.stopPropagation();
-                const next = new URLSearchParams(searchParams);
-                next.set('profile', String(pid));
-                setSearchParams(next, { replace: true });
-              }}
-            >
-              #{pid}
-            </button>
-          ) : (
-            '—'
-          );
-        },
-      },
-      { key: 'tg', label: 'В TG', render: (r) => (r.telegram_sent ? '✓' : '—') },
-    ],
-    [searchParams, setSearchParams],
-  );
-
-  const users = (data?.users ?? []).map((u) => ({ ...u, _key: `u-${u.id}`, _id: String(u.id) }));
-  const profiles = (data?.profiles ?? []).map((p) => ({
-    ...p,
-    _key: `p-${p.id}`,
-    _id: String(p.id),
-  }));
   const notifications = (data?.notifications ?? []).map((n) => ({
     ...n,
     _key: `n-${n.id}`,
@@ -460,11 +226,6 @@ export function AdminWatchtowerScreen({ onBack }) {
     [searchParams, setSearchParams],
   );
 
-  const openProfile = useCallback(
-    (row) => openProfileId(row.id),
-    [openProfileId],
-  );
-
   return (
     <div className="admin-watchtower mq-section">
       <AdminPageHeader
@@ -479,11 +240,7 @@ export function AdminWatchtowerScreen({ onBack }) {
             onClick={async () => {
               setExporting('profiles');
               try {
-                await adminApi.exportProfilesCsv({
-                  limit: 500,
-                  profile_filter: profileFilter || undefined,
-                  q: profileSearch || undefined,
-                });
+                await adminApi.exportProfilesCsv({ limit: 500 });
               } catch (e) {
                 setError(e?.message || 'CSV профилей');
               } finally {
@@ -580,53 +337,6 @@ export function AdminWatchtowerScreen({ onBack }) {
 
           {activeTab === 'guidance' ? (
             <OnboardingFunnel funnel={data.onboarding_funnel} />
-          ) : null}
-
-          {activeTab === 'players' ? (
-            <div className="admin-watchtower__panels admin-watchtower__panels--split">
-              <section className="mq-card admin-watchtower__block">
-                <h2 className="admin-watchtower__block-title">Пользователи</h2>
-                <AdminTable
-                  columns={userColumns}
-                  rows={users}
-                  highlightId={highlightUser}
-                  maxHeight="min(70vh, 520px)"
-                  virtualizeThreshold={80}
-                />
-              </section>
-
-              <section className="mq-card admin-watchtower__block">
-                <h2 className="admin-watchtower__block-title">Профили</h2>
-                <AdminFilterBar
-                  asCard={false}
-                  className="admin-filter-bar--inset"
-                  searchLabel="Профили"
-                  searchPlaceholder="Логин или имя профиля…"
-                  searchValue={searchDraft}
-                  onSearchChange={setSearchDraft}
-                  onSubmit={applyProfileSearch}
-                  showSearchReset={Boolean(profileSearch)}
-                  onSearchReset={() => {
-                    setSearchDraft('');
-                    const next = new URLSearchParams(searchParams);
-                    next.delete('q');
-                    setSearchParams(next, { replace: true });
-                  }}
-                  chips={PROFILE_FILTERS}
-                  activeChipId={profileFilter}
-                  onChipSelect={setProfileFilter}
-                  chipAriaLabel="Фильтр профилей"
-                />
-                <AdminTable
-                  columns={profileColumns}
-                  rows={profiles}
-                  highlightId={highlightProfile}
-                  onRowClick={openProfile}
-                  maxHeight="min(70vh, 560px)"
-                  virtualizeThreshold={80}
-                />
-              </section>
-            </div>
           ) : null}
 
           {activeTab === 'alerts' ? (

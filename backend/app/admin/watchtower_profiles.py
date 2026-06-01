@@ -29,8 +29,12 @@ def profile_rows_query(
     *,
     q: str = "",
     profile_filter: str = "",
+    user_id: int | None = None,
 ) -> Query:
     query = db.query(GameProfile, User).join(User, User.id == GameProfile.user_id)
+
+    if user_id is not None:
+        query = query.filter(GameProfile.user_id == int(user_id))
 
     needle = (q or "").strip()
     if needle:
@@ -85,12 +89,18 @@ def fetch_profile_rows(
     q: str = "",
     profile_filter: str = "",
     stuck_only: bool = False,
+    user_id: int | None = None,
 ) -> list[tuple[GameProfile, User]]:
     filt = (profile_filter or "").strip().lower()
     if stuck_only and not filt:
         filt = "stuck"
 
-    query = profile_rows_query(db, q=q, profile_filter=filt if filt != "stuck" else "")
+    query = profile_rows_query(
+        db,
+        q=q,
+        profile_filter=filt if filt != "stuck" else "",
+        user_id=user_id,
+    )
     fetch_limit = limit
     if filt == "stuck":
         fetch_limit = min(max(limit * 5, limit), 500)

@@ -15,9 +15,12 @@ import { ToastHost } from './components/ToastHost';
 import { MqCatalogScreen } from './components/mqx/catalog/MqCatalogScreen';
 import { AdminLayout } from './components/admin/AdminLayout';
 import { AdminWebShell } from './components/admin/AdminWebShell';
+import { AdminCatalogCreateScreen } from './components/admin/AdminCatalogCreateScreen';
 import { AdminCatalogEditorScreen } from './components/admin/AdminCatalogEditorScreen';
 import { AdminCatalogListScreen } from './components/admin/AdminCatalogListScreen';
 import { AdminCatalogsHub } from './components/admin/AdminCatalogsHub';
+import { AdminProfilesScreen } from './components/admin/AdminProfilesScreen';
+import { AdminUsersScreen } from './components/admin/AdminUsersScreen';
 import { AdminWatchtowerScreen } from './components/admin/AdminWatchtowerScreen';
 import { suggestDefaultProfileName } from './utils/suggestDefaultProfileName';
 import { API } from './api';
@@ -230,7 +233,10 @@ function App() {
                     <Routes>
                       <Route element={<AdminLayout />}>
                         <Route index element={<AdminWatchtowerScreen />} />
+                        <Route path="users" element={<AdminUsersScreen />} />
+                        <Route path="profiles" element={<AdminProfilesScreen />} />
                         <Route path="catalogs" element={<AdminCatalogsHub />} />
+                        <Route path="catalogs/:catalogKey/new" element={<AdminCatalogCreateScreen />} />
                         <Route path="catalogs/:catalogKey" element={<AdminCatalogListScreen />} />
                         <Route
                           path="catalogs/:catalogKey/edit/:rowId"

@@ -15,6 +15,13 @@ from sqlalchemy.orm import Session
 from ..admin.auth import require_admin_user
 from ..admin.catalog_detail import get_catalog_row_detail
 from ..admin.catalog_patch import patch_catalog_row
+from ..admin.catalog_choices import (
+    create_event_choice,
+    delete_event_choice,
+    list_event_choices,
+    patch_event_choice,
+)
+from ..admin.catalog_create_payload import create_catalog_row_payload
 from ..admin.catalog_write import clone_catalog_row, create_catalog_row
 from ..admin.catalogs import fetch_catalog_rows, get_catalog_spec, list_catalog_meta
 from ..admin.csv_export import profiles_csv_rows, run_feedback_csv_rows, stream_csv
@@ -26,7 +33,7 @@ from ..admin.run_feedback import build_run_feedback_rows
 from ..admin.stuck_scan import scan_stuck_and_emit
 from ..admin.notify_messages import format_alert_message_ru, kind_label_ru
 from ..database import get_db
-from ..models import GameProfile, NotificationLog, User
+from ..models import EventDefinition, GameProfile, NotificationLog, User
 
 router = APIRouter(prefix="/api/admin", tags=["admin"])
 
@@ -178,6 +185,35 @@ class AdminCatalogCreateRequest(BaseModel):
     template_key: Optional[str] = None
     key: Optional[str] = None
     title: Optional[str] = None
+    row: Optional[dict[str, Any]] = None
+
+
+class AdminUsersListResponse(BaseModel):
+    users: List[AdminUserRow]
+    total: int
+    limit: int
+
+
+class AdminProfilesListResponse(BaseModel):
+    profiles: List[AdminProfileRow]
+    total: int
+    limit: int
+
+
+class AdminEventChoiceBody(BaseModel):
+    title: str
+    description: str = ""
+    effects: dict[str, Any] = {}
+
+
+class AdminEventChoicePatchBody(BaseModel):
+    title: Optional[str] = None
+    description: Optional[str] = None
+    effects: Optional[dict[str, Any]] = None
+
+
+class AdminEventChoicesResponse(BaseModel):
+    choices: List[dict[str, Any]]
 
 
 class AdminCatalogRowMutationResponse(BaseModel):
@@ -312,13 +348,16 @@ async def admin_catalog_create_row(
     if get_catalog_spec(catalog_key) is None:
         raise HTTPException(status_code=404, detail="Unknown catalog")
     try:
-        result = create_catalog_row(
-            db,
-            catalog_key,
-            template_key=body.template_key,
-            key=body.key or body.template_key,
-            title=body.title,
-        )
+        if body.row:
+            result = create_catalog_row_payload(db, catalog_key, body.row)
+        else:
+            result = create_catalog_row(
+                db,
+                catalog_key,
+                template_key=body.template_key,
+                key=body.key or body.template_key,
+                title=body.title,
+            )
         db.commit()
     except KeyError:
         raise HTTPException(status_code=404, detail="Unknown catalog") from None
@@ -400,6 +439,166 @@ async def admin_catalog_patch_row(
         )
     db.commit()
     return AdminCatalogPatchResponse(ok=True, row=detail, errors={})
+
+
+@router.get("/users", response_model=AdminUsersListResponse)
+async def admin_list_users(
+    q: str = Query("", max_length=120),
+    limit: int = Query(100, ge=1, le=500),
+    _admin: User = Depends(require_admin_user),
+    db: Session = Depends(get_db),
+):
+    query = db.query(User).order_by(User.id.desc())
+    needle = (q or "").strip()
+    if needle:
+        like = f"%{needle}%"
+        query = query.filter(User.username.ilike(like))
+    total = query.count()
+    users = query.limit(limit).all()
+    user_ids = [u.id for u in users]
+    profile_counts: dict[int, int] = {uid: 0 for uid in user_ids}
+    if user_ids:
+        for uid, cnt in (
+            db.query(GameProfile.user_id, func.count(GameProfile.id))
+            .filter(GameProfile.user_id.in_(user_ids))
+            .group_by(GameProfile.user_id)
+            .all()
+        ):
+            profile_counts[int(uid)] = int(cnt)
+    return AdminUsersListResponse(
+        users=[
+            AdminUserRow(
+                id=u.id,
+                username=u.username,
+                telegram_id=u.telegram_id,
+                created_at=u.created_at,
+                profiles_count=profile_counts.get(u.id, 0),
+            )
+            for u in users
+        ],
+        total=int(total),
+        limit=limit,
+    )
+
+
+@router.get("/profiles", response_model=AdminProfilesListResponse)
+async def admin_list_profiles(
+    user_id: Optional[int] = Query(None, ge=1),
+    q: str = Query("", max_length=120),
+    profile_filter: str = Query("", max_length=32),
+    stuck_only: bool = Query(False),
+    limit: int = Query(100, ge=1, le=500),
+    _admin: User = Depends(require_admin_user),
+    db: Session = Depends(get_db),
+):
+    rows = fetch_profile_rows(
+        db,
+        limit=limit,
+        q=q,
+        profile_filter=profile_filter,
+        stuck_only=stuck_only,
+        user_id=user_id,
+    )
+    if user_id is not None:
+        total = (
+            db.query(func.count(GameProfile.id))
+            .filter(GameProfile.user_id == int(user_id))
+            .scalar()
+            or 0
+        )
+    else:
+        total = db.query(func.count(GameProfile.id)).scalar() or 0
+    return AdminProfilesListResponse(
+        profiles=[
+            AdminProfileRow(**build_admin_profile_row(p, user)) for p, user in rows
+        ],
+        total=int(total),
+        limit=limit,
+    )
+
+
+@router.get(
+    "/catalogs/events/rows/{row_id}/choices",
+    response_model=AdminEventChoicesResponse,
+)
+async def admin_event_choices_list(
+    row_id: int,
+    _admin: User = Depends(require_admin_user),
+    db: Session = Depends(get_db),
+):
+    if db.query(EventDefinition).filter(EventDefinition.id == row_id).first() is None:
+        raise HTTPException(status_code=404, detail="Event not found")
+    return AdminEventChoicesResponse(choices=list_event_choices(db, row_id))
+
+
+@router.post(
+    "/catalogs/events/rows/{row_id}/choices",
+    response_model=AdminEventChoicesResponse,
+)
+async def admin_event_choice_create(
+    row_id: int,
+    body: AdminEventChoiceBody,
+    _admin: User = Depends(require_admin_user),
+    db: Session = Depends(get_db),
+):
+    if db.query(EventDefinition).filter(EventDefinition.id == row_id).first() is None:
+        raise HTTPException(status_code=404, detail="Event not found")
+    try:
+        create_event_choice(
+            db,
+            row_id,
+            title=body.title,
+            description=body.description,
+            effects=body.effects,
+        )
+        db.commit()
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+    return AdminEventChoicesResponse(choices=list_event_choices(db, row_id))
+
+
+@router.patch(
+    "/catalogs/events/rows/{row_id}/choices/{choice_id}",
+    response_model=AdminEventChoicesResponse,
+)
+async def admin_event_choice_patch(
+    row_id: int,
+    choice_id: int,
+    body: AdminEventChoicePatchBody,
+    _admin: User = Depends(require_admin_user),
+    db: Session = Depends(get_db),
+):
+    if db.query(EventDefinition).filter(EventDefinition.id == row_id).first() is None:
+        raise HTTPException(status_code=404, detail="Event not found")
+    try:
+        updated = patch_event_choice(
+            db,
+            choice_id,
+            title=body.title,
+            description=body.description,
+            effects=body.effects,
+        )
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+    if updated is None:
+        raise HTTPException(status_code=404, detail="Choice not found")
+    db.commit()
+    return AdminEventChoicesResponse(choices=list_event_choices(db, row_id))
+
+
+@router.delete("/catalogs/events/rows/{row_id}/choices/{choice_id}")
+async def admin_event_choice_delete(
+    row_id: int,
+    choice_id: int,
+    _admin: User = Depends(require_admin_user),
+    db: Session = Depends(get_db),
+):
+    if db.query(EventDefinition).filter(EventDefinition.id == row_id).first() is None:
+        raise HTTPException(status_code=404, detail="Event not found")
+    if not delete_event_choice(db, choice_id):
+        raise HTTPException(status_code=404, detail="Choice not found")
+    db.commit()
+    return {"ok": True}
 
 
 @router.get("/profiles/{profile_id}", response_model=AdminProfileInspectorResponse)
