@@ -1,0 +1,17 @@
+catalog: mvp11
+version: 1
+includes:
+- consumption.yaml
+- health.yaml
+- housing.yaml
+- social_family.yaml
+- social_status.yaml
+- investment_education.yaml
+- insurance.yaml
+- auto.yaml
+- credit_debt.yaml
+- chains/family_money.yaml
+- chains/used_car.yaml
+- chains/freelance_project.yaml
+- profiles.yaml
+- meta/unlock_intro.yaml

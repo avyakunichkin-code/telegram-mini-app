@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>ТВОЙ ХОД — Product UI (MQX) v1.0</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+    :root {
+      --violet: #6D28D9; --violet-deep: #5B21B6; --emerald: #059669;
+      --ink: #0F1115; --mist: #F5F6F8; --slate: #6B7280; --line: #E5E7EB;
+      --warn: #D97706; --danger: #DC2626; --dark-bg: #16171D;
+    }
+    * { box-sizing: border-box; }
+    body {
+      font-family: 'Inter', system-ui, sans-serif; font-size: 10.5pt; line-height: 1.45;
+      color: var(--ink); margin: 0; padding: 0 12mm 14mm; max-width: 210mm; margin-inline: auto;
+    }
+    @page { size: A4; margin: 14mm 12mm 16mm 12mm; }
+    h1 { font-size: 22pt; font-weight: 700; color: var(--violet-deep); margin: 0 0 4mm; }
+    h2 { font-size: 12.5pt; font-weight: 600; margin: 7mm 0 3mm; padding-bottom: 1mm; border-bottom: 1px solid var(--line); break-after: avoid; }
+    h3 { font-size: 10.5pt; font-weight: 600; margin: 4mm 0 2mm; }
+    p { margin: 0 0 2.5mm; }
+    .meta { font-size: 8.5pt; color: var(--slate); margin-bottom: 5mm; }
+    .meta code { font-family: 'JetBrains Mono', monospace; font-size: 8pt; background: var(--mist); padding: 0.2mm 1mm; }
+    .cover {
+      min-height: 200mm; page-break-after: always; margin: -8mm -12mm 8mm -12mm; padding: 18mm 14mm;
+      background: linear-gradient(135deg, var(--violet-deep) 0%, var(--violet) 55%, #4338CA 100%);
+      color: #fff;
+    }
+    .cover h1 { color: #fff; font-size: 28pt; }
+    .cover p { opacity: .92; max-width: 140mm; }
+    table { width: 100%; border-collapse: collapse; font-size: 9pt; margin: 2mm 0 4mm; break-inside: avoid; }
+    th, td { border: 1px solid var(--line); padding: 1.8mm 2.2mm; vertical-align: top; }
+    th { background: var(--mist); }
+    .mqx-demo {
+      border: 1px solid var(--line); border-radius: 4mm; overflow: hidden; margin: 3mm 0;
+      break-inside: avoid;
+    }
+    .mqx-demo__frame { background: linear-gradient(180deg, #fff 0%, var(--mist) 100%); padding: 3mm; }
+    .mqx-demo__hero {
+      background: linear-gradient(135deg, var(--violet-deep), var(--violet));
+      color: #fff; border-radius: 3mm; padding: 3mm 4mm; margin-bottom: 2.5mm;
+      display: flex; align-items: center; gap: 3mm;
+    }
+    .mqx-demo__hero img { height: 10mm; width: auto; }
+    .mqx-demo__hero-title { font-size: 11pt; font-weight: 700; }
+    .mqx-demo__hero-meta { font-size: 7.5pt; opacity: .9; }
+    .mqx-demo__grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2mm; margin-bottom: 2.5mm; }
+    .mqx-demo__mini {
+      background: rgba(255,255,255,.85); border-radius: 2.5mm; padding: 2mm;
+      font-size: 7.5pt; border: 1px solid var(--line);
+    }
+    .mqx-demo__mini strong { display: block; font-size: 9pt; }
+    .mqx-demo__card {
+      background: color-mix(in srgb, #fff 78%, var(--violet) 6%);
+      border-radius: 2.5mm; padding: 2.5mm 3mm; font-size: 8pt;
+      border: 1px solid color-mix(in srgb, var(--line) 80%, var(--violet) 20%);
+    }
+    .mqx-demo__nav {
+      display: flex; justify-content: space-around; padding: 2mm;
+      background: #fff; font-size: 8pt; border-top: 1px solid var(--line);
+    }
+    .mqx-demo__nav .active { color: var(--violet); font-weight: 600; }
+    .callout { border-left: 3px solid var(--violet); background: color-mix(in srgb, var(--violet) 6%, #fff); padding: 2.5mm 3mm; margin: 3mm 0; font-size: 9pt; }
+    .checklist { font-size: 9pt; columns: 2; column-gap: 5mm; }
+    .checklist li { break-inside: avoid; margin-bottom: 1.5mm; }
+    .export-box { background: var(--mist); padding: 3mm; border-radius: 2mm; font-size: 9pt; margin-top: 5mm; }
+    @media print { .cover { margin: -14mm -12mm 0 -12mm; } }
+  </style>
+</head>
+<body>
+
+  <header class="cover">
+    <p style="font-size:10pt;font-weight:600;letter-spacing:.05em;text-transform:uppercase;opacity:.85">Product UI Guidelines</p>
+    <h1>MQX · Telegram Mini App</h1>
+    <p>ТВОЙ ХОД — премиум-слой UI: hero, стекло, таббар, токены. Identity (лого, Монетка) — в <code>brandbook-print.html</code>.</p>
+    <p style="font-size:9pt;margin-top:4mm">Источник: <code>BRANDBOOK_MQX.md</code> · <code>SPEC_FRONTEND_UI.md</code></p>
+  </header>
+
+  <h2>1. Процесс</h2>
+  <p>design-lab → ★ в чате → <code>APPROVED.md</code> → <code>mqx/</code> → prod. Исключение: багфикс без смены дизайна.</p>
+
+  <h2>2. Каркас</h2>
+  <table>
+    <thead><tr><th>Компонент</th><th>Назначение</th></tr></thead>
+    <tbody>
+      <tr><td><code>MqxShell</code></td><td>Hero + content</td></tr>
+      <tr><td><code>MqxTabHero</code> + G2</td><td>Табы игры</td></tr>
+      <tr><td><code>BrandMark</code> + G1</td><td>Старт / auth</td></tr>
+      <tr><td><code>MqxGuidanceStrip</code></td><td>O2 bottom strip</td></tr>
+      <tr><td><code>#root</code> max 480px</td><td>Колонка TMA</td></tr>
+    </tbody>
+  </table>
+
+  <h2>3. Демо-экран (S5)</h2>
+  <div class="mqx-demo" aria-hidden="true">
+    <div class="mqx-demo__frame">
+      <div class="mqx-demo__hero">
+        <img src="assets/logos/logo-compact.png" alt="" />
+        <div>
+          <div class="mqx-demo__hero-title">Период 3</div>
+          <div class="mqx-demo__hero-meta">Играть · Пауза · Quest Violet CTA</div>
+        </div>
+      </div>
+      <div class="mqx-demo__grid">
+        <div class="mqx-demo__mini"><strong>124 500 ₽</strong>Cash</div>
+        <div class="mqx-demo__mini"><strong>45 000 ₽</strong>Подушка</div>
+        <div class="mqx-demo__mini"><strong style="color:var(--emerald)">+12 000</strong>Cashflow</div>
+        <div class="mqx-demo__mini"><strong style="color:var(--warn)">2:14</strong>Таймер</div>
+      </div>
+      <div class="mqx-demo__card"><strong>Цель MVP</strong> — mqx-card--goal, --mqx-glass-*</div>
+    </div>
+    <div class="mqx-demo__nav">
+      <span class="active">Главная</span><span>Капитал</span><span>Аналитика</span><span>Меню</span>
+    </div>
+  </div>
+
+  <h2>4. Токены и семантика</h2>
+  <table>
+    <thead><tr><th>CSS</th><th>HEX</th><th>Роль</th></tr></thead>
+    <tbody>
+      <tr><td><code>--mq-violet</code></td><td>#6D28D9</td><td>CTA, табы</td></tr>
+      <tr><td><code>--mq-emerald</code></td><td>#059669</td><td>Плюс</td></tr>
+      <tr><td><code>--mq-danger</code></td><td>#DC2626</td><td>Просрочка</td></tr>
+      <tr><td><code>--mq-warning</code></td><td>#D97706</td><td>Время</td></tr>
+      <tr><td><code>--mq-fs-body</code></td><td>15px</td><td>Основной текст</td></tr>
+      <tr><td><code>--mqx-glass-*</code></td><td>mix tg-bg</td><td>Карточки</td></tr>
+    </tbody>
+  </table>
+
+  <h2>5. Капитал</h2>
+  <p><strong>Порядок:</strong> Доходы → Расходы → Инвестиции → Страховки → Имущество → Обязательства.</p>
+  <p><strong>Режим</strong> «Детали | Действия» — под потоками Доходы/Расходы; оформление в bottom sheet.</p>
+  <p>Строки: <code>MqxFinListRow</code> · каталог: <code>CapitalPositionCard</code>.</p>
+
+  <div class="callout">
+    <strong>Правила:</strong> один violet hero на вкладку · <code>tg-theme-*</code> + glass, не белый кусок в тёмном TG · модалки с последствием · <code>prefers-reduced-motion</code>.
+  </div>
+
+  <h2>6. Чеклист перед merge</h2>
+  <ul class="checklist">
+    <li>MqxShell / MqxTabHero</li>
+    <li>BrandLogo G1 или G2</li>
+    <li>4 уровня типографики max</li>
+    <li>Суммы с ₽, период N</li>
+    <li>#/dev/mqx после mqx/</li>
+    <li>Нет второго таббара</li>
+  </ul>
+
+  <div class="export-box">
+    <strong>PDF:</strong> Ctrl+P из этого файла · Pandoc: <code>BRANDBOOK_MQX.md</code> → TvoyHod-Product-UI.pdf<br/>
+    <strong>Brand PDF:</strong> <code>brandbook-print.html</code>
+  </div>
+
+  <p class="meta" style="margin-top:6mm">ТВОЙ ХОД Product UI (MQX) v1.0</p>
+</body>
+</html>

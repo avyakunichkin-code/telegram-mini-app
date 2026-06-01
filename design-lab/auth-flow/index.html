@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="ru" data-theme="light">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>ТВОЙ ХОД — auth-flow (design-lab)</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <header class="lab-header">
+      <div>
+        <h1>Auth flow — вход и регистрация</h1>
+        <p>
+          Варианты <strong>A</strong> (premium MQX), <strong>B</strong> (Монетка), <strong>C</strong> (единый экран с табами).
+          Сравнение раздельных route vs unified — см. <a href="./README.md">README.md</a>.
+        </p>
+      </div>
+      <div class="lab-theme" role="group" aria-label="Тема">
+        <button type="button" class="is-active" data-theme-btn="light">Светлая</button>
+        <button type="button" data-theme-btn="dark">Тёмная</button>
+      </div>
+    </header>
+
+    <main class="lab-wrap">
+      <!-- A Login -->
+      <section class="lab-section">
+        <div class="lab-section__label">
+          <span class="lab-section__id">A</span>
+          <span class="lab-section__title">Premium MQX · вход (отдельный экран)</span>
+        </div>
+        <p class="lab-section__note">
+          Направление <strong>F</strong>: hero как на вкладках игры, glass-карта, декор + слот под TGS. Отдельный route
+          <code>/login</code>.
+        </p>
+        <div class="lab-stage">
+          <article class="phone" aria-label="Макет A — вход">
+            <div class="phone__decor" aria-hidden="true">
+              <div class="phone__decor-blob phone__decor-blob--violet"></div>
+              <div class="phone__decor-blob phone__decor-blob--sky"></div>
+              <div class="phone__tgs-slot">TGS<br />фон</div>
+            </div>
+            <div class="phone__scroll">
+              <header class="auth-hero">
+                <div class="auth-hero__row">
+                  <div>
+                    <div class="auth-hero__kicker">Аккаунт</div>
+                    <h2 class="auth-hero__title">ТВОЙ ХОД</h2>
+                  </div>
+                  <span class="auth-hero__pill">Вход</span>
+                </div>
+                <p class="auth-hero__sub">Латинские логин и пароль, как при регистрации.</p>
+              </header>
+              <div class="auth-card">
+                <div class="auth-card__kicker">Безопасность</div>
+                <h3 class="auth-card__title">Войти в игру</h3>
+                <p class="auth-card__sub">Коротко и по делу — как на главном экране.</p>
+                <div class="auth-field">
+                  <label for="a-login-user">Имя пользователя</label>
+                  <input id="a-login-user" name="username" type="text" autocomplete="username" placeholder="username" />
+                </div>
+                <div class="auth-field">
+                  <label for="a-login-pass">Пароль</label>
+                  <input
+                    id="a-login-pass"
+                    name="password"
+                    type="password"
+                    autocomplete="current-password"
+                    placeholder="••••••"
+                  />
+                </div>
+                <div class="auth-actions">
+                  <button type="button" class="auth-btn auth-btn--primary">Войти</button>
+                  <button type="button" class="auth-btn auth-btn--outline">Нет аккаунта? Зарегистрироваться</button>
+                </div>
+              </div>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <!-- A-reg Register -->
+      <section class="lab-section">
+        <div class="lab-section__label">
+          <span class="lab-section__id">A-reg</span>
+          <span class="lab-section__title">Premium MQX · регистрация (отдельный экран)</span>
+        </div>
+        <p class="lab-section__note">Парный экран к A — route <code>/register</code>.</p>
+        <div class="lab-stage">
+          <article class="phone" aria-label="Макет A-reg — регистрация">
+            <div class="phone__decor" aria-hidden="true">
+              <div class="phone__decor-blob phone__decor-blob--violet"></div>
+            </div>
+            <div class="phone__scroll">
+              <header class="auth-hero">
+                <div class="auth-hero__row">
+                  <div>
+                    <div class="auth-hero__kicker">Аккаунт</div>
+                    <h2 class="auth-hero__title">Новый игрок</h2>
+                  </div>
+                  <span class="auth-hero__pill">Регистрация</span>
+                </div>
+                <p class="auth-hero__sub">Логин, email и пароль — обязательны.</p>
+              </header>
+              <div class="auth-card">
+                <div class="auth-card__kicker">Профиль</div>
+                <h3 class="auth-card__title">Создать аккаунт</h3>
+                <div class="auth-field">
+                  <label for="a-reg-user">Имя пользователя *</label>
+                  <input id="a-reg-user" type="text" autocomplete="username" />
+                </div>
+                <div class="auth-field">
+                  <label for="a-reg-email">Email *</label>
+                  <input id="a-reg-email" type="email" autocomplete="email" />
+                </div>
+                <div class="auth-field">
+                  <label for="a-reg-pass">Пароль *</label>
+                  <input id="a-reg-pass" type="password" autocomplete="new-password" placeholder="••••••" />
+                </div>
+                <p class="auth-field-hint">Не короче 6 символов</p>
+                <div class="auth-field">
+                  <label for="a-reg-pass2">Повторите пароль *</label>
+                  <input id="a-reg-pass2" type="password" autocomplete="new-password" placeholder="••••••" />
+                </div>
+                <div class="auth-field">
+                  <label for="a-reg-name">Полное имя</label>
+                  <input id="a-reg-name" type="text" autocomplete="name" />
+                </div>
+                <p class="auth-field-hint">По желанию</p>
+                <div class="auth-actions">
+                  <button type="button" class="auth-btn auth-btn--primary">Зарегистрироваться</button>
+                  <button type="button" class="auth-btn auth-btn--outline">Уже есть аккаунт — войти</button>
+                </div>
+              </div>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <!-- B Monetka -->
+      <section class="lab-section">
+        <div class="lab-section__label">
+          <span class="lab-section__id">B</span>
+          <span class="lab-section__title">Монетка · вход (отдельный экран)</span>
+        </div>
+        <p class="lab-section__note">
+          Направление <strong>M</strong>: персонаж + пузырь. Связка с guided onboarding. Регистрация — тот же skin или
+          упрощённый (см. README).
+        </p>
+        <div class="lab-stage">
+          <article class="phone" aria-label="Макет B — вход">
+            <div class="auth-b">
+              <img
+                class="auth-b__mascot"
+                src="../onboarding-brief/assets/monetka-mascot.png"
+                alt=""
+                width="112"
+                height="112"
+              />
+              <div class="auth-b__bubble">
+                <h3 class="auth-b__bubble-title">Привет, я Монетка!</h3>
+                <p class="auth-b__bubble-text">Войди — и начнём разбираться с деньгами в игре. Логин латиницей.</p>
+                <div class="auth-field">
+                  <label for="b-user">Логин</label>
+                  <input id="b-user" type="text" placeholder="username" />
+                </div>
+                <div class="auth-field" style="margin-bottom: 0">
+                  <label for="b-pass">Пароль</label>
+                  <input id="b-pass" type="password" placeholder="••••••" />
+                </div>
+                <div class="auth-actions" style="margin-top: 14px">
+                  <button type="button" class="auth-btn auth-btn--primary">Войти</button>
+                </div>
+                <p class="auth-link">Нет аккаунта? <button type="button">Создать</button></p>
+              </div>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <!-- C Unified -->
+      <section class="lab-section">
+        <div class="lab-section__label">
+          <span class="lab-section__id">C</span>
+          <span class="lab-section__title">Единый экран · табы «Вход | Регистрация»</span>
+        </div>
+        <p class="lab-section__note">
+          Направление <strong>L</strong>: один route, переключатель табов (кликабельно). Deep-link:
+          <code>/login</code> и <code>/register</code> открывают нужный таб.
+        </p>
+        <div class="lab-stage">
+          <article class="phone phone--compact" aria-label="Макет C — unified" data-auth-tabs>
+            <div class="phone__decor" aria-hidden="true">
+              <div class="phone__decor-blob phone__decor-blob--violet"></div>
+            </div>
+            <div class="phone__scroll">
+              <header class="auth-hero" style="margin-bottom: 10px">
+                <div class="auth-hero__kicker">Аккаунт</div>
+                <h2 class="auth-hero__title">ТВОЙ ХОД</h2>
+                <p class="auth-hero__sub">Вход или регистрация — на одном экране.</p>
+              </header>
+
+              <div class="auth-tabs" role="tablist" aria-label="Вход или регистрация">
+                <button type="button" class="auth-tab is-active" data-auth-tab="login" role="tab" aria-selected="true">
+                  Вход
+                </button>
+                <button type="button" class="auth-tab" data-auth-tab="register" role="tab" aria-selected="false">
+                  Регистрация
+                </button>
+              </div>
+
+              <div class="auth-card">
+                <div class="auth-panel" data-auth-panel="login">
+                  <h3 class="auth-card__title">Войти</h3>
+                  <div class="auth-field">
+                    <label for="c-login-user">Имя пользователя</label>
+                    <input id="c-login-user" type="text" autocomplete="username" />
+                  </div>
+                  <div class="auth-field">
+                    <label for="c-login-pass">Пароль</label>
+                    <input id="c-login-pass" type="password" autocomplete="current-password" />
+                  </div>
+                  <div class="auth-actions">
+                    <button type="button" class="auth-btn auth-btn--primary">Войти</button>
+                  </div>
+                </div>
+
+                <div class="auth-panel" data-auth-panel="register" hidden>
+                  <h3 class="auth-card__title">Создать аккаунт</h3>
+                  <div class="auth-field">
+                    <label for="c-reg-user">Имя пользователя *</label>
+                    <input id="c-reg-user" type="text" />
+                  </div>
+                  <div class="auth-field">
+                    <label for="c-reg-email">Email *</label>
+                    <input id="c-reg-email" type="email" />
+                  </div>
+                  <div class="auth-field">
+                    <label for="c-reg-pass">Пароль *</label>
+                    <input id="c-reg-pass" type="password" />
+                  </div>
+                  <div class="auth-field">
+                    <label for="c-reg-pass2">Повторите пароль *</label>
+                    <input id="c-reg-pass2" type="password" />
+                  </div>
+                  <div class="auth-actions">
+                    <button type="button" class="auth-btn auth-btn--primary">Зарегистрироваться</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section class="lab-section">
+        <div class="lab-section__label">
+          <span class="lab-section__id">?</span>
+          <span class="lab-section__title">Что выбрать</span>
+        </div>
+        <dl class="lab-compare">
+          <dt>Нужна связка с Монеткой</dt>
+          <dd><strong>B</strong> или гибрид B + карточка из A</dd>
+          <dt>Минимум шагов / один URL</dt>
+          <dd><strong>C</strong></dd>
+          <dt>Максимальное единство с игрой</dt>
+          <dd><strong>A</strong> + <strong>A-reg</strong></dd>
+        </dl>
+      </section>
+    </main>
+
+    <script src="./lab.js"></script>
+  </body>
+</html>

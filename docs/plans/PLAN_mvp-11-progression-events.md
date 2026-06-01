@@ -1,6 +1,6 @@
 ---
 layer: plan
-status: draft
+status: implemented
 tracks: progression, events-levels, xp, mvp-1-1
 spec_sprint: ../specs/features/SPEC_mvp-11-progression-events.md
 backlog_mq: MQ-111 — MQ-116
@@ -8,7 +8,9 @@ backlog_mq: MQ-111 — MQ-116
 
 # План MVP 1.1: события по уровню, прокачка, связка UX
 
-Нарезка под **[`SPEC_mvp-11-progression-events`](../specs/features/SPEC_mvp-11-progression-events.md)** (approved). Общая дорожная карта фаз и константы — см. **[`PLAN_level-xp-progression`](PLAN_level-xp-progression.md)** и **[`LEVEL_XP_SYSTEM`](../specs/gameplay/LEVEL_XP_SYSTEM.md)**.
+> **Устарело (2026-05-25):** срезы про **character XP**, **MQ-113** `apply_character_xp` и **level gates** не актуальны — [ADR-003](../decisions/ADR-003-remove-character-progression.md). Актуальная прогрессия событий: **`event_tier` от `period_index`** в [SPEC_mvp-11](../specs/features/SPEC_mvp-11-progression-events.md).
+
+Нарезка под **[`SPEC_mvp-11-progression-events`](../specs/features/SPEC_mvp-11-progression-events.md)** (**implemented**). Канон прогрессии: [remove-character-xp](../vision/ideas/remove-character-xp-and-levels.md).
 
 ---
 
@@ -39,7 +41,7 @@ flowchart TD
     MQ115 --> MQ116
 ```
 
-- **MQ-112** технически читает `profile.level`; после **MQ-113** уровень везде согласуется с одной утилитой XP/L — поэтому **MQ-113 перед или вместе с началом тестирования MQ-112** рекомендован порядком ниже.
+- ~~**MQ-113**~~ снят: tier от **`period_index`**, не от `profile.level` ([ADR-003](../decisions/ADR-003-remove-character-progression.md)).
 
 ---
 
@@ -48,7 +50,7 @@ flowchart TD
 | Шаг | Задача | Результат / критерий готовности |
 |-----|--------|----------------------------------|
 | **1** | **MQ-111** | Колонки `event_definitions.event_tier`, `repeat_policy`; модель SQLAlchemy; смоук приложения после миграции. |
-| **2** | **MQ-113** | **`character_progression.py`**: единый `apply_character_xp`; перенос дубля из **`game_period`**, **`period_actions`** (spec §11). |
+| **2** | ~~**MQ-113**~~ | **Superseded (2026-05-24):** character XP/level сняты — [ADR-003](../decisions/ADR-003-remove-character-progression.md), [`remove-character-xp`](../vision/ideas/remove-character-xp-and-levels.md). Шаг пропустить. |
 | **3** | **MQ-112** | `ensure_period_events`: окно **\[max(1,L−2), L\]**, **`repeat_policy`**, весовая выборка **без** повторов, fallback §6 spec. |
 | **4** | **MQ-114** | Whitelist `effects_json`: **`xp_delta`**, **`monthly_lifestyle_delta`** + clamp; обработчик choose после денежных эффектов. |
 | **5** | **MQ-115** | **`GET /api/finance/overview`**: **`character_*`**; синхронизация **`frontend-react/src/api.js`**. |
@@ -58,7 +60,7 @@ flowchart TD
 
 ## 4. Параллелизм (при двух исполнителях)
 
-После **MQ-111** и **MQ-113**:
+После **MQ-111** (MQ-113 superseded):
 
 - можно параллелить **MQ-112** (отбор событий) и **MQ-114**/`MQ-115`, если интерфейсы не конфликтуют по файлам — на практике **MQ-114** и **MQ-115** чаще идут последовательно после стабильного утилиты.
 

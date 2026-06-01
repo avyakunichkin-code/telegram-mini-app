@@ -1,0 +1,20 @@
+{
+  "ep": "000",
+  "part": "1/2",
+  "slug": "ep-000-author-why",
+  "pair_slug": "ep-000-series-ahead",
+  "arc": null,
+  "arc_title": "Пролог",
+  "layer": "author",
+  "voice": "first_person",
+  "image_headline": "ТВОЙ ХОД",
+  "image_hook_small": "Я сделал свой · Теперь",
+  "image_tagline": "Финансы как игра",
+  "image_layout": "мелкий текст сверху → логотип (зарождение бренда) → подзаголовок",
+  "product_name": "ТВОЙ ХОД",
+  "brand_hook": "свой ход → ТВОЙ ХОД",
+  "visual_pair": "ep-000-intro-desk-series",
+  "platforms": ["telegram"],
+  "approved_at": null,
+  "published_at": null
+}

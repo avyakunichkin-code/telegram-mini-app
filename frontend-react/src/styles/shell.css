@@ -1,0 +1,732 @@
+﻿.app-shell {
+  text-align: left;
+  flex: 1;
+  box-sizing: border-box;
+}
+
+h1,
+h2 {
+  font-family: var(--heading);
+  font-weight: 500;
+  color: var(--text-h);
+}
+
+h1 {
+  font-size: 56px;
+  letter-spacing: -1.68px;
+  margin: 32px 0;
+  @media (max-width: 1024px) {
+    font-size: 36px;
+    margin: 20px 0;
+  }
+}
+h2 {
+  font-size: var(--mq-fs-display);
+  line-height: 118%;
+  letter-spacing: -0.24px;
+  margin: 0 0 8px;
+  @media (max-width: 1024px) {
+    font-size: var(--mq-fs-title);
+  }
+}
+p {
+  margin: 0;
+}
+
+code,
+.counter {
+  font-family: var(--mono);
+  display: inline-flex;
+  border-radius: 4px;
+  color: var(--text-h);
+}
+
+code {
+  font-size: var(--mq-fs-body);
+  line-height: 135%;
+  padding: 4px 8px;
+  background: var(--code-bg);
+}
+
+.bottom-nav {
+  position: relative;
+  flex-shrink: 0;
+  width: 100%;
+  max-width: 480px;
+  margin-inline: auto;
+  box-sizing: border-box;
+  background:
+    linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--tg-theme-bg-color, var(--bg)) 86%, transparent) 0%,
+      color-mix(in srgb, var(--tg-theme-bg-color, var(--bg)) 96%, transparent) 100%
+    );
+  backdrop-filter: blur(10px);
+  padding: 8px 6px;
+  display: flex;
+  gap: 4px;
+  justify-content: space-between;
+  align-items: stretch;
+  border-top: 1px solid color-mix(in srgb, var(--tg-theme-hint-color, var(--border)) 50%, transparent);
+  box-shadow:
+    0 -10px 24px color-mix(in srgb, #000 10%, transparent),
+    0 0 0 1px color-mix(in srgb, var(--tg-theme-hint-color, var(--border)) 25%, transparent) inset;
+  min-height: var(--tma-tabbar-height);
+  z-index: 100;
+}
+
+.bottom-nav--icons {
+  padding-top: 6px;
+  padding-bottom: calc(8px + env(safe-area-inset-bottom, 0px));
+}
+
+/* S5: разделители между вкладками, активная — заливка всей ячейки (без «пилюли») */
+.bottom-nav--unified {
+  padding: 0 0 env(safe-area-inset-bottom, 0px);
+  gap: 0;
+  background: var(--tg-theme-bg-color, #fff);
+  backdrop-filter: none;
+  border-top: 1px solid color-mix(in srgb, var(--mqx-ink, #0f1115) 8%, transparent);
+  box-shadow: none;
+}
+
+.bottom-nav--unified .bottom-nav__track {
+  display: flex;
+  align-items: stretch;
+  width: 100%;
+  min-height: 56px;
+}
+
+.bottom-nav--unified .bottom-nav__sep {
+  flex: 0 0 1px;
+  width: 1px;
+  margin: 0;
+  align-self: stretch;
+  background: color-mix(in srgb, var(--mqx-ink, #0f1115) 10%, transparent);
+  pointer-events: none;
+}
+
+.bottom-nav--unified .bottom-nav__cell {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  padding: 5px 2px 4px;
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+  background: transparent;
+  color: color-mix(in srgb, var(--mqx-ink, #0f1115) 42%, transparent);
+  cursor: pointer;
+  transition:
+    background 0.15s ease,
+    color 0.15s ease,
+    transform 0.08s ease;
+}
+
+.bottom-nav--unified .bottom-nav__cell-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  min-width: 0;
+  max-width: 100%;
+}
+
+.bottom-nav--unified .bottom-nav__label {
+  font-size: 10px;
+  font-weight: 600;
+  line-height: 1.15;
+  letter-spacing: 0.01em;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.bottom-nav--unified .bottom-nav__cell--active .bottom-nav__label {
+  color: inherit;
+}
+
+.bottom-nav--unified .bottom-nav__cell:active:not(:disabled) {
+  transform: scale(0.97);
+}
+
+.bottom-nav--unified .bottom-nav__cell--active {
+  color: #fff;
+  background: linear-gradient(165deg, var(--mq-violet, #7c3aed), var(--mq-violet-deep, #5b21b6));
+  box-shadow: none;
+}
+
+.bottom-nav--unified .bottom-nav__cell--active svg {
+  color: #fff;
+}
+
+.bottom-nav--unified .bottom-nav__cell:disabled {
+  opacity: 0.32;
+  cursor: not-allowed;
+}
+
+.bottom-nav--unified .bottom-nav__cell:focus-visible {
+  outline: 2px solid var(--mq-accent-link, var(--mq-violet, #7c3aed));
+  outline-offset: 1px;
+}
+
+.tma-nav-icon-btn {
+  flex: 1;
+  min-width: 0;
+  max-width: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 46px;
+  margin: 0;
+  padding: 0;
+  border: none;
+  border-radius: 12px;
+  background: transparent;
+  color: var(--tg-theme-hint-color, var(--text));
+  cursor: pointer;
+  transition:
+    background 0.15s ease,
+    color 0.15s ease,
+    transform 0.08s ease;
+}
+
+.tma-nav-icon-btn:active {
+  transform: scale(0.96);
+}
+
+.tma-nav-icon-btn--active {
+  color: var(--tg-theme-button-text-color, #fff);
+  background: var(--mq-accent-fill);
+  box-shadow:
+    0 2px 10px color-mix(in srgb, var(--mq-violet) 28%, transparent),
+    0 0 0 1px color-mix(in srgb, #fff 18%, transparent) inset;
+}
+
+.tma-nav-icon-btn:focus-visible {
+  outline: 2px solid var(--mq-accent-link);
+  outline-offset: 2px;
+}
+
+/* Вкладки «Финансы» */
+.mq-tabs-wrap {
+  margin-bottom: 10px;
+}
+
+.mq-tablist {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 4px;
+  padding: 4px;
+  border-radius: 12px;
+  background: color-mix(in srgb, var(--tg-theme-hint-color, var(--mq-line)) 10%, transparent);
+  border: 1px solid color-mix(in srgb, var(--tg-theme-hint-color, var(--mq-line)) 35%, transparent);
+}
+
+@media (max-width: 400px) {
+  .mq-tablist {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* Вкладки «Финансы» игры: всегда сетка 2×2 для равномерного заполнения ширины */
+.mq-tablist--2x2 {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.mq-fin-wrap {
+  width: 100%;
+}
+
+.mq-fin-shell {
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+.mq-fin-field-grid {
+  display: grid;
+  gap: 10px;
+  width: 100%;
+  box-sizing: border-box;
+  align-items: end;
+}
+
+.mq-fin-field-grid--2 {
+  grid-template-columns: 1fr 1fr;
+}
+
+/* Депозит / облигации: два поля + кнопка в одной сетке */
+.mq-fin-field-grid--with-cta {
+  grid-template-columns: 1fr 1fr auto;
+}
+
+@media (max-width: 392px) {
+  .mq-fin-field-grid--with-cta {
+    grid-template-columns: 1fr 1fr;
+  }
+  .mq-fin-field-grid--with-cta > button {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 352px) {
+  .mq-fin-field-grid--2 {
+    grid-template-columns: 1fr;
+  }
+}
+
+.mq-fin-btn-span2 {
+  grid-column: 1 / -1;
+  justify-self: stretch;
+}
+
+.mq-fin-block-head {
+  margin: 0 0 8px;
+  font-size: var(--mq-fs-caption);
+  font-weight: 650;
+  letter-spacing: 0.02em;
+  color: var(--tg-theme-text-color, var(--mq-ink));
+}
+
+.mq-section-intro {
+  margin: 0 0 10px;
+  padding: 0 20px;
+  font-size: var(--mq-fs-caption);
+  line-height: 1.42;
+  font-weight: 500;
+  color: color-mix(in srgb, var(--tg-theme-text-color, #111) 58%, var(--tg-theme-hint-color, #6b7280));
+}
+
+/* Экраны с внешним padding (стартеры, авторизация): вводный текст без лишней «колонны» */
+.mq-screen-intro {
+  margin: 0 0 10px;
+  padding: 0 20px;
+  font-size: var(--mq-fs-caption);
+  line-height: 1.42;
+  font-weight: 500;
+  color: color-mix(in srgb, var(--tg-theme-text-color, #111) 62%, var(--tg-theme-hint-color, #6b7280));
+}
+
+/* Внутри Section на игровой вкладке: под заголовком, по ширине контента секции */
+.mq-slot-intro {
+  margin: 0 0 10px;
+  padding: 0 20px;
+  font-size: var(--mq-fs-caption);
+  line-height: 1.42;
+  font-weight: 500;
+  color: color-mix(in srgb, var(--tg-theme-text-color, #111) 58%, var(--tg-theme-hint-color, #6b7280));
+}
+
+.mq-add-block {
+  margin-top: 6px;
+  padding-top: 10px;
+  border-top: 1px dashed color-mix(in srgb, var(--tg-theme-hint-color), transparent 68%);
+}
+
+.mq-add-heading {
+  margin: 0 0 8px;
+  font-size: var(--mq-fs-caption);
+  font-weight: 650;
+  color: var(--tg-theme-text-color);
+}
+
+/* Более лёгкие input-подсказки (на базовых формах): не превращаем в еле-серый текст */
+.mq-screen-intro strong,
+.mq-slot-intro strong {
+  font-weight: 650;
+}
+
+.mq-add-action {
+  margin-top: 10px;
+}
+
+.mq-li-title {
+  font-weight: 650;
+  font-size: var(--mq-fs-body);
+  margin-bottom: 2px;
+}
+
+.mq-li-meta {
+  font-size: var(--mq-fs-caption);
+  line-height: 1.42;
+  color: var(--tg-theme-hint-color);
+}
+
+.mq-caption-muted {
+  margin: 8px 0 0;
+  font-size: var(--mq-fs-caption);
+  line-height: 1.42;
+  font-weight: 500;
+  color: var(--tg-theme-hint-color);
+}
+
+.mq-caption-muted:first-child {
+  margin-top: 0;
+}
+
+.mq-in-tab-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.mq-modal-lead {
+  margin: 0 0 8px;
+  font-size: var(--mq-fs-body);
+  font-weight: 650;
+  color: var(--tg-theme-text-color, var(--mq-ink));
+}
+
+.mq-modal-body {
+  margin: 0;
+  font-size: var(--mq-fs-body);
+  line-height: 1.42;
+}
+
+.mq-modal-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.mq-bar-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.mq-period-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.mq-period-actions__row {
+  display: grid;
+  grid-template-columns: 1fr minmax(118px, 36%);
+  gap: 8px;
+  align-items: center;
+}
+
+@media (max-width: 360px) {
+  .mq-period-actions__row {
+    grid-template-columns: 1fr;
+  }
+}
+
+.mq-input-inline--dense {
+  padding: 8px 10px;
+  font-size: var(--mq-fs-caption);
+}
+
+.mq-tab {
+  margin: 0;
+  padding: 8px 4px;
+  border: none;
+  border-radius: 9px;
+  font: inherit;
+  font-size: var(--mq-fs-small);
+  font-weight: 600;
+  line-height: 1.2;
+  text-align: center;
+  color: var(--tg-theme-text-color, var(--mq-ink));
+  background: transparent;
+  cursor: pointer;
+  transition:
+    background 0.18s cubic-bezier(0.22, 1, 0.32, 1),
+    color 0.18s ease,
+    transform 0.14s cubic-bezier(0.22, 1, 0.32, 1),
+    box-shadow 0.2s ease;
+}
+
+.mq-tab:active:not(.mq-tab--active) {
+  transform: scale(0.96);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mq-tab {
+    transition: background 0.12s ease, color 0.12s ease;
+  }
+}
+
+.mq-tab--active {
+  color: var(--tg-theme-button-text-color, #fff);
+  background: var(--mq-accent-fill);
+  box-shadow: 0 1px 4px color-mix(in srgb, var(--mq-violet) 22%, transparent);
+}
+
+.mq-tab:focus-visible {
+  outline: 2px solid var(--mq-accent-link);
+  outline-offset: 1px;
+}
+
+/* Аналитика: компактные бары */
+.analytics-bar-block {
+  margin-top: 2px;
+}
+
+.analytics-bar-caption {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin-bottom: 4px;
+}
+
+.analytics-bar-caption__title {
+  font-size: var(--mq-fs-caption);
+  font-weight: 650;
+}
+
+.analytics-bar-caption__sub {
+  font-size: var(--mq-fs-caption);
+  color: var(--tg-theme-hint-color);
+}
+
+.analytics-bar-track {
+  height: 10px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--tg-theme-hint-color), transparent 76%);
+  overflow: hidden;
+}
+
+.analytics-bar-fill {
+  height: 100%;
+  border-radius: 999px;
+  transition: width 0.35s ease;
+}
+
+.analytics-bar-fill--success {
+  background: linear-gradient(90deg, var(--mq-emerald), color-mix(in srgb, var(--mq-emerald), #fff 18%));
+}
+
+.analytics-bar-fill--violet {
+  background: linear-gradient(90deg, var(--mq-violet-deep), var(--mq-violet));
+}
+
+.analytics-bar-fill--danger {
+  background: linear-gradient(90deg, var(--mq-danger), color-mix(in srgb, var(--mq-danger), #fff 22%));
+}
+
+.analytics-bar-fill--neutral {
+  background: linear-gradient(
+    90deg,
+    color-mix(in srgb, var(--tg-theme-hint-color), var(--mq-violet) 40%),
+    var(--tg-theme-hint-color)
+  );
+}
+
+/* Деньги и строки статистики */
+.mq-money {
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.mq-money__value {
+  letter-spacing: -0.01em;
+}
+
+.mq-stat-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 6px 0;
+  border-bottom: 1px solid color-mix(in srgb, var(--tg-theme-hint-color), transparent 88%);
+}
+
+.mq-stat-row:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.mq-stat-row__ico {
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.mq-stat-row__mqcoin {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--mq-violet);
+}
+
+.mq-stat-row__mqcoin.mq-stat-row__mqcoin--emerald {
+  color: var(--mq-emerald);
+}
+
+.mq-stat-row__mqcoin svg {
+  display: block;
+}
+
+.mq-stat-row__body {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.mq-stat-row__label {
+  font-size: var(--mq-fs-caption);
+  font-weight: 500;
+  color: var(--tg-theme-hint-color);
+}
+
+.mq-stat-row__value {
+  font-size: var(--mq-fs-body);
+  font-weight: 600;
+  color: var(--tg-theme-text-color);
+}
+
+.mq-stat-ico {
+  color: var(--mq-violet);
+}
+
+.mq-stat-ico--muted {
+  color: color-mix(in srgb, var(--tg-theme-hint-color), var(--mq-violet) 25%);
+}
+
+.mq-stat-ico--emerald {
+  color: var(--mq-emerald);
+}
+
+.mq-stat-ico--danger {
+  color: var(--mq-danger);
+}
+
+.mq-stat-ico--violet {
+  color: var(--mq-violet);
+}
+
+.mq-input-inline {
+  flex: 1;
+  min-width: 0;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid color-mix(in srgb, var(--tg-theme-hint-color), transparent 40%);
+  font: inherit;
+  background: var(--tg-theme-bg-color, var(--bg));
+  color: var(--tg-theme-text-color);
+  box-sizing: border-box;
+}
+
+.mq-streak-row {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+}
+
+.mq-streak-row__title {
+  font-weight: 650;
+  font-size: var(--mq-fs-body);
+}
+
+.mq-streak-row__text {
+  font-size: var(--mq-fs-caption);
+  line-height: 1.42;
+  opacity: 0.95;
+  margin-top: 2px;
+}
+
+.mq-ts-error {
+  font-size: var(--mq-fs-caption);
+  color: var(--tg-theme-hint-color);
+}
+
+.mq-spark-pair {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.mq-spark-block {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.mq-spark-block__titles {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.mq-spark-block__title {
+  font-size: var(--mq-fs-caption);
+  font-weight: 650;
+}
+
+.mq-spark-block__sub {
+  font-size: var(--mq-fs-caption);
+  color: var(--tg-theme-hint-color);
+}
+
+.mq-sparkline {
+  width: 100%;
+  height: 52px;
+}
+
+.mq-spark-block--violet .mq-sparkline {
+  color: var(--mq-violet);
+}
+
+.mq-spark-block--emerald .mq-sparkline {
+  color: var(--mq-emerald);
+}
+
+.mq-spark-block--sky .mq-sparkline {
+  color: #38bdf8;
+}
+
+.mq-spark-block--dark .mq-spark-block__title {
+  color: rgba(255, 255, 255, 0.78);
+}
+
+.mq-spark-block--dark .mq-spark-block__sub {
+  color: rgba(255, 255, 255, 0.48);
+}
+
+.mq-spark-block--dark.mq-spark-block--violet .mq-sparkline {
+  color: #c4b5fd;
+}
+
+.mq-spark-block--dark.mq-spark-block--emerald .mq-sparkline {
+  color: #6ee7b7;
+}
+
+.mq-spark-block--dark.mq-spark-block--sky .mq-sparkline {
+  color: #7dd3fc;
+}
+
+.mq-spark-hint {
+  margin: 8px 0 0;
+  font-size: var(--mq-fs-caption);
+  line-height: 1.38;
+  color: var(--tg-theme-hint-color);
+}
+
+.mq-stat-row--dense {
+  padding: 4px 0;
+}
+
+.game-content {
+  /* legacy: отступы таббара — см. .mq-game-shell__main */
+  padding-bottom: 0;
+}
+
+.spinner {
+  width: 18px;
+  height: 18px;
+  border: 2px solid color-mix(in srgb, var(--tg-theme-hint-color), transparent 72%);
+  border-top-color: var(--mq-accent-fill);
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }

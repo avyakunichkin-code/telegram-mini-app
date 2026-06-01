@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="ru" data-theme="light">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>ТВОЙ ХОД — Цель: цепочка (design-lab)</title>
+    <link rel="stylesheet" href="./lab-base.css" />
+  </head>
+  <body>
+    <header class="lab-header">
+      <div>
+        <h1>Дашборд — раздел «Цель»</h1>
+        <p>Цепочка целей по шаблону · без шкал · подсказки «как достичь» · между финансами и действиями.</p>
+      </div>
+      <div class="lab-header__controls">
+        <div class="lab-theme" role="group" aria-label="Тема">
+          <button type="button" class="is-active" data-theme-btn="light">Светлая</button>
+          <button type="button" data-theme-btn="dark">Тёмная</button>
+        </div>
+      </div>
+    </header>
+
+    <main class="lab-main">
+      <p class="lab-intro">
+        <strong>G1 ★ (уточнено)</strong> — в шапке аккордеона название цели (без повтора внутри), без badge «В работе».
+        Внутри — <strong>Монетка</strong> и пузырь «Давай, помогу разобраться», мелкий текст, акценты в стиле Монетки
+        (<code>strong</code> голубые). Фон раздела — <strong>sky</strong>, как у XP. Внизу — цепочка сценария.
+      </p>
+
+      <div class="lab-wrap">
+        <p class="lab-page-order">
+          <strong>Порядок блоков на дашборде</strong>
+          <ol>
+            <li>Финансы периода</li>
+            <li><strong>Цель</strong> ← этот макет</li>
+            <li>Действия периода</li>
+          </ol>
+        </p>
+
+        <section class="lab-states">
+          <p class="lab-state-label">G1 ★ — полная страница (развёрнуто, цель «Подушка»)</p>
+          <div class="mqx-dash-stack mqx-dash-stack--unified" data-skin="s5">
+            <section class="mqx-finance-static" aria-label="Финансы периода">
+              <h2 class="mqx-finance-static__title">Финансы периода</h2>
+              <div class="mqx-finance-static__chips" style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+                <div class="mqx-finance-chip" style="padding:8px;border-radius:12px;background:color-mix(in srgb, var(--mqx-ink) 4%, transparent)">
+                  <span style="font-size:9px;text-transform:uppercase;opacity:.55">Доходы</span>
+                  <div style="font-size:13px;font-weight:800">+12 400</div>
+                </div>
+                <div class="mqx-finance-chip" style="padding:8px;border-radius:12px;background:color-mix(in srgb, var(--mqx-ink) 4%, transparent)">
+                  <span style="font-size:9px;text-transform:uppercase;opacity:.55">Расходы</span>
+                  <div style="font-size:13px;font-weight:800">9 600</div>
+                </div>
+                <div class="mqx-finance-chip" style="padding:8px;border-radius:12px;background:color-mix(in srgb, var(--mqx-ink) 4%, transparent)">
+                  <span style="font-size:9px;text-transform:uppercase;opacity:.55">Баланс</span>
+                  <div style="font-size:13px;font-weight:800">42 150</div>
+                </div>
+                <div class="mqx-finance-chip" style="padding:8px;border-radius:12px;background:color-mix(in srgb, var(--mqx-ink) 4%, transparent)">
+                  <span style="font-size:9px;text-transform:uppercase;opacity:.55">Подушка</span>
+                  <div style="font-size:13px;font-weight:800">18 000</div>
+                </div>
+              </div>
+            </section>
+
+            <hr class="mqx-dash-divider mqx-dash-divider--inset" aria-hidden="true" />
+
+            <div class="mqx-goal-dash-bleed">
+              <section class="mqx-goal-dash mqx-goal-dash--expanded" aria-label="Цель сценария">
+                <button type="button" class="mqx-goal-dash__toggle" data-goal-toggle aria-expanded="true">
+                  <div class="mqx-goal-dash__toggle-inner">
+                    <div class="mqx-goal-dash__head-row">
+                      <div class="mqx-goal-dash__head-text">
+                        <span class="mqx-goal-dash__kicker">Цель</span>
+                        <span class="mqx-goal-dash__current-title">Подушка ≥ 3× обязательств</span>
+                        <span class="mqx-goal-dash__step">Шаг 2 из 4</span>
+                      </div>
+                      <span class="mqx-icon-chevron mqx-goal-dash__chevron" aria-hidden="true">
+                        <svg viewBox="0 0 24 24" fill="none" width="20" height="20">
+                          <path d="M8 10l4 4 4-4" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" />
+                        </svg>
+                      </span>
+                    </div>
+                  </div>
+                </button>
+                <div class="mqx-goal-dash__expand">
+                  <article class="mqx-goal-focus">
+                    <div class="mqx-goal-monetka">
+                      <div class="mqx-goal-monetka__inner">
+                        <img
+                          class="mqx-goal-monetka__img"
+                          src="./assets/monetka-mascot.png"
+                          width="44"
+                          height="44"
+                          alt=""
+                        />
+                        <div class="mqx-goal-monetka__bubble">
+                          <h4 class="mqx-goal-monetka__title">Давай, помогу разобраться</h4>
+                          <p class="mqx-goal-monetka__text">
+                            Откладывай в подушку каждый период не менее <strong>10% от зарплаты</strong> — так быстрее
+                            наберёшь сумму в <strong>3× обязательств</strong>.
+                          </p>
+                          <ul class="mqx-goal-monetka__tips">
+                            <li>После «Зарплата» — «В подушку» в действиях периода.</li>
+                            <li>Не снимай с подушки без нужды.</li>
+                            <li>Полоска в chip «Подушка» показывает % к цели.</li>
+                          </ul>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="mqx-goal-chain">
+                      <h4 class="mqx-goal-chain__title">Цепочка сценария</h4>
+                      <ol class="mqx-goal-chain__list">
+                        <li class="mqx-goal-chain__item mqx-goal-chain__item--done">
+                          <span class="mqx-goal-chain__mark" aria-hidden="true">✓</span>
+                          <span>Стабильный денежный поток</span>
+                        </li>
+                        <li class="mqx-goal-chain__item mqx-goal-chain__item--current">
+                          <span class="mqx-goal-chain__mark" aria-hidden="true">2</span>
+                          <span>Подушка ≥ 3× обязательств</span>
+                        </li>
+                        <li class="mqx-goal-chain__item mqx-goal-chain__item--locked">
+                          <span class="mqx-goal-chain__mark" aria-hidden="true">3</span>
+                          <span>Без просрочки</span>
+                        </li>
+                        <li class="mqx-goal-chain__item mqx-goal-chain__item--locked">
+                          <span class="mqx-goal-chain__mark" aria-hidden="true">4</span>
+                          <span>Пассивный доход ≥ 100 000 ₽/мес</span>
+                        </li>
+                      </ol>
+                    </div>
+                  </article>
+                </div>
+              </section>
+            </div>
+
+            <hr class="mqx-dash-divider mqx-dash-divider--inset" aria-hidden="true" />
+
+            <section class="mqx-period-actions" style="padding:14px" aria-label="Действия периода">
+              <h2 class="mqx-card__title">Действия периода</h2>
+              <p class="mqx-card__sub">Управляй денежным потоком</p>
+              <div class="mqx-grid2 mqx-grid2--actions">
+                <button type="button" class="mqx-action mqx-action--primary">Зарплата</button>
+                <button type="button" class="mqx-action">В подушку</button>
+                <button type="button" class="mqx-action">Снять</button>
+                <button type="button" class="mqx-action">Инвестировать</button>
+              </div>
+            </section>
+          </div>
+        </section>
+
+        <section class="lab-states">
+          <p class="lab-state-label">Свёрнуто (по умолчанию)</p>
+          <div class="mqx-goal-dash-bleed">
+            <section class="mqx-goal-dash" aria-label="Цель">
+              <button type="button" class="mqx-goal-dash__toggle" data-goal-toggle aria-expanded="false">
+                <div class="mqx-goal-dash__toggle-inner">
+                  <div class="mqx-goal-dash__head-row">
+                    <div class="mqx-goal-dash__head-text">
+                      <span class="mqx-goal-dash__kicker">Цель</span>
+                      <span class="mqx-goal-dash__current-title">Подушка ≥ 3× обязательств</span>
+                      <span class="mqx-goal-dash__step">Шаг 2 из 4</span>
+                    </div>
+                    <span class="mqx-icon-chevron mqx-goal-dash__chevron" aria-hidden="true">
+                      <svg viewBox="0 0 24 24" fill="none" width="20" height="20">
+                        <path d="M8 10l4 4 4-4" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" />
+                      </svg>
+                    </span>
+                  </div>
+                </div>
+              </button>
+            </section>
+          </div>
+        </section>
+
+        <section class="lab-states">
+          <p class="lab-state-label">Другая цель — «Без просрочки»</p>
+          <div class="mqx-goal-dash-bleed">
+            <section class="mqx-goal-dash mqx-goal-dash--expanded">
+              <button type="button" class="mqx-goal-dash__toggle" data-goal-toggle aria-expanded="true">
+                <div class="mqx-goal-dash__toggle-inner">
+                  <div class="mqx-goal-dash__head-row">
+                    <div class="mqx-goal-dash__head-text">
+                      <span class="mqx-goal-dash__kicker">Цель</span>
+                      <span class="mqx-goal-dash__current-title">Без просрочки</span>
+                      <span class="mqx-goal-dash__step">Шаг 3 из 4</span>
+                    </div>
+                    <span class="mqx-icon-chevron mqx-goal-dash__chevron" aria-hidden="true">
+                      <svg viewBox="0 0 24 24" fill="none" width="20" height="20">
+                        <path d="M8 10l4 4 4-4" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" />
+                      </svg>
+                    </span>
+                  </div>
+                </div>
+              </button>
+              <div class="mqx-goal-dash__expand">
+                <article class="mqx-goal-focus">
+                  <div class="mqx-goal-monetka">
+                    <div class="mqx-goal-monetka__inner">
+                      <img
+                        class="mqx-goal-monetka__img"
+                        src="./assets/monetka-mascot.png"
+                        width="44"
+                        height="44"
+                        alt=""
+                      />
+                      <div class="mqx-goal-monetka__bubble">
+                        <h4 class="mqx-goal-monetka__title">Давай, помогу разобраться</h4>
+                        <p class="mqx-goal-monetka__text">
+                          Погашай обязательства <strong>в конце периода</strong>, пока хватает cash — иначе растёт
+                          <strong>просрочка</strong> и шаг не засчитается.
+                        </p>
+                        <ul class="mqx-goal-monetka__tips">
+                          <li>Сначала зарплата и платежи по долгам, потом жизнь.</li>
+                          <li>Список платежей — в «Обязательства» на странице капитала.</li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                </article>
+              </div>
+            </section>
+          </div>
+        </section>
+
+        <section class="lab-states">
+          <p class="lab-state-label">Цель выполнена → следующая в цепочке</p>
+          <div class="mqx-goal-dash-bleed">
+            <section class="mqx-goal-dash mqx-goal-dash--expanded">
+              <button type="button" class="mqx-goal-dash__toggle" data-goal-toggle aria-expanded="true">
+                <div class="mqx-goal-dash__toggle-inner">
+                  <div class="mqx-goal-dash__head-row">
+                    <div class="mqx-goal-dash__head-text">
+                      <span class="mqx-goal-dash__kicker">Цель</span>
+                      <span class="mqx-goal-dash__current-title">Стабильный денежный поток</span>
+                      <span class="mqx-goal-dash__step">Шаг 1 из 4 · выполнено ✓</span>
+                    </div>
+                    <span class="mqx-icon-chevron mqx-goal-dash__chevron" aria-hidden="true">
+                      <svg viewBox="0 0 24 24" fill="none" width="20" height="20">
+                        <path d="M8 10l4 4 4-4" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" />
+                      </svg>
+                    </span>
+                  </div>
+                </div>
+              </button>
+              <div class="mqx-goal-dash__expand">
+                <article class="mqx-goal-focus">
+                  <div class="mqx-goal-monetka">
+                    <div class="mqx-goal-monetka__inner">
+                      <img
+                        class="mqx-goal-monetka__img"
+                        src="./assets/monetka-mascot.png"
+                        width="44"
+                        height="44"
+                        alt=""
+                      />
+                      <div class="mqx-goal-monetka__bubble">
+                        <h4 class="mqx-goal-monetka__title">Давай, помогу разобраться</h4>
+                        <p class="mqx-goal-monetka__text">
+                          Класс, этот шаг закрыт ✓ Дальше — <strong>Подушка ≥ 3× обязательств</strong>, откроется в
+                          следующем периоде.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="mqx-goal-chain">
+                    <h4 class="mqx-goal-chain__title">Цепочка сценария</h4>
+                    <ol class="mqx-goal-chain__list">
+                      <li class="mqx-goal-chain__item mqx-goal-chain__item--done">
+                        <span class="mqx-goal-chain__mark" aria-hidden="true">✓</span>
+                        <span>Стабильный денежный поток</span>
+                      </li>
+                      <li class="mqx-goal-chain__item mqx-goal-chain__item--locked">
+                        <span class="mqx-goal-chain__mark" aria-hidden="true">2</span>
+                        <span>Подушка ≥ 3× обязательств</span>
+                      </li>
+                      <li class="mqx-goal-chain__item mqx-goal-chain__item--locked">
+                        <span class="mqx-goal-chain__mark" aria-hidden="true">3</span>
+                        <span>Без просрочки</span>
+                      </li>
+                      <li class="mqx-goal-chain__item mqx-goal-chain__item--locked">
+                        <span class="mqx-goal-chain__mark" aria-hidden="true">4</span>
+                        <span>Пассивный доход ≥ 100 000 ₽/мес</span>
+                      </li>
+                    </ol>
+                  </div>
+                </article>
+              </div>
+            </section>
+          </div>
+        </section>
+      </div>
+    </main>
+
+    <script src="./lab.js"></script>
+  </body>
+</html>

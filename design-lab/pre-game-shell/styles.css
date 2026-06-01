@@ -1,0 +1,378 @@
+/* pre-game-shell v2 — дополнения поверх auth-flow + new-game-mode */
+
+:root {
+  --mqx-ink: var(--text, #0f1115);
+  --mq-fs-heading: 15px;
+  --mqx-onboarding-bubble-bg: var(--surface, #fff);
+  --mqx-onboarding-bubble-border: color-mix(in srgb, var(--mq-violet) 18%, #e5e7eb);
+  --mqx-onboarding-bubble-shadow: 0 10px 28px color-mix(in srgb, var(--mq-violet) 12%, transparent);
+}
+
+[data-theme='dark'] {
+  --mqx-onboarding-bubble-bg: var(--surface);
+  --mqx-onboarding-bubble-border: color-mix(in srgb, var(--mq-violet) 22%, #374151);
+}
+
+.lab-pick-banner {
+  margin: 0 20px 16px;
+  padding: 12px 14px;
+  border-radius: 12px;
+  background: color-mix(in srgb, var(--mq-violet) 10%, var(--surface, #fff));
+  font-size: 14px;
+}
+
+/* Lab: без «рамки телефона» — только canvas TMA */
+.phone--pre-game {
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+  background: var(--surface-b);
+  min-height: 720px;
+}
+
+.pg-app-shell {
+  position: relative;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 680px;
+  overflow: hidden;
+}
+
+.pg-app-shell.mq-page--auth {
+  padding: 14px 12px 22px;
+  box-sizing: border-box;
+}
+
+.mq-page__decor {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.mq-page__decor::before {
+  content: '';
+  position: absolute;
+  inset: -32% -8% auto -28%;
+  height: clamp(200px, 52vw, 380px);
+  background: radial-gradient(
+    ellipse 80% 70% at 70% 30%,
+    color-mix(in srgb, var(--mq-violet) 28%, transparent),
+    transparent 72%
+  );
+  opacity: 0.55;
+}
+
+.mq-page__decor::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    circle at 20% 80%,
+    color-mix(in srgb, #38bdf8 18%, transparent),
+    transparent 55%
+  );
+  opacity: 0.35;
+}
+
+.pg-mqx-screen {
+  position: relative;
+  z-index: 1;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  padding: 0;
+}
+
+.pg-mqx-frame {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.mqx-frame--pre-game,
+.mqx-frame--flat-flow {
+  border: none !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  background: transparent !important;
+  overflow: visible;
+}
+
+/* Prod: Монетка B + TGS */
+.mqx-auth--monetka {
+  flex: 1;
+  min-height: 0;
+  padding: 12px 14px 28px;
+  background: var(--surface-b);
+}
+
+.mqx-auth--lottie-bg {
+  position: relative;
+  isolation: isolate;
+  overflow: clip;
+}
+
+.mq-auth-bg-layer {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.mq-auth-bg-lottie-slot {
+  position: absolute;
+  top: clamp(-120px, -12vmin, -48px);
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(100%, 520px);
+  height: clamp(240px, 48vh, 480px);
+  border-radius: 0;
+  background: radial-gradient(
+    ellipse 70% 60% at 50% 40%,
+    color-mix(in srgb, var(--mq-violet) 16%, transparent),
+    transparent 70%
+  );
+  display: grid;
+  place-items: center;
+}
+
+.pg-tgs-label {
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--mq-violet-deep) 70%, var(--text-muted));
+  opacity: 0.7;
+}
+
+.mq-auth-foreground {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  max-width: 440px;
+  margin-inline: auto;
+}
+
+.mqx-auth-monetka {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  max-width: 360px;
+  margin: 0 auto;
+}
+
+.mqx-auth-monetka--brand-top {
+  justify-content: flex-start;
+  padding-top: 4px;
+}
+
+.pg-brand-mark {
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--mq-violet);
+  margin-bottom: 2px;
+}
+
+.mqx-auth-monetka__mascot {
+  width: 112px;
+  height: 112px;
+  object-fit: contain;
+  filter: drop-shadow(0 6px 16px color-mix(in srgb, var(--mq-violet) 18%, transparent));
+}
+
+.mqx-auth-monetka__bubble {
+  position: relative;
+  width: 100%;
+  padding: 16px;
+  border-radius: 20px;
+  background-color: var(--mqx-onboarding-bubble-bg);
+  background-image: linear-gradient(
+    165deg,
+    color-mix(in srgb, var(--mq-violet) 7%, var(--mqx-onboarding-bubble-bg)) 0%,
+    var(--mqx-onboarding-bubble-bg) 42%
+  );
+  border: 1px solid var(--mqx-onboarding-bubble-border);
+  box-shadow: var(--mqx-onboarding-bubble-shadow);
+}
+
+.mqx-auth-monetka__bubble::after {
+  content: '';
+  position: absolute;
+  top: -8px;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 8px solid transparent;
+  border-bottom-color: var(--mqx-onboarding-bubble-bg);
+}
+
+.mqx-auth-monetka__title {
+  margin: 0 0 6px;
+  font-size: 1.05rem;
+  font-weight: 800;
+  text-align: center;
+  color: var(--mqx-ink);
+}
+
+.mqx-auth-monetka__subtitle {
+  margin: 0 0 14px;
+  font-size: var(--mq-fs-heading);
+  line-height: 1.45;
+  text-align: center;
+  color: color-mix(in srgb, var(--mqx-ink) 82%, var(--text-muted));
+}
+
+.mqx-auth-monetka__actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 14px;
+}
+
+.mqx-auth-monetka__link {
+  margin: 12px 0 0;
+  text-align: center;
+  font-size: var(--mq-fs-heading);
+  color: var(--text-muted);
+}
+
+.mqx-auth-monetka__loading {
+  display: flex;
+  justify-content: center;
+  padding: 18px 0 8px;
+}
+
+.mqx-auth-monetka__loading .pg-spinner {
+  width: 28px;
+  height: 28px;
+  border: 3px solid color-mix(in srgb, var(--mq-violet) 20%, transparent);
+  border-top-color: var(--mq-violet);
+  border-radius: 50%;
+  animation: pg-spin 0.8s linear infinite;
+}
+
+@keyframes pg-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.mq-field {
+  margin-bottom: 10px;
+}
+
+.mq-field label {
+  display: block;
+  margin-bottom: 4px;
+  font-size: 13px;
+  font-weight: 650;
+  color: var(--text-muted);
+}
+
+.mq-field__input {
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 12px;
+  border: 1px solid color-mix(in srgb, var(--mqx-ink) 12%, transparent);
+  font: inherit;
+  font-size: 16px;
+  background: var(--surface);
+  color: var(--mqx-ink);
+}
+
+.mqx-btn {
+  appearance: none;
+  border-radius: 12px;
+  padding: 9px 12px;
+  min-width: 96px;
+  font-size: 15px;
+  font-weight: 700;
+  border: 1px solid color-mix(in srgb, var(--mqx-ink) 12%, transparent);
+  background: color-mix(in srgb, var(--mqx-ink) 4%, var(--surface, #fff));
+  color: var(--mqx-ink);
+  cursor: pointer;
+}
+
+.mqx-btn--primary {
+  background: var(--mq-violet);
+  border-color: var(--mq-violet-deep);
+  color: #fff;
+}
+
+.mqx-btn--secondary {
+  background: var(--surface, #fff);
+  border-color: color-mix(in srgb, var(--mq-violet) 35%, #e5e7eb);
+  color: var(--mq-violet-deep);
+}
+
+.mqx-btn--ghost {
+  background: transparent;
+  border-color: transparent;
+  color: color-mix(in srgb, var(--mqx-ink) 72%, transparent);
+}
+
+.mqx-btn--link {
+  display: inline;
+  min-width: 0;
+  padding: 0;
+  border: none;
+  background: none;
+  color: var(--mq-violet-deep);
+  font-weight: 650;
+  text-decoration: underline;
+}
+
+.mqx-btn--stretched {
+  width: 100%;
+}
+
+.mqx-btn--compact {
+  min-width: 0;
+  padding: 7px 12px;
+  font-size: 12px;
+}
+
+.pg-slot-card {
+  width: 100%;
+  padding: 10px 12px;
+  margin-bottom: 12px;
+  border-radius: 14px;
+  border: 1px solid color-mix(in srgb, var(--mq-violet) 22%, transparent);
+  background: color-mix(in srgb, var(--mq-violet) 6%, var(--surface));
+  text-align: left;
+}
+
+.pg-slot-card strong {
+  display: block;
+  font-size: 15px;
+}
+
+.pg-slot-card span {
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.mqx-monetka-flow__body {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+}
+
+.lab-mascot--perch {
+  width: 124px;
+  max-width: 34vw;
+  height: auto;
+  max-height: 132px;
+  object-fit: contain;
+  object-position: left bottom;
+  filter: drop-shadow(0 4px 12px color-mix(in srgb, var(--mq-violet) 22%, transparent));
+}

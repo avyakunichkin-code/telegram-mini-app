@@ -1,0 +1,887 @@
+﻿/* Pre-game auth / меню — design-lab pre-game-playful-v3 ★ pg-auth-panel */
+.pg-auth-stack {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 400px;
+  margin-inline: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  box-sizing: border-box;
+  /* Место под box-shadow карточки — иначе обрезка + горизонтальный overflow у scroll-контейнера */
+  padding-inline: 10px;
+  overflow: visible;
+}
+
+.pg-auth-logo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 8px 0;
+}
+
+.pg-auth-logo .mqx-brand-logo--full {
+  max-width: min(280px, 92%);
+}
+
+.pg-auth-panel {
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  padding: 12px;
+  border-radius: 20px;
+  background-color: var(--mqx-onboarding-bubble-bg, #ffffff);
+  background-image: linear-gradient(
+    165deg,
+    color-mix(in srgb, var(--mq-violet, #6d28d9) 7%, var(--mqx-onboarding-bubble-bg, #ffffff)) 0%,
+    var(--mqx-onboarding-bubble-bg, #ffffff) 38%
+  );
+  border: 1px solid var(--mqx-onboarding-bubble-border);
+  /* Без крупного blur наружу — не раздувает scrollport и не клипается асимметрично */
+  box-shadow:
+    0 0 0 1px color-mix(in srgb, var(--mq-violet, #6d28d9) 8%, transparent),
+    0 6px 16px color-mix(in srgb, var(--mq-violet, #6d28d9) 10%, transparent);
+}
+
+.pg-auth-panel__head {
+  display: flex;
+  align-items: flex-end;
+  gap: 10px;
+  margin-bottom: 12px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid color-mix(in srgb, var(--mqx-ink) 8%, transparent);
+}
+
+.pg-auth-panel__mascot {
+  width: 72px;
+  height: 72px;
+  flex-shrink: 0;
+  margin: 0 !important;
+  filter: drop-shadow(0 4px 10px color-mix(in srgb, var(--mq-violet, #6d28d9) 20%, transparent));
+}
+
+.pg-auth-panel__voice {
+  flex: 1;
+  min-width: 0;
+}
+
+.pg-auth-panel__title {
+  margin: 0 0 4px;
+  font-size: var(--mq-fs-body);
+  font-weight: var(--mq-fw-heavy, 800);
+  line-height: 1.35;
+  text-align: left;
+  color: var(--mqx-ink);
+}
+
+.pg-auth-panel__subtitle {
+  margin: 0;
+  font-size: var(--mq-fs-heading);
+  line-height: 1.48;
+  text-align: left;
+  color: color-mix(in srgb, var(--mqx-ink) 76%, var(--tg-theme-hint-color, #6b7280));
+}
+
+.pg-auth-panel__subtitle p {
+  margin: 0 0 8px;
+}
+
+.pg-auth-panel__subtitle p:last-child {
+  margin-bottom: 0;
+}
+
+.pg-voice-em,
+.mqx-voice-em {
+  font-weight: var(--mq-fw-heavy, 800);
+  color: var(--mq-warning, #d97706);
+}
+
+.pg-auth-panel__link,
+.mqx-auth-monetka__link {
+  margin: 10px 0 0;
+  text-align: center;
+  font-size: var(--mq-fs-caption);
+  color: var(--tg-theme-hint-color, var(--text-muted, #6b7280));
+}
+
+.pg-continue-slot.mqx-fin-row {
+  margin: 4px 0 14px;
+  align-items: flex-start;
+}
+
+.pg-actions,
+.mqx-auth-monetka__actions,
+.mqx-start-menu__actions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.pg-flow-wrap {
+  position: relative;
+  z-index: 1;
+  max-width: 400px;
+  margin-inline: auto;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.pg-flow-wrap .mqx-monetka-dialog__title {
+  font-size: var(--mq-fs-title) !important;
+  margin-bottom: 6px;
+  line-height: 1.25 !important;
+  letter-spacing: -0.02em;
+  text-align: center;
+}
+
+.pg-flow-wrap .mqx-monetka-dialog__subtitle {
+  font-size: var(--mq-fs-heading) !important;
+  line-height: 1.48;
+}
+
+.pg-flow-wrap .mqx-monetka-dialog__subtitle p + p {
+  margin-top: 8px;
+}
+
+.pg-flow-wrap .mqx-save-kind__heading,
+.pg-flow-wrap .mq-game-catalog-label {
+  margin: 16px 0 12px !important;
+  padding: 0 2px;
+  font-size: var(--mq-fs-caption) !important;
+  font-weight: var(--mq-fw-heavy, 800) !important;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--mqx-ink) 52%, transparent) !important;
+}
+
+.pg-flow-wrap .mq-game-catalog-label {
+  display: block;
+}
+
+.mqx-auth-monetka__form {
+  margin: 0;
+}
+
+/* iOS/TMA: поля <16px вызывают авто-зум при фокусе — «страница 200%» */
+.mq-page--auth .mq-field__input {
+  font-size: 16px;
+}
+
+.mq-page--auth button,
+.mq-page--auth .tgui-button {
+  touch-action: manipulation;
+}
+
+.mqx-auth-monetka__link {
+  margin: 12px 0 0;
+  text-align: center;
+  font-size: var(--mq-fs-caption);
+  color: var(--tg-theme-hint-color, #6b7280);
+}
+
+.mqx-auth-monetka__link button,
+.mqx-auth-monetka__link .mqx-btn--link {
+  border: none;
+  background: none;
+  padding: 0;
+  font: inherit;
+  font-weight: 650;
+  color: var(--mq-violet-deep, #5b21b6);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  cursor: pointer;
+}
+
+/* Pre-game + new-game: без внешней «коробки» mqx-frame (legacy MqxShell) */
+.mqx-frame--pre-game,
+.mqx-frame--flat-flow {
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+  background: transparent;
+  min-height: 0;
+  overflow: visible;
+  max-width: 100%;
+}
+
+.mqx-screen:has(.mqx-frame--pre-game) {
+  min-height: 0;
+  padding: 0;
+}
+
+.mqx-flow--monetka-dialog {
+  min-height: 0;
+}
+
+.mqx-monetka-flow {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 10px;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  margin: 0;
+  padding: 0 0 4px;
+  box-sizing: border-box;
+  overflow-x: clip;
+}
+
+.mqx-monetka-flow--with-brand {
+  padding-top: 12px;
+}
+
+.mqx-monetka-flow--with-brand .mqx-monetka-flow__brand {
+  align-self: center;
+}
+
+.mqx-monetka-flow__mascot {
+  align-self: center;
+  margin: 0 !important;
+}
+
+/* Монетка на кромке пузыря: отрицательный margin, ноги в padding speech */
+.mqx-monetka-dialog__perch {
+  position: relative;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  overflow: visible;
+}
+
+.mqx-monetka-dialog__perch-head {
+  position: relative;
+  z-index: 2;
+  width: fit-content;
+  max-width: 100%;
+  margin: 0 0 -38px 10%;
+  line-height: 0;
+  pointer-events: none;
+}
+
+/* P4–P5 «Новая игра» / шаблоны: Монетка на левой кромке пузыря (не по центру) */
+.mqx-monetka-dialog__perch--sit-edge .mqx-monetka-dialog__perch-head {
+  margin: 0 0 -38px 5%;
+}
+
+.mqx-monetka-dialog__perch-mascot {
+  margin: 0 !important;
+  filter: drop-shadow(0 4px 12px color-mix(in srgb, var(--mq-violet, #6d28d9) 22%, transparent));
+}
+
+.mqx-monetka-dialog__perch--sit-edge .mqx-monetka-dialog__perch-mascot.mqx-onboarding-monetka--sit-edge {
+  object-fit: contain;
+  object-position: left bottom;
+  max-height: 132px;
+}
+
+.mqx-monetka-dialog__perch .mqx-monetka-dialog__speech {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  padding: 34px 12px 12px;
+}
+
+.mqx-monetka-dialog__perch--sit-edge .mqx-monetka-dialog__speech {
+  padding-top: 34px;
+}
+
+.mqx-monetka-dialog__perch .mqx-monetka-dialog__speech::after {
+  display: none;
+}
+
+.mqx-monetka-dialog__speech {
+  position: relative;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  padding: 14px 12px 12px;
+  border-radius: 18px;
+  box-sizing: border-box;
+  background-color: var(--mqx-onboarding-bubble-bg, #ffffff);
+  background-image: linear-gradient(
+    165deg,
+    color-mix(in srgb, var(--mq-violet, #6d28d9) 7%, var(--mqx-onboarding-bubble-bg, #ffffff)) 0%,
+    var(--mqx-onboarding-bubble-bg, #ffffff) 42%
+  );
+  border: 1px solid var(--mqx-onboarding-bubble-border);
+  box-shadow: none;
+}
+
+.mqx-flow--monetka-dialog .mqx-monetka-dialog__speech {
+  box-shadow: none;
+}
+
+.mqx-monetka-dialog__speech::after {
+  content: '';
+  position: absolute;
+  top: -8px;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 8px solid transparent;
+  border-bottom-color: var(--mqx-onboarding-bubble-bg, #ffffff);
+  filter: none;
+}
+
+.mqx-monetka-dialog__title {
+  margin: 0 0 6px;
+  font-size: var(--mq-fs-body);
+  font-weight: var(--mq-fw-heavy, 800);
+  line-height: 1.35;
+  letter-spacing: -0.01em;
+  text-align: center;
+  color: var(--mqx-ink);
+}
+
+#root .mqx-monetka-dialog__title {
+  font-size: var(--mq-fs-body);
+  margin: 0 0 6px;
+  letter-spacing: -0.01em;
+}
+
+.mqx-monetka-dialog__subtitle {
+  margin: 0;
+  font-size: var(--mq-fs-heading);
+  line-height: 1.48;
+  text-align: center;
+  overflow-wrap: anywhere;
+  color: color-mix(in srgb, var(--mqx-ink) 88%, var(--tg-theme-hint-color, #6b7280));
+}
+
+.mqx-monetka-dialog__subtitle p {
+  margin: 0 0 10px;
+}
+
+.mqx-monetka-dialog__subtitle p:last-child {
+  margin-bottom: 0;
+}
+
+.mqx-monetka-dialog__subtitle strong {
+  font-weight: var(--mq-fw-heavy, 800);
+  color: var(--mq-warning, #d97706);
+}
+
+.mqx-monetka-flow__body {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+}
+
+.mqx-monetka-flow__form {
+  margin: 0;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+}
+
+.mqx-monetka-flow__form [class*='tgui-'] {
+  max-width: 100%;
+  min-width: 0;
+}
+
+.mqx-monetka-flow__save-kind {
+  margin: 0;
+}
+
+.mqx-monetka-flow__actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 4px;
+}
+
+.mqx-monetka-flow__loading {
+  display: flex;
+  justify-content: center;
+  padding: 20px 0;
+}
+
+.mqx-monetka-flow__empty {
+  margin: 0;
+  font-size: var(--mq-fs-heading);
+  line-height: 1.45;
+  text-align: center;
+  color: color-mix(in srgb, var(--mqx-ink) 72%, var(--tg-theme-hint-color, #6b7280));
+}
+
+.mqx-monetka-flow .mq-game-catalog-label {
+  display: block;
+  margin: 0 0 6px;
+  font-size: var(--mq-fs-caption);
+  font-weight: 700;
+  color: color-mix(in srgb, var(--mqx-ink) 78%, var(--tg-theme-hint-color, #6b7280));
+}
+
+.mqx-monetka-flow .mq-game-template-picker {
+  margin: 0;
+}
+
+.mqx-auth-monetka__mode-grid,
+.mqx-auth-monetka__save-kind {
+  margin-top: 14px;
+}
+
+/* Выбор режима сохранения — unified strips (S5-совместимо) */
+.mqx-save-kind {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+}
+
+.mqx-save-kind__row {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  margin: 0;
+  padding: 12px 12px 12px 10px;
+  border: none;
+  border-radius: 14px;
+  text-align: left;
+  font: inherit;
+  box-sizing: border-box;
+  transition:
+    background 0.15s ease,
+    transform 0.12s ease;
+}
+
+.mqx-save-kind__row--game {
+  cursor: pointer;
+  background: color-mix(in srgb, var(--mq-violet, #7c3aed) 6%, var(--tg-theme-bg-color, #fff));
+  box-shadow: none;
+}
+
+.mqx-save-kind__row--game:hover {
+  background: color-mix(in srgb, var(--mq-violet, #7c3aed) 10%, var(--tg-theme-bg-color, #fff));
+}
+
+.mqx-save-kind__row--game:active {
+  transform: scale(0.99);
+}
+
+.mqx-save-kind__row--game:focus-visible {
+  outline: 2px solid var(--mq-violet, #7c3aed);
+  outline-offset: 2px;
+}
+
+.mqx-save-kind__row--plan {
+  background: color-mix(in srgb, var(--mqx-ink, #0f1115) 4%, transparent);
+}
+
+.mqx-save-kind__row--soon {
+  opacity: 0.58;
+  filter: grayscale(0.25);
+  pointer-events: none;
+  cursor: not-allowed;
+}
+
+.mqx-save-kind__badge {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  padding: 3px 8px;
+  border-radius: 999px;
+  font-size: var(--mq-fs-small, 11px);
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  background: color-mix(in srgb, var(--mqx-ink) 8%, transparent);
+  border: 1px solid color-mix(in srgb, var(--mqx-ink) 12%, transparent);
+  color: color-mix(in srgb, var(--mqx-ink) 58%, transparent);
+}
+
+.mqx-save-kind__icon-wrap {
+  flex-shrink: 0;
+  width: 48px;
+  height: 48px;
+  display: grid;
+  place-items: center;
+  border-radius: 12px;
+}
+
+.mqx-save-kind__heading {
+  margin: 2px 0 4px;
+  padding: 0 2px;
+  font-size: var(--mq-fs-caption, 12px);
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--mqx-ink) 52%, var(--tg-theme-hint-color, #6b7280));
+}
+
+.mqx-save-kind__icon-wrap--game {
+  color: var(--mq-violet, #7c3aed);
+  background: color-mix(in srgb, var(--mq-violet, #7c3aed) 12%, transparent);
+}
+
+.mqx-save-kind__icon-wrap--game-glow {
+  background: linear-gradient(
+    145deg,
+    color-mix(in srgb, var(--mq-violet, #7c3aed) 22%, transparent),
+    color-mix(in srgb, var(--mq-violet-deep, #5b21b6) 8%, transparent)
+  );
+  box-shadow: 0 6px 18px color-mix(in srgb, var(--mq-violet, #7c3aed) 24%, transparent);
+}
+
+.mqx-save-kind__icon-wrap--plan {
+  color: color-mix(in srgb, var(--mq-violet-deep, #5b21b6) 80%, var(--mqx-ink));
+  background: color-mix(in srgb, var(--mqx-ink) 6%, transparent);
+}
+
+.mqx-save-kind__icon-wrap--plan-emerald {
+  color: var(--mq-emerald, #059669);
+  background: linear-gradient(
+    145deg,
+    color-mix(in srgb, var(--mq-emerald, #059669) 20%, transparent),
+    color-mix(in srgb, var(--mq-emerald, #059669) 7%, transparent)
+  );
+  box-shadow: 0 6px 18px color-mix(in srgb, var(--mq-emerald, #059669) 20%, transparent);
+}
+
+.mqx-save-kind__row--plan:not(.mqx-save-kind__row--soon) {
+  background: color-mix(in srgb, var(--mq-emerald, #059669) 5%, var(--tg-theme-bg-color, #fff));
+}
+
+.mqx-save-kind__icon {
+  width: 36px;
+  height: 36px;
+}
+
+.mqx-save-kind__body {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.mqx-save-kind__title {
+  font-size: var(--mq-fs-body, 15px);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: color-mix(in srgb, var(--mqx-ink) 94%, transparent);
+}
+
+.mqx-save-kind__desc {
+  font-size: var(--mq-fs-caption, 12px);
+  line-height: 1.38;
+  color: color-mix(in srgb, var(--mqx-ink) 56%, transparent);
+}
+
+.mqx-save-kind__trail {
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  color: var(--mq-violet, #7c3aed);
+  opacity: 0.85;
+}
+
+/* Режим игры — яркие карточки (как выбор сценария) */
+.mqx-save-kind--vivid {
+  gap: 10px;
+}
+
+.mqx-save-kind--vivid .mqx-save-kind__row {
+  padding: 14px 12px 14px 10px;
+  gap: 14px;
+  border-radius: 14px;
+}
+
+.mqx-save-kind--vivid .mqx-save-kind__row--game {
+  border-left: 3px solid var(--mq-violet, #7c3aed);
+  background: color-mix(in srgb, var(--mq-violet, #7c3aed) 7%, var(--tg-theme-bg-color, #fff));
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--mq-violet, #7c3aed) 12%, transparent);
+}
+
+.mqx-save-kind--vivid .mqx-save-kind__row--game:hover {
+  background: color-mix(in srgb, var(--mq-violet, #7c3aed) 11%, var(--tg-theme-bg-color, #fff));
+}
+
+.mqx-save-kind--vivid .mqx-save-kind__row--plan {
+  border-left: 3px solid var(--mq-emerald, #059669);
+  background: color-mix(in srgb, var(--mq-emerald, #059669) 6%, var(--tg-theme-bg-color, #fff));
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--mq-emerald, #059669) 10%, transparent);
+}
+
+.mqx-save-kind--vivid .mqx-save-kind__row--soon {
+  opacity: 0.62;
+}
+
+.mqx-save-kind--vivid .mqx-save-kind__icon-wrap {
+  width: 56px;
+  height: 56px;
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+}
+
+.mqx-save-kind--vivid .mqx-save-kind__icon-wrap--game-vivid {
+  color: #fff;
+  background: linear-gradient(135deg, #7c3aed, #a78bfa);
+  box-shadow: 0 8px 22px color-mix(in srgb, var(--mq-violet, #7c3aed) 38%, transparent);
+}
+
+.mqx-save-kind--vivid .mqx-save-kind__icon-wrap--plan-vivid {
+  color: #fff;
+  background: linear-gradient(135deg, #059669, #34d399);
+  box-shadow: 0 8px 22px color-mix(in srgb, var(--mq-emerald, #059669) 32%, transparent);
+}
+
+.mqx-save-kind--vivid .mqx-save-kind__icon {
+  width: 40px;
+  height: 40px;
+}
+
+.mqx-save-kind--vivid .mqx-save-kind__icon-wrap--game-vivid .mqx-save-kind__icon [stroke],
+.mqx-save-kind--vivid .mqx-save-kind__icon-wrap--plan-vivid .mqx-save-kind__icon [stroke] {
+  stroke: rgba(255, 255, 255, 0.95);
+}
+
+.mqx-save-kind--vivid .mqx-save-kind__icon-wrap--game-vivid .mqx-save-kind__icon [fill]:not([fill='none']),
+.mqx-save-kind--vivid .mqx-save-kind__icon-wrap--plan-vivid .mqx-save-kind__icon [fill]:not([fill='none']) {
+  fill: rgba(255, 255, 255, 0.92);
+}
+
+.mqx-save-kind--vivid .mqx-save-kind__title {
+  font-size: var(--mq-fs-title);
+}
+
+.mqx-save-kind--vivid .mqx-save-kind__desc {
+  font-size: var(--mq-fs-caption);
+  line-height: 1.42;
+  color: color-mix(in srgb, var(--mqx-ink) 72%, transparent);
+}
+
+.mqx-save-kind--vivid .mqx-save-kind__body {
+  gap: 4px;
+}
+
+/* T-B glass — плотный светлый фон (режим игры и сценарии старта) */
+.mqx-save-kind--tb-glass.mqx-save-kind--vivid .mqx-save-kind__row {
+  padding: 13px 10px 13px 10px;
+  border-radius: 16px;
+  backdrop-filter: blur(8px);
+  box-shadow:
+    inset 0 0 0 1px color-mix(in srgb, var(--mqx-ink) 10%, transparent),
+    0 4px 14px color-mix(in srgb, var(--mq-violet) 6%, transparent);
+  max-width: 100%;
+}
+
+.mqx-save-kind--tb-glass.mqx-save-kind--vivid .mqx-save-kind__row--game,
+.mqx-save-kind--tb-glass.mqx-save-kind--vivid .mqx-save-kind__row--plan:not(.mqx-save-kind__row--soon),
+.mqx-scenario-picker--tb-glass .mqx-scenario-strip {
+  border-left: none;
+  position: relative;
+  overflow: hidden;
+}
+
+.mqx-save-kind--tb-glass.mqx-save-kind--vivid .mqx-save-kind__row--game::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  background: var(--mq-violet);
+  pointer-events: none;
+}
+
+.mqx-save-kind--tb-glass.mqx-save-kind--vivid .mqx-save-kind__row--game {
+  background: color-mix(in srgb, var(--mq-violet) 5%, var(--surface, #fff));
+}
+
+.mqx-save-kind--tb-glass.mqx-save-kind--vivid .mqx-save-kind__row--plan:not(.mqx-save-kind__row--soon)::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  background: var(--mq-emerald);
+  pointer-events: none;
+}
+
+.mqx-save-kind--tb-glass.mqx-save-kind--vivid .mqx-save-kind__row--plan:not(.mqx-save-kind__row--soon) {
+  background: color-mix(in srgb, var(--mq-emerald) 5%, var(--surface, #fff));
+}
+
+.mqx-scenario-picker--tb-glass .mqx-scenario-strip {
+  padding: 13px 10px 13px 10px;
+  border-radius: 16px;
+  backdrop-filter: blur(8px);
+  box-shadow:
+    inset 0 0 0 1px color-mix(in srgb, var(--mqx-ink) 10%, transparent),
+    0 4px 14px color-mix(in srgb, var(--mq-violet) 6%, transparent);
+  max-width: 100%;
+  box-sizing: border-box;
+  background: color-mix(in srgb, var(--surface, #fff) 92%, transparent) !important;
+}
+
+.mqx-scenario-picker--tb-glass .mqx-scenario-strip--green::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  background: #059669;
+  pointer-events: none;
+}
+
+.mqx-scenario-picker--tb-glass .mqx-scenario-strip--amber::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  background: #d4bc00;
+  pointer-events: none;
+}
+
+.mqx-scenario-picker--tb-glass .mqx-scenario-strip--orange::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  background: #f97316;
+  pointer-events: none;
+}
+
+.mqx-scenario-picker--tb-glass .mqx-scenario-strip--red::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  background: #dc2626;
+  pointer-events: none;
+}
+
+.mqx-scenario-picker--tb-glass .mqx-scenario-strip--selected {
+  box-shadow:
+    0 0 0 1px color-mix(in srgb, var(--mq-violet) 28%, transparent),
+    0 8px 22px color-mix(in srgb, var(--mq-violet) 12%, transparent);
+}
+
+.mqx-auth-monetka__loading {
+  display: flex;
+  justify-content: center;
+  padding: 24px 0;
+}
+
+.mqx-auth-monetka__empty {
+  margin: 8px 0 0;
+  font-size: var(--mq-fs-heading);
+  line-height: 1.45;
+  color: color-mix(in srgb, var(--mqx-ink) 75%, var(--tg-theme-hint-color, #6b7280));
+}
+
+.mqx-auth-monetka__bubble--wide .mq-game-template-picker {
+  margin-top: 4px;
+}
+
+.mqx-auth-monetka__bubble--wide .mq-game-catalog-label {
+  display: block;
+  margin-top: 4px;
+}
+
+/* Меню сохранений (Monetka bubble) */
+.mqx-start-menu__profile {
+  margin-top: 4px;
+  align-items: flex-start;
+}
+
+.mqx-start-menu__actions {
+  margin-top: 16px;
+}
+
+.mqx-start-menu__modal-list {
+  margin-top: 12px;
+}
+
+.mqx-start-menu__modal-row {
+  margin-top: 10px;
+}
+
+.mqx-start-menu__active-pill {
+  display: inline-block;
+  margin-left: 6px;
+  padding: 2px 7px;
+  border-radius: 999px;
+  font-size: var(--mq-fs-micro);
+  font-weight: 750;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  vertical-align: middle;
+  color: var(--mq-violet-deep, #5b21b6);
+  background: color-mix(in srgb, var(--mq-violet, #6d28d9) 12%, var(--tg-theme-bg-color, #fff));
+  border: 1px solid color-mix(in srgb, var(--mq-violet, #6d28d9) 28%, transparent);
+}
+
+.mqx-hero--tab {
+  padding: 14px 14px 14px;
+}
+
+.mqx-hero__title--tab {
+  margin-top: 10px;
+  font-size: var(--mq-fs-title);
+  letter-spacing: -0.02em;
+}
+
+.mqx-hero__sub {
+  margin-top: 6px;
+  font-size: var(--mq-fs-caption);
+  color: rgba(245, 243, 255, 0.82);
+  max-width: 34ch;
+}
+
+.mqx-hero-pills {
+  display: inline-flex;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.mqx-hero-pill {
+  display: inline-flex;
+  align-items: center;
+  height: 26px;
+  padding: 0 10px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.14);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  color: rgba(255, 255, 255, 0.92);
+  font-size: var(--mq-fs-small);
+  font-weight: 750;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+.mqx-hero-pill--brand {
+  font-weight: 800;
+  letter-spacing: 0.06em;
+}
+
+.mqx-hero-pill--ghost {
+  background: rgba(255, 255, 255, 0.10);
+}
+
+.mqx-hero--inline-title .mqx-hero__brand-title .mqx-hero__title {
+  margin-top: 0;
+}

@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="ru" data-theme="light">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>ТВОЙ ХОД — капитал: 6 аккордеонов</title>
+    <link rel="stylesheet" href="./lab-base.css" />
+  </head>
+  <body>
+    <header class="lab-header">
+      <h1>Управление капиталом — единый аккордеон</h1>
+      <p>
+        Шесть разделов в одном стиле: <strong>Доходы · Расходы · Инвестиции · Страховки · Имущество · Обязательства</strong>.
+        Accent — <strong>линия снизу</strong> заголовка (~1.5px, в 3× тоньше прежней полосы слева). Без табов и внешней рамки.
+      </p>
+      <div class="lab-theme-row">
+        <button type="button" class="is-active" data-theme-btn="light">Светлая</button>
+        <button type="button" data-theme-btn="dark">Тёмная</button>
+      </div>
+    </header>
+    <main class="lab-wrap lab-wrap--sheet">
+      <section class="lab-section">
+        <div class="lab-section__label">
+          <span class="lab-section__id lab-section__id--ok">★</span>
+          <span>Интерактивный макет (420px)</span>
+        </div>
+        <article class="phone">
+          <div class="phone__hero">
+            <div class="phone__hero-kicker">Финансы</div>
+            <h2 class="phone__hero-title">Управление капиталом</h2>
+            <p class="phone__hero-sub">Все разделы — один столбец аккордеонов.</p>
+          </div>
+          <div class="phone__main" style="padding: 12px 12px 16px">
+            <div class="cap-page-sheet">
+              <div class="cap-page-sheet__stack">
+
+                <details class="cap-sect-acc cap-sect-acc--in" open>
+                  <summary class="cap-sect-acc__head">
+                    <span class="cap-sect-acc__title">Доходы</span>
+                    <span class="cap-sect-acc__meta">88 400 ₽</span>
+                  </summary>
+                  <div class="cap-sect-acc__body">
+                    <div class="cap-cat"><div class="cap-cat__row"><span>Зарплата</span><span class="cap-amt">45 000 ₽</span></div></div>
+                    <div class="cap-cat"><div class="cap-cat__row"><span>Инвестиции</span><span class="cap-amt">8 400 ₽</span></div>
+                      <div class="cap-lines">
+                        <div class="cap-line"><span>Депозиты</span><span>2 400 ₽</span></div>
+                        <div class="cap-line"><span>Облигации</span><span>6 000 ₽</span></div>
+                      </div></div>
+                    <div class="cap-cat"><div class="cap-cat__row"><span>Доходное имущество</span><span class="cap-amt">35 000 ₽</span></div>
+                      <div class="cap-lines"><div class="cap-line"><span>Аренда</span><span>35 000 ₽</span></div></div></div>
+                  </div>
+                </details>
+
+                <details class="cap-sect-acc cap-sect-acc--out">
+                  <summary class="cap-sect-acc__head">
+                    <span class="cap-sect-acc__title">Расходы</span>
+                    <span class="cap-sect-acc__meta">99 900 ₽</span>
+                  </summary>
+                  <div class="cap-sect-acc__body">
+                    <div class="cap-cat"><div class="cap-cat__row"><span>На жизнь</span><span class="cap-amt">32 500 ₽</span></div>
+                      <div class="cap-lines">
+                        <div class="cap-line"><span>Продукты</span><span>18 000 ₽</span></div>
+                        <div class="cap-line"><span>Транспорт</span><span>6 500 ₽</span></div>
+                        <div class="cap-line"><span>Досуг</span><span>8 000 ₽</span></div>
+                      </div></div>
+                    <div class="cap-cat"><div class="cap-cat__row"><span>Содержание имущества</span><span class="cap-amt">13 000 ₽</span></div>
+                      <div class="cap-lines">
+                        <div class="cap-line"><span>Жильё</span><span>6 000 ₽</span></div>
+                        <div class="cap-line"><span>Авто</span><span>4 000 ₽</span></div>
+                      </div></div>
+                    <div class="cap-cat"><div class="cap-cat__row"><span>Обязательства</span><span class="cap-amt">51 000 ₽</span></div>
+                      <div class="cap-lines">
+                        <div class="cap-line"><span>Ипотека</span><span>42 000 ₽</span></div>
+                        <div class="cap-line"><span>Кредитная карта</span><span>9 000 ₽</span></div>
+                      </div></div>
+                    <div class="cap-cat"><div class="cap-cat__row"><span>Страховки</span><span class="cap-amt">2 400 ₽</span></div>
+                      <div class="cap-lines"><div class="cap-line"><span>ОСАГО</span><span>2 400 ₽</span></div></div></div>
+                  </div>
+                </details>
+
+                <details class="cap-sect-acc cap-sect-acc--invest">
+                  <summary class="cap-sect-acc__head">
+                    <span class="cap-sect-acc__title">Инвестиции</span>
+                    <span class="cap-sect-acc__meta">2 поз.</span>
+                  </summary>
+                  <div class="cap-sect-acc__body">
+                    <p class="cap-sect-lead">Депозит капитализируется; купон облигаций — на счёт в конце периода.</p>
+                    <div class="cap-seg"><button type="button" class="cap-seg__btn is-active">Оформить</button><button type="button" class="cap-seg__btn">Позиции (2)</button></div>
+                    <div class="cap-row">
+                      <div class="cap-row__accent cap-row__accent--sky"></div>
+                      <div>
+                        <div class="cap-row__title">Депозит «Накопительный»</div>
+                        <div class="cap-row__metrics"><span>120 000 ₽</span><span class="pos">+2 400 ₽/п</span></div>
+                      </div>
+                      <button type="button" class="cap-btn-plus" aria-label="Открыть">+</button>
+                    </div>
+                    <div class="cap-row">
+                      <div class="cap-row__accent cap-row__accent--sky"></div>
+                      <div>
+                        <div class="cap-row__title">ОФЗ-портфель</div>
+                        <div class="cap-row__metrics"><span>80 000 ₽</span><span class="pos">+667 ₽/п</span></div>
+                      </div>
+                      <button type="button" class="cap-btn-plus">+</button>
+                    </div>
+                  </div>
+                </details>
+
+                <details class="cap-sect-acc cap-sect-acc--insurance">
+                  <summary class="cap-sect-acc__head">
+                    <span class="cap-sect-acc__title">Страховки</span>
+                    <span class="cap-sect-acc__meta">1 полис</span>
+                  </summary>
+                  <div class="cap-sect-acc__body">
+                    <p class="cap-sect-lead">Премия в конце периода. При случае — выплата, полис закрывается.</p>
+                    <div class="cap-seg"><button type="button" class="cap-seg__btn is-active">Оформить</button><button type="button" class="cap-seg__btn">Мои (1)</button></div>
+                    <div class="cap-row">
+                      <div class="cap-row__accent cap-row__accent--ins"></div>
+                      <div>
+                        <div class="cap-row__title">ОСАГО — Стандарт</div>
+                        <div class="cap-row__metrics"><span>400 000 ₽</span><span class="neg">−2 400 ₽/п</span></div>
+                      </div>
+                      <button type="button" class="cap-btn-plus">+</button>
+                    </div>
+                  </div>
+                </details>
+
+                <details class="cap-sect-acc cap-sect-acc--property">
+                  <summary class="cap-sect-acc__head">
+                    <span class="cap-sect-acc__title">Имущество</span>
+                    <span class="cap-sect-acc__meta">2 поз.</span>
+                  </summary>
+                  <div class="cap-sect-acc__body">
+                    <p class="cap-sect-lead">Покупка из шаблона списывает стоимость с текущего счёта.</p>
+                    <div class="cap-seg"><button type="button" class="cap-seg__btn is-active">Добавить</button><button type="button" class="cap-seg__btn">Мои (2)</button></div>
+                    <div class="cap-row">
+                      <div class="cap-row__accent cap-row__accent--asset"></div>
+                      <div>
+                        <div class="cap-row__title">Доходная квартира (аренда)</div>
+                        <div class="cap-row__metrics"><span>5 200 000 ₽</span><span class="neg">−7 000 ₽/п</span><span class="pos">+35 000 ₽/п</span></div>
+                      </div>
+                      <button type="button" class="cap-btn-plus">+</button>
+                    </div>
+                    <div class="cap-row">
+                      <div class="cap-row__accent cap-row__accent--asset"></div>
+                      <div>
+                        <div class="cap-row__title">Жилая квартира</div>
+                        <div class="cap-row__metrics"><span>4 500 000 ₽</span><span class="neg">−6 000 ₽/п</span></div>
+                      </div>
+                      <button type="button" class="cap-btn-plus">+</button>
+                    </div>
+                  </div>
+                </details>
+
+                <details class="cap-sect-acc cap-sect-acc--liabilities">
+                  <summary class="cap-sect-acc__head">
+                    <span class="cap-sect-acc__title">Обязательства</span>
+                    <span class="cap-sect-acc__meta">1 долг</span>
+                  </summary>
+                  <div class="cap-sect-acc__body">
+                    <p class="cap-sect-lead">Новый долг зачисляет сумму на счёт; закрытие возвращает тело и гасит просрочку.</p>
+                    <div class="cap-seg"><button type="button" class="cap-seg__btn is-active">Добавить</button><button type="button" class="cap-seg__btn">Мои (1)</button></div>
+                    <div class="cap-row">
+                      <div class="cap-row__accent cap-row__accent--liab"></div>
+                      <div>
+                        <div class="cap-row__title">Ипотека</div>
+                        <div class="cap-row__metrics"><span>3 500 000 ₽</span><span class="neg">−42 000 ₽/п</span></div>
+                      </div>
+                      <button type="button" class="cap-btn-plus">+</button>
+                    </div>
+                    <div class="cap-row">
+                      <div class="cap-row__accent cap-row__accent--liab"></div>
+                      <div>
+                        <div class="cap-row__title">Кредитная карта</div>
+                        <div class="cap-row__metrics"><span>150 000 ₽</span><span class="neg">−9 000 ₽/п</span></div>
+                      </div>
+                      <button type="button" class="cap-btn-plus">+</button>
+                    </div>
+                  </div>
+                </details>
+
+              </div>
+            </div>
+          </div>
+        </article>
+        <div class="lab-note-box">
+          <strong>Accent снизу</strong>
+          <ul>
+            <li>Толщина <code>1.5px</code> (было 4px слева).</li>
+            <li>Свернуто: линия между разделами; раскрыто: отделяет заголовок от тела.</li>
+            <li>Табы убраны — навигация = скролл по аккордеонам.</li>
+          </ul>
+        </div>
+      </section>
+    </main>
+    <script>
+      document.querySelectorAll("[data-theme-btn]").forEach(function (btn) {
+        btn.addEventListener("click", function () {
+          var theme = btn.getAttribute("data-theme-btn");
+          document.documentElement.setAttribute("data-theme", theme);
+          document.querySelectorAll("[data-theme-btn]").forEach(function (b) {
+            b.classList.toggle("is-active", b === btn);
+          });
+        });
+      });
+    </script>
+  </body>
+</html>

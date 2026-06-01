@@ -1,4 +1,4 @@
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 import hashlib
 import secrets
 from typing import Optional
@@ -38,7 +38,7 @@ def create_access_token(data: dict) -> str:
     if "sub" in to_encode:
         # JWT subject обычно строка; так избегаем проблем несовместимости по типам.
         to_encode["sub"] = str(to_encode["sub"])
-    expire = datetime.utcnow() + timedelta(minutes=config.ACCESS_TOKEN_EXPIRE_MINUTES)
+    expire = datetime.now(timezone.utc) + timedelta(minutes=config.ACCESS_TOKEN_EXPIRE_MINUTES)
     to_encode.update({"exp": expire})
     encoded_jwt = jwt.encode(to_encode, config.SECRET_KEY, algorithm=config.ALGORITHM)
     return encoded_jwt

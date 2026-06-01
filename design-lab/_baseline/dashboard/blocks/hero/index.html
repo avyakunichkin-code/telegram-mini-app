@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="ru" data-theme="light">
+  <head>
+    <base href="./" />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>ТВОЙ ХОД — Hero без таймера (design-lab)</title>
+    <link rel="stylesheet" href="./lab-base.css" />
+      <style data-embed-style>
+      html[data-embed="1"] .lab-header,
+      html[data-embed="1"] .lab-round-note,
+      html[data-embed="1"] .lab-variant-card__label,
+      html[data-embed="1"] .lab-variant-card__idea,
+      html[data-embed="1"] .lab-variant-grid > *:not(:first-child) { display: none !important; }
+      html[data-embed="1"] .lab-main { padding: 0 !important; }
+      html[data-embed="1"] body { padding: 0 !important; }
+    </style>
+    <script>
+      (function(){
+        try {
+          var p = new URLSearchParams(location.search);
+          if (p.get('embed') === '1') document.documentElement.setAttribute('data-embed','1');
+        } catch (e) {}
+      })();
+    </script>
+  </head>
+  <body>
+    <header class="lab-header">
+      <div>
+        <h1>Дашборд — Hero без таймера</h1>
+        <p>Пошаговый месяц: primary «Закрыть месяц», без MM:SS и play/pause. Idea: <code>turn-based-period-no-timer</code>.</p>
+      </div>
+      <div class="lab-header__controls">
+        <div class="lab-theme" role="group" aria-label="Тема">
+          <button type="button" class="is-active" data-theme-btn="light">Светлая</button>
+          <button type="button" data-theme-btn="dark">Тёмная</button>
+        </div>
+      </div>
+    </header>
+
+    <main class="lab-main">
+      <p class="lab-round-note">
+        <strong>★ FINAL — H2:</strong> кнопки справа, «Закрыть месяц». Чипы плана (H3) — эпик <strong>TB1.1</strong>.
+        H1/H3 — архив сравнения.
+      </p>
+
+      <!-- H1 -->
+      <article class="lab-variant-card lab-variant-card--h1">
+        <h2 class="lab-variant-card__label">H1 — статус месяца + primary CTA в row2</h2>
+        <div class="lab-phone">
+          <div class="lab-phone__shell lab-phone__shell--unified">
+            <div class="mqx-dash-stack mqx-dash-stack--unified" data-skin="s5">
+              <header class="mqx-hero mqx-hero--compact mqx-hero--turn" aria-label="Период и закрытие месяца">
+                <div class="mqx-hero__glow" aria-hidden></div>
+                <div class="mqx-hero-compact__row1">
+                  <div class="mqx-hero-compact__logo" aria-hidden>
+                    <div class="mqx-brand-logo mqx-brand-logo--compact" style="height:34px;width:120px;background:rgba(255,255,255,.2);border-radius:8px"></div>
+                  </div>
+                  <div class="mqx-hero-compact__center">
+                    <div class="mqx-hero-turn__status-title">Месяц открыт</div>
+                    <div class="mqx-hero-turn__status-hint">Закрой, когда сделаешь дела</div>
+                  </div>
+                  <div class="mqx-hero-compact__controls" aria-hidden style="width:0;overflow:hidden"></div>
+                </div>
+                <div class="mqx-hero-compact__row2">
+                  <div class="mqx-hero-turn__period-block">
+                    <span class="mqx-hero-turn__period-label">Период</span>
+                    <span class="mqx-hero-turn__period-value">#3</span>
+                  </div>
+                  <div class="mqx-hero-compact__row2-actions" style="flex:1;justify-content:flex-end;gap:8px">
+                    <button type="button" class="mqx-hero-turn__events-pill">
+                      События
+                      <span class="mqx-hero-turn__events-badge">2</span>
+                    </button>
+                    <button type="button" class="mqx-hero-turn__cta-primary" data-onboarding-anchor="next_period">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden>
+                        <path d="M5 12h12"/><path d="m13 8 4 4-4 4"/>
+                      </svg>
+                      Закрыть месяц
+                    </button>
+                  </div>
+                </div>
+              </header>
+              <p class="lab-phone__caption">Финансы и действия ниже — как в prod, без изменений в этом раунде.</p>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <!-- H2 -->
+      <article class="lab-variant-card lab-variant-card--h2">
+        <h2 class="lab-variant-card__label">H2 ★ FINAL — primary CTA справа, максимальный акцент</h2>
+        <div class="lab-phone">
+          <div class="lab-phone__shell lab-phone__shell--unified">
+            <div class="mqx-dash-stack mqx-dash-stack--unified" data-skin="s5">
+              <header class="mqx-hero mqx-hero--compact mqx-hero--turn" aria-label="Период и закрытие месяца">
+                <div class="mqx-hero__glow" aria-hidden></div>
+                <div class="mqx-hero-turn__row-single">
+                  <div class="mqx-hero-compact__logo" aria-hidden>
+                    <div class="mqx-brand-logo mqx-brand-logo--compact" style="height:34px;width:100px;background:rgba(255,255,255,.2);border-radius:8px"></div>
+                  </div>
+                  <div class="mqx-hero-turn__period-block">
+                    <span class="mqx-hero-turn__status-hint" style="margin:0 0 2px">Месяц открыт</span>
+                    <span class="mqx-hero-turn__period-label">Период</span>
+                    <span class="mqx-hero-turn__period-value">#3</span>
+                  </div>
+                  <div class="mqx-hero-turn__actions-col">
+                    <button type="button" class="mqx-hero-turn__cta-primary mqx-hero-turn__cta-primary--wide">
+                      Закрыть месяц
+                    </button>
+                    <button type="button" class="mqx-hero-turn__events-pill" style="align-self:center">
+                      События
+                      <span class="mqx-hero-turn__events-badge">2</span>
+                    </button>
+                  </div>
+                </div>
+              </header>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <!-- H3 -->
+      <article class="lab-variant-card lab-variant-card--h3">
+        <h2 class="lab-variant-card__label">H3 — H1 + чипы плана месяца (TB1.1)</h2>
+        <div class="lab-phone">
+          <div class="lab-phone__shell lab-phone__shell--unified">
+            <div class="mqx-dash-stack mqx-dash-stack--unified" data-skin="s5">
+              <header class="mqx-hero mqx-hero--compact mqx-hero--turn" aria-label="Период и закрытие месяца">
+                <div class="mqx-hero__glow" aria-hidden></div>
+                <div class="mqx-hero-compact__row1">
+                  <div class="mqx-hero-compact__logo" aria-hidden>
+                    <div class="mqx-brand-logo mqx-brand-logo--compact" style="height:34px;width:120px;background:rgba(255,255,255,.2);border-radius:8px"></div>
+                  </div>
+                  <div class="mqx-hero-compact__center">
+                    <div class="mqx-hero-turn__status-title">Месяц открыт</div>
+                    <div class="mqx-hero-turn__status-hint">До закрытия: зарплата и 2 события</div>
+                  </div>
+                </div>
+                <div class="mqx-hero-turn__plan" aria-label="План месяца">
+                  <span class="mqx-hero-turn__plan-chip mqx-hero-turn__plan-chip--warn"><mark>!</mark> Зарплата</span>
+                  <span class="mqx-hero-turn__plan-chip mqx-hero-turn__plan-chip--warn">События 0/2</span>
+                  <span class="mqx-hero-turn__plan-chip">Подушка</span>
+                </div>
+                <div class="mqx-hero-compact__row2" style="margin-top:10px">
+                  <div class="mqx-hero-turn__period-block">
+                    <span class="mqx-hero-turn__period-label">Период</span>
+                    <span class="mqx-hero-turn__period-value">#3</span>
+                  </div>
+                  <div class="mqx-hero-compact__row2-actions" style="flex:1;justify-content:flex-end;gap:8px">
+                    <button type="button" class="mqx-hero-turn__events-pill">События <span class="mqx-hero-turn__events-badge">2</span></button>
+                    <button type="button" class="mqx-hero-turn__cta-primary">Закрыть месяц</button>
+                  </div>
+                </div>
+              </header>
+            </div>
+          </div>
+        </div>
+      </article>
+    </main>
+
+    <script>
+      document.querySelectorAll('[data-theme-btn]').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          const t = btn.getAttribute('data-theme-btn');
+          document.documentElement.setAttribute('data-theme', t);
+          document.querySelectorAll('[data-theme-btn]').forEach((b) => b.classList.toggle('is-active', b === btn));
+        });
+      });
+    </script>
+  </body>
+</html>

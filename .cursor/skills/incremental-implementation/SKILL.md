@@ -1,9 +1,23 @@
 ---
 name: incremental-implementation
 description: Delivers changes incrementally. Use when implementing any feature or change that touches more than one file. Use when you're about to write a large amount of code at once, or when a task feels too big to land in one step.
+argument-hint: "[feature, spec path, or task slice]"
+user-invocable: true
+allowed-tools: Read, Glob, Grep, Write, Shell
 ---
 
 # Incremental Implementation
+
+## Прочитай сначала (ТВОЙ ХОД)
+
+- [`CLAUDE.md`](../../../CLAUDE.md)
+- [`docs/specs/features/`](../../../docs/specs/features/)
+- [`docs/plans/`](../../../docs/plans/)
+- [`docs/tasks/`](../../../docs/tasks/)
+- [`backend/app/README.md`](../../../backend/app/README.md)
+- [`frontend-react/ARCHITECTURE.md`](../../../frontend-react/ARCHITECTURE.md)
+
+**Куда писать:** `backend/`, `frontend-react/`. **Дальше:** `critical-test-scenarios`, `test-driven-development`, `code-review-and-quality`.
 
 ## Overview
 
@@ -38,7 +52,7 @@ For each slice:
 1. **Implement** the smallest complete piece of functionality
 2. **Test** — run the test suite (or write a test if none exists)
 3. **Verify** — confirm the slice works as expected (tests pass, build succeeds, manual check)
-4. **Commit** -- save your progress with a descriptive message (see `git-workflow-and-versioning` for atomic commit guidance)
+4. **Commit** — атомарный коммит с понятным сообщением (по user rules в Cursor; коммит только по явной просьбе пользователя)
 5. **Move to the next slice** — carry forward, don't restart
 
 ## Slicing Strategies
@@ -243,3 +257,18 @@ After completing all increments for a task:
 - [ ] The build is clean
 - [ ] The feature works end-to-end as specified
 - [ ] No uncommitted changes remain
+
+---
+
+## Итог (Verdict)
+
+В конце работы явно укажи результат: **PASS**, **FAIL**, **CONCERNS**, **COMPLETE** или **APPROVED** — в зависимости от типа задачи.
+
+## Согласование изменений
+
+Перед созданием или изменением файлов в репозитории спроси: «Могу записать …?» — если пользователь не дал явное «делай» / «запиши».
+
+## Следующий шаг
+
+`test-driven-development` на каждый срез; перед merge — `code-review-and-quality`.
+

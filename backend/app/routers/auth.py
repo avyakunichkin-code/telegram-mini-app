@@ -17,15 +17,17 @@ async def register(user_data: UserRegister, db: Session = Depends(get_db)):
     existing = db.query(User).filter(User.username == user_data.username).first()
     if existing:
         raise HTTPException(status_code=400, detail="Username already exists")
+
+    email_taken = db.query(User).filter(User.email == user_data.email).first()
+    if email_taken:
+        raise HTTPException(status_code=400, detail="Email already registered")
     
     # Хешируем пароль
     hashed_password = get_password_hash(user_data.password)
 
-    email = user_data.email if user_data.email and user_data.email.strip() else None
-
     new_user = User(
-        username=user_data.username,
-        email=email,   # ← вместо user_data.email
+        username=user_data.username.strip(),
+        email=user_data.email,
         full_name=user_data.full_name,
         hashed_password=hashed_password,
         telegram_id=user_data.telegram_id,
@@ -34,7 +36,18 @@ async def register(user_data: UserRegister, db: Session = Depends(get_db)):
     db.add(new_user)
     db.commit()
     db.refresh(new_user)
-    
+
+    try:
+        from ..admin.notify import notify_user_registered
+
+        notify_user_registered(db, new_user)
+    except Exception:
+        import logging
+
+        logging.getLogger(__name__).warning(
+            "Admin notify failed for user_registered", exc_info=True
+        )
+
     # Создаём токен
     access_token = create_access_token(data={"sub": str(new_user.id)})
     
@@ -50,8 +63,12 @@ async def register(user_data: UserRegister, db: Session = Depends(get_db)):
 async def login(user_data: UserLogin, db: Session = Depends(get_db)):
     """Вход в систему — не требует авторизации"""
     
-    user = db.query(User).filter(User.username == user_data.username).first()
-    
+    login_id = (user_data.username or "").strip()
+    if "@" in login_id:
+        user = db.query(User).filter(User.email == login_id.lower()).first()
+    else:
+        user = db.query(User).filter(User.username == login_id).first()
+
     if not user or not verify_password(user_data.password, user.hashed_password):
         raise HTTPException(status_code=401, detail="Invalid username or password")
     

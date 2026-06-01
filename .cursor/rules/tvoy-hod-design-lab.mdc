@@ -1,0 +1,60 @@
+﻿---
+description: Design-lab — self-contained стили, sync-lab, без ../ в HTML
+globs: design-lab/**/*
+alwaysApply: false
+---
+
+# Design-lab — стили и запуск
+
+Процесс MQX: [`frontend-react/src/components/mqx/DESIGN_WORKFLOW.md`](frontend-react/src/components/mqx/DESIGN_WORKFLOW.md).  
+**Куда смотреть / когда что:** [`docs/agents/DESIGN_LAB_NAVIGATION.md`](docs/agents/DESIGN_LAB_NAVIGATION.md).
+
+## Навигация (хаб — по умолчанию)
+
+| Цель | Куда |
+|------|------|
+| Обзор, поиск, ссылки на все раунды | `cd design-lab && npx serve .` → **`/`** (из `nav.manifest.json`) |
+| Один раунд (отладка 404) | `design-lab/<тема>/<round>/` + `./sync-lab.sh` + `serve` |
+| Композиция страницы Dashboard/Finance | `*/parity-generated-page-round/` после `npm run design-lab:build` |
+| Утверждённый React | `#/dev/mqx` |
+
+После правки **`design-lab/nav.manifest.json`**: `cd frontend-react && npm run design-lab:build-nav`.  
+**Не править** `design-lab/index.html` вручную.
+
+## Жёсткое правило: self-contained раунд
+
+`npx serve .` отдаёт **только текущую папку**. Пути вида `../styles.css`, `../layout-round/lab-base.css` в `index.html` → **404**, макет без стилей.
+
+### В каждом раунде (папка с `index.html`)
+
+| Обязательно | Запрещено |
+|-------------|-----------|
+| `./lab-base.css` (сгенерирован) | `../styles.css`, `../assets/...` |
+| `./styles.css` (только раунд) | Ручное редактирование `lab-base.css` |
+| `./assets/monetka-mascot.png` (копия) | Забыть `./sync-lab.sh` после правок родительских стилей |
+| **`sync-lab.sh`** (bash) | Документировать или вызывать **`sync-lab.ps1`** (устарело) |
+
+### После создания или изменения раунда
+
+1. Добавить **`sync-lab.sh`** — нативный bash (см. `capital-page/details-actions-round/`) или делегат `events/_shared/sync-lab-round.sh`.
+2. **Запустить** `./sync-lab.sh` и закоммитить `lab-base.css` + `assets/`.
+3. Проверить: Network без 404 (локально в round **или** через хаб `cd design-lab && npx serve .`).
+4. Добавить round в `nav.manifest.json` → `cd frontend-react && npm run design-lab:build-nav`.
+
+Для **events**: `design-lab/events/sync-all-rounds.sh` — все раунды.
+
+**Fallback без bash:** `cd frontend-react && npm run design-lab:sync-round -- design-lab/<тема>/<round>`.
+
+## Чеклист агента (перед «готово»)
+
+- [ ] В `index.html` только `./` для CSS и картинок
+- [ ] `./sync-lab.sh` выполнен, `lab-base.css` актуален
+- [ ] `assets/monetka-mascot.png` на месте (если нужна Монетка)
+- [ ] README раунда: хаб + `./sync-lab.sh` (не только `serve` в round)
+- [ ] `nav.manifest.json` + `design-lab:build-nav` для нового round
+
+Скилл: **design-lab-mqx** (`.cursor/skills/design-lab-mqx/SKILL.md`).
+
+## Утверждение → prod
+
+Без явного «утверждаем X» в чате — не переносить в `mqx/` и prod. См. `tvoy-hod-frontend-mqx.mdc`.

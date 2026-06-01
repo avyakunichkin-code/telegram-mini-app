@@ -1,51 +1,199 @@
-import { useMemo, useState, lazy, Suspense } from 'react';
-import { Button, Modal } from '@telegram-apps/telegram-ui';
-import { MoneyText } from './MoneyText';
-import { showNotification } from './notifications';
+import { useEffect, useMemo, useRef, useState } from 'react';
 
-const PeriodJourneyLottie = lazy(() => import('./PeriodJourneyLottie'));
+import { MoneyText } from './MoneyText';
+
+import { showNotification } from './notifications';
+import { suggestSafetyFundAmount } from '../utils/safetyFundAmount';
+
+import { CAPITAL_FLOWS_SECTION } from '../utils/capitalFlowsNav';
+import {
+  formatSafetyFundChipTitle,
+  getSafetyFundFillFromOverview,
+  SAFETY_FUND_BASELINE_HINT,
+  SAFETY_FUND_CHIP_LABEL,
+} from '../utils/safetyFundFill';
+
+import {
+
+  MqxDashStack,
+
+  MqxDashboardHero,
+
+  MqxDivider,
+
+  MqxFinancePeriodBlock,
+
+  MqxNeedsDash,
+  MqxNeedsHelpSheet,
+  MqxTreatSelfSheet,
+
+  MqxGoalDash,
+
+  MqxPeriodActions,
+  MqxJuiceGainFeedback,
+  MqxSafetyFundSheet,
+
+} from './mqx';
+
+
 
 function formatSignedMoney(n) {
+
   const v = Number(n) || 0;
+
   return v >= 0 ? `+${v}` : `${v}`;
+
 }
+
+
+
+function formatChipMoneyAria(value, { tone } = {}) {
+
+  const n = Number(value) || 0;
+
+  const abs = Math.abs(n).toLocaleString('ru-RU', { maximumFractionDigits: 0 });
+
+  if (tone === 'pos' && n > 0) return `плюс ${abs} руб.`;
+
+  if (tone === 'out') return `${abs} руб.`;
+
+  if (n < 0) return `минус ${abs} руб.`;
+
+  return `${abs} руб.`;
+
+}
+
+
 
 function pctClamp01(x) {
+
   if (!Number.isFinite(x)) return 0;
+
   return Math.max(0, Math.min(1, x));
+
 }
 
+
+
 export function DashboardPremium({
+
   overview,
+
   timeStatus,
+
+  periodStatus = null,
+
+  eventsUnlocked = true,
+
   pendingEventsCount,
+
   onOpenEvents,
-  setPlay,
-  setPause,
+
   onNextPeriod,
+
+  closeMonthDisabled = false,
+
   claimSalary,
+
   contributeToSafetyFund,
+
   withdrawFromSafetyFund,
+  treatSelf,
+  getNeedsGuide,
+
   onGoFinance,
+
+  onGoCapitalFlows,
+
 }) {
+
   const [moneyModal, setMoneyModal] = useState(null); // 'in' | 'out' | null
-  const [amountStr, setAmountStr] = useState('');
+
+  const [safetyAmount, setSafetyAmount] = useState(0);
+
   const [busyAction, setBusyAction] = useState(null); // 'salary'|'in'|'out'|null
+  const [juiceBurstKey, setJuiceBurstKey] = useState(0);
+  const [juiceAmount, setJuiceAmount] = useState(0);
+  const [juiceToastVisible, setJuiceToastVisible] = useState(false);
+  const [salaryCelebrate, setSalaryCelebrate] = useState(false);
+  const [needsHelpOpen, setNeedsHelpOpen] = useState(false);
+  const [treatOpen, setTreatOpen] = useState(false);
+
+  const juiceTimerRef = useRef(null);
+
+  useEffect(
+    () => () => {
+      if (juiceTimerRef.current) window.clearTimeout(juiceTimerRef.current);
+    },
+    [],
+  );
+
+  const closeSafetyPanel = () => {
+
+    setMoneyModal(null);
+
+    setSafetyAmount(0);
+
+  };
 
   const periodIndex = timeStatus?.period_index ?? overview?.period_index ?? 0;
-  const remaining = timeStatus?.remainingLocal ?? timeStatus?.seconds_until_next_period ?? 0;
-  const mm = String(Math.floor(remaining / 60)).padStart(2, '0');
-  const ss = String(Math.floor(remaining % 60)).padStart(2, '0');
+
+  const salaryClaimed = periodStatus?.salary_claimed === true;
+  const canClaimSalary = periodStatus?.can_claim_salary === true;
+  const salaryDisabled = busyAction !== null || salaryClaimed || (periodStatus != null && !canClaimSalary);
 
   const financeCards = useMemo(() => {
+
     const cash = Number(overview?.cash_balance) || 0;
+
     const safety = Number(overview?.safety_fund_balance) || 0;
-    const flow = Number(overview?.net_monthly_cashflow) || 0;
-    const streak = Number(overview?.clean_period_streak) || 0;
+
+    const totalIncome = Number(overview?.total_monthly_income) || 0;
+
+    const totalOutflow = Number(overview?.total_monthly_outflow) || 0;
+    const cushionFill = getSafetyFundFillFromOverview(overview);
+
     return [
       {
+        title: 'Доходы',
+        chipAction: CAPITAL_FLOWS_SECTION.income,
+        titleHint:
+          'Сумма доходов за период: зарплата и доход от активов (без вычета расходов и платежей по долгам)',
+        valueNode: <MoneyText value={totalIncome} />,
+        valueLabel: formatChipMoneyAria(totalIncome, { tone: 'pos' }),
+        accent: 'mqx-accent--sky',
+        valueTone: 'pos',
+        icon: (
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M4 19V5" />
+            <path d="M4 19h16" />
+            <path d="M7 15l4-4 3 3 5-6" />
+          </svg>
+        ),
+      },
+      {
+        title: 'Расходы',
+        chipAction: CAPITAL_FLOWS_SECTION.expense,
+        titleHint:
+          'Сумма расходов за период: расходы на жизнь + платежи по обязательствам + содержание имущества',
+        valueNode: <MoneyText value={totalOutflow} />,
+        valueLabel: formatChipMoneyAria(totalOutflow, { tone: 'out' }),
+        accent: 'mqx-accent--amber',
+        valueTone: 'out',
+        expenseIcon: true,
+        icon: (
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z" />
+            <path d="M3 6h18" />
+            <path d="M16 10a4 4 0 0 1-8 0" />
+          </svg>
+        ),
+      },
+      {
         title: 'Баланс',
+        juiceTarget: 'balance',
         valueNode: <MoneyText value={cash} />,
+        valueLabel: formatChipMoneyAria(cash),
         accent: 'mqx-accent--violet',
         icon: (
           <svg viewBox="0 0 24 24" aria-hidden="true">
@@ -56,9 +204,17 @@ export function DashboardPremium({
         ),
       },
       {
-        title: 'Подушка',
+        title: formatSafetyFundChipTitle(cushionFill?.percent),
+        titleHint: cushionFill
+          ? `${formatSafetyFundChipTitle(cushionFill.percent)} от нормы (${SAFETY_FUND_BASELINE_HINT})`
+          : 'Финансовая подушка — запас на чёрный день',
         valueNode: <MoneyText value={safety} />,
+        valueLabel: cushionFill
+          ? `${formatChipMoneyAria(safety)}, наполнение ${cushionFill.percent}%`
+          : formatChipMoneyAria(safety),
         accent: 'mqx-accent--emerald',
+        cushionChip: true,
+        cushionFill,
         icon: (
           <svg viewBox="0 0 24 24" aria-hidden="true">
             <path d="M12 3 20 7v6c0 5-3.4 8.2-8 9-4.6-.8-8-4-8-9V7l8-4Z" />
@@ -66,373 +222,233 @@ export function DashboardPremium({
           </svg>
         ),
       },
-      {
-        title: 'Чистый поток',
-        valueNode: <MoneyText value={formatSignedMoney(flow)} />,
-        accent: 'mqx-accent--sky',
-        icon: (
-          <svg viewBox="0 0 24 24" aria-hidden="true">
-            <path d="M4 19V5" />
-            <path d="M4 19h16" />
-            <path d="M7 15l4-4 3 3 5-6" />
-          </svg>
-        ),
-      },
-      {
-        title: 'Стрик месяцев',
-        valueNode: <span className="mqx-card-value">{streak}</span>,
-        accent: 'mqx-accent--amber',
-        icon: (
-          <svg viewBox="0 0 24 24" aria-hidden="true">
-            <path d="M7 3v3" />
-            <path d="M17 3v3" />
-            <path d="M4 8h16" />
-            <path d="M6 6h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2Z" />
-            <path d="M8 12h4" />
-            <path d="M8 16h6" />
-          </svg>
-        ),
-      },
     ];
+
   }, [overview]);
+
+
 
   const goal = useMemo(() => {
+
     const current = Number(overview?.safety_fund_balance) || 0;
+
     const target = Number(overview?.win_target_safety_fund) || 0;
+
     const frac = target > 0 ? current / target : 0;
+
     return {
+
       target,
+
       current,
+
       frac: pctClamp01(frac),
+
       win: !!overview?.win_reached,
+
       ready: !!overview?.win_ready,
+
     };
+
   }, [overview]);
 
-  const characterXp = useMemo(() => {
-    const level = Math.max(1, Number(overview?.character_level) || 1);
-    const xp = Math.max(0, Number(overview?.character_xp) || 0);
-    const needRaw = overview?.character_xp_need_for_next;
-    const need = Number.isFinite(Number(needRaw)) && Number(needRaw) > 0 ? Number(needRaw) : 100;
-    const frac = need > 0 ? xp / need : 0;
-    return { level, xp, need, frac: pctClamp01(frac) };
-  }, [overview]);
 
-  const overviewBars = useMemo(() => {
-    const income = Number(overview?.total_monthly_income) || 0;
-    const liab = Number(overview?.total_monthly_liabilities_payment) || 0;
-    const maint = Number(overview?.total_monthly_assets_maintenance) || 0;
-    const denom = Math.max(income, liab + maint, 1);
-    return [
-      { label: 'Ежемесячный доход', value: income, frac: income / denom, tone: 'mqx-bar--emerald' },
-      { label: 'Платежи по долгам', value: liab, frac: liab / denom, tone: 'mqx-bar--rose' },
-      { label: 'Обслуживание активов', value: maint, frac: maint / denom, tone: 'mqx-bar--violet' },
-    ];
-  }, [overview]);
 
-  const canPlay = timeStatus?.time_state !== 'play';
-  const canPause = timeStatus?.time_state !== 'pause';
 
-  const submitMoney = async () => {
-    const amt = Number(String(amountStr).replace(',', '.'));
-    if (!Number.isFinite(amt) || amt <= 0) {
-      showNotification('Введите корректную сумму', 'error');
-      return;
-    }
-    try {
-      setBusyAction(moneyModal === 'in' ? 'in' : 'out');
-      if (moneyModal === 'in') {
-        await contributeToSafetyFund(amt);
-        showNotification('Подушка пополнена', 'success');
-      } else {
-        await withdrawFromSafetyFund(amt);
-        showNotification('С подушки снято', 'success');
-      }
-      setAmountStr('');
-      setMoneyModal(null);
-    } catch (e) {
-      showNotification(e?.detail || e?.message || 'Не удалось выполнить действие', 'error');
-    } finally {
-      setBusyAction(null);
-    }
+  const cashBalance = Math.max(0, Math.floor(Number(overview?.cash_balance) || 0));
+  const safetyBalance = Math.max(0, Math.floor(Number(overview?.safety_fund_balance) || 0));
+  const cushionFill = getSafetyFundFillFromOverview(overview);
+
+  const openSafetySheet = (mode) => {
+    const max = mode === 'in' ? cashBalance : safetyBalance;
+    setSafetyAmount(suggestSafetyFundAmount(max));
+    setMoneyModal(mode);
   };
 
+  const submitMoney = async () => {
+
+    const amt = safetyAmount;
+
+    const max = moneyModal === 'in' ? cashBalance : safetyBalance;
+    if (!Number.isFinite(amt) || amt <= 0 || amt > max) {
+
+      showNotification('Введите корректную сумму', 'error');
+
+      return;
+
+    }
+
+    try {
+
+      setBusyAction(moneyModal === 'in' ? 'in' : 'out');
+
+      if (moneyModal === 'in') {
+
+        const res = await contributeToSafetyFund(amt);
+        showNotification('Фин.подушка пополнена', 'success');
+
+      } else {
+
+        await withdrawFromSafetyFund(amt);
+
+        showNotification('С подушки снято', 'success');
+
+      }
+
+      closeSafetyPanel();
+
+    } catch (e) {
+
+      showNotification(e?.detail || e?.message || 'Не удалось выполнить действие', 'error');
+
+    } finally {
+
+      setBusyAction(null);
+
+    }
+
+  };
+
+
+
   return (
+
     <>
-      <header className="mqx-hero">
-          <div className="mqx-hero__glow" aria-hidden />
 
-          <div className="mqx-hero__top">
-            <div>
-              <div className="mqx-hero__kicker">Money Quest</div>
-              <div className="mqx-hero__title">Финансы как игра</div>
-            </div>
+      <div className="mqx-tab-page mqx-tab-page--dash-unified">
 
-            <div className="mqx-period-chip">
-              <div className="mqx-period-chip__label">Период</div>
-              <div className="mqx-period-chip__value">#{periodIndex}</div>
-            </div>
-          </div>
+        <MqxDashboardHero
+          periodIndex={periodIndex}
+          onCloseMonth={onNextPeriod}
+          closeMonthDisabled={closeMonthDisabled || busyAction !== null}
+          pendingEventsCount={eventsUnlocked ? pendingEventsCount : 0}
+          onOpenEvents={eventsUnlocked ? onOpenEvents : undefined}
+        />
 
-          <div className="mqx-hero__mid">
-            <div className="mqx-timer">
-              <div className="mqx-timer__label">Игровое время</div>
-              <div className="mqx-timer__value">
-                {mm}:{ss}
-              </div>
-            </div>
 
-            <div className="mqx-hero-actions">
-              <button
-                type="button"
-                className="mqx-btn mqx-btn--filled"
-                disabled={!canPlay}
-                onClick={() => setPlay()}
-              >
-                Играть
-              </button>
-              <button
-                type="button"
-                className="mqx-btn mqx-btn--outline"
-                disabled={!canPause}
-                onClick={() => setPause()}
-              >
-                Пауза
-              </button>
-            </div>
-          </div>
 
-          <Suspense
-            fallback={
-              <div className="mq-period-boy mq-period-boy--lottie mq-period-boy--lottie-skeleton" aria-hidden>
-                <div className="mq-period-boy__label">Цикл месяца · Lottie</div>
-                <div className="mq-period-boy__lottie-wrap mq-period-boy__lottie-wrap--skeleton" />
-              </div>
-            }
-          >
-            <PeriodJourneyLottie
-              timeState={timeStatus?.time_state}
-              remainingSeconds={remaining}
-              periodDurationSeconds={timeStatus?.period_duration_seconds}
+        <main className="mqx-content mqx-tab-page__scroll mqx-content--dash-flat">
+
+          <MqxDashStack className="mqx-dash-stack--unified mqx-juice-host">
+            <MqxJuiceGainFeedback
+              burstKey={juiceBurstKey}
+              amount={juiceAmount}
+              toastVisible={juiceToastVisible}
+              toastMessage="Зарплата в кошелёк — ход стал сильнее"
             />
-          </Suspense>
 
-          <div className="mqx-hero__bottom">
-            <button type="button" className="mqx-pill" onClick={onNextPeriod}>
-              Следующий период
-            </button>
-            {pendingEventsCount > 0 ? (
-              <button type="button" className="mqx-pill mqx-pill--events" onClick={onOpenEvents}>
-                События <span className="mqx-pill__badge">{pendingEventsCount}</span>
-              </button>
-            ) : null}
-          </div>
-      </header>
+            <MqxNeedsDash
+              needs={overview?.needs}
+              templateKey={overview?.victory?.template_key ?? overview?.starter_template_key}
+              needsZeroPeriodsStreak={overview?.needs_zero_periods_streak}
+              treatSelf={overview?.treat_self}
+              onHelp={() => setNeedsHelpOpen(true)}
+              onTreatSelf={() => setTreatOpen(true)}
+            />
 
-      <main className="mqx-content">
-          <section className="mqx-card mqx-card--character" aria-labelledby="mq-character-progress">
-            <div className="mqx-card__kicker mqx-card__kicker--sky">Герой</div>
-            <div className="mqx-character__top">
-              <div>
-                <div className="mqx-card__title" id="mq-character-progress">
-                  Уровень {characterXp.level}
-                </div>
-                <p className="mqx-card__sub">Опыт к следующему уровню</p>
-              </div>
-              <span className="mqx-chip mqx-chip--xp" aria-hidden>
-                XP
-              </span>
-            </div>
-            <div className="mqx-character__meter" role="group" aria-label="Прогресс опыта">
-              <div className="mqx-progress">
-                <div className="mqx-progress__fill mqx-progress__fill--xp" style={{ width: `${Math.round(characterXp.frac * 100)}%` }} />
-              </div>
-              <div className="mqx-goal__row mqx-character__meter-labels">
-                <span>Накоплено</span>
-                <span>
-                  {characterXp.xp}
-                  {' '}
-                  / {characterXp.need}
-                </span>
-              </div>
-            </div>
-          </section>
+            <MqxDivider />
 
-          <section className="mqx-card mqx-card--goal">
-            <div className="mqx-goal__top">
-              <div>
-                <div className="mqx-card__kicker mqx-card__kicker--emerald">Цель</div>
-                <div className="mqx-card__title">Финансовая свобода</div>
-              </div>
-              <div className="mqx-goal__badge">{goal.win ? 'Победа' : goal.ready ? 'Почти' : 'В работе'}</div>
-            </div>
+            <MqxFinancePeriodBlock
+              financeCards={financeCards}
+              onGoFinance={onGoFinance}
+              onFlowsNavigate={onGoCapitalFlows}
+              juiceGainActive={salaryCelebrate}
+            />
 
-            {goal.target > 0 ? (
-              <div className="mqx-goal__progress">
-                <div className="mqx-goal__row">
-                  <span>Подушка к цели</span>
-                  <span>
-                    <MoneyText value={goal.current} decimals={0} /> / <MoneyText value={goal.target} decimals={0} />
-                  </span>
-                </div>
-                <div className="mqx-progress">
-                  <div className="mqx-progress__fill" style={{ width: `${Math.round(goal.frac * 100)}%` }} />
-                </div>
-              </div>
-            ) : (
-              <div className="mqx-goal__progress">
-                <div className="mqx-goal__row">
-                  <span>Цель не задана</span>
-                  <span>—</span>
-                </div>
-              </div>
-            )}
-          </section>
+            <MqxDivider />
 
-          <section className="mqx-block">
-            <div className="mqx-block__head">
-              <div className="mqx-block__title">Финансы</div>
-              <button type="button" className="mqx-link" onClick={onGoFinance}>
-                Детали
-              </button>
-            </div>
-            <div className="mqx-grid2">
-              {financeCards.map((c) => (
-                <div key={c.title} className="mqx-mini" role="group" aria-label={c.title}>
-                  <div className={`mqx-mini__icon ${c.accent}`} aria-hidden>
-                    {c.icon}
-                  </div>
-                  <div className="mqx-mini__label">{c.title}</div>
-                  <div className="mqx-mini__value">{c.valueNode}</div>
-                </div>
-              ))}
-            </div>
-          </section>
+            <MqxGoalDash victory={overview?.victory} legacyGoal={goal} />
 
-          <section className="mqx-card">
-            <div className="mqx-actions__head">
-              <div>
-                <div className="mqx-card__title">Действия периода</div>
-                <div className="mqx-card__sub">Управляй денежным потоком</div>
-              </div>
-              <div className="mqx-xp">XP +10</div>
-            </div>
+            <MqxDivider />
 
-            <div className="mqx-grid2">
-              <button
-                type="button"
-                className="mqx-action"
-                disabled={busyAction !== null}
-                onClick={async () => {
-                  try {
-                    setBusyAction('salary');
-                    await claimSalary();
-                    showNotification('Зарплата получена', 'success');
-                  } catch (e) {
-                    showNotification(e?.detail || e?.message || 'Не удалось получить зарплату', 'error');
-                  } finally {
-                    setBusyAction(null);
+            <MqxPeriodActions
+              busy={busyAction !== null}
+              activeMoneyMode={moneyModal}
+              salaryDisabled={salaryDisabled}
+              salaryCelebrate={salaryCelebrate}
+              onSalary={async () => {
+                if (salaryClaimed) {
+                  showNotification('Зарплата за этот период уже получена', 'info');
+                  return;
+                }
+                if (periodStatus != null && !canClaimSalary) {
+                  showNotification('Зарплату в этом периоде получить нельзя', 'info');
+                  return;
+                }
+
+                try {
+                  setBusyAction('salary');
+                  const result = await claimSalary();
+                  if (result?.already_claimed) {
+                    showNotification(
+                      result.message || 'Зарплата за этот период уже получена',
+                      'info',
+                    );
+                  } else if (result?.status === 'success') {
+                    const amount = Number(result.amount) || 0;
+                    if (amount > 0) {
+                      if (juiceTimerRef.current) window.clearTimeout(juiceTimerRef.current);
+                      setJuiceAmount(amount);
+                      setJuiceBurstKey((k) => k + 1);
+                      setSalaryCelebrate(true);
+                      setJuiceToastVisible(true);
+                      juiceTimerRef.current = window.setTimeout(() => {
+                        setSalaryCelebrate(false);
+                        setJuiceToastVisible(false);
+                        juiceTimerRef.current = null;
+                      }, 2400);
+                    } else {
+                      showNotification('Зарплата на счёт', 'success');
+                    }
                   }
-                }}
-              >
-                Получить зарплату
-              </button>
-              <button
-                type="button"
-                className="mqx-action"
-                disabled={busyAction !== null}
-                onClick={() => {
-                  setAmountStr('');
-                  setMoneyModal('in');
-                }}
-              >
-                В подушку
-              </button>
-              <button
-                type="button"
-                className="mqx-action"
-                disabled={busyAction !== null}
-                onClick={() => {
-                  setAmountStr('');
-                  setMoneyModal('out');
-                }}
-              >
-                Снять
-              </button>
-              <button type="button" className="mqx-action" onClick={onGoFinance}>
-                Инвестировать
-              </button>
-            </div>
-          </section>
+                } catch (e) {
+                  showNotification(e?.detail || e?.message || 'Не удалось получить зарплату', 'error');
+                } finally {
+                  setBusyAction(null);
+                }
+              }}
 
-          <section className="mqx-card">
-            <div className="mqx-analytics__head">
-              <div>
-                <div className="mqx-card__kicker">Уровень</div>
-                <div className="mqx-analytics__title">Финансовый стратег</div>
-              </div>
-              <div className="mqx-score">
-                <div className="mqx-score__label">Очки</div>
-                <div className="mqx-score__value">{Number(overview?.score ?? 0)}</div>
-              </div>
-            </div>
+              onContribute={() => openSafetySheet('in')}
 
-            <div className="mqx-bars">
-              {overviewBars.map((b) => (
-                <div key={b.label}>
-                  <div className="mqx-bars__row">
-                    <span className="mqx-bars__label">{b.label}</span>
-                    <span className="mqx-bars__value">
-                      <MoneyText value={b.value} decimals={0} />
-                    </span>
-                  </div>
-                  <div className="mqx-bars__track">
-                    <div className={`mqx-bars__fill ${b.tone}`} style={{ width: `${Math.round(pctClamp01(b.frac) * 100)}%` }} />
-                  </div>
-                </div>
-              ))}
-            </div>
+              onWithdraw={() => openSafetySheet('out')}
 
-            <div className="mqx-xp-card">
-              <div className="mqx-xp-card__row">
-                <span>XP до следующего уровня</span>
-                <strong>{Number(overview?.xp_to_next_level ?? 0)} XP</strong>
-              </div>
-              <div className="mqx-xp-card__track">
-                <div className="mqx-xp-card__fill" style={{ width: '90%' }} />
-              </div>
-            </div>
-          </section>
-      </main>
+              onInvest={onGoFinance}
 
-      <Modal open={moneyModal !== null} onClose={() => setMoneyModal(null)}>
-        <div className="mqx-modal">
-          <div className="mqx-card">
-            <div className="mqx-card__title">{moneyModal === 'in' ? 'В подушку' : 'Снять с подушки'}</div>
-            <p className="mq-modal-lead" style={{ marginTop: 8 }}>Сумма</p>
-            <label className="mq-field" style={{ marginTop: 6 }}>
-              <span className="mq-field__label visually-hidden">Сумма</span>
-              <input
-                className="mq-field__input"
-                name={moneyModal === 'in' ? 'safety_fund_in' : 'safety_fund_out'}
-                inputMode="numeric"
-                value={amountStr}
-                placeholder="0"
-                onChange={(e) => setAmountStr(e.target.value)}
-              />
-            </label>
-            <div className="mq-modal-actions" style={{ marginTop: 16 }}>
-              <Button mode="filled" stretched disabled={busyAction !== null} onClick={submitMoney}>
-                Выполнить
-              </Button>
-              <Button mode="outline" stretched onClick={() => setMoneyModal(null)}>
-                Отмена
-              </Button>
-            </div>
-          </div>
-        </div>
-      </Modal>
+            />
+
+          </MqxDashStack>
+
+        </main>
+
+      </div>
+
+      <MqxNeedsHelpSheet
+        open={needsHelpOpen}
+        onClose={() => setNeedsHelpOpen(false)}
+        loadGuide={getNeedsGuide}
+      />
+      <MqxTreatSelfSheet
+        open={treatOpen}
+        onClose={() => setTreatOpen(false)}
+        treatSelf={treatSelf}
+        treatSelfState={overview?.treat_self}
+      />
+      <MqxSafetyFundSheet
+        open={moneyModal != null}
+        mode={moneyModal || 'in'}
+        onModeChange={(next) => openSafetySheet(next)}
+        onClose={closeSafetyPanel}
+        amount={safetyAmount}
+        onAmountChange={setSafetyAmount}
+        onSubmit={submitMoney}
+        busy={busyAction === 'in' || busyAction === 'out'}
+        cashBalance={cashBalance}
+        safetyBalance={safetyBalance}
+        cushionFillPercent={cushionFill?.percent ?? null}
+      />
     </>
+
   );
+
 }
 

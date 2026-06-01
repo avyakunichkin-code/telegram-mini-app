@@ -1,0 +1,19 @@
+{
+  "ep": "000",
+  "slug": "ep-000-intro",
+  "arc": null,
+  "arc_title": "Пролог",
+  "layer": "author",
+  "voice": "first_person",
+  "format": "hybrid",
+  "tone": "A",
+  "image_headline": "От автора",
+  "signature": "Алексей, Твой ход",
+  "product_name": "Твой ход",
+  "open_hint": "будут знаки",
+  "series_tease": "Монетка поможет вам во всём разобраться",
+  "interview_complete": true,
+  "platforms": ["telegram"],
+  "approved_at": null,
+  "published_at": null
+}

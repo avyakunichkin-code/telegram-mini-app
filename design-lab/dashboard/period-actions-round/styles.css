@@ -1,0 +1,281 @@
+/* period-actions-round — chip-действия + Монетка справа */
+
+.lab-round-note {
+  max-width: 720px;
+  margin: 0 0 20px;
+  font-size: 14px;
+  line-height: 1.5;
+  color: color-mix(in srgb, var(--mqx-ink) 72%, transparent);
+}
+
+.lab-variant-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 20px;
+  align-items: start;
+}
+
+.lab-variant-card {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.lab-variant-card__label {
+  margin: 0;
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+.lab-variant-card__hint {
+  margin: 0;
+  font-size: 12px;
+  line-height: 1.4;
+  color: color-mix(in srgb, var(--mqx-ink) 58%, transparent);
+}
+
+.lab-variant-card__controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.lab-variant-card__controls button {
+  font-size: 12px;
+  padding: 6px 10px;
+  border-radius: 10px;
+  border: 1px solid color-mix(in srgb, var(--mqx-ink) 14%, transparent);
+  background: color-mix(in srgb, var(--mqx-ink) 4%, transparent);
+  cursor: pointer;
+}
+
+.lab-variant-card__controls button.is-active {
+  border-color: color-mix(in srgb, var(--mq-violet) 40%, transparent);
+  background: color-mix(in srgb, var(--mq-violet) 10%, transparent);
+}
+
+/* —— Подсказка: пузырь слева, Монетка справа (не как finance-monetka) —— */
+.mqx-period-hint {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-end;
+  gap: 6px;
+  margin: 0 var(--mqx-dash-inline-pad, 14px) 10px;
+  padding: 0;
+}
+
+.mqx-period-hint__bubble {
+  position: relative;
+  flex: 1;
+  min-width: 0;
+  padding: 10px 12px;
+  border-radius: 14px;
+  font-size: 12px;
+  line-height: 1.45;
+  color: color-mix(in srgb, var(--mqx-ink) 90%, transparent);
+  background: color-mix(in srgb, var(--mq-violet, #6d28d9) 5%, var(--tg-theme-bg-color, #fff));
+  border: 1px solid color-mix(in srgb, var(--mqx-ink) 8%, transparent);
+}
+
+.mqx-period-hint__bubble::after {
+  content: '';
+  position: absolute;
+  right: -6px;
+  bottom: 10px;
+  border: 6px solid transparent;
+  border-left-color: color-mix(in srgb, var(--mq-violet, #6d28d9) 5%, var(--tg-theme-bg-color, #fff));
+  filter: drop-shadow(1px 0 0 color-mix(in srgb, var(--mqx-ink) 8%, transparent));
+}
+
+/* Акценты в пузыре — amber, как mqx-goal-monetka__text strong (prod) */
+.mqx-period-hint__bubble strong {
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  color: color-mix(in srgb, var(--mq-amber, #f59e0b) 92%, var(--mqx-ink));
+}
+
+.mqx-period-hint__mascot {
+  width: 52px;
+  height: auto;
+  flex-shrink: 0;
+  object-fit: contain;
+  filter: drop-shadow(0 2px 6px color-mix(in srgb, var(--mqx-ink) 12%, transparent));
+}
+
+.mqx-period-hint--wink .mqx-period-hint__mascot {
+  width: 48px;
+}
+
+/* —— Секция действий (chip-паттерн) —— */
+.mqx-period-actions--chips {
+  padding: 12px var(--mqx-dash-inline-pad, 14px) 14px;
+}
+
+.mqx-period-actions--chips .mqx-finance-static__title {
+  margin-bottom: 8px;
+}
+
+.mqx-action-chips {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.mqx-action-chips--3col {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.mqx-action-chip {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  min-width: 0;
+  padding: 8px;
+  border: none;
+  border-radius: 12px;
+  background: color-mix(in srgb, var(--mqx-ink) 4%, transparent);
+  font: inherit;
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: background 0.12s ease;
+}
+
+.mqx-action-chip:active:not(:disabled) {
+  background: color-mix(in srgb, var(--mqx-ink) 8%, transparent);
+}
+
+.mqx-action-chip:focus-visible {
+  outline: 2px solid color-mix(in srgb, var(--mq-violet) 45%, transparent);
+  outline-offset: 2px;
+}
+
+.mqx-action-chip.is-disabled,
+.mqx-action-chip:disabled {
+  opacity: 0.48;
+  cursor: not-allowed;
+  filter: grayscale(0.15);
+}
+
+.mqx-action-chip__icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.mqx-action-chip__icon svg {
+  width: 18px;
+  height: 18px;
+  stroke: rgba(255, 255, 255, 0.92);
+  fill: none;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.mqx-action-chip--salary .mqx-action-chip__icon {
+  box-shadow: 0 2px 8px color-mix(in srgb, var(--mq-violet) 22%, transparent);
+}
+
+.mqx-action-chip__body {
+  min-width: 0;
+  flex: 1;
+}
+
+.mqx-action-chip__label {
+  display: block;
+  font-size: 11px;
+  font-weight: 800;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+}
+
+.mqx-action-chip__sub {
+  display: block;
+  margin-top: 2px;
+  font-size: 9px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: color-mix(in srgb, var(--mqx-ink) 52%, transparent);
+}
+
+.mqx-action-chip__sub--phrase {
+  text-transform: none;
+  letter-spacing: 0;
+  font-size: 10px;
+  font-weight: 400;
+  line-height: 1.2;
+}
+
+.mqx-period-hint__bubble {
+  font-weight: 400;
+}
+
+/* Одна кнопка «Подушка» — hub */
+.mqx-action-chip--hub.is-open {
+  background: color-mix(in srgb, var(--mq-emerald) 12%, transparent);
+  outline: 1px solid color-mix(in srgb, var(--mq-emerald) 28%, transparent);
+}
+
+.mqx-period-cushion-sheet {
+  margin: 8px 0 0;
+  padding: 10px;
+  border-radius: 12px;
+  background: color-mix(in srgb, var(--mq-emerald) 6%, var(--tg-theme-bg-color, #fff));
+  border: 1px solid color-mix(in srgb, var(--mq-emerald) 20%, transparent);
+}
+
+.mqx-period-cushion-sheet[hidden] {
+  display: none !important;
+}
+
+.mqx-period-cushion-sheet__row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.mqx-period-cushion-sheet__btn {
+  padding: 10px;
+  border-radius: 10px;
+  border: none;
+  font-size: 12px;
+  font-weight: 750;
+  cursor: pointer;
+  background: color-mix(in srgb, var(--mqx-ink) 5%, transparent);
+}
+
+.mqx-period-cushion-sheet__btn--in {
+  color: color-mix(in srgb, var(--mq-emerald) 95%, var(--mqx-ink));
+}
+
+.mqx-period-cushion-sheet__btn--out {
+  color: color-mix(in srgb, var(--mq-violet-deep) 95%, var(--mqx-ink));
+}
+
+.lab-variant-card--final {
+  max-width: 420px;
+}
+
+.lab-phone--final {
+  margin: 0 auto;
+}
+
+.mqx-period-hint[hidden] {
+  display: none !important;
+}
+
+/* Сравнение: старые mqx-action в раунде — только для R0 */
+.mqx-period-actions--legacy .mqx-grid2--actions {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}

@@ -67,11 +67,22 @@ Sync: `frontend-react/src/api.js`, `CLAUDE.md` if public contract changes.
 
 ## Testing strategy
 
+Skill: **`/critical-tests`** ([`critical-test-scenarios`](../../.cursor/skills/critical-test-scenarios/SKILL.md)).  
+Цель — **не 100% coverage**, а критичные сценарии (gate G1–G4). Ref: [`backend/tests/README.md`](../../backend/tests/README.md).
+
 | Layer | What to prove |
 |-------|----------------|
 | Unit | … |
-| API | … |
+| API / integration | … |
+| FE contract | … |
 | Manual TMA | … |
+
+### Critical scenarios (min gate)
+
+| ID | Scenario | Layer | Command / path |
+|----|----------|-------|----------------|
+| CS-1 | Happy path: … | integration | `pytest tests/integration/…` |
+| CS-2 | Boundary / contract: … | unit | `pytest tests/unit/…` |
 
 Commands:
 

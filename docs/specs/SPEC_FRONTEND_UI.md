@@ -1,30 +1,31 @@
-# Spec: Frontend UI/UX — Money Quest TMA
+# Spec: Frontend UI/UX — ТВОЙ ХОД TMA
 
 **Статус:** принят (аудит 2026-05)  
-**Связанные документы:** [`reference/brandbook/BRANDBOOK.md`](../reference/brandbook/BRANDBOOK.md), [`foundation/TMA_USER_FLOWS.md`](../foundation/TMA_USER_FLOWS.md), [`CLAUDE.md`](../../CLAUDE.md)  
+**Связанные документы:** [`reference/brandbook/BRANDBOOK.md`](../reference/brandbook/BRANDBOOK.md) (identity), [`reference/brandbook/BRANDBOOK_MQX.md`](../reference/brandbook/BRANDBOOK_MQX.md) (MQX UI), [`foundation/TMA_USER_FLOWS.md`](../foundation/TMA_USER_FLOWS.md), [`CLAUDE.md`](../../CLAUDE.md)  
 Проектные Agent Skills и приоритеты — [`agents/CURSOR_SKILLS.md`](../agents/CURSOR_SKILLS.md).
 
 ---
 
 ## Objective
 
-Зафиксировать единые правила интерфейса Telegram Mini App **Money Quest**: визуальный язык MQX, доступность, состояния экрана и границы между кастомным UI и `@telegram-apps/telegram-ui`.
+Зафиксировать единые правила интерфейса Telegram Mini App **ТВОЙ ХОД**: визуальный язык MQX, доступность, состояния экрана и границы между кастомным UI и `@telegram-apps/telegram-ui`.
 
 **Пользователь:** игрок в TMA (мобильный, 320–480px, светлая/тёмная тема Telegram).
 
 **Успех спецификации:**
 - Новые и изменённые экраны выглядят как часть одного приложения (не «два продукта»).
 - Нет англоязычных хвостов и ложных индикаторов прогресса в production UI.
-- Агент и разработчик могут свериться с spec + `.cursor/rules/money-quest-frontend-*.mdc` без повторного аудита.
+- Агент и разработчик могут свериться с spec + `.cursor/rules/tvoy-hod-frontend-*.mdc` без повторного аудита.
 
-**Вне scope этой spec:** продуктовый переход Game/Plan ([`SPEC_game-plan`](features/SPEC_game-plan.md), [evolution §II](../vision/ideas/money-quest-evolution-after-mvp.md)), бэкенд-контракты.
+**Вне scope этой spec:** продуктовый переход Game/Plan ([`SPEC_game-plan`](features/SPEC_game-plan.md), [evolution §II](../vision/ideas/tvoy-hod-evolution-after-mvp.md)), бэкенд-контракты.
 
 ### Assumptions
 
-1. Целевой стек UI: React 18 + Vite, стили в `frontend-react/src/index.css`, компоненты в `frontend-react/src/components/`.
+1. Целевой стек UI: React 18 + Vite, стили в `frontend-react/src/styles/` (barrel `index.css`), компоненты в `frontend-react/src/components/`.
 2. Premium-вкладки игры (`DashboardPremium`, `FinancePremium`, `AnalyticsPremium`, `MenuPremium`) — **эталон**; legacy `*Section.jsx` не расширяем, только поддерживаем до удаления.
 3. Язык интерфейса — **русский**; латиница допустима в терминах API/коде, не в видимых подписях.
 4. TMA: одна колонка `#root` max-width 480px, нижний таббар с safe-area.
+5. **Компонентная база MQX:** новые или существенно меняющие внешний вид элементы в `mqx/` и на premium-экранах проходят цикл из [`DESIGN_WORKFLOW.md`](../../frontend-react/src/components/mqx/DESIGN_WORKFLOW.md); этапы не пропускаются без явного согласования (исключение: багфикс/hotfix). Правило дублируется в `.cursor/rules/tvoy-hod-frontend-mqx.mdc` и [`agents/CURSOR_SKILLS.md`](../agents/CURSOR_SKILLS.md).
 
 ---
 
@@ -35,7 +36,7 @@
 | UI framework | React |
 | Сборка | Vite |
 | Библиотека форм/модалок | `@telegram-apps/telegram-ui` |
-| Стили | CSS (`index.css`), классы `mqx-*`, токены `--mq-*` |
+| Стили | CSS (`src/styles/`, импорт через `index.css`), классы `mqx-*`, токены `--mq-*` |
 | Роутинг | React Router (HashRouter) |
 | API | `frontend-react/src/api.js` |
 
@@ -54,7 +55,7 @@ npm run build
 npm run preview
 ```
 
-Проверка UI вручную: открыть TMA или `npm run dev`, пройти табы Главная / Финансы / Аналитика / Меню на ширине 320px и 390px.
+Проверка UI вручную: открыть TMA или `npm run dev`, пройти табы Главная / Капитал / Аналитика / Меню на ширине 320px и 390px.
 
 ---
 
@@ -68,14 +69,19 @@ frontend-react/src/
     mqx/                # Общие UI-примитивы (бары, и т.д.)
     icons/              # NavIcons, StatIcons
   hooks/                # useGame и др.
-  index.css             # Дизайн-система MQX + TMA shell
+  ARCHITECTURE.md       # Карта screens/api/mqx (канон размещения кода)
+  index.css             # @import barrel → styles/
+  api/                  # HTTP по доменам (зеркало backend routers)
+  screens/              # pre-game, plan, (цель) game tabs
+  styles/               # tokens, tma-base, mqx/*, shell, page, admin (см. styles/README.md)
   api.js                # Контракт с backend
 docs/
   specs/SPEC_FRONTEND_UI.md           # Этот документ
-  reference/brandbook/BRANDBOOK.md  # Цвета, тон, типографика
+  reference/brandbook/BRANDBOOK.md      # Identity: лого, цвет, голос, Монетка
+  reference/brandbook/BRANDBOOK_MQX.md  # Product UI: MQX, токены, паттерны
   foundation/TMA_USER_FLOWS.md      # Потоки и боли
 .cursor/rules/
-  money-quest-frontend-*.mdc  # Правила для агента
+  tvoy-hod-frontend-*.mdc  # Правила для агента
 ```
 
 ---
@@ -122,7 +128,7 @@ export function ExampleBlock({ overview }) {
 
 - `--mq-violet` `#6d28d9`, `--mq-violet-deep` `#5b21b6`
 - `--mq-emerald` `#059669`, `--mq-danger`, `--mq-warning`, `--mq-ink`, `--mq-line`
-- `--mq-fs-body` 15px, `--mq-fs-caption` 12px, `--mq-fs-small` 11px
+- Типографика (`#root`, ★ type-scale-round): `--mq-fs-display` 26px, `--mq-fs-stat` 34px (KPI), `--mq-fs-title` 20px, `--mq-fs-heading` 14px, `--mq-fs-body` 15px, `--mq-fs-caption` 12px, `--mq-fs-small` 11px, `--mq-fs-micro` 10px; веса `--mq-fw-regular|medium|bold|heavy`. В `index.css` для MQX — `var(--mq-fs-*)`, не сырые px (кроме auth input 16px и legacy `h1`).
 
 ### Паттерны экрана
 
@@ -140,6 +146,91 @@ export function ExampleBlock({ overview }) {
 
 - Фон/текст: `var(--tg-theme-*)` с fallback `--mq-*`.
 - Акцент кнопок: `--mq-accent-fill` / `--tgui--button_color` (см. `#root` в `index.css`).
+
+### Действия в строках (Row Actions) — канон MQX
+
+**Процесс:** варианты в [`design-lab/row-actions/`](../../design-lab/row-actions/) → утверждение → `mqx/primitives/` → витрина `#/dev/mqx` → prod. См. [`DESIGN_WORKFLOW.md`](../../frontend-react/src/components/mqx/DESIGN_WORKFLOW.md).
+
+**Утверждено (2026-05):** вариант **B** — компактная кнопка **+** / удаление; по умолчанию **корзина** (`IconMetricTrash`, **F2**); символ **−** — `MqxRowAction` **`removeVisual="minus"`** (**F1**). Подпись действия только в `aria-label`; для всех разрушающих действий — **подтверждение** (`MqxConfirmDialog`). **E2:** если в строке есть `*PositionMetrics` / `MetricsRow` с иконками (`MetricInlineItem`), **не дублировать** те же суммы в `subtitle` у `MqxFinListRow`.
+
+### Порядок и формат метрик в строке (`MetricsRow` / `MetricInlineItem`)
+
+Слева направо (пропускайте отсутствующие слоты):
+
+1. **Основная сумма** (`glyph="coin"`) — остаток / стоимость / лимит, если применимо.
+2. **Исходящие платежи** (`glyph="down"`, `tone="neg"`) — один или несколько слотов (например регулярный платёж, затем просрочка).
+3. **Доход** (`glyph="up"`, `tone="pos"`), если есть.
+4. **Процентная ставка** (`glyph="percent"`) — **только число** без суффикса `%`; смысл «проценты годовых» задаёт глиф и **цвет**: платим — `tone="neg"`, получаем — `tone="pos"`.
+5. **Специфика страховок и прочее** (`term`, дополнительные суммы) — после блока ставки.
+
+**Суммы в ₽:** в подписи значения **не** добавлять `/мес`; пояснение «за период» / соответствие помесячной модели игры — в **`tip`** (`title` у `MetricInlineItem`, нативная подсказка при наведении / long-press).
+
+| Компонент | Назначение | Где использовать |
+|-----------|------------|------------------|
+| `MqxRowAction` | **+** (add) или **корзина** по умолчанию / **−** при `removeVisual="minus"`, hit-area ≥ 44px | Списки позиций, шаблоны с «+», страховки, инвестиции |
+| `MqxFinListRow` | Компактная строка: заголовок, подзаголовок/метрики, trailing action | Режим «Позиции» (активы, долги, депозиты) |
+| `MqxConfirmDialog` | Подтверждение опасного действия (Modal) | Любое удаление / отмена полиса / закрытие позиции |
+| `useMqxConfirm` | Хук: `await confirm({ title, message })` | Экраны с удалением |
+| `CapitalPositionCard` | Карточка с accent + метриками + action | Только **каталог шаблонов** («Добавить»), не список позиций |
+
+**Запрещено в новом коде (premium):**
+
+- Текстовая кнопка **«Удалить»** в списках строк (допустима только внутри диалога подтверждения).
+- `Button mode="destructive"` в trailing списка позиций.
+- Класс `mqx-capital-delete-btn` для компактных строк (legacy; не расширять).
+
+**Платформы:**
+
+- **Touch (TMA):** `:active` + достаточная зона нажатия.
+- **Desktop / Telegram desktop / браузер:** `@media (hover: hover)` — подсветка кнопки удаления (фон danger-soft, border); `:focus-visible` — outline.
+
+**Иконки в строке:**
+
+- В полоске метрик — только глифы **`coin` | `down` | `up` | `percent` | `term`** в `MetricInlineItem` / [`FinanceMetricIcons.jsx`](../../frontend-react/src/components/mqx/icons/FinanceMetricIcons.jsx).
+- В кнопке удаления по умолчанию **корзина** (`IconMetricTrash`, **F2**); символ **−** — при **`removeVisual="minus"`** (**F1**); сравнение в `design-lab/row-actions`, витрина `#/dev/mqx`.
+
+**Вне scope до отдельного эпика:** Plan-мастер (`BaseParamsScreen`), `PlanExpenseEditor` — не менять при унификации финансов.
+
+**Витрина:** секция «Паттерны действий» в `#/dev/mqx` — все варианты + живые `MqxRowAction` / `MqxFinListRow` / confirm.
+
+### Капитал: единый паттерн «каталог + Позиции»
+
+1. Вкладки **Активы**, **Долги**, **Страховки**, **Инвестиции** внутри **«Капитала»** следуют одной схеме: основной экран — **каталог / оформление** (шаблоны, тарифы, форма открытия); список **текущих позиций** — за кнопкой **`MqxModeButton` «Позиции»** (допустимо **«Позиции (N)»**). Обратно к каталогу — **`Button` `mode="plain"`** («← К шаблонам», «← К оформлению», «← К форме» — по смыслу).
+2. **Строки владений** (имеющиеся актив, долг, полис, инвест-позиция) — **`MqxFinListRow`** + строка метрик + **`MqxRowAction`**. Для полисов допускается **`subtitle`** с типом «продукт · объект», если он **не** дублирует суммы из метрик (правило E2).
+3. **`CapitalPositionCard`** (accent H) — только элементы **каталога** с действием **+**. Не использовать её как контейнер длинного списка открытых позиций.
+4. **Кикер** в шаблонах активов/долгов: не дублировать контекст вкладки («Долг» на вкладке долгов); не показывать **несопоставленный** технический `kind` из API — при необходимости маппинг в коде или скрытие кикера.
+
+### Расширяемость подразделов «Капитал»
+
+- Новый подраздел = запись в списке табов + панель с тем же **стеком классов** (`mqx-card` / `mqx-capital-card`, `mqx-capital-lead`, те же примитивы навигации). Визуальная согласованность достигается **повторным использованием** `MqxFinListRow`, `MqxSubtab`, `MqxModeButton`, а не копированием вёрстки.
+- Отклонение от паттерна (другой тип первого экрана или другой список) — только после варианта в `design-lab/` и явного утверждения ([`DESIGN_WORKFLOW.md`](../../frontend-react/src/components/mqx/DESIGN_WORKFLOW.md)).
+
+### Страница «Капитал»
+
+Статика: [`design-lab/capital-page/details-actions-round/`](../../design-lab/capital-page/details-actions-round/) (**★ prod с 2026-06-01**). Обзор IA: [`capital-page/README`](../../design-lab/capital-page/README.md).
+
+| Решение | Значение |
+|---------|----------|
+| Вертикальный порядок | **Доходы / Расходы** → сегмент **Детали \| Действия** → контент режима |
+| **Детали** | Только открытые позиции; meta **M8** (icon+count), обязательства **M5** (tint «N долг(ов)»); row actions «Закрыть» / «Продать» / «Отменить» |
+| **Действия** | Сетка плиток 3× (узкий 2×): Депозит, Облигации, Недвижимость, Авто, Страховки, **Ипотека**, **Кредит**; оформление в **bottom sheet** |
+| Потоки | Meta **M7** (сумма в summary) |
+| Бюджет | **Не в плане** |
+| Страховки (sheet) | Каталог 2×2 + тарифы H (без seg «Оформить \| Мои» в аккордеоне) |
+| Имущество / долги (sheet) | Каталог строк + **+**; ипотека отдельно от прочих кредитов |
+| Снято с prod | `CapitalMonetkaGuidance`, `.mqx-cap-actions-hint`, `MqxSectionSeg` «Добавить \| Мои», pill «N разделов», kicker «Финансы», highlight страховок; **`FinanceSection.jsx`** |
+| Типографика (2026-06) | Hero **«Капитал»**; сегмент Детали/Действия — `var(--mqx-ink)`; **Детали:** заголовки нейтральные, только обязательства — muted red (`.mqx-capital-page`) |
+
+### Pre-game: портреты персонажей
+
+Lab ★: [`design-lab/game-templates/persona-portraits-round/`](../../design-lab/game-templates/persona-portraits-round/) · UX: [`ux/screens/character-pick.md`](../ux/screens/character-pick.md).
+
+| Место | Компонент | Размер |
+|-------|-----------|--------|
+| `GameTemplatePickScreen` | `MqxStarterScenarioPicker` + `PersonaPortrait` | `pick` (56px) |
+| Z-NEEDS на главной | `MqxNeedsDash` + `templateKey` | `dash` (108px) |
+
+Ассеты: `frontend-react/src/assets/character-portraits/` · pipeline: `npm run persona-portraits:process` (`scripts/process-persona-portraits.py`). Четыре роли — **разные** лица/причёски/реквизит; единый масштаб силуэта после normalize. SVG [`ScenarioIllustrations`](../../frontend-react/src/components/mqx/icons/ScenarioIllustrations.jsx) — не канон prod (архив lab `scenario-icons/`).
 
 ---
 
@@ -175,7 +266,7 @@ export function ExampleBlock({ overview }) {
 
 ### Never
 
-- Расширять `FinanceSection` legacy-ветку (`premium === false`) новыми фичами.
+- Возвращать **`FinanceSection`** или паттерн «Добавить \| Мои» внутри аккордеонов капитала (снято 2026-06).
 - Хардкодить прогресс-бары без данных API (пример: XP 90%).
 - Дублировать нижний таббар внутри страницы.
 - Inline hex/Tailwind в новых компонентах (в проекте нет Tailwind).
@@ -187,20 +278,19 @@ export function ExampleBlock({ overview }) {
 
 ### P0 (блокеры качества)
 
-- [ ] На главной прогресс XP привязан к `overview` или блок скрыт.
+- [x] На главной нет прогресса character XP (снят с overview; блок **Цель** — `MqxGoalDash`, цепочка победы).
 - [ ] Нет видимых EN-подписей (`Positions`, `cashflow` в kicker и т.п.) — только RU.
 - [ ] Вкладка «Инвестиции» открывается без `ReferenceError` (константы help, импорты).
 
 ### P1 (единый UX)
 
-- [ ] На каждой вкладке `GameScreen` ровно один `h1` в hero.
-- [ ] `FinancePremium`: инвестиции и страховки визуально в том же `mqx-capital-*`, что портфель.
+- [x] ~~На каждой вкладке `GameScreen` ровно один `h1` в hero.~~ **Снято (2026-05-25):** TMA — `h2` на секциях + `aria-label`; см. [`ux/screens/dashboard.md`](../ux/screens/dashboard.md).
+- [x] `FinancePremium`: Details \| Actions v2 — потоки, `MqxCapitalPageModeSeg`, `CapitalDetailsPanel` / `CapitalActionsPanel`, sheets, meta M5/M7/M8.
 - [ ] `BottomGameNav`: подписи под иконками **или** tooltip при первом визите (решение зафиксировать в PR).
 - [ ] `MenuPremium` не выбивается по плотности контента (минимум: тот же hero-стиль или явный «служебный» экран).
 
 ### P2 (поддерживаемость)
 
-- [ ] `FinanceSection` разбит: portfolio / invest / insurance — отдельные модули.
 - [ ] Новые отступы без голого `style={{ marginTop: N }}`.
 - [ ] Документ spec обновляется при смене паттернов.
 
@@ -209,7 +299,7 @@ export function ExampleBlock({ overview }) {
 1. Логин → старт → игра → 4 таба.
 2. Зарплата, подушка (модалка), следующий период (предупреждение).
 3. События: оверлей, свайп, выбор, закрытие.
-4. Финансы: три вкладки, добавление из шаблона, удаление позиции.
+4. Капитал: Details \| Actions, добавление из шаблона/sheet, закрытие позиции.
 5. Аналитика: графики с 0 периодов и с данными.
 
 ---
@@ -220,76 +310,38 @@ export function ExampleBlock({ overview }) {
 |---|--------|----------|
 | 1 | Подписи под иконками таббара vs только `aria-label`? | Продукт |
 | 2 | Единый hero на `MenuPremium` или оставить «лёгкую» карточку? | Продукт |
-| 3 | Поле XP/level в API для главной — есть ли в overview? | Backend + UI |
-| 4 | Срок sunset legacy `*Section.jsx`? | Команда |
+| 3 | ~~XP/level в overview~~ | **Закрыто:** полей нет; канон — [`remove-character-xp-and-levels.md`](../vision/ideas/remove-character-xp-and-levels.md) |
+| 4 | ~~Sunset `FinanceSection`~~ | **Закрыто (2026-06):** снят; капитал — `FinancePremium` + Details \| Actions |
 
 ---
 
-# Plan (Phase 2)
+# Tasks (backlog UI)
 
-## Компоненты и порядок
-
-```mermaid
-flowchart TD
-  P0[P0: XP + i18n + баги]
-  DS[CSS: spacing utilities]
-  FIN[Finance: capital invest/insurance]
-  REF[Refactor FinanceSection]
-  NAV[Nav labels]
-  MENU[Menu tab polish]
-  P0 --> DS
-  P0 --> FIN
-  FIN --> REF
-  DS --> NAV
-  NAV --> MENU
-```
-
-| Этап | Риск | Митигация |
-|------|------|-----------|
-| P0 | Низкий | Малый diff, сразу `npm run build` |
-| Finance capital parity | Средний | Переиспользовать `mqx-capital-mode-grid`, не копировать логику API |
-| FinanceSection split | Средний | Вынос по одному табу, без смены props контракта |
-| Nav labels | Низкий | CSS-only + короткие RU подписи |
-
----
-
-# Tasks (Phase 3)
-
-- [ ] **P0: XP на главной**
-  - Acceptance: полоса от реальных полей `overview` или блок удалён.
-  - Verify: визуально при score 0 / 50 / 100; `npm run build`.
-  - Files: `DashboardPremium.jsx`
+- [x] **P0: XP на главной** — снят (2026-05-24); не возвращать без нового ADR.
 
 - [ ] **P0: Локализация kickers**
   - Acceptance: нет `Positions`, `cashflow`, `Forecast` в видимом UI.
   - Verify: grep по `frontend-react/src/components`.
   - Files: `AnalyticsPremium.jsx`, `CapitalPortfolioPanels.jsx`
 
-- [ ] **P1: h1 на всех табах**
-  - Acceptance: один `h1` в hero каждого `*Premium`.
-  - Verify: инспектор DOM / axe heading-order.
-  - Files: `DashboardPremium.jsx`, `AnalyticsPremium.jsx`, `MenuPremium.jsx`
-
-- [ ] **P1: Invest/Insurance — capital layout**
-  - Acceptance: те же `mqx-capital-card`, lead, mode-кнопки, что у портфеля.
-  - Verify: ручной проход вкладок.
-  - Files: `FinanceSection.jsx`, `index.css`
+- [x] ~~**P1: h1 на всех табах**~~ — **не делаем**; заголовки через `h2` / `aria-label` на секциях.
 
 - [ ] **P1: Таббар — подписи**
   - Acceptance: RU подпись 10–11px под иконкой или documented tooltip.
   - Verify: 320px, не перекрывает safe-area.
   - Files: `BottomGameNav.jsx`, `index.css`
 
-- [ ] **P2: Вынести InvestPanel / InsurancePanel**
-  - Acceptance: `FinanceSection.jsx` &lt; 400 строк; поведение без регрессий.
-  - Verify: build + чеклист Success Criteria §Финансы.
-  - Files: `components/finance/*.jsx`, `FinanceSection.jsx`
-
 - [ ] **P2: Утилиты отступов**
   - Acceptance: в новых PR нет `style={{ marginTop` в premium-компонентах.
   - Verify: grep в diff PR.
   - Files: `index.css`
 
+- [ ] **P1: Row actions — корзина (F2), confirm и метрики**
+  - Acceptance: позиции портфеля/инвестиций/страховок — `MqxFinListRow` + `MqxRowAction` (по умолчанию корзина); любое удаление через `MqxConfirmDialog`; метрики — порядок и формат из spec (без `/мес` и без `%` в значении ставки).
+  - Verify: `#/dev/mqx` → «Паттерны действий»; ручной проход Капитал → Детали/Действия.
+  - Files: `mqx/primitives/MqxRowAction.jsx`, `mqx/metrics/*`, `MqxFinListRow.jsx`, `MqxConfirmDialog.jsx`, `CapitalPortfolioPanels.jsx`, `index.css`
+  - Design: [`design-lab/row-actions/`](../../design-lab/row-actions/) — **B** + **F2** утверждены.
+
 ---
 
-*Живой документ: при изменении паттерна MQX обновляйте этот файл и `.cursor/rules/money-quest-frontend-*.mdc`.*
+*Живой документ: при изменении паттерна MQX обновляйте этот файл и `.cursor/rules/tvoy-hod-frontend-*.mdc`.*

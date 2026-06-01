@@ -5,9 +5,12 @@ import { showNotification } from './notifications';
 import { MoneyText } from './MoneyText';
 import { sanitizeIntInput, sanitizeDecimalInput, parseNumLoose } from '../utils/numberFields';
 import { DEFAULT_PERIOD_DURATION_SECONDS } from '../config/gameDefaults';
+import { PlanExpenseBudgetEditor } from './mqx/layout/PlanExpenseBudgetEditor';
+import { defaultPlanExpenseBudget, sumExpenseBudget } from '../utils/planExpenseBudget';
 import { MqxShell } from './MqxShell';
 import { MqxTabHero } from './MqxTabHero';
 
+/** Мастер старта Plan: cash, зарплата, статьи расходов (без game-шаблонов каталога). */
 export function BaseParamsScreen({
   profileName,
   saveKind = 'game',
@@ -32,8 +35,12 @@ export function BaseParamsScreen({
   const [newPaymentStr, setNewPaymentStr] = useState('');
 
   const [loading, setLoading] = useState(false);
+  const [expenseBudget, setExpenseBudget] = useState(() =>
+    saveKind === 'plan' ? defaultPlanExpenseBudget(0) : {},
+  );
 
   const useTemplate = Boolean(templateKey && saveKind === 'game');
+  const isPlan = saveKind === 'plan';
 
   const addAsset = () => {
     if (!newAssetTitle.trim()) {
@@ -92,6 +99,10 @@ export function BaseParamsScreen({
     }
     const cash_balance = parseNumLoose(cashStr, 0);
     const monthly_salary = parseNumLoose(salaryStr, 0);
+    if (isPlan && sumExpenseBudget(expenseBudget) <= 0 && monthly_salary <= 0) {
+      showNotification('Укажите зарплату или хотя бы одну статью бюджета', 'error');
+      return;
+    }
     setLoading(true);
     try {
       const basePayload = {
@@ -99,18 +110,25 @@ export function BaseParamsScreen({
         save_kind: saveKind || 'game',
         period_duration_seconds: periodDuration,
       };
+      const manualPayload = {
+        ...basePayload,
+        cash_balance,
+        monthly_salary,
+        assets,
+        liabilities,
+      };
+      if (isPlan) {
+        const budget = Object.fromEntries(
+          Object.entries(expenseBudget).filter(([, v]) => Number(v) > 0),
+        );
+        manualPayload.expense_budget = budget;
+      }
       const result = useTemplate
         ? await API.startNewGame({
             ...basePayload,
             template_key: templateKey,
           })
-        : await API.startNewGame({
-            ...basePayload,
-            cash_balance,
-            monthly_salary,
-            assets,
-            liabilities,
-          });
+        : await API.startNewGame(manualPayload);
       if (result) {
         onGameStarted(result);
       }
@@ -191,6 +209,18 @@ export function BaseParamsScreen({
             </>
           )}
         </div>
+
+        {!useTemplate && isPlan ? (
+          <div className="mq-enter-item mqx-card">
+            <div className="mqx-card__kicker mqx-card__kicker--amber">Бюджет</div>
+            <div className="mqx-card__title">Расходы на жизнь</div>
+            <PlanExpenseBudgetEditor
+              budget={expenseBudget}
+              onChange={setExpenseBudget}
+              monthlySalary={parseNumLoose(salaryStr, 0)}
+            />
+          </div>
+        ) : null}
 
         {!useTemplate ? (
           <>
@@ -351,7 +381,7 @@ export function BaseParamsScreen({
 
         <div className="mq-enter-item mq-actions-stack">
           <Button stretched mode="filled" onClick={handleStart} disabled={loading}>
-            {loading ? 'Запуск...' : 'Старт игры'}
+            {loading ? 'Запуск...' : isPlan ? 'Создать план' : 'Старт игры'}
           </Button>
           <Button stretched mode="outline" onClick={onBack}>
             Назад

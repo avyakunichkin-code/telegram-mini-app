@@ -1,0 +1,16 @@
+events:
+- definition_key: mq11_events_unlock_intro
+  event_domain: meta
+  title: События месяца открылись
+  description: 'Монетка: с первого месяца в каждом периоде появляются сюжетные ситуации — до двух за период;
+    решения влияют на деньги, подушку и расходы. Это разовая подсказка перед обычной колодой.'
+  weight: 1
+  event_tier: 1
+  repeat_policy: once_per_profile
+  interaction_kind: intro
+  scenario_shape: narrative_once
+  choices:
+  - title: Понятно, буду смотреть
+    effects: {}
+  - title: Звучит интересно
+    effects: {}

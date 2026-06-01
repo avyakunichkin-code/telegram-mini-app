@@ -1,0 +1,67 @@
+events:
+- definition_key: mq11_family_money_request
+  event_domain: social_family
+  title: Просьба о помощи от родственника
+  description: Близкий человек просит небольшую сумму в затруднительной ситуации. Помощь — разовая; при
+    отказе может снова обратиться через период.
+  weight: 75
+  event_tier: 2
+  repeat_policy: repeatable
+  scenario_shape: chain
+  cooldown_periods: 4
+  choices:
+  - title: Помочь полностью
+    effects:
+      cash_delta: -15000
+      needs_delta:
+        social: 14
+        comfort: -3
+  - title: Помочь частично
+    effects:
+      cash_delta: -7000
+      needs_delta:
+        social: 8
+        health: 2
+  - title: Отказаться вежливо
+    effects:
+      cash_delta: 0
+      needs_delta:
+        social: -6
+        comfort: -2
+      enqueue_event:
+        chain_key: family_money_refusal
+        followup_definition_key: mq11_family_money_callback
+        after_periods: 1
+        context:
+          branch: refused_once
+    description: Через период родственник может снова попросить о большей сумме.
+- definition_key: mq11_family_money_callback
+  event_domain: social_family
+  title: Родственник снова просит о помощи
+  description: После вашего отказа ситуация не улучшилась — просят уже больше. Можно помочь снова или
+    твёрдо отказать.
+  weight: 1
+  event_tier: 2
+  repeat_policy: once_per_profile
+  interaction_kind: chain_followup
+  scenario_shape: chain
+  mandatory_gate: none
+  choices:
+  - title: Помочь полностью
+    effects:
+      cash_delta: -18000
+      needs_delta:
+        social: 12
+        comfort: -4
+  - title: Помочь частично
+    effects:
+      cash_delta: -9000
+      needs_delta:
+        social: 7
+        health: 1
+  - title: Твёрдый отказ
+    effects:
+      cash_delta: 0
+      needs_delta:
+        social: -8
+        comfort: -3

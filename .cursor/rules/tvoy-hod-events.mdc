@@ -1,0 +1,55 @@
+---
+description: События — каталог, seeds, tier, баланс §10–11; /create-event, /event-analysis
+globs: backend/app/events/**,backend/app/services/events/**,backend/app/routers/events.py,backend/tests/test_event*,backend/tests/unit/events/**,backend/migrations/*event*,data/events/**,docs/vision/ideas/event*.md,docs/templates/EVENT_BRIEF.md,docs/templates/EVENT_CATALOG_ANALYSIS.md,.cursor/skills/create-event/**,.cursor/skills/event-analysis/**
+alwaysApply: false
+---
+
+# События (контент + движок)
+
+**Создание / доработка:** **`/create-event`** — не писать YAML без brief ([`EVENT_BRIEF.md`](docs/templates/EVENT_BRIEF.md)).
+
+**Анализ каталога:** **`/event-analysis`** — read-only; перед EVT1-105 scope **all**.
+
+## Канон
+
+| Документ | Назначение |
+|----------|------------|
+| [`event-balance-rules.md`](.cursor/skills/create-event/event-balance-rules.md) | §1–4 trade-off; **§10 lifecycle**; **§11 needs_axis_map** |
+| [`SPEC_mvp-11-progression-events.md`](docs/specs/features/SPEC_mvp-11-progression-events.md) | tier, repeat, cooldown (prod) |
+| [`SPEC_event-system-v2-slots-and-taxonomy.md`](docs/specs/features/SPEC_event-system-v2-slots-and-taxonomy.md) | слоты, content_class (draft) |
+| [`data/events/mvp11/`](data/events/mvp11/) | git → [`mvp11_seeds.py`](backend/app/events/mvp11_seeds.py) |
+
+## Инварианты
+
+- **Отдельный `definition_key`** на вариант (не `variants[]`).
+- **§10:** downgrade жилья/тарифа — не голый `repeatable`; класс **B** (`max_per_profile`, cooldown ≥ 12) или **A** (`once_per_profile`).
+- **§11:** `needs_delta` по теме (жильё → **comfort**; семья → **social**; отдых с людьми → health + social).
+- **§1–3:** needs+ не бесплатно; нет Pareto-доминанты; отказ с ценой.
+- Effects только `ALLOWED_EFFECT_KEYS`; preview — `choice_impacts`.
+- **`lifecycle_class`** — в brief; в YAML — `repeat_policy`, `cooldown_periods`, `repeat_max`.
+- После изменений: `cd backend && python -m pytest -q -k event`
+
+## Автолинт vs ручной аудит
+
+| Проверка | Где |
+|----------|-----|
+| free lunch, Pareto (4D, **обе стороны**), `xp_delta` | `balance_contract.py` + pytest; gate `validate_mvp11_specs` |
+| skip Pareto: `insurance_claim`, `used_car_action`, `enqueue_event` | §3.1 `event-balance-rules.md` |
+| lifecycle §10, axis §11 | `/event-analysis` + brief; **не** в pytest (пока) |
+
+После изменений:
+
+```bash
+cd backend && python -m pytest -q tests/unit/events/test_event_balance_contract.py tests/test_mvp11_yaml_catalog.py
+```
+
+## Не смешивать
+
+| Задача | Инструмент |
+|--------|------------|
+| Новое событие, баланс | **create-event** |
+| Обзор каталога, EVT1-105 | **event-analysis** |
+| period.py, victory | **game-economy-and-victory** |
+| PR / diff | **economy-reviewer** |
+
+См. [`docs/agents/EVENTS_AGENT.md`](docs/agents/EVENTS_AGENT.md).

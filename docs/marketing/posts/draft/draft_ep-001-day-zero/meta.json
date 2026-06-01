@@ -1,0 +1,14 @@
+{
+  "ep": "001",
+  "slug": "ep-001-day-zero",
+  "arc": 0,
+  "arc_title": "Точка отсчёта",
+  "layer": null,
+  "hook": "A",
+  "image_headline": "День ноль",
+  "commits": ["f21caea", "dd0817b", "ae81273", "401271e"],
+  "merged_topics": ["0.1", "0.2"],
+  "platforms": ["telegram"],
+  "approved_at": null,
+  "published_at": null
+}

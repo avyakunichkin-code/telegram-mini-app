@@ -1,9 +1,23 @@
 ---
 name: test-driven-development
 description: Drives development with tests. Use when implementing any logic, fixing any bug, or changing any behavior. Use when you need to prove that code works, when a bug report arrives, or when you're about to modify existing functionality.
+argument-hint: "[bug, behavior, or test file focus]"
+user-invocable: true
+allowed-tools: Read, Glob, Grep, Write, Shell
 ---
 
 # Test-Driven Development
+
+## Прочитай сначала (ТВОЙ ХОД)
+
+- [`CLAUDE.md`](../../../CLAUDE.md)
+- [`docs/specs/features/`](../../../docs/specs/features/)
+- [`backend/app/game/period.py`](../../../backend/app/game/period.py) — экономика периода
+- [`backend/app/README.md`](../../../backend/app/README.md)
+
+**Куда писать:** `backend/tests/`, `frontend-react/src/` (затронутые модули). **Дальше:** `critical-test-scenarios` (gate на срез), `code-review-and-quality`.
+
+**Связанный скилл:** для *что покрыть* и min gate G1–G4 — [`critical-test-scenarios`](../critical-test-scenarios/SKILL.md) (`/critical-tests`).
 
 ## Overview
 
@@ -381,3 +395,24 @@ After completing any implementation:
 - [ ] Coverage hasn't decreased (if tracked)
 
 **Note:** Run each test command after a change that could affect the result. After a clean run, don't repeat the same command unless the code has changed since — re-running on unchanged code adds no confidence.
+
+## Критичные зоны (ТВОЙ ХОД)
+
+Для **`backend/app/game/period.py`**, **`backend/app/victory/`**, **`backend/app/finance/`** reproduction test **обязателен** — не optional hotfix. Регрессия здесь ломает core loop и победу; «почини без теста» не принимается без явного продуктового риска.
+
+## Verdict
+
+| Verdict | Когда |
+|---------|--------|
+| **PASS** | failing test → minimal fix → pytest green |
+| **CONCERNS** | пользователь настаивает на hotfix без теста в критичной зоне (`period`, `victory`, finance overview) — зафиксируй риск, предложи минимальный тест |
+| **FAIL** | код/тесты записаны без reproduction test на баг в критичной зоне |
+
+## Согласование
+
+Перед записью в репо (тесты в `backend/tests/`, prod-код в `backend/` / `frontend-react/`): **May I write** / **Могу записать** тест и фикс? — если пользователь не дал явное «делай» / «запиши».
+
+## Следующий шаг
+
+- [`critical-test-scenarios`](../critical-test-scenarios/SKILL.md) — gate G1–G4 на срез
+- [`code-review-and-quality`](../code-review-and-quality/SKILL.md) — перед merge

@@ -1,0 +1,12 @@
+---
+description: "[legacy] Фаза → скилл — см. tvoy-hod-router.mdc"
+alwaysApply: false
+---
+
+# Фаза → скилл → docs (legacy)
+
+Перенесено в **[`tvoy-hod-router.mdc`](tvoy-hod-router.mdc)** (primary + satellites).
+
+Каталог: [`.cursor/skills/catalog.yaml`](.cursor/skills/catalog.yaml), карта: [`docs/agents/SKILL_DOC_MAP.md`](docs/agents/SKILL_DOC_MAP.md).
+
+**Задачи и планы:** в `docs/plans/PLAN_*.md` и `docs/tasks/TASKS_*.md` у каждого MQ-* есть **`phase`** (`define` | `build` | `verify` | `ship`) + **`skill`** + **`next_skill`** — см. [`docs/templates/TASK_SLICE.md`](docs/templates/TASK_SLICE.md). Если пользователь прислал `phase: build` — не подменяй скилл на `spec-driven-development`.

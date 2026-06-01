@@ -1,9 +1,20 @@
 ---
 name: code-review-and-quality
 description: Conducts multi-axis code review. Use before merging any change. Use when reviewing code written by yourself, another agent, or a human. Use when you need to assess code quality across multiple dimensions before it enters the main branch.
+argument-hint: "[paths, PR scope, or "staged"]"
+user-invocable: true
+allowed-tools: Read, Glob, Grep, AskUserQuestion
 ---
 
 # Code Review and Quality
+
+## Прочитай сначала (ТВОЙ ХОД)
+
+- [`CLAUDE.md`](../../../CLAUDE.md)
+- [`docs/specs/features/`](../../../docs/specs/features/) — по области изменения
+- [`docs/foundation/SPEC_PRODUCT.md`](../../../docs/foundation/SPEC_PRODUCT.md)
+
+**Куда писать:** никуда (только ревью). **Дальше:** правки через `incremental-implementation`.
 
 ## Overview
 
@@ -129,7 +140,7 @@ Before looking at code, understand the intent:
 
 ### Step 2: Review the Tests First
 
-Tests reveal intent and coverage:
+Tests reveal intent and coverage. For **behavioral** changes, apply min gate from [`critical-test-scenarios`](../../critical-test-scenarios/SKILL.md) (G1 happy, G2 boundary, G3 FE↔BE contract, G4 business invariant):
 
 ```
 - Do tests exist for the change?
@@ -137,7 +148,11 @@ Tests reveal intent and coverage:
 - Are edge cases covered?
 - Do tests have descriptive names?
 - Would the tests catch a regression if the code changed?
+- If spec lists CS-* / MQ-* critical_scenarios — are they implemented?
+- CONCERNS if only status_code asserts on new API fields used by FE
 ```
+
+**Куда писать:** никуда (только ревью). **Satellite при пробелах:** `critical-test-scenarios`.
 
 ### Step 3: Review the Implementation
 
@@ -345,3 +360,18 @@ After review is complete:
 - [ ] Tests pass
 - [ ] Build succeeds
 - [ ] The verification story is documented (what changed, how it was verified)
+
+---
+
+## Итог (Verdict)
+
+В конце работы явно укажи результат: **PASS**, **FAIL**, **CONCERNS**, **COMPLETE** или **APPROVED** — в зависимости от типа задачи.
+
+## Согласование изменений
+
+По умолчанию только чтение и отчёт; правки в репозитории — только по явной просьбе пользователя.
+
+## Следующий шаг
+
+Исправления → `incremental-implementation` / `test-driven-development`; перед merge — повторный review.
+

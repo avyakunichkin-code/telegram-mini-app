@@ -1,0 +1,221 @@
+/* design-lab/character-needs — общие токены и lab chrome */
+
+:root {
+  --mq-violet: #6d28d9;
+  --mq-violet-deep: #5b21b6;
+  --mq-emerald: #059669;
+  --mq-sky: #0ea5e9;
+  --mq-amber: #d97706;
+  --mq-danger: #dc2626;
+  --mq-ink: #0f1115;
+  --mq-mist: #f5f6f8;
+  --mqx-ink: #0f1115;
+  --mqx-glass-soft: rgba(255, 255, 255, 0.92);
+  --surface: #fff;
+  --text: #0f1115;
+  --text-muted: #6b7280;
+  --glass-border: rgba(15, 17, 21, 0.1);
+  --font: system-ui, 'Segoe UI', Roboto, sans-serif;
+  --needs-ok: #059669;
+  --needs-low: #d97706;
+  --needs-distressed: #ea580c;
+  --needs-zero: #dc2626;
+  --needs-track: color-mix(in srgb, var(--mqx-ink) 8%, transparent);
+}
+
+[data-theme='dark'] {
+  --surface: #1e1f26;
+  --text: #f3f4f6;
+  --text-muted: #9ca3af;
+  --glass-border: rgba(255, 255, 255, 0.1);
+  --mq-mist: #121318;
+  --mqx-glass-soft: rgba(30, 31, 38, 0.94);
+  --mqx-ink: #f3f4f6;
+  --needs-track: color-mix(in srgb, var(--mqx-ink) 14%, transparent);
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: var(--font);
+  font-size: 15px;
+  line-height: 1.45;
+  color: var(--text);
+  background: var(--mq-mist);
+}
+
+.lab-header {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  padding: 14px 20px;
+  background: color-mix(in srgb, var(--mq-mist) 92%, transparent);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--glass-border);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  justify-content: space-between;
+}
+
+.lab-header h1 { margin: 0; font-size: 1.125rem; font-weight: 800; }
+.lab-header p { margin: 4px 0 0; font-size: 13px; color: var(--text-muted); max-width: 40rem; }
+
+.lab-header__controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+
+.lab-theme button,
+.lab-state button,
+.lab-expand-all button {
+  font: inherit;
+  font-size: 12px;
+  font-weight: 650;
+  padding: 6px 10px;
+  border-radius: 10px;
+  border: 1px solid var(--glass-border);
+  background: var(--surface);
+  color: var(--text);
+  cursor: pointer;
+}
+
+.lab-theme button.is-active,
+.lab-state button.is-active {
+  background: var(--mq-violet);
+  border-color: var(--mq-violet);
+  color: #fff;
+}
+
+.lab-main {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 16px 20px 48px;
+}
+
+.lab-round-note {
+  margin: 0 0 20px;
+  font-size: 13px;
+  color: var(--text-muted);
+  line-height: 1.5;
+}
+
+.lab-variant-grid {
+  display: grid;
+  gap: 24px;
+}
+
+@media (min-width: 900px) {
+  .lab-variant-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.lab-variant-card {
+  background: var(--surface);
+  border: 1px solid var(--glass-border);
+  border-radius: 16px;
+  padding: 14px;
+  box-shadow: 0 8px 24px color-mix(in srgb, var(--mq-ink) 6%, transparent);
+}
+
+.lab-variant-card__label {
+  margin: 0 0 4px;
+  font-size: 14px;
+  font-weight: 800;
+}
+
+.lab-variant-card__idea {
+  margin: 0 0 12px;
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.lab-phone {
+  width: 100%;
+  max-width: 390px;
+  margin: 0 auto;
+}
+
+.lab-phone__shell {
+  border-radius: 20px;
+  overflow: hidden;
+  border: 1px solid var(--glass-border);
+  background: var(--mq-mist);
+}
+
+.lab-phone__context {
+  padding: 10px 12px 0;
+  font-size: 11px;
+  color: var(--text-muted);
+  text-align: center;
+}
+
+/* Stub blocks above/below needs */
+.lab-stub-finance,
+.lab-stub-goal {
+  margin: 0 12px;
+  padding: 10px;
+  border-radius: 12px;
+  background: var(--mqx-glass-soft);
+  border: 1px solid var(--glass-border);
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+.lab-stub-finance {
+  margin-bottom: 8px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+}
+
+.lab-stub-finance span {
+  padding: 8px;
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--mq-violet) 6%, var(--surface));
+  text-align: center;
+}
+
+.lab-stub-goal {
+  margin-top: 8px;
+  margin-bottom: 10px;
+}
+
+.lab-variant-card__tools {
+  display: flex;
+  gap: 8px;
+  margin-top: 10px;
+  flex-wrap: wrap;
+}
+
+.lab-variant-card__tools button {
+  font: inherit;
+  font-size: 11px;
+  padding: 5px 8px;
+  border-radius: 8px;
+  border: 1px dashed var(--glass-border);
+  background: transparent;
+  cursor: pointer;
+  color: var(--text-muted);
+}
+
+.lab-variant-card__tools button.is-on {
+  border-style: solid;
+  border-color: var(--mq-violet);
+  color: var(--mq-violet);
+  font-weight: 700;
+}
+
+.lab-section {
+  margin-bottom: 20px;
+}
+
+.lab-section h3 {
+  margin: 0 0 8px;
+  font-size: 14px;
+  font-weight: 600;
+}

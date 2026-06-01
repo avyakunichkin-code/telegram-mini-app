@@ -1,10 +1,57 @@
 import { useState, useEffect, useCallback } from 'react';
-import { Button, Modal, Spinner } from '@telegram-apps/telegram-ui';
+import { Modal, Spinner } from '@telegram-apps/telegram-ui';
 import { useAuth } from '../context/AuthContext';
 import { API } from '../api';
-import { MqxShell } from './MqxShell';
-import { MqxTabHero } from './MqxTabHero';
+import { showNotification } from './notifications';
+import { MonetkaBubbleScreen } from './mqx/layout/MonetkaBubbleScreen';
+import { MqxButton } from './mqx/primitives/MqxButton';
 import { MoneyText } from './MoneyText';
+import { suggestDefaultProfileName } from '../utils/suggestDefaultProfileName';
+
+function saveKindLabel(sk) {
+  if (sk === 'game') return 'Игра';
+  if (sk === 'plan') return 'План';
+  return sk || '—';
+}
+
+function runOutcomeBadge(p) {
+  const outcome = p.run_outcome || p.runOutcome;
+  if (outcome === 'victory') return 'Победа';
+  if (outcome === 'defeat' || (p.is_archived && !p.is_active)) return 'Поражение';
+  return null;
+}
+
+function profileSubtitle(p) {
+  const badge = runOutcomeBadge(p);
+  const base = `${saveKindLabel(p.save_kind)} · период ${p.period_index}`;
+  return badge ? `${badge} · ${base}` : base;
+}
+
+function menuCopy({ loading, profileCount }) {
+  if (loading) {
+    return {
+      title: 'Секунду, листаю полки',
+      subtitle: 'Подтягиваю твои сохранения…',
+    };
+  }
+  if (profileCount === 0) {
+    return {
+      title: 'Пока пусто на полке',
+      subtitle:
+        'Начнём первый финансовый сценарий? Жми «Новая игра» — дальше выберешь режим и жизненную ситуацию.',
+    };
+  }
+  return {
+    title: 'Продолжим с того же места?',
+    subtitle: (
+      <p>
+        Ниже — последний слот: «Продолжить» справа внизу, как в приложении. А в{' '}
+        <span className="mqx-voice-em">«Все сохранения»</span> можно выбрать любую игру по названию, которое сам
+        придумывал.
+      </p>
+    ),
+  };
+}
 
 export function StartMenuScreen({ onNewGame, onLoadGame, onLogout }) {
   const [profiles, setProfiles] = useState([]);
@@ -33,26 +80,9 @@ export function StartMenuScreen({ onNewGame, onLoadGame, onLogout }) {
     try {
       await API.activateGameProfile(profileId);
       if (onLoadGame) onLoadGame();
-    } catch {
-      // на MVP молча остаёмся на экране
+    } catch (e) {
+      showNotification(e?.detail || e?.message || 'Не удалось загрузить сохранение', 'error');
     }
-  };
-
-  const lastProfile = profiles.find((p) => p.is_active) || profiles[0];
-  const otherProfiles = profiles.filter((p) => p !== lastProfile);
-
-  const saveKindLabel = (sk) => {
-    if (sk === 'game') return 'Игра';
-    if (sk === 'plan') return 'План';
-    return sk || '—';
-  };
-
-  const profileSubtitle = (p) => {
-    const kind = saveKindLabel(p.save_kind);
-    let extra = '';
-    if (p.starter_template_key) extra = ` · ${p.starter_template_key}`;
-    else if (p.save_kind === 'game') extra = ' · без шаблона';
-    return `Период ${p.period_index} · ${kind}${extra}`;
   };
 
   const handleLogout = () => {
@@ -60,104 +90,106 @@ export function StartMenuScreen({ onNewGame, onLoadGame, onLogout }) {
     if (onLogout) onLogout();
   };
 
-  if (loading) {
-    return (
-      <MqxShell
-        header={
-          <MqxTabHero
-            sectionLabel="Профили"
-            rightPill="…"
-            title="Загрузка слотов"
-            subtitle="Подтягиваем сохранения аккаунта."
-          />
-        }
-      >
-        <div className="mqx-card" style={{ display: 'grid', placeItems: 'center', minHeight: 120, padding: 28 }}>
-          <Spinner />
-        </div>
-      </MqxShell>
-    );
-  }
+  const primaryProfile = profiles.find((p) => p.is_active) || profiles[0];
+  const sortedProfiles = [...profiles].sort((a, b) => {
+    if (a.is_active && !b.is_active) return -1;
+    if (!a.is_active && b.is_active) return 1;
+    return (b.id || 0) - (a.id || 0);
+  });
+
+  const { title, subtitle } = menuCopy({
+    loading,
+    profileCount: profiles.length,
+  });
 
   return (
-    <MqxShell
-      header={
-        <MqxTabHero
-          sectionLabel="Профили"
-          rightPill={`${profiles.length} слотов`}
-          title="Продолжить игру"
-          subtitle="Активный слот — один тап. Остальные — в модалке «Все сохранения»."
-        />
-      }
-    >
-      <div className="mq-stack mq-stack--tight mq-stack-animate">
-        <div className="mq-enter-item mqx-card">
-          <div className="mqx-card__kicker mqx-card__kicker--violet">Быстрый старт</div>
-          <div className="mqx-card__title">Активный профиль</div>
-          <div className="mqx-card__sub">Как на главном табло: карточка и действие без лишней обвязки.</div>
-
-          {lastProfile ? (
-            <div className="mqx-fin-row" style={{ marginTop: 14 }}>
-              <div className="mqx-fin-row__l">
-                <div className="mqx-fin-row__title">{lastProfile.name}</div>
-                <div className="mqx-fin-row__sub">{profileSubtitle(lastProfile)}</div>
-              </div>
-              <div className="mqx-fin-row__r">
-                <div className="mqx-fin-row__val">
-                  <MoneyText value={Number(lastProfile.cash_balance || 0)} />
-                </div>
-                <Button mode="filled" size="s" onClick={() => handleActivate(lastProfile.id)}>
-                  Продолжить
-                </Button>
-              </div>
-            </div>
-          ) : (
-            <div className="mqx-fin-empty" style={{ marginTop: 14 }}>
-              Пока нет сохранений в этом аккаунте.
-            </div>
-          )}
-        </div>
-
-        <div className="mq-enter-item mqx-card">
-          <div className="mqx-card__title">Действия</div>
-          <div className="mqx-card__sub">Новая игра или список слотов — в одном визуальном ряду с игрой.</div>
-          <div className="mq-actions-stack" style={{ marginTop: 14 }}>
-            <Button mode="filled" onClick={onNewGame}>
-              Новая игра
-            </Button>
-            <Button mode="outline" onClick={() => setShowLoadModal(true)} disabled={profiles.length === 0}>
-              Все сохранения
-            </Button>
-            <Button mode="plain" onClick={handleLogout}>
-              Выйти
-            </Button>
+    <>
+      <MonetkaBubbleScreen showBrand title={title} subtitle={subtitle} titleId="mqx-start-menu-title">
+        {loading ? (
+          <div className="mqx-auth-monetka__loading">
+            <Spinner />
           </div>
-        </div>
-      </div>
+        ) : (
+          <>
+            {primaryProfile ? (
+              <div className="pg-continue-slot mqx-fin-row mqx-start-menu__profile">
+                <div className="mqx-fin-row__l">
+                  <div className="mqx-fin-row__title">{primaryProfile.name}</div>
+                  <div className="mqx-fin-row__sub">{profileSubtitle(primaryProfile)}</div>
+                </div>
+                <div className="mqx-fin-row__r">
+                  <div className="mqx-fin-row__val">
+                    <MoneyText value={Number(primaryProfile.cash_balance || 0)} />
+                  </div>
+                  <MqxButton
+                    variant="primary"
+                    size="compact"
+                    title={`Продолжить «${primaryProfile.name}»`}
+                    onClick={() => handleActivate(primaryProfile.id)}
+                  >
+                    Продолжить
+                  </MqxButton>
+                </div>
+              </div>
+            ) : null}
 
-      <Modal open={showLoadModal} onClose={() => setShowLoadModal(false)}>
-        <div className="mqx-modal">
+            <div className="pg-actions mqx-start-menu__actions">
+              <MqxButton
+                variant="primary"
+                stretched
+                onClick={() => onNewGame?.(suggestDefaultProfileName(profiles))}
+                title="Создать новое сохранение"
+              >
+                Новая игра
+              </MqxButton>
+              <MqxButton
+                variant="secondary"
+                stretched
+                onClick={() => setShowLoadModal(true)}
+                disabled={profiles.length === 0}
+                title="Открыть список всех сохранений"
+              >
+                Все сохранения{profiles.length > 0 ? ` (${profiles.length})` : ''}
+              </MqxButton>
+              <MqxButton variant="ghost" stretched onClick={handleLogout} title="Выйти из аккаунта">
+                Выйти
+              </MqxButton>
+            </div>
+          </>
+        )}
+      </MonetkaBubbleScreen>
+
+      <Modal open={showLoadModal} onClose={() => setShowLoadModal(false)} title="Все сохранения">
+        <div className="mqx-modal" role="document" aria-labelledby="mqx-load-profiles-title">
           <div className="mqx-card">
-            <div className="mqx-card__title">Все сохранения</div>
-            <p className="mqx-card__sub">Выберите слот и нажмите «Загрузить».</p>
-            <div className="mqx-fin-list" style={{ marginTop: 12 }}>
-              {otherProfiles.map((profile) => (
-                <div key={profile.id} className="mqx-fin-row" style={{ marginTop: 10 }}>
+            <h2 id="mqx-load-profiles-title" className="mqx-card__title">
+              Все сохранения
+            </h2>
+            <p className="mqx-card__sub">Выберите слот — переключусь без лишних вопросов.</p>
+            <div className="mqx-fin-list mqx-start-menu__modal-list">
+              {sortedProfiles.map((profile) => (
+                <div key={profile.id} className="mqx-fin-row mqx-start-menu__modal-row">
                   <div className="mqx-fin-row__l">
-                    <div className="mqx-fin-row__title">{profile.name}</div>
+                    <div className="mqx-fin-row__title">
+                      {profile.name}
+                      {profile.is_active ? (
+                        <span className="mqx-start-menu__active-pill">активен</span>
+                      ) : null}
+                    </div>
                     <div className="mqx-fin-row__sub">{profileSubtitle(profile)}</div>
                   </div>
                   <div className="mqx-fin-row__r">
-                    <Button
-                      mode="filled"
-                      size="s"
+                    <MqxButton
+                      variant={profile.is_active ? 'secondary' : 'primary'}
+                      size="compact"
+                      title={`Загрузить «${profile.name}»`}
                       onClick={() => {
                         void handleActivate(profile.id);
                         setShowLoadModal(false);
                       }}
                     >
-                      Загрузить
-                    </Button>
+                      {profile.is_active ? 'Открыть' : 'Загрузить'}
+                    </MqxButton>
                   </div>
                 </div>
               ))}
@@ -165,6 +197,6 @@ export function StartMenuScreen({ onNewGame, onLoadGame, onLogout }) {
           </div>
         </div>
       </Modal>
-    </MqxShell>
+    </>
   );
 }

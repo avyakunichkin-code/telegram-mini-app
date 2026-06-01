@@ -1,0 +1,108 @@
+events:
+- definition_key: mq11_evening_course
+  event_domain: investment_education
+  title: Короткий курс по вечерам
+  description: Онлайн-курс по навыку, который может пригодиться на работе.
+  weight: 88
+  event_tier: 2
+  repeat_policy: repeatable
+  scenario_shape: soft_offer
+  choices:
+  - title: Записаться на курс
+    effects:
+      cash_delta: -8900
+      needs_delta:
+        status: 10
+        comfort: 3
+        health: -3
+  - title: Отказаться
+    effects:
+      cash_delta: 0
+      needs_delta:
+        status: -3
+        comfort: 1
+- definition_key: mq11_investment_webinar
+  event_domain: investment_education
+  title: Вебинар по инвестициям
+  description: Платный вебинар с обещанием «простой стратегии».
+  weight: 62
+  event_tier: 4
+  repeat_policy: repeatable
+  scenario_shape: soft_offer
+  choices:
+  - title: Платное участие
+    effects:
+      cash_delta: -3490
+      needs_delta:
+        status: 6
+        comfort: 2
+  - title: Не участвовать
+    effects:
+      cash_delta: 0
+      needs_delta:
+        status: -2
+- definition_key: mq11_study_materials_student
+  content_class: profile
+  event_slot: period_choice
+  audience_template_keys:
+  - mq_game_basic_v1
+  event_domain: investment_education
+  title: Учебники к сессии
+  description: Преподаватель обновил список литературы — можно купить новое, взять б/у или надеяться на библиотеку.
+  weight: 82
+  event_tier: 1
+  repeat_policy: repeatable
+  scenario_shape: soft_offer
+  cooldown_periods: 5
+  choices:
+  - title: Новые учебники
+    effects:
+      cash_delta: -5200
+      needs_delta:
+        status: 8
+        comfort: 3
+  - title: Б/у и конспекты
+    effects:
+      cash_delta: -2100
+      needs_delta:
+        status: 4
+        comfort: 1
+  - title: Только библиотека
+    effects:
+      cash_delta: 0
+      needs_delta:
+        status: -4
+        comfort: -2
+- definition_key: mq11_prof_dev_course_pro
+  content_class: profile
+  event_slot: period_choice
+  audience_template_keys:
+  - mq_game_tight_budget_v1
+  event_domain: investment_education
+  title: Сертификация по специальности
+  description: Профессиональная ассоциация предлагает подготовку к экзамену — вложение в карьеру или отложить.
+  weight: 76
+  event_tier: 2
+  repeat_policy: repeatable
+  scenario_shape: soft_offer
+  cooldown_periods: 6
+  choices:
+  - title: Курс и экзамен
+    effects:
+      cash_delta: -11500
+      needs_delta:
+        status: 14
+        comfort: 2
+        health: -3
+  - title: Только материалы для самоподготовки
+    effects:
+      cash_delta: -3200
+      needs_delta:
+        status: 6
+        comfort: 1
+  - title: Отложить на следующий год
+    effects:
+      cash_delta: 0
+      needs_delta:
+        status: -5
+        comfort: -1

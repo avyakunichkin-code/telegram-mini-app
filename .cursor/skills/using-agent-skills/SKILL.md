@@ -1,41 +1,105 @@
 ---
 name: using-agent-skills
 description: Discovers and invokes agent skills. Use when starting a session or when you need to discover which skill applies to the current task. This is the meta-skill that governs how all other skills are discovered and invoked.
+argument-hint: "[task description or phase]"
+user-invocable: true
+allowed-tools: Read, Glob, Grep
 ---
 
 # Using Agent Skills
+
+## Прочитай сначала (ТВОЙ ХОД)
+
+- [`docs/agents/CURSOR_SKILLS.md`](../../../docs/agents/CURSOR_SKILLS.md)
+- [`docs/agents/SKILLS_PHASE_CONTENT_AND_DATA.md`](../../../docs/agents/SKILLS_PHASE_CONTENT_AND_DATA.md)
+- [`docs/agents/SKILL_DOC_MAP.md`](../../../docs/agents/SKILL_DOC_MAP.md)
+- [`.cursor/skills/catalog.yaml`](../catalog.yaml) — поле **`tier`** на каждый скилл
+- [`CLAUDE.md`](../../../CLAUDE.md)
+
+Фаза → скилл: `.cursor/rules/tvoy-hod-router.mdc` (primary + satellites). В задаче MQ-*: `tier` + `skill` — [`docs/templates/TASK_SLICE.md`](../../../docs/templates/TASK_SLICE.md).
 
 ## Overview
 
 Agent Skills is a collection of engineering workflow skills organized by development phase. Each skill encodes a specific process that senior engineers follow. This meta-skill helps you discover and apply the right skill for your current task.
 
-## Skill Discovery
+## Skill Discovery (сначала `tier`)
 
-When a task arrives, identify the development phase and apply the corresponding skill:
+**Шаг 0.** Открой `catalog.yaml` → `tier` скилла из задачи (или из [`SKILLS_PHASE_CONTENT_AND_DATA.md`](../../../docs/agents/SKILLS_PHASE_CONTENT_AND_DATA.md)).
+
+| `tier` | Поведение агента |
+|--------|------------------|
+| **core** | Primary по умолчанию; не подменять deferred-скиллом |
+| **support** | Primary только если задача явно про plan / merge / ADR; иначе satellite |
+| **deferred** | Только по явному запросу пользователя или полю `satellites` в MQ-* |
+| **meta** | `skill-test`, настройка layout — не для продуктовых срезов |
+| **archived** | `.cursor/skills/_archived/` — studio/GDD, явный вызов |
+
+**Шаг 1.** Выбери primary по смыслу задачи (фаза «контент и данные» — дерево ниже).
+
+**Шаг 2.** Открой **satellites** из таблицы «Primary + satellites» в router / phase doc; не завершай срез без них, если они указаны.
+
+### Дерево primary (`tier: core`)
 
 ```
 Task arrives
     │
-    ├── Vague idea/need refinement? ──→ idea-refine
-    ├── New project/feature/change? ──→ spec-driven-development
-    ├── Have a spec, need tasks? ──────→ planning-and-task-breakdown
-    ├── Implementing code? ────────────→ incremental-implementation
-    │   ├── UI work? ─────────────────→ frontend-ui-engineering
-    │   ├── API work? ────────────────→ api-and-interface-design
-    │   ├── Need better context? ─────→ context-engineering
-    │   ├── Need doc-verified code? ───→ source-driven-development
-    │   └── Stakes high / unfamiliar code? ──→ doubt-driven-development
-    ├── Writing/running tests? ────────→ test-driven-development
-    │   └── Browser-based? ───────────→ browser-testing-with-devtools
-    ├── Something broke? ──────────────→ debugging-and-error-recovery
-    ├── Reviewing code? ───────────────→ code-review-and-quality
-    │   ├── Security concerns? ───────→ security-and-hardening
-    │   └── Performance concerns? ────→ performance-optimization
-    ├── Committing/branching? ─────────→ git-workflow-and-versioning
-    ├── CI/CD pipeline work? ──────────→ ci-cd-and-automation *(в этом репозитории скилл не поставлен — см. `docs/agents/CURSOR_SKILLS.md` или глобальные скиллы Cursor)*
-    ├── Writing docs/ADRs? ───────────→ documentation-and-adrs
-    └── Deploying/launching? ─────────→ shipping-and-launch *(как выше — не в проекте)*
+    ├── Сырая гипотеза / идея ─────────────→ idea-refine
+    ├── Контракт до кода ──────────────────→ spec-driven-development
+    │       └── спор «кто владеет полем»? ─→ documentation-and-adrs (support)
+    ├── Реализация срезом ─────────────────→ incremental-implementation
+    │       └── satellite: test-driven-development
+    │
+    ├── Событие / YAML / brief ────────────→ create-event (/create-event)
+    │       └── satellites: test-driven-development (pytest -k event)
+    ├── Обзор каталога (read-only) ──────→ event-analysis (/event-analysis)
+    │       └── при P1 gaps → create-event
+    │
+    ├── period.py / victory / шаблоны ───→ game-economy-and-victory
+    │       └── satellites: test-driven-development, doubt-driven-development (deferred)
+    │
+    ├── REST / schemas / api.js ─────────→ api-and-interface-design
+    │       └── satellite: test-driven-development (если меняется поведение)
+    │
+    ├── Макет lab ─────────────────────────→ design-lab-mqx
+    ├── UI prod / MQX ───────────────────→ frontend-ui-engineering
+    │       └── satellites: design-lab-mqx (новый UI), api-and-interface-design (новые поля)
+    │
+    └── Регрессия / баг в логике ────────→ test-driven-development
+            └── перед merge → code-review-and-quality (support)
 ```
+
+### Не путать (границы ответственности)
+
+| Задача | Primary | Не использовать как primary |
+|--------|---------|------------------------------|
+| Текст карточки, choices, YAML | create-event | game-economy-and-victory |
+| Закрытие месяца, cashflow, победа | game-economy-and-victory | create-event |
+| Gaps в каталоге | event-analysis | create-event (пока только отчёт) |
+| Новый экран | frontend-ui-engineering | design-lab-mqx в prod без canon |
+
+### `tier: support` (primary только по задаче)
+
+```
+Epic / нарезка из spec ──→ planning-and-task-breakdown
+Перед merge / крупный PR ─→ code-review-and-quality
+Граница доменов / ADR ────→ documentation-and-adrs
+```
+
+### `tier: deferred` (явный вызов — не primary по умолчанию)
+
+```
+release-tma · browser-testing-with-devtools · telegram-mini-app-runtime
+security-and-hardening · performance-optimization · deprecation-and-migration
+social-changelog-posts · code-simplification · context-engineering
+project-cursor-skills-layout
+doubt-driven-development  ← исключение: обязателен как satellite для game-economy-and-victory
+```
+
+### `tier: archived`
+
+Studio/GDD: `brainstorm`, `ux-design`, `design-system`, … — только `.cursor/skills/_archived/<name>/`.
+
+*(CI/CD, git-workflow — в репо нет; см. `docs/agents/CURSOR_SKILLS.md`.)*
 
 ## Core Operating Behaviors
 
@@ -133,45 +197,72 @@ These are the subtle errors that look like productivity but create problems:
 
 ## Lifecycle Sequence
 
-For a complete feature, the typical skill sequence is:
+### Полный epic (классика)
 
 ```
-1.  idea-refine                 → Refine vague ideas
-2.  spec-driven-development     → Define what we're building
-3.  planning-and-task-breakdown → Break into verifiable chunks
-4.  context-engineering         → Load the right context
-5.  source-driven-development   → Verify against official docs
-6.  incremental-implementation  → Build slice by slice
-7.  doubt-driven-development    → Cross-examine non-trivial decisions in-flight
-8.  test-driven-development     → Prove each slice works
-9.  code-review-and-quality     → Review before merge
-10. git-workflow-and-versioning → Clean commit history
-11. documentation-and-adrs      → Document decisions
-12. *(опционально)* CI/deploy    → см. `docs/agents/CURSOR_SKILLS.md`
+1.  idea-refine                    [core]
+2.  spec-driven-development        [core]
+3.  planning-and-task-breakdown    [support] — epic / несколько MQ-*
+4.  incremental-implementation     [core] + test-driven-development [core]
+5.  code-review-and-quality        [support]
+6.  documentation-and-adrs         [support] — при новой границе домена
 ```
 
-Not every task needs every skill. A bug fix might only need: `debugging-and-error-recovery` → `test-driven-development` → `code-review-and-quality`.
+`context-engineering`, `release-tma` — **deferred**, не в цепочке по умолчанию.
+
+### Фаза «контент и данные» (типичные короткие цепочки)
+
+| Цель | Primary → satellites |
+|------|----------------------|
+| Новое событие | create-event → test-driven-development |
+| Расширить каталог | event-analysis → create-event |
+| Баланс / период | game-economy-and-victory → test-driven-development, doubt-driven-development |
+| Новое поле в API + UI | spec-driven-development → api-and-interface-design → incremental-implementation → frontend-ui-engineering |
+| Новый паттерн UI | design-lab-mqx → frontend-ui-engineering (+ canon-sync rule) |
+
+Не каждая задача проходит все шаги. Баг: воспроизведение → `test-driven-development` → `code-review-and-quality` [support]. Коммиты — по user rules в Cursor.
 
 ## Quick Reference
 
-| Phase | Skill | One-Line Summary |
-|-------|-------|-----------------|
-| Define | idea-refine | Refine ideas through structured divergent and convergent thinking |
-| Define | spec-driven-development | Requirements and acceptance criteria before code |
-| Plan | planning-and-task-breakdown | Decompose into small, verifiable tasks |
-| Build | incremental-implementation | Thin vertical slices, test each before expanding |
-| Build | source-driven-development | Verify against official docs before implementing |
-| Build | doubt-driven-development | Adversarial fresh-context review of every non-trivial decision |
-| Build | context-engineering | Right context at the right time |
-| Build | frontend-ui-engineering | Production-quality UI with accessibility |
-| Build | api-and-interface-design | Stable interfaces with clear contracts |
-| Verify | test-driven-development | Failing test first, then make it pass |
-| Verify | browser-testing-with-devtools | Chrome DevTools MCP for runtime verification |
-| Verify | debugging-and-error-recovery | Reproduce → localize → fix → guard |
-| Review | code-review-and-quality | Five-axis review with quality gates |
-| Review | security-and-hardening | OWASP prevention, input validation, least privilege |
-| Review | performance-optimization | Measure first, optimize only what matters |
-| Ship | git-workflow-and-versioning | Atomic commits, clean history |
-| Ship | ci-cd-and-automation | *(не в `.cursor/skills/` проекта)* см. `docs/agents/CURSOR_SKILLS.md` |
-| Ship | documentation-and-adrs | Document the why, not just the what |
-| Ship | shipping-and-launch | *(не в `.cursor/skills/` проекта)* см. `docs/agents/CURSOR_SKILLS.md` |
+`tier` — см. [`catalog.yaml`](../catalog.yaml). Фаза: [`SKILLS_PHASE_CONTENT_AND_DATA.md`](../../../docs/agents/SKILLS_PHASE_CONTENT_AND_DATA.md).
+
+| Phase | Skill | `tier` | One-Line Summary |
+|-------|-------|--------|------------------|
+| Define | idea-refine | core | Refine ideas (diverge/converge) |
+| Define | spec-driven-development | core | Requirements before code |
+| Define | planning-and-task-breakdown | support | Decompose spec → MQ-* |
+| Build | create-event | core | Author MVP11 event YAML |
+| Build | event-analysis | core | Read-only catalog report |
+| Build | game-economy-and-victory | core | Period, victory, templates (not event copy) |
+| Build | incremental-implementation | core | Thin vertical slices |
+| Build | design-lab-mqx | core | design-lab HTML/CSS mockups |
+| Build | frontend-ui-engineering | core | MQX / prod UI |
+| Build | api-and-interface-design | core | REST + api.js contracts |
+| Build | test-driven-development | core | Tests prove behavior |
+| Build | doubt-driven-development | deferred | Adversarial review (satellite for economy) |
+| Build | context-engineering | deferred | Rules vs skills context |
+| Verify | browser-testing-with-devtools | deferred | Chrome DevTools MCP |
+| Verify | security-and-hardening | deferred | OWASP, auth, input |
+| Verify | performance-optimization | deferred | Measure, then optimize |
+| Review | code-review-and-quality | support | Pre-merge review |
+| Ship | documentation-and-adrs | support | ADR, domain boundaries |
+| Ship | release-tma | deferred | Pre-release guardrails |
+| Ship | social-changelog-posts | deferred | Marketing changelog posts |
+| Meta | using-agent-skills | core | This skill — discovery |
+| Meta | skill-test | meta | Lint / audit skills |
+| Archived | *(studio/GDD)* | archived | `_archived/` — explicit invoke only |
+
+---
+
+## Итог (Verdict)
+
+В конце работы явно укажи результат: **PASS**, **FAIL**, **CONCERNS**, **COMPLETE** или **APPROVED** — в зависимости от типа задачи.
+
+## Согласование изменений
+
+По умолчанию только чтение и отчёт; правки в репозитории — только по явной просьбе пользователя.
+
+## Следующий шаг
+
+Выбранный доменный скилл из таблицы в теле скилла.
+

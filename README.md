@@ -1,4 +1,4 @@
-# Money Quest — Telegram Mini App
+# ТВОЙ ХОД — Telegram Mini App
 
 Игра по финансовой грамотности в формате Telegram Mini App: периоды («месяц»), подушка, обязательства, события, инвестиции и страховки MVP.
 
@@ -29,10 +29,10 @@
 - Режимы сохранения **`save_kind`**: `game` (старт из каталога **`game_starter_templates`**) и `plan` (в UI пока заглушка «Скоро»)
 - Периоды с таймером: пауза, продолжение, ручной переход к концу периода (`process_period_end`)
 - Зарплата **раз в период** по кнопке; не забрал до закрытия — за период не повторяется
-- Подушка безопасности, активы и обязательства из шаблонов БД, до трёх событий с выбором на период
+- Подушка безопасности, активы и обязательства из шаблонов БД, **два** события с выбором на период
 - Инвестиции MVP: депозит (капитализация), облигации (купоны на cash)
 - Страховки MVP: покупка и ежемесячная премия
-- Прогресс персонажа: **XP** и **уровень** (отдельно от условной финансовой градации в overview — см. [`docs/specs/gameplay/LEVEL_XP_SYSTEM.md`](docs/specs/gameplay/LEVEL_XP_SYSTEM.md))
+- Прогрессия: **tier событий** от `period_index`; character XP/level сняты ([ADR-003](docs/decisions/ADR-003-remove-character-progression.md)); достижения — backlog M12
 - Интеграция Telegram Web App (тема, viewport)
 
 Подробнее по эндпоинтам и папкам: [`CLAUDE.md`](CLAUDE.md).
@@ -45,8 +45,8 @@
 
 - `backend/main.py` — FastAPI, создание таблиц, точечная автомиграция колонок (без Alembic), роутеры
 - `backend/app/models.py` — профили (`save_kind`, шаблон старта), финансы, события, инвестиции, страховки
-- `backend/app/game_time.py` — якорь и длительность периода
-- `backend/app/game_period.py` — экономика закрытия периода, просрочки MVP, счётчик поражения при отрицательном cash три периода подряд
+- `backend/app/game/time.py` — якорь и длительность периода
+- `backend/app/game/period.py` — экономика закрытия периода, просрочки MVP, счётчик поражения при отрицательном cash три периода подряд
 
 ### Frontend (`frontend-react/`)
 
@@ -99,40 +99,31 @@ npm run dev
 
 ## Миграции БД
 
-Alembic не используется. Идемпотентные SQL-файлы в [`backend/migrations/`](backend/migrations/):
+Alembic не используется. Идемпотентные SQL-файлы в [`backend/migrations/`](backend/migrations/) (нумерация `0002`…`0037+`, см. [`backend/migrations/README.md`](backend/migrations/README.md)).
 
-- `0002_easy_mechanics.sql`
-- `0003_asset_liability_templates_events.sql`
-- `0004_save_kind_game_templates.sql`
-- `0005_game_templates_catalog.sql`
-- `0006_event_tiers_repeat_policy.sql`
+Запуск под Windows (нужны `psql` и `DATABASE_URL`):
 
-Запуск под Windows (нужны `psql` и `DATABASE_URL`): [`backend/migrate.ps1`](backend/migrate.ps1).
+```powershell
+cd backend
+$env:DATABASE_URL = "postgresql://..."
+.\migrate.ps1
+```
 
 ---
 
-## Деплой
+## Деплой (Pre-Alpha / prod)
 
-### Backend (например, Render)
+Пошагово: **[`docs/ops/DEPLOY.md`](docs/ops/DEPLOY.md)** — свой домен `app.*` + API `api.*`, Render без cold start, GitHub Actions, BotFather, smoke.
 
-1. PostgreSQL на Render (`DATABASE_URL` internal URL для сервиса)
-2. Web Service из репозитория  
-3. Переменные: `DATABASE_URL`, `SECRET_KEY`  
-4. Сборка: `pip install -r requirements.txt` (из каталога `backend`)  
-5. Старт из корня приложения backend: например `uvicorn main:app --host 0.0.0.0 --port 10000` (уточняйте в настройках Render под ваш Dockerfile/Root Directory)
+Кратко:
 
-### Frontend (GitHub Pages)
+| Слой | Куда |
+|------|------|
+| API + PostgreSQL | Render ([`render.yaml`](render.yaml), план Starter+) |
+| SPA + лендинг | GitHub Pages (workflow [`.github/workflows/deploy-app.yml`](.github/workflows/deploy-app.yml)) |
 
-Production URL статики задаётся в [`package.json`](frontend-react/package.json) (`homepage`). Сборка и выкладка:
-
-```bash
-cd frontend-react
-npm run deploy
-```
-
-(используется ветка/кэш `gh-pages`; не коммитьте содержимое `dist/` — артефакты сборки в `.gitignore`.)
-
-Базовый URL API для production по умолчанию задан в [`frontend-react/src/api.js`](frontend-react/src/api.js); для нескольких стендов удобнее вынести его в переменную с префиксом `VITE_` после правки `api.js`.
+Переменные сборки фронта: `VITE_API_BASE_URL`, `VITE_BASE_PATH` — см. [`frontend-react/.env.example`](frontend-react/.env.example).  
+Ручной деплой: `cd frontend-react && npm run deploy` (после export env).
 
 ---
 

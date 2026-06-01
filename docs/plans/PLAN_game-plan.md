@@ -1,15 +1,15 @@
----
+﻿---
 layer: plan
-status: draft
+status: implemented
 spec: specs/features/SPEC_game-plan.md
-last_reviewed: 2026-05-17
+last_reviewed: 2026-05-26
 ---
 
 # Plan: эпик G1 — Game Mode, каталог шаблонов E2E, ADR-001
 
 **Spec (implemented):** [`SPEC_game-plan`](../specs/features/SPEC_game-plan.md)  
 **ADR:** [`ADR-001`](../decisions/ADR-001-save-kind-remove-light-hardcore.md)  
-**Тяжёлый детальный план по слоям БД/API:** [evolution §II.3](../vision/ideas/money-quest-evolution-after-mvp.md#ii3-план-доработок-по-слоям) (ориентир; G1 режет scope: Game only, Plan в MVP 2.0).
+**Тяжёлый детальный план по слоям БД/API:** [evolution §II.3](../vision/ideas/tvoy-hod-evolution-after-mvp.md#ii3-план-доработок-по-слоям) (ориентир; G1 режет scope: Game only, Plan в MVP 2.0).
 
 ## Summary
 
@@ -91,16 +91,16 @@ SQL: save_kind, шаблоны, миграция event filter, удаление 
 
 ### MQ-106 — События: фильтр по `save_kind`, снять `profile.mode`
 
-- **Acceptance:** `ensure_period_events` и связка из `game_period.py` не используют light/hardcore профиля; фильтр согласован с ADR.
+- **Acceptance:** `ensure_period_events` и связка из `game/period.py` не используют light/hardcore профиля; фильтр согласован с ADR.
 - **Verify:** pytest на выбор событий для нового профиля; ручной период.
-- **Files:** `backend/app/routers/events.py`, `backend/app/game_period.py`.
+- **Files:** `backend/app/routers/events.py`, `backend/app/game/period.py`.
 - **Estimate:** M · **Depends:** MQ-102, MQ-103
 
 ### MQ-107 — Конец периода: `base_monthly_lifestyle_expense` + дельта (минимум)
 
 - **Acceptance:** в `process_period_end` учитываются базовая «жизнь» из шаблона и поле дельты на профиле (списание на `cash` или эквивалент, не ломая остальной цикл).
 - **Verify:** pytest или сценарий 2 периода; cash согласован с ожиданием.
-- **Files:** `backend/app/game_period.py`, хелперы.
+- **Files:** `backend/app/game/period.py`, хелперы.
 - **Estimate:** M · **Depends:** MQ-105
 
 ### MQ-108 — Frontend: старт без `DifficultyScreen`, новый контракт

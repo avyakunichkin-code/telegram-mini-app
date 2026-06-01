@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="ru" data-theme="light">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Портреты персонажей — 4 жизни</title>
+    <link rel="stylesheet" href="./lab-base.css" />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <header class="lab-header">
+      <div>
+        <h1>Портреты персонажей</h1>
+        <p class="lab-intro">
+          Студент (эталон) + Профессионал, Руководитель, Предприниматель. Прозрачный фон, trim, размеры
+          <strong>pick 56</strong> / <strong>md 72</strong> / <strong>dash 108</strong> px по высоте.
+          <a class="lab-nav-back" href="../scenario-icons/index.html">← SVG I-Scene</a>
+          · <a class="lab-nav-back" href="../index.html">компактный экран</a>
+        </p>
+      </div>
+      <div class="lab-theme" role="group">
+        <button type="button" class="is-active" data-theme-btn="light">Светлая</button>
+        <button type="button" data-theme-btn="dark">Тёмная</button>
+      </div>
+    </header>
+
+    <main class="lab-persona-main">
+      <section class="lab-persona-section">
+        <h2>Экран «Выбери свою жизнь» (prod mock)</h2>
+        <p class="lab-persona-section__note">Карточки как <code>MqxStarterScenarioPicker</code> — портрет вместо SVG.</p>
+        <div class="lab-checker">
+          <div
+            class="mqx-scenario-picker mqx-scenario-picker--compact mqx-scenario-picker--illus mqx-scenario-picker--persona"
+            role="radiogroup"
+          >
+            <button type="button" class="mqx-scenario-strip mqx-scenario-strip--green mqx-scenario-strip--selected">
+              <span class="mqx-scenario-strip__icon-wrap mqx-scenario-strip__icon-wrap--green" aria-hidden="true">
+                <img src="./assets/student-mascot-pick.png" alt="" class="mqx-persona-portrait__img" height="56" />
+              </span>
+              <span class="mqx-scenario-strip__body">
+                <span class="mqx-scenario-strip__title">Студент</span>
+                <ul class="mqx-scenario-strip__list">
+                  <li>Доход ~62 500 ₽/мес</li>
+                  <li>Без долгов в старте</li>
+                </ul>
+              </span>
+              <span class="mqx-scenario-strip__trail" aria-hidden="true">›</span>
+            </button>
+            <button type="button" class="mqx-scenario-strip mqx-scenario-strip--amber">
+              <span class="mqx-scenario-strip__icon-wrap mqx-scenario-strip__icon-wrap--amber" aria-hidden="true">
+                <img src="./assets/professional-mascot-pick.png" alt="" class="mqx-persona-portrait__img" height="56" />
+              </span>
+              <span class="mqx-scenario-strip__body">
+                <span class="mqx-scenario-strip__title">Профессионал</span>
+                <ul class="mqx-scenario-strip__list">
+                  <li>Доход ~100 000 ₽/мес</li>
+                  <li>Авто + кредит</li>
+                </ul>
+              </span>
+              <span class="mqx-scenario-strip__trail" aria-hidden="true">›</span>
+            </button>
+            <button type="button" class="mqx-scenario-strip mqx-scenario-strip--orange">
+              <span class="mqx-scenario-strip__icon-wrap mqx-scenario-strip__icon-wrap--orange" aria-hidden="true">
+                <img src="./assets/manager-mascot-pick.png" alt="" class="mqx-persona-portrait__img" height="56" />
+              </span>
+              <span class="mqx-scenario-strip__body">
+                <span class="mqx-scenario-strip__title">Руководитель</span>
+                <ul class="mqx-scenario-strip__list">
+                  <li>Доход ~46 500 ₽/мес</li>
+                  <li>Ипотека + авто</li>
+                </ul>
+              </span>
+              <span class="mqx-scenario-strip__trail" aria-hidden="true">›</span>
+            </button>
+            <button type="button" class="mqx-scenario-strip mqx-scenario-strip--red">
+              <span class="mqx-scenario-strip__icon-wrap mqx-scenario-strip__icon-wrap--red" aria-hidden="true">
+                <img src="./assets/entrepreneur-mascot-pick.png" alt="" class="mqx-persona-portrait__img" height="56" />
+              </span>
+              <span class="mqx-scenario-strip__body">
+                <span class="mqx-scenario-strip__title">Предприниматель</span>
+                <ul class="mqx-scenario-strip__list">
+                  <li>Доход ~43 500 ₽/мес</li>
+                  <li>Ипотека + кредитная карта</li>
+                </ul>
+              </span>
+              <span class="mqx-scenario-strip__trail" aria-hidden="true">›</span>
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <section class="lab-persona-section">
+        <h2>Размеры (после trim)</h2>
+        <div class="lab-size-grid">
+          <figure class="lab-size-card">
+            <div class="lab-size-card__frame lab-size-card__frame--pick lab-checker">
+              <img src="./assets/professional-mascot-pick.png" alt="" />
+            </div>
+            <figcaption>pick · 56h</figcaption>
+          </figure>
+          <figure class="lab-size-card">
+            <div class="lab-size-card__frame lab-size-card__frame--md lab-checker">
+              <img src="./assets/professional-mascot-md.png" alt="" />
+            </div>
+            <figcaption>md · 72h</figcaption>
+          </figure>
+          <figure class="lab-size-card">
+            <div class="lab-size-card__frame lab-size-card__frame--dash lab-checker">
+              <img src="./assets/professional-mascot-dash.png" alt="" />
+            </div>
+            <figcaption>dash · 108h</figcaption>
+          </figure>
+          <figure class="lab-size-card">
+            <div class="lab-size-card__frame lab-size-card__frame--dash lab-checker">
+              <img src="./assets/professional-mascot.png" alt="" style="max-height: 120px" />
+            </div>
+            <figcaption>master</figcaption>
+          </figure>
+        </div>
+      </section>
+
+      <section class="lab-persona-section">
+        <h2>Все четыре (dash)</h2>
+        <div class="lab-size-grid">
+          <figure class="lab-size-card">
+            <div class="lab-size-card__frame lab-size-card__frame--dash lab-checker">
+              <img src="./assets/student-mascot-dash.png" alt="" />
+            </div>
+            <figcaption>Студент</figcaption>
+          </figure>
+          <figure class="lab-size-card">
+            <div class="lab-size-card__frame lab-size-card__frame--dash lab-checker">
+              <img src="./assets/professional-mascot-dash.png" alt="" />
+            </div>
+            <figcaption>Профессионал</figcaption>
+          </figure>
+          <figure class="lab-size-card">
+            <div class="lab-size-card__frame lab-size-card__frame--dash lab-checker">
+              <img src="./assets/manager-mascot-dash.png" alt="" />
+            </div>
+            <figcaption>Руководитель</figcaption>
+          </figure>
+          <figure class="lab-size-card">
+            <div class="lab-size-card__frame lab-size-card__frame--dash lab-checker">
+              <img src="./assets/entrepreneur-mascot-dash.png" alt="" />
+            </div>
+            <figcaption>Предприниматель</figcaption>
+          </figure>
+        </div>
+      </section>
+    </main>
+
+    <script>
+      document.querySelectorAll('[data-theme-btn]').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          document.documentElement.setAttribute('data-theme', btn.getAttribute('data-theme-btn'));
+          document.querySelectorAll('[data-theme-btn]').forEach((b) => b.classList.toggle('is-active', b === btn));
+        });
+      });
+    </script>
+  </body>
+</html>

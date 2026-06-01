@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="ru" data-theme="light">
+  <head>
+    <base href="./" />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>ТВОЙ ХОД — Подушка: индикатор наполнения (design-lab)</title>
+    <link rel="stylesheet" href="./lab-base.css" />
+      <style data-embed-style>
+      html[data-embed="1"] .lab-header,
+      html[data-embed="1"] .lab-round-note,
+      html[data-embed="1"] .lab-variant-card__label,
+      html[data-embed="1"] .lab-variant-card__idea,
+      html[data-embed="1"] .lab-variant-grid > *:not(:first-child) { display: none !important; }
+      html[data-embed="1"] .lab-main { padding: 0 !important; }
+      html[data-embed="1"] body { padding: 0 !important; }
+    </style>
+    <script>
+      (function(){
+        try {
+          var p = new URLSearchParams(location.search);
+          if (p.get('embed') === '1') document.documentElement.setAttribute('data-embed','1');
+        } catch (e) {}
+      })();
+    </script>
+  </head>
+  <body>
+    <header class="lab-header">
+      <div>
+        <h1>Подушка — наполнение к ×3</h1>
+        <p>Chip «Подушка» на дашборде: полоска заполнения от % цели (подушка / win_target ×3).</p>
+      </div>
+      <div class="lab-header__controls">
+        <div class="lab-theme" role="group" aria-label="Тема">
+          <button type="button" class="is-active" data-theme-btn="light">Светлая</button>
+          <button type="button" data-theme-btn="dark">Тёмная</button>
+        </div>
+      </div>
+    </header>
+
+    <main class="lab-main lab-wrap">
+      <p class="lab-round-note">
+        Цель: <strong>3× обязательств</strong> (в игре — <code>win_target_safety_fund</code>). Цвет полоски по
+        порогам: &lt;25% красный · 25–50% оранжевый · 50–75% жёлтый · ≥75% зелёный.
+      </p>
+
+      <div class="lab-tier-legend" aria-hidden="true">
+        <span class="t-low">&lt;25%</span>
+        <span class="t-mid-low">25–50%</span>
+        <span class="t-mid-high">50–75%</span>
+        <span class="t-high">≥75%</span>
+      </div>
+
+      <section class="lab-section">
+        <h3>F1 ★ — полоска под суммой</h3>
+        <div class="lab-demo-grid">
+          <!-- 12% low -->
+          <div class="mqx-finance-chip mqx-finance-chip--cushion">
+            <div class="mqx-finance-chip__icon mqx-accent--emerald" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><path d="M12 3 20 7v6c0 5-3.4 8.2-8 9-4.6-.8-8-4-8-9V7l8-4Z"/><path d="M9.5 12.2 11 13.7 14.6 10.1"/></svg>
+            </div>
+            <div class="mqx-finance-chip__body">
+              <div class="mqx-finance-chip__label">Подушка · 12%</div>
+              <div class="mqx-finance-chip__value">6 480</div>
+              <div class="mqx-cushion-fill" role="progressbar" aria-valuenow="12" aria-valuemin="0" aria-valuemax="100" aria-label="Наполнение подушки 12%">
+                <span class="mqx-cushion-fill__bar" style="width:12%" data-tier="low"></span>
+              </div>
+            </div>
+          </div>
+          <!-- 35% mid-low -->
+          <div class="mqx-finance-chip mqx-finance-chip--cushion">
+            <div class="mqx-finance-chip__icon mqx-accent--emerald" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><path d="M12 3 20 7v6c0 5-3.4 8.2-8 9-4.6-.8-8-4-8-9V7l8-4Z"/><path d="M9.5 12.2 11 13.7 14.6 10.1"/></svg>
+            </div>
+            <div class="mqx-finance-chip__body">
+              <div class="mqx-finance-chip__label">Подушка · 35%</div>
+              <div class="mqx-finance-chip__value">18 900</div>
+              <div class="mqx-cushion-fill" role="progressbar" aria-valuenow="35" aria-valuemin="0" aria-valuemax="100" aria-label="Наполнение подушки 35%">
+                <span class="mqx-cushion-fill__bar" style="width:35%" data-tier="mid-low"></span>
+              </div>
+            </div>
+          </div>
+          <!-- 55% mid-high -->
+          <div class="mqx-finance-chip mqx-finance-chip--cushion">
+            <div class="mqx-finance-chip__icon mqx-accent--emerald" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><path d="M12 3 20 7v6c0 5-3.4 8.2-8 9-4.6-.8-8-4-8-9V7l8-4Z"/><path d="M9.5 12.2 11 13.7 14.6 10.1"/></svg>
+            </div>
+            <div class="mqx-finance-chip__body">
+              <div class="mqx-finance-chip__label">Подушка · 55%</div>
+              <div class="mqx-finance-chip__value">29 700</div>
+              <div class="mqx-cushion-fill" role="progressbar" aria-valuenow="55" aria-valuemin="0" aria-valuemax="100" aria-label="Наполнение подушки 55%">
+                <span class="mqx-cushion-fill__bar" style="width:55%" data-tier="mid-high"></span>
+              </div>
+            </div>
+          </div>
+          <!-- 82% high -->
+          <div class="mqx-finance-chip mqx-finance-chip--cushion">
+            <div class="mqx-finance-chip__icon mqx-accent--emerald" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><path d="M12 3 20 7v6c0 5-3.4 8.2-8 9-4.6-.8-8-4-8-9V7l8-4Z"/><path d="M9.5 12.2 11 13.7 14.6 10.1"/></svg>
+            </div>
+            <div class="mqx-finance-chip__body">
+              <div class="mqx-finance-chip__label">Подушка · 82%</div>
+              <div class="mqx-finance-chip__value">44 280</div>
+              <div class="mqx-cushion-fill" role="progressbar" aria-valuenow="82" aria-valuemin="0" aria-valuemax="100" aria-label="Наполнение подушки 82%">
+                <span class="mqx-cushion-fill__bar" style="width:82%" data-tier="high"></span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="lab-section">
+        <h3>Интерактив · F1</h3>
+        <label for="lab-pct-slider" style="font-size:13px;display:block;margin-bottom:8px">
+          Наполнение: <strong id="lab-pct-label">40%</strong>
+        </label>
+        <input id="lab-pct-slider" type="range" min="0" max="100" value="40" style="width:100%;margin-bottom:12px" />
+        <div id="lab-live-cushion" class="mqx-finance-chip mqx-finance-chip--cushion">
+          <div class="mqx-finance-chip__icon mqx-accent--emerald" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><path d="M12 3 20 7v6c0 5-3.4 8.2-8 9-4.6-.8-8-4-8-9V7l8-4Z"/><path d="M9.5 12.2 11 13.7 14.6 10.1"/></svg>
+          </div>
+          <div class="mqx-finance-chip__body">
+            <div class="mqx-finance-chip__label">Подушка</div>
+            <div class="mqx-finance-chip__value">21 600</div>
+            <div class="mqx-cushion-fill" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100">
+              <span class="mqx-cushion-fill__bar" style="width:40%" data-tier="mid-low"></span>
+            </div>
+            <div class="mqx-cushion-fill__hint">40% · цель 54 000 ₽ (×3)</div>
+          </div>
+        </div>
+      </section>
+
+      <section class="lab-section">
+        <h3>F2 — заливка фона chip (сравнение)</h3>
+        <p class="lab-round-note" style="margin-top:0">Тот же слайдер меняет и F2. Менее читаемо на малых chip — F1 рекомендуем.</p>
+        <div id="lab-f2-cushion" class="mqx-finance-chip mqx-finance-chip--cushion mqx-finance-chip--cushion-bg">
+          <div class="mqx-finance-chip__icon mqx-accent--emerald" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><path d="M12 3 20 7v6c0 5-3.4 8.2-8 9-4.6-.8-8-4-8-9V7l8-4Z"/><path d="M9.5 12.2 11 13.7 14.6 10.1"/></svg>
+          </div>
+          <div class="mqx-finance-chip__body">
+            <div class="mqx-cushion-fill mqx-cushion-fill--bg" aria-hidden="true">
+              <span class="mqx-cushion-fill__bar" style="--cushion-pct:40%" data-tier="mid-low"></span>
+            </div>
+            <div class="mqx-finance-chip__label">Подушка</div>
+            <div class="mqx-finance-chip__value">21 600</div>
+          </div>
+        </div>
+      </section>
+
+      <section class="lab-section">
+        <h3>Контекст S5 · 2×2</h3>
+        <div class="mqx-dash-stack mqx-dash-stack--unified" data-skin="s5" data-layout="l3">
+          <section class="mqx-finance-static" aria-label="Финансы периода">
+            <h2 class="mqx-finance-static__title">Финансы периода</h2>
+            <div class="mqx-finance-static__chips">
+              <div class="mqx-finance-chip">
+                <div class="mqx-finance-chip__icon mqx-accent--sky" aria-hidden="true">
+                  <svg viewBox="0 0 24 24"><path d="M4 19V5"/><path d="M4 19h16"/><path d="M7 15l4-4 3 3 5-6"/></svg>
+                </div>
+                <div class="mqx-finance-chip__body">
+                  <div class="mqx-finance-chip__label">Доходы</div>
+                  <div class="mqx-finance-chip__value mqx-finance-chip__value--pos">+3 200</div>
+                </div>
+              </div>
+              <div class="mqx-finance-chip">
+                <div class="mqx-finance-chip__icon mqx-accent--amber mqx-accent--expense" aria-hidden="true">
+                  <svg viewBox="0 0 24 24"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+                </div>
+                <div class="mqx-finance-chip__body">
+                  <div class="mqx-finance-chip__label">Расходы</div>
+                  <div class="mqx-finance-chip__value mqx-finance-chip__value--out">9 600</div>
+                </div>
+              </div>
+              <div class="mqx-finance-chip">
+                <div class="mqx-finance-chip__icon mqx-accent--violet" aria-hidden="true">
+                  <svg viewBox="0 0 24 24"><path d="M7 10V7a5 5 0 0 1 10 0v3"/><path d="M6 10h12v10a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V10Z"/><path d="M10 14h4"/></svg>
+                </div>
+                <div class="mqx-finance-chip__body">
+                  <div class="mqx-finance-chip__label">Баланс</div>
+                  <div class="mqx-finance-chip__value">42 150</div>
+                </div>
+              </div>
+              <div class="mqx-finance-chip mqx-finance-chip--cushion">
+                <div class="mqx-finance-chip__icon mqx-accent--emerald" aria-hidden="true">
+                  <svg viewBox="0 0 24 24"><path d="M12 3 20 7v6c0 5-3.4 8.2-8 9-4.6-.8-8-4-8-9V7l8-4Z"/><path d="M9.5 12.2 11 13.7 14.6 10.1"/></svg>
+                </div>
+                <div class="mqx-finance-chip__body">
+                  <div class="mqx-finance-chip__label">Подушка</div>
+                  <div class="mqx-finance-chip__value">29 700</div>
+                  <div
+                    class="mqx-cushion-fill"
+                    role="progressbar"
+                    aria-valuenow="55"
+                    aria-valuemin="0"
+                    aria-valuemax="100"
+                    aria-label="Наполнение подушки 55%"
+                  >
+                    <span class="mqx-cushion-fill__bar" style="width:55%" data-tier="mid-high"></span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+        </div>
+      </section>
+
+      <p class="lab-round-note" style="margin-top:20px">
+        См. <code>VARIANTS.md</code>. После утверждения — MQX: <code>MqxFinancePeriodBlock</code> + утилита
+        <code>safetyFundFill.js</code>.
+      </p>
+    </main>
+
+    <script src="./lab.js"></script>
+  </body>
+</html>

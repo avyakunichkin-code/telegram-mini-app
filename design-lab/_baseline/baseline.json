@@ -1,0 +1,15 @@
+{
+  "frozen_at": "2026-05-28T11:19:06.965Z",
+  "items": [
+    {
+      "id": "dashboard",
+      "src": "design-lab/dashboard/parity-generated-page-round",
+      "dst": "design-lab/_baseline/dashboard"
+    },
+    {
+      "id": "finance",
+      "src": "design-lab/finance/parity-generated-page-round",
+      "dst": "design-lab/_baseline/finance"
+    }
+  ]
+}

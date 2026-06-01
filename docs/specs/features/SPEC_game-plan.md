@@ -1,10 +1,10 @@
----
+﻿---
 layer: spec
 status: implemented
 owner: product
-last_reviewed: 2026-05-17
+last_reviewed: 2026-05-25
 tracks: save-kind, game-plan, victory-v2
-idea: vision/ideas/money-quest-evolution-after-mvp.md
+idea: vision/ideas/tvoy-hod-evolution-after-mvp.md
 plan: plans/PLAN_game-plan.md
 adr: decisions/ADR-001-save-kind-remove-light-hardcore.md
 audit: foundation/MVP_AUDIT_VS_SPEC.md
@@ -31,7 +31,7 @@ audit: foundation/MVP_AUDIT_VS_SPEC.md
 3. Game Mode: **автоматические** списания «жизни»; ручная оплата расходов — вне scope.
 4. **Plan Mode (мастер, prefill `starter_params_json`)** — **MVP 2.0**, **вне scope эпика G1**; в G1 допускается зарезервировать поля/контракт в БД без UI Plan.
 5. **Порядок поставки:** полный путь **Game из каталога шаблонов end-to-end** (БД + API + применение в `process_period_end` + стартовый UI с выбором шаблона), а не отдельный релиз «только `save_kind` без шаблона».
-6. Детали Q&A и таблицы по слоям — [evolution §II](../../vision/ideas/money-quest-evolution-after-mvp.md); этот файл — **исполняемая spec** для G1.
+6. Детали Q&A и таблицы по слоям — [evolution §II](../../vision/ideas/tvoy-hod-evolution-after-mvp.md); этот файл — **исполняемая spec** для G1.
 
 ---
 
@@ -49,10 +49,14 @@ audit: foundation/MVP_AUDIT_VS_SPEC.md
 - [x] События и конец периода используют **новую семантику фильтра** (не `light`/`hardcore` профиля), согласованную с ADR.
 - [x] **Overview:** поля **`avg_net_cashflow_6p`** / **`avg_net_cashflow_6p_n`** присутствуют; условие победы MVP не сломано до включения victory v2 (**M из N**).
 
-**Отложено на MVP 2.0**
+**Реализовано после G1 (backend)**
+
+- [x] Победа **M из N** из `victory_config_json` — [`SPEC_victory-v2`](../specs/features/SPEC_victory-v2.md), `victory/engine.py`.
+
+**Отложено на MVP 2.0 / backlog**
 
 - [ ] `save_kind = plan`, мастер Plan, prefill из другого сохранения.
-- [ ] Полная победа **M из N** из шаблона и дополнительный контент каталога (сейчас **четыре** сида; целевой ориентир в концепции — до пяти сценариев).
+- [x] UI прогресса целей победы (P1: `MqxGoalDash`, `overview.victory`); [ ] расширение каталога шаблонов (ориентир 5 сценариев).
 
 ---
 
@@ -164,7 +168,7 @@ cd frontend-react && npm run build
 |----------|------|
 | ADR | [ADR-001](../../decisions/ADR-001-save-kind-remove-light-hardcore.md) |
 | Audit MVP | [`MVP_AUDIT_VS_SPEC`](../../foundation/MVP_AUDIT_VS_SPEC.md) |
-| Idea | [evolution](../../vision/ideas/money-quest-evolution-after-mvp.md) §II |
+| Idea | [evolution](../../vision/ideas/tvoy-hod-evolution-after-mvp.md) §II |
 | Plan | [PLAN_game-plan](../../plans/PLAN_game-plan.md) |
 | Backlog | [PRODUCT_BACKLOG](../../backlog/PRODUCT_BACKLOG.md) |
 | Matrix | [TRACEABILITY](../../TRACEABILITY.md) G1 |
