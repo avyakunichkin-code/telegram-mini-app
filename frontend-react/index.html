@@ -2,43 +2,100 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <title>Money Quest</title>
-  <!-- Подключаем настоящий SDK Telegram (для реального окружения) -->
-  <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <script>
-    // Эмуляция для локальной разработки (если Telegram WebApp не загрузился)
-    if (!window.Telegram?.WebApp) {
-      console.log('🔧 Эмуляция Telegram WebApp (локальный режим)');
+    /* HashRouter: #/ только на shell игры, не на /landing/ (там якоря #how, #faq). */
+    (function () {
+      var p = location.pathname;
+      if (/\/landing(?:\/|$)/i.test(p)) return;
+      var h = location.hash;
+      if (!h || h === '#') {
+        location.replace(p + location.search + '#/');
+      }
+    })();
+  </script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <meta name="description" content="Игра по финансовой грамотности — периоды, баланс, решения." />
+  <meta name="theme-color" content="#6D28D9" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-title" content="ТВОЙ ХОД" />
+  <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png?v=3" />
+  <link rel="icon" type="image/png" sizes="48x48" href="favicon-48.png?v=3" />
+  <link rel="icon" type="image/png" sizes="192x192" href="favicon-192.png?v=3" />
+  <link rel="apple-touch-icon" sizes="180x180" href="pwa/apple-touch-icon.png?v=3" />
+  <title>ТВОЙ ХОД</title>
+  <script>
+    // Эмуляция Telegram WebApp вне клиента (Safari / PWA).
+    // Важно: если WebApp уже есть, но без onEvent — дополняем (иначе падает AppRoot из telegram-ui).
+    (function () {
+      var listeners = Object.create(null);
+      function onEvent(type, fn) {
+        if (typeof fn !== 'function') return;
+        (listeners[type] || (listeners[type] = [])).push(fn);
+      }
+      function offEvent(type, fn) {
+        if (!listeners[type]) return;
+        if (typeof fn !== 'function') {
+          delete listeners[type];
+          return;
+        }
+        listeners[type] = listeners[type].filter(function (f) {
+          return f !== fn;
+        });
+      }
+
+      var wa = window.Telegram && window.Telegram.WebApp;
+      if (wa && typeof wa.onEvent === 'function' && typeof wa.offEvent === 'function') return;
+
+      if (!wa) {
+        wa = {
+          initData: '',
+          initDataUnsafe: { user: null },
+          version: '6.0',
+          platform: 'web',
+          colorScheme: 'light',
+          themeParams: {
+            bg_color: '#ffffff',
+            text_color: '#0f1115',
+            hint_color: '#6b7280',
+            link_color: '#6d28d9',
+            button_color: '#6d28d9',
+            button_text_color: '#ffffff',
+            secondary_bg_color: '#f5f6f8',
+          },
+          isExpanded: true,
+          expand: function () {},
+          close: function () {},
+          sendData: function () {},
+          ready: function () {},
+          MainButton: {
+            show: function () {},
+            hide: function () {},
+            setText: function () {},
+            onClick: function () {},
+          },
+          BackButton: { show: function () {}, hide: function () {}, onClick: function () {} },
+          HapticFeedback: { impactOccurred: function () {} },
+        };
+      }
+
+      wa.onEvent = onEvent;
+      wa.offEvent = offEvent;
+      if (typeof wa.ready !== 'function') wa.ready = function () {};
+      if (typeof wa.onThemeChanged !== 'function') {
+        wa.onThemeChanged = function (cb) {
+          onEvent('themeChanged', cb);
+          onEvent('theme_changed', cb);
+        };
+      }
+
       window.Telegram = window.Telegram || {};
-      window.Telegram.WebApp = {
-        initData: '',
-        initDataUnsafe: { user: null },
-        version: '6.0',
-        platform: 'web',
-        colorScheme: 'light',
-        themeParams: {
-          bg_color: '#ffffff',
-          text_color: '#0f1115',
-          hint_color: '#6b7280',
-          link_color: '#6d28d9',
-          button_color: '#6d28d9',
-          button_text_color: '#ffffff',
-          secondary_bg_color: '#f5f6f8',
-        },
-        isExpanded: true,
-        expand: () => {},
-        close: () => {},
-        sendData: () => {},
-        MainButton: { show: () => {}, hide: () => {}, setText: () => {}, onClick: () => {} },
-        BackButton: { show: () => {}, hide: () => {} },
-        HapticFeedback: { impactOccurred: () => {} },
-      };
-    }
+      window.Telegram.WebApp = wa;
+    })();
   </script>
 </head>
 <body>
 <div id="root"></div>
 <script type="module" src="/src/main.jsx"></script>
+<script async src="https://telegram.org/js/telegram-web-app.js"></script>
 </body>
 </html>

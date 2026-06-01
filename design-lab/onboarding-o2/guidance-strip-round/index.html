@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="ru" data-theme="light">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>ТВОЙ ХОД — O2 Guidance strip (design-lab)</title>
+    <link rel="stylesheet" href="./lab-base.css" />
+  </head>
+  <body>
+    <header class="lab-header">
+      <div>
+        <h1>O2 — MqxGuidanceStrip</h1>
+        <p>
+          Bottom guidance strip над tab bar: без PNG Монетки, «N из M», крестик icon-only. Вариант
+          <strong>A ★</strong> — prod parity.
+        </p>
+      </div>
+      <div class="lab-header__controls">
+        <div class="lab-theme" role="group" aria-label="Тема">
+          <button type="button" class="is-active" data-theme-btn="light">Светлая</button>
+          <button type="button" data-theme-btn="dark">Тёмная</button>
+        </div>
+      </div>
+    </header>
+
+    <main class="lab-main">
+      <p class="lab-intro">
+        <strong>Spec:</strong> Progressive Guidance (периоды 1–3). Один strip на GameScreen; curriculum и nudge не
+        одновременно. Закрытие ×: 1-й раз — skip beat, 2-й в сессии — skip всего guidance.
+      </p>
+
+      <h2 class="lab-section-title">1. Визуальные варианты (beat «Привет!», 1 из 4)</h2>
+      <div class="lab-grid">
+        <article class="lab-variant lab-variant--approved" id="variant-a">
+          <div class="lab-variant__head">
+            <h2>A</h2>
+            <span class="lab-variant__tag lab-variant__tag--star">★ Prod parity</span>
+          </div>
+          <p class="lab-variant__note">Violet bubble dock — как в `mqx/guidance.css`.</p>
+          <div class="lab-phone">
+            <div class="lab-phone__scroll">
+              <div class="lab-dash-hero">
+                <div class="lab-dash-hero__kicker">Месяц открыт</div>
+                <div class="lab-dash-hero__title">Закрыть месяц</div>
+                <div class="lab-dash-hero__meta">Период №1</div>
+              </div>
+              <div class="lab-dash-metrics">
+                <div class="lab-dash-metrics__cell">Наличные<strong>42 150 ₽</strong></div>
+                <div class="lab-dash-metrics__cell">Подушка<strong>0 ₽</strong></div>
+              </div>
+            </div>
+            <nav class="lab-tabbar" aria-hidden="true">
+              <span class="is-active">Обзор</span><span>Финансы</span><span>Аналитика</span><span>Меню</span>
+            </nav>
+            <aside class="mqx-guidance-strip mqx-guidance-strip--a" role="region" aria-label="Обучение">
+              <div class="mqx-guidance-strip__toolbar">
+                <div class="mqx-guidance-strip__nav">
+                  <button type="button" class="mqx-guidance-strip__arrow" disabled aria-label="Назад">‹</button>
+                  <span class="mqx-guidance-strip__counter">1 из 4</span>
+                  <button type="button" class="mqx-guidance-strip__arrow" disabled aria-label="Вперёд">›</button>
+                </div>
+                <div class="mqx-guidance-strip__toolbar-end">
+                  <button type="button" class="mqx-guidance-strip__close" aria-label="Закрыть подсказку">×</button>
+                </div>
+              </div>
+              <h2 class="mqx-guidance-strip__title mqx-voice-em">Привет!</h2>
+              <p class="mqx-guidance-strip__body mqx-voice-em">
+                Игра идёт <strong>периодами</strong> — как месяцы. Слева «Месяц открыт», справа —
+                <strong>«Закрыть месяц»</strong>, когда закончишь дела.
+
+                План на старт: <strong>Зарплата</strong> → <strong>В подушку</strong> →
+                <strong>Закрыть месяц</strong>.
+              </p>
+              <button type="button" class="mqx-btn mqx-guidance-strip__cta">Понятно</button>
+            </aside>
+          </div>
+        </article>
+
+        <article class="lab-variant" id="variant-b">
+          <div class="lab-variant__head">
+            <h2>B</h2>
+            <span class="lab-variant__tag">Neutral sheet</span>
+          </div>
+          <p class="lab-variant__note">Без violet wash — нейтральный фон Telegram.</p>
+          <div class="lab-phone">
+            <div class="lab-phone__scroll">
+              <div class="lab-dash-hero">
+                <div class="lab-dash-hero__kicker">Месяц открыт</div>
+                <div class="lab-dash-hero__title">Закрыть месяц</div>
+                <div class="lab-dash-hero__meta">Период №1</div>
+              </div>
+              <div class="lab-dash-metrics">
+                <div class="lab-dash-metrics__cell">Наличные<strong>42 150 ₽</strong></div>
+                <div class="lab-dash-metrics__cell">Подушка<strong>0 ₽</strong></div>
+              </div>
+            </div>
+            <nav class="lab-tabbar" aria-hidden="true">
+              <span class="is-active">Обзор</span><span>Финансы</span><span>Аналитика</span><span>Меню</span>
+            </nav>
+            <aside class="mqx-guidance-strip mqx-guidance-strip--b" role="region" aria-label="Обучение">
+              <div class="mqx-guidance-strip__toolbar">
+                <div class="mqx-guidance-strip__nav">
+                  <button type="button" class="mqx-guidance-strip__arrow" disabled>‹</button>
+                  <span class="mqx-guidance-strip__counter">1 из 4</span>
+                  <button type="button" class="mqx-guidance-strip__arrow" disabled>›</button>
+                </div>
+                <div class="mqx-guidance-strip__toolbar-end">
+                  <button type="button" class="mqx-guidance-strip__close" aria-label="Закрыть подсказку">×</button>
+                </div>
+              </div>
+              <h2 class="mqx-guidance-strip__title mqx-voice-em">Привет!</h2>
+              <p class="mqx-guidance-strip__body mqx-voice-em">
+                Игра идёт <strong>периодами</strong> — как месяцы. Слева «Месяц открыт», справа —
+                <strong>«Закрыть месяц»</strong>, когда закончишь дела.
+
+                План на старт: <strong>Зарплата</strong> → <strong>В подушку</strong> →
+                <strong>Закрыть месяц</strong>.
+              </p>
+              <button type="button" class="mqx-btn mqx-guidance-strip__cta">Понятно</button>
+            </aside>
+          </div>
+        </article>
+
+        <article class="lab-variant" id="variant-c">
+          <div class="lab-variant__head">
+            <h2>C</h2>
+            <span class="lab-variant__tag">Compact</span>
+          </div>
+          <p class="lab-variant__note">Меньше padding — больше видимого дашборда.</p>
+          <div class="lab-phone">
+            <div class="lab-phone__scroll">
+              <div class="lab-dash-hero">
+                <div class="lab-dash-hero__kicker">Месяц открыт</div>
+                <div class="lab-dash-hero__title">Закрыть месяц</div>
+                <div class="lab-dash-hero__meta">Период №1</div>
+              </div>
+              <div class="lab-dash-metrics">
+                <div class="lab-dash-metrics__cell">Наличные<strong>42 150 ₽</strong></div>
+                <div class="lab-dash-metrics__cell">Подушка<strong>0 ₽</strong></div>
+              </div>
+            </div>
+            <nav class="lab-tabbar" aria-hidden="true">
+              <span class="is-active">Обзор</span><span>Финансы</span><span>Аналитика</span><span>Меню</span>
+            </nav>
+            <aside class="mqx-guidance-strip mqx-guidance-strip--c" role="region" aria-label="Обучение">
+              <div class="mqx-guidance-strip__toolbar">
+                <div class="mqx-guidance-strip__nav">
+                  <button type="button" class="mqx-guidance-strip__arrow" disabled>‹</button>
+                  <span class="mqx-guidance-strip__counter">1 из 4</span>
+                  <button type="button" class="mqx-guidance-strip__arrow" disabled>›</button>
+                </div>
+                <div class="mqx-guidance-strip__toolbar-end">
+                  <button type="button" class="mqx-guidance-strip__close" aria-label="Закрыть подсказку">×</button>
+                </div>
+              </div>
+              <h2 class="mqx-guidance-strip__title mqx-voice-em">Привет!</h2>
+              <p class="mqx-guidance-strip__body mqx-voice-em">
+                Игра идёт <strong>периодами</strong> — как месяцы. Слева «Месяц открыт», справа —
+                <strong>«Закрыть месяц»</strong>, когда закончишь дела.
+
+                План на старт: <strong>Зарплата</strong> → <strong>В подушку</strong> →
+                <strong>Закрыть месяц</strong>.
+              </p>
+              <button type="button" class="mqx-btn mqx-guidance-strip__cta">Понятно</button>
+            </aside>
+          </div>
+        </article>
+
+        <article class="lab-variant" id="variant-d">
+          <div class="lab-variant__head">
+            <h2>D</h2>
+            <span class="lab-variant__tag">Floating pill</span>
+          </div>
+          <p class="lab-variant__note">Отступ от tab bar, pill со всех сторон.</p>
+          <div class="lab-phone">
+            <div class="lab-phone__scroll">
+              <div class="lab-dash-hero">
+                <div class="lab-dash-hero__kicker">Месяц открыт</div>
+                <div class="lab-dash-hero__title">Закрыть месяц</div>
+                <div class="lab-dash-hero__meta">Период №1</div>
+              </div>
+              <div class="lab-dash-metrics">
+                <div class="lab-dash-metrics__cell">Наличные<strong>42 150 ₽</strong></div>
+                <div class="lab-dash-metrics__cell">Подушка<strong>0 ₽</strong></div>
+              </div>
+            </div>
+            <nav class="lab-tabbar" aria-hidden="true">
+              <span class="is-active">Обзор</span><span>Финансы</span><span>Аналитика</span><span>Меню</span>
+            </nav>
+            <aside class="mqx-guidance-strip mqx-guidance-strip--d" role="region" aria-label="Обучение">
+              <div class="mqx-guidance-strip__toolbar">
+                <div class="mqx-guidance-strip__nav">
+                  <button type="button" class="mqx-guidance-strip__arrow" disabled>‹</button>
+                  <span class="mqx-guidance-strip__counter">1 из 4</span>
+                  <button type="button" class="mqx-guidance-strip__arrow" disabled>›</button>
+                </div>
+                <div class="mqx-guidance-strip__toolbar-end">
+                  <button type="button" class="mqx-guidance-strip__close" aria-label="Закрыть подсказку">×</button>
+                </div>
+              </div>
+              <h2 class="mqx-guidance-strip__title mqx-voice-em">Привет!</h2>
+              <p class="mqx-guidance-strip__body mqx-voice-em">
+                Игра идёт <strong>периодами</strong> — как месяцы. Слева «Месяц открыт», справа —
+                <strong>«Закрыть месяц»</strong>, когда закончишь дела.
+
+                План на старт: <strong>Зарплата</strong> → <strong>В подушку</strong> →
+                <strong>Закрыть месяц</strong>.
+              </p>
+              <button type="button" class="mqx-btn mqx-guidance-strip__cta">Понятно</button>
+            </aside>
+          </div>
+        </article>
+      </div>
+
+      <h2 class="lab-section-title">2. Состояния (вариант A ★)</h2>
+      <div class="lab-states-grid">
+        <article class="lab-variant lab-variant--approved">
+          <div class="lab-variant__head"><h2>Read gate</h2></div>
+          <p class="lab-variant__note">CTA «Понятно», стрелка вперёд disabled.</p>
+          <div class="lab-phone">
+            <div class="lab-phone__scroll">
+              <div class="lab-dash-hero">
+                <div class="lab-dash-hero__title">Закрыть месяц</div>
+                <div class="lab-dash-hero__meta">Период №1</div>
+              </div>
+            </div>
+            <nav class="lab-tabbar" aria-hidden="true"><span class="is-active">Обзор</span><span>…</span></nav>
+            <aside class="mqx-guidance-strip mqx-guidance-strip--a" role="region" aria-label="Обучение">
+              <div class="mqx-guidance-strip__toolbar">
+                <div class="mqx-guidance-strip__nav">
+                  <button type="button" class="mqx-guidance-strip__arrow" disabled>‹</button>
+                  <span class="mqx-guidance-strip__counter">1 из 4</span>
+                  <button type="button" class="mqx-guidance-strip__arrow" disabled>›</button>
+                </div>
+                <div class="mqx-guidance-strip__toolbar-end">
+                  <button type="button" class="mqx-guidance-strip__close" aria-label="Закрыть подсказку">×</button>
+                </div>
+              </div>
+              <h2 class="mqx-guidance-strip__title">Привет!</h2>
+              <p class="mqx-guidance-strip__body">…</p>
+              <button type="button" class="mqx-btn mqx-guidance-strip__cta">Понятно</button>
+            </aside>
+          </div>
+        </article>
+
+        <article class="lab-variant lab-variant--approved">
+          <div class="lab-variant__head"><h2>Gate done</h2></div>
+          <p class="lab-variant__note">После «Зарплата» — чек и «2 из 4», › до last completed.</p>
+          <div class="lab-phone">
+            <div class="lab-phone__scroll">
+              <div class="lab-dash-hero">
+                <div class="lab-dash-hero__title">Закрыть месяц</div>
+                <div class="lab-dash-hero__meta">Период №1</div>
+              </div>
+            </div>
+            <nav class="lab-tabbar" aria-hidden="true"><span class="is-active">Обзор</span><span>…</span></nav>
+            <aside class="mqx-guidance-strip mqx-guidance-strip--a" role="region" aria-label="Обучение">
+              <div class="mqx-guidance-strip__toolbar">
+                <div class="mqx-guidance-strip__nav">
+                  <button type="button" class="mqx-guidance-strip__arrow" aria-label="Назад">‹</button>
+                  <span class="mqx-guidance-strip__counter">2 из 4</span>
+                  <button type="button" class="mqx-guidance-strip__arrow" disabled>›</button>
+                </div>
+                <div class="mqx-guidance-strip__toolbar-end">
+                  <span class="mqx-guidance-strip__check" aria-label="Готово" role="img">✓</span>
+                  <button type="button" class="mqx-guidance-strip__close" aria-label="Закрыть подсказку">×</button>
+                </div>
+              </div>
+              <h2 class="mqx-guidance-strip__title">Зарплата не сама</h2>
+              <p class="mqx-guidance-strip__body">
+                Зарплату забираешь <strong>сам</strong> — кнопкой <strong>«Зарплата»</strong>.
+              </p>
+            </aside>
+          </div>
+        </article>
+
+        <article class="lab-variant lab-variant--approved">
+          <div class="lab-variant__head"><h2>Nudge</h2></div>
+          <p class="lab-variant__note">После guidance_completed — тот же strip, без навигации.</p>
+          <div class="lab-phone">
+            <div class="lab-phone__scroll">
+              <div class="lab-dash-hero">
+                <div class="lab-dash-hero__title">Закрыть месяц</div>
+                <div class="lab-dash-hero__meta">Период №4</div>
+              </div>
+            </div>
+            <nav class="lab-tabbar" aria-hidden="true"><span class="is-active">Обзор</span><span>…</span></nav>
+            <aside class="mqx-guidance-strip mqx-guidance-strip--a" role="region" aria-label="Подсказка">
+              <div class="mqx-guidance-strip__toolbar">
+                <span class="mqx-guidance-strip__counter mqx-guidance-strip__counter--solo">Подсказка</span>
+                <div class="mqx-guidance-strip__toolbar-end">
+                  <button type="button" class="mqx-guidance-strip__close" aria-label="Закрыть подсказку">×</button>
+                </div>
+              </div>
+              <h2 class="mqx-guidance-strip__title">Подушка на нуле</h2>
+              <p class="mqx-guidance-strip__body">
+                Закинь хоть немного в подушку — так проще пережить неожиданные траты в конце месяца.
+              </p>
+            </aside>
+          </div>
+        </article>
+
+        <article class="lab-variant lab-variant--approved">
+          <div class="lab-variant__head"><h2>2× dismiss hint</h2></div>
+          <p class="lab-variant__note">После первого × в сессии — hint перед полным skip.</p>
+          <div class="lab-phone">
+            <div class="lab-phone__scroll">
+              <div class="lab-dash-hero">
+                <div class="lab-dash-hero__title">Закрыть месяц</div>
+              </div>
+            </div>
+            <nav class="lab-tabbar" aria-hidden="true"><span class="is-active">Обзор</span><span>…</span></nav>
+            <aside class="mqx-guidance-strip mqx-guidance-strip--a" role="region" aria-label="Обучение">
+              <div class="mqx-guidance-strip__toolbar">
+                <div class="mqx-guidance-strip__nav">
+                  <button type="button" class="mqx-guidance-strip__arrow" disabled>‹</button>
+                  <span class="mqx-guidance-strip__counter">3 из 4</span>
+                  <button type="button" class="mqx-guidance-strip__arrow" disabled>›</button>
+                </div>
+                <div class="mqx-guidance-strip__toolbar-end">
+                  <button type="button" class="mqx-guidance-strip__close" aria-label="Закрыть подсказку">×</button>
+                </div>
+              </div>
+              <h2 class="mqx-guidance-strip__title">Фин.подушка</h2>
+              <p class="mqx-guidance-strip__body"><strong>«Пополнить»</strong> подушку — запас на чёрный день.</p>
+              <p class="mqx-guidance-strip__hint">Ещё раз — пропустить всё обучение</p>
+            </aside>
+          </div>
+        </article>
+      </div>
+
+      <section class="lab-legend">
+        <h2>Canon → prod</h2>
+        <ul>
+          <li><strong>A ★</strong> → `MqxGuidanceStrip.jsx` + `guidance.css` (retroactive parity).</li>
+          <li>Strip не перекрывает tab bar; padding контента — `mqx-page--guidance-active`.</li>
+          <li>Дальше: `#/dev/mqx` catalog entry (если ещё нет demo).</li>
+        </ul>
+      </section>
+    </main>
+
+    <script type="module" src="./lab.js"></script>
+  </body>
+</html>

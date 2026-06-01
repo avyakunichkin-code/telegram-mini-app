@@ -1,0 +1,250 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ТВОЙ ХОД — Design Lab</title>
+    <style>
+      :root { color-scheme: light dark; }
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        font-family: system-ui, "Segoe UI", Roboto, sans-serif;
+        background: #0f1115;
+        color: #f3f4f6;
+        line-height: 1.45;
+      }
+      .wrap { max-width: 980px; margin: 0 auto; padding: 20px 16px 48px; }
+      h1 { margin: 0 0 8px; font-size: 22px; }
+      .sub { margin: 0 0 16px; color: #9ca3af; font-size: 14px; }
+      .toolbar {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        align-items: center;
+        margin-bottom: 18px;
+      }
+      .search {
+        flex: 1 1 240px;
+        padding: 10px 12px;
+        border-radius: 10px;
+        border: 1px solid rgba(255,255,255,.14);
+        background: rgba(255,255,255,.06);
+        color: inherit;
+        font-size: 15px;
+      }
+      .pill {
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: .06em;
+        padding: 2px 7px;
+        border-radius: 6px;
+        border: 1px solid rgba(255,255,255,.16);
+        opacity: .9;
+      }
+      .pill--page-parity { color: #a7f3d0; border-color: rgba(16,185,129,.35); }
+      .pill--block { color: #bae6fd; border-color: rgba(14,165,233,.35); }
+      .pill--lab { color: #e9d5ff; border-color: rgba(168,85,247,.35); }
+      .pill--doc { color: #fde68a; border-color: rgba(245,158,11,.35); }
+      .quick {
+        display: grid;
+        grid-template-columns: repeat(12, 1fr);
+        gap: 10px;
+        margin: 14px 0 18px;
+      }
+      .quick__card {
+        grid-column: span 6;
+        border-radius: 14px;
+        border: 1px solid rgba(255,255,255,.10);
+        background: rgba(255,255,255,.04);
+        overflow: hidden;
+      }
+      .quick__head {
+        padding: 10px 12px;
+        display: flex;
+        align-items: baseline;
+        justify-content: space-between;
+        gap: 10px;
+        border-bottom: 1px solid rgba(255,255,255,.08);
+        background: rgba(0,0,0,.18);
+      }
+      .quick__title { font-size: 13px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; opacity: .92; }
+      .quick__actions { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; justify-content: flex-end; }
+      .btn {
+        appearance: none;
+        border: 1px solid rgba(255,255,255,.14);
+        background: rgba(255,255,255,.06);
+        color: inherit;
+        padding: 6px 10px;
+        border-radius: 10px;
+        font-size: 12px;
+        text-decoration: none;
+        cursor: pointer;
+      }
+      .btn:hover { border-color: rgba(109,40,217,.55); background: rgba(109,40,217,.12); }
+      .quick__frame { display: block; width: 100%; border: 0; background: transparent; height: 440px; }
+      @media (max-width: 860px) {
+        .quick__card { grid-column: span 12; }
+        .quick__frame { height: 520px; }
+      }
+      .section { margin: 18px 0 22px; }
+      .section h2 {
+        margin: 0 0 10px;
+        font-size: 13px;
+        text-transform: uppercase;
+        letter-spacing: .12em;
+        color: #9ca3af;
+      }
+      .grid { display: grid; gap: 8px; }
+      .card {
+        display: grid;
+        grid-template-columns: 1fr auto;
+        gap: 8px 12px;
+        align-items: center;
+        padding: 10px 12px;
+        border-radius: 12px;
+        border: 1px solid rgba(255,255,255,.1);
+        background: rgba(255,255,255,.04);
+        text-decoration: none;
+        color: inherit;
+      }
+      .card:hover { border-color: rgba(109,40,217,.55); background: rgba(109,40,217,.12); }
+      .card__title { font-weight: 600; font-size: 14px; }
+      .card__meta { font-size: 12px; color: #9ca3af; grid-column: 1 / -1; }
+      .card__badges { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; justify-content: flex-end; }
+      .arch { font-size: 11px; color: #fbbf24; }
+      .empty { padding: 24px; text-align: center; color: #9ca3af; }
+      .gen { margin-top: 20px; font-size: 12px; color: #6b7280; }
+      code { font-family: ui-monospace, Consolas, monospace; font-size: 12px; }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <h1>ТВОЙ ХОД — Design Lab</h1>
+      <p class="sub">Единая навигация по витринам, блокам и prod parity. Не ищите index.html по папкам вручную.</p>
+      <div class="toolbar">
+        <input class="search" id="q" type="search" placeholder="Поиск: hero, needs, events, parity…" autofocus />
+        <button class="btn" type="button" data-quick-filter="page">Page parity</button>
+        <button class="btn" type="button" data-quick-filter="canon">Канон blocks</button>
+        <button class="btn" type="button" data-quick-filter="all">Все витрины</button>
+        <span class="pill">npm run design-lab:build</span>
+      </div>
+      <div id="quick"></div>
+      <div id="root"></div>
+      <p class="gen">Сгенерировано <code>frontend-react/scripts/build-design-lab-nav.mjs</code> · источник <code>design-lab/nav.manifest.json</code></p>
+    </div>
+    <script>
+      function escapeHtml(s) {
+        return String(s)
+          .replaceAll('&', '&amp;')
+          .replaceAll('<', '&lt;')
+          .replaceAll('>', '&gt;')
+          .replaceAll('"', '&quot;')
+          .replaceAll("'", '&#039;');
+      }
+      const ITEMS = [{"id":"dashboard-page-parity","sectionId":"dashboard-canon","sectionTitle":"Dashboard — канон (prod parity)","label":"Dashboard (S5 Unified)","href":"dashboard/parity-generated-page-round/index.html","kind":"page-parity","status":"approved","hint":"frontend-react/src/components/DashboardPremium.jsx"},{"id":"dashboard-block-hero-dashboard/hero-no-timer-round/","sectionId":"dashboard-canon","sectionTitle":"Dashboard — канон (prod parity)","label":"MqxDashboardHero — hero-no-timer-round","href":"dashboard/hero-no-timer-round/index.html","kind":"block","status":"approved","hint":"hero"},{"id":"dashboard-block-needs-character-needs/dashboard-needs-v7-round/","sectionId":"dashboard-canon","sectionTitle":"Dashboard — канон (prod parity)","label":"MqxNeedsDash — dashboard-needs-v7-round","href":"character-needs/dashboard-needs-v7-round/index.html","kind":"block","status":"approved","hint":"needs"},{"id":"dashboard-block-finance-dashboard/cushion-fill-round/","sectionId":"dashboard-canon","sectionTitle":"Dashboard — канон (prod parity)","label":"MqxFinancePeriodBlock — cushion-fill-round","href":"dashboard/cushion-fill-round/index.html","kind":"block","status":"approved","hint":"finance"},{"id":"dashboard-block-goal-dashboard/goal-path-stepper-round/","sectionId":"dashboard-canon","sectionTitle":"Dashboard — канон (prod parity)","label":"MqxGoalDash — goal-path-stepper-round","href":"dashboard/goal-path-stepper-round/index.html","kind":"block","status":"approved","hint":"goal"},{"id":"dashboard-block-goal-dashboard/goal-chain-round/","sectionId":"dashboard-canon","sectionTitle":"Dashboard — канон (prod parity)","label":"MqxGoalDash — goal-chain-round","href":"dashboard/goal-chain-round/index.html","kind":"block","status":"approved","hint":"goal"},{"id":"dashboard-block-actions-dashboard/period-actions-round/","sectionId":"dashboard-canon","sectionTitle":"Dashboard — канон (prod parity)","label":"MqxPeriodActions — period-actions-round","href":"dashboard/period-actions-round/index.html","kind":"block","status":"approved","hint":"actions"},{"id":"finance-page-parity","sectionId":"finance-canon","sectionTitle":"Финансы — канон (prod parity)","label":"Финансы — page parity (MVP)","href":"finance/parity-generated-page-round/index.html","kind":"page-parity","status":"approved","hint":"frontend-react/src/components/FinancePremium.jsx"},{"id":"finance-block-finance-page-finance-insurance/","sectionId":"finance-canon","sectionTitle":"Финансы — канон (prod parity)","label":"FinancePremium — finance-insurance","href":"finance-insurance/index.html","kind":"block","status":"approved","hint":"finance-page"},{"id":"finance-block-invest-forms-invest-forms/","sectionId":"finance-canon","sectionTitle":"Финансы — канон (prod parity)","label":"InvestProductForm — invest-forms","href":"invest-forms/index.html","kind":"block","status":"approved","hint":"invest-forms"},{"id":"finance-block-asset-cards-asset-cards/","sectionId":"finance-canon","sectionTitle":"Финансы — канон (prod parity)","label":"Asset cards — asset-cards","href":"asset-cards/index.html","kind":"block","status":"approved","hint":"asset-cards"},{"id":"finance-block-row-actions-row-actions/","sectionId":"finance-canon","sectionTitle":"Финансы — канон (prod parity)","label":"Row actions — row-actions","href":"row-actions/index.html","kind":"block","status":"approved","hint":"row-actions"},{"id":"finance-block-capital-page-capital-page/details-actions-round/","sectionId":"finance-canon","sectionTitle":"Финансы — канон (prod parity)","label":"Capital page — details-actions-round","href":"capital-page/details-actions-round/index.html","kind":"block","status":"approved","hint":"capital-page"},{"id":"dashboard-extra-compare-prod/index.html","sectionId":"dashboard-extra","sectionTitle":"Сервис / сравнение","label":"Сравнение baseline vs current (Dashboard + Капитал)","href":"compare-prod/index.html","kind":"lab","status":"","hint":""},{"id":"dashboard-extra-type-scale-round/index.html","sectionId":"dashboard-extra","sectionTitle":"Сервис / сравнение","label":"Type scale MQX","href":"type-scale-round/index.html","kind":"lab","status":"","hint":""},{"id":"events-events/index.html","sectionId":"events","sectionTitle":"События","label":"Events — обзор","href":"events/index.html","kind":"lab","status":"","hint":""},{"id":"events-events/overlay-round/index.html","sectionId":"events","sectionTitle":"События","label":"Overlay O1","href":"events/overlay-round/index.html","kind":"lab","status":"approved","hint":""},{"id":"events-events/layout-round/index.html","sectionId":"events","sectionTitle":"События","label":"Layout","href":"events/layout-round/index.html","kind":"lab","status":"","hint":""},{"id":"events-events/domains-round/index.html","sectionId":"events","sectionTitle":"События","label":"Domains","href":"events/domains-round/index.html","kind":"lab","status":"","hint":""},{"id":"events-events/tails-round/index.html","sectionId":"events","sectionTitle":"События","label":"Tails E2/E5","href":"events/tails-round/index.html","kind":"lab","status":"approved","hint":""},{"id":"pre-game-pre-game-shell/index.html","sectionId":"pre-game","sectionTitle":"Pre-game / старт","label":"Pre-game shell v2","href":"pre-game-shell/index.html","kind":"lab","status":"","hint":""},{"id":"pre-game-auth-flow/index.html","sectionId":"pre-game","sectionTitle":"Pre-game / старт","label":"Auth flow","href":"auth-flow/index.html","kind":"lab","status":"approved","hint":""},{"id":"pre-game-new-game-mode/index.html","sectionId":"pre-game","sectionTitle":"Pre-game / старт","label":"New game mode","href":"new-game-mode/index.html","kind":"lab","status":"approved","hint":""},{"id":"pre-game-game-templates/index.html","sectionId":"pre-game","sectionTitle":"Pre-game / старт","label":"Game templates","href":"game-templates/index.html","kind":"lab","status":"approved","hint":""},{"id":"pre-game-game-templates/scenario-icons/index.html","sectionId":"pre-game","sectionTitle":"Pre-game / старт","label":"Scenario icons (архив SVG)","href":"game-templates/scenario-icons/index.html","kind":"lab","status":"archived","hint":""},{"id":"pre-game-game-templates/persona-portraits-round/index.html","sectionId":"pre-game","sectionTitle":"Pre-game / старт","label":"Портреты персонажей (4 жизни)","href":"game-templates/persona-portraits-round/index.html","kind":"lab","status":"approved","hint":""},{"id":"pre-game-onboarding-o2/guidance-strip-round/index.html","sectionId":"pre-game","sectionTitle":"Pre-game / старт","label":"O2 Guidance strip","href":"onboarding-o2/guidance-strip-round/index.html","kind":"lab","status":"approved","hint":""},{"id":"game-ui-period-close/index.html","sectionId":"game-ui","sectionTitle":"Игровой UI","label":"Period close","href":"period-close/index.html","kind":"lab","status":"approved","hint":""},{"id":"game-ui-run-finale/index.html","sectionId":"game-ui","sectionTitle":"Игровой UI","label":"Run finale — GE1 (победа / поражение)","href":"run-finale/index.html","kind":"lab","status":"","hint":""},{"id":"game-ui-game-ui/juice-round/index.html","sectionId":"game-ui","sectionTitle":"Игровой UI","label":"Juice round","href":"game-ui/juice-round/index.html","kind":"lab","status":"approved","hint":""},{"id":"game-ui-ui-states-unified/states-icons-round/index.html","sectionId":"game-ui","sectionTitle":"Игровой UI","label":"UI states + icons (B1-B3)","href":"ui-states-unified/states-icons-round/index.html","kind":"lab","status":"approved","hint":""},{"id":"game-ui-achievements-progress/index.html","sectionId":"game-ui","sectionTitle":"Игровой UI","label":"Achievements","href":"achievements-progress/index.html","kind":"lab","status":"","hint":""},{"id":"primitives-brand-primitives/index.html","sectionId":"primitives-brand","sectionTitle":"Примитивы и бренд","label":"Primitives MQX","href":"primitives/index.html","kind":"lab","status":"approved","hint":""},{"id":"primitives-brand-brand-logo/index.html","sectionId":"primitives-brand","sectionTitle":"Примитивы и бренд","label":"Brand logo","href":"brand-logo/index.html","kind":"lab","status":"approved","hint":""},{"id":"primitives-brand-brand-logo/tagline-round/index.html","sectionId":"primitives-brand","sectionTitle":"Примитивы и бренд","label":"Brand tagline round","href":"brand-logo/tagline-round/index.html","kind":"lab","status":"","hint":""},{"id":"discover-_baseline/dashboard/index.html","sectionId":"discover","sectionTitle":"Все витрины (авто-индекс)","label":"_baseline / dashboard","href":"_baseline/dashboard/index.html","kind":"lab","status":"","hint":"_baseline"},{"id":"discover-_baseline/dashboard/blocks/actions/index.html","sectionId":"discover","sectionTitle":"Все витрины (авто-индекс)","label":"_baseline / dashboard / blocks / actions","href":"_baseline/dashboard/blocks/actions/index.html","kind":"lab","status":"","hint":"_baseline"},{"id":"discover-_baseline/dashboard/blocks/finance/index.html","sectionId":"discover","sectionTitle":"Все витрины (авто-индекс)","label":"_baseline / dashboard / blocks / finance","href":"_baseline/dashboard/blocks/finance/index.html","kind":"lab","status":"","hint":"_baseline"},{"id":"discover-_baseline/dashboard/blocks/goal/index.html","sectionId":"discover","sectionTitle":"Все витрины (авто-индекс)","label":"_baseline / dashboard / blocks / goal","href":"_baseline/dashboard/blocks/goal/index.html","kind":"lab","status":"","hint":"_baseline"},{"id":"discover-_baseline/dashboard/blocks/hero/index.html","sectionId":"discover","sectionTitle":"Все витрины (авто-индекс)","label":"_baseline / dashboard / blocks / hero","href":"_baseline/dashboard/blocks/hero/index.html","kind":"lab","status":"","hint":"_baseline"},{"id":"discover-_baseline/dashboard/blocks/needs/index.html","sectionId":"discover","sectionTitle":"Все витрины (авто-индекс)","label":"_baseline / dashboard / blocks / needs","href":"_baseline/dashboard/blocks/needs/index.html","kind":"lab","status":"","hint":"_baseline"},{"id":"discover-_baseline/finance/index.html","sectionId":"discover","sectionTitle":"Все витрины (авто-индекс)","label":"_baseline / finance","href":"_baseline/finance/index.html","kind":"lab","status":"","hint":"_baseline"},{"id":"discover-_baseline/finance/blocks/asset-cards/index.html","sectionId":"discover","sectionTitle":"Все витрины (авто-индекс)","label":"_baseline / finance / blocks / asset-cards","href":"_baseline/finance/blocks/asset-cards/index.html","kind":"lab","status":"","hint":"_baseline"},{"id":"discover-_baseline/finance/blocks/capital-page/index.html","sectionId":"discover","sectionTitle":"Все витрины (авто-индекс)","label":"_baseline / finance / blocks / capital-page","href":"_baseline/finance/blocks/capital-page/index.html","kind":"lab","status":"","hint":"_baseline"},{"id":"discover-_baseline/finance/blocks/capital-page/flows-round/index.html","sectionId":"discover","sectionTitle":"Все витрины (авто-индекс)","label":"_baseline / finance / blocks / capital-page / flows-round","href":"_baseline/finance/blocks/capital-page/flows-round/index.html","kind":"lab","status":"","hint":"_baseline"},{"id":"discover-_baseline/finance/blocks/capital-page/orient-round/index.html","sectionId":"discover","sectionTitle":"Все витрины (авто-индекс)","label":"_baseline / finance / blocks / capital-page / orient-round","href":"_baseline/finance/blocks/capital-page/orient-round/index.html","kind":"lab","status":"","hint":"_baseline"},{"id":"discover-_baseline/finance/blocks/finance-page/index.html","sectionId":"discover","sectionTitle":"Все витрины (авто-индекс)","label":"_baseline / finance / blocks / finance-page","href":"_baseline/finance/blocks/finance-page/index.html","kind":"lab","status":"","hint":"_baseline"},{"id":"discover-_baseline/finance/blocks/invest-forms/index.html","sectionId":"discover","sectionTitle":"Все витрины (авто-индекс)","label":"_baseline / finance / blocks / invest-forms","href":"_baseline/finance/blocks/invest-forms/index.html","kind":"lab","status":"","hint":"_baseline"},{"id":"discover-_baseline/finance/blocks/row-actions/index.html","sectionId":"discover","sectionTitle":"Все витрины (авто-индекс)","label":"_baseline / finance / blocks / row-actions","href":"_baseline/finance/blocks/row-actions/index.html","kind":"lab","status":"","hint":"_baseline"},{"id":"discover-dashboard/index.html","sectionId":"discover","sectionTitle":"Все витрины (авто-индекс)","label":"dashboard","href":"dashboard/index.html","kind":"lab","status":"","hint":"dashboard"}];
+      const root = document.getElementById('root');
+      const quick = document.getElementById('quick');
+      const input = document.getElementById('q');
+
+      function groupBySection(items) {
+        const map = new Map();
+        for (const it of items) {
+          const key = it.sectionId + '::' + it.sectionTitle;
+          if (!map.has(key)) map.set(key, { title: it.sectionTitle, items: [] });
+          map.get(key).items.push(it);
+        }
+        return [...map.values()];
+      }
+
+      function firstPageParity(themeHint) {
+        const pick = ITEMS.find(it =>
+          it.kind === 'page-parity' &&
+          (it.sectionId || '').includes(themeHint)
+        );
+        return pick || null;
+      }
+
+      function renderQuick() {
+        const dash = firstPageParity('dashboard');
+        const fin = firstPageParity('finance');
+
+        const mkCard = (title, item) => {
+          if (!item) {
+            return '<div class="quick__card"><div class="quick__head"><div class="quick__title">' + title + '</div><div class="quick__actions"></div></div><div class="empty">Нет ссылки в каноне</div></div>';
+          }
+          return '' +
+            '<div class="quick__card">' +
+              '<div class="quick__head">' +
+                '<div class="quick__title">' + title + '</div>' +
+                '<div class="quick__actions">' +
+                  '<span class="pill pill--page-parity">PAGE</span>' +
+                  '<a class="btn" href="./' + item.href + '" target="_blank" rel="noreferrer">Открыть</a>' +
+                  '<button class="btn" type="button" data-set-q="' + escapeHtml(item.sectionTitle) + '">Фильтр</button>' +
+                '</div>' +
+              '</div>' +
+              '<iframe class="quick__frame" title="' + escapeHtml(title) + '" src="./' + item.href + '"></iframe>' +
+            '</div>';
+        };
+
+        quick.innerHTML =
+          '<div class="quick">' +
+            mkCard('Dashboard — default', dash) +
+            mkCard('Финансы — default', fin) +
+          '</div>';
+      }
+
+      function render(items) {
+        if (!items.length) {
+          root.innerHTML = '<div class="empty">Ничего не найдено</div>';
+          return;
+        }
+        const groups = groupBySection(items);
+        root.innerHTML = groups.map(g => {
+          const cards = g.items.map(it => {
+            const arch = it.status === 'superseded' ? '<span class="arch">архив</span>' : (it.status === 'approved' ? '<span class="arch">★</span>' : '');
+            const hint = it.hint ? '<div class="card__meta">' + it.hint + '</div>' : '';
+            return '<a class="card" href="./' + it.href + '" target="_blank" rel="noreferrer">' +
+              '<div class="card__title">' + it.label + '</div>' +
+              '<div class="card__badges"><span class="pill pill--' + it.kind + '">' + it.kind.toUpperCase() + '</span>' + arch + '</div>' +
+              hint +
+            '</a>';
+          }).join('');
+          return '<section class="section"><h2>' + g.title + '</h2><div class="grid">' + cards + '</div></section>';
+        }).join('');
+      }
+
+      function filter() {
+        const q = (input.value || '').trim().toLowerCase();
+        if (!q) return render(ITEMS);
+        const hit = ITEMS.filter(it =>
+          (it.label + ' ' + it.href + ' ' + it.sectionTitle + ' ' + it.hint).toLowerCase().includes(q)
+        );
+        render(hit);
+      }
+
+      document.addEventListener('click', (e) => {
+        const btn = e.target && e.target.closest && e.target.closest('[data-set-q]');
+        if (btn) {
+          input.value = btn.getAttribute('data-set-q') || '';
+          filter();
+          input.focus();
+          return;
+        }
+        const f = e.target && e.target.closest && e.target.closest('[data-quick-filter]');
+        if (f) {
+          const kind = f.getAttribute('data-quick-filter');
+          if (kind === 'page') input.value = 'page parity';
+          else if (kind === 'canon') input.value = 'канон';
+          else input.value = '';
+          filter();
+          input.focus();
+        }
+      });
+
+      input.addEventListener('input', filter);
+      renderQuick();
+      render(ITEMS);
+    </script>
+  </body>
+</html>

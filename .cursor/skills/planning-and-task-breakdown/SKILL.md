@@ -1,9 +1,24 @@
 ---
 name: planning-and-task-breakdown
 description: Breaks work into ordered tasks. Use when you have a spec or clear requirements and need to break work into implementable tasks. Use when a task feels too large to start, when you need to estimate scope, or when parallel work is possible.
+argument-hint: "[spec path or feature name]"
+user-invocable: true
+allowed-tools: Read, Glob, Grep, Write
 ---
 
 # Planning and Task Breakdown
+
+## Прочитай сначала (ТВОЙ ХОД)
+
+- [`docs/DOCUMENTATION_SYSTEM.md`](../../../docs/DOCUMENTATION_SYSTEM.md)
+- [`docs/specs/features/`](../../../docs/specs/features/)
+- [`docs/foundation/SPEC_PRODUCT.md`](../../../docs/foundation/SPEC_PRODUCT.md)
+- [`docs/TRACEABILITY.md`](../../../docs/TRACEABILITY.md)
+- [`docs/templates/PLAN_FEATURE.md`](../../../docs/templates/PLAN_FEATURE.md)
+- [`docs/templates/TASK_SLICE.md`](../../../docs/templates/TASK_SLICE.md)
+- [`docs/agents/SKILL_DOC_MAP.md`](../../../docs/agents/SKILL_DOC_MAP.md)
+
+**Куда писать:** `docs/plans/`, `docs/tasks/`, строка эпика в `TRACEABILITY.md`. **Дальше:** `incremental-implementation`.
 
 ## Overview
 
@@ -31,6 +46,18 @@ Before writing any code, operate in read-only mode:
 - Note risks and unknowns
 
 **Do NOT write code during planning.** The output is a plan document, not implementation.
+
+### Step 1b: Привязка к эпику (ТВОЙ ХОД)
+
+1. Найди или согласуй **epic ID** (`E1`, `M11`, …) в [`docs/TRACEABILITY.md`](../../../docs/TRACEABILITY.md).
+2. Создай/обнови `docs/plans/PLAN_<slug>.md` по [`docs/templates/PLAN_FEATURE.md`](../../../docs/templates/PLAN_FEATURE.md):
+   - frontmatter: `epic_id`, `spec`, `next_skill: incremental-implementation`
+   - таблица **Vertical slices** с колонками Phase / Skill / Next skill
+3. Каждая задача MQ-* — по [`docs/templates/TASK_SLICE.md`](../../../docs/templates/TASK_SLICE.md):
+   - **`phase`:** `define` | `build` | `verify` | `ship`
+   - **`skill`:** один доменный Agent Skill на срез
+   - **`next_skill`:** что после done (часто `test-driven-development` для `build`)
+4. Маппинг phase → skill: [`docs/agents/SKILL_DOC_MAP.md`](../../../docs/agents/SKILL_DOC_MAP.md).
 
 ### Step 2: Identify the Dependency Graph
 
@@ -217,7 +244,28 @@ Before starting implementation, confirm:
 
 - [ ] Every task has acceptance criteria
 - [ ] Every task has a verification step
+- [ ] Every task has **`phase`**, **`skill`**, **`next_skill`**
 - [ ] Task dependencies are identified and ordered correctly
 - [ ] No task touches more than ~5 files
 - [ ] Checkpoints exist between major phases
+- [ ] [`TRACEABILITY.md`](../../../docs/TRACEABILITY.md) — колонка **Plan** у эпика указывает на этот `PLAN_*.md`
 - [ ] The human has reviewed and approved the plan
+
+---
+
+## Gate (Human reviews)
+
+**Do not advance** к `incremental-implementation`, пока человек не просмотрел и не утвердил план задач (явное «ок» / **APPROVED**). Без gate — только черновик в чате.
+
+## Итог (Verdict)
+
+В конце работы явно укажи результат: **PASS**, **FAIL**, **CONCERNS**, **COMPLETE** или **APPROVED** — в зависимости от типа задачи.
+
+## Согласование изменений
+
+Перед созданием или изменением файлов в репозитории спроси: «Могу записать …?» — если пользователь не дал явное «делай» / «запиши».
+
+## Следующий шаг
+
+`incremental-implementation` по списку задач.
+

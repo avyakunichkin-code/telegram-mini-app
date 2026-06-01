@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="ru" data-theme="light">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Events — раунд 1: компоновка</title>
+    <link rel="stylesheet" href="./lab-base.css" />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <header class="lab-header">
+      <div>
+        <h1>Events — раунд 1: компоновка</h1>
+        <p>
+          Сначала выбираем <strong>каркас</strong> (L1–L5). Одинаковые тексты: ДТП (auto/страховка) и Кофе (consumption).
+          После ★ — <a href="../domains-round/">раунд 2: домены</a>.
+        </p>
+      </div>
+      <div class="lab-theme" role="group" aria-label="Тема">
+        <button type="button" class="is-active" data-theme-btn="light">Светлая</button>
+        <button type="button" data-theme-btn="dark">Тёмная</button>
+      </div>
+    </header>
+
+    <main class="lab-wrap">
+      <p class="lab-pick-banner">
+        ★ Утверждено: <strong>L3</strong> (prod). Без номера периода — лейблы домена в ряд. См.
+        <code>LAYOUT_VARIANTS.md</code>.
+      </p>
+
+      <!-- L1 M2 prod -->
+      <section class="lab-section lab-section--featured" id="l1">
+        <div class="lab-section__label">
+          <span class="lab-section__id">L1</span>
+          <span class="lab-section__title">M2 пузырь + Монетка (★ prod сейчас)</span>
+        </div>
+        <p class="lab-section__note">Базовая линия. Домен почти не виден — только badge «Страховой случай».</p>
+        <div class="lab-dual">
+          <div class="ev-card-shell">
+            <article class="ev-m2 ev-m2--insurance">
+              <div class="ev-m2__head">
+                <span class="ev-m2__kicker">Период #4 · 1 из 2</span>
+                <span class="ev-badge-insurance">Страховой случай</span>
+              </div>
+              <h3 class="ev-m2__title">ДТП</h3>
+              <div class="ev-m2__bubble-row">
+                <div class="ev-m2__monetka-wrap">
+                  <img class="ev-monetka" src="./assets/monetka-mascot.png" alt="" width="50" height="50" />
+                </div>
+                <div class="ev-m2__bubble"><p>Небольшое столкновение. При ОСАГО страховая покроет ущерб.</p></div>
+              </div>
+              <div class="ev-choices ev-choices--flat" style="margin-top: 10px">
+                <button type="button" class="ev-choice ev-choice--flat"><span class="ev-choice__title">Оформить по ОСАГО</span><span class="ev-choice__desc">Выплата · XP +4</span></button>
+                <button type="button" class="ev-choice ev-choice--flat"><span class="ev-choice__title">Оплатить из своих (−45 000 ₽)</span><span class="ev-choice__desc">XP +2</span></button>
+                <button type="button" class="ev-choice ev-choice--flat"><span class="ev-choice__title">Договориться</span><span class="ev-choice__desc">−12 000 ₽ · XP +1</span></button>
+              </div>
+            </article>
+          </div>
+          <div class="ev-card-shell">
+            <article class="ev-m2 ev--domain-consumption">
+              <div class="ev-m2__head"><span class="ev-m2__kicker">Период #2 · 1 из 1</span></div>
+              <h3 class="ev-m2__title">Кофе каждый день</h3>
+              <div class="ev-m2__bubble-row">
+                <div class="ev-m2__monetka-wrap">
+                  <img class="ev-monetka" src="./assets/monetka-mascot.png" alt="" width="50" height="50" />
+                </div>
+                <div class="ev-m2__bubble"><p>Абонемент на месяц — иначе платите по чашке у офиса.</p></div>
+              </div>
+              <div class="ev-choices ev-choices--flat" style="margin-top: 10px">
+                <button type="button" class="ev-choice ev-choice--flat"><span class="ev-choice__title">Взять абонемент (−4 500 ₽/мес)</span></button>
+                <button type="button" class="ev-choice ev-choice--flat"><span class="ev-choice__title">Пока без абонемента</span><span class="ev-choice__desc">Без списания</span></button>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <!-- L2 M1 -->
+      <section class="lab-section" id="l2">
+        <div class="lab-section__label">
+          <span class="lab-section__id">L2</span>
+          <span class="lab-section__title">M1 — компактный ряд</span>
+        </div>
+        <p class="lab-section__note">Монетка слева, meta-chip домена, описание 2 строки, выборы на всю ширину.</p>
+        <div class="lab-dual">
+          <article class="ev-m1 ev-card-shell ev--domain-auto">
+            <div class="ev-m1__visual"><img class="ev-monetka" src="./assets/monetka-mascot.png" alt="" width="58" height="58" /></div>
+            <div>
+              <div class="ev-m1__meta">
+                <span class="ev-m1__chip ev-m1__chip--insurance">Страховой</span>
+                <span class="ev-m1__chip">Авто</span>
+                <span class="ev-m1__chip">Период #4</span>
+              </div>
+              <h3 class="ev-m1__title">ДТП</h3>
+              <p class="ev-m1__desc">Небольшое столкновение. При ОСАГО страховая покроет ущерб третьим лицам.</p>
+            </div>
+            <div class="ev-m1__choices ev-choices ev-choices--flat">
+              <button type="button" class="ev-choice ev-choice--flat"><span class="ev-choice__title">Оформить по ОСАГО</span></button>
+              <button type="button" class="ev-choice ev-choice--flat"><span class="ev-choice__title">Оплатить из своих</span></button>
+            </div>
+          </article>
+          <article class="ev-m1 ev-card-shell ev--domain-consumption">
+            <div class="ev-m1__visual"><img class="ev-monetka" src="./assets/monetka-mascot.png" alt="" width="58" height="58" /></div>
+            <div>
+              <div class="ev-m1__meta">
+                <span class="ev-m1__chip">Повседневное</span>
+                <span class="ev-m1__chip">Период #2</span>
+              </div>
+              <h3 class="ev-m1__title">Кофе каждый день</h3>
+              <p class="ev-m1__desc">Абонемент на месяц у кофейни у офиса.</p>
+            </div>
+            <div class="ev-m1__choices ev-choices ev-choices--flat">
+              <button type="button" class="ev-choice ev-choice--flat"><span class="ev-choice__title">Взять абонемент</span></button>
+              <button type="button" class="ev-choice ev-choice--flat"><span class="ev-choice__title">Отказаться</span></button>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <!-- L3 domain band ★ prod -->
+      <section class="lab-section lab-section--monetka-featured" id="l3">
+        <div class="lab-section__label">
+          <span class="lab-section__id">L3</span>
+          <span class="lab-section__title">Domain band + M2 narrative (★ prod)</span>
+        </div>
+        <p class="lab-section__note">
+          Полоса + pill домена в ряд со «Страховой случай»; без «Период #N». Title + пузырь + flat-выборы с impacts.
+        </p>
+        <div class="lab-dual">
+          <article class="ev-l3 ev-card-shell ev--domain-auto">
+            <div class="ev-l3__band" aria-hidden></div>
+            <div class="ev-l3__inner">
+              <div class="ev-l3-head">
+                <h3 class="ev-m2__title" style="margin: 0">ДТП</h3>
+                <button type="button" class="ev-l3-close" aria-label="Закрыть">×</button>
+              </div>
+              <div class="ev-l3__labels">
+                <span class="ev-domain-pill"><span class="ev-domain-pill__dot"></span>Авто</span>
+                <span class="ev-badge-insurance">Страховой случай</span>
+              </div>
+              <div class="ev-m2__bubble-row" style="margin-top: 8px">
+                <div class="ev-m2__monetka-wrap">
+                  <img class="ev-monetka" src="./assets/monetka-mascot.png" alt="" width="50" height="50" />
+                </div>
+                <div class="ev-m2__bubble ev-m2--insurance" style="background: color-mix(in srgb, var(--mq-emerald) 10%, var(--surface)); border-color: color-mix(in srgb, var(--mq-emerald) 24%, transparent)"><p>Небольшое столкновение. При ОСАГО страховая покроет ущерб.</p></div>
+              </div>
+              <div class="ev-choices ev-choices--flat" style="margin-top: 10px">
+                <button type="button" class="ev-choice ev-choice--flat"><span class="ev-choice__title">Оформить по ОСАГО</span></button>
+                <button type="button" class="ev-choice ev-choice--flat"><span class="ev-choice__title">Оплатить из своих</span></button>
+              </div>
+            </div>
+          </article>
+          <article class="ev-l3 ev-card-shell ev--domain-consumption">
+            <div class="ev-l3__band" aria-hidden></div>
+            <div class="ev-l3__inner">
+              <div class="ev-l3-head">
+                <h3 class="ev-m2__title" style="margin: 0">Кофе каждый день</h3>
+              </div>
+              <div class="ev-l3__labels">
+                <span class="ev-domain-pill"><span class="ev-domain-pill__dot"></span>Повседневное</span>
+              </div>
+              <div class="ev-m2__bubble-row" style="margin-top: 8px">
+                <div class="ev-m2__monetka-wrap">
+                  <img class="ev-monetka" src="./assets/monetka-mascot.png" alt="" width="50" height="50" />
+                </div>
+                <div class="ev-m2__bubble"><p>Абонемент на месяц — иначе платите по чашке.</p></div>
+              </div>
+              <div class="ev-choices ev-choices--flat" style="margin-top: 10px">
+                <button type="button" class="ev-choice ev-choice--flat"><span class="ev-choice__title">Взять абонемент</span></button>
+                <button type="button" class="ev-choice ev-choice--flat"><span class="ev-choice__title">Отказаться</span></button>
+              </div>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <!-- L4 M4 rail -->
+      <section class="lab-section" id="l4">
+        <div class="lab-section__label">
+          <span class="lab-section__id">L4</span>
+          <span class="lab-section__title">M4 — визуальная колонка (кольцо домена)</span>
+        </div>
+        <p class="lab-section__note">Домен = цвет кольца + подпись под Монеткой. Текст справа.</p>
+        <div class="lab-dual">
+          <article class="ev-m4 ev-card-shell">
+            <div class="ev-m4__rail">
+              <div class="ev-m4__ring ev-m4__ring--insurance">
+                <img class="ev-monetka" src="./assets/monetka-mascot.png" alt="" width="52" height="52" />
+              </div>
+              <span class="ev-m4__domain">Авто</span>
+            </div>
+            <div class="ev-m4__main">
+              <span class="ev-badge-insurance">Страховой случай</span>
+              <span class="ev-m4__kicker">Период #4</span>
+              <h3 class="ev-m4__title">ДТП</h3>
+              <p class="ev-m4__desc">Небольшое столкновение. При ОСАГО страховая покроет ущерб.</p>
+              <div class="ev-choices ev-choices--flat">
+                <button type="button" class="ev-choice ev-choice--flat"><span class="ev-choice__title">Оформить по ОСАГО</span></button>
+                <button type="button" class="ev-choice ev-choice--flat"><span class="ev-choice__title">Оплатить из своих</span></button>
+              </div>
+            </div>
+          </article>
+          <article class="ev-m4 ev-card-shell">
+            <div class="ev-m4__rail">
+              <div class="ev-m4__ring ev-m4__ring--consumption">
+                <img class="ev-monetka" src="./assets/monetka-mascot.png" alt="" width="52" height="52" />
+              </div>
+              <span class="ev-m4__domain">Повседн.</span>
+            </div>
+            <div class="ev-m4__main">
+              <span class="ev-m4__kicker">Период #2</span>
+              <h3 class="ev-m4__title">Кофе каждый день</h3>
+              <p class="ev-m4__desc">Абонемент на месяц у кофейни у офиса.</p>
+              <div class="ev-choices ev-choices--flat">
+                <button type="button" class="ev-choice ev-choice--flat"><span class="ev-choice__title">Взять абонемент</span></button>
+                <button type="button" class="ev-choice ev-choice--flat"><span class="ev-choice__title">Отказаться</span></button>
+              </div>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <!-- L5 title-first -->
+      <section class="lab-section" id="l5">
+        <div class="lab-section__label">
+          <span class="lab-section__id">L5</span>
+          <span class="lab-section__title">Title-first — без пузыря и Монетки</span>
+        </div>
+        <p class="lab-section__note">Домен через pill + лёгкий tint фона. Меньше «игрушечности», проще в разработке.</p>
+        <div class="lab-dual">
+          <article class="ev-l5 ev-card-shell ev--domain-auto">
+            <span class="ev-l5__meta">Период #4 · 1 из 2</span>
+            <div class="ev-l5__title-row">
+              <h3 class="ev-l5__title">ДТП</h3>
+              <span class="ev-domain-pill"><span class="ev-domain-pill__dot"></span>Авто</span>
+            </div>
+            <span class="ev-badge-insurance">Страховой случай</span>
+            <p class="ev-l5__desc">Небольшое столкновение. При ОСАГО страховая покроет ущерб третьим лицам.</p>
+            <div class="ev-choices ev-choices--flat" style="margin-top: 8px">
+              <button type="button" class="ev-choice ev-choice--flat"><span class="ev-choice__title">Оформить по ОСАГО</span></button>
+              <button type="button" class="ev-choice ev-choice--flat"><span class="ev-choice__title">Оплатить из своих</span></button>
+            </div>
+          </article>
+          <article class="ev-l5 ev-card-shell ev--domain-consumption">
+            <span class="ev-l5__meta">Период #2</span>
+            <div class="ev-l5__title-row">
+              <h3 class="ev-l5__title">Кофе каждый день</h3>
+              <span class="ev-domain-pill"><span class="ev-domain-pill__dot"></span>Повседневное</span>
+            </div>
+            <p class="ev-l5__desc">Абонемент на месяц — иначе платите по чашке у офиса.</p>
+            <div class="ev-choices ev-choices--flat" style="margin-top: 8px">
+              <button type="button" class="ev-choice ev-choice--flat"><span class="ev-choice__title">Взять абонемент</span></button>
+              <button type="button" class="ev-choice ev-choice--flat"><span class="ev-choice__title">Отказаться</span></button>
+            </div>
+          </article>
+        </div>
+      </section>
+    </main>
+
+    <script>
+      document.querySelectorAll('[data-theme-btn]').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          const theme = btn.getAttribute('data-theme-btn');
+          document.documentElement.setAttribute('data-theme', theme);
+          document.querySelectorAll('[data-theme-btn]').forEach((b) => b.classList.toggle('is-active', b === btn));
+        });
+      });
+    </script>
+  </body>
+</html>

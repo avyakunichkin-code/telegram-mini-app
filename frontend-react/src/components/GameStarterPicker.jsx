@@ -1,14 +1,8 @@
 /**
- * Выбор игрового шаблона старта: карточки вместо выпадающего списка (сканируемость, сложность на виду).
+ * Выбор игрового шаблона старта: карточки вместо выпадающего списка (сканируемость, уровень на виду).
  */
 
-function tierFromRank(rank) {
-  const r = Number(rank);
-  if (r <= 1) return { label: 'Легко', slug: 'easy' };
-  if (r === 2) return { label: 'Средне', slug: 'mid' };
-  if (r === 3) return { label: 'Сложно', slug: 'hard' };
-  return { label: 'Экстрим', slug: 'extreme' };
-}
+import { tierFromRank } from '../utils/starterTemplateTier';
 
 export function GameStarterPicker({
   templates,
@@ -47,7 +41,6 @@ export function GameStarterPicker({
                 onChange(t.template_key);
               }}
             >
-              <span className={`mq-game-template-card__tier mq-game-tier-badge mq-game-tier-badge--${tier.slug}`}>{tier.label}</span>
               <span className="mq-game-template-card__title">{t.title}</span>
               {t.description ? (
                 <span className="mq-game-template-card__desc">{t.description}</span>

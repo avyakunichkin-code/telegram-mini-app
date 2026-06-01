@@ -1,0 +1,13 @@
+{
+  "ep": "065",
+  "slug": "ep-065-capital-guide",
+  "arc": 5,
+  "arc_title": "Не одна партия — целая карьера",
+  "layer": "interface",
+  "hook": "B",
+  "image_headline": "Сначала поток",
+  "commits": ["9ced258", "uncommitted-capital-monetka"],
+  "platforms": ["telegram"],
+  "approved_at": null,
+  "published_at": null
+}

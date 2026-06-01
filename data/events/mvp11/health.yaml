@@ -1,0 +1,126 @@
+events:
+- definition_key: mq11_pharmacy_stock
+  event_domain: health
+  title: Аптечка и витамины
+  description: Сезон простуд — без базовой аптечки рискуете дороже лечиться позже.
+  weight: 78
+  event_tier: 1
+  repeat_policy: repeatable
+  scenario_shape: soft_offer
+  cooldown_periods: 3
+  choices:
+  - title: Полный набор
+    effects:
+      cash_delta: -3200
+      needs_delta:
+        health: 10
+        comfort: 3
+  - title: Только необходимое
+    effects:
+      cash_delta: -1100
+      needs_delta:
+        health: 6
+  - title: Обойтись без покупок
+    effects:
+      cash_delta: -600
+      expense_line:
+        category_key: health
+        amount_monthly: 450
+        title: Лекарства по мере болезни
+        expires_after_periods: 1
+      needs_delta:
+        health: -8
+        comfort: -3
+- definition_key: mq11_sprain_leg
+  event_domain: health
+  title: 'Травма: ушибили ногу'
+  description: Сильный ушиб после падения. Без лечения ходить больно — отложить визит к врачу нельзя.
+  weight: 72
+  event_tier: 2
+  repeat_policy: repeatable
+  scenario_shape: mandatory
+  cooldown_periods: 4
+  mandatory_gate: blocks_period_end
+  choices:
+  - title: Травмпункт и перевязки
+    effects:
+      cash_delta: -8500
+      needs_delta:
+        health: 14
+        comfort: 4
+  - title: МРТ и ортез
+    effects:
+      cash_delta: -24000
+      needs_delta:
+        health: 18
+        comfort: 8
+  - title: Терпеть без врача
+    effects:
+      cash_delta: -3000
+      expense_line:
+        category_key: health
+        amount_monthly: 2800
+        title: Лечение ноги
+        expires_after_periods: 2
+      needs_delta:
+        health: -12
+        comfort: -8
+- definition_key: mq11_rescue_easy_walk
+  event_domain: health
+  title: Небольшая прогулка
+  description: Иногда лучшее решение — сменить обстановку и пройтись.
+  weight: 35
+  event_tier: 1
+  repeat_policy: repeatable
+  scenario_shape: rescue
+  extra:
+    is_rescue: true
+    rescue_axes:
+    - health
+    - comfort
+  cooldown_periods: 3
+  choices:
+  - title: Прогуляться
+    effects:
+      cash_delta: -800
+      needs_delta:
+        health: 7
+        comfort: 5
+  - title: Остаться дома
+    effects:
+      cash_delta: 0
+      needs_delta:
+        health: -4
+        comfort: -3
+- definition_key: mq11_dental_checkup
+  content_class: universal
+  event_slot: period_choice
+  audience_template_keys:
+  - all
+  event_domain: health
+  title: Осмотр у стоматолога
+  description: Клиника напоминает о плановом осмотре — профилактика дешевле, чем лечение зуба «когда заболит».
+  weight: 70
+  event_tier: 2
+  repeat_policy: repeatable
+  scenario_shape: soft_offer
+  cooldown_periods: 6
+  choices:
+  - title: Полный осмотр и чистка
+    effects:
+      cash_delta: -9500
+      needs_delta:
+        health: 14
+        comfort: 5
+  - title: Только осмотр
+    effects:
+      cash_delta: -3800
+      needs_delta:
+        health: 8
+        comfort: 2
+  - title: Отложить визит
+    effects:
+      cash_delta: 0
+      needs_delta:
+        health: -6
+        comfort: -4

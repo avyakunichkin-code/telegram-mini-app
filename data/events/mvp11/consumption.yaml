@@ -1,0 +1,363 @@
+events:
+- definition_key: mq11_groceries_discount
+  event_domain: consumption
+  title: Скидки в магазине
+  description: Сеть супермаркетов запустила акцию — можно сэкономить или взять запас.
+  weight: 95
+  event_tier: 1
+  repeat_policy: repeatable
+  scenario_shape: soft_offer
+  cooldown_periods: 3
+  choices:
+  - title: Купить только нужное
+    effects:
+      cash_delta: -1500
+      needs_delta:
+        comfort: 3
+        health: 2
+  - title: Запас на месяц
+    effects:
+      cash_delta: -4200
+      needs_delta:
+        comfort: 6
+        health: 3
+  - title: Обойтись без покупок
+    effects:
+      cash_delta: 0
+      needs_delta:
+        comfort: -4
+        health: -2
+- definition_key: mq11_streaming_offer
+  event_domain: consumption
+  title: Подписки на сервисы
+  description: Несколько стриминговых сервисов напомнили о продлении.
+  weight: 85
+  event_tier: 1
+  repeat_policy: repeatable
+  scenario_shape: soft_offer
+  cooldown_periods: 3
+  choices:
+  - title: Один сервис
+    effects:
+      cash_delta: -599
+      expense_line:
+        category_key: communications
+        amount_monthly: 400
+        title: Стриминг
+      needs_delta:
+        comfort: 5
+        social: 2
+  - title: Пакет «всё включено»
+    effects:
+      cash_delta: -1290
+      expense_line:
+        category_key: communications
+        amount_monthly: 900
+        title: Пакет подписок
+      needs_delta:
+        comfort: 8
+        social: 3
+  - title: Отменить все подписки
+    effects:
+      cash_delta: 0
+      monthly_lifestyle_delta: -500
+      needs_delta:
+        comfort: -2
+        social: -4
+- definition_key: mq11_gym_membership
+  event_domain: consumption
+  title: Абонемент в спортзал
+  description: Зал предлагает продлить членство со скидкой.
+  weight: 80
+  event_tier: 1
+  repeat_policy: repeatable
+  scenario_shape: soft_offer
+  cooldown_periods: 3
+  choices:
+  - title: Продлить на год
+    effects:
+      cash_delta: -14900
+      needs_delta:
+        health: 12
+        comfort: 5
+        status: 2
+  - title: Продлить на квартал
+    effects:
+      cash_delta: -4500
+      needs_delta:
+        health: 6
+        comfort: 2
+  - title: Не продлевать
+    effects:
+      cash_delta: 0
+      needs_delta:
+        health: -3
+- definition_key: mq11_transport_pass
+  event_domain: consumption
+  title: Проездной на месяц
+  description: 'Транспортная карта: проездной или оплата поездок по факту.'
+  weight: 92
+  event_tier: 1
+  repeat_policy: repeatable
+  scenario_shape: soft_offer
+  cooldown_periods: 3
+  choices:
+  - title: Месячный проездной
+    effects:
+      cash_delta: -2800
+      needs_delta:
+        comfort: 5
+        health: 2
+  - title: Пополнить баланс карты
+    effects:
+      cash_delta: -900
+      needs_delta:
+        comfort: 3
+  - title: Ходить пешком
+    effects:
+      cash_delta: 0
+      needs_delta:
+        health: 2
+        comfort: -3
+        social: -1
+- definition_key: mq11_coffee_takeaway
+  event_domain: consumption
+  title: Кофе каждый день
+  description: Кофейня у офиса предлагает абонемент на месяц — иначе платите по чашке.
+  weight: 82
+  event_tier: 1
+  repeat_policy: repeatable
+  scenario_shape: soft_offer
+  cooldown_periods: 3
+  is_active: 0
+  choices:
+  - title: Абонемент на месяц
+    effects:
+      cash_delta: -3200
+      needs_delta:
+        comfort: 5
+        social: 4
+        status: 2
+  - title: Пить реже, без абонемента
+    effects:
+      cash_delta: 0
+      needs_delta:
+        comfort: -1
+        status: -1
+- definition_key: mq11_coffee_takeaway_student
+  content_class: universal
+  event_slot: period_choice
+  audience_template_keys:
+  - mq_game_basic_v1
+  event_domain: consumption
+  title: Кофе у кампуса
+  description: Кофейня у универа предлагает абонемент на месяц — иначе платите по чашке между парами.
+  weight: 84
+  event_tier: 1
+  repeat_policy: repeatable
+  scenario_shape: soft_offer
+  cooldown_periods: 3
+  choices:
+  - title: Абонемент на месяц
+    effects:
+      cash_delta: -2400
+      needs_delta:
+        comfort: 5
+        social: 4
+  - title: Пару раз в неделю без абонемента
+    effects:
+      cash_delta: -900
+      needs_delta:
+        comfort: 2
+        social: 1
+  - title: Термос из дома
+    effects:
+      cash_delta: -350
+      needs_delta:
+        comfort: 0
+        social: -2
+- definition_key: mq11_coffee_takeaway_pro
+  content_class: universal
+  event_slot: period_choice
+  audience_template_keys:
+  - mq_game_tight_budget_v1
+  event_domain: consumption
+  title: Кофе у офиса
+  description: Кофейня у работы предлагает абонемент на месяц — иначе платите по чашке между встречами.
+  weight: 84
+  event_tier: 1
+  repeat_policy: repeatable
+  scenario_shape: soft_offer
+  cooldown_periods: 3
+  choices:
+  - title: Абонемент на месяц
+    effects:
+      cash_delta: -3200
+      needs_delta:
+        comfort: 5
+        status: 4
+        social: 2
+  - title: Пить реже, без абонемента
+    effects:
+      cash_delta: -1100
+      needs_delta:
+        comfort: 2
+        status: 1
+  - title: Отказаться от кофе вне дома
+    effects:
+      cash_delta: 0
+      needs_delta:
+        comfort: -2
+        status: -2
+- definition_key: mq11_clothing_clearance
+  event_domain: consumption
+  title: Распродажа одежды
+  description: Магазин закрывает сезон — скидки на базовый гардероб и «полный апгрейд».
+  weight: 76
+  event_tier: 1
+  repeat_policy: repeatable
+  scenario_shape: soft_offer
+  cooldown_periods: 3
+  choices:
+  - title: Только необходимое
+    effects:
+      cash_delta: -2800
+      needs_delta:
+        status: 4
+        comfort: 3
+  - title: Обновить гардероб
+    effects:
+      cash_delta: -6500
+      needs_delta:
+        status: 10
+        comfort: 6
+        social: 3
+- definition_key: mq11_food_delivery_promo
+  event_domain: consumption
+  title: Акция доставки еды
+  description: Сервис доставки даёт скидку на неделю заказов — удобно, но дороже готовки дома.
+  weight: 88
+  event_tier: 1
+  repeat_policy: repeatable
+  scenario_shape: soft_offer
+  cooldown_periods: 3
+  choices:
+  - title: Неделя заказов
+    effects:
+      cash_delta: -2400
+      expense_line:
+        category_key: other
+        amount_monthly: 3500
+        title: Доставка еды
+        expires_after_periods: 1
+      needs_delta:
+        comfort: 7
+        health: -2
+  - title: Готовить дома
+    effects:
+      cash_delta: -500
+      needs_delta:
+        health: 4
+        comfort: 1
+        social: -2
+- definition_key: mq11_appliance_sale
+  event_domain: consumption
+  title: Скидка на бытовую технику
+  description: Ритейлер распродаёт мелкую технику — можно заменить износившуюся или отложить.
+  weight: 74
+  event_tier: 1
+  repeat_policy: repeatable
+  scenario_shape: soft_offer
+  cooldown_periods: 3
+  choices:
+  - title: Купить нужное сейчас
+    effects:
+      cash_delta: -4500
+      needs_delta:
+        comfort: 7
+        health: 2
+  - title: Отложить покупку
+    effects:
+      cash_delta: 0
+      needs_delta:
+        comfort: -3
+- definition_key: mq11_phone_tariff_student
+  content_class: universal
+  event_slot: period_choice
+  audience_template_keys:
+  - mq_game_basic_v1
+  event_domain: consumption
+  title: Тариф мобильной связи
+  description: Оператор предлагает больше гигабайт и безлимит на мессенджеры — удобно для учёбы и чатов.
+  weight: 80
+  event_tier: 1
+  repeat_policy: repeatable
+  scenario_shape: soft_offer
+  cooldown_periods: 4
+  choices:
+  - title: Тариф «безлимит»
+    effects:
+      cash_delta: -900
+      expense_line:
+        category_key: communications
+        amount_monthly: 1100
+        title: Мобильная связь
+      needs_delta:
+        comfort: 7
+        social: 4
+  - title: Чуть больше трафика
+    effects:
+      cash_delta: -500
+      expense_line:
+        category_key: communications
+        amount_monthly: 650
+        title: Мобильная связь
+      needs_delta:
+        comfort: 4
+        social: 2
+  - title: Оставить как есть
+    effects:
+      cash_delta: 0
+      needs_delta:
+        comfort: -2
+        social: -2
+- definition_key: mq11_phone_tariff_pro
+  content_class: universal
+  event_slot: period_choice
+  audience_template_keys:
+  - mq_game_tight_budget_v1
+  event_domain: consumption
+  title: Тариф мобильной связи
+  description: Оператор предлагает корпоративный пакет с роумингом — удобно для звонков клиентам, но дороже.
+  weight: 80
+  event_tier: 1
+  repeat_policy: repeatable
+  scenario_shape: soft_offer
+  cooldown_periods: 4
+  choices:
+  - title: Пакет с роумингом
+    effects:
+      cash_delta: -1200
+      expense_line:
+        category_key: communications
+        amount_monthly: 1400
+        title: Мобильная связь
+      needs_delta:
+        comfort: 6
+        status: 8
+  - title: Базовый апгрейд
+    effects:
+      cash_delta: -600
+      expense_line:
+        category_key: communications
+        amount_monthly: 800
+        title: Мобильная связь
+      needs_delta:
+        comfort: 3
+        status: 4
+  - title: Не менять тариф
+    effects:
+      cash_delta: 0
+      needs_delta:
+        comfort: -2
+        status: -3

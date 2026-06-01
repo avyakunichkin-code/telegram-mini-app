@@ -66,7 +66,7 @@ export function ToastHost() {
                   : 'rgba(0, 0, 0, 0.72)',
             color: 'white',
             boxShadow: '0 8px 24px rgba(0,0,0,0.18)',
-            fontSize: 14,
+            fontSize: 'var(--mq-fs-heading)',
             lineHeight: 1.2,
           }}
         >

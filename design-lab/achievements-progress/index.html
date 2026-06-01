@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="ru" data-theme="light">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>ТВОЙ ХОД — достижения и уровень (design-lab)</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <svg width="0" height="0" aria-hidden="true" focusable="false" style="position: absolute">
+      <defs>
+        <linearGradient id="g-bronze" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#d4a574" />
+          <stop offset="55%" stop-color="#8b5a2b" />
+          <stop offset="100%" stop-color="#5c3d1e" />
+        </linearGradient>
+        <linearGradient id="g-silver" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#f0f4f8" />
+          <stop offset="50%" stop-color="#9ca3af" />
+          <stop offset="100%" stop-color="#6b7280" />
+        </linearGradient>
+        <linearGradient id="g-gold" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#fde68a" />
+          <stop offset="45%" stop-color="#f59e0b" />
+          <stop offset="100%" stop-color="#b45309" />
+        </linearGradient>
+        <linearGradient id="g-platinum" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#e8eef5" />
+          <stop offset="40%" stop-color="#94a3b8" />
+          <stop offset="100%" stop-color="#64748b" />
+        </linearGradient>
+        <linearGradient id="g-locked" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#e5e7eb" />
+          <stop offset="100%" stop-color="#d1d5db" />
+        </linearGradient>
+        <linearGradient id="g-star" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#e9d5ff" />
+          <stop offset="50%" stop-color="#a78bfa" />
+          <stop offset="100%" stop-color="#6d28d9" />
+        </linearGradient>
+      </defs>
+    </svg>
+
+    <header class="lab-header">
+      <div>
+        <h1>Достижения — уровень + монетки</h1>
+        <p>
+          Гибрид <strong>B+C</strong> ·
+          <a href="../../docs/specs/features/SPEC_achievements.md">SPEC_achievements §11</a>.
+          Сравните <strong>L</strong>, <strong>C</strong>, <strong>P3</strong>. Клик по заголовку уровня — раскрытие.
+        </p>
+      </div>
+      <div class="lab-theme" role="group" aria-label="Тема">
+        <button type="button" class="is-active" data-theme-btn="light">Светлая</button>
+        <button type="button" data-theme-btn="dark">Тёмная</button>
+      </div>
+    </header>
+
+    <main class="lab-wrap">
+      <section class="lab-section">
+        <div class="lab-section__label">
+          <span class="lab-section__id">C</span>
+          <span class="lab-section__title">Монетки tier (C2 SVG + C3 звезда)</span>
+        </div>
+        <p class="lab-section__note">22px — как метрики. Сравните круги и <strong>звезду</strong> для tier 4.</p>
+        <div class="coin-grid">
+          <div class="coin-grid__item">
+            <svg class="coin" viewBox="0 0 24 24" aria-label="Бронза">
+              <circle cx="12" cy="12" r="10" fill="url(#g-bronze)" stroke="rgba(0,0,0,0.12)" stroke-width="0.6" />
+              <ellipse cx="12" cy="9" rx="5" ry="2.2" fill="rgba(255,255,255,0.32)" />
+            </svg>
+            <span class="coin-grid__label">Бронза · t1</span>
+          </div>
+          <div class="coin-grid__item">
+            <svg class="coin" viewBox="0 0 24 24" aria-label="Серебро">
+              <circle cx="12" cy="12" r="10" fill="url(#g-silver)" stroke="rgba(0,0,0,0.1)" stroke-width="0.6" />
+              <ellipse cx="12" cy="9" rx="5" ry="2.2" fill="rgba(255,255,255,0.4)" />
+            </svg>
+            <span class="coin-grid__label">Серебро · t2</span>
+          </div>
+          <div class="coin-grid__item">
+            <svg class="coin" viewBox="0 0 24 24" aria-label="Золото">
+              <circle cx="12" cy="12" r="10" fill="url(#g-gold)" stroke="rgba(0,0,0,0.1)" stroke-width="0.6" />
+              <ellipse cx="12" cy="9" rx="5" ry="2.2" fill="rgba(255,255,255,0.35)" />
+            </svg>
+            <span class="coin-grid__label">Золото · t3</span>
+          </div>
+          <div class="coin-grid__item">
+            <svg class="coin" viewBox="0 0 24 24" aria-label="Платина">
+              <circle cx="12" cy="12" r="10" fill="url(#g-platinum)" stroke="rgba(0,0,0,0.1)" stroke-width="0.6" />
+              <ellipse cx="12" cy="9" rx="5" ry="2.2" fill="rgba(255,255,255,0.45)" />
+            </svg>
+            <span class="coin-grid__label">Платина · t4</span>
+          </div>
+          <div class="coin-grid__item">
+            <svg class="coin" viewBox="0 0 24 24" aria-label="Звезда">
+              <path fill="url(#g-star)" stroke="rgba(109,40,217,0.35)" stroke-width="0.5" d="M12 2.5l2.4 5.5 5.9.5-4.5 3.8 1.4 5.7L12 15.8 6.8 17.9l1.4-5.7-4.5-3.8 5.9-.5L12 2.5z" />
+            </svg>
+            <span class="coin-grid__label">C3 · звезда</span>
+          </div>
+          <div class="coin-grid__item">
+            <svg class="coin coin--locked" viewBox="0 0 24 24" aria-label="Закрыто">
+              <circle cx="12" cy="12" r="10" fill="url(#g-locked)" stroke="rgba(0,0,0,0.08)" stroke-width="0.6" stroke-dasharray="2 1.5" />
+            </svg>
+            <span class="coin-grid__label">C5 · locked</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="lab-section">
+        <div class="lab-section__label">
+          <span class="lab-section__id">L</span>
+          <span class="lab-section__title">Блок «Уровень» на Главной</span>
+        </div>
+        <p class="lab-section__note">Ур.3 · 120/200 XP · 5 последних достижений.</p>
+
+        <div class="lab-row lab-row--2">
+          <div>
+            <p class="lab-section__note"><strong>L0</strong> — flat (референс prod)</p>
+            <article class="level-card level-card--flat">
+              <div class="level-card__toggle" style="cursor: default">
+                <div>
+                  <h2 class="level-card__title">Уровень 3</h2>
+                  <p class="level-card__sub">120 / 200 XP</p>
+                </div>
+                <div class="level-card__score-wrap">
+                  <div class="level-card__score-label">Очки</div>
+                  <div class="level-card__score">1 240</div>
+                </div>
+              </div>
+              <div class="level-card__meter">
+                <div class="dash-progress"><div class="dash-progress__fill--xp" style="width: 60%"></div></div>
+              </div>
+              <p class="level-card__hint">Ещё 80 XP до 4 уровня · на 4 уровне — «Облигации»</p>
+              <div class="level-bars">
+                <div>
+                  <div class="level-bars__row"><span>Доход</span><span>50 000</span></div>
+                  <div class="level-bars__track"><div class="level-bars__fill--emerald" style="width: 100%"></div></div>
+                </div>
+                <div>
+                  <div class="level-bars__row"><span>Долги</span><span>12 000</span></div>
+                  <div class="level-bars__track"><div class="level-bars__fill--rose" style="width: 24%"></div></div>
+                </div>
+              </div>
+            </article>
+          </div>
+
+          <div>
+            <p class="lab-section__note"><strong>L1</strong> — свёрнут <span class="lab-chip">клик → раскрыть</span></p>
+            <article class="level-card" id="level-l1">
+              <button type="button" class="level-card__toggle" data-level-toggle aria-expanded="false">
+                <div>
+                  <h2 class="level-card__title">Уровень 3</h2>
+                  <p class="level-card__sub">120 / 200 XP</p>
+                </div>
+                <div class="level-card__score-wrap">
+                  <div class="level-card__score-label">Очки</div>
+                  <div class="level-card__score">1 240</div>
+                </div>
+                <span class="level-card__chevron" aria-hidden="true">▼</span>
+              </button>
+              <div class="level-card__meter">
+                <div class="dash-progress"><div class="dash-progress__fill--xp" style="width: 60%"></div></div>
+              </div>
+              <p class="level-card__hint">Ещё 80 XP до 4 уровня</p>
+              <div class="level-card__body">
+                <div class="level-card__achieve-head">
+                  <span class="level-card__achieve-label">Достижения</span>
+                  <span class="level-card__achieve-count">7 / 24</span>
+                </div>
+                <div class="coin-strip">
+                  <svg class="coin" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="url(#g-bronze)" /><ellipse cx="12" cy="9" rx="5" ry="2.2" fill="rgba(255,255,255,0.32)" /></svg>
+                  <svg class="coin" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="url(#g-silver)" /><ellipse cx="12" cy="9" rx="5" ry="2.2" fill="rgba(255,255,255,0.4)" /></svg>
+                  <svg class="coin" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="url(#g-gold)" /><ellipse cx="12" cy="9" rx="5" ry="2.2" fill="rgba(255,255,255,0.35)" /></svg>
+                  <svg class="coin" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="url(#g-platinum)" /><ellipse cx="12" cy="9" rx="5" ry="2.2" fill="rgba(255,255,255,0.45)" /></svg>
+                  <svg class="coin" viewBox="0 0 24 24"><path fill="url(#g-star)" d="M12 2.5l2.4 5.5 5.9.5-4.5 3.8 1.4 5.7L12 15.8 6.8 17.9l1.4-5.7-4.5-3.8 5.9-.5L12 2.5z" /></svg>
+                  <a class="coin-strip__link" href="#page-p3">Все достижения →</a>
+                </div>
+              </div>
+            </article>
+          </div>
+        </div>
+
+        <p class="lab-section__note" style="margin-top: 20px"><strong>L2</strong> — развёрнут, без bars</p>
+        <article class="level-card is-expanded" style="max-width: 390px">
+          <button type="button" class="level-card__toggle" data-level-toggle aria-expanded="true">
+            <div>
+              <h2 class="level-card__title">Уровень 3 <span class="level-card__achieve-count" style="font-size: 11px">· 7/24</span></h2>
+              <p class="level-card__sub">120 / 200 XP</p>
+            </div>
+            <div class="level-card__score-wrap">
+              <div class="level-card__score-label">Очки</div>
+              <div class="level-card__score">1 240</div>
+            </div>
+            <span class="level-card__chevron" aria-hidden="true">▼</span>
+          </button>
+          <div class="level-card__meter">
+            <div class="dash-progress"><div class="dash-progress__fill--xp" style="width: 60%"></div></div>
+          </div>
+          <p class="level-card__hint">Ещё 80 XP до 4 уровня · «Облигации»</p>
+          <div class="level-card__body">
+            <div class="level-card__achieve-head"><span class="level-card__achieve-label">Последние</span></div>
+            <div class="coin-strip">
+              <svg class="coin" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="url(#g-bronze)" /><ellipse cx="12" cy="9" rx="5" ry="2.2" fill="rgba(255,255,255,0.32)" /></svg>
+              <svg class="coin" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="url(#g-silver)" /><ellipse cx="12" cy="9" rx="5" ry="2.2" fill="rgba(255,255,255,0.4)" /></svg>
+              <svg class="coin" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="url(#g-gold)" /><ellipse cx="12" cy="9" rx="5" ry="2.2" fill="rgba(255,255,255,0.35)" /></svg>
+              <svg class="coin" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="url(#g-platinum)" /><ellipse cx="12" cy="9" rx="5" ry="2.2" fill="rgba(255,255,255,0.45)" /></svg>
+              <svg class="coin" viewBox="0 0 24 24"><path fill="url(#g-star)" d="M12 2.5l2.4 5.5 5.9.5-4.5 3.8 1.4 5.7L12 15.8 6.8 17.9l1.4-5.7-4.5-3.8 5.9-.5L12 2.5z" /></svg>
+              <a class="coin-strip__link" href="#page-p3">Все достижения →</a>
+            </div>
+          </div>
+        </article>
+      </section>
+
+      <section class="lab-section" id="page-p3">
+        <div class="lab-section__label">
+          <span class="lab-section__id">P3</span>
+          <span class="lab-section__title">Страница «Развитие»</span>
+        </div>
+        <p class="lab-section__note">Overlay в игре, таббар внизу остаётся.</p>
+        <div class="lab-stage">
+          <div class="phone">
+            <div class="phone__scroll ach-page">
+              <header class="ach-page__top">
+                <button type="button" class="ach-page__back" aria-label="Назад">←</button>
+                <h1 class="ach-page__title">Развитие</h1>
+              </header>
+              <article class="level-card level-card--flat" style="margin-bottom: 12px">
+                <div>
+                  <h2 class="level-card__title" style="font-size: 15px">Уровень 3</h2>
+                  <p class="level-card__sub">120 / 200 XP</p>
+                </div>
+                <div class="level-card__meter">
+                  <div class="dash-progress"><div class="dash-progress__fill--xp" style="width: 60%"></div></div>
+                </div>
+                <p class="level-card__hint">Ещё 80 XP до 4 уровня</p>
+              </article>
+              <article class="ach-chain">
+                <header class="ach-chain__head">
+                  <h2 class="ach-chain__name">Подушка безопасности</h2>
+                  <span class="ach-chain__prog">2 / 4</span>
+                </header>
+                <div class="ach-tier">
+                  <svg class="coin" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="url(#g-bronze)" /><ellipse cx="12" cy="9" rx="5" ry="2.2" fill="rgba(255,255,255,0.32)" /></svg>
+                  <div class="ach-tier__text">
+                    <p class="ach-tier__name">Первая подушка</p>
+                    <p class="ach-tier__desc">≥ 1 месяца расходов</p>
+                  </div>
+                  <span class="ach-tier__badge">Получено</span>
+                </div>
+                <div class="ach-tier">
+                  <svg class="coin" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="url(#g-silver)" /><ellipse cx="12" cy="9" rx="5" ry="2.2" fill="rgba(255,255,255,0.4)" /></svg>
+                  <div class="ach-tier__text">
+                    <p class="ach-tier__name">Стабильность</p>
+                    <p class="ach-tier__desc">≥ 3 месяцев расходов</p>
+                  </div>
+                  <span class="ach-tier__badge">Получено</span>
+                </div>
+                <div class="ach-tier ach-tier--locked">
+                  <svg class="coin coin--locked" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="url(#g-locked)" /></svg>
+                  <div class="ach-tier__text">
+                    <p class="ach-tier__name">Запас прочности</p>
+                    <p class="ach-tier__desc">≥ 6 месяцев</p>
+                  </div>
+                  <span class="ach-tier__xp">+95 XP</span>
+                </div>
+              </article>
+              <article class="ach-chain">
+                <header class="ach-chain__head">
+                  <h2 class="ach-chain__name">Вклад</h2>
+                  <span class="ach-chain__prog">1 / 4</span>
+                </header>
+                <div class="ach-tier">
+                  <svg class="coin" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="url(#g-bronze)" /></svg>
+                  <div class="ach-tier__text">
+                    <p class="ach-tier__name">Первый вклад</p>
+                    <p class="ach-tier__desc">от 1 000 ₽</p>
+                  </div>
+                  <span class="ach-tier__badge">Получено</span>
+                </div>
+              </article>
+            </div>
+            <nav class="phone__nav" aria-hidden="true">
+              <span class="phone__nav-dot phone__nav-dot--active"></span>
+              <span class="phone__nav-dot"></span>
+              <span class="phone__nav-dot"></span>
+              <span class="phone__nav-dot"></span>
+            </nav>
+          </div>
+        </div>
+      </section>
+
+      <section class="lab-section">
+        <div class="lab-section__label">
+          <span class="lab-section__id">Меню</span>
+          <span class="lab-section__title">Второй вход</span>
+        </div>
+        <div class="phone" style="max-width: 390px; min-height: auto">
+          <div class="phone__scroll">
+            <article class="level-card">
+              <div class="level-card__achieve-label" style="margin-bottom: 8px">Сценарий</div>
+              <div style="display: flex; flex-direction: column; gap: 8px">
+                <button type="button" style="padding: 12px; border-radius: 12px; border: none; background: var(--mq-violet); color: #fff; font-weight: 700">Новая игра</button>
+                <button type="button" style="padding: 12px; border-radius: 12px; border: 1px solid var(--glass-border); background: var(--surface); font-weight: 650">Выбрать сохранение</button>
+                <button type="button" style="padding: 12px; border-radius: 12px; border: 1px solid color-mix(in srgb, var(--mq-violet) 35%, transparent); background: color-mix(in srgb, var(--mq-violet) 8%, var(--surface)); color: var(--mq-violet-deep); font-weight: 700">★ Развитие и достижения</button>
+                <button type="button" style="padding: 12px; border: none; background: transparent; color: var(--text-muted)">Выйти</button>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <script src="./lab.js"></script>
+  </body>
+</html>

@@ -1,0 +1,13 @@
+{
+  "ep": "004",
+  "slug": "ep-004-first-money",
+  "arc": 0,
+  "arc_title": "Точка отсчёта",
+  "layer": null,
+  "hook": "F",
+  "image_headline": "Первые деньги",
+  "commits": ["56b08b8", "867b364"],
+  "platforms": ["telegram"],
+  "approved_at": null,
+  "published_at": null
+}

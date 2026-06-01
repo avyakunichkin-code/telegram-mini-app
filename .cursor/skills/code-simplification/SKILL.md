@@ -1,15 +1,33 @@
 ---
 name: code-simplification
 description: Simplifies code for clarity. Use when refactoring code for clarity without changing behavior. Use when code works but is harder to read, maintain, or extend than it should be. Use when reviewing code that has accumulated unnecessary complexity.
+argument-hint: "[file or module path]"
+user-invocable: true
+allowed-tools: Read, Glob, Grep, Write
 ---
 
 # Code Simplification
 
 > Inspired by the [Claude Code Simplifier plugin](https://github.com/anthropics/claude-plugins-official/blob/main/plugins/code-simplifier/agents/code-simplifier.md). Adapted here as a model-agnostic, process-driven skill for any AI coding agent.
 
+## Прочитай сначала (ТВОЙ ХОД)
+
+- [`CLAUDE.md`](../../../CLAUDE.md)
+
+**Куда писать:** `backend/`, `frontend-react/`. **Дальше:** `test-driven-development`.
+
 ## Overview
 
 Simplify code by reducing complexity while preserving exact behavior. The goal is not fewer lines — it's code that is easier to read, understand, modify, and debug. Every simplification must pass a simple test: "Would a new team member understand this faster than the original?"
+
+## Severity (что упрощать, а что нет)
+
+Классифицируй каждое предложение перед правкой:
+
+- **blocking** — нельзя упрощать, если меняется поведение, ослабляется обработка ошибок или границы API/контрактов.
+- **advisory** — стиль, именование, дублирование, структура без смены семантики.
+
+Не read-only review: скилл **вносит правки** (`Write`) только после «Могу записать …?» / явного «делай».
 
 ## When to Use
 
@@ -329,3 +347,18 @@ After completing a simplification pass:
 - [ ] No error handling was removed or weakened
 - [ ] No dead code was left behind (unused imports, unreachable branches)
 - [ ] A teammate or review agent would approve the change as a net improvement
+
+---
+
+## Итог (Verdict)
+
+В конце работы явно укажи результат: **PASS**, **FAIL**, **CONCERNS**, **COMPLETE** или **APPROVED** — в зависимости от типа задачи.
+
+## Согласование изменений
+
+Перед созданием или изменением файлов в репозитории спроси: «Могу записать …?» — если пользователь не дал явное «делай» / «запиши».
+
+## Следующий шаг
+
+`code-review-and-quality` после рефакторинга.
+

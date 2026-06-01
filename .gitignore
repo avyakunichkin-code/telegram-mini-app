@@ -60,12 +60,21 @@ coverage/
 *.db
 
 # ===== Cursor / tooling =====
-# Версионируем только rules и project skills; прочее в .cursor/ остаётся локальным
+# Версионируем rules, skills, hooks, agents; прочее в .cursor/ — локально
 .cursor/*
 !.cursor/rules/
 !.cursor/rules/**
 !.cursor/skills/
 !.cursor/skills/**
+!.cursor/hooks/
+!.cursor/hooks/**
+!.cursor/hooks.json
+!.cursor/agents/
+!.cursor/agents/**
+
+# Balance playtest — только baselines в git; reports генерируются локально
+docs/balance/reports/*
+!docs/balance/reports/.gitkeep
 
 # ===== Logs =====
 logs/

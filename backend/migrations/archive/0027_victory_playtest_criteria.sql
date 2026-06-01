@@ -1,0 +1,9 @@
+-- Временные критерии победы для плейтеста (playtest_mode v1). Откат: victory_seeds.VICTORY_CONFIG_LEGACY_BY_TEMPLATE_KEY
+
+UPDATE game_starter_templates
+SET victory_config_json = '{"schema_version":1,"playtest_mode":"v1","min_period_index_for_victory":7,"required_goals_met":3,"goals":[{"key":"safety_3x","type":"safety_fund_months","title":"Подушка ≥ 3× обязательств","months_multiplier":3,"required":false,"enabled":true},{"key":"passive_income_100k","type":"passive_income_monthly_min","title":"Пассивный доход ≥ 100 000 ₽/мес","min_monthly":100000,"required":false,"enabled":true},{"key":"car_owned","type":"asset_kind_any_owned","title":"Машина в собственности","asset_kinds_any":["car","car_personal","car_taxi","rental_car","vehicle"],"required":false,"enabled":true}]}'
+WHERE template_key = 'mq_game_basic_v1';
+
+UPDATE game_starter_templates
+SET victory_config_json = '{"schema_version":1,"playtest_mode":"v1","min_period_index_for_victory":7,"required_goals_met":5,"goals":[{"key":"safety_6x","type":"safety_fund_months","title":"Подушка ≥ 6× обязательств","months_multiplier":6,"required":false,"enabled":true},{"key":"passive_net_250k","type":"passive_income_net_monthly_min","title":"Пассивный доход − расходы ≥ 250 000 ₽/мес","min_net":250000,"required":false,"enabled":true},{"key":"level_10","type":"character_level","title":"Уровень персонажа ≥ 10","min_level":10,"required":false,"enabled":true},{"key":"cash_10m","type":"cash_balance_min","title":"Наличные ≥ 10 000 000 ₽","min_cash":10000000,"required":false,"enabled":true},{"key":"rental_home_owned","type":"asset_kind_any_owned","title":"Сдаваемая квартира в собственности","asset_kinds_any":["rental_home"],"required":false,"enabled":true}]}'
+WHERE template_key IN ('mq_game_tight_budget_v1', 'mq_game_mortgage_stress_v1', 'mq_game_debt_stack_v1');

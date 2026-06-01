@@ -1,9 +1,19 @@
 ---
 name: performance-optimization
 description: Optimizes application performance. Use when performance requirements exist, when you suspect performance regressions, or when Core Web Vitals or load times need improvement. Use when profiling reveals bottlenecks that need fixing.
+argument-hint: "[area: frontend | backend | db | bundle]"
+user-invocable: true
+allowed-tools: Read, Glob, Grep, Write, Shell
 ---
 
 # Performance Optimization
+
+## Прочитай сначала (ТВОЙ ХОД)
+
+- [`frontend-react/ARCHITECTURE.md`](../../../frontend-react/ARCHITECTURE.md)
+- [`CLAUDE.md`](../../../CLAUDE.md)
+
+**Куда писать:** `frontend-react/`, `backend/`. **Дальше:** `test-driven-development`.
 
 ## Overview
 
@@ -348,3 +358,20 @@ After any performance-related change:
 - [ ] No N+1 queries in new data fetching code
 - [ ] Performance budget passes in CI (if configured)
 - [ ] Existing tests still pass (optimization didn't break behavior)
+
+---
+
+## Итог (Verdict)
+
+В конце работы явно укажи результат: **PASS**, **FAIL**, **CONCERNS**, **COMPLETE** или **APPROVED** — в зависимости от типа задачи.
+
+## Согласование изменений
+
+Перед созданием или изменением файлов в репозитории спроси: «Могу записать …?» — если пользователь не дал явное «делай» / «запиши».
+
+**Safety:** не ослабляй проверки и не отключай защиту ради метрик; при сомнении — **CONCERNS** и измерь **risk** регрессии (тесты, профиль, откат).
+
+## Следующий шаг
+
+`code-review-and-quality`; для UI — `browser-testing-with-devtools`.
+

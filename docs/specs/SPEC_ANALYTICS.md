@@ -1,17 +1,17 @@
----
+﻿---
 layer: spec
 domain: analytics
 status: active
 last_reviewed: 2026-05-16
 ---
 
-# Spec: вкладка «Аналитика» (Money Quest)
+# Spec: вкладка «Аналитика» (ТВОЙ ХОД)
 
 Документ фиксирует **вижн и дорожную карту** экрана аналитики: что показываем игроку, зачем (обучение + обратная связь), какие данные нужны от бэкенда.
 
 Текущий MVP вкладки строится на полях `GET /api/finance/overview` и текстовых блоках ниже не хватает — пункты помечены **(будущее)**.
 
-**Согласование с продуктом:** целевая модель победы и метрик — [evolution §II](../vision/ideas/money-quest-evolution-after-mvp.md); «победа недоступна до 7-го периода» — из `period_index` в overview.
+**Согласование с продуктом:** победа — [Victory v2](features/SPEC_victory-v2.md) (`overview.victory`, `win_reached`); «победа недоступна до 7-го периода» — `min_period_index_for_victory` в конфиге шаблона.
 
 ---
 
@@ -29,7 +29,7 @@ last_reviewed: 2026-05-16
 ## 2. Принципы UX (совмещение визуала и логики)
 
 1. **Один главный KPI на блок** — не перегружать карточки цифрами без подписей единиц.  
-2. **Те же понятия, что в экономике месяца** — термины совпадают с главным экраном и вкладкой «Финансы».  
+2. **Те же понятия, что в экономике месяца** — термины совпадают с главным экраном и вкладкой «Капитал».  
 3. **Цвет как смысл**, согласованный с брендбуком: изумруд / фиолетовый акцент / danger для риска, без лишней «радуги».  
 4. **Пустые и ранние партии**: короткая подсказка «данные соберутся после первых периодов» там, где нет истории.
 
@@ -100,8 +100,8 @@ last_reviewed: 2026-05-16
 
 | Файл | Содержание |
 |------|------------|
-| [evolution §II](../vision/ideas/money-quest-evolution-after-mvp.md) | Game/Plan и метрики победы |
-| [GDD outline](../reference/MONEY_QUEST_DESIGN_AND_GDD_OUTLINE.md) | Роль аналитики в GDD |
+| [evolution §II](../vision/ideas/tvoy-hod-evolution-after-mvp.md) | Game/Plan и метрики победы |
+| [GDD outline](../reference/TVOY_HOD_DESIGN_AND_GDD_OUTLINE.md) | Роль аналитики в GDD |
 | [`PRODUCT_BACKLOG.md`](../backlog/PRODUCT_BACKLOG.md) | Приоритизация задач API и UI |
 | [`BRANDBOOK.md`](../reference/brandbook/BRANDBOOK.md) | Цвета статусов и типографика KPI |
 | [`SPEC_FRONTEND_UI.md`](SPEC_FRONTEND_UI.md) | MQX, a11y, premium-экраны |

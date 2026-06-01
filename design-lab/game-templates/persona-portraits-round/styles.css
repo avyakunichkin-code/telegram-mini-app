@@ -1,0 +1,95 @@
+/* Раунд: портреты персонажей на экране выбора */
+
+.lab-persona-main {
+  max-width: 480px;
+  margin: 0 auto;
+  padding: 0 16px 32px;
+}
+
+.lab-persona-section {
+  margin-top: 24px;
+}
+
+.lab-persona-section h2 {
+  margin: 0 0 8px;
+  font-size: 1.05rem;
+}
+
+.lab-persona-section__note {
+  margin: 0 0 12px;
+  font-size: 0.875rem;
+  opacity: 0.78;
+}
+
+.lab-size-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.lab-size-card {
+  text-align: center;
+  padding: 10px 6px;
+  border-radius: 12px;
+  border: 1px solid color-mix(in srgb, var(--mqx-ink) 12%, transparent);
+  background: var(--surface);
+}
+
+.lab-size-card figcaption {
+  margin-top: 8px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.lab-size-card__frame {
+  min-height: 120px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+}
+
+.lab-size-card__frame img {
+  width: auto;
+  object-fit: contain;
+  object-position: bottom center;
+}
+
+.lab-size-card__frame--pick img {
+  height: 56px;
+}
+
+.lab-size-card__frame--md img {
+  height: 72px;
+}
+
+.lab-size-card__frame--dash img {
+  height: 108px;
+  max-width: 100%;
+}
+
+.lab-checker {
+  margin-top: 20px;
+  padding: 12px;
+  border-radius: 12px;
+  background: repeating-conic-gradient(#ccc 0% 25%, #eee 0% 50%) 50% / 16px 16px;
+}
+
+[data-theme='dark'] .lab-checker {
+  background: repeating-conic-gradient(#333 0% 25%, #222 0% 50%) 50% / 16px 16px;
+}
+
+.mqx-scenario-picker--persona .mqx-scenario-strip__icon-wrap {
+  overflow: hidden;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+}
+
+.mqx-scenario-picker--persona .mqx-persona-portrait__img {
+  height: 48px;
+  width: auto;
+  max-width: 100%;
+  object-fit: contain;
+  object-position: bottom center;
+}

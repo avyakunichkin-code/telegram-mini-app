@@ -1,0 +1,368 @@
+# Профильные события: только для starter_template_key из audience_template_keys.
+# content_class: profile — не показывать другим персонажам (EVT1-020, audience_matches).
+events:
+- definition_key: mq11_part_time_job_student
+  content_class: profile
+  event_slot: period_choice
+  audience_template_keys:
+  - mq_game_basic_v1
+  event_domain: income_work
+  title: Подработка на выходных
+  description: Кафе напротив кампуса ищет сменщиков — можно подзаработать, но сессия не отменится сама.
+  weight: 78
+  event_tier: 1
+  repeat_policy: repeatable
+  scenario_shape: soft_offer
+  cooldown_periods: 4
+  choices:
+  - title: Взять несколько смен
+    effects:
+      cash_delta: 12000
+      needs_delta:
+        status: 6
+        health: -6
+        social: -5
+        comfort: -4
+  - title: Одна смена в месяц
+    effects:
+      cash_delta: 4800
+      needs_delta:
+        status: 1
+        health: -1
+        social: -1
+        comfort: 2
+  - title: Отказаться — учёба важнее
+    effects:
+      cash_delta: 0
+      needs_delta:
+        status: 2
+        comfort: 4
+        social: -3
+- definition_key: mq11_roommate_bills_student
+  content_class: profile
+  event_slot: period_choice
+  audience_template_keys:
+  - mq_game_basic_v1
+  event_domain: housing
+  title: Соседи по съёмной
+  description: 'Соседи напоминают про коммуналку и интернет: «Скинешь свою долю?» Отложить — значит портить
+    отношения.'
+  weight: 74
+  event_tier: 1
+  repeat_policy: repeatable
+  scenario_shape: tradeoff
+  cooldown_periods: 4
+  choices:
+  - title: Оплатить всё сразу
+    effects:
+      cash_delta: -2600
+      needs_delta:
+        comfort: 6
+        social: 8
+  - title: Только свою половину
+    effects:
+      cash_delta: -1300
+      needs_delta:
+        comfort: 3
+        social: 4
+  - title: Попросить отсрочку
+    effects:
+      cash_delta: 0
+      needs_delta:
+        social: -8
+        comfort: -3
+- definition_key: mq11_car_service_pro
+  content_class: profile
+  event_slot: period_choice
+  audience_template_keys:
+  - mq_game_tight_budget_v1
+  event_domain: auto
+  title: ТО и расходники на машину
+  description: Сервис напоминает о плановом ТО — без обслуживания растёт риск поломки и простоя.
+  weight: 72
+  event_tier: 2
+  repeat_policy: repeatable
+  scenario_shape: soft_offer
+  cooldown_periods: 5
+  prerequisites:
+    active_asset_kinds_any:
+    - car_personal
+  choices:
+  - title: Официальный дилер
+    effects:
+      cash_delta: -18500
+      needs_delta:
+        comfort: 8
+        status: 5
+        health: 2
+  - title: Независимый сервис
+    effects:
+      cash_delta: -9800
+      needs_delta:
+        comfort: 4
+        status: 2
+  - title: Отложить ТО
+    effects:
+      cash_delta: 0
+      needs_delta:
+        comfort: -4
+        status: -2
+        health: -3
+- definition_key: mq11_lease_renewal_pro
+  content_class: profile
+  event_slot: period_choice
+  audience_template_keys:
+  - mq_game_tight_budget_v1
+  event_domain: housing
+  title: Продление аренды студии
+  description: 'Арендодатель прислал договор: «С следующего месяца +10% или ищите другое жильё».'
+  weight: 68
+  event_tier: 2
+  repeat_policy: max_per_profile
+  repeat_max: 2
+  scenario_shape: tradeoff
+  cooldown_periods: 8
+  choices:
+  - title: Подписать на новых условиях
+    effects:
+      cash_delta: -2000
+      expense_line:
+        category_key: housing
+        amount_monthly: 2500
+        title: Повышение аренды
+      needs_delta:
+        comfort: 4
+        status: 2
+  - title: Торговаться — разовый бонус
+    effects:
+      cash_delta: -6000
+      needs_delta:
+        comfort: 2
+        status: 5
+  - title: Искать квартиру подешевле
+    effects:
+      cash_delta: -9000
+      monthly_lifestyle_delta: -2800
+      needs_delta:
+        comfort: -3
+        status: 1
+        social: -4
+- definition_key: mq11_child_activity_manager
+  content_class: profile
+  event_slot: period_choice
+  audience_template_keys:
+  - mq_game_mortgage_stress_v1
+  event_domain: social_family
+  title: Кружок для ребёнка
+  description: 'Школа предлагает секцию: «Запись до пятницы». Отказ услышат и дома, и в классе.'
+  weight: 80
+  event_tier: 1
+  repeat_policy: repeatable
+  scenario_shape: soft_offer
+  cooldown_periods: 5
+  choices:
+  - title: Премиум-секция с индивидуальным тренером
+    effects:
+      cash_delta: -12000
+      needs_delta:
+        social: 14
+        status: 10
+        comfort: 4
+  - title: Обычная группа
+    effects:
+      cash_delta: -4500
+      needs_delta:
+        social: 8
+        status: 4
+  - title: Отложить до следующего года
+    effects:
+      cash_delta: 0
+      needs_delta:
+        social: -10
+        status: -5
+        comfort: -2
+- definition_key: mq11_hoa_assessment_manager
+  content_class: profile
+  event_slot: period_choice
+  audience_template_keys:
+  - mq_game_mortgage_stress_v1
+  event_domain: housing
+  title: Взнос ТСЖ на ремонт
+  description: 'Домовой чат: собрание одобрило капремонт подъезда — нужен ваш взнос как собственника.'
+  weight: 66
+  event_tier: 2
+  repeat_policy: max_per_profile
+  repeat_max: 1
+  scenario_shape: mandatory
+  cooldown_periods: 12
+  choices:
+  - title: Оплатить полностью
+    effects:
+      cash_delta: -22000
+      needs_delta:
+        comfort: 6
+        status: 5
+  - title: Рассрочка на три месяца
+    effects:
+      cash_delta: -8000
+      expense_line:
+        category_key: housing
+        amount_monthly: 5000
+        title: Взнос ТСЖ (рассрочка)
+        expires_after_periods: 3
+      needs_delta:
+        comfort: 3
+        status: 2
+  - title: Оспорить сумму в ТСЖ
+    effects:
+      cash_delta: -3000
+      needs_delta:
+        comfort: -5
+        status: -6
+        social: -4
+- definition_key: mq11_family_car_repair_manager
+  content_class: profile
+  event_slot: period_choice
+  audience_template_keys:
+  - mq_game_mortgage_stress_v1
+  event_domain: auto
+  title: Ремонт семейного авто
+  description: 'На второй машине загорается Check Engine — без ремонта семья застрянет на одной машине.'
+  weight: 70
+  event_tier: 2
+  repeat_policy: repeatable
+  scenario_shape: soft_offer
+  cooldown_periods: 5
+  prerequisites:
+    active_asset_kinds_any:
+    - car_personal
+  choices:
+  - title: Срочный ремонт у дилера
+    effects:
+      cash_delta: -28000
+      needs_delta:
+        comfort: 7
+        social: 6
+        status: 3
+  - title: Починить по страховке КАСКО
+    effects:
+      cash_delta: -12000
+      needs_delta:
+        comfort: 5
+        social: 4
+  - title: Ездить на одной машине месяц
+    effects:
+      cash_delta: 0
+      needs_delta:
+        comfort: -5
+        social: -6
+        status: -2
+- definition_key: mq11_vendor_payment_entrepreneur
+  content_class: profile
+  event_slot: period_choice
+  audience_template_keys:
+  - mq_game_debt_stack_v1
+  event_domain: credit_debt
+  title: Оплата поставщику
+  description: 'Ключевой поставщик ждёт оплату партии: «Без перевода остановим отгрузку на неделю».'
+  weight: 82
+  event_tier: 2
+  repeat_policy: repeatable
+  scenario_shape: tradeoff
+  cooldown_periods: 4
+  choices:
+  - title: Оплатить полностью
+    effects:
+      cash_delta: -35000
+      needs_delta:
+        status: 10
+        comfort: 4
+  - title: Частичная предоплата
+    effects:
+      cash_delta: -18000
+      needs_delta:
+        status: 3
+        comfort: -2
+  - title: Попросить отсрочку
+    effects:
+      cash_delta: 0
+      needs_delta:
+        status: -10
+        comfort: -6
+- definition_key: mq11_card_minimum_entrepreneur
+  content_class: profile
+  event_slot: period_choice
+  audience_template_keys:
+  - mq_game_debt_stack_v1
+  event_domain: credit_debt
+  title: Платёж по кредитной карте
+  description: 'Банк выставил счёт: можно закрыть минимум, весь долг или рискнуть просрочкой.'
+  weight: 88
+  event_tier: 1
+  repeat_policy: repeatable
+  scenario_shape: soft_offer
+  cooldown_periods: 3
+  prerequisites:
+    min_active_liabilities: 1
+  choices:
+  - title: Минимальный платёж
+    effects:
+      cash_delta: -8500
+      needs_delta:
+        comfort: 2
+        status: -2
+  - title: Закрыть весь долг по карте
+    effects:
+      cash_delta: -42000
+      needs_delta:
+        comfort: 8
+        status: 8
+  - title: Пропустить платёж
+    effects:
+      cash_delta: 0
+      expense_line:
+        category_key: other
+        amount_monthly: 3200
+        title: Пени по кредитной карте
+        expires_after_periods: 2
+      needs_delta:
+        comfort: -6
+        status: -8
+- definition_key: mq11_staff_retention_entrepreneur
+  content_class: profile
+  event_slot: period_choice
+  audience_template_keys:
+  - mq_game_debt_stack_v1
+  event_domain: social_status
+  title: Удержать ключевого сотрудника
+  description: 'Программист уходит к конкуренту: «Нужна премия или ухожу в пятницу».'
+  weight: 76
+  event_tier: 2
+  repeat_policy: max_per_profile
+  repeat_max: 2
+  scenario_shape: tradeoff
+  cooldown_periods: 8
+  choices:
+  - title: Разовая премия
+    effects:
+      cash_delta: -28000
+      needs_delta:
+        social: 12
+        status: 14
+  - title: Повысить оклад с следующего месяца
+    effects:
+      cash_delta: -5000
+      expense_line:
+        category_key: other
+        amount_monthly: 8000
+        title: Повышение оклада сотруднику
+      needs_delta:
+        social: 8
+        status: 8
+  - title: Отпустить без доплат
+    effects:
+      cash_delta: 0
+      needs_delta:
+        social: -8
+        status: -6
+        comfort: -4

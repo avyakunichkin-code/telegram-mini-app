@@ -1,0 +1,39 @@
+events:
+- definition_key: mq11_car_accident
+  content_class: instrumental
+  event_slot: period_choice
+  audience_template_keys:
+  - all
+  event_domain: auto
+  title: ДТП
+  description: 'Столкновение на вашей машине. Нужно решить, как закрыть ущерб: через ОСАГО или за свой
+    счёт — уйти без последствий не получится.'
+  weight: 55
+  event_tier: 3
+  repeat_policy: repeatable
+  scenario_shape: asset_linked
+  extra:
+    secondary_domains:
+    - insurance
+  mandatory_gate: blocks_period_end
+  prerequisites:
+    active_asset_kinds_any:
+    - car_personal
+    - car_taxi
+  choices:
+  - title: Оформить по полису ОСАГО
+    effects:
+      cash_delta: -8000
+      insurance_claim:
+        product: auto
+        insured_object: liability
+      needs_delta:
+        comfort: 5
+        health: 1
+  - title: Оплатить ремонт из своих
+    effects:
+      cash_delta: -45000
+      needs_delta:
+        comfort: -10
+        health: -4
+        status: -3

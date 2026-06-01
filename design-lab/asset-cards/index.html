@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="ru" data-theme="light">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>ТВОЙ ХОД — витрина карточек активов</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <svg xmlns="http://www.w3.org/2000/svg" style="display: none" aria-hidden="true">
+      <symbol id="icon-coins" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75">
+        <ellipse cx="8" cy="7" rx="5" ry="2.2" />
+        <path d="M3 7v4c0 1.2 2.2 2.2 5 2.2s5-1 5-2.2V7" />
+        <ellipse cx="14" cy="13" rx="5" ry="2.2" />
+        <path d="M9 13v4c0 1.2 2.2 2.2 5 2.2s5-1 5-2.2v-4" />
+      </symbol>
+      <!-- Расход / обслуживание: явная стрелка вниз -->
+      <symbol id="icon-trend-down" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25">
+        <path stroke-linecap="round" d="M12 5v10" />
+        <path stroke-linecap="round" stroke-linejoin="round" d="M8 13l4 4 4-4" />
+      </symbol>
+      <!-- Доход: явная стрелка вверх -->
+      <symbol id="icon-trend-up" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25">
+        <path stroke-linecap="round" d="M12 19V9" />
+        <path stroke-linecap="round" stroke-linejoin="round" d="M8 11l4-4 4 4" />
+      </symbol>
+      <symbol id="icon-flow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75">
+        <path stroke-linecap="round" d="M6 12h12M14 8l4 4-4 4" />
+      </symbol>
+    </svg>
+
+    <header class="lab-header">
+      <div>
+        <h1>Карточки активов — design lab</h1>
+        <p>Шаблон «Квартира под сдачу» · сравнение визуальных метрик</p>
+      </div>
+      <div class="lab-theme" role="group" aria-label="Тема">
+        <button type="button" class="is-active" data-theme-btn="light">Светлая</button>
+        <button type="button" data-theme-btn="dark">Тёмная</button>
+      </div>
+    </header>
+
+    <main class="lab-wrap">
+      <!-- REF -->
+      <section class="lab-section" id="ref">
+        <div class="lab-section__label">
+          <span class="lab-section__id">REF</span>
+          <span class="lab-section__title">Как сейчас (текст)</span>
+        </div>
+        <p class="lab-section__note">Строка meta в CapitalPortfolioPanels — без иконок.</p>
+        <article class="mq-card">
+          <div class="mq-card__head">
+            <div>
+              <div class="mq-card__kicker">Недвижимость</div>
+              <div class="mq-card__title">Квартира под сдачу</div>
+              <p class="mq-card__meta-text">
+                Стоимость: 4&nbsp;200&nbsp;000&nbsp;₽ · Обслуживание: 12&nbsp;000&nbsp;₽/мес · Доход:
+                35&nbsp;000&nbsp;₽/мес
+              </p>
+            </div>
+            <button type="button" class="mq-card__add" aria-hidden="true">+</button>
+          </div>
+        </article>
+      </section>
+
+      <!-- A -->
+      <section class="lab-section" id="variant-a">
+        <div class="lab-section__label">
+          <span class="lab-section__id">A</span>
+          <span class="lab-section__title">Иконки в рамках (3 плитки)</span>
+        </div>
+        <p class="lab-section__note">Монеты / расход ↓ / доход ↑ — ваш референс, хорошо для шаблонов каталога.</p>
+        <article class="mq-card">
+          <div class="mq-card__head">
+            <div>
+              <div class="mq-card__kicker">Недвижимость</div>
+              <div class="mq-card__title">Квартира под сдачу</div>
+              <div class="mq-metrics-row">
+                <div class="mq-metric-tile">
+                  <span class="mq-metric-icon mq-metric-icon--coin" aria-hidden="true"
+                    ><svg><use href="#icon-coins" /></svg
+                  ></span>
+                  <span class="mq-metric-tile__value">4,2 млн ₽</span>
+                  <span class="mq-metric-tile__hint">стоимость</span>
+                </div>
+                <div class="mq-metric-tile">
+                  <span class="mq-metric-icon mq-metric-icon--down" aria-hidden="true"
+                    ><svg><use href="#icon-trend-down" /></svg
+                  ></span>
+                  <span class="mq-metric-tile__value mq-val--neg">12 000</span>
+                  <span class="mq-metric-tile__hint">/ мес</span>
+                </div>
+                <div class="mq-metric-tile">
+                  <span class="mq-metric-icon mq-metric-icon--up" aria-hidden="true"
+                    ><svg><use href="#icon-trend-up" /></svg
+                  ></span>
+                  <span class="mq-metric-tile__value mq-val--pos">35 000</span>
+                  <span class="mq-metric-tile__hint">/ мес</span>
+                </div>
+              </div>
+            </div>
+            <button type="button" class="mq-card__add" aria-hidden="true">+</button>
+          </div>
+        </article>
+      </section>
+
+      <!-- B -->
+      <section class="lab-section" id="variant-b">
+        <div class="lab-section__label">
+          <span class="lab-section__id">B</span>
+          <span class="lab-section__title">Компактная полоса (chips)</span>
+        </div>
+        <p class="lab-section__note">Меньше высоты — удобно для длинного списка шаблонов.</p>
+        <article class="mq-card">
+          <div class="mq-card__head">
+            <div>
+              <div class="mq-card__kicker">Недвижимость</div>
+              <div class="mq-card__title">Квартира под сдачу</div>
+              <div class="mq-metrics-strip">
+                <span class="mq-metric-chip">
+                  <span class="mq-metric-icon mq-metric-icon--coin mq-metric-icon--sm" aria-hidden="true"
+                    ><svg><use href="#icon-coins" /></svg
+                  ></span>
+                  4,2 млн ₽
+                </span>
+                <span class="mq-metric-chip">
+                  <span class="mq-metric-icon mq-metric-icon--down mq-metric-icon--sm" aria-hidden="true"
+                    ><svg><use href="#icon-trend-down" /></svg
+                  ></span>
+                  −12k
+                </span>
+                <span class="mq-metric-chip">
+                  <span class="mq-metric-icon mq-metric-icon--up mq-metric-icon--sm" aria-hidden="true"
+                    ><svg><use href="#icon-trend-up" /></svg
+                  ></span>
+                  +35k
+                </span>
+              </div>
+            </div>
+            <button type="button" class="mq-card__add" aria-hidden="true">+</button>
+          </div>
+        </article>
+      </section>
+
+      <!-- C -->
+      <section class="lab-section" id="variant-c">
+        <div class="lab-section__label">
+          <span class="lab-section__id">C</span>
+          <span class="lab-section__title">Строки: иконка + подпись + число</span>
+        </div>
+        <p class="lab-section__note">Самый читаемый для новичков; чуть выше карточка.</p>
+        <article class="mq-card">
+          <div class="mq-card__head">
+            <div>
+              <div class="mq-card__kicker">Недвижимость</div>
+              <div class="mq-card__title">Квартира под сдачу</div>
+              <div class="mq-metrics-list">
+                <div class="mq-metric-row">
+                  <span class="mq-metric-icon mq-metric-icon--coin" aria-hidden="true"
+                    ><svg><use href="#icon-coins" /></svg
+                  ></span>
+                  <div class="mq-metric-row__body">
+                    <span class="mq-metric-row__label">Стоимость</span>
+                    <span class="mq-metric-row__value">4 200 000 ₽</span>
+                  </div>
+                </div>
+                <div class="mq-metric-row">
+                  <span class="mq-metric-icon mq-metric-icon--down" aria-hidden="true"
+                    ><svg><use href="#icon-trend-down" /></svg
+                  ></span>
+                  <div class="mq-metric-row__body">
+                    <span class="mq-metric-row__label">Обслуживание</span>
+                    <span class="mq-metric-row__value mq-val--neg">12 000 ₽/мес</span>
+                  </div>
+                </div>
+                <div class="mq-metric-row">
+                  <span class="mq-metric-icon mq-metric-icon--up" aria-hidden="true"
+                    ><svg><use href="#icon-trend-up" /></svg
+                  ></span>
+                  <div class="mq-metric-row__body">
+                    <span class="mq-metric-row__label">Доход</span>
+                    <span class="mq-metric-row__value mq-val--pos">35 000 ₽/мес</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <button type="button" class="mq-card__add" aria-hidden="true">+</button>
+          </div>
+        </article>
+      </section>
+
+      <!-- D -->
+      <section class="lab-section" id="variant-d">
+        <div class="lab-section__label">
+          <span class="lab-section__id">D</span>
+          <span class="lab-section__title">Крупная стоимость + chips</span>
+        </div>
+        <p class="lab-section__note">Акцент на «цену актива»; расход/доход вторичны — для позиций в портфеле.</p>
+        <article class="mq-card">
+          <div class="mq-card__head">
+            <div>
+              <div class="mq-card__kicker">Недвижимость</div>
+              <div class="mq-hero-metric">
+                <span class="mq-metric-icon mq-metric-icon--coin" aria-hidden="true"
+                  ><svg><use href="#icon-coins" /></svg
+                ></span>
+                <span class="mq-hero-metric__value">4 200 000 ₽</span>
+              </div>
+              <div class="mq-hero-metric__chips">
+                <span class="mq-metric-chip">
+                  <span class="mq-metric-icon mq-metric-icon--down mq-metric-icon--sm" aria-hidden="true"
+                    ><svg><use href="#icon-trend-down" /></svg
+                  ></span>
+                  12 000 / мес
+                </span>
+                <span class="mq-metric-chip">
+                  <span class="mq-metric-icon mq-metric-icon--up mq-metric-icon--sm" aria-hidden="true"
+                    ><svg><use href="#icon-trend-up" /></svg
+                  ></span>
+                  35 000 / мес
+                </span>
+              </div>
+              <div class="mq-card__title" style="margin-top: 8px">Квартира под сдачу</div>
+            </div>
+            <button type="button" class="mq-card__add" aria-hidden="true">+</button>
+          </div>
+        </article>
+      </section>
+
+      <!-- E -->
+      <section class="lab-section" id="variant-e">
+        <div class="lab-section__label">
+          <span class="lab-section__id">E</span>
+          <span class="lab-section__title">Цветная полоса + сетка 2×2</span>
+        </div>
+        <p class="lab-section__note">Визуальный якорь слева; метрики плотные, «премиум».</p>
+        <article class="mq-card mq-card--accent">
+          <div class="mq-card__accent" aria-hidden="true"></div>
+          <div>
+            <div class="mq-card__kicker">Недвижимость</div>
+            <div class="mq-card__title">Квартира под сдачу</div>
+            <div class="mq-metrics-grid">
+              <div class="mq-mini-metric">
+                <span class="mq-metric-icon mq-metric-icon--coin mq-metric-icon--sm" aria-hidden="true"
+                  ><svg><use href="#icon-coins" /></svg
+                ></span>
+                <div class="mq-mini-metric__text">
+                  <div class="mq-mini-metric__label">Стоимость</div>
+                  <div class="mq-mini-metric__value">4,2 млн</div>
+                </div>
+              </div>
+              <div class="mq-mini-metric">
+                <span class="mq-metric-icon mq-metric-icon--down mq-metric-icon--sm" aria-hidden="true"
+                  ><svg><use href="#icon-trend-down" /></svg
+                ></span>
+                <div class="mq-mini-metric__text">
+                  <div class="mq-mini-metric__label">Обслуж.</div>
+                  <div class="mq-mini-metric__value mq-val--neg">12k</div>
+                </div>
+              </div>
+              <div class="mq-mini-metric">
+                <span class="mq-metric-icon mq-metric-icon--up mq-metric-icon--sm" aria-hidden="true"
+                  ><svg><use href="#icon-trend-up" /></svg
+                ></span>
+                <div class="mq-mini-metric__text">
+                  <div class="mq-mini-metric__label">Доход</div>
+                  <div class="mq-mini-metric__value mq-val--pos">35k</div>
+                </div>
+              </div>
+              <div class="mq-mini-metric">
+                <span class="mq-metric-icon mq-metric-icon--up mq-metric-icon--sm" aria-hidden="true"
+                  ><svg><use href="#icon-flow" /></svg
+                ></span>
+                <div class="mq-mini-metric__text">
+                  <div class="mq-mini-metric__label">Чистый</div>
+                  <div class="mq-mini-metric__value mq-val--pos">+23k</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <button type="button" class="mq-card__add" aria-hidden="true">+</button>
+        </article>
+      </section>
+
+      <!-- F -->
+      <section class="lab-section" id="variant-f">
+        <div class="lab-section__label">
+          <span class="lab-section__id">F</span>
+          <span class="lab-section__title">Плитки 2×2 + итог периода</span>
+        </div>
+        <p class="lab-section__note">Сразу виден чистый денежный поток актива (доход − обслуживание).</p>
+        <article class="mq-card">
+          <div class="mq-card__head">
+            <div>
+              <div class="mq-card__kicker">Недвижимость</div>
+              <div class="mq-card__title">Квартира под сдачу</div>
+              <div class="mq-metrics-2x2">
+                <div class="mq-cell-metric">
+                  <span class="mq-metric-icon mq-metric-icon--coin" aria-hidden="true"
+                    ><svg><use href="#icon-coins" /></svg
+                  ></span>
+                  <div class="mq-cell-metric__value">4,2 млн ₽</div>
+                </div>
+                <div class="mq-cell-metric">
+                  <span class="mq-metric-icon mq-metric-icon--down" aria-hidden="true"
+                    ><svg><use href="#icon-trend-down" /></svg
+                  ></span>
+                  <div class="mq-cell-metric__value mq-val--neg">−12k</div>
+                </div>
+                <div class="mq-cell-metric">
+                  <span class="mq-metric-icon mq-metric-icon--up" aria-hidden="true"
+                    ><svg><use href="#icon-trend-up" /></svg
+                  ></span>
+                  <div class="mq-cell-metric__value mq-val--pos">+35k</div>
+                </div>
+                <div class="mq-cell-metric mq-cell-metric--net">
+                  <span class="mq-metric-icon mq-metric-icon--up" aria-hidden="true"
+                    ><svg><use href="#icon-flow" /></svg
+                  ></span>
+                  <div>
+                    <div style="font-size: 10px; color: var(--text-muted)">Чистый / мес</div>
+                    <div class="mq-cell-metric__value mq-val--pos">+23 000 ₽</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <button type="button" class="mq-card__add" aria-hidden="true">+</button>
+          </div>
+        </article>
+      </section>
+
+      <p class="lab-divider">Новая серия — по мотивам E: полоса слева, иконки в линию, без подписей (подсказка при наведении)</p>
+
+      <!-- G — целевой референс -->
+      <section class="lab-section lab-section--featured" id="variant-g">
+        <div class="lab-section__label">
+          <span class="lab-section__id">G ★</span>
+          <span class="lab-section__title">Полоса + линия иконок (близко к вашему ТЗ)</span>
+        </div>
+        <p class="lab-section__note">Маленькие иконки в рамке, только числа; подписи — в tooltip (наведите).</p>
+        <article class="mq-card mq-card--accent mq-card--flat">
+          <div class="mq-card__accent" aria-hidden="true"></div>
+          <div class="mq-card__accent-body">
+            <div class="mq-card__kicker">Недвижимость</div>
+            <div class="mq-card__title">Квартира под сдачу</div>
+            <div class="mq-metrics-inline" role="list">
+              <span class="mq-inline-metric" role="listitem" data-tip="Стоимость актива" tabindex="0">
+                <span class="mq-metric-icon mq-metric-icon--coin mq-metric-icon--xs" aria-hidden="true"
+                  ><svg><use href="#icon-coins" /></svg
+                ></span>
+                <span class="mq-inline-metric__val">4,2 млн ₽</span>
+              </span>
+              <span class="mq-inline-metric" role="listitem" data-tip="Обслуживание в месяц" tabindex="0">
+                <span class="mq-metric-icon mq-metric-icon--down mq-metric-icon--xs" aria-hidden="true"
+                  ><svg><use href="#icon-trend-down" /></svg
+                ></span>
+                <span class="mq-inline-metric__val mq-val--neg">12 000</span>
+              </span>
+              <span class="mq-inline-metric" role="listitem" data-tip="Доход в месяц" tabindex="0">
+                <span class="mq-metric-icon mq-metric-icon--up mq-metric-icon--xs" aria-hidden="true"
+                  ><svg><use href="#icon-trend-up" /></svg
+                ></span>
+                <span class="mq-inline-metric__val mq-val--pos">35 000</span>
+              </span>
+              <span class="mq-inline-metric" role="listitem" data-tip="Чистый поток / мес" tabindex="0">
+                <span class="mq-metric-icon mq-metric-icon--flow mq-metric-icon--xs" aria-hidden="true"
+                  ><svg><use href="#icon-flow" /></svg
+                ></span>
+                <span class="mq-inline-metric__val mq-val--pos">+23 000</span>
+              </span>
+            </div>
+          </div>
+          <button type="button" class="mq-card__add" aria-hidden="true">+</button>
+        </article>
+      </section>
+
+      <!-- H -->
+      <section class="lab-section" id="variant-h">
+        <div class="lab-section__label">
+          <span class="lab-section__id">H</span>
+          <span class="lab-section__title">Полоса + линия без рамок у иконок</span>
+        </div>
+        <p class="lab-section__note">Только цвет иконки и число — ещё легче визуально.</p>
+        <article class="mq-card mq-card--accent mq-card--flat">
+          <div class="mq-card__accent" aria-hidden="true"></div>
+          <div class="mq-card__accent-body">
+            <div class="mq-card__kicker">Недвижимость</div>
+            <div class="mq-card__title">Квартира под сдачу</div>
+            <div class="mq-metrics-inline">
+              <span class="mq-inline-metric" data-tip="Стоимость" tabindex="0">
+                <span class="mq-metric-glyph mq-metric-glyph--coin" aria-hidden="true"
+                  ><svg><use href="#icon-coins" /></svg
+                ></span>
+                <span class="mq-inline-metric__val">4,2 млн ₽</span>
+              </span>
+              <span class="mq-inline-metric" data-tip="Обслуживание" tabindex="0">
+                <span class="mq-metric-glyph mq-metric-glyph--down" aria-hidden="true"
+                  ><svg><use href="#icon-trend-down" /></svg
+                ></span>
+                <span class="mq-inline-metric__val mq-val--neg">12 000</span>
+              </span>
+              <span class="mq-inline-metric" data-tip="Доход" tabindex="0">
+                <span class="mq-metric-glyph mq-metric-glyph--up" aria-hidden="true"
+                  ><svg><use href="#icon-trend-up" /></svg
+                ></span>
+                <span class="mq-inline-metric__val mq-val--pos">35 000</span>
+              </span>
+            </div>
+          </div>
+          <button type="button" class="mq-card__add" aria-hidden="true">+</button>
+        </article>
+      </section>
+
+      <!-- I -->
+      <section class="lab-section" id="variant-i">
+        <div class="lab-section__label">
+          <span class="lab-section__id">I</span>
+          <span class="lab-section__title">Полоса + строки как C, без текста слева</span>
+        </div>
+        <p class="lab-section__note">Вертикальный ритм как в C, но только иконка → значение.</p>
+        <article class="mq-card mq-card--accent mq-card--flat">
+          <div class="mq-card__accent" aria-hidden="true"></div>
+          <div class="mq-card__accent-body">
+            <div class="mq-card__kicker">Недвижимость</div>
+            <div class="mq-card__title">Квартира под сдачу</div>
+            <div class="mq-metrics-rows-compact">
+              <div class="mq-metric-row-compact" data-tip="Стоимость" tabindex="0">
+                <span class="mq-metric-icon mq-metric-icon--coin mq-metric-icon--xs" aria-hidden="true"
+                  ><svg><use href="#icon-coins" /></svg
+                ></span>
+                <span class="mq-metric-row-compact__val">4 200 000 ₽</span>
+              </div>
+              <div class="mq-metric-row-compact" data-tip="Обслуживание / мес" tabindex="0">
+                <span class="mq-metric-icon mq-metric-icon--down mq-metric-icon--xs" aria-hidden="true"
+                  ><svg><use href="#icon-trend-down" /></svg
+                ></span>
+                <span class="mq-metric-row-compact__val mq-val--neg">12 000 ₽</span>
+              </div>
+              <div class="mq-metric-row-compact" data-tip="Доход / мес" tabindex="0">
+                <span class="mq-metric-icon mq-metric-icon--up mq-metric-icon--xs" aria-hidden="true"
+                  ><svg><use href="#icon-trend-up" /></svg
+                ></span>
+                <span class="mq-metric-row-compact__val mq-val--pos">35 000 ₽</span>
+              </div>
+            </div>
+          </div>
+          <button type="button" class="mq-card__add" aria-hidden="true">+</button>
+        </article>
+      </section>
+
+      <!-- J -->
+      <section class="lab-section" id="variant-j">
+        <div class="lab-section__label">
+          <span class="lab-section__id">J</span>
+          <span class="lab-section__title">Линия с разделителями ·</span>
+        </div>
+        <p class="lab-section__note">Одна строка, метрики отделены точкой — максимально компактно.</p>
+        <article class="mq-card mq-card--accent mq-card--flat">
+          <div class="mq-card__accent" aria-hidden="true"></div>
+          <div class="mq-card__accent-body">
+            <div class="mq-card__kicker">Недвижимость</div>
+            <div class="mq-card__title">Квартира под сдачу</div>
+            <div class="mq-metrics-inline mq-metrics-inline--dots">
+              <span class="mq-inline-metric" data-tip="Стоимость" tabindex="0">
+                <span class="mq-metric-icon mq-metric-icon--coin mq-metric-icon--xs" aria-hidden="true"
+                  ><svg><use href="#icon-coins" /></svg></span
+                ><span class="mq-inline-metric__val">4,2 млн</span>
+              </span>
+              <span class="mq-inline-metric" data-tip="Обслуживание" tabindex="0">
+                <span class="mq-metric-icon mq-metric-icon--down mq-metric-icon--xs" aria-hidden="true"
+                  ><svg><use href="#icon-trend-down" /></svg></span
+                ><span class="mq-inline-metric__val mq-val--neg">12k</span>
+              </span>
+              <span class="mq-inline-metric" data-tip="Доход" tabindex="0">
+                <span class="mq-metric-icon mq-metric-icon--up mq-metric-icon--xs" aria-hidden="true"
+                  ><svg><use href="#icon-trend-up" /></svg></span
+                ><span class="mq-inline-metric__val mq-val--pos">35k</span>
+              </span>
+            </div>
+          </div>
+          <button type="button" class="mq-card__add" aria-hidden="true">+</button>
+        </article>
+      </section>
+
+      <!-- K -->
+      <section class="lab-section" id="variant-k">
+        <div class="lab-section__label">
+          <span class="lab-section__id">K</span>
+          <span class="lab-section__title">Полоса + выравнивание space-between</span>
+        </div>
+        <p class="lab-section__note">Метрики растянуты по ширине карточки — удобно на широких экранах.</p>
+        <article class="mq-card mq-card--accent mq-card--flat">
+          <div class="mq-card__accent" aria-hidden="true"></div>
+          <div class="mq-card__accent-body">
+            <div class="mq-card__kicker">Недвижимость</div>
+            <div class="mq-card__title">Квартира под сдачу</div>
+            <div class="mq-metrics-inline mq-metrics-inline--spread">
+              <span class="mq-inline-metric" data-tip="Стоимость" tabindex="0">
+                <span class="mq-metric-icon mq-metric-icon--coin mq-metric-icon--xs" aria-hidden="true"
+                  ><svg><use href="#icon-coins" /></svg
+                ></span>
+                <span class="mq-inline-metric__val">4,2 млн</span>
+              </span>
+              <span class="mq-inline-metric" data-tip="Расход" tabindex="0">
+                <span class="mq-metric-icon mq-metric-icon--down mq-metric-icon--xs" aria-hidden="true"
+                  ><svg><use href="#icon-trend-down" /></svg
+                ></span>
+                <span class="mq-inline-metric__val mq-val--neg">−12k</span>
+              </span>
+              <span class="mq-inline-metric" data-tip="Доход" tabindex="0">
+                <span class="mq-metric-icon mq-metric-icon--up mq-metric-icon--xs" aria-hidden="true"
+                  ><svg><use href="#icon-trend-up" /></svg
+                ></span>
+                <span class="mq-inline-metric__val mq-val--pos">+35k</span>
+              </span>
+              <span class="mq-inline-metric" data-tip="Итого" tabindex="0">
+                <span class="mq-metric-icon mq-metric-icon--flow mq-metric-icon--xs" aria-hidden="true"
+                  ><svg><use href="#icon-flow" /></svg
+                ></span>
+                <span class="mq-inline-metric__val mq-val--pos">+23k</span>
+              </span>
+            </div>
+          </div>
+          <button type="button" class="mq-card__add" aria-hidden="true">+</button>
+        </article>
+      </section>
+    </main>
+
+    <script>
+      document.querySelectorAll('[data-theme-btn]').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          const theme = btn.getAttribute('data-theme-btn');
+          document.documentElement.setAttribute('data-theme', theme);
+          document.querySelectorAll('[data-theme-btn]').forEach((b) => {
+            b.classList.toggle('is-active', b === btn);
+          });
+        });
+      });
+    </script>
+  </body>
+</html>

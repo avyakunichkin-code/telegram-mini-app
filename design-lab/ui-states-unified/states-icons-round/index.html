@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="ru" data-theme="light">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>ТВОЙ ХОД — UI states + icons</title>
+    <link rel="stylesheet" href="./lab-base.css" />
+  </head>
+  <body>
+    <svg xmlns="http://www.w3.org/2000/svg" width="0" height="0" style="position: absolute" aria-hidden="true">
+      <defs>
+        <symbol id="ico-up" viewBox="0 0 24 24">
+          <path stroke="currentColor" stroke-width="2.25" stroke-linecap="round" d="M12 19V9" fill="none" />
+          <path stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round" d="M8 11l4-4 4 4" fill="none" />
+        </symbol>
+        <symbol id="ico-down" viewBox="0 0 24 24">
+          <path stroke="currentColor" stroke-width="2.25" stroke-linecap="round" d="M12 5v10" fill="none" />
+          <path stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round" d="M8 13l4 4 4-4" fill="none" />
+        </symbol>
+        <symbol id="ico-coin" viewBox="0 0 24 24">
+          <ellipse cx="8" cy="7" rx="5" ry="2.2" stroke="currentColor" stroke-width="1.75" fill="none" />
+          <path d="M3 7v4c0 1.2 2.2 2.2 5 2.2s5-1 5-2.2V7" stroke="currentColor" stroke-width="1.75" fill="none" />
+          <ellipse cx="14" cy="13" rx="5" ry="2.2" stroke="currentColor" stroke-width="1.75" fill="none" />
+          <path d="M9 13v4c0 1.2 2.2 2.2 5 2.2s5-1 5-2.2v-4" stroke="currentColor" stroke-width="1.75" fill="none" />
+        </symbol>
+        <symbol id="ico-shield" viewBox="0 0 24 24">
+          <path stroke="currentColor" stroke-width="1.75" stroke-linejoin="round" d="M12 3 20 7v6c0 5-3.4 8.2-8 9-4.6-.8-8-4-8-9V7l8-4Z" fill="none" />
+          <path stroke="currentColor" stroke-width="1.75" stroke-linecap="round" d="M9.5 12.2 11 13.7 14.6 10.1" fill="none" />
+        </symbol>
+        <symbol id="ico-wallet" viewBox="0 0 24 24">
+          <path stroke="currentColor" stroke-width="1.75" d="M7 10V7a5 5 0 0 1 10 0v3" fill="none" />
+          <path stroke="currentColor" stroke-width="1.75" d="M6 10h12v10a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V10Z" fill="none" />
+          <path stroke="currentColor" stroke-width="1.75" stroke-linecap="round" d="M10 14h4" fill="none" />
+        </symbol>
+        <symbol id="ico-warn" viewBox="0 0 24 24">
+          <path stroke="currentColor" stroke-width="1.75" stroke-linejoin="round" d="M12 3 22 20H2L12 3Z" fill="none" />
+          <path stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M12 9v5M12 17h.01" fill="none" />
+        </symbol>
+      </defs>
+    </svg>
+
+    <header class="lab-header">
+      <h1>UI states + icon family</h1>
+      <p>
+        B1 empty/error/loading · B2 ritual beats · B3 chips 2×2. Одинаковые данные — см.
+        <code>../CONTENT.md</code>. Проверьте <strong>тёмную</strong> тему.
+      </p>
+      <div class="lab-header__row">
+        <div class="lab-theme" role="group" aria-label="Тема">
+          <button type="button" class="is-active" data-theme-btn="light">Светлая</button>
+          <button type="button" data-theme-btn="dark">Тёмная</button>
+        </div>
+        <nav class="lab-nav" aria-label="Секции">
+          <a href="#s1">S1 Empty</a>
+          <a href="#s2">S2 Error</a>
+          <a href="#s3">S3 Loading</a>
+          <a href="#s4">S4 Ritual</a>
+          <a href="#s5">S5 Chips</a>
+        </nav>
+      </div>
+    </header>
+
+    <main class="lab-main">
+      <!-- S1 -->
+      <section class="lab-section" id="s1">
+        <h2>S1 — Пустые состояния</h2>
+        <p class="lab-lead">Контекст: «Пока нет открытых позиций» · CTA «Открыть депозит». Legacy dashed — не ★.</p>
+        <div class="lab-compare">
+          <div class="lab-col">
+            <span class="lab-col__id">A</span>
+            <p class="lab-col__note">Текущий mqx-capital-empty</p>
+            <div class="lab-phone"><div class="lab-phone__inner lab-capital-card">
+              <p class="lab-panel-title">Инвестиции</p>
+              <div class="state-empty-a">
+                <p class="state-empty-a__msg">Пока нет открытых позиций</p>
+                <button type="button" class="state-empty-a__cta">Открыть депозит</button>
+              </div>
+            </div></div>
+          </div>
+          <div class="lab-col">
+            <span class="lab-col__id">B</span>
+            <p class="lab-col__note">A + иконка в accent-круге</p>
+            <div class="lab-phone"><div class="lab-phone__inner lab-capital-card">
+              <div class="state-empty-b">
+                <div class="state-empty-b__icon"><svg><use href="#ico-coin" /></svg></div>
+                <p class="state-empty-a__msg">Пока нет открытых позиций</p>
+                <button type="button" class="state-empty-a__cta">Открыть депозит</button>
+              </div>
+            </div></div>
+          </div>
+          <div class="lab-col">
+            <span class="lab-col__id">C</span>
+            <p class="lab-col__note">Inline в карточке, без billboard</p>
+            <div class="lab-phone"><div class="lab-phone__inner lab-capital-card">
+              <div class="state-empty-c">
+                <div class="state-empty-c__icon"><svg><use href="#ico-coin" /></svg></div>
+                <p class="state-empty-c__text">Пока нет открытых позиций</p>
+              </div>
+            </div></div>
+          </div>
+          <div class="lab-col">
+            <span class="lab-col__id">D</span>
+            <p class="lab-col__note">Монетка + заголовок (редко)</p>
+            <div class="lab-phone"><div class="lab-phone__inner lab-capital-card">
+              <div class="state-empty-d">
+                <img class="state-empty-d__monetka" src="./assets/monetka-mascot.png" alt="" width="48" height="48" />
+                <p class="state-empty-d__title">Портфель пуст</p>
+                <p class="state-empty-d__msg">Откройте первую позицию — так проще учиться на цифрах</p>
+                <button type="button" class="state-empty-a__cta">Открыть депозит</button>
+              </div>
+            </div></div>
+          </div>
+          <div class="lab-col">
+            <span class="lab-col__id">—</span>
+            <p class="lab-col__note">Legacy mqx-fin-empty</p>
+            <div class="lab-phone"><div class="lab-phone__inner lab-capital-card">
+              <div class="state-empty-legacy">Нет активных полисов</div>
+              <span class="lab-ref-tag">не в prod ★</span>
+            </div></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- S2 -->
+      <section class="lab-section" id="s2">
+        <h2>S2 — Ошибка загрузки</h2>
+        <p class="lab-lead">A — только toast (референс). B/C — inline + «Повторить» ≥44px.</p>
+        <div class="lab-compare">
+          <div class="lab-col">
+            <span class="lab-col__id">A</span>
+            <p class="lab-col__note">Toast (как сейчас часто)</p>
+            <div class="lab-phone"><div class="lab-phone__inner">
+              <p class="lab-panel-title">Список</p>
+              <div class="state-skeleton-rows" style="opacity: 0.35"><div class="state-skeleton-row"></div></div>
+              <div class="state-error-toast" role="alert">Не удалось загрузить данные</div>
+            </div></div>
+          </div>
+          <div class="lab-col">
+            <span class="lab-col__id">B</span>
+            <p class="lab-col__note">Inline в секции</p>
+            <div class="lab-phone"><div class="lab-phone__inner lab-capital-card">
+              <div class="state-error-b" role="alert">
+                <div class="state-error-b__icon"><svg><use href="#ico-warn" /></svg></div>
+                <p class="state-error-b__title">Не удалось загрузить данные</p>
+                <p class="state-error-b__sub">Проверьте сеть и попробуйте снова</p>
+                <button type="button" class="state-error-b__btn">Повторить</button>
+              </div>
+            </div></div>
+          </div>
+          <div class="lab-col">
+            <span class="lab-col__id">C</span>
+            <p class="lab-col__note">Панель целиком — error mode</p>
+            <div class="lab-phone"><div class="lab-phone__inner">
+              <p class="lab-panel-title">Страховки</p>
+              <div class="state-error-c" role="alert">
+                <div class="state-error-b__icon"><svg><use href="#ico-warn" /></svg></div>
+                <p class="state-error-b__title">Не удалось загрузить данные</p>
+                <p class="state-error-b__sub">Проверьте сеть и попробуйте снова</p>
+                <button type="button" class="state-error-c__btn">Повторить</button>
+              </div>
+            </div></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- S3 -->
+      <section class="lab-section" id="s3">
+        <h2>S3 — Загрузка</h2>
+        <p class="lab-lead">Списки — skeleton B; дашборд — skeleton C.</p>
+        <div class="lab-compare">
+          <div class="lab-col">
+            <span class="lab-col__id">A</span>
+            <p class="lab-col__note">Spinner по центру</p>
+            <div class="lab-phone"><div class="lab-phone__inner lab-capital-card">
+              <div class="state-loading-a" aria-busy="true" aria-label="Загрузка списка">
+                <div class="state-spinner"></div>
+              </div>
+            </div></div>
+          </div>
+          <div class="lab-col">
+            <span class="lab-col__id">B</span>
+            <p class="lab-col__note">3 skeleton-строки</p>
+            <div class="lab-phone"><div class="lab-phone__inner lab-capital-card">
+              <p class="lab-panel-title">Позиции</p>
+              <div class="state-skeleton-rows" aria-busy="true" aria-label="Загрузка списка">
+                <div class="state-skeleton-row"></div>
+                <div class="state-skeleton-row"></div>
+                <div class="state-skeleton-row"></div>
+              </div>
+            </div></div>
+          </div>
+          <div class="lab-col">
+            <span class="lab-col__id">C</span>
+            <p class="lab-col__note">Skeleton 2×2 финансы</p>
+            <div class="lab-phone"><div class="lab-phone__inner">
+              <p class="lab-panel-title">Финансы периода</p>
+              <div class="state-skeleton-chips" aria-busy="true">
+                <div class="state-skeleton-chip"></div>
+                <div class="state-skeleton-chip"></div>
+                <div class="state-skeleton-chip"></div>
+                <div class="state-skeleton-chip"></div>
+              </div>
+            </div></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- S4 -->
+      <section class="lab-section" id="s4">
+        <h2>S4 — Иконки итога периода (ritual)</h2>
+        <p class="lab-lead">Период 3 · фикстура beats из CONTENT.md. R0 = prod (+ ! ◎).</p>
+        <div class="lab-compare">
+          <div class="lab-col">
+            <span class="lab-col__id">R0</span>
+            <p class="lab-col__note">Символы в круге (prod)</p>
+            <div class="lab-phone ritual-phone">
+              <div class="ritual-overlay">
+                <div class="ritual-overlay__badge">Твой ход сделан</div>
+                <h3 class="ritual-overlay__title">Ход завершён!</h3>
+                <p class="ritual-overlay__period">Период 3 закрыт</p>
+                <ul class="ritual-beats">
+                  <li><span class="ritual-beat-icon ritual-beat-icon--pos">+</span><span>Доходы <strong>+12 400 ₽</strong> — деньги пришли в этот ход</span></li>
+                  <li><span class="ritual-beat-icon ritual-beat-icon--neg">!</span><span>Расходы и платежи <strong>−8 900 ₽</strong> — часть прироста ушла на жизнь и долги</span></li>
+                  <li><span class="ritual-beat-icon ritual-beat-icon--pos">+</span><span>Наличные <strong>+3 500 ₽</strong> — итог хода в плюс</span></li>
+                  <li><span class="ritual-beat-icon">◎</span><span>Подушка держится — запас на чёрный день без сюрпризов</span></li>
+                </ul>
+                <button type="button" class="ritual-overlay__btn">Дальше</button>
+              </div>
+            </div>
+            <span class="lab-ref-tag">до ★</span>
+          </div>
+          <div class="lab-col">
+            <span class="lab-col__id">A</span>
+            <p class="lab-col__note">SVG FinanceMetricIcons</p>
+            <div class="lab-phone ritual-phone">
+              <div class="ritual-overlay">
+                <div class="ritual-overlay__badge">Твой ход сделан</div>
+                <h3 class="ritual-overlay__title">Ход завершён!</h3>
+                <p class="ritual-overlay__period">Период 3 закрыт</p>
+                <ul class="ritual-beats">
+                  <li><span class="ritual-beat-icon ritual-beat-icon--pos ritual-beat-icon--svg"><svg><use href="#ico-up" /></svg></span><span>Доходы <strong>+12 400 ₽</strong> — деньги пришли в этот ход</span></li>
+                  <li><span class="ritual-beat-icon ritual-beat-icon--neg ritual-beat-icon--svg"><svg><use href="#ico-down" /></svg></span><span>Расходы и платежи <strong>−8 900 ₽</strong> — часть прироста ушла на жизнь и долги</span></li>
+                  <li><span class="ritual-beat-icon ritual-beat-icon--pos ritual-beat-icon--svg"><svg><use href="#ico-coin" /></svg></span><span>Наличные <strong>+3 500 ₽</strong> — итог хода в плюс</span></li>
+                  <li><span class="ritual-beat-icon ritual-beat-icon--svg"><svg><use href="#ico-shield" /></svg></span><span>Подушка держится — запас на чёрный день без сюрпризов</span></li>
+                </ul>
+                <button type="button" class="ritual-overlay__btn">Дальше</button>
+              </div>
+            </div>
+          </div>
+          <div class="lab-col">
+            <span class="lab-col__id">C</span>
+            <p class="lab-col__note">A + лёгкий glow pos/neg</p>
+            <div class="lab-phone ritual-phone">
+              <div class="ritual-overlay">
+                <div class="ritual-overlay__badge">Твой ход сделан</div>
+                <h3 class="ritual-overlay__title">Ход завершён!</h3>
+                <p class="ritual-overlay__period">Период 3 закрыт</p>
+                <ul class="ritual-beats">
+                  <li><span class="ritual-beat-icon ritual-beat-icon--pos ritual-beat-icon--svg ritual-beat-icon--glow"><svg><use href="#ico-up" /></svg></span><span>Доходы <strong>+12 400 ₽</strong></span></li>
+                  <li><span class="ritual-beat-icon ritual-beat-icon--neg ritual-beat-icon--svg ritual-beat-icon--glow"><svg><use href="#ico-down" /></svg></span><span>Расходы <strong>−8 900 ₽</strong></span></li>
+                  <li><span class="ritual-beat-icon ritual-beat-icon--pos ritual-beat-icon--svg ritual-beat-icon--glow"><svg><use href="#ico-coin" /></svg></span><span>Наличные <strong>+3 500 ₽</strong></span></li>
+                  <li><span class="ritual-beat-icon ritual-beat-icon--svg"><svg><use href="#ico-shield" /></svg></span><span>Подушка держится</span></li>
+                </ul>
+                <button type="button" class="ritual-overlay__btn">Дальше</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- S5 -->
+      <section class="lab-section" id="s5">
+        <h2>S5 — Chips 2×2 (дашборд)</h2>
+        <p class="lab-lead">Доходы 42 000 · Расходы 28 600 · Баланс 15 200 · Подушка 9 800 (62%).</p>
+        <div class="lab-compare">
+          <div class="lab-col">
+            <span class="lab-col__id">D0</span>
+            <p class="lab-col__note">Inline SVG prod</p>
+            <div class="lab-phone"><div class="lab-phone__inner chips-d0">
+              <p class="lab-panel-title">Финансы периода</p>
+              <div class="chips-grid">
+                <div class="mqx-finance-chip">
+                  <div class="mqx-finance-chip__icon mqx-accent--sky"><svg viewBox="0 0 24 24"><path d="M4 19V5"/><path d="M4 19h16"/><path d="M7 15l4-4 3 3 5-6"/></svg></div>
+                  <div class="mqx-finance-chip__body"><div class="mqx-finance-chip__label">Доходы</div><div class="mqx-finance-chip__value mqx-finance-chip__value--pos">42 000</div></div>
+                </div>
+                <div class="mqx-finance-chip">
+                  <div class="mqx-finance-chip__icon mqx-accent--amber"><svg viewBox="0 0 24 24"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/></svg></div>
+                  <div class="mqx-finance-chip__body"><div class="mqx-finance-chip__label">Расходы</div><div class="mqx-finance-chip__value mqx-finance-chip__value--out">28 600</div></div>
+                </div>
+                <div class="mqx-finance-chip">
+                  <div class="mqx-finance-chip__icon mqx-accent--violet"><svg viewBox="0 0 24 24"><path d="M7 10V7a5 5 0 0 1 10 0v3"/><path d="M6 10h12v10a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V10Z"/><path d="M10 14h4"/></svg></div>
+                  <div class="mqx-finance-chip__body"><div class="mqx-finance-chip__label">Баланс</div><div class="mqx-finance-chip__value">15 200</div></div>
+                </div>
+                <div class="mqx-finance-chip">
+                  <div class="mqx-finance-chip__icon mqx-accent--emerald"><svg viewBox="0 0 24 24"><path d="M12 3 20 7v6c0 5-3.4 8.2-8 9-4.6-.8-8-4-8-9V7l8-4Z"/><path d="M9.5 12.2 11 13.7 14.6 10.1"/></svg></div>
+                  <div class="mqx-finance-chip__body"><div class="mqx-finance-chip__label">Фин.подушка</div><div class="mqx-finance-chip__value">9 800</div><div class="mqx-cushion-fill"><span class="mqx-cushion-fill__bar" style="width:62%"></span></div></div>
+                </div>
+              </div>
+            </div></div>
+            <span class="lab-ref-tag">до ★</span>
+          </div>
+          <div class="lab-col">
+            <span class="lab-col__id">A</span>
+            <p class="lab-col__note">FinanceMetricIcons set</p>
+            <div class="lab-phone"><div class="lab-phone__inner">
+              <p class="lab-panel-title">Финансы периода</p>
+              <div class="chips-grid">
+                <div class="mqx-finance-chip">
+                  <div class="mqx-finance-chip__icon mqx-accent--sky"><svg><use href="#ico-up" /></svg></div>
+                  <div class="mqx-finance-chip__body"><div class="mqx-finance-chip__label">Доходы</div><div class="mqx-finance-chip__value mqx-finance-chip__value--pos">42 000</div></div>
+                </div>
+                <div class="mqx-finance-chip">
+                  <div class="mqx-finance-chip__icon mqx-accent--amber"><svg><use href="#ico-down" /></svg></div>
+                  <div class="mqx-finance-chip__body"><div class="mqx-finance-chip__label">Расходы</div><div class="mqx-finance-chip__value mqx-finance-chip__value--out">28 600</div></div>
+                </div>
+                <div class="mqx-finance-chip">
+                  <div class="mqx-finance-chip__icon mqx-accent--violet"><svg><use href="#ico-wallet" /></svg></div>
+                  <div class="mqx-finance-chip__body"><div class="mqx-finance-chip__label">Баланс</div><div class="mqx-finance-chip__value">15 200</div></div>
+                </div>
+                <div class="mqx-finance-chip">
+                  <div class="mqx-finance-chip__icon mqx-accent--emerald"><svg><use href="#ico-shield" /></svg></div>
+                  <div class="mqx-finance-chip__body"><div class="mqx-finance-chip__label">Фин.подушка</div><div class="mqx-finance-chip__value">9 800</div><div class="mqx-cushion-fill"><span class="mqx-cushion-fill__bar" style="width:62%"></span></div></div>
+                </div>
+              </div>
+            </div></div>
+          </div>
+          <div class="lab-col">
+            <span class="lab-col__id">C</span>
+            <p class="lab-col__note">A + box 40×40 (как prod accents)</p>
+            <div class="lab-phone"><div class="lab-phone__inner">
+              <p class="lab-panel-title">Финансы периода</p>
+              <div class="chips-grid">
+                <div class="mqx-finance-chip">
+                  <div class="mqx-finance-chip__icon mqx-accent--sky"><svg><use href="#ico-up" /></svg></div>
+                  <div class="mqx-finance-chip__body"><div class="mqx-finance-chip__label">Доходы</div><div class="mqx-finance-chip__value mqx-finance-chip__value--pos">42 000</div></div>
+                </div>
+                <div class="mqx-finance-chip">
+                  <div class="mqx-finance-chip__icon mqx-accent--amber"><svg><use href="#ico-down" /></svg></div>
+                  <div class="mqx-finance-chip__body"><div class="mqx-finance-chip__label">Расходы</div><div class="mqx-finance-chip__value mqx-finance-chip__value--out">28 600</div></div>
+                </div>
+                <div class="mqx-finance-chip">
+                  <div class="mqx-finance-chip__icon mqx-accent--violet"><svg><use href="#ico-wallet" /></svg></div>
+                  <div class="mqx-finance-chip__body"><div class="mqx-finance-chip__label">Баланс</div><div class="mqx-finance-chip__value">15 200</div></div>
+                </div>
+                <div class="mqx-finance-chip">
+                  <div class="mqx-finance-chip__icon mqx-accent--emerald"><svg><use href="#ico-shield" /></svg></div>
+                  <div class="mqx-finance-chip__body"><div class="mqx-finance-chip__label">Фин.подушка</div><div class="mqx-finance-chip__value">9 800</div><div class="mqx-cushion-fill"><span class="mqx-cushion-fill__bar" style="width:62%"></span></div></div>
+                </div>
+              </div>
+            </div></div>
+          </div>
+        </div>
+      </section>
+
+      <p style="font-size: 13px; color: var(--text-muted); margin-top: 24px">
+        Рекомендуемый гибрид для обсуждения: <strong>S1-B · S2-C · S3-B · S4-A (или C) · S5-C</strong>. Утверждение — в чате, затем MQX.
+      </p>
+    </main>
+
+    <script src="./lab.js"></script>
+  </body>
+</html>

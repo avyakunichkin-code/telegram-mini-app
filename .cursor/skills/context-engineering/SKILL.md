@@ -1,9 +1,21 @@
 ---
 name: context-engineering
 description: Optimizes agent context setup. Use when starting a new session, when agent output quality degrades, when switching between tasks, or when you need to configure rules files and context for a project.
+argument-hint: "[task goal or session focus]"
+user-invocable: true
+allowed-tools: Read, Glob, Grep, Write
 ---
 
 # Context Engineering
+
+## Прочитай сначала (ТВОЙ ХОД)
+
+- [`docs/DOCUMENTATION_SYSTEM.md`](../../../docs/DOCUMENTATION_SYSTEM.md)
+- [`docs/agents/CURSOR_SKILLS.md`](../../../docs/agents/CURSOR_SKILLS.md)
+- [`CLAUDE.md`](../../../CLAUDE.md)
+- [`.cursor/rules/`](../../../.cursor/rules/)
+
+**Куда писать:** `.cursor/rules/`. **Дальше:** `using-agent-skills`.
 
 ## Overview
 
@@ -287,3 +299,18 @@ After setting up context, confirm:
 - [ ] Agent output follows the patterns shown in the rules file
 - [ ] Agent references actual project files and APIs (not hallucinated ones)
 - [ ] Context is refreshed when switching between major tasks
+
+---
+
+## Итог (Verdict)
+
+В конце работы явно укажи результат: **PASS**, **FAIL**, **CONCERNS**, **COMPLETE** или **APPROVED** — в зависимости от типа задачи.
+
+## Согласование изменений
+
+Перед созданием или изменением файлов в репозитории спроси: «Могу записать …?» — если пользователь не дал явное «делай» / «запиши».
+
+## Следующий шаг
+
+`using-agent-skills` для выбора доменного скилла; правила — `.cursor/rules/`.
+

@@ -1,6 +1,20 @@
 // src/hooks/useGame.js
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { API, ApiError, formatApiErrorDetail } from '../api';
+import {
+  notifyAchievementUnlocks,
+  notifyPeriodCloseRewards,
+} from '../utils/progressionToasts';
+import { showNotification } from '../components/notifications';
+import { subscribeAppForeground, debounceForeground } from '../utils/appLifecycle';
+
+const FOREGROUND_RESYNC_MS = 400;
+
+function parsePendingEvents(eventPayload) {
+  if (!eventPayload) return [];
+  if (Array.isArray(eventPayload.events)) return eventPayload.events;
+  return eventPayload.event ? [eventPayload.event] : [];
+}
 
 export function useGame() {
   const [overview, setOverview] = useState(null);
@@ -10,36 +24,74 @@ export function useGame() {
   /** Увеличивается только при загрузке/смене периода при наличии незакрытых событий (не после каждого выбора). */
   const [eventsPromptTick, setEventsPromptTick] = useState(0);
   const [loading, setLoading] = useState(true);
+  /** Фоновое обновление после действий — без полноэкранного спиннера. */
+  const [syncing, setSyncing] = useState(false);
   const [error, setError] = useState(null);
+  const [periodCloseSummary, setPeriodCloseSummary] = useState(null);
+  const [gameSessionStatus, setGameSessionStatus] = useState('active');
+  const [defeatInfo, setDefeatInfo] = useState(null);
+  const [runFinale, setRunFinale] = useState(null);
+  const [runFinaleOpen, setRunFinaleOpen] = useState(false);
 
-  const timerRef = useRef(null);
-  const localRemainingRef = useRef(0);
-  const lastSyncRef = useRef(Date.now());
+  const periodIndexRef = useRef(null);
+  const periodEndInFlightRef = useRef(false);
+  const loadingRef = useRef(true);
 
-  // Загрузка данных (можно повторить после ошибки)
+  const applyBootstrapPayload = useCallback((data, { bumpEvents = false, updateTime = true } = {}) => {
+    setOverview(data.overview);
+    if (updateTime && data.time) {
+      setTimeStatus(data.time);
+      periodIndexRef.current = data.time.period_index ?? null;
+    }
+    setPeriodStatus(data.period);
+    const evList = parsePendingEvents(data.events);
+    setPendingEvents(evList);
+    if (bumpEvents && evList.length > 0) setEventsPromptTick((t) => t + 1);
+    if (data.overview?.newly_unlocked?.length) {
+      notifyAchievementUnlocks(data.overview.newly_unlocked, {
+        onboardingState: data.overview.onboarding_state,
+      });
+    }
+    const sessionStatus = data.game_session_status || data.gameSessionStatus || 'active';
+    setGameSessionStatus(sessionStatus);
+    if (sessionStatus === 'defeated') {
+      setDefeatInfo({
+        reason: data.defeat_reason || data.defeatReason || 'unknown',
+        periodIndex: data.defeat_period_index ?? data.defeatPeriodIndex ?? null,
+      });
+    } else {
+      setDefeatInfo(null);
+    }
+    const finale = data.run_finale || data.runFinale || null;
+    setRunFinale(finale);
+    setRunFinaleOpen(Boolean(finale));
+    return data;
+  }, []);
+
+  /** Один round-trip: overview + period + events (+ time). После мутаций в игре. */
+  const refreshGameState = useCallback(async (opts) => {
+    setSyncing(true);
+    try {
+      const data = await API.getGameBootstrap();
+      applyBootstrapPayload(data, opts);
+      return data;
+    } finally {
+      setSyncing(false);
+    }
+  }, [applyBootstrapPayload]);
+
   const loadData = useCallback(async () => {
     setLoading(true);
+    loadingRef.current = true;
     try {
-      const [overviewData, timeData, periodData, eventData] = await Promise.all([
-        API.getOverview(),
-        API.getTimeStatus(),
-        API.getPeriodStatus(),
-        API.getPendingEvent(),
-      ]);
-      setOverview(overviewData);
-      setTimeStatus(timeData);
-      setPeriodStatus(periodData);
-      const evList =
-        Array.isArray(eventData?.events) ? eventData.events
-        : (eventData?.event ? [eventData.event] : []);
-      setPendingEvents(evList);
-      if (evList.length > 0) setEventsPromptTick((t) => t + 1);
-      localRemainingRef.current = timeData.seconds_until_next_period;
-      lastSyncRef.current = Date.now();
+      const data = await API.getGameBootstrap();
+      applyBootstrapPayload(data, { bumpEvents: true });
       setError(null);
     } catch (err) {
       setOverview(null);
       setTimeStatus(null);
+      setPeriodStatus(null);
+      setPendingEvents([]);
       const msg =
         err instanceof ApiError
           ? formatApiErrorDetail(err.detail, err.message)
@@ -47,13 +99,18 @@ export function useGame() {
       setError(msg);
     } finally {
       setLoading(false);
+      loadingRef.current = false;
     }
-  }, []);
+  }, [applyBootstrapPayload]);
 
-  // Обновление только overview (после действий)
   const refreshOverview = useCallback(async () => {
     const data = await API.getOverview();
     setOverview(data);
+    if (data?.newly_unlocked?.length) {
+      notifyAchievementUnlocks(data.newly_unlocked, {
+        onboardingState: data.onboarding_state,
+      });
+    }
   }, []);
 
   const refreshPeriodStatus = useCallback(async () => {
@@ -61,10 +118,20 @@ export function useGame() {
     setPeriodStatus(data);
   }, []);
 
+  const dismissVictoryFinale = useCallback(async () => {
+    await API.dismissRunFinale();
+    setRunFinaleOpen(false);
+    setRunFinale(null);
+    await refreshGameState();
+  }, [refreshGameState]);
+
+  const submitRunFeedback = useCallback(async (payload) => {
+    return API.submitRunFeedback(payload);
+  }, []);
+
   const refreshPendingEvent = useCallback(async ({ bumpOverlay = false } = {}) => {
     const data = await API.getPendingEvent();
-    const evList =
-      Array.isArray(data?.events) ? data.events : (data?.event ? [data.event] : []);
+    const evList = parsePendingEvents(data);
     setPendingEvents(evList);
     if (bumpOverlay && evList.length > 0) setEventsPromptTick((t) => t + 1);
     return evList.length;
@@ -76,154 +143,139 @@ export function useGame() {
     return data;
   }, []);
 
-  // Таймер
-  const startTimer = useCallback(() => {
-    if (timerRef.current) clearInterval(timerRef.current);
-    if (!timeStatus || timeStatus.time_state !== 'play') return;
-
-    timerRef.current = setInterval(() => {
-      const now = Date.now();
-      const elapsed = Math.floor((now - lastSyncRef.current) / 1000);
-      const remaining = Math.max(0, timeStatus.seconds_until_next_period - elapsed);
-      localRemainingRef.current = remaining;
-
-      // Обновляем UI через setTimeStatus (добавим поле remainingLocal)
-      setTimeStatus(prev => ({ ...prev, remainingLocal: remaining }));
-
-      if (remaining <= 0) {
-        // Период закончился – синхронизируем
-        clearInterval(timerRef.current);
-        timerRef.current = null;
-        handlePeriodEnd();
+  const applyPeriodTransition = useCallback(
+    async (result) => {
+      if (!result) return result;
+      if (result.period_close) {
+        notifyPeriodCloseRewards(result.period_close, {
+          onboardingState: overview?.onboarding_state,
+        });
+        setPeriodCloseSummary(result.period_close);
       }
-    }, 1000);
-  }, [timeStatus]);
-
-  const stopTimer = useCallback(() => {
-    if (timerRef.current) {
-      clearInterval(timerRef.current);
-      timerRef.current = null;
-    }
-  }, []);
-
-  const handlePeriodEnd = useCallback(async () => {
-    const newTime = await API.setTimeNext();
-    if (newTime) {
-      setTimeStatus(newTime);
-      localRemainingRef.current = newTime.seconds_until_next_period;
-      lastSyncRef.current = Date.now();
-      await refreshOverview();
-      await refreshPeriodStatus();
-      await refreshPendingEvent({ bumpOverlay: true });
-      if (newTime.time_state === 'play') {
-        startTimer();
+      if (result.game_over) {
+        setGameSessionStatus('defeated');
+        setDefeatInfo({
+          reason: result.defeat_reason || 'unknown',
+          periodIndex: result.period_index ?? periodIndexRef.current,
+        });
       }
-    }
-  }, [refreshOverview, refreshPeriodStatus, refreshPendingEvent, startTimer]);
+      setTimeStatus(result);
+      periodIndexRef.current = result.period_index ?? periodIndexRef.current;
+      await refreshGameState({ bumpEvents: true, updateTime: false });
+      return result;
+    },
+    [refreshGameState, overview?.onboarding_state],
+  );
 
-  /** Ручной или подтверждённый переход (без window.confirm — его показывает GameScreen). */
+  const resyncAfterForeground = useCallback(async () => {
+    if (loadingRef.current) return;
+    try {
+      const prevIndex = periodIndexRef.current;
+      const data = await refreshGameState();
+      if (
+        prevIndex != null &&
+        data?.time?.period_index != null &&
+        prevIndex !== data.time.period_index
+      ) {
+        const evList = parsePendingEvents(data.events);
+        if (evList.length > 0) setEventsPromptTick((t) => t + 1);
+      }
+    } catch (err) {
+      const msg =
+        err instanceof ApiError
+          ? formatApiErrorDetail(err.detail, err.message)
+          : formatApiErrorDetail(err?.detail ?? err?.message, 'Не удалось обновить игру после возврата');
+      showNotification(msg, 'error');
+    }
+  }, [refreshGameState]);
+
   const advancePeriod = useCallback(async () => {
-    stopTimer();
-    const result = await API.setTimeNext();
-    if (result) {
-      setTimeStatus(result);
-      localRemainingRef.current = result.seconds_until_next_period;
-      lastSyncRef.current = Date.now();
-      await refreshOverview();
-      await refreshPeriodStatus();
-      await refreshPendingEvent({ bumpOverlay: true });
-      if (result.time_state === 'play') {
-        startTimer();
-      }
+    if (periodEndInFlightRef.current) return;
+    periodEndInFlightRef.current = true;
+    try {
+      const result = await API.setTimeNext();
+      await applyPeriodTransition(result);
+      return result;
+    } finally {
+      periodEndInFlightRef.current = false;
     }
-    return result;
-  }, [refreshOverview, refreshPeriodStatus, refreshPendingEvent, startTimer, stopTimer]);
+  }, [applyPeriodTransition]);
 
-  // Действия времени
-  const setPlay = useCallback(async () => {
-    const result = await API.setTimePlay();
-    if (result) {
-      setTimeStatus(result);
-      localRemainingRef.current = result.seconds_until_next_period;
-      lastSyncRef.current = Date.now();
-      startTimer();
-    }
-  }, [startTimer]);
-
-  const setPause = useCallback(async () => {
-    const result = await API.setTimePause();
-    if (result) {
-      setTimeStatus(result);
-      localRemainingRef.current = result.seconds_until_next_period;
-      lastSyncRef.current = Date.now();
-      stopTimer();
-    }
-  }, [stopTimer]);
-
-  // Действия периода
   const claimSalary = useCallback(async () => {
     const result = await API.claimSalary();
     if (result && result.status === 'success') {
-      await refreshOverview();
-      await refreshPeriodStatus();
+      await refreshGameState();
     }
     return result;
-  }, [refreshOverview, refreshPeriodStatus]);
+  }, [refreshGameState]);
 
   const contributeToSafetyFund = useCallback(async (amount) => {
     const result = await API.contributeToSafetyFund({ amount });
     if (result && result.status === 'success') {
-      await refreshOverview();
-      await refreshPeriodStatus();
+      await refreshGameState();
     }
     return result;
-  }, [refreshOverview, refreshPeriodStatus]);
+  }, [refreshGameState]);
 
   const withdrawFromSafetyFund = useCallback(async (amount) => {
     const result = await API.withdrawFromSafetyFund({ amount });
     if (result && result.status === 'success') {
-      await refreshOverview();
-      await refreshPeriodStatus();
+      await refreshGameState();
     }
     return result;
-  }, [refreshOverview, refreshPeriodStatus]);
+  }, [refreshGameState]);
 
-  // Инициализация
+  const treatSelf = useCallback(async (optionId) => {
+    const result = await API.treatSelf({ option_id: optionId });
+    if (result && result.status === 'success') {
+      await refreshGameState();
+    }
+    return result;
+  }, [refreshGameState]);
+
+  const getNeedsGuide = useCallback(async () => {
+    return API.getNeedsGuide();
+  }, []);
+
   useEffect(() => {
     loadData();
-    return () => stopTimer();
-  }, [loadData, stopTimer]);
+  }, [loadData]);
 
-  // Синхронизация таймера при изменении timeStatus
   useEffect(() => {
-    if (timeStatus && timeStatus.time_state === 'play') {
-      startTimer();
-    } else {
-      stopTimer();
-    }
-  }, [timeStatus, startTimer, stopTimer]);
+    const onForeground = debounceForeground(() => {
+      resyncAfterForeground();
+    }, FOREGROUND_RESYNC_MS);
+    return subscribeAppForeground(onForeground);
+  }, [resyncAfterForeground]);
 
   return {
     overview,
     periodStatus,
     pendingEvents,
     eventsPromptTick,
-    timeStatus: timeStatus ? {
-      ...timeStatus,
-      remainingLocal: localRemainingRef.current,
-    } : null,
+    timeStatus,
     loading,
+    syncing,
     error,
-    setPlay,
-    setPause,
     advancePeriod,
     fetchPeriodStatus,
     reload: loadData,
     claimSalary,
     contributeToSafetyFund,
     withdrawFromSafetyFund,
+    treatSelf,
+    getNeedsGuide,
     refreshOverview,
     refreshPeriodStatus,
     refreshPendingEvent,
+    refreshGameState,
+    periodCloseSummary,
+    dismissPeriodClose: () => setPeriodCloseSummary(null),
+    gameSessionStatus,
+    defeatInfo,
+    runFinale,
+    runFinaleOpen,
+    dismissVictoryFinale,
+    submitRunFeedback,
   };
 }

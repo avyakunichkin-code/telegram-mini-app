@@ -1,70 +1,185 @@
-import { useCallback, useEffect, useState } from 'react';
-import { Spinner, Button, Modal } from '@telegram-apps/telegram-ui';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useGame } from '../hooks/useGame';
 import { DashboardPremium } from './DashboardPremium';
 import { FinancePremium } from './FinancePremium';
 import { AnalyticsPremium } from './AnalyticsPremium';
 import { MenuPremium } from './MenuPremium';
-import { BottomGameNav } from './BottomGameNav';
 import { showNotification } from './notifications';
 import { API, formatApiErrorDetail } from '../api';
-import { EventCarouselOverlay } from './EventDeck';
+import { EventCarouselOverlay } from './mqx/events/EventCarouselOverlay';
 import { MqxShell } from './MqxShell';
 import { MqxTabHero } from './MqxTabHero';
+import { GameScreenLayout, GameScreenTabNav } from './GameScreenLayout';
+import {
+  MqxPeriodCloseTail,
+  MqxPeriodCloseRitual,
+  MqxSalaryWarnModal,
+  MqxRunFinale,
+  MqxStateError,
+  MqxStateSkeleton,
+} from './mqx';
+import { PERIOD_CLOSE_AUTO_MAX } from '../constants/periodClose';
+import { shouldAutoOpenPeriodClose } from '../utils/periodCloseDisplay';
+import { GameGuidanceLayer } from './GameGuidanceLayer';
+import {
+  areGameEventsUnlocked,
+  shouldDeferPeriodCloseDuringGuidance,
+} from '../guidance/curriculum';
 
-/** Эмоциональный слой страницы: фон синхронизирован с «время идёт» / «пауза» / загрузка. */
+/** Эмоциональный слой страницы (TB1: без play/pause — активная партия = playing mood). */
 function gamePageMoodClass(timeStatus) {
   if (!timeStatus) return 'mq-page--mood-await';
-  return timeStatus.time_state === 'play' ? 'mq-page--mood-playing' : 'mq-page--mood-pause';
+  return 'mq-page--mood-playing';
 }
 
 export function GameScreen({ onLogout, onNewGame, onLoadGame }) {
   const [activeTab, setActiveTab] = useState('dashboard');
+  /** @type {['income'|'expense'|null, function]} */
+  const [capitalFlowsOpen, setCapitalFlowsOpen] = useState(null);
   const [salaryWarnOpen, setSalaryWarnOpen] = useState(false);
   const [eventsOpen, setEventsOpen] = useState(false);
+  const [onboardingUi, setOnboardingUi] = useState({ visible: false, lockTabs: false });
+  const [queuedPeriodClose, setQueuedPeriodClose] = useState(null);
+  const [lastPeriodClose, setLastPeriodClose] = useState(null);
+  const [periodCloseOpen, setPeriodCloseOpen] = useState(false);
+  const onboardingRootRef = useRef(null);
+  const lastOpenedEventsTickRef = useRef(0);
+  const deferredEventsTickRef = useRef(0);
   const {
     overview,
     timeStatus,
+    periodStatus,
     pendingEvents,
     loading,
+    syncing,
     error,
-    setPlay,
-    setPause,
     advancePeriod,
     fetchPeriodStatus,
     reload,
     claimSalary,
     contributeToSafetyFund,
     withdrawFromSafetyFund,
+    treatSelf,
+    getNeedsGuide,
     refreshOverview,
+    refreshGameState,
     refreshPendingEvent,
     eventsPromptTick,
+    periodCloseSummary,
+    dismissPeriodClose,
+    runFinale,
+    runFinaleOpen,
+    dismissVictoryFinale,
+    submitRunFeedback,
   } = useGame();
 
   const closeEventsOverlay = useCallback(() => setEventsOpen(false), []);
 
-  // Открыть колоду при появлении новых событий (тик из useGame при смене периода).
-  useEffect(() => {
-    if (eventsPromptTick > 0 && (pendingEvents?.length ?? 0) > 0) {
-      // eslint-disable-next-line react-hooks/set-state-in-effect -- синхронизация с событиями бэкенда
-      setEventsOpen(true);
-    }
-  }, [eventsPromptTick, pendingEvents]);
+  const guidance = overview?.guidance;
+  const inGuidanceCurriculum = guidance?.show_curriculum === true;
+  const p1GuidanceDone = areGameEventsUnlocked(guidance, overview?.onboarding_state);
+  const eventsUnlocked = p1GuidanceDone;
+  const inOnboarding = inGuidanceCurriculum;
+  const deferPeriodCloseInGuidance = shouldDeferPeriodCloseDuringGuidance(
+    guidance,
+    overview?.period_index,
+  );
+  const periodCloseForUi = lastPeriodClose;
+  const showPeriodCloseTail =
+    !inOnboarding && activeTab === 'dashboard' && periodCloseForUi && !periodCloseOpen;
 
-  const handleRequestNextPeriod = async () => {
-    try {
-      const st = await fetchPeriodStatus();
-      if (st && st.salary_claimed === false && st.can_claim_salary) {
-        setSalaryWarnOpen(true);
+  // Итоги периода — до эффектов событий: в одном коммите сначала выставляем periodCloseOpen.
+  useEffect(() => {
+    if (!periodCloseSummary) return;
+    const payload = periodCloseSummary;
+
+    if (inOnboarding && deferPeriodCloseInGuidance) {
+      setQueuedPeriodClose(payload);
+      dismissPeriodClose();
+      return;
+    }
+
+    setLastPeriodClose(payload);
+    setQueuedPeriodClose(null);
+    setPeriodCloseOpen(shouldAutoOpenPeriodClose(payload, PERIOD_CLOSE_AUTO_MAX));
+    dismissPeriodClose();
+  }, [periodCloseSummary, inOnboarding, deferPeriodCloseInGuidance, dismissPeriodClose]);
+
+  useEffect(() => {
+    if (!queuedPeriodClose || deferPeriodCloseInGuidance) return;
+    setLastPeriodClose(queuedPeriodClose);
+    setQueuedPeriodClose(null);
+    setPeriodCloseOpen(shouldAutoOpenPeriodClose(queuedPeriodClose, PERIOD_CLOSE_AUTO_MAX));
+  }, [queuedPeriodClose, deferPeriodCloseInGuidance]);
+
+  useEffect(() => {
+    if (!eventsUnlocked) return;
+    if (eventsPromptTick <= lastOpenedEventsTickRef.current) return;
+    if ((pendingEvents?.length ?? 0) > 0) {
+      // Пока открыт лист итогов — откладываем автопоказ событий (хвостик не блокирует).
+      if (periodCloseOpen) {
+        deferredEventsTickRef.current = eventsPromptTick;
         return;
       }
-    } catch {
-      // если статус не получили — идём дальше без модалки
+
+      lastOpenedEventsTickRef.current = eventsPromptTick;
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- открытие только при новом bumpEvents
+      setEventsOpen(true);
+    }
+  }, [eventsPromptTick, pendingEvents?.length, eventsUnlocked, periodCloseOpen]);
+
+  useEffect(() => {
+    if (!eventsUnlocked) {
+      setEventsOpen(false);
+    }
+  }, [eventsUnlocked]);
+
+  useEffect(() => {
+    if (!eventsUnlocked) return;
+    if ((pendingEvents?.length ?? 0) <= 0) return;
+    if (periodCloseOpen) return;
+
+    const deferredTick = deferredEventsTickRef.current;
+    if (deferredTick > lastOpenedEventsTickRef.current && deferredTick <= eventsPromptTick) {
+      deferredEventsTickRef.current = 0;
+      lastOpenedEventsTickRef.current = deferredTick;
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- однократный автопоказ после итогов
+      setEventsOpen(true);
+    }
+  }, [eventsPromptTick, pendingEvents?.length, eventsUnlocked, periodCloseOpen]);
+
+  useEffect(() => {
+    if (onboardingUi.visible && activeTab !== 'dashboard') {
+      setActiveTab('dashboard');
+    }
+  }, [onboardingUi.visible, activeTab]);
+
+  useEffect(() => {
+    if (!inOnboarding) {
+      setOnboardingUi({ visible: false, lockTabs: false });
+    }
+  }, [inOnboarding]);
+
+  const handleClosePeriodClose = useCallback(() => {
+    setPeriodCloseOpen(false);
+  }, []);
+
+  const handleRequestNextPeriod = async () => {
+    if (!inOnboarding) {
+      try {
+        const st = await fetchPeriodStatus();
+        if (st && st.salary_claimed === false && st.can_claim_salary) {
+          setSalaryWarnOpen(true);
+          return;
+        }
+      } catch {
+        // если статус не получили — идём дальше без модалки
+      }
     }
     try {
       await advancePeriod();
     } catch (e) {
-      showNotification(e?.detail || e?.message || 'Не удалось перейти к следующему периоду', 'error');
+      showNotification(e?.detail || e?.message || 'Не удалось закрыть месяц', 'error');
     }
   };
 
@@ -73,43 +188,40 @@ export function GameScreen({ onLogout, onNewGame, onLoadGame }) {
     try {
       await advancePeriod();
     } catch (e) {
-      showNotification(e?.detail || e?.message || 'Не удалось перейти к следующему периоду', 'error');
+      showNotification(e?.detail || e?.message || 'Не удалось закрыть месяц', 'error');
     }
   };
 
+  const moodClass = gamePageMoodClass(timeStatus);
+  const guidanceActiveClass = onboardingUi.visible ? 'mqx-page--guidance-active' : '';
+
   if (loading) {
     return (
-      <div
-        className={`app-shell mq-page mq-page--center ${gamePageMoodClass(timeStatus)}`}
-        style={{ padding: '16px', paddingBottom: 'calc(var(--tma-tabbar-height) + env(safe-area-inset-bottom, 0px))' }}
-      >
-        <div className="mq-page__decor" aria-hidden />
-        <div className="mq-page__grain" aria-hidden />
+      <GameScreenLayout moodClass={`${moodClass} ${guidanceActiveClass}`.trim()}>
         <MqxShell
           header={
             <MqxTabHero
               sectionLabel="Игра"
               rightPill="Загрузка"
               title="Подключаемся"
-              subtitle="Таймер, баланс и события появятся в привычной рамке."
+              subtitle="Период, баланс и события появятся в привычной рамке."
             />
           }
         >
-          <div className="mqx-card" style={{ display: 'grid', placeItems: 'center', minHeight: 140, padding: 28 }}>
-            <Spinner />
+          <div className="mqx-card" style={{ padding: 14 }}>
+            <MqxStateSkeleton variant="chips" label="Финансы периода" />
+            <div style={{ marginTop: 16 }}>
+              <MqxStateSkeleton variant="rows" rows={2} label="Цели и действия" />
+            </div>
           </div>
         </MqxShell>
-      </div>
+      </GameScreenLayout>
     );
   }
+
   if (error) {
     return (
-      <div
-        className={`app-shell mq-page ${gamePageMoodClass(timeStatus)}`}
-        style={{ padding: '12px', paddingBottom: 'calc(var(--tma-tabbar-height) + env(safe-area-inset-bottom, 0px))' }}
-      >
-        <div className="mq-page__decor" aria-hidden />
-        <div className="mq-page__grain" aria-hidden />
+      <GameScreenLayout moodClass={`${moodClass} ${guidanceActiveClass}`.trim()}>
         <MqxShell
           header={
             <MqxTabHero
@@ -122,28 +234,22 @@ export function GameScreen({ onLogout, onNewGame, onLoadGame }) {
         >
           <div className="mq-stack mq-stack--tight mq-stack-animate">
             <div className="mqx-card mq-enter-item">
-              <div className="mqx-card__kicker">Сеть или API</div>
-              <div className="mqx-card__title">Что-то пошло не так</div>
-              <p className="mqx-card__sub">{formatApiErrorDetail(error, 'Не удалось загрузить данные')}</p>
-              <div className="mq-actions-stack" style={{ marginTop: 16 }}>
-                <Button stretched mode="filled" onClick={() => reload()}>
-                  Повторить загрузку
-                </Button>
-              </div>
+              <MqxStateError
+                title="Не удалось загрузить"
+                message={formatApiErrorDetail(error, 'Проверьте сеть и попробуйте снова')}
+                retryLabel="Повторить загрузку"
+                onRetry={() => reload()}
+              />
             </div>
           </div>
         </MqxShell>
-      </div>
+      </GameScreenLayout>
     );
   }
+
   if (!overview || !timeStatus) {
     return (
-      <div
-        className={`app-shell mq-page ${gamePageMoodClass(timeStatus)}`}
-        style={{ padding: '12px', paddingBottom: 'calc(var(--tma-tabbar-height) + env(safe-area-inset-bottom, 0px))' }}
-      >
-        <div className="mq-page__decor" aria-hidden />
-        <div className="mq-page__grain" aria-hidden />
+      <GameScreenLayout moodClass={`${moodClass} ${guidanceActiveClass}`.trim()}>
         <MqxShell
           header={
             <MqxTabHero
@@ -166,99 +272,158 @@ export function GameScreen({ onLogout, onNewGame, onLoadGame }) {
             </div>
           </div>
         </MqxShell>
-      </div>
+      </GameScreenLayout>
     );
   }
 
   return (
-    <div
-      className={`app-shell mq-page ${gamePageMoodClass(timeStatus)}`}
-      style={{ padding: '12px', paddingBottom: 'calc(var(--tma-tabbar-height) + env(safe-area-inset-bottom, 0px))' }}
+    <GameScreenLayout
+      moodClass={`${moodClass} ${guidanceActiveClass}`.trim()}
+      tabNav={(
+        <GameScreenTabNav
+          activeTab={activeTab}
+          setActiveTab={setActiveTab}
+          lockTabs={onboardingUi.lockTabs}
+        />
+      )}
+      overlays={(
+        <>
+          <MqxSalaryWarnModal
+            open={salaryWarnOpen && !inOnboarding}
+            salaryAmount={Number(periodStatus?.salary_amount) || 0}
+            onClose={() => setSalaryWarnOpen(false)}
+            onConfirmSkip={confirmAdvanceWithSalaryLoss}
+          />
+
+          <MqxRunFinale
+            open={runFinaleOpen && Boolean(runFinale)}
+            payload={runFinale}
+            onDismissVictory={dismissVictoryFinale}
+            onNewGame={onNewGame}
+            onMenu={onLoadGame}
+            onSubmitFeedback={submitRunFeedback}
+          />
+
+          <MqxPeriodCloseRitual
+            summary={periodCloseForUi}
+            open={Boolean(periodCloseForUi && periodCloseOpen)}
+            onClose={handleClosePeriodClose}
+          />
+          {showPeriodCloseTail ? (
+            <MqxPeriodCloseTail
+              summary={periodCloseForUi}
+              onOpen={() => setPeriodCloseOpen(true)}
+            />
+          ) : null}
+
+          <EventCarouselOverlay
+            open={eventsOpen}
+            onClose={closeEventsOverlay}
+            events={pendingEvents}
+            onResolved={async (eventId, choiceId) => {
+              const res = await API.chooseEvent(eventId, choiceId);
+              const needsBefore = res?.needs_before;
+              const needsAfter = res?.needs_after;
+              const claim = res?.insurance_claim;
+              if (claim?.applied && Number(claim.payout_amount) > 0) {
+                const title = claim.policy_title ? `${claim.policy_title}: ` : '';
+                showNotification(
+                  `${title}выплата +${Math.round(Number(claim.payout_amount))} ₽`,
+                  'success',
+                );
+              } else if (needsAfter && typeof needsAfter === 'object') {
+                const labels = {
+                  comfort: 'Комфорт',
+                  status: 'Статус',
+                  social: 'Связи',
+                  health: 'Здоровье',
+                };
+                const deltas = [];
+                if (needsBefore && typeof needsBefore === 'object') {
+                  for (const key of Object.keys(labels)) {
+                    const before = Number(needsBefore?.[key]);
+                    const after = Number(needsAfter?.[key]);
+                    if (!Number.isFinite(before) || !Number.isFinite(after)) continue;
+                    const d = Math.round((after - before) * 10) / 10;
+                    if (Math.abs(d) < 1e-6) continue;
+                    deltas.push(`${labels[key]} ${d > 0 ? `+${d}` : String(d)}`);
+                  }
+                }
+                showNotification(
+                  deltas.length ? `Потребности: ${deltas.join(', ')}` : 'Потребности изменились',
+                  'success',
+                );
+              } else {
+                showNotification('Решение применено', 'success');
+              }
+              await refreshGameState();
+            }}
+          />
+        </>
+      )}
     >
-      <div className="mq-page__decor" aria-hidden />
-      <div className="mq-page__grain" aria-hidden />
-
-      <Modal open={salaryWarnOpen} onClose={() => setSalaryWarnOpen(false)}>
-        <div className="mqx-modal">
-          <div className="mqx-card">
-            <div className="mqx-card__kicker mqx-card__kicker--amber">Период</div>
-            <div className="mqx-card__title">Следующий период</div>
-            <p className="mqx-card__sub">Проверка перед сменой месяца в игре.</p>
-            <p className="mq-modal-lead" style={{ marginTop: 14 }}>Зарплата за этот период ещё не получена</p>
-            <p className="mq-modal-body">
-              Если перейти дальше, начисление за текущий месяц <strong>сгорит</strong>, как если не нажали «Получить зарплату».
-            </p>
-            <div className="mq-modal-actions" style={{ marginTop: 16 }}>
-              <Button mode="filled" stretched onClick={confirmAdvanceWithSalaryLoss}>
-                Перейти без зарплаты
-              </Button>
-              <Button mode="outline" stretched onClick={() => setSalaryWarnOpen(false)}>
-                Отмена
-              </Button>
-            </div>
-          </div>
-        </div>
-      </Modal>
-
-      <EventCarouselOverlay
-        open={eventsOpen}
-        onClose={closeEventsOverlay}
-        events={pendingEvents}
-        onResolved={async (eventId, choiceId) => {
-          const res = await API.chooseEvent(eventId, choiceId);
-          const xpg = Number(res?.xp_gained) || 0;
-          const lv = res?.level_up ? res?.new_level : null;
-          if (xpg > 0) {
-            showNotification(lv ? `+${xpg} XP · уровень ${lv}` : `+${xpg} XP`, 'success');
-          } else {
-            showNotification('Решение применено', 'success');
-          }
-          await refreshOverview();
-          await refreshPendingEvent();
-        }}
-      />
-
-      <div className="mqx-screen">
+      <div className="mqx-screen mqx-screen--game" aria-busy={syncing || undefined}>
         <div className="mqx-frame">
-          <div className="mq-stack mq-stack-animate mq-stack--tight">
-            <div key={activeTab} className="mq-enter-item">
-          {activeTab === 'dashboard' && (
-            <DashboardPremium
-              overview={overview}
-              timeStatus={timeStatus}
-              pendingEventsCount={pendingEvents?.length ?? 0}
-              onOpenEvents={() => setEventsOpen(true)}
-              setPlay={setPlay}
-              setPause={setPause}
-              onNextPeriod={handleRequestNextPeriod}
-              claimSalary={claimSalary}
-              contributeToSafetyFund={contributeToSafetyFund}
-              withdrawFromSafetyFund={withdrawFromSafetyFund}
-              onGoFinance={() => setActiveTab('finance')}
-            />
-          )}
+          <div className="mq-stack mq-stack-animate mq-stack--tight mq-stack--game-tab">
+            <div key={activeTab} className="mq-enter-item mq-enter-item--fill">
+              {activeTab === 'dashboard' && (
+                <div ref={onboardingRootRef} className="mqx-onboarding-anchor-root">
+                  <DashboardPremium
+                    overview={overview}
+                    timeStatus={timeStatus}
+                    periodStatus={periodStatus}
+                    eventsUnlocked={eventsUnlocked}
+                    pendingEventsCount={eventsUnlocked ? (pendingEvents?.length ?? 0) : 0}
+                    onOpenEvents={eventsUnlocked ? () => setEventsOpen(true) : undefined}
+                    onNextPeriod={handleRequestNextPeriod}
+                    closeMonthDisabled={syncing}
+                    claimSalary={claimSalary}
+                    contributeToSafetyFund={contributeToSafetyFund}
+                    withdrawFromSafetyFund={withdrawFromSafetyFund}
+                    treatSelf={treatSelf}
+                    getNeedsGuide={getNeedsGuide}
+                    onGoFinance={() => {
+                      setCapitalFlowsOpen(null);
+                      setActiveTab('finance');
+                    }}
+                    onGoCapitalFlows={(section) => {
+                      setCapitalFlowsOpen(section);
+                      setActiveTab('finance');
+                    }}
+                  />
+                </div>
+              )}
 
-          {activeTab === 'finance' && (
-            <FinancePremium overview={overview} refreshOverview={refreshOverview} />
-          )}
+              {activeTab === 'finance' && (
+                <FinancePremium
+                  overview={overview}
+                  refreshOverview={refreshOverview}
+                  openFlowsSection={capitalFlowsOpen}
+                  onFlowsSectionOpened={() => setCapitalFlowsOpen(null)}
+                />
+              )}
 
-          {activeTab === 'analytics' && (
-            <AnalyticsPremium overview={overview} />
-          )}
+              {activeTab === 'analytics' && (
+                <AnalyticsPremium overview={overview} />
+              )}
 
-          {activeTab === 'menu' && (
-            <MenuPremium
-              onLogout={onLogout}
-              onNewGame={onNewGame}
-              onLoadGame={onLoadGame}
-            />
-          )}
+              {activeTab === 'menu' && (
+                <MenuPremium
+                  onLogout={onLogout}
+                  onNewGame={onNewGame}
+                  onLoadGame={onLoadGame}
+                />
+              )}
             </div>
           </div>
         </div>
       </div>
-
-      <BottomGameNav activeTab={activeTab} setActiveTab={setActiveTab} />
-    </div>
+      <GameGuidanceLayer
+        guidance={guidance}
+        refreshOverview={refreshOverview}
+        scrollRootRef={onboardingRootRef}
+        onOverlayStateChange={setOnboardingUi}
+      />
+    </GameScreenLayout>
   );
 }

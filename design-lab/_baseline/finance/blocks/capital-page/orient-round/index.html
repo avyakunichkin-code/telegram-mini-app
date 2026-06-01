@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="ru" data-theme="light">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>ТВОЙ ХОД — капитал: ориентация (доходы/расходы)</title>
+    <link rel="stylesheet" href="./lab-base.css" />
+  </head>
+  <body>
+    <header class="lab-header">
+      <h1>Управление капиталом — ориентация</h1>
+      <p>
+        Фокус: <strong>разобраться в потоке периода</strong> (доходы и расходы). Действия (оформить, добавить) —
+        только после раскрытия раздела ниже. Без вкладки «Бюджет», без ссылки на цель сценария.
+      </p>
+      <div class="lab-theme-row">
+        <button type="button" class="is-active" data-theme-btn="light">Светлая</button>
+        <button type="button" data-theme-btn="dark">Тёмная</button>
+      </div>
+    </header>
+
+    <main class="lab-wrap">
+      <!-- O1 -->
+      <section class="lab-section">
+        <div class="lab-section__label">
+          <span class="lab-section__id lab-section__id--ok">O1</span>
+          <span>Сводка + доходы и расходы открыты <span class="lab-variant-tag">★ кандидат</span></span>
+        </div>
+        <p class="lab-section__note">Сводка и поток как в flows-round; между расходами и остальными разделами — подсказка.</p>
+        <article class="phone">
+          <div class="phone__hero">
+            <div class="phone__hero-kicker">Финансы</div>
+            <h2 class="phone__hero-title">Управление капиталом</h2>
+          </div>
+          <div class="phone__main" style="padding: 12px">
+            <div class="cap-health" aria-label="Сводка периода">
+              <div class="cap-health__cell">
+                <span class="cap-health__label">Поток</span>
+                <span class="cap-health__value cap-health__value--neg">−11 500 ₽</span>
+              </div>
+              <div class="cap-health__cell">
+                <span class="cap-health__label">Подушка</span>
+                <span class="cap-health__value">21 600 ₽</span>
+                <div class="cap-health__fill" role="presentation">
+                  <span class="cap-health__fill-bar" style="width: 40%"></span>
+                </div>
+              </div>
+              <div class="cap-health__cell">
+                <span class="cap-health__label">Просрочка</span>
+                <span class="cap-health__value cap-health__value--pos">нет</span>
+              </div>
+            </div>
+            <div class="cap-page-sheet__stack">
+              <details class="cap-sect-acc cap-sect-acc--in" open>
+                <summary class="cap-sect-acc__head">
+                  <span class="cap-sect-acc__title">Доходы</span>
+                  <span class="cap-sect-acc__meta">88 400 ₽</span>
+                </summary>
+                <div class="cap-sect-acc__body">
+                  <div class="cap-cat"><div class="cap-cat__row"><span>Зарплата</span><span class="cap-amt">45 000 ₽</span></div></div>
+                  <div class="cap-cat"><div class="cap-cat__row"><span>Инвестиции</span><span class="cap-amt">8 400 ₽</span></div>
+                    <div class="cap-lines"><div class="cap-line"><span>Депозиты</span><span>2 400 ₽</span></div></div></div>
+                  <div class="cap-cat"><div class="cap-cat__row"><span>Доходное имущество</span><span class="cap-amt">35 000 ₽</span></div></div>
+                </div>
+              </details>
+              <details class="cap-sect-acc cap-sect-acc--out" open>
+                <summary class="cap-sect-acc__head">
+                  <span class="cap-sect-acc__title">Расходы</span>
+                  <span class="cap-sect-acc__meta">99 900 ₽</span>
+                </summary>
+                <div class="cap-sect-acc__body">
+                  <div class="cap-cat"><div class="cap-cat__row"><span>На жизнь</span><span class="cap-amt">32 500 ₽</span></div></div>
+                  <div class="cap-cat"><div class="cap-cat__row"><span>Обязательства</span><span class="cap-amt">51 000 ₽</span></div></div>
+                  <div class="cap-cat"><div class="cap-cat__row"><span>Страховки</span><span class="cap-amt">2 400 ₽</span></div></div>
+                </div>
+              </details>
+              <p class="cap-actions-hint">В разделах ниже доступны действия добавления и удаления.</p>
+              <details class="cap-sect-acc cap-sect-acc--invest">
+                <summary class="cap-sect-acc__head cap-sect-acc__head--tease">
+                  <span class="cap-sect-acc__title">Инвестиции</span>
+                  <span class="cap-sect-acc__meta">2 поз.</span>
+                </summary>
+                <div class="cap-sect-acc__body"><p class="cap-sect-lead">Оформить — раскройте раздел.</p></div>
+              </details>
+              <details class="cap-sect-acc cap-sect-acc--insurance">
+                <summary class="cap-sect-acc__head cap-sect-acc__head--tease">
+                  <span class="cap-sect-acc__title">Страховки</span>
+                  <span class="cap-sect-acc__meta">1 полис</span>
+                </summary>
+                <div class="cap-sect-acc__body"></div>
+              </details>
+              <details class="cap-sect-acc cap-sect-acc--property">
+                <summary class="cap-sect-acc__head cap-sect-acc__head--tease">
+                  <span class="cap-sect-acc__title">Имущество</span>
+                  <span class="cap-sect-acc__meta">3 актива</span>
+                </summary>
+                <div class="cap-sect-acc__body"></div>
+              </details>
+              <details class="cap-sect-acc cap-sect-acc--liabilities">
+                <summary class="cap-sect-acc__head cap-sect-acc__head--tease">
+                  <span class="cap-sect-acc__title">Обязательства</span>
+                  <span class="cap-sect-acc__meta">2 долга</span>
+                </summary>
+                <div class="cap-sect-acc__body"></div>
+              </details>
+            </div>
+          </div>
+        </article>
+      </section>
+
+      <!-- O2 -->
+      <section class="lab-section">
+        <div class="lab-section__label">
+          <span class="lab-section__id">O2</span>
+          <span>Один аккордеон «Поток периода»</span>
+        </div>
+        <p class="lab-section__note">Доходы и расходы внутри одной секции, внизу — чистый поток за период.</p>
+        <article class="phone">
+          <div class="phone__hero">
+            <div class="phone__hero-kicker">Финансы</div>
+            <h2 class="phone__hero-title">Управление капиталом</h2>
+          </div>
+          <div class="phone__main" style="padding: 12px">
+            <div class="cap-health">
+              <div class="cap-health__cell">
+                <span class="cap-health__label">Поток</span>
+                <span class="cap-health__value cap-health__value--neg">−11 500 ₽</span>
+              </div>
+              <div class="cap-health__cell">
+                <span class="cap-health__label">Подушка</span>
+                <span class="cap-health__value">40%</span>
+              </div>
+              <div class="cap-health__cell">
+                <span class="cap-health__label">Просрочка</span>
+                <span class="cap-health__value cap-health__value--pos">нет</span>
+              </div>
+            </div>
+            <div class="cap-page-sheet__stack">
+              <details class="cap-sect-acc cap-sect-acc--merged" open>
+                <summary class="cap-sect-acc__head">
+                  <span class="cap-sect-acc__title">Поток периода</span>
+                  <span class="cap-sect-acc__meta">−11 500 ₽</span>
+                </summary>
+                <div class="cap-sect-acc__body">
+                  <div class="cap-cat"><div class="cap-cat__row"><span>Доходы</span><span class="cap-amt pos">88 400 ₽</span></div>
+                    <div class="cap-lines"><div class="cap-line"><span>Зарплата</span><span>45 000 ₽</span></div><div class="cap-line"><span>Инвестиции</span><span>8 400 ₽</span></div></div></div>
+                  <div class="cap-cat"><div class="cap-cat__row"><span>Расходы</span><span class="cap-amt neg">99 900 ₽</span></div>
+                    <div class="cap-lines"><div class="cap-line"><span>На жизнь</span><span>32 500 ₽</span></div><div class="cap-line"><span>Обязательства</span><span>51 000 ₽</span></div></div></div>
+                  <div class="cap-flow-merged__net">
+                    <span>Чистый поток (доходы − расходы)</span>
+                    <span class="cap-flow-merged__net-amt cap-flow-merged__net-amt--neg">−11 500 ₽</span>
+                  </div>
+                </div>
+              </details>
+              <details class="cap-sect-acc cap-sect-acc--invest">
+                <summary class="cap-sect-acc__head cap-sect-acc__head--tease">
+                  <span class="cap-sect-acc__title">Инвестиции</span>
+                  <span class="cap-sect-acc__meta">2 поз.</span>
+                </summary>
+                <div class="cap-sect-acc__body"></div>
+              </details>
+            </div>
+          </div>
+        </article>
+      </section>
+
+      <!-- O3 -->
+      <section class="lab-section">
+        <div class="lab-section__label">
+          <span class="lab-section__id">O3</span>
+          <span>Мост между доходами и расходами</span>
+        </div>
+        <p class="lab-section__note">Два аккордеона, между ними — карточка «остаток» (не путать с cash на дашборде).</p>
+        <article class="phone">
+          <div class="phone__hero">
+            <div class="phone__hero-kicker">Финансы</div>
+            <h2 class="phone__hero-title">Управление капиталом</h2>
+          </div>
+          <div class="phone__main" style="padding: 12px">
+            <div class="cap-health">
+              <div class="cap-health__cell">
+                <span class="cap-health__label">Поток</span>
+                <span class="cap-health__value cap-health__value--neg">−11 500 ₽</span>
+              </div>
+              <div class="cap-health__cell">
+                <span class="cap-health__label">Подушка</span>
+                <span class="cap-health__value">40%</span>
+              </div>
+              <div class="cap-health__cell">
+                <span class="cap-health__label">Просрочка</span>
+                <span class="cap-health__value cap-health__value--warn">9 000 ₽</span>
+              </div>
+            </div>
+            <div class="cap-page-sheet__stack">
+              <details class="cap-sect-acc cap-sect-acc--in" open>
+                <summary class="cap-sect-acc__head">
+                  <span class="cap-sect-acc__title">Доходы</span>
+                  <span class="cap-sect-acc__meta">88 400 ₽</span>
+                </summary>
+                <div class="cap-sect-acc__body">
+                  <div class="cap-cat"><div class="cap-cat__row"><span>Зарплата</span><span class="cap-amt">45 000 ₽</span></div></div>
+                </div>
+              </details>
+              <div class="cap-flow-bridge" role="status">
+                <div class="cap-flow-bridge__row">
+                  <span>После всех расходов периода</span>
+                  <span class="cap-flow-bridge__amt cap-flow-bridge__amt--neg">−11 500 ₽</span>
+                </div>
+                <div class="cap-flow-bridge__row">
+                  <span>Расходы ниже — по категориям</span>
+                  <span>99 900 ₽</span>
+                </div>
+              </div>
+              <details class="cap-sect-acc cap-sect-acc--out">
+                <summary class="cap-sect-acc__head">
+                  <span class="cap-sect-acc__title">Расходы</span>
+                  <span class="cap-sect-acc__meta">99 900 ₽</span>
+                </summary>
+                <div class="cap-sect-acc__body">
+                  <div class="cap-cat"><div class="cap-cat__row"><span>На жизнь</span><span class="cap-amt">32 500 ₽</span></div></div>
+                  <div class="cap-cat"><div class="cap-cat__row"><span>Обязательства</span><span class="cap-amt">51 000 ₽</span></div></div>
+                </div>
+              </details>
+            </div>
+          </div>
+        </article>
+      </section>
+
+      <!-- O4 -->
+      <section class="lab-section">
+        <div class="lab-section__label">
+          <span class="lab-section__id">O4</span>
+          <span>Сводка + только доходы открыты</span>
+        </div>
+        <p class="lab-section__note">Расходы свёрнуты, в meta — итог. Меньше высоты при первом заходе.</p>
+        <article class="phone">
+          <div class="phone__hero">
+            <div class="phone__hero-kicker">Финансы</div>
+            <h2 class="phone__hero-title">Управление капиталом</h2>
+          </div>
+          <div class="phone__main" style="padding: 12px">
+            <div class="cap-health">
+              <div class="cap-health__cell">
+                <span class="cap-health__label">Поток</span>
+                <span class="cap-health__value cap-health__value--neg">−11 500 ₽</span>
+              </div>
+              <div class="cap-health__cell">
+                <span class="cap-health__label">Подушка</span>
+                <span class="cap-health__value">40%</span>
+              </div>
+              <div class="cap-health__cell">
+                <span class="cap-health__label">Просрочка</span>
+                <span class="cap-health__value cap-health__value--pos">нет</span>
+              </div>
+            </div>
+            <div class="cap-page-sheet__stack">
+              <details class="cap-sect-acc cap-sect-acc--in" open>
+                <summary class="cap-sect-acc__head">
+                  <span class="cap-sect-acc__title">Доходы</span>
+                  <span class="cap-sect-acc__meta">88 400 ₽</span>
+                </summary>
+                <div class="cap-sect-acc__body">
+                  <div class="cap-cat"><div class="cap-cat__row"><span>Зарплата</span><span class="cap-amt">45 000 ₽</span></div></div>
+                  <div class="cap-cat"><div class="cap-cat__row"><span>Инвестиции</span><span class="cap-amt">8 400 ₽</span></div></div>
+                </div>
+              </details>
+              <details class="cap-sect-acc cap-sect-acc--out">
+                <summary class="cap-sect-acc__head">
+                  <span class="cap-sect-acc__title">Расходы</span>
+                  <span class="cap-sect-acc__meta">99 900 ₽ · раскройте</span>
+                </summary>
+                <div class="cap-sect-acc__body">
+                  <div class="cap-cat"><div class="cap-cat__row"><span>На жизнь</span><span class="cap-amt">32 500 ₽</span></div></div>
+                </div>
+              </details>
+            </div>
+          </div>
+        </article>
+      </section>
+    </main>
+
+    <script>
+      document.querySelectorAll('[data-theme-btn]').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          const theme = btn.getAttribute('data-theme-btn');
+          document.documentElement.setAttribute('data-theme', theme);
+          document.querySelectorAll('[data-theme-btn]').forEach((b) => b.classList.toggle('is-active', b === btn));
+        });
+      });
+    </script>
+  </body>
+</html>

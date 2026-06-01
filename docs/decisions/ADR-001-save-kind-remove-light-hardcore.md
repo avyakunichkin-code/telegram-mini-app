@@ -1,4 +1,4 @@
----
+﻿---
 status: accepted
 date: 2026-05-16
 deciders: проект (единственный владелец продукта)
@@ -40,4 +40,4 @@ deciders: проект (единственный владелец продукт
 ## Связанные артефакты
 
 - Spec: [`SPEC_game-plan`](../specs/features/SPEC_game-plan.md)
-- Идея / Q&A: [`vision/ideas/money-quest-evolution-after-mvp.md`](../vision/ideas/money-quest-evolution-after-mvp.md) §II
+- Идея / Q&A: [`vision/ideas/tvoy-hod-evolution-after-mvp.md`](../vision/ideas/tvoy-hod-evolution-after-mvp.md) §II

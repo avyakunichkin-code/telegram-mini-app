@@ -1,0 +1,60 @@
+﻿---
+description: Базовые правила UI ТВОЙ ХОД (React TMA, MQX, язык, состояния)
+globs: frontend-react/**/*.{jsx,js,css}
+alwaysApply: false
+---
+
+# Frontend — базовые правила
+
+Полная spec: [`docs/specs/SPEC_FRONTEND_UI.md`](docs/specs/SPEC_FRONTEND_UI.md). Бренд: [`docs/reference/brandbook/BRANDBOOK.md`](docs/reference/brandbook/BRANDBOOK.md).
+
+## Эталон и legacy
+
+- **Новый игровой UI** — только `*Premium.jsx` + `mqx-*` (`DashboardPremium`, `FinancePremium`, `AnalyticsPremium`).
+- **Не расширять** legacy `*Section.jsx` (`premium === false`); багфиксы — минимальный diff.
+- Общие примитивы — `frontend-react/src/components/mqx/`.
+- **Компонентная база MQX:** новые/переработанные блоки UI в `mqx/` и крупные визуальные изменения на premium-экранах — **только по согласованному FLOW** в [`frontend-react/src/components/mqx/DESIGN_WORKFLOW.md`](frontend-react/src/components/mqx/DESIGN_WORKFLOW.md) (`design-lab` → утверждение → `mqx/` → `#/dev/mqx` → prod). Исключения: мелкий багфикс/hotfix без смены дизайна. Правило с `globs` на JSX/CSS: см. `tvoy-hod-frontend-mqx.mdc`.
+
+## Язык и контент
+
+- Видимый UI — **русский**. Не оставлять EN kickers (`Positions`, `cashflow`, `Forecast`) в production.
+- Тон: коротко, активный залог (брендбук, раздел 1). Суммы — `<MoneyText />`.
+
+## Состояния экрана
+
+Каждый асинхронный блок: **loading** (Spinner / текст), **empty** (`mqx-fin-empty`), **error** (тост или Section). Не `alert` — `showNotification`.
+
+## Данные и состояние игры
+
+- **API**: `frontend-react/src/api.js` — не дублировать разбор ошибок; при не-`ok` — `ApiError`.
+- **Игровое состояние**: `frontend-react/src/hooks/useGame.js` и связанные вызовы; при смене контракта сверяться с роутами из `CLAUDE.md`.
+- Не хардкодить прогресс (% в style) без полей из `overview`/API.
+- Смена API → синхронизировать `api.js` и хуки.
+
+## Поток старта и `save_kind`
+
+- Ось сохранения: **`save_kind`** `game` | `plan` ([ADR-001](docs/decisions/ADR-001-save-kind-remove-light-hardcore.md)); legacy **`mode`** light/hardcore **не возвращать** в UI/API.
+- Новая **Game:** **`NewProfileKindScreen`** (плитка **Plan** намеренно неактивна) → **`GameTemplatePickScreen`** (`template_key`, `save_kind=game`) → игра; **`DifficultyScreen`** удалён ([`SPEC_game-plan`](docs/specs/features/SPEC_game-plan.md)).
+- **`BaseParamsScreen`** — только под будущий **Plan** (MVP 2.0); для **Game** ручной «свой сценарий» на экране шаблона не показывается (`GameStarterPicker` без manual).
+- Создание/список профилей — поля и тела запросов как в `api.js` / `routers/game.py`; при смене контракта синхронизировать **`api.js`**, хуки и экраны старта.
+
+## Структура компонента
+
+```jsx
+// ✅ section + h2, guard на null
+export function Block({ overview }) {
+  if (!overview) return null;
+  return (
+    <section className="mqx-card mqx-capital-card">
+      <h2 className="mqx-capital-card__title">Заголовок</h2>
+    </section>
+  );
+}
+```
+
+- Файл компонента **&lt; ~200 строк** — выносить подкомпоненты.
+- Не дублировать `BottomGameNav` внутри страниц.
+
+## Сборка
+
+После изменений: `cd frontend-react && npm run build`.

@@ -1,0 +1,68 @@
+---
+description: MQX layout, hero, карточки, цвета и telegram-ui в ТВОЙ ХОД
+globs: frontend-react/**/*.{jsx,css}
+alwaysApply: false
+---
+
+# Frontend — MQX и вёрстка
+
+## Компонентная база MQX — обязательный FLOW
+
+**Жёсткое правило:** любая работа с **новой** или **существенно меняющей внешний вид** компонентной базой (`frontend-react/src/components/mqx/`, новые `mqx-*` в `index.css`, новые визуальные паттерны на `*Premium.jsx`) **обязана** следовать согласованному циклу в:
+
+**[`frontend-react/src/components/mqx/DESIGN_WORKFLOW.md`](frontend-react/src/components/mqx/DESIGN_WORKFLOW.md)**
+
+Кратко: **задача → варианты в `design-lab/<тема>/` → выбор → явное «утверждаем X» в чате → React в `mqx/` + секция в `#/dev/mqx` → внедрение в prod (один сценарий за PR).**
+
+**Design-lab стили:** каждый раунд self-contained (`./lab-base.css`, `sync-lab.sh`) — см. `tvoy-hod-design-lab.mdc` и скилл `design-lab-mqx`. Не использовать `../` в `index.html`.
+
+- **Запрещено** сразу править игровые экраны, минуя `design-lab` и утверждение (исключения: **минимальный багфикс / hotfix** без смены дизайна — см. тот же документ).
+- Контракт UI и паттерны: [`docs/specs/SPEC_FRONTEND_UI.md`](docs/specs/SPEC_FRONTEND_UI.md).
+
+Если пользователь просит «сразу в код» — **напомни про FLOW** и предложи сначала этап `design-lab` или сослаться на уже утверждённый вариант.
+
+## Токены (не hex в JSX)
+
+`--mq-violet`, `--mq-violet-deep`, `--mq-emerald`, `--mq-ink`, `--mq-line`, `--mq-fs-body` (15px), `--mq-fs-caption` (12px).
+
+## Каркас вкладки игры
+
+1. Hero: `mqx-hero mqx-hero--tab` + **один `h1`** (`mqx-hero__title--tab` / `--capital`).
+2. Контент: `main.mqx-content` (+ `mqx-capital-page` для финансов).
+3. Карточки: `mqx-card` / `mqx-capital-card` (padding ~16–18px, radius ~22px).
+
+## Когда что использовать
+
+| Задача | Классы / компонент |
+|--------|-------------------|
+| Секции финансов (новый UI) | `mqx-capital-*`, `CapitalPortfolioPanels` |
+| Табы разделов | `mqx-fin-tabs`, `mqx-capital-tab--active` |
+| Режим add/positions | `mqx-capital-mode-grid`, `mqx-capital-mode-btn` |
+| Формы, модалки | `@telegram-apps/telegram-ui` (`Button`, `Input`, `Modal`, `Section`) |
+| Кастом CTA в premium | `mqx-btn`, `mqx-capital-mode-btn` |
+
+## Отступы
+
+- Предпочитать `mqx-content`, gap в CSS, `mqx-capital-lead`.
+- **Не добавлять** `style={{ marginTop: 12 }}` в новом коде.
+
+## Градиенты
+
+- Hero + один primary CTA на экран — ок.
+- Не вешать новый violet-gradient на каждую секцию подряд.
+
+## Капитал (вкладка `finance`)
+
+- Label в таббаре: **«Капитал»**; экран — `FinancePremium.jsx` (`mqx-capital-page`).
+- Hero: title **«Капитал»**; без kicker «Финансы», без pill «N разделов».
+- Порядок: **Доходы / Расходы** → сегмент **Детали \| Действия** → `CapitalDetailsPanel` или `CapitalActionsPanel` + `MqxCapitalSheet` (не legacy-аккордеоны разделов).
+- Типографика (2026-06): сегмент Детали/Действия — `var(--mqx-ink)`; в **Детали** заголовки нейтральные, только обязательства — muted red; доходы/расходы в потоках не перекрашивать.
+- Сетка действий: плитки без `highlight` на страховках; ипотека и кредит — отдельные плитки.
+- UX/spec: [`docs/ux/screens/finance.md`](docs/ux/screens/finance.md), lab ★ [`design-lab/capital-page/details-actions-round/`](design-lab/capital-page/details-actions-round/).
+
+## Z-NEEDS (главная)
+
+- `MqxNeedsDash` **v7-e2e3** (`actionsVariant` по умолчанию): **книга+?** → `MqxNeedsHelpSheet` + `GET /api/game/needs/guide` (`sections[]`); **сердце** → treat-self (UI «Улучшить»).
+- Четыре шкалы всегда видимы; портрет — `PersonaPortrait` size `dash`.
+- Lab ★: [`design-lab/character-needs/dashboard-needs-v7-round/`](design-lab/character-needs/dashboard-needs-v7-round/); v5 — архив.
+- UX: [`docs/ux/screens/character-needs-dashboard.md`](docs/ux/screens/character-needs-dashboard.md), help: [`character-needs-help.md`](docs/ux/screens/character-needs-help.md).

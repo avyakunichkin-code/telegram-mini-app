@@ -1,0 +1,10 @@
+﻿---
+description: "[legacy] Карта проекта — см. tvoy-hod-router.mdc"
+alwaysApply: false
+---
+
+# ТВОЙ ХОД — ориентиры (legacy)
+
+**Актуальный alwaysApply-роутер:** [`tvoy-hod-router.mdc`](tvoy-hod-router.mdc).
+
+Кратко: [`CLAUDE.md`](CLAUDE.md), [`docs/agents/SKILL_DOC_MAP.md`](docs/agents/SKILL_DOC_MAP.md), MQX — [`DESIGN_WORKFLOW.md`](../frontend-react/src/components/mqx/DESIGN_WORKFLOW.md).

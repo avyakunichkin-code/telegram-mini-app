@@ -1,0 +1,96 @@
+{
+  "schema_version": 1,
+  "theme": "dashboard",
+  "page_parity": {
+    "name": "Dashboard (S5 Unified)",
+    "prod_entry": "frontend-react/src/components/DashboardPremium.jsx",
+    "canonical_page_round": {
+      "path": "design-lab/dashboard/parity-generated-page-round/",
+      "status": "approved",
+      "notes": "Prod-parity page generated from manifest. Avoid manual CSS concatenation across multiple rounds."
+    }
+  },
+  "blocks": [
+    {
+      "id": "hero",
+      "kind": "page-block",
+      "prod_component": "MqxDashboardHero",
+      "status": "approved",
+      "canonical_rounds": [
+        {
+          "path": "design-lab/dashboard/hero-no-timer-round/",
+          "status": "approved"
+        }
+      ]
+    },
+    {
+      "id": "needs",
+      "kind": "page-block",
+      "prod_component": "MqxNeedsDash",
+      "status": "approved",
+      "canonical_rounds": [
+        {
+          "path": "design-lab/character-needs/dashboard-needs-v7-round/",
+          "status": "approved"
+        }
+      ],
+      "invariants": [
+        "Z-NEEDS immediately after hero, before finance (UX-01).",
+        "v7-e2e3: 4 bars always visible; header book+? → help sheet; heart → treat-self.",
+        "No collapsed summary / expand accordion (superseded v5)."
+      ]
+    },
+    {
+      "id": "finance",
+      "kind": "page-block",
+      "prod_component": "MqxFinancePeriodBlock",
+      "status": "approved",
+      "canonical_rounds": [
+        {
+          "path": "design-lab/dashboard/cushion-fill-round/",
+          "status": "approved"
+        }
+      ]
+    },
+    {
+      "id": "goal",
+      "kind": "page-block",
+      "prod_component": "MqxGoalDash",
+      "status": "approved",
+      "canonical_rounds": [
+        {
+          "path": "design-lab/dashboard/goal-path-stepper-round/",
+          "status": "approved"
+        },
+        {
+          "path": "design-lab/dashboard/goal-chain-round/",
+          "status": "approved"
+        }
+      ],
+      "invariants": [
+        "Collapsed goal uses path stepper (no \"Шаг N из M\" text).",
+        "Goal header stays inside goal block (sky tone), not duplicated by external section header."
+      ]
+    },
+    {
+      "id": "actions",
+      "kind": "page-block",
+      "prod_component": "MqxPeriodActions",
+      "status": "approved",
+      "canonical_rounds": [
+        {
+          "path": "design-lab/dashboard/period-actions-round/",
+          "status": "approved"
+        }
+      ]
+    }
+  ],
+  "page_order_prod_components": [
+    "MqxDashboardHero",
+    "MqxNeedsDash",
+    "MqxFinancePeriodBlock",
+    "MqxGoalDash",
+    "MqxPeriodActions"
+  ]
+}
+

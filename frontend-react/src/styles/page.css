@@ -1,0 +1,524 @@
+﻿/* =====================================================================
+ * Страничная оболочка: фон, «воздух», анимации появления
+ * ===================================================================== */
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.mq-page {
+  --mq-page-pad-x: 12px;
+  --mq-page-pad-y: 12px;
+
+  position: relative;
+  z-index: 0;
+  box-sizing: border-box;
+}
+
+/* Игровой экран: таббар в потоке, прокрутка в main (не fixed overlay) */
+.mq-game-shell {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  padding: 0;
+}
+
+.mq-game-shell__main {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  padding: var(--mq-page-pad-y) var(--mq-page-pad-x);
+  padding-bottom: var(--mq-page-pad-y);
+  box-sizing: border-box;
+}
+
+.mq-page--center {
+  display: grid;
+  min-height: 60svh;
+  place-items: center;
+}
+
+/*
+ * Pre-game / auth — одна оболочка (design-lab pg-app-shell).
+ * Не смешивать с .mq-page--auth layout: там только типографика полей.
+ */
+.app-shell.mq-page.pg-app-shell {
+  flex: 1 1 auto;
+  min-height: 0;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  box-sizing: border-box;
+  padding: calc(14px + env(safe-area-inset-top, 0px))
+    12px
+    calc(22px + env(safe-area-inset-bottom, 0px));
+  overflow-x: clip;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-gutter: auto;
+}
+
+.pg-app-shell > .pg-auth-stack,
+.pg-app-shell > .pg-flow-wrap {
+  flex: 0 0 auto;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+}
+
+/* Прочие не-игровые экраны без pg-app-shell (например /dev/mqx) */
+.app-shell.mq-page:not(.mq-game-shell):not(.pg-app-shell) {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  padding: var(--mq-page-pad-y) var(--mq-page-pad-x);
+  padding-bottom: calc(var(--mq-page-pad-y) + env(safe-area-inset-bottom, 0px));
+  box-sizing: border-box;
+}
+
+/* AppRoot → роутер → экран: колонка на всю высоту TMA */
+.mq-app-fill {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.mq-auth-inner {
+  width: 100%;
+  max-width: 440px;
+  margin-inline: auto;
+}
+
+.mq-form-alert {
+  padding: 10px 12px;
+  border-radius: 10px;
+  font-size: var(--mq-fs-heading);
+  line-height: 1.38;
+  color: var(--tg-theme-destructive-text-color, var(--mq-danger));
+  background: color-mix(in srgb, var(--mq-danger-soft), var(--tg-theme-bg-color) 88%);
+  border: 1px solid color-mix(in srgb, var(--mq-danger) 42%, transparent);
+}
+
+/* Фоновый слой: мягкий градиент + сетка, не перекрывает контент */
+.mq-page__decor {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  overflow: hidden;
+  border-radius: inherit;
+}
+
+.pg-app-shell .mq-page__decor::before {
+  inset: -32% -20% auto -20%;
+}
+
+.mq-page__decor::before {
+  content: '';
+  position: absolute;
+  inset: -32% -8% auto -28%;
+  height: clamp(220px, 56vw, 420px);
+  background:
+    radial-gradient(
+      ellipse 90% 100% at 16% -6%,
+      color-mix(in srgb, var(--tg-theme-button-color, var(--mq-violet)) 28%, transparent),
+      transparent 58%
+    ),
+    radial-gradient(
+      ellipse 80% 100% at 96% -2%,
+      color-mix(in srgb, var(--mq-emerald) 26%, transparent),
+      transparent 56%
+    );
+  filter: blur(0px);
+  transform: rotate(-2deg) scale(1.02);
+  animation: mqDecorDrift 18s ease-in-out infinite alternate;
+}
+
+.mq-page__decor::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  opacity: 0.42;
+  background-image: radial-gradient(
+    circle at 1px 1px,
+    color-mix(in srgb, var(--tg-theme-hint-color, var(--mq-line)), transparent 86%) 0.9px,
+    transparent 1px
+  );
+  background-size: 17px 17px;
+  mask-image: linear-gradient(
+    to bottom,
+    black 0%,
+    rgba(0, 0, 0, 0.8) 40%,
+    transparent 92%
+  );
+}
+
+/* --- Эмоциональный фон игры: «время идёт» / пауза / ожидание (GameScreen) --- */
+.mq-page--mood-playing .mq-page__decor::before {
+  height: clamp(240px, 58vw, 440px);
+  background:
+    radial-gradient(
+      ellipse 70% 85% at 50% 112%,
+      color-mix(in srgb, var(--mq-warning) 16%, transparent),
+      transparent 52%
+    ),
+    radial-gradient(
+      ellipse 90% 100% at 16% -6%,
+      color-mix(in srgb, var(--tg-theme-button-color, var(--mq-violet)) 32%, transparent),
+      transparent 58%
+    ),
+    radial-gradient(
+      ellipse 80% 100% at 96% -2%,
+      color-mix(in srgb, var(--mq-emerald) 28%, transparent),
+      transparent 56%
+    );
+  animation: mqDecorDriftAlive 11s ease-in-out infinite alternate;
+}
+
+.mq-page--mood-pause .mq-page__decor::before {
+  animation: mqDecorDriftPause 24s ease-in-out infinite alternate;
+  filter: saturate(0.96);
+}
+
+.mq-page--mood-await .mq-page__decor::before {
+  animation: mqDecorAwait 30s ease-in-out infinite alternate;
+  filter: saturate(0.93);
+}
+
+.mq-page--mood-playing .mq-page__decor::after {
+  opacity: 0.5;
+}
+
+.mq-page--mood-pause .mq-page__decor::after,
+.mq-page--mood-await .mq-page__decor::after {
+  opacity: 0.35;
+}
+
+@keyframes mqDecorDriftAlive {
+  0% {
+    transform: rotate(-2deg) scale(1) translateY(0);
+    filter: saturate(1) brightness(1);
+  }
+  50% {
+    transform: rotate(0.5deg) scale(1.09) translateY(12px);
+    filter: saturate(1.14) brightness(1.05);
+  }
+  100% {
+    transform: rotate(2deg) scale(1.07) translateY(14px);
+    filter: saturate(1.08) brightness(1.03);
+  }
+}
+
+@keyframes mqDecorDriftPause {
+  from {
+    transform: rotate(-2deg) scale(1) translateY(0);
+  }
+  to {
+    transform: rotate(1.5deg) scale(1.05) translateY(9px);
+  }
+}
+
+@keyframes mqDecorAwait {
+  from {
+    transform: rotate(-1deg) scale(1) translateY(0);
+    opacity: 0.97;
+  }
+  to {
+    transform: rotate(1deg) scale(1.03) translateY(5px);
+    opacity: 1;
+  }
+}
+
+/* Лёгкая зернистость (тема-адаптивная), только под контентом игры */
+.mq-page__grain {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  overflow: hidden;
+  border-radius: inherit;
+  background: color-mix(in srgb, var(--tg-theme-text-color) 4.8%, transparent);
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 256 256'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  mask-size: 160px 160px;
+  mask-repeat: repeat;
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 256 256'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  -webkit-mask-size: 160px 160px;
+  -webkit-mask-repeat: repeat;
+}
+
+@keyframes mqDecorDrift {
+  from {
+    transform: rotate(-2deg) scale(1) translateY(0px);
+    filter: saturate(1);
+  }
+  to {
+    transform: rotate(2deg) scale(1.07) translateY(14px);
+    filter: saturate(1.06);
+  }
+}
+
+@keyframes mqEnterUp {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.mq-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.mq-stack--tight {
+  gap: 10px;
+}
+
+.mq-stack-animate > .mq-enter-item {
+  opacity: 0;
+  animation: mqEnterUp 0.52s cubic-bezier(0.22, 1, 0.32, 1) both;
+}
+
+.mq-stack-animate > .mq-enter-item:nth-child(1) {
+  animation-delay: 0.03s;
+}
+.mq-stack-animate > .mq-enter-item:nth-child(2) {
+  animation-delay: 0.08s;
+}
+.mq-stack-animate > .mq-enter-item:nth-child(3) {
+  animation-delay: 0.13s;
+}
+.mq-stack-animate > .mq-enter-item:nth-child(4) {
+  animation-delay: 0.18s;
+}
+.mq-stack-animate > .mq-enter-item:nth-child(5) {
+  animation-delay: 0.23s;
+}
+.mq-stack-animate > .mq-enter-item:nth-child(6) {
+  animation-delay: 0.28s;
+}
+.mq-stack-animate > .mq-enter-item:nth-child(7) {
+  animation-delay: 0.33s;
+}
+.mq-stack-animate > .mq-enter-item:nth-child(8) {
+  animation-delay: 0.38s;
+}
+.mq-stack-animate > .mq-enter-item:nth-child(9) {
+  animation-delay: 0.43s;
+}
+.mq-stack-animate > .mq-enter-item:nth-child(10) {
+  animation-delay: 0.48s;
+}
+
+.mq-actions-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 6px;
+}
+
+.mq-actions-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+
+.mq-inline-field-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+}
+
+.mq-inline-field-row > * {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.mq-inline-field-row > button {
+  flex: 0 0 auto;
+}
+
+.mq-chip-btn {
+  min-width: 44px !important;
+  border-radius: 12px !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mq-page__decor::before,
+  .mq-stack-animate > .mq-enter-item {
+    animation: none !important;
+  }
+  .mq-stack-animate > .mq-enter-item {
+    opacity: 1;
+    transform: none;
+  }
+  /* Состояние «игра» без анимации: сохраняем лёгкий насыщенный кадр из mid-keyframe */
+  .mq-page--mood-playing .mq-page__decor::before {
+    filter: saturate(1.06) brightness(1.02);
+  }
+  .mq-page--mood-pause .mq-page__decor::before,
+  .mq-page--mood-await .mq-page__decor::before {
+    opacity: 1;
+    filter: saturate(0.96);
+  }
+}
+
+/* Игровой HUD и таймер */
+.mq-hud {
+  border-radius: 14px;
+  border: 1px solid color-mix(in srgb, var(--tg-theme-hint-color, var(--mq-line)), 54%, transparent);
+  box-shadow:
+    0 1px 0 color-mix(in srgb, var(--tg-theme-secondary-bg-color, #fff), transparent 40%),
+    0 10px 30px color-mix(in srgb, #000, transparent 92%);
+}
+
+.mq-hud__row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.mq-period-label {
+  font-weight: 650;
+  font-size: var(--mq-fs-body);
+  letter-spacing: -0.02em;
+}
+
+.mq-timer-chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 10px;
+  border-radius: 10px;
+  font-family:
+    ui-monospace, var(--telegram-font-monospace, SFMono-Regular), Menlo,
+    monospace;
+  font-size: 1.1rem;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.04em;
+  color: var(--tg-theme-text-color, var(--mq-ink));
+  background: color-mix(
+    in srgb,
+    var(--tg-theme-secondary-bg-color, #f5f6f8) 88%,
+    var(--tg-theme-hint-color, var(--mq-line)) 12%
+  );
+  border: 1px solid color-mix(in srgb, var(--tg-theme-hint-color), transparent 74%);
+}
+
+.mq-hud-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+/* Кнопки в контентной зоне: мягкая глубина (нижнее меню и оверлеи не трогаем) */
+#root button:not(.tma-nav-icon-btn):not(.mqx-btn):not(.mqx-save-kind__row):not(.bottom-nav__cell):not(.mqx-dash-link):not(.mqx-needs-help-link):not(.mqx-needs-action--treat):not(.mqx-help-icon-btn):not(.mqx-treat-heart-btn):not(.mqx-finance-monetka__close):not(.mqx-capital-monetka__close):not(.mqx-action):not(.mqx-action-chip):not(.mqx-goal-dash__toggle):not(.events-carousel-dot):not(.events-carousel-arrow):not(
+    .events-overlay-close
+  ):not(.mqx-events-choice):focus-visible {
+  outline: 2px solid color-mix(in srgb, var(--mq-accent-link), transparent 22%);
+  outline-offset: 2px;
+}
+
+#root button:not(.tma-nav-icon-btn):not(.mqx-btn):not(.mqx-save-kind__row):not(.bottom-nav__cell):not(.mqx-dash-link):not(.mqx-needs-help-link):not(.mqx-needs-action--treat):not(.mqx-help-icon-btn):not(.mqx-treat-heart-btn):not(.mqx-finance-monetka__close):not(.mqx-capital-monetka__close):not(.mqx-action):not(.mqx-action-chip):not(.mqx-goal-dash__toggle):not(.events-carousel-dot):not(.events-carousel-arrow):not(
+    .events-overlay-close
+  ):not(.mqx-events-choice):active:not(:disabled) {
+  transform: scale(0.985);
+}
+
+#root button:not(.tma-nav-icon-btn):not(.mqx-btn):not(.mqx-save-kind__row):not(.bottom-nav__cell):not(.mqx-dash-link):not(.mqx-needs-help-link):not(.mqx-needs-action--treat):not(.mqx-help-icon-btn):not(.mqx-treat-heart-btn):not(.mqx-finance-monetka__close):not(.mqx-capital-monetka__close):not(.mqx-action):not(.mqx-action-chip):not(.mqx-goal-dash__toggle):not(.events-carousel-dot):not(.events-carousel-arrow):not(
+    .events-overlay-close
+  ):not(.mqx-events-choice):not(:disabled) {
+  transition:
+    transform 0.14s cubic-bezier(0.22, 1, 0.32, 1),
+    box-shadow 0.18s ease,
+    filter 0.18s ease,
+    opacity 0.18s ease;
+}
+
+.mq-input-inline:focus-visible {
+  outline: none;
+  border-color: color-mix(in srgb, var(--mq-accent-fill), transparent 8%);
+  box-shadow:
+    0 0 0 3px color-mix(in srgb, var(--mq-violet), transparent 82%),
+    0 1px 0 color-mix(in srgb, #fff, transparent 70%);
+}
+
+.mq-dash-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+}
+
+.mq-dash-actions .mq-dash-actions__field {
+  flex: 2 1 120px;
+  min-width: 0;
+}
+
+.mq-dash-block {
+  margin: 14px 0 0;
+}
+
+/* Смена внутренней вкладки (напр. финансы) */
+.mq-tab-panel-reveal {
+  animation: mqEnterUp 0.44s cubic-bezier(0.22, 1, 0.32, 1) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mq-tab-panel-reveal {
+    animation: none;
+  }
+}
+
+.bottom-nav button.tma-nav-icon-btn svg,
+.bottom-nav--unified .bottom-nav__cell svg {
+  transition:
+    transform 0.28s cubic-bezier(0.22, 1, 0.32, 1),
+    opacity 0.22s ease,
+    color 0.15s ease;
+}
+
+.tma-nav-icon-btn:active svg,
+.bottom-nav--unified .bottom-nav__cell:active:not(:disabled) svg {
+  transform: scale(0.92);
+}
+
+.tma-nav-icon-btn--active svg,
+.bottom-nav--unified .bottom-nav__cell--active svg {
+  transform: translateY(-1px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bottom-nav button.tma-nav-icon-btn svg,
+  .bottom-nav--unified .bottom-nav__cell svg {
+    transition: none;
+  }
+}

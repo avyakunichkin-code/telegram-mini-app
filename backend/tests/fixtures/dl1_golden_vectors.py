@@ -1,0 +1,56 @@
+"""
+Golden vectors for DL1 annuity / payoff (SPEC §4.4).
+
+Rounding: HALF_UP to 0.01 on each component — must match finance/annuity.py.
+"""
+
+from __future__ import annotations
+
+# --- Vector V1: issue + 2 full periods + prepay (no overdue) ---
+V1_PRINCIPAL = 1_000_000.0
+V1_ANNUAL_RATE = 12.0
+V1_TERM = 12
+V1_MONTHLY_PAYMENT = 88_848.79
+
+V1_AFTER_P1_DEBT = 921_151.21
+V1_P1_INTEREST = 10_000.0
+V1_P1_PRINCIPAL = 78_848.79
+
+V1_AFTER_P2_DEBT = 841_513.93
+V1_P2_INTEREST = 9_211.51
+V1_P2_PRINCIPAL = 79_637.28
+
+V1_PREPAY_AMOUNT = 50_000.0
+V1_AFTER_PREPAY_DEBT = 791_513.93
+V1_PREPAY_N_REM = 10
+V1_MONTHLY_PAYMENT_AFTER_PREPAY = 83_569.68
+
+# --- Vector V2: sale after V1 state + overdue ---
+V2_ASSET_VALUE = 1_100_000.0
+V2_OVERDUE = 5_000.0
+V2_DEBT = V1_AFTER_PREPAY_DEBT
+V2_PAYOFF = 796_513.93
+V2_CASH_NET = 303_486.07
+V2_TOP_UP = 0.0
+
+# --- Vector V3: partial period payment (body unchanged) ---
+V3_DUE = V1_MONTHLY_PAYMENT_AFTER_PREPAY
+V3_PAID = 40_000.0
+V3_UNPAID = 43_569.68
+V3_DEBT_UNCHANGED = V1_AFTER_PREPAY_DEBT
+
+# --- Vector V4: prepay with overdue waterfall ---
+V4_OVERDUE_BEFORE = V3_UNPAID
+V4_PREPAY_AMOUNT = 100_000.0
+V4_APPLIED_OVERDUE = 43_569.68
+V4_APPLIED_PRINCIPAL = 56_430.32
+V4_DEBT_AFTER = 735_083.61
+V4_OVERDUE_AFTER = 0.0
+
+# --- Vector V5: underwater sale ---
+V5_ASSET_VALUE = 700_000.0
+V5_DEBT = 791_513.93
+V5_OVERDUE = 0.0
+V5_PAYOFF = 791_513.93
+V5_CASH_NET = 0.0
+V5_TOP_UP = 91_513.93

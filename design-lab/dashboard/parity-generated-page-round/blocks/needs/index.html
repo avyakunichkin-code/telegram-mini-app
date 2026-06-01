@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="ru" data-theme="light">
+  <head>
+    <base href="./" />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>ТВОЙ ХОД — Z-NEEDS v7 (design-lab)</title>
+    <link rel="stylesheet" href="./lab-base.css" />
+      <style data-embed-style>
+      html[data-embed="1"] .lab-header,
+      html[data-embed="1"] .lab-round-note,
+      html[data-embed="1"] .lab-variant-card__label,
+      html[data-embed="1"] .lab-variant-card__idea,
+      html[data-embed="1"] .lab-variant-grid > *:not(:first-child) { display: none !important; }
+      html[data-embed="1"] .lab-main { padding: 0 !important; }
+      html[data-embed="1"] body { padding: 0 !important; }
+    </style>
+    <script>
+      (function(){
+        try {
+          var p = new URLSearchParams(location.search);
+          if (p.get('embed') === '1') document.documentElement.setAttribute('data-embed','1');
+        } catch (e) {}
+      })();
+    </script>
+  </head>
+  <body>
+    <header class="lab-header">
+      <div>
+        <h1>Z-NEEDS v7 — плоский блок</h1>
+        <p>
+          Заголовок «Потребности» на уровне «Финансы периода» (<code>mqx-finance-static__title</code>). Всегда 4 шкалы рядом с
+          портретом — без раскрытия и без дубля «Есть просадка». Ниже — варианты действий (A + иконки e1–e3 + B–D).
+        </p>
+      </div>
+      <div class="lab-header__controls">
+        <div class="lab-state" role="group" aria-label="Сценарий">
+          <button type="button" data-state-btn="distressed" class="is-active">Истощение</button>
+          <button type="button" data-state-btn="low">Просадка</button>
+          <button type="button" data-state-btn="ok">Норма</button>
+          <button type="button" data-state-btn="zero">Ноль + streak</button>
+        </div>
+        <div class="lab-theme" role="group" aria-label="Тема">
+          <button type="button" class="is-active" data-theme-btn="light">Светлая</button>
+          <button type="button" data-theme-btn="dark">Тёмная</button>
+        </div>
+      </div>
+    </header>
+
+    <main class="lab-main">
+      <p class="lab-round-note">
+        Сравнение: <a href="./VARIANTS.md">VARIANTS.md</a> · UX:
+        <a href="../../../docs/ux/screens/character-needs-dashboard.md">character-needs-dashboard.md</a>
+      </p>
+
+      <div class="lab-variant-grid lab-variant-grid--v7">
+        <!-- A -->
+        <article class="lab-variant-card">
+          <h2 class="lab-variant-card__label">v7-A — Ссылка + компактный CTA</h2>
+          <p class="lab-variant-card__idea">
+            Заголовок слева; «Подсказки» — текстовая ссылка, «Улучшить» — микро-чип меньше finance chips. Заблокированный CTA — тост «Разблокируется через N периодов».
+          </p>
+          <div class="lab-phone"><div class="lab-phone__shell">
+            <section class="mqx-needs-section" data-needs-section data-actions="a" aria-labelledby="needs-a-title">
+              <div class="mqx-needs-section__head">
+                <h2 id="needs-a-title" class="mqx-finance-static__title">Потребности</h2>
+                <div class="mqx-needs-actions">
+                  <button type="button" class="mqx-needs-help-link">Подсказки<span class="mqx-needs-help-link__arrow" aria-hidden="true"> →</span></button>
+                  <button type="button" class="mqx-needs-action mqx-needs-action--treat is-disabled" aria-disabled="true">Улучшить</button>
+                </div>
+              </div>
+              <div class="mqx-needs-block">
+                <div class="mqx-needs-risk" role="alert"></div>
+                <div class="mqx-needs-body">
+                  <div class="mqx-needs-avatar" aria-hidden="true">
+                    <img data-needs-avatar alt="" class="mqx-needs-avatar__img" />
+                  </div>
+                  <div class="mqx-needs-bars" data-needs-bars></div>
+                </div>
+              </div>
+            </section>
+          </div></div>
+        </article>
+
+        <!-- E2E3 prod -->
+        <article class="lab-variant-card lab-variant-card--star">
+          <h2 class="lab-variant-card__label">v7-e2e3 — ★ Prod (книга e2 + сердце e3)</h2>
+          <p class="lab-variant-card__idea">
+            Справка: книга с бейджем «?» без фона. Treat: круглая emerald-точка с заливкой сердца.
+          </p>
+          <div class="lab-phone"><div class="lab-phone__shell">
+            <section class="mqx-needs-section" data-needs-section data-actions="e2e3" aria-labelledby="needs-e2e3-title">
+              <div class="mqx-needs-section__head">
+                <h2 id="needs-e2e3-title" class="mqx-finance-static__title">Потребности</h2>
+                <div class="mqx-needs-actions">
+                  <button type="button" class="mqx-help-icon-btn mqx-help-icon-btn--badge" aria-label="Подсказки">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                      <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
+                      <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" />
+                    </svg>
+                    <span class="mqx-help-icon-btn__badge" aria-hidden="true">?</span>
+                  </button>
+                  <button type="button" class="mqx-treat-heart-btn mqx-treat-heart-btn--dot" aria-label="Улучшить потребности">
+                    <svg viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="1.5" width="14" height="14" aria-hidden="true">
+                      <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78L12 21.23l8.84-8.84a5.5 5.5 0 0 0 0-7.78z" />
+                    </svg>
+                  </button>
+                </div>
+              </div>
+              <div class="mqx-needs-block">
+                <div class="mqx-needs-risk" role="alert"></div>
+                <div class="mqx-needs-body">
+                  <div class="mqx-needs-avatar" aria-hidden="true">
+                    <img data-needs-avatar alt="" class="mqx-needs-avatar__img" />
+                  </div>
+                  <div class="mqx-needs-bars" data-needs-bars></div>
+                </div>
+              </div>
+            </section>
+          </div></div>
+        </article>
+
+        <!-- E1 -->
+        <article class="lab-variant-card">
+          <h2 class="lab-variant-card__label">v7-e1 — Книга + сердце-чип</h2>
+          <p class="lab-variant-card__idea">
+            Справка: книга без фона и рамки (17px). Treat: мягкий emerald-чип 28px, сердце 16px — как v7-C, но компактнее. <strong>Prod по умолчанию.</strong>
+          </p>
+          <div class="lab-phone"><div class="lab-phone__shell">
+            <section class="mqx-needs-section" data-needs-section data-actions="e1" aria-labelledby="needs-e1-title">
+              <div class="mqx-needs-section__head">
+                <h2 id="needs-e1-title" class="mqx-finance-static__title">Потребности</h2>
+                <div class="mqx-needs-actions">
+                  <button type="button" class="mqx-help-icon-btn" aria-label="Подсказки">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                      <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
+                      <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" />
+                    </svg>
+                  </button>
+                  <button type="button" class="mqx-treat-heart-btn" aria-label="Улучшить потребности">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16" aria-hidden="true">
+                      <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78L12 21.23l8.84-8.84a5.5 5.5 0 0 0 0-7.78z" />
+                    </svg>
+                  </button>
+                </div>
+              </div>
+              <div class="mqx-needs-block">
+                <div class="mqx-needs-risk" role="alert"></div>
+                <div class="mqx-needs-body">
+                  <div class="mqx-needs-avatar" aria-hidden="true">
+                    <img data-needs-avatar alt="" class="mqx-needs-avatar__img" />
+                  </div>
+                  <div class="mqx-needs-bars" data-needs-bars></div>
+                </div>
+              </div>
+            </section>
+          </div></div>
+        </article>
+
+        <!-- E2 -->
+        <article class="lab-variant-card">
+          <h2 class="lab-variant-card__label">v7-e2 — Книга + бейдж «?» · сердце без чипа</h2>
+          <p class="lab-variant-card__idea">
+            Угловой микро-бейдж «?» на книге (кандидат на общий help по игре). Сердце — только stroke, без подложки.
+          </p>
+          <div class="lab-phone"><div class="lab-phone__shell">
+            <section class="mqx-needs-section" data-needs-section data-actions="e2" aria-labelledby="needs-e2-title">
+              <div class="mqx-needs-section__head">
+                <h2 id="needs-e2-title" class="mqx-finance-static__title">Потребности</h2>
+                <div class="mqx-needs-actions">
+                  <button type="button" class="mqx-help-icon-btn mqx-help-icon-btn--badge" aria-label="Подсказки">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                      <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
+                      <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" />
+                    </svg>
+                    <span class="mqx-help-icon-btn__badge" aria-hidden="true">?</span>
+                  </button>
+                  <button type="button" class="mqx-treat-heart-btn mqx-treat-heart-btn--ghost is-disabled" aria-disabled="true" aria-label="Разблокируется через 2 периодов">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="17" height="17" aria-hidden="true">
+                      <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78L12 21.23l8.84-8.84a5.5 5.5 0 0 0 0-7.78z" />
+                    </svg>
+                  </button>
+                </div>
+              </div>
+              <div class="mqx-needs-block">
+                <div class="mqx-needs-risk" role="alert"></div>
+                <div class="mqx-needs-body">
+                  <div class="mqx-needs-avatar" aria-hidden="true">
+                    <img data-needs-avatar alt="" class="mqx-needs-avatar__img" />
+                  </div>
+                  <div class="mqx-needs-bars" data-needs-bars></div>
+                </div>
+              </div>
+            </section>
+          </div></div>
+        </article>
+
+        <!-- E3 -->
+        <article class="lab-variant-card">
+          <h2 class="lab-variant-card__label">v7-e3 — «?» внутри книги · сердце-точка</h2>
+          <p class="lab-variant-card__idea">
+            Вопрос внутри страницы (единый SVG). Treat — круглая emerald-точка с заливкой сердца.
+          </p>
+          <div class="lab-phone"><div class="lab-phone__shell">
+            <section class="mqx-needs-section" data-needs-section data-actions="e3" aria-labelledby="needs-e3-title">
+              <div class="mqx-needs-section__head">
+                <h2 id="needs-e3-title" class="mqx-finance-static__title">Потребности</h2>
+                <div class="mqx-needs-actions">
+                  <button type="button" class="mqx-help-icon-btn mqx-help-icon-btn--inside" aria-label="Подсказки">
+                    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" width="16" height="16">
+                      <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                      <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                      <path d="M12.25 8.35a1.4 1.4 0 1 0-2.8 0c0 .72.6 1.02 1 1.38" stroke="currentColor" stroke-width="1.65" stroke-linecap="round"/>
+                      <circle cx="10.85" cy="14.15" r="0.65" fill="currentColor"/>
+                    </svg>
+                  </button>
+                  <button type="button" class="mqx-treat-heart-btn mqx-treat-heart-btn--dot" aria-label="Улучшить потребности">
+                    <svg viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="1.5" width="14" height="14" aria-hidden="true">
+                      <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78L12 21.23l8.84-8.84a5.5 5.5 0 0 0 0-7.78z" />
+                    </svg>
+                  </button>
+                </div>
+              </div>
+              <div class="mqx-needs-block">
+                <div class="mqx-needs-risk" role="alert"></div>
+                <div class="mqx-needs-body">
+                  <div class="mqx-needs-avatar" aria-hidden="true">
+                    <img data-needs-avatar alt="" class="mqx-needs-avatar__img" />
+                  </div>
+                  <div class="mqx-needs-bars" data-needs-bars></div>
+                </div>
+              </div>
+            </section>
+          </div></div>
+        </article>
+
+        <!-- B -->
+        <article class="lab-variant-card">
+          <h2 class="lab-variant-card__label">v7-B — Подвал: ссылка + CTA</h2>
+          <p class="lab-variant-card__idea">Шапка только заголовок. Под шкалами — underline «Как поднять» и зелёная кнопка справа.</p>
+          <div class="lab-phone"><div class="lab-phone__shell">
+            <section class="mqx-needs-section" data-needs-section data-actions="b" aria-labelledby="needs-b-title">
+              <div class="mqx-needs-section__head">
+                <h2 id="needs-b-title" class="mqx-finance-static__title">Потребности</h2>
+                <div class="mqx-needs-actions"></div>
+              </div>
+              <div class="mqx-needs-block">
+                <div class="mqx-needs-risk" role="alert"></div>
+                <div class="mqx-needs-body">
+                  <div class="mqx-needs-avatar" aria-hidden="true">
+                    <img data-needs-avatar alt="" class="mqx-needs-avatar__img" />
+                  </div>
+                  <div>
+                    <div class="mqx-needs-bars" data-needs-bars></div>
+                    <div class="mqx-needs-foot">
+                      <button type="button" class="mqx-needs-action mqx-needs-action--ghost">Как поднять потребности</button>
+                      <button type="button" class="mqx-needs-action mqx-needs-action--treat">Побаловать себя</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </section>
+          </div></div>
+        </article>
+
+        <!-- C -->
+        <article class="lab-variant-card">
+          <h2 class="lab-variant-card__label">v7-C — Иконки в шапке</h2>
+          <p class="lab-variant-card__idea">Минимум текста: книга (справка) + сердце/подарок (treat). Подписи в aria-label.</p>
+          <div class="lab-phone"><div class="lab-phone__shell">
+            <section class="mqx-needs-section" data-needs-section data-actions="c" aria-labelledby="needs-c-title">
+              <div class="mqx-needs-section__head">
+                <h2 id="needs-c-title" class="mqx-finance-static__title">Потребности</h2>
+                <div class="mqx-needs-actions">
+                  <button type="button" class="mqx-needs-action mqx-needs-action--ghost" aria-label="Подсказки">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                      <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
+                      <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" />
+                    </svg>
+                    <span class="mqx-needs-action__label">Подсказки</span>
+                  </button>
+                  <button type="button" class="mqx-needs-action mqx-needs-action--treat" aria-label="Побаловать себя">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                      <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78L12 21.23l8.84-8.84a5.5 5.5 0 0 0 0-7.78z" />
+                    </svg>
+                    <span class="mqx-needs-action__label">Побаловать</span>
+                  </button>
+                </div>
+              </div>
+              <div class="mqx-needs-block">
+                <div class="mqx-needs-risk" role="alert"></div>
+                <div class="mqx-needs-body">
+                  <div class="mqx-needs-avatar" aria-hidden="true">
+                    <img data-needs-avatar alt="" class="mqx-needs-avatar__img" />
+                  </div>
+                  <div class="mqx-needs-bars" data-needs-bars></div>
+                </div>
+              </div>
+            </section>
+          </div></div>
+        </article>
+
+        <!-- D -->
+        <article class="lab-variant-card">
+          <h2 class="lab-variant-card__label">v7-D — Док у портрета</h2>
+          <p class="lab-variant-card__idea">Портрет + две мини-кнопки столбиком под ним — «игровой» паттерн, шкалы на всю ширину справа.</p>
+          <div class="lab-phone"><div class="lab-phone__shell">
+            <section class="mqx-needs-section" data-needs-section data-actions="d" aria-labelledby="needs-d-title">
+              <div class="mqx-needs-section__head">
+                <h2 id="needs-d-title" class="mqx-finance-static__title">Потребности</h2>
+              </div>
+              <div class="mqx-needs-block">
+                <div class="mqx-needs-risk" role="alert"></div>
+                <div class="mqx-needs-body">
+                  <div class="mqx-needs-avatar-col">
+                    <div class="mqx-needs-avatar" aria-hidden="true">
+                      <img data-needs-avatar alt="" class="mqx-needs-avatar__img" />
+                    </div>
+                    <div class="mqx-needs-dock">
+                      <button type="button" class="mqx-needs-action mqx-needs-action--ghost">Подсказки</button>
+                      <button type="button" class="mqx-needs-action mqx-needs-action--treat">Улучшить</button>
+                    </div>
+                  </div>
+                  <div class="mqx-needs-bars" data-needs-bars></div>
+                </div>
+              </div>
+            </section>
+          </div></div>
+        </article>
+      </div>
+    </main>
+    <script src="./lab-needs.js"></script>
+  </body>
+</html>

@@ -1,0 +1,263 @@
+﻿/* Основная оболочка TMA: колонка + «рамка приложения», компактная типографика */
+#root {
+  /* Реальная высота нижнего таббара (иконки + паддинги + safe-area) */
+  --tma-tabbar-height: 64px;
+  --tma-tabbar-inset: calc(var(--tma-tabbar-height) + env(safe-area-inset-bottom, 0px));
+
+  /* Шкала типографики MQX (type-scale-round ★, display A = 26px) */
+  --mq-fs-display: 26px;
+  --mq-fs-stat: 34px; /* KPI / крупная цифра (аналитика), вне обычной иерархии экрана */
+  --mq-fs-title: 20px;
+  --mq-fs-heading: 14px;
+  --mq-fs-body: 15px;
+  --mq-fs-caption: 12px;
+  --mq-fs-small: 11px;
+  --mq-fs-micro: 10px;
+  --mq-fw-regular: 400;
+  --mq-fw-medium: 550;
+  --mq-fw-bold: 700;
+  --mq-fw-heavy: 800;
+  --mq-lh-tight: 1.15;
+  --mq-lh-body: 1.42;
+  --mq-lh-relaxed: 1.45;
+
+  /*
+   * Основная заливка CTA и ссылки: Quest Violet (бренд), без «голубого» акцента клиента Telegram.
+   * Текст на кнопке остаётся из темы (обычно белый на тёмном / чёрный на светлом — задаёт telegram-ui).
+   */
+  --mq-accent-fill: var(--mq-violet);
+  --mq-accent-link: var(--mq-violet-deep);
+
+  /*
+   * MQX (Dashboard / Finance / Analytics): поверхности и типографика от темы TMA,
+   * чтобы не оставался «кусок светлого UI» в тёмной теме клиента.
+   */
+  --mqx-ink: var(--tg-theme-text-color, var(--mq-ink));
+  --mqx-surface-a: var(--tg-theme-bg-color, #ffffff);
+  --mqx-surface-b: color-mix(
+    in srgb,
+    var(--tg-theme-secondary-bg-color, #eef0f6) 32%,
+    var(--tg-theme-bg-color, #ffffff) 68%
+  );
+  --mqx-glass-strong: color-mix(in srgb, var(--tg-theme-bg-color, #ffffff) 90%, transparent);
+  --mqx-glass-mid: color-mix(in srgb, var(--tg-theme-bg-color, #ffffff) 78%, transparent);
+  --mqx-glass-soft: color-mix(in srgb, var(--tg-theme-bg-color, #ffffff) 70%, transparent);
+  --mqx-glass-softer: color-mix(in srgb, var(--tg-theme-bg-color, #ffffff) 64%, transparent);
+  --mqx-shadow-soft: color-mix(in srgb, var(--mqx-ink) 13%, transparent);
+  --mqx-shadow-card: color-mix(in srgb, var(--mqx-ink) 8%, transparent);
+  /* Coach: непрозрачная карточка (не var(--tg-theme-bg-color) — сливается с фоном TMA) */
+  --mqx-onboarding-bubble-bg: color-mix(in srgb, #ffffff 90%, #ede9fe 10%);
+  --mqx-onboarding-scrim-bg: rgba(8, 10, 22, 0.74);
+  --mqx-onboarding-bubble-border: color-mix(
+    in srgb,
+    var(--tg-theme-hint-color, var(--mq-line)) 38%,
+    var(--mq-violet, #6d28d9) 18%
+  );
+  --mqx-onboarding-bubble-shadow:
+    0 4px 6px rgba(0, 0, 0, 0.06),
+    0 20px 48px rgba(0, 0, 0, 0.22);
+
+  /* telegram-ui tokens */
+  --tgui--button_color: #6d28d9 !important;
+  --tgui--link_color: #5b21b6 !important;
+  --tgui--outline: color-mix(in srgb, #6d28d9 46%, var(--tg-theme-hint-color, #e5e7eb)) !important;
+  --tgui--accent_text_color: #6d28d9 !important;
+  --tgui--primary_code_highlight: #5b21b6 !important;
+  --tgui--toast_accent_color: #6d28d9 !important;
+  --tgui--button_text_color: var(--tg-theme-button-text-color, #ffffff) !important;
+
+  width: 100%;
+  max-width: 480px;
+  margin: 0 auto;
+  text-align: left;
+  min-height: 100svh;
+  min-height: 100dvh;
+  height: 100dvh;
+  max-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  box-sizing: border-box;
+  font-size: var(--mq-fs-body);
+  line-height: 1.42;
+  letter-spacing: 0.01px;
+  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, Ubuntu, Cantarell,
+    'Noto Sans', 'Helvetica Neue', Arial, sans-serif;
+  border-left: 1px solid
+    color-mix(in srgb, var(--tg-theme-hint-color, var(--mq-line)) 45%, transparent);
+  border-right: 1px solid
+    color-mix(in srgb, var(--tg-theme-hint-color, var(--mq-line)) 45%, transparent);
+  box-shadow:
+    0 0 0 1px color-mix(in srgb, var(--tg-theme-hint-color, var(--mq-line)) 35%, transparent);
+  background: var(--tg-theme-bg-color, var(--bg));
+  color: var(--tg-theme-text-color, var(--text));
+  font-size: var(--mq-fs-body);
+  line-height: 1.42;
+}
+
+/* На всякий случай дублируем на :root (некоторые компоненты читают токены выше по дереву) */
+:root {
+  --tgui--button_color: #6d28d9 !important;
+  --tgui--link_color: #5b21b6 !important;
+  --tgui--outline: color-mix(in srgb, #6d28d9 46%, #e5e7eb) !important;
+  --tgui--accent_text_color: #6d28d9 !important;
+  --tgui--primary_code_highlight: #5b21b6 !important;
+  --tgui--toast_accent_color: #6d28d9 !important;
+}
+
+/* Кнопки: всегда с рамкой; filled — заливка, outline/plain — остаются библиотечными */
+#root button:not(.tma-nav-icon-btn):not(.mqx-btn):not(.mqx-save-kind__row):not(.bottom-nav__cell):not(.mqx-dash-link):not(.mqx-needs-help-link):not(.mqx-needs-action--treat):not(.mqx-help-icon-btn):not(.mqx-treat-heart-btn):not(.mqx-finance-monetka__close):not(.mqx-capital-monetka__close):not(.mqx-action):not(.mqx-action-chip):not(.mqx-goal-dash__toggle):not(.events-carousel-dot):not(.events-carousel-arrow):not(.events-overlay-close):not(.mqx-events-card__close):not(.mqx-events-choice) {
+  box-shadow: 0 0 0 1px var(--tgui--outline) inset;
+}
+
+/* Компактные поля с подчёркиванием (для мастера «Базовые параметры» и похожих форм) */
+.mq-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  position: relative;
+  z-index: 3;
+}
+
+.mq-field__label {
+  font-size: var(--mq-fs-caption);
+  font-weight: 650;
+  letter-spacing: 0.01em;
+  color: var(--tg-theme-text-color, var(--mq-ink));
+}
+
+.mq-field__hint {
+  font-size: var(--mq-fs-small);
+  line-height: 1.35;
+  font-weight: 500;
+  color: color-mix(
+    in srgb,
+    var(--tg-theme-text-color, var(--mq-ink)) 42%,
+    var(--tg-theme-hint-color, #6b7280)
+  );
+}
+
+.mq-field__error {
+  font-size: var(--mq-fs-small);
+  line-height: 1.35;
+  font-weight: 550;
+  color: var(--tg-theme-destructive-text-color, var(--mq-danger));
+}
+
+.mq-field--invalid .mq-field__input {
+  border-bottom-color: color-mix(in srgb, var(--mq-danger) 72%, transparent);
+}
+
+.mqx-auth-monetka__form .mq-field__label {
+  color: color-mix(in srgb, var(--mqx-ink) 94%, var(--tg-theme-hint-color, #6b7280));
+}
+
+.mq-field__input {
+  width: 100%;
+  box-sizing: border-box;
+  border: none;
+  border-bottom: 1.5px solid color-mix(in srgb, var(--tgui--outline), transparent 12%);
+  border-radius: 0;
+  padding: 8px 2px 9px;
+  background: transparent;
+  color: var(--tg-theme-text-color, var(--mq-ink));
+  font: inherit;
+  font-size: var(--mq-fs-body);
+  line-height: 1.25;
+  outline: none;
+  position: relative;
+  z-index: 3;
+  pointer-events: auto;
+}
+
+/* Если в ячейке telegram-ui есть верхний overlay-слой, приподнимаем контентные элементы */
+.mq-field,
+.mq-field__input,
+.mq-add-action,
+.mq-actions-stack button {
+  position: relative;
+  z-index: 3;
+}
+
+/* Внутри Cell: отключаем «активность всей ячейки», чтобы клики шли в реальные контролы */
+#root [class*='tgui-']:has(.mq-field) {
+  cursor: default !important;
+}
+
+/* На случай, если в текущем браузере :has недоступен — просто не даём псевдослою ловить клики */
+#root [class*='tgui-'] .mq-field {
+  pointer-events: auto;
+}
+
+.mq-field__input::placeholder {
+  color: color-mix(in srgb, var(--tg-theme-hint-color, #6b7280), transparent 10%);
+}
+
+.mq-field__input:focus-visible {
+  border-bottom-color: #5b21b6;
+  box-shadow: 0 3px 0 -2px rgba(91, 33, 182, 0.45);
+}
+
+/* Убираем браузерные стрелки у number в WebKit */
+.mq-field__input[type='number']::-webkit-outer-spin-button,
+.mq-field__input[type='number']::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* И в Firefox */
+.mq-field__input[type='number'] {
+  -moz-appearance: textfield;
+}
+
+/* Подсказки под полями telegram-ui Input внутри MQX-карточек */
+.mqx-form-field-hint-wrap {
+  display: flex;
+  flex-direction: column;
+}
+
+.mqx-field-inline-hint {
+  margin: 6px 0 0;
+  padding: 0 2px;
+  font-size: var(--mq-fs-caption);
+  line-height: 1.38;
+  color: color-mix(
+    in srgb,
+    var(--tg-theme-text-color, var(--mq-ink)) 48%,
+    var(--tg-theme-hint-color, #6b7280)
+  );
+}
+
+/* Hover/глубина для filled-кнопок (не трогаем outline/plain) */
+@media (hover: hover) {
+  #root button:not(.tma-nav-icon-btn):not(.mqx-btn):not(.mqx-save-kind__row):not(.bottom-nav__cell):not(.mqx-dash-link):not(.mqx-needs-help-link):not(.mqx-needs-action--treat):not(.mqx-help-icon-btn):not(.mqx-treat-heart-btn):not(.mqx-finance-monetka__close):not(.mqx-capital-monetka__close):not(.mqx-action):not(.mqx-action-chip):not(.mqx-goal-dash__toggle):not(.events-carousel-dot):not(.events-carousel-arrow):not(.events-overlay-close):not(.mqx-events-card__close):not(.mqx-events-choice) {
+    transition:
+      background-color 0.14s ease,
+      box-shadow 0.14s ease,
+      transform 0.12s cubic-bezier(0.22, 1, 0.32, 1);
+  }
+  #root button:not(.tma-nav-icon-btn):not(.mqx-btn):not(.mqx-save-kind__row):not(.bottom-nav__cell):not(.mqx-dash-link):not(.mqx-finance-monetka__close):not(.mqx-capital-monetka__close):not(.mqx-action):not(.mqx-action-chip):not(.mqx-goal-dash__toggle):not(.events-carousel-dot):not(.events-carousel-arrow):not(.events-overlay-close):not(.mqx-events-card__close):not(.mqx-events-choice):active:not(:disabled) {
+    transform: scale(0.985);
+  }
+  /* filled у telegram-ui использует var(--tgui--button_color) — затемняем только его */
+  #root button:not(.tma-nav-icon-btn):not(.mqx-btn):not(.mqx-save-kind__row):not(.bottom-nav__cell):not(.mqx-dash-link):not(.mqx-finance-monetka__close):not(.mqx-capital-monetka__close):not(.mqx-action):not(.mqx-action-chip):not(.mqx-goal-dash__toggle):not(.events-carousel-dot):not(.events-carousel-arrow):not(.events-overlay-close):not(.mqx-events-card__close):not(.mqx-events-choice)[style*='--tgui--button_color'],
+  #root button:not(.tma-nav-icon-btn):not(.mqx-btn):not(.mqx-save-kind__row):not(.bottom-nav__cell):not(.mqx-dash-link):not(.mqx-finance-monetka__close):not(.mqx-capital-monetka__close):not(.mqx-action):not(.mqx-action-chip):not(.mqx-goal-dash__toggle):not(.events-carousel-dot):not(.events-carousel-arrow):not(.events-overlay-close):not(.mqx-events-card__close):not(.mqx-events-choice)[class*='tgui-']:where(:not(:disabled)) {
+    /* оставляем библиотечные состояния; глубина достигается рамкой и лёгким transform */
+  }
+}
+
+/* Убираем подсветку строк/блоков при наведении (desktop) */
+@media (hover: hover) {
+  #root [class*='tgui-'][class*='Cell']:hover,
+  #root [class*='tgui-'][class*='cell']:hover,
+  #root [class*='tgui-'][role='button']:hover {
+    background-color: transparent !important;
+  }
+}
+
+/* Библиотечный overlay-слой для нажатий/подсветки: не должен блокировать вложенные контролы */
+/* Хрупко: hashed class из @telegram-apps/telegram-ui (Cell overlay). При обновлении пакета —
+   если клики по .mq-field ломаются, проверьте DOM и замените селектор. Пакет см. package.json */
+#root .tgui-8071f6e38c77bc0b {
+  pointer-events: none;
+}

@@ -1,6 +1,6 @@
 /**
  * После default/interop или отдельного чанка `import … from 'lottie-react'` иногда попадается объект —
- * React: type is invalid … got object (см. FintechTgsSticker).
+ * React: type is invalid … got object — unwrap default/interop.
  */
 import * as LottiePkg from 'lottie-react';
 

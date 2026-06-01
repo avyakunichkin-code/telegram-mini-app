@@ -1,0 +1,167 @@
+/* hero-no-timer-round — варианты hero без MM:SS */
+
+.mqx-hero--turn {
+  padding: 10px 12px;
+}
+
+.mqx-hero-turn__status-title {
+  font-size: 1.35rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: #fff;
+  line-height: 1.1;
+}
+
+.mqx-hero-turn__status-hint {
+  margin-top: 2px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  color: rgba(245, 243, 255, 0.72);
+}
+
+.mqx-hero-turn__period-block {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  min-width: 0;
+}
+
+.mqx-hero-turn__period-label {
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(245, 243, 255, 0.62);
+}
+
+.mqx-hero-turn__period-value {
+  font-size: 1.25rem;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  color: #fff;
+  line-height: 1.1;
+}
+
+/* Primary CTA — закрытие месяца */
+.mqx-hero-turn__cta-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: 40px;
+  padding: 0 14px;
+  border: none;
+  border-radius: 12px;
+  font-size: 0.82rem;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  color: var(--mq-violet-deep);
+  background: #fff;
+  box-shadow: 0 2px 10px rgba(15, 17, 21, 0.18);
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.mqx-hero-turn__cta-primary:hover {
+  filter: brightness(1.03);
+}
+
+.mqx-hero-turn__cta-primary svg {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+}
+
+.mqx-hero-turn__cta-primary--wide {
+  flex: 1 1 auto;
+  min-width: 0;
+  max-width: 100%;
+}
+
+/* H2: column stack справа */
+.mqx-hero-turn__actions-col {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.mqx-hero-turn__events-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 32px;
+  padding: 0 12px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  background: rgba(255, 255, 255, 0.12);
+  color: #fff;
+  font-size: 0.75rem;
+  font-weight: 700;
+  cursor: pointer;
+  position: relative;
+}
+
+.mqx-hero-turn__events-badge {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 5px;
+  border-radius: 999px;
+  background: var(--mq-amber);
+  color: #fff;
+  font-size: 0.65rem;
+  font-weight: 800;
+  line-height: 18px;
+  text-align: center;
+}
+
+/* H3: plan chips */
+.mqx-hero-turn__plan {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 8px;
+}
+
+.mqx-hero-turn__plan-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 8px;
+  border-radius: 8px;
+  font-size: 0.68rem;
+  font-weight: 700;
+  background: rgba(255, 255, 255, 0.14);
+  color: rgba(255, 255, 255, 0.92);
+}
+
+.mqx-hero-turn__plan-chip--done {
+  background: rgba(5, 150, 105, 0.35);
+}
+
+.mqx-hero-turn__plan-chip--warn {
+  background: rgba(217, 119, 6, 0.4);
+}
+
+.mqx-hero-turn__plan-chip mark {
+  background: none;
+  color: inherit;
+  font-weight: 800;
+}
+
+/* H2 single row grid */
+.mqx-hero-turn__row-single {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 10px;
+}
+
+.lab-variant-card--h2 .mqx-hero-turn__row-single {
+  grid-template-columns: auto minmax(0, 1fr) auto;
+}

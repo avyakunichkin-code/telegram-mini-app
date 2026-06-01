@@ -1,60 +1,28 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Request
+from fastapi.responses import JSONResponse
 from sqlalchemy.orm import Session
-from datetime import datetime
 
 from ..auth import get_current_user
-from ..balance_utils import adjust_balance, TRANSACTION_TYPES, adjust_safety_fund_balance
 from ..database import get_db
-from ..character_progression import apply_character_xp
-from ..models import GameProfile, PeriodSnapshot, FinanceSalary, FinanceLiability, FinanceAsset
-from ..schemas import SafetyFundContribution, PeriodStatusResponse, PeriodSummaryResponse
-from ..game_time import get_active_game_profile, sync_time, get_seconds_until_next
+from ..schemas import (
+    SafetyFundContribution,
+    PeriodStatusResponse,
+    PeriodSummaryResponse,
+    TreatSelfRequest,
+    TreatSelfResponse,
+)
+from ..game.time import get_active_game_profile, sync_time
+from ..idempotency import read_idempotency_key, run_idempotent
+from ..services.period.complete import complete_period as service_complete_period
+from ..services.period.salary import claim_salary as service_claim_salary
+from ..services.period.status import build_period_status
+from ..services.period.safety_fund import (
+    contribute_to_safety_fund as service_contribute_to_safety_fund,
+    withdraw_from_safety_fund as service_withdraw_from_safety_fund,
+)
+from ..services.period.treat_self import treat_self as service_treat_self
 
 router = APIRouter(prefix="/api/game/period", tags=["period"])
-
-
-def get_current_period_snapshot(db: Session, profile: GameProfile, create_if_missing: bool = True) -> PeriodSnapshot:
-    """Получает или создаёт снимок текущего периода"""
-    snapshot = db.query(PeriodSnapshot).filter(
-        PeriodSnapshot.game_profile_id == profile.id,
-        PeriodSnapshot.period_index == profile.period_index
-    ).first()
-
-    if not snapshot and create_if_missing:
-        snapshot = PeriodSnapshot(
-            game_profile_id=profile.id,
-            period_index=profile.period_index,
-            safety_fund_total=profile.safety_fund_balance,
-            )
-        db.add(snapshot)
-        db.commit()
-        db.refresh(snapshot)
-
-    return snapshot
-
-
-def calculate_available_net_income(db: Session, profile: GameProfile, snapshot: PeriodSnapshot) -> float:
-    """Рассчитывает доступный чистый доход за период (после обязательств)"""
-    # Получаем зарплату
-    salary = db.query(FinanceSalary).filter(FinanceSalary.game_profile_id == profile.id).first()
-    monthly_income = salary.monthly_amount if salary else 0
-
-    # Получаем обязательные платежи
-    liabilities = db.query(FinanceLiability).filter(FinanceLiability.game_profile_id == profile.id).all()
-    total_liability_payments = sum(l.monthly_payment for l in liabilities)
-
-    # Расходы на обслуживание активов
-    assets = db.query(FinanceAsset).filter(FinanceAsset.game_profile_id == profile.id).all()
-    total_asset_maintenance = sum(a.monthly_maintenance_cost for a in assets)
-
-    # Чистый доход после обязательных расходов
-    net_income = monthly_income - total_liability_payments - total_asset_maintenance
-
-    # Если уже получали зарплату в этом периоде — вычитаем
-    if snapshot.salary_claimed:
-        net_income -= snapshot.salary_amount
-
-    return max(0, net_income)
 
 
 @router.get("/status", response_model=PeriodStatusResponse)
@@ -65,173 +33,48 @@ async def get_period_status(
     """Получает статус текущего периода — какие действия выполнены"""
     profile = get_active_game_profile(db, current_user.id)
     sync_time(profile)
-    snapshot = get_current_period_snapshot(db, profile)
-
-    # Получаем зарплатную информацию
-    salary = db.query(FinanceSalary).filter(FinanceSalary.game_profile_id == profile.id).first()
-    monthly_income = salary.monthly_amount if salary else 0
-
-    # Рассчитываем доступный доход
-    net_income_available = calculate_available_net_income(db, profile, snapshot)
-
-    # Проверяем, все ли необходимые действия выполнены
-    required_actions_completed = (
-        snapshot.salary_claimed == 1  # Зарплата получена
-    )
-
-    return PeriodStatusResponse(
-        period_index=profile.period_index,
-        salary_claimed=snapshot.salary_claimed == 1,
-        salary_amount=snapshot.salary_amount,
-        safety_fund_total=snapshot.safety_fund_total,
-        safety_fund_contribution=snapshot.safety_fund_contribution,
-        can_claim_salary=snapshot.salary_claimed == 0 and monthly_income > 0,
-        can_contribute_to_fund=True,  # Всегда можно отложить из доступного дохода
-        required_actions_completed=required_actions_completed,
-        total_expenses=snapshot.total_expenses,
-        net_income_available=net_income_available
-    )
+    return build_period_status(db, profile)
 
 
 @router.post("/claim-salary")
 async def claim_salary(
-        current_user=Depends(get_current_user),
-        db: Session = Depends(get_db)
+    current_user=Depends(get_current_user),
+    db: Session = Depends(get_db),
 ):
-    """Получить зарплату за текущий период (один раз за период)"""
-    # Получаем активный профиль
+    """Получить зарплату за текущий период (один раз за период; повтор — идемпотентный 200)."""
     profile = get_active_game_profile(db, current_user.id)
-    sync_time(profile)  # синхронизируем время (на всякий случай)
-
-    # Проверяем, не получали ли уже зарплату в этом периоде
-    if profile.last_period_salary_claimed == profile.period_index:
-        raise HTTPException(
-            status_code=400,
-            detail=f"Зарплата уже получена в периоде #{profile.period_index}"
-        )
-
-    # Получаем зарплатную запись для профиля
-    salary = db.query(FinanceSalary).filter(
-        FinanceSalary.game_profile_id == profile.id
-    ).first()
-    if not salary or salary.monthly_amount <= 0:
-        raise HTTPException(
-            status_code=400,
-            detail="Зарплата не настроена или равна нулю"
-        )
-
-    amount = salary.monthly_amount
-    period_index = profile.period_index
-
-    snapshot = get_current_period_snapshot(db, profile)
-    if snapshot.salary_claimed == 1:
-        raise HTTPException(
-            status_code=400,
-            detail=f"Зарплата уже получена в периоде #{profile.period_index}"
-        )
-
-    # Начисляем зарплату на баланс
-    try:
-        new_balance = adjust_balance(
-            db=db,
-            game_profile_id=profile.id,
-            amount=amount,
-            type=TRANSACTION_TYPES["SALARY"],
-            description=f"Зарплата за период #{period_index}",
-            period_index=period_index,
-        )
-    except ValueError as e:
-        raise HTTPException(status_code=400, detail=str(e))
-
-    # Обновляем флаг получения зарплаты в профиле
-    profile.last_period_salary_claimed = period_index
-    snapshot.salary_claimed = 1
-    snapshot.salary_amount = amount
-
-    xp_gained = 10
-    xp_apply = apply_character_xp(profile, xp_gained, db)
-
-    db.commit()
-
-    response = {
-        "status": "success",
-        "amount": amount,
-        "new_balance": new_balance,
-        "xp_gained": xp_apply["xp_gained"],
-        "level_up": xp_apply["level_up"],
-        "new_level": xp_apply["new_level"],
-        "message": f"Вы получили зарплату: {amount:,.2f} ₽"
-    }
-    if xp_apply["level_up"]:
-        response["message"] += f" Поздравляем! Вы достигли {profile.level} уровня!"
-
-    return response
+    sync_time(profile)
+    return service_claim_salary(db, profile)
 
 
 @router.post("/contribute-to-safety-fund")
 async def contribute_to_safety_fund(
-        contribution: SafetyFundContribution,
-        current_user=Depends(get_current_user),
-        db: Session = Depends(get_db)
+    request: Request,
+    contribution: SafetyFundContribution,
+    current_user=Depends(get_current_user),
+    db: Session = Depends(get_db),
 ):
     """
     Отложить деньги в подушку безопасности.
     Списывает указанную сумму с cash_balance и зачисляет на safety_fund_balance.
     """
-    if contribution.amount <= 0:
-        raise HTTPException(status_code=400, detail="Сумма должна быть положительной")
+    idem_key = read_idempotency_key(request)
 
-    profile = get_active_game_profile(db, current_user.id)
-    sync_time(profile)
+    def _execute() -> dict:
+        profile = get_active_game_profile(db, current_user.id)
+        sync_time(profile)
+        return service_contribute_to_safety_fund(db, profile, float(contribution.amount))
 
-    # Проверяем, достаточно ли средств на основном балансе
-    if profile.cash_balance < contribution.amount:
-        raise HTTPException(
-            status_code=400,
-            detail=f"Недостаточно средств. Доступно: {profile.cash_balance:,.2f} ₽"
+    if idem_key:
+        status, body = run_idempotent(
+            db,
+            user_id=current_user.id,
+            route_key="period.contribute_safety_fund",
+            idempotency_key=idem_key,
+            handler=_execute,
         )
-
-    period_index = profile.period_index
-    amount = contribution.amount
-    snapshot = get_current_period_snapshot(db, profile)
-
-    # Используем adjust_safety_fund_balance для перевода
-    try:
-        new_safety_fund = adjust_safety_fund_balance(
-            db=db,
-            game_profile_id=profile.id,
-            amount=amount,  # положительное число → в подушку
-            type=TRANSACTION_TYPES["SAFETY_FUND_CONTRIBUTION"],
-            description=f"Взнос в подушку безопасности #{period_index}",
-            period_index=period_index,
-        )
-    except ValueError as e:
-        raise HTTPException(status_code=400, detail=str(e))
-
-    # Обновляем профиль в текущей сессии (adjust_safety_fund_balance уже изменил балансы)
-    db.refresh(profile)
-    snapshot.safety_fund_total = profile.safety_fund_balance
-    snapshot.safety_fund_contribution = float(snapshot.safety_fund_contribution or 0) + amount
-
-    xp_gained = 5
-    xp_apply = apply_character_xp(profile, xp_gained, db)
-
-    db.commit()
-
-    response = {
-        "status": "success",
-        "contributed": amount,
-        "new_cash_balance": profile.cash_balance,
-        "new_safety_fund_balance": new_safety_fund,
-        "xp_gained": xp_apply["xp_gained"],
-        "level_up": xp_apply["level_up"],
-        "new_level": xp_apply["new_level"],
-        "message": f"Отложено {amount:,.2f} ₽ в подушку безопасности"
-    }
-    if xp_apply["level_up"]:
-        response["message"] += f" Поздравляем! Вы достигли {profile.level} уровня!"
-
-    return response
+        return JSONResponse(status_code=status, content=body)
+    return _execute()
 
 
 @router.post("/complete-period", response_model=PeriodSummaryResponse)
@@ -245,98 +88,65 @@ async def complete_period(
     """
     profile = get_active_game_profile(db, current_user.id)
     sync_time(profile)
-    snapshot = get_current_period_snapshot(db, profile)
-
-    if snapshot.is_completed == 1:
-        raise HTTPException(status_code=400, detail="Period already completed")
-
-    # Рассчитываем чистые сбережения
-    net_savings = snapshot.safety_fund_contribution
-
-    # Рассчитываем XP за период
-    xp_earned = 10  # Базовая награда
-    if snapshot.salary_claimed:
-        xp_earned += 20  # Бонус за получение зарплаты
-    if net_savings > 0:
-        xp_earned += min(30, int(net_savings / 1000))  # Бонус за сбережения
-
-    apply_character_xp(profile, xp_earned, db)
-
-    # Отмечаем период как завершённый
-    snapshot.is_completed = 1
-    snapshot.completed_at = datetime.utcnow()
-    snapshot.net_savings = net_savings
-    snapshot.xp_earned = xp_earned
-
-    # Инкрементируем период
-    profile.period_index += 1
-    profile.period_anchor_at = datetime.utcnow()
-
-    db.commit()
-
-    return PeriodSummaryResponse(
-        period_index=snapshot.period_index,
-        salary_claimed=snapshot.salary_claimed == 1,
-        salary_amount=snapshot.salary_amount,
-        safety_fund_contribution=snapshot.safety_fund_contribution,
-        safety_fund_total=snapshot.safety_fund_total,
-        net_savings=net_savings,
-        xp_earned=xp_earned,
-        required_actions_completed=True,
-    )
+    return service_complete_period(db, profile)
 
 
 @router.post("/withdraw-from-safety-fund")
 async def withdraw_from_safety_fund(
-        withdrawal: SafetyFundContribution,
-        current_user=Depends(get_current_user),
-        db: Session = Depends(get_db)
+    request: Request,
+    withdrawal: SafetyFundContribution,
+    current_user=Depends(get_current_user),
+    db: Session = Depends(get_db),
 ):
     """
     Снять деньги с подушки безопасности на основной счёт.
     Без комиссии, без ограничений по периоду.
     """
-    if withdrawal.amount <= 0:
-        raise HTTPException(status_code=400, detail="Сумма должна быть положительной")
+    idem_key = read_idempotency_key(request)
 
-    profile = get_active_game_profile(db, current_user.id)
-    sync_time(profile)
+    def _execute() -> dict:
+        profile = get_active_game_profile(db, current_user.id)
+        sync_time(profile)
+        return service_withdraw_from_safety_fund(db, profile, float(withdrawal.amount))
 
-    # Проверяем, достаточно ли средств на подушке
-    if profile.safety_fund_balance < withdrawal.amount:
-        raise HTTPException(
-            status_code=400,
-            detail=f"Недостаточно средств на подушке безопасности. Доступно: {profile.safety_fund_balance:,.2f} ₽"
+    if idem_key:
+        status, body = run_idempotent(
+            db,
+            user_id=current_user.id,
+            route_key="period.withdraw_safety_fund",
+            idempotency_key=idem_key,
+            handler=_execute,
         )
+        return JSONResponse(status_code=status, content=body)
+    return _execute()
 
-    period_index = profile.period_index
-    amount = withdrawal.amount
-    snapshot = get_current_period_snapshot(db, profile)
 
-    # Используем adjust_safety_fund_balance с отрицательной суммой (снятие)
-    try:
-        new_safety_fund = adjust_safety_fund_balance(
-            db=db,
-            game_profile_id=profile.id,
-            amount=-amount,   # отрицательное — снятие
-            type=TRANSACTION_TYPES["SAFETY_FUND_WITHDRAWAL"],
-            description=f"Снятие с подушки безопасности #{period_index}",
-            period_index=period_index,
+@router.post("/treat-self", response_model=TreatSelfResponse)
+async def treat_self(
+    request: Request,
+    payload: TreatSelfRequest,
+    current_user=Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    """«Порадовать себя»: списание с cash + needs_delta, с кулдауном по периодам (ADR-006)."""
+    option_id = (payload.option_id or "").strip()
+    if not option_id:
+        raise HTTPException(status_code=400, detail="option_id is required")
+
+    idem_key = read_idempotency_key(request)
+
+    def _execute() -> dict:
+        profile = get_active_game_profile(db, current_user.id)
+        sync_time(profile)
+        return service_treat_self(db, profile, option_id)
+
+    if idem_key:
+        status, body = run_idempotent(
+            db,
+            user_id=current_user.id,
+            route_key="period.treat_self",
+            idempotency_key=idem_key,
+            handler=_execute,
         )
-        db.commit()
-    except ValueError as e:
-        raise HTTPException(status_code=400, detail=str(e))
-
-    db.refresh(profile)
-    snapshot.safety_fund_total = profile.safety_fund_balance
-
-    # XP не начисляем (или начисляем штраф?, но по условию — без комиссии, без штрафа)
-    # Можно при желании добавить -2 XP, но пока оставим без изменений XP.
-
-    return {
-        "status": "success",
-        "withdrawn": amount,
-        "new_cash_balance": profile.cash_balance,
-        "new_safety_fund_balance": new_safety_fund,
-        "message": f"Снято {amount:,.2f} ₽ с подушки безопасности"
-    }
+        return JSONResponse(status_code=status, content=body)
+    return _execute()

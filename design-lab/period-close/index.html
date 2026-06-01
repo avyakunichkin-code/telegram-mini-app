@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="ru" data-theme="light">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Итог периода — design-lab</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="lab-header">
+      <div>
+        <h1>Итог периода — 5 вариантов</h1>
+        <p>Компактная выжимка с метриками MQX. Механика: авто до 3-го периода, с 4-го — хвостик.</p>
+      </div>
+      <div class="lab-controls">
+        <label class="lab-period">
+          Закрыт период №
+          <input id="period-range" type="range" min="1" max="7" value="3" />
+          <output id="period-out">3</output>
+        </label>
+        <span id="mode-hint" class="lab-mode-hint lab-mode-hint--auto">Режим: авто</span>
+        <div class="lab-theme" role="group">
+          <button type="button" class="is-active" data-theme-btn="light">Светлая</button>
+          <button type="button" data-theme-btn="dark">Тёмная</button>
+        </div>
+      </div>
+    </header>
+
+    <main class="lab-main">
+      <section class="lab-mechanics">
+        <strong>Механика (новая)</strong>
+        <ul>
+          <li><strong>Периоды 1–3</strong> — итог открывается сам после конца месяца (как сейчас, но компактно).</li>
+          <li><strong>С 4-го</strong> — без авто-оверлея; внизу дашборда <strong>хвостик</strong> «Период N · итоги» → тап открывает выжимку.</li>
+          <li>Контент: Δ баланс, доходы, расходы, подушка, инвестиции — глифы как в портфеле.</li>
+        </ul>
+      </section>
+
+      <div class="lab-grid">
+        <!-- A -->
+        <article class="lab-variant" id="variant-a">
+          <div class="lab-variant__head">
+            <h2>A</h2>
+            <span class="lab-variant__tag">Compact sheet</span>
+          </div>
+          <p class="lab-variant__note">Нижний лист ~40% экрана, без простыни breakdown.</p>
+          <div class="lab-variant__tools">
+            <button type="button" data-open>Открыть итог</button>
+          </div>
+          <div class="lab-phone" data-auto-open="true">
+            <div class="lab-dash">
+              <header class="lab-dash__hero">
+                <div class="lab-dash__hero-row">
+                  <div class="lab-dash__logo">MQ</div>
+                  <div>
+                    <div class="lab-dash__timer">00:00</div>
+                    <div class="lab-dash__meta">Период <span data-period-label>3</span> · пауза</div>
+                  </div>
+                </div>
+              </header>
+              <div class="lab-dash__finance">
+                <div class="lab-dash__fin-card">Баланс<strong>48 500 ₽</strong></div>
+                <div class="lab-dash__fin-card">Подушка<strong>18 000 ₽</strong></div>
+              </div>
+              <div class="lab-dash__body">Дашборд (заглушка)</div>
+            </div>
+            <button type="button" class="lab-tail" data-tail-label>Период 3 · итоги</button>
+            <nav class="lab-bottom-nav" aria-hidden="true"><span>⌂</span><span>◎</span><span>↗</span><span>☰</span></nav>
+            <div class="lab-scrim">
+              <div class="pc-panel pc-panel--sheet-a">
+                <div class="pc-panel__handle" aria-hidden="true"></div>
+                <div data-panel-body="a"></div>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <!-- B -->
+        <article class="lab-variant" id="variant-b">
+          <div class="lab-variant__head">
+            <h2>B</h2>
+            <span class="lab-variant__tag">Hero strip</span>
+          </div>
+          <p class="lab-variant__note">Не modal: полоска под hero, сворачивается крестиком.</p>
+          <div class="lab-variant__tools">
+            <button type="button" data-open>Открыть итог</button>
+          </div>
+          <div class="lab-phone" data-auto-open="true">
+            <div class="lab-dash">
+              <header class="lab-dash__hero">
+                <div class="lab-dash__hero-row">
+                  <div class="lab-dash__logo">MQ</div>
+                  <div>
+                    <div class="lab-dash__timer">00:00</div>
+                    <div class="lab-dash__meta">Период <span data-period-label>3</span></div>
+                  </div>
+                </div>
+              </header>
+              <div class="lab-strip-b">
+                <div class="lab-strip-b__row">
+                  <div>
+                    <p class="pc-panel__kicker">Период <span data-period-label>3</span> закрыт</p>
+                    <h3 class="pc-panel__title">Итог месяца</h3>
+                  </div>
+                  <button type="button" class="lab-strip-b__close" data-close aria-label="Свернуть">×</button>
+                </div>
+                <div data-panel-body="metrics"></div>
+                <div class="pc-panel__actions" style="margin-top:10px">
+                  <button type="button" class="pc-panel__btn" data-close>Понятно</button>
+                </div>
+              </div>
+              <div class="lab-dash__finance">
+                <div class="lab-dash__fin-card">Баланс<strong>48 500 ₽</strong></div>
+                <div class="lab-dash__fin-card">Подушка<strong>18 000 ₽</strong></div>
+              </div>
+              <div class="lab-dash__body">Контент под полоской</div>
+            </div>
+            <button type="button" class="lab-tail" data-tail-label>Период 3 · итоги</button>
+            <nav class="lab-bottom-nav" aria-hidden="true"><span>⌂</span><span>◎</span><span>↗</span><span>☰</span></nav>
+          </div>
+        </article>
+
+        <!-- C -->
+        <article class="lab-variant" id="variant-c">
+          <div class="lab-variant__head">
+            <h2>C</h2>
+            <span class="lab-variant__tag">Chips 2×2</span>
+          </div>
+          <p class="lab-variant__note">Крупные чипы как мини-карточки дашборда.</p>
+          <div class="lab-variant__tools">
+            <button type="button" data-open>Открыть итог</button>
+          </div>
+          <div class="lab-phone" data-auto-open="true">
+            <div class="lab-dash">
+              <header class="lab-dash__hero">
+                <div class="lab-dash__hero-row">
+                  <div class="lab-dash__logo">MQ</div>
+                  <div class="lab-dash__timer">00:00</div>
+                </div>
+              </header>
+              <div class="lab-dash__finance">
+                <div class="lab-dash__fin-card">Баланс<strong>48 500 ₽</strong></div>
+                <div class="lab-dash__fin-card">Подушка<strong>18 000 ₽</strong></div>
+              </div>
+              <div class="lab-dash__body">Дашборд</div>
+            </div>
+            <button type="button" class="lab-tail" data-tail-label>Период 3 · итоги</button>
+            <nav class="lab-bottom-nav" aria-hidden="true"><span>⌂</span><span>◎</span><span>↗</span><span>☰</span></nav>
+            <div class="lab-scrim">
+              <div class="pc-panel pc-panel--sheet-a">
+                <div class="pc-panel__handle" aria-hidden="true"></div>
+                <div data-panel-body="c"></div>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <!-- D -->
+        <article class="lab-variant" id="variant-d">
+          <div class="lab-variant__head">
+            <h2>D</h2>
+            <span class="lab-variant__tag">Tail + sheet ★</span>
+          </div>
+          <p class="lab-variant__note">Рекомендуемая механика: хвостик с периода 4, тело как A.</p>
+          <div class="lab-variant__tools">
+            <button type="button" data-open>Открыть итог</button>
+          </div>
+          <div class="lab-phone" data-auto-open="true">
+            <div class="lab-dash">
+              <header class="lab-dash__hero">
+                <div class="lab-dash__hero-row">
+                  <div class="lab-dash__logo">MQ</div>
+                  <div>
+                    <div class="lab-dash__timer">00:00</div>
+                    <div class="lab-dash__meta">Период <span data-period-label>3</span></div>
+                  </div>
+                </div>
+              </header>
+              <div class="lab-dash__finance">
+                <div class="lab-dash__fin-card">Баланс<strong>48 500 ₽</strong></div>
+                <div class="lab-dash__fin-card">Подушка<strong>18 000 ₽</strong></div>
+              </div>
+              <div class="lab-dash__body">Сдвинь слайдер на 4+ — появится хвостик, авто-оверлей исчезнет.</div>
+            </div>
+            <button type="button" class="lab-tail" data-tail-label>Период 3 · итоги</button>
+            <nav class="lab-bottom-nav" aria-hidden="true"><span>⌂</span><span>◎</span><span>↗</span><span>☰</span></nav>
+            <div class="lab-scrim">
+              <div class="pc-panel pc-panel--sheet-a">
+                <div class="pc-panel__handle" aria-hidden="true"></div>
+                <div data-panel-body="a"></div>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <!-- E -->
+        <article class="lab-variant" id="variant-e">
+          <div class="lab-variant__head">
+            <h2>E</h2>
+            <span class="lab-variant__tag">Float card</span>
+          </div>
+          <p class="lab-variant__note">Карточка над таббаром, лёгкий scrim, без полноэкранного modal.</p>
+          <div class="lab-variant__tools">
+            <button type="button" data-open>Открыть итог</button>
+          </div>
+          <div class="lab-phone" data-auto-open="true">
+            <div class="lab-dash">
+              <header class="lab-dash__hero">
+                <div class="lab-dash__hero-row">
+                  <div class="lab-dash__logo">MQ</div>
+                  <div class="lab-dash__timer">00:00</div>
+                </div>
+              </header>
+              <div class="lab-dash__finance">
+                <div class="lab-dash__fin-card">Баланс<strong>48 500 ₽</strong></div>
+                <div class="lab-dash__fin-card">Подушка<strong>18 000 ₽</strong></div>
+              </div>
+              <div class="lab-dash__body">Дашборд</div>
+            </div>
+            <button type="button" class="lab-tail" data-tail-label>Период 3 · итоги</button>
+            <nav class="lab-bottom-nav" aria-hidden="true"><span>⌂</span><span>◎</span><span>↗</span><span>☰</span></nav>
+            <div class="lab-scrim lab-scrim--center">
+              <div class="pc-panel pc-panel--float">
+                <div data-panel-body="a"></div>
+              </div>
+            </div>
+          </div>
+        </article>
+      </div>
+    </main>
+
+    <script src="lab.js"></script>
+  </body>
+</html>

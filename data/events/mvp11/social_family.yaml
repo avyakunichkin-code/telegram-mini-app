@@ -1,0 +1,129 @@
+events:
+- definition_key: mq11_rescue_friend_call
+  event_domain: social_family
+  title: Позвонить другу
+  description: Пять минут разговора помогают выдохнуть и собраться с мыслями.
+  weight: 35
+  event_tier: 1
+  repeat_policy: repeatable
+  scenario_shape: rescue
+  extra:
+    is_rescue: true
+    rescue_axes:
+    - social
+  cooldown_periods: 3
+  choices:
+  - title: Созвониться
+    effects:
+      cash_delta: -400
+      needs_delta:
+        social: 8
+        comfort: 2
+  - title: Отложить
+    effects:
+      cash_delta: 0
+      needs_delta:
+        social: -5
+        comfort: -2
+- definition_key: mq11_friend_outing_student
+  content_class: profile
+  event_slot: period_choice
+  audience_template_keys:
+  - mq_game_basic_v1
+  event_domain: social_family
+  title: Подруга зовёт погулять
+  description: 'Подруга пишет: «Выберемся вечером?» Можно сходить вместе — или честно сказать, что завал
+    с учёбой.'
+  weight: 86
+  event_tier: 1
+  repeat_policy: repeatable
+  scenario_shape: soft_offer
+  cooldown_periods: 3
+  prerequisites:
+    forbid_active_asset_kinds_any:
+    - car_personal
+    - car_taxi
+  choices:
+  - title: Сходить в кино
+    effects:
+      cash_delta: -3200
+      needs_delta:
+        social: 20
+        health: 10
+        comfort: 8
+  - title: Погулять и выпить кофе
+    effects:
+      cash_delta: -1400
+      needs_delta:
+        social: 14
+        health: 6
+        comfort: 4
+  - title: Отложить — занят учёбой
+    effects:
+      cash_delta: 0
+      needs_delta:
+        social: -5
+- definition_key: mq11_wedding_gift_once
+  event_domain: social_family
+  title: Свадьба друга (разовый сценарий)
+  description: Приглашение на праздник — подарок и поездка.
+  weight: 40
+  event_tier: 2
+  repeat_policy: once_per_profile
+  scenario_shape: narrative_once
+  choices:
+  - title: Подарок и поездка
+    effects:
+      cash_delta: -22000
+      needs_delta:
+        social: 16
+        status: 6
+        comfort: 4
+  - title: Только подарок
+    effects:
+      cash_delta: -8000
+      needs_delta:
+        social: 12
+        status: 3
+  - title: Поздравить дистанционно
+    effects:
+      cash_delta: -2000
+      needs_delta:
+        social: 4
+        comfort: -2
+- definition_key: mq11_friend_outing_pro
+  content_class: profile
+  event_slot: period_choice
+  audience_template_keys:
+  - mq_game_tight_budget_v1
+  event_domain: social_family
+  title: Коллеги зовут после работы
+  description: 'В чате офиса: «Соберёмся в пятницу?» Можно поддержать команду — или честно
+    сказать, что нужен отдых дома.'
+  weight: 84
+  event_tier: 1
+  repeat_policy: repeatable
+  scenario_shape: soft_offer
+  cooldown_periods: 3
+  choices:
+  - title: Ужин и бар
+    effects:
+      cash_delta: -5800
+      needs_delta:
+        social: 18
+        status: 10
+        health: -2
+  - title: Только кофе с коллегами
+    effects:
+      cash_delta: -2200
+      needs_delta:
+        social: 12
+        status: 5
+        comfort: 3
+  - title: Отказаться — устал
+    effects:
+      cash_delta: 0
+      needs_delta:
+        social: -6
+        status: -3
+        comfort: 2

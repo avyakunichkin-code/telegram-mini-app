@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="ru" data-theme="light">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>ТВОЙ ХОД — pre-game shell v2 ★</title>
+    <link rel="stylesheet" href="./lab-base.css" />
+  </head>
+  <body>
+    <header class="lab-header">
+      <div>
+        <h1>Pre-game shell v2 ★</h1>
+        <p>
+          Паритет с prod: <strong>Монетка B</strong> + TGS-фон + <code>mqx-frame--pre-game</code> (без внешней обводки).
+          P4–P5 — perch из new-game-mode. После sync: <code>.\sync-lab.ps1</code>.
+        </p>
+      </div>
+      <div class="lab-theme" role="group" aria-label="Тема">
+        <button type="button" class="is-active" data-theme-btn="light">Светлая</button>
+        <button type="button" data-theme-btn="dark">Тёмная</button>
+      </div>
+    </header>
+
+    <p class="lab-pick-banner">
+      ★ Утверждаем: bubble (P1–P3, P6) без внешней рамки frame · flow flat (P4–P5) · кнопки
+      <strong>mqx-btn</strong>.
+    </p>
+
+    <main class="lab-wrap">
+      <!-- P1 Login -->
+      <section class="lab-section" id="p1">
+        <div class="lab-section__label">
+          <span class="lab-section__id">P1</span>
+          <span class="lab-section__title">Вход · /login · Bubble + TGS</span>
+        </div>
+        <p class="lab-section__note">Prod: <code>MonetkaBubbleScreen</code> + <code>showLottieBackdrop</code> + <code>mqx-frame--pre-game</code>.</p>
+        <div class="lab-stage">
+          <article class="phone phone--pre-game" aria-label="P1 — вход">
+            <div class="pg-app-shell mq-page mq-page--auth">
+              <div class="mq-page__decor" aria-hidden="true"></div>
+              <div class="pg-mqx-screen">
+                <div class="pg-mqx-frame mqx-frame--pre-game">
+                  <div class="mqx-auth mqx-auth--monetka mqx-auth--lottie-bg">
+                    <div class="mq-auth-bg-layer" aria-hidden="true">
+                      <div class="mq-auth-bg-lottie-slot"><span class="pg-tgs-label">TGS · fintech</span></div>
+                    </div>
+                    <div class="mq-auth-foreground">
+                      <div class="mqx-auth-monetka mqx-auth-monetka--brand-top">
+                        <div class="pg-brand-mark">ТВОЙ ХОД</div>
+                        <img class="mqx-auth-monetka__mascot" src="./assets/monetka-mascot.png" alt="" width="112" height="112" />
+                        <section class="mqx-auth-monetka__bubble">
+                          <h1 class="mqx-auth-monetka__title">Привет, я Монетка!</h1>
+                          <p class="mqx-auth-monetka__subtitle">Введи логин и пароль — и вперёд в игру</p>
+                          <div class="mq-field">
+                            <label for="p1-user">Имя пользователя</label>
+                            <input id="p1-user" class="mq-field__input" type="text" autocomplete="username" placeholder="username" />
+                          </div>
+                          <div class="mq-field">
+                            <label for="p1-pass">Пароль</label>
+                            <input id="p1-pass" class="mq-field__input" type="password" autocomplete="current-password" placeholder="••••••" />
+                          </div>
+                          <div class="mqx-auth-monetka__actions">
+                            <button type="button" class="mqx-btn mqx-btn--primary mqx-btn--stretched">Войти</button>
+                          </div>
+                          <p class="mqx-auth-monetka__link">
+                            Нет аккаунта?
+                            <button type="button" class="mqx-btn mqx-btn--link">Зарегистрироваться</button>
+                          </p>
+                        </section>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <!-- P2 Register -->
+      <section class="lab-section" id="p2">
+        <div class="lab-section__label">
+          <span class="lab-section__id">P2</span>
+          <span class="lab-section__title">Регистрация · /register</span>
+        </div>
+        <div class="lab-stage">
+          <article class="phone phone--pre-game" aria-label="P2 — регистрация">
+            <div class="pg-app-shell mq-page mq-page--auth">
+              <div class="mq-page__decor" aria-hidden="true"></div>
+              <div class="pg-mqx-screen">
+                <div class="pg-mqx-frame mqx-frame--pre-game">
+                  <div class="mqx-auth mqx-auth--monetka mqx-auth--lottie-bg">
+                    <div class="mq-auth-bg-layer" aria-hidden="true">
+                      <div class="mq-auth-bg-lottie-slot"><span class="pg-tgs-label">TGS · fintech</span></div>
+                    </div>
+                    <div class="mq-auth-foreground">
+                      <div class="mqx-auth-monetka mqx-auth-monetka--brand-top">
+                        <div class="pg-brand-mark">ТВОЙ ХОД</div>
+                        <img class="mqx-auth-monetka__mascot" src="./assets/monetka-mascot.png" alt="" width="112" height="112" />
+                        <section class="mqx-auth-monetka__bubble">
+                          <h1 class="mqx-auth-monetka__title">Привет, я Монетка!</h1>
+                          <p class="mqx-auth-monetka__subtitle">
+                            Я тоже регистрировалась в первый раз. Регистрируйся — подожду!
+                          </p>
+                          <div class="mq-field">
+                            <label>Имя пользователя *</label>
+                            <input class="mq-field__input" type="text" />
+                          </div>
+                          <div class="mq-field">
+                            <label>Email *</label>
+                            <input class="mq-field__input" type="email" />
+                          </div>
+                          <div class="mq-field">
+                            <label>Пароль *</label>
+                            <input class="mq-field__input" type="password" />
+                          </div>
+                          <div class="mqx-auth-monetka__actions">
+                            <button type="button" class="mqx-btn mqx-btn--primary mqx-btn--stretched">Зарегистрироваться</button>
+                          </div>
+                          <p class="mqx-auth-monetka__link">
+                            Уже есть аккаунт?
+                            <button type="button" class="mqx-btn mqx-btn--link">Войти</button>
+                          </p>
+                        </section>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <!-- P3 Start menu -->
+      <section class="lab-section" id="p3">
+        <div class="lab-section__label">
+          <span class="lab-section__id">P3</span>
+          <span class="lab-section__title">Стартовое меню</span>
+        </div>
+        <div class="lab-stage">
+          <article class="phone phone--pre-game" aria-label="P3 — стартовое меню">
+            <div class="pg-app-shell mq-page">
+              <div class="mq-page__decor" aria-hidden="true"></div>
+              <div class="pg-mqx-screen">
+                <div class="pg-mqx-frame mqx-frame--pre-game">
+                  <div class="mqx-auth mqx-auth--monetka mqx-auth--lottie-bg">
+                    <div class="mq-auth-bg-layer" aria-hidden="true">
+                      <div class="mq-auth-bg-lottie-slot"><span class="pg-tgs-label">TGS · fintech</span></div>
+                    </div>
+                    <div class="mq-auth-foreground">
+                      <div class="mqx-auth-monetka mqx-auth-monetka--brand-top">
+                        <div class="pg-brand-mark">ТВОЙ ХОД</div>
+                        <img class="mqx-auth-monetka__mascot" src="./assets/monetka-mascot.png" alt="" width="112" height="112" />
+                        <section class="mqx-auth-monetka__bubble mqx-auth-monetka__bubble--wide">
+                          <h1 class="mqx-auth-monetka__title">Продолжим с того же места?</h1>
+                          <p class="mqx-auth-monetka__subtitle">Слот «Моя игра» · период 4</p>
+                          <div class="pg-slot-card">
+                            <strong>Моя игра</strong>
+                            <span>Игра · период 4 · cash 42 500 ₽</span>
+                          </div>
+                          <button type="button" class="mqx-btn mqx-btn--primary mqx-btn--compact" style="margin-bottom: 4px">
+                            Продолжить
+                          </button>
+                          <div class="mqx-auth-monetka__actions">
+                            <button type="button" class="mqx-btn mqx-btn--primary mqx-btn--stretched">Новая игра</button>
+                            <button type="button" class="mqx-btn mqx-btn--secondary mqx-btn--stretched">Все сохранения (2)</button>
+                            <button type="button" class="mqx-btn mqx-btn--ghost mqx-btn--stretched">Выйти</button>
+                          </div>
+                        </section>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <!-- P4 New game kind -->
+      <section class="lab-section" id="p4">
+        <div class="lab-section__label">
+          <span class="lab-section__id">P4</span>
+          <span class="lab-section__title">Новая игра · режим (perch)</span>
+        </div>
+        <p class="lab-section__note">Prod: <code>MqxMonetkaDialogScreen</code> + <code>mqx-frame--flat-flow</code>.</p>
+        <div class="lab-stage">
+          <article class="phone phone--pre-game" aria-label="P4 — режим">
+            <div class="pg-app-shell mq-page">
+              <div class="mq-page__decor" aria-hidden="true"></div>
+              <div class="pg-mqx-screen">
+                <div class="pg-mqx-frame mqx-frame--flat-flow">
+                  <div class="mqx-flow mqx-flow--monetka-dialog">
+                    <div class="mqx-monetka-flow">
+                      <div class="mqx-monetka-dialog__perch mqx-monetka-dialog__perch--sit-edge">
+                        <div class="mqx-monetka-dialog__perch-head">
+                          <img
+                            class="lab-mascot--perch"
+                            src="./assets/monetka-sit-edge.png"
+                            width="124"
+                            alt=""
+                            aria-hidden="true"
+                          />
+                        </div>
+                        <section class="mqx-monetka-dialog__speech">
+                          <h1 class="mqx-monetka-dialog__title">Новая игра!</h1>
+                          <div class="mqx-monetka-dialog__subtitle">
+                            <p>
+                              В режиме <strong>Игра</strong> — разные жизненные ситуации, в
+                              <strong>План</strong> — что-то очень интересное (скоро).
+                            </p>
+                          </div>
+                        </section>
+                      </div>
+                      <div class="mqx-monetka-flow__body">
+                        <h2 class="mqx-save-kind__heading">Режим игры</h2>
+                        <div class="mqx-save-kind">
+                          <button type="button" class="mqx-save-kind__row mqx-save-kind__row--game">
+                            <span class="mqx-save-kind__icon-wrap mqx-save-kind__icon-wrap--game mqx-save-kind__icon-wrap--game-glow" aria-hidden>🎮</span>
+                            <span class="mqx-save-kind__body"><span class="mqx-save-kind__title">Игра</span></span>
+                            <span class="mqx-save-kind__trail" aria-hidden>›</span>
+                          </button>
+                          <div class="mqx-save-kind__row mqx-save-kind__row--plan mqx-save-kind__row--soon">
+                            <span class="mqx-save-kind__badge">Скоро</span>
+                            <span class="mqx-save-kind__icon-wrap mqx-save-kind__icon-wrap--plan" aria-hidden>📋</span>
+                            <span class="mqx-save-kind__body"><span class="mqx-save-kind__title">План</span></span>
+                          </div>
+                        </div>
+                        <button type="button" class="mqx-btn mqx-btn--secondary mqx-btn--stretched">Назад</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <!-- P5 Templates -->
+      <section class="lab-section" id="p5">
+        <div class="lab-section__label">
+          <span class="lab-section__id">P5</span>
+          <span class="lab-section__title">Шаблоны старта</span>
+        </div>
+        <div class="lab-stage">
+          <article class="phone phone--pre-game" aria-label="P5 — шаблоны">
+            <div class="pg-app-shell mq-page">
+              <div class="pg-mqx-screen">
+                <div class="pg-mqx-frame mqx-frame--flat-flow">
+                  <div class="mqx-flow mqx-flow--monetka-dialog">
+                    <div class="mqx-monetka-flow">
+                      <div class="mqx-monetka-dialog__perch mqx-monetka-dialog__perch--sit-edge">
+                        <div class="mqx-monetka-dialog__perch-head">
+                          <img class="lab-mascot--perch" src="./assets/monetka-sit-edge.png" width="124" alt="" aria-hidden="true" />
+                        </div>
+                        <section class="mqx-monetka-dialog__speech">
+                          <h1 class="mqx-monetka-dialog__title">Выбери сценарий</h1>
+                          <div class="mqx-monetka-dialog__subtitle">
+                            <p>Каталог шаблонов и длительность периода — как в prod.</p>
+                          </div>
+                        </section>
+                      </div>
+                      <div class="mqx-monetka-flow__body">
+                        <div class="pg-slot-card" style="margin-bottom: 8px">
+                          <strong>Старт карьеры</strong>
+                          <span>Средняя · зарплата 85 000 ₽</span>
+                        </div>
+                        <div class="mqx-auth-monetka__actions">
+                          <button type="button" class="mqx-btn mqx-btn--primary mqx-btn--stretched">Начать игру</button>
+                          <button type="button" class="mqx-btn mqx-btn--secondary mqx-btn--stretched">Быстрый старт</button>
+                          <button type="button" class="mqx-btn mqx-btn--ghost mqx-btn--stretched">Назад</button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <!-- P6 Session loading -->
+      <section class="lab-section" id="p6">
+        <div class="lab-section__label">
+          <span class="lab-section__id">P6</span>
+          <span class="lab-section__title">Проверка сессии · AuthGuard</span>
+        </div>
+        <div class="lab-stage">
+          <article class="phone phone--pre-game" aria-label="P6 — loading">
+            <div class="pg-app-shell mq-page mq-page--auth">
+              <div class="mq-page__decor" aria-hidden="true"></div>
+              <div class="pg-mqx-screen">
+                <div class="pg-mqx-frame mqx-frame--pre-game">
+                  <div class="mqx-auth mqx-auth--monetka mqx-auth--lottie-bg">
+                    <div class="mq-auth-bg-layer" aria-hidden="true">
+                      <div class="mq-auth-bg-lottie-slot"><span class="pg-tgs-label">TGS · fintech</span></div>
+                    </div>
+                    <div class="mq-auth-foreground">
+                      <div class="mqx-auth-monetka">
+                        <img class="mqx-auth-monetka__mascot" src="./assets/monetka-mascot.png" alt="" width="112" height="112" />
+                        <section class="mqx-auth-monetka__bubble">
+                          <h1 class="mqx-auth-monetka__title">Секунду, листаю полки</h1>
+                          <p class="mqx-auth-monetka__subtitle">Подтягиваю твои сохранения… обычно это занимает секунду.</p>
+                          <div class="mqx-auth-monetka__loading" aria-busy="true">
+                            <div class="pg-spinner" role="status" aria-label="Загрузка"></div>
+                          </div>
+                        </section>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </article>
+        </div>
+      </section>
+    </main>
+
+    <script>
+      document.querySelectorAll('[data-theme-btn]').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          const t = btn.getAttribute('data-theme-btn');
+          document.documentElement.setAttribute('data-theme', t);
+          document.querySelectorAll('[data-theme-btn]').forEach((b) => b.classList.toggle('is-active', b === btn));
+        });
+      });
+    </script>
+  </body>
+</html>

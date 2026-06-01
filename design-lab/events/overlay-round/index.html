@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="ru" data-theme="light">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Events — раунд 3: оверлей L3</title>
+    <link rel="stylesheet" href="./lab-base.css" />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <header class="lab-header">
+      <div>
+        <h1>Events — оверлей L3 ★</h1>
+        <p>
+          Полоса домена → заголовок + × → лейблы → Монетка → flat-выборы. Внизу «1 / 2» и стрелки.
+        </p>
+      </div>
+      <div class="lab-theme" role="group" aria-label="Тема">
+        <button type="button" class="is-active" data-theme-btn="light">Светлая</button>
+        <button type="button" data-theme-btn="dark">Тёмная</button>
+      </div>
+    </header>
+
+    <main class="lab-wrap">
+      <section class="lab-section lab-section--featured">
+        <div class="lab-section__label">
+          <span class="lab-section__id">O1</span>
+          <span class="lab-section__title">Две карточки (★ prod)</span>
+        </div>
+        <div class="lab-stage">
+          <div class="ev-overlay-backdrop" aria-hidden></div>
+          <div class="ev-panel-l3" role="dialog">
+            <article class="ev-l3-card ev--domain-auto">
+              <div class="ev-l3-card__band" aria-hidden></div>
+              <div class="ev-l3-card__inner">
+                <div class="ev-l3-head">
+                  <h3 class="ev-l3-title">ДТП</h3>
+                  <button type="button" class="ev-l3-close" aria-label="Закрыть">×</button>
+                </div>
+                <div class="ev-l3-labels">
+                  <span class="ev-domain-pill"><span class="ev-domain-pill__dot"></span>Авто</span>
+                  <span class="ev-badge-insurance">Страховой случай</span>
+                </div>
+                <div class="ev-l3-bubble-row">
+                  <img class="ev-monetka" src="./assets/monetka-mascot.png" alt="" width="50" height="50" />
+                  <div class="ev-l3-bubble ev-l3-bubble--insurance">
+                    Небольшое столкновение. При ОСАГО страховая покроет ущерб.
+                  </div>
+                </div>
+                <div class="ev-choices ev-choices--flat">
+                  <button type="button" class="ev-choice">
+                    <span class="ev-choice__title">Оформить по полису ОСАГО</span>
+                    <span class="ev-choice__desc">Выплата · XP +4</span>
+                  </button>
+                  <button type="button" class="ev-choice">
+                    <span class="ev-choice__title">Оплатить из своих (−45 000 ₽)</span>
+                  </button>
+                  <button type="button" class="ev-choice">
+                    <span class="ev-choice__title">Договориться</span>
+                  </button>
+                </div>
+              </div>
+            </article>
+            <div class="ev-nav-l3">
+              <button type="button" disabled aria-label="Назад">‹</button>
+              <span class="ev-nav-l3__count">1 / 2</span>
+              <button type="button" aria-label="Вперёд">›</button>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <script>
+      document.querySelectorAll('[data-theme-btn]').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          document.documentElement.dataset.theme = btn.dataset.themeBtn;
+          document.querySelectorAll('[data-theme-btn]').forEach((b) => b.classList.toggle('is-active', b === btn));
+        });
+      });
+    </script>
+  </body>
+</html>

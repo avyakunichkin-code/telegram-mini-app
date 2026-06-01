@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="ru" data-theme="light">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>ТВОЙ ХОД — Финансы: Детали | Действия v2</title>
+    <link rel="stylesheet" href="./lab-base.css" />
+  </head>
+  <body>
+    <svg xmlns="http://www.w3.org/2000/svg" style="display: none" aria-hidden="true">
+      <symbol id="ico-coin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75">
+        <ellipse cx="8" cy="7" rx="5" ry="2.2" /><path d="M3 7v4c0 1.2 2.2 2.2 5 2.2s5-1 5-2.2V7" />
+      </symbol>
+      <symbol id="ico-up" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25">
+        <path stroke-linecap="round" d="M12 19V9" /><path stroke-linecap="round" stroke-linejoin="round" d="M8 11l4-4 4 4" />
+      </symbol>
+      <symbol id="ico-down" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25">
+        <path stroke-linecap="round" d="M12 5v10" /><path stroke-linecap="round" stroke-linejoin="round" d="M8 13l4 4 4-4" />
+      </symbol>
+      <symbol id="ico-pct" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.85">
+        <circle cx="7" cy="7" r="2.25" /><circle cx="17" cy="17" r="2.25" /><path stroke-linecap="round" d="M5 19L19 5" />
+      </symbol>
+      <symbol id="ico-x" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path stroke-linecap="round" d="M6 6l12 12M18 6 6 18" />
+      </symbol>
+    </svg>
+
+    <header class="lab-header">
+      <h1>Финансы — Детали | Действия (v2)</h1>
+      <p>
+        Сверху — <strong>Доходы / Расходы</strong>, затем переключатель <strong>Детали | Действия</strong> как разделитель.
+        Meta: <strong>M7</strong> на потоках, <strong>M8</strong> на позициях, <strong>M5</strong> на обязательствах.
+      </p>
+      <div class="lab-theme-row">
+        <button type="button" class="is-active" data-theme-btn="light">Светлая</button>
+        <button type="button" data-theme-btn="dark">Тёмная</button>
+      </div>
+    </header>
+
+    <main class="lab-wrap">
+      <section class="lab-section" id="proto">
+        <div class="lab-section__label">
+          <span class="lab-section__id lab-section__id--ok">★</span>
+          <span>Интерактивный прототип</span>
+        </div>
+        <p class="cap-proto-note">
+          Порядок: потоки → сегмент → контент. «Действия» — плитки 2–3 в ряд (flex-wrap).
+        </p>
+        <div class="cap-deep-link-bar">
+          <span>С дашборда:</span>
+          <button type="button" data-deep-link="income">Доходы</button>
+          <button type="button" data-deep-link="expense">Расходы</button>
+        </div>
+
+        <article class="phone" data-proto-phone>
+          <div class="phone__hero">
+            <div class="phone__hero-kicker">Финансы</div>
+            <h2 class="phone__hero-title">Управление капиталом</h2>
+          </div>
+          <div class="phone__main" style="padding: 12px">
+            <div class="cap-flows-pinned" data-flows-pinned>
+              <div class="cap-page-sheet__stack" data-flow-stack>
+                <details class="cap-sect-acc cap-sect-acc--in" id="capital-flows-income" data-flow="income">
+                  <summary class="cap-sect-acc__head">
+                    <span class="cap-sect-acc__title">Доходы</span>
+                    <span class="cap-meta-v7">88 400 ₽</span>
+                  </summary>
+                  <div class="cap-sect-acc__body">
+                    <div class="cap-cat">
+                      <div class="cap-cat__row"><span>Зарплата</span><span class="cap-amt">45 000 ₽</span></div>
+                    </div>
+                    <div class="cap-cat">
+                      <div class="cap-cat__row"><span>Инвестиции</span><span class="cap-amt">8 400 ₽</span></div>
+                      <div class="cap-lines">
+                        <div class="cap-line"><span>Депозит «Сбер»</span><span>2 400 ₽</span></div>
+                        <div class="cap-line"><span>Облигации OFZ</span><span>6 000 ₽</span></div>
+                      </div>
+                    </div>
+                  </div>
+                </details>
+                <details class="cap-sect-acc cap-sect-acc--out" id="capital-flows-expense" data-flow="expense">
+                  <summary class="cap-sect-acc__head">
+                    <span class="cap-sect-acc__title">Расходы</span>
+                    <span class="cap-meta-v7">99 900 ₽</span>
+                  </summary>
+                  <div class="cap-sect-acc__body">
+                    <div class="cap-cat">
+                      <div class="cap-cat__row"><span>На жизнь</span><span class="cap-amt">32 500 ₽</span></div>
+                    </div>
+                    <div class="cap-cat">
+                      <div class="cap-cat__row"><span>Обязательства</span><span class="cap-amt">51 000 ₽</span></div>
+                    </div>
+                  </div>
+                </details>
+              </div>
+            </div>
+
+            <div class="cap-mode-seg-zone">
+              <div class="cap-page-seg cap-mode-seg" data-page-seg>
+                <button type="button" class="cap-page-seg__btn is-active" data-mode="details">Детали</button>
+                <button type="button" class="cap-page-seg__btn" data-mode="actions">Действия</button>
+              </div>
+            </div>
+
+            <!-- ДЕТАЛИ -->
+            <div data-panel="details">
+              <div class="cap-page-sheet__stack">
+                <details class="cap-sect-acc cap-sect-acc--invest">
+                  <summary class="cap-sect-acc__head">
+                    <span class="cap-sect-acc__title">Инвестиции</span>
+                    <span class="cap-meta-v8"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h10"/></svg>2</span>
+                  </summary>
+                  <div class="cap-sect-acc__body">
+                    <div class="cap-pos-list">
+                      <div class="cap-pos-row">
+                        <div>
+                          <div class="cap-pos-row__title">Депозит «Сбер»</div>
+                          <div class="cap-pos-row__metrics">
+                            <span class="cap-metric"><span class="cap-metric__glyph cap-metric__glyph--coin"><svg><use href="#ico-coin" /></svg></span>120 000 ₽</span>
+                            <span class="cap-metric cap-metric--pos"><span class="cap-metric__glyph cap-metric__glyph--up"><svg><use href="#ico-up" /></svg></span>+2 400</span>
+                            <span class="cap-metric"><span class="cap-metric__glyph cap-metric__glyph--pct"><svg><use href="#ico-pct" /></svg></span>12</span>
+                          </div>
+                        </div>
+                        <button type="button" class="cap-row-action cap-row-action--close">Закрыть</button>
+                      </div>
+                      <div class="cap-pos-row">
+                        <div>
+                          <div class="cap-pos-row__title">Облигации OFZ</div>
+                          <div class="cap-pos-row__metrics">
+                            <span class="cap-metric"><span class="cap-metric__glyph cap-metric__glyph--coin"><svg><use href="#ico-coin" /></svg></span>50 000 ₽</span>
+                            <span class="cap-metric cap-metric--pos"><span class="cap-metric__glyph cap-metric__glyph--up"><svg><use href="#ico-up" /></svg></span>+500</span>
+                            <span class="cap-metric"><span class="cap-metric__glyph cap-metric__glyph--pct"><svg><use href="#ico-pct" /></svg></span>10</span>
+                          </div>
+                        </div>
+                        <button type="button" class="cap-row-action cap-row-action--sell">Продать</button>
+                      </div>
+                    </div>
+                  </div>
+                </details>
+
+                <details class="cap-sect-acc cap-sect-acc--insurance">
+                  <summary class="cap-sect-acc__head">
+                    <span class="cap-sect-acc__title">Страховки</span>
+                    <span class="cap-meta-v8 cap-meta-v8--empty"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h10"/></svg>0</span>
+                  </summary>
+                  <div class="cap-sect-acc__body">
+                    <div class="cap-detail-empty">
+                      <p class="cap-detail-empty__text">
+                        Здесь только <strong>оформленные полисы</strong>. Новый полис — вкладка <strong>«Действия»</strong>.
+                      </p>
+                      <div class="cap-detail-empty__actions">
+                        <button type="button" class="cap-add-cta" data-goto-action="insurance">+ Добавить</button>
+                      </div>
+                    </div>
+                  </div>
+                </details>
+
+                <details class="cap-sect-acc cap-sect-acc--property">
+                  <summary class="cap-sect-acc__head">
+                    <span class="cap-sect-acc__title">Имущество</span>
+                    <span class="cap-meta-v8"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h10"/></svg>2</span>
+                  </summary>
+                  <div class="cap-sect-acc__body">
+                    <div class="cap-pos-list">
+                      <div class="cap-pos-row">
+                        <div>
+                          <div class="cap-pos-row__title">Квартира (аренда)</div>
+                          <div class="cap-pos-row__metrics">
+                            <span class="cap-metric cap-metric--pos"><span class="cap-metric__glyph cap-metric__glyph--up"><svg><use href="#ico-up" /></svg></span>+35 000 ₽/мес</span>
+                          </div>
+                        </div>
+                        <button type="button" class="cap-row-action cap-row-action--sell">Продать</button>
+                      </div>
+                      <div class="cap-pos-row">
+                        <div>
+                          <div class="cap-pos-row__title">Авто (такси)</div>
+                          <div class="cap-pos-row__metrics">
+                            <span class="cap-metric cap-metric--pos"><span class="cap-metric__glyph cap-metric__glyph--up"><svg><use href="#ico-up" /></svg></span>+12 000 ₽/мес</span>
+                          </div>
+                        </div>
+                        <button type="button" class="cap-row-action cap-row-action--sell">Продать</button>
+                      </div>
+                    </div>
+                  </div>
+                </details>
+
+                <details class="cap-sect-acc cap-sect-acc--liabilities">
+                  <summary class="cap-sect-acc__head">
+                    <span class="cap-sect-acc__title">Обязательства</span>
+                    <span class="cap-meta-v5 cap-meta-v5--liab">2 долга</span>
+                  </summary>
+                  <div class="cap-sect-acc__body">
+                    <div class="cap-pos-list">
+                      <div class="cap-pos-row">
+                        <div>
+                          <div class="cap-pos-row__title">Ипотека</div>
+                          <div class="cap-pos-row__metrics">
+                            <span class="cap-metric cap-metric--neg"><span class="cap-metric__glyph cap-metric__glyph--down"><svg><use href="#ico-down" /></svg></span>−42 000 ₽/мес</span>
+                            <span class="cap-metric"><span class="cap-metric__glyph cap-metric__glyph--coin"><svg><use href="#ico-coin" /></svg></span>2,1 млн</span>
+                          </div>
+                        </div>
+                        <button type="button" class="cap-row-action cap-row-action--close">Закрыть</button>
+                      </div>
+                      <div class="cap-pos-row">
+                        <div>
+                          <div class="cap-pos-row__title">Потребительский кредит</div>
+                          <div class="cap-pos-row__metrics">
+                            <span class="cap-metric cap-metric--neg"><span class="cap-metric__glyph cap-metric__glyph--down"><svg><use href="#ico-down" /></svg></span>−9 000 ₽/мес</span>
+                            <span class="cap-metric"><span class="cap-metric__glyph cap-metric__glyph--coin"><svg><use href="#ico-coin" /></svg></span>180 000 ₽</span>
+                          </div>
+                        </div>
+                        <button type="button" class="cap-row-action cap-row-action--close">Закрыть</button>
+                      </div>
+                    </div>
+                  </div>
+                </details>
+              </div>
+            </div>
+
+            <!-- ДЕЙСТВИЯ -->
+            <div data-panel="actions" class="cap-panel-hidden">
+              <div class="cap-act-list cap-act-list--wrap">
+                <button type="button" class="cap-act-row cap-act-tile" data-open-sheet="deposit">
+                  <span class="cap-act-row__icon">🏦</span>
+                  <span class="cap-act-row__title">Депозит</span>
+                </button>
+                <button type="button" class="cap-act-row cap-act-tile" data-open-sheet="bond">
+                  <span class="cap-act-row__icon cap-act-row__icon--bond">📈</span>
+                  <span class="cap-act-row__title">Облигации</span>
+                </button>
+                <button type="button" class="cap-act-row cap-act-tile" data-open-sheet="realestate">
+                  <span class="cap-act-row__icon cap-act-row__icon--prop">🏠</span>
+                  <span class="cap-act-row__title">Недвижимость</span>
+                </button>
+                <button type="button" class="cap-act-row cap-act-tile" data-open-sheet="car">
+                  <span class="cap-act-row__icon cap-act-row__icon--car">🚗</span>
+                  <span class="cap-act-row__title">Авто</span>
+                </button>
+                <button type="button" class="cap-act-row cap-act-tile cap-act-tile--highlight" data-open-sheet="insurance">
+                  <span class="cap-act-row__icon cap-act-row__icon--ins">🛡</span>
+                  <span class="cap-act-row__title">Страховки</span>
+                </button>
+                <button type="button" class="cap-act-row cap-act-tile" data-open-sheet="mortgage">
+                  <span class="cap-act-row__icon cap-act-row__icon--debt">🏠</span>
+                  <span class="cap-act-row__title">Ипотека</span>
+                </button>
+                <button type="button" class="cap-act-row cap-act-tile" data-open-sheet="credit">
+                  <span class="cap-act-row__icon cap-act-row__icon--credit">💳</span>
+                  <span class="cap-act-row__title">Кредит</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </article>
+      </section>
+
+      <!-- Meta variants -->
+      <section class="lab-section">
+        <div class="lab-section__label"><span class="lab-section__id">M</span><span>Meta в заголовке (выберите)</span></div>
+        <p class="lab-section__note">В прототипе ★: M7 на потоках, M8 на позициях (icon+число), M5 tint на обязательствах.</p>
+        <div class="cap-meta-pick" data-meta-pick>
+          <div class="cap-meta-pick__item"><span class="cap-meta-v1"><span class="cap-meta-v1__dot"></span>2</span>M1 pill</div>
+          <div class="cap-meta-pick__item"><span class="cap-meta-v2">2</span>M2 square</div>
+          <div class="cap-meta-pick__item"><span class="cap-meta-v3"><strong>2</strong> поз.</span>M3 текст</div>
+          <div class="cap-meta-pick__item"><span class="cap-meta-v4">поз. <span class="cap-meta-v4__n">2</span></span>M4 label</div>
+          <div class="cap-meta-pick__item cap-meta-pick__item--applied"><span class="cap-meta-v5 cap-meta-v5--liab">2 долга</span>M5 tint ★</div>
+          <div class="cap-meta-pick__item"><span class="cap-meta-v6"></span>M6 dot</div>
+          <div class="cap-meta-pick__item cap-meta-pick__item--applied"><span class="cap-meta-v7">88 400 ₽</span>M7 сумма ★</div>
+          <div class="cap-meta-pick__item cap-meta-pick__item--applied"><span class="cap-meta-v8"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h16M4 18h10"/></svg>2</span>M8 icon ★</div>
+          <div class="cap-meta-pick__item"><span class="cap-meta-v1 cap-meta-v1--empty"><span class="cap-meta-v1__dot"></span>Пусто</span>empty</div>
+          <div class="cap-meta-pick__item"><span class="cap-meta-v2 cap-meta-v2--empty">—</span>empty²</div>
+        </div>
+        <p class="cap-meta-selected-note" data-meta-note hidden>Выбран: —</p>
+      </section>
+    </main>
+
+    <div class="cap-sheet-backdrop" data-sheet-backdrop aria-hidden="true"></div>
+    <div class="cap-sheet" data-sheet-panel aria-hidden="true" role="dialog" aria-modal="true">
+      <div class="cap-sheet__head">
+        <h3 class="cap-sheet__title" data-sheet-title>Раздел</h3>
+        <button type="button" class="cap-sheet__close" data-sheet-close aria-label="Закрыть">✕</button>
+      </div>
+      <div class="cap-sheet__body" data-sheet-body></div>
+    </div>
+
+    <script>
+      const FLOW_DEPOSIT = `
+        <div class="mqx-safety-flow" aria-label="Со счёта в депозит">
+          <div class="mqx-safety-flow__node mqx-safety-flow__node--violet">
+            <span class="mqx-safety-flow__node-label">Счёт</span>
+            <span class="mqx-safety-flow__node-value">84 200 ₽</span>
+            <span class="mqx-safety-flow__node-after">→ 34 200 ₽</span>
+          </div>
+          <span class="mqx-safety-flow__arrow">→</span>
+          <div class="mqx-safety-flow__node mqx-safety-flow__node--emerald">
+            <span class="mqx-safety-flow__node-label">Депозит</span>
+            <span class="mqx-safety-flow__node-value">120 000 ₽</span>
+            <span class="mqx-safety-flow__node-after">→ 170 000 ₽</span>
+          </div>
+        </div>
+        <div class="mqx-safety-presets">
+          <button type="button" class="mqx-safety-preset">25%</button>
+          <button type="button" class="mqx-safety-preset is-active">50 000</button>
+          <button type="button" class="mqx-safety-preset">Макс</button>
+        </div>
+        <div class="inv-b">
+          <div class="inv-b__accent"></div>
+          <div>
+            <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px">
+              <strong>Депозит</strong>
+              <div class="inv-rate-chip"><div class="inv-rate-chip__val">12%</div><div class="inv-rate-chip__hint">годовых</div></div>
+            </div>
+            <label class="inv-amount-label">Сумма</label>
+            <div class="inv-underline"><input type="text" value="50 000" /><span class="inv-underline__unit">₽</span></div>
+            <input type="range" class="inv-slider" min="0" max="84200" value="50000" />
+            <div class="inv-range-hint"><span>0</span><span>На счёте: 84 200 ₽</span></div>
+            <button type="button" class="inv-btn">Открыть депозит</button>
+          </div>
+        </div>`;
+
+      const FLOW_BOND = `
+        <div class="mqx-safety-flow">
+          <div class="mqx-safety-flow__node mqx-safety-flow__node--violet">
+            <span class="mqx-safety-flow__node-label">Счёт</span>
+            <span class="mqx-safety-flow__node-value">84 200 ₽</span>
+          </div>
+          <span class="mqx-safety-flow__arrow">→</span>
+          <div class="mqx-safety-flow__node mqx-safety-flow__node--sky">
+            <span class="mqx-safety-flow__node-label">Облигации</span>
+            <span class="mqx-safety-flow__node-value">50 000 ₽</span>
+          </div>
+        </div>
+        <div class="mqx-safety-presets">
+          <button type="button" class="mqx-safety-preset is-active">50 000</button>
+          <button type="button" class="mqx-safety-preset">100 000</button>
+        </div>
+        <div class="inv-b">
+          <div class="inv-b__accent inv-b__accent--bond"></div>
+          <div>
+            <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px">
+              <strong>Облигации</strong>
+              <div class="inv-rate-chip inv-rate-chip--bond"><div class="inv-rate-chip__val">10%</div><div class="inv-rate-chip__hint">годовых</div></div>
+            </div>
+            <label class="inv-amount-label">Сумма</label>
+            <div class="inv-underline inv-underline--bond"><input type="text" value="50 000" /><span class="inv-underline__unit">₽</span></div>
+            <input type="range" class="inv-slider" min="0" max="84200" value="50000" />
+            <div class="inv-range-hint"><span>0</span><span>Купон на счёт каждый период</span></div>
+            <button type="button" class="inv-btn inv-btn--bond">Купить облигации</button>
+          </div>
+        </div>`;
+
+      const SHEET_TEMPLATES = {
+        deposit: FLOW_DEPOSIT,
+        bond: FLOW_BOND,
+        realestate: `<span class="cap-form-label">Недвижимость</span><div class="cap-row"><span class="cap-row__accent cap-row__accent--asset"></span><div><div class="cap-row__title">Арендная квартира</div><div class="cap-row__metrics"><span class="pos">+35 000 ₽/мес</span></div></div><button type="button" class="cap-btn-plus">+</button></div><div class="cap-row"><span class="cap-row__accent cap-row__accent--asset"></span><div><div class="cap-row__title">Жильё (своё)</div><div class="cap-row__metrics"><span>−6 000 ₽ содерж.</span></div></div><button type="button" class="cap-btn-plus">+</button></div>`,
+        car: `<span class="cap-form-label">Авто</span><div class="cap-row"><span class="cap-row__accent cap-row__accent--asset"></span><div><div class="cap-row__title">Авто (такси)</div><div class="cap-row__metrics"><span class="pos">+12 000 ₽/мес</span></div></div><button type="button" class="cap-btn-plus">+</button></div><div class="cap-row"><span class="cap-row__accent cap-row__accent--asset"></span><div><div class="cap-row__title">Личный автомобиль</div></div><button type="button" class="cap-btn-plus">+</button></div>`,
+        insurance: `<span class="cap-form-label">Выберите полис</span><div class="cap-ins-grid"><button type="button" class="cap-ins-tile"><span class="cap-ins-tile__title">ОСАГО</span><span class="cap-ins-tile__price">2 400 ₽/мес</span></button><button type="button" class="cap-ins-tile"><span class="cap-ins-tile__title">Каско</span><span class="cap-ins-tile__price">4 100 ₽/мес</span></button><button type="button" class="cap-ins-tile"><span class="cap-ins-tile__title">Жильё</span><span class="cap-ins-tile__price">900 ₽/мес</span></button><button type="button" class="cap-ins-tile"><span class="cap-ins-tile__title">Жизнь</span><span class="cap-ins-tile__price">1 200 ₽/мес</span></button></div>`,
+        mortgage: `<span class="cap-form-label">Ипотека</span><div class="cap-row"><span class="cap-row__accent cap-row__accent--liab"></span><div><div class="cap-row__title">Ипотека (шаблон)</div><div class="cap-row__metrics"><span class="neg">−42 000 ₽/мес</span></div></div><button type="button" class="cap-btn-plus">+</button></div>`,
+        credit: `<span class="cap-form-label">Кредит</span><div class="cap-row"><span class="cap-row__accent cap-row__accent--liab"></span><div><div class="cap-row__title">Потребительский</div><div class="cap-row__metrics"><span class="neg">−9 000 ₽/мес</span></div></div><button type="button" class="cap-btn-plus">+</button></div><div class="cap-row"><span class="cap-row__accent cap-row__accent--liab"></span><div><div class="cap-row__title">Автокредит</div><div class="cap-row__metrics"><span class="neg">−14 000 ₽/мес</span></div></div><button type="button" class="cap-btn-plus">+</button></div>`,
+      };
+
+      const SHEET_TITLES = {
+        deposit: 'Депозит',
+        bond: 'Облигации',
+        realestate: 'Недвижимость',
+        car: 'Авто',
+        insurance: 'Страховки',
+        mortgage: 'Ипотека',
+        credit: 'Кредит',
+      };
+
+      document.querySelectorAll('[data-theme-btn]').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          document.documentElement.dataset.theme = btn.dataset.themeBtn;
+          document.querySelectorAll('[data-theme-btn]').forEach((b) => b.classList.toggle('is-active', b === btn));
+        });
+      });
+
+      const backdrop = document.querySelector('[data-sheet-backdrop]');
+      const sheet = document.querySelector('[data-sheet-panel]');
+      const sheetTitle = document.querySelector('[data-sheet-title]');
+      const sheetBody = document.querySelector('[data-sheet-body]');
+
+      function openSheet(key) {
+        sheetTitle.textContent = SHEET_TITLES[key] || 'Раздел';
+        sheetBody.innerHTML = SHEET_TEMPLATES[key] || '';
+        sheet.classList.add('is-open');
+        backdrop.classList.add('is-open');
+        sheet.setAttribute('aria-hidden', 'false');
+        backdrop.setAttribute('aria-hidden', 'false');
+      }
+
+      function closeSheet() {
+        sheet.classList.remove('is-open');
+        backdrop.classList.remove('is-open');
+        sheet.setAttribute('aria-hidden', 'true');
+        backdrop.setAttribute('aria-hidden', 'true');
+      }
+
+      document.querySelector('[data-sheet-close]')?.addEventListener('click', closeSheet);
+      backdrop?.addEventListener('click', closeSheet);
+
+      const proto = document.getElementById('proto');
+
+      function setMode(section, mode) {
+        section.querySelector('[data-panel="details"]')?.classList.toggle('cap-panel-hidden', mode !== 'details');
+        section.querySelector('[data-panel="actions"]')?.classList.toggle('cap-panel-hidden', mode !== 'actions');
+        section.querySelectorAll('[data-page-seg] [data-mode]').forEach((b) => {
+          b.classList.toggle('is-active', b.dataset.mode === mode);
+        });
+      }
+
+      function openFlowSection(section, flow) {
+        const el = section.querySelector(`#capital-flows-${flow}`);
+        if (!el) return;
+        el.open = true;
+        el.classList.add('cap-flow-target-flash');
+        el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        setTimeout(() => el.classList.remove('cap-flow-target-flash'), 1400);
+      }
+
+      proto.querySelectorAll('[data-deep-link]').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          proto.querySelectorAll('[data-deep-link]').forEach((b) => b.classList.toggle('is-active', b === btn));
+          openFlowSection(proto, btn.dataset.deepLink);
+        });
+      });
+
+      proto.querySelectorAll('[data-page-seg] [data-mode]').forEach((btn) => {
+        btn.addEventListener('click', () => setMode(proto, btn.dataset.mode));
+      });
+
+      proto.querySelectorAll('[data-goto-action]').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          const key = btn.dataset.gotoAction;
+          setMode(proto, 'actions');
+          openSheet(key);
+        });
+      });
+
+      proto.querySelectorAll('[data-open-sheet]').forEach((btn) => {
+        btn.addEventListener('click', () => openSheet(btn.dataset.openSheet));
+      });
+
+      document.querySelectorAll('[data-meta-pick] .cap-meta-pick__item').forEach((item) => {
+        item.addEventListener('click', () => {
+          document.querySelectorAll('[data-meta-pick] .cap-meta-pick__item').forEach((i) => i.style.outline = '');
+          item.style.outline = '2px solid var(--mq-emerald)';
+          const note = document.querySelector('[data-meta-note]');
+          if (note) {
+            note.hidden = false;
+            note.textContent = `Выбран: ${item.textContent.trim()}`;
+          }
+        });
+      });
+    </script>
+  </body>
+</html>

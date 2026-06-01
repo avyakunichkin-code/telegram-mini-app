@@ -1,0 +1,13 @@
+{
+  "ep": "002",
+  "slug": "ep-002-telegram-gate",
+  "arc": 0,
+  "arc_title": "Точка отсчёта",
+  "layer": null,
+  "hook": "G",
+  "image_headline": "Кто ты?",
+  "commits": ["2acb137", "78fa013"],
+  "platforms": ["telegram"],
+  "approved_at": null,
+  "published_at": null
+}

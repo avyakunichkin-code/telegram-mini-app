@@ -1,11 +1,23 @@
 ---
 name: idea-refine
 description: Refines ideas iteratively. Refine ideas through structured divergent and convergent thinking. Use "idea-refine" or "ideate" to trigger.
+argument-hint: "[idea topic or doc path]"
+user-invocable: true
+allowed-tools: Read, Glob, Grep, Write, AskUserQuestion
 ---
 
 # Idea Refine
 
 Refines raw ideas into sharp, actionable concepts worth building through structured divergent and convergent thinking.
+
+## Прочитай сначала (ТВОЙ ХОД)
+
+- [`docs/DOCUMENTATION_SYSTEM.md`](../../../docs/DOCUMENTATION_SYSTEM.md)
+- [`docs/foundation/SPEC_PRODUCT.md`](../../../docs/foundation/SPEC_PRODUCT.md)
+- [`docs/vision/ideas/tvoy-hod-evolution-after-mvp.md`](../../../docs/vision/ideas/tvoy-hod-evolution-after-mvp.md)
+- [`docs/backlog/PRODUCT_BACKLOG.md`](../../../docs/backlog/PRODUCT_BACKLOG.md)
+
+**Куда писать:** `docs/vision/ideas/`. **Дальше:** `spec-driven-development`.
 
 ## How It Works
 
@@ -176,3 +188,22 @@ After completing an ideation session:
 - [ ] A "Not Doing" list makes trade-offs explicit
 - [ ] The output is a concrete artifact (markdown one-pager), not just conversation
 - [ ] The user confirmed the final direction before any implementation work
+
+---
+
+## Gate (не переходи дальше без утверждения)
+
+**Do not advance** к `spec-driven-development` или коду, пока пользователь не утвердил направление (явное «ок» / **APPROVED**). До этого — **CONCERNS** или доработка one-pager.
+
+## Итог (Verdict)
+
+В конце работы явно укажи результат: **PASS**, **FAIL**, **CONCERNS**, **COMPLETE** или **APPROVED** — в зависимости от типа задачи.
+
+## Согласование изменений
+
+Перед созданием или изменением файлов в репозитории спроси: «Могу записать …?» — если пользователь не дал явное «делай» / «запиши».
+
+## Следующий шаг
+
+`spec-driven-development` когда идея стабилизировалась.
+

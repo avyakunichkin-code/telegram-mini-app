@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="ru" data-theme="light">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>ТВОЙ ХОД — tagline (design-lab)</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Manrope:wght@400;500;600&family=Montserrat:wght@500;600&family=Nunito:wght@500;600;700&family=Onest:wght@400;500;600&family=Raleway:ital,wght@0,400;0,500;1,400&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <header class="lab-header">
+      <div>
+        <h1>Tagline — «Финансы как игра»</h1>
+        <p>
+          Раунд 2: только подзаголовок под 3D-логотипом <strong>G2</strong>. Шрифт проще и легче, чем «ТВОЙ ХОД».
+          Слева в карточке — <strong>тёмный</strong> фон (TMA), справа — <strong>светлый</strong>.
+          <a href="../index.html">← логотип G1/G2</a>
+        </p>
+      </div>
+      <div class="lab-theme" role="group" aria-label="Тема страницы">
+        <button type="button" class="is-active" data-theme-btn="light">Светлая</button>
+        <button type="button" data-theme-btn="dark">Тёмная</button>
+      </div>
+    </header>
+
+    <main class="lab-wrap">
+      <p class="lab-pick-banner">
+        Выберите ID (например <strong>★ T7 + T10</strong>) или комбинацию: шрифт от одного, цвет от другого.
+        В prod tagline лучше как <strong>текст/CSS</strong> или отдельный SVG — не запекать в PNG логотипа.
+      </p>
+
+      <section class="lab-section" id="ref">
+        <div class="lab-section__label">
+          <span class="lab-section__id">REF</span>
+          <span class="lab-section__title">Tagline внутри G1 (запечён в PNG)</span>
+        </div>
+        <p class="lab-section__note">Для сравнения с живой типографикой ниже — как сейчас в сгенерированном lockup.</p>
+        <article class="tl-card tl-ref">
+          <div class="tl-dual">
+            <div class="tl-pane tl-pane--dark">
+              <p class="tl-pane-label">Тёмный</p>
+              <div class="tl-lockup">
+                <img class="tl-lockup__logo" src="../assets/G1-full-tagline.png" alt="G1 с tagline" />
+              </div>
+            </div>
+          </div>
+          <div class="tl-card__meta">
+            <strong>G1-full-tagline.png</strong>
+            <span>Tagline не редактируется отдельно — поэтому раунд T1–T15.</span>
+          </div>
+        </article>
+      </section>
+
+      <section class="lab-section">
+        <div class="lab-section__label">
+          <span class="lab-section__id">T1–T8</span>
+          <span class="lab-section__title">Шрифты и нейтральные цвета</span>
+        </div>
+        <p class="lab-section__note">Одинаковая вёрстка: логотип G2 + строка под ним. Проверьте контраст и «не спорит» с 3D.</p>
+
+        <div class="tl-grid">
+          <article class="tl-card tl-t1">
+            <div class="tl-dual">
+              <div class="tl-pane tl-pane--dark">
+                <p class="tl-pane-label">Тёмный</p>
+                <div class="tl-lockup">
+                  <img class="tl-lockup__logo" src="../assets/G2-compact-stacked.png" alt="" width="220" />
+                  <p class="tl-tagline">Финансы как игра</p>
+                </div>
+              </div>
+              <div class="tl-pane tl-pane--light">
+                <p class="tl-pane-label">Светлый</p>
+                <div class="tl-lockup">
+                  <img class="tl-lockup__logo" src="../assets/G2-compact-stacked.png" alt="" width="220" />
+                  <p class="tl-tagline">Финансы как игра</p>
+                </div>
+              </div>
+            </div>
+            <div class="tl-card__meta">
+              <strong>T1 — как в посте</strong>
+              <span>system-ui · 500 · белый / серый. Близко к REF.</span>
+            </div>
+          </article>
+
+          <article class="tl-card tl-t2">
+            <div class="tl-dual">
+              <div class="tl-pane tl-pane--dark">
+                <p class="tl-pane-label">Тёмный</p>
+                <div class="tl-lockup">
+                  <img class="tl-lockup__logo" src="../assets/G2-compact-stacked.png" alt="" />
+                  <p class="tl-tagline">Финансы как игра</p>
+                </div>
+              </div>
+              <div class="tl-pane tl-pane--light">
+                <p class="tl-pane-label">Светлый</p>
+                <div class="tl-lockup">
+                  <img class="tl-lockup__logo" src="../assets/G2-compact-stacked.png" alt="" />
+                  <p class="tl-tagline">Финансы как игра</p>
+                </div>
+              </div>
+            </div>
+            <div class="tl-card__meta">
+              <strong>T2 — UI-нейтральный</strong>
+              <span>400 · приглушённый на тёмном, #4b5563 на светлом. Как подпись в приложении.</span>
+            </div>
+          </article>
+
+          <article class="tl-card tl-t3">
+            <div class="tl-dual">
+              <div class="tl-pane tl-pane--dark">
+                <p class="tl-pane-label">Тёмный</p>
+                <div class="tl-lockup">
+                  <img class="tl-lockup__logo" src="../assets/G2-compact-stacked.png" alt="" />
+                  <p class="tl-tagline">Финансы как игра</p>
+                </div>
+              </div>
+              <div class="tl-pane tl-pane--light">
+                <p class="tl-pane-label">Светлый</p>
+                <div class="tl-lockup">
+                  <img class="tl-lockup__logo" src="../assets/G2-compact-stacked.png" alt="" />
+                  <p class="tl-tagline">Финансы как игра</p>
+                </div>
+              </div>
+            </div>
+            <div class="tl-card__meta">
+              <strong>T3 — Nunito</strong>
+              <span>Округлый, «игровой», без конкуренции с 3D. Фиолет на светлом.</span>
+            </div>
+          </article>
+
+          <article class="tl-card tl-t4">
+            <div class="tl-dual">
+              <div class="tl-pane tl-pane--dark">
+                <p class="tl-pane-label">Тёмный</p>
+                <div class="tl-lockup">
+                  <img class="tl-lockup__logo" src="../assets/G2-compact-stacked.png" alt="" />
+                  <p class="tl-tagline">Финансы как игра</p>
+                </div>
+              </div>
+              <div class="tl-pane tl-pane--light">
+                <p class="tl-pane-label">Светлый</p>
+                <div class="tl-lockup">
+                  <img class="tl-lockup__logo" src="../assets/G2-compact-stacked.png" alt="" />
+                  <p class="tl-tagline">Финансы как игра</p>
+                </div>
+              </div>
+            </div>
+            <div class="tl-card__meta">
+              <strong>T4 — Manrope</strong>
+              <span>Геометричный, современный. Лавандовый на тёмном.</span>
+            </div>
+          </article>
+
+          <article class="tl-card tl-t5">
+            <div class="tl-dual">
+              <div class="tl-pane tl-pane--dark">
+                <p class="tl-pane-label">Тёмный</p>
+                <div class="tl-lockup">
+                  <img class="tl-lockup__logo" src="../assets/G2-compact-stacked.png" alt="" />
+                  <p class="tl-tagline">Финансы как игра</p>
+                </div>
+              </div>
+              <div class="tl-pane tl-pane--light">
+                <p class="tl-pane-label">Светлый</p>
+                <div class="tl-lockup">
+                  <img class="tl-lockup__logo" src="../assets/G2-compact-stacked.png" alt="" />
+                  <p class="tl-tagline">Финансы как игра</p>
+                </div>
+              </div>
+            </div>
+            <div class="tl-card__meta">
+              <strong>T5 — Onest</strong>
+              <span>Кириллица «из коробки», нейтральный тон.</span>
+            </div>
+          </article>
+
+          <article class="tl-card tl-t6">
+            <div class="tl-dual">
+              <div class="tl-pane tl-pane--dark">
+                <p class="tl-pane-label">Тёмный</p>
+                <div class="tl-lockup">
+                  <img class="tl-lockup__logo" src="../assets/G2-compact-stacked.png" alt="" />
+                  <p class="tl-tagline">Финансы как игра</p>
+                </div>
+              </div>
+              <div class="tl-pane tl-pane--light">
+                <p class="tl-pane-label">Светлый</p>
+                <div class="tl-lockup">
+                  <img class="tl-lockup__logo" src="../assets/G2-compact-stacked.png" alt="" />
+                  <p class="tl-tagline">Финансы как игра</p>
+                </div>
+              </div>
+            </div>
+            <div class="tl-card__meta">
+              <strong>T6 — Montserrat</strong>
+              <span>Классический сабтайтл, чуть разрядка. Глубокий фиолет на светлом.</span>
+            </div>
+          </article>
+
+          <article class="tl-card tl-t7">
+            <div class="tl-dual">
+              <div class="tl-pane tl-pane--dark">
+                <p class="tl-pane-label">Тёмный</p>
+                <div class="tl-lockup">
+                  <img class="tl-lockup__logo" src="../assets/G2-compact-stacked.png" alt="" />
+                  <p class="tl-tagline">Финансы как игра</p>
+                </div>
+              </div>
+              <div class="tl-pane tl-pane--light">
+                <p class="tl-pane-label">Светлый</p>
+                <div class="tl-lockup">
+                  <img class="tl-lockup__logo" src="../assets/G2-compact-stacked.png" alt="" />
+                  <p class="tl-tagline">Финансы как игра</p>
+                </div>
+              </div>
+            </div>
+            <div class="tl-card__meta">
+              <strong>T7 — Inter</strong>
+              <span>Как в продуктовых UI. Плотный кегль, −0.02em трекинг.</span>
+            </div>
+          </article>
+
+          <article class="tl-card tl-t8">
+            <div class="tl-dual">
+              <div class="tl-pane tl-pane--dark">
+                <p class="tl-pane-label">Тёмный</p>
+                <div class="tl-lockup">
+                  <img class="tl-lockup__logo" src="../assets/G2-compact-stacked.png" alt="" />
+                  <p class="tl-tagline">Финансы как игра</p>
+                </div>
+              </div>
+              <div class="tl-pane tl-pane--light">
+                <p class="tl-pane-label">Светлый</p>
+                <div class="tl-lockup">
+                  <img class="tl-lockup__logo" src="../assets/G2-compact-stacked.png" alt="" />
+                  <p class="tl-tagline">Финансы как игра</p>
+                </div>
+              </div>
+            </div>
+            <div class="tl-card__meta">
+              <strong>T8 — Raleway</strong>
+              <span>Лёгкий, воздушный. Хорош, если логотип «тяжёлый».</span>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section class="lab-section">
+        <div class="lab-section__label">
+          <span class="lab-section__id">T9–T15</span>
+          <span class="lab-section__title">Цвет, акцент, читаемость</span>
+        </div>
+        <p class="lab-section__note">Приёмы, которые не требуют 3D: тень, фиолет бренда, золото на «игра», капсы, pill, линия.</p>
+
+        <div class="tl-grid">
+          <article class="tl-card tl-t9">
+            <div class="tl-dual">
+              <div class="tl-pane tl-pane--dark">
+                <p class="tl-pane-label">Тёмный</p>
+                <div class="tl-lockup">
+                  <img class="tl-lockup__logo" src="../assets/G2-compact-stacked.png" alt="" />
+                  <p class="tl-tagline">Финансы как игра</p>
+                </div>
+              </div>
+              <div class="tl-pane tl-pane--light">
+                <p class="tl-pane-label">Светлый</p>
+                <div class="tl-lockup">
+                  <img class="tl-lockup__logo" src="../assets/G2-compact-stacked.png" alt="" />
+                  <p class="tl-tagline">Финансы как игра</p>
+                </div>
+              </div>
+            </div>
+            <div class="tl-card__meta">
+              <strong>T9 — свечение</strong>
+              <span>Белый + мягкая тень/ореол на тёмном. Для градиентных фонов TMA.</span>
+            </div>
+          </article>
+
+          <article class="tl-card tl-t10">
+            <div class="tl-dual">
+              <div class="tl-pane tl-pane--dark">
+                <p class="tl-pane-label">Тёмный</p>
+                <div class="tl-lockup">
+                  <img class="tl-lockup__logo" src="../assets/G2-compact-stacked.png" alt="" />
+                  <p class="tl-tagline">Финансы как игра</p>
+                </div>
+              </div>
+              <div class="tl-pane tl-pane--light">
+                <p class="tl-pane-label">Светлый</p>
+                <div class="tl-lockup">
+                  <img class="tl-lockup__logo" src="../assets/G2-compact-stacked.png" alt="" />
+                  <p class="tl-tagline">Финансы как игра</p>
+                </div>
+              </div>
+            </div>
+            <div class="tl-card__meta">
+              <strong>T10 — Quest Violet</strong>
+              <span>#c4b5fd на тёмном · #7c3aed на светлом. Связь с «ХОД».</span>
+            </div>
+          </article>
+
+          <article class="tl-card tl-t11">
+            <div class="tl-dual">
+              <div class="tl-pane tl-pane--dark">
+                <p class="tl-pane-label">Тёмный</p>
+                <div class="tl-lockup">
+                  <img class="tl-lockup__logo" src="../assets/G2-compact-stacked.png" alt="" />
+                  <p class="tl-tagline">Финансы как <em>игра</em></p>
+                </div>
+              </div>
+              <div class="tl-pane tl-pane--light">
+                <p class="tl-pane-label">Светлый</p>
+                <div class="tl-lockup">
+                  <img class="tl-lockup__logo" src="../assets/G2-compact-stacked.png" alt="" />
+                  <p class="tl-tagline">Финансы как <em>игра</em></p>
+                </div>
+              </div>
+            </div>
+            <div class="tl-card__meta">
+              <strong>T11 — акцент «игра»</strong>
+              <span>Coin Gold на последнем слове. Nunito 600.</span>
+            </div>
+          </article>
+
+          <article class="tl-card tl-t12">
+            <div class="tl-dual">
+              <div class="tl-pane tl-pane--dark">
+                <p class="tl-pane-label">Тёмный</p>
+                <div class="tl-lockup">
+                  <img class="tl-lockup__logo" src="../assets/G2-compact-stacked.png" alt="" />
+                  <p class="tl-tagline">Финансы как игра</p>
+                </div>
+              </div>
+              <div class="tl-pane tl-pane--light">
+                <p class="tl-pane-label">Светлый</p>
+                <div class="tl-lockup">
+                  <img class="tl-lockup__logo" src="../assets/G2-compact-stacked.png" alt="" />
+                  <p class="tl-tagline">Финансы как игра</p>
+                </div>
+              </div>
+            </div>
+            <div class="tl-card__meta">
+              <strong>T12 — малые капсы</strong>
+              <span>11px · tracking 0.14em. Служебная подпись, не второй логотип.</span>
+            </div>
+          </article>
+
+          <article class="tl-card tl-t13">
+            <div class="tl-dual">
+              <div class="tl-pane tl-pane--dark">
+                <p class="tl-pane-label">Тёмный</p>
+                <div class="tl-lockup">
+                  <img class="tl-lockup__logo" src="../assets/G2-compact-stacked.png" alt="" />
+                  <p class="tl-tagline">Финансы как игра</p>
+                </div>
+              </div>
+              <div class="tl-pane tl-pane--light">
+                <p class="tl-pane-label">Светлый</p>
+                <div class="tl-lockup">
+                  <img class="tl-lockup__logo" src="../assets/G2-compact-stacked.png" alt="" />
+                  <p class="tl-tagline">Финансы как игра</p>
+                </div>
+              </div>
+            </div>
+            <div class="tl-card__meta">
+              <strong>T13 — курсив</strong>
+              <span>Raleway italic · мягче, «обещание», не кричит.</span>
+            </div>
+          </article>
+
+          <article class="tl-card tl-t14">
+            <div class="tl-dual">
+              <div class="tl-pane tl-pane--dark">
+                <p class="tl-pane-label">Тёмный</p>
+                <div class="tl-lockup">
+                  <img class="tl-lockup__logo" src="../assets/G2-compact-stacked.png" alt="" />
+                  <p class="tl-tagline">Финансы как игра</p>
+                </div>
+              </div>
+              <div class="tl-pane tl-pane--light">
+                <p class="tl-pane-label">Светлый</p>
+                <div class="tl-lockup">
+                  <img class="tl-lockup__logo" src="../assets/G2-compact-stacked.png" alt="" />
+                  <p class="tl-tagline">Финансы как игра</p>
+                </div>
+              </div>
+            </div>
+            <div class="tl-card__meta">
+              <strong>T14 — pill</strong>
+              <span>Полупрозрачная плашка — макс. читаемость на шумном фоне.</span>
+            </div>
+          </article>
+
+          <article class="tl-card tl-t15">
+            <div class="tl-dual">
+              <div class="tl-pane tl-pane--dark">
+                <p class="tl-pane-label">Тёмный</p>
+                <div class="tl-lockup">
+                  <img class="tl-lockup__logo" src="../assets/G2-compact-stacked.png" alt="" />
+                  <p class="tl-tagline">Финансы как игра</p>
+                </div>
+              </div>
+              <div class="tl-pane tl-pane--light">
+                <p class="tl-pane-label">Светлый</p>
+                <div class="tl-lockup">
+                  <img class="tl-lockup__logo" src="../assets/G2-compact-stacked.png" alt="" />
+                  <p class="tl-tagline">Финансы как игра</p>
+                </div>
+              </div>
+            </div>
+            <div class="tl-card__meta">
+              <strong>T15 — линия-разделитель</strong>
+              <span>Тонкая черта между 3D и текстом. Чёткая иерархия.</span>
+            </div>
+          </article>
+        </div>
+      </section>
+    </main>
+
+    <script>
+      document.querySelectorAll('[data-theme-btn]').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          document.documentElement.setAttribute('data-theme', btn.getAttribute('data-theme-btn'));
+          document.querySelectorAll('[data-theme-btn]').forEach((b) => b.classList.toggle('is-active', b === btn));
+        });
+      });
+    </script>
+  </body>
+</html>

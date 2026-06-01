@@ -1,0 +1,37 @@
+---
+description: Соглашения по backend ТВОЙ ХОД (FastAPI, период, БД)
+globs: backend/**/*.{py,sql}
+alwaysApply: false
+---
+
+# Backend
+
+Карта слоёв: [`backend/app/README.md`](backend/app/README.md), [`backend/app/services/README.md`](backend/app/services/README.md) — [ADR-007](docs/decisions/ADR-007-backend-domain-packages.md).
+
+- **Конец периода и экономика**: `backend/app/game/period.py` (`process_period_end` и связанная логика).
+- **HTTP / use-cases**: `backend/app/routers/`, `backend/app/services/<domain>/`.
+- **Модели**: `backend/app/models.py`; новые сущности — согласовать с SQL-миграциями ([`backend/migrations/README.md`](backend/migrations/README.md)) и лёгкой автомиграцией в `backend/main.py`, если она уже есть для подобных полей. Прогон SQL: `backend/migrate.ps1` (`DATABASE_URL`, `psql`).
+
+## `save_kind` (Game / Plan) — [ADR-001](docs/decisions/ADR-001-save-kind-remove-light-hardcore.md)
+
+- На профиле: **`save_kind`** — `game` | `plan`; **immutable** после создания. Legacy **`GameProfile.mode`** (`light`/`hardcore`) **не использовать** — колонка снята.
+- **Game:** старт только из каталога **`game_starter_templates`** (`starter_template_key`, blueprint, `base_monthly_lifestyle_expense`). API создания — `save_kind=game` + `template_key` (см. `backend/app/routers/game.py`).
+- **Plan:** зарезервирован в модели/API; полный мастер и UI — **MVP 2.0** ([`SPEC_game-plan`](docs/specs/features/SPEC_game-plan.md)). В G1 не возвращать выбор light/hardcore.
+- **События:** фильтр по **`EventDefinition.mode`**: `game` | `plan` | `any` в связке с **`profile.save_kind`**, не по legacy сложности профиля.
+- Изменения контракта профиля/событий → SQL-миграция + `models.py` + при необходимости `main.py` + **`frontend-react/src/api.js`** и экраны старта.
+- **Роутеры**: подключение в `backend/main.py`; префиксы API держать согласованными с фронтом (`/api/...`).
+- **Ошибки API**: предсказуемые статусы и тело ответа; фронт ожидает единый контракт ошибок через `apiCall` в `frontend-react/src/api.js`.
+- **Победа (prod: Victory v2):** `GET /api/finance/overview` → `win_reached` и блок `victory` из `victory/engine.py` + `victory_config_json` шаблона (`chain` | `parallel`, gate `min_period_index_for_victory`, обычно 7). Spec: [`SPEC_victory-v2.md`](docs/specs/features/SPEC_victory-v2.md), [ADR-002](docs/decisions/ADR-002-victory-engine-and-template-config.md). Game/Plan: [`SPEC_game-plan.md`](docs/specs/features/SPEC_game-plan.md).
+- **Инварианты логики (tier-окно, победа):** `backend/app/game/rules.py`; победа v2 — `backend/app/victory/engine.py`. Роутеры не дублируют условия победы вручную.
+
+## Локальные тесты (без CI)
+
+После правок в `backend/` (особенно `game/`, `victory/`, `events/`, `routers/`, `services/`) **запускай** и в ответе пользователю **напоминай**, если не запускал:
+
+```bash
+cd backend && python -m pytest -q
+```
+
+Первый раз или после смены окружения: `python -m pip install -r requirements-dev.txt`.
+
+В CI тесты пока не подключаем — только локальная проверка перед завершением задачи.

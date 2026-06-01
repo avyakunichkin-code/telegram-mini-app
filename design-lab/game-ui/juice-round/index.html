@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="ru" data-theme="light">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>ТВОЙ ХОД — Game juice (design-lab)</title>
+    <link rel="stylesheet" href="./lab-base.css" />
+  </head>
+  <body>
+    <header class="lab-header">
+      <div>
+        <h1>Game UI — Juice round</h1>
+        <p>
+          Четыре паттерна отклика (bold): награда, риск, ритуал хода, предупреждение. Нажми «Проиграть» в каждом
+          варианте.
+        </p>
+      </div>
+      <div class="lab-header__controls">
+        <div class="lab-theme" role="group" aria-label="Тема">
+          <button type="button" class="is-active" data-theme-btn="light">Светлая</button>
+          <button type="button" data-theme-btn="dark">Тёмная</button>
+        </div>
+      </div>
+    </header>
+
+    <main class="lab-main">
+      <p class="lab-intro">
+        <strong>Гипотеза:</strong> интерфейс перестаёт ощущаться «банком», если важные действия дают короткую сцену
+        (цвет, движение, реплика), а не только обновляют цифру. После утверждения ★ — волна 2 (режиссура вкладок).
+      </p>
+
+      <div class="lab-grid">
+        <!-- A — Gain -->
+        <article class="lab-variant" id="variant-a">
+          <div class="lab-variant__head">
+            <h2>A</h2>
+            <span class="lab-variant__tag">Gain · зарплата</span>
+          </div>
+          <p class="lab-variant__note">
+            Chip «Зарплата» → всплеск emerald, летящая сумма, тост, счётчик баланса подпрыгивает.
+          </p>
+          <div class="lab-variant__tools">
+            <button type="button" class="lab-play-btn" data-play="gain">Проиграть</button>
+            <button type="button" data-reset="gain">Сброс</button>
+          </div>
+          <div class="lab-phone" data-demo="gain">
+            <div class="lab-phone__inner">
+              <div class="juice-dash">
+                <div class="juice-dash__hero">
+                  <div class="juice-dash__hero-kicker">Ход открыт</div>
+                  <div class="juice-dash__hero-title">Закрыть месяц</div>
+                  <div class="juice-dash__hero-meta">Период №4</div>
+                </div>
+                <div class="juice-resource-strip">
+                  <div class="juice-resource" data-resource="balance">
+                    <div class="juice-resource__label">Наличные</div>
+                    <div class="juice-resource__value" data-balance>42 150 ₽</div>
+                  </div>
+                  <div class="juice-resource">
+                    <div class="juice-resource__label">Подушка</div>
+                    <div class="juice-resource__value">18 000 ₽</div>
+                  </div>
+                </div>
+              </div>
+              <div class="juice-actions">
+                <button type="button" class="juice-action-chip" data-salary-chip>
+                  <span class="juice-action-chip__icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24">
+                      <path d="M12 2v4" />
+                      <path d="M8 6h8" />
+                      <path d="M6 10h12v8a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2v-8Z" />
+                      <path d="M9 14h6" />
+                    </svg>
+                  </span>
+                  <span>
+                    <span class="juice-action-chip__label">Зарплата</span>
+                    <span class="juice-action-chip__sub">получить за период</span>
+                  </span>
+                </button>
+              </div>
+              <div class="juice-flyout" data-flyout>+12 400 ₽</div>
+              <div class="juice-toast" data-toast>
+                <span class="juice-toast__icon" aria-hidden="true">↑</span>
+                <span>Зарплата в кошелёк — ход стал сильнее</span>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <!-- B — Risk -->
+        <article class="lab-variant" id="variant-b">
+          <div class="lab-variant__head">
+            <h2>B</h2>
+            <span class="lab-variant__tag">Risk · просрочка</span>
+          </div>
+          <p class="lab-variant__note">
+            Строка обязательства: shake + красный pulse; Монетка с последствием (не «Внимание»).
+          </p>
+          <div class="lab-variant__tools">
+            <button type="button" class="lab-play-btn" data-play="risk">Проиграть</button>
+            <button type="button" data-reset="risk">Сброс</button>
+          </div>
+          <div class="lab-phone" data-demo="risk">
+            <div class="lab-phone__inner">
+              <div class="juice-risk-block">
+                <div class="juice-fin-row" data-risk-row>
+                  <div class="juice-fin-row__icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24">
+                      <path d="M12 9v4" />
+                      <path d="M12 17h.01" />
+                      <path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" />
+                    </svg>
+                  </div>
+                  <div class="juice-fin-row__body">
+                    <div class="juice-fin-row__title">Кредитная карта</div>
+                    <div class="juice-fin-row__sub">Просрочка +2 400 ₽</div>
+                  </div>
+                  <div class="juice-fin-row__amount">−2 400</div>
+                </div>
+                <div class="juice-monetka-hint" data-monetka-hint>
+                  <img
+                    class="juice-monetka-hint__img"
+                    src="./assets/monetka-mascot.png"
+                    width="52"
+                    height="52"
+                    alt=""
+                  />
+                  <p class="juice-monetka-hint__bubble">
+                    Если не закроешь долг в этом ходу — <strong>штраф съест наличные</strong>, а серия минусовых
+                    месяцев приблизит поражение.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <!-- C — Turn ritual -->
+        <article class="lab-variant" id="variant-c">
+          <div class="lab-variant__head">
+            <h2>C</h2>
+            <span class="lab-variant__tag">Turn · ход завершён</span>
+          </div>
+          <p class="lab-variant__note">
+            Ритуал вместо таблицы: «Ход №N завершён» + 3 удара истории, затем «Дальше».
+          </p>
+          <div class="lab-variant__tools">
+            <button type="button" class="lab-play-btn" data-play="ritual">Проиграть</button>
+            <button type="button" data-reset="ritual">Сброс</button>
+          </div>
+          <div class="lab-phone" data-demo="ritual">
+            <div class="lab-phone__inner">
+              <div class="juice-dash" style="opacity: 0.45">
+                <div class="juice-dash__hero">
+                  <div class="juice-dash__hero-kicker">Ход открыт</div>
+                  <div class="juice-dash__hero-title">Закрыть месяц</div>
+                  <div class="juice-dash__hero-meta">Период №4</div>
+                </div>
+              </div>
+              <div class="juice-ritual" data-ritual aria-hidden="true">
+                <div class="juice-ritual__spark" aria-hidden="true"></div>
+                <div class="juice-ritual__badge">Твой ход сделан</div>
+                <h3 class="juice-ritual__title">Ход завершён!</h3>
+                <p class="juice-ritual__period">Период №4 закрыт</p>
+                <ul class="juice-ritual__beats">
+                  <li>
+                    <span class="juice-ritual__beat-icon juice-ritual__beat-icon--pos" aria-hidden="true">+</span>
+                    <span>Зарплата <strong>+12 400 ₽</strong> — наличные выросли</span>
+                  </li>
+                  <li>
+                    <span class="juice-ritual__beat-icon juice-ritual__beat-icon--neg" aria-hidden="true">!</span>
+                    <span>Жизнь и кредиты <strong>−9 600 ₽</strong> — расходы съели часть прироста</span>
+                  </li>
+                  <li>
+                    <span class="juice-ritual__beat-icon" aria-hidden="true">◎</span>
+                    <span>Подушка <strong>18 000 ₽</strong> — запас на чёрный день держится</span>
+                  </li>
+                </ul>
+                <button type="button" class="juice-ritual__dismiss" data-ritual-dismiss>Дальше</button>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <!-- D — Warning -->
+        <article class="lab-variant" id="variant-d">
+          <div class="lab-variant__head">
+            <h2>D</h2>
+            <span class="lab-variant__tag">Warning · зарплата сгорит</span>
+          </div>
+          <p class="lab-variant__note">
+            Модалка с Монеткой: последствие действия, не системное «Внимание».
+          </p>
+          <div class="lab-variant__tools">
+            <button type="button" class="lab-play-btn" data-play="warning">Проиграть</button>
+            <button type="button" data-reset="warning">Сброс</button>
+          </div>
+          <div class="lab-phone" data-demo="warning">
+            <div class="lab-phone__inner">
+              <div class="juice-dash">
+                <div class="juice-dash__hero">
+                  <div class="juice-dash__hero-kicker">Ход открыт</div>
+                  <div class="juice-dash__hero-title">Закрыть месяц</div>
+                  <div class="juice-dash__hero-meta">Зарплата ещё не получена</div>
+                </div>
+              </div>
+              <div class="juice-modal-scrim" data-modal-scrim></div>
+              <div class="juice-modal" data-modal role="dialog" aria-labelledby="juice-modal-title">
+                <div class="juice-modal__head">
+                  <img
+                    class="juice-modal__mascot"
+                    src="./assets/monetka-mascot.png"
+                    width="56"
+                    height="56"
+                    alt=""
+                  />
+                  <div class="juice-modal__copy">
+                    <p class="juice-modal__kicker">Перед ходом</p>
+                    <h3 class="juice-modal__title" id="juice-modal-title">Зарплата сгорит</h3>
+                    <p class="juice-modal__text">
+                      Если закроешь месяц сейчас, <strong>12 400 ₽ за этот период не придут</strong> — в следующем ходу
+                      их уже не забрать.
+                    </p>
+                  </div>
+                </div>
+                <div class="juice-modal__actions">
+                  <button type="button" class="juice-modal__btn juice-modal__btn--primary">Сначала зарплата</button>
+                  <button type="button" class="juice-modal__btn juice-modal__btn--danger">Всё равно закрыть</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </article>
+      </div>
+
+      <section class="lab-legend">
+        <h2>Prod (после ★)</h2>
+        <ul>
+          <li><strong>A</strong> → <code>MqxPeriodActions</code> / claim salary + тост</li>
+          <li><strong>B</strong> → просрочка в <code>FinancePremium</code> / tail периода</li>
+          <li><strong>C</strong> → sheet/tail <code>GameScreen</code> после <code>time/next</code></li>
+          <li><strong>D</strong> → modal перед «Закрыть месяц» без зарплаты</li>
+          <li>Классы <code>mqx-juice-*</code> в <code>styles/mqx/juice.css</code> + <code>prefers-reduced-motion</code></li>
+        </ul>
+        <p>См. <a href="./VARIANTS.md">VARIANTS.md</a> · <a href="./README.md">README.md</a></p>
+      </section>
+    </main>
+
+    <script src="./lab.js"></script>
+  </body>
+</html>

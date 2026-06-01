@@ -1,0 +1,240 @@
+/* type-scale-round — целевая шкала MQX (lab) */
+
+:root {
+  /* Размеры (решения раунда) */
+  --mq-fs-display-a: 26px;
+  --mq-fs-display-b: 28px;
+  --mq-fs-display: var(--mq-fs-display-a);
+  --mq-fs-title: 20px;
+  --mq-fs-heading: 14px;
+  --mq-fs-body: 15px;
+  --mq-fs-caption: 12px; /* 13px → округление */
+  --mq-fs-small: 11px;
+  --mq-fs-micro: 10px; /* 9px → подъём */
+
+  --mq-fw-regular: 400;
+  --mq-fw-medium: 550;
+  --mq-fw-bold: 700;
+  --mq-fw-heavy: 800;
+
+  --mq-lh-tight: 1.15;
+  --mq-lh-body: 1.42;
+  --mq-lh-relaxed: 1.45;
+}
+
+/* —— Lab chrome —— */
+.lab-type-page {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 16px 40px;
+}
+
+.lab-decisions {
+  margin: 0 0 24px;
+  padding: 14px 16px;
+  border-radius: 14px;
+  background: color-mix(in srgb, var(--mq-violet) 6%, var(--surface));
+  border: 1px solid color-mix(in srgb, var(--mqx-ink) 10%, transparent);
+  font-size: var(--mq-fs-caption);
+  line-height: var(--mq-lh-relaxed);
+}
+
+.lab-decisions strong {
+  font-weight: var(--mq-fw-heavy);
+}
+
+.lab-section {
+  margin-bottom: 32px;
+}
+
+.lab-section h2 {
+  margin: 0 0 8px;
+  font-size: 1rem;
+  font-weight: var(--mq-fw-heavy);
+}
+
+.lab-section > p {
+  margin: 0 0 14px;
+  font-size: var(--mq-fs-caption);
+  color: var(--text-muted);
+  line-height: var(--mq-lh-relaxed);
+}
+
+/* Таблица шкалы */
+.lab-scale-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--mq-fs-caption);
+}
+
+.lab-scale-table th,
+.lab-scale-table td {
+  padding: 10px 12px;
+  text-align: left;
+  border-bottom: 1px solid color-mix(in srgb, var(--mqx-ink) 10%, transparent);
+  vertical-align: middle;
+}
+
+.lab-scale-table th {
+  font-size: var(--mq-fs-small);
+  font-weight: var(--mq-fw-bold);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-muted);
+}
+
+.lab-scale-specimen {
+  display: block;
+  color: var(--mqx-ink);
+}
+
+.lab-scale-specimen--display-a { font-size: var(--mq-fs-display-a); font-weight: var(--mq-fw-heavy); line-height: var(--mq-lh-tight); letter-spacing: -0.03em; }
+.lab-scale-specimen--display-b { font-size: var(--mq-fs-display-b); font-weight: var(--mq-fw-heavy); line-height: var(--mq-lh-tight); letter-spacing: -0.03em; }
+.lab-scale-specimen--title { font-size: var(--mq-fs-title); font-weight: var(--mq-fw-heavy); letter-spacing: -0.02em; font-variant-numeric: tabular-nums; }
+.lab-scale-specimen--heading { font-size: var(--mq-fs-heading); font-weight: var(--mq-fw-heavy); }
+.lab-scale-specimen--body { font-size: var(--mq-fs-body); font-weight: var(--mq-fw-regular); line-height: var(--mq-lh-body); }
+.lab-scale-specimen--caption { font-size: var(--mq-fs-caption); font-weight: var(--mq-fw-regular); line-height: var(--mq-lh-relaxed); }
+.lab-scale-specimen--small { font-size: var(--mq-fs-small); font-weight: var(--mq-fw-bold); }
+.lab-scale-specimen--micro { font-size: var(--mq-fs-micro); font-weight: var(--mq-fw-regular); color: color-mix(in srgb, var(--mqx-ink) 55%, transparent); }
+
+.lab-compare-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 16px;
+  align-items: start;
+}
+
+.lab-compare-card__tag {
+  margin: 0 0 8px;
+  font-size: var(--mq-fs-small);
+  font-weight: var(--mq-fw-bold);
+}
+
+.lab-compare-card__tag--pick {
+  color: color-mix(in srgb, var(--mq-emerald) 90%, var(--mqx-ink));
+}
+
+/* Hero A/B */
+.lab-hero-ab .mqx-hero--compact {
+  border-radius: 0;
+}
+
+.lab-hero-ab [data-display='a'] .mqx-hero-compact__timer {
+  font-size: var(--mq-fs-display-a);
+}
+
+.lab-hero-ab [data-display='b'] .mqx-hero-compact__timer {
+  font-size: var(--mq-fs-display-b);
+}
+
+.lab-hero-ab .mqx-hero-compact__period-label {
+  font-size: var(--mq-fs-micro);
+}
+
+.lab-hero-ab .mqx-hero-compact__progress-meta,
+.lab-hero-ab .mqx-pill {
+  font-size: var(--mq-fs-caption);
+}
+
+.lab-hero-ab .mqx-hero-compact__period-value {
+  font-size: var(--mq-fs-heading);
+}
+
+/* Chip before/after */
+.lab-chip-compare {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.lab-chip-compare__col h3 {
+  margin: 0 0 8px;
+  font-size: var(--mq-fs-small);
+  font-weight: var(--mq-fw-bold);
+  color: var(--text-muted);
+}
+
+.lab-chip-old .mqx-finance-chip__label {
+  font-size: 9px;
+}
+
+.lab-chip-old .mqx-finance-chip__value {
+  font-size: 13px;
+}
+
+.lab-chip-new .mqx-finance-chip__label {
+  font-size: var(--mq-fs-micro);
+  font-weight: var(--mq-fw-medium);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.lab-chip-new .mqx-finance-chip__value {
+  font-size: var(--mq-fs-caption);
+  font-weight: var(--mq-fw-heavy);
+}
+
+/* S5 body — токены на утверждённом дашборде */
+.lab-dash-tokens .mqx-finance-static__title,
+.lab-dash-tokens .mqx-period-actions--chips .mqx-finance-static__title {
+  font-size: var(--mq-fs-heading);
+  font-weight: var(--mq-fw-heavy);
+}
+
+.lab-dash-tokens .mqx-finance-chip__label {
+  font-size: var(--mq-fs-micro);
+  font-weight: var(--mq-fw-medium);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.lab-dash-tokens .mqx-finance-chip__value {
+  font-size: var(--mq-fs-caption);
+  font-weight: var(--mq-fw-heavy);
+}
+
+.lab-dash-tokens .mqx-action-chip__label {
+  font-size: var(--mq-fs-small);
+  font-weight: var(--mq-fw-bold);
+}
+
+.lab-dash-tokens .mqx-action-chip__sub--phrase {
+  font-size: var(--mq-fs-micro);
+  font-weight: var(--mq-fw-regular);
+}
+
+.lab-dash-tokens .mqx-period-hint__bubble {
+  font-size: var(--mq-fs-caption);
+  font-weight: var(--mq-fw-regular);
+}
+
+.lab-dash-tokens .mqx-goal-dash__kicker {
+  font-size: var(--mq-fs-micro);
+}
+
+.lab-dash-tokens .mqx-goal-dash__current-title {
+  font-size: var(--mq-fs-caption);
+  font-weight: var(--mq-fw-bold);
+}
+
+.lab-pick-btns {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.lab-pick-btns button {
+  padding: 8px 12px;
+  border-radius: 10px;
+  border: 1px solid color-mix(in srgb, var(--mqx-ink) 14%, transparent);
+  background: color-mix(in srgb, var(--mqx-ink) 4%, transparent);
+  font-size: var(--mq-fs-caption);
+  font-weight: var(--mq-fw-bold);
+  cursor: pointer;
+}
+
+.lab-pick-btns button.is-active {
+  border-color: color-mix(in srgb, var(--mq-violet) 45%, transparent);
+  background: color-mix(in srgb, var(--mq-violet) 12%, transparent);
+}

@@ -1,0 +1,13 @@
+{
+  "ep": "003",
+  "slug": "ep-003-door-opens",
+  "arc": 0,
+  "arc_title": "Точка отсчёта",
+  "layer": null,
+  "hook": "C",
+  "image_headline": "Дверь открыта",
+  "commits": ["e8ad28a", "187db95"],
+  "platforms": ["telegram"],
+  "approved_at": null,
+  "published_at": null
+}

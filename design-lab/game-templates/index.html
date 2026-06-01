@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="ru" data-theme="light">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Четыре ритма — утверждённый экран</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <header class="lab-header">
+      <div>
+        <h1>Шаг 2 — утверждено ★</h1>
+        <p class="lab-intro">
+          Layout <strong>B</strong> компакт (силуэты). Новые иллюстрации как «Режим игры»:
+          <a href="./scenario-icons/index.html"><strong>4 набора A–D →</strong></a>
+        </p>
+      </div>
+      <div class="lab-theme" role="group">
+        <button type="button" class="is-active" data-theme-btn="light">Светлая</button>
+        <button type="button" data-theme-btn="dark">Тёмная</button>
+      </div>
+    </header>
+
+    <main class="lab-main">
+      <div class="lab-phone__shell lab-phone__shell--narrow">
+        <div class="mqx-monetka-flow">
+          <div class="mqx-monetka-dialog__perch mqx-monetka-dialog__perch--sit-edge">
+            <div class="mqx-monetka-dialog__perch-head">
+              <img class="lab-mascot lab-mascot--perch" src="./assets/monetka-sit-edge.png" width="124" alt="" />
+            </div>
+            <section class="mqx-monetka-dialog__speech">
+              <h1 class="mqx-monetka-dialog__title">Четыре ритма</h1>
+              <div class="mqx-monetka-dialog__subtitle">
+                <p>
+                  Ух ты, четыре жизни с разным ритмом. Начни со <strong>Старта</strong> или сразу лови
+                  <strong>Драйв</strong> — ты сам выбираешь, насколько насыщенной будет игра.
+                </p>
+              </div>
+            </section>
+          </div>
+
+          <label class="lab-field">
+            <span class="lab-field__label">Название игры</span>
+            <input class="lab-field__input" type="text" value="Моя игра - 1" />
+          </label>
+
+          <span class="lab-catalog-label">Сценарий</span>
+          <div class="mqx-scenario-picker mqx-scenario-picker--compact">
+            <button type="button" class="mqx-scenario-strip mqx-scenario-strip--green mqx-scenario-strip--selected">
+              <span class="mqx-scenario-strip__icon-wrap mqx-scenario-strip__icon-wrap--green" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" aria-hidden>
+                  <path d="M12 4 4 8v2l8 4 8-4V8l-8-4z" stroke="currentColor" stroke-width="2" stroke-linejoin="round" />
+                  <path d="M6 12v4c0 2.2 2.7 4 6 4s6-1.8 6-4v-4" stroke="currentColor" stroke-width="2" />
+                </svg>
+              </span>
+              <span class="mqx-scenario-strip__body">
+                <span class="mqx-scenario-strip__head">
+                  <span class="mqx-scenario-strip__title">Студент</span>
+                </span>
+                <ul class="mqx-scenario-strip__list">
+                  <li>Доход ~50 000 ₽/мес</li>
+                  <li>Чистый старт — без долгов</li>
+                  <li>На счёте ~15 000 ₽</li>
+                </ul>
+              </span>
+              <span class="mqx-scenario-strip__trail" aria-hidden="true">›</span>
+            </button>
+
+            <button type="button" class="mqx-scenario-strip mqx-scenario-strip--amber">
+              <span class="mqx-scenario-strip__icon-wrap mqx-scenario-strip__icon-wrap--amber" aria-hidden="true">
+                <svg class="mqx-scenario-strip__icon--silhouette" viewBox="0 0 24 24" fill="currentColor" aria-hidden>
+                  <path d="M7 16.25V12.8l2.4-2.1h5.2l2.4 2.1v3.45H7z" />
+                  <circle cx="8.25" cy="17.1" r="2" />
+                  <circle cx="15.75" cy="17.1" r="2" />
+                </svg>
+              </span>
+              <span class="mqx-scenario-strip__body">
+                <span class="mqx-scenario-strip__head">
+                  <span class="mqx-scenario-strip__title">Профессионал</span>
+                </span>
+                <ul class="mqx-scenario-strip__list">
+                  <li>Доход ~45 000 ₽/мес</li>
+                  <li>Авто + потребительский кредит</li>
+                </ul>
+              </span>
+              <span class="mqx-scenario-strip__trail" aria-hidden="true">›</span>
+            </button>
+
+            <button type="button" class="mqx-scenario-strip mqx-scenario-strip--orange">
+              <span class="mqx-scenario-strip__icon-wrap mqx-scenario-strip__icon-wrap--orange" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" aria-hidden>
+                  <path d="M4 12 12 5l8 7v7H4v-7z" stroke="currentColor" stroke-width="2" />
+                  <path d="M10 19v-5h4v5" stroke="currentColor" stroke-width="2" />
+                </svg>
+              </span>
+              <span class="mqx-scenario-strip__body">
+                <span class="mqx-scenario-strip__head">
+                  <span class="mqx-scenario-strip__title">Руководитель</span>
+                </span>
+                <ul class="mqx-scenario-strip__list">
+                  <li>Доход ~46 500 ₽/мес</li>
+                  <li>Ипотека + авто</li>
+                </ul>
+              </span>
+              <span class="mqx-scenario-strip__trail" aria-hidden="true">›</span>
+            </button>
+
+            <button type="button" class="mqx-scenario-strip mqx-scenario-strip--red">
+              <span class="mqx-scenario-strip__icon-wrap mqx-scenario-strip__icon-wrap--red" aria-hidden="true">
+                <svg class="mqx-scenario-strip__icon--silhouette" viewBox="0 0 24 24" fill="currentColor" aria-hidden>
+                  <path d="M2.5 19.25V14.5l1.6-1.35 1.6 1.35 1.6-1.35 1.6 1.35 1.6-1.35 1.6 1.35V19.25H2.5z" />
+                  <path d="M13.75 19.25V10h5.25v9.25H13.75z" />
+                  <circle cx="16.35" cy="7.35" r="2.15" />
+                </svg>
+              </span>
+              <span class="mqx-scenario-strip__body">
+                <span class="mqx-scenario-strip__head">
+                  <span class="mqx-scenario-strip__title">Предприниматель</span>
+                </span>
+                <ul class="mqx-scenario-strip__list">
+                  <li>Доход ~43 500 ₽/мес</li>
+                  <li>Ипотека + кредитная карта</li>
+                </ul>
+              </span>
+              <span class="mqx-scenario-strip__trail" aria-hidden="true">›</span>
+            </button>
+          </div>
+
+          <div class="lab-actions">
+            <button type="button" class="lab-btn lab-btn--filled">Начать игру</button>
+            <button type="button" class="lab-btn lab-btn--outline">Быстрый старт</button>
+            <button type="button" class="lab-btn lab-btn--outline">Назад</button>
+          </div>
+        </div>
+      </div>
+
+      <section class="lab-section">
+        <h2>Цветовая шкала</h2>
+        <ul class="lab-section__note" style="padding-left: 1.2em; margin: 0">
+          <li><strong>Зелёный</strong> — Студент</li>
+          <li><strong>Жёлтый</strong> (#FFE800, градиент с #E6C200) — Профессионал</li>
+          <li><strong>Оранжевый</strong> (#f97316) — Руководитель</li>
+          <li><strong>Красный</strong> — Предприниматель (иконка завода)</li>
+        </ul>
+      </section>
+    </main>
+
+    <script>
+      document.querySelectorAll('[data-theme-btn]').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          document.documentElement.setAttribute('data-theme', btn.getAttribute('data-theme-btn'));
+          document.querySelectorAll('[data-theme-btn]').forEach((b) => b.classList.toggle('is-active', b === btn));
+        });
+      });
+    </script>
+  </body>
+</html>

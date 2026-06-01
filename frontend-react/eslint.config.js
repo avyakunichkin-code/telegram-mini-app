@@ -18,4 +18,19 @@ export default defineConfig([
       parserOptions: { ecmaFeatures: { jsx: true } },
     },
   },
+  {
+    // Quarantine: screens must not import legacy tab containers / section components.
+    files: ['src/screens/**/*.{js,jsx}'],
+    rules: {
+      'no-restricted-imports': [
+        'error',
+        {
+          patterns: [
+            '**/components/**/*Premium*',
+            '**/components/**/*Section*',
+          ],
+        },
+      ],
+    },
+  },
 ])

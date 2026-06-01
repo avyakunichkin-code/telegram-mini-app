@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="ru" data-theme="light" data-outcome="win" data-template="student">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Run finale — design-lab GE1</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <header class="lab-header">
+      <div>
+        <h1>Run finale — финал партии (GE1)</h1>
+        <p>
+          Победа и поражение: игровые заслуги (не M12), обратная связь, бейджи сохранений. Без звука.
+        </p>
+      </div>
+      <div class="lab-controls">
+        <label>
+          Исход
+          <select id="outcome-select">
+            <option value="win">Победа</option>
+            <option value="defeat">Поражение</option>
+          </select>
+        </label>
+        <label>
+          Сценарий (V7)
+          <select id="template-select">
+            <option value="student">Студент</option>
+            <option value="professional">Профессионал</option>
+            <option value="manager">Руководитель</option>
+            <option value="entrepreneur">Предприниматель</option>
+          </select>
+        </label>
+        <div class="lab-theme" role="group">
+          <button type="button" class="is-active" data-theme-btn="light">Светлая</button>
+          <button type="button" data-theme-btn="dark">Тёмная</button>
+        </div>
+      </div>
+    </header>
+
+    <main class="lab-main">
+      <p class="lab-intro">
+        <strong>Идея:</strong>
+        <code>docs/vision/ideas/game-run-finale-pre-alpha.md</code>
+        · Поражение → архив + бейдж · Победа → бейдж в списке · Поле комментария на всех вариантах.
+      </p>
+
+      <div class="lab-grid">
+        <!-- S0 -->
+        <article class="lab-variant">
+          <div class="lab-variant__head">
+            <h2>S0</h2>
+            <span class="lab-variant__tag">Базовый ритуал</span>
+          </div>
+          <p class="lab-variant__note">Hero-сетка, Монетка, CTA, feedback.</p>
+          <div class="lab-phone">
+            <div class="lab-phone__scrim" aria-hidden="true"></div>
+            <div class="lab-finale">
+              <div class="lab-finale__scroll">
+                <span class="lab-badge lab-badge--dynamic lab-badge--win">Победа</span>
+                <div class="lab-finale__head">
+                  <div class="lab-monetka" aria-hidden="true">🪙</div>
+                  <div>
+                    <p class="lab-finale__kicker">Период 38 · сценарий Студент</p>
+                    <h3 class="lab-finale__title">Цели сценария выполнены</h3>
+                    <p class="lab-finale__text win-only">Сценарий пройден — можно играть дальше или начать новую партию.</p>
+                    <p class="lab-finale__text loss-only">Партия уйдёт в архив с бейджем «Поражение».</p>
+                  </div>
+                </div>
+                <div class="lab-metrics" data-metrics></div>
+                <p class="lab-finale__text loss-only">
+                  <strong>Факт:</strong> три месяца подряд итоговый cash после закрытия был отрицательным (−8 200 ₽ в
+                  последнем периоде).
+                </p>
+                <ul class="lab-finale__text loss-only" style="margin: 0; padding-left: 1.1rem; font-size: 0.8rem">
+                  <li>Забирай зарплату до «Закрыть месяц»</li>
+                  <li>Следи за прогнозом на дашборде</li>
+                </ul>
+                <form class="lab-feedback" data-feedback-form>
+                  <label class="lab-feedback__label">
+                    Расскажите, как прошла партия
+                    <span class="lab-feedback__hint">(необязательно)</span>
+                  </label>
+                  <textarea placeholder="Что было непонятно или что понравилось?"></textarea>
+                  <button type="submit" class="lab-btn lab-btn--primary" style="margin-top: 8px" data-feedback-submit disabled>
+                    Отправить отзыв
+                  </button>
+                </form>
+              </div>
+              <div class="lab-finale__actions">
+                <button type="button" class="lab-btn lab-btn--primary win-only">Играть дальше</button>
+                <button type="button" class="lab-btn lab-btn--primary loss-only">Новая игра</button>
+                <button type="button" class="lab-btn lab-btn--secondary">К сохранениям</button>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <!-- V1 Gazeta (compact) -->
+        <article class="lab-variant">
+          <div class="lab-variant__head">
+            <h2>V1</h2>
+            <span class="lab-variant__tag">Газета · compact</span>
+          </div>
+          <p class="lab-variant__note">Выпуск с акцентом, строки «описание + иконка + значение». Победа — маскот слева.</p>
+          <div class="lab-phone">
+            <div class="lab-phone__scrim" aria-hidden="true"></div>
+            <div class="lab-finale lab-finale--gazeta" data-gazeta>
+              <div class="lab-finale__scroll lab-finale__scroll--gazeta">
+                <header class="lab-gazeta-mast">
+                  <h3>ТВОЙ ХОД · выпуск</h3>
+                  <p class="lab-gazeta-mast__sub">Период 38 · <span class="win-only">победа сценария</span><span class="loss-only">итог партии</span></p>
+                </header>
+
+                <div class="lab-gazeta-body">
+                  <div class="lab-gazeta-hero win-only">
+                    <div class="lab-gazeta-hero__persona">
+                    <img
+                      class="lab-gazeta-hero__img"
+                      data-persona-img
+                      src="./assets/student-mascot-cup-dash.webp"
+                      alt=""
+                      height="108"
+                      decoding="async"
+                    />
+                    </div>
+                    <p class="lab-gazeta-hero__lead" data-gazeta-lead>
+                      Цепочка целей закрыта — сценарий «Студент» пройден.
+                    </p>
+                  </div>
+
+                  <div class="lab-gazeta-bubble loss-only">
+                    <img
+                      class="lab-gazeta-bubble__monetka"
+                      src="./assets/monetka-mascot.png"
+                      alt=""
+                      width="44"
+                      height="44"
+                    />
+                    <div class="lab-gazeta-bubble__copy">
+                      <p class="lab-gazeta-bubble__title">Фух, хорошо, что это в игре</p>
+                      <p class="lab-gazeta-bubble__text">
+                        Не волнуйся, я сама первые несколько раз проигрывала, но разработчики не хотят чтобы мы
+                        проигрывали, напишешь им свой комментарий?
+                      </p>
+                    </div>
+                  </div>
+
+                  <div class="lab-gazeta-metrics" data-gazeta-metrics aria-label="Итоги партии"></div>
+
+                  <section class="lab-gazeta-fact loss-only" aria-labelledby="gazeta-fact-label">
+                    <div class="lab-gazeta-fact__rule" aria-hidden="true"></div>
+                    <h4 id="gazeta-fact-label" class="lab-gazeta-fact__label">Факт</h4>
+                    <p class="lab-gazeta-fact__text">
+                      Три месяца подряд итоговый cash после закрытия был отрицательным (−8 200 ₽ в последнем периоде).
+                    </p>
+                    <ul class="lab-gazeta-fact__tips">
+                      <li>Забирай зарплату до «Закрыть месяц»</li>
+                      <li>Следи за прогнозом на дашборде</li>
+                      <li>Держи подушку на обязательные платежи</li>
+                    </ul>
+                  </section>
+
+                <form class="lab-feedback lab-feedback--gazeta" data-feedback-form>
+                  <label class="lab-feedback__label">
+                    Расскажите, как прошла партия
+                    <span class="lab-feedback__hint">(необязательно)</span>
+                  </label>
+                  <textarea placeholder="Что было непонятно или что понравилось?"></textarea>
+                  <button type="submit" class="lab-btn lab-btn--primary" data-feedback-submit disabled>Отправить отзыв</button>
+                </form>
+                </div>
+              </div>
+              <div class="lab-finale__actions">
+                <button type="button" class="lab-btn lab-btn--primary win-only">Играть дальше</button>
+                <button type="button" class="lab-btn lab-btn--primary loss-only">Новая игра</button>
+                <button type="button" class="lab-btn lab-btn--secondary">К сохранениям</button>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <!-- V7 Scenario -->
+        <article class="lab-variant">
+          <div class="lab-variant__head">
+            <h2>V7</h2>
+            <span class="lab-variant__tag">Сценарий</span>
+          </div>
+          <p class="lab-variant__note">Заголовок и реплика от шаблона (переключатель вверху).</p>
+          <div class="lab-phone">
+            <div class="lab-phone__scrim" aria-hidden="true"></div>
+            <div class="lab-finale">
+              <div class="lab-finale__scroll">
+                <span class="lab-badge lab-badge--dynamic lab-badge--win">Победа</span>
+                <div class="lab-finale__head">
+                  <div class="lab-monetka" aria-hidden="true">🪙</div>
+                  <div>
+                    <p class="lab-finale__kicker">Период 38</p>
+                    <h3 class="lab-finale__title" data-scenario-title="title">Ты вывел студенческий бюджет в плюс</h3>
+                    <p class="lab-finale__text" data-scenario-title="line">Сценарий «Студент» — ты закрыл цепочку целей.</p>
+                  </div>
+                </div>
+                <div class="lab-metrics" data-metrics></div>
+                <form class="lab-feedback" data-feedback-form>
+                  <label class="lab-feedback__label">Комментарий <span class="lab-feedback__hint">(необязательно)</span></label>
+                  <textarea></textarea>
+                  <button type="submit" class="lab-btn lab-btn--primary" style="margin-top: 8px" data-feedback-submit disabled>
+                    Отправить
+                  </button>
+                </form>
+              </div>
+              <div class="lab-finale__actions">
+                <button type="button" class="lab-btn lab-btn--primary win-only">Играть дальше</button>
+                <button type="button" class="lab-btn lab-btn--primary loss-only">Новая игра</button>
+                <button type="button" class="lab-btn lab-btn--secondary">К сохранениям</button>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <!-- V8 Onboarding -->
+        <article class="lab-variant">
+          <div class="lab-variant__head">
+            <h2>V8</h2>
+            <span class="lab-variant__tag">Онбординг</span>
+          </div>
+          <p class="lab-variant__note">При поражении — отсылка к шагу O1 (не новый туториал).</p>
+          <div class="lab-phone">
+            <div class="lab-phone__scrim" aria-hidden="true"></div>
+            <div class="lab-finale">
+              <div class="lab-finale__scroll">
+                <span class="lab-badge lab-badge--dynamic lab-badge--loss">Поражение</span>
+                <div class="lab-finale__head">
+                  <div class="lab-monetka" aria-hidden="true">🪙</div>
+                  <div>
+                    <p class="lab-finale__kicker">Период 12</p>
+                    <h3 class="lab-finale__title">Минус три месяца подряд</h3>
+                    <p class="lab-finale__text">Партия в архиве. Разберём, что случилось.</p>
+                  </div>
+                </div>
+                <div class="lab-o2-strip loss-only">
+                  <strong>Из обучения: подушка</strong>
+                  В O1 мы говорили откладывать на обязательные платежи — в этой партии подушка не перекрыла 3
+                  закрытия в минусе.
+                </div>
+                <p class="lab-finale__text loss-only">
+                  <strong>Факт:</strong> cash после закрытия периода 12: −8 200 ₽.
+                </p>
+                <div class="lab-metrics" data-metrics></div>
+                <form class="lab-feedback" data-feedback-form>
+                  <label class="lab-feedback__label">Комментарий <span class="lab-feedback__hint">(необязательно)</span></label>
+                  <textarea></textarea>
+                  <button type="submit" class="lab-btn lab-btn--primary" style="margin-top: 8px" data-feedback-submit disabled>
+                    Отправить
+                  </button>
+                </form>
+              </div>
+              <div class="lab-finale__actions">
+                <button type="button" class="lab-btn lab-btn--primary">Новая игра</button>
+                <button type="button" class="lab-btn lab-btn--secondary">К сохранениям</button>
+              </div>
+            </div>
+          </div>
+        </article>
+      </div>
+    </main>
+
+    <div id="lab-toast" class="lab-toast" role="status"></div>
+    <script>
+      (function injectMetrics() {
+        const items = [
+          ['Периодов', '38'],
+          ['Cashflow 6p', '+1 840 ₽'],
+          ['Подушка', '4,2 мес.'],
+          ['Инвестиции', '120 000 ₽'],
+          ['Пассивный доход', '18 500 ₽/мес'],
+          ['Просрочка', '0 ₽'],
+          ['Цели chain', '6 / 6'],
+        ];
+        document.querySelectorAll('[data-metrics]').forEach((host) => {
+          host.innerHTML = items
+            .map(
+              ([label, value], i) =>
+                `<div class="lab-metric${i === 6 ? ' lab-metric--wide' : ''}"><span class="lab-metric__label">${label}</span><span class="lab-metric__value">${value}</span></div>`,
+            )
+            .join('');
+        });
+      })();
+    </script>
+    <script src="./lab.js"></script>
+  </body>
+</html>

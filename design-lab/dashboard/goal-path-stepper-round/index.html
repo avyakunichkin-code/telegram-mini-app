@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="ru" data-theme="light">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>ТВОЙ ХОД — Тропа целей: stepper (design-lab)</title>
+    <link rel="stylesheet" href="./lab-base.css" />
+  </head>
+  <body>
+    <header class="lab-header">
+      <div>
+        <h1>Дашборд — тропа целей (свёрнутый stepper)</h1>
+        <p>
+          Связанные кружки в аккордеоне «Цель» · Concept 2 brainstorm · basic 5 шагов · без шкал.
+        </p>
+      </div>
+      <div class="lab-header__controls">
+        <div class="lab-theme" role="group" aria-label="Тема">
+          <button type="button" class="is-active" data-theme-btn="light">Светлая</button>
+          <button type="button" data-theme-btn="dark">Тёмная</button>
+        </div>
+      </div>
+    </header>
+
+    <main class="lab-main">
+      <p class="lab-intro">
+        <strong>Утверждено P3:</strong> в свёрнутом виде — дорожка (✓ / текущий / locked), <em>без</em> текста «Шаг K из N».
+        Развёрнуто — прежняя цепочка + Монетка (G1). Данные: <code>chain[].status</code> из overview.
+      </p>
+
+      <div class="lab-legend">
+        <strong>Легенда узлов</strong>
+        <dl>
+          <dt>✓ / done</dt>
+          <dd>Цель выполнена — галочка, линия до следующего узла sky</dd>
+          <dt>Кольцо</dt>
+          <dd>Текущий шаг — номер, glow</dd>
+          <dt>Пунктир</dt>
+          <dd>Locked — ещё не доступен (механика или порядок chain)</dd>
+          <dt>🔒 gate</dt>
+          <dd>Условие времени (победа с 7-го периода) — опционально последний узел</dd>
+        </dl>
+      </div>
+
+      <div class="lab-wrap">
+        <!-- P1 recommended -->
+        <section class="lab-states">
+          <span class="lab-variant-tag lab-variant-tag--rec">P1 ★ — stepper под заголовком</span>
+          <p class="lab-state-label">Свёрнуто · шаг 3 из 5 · basic tutorial chain</p>
+          <div class="mqx-goal-dash-bleed">
+            <section class="mqx-goal-dash mqx-goal-dash--path-p1" aria-label="Цель сценария">
+              <button type="button" class="mqx-goal-dash__toggle" data-goal-toggle aria-expanded="false">
+                <div class="mqx-goal-dash__toggle-inner">
+                  <div class="mqx-goal-dash__head-row">
+                    <div class="mqx-goal-dash__head-text">
+                      <span class="mqx-goal-dash__kicker">Цель</span>
+                      <span class="mqx-goal-dash__current-title">Подушка ≥ 3× обязательств</span>
+                      <span class="mqx-goal-dash__step">Шаг 3 из 5</span>
+                      <div
+                        class="mqx-goal-path"
+                        role="group"
+                        aria-label="Шаги сценария: 2 выполнено, шаг 3 активен"
+                      >
+                        <div class="mqx-goal-path__track">
+                          <div class="mqx-goal-path__segment mqx-goal-path__segment--done">
+                            <span class="mqx-goal-path__node" aria-hidden="true">✓</span>
+                            <span class="mqx-goal-path__sr">Забрать зарплату</span>
+                            <span class="mqx-goal-path__connector" aria-hidden="true"></span>
+                          </div>
+                          <div class="mqx-goal-path__segment mqx-goal-path__segment--done">
+                            <span class="mqx-goal-path__node" aria-hidden="true">✓</span>
+                            <span class="mqx-goal-path__sr">Внести в подушку</span>
+                            <span class="mqx-goal-path__connector" aria-hidden="true"></span>
+                          </div>
+                          <div class="mqx-goal-path__segment mqx-goal-path__segment--current">
+                            <span class="mqx-goal-path__node" aria-hidden="true">3</span>
+                            <span class="mqx-goal-path__sr">Подушка ≥ 3× обязательств</span>
+                            <span class="mqx-goal-path__connector" aria-hidden="true"></span>
+                          </div>
+                          <div class="mqx-goal-path__segment mqx-goal-path__segment--locked">
+                            <span class="mqx-goal-path__node" aria-hidden="true">4</span>
+                            <span class="mqx-goal-path__sr">Открыть депозит или облигацию</span>
+                            <span class="mqx-goal-path__connector" aria-hidden="true"></span>
+                          </div>
+                          <div class="mqx-goal-path__segment mqx-goal-path__segment--locked">
+                            <span class="mqx-goal-path__node" aria-hidden="true">5</span>
+                            <span class="mqx-goal-path__sr">Доход с инвестиций ≥ 15 000 ₽/мес</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <span class="mqx-icon-chevron mqx-goal-dash__chevron" aria-hidden="true">
+                      <svg viewBox="0 0 24 24" fill="none" width="20" height="20">
+                        <path
+                          d="M8 10l4 4 4-4"
+                          stroke="currentColor"
+                          stroke-width="2.25"
+                          stroke-linecap="round"
+                        />
+                      </svg>
+                    </span>
+                  </div>
+                </div>
+              </button>
+            </section>
+          </div>
+        </section>
+
+        <section class="lab-states">
+          <span class="lab-variant-tag">P1 — развёрнуто (шаг 3, Монетка + список)</span>
+          <div class="mqx-goal-dash-bleed">
+            <section class="mqx-goal-dash mqx-goal-dash--expanded mqx-goal-dash--path-p1" aria-label="Цель">
+              <button type="button" class="mqx-goal-dash__toggle" data-goal-toggle aria-expanded="true">
+                <div class="mqx-goal-dash__toggle-inner">
+                  <div class="mqx-goal-dash__head-row">
+                    <div class="mqx-goal-dash__head-text">
+                      <span class="mqx-goal-dash__kicker">Цель</span>
+                      <span class="mqx-goal-dash__current-title">Подушка ≥ 3× обязательств</span>
+                      <span class="mqx-goal-dash__step">Шаг 3 из 5</span>
+                      <div class="mqx-goal-path" role="group" aria-hidden="true">
+                        <div class="mqx-goal-path__track">
+                          <div class="mqx-goal-path__segment mqx-goal-path__segment--done">
+                            <span class="mqx-goal-path__node">✓</span>
+                            <span class="mqx-goal-path__connector"></span>
+                          </div>
+                          <div class="mqx-goal-path__segment mqx-goal-path__segment--done">
+                            <span class="mqx-goal-path__node">✓</span>
+                            <span class="mqx-goal-path__connector"></span>
+                          </div>
+                          <div class="mqx-goal-path__segment mqx-goal-path__segment--current">
+                            <span class="mqx-goal-path__node">3</span>
+                            <span class="mqx-goal-path__connector"></span>
+                          </div>
+                          <div class="mqx-goal-path__segment mqx-goal-path__segment--locked">
+                            <span class="mqx-goal-path__node">4</span>
+                            <span class="mqx-goal-path__connector"></span>
+                          </div>
+                          <div class="mqx-goal-path__segment mqx-goal-path__segment--locked">
+                            <span class="mqx-goal-path__node">5</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <span class="mqx-icon-chevron mqx-goal-dash__chevron" aria-hidden="true">
+                      <svg viewBox="0 0 24 24" fill="none" width="20" height="20">
+                        <path
+                          d="M8 10l4 4 4-4"
+                          stroke="currentColor"
+                          stroke-width="2.25"
+                          stroke-linecap="round"
+                        />
+                      </svg>
+                    </span>
+                  </div>
+                </div>
+              </button>
+              <div class="mqx-goal-dash__expand">
+                <article class="mqx-goal-focus">
+                  <div class="mqx-goal-monetka">
+                    <div class="mqx-goal-monetka__inner">
+                      <img
+                        class="mqx-goal-monetka__img"
+                        src="./assets/monetka-mascot.png"
+                        width="44"
+                        height="44"
+                        alt=""
+                      />
+                      <div class="mqx-goal-monetka__bubble">
+                        <h4 class="mqx-goal-monetka__title">Давай, помогу разобраться</h4>
+                        <p class="mqx-goal-monetka__text">
+                          Откладывай в подушку — цель <strong>3× обязательств</strong>. Шаг 4 откроет
+                          <strong>инвестиции</strong>.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="mqx-goal-chain">
+                    <h4 class="mqx-goal-chain__title">Цепочка сценария</h4>
+                    <ol class="mqx-goal-chain__list">
+                      <li class="mqx-goal-chain__item mqx-goal-chain__item--done">
+                        <span class="mqx-goal-chain__mark">✓</span>
+                        <span>Забрать зарплату</span>
+                      </li>
+                      <li class="mqx-goal-chain__item mqx-goal-chain__item--done">
+                        <span class="mqx-goal-chain__mark">✓</span>
+                        <span>Внести в подушку</span>
+                      </li>
+                      <li class="mqx-goal-chain__item mqx-goal-chain__item--current">
+                        <span class="mqx-goal-chain__mark">3</span>
+                        <span>Подушка ≥ 3× обязательств</span>
+                      </li>
+                      <li class="mqx-goal-chain__item mqx-goal-chain__item--locked">
+                        <span class="mqx-goal-chain__mark">4</span>
+                        <span>Открыть депозит или облигацию</span>
+                      </li>
+                      <li class="mqx-goal-chain__item mqx-goal-chain__item--locked">
+                        <span class="mqx-goal-chain__mark">5</span>
+                        <span>Доход с инвестиций ≥ 15 000 ₽/мес</span>
+                      </li>
+                    </ol>
+                  </div>
+                </article>
+              </div>
+            </section>
+          </div>
+        </section>
+
+        <!-- P2 -->
+        <section class="lab-states">
+          <span class="lab-variant-tag">P2 — stepper над названием цели</span>
+          <p class="lab-state-label">Свёрнуто · шаг 1 из 5</p>
+          <div class="mqx-goal-dash-bleed">
+            <section class="mqx-goal-dash mqx-goal-dash--path-p2" aria-label="Цель">
+              <button type="button" class="mqx-goal-dash__toggle" data-goal-toggle aria-expanded="false">
+                <div class="mqx-goal-dash__toggle-inner">
+                  <div class="mqx-goal-path" role="group" aria-label="Шаг 1 из 5 активен">
+                    <div class="mqx-goal-path__track">
+                      <div class="mqx-goal-path__segment mqx-goal-path__segment--current">
+                        <span class="mqx-goal-path__node">1</span>
+                        <span class="mqx-goal-path__connector"></span>
+                      </div>
+                      <div class="mqx-goal-path__segment mqx-goal-path__segment--locked">
+                        <span class="mqx-goal-path__node">2</span>
+                        <span class="mqx-goal-path__connector"></span>
+                      </div>
+                      <div class="mqx-goal-path__segment mqx-goal-path__segment--locked">
+                        <span class="mqx-goal-path__node">3</span>
+                        <span class="mqx-goal-path__connector"></span>
+                      </div>
+                      <div class="mqx-goal-path__segment mqx-goal-path__segment--locked">
+                        <span class="mqx-goal-path__node">4</span>
+                        <span class="mqx-goal-path__connector"></span>
+                      </div>
+                      <div class="mqx-goal-path__segment mqx-goal-path__segment--locked">
+                        <span class="mqx-goal-path__node">5</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="mqx-goal-dash__head-row">
+                    <div class="mqx-goal-dash__head-text">
+                      <span class="mqx-goal-dash__kicker">Цель</span>
+                      <span class="mqx-goal-dash__current-title">Забрать зарплату</span>
+                      <span class="mqx-goal-dash__step">Шаг 1 из 5</span>
+                    </div>
+                    <span class="mqx-icon-chevron mqx-goal-dash__chevron" aria-hidden="true">
+                      <svg viewBox="0 0 24 24" fill="none" width="20" height="20">
+                        <path
+                          d="M8 10l4 4 4-4"
+                          stroke="currentColor"
+                          stroke-width="2.25"
+                          stroke-linecap="round"
+                        />
+                      </svg>
+                    </span>
+                  </div>
+                </div>
+              </button>
+            </section>
+          </div>
+        </section>
+
+        <!-- P3 ★ approved -->
+        <section class="lab-states">
+          <span class="lab-variant-tag lab-variant-tag--rec">P3 ★ — компакт: только тропа (без «Шаг K из N»)</span>
+          <p class="lab-state-label">Свёрнуто · шаг 4 из 5 · invest unlock · prod</p>
+          <div class="mqx-goal-dash-bleed">
+            <section class="mqx-goal-dash mqx-goal-dash--path-p3" aria-label="Цель">
+              <button type="button" class="mqx-goal-dash__toggle" data-goal-toggle aria-expanded="false">
+                <div class="mqx-goal-dash__toggle-inner">
+                  <div class="mqx-goal-dash__head-row">
+                    <div class="mqx-goal-dash__head-text">
+                      <span class="mqx-goal-dash__kicker">Цель</span>
+                      <span class="mqx-goal-dash__current-title">Открыть депозит или облигацию</span>
+                      <div class="mqx-goal-dash__path-row">
+                        <div
+                          class="mqx-goal-path"
+                          role="group"
+                          aria-label="Шаги сценария: 3 выполнено, активен шаг 4 из 5"
+                        >
+                          <div class="mqx-goal-path__track">
+                            <div class="mqx-goal-path__segment mqx-goal-path__segment--done">
+                              <span class="mqx-goal-path__node">✓</span>
+                              <span class="mqx-goal-path__connector"></span>
+                            </div>
+                            <div class="mqx-goal-path__segment mqx-goal-path__segment--done">
+                              <span class="mqx-goal-path__node">✓</span>
+                              <span class="mqx-goal-path__connector"></span>
+                            </div>
+                            <div class="mqx-goal-path__segment mqx-goal-path__segment--done">
+                              <span class="mqx-goal-path__node">✓</span>
+                              <span class="mqx-goal-path__connector"></span>
+                            </div>
+                            <div class="mqx-goal-path__segment mqx-goal-path__segment--current">
+                              <span class="mqx-goal-path__node">4</span>
+                              <span class="mqx-goal-path__connector"></span>
+                            </div>
+                            <div class="mqx-goal-path__segment mqx-goal-path__segment--locked">
+                              <span class="mqx-goal-path__node">5</span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <span class="mqx-icon-chevron mqx-goal-dash__chevron" aria-hidden="true">
+                      <svg viewBox="0 0 24 24" fill="none" width="20" height="20">
+                        <path
+                          d="M8 10l4 4 4-4"
+                          stroke="currentColor"
+                          stroke-width="2.25"
+                          stroke-linecap="round"
+                        />
+                      </svg>
+                    </span>
+                  </div>
+                </div>
+              </button>
+            </section>
+          </div>
+        </section>
+
+        <!-- 7 steps + gate -->
+        <section class="lab-states">
+          <span class="lab-variant-tag">P1 dense — 7 шагов (тяжёлый шаблон)</span>
+          <p class="lab-state-label">Свёрнуто · шаг 5 из 7</p>
+          <div class="mqx-goal-dash-bleed">
+            <section class="mqx-goal-dash mqx-goal-dash--path-p1" aria-label="Цель">
+              <button type="button" class="mqx-goal-dash__toggle" data-goal-toggle aria-expanded="false">
+                <div class="mqx-goal-dash__toggle-inner">
+                  <div class="mqx-goal-dash__head-row">
+                    <div class="mqx-goal-dash__head-text">
+                      <span class="mqx-goal-dash__kicker">Цель</span>
+                      <span class="mqx-goal-dash__current-title">Открыть депозит или облигацию</span>
+                      <span class="mqx-goal-dash__step">Шаг 5 из 7</span>
+                      <div class="mqx-goal-path mqx-goal-path--dense" role="group" aria-label="Шаг 5 из 7">
+                        <div class="mqx-goal-path__track">
+                          <div class="mqx-goal-path__segment mqx-goal-path__segment--done">
+                            <span class="mqx-goal-path__node">✓</span>
+                            <span class="mqx-goal-path__connector"></span>
+                          </div>
+                          <div class="mqx-goal-path__segment mqx-goal-path__segment--done">
+                            <span class="mqx-goal-path__node">✓</span>
+                            <span class="mqx-goal-path__connector"></span>
+                          </div>
+                          <div class="mqx-goal-path__segment mqx-goal-path__segment--done">
+                            <span class="mqx-goal-path__node">✓</span>
+                            <span class="mqx-goal-path__connector"></span>
+                          </div>
+                          <div class="mqx-goal-path__segment mqx-goal-path__segment--done">
+                            <span class="mqx-goal-path__node">✓</span>
+                            <span class="mqx-goal-path__connector"></span>
+                          </div>
+                          <div class="mqx-goal-path__segment mqx-goal-path__segment--current">
+                            <span class="mqx-goal-path__node">5</span>
+                            <span class="mqx-goal-path__connector"></span>
+                          </div>
+                          <div class="mqx-goal-path__segment mqx-goal-path__segment--locked">
+                            <span class="mqx-goal-path__node">6</span>
+                            <span class="mqx-goal-path__connector"></span>
+                          </div>
+                          <div class="mqx-goal-path__segment mqx-goal-path__segment--locked">
+                            <span class="mqx-goal-path__node">7</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <span class="mqx-icon-chevron mqx-goal-dash__chevron" aria-hidden="true">
+                      <svg viewBox="0 0 24 24" fill="none" width="20" height="20">
+                        <path
+                          d="M8 10l4 4 4-4"
+                          stroke="currentColor"
+                          stroke-width="2.25"
+                          stroke-linecap="round"
+                        />
+                      </svg>
+                    </span>
+                  </div>
+                </div>
+              </button>
+            </section>
+          </div>
+        </section>
+
+        <section class="lab-states">
+          <span class="lab-variant-tag">Все цели met · gate периода 7</span>
+          <p class="lab-state-label">Свёрнуто · победа доступна с 7-го периода (сейчас 5-й)</p>
+          <div class="mqx-goal-dash-bleed">
+            <section class="mqx-goal-dash mqx-goal-dash--path-p1" aria-label="Цель">
+              <button type="button" class="mqx-goal-dash__toggle" data-goal-toggle aria-expanded="false">
+                <div class="mqx-goal-dash__toggle-inner">
+                  <div class="mqx-goal-dash__head-row">
+                    <div class="mqx-goal-dash__head-text">
+                      <span class="mqx-goal-dash__kicker">Цель</span>
+                      <span class="mqx-goal-dash__current-title">Доход с инвестиций ≥ 15 000 ₽/мес</span>
+                      <span class="mqx-goal-dash__gate-hint">Победа с 7-го периода</span>
+                      <div class="mqx-goal-path" role="group" aria-label="Все шаги выполнены, ожидание периода">
+                        <div class="mqx-goal-path__track">
+                          <div class="mqx-goal-path__segment mqx-goal-path__segment--done">
+                            <span class="mqx-goal-path__node">✓</span>
+                            <span class="mqx-goal-path__connector"></span>
+                          </div>
+                          <div class="mqx-goal-path__segment mqx-goal-path__segment--done">
+                            <span class="mqx-goal-path__node">✓</span>
+                            <span class="mqx-goal-path__connector"></span>
+                          </div>
+                          <div class="mqx-goal-path__segment mqx-goal-path__segment--done">
+                            <span class="mqx-goal-path__node">✓</span>
+                            <span class="mqx-goal-path__connector"></span>
+                          </div>
+                          <div class="mqx-goal-path__segment mqx-goal-path__segment--done">
+                            <span class="mqx-goal-path__node">✓</span>
+                            <span class="mqx-goal-path__connector"></span>
+                          </div>
+                          <div class="mqx-goal-path__segment mqx-goal-path__segment--gate">
+                            <span class="mqx-goal-path__node" title="С 7-го периода">
+                              <svg class="mqx-goal-path__lock" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                                <path
+                                  d="M7 11V8a5 5 0 0110 0v3M6 11h12v10H6V11z"
+                                  stroke="currentColor"
+                                  stroke-width="2"
+                                  stroke-linecap="round"
+                                />
+                              </svg>
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <span class="mqx-icon-chevron mqx-goal-dash__chevron" aria-hidden="true">
+                      <svg viewBox="0 0 24 24" fill="none" width="20" height="20">
+                        <path
+                          d="M8 10l4 4 4-4"
+                          stroke="currentColor"
+                          stroke-width="2.25"
+                          stroke-linecap="round"
+                        />
+                      </svg>
+                    </span>
+                  </div>
+                </div>
+              </button>
+            </section>
+          </div>
+        </section>
+      </div>
+    </main>
+
+    <script src="./lab.js"></script>
+  </body>
+</html>
