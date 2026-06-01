@@ -1,4 +1,4 @@
-import { MonetkaAvatar } from '../onboarding/MonetkaAvatar';
+import { MonetkaAvatar } from '../brand/MonetkaAvatar';
 import { MqxButton } from '../primitives/MqxButton';
 
 /** ★ juice D — зарплата сгорит: Монетка + последствие, не системный alert. */

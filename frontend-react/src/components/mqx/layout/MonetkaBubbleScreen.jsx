@@ -1,5 +1,5 @@
 import { BrandLogo } from '../../BrandLogo';
-import { MonetkaAvatar } from '../onboarding/MonetkaAvatar';
+import { MonetkaAvatar } from '../brand/MonetkaAvatar';
 
 /**
  * Pre-game / auth: design-lab pg-auth-panel (логотип сверху, Монетка в шапке карточки).

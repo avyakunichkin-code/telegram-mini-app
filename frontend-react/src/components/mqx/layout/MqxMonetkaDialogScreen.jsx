@@ -1,4 +1,4 @@
-import { MonetkaAvatar } from '../onboarding/MonetkaAvatar';
+import { MonetkaAvatar } from '../brand/MonetkaAvatar';
 
 /**
  * Шаги новой игры: design-lab pg-flow-wrap + Монетка на кромке пузыря.

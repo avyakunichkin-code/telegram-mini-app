@@ -4,7 +4,8 @@
 
 | Дата | Что в prod | Что исправили в docs |
 |------|------------|----------------------|
-| 2026-06-01 | O2 spec + plan | `SPEC_onboarding-o2.md`, `PLAN_onboarding-o2.md`; O1 superseded | guidance UX |
+| 2026-06-01 | **O2 → PA-T2 triage** | `PRE_ALPHA_PLAYTEST_FEEDBACK.md`: α-FB-01/13/15/17 «ждём PA-T2» |
+| 2026-06-01 | **O2 в prod:** O1/lab сняты; guidance strip; cushion chip «ФИН.ПОДУШКА · N%» | `SPEC_onboarding-o2` success criteria; ссылки O1→O2 | guidance UX |
 | 2026-06-01 | — | Добавлен снимок [`PROJECT_META.md`](PROJECT_META.md): LOC, файлы, эпики, бэклог, git-сроки |
 | 2026-05-24 | Сняты `level`/`xp`, victory без `character_level` | ADR-003, баннеры в evolution, LEVEL_XP superseded |
 | 2026-05-24 | Victory v2 в `finance_overview_build` | ADR-002, GLOSSARY, TRACEABILITY |

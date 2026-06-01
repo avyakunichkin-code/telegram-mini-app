@@ -121,8 +121,7 @@ npx serve .
 | 3 | `finance-insurance/` — **внедрено** | `InsuranceSection`, `Insurance*Card/Row/Picker`, Finance |
 | 4 | `dashboard/` — **S5 ★ в prod**; хвосты: empty/error, иконки | DashboardPremium |
 | 5 | `events/` — pill, карточка, оверлей (**внедрено**) | `EventCard`, `EventCarouselOverlay`, `MqxPill` |
-| 6 | `onboarding-guided/` — **★ утверждён** | `OnboardingCoach`, `MonetkaAvatar` |
-| 6b | `onboarding-brief/` — superseded | — |
+| 6 | `onboarding-o2/` — **★ утверждён** | `MqxGuidanceStrip`, `GameGuidanceLayer`, `MonetkaAvatar` |
 | 7 | `achievements-progress/` — level collapsible + монетки + каталог | `MqxAchievementCoin`, `AchievementsScreen` |
 | 8 | `dashboard-home-v2/` — эксперименты компоновок (архив) | — |
 | 9 | ~~`dashboard-dual-accordion/`~~ | superseded **S5**; не внедрять |

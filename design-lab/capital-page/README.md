@@ -35,6 +35,8 @@ npx serve .
 
 - [`flows-round/`](flows-round/) — аккордеоны **Доходы / Расходы** (в prod)
 - [`orient-round/`](orient-round/) — **сводка + ориентация** O1–O4 (здоровье капитала, без бюджета)
+- [`actions-round/`](actions-round/) — все варианты redesign V0–V8
+- [`details-actions-round/`](details-actions-round/) — **★ Детали | Действия** + sheet (текущий кандидат)
 - [`row-actions/`](../row-actions/) — метрики, `MqxFinListRow`, корзина
 - [`finance-insurance/`](../finance-insurance/) — эталон страховок
 - [`invest-forms/`](../invest-forms/) — формы инвестиций

@@ -6,13 +6,13 @@ owner: product+frontend
 last_reviewed: 2026-06-01
 tracks: O1, pre-alpha, onboarding
 idea: ../../vision/ideas/onboarding-tma-mission-brief.md
-design_lab: ../../../design-lab/onboarding-guided/
+design_lab: ../../../design-lab/onboarding-o2/
 character: ../../reference/CHARACTER_MONETKA.md
 ---
 
 # Spec: Онбординг TMA (Guided Coach + Монетка)
 
-> **Superseded (2026-06-01):** заменён [`SPEC_onboarding-o2.md`](SPEC_onboarding-o2.md) — Progressive Guidance, bottom strip, user-level completion. O1 код остаётся до merge O2.
+> **Superseded (2026-06-01):** заменён [`SPEC_onboarding-o2.md`](SPEC_onboarding-o2.md) — Progressive Guidance, bottom strip, user-level completion. O1 MQX и lab `onboarding-guided/` **удалены из prod/репо** (2026-06-01).
 
 ## Objective
 
@@ -101,7 +101,7 @@ flowchart TD
 
 ## Content
 
-Канон текстов: [`design-lab/onboarding-guided/CONTENT.md`](../../../design-lab/onboarding-guided/CONTENT.md).
+Канон текстов O1 (архив): история этого spec §Content; актуальный копирайт guidance — [`backend/app/guidance/curriculum.py`](../../../backend/app/guidance/curriculum.py) и [`SPEC_onboarding-o2.md`](SPEC_onboarding-o2.md).
 
 **Голос Монетки:** игривый напарник, «только что поняла»; мягкий задор; женский род. [`CHARACTER_MONETKA.md`](../../reference/CHARACTER_MONETKA.md).
 
@@ -109,7 +109,7 @@ flowchart TD
 
 ## Design-lab
 
-**Утверждено 2026-05-20:** guided coach — [`design-lab/onboarding-guided/APPROVED.md`](../../../design-lab/onboarding-guided/APPROVED.md).
+**Утверждено 2026-05-20:** guided coach (O1) — lab удалён 2026-06-01; см. [`design-lab/onboarding-o2/APPROVED.md`](../../../design-lab/onboarding-o2/APPROVED.md) (O2 prod).
 
 **Superseded:** [`design-lab/onboarding-brief/`](../../../design-lab/onboarding-brief/) (layout A, 3 карточки + видео).
 
@@ -175,5 +175,6 @@ flowchart TD
 ### История
 
 2026-05-19: approved layout A (Mission Brief) — superseded 2026-05-20.  
-2026-05-20: **approved** guided coach 5 шагов — [`onboarding-guided/APPROVED.md`](../../../design-lab/onboarding-guided/APPROVED.md).  
-2026-05-26: копирайт и практика согласованы с **TB1** (без hero-таймера); id шага `period_timer` — legacy в API.
+2026-05-20: **approved** guided coach 5 шагов (O1 lab; папка удалена 2026-06-01).  
+2026-05-26: копирайт и практика согласованы с **TB1** (без hero-таймера); id шага `period_timer` — legacy в API.  
+2026-06-01: **superseded by O2** — см. [`SPEC_onboarding-o2.md`](SPEC_onboarding-o2.md).

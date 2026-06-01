@@ -17,6 +17,7 @@ function renderBody(text) {
 
 /**
  * O2 bottom guidance strip — без PNG Монетки, над tab bar.
+ * Toolbar: навигация слева; зелёный чек + крестик справа (variant A ★).
  */
 export function MqxGuidanceStrip({
   mode = 'curriculum',
@@ -32,6 +33,8 @@ export function MqxGuidanceStrip({
   onNext,
   onContinue,
   showNav = true,
+  dismissHint,
+  className = '',
 }) {
   const counterLabel = useMemo(() => {
     if (mode === 'nudge') return 'Подсказка';
@@ -43,19 +46,11 @@ export function MqxGuidanceStrip({
 
   return (
     <aside
-      className="mqx-guidance-strip"
+      className={`mqx-guidance-strip ${className}`.trim()}
       role="region"
       aria-label={mode === 'nudge' ? 'Подсказка' : 'Обучение'}
     >
       <div className="mqx-guidance-strip__toolbar">
-        <button
-          type="button"
-          className="mqx-guidance-strip__close"
-          aria-label="Закрыть подсказку"
-          onClick={onDismiss}
-        >
-          ×
-        </button>
         {showNav && mode === 'curriculum' ? (
           <div className="mqx-guidance-strip__nav">
             <button
@@ -83,17 +78,25 @@ export function MqxGuidanceStrip({
             {counterLabel}
           </span>
         )}
+        <div className="mqx-guidance-strip__toolbar-end">
+          {beatCompleted ? (
+            <span className="mqx-guidance-strip__check" aria-label="Готово" role="img">
+              ✓
+            </span>
+          ) : null}
+          <button
+            type="button"
+            className="mqx-guidance-strip__close"
+            aria-label="Закрыть подсказку"
+            onClick={onDismiss}
+          >
+            ×
+          </button>
+        </div>
       </div>
       {title ? <h2 className="mqx-guidance-strip__title mqx-voice-em">{title}</h2> : null}
       {body ? <p className="mqx-guidance-strip__body mqx-voice-em">{renderBody(body)}</p> : null}
-      {beatCompleted ? (
-        <p className="mqx-guidance-strip__done" aria-live="polite">
-          <span className="mqx-guidance-strip__check" aria-hidden>
-            ✓
-          </span>{' '}
-          Готово
-        </p>
-      ) : null}
+      {dismissHint ? <p className="mqx-guidance-strip__hint">{dismissHint}</p> : null}
       {onContinue ? (
         <MqxButton variant="primary" className="mqx-guidance-strip__cta" onClick={onContinue}>
           Понятно

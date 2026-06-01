@@ -1,0 +1,211 @@
+/* guidance-strip-round — MqxGuidanceStrip + варианты A–D */
+
+.mqx-voice-em strong {
+  font-weight: 700;
+}
+
+.mqx-guidance-strip {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: calc(var(--tma-tabbar-inset, 64px) + 4px);
+  z-index: 10;
+  margin: 0 auto;
+  max-width: var(--mqx-content-max, 480px);
+  padding: 12px 16px calc(12px + env(safe-area-inset-bottom, 0px));
+  border-radius: 16px 16px 0 0;
+  background: var(--mqx-onboarding-bubble-bg);
+  border: 1px solid var(--mqx-onboarding-bubble-border);
+  box-shadow: var(--mqx-onboarding-bubble-shadow);
+  animation: mqx-guidance-slide-up 0.28s ease-out;
+}
+
+@keyframes mqx-guidance-slide-up {
+  from {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* A — prod parity (default tokens above) */
+.mqx-guidance-strip--a {
+  /* uses root tokens */
+}
+
+/* B — neutral TG sheet */
+.mqx-guidance-strip--b {
+  background: var(--tg-theme-bg-color);
+  border-color: color-mix(in srgb, var(--tg-theme-hint-color) 28%, transparent);
+  box-shadow: 0 -6px 24px rgba(15, 17, 21, 0.08);
+}
+
+[data-theme='dark'] .mqx-guidance-strip--b {
+  box-shadow: 0 -8px 28px rgba(0, 0, 0, 0.35);
+}
+
+/* C — compact */
+.mqx-guidance-strip--c {
+  padding: 10px 14px calc(10px + env(safe-area-inset-bottom, 0px));
+}
+
+.mqx-guidance-strip--c .mqx-guidance-strip__title {
+  font-size: 16px;
+}
+
+.mqx-guidance-strip--c .mqx-guidance-strip__body {
+  font-size: 13px;
+  margin-bottom: 8px;
+}
+
+.mqx-guidance-strip--c .mqx-guidance-strip__close,
+.mqx-guidance-strip--c .mqx-guidance-strip__arrow {
+  min-width: 40px;
+  min-height: 40px;
+}
+
+/* D — floating pill above tab bar */
+.mqx-guidance-strip--d {
+  left: 10px;
+  right: 10px;
+  bottom: calc(var(--tma-tabbar-inset, 64px) + 12px);
+  border-radius: 18px;
+  box-shadow:
+    0 12px 40px rgba(20, 24, 48, 0.16),
+    0 0 0 1px color-mix(in srgb, var(--mq-violet) 8%, transparent);
+}
+
+.mqx-guidance-strip__toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.mqx-guidance-strip__toolbar-end {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  flex-shrink: 0;
+  margin-left: auto;
+}
+
+.mqx-guidance-strip__close {
+  min-width: 44px;
+  min-height: 44px;
+  margin: -8px -8px -8px 0;
+  padding: 0;
+  border: none;
+  background: transparent;
+  color: var(--tg-theme-hint-color);
+  font-size: 28px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.mqx-guidance-strip__nav {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  min-width: 0;
+}
+
+.mqx-guidance-strip__counter {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--tg-theme-hint-color);
+  min-width: 4.5rem;
+  text-align: center;
+}
+
+.mqx-guidance-strip__arrow {
+  min-width: 44px;
+  min-height: 44px;
+  border: none;
+  background: transparent;
+  color: var(--tg-theme-text-color);
+  font-size: 22px;
+  cursor: pointer;
+}
+
+.mqx-guidance-strip__arrow:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+
+.mqx-guidance-strip__title {
+  margin: 0 0 6px;
+  font-size: 17px;
+  font-weight: 700;
+  line-height: 1.25;
+  color: var(--tg-theme-text-color);
+}
+
+.mqx-guidance-strip__body {
+  margin: 0 0 10px;
+  font-size: 14px;
+  line-height: 1.45;
+  white-space: pre-line;
+  color: var(--tg-theme-text-color);
+}
+
+.mqx-guidance-strip__hint {
+  margin: -4px 0 10px;
+  font-size: 12px;
+  line-height: 1.35;
+  color: var(--tg-theme-hint-color);
+}
+
+.mqx-guidance-strip__check {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.5rem;
+  height: 1.5rem;
+  border-radius: 50%;
+  font-size: 0.875rem;
+  font-weight: 700;
+  line-height: 1;
+  color: #fff;
+  background: var(--mq-emerald, #059669);
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--mq-emerald, #059669) 22%, transparent);
+}
+
+.mqx-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 44px;
+  padding: 10px 16px;
+  border: none;
+  border-radius: 12px;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  background: linear-gradient(135deg, var(--mq-violet) 0%, var(--mq-violet-deep) 100%);
+  color: #fff;
+}
+
+.mqx-guidance-strip__cta {
+  width: 100%;
+}
+
+.lab-states-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 14px;
+}
+
+.lab-states-grid .lab-phone {
+  min-height: 360px;
+}
+
+.lab-states-grid .lab-phone__scroll {
+  min-height: 360px;
+  padding-bottom: calc(var(--tma-tabbar-inset) + 170px);
+}

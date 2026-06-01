@@ -16,7 +16,7 @@
 | Меню | `MenuPremium.jsx` | ★ | В основном MQX |
 | События (оверлей) | `EventDeck` → `EventCarouselOverlay` | ★ L3 | `EventCard`, domain band; лендинг: [`LANDING_SCREENSHOTS.md`](LANDING_SCREENSHOTS.md) |
 | Итог периода | `MqxPeriodCloseSheet` / `Tail` | ★ | Иконки строк — 📋 lab |
-| Онбординг | `GameOnboardingLayer` + coach | ★ | Guided ★ |
+| Онбординг | `MqxGuidanceStrip` (O2) | ★ | Progressive Guidance ★ |
 
 ---
 

@@ -5,8 +5,16 @@
 
 export const SAFETY_FUND_BASELINE_MULTIPLIER = 3;
 
-/** Короткая подпись chip на дашборде */
-export const SAFETY_FUND_CHIP_LABEL = 'Фин.подушка';
+/** Короткая подпись chip на дашборде (F1 design-lab: cushion-fill-round) */
+export const SAFETY_FUND_CHIP_LABEL = 'ФИН.ПОДУШКА';
+
+/** @param {number|null|undefined} percent */
+export function formatSafetyFundChipTitle(percent) {
+  if (percent == null || !Number.isFinite(percent)) {
+    return SAFETY_FUND_CHIP_LABEL;
+  }
+  return `${SAFETY_FUND_CHIP_LABEL} · ${Math.round(percent)}%`;
+}
 
 /** Подсказка для chip: от чего считается полоска */
 export const SAFETY_FUND_BASELINE_HINT = '×3 всех расходов за период';

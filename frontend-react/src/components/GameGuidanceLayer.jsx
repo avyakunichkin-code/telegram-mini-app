@@ -1,17 +1,25 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { API } from '../api';
+import {
+  bumpGuidanceSessionDismissCount,
+  getGuidanceSessionDismissCount,
+  resetGuidanceSessionDismissCount,
+} from '../guidance/sessionDismiss';
 import { MqxGuidanceStrip } from './mqx/guidance/MqxGuidanceStrip';
 
 /**
  * O2 Progressive Guidance — bottom strip, синхронизация с overview.guidance + PATCH.
+ * 2× закрытие (×) в одной сессии UI → skip_all; 1× → dismiss_beat на сервере.
  */
 export function GameGuidanceLayer({
   guidance,
   refreshOverview,
   onOverlayStateChange,
 }) {
-  const autoAdvanceRef = useRef(false);
   const [dismissedNudgeId, setDismissedNudgeId] = useState(null);
+  const [sessionDismissCount, setSessionDismissCount] = useState(() =>
+    getGuidanceSessionDismissCount(),
+  );
 
   const showCurriculum = guidance?.show_curriculum === true;
   const showNudge = !showCurriculum && guidance?.nudge_id && guidance.nudge_id !== dismissedNudgeId;
@@ -41,24 +49,27 @@ export function GameGuidanceLayer({
   }, [visible, showCurriculum, onOverlayStateChange]);
 
   useEffect(() => {
-    if (!showCurriculum || !guidance?.beat_completed || !guidance?.beat_id) {
-      autoAdvanceRef.current = false;
+    if (guidance?.show_curriculum === false && !guidance?.nudge_id) {
+      resetGuidanceSessionDismissCount();
+      setSessionDismissCount(0);
+    }
+  }, [guidance?.show_curriculum, guidance?.nudge_id]);
+
+  const handleCurriculumDismiss = useCallback(async () => {
+    const next = bumpGuidanceSessionDismissCount();
+    setSessionDismissCount(next);
+    if (next >= 2) {
+      resetGuidanceSessionDismissCount();
+      setSessionDismissCount(0);
+      await patch({ action: 'skip_all' });
       return;
     }
-    if (autoAdvanceRef.current) return;
-    const beat = guidance.beat_id;
-    const gateRead = beat === 'p2_events_done' || beat === 'p3_needs';
-    if (!gateRead && beat !== 'p1_close') {
-      autoAdvanceRef.current = true;
-      const t = setTimeout(() => {
-        patch({ action: 'advance_read', beat_id: beat }).finally(() => {
-          autoAdvanceRef.current = false;
-        });
-      }, 600);
-      return () => clearTimeout(t);
-    }
-    return undefined;
-  }, [showCurriculum, guidance?.beat_completed, guidance?.beat_id, patch]);
+    await patch({ action: 'dismiss_beat' });
+  }, [patch]);
+
+  const handleNudgeDismiss = useCallback(() => {
+    setDismissedNudgeId(guidance?.nudge_id ?? null);
+  }, [guidance?.nudge_id]);
 
   if (!visible) {
     return null;
@@ -71,7 +82,7 @@ export function GameGuidanceLayer({
         title={guidance.nudge_title}
         body={guidance.nudge_body}
         showNav={false}
-        onDismiss={() => setDismissedNudgeId(guidance.nudge_id)}
+        onDismiss={handleNudgeDismiss}
       />
     );
   }
@@ -86,6 +97,9 @@ export function GameGuidanceLayer({
   const showContinue =
     isReadGate && (!guidance.beat_completed || (guidance.beat_id === 'p1_close' && guidance.show_debrief));
 
+  const dismissHint =
+    sessionDismissCount === 1 ? 'Ещё раз — пропустить всё обучение' : undefined;
+
   return (
     <MqxGuidanceStrip
       mode="curriculum"
@@ -96,8 +110,9 @@ export function GameGuidanceLayer({
       viewIndex={guidance.view_index}
       lastCompletedIndex={guidance.last_completed_index}
       beatCompleted={guidance.beat_completed && !showContinue}
+      dismissHint={dismissHint}
       showNav
-      onDismiss={() => patch({ action: 'dismiss_beat' })}
+      onDismiss={handleCurriculumDismiss}
       onPrev={() =>
         patch({
           action: 'nav',

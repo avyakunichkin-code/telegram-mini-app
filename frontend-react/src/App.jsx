@@ -36,6 +36,7 @@ function GameApp() {
   const [screen, setScreen] = useState('start'); // start | newProfileKind | gameTemplates | planSetup | game
   const [newGameProfileName, setNewGameProfileName] = useState('');
   const [savedProfileCount, setSavedProfileCount] = useState(null);
+  const [startingFirstGame, setStartingFirstGame] = useState(false);
   const { logout } = useAuth();
 
   useEffect(() => {
@@ -67,11 +68,14 @@ function GameApp() {
 
   const handleChooseGameMode = async () => {
     if (savedProfileCount === 0) {
+      setStartingFirstGame(true);
       try {
         await startGameWithStudentTemplate(newGameProfileName);
         handleGameStarted();
       } catch (error) {
         showNotification(error?.detail || error?.message || 'Не удалось запустить игру', 'error');
+      } finally {
+        setStartingFirstGame(false);
       }
       return;
     }
@@ -110,6 +114,17 @@ function GameApp() {
     return (
       <GameAppFlowShell>
         <StartMenuScreen onNewGame={handleNewGame} onLoadGame={handleLoadGame} onLogout={handleLogout} />
+      </GameAppFlowShell>
+    );
+  }
+
+  if (startingFirstGame) {
+    return (
+      <GameAppFlowShell>
+        <div className="mqx-card" style={{ margin: 24, padding: 24, textAlign: 'center' }}>
+          <Spinner size="m" />
+          <p style={{ marginTop: 16 }}>Запускаем первую игру…</p>
+        </div>
       </GameAppFlowShell>
     );
   }

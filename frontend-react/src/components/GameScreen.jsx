@@ -184,10 +184,11 @@ export function GameScreen({ onLogout, onNewGame, onLoadGame }) {
   };
 
   const moodClass = gamePageMoodClass(timeStatus);
+  const guidanceActiveClass = onboardingUi.visible ? 'mqx-page--guidance-active' : '';
 
   if (loading) {
     return (
-      <GameScreenLayout moodClass={moodClass}>
+      <GameScreenLayout moodClass={`${moodClass} ${guidanceActiveClass}`.trim()}>
         <MqxShell
           header={
             <MqxTabHero
@@ -211,7 +212,7 @@ export function GameScreen({ onLogout, onNewGame, onLoadGame }) {
 
   if (error) {
     return (
-      <GameScreenLayout moodClass={moodClass}>
+      <GameScreenLayout moodClass={`${moodClass} ${guidanceActiveClass}`.trim()}>
         <MqxShell
           header={
             <MqxTabHero
@@ -239,7 +240,7 @@ export function GameScreen({ onLogout, onNewGame, onLoadGame }) {
 
   if (!overview || !timeStatus) {
     return (
-      <GameScreenLayout moodClass={moodClass}>
+      <GameScreenLayout moodClass={`${moodClass} ${guidanceActiveClass}`.trim()}>
         <MqxShell
           header={
             <MqxTabHero
@@ -268,7 +269,7 @@ export function GameScreen({ onLogout, onNewGame, onLoadGame }) {
 
   return (
     <GameScreenLayout
-      moodClass={moodClass}
+      moodClass={`${moodClass} ${guidanceActiveClass}`.trim()}
       tabNav={(
         <GameScreenTabNav
           activeTab={activeTab}

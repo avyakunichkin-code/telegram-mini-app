@@ -1,16 +1,19 @@
 ---
 layer: plan
-status: draft
-last_reviewed: 2026-05-20
+status: superseded
+superseded_by: PLAN_onboarding-o2.md
+last_reviewed: 2026-06-01
 spec: ../specs/features/SPEC_onboarding-tma.md
 epic: O1
 ---
 
 # Plan: Онбординг TMA (O1)
 
+> **Superseded (2026-06-01):** эпик закрыт заменой [`PLAN_onboarding-o2.md`](PLAN_onboarding-o2.md). Lab `onboarding-guided/` удалён из репо.
+
 **Принцип:** утвердить в design-lab, затем MQX → prod.
 
-**Поворот 2026-05-20:** вместо Mission Brief (3 карточки) — **guided coach** на `GameScreen` ([`onboarding-guided/`](../../design-lab/onboarding-guided/)).
+**Поворот 2026-05-20:** вместо Mission Brief (3 карточки) — **guided coach** на `GameScreen` (O1 lab; снят 2026-06-01 → O2 [`onboarding-o2/`](../../design-lab/onboarding-o2/)).
 
 ---
 
@@ -20,7 +23,7 @@ epic: O1
 |---|----------|--------|----------------|
 | 1 | [`onboarding-tma-mission-brief.md`](../vision/ideas/onboarding-tma-mission-brief.md) | draft | Продукт, scope |
 | 2 | [`CHARACTER_MONETKA.md`](../reference/CHARACTER_MONETKA.md) | approved | Тон Монетки |
-| 3 | [`design-lab/onboarding-guided/`](../../design-lab/onboarding-guided/) | **★ утверждён** | Копирайт, APPROVED |
+| 3 | [`design-lab/onboarding-o2/`](../../design-lab/onboarding-o2/) | **★ O2 prod** | Strip A, APPROVED |
 | 3b | [`design-lab/onboarding-brief/`](../../design-lab/onboarding-brief/) | superseded | Архив |
 | 4 | [`SPEC_onboarding-tma.md`](../specs/features/SPEC_onboarding-tma.md) | approved | Guided coach |
 | 5 | `PLAN_onboarding-tma.md` (этот файл) | draft | Дорожная карта |
@@ -35,7 +38,7 @@ epic: O1
 ### Фаза 0 — Утверждение ✅
 
 - ~~Mission Brief A~~ superseded.
-- **2026-05-20:** guided coach 5 шагов — [`onboarding-guided/APPROVED.md`](../../design-lab/onboarding-guided/APPROVED.md).
+- **2026-05-20:** guided coach 5 шагов (O1; lab удалён 2026-06-01).
 
 ---
 

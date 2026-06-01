@@ -46,7 +46,7 @@ import {
   MqxConfirmDialog,
   useMqxConfirm,
   EventCard,
-  OnboardingCoachDemo,
+  MqxGuidanceStripDemo,
   MqxJuiceCatalogDemo,
 } from '../index';
 import { MqxStatesCatalogDemo } from './MqxStatesCatalogDemo';
@@ -152,8 +152,8 @@ export function MqCatalogScreen() {
         </Link>
       </header>
 
-      <CatalogSection title="Онбординг — Guided coach (O1 ★)">
-        <OnboardingCoachDemo />
+      <CatalogSection title="Онбординг — Guidance strip (O2 ★)">
+        <MqxGuidanceStripDemo />
       </CatalogSection>
 
       <CatalogSection title="Новая игра — выбор режима (R1 ★)">
@@ -498,7 +498,7 @@ export function MqCatalogScreen() {
 
       <CatalogSection title="Позиция депозита">
         <InvestPositionRow
-          position={{ id: 1, title: 'Депозит · 12 годовых', principal: 250000, annual_rate_percent: 12 }}
+          position={{ id: 1, title: 'Депозит · 14% годовых', principal: 250000, annual_rate_percent: 14 }}
           onClose={() => {}}
         />
       </CatalogSection>

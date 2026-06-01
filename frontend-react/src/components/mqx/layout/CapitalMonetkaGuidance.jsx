@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { MonetkaAvatar } from '../onboarding/MonetkaAvatar';
+import { MonetkaAvatar } from '../brand/MonetkaAvatar';
 
 export const MQ_CAPITAL_MONETKA_KEY = 'mq-capital-monetka-v1';
 

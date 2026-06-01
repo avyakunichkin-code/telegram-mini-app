@@ -53,7 +53,7 @@
 | Эталон 3D-цвета | REF | — | `design-lab/brand-logo/assets/reference-ep-author-why.png` | Маркетинг, не UI lockup |
 | Монограмма аватар | **ТХ** | 2026-05 | [`assets/logos/avatar-tx.svg`](assets/logos/avatar-tx.svg) | TG 512×512, соцсети |
 | Dashboard unified | S5 | 2026-05 | [`design-lab/dashboard/APPROVED.md`](../../../design-lab/dashboard/APPROVED.md) | см. MQX doc |
-| Guided onboarding | Coach | 2026-05-20 | [`design-lab/onboarding-guided/APPROVED.md`](../../../design-lab/onboarding-guided/APPROVED.md) | см. MQX doc |
+| Guided onboarding (O2) | Strip | 2026-06-01 | [`design-lab/onboarding-o2/APPROVED.md`](../../../design-lab/onboarding-o2/APPROVED.md) | см. MQX doc |
 | New game mode UI | R2 | 2026-05-20 | [`design-lab/new-game-mode/APPROVED.md`](../../../design-lab/new-game-mode/APPROVED.md) | см. MQX doc |
 
 ---
@@ -166,7 +166,7 @@
 ### 6.1 TMA и Монетка
 
 - Только **ты / твой / тебе**  
-- Канон реплик: [`CHARACTER_MONETKA.md`](../CHARACTER_MONETKA.md), [`onboarding-guided/CONTENT.md`](../../../design-lab/onboarding-guided/CONTENT.md)  
+- Канон реплик: [`CHARACTER_MONETKA.md`](../CHARACTER_MONETKA.md), beats O2 в [`curriculum.py`](../../../backend/app/guidance/curriculum.py) · [`SPEC_onboarding-o2.md`](../../specs/features/SPEC_onboarding-o2.md)
 - Монетка не решает за игрока; не комментирует каждое событие  
 
 ### 6.2 Посты и канал (3-е лицо)

@@ -114,7 +114,7 @@ App (HashRouter)
 | `MqxGoalDash` | goal-chain-round ★ · [`goal-path-stepper-round`](../../../design-lab/dashboard/goal-path-stepper-round/) (draft) | Цепочка победы v2 + guidance; свёрнуто — stepper из связанных узлов |
 | `MqxPeriodActions` | period-actions-round ★ | Зарплата, вложить, пополнить, снять |
 | `SafetyFundActionForm` | shared MQX | Сумма in/out подушки |
-| `GameOnboardingLayer` | onboarding-guided ★ | Coach + spotlight (не дочерний dashboard) |
+| `GameGuidanceLayer` | [`onboarding-o2`](../../../design-lab/onboarding-o2/) ★ | O2 guidance strip (не дочерний dashboard) |
 
 ### ASCII Wireframe
 

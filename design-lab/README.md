@@ -50,7 +50,7 @@ cd design-lab/<тема>/<round>
 | [events/](events/) | **внедрено в prod** | EventCard, EventCarouselOverlay, MqxPill |
 | [row-actions/](row-actions/) | **B + F2 → prod** | MqxRowAction (корзина по умолчанию), MqxFinListRow, confirm; порядок метрик — в spec |
 | [capital-page/](capital-page/) | **IA утверждена → вариант A/B на выбор** | 5 табов, бюджет №2, имущество/обязательства строками |
-| [onboarding-guided/](onboarding-guided/) | **★ утверждён** → MQX | Guided coach, 5 шагов, spotlight |
+| [onboarding-o2/](onboarding-o2/) | **★ утверждён** → MQX | O2 Guidance strip, progressive curriculum |
 | [pre-game-shell/](pre-game-shell/) | v2 (сравнение) | Монетка над пузырём, TGS, без frame |
 | [auth-flow/](auth-flow/) | **★ B → prod** | Вход / регистрация (история вариантов A/B/C) |
 | [new-game-mode/](new-game-mode/) | **★ B → prod** | Шаг 1: имя + Игра / План |

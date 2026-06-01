@@ -24,7 +24,7 @@ python scripts/balance_diff.py --current ../docs/balance/reports/current.json --
 
 | ID | Поведение |
 |----|-----------|
-| `tutorial` | зарплата → события (max affordable Δcash) → подушка 5k (1×) → депозит 10k @12% (1×) |
+| `tutorial` | зарплата → события (max affordable Δcash) → подушка 5k (1×) → депозит 10k @14% (1×) |
 | `safety_first` | то же по событиям; переводы в подушку до `safety_fund_baseline_target` |
 | `passive` | зарплата → события (min affordable Δcash); без проактивной подушки/инвеста |
 

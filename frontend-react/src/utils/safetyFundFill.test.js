@@ -1,11 +1,17 @@
 import assert from 'node:assert/strict';
 import {
+  formatSafetyFundChipTitle,
   getSafetyFundFillPercent,
   getSafetyFundFillTier,
   getSafetyFundFillFromOverview,
   resolveSafetyFundBaselineTarget,
   resolveMonthlyPressureForBaseline,
+  SAFETY_FUND_CHIP_LABEL,
 } from './safetyFundFill.js';
+
+assert.equal(SAFETY_FUND_CHIP_LABEL, 'ФИН.ПОДУШКА');
+assert.equal(formatSafetyFundChipTitle(null), 'ФИН.ПОДУШКА');
+assert.equal(formatSafetyFundChipTitle(35), 'ФИН.ПОДУШКА · 35%');
 
 assert.equal(getSafetyFundFillPercent(0, 0), null);
 assert.equal(getSafetyFundFillPercent(13500, 54000), 25);

@@ -7,6 +7,7 @@ import { suggestSafetyFundAmount } from '../utils/safetyFundAmount';
 
 import { CAPITAL_FLOWS_SECTION } from '../utils/capitalFlowsNav';
 import {
+  formatSafetyFundChipTitle,
   getSafetyFundFillFromOverview,
   SAFETY_FUND_BASELINE_HINT,
   SAFETY_FUND_CHIP_LABEL,
@@ -31,7 +32,6 @@ import {
   MqxPeriodActions,
   MqxJuiceGainFeedback,
   MqxSafetyFundSheet,
-  MqxPeriodCloseRiskBanner,
 
 } from './mqx';
 
@@ -204,9 +204,9 @@ export function DashboardPremium({
         ),
       },
       {
-        title: SAFETY_FUND_CHIP_LABEL,
+        title: formatSafetyFundChipTitle(cushionFill?.percent),
         titleHint: cushionFill
-          ? `${SAFETY_FUND_CHIP_LABEL} · ${cushionFill.percent}% от нормы (${SAFETY_FUND_BASELINE_HINT})`
+          ? `${formatSafetyFundChipTitle(cushionFill.percent)} от нормы (${SAFETY_FUND_BASELINE_HINT})`
           : 'Финансовая подушка — запас на чёрный день',
         valueNode: <MoneyText value={safety} />,
         valueLabel: cushionFill
@@ -359,11 +359,6 @@ export function DashboardPremium({
             <MqxGoalDash victory={overview?.victory} legacyGoal={goal} />
 
             <MqxDivider />
-
-            <MqxPeriodCloseRiskBanner
-              preview={overview?.period_close_preview}
-              periodIndex={periodIndex}
-            />
 
             <MqxPeriodActions
               busy={busyAction !== null}

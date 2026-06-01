@@ -60,6 +60,8 @@
         { "label": "Capital page", "path": "capital-page/index.html", "kind": "lab" },
         { "label": "Capital — orient", "path": "capital-page/orient-round/index.html", "kind": "lab" },
         { "label": "Capital — flows", "path": "capital-page/flows-round/index.html", "kind": "lab" },
+        { "label": "Capital — actions (all variants)", "path": "capital-page/actions-round/index.html", "kind": "lab" },
+        { "label": "Capital — Детали|Действия ★", "path": "capital-page/details-actions-round/index.html", "kind": "lab" },
         { "label": "Invest forms", "path": "invest-forms/index.html", "kind": "lab", "status": "approved" },
         { "label": "Asset cards", "path": "asset-cards/index.html", "kind": "lab", "status": "approved" },
         { "label": "Row actions", "path": "row-actions/index.html", "kind": "lab", "status": "approved" }
@@ -73,7 +75,13 @@
         { "label": "Auth flow", "path": "auth-flow/index.html", "kind": "lab", "status": "approved" },
         { "label": "New game mode", "path": "new-game-mode/index.html", "kind": "lab", "status": "approved" },
         { "label": "Game templates", "path": "game-templates/index.html", "kind": "lab", "status": "approved" },
-        { "label": "Scenario icons", "path": "game-templates/scenario-icons/index.html", "kind": "lab" }
+        { "label": "Scenario icons", "path": "game-templates/scenario-icons/index.html", "kind": "lab" },
+        {
+          "label": "O2 Guidance strip",
+          "path": "onboarding-o2/guidance-strip-round/index.html",
+          "kind": "lab",
+          "status": "approved"
+        }
       ]
     },
     {

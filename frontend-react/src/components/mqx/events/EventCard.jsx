@@ -1,5 +1,5 @@
 import { asSafeReactText } from '../../../utils/displayText';
-import { MonetkaAvatar } from '../onboarding/MonetkaAvatar';
+import { MonetkaAvatar } from '../brand/MonetkaAvatar';
 import { EventChoiceButton } from './EventChoiceButton';
 import { eventDomainTheme } from './eventDomainDisplay';
 import { eventHasInsuranceClaimChoice } from './eventDisplay';

@@ -6,7 +6,7 @@ last_reviewed: 2026-06-01
 tracks: O2, pre-alpha, onboarding
 supersedes: SPEC_onboarding-tma.md (O1 guided coach)
 idea: ../../vision/ideas/onboarding-o2-progressive-guidance.md
-design_lab: ../../../design-lab/onboarding-o2/ (создать до prod)
+design_lab: ../../../design-lab/onboarding-o2/guidance-strip-round/ (★ A prod parity, APPROVED 2026-06-01)
 character_voice: ../../reference/CHARACTER_MONETKA.md
 feedback: ../../foundation/PRE_ALPHA_PLAYTEST_FEEDBACK.md
 ---
@@ -62,19 +62,18 @@ feedback: ../../foundation/PRE_ALPHA_PLAYTEST_FEEDBACK.md
 
 ```
 ┌─────────────────────────────────────────────┐
-│  [×]                          ‹  2 из 4  ›  │  ← крестик: icon-only, no bg
+│  ‹  2 из 4  ›                    [✓]  [×]  │
 │  Заголовок beat                             │
 │  Текст в голосе Монетки (без PNG)           │
-│  [ опционально: чек ✓ выполнено ]           │
+│  [ опционально: CTA «Понятно» ]           │
 └─────────────────────────────────────────────┘
 ```
 
 | Элемент | Правило |
 |---------|---------|
-| **Close (×)** | `aria-label="Закрыть подсказку"`; hit area ≥ 44px; **transparent** background; hint/icon color из `--tg-theme-hint-color` |
-| **Счётчик** | `{currentIndex + 1} из {moduleStepCount}` — счётчик **внутри модуля периода** (см. curriculum) |
-| **Стрелки ‹ ›** | `‹` disabled на первом шаге; `›` disabled если `index >= lastCompletedIndex` |
-| **Чек выполнения** | После gate — иконка ✓ у текущего beat; затем auto-advance |
+| **Close (×)** | Справа сверху; `aria-label="Закрыть подсказку"`; hit area ≥ 44px; **transparent** background |
+| **Навигация ‹ N из M ›** | Слева в toolbar; `‹` disabled на первом шаге; `›` disabled если `index >= lastCompletedIndex` |
+| **Чек выполнения** | Справа, перед ×; зелёный круг ✓ (`--mq-emerald`) после gate |
 | **Текст** | Заголовок + 2–4 предложения; классы как у `MqxMonetkaDialogScreen` subtitle, **без** `MonetkaAvatar` |
 
 ### Запрещено
@@ -269,13 +268,16 @@ cd frontend-react && npm run build
 
 ## Success criteria (O2)
 
-- [ ] O1 spotlight удалён из prod path.
-- [ ] `MqxGuidanceStrip` в design-lab **approved** → mqx.
-- [ ] Первая игра → Студент без picker.
-- [ ] `guidance_completed` user-level; 2-я игра без curriculum.
-- [ ] Backfill migration applied.
-- [ ] α-FB-15 copy в `p1_close`; debrief после close.
-- [ ] pytest + vitest + build green.
+- [x] O1 spotlight удалён из prod path (`OnboardingCoach`, `GameOnboardingLayer`, lab `onboarding-guided/`).
+- [x] `MqxGuidanceStrip` в design-lab **approved (A ★)** → mqx → `#/dev/mqx`.
+- [x] Первая игра → Студент без picker (`startGameWithStudentTemplate` в `App.jsx`).
+- [x] `guidance_completed` user-level; 2-я игра без curriculum (`test_guidance_o2.py`).
+- [x] Backfill migration applied (`0000_schema_baseline.sql`, users с `brief_done` → `guidance_completed=1`).
+- [x] α-FB-15 copy в `p1_close`; debrief после close (`curriculum.py` + `engine.py`).
+- [x] Chip подушки: **ФИН.ПОДУШКА · N%** на дашборде (`formatSafetyFundChipTitle`, lab F1).
+- [x] pytest + vitest + build green (`test_guidance_o2.py`, `src/guidance/*.test.js`, `npm run build`).
+
+**Открыто (не блокер merge):** replay guidance из меню; period-close ritual во время guidance; gate `p2_events_done` «2 выбора».
 
 ---
 
@@ -292,18 +294,17 @@ cd frontend-react && npm run build
 
 ## Supersedes
 
-[`SPEC_onboarding-tma.md`](SPEC_onboarding-tma.md) (O1) — статус **superseded by O2** после merge O2.
+[`SPEC_onboarding-tma.md`](SPEC_onboarding-tma.md) (O1) — статус **superseded by O2** (2026-06-01).
 
-[`design-lab/onboarding-guided/`](../../../design-lab/onboarding-guided/) — superseded для prod UI (контент — reference для копирайта).
+Lab **`design-lab/onboarding-guided/`** удалён из репо (2026-06-01); копирайт O1 — в истории spec O1 и beats O2 в `backend/app/guidance/curriculum.py`. Канон UI: [`design-lab/onboarding-o2/`](../../../design-lab/onboarding-o2/).
 
 ---
 
-## Next steps (gated)
+## Next steps (post-merge)
 
-1. **APPROVED** этот spec (product).
-2. `planning-and-task-breakdown` → `docs/plans/PLAN_onboarding-o2.md`.
-3. `design-lab-mqx` → `design-lab/onboarding-o2/`.
-4. `incremental-implementation` + `test-driven-development`.
+1. ~~Spec / plan / lab / implementation~~ — **done** 2026-06-01.
+2. **PA-T2:** валидация α-FB-01, α-FB-15, α-FB-17 на живой игре.
+3. **Фаза 2 (backlog):** «Повторить обучение», replay API.
 
 ---
 
@@ -312,3 +313,4 @@ cd frontend-react && npm run build
 | Дата | Событие |
 |------|---------|
 | 2026-06-01 | Draft O2 из idea-refine + уточнения UX (strip, no PNG, nav 1..N, backfill) |
+| 2026-06-01 | **Prod:** O2 guidance; O1/lab удалены; cushion chip «ФИН.ПОДУШКА · N%» |

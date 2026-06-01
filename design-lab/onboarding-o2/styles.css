@@ -1,0 +1,291 @@
+/* design-lab/onboarding-o2 — витрина + TG-токены для guidance strip */
+
+:root {
+  --mq-violet: #6d28d9;
+  --mq-violet-deep: #5b21b6;
+  --mq-emerald: #059669;
+  --mq-ink: #0f1115;
+  --mq-mist: #f5f6f8;
+  --surface: #fff;
+  --text: #0f1115;
+  --text-muted: #6b7280;
+  --glass-border: rgba(15, 17, 21, 0.1);
+  --font: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --tma-tabbar-height: 56px;
+  --tma-tabbar-inset: calc(var(--tma-tabbar-height) + env(safe-area-inset-bottom, 0px));
+  --mqx-content-max: 480px;
+  --tg-theme-bg-color: #ffffff;
+  --tg-theme-text-color: #000000;
+  --tg-theme-hint-color: #8e8e93;
+  --tg-theme-link-color: #2481cc;
+  --mqx-onboarding-bubble-bg: color-mix(in srgb, #ffffff 90%, #ede9fe 10%);
+  --mqx-onboarding-bubble-border: color-mix(in srgb, var(--mq-violet) 22%, transparent);
+  --mqx-onboarding-bubble-shadow: 0 -8px 32px rgba(20, 24, 48, 0.12);
+}
+
+[data-theme='dark'] {
+  --surface: #1e1f26;
+  --text: #f3f4f6;
+  --text-muted: #9ca3af;
+  --mq-mist: #121318;
+  --glass-border: rgba(255, 255, 255, 0.1);
+  --tg-theme-bg-color: #1e1f26;
+  --tg-theme-text-color: #f3f4f6;
+  --tg-theme-hint-color: #9ca3af;
+  --tg-theme-link-color: #6ab3f3;
+  --mqx-onboarding-bubble-bg: color-mix(in srgb, var(--tg-theme-bg-color) 88%, #4c1d95 12%);
+  --mqx-onboarding-bubble-border: color-mix(in srgb, var(--mq-violet) 35%, transparent);
+  --mqx-onboarding-bubble-shadow: 0 -8px 36px rgba(0, 0, 0, 0.45);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font);
+  font-size: 15px;
+  line-height: 1.42;
+  color: var(--text);
+  background: var(--mq-mist);
+}
+
+.lab-header {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  padding: 14px 18px;
+  background: color-mix(in srgb, var(--mq-mist) 92%, transparent);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--glass-border);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.lab-header h1 {
+  margin: 0;
+  font-size: 1.125rem;
+  font-weight: 800;
+}
+
+.lab-header p {
+  margin: 4px 0 0;
+  font-size: 13px;
+  color: var(--text-muted);
+  max-width: 42rem;
+}
+
+.lab-header__controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+
+.lab-theme button {
+  border: 1px solid var(--glass-border);
+  background: var(--surface);
+  padding: 7px 12px;
+  border-radius: 10px;
+  font-weight: 650;
+  font-size: 12px;
+  cursor: pointer;
+  color: var(--text);
+}
+
+.lab-theme button.is-active {
+  border-color: var(--mq-violet);
+  background: color-mix(in srgb, var(--mq-violet) 12%, transparent);
+  color: var(--mq-violet-deep);
+}
+
+.lab-main {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 12px 16px 56px;
+}
+
+.lab-intro {
+  margin: 0 0 18px;
+  font-size: 13px;
+  color: var(--text-muted);
+  line-height: 1.5;
+}
+
+.lab-section-title {
+  margin: 28px 0 12px;
+  font-size: 14px;
+  font-weight: 800;
+}
+
+.lab-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 18px;
+}
+
+.lab-variant {
+  border-radius: 16px;
+  background: var(--surface);
+  border: 1px solid var(--glass-border);
+  padding: 14px;
+}
+
+.lab-variant--approved {
+  border-color: color-mix(in srgb, var(--mq-violet) 45%, var(--glass-border));
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--mq-violet) 12%, transparent);
+}
+
+.lab-variant__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+
+.lab-variant__head h2 {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 800;
+}
+
+.lab-variant__tag {
+  font-size: 11px;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--mq-violet) 12%, var(--surface));
+  color: var(--mq-violet-deep);
+}
+
+.lab-variant__tag--star {
+  background: color-mix(in srgb, var(--mq-violet) 22%, var(--surface));
+}
+
+.lab-variant__note {
+  margin: 0 0 10px;
+  font-size: 12px;
+  color: var(--text-muted);
+  line-height: 1.45;
+}
+
+.lab-phone {
+  position: relative;
+  width: 100%;
+  max-width: 360px;
+  margin: 0 auto;
+  border-radius: 20px;
+  overflow: hidden;
+  background: var(--tg-theme-bg-color);
+  min-height: 420px;
+  box-shadow: 0 12px 40px color-mix(in srgb, var(--mq-ink) 12%, transparent);
+}
+
+.lab-phone__scroll {
+  min-height: 420px;
+  padding: 12px 14px calc(var(--tma-tabbar-inset) + 200px);
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--mq-mist) 35%, var(--tg-theme-bg-color)) 0%,
+    var(--tg-theme-bg-color) 32%
+  );
+}
+
+.lab-dash-hero {
+  border-radius: 14px;
+  padding: 12px 14px;
+  background: color-mix(in srgb, var(--mq-violet) 8%, var(--tg-theme-bg-color));
+  border: 1px solid var(--glass-border);
+  margin-bottom: 10px;
+}
+
+.lab-dash-hero__kicker {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--text-muted);
+}
+
+.lab-dash-hero__title {
+  margin-top: 4px;
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--tg-theme-text-color);
+}
+
+.lab-dash-hero__meta {
+  margin-top: 2px;
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.lab-dash-metrics {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.lab-dash-metrics__cell {
+  border-radius: 12px;
+  padding: 10px 12px;
+  background: var(--surface);
+  border: 1px solid var(--glass-border);
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+.lab-dash-metrics__cell strong {
+  display: block;
+  margin-top: 4px;
+  font-size: 15px;
+  color: var(--tg-theme-text-color);
+}
+
+.lab-tabbar {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: var(--tma-tabbar-height);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  align-items: center;
+  text-align: center;
+  font-size: 10px;
+  color: var(--tg-theme-hint-color);
+  background: color-mix(in srgb, var(--tg-theme-bg-color) 94%, var(--mq-violet) 6%);
+  border-top: 1px solid var(--glass-border);
+}
+
+.lab-tabbar span.is-active {
+  color: var(--mq-violet-deep);
+  font-weight: 700;
+}
+
+.lab-legend {
+  margin-top: 28px;
+  padding: 16px;
+  border-radius: 14px;
+  background: color-mix(in srgb, var(--mq-violet) 6%, var(--surface));
+  border: 1px solid var(--glass-border);
+}
+
+.lab-legend h2 {
+  margin: 0 0 8px;
+  font-size: 14px;
+}
+
+.lab-legend ul {
+  margin: 0;
+  padding-left: 1.2rem;
+  font-size: 13px;
+  color: var(--text-muted);
+  line-height: 1.5;
+}

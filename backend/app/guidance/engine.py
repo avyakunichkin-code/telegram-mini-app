@@ -161,10 +161,22 @@ def _module_indices(beat: GuidanceBeat, progress: dict[str, Any]) -> tuple[int, 
     return view_index, last_done, count
 
 
-def _beat_body(beat: GuidanceBeat, progress: dict[str, Any]) -> str:
+def _beat_body(beat: GuidanceBeat, progress: dict[str, Any], db: Session, profile: GameProfile) -> str:
     if beat.id == "p1_close" and progress.get("p1_close_debrief") and beat.debrief_body:
         return beat.debrief_body
-    return beat.body
+    body = beat.body
+    if beat.id == "p1_close" and not progress.get("p1_close_debrief"):
+        try:
+            from ..finance.period_close_preview import estimate_period_close_preview
+
+            preview = estimate_period_close_preview(db, profile)
+            charges = float(preview.get("estimated_charges_total") or 0)
+            if charges > 0:
+                rounded = int(round(charges))
+                body += f"\n\nПредпросмотр: при закрытии спишется около **{rounded:,} ₽**.".replace(",", " ")
+        except Exception:
+            logger.debug("p1_close preview append failed", exc_info=True)
+    return body
 
 
 def complete_guidance(user: User, profile: GameProfile, db: Session) -> None:
@@ -260,7 +272,7 @@ def build_guidance_overview(db: Session, user: User | None, profile: GameProfile
         "show_curriculum": True,
         "beat_id": display_beat.id,
         "title": display_beat.title,
-        "body": _beat_body(display_beat, progress),
+        "body": _beat_body(display_beat, progress, db, profile),
         "module_step": display_beat.module_step,
         "module_step_count": step_count,
         "view_index": view_index,
@@ -299,14 +311,9 @@ def patch_guidance(
         return build_guidance_overview(db, user, profile)
 
     if action == "dismiss_beat":
-        skip = int(progress.get("dismiss_skip_count") or 0) + 1
-        progress["dismiss_skip_count"] = skip
-        if skip >= 2:
-            complete_guidance(user, profile, db)
-            return build_guidance_overview(db, user, profile)
         if active:
             _mark_completed(progress, active.id)
-        progress["dismiss_skip_count"] = skip
+        progress["dismiss_skip_count"] = int(progress.get("dismiss_skip_count") or 0) + 1
         progress["view_beat_id"] = None
         _save_progress(user, progress, db)
         db.commit()
@@ -323,6 +330,7 @@ def patch_guidance(
             _save_progress(user, progress, db)
             complete_guidance(user, profile, db)
             return build_guidance_overview(db, user, profile)
+        progress["dismiss_skip_count"] = 0
         progress["view_beat_id"] = None
         _save_progress(user, progress, db)
         db.commit()

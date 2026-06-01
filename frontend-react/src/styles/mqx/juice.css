@@ -336,43 +336,6 @@
   line-height: 1.45;
 }
 
-.mqx-close-risk {
-  margin: 0 0 12px;
-  padding: 12px 14px;
-  border-radius: 14px;
-  border: 1px solid color-mix(in srgb, var(--mq-amber, #d97706) 35%, transparent);
-  background: color-mix(in srgb, var(--mq-amber, #d97706) 10%, var(--mqx-surface, #fff));
-}
-
-.mqx-close-risk--critical {
-  border-color: color-mix(in srgb, #dc2626 45%, transparent);
-  background: color-mix(in srgb, #dc2626 12%, var(--mqx-surface, #fff));
-}
-
-.mqx-close-risk__title {
-  margin: 0;
-  font-size: 13px;
-  font-weight: 800;
-  color: var(--mqx-ink, #0f1115);
-}
-
-.mqx-close-risk--critical .mqx-close-risk__title {
-  color: #b91c1c;
-}
-
-.mqx-close-risk__text,
-.mqx-close-risk__estimate,
-.mqx-close-risk__rule {
-  margin: 6px 0 0;
-  font-size: 12px;
-  line-height: 1.45;
-  color: color-mix(in srgb, var(--mqx-ink, #0f1115) 72%, transparent);
-}
-
-.mqx-close-risk__estimate strong {
-  color: var(--mqx-ink, #0f1115);
-}
-
 .mqx-game-over-modal__tips {
   margin: 10px 0 0;
   padding-left: 18px;

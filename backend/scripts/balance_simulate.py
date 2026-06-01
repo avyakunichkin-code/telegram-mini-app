@@ -312,7 +312,7 @@ def run_balance_simulation(
             r = client.post(
                 "/api/invest/deposit/open",
                 headers=headers,
-                json={"amount": 10_000, "annual_rate_percent": 12.0},
+                json={"amount": 10_000, "annual_rate_percent": 14.0},
             )
             if r.status_code == 200:
                 state.invest_once_done = True

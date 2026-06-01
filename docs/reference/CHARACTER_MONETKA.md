@@ -44,7 +44,7 @@ role: onboarding_mascot
 | «Твой ход», «ты можешь», «твоя подушка» | «Ваш ход», «Вы можете», «уважаемый клиент» |
 | «Давай посмотрим на **твой** баланс» | «Предлагаем ознакомиться с балансом» |
 
-**Канон копирайта онбординга:** [`design-lab/onboarding-guided/CONTENT.md`](../../design-lab/onboarding-guided/CONTENT.md) · spec [`SPEC_onboarding-tma.md`](../specs/features/SPEC_onboarding-tma.md).
+**Канон копирайта онбординга:** [`SPEC_onboarding-o2.md`](../specs/features/SPEC_onboarding-o2.md) · beats в [`backend/app/guidance/curriculum.py`](../../backend/app/guidance/curriculum.py) · O1 (архив): [`SPEC_onboarding-tma.md`](../specs/features/SPEC_onboarding-tma.md).
 
 ---
 

@@ -1,4 +1,4 @@
-import { MonetkaAvatar } from '../onboarding/MonetkaAvatar';
+import { MonetkaAvatar } from '../brand/MonetkaAvatar';
 
 function GuidanceParagraph({ parts }) {
   if (!parts?.length) return null;

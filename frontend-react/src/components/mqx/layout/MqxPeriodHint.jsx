@@ -1,4 +1,4 @@
-import { MonetkaAvatar } from '../onboarding/MonetkaAvatar';
+import { MonetkaAvatar } from '../brand/MonetkaAvatar';
 
 /** Подсказка Монетки над chip-действиями периода (wink справа, пузырь слева). */
 export function MqxPeriodHint() {

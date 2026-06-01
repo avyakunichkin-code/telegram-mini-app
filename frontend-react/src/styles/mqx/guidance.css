@@ -33,10 +33,18 @@
   margin-bottom: 8px;
 }
 
+.mqx-guidance-strip__toolbar-end {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  flex-shrink: 0;
+  margin-left: auto;
+}
+
 .mqx-guidance-strip__close {
   min-width: 44px;
   min-height: 44px;
-  margin: -8px 0 -8px -8px;
+  margin: -8px -8px -8px 0;
   padding: 0;
   border: none;
   background: transparent;
@@ -49,8 +57,8 @@
 .mqx-guidance-strip__nav {
   display: flex;
   align-items: center;
-  gap: 8px;
-  margin-left: auto;
+  gap: 4px;
+  min-width: 0;
 }
 
 .mqx-guidance-strip__counter {
@@ -59,10 +67,6 @@
   color: var(--tg-theme-hint-color, #8e8e93);
   min-width: 4.5rem;
   text-align: center;
-}
-
-.mqx-guidance-strip__counter--solo {
-  margin-left: auto;
 }
 
 .mqx-guidance-strip__arrow {
@@ -94,27 +98,107 @@
   white-space: pre-line;
 }
 
-.mqx-guidance-strip__done {
-  margin: 0 0 8px;
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--tg-theme-link-color, #2481cc);
-}
-
 .mqx-guidance-strip__check {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 1.25rem;
-  height: 1.25rem;
+  width: 1.5rem;
+  height: 1.5rem;
   border-radius: 50%;
-  background: color-mix(in srgb, var(--tg-theme-link-color, #2481cc) 18%, transparent);
+  font-size: 0.875rem;
+  font-weight: 700;
+  line-height: 1;
+  color: #fff;
+  background: var(--mq-emerald, #059669);
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--mq-emerald, #059669) 22%, transparent);
 }
 
 .mqx-guidance-strip__cta {
   width: 100%;
 }
 
-.mqx-page--guidance-active .mq-page__content {
+.mqx-guidance-strip__hint {
+  margin: -4px 0 10px;
+  font-size: 12px;
+  line-height: 1.35;
+  color: var(--tg-theme-hint-color, #8e8e93);
+}
+
+.mqx-page--guidance-active .mq-game-shell__main {
   padding-bottom: calc(var(--tma-tabbar-inset, 64px) + 180px);
+}
+
+.mqx-page--guidance-active .mqx-guidance-strip {
+  z-index: 545;
+}
+
+/* #/dev/mqx — strip внутри phone mockup, не fixed viewport */
+.mqx-guidance-strip-demo__phone {
+  position: relative;
+  max-width: 420px;
+  min-height: 340px;
+  margin-top: 12px;
+  border-radius: 20px;
+  overflow: hidden;
+  background: var(--tg-theme-bg-color, #fff);
+  box-shadow: 0 12px 40px color-mix(in srgb, var(--mq-ink, #0f1115) 10%, transparent);
+}
+
+.mqx-guidance-strip-demo__dash {
+  padding: 14px 16px 120px;
+}
+
+.mqx-guidance-strip-demo__hero-kicker {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--tg-theme-hint-color, #8e8e93);
+}
+
+.mqx-guidance-strip-demo__hero-title {
+  margin-top: 4px;
+  font-size: 18px;
+  font-weight: 800;
+}
+
+.mqx-guidance-strip-demo__hero-meta {
+  margin-top: 2px;
+  font-size: 12px;
+  color: var(--tg-theme-hint-color, #8e8e93);
+}
+
+.mqx-guidance-strip-demo__tabbar {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 56px;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  place-items: center;
+  font-size: 10px;
+  color: var(--tg-theme-hint-color, #8e8e93);
+  background: var(--tg-theme-bg-color, #fff);
+  border-top: 1px solid color-mix(in srgb, var(--tg-theme-hint-color, #8e8e93) 25%, transparent);
+}
+
+.mqx-guidance-strip-demo__tabbar .is-active {
+  color: var(--mq-violet, #6d28d9);
+  font-weight: 700;
+}
+
+.mqx-guidance-strip--demo {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: calc(56px + 4px);
+  animation: none;
+}
+
+.mqx-guidance-strip-demo__toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 4px;
 }

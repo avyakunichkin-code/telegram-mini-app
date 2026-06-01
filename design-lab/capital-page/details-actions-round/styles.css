@@ -1,0 +1,469 @@
+/* details-actions-round — V3 hybrid: Детали | Действия + sheet (V7) */
+
+.cap-mode-seg .cap-page-seg__btn.is-active:first-child {
+  color: var(--mq-violet-deep, #5b21b6);
+}
+
+.cap-mode-seg .cap-page-seg__btn.is-active:last-child {
+  color: var(--cap-invest-text, #0284c7);
+}
+
+/* —— Meta badges (замена «2 поз.» uppercase) —— */
+.cap-sect-acc__meta--legacy {
+  font-size: 11px;
+  font-weight: 400;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  opacity: 0.55;
+  text-decoration: line-through;
+}
+
+.cap-meta-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 8px 3px 6px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0;
+  text-transform: none;
+  line-height: 1.2;
+  border: 1px solid transparent;
+}
+
+.cap-meta-pill__dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.cap-meta-pill--count {
+  background: color-mix(in srgb, var(--mq-violet) 10%, var(--glass-strong));
+  border-color: color-mix(in srgb, var(--mq-violet) 18%, transparent);
+  color: var(--mq-violet-deep, #5b21b6);
+}
+
+.cap-meta-pill--count .cap-meta-pill__dot {
+  background: var(--mq-violet);
+}
+
+.cap-meta-pill--empty {
+  background: color-mix(in srgb, var(--lab-text) 4%, var(--glass-strong));
+  border-color: var(--glass-border);
+  color: var(--text-muted);
+  font-weight: 700;
+}
+
+.cap-meta-pill--empty .cap-meta-pill__dot {
+  background: transparent;
+  border: 1.5px dashed var(--text-muted);
+  width: 7px;
+  height: 7px;
+}
+
+.cap-meta-pill--flow {
+  background: transparent;
+  border: none;
+  padding: 0;
+  font-size: 11px;
+  font-weight: 850;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: inherit;
+}
+
+.cap-meta-pill--flow .cap-meta-pill__dot {
+  display: none;
+}
+
+/* —— Empty state в «Детали» —— */
+.cap-detail-empty {
+  margin: 4px 0 2px;
+  padding: 12px 12px 11px;
+  border-radius: 14px;
+  border: 1px dashed color-mix(in srgb, var(--mq-violet) 22%, var(--glass-border));
+  background: color-mix(in srgb, var(--mq-violet) 4%, transparent);
+}
+
+.cap-detail-empty__text {
+  margin: 0;
+  font-size: 12px;
+  line-height: 1.45;
+  color: var(--lab-text-soft);
+}
+
+.cap-detail-empty__text strong {
+  color: var(--lab-text);
+  font-weight: 800;
+}
+
+.cap-detail-empty__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.cap-add-cta {
+  font: inherit;
+  font-size: 13px;
+  font-weight: 850;
+  padding: 9px 14px;
+  border-radius: 10px;
+  border: none;
+  background: var(--mq-violet);
+  color: #fff;
+  cursor: pointer;
+}
+
+.cap-add-cta--ghost {
+  background: transparent;
+  border: 1px solid var(--glass-border);
+  color: var(--lab-text-soft);
+  font-weight: 750;
+}
+
+/* —— Позиции в «Детали» (D1 — строки как prod) —— */
+.cap-pos-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.cap-pos-row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 8px 10px;
+  align-items: start;
+  padding: 11px 0;
+  border-bottom: 1px solid color-mix(in srgb, var(--glass-border) 70%, transparent);
+}
+
+.cap-pos-row:last-child {
+  border-bottom: none;
+  padding-bottom: 4px;
+}
+
+.cap-pos-row__title {
+  font-size: 14px;
+  font-weight: 800;
+  color: var(--lab-text);
+}
+
+.cap-pos-row__sub {
+  margin-top: 2px;
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+.cap-pos-row__metrics {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 10px;
+  margin-top: 5px;
+  font-size: 11px;
+  color: var(--lab-text-soft);
+}
+
+.cap-pos-row__metrics .pos {
+  color: var(--cap-in-text);
+  font-weight: 750;
+}
+
+.cap-pos-row__metrics .neg {
+  color: var(--mq-danger);
+  font-weight: 750;
+}
+
+.cap-pos-row__action {
+  font: inherit;
+  font-size: 11px;
+  font-weight: 800;
+  padding: 6px 9px;
+  border-radius: 8px;
+  border: 1px solid var(--glass-border);
+  background: var(--glass);
+  color: var(--lab-text-soft);
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+/* D2 — группы с подзаголовком */
+.cap-pos-group + .cap-pos-group {
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid color-mix(in srgb, var(--glass-border) 65%, transparent);
+}
+
+.cap-pos-group__label {
+  margin: 0 0 6px;
+  font-size: 10px;
+  font-weight: 850;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+/* D3 — компактные chips */
+.cap-pos-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.cap-pos-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 10px;
+  border-radius: 10px;
+  border: 1px solid var(--glass-border);
+  background: var(--glass-strong);
+  font-size: 12px;
+  font-weight: 750;
+}
+
+.cap-pos-chip__amt {
+  font-size: 11px;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  color: var(--cap-in-text);
+}
+
+/* —— «Действия» — hub —— */
+.cap-act-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.cap-act-row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 10px;
+  align-items: center;
+  width: 100%;
+  font: inherit;
+  text-align: left;
+  padding: 12px 13px;
+  border-radius: 14px;
+  border: 1px solid var(--glass-border);
+  background: var(--glass-strong);
+  cursor: pointer;
+}
+
+.cap-act-row__title {
+  font-size: 14px;
+  font-weight: 850;
+}
+
+.cap-act-row__sub {
+  margin-top: 2px;
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+.cap-act-row__chev {
+  font-size: 18px;
+  color: var(--text-muted);
+  line-height: 1;
+}
+
+.cap-act-row--highlight {
+  border-color: color-mix(in srgb, var(--mq-violet) 28%, var(--glass-border));
+  background: color-mix(in srgb, var(--mq-violet) 6%, var(--glass-strong));
+}
+
+/* —— Sheet (только оформление) —— */
+.cap-sheet-host--phone {
+  position: relative;
+  min-height: 0;
+}
+
+.cap-sheet-host--phone .cap-sheet {
+  position: fixed;
+  left: 50%;
+  transform: translateX(-50%) translateY(110%);
+  width: min(420px, calc(100vw - 24px));
+  max-height: min(78vh, 520px);
+  bottom: 12px;
+  top: auto;
+  inset: auto;
+  border-radius: 20px;
+}
+
+.cap-sheet-host--phone .cap-sheet.is-open {
+  transform: translateX(-50%) translateY(0);
+}
+
+.cap-sheet-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 7;
+  background: rgba(15, 17, 21, 0.35);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.18s ease;
+}
+
+.cap-sheet-backdrop.is-open {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.cap-form-block {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.cap-form-label {
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.cap-form-input-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 12px;
+  border-radius: 12px;
+  border: 1px solid var(--glass-border);
+  background: var(--glass);
+}
+
+.cap-form-input-row input {
+  flex: 1;
+  border: none;
+  background: transparent;
+  font: inherit;
+  font-size: 18px;
+  font-weight: 850;
+  font-variant-numeric: tabular-nums;
+  outline: none;
+  color: var(--lab-text);
+}
+
+.cap-form-submit {
+  font: inherit;
+  font-size: 14px;
+  font-weight: 850;
+  padding: 12px 14px;
+  border-radius: 12px;
+  border: none;
+  background: var(--mq-violet);
+  color: #fff;
+  cursor: pointer;
+}
+
+.cap-form-help {
+  margin: 0;
+  font-size: 11px;
+  line-height: 1.4;
+  color: var(--text-muted);
+}
+
+.cap-ins-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.cap-ins-tile {
+  font: inherit;
+  text-align: left;
+  padding: 10px;
+  border-radius: 12px;
+  border: 1px solid var(--glass-border);
+  background: var(--glass);
+  cursor: pointer;
+}
+
+.cap-ins-tile__title {
+  display: block;
+  font-size: 12px;
+  font-weight: 850;
+}
+
+.cap-ins-tile__price {
+  display: block;
+  margin-top: 4px;
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+/* F2 — каталог → форма (step indicator) */
+.cap-form-steps {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 12px;
+}
+
+.cap-form-step {
+  flex: 1;
+  height: 3px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--lab-text) 10%, transparent);
+}
+
+.cap-form-step.is-done,
+.cap-form-step.is-active {
+  background: var(--mq-violet);
+}
+
+.lab-compare-row {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+}
+
+@media (min-width: 720px) {
+  .lab-compare-row--2 {
+    grid-template-columns: 1fr 1fr;
+  }
+  .lab-compare-row--3 {
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+}
+
+.lab-mini-phone {
+  border-radius: 18px;
+  border: 1px solid var(--glass-border);
+  background: var(--glass-strong);
+  padding: 10px;
+}
+
+.lab-mini-phone__label {
+  margin: 0 0 8px;
+  font-size: 11px;
+  font-weight: 850;
+  color: var(--lab-text-soft);
+}
+
+.cap-badge-gallery {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+  padding: 12px;
+  border-radius: 14px;
+  border: 1px solid var(--glass-border);
+  background: var(--glass);
+}
+
+.cap-proto-note {
+  margin: 0 0 12px;
+  padding: 10px 12px;
+  border-radius: 12px;
+  font-size: 12px;
+  line-height: 1.45;
+  color: var(--lab-text-soft);
+  background: color-mix(in srgb, var(--mq-emerald) 8%, var(--glass));
+  border: 1px solid color-mix(in srgb, var(--mq-emerald) 20%, transparent);
+}

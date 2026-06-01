@@ -25,7 +25,7 @@
 |---------|-----|------|-----|------|
 | Логотип full / compact | G1, G2 | 2026-05-20 | [`brand-logo/APPROVED.md`](../../../design-lab/brand-logo/APPROVED.md) | `BrandLogo`, `BrandMark` |
 | Dashboard unified | S5 + L3 | 2026-05 | [`dashboard/APPROVED.md`](../../../design-lab/dashboard/APPROVED.md) | `DashboardPremium`, `mqx-tab-page--dash-unified` |
-| Guided onboarding | 5 шагов | 2026-05-20 | [`onboarding-guided/APPROVED.md`](../../../design-lab/onboarding-guided/APPROVED.md) | `OnboardingCoach` |
+| Guided onboarding (O2) | strip A ★ | 2026-06-01 | [`onboarding-o2/APPROVED.md`](../../../design-lab/onboarding-o2/APPROVED.md) | `MqxGuidanceStrip`, `GameGuidanceLayer` |
 | New game mode pick | R2 + I1 | 2026-05-20 | [`new-game-mode/APPROVED.md`](../../../design-lab/new-game-mode/APPROVED.md) | `NewProfileKindScreen`, `MqxSaveKindPicker` |
 | Финансы: порядок разделов | Capital | — | [`capital-page/flows-round/`](../../../design-lab/capital-page/flows-round/) | `FinancePremium` аккордеоны |
 | Цель на дашборде | G1 chain | 2026-05 | [`dashboard/goal-chain-round/`](../../../design-lab/dashboard/goal-chain-round/) | `MqxGoalDash` |
@@ -47,7 +47,7 @@ Mission Brief (3 карточки) — **superseded** guided onboarding.
 | Оболочка | `MqxShell` | header + `mqx-content` |
 | Таб-hero | `MqxTabHero` | `BrandLogo variant="compact"` (G2) |
 | Старт / auth | `BrandMark` | G1 full по центру |
-| Онбординг | `OnboardingCoach`, `MqxMonetkaDialogScreen` | Spotlight + Монетка |
+| Онбординг | `MqxGuidanceStrip`, `MqxMonetkaDialogScreen` | Bottom strip O2 + Монетка в диалогах |
 
 **Dashboard (S5):** hero на всю ширину, контент без рамки `mqx-frame`, inset-разделители, таббар — активная **вся ячейка** градиентом.
 

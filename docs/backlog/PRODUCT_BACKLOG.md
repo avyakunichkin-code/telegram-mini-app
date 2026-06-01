@@ -270,11 +270,11 @@
 - [x] P1 **[Frontend] V2** — UI целей из `overview.victory` (`MqxGoalDash`, `victoryGoalDisplay.js`) — architecture-review Q&A 2026-05-25.
 - [ ] P2 **[Frontend] ⚠ spec** Бейджи `game` / `plan` и сложность шаблона в списке сохранений (GAME §12, §13).
 
-### Эпик O1 — онбординг TMA (Pre-Alpha)
+### Эпик O1 — онбординг TMA (Pre-Alpha) — **superseded → O2**
 
-Идея: [`onboarding-tma-mission-brief.md`](../vision/ideas/onboarding-tma-mission-brief.md) · Spec: [`SPEC_onboarding-tma.md`](../specs/features/SPEC_onboarding-tma.md) · Plan: [`PLAN_onboarding-tma.md`](../plans/PLAN_onboarding-tma.md) · Lab: [`onboarding-guided/`](../design-lab/onboarding-guided/)
+Идея: [`onboarding-tma-mission-brief.md`](../vision/ideas/onboarding-tma-mission-brief.md) · Spec: [`SPEC_onboarding-tma.md`](../specs/features/SPEC_onboarding-tma.md) (superseded) · Plan: [`PLAN_onboarding-tma.md`](../plans/PLAN_onboarding-tma.md) · **O2:** [`SPEC_onboarding-o2.md`](../specs/features/SPEC_onboarding-o2.md) · Lab: [`onboarding-o2/`](../design-lab/onboarding-o2/) (lab `onboarding-guided/` удалён 2026-06-01)
 
-- [x] P0 **[Doc+Design]** Guided coach **5 шагов ★** — [`onboarding-guided/APPROVED.md`](../design-lab/onboarding-guided/APPROVED.md).
+- [x] P0 **[Doc+Design]** Guided coach **5 шагов ★** (O1, 2026-05-20; lab снят → O2 strip).
 - [x] P0 **[Doc]** Spec O1 → guided coach (2026-05-20).
 - [x] P0 **[Doc]** Ассет Монетки: [`docs/reference/assets/monetka-mascot.png`](../reference/assets/monetka-mascot.png).
 - [x] P0 **[Product+Frontend]** Автостарт **простейшего** шаблона после Game Mode (`startGameWithSimplestTemplate`).
@@ -443,7 +443,7 @@
 | P2 | α-FB-03 | Повторы событий: cooldown / state ladder — [`event-repeat-and-state-ladder`](../vision/ideas/event-repeat-and-state-ladder.md) | Content+BE |
 | P2 | α-FB-04 | Log `event_chosen` + доля осмысленных выборов (не только carousel) | BE |
 | P2 | α-FB-06/08 | Empty states «Финансы» + RU labels kind + IA капитала | Frontend |
-| P1 | **O2** onboarding | [`SPEC_onboarding-o2`](../specs/features/SPEC_onboarding-o2.md) + [`PLAN_onboarding-o2`](../plans/PLAN_onboarding-o2.md) — strip, user-once, auto Студент | Frontend+BE |
+| ~~P1~~ ✅ | **O2** onboarding | [`SPEC_onboarding-o2`](../specs/features/SPEC_onboarding-o2.md) — strip, user-once, auto Студент (**core prod 2026-06-01**); replay — backlog | Frontend+BE |
 | P1 | α-FB-15/18 | Preview расходов + richer period close (связь **E1-115**) | BE+FE |
 | P2 | α-FB-13 | First-run подсказки «характеристики» / needs | Frontend |
 | — | TB1.1 | Чипы плана месяца — backlog | Frontend |
