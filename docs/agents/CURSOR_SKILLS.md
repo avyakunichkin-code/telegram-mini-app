@@ -1,12 +1,14 @@
 ﻿# Agent Skills ТВОЙ ХОД — что использовать и когда
 
-**Активные** скиллы: `.cursor/skills/<name>/` (см. [`catalog.yaml`](../../.cursor/skills/catalog.yaml): `status` + **`tier`**; на 2026-05-29: **15 active**, **11 optional**).
+**Активные** скиллы: `.cursor/skills/<name>/` (см. [`catalog.yaml`](../../.cursor/skills/catalog.yaml): `status` + **`tier`**; на 2026-06-01: **17 active**, **12 optional**, **11 archived** — полный разбор: [`SKILLS_AUDIT_2026-06-01.md`](SKILLS_AUDIT_2026-06-01.md)).
 
 **Текущая фаза (контент + данные):** [`SKILLS_PHASE_CONTENT_AND_DATA.md`](SKILLS_PHASE_CONTENT_AND_DATA.md) — `tier: core` / `support` / `deferred` / `archived`.
 
 **Архив** (не удалены, не автоподключаются): [`.cursor/skills/_archived/`](../../.cursor/skills/_archived/) — studio/GDD-наследие.
 
-Глобальные скиллы Cursor (`babysit`, `canvas`, `ci-investigator`, …) в проект не дублируем.
+Глобальные скиллы Cursor (`babysit`, `canvas`, `ci-investigator`, `thermo-nuclear-code-quality-review`, …) в проект не дублируем.
+
+**FE adjunct (не в `catalog.yaml`):** `frontend-react/.agents/skills/` — `react-best-practices`, `composition-patterns`, … (справочник через workspace rules; продуктовый конвейер — только `.cursor/skills/`).
 
 Ориентир по стеку: [`CLAUDE.md`](../../CLAUDE.md).
 
@@ -60,6 +62,7 @@
 | **balance-playtest** (`/balance-playtest`) | 40 периодов, JSON, diff к baseline; subagent `economy-balance-runner` |
 | **code-review-and-quality** | Перед merge |
 | **planning-and-task-breakdown** | Задачи из spec |
+| **project-handbook-documentation** | Пакет `docs/handbook/` для людей / плейтест |
 | **idea-refine** | `docs/vision/ideas/` до spec |
 | **using-agent-skills** | Выбор скилла по фазе |
 | **skill-test** | `audit` / `static` / `spec` / `category` |

@@ -88,7 +88,7 @@ design-lab/<theme>/    design-lab-mqx  →  mqx/ + prod   frontend-ui-engineerin
 
 | Задача | Скилл | Читать |
 |--------|-------|--------|
-| Какой скилл выбрать | `using-agent-skills` | `CURSOR_SKILLS.md`, `catalog.yaml` |
+| Какой скилл выбрать | `using-agent-skills` | `CURSOR_SKILLS.md`, `catalog.yaml`, [`SKILLS_AUDIT_2026-06-01.md`](SKILLS_AUDIT_2026-06-01.md) |
 | Rules vs skills | `context-engineering` | `DOCUMENTATION_SYSTEM.md` |
 | Линт скиллов | `skill-test` | `catalog.yaml`, `quality-rubric.md` |
 

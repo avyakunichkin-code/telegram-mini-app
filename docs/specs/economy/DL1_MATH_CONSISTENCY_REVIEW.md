@@ -123,6 +123,6 @@ SPEC: «включая просроченные попытки» — **мате�
 | Срок / `periods_paid` | ⚠ уточнить определение |
 | Страховка | ✅ математика срока ок |
 
-**Следующий шаг:** DL1-101 approved; golden tests — `test_dl1_annuity_golden.py` (SPEC §4.4, §11).
+**Следующий шаг:** ✅ DL1-101 approved (2026-06-02); golden tests — `test_dl1_annuity_golden.py`, integration — `test_dl1_integration.py` (SPEC §4.4, §11). Далее: **DL1-143** balance-playtest.
 
 **Реализовано (TDD фундамент):** `backend/app/finance/annuity.py` + golden V1–V5.

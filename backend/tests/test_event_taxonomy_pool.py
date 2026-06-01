@@ -87,9 +87,11 @@ class TestEventTaxonomyPool:
 
 
 class TestConsumptionVariantsSeeded:
-    def test_four_variant_defs_present(self, catalog):
+    def test_consumption_variant_defs_present(self, catalog):
+        """Канон: generic coffee выключен; student/pro + три общих consumption-события."""
         keys = (
-            "mq11_coffee_takeaway",
+            "mq11_coffee_takeaway_student",
+            "mq11_coffee_takeaway_pro",
             "mq11_clothing_clearance",
             "mq11_food_delivery_promo",
             "mq11_appliance_sale",
@@ -100,6 +102,10 @@ class TestConsumptionVariantsSeeded:
             assert row.is_active == 1
             meta = json.loads(row.metadata_json)
             assert meta.get("event_domain") == "consumption"
+
+        legacy = catalog.query(EventDefinition).filter(EventDefinition.key == "mq11_coffee_takeaway").first()
+        assert legacy is not None
+        assert legacy.is_active == 0
 
 
 class TestFamilyMoneyChain:

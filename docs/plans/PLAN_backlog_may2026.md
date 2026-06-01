@@ -1,12 +1,14 @@
 ---
 layer: plan
 status: active
-last_reviewed: 2026-05-26
+last_reviewed: 2026-06-02
 tracks: backlog, pre-alpha, m12, i1, pw1, e1, a0
 source: ../backlog/PRODUCT_BACKLOG.md
 ---
 
 # План работ: май 2026 (из беклога)
+
+> **Синхронизация 2026-06-02:** актуальный статус эпиков и «В работу сейчас» — [`PRODUCT_BACKLOG.md`](../backlog/PRODUCT_BACKLOG.md). Закрыто с мая: **O2**, **DL1** (ядро), **Admin AQ/C1–C2**, **GE1**, period highlights.
 
 Решения продукта (2026-05-26):
 

@@ -14,6 +14,7 @@ allowed-tools: Read, Glob, Grep, Write
 - [`docs/specs/SPEC_FRONTEND_UI.md`](../../../docs/specs/SPEC_FRONTEND_UI.md)
 - [`docs/specs/UI_CONSISTENCY_AUDIT.md`](../../../docs/specs/UI_CONSISTENCY_AUDIT.md)
 - [`docs/reference/brandbook/BRANDBOOK_MQX.md`](../../../docs/reference/brandbook/BRANDBOOK_MQX.md)
+- [`docs/ux/screens/dashboard.md`](../../../docs/ux/screens/dashboard.md) — дашборд, sheet подушки (`InvestProductForm` + `MqxCapitalSheet`)
 - [`docs/ux/accessibility-requirements.md`](../../../docs/ux/accessibility-requirements.md)
 - [`frontend-react/ARCHITECTURE.md`](../../../frontend-react/ARCHITECTURE.md)
 - [`CLAUDE.md`](../../../CLAUDE.md)

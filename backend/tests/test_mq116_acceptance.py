@@ -11,7 +11,8 @@ import pytest
 from sqlalchemy import or_
 
 from app.game.rules import event_tier_in_core_window
-from app.models import EventChoice, EventDefinition, EventInstance, GameProfile
+from app.models import EventChoice, EventDefinition, EventInstance, GameProfile, User
+from app.events.constants import EVENTS_UNLOCK_INTRO_KEY
 from app.events.mvp11_contract import validate_mvp11_db_catalog, validate_mvp11_specs
 from app.events.mvp11_seeds import MVP11_EVENT_SPECS, ensure_mvp11_event_catalog
 from app.routers.events import (
@@ -188,8 +189,18 @@ class TestMq116ApiIntegration:
         assert pending.status_code == 200
         body = pending.json()
         events = body.get("events") or []
-        assert len(events) == EVENTS_PER_PERIOD + 1
-        assert events[0].get("key") == "mq11_events_unlock_intro"
+
+        profile = self._active_profile(db_session)
+        user = db_session.query(User).filter(User.id == profile.user_id).first()
+        o2_replaces_intro = user is not None and int(getattr(user, "guidance_completed", 0) or 0) == 0
+
+        if o2_replaces_intro:
+            assert len(events) == EVENTS_PER_PERIOD
+            assert all(ev.get("key") != EVENTS_UNLOCK_INTRO_KEY for ev in events)
+        else:
+            assert len(events) == EVENTS_PER_PERIOD + 1
+            assert events[0].get("key") == EVENTS_UNLOCK_INTRO_KEY
+
         for ev in events:
             assert ev.get("key", "").startswith("mq11_") or ev.get("key") in {
                 "broken_phone",

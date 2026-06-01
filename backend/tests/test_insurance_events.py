@@ -5,7 +5,15 @@ import json
 import pytest
 
 from app.events.insurance_hooks import apply_insurance_claim_from_effects, find_policy_for_claim
-from app.models import EventChoice, EventDefinition, EventInstance, GameProfile, GameStarterTemplate, InsurancePolicy
+from app.models import (
+    EventChoice,
+    EventDefinition,
+    EventInstance,
+    FinanceAsset,
+    GameProfile,
+    GameStarterTemplate,
+    InsurancePolicy,
+)
 from app.victory.seeds import victory_config_json_for_template
 
 INSURANCE_TEST_TEMPLATE_KEY = "mq_game_insurance_pytest_v1"
@@ -235,12 +243,32 @@ class TestInsuranceBuyFlow:
         )
         assert start.status_code == 200
 
+        profile = (
+            db_session.query(GameProfile)
+            .filter(GameProfile.is_active == 1)
+            .order_by(GameProfile.id.desc())
+            .first()
+        )
+        assert profile is not None
+        car = FinanceAsset(
+            game_profile_id=profile.id,
+            title="Pytest car",
+            kind="car_personal",
+            asset_value=1_000_000,
+            monthly_maintenance_cost=0,
+            acquisition_mode="cash",
+            is_active=1,
+        )
+        db_session.add(car)
+        db_session.commit()
+        db_session.refresh(car)
+
         buy = client.post(
             "/api/insurance/buy",
             headers=auth_headers,
-            json={"plan_key": "auto_liability_standard"},
+            json={"plan_key": "auto_liability_standard", "insured_asset_id": car.id},
         )
-        assert buy.status_code == 200
+        assert buy.status_code == 200, buy.json()
         body = buy.json()
         assert body["status"] == "success"
         assert body["policy"]["payout_amount"] == 400000.0

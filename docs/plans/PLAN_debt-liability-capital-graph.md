@@ -2,7 +2,8 @@
 layer: plan
 epic_id: DL1
 phase: define
-status: draft
+status: active
+last_reviewed: 2026-06-02
 tracks: debt, liability, insurance, capital, economy
 spec: ../specs/features/SPEC_debt-liability-capital-graph.md
 idea: ../vision/ideas/debt-liability-capital-graph.md
@@ -25,15 +26,15 @@ next_skill: spec-driven-development
 
 | Волна | Название | Игрок видит | Зависимости |
 |-------|----------|-------------|-------------|
-| **0** | Контракт | ADR + approved spec | — |
-| **A** | Схема и legacy | Ничего (только совместимость) | 0 |
-| **B** | Целевой кредит | Ипотека «на квартиру», не на кошелёк | A |
-| **C** | Страховка ↔ актив | Выбор машины/дома при полисе | A |
-| **D** | Срок + аннуитет | Платёж тает, срок кончается | A, B (для mortgage) |
-| **E** | Частичное погашение | Кнопка «Погасить часть» | D |
-| **F** | Страховка: срок в UI | «Действует ещё N периодов» | C (частично без C) |
+| **0** | Контракт | ADR + approved spec | ✅ 2026-06-02 |
+| **A** | Схема и legacy | Ничего (только совместимость) | ✅ |
+| **B** | Целевой кредит | Ипотека «на квартиру», не на кошелёк | ✅ |
+| **C** | Страховка ↔ актив | Выбор машины/дома при полисе | ✅ |
+| **D** | Срок + аннуитет | Платёж тает, срок кончается | ✅ ([**DL1-143**](../balance/reports/DL1-143_balance_playtest_2026-06-02.md) REVIEW) |
+| **E** | Частичное погашение | Кнопка «Погасить часть» | ✅ |
+| **F** | UI капитал + polish | Prepay, связка актив↔долг; срок полиса в UI — backlog | ✅ MVP |
 
-**Gate:** волна B не в prod без зелёных тестов A; волна D — balance-playtest на tutorial + 1 сложный шаблон.
+**Gate:** волны A–F MVP в prod (2026-06-02); **DL1-143** balance-playtest — перед PA-W2 / закрытием эпика.
 
 **Test gate (100% математики + сценарии эпика):** SPEC §11. Уже в репо: `app/finance/annuity.py`, `tests/test_dl1_annuity_golden.py` (V1–V5). Каждый PR — расширять матрицу, не ослаблять golden без правки spec §4.4.
 
@@ -99,7 +100,7 @@ flowchart TD
 | ID | Задача | DoD |
 |----|--------|-----|
 | DL1-100 | ADR: граф актив–долг–страховка, продажа актива, legacy | ✅ [`ADR-010`](../decisions/ADR-010-liability-asset-insurance-graph.md) accepted 2026-06-01 |
-| DL1-101 | Spec → **approved**; строка TRACEABILITY | Product sign-off (потоки зафиксированы в spec §5) |
+| DL1-101 | Spec → **approved**; строка TRACEABILITY | ✅ 2026-06-02 |
 
 ### Волна A
 

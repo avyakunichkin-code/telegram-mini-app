@@ -23,28 +23,30 @@
 
 ---
 
-## Сводка эпиков (май 2026)
+## Сводка эпиков (июнь 2026)
 
 | ID | Название | Слои | Статус |
 |----|----------|------|--------|
 | **G1** | Game / Plan, шаблоны старта | DB+Backend+Frontend | ✅ MQ-101–108 |
 | **M11** | MVP 1.1: tier, события, cooldown | DB+Backend+Frontend | ✅ MQ-111–116; без character XP (2026-05-24); плейтест Pre-Alpha — ⬜ |
 | **M12** | Достижения / «Развитие» | DB+Backend+Frontend | ⏸ **idea-refine** (2026-05-30): после снятия XP роль UI под вопросом; BE в коде, FE не в scope α |
-| **V2** | Victory M из N | DB+Backend+Frontend+Doc | ✅ **P1 закрыт**: `victory_engine` + `MqxGoalDash`; дальше — баланс/плейтест |
-| **I1** | Страховки: продукт + объект | DB+Backend+Frontend | ✅ I1-A/B (2026-06-01): покупка, claim, тесты |
+| **V2** | Victory M из N | DB+Backend+Frontend+Doc | ✅ **P1 закрыт**: `victory_engine` + `MqxGoalDash`; period gate снят (2026-06); дальше — **V2-BAL** / balance-playtest |
+| **I1** | Страховки: продукт + объект | DB+Backend+Frontend | ✅ I1-A/B (2026-06-01): покупка, claim, тесты; **DL1-130** привязка к активу ✅ |
 | **CN1** | Потребности персонажа (Z‑NEEDS) | DB+Backend+Frontend+Doc | 🟡 ядро ✅ в prod; **доработка контента/UI ⏸** до пересмотра SPEC (2026-05-30) |
 | **α** | Pre-Alpha / Closed Alpha гейты | Doc+Backend (метрики) | 🟡 KPI v1.2 + протокол ✅; **волна PA-W1** ⬜ |
-| **O1** | Онбординг TMA — Guided coach + Монетка | Frontend+Backend+Doc | ✅ P0 в prod |
-| **A0** | Admin Watchtower / Ops cockpit | DB+Backend+Frontend | 🟡 A1–A4 ✅ · каталоги C0 ✅ · [**ADMIN_BACKLOG**](ADMIN_BACKLOG.md) · идея [admin-platform-evolution](../vision/ideas/admin-platform-evolution.md) |
-| **TG1** | Telegram: боты, ops, player notify | Ops+Backend+Frontend | 🟡 ops-alerts ✅; **env + player bot** ⬜ |
+| **O1** | Онбординг TMA — Guided coach (архив) | Frontend+Backend+Doc | **superseded → O2** |
+| **O2** | Progressive Guidance — bottom strip | Frontend+Backend+Doc | ✅ **core prod** (2026-06-01); replay — backlog |
+| **A0** | Admin Watchtower / Ops cockpit | DB+Backend+Frontend | 🟡 **AQ-01…10 ✅**, **C1–C2 ✅** · C2e choices ⬜ · [**ADMIN_BACKLOG**](ADMIN_BACKLOG.md) |
+| **TG1** | Telegram: боты, ops, player notify | Ops+Backend+Frontend | 🟡 ops-alerts ✅ + `OPS_TELEGRAM_MESSAGE_THREAD_ID`; **player bot** ⬜ |
 | **E1** | **Расходы жизнеобеспечения** — категории, статьи, burn, UI | DB+Backend+Frontend+Content | ⏸ **ждём описание + doc**; E1-R и код — после spec ([PLAN](../plans/PLAN_backlog_may2026.md)) |
 | **PW1** | PWA / standalone + стабильный resume (lock/unlock) | Frontend+Ops+Doc | 🟡 фаза 0–1 ✅; **PW1-004/104 PASS**; [PLAN](../plans/PLAN_pwa-standalone.md) |
 | **WD1** | Полноразмерный веб (desktop / wide layout) | Frontend+Doc+Ops | ⬜ idea ✅; [PLAN](../plans/PLAN_desktop-wide-web.md); **CA 50–100** |
 | **AC1** | Связка аккаунтов TG ↔ email | Backend+Frontend | ⬜ в фокусе; после WD1 v1 / TG2; нет spec |
 | **AF1** | Воронка «игра → советник» (гипотеза) | Doc+Marketing+Frontend | 🟡 handbook; **Pre-Alpha: без CTA советника** (2026-05-30) |
 | **T1** | Пошаговый месяц без таймера (TB1) | DB+Backend+Frontend+Doc | ✅ **implemented** — [idea](../vision/ideas/turn-based-period-no-timer.md) · [plan](../plans/PLAN_turn-based-period-no-timer.md) · TB1.1 чипы — backlog |
-| **GE1** | Run Finale — финал партии, feedback, бейджи сохранений | DB+Backend+Frontend+Doc | 🟢 v1 prod · [SPEC_game-run-finale](../specs/features/SPEC_game-run-finale.md) · idea [game-run-finale-pre-alpha](../vision/ideas/game-run-finale-pre-alpha.md) · lab `run-finale/` |
-| **DL1** | **Реалистичный долг** — актив↔кредит↔страховка, аннуитет, срок, prepay | DB+Backend+Frontend+Doc | ⬜ **перед PA-W2** · [idea](../vision/ideas/debt-liability-capital-graph.md) · [SPEC](../specs/features/SPEC_debt-liability-capital-graph.md) draft · [PLAN](../plans/PLAN_debt-liability-capital-graph.md) · [TASKS](../tasks/TASKS_debt-liability-capital-graph.md) |
+| **GE1** | Run Finale — финал партии, feedback, бейджи сохранений | DB+Backend+Frontend+Doc | 🟢 v1 prod · [SPEC_game-run-finale](../specs/features/SPEC_game-run-finale.md) · `run_outcome`, Watchtower feedback |
+| **DL1** | **Реалистичный долг** — актив↔кредит↔страховка, аннуитет, prepay | DB+Backend+Frontend+Doc | 🟡 **MVP в prod** · spec approved; **DL1-143** REVIEW ([отчёт](../balance/reports/DL1-143_balance_playtest_2026-06-02.md)); polish UI |
+| **EVT1** | Система событий v2 (слоты, informational, global) | DB+Backend+Frontend+Content | 🟡 taxonomy `0041` + rebalance ✅; **мульти-слот** EVT1-030…050 ⬜ |
 
 > **GAME.md §0.2 / M11:** синхронизировано 2026-05-26 (Task 0.1): `cooldown_periods` ✅, MQ-116 → [`MVP_AUDIT_VS_SPEC`](../foundation/MVP_AUDIT_VS_SPEC.md) §M11.
 
@@ -189,8 +191,9 @@
 - [x] P1 **[Backend+Frontend]** A3: profile inspector (`?profile=`).
 - [x] P1 **[Backend+Frontend]** A4: stuck scan, first_salary/safety emits, GE1 `run_feedback` в WT.
 - [x] P1 **[Backend+Frontend]** C0: Catalog registry read-only (`#/admin/catalogs`).
-- [ ] P1 **[Backend+Frontend]** **AQ-01…AQ-07** — quick wins (фильтры, KPI+, CSV, inspector+) → [`ADMIN_BACKLOG.md`](ADMIN_BACKLOG.md).
-- [ ] P1 **[Backend+Frontend]** C1–C2: правка каталогов (clone, PATCH, choices).
+- [x] P1 **[Backend+Frontend]** **AQ-01…AQ-10** — quick wins (фильтры, KPI+, CSV, inspector+, очередь внимания) — 2026-06-02 → [`ADMIN_BACKLOG.md`](ADMIN_BACKLOG.md).
+- [x] P1 **[Backend+Frontend]** **C1–C2** — create/clone, PATCH скаляров + JSON validate, редактор Основное/JSON — 2026-06-02.
+- [ ] P1 **[Backend+Frontend]** **C2e** — event choices: list / add / delete.
 - [ ] P2 **[Backend+Frontend]** Player inbox (Phase 1 idea).
 - [ ] P2 **[Backend+Frontend]** Draft/publish контента и «отправить себе» (Phase 2 idea).
 - [x] P2 **[Doc]** Spec [`SPEC_telegram-bots-and-notifications.md`](../specs/features/SPEC_telegram-bots-and-notifications.md) · бэклог [`TELEGRAM_BACKLOG.md`](TELEGRAM_BACKLOG.md).
@@ -264,51 +267,53 @@
 - [x] P1 **[Backend]** Claim payout по `payout_amount`, деактивация полиса — `insurance_hooks.py`, `test_insurance_events.py` (2026-06-01).
 - [ ] P2 **[Backend]** Связка страховых событий с `product` / `insured_object` (контент `auto.yaml`, `housing.yaml`).
 
-### Эпик DL1 — реалистичный долг и граф капитала (перед PA-W2)
+### Эпик DL1 — реалистичный долг и граф капитала
 
-> **Контекст:** ипотека сейчас зачисляется на cash; платёж — только %; страховка без `finance_assets.id`. План волн: [`PLAN_debt-liability-capital-graph`](../plans/PLAN_debt-liability-capital-graph.md). Задачи: [`TASKS_debt-liability-capital-graph`](../tasks/TASKS_debt-liability-capital-graph.md).
+> **Контекст (2026-06-02):** MVP **в prod** — secured bundle, аннуитет в `period_end`, prepay, страховка на `insured_asset_id`, продажа актива с payoff; legacy `interest_only` сохранён. План: [`PLAN_debt-liability-capital-graph`](../plans/PLAN_debt-liability-capital-graph.md) · задачи: [`TASKS_debt-liability-capital-graph`](../tasks/TASKS_debt-liability-capital-graph.md) · pytest: `test_dl1_annuity_golden.py`, `test_dl1_integration.py`, `test_liability_legacy_compat.py`.
 
 **Волна 0 — контракт**
 
 - [x] P0 **[Doc] DL1-100** — ADR-010: пути A (secured bundle) / B (cash + ≤2 consumer), продажа с payoff — [`ADR-010`](../decisions/ADR-010-liability-asset-insurance-graph.md) **accepted** 2026-06-01.
-- [ ] P0 **[Doc] DL1-101** — Spec [`SPEC_debt-liability-capital-graph`](../specs/features/SPEC_debt-liability-capital-graph.md) → **approved** (§4.4 golden, §11 test gate).
-- [x] P0 **[Backend] DL1-105** — `finance/annuity.py` + `test_dl1_annuity_golden.py` (V1–V5, 10 tests green).
+- [x] P0 **[Doc] DL1-101** — Spec [`SPEC_debt-liability-capital-graph`](../specs/features/SPEC_debt-liability-capital-graph.md) → **approved** (2026-06-02; §4.4 golden + §11 test gate).
+- [x] P0 **[Backend] DL1-105** — `finance/annuity.py` + `test_dl1_annuity_golden.py` (V1–V5).
 
-**Волна A — схема (без смены UX)**
+**Волна A — схема**
 
-- [ ] P1 **[DB] DL1-110** — `finance_liabilities`: `liability_kind`, `secured_asset_id`, `term_periods`, `payment_mode`, …
-- [ ] P1 **[DB] DL1-111** — `insurance_policies.insured_asset_id`.
-- [ ] P1 **[Backend] DL1-112** — API/schemas + legacy backfill + `test_liability_legacy_compat.py`.
+- [x] P1 **[DB] DL1-110** — `finance_liabilities`: `liability_kind`, `secured_asset_id`, `term_periods`, `payment_mode`, … — `0044_dl1_liability_asset_graph.sql`.
+- [x] P1 **[DB] DL1-111** — `insurance_policies.insured_asset_id` — в `0044`.
+- [x] P1 **[Backend] DL1-112** — API/schemas + legacy backfill + `test_liability_legacy_compat.py` (2026-06-02).
 
 **Волна B — целевой кредит (анти-эксплойт)**
 
-- [ ] P0 **[Backend] DL1-120** — Ипотека/автокредит: выдача не на свободный cash; bundled asset+loan.
-- [ ] P1 **[DB+Backend] DL1-121** — Шаблоны пар mortgage↔home, auto_loan↔car.
-- [ ] P1 **[Backend] DL1-122** — Один secured-кредит на актив.
+- [x] P0 **[Backend] DL1-120** — `POST /acquisitions/secured`; ипотека/авто не через `from-template` на cash.
+- [x] P1 **[DB+Backend] DL1-121** — Пары mortgage↔`apt_1br`, auto_loan↔`car_personal` — `0044`–`0046`, `capital_catalog.py`.
+- [x] P1 **[Backend] DL1-122** — Один secured-кредит на актив (`acquisitions.py`).
+- [x] P1 **[Backend] DL1-123** — Продажа актива с payoff secured-долга — `test_asset_sale_with_mortgage_payoff`.
 
 **Волна C — страховка на объект**
 
-- [ ] P0 **[Backend] DL1-130** — `buy_policy`: нельзя КАСКО/имущество без актива нужного `kind`.
-- [ ] P1 **[Backend] DL1-131** — Каталог: `eligible_assets` для планов на объект.
+- [x] P0 **[Backend] DL1-130** — `buy_policy` без актива нужного `kind` → 400 (`test_insurance_requires_asset`).
+- [x] P1 **[Backend] DL1-131** — Каталог планов + `insured_asset_id` в buy (`insurance/service.py`, seeds).
 
 **Волна D — срок + аннуитет**
 
-- [ ] P0 **[Backend] DL1-140–141** — Аннуитет в `period_end`; тело убывает; автозакрытие по сроку.
-- [ ] P1 **[Doc+Balance] DL1-143** — balance-playtest tutorial + 1 шаблон vs baseline.
+- [x] P0 **[Backend] DL1-140–141** — Аннуитет в `period_end`; тело убывает; `periods_paid` — `game/period.py`, `test_annuity_period_close_reduces_debt`.
+- [x] P1 **[Doc+Balance] DL1-143** — balance-playtest tutorial + `mq_game_mortgage_stress_v1` (2026-06-02): manifest **REGRESSION** (needs); DL1 pytest ✅ — [`DL1-143_balance_playtest_2026-06-02.md`](../balance/reports/DL1-143_balance_playtest_2026-06-02.md).
 
 **Волна E — частичное погашение**
 
-- [ ] P1 **[Backend] DL1-150** — `POST /liabilities/{id}/prepay`.
+- [x] P1 **[Backend] DL1-150** — `POST /liabilities/{id}/prepay` + `test_prepay_reduces_debt`.
 
 **Волна F + Frontend**
 
-- [ ] P1 **[Backend] DL1-170** — Регрессия истечения полиса (срок уже в модели).
-- [ ] P1 **[Frontend] DL1-160** — Капитал: актив у долга/полиса, prepay, «осталось N периодов».
+- [x] P1 **[Backend] DL1-170** — Регрессия срока полиса (backend); UI «истекает» — backlog.
+- [x] P1 **[Frontend] DL1-160** — Капитал: secured acquire, prepay form, связка актив↔долг (`FinancePremium`, `CapitalDetailsPanel`, `capitalDl1.js`) (2026-06-02).
 
 **После MVP DL1**
 
 - [ ] P2 **[Backend] DL1-200** — DTI / лимит нового долга (GD-18).
 - [ ] P2 **[Content] DL1-210** — События с предикатом `insured_asset_id` (GD-11).
+- [ ] P2 **[Frontend] DL1-161** — «Осталось N периодов» / expires полиса в карточках (polish).
 
 ---
 
@@ -316,9 +321,13 @@
 
 ### Сделано
 
-- [x] HUD времени, модал конца периода, тосты, финансы по вкладкам, события (карусель).
-- [x] Поток Game: `NewProfileKindScreen` → `GameTemplatePickScreen` (Plan — заглушка).
+- [x] HUD времени, модал конца периода, тосты, вкладка **«Капитал»** (бывш. «Финансы»), события (карусель).
+- [x] Поток Game: `NewProfileKindScreen` → `GameTemplatePickScreen` (Plan — заглушка); портреты персонажей на плитках.
 - [x] **MQ-108** — дашборд без legacy `character_*`; прогресс победы — см. V2 UI.
+- [x] **O2** — `GameGuidanceLayer`, `MqxGuidanceStrip`, `guidance_completed` на user (2026-06-01).
+- [x] **GE1** — `MqxRunFinale`, `player_run_feedback`, бейджи `run_outcome` в списке сохранений (2026-06-01).
+- [x] **DL1-160** — secured/prepay/sale preview во вкладке «Капитал» (2026-06-02).
+- [x] P1 **[Frontend+Backend] α-FB-18 (часть)** — `period_highlights` в `period_close` + `MqxPeriodCloseRitual` (расходы, купоны, депозит); полный breakdown по категориям — **E1-115**.
 
 ### MVP 1.1 / прогрессия
 
@@ -509,9 +518,13 @@
 | V2 Victory | ✅ 0010 | ✅ engine | прогресс целей | ✅ SPEC |
 | I1 Insurance | ✅ 0008 | ✅ buy/claim | ✅ catalog UI | ⚠ SPEC |
 | α Playtest | — | 🟡 PA-A* SQL | опрос | ✅ KPI v1.2 |
-| A0 Watchtower | ✅ 0012 | 🟡 notify RU | 🟡 `#/admin` | idea+spec |
-| TG1 Telegram | — | 🟡 ops code | ⬜ player bot | [TELEGRAM_BACKLOG](TELEGRAM_BACKLOG.md) |
-| PW1 PWA / resume | — | — | фаза 0–1 | idea+plan |
+| A0 Watchtower | ✅ 0012 | ✅ notify + metrics | ✅ AQ + C1–C2 | [ADMIN_BACKLOG](ADMIN_BACKLOG.md) |
+| O2 Guidance | ✅ users.* | ✅ curriculum | ✅ strip | [SPEC_onboarding-o2](../specs/features/SPEC_onboarding-o2.md) |
+| GE1 Run Finale | ✅ feedback | ✅ run_outcome | ✅ finale UI | [SPEC_game-run-finale](../specs/features/SPEC_game-run-finale.md) |
+| DL1 Debt graph | ✅ 0044–46 | ✅ secured/annuity | ✅ Capital UI | ✅ SPEC approved |
+| EVT1 Events v2 | ✅ 0041 | 🟡 choice pool | ⬜ multi-slot | SPEC draft |
+| TG1 Telegram | — | 🟡 ops + thread | ⬜ player bot | [TELEGRAM_BACKLOG](TELEGRAM_BACKLOG.md) |
+| PW1 PWA / resume | — | — | фаза 0–1 ✅ | idea+plan |
 | WD1 wide web | — | — | ⬜ CA 50–100 | [PLAN_desktop-wide-web](../plans/PLAN_desktop-wide-web.md) |
 | AC1 TG+email | — | ⬜ link | ⬜ | [TELEGRAM_BACKLOG](TELEGRAM_BACKLOG.md) |
 | T1 Turn-based (TB1) | ✅ sync_time | ✅ hero H2 | ✅ | idea + plan + dashboard UX |
@@ -522,31 +535,30 @@
 
 ## В работу сейчас
 
-Синхронизировано с решениями **2026-05-30** и [`PLAN_backlog_may2026.md`](../plans/PLAN_backlog_may2026.md).
+Синхронизировано **2026-06-02** с [`PLAN_backlog_may2026.md`](../plans/PLAN_backlog_may2026.md) и [`ADMIN_BACKLOG.md`](ADMIN_BACKLOG.md).
 
 | Приоритет | Task ID | Пункт | Слой |
 |-----------|---------|-------|------|
-| — | — | **PA-W1** Pre-Alpha волна — отложено | Product |
-| **P1** | **AQ** | **Admin quick wins:** фильтры WT, `run_outcome`, KPI defeats/feedback, CSV — [`ADMIN_BACKLOG`](ADMIN_BACKLOG.md) | Backend+Frontend |
+| **P0** | — | **PA-W1** Pre-Alpha волна (10–20 игроков, [`PRE_ALPHA_WAVE1_OPS`](../foundation/PRE_ALPHA_WAVE1_OPS.md)) | Product |
+| P2 | DL1 | Смягчение needs / новый baseline manifest **или** бот secured на mortgage_stress | Balance+Product |
+| **P1** | **EVT1-030** | Мульти-слот `ensure_period_events` + informational UI | BE+FE |
 | P1 | 1.6 | A0 env Render (`ADMIN_*`, ops TG) + **TG-001…005** | Ops |
 | P1 | 1.7 | **TG1** player bot: BotFather + webhook `/start` (этап 1) | Ops+Backend |
-| — | CN1-001 | One-pager + пересмотр SPEC needs (**gate** для CN1 контента) | Doc |
-| — | M12 | Idea-refine «Развитие» — [`achievements-m12-direction`](../vision/ideas/achievements-m12-direction.md) | Doc |
+| P1 | **C2e** | Admin: правка choices событий | BE+FE |
+| P1 | **V2-BAL** | Пороги chain-целей vs экономика шаблонов | Doc+Balance |
+| — | CN1-001 | One-pager + пересмотр SPEC needs (**gate**) | Doc |
+| — | M12 | Idea-refine «Развитие» | Doc |
 | — | E1 | Описание фичи + doc (**gate** для E1-R) | Doc |
 | ⏸ | E1-R, M12 FE, CN1-010+ | После gate-доков | — |
 | ⏸ | Plan Mode | MVP 2.0 | — |
-| ⏸ | AF1 CTA | **Нет** in-app CTA советника в Pre-Alpha | — |
-| P2 | **WD1-001** | design-lab `wide-game-shell` → spec (после AQ/TG1) | Frontend+Doc |
-| P2 | 2.x | Watchtower metrics + inspector (после α) | Backend+Frontend |
-| P2 | α-FB-03 | Повторы событий: cooldown / state ladder — [`event-repeat-and-state-ladder`](../vision/ideas/event-repeat-and-state-ladder.md) | Content+BE |
-| P2 | α-FB-04 | Log `event_chosen` + доля осмысленных выборов (не только carousel) | BE |
-| P2 | α-FB-06/08 | Empty states «Капитал» + RU labels kind + IA капитала | Frontend |
-| ~~P1~~ ✅ | **O2** onboarding | [`SPEC_onboarding-o2`](../specs/features/SPEC_onboarding-o2.md) — strip, user-once, auto Студент (**core prod 2026-06-01**); replay — backlog | Frontend+BE |
-| P1 | α-FB-15/18 | Preview расходов + richer period close (связь **E1-115**) | BE+FE |
-| P2 | α-FB-13 | First-run подсказки «характеристики» / needs | Frontend |
-| — | TB1.1 | Чипы плана месяца — backlog | Frontend |
+| P2 | **WD1-001** | design-lab `wide-game-shell` → spec | Frontend+Doc |
+| P2 | α-FB-03 | Повторы событий: state ladder | Content+BE |
+| P2 | α-FB-06/08 | Empty states «Капитал» + RU labels kind | Frontend |
+| P2 | α-FB-13 | First-run подсказки needs | Frontend |
+| — | TB1.1 | Чипы плана месяца | Frontend |
+| — | O2-replay | «Повторить обучение» из меню | Frontend |
 
-**Закрыто:** PW1-004 ✅ (2026-05-30); PW1-104 ✅ (2026-06-01); **I1-A / I1-B** ✅ (2026-06-01); **Victory period gate снят** + **notify RU** ✅ (2026-06-01).
+**Закрыто недавно:** **AQ-01…10**, **C1–C2** admin ✅ (2026-06-02); **DL1** волны A–F (ядро) ✅; **α-FB-04** `event_chosen` log ✅; **α-FB-18** highlights периода ✅ (часть); PW1-004/104; I1-A/B; O2 core; Victory period gate; GE1 finale.
 
 ---
 
@@ -569,8 +581,15 @@
 | 2026-06-01 | **Playtest feedback register** | [`PRE_ALPHA_PLAYTEST_FEEDBACK.md`](PRE_ALPHA_PLAYTEST_FEEDBACK.md) α-FB-01…19; INT-2 сырые заметки; Q11 опрос |
 | 2026-06-01 | **Victory:** period gate снят (`0042`); TARGET/KPI v1.1→v1.2. |
 | 2026-06-01 | **WD1:** полноразмерный веб (desktop/wide) — idea approved, [`PLAN_desktop-wide-web`](../plans/PLAN_desktop-wide-web.md), CA 50–100; **AC1** TG↔email в фокусе. |
+| 2026-06-02 | **DL1-143:** balance-playtest — отчёт [`DL1-143_balance_playtest_2026-06-02.md`](../balance/reports/DL1-143_balance_playtest_2026-06-02.md); manifest REGRESSION (needs), DL1 pytest OK. |
+| 2026-06-02 | **DL1-101:** [`SPEC_debt-liability-capital-graph`](../specs/features/SPEC_debt-liability-capital-graph.md) → **approved**. |
+| 2026-06-02 | **DL1 MVP в prod:** миграции `0044`–`0046`, secured/prepay/annuity, insurance на актив, FE «Капитал»; pytest integration + legacy compat. |
+| 2026-06-02 | **Admin:** AQ-01…10, C1–C2 (PATCH каталогов, CSV, очередь внимания, `event_chosen`); см. [`ADMIN_BACKLOG`](ADMIN_BACKLOG.md). |
+| 2026-06-02 | **Period close:** `period_highlights` (расходы, купоны, депозит) в API + ritual UI; paid/unpaid/overdue в breakdown. |
+| 2026-06-02 | **Контент:** цепочка `freelance_project` в `mvp11`; регистрация без обязательного `username`. |
+| 2026-06-02 | **Ops TG:** `OPS_TELEGRAM_MESSAGE_THREAD_ID` для топика алертов. |
 | 2026-05-26 | Документация: уборка `docs/`, `GAME.md` §5–6; M11/level-gates — история, не активный трек. |
 
 ---
 
-*Последнее обновление: 2026-06-01 — WD1 wide web + AC1 в бэклоге.*
+*Последнее обновление: 2026-06-02 — DL1 ядро ✅, Admin AQ/C1–C2 ✅, беклог синхронизирован с prod.*

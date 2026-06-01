@@ -11,6 +11,7 @@ allowed-tools: Read, Glob, Grep
 ## Прочитай сначала (ТВОЙ ХОД)
 
 - [`docs/agents/CURSOR_SKILLS.md`](../../../docs/agents/CURSOR_SKILLS.md)
+- [`docs/agents/SKILLS_AUDIT_2026-06-01.md`](../../../docs/agents/SKILLS_AUDIT_2026-06-01.md) — последний аудит каталога
 - [`docs/agents/SKILLS_PHASE_CONTENT_AND_DATA.md`](../../../docs/agents/SKILLS_PHASE_CONTENT_AND_DATA.md)
 - [`docs/agents/SKILL_DOC_MAP.md`](../../../docs/agents/SKILL_DOC_MAP.md)
 - [`.cursor/skills/catalog.yaml`](../catalog.yaml) — поле **`tier`** на каждый скилл

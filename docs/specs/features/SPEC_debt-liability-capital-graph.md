@@ -1,16 +1,18 @@
 ---
 layer: spec
-status: draft
+status: approved
+owner: product
 epic_id: DL1
-last_reviewed: 2026-06-01
+last_reviewed: 2026-06-02
 idea: ../../vision/ideas/debt-liability-capital-graph.md
 plan: ../../plans/PLAN_debt-liability-capital-graph.md
 traceability: ../../TRACEABILITY.md
+adr: decisions/ADR-010-liability-asset-insurance-graph.md
 ---
 
 # SPEC: DL1 — Реалистичный долг и граф капитала
 
-**Статус:** `draft` — реализация **после** утверждения плана и ADR; **до** волны Pre-Alpha PA-W2 (не блокирует PA-W1, но повышает доверие к «Капиталу»).
+**Статус:** `approved` (2026-06-02) — **MVP ядро в prod**; миграции `0044`–`0046`; pytest: `test_dl1_annuity_golden.py`, `test_dl1_integration.py`, `test_liability_legacy_compat.py`. **Открыто:** balance-playtest (**DL1-143**), polish UI сроков полиса, DTI (**DL1-200**), события по `insured_asset_id` (**DL1-210**).
 
 **Связано:** [`SPEC_PRODUCT.md`](../../foundation/SPEC_PRODUCT.md) §12.1, [`insurance-product-parameters.md`](../../vision/ideas/insurance-product-parameters.md), [`finance.md`](../../ux/screens/finance.md).
 
@@ -25,10 +27,10 @@ traceability: ../../TRACEABILITY.md
 3. Привязать страховку имущества/авто к **конкретному** активу игрока.
 4. Дать **частичное досрочное** погашение без закрытия всего обязательства.
 
-## 2. Текущее состояние (as-is)
+## 2. Было до DL1 (as-was)
 
-| Область | Поведение |
-|---------|-----------|
+| Область | Поведение (до 2026-06) |
+|---------|------------------------|
 | Выдача кредита | `create_liability_from_template` → `adjust_balance(+principal)` |
 | Платёж | `monthly_interest_payment` — только %; тело неизменно |
 | Закрытие | `DELETE /liabilities/{id}` — полное погашение cash |
@@ -36,7 +38,9 @@ traceability: ../../TRACEABILITY.md
 | Актив | `FinanceAsset.kind` (`home`, `car`, …); связи с долгом нет |
 | Продажа актива | `delete_asset` → **вся** `asset_value` на cash; долг не трогается |
 
-## 3. Модель данных (to-be)
+**Реализация MVP (prod):** `backend/app/finance/annuity.py`, `services/finance/acquisitions.py`, `game/period.py` (аннуитет), `routers/finance.py` (`/acquisitions/secured`, `/liabilities/{id}/prepay`), `services/insurance/service.py`, FE `FinancePremium` / `capitalDl1.js`. Legacy `interest_only` сохранён для backfill.
+
+## 3. Модель данных (канон)
 
 ### 3.1. `finance_liabilities` (расширение)
 
@@ -262,19 +266,17 @@ payment = P / n                              при r = 0
 
 **Правило эпика:** ни один PR волны A–F **не мержится** без зелёного pytest по матрице ниже. Satellites: `test-driven-development`, `critical-test-scenarios`.
 
-### 11.1. Матрица файлов
+### 11.1. Матрица файлов (prod)
 
 | Файл | Покрывает | DL1-AC |
 |------|-----------|--------|
 | `tests/test_dl1_annuity_golden.py` | §4.1–4.3, §4.4 V1–V5 | 2, 4 |
 | `tests/test_liability_legacy_compat.py` | backfill, interest-only | legacy |
-| `tests/test_secured_acquisition.py` | путь A, нет disbursement на cash | 1, 1b |
-| `tests/test_consumer_loan_limit.py` | ≤2 consumer | 1 |
-| `tests/test_asset_sale_with_mortgage.py` | продажа payoff / top-up | 1c |
-| `tests/test_liability_prepay.py` | API prepay + waterfall | 4 |
-| `tests/test_insurance_asset_binding.py` | buy без актива / FK | 5 |
+| `tests/test_dl1_integration.py` | secured bundle, consumer ≤2, sale payoff, prepay, insurance binding, annuity `period_end` | 1, 1b, 1c, 2, 4, 5 |
 | `tests/test_insurance_policy_expiry.py` | премия после expires | 6 |
-| `tests/test_period_close_metrics.py` | регрессия period_end + аннуитет | 2, 3, 7 |
+| `tests/test_period_close_metrics.py` | регрессия period_end (общая) | 7 |
+
+*Ранее планировались отдельные `test_secured_acquisition.py` и др. — сведены в `test_dl1_integration.py` (2026-06-02).*
 
 ### 11.2. Критические сценарии (CS)
 
@@ -312,3 +314,4 @@ payment = P / n                              при r = 0
 | 2026-06-01 | Потоки A/B и продажа — по ADR-010 (product decision) |
 | 2026-06-01 | §4.0 канон полей, аннуитет/prepay/payoff — math review |
 | 2026-06-01 | §4.4 golden vectors; §11 test gate; `finance/annuity.py` + `test_dl1_annuity_golden` |
+| 2026-06-02 | **Approved** — MVP волны A–F в prod; §2 as-was + указатель кода; §11.1 матрица под `test_dl1_integration.py` |

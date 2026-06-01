@@ -18,7 +18,7 @@
 #   next_skill   — типичный следующий скилл в конвейере
 #
 version: 1
-updated: "2026-05-31"
+updated: "2026-06-01"
 skills_root: .cursor/skills
 archived_root: .cursor/skills/_archived
 specs_root: .cursor/skills/specs
@@ -449,6 +449,7 @@ skills:
         - docs/specs/UI_CONSISTENCY_AUDIT.md
         - docs/reference/brandbook/BRANDBOOK_MQX.md
         - docs/ux/screens/finance.md
+        - docs/ux/screens/dashboard.md
         - docs/ux/screens/character-needs-dashboard.md
         - docs/ux/accessibility-requirements.md
         - frontend-react/ARCHITECTURE.md

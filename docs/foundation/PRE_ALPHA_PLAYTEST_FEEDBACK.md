@@ -32,7 +32,7 @@ sources: wave-0 (n=1), авторские прогоны (INT, INT-2), vision-id
 | **α-FB-01** | Первые минуты: не сразу ясен цикл «зарплата → события → закрыть месяц»; см. также **α-FB-15** (списание расходов) | W0, INT-2 | 🟡 **ждём PA-T2** | **O2 в prod** (2026-06-01): curriculum 3 периода, autostart Студент, bottom strip без scrim; **проверить** Q1, Q2 на PA-T2 | UX / Doc |
 | **α-FB-02** | «Медленно» — загрузка и паузы после действий | W0 | 🟡 частично | Bootstrap catalog early-return ✅; **холодный старт Render** — текст в приглашении; loading только на 1-м входе ✅ | BE / Ops |
 | **α-FB-03** | **Повтор** одних карточек (интернет, downgrade жилья) — immersion ломается | INT, **INT-2** | ⬜ открыто | Контент: cooldown / once ([`event-repeat-and-state-ladder`](../vision/ideas/event-repeat-and-state-ladder.md)); EVT1-105 частично; **движок state ladder** — backlog | Content / BE |
-| **α-FB-04** | События ощущаются как **листание**, а не осознанный **выбор** | W0 | ⬜ открыто | Q11 в опросе; в модерации спрашивать «нажимали кнопки или только листали»; позже — метрика `event_chosen` в log | UX / Analytics |
+| **α-FB-04** | События ощущаются как **листание**, а не осознанный **выбор** | W0 | 🟡 **метрика ✅** | **2026-06-02:** `event_chosen` в `notification_log` (без TG); анализ на PA-W1 + Q11 опроса | UX / Analytics |
 | **α-FB-05** | **Монетка** на каждой карточке события — шум | INT | ⬜ гипотеза | Смотреть Q5; [`mqx-ui-unification`](../vision/ideas/mqx-ui-unification.md) E4 — не менять до волны 1 | UX |
 | **α-FB-06** | Вкладка **«Капитал»**: неудобная навигация, пустые блоки, нет «что делать дальше» | INT, **INT-2** | 🟡 частично | Details \| Actions v2 (2026-06); empty states — backlog | Frontend |
 | **α-FB-07** | **Цель / победа** на главной не читается с первого взгляда | INT | 🟡 частично | `MqxGoalDash` есть; проверить Q5 «цель»; TB1.1 чипы плана месяца — backlog | Frontend |
@@ -45,7 +45,7 @@ sources: wave-0 (n=1), авторские прогоны (INT, INT-2), vision-id
 | **α-FB-14** | **План** vs **Игра** — «Скоро» без объяснения | INT | ⬜ by design | MVP 2.0; в Q5 не считать блокером | Product |
 | **α-FB-15** | Нет явного понимания, что **сумма расходов спишется в конце периода** (не «здесь и сейчас») | **INT-2** | 🟡 **ждём PA-T2** | **O2 в prod:** beat `p1_close` (preview + debrief copy); chip **ФИН.ПОДУШКА · N%**; rich breakdown — **E1-115** / `MqxPeriodCloseRitual` backlog | UX / BE |
 | **α-FB-17** | **Онбординг**: интерфейс **прыгает, мигает**, местами **ломается** (coach + refresh + overlays) | **INT-2** | 🟡 **ждём PA-T2** | **O2 в prod** (2026-06-01): `MqxGuidanceStrip` без scrim/spotlight; O1 удалён; **проверить** на PA-T2 — нет layout shift / overlap с nav | Frontend |
-| **α-FB-18** | **Мало информации в отчёте за период** после «Закрыть месяц» | **INT-2** | ⬜ открыто | Расширить `MqxPeriodCloseRitual` / sheet; **E1-115** `period_close` breakdown по категориям | BE + FE |
+| **α-FB-18** | **Мало информации в отчёте за период** после «Закрыть месяц» | **INT-2** | 🟡 **частично** | **2026-06-02:** `period_highlights` (расходы, купоны, депозит) в API + ritual; полный breakdown по категориям — **E1-115** | BE + FE |
 | **α-FB-19** | **Модалка событий** пересекается с nav, coach, monetka и др. | **INT-2** | ⬜ исследование | Stack `EventCarouselOverlay` vs bottom nav / sheets; скрин + шаги воспроизведения от автора | Frontend |
 
 **Легенда статуса:** ✅ закрыто · 🟡 частично / **ждём PA-T2** (код есть, нужна валидация) · ⬜ открыто · 🔴 сильный сигнал без фикса · ⏸ сознательно отложено
@@ -114,7 +114,7 @@ sources: wave-0 (n=1), авторские прогоны (INT, INT-2), vision-id
 | Отзыв | Эпик / задача |
 |-------|----------------|
 | α-FB-03 | EVT1 state ladder + YAML cooldown |
-| α-FB-04 | log `event_chosen` + Watchtower |
+| ~~α-FB-04~~ | ~~log `event_chosen`~~ — ✅ 2026-06-02 (A4+ admin) |
 | α-FB-06, α-FB-08 | Frontend empty states + локализация kind + IA «Капитал» |
 | α-FB-07 | TB1.1 чипы «план месяца» на hero |
 | α-FB-13 | Усилить first-run needs, если beat недостаточен |

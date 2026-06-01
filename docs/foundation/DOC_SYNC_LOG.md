@@ -12,6 +12,9 @@
 | 2026-06-02 | **Чистка legacy в docs** | Сняты O1/hero-compact тела; FinanceSection tasks; needs accordion/v5; capital «Добавить\|Мои»; help maintenance/critical в UX |
 | 2026-06-02 | **Скиллы / rules / agents:** Капитал + Z-NEEDS v7 | `frontend-ui-engineering`, `design-lab-mqx`, `release-tma`, `tvoy-hod-frontend-mqx.mdc`, `tvoy-hod-canon-sync.mdc`, `catalog.yaml`, `DESIGN_WORKFLOW.md`, `DESIGN_LAB_NAVIGATION`, `frontend-design` skill |
 | 2026-06-02 | **Док-свип (завершение):** «Капитал», v7-e2e3, help `sections[]` | handbook, TMA flows, analytics, landing shots, UI audit, TEAM_UPDATE, backlog, brandbook MQX, design-lab nav/README, `contextual-help-system`, ADR-004, vision ideas |
+| 2026-06-02 | **PRODUCT_BACKLOG** синхронизация | DL1 MVP ✅, Admin AQ/C1–C2 ✅, O2/GE1 в сводке, EVT1 строка, «В работу сейчас», журнал |
+| 2026-06-02 | **DL1-101** spec approved | [`SPEC_debt-liability-capital-graph`](../specs/features/SPEC_debt-liability-capital-graph.md), TRACEABILITY, TASKS, PRODUCT_BACKLOG |
+| 2026-06-02 | **DL1-143** balance-playtest | [`DL1-143_balance_playtest_2026-06-02.md`](../balance/reports/DL1-143_balance_playtest_2026-06-02.md); manifest REGRESSION (needs); baseline не меняли |
 | 2026-06-01 | **Док-свип:** вкладка **«Капитал»**, Z-NEEDS v7, help API | `finance.md`, `dashboard.md`, `character-needs-*`, `SPEC_*`, handbook, ADR-004, `CLAUDE.md`, design-lab README, `contextual-help-system` |
 | 2026-06-01 | **Вкладка «Капитал»** (было «Финансы» / «Управление капиталом») | `BottomGameNav`, `FinancePremium`, «Весь капитал →»; без pill «N разделов»; детали — нейтральный текст, обязательства приглушённо красные |
 | 2026-06-01 | **Z-NEEDS v7-e2e3** + справочник 4 раздела | `MqxNeedsDash` e2+e3; `guide_content.py` + `sections[]`; `MqxNeedsHelpSheet`; lab v7-e2e3 ★ |

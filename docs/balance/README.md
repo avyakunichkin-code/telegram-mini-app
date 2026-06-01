@@ -38,7 +38,7 @@ python scripts/balance_diff.py --current ../docs/balance/reports/current.json --
 |------|------------|
 | `baselines/manifest.yaml` | список эталонов и параметров |
 | `baselines/*.json` | эталонные снимки (в git) |
-| `reports/` | локальные прогоны, diff, `playtest_summary_latest.json` |
+| `reports/` | локальные прогоны, diff, `playtest_summary_latest.json`, эпик-отчёты (`DL1-143_*.md`) |
 
 ## Обновить baseline
 

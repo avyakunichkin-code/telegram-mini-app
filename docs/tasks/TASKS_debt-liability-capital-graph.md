@@ -33,7 +33,7 @@ spec: ../specs/features/SPEC_debt-liability-capital-graph.md
 - **Acceptance:** `SPEC_debt-liability-capital-graph.md` status `approved`; TRACEABILITY обновлён
 - **Estimate:** S
 - **Depends:** DL1-100
-- **Status:** ⬜
+- **Status:** ✅ 2026-06-02 (`status: approved` в SPEC)
 
 ---
 
@@ -57,10 +57,10 @@ spec: ../specs/features/SPEC_debt-liability-capital-graph.md
 - **Satellites:** `test-driven-development`
 - **Acceptance:** Колонки по spec §3.1; backfill `unsecured` + `interest_only`
 - **Verify:** `pytest backend/tests/test_liability_legacy_compat.py`
-- **Files:** `backend/migrations/00xx_liability_graph.sql`, `models.py`
+- **Files:** `backend/migrations/0044_dl1_liability_asset_graph.sql`, `models.py`
 - **Estimate:** M
 - **Depends:** DL1-101
-- **Status:** ⬜
+- **Status:** ✅ 2026-06-02
 
 ---
 
@@ -71,7 +71,7 @@ spec: ../specs/features/SPEC_debt-liability-capital-graph.md
 - **Acceptance:** `insured_asset_id` nullable FK
 - **Estimate:** S
 - **Depends:** DL1-101, DL1-105
-- **Status:** ⬜
+- **Status:** ✅ 2026-06-02 (`0044`)
 
 ---
 
@@ -82,10 +82,10 @@ spec: ../specs/features/SPEC_debt-liability-capital-graph.md
 - **Satellites:** `api-and-interface-design`, `test-driven-development`
 - **Acceptance:** DL1-AC-1, DL1-AC-1b; ADR-010 §1–4
 - **Verify:** `test_secured_acquisition.py`, `test_consumer_loan_limit.py`
-- **Files:** `services/finance/liabilities.py`, `services/finance/assets.py`, `starters/` seeds
+- **Files:** `services/finance/acquisitions.py`, `routers/finance.py`, `seeds/capital_catalog.py`
 - **Estimate:** L
 - **Depends:** DL1-110
-- **Status:** ⬜
+- **Status:** ✅ 2026-06-02 (`test_dl1_integration.py`)
 
 ---
 
@@ -98,7 +98,7 @@ spec: ../specs/features/SPEC_debt-liability-capital-graph.md
 - **Files:** `services/finance/assets.py`
 - **Estimate:** M
 - **Depends:** DL1-120
-- **Status:** ⬜
+- **Status:** ✅ 2026-06-02
 
 ---
 
@@ -111,7 +111,7 @@ spec: ../specs/features/SPEC_debt-liability-capital-graph.md
 - **Files:** `services/insurance/service.py`, `starters/insurance_catalog.py`
 - **Estimate:** M
 - **Depends:** DL1-111
-- **Status:** ⬜
+- **Status:** ✅ 2026-06-02
 
 ---
 
@@ -124,7 +124,7 @@ spec: ../specs/features/SPEC_debt-liability-capital-graph.md
 - **Files:** `backend/app/finance/annuity.py`, `finance/helpers.py`
 - **Estimate:** M
 - **Depends:** DL1-110
-- **Status:** ⬜
+- **Status:** ✅ 2026-06-02
 
 ---
 
@@ -138,7 +138,18 @@ spec: ../specs/features/SPEC_debt-liability-capital-graph.md
 - **Files:** `game/period.py`
 - **Estimate:** L
 - **Depends:** DL1-140
-- **Status:** ⬜
+- **Status:** ✅ 2026-06-02 (`game/period.py`)
+
+---
+
+## DL1-143 — Balance-playtest (tutorial + mortgage_stress)
+
+- **Phase:** `verify`
+- **Skill:** `balance-playtest`
+- **Satellites:** `game-economy-and-victory`, `doubt-driven-development`
+- **Acceptance:** Отчёт в `docs/balance/reports/`; manifest diff; снимок `mq_game_mortgage_stress_v1`
+- **Verify:** `python scripts/balance_playtest.py`; pytest DL1 green
+- **Status:** ✅ 2026-06-02 — **VERDICT: REVIEW** ([`DL1-143_balance_playtest_2026-06-02.md`](../balance/reports/DL1-143_balance_playtest_2026-06-02.md)); baseline **не** обновлялся
 
 ---
 
@@ -151,7 +162,7 @@ spec: ../specs/features/SPEC_debt-liability-capital-graph.md
 - **Files:** `routers/finance.py`, `services/finance/liabilities.py`
 - **Estimate:** M
 - **Depends:** DL1-141
-- **Status:** ⬜
+- **Status:** ✅ 2026-06-02
 
 ---
 
@@ -164,7 +175,7 @@ spec: ../specs/features/SPEC_debt-liability-capital-graph.md
 - **Files:** `FinancePremium.jsx`, `api/finance.js`, `api/insurance.js`
 - **Estimate:** L
 - **Depends:** DL1-120, DL1-130, DL1-150
-- **Status:** ⬜
+- **Status:** ✅ 2026-06-02
 
 ---
 
