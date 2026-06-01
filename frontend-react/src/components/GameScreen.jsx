@@ -14,7 +14,7 @@ import {
   MqxPeriodCloseTail,
   MqxPeriodCloseRitual,
   MqxSalaryWarnModal,
-  MqxGameOverModal,
+  MqxRunFinale,
   MqxStateError,
   MqxStateSkeleton,
 } from './mqx';
@@ -64,8 +64,10 @@ export function GameScreen({ onLogout, onNewGame, onLoadGame }) {
     eventsPromptTick,
     periodCloseSummary,
     dismissPeriodClose,
-    gameSessionStatus,
-    defeatInfo,
+    runFinale,
+    runFinaleOpen,
+    dismissVictoryFinale,
+    submitRunFeedback,
   } = useGame();
 
   const closeEventsOverlay = useCallback(() => setEventsOpen(false), []);
@@ -286,12 +288,13 @@ export function GameScreen({ onLogout, onNewGame, onLoadGame }) {
             onConfirmSkip={confirmAdvanceWithSalaryLoss}
           />
 
-          <MqxGameOverModal
-            open={gameSessionStatus === 'defeated'}
-            defeatReason={defeatInfo?.reason}
-            defeatPeriodIndex={defeatInfo?.periodIndex}
+          <MqxRunFinale
+            open={runFinaleOpen && Boolean(runFinale)}
+            payload={runFinale}
+            onDismissVictory={dismissVictoryFinale}
             onNewGame={onNewGame}
             onMenu={onLoadGame}
+            onSubmitFeedback={submitRunFeedback}
           />
 
           <MqxPeriodCloseRitual

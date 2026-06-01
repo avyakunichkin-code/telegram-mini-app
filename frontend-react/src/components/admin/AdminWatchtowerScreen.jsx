@@ -216,6 +216,20 @@ export function AdminWatchtowerScreen({ onBack }) {
         ),
       },
       { key: 'cash', label: 'Cash', render: (r) => `${r.cash_balance} ₽` },
+      {
+        key: 'stuck',
+        label: 'Застрял',
+        render: (r) =>
+          r.stuck_kind === 'onboarding_stuck' ? (
+            <span className="admin-watchtower__badge admin-watchtower__badge--stuck">
+              онбординг
+            </span>
+          ) : r.stuck_kind === 'player_stuck' ? (
+            <span className="admin-watchtower__badge admin-watchtower__badge--stuck">игра</span>
+          ) : (
+            '—'
+          ),
+      },
       { key: 'active', label: 'Активен', render: (r) => (r.is_active ? 'да' : 'нет') },
     ],
     [],

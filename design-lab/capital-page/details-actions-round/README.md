@@ -40,7 +40,10 @@ cd design-lab/capital-page/details-actions-round
 npx serve .
 ```
 
+## Prod
+
+- **2026-06-01:** перенесено в `FinancePremium.jsx` + `frontend-react/src/styles/mqx/finance.css` (см. `docs/ux/screens/finance.md`).
+
 ## Открыто
 
-- Выбор meta из блока **M** (клик в lab)
-- Утверждение → `APPROVED.md` → React
+- Формальный `APPROVED.md` на уровне `capital-page/` (meta M зафиксированы в prod, док — в SPEC/UX)

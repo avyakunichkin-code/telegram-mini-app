@@ -41,8 +41,12 @@ npx serve .
 - [`finance-insurance/`](../finance-insurance/) — эталон страховок
 - [`invest-forms/`](../invest-forms/) — формы инвестиций
 
-## Prod (2026-05)
+## Prod (2026-06)
 
-- `FinancePremium` — сводка доходов/расходов (в работе) + 4 вкладки (`FINANCE_TABS_CAPITAL`).
-- `CapitalPropertyPanel` / `CapitalLiabilitiesPanel` — имущество и обязательства.
-- `MqxSectionSeg` — сегмент B (инвестиции: «Оформить», страховки/портфель: «Добавить»).
+- **`details-actions-round` v2** в `FinancePremium`: потоки → **Детали \| Действия** → позиции или сетка плиток + `MqxCapitalSheet`.
+- Компоненты: `CapitalDetailsPanel`, `CapitalActionsPanel`, `MqxCapitalPageModeSeg`, meta M5/M7/M8.
+- Lab sync: **`./sync-lab.sh`** (bash); PowerShell-скрипт в этом раунде не используется.
+
+## Prod (устарело, до 2026-06)
+
+- ~~4 аккордеона с `MqxSectionSeg` «Добавить \| Мои» внутри~~ — заменено режимом Детали/Действия.

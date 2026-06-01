@@ -8,6 +8,6 @@
 
 ```powershell
 cd design-lab/game-ui/juice-round
-.\sync-lab.ps1
+.\sync-lab.sh
 npx serve .
 ```

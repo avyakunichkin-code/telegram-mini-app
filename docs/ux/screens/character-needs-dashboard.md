@@ -1,7 +1,7 @@
 ---
 layer: ux
 status: approved
-last_reviewed: 2026-05-26
+last_reviewed: 2026-06-01
 platform: Telegram Mini App
 screen_id: dashboard-needs
 parent: dashboard
@@ -13,7 +13,7 @@ prod_route: GameScreen tab `dashboard` → Z-NEEDS
 > **Status:** Approved (базовые решения UX-01…UX-08)  
 > **Parent:** [`dashboard.md`](dashboard.md)  
 > **Product:** [`SPEC_game-character-needs.md`](../../specs/features/SPEC_game-character-needs.md)  
-> **Lab:** [`design-lab/character-needs/dashboard-needs-v5-round/`](../../../design-lab/character-needs/dashboard-needs-v5-round/) — **v5 ★ prod** ([`APPROVED.md`](../../../design-lab/character-needs/dashboard-needs-v5-round/APPROVED.md)); v1–v4: [`dashboard-needs-round/`](../../../design-lab/character-needs/dashboard-needs-round/)
+> **Lab:** [`dashboard-needs-v5-round/`](../../../design-lab/character-needs/dashboard-needs-v5-round/) — **v5 ★ prod** · **черновик улучшений:** [`dashboard-needs-v6-round/`](../../../design-lab/character-needs/dashboard-needs-v6-round/) (v6-A/B/C) · v1–v4: [`dashboard-needs-round/`](../../../design-lab/character-needs/dashboard-needs-round/) · **Портрет:** [`persona-portraits-round/`](../../../design-lab/game-templates/persona-portraits-round/)
 
 ---
 
@@ -56,7 +56,7 @@ GameScreen → dashboard
 ### Information Hierarchy (Z-NEEDS only)
 
 1. **Bleed-баннер риска** (если `needs_zero_periods_streak > 0`) — на всю ширину, без card-chrome  
-2. **Свернуто:** маскот слева (52×56) + **одна** горизонтальная шкала min-оси + цветной статус справа (**без** дубля «Истощение» в шапке строки)  
+2. **Свернуто:** **портрет персонажа** слева (`PersonaPortrait` **dash** ~108px по высоте силуэта, из `starter_template_key`) + **одна** горизонтальная шкала min-оси + цветной статус справа (**без** дубля «Истощение» в шапке строки)  
 3. **Раскрыто:** 4 горизонтальные шкалы (тот же паттерн: подпись · бар · цветной статус)  
 4. **Действия** — в expanded: чип «Улучшить» и «?» в кружке рядом с заголовком (в collapsed вместо «?» — ссылка `как улучшить →`)
 
@@ -97,7 +97,8 @@ GameScreen → dashboard
 
 | Компонент | Lab / MQX | Примечание |
 |-----------|-----------|------------|
-| `MqxNeedsSummary` | dashboard-needs-round | accordion host |
+| `MqxNeedsDash` | dashboard-needs-v5-round | accordion + портрет по `templateKey` |
+| `PersonaPortrait` | persona-portraits-round | `size="dash"` в аватаре Z-NEEDS |
 | `MqxNeedsBars` | то же | `role="progressbar"` per bar |
 | `MqxNeedsRiskBanner` | то же | optional |
 | `MqxNeedsIntroBanner` | needs-intro-banner-round | post-onboarding |

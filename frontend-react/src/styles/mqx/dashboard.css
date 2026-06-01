@@ -153,13 +153,22 @@
   justify-content: center;
 }
 
-.mqx-needs-avatar__img {
-  width: 129px;
+.mqx-needs-avatar__img,
+.mqx-needs-avatar__persona .mqx-persona-portrait__img {
+  width: auto;
+  max-width: 129px;
   height: auto;
   max-height: 108px;
   object-fit: contain;
   object-position: bottom center;
   background: transparent;
+}
+
+.mqx-needs-avatar__persona {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  line-height: 0;
 }
 
 .mqx-needs-block__header {

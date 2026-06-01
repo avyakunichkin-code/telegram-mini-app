@@ -44,6 +44,7 @@ mqx/
     EventOverlayToolbar, useEventCarousel
   brand/
     MonetkaAvatar
+    PersonaPortrait, personaPortraits.js  — 4 персонажа (pick/md/dash)
   catalog/MqCatalogScreen.jsx
   index.js
 ```
@@ -58,7 +59,19 @@ mqx/
 | `EventCarouselOverlay` | Полноэкранный оверлей с каруселью |
 | `EventCarouselDots` / `EventCarouselNav` | Навигация |
 | `BrandLogo` / `BrandMark` | PNG G1/G2: `full` — старт по центру + tagline; `compact` — hero/табы, без фона |
+| `PersonaPortrait` | Растровые портреты 4 жизней (★ persona-portraits-round): pick на `GameTemplatePickScreen`, dash в `MqxNeedsDash` |
 | `useEventCarousel` | Состояние свайпа/слайдов |
+
+## Персонажи (prod, 2026-06)
+
+| Компонент | Назначение |
+|-----------|------------|
+| `PersonaPortrait` | `<picture>` webp/png по `template_key` и `size` (`pick` \| `md` \| `dash`) |
+| `personaPortraits.js` | Маппинг `mq_game_*` → slug + импорты из `src/assets/character-portraits/` |
+| `MqxStarterScenarioPicker` | `usePersonaPortraits` (default `true`) |
+| `MqxNeedsDash` | `templateKey` → портрет `dash` |
+
+Пересборка ассетов: `npm run persona-portraits:process` · lab: [`design-lab/game-templates/persona-portraits-round/`](../../../design-lab/game-templates/persona-portraits-round/). SVG `ScenarioIllustrations` — архив/fallback.
 
 Импорт: `import { EventCarouselOverlay } from './mqx';`  
 События: `EventCarouselOverlay` из `mqx/events/` (в `GameScreen` — прямой импорт).

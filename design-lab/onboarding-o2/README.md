@@ -20,6 +20,6 @@ cd design-lab && npx serve .
 
 ```powershell
 cd design-lab/onboarding-o2/guidance-strip-round
-.\sync-lab.ps1
+.\sync-lab.sh
 npx serve .
 ```

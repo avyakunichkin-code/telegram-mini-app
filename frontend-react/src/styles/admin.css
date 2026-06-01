@@ -1,4 +1,4 @@
-﻿/* Desktop admin: снимаем TMA-рамку 480px только на #/admin */
+/* Desktop admin: снимаем TMA-рамку 480px только на #/admin */
 html[data-mq-layout='admin'] #root {
   width: 100%;
   max-width: none;
@@ -280,6 +280,11 @@ html[data-mq-layout='admin'] .mq-app-fill {
 .admin-watchtower__badge--draft {
   background: color-mix(in srgb, var(--mq-violet, #6d28d9) 18%, transparent);
   color: var(--mq-violet-deep, #5b21b6);
+}
+
+.admin-watchtower__badge--stuck {
+  background: color-mix(in srgb, var(--mq-color-warning, #e8a317) 22%, transparent);
+  color: var(--mq-color-warning, #c4840f);
 }
 
 .admin-watchtower__badge--done {

@@ -91,7 +91,7 @@
 
 ```bash
 cd design-lab/ui-states-unified/states-icons-round
-.\sync-lab.ps1
+.\sync-lab.sh
 npx serve .
 ```
 

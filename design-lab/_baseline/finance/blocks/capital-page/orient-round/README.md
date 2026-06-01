@@ -6,7 +6,7 @@
 
 ```powershell
 cd design-lab/capital-page/orient-round
-.\sync-lab.ps1
+.\sync-lab.sh
 npx serve .
 ```
 
@@ -17,7 +17,7 @@ npx serve .
 После правок `styles.css` или родительских стилей:
 
 ```powershell
-.\sync-lab.ps1
+.\sync-lab.sh
 ```
 
 ## Файлы

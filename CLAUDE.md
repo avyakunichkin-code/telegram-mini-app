@@ -1,4 +1,4 @@
-﻿## ТВОЙ ХОД — контекст проекта (для быстрого онбординга агента)
+## ТВОЙ ХОД — контекст проекта (для быстрого онбординга агента)
 
 Этот файл нужен, чтобы «загрузить контекст с нуля»: что это за проект, какие сущности, где логика, как запускать и как продолжать разработку.
 
@@ -110,12 +110,12 @@
 - `frontend-react/src/hooks/useGame.js` — `overview`, `timeStatus`, `periodStatus`, закрытие месяца (`advancePeriod`), foreground resync, `pendingEvents`.
 - `frontend-react/src/components/GameScreen.jsx` — шапка, события, оверлей карусели.
 - `frontend-react/src/components/EventDeck.jsx` — кнопка событий, `EventCarouselOverlay`, свайп/стрелки.
-- `frontend-react/src/components/FinancePremium.jsx` — вкладка «Финансы»: доходы/расходы, инвестиции, страховки, имущество, обязательства (аккордеоны по `overview.mechanics`).
+- `frontend-react/src/components/FinancePremium.jsx` — вкладка «Финансы»: потоки Доходы/Расходы → **Детали \| Действия** (позиции vs сетка+sheet); см. [`docs/ux/screens/finance.md`](docs/ux/screens/finance.md).
 - `frontend-react/src/components/BottomGameNav.jsx` + `icons/NavIcons.jsx` — нижняя навигация.
 - `frontend-react/src/components/AnalyticsSection.jsx` / **AnalyticsPremium**, **DashboardPremium** — обзор и цели; spec: [`docs/specs/SPEC_ANALYTICS.md`](docs/specs/SPEC_ANALYTICS.md).
 - `frontend-react/src/components/ToastHost.jsx` + `notifications.js` — тосты вместо `alert`.
 - `frontend-react/src/components/mqx/` — компонентная база MQX; **новые или существенно меняющие вид** UI-паттерны — только по согласованному циклу в [`DESIGN_WORKFLOW.md`](frontend-react/src/components/mqx/DESIGN_WORKFLOW.md) (`design-lab` → утверждение → `mqx/` → `#/dev/mqx` → prod; исключение: багфикс/hotfix).
-- Поток **новой игры:** `StartMenuScreen` → **`NewProfileKindScreen`** (имя + плитки **Игра / План**; Plan неактивен) → **`GameTemplatePickScreen`** (каталог шаблонов + длительность периода + создание профиля) → **`GameScreen`**. **`BaseParamsScreen`** остаётся в коде под будущий мастер **Plan**, не используется для старта Game. Переиспользуемый выбор шаблона: `GameStarterPicker` (опция ручного сценария для Game выключена).
+- Поток **новой игры:** `StartMenuScreen` → **`NewProfileKindScreen`** (имя + плитки **Игра / План**; Plan неактивен) → **`GameTemplatePickScreen`** (каталог шаблонов + длительность периода + создание профиля; карточки с **растровыми портретами** `PersonaPortrait` / lab [`persona-portraits-round`](design-lab/game-templates/persona-portraits-round/)) → **`GameScreen`**. На дашборде Z-NEEDS тот же портрет по `template_key` (`MqxNeedsDash`). Ассеты: `src/assets/character-portraits/`, `npm run persona-portraits:process`. **`BaseParamsScreen`** остаётся в коде под будущий мастер **Plan**, не используется для старта Game. Переиспользуемый выбор шаблона: `GameStarterPicker` (опция ручного сценария для Game выключена).
 
 ---
 

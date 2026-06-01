@@ -40,8 +40,9 @@ src/
 | Слой | Пример |
 |------|--------|
 | Screen | `screens/pre-game/GameTemplatePickScreen.jsx` |
+| Brand assets | `src/assets/character-portraits/` (`PersonaPortrait`, `npm run persona-portraits:process`) |
 | API | `api/game.js` → `POST /api/game/start` |
-| Styles | `styles/mqx/flows.css` |
+| Styles | `styles/mqx/flows.css`, `styles/mqx/finance.css` (picker), `styles/mqx/dashboard.css` (needs avatar) |
 
 ---
 

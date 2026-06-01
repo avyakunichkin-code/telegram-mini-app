@@ -49,7 +49,7 @@ Login и register — **раздельные route**, без табов.
 
 **Рамка `mqx-frame`:** на PreGame.Bubble и Flow — **без внешней обводки** (`border` / `box-shadow` сняты через `mqx-frame--pre-game` или `mqx-frame--flat-flow`). Внутренний пузырь Монетки с градиентом и хвостом сохраняется.
 
-**Design-lab v2:** [`design-lab/pre-game-shell/`](../../design-lab/pre-game-shell/) — `sync-lab.ps1` включает `auth-flow` + `new-game-mode` + локальные стили prod-классов.
+**Design-lab v2:** [`design-lab/pre-game-shell/`](../../design-lab/pre-game-shell/) — `sync-lab.sh` включает `auth-flow` + `new-game-mode` + локальные стили prod-классов.
 
 ---
 

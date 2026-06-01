@@ -30,6 +30,8 @@ export function useGame() {
   const [periodCloseSummary, setPeriodCloseSummary] = useState(null);
   const [gameSessionStatus, setGameSessionStatus] = useState('active');
   const [defeatInfo, setDefeatInfo] = useState(null);
+  const [runFinale, setRunFinale] = useState(null);
+  const [runFinaleOpen, setRunFinaleOpen] = useState(false);
 
   const periodIndexRef = useRef(null);
   const periodEndInFlightRef = useRef(false);
@@ -60,6 +62,9 @@ export function useGame() {
     } else {
       setDefeatInfo(null);
     }
+    const finale = data.run_finale || data.runFinale || null;
+    setRunFinale(finale);
+    setRunFinaleOpen(Boolean(finale));
     return data;
   }, []);
 
@@ -111,6 +116,17 @@ export function useGame() {
   const refreshPeriodStatus = useCallback(async () => {
     const data = await API.getPeriodStatus();
     setPeriodStatus(data);
+  }, []);
+
+  const dismissVictoryFinale = useCallback(async () => {
+    await API.dismissRunFinale();
+    setRunFinaleOpen(false);
+    setRunFinale(null);
+    await refreshGameState();
+  }, [refreshGameState]);
+
+  const submitRunFeedback = useCallback(async (payload) => {
+    return API.submitRunFeedback(payload);
   }, []);
 
   const refreshPendingEvent = useCallback(async ({ bumpOverlay = false } = {}) => {
@@ -257,5 +273,9 @@ export function useGame() {
     dismissPeriodClose: () => setPeriodCloseSummary(null),
     gameSessionStatus,
     defeatInfo,
+    runFinale,
+    runFinaleOpen,
+    dismissVictoryFinale,
+    submitRunFeedback,
   };
 }

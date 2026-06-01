@@ -6,7 +6,7 @@
 
 ```powershell
 cd design-lab/dashboard/cushion-fill-round
-.\sync-lab.ps1
+.\sync-lab.sh
 npx serve .
 ```
 
@@ -18,7 +18,7 @@ npx serve .
 |------|------------|
 | `index.html` | Демо F1/F2, слайдер, контекст 2×2 |
 | `styles.css` | Стили раунда |
-| `lab-base.css` | AUTO (`sync-lab.ps1`) |
+| `lab-base.css` | AUTO (`sync-lab.sh`) |
 | `lab.js` | Тема + слайдер |
 | `VARIANTS.md` | Пороги и решение F1 ★ |
 

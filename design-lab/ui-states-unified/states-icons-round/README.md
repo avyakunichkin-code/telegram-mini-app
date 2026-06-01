@@ -6,7 +6,7 @@ HTML-витрина **B1 + B2 + B3**: empty / error / loading · ritual icons ·
 
 ```powershell
 cd design-lab/ui-states-unified/states-icons-round
-.\sync-lab.ps1
+.\sync-lab.sh
 npx serve .
 ```
 
@@ -18,7 +18,7 @@ npx serve .
 |------|------|
 | `index.html` | Секции S1–S5, варианты A–D / R0 / D0 |
 | `styles.css` | Стили раунда |
-| `lab-base.css` | AUTO (`sync-lab.ps1`) |
+| `lab-base.css` | AUTO (`sync-lab.sh`) |
 | `lab.js` | Тема light/dark |
 | `assets/monetka-mascot.png` | AUTO (S1-D) |
 

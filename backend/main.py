@@ -76,6 +76,10 @@ def ensure_schema_compatibility() -> None:
         statements.append("ALTER TABLE game_profiles ADD COLUMN salary_miss_streak INTEGER NOT NULL DEFAULT 0")
     if "negative_close_streak" not in columns:
         statements.append("ALTER TABLE game_profiles ADD COLUMN negative_close_streak INTEGER NOT NULL DEFAULT 0")
+    if "run_outcome" not in columns:
+        statements.append("ALTER TABLE game_profiles ADD COLUMN run_outcome VARCHAR(16) NULL")
+    if "victory_finale_shown_at" not in columns:
+        statements.append("ALTER TABLE game_profiles ADD COLUMN victory_finale_shown_at TIMESTAMP NULL")
 
     if "users" in inspector.get_table_names():
         user_cols = {item["name"] for item in inspector.get_columns("users")}

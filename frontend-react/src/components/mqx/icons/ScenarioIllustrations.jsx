@@ -1,6 +1,6 @@
 /**
- * I-Scene ★ — иллюстрации сценариев старта (design-lab/game-templates/scenario-icons).
- * Студент: учёба + новичок; профессионал: P-C (специалист + авто + карта).
+ * I-Scene — SVG-иллюстрации (архив: design-lab/game-templates/scenario-icons).
+ * Prod-канон: PersonaPortrait (persona-portraits-round). Используется при usePersonaPortraits={false}.
  */
 
 function SceneOrbit({ opacity = 0.28 }) {

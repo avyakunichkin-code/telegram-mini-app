@@ -4,6 +4,10 @@
 
 | Дата | Что в prod | Что исправили в docs |
 |------|------------|----------------------|
+| 2026-06-01 | **Портреты 4 персонажей** на `GameTemplatePickScreen` + `MqxNeedsDash` | `persona-portraits-round/APPROVED.md`, `character-portraits/`, `npm run persona-portraits:process`; docs: `BRANDBOOK_MQX`, `FEATURE_STATUS`, `SPEC_FRONTEND_UI` §pre-game, `character-pick` / `character-needs-dashboard`, `UI_CONSISTENCY_AUDIT`, `scenario-icons` → архив |
+| 2026-06-01 | — (lab only) | **GE1 Run Finale:** idea [`game-run-finale-pre-alpha`](../vision/ideas/game-run-finale-pre-alpha.md), `design-lab/run-finale/`, эпик в `PRODUCT_BACKLOG` |
+| 2026-06-01 | **Finance Details \| Actions v2** | `FinancePremium`: потоки → сегмент Детали/Действия → позиции или сетка+sheet; meta M5/M7/M8; ипотека/кредит раздельно; без Monetka/hint на вкладке | `finance.md`, `SPEC_FRONTEND_UI` §капитал, `capital-page/README`, `UI_CONSISTENCY_AUDIT`, `CLAUDE.md`, skills frontend-ui + design-lab-mqx; внутренний пост `handbook/internal/TEAM_UPDATE_2026-06-01.md` |
+| 2026-06-01 | **design-lab** `details-actions-round`: sync только `sync-lab.sh`, починка `lab-base.css` | `details-actions-round/README`, validate-design-lab-rounds (sh) |
 | 2026-06-01 | **O2 → PA-T2 triage** | `PRE_ALPHA_PLAYTEST_FEEDBACK.md`: α-FB-01/13/15/17 «ждём PA-T2» |
 | 2026-06-01 | **O2 в prod:** O1/lab сняты; guidance strip; cushion chip «ФИН.ПОДУШКА · N%» | `SPEC_onboarding-o2` success criteria; ссылки O1→O2 | guidance UX |
 | 2026-06-01 | — | Добавлен снимок [`PROJECT_META.md`](PROJECT_META.md): LOC, файлы, эпики, бэклог, git-сроки |

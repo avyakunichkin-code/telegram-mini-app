@@ -6,7 +6,7 @@
 
 ```powershell
 cd design-lab/dashboard/goal-chain-round
-.\sync-lab.ps1
+.\sync-lab.sh
 npx serve .
 ```
 

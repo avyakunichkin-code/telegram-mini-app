@@ -21,8 +21,8 @@ _ONBOARDING_STEPS = frozenset({"period_timer", "salary", "next_period", "safety_
 def list_game_profiles(db: Session, user_id: int) -> list[GameProfile]:
     return (
         db.query(GameProfile)
-        .filter(GameProfile.user_id == user_id, GameProfile.is_archived == 0)
-        .order_by(GameProfile.created_at.desc())
+        .filter(GameProfile.user_id == user_id)
+        .order_by(GameProfile.is_active.desc(), GameProfile.updated_at.desc(), GameProfile.id.desc())
         .all()
     )
 

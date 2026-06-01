@@ -16,6 +16,7 @@ from ..admin.catalogs import fetch_catalog_rows, get_catalog_spec, list_catalog_
 from ..admin.metrics_summary import build_metrics_summary
 from ..admin.onboarding_funnel import build_onboarding_funnel, user_guidance_admin_fields
 from ..admin.profile_inspector import build_profile_inspector
+from ..admin.stuck_scan import profile_stuck_kind, scan_stuck_and_emit
 from ..admin.notify_messages import format_alert_message_ru, kind_label_ru
 from ..database import get_db
 from ..models import GameProfile, NotificationLog, User
@@ -47,6 +48,7 @@ class AdminProfileRow(BaseModel):
     guidance_current_beat: Optional[str] = None
     created_at: Optional[datetime] = None
     updated_at: Optional[datetime] = None
+    stuck_kind: Optional[str] = None
 
 
 class AdminOnboardingFunnelStep(BaseModel):
@@ -288,6 +290,15 @@ async def admin_watchtower(
         ):
             profile_counts[int(uid)] = int(cnt)
 
+    try:
+        scan_stuck_and_emit(db, profiles)
+    except Exception:
+        import logging
+
+        logging.getLogger(__name__).warning(
+            "stuck_scan failed during watchtower", exc_info=True
+        )
+
     return AdminWatchtowerResponse(
         users=[
             AdminUserRow(
@@ -315,6 +326,7 @@ async def admin_watchtower(
                 **user_guidance_admin_fields(user),
                 created_at=p.created_at,
                 updated_at=p.updated_at,
+                stuck_kind=profile_stuck_kind(p, user),
             )
             for p, user in profiles
         ],

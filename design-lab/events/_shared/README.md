@@ -1,4 +1,4 @@
-﻿# Design-lab events — общие скрипты
+# Design-lab events — общие скрипты
 
 ## Почему `sync-lab`
 
@@ -14,18 +14,20 @@
 
 ## Команды
 
-```powershell
+```bash
 # один раунд (из папки раунда)
-.\sync-lab.ps1
+./sync-lab.sh
 
 # все раунды events
 cd design-lab/events
-.\sync-all-rounds.ps1
+./sync-all-rounds.sh
 ```
+
+Сборщик: `events/_shared/sync-lab-round.sh` (bash).
 
 После правок `design-lab/events/styles*.css` или `layout-round/styles.css` — пересобрать затронутые раунды.
 
-Раунды с разметкой `ev-l3__` (domains, tails) автоматически включают `layout-round/styles.css` в `lab-base.css` — флаг `-WithLayoutStyles` не обязателен.
+Раунды с разметкой `ev-l3__` (domains, tails) автоматически включают `layout-round/styles.css` в `lab-base.css`.
 
 ## Агентам
 

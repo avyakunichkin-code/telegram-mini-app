@@ -17,6 +17,10 @@ _KIND_LABEL_RU: dict[str, str] = {
     "period_milestone": "Веха по месяцам",
     "period_closed": "Месяц закрыт",
     "salary_claimed": "Зарплата",
+    "first_salary_claimed": "Первая зарплата",
+    "first_safety_fund": "Первая подушка",
+    "player_stuck": "Игрок застрял",
+    "onboarding_stuck": "Застрял в онбординге",
     "onboarding_step_reached": "Онбординг: шаг",
     "onboarding_brief_done": "Онбординг завершён",
     "onboarding_skipped": "Пропуск онбординга",
@@ -110,9 +114,50 @@ def format_alert_message_ru(kind: str, payload: dict[str, Any]) -> str:
     if kind == "period_closed":
         closed = int(p.get("closed_period") or 0)
         nxt = int(p.get("next_period") or closed + 1)
+        econ: list[str] = []
+        if "cash_balance" in p:
+            econ.append(f"Счёт: {_rub(p.get('cash_balance'))}")
+        if "safety_fund_balance" in p:
+            econ.append(f"Подушка: {_rub(p.get('safety_fund_balance'))}")
+        if "total_overdue_amount" in p:
+            econ.append(f"Просрочка: {_rub(p.get('total_overdue_amount'))}")
+        if "net_monthly_cashflow" in p:
+            econ.append(f"Поток/мес: {_rub(p.get('net_monthly_cashflow'))}")
         return _lines(
             f"📆 Закрыт {closed}-й месяц",
             f"Партия: «{name}» · открыт {nxt}-й",
+            " · ".join(econ) if econ else None,
+            link,
+        )
+
+    if kind == "first_salary_claimed":
+        return _lines(
+            "💰 Первая зарплата в партии",
+            f"«{name}» · месяц {p.get('period_index', '—')} · {_rub(p.get('amount'))}",
+            link,
+        )
+
+    if kind == "first_safety_fund":
+        return _lines(
+            "🛡️ Первый взнос в подушку",
+            f"«{name}» · {_rub(p.get('amount'))}",
+            f"Баланс подушки: {_rub(p.get('safety_fund_balance'))}",
+            link,
+        )
+
+    if kind == "player_stuck":
+        return _lines(
+            "⏸️ Игрок давно без действий",
+            f"«{name}» · месяц №{p.get('period_index', '—')} · режим {p.get('time_state', '—')}",
+            f"Без активности ≥ {p.get('hours_idle', '—')} ч",
+            link,
+        )
+
+    if kind == "onboarding_stuck":
+        return _lines(
+            "🧭 Застрял в онбординге",
+            f"«{name}» · месяц №{p.get('period_index', '—')}",
+            f"Без прогресса ≥ {p.get('hours_idle', '—')} ч",
             link,
         )
 

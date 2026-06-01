@@ -12,6 +12,7 @@ confidentiality: team-only
 
 | Документ | Содержание |
 |----------|------------|
+| [`TEAM_UPDATE_2026-06-01.md`](TEAM_UPDATE_2026-06-01.md) | Внутренний дайджест: финансы v2, исправления lab, смоук, аудит скиллов |
 | [`ECONOMY_TUNING.md`](ECONOMY_TUNING.md) | Формулы метрик TB1, decay потребностей, event tier, поражение |
 
 **Публичный обзор без формул:** [`../ECONOMY_OVERVIEW.md`](../ECONOMY_OVERVIEW.md).

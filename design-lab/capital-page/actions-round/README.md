@@ -12,7 +12,7 @@
 
 ```powershell
 cd design-lab/capital-page/actions-round
-.\sync-lab.ps1
+.\sync-lab.sh
 npx serve .
 ```
 

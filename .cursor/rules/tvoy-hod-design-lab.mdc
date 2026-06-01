@@ -14,7 +14,7 @@ alwaysApply: false
 | Цель | Куда |
 |------|------|
 | Обзор, поиск, ссылки на все раунды | `cd design-lab && npx serve .` → **`/`** (из `nav.manifest.json`) |
-| Один раунд (отладка 404) | `design-lab/<тема>/<round>/` + `sync-lab.ps1` + `serve` |
+| Один раунд (отладка 404) | `design-lab/<тема>/<round>/` + `./sync-lab.sh` + `serve` |
 | Композиция страницы Dashboard/Finance | `*/parity-generated-page-round/` после `npm run design-lab:build` |
 | Утверждённый React | `#/dev/mqx` |
 
@@ -31,23 +31,26 @@ alwaysApply: false
 |-------------|-----------|
 | `./lab-base.css` (сгенерирован) | `../styles.css`, `../assets/...` |
 | `./styles.css` (только раунд) | Ручное редактирование `lab-base.css` |
-| `./assets/monetka-mascot.png` (копия) | Забыть `sync-lab.ps1` после правок родительских стилей |
+| `./assets/monetka-mascot.png` (копия) | Забыть `./sync-lab.sh` после правок родительских стилей |
+| **`sync-lab.sh`** (bash) | Документировать или вызывать **`sync-lab.ps1`** (устарело) |
 
 ### После создания или изменения раунда
 
-1. Добавить `sync-lab.ps1` (вызов [`design-lab/events/_shared/sync-lab-round.ps1`](design-lab/events/_shared/sync-lab-round.ps1) или аналог в теме).
-2. **Запустить** sync и закоммитить сгенерированные `lab-base.css` + `assets/`.
+1. Добавить **`sync-lab.sh`** — нативный bash (см. `capital-page/details-actions-round/`) или делегат `events/_shared/sync-lab-round.sh`.
+2. **Запустить** `./sync-lab.sh` и закоммитить `lab-base.css` + `assets/`.
 3. Проверить: Network без 404 (локально в round **или** через хаб `cd design-lab && npx serve .`).
 4. Добавить round в `nav.manifest.json` → `cd frontend-react && npm run design-lab:build-nav`.
 
-Для **events**: `design-lab/events/sync-all-rounds.ps1` — все раунды, включая `tails-round`.
+Для **events**: `design-lab/events/sync-all-rounds.sh` — все раунды.
+
+**Fallback без bash:** `cd frontend-react && npm run design-lab:sync-round -- design-lab/<тема>/<round>`.
 
 ## Чеклист агента (перед «готово»)
 
 - [ ] В `index.html` только `./` для CSS и картинок
-- [ ] `sync-lab.ps1` выполнен, `lab-base.css` актуален
+- [ ] `./sync-lab.sh` выполнен, `lab-base.css` актуален
 - [ ] `assets/monetka-mascot.png` на месте (если нужна Монетка)
-- [ ] README раунда: хаб + `sync-lab` (не только `serve` в round)
+- [ ] README раунда: хаб + `./sync-lab.sh` (не только `serve` в round)
 - [ ] `nav.manifest.json` + `design-lab:build-nav` для нового round
 
 Скилл: **design-lab-mqx** (`.cursor/skills/design-lab-mqx/SKILL.md`).

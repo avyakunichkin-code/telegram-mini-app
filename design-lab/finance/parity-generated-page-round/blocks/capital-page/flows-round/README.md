@@ -6,7 +6,7 @@
 
 ```powershell
 cd design-lab/capital-page/flows-round
-.\sync-lab.ps1
+.\sync-lab.sh
 npx serve .
 ```
 
@@ -17,7 +17,7 @@ npx serve .
 После правок `styles.css` или родительского `../styles.css`:
 
 ```powershell
-.\sync-lab.ps1
+.\sync-lab.sh
 ```
 
 Коммитить `lab-base.css` вместе с `index.html` и `styles.css`.

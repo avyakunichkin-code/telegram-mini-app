@@ -18,4 +18,4 @@ Per-screen UX в конвейере [`DOCUMENTATION_SYSTEM.md`](../DOCUMENTATION
 
 **Design-lab:** [`design-lab/character-needs/`](../../design-lab/character-needs/)
 
-**Канон визуала:** dashboard — [`design-lab/dashboard/APPROVED.md`](../../design-lab/dashboard/APPROVED.md); капитал — [`design-lab/capital-page/`](../../design-lab/capital-page/). **Код:** `DashboardPremium.jsx`, `FinancePremium.jsx`.
+**Канон визуала:** dashboard — [`design-lab/dashboard/APPROVED.md`](../../design-lab/dashboard/APPROVED.md); капитал — [`design-lab/capital-page/details-actions-round/`](../../design-lab/capital-page/details-actions-round/); портреты персонажей — [`design-lab/game-templates/persona-portraits-round/APPROVED.md`](../../design-lab/game-templates/persona-portraits-round/APPROVED.md). **Код:** `DashboardPremium.jsx`, `FinancePremium.jsx`, `GameTemplatePickScreen`. Внутренний дайджест: [`handbook/internal/TEAM_UPDATE_2026-06-01.md`](../handbook/internal/TEAM_UPDATE_2026-06-01.md).

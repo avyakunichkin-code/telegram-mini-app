@@ -20,6 +20,22 @@ class User(Base):
     created_at = Column(DateTime, default=utc_now_naive)
 
 
+class PlayerRunFeedback(Base):
+    """Комментарий игрока с экрана финала партии (GE1-FB)."""
+
+    __tablename__ = "player_run_feedback"
+
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=False, index=True)
+    game_profile_id = Column(Integer, ForeignKey("game_profiles.id"), nullable=False, index=True)
+    outcome = Column(String(16), nullable=False)
+    template_key = Column(String(80), nullable=True)
+    period_index = Column(Integer, nullable=False, default=0)
+    defeat_reason = Column(String(40), nullable=True)
+    comment = Column(Text, nullable=False)
+    created_at = Column(DateTime, default=utc_now_naive)
+
+
 class ApiIdempotencyRecord(Base):
     """Сохранённый ответ для повторного POST с тем же Idempotency-Key."""
 
@@ -75,6 +91,8 @@ class GameProfile(Base):
     treat_self_last_period_index = Column(Integer, nullable=False, default=0)
     salary_miss_streak = Column(Integer, nullable=False, default=0)
     negative_close_streak = Column(Integer, nullable=False, default=0)
+    run_outcome = Column(String(16), nullable=True)  # victory | defeat
+    victory_finale_shown_at = Column(DateTime, nullable=True)
 
     created_at = Column(DateTime, default=utc_now_naive)
     updated_at = Column(DateTime, default=utc_now_naive, onupdate=utc_now_naive)

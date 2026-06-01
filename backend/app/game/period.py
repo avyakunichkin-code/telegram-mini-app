@@ -37,6 +37,12 @@ from ..needs.engine import (
 )
 
 
+def _apply_defeat_to_profile(profile: GameProfile) -> None:
+    profile.is_active = 0
+    profile.is_archived = 1
+    profile.run_outcome = "defeat"
+
+
 def _prev_period_closing(db: Session, profile_id: int, period_index: int) -> PeriodEconomyClosing | None:
     if int(period_index) <= 1:
         return None
@@ -367,8 +373,7 @@ def process_period_end(db: Session, profile: GameProfile) -> dict:
         profile.negative_periods_count += 1
         # Можно добавить транзакцию-предупреждение
         if profile.negative_periods_count >= 3:
-            # Поражение: блокируем профиль
-            profile.is_active = 0
+            _apply_defeat_to_profile(profile)
             defeat_reason = "cash_negative_streak"
             add_transaction(
                 db=db,
@@ -415,7 +420,7 @@ def process_period_end(db: Session, profile: GameProfile) -> dict:
 
                 # defeat: streak >= 3
                 if int(getattr(profile, "needs_zero_periods_streak", 0) or 0) >= 3:
-                    profile.is_active = 0
+                    _apply_defeat_to_profile(profile)
                     defeat_reason = "needs_depletion"
                     add_transaction(
                         db=db,
@@ -524,7 +529,19 @@ def process_period_end(db: Session, profile: GameProfile) -> dict:
     try:
         from ..admin.notify import process_period_admin_alerts
 
-        process_period_admin_alerts(db, profile, closed_period_index=closed_period_index)
+        net_cashflow = round(float(current_income_rate) - float(current_expense_total), 2)
+        process_period_admin_alerts(
+            db,
+            profile,
+            closed_period_index=closed_period_index,
+            economy={
+                "cash_balance": round(cash_end, 2),
+                "safety_fund_balance": round(safety_end, 2),
+                "total_overdue_amount": total_overdue_now,
+                "net_monthly_cashflow": net_cashflow,
+                "salary_claimed": salary_claimed,
+            },
+        )
     except Exception:
         import logging
 

@@ -6,7 +6,7 @@
 
 ```bash
 cd design-lab/character-needs/dashboard-needs-v5-round
-./sync-lab.ps1
+./sync-lab.sh
 npx serve .
 ```
 

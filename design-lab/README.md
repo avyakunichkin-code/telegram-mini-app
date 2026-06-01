@@ -27,8 +27,7 @@ npm run design-lab:build-dashboard-page-round
 
 ```bash
 cd design-lab/<тема>/<round>
-./sync-lab.sh          # bash / Git Bash / WSL
-# или PowerShell: .\sync-lab.ps1
+./sync-lab.sh          # bash / Git Bash / WSL (канон)
 # или: cd frontend-react && npm run design-lab:sync-round -- design-lab/<тема>/<round>
 ```
 
@@ -54,25 +53,25 @@ cd design-lab/<тема>/<round>
 | [pre-game-shell/](pre-game-shell/) | v2 (сравнение) | Монетка над пузырём, TGS, без frame |
 | [auth-flow/](auth-flow/) | **★ B → prod** | Вход / регистрация (история вариантов A/B/C) |
 | [new-game-mode/](new-game-mode/) | **★ B → prod** | Шаг 1: имя + Игра / План |
-| [game-templates/](game-templates/) | **★ B → prod** | Шаг 2: каталог + быстрый старт |
+| [game-templates/](game-templates/) | **★ → prod** | Шаг 2: каталог; **портреты 4 жизней** ★ [`persona-portraits-round/`](game-templates/persona-portraits-round/); SVG [`scenario-icons/`](game-templates/scenario-icons/) — архив |
 | [period-close/](period-close/) | **★ в prod** | Иконки строк — lab-раунд B2 |
 | [start-menu/](start-menu/) | **★ B → prod** | Меню сохранений после входа |
 | [brand-logo/](brand-logo/) | **★ → prod** | G1 старт, G2 hero; tagline в G1 |
 | [game-ui/juice-round/](game-ui/juice-round/) | **★ A+C+D → prod** | Gain, turn ritual, salary warn; B Risk — backlog |
-| [character-needs/](character-needs/) | **dashboard-needs-round готов** | Z-NEEDS A–D; treat-self / events — следующие раунды |
+| [character-needs/](character-needs/) | **★ v5 в prod** | Z-NEEDS + портрет `dash` из persona-portraits-round |
 | [ui-states-unified/states-icons-round/](ui-states-unified/states-icons-round/) | **★ в prod** | S1 C′, S2 B, S3 B/C, S4 A, S5 D0 |
 
 ## Как работать
 
 ```bash
 cd design-lab/<тема>/<раунд>
-.\sync-lab.ps1          # если есть — пересобрать lab-base.css + assets
+./sync-lab.sh          # пересобрать lab-base.css + assets
 npx serve .
 ```
 
 **Важно:** в HTML макета только пути `./` — не `../` (иначе стили 404). См. `tvoy-hod-design-lab.mdc` и скилл `design-lab-mqx`.
 
-**Events:** `design-lab/events/sync-all-rounds.ps1` — все раунды сразу.
+**Events:** `design-lab/events/sync-all-rounds.sh` — все раунды сразу.
 
 В `README.md` каждой темы — таблица вариантов A, B, C… и что утверждено.
 

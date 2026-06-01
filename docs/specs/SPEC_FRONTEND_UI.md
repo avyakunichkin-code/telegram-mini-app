@@ -1,4 +1,4 @@
-﻿# Spec: Frontend UI/UX — ТВОЙ ХОД TMA
+# Spec: Frontend UI/UX — ТВОЙ ХОД TMA
 
 **Статус:** принят (аудит 2026-05)  
 **Связанные документы:** [`reference/brandbook/BRANDBOOK.md`](../reference/brandbook/BRANDBOOK.md) (identity), [`reference/brandbook/BRANDBOOK_MQX.md`](../reference/brandbook/BRANDBOOK_MQX.md) (MQX UI), [`foundation/TMA_USER_FLOWS.md`](../foundation/TMA_USER_FLOWS.md), [`CLAUDE.md`](../../CLAUDE.md)  
@@ -205,18 +205,33 @@ export function ExampleBlock({ overview }) {
 - Новый подраздел = запись в списке табов + панель с тем же **стеком классов** (`mqx-card` / `mqx-capital-card`, `mqx-capital-lead`, те же примитивы навигации). Визуальная согласованность достигается **повторным использованием** `MqxFinListRow`, `MqxSubtab`, `MqxModeButton`, а не копированием вёрстки.
 - Отклонение от паттерна (другой тип первого экрана или другой список) — только после варианта в `design-lab/` и явного утверждения ([`DESIGN_WORKFLOW.md`](../../frontend-react/src/components/mqx/DESIGN_WORKFLOW.md)).
 
-### Страница «Управление капиталом» (утверждено в lab, 2026-05)
+### Страница «Управление капиталом»
 
-Статика: [`design-lab/capital-page/`](../../design-lab/capital-page/).
+Статика: [`design-lab/capital-page/details-actions-round/`](../../design-lab/capital-page/details-actions-round/) (**★ prod с 2026-06-01**). Обзор IA: [`capital-page/README`](../../design-lab/capital-page/README.md).
 
 | Решение | Значение |
 |---------|----------|
-| Порядок разделов (аккордеоны) | **Доходы → Расходы → Инвестиции → Страховки → Имущество → Обязательства** |
-| Бюджет | **Не в плане** (жизнь остаётся в «Расходы → На жизнь») |
-| Страховки | Каталог без изменений (сетка 2×2 + тарифы H) |
-| Имущество / Обязательства | Каталог — **строки** (accent + title + метрики + **+**), без kickers |
-| Позиции | Не на первом экране; сегмент **«Добавить \| Мои (N)»** внутри карточки раздела (вариант **B**, утверждено) |
-| Навигация 5 разделов | **T2 / T3 / T4** в lab — не горизонтальный скролл (**T1**); см. [`design-lab/capital-page/`](../../design-lab/capital-page/) |
+| Вертикальный порядок | **Доходы / Расходы** → сегмент **Детали \| Действия** → контент режима |
+| **Детали** | Только открытые позиции; meta **M8** (icon+count), обязательства **M5** (tint «N долг(ов)»); row actions «Закрыть» / «Продать» / «Отменить» |
+| **Действия** | Сетка плиток 3× (узкий 2×): Депозит, Облигации, Недвижимость, Авто, Страховки, **Ипотека**, **Кредит**; оформление в **bottom sheet** |
+| Потоки | Meta **M7** (сумма в summary) |
+| Бюджет | **Не в плане** |
+| Страховки (sheet) | Каталог 2×2 + тарифы H (без seg «Оформить \| Мои» в аккордеоне) |
+| Имущество / долги (sheet) | Каталог строк + **+**; ипотека отдельно от прочих кредитов |
+| Снято с prod | `CapitalMonetkaGuidance`, `.mqx-cap-actions-hint`, `MqxSectionSeg` внутри аккордеонов капитала |
+
+**Legacy (до v2):** сегмент **«Добавить \| Мои (N)»** внутри аккордеона — заменён режимом Детали/Действия + sheets.
+
+### Pre-game: портреты персонажей
+
+Lab ★: [`design-lab/game-templates/persona-portraits-round/`](../../design-lab/game-templates/persona-portraits-round/) · UX: [`ux/screens/character-pick.md`](../ux/screens/character-pick.md).
+
+| Место | Компонент | Размер |
+|-------|-----------|--------|
+| `GameTemplatePickScreen` | `MqxStarterScenarioPicker` + `PersonaPortrait` | `pick` (56px) |
+| Z-NEEDS на главной | `MqxNeedsDash` + `templateKey` | `dash` (108px) |
+
+Ассеты: `frontend-react/src/assets/character-portraits/` · pipeline: `npm run persona-portraits:process` (`scripts/process-persona-portraits.py`). Четыре роли — **разные** лица/причёски/реквизит; единый масштаб силуэта после normalize. SVG [`ScenarioIllustrations`](../../frontend-react/src/components/mqx/icons/ScenarioIllustrations.jsx) — не канон prod (архив lab `scenario-icons/`).
 
 ---
 
@@ -271,7 +286,7 @@ export function ExampleBlock({ overview }) {
 ### P1 (единый UX)
 
 - [x] ~~На каждой вкладке `GameScreen` ровно один `h1` в hero.~~ **Снято (2026-05-25):** TMA — `h2` на секциях + `aria-label`; см. [`ux/screens/dashboard.md`](../ux/screens/dashboard.md).
-- [x] `FinancePremium`: инвестиции и страховки визуально в том же `mqx-capital-*`, что портфель (форма embedded, `MqxSectionSeg`, `MqxCapitalEmpty`).
+- [x] `FinancePremium`: Details \| Actions v2 — потоки, `MqxCapitalPageModeSeg`, `CapitalDetailsPanel` / `CapitalActionsPanel`, sheets, meta M5/M7/M8.
 - [ ] `BottomGameNav`: подписи под иконками **или** tooltip при первом визите (решение зафиксировать в PR).
 - [ ] `MenuPremium` не выбивается по плотности контента (минимум: тот же hero-стиль или явный «служебный» экран).
 

@@ -61,13 +61,13 @@ npm run design-lab:build
 
 ## Новый раунд (чеклист агента)
 
-1. Создать `design-lab/<тема>/<round>/` — `index.html`, `styles.css`, `sync-lab.ps1`, `VARIANTS.md`.
-2. Только `./` пути в HTML; запустить `sync-lab.ps1`; закоммитить `lab-base.css` + `assets/`.
+1. Создать `design-lab/<тема>/<round>/` — `index.html`, `styles.css`, `sync-lab.sh`, `VARIANTS.md`.
+2. Только `./` пути в HTML; запустить `sync-lab.sh`; закоммитить `lab-base.css` + `assets/`.
 3. Добавить пункт в **`nav.manifest.json`** (секция темы, `kind: "lab"`, при ★ — `"status": "approved"`).
 4. **`npm run design-lab:build-nav`** — обновить хаб.
 5. Показать пользователю ссылку через **хаб**, не «откройте папку round».
 
-Для **events**: после правок родительских стилей — `design-lab/events/sync-all-rounds.ps1`.
+Для **events**: после правок родительских стилей — `design-lab/events/sync-all-rounds.sh`.
 
 ---
 

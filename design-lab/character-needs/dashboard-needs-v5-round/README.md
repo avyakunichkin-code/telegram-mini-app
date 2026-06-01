@@ -15,6 +15,6 @@ npx serve .
 ## Prod
 
 - `MqxNeedsDash.jsx`
-- `frontend-react/src/styles/mqx/dashboard.css` — блок Z-NEEDS подмешивается в `lab-base.css` через `sync-lab.ps1` (не править `lab-base` руками)
+- `frontend-react/src/styles/mqx/dashboard.css` — блок Z-NEEDS подмешивается в `lab-base.css` через `sync-lab.sh` (не править `lab-base` руками)
 
 Предыдущие варианты v1–v4: [`../dashboard-needs-round/`](../dashboard-needs-round/).

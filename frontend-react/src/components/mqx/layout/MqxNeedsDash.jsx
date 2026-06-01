@@ -1,7 +1,6 @@
 import { useMemo, useState } from 'react';
 
-import studentMascotPng from '../../../assets/character-needs/student-mascot.png';
-import studentMascotWebp from '../../../assets/character-needs/student-mascot.webp';
+import { PersonaPortrait } from '../brand/PersonaPortrait';
 
 const AXES = [
   { key: 'comfort', label: 'Комфорт' },
@@ -93,6 +92,7 @@ function NeedsBarRow({ axis, value, compact = false }) {
 
 export function MqxNeedsDash({
   needs,
+  templateKey = null,
   needsZeroPeriodsStreak = 0,
   treatSelf = null,
   onTreatSelf,
@@ -155,18 +155,11 @@ export function MqxNeedsDash({
 
       <div className="mqx-needs-body">
         <div className="mqx-needs-avatar" aria-hidden="true">
-          <picture>
-            <source type="image/webp" srcSet={studentMascotWebp} />
-            <img
-              src={studentMascotPng}
-              alt=""
-              width={129}
-              height={108}
-              className="mqx-needs-avatar__img"
-              decoding="async"
-              draggable={false}
-            />
-          </picture>
+          <PersonaPortrait
+            templateKey={templateKey || 'mq_game_basic_v1'}
+            size="dash"
+            className="mqx-needs-avatar__persona"
+          />
         </div>
 
         <div className="mqx-needs-main">

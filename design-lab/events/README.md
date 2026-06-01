@@ -29,7 +29,7 @@ npm run design-lab:build-nav
 
 ```powershell
 cd design-lab/events
-.\sync-all-rounds.ps1
+.\sync-all-rounds.sh
 ```
 
 В `index.html` только `./lab-base.css` и `./styles.css` — без `../`.

@@ -14,8 +14,17 @@ function saveKindLabel(sk) {
   return sk || '—';
 }
 
+function runOutcomeBadge(p) {
+  const outcome = p.run_outcome || p.runOutcome;
+  if (outcome === 'victory') return 'Победа';
+  if (outcome === 'defeat' || (p.is_archived && !p.is_active)) return 'Поражение';
+  return null;
+}
+
 function profileSubtitle(p) {
-  return `${saveKindLabel(p.save_kind)} · период ${p.period_index}`;
+  const badge = runOutcomeBadge(p);
+  const base = `${saveKindLabel(p.save_kind)} · период ${p.period_index}`;
+  return badge ? `${badge} · ${base}` : base;
 }
 
 function menuCopy({ loading, profileCount }) {

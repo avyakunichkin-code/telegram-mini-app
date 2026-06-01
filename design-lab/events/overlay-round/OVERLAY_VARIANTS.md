@@ -15,7 +15,7 @@
 
 ```powershell
 cd design-lab/events/overlay-round
-.\sync-lab.ps1
+.\sync-lab.sh
 npx serve .
 ```
 

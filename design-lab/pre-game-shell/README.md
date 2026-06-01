@@ -5,13 +5,13 @@
 
 Единая система для **до партии**: два route auth, **Монетка B** + TGS-фон, пузырь с хвостом, **без внешней обводки** `mqx-frame` (`mqx-frame--pre-game`), flow flat для new-game, **только `mqx-btn`**.
 
-`sync-lab.ps1` тянет `auth-flow/styles.css` + `new-game-mode/styles.css` + локальные дополнения.
+`sync-lab.sh` тянет `auth-flow/styles.css` + `new-game-mode/styles.css` + локальные дополнения.
 
 ## Запуск
 
 ```powershell
 cd design-lab/pre-game-shell
-.\sync-lab.ps1
+.\sync-lab.sh
 npx serve .
 ```
 

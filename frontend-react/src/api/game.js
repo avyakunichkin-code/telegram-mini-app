@@ -31,6 +31,12 @@ export const gameApi = {
   getGameBootstrap() {
     return apiCall('/api/game/bootstrap');
   },
+  dismissRunFinale() {
+    return apiCall('/api/game/run-finale/dismiss', 'POST');
+  },
+  submitRunFeedback(payload) {
+    return apiCall('/api/game/run-feedback', 'POST', payload);
+  },
   getTimeStatus() {
     return apiCall('/api/game/time');
   },

@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
 set -euo pipefail
-ROOT="$(cd "$(dirname "$0")" && pwd)"
-powershell.exe -NoProfile -ExecutionPolicy Bypass -File "$ROOT/sync-lab.ps1" 2>/dev/null || pwsh -NoProfile -File "$ROOT/sync-lab.ps1"
+ROUND="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+DL="$(cd "$ROUND/../.." && pwd)"
+exec bash "$DL/_shared/sync-lab-runner.sh" "$ROUND" "$@"

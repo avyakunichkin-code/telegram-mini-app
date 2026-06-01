@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
-# Положить в папку раунда как sync-lab.sh — тот же смысл, что sync-lab.ps1 / sync-lab.cmd.
+# Stub в раунде без нативного sync: делегат на sync-lab-runner (legacy ps1 → порт на bash).
 set -euo pipefail
 ROUND="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 d="$ROUND"
 while [[ "$d" != "/" ]]; do
-  if [[ "$(basename "$d")" == "design-lab" && -f "$d/_shared/sync-lab-runner.sh" ]]; then
+  if [[ "$(basename "$d")" == "design-lab" ]]; then
     exec bash "$d/_shared/sync-lab-runner.sh" "$ROUND" "$@"
   fi
   d="$(dirname "$d")"

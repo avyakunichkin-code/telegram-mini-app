@@ -385,6 +385,58 @@ class GameProfileResponse(BaseModel):
     base_params_locked: int
     onboarding_state: str
     onboarding_step: str = "period_timer"
+    run_outcome: Optional[str] = None
+
+
+class RunFinaleMetric(BaseModel):
+    glyph: str  # up | down | coin | term | goal
+    headline: str
+    name: str
+    value: str
+
+
+class RunFinaleSection(BaseModel):
+    title: str
+    metrics: List[RunFinaleMetric] = Field(default_factory=list)
+    divider_before: bool = False
+
+
+class RunFinaleFact(BaseModel):
+    title: str
+    text: str
+    tips: List[str] = Field(default_factory=list)
+
+
+class RunFinalePayload(BaseModel):
+    outcome: str  # victory | defeat
+    period_index: int
+    template_key: Optional[str] = None
+    template_title: Optional[str] = None
+    persona_slug: Optional[str] = None
+    scenario_title: str
+    scenario_line: str
+    gazeta_lead: Optional[str] = None
+    coach_title: str
+    coach_text: str
+    sections: List[RunFinaleSection] = Field(default_factory=list)
+    fact: Optional[RunFinaleFact] = None
+    defeat_reason: Optional[str] = None
+    can_dismiss: bool = False
+
+
+class RunFinaleDismissResponse(BaseModel):
+    status: str = "success"
+    victory_finale_shown_at: Optional[datetime] = None
+
+
+class RunFeedbackRequest(BaseModel):
+    text: str
+    outcome: Optional[str] = None
+
+
+class RunFeedbackResponse(BaseModel):
+    status: str = "success"
+    id: int
 
 
 class OnboardingPatchRequest(BaseModel):
@@ -533,6 +585,7 @@ class GameBootstrapResponse(BaseModel):
     game_session_status: str = "active"  # active | defeated
     defeat_reason: Optional[str] = None
     defeat_period_index: Optional[int] = None
+    run_finale: Optional[RunFinalePayload] = None
 
 
 class PeriodSummaryResponse(BaseModel):

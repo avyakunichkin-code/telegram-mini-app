@@ -1,4 +1,4 @@
-﻿# MQX — процесс дизайна и внедрения
+# MQX — процесс дизайна и внедрения
 
 Согласованный цикл: **сначала варианты → выбор → (при необходимости ещё раунд) → утверждение → только потом код в приложении.**
 
@@ -64,13 +64,13 @@ npx serve .
 
 | Файл в раунде | Роль |
 |---------------|------|
-| `lab-base.css` | Сборка общих стилей (`sync-lab.ps1`, не править руками) |
+| `lab-base.css` | Сборка общих стилей (`sync-lab.sh`, не править руками) |
 | `styles.css` | Стили вариантов этого раунда |
 | `assets/monetka-mascot.png` | Копия маскота при необходимости |
 
 В `index.html` только `./lab-base.css`, `./styles.css`, `./assets/...`.
 
-**Events:** `design-lab/events/sync-all-rounds.ps1` или `.\sync-lab.ps1` в папке раунда.
+**Events:** `design-lab/events/sync-all-rounds.sh` или `./sync-lab.sh` в папке раунда.
 
 Правило Cursor: `tvoy-hod-design-lab.mdc`. Скилл: `design-lab-mqx`.
 
@@ -126,13 +126,13 @@ npx serve .
 | 8 | `dashboard-home-v2/` — эксперименты компоновок (архив) | — |
 | 9 | ~~`dashboard-dual-accordion/`~~ | superseded **S5**; не внедрять |
 | 10 | **`new-game-mode/`** — R2 + I1 ★ | `MqxMonetkaDialogScreen`, `MqxSaveKindPicker`, `NewProfileKindScreen` |
-| 11 | **`game-templates/`** — compact + цвета ★; **`scenario-icons/`** — I-Scene ★, P-C | `MqxStarterScenarioPicker`, `ScenarioIllustrations`, `GameTemplatePickScreen` |
+| 11 | **`game-templates/`** — compact + цвета ★; **`persona-portraits-round/`** ★ (pick/dash); **`scenario-icons/`** — архив I-Scene | `PersonaPortrait`, `MqxStarterScenarioPicker`, `MqxNeedsDash`, `GameTemplatePickScreen` |
 | 12 | **`period-close/`** — хвостик ★; итог — **`game-ui/juice-round` C** | `MqxPeriodCloseRitual`, `MqxPeriodCloseTail` (sheet legacy в каталоге) |
 | 13 | **`game-ui/juice-round/`** ★ A+C+D | `MqxJuiceGainFeedback`, `MqxPeriodCloseRitual`, `MqxSalaryWarnModal` |
-| 13 | **`capital-page/`** — IA ★, вариант A/B | унификация `FinanceSection` → MQX |
+| 13 | **`capital-page/details-actions-round/`** ★ v2 | `FinancePremium`: Детали \| Действия + sheets |
 | 14 | **`character-needs/`** — dashboard Z-NEEDS, treat-self, events chips | `MqxNeedsSummary`, `MqxNeedsBars`, `MqxTreatSelfSheet`, … |
 
-Текущий статус: **дашборд S5**, **события L3 + оверлей O1**, **итог периода**, **новая игра**, **онбординг**, **ui-states ★** в prod. Lab оверлея: [`design-lab/events/overlay-round/`](../../../../design-lab/events/overlay-round/). Дальше: **капитал** (волна C).
+Текущий статус: **дашборд S5**, **события L3 + оверлей O1**, **итог периода**, **новая игра**, **онбординг**, **ui-states ★**, **финансы Details \| Actions v2 ★** в prod. Lab оверлея: [`design-lab/events/overlay-round/`](../../../../design-lab/events/overlay-round/). Дальше: **аналитика** (волна C хвост).
 
 ---
 

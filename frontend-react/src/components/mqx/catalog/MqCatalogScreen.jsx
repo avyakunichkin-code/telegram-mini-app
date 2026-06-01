@@ -165,9 +165,11 @@ export function MqCatalogScreen() {
         </div>
       </CatalogSection>
 
-      <CatalogSection title="Новая игра — сценарии (I-Scene ★)">
+      <CatalogSection title="Новая игра — выбор персонажа (портреты ★)">
         <p className="mqx-catalog__lead">
-          Шаг 2: <code>MqxStarterScenarioPicker</code> compact + иллюстрации 56/40. Профи — P-C.
+          Шаг 2: <code>MqxStarterScenarioPicker</code> + <code>PersonaPortrait</code> (pick 56px). Lab:{' '}
+          <code>design-lab/game-templates/persona-portraits-round/</code>. SVG I-Scene — архив, fallback при{' '}
+          <code>usePersonaPortraits=false</code>.
         </p>
         <div style={{ maxWidth: 420 }}>
           <MqxStarterScenarioPicker

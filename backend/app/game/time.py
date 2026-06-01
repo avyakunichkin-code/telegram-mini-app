@@ -71,7 +71,7 @@ def resolve_game_session(
 
     last = (
         db.query(GameProfile)
-        .filter(GameProfile.user_id == user_id, GameProfile.is_archived == 0)
+        .filter(GameProfile.user_id == user_id)
         .order_by(GameProfile.updated_at.desc(), GameProfile.id.desc())
         .first()
     )

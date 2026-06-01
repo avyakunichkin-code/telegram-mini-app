@@ -126,13 +126,13 @@ related: ../specs/SPEC_ANALYTICS.md
 | A3.1 | `GET /api/admin/profiles/{id}` — профиль, user, economy, closings, activity log |
 | A3.2 | UI: клик по строке / `?profile=` → inspector panel на Watchtower |
 
-### Фаза A4 — Вовлечение в лог (по мере надобности)
+### Фаза A4 — Вовлечение в лог ✅ (2026-06-01)
 
 | # | Задача |
 |---|--------|
-| A4.1 | `first_salary_claimed`, `first_safety_fund` (dedupe) |
-| A4.2 | Payload period_end: cash, overdue, cashflow |
-| A4.3 | `player_stuck` / `onboarding_stuck` — фоновая проверка или при overview |
+| A4.1 | `first_salary_claimed`, `first_safety_fund` (dedupe) ✅ |
+| A4.2 | Payload period_end: cash, overdue, cashflow ✅ |
+| A4.3 | `player_stuck` / `onboarding_stuck` — scan при `GET /watchtower`, бейдж `stuck_kind` ✅ |
 
 ### Фаза B — Player inbox (отложено)
 

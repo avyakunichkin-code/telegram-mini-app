@@ -26,7 +26,7 @@
 
 ```powershell
 cd design-lab/events
-.\sync-all-rounds.ps1
+.\sync-all-rounds.sh
 cd ../../frontend-react
 npm run check:events-tails-parity
 ```
@@ -79,7 +79,7 @@ npm run check:events-tails-parity
 ## Чеклист синка (агент / PR)
 
 1. Правка lab → зеркало в prod (или наоборот) по таблице выше.
-2. `design-lab/events/sync-all-rounds.ps1`
+2. `design-lab/events/sync-all-rounds.sh`
 3. `npm run check:events-tails-parity` (frontend-react)
 4. Визуально: хаб `events/tails-round/` и `#/dev/mqx` Events tails
 5. Обновить **эту секцию**, если меняются селекторы или номера строк

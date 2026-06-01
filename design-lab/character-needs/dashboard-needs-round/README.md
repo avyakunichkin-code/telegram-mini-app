@@ -15,12 +15,12 @@
 
 ## Lab (готово к review)
 
-- [x] `index.html` + `styles.css` + `sync-lab.ps1` + `lab.js`
+- [x] `index.html` + `styles.css` + `sync-lab.sh` + `lab.js`
 - [x] Варианты A–D, переключатель состояний и темы
 - [x] Collapsed / expanded на карточке
 
 ```powershell
-.\sync-lab.ps1
+.\sync-lab.sh
 npx serve .
 ```
 

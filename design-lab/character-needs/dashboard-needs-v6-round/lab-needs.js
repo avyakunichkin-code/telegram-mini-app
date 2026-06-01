@@ -1,0 +1,217 @@
+(function () {
+  const AVATAR_SRC = './assets/student-mascot-dash.png';
+  const AVATAR_FALLBACK = './assets/student-mascot.png';
+
+  const AXES = [
+    { key: 'comfort', label: 'Комфорт' },
+    { key: 'status', label: 'Статус' },
+    { key: 'social', label: 'Связи' },
+    { key: 'health', label: 'Здоровье' },
+  ];
+
+  const PRESETS = {
+    distressed: { comfort: 72, status: 41, social: 28, health: 65, streak: 1 },
+    low: { comfort: 55, status: 48, social: 38, health: 52, streak: 0 },
+    ok: { comfort: 76, status: 58, social: 62, health: 74, streak: 0 },
+    zero: { comfort: 64, status: 52, social: 0, health: 58, streak: 2 },
+  };
+
+  function zone(v) {
+    if (v <= 0) return 'zero';
+    if (v < 30) return 'distressed';
+    if (v < 40) return 'low';
+    return 'ok';
+  }
+
+  function zoneLabel(z) {
+    if (z === 'zero') return 'Критично';
+    if (z === 'distressed') return 'Истощение';
+    if (z === 'low') return 'Низко';
+    return 'Норма';
+  }
+
+  function minAxis(values) {
+    let min = AXES[0];
+    AXES.forEach((a) => {
+      if (values[a.key] < values[min.key]) min = a;
+    });
+    return min;
+  }
+
+  function overallStatus(values) {
+    let worst = 'ok';
+    AXES.forEach((a) => {
+      const z = zone(values[a.key]);
+      if (z === 'zero') worst = 'zero';
+      else if (z === 'distressed' && worst !== 'zero') worst = 'distressed';
+      else if (z === 'low' && worst === 'ok') worst = 'low';
+    });
+    return worst;
+  }
+
+  function overallCopy(status) {
+    if (status === 'zero') return 'Критично';
+    if (status === 'distressed') return 'Истощение';
+    if (status === 'low') return 'Есть просадка';
+    return 'Всё в норме';
+  }
+
+  function renderBarRow(axis, value, opts = {}) {
+    const z = zone(value);
+    const pct = Math.max(0, Math.min(100, value));
+    const pctAttr = opts.showPct ? ` data-pct="${pct}"` : '';
+    return `
+      <div class="mqx-needs-bar-row${opts.compact ? ' mqx-needs-bar-row--compact' : ''}">
+        <span class="mqx-needs-bar-label">${axis.label}</span>
+        <div class="mqx-needs-bar-track" role="progressbar" aria-valuenow="${pct}" aria-valuemin="0" aria-valuemax="100">
+          <span class="mqx-needs-bar-fill" data-zone="${z}" style="width:${pct}%"></span>
+        </div>
+        <span class="mqx-needs-zone-text" data-zone="${z}"${pctAttr}>${zoneLabel(z)}</span>
+      </div>`;
+  }
+
+  function renderQuad(values) {
+    return `<div class="mqx-needs-quad">${AXES.map((a) => {
+      const v = values[a.key];
+      const z = zone(v);
+      const pct = Math.max(0, Math.min(100, v));
+      return `
+        <div class="mqx-needs-quad-item">
+          <span class="mqx-needs-quad-label">${a.label}</span>
+          <div class="mqx-needs-bar-track" role="progressbar" aria-valuenow="${pct}" aria-valuemin="0" aria-valuemax="100">
+            <span class="mqx-needs-bar-fill" data-zone="${z}" style="width:${pct}%"></span>
+          </div>
+        </div>`;
+    }).join('')}</div>`;
+  }
+
+  function renderSegmentStrip(values) {
+    const min = minAxis(values);
+    const segments = AXES.map((a) => {
+      const z = zone(values[a.key]);
+      const flex = Math.max(8, values[a.key]);
+      return `<span data-zone="${z}" style="flex:${flex}" title="${a.label}: ${values[a.key]}"></span>`;
+    }).join('');
+    const hint = `Слабее всего: <strong>${min.label}</strong> · ${zoneLabel(zone(values[min.key]))}`;
+    return `
+      <div class="mqx-needs-segment-wrap">
+        <div class="mqx-needs-segment-strip" role="img" aria-label="Четыре потребности">${segments}</div>
+        <p class="mqx-needs-compact-hint">${hint}</p>
+      </div>`;
+  }
+
+  function renderPanels(block, values) {
+    const variant = block.getAttribute('data-lab-variant') || 'v5';
+    const min = minAxis(values);
+    const compactHost = block.querySelector('[data-needs-compact]');
+    const expandedHost = block.querySelector('[data-needs-expanded]');
+    const showPct = variant === 'v6b';
+
+    if (compactHost) {
+      if (variant === 'v6a') compactHost.innerHTML = renderQuad(values);
+      else if (variant === 'v6c') compactHost.innerHTML = renderSegmentStrip(values);
+      else compactHost.innerHTML = renderBarRow(min, values[min.key], { compact: true, showPct });
+    }
+
+    if (expandedHost) {
+      const bars = AXES.map((a) => renderBarRow(a, values[a.key], { showPct })).join('');
+      const footer = `
+        <div class="mqx-needs-footer">
+          <button type="button" class="mqx-needs-treat-btn">Порадовать себя</button>
+          <button type="button" class="mqx-needs-help-btn" aria-label="Как улучшить">?</button>
+        </div>`;
+      expandedHost.innerHTML = bars + footer;
+    }
+
+    const summary = block.querySelector('.mqx-needs-block__summary');
+    const status = overallStatus(values);
+    if (summary) {
+      summary.textContent = overallCopy(status);
+      summary.setAttribute('data-status', status);
+    }
+    block.setAttribute('data-overall', status);
+  }
+
+  function updateRisk(block, preset) {
+    const risk = block.querySelector('.mqx-needs-risk');
+    if (!risk) return;
+    const min = minAxis(preset);
+    const show = preset.streak > 0;
+    risk.classList.toggle('is-visible', show);
+    block.classList.toggle('is-bleed-risk', show);
+    risk.hidden = !show;
+    if (show) {
+      risk.textContent = `Риск поражения: ${preset.streak} из 3 месяцев с нулём на «${min.label}»`;
+    }
+  }
+
+  function setExpanded(block, expanded) {
+    block.classList.toggle('is-expanded', expanded);
+    const header = block.querySelector('.mqx-needs-block__header');
+    if (header) header.setAttribute('aria-expanded', expanded ? 'true' : 'false');
+    const compact = block.querySelector('[data-needs-compact]');
+    const expandedPanel = block.querySelector('[data-needs-expanded]');
+    if (compact) compact.hidden = expanded;
+    if (expandedPanel) expandedPanel.hidden = !expanded;
+  }
+
+  function wireBlock(block) {
+    const header = block.querySelector('.mqx-needs-block__header');
+    if (!header) return;
+    header.addEventListener('click', (e) => {
+      if (e.target.closest('.mqx-needs-improve-link, .mqx-needs-help-btn, .mqx-needs-treat-btn')) return;
+      setExpanded(block, !block.classList.contains('is-expanded'));
+    });
+    header.addEventListener('keydown', (e) => {
+      if (e.key !== 'Enter' && e.key !== ' ') return;
+      if (e.target.closest('.mqx-needs-improve-link')) return;
+      e.preventDefault();
+      setExpanded(block, !block.classList.contains('is-expanded'));
+    });
+  }
+
+  function applyPreset(name) {
+    const preset = PRESETS[name] || PRESETS.distressed;
+    document.querySelectorAll('[data-needs-block]').forEach((block) => {
+      renderPanels(block, preset);
+      updateRisk(block, preset);
+    });
+  }
+
+  function wireAvatars() {
+    document.querySelectorAll('[data-needs-avatar]').forEach((img) => {
+      img.addEventListener('error', () => {
+        if (img.dataset.fallback) return;
+        img.dataset.fallback = '1';
+        img.src = AVATAR_FALLBACK;
+      });
+    });
+  }
+
+  document.querySelectorAll('[data-state-btn]').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('[data-state-btn]').forEach((b) => b.classList.remove('is-active'));
+      btn.classList.add('is-active');
+      applyPreset(btn.getAttribute('data-state-btn'));
+    });
+  });
+
+  document.querySelectorAll('[data-theme-btn]').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      document.documentElement.setAttribute('data-theme', btn.getAttribute('data-theme-btn'));
+      document.querySelectorAll('[data-theme-btn]').forEach((b) => b.classList.remove('is-active'));
+      btn.classList.add('is-active');
+    });
+  });
+
+  document.querySelectorAll('[data-needs-block]').forEach((block) => {
+    wireBlock(block);
+    setExpanded(block, block.classList.contains('is-expanded'));
+  });
+
+  document.querySelectorAll('[data-needs-avatar]').forEach((img) => {
+    img.src = AVATAR_SRC;
+  });
+  wireAvatars();
+  applyPreset('distressed');
+})();

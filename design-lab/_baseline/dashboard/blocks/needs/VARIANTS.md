@@ -20,7 +20,7 @@
 ## Запуск
 
 ```powershell
-.\sync-lab.ps1
+.\sync-lab.sh
 npx serve .
 ```
 

@@ -32,6 +32,10 @@ _KIND_EMOJI = {
     "period_milestone": "📅",
     "period_closed": "📆",
     "salary_claimed": "💰",
+    "first_salary_claimed": "💰",
+    "first_safety_fund": "🛡️",
+    "player_stuck": "⏸️",
+    "onboarding_stuck": "🧭",
     "onboarding_step_reached": "👣",
     "onboarding_brief_done": "✅",
     "onboarding_skipped": "⏭️",
@@ -248,17 +252,34 @@ def notify_period_milestone(db: Session, profile: GameProfile, *, closed_period_
     )
 
 
-def notify_period_closed(db: Session, profile: GameProfile, *, closed_period_index: int) -> None:
+def notify_period_closed(
+    db: Session,
+    profile: GameProfile,
+    *,
+    closed_period_index: int,
+    economy: Optional[dict[str, Any]] = None,
+) -> None:
+    payload: dict[str, Any] = {
+        "name": profile.name,
+        "closed_period": closed_period_index,
+        "next_period": int(profile.period_index),
+        "profile_id": profile.id,
+        "_admin_link": _admin_link(f"/admin?profile={profile.id}"),
+    }
+    if economy:
+        for key in (
+            "cash_balance",
+            "safety_fund_balance",
+            "total_overdue_amount",
+            "net_monthly_cashflow",
+            "salary_claimed",
+        ):
+            if key in economy:
+                payload[key] = economy[key]
     emit_admin_alert(
         db,
         "period_closed",
-        {
-            "name": profile.name,
-            "closed_period": closed_period_index,
-            "next_period": int(profile.period_index),
-            "profile_id": profile.id,
-            "_admin_link": _admin_link(f"/admin?profile={profile.id}"),
-        },
+        payload,
         user_id=profile.user_id,
         game_profile_id=profile.id,
         dedupe_key=f"period_closed:{profile.id}:{closed_period_index}",
@@ -378,13 +399,75 @@ def notify_salary_claimed(
         user_id=profile.user_id,
         game_profile_id=profile.id,
         dedupe_key=f"salary_claimed:{profile.id}:{period_index}",
-        send_telegram=first_claim,
+        send_telegram=False,
+    )
+    if first_claim:
+        notify_first_salary_claimed(
+            db, profile, period_index=period_index, amount=amount
+        )
+
+
+def notify_first_salary_claimed(
+    db: Session,
+    profile: GameProfile,
+    *,
+    period_index: int,
+    amount: float,
+) -> None:
+    emit_admin_alert(
+        db,
+        "first_salary_claimed",
+        {
+            "name": profile.name,
+            "period_index": period_index,
+            "amount": round(float(amount), 2),
+            "profile_id": profile.id,
+            "_admin_link": _admin_link(f"/admin?profile={profile.id}"),
+        },
+        user_id=profile.user_id,
+        game_profile_id=profile.id,
+        dedupe_key=f"first_salary_claimed:{profile.id}",
+        send_telegram=True,
     )
 
 
-def process_period_admin_alerts(db: Session, profile: GameProfile, *, closed_period_index: int) -> None:
+def notify_first_safety_fund(
+    db: Session,
+    profile: GameProfile,
+    *,
+    period_index: int,
+    amount: float,
+    new_safety_fund_balance: float,
+) -> None:
+    emit_admin_alert(
+        db,
+        "first_safety_fund",
+        {
+            "name": profile.name,
+            "period_index": period_index,
+            "amount": round(float(amount), 2),
+            "safety_fund_balance": round(float(new_safety_fund_balance), 2),
+            "profile_id": profile.id,
+            "_admin_link": _admin_link(f"/admin?profile={profile.id}"),
+        },
+        user_id=profile.user_id,
+        game_profile_id=profile.id,
+        dedupe_key=f"first_safety_fund:{profile.id}",
+        send_telegram=False,
+    )
+
+
+def process_period_admin_alerts(
+    db: Session,
+    profile: GameProfile,
+    *,
+    closed_period_index: int,
+    economy: Optional[dict[str, Any]] = None,
+) -> None:
     """Хуки после commit конца периода (profile уже с новым period_index)."""
-    notify_period_closed(db, profile, closed_period_index=closed_period_index)
+    notify_period_closed(
+        db, profile, closed_period_index=closed_period_index, economy=economy
+    )
     notify_period_milestone(db, profile, closed_period_index=closed_period_index)
     if profile.is_active == 0:
         notify_game_lost(db, profile, period_index=closed_period_index)

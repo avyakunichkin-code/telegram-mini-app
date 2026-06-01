@@ -12,12 +12,12 @@
 ### Fixture
 
 - Новый раунд `design-lab/dashboard/my-round/`.
-- Рядом есть канонический раунд с `sync-lab.ps1`.
+- Рядом есть канонический раунд с `sync-lab.sh`.
 
 ### Expected behavior
 
 1. Структура: `index.html`, `styles.css`, `lab-base.css`, `assets/`, только `./` пути.
-2. После правок родительских CSS — `sync-lab.ps1` (или явное напоминание).
+2. После правок родительских CSS — `sync-lab.sh` (или явное напоминание).
 3. Проверка: `npx serve` из каталога раунда.
 4. **Verdict: COMPLETE** — макет готов к утверждению в чате; handoff `frontend-ui-engineering`.
 

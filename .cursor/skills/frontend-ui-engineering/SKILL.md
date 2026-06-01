@@ -1,4 +1,4 @@
-﻿---
+---
 name: frontend-ui-engineering
 description: Builds production-quality UIs. Use when building or modifying user-facing interfaces. Use when creating components, implementing layouts, managing state, or when the output needs to look and feel production-quality rather than AI-generated.
 argument-hint: "[screen, component, or MQX pattern]"
@@ -31,7 +31,7 @@ Build production-quality user interfaces that are accessible, performant, and vi
 
 | Шаг | Где | Критерий готовности |
 |-----|-----|---------------------|
-| **1. Lab** | `design-lab/<тема>/<round>/` | 2–5 варианта **или** prod-parity round; `sync-lab.ps1` + `./` пути; см. скилл **design-lab-mqx** |
+| **1. Lab** | `design-lab/<тема>/<round>/` | 2–5 варианта **или** prod-parity round; `sync-lab.sh` (или `npm run design-lab:sync-round`); см. скилл **design-lab-mqx** |
 | **2. Review** | Чат | Пользователь видит макет (`cd design-lab && npx serve .`) |
 | **3. Утверждение** | Чат | Явное «утверждаем X» — см. `DESIGN_WORKFLOW.md` §3 |
 | **4. MQX** | `mqx/` + `#/dev/mqx` | React + стили; Canon Sync при ★ |
@@ -57,7 +57,7 @@ Build production-quality user interfaces that are accessible, performant, and vi
 
 1. **Сначала прочитай и следуй** [`frontend-react/src/components/mqx/DESIGN_WORKFLOW.md`](../../../frontend-react/src/components/mqx/DESIGN_WORKFLOW.md): варианты в `design-lab/<тема>/` → выбор → **явное утверждение в чате** → реализация в `mqx/` + секция `#/dev/mqx` → перенос в prod.
 2. **Не начинай** с правок игровых экранов, минуя этот цикл (исключение: **минимальный багфикс / hotfix** без смены дизайна — см. тот же документ).
-3. **Design-lab HTML/CSS:** скилл **design-lab-mqx** + правило `tvoy-hod-design-lab.mdc` — `sync-lab.ps1`, только `./` пути, без 404 на стили.
+3. **Design-lab HTML/CSS:** скилл **design-lab-mqx** + правило `tvoy-hod-design-lab.mdc` — `sync-lab.sh`, только `./` пути, без 404 на стили.
 4. Правила Cursor: `tvoy-hod-frontend-mqx.mdc`, `tvoy-hod-frontend-core.mdc`; контракт UI: [`docs/specs/SPEC_FRONTEND_UI.md`](../../../docs/specs/SPEC_FRONTEND_UI.md).
 
 ## ТВОЙ ХОД — приоритеты UI (2026, нормативно)
@@ -69,7 +69,7 @@ Build production-quality user interfaces that are accessible, performant, and vi
 | Вкладка / зона | Статус | Действие агента |
 |----------------|--------|-----------------|
 | Главная, события, pre-game, онбординг | ★ в prod | Не перекомпоновывать без lab; только hotfix или хвосты (empty/error) |
-| **Финансы** | ⚠ гибрид | Новый UI → `design-lab/capital-page/` → ★ → `mqx/`; паттерн капитала из `SPEC_FRONTEND_UI` § capital |
+| **Финансы** | ★ v2 prod | Паттерн **Детали \| Действия** + sheets — [`details-actions-round`](../../../design-lab/capital-page/details-actions-round/); UX: [`finance.md`](../../../docs/ux/screens/finance.md); новые изменения layout → lab сначала |
 | **Аналитика** | ⚠ | Согласовать метрики с дашбордом через lab, не новый `MqStatRow`-стиль в одном PR |
 | Legacy `*Section.jsx` | quarantine | **Не расширять** |
 

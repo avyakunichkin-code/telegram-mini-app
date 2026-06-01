@@ -1,4 +1,4 @@
-﻿---
+---
 name: design-lab-mqx
 description: Design-lab rounds for MQX — self-contained HTML/CSS, sync-lab scripts, serve without broken ../ paths. Use when creating or editing design-lab/, layout variants, or before saying a lab mockup is ready for review.
 argument-hint: "[design-lab theme or round path]"
@@ -59,7 +59,7 @@ design-lab/<тема>/<round>/
   index.html          # только ./lab-base.css, ./styles.css, ./assets/...
   styles.css          # стили раунда
   lab-base.css        # AUTO — не править руками
-  sync-lab.ps1        # пересборка
+  sync-lab.sh         # пересборка (bash, канон)
   assets/
     monetka-mascot.png
 ```
@@ -73,17 +73,28 @@ design-lab/<тема>/<round>/
 
 ### 2. Sync
 
-**Events** (есть общий скрипт):
+**Канон — только bash:**
+
+```bash
+cd design-lab/<тема>/<round>
+./sync-lab.sh
+```
+
+**Events (все раунды):**
 
 ```bash
 cd design-lab/events
-# overlay-round и др.:
-cd overlay-round && ./sync-lab.sh
+./sync-all-rounds.sh
 ```
 
-PowerShell (events): `.\sync-all-rounds.ps1` в `design-lab/events/`.
+**Без bash в PATH (Windows):**
 
-**Другая тема** — скопировать паттерн из [`design-lab/events/_shared/sync-lab-round.ps1`](../../../design-lab/events/_shared/sync-lab-round.ps1) или inline-сборка `lab-base.css` из локальных `../styles.css` **в файл внутри раунда**.
+```bash
+cd frontend-react
+npm run design-lab:sync-round -- design-lab/<тема>/<round>
+```
+
+Новый раунд: нативный `sync-lab.sh` по образцу [`capital-page/details-actions-round/sync-lab.sh`](../../../design-lab/capital-page/details-actions-round/sync-lab.sh) или [`game-templates/persona-portraits-round/sync-lab.sh`](../../../design-lab/game-templates/persona-portraits-round/sync-lab.sh). **Не** предлагать PowerShell `sync-lab.ps1` — устарело.
 
 ### 3. Verify
 
@@ -93,11 +104,9 @@ PowerShell (events): `.\sync-all-rounds.ps1` в `design-lab/events/`.
 
 ```bash
 cd design-lab/<тема>/<round>
-./sync-lab.sh          # bash / Git Bash — не ./sync-lab.ps1
+./sync-lab.sh
 npx serve .
 ```
-
-PowerShell: `.\sync-lab.ps1`. Без PowerShell в PATH: `cd frontend-react && npm run design-lab:sync-round -- design-lab/<тема>/<round>`.
 
 В DevTools → Network: нет 404 на `.css` и `.png`.
 
@@ -108,20 +117,22 @@ cd frontend-react
 npm run design-lab:check-rounds
 ```
 
-Скрипт `scripts/check-design-lab-rounds.mjs`: нет `href="../…css"`, канон и parity-блоки с `sync-lab.ps1` имеют актуальный `lab-base.css`. Входит в `design-lab:build` и `check:guardrails`.
+Скрипт `scripts/check-design-lab-rounds.mjs`: нет `href="../…css"`, раунды с `sync-lab.sh` имеют актуальный `lab-base.css`. Входит в `design-lab:build` и `check:guardrails`.
 
 ### 4. Commit
 
-Включить в коммит: `lab-base.css`, `assets/*`, `index.html`, `styles.css`, `sync-lab.ps1`.
+Включить в коммит: `lab-base.css`, `assets/*`, `index.html`, `styles.css`, `sync-lab.sh`.
 
 ## Events-specific
 
 | Раунд | sync-lab | lab-base включает |
 |-------|----------|-------------------|
-| `layout-round` | `.\sync-lab.ps1` | `events/styles.css` + `styles-monetka.css` |
-| `overlay-round` | `.\sync-lab.ps1` | то же |
-| `domains-round` | `.\sync-lab.ps1` | + `layout-round/styles.css` (`-WithLayoutStyles`) |
-| `tails-round` | `.\sync-lab.ps1` | + `layout-round/styles.css` (auto при `ev-l3__` в index) + дельты E2/E5 в `styles.css` |
+| `layout-round` | `./sync-lab.sh` → `events/_shared/sync-lab-round.sh` | `events/styles.css` + `styles-monetka.css` |
+| `overlay-round` | то же | то же |
+| `domains-round` | то же | + `layout-round/styles.css` при `ev-l3__` |
+| `tails-round` | то же | + layout при необходимости |
+| `capital-page/details-actions-round` | нативный `./sync-lab.sh` | flows + локальный `styles.css` |
+| `game-templates/persona-portraits-round` | нативный `./sync-lab.sh` | game-templates + picker из prod |
 
 После нового раунда events: добавить в `nav.manifest.json` → `npm run design-lab:build-nav`.
 
@@ -138,11 +149,11 @@ npm run design-lab:check-rounds
 | Данные | **Одинаковые** тестовые суммы/копирайт во всех вариантах |
 | Язык | Видимый текст **на русском** |
 | Бренд | Только канон: Quest Violet, emerald/danger по смыслу; токены из `styles/tma-base.css` / lab-base, **без новых hex** в вариантах |
-| Подписи | В `README.md` раунда: идея каждого варианта + команда `npx serve .` + `.\sync-lab.ps1` |
+| Подписи | В `README.md` раунда: идея каждого варианта + `npx serve .` + `./sync-lab.sh` |
 | Тема TG | Светлая и тёмная — если экран в prod зависит от `tg-theme-*`, проверить оба |
 | Не перерисовывать ★ | S5 dashboard, L3 events, pre-game ★ — новый lab только для **хвостов** (empty/error, capital, icons), см. unification |
 
-**Приоритет lab (пока ⚠ в prod):** `capital-page/`, **[`ui-states-unified/`](../../../design-lab/ui-states-unified/)** (B1+B2+B3 brief) — не открывать параллельно 3+ крупных тем без запроса.
+**Приоритет lab:** **[`ui-states-unified/`](../../../design-lab/ui-states-unified/)** (B1+B2+B3 brief); `capital-page/details-actions-round` ★ в prod — только parity/hotfix. Не открывать параллельно 3+ крупных тем без запроса.
 
 **Не предлагать в lab без явного запроса:** `dashboard-dual-accordion` (superseded), идеи из backlog D1–D12 без spec.
 
@@ -150,7 +161,7 @@ npm run design-lab:check-rounds
 
 ```
 - [ ] index.html без ../ для статики
-- [ ] sync-lab.ps1 запущен
+- [ ] ./sync-lab.sh запущен
 - [ ] lab-base.css и assets закоммичены
 - [ ] serve . — стили и Монетка на месте
 - [ ] README раунда обновлён (запуск + sync)
@@ -173,4 +184,3 @@ npm run design-lab:check-rounds
 ## Следующий шаг
 
 Утверждённый раунд → `frontend-ui-engineering` + canon sync (`tvoy-hod-canon-sync`).
-

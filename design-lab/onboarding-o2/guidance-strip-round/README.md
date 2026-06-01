@@ -6,7 +6,7 @@
 
 ```powershell
 cd design-lab/onboarding-o2/guidance-strip-round
-.\sync-lab.ps1
+.\sync-lab.sh
 npx serve .
 ```
 
@@ -15,7 +15,7 @@ npx serve .
 ## Sync
 
 ```powershell
-.\sync-lab.ps1
+.\sync-lab.sh
 # или из frontend-react:
 npm run design-lab:sync-round -- design-lab/onboarding-o2/guidance-strip-round
 ```

@@ -25,7 +25,7 @@ npx serve .
 
 ```powershell
 cd design-lab/events/tails-round
-.\sync-lab.ps1
+.\sync-lab.sh
 npx serve .
 ```
 
@@ -37,7 +37,7 @@ npx serve .
 
 ```powershell
 cd design-lab/events
-.\sync-all-rounds.ps1
+.\sync-all-rounds.sh
 ```
 
 ## Prod parity

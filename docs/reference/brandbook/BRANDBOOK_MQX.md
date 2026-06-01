@@ -27,7 +27,8 @@
 | Dashboard unified | S5 + L3 | 2026-05 | [`dashboard/APPROVED.md`](../../../design-lab/dashboard/APPROVED.md) | `DashboardPremium`, `mqx-tab-page--dash-unified` |
 | Guided onboarding (O2) | strip A ★ | 2026-06-01 | [`onboarding-o2/APPROVED.md`](../../../design-lab/onboarding-o2/APPROVED.md) | `MqxGuidanceStrip`, `GameGuidanceLayer` |
 | New game mode pick | R2 + I1 | 2026-05-20 | [`new-game-mode/APPROVED.md`](../../../design-lab/new-game-mode/APPROVED.md) | `NewProfileKindScreen`, `MqxSaveKindPicker` |
-| Финансы: порядок разделов | Capital | — | [`capital-page/flows-round/`](../../../design-lab/capital-page/flows-round/) | `FinancePremium` аккордеоны |
+| Портреты 4 персонажей | P-P | 2026-06-01 | [`game-templates/persona-portraits-round/APPROVED.md`](../../../design-lab/game-templates/persona-portraits-round/APPROVED.md) | `PersonaPortrait`, `MqxStarterScenarioPicker`, `MqxNeedsDash` |
+| Финансы: Details \| Actions | Capital | — | [`capital-page/details-actions-round/`](../../../design-lab/capital-page/details-actions-round/) | `FinancePremium` v2 |
 | Цель на дашборде | G1 chain | 2026-05 | [`dashboard/goal-chain-round/`](../../../design-lab/dashboard/goal-chain-round/) | `MqxGoalDash` |
 | Лендинг (скрины UI) | — | 2026-05-25 | capture app / lab fallback | [`LANDING_SCREENSHOTS.md`](../../specs/LANDING_SCREENSHOTS.md) |
 | Pre-game shell + кнопки | P1–P6 | 2026-05-25 | [`pre-game-shell/`](../../../design-lab/pre-game-shell/) | `MqxButton`, Bubble/Flow — [`SPEC_APP_SHELL.md`](../../specs/SPEC_APP_SHELL.md) |

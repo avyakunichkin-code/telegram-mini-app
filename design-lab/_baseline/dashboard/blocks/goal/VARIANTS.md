@@ -42,6 +42,6 @@ Brainstorm Concept 2 («Тропа уроков») · дополнение к у
 
 ```powershell
 cd design-lab/dashboard/goal-path-stepper-round
-.\sync-lab.ps1
+.\sync-lab.sh
 npx serve .
 ```

@@ -8,7 +8,7 @@
 cd design-lab/dashboard/period-actions-round
 ```
 
-**Sync CSS** (если `.\sync-lab.ps1` падает с ExecutionPolicy):
+**Sync CSS** (если `.\sync-lab.sh` падает с ExecutionPolicy):
 
 ```cmd
 sync-lab.cmd
@@ -17,7 +17,7 @@ sync-lab.cmd
 или:
 
 ```powershell
-powershell -NoProfile -ExecutionPolicy Bypass -File .\sync-lab.ps1
+powershell -NoProfile -ExecutionPolicy Bypass -File .\sync-lab.sh
 ```
 
 ```powershell
@@ -31,10 +31,10 @@ npx serve .
 После правок `styles.css` или `../styles.css`:
 
 ```powershell
-.\sync-lab.ps1
+.\sync-lab.sh
 ```
 
-Коммитить: `lab-base.css`, `assets/*`, `index.html`, `styles.css`, `sync-lab.ps1`.
+Коммитить: `lab-base.css`, `assets/*`, `index.html`, `styles.css`, `sync-lab.sh`.
 
 ## Файлы
 

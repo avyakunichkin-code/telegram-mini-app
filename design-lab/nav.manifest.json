@@ -75,7 +75,18 @@
         { "label": "Auth flow", "path": "auth-flow/index.html", "kind": "lab", "status": "approved" },
         { "label": "New game mode", "path": "new-game-mode/index.html", "kind": "lab", "status": "approved" },
         { "label": "Game templates", "path": "game-templates/index.html", "kind": "lab", "status": "approved" },
-        { "label": "Scenario icons", "path": "game-templates/scenario-icons/index.html", "kind": "lab" },
+        { "label": "Scenario icons (архив SVG)", "path": "game-templates/scenario-icons/index.html", "kind": "lab", "status": "archived" },
+        {
+          "label": "Портреты персонажей (4 жизни)",
+          "path": "game-templates/persona-portraits-round/index.html",
+          "kind": "lab",
+          "status": "approved"
+        },
+        {
+          "label": "Z-NEEDS v6 (улучшения)",
+          "path": "character-needs/dashboard-needs-v6-round/index.html",
+          "kind": "lab"
+        },
         {
           "label": "O2 Guidance strip",
           "path": "onboarding-o2/guidance-strip-round/index.html",
@@ -89,6 +100,11 @@
       "title": "Игровой UI",
       "items": [
         { "label": "Period close", "path": "period-close/index.html", "kind": "lab", "status": "approved" },
+        {
+          "label": "Run finale — GE1 (победа / поражение)",
+          "path": "run-finale/index.html",
+          "kind": "lab"
+        },
         { "label": "Juice round", "path": "game-ui/juice-round/index.html", "kind": "lab", "status": "approved" },
         {
           "label": "UI states + icons (B1-B3)",

@@ -9,7 +9,8 @@ npx serve .
 
 | Страница | Содержание |
 |----------|------------|
-| [`scenario-icons/index.html`](scenario-icons/index.html) | **4 набора иллюстраций** (как «Режим игры») ★ |
+| [`persona-portraits-round/index.html`](persona-portraits-round/index.html) | **Портреты 4 персонажей** ★ → prod pick + dash |
+| [`scenario-icons/index.html`](scenario-icons/index.html) | **4 набора SVG** (архив I-Scene) ★ |
 | [`scenario-icons/VARIANTS.md`](scenario-icons/VARIANTS.md) | A–D, размеры 56/40 |
 | [`index.html`](index.html) | Компактный экран (силуэты) |
 | [`icons-variants.html`](icons-variants.html) | Архив I1/I2/I3 |

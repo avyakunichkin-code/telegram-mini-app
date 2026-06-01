@@ -6,7 +6,7 @@ Design-lab: **связанные кружки** (stepper) в свёрнутом 
 
 ```powershell
 cd design-lab/dashboard/goal-path-stepper-round
-.\sync-lab.ps1
+.\sync-lab.sh
 npx serve .
 ```
 
@@ -14,7 +14,7 @@ npx serve .
 
 ## Sync
 
-`sync-lab.ps1` собирает:
+`sync-lab.sh` собирает:
 
 1. `../styles.css` (dashboard lab base)
 2. `../goal-chain-round/styles.css` (G1 goal dash)

@@ -1,7 +1,7 @@
 ---
 layer: ux
 status: approved
-last_reviewed: 2026-05-26
+last_reviewed: 2026-06-01
 platform: Telegram Mini App
 screen_id: character-pick
 prod_route: GameTemplatePickScreen
@@ -10,7 +10,7 @@ prod_route: GameTemplatePickScreen
 # UX Spec: Выбор персонажа (старт Game)
 
 > **Replaces copy:** «Шаблон» / «сценарий» → **«персонаж» / «жизнь»** где уместно  
-> **Lab:** [`design-lab/game-templates/`](../../../design-lab/game-templates/) (доп. раунд копирайта)
+> **Lab:** [`design-lab/game-templates/persona-portraits-round/`](../../../design-lab/game-templates/persona-portraits-round/) ★ портреты · [`game-templates/`](../../../design-lab/game-templates/) копирайт
 
 ---
 
@@ -47,7 +47,9 @@ prod_route: GameTemplatePickScreen
 
 - Screen title: **Выбор персонажа**.
 - Под title: lead 1 предложение — «У каждой жизни свой ритм и свои потребности: комфорт, статус, связи, здоровье.»
-- Карточки: существующий `MqxStarterScenarioPicker` + **одна** строка `support_line` из blueprint или статический map по `template_key`.
+- Карточки: `MqxStarterScenarioPicker` с **растровыми портретами** (`usePersonaPortraits`, по умолчанию `true`) + bullets из API.
+- Ассеты: `frontend-react/src/assets/character-portraits/`; пересборка — `npm run persona-portraits:process` (см. lab README).
+- SVG I-Scene (`ScenarioIllustrations`) — **не** канон шага 2; остаётся в коде как fallback при `usePersonaPortraits={false}`.
 
 ---
 
@@ -57,3 +59,4 @@ prod_route: GameTemplatePickScreen
 2. У каждой карточки есть отличимая строка про стиль жизни/поддержку.
 3. Нет формулировок «шаблон сложности» без контекста жизни.
 4. Plan mode tile не затронут.
+5. У каждой карточки виден **отличимый** портрет персонажа (не одинаковое лицо на всех ролях).

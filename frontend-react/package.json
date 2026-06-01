@@ -24,6 +24,7 @@
     "design-lab:build-nav": "node scripts/build-design-lab-nav.mjs",
     "design-lab:build": "node scripts/check-design-lab-rounds.mjs --pre-build && npm run design-lab:build-dashboard-page-round && npm run design-lab:build-finance-page-round && npm run design-lab:build-nav && node scripts/check-design-lab-rounds.mjs",
     "design-lab:freeze-baseline": "node scripts/freeze-design-lab-baseline.mjs",
+    "persona-portraits:process": "python scripts/process-persona-portraits.py",
     "test:utils": "node --test src/utils/*.test.js src/hooks/useGameForeground.test.js",
     "test:mqx": "node --test src/components/mqx/**/__tests__/*.test.js",
     "test:unit": "npm run test:utils && npm run test:mqx",

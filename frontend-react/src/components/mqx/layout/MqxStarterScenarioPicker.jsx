@@ -1,4 +1,6 @@
+import { PersonaPortrait } from '../brand/PersonaPortrait';
 import { ScenarioIllustrationIcon } from '../icons/ScenarioIllustrations';
+import { getPersonaPortrait } from '../brand/personaPortraits';
 import { tierFromRank } from '../../../utils/starterTemplateTier';
 
 const COMPACT_MAX_BULLETS = 2;
@@ -17,6 +19,8 @@ export function MqxStarterScenarioPicker({
   labelledById,
   layout = 'compact',
   tbGlass = true,
+  /** Растровые портреты персонажей (design-lab persona-portraits-round) вместо SVG I-Scene */
+  usePersonaPortraits = true,
 }) {
   const isCompact = layout === 'compact';
   const isGrid = layout === 'grid';
@@ -31,6 +35,7 @@ export function MqxStarterScenarioPicker({
       className={[
         'mqx-scenario-picker',
         'mqx-scenario-picker--illus',
+        usePersonaPortraits ? 'mqx-scenario-picker--persona' : '',
         layoutCls,
         tbGlass ? 'mqx-scenario-picker--tb-glass' : '',
       ]
@@ -46,6 +51,7 @@ export function MqxStarterScenarioPicker({
         const highlights = Array.isArray(t.highlights) ? t.highlights : [];
         const visibleHighlights = isCompact ? highlights.slice(0, COMPACT_MAX_BULLETS) : highlights;
         const iconKey = t.scenario_icon || 'fresh_start';
+        const portrait = usePersonaPortraits ? getPersonaPortrait(t.template_key, 'pick') : null;
 
         return (
           <button
@@ -74,7 +80,11 @@ export function MqxStarterScenarioPicker({
               className={`mqx-scenario-strip__icon-wrap mqx-scenario-strip__icon-wrap--${tier.slug}`}
               aria-hidden
             >
-              <ScenarioIllustrationIcon iconKey={iconKey} />
+              {portrait ? (
+                <PersonaPortrait templateKey={t.template_key} size="pick" className="mqx-scenario-strip__persona" />
+              ) : (
+                <ScenarioIllustrationIcon iconKey={iconKey} />
+              )}
             </span>
             <span className="mqx-scenario-strip__body">
               <span className="mqx-scenario-strip__head">

@@ -24,9 +24,9 @@
 |-------|--------|------|
 | **A — Hygiene** | Инвентаризация, удаление мёртвого кода, MQX-витрина = только ★ prod | Меньше шума для агента и разработки |
 | **B — Дашборд + события** | Только **открытые** хвосты (не перерисовывать S5 ★) | Lab → ★ → prod |
-| **C — Капитал / Финансы** | `capital-page` A/B, вынос из `FinanceSection` | Один язык вкладки «Финансы» |
+| **C — Капитал / Финансы** | `details-actions-round` ★ в prod (2026-06) | Details \| Actions + sheets |
 
-**Главный визуальный разрыв сейчас:** `FinancePremium` → legacy **`FinanceSection`** (смешение `mq-` / `tgui-` / `mqx-`). Дашборд **S5 Unified ★** уже в prod; события **L3 ★** в prod (бывш. M2 + domain band).
+**Главный визуальный разрыв сейчас:** аналитика (`MqStatRow`), не финансы. Дашборд **S5 ★**, события **L3 ★**, финансы **Details \| Actions v2 ★**.
 
 ---
 
@@ -107,12 +107,11 @@
 
 ---
 
-## Этап C — Капитал (после B, отдельное ★)
+## Этап C — Капитал — **в prod (2026-06-01)**
 
-- Утвердить **A или B** в [`design-lab/capital-page/`](../../../design-lab/capital-page/)
-- Порядок табов: Инвестиции → Бюджет → Страховки → Имущество → Обязательства
-- Постепенно заменить тело `FinanceSection` на MQX-компоненты
-- Недвижимость (`real-estate-asset-catalog`) — только через этот каркас
+- ★ [`details-actions-round`](../../../design-lab/capital-page/details-actions-round/) → `FinancePremium`: **Детали \| Действия**, sheets, meta M5/M7/M8
+- Документация: [`finance.md`](../../ux/screens/finance.md), [`TEAM_UPDATE_2026-06-01.md`](../../handbook/internal/TEAM_UPDATE_2026-06-01.md)
+- Хвост: формальный `APPROVED.md`, parity guardrails, EN-audit
 
 ---
 
@@ -120,7 +119,7 @@
 
 - [ ] Игроку не мешает Монетка на **каждой** карточке события (M2) — playtest
 - [ ] Удаление legacy `*Section` не ломает ни один маршрут (grep + smoke)
-- [ ] `FinanceSection`-рефактор можно резать по одной вкладке за PR
+- [x] ~~`FinanceSection`~~ — снят; капитал в `FinancePremium` + MQX panels (2026-06)
 
 ---
 
@@ -128,7 +127,7 @@
 
 **In:** этап A целиком; one-pager; audit-таблица; согласованный backlog B (дашборд хвосты + события).
 
-**Out:** Plan mode UI; полный capital-page prod; редизайн аналитики (`MqStatRow` → MQX).
+**Out:** Plan mode UI; редизайн аналитики (`MqStatRow` → MQX). ~~полный capital-page prod~~ — **done** (Details \| Actions v2).
 
 ---
 

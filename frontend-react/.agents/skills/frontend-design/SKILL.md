@@ -1,4 +1,4 @@
-﻿---
+---
 name: frontend-design
 description: Create distinctive, production-grade frontend interfaces with high design quality. Use this skill when the user asks to build web components, pages, artifacts, posters, or applications (examples include websites, landing pages, dashboards, React components, HTML/CSS layouts, or when styling/beautifying any web UI). Generates creative, polished code and UI design that avoids generic AI aesthetics.
 license: Complete terms in LICENSE.txt
@@ -80,10 +80,10 @@ Remember: Claude is capable of extraordinary creative work. Don't hold back, sho
 
 Новые игровые экраны — только паттерны `*Premium.jsx` и `mqx-*` (см. `.cursor/rules/tvoy-hod-frontend-core.mdc`).
 
-### Капитал MQX (портфель, страховки, новые подразделы «Финансы»)
+### Капитал MQX (prod v2, 2026-06)
 
-- **Порядок разделов (утверждено):** Доходы → Расходы → Инвестиции → Страховки → Имущество → Обязательства (аккордеоны). **Бюджет не в плане.** Макет: [`design-lab/capital-page/`](../../../../design-lab/capital-page/), ориентация: [`orient-round/`](../../../../design-lab/capital-page/orient-round/).
-- **Каталог vs позиции:** сегмент **«Добавить | Мои (N)»** (или «Оформить | Позиции» для инвестиций) — **внутри** `mqx-capital-card` активного раздела, сразу после `mqx-capital-lead`, по умолчанию левая вкладка («Добавить»). Не в hero страницы. См. [`design-lab/capital-page/`](../../../../design-lab/capital-page/).
-- **Строки позиций** (актив, долг, полис, инвест-позиция): **`MqxFinListRow`** + метрики + **`MqxRowAction`**. Карточка с вертикальным accent (**`CapitalPositionCard`**, вариант H) — только **каталог** (шаблоны активов/долгов, тарифы страховки с **+**).
-- **Кикеры в шаблонах:** не показывать сырой `kind` из API (`home`, `rental_home` и т.д.); не повторять название раздела («Долг» во вкладке долгов). Смысловой контекст страхового полиса (**продукт · объект**) — в `subtitle` у `MqxFinListRow`, если не дублирует метрики (см. E2 в [`SPEC_FRONTEND_UI.md`](../../../../docs/specs/SPEC_FRONTEND_UI.md)).
-- **Новый подраздел «Финансы»:** тот же каркас — `mqx-card mqx-capital-card`, при необходимости `MqxSubtab`, lead `mqx-capital-lead`, затем либо каталог, либо список позиций за кнопкой. Не вводить третий визуальный язык без этапа `design-lab` и утверждения по [`DESIGN_WORKFLOW.md`](../../../src/components/mqx/DESIGN_WORKFLOW.md).
+- **Порядок:** Доходы / Расходы → сегмент **Детали \| Действия** → контент. Макет: [`design-lab/capital-page/details-actions-round/`](../../../../design-lab/capital-page/details-actions-round/).
+- **Детали:** только позиции; meta **M8** (icon+count), обязательства **M5**; **`MqxCapitalTextRowAction`** («Закрыть» / «Продать» / «Отменить»).
+- **Действия:** **`MqxCapitalActionGrid`** (сетка 3×) + **`MqxCapitalSheet`**; каталог в sheet — **`CapitalPositionCard`**, страховки — **`InsuranceProductPicker`**, инвестиции — **`InvestProductForm`**.
+- **Ипотека и кредит** — отдельные плитки и sheets (`mortgage` vs остальные `liability_templates`).
+- Новый layout — только через lab → [`DESIGN_WORKFLOW.md`](../../../src/components/mqx/DESIGN_WORKFLOW.md); см. [`docs/ux/screens/finance.md`](../../../../docs/ux/screens/finance.md).

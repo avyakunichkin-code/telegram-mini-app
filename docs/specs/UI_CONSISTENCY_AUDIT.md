@@ -1,6 +1,6 @@
 # UI Consistency Audit — ТВОЙ ХОД TMA
 
-**Дата:** 2026-05-25  
+**Дата:** 2026-06-01  
 **Цель:** карта экранов и компонентов для эпика [mqx-ui-unification](../vision/ideas/mqx-ui-unification.md).  
 **Легенда:** ★ prod MQX · ⚠ hybrid · 🗑 удалить/архив · 📋 lab открыт
 
@@ -11,7 +11,7 @@
 | Экран | Файл | Статус | Комментарий |
 |-------|------|--------|-------------|
 | Главная | `DashboardPremium.jsx` | ★ | S5 Unified, `MqxFinancePeriodBlock`, `MqxGoalDash`, `MqxPeriodActions` |
-| Финансы | `FinancePremium.jsx` → `FinanceSection.jsx` | ⚠ | Обёртка MQX, тело legacy — **главная боль** |
+| Финансы | `FinancePremium.jsx` | ★ | Details \| Actions v2 (2026-06); `CapitalDetailsPanel` / `CapitalActionsPanel` |
 | Аналитика | `AnalyticsPremium.jsx` | ⚠ | Hero MQX; строки `MqStatRow`, бары `MqxMetricBars` |
 | Меню | `MenuPremium.jsx` | ★ | В основном MQX |
 | События (оверлей) | `EventDeck` → `EventCarouselOverlay` | ★ L3 | `EventCard`, domain band; лендинг: [`LANDING_SCREENSHOTS.md`](LANDING_SCREENSHOTS.md) |
@@ -28,7 +28,7 @@
 | Проверка сессии | ★ D | `AuthGuard` → Bubble (не TabHero) |
 | Стартовое меню | ★ D | `MonetkaBubbleScreen` + `MqxButton` |
 | Новая игра шаг 1 | ★ D | `MqxMonetkaDialogScreen` + `MqxSaveKindPicker` |
-| Новая игра шаг 2 | ★ D | `MqxMonetkaDialogScreen` + `MqxStarterScenarioPicker` |
+| Новая игра шаг 2 | ★ D | `MqxMonetkaDialogScreen` + `MqxStarterScenarioPicker` + **портреты** (`PersonaPortrait`, lab ★) |
 | Plan / Base params | 🗑 hold | Вне scope 2 недель |
 
 ---
@@ -64,7 +64,9 @@
 | `dashboard/` | ★ S5 в prod | B1, B3, B4 по необходимости |
 | `period-close/` | ★ в prod | B2 иконки |
 | `events/` | ★ M2 в prod | E2–E6 полировка |
-| `capital-page/` | IA ★, A/B выбор | Этап C |
+| `capital-page/details-actions-round/` | ★ v2 в prod | Поддержка parity; `sync-lab.sh` |
+| `game-templates/persona-portraits-round/` | ★ в prod | pick 56 / dash 108; `npm run persona-portraits:process` |
+| `game-templates/scenario-icons/` | архив | Заменены портретами; SVG в коде — fallback |
 | `onboarding-brief/` | superseded | — |
 | `dashboard-dual-accordion/` | не утверждалось | не внедрять |
 
@@ -74,7 +76,7 @@
 
 | Место | Проблема | Эпик |
 |-------|---------|------|
-| `FinanceSection` | Смешение классов, старые табы | C |
+| ~~`FinanceSection`~~ | Удалён из prod | — |
 | `AnalyticsPremium` | `MqStatRow` | D |
 | `InvestProductForm` | Вне `mqx/` | C (инвестиции) |
 

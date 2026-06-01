@@ -21,6 +21,9 @@ from ..schemas import (
     GuidancePatchRequest,
     GuidancePatchResponse,
     GuidanceOverview,
+    RunFinaleDismissResponse,
+    RunFeedbackRequest,
+    RunFeedbackResponse,
 )
 from ..services.game.profiles import (
     activate_game_profile as service_activate_game_profile,
@@ -31,6 +34,10 @@ from ..services.game.profiles import (
 from ..services.game.start import start_new_game as service_start_new_game
 from ..services.game.guidance import get_guidance as service_get_guidance, patch_user_guidance as service_patch_guidance
 from ..services.game.templates import list_game_templates as service_list_game_templates
+from ..services.game.run_finale import (
+    dismiss_victory_finale as service_dismiss_victory_finale,
+    submit_run_feedback as service_submit_run_feedback,
+)
 from ..services.game.time import (
     get_time_status as service_get_time_status,
     go_to_next_period as service_go_to_next_period,
@@ -58,6 +65,23 @@ async def game_bootstrap(
         defeat_reason=defeat_reason,
         defeat_period_index=defeat_period_index,
     )
+
+
+@router.post("/run-finale/dismiss", response_model=RunFinaleDismissResponse)
+async def dismiss_run_finale(
+    current_user=Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    return service_dismiss_victory_finale(db, current_user.id)
+
+
+@router.post("/run-feedback", response_model=RunFeedbackResponse)
+async def post_run_feedback(
+    payload: RunFeedbackRequest,
+    current_user=Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    return service_submit_run_feedback(db, current_user.id, payload)
 
 
 @router.get("/templates", response_model=list[GameStarterTemplatePublic])

@@ -43,13 +43,12 @@ def claim_salary(db: Session, profile: GameProfile) -> dict:
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e)) from e
 
+    first_claim = int(profile.last_period_salary_claimed or 0) == 0
     profile.last_period_salary_claimed = period_index
     snapshot.salary_claimed = 1
     snapshot.salary_amount = amount
-
-    first_claim = period_index == 1
     try:
-        from ..admin.notify import notify_salary_claimed
+        from ...admin.notify import notify_salary_claimed
 
         notify_salary_claimed(
             db,

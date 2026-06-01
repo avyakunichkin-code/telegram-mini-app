@@ -6,7 +6,7 @@
 
 ```powershell
 cd design-lab/events/layout-round
-.\sync-lab.ps1
+.\sync-lab.sh
 npx serve .
 ```
 

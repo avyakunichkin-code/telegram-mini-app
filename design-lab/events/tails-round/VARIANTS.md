@@ -1,7 +1,7 @@
 # Events tails — E2 + E5
 
 **Каркас:** L3 ★ prod (`EventCard`), разметка как в [`layout-round/`](../layout-round/) (`ev-l3__*`, `ev-m2__bubble-row`, flat-выборы).  
-**Sync:** `sync-lab.ps1` — L3 CSS подтягивается автоматически, если в `index.html` есть `ev-l3__` (см. `_shared/sync-lab-round.ps1`).  
+**Sync:** `sync-lab.sh` — L3 CSS подтягивается автоматически, если в `index.html` есть `ev-l3__` (см. `_shared/sync-lab-round.sh`).  
 **Цель:** закрыть хвосты из [`mqx-ui-unification`](../../../docs/vision/ideas/mqx-ui-unification.md).
 
 **Смотреть:** не отдельный `serve` в этой папке, а хаб — `cd design-lab && npx serve .` → поиск «Tails» или раздел **События** → `events/tails-round/`.
