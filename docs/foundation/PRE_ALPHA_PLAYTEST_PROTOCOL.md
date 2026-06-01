@@ -55,7 +55,7 @@ audience_note: Первая волна Pre-Alpha (10–20 человек), ЦА 
 
 Опционально до волны (не блокер Pre-Alpha, но сильно помогает):
 
-- [ ] Mission Brief с **Монеткой** (эпик O1) — желательно до плейтеста; иначе текст из [`onboarding-tma-mission-brief.md`](../vision/ideas/onboarding-tma-mission-brief.md) в приглашении.
+- [x] Mission Brief / **guided coach O1** в prod — валидация α-FB-01 на PA-W1 (Q1); иначе усилить копирайт в приглашении.
 
 ---
 

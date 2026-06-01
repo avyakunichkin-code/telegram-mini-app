@@ -72,6 +72,21 @@ def ensure_schema_compatibility() -> None:
         statements.append(
             "ALTER TABLE game_profiles ADD COLUMN treat_self_last_period_index INTEGER NOT NULL DEFAULT 0"
         )
+    if "salary_miss_streak" not in columns:
+        statements.append("ALTER TABLE game_profiles ADD COLUMN salary_miss_streak INTEGER NOT NULL DEFAULT 0")
+    if "negative_close_streak" not in columns:
+        statements.append("ALTER TABLE game_profiles ADD COLUMN negative_close_streak INTEGER NOT NULL DEFAULT 0")
+
+    if "users" in inspector.get_table_names():
+        user_cols = {item["name"] for item in inspector.get_columns("users")}
+        if "guidance_completed" not in user_cols:
+            statements.append("ALTER TABLE users ADD COLUMN guidance_completed INTEGER NOT NULL DEFAULT 0")
+        if "guidance_progress_json" not in user_cols:
+            statements.append(
+                "ALTER TABLE users ADD COLUMN guidance_progress_json TEXT NOT NULL DEFAULT '{}'"
+            )
+        if "guidance_completed_at" not in user_cols:
+            statements.append("ALTER TABLE users ADD COLUMN guidance_completed_at TIMESTAMP NULL")
 
     if "period_snapshots" in inspector.get_table_names():
         ps_cols = {item["name"] for item in inspector.get_columns("period_snapshots")}

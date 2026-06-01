@@ -14,6 +14,9 @@ class User(Base):
     hashed_password = Column(String(200), nullable=False)
     full_name = Column(String(100))
     telegram_id = Column(Integer, unique=True, nullable=True)
+    guidance_completed = Column(Integer, nullable=False, default=0)
+    guidance_progress_json = Column(Text, nullable=False, default="{}")
+    guidance_completed_at = Column(DateTime, nullable=True)
     created_at = Column(DateTime, default=utc_now_naive)
 
 
@@ -70,6 +73,8 @@ class GameProfile(Base):
     need_health = Column(Float, nullable=False, default=0)
     needs_zero_periods_streak = Column(Integer, nullable=False, default=0)
     treat_self_last_period_index = Column(Integer, nullable=False, default=0)
+    salary_miss_streak = Column(Integer, nullable=False, default=0)
+    negative_close_streak = Column(Integer, nullable=False, default=0)
 
     created_at = Column(DateTime, default=utc_now_naive)
     updated_at = Column(DateTime, default=utc_now_naive, onupdate=utc_now_naive)

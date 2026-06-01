@@ -54,19 +54,25 @@ def test_period_milestone_three_skips_telegram(db_session, monkeypatch):
         "app.admin.notify._send_telegram_message",
         lambda text: tg_calls.append(text) or True,
     )
+    monkeypatch.setenv("OPS_TELEGRAM_BOT_TOKEN", "test-token")
+    monkeypatch.setenv("OPS_TELEGRAM_CHAT_ID", "1")
+    from app import config as config_module
+
+    config_module.config.OPS_TELEGRAM_BOT_TOKEN = "test-token"
+    config_module.config.OPS_TELEGRAM_CHAT_ID = "1"
+
     profile = GameProfile(
         user_id=1,
         name="M3",
         save_kind="game",
-        period_index=4,
+        period_index=6,
     )
     db_session.add(profile)
     db_session.flush()
 
     notify_period_milestone(db_session, profile, closed_period_index=3)
-    db_session.commit()
-
     assert tg_calls == []
 
     notify_period_milestone(db_session, profile, closed_period_index=5)
     assert len(tg_calls) == 1
+    assert "Pre-Alpha" in tg_calls[0]

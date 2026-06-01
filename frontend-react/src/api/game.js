@@ -22,6 +22,12 @@ export const gameApi = {
   patchOnboarding(payload) {
     return apiCall('/api/game/profile/onboarding', 'PATCH', payload);
   },
+  getGuidance() {
+    return apiCall('/api/game/guidance');
+  },
+  patchGuidance(payload) {
+    return apiCall('/api/game/guidance', 'PATCH', payload);
+  },
   getGameBootstrap() {
     return apiCall('/api/game/bootstrap');
   },

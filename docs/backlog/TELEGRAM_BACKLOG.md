@@ -228,7 +228,10 @@ gantt
 
 | KPI | Откуда |
 |-----|--------|
-| PA-T1 (≥60% до 3-го периода) | опрос + `period_milestone` в log |
+| PA-T1 (≥50% с **≥5** периодами, Q9) | опрос; сверка с **PA-A1** |
+| PA-T1s (≥25% с **≥8** периодами) | опрос; сверка с **PA-A1s** |
+| PA-A1 / PA-A1s / PA-A2 / PA-A3 | SQL по `period_economy_closings` + профили — [`PRE_ALPHA_WAVE1_OPS.md`](../foundation/PRE_ALPHA_WAVE1_OPS.md) |
+| PA-R3 (game over ≤5 мес.) | `game_profiles` + log |
 | CA D7 | cohort script по `notification_log` + `last_seen_at` |
 | «Кто застрял на онбординге» | `onboarding_stuck` + воронка в admin |
 
@@ -274,7 +277,7 @@ gantt
 | **R6** | Player nudge (D1/D3) — **только после** initData (этап 2) | **Да** | ⬜ |
 | **R7** | `/quiet` отключает **все** TG, включая win/loss | **Нет** — win/loss всё равно шлём (1 раз, продуктовый итог) | ⬜ |
 | **R8** | Merge email-аккаунта и TG — **только явная привязка** | **Да** | ⬜ |
-| **R9** | Spec [`SPEC_telegram-bots-and-notifications.md`](../specs/features/SPEC_telegram-bots-and-notifications.md) — канон для реализации | **Да** | ⬜ |
+| **R9** | Spec [`SPEC_telegram-bots-and-notifications.md`](../specs/features/SPEC_telegram-bots-and-notifications.md) — канон для реализации | **Да** | ✅ черновик + события 2026-06 |
 
 ---
 
@@ -282,12 +285,12 @@ gantt
 
 | Область | Сейчас | Gap |
 |---------|--------|-----|
-| Ops → TG | Код ✅ | Prod env ⬜ (TG-001…003) |
-| Watchtower | UI ✅ | KPI summary ⬜ (TG-401) |
+| Ops → TG | RU-шаблоны ✅, hooks ✅ | Prod env ⬜ (TG-001…003) |
+| Watchtower | UI + «Событие» RU ✅ | KPI summary ⬜ (TG-401 / A2) |
 | Player bot | Только BotFather вручную | Webhook, /start ⬜ (TG-104…) |
 | TG login | Нет | initData ⬜ (TG-201…) |
 | Player push | Нет | win/loss ⬜ (TG-301…) |
-| Analytics | `notification_log` ✅ | digest, stuck, D7 ⬜ (TG-4xx) |
+| Analytics | `notification_log` + `period_closed` + `salary_claimed` ✅ | digest, stuck, D7 ⬜ (TG-4xx) |
 | Канал | Док + черновики постов | Пост + deeplink ⬜ (TG-108) |
 
 **Узкое место Pre-Alpha:** не код, а **ops env + player bot + invite copy**. Это этапы 0–1 (~1 неделя календарно при part-time).
@@ -324,6 +327,7 @@ gantt
 
 | Дата | Событие |
 |------|---------|
+| 2026-06-01 | KPI v1.2 (PA-A*), RU notify, milestones 5/8 TG / 3 log-only; sync с PRODUCT_BACKLOG |
 | 2026-05-30 | Черновик бэклога из spec + сессии architecture review |
 
 ---

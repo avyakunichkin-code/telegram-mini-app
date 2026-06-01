@@ -909,6 +909,13 @@ def choose_event(db: Session, profile: GameProfile, event_id: int, choice_id: in
     record_event_profile_selection(db, profile.id, int(inst.definition_id), int(profile.period_index))
     db.commit()
 
+    try:
+        from ...guidance.engine import on_event_chosen
+
+        on_event_chosen(db, profile.user_id)
+    except Exception:
+        pass
+
     response = {"status": "success"}
     if needs_after is not None:
         response["needs_before"] = needs_before

@@ -80,7 +80,11 @@ SQL: [`PRE_ALPHA_WAVE1_OPS.md`](PRE_ALPHA_WAVE1_OPS.md) § «Серверный 
 2. 
 3. 
 
+**Повторы / выбор в событиях (Q11):**
+
 **Resume / lock-unlock (Q8):**
+
+**Сводка по α-FB:** см. [`PRE_ALPHA_PLAYTEST_FEEDBACK.md`](PRE_ALPHA_PLAYTEST_FEEDBACK.md) — какие ID подтвердились / закрылись.
 
 ---
 

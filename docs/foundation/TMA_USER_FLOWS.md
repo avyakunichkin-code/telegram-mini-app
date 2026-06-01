@@ -59,7 +59,7 @@ Real-time таймера нет (TB1); паузы и блокировка экр
 ## Чеклист доработки (коротко)
 
 - [x] Выбор **Game / Plan** (Plan — заглушка) и поток **шаблонов** вместо `light` / `hardcore` (см. [`SPEC_game-plan.md`](../specs/features/SPEC_game-plan.md)).
-- [ ] Онбординг: **Guided coach** (5 шагов на дашборде, первая игра Game Mode) — эпик **O1**, [`SPEC_onboarding-tma.md`](../specs/features/SPEC_onboarding-tma.md).
+- [x] **Guided coach O1** на первой игре — [`SPEC_onboarding-tma.md`](../specs/features/SPEC_onboarding-tma.md); валидация α-FB-01 на PA-W1 (Q1).
 - [ ] Локализованные подписи типов активов / событий (не сырое поле API).
 - [ ] Прогресс цели победы визуально на главной (в т.ч. после перехода на **M из N** целей из шаблона).
 - [ ] Пустые состояния вкладки «Финансы».

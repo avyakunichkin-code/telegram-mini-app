@@ -1,8 +1,8 @@
 ---
 layer: foundation
 status: active
-last_reviewed: 2026-05-25
-audience_note: Пилот n=1 (пробный тестер). Следующая волна — по протоколу PRE_ALPHA_PLAYTEST_PROTOCOL.md.
+last_reviewed: 2026-06-01
+audience_note: Пилот n=1 (2026-05-25). Полный реестр отзывов → [`PRE_ALPHA_PLAYTEST_FEEDBACK.md`](PRE_ALPHA_PLAYTEST_FEEDBACK.md).
 ---
 
 # Pre-Alpha: пилот wave-0 (1 тестер)
@@ -36,10 +36,13 @@ audience_note: Пилот n=1 (пробный тестер). Следующая 
 
 ## Открыто на следующую волну
 
-- [x] Опрос — текст [`templates/PRE_ALPHA_SURVEY_COPY.md`](templates/PRE_ALPHA_SURVEY_COPY.md); развернуть URL в [`PRE_ALPHA_WAVE1_OPS.md`](PRE_ALPHA_WAVE1_OPS.md)
+→ Triage: **[`PRE_ALPHA_PLAYTEST_FEEDBACK.md`](PRE_ALPHA_PLAYTEST_FEEDBACK.md)** (α-FB-01…19; INT-2 от 2026-06-01).
+
+- [x] Опрос — текст [`templates/PRE_ALPHA_SURVEY_COPY.md`](templates/PRE_ALPHA_SURVEY_COPY.md); Q11 про повторы/выбор
 - [ ] Зафиксировать билд (commit/tag) в ops-листе **перед рассылкой** — см. PA-W1 §«3 шага»
 - [ ] Волна 1 (10–20) — [`PRE_ALPHA_WAVE1_OPS.md`](PRE_ALPHA_WAVE1_OPS.md) · результаты → [`PRE_ALPHA_WAVE1_RESULTS.md`](PRE_ALPHA_WAVE1_RESULTS.md)
-- [ ] События: доля периодов с выбором (не только свайп)
+- [ ] **α-FB-03:** повторы событий (контент + cooldown) — смотреть Q5/Q11
+- [ ] **α-FB-04:** осмысленность выбора в событиях (не только листание) — Q11 + модерация
 
 ---
 

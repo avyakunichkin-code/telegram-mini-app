@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Spinner } from '@telegram-apps/telegram-ui';
 import { HashRouter, Routes, Route, useNavigate } from 'react-router-dom';
 import { AppRoot } from '@telegram-apps/telegram-ui';  // импортируем AppRoot
@@ -18,6 +18,9 @@ import { AdminCatalogListScreen } from './components/admin/AdminCatalogListScree
 import { AdminCatalogsHub } from './components/admin/AdminCatalogsHub';
 import { AdminWatchtowerScreen } from './components/admin/AdminWatchtowerScreen';
 import { suggestDefaultProfileName } from './utils/suggestDefaultProfileName';
+import { API } from './api';
+import { showNotification } from './components/notifications';
+import { startGameWithStudentTemplate } from './utils/startGame';
 
 function GameAppFlowShell({ children }) {
   return (
@@ -32,7 +35,26 @@ function GameApp() {
   const navigate = useNavigate();
   const [screen, setScreen] = useState('start'); // start | newProfileKind | gameTemplates | planSetup | game
   const [newGameProfileName, setNewGameProfileName] = useState('');
+  const [savedProfileCount, setSavedProfileCount] = useState(null);
   const { logout } = useAuth();
+
+  useEffect(() => {
+    if (screen !== 'newProfileKind') return undefined;
+    let cancelled = false;
+    (async () => {
+      try {
+        const rows = await API.getGameProfiles();
+        if (!cancelled) {
+          setSavedProfileCount(Array.isArray(rows) ? rows.length : 0);
+        }
+      } catch {
+        if (!cancelled) setSavedProfileCount(null);
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [screen]);
 
   const handleNewGame = (initialName) => {
     const name =
@@ -43,7 +65,16 @@ function GameApp() {
     setScreen('newProfileKind');
   };
 
-  const handleChooseGameMode = () => {
+  const handleChooseGameMode = async () => {
+    if (savedProfileCount === 0) {
+      try {
+        await startGameWithStudentTemplate(newGameProfileName);
+        handleGameStarted();
+      } catch (error) {
+        showNotification(error?.detail || error?.message || 'Не удалось запустить игру', 'error');
+      }
+      return;
+    }
     setScreen('gameTemplates');
   };
 

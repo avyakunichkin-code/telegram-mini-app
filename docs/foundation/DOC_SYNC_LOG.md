@@ -4,6 +4,7 @@
 
 | Дата | Что в prod | Что исправили в docs |
 |------|------------|----------------------|
+| 2026-06-01 | O2 spec + plan | `SPEC_onboarding-o2.md`, `PLAN_onboarding-o2.md`; O1 superseded | guidance UX |
 | 2026-06-01 | — | Добавлен снимок [`PROJECT_META.md`](PROJECT_META.md): LOC, файлы, эпики, бэклог, git-сроки |
 | 2026-05-24 | Сняты `level`/`xp`, victory без `character_level` | ADR-003, баннеры в evolution, LEVEL_XP superseded |
 | 2026-05-24 | Victory v2 в `finance_overview_build` | ADR-002, GLOSSARY, TRACEABILITY |

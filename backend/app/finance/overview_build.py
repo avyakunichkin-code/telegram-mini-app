@@ -17,6 +17,7 @@ from ..models import (
     GameProfile,
     GameStarterTemplate,
     InvestmentPosition,
+    User,
 )
 import json
 
@@ -31,6 +32,7 @@ from ..schemas import (
     AchievementUnlockEvent,
     AssetResponse,
     FinanceOverview,
+    GuidanceOverview,
     LiabilityResponse,
     MonthlyBurnBreakdown,
     PeriodClosePreview,
@@ -294,6 +296,16 @@ def build_finance_overview(db: Session, profile: GameProfile) -> FinanceOverview
         needs_distressed_penalty_estimate=0,
     )
 
+    user = db.query(User).filter(User.id == profile.user_id).first()
+    guidance = None
+    try:
+        from ..guidance.engine import build_guidance_overview
+
+        guidance_data = build_guidance_overview(db, user, profile)
+        guidance = GuidanceOverview(**guidance_data)
+    except Exception:
+        logger.warning("guidance overview failed profile_id=%s", profile.id, exc_info=True)
+
     return FinanceOverview(
         salary=SalaryProfileResponse(
             monthly_amount=salary.monthly_amount if salary else 0,
@@ -346,4 +358,5 @@ def build_finance_overview(db: Session, profile: GameProfile) -> FinanceOverview
         negative_periods_count=int(getattr(profile, "negative_periods_count", 0) or 0),
         period_close_preview=period_close_preview,
         profile_is_active=int(getattr(profile, "is_active", 1) or 0) == 1,
+        guidance=guidance,
     )

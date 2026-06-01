@@ -20,7 +20,8 @@ import {
 } from './mqx';
 import { PERIOD_CLOSE_AUTO_MAX } from '../constants/periodClose';
 import { shouldAutoOpenPeriodClose } from '../utils/periodCloseDisplay';
-import { GameOnboardingLayer } from './GameOnboardingLayer';
+import { GameGuidanceLayer } from './GameGuidanceLayer';
+import { isP1GuidanceComplete } from '../guidance/curriculum';
 
 /** Эмоциональный слой страницы (TB1: без play/pause — активная партия = playing mood). */
 function gamePageMoodClass(timeStatus) {
@@ -69,9 +70,12 @@ export function GameScreen({ onLogout, onNewGame, onLoadGame }) {
 
   const closeEventsOverlay = useCallback(() => setEventsOpen(false), []);
 
-  const inOnboarding =
-    overview && (overview.onboarding_state === 'draft' || overview.onboarding_state === 'started');
-  const eventsUnlocked = !inOnboarding;
+  const guidance = overview?.guidance;
+  const inGuidanceCurriculum = guidance?.show_curriculum === true;
+  const p1GuidanceDone =
+    isP1GuidanceComplete(guidance) || overview?.onboarding_state === 'brief_done';
+  const eventsUnlocked = !inGuidanceCurriculum && p1GuidanceDone;
+  const inOnboarding = inGuidanceCurriculum;
   const periodCloseForUi = lastPeriodClose;
   const showPeriodCloseTail =
     !inOnboarding && activeTab === 'dashboard' && periodCloseForUi && !periodCloseOpen;
@@ -403,10 +407,8 @@ export function GameScreen({ onLogout, onNewGame, onLoadGame }) {
           </div>
         </div>
       </div>
-      <GameOnboardingLayer
-        overview={overview}
-        periodStatus={periodStatus}
-        rootRef={onboardingRootRef}
+      <GameGuidanceLayer
+        guidance={guidance}
         refreshOverview={refreshOverview}
         onOverlayStateChange={setOnboardingUi}
       />

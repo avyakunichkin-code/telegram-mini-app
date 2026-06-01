@@ -1,7 +1,7 @@
 ---
 layer: handbook
 status: active
-last_reviewed: 2026-05-30
+last_reviewed: 2026-06-01
 audience: product, playtest, partners
 ---
 
@@ -24,7 +24,7 @@ audience: product, playtest, partners
 | Игровой месяц (TB1), «Закрыть месяц» | ✅ | Без real-time таймера |
 | Зарплата по кнопке (пропуск = нет выплаты за период) | ✅ | |
 | Поражение: 3 периода cash &lt; 0 | ✅ | |
-| Победа Victory v2 (`chain` / legacy `parallel`) | ✅ | Обычно `period_index ≥ 7` |
+| Победа Victory v2 (`chain` / legacy `parallel`) | ✅ | Только по целям chain; period gate снят (2026-06); полная кампания **~40–60** мес. |
 | UI целей (`MqxGoalDash`) | ✅ | |
 | 2 события на период, tier/cooldown | ✅ | [ADR-009](../decisions/ADR-009-metrics-dictionary-tb1.md) |
 
@@ -79,8 +79,9 @@ audience: product, playtest, partners
 | Mission Brief / онбординг O1 | 🟡 | [SPEC_onboarding-tma](../specs/features/SPEC_onboarding-tma.md) |
 | Экран аналитики | ✅ | [SPEC_ANALYTICS](../specs/SPEC_ANALYTICS.md) |
 | Balance playtest (headless) | ✅ | [`docs/balance/`](../balance/README.md) |
-| Pre-Alpha волна 10–20 | 🟡 | [Протокол](../foundation/PRE_ALPHA_PLAYTEST_PROTOCOL.md) · [Ops волны 1](../foundation/PRE_ALPHA_WAVE1_OPS.md) — набор не начат |
-| Closed Alpha D1/D7 | ⬜ | KPI зафиксированы — [`KPI_AND_PHASES.md`](KPI_AND_PHASES.md); аналитика в prod ⬜ |
+| Ops-алерты + Watchtower `#/admin` | 🟡 | RU-тексты в TG; KPI summary (PA-A*) — backlog A2 |
+| Pre-Alpha волна 10–20 | 🟡 | Доки + KPI v1.2 (PA-T* / PA-A*) готовы; **набор не начат** — [Ops](../foundation/PRE_ALPHA_WAVE1_OPS.md) |
+| Closed Alpha D1/D7 | ⬜ | KPI в [`KPI_AND_PHASES.md`](KPI_AND_PHASES.md); Amplitude / digest ⬜ |
 | Монетизация B2C | ⬜ | TBD — [`MONETIZATION.md`](MONETIZATION.md) |
 
 ---

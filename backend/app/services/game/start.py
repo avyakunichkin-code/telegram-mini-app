@@ -16,6 +16,7 @@ from ...models import (
     GameProfile,
     GameStarterTemplate,
     Transaction,
+    User,
 )
 from ...needs.engine import parse_needs_config, set_profile_needs
 from ...schemas import AssetCreate, GameStartRequest, GameStartResponse, LiabilityCreate
@@ -34,6 +35,9 @@ def start_new_game(db: Session, user_id: int, payload: GameStartRequest) -> Game
     """
     validate_game_start_request(payload, db)
     save_kind = validate_save_kind(payload.save_kind)
+
+    user = db.query(User).filter(User.id == user_id).first()
+    guidance_done = user is not None and int(getattr(user, "guidance_completed", 0) or 0) == 1
 
     starter_template_key = None
     base_monthly_lifestyle = 0.0
@@ -130,8 +134,8 @@ def start_new_game(db: Session, user_id: int, payload: GameStartRequest) -> Game
         time_state="pause",
         period_anchor_at=utc_now_naive(),
         base_params_locked=1,
-        onboarding_state="draft",
-        onboarding_step="period_timer",
+        onboarding_state="brief_done" if guidance_done else "draft",
+        onboarding_step="farewell" if guidance_done else "period_timer",
     )
     try:
         if save_kind == "game":

@@ -57,7 +57,11 @@
 | [`foundation/GLOSSARY.md`](foundation/GLOSSARY.md) | Термины (период, подушка, save_kind, …) |
 | [`foundation/PROJECT_META.md`](foundation/PROJECT_META.md) | **Снимок метрик:** размер репо, LOC, эпики, бэклог, дни с `init` |
 | [`foundation/PRE_ALPHA_PLAYTEST_PROTOCOL.md`](foundation/PRE_ALPHA_PLAYTEST_PROTOCOL.md) | **Черновик** протокола плейтеста Pre-Alpha (10–20), опрос, чеклист перед волной |
-| [`foundation/PRE_ALPHA_PLAYTEST_WAVE0_RESULTS.md`](foundation/PRE_ALPHA_PLAYTEST_WAVE0_RESULTS.md) | Пилот wave-0 (n=1): итоги и правки после пробного тестера |
+| [`foundation/PRE_ALPHA_PLAYTEST_WAVE0_RESULTS.md`](foundation/PRE_ALPHA_PLAYTEST_WAVE0_RESULTS.md) | Пилот wave-0 (n=1): итоги и правки |
+| [`foundation/PRE_ALPHA_PLAYTEST_FEEDBACK.md`](foundation/PRE_ALPHA_PLAYTEST_FEEDBACK.md) | **Реестр отзывов** wave-0 + внутренние прогоны → backlog |
+| [`specs/features/SPEC_onboarding-o2.md`](specs/features/SPEC_onboarding-o2.md) | **O2** онбординг: bottom strip, 3 периода, user-once |
+| [`plans/PLAN_onboarding-o2.md`](plans/PLAN_onboarding-o2.md) | План реализации O2 (без hotfix O1) |
+| [`vision/ideas/onboarding-o2-progressive-guidance.md`](vision/ideas/onboarding-o2-progressive-guidance.md) | Idea APPROVED → O2 spec |
 | [`foundation/MVP_AUDIT_VS_SPEC.md`](foundation/MVP_AUDIT_VS_SPEC.md) | Чеклист: текущий код vs SPEC_PRODUCT |
 | [`foundation/DOC_SYNC_LOG.md`](foundation/DOC_SYNC_LOG.md) | Журнал синхронизации docs ↔ prod |
 

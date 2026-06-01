@@ -1,8 +1,9 @@
 ---
 layer: spec
-status: approved
+status: superseded
+superseded_by: SPEC_onboarding-o2.md
 owner: product+frontend
-last_reviewed: 2026-05-26
+last_reviewed: 2026-06-01
 tracks: O1, pre-alpha, onboarding
 idea: ../../vision/ideas/onboarding-tma-mission-brief.md
 design_lab: ../../../design-lab/onboarding-guided/
@@ -10,6 +11,8 @@ character: ../../reference/CHARACTER_MONETKA.md
 ---
 
 # Spec: Онбординг TMA (Guided Coach + Монетка)
+
+> **Superseded (2026-06-01):** заменён [`SPEC_onboarding-o2.md`](SPEC_onboarding-o2.md) — Progressive Guidance, bottom strip, user-level completion. O1 код остаётся до merge O2.
 
 ## Objective
 

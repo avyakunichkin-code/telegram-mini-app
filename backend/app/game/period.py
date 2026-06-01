@@ -470,6 +470,19 @@ def process_period_end(db: Session, profile: GameProfile) -> dict:
     else:
         profile.clean_period_streak = 0
 
+    salary_claimed = snapshot is not None and int(snapshot.salary_claimed or 0) == 1
+    try:
+        from ..guidance.engine import on_period_closed_guidance, update_nudge_streaks_on_period_close
+
+        update_nudge_streaks_on_period_close(
+            profile,
+            salary_claimed=salary_claimed,
+            cash_end=cash_end,
+        )
+        on_period_closed_guidance(db, profile.user_id, profile, closed_period_index)
+    except Exception:
+        logger.warning("guidance period close hook failed profile_id=%s", profile.id, exc_info=True)
+
     db.add(
         PeriodEconomyClosing(
             game_profile_id=int(profile.id),

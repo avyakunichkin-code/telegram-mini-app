@@ -284,6 +284,7 @@ class FinanceOverview(BaseModel):
     negative_periods_count: int = 0
     period_close_preview: Optional[PeriodClosePreview] = None
     profile_is_active: bool = True
+    guidance: Optional[GuidanceOverview] = None
 
 
 class AnalyticsTimeseriesPoint(BaseModel):
@@ -392,6 +393,34 @@ class OnboardingPatchRequest(BaseModel):
 class OnboardingPatchResponse(BaseModel):
     onboarding_state: str
     onboarding_step: str
+
+
+class GuidanceOverview(BaseModel):
+    show_curriculum: bool = False
+    beat_id: Optional[str] = None
+    title: Optional[str] = None
+    body: Optional[str] = None
+    module_step: int = 0
+    module_step_count: int = 0
+    view_index: int = 0
+    last_completed_index: int = -1
+    completed_beats: List[str] = Field(default_factory=list)
+    beat_completed: bool = False
+    dismiss_skip_count: int = 0
+    show_debrief: bool = False
+    nudge_id: Optional[str] = None
+    nudge_title: Optional[str] = None
+    nudge_body: Optional[str] = None
+
+
+class GuidancePatchRequest(BaseModel):
+    action: str
+    beat_id: Optional[str] = None
+    view_index: Optional[int] = None
+
+
+class GuidancePatchResponse(BaseModel):
+    guidance: GuidanceOverview
 
 
 class TimeConfigUpdate(BaseModel):

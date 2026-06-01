@@ -1,6 +1,6 @@
 from typing import Optional
 
-from fastapi import APIRouter, Depends, Query
+from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.orm import Session
 
 from ..auth import get_current_user
@@ -18,6 +18,9 @@ from ..schemas import (
     OnboardingPatchRequest,
     OnboardingPatchResponse,
     GameBootstrapResponse,
+    GuidancePatchRequest,
+    GuidancePatchResponse,
+    GuidanceOverview,
 )
 from ..services.game.profiles import (
     activate_game_profile as service_activate_game_profile,
@@ -26,6 +29,7 @@ from ..services.game.profiles import (
     patch_profile_onboarding as service_patch_profile_onboarding,
 )
 from ..services.game.start import start_new_game as service_start_new_game
+from ..services.game.guidance import get_guidance as service_get_guidance, patch_user_guidance as service_patch_guidance
 from ..services.game.templates import list_game_templates as service_list_game_templates
 from ..services.game.time import (
     get_time_status as service_get_time_status,
@@ -91,6 +95,30 @@ async def patch_profile_onboarding(
     db: Session = Depends(get_db),
 ):
     return service_patch_profile_onboarding(db, current_user.id, payload)
+
+
+@router.get("/guidance", response_model=GuidanceOverview)
+async def get_game_guidance(
+    current_user=Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    return service_get_guidance(db, current_user.id)
+
+
+@router.patch("/guidance", response_model=GuidancePatchResponse)
+async def patch_game_guidance(
+    payload: GuidancePatchRequest,
+    current_user=Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    return service_patch_guidance(db, current_user.id, payload)
+
+
+@router.post("/guidance/replay")
+async def replay_game_guidance(
+    current_user=Depends(get_current_user),
+):
+    raise HTTPException(status_code=501, detail="Guidance replay is not available in O2")
 
 
 @router.post("/profiles/{profile_id}/activate")
