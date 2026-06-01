@@ -3,7 +3,7 @@ import { InsurancePlanMetrics } from '../metrics/InsurancePlanMetrics';
 import { CapitalPositionCard } from './CapitalPositionCard';
 
 /** Готовый тариф — карточка как asset H: accent, kicker, метрики, кнопка «+». */
-export function InsurancePlanCard({ plan, busy, onBuy }) {
+export function InsurancePlanCard({ plan, busy, disabled = false, onBuy }) {
   const catalog = findInsuranceCatalogItem(plan.kind);
   const accent = insuranceAccentClass(catalog.product);
 
@@ -22,7 +22,8 @@ export function InsurancePlanCard({ plan, busy, onBuy }) {
       }
       action={{
         className: 'mqx-fin-icon-btn mqx-fin-icon-btn--plus mqx-capital-add-btn',
-        onClick: () => !busy && onBuy(plan),
+        disabled: busy || disabled,
+        onClick: () => !busy && !disabled && onBuy(plan),
       }}
       actionLabel="+"
       actionAriaLabel={`Оформить ${catalog.title} — ${plan.label}`}

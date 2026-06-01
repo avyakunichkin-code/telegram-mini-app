@@ -8,6 +8,12 @@ import { CapitalPositionCard } from './CapitalPositionCard';
 import { InsuranceProductPicker } from './InsuranceProductPicker';
 import { MqxCapitalActionGrid } from './MqxCapitalActionGrid';
 import { MqxCapitalSheet } from './MqxCapitalSheet';
+import { SecuredAcquisitionList } from './SecuredAcquisitionList';
+import {
+  buildSecuredBundles,
+  filterBundlesForSheet,
+  isConsumerLiabilityTemplate,
+} from '../../../utils/capitalDl1';
 
 const PROPERTY_KINDS = new Set(['home', 'rental_home']);
 const CAR_KINDS = new Set(['car_personal', 'car_taxi']);
@@ -28,7 +34,7 @@ const SHEET_COPY = {
   },
   car: {
     title: 'Авто',
-    subtitle: 'Покупка из шаблона списывает стоимость с текущего счёта.',
+    subtitle: 'За наличные или автокредит с первым взносом (связка ниже).',
   },
   insurance: {
     title: 'Страховки',
@@ -36,11 +42,11 @@ const SHEET_COPY = {
   },
   mortgage: {
     title: 'Ипотека',
-    subtitle: 'Новый долг зачисляет сумму на счёт; закрытие возвращает тело и гасит просрочку.',
+    subtitle: 'Первый взнос с счёта, кредит на остаток. Сумма кредита на счёт не зачисляется.',
   },
   credit: {
-    title: 'Кредит',
-    subtitle: 'Новый долг зачисляет сумму на счёт; закрытие возвращает тело и гасит просрочку.',
+    title: 'Потребительский кредит',
+    subtitle: 'До 2 активных кредитов; сумма зачисляется на счёт. Ипотека — в «Недвижимость».',
   },
 };
 
@@ -76,6 +82,9 @@ export function CapitalActionsPanel({
   buyingPlanKey,
   onAddAssetFromTemplate,
   onAddLiabilityFromTemplate,
+  onSecuredAcquisition,
+  securedAcquireBusyKey = null,
+  ownedAssets = [],
 }) {
   const visibleIds = useMemo(() => {
     const ids = new Set();
@@ -100,12 +109,12 @@ export function CapitalActionsPanel({
     [assetTemplates],
   );
   const carTemplates = useMemo(() => filterAssetTemplates(assetTemplates, CAR_KINDS), [assetTemplates]);
-  const mortgageTemplates = useMemo(
-    () => filterLiabilityTemplates(liabilityTemplates, (t) => t.key === 'mortgage'),
-    [liabilityTemplates],
+  const securedBundles = useMemo(
+    () => buildSecuredBundles(liabilityTemplates, assetTemplates),
+    [liabilityTemplates, assetTemplates],
   );
   const creditTemplates = useMemo(
-    () => filterLiabilityTemplates(liabilityTemplates, (t) => t.key !== 'mortgage'),
+    () => filterLiabilityTemplates(liabilityTemplates, isConsumerLiabilityTemplate),
     [liabilityTemplates],
   );
 
@@ -186,11 +195,37 @@ export function CapitalActionsPanel({
       case 'realestate':
         return renderTemplateList(propertyTemplates, 'asset', onAddAssetFromTemplate);
       case 'car':
-        return renderTemplateList(carTemplates, 'asset', onAddAssetFromTemplate);
+        return (
+          <>
+            <SecuredAcquisitionList
+              bundles={filterBundlesForSheet(securedBundles, 'car')}
+              onAcquire={onSecuredAcquisition}
+              busyKey={securedAcquireBusyKey}
+            />
+            {carTemplates.length > 0 ? (
+              <>
+                <p className="mqx-capital-sheet-section-label">За наличные</p>
+                {renderTemplateList(carTemplates, 'asset', onAddAssetFromTemplate)}
+              </>
+            ) : null}
+          </>
+        );
       case 'insurance':
-        return <InsuranceProductPicker onBuy={onBuyInsurance} buyingPlanKey={buyingPlanKey} />;
+        return (
+          <InsuranceProductPicker
+            ownedAssets={ownedAssets}
+            onBuy={onBuyInsurance}
+            buyingPlanKey={buyingPlanKey}
+          />
+        );
       case 'mortgage':
-        return renderTemplateList(mortgageTemplates, 'liability', onAddLiabilityFromTemplate);
+        return (
+          <SecuredAcquisitionList
+            bundles={filterBundlesForSheet(securedBundles, 'mortgage')}
+            onAcquire={onSecuredAcquisition}
+            busyKey={securedAcquireBusyKey}
+          />
+        );
       case 'credit':
         return renderTemplateList(creditTemplates, 'liability', onAddLiabilityFromTemplate);
       default:

@@ -7,8 +7,10 @@ export function LiabilityPositionMetrics({
   monthlyPayment,
   annualRatePercent,
   overdueAmount = 0,
+  remainingPeriods = null,
 }) {
   const showOverdue = Number(overdueAmount) > 0;
+  const showTerm = remainingPeriods != null && Number(remainingPeriods) >= 0;
 
   return (
     <MetricsRow className="mqx-asset-metrics-inline--position">
@@ -26,6 +28,11 @@ export function LiabilityPositionMetrics({
       <MetricInlineItem tip="Годовая ставка — платим проценты по долгу" glyph="percent" tone="neg">
         {Number(annualRatePercent)}
       </MetricInlineItem>
+      {showTerm ? (
+        <MetricInlineItem tip="Осталось периодов по графику" glyph="clock">
+          {Number(remainingPeriods)}
+        </MetricInlineItem>
+      ) : null}
     </MetricsRow>
   );
 }

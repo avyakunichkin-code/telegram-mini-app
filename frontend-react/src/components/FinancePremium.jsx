@@ -33,6 +33,8 @@ export function FinancePremium({
   const [assetTemplates, setAssetTemplates] = useState([]);
   const [liabilityTemplates, setLiabilityTemplates] = useState([]);
   const [extraLoading, setExtraLoading] = useState(true);
+  const [securedAcquireBusyKey, setSecuredAcquireBusyKey] = useState(null);
+  const [prepayBusy, setPrepayBusy] = useState(false);
 
   const mechanics = useMemo(() => getEffectiveMechanicsFromOverview(overview), [overview]);
   const insuranceSectionState = useMemo(
@@ -106,18 +108,25 @@ export function FinancePremium({
 
   const handleDeleteAsset = async (id) => {
     try {
-      await API.deleteAsset(id);
+      const res = await API.deleteAsset(id);
       await refreshOverview();
-      showNotification('Актив удалён', 'success');
+      if (res?.payoff > 0) {
+        const parts = [`Продано. Погашено кредита: ${Math.round(res.payoff).toLocaleString('ru-RU')} ₽`];
+        if (res.cash_net > 0) parts.push(`на счёт: ${Math.round(res.cash_net).toLocaleString('ru-RU')} ₽`);
+        if (res.top_up > 0) parts.push(`доплата: ${Math.round(res.top_up).toLocaleString('ru-RU')} ₽`);
+        showNotification(parts.join(' · '), 'success');
+      } else {
+        showNotification('Актив продан', 'success');
+      }
     } catch (err) {
       showNotification(err?.detail || err?.message || 'Ошибка соединения', 'error');
     }
   };
 
-  const buyInsurancePlan = async (plan) => {
+  const buyInsurancePlan = async (payload, plan) => {
     setBuyingPlanKey(plan.plan_key);
     try {
-      await API.buyPolicy({ plan_key: plan.plan_key });
+      await API.buyPolicy(payload);
       showNotification('Полис оформлен', 'success');
       await refreshOverview();
       await reloadExtra();
@@ -142,10 +151,42 @@ export function FinancePremium({
     }
   };
 
+  const addSecuredAcquisition = async (bundle) => {
+    const busyKey = `${bundle.liabilityKey}:${bundle.assetKey}`;
+    setSecuredAcquireBusyKey(busyKey);
+    try {
+      await API.createSecuredAcquisition({
+        liability_key: bundle.liabilityKey,
+        asset_key: bundle.assetKey,
+      });
+      showNotification(`${bundle.assetTitle}: оформлено с первым взносом`, 'success');
+      await refreshOverview();
+      await reloadExtra();
+      setOpenSheet(null);
+    } catch (e) {
+      showNotification(e?.detail || e?.message || 'Не удалось оформить покупку в кредит', 'error');
+    } finally {
+      setSecuredAcquireBusyKey(null);
+    }
+  };
+
+  const handlePrepayLiability = async (liabilityId, amount) => {
+    setPrepayBusy(true);
+    try {
+      await API.prepayLiability(liabilityId, amount);
+      showNotification('Досрочное погашение выполнено', 'success');
+      await refreshOverview();
+    } catch (e) {
+      showNotification(e?.detail || e?.message || 'Не удалось погасить досрочно', 'error');
+    } finally {
+      setPrepayBusy(false);
+    }
+  };
+
   const addLiabilityFromTemplate = async (t) => {
     try {
       await API.createLiabilityFromTemplate(t.key);
-      showNotification('Обязательство добавлено: сумма зачислена на счёт', 'success');
+      showNotification('Кредит оформлен: сумма зачислена на счёт', 'success');
       await refreshOverview();
       await reloadExtra();
       setOpenSheet(null);
@@ -256,6 +297,9 @@ export function FinancePremium({
                 cancellingPolicyId={cancellingPolicyId}
                 onDeleteAsset={handleDeleteAsset}
                 onDeleteLiability={handleDeleteLiability}
+                onPrepayLiability={handlePrepayLiability}
+                prepayBusy={prepayBusy}
+                maxCash={maxCash}
                 onGotoAction={handleGotoAction}
               />
             ) : (
@@ -282,6 +326,9 @@ export function FinancePremium({
                 buyingPlanKey={buyingPlanKey}
                 onAddAssetFromTemplate={addAssetFromTemplate}
                 onAddLiabilityFromTemplate={addLiabilityFromTemplate}
+                onSecuredAcquisition={addSecuredAcquisition}
+                securedAcquireBusyKey={securedAcquireBusyKey}
+                ownedAssets={ownedAssets}
               />
             )}
           </div>

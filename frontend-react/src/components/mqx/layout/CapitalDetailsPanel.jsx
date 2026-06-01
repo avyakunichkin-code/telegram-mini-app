@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { AssetPositionMetrics } from '../metrics/AssetPositionMetrics';
 import { InsurancePolicyMetrics } from '../metrics/InsurancePolicyMetrics';
 import { LiabilityPositionMetrics } from '../metrics/LiabilityPositionMetrics';
@@ -10,6 +11,30 @@ import { MqxCapitalMechanicLocked } from './MqxCapitalMechanicLocked';
 import { formatDebtCount, MqxCapitalMetaCount, MqxCapitalMetaLiab } from './MqxCapitalSectionMeta';
 import { MqxCapitalSectionAccordion } from './MqxCapitalSectionAccordion';
 import { MqxFinListRow } from './MqxFinListRow';
+import { MqxCapitalSheet } from './MqxCapitalSheet';
+import { MqxLiabilityPrepayForm } from './MqxLiabilityPrepayForm';
+import {
+  canPrepayLiability,
+  computeSalePreview,
+  findSecuredLiabilityForAsset,
+} from '../../../utils/capitalDl1';
+
+function liabilityAssetSubtitle(liability, ownedAssets) {
+  if (!liability?.secured_asset_id) return null;
+  const asset = (ownedAssets || []).find((a) => Number(a.id) === Number(liability.secured_asset_id));
+  return asset ? `Под залог: ${asset.title}` : 'Под залог актива';
+}
+
+function formatRub(amount) {
+  return `${Math.round(Number(amount) || 0).toLocaleString('ru-RU')} ₽`;
+}
+
+function formatSaleConfirmMessage(asset, liability) {
+  const { payoff, cashNet, topUp } = computeSalePreview(asset, liability);
+  let msg = `Погашение кредита: ${formatRub(payoff)}. На счёт: ${formatRub(cashNet)}.`;
+  if (topUp > 0) msg += ` Доплата с счёта: ${formatRub(topUp)}.`;
+  return msg;
+}
 
 /** Панель «Детали» — только позиции и компактные row-actions. */
 export function CapitalDetailsPanel({
@@ -21,14 +46,18 @@ export function CapitalDetailsPanel({
   ownedAssets,
   ownedLiabilities,
   extraLoading,
+  maxCash,
   onCloseInvest,
   onCancelPolicy,
   cancellingPolicyId,
   onDeleteAsset,
   onDeleteLiability,
+  onPrepayLiability,
+  prepayBusy = false,
   onGotoAction,
 }) {
   const { confirm, dialog } = useMqxConfirm();
+  const [prepayTarget, setPrepayTarget] = useState(null);
 
   const requestCloseInvest = async (position) => {
     const ok = await confirm({
@@ -48,19 +77,28 @@ export function CapitalDetailsPanel({
   };
 
   const confirmDeleteAsset = async (asset) => {
+    const secured = findSecuredLiabilityForAsset(ownedLiabilities, asset.id);
     const ok = await confirm({
-      title: 'Удалить актив?',
-      message: `«${asset.title}» будет снят с учёта.`,
+      title: 'Продать актив?',
+      message: secured
+        ? formatSaleConfirmMessage(asset, secured)
+        : `«${asset.title}» будет продан, выручка зачислится на счёт.`,
     });
     if (ok) await onDeleteAsset(asset.id);
   };
 
   const confirmDeleteLiability = async (liability) => {
     const ok = await confirm({
-      title: 'Удалить обязательство?',
-      message: `«${liability.title}» будет закрыто и снято с учёта.`,
+      title: 'Закрыть обязательство?',
+      message: `«${liability.title}» будет закрыто: спишется остаток тела и просрочка со счёта.`,
     });
     if (ok) await onDeleteLiability(liability.id);
+  };
+
+  const submitPrepay = async (amount) => {
+    if (!prepayTarget) return;
+    await onPrepayLiability(prepayTarget.id, amount);
+    setPrepayTarget(null);
   };
 
   return (
@@ -163,6 +201,11 @@ export function CapitalDetailsPanel({
                 <MqxFinListRow
                   key={a.id}
                   title={a.title}
+                  subtitle={
+                    a.acquisition_mode === 'secured'
+                      ? 'Куплено в кредит — продажа погасит долг'
+                      : null
+                  }
                   metrics={
                     <AssetPositionMetrics
                       assetValue={a.asset_value}
@@ -204,37 +247,71 @@ export function CapitalDetailsPanel({
                 actionLabel="+ Добавить"
                 onAction={() => onGotoAction('mortgage')}
               >
-                Здесь только <strong>активные долги</strong>. Новый долг — вкладка{' '}
-                <strong>«Действия»</strong>.
+                Здесь только <strong>активные долги</strong>. Ипотека — «Недвижимость», кредит —{' '}
+                <strong>«Кредит»</strong>.
               </MqxCapitalDetailEmpty>
             ) : (
-              ownedLiabilities.map((l) => (
-                <MqxFinListRow
-                  key={l.id}
-                  title={l.title}
-                  metrics={
-                    <LiabilityPositionMetrics
-                      totalDebt={l.total_debt}
-                      monthlyPayment={l.monthly_payment}
-                      annualRatePercent={l.annual_rate_percent}
-                      overdueAmount={l.overdue_amount}
-                    />
-                  }
-                  trailing={
-                    <MqxCapitalTextRowAction
-                      variant="close"
-                      ariaLabel={`Закрыть ${l.title}`}
-                      onClick={() => void confirmDeleteLiability(l)}
-                    >
-                      Закрыть
-                    </MqxCapitalTextRowAction>
-                  }
-                />
-              ))
+              ownedLiabilities.map((l) => {
+                const secured = Boolean(l.secured_asset_id);
+                return (
+                  <MqxFinListRow
+                    key={l.id}
+                    title={l.title}
+                    subtitle={liabilityAssetSubtitle(l, ownedAssets)}
+                    metrics={
+                      <LiabilityPositionMetrics
+                        totalDebt={l.total_debt}
+                        monthlyPayment={l.monthly_payment}
+                        annualRatePercent={l.annual_rate_percent}
+                        overdueAmount={l.overdue_amount}
+                        remainingPeriods={l.remaining_periods}
+                      />
+                    }
+                    trailing={
+                      <div className="mqx-cap-row-actions-stack">
+                        {canPrepayLiability(l) ? (
+                          <MqxCapitalTextRowAction
+                            variant="sell"
+                            ariaLabel={`Досрочное погашение ${l.title}`}
+                            onClick={() => setPrepayTarget(l)}
+                          >
+                            Досрочно
+                          </MqxCapitalTextRowAction>
+                        ) : null}
+                        {!secured ? (
+                          <MqxCapitalTextRowAction
+                            variant="close"
+                            ariaLabel={`Закрыть ${l.title}`}
+                            onClick={() => void confirmDeleteLiability(l)}
+                          >
+                            Закрыть
+                          </MqxCapitalTextRowAction>
+                        ) : null}
+                      </div>
+                    }
+                  />
+                );
+              })
             )}
           </div>
         </MqxCapitalSectionAccordion>
       ) : null}
+
+      <MqxCapitalSheet
+        open={Boolean(prepayTarget)}
+        title="Досрочное погашение"
+        subtitle={prepayTarget?.title}
+        onClose={() => setPrepayTarget(null)}
+      >
+        {prepayTarget ? (
+          <MqxLiabilityPrepayForm
+            liability={prepayTarget}
+            maxCash={maxCash}
+            busy={prepayBusy}
+            onSubmit={submitPrepay}
+          />
+        ) : null}
+      </MqxCapitalSheet>
     </>
   );
 }

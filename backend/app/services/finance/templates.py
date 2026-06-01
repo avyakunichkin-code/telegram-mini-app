@@ -51,6 +51,9 @@ def list_liability_templates(db: Session) -> list[dict]:
                 "liability_kind": getattr(t, "liability_kind", None),
                 "disbursement_mode": getattr(t, "disbursement_mode", None),
                 "term_periods": term if term > 0 else None,
+                "down_payment_amount": float(getattr(t, "down_payment_amount", 0) or 0),
+                "requires_asset_kind": getattr(t, "requires_asset_kind", None),
+                "linked_asset_template_key": getattr(t, "linked_asset_template_key", None),
             }
         )
     return out

@@ -20,6 +20,14 @@ export const financeApi = {
   createLiabilityFromTemplate(key) {
     return apiCall('/api/finance/liabilities/from-template', 'POST', { key });
   },
+  createSecuredAcquisition({ liability_key, asset_key, down_payment }) {
+    const body = { liability_key, asset_key };
+    if (down_payment != null) body.down_payment = down_payment;
+    return apiCall('/api/finance/acquisitions/secured', 'POST', body);
+  },
+  prepayLiability(id, amount) {
+    return apiCall(`/api/finance/liabilities/${id}/prepay`, 'POST', { amount });
+  },
   addLiability(payload) {
     return apiCall('/api/finance/liabilities', 'POST', payload);
   },

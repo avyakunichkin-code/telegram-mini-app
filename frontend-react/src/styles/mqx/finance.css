@@ -3156,6 +3156,61 @@ body [class*='modal'] {
   --mqx-cap-sect-accent: color-mix(in srgb, #b91c1c 45%, var(--mqx-glass-border, var(--mq-line)));
 }
 
+.mqx-capital-sheet-empty,
+.mqx-capital-sheet-section-label {
+  margin: 0 0 10px;
+  font-size: 13px;
+  line-height: 1.35;
+  color: var(--mqx-text-muted, rgba(255, 255, 255, 0.55));
+}
+
+.mqx-capital-sheet-section-label {
+  margin-top: 14px;
+  font-weight: 600;
+}
+
+.mqx-liab-prepay-form__hint,
+.mqx-liab-prepay-form__debt {
+  margin: 0 0 10px;
+  font-size: 13px;
+  line-height: 1.4;
+  color: var(--mqx-text-muted, rgba(255, 255, 255, 0.55));
+}
+
+.mqx-cap-row-actions-stack {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+}
+
+.mqx-ins-picker__asset {
+  margin: 0 0 12px;
+}
+
+.mqx-ins-picker__asset-label {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 13px;
+  color: var(--mqx-text-muted, rgba(255, 255, 255, 0.55));
+}
+
+.mqx-ins-picker__asset-select {
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid var(--mqx-border-subtle, rgba(255, 255, 255, 0.12));
+  background: var(--mqx-surface-elevated, rgba(255, 255, 255, 0.06));
+  color: inherit;
+  font: inherit;
+}
+
+.mqx-ins-picker__asset-empty {
+  margin: 0;
+  font-size: 13px;
+  color: var(--mqx-warning, #e8b84a);
+}
+
 .mqx-capital-page .mqx-cap-sect--liabilities .mqx-cap-sect__title,
 .mqx-capital-page .mqx-cap-sect--liabilities .mqx-cap-sect__meta {
   color: color-mix(in srgb, #b91c1c 70%, var(--mqx-ink));

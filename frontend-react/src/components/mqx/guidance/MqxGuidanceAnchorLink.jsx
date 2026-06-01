@@ -10,7 +10,7 @@ function buildLinkGeometry(stripEl, targetEl) {
   const x1 = strip.left + strip.width * 0.42;
   const y1 = strip.top + 2;
   const x2 = tr.left + tr.width / 2;
-  const y2 = tr.top + Math.min(tr.height * 0.55, tr.height - 4);
+  const y2 = tr.top + Math.min(tr.height * 0.35, tr.height - 4);
 
   if (y2 >= y1 - 12) return null;
 
