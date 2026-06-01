@@ -67,7 +67,7 @@ function Stat({ label, value, sub }) {
   );
 }
 
-export function AdminProfileInspectorPanel() {
+export function AdminProfileInspectorPanel({ onClose: onCloseProp }) {
   const [searchParams, setSearchParams] = useSearchParams();
   const profileId = searchParams.get('profile');
 
@@ -77,12 +77,16 @@ export function AdminProfileInspectorPanel() {
   const [logKind, setLogKind] = useState('');
 
   const close = useCallback(() => {
-    const next = new URLSearchParams(searchParams);
-    next.delete('profile');
-    setSearchParams(next, { replace: true });
+    if (onCloseProp) {
+      onCloseProp();
+    } else {
+      const next = new URLSearchParams(searchParams);
+      next.delete('profile');
+      setSearchParams(next, { replace: true });
+    }
     setDetail(null);
     setError(null);
-  }, [searchParams, setSearchParams]);
+  }, [onCloseProp, searchParams, setSearchParams]);
 
   const load = useCallback(async () => {
     if (!profileId) {
@@ -121,7 +125,7 @@ export function AdminProfileInspectorPanel() {
   );
 
   return (
-    <section className="mq-card admin-inspector" aria-labelledby="admin-inspector-title">
+    <section className="admin-inspector admin-inspector--drawer" aria-labelledby="admin-inspector-title">
       <header className="admin-inspector__header">
         <div>
           <h2 id="admin-inspector-title" className="admin-watchtower__block-title">

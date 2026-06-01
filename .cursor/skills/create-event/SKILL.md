@@ -219,6 +219,25 @@ cd backend && python -m pytest -q -k "event"
 
 ---
 
+## Эталонная «История» (4+ шага) — `freelance_project`
+
+Канон: [`data/events/mvp11/chains/freelance_project.yaml`](../../../data/events/mvp11/chains/freelance_project.yaml) · brief [`mq11_freelance_project_chain.md`](../../../docs/vision/ideas/event-briefs/mq11_freelance_project_chain.md) · тест [`test_freelance_project_chain.py`](../../../backend/tests/test_freelance_project_chain.py).
+
+| Паттерн | Как в эталоне |
+|---------|----------------|
+| **Отдельный key на ветку UX** | `deadline_rush` vs `deadline_steady`; `epilogue_rush` vs `epilogue_steady` |
+| **Скрытые кнопки** | `requires_chain_branch` **внутри `effects`** (не на уровне choice); дубли title для `advance` / `deferred` или `advance_grill` / `advance_grind` |
+| **Контекст цепочки** | `payment`, `prep`, `branch` в `enqueue_event.context`; шаг 3 фильтрует по полному `branch` (`advance_grill`) |
+| **Деньги** | В шаге 1 — аванс; в тексте шага 1 — «остаток после защиты»; шаги 2–3 — **без cash** (только needs); выплата в informational |
+| **Обязательность** | `mandatory_gate: blocks_period_end` на шагах 2–3 (нельзя закрыть период без выбора) |
+| **Informational** | `interaction_kind: informational`, ≥2 кнопки; подпись-урок во втором абзаце `description` |
+| **Тайминг** | `after_periods: 2` между сюжетными шагами, `1` перед эпилогом (периоды N → N+2 → N+4 → N+5) |
+| **Движок** | `FREELANCE_PROJECT_CHAIN_KEY`, `CHAIN_KEY_BY_DEFINITION`, `active_chain_context`; follow-up в `CHAIN_FOLLOWUP_EXCLUDE_FROM_RANDOM_POOL` |
+
+Новая многошаговая история: копируй каркас, не смешивай rush/steady в одном definition_key.
+
+---
+
 ## Чеклист перед записью
 
 - [ ] `content_class` — один из пяти; **profile ≠ all**

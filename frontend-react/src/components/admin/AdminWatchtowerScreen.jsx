@@ -4,7 +4,9 @@ import { Button, Spinner } from '@telegram-apps/telegram-ui';
 import { adminApi } from '../../api';
 import { AdminAttentionQueue } from './AdminAttentionQueue';
 import { AdminPageHeader } from './AdminPageHeader';
-import { AdminTable, formatAdminDt } from './adminTable';
+import { formatAdminDt } from './adminFormat';
+import { AdminTable } from './adminTable';
+import { AdminKpiGrid } from './ui/AdminKpiGrid';
 import { GuidanceBadge } from './AdminGuidanceBadge';
 import { notificationProfileId } from './adminUtils';
 
@@ -29,24 +31,14 @@ function OnboardingFunnel({ funnel }) {
   return (
     <section className="mq-card admin-watchtower__block admin-watchtower__funnel">
       <h2 className="admin-watchtower__block-title">O2 · Progressive Guidance</h2>
-      <div className="admin-watchtower__kpi-row">
-        <div className="admin-watchtower__kpi">
-          <span className="admin-watchtower__kpi-label">Стартов игр</span>
-          <strong>{funnel.started_profiles}</strong>
-        </div>
-        <div className="admin-watchtower__kpi">
-          <span className="admin-watchtower__kpi-label">В guidance</span>
-          <strong>{funnel.draft_profiles}</strong>
-        </div>
-        <div className="admin-watchtower__kpi">
-          <span className="admin-watchtower__kpi-label">Завершили</span>
-          <strong>{funnel.brief_done_profiles}</strong>
-        </div>
-        <div className="admin-watchtower__kpi">
-          <span className="admin-watchtower__kpi-label">Конверсия</span>
-          <strong>{funnel.completion_rate_pct}%</strong>
-        </div>
-      </div>
+      <AdminKpiGrid
+        items={[
+          { key: 'started', label: 'Стартов игр', value: funnel.started_profiles },
+          { key: 'draft', label: 'В guidance', value: funnel.draft_profiles },
+          { key: 'done', label: 'Завершили', value: funnel.brief_done_profiles },
+          { key: 'conv', label: 'Конверсия', value: `${funnel.completion_rate_pct}%` },
+        ]}
+      />
       <div className="admin-watchtower__table-wrap">
         <table className="admin-watchtower__table admin-watchtower__table--funnel">
           <thead>
@@ -81,56 +73,59 @@ function MetricsSummary({ summary }) {
   return (
     <section className="mq-card admin-watchtower__block admin-watchtower__summary">
       <h2 className="admin-watchtower__block-title">Сводка · {days} дн.</h2>
-      <div className="admin-watchtower__kpi-row admin-watchtower__kpi-row--summary">
-        <div className="admin-watchtower__kpi">
-          <span className="admin-watchtower__kpi-label">Пользователи</span>
-          <strong>{summary.users_total}</strong>
-          <span className="admin-watchtower__kpi-sub">+{summary.users_recent} за {days}д</span>
-        </div>
-        <div className="admin-watchtower__kpi">
-          <span className="admin-watchtower__kpi-label">Профили актив.</span>
-          <strong>{summary.profiles_active}</strong>
-          <span className="admin-watchtower__kpi-sub">всего {summary.profiles_total}</span>
-        </div>
-        <div className="admin-watchtower__kpi">
-          <span className="admin-watchtower__kpi-label">Guidance</span>
-          <strong>{summary.guidance_in_progress}</strong>
-          <span className="admin-watchtower__kpi-sub">
-            ✓ {summary.guidance_completed_total} (+{summary.guidance_completed_recent})
-          </span>
-        </div>
-        <div className="admin-watchtower__kpi">
-          <span className="admin-watchtower__kpi-label">Победы</span>
-          <strong>{summary.wins_total}</strong>
-          <span className="admin-watchtower__kpi-sub">+{summary.wins_recent} за {days}д</span>
-        </div>
-        <div className="admin-watchtower__kpi">
-          <span className="admin-watchtower__kpi-label">Поражения</span>
-          <strong>{summary.defeats_total ?? 0}</strong>
-          <span className="admin-watchtower__kpi-sub">
-            +{summary.defeats_recent ?? 0} за {days}д
-          </span>
-        </div>
-        <div className="admin-watchtower__kpi">
-          <span className="admin-watchtower__kpi-label">Отзывы</span>
-          <strong>{summary.run_feedback_recent ?? 0}</strong>
-          <span className="admin-watchtower__kpi-sub">за {days}д</span>
-        </div>
-        <div className="admin-watchtower__kpi">
-          <span className="admin-watchtower__kpi-label">Период ≥3</span>
-          <strong>{summary.profiles_period_3_plus_active ?? 0}</strong>
-          <span className="admin-watchtower__kpi-sub">
-            всего {summary.profiles_period_3_plus_total ?? 0}
-          </span>
-        </div>
-        <div className="admin-watchtower__kpi">
-          <span className="admin-watchtower__kpi-label">Ср. период</span>
-          <strong>{summary.avg_period_index_active}</strong>
-          <span className="admin-watchtower__kpi-sub">
-            стартов +{summary.game_started_recent}
-          </span>
-        </div>
-      </div>
+      <AdminKpiGrid
+        variant="summary"
+        items={[
+          {
+            key: 'users',
+            label: 'Пользователи',
+            value: summary.users_total,
+            sub: `+${summary.users_recent} за ${days}д`,
+          },
+          {
+            key: 'profiles',
+            label: 'Профили актив.',
+            value: summary.profiles_active,
+            sub: `всего ${summary.profiles_total}`,
+          },
+          {
+            key: 'guidance',
+            label: 'Guidance',
+            value: summary.guidance_in_progress,
+            sub: `✓ ${summary.guidance_completed_total} (+${summary.guidance_completed_recent})`,
+          },
+          {
+            key: 'wins',
+            label: 'Победы',
+            value: summary.wins_total,
+            sub: `+${summary.wins_recent} за ${days}д`,
+          },
+          {
+            key: 'defeats',
+            label: 'Поражения',
+            value: summary.defeats_total ?? 0,
+            sub: `+${summary.defeats_recent ?? 0} за ${days}д`,
+          },
+          {
+            key: 'feedback',
+            label: 'Отзывы',
+            value: summary.run_feedback_recent ?? 0,
+            sub: `за ${days}д`,
+          },
+          {
+            key: 'p3',
+            label: 'Период ≥3',
+            value: summary.profiles_period_3_plus_active ?? 0,
+            sub: `всего ${summary.profiles_period_3_plus_total ?? 0}`,
+          },
+          {
+            key: 'avg',
+            label: 'Ср. период',
+            value: summary.avg_period_index_active,
+            sub: `стартов +${summary.game_started_recent}`,
+          },
+        ]}
+      />
     </section>
   );
 }
@@ -200,20 +195,50 @@ export function AdminWatchtowerScreen({ onBack }) {
 
   const userColumns = useMemo(
     () => [
-      { key: 'id', label: 'ID', render: (r) => r.id },
-      { key: 'username', label: 'Логин', render: (r) => r.username },
+      { key: 'id', label: 'ID', render: (r) => r.id, sortable: true, sortValue: (r) => r.id },
+      {
+        key: 'username',
+        label: 'Логин',
+        render: (r) => r.username,
+        sortable: true,
+        sortValue: (r) => r.username ?? '',
+      },
       { key: 'telegram', label: 'TG', render: (r) => r.telegram_id ?? '—' },
-      { key: 'profiles', label: 'Профили', render: (r) => r.profiles_count },
-      { key: 'created', label: 'Создан', render: (r) => formatAdminDt(r.created_at) },
+      {
+        key: 'profiles',
+        label: 'Профили',
+        render: (r) => r.profiles_count,
+        sortable: true,
+        sortValue: (r) => r.profiles_count ?? 0,
+      },
+      {
+        key: 'created',
+        label: 'Создан',
+        render: (r) => formatAdminDt(r.created_at),
+        sortable: true,
+        sortValue: (r) => (r.created_at ? new Date(r.created_at).getTime() : 0),
+      },
     ],
     [],
   );
 
   const profileColumns = useMemo(
     () => [
-      { key: 'id', label: 'ID', render: (r) => r.id },
-      { key: 'user', label: 'User', render: (r) => r.username },
-      { key: 'name', label: 'Имя', render: (r) => r.name },
+      { key: 'id', label: 'ID', render: (r) => r.id, sortable: true, sortValue: (r) => r.id },
+      {
+        key: 'user',
+        label: 'User',
+        render: (r) => r.username,
+        sortable: true,
+        sortValue: (r) => r.username ?? '',
+      },
+      {
+        key: 'name',
+        label: 'Имя',
+        render: (r) => r.name,
+        sortable: true,
+        sortValue: (r) => r.name ?? '',
+      },
       {
         key: 'template',
         label: 'Шаблон',
@@ -230,7 +255,13 @@ export function AdminWatchtowerScreen({ onBack }) {
             '—'
           ),
       },
-      { key: 'period', label: 'Период', render: (r) => r.period_index },
+      {
+        key: 'period',
+        label: 'Период',
+        render: (r) => r.period_index,
+        sortable: true,
+        sortValue: (r) => r.period_index ?? 0,
+      },
       {
         key: 'guidance',
         label: 'Guidance',
@@ -243,7 +274,13 @@ export function AdminWatchtowerScreen({ onBack }) {
           </>
         ),
       },
-      { key: 'cash', label: 'Cash', render: (r) => `${r.cash_balance} ₽` },
+      {
+        key: 'cash',
+        label: 'Cash',
+        render: (r) => `${r.cash_balance} ₽`,
+        sortable: true,
+        sortValue: (r) => Number(r.cash_balance) || 0,
+      },
       {
         key: 'outcome',
         label: 'Исход',
@@ -293,8 +330,20 @@ export function AdminWatchtowerScreen({ onBack }) {
 
   const notificationColumns = useMemo(
     () => [
-      { key: 'when', label: 'Когда', render: (r) => formatAdminDt(r.created_at) },
-      { key: 'kind', label: 'Тип', render: (r) => r.kind_label || r.kind },
+      {
+        key: 'when',
+        label: 'Когда',
+        render: (r) => formatAdminDt(r.created_at),
+        sortable: true,
+        sortValue: (r) => (r.created_at ? new Date(r.created_at).getTime() : 0),
+      },
+      {
+        key: 'kind',
+        label: 'Тип',
+        render: (r) => r.kind_label || r.kind,
+        sortable: true,
+        sortValue: (r) => r.kind_label || r.kind || '',
+      },
       {
         key: 'summary',
         label: 'Событие',
@@ -346,7 +395,13 @@ export function AdminWatchtowerScreen({ onBack }) {
 
   const runFeedbackColumns = useMemo(
     () => [
-      { key: 'when', label: 'Когда', render: (r) => formatAdminDt(r.created_at) },
+      {
+        key: 'when',
+        label: 'Когда',
+        render: (r) => formatAdminDt(r.created_at),
+        sortable: true,
+        sortValue: (r) => (r.created_at ? new Date(r.created_at).getTime() : 0),
+      },
       { key: 'user', label: 'Игрок', render: (r) => `${r.username} (#${r.user_id})` },
       {
         key: 'profile',
@@ -368,7 +423,13 @@ export function AdminWatchtowerScreen({ onBack }) {
           </span>
         ),
       },
-      { key: 'period', label: 'Период', render: (r) => r.period_index },
+      {
+        key: 'period',
+        label: 'Период',
+        render: (r) => r.period_index,
+        sortable: true,
+        sortValue: (r) => r.period_index ?? 0,
+      },
       { key: 'template', label: 'Шаблон', render: (r) => r.template_key || '—' },
       {
         key: 'comment',
@@ -524,7 +585,12 @@ export function AdminWatchtowerScreen({ onBack }) {
             <div className="admin-watchtower__panels admin-watchtower__panels--split">
               <section className="mq-card admin-watchtower__block">
                 <h2 className="admin-watchtower__block-title">Пользователи</h2>
-                <AdminTable columns={userColumns} rows={users} highlightId={highlightUser} />
+                <AdminTable
+                  columns={userColumns}
+                  rows={users}
+                  highlightId={highlightUser}
+                  maxHeight="min(70vh, 520px)"
+                />
               </section>
 
               <section className="mq-card admin-watchtower__block">
@@ -583,6 +649,7 @@ export function AdminWatchtowerScreen({ onBack }) {
                   rows={profiles}
                   highlightId={highlightProfile}
                   onRowClick={openProfile}
+                  maxHeight="min(70vh, 560px)"
                 />
               </section>
             </div>
@@ -594,6 +661,7 @@ export function AdminWatchtowerScreen({ onBack }) {
               <AdminTable
                 columns={notificationColumns}
                 rows={notifications}
+                maxHeight="min(75vh, 640px)"
                 onRowClick={(r) => {
                   const pid = notificationProfileId(r);
                   if (pid) openProfileId(pid);
@@ -612,6 +680,7 @@ export function AdminWatchtowerScreen({ onBack }) {
                 columns={runFeedbackColumns}
                 rows={runFeedback}
                 emptyText="Пока нет отзывов."
+                maxHeight="min(75vh, 640px)"
                 onRowClick={(r) => {
                   const next = new URLSearchParams(searchParams);
                   next.set('profile', String(r.game_profile_id));

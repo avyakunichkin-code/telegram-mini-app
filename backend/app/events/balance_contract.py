@@ -172,6 +172,8 @@ def validate_event_spec(spec: dict[str, Any]) -> list[BalanceViolation]:
                 continue
             if _has_enqueue_event(ea) or _has_enqueue_event(eb):
                 continue
+            if ea.get("requires_chain_branch") or eb.get("requires_chain_branch"):
+                continue
             if _pareto_dominates(ea, eb):
                 ti = str(choices[i].get("title") or i)
                 tj = str(choices[j].get("title") or j)

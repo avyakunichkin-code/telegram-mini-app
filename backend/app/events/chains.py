@@ -21,6 +21,7 @@ CHAIN_STATUS_CANCELLED = "cancelled"
 
 USED_CAR_CHAIN_KEY = "used_car_deal"
 FAMILY_MONEY_CHAIN_KEY = "family_money_refusal"
+FREELANCE_PROJECT_CHAIN_KEY = "freelance_project"
 USED_CAR_TEMPLATE_KEY = "car_personal"
 USED_CAR_DEFAULT_DISCOUNT = 0.25
 USED_CAR_DEPOSIT_AMOUNT = 50_000.0
@@ -29,6 +30,28 @@ CHAIN_FOLLOWUP_EXCLUDE_FROM_RANDOM_POOL = frozenset(
     {
         "mq11_used_car_deadline",
         "mq11_family_money_callback",
+        "mq11_freelance_project_midperiod",
+        "mq11_freelance_project_deadline_rush",
+        "mq11_freelance_project_deadline_steady",
+        "mq11_freelance_project_epilogue_rush",
+        "mq11_freelance_project_epilogue_steady",
+    }
+)
+
+# definition_key → chain_key для фильтрации choices и валидации choose
+CHAIN_KEY_BY_DEFINITION: dict[str, str] = {
+    "mq11_used_car_deadline": USED_CAR_CHAIN_KEY,
+    "mq11_freelance_project_midperiod": FREELANCE_PROJECT_CHAIN_KEY,
+    "mq11_freelance_project_deadline_rush": FREELANCE_PROJECT_CHAIN_KEY,
+    "mq11_freelance_project_deadline_steady": FREELANCE_PROJECT_CHAIN_KEY,
+    "mq11_freelance_project_epilogue_rush": FREELANCE_PROJECT_CHAIN_KEY,
+    "mq11_freelance_project_epilogue_steady": FREELANCE_PROJECT_CHAIN_KEY,
+}
+
+FREELANCE_EPILOGUE_DEFINITION_KEYS = frozenset(
+    {
+        "mq11_freelance_project_epilogue_rush",
+        "mq11_freelance_project_epilogue_steady",
     }
 )
 
@@ -278,12 +301,41 @@ def create_asset_from_deal(
     return asset
 
 
+def chain_key_for_definition(definition_key: str) -> str | None:
+    return CHAIN_KEY_BY_DEFINITION.get(str(definition_key or "").strip())
+
+
+def active_chain_context(
+    db: Session,
+    profile: GameProfile,
+    definition_key: str,
+) -> dict[str, Any] | None:
+    chain_key = chain_key_for_definition(definition_key)
+    if not chain_key:
+        return None
+    chain = get_active_chain(
+        db,
+        profile.id,
+        chain_key,
+        statuses=(CHAIN_STATUS_SURFACED, CHAIN_STATUS_SCHEDULED),
+    )
+    if not chain:
+        return None
+    return _parse_json_obj(chain.context_json)
+
+
 def choice_allowed_for_chain_branch(choice_effects: dict, chain_context: dict[str, Any]) -> bool:
     required = choice_effects.get("requires_chain_branch")
     if not required:
         return True
+    req = str(required).strip()
     branch = str(chain_context.get("branch") or "")
-    return str(required).strip() == branch
+    payment = str(chain_context.get("payment") or "")
+    if req in (branch, payment):
+        return True
+    if branch.startswith(f"{req}_"):
+        return True
+    return False
 
 
 def resolve_used_car_deadline_choice(

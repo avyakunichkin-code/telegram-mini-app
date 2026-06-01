@@ -1,6 +1,8 @@
+import { useCallback } from 'react';
 import { NavLink, Outlet, useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import { Button } from '@telegram-apps/telegram-ui';
 import { AdminProfileInspectorPanel } from './AdminProfileInspectorPanel';
+import { AdminDrawer } from './ui/AdminDrawer';
 
 const CATALOG_LINKS = [
   { key: 'liabilities', label: 'Долги' },
@@ -63,8 +65,14 @@ function WatchtowerTabLink({ tabId, label }) {
 export function AdminLayout() {
   const navigate = useNavigate();
   const location = useLocation();
-  const [searchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
   const hasProfileInspector = Boolean(searchParams.get('profile'));
+
+  const closeInspector = useCallback(() => {
+    const next = new URLSearchParams(searchParams);
+    next.delete('profile');
+    setSearchParams(next, { replace: true });
+  }, [searchParams, setSearchParams]);
 
   const catalogMatch = location.pathname.match(/^\/admin\/catalogs\/([^/]+)/);
   const catalogKey = catalogMatch?.[1];
@@ -128,14 +136,12 @@ export function AdminLayout() {
       </aside>
 
       <div className="mq-admin-layout__main">
-        {hasProfileInspector ? (
-          <div className="mq-admin-layout__inspector">
-            <AdminProfileInspectorPanel />
-          </div>
-        ) : null}
         <div className="mq-admin-layout__page">
           <Outlet />
         </div>
+        <AdminDrawer open={hasProfileInspector} onClose={closeInspector}>
+          <AdminProfileInspectorPanel onClose={closeInspector} />
+        </AdminDrawer>
       </div>
     </div>
   );

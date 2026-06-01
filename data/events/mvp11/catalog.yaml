@@ -12,5 +12,6 @@ includes:
 - credit_debt.yaml
 - chains/family_money.yaml
 - chains/used_car.yaml
+- chains/freelance_project.yaml
 - profiles.yaml
 - meta/unlock_intro.yaml

@@ -37,7 +37,10 @@ from ...finance.expenses import add_expense_line_from_event
 from ...events.insurance_hooks import apply_insurance_claim_from_effects, find_policy_for_claim
 from ...events.chains import (
     CHAIN_FOLLOWUP_EXCLUDE_FROM_RANDOM_POOL,
+    FREELANCE_EPILOGUE_DEFINITION_KEYS,
+    FREELANCE_PROJECT_CHAIN_KEY,
     USED_CAR_CHAIN_KEY,
+    active_chain_context,
     apply_asset_from_template_effect,
     apply_enqueue_event_effect,
     choice_allowed_for_chain_branch,
@@ -642,10 +645,8 @@ def serialize_instance_rows(
             .all()
         )
         chain_ctx: dict | None = None
-        if profile is not None and definition.key == "mq11_used_car_deadline":
-            chain_row = get_active_chain(db, profile.id, USED_CAR_CHAIN_KEY)
-            if chain_row:
-                chain_ctx = json.loads(chain_row.context_json or "{}")
+        if profile is not None:
+            chain_ctx = active_chain_context(db, profile, definition.key)
 
         choice_rows = []
         for c in choices:
@@ -761,6 +762,10 @@ def choose_event(db: Session, profile: GameProfile, event_id: int, choice_id: in
     def_key = definition.key if definition else ""
 
     effects = resolve_choice_effects_for_definition(db, profile, def_key, effects)
+
+    chain_ctx = active_chain_context(db, profile, def_key)
+    if chain_ctx and not choice_allowed_for_chain_branch(effects, chain_ctx):
+        raise HTTPException(status_code=400, detail="Выбор недоступен для текущего этапа цепочки")
 
     unknown = set(effects.keys()) - ALLOWED_EFFECT_KEYS
     if unknown:
@@ -900,6 +905,10 @@ def choose_event(db: Session, profile: GameProfile, event_id: int, choice_id: in
 
     if def_key == "mq11_used_car_deadline":
         chain = get_active_chain(db, profile.id, USED_CAR_CHAIN_KEY)
+        if chain:
+            complete_chain(db, chain, period_index=int(profile.period_index))
+    elif def_key in FREELANCE_EPILOGUE_DEFINITION_KEYS:
+        chain = get_active_chain(db, profile.id, FREELANCE_PROJECT_CHAIN_KEY)
         if chain:
             complete_chain(db, chain, period_index=int(profile.period_index))
 
