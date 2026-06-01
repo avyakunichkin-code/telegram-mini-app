@@ -114,13 +114,26 @@
   inset: 0;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 20px 18px calc(20px + var(--tma-tabbar-inset, 64px));
+  align-items: stretch;
+  justify-content: flex-end;
+  padding: 20px 18px calc(16px + var(--tma-tabbar-inset, 64px));
   background: color-mix(in srgb, var(--mq-violet-deep, #5b21b6) 88%, #0f1115);
   color: #fff;
   text-align: center;
   opacity: 0;
+}
+
+.mqx-juice-ritual__scroll {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  padding-bottom: 8px;
 }
 
 .mqx-juice-ritual--active {
@@ -163,6 +176,123 @@
   margin-top: 6px;
   font-size: 14px;
   opacity: 0.9;
+}
+
+.mqx-juice-ritual__balance {
+  margin-top: 16px;
+  width: 100%;
+  max-width: 320px;
+  padding: 12px 14px;
+  border-radius: 14px;
+  background: color-mix(in srgb, #fff 10%, transparent);
+  border: 1px solid color-mix(in srgb, #fff 16%, transparent);
+}
+
+.mqx-juice-ritual__balance-main {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.mqx-juice-ritual__balance-label {
+  font-size: 12px;
+  font-weight: 700;
+  opacity: 0.82;
+}
+
+.mqx-juice-ritual__balance-value {
+  font-size: 24px;
+  font-weight: 850;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.02em;
+}
+
+.mqx-juice-ritual__balance-delta {
+  margin-top: 6px;
+  font-size: 13px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  opacity: 0.92;
+}
+
+.mqx-juice-ritual__balance-delta--pos {
+  color: color-mix(in srgb, var(--mq-emerald, #059669) 85%, #fff);
+}
+
+.mqx-juice-ritual__balance-delta--neg {
+  color: color-mix(in srgb, #fecaca 88%, #fff);
+}
+
+.mqx-juice-ritual__overdue {
+  margin: 8px 0 0;
+  font-size: 12px;
+  font-weight: 700;
+  color: color-mix(in srgb, #fecaca 90%, #fff);
+}
+
+.mqx-juice-ritual__details {
+  margin-top: 16px;
+  width: 100%;
+  max-width: 320px;
+  text-align: left;
+}
+
+.mqx-juice-ritual__details-title {
+  margin: 0 0 8px;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  opacity: 0.78;
+}
+
+.mqx-juice-ritual__detail-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-radius: 12px;
+  background: color-mix(in srgb, #fff 8%, transparent);
+  border: 1px solid color-mix(in srgb, #fff 12%, transparent);
+}
+
+.mqx-juice-ritual__detail-row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 4px 10px;
+  padding: 9px 12px;
+  border-bottom: 1px solid color-mix(in srgb, #fff 10%, transparent);
+  font-size: 13px;
+  line-height: 1.3;
+}
+
+.mqx-juice-ritual__detail-row:last-child {
+  border-bottom: none;
+}
+
+.mqx-juice-ritual__detail-label {
+  font-weight: 650;
+}
+
+.mqx-juice-ritual__detail-value {
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.mqx-juice-ritual__detail-value--income {
+  color: color-mix(in srgb, var(--mq-emerald, #059669) 80%, #fff);
+}
+
+.mqx-juice-ritual__detail-value--expense {
+  color: color-mix(in srgb, #fecaca 88%, #fff);
+}
+
+.mqx-juice-ritual__detail-note {
+  grid-column: 1 / -1;
+  font-size: 11px;
+  font-weight: 650;
+  opacity: 0.82;
+  color: color-mix(in srgb, #fecaca 85%, #fff);
 }
 
 .mqx-juice-ritual__beats {
@@ -231,7 +361,9 @@
 }
 
 .mqx-juice-ritual__dismiss {
-  margin-top: 18px;
+  flex: 0 0 auto;
+  margin-top: 14px;
+  align-self: center;
   padding: 10px 20px;
   border-radius: 12px;
   border: none;

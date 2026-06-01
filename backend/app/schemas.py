@@ -303,6 +303,9 @@ class PeriodCloseBreakdownItem(BaseModel):
     title: str
     amount: float
     category_key: Optional[str] = None
+    paid: Optional[float] = None
+    unpaid: Optional[float] = None
+    due: Optional[float] = None
 
 
 class PeriodCloseSummary(BaseModel):
@@ -315,6 +318,7 @@ class PeriodCloseSummary(BaseModel):
     debt_delta: float = 0
     total_spent: float = 0
     new_balance: float = 0
+    overdue_added: float = 0
     breakdown: List[PeriodCloseBreakdownItem] = Field(default_factory=list)
     achievement_unlocks: List["AchievementUnlockEvent"] = Field(default_factory=list)
 

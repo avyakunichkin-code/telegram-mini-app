@@ -731,6 +731,63 @@
   font-size: var(--mq-fs-caption);
 }
 
+.mqx-pclose-sheet__details {
+  margin-top: 12px;
+  padding-top: 10px;
+  border-top: 1px solid color-mix(in srgb, var(--mqx-ink) 8%, transparent);
+}
+
+.mqx-pclose-sheet__details-title {
+  margin: 0 0 8px;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--mqx-ink) 55%, transparent);
+}
+
+.mqx-pclose-sheet__detail-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.mqx-pclose-sheet__detail-row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 2px 8px;
+  font-size: var(--mq-fs-small);
+}
+
+.mqx-pclose-sheet__detail-label {
+  font-weight: 650;
+  color: color-mix(in srgb, var(--mqx-ink) 88%, transparent);
+}
+
+.mqx-pclose-sheet__detail-value {
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.mqx-pclose-sheet__detail-value--income {
+  color: var(--mq-emerald, #059669);
+}
+
+.mqx-pclose-sheet__detail-value--expense {
+  color: var(--mq-danger, #dc2626);
+}
+
+.mqx-pclose-sheet__detail-note {
+  grid-column: 1 / -1;
+  font-size: 11px;
+  font-weight: 650;
+  color: var(--mq-danger, #dc2626);
+}
+
 .mqx-pclose-sheet__xp {
   margin: 10px 0 0;
   padding-top: 8px;

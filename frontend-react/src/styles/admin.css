@@ -256,6 +256,16 @@ html[data-mq-layout='admin'] .mq-app-fill {
   font-weight: 800;
 }
 
+.admin-watchtower__kpi-sub {
+  font-size: var(--mq-fs-small);
+  opacity: 0.6;
+  font-weight: 600;
+}
+
+.admin-watchtower__kpi-row--summary {
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+}
+
 .admin-watchtower__badge {
   display: inline-block;
   padding: 2px 8px;

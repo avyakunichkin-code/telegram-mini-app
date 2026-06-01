@@ -564,9 +564,15 @@
   z-index: 999;
 }
 
+.mqx-sheet-root--portal {
+  /* Портал на body: sheet не обрезается overflow:hidden внутри дашборда */
+  z-index: 560;
+}
+
 .mqx-sheet-scrim {
   position: absolute;
   inset: 0;
+  z-index: 0;
   border: none;
   background: rgba(15, 17, 21, 0.36);
 }
@@ -576,6 +582,7 @@
   left: 0;
   right: 0;
   bottom: 0;
+  z-index: 1;
   margin: 0;
   border-radius: 16px 16px 0 0;
   background: var(--tg-theme-bg-color, #fff);

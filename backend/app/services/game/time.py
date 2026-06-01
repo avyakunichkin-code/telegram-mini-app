@@ -20,16 +20,35 @@ from ...schemas import (
 )
 
 
+def _breakdown_item_from_raw(item: dict) -> PeriodCloseBreakdownItem | None:
+    if not isinstance(item, dict):
+        return None
+    item_type = str(item.get("type") or "other")
+    title = str(item.get("title") or "").strip()
+    if not title:
+        return None
+    amount = round(float(item.get("amount") or 0), 2)
+    paid = round(float(item.get("paid") or 0), 2) if item.get("paid") is not None else None
+    unpaid = round(float(item.get("unpaid") or 0), 2) if item.get("unpaid") is not None else None
+    due = round(float(item.get("due") or 0), 2) if item.get("due") is not None else None
+    if item_type == "liability":
+        amount = paid if paid is not None else amount
+    return PeriodCloseBreakdownItem(
+        type=item_type,
+        title=title,
+        amount=amount,
+        category_key=item.get("category_key"),
+        paid=paid,
+        unpaid=unpaid,
+        due=due,
+    )
+
+
 def period_close_summary(period_result: dict) -> PeriodCloseSummary:
     breakdown = [
-        PeriodCloseBreakdownItem(
-            type=str(item.get("type") or "other"),
-            title=str(item.get("title") or ""),
-            amount=round(float(item.get("amount") or 0), 2),
-            category_key=item.get("category_key"),
-        )
+        row
         for item in (period_result.get("breakdown") or [])
-        if isinstance(item, dict)
+        if (row := _breakdown_item_from_raw(item)) is not None
     ]
     achievement_unlocks = [
         AchievementUnlockEvent(**item)
@@ -46,6 +65,7 @@ def period_close_summary(period_result: dict) -> PeriodCloseSummary:
         debt_delta=round(float(period_result.get("debt_delta") or 0), 2),
         total_spent=round(float(period_result.get("total_spent") or 0), 2),
         new_balance=round(float(period_result.get("new_balance") or 0), 2),
+        overdue_added=round(float(period_result.get("overdue_added") or 0), 2),
         breakdown=breakdown,
         achievement_unlocks=achievement_unlocks,
     )

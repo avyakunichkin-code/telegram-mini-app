@@ -13,7 +13,9 @@ from sqlalchemy.orm import Session
 
 from ..admin.auth import require_admin_user
 from ..admin.catalogs import fetch_catalog_rows, get_catalog_spec, list_catalog_meta
-from ..admin.onboarding_funnel import build_onboarding_funnel
+from ..admin.metrics_summary import build_metrics_summary
+from ..admin.onboarding_funnel import build_onboarding_funnel, user_guidance_admin_fields
+from ..admin.profile_inspector import build_profile_inspector
 from ..admin.notify_messages import format_alert_message_ru, kind_label_ru
 from ..database import get_db
 from ..models import GameProfile, NotificationLog, User
@@ -41,6 +43,8 @@ class AdminProfileRow(BaseModel):
     cash_balance: float
     onboarding_state: str = "brief_done"
     onboarding_step: str = "farewell"
+    guidance_completed: bool = False
+    guidance_current_beat: Optional[str] = None
     created_at: Optional[datetime] = None
     updated_at: Optional[datetime] = None
 
@@ -58,6 +62,7 @@ class AdminOnboardingFunnel(BaseModel):
     brief_done_profiles: int
     completion_rate_pct: float
     steps: List[AdminOnboardingFunnelStep]
+    guidance_mode: str = "o2"
 
 
 class AdminNotificationRow(BaseModel):
@@ -72,11 +77,29 @@ class AdminNotificationRow(BaseModel):
     created_at: Optional[datetime] = None
 
 
+class AdminMetricsSummary(BaseModel):
+    window_days: int
+    users_total: int
+    users_recent: int
+    profiles_total: int
+    profiles_active: int
+    profiles_recent: int
+    users_with_profiles: int
+    guidance_in_progress: int
+    guidance_completed_total: int
+    guidance_completed_recent: int
+    wins_total: int
+    wins_recent: int
+    avg_period_index_active: float
+    game_started_recent: int
+
+
 class AdminWatchtowerResponse(BaseModel):
     users: List[AdminUserRow]
     profiles: List[AdminProfileRow]
     notifications: List[AdminNotificationRow]
     onboarding_funnel: AdminOnboardingFunnel
+    metrics_summary: AdminMetricsSummary
 
 
 class AdminCatalogColumn(BaseModel):
@@ -97,6 +120,73 @@ class AdminCatalogRowsResponse(BaseModel):
     rows: List[dict[str, Any]]
     total: int
     limit: int
+
+
+class AdminProfileInspectorUser(BaseModel):
+    id: int
+    username: str
+    telegram_id: Optional[int] = None
+    guidance_completed_at: Optional[datetime] = None
+
+
+class AdminProfileInspectorProfile(BaseModel):
+    id: int
+    user_id: int
+    username: str
+    name: str
+    save_kind: str
+    starter_template_key: Optional[str] = None
+    is_active: bool
+    is_archived: bool = False
+    period_index: int
+    time_state: str
+    cash_balance: float
+    safety_fund_balance: float
+    negative_periods_count: int
+    clean_period_streak: int
+    onboarding_state: str = ""
+    onboarding_step: str = ""
+    period_duration_seconds: int = 0
+    guidance_completed: bool = False
+    guidance_current_beat: Optional[str] = None
+    guidance_completed_beats: List[str] = []
+    created_at: Optional[datetime] = None
+    updated_at: Optional[datetime] = None
+
+
+class AdminProfileInspectorEconomy(BaseModel):
+    win_reached: bool = False
+
+
+class AdminPeriodClosingRow(BaseModel):
+    period_index: int
+    cash_balance: float
+    safety_fund_balance: float
+    total_overdue_amount: float
+    monthly_burn_total: float
+    period_income_rate: float
+    period_expense_total: float
+    total_debt_balance: float
+    closed_at: Optional[datetime] = None
+
+
+class AdminActivityLogRow(BaseModel):
+    id: int
+    audience: str
+    kind: str
+    kind_label: str
+    summary: str
+    payload: dict[str, Any]
+    telegram_sent: bool
+    created_at: Optional[datetime] = None
+
+
+class AdminProfileInspectorResponse(BaseModel):
+    profile: AdminProfileInspectorProfile
+    user: AdminProfileInspectorUser
+    economy: AdminProfileInspectorEconomy
+    period_closings: List[AdminPeriodClosingRow]
+    activity_log: List[AdminActivityLogRow]
 
 
 @router.get("/catalogs", response_model=list[AdminCatalogMeta])
@@ -135,6 +225,34 @@ async def admin_catalog_rows(
     )
 
 
+@router.get("/profiles/{profile_id}", response_model=AdminProfileInspectorResponse)
+async def admin_profile_inspector(
+    profile_id: int,
+    log_limit: int = Query(50, ge=1, le=200),
+    closing_limit: int = Query(12, ge=1, le=60),
+    _admin: User = Depends(require_admin_user),
+    db: Session = Depends(get_db),
+):
+    detail = build_profile_inspector(
+        db,
+        profile_id,
+        log_limit=log_limit,
+        closing_limit=closing_limit,
+    )
+    if detail is None:
+        raise HTTPException(status_code=404, detail="Profile not found")
+    return AdminProfileInspectorResponse(**detail)
+
+
+@router.get("/metrics/summary", response_model=AdminMetricsSummary)
+async def admin_metrics_summary(
+    days: int = Query(7, ge=1, le=90),
+    _admin: User = Depends(require_admin_user),
+    db: Session = Depends(get_db),
+):
+    return AdminMetricsSummary(**build_metrics_summary(db, days=days))
+
+
 @router.get("/watchtower", response_model=AdminWatchtowerResponse)
 async def admin_watchtower(
     user_limit: int = Query(50, ge=1, le=200),
@@ -145,7 +263,7 @@ async def admin_watchtower(
 ):
     users = db.query(User).order_by(User.id.desc()).limit(user_limit).all()
     profiles = (
-        db.query(GameProfile, User.username)
+        db.query(GameProfile, User)
         .join(User, User.id == GameProfile.user_id)
         .order_by(GameProfile.updated_at.desc())
         .limit(profile_limit)
@@ -185,7 +303,7 @@ async def admin_watchtower(
             AdminProfileRow(
                 id=p.id,
                 user_id=p.user_id,
-                username=username,
+                username=user.username,
                 name=p.name,
                 save_kind=p.save_kind,
                 starter_template_key=p.starter_template_key,
@@ -194,12 +312,14 @@ async def admin_watchtower(
                 cash_balance=round(float(p.cash_balance or 0), 2),
                 onboarding_state=str(getattr(p, "onboarding_state", "brief_done") or "brief_done"),
                 onboarding_step=str(getattr(p, "onboarding_step", "farewell") or "farewell"),
+                **user_guidance_admin_fields(user),
                 created_at=p.created_at,
                 updated_at=p.updated_at,
             )
-            for p, username in profiles
+            for p, user in profiles
         ],
         onboarding_funnel=AdminOnboardingFunnel(**build_onboarding_funnel(db)),
+        metrics_summary=AdminMetricsSummary(**build_metrics_summary(db, days=7)),
         notifications=[
             AdminNotificationRow(
                 id=n.id,

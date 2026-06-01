@@ -13,12 +13,17 @@ function formatDt(value) {
   }
 }
 
-function OnboardingBadge({ state }) {
-  const s = state || 'brief_done';
-  const draft = s === 'draft' || s === 'started';
+function GuidanceBadge({ completed }) {
+  if (completed) {
+    return (
+      <span className="admin-watchtower__badge admin-watchtower__badge--done">
+        guidance ✓
+      </span>
+    );
+  }
   return (
-    <span className={`admin-watchtower__badge ${draft ? 'admin-watchtower__badge--draft' : 'admin-watchtower__badge--done'}`}>
-      {draft ? 'coach' : 'готово'}
+    <span className="admin-watchtower__badge admin-watchtower__badge--draft">
+      guidance
     </span>
   );
 }
@@ -27,14 +32,14 @@ function OnboardingFunnel({ funnel }) {
   if (!funnel) return null;
   return (
     <section className="mq-card admin-watchtower__block admin-watchtower__funnel">
-      <h2 className="admin-watchtower__block-title">Воронка онбординга</h2>
+      <h2 className="admin-watchtower__block-title">O2 · Progressive Guidance</h2>
       <div className="admin-watchtower__kpi-row">
         <div className="admin-watchtower__kpi">
-          <span className="admin-watchtower__kpi-label">Стартов</span>
+          <span className="admin-watchtower__kpi-label">Стартов игр</span>
           <strong>{funnel.started_profiles}</strong>
         </div>
         <div className="admin-watchtower__kpi">
-          <span className="admin-watchtower__kpi-label">В coach</span>
+          <span className="admin-watchtower__kpi-label">В guidance</span>
           <strong>{funnel.draft_profiles}</strong>
         </div>
         <div className="admin-watchtower__kpi">
@@ -50,9 +55,9 @@ function OnboardingFunnel({ funnel }) {
         <table className="admin-watchtower__table admin-watchtower__table--funnel">
           <thead>
             <tr>
-              <th>Шаг</th>
-              <th>Сейчас (draft)</th>
-              <th>Дошли (лог)</th>
+              <th>Beat</th>
+              <th>Сейчас (user)</th>
+              <th>Дошли (progress)</th>
             </tr>
           </thead>
           <tbody>
@@ -67,8 +72,50 @@ function OnboardingFunnel({ funnel }) {
         </table>
       </div>
       <p className="mq-muted admin-watchtower__funnel-hint">
-        «Сейчас» — профили в coach на шаге. «Дошли» — уникальные profile_id в журнале (без Telegram на шагах).
+        «Сейчас» — пользователи с незавершённым guidance на этом beat. «Дошли» — beat в
+        guidance_progress_json.
       </p>
+    </section>
+  );
+}
+
+function MetricsSummary({ summary }) {
+  if (!summary) return null;
+  const days = summary.window_days ?? 7;
+  return (
+    <section className="mq-card admin-watchtower__block admin-watchtower__summary">
+      <h2 className="admin-watchtower__block-title">Сводка · {days} дн.</h2>
+      <div className="admin-watchtower__kpi-row admin-watchtower__kpi-row--summary">
+        <div className="admin-watchtower__kpi">
+          <span className="admin-watchtower__kpi-label">Пользователи</span>
+          <strong>{summary.users_total}</strong>
+          <span className="admin-watchtower__kpi-sub">+{summary.users_recent} за {days}д</span>
+        </div>
+        <div className="admin-watchtower__kpi">
+          <span className="admin-watchtower__kpi-label">Профили актив.</span>
+          <strong>{summary.profiles_active}</strong>
+          <span className="admin-watchtower__kpi-sub">всего {summary.profiles_total}</span>
+        </div>
+        <div className="admin-watchtower__kpi">
+          <span className="admin-watchtower__kpi-label">Guidance</span>
+          <strong>{summary.guidance_in_progress}</strong>
+          <span className="admin-watchtower__kpi-sub">
+            ✓ {summary.guidance_completed_total} (+{summary.guidance_completed_recent})
+          </span>
+        </div>
+        <div className="admin-watchtower__kpi">
+          <span className="admin-watchtower__kpi-label">Победы</span>
+          <strong>{summary.wins_total}</strong>
+          <span className="admin-watchtower__kpi-sub">+{summary.wins_recent} за {days}д</span>
+        </div>
+        <div className="admin-watchtower__kpi">
+          <span className="admin-watchtower__kpi-label">Ср. период</span>
+          <strong>{summary.avg_period_index_active}</strong>
+          <span className="admin-watchtower__kpi-sub">
+            стартов +{summary.game_started_recent}
+          </span>
+        </div>
+      </div>
     </section>
   );
 }
@@ -155,12 +202,14 @@ export function AdminWatchtowerScreen({ onBack }) {
       { key: 'template', label: 'Шаблон', render: (r) => r.starter_template_key || '—' },
       { key: 'period', label: 'Период', render: (r) => r.period_index },
       {
-        key: 'onboarding',
-        label: 'Coach',
+        key: 'guidance',
+        label: 'Guidance',
         render: (r) => (
           <>
-            <OnboardingBadge state={r.onboarding_state} />
-            <span className="admin-watchtower__step-tag">{r.onboarding_step}</span>
+            <GuidanceBadge completed={r.guidance_completed} />
+            {r.guidance_current_beat ? (
+              <span className="admin-watchtower__step-tag">{r.guidance_current_beat}</span>
+            ) : null}
           </>
         ),
       },
@@ -245,6 +294,7 @@ export function AdminWatchtowerScreen({ onBack }) {
 
       {!loading && !error && data ? (
         <>
+          <MetricsSummary summary={data.metrics_summary} />
           <OnboardingFunnel funnel={data.onboarding_funnel} />
 
           <div className="admin-watchtower__panels admin-watchtower__panels--split">

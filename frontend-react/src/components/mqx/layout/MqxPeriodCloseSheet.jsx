@@ -5,6 +5,7 @@ import {
   IconMetricTrendUp,
 } from '../icons/FinanceMetricIcons';
 import { periodCloseRows, periodCloseTitle } from '../../../utils/periodCloseDisplay';
+import { formatPeriodMoney, periodCloseDetailLines } from '../../../utils/periodCloseBreakdown';
 
 const GLYPHS = {
   coin: IconMetricCoins,
@@ -68,6 +69,7 @@ export function MqxPeriodCloseSheet({ summary, open, onClose }) {
 
   const rows = periodCloseRows(summary);
   const title = periodCloseTitle(summary);
+  const detailLines = periodCloseDetailLines(summary);
 
   return (
     <div className="mqx-pclose-root" role="presentation">
@@ -89,6 +91,23 @@ export function MqxPeriodCloseSheet({ summary, open, onClose }) {
             <PeriodCloseRow key={row.key} row={row} />
           ))}
         </ul>
+        {detailLines.length > 0 ? (
+          <div className="mqx-pclose-sheet__details">
+            <h3 className="mqx-pclose-sheet__details-title">Детализация</h3>
+            <ul className="mqx-pclose-sheet__detail-list">
+              {detailLines.map((line) => (
+                <li key={line.id} className="mqx-pclose-sheet__detail-row">
+                  <span className="mqx-pclose-sheet__detail-label">{line.title}</span>
+                  <span className={`mqx-pclose-sheet__detail-value mqx-pclose-sheet__detail-value--${line.tone}`}>
+                    {line.tone === 'income' ? '+' : '−'}
+                    {formatPeriodMoney(line.amount)} ₽
+                  </span>
+                  {line.note ? <span className="mqx-pclose-sheet__detail-note">{line.note}</span> : null}
+                </li>
+              ))}
+            </ul>
+          </div>
+        ) : null}
       </section>
     </div>
   );

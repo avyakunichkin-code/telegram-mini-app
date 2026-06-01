@@ -64,7 +64,9 @@ def test_admin_watchtower_ok(client, admin_env, auth_headers):
     assert "profiles" in data
     assert "notifications" in data
     assert "onboarding_funnel" in data
-    assert len(data["onboarding_funnel"]["steps"]) == 5
+    assert "metrics_summary" in data
+    assert len(data["onboarding_funnel"]["steps"]) == 8
+    assert data["onboarding_funnel"].get("guidance_mode") == "o2"
     usernames = [u["username"] for u in data["users"]]
     assert admin_env.username in usernames
 

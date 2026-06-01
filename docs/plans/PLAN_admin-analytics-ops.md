@@ -110,12 +110,14 @@ related: ../specs/SPEC_ANALYTICS.md
 
 **Критерий:** в `/admin` видно, кто на каком шаге; в TG приходит только `brief_done` / полный skip.
 
-### Фаза A2 — Сводка метрик (1 день)
+### Фаза A2 — Сводка метрик (1 день) ✅
 
 | # | Задача |
 |---|--------|
-| A2.1 | `GET /api/admin/metrics/summary` — users, profiles, draft onboarding, brief_done 7d, wins, avg period |
-| A2.2 | Карточки сверху Watchtower |
+| A2.1 | `GET /api/admin/metrics/summary` — users, profiles, guidance in progress / completed, wins, avg period |
+| A2.2 | Карточки сверху Watchtower + вложено в `/watchtower` как `metrics_summary` |
+
+**O2 (2026-06):** воронка A1 переведена на `User.guidance_*` и beats curriculum (8 шагов), не O1 coach steps.
 
 ### Фаза A3 — Карточка профиля (2 дня)
 

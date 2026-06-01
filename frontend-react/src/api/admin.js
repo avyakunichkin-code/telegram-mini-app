@@ -1,6 +1,13 @@
 import { apiCall } from './client.js';
 
 export const adminApi = {
+  metricsSummary(params = {}) {
+    const qs = new URLSearchParams();
+    if (params.days) qs.set('days', String(params.days));
+    const query = qs.toString();
+    return apiCall(`/api/admin/metrics/summary${query ? `?${query}` : ''}`);
+  },
+
   watchtower(params = {}) {
     const qs = new URLSearchParams();
     if (params.user_limit) qs.set('user_limit', String(params.user_limit));

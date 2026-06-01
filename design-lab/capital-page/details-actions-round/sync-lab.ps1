@@ -4,11 +4,13 @@ $parent = Join-Path $round ".."
 $actionsRound = Join-Path $parent "actions-round"
 $out = Join-Path $round "lab-base.css"
 
+$investStyles = Join-Path (Join-Path (Join-Path $parent "..") "invest-forms") "styles.css"
 $sources = @(
     (Join-Path $parent "styles.css"),
     (Join-Path (Join-Path $parent "flows-round") "styles.css"),
     (Join-Path (Join-Path $parent "orient-round") "styles.css"),
     (Join-Path $actionsRound "styles.css"),
+    $investStyles,
     (Join-Path $round "styles.css")
 )
 

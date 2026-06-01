@@ -75,13 +75,24 @@ def test_watchtower_includes_funnel(client, admin_env, auth_headers):
     data = r.json()
     assert "onboarding_funnel" in data
     assert "steps" in data["onboarding_funnel"]
-    assert len(data["onboarding_funnel"]["steps"]) == 5
+    assert len(data["onboarding_funnel"]["steps"]) == 8
+
+
+def test_admin_metrics_summary_ok(client, admin_env, auth_headers):
+    resp = client.get("/api/admin/metrics/summary?days=7", headers=auth_headers)
+    assert resp.status_code == 200
+    data = resp.json()
+    assert data["window_days"] == 7
+    assert "users_total" in data
+    assert "guidance_completed_total" in data
+    assert "wins_total" in data
 
 
 def test_build_onboarding_funnel_empty(db_session):
     funnel = build_onboarding_funnel(db_session)
     assert funnel["draft_profiles"] == 0
-    assert len(funnel["steps"]) == 5
+    assert len(funnel["steps"]) == 8
+    assert funnel.get("guidance_mode") == "o2"
 
 
 def test_step_reached_no_telegram(db_session, monkeypatch):
