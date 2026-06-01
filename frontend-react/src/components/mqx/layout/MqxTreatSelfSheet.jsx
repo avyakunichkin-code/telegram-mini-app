@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { createPortal } from 'react-dom';
 
 import { showNotification } from '../../notifications';
+import { useMqxSheetScrollLock } from '../hooks/useMqxSheetScrollLock';
 import { NeedsDeltaChips } from '../needs/NeedsDeltaChips';
 import { MqxButton } from '../primitives/MqxButton';
 
@@ -42,19 +43,11 @@ export function MqxTreatSelfSheet({ open, onClose, treatSelf, treatSelfState }) 
 
   useEffect(() => {
     if (!open) return undefined;
-    const body = document.body;
-    const root = document.getElementById('root');
-    const prevBody = body.style.overflow;
-    const prevRoot = root?.style.overflow ?? '';
-    body.classList.add('mqx-treat-sheet-open');
-    body.style.overflow = 'hidden';
-    if (root) root.style.overflow = 'hidden';
-    return () => {
-      body.classList.remove('mqx-treat-sheet-open');
-      body.style.overflow = prevBody;
-      if (root) root.style.overflow = prevRoot;
-    };
+    document.body.classList.add('mqx-treat-sheet-open');
+    return () => document.body.classList.remove('mqx-treat-sheet-open');
   }, [open]);
+
+  useMqxSheetScrollLock(open);
 
   const confirmDisabled = busy || !available || !selected?.id;
 

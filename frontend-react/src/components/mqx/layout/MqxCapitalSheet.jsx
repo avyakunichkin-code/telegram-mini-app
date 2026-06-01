@@ -1,11 +1,31 @@
-/** Универсальный bottom sheet для действий на странице «Финансы». */
-export function MqxCapitalSheet({ open, title, subtitle, onClose, busy = false, children }) {
+import { createPortal } from 'react-dom';
+
+import { useMqxSheetScrollLock } from '../hooks/useMqxSheetScrollLock';
+
+const DEFAULT_SHEET_CLASS = 'mqx-sheet--amount mqx-sheet--capital';
+
+/** Универсальный bottom sheet (финансы, подушка на дашборде). */
+export function MqxCapitalSheet({
+  open,
+  title,
+  subtitle,
+  onClose,
+  busy = false,
+  children,
+  portal = false,
+  lockScroll = false,
+  titleId = 'mqx-capital-sheet-title',
+  sheetClassName = DEFAULT_SHEET_CLASS,
+}) {
+  useMqxSheetScrollLock(open && lockScroll);
+
   if (!open) return null;
 
-  const titleId = 'mqx-capital-sheet-title';
-
-  return (
-    <div className="mqx-sheet-root" role="presentation">
+  const sheet = (
+    <div
+      className={['mqx-sheet-root', portal && 'mqx-sheet-root--portal'].filter(Boolean).join(' ')}
+      role="presentation"
+    >
       <button
         type="button"
         className="mqx-sheet-scrim"
@@ -13,7 +33,7 @@ export function MqxCapitalSheet({ open, title, subtitle, onClose, busy = false, 
         onClick={busy ? undefined : onClose}
       />
       <section
-        className="mqx-sheet mqx-sheet--capital"
+        className={['mqx-sheet', sheetClassName].filter(Boolean).join(' ')}
         role="dialog"
         aria-modal="true"
         aria-labelledby={titleId}
@@ -36,4 +56,7 @@ export function MqxCapitalSheet({ open, title, subtitle, onClose, busy = false, 
       </section>
     </div>
   );
+
+  if (portal) return createPortal(sheet, document.body);
+  return sheet;
 }

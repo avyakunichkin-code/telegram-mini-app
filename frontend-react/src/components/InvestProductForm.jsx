@@ -1,22 +1,35 @@
 import { InvestAmountControl } from './InvestAmountControl';
 import { InvestRateChip } from './InvestRateChip';
+import { MoneyText } from './MoneyText';
 import { MqxModeButton } from './mqx';
 
-/** Форма депозита / облигаций — variant D (компактная строка) + chip ставки. */
+/** Форма суммы: депозит / облигации / подушка (variant D, compact). */
 export function InvestProductForm({
   productId,
   productTitle,
   amount,
   maxCash,
   annualRatePercent,
+  rateSlot: rateSlotProp,
   onAmountChange,
   onSubmit,
   submitLabel = 'Открыть',
   amountLabel = 'Сумма',
   showTitle = false,
   embedded = false,
+  maxHint = null,
+  emptyHint = 'Нет средств на счёте',
+  busy = false,
+  autoFocus = false,
 }) {
-  const canSubmit = amount > 0 && amount <= maxCash;
+  const canSubmit = amount > 0 && amount <= maxCash && !busy;
+
+  const rateSlot =
+    rateSlotProp !== undefined
+      ? rateSlotProp
+      : annualRatePercent != null
+        ? <InvestRateChip annualRatePercent={annualRatePercent} productId={productId} />
+        : null;
 
   return (
     <article
@@ -40,7 +53,16 @@ export function InvestProductForm({
           maxAmount={maxCash}
           onChange={onAmountChange}
           compact
-          rateSlot={<InvestRateChip annualRatePercent={annualRatePercent} productId={productId} />}
+          autoFocus={autoFocus}
+          rateSlot={rateSlot}
+          maxHint={
+            maxHint ?? (
+              <>
+                На счёте: <MoneyText value={maxCash} decimals={0} />
+              </>
+            )
+          }
+          emptyHint={emptyHint}
         />
         <MqxModeButton
           active
@@ -48,7 +70,7 @@ export function InvestProductForm({
           disabled={!canSubmit}
           onClick={onSubmit}
         >
-          {submitLabel}
+          {busy ? '…' : submitLabel}
         </MqxModeButton>
       </div>
     </article>

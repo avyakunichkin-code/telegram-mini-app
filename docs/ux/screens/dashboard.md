@@ -113,7 +113,7 @@ App (HashRouter)
 | `MqxFinancePeriodBlock` | dashboard L3 | 4 KPI chips, ссылка «Весь капитал →» |
 | `MqxGoalDash` | goal-chain-round ★ · [`goal-path-stepper-round`](../../../design-lab/dashboard/goal-path-stepper-round/) (draft) | Цепочка победы v2 + guidance; свёрнуто — stepper из связанных узлов |
 | `MqxPeriodActions` | period-actions-round ★ | Зарплата, вложить, пополнить, снять |
-| `SafetyFundActionForm` | shared MQX | Сумма in/out подушки |
+| `InvestProductForm` + `MqxSafetyFundSheet` | shared MQX | Сумма in/out подушки (как депозит) |
 | `GameGuidanceLayer` | [`onboarding-o2`](../../../design-lab/onboarding-o2/) ★ | O2 guidance strip (не дочерний dashboard) |
 
 ### ASCII Wireframe

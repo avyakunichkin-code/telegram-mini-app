@@ -17,26 +17,3 @@ export function suggestSafetyFundAmount(maxAmount) {
 
   return clampToMax(Math.max(1, n), max);
 }
-
-/**
- * Быстрые суммы: 25%, 50%, всё доступное (без дубликатов).
- * @param {number} maxAmount
- * @returns {{ label: string, value: number }[]}
- */
-export function safetyFundAmountPresets(maxAmount) {
-  const max = Math.max(0, Math.floor(Number(maxAmount) || 0));
-  if (max <= 0) return [];
-
-  const parts = [
-    { label: '25%', value: clampToMax(Math.floor(max * 0.25), max) },
-    { label: '50%', value: clampToMax(Math.floor(max * 0.5), max) },
-    { label: 'Всё', value: max },
-  ];
-
-  const seen = new Set();
-  return parts.filter((p) => {
-    if (p.value <= 0 || seen.has(p.value)) return false;
-    seen.add(p.value);
-    return true;
-  });
-}

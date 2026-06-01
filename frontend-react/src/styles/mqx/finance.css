@@ -2877,7 +2877,8 @@ body [class*='modal'] {
   background: color-mix(in srgb, rgba(109, 40, 217, 0.9) 6%, var(--mqx-glass-strong, rgba(255, 255, 255, 0.72)));
 }
 
-.mqx-sheet--capital {
+/* Компактный sheet: депозит, подушка, короткие формы суммы */
+.mqx-sheet--amount {
   display: flex;
   flex-direction: column;
   max-height: min(78vh, calc(100dvh - env(safe-area-inset-top, 0px) - 64px));
@@ -2885,29 +2886,29 @@ body [class*='modal'] {
   padding-bottom: calc(12px + env(safe-area-inset-bottom, 0px));
 }
 
-.mqx-sheet--capital .mqx-sheet__head {
+.mqx-sheet--amount .mqx-sheet__head {
   position: relative;
   flex-shrink: 0;
   padding-right: 40px;
 }
 
-.mqx-sheet--capital .mqx-sheet__close {
+.mqx-sheet--amount .mqx-sheet__close {
   top: 0;
   right: 0;
 }
 
-.mqx-sheet--capital .mqx-sheet__title {
+.mqx-sheet--amount .mqx-sheet__title {
   font-size: var(--mq-fs-body);
   line-height: 1.2;
 }
 
-.mqx-sheet--capital .mqx-sheet__sub {
+.mqx-sheet--amount .mqx-sheet__sub {
   margin-top: 4px;
   font-size: var(--mq-fs-micro);
   line-height: 1.35;
 }
 
-.mqx-sheet--capital .mqx-sheet__body--scroll {
+.mqx-sheet--amount .mqx-sheet__body--scroll {
   flex: 1 1 auto;
   min-height: 0;
   margin-top: 8px;
