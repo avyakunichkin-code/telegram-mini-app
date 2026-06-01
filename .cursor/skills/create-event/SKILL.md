@@ -34,8 +34,9 @@ allowed-tools: Read, Glob, Grep, Write, Shell
 - [`backend/app/events/choice_impacts.py`](../../../backend/app/events/choice_impacts.py) — burn preview
 - [`.cursor/skills/create-event/event-balance-rules.md`](event-balance-rules.md) — **trade-off, Pareto, lifecycle §10, оси needs §11, MCE §12**
 - [`docs/vision/ideas/event-choice-balance-tradeoffs.md`](../../../docs/vision/ideas/event-choice-balance-tradeoffs.md) — продуктовое обоснование
+- **Эталон цепочки-«Истории»:** [`event-briefs/mq11_freelance_project_chain.md`](../../../docs/vision/ideas/event-briefs/mq11_freelance_project_chain.md) · `chains/freelance_project.yaml`
 
-**Satellites:** `test-driven-development` (pytest); перед merge каталога или крупного YAML — **`/event-analysis`** (§10/§11); при дублях/gaps — analysis; UI informational → `design-lab-mqx`.
+**Satellites:** `test-driven-development` (pytest); **после новой цепочки 3+ шагов** — **`/event-analysis`** (scope `chains` или `key` + §10/§11); перед merge всего каталога — scope **all**; UI informational → `design-lab-mqx`.
 
 **Дальше:** `test-driven-development` (см. `catalog.yaml` → `next_skill`).
 
@@ -151,11 +152,13 @@ interaction_kind: choice
 
 ### 0. Уточни у пользователя (если не сказано)
 
+- **Формат:** разовая карточка | **цепочка-«История»** (3–5 шагов, отдельные keys на ветки) — для истории см. §Эталон
 - **content_class:** universal | profile | instrumental | needs_risk | global | informational-followup
 - **event_slot:** period_choice | informational | needs_risk | chain_followup | global_macro
 - Персона / **audience:** student (`mq_game_basic_v1`) | pro (`mq_game_tight_budget_v1`) | all
 - Идея одним предложением
 - Триггер (random pool | chain | needs | mechanic | global schedule)
+- Для сырой сюжетной гипотезы без цифр → сначала **idea-refine**, затем brief
 
 ### 1. Event Brief
 
@@ -223,18 +226,26 @@ cd backend && python -m pytest -q -k "event"
 
 Канон: [`data/events/mvp11/chains/freelance_project.yaml`](../../../data/events/mvp11/chains/freelance_project.yaml) · brief [`mq11_freelance_project_chain.md`](../../../docs/vision/ideas/event-briefs/mq11_freelance_project_chain.md) · тест [`test_freelance_project_chain.py`](../../../backend/tests/test_freelance_project_chain.py).
 
+**7 keys:** `offer` → `midperiod` → (`deadline_rush` | `deadline_steady`) → (`epilogue_rush` | `epilogue_steady`). **Не путать** с разовым `mq11_part_time_job_student` (кафе, без цепочки).
+
 | Паттерн | Как в эталоне |
 |---------|----------------|
+| **Педагогика** | Нерегулярный доход; аванс = обязательство; шаг 2 — trade-off needs **без спойлера** будущих ₽; игрок не знает «цены» отдыха vs работы |
 | **Отдельный key на ветку UX** | `deadline_rush` vs `deadline_steady`; `epilogue_rush` vs `epilogue_steady` |
 | **Скрытые кнопки** | `requires_chain_branch` **внутри `effects`** (не на уровне choice); дубли title для `advance` / `deferred` или `advance_grill` / `advance_grind` |
-| **Контекст цепочки** | `payment`, `prep`, `branch` в `enqueue_event.context`; шаг 3 фильтрует по полному `branch` (`advance_grill`) |
-| **Деньги** | В шаге 1 — аванс; в тексте шага 1 — «остаток после защиты»; шаги 2–3 — **без cash** (только needs); выплата в informational |
-| **Обязательность** | `mandatory_gate: blocks_period_end` на шагах 2–3 (нельзя закрыть период без выбора) |
-| **Informational** | `interaction_kind: informational`, ≥2 кнопки; подпись-урок во втором абзаце `description` |
-| **Тайминг** | `after_periods: 2` между сюжетными шагами, `1` перед эпилогом (периоды N → N+2 → N+4 → N+5) |
-| **Движок** | `FREELANCE_PROJECT_CHAIN_KEY`, `CHAIN_KEY_BY_DEFINITION`, `active_chain_context`; follow-up в `CHAIN_FOLLOWUP_EXCLUDE_FROM_RANDOM_POOL` |
+| **Контекст цепочки** | `payment`, `prep`, `branch` в `enqueue_event.context`; каждый `enqueue` **переносит** `payment`; шаг 3 фильтрует по полному `branch` |
+| **Деньги** | Шаг 1: в тексте **остаток только после защиты**; аванс на кнопке; шаги 2–3 — **без cash**; эпилог — остаток; steady — +35% бонус; rush — без бонуса, ремарка про опечатки |
+| **Отказ / срыв** | Отказ **только** на шаге 1; **нет** кнопки «сдаться» на дедлайне; **нет** автопровала |
+| **Кнопки** | Шаг 2 — ровно **2**; шаг 3 — **2** (rush: сам / инструмент; steady: сдать / вычитать) |
+| **Обязательность** | `mandatory_gate: blocks_period_end` на шагах 2–3 |
+| **Informational** | `event_slot: informational`, ≥2 кнопки с лёгким trade-off needs (не дубли 0/0); урок — второй абзац `description` |
+| **Тайминг** | `after_periods: 2` → `2` → `1` (периоды **N → N+2 → N+4 → N+5** от старта цепочки) |
+| **Движок** | `chain_key: freelance_project`; `CHAIN_KEY_BY_DEFINITION` + `active_chain_context`; все follow-up в `CHAIN_FOLLOWUP_EXCLUDE_FROM_RANDOM_POOL`; цепочка `complete` на эпилоге |
+| **Баланс** | Pareto не сравнивает пары с `requires_chain_branch` ([`event-balance-rules.md`](event-balance-rules.md) §3.1) |
 
-Новая многошаговая история: копируй каркас, не смешивай rush/steady в одном definition_key.
+**После записи:** `pytest` + **`/event-analysis`** scope `chains` или `key mq11_freelance_project_offer`.
+
+Новая многошаговая история: копируй каркас; не смешивай rush/steady в одном `definition_key`.
 
 ---
 
@@ -247,7 +258,8 @@ cd backend && python -m pytest -q -k "event"
 - [ ] instrumental → `prerequisites` (AND); не подменять profile
 - [ ] needs_risk → axes в extra; не полагаться на rescue bias
 - [ ] chain follow-up → отсылка к выбору в description
-- [ ] 2+ choices (prod loader); informational — workaround если одна кнопка
+- [ ] **Цепочка-История:** отдельные keys на ветки; `requires_chain_branch` в `effects`; follow-up в exclude pool; mid/deadline mandatory при необходимости; cash только на согласованных шагах
+- [ ] 2+ choices (prod loader); informational — ≥2 кнопки, не идентичные 0/0
 - [ ] **Баланс:** trade-off §1, Pareto §3 (порядок choices не спасает), отказ §2, needs_risk §4, **needs_axis_map §11**
 - [ ] `pytest tests/unit/events/test_event_balance_contract.py` — **0** violations (baseline)
 

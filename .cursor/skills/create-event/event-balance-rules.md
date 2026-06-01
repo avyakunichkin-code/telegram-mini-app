@@ -99,6 +99,7 @@
 | `insurance_claim` в choice | выплата полиса не в YAML |
 | `used_car_action` | cash/asset подставляет движок |
 | `enqueue_event` у **любого** choice в паре | отложенный исход цепочки; сравниваем trade-off в **первом** звене |
+| `requires_chain_branch` у **любого** choice в паре | в UI одновременно видна одна ветка; см. эталон `freelance_project` |
 
 **Где enforced:**
 
@@ -144,9 +145,10 @@ choices:
 
 | Тип | Trade-off |
 |-----|-----------|
-| `interaction_kind: informational` | одна кнопка «Понятно»; effects пустые или чисто narrative |
+| `interaction_kind: informational` | ≥2 кнопки (prod); выплата/needs — в **эпилоге** цепочки; урок — второй абзац `description` |
 | `intro` / `meta` | без экономического trade-off |
 | chain follow-up | отсылка к прошлому выбору; trade-off может быть **в первом** звене |
+| **История 4+ шага** | шаг 1 — cash/отказ; середина — **только needs** (не спойлерить будущую цену); деньги — informational; эталон [`freelance_project.yaml`](../../../data/events/mvp11/chains/freelance_project.yaml) |
 
 ---
 

@@ -16,8 +16,11 @@ import { Button } from '@telegram-apps/telegram-ui';
  * @param {(id: string) => void} [props.onChipSelect]
  * @param {string} [props.chipAriaLabel]
  * @param {import('react').ReactNode} [props.children] — чекбоксы, доп. кнопки
+ * @param {boolean} [props.asCard] — обёртка mq-card (по умолчанию да)
  */
 export function AdminFilterBar({
+  asCard = true,
+  className = '',
   searchLabel = 'Поиск',
   searchPlaceholder = 'Введите запрос…',
   searchValue,
@@ -33,8 +36,12 @@ export function AdminFilterBar({
 }) {
   const hasChips = chips?.length > 0 && onChipSelect;
 
+  const rootClass = ['admin-filter-bar', asCard ? 'mq-card' : null, className]
+    .filter(Boolean)
+    .join(' ');
+
   return (
-    <form className="admin-filter-bar mq-card" onSubmit={onSubmit}>
+    <form className={rootClass} onSubmit={onSubmit}>
       <label className="admin-filter-bar__search">
         <span className="admin-filter-bar__search-label">{searchLabel}</span>
         <input

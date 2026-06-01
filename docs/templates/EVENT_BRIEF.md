@@ -99,6 +99,14 @@ repeat_policy: once_per_profile
 
 ---
 
+## 3b. Цепочка-«История» (3+ шага)
+
+Один brief на цепочку: [`docs/vision/ideas/event-briefs/<chain_slug>.md`](../vision/ideas/event-briefs/) — образец [`mq11_freelance_project_chain.md`](../vision/ideas/event-briefs/mq11_freelance_project_chain.md).
+
+Обязательно в brief: таблица шагов (`definition_key`, `after_periods`, период N+k, `mandatory_gate`), ветки (`payment` / `prep` / `branch`), **где есть cash**, **Not doing** (срыв, автопровал, лишние кнопки). После YAML — `/event-analysis` scope `chains`.
+
+---
+
 ## 4. Чеклист перед merge
 
 - [ ] Отдельный `definition_key` (не `variants[]` в одной записи)

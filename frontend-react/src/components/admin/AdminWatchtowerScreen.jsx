@@ -6,6 +6,7 @@ import { AdminAttentionQueue } from './AdminAttentionQueue';
 import { AdminPageHeader } from './AdminPageHeader';
 import { formatAdminDt } from './adminFormat';
 import { AdminTable } from './adminTable';
+import { AdminFilterBar } from './ui/AdminFilterBar';
 import { AdminKpiGrid } from './ui/AdminKpiGrid';
 import { GuidanceBadge } from './AdminGuidanceBadge';
 import { notificationProfileId } from './adminUtils';
@@ -566,7 +567,7 @@ export function AdminWatchtowerScreen({ onBack }) {
               <section className="mq-card admin-watchtower__block admin-attention">
                 <h2 className="admin-watchtower__block-title">Очередь внимания</h2>
                 <p className="mq-muted admin-watchtower__block-hint">
-                  Застрявшие, поражения и свежие отзывы — клик открывает inspector сверху.
+                  Застрявшие, поражения и свежие отзывы — клик открывает inspector справа.
                 </p>
                 <AdminAttentionQueue
                   profiles={data.profiles ?? []}
@@ -590,66 +591,39 @@ export function AdminWatchtowerScreen({ onBack }) {
                   rows={users}
                   highlightId={highlightUser}
                   maxHeight="min(70vh, 520px)"
+                  virtualizeThreshold={80}
                 />
               </section>
 
               <section className="mq-card admin-watchtower__block">
                 <h2 className="admin-watchtower__block-title">Профили</h2>
-                <form className="admin-watchtower__search" onSubmit={applyProfileSearch}>
-                  <input
-                    className="mq-field__input"
-                    type="search"
-                    value={searchDraft}
-                    onChange={(e) => setSearchDraft(e.target.value)}
-                    placeholder="Логин или имя профиля…"
-                    aria-label="Поиск профилей"
-                  />
-                  <Button size="s" type="submit">
-                    Найти
-                  </Button>
-                  {profileSearch ? (
-                    <Button
-                      size="s"
-                      mode="plain"
-                      type="button"
-                      onClick={() => {
-                        setSearchDraft('');
-                        const next = new URLSearchParams(searchParams);
-                        next.delete('q');
-                        setSearchParams(next, { replace: true });
-                      }}
-                    >
-                      Сброс
-                    </Button>
-                  ) : null}
-                </form>
-                <div
-                  className="admin-watchtower__filters"
-                  role="toolbar"
-                  aria-label="Фильтр профилей"
-                >
-                  {PROFILE_FILTERS.map((f) => (
-                    <button
-                      key={f.id || 'all'}
-                      type="button"
-                      className={[
-                        'admin-watchtower__filter-chip',
-                        profileFilter === f.id ? 'admin-watchtower__filter-chip--active' : null,
-                      ]
-                        .filter(Boolean)
-                        .join(' ')}
-                      onClick={() => setProfileFilter(f.id)}
-                    >
-                      {f.label}
-                    </button>
-                  ))}
-                </div>
+                <AdminFilterBar
+                  asCard={false}
+                  className="admin-filter-bar--inset"
+                  searchLabel="Профили"
+                  searchPlaceholder="Логин или имя профиля…"
+                  searchValue={searchDraft}
+                  onSearchChange={setSearchDraft}
+                  onSubmit={applyProfileSearch}
+                  showSearchReset={Boolean(profileSearch)}
+                  onSearchReset={() => {
+                    setSearchDraft('');
+                    const next = new URLSearchParams(searchParams);
+                    next.delete('q');
+                    setSearchParams(next, { replace: true });
+                  }}
+                  chips={PROFILE_FILTERS}
+                  activeChipId={profileFilter}
+                  onChipSelect={setProfileFilter}
+                  chipAriaLabel="Фильтр профилей"
+                />
                 <AdminTable
                   columns={profileColumns}
                   rows={profiles}
                   highlightId={highlightProfile}
                   onRowClick={openProfile}
                   maxHeight="min(70vh, 560px)"
+                  virtualizeThreshold={80}
                 />
               </section>
             </div>
@@ -662,6 +636,7 @@ export function AdminWatchtowerScreen({ onBack }) {
                 columns={notificationColumns}
                 rows={notifications}
                 maxHeight="min(75vh, 640px)"
+                virtualizeThreshold={80}
                 onRowClick={(r) => {
                   const pid = notificationProfileId(r);
                   if (pid) openProfileId(pid);
@@ -681,6 +656,7 @@ export function AdminWatchtowerScreen({ onBack }) {
                 rows={runFeedback}
                 emptyText="Пока нет отзывов."
                 maxHeight="min(75vh, 640px)"
+                virtualizeThreshold={80}
                 onRowClick={(r) => {
                   const next = new URLSearchParams(searchParams);
                   next.set('profile', String(r.game_profile_id));

@@ -3,11 +3,16 @@ import { Link, useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import { Button, Spinner } from '@telegram-apps/telegram-ui';
 import { adminApi } from '../../api';
 import { AdminPageHeader } from './AdminPageHeader';
+import { AdminTable } from './adminTable';
+import { AdminFilterBar } from './ui/AdminFilterBar';
+import {
+  catalogColumnSortable,
+  catalogColumnSortValue,
+  formatCatalogCell,
+} from './ui/adminCatalogTable';
 
-function formatCell(value) {
-  if (value === null || value === undefined || value === '') return '—';
-  if (typeof value === 'boolean') return value ? 'да' : 'нет';
-  return String(value);
+function rowHighlightKey(row) {
+  return String(row.template_key || row.key || row.id || '');
 }
 
 export function AdminCatalogListScreen() {
@@ -62,22 +67,82 @@ export function AdminCatalogListScreen() {
     }
   }, [highlightKey, data?.rows]);
 
-  const columns = useMemo(() => data?.columns ?? [], [data]);
+  const apiColumns = useMemo(() => data?.columns ?? [], [data]);
+
+  const afterMutation = useCallback(
+    (result) => {
+      const hl = result.template_key || result.key;
+      if (hl) {
+        navigate(`/admin/catalogs/${catalogKey}?highlight=${encodeURIComponent(hl)}`);
+      } else {
+        load();
+      }
+    },
+    [catalogKey, load, navigate],
+  );
+
+  const handleClone = useCallback(
+    async (rowId) => {
+      if (!catalogKey || mutating) return;
+      setMutating(true);
+      setError(null);
+      try {
+        const result = await adminApi.catalogClone(catalogKey, rowId);
+        afterMutation(result);
+      } catch (e) {
+        setError(e?.detail || e?.message || 'Не удалось дублировать');
+      } finally {
+        setMutating(false);
+      }
+    },
+    [afterMutation, catalogKey, mutating],
+  );
+
+  const tableColumns = useMemo(() => {
+    const dataCols = apiColumns.map((col) => ({
+      key: col.key,
+      label: col.label,
+      render: (row) => formatCatalogCell(row[col.key]),
+      sortable: catalogColumnSortable(col.key),
+      sortValue: (row) => catalogColumnSortValue(row, col.key),
+    }));
+    dataCols.push({
+      key: '_actions',
+      label: 'Действия',
+      render: (row) => (
+        <div
+          className="admin-catalog-list__actions"
+          onClick={(e) => e.stopPropagation()}
+          onKeyDown={(e) => e.stopPropagation()}
+        >
+          <Link
+            to={`/admin/catalogs/${catalogKey}/edit/${row.id}`}
+            className="admin-inspector__link"
+          >
+            Редактировать
+          </Link>
+          <Button size="s" mode="plain" disabled={mutating} onClick={() => handleClone(row.id)}>
+            Дублировать
+          </Button>
+        </div>
+      ),
+    });
+    return dataCols;
+  }, [apiColumns, catalogKey, handleClone, mutating]);
+
+  const tableRows = useMemo(
+    () =>
+      (data?.rows ?? []).map((row) => ({
+        ...row,
+        _key: String(row.id ?? row.key ?? row.template_key),
+        _id: rowHighlightKey(row),
+      })),
+    [data?.rows],
+  );
 
   const handleSearch = (e) => {
     e.preventDefault();
     setQuery(searchDraft.trim());
-  };
-
-  const rowHighlightKey = (row) => String(row.template_key || row.key || row.id || '');
-
-  const afterMutation = (result) => {
-    const hl = result.template_key || result.key;
-    if (hl) {
-      navigate(`/admin/catalogs/${catalogKey}?highlight=${encodeURIComponent(hl)}`);
-    } else {
-      load();
-    }
   };
 
   const handleCreateDraft = async () => {
@@ -94,19 +159,16 @@ export function AdminCatalogListScreen() {
     }
   };
 
-  const handleClone = async (rowId) => {
-    if (!catalogKey || mutating) return;
-    setMutating(true);
-    setError(null);
-    try {
-      const result = await adminApi.catalogClone(catalogKey, rowId);
-      afterMutation(result);
-    } catch (e) {
-      setError(e?.detail || e?.message || 'Не удалось дублировать');
-    } finally {
-      setMutating(false);
-    }
-  };
+  const getRowRef = useCallback(
+    (row) => (highlightKey && row._id === highlightKey ? highlightRef : undefined),
+    [highlightKey],
+  );
+
+  const getRowClassName = useCallback(
+    (row) =>
+      highlightKey && row._id === highlightKey ? 'admin-catalog-list__row--highlight' : undefined,
+    [highlightKey],
+  );
 
   return (
     <div className="admin-catalog-list mq-section">
@@ -130,18 +192,18 @@ export function AdminCatalogListScreen() {
         </div>
       </AdminPageHeader>
 
-      <form className="admin-catalog-list__filters mq-card" onSubmit={handleSearch}>
-        <label className="admin-catalog-list__search">
-          <span className="admin-catalog-list__search-label">Поиск</span>
-          <input
-            className="mq-field__input"
-            type="search"
-            value={searchDraft}
-            onChange={(e) => setSearchDraft(e.target.value)}
-            placeholder="Ключ или название…"
-          />
-        </label>
-        <label className="admin-catalog-list__check">
+      <AdminFilterBar
+        searchValue={searchDraft}
+        onSearchChange={setSearchDraft}
+        onSubmit={handleSearch}
+        searchPlaceholder="Ключ или название…"
+        showSearchReset={Boolean(query)}
+        onSearchReset={() => {
+          setSearchDraft('');
+          setQuery('');
+        }}
+      >
+        <label className="admin-filter-bar__check">
           <input
             type="checkbox"
             checked={activeOnly}
@@ -149,10 +211,7 @@ export function AdminCatalogListScreen() {
           />
           <span>Только активные</span>
         </label>
-        <Button size="s" type="submit">
-          Найти
-        </Button>
-      </form>
+      </AdminFilterBar>
 
       {loading ? (
         <div className="admin-watchtower__loading">
@@ -168,57 +227,16 @@ export function AdminCatalogListScreen() {
 
       {!loading && !error && data ? (
         <section className="mq-card admin-watchtower__block">
-          {data.rows?.length ? (
-            <div className="admin-watchtower__table-wrap">
-              <table className="admin-watchtower__table">
-                <thead>
-                  <tr>
-                    {columns.map((col) => (
-                      <th key={col.key}>{col.label}</th>
-                    ))}
-                    <th>Действия</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {data.rows.map((row) => {
-                    const rowKey = rowHighlightKey(row);
-                    const isHighlight = highlightKey && rowKey === highlightKey;
-                    return (
-                      <tr
-                        key={row.id ?? row.key ?? row.template_key}
-                        ref={isHighlight ? highlightRef : undefined}
-                        className={
-                          isHighlight ? 'admin-catalog-list__row--highlight' : undefined
-                        }
-                      >
-                        {columns.map((col) => (
-                          <td key={col.key}>{formatCell(row[col.key])}</td>
-                        ))}
-                        <td className="admin-catalog-list__actions">
-                          <Link
-                            to={`/admin/catalogs/${catalogKey}/edit/${row.id}`}
-                            className="admin-inspector__link"
-                          >
-                            Редактировать
-                          </Link>
-                          <Button
-                            size="s"
-                            mode="plain"
-                            disabled={mutating}
-                            onClick={() => handleClone(row.id)}
-                          >
-                            Дублировать
-                          </Button>
-                        </td>
-                      </tr>
-                    );
-                  })}
-                </tbody>
-              </table>
-            </div>
-          ) : (
-            <p className="mq-muted">Ничего не найдено</p>
-          )}
+          <AdminTable
+            columns={tableColumns}
+            rows={tableRows}
+            highlightId={highlightKey || undefined}
+            emptyText="Ничего не найдено"
+            maxHeight="min(75vh, 680px)"
+            virtualizeThreshold={60}
+            getRowRef={getRowRef}
+            getRowClassName={getRowClassName}
+          />
         </section>
       ) : null}
     </div>

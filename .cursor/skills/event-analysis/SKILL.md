@@ -41,6 +41,7 @@ allowed-tools: Read, Glob, Grep, Shell
 - [`docs/backlog/PRODUCT_BACKLOG.md`](../../../docs/backlog/PRODUCT_BACKLOG.md) — эпик **EVT1**
 - [`.cursor/skills/create-event/event-balance-rules.md`](../create-event/event-balance-rules.md) — **аудит trade-off**
 - [`docs/vision/ideas/event-choice-balance-tradeoffs.md`](../../../docs/vision/ideas/event-choice-balance-tradeoffs.md)
+- **Эталон цепочки:** [`mq11_freelance_project_chain.md`](../../../docs/vision/ideas/event-briefs/mq11_freelance_project_chain.md) · [`chains/freelance_project.yaml`](../../../data/events/mvp11/chains/freelance_project.yaml)
 
 **Куда писать:** `docs/vision/analysis/` (сохранение отчёта — только по запросу).
 
@@ -77,6 +78,7 @@ allowed-tools: Read, Glob, Grep, Shell
 | **persona** | student / pro / пары / audience gaps |
 | **tier** | event_tier 1 / 2 / 3+ |
 | **key** | одно событие + соседи |
+| **chains** | все `chains/*.yaml` + `enqueue_event` + exclude pool |
 | **evt1** | готовность к demo α по таблице EVT1 в беклоге |
 
 ### 1. Собери факты
@@ -138,7 +140,7 @@ cd backend && python -c "from app.events.mvp11_catalog import load_mvp11_catalog
 
 1. **Free lunch scan:** choices с `needs_delta` &gt; 0 и `cash_delta >= 0` без burn — список keys (**CONCERNS** если много в tier-1 soft_offer). Дублирует код `free_lunch` в `balance_contract`.
 2. **Отказ:** soft_offer с «не тратить» — есть ли needs− или только 0/0? **CONCERNS**, если needs+ при cash ≥ 0 (автомат) или «консультация» строго лучше «отказа» по Pareto.
-3. **Pareto:** не дублируй ручной обход — **источник истины** `validate_mvp11_balance`; вручную только edge cases вне автомата (§3.1 skips: insurance, used_car, enqueue).
+3. **Pareto:** не дублируй ручной обход — **источник истины** `validate_mvp11_balance`; вручную только edge cases вне автомата (§3.1 skips: insurance, used_car, enqueue, **`requires_chain_branch`**).
 4. **needs_risk / is_rescue:** «бесплатное» восстановление needs?
 5. **% salary:** max \|cash\| vs 62.5k / 100k (persona-profiles).
 6. **Рекомендация:** keys на `/create-event` ребаланс + brief `balance_notes`.
@@ -185,9 +187,31 @@ rg "monthly_lifestyle_delta: -" data/events/mvp11/ -B10
 
 #### G. Цепочки
 
-- offer + followup в `chains/`; follow-up **вне** random pool keys.
+- offer + followup в `chains/`; follow-up **вне** random pool keys (`CHAIN_FOLLOWUP_EXCLUDE_FROM_RANDOM_POOL` в `chains.py`).
 - Текст follow-up: отсылка к branch / прошлому выбору (да/нет/сумма).
 - Informational follow-up (лотерея, коллега) — slot + trigger documented?
+
+**Аудит эталона `freelance_project` (и любой новой «Истории»):**
+
+| Проверка | Ожидание |
+|----------|----------|
+| Keys в exclude pool | все follow-up, не `offer` |
+| `mandatory_gate: blocks_period_end` | midperiod + deadline(s), не offer/epilogue |
+| Cash на шагах 2–3 | **нет** (только needs; rush — опционально −cash за инструмент) |
+| Шаг 1 description | остаток **после защиты** явно |
+| `requires_chain_branch` | только в `effects`, не сиротой на choice |
+| `after_periods` | 2–2–1 или задокументировано иначе в brief |
+| Informational epilogue | `interaction_kind: informational`; 2+ choices; разный исход rush vs steady |
+| Дубликат механики | нет пересечения с `mq11_part_time_job_*` без brief |
+| Engine | `CHAIN_KEY_BY_DEFINITION` содержит все chain_followup keys |
+| pytest | `test_freelance_project_chain.py` + balance **0** |
+
+```bash
+rg "definition_key: mq11_freelance" data/events/mvp11/chains/freelance_project.yaml
+rg "mandatory_gate: blocks" data/events/mvp11/chains/
+rg "followup_definition_key: mq11_freelance" data/events/mvp11/
+cd backend && python -m pytest -q tests/test_freelance_project_chain.py
+```
 
 #### H. Needs (legacy rescue)
 
