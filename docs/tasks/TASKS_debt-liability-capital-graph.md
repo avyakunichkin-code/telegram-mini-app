@@ -173,10 +173,10 @@ spec: ../specs/features/SPEC_debt-liability-capital-graph.md
 - **Phase:** `verify`
 - **Skill:** `test-driven-development`
 - **Acceptance:** DL1-AC-6; UI показывает expires
-- **Verify:** extend `test_insurance_events.py`
+- **Verify:** `tests/test_insurance_policy_expiry.py`
 - **Estimate:** S
 - **Depends:** DL1-111
-- **Status:** ⬜
+- **Status:** ✅ 2026-06-01 (backend; UI expires — backlog)
 
 ---
 

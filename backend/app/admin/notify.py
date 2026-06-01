@@ -61,16 +61,18 @@ def _send_telegram_message(text: str) -> bool:
 
     token = config.OPS_TELEGRAM_BOT_TOKEN
     chat_id = config.OPS_TELEGRAM_CHAT_ID
+    thread_id = config.OPS_TELEGRAM_MESSAGE_THREAD_ID
     if not token or not chat_id:
         return False
     url = f"https://api.telegram.org/bot{token}/sendMessage"
-    body = urllib.parse.urlencode(
-        {
-            "chat_id": chat_id,
-            "text": text[:4096],
-            "disable_web_page_preview": "true",
-        }
-    ).encode("utf-8")
+    fields: dict[str, str] = {
+        "chat_id": chat_id,
+        "text": text[:4096],
+        "disable_web_page_preview": "true",
+    }
+    if thread_id:
+        fields["message_thread_id"] = thread_id
+    body = urllib.parse.urlencode(fields).encode("utf-8")
     req = urllib.request.Request(url, data=body, method="POST")
     try:
         with urllib.request.urlopen(req, timeout=8) as resp:

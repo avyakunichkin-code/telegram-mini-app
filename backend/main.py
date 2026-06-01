@@ -26,6 +26,7 @@ from app.routers import (
     needs_router,
 )
 
+from app.seeds.capital_catalog import upsert_capital_liability_catalog
 from app.seeds.game_starter_templates import GAME_STARTER_TEMPLATE_SEEDS
 
 def ensure_schema_compatibility() -> None:
@@ -368,6 +369,19 @@ def ensure_schema_compatibility() -> None:
                         "victory_json": victory_config_json_for_template(tk),
                     },
                 )
+
+    # DL1: каталог обязательств (car_loan secured, mortgage metadata)
+    inspector = inspect(engine)
+    if "liability_templates" in inspector.get_table_names():
+        lt_cols = {item["name"] for item in inspector.get_columns("liability_templates")}
+        if "liability_kind" in lt_cols:
+            from app.database import SessionLocal
+
+            db = SessionLocal()
+            try:
+                upsert_capital_liability_catalog(db)
+            finally:
+                db.close()
 
     # Optional lint: if victory_goals table exists, report issues.
     # This is non-blocking by default to avoid breaking boot on incomplete DBs.

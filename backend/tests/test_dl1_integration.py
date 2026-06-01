@@ -37,6 +37,22 @@ def auth_client(dl1_client, auth_headers):
     return client, db, profile, auth_headers
 
 
+def test_secured_car_loan_bundle(auth_client):
+    client, db, profile, headers = auth_client
+    cash_before = float(profile.cash_balance)
+    resp = client.post(
+        "/api/finance/acquisitions/secured",
+        json={"liability_key": "car_loan", "asset_key": "car_personal"},
+        headers=headers,
+    )
+    assert resp.status_code == 200, resp.text
+    body = resp.json()
+    assert body["liability"]["liability_kind"] == "auto_loan"
+    assert body["asset"]["kind"] == "car_personal"
+    db.refresh(profile)
+    assert float(profile.cash_balance) == cash_before - 300_000.0
+
+
 def test_secured_acquisition_no_cash_disbursement(auth_client):
     client, db, profile, headers = auth_client
     cash_before = float(profile.cash_balance)

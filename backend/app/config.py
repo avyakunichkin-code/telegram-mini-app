@@ -47,6 +47,8 @@ class Config:
     ADMIN_USER_IDS = _parse_int_set(os.getenv("ADMIN_USER_IDS", ""))
     OPS_TELEGRAM_BOT_TOKEN = os.getenv("OPS_TELEGRAM_BOT_TOKEN", "").strip()
     OPS_TELEGRAM_CHAT_ID = os.getenv("OPS_TELEGRAM_CHAT_ID", "").strip()
+    # Forum topic in supergroup (sendMessage message_thread_id); empty = General / no topic
+    OPS_TELEGRAM_MESSAGE_THREAD_ID = os.getenv("OPS_TELEGRAM_MESSAGE_THREAD_ID", "").strip()
     ADMIN_WEB_BASE_URL = _resolve_admin_web_base_url()
     
     @classmethod

@@ -22,6 +22,7 @@ def admin_env(test_user, monkeypatch):
 
     config_module.config.OPS_TELEGRAM_BOT_TOKEN = ""
     config_module.config.OPS_TELEGRAM_CHAT_ID = ""
+    config_module.config.OPS_TELEGRAM_MESSAGE_THREAD_ID = ""
     yield test_user
 
 

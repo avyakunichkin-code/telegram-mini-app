@@ -1,6 +1,8 @@
 """RU-тексты ops-алертов."""
 
-from app.admin.notify import notify_period_milestone
+import urllib.request
+
+from app.admin.notify import _send_telegram_message, notify_period_milestone
 from app.admin.notify_messages import format_alert_message_ru, kind_label_ru
 from app.models import GameProfile
 
@@ -46,6 +48,63 @@ def test_user_registered_no_technical_keys():
     )
     assert "alex" in text
     assert "username=" not in text
+
+
+def test_send_telegram_message_thread_id(monkeypatch):
+    captured: dict[str, str] = {}
+
+    def fake_urlopen(req, timeout=8):
+        captured["body"] = req.data.decode("utf-8")
+
+        class Resp:
+            status = 200
+
+            def __enter__(self):
+                return self
+
+            def __exit__(self, *args):
+                return False
+
+        return Resp()
+
+    monkeypatch.setattr(urllib.request, "urlopen", fake_urlopen)
+    from app import config as config_module
+
+    config_module.config.OPS_TELEGRAM_BOT_TOKEN = "test-token"
+    config_module.config.OPS_TELEGRAM_CHAT_ID = "-100123"
+    config_module.config.OPS_TELEGRAM_MESSAGE_THREAD_ID = "42"
+
+    assert _send_telegram_message("ping")
+    assert "message_thread_id=42" in captured["body"]
+    assert "chat_id=-100123" in captured["body"]
+
+
+def test_send_telegram_without_thread_id_omits_param(monkeypatch):
+    captured: dict[str, str] = {}
+
+    def fake_urlopen(req, timeout=8):
+        captured["body"] = req.data.decode("utf-8")
+
+        class Resp:
+            status = 200
+
+            def __enter__(self):
+                return self
+
+            def __exit__(self, *args):
+                return False
+
+        return Resp()
+
+    monkeypatch.setattr(urllib.request, "urlopen", fake_urlopen)
+    from app import config as config_module
+
+    config_module.config.OPS_TELEGRAM_BOT_TOKEN = "test-token"
+    config_module.config.OPS_TELEGRAM_CHAT_ID = "1"
+    config_module.config.OPS_TELEGRAM_MESSAGE_THREAD_ID = ""
+
+    assert _send_telegram_message("ping")
+    assert "message_thread_id" not in captured["body"]
 
 
 def test_period_milestone_three_skips_telegram(db_session, monkeypatch):
