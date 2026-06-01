@@ -107,3 +107,28 @@ class TestRunFeedback:
         row = db_session.query(PlayerRunFeedback).filter(PlayerRunFeedback.user_id == test_user.id).first()
         assert row is not None
         assert "Интересный" in row.comment
+
+
+class TestWatchtowerRunFeedback:
+    def test_watchtower_includes_run_feedback(
+        self, client, admin_env, auth_headers, db_session, test_user
+    ):
+        profile = create_game_profile(db_session, user_id=test_user.id, is_active=0, name="FB test")
+        db_session.add(
+            PlayerRunFeedback(
+                user_id=test_user.id,
+                game_profile_id=profile.id,
+                outcome="defeat",
+                template_key="mq_game_basic_v1",
+                period_index=3,
+                defeat_reason="cash_negative_streak",
+                comment="Сложно, но понятно",
+            )
+        )
+        db_session.commit()
+
+        r = client.get("/api/admin/watchtower", headers=auth_headers)
+        assert r.status_code == 200
+        body = r.json()
+        assert "run_feedback" in body
+        assert any("Сложно" in (row.get("comment") or "") for row in body["run_feedback"])

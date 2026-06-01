@@ -92,8 +92,7 @@ events:
   content_class: profile
   event_slot: period_choice
   audience_template_keys:
-  - mq_game_professional_v1
-  - mq_game_manager_v1
+  - mq_game_tight_budget_v1
   event_domain: social_status
   title: Обновить деловой гардероб
   description: Внешний вид влияет на переговоры и самоощущение — можно вложиться или обойтись.

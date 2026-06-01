@@ -63,6 +63,8 @@ def test_admin_watchtower_ok(client, admin_env, auth_headers):
     assert "users" in data
     assert "profiles" in data
     assert "notifications" in data
+    assert "run_feedback" in data
+    assert isinstance(data["run_feedback"], list)
     assert "onboarding_funnel" in data
     assert "metrics_summary" in data
     assert len(data["onboarding_funnel"]["steps"]) == 8

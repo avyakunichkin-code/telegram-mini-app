@@ -106,7 +106,7 @@
 }
 
 /* Кнопки: всегда с рамкой; filled — заливка, outline/plain — остаются библиотечными */
-#root button:not(.tma-nav-icon-btn):not(.mqx-btn):not(.mqx-save-kind__row):not(.bottom-nav__cell):not(.mqx-dash-link):not(.mqx-finance-monetka__close):not(.mqx-capital-monetka__close):not(.mqx-action):not(.mqx-action-chip):not(.mqx-goal-dash__toggle):not(.events-carousel-dot):not(.events-carousel-arrow):not(.events-overlay-close):not(.mqx-events-card__close):not(.mqx-events-choice) {
+#root button:not(.tma-nav-icon-btn):not(.mqx-btn):not(.mqx-save-kind__row):not(.bottom-nav__cell):not(.mqx-dash-link):not(.mqx-needs-help-link):not(.mqx-needs-action--treat):not(.mqx-finance-monetka__close):not(.mqx-capital-monetka__close):not(.mqx-action):not(.mqx-action-chip):not(.mqx-goal-dash__toggle):not(.events-carousel-dot):not(.events-carousel-arrow):not(.events-overlay-close):not(.mqx-events-card__close):not(.mqx-events-choice) {
   box-shadow: 0 0 0 1px var(--tgui--outline) inset;
 }
 
@@ -230,7 +230,7 @@
 
 /* Hover/глубина для filled-кнопок (не трогаем outline/plain) */
 @media (hover: hover) {
-  #root button:not(.tma-nav-icon-btn):not(.mqx-btn):not(.mqx-save-kind__row):not(.bottom-nav__cell):not(.mqx-dash-link):not(.mqx-finance-monetka__close):not(.mqx-capital-monetka__close):not(.mqx-action):not(.mqx-action-chip):not(.mqx-goal-dash__toggle):not(.events-carousel-dot):not(.events-carousel-arrow):not(.events-overlay-close):not(.mqx-events-card__close):not(.mqx-events-choice) {
+  #root button:not(.tma-nav-icon-btn):not(.mqx-btn):not(.mqx-save-kind__row):not(.bottom-nav__cell):not(.mqx-dash-link):not(.mqx-needs-help-link):not(.mqx-needs-action--treat):not(.mqx-finance-monetka__close):not(.mqx-capital-monetka__close):not(.mqx-action):not(.mqx-action-chip):not(.mqx-goal-dash__toggle):not(.events-carousel-dot):not(.events-carousel-arrow):not(.events-overlay-close):not(.mqx-events-card__close):not(.mqx-events-choice) {
     transition:
       background-color 0.14s ease,
       box-shadow 0.14s ease,

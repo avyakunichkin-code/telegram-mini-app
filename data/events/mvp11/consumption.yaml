@@ -129,6 +129,7 @@ events:
   repeat_policy: repeatable
   scenario_shape: soft_offer
   cooldown_periods: 3
+  is_active: 0
   choices:
   - title: Абонемент на месяц
     effects:
@@ -143,6 +144,71 @@ events:
       needs_delta:
         comfort: -1
         status: -1
+- definition_key: mq11_coffee_takeaway_student
+  content_class: universal
+  event_slot: period_choice
+  audience_template_keys:
+  - mq_game_basic_v1
+  event_domain: consumption
+  title: Кофе у кампуса
+  description: Кофейня у универа предлагает абонемент на месяц — иначе платите по чашке между парами.
+  weight: 84
+  event_tier: 1
+  repeat_policy: repeatable
+  scenario_shape: soft_offer
+  cooldown_periods: 3
+  choices:
+  - title: Абонемент на месяц
+    effects:
+      cash_delta: -2400
+      needs_delta:
+        comfort: 5
+        social: 4
+  - title: Пару раз в неделю без абонемента
+    effects:
+      cash_delta: -900
+      needs_delta:
+        comfort: 2
+        social: 1
+  - title: Термос из дома
+    effects:
+      cash_delta: -350
+      needs_delta:
+        comfort: 0
+        social: -2
+- definition_key: mq11_coffee_takeaway_pro
+  content_class: universal
+  event_slot: period_choice
+  audience_template_keys:
+  - mq_game_tight_budget_v1
+  event_domain: consumption
+  title: Кофе у офиса
+  description: Кофейня у работы предлагает абонемент на месяц — иначе платите по чашке между встречами.
+  weight: 84
+  event_tier: 1
+  repeat_policy: repeatable
+  scenario_shape: soft_offer
+  cooldown_periods: 3
+  choices:
+  - title: Абонемент на месяц
+    effects:
+      cash_delta: -3200
+      needs_delta:
+        comfort: 5
+        status: 4
+        social: 2
+  - title: Пить реже, без абонемента
+    effects:
+      cash_delta: -1100
+      needs_delta:
+        comfort: 2
+        status: 1
+  - title: Отказаться от кофе вне дома
+    effects:
+      cash_delta: 0
+      needs_delta:
+        comfort: -2
+        status: -2
 - definition_key: mq11_clothing_clearance
   event_domain: consumption
   title: Распродажа одежды
@@ -215,3 +281,83 @@ events:
       cash_delta: 0
       needs_delta:
         comfort: -3
+- definition_key: mq11_phone_tariff_student
+  content_class: universal
+  event_slot: period_choice
+  audience_template_keys:
+  - mq_game_basic_v1
+  event_domain: consumption
+  title: Тариф мобильной связи
+  description: Оператор предлагает больше гигабайт и безлимит на мессенджеры — удобно для учёбы и чатов.
+  weight: 80
+  event_tier: 1
+  repeat_policy: repeatable
+  scenario_shape: soft_offer
+  cooldown_periods: 4
+  choices:
+  - title: Тариф «безлимит»
+    effects:
+      cash_delta: -900
+      expense_line:
+        category_key: communications
+        amount_monthly: 1100
+        title: Мобильная связь
+      needs_delta:
+        comfort: 7
+        social: 4
+  - title: Чуть больше трафика
+    effects:
+      cash_delta: -500
+      expense_line:
+        category_key: communications
+        amount_monthly: 650
+        title: Мобильная связь
+      needs_delta:
+        comfort: 4
+        social: 2
+  - title: Оставить как есть
+    effects:
+      cash_delta: 0
+      needs_delta:
+        comfort: -2
+        social: -2
+- definition_key: mq11_phone_tariff_pro
+  content_class: universal
+  event_slot: period_choice
+  audience_template_keys:
+  - mq_game_tight_budget_v1
+  event_domain: consumption
+  title: Тариф мобильной связи
+  description: Оператор предлагает корпоративный пакет с роумингом — удобно для звонков клиентам, но дороже.
+  weight: 80
+  event_tier: 1
+  repeat_policy: repeatable
+  scenario_shape: soft_offer
+  cooldown_periods: 4
+  choices:
+  - title: Пакет с роумингом
+    effects:
+      cash_delta: -1200
+      expense_line:
+        category_key: communications
+        amount_monthly: 1400
+        title: Мобильная связь
+      needs_delta:
+        comfort: 6
+        status: 8
+  - title: Базовый апгрейд
+    effects:
+      cash_delta: -600
+      expense_line:
+        category_key: communications
+        amount_monthly: 800
+        title: Мобильная связь
+      needs_delta:
+        comfort: 3
+        status: 4
+  - title: Не менять тариф
+    effects:
+      cash_delta: 0
+      needs_delta:
+        comfort: -2
+        status: -3

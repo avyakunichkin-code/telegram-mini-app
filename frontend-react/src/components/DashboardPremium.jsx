@@ -340,6 +340,7 @@ export function DashboardPremium({
             <MqxNeedsDash
               needs={overview?.needs}
               templateKey={overview?.victory?.template_key ?? overview?.starter_template_key}
+              needsZeroPeriodsStreak={overview?.needs_zero_periods_streak}
               treatSelf={overview?.treat_self}
               onHelp={() => setNeedsHelpOpen(true)}
               onTreatSelf={() => setTreatOpen(true)}

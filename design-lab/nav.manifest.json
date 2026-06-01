@@ -88,6 +88,11 @@
           "kind": "lab"
         },
         {
+          "label": "Z-NEEDS v7 (плоский блок)",
+          "path": "character-needs/dashboard-needs-v7-round/index.html",
+          "kind": "lab"
+        },
+        {
           "label": "O2 Guidance strip",
           "path": "onboarding-o2/guidance-strip-round/index.html",
           "kind": "lab",

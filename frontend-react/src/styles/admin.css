@@ -292,6 +292,31 @@ html[data-mq-layout='admin'] .mq-app-fill {
   color: var(--mq-emerald, #059669);
 }
 
+.admin-watchtower__badge--win {
+  background: color-mix(in srgb, var(--mq-emerald, #059669) 18%, transparent);
+  color: var(--mq-emerald, #059669);
+}
+
+.admin-watchtower__badge--loss {
+  background: color-mix(in srgb, var(--mq-danger, #dc2626) 15%, transparent);
+  color: var(--mq-danger, #dc2626);
+}
+
+.admin-watchtower__block-hint {
+  margin: -4px 0 12px;
+  font-size: var(--mq-fs-caption);
+}
+
+.admin-watchtower__feedback-comment {
+  display: block;
+  max-width: 36ch;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: var(--mq-fs-caption);
+  line-height: 1.35;
+}
+
 .admin-watchtower__step-tag {
   font-size: var(--mq-fs-small);
   opacity: 0.7;

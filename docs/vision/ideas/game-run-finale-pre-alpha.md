@@ -5,7 +5,7 @@ last_reviewed: 2026-06-01
 tracks: ge1, pre-alpha, run-finale, player-feedback
 idea_refine: 2026-06-01
 design_lab: design-lab/run-finale/
-related: specs/features/SPEC_victory-v2.md, foundation/SPEC_PRODUCT.md §3.3
+related: specs/features/SPEC_game-run-finale.md, specs/features/SPEC_victory-v2.md, foundation/SPEC_PRODUCT.md §3.3
 not_in_scope: specs/features/SPEC_achievements.md (M12 chains — MVP 2.0 / Plan)
 ---
 
@@ -106,9 +106,8 @@ CTA: **Новая игра** | **Играть дальше** (только по�
 
 ## Следующий шаг
 
-1. Review [`design-lab/run-finale/`](../../../design-lab/run-finale/) → ★ в чате.  
-2. `spec-driven-development` → `docs/specs/features/SPEC_game-run-finale.md`.  
-3. `incremental-implementation` + `frontend-ui-engineering`.
+- Канон prod: [`SPEC_game-run-finale.md`](../../specs/features/SPEC_game-run-finale.md) (2026-06-01).  
+- Backlog: комментарий с дашборда (GE1-FB-2), PA-T2 по assumptions.
 
 ## Verdict (idea-refine)
 

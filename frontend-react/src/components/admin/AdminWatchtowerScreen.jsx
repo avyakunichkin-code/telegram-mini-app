@@ -266,6 +266,51 @@ export function AdminWatchtowerScreen({ onBack }) {
     _id: String(n.id),
   }));
 
+  const runFeedbackColumns = useMemo(
+    () => [
+      { key: 'when', label: 'Когда', render: (r) => formatDt(r.created_at) },
+      { key: 'user', label: 'Игрок', render: (r) => `${r.username} (#${r.user_id})` },
+      {
+        key: 'profile',
+        label: 'Профиль',
+        render: (r) => `${r.profile_name} (#${r.game_profile_id})`,
+      },
+      {
+        key: 'outcome',
+        label: 'Исход',
+        render: (r) => (
+          <span
+            className={
+              r.outcome === 'victory'
+                ? 'admin-watchtower__badge admin-watchtower__badge--win'
+                : 'admin-watchtower__badge admin-watchtower__badge--loss'
+            }
+          >
+            {r.outcome_label || r.outcome}
+          </span>
+        ),
+      },
+      { key: 'period', label: 'Период', render: (r) => r.period_index },
+      { key: 'template', label: 'Шаблон', render: (r) => r.template_key || '—' },
+      {
+        key: 'comment',
+        label: 'Комментарий',
+        render: (r) => (
+          <span className="admin-watchtower__feedback-comment" title={r.comment}>
+            {r.comment_preview || r.comment || '—'}
+          </span>
+        ),
+      },
+    ],
+    [],
+  );
+
+  const runFeedback = (data?.run_feedback ?? []).map((r) => ({
+    ...r,
+    _key: `rf-${r.id}`,
+    _id: String(r.id),
+  }));
+
   const openProfile = useCallback(
     (row) => {
       const next = new URLSearchParams(searchParams);
@@ -344,6 +389,26 @@ export function AdminWatchtowerScreen({ onBack }) {
           <section className="mq-card admin-watchtower__block">
             <h2 className="admin-watchtower__block-title">Журнал алертов</h2>
             <Table columns={notificationColumns} rows={notifications} />
+          </section>
+
+          <section className="mq-card admin-watchtower__block">
+            <h2 className="admin-watchtower__block-title">Отзывы с финала партии</h2>
+            <p className="mq-muted admin-watchtower__block-hint">
+              GE1 · комментарии с экрана победы/поражения ({runFeedback.length})
+            </p>
+            {runFeedback.length === 0 ? (
+              <p className="mq-muted">Пока нет отзывов.</p>
+            ) : (
+              <Table
+                columns={runFeedbackColumns}
+                rows={runFeedback}
+                onRowClick={(r) => {
+                  const next = new URLSearchParams(searchParams);
+                  next.set('profile', String(r.game_profile_id));
+                  setSearchParams(next, { replace: true });
+                }}
+              />
+            )}
           </section>
         </>
       ) : null}

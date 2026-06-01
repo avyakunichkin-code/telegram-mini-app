@@ -1,5 +1,12 @@
-import { useMemo, useState } from 'react';
+import { useMemo } from 'react';
 
+import {
+  IconHelpBook,
+  IconHelpBookQuestionInside,
+  IconHelpBookWithBadge,
+  IconTreatHeart,
+} from '../icons/MqxContextHelpIcons';
+import { showNotification } from '../../notifications';
 import { PersonaPortrait } from '../brand/PersonaPortrait';
 
 const AXES = [
@@ -49,29 +56,11 @@ function minAxis(values) {
   return min;
 }
 
-function overallStatus(values) {
-  let worst = 'ok';
-  for (const a of AXES) {
-    const z = zone(values[a.key]);
-    if (z === 'zero') return 'zero';
-    if (z === 'distressed') worst = 'distressed';
-    else if (z === 'low' && worst === 'ok') worst = 'low';
-  }
-  return worst;
-}
-
-function overallStatusCopy(status) {
-  if (status === 'zero') return 'Критично';
-  if (status === 'distressed') return 'Истощение';
-  if (status === 'low') return 'Есть просадка';
-  return 'Всё в норме';
-}
-
-function NeedsBarRow({ axis, value, compact = false }) {
+function NeedsBarRow({ axis, value }) {
   const pct = clampPct(value);
   const z = zone(value);
   return (
-    <div className={`mqx-needs-bar-row${compact ? ' mqx-needs-bar-row--compact' : ''}`}>
+    <div className="mqx-needs-bar-row">
       <span className="mqx-needs-bar-label">{axis.label}</span>
       <div
         className="mqx-needs-bar-track"
@@ -90,6 +79,108 @@ function NeedsBarRow({ axis, value, compact = false }) {
   );
 }
 
+/** @typedef {'a' | 'e1' | 'e2' | 'e3'} MqxNeedsActionsVariant */
+
+function NeedsHeadActions({
+  variant,
+  onHelp,
+  treatSelf,
+  treatAvailable,
+  treatLockedHint,
+  onTreatClick,
+}) {
+  const helpLabel = 'Подсказки';
+  const treatLabel = treatAvailable ? 'Улучшить потребности' : treatLockedHint;
+
+  const treatBtn = (className, { filled = false } = {}) =>
+    treatSelf ? (
+      <button
+        type="button"
+        className={[className, !treatAvailable && 'is-disabled'].filter(Boolean).join(' ')}
+        aria-disabled={!treatAvailable}
+        aria-label={treatLabel}
+        onClick={onTreatClick}
+      >
+        <IconTreatHeart filled={filled} />
+        <span className="mqx-needs-sr-only">Улучшить</span>
+      </button>
+    ) : null;
+
+  if (variant === 'e1') {
+    return (
+      <div className="mqx-needs-actions">
+        <button type="button" className="mqx-help-icon-btn" onClick={() => onHelp?.()} aria-label={helpLabel}>
+          <IconHelpBook size={17} />
+        </button>
+        {treatBtn('mqx-treat-heart-btn')}
+      </div>
+    );
+  }
+
+  if (variant === 'e2') {
+    return (
+      <div className="mqx-needs-actions">
+        <button
+          type="button"
+          className="mqx-help-icon-btn mqx-help-icon-btn--badge"
+          onClick={() => onHelp?.()}
+          aria-label={helpLabel}
+        >
+          <IconHelpBookWithBadge size={17} />
+          <span className="mqx-help-icon-btn__badge" aria-hidden="true">
+            ?
+          </span>
+        </button>
+        {treatBtn('mqx-treat-heart-btn mqx-treat-heart-btn--ghost')}
+      </div>
+    );
+  }
+
+  if (variant === 'e3') {
+    return (
+      <div className="mqx-needs-actions">
+        <button
+          type="button"
+          className="mqx-help-icon-btn mqx-help-icon-btn--inside"
+          onClick={() => onHelp?.()}
+          aria-label={helpLabel}
+        >
+          <IconHelpBookQuestionInside size={16} />
+        </button>
+        {treatBtn('mqx-treat-heart-btn mqx-treat-heart-btn--dot', { filled: true })}
+      </div>
+    );
+  }
+
+  return (
+    <div className="mqx-needs-actions">
+      <button type="button" className="mqx-needs-help-link" onClick={() => onHelp?.()}>
+        Подсказки
+        <span className="mqx-needs-help-link__arrow" aria-hidden="true">
+          →
+        </span>
+      </button>
+      {treatSelf ? (
+        <button
+          type="button"
+          className={['mqx-needs-action', 'mqx-needs-action--treat', !treatAvailable && 'is-disabled']
+            .filter(Boolean)
+            .join(' ')}
+          aria-disabled={!treatAvailable}
+          aria-label={treatLabel}
+          onClick={onTreatClick}
+        >
+          Улучшить
+        </button>
+      ) : null}
+    </div>
+  );
+}
+
+/**
+ * Z-NEEDS v7: заголовок секции снаружи, 4 шкалы без accordion.
+ * Lab: design-lab/character-needs/dashboard-needs-v7-round/ (e1–e3 иконки, v7-A архив).
+ */
 export function MqxNeedsDash({
   needs,
   templateKey = null,
@@ -97,13 +188,12 @@ export function MqxNeedsDash({
   treatSelf = null,
   onTreatSelf,
   onHelp,
+  /** @type {MqxNeedsActionsVariant} */
+  actionsVariant = 'e1',
   className = '',
 }) {
   const values = useMemo(() => pickAxisValues(needs), [needs]);
-  const [expanded, setExpanded] = useState(false);
-
   const min = useMemo(() => (values ? minAxis(values) : null), [values]);
-  const status = useMemo(() => (values ? overallStatus(values) : 'ok'), [values]);
 
   if (!values || !min) return null;
 
@@ -111,132 +201,73 @@ export function MqxNeedsDash({
   const showRisk = streak > 0;
   const treatAvailable = Boolean(treatSelf?.available);
   const cooldown = Number(treatSelf?.cooldown_periods_remaining) || 0;
-  const treatHint = treatAvailable
-    ? 'Списание с карты · редкий запасной путь'
-    : cooldown > 0
-      ? `Доступно через ${cooldown} периодов`
-      : 'Сейчас недоступно';
+  const treatLockedHint =
+    cooldown > 0 ? `Разблокируется через ${cooldown} периодов` : 'Сейчас недоступно';
 
-  const openTreat = (e) => {
-    e.stopPropagation();
-    if (!treatAvailable) return;
+  const handleTreatClick = () => {
+    if (!treatAvailable) {
+      showNotification(treatLockedHint, 'info', { ttlMs: 3200 });
+      return;
+    }
     onTreatSelf?.();
   };
 
-  const openHelp = (e) => {
-    e.stopPropagation();
-    onHelp?.();
-  };
-
-  const toggleExpanded = () => setExpanded((v) => !v);
-
   return (
     <section
-      className={[
-        'mqx-needs-block',
-        expanded && 'is-expanded',
-        showRisk && 'is-bleed-risk',
-        className,
-      ]
-        .filter(Boolean)
-        .join(' ')}
-      data-lab-variant="v4"
-      aria-labelledby="needs-title"
+      className={['mqx-needs-section', className].filter(Boolean).join(' ')}
+      data-actions="a"
+      aria-labelledby="needs-section-title"
     >
-      <div
-        className={['mqx-needs-risk', showRisk && 'is-visible'].filter(Boolean).join(' ')}
-        role="alert"
-        hidden={!showRisk}
-      >
-        {showRisk
-          ? `Риск поражения: ${streak} из 3 месяцев с нулём на «${min.label}»`
-          : null}
+      <div className="mqx-needs-section__head">
+        <h2 id="needs-section-title" className="mqx-finance-static__title">
+          Потребности
+        </h2>
+        <div className="mqx-needs-actions">
+          <button type="button" className="mqx-needs-help-link" onClick={() => onHelp?.()}>
+            Подсказки
+            <span className="mqx-needs-help-link__arrow" aria-hidden="true">
+              →
+            </span>
+          </button>
+          {treatSelf ? (
+            <button
+              type="button"
+              className={[
+                'mqx-needs-action',
+                'mqx-needs-action--treat',
+                !treatAvailable && 'is-disabled',
+              ]
+                .filter(Boolean)
+                .join(' ')}
+              aria-disabled={!treatAvailable}
+              aria-label={treatAvailable ? 'Улучшить потребности' : treatLockedHint}
+              onClick={handleTreatClick}
+            >
+              Улучшить
+            </button>
+          ) : null}
+        </div>
       </div>
 
-      <div className="mqx-needs-body">
-        <div className="mqx-needs-avatar" aria-hidden="true">
-          <PersonaPortrait
-            templateKey={templateKey || 'mq_game_basic_v1'}
-            size="dash"
-            className="mqx-needs-avatar__persona"
-          />
-        </div>
-
-        <div className="mqx-needs-main">
-          <div
-            className="mqx-needs-block__header"
-            role="button"
-            tabIndex={0}
-            aria-expanded={expanded ? 'true' : 'false'}
-            aria-controls="needs-panel"
-            onClick={toggleExpanded}
-            onKeyDown={(e) => {
-              if (e.key !== 'Enter' && e.key !== ' ') return;
-              if (e.target.closest('.mqx-needs-improve-link, .mqx-needs-help-btn')) return;
-              e.preventDefault();
-              toggleExpanded();
-            }}
-          >
-            <div className="mqx-needs-block__head-text">
-              <h2 id="needs-title" className="mqx-needs-block__title mqx-finance-static__title">
-                Потребности
-              </h2>
-              {!expanded ? (
-                <p className="mqx-needs-block__summary" data-status={status}>
-                  {overallStatusCopy(status)}
-                </p>
-              ) : null}
-            </div>
-            {!expanded ? (
-              <button type="button" className="mqx-needs-improve-link" onClick={openHelp}>
-                как улучшить →
-              </button>
-            ) : null}
-            <svg
-              className="mqx-needs-block__chevron"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              aria-hidden="true"
-            >
-              <path d="m6 9 6 6 6-6" />
-            </svg>
+      <div className="mqx-needs-block">
+        {showRisk ? (
+          <div className="mqx-needs-risk is-visible" role="alert">
+            {`Риск поражения: ${streak} из 3 месяцев с нулём на «${min.label}»`}
           </div>
+        ) : null}
 
-          <div id="needs-panel" className="mqx-needs-panel">
-            {!expanded ? (
-              <div className="mqx-needs-compact">
-                <NeedsBarRow axis={min} value={values[min.key]} compact />
-              </div>
-            ) : (
-              <div className="mqx-needs-expanded">
-                {AXES.map((a) => (
-                  <NeedsBarRow key={a.key} axis={a} value={values[a.key]} />
-                ))}
-                <div className="mqx-needs-footer">
-                  {treatSelf ? (
-                    <button
-                      type="button"
-                      className="mqx-needs-treat-btn"
-                      disabled={!treatAvailable}
-                      title={treatHint}
-                      onClick={openTreat}
-                    >
-                      Порадовать себя
-                    </button>
-                  ) : null}
-                  <button
-                    type="button"
-                    className="mqx-needs-help-btn"
-                    aria-label="Как улучшить потребности"
-                    onClick={openHelp}
-                  >
-                    ?
-                  </button>
-                </div>
-              </div>
-            )}
+        <div className="mqx-needs-body">
+          <div className="mqx-needs-avatar" aria-hidden="true">
+            <PersonaPortrait
+              templateKey={templateKey || 'mq_game_basic_v1'}
+              size="dash"
+              className="mqx-needs-avatar__persona"
+            />
+          </div>
+          <div className="mqx-needs-bars">
+            {AXES.map((a) => (
+              <NeedsBarRow key={a.key} axis={a} value={values[a.key]} />
+            ))}
           </div>
         </div>
       </div>

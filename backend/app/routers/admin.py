@@ -16,6 +16,7 @@ from ..admin.catalogs import fetch_catalog_rows, get_catalog_spec, list_catalog_
 from ..admin.metrics_summary import build_metrics_summary
 from ..admin.onboarding_funnel import build_onboarding_funnel, user_guidance_admin_fields
 from ..admin.profile_inspector import build_profile_inspector
+from ..admin.run_feedback import build_run_feedback_rows
 from ..admin.stuck_scan import profile_stuck_kind, scan_stuck_and_emit
 from ..admin.notify_messages import format_alert_message_ru, kind_label_ru
 from ..database import get_db
@@ -79,6 +80,22 @@ class AdminNotificationRow(BaseModel):
     created_at: Optional[datetime] = None
 
 
+class AdminRunFeedbackRow(BaseModel):
+    id: int
+    user_id: int
+    username: str
+    game_profile_id: int
+    profile_name: str
+    outcome: str
+    outcome_label: str
+    template_key: Optional[str] = None
+    period_index: int
+    defeat_reason: Optional[str] = None
+    comment: str
+    comment_preview: str
+    created_at: Optional[datetime] = None
+
+
 class AdminMetricsSummary(BaseModel):
     window_days: int
     users_total: int
@@ -100,6 +117,7 @@ class AdminWatchtowerResponse(BaseModel):
     users: List[AdminUserRow]
     profiles: List[AdminProfileRow]
     notifications: List[AdminNotificationRow]
+    run_feedback: List[AdminRunFeedbackRow] = []
     onboarding_funnel: AdminOnboardingFunnel
     metrics_summary: AdminMetricsSummary
 
@@ -260,6 +278,7 @@ async def admin_watchtower(
     user_limit: int = Query(50, ge=1, le=200),
     profile_limit: int = Query(50, ge=1, le=200),
     notification_limit: int = Query(100, ge=1, le=500),
+    run_feedback_limit: int = Query(50, ge=1, le=200),
     _admin: User = Depends(require_admin_user),
     db: Session = Depends(get_db),
 ):
@@ -346,6 +365,7 @@ async def admin_watchtower(
             )
             for n in notifications
         ],
+        run_feedback=[AdminRunFeedbackRow(**row) for row in build_run_feedback_rows(db, limit=run_feedback_limit)],
     )
 
 

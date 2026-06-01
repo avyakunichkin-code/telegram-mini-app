@@ -41,7 +41,7 @@
 | **PW1** | PWA / standalone + стабильный resume (lock/unlock) | Frontend+Ops+Doc | 🟡 фаза 0–1 ✅; **PW1-004/104 PASS**; [PLAN](../plans/PLAN_pwa-standalone.md) |
 | **AF1** | Воронка «игра → советник» (гипотеза) | Doc+Marketing+Frontend | 🟡 handbook; **Pre-Alpha: без CTA советника** (2026-05-30) |
 | **T1** | Пошаговый месяц без таймера (TB1) | DB+Backend+Frontend+Doc | ✅ **implemented** — [idea](../vision/ideas/turn-based-period-no-timer.md) · [plan](../plans/PLAN_turn-based-period-no-timer.md) · TB1.1 чипы — backlog |
-| **GE1** | Run Finale — финал партии, feedback, бейджи сохранений | DB+Backend+Frontend+Doc | 🟡 idea ★ · [game-run-finale-pre-alpha](../vision/ideas/game-run-finale-pre-alpha.md) · lab `run-finale/` |
+| **GE1** | Run Finale — финал партии, feedback, бейджи сохранений | DB+Backend+Frontend+Doc | 🟢 v1 prod · [SPEC_game-run-finale](../specs/features/SPEC_game-run-finale.md) · idea [game-run-finale-pre-alpha](../vision/ideas/game-run-finale-pre-alpha.md) · lab `run-finale/` |
 
 > **GAME.md §0.2 / M11:** синхронизировано 2026-05-26 (Task 0.1): `cooldown_periods` ✅, MQ-116 → [`MVP_AUDIT_VS_SPEC`](../foundation/MVP_AUDIT_VS_SPEC.md) §M11.
 

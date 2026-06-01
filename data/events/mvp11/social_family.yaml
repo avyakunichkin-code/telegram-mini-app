@@ -91,3 +91,39 @@ events:
       needs_delta:
         social: 4
         comfort: -2
+- definition_key: mq11_friend_outing_pro
+  content_class: profile
+  event_slot: period_choice
+  audience_template_keys:
+  - mq_game_tight_budget_v1
+  event_domain: social_family
+  title: Коллеги зовут после работы
+  description: 'В чате офиса: «Соберёмся в пятницу?» Можно поддержать команду — или честно
+    сказать, что нужен отдых дома.'
+  weight: 84
+  event_tier: 1
+  repeat_policy: repeatable
+  scenario_shape: soft_offer
+  cooldown_periods: 3
+  choices:
+  - title: Ужин и бар
+    effects:
+      cash_delta: -5800
+      needs_delta:
+        social: 18
+        status: 10
+        health: -2
+  - title: Только кофе с коллегами
+    effects:
+      cash_delta: -2200
+      needs_delta:
+        social: 12
+        status: 5
+        comfort: 3
+  - title: Отказаться — устал
+    effects:
+      cash_delta: 0
+      needs_delta:
+        social: -6
+        status: -3
+        comfort: 2

@@ -92,3 +92,35 @@ events:
       needs_delta:
         health: -4
         comfort: -3
+- definition_key: mq11_dental_checkup
+  content_class: universal
+  event_slot: period_choice
+  audience_template_keys:
+  - all
+  event_domain: health
+  title: Осмотр у стоматолога
+  description: Клиника напоминает о плановом осмотре — профилактика дешевле, чем лечение зуба «когда заболит».
+  weight: 70
+  event_tier: 2
+  repeat_policy: repeatable
+  scenario_shape: soft_offer
+  cooldown_periods: 6
+  choices:
+  - title: Полный осмотр и чистка
+    effects:
+      cash_delta: -9500
+      needs_delta:
+        health: 14
+        comfort: 5
+  - title: Только осмотр
+    effects:
+      cash_delta: -3800
+      needs_delta:
+        health: 8
+        comfort: 2
+  - title: Отложить визит
+    effects:
+      cash_delta: 0
+      needs_delta:
+        health: -6
+        comfort: -4
