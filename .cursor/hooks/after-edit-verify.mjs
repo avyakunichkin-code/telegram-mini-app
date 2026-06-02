@@ -82,7 +82,7 @@ if (/docs\/specs\/features\//.test(filePath)) {
 
 if (/backend\/migrations\//.test(filePath) && /\.sql$/.test(filePath)) {
   hints.push(
-    'ТВОЙ ХОД hook: SQL-миграция — проверь `backend/migrations/README.md`, `migrate.ps1`, согласование с `models.py` и ADR.',
+    'ТВОЙ ХОД hook: SQL-миграция — проверь `backend/migrations/README.md`, `backend/scripts/db.sh`, согласование с `models.py` и ADR.',
   );
 }
 

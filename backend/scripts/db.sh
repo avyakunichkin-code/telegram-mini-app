@@ -11,7 +11,7 @@ set -euo pipefail
 #   db.sh migrate [--baseline-only|--skip-baseline]
 #   db.sh seed
 #   db.sh events-sync
-#   db.sh bootstrap [--with-events]
+#   db.sh bootstrap
 #   db.sh baseline-dump          (pg_dump via existing dump_schema_baseline.sh)
 #   db.sh baseline-verify        (python verify_schema_baseline.py)
 #   db.sh archive-incrementals   (move old migrations to migrations/archive/)
@@ -19,7 +19,7 @@ set -euo pipefail
 # Examples:
 #   export DATABASE_URL="postgresql://USER:PASS@HOST:5432/DBNAME"
 #   bash backend/scripts/db.sh migrate
-#   bash backend/scripts/db.sh bootstrap --with-events
+#   bash backend/scripts/db.sh bootstrap
 
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 MIGRATIONS_DIR="${ROOT}/migrations"
@@ -103,24 +103,10 @@ cmd_bootstrap() {
   require_env
   require_cmd psql
 
-  local with_events=0
-  while [[ $# -gt 0 ]]; do
-    case "$1" in
-      --with-events) with_events=1; shift ;;
-      *) echo "Unknown bootstrap flag: $1" >&2; exit 2 ;;
-    esac
-  done
-
-  echo "[1/3] migrate --baseline-only"
+  echo "[1/2] migrate --baseline-only"
   cmd_migrate --baseline-only
-  echo "[2/3] seed"
+  echo "[2/2] seed (includes events sync)"
   cmd_seed
-  if [[ $with_events -eq 1 ]]; then
-    echo "[3/3] events-sync"
-    cmd_events_sync
-  else
-    echo "[3/3] skip events-sync (use --with-events)"
-  fi
   echo "[OK] bootstrap complete"
 }
 
@@ -146,7 +132,7 @@ Commands:
   migrate [--baseline-only|--skip-baseline]
   seed
   events-sync
-  bootstrap [--with-events]
+  bootstrap
   baseline-dump
   baseline-verify
   archive-incrementals [--whatif|--force]

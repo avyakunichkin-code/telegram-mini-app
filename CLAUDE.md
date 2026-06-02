@@ -149,7 +149,7 @@
 Без Alembic.
 
 - Каталог: [`backend/migrations/`](backend/migrations/) — процедура и нумерация: [`backend/migrations/README.md`](backend/migrations/README.md).
-- Прогон: [`backend/migrate.ps1`](backend/migrate.ps1) (нужны `psql` и `DATABASE_URL`); дополнительно при старте API — лёгкая автомиграция в `backend/main.py`.
+- Прогон: `bash backend/scripts/db.sh migrate` (нужны `psql` и `DATABASE_URL`); дополнительно при старте API — лёгкая автомиграция в `backend/main.py`.
 
 ---
 

@@ -13,7 +13,7 @@ cd backend
 python scripts/balance_playtest.py
 
 # Или PowerShell-обёртка
-.\scripts\balance_playtest.ps1
+bash backend/scripts/balance_playtest.sh
 
 # Один сценарий
 python scripts/balance_simulate.py --policy tutorial --periods 40 --out ../docs/balance/reports/current.json --format md

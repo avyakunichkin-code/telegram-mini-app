@@ -67,7 +67,7 @@ confidentiality: team-only
 ### Контент и баланс событий
 
 - Ребаланс каталога MVP11 (lifecycle, trade-off), усилены проверки **Pareto / free lunch** в тестах.
-- Миграции: упрощение baseline, параметры `-BaselineOnly` / `-SkipBaseline` в `migrate.ps1`.
+- Миграции: упрощение baseline, режимы `--baseline-only` / `--skip-baseline` в `backend/scripts/db.sh migrate`.
 
 ### Инфраструктура docs / агентов
 

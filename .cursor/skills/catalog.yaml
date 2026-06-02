@@ -27,6 +27,27 @@ results_root: .cursor/skills/results
 template: .cursor/skills/templates/skill-test-spec.md
 
 skills:
+  db-baselines-and-migrations:
+    category: build
+    priority: high
+    status: active
+    tier: support
+    spec: .cursor/skills/specs/build/db-baselines-and-migrations.md
+    context:
+      must_read:
+        - backend/migrations/README.md
+        - backend/scripts/dump_schema_baseline.py
+        - backend/migrations/0000_schema_baseline.sql
+      writes_to:
+        - backend/migrations/
+        - backend/scripts/
+      next_skill:
+        - test-driven-development
+        - code-review-and-quality
+        - documentation-and-adrs
+    last_static: "2026-06-02"
+    last_static_result: UNKNOWN
+
   balance-playtest:
     category: verify
     priority: medium

@@ -8,8 +8,6 @@ from sqlalchemy import inspect, text
 
 from app.cors_settings import resolve_cors_allow_origin_regex, resolve_cors_allow_origins
 from app.database import engine, Base
-from app.victory.seeds import VICTORY_CONFIG_BY_TEMPLATE_KEY, victory_config_json_for_template
-from app.finance.expense_defaults import expense_budget_for_template
 from app.finance.expenses import ensure_expense_category_catalog
 from app.routers import (
     auth_router,
@@ -27,8 +25,6 @@ from app.routers import (
     needs_router,
 )
 
-from app.seeds.capital_catalog import upsert_capital_liability_catalog
-from app.seeds.game_starter_templates import GAME_STARTER_TEMPLATE_SEEDS
 
 
 def _validate_database_url() -> None:
@@ -324,87 +320,8 @@ def ensure_schema_compatibility() -> None:
                 connection.execute(text("ALTER TABLE game_profiles DROP COLUMN mode"))
             print("[OK] Удалена колонка game_profiles.mode (save_kind)")
 
-    # События: light/hardcore → game
-    if "event_definitions" in inspector.get_table_names():
-        with engine.begin() as connection:
-            connection.execute(
-                text(
-                    "UPDATE event_definitions SET mode = 'game' WHERE mode IN ('light', 'hardcore')"
-                )
-            )
-
-    # Каталог шаблонов старта Game (идемпотентно)
-    inspector = inspect(engine)
-    if "game_starter_templates" in inspector.get_table_names():
-        gst_cols = {item["name"] for item in inspector.get_columns("game_starter_templates")}
-        if "applies_to_save_kind" not in gst_cols:
-            with engine.begin() as connection:
-                connection.execute(
-                    text(
-                        "ALTER TABLE game_starter_templates ADD COLUMN applies_to_save_kind VARCHAR(20) NOT NULL DEFAULT 'game'"
-                    )
-                )
-        stmt = text(
-            """
-            INSERT INTO game_starter_templates
-              (template_key, title, difficulty_rank, base_monthly_lifestyle_expense,
-               blueprint_json, victory_config_json, is_active, sort_order, applies_to_save_kind)
-            VALUES
-              (:template_key, :title, :difficulty_rank, :base_expense,
-               :blueprint_json, '{}', 1, :sort_order, 'game')
-            ON CONFLICT (template_key) DO UPDATE SET
-              title = EXCLUDED.title,
-              difficulty_rank = EXCLUDED.difficulty_rank,
-              base_monthly_lifestyle_expense = EXCLUDED.base_monthly_lifestyle_expense,
-              blueprint_json = EXCLUDED.blueprint_json,
-              sort_order = EXCLUDED.sort_order
-            """
-        )
-        with engine.begin() as connection:
-            for seed in GAME_STARTER_TEMPLATE_SEEDS:
-                tk = seed["template_key"]
-                bp = dict(seed["blueprint"])
-                base_exp = float(seed["base_expense"])
-                bp["expense_budget"] = expense_budget_for_template(tk, base_exp, bp)
-                connection.execute(
-                    stmt,
-                    {
-                        "template_key": tk,
-                        "title": seed["title"],
-                        "difficulty_rank": int(seed["difficulty_rank"]),
-                        "base_expense": base_exp,
-                        "sort_order": int(seed["sort_order"]),
-                        "blueprint_json": json.dumps(bp, ensure_ascii=False),
-                    },
-                )
-            update_victory = text(
-                """
-                UPDATE game_starter_templates
-                SET victory_config_json = :victory_json
-                WHERE template_key = :template_key
-                """
-            )
-            for tk in VICTORY_CONFIG_BY_TEMPLATE_KEY:
-                connection.execute(
-                    update_victory,
-                    {
-                        "template_key": tk,
-                        "victory_json": victory_config_json_for_template(tk),
-                    },
-                )
-
-    # DL1: каталог обязательств (car_loan secured, mortgage metadata)
-    inspector = inspect(engine)
-    if "liability_templates" in inspector.get_table_names():
-        lt_cols = {item["name"] for item in inspector.get_columns("liability_templates")}
-        if "liability_kind" in lt_cols:
-            from app.database import SessionLocal
-
-            db = SessionLocal()
-            try:
-                upsert_capital_liability_catalog(db)
-            finally:
-                db.close()
+    # NOTE: DML (seeds/backfills) не должно жить в ensure_schema_compatibility.
+    # Сиды запускаются отдельно: app.seeds.runner.seed_all (startup) или scripts/seed_db.py.
 
     # Optional lint: if victory_goals table exists, report issues.
     # This is non-blocking by default to avoid breaking boot on incomplete DBs.
@@ -466,7 +383,10 @@ def _startup_db_bootstrap() -> None:
 
     _db_boot = SessionLocal()
     try:
-        ensure_expense_category_catalog(_db_boot)
+        # Reference data + catalogs (idempotent).
+        from app.seeds.runner import seed_all
+
+        seed_all(_db_boot)
         _db_boot.commit()
     except Exception:
         _db_boot.rollback()

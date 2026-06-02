@@ -1,0 +1,42 @@
+---
+description: Guardrails for PostgreSQL migrations and schema baseline (backend/migrations). Keeps baseline DDL-only, enforces FK→UNIQUE ordering, avoids redundant indexes.
+globs: backend/migrations/**/*.sql,backend/scripts/dump_schema_baseline.py
+alwaysApply: false
+---
+
+# ТВОЙ ХОД — DB migrations guardrails (PostgreSQL)
+
+Эта rule — **короткий guardrail**. Подробная процедура, чеклисты и команды — в skill `db-baselines-and-migrations`.
+
+## MUST (обязательно)
+
+- **Baseline (`backend/migrations/0000_schema_baseline.sql`)**: строго **DDL-only**.
+  - Не должно быть `INSERT/UPDATE/DELETE`
+  - Не должно быть маркеров склейки миграций (`-- >>> 00xx_*.sql`)
+- **Порядок DDL**: родительские таблицы/типы → дочерние таблицы с FK → индексы.
+- **FK на “natural key”** (не PK): в таблице-родителе должен существовать **`UNIQUE/PK` на эти колонки до создания FK**.
+  - Иначе ошибка Postgres: `there is no unique constraint matching given keys for referenced table`.
+- **Индексы**: не добавляй явный индекс на `id`, если `id` уже `PRIMARY KEY`.
+
+## NEVER (запрещено)
+
+- Добавлять DML в baseline.
+- Склеивать baseline с историей миграций “для удобства”.
+- Делать “тихий” backfill без `WHERE`‑ограничений и идемпотентности (если это data-migration — явно пометь и огради).
+
+## Быстрые проверки (bash)
+
+```bash
+# Baseline должен пройти статическую валидацию
+bash .cursor/skills/db-baselines-and-migrations/scripts/validate_baseline.sh backend/migrations/0000_schema_baseline.sql
+
+# Перегенерация baseline из моделей (DDL-only)
+python backend/scripts/dump_schema_baseline.py --models-only
+
+# Сверка: все model tables присутствуют в baseline
+python backend/scripts/verify_schema_baseline.py
+
+# Полный bootstrap пустой БД (schema + seeds + events)
+export DATABASE_URL="postgresql://USER:PASS@HOST:5432/DBNAME"
+bash backend/scripts/db.sh bootstrap
+```

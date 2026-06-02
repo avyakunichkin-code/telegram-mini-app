@@ -18,7 +18,7 @@ STAMP="$(date -u +"%Y-%m-%d %H:%M:%S UTC")"
 -- Schema baseline: ТВОЙ ХОД (PostgreSQL)
 -- Generated: $STAMP
 -- Regenerate: backend/scripts/dump_schema_baseline.sh
--- Apply empty DB only: migrate.ps1 -BaselineOnly (Windows) or see migrations/README.md
+-- Apply empty DB: bash backend/scripts/db.sh migrate --baseline-only
 --
 -- DDL only. Reference data: main.py seeds + data/events/mvp11 YAML sync.
 --

@@ -52,11 +52,11 @@ Resume после блокировки экрана (PW1): [`foundation/PW1_RESU
 | `OPS_TELEGRAM_BOT_TOKEN` / `OPS_TELEGRAM_CHAT_ID` | по желанию (Watchtower) |
 
 4. **Custom Domain** на Web Service: `api.YOUR_DOMAIN` → CNAME из панели Render.
-5. Миграции на prod (Windows, из `backend/`): все `migrations/*.sql` по порядку — см. [`backend/migrations/README.md`](../../backend/migrations/README.md).
+5. Миграции на prod (из корня репо): — см. [`backend/migrations/README.md`](../../backend/migrations/README.md).
 
-```powershell
-$env:DATABASE_URL = "<Internal Database URL из Render>"
-.\migrate.ps1
+```bash
+export DATABASE_URL="<Internal Database URL из Render>"
+bash backend/scripts/db.sh migrate
 ```
 
 6. Smoke: `GET https://api.YOUR_DOMAIN/api/health` → `200`.
@@ -190,9 +190,9 @@ HashRouter (`#/game`) менять не нужно.
 | CORS error в консоли | Неверный origin | `PUBLIC_APP_URL`, `CORS_ALLOW_ORIGINS` |
 | 404 на refresh без hash | BrowserRouter на static host | Оставляем HashRouter |
 | API 401 после деплоя | другой `SECRET_KEY` | Тестерам перелогиниться |
-| Пустая БД | миграции не прогнаны | `migrate.ps1` на prod `DATABASE_URL` |
+| Пустая БД | миграции не прогнаны | `bash backend/scripts/db.sh migrate` на prod `DATABASE_URL` |
 
-| Пустая БД | миграции не прогнаны | `migrate.ps1` на prod `DATABASE_URL` |
+| Пустая БД | миграции не прогнаны | `bash backend/scripts/db.sh migrate` на prod `DATABASE_URL` |
 
 ---
 

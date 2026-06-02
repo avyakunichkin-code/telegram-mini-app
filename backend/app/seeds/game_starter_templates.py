@@ -1,5 +1,15 @@
 ﻿"""Каталог стартовых шаблонов Game (идемпотентный upsert в main.ensure_schema_compatibility)."""
 
+# NOTE: Сиды запускаются через app.seeds.runner.seed_all (startup) или scripts/seed_db.py.
+
+import json
+
+from sqlalchemy import text
+from sqlalchemy.orm import Session
+
+from app.finance.expense_defaults import expense_budget_for_template
+from app.victory.seeds import VICTORY_CONFIG_BY_TEMPLATE_KEY, victory_config_json_for_template
+
 # Сортируется sort_order; ON CONFLICT не обновляет существующие строки.
 GAME_STARTER_TEMPLATE_SEEDS = [
     {
@@ -320,3 +330,63 @@ GAME_STARTER_TEMPLATE_SEEDS = [
         },
     },
 ]
+
+
+def upsert_game_starter_templates(db: Session) -> None:
+    """
+    Идемпотентно синхронизирует game_starter_templates:
+    - upsert базовых полей и blueprint_json
+    - синхронизирует victory_config_json из app.victory.seeds
+
+    Важно: это DML (seed), не миграция схемы.
+    """
+    stmt = text(
+        """
+        INSERT INTO game_starter_templates
+          (template_key, title, difficulty_rank, base_monthly_lifestyle_expense,
+           blueprint_json, victory_config_json, is_active, sort_order, applies_to_save_kind)
+        VALUES
+          (:template_key, :title, :difficulty_rank, :base_expense,
+           :blueprint_json, '{}', 1, :sort_order, 'game')
+        ON CONFLICT (template_key) DO UPDATE SET
+          title = EXCLUDED.title,
+          difficulty_rank = EXCLUDED.difficulty_rank,
+          base_monthly_lifestyle_expense = EXCLUDED.base_monthly_lifestyle_expense,
+          blueprint_json = EXCLUDED.blueprint_json,
+          sort_order = EXCLUDED.sort_order
+        """
+    )
+    for seed in GAME_STARTER_TEMPLATE_SEEDS:
+        tk = seed["template_key"]
+        bp = dict(seed["blueprint"])
+        base_exp = float(seed["base_expense"])
+        bp["expense_budget"] = expense_budget_for_template(tk, base_exp, bp, db)
+        db.execute(
+            stmt,
+            {
+                "template_key": tk,
+                "title": seed["title"],
+                "difficulty_rank": int(seed["difficulty_rank"]),
+                "base_expense": base_exp,
+                "sort_order": int(seed["sort_order"]),
+                "blueprint_json": json.dumps(bp, ensure_ascii=False),
+            },
+        )
+
+    update_victory = text(
+        """
+        UPDATE game_starter_templates
+        SET victory_config_json = :victory_json
+        WHERE template_key = :template_key
+        """
+    )
+    for tk in VICTORY_CONFIG_BY_TEMPLATE_KEY:
+        db.execute(
+            update_victory,
+            {
+                "template_key": tk,
+                "victory_json": victory_config_json_for_template(tk),
+            },
+        )
+
+    db.flush()

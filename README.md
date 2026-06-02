@@ -73,7 +73,7 @@ pip install -r requirements.txt
 python main.py
 ```
 
-На Windows для применения SQL-миграций при наличии `psql`: [`backend/migrate.ps1`](backend/migrate.ps1).
+Применение SQL-миграций: `bash backend/scripts/db.sh migrate` (нужны `psql` и `DATABASE_URL`).
 
 ### Frontend
 
@@ -101,12 +101,11 @@ npm run dev
 
 Alembic не используется. Идемпотентные SQL-файлы в [`backend/migrations/`](backend/migrations/) (нумерация `0002`…`0037+`, см. [`backend/migrations/README.md`](backend/migrations/README.md)).
 
-Запуск под Windows (нужны `psql` и `DATABASE_URL`):
+Запуск (нужны `psql` и `DATABASE_URL`):
 
-```powershell
-cd backend
-$env:DATABASE_URL = "postgresql://..."
-.\migrate.ps1
+```bash
+export DATABASE_URL="postgresql://..."
+bash backend/scripts/db.sh migrate
 ```
 
 ---

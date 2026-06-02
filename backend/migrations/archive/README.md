@@ -1,6 +1,6 @@
 # Архив инкрементальных миграций
 
-SQL-файлы здесь **не выполняются** `migrate.ps1` (скрипт читает только `migrations/*.sql` в корне папки).
+SQL-файлы здесь **не выполняются** `backend/scripts/db.sh migrate` (скрипт читает только `migrations/*.sql` в корне папки).
 
 ## Зачем
 
@@ -17,8 +17,8 @@ SQL-файлы здесь **не выполняются** `migrate.ps1` (скр�
    ```
    (без `pg_dump` — **models + migrations**; с доступным PostgreSQL — сначала пробует `pg_dump`)
 3. Проверка: `python scripts/verify_schema_baseline.py`
-4. Пустая PostgreSQL: `.\migrate.ps1 -BaselineOnly`, затем API + pytest.
-5. Перенести инкременты: `.\scripts\archive_incremental_migrations.ps1 -Force`
+4. Пустая PostgreSQL: `bash backend/scripts/db.sh migrate --baseline-only`, затем API + pytest.
+5. Перенести инкременты: `bash backend/scripts/db.sh archive-incrementals --force`
 5. Закоммитить `0000_schema_baseline.sql` + изменения в `archive/`.
 
 **Prod с уже применённой историей** — повторно baseline не гонять; только новые `00NN_*.sql` в корне `migrations/`.
