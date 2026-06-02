@@ -3,6 +3,7 @@ import json
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from starlette.middleware.gzip import GZipMiddleware
+from sqlalchemy.engine import make_url
 from sqlalchemy import inspect, text
 
 from app.cors_settings import resolve_cors_allow_origin_regex, resolve_cors_allow_origins
@@ -28,6 +29,28 @@ from app.routers import (
 
 from app.seeds.capital_catalog import upsert_capital_liability_catalog
 from app.seeds.game_starter_templates import GAME_STARTER_TEMPLATE_SEEDS
+
+
+def _validate_database_url() -> None:
+    """
+    Fail fast with a clear message when DATABASE_URL is malformed.
+    Render frequently shows a "Hostname" like dpg-...-a, but DATABASE_URL must
+    contain a resolvable host (usually a full *.render.com or regional internal host).
+    """
+    try:
+        url = make_url(str(engine.url))
+    except Exception:
+        # If SQLAlchemy can't parse it, the startup will fail anyway.
+        return
+
+    host = (url.host or "").strip()
+    if host.startswith("dpg-") and "." not in host:
+        raise RuntimeError(
+            "Некорректный DATABASE_URL: host выглядит как 'dpg-...-a' без домена. "
+            "В Render нужно использовать именно 'Internal Database URL' / connectionString, "
+            "а не значение поля Hostname."
+        )
+
 
 def ensure_schema_compatibility() -> None:
     """
@@ -399,23 +422,6 @@ def ensure_schema_compatibility() -> None:
             db.close()
 
 
-# Создаём/обновляем таблицы
-Base.metadata.create_all(bind=engine)
-ensure_schema_compatibility()
-
-from app.database import SessionLocal
-
-_db_boot = SessionLocal()
-try:
-    ensure_expense_category_catalog(_db_boot)
-    _db_boot.commit()
-except Exception:
-    _db_boot.rollback()
-finally:
-    _db_boot.close()
-
-print("[OK] Таблицы созданы/проверены")
-
 app = FastAPI(title="Telegram Mini App API", version="2.0.0")
 
 app.add_middleware(GZipMiddleware, minimum_size=500)
@@ -447,6 +453,28 @@ app.include_router(achievements_router)
 app.include_router(expenses_router)
 app.include_router(admin_router)
 app.include_router(needs_router)
+
+@app.on_event("startup")
+def _startup_db_bootstrap() -> None:
+    _validate_database_url()
+
+    # Создаём/обновляем таблицы (падаем осмысленно на старте, а не при импорте)
+    Base.metadata.create_all(bind=engine)
+    ensure_schema_compatibility()
+
+    from app.database import SessionLocal
+
+    _db_boot = SessionLocal()
+    try:
+        ensure_expense_category_catalog(_db_boot)
+        _db_boot.commit()
+    except Exception:
+        _db_boot.rollback()
+        raise
+    finally:
+        _db_boot.close()
+
+    print("[OK] Таблицы созданы/проверены")
 
 
 @app.get("/")
