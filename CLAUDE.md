@@ -14,6 +14,7 @@
 | [`docs/vision/ideas/remove-character-xp-and-levels.md`](docs/vision/ideas/remove-character-xp-and-levels.md) | **Канон прогрессии:** `event_tier` от `period_index`, без character level/XP |
 | [`docs/vision/ideas/remove-character-xp-and-levels.md`](docs/vision/ideas/remove-character-xp-and-levels.md) | Прогрессия: `event_tier` от `period_index`, без level/XP |
 | [`docs/vision/ideas/tvoy-hod-evolution-after-mvp.md`](docs/vision/ideas/tvoy-hod-evolution-after-mvp.md) | **Часть II** — целевая концепция Game/Plan, шаблоны, победа из шаблона, Q&A, план по слоям |
+| [`docs/vision/ARCHITECTURE_ASSESSMENT_2026-06.md`](docs/vision/ARCHITECTURE_ASSESSMENT_2026-06.md) | Оценка архитектуры, масштаб, онбординг, тех. roadmap, infra |
 | [`docs/backlog/PRODUCT_BACKLOG.md`](docs/backlog/PRODUCT_BACKLOG.md) | Бэклог по слоям |
 | [`docs/foundation/TMA_USER_FLOWS.md`](docs/foundation/TMA_USER_FLOWS.md) | Потоки и боли TMA |
 | [`docs/specs/SPEC_ANALYTICS.md`](docs/specs/SPEC_ANALYTICS.md) | Экран аналитики и данные |

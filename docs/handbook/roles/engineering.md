@@ -17,10 +17,11 @@ last_reviewed: 2026-05-30
 
 1. [`../../../CLAUDE.md`](../../../CLAUDE.md) — карта репо, эндпоинты  
 2. [`../../foundation/SPEC_PRODUCT.md`](../../foundation/SPEC_PRODUCT.md)  
-3. Spec фичи: `docs/specs/features/SPEC_*.md`  
-4. [`../GAME.md`](../GAME.md) §0.2 — статус блоков  
-5. [`../../decisions/`](../../decisions/) — ADR по затронутой области  
-6. [`../../agents/CURSOR_SKILLS.md`](../../agents/CURSOR_SKILLS.md) — какой skill primary  
+3. [`../../vision/ARCHITECTURE_ASSESSMENT_2026-06.md`](../../vision/ARCHITECTURE_ASSESSMENT_2026-06.md) — архитектура, масштаб, тех. roadmap (раз в квартал)  
+4. Spec фичи: `docs/specs/features/SPEC_*.md`  
+5. [`../GAME.md`](../GAME.md) §0.2 — статус блоков  
+6. [`../../decisions/`](../../decisions/) — ADR по затронутой области  
+7. [`../../agents/CURSOR_SKILLS.md`](../../agents/CURSOR_SKILLS.md) — какой skill primary  
 
 ## Доменные пакеты backend
 

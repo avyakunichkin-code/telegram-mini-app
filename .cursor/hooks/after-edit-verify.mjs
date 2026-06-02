@@ -82,7 +82,13 @@ if (/docs\/specs\/features\//.test(filePath)) {
 
 if (/backend\/migrations\//.test(filePath) && /\.sql$/.test(filePath)) {
   hints.push(
-    'ТВОЙ ХОД hook: SQL-миграция — проверь `backend/migrations/README.md`, `backend/scripts/db.sh`, согласование с `models.py` и ADR.',
+    'ТВОЙ ХОД hook: SQL-миграция — skill `db-baselines-and-migrations`, `backend/migrations/README.md`, `db.sh migrate`; для `0000_*` — validate_baseline.sh; согласовать с `models.py` / seeds.',
+  );
+}
+
+if (/backend\/app\/seeds\//.test(filePath)) {
+  hints.push(
+    'ТВОЙ ХОД hook: seed — идемпотентный upsert; не дублировать DML в baseline; runner `seed_all` на startup.',
   );
 }
 

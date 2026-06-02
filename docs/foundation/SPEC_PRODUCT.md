@@ -21,6 +21,8 @@ doc_sync: foundation/DOC_SYNC_LOG.md
 - **победа** — только по целям Victory v2 (chain / parallel); ворота по номеру периода **сняты** (2026-06);
 - устаревшая пара **`light` / `hardcore`** заменена на **`save_kind`** и шаблоны — см. [ADR-001](../decisions/ADR-001-save-kind-remove-light-hardcore.md) и [`specs/features/SPEC_game-plan.md`](../specs/features/SPEC_game-plan.md).
 
+Техническая оценка архитектуры, масштаба и infra-roadmap: [`vision/ARCHITECTURE_ASSESSMENT_2026-06.md`](../vision/ARCHITECTURE_ASSESSMENT_2026-06.md). Геймдизайн и рынок: [`vision/GAME_DESIGN_ROADMAP_2026.md`](../vision/GAME_DESIGN_ROADMAP_2026.md).
+
 Ниже **§1–11** описывают **уже реализованный** цикл; **§7.1** — победа в prod (**Victory v2**). Упрощённое правило «подушка 3× + просрочка + cashflow» — **legacy** (тесты). **§12** — направления улучшения модели, без обязательства ближайшей реализации.
 
 ---

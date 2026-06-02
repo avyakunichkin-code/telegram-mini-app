@@ -37,7 +37,12 @@ export DATABASE_URL="postgresql://USER:PASS@HOST:5432/DBNAME"
 bash backend/scripts/db.sh bootstrap
 ```
 
-После SQL при старте API `backend/main.py` выполняет **лёгкую автомиграцию** (`ensure_schema_compatibility`) и **seeds** (шаблоны, каталог событий из YAML).
+После SQL при старте API `backend/main.py` выполняет **лёгкую автомиграцию** (`ensure_schema_compatibility`), **`create_all`**, затем **`seed_all`**:
+
+- справочники расходов;
+- `game_starter_templates`, каталог капитала/обязательств;
+- **`victory_goals`** (цели победы по шаблону; таблица без ORM-модели);
+- каталог событий из `data/events/mvp11/*.yaml`.
 
 ## Baseline: одним файлом поднять схему
 
@@ -67,7 +72,7 @@ bash backend/scripts/db.sh bootstrap
 
 ## Новая миграция
 
-1. Следующий номер: `0044_*` (после squash; смотреть `ls migrations/*.sql`).
+1. Следующий номер: смотреть `ls migrations/*.sql` (сейчас после `0046_*` → `0047_*`).
 2. Имя: `NNNN_short_snake_case.sql` (латиница, одна тема на файл).
 3. Писать **идемпотентно**, где возможно:
    - `CREATE TABLE IF NOT EXISTS`
@@ -86,9 +91,17 @@ bash backend/scripts/db.sh bootstrap
 | Массовый одноразовый backfill | **`.sql`** по отдельному решению |
 | Одна колонка, как у `save_kind` | **`.sql`** + guard в **`main.py`** |
 
-## Prod
+## Prod (Render)
 
-См. [`docs/ops/DEPLOY.md`](../../docs/ops/DEPLOY.md): Internal `DATABASE_URL` на Render, `bash backend/scripts/db.sh migrate`.
+См. [`docs/ops/DEPLOY.md`](../../docs/ops/DEPLOY.md).
+
+| Ситуация | Действие |
+|----------|----------|
+| Обычный релиз (колонки покрыты `ensure_schema` + seeds) | Redeploy API — startup поднимет схему и сиды |
+| В релизе новый `00NN_*.sql` (DDL, не покрытый startup) | `bash backend/scripts/db.sh migrate` на prod **до/после** deploy |
+| Пустая БД | `db.sh bootstrap` или migrate + deploy |
+
+Internal `DATABASE_URL` на Render (host `dpg-…-a`) — только внутри сети Render; локально — External URL.
 
 ## Не коммитить
 

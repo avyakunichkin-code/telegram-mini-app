@@ -36,13 +36,18 @@ skills:
     context:
       must_read:
         - backend/migrations/README.md
+        - backend/scripts/db.sh
+        - backend/app/seeds/runner.py
         - backend/scripts/dump_schema_baseline.py
         - backend/migrations/0000_schema_baseline.sql
       writes_to:
         - backend/migrations/
+        - backend/app/seeds/
         - backend/scripts/
+        - backend/main.py
       next_skill:
         - test-driven-development
+        - game-economy-and-victory
         - code-review-and-quality
         - documentation-and-adrs
     last_static: "2026-06-02"

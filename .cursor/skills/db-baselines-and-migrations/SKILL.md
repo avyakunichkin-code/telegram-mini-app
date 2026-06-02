@@ -1,9 +1,9 @@
 ---
 name: db-baselines-and-migrations
 description: >-
-  Defines project rules for PostgreSQL schema baselines and incremental migrations.
-  Use when editing backend/migrations/*.sql, changing SQLAlchemy models, regenerating schema baselines, or reviewing DB/index/constraint changes.
-argument-hint: "[baseline | migration | review]"
+  PostgreSQL: baseline DDL, incremental migrations, db.sh, seeds vs SQL.
+  Use when editing backend/migrations/*.sql, models.py, app/seeds/, ensure_schema in main.py, or regenerating 0000_schema_baseline.sql.
+argument-hint: "[baseline | migration | seed | review]"
 user-invocable: true
 ---
 
@@ -11,172 +11,147 @@ user-invocable: true
 
 ## Прочитай сначала (ТВОЙ ХОД)
 
-- `backend/migrations/README.md`
-- `backend/scripts/dump_schema_baseline.py`
+- [`backend/migrations/README.md`](../../../backend/migrations/README.md) — режимы migrate, prod, новый `00NN_*.sql`
+- [`backend/scripts/db.sh`](../../../backend/scripts/db.sh) — **единая точка входа** (migrate / seed / bootstrap)
+- [`backend/app/seeds/runner.py`](../../../backend/app/seeds/runner.py) — что наполняется на старте API
+- [`backend/scripts/dump_schema_baseline.py`](../../../backend/scripts/dump_schema_baseline.py) — перегенерация baseline
 
-**Куда писать:** `backend/migrations/`. **Дальше:** `test-driven-development`, `documentation-and-adrs` (если меняется контракт/данные).
+**Куда писать:** `backend/migrations/`, `backend/app/seeds/`, при колонках без ORM — `ensure_schema_compatibility()` в `main.py`.  
+**Satellites:** `test-driven-development`; при смене контракта/каталога — `documentation-and-adrs`, `game-economy-and-victory` (цели победы).
 
-## Цель
+## Три слоя (не смешивать)
 
-Схема должна подниматься **детерминированно** и **быстро** на пустой БД, а миграции — быть **безопасными**, **обратимо‑предсказуемыми** и **проверяемыми**.
+| Слой | Где | Когда |
+|------|-----|--------|
+| **Schema** | `0000_schema_baseline.sql` + `00NN_*.sql` + `create_all` + `ensure_schema_compatibility()` | Таблицы, колонки, индексы, FK |
+| **Seeds** | `app/seeds/*`, `seed_all()` на startup | Справочники, шаблоны старта, `victory_goals`, каталог событий из YAML |
+| **Runtime patch** | `main.py` `ensure_schema_compatibility()` | Только лёгкие `ADD COLUMN` для уже существующих prod-БД без полного migrate |
+
+**Контент событий** — только `data/events/mvp11/*.yaml` → `ensure_mvp11_event_catalog` (не SQL, не baseline). См. ADR-008.
 
 ## Термины
 
-- **Baseline**: `0000_schema_baseline.sql` — *только DDL*, без сидов/контентных апдейтов.
-- **Incremental migration**: `00xx_*.sql` — изменения схемы и (иногда) data-migration.
-- **Seed/контент**: наполнение справочников/событий — не часть baseline; живёт в сидерах приложения или отдельных миграциях данных с явной маркировкой.
+- **Baseline**: `0000_schema_baseline.sql` — *только DDL* (итоговая схема для пустой БД).
+- **Incremental**: `0044_*.sql`, … в корне `migrations/` (после squash `0002…0043` в [`archive/`](../../../backend/migrations/archive/README.md)).
+- **Seed**: идемпотентный upsert в Python; безопасен на **каждом** старте API.
+
+## Prod / Render (типовой путь)
+
+1. **Деплой API** — на startup: `create_all` → `ensure_schema_compatibility()` (в т.ч. таблицы без ORM) → `seed_all()`.
+2. **Отдельный migrate** — если в релизе есть новый `00NN_*.sql` и БД уже жила без redeploy-only DDL:
+
+   ```bash
+   export DATABASE_URL="postgresql://..."
+   bash backend/scripts/db.sh migrate
+   ```
+
+3. **Пустая БД локально / CI:** `bash backend/scripts/db.sh bootstrap` (= baseline-only migrate + seed).
+
+На prod с **уже накатанной** историей: **не** перегонять весь `0000` повторно — только новые инкременты (или полагаться на startup, если изменение покрыто `ensure_schema` + seed).
 
 ## Правила (must-follow)
 
 ### 1) Baseline — строго DDL-only
 
-В `0000_schema_baseline.sql` запрещены:
+В `0000_schema_baseline.sql` запрещены: `INSERT` / `UPDATE` / `DELETE`, маркеры `-- >>> 00xx_*.sql`, backfill-блоки.
 
-- `INSERT`, `UPDATE`, `DELETE`
-- «контентные» `ALTER TABLE ...` из истории миграций (baseline должен уже содержать итоговую схему через `CREATE TABLE ...`)
-- любые «Backfill» блоки
+Наполнение — в **сидах** (`runner.py`) или в инкременте с пометкой **DATA MIGRATION**.
 
-Если нужно стартовое наполнение — делай это **в сидерах приложения** или в отдельной **data-migration** (см. ниже).
+### 2) Таблицы без SQLAlchemy-модели
 
-### 2) Не создавай индексы, которые уже существуют из-за PK/UNIQUE
+Пример: **`victory_goals`** (каталог целей по `template_key`; читает `app/victory/goals_store.py`).
 
-- `PRIMARY KEY (id)` в Postgres **уже создаёт индекс**. Индексы вида `CREATE INDEX ... ON table (id)` — почти всегда мусор.
-- `UNIQUE (...)` создаёт уникальный индекс: не добавляй дублирующий `CREATE UNIQUE INDEX` с теми же колонками, если это не частичный/с другим order/opclass.
+- DDL: в **baseline** и/или `00NN_*.sql`, плюс `ensure_victory_goals_table()` при отсутствии таблицы на старте.
+- Данные: **`app/seeds/victory_goals.py`** из `VICTORY_CONFIG_BY_TEMPLATE_KEY` (не DML в baseline).
+- `create_all` **не** создаёт такие таблицы — не забывать DDL.
 
-### 3) Индексы по FK — делай осознанно
+### 3) Индексы и UNIQUE
 
-Postgres **не** создаёт индекс автоматически на FK-колонках.
+- Не дублировать индекс на `id` при `PRIMARY KEY (id)`.
+- FK на natural key (`template_key`, `chain_key`, …): в родителе **`UNIQUE`** на те же колонки **до** FK.
 
-- Если FK используется в join/filter (`WHERE ..._id = ?`) — индекс обычно нужен.
-- Если таблица маленькая/редко читается — индекс может быть лишним.
+### 4) Schema vs data-migration
 
-### 4) Разделяй schema-migration и data-migration
+Data-migration в `00NN_*.sql`: заголовок **DATA MIGRATION**, идемпотентность (`ON CONFLICT`, узкий `WHERE`).
 
-Если в миграции есть DML (апдейт данных):
+### 5) Идемпотентность инкрементов
 
-- пометь это в заголовке файла как **DATA MIGRATION**
-- делай апдейт **идемпотентным** (повторный прогон не должен ломать данные)
-- избегай «тихих» массовых перезаписей без `WHERE`‑ограничений
+`CREATE … IF NOT EXISTS`, `ADD COLUMN IF NOT EXISTS`, осознанные `DROP` — только с обоснованием.
 
-### 5) Идемпотентность — по умолчанию
-
-Для `00xx_*.sql`:
-
-- `CREATE TABLE IF NOT EXISTS ...`
-- `CREATE INDEX IF NOT EXISTS ...`
-- `ALTER TABLE ... ADD COLUMN IF NOT EXISTS ...`
-
-Если операция не идемпотентна — это должно быть **обосновано** и **проверено** (например, `DROP COLUMN`).
-
-### 6) Порядок DDL
-
-В baseline и миграциях:
-
-- типы/таблицы-родители → таблицы-дети → индексы → foreign keys (если выносишь отдельно)
-- избегай «склейки» baseline + куски старых миграций в один файл
-
-### 7) UNIQUE обязателен для ссылок на “natural key”
-
-Если `FOREIGN KEY` ссылается **не на PK**, а на «естественный ключ» (`chain_key`, `template_key`, и т.п.), то в таблице-родителе **должен быть**
-`UNIQUE(...)` (или `PRIMARY KEY(...)`) **на ровно эти колонки**.
-
-Практическое правило:
-
-- Если видишь `REFERENCES parent (some_key)` и `some_key` не PK — добавь `UNIQUE (some_key)` в `CREATE TABLE parent` (или отдельным `ALTER TABLE ... ADD CONSTRAINT ... UNIQUE`, но **до** создания FK).
-
-Иначе Postgres упадёт ошибкой вида: `there is no unique constraint matching given keys for referenced table`.
-
-## Чеклист перед коммитом DB изменений
-
-- [ ] **Baseline** не содержит `INSERT/UPDATE/DELETE`
-- [ ] Нет индексов `... (id)` на PK
-- [ ] Уникальности оформлены либо `UNIQUE (...)`, либо `CREATE UNIQUE INDEX ...` (без дублей)
-- [ ] Любой FK на “natural key” ссылается на `UNIQUE/PK` в таблице-родителе
-- [ ] Для горячих FK добавлены индексы (и наоборот — нет лишних)
-- [ ] Для data-migration есть явный маркер и `WHERE`‑ограничения
-- [ ] Скрипт запускается на пустой БД без ручных шагов
-- [ ] Для «разрушительных» изменений (rename/drop/тип) выбран безопасный путь (см. expand/contract в `reference.md`)
-
-## Анти‑паттерны (запрещено/нежелательно)
-
-- «Baseline = baseline + история миграций + сиды» в одном файле
-- Индексы на `id` при PK
-- DML в baseline
-- Массивные `UPDATE` без `WHERE`
-- Миграции, которые «работают только один раз» без фикса идемпотентности/гейта
-- «Тихое» удаление/переименование колонок без переходного периода в коде
-
-## Red flags (остановись и перепроверь)
-
-- В baseline появились `-- >>> 00xx_*.sql` маркеры или DML — значит файл «склеен» с историей миграций
-- Миграция меняет данные без возможности оценить объём (`UPDATE` без узкого `WHERE`)
-- Добавлен индекс “на всякий случай” без запроса/эндпоинта, который его использует
-- Изменение типа/семантики поля без backfill и двойного чтения/записи
-
-## Команды (bash)
-
-## Bootstrap workflow (schema → seeds → events)
-
-Цель: на пустой PostgreSQL получить **схему** + **минимальные справочники/каталоги** для работы приложения.
-
-Порядок:
-
-1. **Schema**: применить baseline (+ новые миграции, если есть).
-2. **Seeds (reference + catalogs)**: идемпотентный upsert из кода.
-3. **Events catalog**: синхронизация из YAML канона (`data/events/mvp11`) в PostgreSQL.
-   Делается сидером (idempotent), **не** через baseline и не через миграции.
-
-### Перегенерировать baseline
+### 6) Перегенерация baseline
 
 ```bash
 python backend/scripts/dump_schema_baseline.py --models-only
 ```
 
-### Создать схему на пустой БД (baseline через psql)
+Затем **вручную** добавить в baseline таблицы **без** ORM (если есть), прогнать валидатор. Сверка с моделями:
+
+```bash
+python backend/scripts/verify_schema_baseline.py
+```
+
+`verify_schema_baseline` проверяет только таблицы из `models.py`; каталоги вне ORM — отдельный чеклист в skill.
+
+## Seeds (канон)
+
+| Модуль | Назначение |
+|--------|------------|
+| `seed_reference_data` | категории расходов |
+| `seed_catalogs` | `game_starter_templates`, capital/liability templates, **`victory_goals`** |
+| `seed_events` | YAML mvp11 → `event_definitions` |
+
+Вызов: startup `main.py` → `seed_all`; CLI: `bash backend/scripts/db.sh seed`.
+
+## Команды (bash)
 
 ```bash
 export DATABASE_URL="postgresql://USER:PASS@HOST:5432/DBNAME"
-psql "$DATABASE_URL" -v ON_ERROR_STOP=1 -f backend/migrations/0000_schema_baseline.sql
-```
 
-### Применить базовое наполнение (seeds)
+# Схема: baseline + инкременты в корне migrations/
+bash backend/scripts/db.sh migrate
 
-```bash
-export DATABASE_URL="postgresql://USER:PASS@HOST:5432/DBNAME"
-python backend/scripts/seed_db.py
-```
+# Только baseline (пустая БД)
+bash backend/scripts/db.sh migrate --baseline-only
 
-### Синхронизировать каталог событий (YAML → PostgreSQL)
+# Сиды (включая events из YAML)
+bash backend/scripts/db.sh seed
 
-```bash
-export DATABASE_URL="postgresql://USER:PASS@HOST:5432/DBNAME"
-python backend/scripts/sync_events_catalog.py
-```
+# Пустая БД: schema + seeds
+bash backend/scripts/db.sh bootstrap
 
-### Быстрая статическая проверка baseline (без БД)
+# Перегенерация / проверка baseline
+bash backend/scripts/db.sh baseline-dump
+bash backend/scripts/db.sh baseline-verify
 
-```bash
+# Статика без БД
 bash .cursor/skills/db-baselines-and-migrations/scripts/validate_baseline.sh backend/migrations/0000_schema_baseline.sql
 ```
 
+## Чеклист перед коммитом DB-изменений
+
+- [ ] Baseline без DML и без `-- >>>`
+- [ ] Новый `00NN_*.sql` — следующий номер после `ls backend/migrations/*.sql`
+- [ ] `models.py` согласован (если таблица в ORM)
+- [ ] Каталоги/цели победы — сид, не baseline DML
+- [ ] Таблица без ORM: baseline + `ensure_schema` или инкремент + seed
+- [ ] `bash … validate_baseline.sh` для правок `0000_*`
+- [ ] `pytest` после migrate/логики
+
+## Анти‑паттерны
+
+- DML в baseline; склейка baseline + archive миграций
+- Ожидать, что `create_all` поднимет `victory_goals` и прочие non-ORM каталоги
+- Контент событий в `migrations/*.sql`
+- Массовый `UPDATE` без `WHERE`
+
 ## Доп. материалы
 
-- Подробная памятка и примеры: [reference.md](reference.md)
+- [reference.md](reference.md) — expand/contract, data-migration, non-ORM checklist
 
-## Статус репозитория (важно)
+## Verification
 
-Если текущий `backend/migrations/0000_schema_baseline.sql` содержит DML/маркеры миграций (часто бывает при «склейке» baseline + history),
-то сначала приведи baseline к DDL-only (перегенерация + вырезание хвоста), и только потом полагайся на валидатор.
+- [ ] Пустая БД: `bootstrap` или migrate + startup без `UndefinedTable`
+- [ ] Baseline проходит `validate_baseline.sh`
+- [ ] Инкременты идемпотентны там, где заявлено
 
----
-
-## Verification (после выполнения задачи)
-
-- [ ] Baseline: DDL-only, без `-- >>> 00xx_*.sql`
-- [ ] Миграции: читабельны, упорядочены, без дублей индексов/уникальностей
-- [ ] Для data-migration: есть гейты/идемпотентность/оценка объёма затронутых строк
-- [ ] Ничего не удалено “навсегда” без переходного периода (если это не сознательный breaking change)
-
-## Итог (Verdict)
-
-В конце работы явно укажи результат: **PASS**, **FAIL**, **CONCERNS** или **COMPLETE**.
+**Verdict:** PASS | FAIL | CONCERNS | COMPLETE

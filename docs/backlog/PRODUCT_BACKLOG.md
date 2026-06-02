@@ -3,7 +3,7 @@
 Живой список работ по слоям **DB / Backend / Frontend / Doc**. Источник идей для этой итерации: **[`GAME.md`](../../GAME.md)** (синтез анкеты, кода, Pre-Alpha → Closed Alpha).
 
 **Трассировка эпиков:** [`TRACEABILITY.md`](../TRACEABILITY.md)  
-**Связанные документы:** [`CLAUDE.md`](../../CLAUDE.md), [evolution §II](../vision/ideas/tvoy-hod-evolution-after-mvp.md), [`GAME_DESIGN_ROADMAP_2026.md`](../vision/GAME_DESIGN_ROADMAP_2026.md) (геймдизайн, сравнение с рынком, фазы 12–18 мес.), [`foundation/SPEC_PRODUCT.md`](../foundation/SPEC_PRODUCT.md), [`foundation/TMA_USER_FLOWS.md`](../foundation/TMA_USER_FLOWS.md), [`specs/SPEC_ANALYTICS.md`](../specs/SPEC_ANALYTICS.md), [`specs/SPEC_FRONTEND_UI.md`](../specs/SPEC_FRONTEND_UI.md).
+**Связанные документы:** [`CLAUDE.md`](../../CLAUDE.md), [evolution §II](../vision/ideas/tvoy-hod-evolution-after-mvp.md), [`GAME_DESIGN_ROADMAP_2026.md`](../vision/GAME_DESIGN_ROADMAP_2026.md) (геймдизайн, сравнение с рынком, фазы 12–18 мес.), [`ARCHITECTURE_ASSESSMENT_2026-06.md`](../vision/ARCHITECTURE_ASSESSMENT_2026-06.md) (тех. архитектура, масштаб, ops), [`foundation/SPEC_PRODUCT.md`](../foundation/SPEC_PRODUCT.md), [`foundation/TMA_USER_FLOWS.md`](../foundation/TMA_USER_FLOWS.md), [`specs/SPEC_ANALYTICS.md`](../specs/SPEC_ANALYTICS.md), [`specs/SPEC_FRONTEND_UI.md`](../specs/SPEC_FRONTEND_UI.md).
 
 ---
 

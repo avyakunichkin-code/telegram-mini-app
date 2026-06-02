@@ -31,6 +31,7 @@ Studio/GDD: только [`.cursor/skills/_archived/`](.cursor/skills/_archived/
 | FE↔BE | api-and-interface-design | incremental без spec |
 | Поверхность | design-lab-mqx → frontend-ui-engineering | lab без canon-sync в prod |
 | Границы доменов | documentation-and-adrs (support) | код без ADR при споре «кто владелец» |
+| **Схема БД / миграции / seeds** | **db-baselines-and-migrations** (support) | create-event (контент в YAML, не SQL) |
 
 **Satellites обязательны:** create-event → TDD; game-economy → TDD + doubt-driven-development; крупный diff → economy-reviewer / mqx-ui-reviewer.
 
@@ -52,11 +53,12 @@ Studio/GDD: только [`.cursor/skills/_archived/`](.cursor/skills/_archived/
 | Регрессии / баги в логике | **test-driven-development** | `backend/tests/` |
 | **Критичные сценарии / test gate** | **critical-test-scenarios** (`/critical-tests`) | `backend/tests/`, FE `__tests__/` |
 | Перед merge | **code-review-and-quality** | read-only |
+| **SQL baseline / `00NN_*.sql` / seeds / `db.sh`** | **db-baselines-and-migrations** | `test-driven-development`; game-economy при `victory_goals` |
 | Неясно какой скилл | **using-agent-skills** | — |
 
 **`tier: deferred`** (явный вызов): `browser-testing-with-devtools`, `security-and-hardening`, `performance-optimization`, `deprecation-and-migration`, `release-tma`, `telegram-mini-app-runtime`, `social-changelog-posts`, `code-simplification`, `context-engineering`.
 
-**`tier: support`:** `planning-and-task-breakdown` (epic), `code-review-and-quality` (merge), `project-handbook-documentation` (handbook для людей), `documentation-and-adrs` (граница доменов). **`doubt-driven-development`** — deferred, но satellite для game-economy.
+**`tier: support`:** `planning-and-task-breakdown` (epic), `code-review-and-quality` (merge), `project-handbook-documentation` (handbook для людей), `documentation-and-adrs` (граница доменов), **`db-baselines-and-migrations`** (PostgreSQL baseline/миграции/seeds). **`doubt-driven-development`** — deferred, но satellite для game-economy.
 
 Скилл с `status: active` — блок **«Прочитай сначала»** в `SKILL.md` до процедуры.
 
@@ -78,6 +80,7 @@ Studio/GDD: только [`.cursor/skills/_archived/`](.cursor/skills/_archived/
 | Rule | Когда |
 |------|--------|
 | `tvoy-hod-backend.mdc` | `backend/**` |
+| `tvoy-hod-db-migrations.mdc` | `backend/migrations/**`, `backend/app/seeds/**`, `backend/scripts/db.sh` |
 | `tvoy-hod-frontend-*.mdc` | `frontend-react/**` |
 | `tvoy-hod-design-lab.mdc` | `design-lab/**` — хаб `nav.manifest` → `design-lab:build-nav`; см. `docs/agents/DESIGN_LAB_NAVIGATION.md` |
 | `tvoy-hod-canon-sync.mdc` | утверждённый UI → prod |

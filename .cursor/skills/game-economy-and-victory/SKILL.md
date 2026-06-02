@@ -23,7 +23,7 @@ allowed-tools: Read, Glob, Grep, Write, Shell
 - [`backend/app/finance/overview_build.py`](../../../backend/app/finance/overview_build.py)
 - [`docs/balance/README.md`](../../../docs/balance/README.md) — playtest после смены формул/порогов
 
-**Satellites (та же задача):** `test-driven-development`, `doubt-driven-development`, **`balance-playtest`** (крупный баланс / seeds / period).
+**Satellites (та же задача):** `test-driven-development`, `doubt-driven-development`, **`balance-playtest`** (крупный баланс / seeds / period), **`db-baselines-and-migrations`** (если меняется `victory_goals` / DDL шаблонов).
 
 **Куда писать:** `backend/app/game/`, `backend/app/victory/`, `backend/app/events/`, `backend/app/seeds/`, `backend/migrations/`, `docs/specs/features/`, при смене контракта overview — `frontend-react/src/api.js` + UI целей.
 

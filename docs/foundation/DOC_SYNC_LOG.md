@@ -4,6 +4,7 @@
 
 | Дата | Что в prod | Что исправили в docs |
 |------|------------|----------------------|
+| 2026-06-02 | — (architecture review) | [`vision/ARCHITECTURE_ASSESSMENT_2026-06.md`](../vision/ARCHITECTURE_ASSESSMENT_2026-06.md): масштаб, онбординг, тех. roadmap, infra, IN-идеи; ссылки в README, backlog, engineering guide |
 | 2026-06-01 | — (product) | **WD1** полноразмерный веб-канал: idea [`desktop-wide-web-channel`](../vision/ideas/desktop-wide-web-channel.md), [`PLAN_desktop-wide-web`](../plans/PLAN_desktop-wide-web.md), эпик **AC1** TG↔email в фокусе; CA **50–100**, свой домен |
 | 2026-06-02 | **Admin C2:** PATCH каталогов + JSON validate; редактор Основное/JSON | `catalog_patch.py`, `AdminCatalogEditorScreen` |
 | 2026-06-02 | **Admin A4+ / C1:** `event_chosen` в `notification_log` (без TG); каталоги POST create + clone (`is_active=0`) | `notify_event_chosen`, `catalog_write.py`, `#/admin/catalogs` |

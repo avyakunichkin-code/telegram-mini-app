@@ -89,6 +89,7 @@
 |----------|------------|
 | [`vision/ideas/tvoy-hod-evolution-after-mvp.md`](vision/ideas/tvoy-hod-evolution-after-mvp.md) | **Часть II** — Game/Plan, Q&A, план по слоям (источник истины для цели) |
 | [`vision/GAME_DESIGN_ROADMAP_2026.md`](vision/GAME_DESIGN_ROADMAP_2026.md) | Геймдизайн: сравнение с рынком, идеи механик (GD-xxx), roadmap по фазам |
+| [`vision/ARCHITECTURE_ASSESSMENT_2026-06.md`](vision/ARCHITECTURE_ASSESSMENT_2026-06.md) | **Software architecture:** масштаб, онбординг, тех. roadmap, infra, IN-идеи |
 | [`vision/ideas/mvp-1-1-product-direction.md`](vision/ideas/mvp-1-1-product-direction.md) | MVP 1.1: закрытые ответы + направления доработки (перед spec эпика) |
 | [`vision/ideas/game-balance-thresholds-and-constraints.md`](vision/ideas/game-balance-thresholds-and-constraints.md) | Черновик баланса: победа/поражение MVP, ограничения, пакеты для калибровки по шаблонам |
 | [`vision/ideas/event-catalog-qna-refine.md`](vision/ideas/event-catalog-qna-refine.md) | Q&A каталога событий, цепочки (авто, родственник) |
