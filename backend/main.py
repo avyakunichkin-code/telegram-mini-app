@@ -40,11 +40,16 @@ def _validate_database_url() -> None:
         return
 
     host = (url.host or "").strip()
+    # Render can provide an Internal Database URL whose host is only resolvable inside Render's network.
+    # That host may look like "dpg-...-a" without dots. This is valid on Render, but invalid locally.
+    #
+    # Therefore: do NOT hard-fail here. Emit a warning with actionable guidance.
     if host.startswith("dpg-") and "." not in host:
-        raise RuntimeError(
-            "Некорректный DATABASE_URL: host выглядит как 'dpg-...-a' без домена. "
-            "В Render нужно использовать именно 'Internal Database URL' / connectionString, "
-            "а не значение поля Hostname."
+        print(
+            "[warn] DATABASE_URL host выглядит как 'dpg-...-a' без домена. "
+            "Это нормально для Render Internal Database URL (резолвится только внутри Render). "
+            "Локально такой host не резолвится — для локального запуска используй External Database URL.",
+            flush=True,
         )
 
 
