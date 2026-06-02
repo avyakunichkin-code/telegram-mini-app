@@ -1,5 +1,8 @@
 """O2 Progressive Guidance — user-level progress, overview, PATCH."""
 
+from types import SimpleNamespace
+
+from app.guidance.engine import _first_incomplete_beat
 from app.models import GameProfile, User
 
 
@@ -133,6 +136,30 @@ def test_dismiss_beat_skips_beat_without_completing_guidance(client, auth_header
     user = db_session.query(User).order_by(User.id.desc()).first()
     assert user is not None
     assert int(user.guidance_completed or 0) == 0
+
+
+def test_first_incomplete_beat_period2_still_returns_p1_close():
+    """На периоде 2 не показывать P2, пока не закрыт шаг p1_close в progress."""
+    profile = SimpleNamespace(period_index=2)
+    progress = {
+        "completed_beats": ["p1_period", "p1_salary", "p1_cushion"],
+        "view_beat_id": None,
+        "p1_close_debrief": True,
+    }
+    beat = _first_incomplete_beat(profile, progress)
+    assert beat is not None
+    assert beat.id == "p1_close"
+
+
+def test_first_incomplete_beat_period2_after_p1_close_goes_to_p2():
+    profile = SimpleNamespace(period_index=2)
+    progress = {
+        "completed_beats": ["p1_period", "p1_salary", "p1_cushion", "p1_close"],
+        "view_beat_id": None,
+    }
+    beat = _first_incomplete_beat(profile, progress)
+    assert beat is not None
+    assert beat.id == "p2_events_intro"
 
 
 def test_p1_close_body_includes_close_preview(client, auth_headers):

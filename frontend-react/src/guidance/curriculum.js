@@ -91,9 +91,18 @@ export function isP1GuidanceComplete(guidance) {
   return (guidance.completed_beats || []).includes('p1_close');
 }
 
-/** События и pill «События» — после P1, в т.ч. во время curriculum P2/P3 (SPEC_onboarding-o2). */
-export function areGameEventsUnlocked(guidance, onboardingState) {
-  return isP1GuidanceComplete(guidance) || onboardingState === 'brief_done';
+/**
+ * События и pill «События» — после P1, на P2+ и во время curriculum P2/P3 (SPEC_onboarding-o2).
+ * periodIndex — страховка, если beat_id уже P2, а completed_beats без p1_close (resume / legacy).
+ */
+export function areGameEventsUnlocked(guidance, onboardingState, periodIndex = null) {
+  if (onboardingState === 'brief_done') return true;
+  if (!guidance?.show_curriculum) return true;
+  if (isP1GuidanceComplete(guidance)) return true;
+  if (Number(periodIndex) >= 2) return true;
+  const beatId = guidance?.beat_id;
+  if (beatId && (beatId.startsWith('p2_') || beatId.startsWith('p3_'))) return true;
+  return false;
 }
 
 /** Итоги периода не откладываем на очередь — после закрытия P1 / с периода 2. */
@@ -101,4 +110,9 @@ export function shouldDeferPeriodCloseDuringGuidance(guidance, periodIndex) {
   if (!guidance?.show_curriculum) return false;
   if (isP1GuidanceComplete(guidance)) return false;
   return Number(periodIndex) <= 1;
+}
+
+/** Полоска curriculum (P2 «Жизненные ситуации» и др.) — после закрытия листа итогов месяца. */
+export function shouldDeferGuidanceForPeriodCloseRitual(periodCloseOpen) {
+  return Boolean(periodCloseOpen);
 }

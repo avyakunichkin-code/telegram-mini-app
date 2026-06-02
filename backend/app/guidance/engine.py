@@ -120,17 +120,16 @@ def _sync_auto_gates(
 
 
 def _first_incomplete_beat(profile: GameProfile, progress: dict[str, Any]) -> GuidanceBeat | None:
+    """Сначала незавершённые шаги ранних периодов — иначе P2 guidance без UI событий."""
     pi = max(1, min(3, int(profile.period_index or 1)))
-    for beat in beats_for_period(pi):
-        if not _is_completed(progress, beat.id):
-            return beat
-    if pi < 3:
-        for beat in beats_for_period(pi + 1):
+    for period in range(1, pi + 1):
+        for beat in beats_for_period(period):
             if not _is_completed(progress, beat.id):
                 return beat
-    for beat in CURRICULUM:
-        if not _is_completed(progress, beat.id):
-            return beat
+    for period in range(pi + 1, 4):
+        for beat in beats_for_period(period):
+            if not _is_completed(progress, beat.id):
+                return beat
     return None
 
 

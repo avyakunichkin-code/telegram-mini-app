@@ -23,6 +23,7 @@ import { shouldAutoOpenPeriodClose } from '../utils/periodCloseDisplay';
 import { GameGuidanceLayer } from './GameGuidanceLayer';
 import {
   areGameEventsUnlocked,
+  shouldDeferGuidanceForPeriodCloseRitual,
   shouldDeferPeriodCloseDuringGuidance,
 } from '../guidance/curriculum';
 
@@ -77,7 +78,11 @@ export function GameScreen({ onLogout, onNewGame, onLoadGame }) {
 
   const guidance = overview?.guidance;
   const inGuidanceCurriculum = guidance?.show_curriculum === true;
-  const p1GuidanceDone = areGameEventsUnlocked(guidance, overview?.onboarding_state);
+  const p1GuidanceDone = areGameEventsUnlocked(
+    guidance,
+    overview?.onboarding_state,
+    overview?.period_index ?? timeStatus?.period_index,
+  );
   const eventsUnlocked = p1GuidanceDone;
   const inOnboarding = inGuidanceCurriculum;
   const deferPeriodCloseInGuidance = shouldDeferPeriodCloseDuringGuidance(
@@ -87,6 +92,7 @@ export function GameScreen({ onLogout, onNewGame, onLoadGame }) {
   const periodCloseForUi = lastPeriodClose;
   const showPeriodCloseTail =
     !inOnboarding && activeTab === 'dashboard' && periodCloseForUi && !periodCloseOpen;
+  const deferGuidanceForPeriodClose = shouldDeferGuidanceForPeriodCloseRitual(periodCloseOpen);
 
   // Итоги периода — до эффектов событий: в одном коммите сначала выставляем periodCloseOpen.
   useEffect(() => {
@@ -422,6 +428,7 @@ export function GameScreen({ onLogout, onNewGame, onLoadGame }) {
         guidance={guidance}
         refreshOverview={refreshOverview}
         scrollRootRef={onboardingRootRef}
+        deferForPeriodClose={deferGuidanceForPeriodClose}
         onOverlayStateChange={setOnboardingUi}
       />
     </GameScreenLayout>

@@ -18,6 +18,7 @@ export function GameGuidanceLayer({
   refreshOverview,
   onOverlayStateChange,
   scrollRootRef = null,
+  deferForPeriodClose = false,
 }) {
   const stripRef = useRef(null);
   const [stripHeightPx, setStripHeightPx] = useState(0);
@@ -28,7 +29,8 @@ export function GameGuidanceLayer({
 
   const showCurriculum = guidance?.show_curriculum === true;
   const showNudge = !showCurriculum && guidance?.nudge_id && guidance.nudge_id !== dismissedNudgeId;
-  const visible = showCurriculum || showNudge;
+  const wouldShow = showCurriculum || showNudge;
+  const visible = wouldShow && !deferForPeriodClose;
 
   const patch = useCallback(
     async (payload) => {
@@ -49,7 +51,7 @@ export function GameGuidanceLayer({
   useEffect(() => {
     onOverlayStateChange?.({
       visible: !!visible,
-      lockTabs: !!showCurriculum,
+      lockTabs: !!showCurriculum && !!visible,
     });
   }, [visible, showCurriculum, onOverlayStateChange]);
 
