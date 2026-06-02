@@ -507,6 +507,26 @@ CREATE TABLE insurance_policies (
 )
 
 ;
+
+CREATE TABLE victory_goals (
+	id SERIAL NOT NULL,
+	template_key VARCHAR(80) NOT NULL,
+	goal_key VARCHAR(80) NOT NULL,
+	goal_type VARCHAR(60) NOT NULL,
+	title TEXT NOT NULL,
+	order_index INTEGER NOT NULL,
+	enabled BOOLEAN NOT NULL,
+	required BOOLEAN NOT NULL,
+	requires_mechanics JSONB NOT NULL,
+	params JSONB NOT NULL,
+	created_at TIMESTAMP WITHOUT TIME ZONE NOT NULL,
+	PRIMARY KEY (id)
+)
+
+;
+
+CREATE UNIQUE INDEX ix_victory_goals_template_goal_key ON victory_goals (template_key, goal_key);
+CREATE INDEX ix_victory_goals_template_order ON victory_goals (template_key, order_index);
 CREATE UNIQUE INDEX ix_achievement_chains_chain_key ON achievement_chains (chain_key);
 CREATE INDEX ix_achievement_chains_id ON achievement_chains (id);
 CREATE UNIQUE INDEX ix_asset_templates_template_key ON asset_templates (template_key);

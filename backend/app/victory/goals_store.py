@@ -11,7 +11,7 @@ from __future__ import annotations
 import json
 from typing import Any
 
-from sqlalchemy.exc import OperationalError
+from sqlalchemy.exc import OperationalError, ProgrammingError
 from sqlalchemy import text
 from sqlalchemy.orm import Session
 
@@ -67,8 +67,8 @@ def load_victory_goals_for_template(db: Session, template_key: str) -> list[dict
             ),
             {"tk": tk},
         ).mappings().all()
-    except OperationalError:
-        # Common in unit tests using SQLite without SQL migrations.
+    except (OperationalError, ProgrammingError):
+        # SQLite без миграций; Postgres до первого seed/DDL (UndefinedTable).
         return []
 
     if not rows:

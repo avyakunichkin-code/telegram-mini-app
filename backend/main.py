@@ -316,6 +316,19 @@ def ensure_schema_compatibility() -> None:
                 connection.execute(text(stmt))
         print(f"[OK] Схема обновлена: {len(statements)} изм.")
 
+    # victory_goals — каталог без ORM-модели (create_all не создаёт)
+    inspector = inspect(engine)
+    if "victory_goals" not in inspector.get_table_names():
+        from app.seeds.victory_goals import ensure_victory_goals_table
+        from app.database import SessionLocal
+
+        db = SessionLocal()
+        try:
+            ensure_victory_goals_table(db)
+            print("[OK] Создана таблица victory_goals")
+        finally:
+            db.close()
+
     # DROP legacy mode после появления save_kind (повторный inspect)
     inspector = inspect(engine)
     if "game_profiles" in inspector.get_table_names():
