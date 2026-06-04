@@ -365,7 +365,11 @@ export function DashboardPremium({
 
             <MqxDivider />
 
-            <MqxGoalDash victory={overview?.victory} legacyGoal={goal} />
+            <MqxGoalDash
+              victory={overview?.victory}
+              legacyGoal={goal}
+              periodIndex={periodIndex}
+            />
 
             <MqxDivider />
 

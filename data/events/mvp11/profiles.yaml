@@ -27,17 +27,18 @@ events:
     effects:
       cash_delta: 4800
       needs_delta:
-        status: 1
-        health: -1
-        social: -1
-        comfort: 2
+        status: 2
+        health: -3
+        social: -2
+        comfort: -2
   - title: Отказаться — учёба важнее
     effects:
       cash_delta: 0
       needs_delta:
-        status: 2
-        comfort: 4
-        social: -3
+        status: -1
+        comfort: 2
+        social: -4
+        health: 3
 - definition_key: mq11_roommate_bills_student
   content_class: profile
   event_slot: period_choice

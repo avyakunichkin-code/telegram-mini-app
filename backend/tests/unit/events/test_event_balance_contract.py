@@ -28,7 +28,6 @@ def test_mvp11_balance_no_xp_delta_in_yaml():
 
 
 def test_pareto_checks_both_directions():
-    """Регрессия: «отказ» позже в списке choices тоже должен ловиться."""
     spec = {
         "key": "test_transport_order",
         "choices": [
@@ -39,3 +38,35 @@ def test_pareto_checks_both_directions():
     }
     violations = validate_event_spec(spec)
     assert any(v.code == "pareto_dominates" for v in violations), violations
+
+
+def test_refusal_needs_bonus_on_soft_offer():
+    spec = {
+        "key": "test_refusal",
+        "scenario_shape": "soft_offer",
+        "choices": [
+            {"title": "Потратить", "effects": {"cash_delta": -3000, "needs_delta": {"social": 8}}},
+            {
+                "title": "Отказаться",
+                "effects": {"cash_delta": 0, "needs_delta": {"comfort": 4, "status": 2, "social": -3}},
+            },
+        ],
+    }
+    violations = validate_event_spec(spec)
+    assert any(v.code == "refusal_needs_bonus" for v in violations), violations
+
+
+def test_refusal_with_net_needs_down_is_ok():
+    spec = {
+        "key": "test_refusal_ok",
+        "scenario_shape": "soft_offer",
+        "choices": [
+            {"title": "Пойти", "effects": {"cash_delta": -2000, "needs_delta": {"social": 10}}},
+            {
+                "title": "Остаться дома",
+                "effects": {"cash_delta": 0, "needs_delta": {"social": -6, "comfort": 2}},
+            },
+        ],
+    }
+    violations = validate_event_spec(spec)
+    assert not any(v.code == "refusal_needs_bonus" for v in violations), violations

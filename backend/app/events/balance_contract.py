@@ -16,6 +16,23 @@ FORBIDDEN_EFFECT_KEYS = frozenset({"xp_delta"})
 
 NEEDS_AXES = ("comfort", "status", "social", "health")
 
+DECLINE_TITLE_MARKERS = (
+    "отказ",
+    "остаться",
+    "не участ",
+    "пропуст",
+    "не трат",
+    "не брать",
+    "закрыться",
+    "не идти",
+    "не ехать",
+)
+
+
+def _is_decline_choice(title: str) -> bool:
+    t = str(title or "").lower()
+    return any(marker in t for marker in DECLINE_TITLE_MARKERS)
+
 
 @dataclass(frozen=True)
 class BalanceViolation:
@@ -112,7 +129,6 @@ def _pareto_dominates(a: dict[str, Any], b: dict[str, Any]) -> bool:
 
 
 def is_free_lunch(effects: dict[str, Any], *, needs_threshold: float = 0.5) -> bool:
-    """needs+ без cash-, burn+ и без compensating needs- на других осях."""
     if _needs_sum_positive(effects) <= needs_threshold:
         return False
     if _cash(effects) < -1e-6:
@@ -124,10 +140,23 @@ def is_free_lunch(effects: dict[str, Any], *, needs_threshold: float = 0.5) -> b
     return True
 
 
+def is_refusal_net_needs_bonus(effects: dict[str, Any]) -> bool:
+    """Отказ с net needs+ без cash/burn — §2 event-balance-rules."""
+    if _cash(effects) < -1e-6 or _has_future_money_cost(effects):
+        return False
+    pos = _needs_sum_positive(effects)
+    if pos <= 0.5:
+        return False
+    neg = _needs_sum_negative(effects)
+    return pos + neg > 0.5
+
+
 def validate_choice_effects(
     event_key: str,
     choice_title: str,
     effects: dict[str, Any],
+    *,
+    scenario_shape: str | None = None,
 ) -> list[BalanceViolation]:
     out: list[BalanceViolation] = []
     if not isinstance(effects, dict):
@@ -147,11 +176,23 @@ def validate_choice_effects(
                 "needs+ without cash-, burn+, or needs- on other axes",
             )
         )
+    shape = str(scenario_shape or "").lower()
+    if shape in {"soft_offer", "tradeoff"} and _is_decline_choice(choice_title):
+        if is_refusal_net_needs_bonus(effects):
+            out.append(
+                BalanceViolation(
+                    event_key,
+                    choice_title,
+                    "refusal_needs_bonus",
+                    "decline choice with net needs+ and no cash/burn cost",
+                )
+            )
     return out
 
 
 def validate_event_spec(spec: dict[str, Any]) -> list[BalanceViolation]:
-    key = str(spec.get("key") or "")
+    key = str(spec.get("key") or spec.get("definition_key") or "")
+    scenario_shape = spec.get("scenario_shape")
     violations: list[BalanceViolation] = []
     choices = spec.get("choices") or []
     effect_list = [ch.get("effects") or {} for ch in choices if isinstance(ch, dict)]
@@ -160,7 +201,14 @@ def validate_event_spec(spec: dict[str, Any]) -> list[BalanceViolation]:
         if not isinstance(ch, dict):
             continue
         title = str(ch.get("title") or "")
-        violations.extend(validate_choice_effects(key, title, ch.get("effects") or {}))
+        violations.extend(
+            validate_choice_effects(
+                key,
+                title,
+                ch.get("effects") or {},
+                scenario_shape=scenario_shape,
+            )
+        )
 
     for i, ea in enumerate(effect_list):
         for j, eb in enumerate(effect_list):

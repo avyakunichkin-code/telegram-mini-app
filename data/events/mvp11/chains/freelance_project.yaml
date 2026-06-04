@@ -52,9 +52,9 @@ events:
     effects:
       cash_delta: 0
       needs_delta:
-        comfort: 4
-        social: -5
-        status: 2
+        comfort: 1
+        social: -6
+        status: -3
 - definition_key: mq11_freelance_project_midperiod
   content_class: profile
   event_slot: chain_followup

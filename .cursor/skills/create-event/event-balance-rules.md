@@ -89,6 +89,7 @@
 | Код | Правило |
 |-----|---------|
 | `free_lunch` | §1 — needs+ без cash−, burn+ и без compensating needs− |
+| `refusal_needs_bonus` | §2 — отказ/«остаться» с net needs+ без cash/burn |
 | `pareto_dominates` | §3 — доминирование по 4D-вектору (см. выше) |
 | `forbidden_effect` | `xp_delta` запрещён |
 
