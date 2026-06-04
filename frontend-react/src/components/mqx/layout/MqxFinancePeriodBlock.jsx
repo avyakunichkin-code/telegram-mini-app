@@ -122,7 +122,7 @@ export function MqxFinancePeriodBlock({
   }, [financeCards]);
 
   return (
-    <section className="mqx-finance-static" aria-label="Финансы периода">
+    <section className="mqx-finance-static" aria-label="Финансы периода" data-onboarding-anchor="finance-flows">
       <h2 className="mqx-finance-static__title">Финансы периода</h2>
       <div ref={chipsRef} className="mqx-finance-static__chips">
         {financeCards.map((c) => (

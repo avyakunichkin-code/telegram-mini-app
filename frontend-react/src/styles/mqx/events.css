@@ -239,6 +239,14 @@ body.mqx-events-overlay-open .mqx-tab-page__scroll {
   z-index: 530;
 }
 
+.mqx-events-overlay .mqx-event-help-root {
+  z-index: 5;
+}
+
+.mqx-event-help-sheet__lead {
+  margin-top: -4px;
+}
+
 .mqx-events-backdrop {
   background: color-mix(in srgb, #0f0a1f 72%, transparent);
 }
@@ -324,6 +332,18 @@ body.mqx-events-overlay-open .mqx-tab-page__scroll {
   align-items: flex-start;
   justify-content: space-between;
   gap: 8px;
+}
+
+.mqx-events-card__head-actions {
+  display: flex;
+  flex-shrink: 0;
+  align-items: flex-start;
+  gap: 2px;
+  margin: -2px -2px 0 0;
+}
+
+.mqx-events-card__help {
+  margin: 0;
 }
 
 .mqx-events-card__head .mqx-events-card__title--l3 {

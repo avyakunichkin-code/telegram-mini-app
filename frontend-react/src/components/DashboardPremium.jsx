@@ -103,7 +103,11 @@ export function DashboardPremium({
 
   onGoFinance,
 
+  onGoFinanceInvest,
+
   onGoCapitalFlows,
+
+  onGuidanceScreenEnter,
 
 }) {
 
@@ -127,6 +131,10 @@ export function DashboardPremium({
     },
     [],
   );
+
+  useEffect(() => {
+    if (needsHelpOpen) onGuidanceScreenEnter?.('needs');
+  }, [needsHelpOpen, onGuidanceScreenEnter]);
 
   const closeSafetyPanel = () => {
 
@@ -412,7 +420,7 @@ export function DashboardPremium({
 
               onWithdraw={() => openSafetySheet('out')}
 
-              onInvest={onGoFinance}
+              onInvest={onGoFinanceInvest ?? onGoFinance}
 
             />
 

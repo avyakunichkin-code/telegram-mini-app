@@ -24,6 +24,7 @@ def patch_user_guidance(db: Session, user_id: int, payload: GuidancePatchRequest
             action=payload.action.strip(),
             beat_id=payload.beat_id,
             view_index=payload.view_index,
+            trigger_id=payload.trigger_id,
         )
     except ValueError as e:
         raise HTTPException(status_code=404, detail=str(e)) from e

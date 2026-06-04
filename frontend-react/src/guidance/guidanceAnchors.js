@@ -1,11 +1,13 @@
 /** beat_id curriculum → data-onboarding-anchor на дашборде */
 const BEAT_TO_ANCHOR = {
   p1_period: 'hero',
+  p1_flows: 'finance-flows',
   p1_salary: 'salary',
   p1_cushion: 'cushion',
   p1_close: 'next_period',
-  p2_events_intro: 'events',
-  p3_needs: 'needs',
+  p2_new_month: 'hero',
+  t_events_intro: 'events',
+  t_needs: 'needs',
 };
 
 export const GUIDANCE_ANCHOR_FOCUS_CLASS = 'mqx-onboarding-anchor--focus';

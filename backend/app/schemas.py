@@ -489,12 +489,14 @@ class GuidanceOverview(BaseModel):
     nudge_id: Optional[str] = None
     nudge_title: Optional[str] = None
     nudge_body: Optional[str] = None
+    is_trigger: bool = False
 
 
 class GuidancePatchRequest(BaseModel):
     action: str
     beat_id: Optional[str] = None
     view_index: Optional[int] = None
+    trigger_id: Optional[str] = None
 
 
 class GuidancePatchResponse(BaseModel):

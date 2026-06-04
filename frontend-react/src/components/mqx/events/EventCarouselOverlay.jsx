@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { showNotification } from '../../notifications';
 import { EventCard } from './EventCard';
 import { EventCarouselNav } from './EventCarouselNav';
+import { MqxEventHelpSheet } from './MqxEventHelpSheet';
 import { useEventCarousel } from './useEventCarousel';
 
 /**
@@ -9,6 +10,7 @@ import { useEventCarousel } from './useEventCarousel';
  */
 export function EventCarouselOverlay({ open, onClose, events, onResolved }) {
   const [busyId, setBusyId] = useState(null);
+  const [helpOpen, setHelpOpen] = useState(false);
 
   const carousel = useEventCarousel(events, {
     open,
@@ -41,6 +43,10 @@ export function EventCarouselOverlay({ open, onClose, events, onResolved }) {
     window.addEventListener('keydown', onKeyDown);
     return () => window.removeEventListener('keydown', onKeyDown);
   }, [open, onClose]);
+
+  useEffect(() => {
+    if (!open) setHelpOpen(false);
+  }, [open]);
 
   useEffect(() => {
     if (!open) return undefined;
@@ -103,6 +109,7 @@ export function EventCarouselOverlay({ open, onClose, events, onResolved }) {
                 busyId={busyId}
                 onPick={handlePick}
                 onClose={onClose}
+                onHelp={() => setHelpOpen(true)}
                 titleId={titleId}
               />
             </div>
@@ -118,6 +125,7 @@ export function EventCarouselOverlay({ open, onClose, events, onResolved }) {
                 busyId={busyId}
                 onPick={handlePick}
                 onClose={onClose}
+                onHelp={() => setHelpOpen(true)}
                 titleId={titleId}
               />
             </div>
@@ -134,6 +142,8 @@ export function EventCarouselOverlay({ open, onClose, events, onResolved }) {
           onNext={goNext}
         />
       </div>
+
+      <MqxEventHelpSheet open={helpOpen} onClose={() => setHelpOpen(false)} />
     </div>
   );
 }

@@ -20,6 +20,10 @@ export function FinancePremium({
   refreshOverview,
   openFlowsSection = null,
   onFlowsSectionOpened,
+  /** 'details' | 'actions' — одноразовый запрос с дашборда (напр. chip «Вложить»). */
+  pageModeRequest = null,
+  onPageModeRequestHandled,
+  onGuidanceScreenEnter,
 }) {
   const { dialog } = useMqxConfirm();
   const [pageMode, setPageMode] = useState('details');
@@ -45,6 +49,18 @@ export function FinancePremium({
     () => (insuranceSectionState === 'locked' ? capitalLockHint(overview) : null),
     [insuranceSectionState, overview],
   );
+
+  useEffect(() => {
+    if (pageModeRequest !== 'details' && pageModeRequest !== 'actions') return undefined;
+    setPageMode(pageModeRequest);
+    onPageModeRequestHandled?.();
+    return undefined;
+  }, [pageModeRequest, onPageModeRequestHandled]);
+
+  useEffect(() => {
+    if (pageMode === 'actions') onGuidanceScreenEnter?.('finance:actions');
+    else if (pageMode === 'details') onGuidanceScreenEnter?.('finance:details');
+  }, [pageMode, onGuidanceScreenEnter]);
 
   useEffect(() => {
     if (!openFlowsSection) return undefined;

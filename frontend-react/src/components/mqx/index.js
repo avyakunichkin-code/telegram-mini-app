@@ -69,6 +69,7 @@ export { EventChoiceImpacts } from './events/EventChoiceImpacts';
 export { EventCarouselDots } from './events/EventCarouselDots';
 export { EventCarouselNav } from './events/EventCarouselNav';
 export { EventCarouselOverlay } from './events/EventCarouselOverlay';
+export { MqxEventHelpSheet } from './events/MqxEventHelpSheet';
 export { EventOverlayToolbar } from './events/EventOverlayToolbar';
 export { EventsTriggerButton } from './events/EventsTriggerButton';
 export { useEventCarousel } from './events/useEventCarousel';

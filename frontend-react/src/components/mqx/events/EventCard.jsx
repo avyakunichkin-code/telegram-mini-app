@@ -1,5 +1,6 @@
 import { asSafeReactText } from '../../../utils/displayText';
 import { MonetkaAvatar } from '../brand/MonetkaAvatar';
+import { IconHelpBookWithBadge } from '../icons/MqxContextHelpIcons';
 import { EventChoiceButton } from './EventChoiceButton';
 import { eventDomainTheme } from './eventDomainDisplay';
 import { eventHasInsuranceClaimChoice } from './eventDisplay';
@@ -12,6 +13,7 @@ export function EventCard({
   busyId,
   onPick,
   onClose,
+  onHelp,
   titleId = 'mqx-event-card-title',
 }) {
   const disabled = busyId !== null;
@@ -44,17 +46,33 @@ export function EventCard({
           >
             {titleText}
           </h3>
-          {onClose ? (
-            <button
-              type="button"
-              className="mqx-events-card__close"
-              aria-label="Закрыть"
-              title="Закрыть"
-              onClick={onClose}
-            >
-              ×
-            </button>
-          ) : null}
+          <div className="mqx-events-card__head-actions">
+            {onHelp ? (
+              <button
+                type="button"
+                className="mqx-help-icon-btn mqx-help-icon-btn--badge mqx-events-card__help"
+                aria-label="Как читать событие"
+                title="Как читать событие"
+                onClick={onHelp}
+              >
+                <IconHelpBookWithBadge size={17} />
+                <span className="mqx-help-icon-btn__badge" aria-hidden="true">
+                  ?
+                </span>
+              </button>
+            ) : null}
+            {onClose ? (
+              <button
+                type="button"
+                className="mqx-events-card__close"
+                aria-label="Закрыть"
+                title="Закрыть"
+                onClick={onClose}
+              >
+                ×
+              </button>
+            ) : null}
+          </div>
         </div>
 
         <div className="mqx-events-card__labels">

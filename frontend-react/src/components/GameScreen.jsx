@@ -23,6 +23,7 @@ import { shouldAutoOpenPeriodClose } from '../utils/periodCloseDisplay';
 import { GameGuidanceLayer } from './GameGuidanceLayer';
 import {
   areGameEventsUnlocked,
+  GUIDANCE_SCREEN_TRIGGERS,
   shouldDeferGuidanceForPeriodCloseRitual,
   shouldDeferPeriodCloseDuringGuidance,
 } from '../guidance/curriculum';
@@ -37,6 +38,8 @@ export function GameScreen({ onLogout, onNewGame, onLoadGame }) {
   const [activeTab, setActiveTab] = useState('dashboard');
   /** @type {['income'|'expense'|null, function]} */
   const [capitalFlowsOpen, setCapitalFlowsOpen] = useState(null);
+  /** @type {['details'|'actions'|null, function]} */
+  const [capitalPageModeRequest, setCapitalPageModeRequest] = useState(null);
   const [salaryWarnOpen, setSalaryWarnOpen] = useState(false);
   const [eventsOpen, setEventsOpen] = useState(false);
   const [onboardingUi, setOnboardingUi] = useState({ visible: false, lockTabs: false });
@@ -75,6 +78,24 @@ export function GameScreen({ onLogout, onNewGame, onLoadGame }) {
   } = useGame();
 
   const closeEventsOverlay = useCallback(() => setEventsOpen(false), []);
+
+  const goFinanceTab = useCallback(({ flowsSection = null, pageMode = null } = {}) => {
+    setCapitalFlowsOpen(flowsSection);
+    setCapitalPageModeRequest(pageMode);
+    setActiveTab('finance');
+  }, []);
+
+  const reportGuidanceScreen = useCallback(
+    (screenKey) => {
+      if (!overview?.guidance?.show_curriculum) return;
+      const triggerId = GUIDANCE_SCREEN_TRIGGERS[screenKey];
+      if (!triggerId) return;
+      void API.patchGuidance({ action: 'screen_enter', trigger_id: triggerId }).then(() =>
+        refreshOverview?.(),
+      );
+    },
+    [overview?.guidance?.show_curriculum, refreshOverview],
+  );
 
   const guidance = overview?.guidance;
   const inGuidanceCurriculum = guidance?.show_curriculum === true;
@@ -388,14 +409,10 @@ export function GameScreen({ onLogout, onNewGame, onLoadGame }) {
                     withdrawFromSafetyFund={withdrawFromSafetyFund}
                     treatSelf={treatSelf}
                     getNeedsGuide={getNeedsGuide}
-                    onGoFinance={() => {
-                      setCapitalFlowsOpen(null);
-                      setActiveTab('finance');
-                    }}
-                    onGoCapitalFlows={(section) => {
-                      setCapitalFlowsOpen(section);
-                      setActiveTab('finance');
-                    }}
+                    onGoFinance={() => goFinanceTab()}
+                    onGoFinanceInvest={() => goFinanceTab({ pageMode: 'actions' })}
+                    onGoCapitalFlows={(section) => goFinanceTab({ flowsSection: section })}
+                    onGuidanceScreenEnter={reportGuidanceScreen}
                   />
                 </div>
               )}
@@ -406,6 +423,9 @@ export function GameScreen({ onLogout, onNewGame, onLoadGame }) {
                   refreshOverview={refreshOverview}
                   openFlowsSection={capitalFlowsOpen}
                   onFlowsSectionOpened={() => setCapitalFlowsOpen(null)}
+                  pageModeRequest={capitalPageModeRequest}
+                  onPageModeRequestHandled={() => setCapitalPageModeRequest(null)}
+                  onGuidanceScreenEnter={reportGuidanceScreen}
                 />
               )}
 

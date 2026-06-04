@@ -2,7 +2,8 @@
   position: fixed;
   left: var(--mqx-dash-inline-pad, 14px);
   right: var(--mqx-dash-inline-pad, 14px);
-  bottom: calc(var(--tma-tabbar-inset, 64px) + 4px);
+  bottom: var(--mqx-guidance-strip-bottom, calc(var(--tma-tabbar-inset, 64px) + 4px));
+  transition: bottom 0.28s ease-out;
   z-index: 510;
   width: auto;
   max-width: var(--mqx-content-max, 480px);
@@ -204,6 +205,14 @@ body.mqx-page--guidance-active .mqx-sheet-root--portal {
   outline-offset: 3px;
   border-radius: 12px;
   animation: mqx-onboarding-anchor-pulse 1.6s ease-in-out infinite;
+}
+
+.mqx-finance-static.mqx-onboarding-anchor--focus,
+.mqx-finance-static__chips.mqx-onboarding-anchor--focus {
+  border-radius: 14px;
+  box-shadow:
+    0 0 0 3px color-mix(in srgb, var(--mq-violet, #6d28d9) 45%, transparent),
+    0 8px 24px color-mix(in srgb, var(--mq-violet, #6d28d9) 18%, transparent);
 }
 
 .mqx-action-chip.mqx-onboarding-anchor--focus,

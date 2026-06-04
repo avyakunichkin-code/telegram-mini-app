@@ -21,7 +21,7 @@ function clearFocusMarkers(root) {
 /**
  * Подсветка якоря шага + автоскролл в зоне .mqx-tab-page__scroll.
  */
-export function useGuidanceAnchorFocus({ rootRef, beatId, active, stripHeightPx = 0 }) {
+export function useGuidanceAnchorFocus({ rootRef, beatId, active, stripHeightPx = 0, liftExtraPx = 0 }) {
   useEffect(() => {
     const root = rootRef?.current;
     if (!root || !active) {
@@ -48,7 +48,7 @@ export function useGuidanceAnchorFocus({ rootRef, beatId, active, stripHeightPx 
     const tabInset = parsePx(
       getComputedStyle(document.documentElement).getPropertyValue('--tma-tabbar-inset'),
     );
-    const reserve = getGuidanceBottomReservePx(stripHeightPx, tabInset);
+    const reserve = getGuidanceBottomReservePx(stripHeightPx, tabInset) + (Number(liftExtraPx) || 0);
 
     const runScroll = () => {
       scrollGuidanceAnchorIntoView({ scrollEl, target, bottomReservePx: reserve });
@@ -62,5 +62,5 @@ export function useGuidanceAnchorFocus({ rootRef, beatId, active, stripHeightPx 
       window.clearTimeout(t2);
       clearFocusMarkers(root);
     };
-  }, [rootRef, beatId, active, stripHeightPx]);
+  }, [rootRef, beatId, active, stripHeightPx, liftExtraPx]);
 }

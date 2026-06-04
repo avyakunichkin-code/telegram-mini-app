@@ -1,14 +1,14 @@
 ---
 layer: spec
-status: approved
-owner: product+frontend+backend
-last_reviewed: 2026-06-01
-tracks: O2, pre-alpha, onboarding
-supersedes: SPEC_onboarding-tma.md (O1 guided coach)
-idea: ../../vision/ideas/onboarding-o2-progressive-guidance.md
-design_lab: ../../../design-lab/onboarding-o2/guidance-strip-round/ (★ A prod parity, APPROVED 2026-06-01)
-character_voice: ../../reference/CHARACTER_MONETKA.md
-feedback: ../../foundation/PRE_ALPHA_PLAYTEST_FEEDBACK.md
+status: superseded
+superseded_by: SPEC_onboarding-o3.md
+last_reviewed: 2026-06-05
+---
+
+# Spec: Онбординг TMA v2 (O2 — Progressive Guidance) — архив
+
+**Не использовать для новых задач.** Канон: [`SPEC_onboarding-o3.md`](SPEC_onboarding-o3.md) (2026-06-05).
+
 ---
 
 # Spec: Онбординг TMA v2 (O2 — Progressive Guidance)

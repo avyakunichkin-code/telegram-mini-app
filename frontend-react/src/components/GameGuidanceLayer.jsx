@@ -6,6 +6,7 @@ import {
   resetGuidanceSessionDismissCount,
 } from '../guidance/sessionDismiss';
 import { useGuidanceAnchorFocus } from '../guidance/useGuidanceAnchorFocus';
+import { useGuidanceStripAnchorLift } from '../guidance/useGuidanceStripAnchorLift';
 import { MqxGuidanceAnchorLink } from './mqx/guidance/MqxGuidanceAnchorLink';
 import { MqxGuidanceStrip } from './mqx/guidance/MqxGuidanceStrip';
 
@@ -22,6 +23,7 @@ export function GameGuidanceLayer({
 }) {
   const stripRef = useRef(null);
   const [stripHeightPx, setStripHeightPx] = useState(0);
+  const [liftExtraPx, setLiftExtraPx] = useState(0);
   const [dismissedNudgeId, setDismissedNudgeId] = useState(null);
   const [sessionDismissCount, setSessionDismissCount] = useState(() =>
     getGuidanceSessionDismissCount(),
@@ -60,13 +62,25 @@ export function GameGuidanceLayer({
     beatId: showCurriculum ? guidance?.beat_id : null,
     active: showCurriculum && visible,
     stripHeightPx,
+    liftExtraPx,
+  });
+
+  useGuidanceStripAnchorLift({
+    stripRef,
+    rootRef: scrollRootRef,
+    beatId: guidance?.beat_id,
+    active: showCurriculum && visible,
+    stripHeightPx,
+    onLiftExtraPxChange: setLiftExtraPx,
   });
 
   useEffect(() => {
     if (!visible) {
       setStripHeightPx(0);
+      setLiftExtraPx(0);
       document.documentElement.style.removeProperty('--mqx-guidance-scroll-pad');
       document.documentElement.style.removeProperty('--mqx-guidance-strip-lift');
+      document.documentElement.style.removeProperty('--mqx-guidance-strip-bottom');
       return undefined;
     }
 
@@ -78,7 +92,8 @@ export function GameGuidanceLayer({
       setStripHeightPx(h);
       const tabRaw = getComputedStyle(document.documentElement).getPropertyValue('--tma-tabbar-inset');
       const tab = parseFloat(tabRaw) || 64;
-      const lift = `calc(${h}px + ${tab}px + 4px)`;
+      const extra = liftExtraPx || 0;
+      const lift = `calc(${h}px + ${tab}px + 4px + ${extra}px)`;
       document.documentElement.style.setProperty('--mqx-guidance-scroll-pad', `calc(${lift} + 16px)`);
       document.documentElement.style.setProperty('--mqx-guidance-strip-lift', lift);
     };
@@ -90,8 +105,9 @@ export function GameGuidanceLayer({
       ro.disconnect();
       document.documentElement.style.removeProperty('--mqx-guidance-scroll-pad');
       document.documentElement.style.removeProperty('--mqx-guidance-strip-lift');
+      document.documentElement.style.removeProperty('--mqx-guidance-strip-bottom');
     };
-  }, [visible, guidance?.beat_id, guidance?.view_index, guidance?.title, guidance?.body]);
+  }, [visible, liftExtraPx, guidance?.beat_id, guidance?.view_index, guidance?.title, guidance?.body]);
 
   useEffect(() => {
     if (guidance?.show_curriculum === false && !guidance?.nudge_id) {
@@ -134,12 +150,16 @@ export function GameGuidanceLayer({
     );
   }
 
+  const beatId = guidance.beat_id;
   const isReadGate =
-    guidance.beat_id === 'p1_period' ||
-    guidance.beat_id === 'p2_events_done' ||
-    guidance.beat_id === 'p3_needs' ||
-    guidance.beat_id === 'p3_farewell' ||
-    (guidance.beat_id === 'p1_close' && guidance.show_debrief);
+    beatId === 'p1_period' ||
+    beatId === 'p1_flows' ||
+    beatId === 'p2_new_month' ||
+    beatId === 't_finance_actions' ||
+    beatId === 't_finance_details' ||
+    beatId === 't_needs' ||
+    beatId === 't_farewell' ||
+    (beatId === 'p1_close' && guidance.show_debrief);
 
   const showContinue =
     isReadGate && (!guidance.beat_completed || (guidance.beat_id === 'p1_close' && guidance.show_debrief));
