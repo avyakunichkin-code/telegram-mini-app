@@ -1,7 +1,7 @@
 ---
 layer: foundation
 status: active
-last_reviewed: 2026-06-01
+last_reviewed: 2026-06-05
 audience: product, playtest moderators
 wave_id: PA-W1-2026-06
 ---
@@ -14,15 +14,15 @@ wave_id: PA-W1-2026-06
 
 ---
 
-## Статус запуска (2026-06-01)
+## Статус запуска (2026-06-05)
 
 | Готово | Блок |
 |--------|------|
-| ✅ | Код: TB1, O1 coach, PW1 resume/PWA, I1 страховки, smoke S1–S6 |
-| ✅ | Доки: протокол, опрос, приглашение, трекер, KPI |
-| ⏳ | **Деплой prod** — зафиксировать commit после merge/push (см. ниже) |
+| ✅ | Код: TB1, **O3** guidance (spine + триггеры), PW1 resume/PWA, **I1** страховки, **notify RU** (ops TG) |
+| ✅ | Доки: протокол, опрос, приглашение (**холодный старт ~10–15 с**), трекер, KPI |
+| ⏳ | **Деплой prod** — merge → `main` → Pages + Render; **pin commit** (см. §«Закреплённый билд») |
 | ☐ | **Вы:** канал фидбека, форма опроса, трекер, модератор |
-| ☐ | **Вы:** рассылка 10–20 приглашений |
+| ☐ | **Вы:** рассылка 10–20 приглашений (PA-T2 / волна 2) |
 
 ---
 
@@ -34,7 +34,7 @@ wave_id: PA-W1-2026-06
 | 2 | Жёсткий дедлайн? | **Нет.** Soft-напоминание через 3–4 дня («если ещё не играли — опрос до …»). |
 | 3 | Где сырые ответы опроса? | **Google Form → Sheet** (или Яндекс.Формы). Доступ: product + 1 модератор. PII минимум; в git **не** коммитить ответы. 152-ФЗ: без паспортных данных; при сомнении — юрист. |
 | 4 | Созвоны? | **Только асинхрон** в волне 1. До **3** коротких интервью (15 мин) **по желанию** после опроса — не в приглашении массово. |
-| 5 | MQ-116 | Закрыта; не блокер. Онбординг O1 — в prod. |
+| 5 | MQ-116 | Закрыта; не блокер. Онбординг **O3** — в коде; в prod после деплоя. |
 | 6 | Вход | **Браузер или PWA** (Safari «На экран Домой»). TMA-бот — опционально позже ([`TELEGRAM_BACKLOG.md`](../backlog/TELEGRAM_BACKLOG.md)). |
 
 ---
@@ -46,7 +46,7 @@ wave_id: PA-W1-2026-06
 | **wave_id** | `PA-W1-2026-06` | [x] |
 | **Игра (браузер/PWA)** | [https://avyakunichkin-code.github.io/telegram-mini-app/#/](https://avyakunichkin-code.github.io/telegram-mini-app/#/) | [x] |
 | **API health** | `GET https://telegram-mini-app-zwfs.onrender.com/api/health` → 200 | [x] |
-| **Commit / deploy (prod)** | **Обновить перед рассылкой:** prod сейчас `index-BoE0mfML.js` (Pages); локально `ddc49ce` + незакоммиченный I1 — см. [`ops/DEPLOY.md`](../ops/DEPLOY.md) §5 | [ ] |
+| **Commit / deploy (prod)** | **Обновить после merge в `main`:** см. §«Закреплённый билд»; кандидат `85ca8c4` (`new_functions`) | [ ] |
 | **Канал фидбека** | TG-чат / группа: `________` | [ ] |
 | **Опрос** | URL формы: `________` (текст: [`templates/PRE_ALPHA_SURVEY_COPY.md`](templates/PRE_ALPHA_SURVEY_COPY.md)) | [ ] |
 | **Трекер** | Sheet: `________` (шаблон: [`templates/PRE_ALPHA_WAVE1_TRACKER.md`](templates/PRE_ALPHA_WAVE1_TRACKER.md)) | [ ] |
@@ -60,11 +60,15 @@ wave_id: PA-W1-2026-06
 
 ### Шаг 1 — Деплой и pin билда (~15 мин)
 
-1. Закоммитить и запушить ветку → `main` (или `npm run deploy` из `frontend-react/`).
-2. Дождаться GitHub Pages + Render (API уже на Render).
-3. Ручной smoke S7: регистрация → **Игра** → **Студент** → зарплата → 1 событие → **Закрыть месяц**.
-4. Записать в таблицу выше: `git rev-parse --short HEAD` и hash `index-*.js` со страницы.
-5. Закрепить в канале фидбека: «Стенд от `YYYY-MM-DD`, commit `…`».
+**Состав билда:** **O3** (guidance spine + триггеры) + **I1** (страховки) + **notify** (RU в ops-чат, milestones 5/8).
+
+1. Merge ветки с O3/I1/notify → `main`; `git push origin main`.
+2. Дождаться:
+   - GitHub Actions **Deploy app to GitHub Pages** (зелёный workflow);
+   - Render **tvoy-hod-api** — autoDeploy от того же commit (`render.yaml`).
+3. Ручной smoke S7: регистрация → **Игра** → **Студент** → O3 strip (5 шагов P1) → зарплата → 1 событие → **Закрыть месяц**.
+4. Заполнить §«Закреплённый билд» ниже: SHA, дата, `index-*.js` из DevTools → Network.
+5. Закрепить в канале фидбека текст из §«Сообщение pin в канале».
 
 ### Шаг 2 — Опрос + трекер (~30 мин)
 
@@ -82,7 +86,49 @@ wave_id: PA-W1-2026-06
 
 ---
 
+## Закреплённый билд (pin commit)
+
+Заполнить **после** успешного деплоя с `main`. Не рассылать приглашения, пока строка commit пустая.
+
+| Поле | Значение |
+|------|----------|
+| **wave / когорта** | PA-T2 (или `PA-W1-2026-06` — зафиксировать одно) |
+| **Дата деплоя** | `YYYY-MM-DD` |
+| **Commit SHA (`main`)** | `________` *(кандидат до merge: `85ca8c4` на `new_functions`)* |
+| **Фичи билда** | O3 guidance · I1 insurance · notify RU |
+| **GitHub Pages asset** | `index-________.js` (DevTools → Network при загрузке `#/`) |
+| **Render API deploy** | тот же commit; `GET /api/health` → 200 |
+| **Проверил S7** | имя, дата |
+
+Команды:
+
+```bash
+git checkout main && git pull
+git rev-parse --short HEAD
+curl -s -o /dev/null -w "%{http_code} %{time_total}s\n" https://telegram-mini-app-zwfs.onrender.com/api/health
+```
+
+---
+
+## Сообщение pin в канале фидбека
+
+```
+📌 Стенд Pre-Alpha · {{DATE}}
+commit: {{COMMIT_SHA}}
+Билд: O3 (онбординг) · страховки I1 · уведомления
+
+Игра: https://avyakunichkin-code.github.io/telegram-mini-app/#/
+Первый вход: ~20–30 с — экран «Разбудим сервер»; дальше быстрее.
+Новая игра → Игра → Студент.
+
+Баги и вопросы — сюда, со скрином и временем.
+```
+
+---
+
 ## Текст приглашения (подставить 2 URL)
+
+Полная версия: [`templates/PRE_ALPHA_INVITE_RU.md`](templates/PRE_ALPHA_INVITE_RU.md).
 
 ```
 Привет!
@@ -91,8 +137,10 @@ wave_id: PA-W1-2026-06
 
 Согласие: фидбек — для улучшения продукта, без имён в отчётах; скрины — только с вашего разрешения.
 
+⏳ Первый запуск: ~20–30 с — в игре экран «Разбудим сервер» со спиннером. Не закрывайте вкладку.
+
 1. Игра: https://avyakunichkin-code.github.io/telegram-mini-app/#/
-   (браузер или «Добавить на экран» в Safari/Chrome; первый вход к API может ждать ~10–15 с)
+   (браузер или «Добавить на экран» в Safari/Chrome)
 2. Новая игра → «Игра» → шаблон «Студент»
 3. 30–45 мин, цель — **≥5 закрытых периодов** (новичку ≥3; stretch ≥8). Победу не ждём
 4. Застряли — {{FEEDBACK_CHANNEL}} + скрин
@@ -125,7 +173,7 @@ wave_id: PA-W1-2026-06
 ## Чеклист «кнопка старт» (§3 протокола)
 
 - [x] Smoke S1–S6
-- [ ] Деплой prod = pin commit в таблице выше
+- [ ] Деплой prod (**O3 + I1 + notify**) = pin commit в §«Закреплённый билд»
 - [ ] S7 — полный ручной прогон после деплоя
 - [ ] В канале фидбека закреплена строка билда
 - [ ] Опрос развёрнут, тестовый ответ проверен

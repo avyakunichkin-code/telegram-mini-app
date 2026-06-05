@@ -9,6 +9,15 @@ function resolveApiBase() {
 
 const API_BASE = resolveApiBase();
 
+/** Prod/staging URL (не dev-proxy). Пустая строка — локальный Vite proxy. */
+export function getApiBase() {
+  return API_BASE;
+}
+
+export function isRemoteProdApi() {
+  return Boolean(API_BASE);
+}
+
 let authToken = localStorage.getItem('tg_miniapp_token');
 
 export function setAuthToken(token) {

@@ -786,6 +786,17 @@
   padding: 24px 0;
 }
 
+.mqx-api-cold-start {
+  text-align: center;
+}
+
+.mqx-api-cold-start__hint {
+  margin: 0 0 8px;
+  font-size: var(--mq-fs-small);
+  line-height: 1.4;
+  color: color-mix(in srgb, var(--mqx-ink) 68%, var(--tg-theme-hint-color, #6b7280));
+}
+
 .mqx-auth-monetka__empty {
   margin: 8px 0 0;
   font-size: var(--mq-fs-heading);

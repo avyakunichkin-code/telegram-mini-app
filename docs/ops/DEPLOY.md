@@ -135,11 +135,12 @@ HashRouter (`#/game`) менять не нужно.
 
 ## 5. Зафиксировать билд для волны (Pre-Alpha §3)
 
-Перед набором 10–20 человек:
+Перед набором 10–20 человек (чеклист и шаблон pin: [`PRE_ALPHA_WAVE1_OPS.md`](../foundation/PRE_ALPHA_WAVE1_OPS.md) §«Закреплённый билд»):
 
-1. Записать **commit SHA** `main` после успешного workflow Deploy.
-2. Записать **тег API** (Render deploy id или commit, если деплой с ветки).
-3. В канале тестеров одна строка: «стенд от `2026-05-24`, commit `abc1234`».
+1. Merge в `main` билд **O3 + I1 + notify**; дождаться GitHub Pages workflow и Render autoDeploy.
+2. Записать **commit SHA** `main` (`git rev-parse --short HEAD`).
+3. Записать **Pages asset** (`index-*.js`) и проверить `GET /api/health` на том же билде.
+4. В канале тестеров — pin-сообщение (commit, дата, **«первый вход 10–15 с»**).
 
 При hotfix — коротко сообщить «билд обновлён», не менять механику mid-session без нужды.
 
