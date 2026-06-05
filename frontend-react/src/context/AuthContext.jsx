@@ -2,7 +2,11 @@ import { createContext, useContext, useState, useEffect, useCallback } from 'rea
 import { API, setAuthToken } from '../api';
 import { isRemoteProdApi } from '../api/client';
 import { wakeRemoteApi } from '../api/health';
-import { markApiWarmedThisSession, shouldShowApiColdStart } from '../utils/apiWarmupSession';
+import {
+  isPageColdUiActive,
+  markApiWarmedThisSession,
+  shouldRunApiWake,
+} from '../utils/apiWarmupSession';
 
 const AuthContext = createContext();
 
@@ -22,13 +26,12 @@ export function AuthProvider({ children }) {
 
     async function bootstrap() {
       const remote = isRemoteProdApi();
-      const cold = remote && shouldShowApiColdStart();
 
-      if (cold) {
+      if (remote && isPageColdUiActive()) {
         setBootPhase('cold_start');
       }
 
-      if (remote && cold) {
+      if (remote && shouldRunApiWake()) {
         const wake = await wakeRemoteApi();
         if (cancelled) return;
         if (wake.ok) {
@@ -45,7 +48,7 @@ export function AuthProvider({ children }) {
         return;
       }
 
-      if (!cold && !cancelled) {
+      if (!remote && !cancelled) {
         setBootPhase('session');
       }
 

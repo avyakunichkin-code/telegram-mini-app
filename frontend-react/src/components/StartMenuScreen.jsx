@@ -3,6 +3,10 @@ import { Modal, Spinner } from '@telegram-apps/telegram-ui';
 import { useAuth } from '../context/AuthContext';
 import { API } from '../api';
 import { showNotification } from './notifications';
+import { isRemoteProdApi } from '../api/client';
+import { isPageColdUiActive, markPageColdUiComplete } from '../utils/apiWarmupSession';
+import { getBootstrapCopy } from '../utils/bootstrapCopy';
+import { AppBootstrapScreen } from './mqx/layout/AppBootstrapScreen';
 import { MonetkaBubbleScreen } from './mqx/layout/MonetkaBubbleScreen';
 import { MqxButton } from './mqx/primitives/MqxButton';
 import { MoneyText } from './MoneyText';
@@ -27,8 +31,12 @@ function profileSubtitle(p) {
   return badge ? `${badge} · ${base}` : base;
 }
 
-function menuCopy({ loading, profileCount }) {
+function menuCopy({ loading, profileCount, useColdCopy }) {
   if (loading) {
+    if (useColdCopy) {
+      const copy = getBootstrapCopy('cold_start');
+      return { title: copy.title, subtitle: copy.subtitle };
+    }
     return {
       title: 'Секунду, листаю полки',
       subtitle: 'Подтягиваю твои сохранения…',
@@ -68,6 +76,7 @@ export function StartMenuScreen({ onNewGame, onLoadGame, onLogout }) {
       setProfiles([]);
     } finally {
       setLoading(false);
+      markPageColdUiComplete();
     }
   }, []);
 
@@ -97,9 +106,16 @@ export function StartMenuScreen({ onNewGame, onLoadGame, onLogout }) {
     return (b.id || 0) - (a.id || 0);
   });
 
+  const useColdBootstrap = loading && isRemoteProdApi() && isPageColdUiActive();
+
+  if (useColdBootstrap) {
+    return <AppBootstrapScreen mode="cold_start" />;
+  }
+
   const { title, subtitle } = menuCopy({
     loading,
     profileCount: profiles.length,
+    useColdCopy: false,
   });
 
   return (
