@@ -26,7 +26,7 @@ import { suggestDefaultProfileName } from './utils/suggestDefaultProfileName';
 import { API } from './api';
 import { showNotification } from './components/notifications';
 import { startGameWithStudentTemplate } from './utils/startGame';
-import { ApiWarmupGate } from './components/ApiWarmupGate';
+import { AppBootstrapGate } from './components/AppBootstrapGate';
 
 function GameAppFlowShell({ children }) {
   return (
@@ -185,8 +185,8 @@ function GameApp() {
 function App() {
   return (
     <AppRoot className="mq-app-fill">
-      <ApiWarmupGate>
       <AuthProvider>
+        <AppBootstrapGate>
         <ToastHost />
         <div className="mq-app-fill">
         <HashRouter>
@@ -258,8 +258,8 @@ function App() {
           </Routes>
         </HashRouter>
         </div>
+        </AppBootstrapGate>
       </AuthProvider>
-      </ApiWarmupGate>
     </AppRoot>
   );
 }
