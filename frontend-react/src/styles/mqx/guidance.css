@@ -325,16 +325,33 @@ body.mqx-page--guidance-active .mqx-sheet-root--portal {
   }
 }
 
-/* Hero / «Закрыть месяц» и «События» — фиолетовый фон, кольцо белое */
+/* Hero / «Завершить ход» — фиолетовый фон, кольцо белое */
 .mqx-hero.mqx-onboarding-anchor--focus,
-.mqx-hero-turn__cta-primary.mqx-onboarding-anchor--focus,
-.mqx-hero-turn__events-pill.mqx-onboarding-anchor--focus {
+.mqx-hero-turn__cta-primary.mqx-onboarding-anchor--focus {
   outline: 2px solid #fff;
   outline-offset: 3px;
   box-shadow:
     0 0 0 1px color-mix(in srgb, var(--mq-violet-deep, #4c1d95) 40%, transparent),
     0 2px 12px color-mix(in srgb, #000 22%, transparent);
   animation: mqx-onboarding-anchor-pulse-light 1.6s ease-in-out infinite;
+}
+
+/* «События» на t_events_intro: полупрозрачная пилюля + белый outline не читаются на hero */
+.mqx-hero-turn__events-pill.mqx-onboarding-anchor--focus {
+  outline: none;
+  border: 2px solid #fff;
+  background: #fff;
+  color: var(--mq-violet-deep, #4c1d95);
+  box-shadow:
+    0 0 0 2px var(--mq-violet-deep, #4c1d95),
+    0 0 0 5px #fff,
+    0 6px 20px rgba(15, 17, 21, 0.32);
+  animation: mqx-onboarding-events-pill-pulse 1.5s ease-in-out infinite;
+}
+
+.mqx-hero-turn__events-pill.mqx-onboarding-anchor--focus .mqx-pill__badge {
+  background: color-mix(in srgb, var(--mq-violet-deep, #4c1d95) 14%, #fff);
+  color: var(--mq-violet-deep, #4c1d95);
 }
 
 .mqx-guidance-anchor-link {
@@ -392,6 +409,22 @@ body.mqx-page--guidance-active .mqx-sheet-root--portal {
   }
   50% {
     outline-color: #fff;
+  }
+}
+
+@keyframes mqx-onboarding-events-pill-pulse {
+  0%,
+  100% {
+    box-shadow:
+      0 0 0 2px var(--mq-violet-deep, #4c1d95),
+      0 0 0 5px rgba(255, 255, 255, 0.88),
+      0 6px 18px rgba(15, 17, 21, 0.26);
+  }
+  50% {
+    box-shadow:
+      0 0 0 2px var(--mq-violet-deep, #4c1d95),
+      0 0 0 6px #fff,
+      0 10px 28px rgba(15, 17, 21, 0.36);
   }
 }
 
