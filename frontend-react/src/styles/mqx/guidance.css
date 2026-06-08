@@ -3,6 +3,9 @@
   left: var(--mqx-dash-inline-pad, 14px);
   right: var(--mqx-dash-inline-pad, 14px);
   bottom: var(--mqx-guidance-strip-bottom, calc(var(--tma-tabbar-inset, 64px) + 4px));
+  max-height: min(46vh, calc(100dvh - var(--tma-tabbar-inset, 64px) - 24px));
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
   transition: bottom 0.28s ease-out;
   z-index: 510;
   width: auto;

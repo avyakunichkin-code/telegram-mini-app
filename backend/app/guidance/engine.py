@@ -7,6 +7,7 @@ from typing import Any
 
 from sqlalchemy.orm import Session
 
+from ..game.rules import MIN_PERIOD_INDEX_FOR_GAME_EVENTS
 from ..game.time import get_active_game_profile
 from ..models import User as UserModel
 from ..models import EventInstance, GameProfile, PeriodSnapshot, User
@@ -142,7 +143,7 @@ def _trigger_eligible(
         return True
 
     if trigger.id == "t_events_intro":
-        if int(profile.period_index or 1) < 2:
+        if int(profile.period_index or 1) < MIN_PERIOD_INDEX_FOR_GAME_EVENTS:
             return False
         if int(progress.get("events_chosen_p2") or 0) >= 1:
             return True

@@ -2,6 +2,9 @@
 
 export const STUDENT_TEMPLATE_KEY = 'mq_game_basic_v1';
 
+/** События и онбординг t_events_intro — с этого хода (зеркало game/rules.py). */
+export const MIN_PERIOD_INDEX_FOR_GAME_EVENTS = 3;
+
 /** O3 contextual triggers — зеркало backend/app/guidance/triggers.py */
 export const GUIDANCE_SCREEN_TRIGGERS = {
   'finance:actions': 't_finance_actions',
@@ -60,7 +63,7 @@ export const CURRICULUM = [
     body:
       'Интересно, а что если не завершить? Расходы всё равно **спишутся**, когда нажмёшь **«Завершить ход»** в шапке — жизнь, обязательства, содержание. Даже если баланс в течение хода был в плюсе.\n\n**Сейчас: нажми «Завершить ход»**, когда будешь готов.',
     debrief_body:
-      'Вот что **реально списалось** в этом ходе — сравни с тем, что видел на чипе «Расходы» до завершения. Так проще понять, куда ушли деньги.\n\n**Нажми «Понятно»** — откроется следующий ход.',
+      'Вот что **произошло за этот ход** — сравни с тем, что было на главной игровой странице до **«Завершить ход»**.\n\n**Нажми «Понятно»** — начнётся следующий ход.',
   },
   {
     id: 'p2_new_month',
@@ -70,7 +73,7 @@ export const CURRICULUM = [
     gate: 'read',
     title: 'Новый ход — новый цикл',
     body:
-      '**Ход №2**! **«Зарплата»** снова активна — забери, пока не завершил ход. Помни: после **«Завершить ход»** зарплата за этот ход уже **не повторится**.\n\n**Нажми «Понятно»** — дальше подсказки будут появляться, когда зайдёшь в новые разделы.',
+      '**Ход №2**! **«Зарплата»** снова активна — забери, пока не завершил ход. Помни: после **«Завершить ход»** зарплата за этот ход уже **не повторится**.\n\nКарточки событий подключатся с **хода №3** — пока просто освой ритм.\n\n**Нажми «Понятно»**.',
   },
 ];
 
@@ -85,15 +88,21 @@ export function isTriggerBeat(beatId) {
 }
 
 /**
- * События — после P1 (закрыт p1_close), на P2+.
+ * События — с хода MIN_PERIOD_INDEX_FOR_GAME_EVENTS; t_events_intro — после spine P1+P2.
  */
 export function areGameEventsUnlocked(guidance, onboardingState, periodIndex = null) {
+  const pi = Number(periodIndex);
+  const pastEventGate = Number.isFinite(pi) && pi >= MIN_PERIOD_INDEX_FOR_GAME_EVENTS;
+
   if (onboardingState === 'brief_done') return true;
-  if (!guidance?.show_curriculum) return true;
+  if (!guidance?.show_curriculum) {
+    return !Number.isFinite(pi) || pastEventGate;
+  }
+  if (guidance?.beat_id === 'p1_close' && guidance?.show_debrief) return false;
+  if (!pastEventGate) return false;
   if (isP1GuidanceComplete(guidance)) return true;
-  if (Number(periodIndex) >= 2) return true;
   const beatId = guidance?.beat_id;
-  if (beatId && (beatId.startsWith('p2_') || beatId.startsWith('t_'))) return true;
+  if (beatId && beatId.startsWith('t_')) return true;
   return false;
 }
 
@@ -103,6 +112,22 @@ export function shouldDeferPeriodCloseDuringGuidance(guidance, periodIndex) {
   return Number(periodIndex) <= 1;
 }
 
-export function shouldDeferGuidanceForPeriodCloseRitual(periodCloseOpen) {
-  return Boolean(periodCloseOpen);
+export function shouldDeferGuidanceForPeriodCloseRitual(periodCloseOpen, guidance = null) {
+  if (!periodCloseOpen) return false;
+  if (guidance?.beat_id === 'p1_close' && guidance?.show_debrief) return false;
+  return true;
+}
+
+/** Блокирует автопоказ карусели событий, пока идёт ритуал итогов или debrief P1. */
+export function shouldBlockAutoEventsOverlay({
+  periodCloseOpen,
+  periodCloseSummary,
+  queuedPeriodClose,
+  guidance,
+}) {
+  if (periodCloseOpen) return true;
+  if (periodCloseSummary) return true;
+  if (queuedPeriodClose) return true;
+  if (guidance?.beat_id === 'p1_close' && guidance?.show_debrief) return true;
+  return false;
 }

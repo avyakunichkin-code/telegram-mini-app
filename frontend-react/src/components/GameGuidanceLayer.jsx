@@ -5,8 +5,12 @@ import {
   getGuidanceSessionDismissCount,
   resetGuidanceSessionDismissCount,
 } from '../guidance/sessionDismiss';
+import {
+  computeGuidanceScrollPad,
+  defaultGuidanceStripBottom,
+  parseCssPx,
+} from '../guidance/guidanceStripLayout';
 import { useGuidanceAnchorFocus } from '../guidance/useGuidanceAnchorFocus';
-import { useGuidanceStripAnchorLift } from '../guidance/useGuidanceStripAnchorLift';
 import { MqxGuidanceAnchorLink } from './mqx/guidance/MqxGuidanceAnchorLink';
 import { MqxGuidanceStrip } from './mqx/guidance/MqxGuidanceStrip';
 
@@ -23,7 +27,6 @@ export function GameGuidanceLayer({
 }) {
   const stripRef = useRef(null);
   const [stripHeightPx, setStripHeightPx] = useState(0);
-  const [liftExtraPx, setLiftExtraPx] = useState(0);
   const [dismissedNudgeId, setDismissedNudgeId] = useState(null);
   const [sessionDismissCount, setSessionDismissCount] = useState(() =>
     getGuidanceSessionDismissCount(),
@@ -62,27 +65,20 @@ export function GameGuidanceLayer({
     beatId: showCurriculum ? guidance?.beat_id : null,
     active: showCurriculum && visible,
     stripHeightPx,
-    liftExtraPx,
-  });
-
-  useGuidanceStripAnchorLift({
-    stripRef,
-    rootRef: scrollRootRef,
-    beatId: guidance?.beat_id,
-    active: showCurriculum && visible,
-    stripHeightPx,
-    onLiftExtraPxChange: setLiftExtraPx,
+    liftExtraPx: 0,
   });
 
   useEffect(() => {
     if (!visible) {
       setStripHeightPx(0);
-      setLiftExtraPx(0);
       document.documentElement.style.removeProperty('--mqx-guidance-scroll-pad');
       document.documentElement.style.removeProperty('--mqx-guidance-strip-lift');
       document.documentElement.style.removeProperty('--mqx-guidance-strip-bottom');
+      document.documentElement.style.removeProperty('--mqx-guidance-strip-offset');
       return undefined;
     }
+
+    document.documentElement.style.removeProperty('--mqx-guidance-strip-bottom');
 
     const node = stripRef.current;
     if (!node) return undefined;
@@ -90,12 +86,16 @@ export function GameGuidanceLayer({
     const apply = () => {
       const h = Math.ceil(node.getBoundingClientRect().height);
       setStripHeightPx(h);
-      const tabRaw = getComputedStyle(document.documentElement).getPropertyValue('--tma-tabbar-inset');
-      const tab = parseFloat(tabRaw) || 64;
-      const extra = liftExtraPx || 0;
-      const lift = `calc(${h}px + ${tab}px + 4px + ${extra}px)`;
-      document.documentElement.style.setProperty('--mqx-guidance-scroll-pad', `calc(${lift} + 16px)`);
+      const tab = parseCssPx(
+        getComputedStyle(document.documentElement).getPropertyValue('--tma-tabbar-inset'),
+        64,
+      );
+      const stripBottom = defaultGuidanceStripBottom(tab);
+      const scrollPad = computeGuidanceScrollPad(h, stripBottom, 16);
+      const lift = computeGuidanceScrollPad(h, stripBottom, 4);
+      document.documentElement.style.setProperty('--mqx-guidance-scroll-pad', scrollPad);
       document.documentElement.style.setProperty('--mqx-guidance-strip-lift', lift);
+      document.documentElement.style.setProperty('--mqx-guidance-strip-offset', `${h}px`);
     };
 
     apply();
@@ -105,9 +105,9 @@ export function GameGuidanceLayer({
       ro.disconnect();
       document.documentElement.style.removeProperty('--mqx-guidance-scroll-pad');
       document.documentElement.style.removeProperty('--mqx-guidance-strip-lift');
-      document.documentElement.style.removeProperty('--mqx-guidance-strip-bottom');
+      document.documentElement.style.removeProperty('--mqx-guidance-strip-offset');
     };
-  }, [visible, liftExtraPx, guidance?.beat_id, guidance?.view_index, guidance?.title, guidance?.body]);
+  }, [visible, guidance?.beat_id, guidance?.view_index, guidance?.title, guidance?.body]);
 
   useEffect(() => {
     if (guidance?.show_curriculum === false && !guidance?.nudge_id) {

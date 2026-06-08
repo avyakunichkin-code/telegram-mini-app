@@ -11,6 +11,7 @@ from sqlalchemy.orm import Session
 from ...finance.balance_utils import adjust_balance, adjust_safety_fund_balance, TRANSACTION_TYPES
 from ...game.rules import (
     EVENTS_PER_PERIOD,
+    MIN_PERIOD_INDEX_FOR_GAME_EVENTS,
     MANDATORY_GATE_BLOCKS_PERIOD_END,
     EventProfileContext,
     EventProfileCounterSnapshot,
@@ -468,7 +469,9 @@ def _o2_guidance_replaces_events_intro(db: Session, profile: GameProfile) -> boo
 
 
 def ensure_events_unlock_intro(db: Session, profile: GameProfile) -> None:
-    """Разовое intro-событие при первом доступе к колоде (с 1-го периода)."""
+    """Разовое intro-событие при первом доступе к колоде (legacy, без O2 guidance)."""
+    if int(profile.period_index or 1) < MIN_PERIOD_INDEX_FOR_GAME_EVENTS:
+        return
     if _o2_guidance_replaces_events_intro(db, profile):
         return
 
@@ -543,6 +546,9 @@ def _period_pool_instance_count(
 def ensure_period_events(db: Session, game_profile_id: int, period_index: int, save_kind: str) -> None:
     profile = db.query(GameProfile).filter(GameProfile.id == game_profile_id).first()
     if not profile:
+        return
+
+    if int(period_index) < MIN_PERIOD_INDEX_FOR_GAME_EVENTS:
         return
 
     ensure_scheduled_chain_events(db, game_profile_id, period_index)
@@ -708,6 +714,9 @@ def serialize_instance_rows(
 
 def build_pending_events_payload(db: Session, profile: GameProfile) -> dict:
     _ensure_seed_events(db)
+
+    if int(profile.period_index or 1) < MIN_PERIOD_INDEX_FOR_GAME_EVENTS:
+        return {"events": [], "event": None}
 
     o2_intro = _o2_guidance_replaces_events_intro(db, profile)
     if not o2_intro:

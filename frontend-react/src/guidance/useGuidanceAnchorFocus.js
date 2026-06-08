@@ -45,21 +45,33 @@ export function useGuidanceAnchorFocus({ rootRef, beatId, active, stripHeightPx 
 
     target.classList.add(GUIDANCE_ANCHOR_FOCUS_CLASS);
 
-    const tabInset = parsePx(
-      getComputedStyle(document.documentElement).getPropertyValue('--tma-tabbar-inset'),
-    );
-    const reserve = getGuidanceBottomReservePx(stripHeightPx, tabInset) + (Number(liftExtraPx) || 0);
-
     const runScroll = () => {
+      const tabInset = parsePx(
+        getComputedStyle(document.documentElement).getPropertyValue('--tma-tabbar-inset'),
+      );
+      const padRaw = getComputedStyle(document.documentElement).getPropertyValue(
+        '--mqx-guidance-scroll-pad',
+      );
+      const padFromCss = parsePx(padRaw, 0);
+      const reserve =
+        padFromCss > 0
+          ? padFromCss
+          : getGuidanceBottomReservePx(stripHeightPx, tabInset) + (Number(liftExtraPx) || 0);
       scrollGuidanceAnchorIntoView({ scrollEl, target, bottomReservePx: reserve });
     };
 
     const raf = requestAnimationFrame(runScroll);
     const t2 = window.setTimeout(runScroll, 320);
+    scrollEl?.addEventListener('scroll', runScroll, { passive: true });
+    window.addEventListener('resize', runScroll);
+    window.visualViewport?.addEventListener('resize', runScroll);
 
     return () => {
       cancelAnimationFrame(raf);
       window.clearTimeout(t2);
+      scrollEl?.removeEventListener('scroll', runScroll);
+      window.removeEventListener('resize', runScroll);
+      window.visualViewport?.removeEventListener('resize', runScroll);
       clearFocusMarkers(root);
     };
   }, [rootRef, beatId, active, stripHeightPx, liftExtraPx]);

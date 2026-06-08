@@ -98,7 +98,7 @@
   top: 0;
   bottom: 0;
   left: 50%;
-  z-index: 250;
+  z-index: 535;
   width: 100%;
   max-width: 480px;
   transform: translateX(-50%);
@@ -107,6 +107,13 @@
 
 .mqx-juice-ritual-root--open {
   pointer-events: auto;
+}
+
+/* Debrief P1: полоска guidance fixed у tab bar — отступ снизу у ритуала */
+.mqx-page--guidance-active .mqx-juice-ritual {
+  padding-bottom: calc(
+    16px + var(--tma-tabbar-inset, 64px) + var(--mqx-guidance-strip-offset, 0px) + 8px
+  );
 }
 
 .mqx-juice-ritual {

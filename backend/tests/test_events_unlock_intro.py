@@ -1,5 +1,6 @@
-﻿"""Сценарное событие «открытие колоды» — intro в первом периоде."""
+﻿"""Сценарное событие «открытие колоды» — legacy intro (без O2 guidance)."""
 
+from app.game.rules import MIN_PERIOD_INDEX_FOR_GAME_EVENTS
 from app.models import EventDefinition, EventInstance, GameProfile, User
 from app.events.mvp11_seeds import ensure_mvp11_event_catalog
 from app.routers.events import (
@@ -13,22 +14,30 @@ class TestEventsUnlockIntro:
     def test_spawns_once_not_in_random_pool(self, db_session):
         ensure_mvp11_event_catalog(db_session)
 
+        user = User(username="legacy_intro", hashed_password="x", guidance_completed=1)
+        db_session.add(user)
+        db_session.commit()
+
+        period_index = MIN_PERIOD_INDEX_FOR_GAME_EVENTS
         profile = GameProfile(
-            user_id=1,
+            user_id=user.id,
             name="intro",
             save_kind="game",
             is_active=1,
-            period_index=1,
+            period_index=period_index,
         )
         db_session.add(profile)
         db_session.commit()
 
         ensure_events_unlock_intro(db_session, profile)
-        ensure_period_events(db_session, profile.id, 1, "game")
+        ensure_period_events(db_session, profile.id, period_index, "game")
 
         instances = (
             db_session.query(EventInstance)
-            .filter(EventInstance.game_profile_id == profile.id, EventInstance.period_index == 1)
+            .filter(
+                EventInstance.game_profile_id == profile.id,
+                EventInstance.period_index == period_index,
+            )
             .all()
         )
         intro_def = (

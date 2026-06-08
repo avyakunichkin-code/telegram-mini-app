@@ -24,6 +24,7 @@ import { GameGuidanceLayer } from './GameGuidanceLayer';
 import {
   areGameEventsUnlocked,
   GUIDANCE_SCREEN_TRIGGERS,
+  shouldBlockAutoEventsOverlay,
   shouldDeferGuidanceForPeriodCloseRitual,
   shouldDeferPeriodCloseDuringGuidance,
 } from '../guidance/curriculum';
@@ -130,7 +131,16 @@ export function GameScreen({ onLogout, onNewGame, onLoadGame }) {
   const periodCloseForUi = lastPeriodClose;
   const showPeriodCloseTail =
     !inOnboarding && activeTab === 'dashboard' && periodCloseForUi && !periodCloseOpen;
-  const deferGuidanceForPeriodClose = shouldDeferGuidanceForPeriodCloseRitual(periodCloseOpen);
+  const deferGuidanceForPeriodClose = shouldDeferGuidanceForPeriodCloseRitual(
+    periodCloseOpen,
+    guidance,
+  );
+  const blockAutoEventsOverlay = shouldBlockAutoEventsOverlay({
+    periodCloseOpen,
+    periodCloseSummary,
+    queuedPeriodClose,
+    guidance,
+  });
 
   // Итоги периода — до эффектов событий: в одном коммите сначала выставляем periodCloseOpen.
   useEffect(() => {
@@ -160,8 +170,8 @@ export function GameScreen({ onLogout, onNewGame, onLoadGame }) {
     if (!eventsUnlocked) return;
     if (eventsPromptTick <= lastOpenedEventsTickRef.current) return;
     if ((pendingEvents?.length ?? 0) > 0) {
-      // Пока открыт лист итогов — откладываем автопоказ событий (хвостик не блокирует).
-      if (periodCloseOpen) {
+      // Пока итоги хода или debrief P1 — откладываем автопоказ событий.
+      if (blockAutoEventsOverlay) {
         deferredEventsTickRef.current = eventsPromptTick;
         return;
       }
@@ -170,7 +180,7 @@ export function GameScreen({ onLogout, onNewGame, onLoadGame }) {
       // eslint-disable-next-line react-hooks/set-state-in-effect -- открытие только при новом bumpEvents
       setEventsOpen(true);
     }
-  }, [eventsPromptTick, pendingEvents?.length, eventsUnlocked, periodCloseOpen]);
+  }, [eventsPromptTick, pendingEvents?.length, eventsUnlocked, blockAutoEventsOverlay]);
 
   useEffect(() => {
     if (!eventsUnlocked) {
@@ -179,9 +189,15 @@ export function GameScreen({ onLogout, onNewGame, onLoadGame }) {
   }, [eventsUnlocked]);
 
   useEffect(() => {
+    if (blockAutoEventsOverlay && eventsOpen) {
+      setEventsOpen(false);
+    }
+  }, [blockAutoEventsOverlay, eventsOpen]);
+
+  useEffect(() => {
     if (!eventsUnlocked) return;
     if ((pendingEvents?.length ?? 0) <= 0) return;
-    if (periodCloseOpen) return;
+    if (blockAutoEventsOverlay) return;
 
     const deferredTick = deferredEventsTickRef.current;
     if (deferredTick > lastOpenedEventsTickRef.current && deferredTick <= eventsPromptTick) {
@@ -190,7 +206,7 @@ export function GameScreen({ onLogout, onNewGame, onLoadGame }) {
       // eslint-disable-next-line react-hooks/set-state-in-effect -- однократный автопоказ после итогов
       setEventsOpen(true);
     }
-  }, [eventsPromptTick, pendingEvents?.length, eventsUnlocked, periodCloseOpen]);
+  }, [eventsPromptTick, pendingEvents?.length, eventsUnlocked, blockAutoEventsOverlay]);
 
   useEffect(() => {
     if (onboardingUi.visible && activeTab !== 'dashboard') {
