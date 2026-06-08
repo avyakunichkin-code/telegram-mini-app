@@ -1,9 +1,10 @@
 import { BrandLogo } from '../../BrandLogo';
+import { FINISH_TURN_BUTTON, TURN_SINGULAR } from '../../../constants/turnCopy';
 import { MqxButton } from '../primitives/MqxButton';
 import { MqxPill } from '../primitives/MqxPill';
 
 /**
- * Hero дашборда (TB1, layout H2): период слева, справа — «Закрыть месяц» + «События».
+ * Hero дашборда (TB1, layout H2): ход слева, справа — «Завершить ход» + «События».
  * Без таймера и play/pause.
  */
 export function MqxDashboardHero({
@@ -24,7 +25,7 @@ export function MqxDashboardHero({
 
         <div className="mqx-hero-turn__period-block">
           <span className="mqx-hero-turn__status-hint">Месяц открыт</span>
-          <span className="mqx-hero-turn__period-label">Период</span>
+          <span className="mqx-hero-turn__period-label">{TURN_SINGULAR}</span>
           <span className="mqx-hero-turn__period-value">#{periodIndex}</span>
         </div>
 
@@ -47,10 +48,10 @@ export function MqxDashboardHero({
             disabled={closeMonthDisabled}
             onClick={onCloseMonth}
             data-onboarding-anchor="next_period"
-            title="Закрыть текущий месяц и перейти к следующему периоду"
-            aria-label="Закрыть месяц и перейти к следующему периоду"
+            title="Завершить текущий ход и перейти к следующему"
+            aria-label="Завершить ход и перейти к следующему"
           >
-            Закрыть месяц
+            {FINISH_TURN_BUTTON}
           </MqxButton>
         </div>
       </div>

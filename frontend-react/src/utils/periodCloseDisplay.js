@@ -1,5 +1,7 @@
+import { turnCloseTitle } from '../constants/turnCopy';
+
 /**
- * Строки компактного итога периода (иконка + подпись + Δ со стрелкой).
+ * Строки компактного итога хода (иконка + подпись + Δ со стрелкой).
  * @typedef {{ key: string, label: string, glyph: 'coin'|'up'|'down'|'percent', delta: number, tone?: 'pos'|'neg'|'' }} PeriodCloseRow
  */
 
@@ -74,8 +76,7 @@ export function periodCloseRows(summary) {
 
 export function periodCloseTitle(summary) {
   const m = derivePeriodCloseMetrics(summary);
-  const n = m?.periodIndex || 0;
-  return n > 0 ? `Итоги периода #${n}` : 'Итоги периода';
+  return turnCloseTitle(m?.periodIndex || 0);
 }
 
 export function shouldAutoOpenPeriodClose(summary, autoMax = 3) {

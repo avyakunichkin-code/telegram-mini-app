@@ -1,8 +1,15 @@
 import { useCallback, useState } from 'react';
 import { MonetkaAvatar } from '../brand/MonetkaAvatar';
 import { getRunFinaleCupPortrait } from '../brand/runFinalePortraits';
+import { TURN_SINGULAR_GEN } from '../../../constants/turnCopy';
 import { MqxButton } from '../primitives/MqxButton';
 import { showNotification } from '../../notifications';
+
+const ADVANCED_SCENARIO_AFTER_STUDENT = {
+  template_key: 'mq_game_tight_budget_v1',
+  title: 'Профессионал',
+  blurb: 'Аренда, авто, кредит, страховки и больше решений за ход',
+};
 
 const GLYPHS = {
   up: (
@@ -60,6 +67,7 @@ export function MqxRunFinale({
   payload,
   onDismissVictory,
   onNewGame,
+  onStartAdvancedScenario,
   onMenu,
   onSubmitFeedback,
 }) {
@@ -69,6 +77,10 @@ export function MqxRunFinale({
 
   const isWin = payload?.outcome === 'victory';
   const cup = getRunFinaleCupPortrait(payload?.persona_slug);
+  const showAdvancedCta =
+    isWin &&
+    payload?.template_key === 'mq_game_basic_v1' &&
+    typeof onStartAdvancedScenario === 'function';
 
   const handleSubmitFeedback = useCallback(
     async (e) => {
@@ -114,7 +126,7 @@ export function MqxRunFinale({
             </span>
             <h3 id="mqx-run-finale-title">ТВОЙ ХОД · выпуск</h3>
             <p className="mqx-run-finale-mast__sub">
-              Период {payload.period_index} · {mastSub}
+              {payload.period_index} {TURN_SINGULAR_GEN} · {mastSub}
             </p>
           </header>
 
@@ -209,7 +221,17 @@ export function MqxRunFinale({
         </div>
 
         <div className="mqx-run-finale__actions">
-          {isWin ? (
+          {showAdvancedCta ? (
+            <>
+              <MqxButton variant="primary" onClick={onStartAdvancedScenario}>
+                Сценарий «{ADVANCED_SCENARIO_AFTER_STUDENT.title}»
+              </MqxButton>
+              <p className="mqx-run-finale__advanced-hint">{ADVANCED_SCENARIO_AFTER_STUDENT.blurb}</p>
+              <MqxButton variant="secondary" onClick={onDismissVictory}>
+                Играть дальше в этом сохранении
+              </MqxButton>
+            </>
+          ) : isWin ? (
             <MqxButton variant="primary" onClick={onDismissVictory}>
               Играть дальше
             </MqxButton>
@@ -218,7 +240,7 @@ export function MqxRunFinale({
               Новая игра
             </MqxButton>
           )}
-          <MqxButton variant="secondary" onClick={onMenu}>
+          <MqxButton variant="ghost" onClick={onMenu}>
             К сохранениям
           </MqxButton>
         </div>

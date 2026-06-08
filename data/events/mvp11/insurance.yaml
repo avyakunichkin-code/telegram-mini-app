@@ -6,6 +6,7 @@ events:
   weight: 70
   event_tier: 3
   repeat_policy: repeatable
+  cooldown_periods: 10
   scenario_shape: soft_offer
   choices:
   - title: Подключить доп. покрытие

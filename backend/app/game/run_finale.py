@@ -261,9 +261,9 @@ def build_run_finale_payload(
             title="Доходы, расходы и подушка",
             divider_before=False,
             metrics=[
-                _metric("term", "Периодов сыграно", "До исхода", str(period_index)),
-                _metric("up", "Доходы", "В среднем за период", f"{_fmt_rub(avg_income)} ₽"),
-                _metric("down", "Расходы", "В среднем за период", f"{_fmt_rub(avg_expense)} ₽"),
+                _metric("term", "Ходов сыграно", "До исхода", str(period_index)),
+                _metric("up", "Доходы", "В среднем за ход", f"{_fmt_rub(avg_income)} ₽"),
+                _metric("down", "Расходы", "В среднем за ход", f"{_fmt_rub(avg_expense)} ₽"),
                 _metric(
                     "coin",
                     "Подушка",

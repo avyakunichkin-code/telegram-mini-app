@@ -325,3 +325,11 @@
   border-top: 1px solid var(--mqx-border, rgba(15, 17, 21, 0.1));
   background: var(--mqx-surface, #fff);
 }
+
+.mqx-run-finale__advanced-hint {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.35;
+  color: var(--mqx-text-secondary, rgba(15, 17, 21, 0.62));
+  text-align: center;
+}

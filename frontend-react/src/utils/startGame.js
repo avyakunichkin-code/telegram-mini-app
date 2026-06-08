@@ -15,6 +15,24 @@ export async function startGameWithStudentTemplate(profileName) {
   });
 }
 
+/** Автостарт Game Mode с выбранным шаблоном (напр. после победы за «Студента»). */
+export async function startGameWithTemplate(profileName, templateKey) {
+  const name = String(profileName || '').trim();
+  const key = String(templateKey || '').trim();
+  if (!name) {
+    throw new Error('Введите название сохранения');
+  }
+  if (!key) {
+    throw new Error('Не выбран шаблон игры');
+  }
+  return API.startNewGame({
+    profile_name: name,
+    save_kind: 'game',
+    template_key: key,
+    period_duration_seconds: DEFAULT_PERIOD_DURATION_SECONDS,
+  });
+}
+
 /** Автостарт Game Mode с самым простым шаблоном каталога. */
 export async function startGameWithSimplestTemplate(profileName) {
   const name = String(profileName || '').trim();

@@ -58,7 +58,7 @@ def _safety_months_target(snap_kwargs: dict | None = None, *, mult: float = 3) -
 
 
 def _tutorial_complete_snap(**kwargs):
-    target = _safety_months_target(kwargs, mult=3)
+    target = _safety_months_target(kwargs, mult=2)
     defaults = dict(
         salary_ever_claimed=True,
         safety_ever_contributed=True,

@@ -27,6 +27,8 @@ import {
   shouldDeferGuidanceForPeriodCloseRitual,
   shouldDeferPeriodCloseDuringGuidance,
 } from '../guidance/curriculum';
+import { startGameWithTemplate } from '../utils/startGame';
+import { suggestDefaultProfileName } from '../utils/suggestDefaultProfileName';
 
 /** Эмоциональный слой страницы (TB1: без play/pause — активная партия = playing mood). */
 function gamePageMoodClass(timeStatus) {
@@ -78,6 +80,21 @@ export function GameScreen({ onLogout, onNewGame, onLoadGame }) {
   } = useGame();
 
   const closeEventsOverlay = useCallback(() => setEventsOpen(false), []);
+
+  const handleStartAdvancedScenario = useCallback(async () => {
+    try {
+      const profiles = await API.getGameProfiles();
+      const name = suggestDefaultProfileName(Array.isArray(profiles) ? profiles : []);
+      await startGameWithTemplate(name, 'mq_game_tight_budget_v1');
+      await reload();
+      showNotification('Запущен сценарий «Профессионал» — кредиты, авто и страховки', 'success');
+    } catch (err) {
+      showNotification(
+        formatApiErrorDetail(err?.detail ?? err?.message, 'Не удалось начать новый сценарий'),
+        'error',
+      );
+    }
+  }, [reload]);
 
   const goFinanceTab = useCallback(({ flowsSection = null, pageMode = null } = {}) => {
     setCapitalFlowsOpen(flowsSection);
@@ -327,6 +344,7 @@ export function GameScreen({ onLogout, onNewGame, onLoadGame }) {
             payload={runFinale}
             onDismissVictory={dismissVictoryFinale}
             onNewGame={onNewGame}
+            onStartAdvancedScenario={handleStartAdvancedScenario}
             onMenu={onLoadGame}
             onSubmitFeedback={submitRunFeedback}
           />

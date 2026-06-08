@@ -136,8 +136,8 @@ _BASIC_TUTORIAL_CHAIN: list[dict[str, Any]] = [
     {
         "key": "safety_3x",
         "type": "safety_fund_months",
-        "title": "Подушка ≥ 3× текущих расходов за период",
-        "months_multiplier": 3,
+        "title": "Подушка ≥ 2× текущих расходов за ход",
+        "months_multiplier": 2,
         "requires_mechanics": [MECHANIC_DASHBOARD_CORE],
         "required": False,
         "enabled": True,
@@ -145,8 +145,8 @@ _BASIC_TUTORIAL_CHAIN: list[dict[str, Any]] = [
     {
         "key": "invest_income_15k",
         "type": "passive_income_monthly_min",
-        "title": "Доход с инвестиций ≥ 15 000 ₽/мес",
-        "min_monthly": 15_000,
+        "title": "Доход с инвестиций ≥ 10 000 ₽/мес",
+        "min_monthly": 10_000,
         "requires_mechanics": [MECHANIC_CAPITAL_INVEST],
         "required": False,
         "enabled": True,
