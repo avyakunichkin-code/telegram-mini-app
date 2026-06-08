@@ -17,10 +17,10 @@ export function InsurancePolicyMetrics({ policy }) {
       <MetricInlineItem tip="Лимит выплаты / покрытие по полису" glyph="coin">
         <MoneyText value={payout} decimals={0} />
       </MetricInlineItem>
-      <MetricInlineItem tip="Премия за период (списание в конце периода)" glyph="down" tone="neg">
+      <MetricInlineItem tip="Премия за ход (списание в конце хода)" glyph="down" tone="neg">
         <MoneyText value={policy.monthly_premium} decimals={0} />
       </MetricInlineItem>
-      <MetricInlineItem tip="Срок действия (периоды игры)" glyph="term">
+      <MetricInlineItem tip="Срок действия (ходы игры)" glyph="term">
         {term}
       </MetricInlineItem>
     </MetricsRow>

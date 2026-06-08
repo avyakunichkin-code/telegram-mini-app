@@ -155,7 +155,7 @@ export function AnalyticsPremium({ overview }) {
     <div className="mqx-tab-page">
       <MqxTabHero
         sectionLabel="Аналитика"
-        rightPill={`Период #${overview.period_index}`}
+        rightPill={`Ход #${overview.period_index}`}
         title="Финансовая картина"
         subtitle="Цели, потоки и динамика — в одном стиле с главной."
       />
@@ -165,8 +165,8 @@ export function AnalyticsPremium({ overview }) {
           <div className="mqx-analytics-level__top">
             <div>
               <div className="mqx-card__kicker mqx-card__kicker--violet">Сценарий</div>
-              <div className="mqx-analytics-level__title">Период #{overview.period_index}</div>
-              <p className="mqx-analytics-level__sub">Чистых месяцев подряд без просрочки: {streak}</p>
+              <div className="mqx-analytics-level__title">Ход #{overview.period_index}</div>
+              <p className="mqx-analytics-level__sub">Чистых ходов подряд без просрочки: {streak}</p>
             </div>
             <div className="mqx-analytics-level__score-chip" aria-label="Просрочка">
               <div className="mqx-analytics-level__score-label">Просрочка</div>
@@ -279,11 +279,11 @@ export function AnalyticsPremium({ overview }) {
                     />
                   </div>
                 ) : null}
-                <p className="mqx-analytics-dark__hint">История закрытых периодов и снимок текущего месяца.</p>
+                <p className="mqx-analytics-dark__hint">История завершённых ходов и снимок текущего хода.</p>
               </>
             ) : null}
             {ts && !tsError && pts.length === 0 ? (
-              <div className="mqx-analytics-dark__err">Пока нет закрытых периодов — график появится после первого перехода месяца.</div>
+              <div className="mqx-analytics-dark__err">Пока нет завершённых ходов — график появится после первого «Завершить ход».</div>
             ) : null}
           </div>
         </section>
@@ -303,7 +303,7 @@ export function AnalyticsPremium({ overview }) {
             <MqxCashflowBar
               label="Доход"
               amountNode={
-                <span title="Сумма за период игры (в модели — помесячный доход)">
+                <span title="Сумма за ход игры (в модели — помесячный доход)">
                   <MoneyText value={income} decimals={0} />
                 </span>
               }
@@ -313,7 +313,7 @@ export function AnalyticsPremium({ overview }) {
             <MqxCashflowBar
               label="Платежи по долгам"
               amountNode={
-                <span title="Сумма за период игры (в модели — помесячные платежи)">
+                <span title="Сумма за ход игры (в модели — помесячные платежи)">
                   <MoneyText value={liabPay} decimals={0} />
                 </span>
               }
@@ -323,7 +323,7 @@ export function AnalyticsPremium({ overview }) {
             <MqxCashflowBar
               label="Обслуживание активов"
               amountNode={
-                <span title="Сумма за период игры (в модели — помесячное обслуживание)">
+                <span title="Сумма за ход игры (в модели — помесячное обслуживание)">
                   <MoneyText value={maintenance} decimals={0} />
                 </span>
               }
@@ -334,7 +334,7 @@ export function AnalyticsPremium({ overview }) {
               <MqxCashflowBar
                 label="Расходы на жизнь"
                 amountNode={
-                  <span title="Расходы на жизнь за период и доля от дохода">
+                  <span title="Расходы на жизнь за ход и доля от дохода">
                     <MoneyText value={burn} decimals={0} />
                     <span className="mqx-analytics-cf-suffix">
                       {' '}
@@ -354,7 +354,7 @@ export function AnalyticsPremium({ overview }) {
               if (n <= 0) {
                 return (
                   <>
-                    После нескольких закрытых периодов здесь появится среднее изменение наличных и подушки между
+                    После нескольких завершённых ходов здесь появится среднее изменение наличных и подушки между
                     закрытиями (до шести последних интервалов).
                   </>
                 );
@@ -393,7 +393,7 @@ export function AnalyticsPremium({ overview }) {
           </div>
 
           <div className="mqx-analytics-runway">
-            <div className="mqx-analytics-runway__label">Ориентировочно, сколько периодов хватит счёта при текущих обязательствах</div>
+            <div className="mqx-analytics-runway__label">Ориентировочно, сколько ходов хватит счёта при текущих обязательствах</div>
             <div className="mqx-analytics-runway__value">{obligations > 0 ? `${runwayMonths} пер.` : '—'}</div>
           </div>
 
@@ -417,7 +417,7 @@ export function AnalyticsPremium({ overview }) {
           <div className="mqx-analytics-forecast__head">
             <div>
               <div className="mqx-analytics-forecast__kicker">Прогноз</div>
-              <h2 className="mqx-analytics-forecast__title">Счёт через 12 периодов</h2>
+              <h2 className="mqx-analytics-forecast__title">Счёт через 12 ходов</h2>
             </div>
             <div className="mqx-analytics-forecast__side">
               <div className="mqx-analytics-forecast__side-label">+12 пер.</div>
@@ -434,7 +434,7 @@ export function AnalyticsPremium({ overview }) {
 
           <div className="mqx-analytics-forecast__callout">
             <div className="mqx-analytics-forecast__callout-text">
-              Линейная оценка: текущий чистый поток × 12 периодов к последнему значению на графике. Не учитывает события и
+              Линейная оценка: текущий чистый поток × 12 ходов к последнему значению на графике. Не учитывает события и
               новые сделки.
             </div>
             <div className="mqx-analytics-forecast__callout-sum">

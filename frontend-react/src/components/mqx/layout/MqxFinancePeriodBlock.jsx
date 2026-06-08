@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'react';
+import { FINANCES_OF_TURN } from '../../../constants/turnCopy';
 import { fitChipValuesIn } from '../../../utils/fitChipValue';
 
 function CushionFillBar({ percent, tier }) {
@@ -26,7 +27,7 @@ function chipAriaLabel(card, onFlowsNavigate) {
   return `${card.title}${valuePart}${actionPart}`;
 }
 
-/** Статичный блок «Финансы периода» (L3): 2×2 chips + ссылка на вкладку «Капитал». */
+/** Статичный блок «Финансы хода» (L3): 2×2 chips + ссылка на вкладку «Капитал». */
 function FinanceChip({ card, onFlowsNavigate, juiceGainActive = false }) {
   const className = [
     'mqx-finance-chip',
@@ -122,8 +123,8 @@ export function MqxFinancePeriodBlock({
   }, [financeCards]);
 
   return (
-    <section className="mqx-finance-static" aria-label="Финансы периода" data-onboarding-anchor="finance-flows">
-      <h2 className="mqx-finance-static__title">Финансы периода</h2>
+    <section className="mqx-finance-static" aria-label={FINANCES_OF_TURN} data-onboarding-anchor="finance-flows">
+      <h2 className="mqx-finance-static__title">{FINANCES_OF_TURN}</h2>
       <div ref={chipsRef} className="mqx-finance-static__chips">
         {financeCards.map((c) => (
           <FinanceChip

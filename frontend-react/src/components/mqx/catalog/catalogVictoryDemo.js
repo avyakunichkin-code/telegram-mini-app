@@ -8,9 +8,9 @@ export const CATALOG_VICTORY_DEMO = {
   current_goal_key: 'cashflow',
   goals: [
     {
-      key: 'safety_3x',
+      key: 'safety_2x',
       type: 'safety_fund_months',
-      title: 'Подушка ≥ 3× обязательств',
+      title: 'Подушка ≥ 2× расходов за ход',
       met: true,
       enabled: true,
       progress: 1,

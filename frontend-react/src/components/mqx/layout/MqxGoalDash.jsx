@@ -1,5 +1,6 @@
 import { useEffect, useId, useMemo, useState } from 'react';
 
+import { victoryFromTurn, waitForTurn } from '../../../constants/turnCopy';
 import { buildGoalChainView } from '../utils/goalChainDisplay';
 import { buildGoalActionHint } from '../utils/goalGuidanceCopy';
 import { pctClamp01 } from '../utils/victoryGoalDisplay';
@@ -50,7 +51,7 @@ function goalStepBadge(view) {
   if (view.total <= 0) return null;
   const done = view.chain.filter((s) => s.status === 'done').length;
   if (view.phase === 'win') return `Победа · ${view.total}/${view.total}`;
-  if (view.phase === 'gate') return `Ждём период ${view.minPeriod ?? '—'}`;
+  if (view.phase === 'gate') return waitForTurn(view.minPeriod);
   const current = view.currentIndex >= 0 ? view.currentIndex + 1 : 1;
   return `Шаг ${current}/${view.total}${done > 0 ? ` · ${done} готово` : ''}`;
 }
@@ -78,7 +79,7 @@ function GoalDashHead({ view, showStepper, actionHint, stepBadge }) {
       </div>
       <span className="mqx-goal-dash__current-title">{view.headerTitle}</span>
       {view.phase === 'gate' && view.minPeriod ? (
-        <span className="mqx-goal-dash__gate-hint">Победа с {view.minPeriod}-го периода</span>
+        <span className="mqx-goal-dash__gate-hint">{victoryFromTurn(view.minPeriod)}</span>
       ) : null}
       {actionHint && view.phase === 'active' ? (
         <p className="mqx-goal-dash__action-hint">{actionHint}</p>

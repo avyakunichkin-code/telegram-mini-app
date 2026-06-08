@@ -35,7 +35,7 @@ export function getEffectiveMechanicsFromOverview(overview) {
 
 /** Подзаголовок страницы «Капитал». */
 export function capitalPageSubtitle(mechanics) {
-  const parts = ['Доходы и расходы за период'];
+  const parts = ['Доходы и расходы за ход'];
   if (mechanics.capital_invest) parts.push('инвестиции');
   if (mechanics.capital_insurance) parts.push('страховки');
   if (mechanics.capital_property) parts.push('имущество');

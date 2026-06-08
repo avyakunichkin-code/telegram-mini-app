@@ -5,7 +5,7 @@ from __future__ import annotations
 import json
 from typing import Any
 
-from sqlalchemy import text
+from sqlalchemy import bindparam, text
 from sqlalchemy.orm import Session
 
 from app.victory.seeds import VICTORY_CONFIG_BY_TEMPLATE_KEY
@@ -118,5 +118,22 @@ def upsert_victory_goals(db: Session) -> None:
                 "requires_mechanics": json.dumps(row["requires_mechanics"], ensure_ascii=False),
                 "params": json.dumps(row["params"], ensure_ascii=False),
             },
+        )
+
+    keys_by_template: dict[str, list[str]] = {}
+    for row in rows:
+        keys_by_template.setdefault(row["template_key"], []).append(row["goal_key"])
+    for template_key, goal_keys in keys_by_template.items():
+        if not goal_keys:
+            continue
+        db.execute(
+            text(
+                """
+                DELETE FROM victory_goals
+                WHERE template_key = :template_key
+                  AND goal_key NOT IN :goal_keys
+                """
+            ).bindparams(bindparam("goal_keys", expanding=True)),
+            {"template_key": template_key, "goal_keys": goal_keys},
         )
     db.commit()

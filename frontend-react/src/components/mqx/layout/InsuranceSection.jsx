@@ -15,7 +15,7 @@ export function InsuranceSection({
   cancellingPolicyId = null,
   onBuy,
   onCancel,
-  intro = 'Премия списывается в конце периода. При страховом случае — полная выплата, полис закрывается.',
+  intro = 'Премия списывается в конце хода. При страховом случае — полная выплата, полис закрывается.',
   useSectionSeg = false,
 }) {
   const [uiMode, setUiMode] = useState('picker');

@@ -1,0 +1,151 @@
+events:
+- definition_key: mq11_portfolio_rebalance
+  content_class: universal
+  event_slot: period_choice
+  audience_template_keys:
+  - all
+  event_domain: investment_education
+  title: Пересмотр портфеля
+  description: Накопилось на счёте — банк предлагает перераспределить между депозитом и облигациями.
+  weight: 64
+  event_tier: 4
+  repeat_policy: repeatable
+  cooldown_periods: 10
+  scenario_shape: soft_offer
+  choices:
+  - title: Больше в облигации
+    effects:
+      cash_delta: -2500
+      needs_delta:
+        status: 7
+        comfort: 3
+        health: -2
+  - title: Оставить как есть
+    effects:
+      cash_delta: 0
+      needs_delta:
+        status: -3
+        comfort: -1
+  - title: Усилить депозит
+    effects:
+      cash_delta: -1200
+      needs_delta:
+        comfort: 5
+        status: 2
+        health: 1
+- definition_key: mq11_rent_room_student
+  content_class: profile
+  event_slot: period_choice
+  audience_template_keys:
+  - mq_game_basic_v1
+  event_domain: housing
+  title: Снять комнату подешевле
+  description: Одногруппники нашли комнату в соседнем районе — аренда ниже, но дальше до универа.
+  weight: 58
+  event_tier: 3
+  repeat_policy: once_per_profile
+  scenario_shape: soft_offer
+  choices:
+  - title: Переехать в комнату
+    effects:
+      cash_delta: -8000
+      monthly_lifestyle_delta: -1800
+      needs_delta:
+        comfort: -6
+        social: -3
+        status: 2
+  - title: Остаться как живёшь
+    effects:
+      cash_delta: 0
+      needs_delta:
+        comfort: -1
+        social: -2
+        status: 1
+  - title: Взять комнату поближе к центру
+    effects:
+      cash_delta: -5000
+      expense_line:
+        category_key: housing
+        amount_monthly: 2200
+        title: Аренда комнаты
+      needs_delta:
+        comfort: 8
+        social: 4
+        status: 3
+- definition_key: mq11_mortgage_prepay_pro
+  content_class: profile
+  event_slot: period_choice
+  audience_template_keys:
+  - mq_game_tight_budget_v1
+  event_domain: credit_debt
+  title: Досрочка по ипотеке
+  description: Банк напоминает о возможности внести сверх платежа — снизить переплату или оставить cash на подушке.
+  weight: 54
+  event_tier: 5
+  repeat_policy: repeatable
+  cooldown_periods: 12
+  scenario_shape: soft_offer
+  prerequisites:
+    min_active_liabilities: 1
+  choices:
+  - title: Внести 50 000 ₽ досрочно
+    effects:
+      cash_delta: -50000
+      needs_delta:
+        comfort: 8
+        status: 6
+        health: 2
+  - title: Только обязательный платёж
+    effects:
+      cash_delta: 0
+      needs_delta:
+        comfort: -2
+        status: -2
+  - title: Отложить досрочку
+    effects:
+      cash_delta: 0
+      needs_delta:
+        comfort: 3
+        status: -4
+        health: -1
+- definition_key: mq11_lifestyle_creep
+  content_class: universal
+  event_slot: period_choice
+  audience_template_keys:
+  - all
+  event_domain: consumption
+  title: Привычки подорожали
+  description: Подписки, доставка и мелкие удобства потихоньку раздувают ежемесячные траты.
+  weight: 72
+  event_tier: 3
+  repeat_policy: repeatable
+  cooldown_periods: 12
+  scenario_shape: soft_offer
+  choices:
+  - title: Оставить все подписки
+    effects:
+      expense_line:
+        category_key: entertainment
+        amount_monthly: 900
+        title: Подписки и сервисы
+      needs_delta:
+        comfort: 9
+        status: 5
+        social: 3
+  - title: Отрезать лишнее
+    effects:
+      monthly_lifestyle_delta: -450
+      needs_delta:
+        comfort: -5
+        status: -3
+        social: -2
+  - title: Один сервис, не больше
+    effects:
+      cash_delta: -600
+      expense_line:
+        category_key: entertainment
+        amount_monthly: 350
+        title: Одна подписка
+      needs_delta:
+        comfort: 4
+        status: 1

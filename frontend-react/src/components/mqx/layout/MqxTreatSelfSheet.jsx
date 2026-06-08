@@ -81,7 +81,7 @@ export function MqxTreatSelfSheet({ open, onClose, treatSelf, treatSelfState }) 
 
         {!available ? (
           <div className="mqx-treat__cooldown" role="note">
-            Доступно через {cooldown} периодов
+            Доступно через {cooldown} ходов
           </div>
         ) : null}
 

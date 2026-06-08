@@ -14,7 +14,7 @@ export function VictoryGoalsPanel({ victory, legacyGoal, flat = false }) {
 
   const gateNote =
     summary.gateOpen === false && summary.minPeriod
-      ? `Победа доступна с периода ${summary.minPeriod}`
+      ? `Победа доступна с ${summary.minPeriod}-го хода`
       : null;
 
   const sub = [summary.subtitle, gateNote].filter(Boolean).join(' · ') || null;

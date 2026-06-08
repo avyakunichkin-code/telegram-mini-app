@@ -248,12 +248,12 @@ export function GameScreen({ onLogout, onNewGame, onLoadGame }) {
               sectionLabel="Игра"
               rightPill="Загрузка"
               title="Подключаемся"
-              subtitle="Период, баланс и события появятся в привычной рамке."
+              subtitle="Ход, баланс и события появятся в привычной рамке."
             />
           }
         >
           <div className="mqx-card" style={{ padding: 14 }}>
-            <MqxStateSkeleton variant="chips" label="Финансы периода" />
+            <MqxStateSkeleton variant="chips" label="Финансы хода" />
             <div style={{ marginTop: 16 }}>
               <MqxStateSkeleton variant="rows" rows={2} label="Цели и действия" />
             </div>

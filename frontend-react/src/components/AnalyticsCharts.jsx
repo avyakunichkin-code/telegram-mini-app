@@ -48,7 +48,7 @@ export function AnalyticsBalanceCharts({ timeseriesPayload }) {
   const last = pts[pts.length - 1];
   const lastCash = Number(last?.cash_balance);
   const lastCushion = Number(last?.safety_fund_balance);
-  const tail = last?.is_projection ? 'текущий период' : 'последняя точка';
+  const tail = last?.is_projection ? 'текущий ход' : 'последняя точка';
 
   return (
     <div className="mq-spark-pair">

@@ -1,3 +1,5 @@
+import { ACTIONS_OF_TURN } from '../../../constants/turnCopy';
+
 function ActionChipIcon({ accent, children }) {
   return (
     <span className={`mqx-action-chip__icon ${accent}`} aria-hidden="true">
@@ -19,7 +21,7 @@ function ActionChip({ label, sub, icon, disabled, className = '', ...buttonProps
   );
 }
 
-/** Блок «Действия периода» — chip 2×2 (★ period-actions-round). */
+/** Блок «Действия хода» — chip 2×2 (★ period-actions-round). */
 export function MqxPeriodActions({
   salaryDisabled = false,
   salaryCelebrate = false,
@@ -40,8 +42,8 @@ export function MqxPeriodActions({
     .join(' ');
 
   return (
-    <section className="mqx-period-actions mqx-period-actions--chips" aria-label="Действия периода">
-      <h2 className="mqx-finance-static__title">Действия периода</h2>
+    <section className="mqx-period-actions mqx-period-actions--chips" aria-label={ACTIONS_OF_TURN}>
+      <h2 className="mqx-finance-static__title">{ACTIONS_OF_TURN}</h2>
       <div className="mqx-action-chips">
         <ActionChip
           label="Зарплата"
@@ -51,8 +53,8 @@ export function MqxPeriodActions({
           data-onboarding-anchor="salary"
           title={
             salaryDisabled
-              ? 'Зарплата за этот период уже получена или недоступна'
-              : 'Получить зарплату за текущий период'
+              ? 'Зарплата за этот ход уже получена или недоступна'
+              : 'Получить зарплату за текущий ход'
           }
           aria-label="Зарплата"
           onClick={onSalary}

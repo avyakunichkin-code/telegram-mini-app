@@ -18,7 +18,7 @@ export function guidanceForGoal(goal, view) {
   if (view.phase === 'gate') {
     return {
       lead: [
-        { text: 'Все шаги цепочки закрыты. Победа засчитается с периода ' },
+        { text: 'Все шаги цепочки закрыты. Победа засчитается с хода ' },
         { highlight: String(view.minPeriod ?? '—') },
         { text: ' — доживи до этой отметки на таймере.' },
       ],
@@ -31,7 +31,7 @@ export function guidanceForGoal(goal, view) {
       lead: [
         { text: 'Класс, этот шаг закрыт ✓ Дальше — ' },
         { highlight: view.nextGoalTitle },
-        { text: ', откроется в следующем периоде.' },
+        { text: ', откроется в следующем ходе.' },
       ],
       tips: [],
     };
@@ -41,8 +41,8 @@ export function guidanceForGoal(goal, view) {
     const action = goal?.detail?.action || '';
     if (action === 'salary_claimed' || key === 'tutorial_salary') {
       return {
-        lead: [{ text: 'Нажми «Зарплата» в действиях периода — это первый шаг сценария.' }],
-        tips: ['Без зарплаты в периоде доход не засчитается в поток.'],
+        lead: [{ text: 'Нажми «Зарплата» в действиях хода — это первый шаг сценария.' }],
+        tips: ['Без зарплаты в этом ходе доход не засчитается в поток.'],
       };
     }
     if (action === 'safety_contributed' || key === 'tutorial_cushion') {
@@ -79,19 +79,20 @@ export function guidanceForGoal(goal, view) {
     }
   }
 
-  if (type === 'safety_fund_months' || key === 'safety_3x' || key === 'safety_6x') {
+  if (type === 'safety_fund_months' || key === 'safety_2x' || key === 'safety_3x' || key === 'safety_6x') {
+    const mult = goal?.detail?.months_multiplier ?? (key === 'safety_2x' ? 2 : key === 'safety_6x' ? 6 : 3);
     return {
       lead: [
-        { text: 'Откладывай в подушку каждый период не менее ' },
+        { text: 'Откладывай в подушку каждый ход не менее ' },
         { highlight: '10% от зарплаты' },
         { text: ' — так быстрее наберёшь сумму в ' },
-        { highlight: '3× обязательств' },
+        { highlight: `${mult}× расходов` },
         { text: '.' },
       ],
       tips: [
-        'После «Зарплата» — «В подушку» в действиях периода.',
+        'После «Зарплата» — «В подушку» в действиях хода.',
         'Не снимай с подушки без нужды.',
-        'Полоска в chip «Фин.подушка» — % от нормы (×3 всех расходов за период), не цель сценария.',
+        'Полоска в chip «Фин.подушка» — % от нормы (×3 всех расходов за ход), не цель сценария.',
       ],
     };
   }
@@ -100,7 +101,7 @@ export function guidanceForGoal(goal, view) {
     return {
       lead: [
         { text: 'Погашай обязательства ' },
-        { highlight: 'в конце периода' },
+        { highlight: 'в конце хода' },
         { text: ', пока хватает cash — иначе растёт ' },
         { highlight: 'просрочка' },
         { text: ' и шаг не засчитается.' },
@@ -116,7 +117,7 @@ export function guidanceForGoal(goal, view) {
     return {
       lead: [
         { text: 'Забирай зарплату и следи, чтобы ' },
-        { highlight: 'чистый поток за период был ≥ 0' },
+        { highlight: 'чистый поток за ход был ≥ 0' },
         { text: ' — доходы перекрывают обязательные расходы.' },
       ],
       tips: [
@@ -126,7 +127,12 @@ export function guidanceForGoal(goal, view) {
     };
   }
 
-  if (type === 'passive_income_monthly_min' || key === 'invest_income_15k' || key === 'passive_income_100k') {
+  if (
+    type === 'passive_income_monthly_min' ||
+    key === 'invest_income_10k' ||
+    key === 'invest_income_15k' ||
+    key === 'passive_income_100k'
+  ) {
     const target = goal?.detail?.min_monthly;
     const targetLabel =
       typeof target === 'number' && target > 0
@@ -142,7 +148,7 @@ export function guidanceForGoal(goal, view) {
       ],
       tips: [
         'Только инвестиции в этом сценарии — без недвижимости.',
-        'Купоны и %% капитализируются в конце периода.',
+        'Купоны и %% капитализируются в конце хода.',
       ],
     };
   }
@@ -152,7 +158,7 @@ export function guidanceForGoal(goal, view) {
       lead: [
         { text: 'Доведи ' },
         { highlight: 'пассивный доход минус расходы на жизнь' },
-        { text: ' до целевого уровня — считается в конце периода.' },
+        { text: ' до целевого уровня — считается в конце хода.' },
       ],
       tips: ['Снижай «Расходы» или наращивай доходные активы и инвестиции.'],
     };
@@ -184,8 +190,8 @@ export function guidanceForGoal(goal, view) {
     lead: [
       {
         text: goal?.title
-          ? `Двигайся к цели «${goal.title}» шаг за шагом — смотри цифры в финансах периода.`
-          : 'Следи за финансами периода и действиями внизу экрана.',
+          ? `Двигайся к цели «${goal.title}» шаг за шагом — смотри цифры в финансах хода.`
+          : 'Следи за финансами хода и действиями внизу экрана.',
       },
     ],
     tips: [],

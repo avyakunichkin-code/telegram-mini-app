@@ -10,6 +10,7 @@ includes:
 - insurance.yaml
 - auto.yaml
 - credit_debt.yaml
+- late_game.yaml
 - chains/family_money.yaml
 - chains/used_car.yaml
 - chains/freelance_project.yaml

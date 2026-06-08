@@ -221,7 +221,7 @@ export function MqxNeedsDash({
   const treatAvailable = Boolean(treatSelf?.available);
   const cooldown = Number(treatSelf?.cooldown_periods_remaining) || 0;
   const treatLockedHint =
-    cooldown > 0 ? `Разблокируется через ${cooldown} периодов` : 'Сейчас недоступно';
+    cooldown > 0 ? `Разблокируется через ${cooldown} ходов` : 'Сейчас недоступно';
 
   const handleTreatClick = () => {
     if (!treatAvailable) {

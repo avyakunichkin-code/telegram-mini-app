@@ -5,7 +5,7 @@ export function MqxPeriodHint() {
   return (
     <div className="mqx-period-hint mqx-period-hint--wink">
       <p className="mqx-period-hint__bubble">
-        Нажми <strong>Зарплату</strong> — получишь доход за этот период.
+        Нажми <strong>Зарплату</strong> — получишь доход за этот ход.
       </p>
       <MonetkaAvatar pose="wink" size={48} className="mqx-period-hint__mascot" />
     </div>

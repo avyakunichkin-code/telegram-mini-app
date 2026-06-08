@@ -13,7 +13,7 @@ const SHEET_COPY = {
   },
   out: {
     title: 'Снять с подушки',
-    subtitle: 'Перевод с подушки на счёт для трат в этом периоде.',
+    subtitle: 'Перевод с подушки на счёт для трат в этом ходе.',
     submitLabel: 'Снять на счёт',
     productId: 'safety-out',
     maxHintLabel: 'В подушке',

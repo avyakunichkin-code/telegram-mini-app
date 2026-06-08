@@ -27,7 +27,7 @@ function runOutcomeBadge(p) {
 
 function profileSubtitle(p) {
   const badge = runOutcomeBadge(p);
-  const base = `${saveKindLabel(p.save_kind)} · период ${p.period_index}`;
+  const base = `${saveKindLabel(p.save_kind)} · ход ${p.period_index}`;
   return badge ? `${badge} · ${base}` : base;
 }
 

@@ -166,7 +166,7 @@ export function DashboardPremium({
         title: 'Доходы',
         chipAction: CAPITAL_FLOWS_SECTION.income,
         titleHint:
-          'Сумма доходов за период: зарплата и доход от активов (без вычета расходов и платежей по долгам)',
+          'Сумма доходов за ход: зарплата и доход от активов (без вычета расходов и платежей по долгам)',
         valueNode: <MoneyText value={totalIncome} />,
         valueLabel: formatChipMoneyAria(totalIncome, { tone: 'pos' }),
         accent: 'mqx-accent--sky',
@@ -183,7 +183,7 @@ export function DashboardPremium({
         title: 'Расходы',
         chipAction: CAPITAL_FLOWS_SECTION.expense,
         titleHint:
-          'Сумма расходов за период: расходы на жизнь + платежи по обязательствам + содержание имущества',
+          'Сумма расходов за ход: расходы на жизнь + платежи по обязательствам + содержание имущества',
         valueNode: <MoneyText value={totalOutflow} />,
         valueLabel: formatChipMoneyAria(totalOutflow, { tone: 'out' }),
         accent: 'mqx-accent--amber',
@@ -380,11 +380,11 @@ export function DashboardPremium({
               salaryCelebrate={salaryCelebrate}
               onSalary={async () => {
                 if (salaryClaimed) {
-                  showNotification('Зарплата за этот период уже получена', 'info');
+                  showNotification('Зарплата за этот ход уже получена', 'info');
                   return;
                 }
                 if (periodStatus != null && !canClaimSalary) {
-                  showNotification('Зарплату в этом периоде получить нельзя', 'info');
+                  showNotification('Зарплату в этом ходе получить нельзя', 'info');
                   return;
                 }
 
@@ -393,7 +393,7 @@ export function DashboardPremium({
                   const result = await claimSalary();
                   if (result?.already_claimed) {
                     showNotification(
-                      result.message || 'Зарплата за этот период уже получена',
+                      result.message || 'Зарплата за этот ход уже получена',
                       'info',
                     );
                   } else if (result?.status === 'success') {

@@ -1,5 +1,5 @@
 import { BrandLogo } from '../../BrandLogo';
-import { FINISH_TURN_BUTTON, TURN_SINGULAR } from '../../../constants/turnCopy';
+import { FINISH_TURN_BUTTON, TURN_OPEN_STATUS, TURN_SINGULAR } from '../../../constants/turnCopy';
 import { MqxButton } from '../primitives/MqxButton';
 import { MqxPill } from '../primitives/MqxPill';
 
@@ -24,7 +24,7 @@ export function MqxDashboardHero({
         </div>
 
         <div className="mqx-hero-turn__period-block">
-          <span className="mqx-hero-turn__status-hint">Месяц открыт</span>
+          <span className="mqx-hero-turn__status-hint">{TURN_OPEN_STATUS}</span>
           <span className="mqx-hero-turn__period-label">{TURN_SINGULAR}</span>
           <span className="mqx-hero-turn__period-value">#{periodIndex}</span>
         </div>

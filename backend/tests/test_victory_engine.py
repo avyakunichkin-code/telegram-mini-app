@@ -97,7 +97,7 @@ class TestBasicTutorialChain:
         invest = next(g for g in r.goals if g.key == "tutorial_invest")
         assert invest.available is True
         assert invest.met is False
-        passive = next(g for g in r.goals if g.key == "invest_income_15k")
+        passive = next(g for g in r.goals if g.key == "invest_income_10k")
         assert passive.available is True
 
     def test_invest_unlocks_after_tutorial_cushion_met(self):
@@ -122,7 +122,7 @@ class TestBasicTutorialChain:
                 net_monthly_cashflow=-100.0,
             )
         )
-        passive = next(g for g in r.goals if g.key == "invest_income_15k")
+        passive = next(g for g in r.goals if g.key == "invest_income_10k")
         assert passive.detail.get("raw_met") is True
         assert passive.met is False
         assert r.current_goal_key == "tutorial_invest"

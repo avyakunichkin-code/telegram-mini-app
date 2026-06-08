@@ -50,7 +50,7 @@ export function ExpensesBudgetBlock({
           {!embedded ? <div className="mqx-card__kicker mqx-card__kicker--amber">Жизнеобеспечение</div> : null}
           {!embedded ? <h2 className="mqx-expenses-budget__title">Расходы на жизнь</h2> : null}
           <p className="mqx-expenses-budget__sub">
-            Списываются в конце периода
+            Списываются в конце хода
             {income > 0 ? (
               <>
                 {' '}
@@ -69,7 +69,7 @@ export function ExpensesBudgetBlock({
 
       {showOutflow && outflow > burn ? (
         <p className="mqx-expenses-budget__outflow" role="note">
-          Всего уйдёт за период (долги + жизнь): <MoneyText value={outflow} decimals={0} />
+          Всего уйдёт за ход (долги + жизнь): <MoneyText value={outflow} decimals={0} />
         </p>
       ) : null}
 
