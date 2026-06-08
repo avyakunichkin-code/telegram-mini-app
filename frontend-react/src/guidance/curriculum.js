@@ -87,6 +87,30 @@ export function isTriggerBeat(beatId) {
   return typeof beatId === 'string' && beatId.startsWith('t_');
 }
 
+/** Spine P1+P2 завершён (completed_beats — spine; у trigger payload туда же пишутся completed_triggers). */
+export function isSpineGuidanceComplete(guidance) {
+  if (!guidance?.show_curriculum) return true;
+  const completed = guidance?.completed_beats || [];
+  return completed.includes('p1_close') && completed.includes('p2_new_month');
+}
+
+/** Шаг t_events_intro пройден (выбор события, dismiss или skip_all). */
+export function isEventsIntroGuidanceComplete(guidance) {
+  if (!guidance?.show_curriculum) return true;
+  return (guidance?.completed_beats || []).includes('t_events_intro');
+}
+
+/**
+ * Не автопоказывать карусель событий, пока curriculum ждёт intro на ходе 3+.
+ * Ручное открытие «События» на шаге t_events_intro по-прежнему разрешено.
+ */
+export function shouldDeferEventsAutoOpen(guidance, periodIndex) {
+  const pi = Number(periodIndex);
+  if (!Number.isFinite(pi) || pi < MIN_PERIOD_INDEX_FOR_GAME_EVENTS) return false;
+  if (!guidance?.show_curriculum) return false;
+  return !isEventsIntroGuidanceComplete(guidance);
+}
+
 /**
  * События — с хода MIN_PERIOD_INDEX_FOR_GAME_EVENTS; t_events_intro — после spine P1+P2.
  */
@@ -118,16 +142,18 @@ export function shouldDeferGuidanceForPeriodCloseRitual(periodCloseOpen, guidanc
   return true;
 }
 
-/** Блокирует автопоказ карусели событий, пока идёт ритуал итогов или debrief P1. */
+/** Блокирует автопоказ карусели событий, пока идёт ритуал итогов, debrief P1 или intro событий. */
 export function shouldBlockAutoEventsOverlay({
   periodCloseOpen,
   periodCloseSummary,
   queuedPeriodClose,
   guidance,
+  periodIndex = null,
 }) {
   if (periodCloseOpen) return true;
   if (periodCloseSummary) return true;
   if (queuedPeriodClose) return true;
   if (guidance?.beat_id === 'p1_close' && guidance?.show_debrief) return true;
+  if (shouldDeferEventsAutoOpen(guidance, periodIndex)) return true;
   return false;
 }

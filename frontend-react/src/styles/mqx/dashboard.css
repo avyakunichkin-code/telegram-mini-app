@@ -1501,13 +1501,10 @@ button.mqx-finance-chip.mqx-finance-chip--action:focus-visible {
   flex: 1;
 }
 
-.mqx-goal-dash__kicker {
-  display: block;
-  font-size: var(--mq-fs-micro);
-  font-weight: var(--mq-fw-bold);
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  color: color-mix(in srgb, var(--mq-sky, #0ea5e9) 82%, var(--mqx-ink));
+.mqx-goal-dash__title {
+  margin: 0;
+  flex: 1 1 auto;
+  min-width: 0;
 }
 
 .mqx-goal-dash__kicker-row {
@@ -1515,6 +1512,7 @@ button.mqx-finance-chip.mqx-finance-chip--action:focus-visible {
   flex-wrap: wrap;
   align-items: center;
   gap: 8px;
+  margin-bottom: 2px;
 }
 
 .mqx-goal-dash__step-chip {

@@ -1,15 +1,9 @@
 import { useEffect } from 'react';
 import {
   getGuidanceAnchorForBeat,
-  getGuidanceBottomReservePx,
   GUIDANCE_ANCHOR_FOCUS_CLASS,
   scrollGuidanceAnchorIntoView,
 } from './guidanceAnchors';
-
-function parsePx(value) {
-  const n = parseFloat(String(value || '').trim());
-  return Number.isFinite(n) ? n : 64;
-}
 
 function clearFocusMarkers(root) {
   if (!root) return;
@@ -21,7 +15,7 @@ function clearFocusMarkers(root) {
 /**
  * Подсветка якоря шага + автоскролл в зоне .mqx-tab-page__scroll.
  */
-export function useGuidanceAnchorFocus({ rootRef, beatId, active, stripHeightPx = 0, liftExtraPx = 0 }) {
+export function useGuidanceAnchorFocus({ rootRef, beatId, active, stripHeightPx = 0 }) {
   useEffect(() => {
     const root = rootRef?.current;
     if (!root || !active) {
@@ -46,18 +40,7 @@ export function useGuidanceAnchorFocus({ rootRef, beatId, active, stripHeightPx 
     target.classList.add(GUIDANCE_ANCHOR_FOCUS_CLASS);
 
     const runScroll = () => {
-      const tabInset = parsePx(
-        getComputedStyle(document.documentElement).getPropertyValue('--tma-tabbar-inset'),
-      );
-      const padRaw = getComputedStyle(document.documentElement).getPropertyValue(
-        '--mqx-guidance-scroll-pad',
-      );
-      const padFromCss = parsePx(padRaw, 0);
-      const reserve =
-        padFromCss > 0
-          ? padFromCss
-          : getGuidanceBottomReservePx(stripHeightPx, tabInset) + (Number(liftExtraPx) || 0);
-      scrollGuidanceAnchorIntoView({ scrollEl, target, bottomReservePx: reserve });
+      scrollGuidanceAnchorIntoView({ scrollEl, target, stripHeightPx });
     };
 
     const raf = requestAnimationFrame(runScroll);
@@ -74,5 +57,5 @@ export function useGuidanceAnchorFocus({ rootRef, beatId, active, stripHeightPx 
       window.visualViewport?.removeEventListener('resize', runScroll);
       clearFocusMarkers(root);
     };
-  }, [rootRef, beatId, active, stripHeightPx, liftExtraPx]);
+  }, [rootRef, beatId, active, stripHeightPx]);
 }

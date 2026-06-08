@@ -614,6 +614,10 @@
 
 .mqx-hero-turn__events-pill.mqx-pill {
   align-self: center;
+  border: 2px solid #fff;
+  background: rgba(255, 255, 255, 0.14);
+  box-shadow: 0 2px 10px rgba(15, 17, 21, 0.14);
+  color: #fff;
 }
 
 .mqx-hero-compact__period-value {

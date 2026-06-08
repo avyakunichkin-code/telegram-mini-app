@@ -1,12 +1,27 @@
+.mqx-guidance-portal {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 508;
+  max-width: 480px;
+  margin-inline: auto;
+}
+
+.mqx-guidance-portal > * {
+  pointer-events: auto;
+}
+
 .mqx-guidance-strip {
   position: fixed;
   left: var(--mqx-dash-inline-pad, 14px);
   right: var(--mqx-dash-inline-pad, 14px);
-  bottom: var(--mqx-guidance-strip-bottom, calc(var(--tma-tabbar-inset, 64px) + 4px));
-  max-height: min(46vh, calc(100dvh - var(--tma-tabbar-inset, 64px) - 24px));
+  bottom: var(--mqx-tabbar-measured, var(--tma-tabbar-inset, 64px));
+  max-height: min(
+    46vh,
+    calc(100dvh - var(--mqx-tabbar-measured, var(--tma-tabbar-inset, 64px)) - 16px)
+  );
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
-  transition: bottom 0.28s ease-out;
   z-index: 510;
   width: auto;
   max-width: var(--mqx-content-max, 480px);
@@ -181,8 +196,13 @@
   padding-bottom: var(--mqx-guidance-scroll-pad, calc(200px + env(safe-area-inset-bottom, 0px)));
 }
 
+body.mqx-page--guidance-active .mqx-guidance-strip,
 .mqx-page--guidance-active .mqx-guidance-strip {
   z-index: 545;
+}
+
+body.mqx-page--guidance-active .mqx-guidance-portal {
+  z-index: 540;
 }
 
 /* Sheet подушки (portal) — над полоской обучения, не перекрывается ею */
@@ -305,10 +325,12 @@ body.mqx-page--guidance-active .mqx-sheet-root--portal {
   }
 }
 
-/* Hero / «Закрыть месяц» — фиолетовый фон, кольцо белое */
+/* Hero / «Закрыть месяц» и «События» — фиолетовый фон, кольцо белое */
 .mqx-hero.mqx-onboarding-anchor--focus,
-.mqx-hero-turn__cta-primary.mqx-onboarding-anchor--focus {
-  outline-color: #fff;
+.mqx-hero-turn__cta-primary.mqx-onboarding-anchor--focus,
+.mqx-hero-turn__events-pill.mqx-onboarding-anchor--focus {
+  outline: 2px solid #fff;
+  outline-offset: 3px;
   box-shadow:
     0 0 0 1px color-mix(in srgb, var(--mq-violet-deep, #4c1d95) 40%, transparent),
     0 2px 12px color-mix(in srgb, #000 22%, transparent);

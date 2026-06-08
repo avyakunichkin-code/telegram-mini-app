@@ -506,7 +506,11 @@ def patch_guidance(
 
     if action == "dismiss_beat":
         if active_spine and not _spine_complete(progress):
-            _mark_beat_completed(progress, active_spine.id)
+            skip_id = beat_id if beat_id and beat_id in BEAT_BY_ID else active_spine.id
+            _mark_beat_completed(progress, skip_id)
+        elif beat_id and beat_id in TRIGGER_IDS:
+            _mark_trigger_completed(progress, beat_id)
+            progress["last_screen_enter"] = None
         else:
             active_trigger = _pick_active_trigger(db, profile, progress)
             if active_trigger:

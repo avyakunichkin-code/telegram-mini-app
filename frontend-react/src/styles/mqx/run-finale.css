@@ -104,6 +104,8 @@
 
 .mqx-run-finale-body {
   padding: 10px 14px 0;
+  min-width: 0;
+  box-sizing: border-box;
 }
 
 .mqx-run-finale-scenario__title {
@@ -290,6 +292,9 @@
   border-radius: 12px;
   border: 1.5px solid color-mix(in srgb, var(--mq-violet, #6d28d9) 22%, transparent);
   background: color-mix(in srgb, var(--mq-violet, #6d28d9) 6%, var(--mqx-surface, #fff));
+  min-width: 0;
+  max-width: 100%;
+  box-sizing: border-box;
 }
 
 .mqx-run-finale-feedback__label {
@@ -305,7 +310,10 @@
 }
 
 .mqx-run-finale-feedback textarea {
+  display: block;
   width: 100%;
+  max-width: 100%;
+  min-width: 0;
   min-height: 72px;
   padding: 8px 10px;
   border-radius: 10px;
@@ -315,6 +323,7 @@
   margin-bottom: 8px;
   background: var(--mqx-surface, #fff);
   color: inherit;
+  box-sizing: border-box;
 }
 
 .mqx-run-finale__actions {
@@ -326,10 +335,109 @@
   background: var(--mqx-surface, #fff);
 }
 
-.mqx-run-finale__advanced-hint {
-  margin: 0;
-  font-size: 13px;
-  line-height: 1.35;
-  color: var(--mqx-text-secondary, rgba(15, 17, 21, 0.62));
+.mqx-run-finale-next {
+  margin: 4px 0 12px;
+  padding: 10px 0 4px;
+  border-top: 1px solid var(--mqx-border, rgba(15, 17, 21, 0.08));
+}
+
+.mqx-run-finale-next__title {
+  margin: 0 0 4px;
+  font-size: 0.82rem;
+  font-weight: 800;
   text-align: center;
+}
+
+.mqx-run-finale-next__lead {
+  margin: 0 0 10px;
+  font-size: 0.72rem;
+  line-height: 1.35;
+  text-align: center;
+  color: var(--mqx-text-muted, #6b7280);
+}
+
+.mqx-run-finale-next__row {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+  align-items: start;
+}
+
+.mqx-run-finale-next__col {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  min-width: 0;
+}
+
+.mqx-run-finale-next__chip {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  width: 100%;
+  min-width: 0;
+  padding: 8px 6px 6px;
+  border: 1.5px solid color-mix(in srgb, var(--mq-violet, #6d28d9) 28%, transparent);
+  border-radius: 12px;
+  background: color-mix(in srgb, var(--mq-violet, #6d28d9) 7%, var(--mqx-surface, #fff));
+  cursor: pointer;
+  transition:
+    border-color 0.15s ease,
+    background 0.15s ease,
+    transform 0.12s ease;
+}
+
+.mqx-run-finale-next__chip:hover:not(:disabled) {
+  border-color: color-mix(in srgb, var(--mq-violet, #6d28d9) 52%, transparent);
+  background: color-mix(in srgb, var(--mq-violet, #6d28d9) 11%, var(--mqx-surface, #fff));
+}
+
+.mqx-run-finale-next__chip:active:not(:disabled) {
+  transform: scale(0.98);
+}
+
+.mqx-run-finale-next__chip:disabled {
+  opacity: 0.55;
+  cursor: default;
+}
+
+.mqx-run-finale-next__mascot {
+  display: block;
+  line-height: 0;
+}
+
+.mqx-run-finale-next__mascot img {
+  display: block;
+  height: 52px;
+  width: auto;
+  max-width: 100%;
+  object-fit: contain;
+  object-position: center bottom;
+  filter: drop-shadow(0 3px 8px rgba(15, 17, 21, 0.1));
+}
+
+.mqx-run-finale-next__chip-title {
+  font-size: 0.68rem;
+  font-weight: 800;
+  line-height: 1.2;
+  text-align: center;
+  color: var(--mqx-ink, #0f1115);
+}
+
+.mqx-run-finale-next__starter-list {
+  margin: 6px 0 0;
+  padding: 0;
+  list-style: none;
+  font-size: 0.62rem;
+  line-height: 1.35;
+  color: var(--mqx-text-muted, #6b7280);
+}
+
+.mqx-run-finale-next__starter-list li {
+  margin: 0;
+  padding: 1px 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }

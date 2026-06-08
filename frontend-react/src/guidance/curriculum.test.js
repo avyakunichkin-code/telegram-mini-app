@@ -5,6 +5,7 @@ import {
   isP1GuidanceComplete,
   MIN_PERIOD_INDEX_FOR_GAME_EVENTS,
   shouldBlockAutoEventsOverlay,
+  shouldDeferEventsAutoOpen,
   shouldDeferGuidanceForPeriodCloseRitual,
   shouldDeferPeriodCloseDuringGuidance,
 } from './curriculum.js';
@@ -110,6 +111,27 @@ test('shouldDeferGuidanceForPeriodCloseRitual false during p1_close debrief', ()
   );
 });
 
+test('shouldDeferEventsAutoOpen until t_events_intro on turn 3+', () => {
+  assert.equal(
+    shouldDeferEventsAutoOpen(
+      { show_curriculum: true, beat_id: 't_events_intro', completed_beats: ['p1_close', 'p2_new_month'] },
+      3,
+    ),
+    true,
+  );
+  assert.equal(
+    shouldDeferEventsAutoOpen(
+      {
+        show_curriculum: true,
+        beat_id: 't_finance_actions',
+        completed_beats: ['p1_close', 'p2_new_month', 't_events_intro'],
+      },
+      3,
+    ),
+    false,
+  );
+});
+
 test('shouldBlockAutoEventsOverlay during period close pipeline', () => {
   assert.equal(
     shouldBlockAutoEventsOverlay({
@@ -135,8 +157,23 @@ test('shouldBlockAutoEventsOverlay during period close pipeline', () => {
       periodCloseSummary: null,
       queuedPeriodClose: null,
       guidance: { beat_id: 'p2_new_month', show_debrief: false },
+      periodIndex: 2,
     }),
     false,
+  );
+  assert.equal(
+    shouldBlockAutoEventsOverlay({
+      periodCloseOpen: false,
+      periodCloseSummary: null,
+      queuedPeriodClose: null,
+      guidance: {
+        show_curriculum: true,
+        beat_id: 't_events_intro',
+        completed_beats: ['p1_close', 'p2_new_month'],
+      },
+      periodIndex: 3,
+    }),
+    true,
   );
 });
 

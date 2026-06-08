@@ -1,4 +1,4 @@
-import { useEffect, useId, useMemo, useState } from 'react';
+import { useId, useMemo, useState } from 'react';
 
 import { victoryFromTurn, waitForTurn } from '../../../constants/turnCopy';
 import { buildGoalChainView } from '../utils/goalChainDisplay';
@@ -56,13 +56,6 @@ function goalStepBadge(view) {
   return `Шаг ${current}/${view.total}${done > 0 ? ` · ${done} готово` : ''}`;
 }
 
-function shouldAutoExpand(periodIndex, view) {
-  if (view.phase === 'empty' || view.phase === 'win') return false;
-  if (view.phase === 'gate') return true;
-  const pi = Number(periodIndex) || 0;
-  return pi <= 7 && view.phase === 'active';
-}
-
 function GoalDashHead({ view, showStepper, actionHint, stepBadge }) {
   const progressFrac =
     view.currentGoal && view.phase === 'active'
@@ -74,7 +67,7 @@ function GoalDashHead({ view, showStepper, actionHint, stepBadge }) {
   return (
     <div className="mqx-goal-dash__head-text">
       <div className="mqx-goal-dash__kicker-row">
-        <span className="mqx-goal-dash__kicker">Цель сценария</span>
+        <h2 className="mqx-finance-static__title mqx-goal-dash__title">Цель сценария</h2>
         {stepBadge ? <span className="mqx-goal-dash__step-chip">{stepBadge}</span> : null}
       </div>
       <span className="mqx-goal-dash__current-title">{view.headerTitle}</span>
@@ -114,18 +107,13 @@ export function MqxGoalDash({
 }) {
   const expandId = useId();
   const view = useMemo(() => buildGoalChainView(victory, legacyGoal), [victory, legacyGoal]);
-  const autoExpand = defaultExpanded || shouldAutoExpand(periodIndex, view);
-  const [expanded, setExpanded] = useState(autoExpand);
+  const [expanded, setExpanded] = useState(defaultExpanded);
   const showStepper = view.chain.length > 0;
   const actionHint = useMemo(
     () => buildGoalActionHint(view.currentGoal, view),
     [view.currentGoal, view],
   );
   const stepBadge = useMemo(() => goalStepBadge(view), [view]);
-
-  useEffect(() => {
-    if (autoExpand) setExpanded(true);
-  }, [autoExpand, view.currentGoal?.key, view.phase]);
 
   if (view.phase === 'empty') return null;
 

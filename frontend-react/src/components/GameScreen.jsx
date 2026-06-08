@@ -21,6 +21,7 @@ import {
 import { PERIOD_CLOSE_AUTO_MAX } from '../constants/periodClose';
 import { shouldAutoOpenPeriodClose } from '../utils/periodCloseDisplay';
 import { GameGuidanceLayer } from './GameGuidanceLayer';
+import { useTabBarInset } from '../guidance/useTabBarInset';
 import {
   areGameEventsUnlocked,
   GUIDANCE_SCREEN_TRIGGERS,
@@ -52,6 +53,7 @@ export function GameScreen({ onLogout, onNewGame, onLoadGame }) {
   const onboardingRootRef = useRef(null);
   const lastOpenedEventsTickRef = useRef(0);
   const deferredEventsTickRef = useRef(0);
+  useTabBarInset();
   const {
     overview,
     timeStatus,
@@ -80,22 +82,34 @@ export function GameScreen({ onLogout, onNewGame, onLoadGame }) {
     submitRunFeedback,
   } = useGame();
 
-  const closeEventsOverlay = useCallback(() => setEventsOpen(false), []);
+  const closeEventsOverlay = useCallback(() => {
+    setEventsOpen(false);
+    void refreshOverview?.();
+  }, [refreshOverview]);
 
-  const handleStartAdvancedScenario = useCallback(async () => {
-    try {
-      const profiles = await API.getGameProfiles();
-      const name = suggestDefaultProfileName(Array.isArray(profiles) ? profiles : []);
-      await startGameWithTemplate(name, 'mq_game_tight_budget_v1');
-      await reload();
-      showNotification('Запущен сценарий «Профессионал» — кредиты, авто и страховки', 'success');
-    } catch (err) {
-      showNotification(
-        formatApiErrorDetail(err?.detail ?? err?.message, 'Не удалось начать новый сценарий'),
-        'error',
-      );
-    }
-  }, [reload]);
+  const handleStartAdvancedScenario = useCallback(
+    async (templateKey = 'mq_game_tight_budget_v1') => {
+      const titles = {
+        mq_game_tight_budget_v1: 'Профессионал',
+        mq_game_mortgage_stress_v1: 'Руководитель',
+        mq_game_debt_stack_v1: 'Предприниматель',
+      };
+      const label = titles[templateKey] || 'новый сценарий';
+      try {
+        const profiles = await API.getGameProfiles();
+        const name = suggestDefaultProfileName(Array.isArray(profiles) ? profiles : []);
+        await startGameWithTemplate(name, templateKey);
+        await reload();
+        showNotification(`Запущен сценарий «${label}»`, 'success');
+      } catch (err) {
+        showNotification(
+          formatApiErrorDetail(err?.detail ?? err?.message, 'Не удалось начать новый сценарий'),
+          'error',
+        );
+      }
+    },
+    [reload],
+  );
 
   const goFinanceTab = useCallback(({ flowsSection = null, pageMode = null } = {}) => {
     setCapitalFlowsOpen(flowsSection);
@@ -135,11 +149,13 @@ export function GameScreen({ onLogout, onNewGame, onLoadGame }) {
     periodCloseOpen,
     guidance,
   );
+  const periodIndex = overview?.period_index ?? timeStatus?.period_index;
   const blockAutoEventsOverlay = shouldBlockAutoEventsOverlay({
     periodCloseOpen,
     periodCloseSummary,
     queuedPeriodClose,
     guidance,
+    periodIndex,
   });
 
   // Итоги периода — до эффектов событий: в одном коммите сначала выставляем periodCloseOpen.

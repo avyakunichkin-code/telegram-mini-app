@@ -4,12 +4,7 @@ import { getRunFinaleCupPortrait } from '../brand/runFinalePortraits';
 import { TURN_SINGULAR_GEN } from '../../../constants/turnCopy';
 import { MqxButton } from '../primitives/MqxButton';
 import { showNotification } from '../../notifications';
-
-const ADVANCED_SCENARIO_AFTER_STUDENT = {
-  template_key: 'mq_game_tight_budget_v1',
-  title: 'Профессионал',
-  blurb: 'Аренда, авто, кредит, страховки и больше решений за ход',
-};
+import { VICTORY_NEXT_SCENARIOS } from './runFinaleNextScenarios';
 
 const GLYPHS = {
   up: (
@@ -62,6 +57,45 @@ function GazetaStat({ metric }) {
   );
 }
 
+function RunFinaleNextScenarios({ onStartScenario, busy }) {
+  return (
+    <section className="mqx-run-finale-next" aria-labelledby="mqx-run-finale-next-title">
+      <h4 id="mqx-run-finale-next-title" className="mqx-run-finale-next__title">
+        Попробовать другого персонажа
+      </h4>
+      <p className="mqx-run-finale-next__lead">Новое сохранение с другим стартовым набором</p>
+      <div className="mqx-run-finale-next__row">
+        {VICTORY_NEXT_SCENARIOS.map((scenario) => {
+          const cup = getRunFinaleCupPortrait(scenario.personaSlug);
+          return (
+            <div key={scenario.template_key} className="mqx-run-finale-next__col">
+              <button
+                type="button"
+                className="mqx-run-finale-next__chip"
+                disabled={busy}
+                onClick={() => onStartScenario?.(scenario.template_key)}
+              >
+                <span className="mqx-run-finale-next__mascot" aria-hidden="true">
+                  <picture>
+                    {cup?.webp ? <source srcSet={cup.webp} type="image/webp" /> : null}
+                    <img src={cup?.png} alt="" height={52} decoding="async" />
+                  </picture>
+                </span>
+                <span className="mqx-run-finale-next__chip-title">{scenario.title}</span>
+              </button>
+              <ul className="mqx-run-finale-next__starter-list">
+                {scenario.starterLines.map((line) => (
+                  <li key={line}>+ {line}</li>
+                ))}
+              </ul>
+            </div>
+          );
+        })}
+      </div>
+    </section>
+  );
+}
+
 export function MqxRunFinale({
   open,
   payload,
@@ -74,13 +108,27 @@ export function MqxRunFinale({
   const [comment, setComment] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const [startingScenario, setStartingScenario] = useState(false);
 
   const isWin = payload?.outcome === 'victory';
   const cup = getRunFinaleCupPortrait(payload?.persona_slug);
-  const showAdvancedCta =
+  const showNextScenarios =
     isWin &&
     payload?.template_key === 'mq_game_basic_v1' &&
     typeof onStartAdvancedScenario === 'function';
+
+  const handleStartScenario = useCallback(
+    async (templateKey) => {
+      if (startingScenario) return;
+      setStartingScenario(true);
+      try {
+        await onStartAdvancedScenario?.(templateKey);
+      } finally {
+        setStartingScenario(false);
+      }
+    },
+    [onStartAdvancedScenario, startingScenario],
+  );
 
   const handleSubmitFeedback = useCallback(
     async (e) => {
@@ -198,11 +246,12 @@ export function MqxRunFinale({
             ) : null}
 
             <form className="mqx-run-finale-feedback" onSubmit={handleSubmitFeedback}>
-              <label className="mqx-run-finale-feedback__label">
+              <label className="mqx-run-finale-feedback__label" htmlFor="mqx-run-finale-comment">
                 Расскажите, как прошла партия
                 <span className="mqx-run-finale-feedback__hint"> (необязательно)</span>
               </label>
               <textarea
+                id="mqx-run-finale-comment"
                 value={comment}
                 onChange={(e) => setComment(e.target.value)}
                 placeholder="Что было непонятно или что понравилось?"
@@ -217,30 +266,27 @@ export function MqxRunFinale({
                 {submitted ? 'Отправлено' : 'Отправить отзыв'}
               </MqxButton>
             </form>
+
+            {showNextScenarios ? (
+              <RunFinaleNextScenarios
+                onStartScenario={handleStartScenario}
+                busy={startingScenario}
+              />
+            ) : null}
           </div>
         </div>
 
         <div className="mqx-run-finale__actions">
-          {showAdvancedCta ? (
-            <>
-              <MqxButton variant="primary" onClick={onStartAdvancedScenario}>
-                Сценарий «{ADVANCED_SCENARIO_AFTER_STUDENT.title}»
-              </MqxButton>
-              <p className="mqx-run-finale__advanced-hint">{ADVANCED_SCENARIO_AFTER_STUDENT.blurb}</p>
-              <MqxButton variant="secondary" onClick={onDismissVictory}>
-                Играть дальше в этом сохранении
-              </MqxButton>
-            </>
-          ) : isWin ? (
-            <MqxButton variant="primary" onClick={onDismissVictory}>
-              Играть дальше
+          {isWin ? (
+            <MqxButton variant="primary" onClick={onDismissVictory} disabled={startingScenario}>
+              Играть дальше в этом сохранении
             </MqxButton>
           ) : (
             <MqxButton variant="primary" onClick={onNewGame}>
               Новая игра
             </MqxButton>
           )}
-          <MqxButton variant="ghost" onClick={onMenu}>
+          <MqxButton variant="ghost" onClick={onMenu} disabled={startingScenario}>
             К сохранениям
           </MqxButton>
         </div>

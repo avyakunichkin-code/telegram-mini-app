@@ -18,7 +18,7 @@ describe('guidanceAnchors', () => {
     assert.equal(getGuidanceAnchorForBeat(null), null);
   });
 
-  it('sums strip + tabbar reserve', () => {
-    assert.equal(getGuidanceBottomReservePx(140, 56), 140 + 56 + 16);
+  it('reserves strip height plus padding for scroll', () => {
+    assert.equal(getGuidanceBottomReservePx(140, 16), 140 + 16);
   });
 });
