@@ -174,6 +174,47 @@ def test_prepay_reduces_debt(auth_client):
     assert body["monthly_payment"] == pytest.approx(V1_MONTHLY_PAYMENT_AFTER_PREPAY, abs=0.01)
 
 
+def test_secured_liability_close_without_asset_sale(auth_client):
+    client, db, profile, headers = auth_client
+    created = client.post(
+        "/api/finance/acquisitions/secured",
+        json={"liability_key": "mortgage", "asset_key": "apt_1br"},
+        headers=headers,
+    ).json()
+    asset_id = created["asset"]["id"]
+    liability_id = created["liability"]["id"]
+    liab = db.query(FinanceLiability).filter(FinanceLiability.id == liability_id).first()
+    due = float(liab.overdue_amount or 0) + float(liab.total_debt or 0)
+    db.refresh(profile)
+    profile.cash_balance = due + 100_000
+    db.commit()
+
+    resp = client.delete(f"/api/finance/liabilities/{liability_id}", headers=headers)
+    assert resp.status_code == 200
+
+    db.refresh(liab)
+    assert liab.is_active == 0
+    asset = db.query(FinanceAsset).filter(FinanceAsset.id == asset_id).first()
+    assert asset.is_active == 1
+
+
+def test_credit_card_from_template_prepay_rejected(auth_client):
+    client, _db, _profile, headers = auth_client
+    created = client.post(
+        "/api/finance/liabilities/from-template",
+        json={"key": "credit_card"},
+        headers=headers,
+    )
+    assert created.status_code == 200
+    lid = created.json()["id"]
+    resp = client.post(
+        f"/api/finance/liabilities/{lid}/prepay",
+        json={"amount": 5_000},
+        headers=headers,
+    )
+    assert resp.status_code == 400
+
+
 def test_insurance_requires_asset(auth_client):
     client, _db, _profile, headers = auth_client
     resp = client.post(

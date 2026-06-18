@@ -2,6 +2,7 @@ import assert from 'node:assert/strict';
 import { describe, it } from 'node:test';
 import {
   buildSecuredBundles,
+  canPrepayLiability,
   computeSalePreview,
   isConsumerLiabilityTemplate,
   isSecuredLiabilityTemplate,
@@ -39,5 +40,11 @@ describe('capitalDl1', () => {
     assert.equal(r.payoff, 796_513.93);
     assert.equal(r.cashNet, 303_486.07);
     assert.equal(r.topUp, 0);
+  });
+
+  it('canPrepayLiability excludes interest_only', () => {
+    assert.equal(canPrepayLiability({ payment_mode: 'annuity', term_periods: 36 }), true);
+    assert.equal(canPrepayLiability({ payment_mode: 'interest_only', term_periods: null }), false);
+    assert.equal(canPrepayLiability({ payment_mode: 'interest_only', term_periods: 12 }), false);
   });
 });

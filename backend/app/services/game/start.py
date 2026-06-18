@@ -7,7 +7,7 @@ from sqlalchemy.orm import Session
 
 from ...finance.expense_defaults import default_plan_expense_budget, expense_budget_for_template
 from ...finance.expenses import ensure_expense_category_catalog, seed_expense_lines_from_budget
-from ...finance.helpers import monthly_interest_payment
+from ...finance.starter_liability import build_starter_liability
 from ...game.start_validation import validate_game_start_request
 from ...models import (
     FinanceAsset,
@@ -47,6 +47,7 @@ def start_new_game(db: Session, user_id: int, payload: GameStartRequest) -> Game
     monthly_salary = float(payload.monthly_salary)
     assets_list: List[AssetCreate] = []
     liabilities_list: List[LiabilityCreate] = []
+    starter_liabilities_raw: List[dict] = []
     seeded_budget: dict[str, float] | None = None
     starter_params_json = "{}"
 
@@ -82,6 +83,7 @@ def start_new_game(db: Session, user_id: int, payload: GameStartRequest) -> Game
                 )
         for li in blueprint.get("liabilities") or []:
             if isinstance(li, dict):
+                starter_liabilities_raw.append(li)
                 liabilities_list.append(
                     LiabilityCreate(
                         title=li.get("title") or "Обязательство",
@@ -111,6 +113,14 @@ def start_new_game(db: Session, user_id: int, payload: GameStartRequest) -> Game
     else:
         assets_list = list(payload.assets)
         liabilities_list = list(payload.liabilities)
+        starter_liabilities_raw = [
+            {
+                "title": li.title or "Обязательство",
+                "total_debt": li.total_debt,
+                "annual_rate_percent": li.annual_rate_percent,
+            }
+            for li in liabilities_list
+        ]
 
     db.query(GameProfile).filter(
         GameProfile.user_id == user_id,
@@ -155,6 +165,7 @@ def start_new_game(db: Session, user_id: int, payload: GameStartRequest) -> Game
     )
     db.add(salary)
 
+    created_assets: List[FinanceAsset] = []
     for asset_data in assets_list:
         asset = FinanceAsset(
             game_profile_id=new_profile.id,
@@ -167,17 +178,17 @@ def start_new_game(db: Session, user_id: int, payload: GameStartRequest) -> Game
             is_active=1,
         )
         db.add(asset)
+        created_assets.append(asset)
 
-    for liability_data in liabilities_list:
-        liability = FinanceLiability(
-            game_profile_id=new_profile.id,
-            title=liability_data.title,
-            total_debt=liability_data.total_debt,
-            annual_rate_percent=liability_data.annual_rate_percent,
-            monthly_payment=monthly_interest_payment(
-                liability_data.total_debt, liability_data.annual_rate_percent
-            ),
-            is_active=1,
+    db.flush()
+
+    used_secured_asset_ids: set[int] = set()
+    for blueprint_li in starter_liabilities_raw:
+        liability = build_starter_liability(
+            profile_id=new_profile.id,
+            blueprint_li=blueprint_li,
+            assets=created_assets,
+            used_secured_asset_ids=used_secured_asset_ids,
         )
         db.add(liability)
 

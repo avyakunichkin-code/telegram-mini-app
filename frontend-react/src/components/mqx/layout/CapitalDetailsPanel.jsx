@@ -88,9 +88,12 @@ export function CapitalDetailsPanel({
   };
 
   const confirmDeleteLiability = async (liability) => {
+    const secured = Boolean(liability?.secured_asset_id);
     const ok = await confirm({
       title: 'Закрыть обязательство?',
-      message: `«${liability.title}» будет закрыто: спишется остаток тела и просрочка со счёта.`,
+      message: secured
+        ? `«${liability.title}» будет закрыто: спишется остаток тела и просрочка. Актив останется в портфеле.`
+        : `«${liability.title}» будет закрыто: спишется остаток тела и просрочка со счёта.`,
     });
     if (ok) await onDeleteLiability(liability.id);
   };
@@ -252,7 +255,6 @@ export function CapitalDetailsPanel({
               </MqxCapitalDetailEmpty>
             ) : (
               ownedLiabilities.map((l) => {
-                const secured = Boolean(l.secured_asset_id);
                 return (
                   <MqxFinListRow
                     key={l.id}
@@ -278,15 +280,13 @@ export function CapitalDetailsPanel({
                             Досрочно
                           </MqxCapitalTextRowAction>
                         ) : null}
-                        {!secured ? (
-                          <MqxCapitalTextRowAction
-                            variant="close"
-                            ariaLabel={`Закрыть ${l.title}`}
-                            onClick={() => void confirmDeleteLiability(l)}
-                          >
-                            Закрыть
-                          </MqxCapitalTextRowAction>
-                        ) : null}
+                        <MqxCapitalTextRowAction
+                          variant="close"
+                          ariaLabel={`Закрыть ${l.title}`}
+                          onClick={() => void confirmDeleteLiability(l)}
+                        >
+                          Закрыть
+                        </MqxCapitalTextRowAction>
                       </div>
                     }
                   />

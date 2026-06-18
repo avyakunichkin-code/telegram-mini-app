@@ -24,11 +24,13 @@ export function MqxLiabilityPrepayForm({
   }, [maxPrepay, liability?.id]);
 
   const canSubmit = amount > 0 && amount <= maxPrepay && !busy;
+  const recalculatesPayment = liability?.payment_mode === 'annuity';
 
   return (
     <article className="mqx-invest-form mqx-invest-form--d mqx-invest-form--embedded mqx-liab-prepay-form">
       <p className="mqx-liab-prepay-form__hint">
-        Сначала гасится просрочка, затем тело долга. Платёж пересчитается по оставшемуся сроку.
+        Сначала гасится просрочка, затем тело долга.
+        {recalculatesPayment ? ' Платёж пересчитается по оставшемуся сроку.' : null}
       </p>
       <div className="mqx-liab-prepay-form__debt">
         Остаток тела: <MoneyText value={liability?.total_debt} decimals={0} />

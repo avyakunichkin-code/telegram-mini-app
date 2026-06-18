@@ -77,8 +77,8 @@ export function findSecuredLiabilityForAsset(liabilities, assetId) {
 
 export function canPrepayLiability(liability) {
   if (!liability) return false;
-  if (liability.payment_mode === 'annuity') return true;
-  return Number(liability.term_periods) > 0;
+  if (liability.payment_mode === 'interest_only') return false;
+  return liability.payment_mode === 'annuity' || Number(liability.term_periods) > 0;
 }
 
 export function insuranceKindNeedsAsset(kind) {
