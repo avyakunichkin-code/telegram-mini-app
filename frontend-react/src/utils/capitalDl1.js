@@ -2,6 +2,24 @@
 
 const SECURED_KINDS = new Set(['mortgage', 'auto_loan']);
 
+export function isCarAssetKind(kind) {
+  return (kind || '').toLowerCase().startsWith('car');
+}
+
+export function isPropertyAssetKind(kind) {
+  const k = (kind || '').toLowerCase();
+  if (!k || k === 'generic' || isCarAssetKind(k)) return false;
+  return true;
+}
+
+export function filterCarAssetTemplates(templates) {
+  return (templates || []).filter((t) => isCarAssetKind(t.kind));
+}
+
+export function filterPropertyAssetTemplates(templates) {
+  return (templates || []).filter((t) => isPropertyAssetKind(t.kind));
+}
+
 export function isSecuredLiabilityTemplate(t) {
   if (!t) return false;
   if (SECURED_KINDS.has(t.liability_kind)) return true;

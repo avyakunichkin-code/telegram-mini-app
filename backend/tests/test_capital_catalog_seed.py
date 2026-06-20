@@ -1,7 +1,32 @@
-"""Сид каталога DL1: car_loan + mortgage metadata."""
+"""Сид каталога DL1: asset + liability metadata."""
 
-from app.models import LiabilityTemplate
-from app.seeds.capital_catalog import upsert_capital_liability_catalog
+from app.models import AssetTemplate, LiabilityTemplate
+from app.seeds.capital_catalog import upsert_capital_asset_catalog, upsert_capital_liability_catalog
+
+
+def test_upsert_asset_catalog_real_estate_and_cars(db_session):
+    upsert_capital_asset_catalog(db_session)
+    active = (
+        db_session.query(AssetTemplate)
+        .filter(AssetTemplate.is_active == 1)
+        .order_by(AssetTemplate.sort_order.asc())
+        .all()
+    )
+    keys = {row.template_key for row in active}
+    assert "apt_1br" in keys
+    assert "car_personal" in keys
+    assert "car_taxi" in keys
+    assert "home" not in keys
+    assert "rental_home" not in keys
+
+    apt = (
+        db_session.query(AssetTemplate)
+        .filter(AssetTemplate.template_key == "apt_1br")
+        .first()
+    )
+    assert apt is not None
+    assert apt.kind == "home"
+    assert float(apt.asset_value) == 5_000_000.0
 
 
 def test_upsert_car_loan_secured_metadata(db_session):

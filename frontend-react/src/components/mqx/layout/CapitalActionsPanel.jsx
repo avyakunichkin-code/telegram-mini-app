@@ -12,11 +12,10 @@ import { SecuredAcquisitionList } from './SecuredAcquisitionList';
 import {
   buildSecuredBundles,
   filterBundlesForSheet,
+  filterCarAssetTemplates,
+  filterPropertyAssetTemplates,
   isConsumerLiabilityTemplate,
 } from '../../../utils/capitalDl1';
-
-const PROPERTY_KINDS = new Set(['home', 'rental_home']);
-const CAR_KINDS = new Set(['car_personal', 'car_taxi']);
 
 const SHEET_COPY = {
   deposit: {
@@ -49,14 +48,6 @@ const SHEET_COPY = {
     subtitle: 'Автокредит, потребительский кредит (до 2). Ипотека — отдельная плитка.',
   },
 };
-
-function filterAssetTemplates(templates, kindSet) {
-  return templates.filter((t) => kindSet.has(t.kind));
-}
-
-function filterLiabilityTemplates(templates, predicate) {
-  return templates.filter(predicate);
-}
 
 /** Панель «Действия» — сетка плиток + bottom sheets. */
 export function CapitalActionsPanel({
@@ -105,16 +96,19 @@ export function CapitalActionsPanel({
   }, [mechanics, insuranceSectionState]);
 
   const propertyTemplates = useMemo(
-    () => filterAssetTemplates(assetTemplates, PROPERTY_KINDS),
+    () => filterPropertyAssetTemplates(assetTemplates),
     [assetTemplates],
   );
-  const carTemplates = useMemo(() => filterAssetTemplates(assetTemplates, CAR_KINDS), [assetTemplates]);
+  const carTemplates = useMemo(
+    () => filterCarAssetTemplates(assetTemplates),
+    [assetTemplates],
+  );
   const securedBundles = useMemo(
     () => buildSecuredBundles(liabilityTemplates, assetTemplates),
     [liabilityTemplates, assetTemplates],
   );
   const creditTemplates = useMemo(
-    () => filterLiabilityTemplates(liabilityTemplates, isConsumerLiabilityTemplate),
+    () => liabilityTemplates.filter(isConsumerLiabilityTemplate),
     [liabilityTemplates],
   );
 
