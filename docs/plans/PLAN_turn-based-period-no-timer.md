@@ -5,8 +5,14 @@ last_reviewed: 2026-05-26
 idea: ../vision/ideas/turn-based-period-no-timer.md
 epic: TB1
 design_lab: ../../design-lab/dashboard/hero-no-timer-round/
+tags:
+  - tvoy-hod/layer/plan
+  - tvoy-hod/status/implemented
+aliases:
+  - "Implementation Plan: Пошаговый месяц без таймера (TB1)"
+  - "PLAN turn based period no timer"
+  - PLAN_turn-based-period-no-timer
 ---
-
 # Implementation Plan: Пошаговый месяц без таймера (TB1)
 
 ## Overview

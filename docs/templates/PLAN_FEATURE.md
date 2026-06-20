@@ -10,8 +10,17 @@ idea: ../vision/ideas/<slug>.md
 tasks: ../tasks/TASKS_<slug>.md
 traceability: ../TRACEABILITY.md
 next_skill: incremental-implementation
+tags:
+  - tvoy-hod/layer/plan
+  - tvoy-hod/layer/template
+  - tvoy-hod/status/draft
+aliases:
+  - "[Feature name]"
+  - E1
+  - "PLAN FEATURE"
+  - PLAN_FEATURE
+  - "Plan: [Feature name]"
 ---
-
 # Plan: [Feature name]
 
 **Epic ID:** `E1` (строка в [`TRACEABILITY.md`](../TRACEABILITY.md))  

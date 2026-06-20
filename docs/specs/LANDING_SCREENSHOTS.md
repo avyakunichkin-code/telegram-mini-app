@@ -3,8 +3,13 @@ layer: spec
 status: active
 last_reviewed: 2026-05-25
 audience: frontend, marketing, agents
+tags:
+  - tvoy-hod/layer/spec
+  - tvoy-hod/status/active
+aliases:
+  - "Лендинг — скриншоты UI (MQX)"
+  - LANDING_SCREENSHOTS
 ---
-
 # Лендинг — скриншоты UI (MQX)
 
 **Связано:** [`landing/README.md`](../../landing/README.md) · [`vision/ideas/landing-mqx-product-preview.md`](../vision/ideas/landing-mqx-product-preview.md) · [`landing/public/screens/README.md`](../../landing/public/screens/README.md) · [`landing/src/scripts/screens.js`](../../landing/src/scripts/screens.js)

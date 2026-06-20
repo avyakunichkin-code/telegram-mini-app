@@ -7,8 +7,14 @@ parent: admin-and-notifications.md
 related: admin-ops-quarter-2026.md
 plan: ../../plans/PLAN_admin-analytics-ops.md
 next_spec: specs/features/SPEC_admin-and-notifications.md
+tags:
+  - tvoy-hod/layer/idea
+  - tvoy-hod/layer/vision
+  - tvoy-hod/status/active
+aliases:
+  - "Admin Catalog Registry — справочники без CMS"
+  - admin-catalog-registry
 ---
-
 # Admin Catalog Registry — справочники без CMS
 
 Сессия **idea-refine** (2026-05-25): desktop-admin, каталоги **события / стартеры / активы / долги**, списки + добавление без «закапывания» в детали. **draft/publish** отложен (`is_active`).

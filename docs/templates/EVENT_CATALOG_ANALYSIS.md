@@ -1,3 +1,10 @@
+---
+tags:
+  - tvoy-hod/layer/template
+aliases:
+  - "Event Catalog Analysis — шаблон отчёта"
+  - EVENT_CATALOG_ANALYSIS
+---
 # Event Catalog Analysis — шаблон отчёта
 
 Скопируйте в `docs/vision/analysis/event-catalog-<topic>-<YYYY-MM-DD>.md` или отдайте в чат по `/event-analysis`.

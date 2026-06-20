@@ -16,8 +16,19 @@ related:
   - SPEC_FRONTEND_UI.md
   - ../../plans/PLAN_expenses.md
   - ../../specs/economy/EXPENSES_LAYER_CHECKLIST.md
+tags:
+  - tvoy-hod/layer/spec
+  - tvoy-hod/status/draft
+  - tvoy-hod/topic/e1
+  - tvoy-hod/topic/economy
+  - tvoy-hod/topic/expenses
+  - tvoy-hod/topic/life-sustaining-budget
+aliases:
+  - "Эпик E1 — Расходы на жизнеобеспечение"
+  - "SPEC expenses"
+  - SPEC_expenses
+  - "Spec: Эпик E1 — Расходы на жизнеобеспечение"
 ---
-
 # Spec: Эпик E1 — Расходы на жизнеобеспечение
 
 Норматив эпика: **полноценный слой бюджета жизни** (еда, жильё, одежда, связь, здоровье, досуг…), а не только отображение агрегата `base + delta`.

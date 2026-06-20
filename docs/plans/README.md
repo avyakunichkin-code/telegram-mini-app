@@ -1,3 +1,9 @@
+---
+tags:
+  - tvoy-hod/layer/plan
+aliases:
+  - "Планы (`docs/plans/`)"
+---
 # Планы (`docs/plans/`)
 
 **PLAN_*.md** — как строим фичу после утверждённой spec: граф зависимостей, вертикальные срезы, checkpoints.

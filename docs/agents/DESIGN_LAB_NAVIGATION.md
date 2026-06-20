@@ -1,3 +1,10 @@
+---
+tags:
+  - tvoy-hod/layer/agents
+aliases:
+  - "Design Lab — навигация: что, когда и куда"
+  - DESIGN_LAB_NAVIGATION
+---
 # Design Lab — навигация: что, когда и куда
 
 **Для людей и агентов.** Канон процесса: [`DESIGN_WORKFLOW.md`](../../frontend-react/src/components/mqx/DESIGN_WORKFLOW.md).  

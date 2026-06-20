@@ -3,8 +3,13 @@ layer: ops
 status: active
 last_reviewed: 2026-05-24
 audience_note: Pre-Alpha и Closed Alpha — один prod-стенд с своим доменом, API без cold start.
+tags:
+  - tvoy-hod/layer/ops
+  - tvoy-hod/status/active
+aliases:
+  - "Деплой: Pre-Alpha → Closed Alpha"
+  - DEPLOY
 ---
-
 # Деплой: Pre-Alpha → Closed Alpha
 
 Целевая схема на ближайшие две волны плейтеста (**10–20** и **50–100** игроков по [`GAME.md`](../../GAME.md) §11):

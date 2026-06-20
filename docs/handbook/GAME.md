@@ -3,8 +3,13 @@ layer: handbook
 status: active
 last_reviewed: 2026-05-30
 audience: product, game-design, partners, playtest
+tags:
+  - tvoy-hod/layer/handbook
+  - tvoy-hod/status/active
+aliases:
+  - "ТВОЙ ХОД — игра по финансовой грамотности"
+  - GAME
 ---
-
 # ТВОЙ ХОД — игра по финансовой грамотности
 
 Описание **текущей** игры: механики, логика, статус в production. Детали API и полей — в [`SPEC_PRODUCT.md`](../foundation/SPEC_PRODUCT.md) и spec фич. История решений и анкета — [`HISTORY.md`](HISTORY.md), [`QUESTIONNAIRE.md`](../../QUESTIONNAIRE.md).

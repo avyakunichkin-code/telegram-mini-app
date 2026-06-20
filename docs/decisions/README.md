@@ -1,3 +1,9 @@
+---
+tags:
+  - tvoy-hod/layer/adr
+aliases:
+  - "Architecture Decision Records (ADR)"
+---
 # Architecture Decision Records (ADR)
 
 Когда фиксировать ADR: необратимый выбор схемы, миграции, отказ от Alembic, контракт API.

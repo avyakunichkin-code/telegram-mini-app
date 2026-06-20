@@ -2,8 +2,14 @@
 status: accepted
 date: 2026-05-29
 deciders: продукт (ответы на открытые вопросы GDD-аудита)
+tags:
+  - tvoy-hod/layer/adr
+  - tvoy-hod/status/accepted
+aliases:
+  - ADR-009
+  - ADR-009-metrics-dictionary-tb1
+  - "ADR-009: Словарь метрик TB1 и продуктовые решения по давлению"
 ---
-
 # ADR-009: Словарь метрик TB1 и продуктовые решения по давлению
 
 ## Context

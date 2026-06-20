@@ -5,8 +5,13 @@ last_reviewed: 2026-06-02
 platform: Telegram Mini App
 screen_id: needs-help-sheet
 parent: dashboard-needs
+tags:
+  - tvoy-hod/layer/ux
+  - tvoy-hod/status/approved
+aliases:
+  - character-needs-help
+  - "UX Spec: Справочник «Потребности» (needs guide)"
 ---
-
 # UX Spec: Справочник «Потребности» (needs guide)
 
 > **API:** `GET /api/game/needs/guide`  

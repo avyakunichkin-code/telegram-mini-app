@@ -3,8 +3,13 @@ status: draft
 owner:
 last_reviewed:
 source: idea-refine
+tags:
+  - tvoy-hod/layer/template
+  - tvoy-hod/status/draft
+aliases:
+  - "[Название идеи]"
+  - IDEA_ONEPAGER
 ---
-
 # [Название идеи]
 
 ## Problem Statement

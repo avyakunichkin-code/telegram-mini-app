@@ -3,8 +3,13 @@ layer: foundation
 status: active
 last_reviewed: 2026-06-01
 audience_note: Пилот n=1 (2026-05-25). Полный реестр отзывов → [`PRE_ALPHA_PLAYTEST_FEEDBACK.md`](PRE_ALPHA_PLAYTEST_FEEDBACK.md).
+tags:
+  - tvoy-hod/layer/foundation
+  - tvoy-hod/status/active
+aliases:
+  - PRE_ALPHA_PLAYTEST_WAVE0_RESULTS
+  - "Pre-Alpha: пилот wave-0 (1 тестер)"
 ---
-
 # Pre-Alpha: пилот wave-0 (1 тестер)
 
 **Дата:** 2026-05-25  

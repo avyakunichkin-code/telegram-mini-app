@@ -1,3 +1,10 @@
+---
+tags:
+  - tvoy-hod/layer/foundation
+aliases:
+  - "Целевой игрок, сессия и рамки контента (MVP 1.1+)"
+  - TARGET_PLAYER_AND_SESSION
+---
 ﻿---
 layer: foundation
 status: active

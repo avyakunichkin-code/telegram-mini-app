@@ -1,3 +1,12 @@
+---
+tags:
+  - tvoy-hod/layer/spec
+aliases:
+  - "вкладка «Аналитика» (ТВОЙ ХОД)"
+  - "SPEC ANALYTICS"
+  - SPEC_ANALYTICS
+  - "Spec: вкладка «Аналитика» (ТВОЙ ХОД)"
+---
 ﻿---
 layer: spec
 domain: analytics

@@ -2,8 +2,14 @@
 status: accepted
 date: 2026-05-26
 deciders: продукт (сессия character needs)
+tags:
+  - tvoy-hod/layer/adr
+  - tvoy-hod/status/accepted
+aliases:
+  - ADR-006
+  - ADR-006-treat-self-options-and-cooldown
+  - "ADR-006: «Порадовать себя» — выбор варианта и кулдаун 15 периодов"
 ---
-
 # ADR-006: «Порадовать себя» — выбор варианта и кулдаун 15 периодов
 
 ## Context

@@ -4,8 +4,16 @@ status: approved
 owner: product
 last_reviewed: 2026-05-30
 tracks: events, balance, content-pipeline
+tags:
+  - tvoy-hod/layer/idea
+  - tvoy-hod/status/approved
+  - tvoy-hod/topic/balance
+  - tvoy-hod/topic/content-pipeline
+  - tvoy-hod/topic/events
+aliases:
+  - "Повтор событий, cooldown и state ladder"
+  - event-repeat-and-state-ladder
 ---
-
 # Повтор событий, cooldown и state ladder
 
 ## Problem Statement

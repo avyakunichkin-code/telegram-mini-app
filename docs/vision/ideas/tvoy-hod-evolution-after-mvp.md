@@ -4,8 +4,14 @@ status: active
 last_reviewed: 2026-05-25
 idea_refine: true
 next_spec: specs/features/SPEC_game-plan.md
+tags:
+  - tvoy-hod/layer/idea
+  - tvoy-hod/layer/vision
+  - tvoy-hod/status/active
+aliases:
+  - "ТВОЙ ХОД — развитие после easy MVP"
+  - tvoy-hod-evolution-after-mvp
 ---
-
 # ТВОЙ ХОД — развитие после easy MVP
 
 **Статус документа:** **§§ Problem … Снимок реализации** — исторический контекст и старые формулировки (easy/hard); **актуальная целевая концепция, Q&A и пошаровый план** — в **[части II](#часть-ii--полная-концепция-после-обсуждения-qa-и-план-работ)** внизу файла. Foundation: [`SPEC_PRODUCT.md`](../foundation/SPEC_PRODUCT.md) §0 (краткая выжимка, без дублирования §II).

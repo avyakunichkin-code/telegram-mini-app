@@ -1,3 +1,9 @@
+---
+tags:
+  - tvoy-hod/layer/ux
+aliases:
+  - "UX-спеки экранов (ТВОЙ ХОД)"
+---
 # UX-спеки экранов (ТВОЙ ХОД)
 
 Per-screen UX в конвейере [`DOCUMENTATION_SYSTEM.md`](../DOCUMENTATION_SYSTEM.md): дополняют [`specs/SPEC_FRONTEND_UI.md`](../specs/SPEC_FRONTEND_UI.md) и [`foundation/TMA_USER_FLOWS.md`](../foundation/TMA_USER_FLOWS.md).

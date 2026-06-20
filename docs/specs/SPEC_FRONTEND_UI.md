@@ -1,3 +1,12 @@
+---
+tags:
+  - tvoy-hod/layer/spec
+aliases:
+  - "Frontend UI/UX — ТВОЙ ХОД TMA"
+  - "SPEC FRONTEND_UI"
+  - SPEC_FRONTEND_UI
+  - "Spec: Frontend UI/UX — ТВОЙ ХОД TMA"
+---
 # Spec: Frontend UI/UX — ТВОЙ ХОД TMA
 
 **Статус:** принят (аудит 2026-05)  

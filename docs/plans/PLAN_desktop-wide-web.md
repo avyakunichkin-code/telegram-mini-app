@@ -6,8 +6,15 @@ idea: ../vision/ideas/desktop-wide-web-channel.md
 epic: WD1
 product_phase: closed-alpha
 target_wave: CA 50-100
+tags:
+  - tvoy-hod/layer/plan
+  - tvoy-hod/status/draft
+aliases:
+  - "полноразмерный веб-канал (эпик WD1)"
+  - "PLAN desktop wide web"
+  - PLAN_desktop-wide-web
+  - "Plan: полноразмерный веб-канал (эпик WD1)"
 ---
-
 # Plan: полноразмерный веб-канал (эпик WD1)
 
 **Драйвер:** игрок на desktop не должен видеть «вертикальное мини-приложение по центру экрана».  

@@ -3,8 +3,13 @@ layer: handbook
 status: active
 role: marketing
 last_reviewed: 2026-05-30
+tags:
+  - tvoy-hod/layer/handbook
+  - tvoy-hod/status/active
+aliases:
+  - "Маркетинг / партнёр — guide"
+  - marketing
 ---
-
 # Маркетинг / партнёр — guide
 
 УТП, стадия, бренд — **без** внутреннего backlog, формул экономики и `handbook/internal/`.

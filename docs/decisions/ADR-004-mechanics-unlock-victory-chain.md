@@ -2,8 +2,14 @@
 status: accepted
 date: 2026-05-25
 deciders: продукт / разработка (синхронизация docs ↔ prod)
+tags:
+  - tvoy-hod/layer/adr
+  - tvoy-hod/status/accepted
+aliases:
+  - ADR-004
+  - ADR-004-mechanics-unlock-victory-chain
+  - "ADR-004: Разблокировка механик по цепочке целей победы"
 ---
-
 # ADR-004: Разблокировка механик по цепочке целей победы
 
 ## Context

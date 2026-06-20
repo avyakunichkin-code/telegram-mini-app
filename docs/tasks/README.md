@@ -1,3 +1,9 @@
+---
+tags:
+  - tvoy-hod/layer/task
+aliases:
+  - "Задачи (`docs/tasks/`)"
+---
 # Задачи (`docs/tasks/`)
 
 Опциональная выгрузка MQ-* для трекера. **Канон** — секция **Tasks** в `docs/plans/PLAN_<feature>.md`; файл `TASKS_<slug>.md` — когда нужен отдельный чеклист или импорт в Linear/Jira.

@@ -3,8 +3,14 @@ layer: vision
 status: draft
 last_reviewed: 2026-05-19
 idea_refine: true
+tags:
+  - tvoy-hod/layer/idea
+  - tvoy-hod/layer/vision
+  - tvoy-hod/status/draft
+aliases:
+  - "Онбординг TMA — Mission Brief + первый период"
+  - onboarding-tma-mission-brief
 ---
-
 # Онбординг TMA — Mission Brief + первый период
 
 ## Problem Statement

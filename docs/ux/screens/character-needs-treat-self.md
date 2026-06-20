@@ -5,8 +5,13 @@ last_reviewed: 2026-05-26
 platform: Telegram Mini App
 screen_id: treat-self-sheet
 parent: dashboard-needs
+tags:
+  - tvoy-hod/layer/ux
+  - tvoy-hod/status/approved
+aliases:
+  - character-needs-treat-self
+  - "UX Spec: «Улучшить» / treat-self (bottom sheet)"
 ---
-
 # UX Spec: «Улучшить» / treat-self (bottom sheet)
 
 > **Prod UI:** кнопка **сердце** в Z-NEEDS (v7-e3); механика и API — `treat_self` / ADR-006. В копирайте справки — «Улучшить»; в legacy spec — «Порадовать себя».

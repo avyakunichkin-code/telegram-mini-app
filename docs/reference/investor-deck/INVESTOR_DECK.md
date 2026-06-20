@@ -1,3 +1,10 @@
+---
+tags:
+  - tvoy-hod/layer/reference
+aliases:
+  - "ТВОЙ ХОД — Investor UI Deck (v1)"
+  - INVESTOR_DECK
+---
 # ТВОЙ ХОД — Investor UI Deck (v1)
 
 Этот документ — **эталонный дизайн всех ключевых экранов** ТВОЙ ХОД (Telegram Mini App) для демонстрации инвесторам.

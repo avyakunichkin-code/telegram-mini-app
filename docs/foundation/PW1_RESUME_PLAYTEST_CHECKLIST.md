@@ -4,8 +4,13 @@ status: active
 last_reviewed: 2026-05-26
 epic: PW1
 plan: ../plans/PLAN_pwa-standalone.md
+tags:
+  - tvoy-hod/layer/foundation
+  - tvoy-hod/status/active
+aliases:
+  - "Чеклист плейтеста PW1 — resume после блокировки экрана"
+  - PW1_RESUME_PLAYTEST_CHECKLIST
 ---
-
 # Чеклист плейтеста PW1 — resume после блокировки экрана
 
 Внутренняя приёмка **фазы 0** (эпик PW1) перед включением сценария в [Pre-Alpha](PRE_ALPHA_PLAYTEST_PROTOCOL.md).

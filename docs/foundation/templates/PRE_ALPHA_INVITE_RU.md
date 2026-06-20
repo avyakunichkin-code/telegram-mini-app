@@ -2,8 +2,13 @@
 layer: foundation
 status: active
 audience: product, playtest moderators
+tags:
+  - tvoy-hod/layer/foundation
+  - tvoy-hod/status/active
+aliases:
+  - "Приглашение Pre-Alpha (RU) — черновик"
+  - PRE_ALPHA_INVITE_RU
 ---
-
 # Приглашение Pre-Alpha (RU) — черновик
 
 Подставьте **ссылку на игру**, **канал фидбека**, **ссылку на опрос** из [`PRE_ALPHA_WAVE1_OPS.md`](../PRE_ALPHA_WAVE1_OPS.md).

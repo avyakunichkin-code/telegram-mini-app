@@ -1,3 +1,10 @@
+---
+tags:
+  - tvoy-hod/layer/spec
+aliases:
+  - "Архив: система уровней персонажа и XP"
+  - LEVEL_XP_SYSTEM
+---
 ﻿---
 layer: spec
 domain: gameplay

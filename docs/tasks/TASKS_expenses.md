@@ -5,8 +5,14 @@ spec: ../specs/features/SPEC_expenses.md
 plan: ../plans/PLAN_expenses.md
 checklist: ../specs/economy/EXPENSES_LAYER_CHECKLIST.md
 traceability: ../TRACEABILITY.md
+tags:
+  - tvoy-hod/layer/task
+  - tvoy-hod/layer/tasks
+aliases:
+  - "Задачи E1 — Расходы (жизнеобеспечение)"
+  - E1
+  - TASKS_expenses
 ---
-
 # Задачи E1 — Расходы (жизнеобеспечение)
 
 > **2026-05-26:** реализация **на паузе**. Сначала E1-R в [`PLAN_backlog_may2026.md`](../plans/PLAN_backlog_may2026.md) (R1→R2→R3, go/decision). Чекбоксы ниже — **после go**.

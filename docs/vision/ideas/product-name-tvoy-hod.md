@@ -1,8 +1,13 @@
 ---
 status: approved
 last_reviewed: 2026-05-23
+tags:
+  - tvoy-hod/layer/idea
+  - tvoy-hod/status/approved
+aliases:
+  - "Публичное имя: **ТВОЙ ХОД**"
+  - product-name-tvoy-hod
 ---
-
 # Публичное имя: **ТВОЙ ХОД**
 
 ## Problem Statement

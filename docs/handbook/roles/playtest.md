@@ -3,8 +3,13 @@ layer: handbook
 status: active
 role: playtest
 last_reviewed: 2026-05-30
+tags:
+  - tvoy-hod/layer/handbook
+  - tvoy-hod/status/active
+aliases:
+  - "Плейтест / QA — guide"
+  - playtest
 ---
-
 # Плейтест / QA — guide
 
 Маршрут для **участников Pre-Alpha** и модераторов волны. Технические пути к коду здесь **не нужны**.

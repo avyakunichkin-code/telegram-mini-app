@@ -4,8 +4,18 @@ status: implemented
 tracks: progression, events-levels, xp, mvp-1-1
 spec_sprint: ../specs/features/SPEC_mvp-11-progression-events.md
 backlog_mq: MQ-111 — MQ-116
+tags:
+  - tvoy-hod/layer/plan
+  - tvoy-hod/status/implemented
+  - tvoy-hod/topic/events-levels
+  - tvoy-hod/topic/mvp-1-1
+  - tvoy-hod/topic/progression
+  - tvoy-hod/topic/xp
+aliases:
+  - "План MVP 1.1: события по уровню, прокачка, связка UX"
+  - "PLAN mvp 11 progression events"
+  - PLAN_mvp-11-progression-events
 ---
-
 # План MVP 1.1: события по уровню, прокачка, связка UX
 
 > **Устарело (2026-05-25):** срезы про **character XP**, **MQ-113** `apply_character_xp` и **level gates** не актуальны — [ADR-003](../decisions/ADR-003-remove-character-progression.md). Актуальная прогрессия событий: **`event_tier` от `period_index`** в [SPEC_mvp-11](../specs/features/SPEC_mvp-11-progression-events.md).

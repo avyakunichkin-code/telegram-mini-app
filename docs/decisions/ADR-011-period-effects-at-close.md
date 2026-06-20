@@ -2,8 +2,15 @@
 layer: decision
 status: accepted
 date: 2026-06-05
+tags:
+  - tvoy-hod/layer/adr
+  - tvoy-hod/layer/decision
+  - tvoy-hod/status/accepted
+aliases:
+  - ADR-011
+  - ADR-011-period-effects-at-close
+  - "ADR-011: эффекты открытого периода при закрытии месяца"
 ---
-
 # ADR-011: эффекты открытого периода при закрытии месяца
 
 ## Контекст

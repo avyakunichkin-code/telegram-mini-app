@@ -11,8 +11,13 @@ next_skill: critical-test-scenarios
 spec: ../specs/features/SPEC_<slug>.md
 plan: ../plans/PLAN_<slug>.md
 traceability: ../TRACEABILITY.md
+tags:
+  - tvoy-hod/layer/task
+  - tvoy-hod/layer/template
+aliases:
+  - E1
+  - TASK_SLICE
 ---
-
 ### MQ-042 — Краткое название среза
 
 - **Phase:** `build` — `define` | `build` | `verify` | `ship` (см. [`SKILL_DOC_MAP.md`](../agents/SKILL_DOC_MAP.md))

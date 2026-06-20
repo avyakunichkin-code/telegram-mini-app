@@ -2,8 +2,14 @@
 status: accepted
 date: 2026-05-26
 deciders: продукт (сессия character needs)
+tags:
+  - tvoy-hod/layer/adr
+  - tvoy-hod/status/accepted
+aliases:
+  - ADR-005
+  - ADR-005-character-needs-state-and-defeat
+  - "ADR-005: Потребности персонажа, медленный decay и поражение при нуле"
 ---
-
 # ADR-005: Потребности персонажа, медленный decay и поражение при нуле
 
 ## Context

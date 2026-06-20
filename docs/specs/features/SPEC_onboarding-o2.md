@@ -3,8 +3,15 @@ layer: spec
 status: superseded
 superseded_by: SPEC_onboarding-o3.md
 last_reviewed: 2026-06-05
+tags:
+  - tvoy-hod/layer/spec
+  - tvoy-hod/status/superseded
+aliases:
+  - "Онбординг TMA v2 (O2 — Progressive Guidance) — архив"
+  - "SPEC onboarding o2"
+  - SPEC_onboarding-o2
+  - "Spec: Онбординг TMA v2 (O2 — Progressive Guidance) — архив"
 ---
-
 # Spec: Онбординг TMA v2 (O2 — Progressive Guidance) — архив
 
 **Не использовать для новых задач.** Канон: [`SPEC_onboarding-o3.md`](SPEC_onboarding-o3.md) (2026-06-05).

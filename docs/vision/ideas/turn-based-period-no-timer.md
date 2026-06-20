@@ -3,8 +3,14 @@ layer: vision
 status: implemented
 last_reviewed: 2026-05-26
 implemented: 2026-05-26
+tags:
+  - tvoy-hod/layer/idea
+  - tvoy-hod/layer/vision
+  - tvoy-hod/status/implemented
+aliases:
+  - "Пошаговый месяц без таймера (turn-based period)"
+  - turn-based-period-no-timer
 ---
-
 # Пошаговый месяц без таймера (turn-based period)
 
 ## Problem Statement

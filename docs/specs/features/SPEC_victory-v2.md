@@ -1,3 +1,12 @@
+---
+tags:
+  - tvoy-hod/layer/spec
+aliases:
+  - "SPEC victory v2"
+  - SPEC_victory-v2
+  - "Spec: Victory v2 — M из N по шаблону"
+  - "Victory v2 — M из N по шаблону"
+---
 ﻿---
 layer: spec
 status: approved

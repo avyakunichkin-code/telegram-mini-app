@@ -10,8 +10,18 @@ checklist: ../specs/economy/EXPENSES_LAYER_CHECKLIST.md
 tasks: ../tasks/TASKS_expenses.md
 traceability: ../TRACEABILITY.md
 next_skill: incremental-implementation
+tags:
+  - tvoy-hod/layer/plan
+  - tvoy-hod/status/draft
+  - tvoy-hod/topic/e1
+  - tvoy-hod/topic/economy
+  - tvoy-hod/topic/expenses
+aliases:
+  - "План эпика E1: Расходы на жизнеобеспечение"
+  - E1
+  - "PLAN expenses"
+  - PLAN_expenses
 ---
-
 # План эпика E1: Расходы на жизнеобеспечение
 
 Нарезка под **[`SPEC_expenses.md`](../specs/features/SPEC_expenses.md)** и **[`EXPENSES_SYSTEM.md`](../specs/gameplay/EXPENSES_SYSTEM.md)**.  

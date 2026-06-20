@@ -6,8 +6,13 @@ owner: product
 audience: product, dev, ops, marketing
 spec: ../specs/features/SPEC_telegram-bots-and-notifications.md
 product_phase: pre-alpha → closed-alpha
+tags:
+  - tvoy-hod/layer/backlog
+  - tvoy-hod/status/draft
+aliases:
+  - "Telegram — бэклог и этапы"
+  - TELEGRAM_BACKLOG
 ---
-
 # Telegram — бэклог и этапы
 
 Понятный план: **что делаем с ботами и каналом**, в каком порядке и когда считаем этап готовым.

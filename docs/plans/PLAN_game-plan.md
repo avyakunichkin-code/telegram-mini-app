@@ -1,3 +1,12 @@
+---
+tags:
+  - tvoy-hod/layer/plan
+aliases:
+  - "эпик G1 — Game Mode, каталог шаблонов E2E, ADR-001"
+  - "PLAN game plan"
+  - PLAN_game-plan
+  - "Plan: эпик G1 — Game Mode, каталог шаблонов E2E, ADR-001"
+---
 ﻿---
 layer: plan
 status: implemented

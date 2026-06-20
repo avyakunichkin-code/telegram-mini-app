@@ -4,8 +4,14 @@ status: active
 last_reviewed: 2026-06-02
 audience: команда ТВОЙ ХОД (продукт, дизайн, разработка, QA)
 confidentiality: team-only
+tags:
+  - tvoy-hod/layer/handbook
+  - tvoy-hod/layer/handbook-internal
+  - tvoy-hod/status/active
+aliases:
+  - "Внутренний дайджест: что изменилось (конец мая — 1 июня 2026)"
+  - TEAM_UPDATE_2026-06-01
 ---
-
 # Внутренний дайджест: что изменилось (конец мая — 1 июня 2026)
 
 Коротко о том, что уже в ветке разработки и что стоит проверить при смоуке и плейтесте. Тон — для коллег, не для канала игроков.

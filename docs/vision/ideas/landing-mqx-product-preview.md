@@ -1,3 +1,10 @@
+---
+tags:
+  - tvoy-hod/layer/idea
+aliases:
+  - "Лендинг — превью продукта (MQX)"
+  - landing-mqx-product-preview
+---
 # Лендинг — превью продукта (MQX)
 
 **Статус:** в работе (вариант A)  

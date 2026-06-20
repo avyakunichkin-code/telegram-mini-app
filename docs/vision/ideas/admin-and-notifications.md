@@ -5,8 +5,14 @@ last_reviewed: 2026-05-19
 phase_0: implemented
 idea_refine: true
 next_spec: specs/features/SPEC_telegram-bots-and-notifications.md
+tags:
+  - tvoy-hod/layer/idea
+  - tvoy-hod/layer/vision
+  - tvoy-hod/status/active
+aliases:
+  - "Админка и уведомления (игрок + ops)"
+  - admin-and-notifications
 ---
-
 # Админка и уведомления (игрок + ops)
 
 Сессия **idea-refine** с опорой на текущий стек: FastAPI, TMA (`frontend-react`), тосты [`notifications.js`](../../../frontend-react/src/components/notifications.js), контент в БД (миграции/сиды), модель [`User`](../../../backend/app/models.py) / [`EventDefinition`](../../../backend/app/models.py).

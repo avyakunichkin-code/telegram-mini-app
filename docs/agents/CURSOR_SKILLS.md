@@ -1,3 +1,9 @@
+---
+tags:
+  - tvoy-hod/layer/agents
+aliases:
+  - CURSOR_SKILLS
+---
 ﻿# Agent Skills ТВОЙ ХОД — что использовать и когда
 
 **Активные** скиллы: `.cursor/skills/<name>/` (см. [`catalog.yaml`](../../.cursor/skills/catalog.yaml): `status` + **`tier`**; на 2026-06-01: **17 active**, **12 optional**, **11 archived** — полный разбор: [`SKILLS_AUDIT_2026-06-01.md`](SKILLS_AUDIT_2026-06-01.md)).

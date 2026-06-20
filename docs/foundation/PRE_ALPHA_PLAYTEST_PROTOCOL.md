@@ -3,8 +3,13 @@ layer: foundation
 status: active
 last_reviewed: 2026-06-01
 audience_note: Первая волна Pre-Alpha (10–20 человек), ЦА 30+. Инструкция для игрока — handbook/PLAYER_EXPERIENCE.md.
+tags:
+  - tvoy-hod/layer/foundation
+  - tvoy-hod/status/active
+aliases:
+  - "Протокол плейтеста Pre-Alpha"
+  - PRE_ALPHA_PLAYTEST_PROTOCOL
 ---
-
 # Протокол плейтеста Pre-Alpha
 
 Ориентир по продукту: **[`docs/handbook/GAME.md`](../handbook/GAME.md)** ([воронка](../handbook/GAME.md#воронка-привлечения-игроков) — Pre-Alpha 10–20 человек).  

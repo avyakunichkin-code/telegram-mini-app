@@ -7,8 +7,18 @@ tracks: events, mvp-1-1, pre-alpha
 idea: ../../vision/ideas/event-types-and-taxonomy.md
 handbook: ../../handbook/EVENTS_TERMS_RU.md
 supersedes_partial: SPEC_mvp-11-progression-events.md
+tags:
+  - tvoy-hod/layer/spec
+  - tvoy-hod/status/draft
+  - tvoy-hod/topic/events
+  - tvoy-hod/topic/mvp-1-1
+  - tvoy-hod/topic/pre-alpha
+aliases:
+  - "Система событий v2 — слоты, типы контента, аудитория, цепочки, глобальные"
+  - "SPEC event system v2 slots and taxonomy"
+  - SPEC_event-system-v2-slots-and-taxonomy
+  - "Spec: Система событий v2 — слоты, типы контента, аудитория, цепочки, глобальные"
 ---
-
 # Spec: Система событий v2 — слоты, типы контента, аудитория, цепочки, глобальные
 
 > **Статус:** черновик для обсуждения (2026-05-30). **Не implement** до approve.  

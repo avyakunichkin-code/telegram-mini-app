@@ -76,6 +76,13 @@ coverage/
 docs/balance/reports/*
 !docs/balance/reports/.gitkeep
 
+# ===== Obsidian (vault settings — shared; workspace — local) =====
+.obsidian/workspace.json
+.obsidian/workspace-mobile.json
+.obsidian/graph.json.bak
+.obsidian/plugins/
+.obsidian/themes/
+
 # ===== Logs =====
 logs/
 *.log

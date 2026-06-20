@@ -5,8 +5,13 @@ last_reviewed: 2026-05-26
 platform: Telegram Mini App (touch-first, 320–480px)
 screen_id: dashboard
 prod_route: GameScreen tab `dashboard`
+tags:
+  - tvoy-hod/layer/ux
+  - tvoy-hod/status/approved
+aliases:
+  - dashboard
+  - "UX Spec: Главная (Dashboard)"
 ---
-
 # UX Spec: Главная (Dashboard)
 
 > **Status:** Approved — OQ 1–7 закрыты (2026-05-25); без `h1` на вкладках (решение продукта); EN-audit отложен  

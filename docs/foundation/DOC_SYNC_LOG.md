@@ -1,3 +1,10 @@
+---
+tags:
+  - tvoy-hod/layer/foundation
+aliases:
+  - "Журнал синхронизации документации ↔ prod"
+  - DOC_SYNC_LOG
+---
 # Журнал синхронизации документации ↔ prod
 
 Краткий лог, когда **код обогнал docs** или наоборот. Полный чеклист — [`MVP_AUDIT_VS_SPEC.md`](MVP_AUDIT_VS_SPEC.md).

@@ -1,3 +1,10 @@
+---
+tags:
+  - tvoy-hod/layer/architecture
+aliases:
+  - "ТВОЙ ХОД — Master Architecture (Character Needs + контекст стека)"
+  - architecture
+---
 # ТВОЙ ХОД — Master Architecture (Character Needs + контекст стека)
 
 ## Document Status

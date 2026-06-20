@@ -2,8 +2,13 @@
 layer: foundation
 status: active
 audience: product
+tags:
+  - tvoy-hod/layer/foundation
+  - tvoy-hod/status/active
+aliases:
+  - "Опрос Pre-Alpha — текст для формы (RU)"
+  - PRE_ALPHA_SURVEY_COPY
 ---
-
 # Опрос Pre-Alpha — текст для формы (RU)
 
 Создайте форму (Google / Яндекс), вставьте вопросы ниже. В описании формы: «После 30–45 мин в игре ТВОЙ ХОД, волна Pre-Alpha».

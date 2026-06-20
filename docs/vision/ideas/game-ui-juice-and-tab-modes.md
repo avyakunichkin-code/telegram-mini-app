@@ -1,3 +1,10 @@
+---
+tags:
+  - tvoy-hod/layer/idea
+aliases:
+  - "Game UI: juice + tab modes"
+  - game-ui-juice-and-tab-modes
+---
 # Game UI: juice + tab modes
 
 **Статус:** A/C/D в prod (2026-05-26); B Risk — backlog; волна 2 tab-modes — отложена  

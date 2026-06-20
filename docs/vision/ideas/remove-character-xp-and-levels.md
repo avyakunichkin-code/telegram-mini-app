@@ -13,8 +13,13 @@ related_specs:
   - ../../specs/features/SPEC_mvp-11-progression-events.md
   - ../../foundation/SPEC_PRODUCT.md
 adr: ../../decisions/ADR-003-remove-character-progression.md
+tags:
+  - tvoy-hod/layer/idea
+  - tvoy-hod/status/implemented-archive
+aliases:
+  - "Убрать уровень персонажа, XP и «геймификационный» рейтинг"
+  - remove-character-xp-and-levels
 ---
-
 # Убрать уровень персонажа, XP и «геймификационный» рейтинг
 
 ## Решения продукта (2026-05-24)

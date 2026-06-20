@@ -4,8 +4,16 @@ status: approved
 owner: product
 last_reviewed: 2026-05-22
 tracks: events, gameplay, chains
+tags:
+  - tvoy-hod/layer/idea
+  - tvoy-hod/status/approved
+  - tvoy-hod/topic/chains
+  - tvoy-hod/topic/events
+  - tvoy-hod/topic/gameplay
+aliases:
+  - "Каталог событий: Q&A и цепочки"
+  - event-catalog-qna-refine
 ---
-
 # Каталог событий: Q&A и цепочки
 
 ## Problem Statement

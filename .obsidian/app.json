@@ -1,0 +1,27 @@
+{
+  "legacyEditor": false,
+  "livePreview": true,
+  "defaultViewMode": "preview",
+  "readableLineLength": true,
+  "showFrontmatter": true,
+  "showInlineTitle": true,
+  "useMarkdownLinks": true,
+  "alwaysUpdateLinks": true,
+  "newLinkFormat": "relativePath",
+  "attachmentFolderPath": "docs/reference/brandbook/assets",
+  "newFileLocation": "folder",
+  "newFileFolderPath": "docs/vision/ideas",
+  "promptDelete": false,
+  "foldHeading": true,
+  "foldIndent": true,
+  "showLineNumber": false,
+  "strictLineBreaks": false,
+  "tabSize": 2,
+  "trailingSlash": false,
+  "userIgnoreFilters": [
+    "frontend-react/node_modules/",
+    "frontend-react/dist/",
+    "backend/.venv/",
+    "**/__pycache__/"
+  ]
+}

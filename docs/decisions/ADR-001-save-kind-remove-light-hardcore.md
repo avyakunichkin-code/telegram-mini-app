@@ -1,3 +1,11 @@
+---
+tags:
+  - tvoy-hod/layer/adr
+aliases:
+  - ADR-001
+  - ADR-001-save-kind-remove-light-hardcore
+  - "ADR-001: Отказ от `light` / `hardcore`, переход на `save_kind` (Game сначала)"
+---
 ﻿---
 status: accepted
 date: 2026-05-16

@@ -4,8 +4,13 @@ status: active
 last_reviewed: 2026-06-01
 audience: product, design, engineering
 idea_refine: true
+tags:
+  - tvoy-hod/layer/vision
+  - tvoy-hod/status/active
+aliases:
+  - "ТВОЙ ХОД — геймдизайн, сравнение с рынком и roadmap 2026"
+  - GAME_DESIGN_ROADMAP_2026
 ---
-
 # ТВОЙ ХОД — геймдизайн, сравнение с рынком и roadmap 2026
 
 Синтез для продуктовых решений: **оценка относительно современных пошаговых и finance/life sim**, **идеи улучшения текущих механик**, **дорожная карта 12–18 мес.** с привязкой к эпикам [`PRODUCT_BACKLOG.md`](../backlog/PRODUCT_BACKLOG.md).

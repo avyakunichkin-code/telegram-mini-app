@@ -10,8 +10,17 @@ related:
   - SPEC_mvp-11-progression-events.md
   - SPEC_victory-v2.md
   - ../../../GAME.md
+tags:
+  - tvoy-hod/layer/spec
+  - tvoy-hod/status/approved
+  - tvoy-hod/topic/achievements
+  - tvoy-hod/topic/m12
+aliases:
+  - "Достижения (M12) — цепочки tier, экран «Развитие»"
+  - "SPEC achievements"
+  - SPEC_achievements
+  - "Spec: Достижения (M12) — цепочки tier, экран «Развитие»"
 ---
-
 # Spec: Достижения (M12) — цепочки tier, экран «Развитие»
 
 > **Prod (2026-05-24+):** достижения **без** награды character XP и **без** level gates ([ADR-003](../../decisions/ADR-003-remove-character-progression.md)). Разблокировка капитала — **`mechanics_unlock`** ([ADR-004](../../decisions/ADR-004-mechanics-unlock-victory-chain.md)). Отдельно от **Victory v2**.

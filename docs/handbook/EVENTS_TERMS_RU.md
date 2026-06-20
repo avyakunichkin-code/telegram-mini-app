@@ -5,8 +5,13 @@ last_reviewed: 2026-05-30
 audience: product, game-design, partners, playtest moderators
 companion: EVENTS.md
 technical: ../vision/ideas/event-types-and-taxonomy.md
+tags:
+  - tvoy-hod/layer/handbook
+  - tvoy-hod/status/active
+aliases:
+  - "События — «переводчик» терминов"
+  - EVENTS_TERMS_RU
 ---
-
 # События — «переводчик» терминов
 
 Документ для **внутренней команды и партнёра-советника**: что означают технические метки в каталоге событий и в разговорах о разработке.

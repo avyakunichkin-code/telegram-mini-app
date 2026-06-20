@@ -2,8 +2,14 @@
 status: accepted
 date: 2026-05-24
 deciders: проект (architecture-review retroactive, 2026-05-25)
+tags:
+  - tvoy-hod/layer/adr
+  - tvoy-hod/status/accepted
+aliases:
+  - ADR-003
+  - ADR-003-remove-character-progression
+  - "ADR-003: Снятие character level, XP и геймификационного score"
 ---
-
 # ADR-003: Снятие character level, XP и геймификационного score
 
 ## Context

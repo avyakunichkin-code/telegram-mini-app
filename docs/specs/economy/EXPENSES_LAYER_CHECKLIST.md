@@ -3,8 +3,13 @@ layer: reference
 purpose: implementation-checklist
 epic: E1
 spec: ../features/SPEC_expenses.md
+tags:
+  - tvoy-hod/layer/reference
+  - tvoy-hod/layer/spec
+aliases:
+  - "Чеклист внедрения E1 «Расходы» (все слои)"
+  - EXPENSES_LAYER_CHECKLIST
 ---
-
 # Чеклист внедрения E1 «Расходы» (все слои)
 
 Использовать при планировании спринтов и ревью PR: отмечать `[x]` по мере готовности.  

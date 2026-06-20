@@ -1,4 +1,15 @@
-﻿# Документация ТВОЙ ХОД
+---
+layer: index
+status: active
+tags:
+  - tvoy-hod/layer/index
+  - tvoy-hod/status/active
+aliases:
+  - "Документация ТВОЙ ХОД"
+---
+# Документация ТВОЙ ХОД
+
+**Obsidian vault:** откройте корень репозитория → [`Home.md`](Home.md) · [`OBSIDIAN.md`](OBSIDIAN.md)
 
 Структура **вариант A** (слои зрелости): [`DOCUMENTATION_SYSTEM.md`](DOCUMENTATION_SYSTEM.md)  
 Шаблоны: [`templates/`](templates/) · Трассировка эпиков: [`TRACEABILITY.md`](TRACEABILITY.md)

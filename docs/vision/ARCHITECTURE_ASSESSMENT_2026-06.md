@@ -4,8 +4,13 @@ status: active
 last_reviewed: 2026-06-02
 audience: engineering, product, tech lead
 doc_type: architecture-assessment
+tags:
+  - tvoy-hod/layer/vision
+  - tvoy-hod/status/active
+aliases:
+  - "ТВОЙ ХОД — оценка архитектуры и roadmap развития (июнь 2026)"
+  - ARCHITECTURE_ASSESSMENT_2026-06
 ---
-
 # ТВОЙ ХОД — оценка архитектуры и roadmap развития (июнь 2026)
 
 Документ фиксирует **снимок технической архитектуры**, оценку **масштабируемости**, **порога входа** для новых разработчиков и **предложения по развитию** кодовой базы, инфраструктуры и игровых систем.

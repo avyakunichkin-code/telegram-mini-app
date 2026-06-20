@@ -5,8 +5,13 @@ last_reviewed: 2026-05-30
 idea_refine: true
 spec: ../../specs/features/SPEC_event-system-v2-slots-and-taxonomy.md
 skills: .cursor/skills/create-event/event-balance-rules.md
+tags:
+  - tvoy-hod/layer/idea
+  - tvoy-hod/status/approved-direction
+aliases:
+  - "Баланс выборов в событиях — «нет бесплатных плюсов»"
+  - event-choice-balance-tradeoffs
 ---
-
 # Баланс выборов в событиях — «нет бесплатных плюсов»
 
 ## Problem Statement (HMW)

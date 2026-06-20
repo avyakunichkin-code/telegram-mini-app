@@ -5,8 +5,13 @@ last_reviewed: 2026-05-30
 owner: product / marketing
 audience: marketing, partners, product
 method: hypothesis-driven (продуктовый канон + рыночная модель; не замена CustDev)
+tags:
+  - tvoy-hod/layer/handbook
+  - tvoy-hod/status/active
+aliases:
+  - "ЦА воронки «игра → финансовый советник»"
+  - ADVISOR_FUNNEL_AUDIENCE
 ---
-
 # ЦА воронки «игра → финансовый советник»
 
 Исследование целевой аудитории для конверсии игроков **ТВОЙ ХОД** в клиентов услуг **финансового советника**.

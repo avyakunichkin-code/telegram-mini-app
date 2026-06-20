@@ -1,3 +1,10 @@
+---
+tags:
+  - tvoy-hod/layer/marketing
+aliases:
+  - "Публикация постов в Telegram"
+  - TELEGRAM_PUBLISHING
+---
 # Публикация постов в Telegram
 
 **Твой ход** Mini App и **бот для канала** — разные сущности. Посты в канал/группу делаются через **Telegram Bot API**, не через TMA SDK.

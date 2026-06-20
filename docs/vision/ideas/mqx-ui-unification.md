@@ -1,3 +1,10 @@
+---
+tags:
+  - tvoy-hod/layer/idea
+aliases:
+  - "MQX UI Unification — единый визуальный язык TMA"
+  - mqx-ui-unification
+---
 # MQX UI Unification — единый визуальный язык TMA
 
 **Статус:** in progress (этап A, 2026-05-23)  

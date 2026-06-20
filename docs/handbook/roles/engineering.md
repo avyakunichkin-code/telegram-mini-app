@@ -3,8 +3,13 @@ layer: handbook
 status: draft
 role: engineering
 last_reviewed: 2026-05-30
+tags:
+  - tvoy-hod/layer/handbook
+  - tvoy-hod/status/draft
+aliases:
+  - "Разработка — guide"
+  - engineering
 ---
-
 # Разработка — guide
 
 > Каркас role-guide. Для кода начинайте с [`CLAUDE.md`](../../../CLAUDE.md), не с GAME.md.

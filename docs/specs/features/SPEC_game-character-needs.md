@@ -9,8 +9,18 @@ architecture: architecture/architecture.md
 related: specs/features/SPEC_victory-v2.md, specs/features/SPEC_mvp-11-progression-events.md
 adr: decisions/ADR-005-character-needs-state-and-defeat.md, decisions/ADR-006-treat-self-options-and-cooldown.md
 supersedes_ui_term: game_starter_templates → «Выбор персонажа» (копирайт)
+tags:
+  - tvoy-hod/layer/spec
+  - tvoy-hod/status/draft
+  - tvoy-hod/topic/character-needs
+  - tvoy-hod/topic/game-plan
+  - tvoy-hod/topic/retention
+aliases:
+  - "Потребности персонажа (фаза 1)"
+  - "SPEC game character needs"
+  - SPEC_game-character-needs
+  - "Spec: Потребности персонажа (фаза 1)"
 ---
-
 # Spec: Потребности персонажа (фаза 1)
 
 ## Глубина проработки (что фиксируем сейчас vs при декомпозиции)

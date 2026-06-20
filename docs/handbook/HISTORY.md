@@ -3,8 +3,13 @@ layer: handbook
 status: archive
 last_reviewed: 2026-05-30
 audience: team, historians
+tags:
+  - tvoy-hod/layer/handbook
+  - tvoy-hod/status/archive
+aliases:
+  - "История продукта и отступления от первой анкеты"
+  - HISTORY
 ---
-
 # История продукта и отступления от первой анкеты
 
 Материал **не описывает текущую игру** — только как мы пришли к решениям. Актуальное состояние — [`GAME.md`](GAME.md).

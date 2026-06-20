@@ -1,3 +1,10 @@
+---
+tags:
+  - tvoy-hod/layer/reference
+aliases:
+  - "ТВОЙ ХОД — Product UI (MQX)"
+  - BRANDBOOK_MQX
+---
 # ТВОЙ ХОД — Product UI (MQX)
 
 **Версия:** 1.0 (слой Product UI брендбука v2)  

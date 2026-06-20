@@ -1,3 +1,10 @@
+---
+tags:
+  - tvoy-hod/layer/idea
+aliases:
+  - "Балансы, пороги и ограничения ТВОЙ ХОД"
+  - game-balance-thresholds-and-constraints
+---
 # Балансы, пороги и ограничения ТВОЙ ХОД
 
 > **Статус (2026-05-25):** раздел **«Канон MVP»** ниже частично **устарел**. **Prod:** победа — [`victory_engine`](../../../backend/app/victory/engine.py) + `victory_config_json` ([ADR-002](../../decisions/ADR-002-victory-engine-and-template-config.md)); прогрессия событий — **`event_tier` от `period_index`** ([`remove-character-xp-and-levels.md`](remove-character-xp-and-levels.md)); механики капитала — **`mechanics_unlock`** ([ADR-004](../../decisions/ADR-004-mechanics-unlock-victory-chain.md)). [`LEVEL_XP_SYSTEM`](../../specs/gameplay/LEVEL_XP_SYSTEM.md) — архив.

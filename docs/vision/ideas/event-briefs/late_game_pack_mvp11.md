@@ -1,3 +1,10 @@
+---
+tags:
+  - tvoy-hod/layer/idea
+aliases:
+  - late_game_pack_mvp11
+  - "Late-game pack (ходы 20–40) — MVP 1.1"
+---
 # Late-game pack (ходы 20–40) — MVP 1.1
 
 **Дата:** 2026-06-08 · **Каталог:** `data/events/mvp11/late_game.yaml` + `credit_debt.yaml` (рефинанс)

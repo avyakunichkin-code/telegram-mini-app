@@ -2,8 +2,14 @@
 status: accepted
 date: 2026-05-29
 deciders: продукт + агентный конвейер (/create-event)
+tags:
+  - tvoy-hod/layer/adr
+  - tvoy-hod/status/accepted
+aliases:
+  - ADR-008
+  - ADR-008-events-catalog-single-source
+  - "ADR-008: Единый канон каталога событий (git → БД)"
 ---
-
 # ADR-008: Единый канон каталога событий (git → БД)
 
 ## Context

@@ -1,3 +1,10 @@
+---
+tags:
+  - tvoy-hod/layer/agents
+aliases:
+  - "Карта: фаза → скилл → документы (ТВОЙ ХОД)"
+  - SKILL_DOC_MAP
+---
 # Карта: фаза → скилл → документы (ТВОЙ ХОД)
 
 Машиночитаемый дубль — поле `context:` и **`tier`** в [`.cursor/skills/catalog.yaml`](../../.cursor/skills/catalog.yaml).  

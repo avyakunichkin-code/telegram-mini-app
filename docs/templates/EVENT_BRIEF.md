@@ -1,3 +1,10 @@
+---
+tags:
+  - tvoy-hod/layer/template
+aliases:
+  - "Event Brief — одно событие (шаблон)"
+  - EVENT_BRIEF
+---
 # Event Brief — одно событие (шаблон)
 
 Скопируйте блок в `docs/vision/ideas/event-briefs/<definition_key>.md` или в описание задачи перед `/create-event`.

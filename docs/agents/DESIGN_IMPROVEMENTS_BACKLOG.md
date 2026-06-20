@@ -1,3 +1,10 @@
+---
+tags:
+  - tvoy-hod/layer/agents
+aliases:
+  - "Design improvements — backlog (не в скиллах до spec)"
+  - DESIGN_IMPROVEMENTS_BACKLOG
+---
 # Design improvements — backlog (не в скиллах до spec)
 
 **Назначение:** идеи из UI-аудита (2026-05), которые **ещё не готовы** для обязательных правил агента.  

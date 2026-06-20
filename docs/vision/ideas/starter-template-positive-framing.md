@@ -1,3 +1,10 @@
+---
+tags:
+  - tvoy-hod/layer/idea
+aliases:
+  - "Позитивный выбор сценария на старте (idea-refine)"
+  - starter-template-positive-framing
+---
 # Позитивный выбор сценария на старте (idea-refine)
 
 **Статус:** черновик направления (май 2026)  

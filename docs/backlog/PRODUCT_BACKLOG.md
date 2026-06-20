@@ -1,3 +1,9 @@
+---
+tags:
+  - tvoy-hod/layer/backlog
+aliases:
+  - PRODUCT_BACKLOG
+---
 ﻿# ТВОЙ ХОД — бэклог и дорожная карта
 
 Живой список работ по слоям **DB / Backend / Frontend / Doc**. Источник идей для этой итерации: **[`GAME.md`](../../GAME.md)** (синтез анкеты, кода, Pre-Alpha → Closed Alpha).

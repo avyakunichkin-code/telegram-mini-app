@@ -5,8 +5,13 @@ last_reviewed: 2026-06-05
 spec: ../../specs/features/SPEC_onboarding-o3.md
 supersedes: onboarding-o2-progressive-guidance.md (частично)
 feedback: playtest 2026-06 (PA wave)
+tags:
+  - tvoy-hod/layer/idea
+  - tvoy-hod/status/approved
+aliases:
+  - "O3 — гибридный онбординг (spine + триггеры)"
+  - onboarding-o3-hybrid-guidance
 ---
-
 # O3 — гибридный онбординг (spine + триггеры)
 
 ## Проблема

@@ -1,3 +1,10 @@
+---
+tags:
+  - tvoy-hod/layer/marketing
+aliases:
+  - "Трекер тем для соцсетей"
+  - CHANGELOG_TRACKER
+---
 # Трекер тем для соцсетей
 
 Структура: арки → слои (`mechanics` | `interface` | `product` | `visual` | `workshop`) → посты `ep-NNN-*` · стиль: [`POST_STYLE.md`](POST_STYLE.md).

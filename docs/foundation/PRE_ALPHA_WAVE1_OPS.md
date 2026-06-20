@@ -4,8 +4,13 @@ status: active
 last_reviewed: 2026-06-05
 audience: product, playtest moderators
 wave_id: PA-W1-2026-06
+tags:
+  - tvoy-hod/layer/foundation
+  - tvoy-hod/status/active
+aliases:
+  - PRE_ALPHA_WAVE1_OPS
+  - "Pre-Alpha волна 1 — операционный лист"
 ---
-
 # Pre-Alpha волна 1 — операционный лист
 
 Заполнить **до** рассылки приглашений. Протокол: [`PRE_ALPHA_PLAYTEST_PROTOCOL.md`](PRE_ALPHA_PLAYTEST_PROTOCOL.md) · KPI: [`handbook/KPI_AND_PHASES.md`](../handbook/KPI_AND_PHASES.md) · результаты: [`PRE_ALPHA_WAVE1_RESULTS.md`](PRE_ALPHA_WAVE1_RESULTS.md).

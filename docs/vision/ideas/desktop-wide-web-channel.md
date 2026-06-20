@@ -5,8 +5,14 @@ last_reviewed: 2026-06-01
 product_phase: closed-alpha
 drivers: desktop browser, wide layout, multi-channel
 epic: WD1
+tags:
+  - tvoy-hod/layer/idea
+  - tvoy-hod/layer/vision
+  - tvoy-hod/status/approved
+aliases:
+  - "Идея: полноразмерный веб-канал (desktop / wide)"
+  - desktop-wide-web-channel
 ---
-
 # Идея: полноразмерный веб-канал (desktop / wide)
 
 ## Problem Statement

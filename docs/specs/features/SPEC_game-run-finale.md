@@ -8,8 +8,19 @@ idea: vision/ideas/game-run-finale-pre-alpha.md
 design_lab: design-lab/run-finale/
 related: specs/features/SPEC_victory-v2.md, foundation/SPEC_PRODUCT.md
 not_in_scope: specs/features/SPEC_achievements.md
+tags:
+  - tvoy-hod/layer/spec
+  - tvoy-hod/status/approved
+  - tvoy-hod/topic/ge1
+  - tvoy-hod/topic/player-feedback
+  - tvoy-hod/topic/pre-alpha
+  - tvoy-hod/topic/run-finale
+aliases:
+  - "Game Run Finale (GE1)"
+  - "SPEC game run finale"
+  - SPEC_game-run-finale
+  - "Spec: Game Run Finale (GE1)"
 ---
-
 # Spec: Game Run Finale (GE1)
 
 ## Objective

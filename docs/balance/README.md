@@ -1,3 +1,9 @@
+---
+tags:
+  - tvoy-hod/layer/balance
+aliases:
+  - "Balance playtest (симуляция партии)"
+---
 # Balance playtest (симуляция партии)
 
 Детерминированный прогон **N периодов** через headless API (`TestClient` + SQLite), фиксированные **политики бота**, JSON-отчёт и **diff** к baseline.

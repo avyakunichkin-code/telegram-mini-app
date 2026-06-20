@@ -1,3 +1,10 @@
+---
+tags:
+  - tvoy-hod/layer/foundation
+aliases:
+  - "Глоссарий ТВОЙ ХОД"
+  - GLOSSARY
+---
 # Глоссарий ТВОЙ ХОД
 
 Единые термины для foundation, spec и UI. При добавлении поля в API — обновлять здесь и в [`SPEC_PRODUCT.md`](SPEC_PRODUCT.md).

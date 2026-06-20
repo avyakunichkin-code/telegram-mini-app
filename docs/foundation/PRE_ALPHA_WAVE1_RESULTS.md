@@ -4,8 +4,13 @@ status: draft
 last_reviewed: 2026-06-01
 wave_id: PA-W1-2026-06
 audience: product
+tags:
+  - tvoy-hod/layer/foundation
+  - tvoy-hod/status/draft
+aliases:
+  - PRE_ALPHA_WAVE1_RESULTS
+  - "Pre-Alpha волна 1 — результаты"
 ---
-
 # Pre-Alpha волна 1 — результаты
 
 Заполнять **после** закрытия набора (ориентир: 7 дней с первого приглашения). Операционный лист: [`PRE_ALPHA_WAVE1_OPS.md`](PRE_ALPHA_WAVE1_OPS.md) · KPI: [`handbook/KPI_AND_PHASES.md`](../handbook/KPI_AND_PHASES.md).

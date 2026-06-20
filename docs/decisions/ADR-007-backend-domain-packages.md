@@ -2,8 +2,14 @@
 status: accepted
 date: 2026-05-28
 deciders: проект (рефакторинг структуры после выноса services/)
+tags:
+  - tvoy-hod/layer/adr
+  - tvoy-hod/status/accepted
+aliases:
+  - ADR-007
+  - ADR-007-backend-domain-packages
+  - "ADR-007: Доменные пакеты в `backend/app/` (модульный монолит)"
 ---
-
 # ADR-007: Доменные пакеты в `backend/app/` (модульный монолит)
 
 ## Context

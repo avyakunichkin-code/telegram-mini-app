@@ -4,8 +4,15 @@ status: draft
 owner: product+frontend+backend
 last_reviewed: 2026-06-01
 spec: ../specs/features/SPEC_onboarding-o2.md
+tags:
+  - tvoy-hod/layer/plan
+  - tvoy-hod/status/draft
+aliases:
+  - "O2 Progressive Guidance"
+  - "PLAN onboarding o2"
+  - PLAN_onboarding-o2
+  - "Plan: O2 Progressive Guidance"
 ---
-
 # Plan: O2 Progressive Guidance
 
 План реализации по [`SPEC_onboarding-o2.md`](../specs/features/SPEC_onboarding-o2.md). **Без hotfix O1** — замена одним эпиком.

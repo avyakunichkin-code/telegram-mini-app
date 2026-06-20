@@ -1,3 +1,9 @@
+---
+tags:
+  - tvoy-hod/layer/reference
+aliases:
+  - BRANDBOOK
+---
 ﻿# Брендбук ТВОЙ ХОД — Brand Guidelines
 
 **Версия документа:** 2.0  

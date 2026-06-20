@@ -7,8 +7,13 @@ audience: product, frontend, backend
 supersedes_pattern: guided coach O1 (spotlight + scrim)
 related: ../../specs/features/SPEC_onboarding-tma.md
 feedback: ../../foundation/PRE_ALPHA_PLAYTEST_FEEDBACK.md (α-FB-01, α-FB-13, α-FB-15, α-FB-17)
+tags:
+  - tvoy-hod/layer/idea
+  - tvoy-hod/status/approved
+aliases:
+  - "O2 — Progressive Guidance (inline Монетка, скрытый track)"
+  - onboarding-o2-progressive-guidance
 ---
-
 # O2 — Progressive Guidance (inline Монетка, скрытый track)
 
 ## Problem Statement

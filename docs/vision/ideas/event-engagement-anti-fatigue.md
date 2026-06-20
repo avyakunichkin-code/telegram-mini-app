@@ -4,8 +4,16 @@ status: approved
 owner: product
 last_reviewed: 2026-05-22
 tracks: events, gameplay, content-pipeline
+tags:
+  - tvoy-hod/layer/idea
+  - tvoy-hod/status/approved
+  - tvoy-hod/topic/content-pipeline
+  - tvoy-hod/topic/events
+  - tvoy-hod/topic/gameplay
+aliases:
+  - "Вовлечённость событий: анти-усталость"
+  - event-engagement-anti-fatigue
 ---
-
 # Вовлечённость событий: анти-усталость
 
 ## Problem Statement

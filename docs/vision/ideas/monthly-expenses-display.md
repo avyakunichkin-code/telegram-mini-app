@@ -1,3 +1,10 @@
+---
+tags:
+  - tvoy-hod/layer/idea
+aliases:
+  - "Расходы «жизни» — отображение на слоях игры"
+  - monthly-expenses-display
+---
 # Расходы «жизни» — отображение на слоях игры
 
 > **Эпик E1 (полный слой):** [expenses-mechanic.md](expenses-mechanic.md) → [EXPENSES_SYSTEM.md](../../specs/gameplay/EXPENSES_SYSTEM.md) → [SPEC_expenses.md](../../specs/features/SPEC_expenses.md). Этот файл — **UI/UX-очередь (волна B)** поверх API breakdown.

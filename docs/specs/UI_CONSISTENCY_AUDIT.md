@@ -1,3 +1,10 @@
+---
+tags:
+  - tvoy-hod/layer/spec
+aliases:
+  - "UI Consistency Audit — ТВОЙ ХОД TMA"
+  - UI_CONSISTENCY_AUDIT
+---
 # UI Consistency Audit — ТВОЙ ХОД TMA
 
 **Дата:** 2026-06-02  

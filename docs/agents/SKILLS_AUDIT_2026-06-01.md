@@ -1,3 +1,10 @@
+---
+tags:
+  - tvoy-hod/layer/agents
+aliases:
+  - "Аудит Agent Skills — 2026-06-01"
+  - SKILLS_AUDIT_2026-06-01
+---
 # Аудит Agent Skills — 2026-06-01
 
 **Цель:** актуализировать карту скиллов, сверить `catalog.yaml` ↔ `SKILL.md` ↔ docs, решить что чистить.

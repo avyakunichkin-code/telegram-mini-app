@@ -1,3 +1,10 @@
+---
+tags:
+  - tvoy-hod/layer/marketing
+aliases:
+  - "Платформа: Telegram (канал)"
+  - post
+---
 # Платформа: Telegram (канал)
 # Часть 2 из 2 · голос: первое лицо
 

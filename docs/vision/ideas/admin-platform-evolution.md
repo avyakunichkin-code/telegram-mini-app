@@ -8,8 +8,18 @@ parent: admin-and-notifications.md
 backlog: ../../backlog/ADMIN_BACKLOG.md
 plan: ../../plans/PLAN_admin-analytics-ops.md
 related: admin-catalog-registry.md, admin-ops-quarter-2026.md, specs/features/SPEC_telegram-bots-and-notifications.md
+tags:
+  - tvoy-hod/layer/idea
+  - tvoy-hod/layer/vision
+  - tvoy-hod/status/active
+  - tvoy-hod/topic/a0
+  - tvoy-hod/topic/admin
+  - tvoy-hod/topic/analytics
+  - tvoy-hod/topic/ops
+aliases:
+  - "Admin Platform — эволюция на 1–3 месяца"
+  - admin-platform-evolution
 ---
-
 # Admin Platform — эволюция на 1–3 месяца
 
 Сессия **idea-refine** (2026-06-01): solo-dev / оператор, **низкий DAU**, цель — **аналитика и разбор игроков без BI и CMS**, почти без затрат. Исключено из фокуса сейчас: PA-W1, E1, бэкапы БД.

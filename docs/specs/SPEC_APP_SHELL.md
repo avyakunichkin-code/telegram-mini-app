@@ -3,8 +3,14 @@ layer: spec
 status: active
 last_reviewed: 2026-05-25
 audience: frontend, design-lab, agents
+tags:
+  - tvoy-hod/layer/spec
+  - tvoy-hod/status/active
+aliases:
+  - "App Shell MQX — pre-game и кнопки"
+  - "SPEC APP_SHELL"
+  - SPEC_APP_SHELL
 ---
-
 # App Shell MQX — pre-game и кнопки
 
 **Идея:** [`mqx-app-shell-pre-game-unification.md`](../vision/ideas/mqx-app-shell-pre-game-unification.md)  

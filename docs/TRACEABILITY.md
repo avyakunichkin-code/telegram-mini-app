@@ -1,3 +1,9 @@
+---
+tags:
+  - tvoy-hod/layer/trace
+aliases:
+  - TRACEABILITY
+---
 ﻿# Трассировка: идея → spec → plan → backlog
 
 Живая матрица эпиков. Обновляйте при смене статуса spec или появлении `PLAN_*` / задач MQ-*.

@@ -4,8 +4,16 @@ status: draft
 owner: product
 last_reviewed: 2026-05-22
 tracks: events, gameplay, analytics
+tags:
+  - tvoy-hod/layer/idea
+  - tvoy-hod/status/draft
+  - tvoy-hod/topic/analytics
+  - tvoy-hod/topic/events
+  - tvoy-hod/topic/gameplay
+aliases:
+  - "Типизация событий и таксономия"
+  - event-types-and-taxonomy
 ---
-
 # Типизация событий и таксономия
 
 ## Problem Statement

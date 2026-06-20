@@ -8,8 +8,19 @@ supersedes: SPEC_onboarding-o2.md
 idea: ../../vision/ideas/onboarding-o3-hybrid-guidance.md
 design_lab: ../../../design-lab/onboarding-o2/guidance-strip-round/
 character_voice: ../../reference/CHARACTER_MONETKA.md
+tags:
+  - tvoy-hod/layer/spec
+  - tvoy-hod/status/approved
+  - tvoy-hod/topic/o3
+  - tvoy-hod/topic/onboarding
+  - tvoy-hod/topic/pre-alpha
+aliases:
+  - "Онбординг O3 — гибрид (spine + триггеры)"
+  - O3
+  - "SPEC onboarding o3"
+  - SPEC_onboarding-o3
+  - "Spec: Онбординг O3 — гибрид (spine + триггеры)"
 ---
-
 # Spec: Онбординг O3 — гибрид (spine + триггеры)
 
 ## Objective

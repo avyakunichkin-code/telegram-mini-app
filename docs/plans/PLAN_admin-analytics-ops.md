@@ -5,8 +5,15 @@ last_reviewed: 2026-05-20
 spec: ../vision/ideas/admin-and-notifications.md
 epic: A0
 related: ../specs/SPEC_ANALYTICS.md
+tags:
+  - tvoy-hod/layer/plan
+  - tvoy-hod/status/draft
+aliases:
+  - "Ops-аналитика, Watchtower A1, уведомления"
+  - "PLAN admin analytics ops"
+  - PLAN_admin-analytics-ops
+  - "Plan: Ops-аналитика, Watchtower A1, уведомления"
 ---
-
 # Plan: Ops-аналитика, Watchtower A1, уведомления
 
 **Принцип:** при низком DAU ценность — **видеть каждого игрока и воронку**, а не BI-дашборды. Реализация **вертикальными срезами**: метрика → emit → лог → строка в `/admin` → (опционально) Telegram.

@@ -1,3 +1,10 @@
+---
+tags:
+  - tvoy-hod/layer/idea
+aliases:
+  - "Структура репозитория и стандарты кода"
+  - project-structure-standardization
+---
 # Структура репозитория и стандарты кода
 
 Сессия **idea-refine** (май 2026): как привести код к предсказуемой структуре без «большого взрыва», опираясь на уже сделанный split CSS (`frontend-react/src/styles/`) и конвейер документации (вариант A в [`DOCUMENTATION_SYSTEM.md`](../../DOCUMENTATION_SYSTEM.md)).

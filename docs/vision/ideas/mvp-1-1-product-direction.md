@@ -1,3 +1,10 @@
+---
+tags:
+  - tvoy-hod/layer/idea
+aliases:
+  - "MVP 1.1 — закрытые ответы и направления доработки"
+  - mvp-1-1-product-direction
+---
 ﻿---
 layer: vision
 idea_refine_output: consolidated

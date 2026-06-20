@@ -1,3 +1,11 @@
+---
+tags:
+  - tvoy-hod/layer/foundation
+aliases:
+  - "ТВОЙ ХОД — продуктовая спецификация (идея и текущее состояние)"
+  - "SPEC PRODUCT"
+  - SPEC_PRODUCT
+---
 ﻿---
 layer: foundation
 status: active

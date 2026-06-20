@@ -1,0 +1,66 @@
+{
+  "collapse-filter": false,
+  "search": "",
+  "showTags": true,
+  "showAttachments": false,
+  "hideUnresolved": false,
+  "showOrphans": false,
+  "collapse-color-groups": false,
+  "colorGroups": [
+    {
+      "query": "path:docs/handbook",
+      "color": { "a": 1, "rgb": 4884697 }
+    },
+    {
+      "query": "path:docs/foundation",
+      "color": { "a": 1, "rgb": 5025616 }
+    },
+    {
+      "query": "path:docs/specs",
+      "color": { "a": 1, "rgb": 16753920 }
+    },
+    {
+      "query": "path:docs/vision",
+      "color": { "a": 1, "rgb": 10305535 }
+    },
+    {
+      "query": "path:docs/decisions",
+      "color": { "a": 1, "rgb": 15631086 }
+    },
+    {
+      "query": "path:docs/plans",
+      "color": { "a": 1, "rgb": 628936 }
+    },
+    {
+      "query": "path:docs/backlog",
+      "color": { "a": 1, "rgb": 16766720 }
+    },
+    {
+      "query": "path:docs/agents",
+      "color": { "a": 1, "rgb": 8421504 }
+    },
+    {
+      "query": "path:docs/ux",
+      "color": { "a": 1, "rgb": 8900331 }
+    },
+    {
+      "query": "path:docs/marketing",
+      "color": { "a": 1, "rgb": 13353215 }
+    },
+    {
+      "query": "path:docs/reference",
+      "color": { "a": 1, "rgb": 7048739 }
+    },
+    {
+      "query": "path:CLAUDE",
+      "color": { "a": 1, "rgb": 3355443 }
+    }
+  ],
+  "collapse-display": false,
+  "showArrow": true,
+  "textFadeMultiplier": 0,
+  "nodeSizeMultiplier": 1,
+  "lineSizeMultiplier": 1,
+  "scale": 0.8,
+  "close": false
+}

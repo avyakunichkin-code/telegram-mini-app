@@ -3,8 +3,13 @@ layer: reference
 status: approved
 last_reviewed: 2026-05-23
 role: onboarding_mascot
+tags:
+  - tvoy-hod/layer/reference
+  - tvoy-hod/status/approved
+aliases:
+  - "Персонаж: Монетка"
+  - CHARACTER_MONETKA
 ---
-
 # Персонаж: Монетка
 
 **Монетка** — игровой наставник **ТВОЙ ХОД** для онбординга и (позже) коротких подсказок. Не банковский консультант и не «голос приложения». Смысл бренда и обращение «на ты»: [`product-name-tvoy-hod.md`](../vision/ideas/product-name-tvoy-hod.md).

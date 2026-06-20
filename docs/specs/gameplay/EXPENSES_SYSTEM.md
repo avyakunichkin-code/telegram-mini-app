@@ -8,8 +8,13 @@ related:
   - ../features/SPEC_expenses.md
   - ../../vision/ideas/expenses-mechanic.md
   - ../../foundation/SPEC_PRODUCT.md
+tags:
+  - tvoy-hod/layer/spec
+  - tvoy-hod/status/draft
+aliases:
+  - "Система расходов (жизнеобеспечение)"
+  - EXPENSES_SYSTEM
 ---
-
 # Система расходов (жизнеобеспечение)
 
 Живой **дизайн-документ** для слоя «Расходы»: что это в продукте, как связано с долгами/активами, как считается burn rate, как влияет на период, API, UI, события, победу и Plan Mode.

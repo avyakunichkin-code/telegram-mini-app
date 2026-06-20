@@ -2,8 +2,12 @@
 layer: foundation
 status: active
 audience: product, playtest moderators
+tags:
+  - tvoy-hod/layer/foundation
+  - tvoy-hod/status/active
+aliases:
+  - "Шаблоны Pre-Alpha"
 ---
-
 # Шаблоны Pre-Alpha
 
 Копируйте в Google Forms / Яндекс.Формы / таблицу — **не** коммитьте ответы с PII в репозиторий.

@@ -5,8 +5,13 @@ last_reviewed: 2026-06-02
 platform: Telegram Mini App (touch-first, 320–480px)
 screen_id: finance
 prod_route: GameScreen tab `finance`
+tags:
+  - tvoy-hod/layer/ux
+  - tvoy-hod/status/draft
+aliases:
+  - finance
+  - "UX Spec: Капитал"
 ---
-
 # UX Spec: Капитал
 
 > **Status:** Draft — as-built из prod + design-lab; на ревью  

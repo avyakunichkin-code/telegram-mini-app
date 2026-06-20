@@ -4,8 +4,13 @@ status: active
 last_reviewed: 2026-05-30
 owner: product (владелец продукта)
 audience: product, playtest, partners
+tags:
+  - tvoy-hod/layer/handbook
+  - tvoy-hod/status/active
+aliases:
+  - "Product Brief — ТВОЙ ХОД"
+  - PRODUCT_BRIEF
 ---
-
 # Product Brief — ТВОЙ ХОД
 
 Одностраничный **продуктовый якорь**: зачем игра существует, для кого, какие принципы не торгуем, что в scope сейчас и что обязательно в **MVP 2.0**. Детали механик — [`GAME.md`](GAME.md); контракт prod — [`SPEC_PRODUCT.md`](../foundation/SPEC_PRODUCT.md).

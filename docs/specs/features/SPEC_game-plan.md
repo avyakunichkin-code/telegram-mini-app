@@ -1,3 +1,12 @@
+---
+tags:
+  - tvoy-hod/layer/spec
+aliases:
+  - "Game Mode, шаблоны старта, отказ от light/hardcore (эпик G1)"
+  - "SPEC game plan"
+  - SPEC_game-plan
+  - "Spec: Game Mode, шаблоны старта, отказ от light/hardcore (эпик G1)"
+---
 ﻿---
 layer: spec
 status: implemented

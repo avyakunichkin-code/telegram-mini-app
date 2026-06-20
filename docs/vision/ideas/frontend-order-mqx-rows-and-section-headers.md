@@ -1,3 +1,10 @@
+---
+tags:
+  - tvoy-hod/layer/idea
+aliases:
+  - "Порядок на фронте: границы + MQX (Rows + Section Header)"
+  - frontend-order-mqx-rows-and-section-headers
+---
 # Порядок на фронте: границы + MQX (Rows + Section Header)
 
 ## Problem Statement

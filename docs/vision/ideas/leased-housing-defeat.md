@@ -1,3 +1,10 @@
+---
+tags:
+  - tvoy-hod/layer/idea
+aliases:
+  - "Арендуемое жильё и поражение «негде жить» (idea)"
+  - leased-housing-defeat
+---
 # Арендуемое жильё и поражение «негде жить» (idea)
 
 **Статус:** идея, не в MVP кода; связано с [real-estate-asset-catalog.md](real-estate-asset-catalog.md).

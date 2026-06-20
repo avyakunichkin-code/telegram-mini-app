@@ -4,8 +4,15 @@ status: draft
 last_reviewed: 2026-05-25
 idea: ../vision/ideas/pwa-standalone-channel.md
 epic: PW1
+tags:
+  - tvoy-hod/layer/plan
+  - tvoy-hod/status/draft
+aliases:
+  - "PLAN pwa standalone"
+  - PLAN_pwa-standalone
+  - "Plan: PWA / standalone (эпик PW1)"
+  - "PWA / standalone (эпик PW1)"
 ---
-
 # Plan: PWA / standalone (эпик PW1)
 
 **Драйвер:** нестабильный resume в TMA при блокировке экрана.  

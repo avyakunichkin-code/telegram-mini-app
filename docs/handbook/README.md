@@ -3,8 +3,12 @@ layer: handbook
 status: active
 last_reviewed: 2026-05-30
 audience: all human readers
+tags:
+  - tvoy-hod/layer/handbook
+  - tvoy-hod/status/active
+aliases:
+  - "Путеводитель по документации ТВОЙ ХОД"
 ---
-
 # Путеводитель по документации ТВОЙ ХОД
 
 Эта папка — **проектная документация для людей**: что за игра, как она устроена, что уже в prod и куда смотреть дальше. Технический конвейер (spec → plan → tasks → код) остаётся в [`../`](../README.md).

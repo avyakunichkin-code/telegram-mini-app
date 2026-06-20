@@ -4,8 +4,13 @@ status: active
 last_reviewed: 2026-06-01
 audience: product, playtest moderators
 sources: wave-0 (n=1), авторские прогоны (INT, INT-2), vision-ideas из плейтеста, O2 prod 2026-06-01
+tags:
+  - tvoy-hod/layer/foundation
+  - tvoy-hod/status/active
+aliases:
+  - PRE_ALPHA_PLAYTEST_FEEDBACK
+  - "Pre-Alpha — реестр отзывов (α-FB)"
 ---
-
 # Pre-Alpha — реестр отзывов (α-FB)
 
 Единая **triage-таблица** отзывов с первых прогонов. Часть закрыта **O2** (2026-06-01) — статус «ждём PA-T2» = код в prod, нужна валидация на следующей волне. Сырые цитаты — в канале фидбека / Sheet, не в git.

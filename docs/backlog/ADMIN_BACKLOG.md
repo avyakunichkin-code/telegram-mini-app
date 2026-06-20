@@ -1,3 +1,10 @@
+---
+tags:
+  - tvoy-hod/layer/backlog
+aliases:
+  - "Admin — бэклог (эпик A0+)"
+  - ADMIN_BACKLOG
+---
 # Admin — бэклог (эпик A0+)
 
 Живой список работ по **ops-админке** (`#/admin`, `GET /api/admin/*`). Не путать с вкладкой «Аналитика» у игрока — [`SPEC_ANALYTICS.md`](../specs/SPEC_ANALYTICS.md).

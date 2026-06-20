@@ -1,3 +1,12 @@
+---
+tags:
+  - tvoy-hod/layer/spec
+aliases:
+  - "MVP 1.1 — события по tier, repeat/cooldown, связка UX"
+  - "SPEC mvp 11 progression events"
+  - SPEC_mvp-11-progression-events
+  - "Spec: MVP 1.1 — события по tier, repeat/cooldown, связка UX"
+---
 ﻿---
 layer: spec
 status: approved

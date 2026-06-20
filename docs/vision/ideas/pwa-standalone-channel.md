@@ -3,8 +3,14 @@ layer: vision
 status: draft
 last_reviewed: 2026-05-26
 drivers: TMA lifecycle, screen lock, resume
+tags:
+  - tvoy-hod/layer/idea
+  - tvoy-hod/layer/vision
+  - tvoy-hod/status/draft
+aliases:
+  - "Идея: PWA / standalone-канал (веб вне Telegram)"
+  - pwa-standalone-channel
 ---
-
 # Идея: PWA / standalone-канал (веб вне Telegram)
 
 ## Проблема

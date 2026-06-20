@@ -5,8 +5,16 @@ last_reviewed:
 tracks:
 idea:
 plan:
+# tags + aliases — после сохранения: node scripts/docs/obsidian-enrich.mjs
+tags:
+  - tvoy-hod/layer/template
+  - tvoy-hod/status/draft
+aliases:
+  - "[Feature name]"
+  - "SPEC FEATURE"
+  - SPEC_FEATURE
+  - "Spec: [Feature name]"
 ---
-
 # Spec: [Feature name]
 
 ## Assumptions

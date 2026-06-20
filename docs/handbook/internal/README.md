@@ -4,8 +4,13 @@ status: active
 last_reviewed: 2026-05-30
 audience: product owner, game-design, engineering
 confidentiality: team-only
+tags:
+  - tvoy-hod/layer/handbook
+  - tvoy-hod/layer/handbook-internal
+  - tvoy-hod/status/active
+aliases:
+  - "Handbook — внутренняя часть"
 ---
-
 # Handbook — внутренняя часть
 
 Документы здесь содержат **формулы, пороги tuning и операционные детали**, которые **не** входят в пакет для плейтестеров и внешних партнёров.

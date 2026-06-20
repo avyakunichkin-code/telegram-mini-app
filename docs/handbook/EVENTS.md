@@ -4,8 +4,13 @@ status: active
 last_reviewed: 2026-05-30
 audience: product, game-design, partners, playtest
 companion: EVENTS_TERMS_RU.md
+tags:
+  - tvoy-hod/layer/handbook
+  - tvoy-hod/status/active
+aliases:
+  - "События — как устроена «жизнь» в игре"
+  - EVENTS
 ---
-
 # События — как устроена «жизнь» в игре
 
 Публичное описание **роли событий**, **ожиданий игрока** и **принципов дизайна**. Без полей YAML, классов lifecycle и формул баланса — это для команды контента: [`EVENTS_AGENT.md`](../agents/EVENTS_AGENT.md).

@@ -3,8 +3,13 @@ layer: handbook
 status: active
 last_reviewed: 2026-06-02
 audience: product, playtest, partners
+tags:
+  - tvoy-hod/layer/handbook
+  - tvoy-hod/status/active
+aliases:
+  - "Матрица фич — что в prod"
+  - FEATURE_STATUS
 ---
-
 # Матрица фич — что в prod
 
 Сводка для **плейтестеров и партнёров** без чтения бэклога. Детали поведения — [`GAME.md`](GAME.md) · сверка с кодом — [`MVP_AUDIT_VS_SPEC.md`](../foundation/MVP_AUDIT_VS_SPEC.md).

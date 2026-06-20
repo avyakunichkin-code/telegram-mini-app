@@ -4,8 +4,18 @@ status: approved
 owner: engineering
 last_reviewed: 2026-05-19
 tracks: quality, mq-116, api-hardening
+tags:
+  - tvoy-hod/layer/spec
+  - tvoy-hod/status/approved
+  - tvoy-hod/topic/api-hardening
+  - tvoy-hod/topic/mq-116
+  - tvoy-hod/topic/quality
+aliases:
+  - "Качество и релиз (бэкенд)"
+  - "SPEC quality release"
+  - SPEC_quality-release
+  - "Spec: Качество и релиз (бэкенд)"
 ---
-
 # Spec: Качество и релиз (бэкенд)
 
 ## Objective

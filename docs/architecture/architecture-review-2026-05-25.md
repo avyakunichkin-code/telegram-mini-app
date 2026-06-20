@@ -1,3 +1,9 @@
+---
+tags:
+  - tvoy-hod/layer/architecture
+aliases:
+  - architecture-review-2026-05-25
+---
 ﻿# Architecture Review Report
 
 **Date:** 2026-05-25  

@@ -1,3 +1,10 @@
+---
+tags:
+  - tvoy-hod/layer/balance
+aliases:
+  - "Пороги balance diff (эвристика)"
+  - THRESHOLDS
+---
 # Пороги balance diff (эвристика)
 
 Используются в `backend/scripts/balance_diff.py`. Не заменяют продуктовое решение — только сигнал для ревью.

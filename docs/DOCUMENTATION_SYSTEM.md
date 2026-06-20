@@ -1,3 +1,9 @@
+---
+tags:
+  - tvoy-hod/layer/system
+aliases:
+  - DOCUMENTATION_SYSTEM
+---
 ﻿# Система документации ТВОЙ ХОД
 
 Как хранить знания о продукте и превращать их в **спеки → планы → задачи → разработку**.  
@@ -234,8 +240,14 @@ status: draft | review | approved | implemented | stale
 owner: имя или роль
 last_reviewed: 2026-05-16
 tracks: save-kind, game-plan
+tags:
+  - tvoy-hod/layer/spec
+aliases:
+  - SPEC_example
 ---
 ```
+
+Поля **`tags`** и **`aliases`** для Obsidian генерирует `node scripts/docs/obsidian-enrich.mjs` (не править вручную, кроме редких псевдонимов). Гайд vault: [`OBSIDIAN.md`](OBSIDIAN.md).
 
 ### 5.2. Матрица трассировки (одна таблица в backlog или отдельный файл)
 
@@ -315,6 +327,14 @@ Spec отвечает на **что**; ADR на **почему так**.
 Задачи:    «разбей PLAN на задачи MQ-*» → секция Tasks
 Бэклог:    «добавь в backlog P1 со ссылкой на spec»
 ```
+
+---
+
+## 9. Obsidian
+
+Репозиторий — **Obsidian vault** (корень `telegram-mini-app/`). Markdown-ссылки сохраняются для GitHub и агентов; навигация в Obsidian — через `tags`, `aliases`, MOC (`docs/*/_index.md`) и [`Home.md`](Home.md).
+
+После правок frontmatter: `node scripts/docs/obsidian-enrich.mjs`.
 
 ---
 

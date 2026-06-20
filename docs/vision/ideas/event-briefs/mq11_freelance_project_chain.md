@@ -1,3 +1,10 @@
+---
+tags:
+  - tvoy-hod/layer/idea
+aliases:
+  - "Event Brief — цепочка `mq11_freelance_project_*` (эталон «История»)"
+  - mq11_freelance_project_chain
+---
 # Event Brief — цепочка `mq11_freelance_project_*` (эталон «История»)
 
 **Статус:** реализовано в `data/events/mvp11/chains/freelance_project.yaml`  
