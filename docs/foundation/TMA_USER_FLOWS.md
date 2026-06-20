@@ -6,6 +6,8 @@ aliases:
 ---
 ﻿# ТВОЙ ХОД — user flows и болевые точки (TMA)
 
+> **Каналы (ADR-012):** этот документ описывает **Telegram Mini App** — **secondary channel**. Primary smoke и playtest: **PWA + web** — [`PWA_INSTALL.md`](PWA_INSTALL.md), skill **`release-web`**.
+
 Документ для приоритизации UX: кратко **потоки**, **типичные ошибки пользователя** и **что уже сделано / что брать следующим**.
 
 ---

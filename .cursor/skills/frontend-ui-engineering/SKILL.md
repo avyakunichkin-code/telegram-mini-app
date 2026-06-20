@@ -6,19 +6,39 @@ user-invocable: true
 allowed-tools: Read, Glob, Grep, Write
 ---
 
+## Стандарт качества и вызов
+
+**Release-ready:** [release-ready-quality.md](../_shared/release-ready-quality.md) — готовность к merge, не набросок; **допустимо больше токенов** на чтение spec/кода, анализ и self-review перед verdict.
+
+**Workflow:** [delivery-workflow.md](../_shared/delivery-workflow.md) — думаем → уточняем → планируем → делаем.
+
+**Неясность:** [clarify-first.md](../_shared/clarify-first.md) — STOP и вопрос до implement; не угадывать.
+
+**Границы:** [skill-responsibility-matrix.md](../_shared/skill-responsibility-matrix.md) — **primary** только в колонке «Когда primary»; иначе satellite или другой primary.
+**Визуал:** [visual-assets-policy.md](../_shared/visual-assets-policy.md) — согласовать формат → сгенерировать → в репо; без временных заглушек.
+
+
 # Frontend UI Engineering
 
 ## Прочитай сначала (ТВОЙ ХОД)
 
+- [`.cursor/skills/_shared/game-lexicon.md`](../_shared/game-lexicon.md) — TMA-игра, save_kind, UI vs economy
 - [`frontend-react/src/components/mqx/DESIGN_WORKFLOW.md`](../../../frontend-react/src/components/mqx/DESIGN_WORKFLOW.md) — **целиком** для новых паттернов
 - [`docs/specs/SPEC_FRONTEND_UI.md`](../../../docs/specs/SPEC_FRONTEND_UI.md)
-- [`docs/specs/UI_CONSISTENCY_AUDIT.md`](../../../docs/specs/UI_CONSISTENCY_AUDIT.md)
 - [`docs/reference/brandbook/BRANDBOOK_MQX.md`](../../../docs/reference/brandbook/BRANDBOOK_MQX.md)
-- [`docs/ux/screens/dashboard.md`](../../../docs/ux/screens/dashboard.md) — дашборд, sheet подушки (`InvestProductForm` + `MqxCapitalSheet`)
-- [`docs/ux/accessibility-requirements.md`](../../../docs/ux/accessibility-requirements.md)
 - [`frontend-react/ARCHITECTURE.md`](../../../frontend-react/ARCHITECTURE.md)
 - [`CLAUDE.md`](../../../CLAUDE.md)
-- Идеи **без** spec пока: [`docs/agents/DESIGN_IMPROVEMENTS_BACKLOG.md`](../../../docs/agents/DESIGN_IMPROVEMENTS_BACKLOG.md)
+
+## Читай при условии (`catalog.yaml` → `read_if`)
+
+| Когда | Файлы |
+|-------|--------|
+| dashboard screen | [`docs/ux/screens/dashboard.md`](../../../docs/ux/screens/dashboard.md) |
+| finance / capital | [`docs/ux/screens/finance.md`](../../../docs/ux/screens/finance.md) |
+| character needs | [`docs/ux/screens/character-needs-dashboard.md`](../../../docs/ux/screens/character-needs-dashboard.md) |
+| a11y pass | [`docs/ux/accessibility-requirements.md`](../../../docs/ux/accessibility-requirements.md) |
+| UI parity audit | [`docs/specs/UI_CONSISTENCY_AUDIT.md`](../../../docs/specs/UI_CONSISTENCY_AUDIT.md) |
+| ideas без spec | [`docs/agents/DESIGN_IMPROVEMENTS_BACKLOG.md`](../../../docs/agents/DESIGN_IMPROVEMENTS_BACKLOG.md) |
 
 **Куда писать:** `frontend-react/src/components/mqx/`, экраны `*Premium.jsx`, `frontend-react/src/styles/`. **Дальше:** `design-lab-mqx`, `browser-testing-with-devtools`, `code-review-and-quality`.
 
@@ -49,6 +69,10 @@ Build production-quality user interfaces that are accessible, performant, and vi
 - Implementing responsive layouts
 - Adding interactivity or state management
 - Fixing visual or UX issues
+
+**When NOT primary:** новый макет/смена layout → **design-lab-mqx** сначала; только backend/API → **api-and-interface-design**; правила period/victory → **game-economy-and-victory**.
+
+**Release-ready UI:** после правок — `npm run build`, contract tests при смене display/helpers (`critical-test-scenarios`); self-review по [`release-ready-quality.md`](../_shared/release-ready-quality.md) § UI; **ассеты** — [`visual-assets-policy.md`](../_shared/visual-assets-policy.md).
 
 **Перед любым пунктом выше, кроме hotfix:** открой **design-lab-mqx** и создай/обнови раунд. Prod-код без lab — нарушение процесса MQX.
 
@@ -103,7 +127,7 @@ Build production-quality user interfaces that are accessible, performant, and vi
 - [ ] Canon Sync: APPROVED.md + parity round при крупном изменении
 - [ ] Ручная проверка: 320px, тёмная тема TG, 4 вкладки игры
 - [ ] a11y Basic: touch ≥44px, статус не только цветом (см. accessibility-requirements)
-- [ ] npm run build; release-tma чеклист перед merge в release
+- [ ] npm run build; **release-web** чеклист перед merge в release
 ```
 
 ### Отложено (не внедрять «из аудита» без spec)
@@ -234,7 +258,7 @@ AI-generated UI has recognizable patterns. Avoid all of them:
 | Excessive gradients | Gradients add visual noise and clash with most design systems | Flat or subtle gradients matching the design system |
 | Rounded everything (rounded-2xl) | Maximum rounding signals "friendly" but ignores the hierarchy of corner radii in real designs | Consistent border-radius from the design system |
 | Generic hero sections | Template-driven layout with no connection to the actual content or user need | Content-first layouts |
-| Lorem ipsum-style copy | Placeholder text hides layout problems that real content reveals (length, wrapping, overflow) | Realistic placeholder content |
+| Lorem ipsum-style copy | Placeholder text hides layout problems that real content reveals (length, wrapping, overflow) | Реалистичный **текст** из spec/persona (не Lorem); **картинки/иконки** — [visual-assets-policy.md](../_shared/visual-assets-policy.md), не emoji/placeholder URL |
 | Oversized padding everywhere | Equal generous padding destroys visual hierarchy and wastes screen space | Consistent spacing scale |
 | Stock card grids | Uniform grids are a layout shortcut that ignores information priority and scanning patterns | Purpose-driven layouts |
 | Shadow-heavy design | Layered shadows add depth that competes with content and slows rendering on low-end devices | Subtle or no shadows unless the design system specifies |

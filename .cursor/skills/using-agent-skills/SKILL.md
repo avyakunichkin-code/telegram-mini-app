@@ -6,12 +6,19 @@ user-invocable: true
 allowed-tools: Read, Glob, Grep
 ---
 
+## Стандарт качества и вызов
+
+**Meta-скилл:** не product delivery. Для кода/spec/UI — доменный скилл + [release-ready-quality.md](../_shared/release-ready-quality.md).
+
+**Workflow:** [delivery-workflow.md](../_shared/delivery-workflow.md) · **Уточнение:** [clarify-first.md](../_shared/clarify-first.md).
+
+
 # Using Agent Skills
 
 ## Прочитай сначала (ТВОЙ ХОД)
 
 - [`docs/agents/CURSOR_SKILLS.md`](../../../docs/agents/CURSOR_SKILLS.md)
-- [`docs/agents/SKILLS_AUDIT_2026-06-01.md`](../../../docs/agents/SKILLS_AUDIT_2026-06-01.md) — последний аудит каталога
+- [`docs/agents/SKILLS_QUALITY_AUDIT_2026-06-20.md`](../../../docs/agents/SKILLS_QUALITY_AUDIT_2026-06-20.md) — аудит каталога (G1–G6, read_if)
 - [`docs/agents/SKILLS_PHASE_CONTENT_AND_DATA.md`](../../../docs/agents/SKILLS_PHASE_CONTENT_AND_DATA.md)
 - [`docs/agents/SKILL_DOC_MAP.md`](../../../docs/agents/SKILL_DOC_MAP.md)
 - [`.cursor/skills/catalog.yaml`](../catalog.yaml) — поле **`tier`** на каждый скилл
@@ -36,6 +43,8 @@ Agent Skills is a collection of engineering workflow skills organized by develop
 | **archived** | `.cursor/skills/_archived/` — studio/GDD, явный вызов |
 
 **Шаг 1.** Выбери primary по смыслу задачи (фаза «контент и данные» — дерево ниже).
+
+**Контекст скилла (`catalog.yaml`):** открой **`must_read`** всегда; **`read_if`** — только когда условие `when` совпадает с задачей (см. секцию «Читай при условии» в `SKILL.md`). Не грузить все `read_if` подряд.
 
 **Шаг 2.** Открой **satellites** из таблицы «Primary + satellites» в router / phase doc; не завершай срез без них, если они указаны.
 
@@ -89,7 +98,7 @@ Epic / нарезка из spec ──→ planning-and-task-breakdown
 ### `tier: deferred` (явный вызов — не primary по умолчанию)
 
 ```
-release-tma · browser-testing-with-devtools · telegram-mini-app-runtime
+release-web · browser-testing-with-devtools · telegram-mini-app-runtime
 security-and-hardening · performance-optimization · deprecation-and-migration
 social-changelog-posts · code-simplification · context-engineering
 project-cursor-skills-layout
@@ -105,6 +114,17 @@ Studio/GDD: `brainstorm`, `ux-design`, `design-system`, … — только `.c
 ## Core Operating Behaviors
 
 These behaviors apply at all times, across all skills. They are non-negotiable.
+
+### 0. Release-ready over speed
+
+**Default bar:** merge-ready output, not a sketch. See [`.cursor/skills/_shared/release-ready-quality.md`](../_shared/release-ready-quality.md).
+
+**Workflow:** [delivery-workflow.md](../_shared/delivery-workflow.md) — думаем → уточняем → планируем → делаем. При сомнении — [clarify-first.md](../_shared/clarify-first.md) (STOP до implement).
+
+- **Spend tokens deliberately:** read spec + existing code + tests before writing; run verify steps from the primary skill and satellites.
+- **Think, then ship:** analysis and self-review are part of the task — not optional if the diff touches economy, API, or prod UI.
+- **One primary skill** per task ([`skill-responsibility-matrix.md`](../_shared/skill-responsibility-matrix.md)); deferred skills only on explicit request or as satellites.
+- **Verdict honesty:** COMPLETE/PASS only when the release-ready checklist passes; drafts → DRAFT/GAPS/CONCERNS.
 
 ### 1. Surface Assumptions
 
@@ -209,7 +229,7 @@ These are the subtle errors that look like productivity but create problems:
 6.  documentation-and-adrs         [support] — при новой границе домена
 ```
 
-`context-engineering`, `release-tma` — **deferred**, не в цепочке по умолчанию.
+`context-engineering`, `release-web` — **deferred**, не в цепочке по умолчанию.
 
 ### Фаза «контент и данные» (типичные короткие цепочки)
 
@@ -247,7 +267,7 @@ These are the subtle errors that look like productivity but create problems:
 | Verify | performance-optimization | deferred | Measure, then optimize |
 | Review | code-review-and-quality | support | Pre-merge review |
 | Ship | documentation-and-adrs | support | ADR, domain boundaries |
-| Ship | release-tma | deferred | Pre-release guardrails |
+| Ship | release-web | deferred | Pre-release guardrails (PWA/web primary) |
 | Ship | social-changelog-posts | deferred | Marketing changelog posts |
 | Meta | using-agent-skills | core | This skill — discovery |
 | Meta | skill-test | meta | Lint / audit skills |

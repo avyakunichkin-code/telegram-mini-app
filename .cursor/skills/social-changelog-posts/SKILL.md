@@ -12,6 +12,18 @@ user-invocable: true
 allowed-tools: Read, Glob, Grep, Write
 ---
 
+## Стандарт качества и вызов
+
+**Release-ready:** [release-ready-quality.md](../_shared/release-ready-quality.md) — готовность к merge, не набросок; **допустимо больше токенов** на чтение spec/кода, анализ и self-review перед verdict.
+
+**Workflow:** [delivery-workflow.md](../_shared/delivery-workflow.md) — думаем → уточняем → планируем → делаем.
+
+**Неясность:** [clarify-first.md](../_shared/clarify-first.md) — STOP и вопрос до implement; не угадывать.
+
+**Границы:** [skill-responsibility-matrix.md](../_shared/skill-responsibility-matrix.md) — **primary** только в колонке «Когда primary»; иначе satellite или другой primary.
+**Визуал:** [visual-assets-policy.md](../_shared/visual-assets-policy.md) — согласовать формат → сгенерировать → в репо; без временных заглушек.
+
+
 
 # Посты по changelog (соцсети)
 

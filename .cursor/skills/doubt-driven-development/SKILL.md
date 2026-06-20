@@ -6,6 +6,17 @@ user-invocable: true
 allowed-tools: Read, Glob, Grep, AskUserQuestion
 ---
 
+## Стандарт качества и вызов
+
+**Release-ready:** [release-ready-quality.md](../_shared/release-ready-quality.md) — готовность к merge, не набросок; **допустимо больше токенов** на чтение spec/кода, анализ и self-review перед verdict.
+
+**Workflow:** [delivery-workflow.md](../_shared/delivery-workflow.md) — думаем → уточняем → планируем → делаем.
+
+**Неясность:** [clarify-first.md](../_shared/clarify-first.md) — STOP и вопрос до implement; не угадывать.
+
+**Границы:** [skill-responsibility-matrix.md](../_shared/skill-responsibility-matrix.md) — **primary** только в колонке «Когда primary»; иначе satellite или другой primary.
+
+
 # Doubt-Driven Development
 
 ## Прочитай сначала (ТВОЙ ХОД)
@@ -48,6 +59,8 @@ Apply the skill when:
 - The user has explicitly asked for speed over verification
 
 If you doubt every keystroke, you ship nothing. The skill applies only to non-trivial decisions as defined above.
+
+**When NOT primary:** всегда **satellite** к `game-economy-and-victory` / крупному diff; не подменяет primary authoring или **code-review-and-quality**.
 
 ## Loading Constraints
 

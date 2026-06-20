@@ -1,10 +1,15 @@
 #!/usr/bin/env node
 /**
  * Post-edit reminders for ТВОЙ ХОД (economy, MQX prod, design-lab).
- * stdin: Cursor afterFileEdit JSON { file_path | path | ... }
- * stdout: { "additional_context": "..." } or {}
+ * Throttle: same bucket max once per THROTTLE_MS (local .hint-throttle.json).
  */
-import { readFileSync } from 'fs';
+import { readFileSync, writeFileSync, mkdirSync } from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const THROTTLE_MS = 120_000;
+const hookDir = path.dirname(fileURLToPath(import.meta.url));
+const STATE_PATH = path.join(hookDir, '.hint-throttle.json');
 
 function readStdin() {
   try {
@@ -16,6 +21,48 @@ function readStdin() {
 
 function normalize(p) {
   return String(p || '').replace(/\\/g, '/');
+}
+
+function loadState() {
+  try {
+    return JSON.parse(readFileSync(STATE_PATH, 'utf8'));
+  } catch {
+    return {};
+  }
+}
+
+function saveState(state) {
+  try {
+    mkdirSync(hookDir, { recursive: true });
+    writeFileSync(STATE_PATH, JSON.stringify(state));
+  } catch {
+    // ignore — hook must not fail edits
+  }
+}
+
+function bucketFor(filePath) {
+  if (/data\/events\/mvp11\//.test(filePath)) return 'events-yaml';
+  if (/backend\/app\/events\//.test(filePath)) return 'events-engine';
+  if (/backend\/app\/(game|victory)\//.test(filePath)) return 'economy';
+  if (/backend\/app\/routers\//.test(filePath)) return 'api';
+  if (/backend\/app\/seeds\//.test(filePath)) return 'seeds';
+  if (/backend\/migrations\//.test(filePath)) return 'migrations';
+  if (/backend\/tests\//.test(filePath)) return 'be-tests';
+  if (/frontend-react\/src\/.*__tests__\//.test(filePath)) return 'fe-tests';
+  if (/docs\/specs\/features\//.test(filePath)) return 'spec-features';
+  if (/frontend-react\/src\/components\/(mqx\/|.*Premium\.jsx)/.test(filePath)) return 'mqx-prod';
+  if (/design-lab\//.test(filePath)) return 'design-lab';
+  return null;
+}
+
+function isThrottled(bucket) {
+  if (!bucket) return false;
+  const state = loadState();
+  const now = Date.now();
+  if (state[bucket] && now - state[bucket] < THROTTLE_MS) return true;
+  state[bucket] = now;
+  saveState(state);
+  return false;
 }
 
 const raw = readStdin();
@@ -32,8 +79,13 @@ const filePath = normalize(
   payload.file_path ?? payload.path ?? payload.filePath ?? '',
 );
 
-const hints = [];
+const bucket = bucketFor(filePath);
+if (isThrottled(bucket)) {
+  process.stdout.write('{}');
+  process.exit(0);
+}
 
+const hints = [];
 const balancePlaytestHint =
   'После существенных правок: `/balance-playtest` или `cd backend && python scripts/balance_playtest.py` (diff vs docs/balance/baselines/). Subagent: `economy-balance-runner`.';
 
@@ -57,9 +109,13 @@ if (/data\/events\/mvp11\//.test(filePath)) {
   );
 } else if (/backend\/app\/seeds\//.test(filePath)) {
   hints.push(
-    'ТВОЙ ХОД hook: seeds/шаблоны — проверь victory_config_json и starter templates; pytest + balance playtest.',
+    'ТВОЙ ХОД hook: seeds/шаблоны — victory_config_json, starter templates; идемпотентный upsert; pytest + balance playtest.',
   );
   hints.push(balancePlaytestHint);
+} else if (/backend\/migrations\/.*\.sql$/.test(filePath)) {
+  hints.push(
+    'ТВОЙ ХОД hook: SQL-миграция — skill `db-baselines-and-migrations`, `backend/migrations/README.md`, `db.sh migrate`; для `0000_*` — validate_baseline.sh; согласовать с `models.py` / seeds.',
+  );
 }
 
 if (/backend\/tests\//.test(filePath)) {
@@ -77,18 +133,6 @@ if (/frontend-react\/src\/.*__tests__\//.test(filePath)) {
 if (/docs\/specs\/features\//.test(filePath)) {
   hints.push(
     'ТВОЙ ХОД hook: spec — § Critical scenarios (CS-*) до кода; skill `/critical-tests`.',
-  );
-}
-
-if (/backend\/migrations\//.test(filePath) && /\.sql$/.test(filePath)) {
-  hints.push(
-    'ТВОЙ ХОД hook: SQL-миграция — skill `db-baselines-and-migrations`, `backend/migrations/README.md`, `db.sh migrate`; для `0000_*` — validate_baseline.sh; согласовать с `models.py` / seeds.',
-  );
-}
-
-if (/backend\/app\/seeds\//.test(filePath)) {
-  hints.push(
-    'ТВОЙ ХОД hook: seed — идемпотентный upsert; не дублировать DML в baseline; runner `seed_all` на startup.',
   );
 }
 
@@ -116,7 +160,7 @@ if (/design-lab\/nav\.manifest\.json$/.test(filePath)) {
 } else if (/design-lab\//.test(filePath) && /\/(index\.html|styles\.css|lab-base\.css)$/.test(filePath)) {
   const isRoundHtml = /\/[^/]+-round\/index\.html$/.test(filePath) || /parity-generated-page-round\/blocks\//.test(filePath);
   hints.push(
-    'ТВОЙ ХОД hook: design-lab round — index.html только `./lab-base.css` (без `../`). После styles.css: `./sync-lab.sh` (bash) или `.\\sync-lab.ps1` (не `./sync-lab.ps1` в bash). Проверка: `cd frontend-react && npm run design-lab:check-rounds`.',
+    'ТВОЙ ХОД hook: design-lab round — index.html только `./lab-base.css` (без `../`). После styles.css: `./sync-lab.sh` (bash) или `.\\sync-lab.ps1` (не `./sync-lab.ps1` in bash). Проверка: `cd frontend-react && npm run design-lab:check-rounds`.',
   );
   if (isRoundHtml) {
     hints.push(
@@ -125,14 +169,16 @@ if (/design-lab\/nav\.manifest\.json$/.test(filePath)) {
   }
 }
 
-if (hints.length === 0) {
+const unique = [...new Set(hints)];
+
+if (unique.length === 0) {
   process.stdout.write('{}');
   process.exit(0);
 }
 
 process.stdout.write(
   JSON.stringify({
-    additional_context: hints.join('\n\n'),
+    additional_context: unique.join('\n\n'),
   }),
 );
 process.exit(0);

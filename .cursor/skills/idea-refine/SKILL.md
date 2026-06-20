@@ -6,6 +6,17 @@ user-invocable: true
 allowed-tools: Read, Glob, Grep, Write, AskUserQuestion
 ---
 
+## Стандарт качества и вызов
+
+**Release-ready:** [release-ready-quality.md](../_shared/release-ready-quality.md) — готовность к merge, не набросок; **допустимо больше токенов** на чтение spec/кода, анализ и self-review перед verdict.
+
+**Workflow:** [delivery-workflow.md](../_shared/delivery-workflow.md) — думаем → уточняем → планируем → делаем.
+
+**Неясность:** [clarify-first.md](../_shared/clarify-first.md) — STOP и вопрос до implement; не угадывать.
+
+**Границы:** [skill-responsibility-matrix.md](../_shared/skill-responsibility-matrix.md) — **primary** только в колонке «Когда primary»; иначе satellite или другой primary.
+
+
 # Idea Refine
 
 Refines raw ideas into sharp, actionable concepts worth building through structured divergent and convergent thinking.
@@ -18,6 +29,10 @@ Refines raw ideas into sharp, actionable concepts worth building through structu
 - [`docs/backlog/PRODUCT_BACKLOG.md`](../../../docs/backlog/PRODUCT_BACKLOG.md)
 
 **Куда писать:** `docs/vision/ideas/`. **Дальше:** `spec-driven-development`.
+
+**When NOT primary:** контракт/spec готов → **spec-driven-development**; реализация → **incremental-implementation**.
+
+**Output mode (не release-ready prod):** one-pager **DRAFT** в `docs/vision/ideas/`; verdict **DRAFT** / **REFINED**, не COMPLETE для merge в код.
 
 ## How It Works
 

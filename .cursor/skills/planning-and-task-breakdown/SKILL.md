@@ -6,17 +6,33 @@ user-invocable: true
 allowed-tools: Read, Glob, Grep, Write
 ---
 
+## Стандарт качества и вызов
+
+**Release-ready:** [release-ready-quality.md](../_shared/release-ready-quality.md) — готовность к merge, не набросок; **допустимо больше токенов** на чтение spec/кода, анализ и self-review перед verdict.
+
+**Workflow:** [delivery-workflow.md](../_shared/delivery-workflow.md) — думаем → уточняем → планируем → делаем.
+
+**Неясность:** [clarify-first.md](../_shared/clarify-first.md) — STOP и вопрос до implement; не угадывать.
+
+**Границы:** [skill-responsibility-matrix.md](../_shared/skill-responsibility-matrix.md) — **primary** только в колонке «Когда primary»; иначе satellite или другой primary.
+
+
 # Planning and Task Breakdown
 
 ## Прочитай сначала (ТВОЙ ХОД)
 
 - [`docs/DOCUMENTATION_SYSTEM.md`](../../../docs/DOCUMENTATION_SYSTEM.md)
-- [`docs/specs/features/`](../../../docs/specs/features/)
 - [`docs/foundation/SPEC_PRODUCT.md`](../../../docs/foundation/SPEC_PRODUCT.md)
-- [`docs/TRACEABILITY.md`](../../../docs/TRACEABILITY.md)
 - [`docs/templates/PLAN_FEATURE.md`](../../../docs/templates/PLAN_FEATURE.md)
 - [`docs/templates/TASK_SLICE.md`](../../../docs/templates/TASK_SLICE.md)
-- [`docs/agents/SKILL_DOC_MAP.md`](../../../docs/agents/SKILL_DOC_MAP.md)
+
+## Читай при условии (`catalog.yaml` → `read_if`)
+
+| Когда | Файлы |
+|-------|--------|
+| epic из spec | matching [`docs/specs/features/SPEC_*.md`](../../../docs/specs/features/) |
+| traceability | [`docs/TRACEABILITY.md`](../../../docs/TRACEABILITY.md) |
+| routing MQ-* / skill | [`docs/agents/SKILL_DOC_MAP.md`](../../../docs/agents/SKILL_DOC_MAP.md) |
 
 **Куда писать:** `docs/plans/`, `docs/tasks/`, строка эпика в `TRACEABILITY.md`. **Дальше:** `incremental-implementation`.
 
@@ -33,6 +49,8 @@ Decompose work into small, verifiable tasks with explicit acceptance criteria. G
 - The implementation order isn't obvious
 
 **When NOT to use:** Single-file changes with obvious scope, or when the spec already contains well-defined tasks.
+
+**When NOT primary:** один очевидный срез → **incremental-implementation**; нет spec → **spec-driven-development** / **idea-refine**.
 
 ## The Planning Process
 
@@ -56,6 +74,7 @@ Before writing any code, operate in read-only mode:
 3. Каждая задача MQ-* — по [`docs/templates/TASK_SLICE.md`](../../../docs/templates/TASK_SLICE.md):
    - **`phase`:** `define` | `build` | `verify` | `ship`
    - **`skill`:** один доменный Agent Skill на срез
+   - **`read_if_when`:** если у skill есть `read_if` в catalog — только matching `when` для этого среза (не все paths). Справка: `node .cursor/skills/skill-test/_resolve-read-if.mjs <skill>`
    - **`next_skill`:** что после done (часто `test-driven-development` для `build`)
 4. Маппинг phase → skill: [`docs/agents/SKILL_DOC_MAP.md`](../../../docs/agents/SKILL_DOC_MAP.md).
 

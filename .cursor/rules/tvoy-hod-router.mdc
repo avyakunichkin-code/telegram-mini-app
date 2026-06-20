@@ -8,9 +8,10 @@ alwaysApply: true
 ## Карта проекта
 
 - **Код и API**: [`CLAUDE.md`](CLAUDE.md)
-- **Продукт**: [`docs/foundation/SPEC_PRODUCT.md`](docs/foundation/SPEC_PRODUCT.md)
+- **Лексикон игры**: [`.cursor/skills/_shared/game-lexicon.md`](.cursor/skills/_shared/game-lexicon.md)
+- **Продукт**: [`docs/foundation/SPEC_PRODUCT.md`](docs/foundation/SPEC_PRODUCT.md) — §1.1 **каналы: PWA/web primary**, TMA secondary ([ADR-012](docs/decisions/ADR-012-primary-channels-pwa-web-over-tma.md))
 - **Конвейер docs**: [`docs/agents/SKILL_DOC_MAP.md`](docs/agents/SKILL_DOC_MAP.md), [`docs/DOCUMENTATION_SYSTEM.md`](docs/DOCUMENTATION_SYSTEM.md)
-- **Скиллы**: [`docs/agents/CURSOR_SKILLS.md`](docs/agents/CURSOR_SKILLS.md), [`docs/agents/SKILLS_PHASE_CONTENT_AND_DATA.md`](docs/agents/SKILLS_PHASE_CONTENT_AND_DATA.md), [`.cursor/skills/catalog.yaml`](.cursor/skills/catalog.yaml) (`tier`)
+- **Скиллы**: [`docs/agents/CURSOR_SKILLS.md`](docs/agents/CURSOR_SKILLS.md), [`docs/agents/AI_ONBOARDING.md`](docs/agents/AI_ONBOARDING.md), [`docs/agents/SKILLS_PHASE_CONTENT_AND_DATA.md`](docs/agents/SKILLS_PHASE_CONTENT_AND_DATA.md), [`.cursor/skills/catalog.yaml`](.cursor/skills/catalog.yaml) (`tier`)
 - **Баланс / пороги**: [`game-balance-thresholds-and-constraints.md`](docs/vision/ideas/game-balance-thresholds-and-constraints.md)
 - **Баланс событий (authoring)**: [`.cursor/skills/create-event/event-balance-rules.md`](.cursor/skills/create-event/event-balance-rules.md) — §10 lifecycle, §11 needs_axis_map
 - **MQX**: [`frontend-react/src/components/mqx/DESIGN_WORKFLOW.md`](frontend-react/src/components/mqx/DESIGN_WORKFLOW.md) — читать **целиком** перед новым UI (исключение: hotfix без смены дизайна)
@@ -29,7 +30,7 @@ Studio/GDD: только [`.cursor/skills/_archived/`](.cursor/skills/_archived/
 | Данные (события) | create-event, event-analysis | game-economy (движок периода) |
 | Механики | game-economy-and-victory | create-event (YAML карточек) |
 | FE↔BE | api-and-interface-design | incremental без spec |
-| Поверхность | design-lab-mqx → frontend-ui-engineering | lab без canon-sync в prod |
+| Поверхность | design-lab-mqx → frontend-ui-engineering | lab без canon-sync в prod; **primary QA: PWA/web** |
 | Границы доменов | documentation-and-adrs (support) | код без ADR при споре «кто владелец» |
 | **Схема БД / миграции / seeds** | **db-baselines-and-migrations** (support) | create-event (контент в YAML, не SQL) |
 
@@ -56,11 +57,13 @@ Studio/GDD: только [`.cursor/skills/_archived/`](.cursor/skills/_archived/
 | **SQL baseline / `00NN_*.sql` / seeds / `db.sh`** | **db-baselines-and-migrations** | `test-driven-development`; game-economy при `victory_goals` |
 | Неясно какой скилл | **using-agent-skills** | — |
 
-**`tier: deferred`** (явный вызов): `browser-testing-with-devtools`, `security-and-hardening`, `performance-optimization`, `deprecation-and-migration`, `release-tma`, `telegram-mini-app-runtime`, `social-changelog-posts`, `code-simplification`, `context-engineering`.
+**`tier: deferred`** (явный вызов): `browser-testing-with-devtools`, `security-and-hardening`, `performance-optimization`, `deprecation-and-migration`, **`release-web`**, `telegram-mini-app-runtime`, `social-changelog-posts`, `code-simplification`, `context-engineering`. Legacy **`release-tma`** → redirect на **`release-web`**.
 
 **`tier: support`:** `planning-and-task-breakdown` (epic), `code-review-and-quality` (merge), `project-handbook-documentation` (handbook для людей), `documentation-and-adrs` (граница доменов), **`db-baselines-and-migrations`** (PostgreSQL baseline/миграции/seeds). **`doubt-driven-development`** — deferred, но satellite для game-economy.
 
 Скилл с `status: active` — блок **«Прочитай сначала»** в `SKILL.md` до процедуры.
+
+**Release-ready:** все product-скиллы следуют [`.cursor/skills/_shared/release-ready-quality.md`](.cursor/skills/_shared/release-ready-quality.md) — результат **готов к merge**, не набросок; допустимо больше токенов на анализ и verify. **Workflow:** [delivery-workflow.md](.cursor/skills/_shared/delivery-workflow.md) (думаем → уточняем → планируем → делаем). **Неясность:** [clarify-first.md](.cursor/skills/_shared/clarify-first.md). **Визуал:** [visual-assets-policy.md](.cursor/skills/_shared/visual-assets-policy.md). Границы: [`skill-responsibility-matrix.md`](.cursor/skills/_shared/skill-responsibility-matrix.md).
 
 ## Primary + satellites (обязательные пары)
 
@@ -88,6 +91,18 @@ Studio/GDD: только [`.cursor/skills/_archived/`](.cursor/skills/_archived/
 
 **Hooks:** `.cursor/hooks.json` — напоминания после правок economy/UI/lab.
 
-**Subagents:** [`.cursor/agents/`](.cursor/agents/) — `economy-reviewer`, `economy-balance-runner`, `mqx-ui-reviewer` (после крупных diff; см. `catalog.yaml` → `agents:`).
+## Subagents (post-diff review, не primary)
+
+Parent agent запускает **после крупного diff** — дополняют pytest/TDD, не заменяют primary skill.
+
+| Agent | Когда запускать | Режим | Не заменяет |
+|-------|-----------------|-------|-------------|
+| **economy-reviewer** | Логика/данные `game/`, `victory/`, events seeds; смена balance-чисел | readonly | `game-economy-and-victory`, pytest |
+| **economy-balance-runner** | Крупная правка seeds/YAML/period — нужен sim 30–40p + diff baseline | shell | unit tests, authoring |
+| **mqx-ui-reviewer** | Крупный MQX или lab→prod в одном PR | readonly | `DESIGN_WORKFLOW`, мелкий hotfix |
+
+**Когда НЕ запускать:** hotfix 1–2 файла, docs-only, rename без поведения, authoring YAML по **`create-event`** (satellite **`event-analysis`** для §10/§11 audit).
+
+**Правила:** один primary на задачу; subagent — второй проход, не параллельный primary. Конфиг и `trigger_globs`: [`.cursor/skills/catalog.yaml`](.cursor/skills/catalog.yaml) → `agents:`. Онбординг: [`docs/agents/AI_ONBOARDING.md`](docs/agents/AI_ONBOARDING.md) §5.
 
 При смене API: `frontend-react/src/api.js` + хуки/экраны.

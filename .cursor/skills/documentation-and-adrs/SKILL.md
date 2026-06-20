@@ -6,6 +6,17 @@ user-invocable: true
 allowed-tools: Read, Glob, Grep, Write
 ---
 
+## Стандарт качества и вызов
+
+**Release-ready:** [release-ready-quality.md](../_shared/release-ready-quality.md) — готовность к merge, не набросок; **допустимо больше токенов** на чтение spec/кода, анализ и self-review перед verdict.
+
+**Workflow:** [delivery-workflow.md](../_shared/delivery-workflow.md) — думаем → уточняем → планируем → делаем.
+
+**Неясность:** [clarify-first.md](../_shared/clarify-first.md) — STOP и вопрос до implement; не угадывать.
+
+**Границы:** [skill-responsibility-matrix.md](../_shared/skill-responsibility-matrix.md) — **primary** только в колонке «Когда primary»; иначе satellite или другой primary.
+
+
 # Documentation and ADRs
 
 ## Прочитай сначала (ТВОЙ ХОД)
@@ -30,6 +41,8 @@ Document decisions, not just code. The most valuable documentation captures the 
 - When you find yourself explaining the same thing repeatedly
 
 **When NOT to use:** Don't document obvious code. Don't add comments that restate what the code already says. Don't write docs for throwaway prototypes.
+
+**When NOT primary:** narrative handbook для людей → **project-handbook-documentation**; реализация фичи → **incremental-implementation**.
 
 ## Architecture Decision Records (ADRs)
 

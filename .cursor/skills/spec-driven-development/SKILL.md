@@ -6,16 +6,31 @@ user-invocable: true
 allowed-tools: Read, Glob, Grep, Write, AskUserQuestion
 ---
 
+## Стандарт качества и вызов
+
+**Release-ready:** [release-ready-quality.md](../_shared/release-ready-quality.md) — готовность к merge, не набросок; **допустимо больше токенов** на чтение spec/кода, анализ и self-review перед verdict.
+
+**Workflow:** [delivery-workflow.md](../_shared/delivery-workflow.md) — думаем → уточняем → планируем → делаем.
+
+**Неясность:** [clarify-first.md](../_shared/clarify-first.md) — STOP и вопрос до implement; не угадывать.
+
+**Границы:** [skill-responsibility-matrix.md](../_shared/skill-responsibility-matrix.md) — **primary** только в колонке «Когда primary»; иначе satellite или другой primary.
+
+
 # Spec-Driven Development
 
 ## Прочитай сначала (ТВОЙ ХОД)
 
-Из **корня репо** (см. `catalog.yaml` → `spec-driven-development.context`):
-
 - [`docs/DOCUMENTATION_SYSTEM.md`](../../../docs/DOCUMENTATION_SYSTEM.md)
 - [`docs/foundation/SPEC_PRODUCT.md`](../../../docs/foundation/SPEC_PRODUCT.md)
-- [`docs/vision/ideas/`](../../../docs/vision/ideas/)
-- [`docs/decisions/`](../../../docs/decisions/)
+
+## Читай при условии (`catalog.yaml` → `read_if`)
+
+| Когда | Файлы |
+|-------|--------|
+| сырая idea / vision | [`docs/vision/ideas/`](../../../docs/vision/ideas/) — **конкретный** `.md`, не весь каталог |
+| граница домена / ADR | [`docs/decisions/`](../../../docs/decisions/) — релевантные ADR |
+| расширение фичи | matching [`docs/specs/features/SPEC_*.md`](../../../docs/specs/features/) |
 
 **Куда писать:** `docs/specs/features/`. **Дальше:** `planning-and-task-breakdown`, при API — `api-and-interface-design`, при экономике/победе — `game-economy-and-victory`.
 
@@ -32,6 +47,8 @@ Write a structured specification before writing any code. The spec is the shared
 - The task would take more than 30 minutes to implement
 
 **When NOT to use:** Single-line fixes, typo corrections, or changes where requirements are unambiguous and self-contained.
+
+**When NOT primary:** мелкий фикс с ясным scope → **incremental-implementation**; YAML события → **create-event**; реализация без нового контракта → **incremental-implementation**.
 
 ## The Gated Workflow
 

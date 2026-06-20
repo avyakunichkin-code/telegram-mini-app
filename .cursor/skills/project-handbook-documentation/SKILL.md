@@ -11,6 +11,17 @@ user-invocable: true
 allowed-tools: Read, Glob, Grep, Write
 ---
 
+## Стандарт качества и вызов
+
+**Release-ready:** [release-ready-quality.md](../_shared/release-ready-quality.md) — готовность к merge, не набросок; **допустимо больше токенов** на чтение spec/кода, анализ и self-review перед verdict.
+
+**Workflow:** [delivery-workflow.md](../_shared/delivery-workflow.md) — думаем → уточняем → планируем → делаем.
+
+**Неясность:** [clarify-first.md](../_shared/clarify-first.md) — STOP и вопрос до implement; не угадывать.
+
+**Границы:** [skill-responsibility-matrix.md](../_shared/skill-responsibility-matrix.md) — **primary** только в колонке «Когда primary»; иначе satellite или другой primary.
+
+
 # Project Handbook Documentation
 
 ## Прочитай сначала (ТВОЙ ХОД)
@@ -26,7 +37,7 @@ allowed-tools: Read, Glob, Grep, Write
 **Куда писать:** `docs/handbook/`, `docs/handbook/roles/`, `docs/handbook/internal/` (формулы, team-only).  
 **Не писать сюда:** `docs/specs/features/` (контракты фич), `docs/decisions/` (ADR — скилл `documentation-and-adrs`).  
 **Satellite:** `documentation-and-adrs` при архитектурном решении; `spec-driven-development` если handbook выявил пробел в spec.  
-**Дальше:** плейтест → обновить `PRE_ALPHA_PLAYTEST_PROTOCOL`; релиз → `release-tma`.
+**Дальше:** плейтест → обновить `PRE_ALPHA_PLAYTEST_PROTOCOL`; релиз → **`release-web`**.
 
 ---
 
@@ -60,6 +71,8 @@ allowed-tools: Read, Glob, Grep, Write
 - Новая фича с API/поведением → `spec-driven-development` + код
 - Только ADR «почему PostgreSQL» → `documentation-and-adrs`
 - Правка одной строки в spec без смены narrative → spec напрямую
+
+**When NOT primary:** контракт/API/spec фичи → **spec-driven-development**; ADR границы доменов → **documentation-and-adrs**.
 
 ---
 

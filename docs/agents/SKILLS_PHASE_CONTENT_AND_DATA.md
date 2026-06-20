@@ -87,6 +87,8 @@ aliases:
 
 Канон событий: [ADR-008](../decisions/ADR-008-events-catalog-single-source.md), [EVENTS_AGENT.md](EVENTS_AGENT.md).
 
+**Release-ready (все product-скиллы):** [release-ready-quality.md](../../.cursor/skills/_shared/release-ready-quality.md) · [clarify-first.md](../../.cursor/skills/_shared/clarify-first.md) · [delivery-workflow.md](../../.cursor/skills/_shared/delivery-workflow.md) · [visual-assets-policy.md](../../.cursor/skills/_shared/visual-assets-policy.md) · [skill-responsibility-matrix.md](../../.cursor/skills/_shared/skill-responsibility-matrix.md). Аудит: [SKILLS_QUALITY_AUDIT_2026-06-20.md](SKILLS_QUALITY_AUDIT_2026-06-20.md).
+
 ---
 
 ## Core / support / deferred (сводка)
@@ -163,7 +165,7 @@ Subagents после крупного diff: **economy-reviewer**, **mqx-ui-revie
 
 | Скилл | Триггер |
 |-------|---------|
-| release-tma | Регулярные выкатки в prod |
+| release-web | Регулярные выкатки в prod (PWA/web smoke) |
 | browser-testing-with-devtools | Стабилизация TMA UX |
 | performance-optimization | Жалобы на LCP/рендер |
 | security-and-hardening | Внешний аудит / auth |

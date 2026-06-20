@@ -6,16 +6,31 @@ user-invocable: true
 allowed-tools: Read, Glob, Grep, Write, Shell
 ---
 
+## Стандарт качества и вызов
+
+**Release-ready:** [release-ready-quality.md](../_shared/release-ready-quality.md) — готовность к merge, не набросок; **допустимо больше токенов** на чтение spec/кода, анализ и self-review перед verdict.
+
+**Workflow:** [delivery-workflow.md](../_shared/delivery-workflow.md) — думаем → уточняем → планируем → делаем.
+
+**Неясность:** [clarify-first.md](../_shared/clarify-first.md) — STOP и вопрос до implement; не угадывать.
+
+**Границы:** [skill-responsibility-matrix.md](../_shared/skill-responsibility-matrix.md) — **primary** только в колонке «Когда primary»; иначе satellite или другой primary.
+
+
 # Incremental Implementation
 
 ## Прочитай сначала (ТВОЙ ХОД)
 
 - [`CLAUDE.md`](../../../CLAUDE.md)
-- [`docs/specs/features/`](../../../docs/specs/features/)
-- [`docs/plans/`](../../../docs/plans/)
-- [`docs/tasks/`](../../../docs/tasks/)
 - [`backend/app/README.md`](../../../backend/app/README.md)
 - [`frontend-react/ARCHITECTURE.md`](../../../frontend-react/ARCHITECTURE.md)
+
+## Читай при условии (`catalog.yaml` → `read_if`)
+
+| Когда | Файлы |
+|-------|--------|
+| task names spec / feature | [`docs/specs/features/`](../../../docs/specs/features/) — **только** релевантный `SPEC_*.md` |
+| slicing from plan / MQ-* | [`docs/plans/`](../../../docs/plans/) · [`docs/tasks/`](../../../docs/tasks/) |
 
 **Куда писать:** `backend/`, `frontend-react/`. **Дальше:** `critical-test-scenarios`, `test-driven-development`, `code-review-and-quality`.
 
@@ -31,6 +46,8 @@ Build in thin vertical slices — implement one piece, test it, verify it, then 
 - Any time you're tempted to write more than ~100 lines before testing
 
 **When NOT to use:** Single-file, single-function changes where the scope is already minimal.
+
+**When NOT primary:** новый контракт без spec → **spec-driven-development**; YAML события → **create-event**; `period.py` / victory → **game-economy-and-victory**; pre-merge review → **code-review-and-quality**.
 
 ## The Increment Cycle
 

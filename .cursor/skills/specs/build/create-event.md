@@ -22,7 +22,7 @@
 
 ### Assertions
 
-- [ ] Отдельный key; не variants[].
+- [ ] Отдельный `definition_key` на карточку; **не** массив `variants[]` — один key = одна запись в `events:` (см. §Модель, «Генерация пары»).
 - [ ] profile + audience all — отклоняется / не предлагается.
 - [ ] audience = фильтр; universal pair = два key + два audience.
 - [ ] Каждый choice: needs+ ⇒ cash− или burn или needs− (event-balance-rules §1).

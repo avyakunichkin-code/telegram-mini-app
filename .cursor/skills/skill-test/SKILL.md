@@ -244,6 +244,7 @@ node .cursor/skills/skill-test/_context-check.mjs
 | `context:` в catalog | active/optional без блока | archived без context — OK |
 | «Прочитай сначала» | нет у `status: active` | нет у optional |
 | `must_read` | путь не в SKILL (включая basename для `.mdc`) | только вне блока «Прочитай» |
+| `read_if` | путь не в SKILL | только вне «Читай при условии»; нет секции при `read_if` в catalog |
 | `writes_to` / `next_skill` | — | не упомянуты в SKILL |
 | `SKILL_DOC_MAP.md` | нет pipeline-скилла или catalog | — |
 | Пути на диске | — | `must_read` не существует |
@@ -260,10 +261,43 @@ node .cursor/skills/skill-test/_context-check.mjs
 
 ## Phase 2D: Category Mode — Rubric Evaluation
 
+### Step 1 — Run script (из корня репо)
+
+```bash
+node .cursor/skills/skill-test/_category-check.mjs
+```
+
+Для одного скилла: отфильтруй вывод по имени. Heuristic WARN-only по `category:` из [`.cursor/skills/catalog.yaml`](../catalog.yaml) и [`.cursor/skills/quality-rubric.md`](../quality-rubric.md).
+
+### Step 2 — Что проверяется
+
+| Category | Heuristics |
+|----------|------------|
+| `api` | contract-first, backward compatibility |
+| `build` | incrementality, verification hook |
+| `define` | acceptance criteria, gate language |
+| `review` | read-only, severity levels |
+| `verify` | evidence-based, safety language |
+| `ship` | docs/release handoff |
+| `meta` | repo conventions refs |
+
+Exit code `0` (WARN не блокирует merge). CI: [`.github/workflows/skills-check.yml`](../../../.github/workflows/skills-check.yml).
+
+### Step 3 — Offer to Update Catalog
+
+«Могу обновить `catalog.yaml` (`last_category`, `last_category_result`) для [name]?»
+
+---
+
+## Phase 2D (legacy prose) — Category Rubric Evaluation
+
+<details>
+<summary>Ручная оценка через spec (редко)</summary>
+
 ### Step 1 — Locate Skill and Category
 
-Find skill at `.claude/skills/[name]/SKILL.md`.
-Look up `category:` field in `CCGS Skill Testing Framework/catalog.yaml`.
+Find skill at `.cursor/skills/[name]/SKILL.md`.
+Look up `category:` field in `.cursor/skills/catalog.yaml`.
 
 If skill not found: "Skill '[name]' not found."
 If no `category:` field: "No category assigned for '[name]' in catalog.yaml.
@@ -311,6 +345,8 @@ Fix: Add TD-PHASE-GATE, PR-PHASE-GATE, and AD-PHASE-GATE to the full-mode direct
 
 "May I update `CCGS Skill Testing Framework/catalog.yaml` to record this category check
 (`last_category`, `last_category_result`) for [name]?"
+
+</details>
 
 ---
 

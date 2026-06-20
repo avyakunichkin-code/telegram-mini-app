@@ -15,7 +15,7 @@
 
 1. Сначала `tier` из `catalog.yaml` / `SKILLS_PHASE_CONTENT_AND_DATA.md`.
 2. Дерево: `spec-driven-development` → `api-and-interface-design` → `incremental-implementation` → `frontend-ui-engineering` (все `tier: core`).
-3. Не ставит `social-changelog-posts` / `release-tma` primary без запроса (`tier: deferred`).
+3. Не ставит `social-changelog-posts` / `release-web` primary без запроса (`tier: deferred`).
 4. Указывает satellites (например `test-driven-development`).
 5. **Verdict: COMPLETE** со списком скиллов по порядку.
 

@@ -14,6 +14,7 @@ aliases:
 - [ADR-004: разблокировка механик по цепочке целей](ADR-004-mechanics-unlock-victory-chain.md) (accepted)
 - [ADR-005: потребности персонажа, decay, поражение при нуле](ADR-005-character-needs-state-and-defeat.md) (accepted)
 - [ADR-006: «Порадовать себя» — выбор варианта, MVP ≥1 опция, кулдаун 15](ADR-006-treat-self-options-and-cooldown.md) (accepted)
+- [ADR-012: primary channels — PWA и web; TMA вторичный](ADR-012-primary-channels-pwa-web-over-tma.md) (accepted)
 
 Шаблон: [`../templates/ADR.md`](../templates/ADR.md)
 

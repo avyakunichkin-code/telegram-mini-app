@@ -10,31 +10,51 @@ user-invocable: true
 allowed-tools: Read, Glob, Grep, Write, Shell
 ---
 
+## Стандарт качества и вызов
+
+**Release-ready:** [release-ready-quality.md](../_shared/release-ready-quality.md) — готовность к merge, не набросок; **допустимо больше токенов** на чтение spec/кода, анализ и self-review перед verdict.
+
+**Workflow:** [delivery-workflow.md](../_shared/delivery-workflow.md) — думаем → уточняем → планируем → делаем.
+
+**Неясность:** [clarify-first.md](../_shared/clarify-first.md) — STOP и вопрос до implement; не угадывать.
+
+**Границы:** [skill-responsibility-matrix.md](../_shared/skill-responsibility-matrix.md) — **primary** только в колонке «Когда primary»; иначе satellite или другой primary.
+
+
 # Create Event (/create-event)
 
 Помощник **авторинга** событий ТВОЙ ХОД. Вызывай: **`/create-event`**, «создать событие», «informational для цепочки», «global для студента».
 
 **Не путать с:** **`/event-analysis`** (read-only обзор) · `game-economy-and-victory` (движок слотов) · `economy-reviewer` (ревью diff).
 
+**When NOT primary:** обзор каталога без YAML → **`/event-analysis`**; `period.py` / victory → **`game-economy-and-victory`**.
+
+**Release-ready YAML:** brief заполнен; balance §1–4; §10/§11 при lifecycle; `pytest -k event` зелёный; не сдавать «пример карточки» без `definition_key` и effects.
+
 > **2026-05-30:** канон типов — [`SPEC_event-system-v2-slots-and-taxonomy.md`](../../../docs/specs/features/SPEC_event-system-v2-slots-and-taxonomy.md). **EVT1-020 (taxonomy колонки + фильтр пула `period_choice`/audience)** — в prod. **EVT1-030 (multi-slot: informational / needs_risk / global_macro)** — отдельная задача; новые поля в YAML закладываем заранее.
 
 ## Прочитай сначала
 
+- [`.cursor/skills/_shared/game-lexicon.md`](../_shared/game-lexicon.md) — save_kind, event_tier, границы скиллов
 - [`SPEC_event-system-v2-slots-and-taxonomy.md`](../../../docs/specs/features/SPEC_event-system-v2-slots-and-taxonomy.md) — **content_class, event_slot, audience, needs_risk, global**
 - [`docs/handbook/EVENTS_TERMS_RU.md`](../../../docs/handbook/EVENTS_TERMS_RU.md) — «переводчик» для команды
 - [`.cursor/skills/create-event/persona-profiles.md`](persona-profiles.md) — Студент / Профессионал, burn, needs
 - [`docs/templates/EVENT_BRIEF.md`](../../../docs/templates/EVENT_BRIEF.md)
-- [`data/events/mvp11/`](../../../data/events/mvp11/) — канон YAML
+- [`data/events/mvp11/catalog.yaml`](../../../data/events/mvp11/catalog.yaml)
 - [`data/events/README.md`](../../../data/events/README.md)
-- [`docs/specs/features/SPEC_mvp-11-progression-events.md`](../../../docs/specs/features/SPEC_mvp-11-progression-events.md) — tier, pool (legacy 2 choice)
-- [`docs/vision/ideas/event-engagement-anti-fatigue.md`](../../../docs/vision/ideas/event-engagement-anti-fatigue.md)
-- [`docs/vision/ideas/event-repeat-and-state-ladder.md`](../../../docs/vision/ideas/event-repeat-and-state-ladder.md) — повтор, cooldown, лестница жилья/тарифа
-- [`docs/vision/ideas/event-types-and-taxonomy.md`](../../../docs/vision/ideas/event-types-and-taxonomy.md)
 - [`backend/app/events/constants.py`](../../../backend/app/events/constants.py) — `ALLOWED_EFFECT_KEYS`
-- [`backend/app/events/choice_impacts.py`](../../../backend/app/events/choice_impacts.py) — burn preview
 - [`.cursor/skills/create-event/event-balance-rules.md`](event-balance-rules.md) — **trade-off, Pareto, lifecycle §10, оси needs §11, MCE §12**
-- [`docs/vision/ideas/event-choice-balance-tradeoffs.md`](../../../docs/vision/ideas/event-choice-balance-tradeoffs.md) — продуктовое обоснование
-- **Эталон цепочки-«Истории»:** [`event-briefs/mq11_freelance_project_chain.md`](../../../docs/vision/ideas/event-briefs/mq11_freelance_project_chain.md) · `chains/freelance_project.yaml`
+
+## Читай при условии (`catalog.yaml` → `read_if`)
+
+| Когда | Файлы |
+|-------|--------|
+| progression / event_tier / pool | [`SPEC_mvp-11-progression-events.md`](../../../docs/specs/features/SPEC_mvp-11-progression-events.md) |
+| anti-fatigue / repeat tuning | [`event-engagement-anti-fatigue.md`](../../../docs/vision/ideas/event-engagement-anti-fatigue.md) |
+| housing / state ladder / §10 | [`event-repeat-and-state-ladder.md`](../../../docs/vision/ideas/event-repeat-and-state-ladder.md) |
+| trade-off framing | [`event-choice-balance-tradeoffs.md`](../../../docs/vision/ideas/event-choice-balance-tradeoffs.md) |
+| clone chain / эталон | [`mq11_freelance_project_chain.md`](../../../docs/vision/ideas/event-briefs/mq11_freelance_project_chain.md) · [`chains/freelance_project.yaml`](../../../data/events/mvp11/chains/freelance_project.yaml) |
+| burn preview | [`choice_impacts.py`](../../../backend/app/events/choice_impacts.py) |
 
 **Satellites:** `test-driven-development` (pytest); **после новой цепочки 3+ шагов** — **`/event-analysis`** (scope `chains` или `key` + §10/§11); перед merge всего каталога — scope **all**; UI informational → `design-lab-mqx`.
 
@@ -79,6 +99,7 @@ allowed-tools: Read, Glob, Grep, Write, Shell
 **Инварианты:**
 
 - Одна запись = **один** `content_class` (не «профильное + по машине»; v2+ combo — позже).
+- **Не** `variants[]` в YAML — отдельный `definition_key` на каждый вариант текста/аудитории (см. «Генерация пары»).
 - **`profile` + `audience: ["all"]`** — **ошибка автора**; валидатор EVT1 отклонит.
 - **Не путать:** `audience` = **кому показывать** (фильтр), не «стилистика». Два текста под студента/про при одной механике → **две** записи `universal` с разным `audience`, не `profile`.
 

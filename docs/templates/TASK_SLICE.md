@@ -7,6 +7,8 @@ skill: incremental-implementation
 satellites:
   - test-driven-development
   - critical-test-scenarios
+read_if_when:
+  - "progression / event_tier / pool"
 next_skill: critical-test-scenarios
 spec: ../specs/features/SPEC_<slug>.md
 plan: ../plans/PLAN_<slug>.md
@@ -26,6 +28,7 @@ aliases:
 - **Satellites:** `test-driven-development`, `critical-test-scenarios` — открыть в **той же** сессии до «done» (см. `.cursor/rules/tvoy-hod-router.mdc` → Primary + satellites)
 - **Next skill:** `critical-test-scenarios` — закрыть min gate G1–G4; затем `code-review-and-quality`
 - **Spec:** `specs/features/SPEC_<slug>.md` §…
+- **Read if:** **`read_if_when`** — список `when` из `catalog.yaml` → `read_if` для **primary skill**; открыть **только** matching paths (не всю папку spec). Справка: `node .cursor/skills/skill-test/_resolve-read-if.mjs <skill>`
 - **Acceptance:** …
 - **Critical scenarios:** CS-1 …, CS-2 … (skill `/critical-tests`, gate G1–G4)
 - **Verify:** `pytest …` / `npm run test:unit` / ручной сценарий из spec
@@ -47,6 +50,6 @@ aliases:
 | Нарезка epic из spec | `support` | `planning-and-task-breakdown` | — |
 | Ревью перед merge | `support` | `code-review-and-quality` | — |
 | ADR: кто владеет полем API | `support` | `documentation-and-adrs` | `spec-driven-development` |
-| Pre-release checklist | `deferred` | `release-tma` | `code-review-and-quality` |
+| Pre-release checklist | `deferred` | `release-web` | `code-review-and-quality` |
 
 `tier: deferred` в задаче — только если пользователь явно просит (release, perf, TMA runtime, …).

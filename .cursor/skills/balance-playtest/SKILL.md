@@ -9,6 +9,17 @@ user-invocable: true
 allowed-tools: Read, Glob, Grep, Shell
 ---
 
+## Стандарт качества и вызов
+
+**Release-ready:** [release-ready-quality.md](../_shared/release-ready-quality.md) — готовность к merge, не набросок; **допустимо больше токенов** на чтение spec/кода, анализ и self-review перед verdict.
+
+**Workflow:** [delivery-workflow.md](../_shared/delivery-workflow.md) — думаем → уточняем → планируем → делаем.
+
+**Неясность:** [clarify-first.md](../_shared/clarify-first.md) — STOP и вопрос до implement; не угадывать.
+
+**Границы:** [skill-responsibility-matrix.md](../_shared/skill-responsibility-matrix.md) — **primary** только в колонке «Когда primary»; иначе satellite или другой primary.
+
+
 # Balance playtest (/balance-playtest)
 
 **Количественная** проверка баланса: детерминированный бот, JSON, diff к baseline.
@@ -27,6 +38,10 @@ allowed-tools: Read, Glob, Grep, Shell
 **Evidence-based:** вердикт только по JSON-отчёту, `balance_diff` и exit code — не «на глаз»; воспроизведение через `balance_playtest.py` / manifest.
 
 **Safety:** не merge по балансу при флаге REGRESSION; обновление baseline — только по явному согласию; не трактовать сдвиг метрик как «лучше» без продукта; при риске ложного PASS — **security** gate через pytest + `economy-reviewer`.
+
+**When NOT primary:** нет смены economy/events/seeds; чистый CSS; authoring одного события без sim.
+
+**Release-ready:** verdict только с JSON + diff artifact; REGRESSION → **FAIL**, не «можно merge».
 
 ## Прочитай сначала
 

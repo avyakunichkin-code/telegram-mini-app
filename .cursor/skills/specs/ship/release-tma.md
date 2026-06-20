@@ -1,19 +1,7 @@
-# Skill Test Spec: /release-tma
+# Skill Test Spec: /release-tma (deprecated)
 
-**Skill:** `.cursor/skills/release-tma/SKILL.md`  
-**Category:** ship · **Priority:** medium
+**Status:** archived alias of **`release-web`**.
 
----
+**Use:** [`.cursor/skills/specs/ship/release-web.md`](release-web.md)
 
-## Test Case 1: Happy Path — «готов к релизу»
-
-### Expected behavior
-
-1. Запускает или перечисляет `check:guardrails` и `design-lab:build`.
-2. Упоминает pytest если был backend diff.
-3. **Verdict: READY** или **BLOCKED** с командами.
-
-### Assertions
-
-- [ ] Не коммитит без явной просьбы.
-- [ ] Ссылается на `tvoy-hod-release-guardrails.mdc`.
+**Skill:** `.cursor/skills/release-tma/SKILL.md` redirects to `release-web/SKILL.md`.

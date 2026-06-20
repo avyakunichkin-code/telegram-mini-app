@@ -14,7 +14,7 @@ aliases:
 Структура **вариант A** (слои зрелости): [`DOCUMENTATION_SYSTEM.md`](DOCUMENTATION_SYSTEM.md)  
 Шаблоны: [`templates/`](templates/) · Трассировка эпиков: [`TRACEABILITY.md`](TRACEABILITY.md)
 
-Технический онбординг: [`../CLAUDE.md`](../CLAUDE.md)
+Технический онбординг: [`../CLAUDE.md`](../CLAUDE.md) · **AI агент:** [`agents/AI_ONBOARDING.md`](agents/AI_ONBOARDING.md)
 
 ---
 

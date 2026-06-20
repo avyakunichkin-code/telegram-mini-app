@@ -11,6 +11,13 @@ user-invocable: false
 allowed-tools: Read, Glob, Grep
 ---
 
+## Стандарт качества и вызов
+
+**Meta-скилл:** не product delivery. Для кода/spec/UI — доменный скилл + [release-ready-quality.md](../_shared/release-ready-quality.md).
+
+**Workflow:** [delivery-workflow.md](../_shared/delivery-workflow.md) · **Уточнение:** [clarify-first.md](../_shared/clarify-first.md).
+
+
 
 # Расположение Agent Skills в этом проекте
 

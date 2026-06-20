@@ -24,8 +24,8 @@
 ### Assertions
 
 - [ ] Явная отсылка к DESIGN_WORKFLOW (не только «сделай красиво»).
-- [ ] Не добавляет `href="../"` в lab HTML.
-- [ ] «Прочитай сначала» содержит SPEC_FRONTEND_UI, UI_CONSISTENCY_AUDIT, ARCHITECTURE.
+- [ ] Lab HTML: только `./` пути — primary **design-lab-mqx** (шаг 1); FE skill не правит lab без satellite.
+- [ ] `must_read`: DESIGN_WORKFLOW, SPEC_FRONTEND_UI, ARCHITECTURE, CLAUDE; `UI_CONSISTENCY_AUDIT` — **read_if** `UI consistency / parity` (не грузить без задачи audit).
 - [ ] Капитал / Z-NEEDS ★: не новый визуал в prod без lab; не откатывать к v5 needs / finance-аккордеонам.
 - [ ] Analytics ⚠: не новый визуал в prod без lab (волна C хвост).
 - [ ] Не внедряет D1–D12 из DESIGN_IMPROVEMENTS_BACKLOG без spec.
@@ -58,8 +58,9 @@
 
 ### Expected behavior
 
-1. «Прочитай сначала»: DESIGN_WORKFLOW, SPEC_FRONTEND_UI, ARCHITECTURE, CLAUDE.
-2. **Дальше:** `design-lab-mqx`, `browser-testing-with-devtools`, `code-review-and-quality`.
+1. «Прочитай сначала»: DESIGN_WORKFLOW, SPEC_FRONTEND_UI, ARCHITECTURE, CLAUDE (+ game-lexicon, BRANDBOOK — catalog must_read).
+2. **read_if:** UI_CONSISTENCY_AUDIT при parity/audit; screen UX по `when`.
+3. **Дальше:** `design-lab-mqx`, `browser-testing-with-devtools`, `code-review-and-quality`.
 
 ### Assertions
 

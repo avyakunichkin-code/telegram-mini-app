@@ -1,0 +1,49 @@
+# Agent skills: contract (G1–G6) + catalog ↔ SKILL.md parity (must_read / read_if).
+name: Agent skills check
+
+on:
+  pull_request:
+    paths:
+      - '.cursor/skills/**'
+      - '.cursor/rules/**'
+      - '.cursor/hooks/**'
+      - 'docs/agents/**'
+      - 'docs/templates/TASK_SLICE.md'
+      - 'docs/templates/PLAN_FEATURE.md'
+      - '.github/workflows/skills-check.yml'
+  push:
+    branches: [main]
+    paths:
+      - '.cursor/skills/**'
+      - '.cursor/rules/**'
+      - '.cursor/hooks/**'
+      - 'docs/agents/**'
+      - 'docs/templates/TASK_SLICE.md'
+      - 'docs/templates/PLAN_FEATURE.md'
+      - '.github/workflows/skills-check.yml'
+
+concurrency:
+  group: skills-check-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  skills:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Static skill contract check
+        run: node .cursor/skills/skill-test/_static-check.mjs
+
+      - name: Skill context parity check
+        run: node .cursor/skills/skill-test/_context-check.mjs
+
+      - name: Skill category rubric check
+        run: node .cursor/skills/skill-test/_category-check.mjs
+
+      - name: Archived skills frontmatter check
+        run: node .cursor/skills/skill-test/_archived-check.mjs

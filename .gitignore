@@ -68,6 +68,7 @@ coverage/
 !.cursor/skills/**
 !.cursor/hooks/
 !.cursor/hooks/**
+.cursor/hooks/.hint-throttle.json
 !.cursor/hooks.json
 !.cursor/agents/
 !.cursor/agents/**

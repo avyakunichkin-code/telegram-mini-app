@@ -1,8 +1,8 @@
 ---
 layer: vision
 status: draft
-last_reviewed: 2026-05-26
-drivers: TMA lifecycle, screen lock, resume
+last_reviewed: 2026-06-20
+drivers: TMA lifecycle, screen lock, resume, ADR-012 primary channel
 tags:
   - tvoy-hod/layer/idea
   - tvoy-hod/layer/vision
@@ -22,11 +22,13 @@ aliases:
 
 **Корневая причина (2026-05, до PW1-001):** клиент **не делал resync** при `visibilitychange`. **TB1 (2026-05-26):** локальный секундомер и auto-next сняты; период не тикает по времени — при resume важны **overview/bootstrap**, а не `seconds_until_next_period`. Фаза 0: `appLifecycle.js` + `refreshGameState()` в `useGame.js`.
 
-PWA **не заменяет** TMA как основной канал дистрибуции, но даёт:
+PWA — **primary channel** доставки (с web-браузером), см. [ADR-012](../../decisions/ADR-012-primary-channels-pwa-web-over-tma.md) и [`SPEC_PRODUCT.md`](../../foundation/SPEC_PRODUCT.md) §1.1. Даёт:
 
-1. **Установку на домашний экран** — игра в отдельном окне, меньше конфликтов с жизненным циклом чата.
+1. **Установку на домашний экран** — игра в отдельном окне, меньше конфликтов с жизненным циклом чата Telegram.
 2. **Более предсказуемый lifecycle** в Chrome/Safari standalone (всё ещё нужен resync — см. фазу 0 плана).
-3. **Запасной вход** при сбоях TMA: тот же аккаунт JWT, тот же API.
+3. **Основной вход** для пользователей вне Telegram / при блокировках; тот же аккаунт JWT, тот же API.
+
+**TMA** остаётся **secondary**: опциональная регрессия при правках WebApp shell, не единственный release gate (`release-web`).
 
 ## Цели
 
@@ -60,5 +62,7 @@ PWA **не заменяет** TMA как основной канал дистр�
 
 ## Решение по приоритету
 
-**Сначала** фаза 0 (resync lifecycle) — улучшает **и TMA, и будущую PWA**.  
+**Primary (2026-06):** PWA + web — продуктовый и QA фокус ([ADR-012](../../decisions/ADR-012-primary-channels-pwa-web-over-tma.md)).
+
+**Сначала** фаза 0 (resync lifecycle) — улучшает **PWA, web и TMA**.  
 **Затем** фаза 1 (manifest + service worker + иконки).

@@ -11,6 +11,8 @@
   - если `allowed-tools` содержит `Write`/`Edit`, в теле есть ask-before-write («May I write»/«Могу записать»/эквивалент).
   - если скилл read-only, явно сказано, что он не пишет в репо.
 - **G4 — Handoff**: в конце есть «Следующий шаг» (или эквивалент) со ссылкой на следующий скилл/путь.
+- **G5 — Release-ready bar**: ссылка на `_shared/release-ready-quality.md` или эквивалентный блок; запрет «COMPLETE» для набросков/TODO без явного draft-only; self-review перед verdict.
+- **G6 — Clarify & workflow**: ссылка на `_shared/clarify-first.md` и `_shared/delivery-workflow.md` (или эквивалент STOP/уточнение до implement); для UI/marketing — `_shared/visual-assets-policy.md` или явная политика ассетов.
 
 ## Категории
 

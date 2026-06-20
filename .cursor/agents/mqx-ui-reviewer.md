@@ -119,4 +119,4 @@ When **CONCERNS** (canon follow-up), list exact files to update: `design-lab/<th
 - npm run check:guardrails
 ```
 
-End: **merge по UI: да/нет** + next skill (`design-lab-mqx`, `frontend-ui-engineering`, `release-tma`).
+End: **merge по UI: да/нет** + next skill (`design-lab-mqx`, `frontend-ui-engineering`, `release-web`).

@@ -154,7 +154,7 @@ flowchart TB
 
 | Канал | Роль в CA |
 |-------|-----------|
-| TMA | Основной привлечение (после TG1) |
-| PWA / mobile browser | Телефон вне TG |
-| **WD1 wide** | Desktop и широкий браузер — **целевой UX этой идеи** |
+| **PWA / mobile browser** | **Primary** — телефон, install, JWT |
+| **Web (desktop + mobile)** | **Primary** — браузер; wide layout — DW1 |
+| TMA | **Secondary** — поддержка, опциональная регрессия |
 | Лендинг | Номинальный; прямая ссылка на игру достаточна |

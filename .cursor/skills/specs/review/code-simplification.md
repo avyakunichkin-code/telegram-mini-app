@@ -1,34 +1,12 @@
 # Skill Test Spec: /code-simplification
 
 **Skill:** `.cursor/skills/code-simplification/SKILL.md`  
-**Category:** review · **Priority:** medium
+**Category:** build · **Priority:** medium
 
-> Stub: расширить по [`templates/skill-test-spec.md`](../templates/skill-test-spec.md) перед строгим `/skill-test spec code-simplification`.
-
----
-
-## Test Case 1: Smoke — invoke skill
-
-### Fixture
-
-- Skill и spec зарегистрированы в `catalog.yaml`.
-- Пользователь вызывает `/code-simplification` с аргументом из `argument-hint`.
-
-### Expected behavior
-
-1. Агент читает SKILL.md и следует Overview / When to Use.
-2. Завершает с явным **Verdict** (PASS / FAIL / CONCERNS / COMPLETE / APPROVED).
-
-### Assertions
-
-- [ ] `name` в frontmatter совпадает с каталогом.
-- [ ] Есть блок «Следующий шаг» или эквивалентный handoff.
+> **Smoke stub** — общий протокол: [`SMOKE_STUB.md`](../_shared/SMOKE_STUB.md). Расширить секцией ниже перед строгим `/skill-test spec code-simplification`.
 
 ---
 
-## Protocol Compliance
+## Skill-specific fixtures
 
-- [ ] Ask-before-write / «Могу записать» если `allowed-tools` содержит Write.
-- [ ] Read-only скиллы не пишут в репо без явной просьбы.
-- [ ] Не auto-commit / auto-push.
-
+_(none — добавь Test Case 2+ и domain assertions перед strict spec test)_

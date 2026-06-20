@@ -27,7 +27,7 @@ handbook (люди)        project-handbook-documentation  →  docs/handbook/
         ↓
 ADR / sync             documentation-and-adrs  →  docs/decisions/, DOC_SYNC_LOG
         ↓
-release (optional)     release-tma
+release (optional)     release-web
 ```
 
 ## События (контент)
@@ -85,7 +85,7 @@ design-lab/<theme>/    design-lab-mqx  →  mqx/ + prod   frontend-ui-engineerin
 | `define` | `idea-refine`, `spec-driven-development`, `api-and-interface-design` | `planning-and-task-breakdown` | `context-engineering` |
 | `build` | `incremental-implementation`, `create-event`, `event-analysis`, `game-economy-and-victory`, `design-lab-mqx`, `frontend-ui-engineering`, `test-driven-development`, `critical-test-scenarios` | — | `code-simplification` |
 | `verify` | `critical-test-scenarios`, `test-driven-development` | `code-review-and-quality` | `browser-testing-with-devtools`, `doubt-driven-development`, `performance-optimization`, `security-and-hardening`, `telegram-mini-app-runtime` |
-| `ship` | — | `project-handbook-documentation`, `documentation-and-adrs` | `deprecation-and-migration`, `social-changelog-posts`, `release-tma` |
+| `ship` | — | `project-handbook-documentation`, `documentation-and-adrs` | `deprecation-and-migration`, `social-changelog-posts`, **`release-web`** (`release-tma` → alias) |
 
 **Satellites** — в YAML/frontmatter задачи (`satellites:`), не отдельный `tier`. Пример: `game-economy-and-victory` + `doubt-driven-development`.
 
@@ -95,7 +95,7 @@ design-lab/<theme>/    design-lab-mqx  →  mqx/ + prod   frontend-ui-engineerin
 
 | Задача | Скилл | Читать |
 |--------|-------|--------|
-| Какой скилл выбрать | `using-agent-skills` | `CURSOR_SKILLS.md`, `catalog.yaml`, [`SKILLS_AUDIT_2026-06-01.md`](SKILLS_AUDIT_2026-06-01.md) |
+| Какой скилл выбрать | `using-agent-skills` | `CURSOR_SKILLS.md`, `catalog.yaml`, [`SKILLS_QUALITY_AUDIT_2026-06-20.md`](SKILLS_QUALITY_AUDIT_2026-06-20.md) |
 | Rules vs skills | `context-engineering` | `DOCUMENTATION_SYSTEM.md` |
 | Линт скиллов | `skill-test` | `catalog.yaml`, `quality-rubric.md` |
 

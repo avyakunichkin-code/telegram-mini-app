@@ -6,13 +6,29 @@ user-invocable: true
 allowed-tools: Read, Glob, Grep, AskUserQuestion
 ---
 
+## Стандарт качества и вызов
+
+**Release-ready:** [release-ready-quality.md](../_shared/release-ready-quality.md) — готовность к merge, не набросок; **допустимо больше токенов** на чтение spec/кода, анализ и self-review перед verdict.
+
+**Workflow:** [delivery-workflow.md](../_shared/delivery-workflow.md) — думаем → уточняем → планируем → делаем.
+
+**Неясность:** [clarify-first.md](../_shared/clarify-first.md) — STOP и вопрос до implement; не угадывать.
+
+**Границы:** [skill-responsibility-matrix.md](../_shared/skill-responsibility-matrix.md) — **primary** только в колонке «Когда primary»; иначе satellite или другой primary.
+
+
 # Code Review and Quality
 
 ## Прочитай сначала (ТВОЙ ХОД)
 
 - [`CLAUDE.md`](../../../CLAUDE.md)
-- [`docs/specs/features/`](../../../docs/specs/features/) — по области изменения
 - [`docs/foundation/SPEC_PRODUCT.md`](../../../docs/foundation/SPEC_PRODUCT.md)
+
+## Читай при условии (`catalog.yaml` → `read_if`)
+
+| Когда | Файлы |
+|-------|--------|
+| review touches feature contract | [`docs/specs/features/`](../../../docs/specs/features/) — matching `SPEC_*.md` по diff |
 
 **Куда писать:** никуда (только ревью). **Дальше:** правки через `incremental-implementation`.
 
@@ -29,6 +45,10 @@ Multi-dimensional code review with quality gates. Every change gets reviewed bef
 - When another agent or model produced code you need to evaluate
 - When refactoring existing code
 - After any bug fix (review both the fix and the regression test)
+
+**When NOT primary:** authoring фичи — **incremental-implementation**; read-only catalog — **event-analysis**.
+
+**Release-ready bar for merge:** blocking issues = FAIL; approve only if diff meets [`release-ready-quality.md`](../_shared/release-ready-quality.md) (tests, контракт, границы скилла автора).
 
 ## The Five-Axis Review
 

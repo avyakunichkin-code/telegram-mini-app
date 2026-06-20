@@ -5,7 +5,19 @@ description: >-
   Use when editing backend/migrations/*.sql, models.py, app/seeds/, ensure_schema in main.py, or regenerating 0000_schema_baseline.sql.
 argument-hint: "[baseline | migration | seed | review]"
 user-invocable: true
+allowed-tools: Read, Glob, Grep, Write, Shell
 ---
+
+## Стандарт качества и вызов
+
+**Release-ready:** [release-ready-quality.md](../_shared/release-ready-quality.md) — готовность к merge, не набросок; **допустимо больше токенов** на чтение spec/кода, анализ и self-review перед verdict.
+
+**Workflow:** [delivery-workflow.md](../_shared/delivery-workflow.md) — думаем → уточняем → планируем → делаем.
+
+**Неясность:** [clarify-first.md](../_shared/clarify-first.md) — STOP и вопрос до implement; не угадывать.
+
+**Границы:** [skill-responsibility-matrix.md](../_shared/skill-responsibility-matrix.md) — **primary** только в колонке «Когда primary»; иначе satellite или другой primary.
+
 
 # DB Baselines and Migrations (PostgreSQL)
 
@@ -16,8 +28,9 @@ user-invocable: true
 - [`backend/app/seeds/runner.py`](../../../backend/app/seeds/runner.py) — что наполняется на старте API
 - [`backend/scripts/dump_schema_baseline.py`](../../../backend/scripts/dump_schema_baseline.py) — перегенерация baseline
 
-**Куда писать:** `backend/migrations/`, `backend/app/seeds/`, при колонках без ORM — `ensure_schema_compatibility()` в `main.py`.  
-**Satellites:** `test-driven-development`; при смене контракта/каталога — `documentation-and-adrs`, `game-economy-and-victory` (цели победы).
+**Куда писать:** `backend/migrations/`, `backend/app/seeds/`, `backend/scripts/`, [`backend/main.py`](../../../backend/main.py) (`ensure_schema_compatibility`).  
+**Satellites:** `test-driven-development`; при смене контракта/каталога — `documentation-and-adrs`, `game-economy-and-victory` (цели победы).  
+**Дальше:** `test-driven-development`, `game-economy-and-victory`, `code-review-and-quality`, `documentation-and-adrs` (см. `catalog.yaml` → `next_skill`).
 
 ## Три слоя (не смешивать)
 
@@ -28,6 +41,8 @@ user-invocable: true
 | **Runtime patch** | `main.py` `ensure_schema_compatibility()` | Только лёгкие `ADD COLUMN` для уже существующих prod-БД без полного migrate |
 
 **Контент событий** — только `data/events/mvp11/*.yaml` → `ensure_mvp11_event_catalog` (не SQL, не baseline). См. ADR-008.
+
+**When NOT primary:** authoring YAML → **create-event**; логика периода без DDL → **game-economy-and-victory**.
 
 ## Термины
 
@@ -148,6 +163,10 @@ bash .cursor/skills/db-baselines-and-migrations/scripts/validate_baseline.sh bac
 
 - [reference.md](reference.md) — expand/contract, data-migration, non-ORM checklist
 
+## Согласование изменений
+
+Перед записью SQL, seeds или правок `main.py`: **Могу записать эти изменения?** — если пользователь не дал явное «делай» / «запиши».
+
 ## Verification
 
 - [ ] Пустая БД: `bootstrap` или migrate + startup без `UndefinedTable`
@@ -155,3 +174,7 @@ bash .cursor/skills/db-baselines-and-migrations/scripts/validate_baseline.sh bac
 - [ ] Инкременты идемпотентны там, где заявлено
 
 **Verdict:** PASS | FAIL | CONCERNS | COMPLETE
+
+## Следующий шаг
+
+После DDL/seeds — `test-driven-development`; при `victory_goals` — `game-economy-and-victory`; перед merge — `code-review-and-quality`; новая граница домена — `documentation-and-adrs`.

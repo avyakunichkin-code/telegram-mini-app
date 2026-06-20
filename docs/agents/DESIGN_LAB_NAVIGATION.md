@@ -62,7 +62,7 @@ cd frontend-react
 npm run design-lab:build
 ```
 
-Перед релизом: `release-tma` / `tvoy-hod-release-guardrails.mdc`.
+Перед релизом: `release-web` / `tvoy-hod-release-guardrails.mdc`.
 
 ---
 

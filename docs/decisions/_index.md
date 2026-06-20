@@ -21,6 +21,7 @@ aliases:
 | [[docs/decisions/ADR-007-backend-domain-packages|ADR-007]] | Backend domain packages |
 | [[docs/decisions/ADR-008-events-catalog-single-source|ADR-008]] | Events catalog YAML |
 | [[docs/decisions/ADR-010-liability-asset-insurance-graph|ADR-010]] | Liability/asset graph |
+| [[docs/decisions/ADR-012-primary-channels-pwa-web-over-tma|ADR-012]] | Primary channels: PWA + web; TMA secondary |
 
 Шаблон нового ADR: [[docs/templates/ADR|ADR template]].
 

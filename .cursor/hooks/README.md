@@ -9,4 +9,4 @@
 
 Требуется `node` в PATH. После правок `hooks.json` перезагрузите hooks в Cursor (или перезапустите IDE).
 
-Перед релизом вручную или через skill **`release-tma`**: guardrails + `design-lab:build` — см. `tvoy-hod-release-guardrails.mdc`.
+Перед релизом вручную или через skill **`release-web`**: guardrails + `design-lab:build` + PWA/web smoke — см. `tvoy-hod-release-guardrails.mdc`.

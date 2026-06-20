@@ -6,6 +6,17 @@ user-invocable: true
 allowed-tools: Read, Glob, Grep, Write, Shell
 ---
 
+## Стандарт качества и вызов
+
+**Release-ready:** [release-ready-quality.md](../_shared/release-ready-quality.md) — готовность к merge, не набросок; **допустимо больше токенов** на чтение spec/кода, анализ и self-review перед verdict.
+
+**Workflow:** [delivery-workflow.md](../_shared/delivery-workflow.md) — думаем → уточняем → планируем → делаем.
+
+**Неясность:** [clarify-first.md](../_shared/clarify-first.md) — STOP и вопрос до implement; не угадывать.
+
+**Границы:** [skill-responsibility-matrix.md](../_shared/skill-responsibility-matrix.md) — **primary** только в колонке «Когда primary»; иначе satellite или другой primary.
+
+
 # Test-Driven Development
 
 ## Прочитай сначала (ТВОЙ ХОД)
@@ -32,6 +43,8 @@ Write a failing test before writing the code that makes it pass. For bug fixes, 
 - Any change that could break existing behavior
 
 **When NOT to use:** Pure configuration changes, documentation updates, or static content changes that have no behavioral impact.
+
+**When NOT primary:** read-only обзор каталога → **event-analysis**; полный срез фичи → **incremental-implementation** (TDD как satellite).
 
 **Related:** For browser-based changes, combine TDD with runtime verification using Chrome DevTools MCP — see the Browser Testing section below.
 

@@ -9,19 +9,37 @@ user-invocable: true
 allowed-tools: Read, Glob, Grep, Write, Shell
 ---
 
+## Стандарт качества и вызов
+
+**Release-ready:** [release-ready-quality.md](../_shared/release-ready-quality.md) — готовность к merge, не набросок; **допустимо больше токенов** на чтение spec/кода, анализ и self-review перед verdict.
+
+**Workflow:** [delivery-workflow.md](../_shared/delivery-workflow.md) — думаем → уточняем → планируем → делаем.
+
+**Неясность:** [clarify-first.md](../_shared/clarify-first.md) — STOP и вопрос до implement; не угадывать.
+
+**Границы:** [skill-responsibility-matrix.md](../_shared/skill-responsibility-matrix.md) — **primary** только в колонке «Когда primary»; иначе satellite или другой primary.
+
+
 # Game Economy and Victory
 
 ## Прочитай сначала (ТВОЙ ХОД)
 
+- [`.cursor/skills/_shared/game-lexicon.md`](../_shared/game-lexicon.md) — канон периода, победы, save_kind
 - [`CLAUDE.md`](../../../CLAUDE.md)
 - [`docs/specs/features/SPEC_victory-v2.md`](../../../docs/specs/features/SPEC_victory-v2.md)
 - [`docs/decisions/ADR-002-victory-engine-and-template-config.md`](../../../docs/decisions/ADR-002-victory-engine-and-template-config.md)
 - [`docs/decisions/ADR-004-mechanics-unlock-victory-chain.md`](../../../docs/decisions/ADR-004-mechanics-unlock-victory-chain.md)
-- [`docs/vision/ideas/game-balance-thresholds-and-constraints.md`](../../../docs/vision/ideas/game-balance-thresholds-and-constraints.md)
 - [`backend/app/game/period.py`](../../../backend/app/game/period.py)
 - [`backend/app/victory/engine.py`](../../../backend/app/victory/engine.py)
-- [`backend/app/finance/overview_build.py`](../../../backend/app/finance/overview_build.py)
-- [`docs/balance/README.md`](../../../docs/balance/README.md) — playtest после смены формул/порогов
+
+## Читай при условии (`catalog.yaml` → `read_if`)
+
+| Когда | Файлы |
+|-------|--------|
+| balance thresholds / defeat | [`game-balance-thresholds-and-constraints.md`](../../../docs/vision/ideas/game-balance-thresholds-and-constraints.md) |
+| overview / victory UI contract | [`overview_build.py`](../../../backend/app/finance/overview_build.py) |
+| post-formula balance sim | [`docs/balance/README.md`](../../../docs/balance/README.md) |
+| formula consistency / DL1 | [`DL1_MATH_CONSISTENCY_REVIEW.md`](../../../docs/specs/economy/DL1_MATH_CONSISTENCY_REVIEW.md) |
 
 **Satellites (та же задача):** `test-driven-development`, `doubt-driven-development`, **`balance-playtest`** (крупный баланс / seeds / period), **`db-baselines-and-migrations`** (если меняется `victory_goals` / DDL шаблонов).
 
@@ -44,6 +62,14 @@ Legacy MVP-AND («3× подушка + просрочка + cashflow») — **т
 - Баланс порогов (поражение, gate периода 7+)
 
 **When NOT to use:** чисто визуальный UI без смены правил — `frontend-ui-engineering` / `design-lab-mqx`.
+
+**When NOT primary:** narrative/YAML карточки → **create-event**; чистый MQX без economy → **frontend-ui-engineering**; read-only каталог → **event-analysis**.
+
+### 5. Release-ready gate (перед verdict)
+
+- Прогон `pytest` по затронутой области; при seeds/формулах — **`balance-playtest`** satellite.
+- Self-review: [`release-ready-quality.md`](../_shared/release-ready-quality.md) + doubt pass §4.
+- **COMPLETE** только если тесты зелёные и поведение согласовано с SPEC/ADR; иначе **CONCERNS** / **FAIL**.
 
 ## Procedure
 

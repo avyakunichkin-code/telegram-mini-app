@@ -6,6 +6,19 @@ user-invocable: true
 allowed-tools: Read, Glob, Grep, Write, Shell
 ---
 
+## Стандарт качества и вызов
+
+**Release-ready:** [release-ready-quality.md](../_shared/release-ready-quality.md) — готовность к merge, не набросок; **допустимо больше токенов** на чтение spec/кода, анализ и self-review перед verdict.
+
+**Workflow:** [delivery-workflow.md](../_shared/delivery-workflow.md) — думаем → уточняем → планируем → делаем.
+
+**Неясность:** [clarify-first.md](../_shared/clarify-first.md) — STOP и вопрос до implement; не угадывать.
+
+**Границы:** [skill-responsibility-matrix.md](../_shared/skill-responsibility-matrix.md) — **primary** только в колонке «Когда primary»; иначе satellite или другой primary.
+
+**Визуал:** [visual-assets-policy.md](../_shared/visual-assets-policy.md) — согласовать формат → сгенерировать → в репо; без временных заглушек.
+
+
 
 # Design-lab MQX
 
@@ -13,12 +26,19 @@ allowed-tools: Read, Glob, Grep, Write, Shell
 
 - [`frontend-react/src/components/mqx/DESIGN_WORKFLOW.md`](../../../frontend-react/src/components/mqx/DESIGN_WORKFLOW.md)
 - [`docs/specs/SPEC_FRONTEND_UI.md`](../../../docs/specs/SPEC_FRONTEND_UI.md)
-- [`docs/specs/UI_CONSISTENCY_AUDIT.md`](../../../docs/specs/UI_CONSISTENCY_AUDIT.md) — что ★ / ⚠ / 📋 lab
-- [`docs/vision/ideas/mqx-ui-unification.md`](../../../docs/vision/ideas/mqx-ui-unification.md) — волны A/B/C
-- [`design-lab/dashboard/APPROVED.md`](../../../design-lab/dashboard/APPROVED.md) (и `APPROVED.md` **темы раунда**, если есть)
+- **[`docs/agents/DESIGN_LAB_NAVIGATION.md`](../../../docs/agents/DESIGN_LAB_NAVIGATION.md)** — хаб vs round vs parity vs `#/dev/mqx`
 - [`.cursor/rules/tvoy-hod-design-lab.mdc`](../../../.cursor/rules/tvoy-hod-design-lab.mdc), [`.cursor/rules/tvoy-hod-canon-sync.mdc`](../../../.cursor/rules/tvoy-hod-canon-sync.mdc)
-- **[`docs/agents/DESIGN_LAB_NAVIGATION.md`](../../../docs/agents/DESIGN_LAB_NAVIGATION.md)** — хаб vs round vs parity vs `#/dev/mqx` (**прочитать при сомнении «куда смотреть»**)
-- Отложенные идеи без spec: [`docs/agents/DESIGN_IMPROVEMENTS_BACKLOG.md`](../../../docs/agents/DESIGN_IMPROVEMENTS_BACKLOG.md)
+
+## Читай при условии (`catalog.yaml` → `read_if`)
+
+| Когда | Файлы |
+|-------|--------|
+| parity / ★ audit | [`UI_CONSISTENCY_AUDIT.md`](../../../docs/specs/UI_CONSISTENCY_AUDIT.md) |
+| wave C / unification | [`mqx-ui-unification.md`](../../../docs/vision/ideas/mqx-ui-unification.md) |
+| dashboard theme | [`design-lab/dashboard/APPROVED.md`](../../../design-lab/dashboard/APPROVED.md) |
+| capital lab | [`details-actions-round/README.md`](../../../design-lab/capital-page/details-actions-round/README.md) |
+| needs dashboard lab | [`dashboard-needs-v7-round/VARIANTS.md`](../../../design-lab/character-needs/dashboard-needs-v7-round/VARIANTS.md) |
+| ideas без spec | [`DESIGN_IMPROVEMENTS_BACKLOG.md`](../../../docs/agents/DESIGN_IMPROVEMENTS_BACKLOG.md) |
 
 **Куда писать:** `design-lab/<тема>/`. **Дальше:** `frontend-ui-engineering`.
 
@@ -41,6 +61,10 @@ allowed-tools: Read, Glob, Grep, Write, Shell
 - Пользователь видит «голый» HTML без стилей в lab
 - Перед сдачей макета на утверждение
 - **Перед prod-кодом**, если другой скилл (frontend-ui-engineering, frontend-design) собирается менять UX в `*Premium.jsx` / `mqx/` — **сначала этот скилл**, lab, утверждение
+
+**When NOT primary:** правка prod `*Premium.jsx` без смены макета (hotfix) → **frontend-ui-engineering**; backend/events → другие скиллы.
+
+**Release-ready lab:** макет готов к review только после `sync-lab`, `design-lab:check-rounds`, видимый хаб; verdict **APPROVED** — только после явного «утверждаем» пользователя (не COMPLETE для prod). Растровые ассеты в round — по [`visual-assets-policy.md`](../_shared/visual-assets-policy.md) (формат согласовать до `GenerateImage`).
 
 Полный продуктовый цикл: [`frontend-react/src/components/mqx/DESIGN_WORKFLOW.md`](../../../frontend-react/src/components/mqx/DESIGN_WORKFLOW.md).
 

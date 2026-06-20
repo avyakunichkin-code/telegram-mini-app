@@ -10,6 +10,17 @@ user-invocable: true
 allowed-tools: Read, Glob, Grep, Write, Shell
 ---
 
+## Стандарт качества и вызов
+
+**Release-ready:** [release-ready-quality.md](../_shared/release-ready-quality.md) — готовность к merge, не набросок; **допустимо больше токенов** на чтение spec/кода, анализ и self-review перед verdict.
+
+**Workflow:** [delivery-workflow.md](../_shared/delivery-workflow.md) — думаем → уточняем → планируем → делаем.
+
+**Неясность:** [clarify-first.md](../_shared/clarify-first.md) — STOP и вопрос до implement; не угадывать.
+
+**Границы:** [skill-responsibility-matrix.md](../_shared/skill-responsibility-matrix.md) — **primary** только в колонке «Когда primary»; иначе satellite или другой primary.
+
+
 # Critical Test Scenarios
 
 ## Прочитай сначала (ТВОЙ ХОД)
@@ -43,6 +54,8 @@ allowed-tools: Read, Glob, Grep, Write, Shell
 - После canon-sync lab → prod (MQX) — contract-тесты display/serialize
 
 **When NOT to use:** чисто косметический CSS без смены контракта; docs-only; rename без поведения.
+
+**When NOT primary:** authoring фичи → **incremental-implementation**; обзор YAML → **event-analysis**.
 
 ## Минимальный gate (Definition of Done)
 

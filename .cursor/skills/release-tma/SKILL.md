@@ -1,77 +1,46 @@
 ---
 name: release-tma
 description: >-
-  Pre-release checklist for Telegram Mini App — guardrails, design-lab parity,
-  and doc sync. Use before merge to release branch, deploy, or when user says
-  ready to ship or PR.
-argument-hint: "[release or PR readiness]"
+  DEPRECATED — use release-web. Pre-release checklist alias for backward
+  compatibility with /release-tma invocations.
+argument-hint: "[deprecated — use /release-web]"
 user-invocable: true
-allowed-tools: Read, Glob, Grep, Shell
+allowed-tools: Read
 ---
 
-# Release TMA (ТВОЙ ХОД)
+## Стандарт качества и вызов
 
-## Прочитай сначала (ТВОЙ ХОД)
+**Release-ready:** см. [release-ready-quality.md](../_shared/release-ready-quality.md) через **`release-web`**.
 
-- [`.cursor/rules/tvoy-hod-release-guardrails.mdc`](../../rules/tvoy-hod-release-guardrails.mdc)
-- [`.cursor/rules/tvoy-hod-canon-sync.mdc`](../../rules/tvoy-hod-canon-sync.mdc)
-- [`docs/foundation/DOC_SYNC_LOG.md`](../../../docs/foundation/DOC_SYNC_LOG.md)
+**Workflow:** [delivery-workflow.md](../_shared/delivery-workflow.md).
 
-**Дальше:** `code-review-and-quality` (см. `catalog.yaml` → `next_skill`).
+# release-tma (deprecated)
 
-**Куда писать:** по умолчанию только чтение — отчёт в чат. **May I write** / **Могу записать** правки в репо (`DOC_SYNC_LOG`, код, baseline) — только после явного согласования пользователя.
+> **С 2026-06-20** primary channels = **PWA + web** ([ADR-012](../../../docs/decisions/ADR-012-primary-channels-pwa-web-over-tma.md)).  
+> Используй **`release-web`** — тот же gate + PWA/web smoke; TMA — optional subsection.
+
+## Прочитай сначала
+
+- [`.cursor/skills/release-web/SKILL.md`](../release-web/SKILL.md) — **единственная процедура**
+
+**Дальше:** выполни **`release-web`**; не дублируй checklist здесь.
 
 ## Checklist
 
-### 1. Guardrails (из `frontend-react/`)
+1. Открой и выполни **`release-web`** целиком.
+2. В отчёте укажи: «вызван deprecated `/release-tma` → применён `release-web`».
 
-```bash
-npm run check:guardrails
-```
-
-### 2. Design-lab parity
-
-```bash
-npm run design-lab:build
-```
-
-### 3. Backend (если менялся `backend/` в ветке)
-
-```bash
-cd backend && python -m pytest -q
-```
-
-### 4. Canon sync (если в ветке был утверждённый UI)
-
-- `design-lab/<theme>/APPROVED.md` актуален
-- prod parity round соответствует prod
-
-### 4b. Design QA (ручной, если менялся `frontend-react/` UI)
-
-См. также `frontend-ui-engineering` → Definition of Done.
-
-| # | Проверка |
-|---|----------|
-| Q1 | **320px** и **~390px** — нет обрезания таббара / hero |
-| Q2 | **Тёмная тема** Telegram — нет «белого острова» на MQX-карточках |
-| Q3 | Игра: **4 вкладки** + события + закрытие периода (smoke) |
-| Q4 | `#/dev/mqx` — новые компоненты в каталоге (если не hotfix) |
-| Q5 | **Капитал:** Details \| Actions, hero «Капитал», нет legacy-аккордеонов без lab |
-| Q6 | **Z-NEEDS:** help sheet грузит `sections[]`; e2e3 affordance; treat-self сердце |
-
-### 5. Docs (если менялось поведение)
-
-- `DOC_SYNC_LOG.md` или ADR при необходимости
+Не дублируй checklist здесь.
 
 ## Verdict
 
-**READY** / **BLOCKED** / **CONCERNS** — с перечислением упавших команд.
+Наследуется от **`release-web`**: READY / BLOCKED / CONCERNS.
 
 ## Согласование
 
-Этот скилл **не пишет** в репо по умолчанию — только отчёт. Если чеклист требует правок, спроси: **Могу записать исправления в репо?**
+Этот alias **не пишет** в репо — только отчёт через **`release-web`**. **Могу записать** — только после явного согласования (как в `release-web`).
 
 ## Следующий шаг
 
+- [`release-web`](../release-web/SKILL.md)
 - [`code-review-and-quality`](../code-review-and-quality/SKILL.md)
-- [`documentation-and-adrs`](../documentation-and-adrs/SKILL.md)

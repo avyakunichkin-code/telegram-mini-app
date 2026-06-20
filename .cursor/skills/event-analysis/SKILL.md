@@ -9,6 +9,17 @@ user-invocable: true
 allowed-tools: Read, Glob, Grep, Shell
 ---
 
+## Стандарт качества и вызов
+
+**Release-ready:** [release-ready-quality.md](../_shared/release-ready-quality.md) — готовность к merge, не набросок; **допустимо больше токенов** на чтение spec/кода, анализ и self-review перед verdict.
+
+**Workflow:** [delivery-workflow.md](../_shared/delivery-workflow.md) — думаем → уточняем → планируем → делаем.
+
+**Неясность:** [clarify-first.md](../_shared/clarify-first.md) — STOP и вопрос до implement; не угадывать.
+
+**Границы:** [skill-responsibility-matrix.md](../_shared/skill-responsibility-matrix.md) — **primary** только в колонке «Когда primary»; иначе satellite или другой primary.
+
+
 # Event Analysis (/event-analysis)
 
 **Read-only** обзор каталога. Вызов: **`/event-analysis`**, «пробелы по content_class», «хватает ли informational», «global для студента».
@@ -23,6 +34,10 @@ allowed-tools: Read, Glob, Grep, Shell
 
 **Мантра:** *Create пишет YAML · Analyze читает YAML · Reviewer судит diff.*
 
+**When NOT primary:** писать/менять YAML → **`/create-event`**; engine/period → **`game-economy-and-victory`**.
+
+**Release-ready отчёт:** evidence по файлам каталога; §10/§11 при scope all/housing; verdict **GAPS** / **CONCERNS** — не «COMPLETE prod» (read-only).
+
 > **Канон типов (2026-05-30):** [`SPEC_event-system-v2-slots-and-taxonomy.md`](../../../docs/specs/features/SPEC_event-system-v2-slots-and-taxonomy.md), [`EVENTS_TERMS_RU.md`](../../../docs/handbook/EVENTS_TERMS_RU.md). Поля в YAML могут **опережать** prod loader — отмечай **authoring vs engine**.
 
 ## Прочитай сначала
@@ -32,16 +47,19 @@ allowed-tools: Read, Glob, Grep, Shell
 - [`data/events/README.md`](../../../data/events/README.md)
 - [`data/events/mvp11/catalog.yaml`](../../../data/events/mvp11/catalog.yaml)
 - [`.cursor/skills/create-event/persona-profiles.md`](../create-event/persona-profiles.md)
-- [`docs/specs/features/SPEC_mvp-11-progression-events.md`](../../../docs/specs/features/SPEC_mvp-11-progression-events.md)
-- [`docs/vision/ideas/game-balance-thresholds-and-constraints.md`](../../../docs/vision/ideas/game-balance-thresholds-and-constraints.md)
-- [`docs/vision/ideas/event-engagement-anti-fatigue.md`](../../../docs/vision/ideas/event-engagement-anti-fatigue.md)
-- [`docs/vision/ideas/event-repeat-and-state-ladder.md`](../../../docs/vision/ideas/event-repeat-and-state-ladder.md)
 - [`docs/templates/EVENT_CATALOG_ANALYSIS.md`](../../../docs/templates/EVENT_CATALOG_ANALYSIS.md)
 - [ADR-008](../../../docs/decisions/ADR-008-events-catalog-single-source.md)
-- [`docs/backlog/PRODUCT_BACKLOG.md`](../../../docs/backlog/PRODUCT_BACKLOG.md) — эпик **EVT1**
 - [`.cursor/skills/create-event/event-balance-rules.md`](../create-event/event-balance-rules.md) — **аудит trade-off**
-- [`docs/vision/ideas/event-choice-balance-tradeoffs.md`](../../../docs/vision/ideas/event-choice-balance-tradeoffs.md)
-- **Эталон цепочки:** [`mq11_freelance_project_chain.md`](../../../docs/vision/ideas/event-briefs/mq11_freelance_project_chain.md) · [`chains/freelance_project.yaml`](../../../data/events/mvp11/chains/freelance_project.yaml)
+
+## Читай при условии (`catalog.yaml` → `read_if`)
+
+| Когда | Файлы |
+|-------|--------|
+| progression / tier gaps | [`SPEC_mvp-11-progression-events.md`](../../../docs/specs/features/SPEC_mvp-11-progression-events.md) |
+| balance thresholds | [`game-balance-thresholds-and-constraints.md`](../../../docs/vision/ideas/game-balance-thresholds-and-constraints.md) |
+| trade-off / repeat / fatigue | [`event-choice-balance-tradeoffs.md`](../../../docs/vision/ideas/event-choice-balance-tradeoffs.md) · [`event-repeat-and-state-ladder.md`](../../../docs/vision/ideas/event-repeat-and-state-ladder.md) · [`event-engagement-anti-fatigue.md`](../../../docs/vision/ideas/event-engagement-anti-fatigue.md) |
+| EVT1 backlog | [`PRODUCT_BACKLOG.md`](../../../docs/backlog/PRODUCT_BACKLOG.md) |
+| chain parity | [`mq11_freelance_project_chain.md`](../../../docs/vision/ideas/event-briefs/mq11_freelance_project_chain.md) · [`freelance_project.yaml`](../../../data/events/mvp11/chains/freelance_project.yaml) |
 
 **Куда писать:** `docs/vision/analysis/` (сохранение отчёта — только по запросу).
 

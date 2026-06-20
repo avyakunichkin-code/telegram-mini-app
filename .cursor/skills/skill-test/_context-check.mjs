@@ -71,7 +71,23 @@ function parseCatalog(text) {
     return /^\s{4}context:\s*$/m.test(skillBlock(name));
   }
 
-  return { names, scalar, list, hasContext, skillBlock };
+  function readIfList(name) {
+    const block = skillBlock(name);
+    const m = block.match(
+      /^\s{6}read_if:\s*\r?\n([\s\S]*?)(?=^\s{6}[a-z_]+:\s*$|^\s{4}[a-z_]+:\s*$)/m,
+    );
+    if (!m) return [];
+    const chunk = m[1];
+    const paths = [];
+    for (const part of chunk.split(/^\s{8}- when:/m).filter((s) => s.trim())) {
+      for (const pm of part.matchAll(/^\s{12}- (.+)$/gm)) {
+        paths.push(pm[1].trim().replace(/^["']|["']$/g, ''));
+      }
+    }
+    return paths;
+  }
+
+  return { names, scalar, list, hasContext, skillBlock, readIfList };
 }
 
 function normalizePath(p) {
@@ -100,6 +116,14 @@ function extractPathsFromText(text) {
 
 function pochitaySection(body) {
   const idx = body.indexOf(POCHITAY);
+  if (idx < 0) return '';
+  const tail = body.slice(idx);
+  const end = tail.search(/\n## (?!#)/);
+  return end > 0 ? tail.slice(0, end) : tail;
+}
+
+function readIfSection(body) {
+  const idx = body.indexOf('Читай при условии');
   if (idx < 0) return '';
   const tail = body.slice(idx);
   const end = tail.search(/\n## (?!#)/);
@@ -138,7 +162,7 @@ function skillMdPath(name, status) {
 }
 
 const catalogText = stripBom(fs.readFileSync(CATALOG_PATH, 'utf8'));
-const { names, scalar, list, hasContext } = parseCatalog(catalogText);
+const { names, scalar, list, hasContext, readIfList } = parseCatalog(catalogText);
 const repoRoot = process.cwd();
 
 const mapIssues = [];
@@ -169,6 +193,7 @@ for (const name of names) {
   }
 
   const mustRead = list(name, 'must_read');
+  const readIf = readIfList(name);
   const writesTo = list(name, 'writes_to');
   const nextSkill = list(name, 'next_skill');
 
@@ -182,12 +207,18 @@ for (const name of names) {
   const body = parseFrontmatter(stripBom(fs.readFileSync(skillPath, 'utf8'))).body;
   const pochitay = pochitaySection(body);
   const pochitayPaths = extractPathsFromText(pochitay);
+  const readIfSec = readIfSection(body);
+  const readIfSecPaths = extractPathsFromText(readIfSec);
   const bodyPaths = extractPathsFromText(body);
 
   if (status === 'active') {
     if (!pochitay) fails.push('SKILL.md: missing «Прочитай сначала» section');
   } else if (status === 'optional' && !pochitay) {
     warns.push('SKILL.md: no «Прочитай сначала» (recommended for optional)');
+  }
+
+  if (readIf.length > 0 && !readIfSec) {
+    warns.push('catalog: read_if present but SKILL missing «Читай при условии»');
   }
 
   for (const p of mustRead) {
@@ -198,6 +229,21 @@ for (const name of names) {
     }
     if (!pathExists(repoRoot, p)) {
       warns.push(`must_read path missing on disk: ${p}`);
+    }
+  }
+
+  for (const p of readIf) {
+    const covered =
+      pathCovered(p, readIfSecPaths, '') ||
+      pathCovered(p, pochitayPaths, '') ||
+      pathCovered(p, bodyPaths, body);
+    if (!covered) {
+      fails.push(`read_if not in SKILL: ${p}`);
+    } else if (readIfSec && !pathCovered(p, readIfSecPaths, '')) {
+      warns.push(`read_if only outside «Читай при условии»: ${p}`);
+    }
+    if (!pathExists(repoRoot, p)) {
+      warns.push(`read_if path missing on disk: ${p}`);
     }
   }
 
@@ -216,7 +262,7 @@ for (const name of names) {
   if (
     nextSkill.length > 0 &&
     pochitay &&
-    !/Дальше|next_skill|Следующий/i.test(pochitay)
+    !/Дальше|next_skill|Следующий/i.test(pochitay + readIfSec)
   ) {
     warns.push('«Прочитай»: no «Дальше» / next_skill handoff line');
   }

@@ -107,7 +107,7 @@ aliases:
 | **design-lab-mqx** | Обновлён: `details-actions-round` → `sync-lab.sh`; capital v2 в prod |
 | **design-lab-mqx** (checklist) | Для capital-round — `sync-lab.sh`, не только `.ps1` |
 | **social-changelog-posts** | Без изменений процедуры; этот текст — **внутренний**, не пост в канал |
-| **release-tma / canon-sync** | При релизе: parity finance-page, smoke по чеклисту выше |
+| **release-web / canon-sync** | При релизе: parity finance-page, PWA/web smoke по чеклисту выше |
 | **incremental-implementation** | Без правок — общий процесс |
 | **mqx-ui-unification** (idea) | Частично закрыт этап C для Finance; Analytics — по-прежнему ⚠ |
 

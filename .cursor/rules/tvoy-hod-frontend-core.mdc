@@ -58,3 +58,12 @@ export function Block({ overview }) {
 ## Сборка
 
 После изменений: `cd frontend-react && npm run build`.
+
+## React perf (slim; полный гайд — по запросу)
+
+Стек: **Vite + React**, backend FastAPI — не Next.js/RSC.
+
+- Параллельные независимые fetch (`Promise.all`); sync guard до `await`.
+- Lazy `import()` для тяжёлых экранов; без barrel-import иконок.
+- Derived state в render; side effects — в handlers; не вкладывать компоненты.
+- Полный Vercel-гайд: `frontend-react/.agents/skills/react-best-practices/AGENTS.full.md` или skill **performance-optimization** (deferred).

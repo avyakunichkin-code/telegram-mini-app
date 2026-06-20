@@ -6,15 +6,33 @@ user-invocable: true
 allowed-tools: Read, Glob, Grep, Write, AskUserQuestion
 ---
 
+## Стандарт качества и вызов
+
+**Release-ready:** [release-ready-quality.md](../_shared/release-ready-quality.md) — готовность к merge, не набросок; **допустимо больше токенов** на чтение spec/кода, анализ и self-review перед verdict.
+
+**Workflow:** [delivery-workflow.md](../_shared/delivery-workflow.md) — думаем → уточняем → планируем → делаем.
+
+**Неясность:** [clarify-first.md](../_shared/clarify-first.md) — STOP и вопрос до implement; не угадывать.
+
+**Границы:** [skill-responsibility-matrix.md](../_shared/skill-responsibility-matrix.md) — **primary** только в колонке «Когда primary»; иначе satellite или другой primary.
+
+
 # API and Interface Design
 
 ## Прочитай сначала (ТВОЙ ХОД)
 
+- [`.cursor/skills/_shared/game-lexicon.md`](../_shared/game-lexicon.md) — overview, period, victory контракт
 - [`CLAUDE.md`](../../../CLAUDE.md)
-- [`docs/DOCUMENTATION_SYSTEM.md`](../../../docs/DOCUMENTATION_SYSTEM.md)
 - [`backend/app/README.md`](../../../backend/app/README.md)
-- [`backend/app/services/README.md`](../../../backend/app/services/README.md)
 - [`frontend-react/src/api.js`](../../../frontend-react/src/api.js)
+
+## Читай при условии (`catalog.yaml` → `read_if`)
+
+| Когда | Файлы |
+|-------|--------|
+| router / services pattern | [`backend/app/services/README.md`](../../../backend/app/services/README.md) |
+| docs pipeline | [`docs/DOCUMENTATION_SYSTEM.md`](../../../docs/DOCUMENTATION_SYSTEM.md) |
+| есть feature spec | matching [`docs/specs/features/SPEC_*.md`](../../../docs/specs/features/) |
 
 **Куда писать:** `backend/app/routers/`, `backend/app/schemas.py`, `frontend-react/src/api/`, при необходимости `docs/specs/features/`. **Дальше:** `incremental-implementation`, `documentation-and-adrs`.
 
@@ -29,6 +47,10 @@ Design stable, well-documented interfaces that are hard to misuse. Good interfac
 - Creating component prop interfaces
 - Establishing database schema that informs API shape
 - Changing existing public interfaces
+
+**When NOT primary:** только YAML события → **create-event**; только CSS → **frontend-ui-engineering**; typo без контракта → **incremental-implementation**.
+
+**Release-ready контракт:** OpenAPI-level ясность (поля, ошибки, backward compat); sync `schemas.py` + `api.js` + critical test; self-review [`release-ready-quality.md`](../_shared/release-ready-quality.md).
 
 ## Core Principles
 
