@@ -143,7 +143,10 @@ export function FinancePremium({
     setBuyingPlanKey(plan.plan_key);
     try {
       await API.buyPolicy(payload);
-      showNotification('Полис оформлен', 'success');
+      showNotification(
+        `Полис оформлен · премия ${Math.round(Number(plan?.monthly_premium) || 0).toLocaleString('ru-RU')} ₽`,
+        'success',
+      );
       await refreshOverview();
       await reloadExtra();
       setOpenSheet(null);

@@ -102,6 +102,22 @@ class TestSerializeInstanceContract:
         assert "effects_json" not in by_id[choice_insured.id]
         assert "insurance_claim" not in by_id[choice_cash.id]
 
+    def test_insurance_choice_not_added_after_mid_event_policy_purchase(self, db_session, test_user):
+        profile, instance, choice_insured, choice_cash = _event_with_choices(
+            db_session, user_id=test_user.id
+        )
+
+        rows_before = serialize_instance_rows(db_session, [instance], profile=profile)
+        ids_before = {c["id"] for c in rows_before[0]["choices"]}
+        assert choice_insured.id not in ids_before
+        assert choice_cash.id in ids_before
+
+        create_auto_liability_policy(db_session, profile.id)
+
+        rows_after = serialize_instance_rows(db_session, [instance], profile=profile)
+        ids_after = {c["id"] for c in rows_after[0]["choices"]}
+        assert ids_after == ids_before
+
     def test_consumption_domain_defaults_when_metadata_missing(self, db_session, test_user):
         profile = create_game_profile(db_session, user_id=test_user.id)
         definition = EventDefinition(

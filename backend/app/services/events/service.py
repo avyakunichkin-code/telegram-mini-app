@@ -36,7 +36,13 @@ from ...models import (
 )
 from ...timeutil import utc_now_naive
 from ...finance.expenses import add_expense_line_from_event
-from ...events.insurance_hooks import apply_insurance_claim_from_effects, find_policy_for_claim
+from ...events.insurance_hooks import apply_insurance_claim_from_effects
+from ...events.choice_snapshot import (
+    attach_event_instance_choice_snapshot,
+    choice_available_for_profile,
+    ensure_event_instance_choice_snapshot,
+    parse_choice_snapshot,
+)
 from ...events.chains import (
     CHAIN_FOLLOWUP_EXCLUDE_FROM_RANDOM_POOL,
     FREELANCE_EPILOGUE_DEFINITION_KEYS,
@@ -402,28 +408,6 @@ def _definition_prerequisites_met(d: EventDefinition, ctx: EventProfileContext) 
     return event_prerequisites_met(prereq, ctx)
 
 
-def _choice_available_for_profile(db: Session, profile: GameProfile, effects: dict) -> bool:
-    claim = effects.get("insurance_claim")
-    if not isinstance(claim, dict):
-        return True
-    kind = (claim.get("kind") or "").strip() or None
-    product = (claim.get("product") or "").strip() or None
-    insured_object = (claim.get("insured_object") or "").strip() or None
-    policy_id = claim.get("policy_id")
-    pid = int(policy_id) if policy_id is not None else None
-    return (
-        find_policy_for_claim(
-            db,
-            profile.id,
-            kind=kind,
-            product=product,
-            insured_object=insured_object,
-            policy_id=pid,
-        )
-        is not None
-    )
-
-
 def _load_event_counter_map(db: Session, game_profile_id: int) -> dict[int, EventProfileCounterSnapshot]:
     rows = (
         db.query(EventProfileCounter)
@@ -511,14 +495,15 @@ def ensure_events_unlock_intro(db: Session, profile: GameProfile) -> None:
     if already:
         return
 
-    db.add(
-        EventInstance(
-            game_profile_id=profile.id,
-            period_index=int(profile.period_index),
-            definition_id=definition.id,
-            status="pending",
-        )
+    inst = EventInstance(
+        game_profile_id=profile.id,
+        period_index=int(profile.period_index),
+        definition_id=definition.id,
+        status="pending",
     )
+    db.add(inst)
+    db.flush()
+    attach_event_instance_choice_snapshot(db, profile, definition, inst)
     db.commit()
 
 
@@ -631,14 +616,15 @@ def ensure_period_events(db: Session, game_profile_id: int, period_index: int, s
         picked = _pick_diverse_period_events(p1, kk, counter_map, weight_multiplier_by_id=rescue_mult_by_id)
 
     for d in picked:
-        db.add(
-            EventInstance(
-                game_profile_id=game_profile_id,
-                period_index=period_index,
-                definition_id=d.id,
-                status="pending",
-            )
+        inst = EventInstance(
+            game_profile_id=game_profile_id,
+            period_index=period_index,
+            definition_id=d.id,
+            status="pending",
         )
+        db.add(inst)
+        db.flush()
+        attach_event_instance_choice_snapshot(db, profile, d, inst)
 
     db.commit()
 
@@ -658,6 +644,9 @@ def serialize_instance_rows(
         definition = db.query(EventDefinition).filter(EventDefinition.id == inst.definition_id).first()
         if not definition:
             continue
+        if profile is not None:
+            ensure_event_instance_choice_snapshot(db, inst, profile)
+        snapshot_ids = parse_choice_snapshot(inst)
         choices = (
             db.query(EventChoice)
             .filter(EventChoice.definition_id == definition.id)
@@ -678,7 +667,10 @@ def serialize_instance_rows(
                 effects = {}
             if chain_ctx and not choice_allowed_for_chain_branch(effects, chain_ctx):
                 continue
-            if profile is not None and not _choice_available_for_profile(db, profile, effects):
+            if snapshot_ids is not None:
+                if int(c.id) not in snapshot_ids:
+                    continue
+            elif profile is not None and not choice_available_for_profile(db, profile, effects):
                 continue
             if profile is not None:
                 effects = resolve_choice_effects_for_definition(
@@ -772,6 +764,11 @@ def choose_event(db: Session, profile: GameProfile, event_id: int, choice_id: in
     )
     if not inst:
         raise HTTPException(status_code=404, detail="Event not found or already resolved")
+
+    ensure_event_instance_choice_snapshot(db, inst, profile)
+    snapshot_ids = parse_choice_snapshot(inst)
+    if snapshot_ids is not None and int(choice_id) not in snapshot_ids:
+        raise HTTPException(status_code=400, detail="Выбор недоступен для этого события")
 
     choice = db.query(EventChoice).filter(EventChoice.id == choice_id, EventChoice.definition_id == inst.definition_id).first()
     if not choice:

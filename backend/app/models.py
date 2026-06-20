@@ -339,6 +339,7 @@ class EventInstance(Base):
     definition_id = Column(Integer, ForeignKey("event_definitions.id"), nullable=False, index=True)
     status = Column(String(20), nullable=False, default="pending")  # pending/selected/expired
     selected_choice_id = Column(Integer, ForeignKey("event_choices.id"), nullable=True)
+    available_choice_ids_json = Column(Text, nullable=False, default="[]")
     created_at = Column(DateTime, default=utc_now_naive)
     resolved_at = Column(DateTime, nullable=True)
 

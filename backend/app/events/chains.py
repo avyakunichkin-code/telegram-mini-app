@@ -215,6 +215,11 @@ def ensure_scheduled_chain_events(db: Session, game_profile_id: int, period_inde
         )
         db.add(inst)
         db.flush()
+        profile = db.query(GameProfile).filter(GameProfile.id == game_profile_id).first()
+        if profile is not None:
+            from .choice_snapshot import attach_event_instance_choice_snapshot
+
+            attach_event_instance_choice_snapshot(db, profile, definition, inst)
         chain.status = CHAIN_STATUS_SURFACED
         chain.surfaced_instance_id = int(inst.id)
         created += 1

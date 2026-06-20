@@ -286,6 +286,14 @@ def ensure_schema_compatibility() -> None:
                 "ALTER TABLE asset_templates ADD COLUMN has_tenants_default INTEGER NOT NULL DEFAULT 0"
             )
 
+    # ---- event_instances: заморозка choice_id ----
+    if "event_instances" in inspector.get_table_names():
+        ei_cols = {item["name"] for item in inspector.get_columns("event_instances")}
+        if "available_choice_ids_json" not in ei_cols:
+            statements.append(
+                "ALTER TABLE event_instances ADD COLUMN available_choice_ids_json TEXT NOT NULL DEFAULT '[]'"
+            )
+
     # ---- game_profiles: save_kind + шаблон (ADR-001 / эпик G1) ----
     if "game_profiles" in inspector.get_table_names():
         gp_cols = {item["name"] for item in inspector.get_columns("game_profiles")}

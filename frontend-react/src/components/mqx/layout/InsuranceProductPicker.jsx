@@ -46,7 +46,9 @@ export function InsuranceProductPicker({ ownedAssets = [], onBuy, buyingPlanKey 
     <div className="mqx-ins-picker">
       <InsuranceCatalogGrid items={gridItems} selectedKind={selectedKind} onSelect={setSelectedKind} />
       <div className="mqx-ins-picker__heading">{selected.title}</div>
-      <p className="mqx-ins-picker__hint">Выберите тариф — параметры фиксированы, премию спишем в конце хода.</p>
+      <p className="mqx-ins-picker__hint">
+        Выберите тариф — премия списывается сразу при оформлении, далее в конце каждого хода.
+      </p>
 
       {assetNeed ? (
         <div className="mqx-ins-picker__asset">

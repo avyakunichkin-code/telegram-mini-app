@@ -1,6 +1,7 @@
 from fastapi import HTTPException
 from sqlalchemy.orm import Session
 
+from ...constants import EPSILON
 from ...finance.balance_utils import adjust_balance
 from ...starters.insurance_catalog import list_catalog, list_grid_catalog, list_plans, resolve_plan, resolve_product_object
 from ...finance.liability_kinds import ASSET_KIND_FOR_AUTO
@@ -44,6 +45,18 @@ def list_policies(db: Session, profile: GameProfile) -> list[dict]:
         .all()
     )
     return [policy_to_dict(r) for r in rows]
+
+
+def premium_due_for_period(policy: InsurancePolicy, period_index: int) -> float:
+    """Премия к списанию в конце period_index (первая — при оформлении, не здесь)."""
+    if policy.claimed_period_index is not None:
+        return 0.0
+    exp = policy.expires_period_index
+    if exp is not None and period_index >= int(exp):
+        return 0.0
+    if int(policy.started_period_index or 0) == period_index:
+        return 0.0
+    return float(policy.monthly_premium or 0)
 
 
 def _parse_buy_payload(payload: dict):
@@ -138,6 +151,11 @@ def buy_policy(db: Session, profile: GameProfile, payload: dict) -> dict:
     insured_asset_id = _resolve_insured_asset_id(
         db, profile, payload, spec.product, spec.insured_object
     )
+    if float(profile.cash_balance) + EPSILON < monthly_premium:
+        raise HTTPException(
+            status_code=400,
+            detail="Недостаточно средств на счёте для оформления полиса",
+        )
     started = int(profile.period_index or 1)
     expires = started + term_periods
     policy = InsurancePolicy(
@@ -157,9 +175,25 @@ def buy_policy(db: Session, profile: GameProfile, payload: dict) -> dict:
         is_active=1,
     )
     db.add(policy)
+    db.flush()
+    adjust_balance(
+        db,
+        profile.id,
+        -monthly_premium,
+        "insurance_premium",
+        f"Оформление полиса: {title}",
+        started,
+    )
     db.commit()
     db.refresh(policy)
-    return {"status": "success", "policy_id": policy.id, "policy": policy_to_dict(policy)}
+    db.refresh(profile)
+    return {
+        "status": "success",
+        "policy_id": policy.id,
+        "policy": policy_to_dict(policy),
+        "premium_charged": monthly_premium,
+        "cash_balance": float(profile.cash_balance),
+    }
 
 
 def cancel_policy(db: Session, profile: GameProfile, policy_id: int) -> dict:
@@ -211,12 +245,9 @@ def charge_premiums_for_period(db: Session, profile: GameProfile, period_index: 
     )
     total = 0.0
     for p in policies:
-        if p.claimed_period_index is not None:
-            continue
-        exp = p.expires_period_index
-        if exp is not None and period_index >= int(exp):
-            continue
-        total += float(p.monthly_premium)
+        due = premium_due_for_period(p, period_index)
+        if due > 0:
+            total += due
     if total > 0:
         adjust_balance(
             db,

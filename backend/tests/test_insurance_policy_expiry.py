@@ -2,6 +2,9 @@
 
 from __future__ import annotations
 
+import pytest
+from fastapi import HTTPException
+
 from app.models import InsurancePolicy, Transaction
 from app.services.insurance.service import (
     buy_policy,
@@ -140,6 +143,7 @@ class TestBuyPolicyExpiryFields:
             db_session,
             user_id=test_user.id,
             period_index=7,
+            cash_balance=50_000.0,
             starter_template_key=INSURANCE_TEST_TEMPLATE_KEY,
         )
         result = buy_policy(
@@ -151,6 +155,46 @@ class TestBuyPolicyExpiryFields:
         assert pol["started_period_index"] == 7
         assert pol["term_periods"] == 12
         assert pol["expires_period_index"] == 19
+        assert result["premium_charged"] == 900.0
+        db_session.refresh(profile)
+        assert float(profile.cash_balance) == 49_100.0
+
+    def test_buy_rejects_insufficient_cash(self, db_session, test_user):
+        _ensure_insurance_test_template(db_session)
+        profile = create_game_profile(
+            db_session,
+            user_id=test_user.id,
+            period_index=1,
+            cash_balance=500.0,
+            starter_template_key=INSURANCE_TEST_TEMPLATE_KEY,
+        )
+        with pytest.raises(HTTPException) as exc:
+            buy_policy(db_session, profile, {"plan_key": "health_life_basic"})
+        assert exc.value.status_code == 400
+        assert "Недостаточно средств" in exc.value.detail
+
+    def test_first_premium_at_buy_not_at_same_period_end(self, db_session, test_user):
+        _ensure_insurance_test_template(db_session)
+        profile = create_game_profile(
+            db_session,
+            user_id=test_user.id,
+            period_index=7,
+            cash_balance=50_000.0,
+            starter_template_key=INSURANCE_TEST_TEMPLATE_KEY,
+        )
+        buy_policy(db_session, profile, {"plan_key": "health_life_basic"})
+        db_session.refresh(profile)
+        cash_after_buy = float(profile.cash_balance)
+
+        charged_same = charge_premiums_for_period(db_session, profile, 7)
+        db_session.refresh(profile)
+        assert charged_same == 0.0
+        assert float(profile.cash_balance) == cash_after_buy
+
+        charged_next = charge_premiums_for_period(db_session, profile, 8)
+        db_session.refresh(profile)
+        assert charged_next == 900.0
+        assert float(profile.cash_balance) == cash_after_buy - 900.0
 
     def test_period_end_via_process_period_end(self, db_session, test_user):
         from app.game.period import process_period_end

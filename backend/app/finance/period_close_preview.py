@@ -10,7 +10,9 @@ from ..models import FinanceAsset, FinanceLiability, GameProfile
 def _estimate_insurance_premiums(db: Session, profile: GameProfile) -> float:
     try:
         from ..models import InsurancePolicy
+        from ..services.insurance.service import premium_due_for_period
 
+        period_index = int(profile.period_index or 1)
         total = 0.0
         rows = (
             db.query(InsurancePolicy)
@@ -21,7 +23,7 @@ def _estimate_insurance_premiums(db: Session, profile: GameProfile) -> float:
             .all()
         )
         for pol in rows:
-            total += float(getattr(pol, "monthly_premium", 0) or getattr(pol, "premium_amount", 0) or 0)
+            total += premium_due_for_period(pol, period_index)
         return round(total, 2)
     except Exception:
         return 0.0
