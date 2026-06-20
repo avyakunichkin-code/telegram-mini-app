@@ -7,7 +7,7 @@ aliases:
 ---
 # Балансы, пороги и ограничения ТВОЙ ХОД
 
-> **Статус (2026-05-25):** раздел **«Канон MVP»** ниже частично **устарел**. **Prod:** победа — [`victory_engine`](../../../backend/app/victory/engine.py) + `victory_config_json` ([ADR-002](../../decisions/ADR-002-victory-engine-and-template-config.md)); прогрессия событий — **`event_tier` от `period_index`** ([`remove-character-xp-and-levels.md`](remove-character-xp-and-levels.md)); механики капитала — **`mechanics_unlock`** ([ADR-004](../../decisions/ADR-004-mechanics-unlock-victory-chain.md)). [`LEVEL_XP_SYSTEM`](../../specs/gameplay/LEVEL_XP_SYSTEM.md) — архив.
+> **Статус (2026-05-25):** раздел **«Канон MVP»** ниже частично **устарел**. **Prod:** победа — [`victory_engine`](../../../backend/app/victory/engine.py) + `victory_config_json` ([ADR-002](../../decisions/ADR-002-victory-engine-and-template-config.md)); прогрессия событий — **`event_tier` от `period_index`** ([`remove-character-xp-and-levels.md`](remove-character-xp-and-levels.md)); механики капитала — **`mechanics_unlock`** ([ADR-004](../../decisions/ADR-004-mechanics-unlock-victory-chain.md)). [`LEVEL_XP` archive](../../archive/character-xp-progression/README.md) — архив.
 
 Сессия **idea-refine**: зафиксированные допущения, варианты и рекомендуемый набор рычагов для калибровки экономики. Связано с `game/period.py`, [`SPEC_mvp-11-progression-events`](../../specs/features/SPEC_mvp-11-progression-events.md).
 

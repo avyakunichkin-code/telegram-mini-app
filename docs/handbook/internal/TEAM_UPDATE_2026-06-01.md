@@ -1,7 +1,8 @@
 ---
 layer: handbook-internal
-status: active
-last_reviewed: 2026-06-02
+status: archived
+last_reviewed: 2026-06-01
+archived_at: 2026-06-20
 audience: команда ТВОЙ ХОД (продукт, дизайн, разработка, QA)
 confidentiality: team-only
 tags:
@@ -13,6 +14,8 @@ aliases:
   - TEAM_UPDATE_2026-06-01
 ---
 # Внутренний дайджест: что изменилось (конец мая — 1 июня 2026)
+
+> **Архив 2026-06-20.** Исторический снимок до ADR-012 и O3. Актуальный smoke: **`release-web`**, канон onboarding: [`SPEC_onboarding-o3.md`](../../specs/features/SPEC_onboarding-o3.md).
 
 Коротко о том, что уже в ветке разработки и что стоит проверить при смоуке и плейтесте. Тон — для коллег, не для канала игроков.
 
@@ -68,7 +71,7 @@ aliases:
 ### Онбординг O2 (guidance)
 
 - В prod: полоса подсказок на главной, прогресс guidance в профиле, chip подушки **«ФИН.ПОДУШКА · N%»**.
-- Спека: [`SPEC_onboarding-o2.md`](../../specs/features/SPEC_onboarding-o2.md).
+- Спека: [`SPEC_onboarding-o3.md`](../../specs/features/SPEC_onboarding-o3.md) (O2 → archive [`onboarding-o2/`](../../archive/onboarding-o2/README.md)).
 
 ### Контент и баланс событий
 

@@ -666,6 +666,30 @@
   color: var(--mq-violet-deep, #5b21b6);
 }
 
+.mqx-metric-glyph--overdue {
+  color: var(--mq-danger);
+}
+
+.mqx-metric-glyph--shield {
+  color: var(--mq-emerald, #059669);
+}
+
+.mqx-metric-glyph--wallet {
+  color: #7c3aed;
+}
+
+.mqx-metric-glyph--goal {
+  color: var(--mq-emerald, #059669);
+}
+
+.mqx-metric-glyph--warn {
+  color: var(--mq-danger);
+}
+
+.mqx-metric-glyph--trash {
+  color: var(--mq-danger);
+}
+
 /* —— Страховки (вариант B: каталог 2×2 + тарифы) —— */
 .mqx-ins-picker {
   display: flex;
@@ -1251,7 +1275,22 @@
   display: flex;
   flex-wrap: wrap;
   gap: 16px;
+  align-items: flex-start;
+}
+
+.mqx-catalog-glyphs__item {
+  display: flex;
+  flex-direction: column;
   align-items: center;
+  gap: 6px;
+  min-width: 72px;
+}
+
+.mqx-catalog-glyphs__label {
+  font-size: var(--mq-fs-micro, 10px);
+  line-height: 1.25;
+  text-align: center;
+  color: var(--mq-text-muted, rgba(15, 23, 42, 0.55));
 }
 
 /* Модалки (telegram-ui) — выше guidance strip (480) */

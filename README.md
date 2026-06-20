@@ -1,6 +1,6 @@
-# ТВОЙ ХОД — Telegram Mini App
+# ТВОЙ ХОД — игра по финансовой грамотности
 
-Игра по финансовой грамотности в формате Telegram Mini App: периоды («месяц»), подушка, обязательства, события, инвестиции и страховки MVP.
+**PWA и web** — primary каналы; **Telegram Mini App** — secondary ([ADR-012](docs/decisions/ADR-012-primary-channels-pwa-web-over-tma.md)). Периоды («месяц»), подушка, обязательства, события, инвестиции и страховки MVP.
 
 [![Deploy on Render](https://img.shields.io/badge/Deploy%20on-Render-blue?logo=render)](https://render.com)
 [![GitHub Pages](https://img.shields.io/badge/Hosted%20on-GitHub%20Pages-blue?logo=github)](https://avyakunichkin-code.github.io/telegram-mini-app/)

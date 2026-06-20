@@ -6,7 +6,7 @@ aliases:
 ---
 ﻿# Agent Skills ТВОЙ ХОД — что использовать и когда
 
-**Активные** скиллы: `.cursor/skills/<name>/` (см. [`catalog.yaml`](../../.cursor/skills/catalog.yaml): `status` + **`tier`**). Аудит: [`SKILLS_QUALITY_AUDIT_2026-06-20.md`](SKILLS_QUALITY_AUDIT_2026-06-20.md) (G1–G6, `read_if`). Архив 2026-06-01: [`SKILLS_AUDIT_2026-06-01.md`](SKILLS_AUDIT_2026-06-01.md).
+**Активные** скиллы: `.cursor/skills/<name>/` (см. [`catalog.yaml`](../../.cursor/skills/catalog.yaml): `status` + **`tier`**). Аудит: [`SKILLS_QUALITY_AUDIT_2026-06-20.md`](SKILLS_QUALITY_AUDIT_2026-06-20.md).
 
 **Текущая фаза (контент + данные):** [`SKILLS_PHASE_CONTENT_AND_DATA.md`](SKILLS_PHASE_CONTENT_AND_DATA.md) — `tier: core` / `support` / `deferred` / `archived`.
 
@@ -47,14 +47,7 @@ aliases:
 
 ## Фаза: контент и данные (`tier`)
 
-| `tier` | Скиллы | Когда |
-|--------|--------|--------|
-| **core** | idea-refine, spec-driven-development, create-event, event-analysis, game-economy-and-victory, api-and-interface-design, design-lab-mqx, frontend-ui-engineering, incremental-implementation, test-driven-development, critical-test-scenarios, using-agent-skills | Primary по умолчанию |
-| **support** | planning-and-task-breakdown, code-review-and-quality, documentation-and-adrs, skill-test, balance-playtest | Epic, merge, ADR; `/balance-playtest` после баланса |
-| **deferred** | все `status: optional` кроме documentation-and-adrs | Явный запрос; doubt — satellite для economy |
-| **archived** | `_archived/*` | Studio/GDD вручную |
-
-Подробно: [`SKILLS_PHASE_CONTENT_AND_DATA.md`](SKILLS_PHASE_CONTENT_AND_DATA.md).
+Полная таблица **`tier: core / support / deferred / archived`** — только в [`SKILLS_PHASE_CONTENT_AND_DATA.md`](SKILLS_PHASE_CONTENT_AND_DATA.md). Роутер: [`tvoy-hod-router.mdc`](../../.cursor/rules/tvoy-hod-router.mdc).
 
 ---
 
@@ -62,7 +55,7 @@ aliases:
 
 | Скилл | Зачем |
 |-------|--------|
-| **frontend-ui-engineering** | MQX, TMA UI; prod **Капитал** (Details \| Actions), **Z-NEEDS v7-e2e3** — [`DESIGN_WORKFLOW.md`](../../frontend-react/src/components/mqx/DESIGN_WORKFLOW.md) |
+| **frontend-ui-engineering** | MQX, SPA/PWA UI; prod **Капитал** (Details \| Actions), **Z-NEEDS v7-e2e3** — [`DESIGN_WORKFLOW.md`](../../frontend-react/src/components/mqx/DESIGN_WORKFLOW.md) |
 | **design-lab-mqx** | `design-lab/` — хаб `nav.manifest`; ★ `capital-page/details-actions-round`, `character-needs/dashboard-needs-v7-round` — `DESIGN_LAB_NAVIGATION.md` |
 | **spec-driven-development** | Spec в `docs/specs/` до кода |
 | **incremental-implementation** | Срезы без монолитных PR |
@@ -88,7 +81,7 @@ aliases:
 |-------|--------|--------|
 | **project-handbook-documentation** | support | Пакет `docs/handbook/`: GDD, brief, плейтест, матрица фич (`/project-handbook-documentation`) |
 | **documentation-and-adrs** | support | ADR, граница доменов, публичный API |
-| **browser-testing-with-devtools** | deferred | DOM/сеть TMA (Chrome DevTools MCP) |
+| **browser-testing-with-devtools** | deferred | DOM/сеть PWA/web (Chrome DevTools MCP) |
 | **doubt-driven-development** | deferred | Satellite для game-economy; иначе высокие ставки |
 | **deprecation-and-migration** | deferred | Смена контрактов, `save_kind` |
 | **security-and-hardening** | deferred | JWT, ввод, интеграции |
@@ -97,7 +90,7 @@ aliases:
 | **context-engineering** | deferred | Rules vs skills, объём контекста |
 | **social-changelog-posts** | deferred | Посты → `docs/marketing/` |
 | **release-web** | deferred | Guardrails + design-lab:build + PWA/web smoke перед выкаткой |
-| ~~release-tma~~ | archived | Alias → **release-web** |
+| ~~release-tma~~ | deferred alias | → **release-web** |
 | **telegram-mini-app-runtime** | deferred | WebApp SDK, initData, viewport TMA |
 | **project-cursor-skills-layout** | meta | Rules vs skills, контракт `SKILL.md` |
 

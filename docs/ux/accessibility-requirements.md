@@ -3,7 +3,7 @@ layer: ux
 status: active
 last_reviewed: 2026-05-25
 tier: basic
-platform: Telegram Mini App
+platform: SPA / PWA
 tags:
   - tvoy-hod/layer/ux
   - tvoy-hod/status/active

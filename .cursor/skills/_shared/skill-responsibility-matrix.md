@@ -25,7 +25,7 @@
 | **project-handbook-documentation** | support | GDD/handbook для людей | Контракт spec → `spec-driven-development` |
 | **doubt-driven-development** | deferred | Satellite: крупная economy/victory | Каждая мелкая правка |
 | **release-web** | deferred | Явно: перед выкаткой PWA/web | Обычная фича |
-| ~~release-tma~~ | archived | Alias → **release-web** | — |
+| ~~release-tma~~ | deferred alias | → **release-web** | — |
 | **telegram-mini-app-runtime** | deferred | WebApp SDK, initData, viewport | MQX layout → `frontend-ui-engineering` |
 | **browser-testing-with-devtools** | deferred | Интерактив PWA/web/DOM | Backend pytest |
 | **performance-optimization** | deferred | Измеренная проблема LCP/CLS | Новый экран → design+FE skills |

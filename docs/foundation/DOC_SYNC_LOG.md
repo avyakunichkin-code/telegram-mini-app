@@ -11,6 +11,10 @@ aliases:
 
 | Дата | Что в prod | Что исправили в docs |
 |------|------------|----------------------|
+| 2026-06-20 | — (legacy wave 4) | Superseded ideas → redirect; UI audit O3/SPA; ADR-012 trim в 10 docs; [`LEGACY_NOISE_AUDIT`](../agents/LEGACY_NOISE_AUDIT_2026-06-20.md) §4 |
+| 2026-06-20 | — (legacy wave 3) | Archive O2/XP/hero-compact; O3 канон onboarding; TEAM_UPDATE archived; [`LEGACY_NOISE_AUDIT`](../agents/LEGACY_NOISE_AUDIT_2026-06-20.md) §3 |
+| 2026-06-20 | — (legacy wave 2) | `docs/archive/onboarding-o1/`; UX platform SPA/PWA; marketing ep-000 ADR-012; release-web spec test |
+| 2026-06-20 | — (legacy cleanup) | Удалены `specs/specs/` (21 dup), 8 skill-test results мая, `SKILLS_AUDIT_2026-06-01`; trim TMA-first в README/CLAUDE/handbook/SPEC_FRONTEND_UI; [`LEGACY_NOISE_AUDIT_2026-06-20.md`](../agents/LEGACY_NOISE_AUDIT_2026-06-20.md) |
 | 2026-06-20 | — (strategy) | **ADR-012:** primary = PWA + web; TMA secondary. `SPEC_PRODUCT` §1.1, `release-web` skill, `release-tma` → alias, router/AI_ONBOARDING/lexicon, `pwa-standalone-channel`, `PLAN_desktop-wide-web` |
 | 2026-06-02 | — (architecture review) | [`vision/ARCHITECTURE_ASSESSMENT_2026-06.md`](../vision/ARCHITECTURE_ASSESSMENT_2026-06.md): масштаб, онбординг, тех. roadmap, infra, IN-идеи; ссылки в README, backlog, engineering guide |
 | 2026-06-01 | — (product) | **WD1** полноразмерный веб-канал: idea [`desktop-wide-web-channel`](../vision/ideas/desktop-wide-web-channel.md), [`PLAN_desktop-wide-web`](../plans/PLAN_desktop-wide-web.md), эпик **AC1** TG↔email в фокусе; CA **50–100**, свой домен |

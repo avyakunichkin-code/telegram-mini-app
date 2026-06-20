@@ -1,6 +1,6 @@
 import {
   IconMetricCoins,
-  IconMetricPercent,
+  IconMetricShield,
   IconMetricTrendDown,
   IconMetricTrendUp,
 } from '../icons/FinanceMetricIcons';
@@ -11,7 +11,7 @@ const GLYPHS = {
   coin: IconMetricCoins,
   up: IconMetricTrendUp,
   down: IconMetricTrendDown,
-  percent: IconMetricPercent,
+  shield: IconMetricShield,
 };
 
 function formatSignedDelta(n) {

@@ -799,6 +799,8 @@ skills:
         - code-review-and-quality
     last_static: "2026-06-20"
     last_static_result: COMPLIANT
+    last_spec: "2026-06-20"
+    last_spec_result: PASS
 
   release-tma:
     category: ship

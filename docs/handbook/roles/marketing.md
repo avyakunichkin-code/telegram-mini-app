@@ -2,7 +2,7 @@
 layer: handbook
 status: active
 role: marketing
-last_reviewed: 2026-05-30
+last_reviewed: 2026-06-20
 tags:
   - tvoy-hod/layer/handbook
   - tvoy-hod/status/active
@@ -34,7 +34,7 @@ aliases:
 
 **ТВОЙ ХОД** — умная игра про финансовые решения в формате игровых месяцев: зарплата, подушка, жизненные события, инвестиции и страховки, плюс слой **потребностей** персонажа. Ошибки безопасны, последствия читаются в цифрах.
 
-**Каналы:** Telegram Mini App, браузер, PWA — один продукт, не «только TMA».
+**Каналы:** PWA + web (primary), браузер, Telegram Mini App — один продукт ([ADR-012](../../decisions/ADR-012-primary-channels-pwa-web-over-tma.md)).
 
 **Стадия:** Pre-Alpha; массовый набор не открыт. **MVP 2.0:** режим **Plan** (свой бюджет) — в roadmap обязателен.
 

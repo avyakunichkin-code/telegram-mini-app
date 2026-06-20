@@ -7,10 +7,15 @@ import {
   AssetTemplateMetrics,
   CapitalPositionCard,
   IconMetricCoins,
+  IconMetricGoal,
   IconMetricPercent,
+  IconMetricShield,
   IconMetricTerm,
+  IconMetricTrash,
   IconMetricTrendDown,
   IconMetricTrendUp,
+  IconMetricWallet,
+  IconMetricWarn,
   InsurancePlanCard,
   InsurancePlanMetrics,
   InsurancePolicyMetrics,
@@ -288,25 +293,40 @@ export function MqCatalogScreen() {
       </CatalogSection>
 
       <CatalogSection title="Иконки метрик">
+        <p className="mqx-catalog__lead" style={{ marginTop: 0 }}>
+          Канон: <code>FinanceMetricIcons</code> · SVG в <code>src/assets/icons/metrics/</code>
+        </p>
         <div className="mqx-catalog-glyphs">
-          <span className="mqx-metric-glyph mqx-metric-glyph--coin">
-            <IconMetricCoins />
-          </span>
-          <span className="mqx-metric-glyph mqx-metric-glyph--down">
-            <IconMetricTrendDown />
-          </span>
-          <span className="mqx-metric-glyph mqx-metric-glyph--up">
-            <IconMetricTrendUp />
-          </span>
-          <span className="mqx-metric-glyph mqx-metric-glyph--percent mqx-metric-glyph--pos">
-            <IconMetricPercent />
-          </span>
-          <span className="mqx-metric-glyph mqx-metric-glyph--percent mqx-metric-glyph--neg">
-            <IconMetricPercent />
-          </span>
-          <span className="mqx-metric-glyph mqx-metric-glyph--term">
-            <IconMetricTerm />
-          </span>
+          {[
+            { key: 'coin', label: 'coin · сумма', className: 'mqx-metric-glyph--coin', Icon: IconMetricCoins },
+            { key: 'down', label: 'down · расход', className: 'mqx-metric-glyph--down', Icon: IconMetricTrendDown },
+            { key: 'up', label: 'up · доход', className: 'mqx-metric-glyph--up', Icon: IconMetricTrendUp },
+            {
+              key: 'percent-pos',
+              label: '% · получаем',
+              className: 'mqx-metric-glyph--percent mqx-metric-glyph--pos',
+              Icon: IconMetricPercent,
+            },
+            {
+              key: 'percent-neg',
+              label: '% · платим',
+              className: 'mqx-metric-glyph--percent mqx-metric-glyph--neg',
+              Icon: IconMetricPercent,
+            },
+            { key: 'term', label: 'term · срок', className: 'mqx-metric-glyph--term', Icon: IconMetricTerm },
+            { key: 'shield', label: 'shield · защита', className: 'mqx-metric-glyph--shield', Icon: IconMetricShield },
+            { key: 'wallet', label: 'wallet · cash', className: 'mqx-metric-glyph--wallet', Icon: IconMetricWallet },
+            { key: 'goal', label: 'goal · chain', className: 'mqx-metric-glyph--goal', Icon: IconMetricGoal },
+            { key: 'warn', label: 'warn · ошибка', className: 'mqx-metric-glyph--warn', Icon: IconMetricWarn },
+            { key: 'trash', label: 'trash · удалить', className: 'mqx-metric-glyph--trash', Icon: IconMetricTrash },
+          ].map(({ key, label, className, Icon }) => (
+            <div key={key} className="mqx-catalog-glyphs__item">
+              <span className={`mqx-metric-glyph ${className}`}>
+                <Icon size={key === 'trash' ? 18 : 16} />
+              </span>
+              <span className="mqx-catalog-glyphs__label">{label}</span>
+            </div>
+          ))}
         </div>
       </CatalogSection>
 

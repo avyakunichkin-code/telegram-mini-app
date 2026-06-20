@@ -82,7 +82,7 @@ aliases:
 
 ## Character level / XP (снято)
 
-Шкала уровней 1–10 и источники XP **не в коде**. Архив: [`LEVEL_XP_SYSTEM.md`](../specs/gameplay/LEVEL_XP_SYSTEM.md), git history `GAME.md` до 2026-05-30.
+Шкала уровней 1–10 и источники XP **не в коде**. Архив: [`archive/character-xp-progression/`](../archive/character-xp-progression/README.md), git history `GAME.md` до 2026-05-30.
 
 ---
 

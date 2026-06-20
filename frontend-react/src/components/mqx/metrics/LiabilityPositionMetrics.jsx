@@ -21,7 +21,7 @@ export function LiabilityPositionMetrics({
         <MoneyText value={monthlyPayment} decimals={0} />
       </MetricInlineItem>
       {showOverdue ? (
-        <MetricInlineItem tip="Просрочка к доплате за ход" glyph="down" tone="neg">
+        <MetricInlineItem tip="Просрочка к доплате за ход" glyph="overdue" tone="neg">
           <MoneyText value={overdueAmount} decimals={0} />
         </MetricInlineItem>
       ) : null}
@@ -29,7 +29,7 @@ export function LiabilityPositionMetrics({
         {Number(annualRatePercent)}
       </MetricInlineItem>
       {showTerm ? (
-        <MetricInlineItem tip="Осталось ходов по графику" glyph="clock">
+        <MetricInlineItem tip="Осталось ходов по графику" glyph="term">
           {Number(remainingPeriods)}
         </MetricInlineItem>
       ) : null}

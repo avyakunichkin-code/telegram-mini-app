@@ -47,6 +47,6 @@ MVP 1.1 вводил **уровень персонажа**, **XP** (период
 ## Связанные артефакты
 
 - Idea (канон): [`remove-character-xp-and-levels.md`](../vision/ideas/remove-character-xp-and-levels.md)
-- Supersedes: [`LEVEL_XP_SYSTEM.md`](../specs/gameplay/LEVEL_XP_SYSTEM.md) (архив)
+- Supersedes: [`character-xp archive`](../archive/character-xp-progression/README.md) (ADR-003)
 - Spec: [`SPEC_mvp-11-progression-events`](../specs/features/SPEC_mvp-11-progression-events.md)
 - Migration: `backend/migrations/0031_remove_character_progression.sql`

@@ -21,7 +21,7 @@ http://localhost:5173/#/dev/mqx
 ```text
 mqx/
   primitives/                         — кнопки, пилюли, чипы, прогресс
-  icons/FinanceMetricIcons.jsx        — монеты, ↓ ↑ %, срок (term), корзина (trash) для `MqxRowAction`
+  icons/FinanceMetricIcons.jsx        — монеты, ↓ ↑ %, срок (term), shield, wallet, goal, warn, корзина (trash)
   metrics/
     MetricInlineItem, MetricsRow
     Asset*Metrics, Liability*Metrics, InvestPositionMetrics

@@ -2,7 +2,7 @@
 layer: ux
 status: draft
 last_reviewed: 2026-06-02
-platform: Telegram Mini App (touch-first, 320–480px)
+platform: SPA / PWA (touch-first, 320–480px)
 screen_id: finance
 prod_route: GameScreen tab `finance`
 tags:

@@ -5,50 +5,30 @@ import { TURN_SINGULAR_GEN } from '../../../constants/turnCopy';
 import { MqxButton } from '../primitives/MqxButton';
 import { showNotification } from '../../notifications';
 import { VICTORY_NEXT_SCENARIOS } from './runFinaleNextScenarios';
+import {
+  IconMetricCoins,
+  IconMetricGoal,
+  IconMetricTerm,
+  IconMetricTrendDown,
+  IconMetricTrendUp,
+} from '../icons/FinanceMetricIcons';
 
-const GLYPHS = {
-  up: (
-    <svg viewBox="0 0 24 24" aria-hidden="true">
-      <path d="M12 19V7" />
-      <path d="m7 12 5-5 5 5" />
-    </svg>
-  ),
-  down: (
-    <svg viewBox="0 0 24 24" aria-hidden="true">
-      <path d="M12 5v12" />
-      <path d="m7 10 5 5 5-5" />
-    </svg>
-  ),
-  coin: (
-    <svg viewBox="0 0 24 24" aria-hidden="true">
-      <circle cx="12" cy="12" r="8" />
-      <path d="M12 8v8" />
-      <path d="M9 12h6" />
-    </svg>
-  ),
-  term: (
-    <svg viewBox="0 0 24 24" aria-hidden="true">
-      <path d="M7 4v16" />
-      <path d="M17 4v16" />
-      <path d="M7 8h10" />
-      <path d="M7 16h6" />
-    </svg>
-  ),
-  goal: (
-    <svg viewBox="0 0 24 24" aria-hidden="true">
-      <path d="M6 12 10 16 18 8" />
-    </svg>
-  ),
+const GAZETA_GLYPHS = {
+  up: IconMetricTrendUp,
+  down: IconMetricTrendDown,
+  coin: IconMetricCoins,
+  term: IconMetricTerm,
+  goal: IconMetricGoal,
 };
 
 function GazetaStat({ metric }) {
-  const glyph = GLYPHS[metric.glyph] || GLYPHS.coin;
+  const Icon = GAZETA_GLYPHS[metric.glyph] || IconMetricCoins;
   return (
     <article className="mqx-run-finale-stat">
       <h5 className="mqx-run-finale-stat__headline">{metric.headline}</h5>
       <div className="mqx-run-finale-stat__line">
         <span className={`mqx-run-finale-stat__glyph mqx-run-finale-stat__glyph--${metric.glyph}`}>
-          {glyph}
+          <Icon size={16} />
         </span>
         <span className="mqx-run-finale-stat__name">{metric.name}</span>
         <span className="mqx-run-finale-stat__value">{metric.value}</span>

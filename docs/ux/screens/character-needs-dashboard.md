@@ -2,7 +2,7 @@
 layer: ux
 status: approved
 last_reviewed: 2026-06-02
-platform: Telegram Mini App
+platform: SPA / PWA
 screen_id: dashboard-needs
 parent: dashboard
 prod_route: GameScreen tab `dashboard` → Z-NEEDS

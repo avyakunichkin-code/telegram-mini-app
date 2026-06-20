@@ -11,3 +11,5 @@
 | context | `skill-test-context-{YYYY-MM-DD}.md` |
 
 Каталог обновляется в `.cursor/skills/catalog.yaml` (`last_static`, `last_spec`, `last_context`, …).
+
+**Retention:** после нового прогона удалять старые файлы с тем же `{skill-name}` / режимом (см. [`LEGACY_NOISE_AUDIT_2026-06-20.md`](../../docs/agents/LEGACY_NOISE_AUDIT_2026-06-20.md)).

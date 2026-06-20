@@ -2,7 +2,7 @@
 layer: ux
 status: approved
 last_reviewed: 2026-06-01
-platform: Telegram Mini App
+platform: SPA / PWA
 screen_id: character-pick
 prod_route: GameTemplatePickScreen
 tags:

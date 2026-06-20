@@ -2,19 +2,14 @@
 layer: spec
 domain: gameplay
 status: archived
+redirect: ../../../archive/character-xp-progression/README.md
 superseded_by: ../../vision/ideas/remove-character-xp-and-levels.md
 archived_at: 2026-05-26
 tags:
   - tvoy-hod/layer/spec
-  - tvoy-hod/status/archived
 aliases:
-  - "Архив: матрица XP (действия и события)"
   - XP_EVENTS_ACTIONS_MATRIX
 ---
-# Архив: матрица XP (действия и события)
+# XP_EVENTS_ACTIONS_MATRIX (redirect)
 
-**Не использовать при разработке.** Связана с снятой механикой level/XP ([ADR-003](../../decisions/ADR-003-remove-character-progression.md)).
-
-**Канон:** [`remove-character-xp-and-levels.md`](../../../vision/ideas/remove-character-xp-and-levels.md).
-
-Полный текст — в git history до 2026-05-26.
+→ **[`docs/archive/character-xp-progression/README.md`](../../../archive/character-xp-progression/README.md)** · [ADR-003](../../../decisions/ADR-003-remove-character-progression.md)

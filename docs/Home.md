@@ -53,7 +53,7 @@ aliases:
 
 ## Эпики (implemented)
 
-[[docs/specs/features/SPEC_game-plan|G1 Game]] · [[docs/specs/features/SPEC_mvp-11-progression-events|M11 Events]] · [[docs/specs/features/SPEC_victory-v2|V2 Victory]] · [[docs/specs/features/SPEC_onboarding-o2|O2 Onboarding]] · [[docs/specs/features/SPEC_debt-liability-capital-graph|DL1 Debt graph]]
+[[docs/specs/features/SPEC_game-plan|G1 Game]] · [[docs/specs/features/SPEC_mvp-11-progression-events|M11 Events]] · [[docs/specs/features/SPEC_victory-v2|V2 Victory]] · [[docs/specs/features/SPEC_onboarding-o3|O3 Onboarding]] · [[docs/specs/features/SPEC_debt-liability-capital-graph|DL1 Debt graph]]
 
 ---
 

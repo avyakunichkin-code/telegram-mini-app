@@ -2,10 +2,10 @@
 tags:
   - tvoy-hod/layer/idea
 aliases:
-  - "MQX UI Unification — единый визуальный язык TMA"
+  - "MQX UI Unification — единый визуальный язык SPA/PWA"
   - mqx-ui-unification
 ---
-# MQX UI Unification — единый визуальный язык TMA
+# MQX UI Unification — единый визуальный язык SPA / PWA
 
 **Статус:** in progress (этап A, 2026-05-23)  
 **Связано:** [`SPEC_FRONTEND_UI.md`](../../specs/SPEC_FRONTEND_UI.md), [`DESIGN_WORKFLOW.md`](../../../frontend-react/src/components/mqx/DESIGN_WORKFLOW.md), [`UI_CONSISTENCY_AUDIT.md`](../../specs/UI_CONSISTENCY_AUDIT.md)
@@ -14,9 +14,9 @@ aliases:
 
 ## Problem Statement
 
-**How might we** сделать так, чтобы любой экран Telegram Mini App ТВОЙ ХОД воспринимался как один продукт (MQX + Quest Violet), без третьего «языка» и без правок в production в обход `design-lab` → утверждение → MQX → `#/dev/mqx`?
+**How might we** сделать так, чтобы любой экран ТВОЙ ХОД (PWA, web, TMA) воспринимался как один продукт (MQX + Quest Violet), без третьего «языка» и без правок в production в обход `design-lab` → утверждение → MQX → `#/dev/mqx`?
 
-**Для кого:** игрок TMA (320–480px, светлая/тёмная тема Telegram).  
+**Для кого:** игрок на узком viewport (320–480px mobile, wide web — см. WD1); светлая/тёмная тема (Telegram / системная).  
 **Успех:** новый UI = утверждённый паттерн из spec; legacy не растёт; витрина MQX отражает только prod; главная боль — **несогласованность между вкладками** (особенно «Капитал»).
 
 **Ограничения сессии:** Plan mode в prod **не** в scope ближайших 2 недель. Путь: **аудит → обсуждение → design-lab → ★ → prod**.
@@ -144,7 +144,7 @@ aliases:
 |------------|---------|
 | `BaseParamsScreen`, `PlanExpenseEditor` | Plan не в prod 2 недели; spec вне scope |
 | Переписать `AnalyticsPremium` на чистый MQX | Этап D, после капитала |
-| Новые шрифты / Inter в TMA | Против брендбука |
+| Новые шрифты / Inter в prod UI | Против брендбука |
 | Правки prod без design-lab | Только hotfix/баг без смены вида |
 | `dashboard-dual-accordion` | Не утверждалось; superseded S5 |
 

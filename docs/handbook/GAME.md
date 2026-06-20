@@ -22,7 +22,7 @@ aliases:
 
 ## В двух словах
 
-**ТВОЙ ХОД** — Telegram Mini App: **игра про финансовую грамотность**, а не сухой курс. Игрок проживает **игровые месяцы** (периоды): зарплата, обязательства, подушка, события из жизни, инвестиции и страховки — в безопасной песочнице с правилами, близкими к реальности.
+**ТВОЙ ХОД** — **игра про финансовую грамотность** (PWA/web primary; TMA — secondary, [`SPEC_PRODUCT`](../foundation/SPEC_PRODUCT.md) §1.1). Игрок проживает **игровые месяцы** (периоды): зарплата, обязательства, подушка, события из жизни, инвестиции и страховки — в безопасной песочнице с правилами, близкими к реальности.
 
 **ЦА:** люди **30+**, готовые поиграть в **умную игру** (финансовая тема, осмысленные решения) — [`TARGET_PLAYER_AND_SESSION.md`](../foundation/TARGET_PLAYER_AND_SESSION.md).
 
@@ -46,7 +46,7 @@ aliases:
 | **Потребности (Z-NEEDS)** | 🟡 | BE + UI на дашборде; [SPEC](../specs/features/SPEC_game-character-needs.md) draft |
 | `mechanics_unlock` | ✅ | [ADR-004](../decisions/ADR-004-mechanics-unlock-victory-chain.md) |
 | Достижения | 🟡 | Движок + API; UI «Развитие» — M12 |
-| Онбординг O2 | ✅ | [SPEC_onboarding-o2](../specs/features/SPEC_onboarding-o2.md) |
+| Онбординг | ✅ O2 core / O3 spec | [SPEC_onboarding-o3](../specs/features/SPEC_onboarding-o3.md) |
 | Balance playtest | ✅ | [`docs/balance/`](../balance/README.md) |
 | Pre-Alpha 10–20 | 🟡 | [Протокол](../foundation/PRE_ALPHA_PLAYTEST_PROTOCOL.md) · [Ops](../foundation/PRE_ALPHA_WAVE1_OPS.md) · [5 мин](PLAYER_EXPERIENCE.md) |
 | Closed Alpha D1/D7 | ⬜ | KPI лайт: D7 gate **≥8%** — [`KPI_AND_PHASES.md`](KPI_AND_PHASES.md) |

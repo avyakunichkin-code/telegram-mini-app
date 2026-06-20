@@ -2,7 +2,7 @@
 layer: ux
 status: approved
 last_reviewed: 2026-05-26
-platform: Telegram Mini App (touch-first, 320–480px)
+platform: SPA / PWA (touch-first, 320–480px)
 screen_id: dashboard
 prod_route: GameScreen tab `dashboard`
 tags:
@@ -20,7 +20,7 @@ aliases:
 > **Journey Phase(s):** активная партия (core loop), первая сессия (онбординг O1)  
 > **Template:** UX Spec (адаптация studio → `docs/ux/screens/`)
 
-**Связанные документы:** [`TMA_USER_FLOWS.md`](../../foundation/TMA_USER_FLOWS.md) · [`SPEC_PRODUCT` §3.1](../../foundation/SPEC_PRODUCT.md) · [TB1 idea](../../vision/ideas/turn-based-period-no-timer.md) · [`SPEC_FRONTEND_UI.md`](../../specs/SPEC_FRONTEND_UI.md) · [`SPEC_victory-v2.md`](../../specs/features/SPEC_victory-v2.md) · [ADR-002](../../decisions/ADR-002-victory-engine-and-template-config.md) · [ADR-004](../../decisions/ADR-004-mechanics-unlock-victory-chain.md) · [`SPEC_onboarding-o2.md`](../../specs/features/SPEC_onboarding-o2.md) · [`design-lab/dashboard/hero-no-timer-round/`](../../../design-lab/dashboard/hero-no-timer-round/)
+**Связанные документы:** [`TMA_USER_FLOWS.md`](../../foundation/TMA_USER_FLOWS.md) · [`SPEC_PRODUCT` §3.1](../../foundation/SPEC_PRODUCT.md) · [TB1 idea](../../vision/ideas/turn-based-period-no-timer.md) · [`SPEC_FRONTEND_UI.md`](../../specs/SPEC_FRONTEND_UI.md) · [`SPEC_victory-v2.md`](../../specs/features/SPEC_victory-v2.md) · [ADR-002](../../decisions/ADR-002-victory-engine-and-template-config.md) · [ADR-004](../../decisions/ADR-004-mechanics-unlock-victory-chain.md) · [`SPEC_onboarding-o3.md`](../../specs/features/SPEC_onboarding-o3.md) · [`design-lab/dashboard/hero-no-timer-round/`](../../../design-lab/dashboard/hero-no-timer-round/)
 
 **Реализация:** `DashboardPremium.jsx`, `MqxDashboardHero`, `MqxFinancePeriodBlock`, `MqxGoalDash`, `MqxPeriodActions`; оболочка и оверлеи — `GameScreen.jsx`.
 
@@ -312,7 +312,7 @@ Skip: 1-й раз — шаг; 2-й — весь онбординг → `brief_do
 | Goal `aria-expanded` / `aria-controls` | ✅ | сохранить |
 | Chips: имя + сумма для SR | ⚠ частично | `aria-label` с значением |
 | Tone pos/neg только цветом | ⚠ | дублировать знак в `MoneyText` |
-| Guidance strip | ⚠ | [`SPEC_onboarding-o2.md`](../../specs/features/SPEC_onboarding-o2.md) |
+| Guidance strip | ⚠ | [`SPEC_onboarding-o3.md`](../../specs/features/SPEC_onboarding-o3.md) |
 
 ---
 
@@ -338,12 +338,12 @@ Skip: 1-й раз — шаг; 2-й — весь онбординг → `brief_do
 3. Chip «Расходы» показывает `monthly_lifestyle_expense` (base+delta), не просрочку и не долги.
 4. Chip «Доходы» показывает `total_monthly_income` (сумма доходов без вычета расходов); подпись «Доходы» сохраняется.
 5. «Зарплата» после успешного claim неактивна; повторный tap — info toast, не повторный POST.
-6. «Закрыть месяц» при незабранной доступной зарплате вне онбординга открывает modal; в онбординге O2 — по curriculum ([`SPEC_onboarding-o2.md`](../../specs/features/SPEC_onboarding-o2.md)).
+6. «Закрыть месяц» при незабранной доступной зарплате вне онбординга открывает modal; в онбординге O2 — по curriculum ([`SPEC_onboarding-o3.md`](../../specs/features/SPEC_onboarding-o3.md)).
 7. `MqxGoalDash`: при `victory.goals` — свёрнутый заголовок «Шаг K из N»; цель `tutorial_invest` — «Положить деньги на депозит или купить облигацию»; при `win_reached` — фаза победы.
 8. Pill «События» при N>0 открывает overlay; при `inOnboarding` pill **не показывается**.
 9. Пополнение подушки: сумма ∈ (0, cash] → success toast, панель закрывается, балансы обновляются.
 10. На ширине 320px все 8 chips (4+4) без горизонтального скролла; длинные суммы ужимаются (`fitChipValuesIn`).
-11. O2 guidance: strip по curriculum; dismiss / completion по [`SPEC_onboarding-o2.md`](../../specs/features/SPEC_onboarding-o2.md).
+11. O2 guidance: strip по curriculum; dismiss / completion по [`SPEC_onboarding-o3.md`](../../specs/features/SPEC_onboarding-o3.md).
 12. `npm run build` без регрессий; ручной smoke: зарплата → подушка → **закрыть месяц** → события; 6+ мин AFK **не** меняет `period_index` без кнопки (TB1).
 
 ---
@@ -366,7 +366,7 @@ Skip: 1-й раз — шаг; 2-й — весь онбординг → `brief_do
 
 | Слой | Компонент | Когда |
 |------|-----------|--------|
-| **O2** | `MqxGuidanceStrip` | Первые периоды ([`SPEC_onboarding-o2.md`](../../specs/features/SPEC_onboarding-o2.md)) |
+| **O2** | `MqxGuidanceStrip` | Первые периоды ([`SPEC_onboarding-o3.md`](../../specs/features/SPEC_onboarding-o3.md)) |
 | **Цель** | `MqxGoalDash` → `GoalMonetkaGuidance` | При раскрытии аккордеона «Цель» |
 
 Подсказка под chips «Финансы периода» **не используется** (снята 2026-05-25).

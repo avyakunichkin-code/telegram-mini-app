@@ -80,6 +80,7 @@ docs/balance/reports/*
 # ===== Obsidian (vault settings — shared; workspace — local) =====
 .obsidian/workspace.json
 .obsidian/workspace-mobile.json
+.obsidian/graph.json
 .obsidian/graph.json.bak
 .obsidian/plugins/
 .obsidian/themes/

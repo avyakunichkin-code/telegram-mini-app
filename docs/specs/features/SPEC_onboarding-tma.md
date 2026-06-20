@@ -1,19 +1,14 @@
 ---
 layer: spec
 status: superseded
-superseded_by: SPEC_onboarding-o2.md
-last_reviewed: 2026-06-02
+superseded_by: SPEC_onboarding-o3.md
+redirect: ../../archive/onboarding-o1/README.md
 tags:
   - tvoy-hod/layer/spec
   - tvoy-hod/status/superseded
 aliases:
-  - "Онбординг TMA (O1) — архив"
-  - "SPEC onboarding tma"
   - SPEC_onboarding-tma
-  - "Spec: Онбординг TMA (O1) — архив"
 ---
-# Spec: Онбординг TMA (O1) — архив
+# Spec: O1 onboarding (redirect)
 
-**Не использовать.** Эпик O1 (guided coach, Mission Brief, lab `onboarding-guided/`) снят **2026-06-01**.
-
-**Канон:** [`SPEC_onboarding-o2.md`](SPEC_onboarding-o2.md) · [`PLAN_onboarding-o2.md`](../../plans/PLAN_onboarding-o2.md) · lab [`design-lab/onboarding-o2/`](../../../design-lab/onboarding-o2/)
+→ **[`docs/archive/onboarding-o1/README.md`](../../archive/onboarding-o1/README.md)** · канон: [`SPEC_onboarding-o3.md`](SPEC_onboarding-o3.md)

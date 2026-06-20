@@ -2,24 +2,24 @@
 tags:
   - tvoy-hod/layer/spec
 aliases:
-  - "Frontend UI/UX — ТВОЙ ХОД TMA"
+  - "Frontend UI/UX — ТВОЙ ХОД (SPA / PWA)"
   - "SPEC FRONTEND_UI"
   - SPEC_FRONTEND_UI
-  - "Spec: Frontend UI/UX — ТВОЙ ХОД TMA"
+  - "Spec: Frontend UI/UX — ТВОЙ ХОД"
 ---
-# Spec: Frontend UI/UX — ТВОЙ ХОД TMA
+# Spec: Frontend UI/UX — ТВОЙ ХОД
 
-**Статус:** принят (аудит 2026-05)  
-**Связанные документы:** [`reference/brandbook/BRANDBOOK.md`](../reference/brandbook/BRANDBOOK.md) (identity), [`reference/brandbook/BRANDBOOK_MQX.md`](../reference/brandbook/BRANDBOOK_MQX.md) (MQX UI), [`foundation/TMA_USER_FLOWS.md`](../foundation/TMA_USER_FLOWS.md), [`CLAUDE.md`](../../CLAUDE.md)  
+**Статус:** принят (аудит 2026-05; каналы — [ADR-012](../decisions/ADR-012-primary-channels-pwa-web-over-tma.md))  
+**Связанные документы:** [`reference/brandbook/BRANDBOOK.md`](../reference/brandbook/BRANDBOOK.md) (identity), [`reference/brandbook/BRANDBOOK_MQX.md`](../reference/brandbook/BRANDBOOK_MQX.md) (MQX UI), [`foundation/TMA_USER_FLOWS.md`](../foundation/TMA_USER_FLOWS.md) (secondary channel), [`CLAUDE.md`](../../CLAUDE.md)  
 Проектные Agent Skills и приоритеты — [`agents/CURSOR_SKILLS.md`](../agents/CURSOR_SKILLS.md).
 
 ---
 
 ## Objective
 
-Зафиксировать единые правила интерфейса Telegram Mini App **ТВОЙ ХОД**: визуальный язык MQX, доступность, состояния экрана и границы между кастомным UI и `@telegram-apps/telegram-ui`.
+Зафиксировать единые правила интерфейса **SPA ТВОЙ ХОД** (PWA/web primary; TMA — subset constraints): визуальный язык MQX, доступность, состояния экрана и границы между кастомным UI и `@telegram-apps/telegram-ui`.
 
-**Пользователь:** игрок в TMA (мобильный, 320–480px, светлая/тёмная тема Telegram).
+**Пользователь:** игрок на **touch-first** viewport 320–480px (браузер, PWA, опционально TMA); светлая/тёмная тема.
 
 **Успех спецификации:**
 - Новые и изменённые экраны выглядят как часть одного приложения (не «два продукта»).

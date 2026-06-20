@@ -36,6 +36,7 @@ aliases:
 | **Marketing** | [`marketing/`](marketing/) | Посты, трекер тем, стиль, Telegram-публикация |
 | **Ops** | [`ops/`](ops/) | Деплой prod / Pre-Alpha ([`ops/DEPLOY.md`](ops/DEPLOY.md)) |
 | **Agents** | [`agents/`](agents/) | Cursor skills и приоритеты |
+| **Archive** | [`archive/`](archive/) | Superseded stubs (O1 onboarding и др.) |
 
 ---
 
@@ -63,14 +64,15 @@ aliases:
 | Документ | Содержание |
 |----------|------------|
 | [`foundation/SPEC_PRODUCT.md`](foundation/SPEC_PRODUCT.md) | Продукт, цикл, экономика MVP; **раздел 0** — краткая дорожная карта Game/Plan |
-| [`foundation/TMA_USER_FLOWS.md`](foundation/TMA_USER_FLOWS.md) | Потоки и боли Telegram Mini App |
+| [`foundation/TMA_USER_FLOWS.md`](foundation/TMA_USER_FLOWS.md) | Потоки TMA (secondary channel, ADR-012) |
 | [`foundation/TARGET_PLAYER_AND_SESSION.md`](foundation/TARGET_PLAYER_AND_SESSION.md) | ЦА **30+**, умная игра; сессия, рамки контента, копирайт событий |
 | [`foundation/GLOSSARY.md`](foundation/GLOSSARY.md) | Термины (период, подушка, save_kind, …) |
 | [`foundation/PROJECT_META.md`](foundation/PROJECT_META.md) | **Снимок метрик:** размер репо, LOC, эпики, бэклог, дни с `init` |
 | [`foundation/PRE_ALPHA_PLAYTEST_PROTOCOL.md`](foundation/PRE_ALPHA_PLAYTEST_PROTOCOL.md) | **Черновик** протокола плейтеста Pre-Alpha (10–20), опрос, чеклист перед волной |
 | [`foundation/PRE_ALPHA_PLAYTEST_WAVE0_RESULTS.md`](foundation/PRE_ALPHA_PLAYTEST_WAVE0_RESULTS.md) | Пилот wave-0 (n=1): итоги и правки |
 | [`foundation/PRE_ALPHA_PLAYTEST_FEEDBACK.md`](foundation/PRE_ALPHA_PLAYTEST_FEEDBACK.md) | **Реестр отзывов** wave-0 + внутренние прогоны → backlog |
-| [`specs/features/SPEC_onboarding-o2.md`](specs/features/SPEC_onboarding-o2.md) | **O2** онбординг: bottom strip, 3 периода, user-once |
+| [`specs/features/SPEC_onboarding-o3.md`](specs/features/SPEC_onboarding-o3.md) | **O3** онбординг: spine + триггеры (канон) |
+| [`archive/onboarding-o2/`](archive/onboarding-o2/README.md) | O2 stub (Progressive Guidance) |
 | [`plans/PLAN_onboarding-o2.md`](plans/PLAN_onboarding-o2.md) | План реализации O2 (без hotfix O1) |
 | [`vision/ideas/onboarding-o2-progressive-guidance.md`](vision/ideas/onboarding-o2-progressive-guidance.md) | Idea APPROVED → O2 spec |
 | [`foundation/MVP_AUDIT_VS_SPEC.md`](foundation/MVP_AUDIT_VS_SPEC.md) | Чеклист: текущий код vs SPEC_PRODUCT |
@@ -92,7 +94,7 @@ aliases:
 | [`vision/ideas/turn-based-period-no-timer.md`](vision/ideas/turn-based-period-no-timer.md) | **TB1 (implemented):** период без real-time таймера; закрытие «Закрыть месяц» |
 | [`ux/screens/dashboard.md`](ux/screens/dashboard.md) | UX главной вкладки (hero H2, chips, онбординг) |
 
-Архив level/XP (только git history): `specs/gameplay/LEVEL_XP_SYSTEM.md`, `catalogs/XP_EVENTS_ACTIONS_MATRIX.md`, `plans/PLAN_level-xp-progression.md`.
+Архив: [`archive/`](archive/README.md) (O1/O2 onboarding, level/XP, hero-compact).
 
 ### Vision
 
@@ -121,7 +123,7 @@ aliases:
 | [`specs/features/SPEC_mvp-11-progression-events.md`](specs/features/SPEC_mvp-11-progression-events.md) | MVP 1.1 — **`event_tier`**, **`repeat_policy`**, cooldown; tier-окно от **`period_index`** (см. remove-character-xp); план — [`plans/PLAN_mvp-11-progression-events.md`](plans/PLAN_mvp-11-progression-events.md) |
 | [`specs/gameplay/EXPENSES_SYSTEM.md`](specs/gameplay/EXPENSES_SYSTEM.md) | Канон механики **расходов** (категории, burn, Game/Plan) |
 | [`specs/features/SPEC_expenses.md`](specs/features/SPEC_expenses.md) | Эпик **E1** — внедрение на всех слоях; чеклист — [`specs/economy/EXPENSES_LAYER_CHECKLIST.md`](specs/economy/EXPENSES_LAYER_CHECKLIST.md) |
-| [`specs/features/SPEC_onboarding-o2.md`](specs/features/SPEC_onboarding-o2.md) | Эпик **O2** — Progressive Guidance (prod) |
+| [`specs/features/SPEC_onboarding-o3.md`](specs/features/SPEC_onboarding-o3.md) | Эпик **O3** — hybrid guidance (канon spec) |
 | [`specs/features/SPEC_telegram-bots-and-notifications.md`](specs/features/SPEC_telegram-bots-and-notifications.md) | **TG:** player + ops боты, каталог `kind`, webhook, initData, digest (draft) |
 | [`reference/CHARACTER_MONETKA.md`](reference/CHARACTER_MONETKA.md) | Персонаж-наставник **Монетка** (онбординг) |
 

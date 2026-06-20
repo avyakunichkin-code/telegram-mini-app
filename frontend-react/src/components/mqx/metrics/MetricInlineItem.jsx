@@ -1,5 +1,6 @@
 import {
   IconMetricCoins,
+  IconMetricOverdue,
   IconMetricPercent,
   IconMetricTerm,
   IconMetricTrendDown,
@@ -12,6 +13,9 @@ const GLYPH_ICONS = {
   up: IconMetricTrendUp,
   percent: IconMetricPercent,
   term: IconMetricTerm,
+  overdue: IconMetricOverdue,
+  /** @deprecated alias — используйте `term` */
+  clock: IconMetricTerm,
 };
 
 /** Иконка + значение в линию; подсказка при наведении. */

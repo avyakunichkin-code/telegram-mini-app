@@ -3,7 +3,7 @@ import { API, ApiError, formatApiErrorDetail } from '../api';
 import { MoneyText } from './MoneyText';
 import { resolveSafetyFundBaselineTarget } from '../utils/safetyFundFill';
 import { SparkLineSvg, CashForecastSpark } from './AnalyticsCharts';
-import { IconPercentStat, IconOverdueStat, IconShieldStat, IconFlowStat } from './icons/StatIcons';
+import { IconFlowStat, IconGoalStat, IconOverdueStat, IconShieldStat } from './icons/StatIcons';
 import { MqStatRow } from './MqStatRow';
 import { getMonthlyBurn } from '../utils/expensesDisplay';
 import { MqxGoalBar, MqxCashflowBar, pctClamp01 } from './mqx/MqxMetricBars';
@@ -407,7 +407,7 @@ export function AnalyticsPremium({ overview }) {
             <MqStatRow dense icon={<IconFlowStat />} label="Чистый поток (модель)">
               <MoneyText value={net} />
             </MqStatRow>
-            <MqStatRow dense icon={<IconPercentStat />} label="Статус победы">
+            <MqStatRow dense icon={<IconGoalStat />} label="Статус победы">
               <strong>{overview.win_reached ? 'победа' : overview.win_ready ? 'почти' : 'в работе'}</strong>
             </MqStatRow>
           </div>

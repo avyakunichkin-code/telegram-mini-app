@@ -7,7 +7,7 @@ aliases:
 ﻿# Architecture Review Report
 
 **Date:** 2026-05-25  
-**Project:** ТВОЙ ХОД (Telegram Mini App)  
+**Project:** ТВОЙ ХОД (PWA + web primary; TMA secondary — [ADR-012](../decisions/ADR-012-primary-channels-pwa-web-over-tma.md))  
 **Mode:** full (adapted: foundation + feature specs + vision ideas; stack FastAPI / PostgreSQL / React)
 
 **Loaded:** 0 GDD · **1 ADR** (at review start) · **~12 normative specs** · **~40 vision ideas** · [`TRACEABILITY.md`](../TRACEABILITY.md) · **178 backend tests** (2 failures in `test_victory_engine.py`)

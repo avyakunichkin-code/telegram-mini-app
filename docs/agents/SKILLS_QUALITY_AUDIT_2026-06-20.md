@@ -88,7 +88,7 @@ aliases:
 
 **Закрыто Sprint B (2026-06-20):** `read_if` в `catalog.yaml`; slim `must_read`; секция «Читай при условии» в SKILL; `_context-check` поддерживает `read_if`.
 
-**Закрыто Sprint C (2026-06-20):** tiered context для `spec-driven-development`, `api-and-interface-design`, `planning-and-task-breakdown`; DL1 в `game-economy` `read_if`; `session-start` hook; архив `SKILLS_AUDIT_2026-06-01`; `TASK_SLICE` → `read_if`.
+**Закрыто Sprint C (2026-06-20):** tiered context для `spec-driven-development`, `api-and-interface-design`, `planning-and-task-breakdown`; DL1 в `game-economy` `read_if`; `session-start` hook; удалён `SKILLS_AUDIT_2026-06-01`; `TASK_SLICE` → `read_if`.
 
 **Закрыто Sprint D (2026-06-20):** CI `.github/workflows/skills-check.yml` (static + context на PR/push); `last_context` 2026-06-20 для 11 tiered skills; `db-baselines-and-migrations` → 0 WARNINGS.
 
@@ -155,12 +155,18 @@ aliases:
 |---------|-----------|
 | Primary = **PWA + web** | [`ADR-012`](../decisions/ADR-012-primary-channels-pwa-web-over-tma.md), `SPEC_PRODUCT` §1.1 |
 | Release gate | **`release-web`** (guardrails + PWA/web smoke W1–W9) |
-| TMA secondary | **`release-tma`** → archived alias; **`telegram-mini-app-runtime`** — optional T1/T2 |
+| TMA secondary | **`release-tma`** → deprecated alias; **`telegram-mini-app-runtime`** — optional T1/T2 |
 | Agent docs | `AI_ONBOARDING` §2, `game-lexicon` Channels, router deferred list |
 
 ---
 
-## 13. Чекlist для нового скилла
+## 13. Legacy noise cleanup (2026-06-20)
+
+См. [`LEGACY_NOISE_AUDIT_2026-06-20.md`](LEGACY_NOISE_AUDIT_2026-06-20.md) — удалено ~30 файлов-дублей, trim TMA-first messaging.
+
+---
+
+## 14. Чекlist для нового скилла
 
 1. Frontmatter G1 + `allowed-tools` если Write
 2. Блок «Стандарт качества и вызов» + строка в matrix

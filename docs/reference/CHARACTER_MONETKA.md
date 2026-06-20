@@ -49,7 +49,7 @@ aliases:
 | «Твой ход», «ты можешь», «твоя подушка» | «Ваш ход», «Вы можете», «уважаемый клиент» |
 | «Давай посмотрим на **твой** баланс» | «Предлагаем ознакомиться с балансом» |
 
-**Канон копирайта онбординга:** [`SPEC_onboarding-o2.md`](../specs/features/SPEC_onboarding-o2.md) · beats в [`backend/app/guidance/curriculum.py`](../../backend/app/guidance/curriculum.py) · O1 (архив): [`SPEC_onboarding-tma.md`](../specs/features/SPEC_onboarding-tma.md).
+**Канон копирайта онбординга:** [`SPEC_onboarding-o3.md`](../specs/features/SPEC_onboarding-o3.md) · beats в [`backend/app/guidance/curriculum.py`](../../backend/app/guidance/curriculum.py) · архив: [`archive/onboarding-o1/`](../archive/onboarding-o1/README.md), [`archive/onboarding-o2/`](../archive/onboarding-o2/README.md).
 
 ---
 
@@ -61,7 +61,7 @@ aliases:
 | **Формат** | **PNG**, прозрачный фон (`alpha`); WebP — позже при оптимизации бандла |
 | **Дефолт** | [`assets/monetka-mascot.png`](assets/monetka-mascot.png) — приветствие, общий UI |
 | **Позы** | Каталог [`assets/monetka-poses/`](assets/monetka-poses/) |
-| **В онбординге** | Над заголовком брифа, ~120px ([`design-lab/onboarding-brief`](../../design-lab/onboarding-brief/)) |
+| **В онбординге** | Над заголовком брифа, ~120px (O1 lab: [`design-lab/onboarding-brief`](../../design-lab/onboarding-brief/); канон — [`SPEC_onboarding-o3.md`](../specs/features/SPEC_onboarding-o3.md)) |
 | **Позы v1 (прод)** | Пока одна PNG на все 3 экрана брифа; каталог — для coach / auth / lab |
 
 **Недопустимо:** CSS-заглушка; ₽ на лице; UI-карточка, запечённая в PNG позы (пузырь рисуется CSS).
@@ -96,12 +96,11 @@ Quest Violet `#6D28D9`, золото/amber — [`BRANDBOOK.md`](brandbook/BRANDB
 
 ## UI онбординга
 
-**Layout A ★** — [`design-lab/onboarding-brief/APPROVED.md`](../../design-lab/onboarding-brief/APPROVED.md): Монетка + заголовок + текст + «Посмотреть» + видео.
+**Layout A ★** (O1, архив) — [`design-lab/onboarding-brief/APPROVED.md`](../../design-lab/onboarding-brief/APPROVED.md): Монетка + заголовок + текст + «Посмотреть» + видео. Канон prod: [`SPEC_onboarding-o3.md`](../specs/features/SPEC_onboarding-o3.md).
 
 ---
 
 ## Связанные документы
 
-- [`onboarding-tma-mission-brief.md`](../vision/ideas/onboarding-tma-mission-brief.md)
-- [`SPEC_onboarding-tma.md`](../specs/features/SPEC_onboarding-tma.md)
-- [`PLAN_onboarding-tma.md`](../plans/PLAN_onboarding-tma.md)
+- [`archive/onboarding-o1/README.md`](../archive/onboarding-o1/README.md) — O1 stub
+- [`onboarding-tma-mission-brief.md`](../vision/ideas/onboarding-tma-mission-brief.md) — исторический контекст

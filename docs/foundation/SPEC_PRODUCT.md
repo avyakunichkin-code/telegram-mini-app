@@ -5,8 +5,6 @@ aliases:
   - "ТВОЙ ХОД — продуктовая спецификация (идея и текущее состояние)"
   - "SPEC PRODUCT"
   - SPEC_PRODUCT
----
-﻿---
 layer: foundation
 status: active
 last_reviewed: 2026-06-20

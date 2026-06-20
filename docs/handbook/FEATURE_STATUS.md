@@ -75,8 +75,8 @@ aliases:
 |------|--------|-------------|
 | Game (`save_kind: game`) | ✅ | Шаблоны старта |
 | Plan (`save_kind: plan`) | 🟡 | **MVP 2.0 обязателен** — UI «Скоро» |
-| Telegram Mini App | ✅ | |
-| PWA / браузер (email+пароль) | ✅ | [`PWA_INSTALL.md`](../foundation/PWA_INSTALL.md) |
+| PWA / браузер (email+пароль) | ✅ | Primary — [`PWA_INSTALL.md`](../foundation/PWA_INSTALL.md), [ADR-012](../decisions/ADR-012-primary-channels-pwa-web-over-tma.md) |
+| Telegram Mini App | ✅ | Secondary channel |
 | Legacy light/hardcore | ⬜ | Снято [ADR-001](../decisions/ADR-001-save-kind-remove-light-hardcore.md) |
 
 ---
@@ -85,7 +85,7 @@ aliases:
 
 | Фича | Статус | Комментарий |
 |------|--------|-------------|
-| Онбординг O2 (Progressive Guidance) | ✅ | [SPEC_onboarding-o2](../specs/features/SPEC_onboarding-o2.md) |
+| Онбординг O3 (hybrid guidance) | ✅ / 🟡 | [SPEC_onboarding-o3](../specs/features/SPEC_onboarding-o3.md); O2 в prod, O3 spec approved |
 | Экран аналитики | ✅ | [SPEC_ANALYTICS](../specs/SPEC_ANALYTICS.md) |
 | Balance playtest (headless) | ✅ | [`docs/balance/`](../balance/README.md) |
 | Ops-алерты + Watchtower `#/admin` | 🟡 | RU-тексты в TG; KPI summary (PA-A*) — backlog A2 |

@@ -343,7 +343,7 @@ aliases:
 
 ### Эпик O1 — онбординг TMA (Pre-Alpha) — **superseded → O2**
 
-Идея: [`onboarding-tma-mission-brief.md`](../vision/ideas/onboarding-tma-mission-brief.md) · Spec: [`SPEC_onboarding-tma.md`](../specs/features/SPEC_onboarding-tma.md) (superseded) · Plan: [`PLAN_onboarding-tma.md`](../plans/PLAN_onboarding-tma.md) · **O2:** [`SPEC_onboarding-o2.md`](../specs/features/SPEC_onboarding-o2.md) · Lab: [`onboarding-o2/`](../design-lab/onboarding-o2/) (lab `onboarding-guided/` удалён 2026-06-01)
+Идея (архив): [`onboarding-tma-mission-brief.md`](../vision/ideas/onboarding-tma-mission-brief.md) · Stubs: [`archive/onboarding-o1/`](../archive/onboarding-o1/README.md), [`archive/onboarding-o2/`](../archive/onboarding-o2/README.md) · **O3:** [`SPEC_onboarding-o3.md`](../specs/features/SPEC_onboarding-o3.md) · Lab: [`onboarding-o2/`](../design-lab/onboarding-o2/)
 
 - [x] P0 **[Doc+Design]** Guided coach **5 шагов ★** (O1, 2026-05-20; lab снят → O2 strip).
 - [x] P0 **[Doc]** Spec O1 → guided coach (2026-05-20).
@@ -525,7 +525,7 @@ aliases:
 | I1 Insurance | ✅ 0008 | ✅ buy/claim | ✅ catalog UI | ⚠ SPEC |
 | α Playtest | — | 🟡 PA-A* SQL | опрос | ✅ KPI v1.2 |
 | A0 Watchtower | ✅ 0012 | ✅ notify + metrics | ✅ AQ + C1–C2 | [ADMIN_BACKLOG](ADMIN_BACKLOG.md) |
-| O2 Guidance | ✅ users.* | ✅ curriculum | ✅ strip | [SPEC_onboarding-o2](../specs/features/SPEC_onboarding-o2.md) |
+| O3 Guidance | 🟡 spec | ✅ curriculum | ✅ strip | [SPEC_onboarding-o3](../specs/features/SPEC_onboarding-o3.md) · O2 [archive](../archive/onboarding-o2/README.md) |
 | GE1 Run Finale | ✅ feedback | ✅ run_outcome | ✅ finale UI | [SPEC_game-run-finale](../specs/features/SPEC_game-run-finale.md) |
 | DL1 Debt graph | ✅ 0044–46 | ✅ secured/annuity | ✅ Capital UI | ✅ SPEC approved |
 | EVT1 Events v2 | ✅ 0041 | 🟡 choice pool | ⬜ multi-slot | SPEC draft |

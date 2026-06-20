@@ -197,7 +197,7 @@ Onboarding + docs + landing demo (если есть таймер)
 
 #### Task 8: Онбординг
 
-**Description:** `onboardingSteps.js`: шаг 1 — период без таймера/play; шаг 4 — только primary «Закрыть месяц». `SPEC_onboarding-tma.md`, demo `OnboardingCoachDemo.jsx`.
+**Description:** `onboardingSteps.js`: шаг 1 — период без таймера/play; шаг 4 — только primary «Закрыть месяц». O1 archive [`archive/onboarding-o1/`](../../archive/onboarding-o1/README.md), demo `OnboardingCoachDemo.jsx`.
 
 **Acceptance criteria:**
 

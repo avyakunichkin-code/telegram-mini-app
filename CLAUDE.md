@@ -6,9 +6,7 @@ aliases:
 ---
 ## ТВОЙ ХОД — индекс для агента
 
-Telegram Mini App: **игра по финансовой грамотности** (периоды, cash, обязательства, события, победа).
-
-**Каналы (2026-06, ADR-012):** primary = **PWA + web**; TMA — secondary. См. [`SPEC_PRODUCT.md`](docs/foundation/SPEC_PRODUCT.md) §1.1.
+**Игра по финансовой грамотности** (PWA/web primary; TMA secondary — [ADR-012](docs/decisions/ADR-012-primary-channels-pwa-web-over-tma.md)): периоды, cash, обязательства, события, победа.
 
 **Роутер скиллов:** [`.cursor/rules/tvoy-hod-router.mdc`](.cursor/rules/tvoy-hod-router.mdc) · **Лексикон игры:** [`.cursor/skills/_shared/game-lexicon.md`](.cursor/skills/_shared/game-lexicon.md)
 

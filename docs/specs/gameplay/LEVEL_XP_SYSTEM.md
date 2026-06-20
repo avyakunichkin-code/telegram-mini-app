@@ -2,21 +2,14 @@
 tags:
   - tvoy-hod/layer/spec
 aliases:
-  - "Архив: система уровней персонажа и XP"
   - LEVEL_XP_SYSTEM
----
-﻿---
 layer: spec
 domain: gameplay
 status: archived
+redirect: ../../archive/character-xp-progression/README.md
 superseded_by: ../../vision/ideas/remove-character-xp-and-levels.md
 archived_at: 2026-05-26
 ---
+# LEVEL_XP_SYSTEM (redirect)
 
-# Архив: система уровней персонажа и XP
-
-**Не использовать при разработке.** Механика снята в коде (2026-05-24): [ADR-003](../../decisions/ADR-003-remove-character-progression.md).
-
-**Канон прогрессии:** [`remove-character-xp-and-levels.md`](../../vision/ideas/remove-character-xp-and-levels.md) — `event_tier` от `period_index`, механики с 1-го периода.
-
-Полный текст этого файла — в git history до 2026-05-26.
+→ **[`docs/archive/character-xp-progression/README.md`](../../archive/character-xp-progression/README.md)** · [ADR-003](../../decisions/ADR-003-remove-character-progression.md)

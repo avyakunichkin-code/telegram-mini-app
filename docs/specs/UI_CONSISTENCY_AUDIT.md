@@ -2,10 +2,12 @@
 tags:
   - tvoy-hod/layer/spec
 aliases:
-  - "UI Consistency Audit — ТВОЙ ХОД TMA"
+  - "UI Consistency Audit — ТВОЙ ХОД SPA/PWA"
   - UI_CONSISTENCY_AUDIT
 ---
-# UI Consistency Audit — ТВОЙ ХОД TMA
+# UI Consistency Audit — ТВОЙ ХОД (SPA / PWA)
+
+> Каналы: [ADR-012](../decisions/ADR-012-primary-channels-pwa-web-over-tma.md) — primary PWA + web; TMA secondary.
 
 **Дата:** 2026-06-02  
 **Цель:** карта экранов и компонентов для эпика [mqx-ui-unification](../vision/ideas/mqx-ui-unification.md).  
@@ -23,7 +25,7 @@ aliases:
 | Меню | `MenuPremium.jsx` | ★ | В основном MQX |
 | События (оверлей) | `EventDeck` → `EventCarouselOverlay` | ★ L3 | `EventCard`, domain band; лендинг: [`LANDING_SCREENSHOTS.md`](LANDING_SCREENSHOTS.md) |
 | Итог периода | `MqxPeriodCloseSheet` / `Tail` | ★ | Иконки строк — 📋 lab |
-| Онбординг | `MqxGuidanceStrip` (O2) | ★ | Progressive Guidance ★ |
+| Онбординг | `MqxGuidanceStrip` (O3) | ★ | [`SPEC_onboarding-o3.md`](features/SPEC_onboarding-o3.md) |
 
 ---
 
@@ -74,7 +76,7 @@ aliases:
 | `capital-page/details-actions-round/` | ★ v2 в prod | Поддержка parity; `sync-lab.sh` |
 | `game-templates/persona-portraits-round/` | ★ в prod | pick 56 / dash 108; `npm run persona-portraits:process` |
 | `game-templates/scenario-icons/` | архив | Заменены портретами; SVG в коде — fallback |
-| `onboarding-brief/` | superseded | — |
+| `onboarding-brief/` | superseded (O1) | [`archive/onboarding-o1/`](../archive/onboarding-o1/README.md) |
 | `dashboard-dual-accordion/` | не утверждалось | не внедрять |
 
 ---

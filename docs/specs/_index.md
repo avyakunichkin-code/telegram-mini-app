@@ -21,7 +21,7 @@ aliases:
 ## Gameplay
 
 - [[docs/specs/gameplay/EXPENSES_SYSTEM|Expenses System]]
-- [[docs/specs/gameplay/LEVEL_XP_SYSTEM|LEVEL_XP (archive)]]
+- [[docs/archive/character-xp-progression/README|LEVEL_XP (archive)]]
 
 ## Economy
 
@@ -36,7 +36,8 @@ aliases:
 | M11 | [[docs/specs/features/SPEC_mvp-11-progression-events|SPEC_mvp-11]] |
 | V2 | [[docs/specs/features/SPEC_victory-v2|SPEC_victory-v2]] |
 | E1 | [[docs/specs/features/SPEC_expenses|SPEC_expenses]] |
-| O2 | [[docs/specs/features/SPEC_onboarding-o2|SPEC_onboarding-o2]] |
+| O3 | [[docs/specs/features/SPEC_onboarding-o3|SPEC_onboarding-o3]] |
+| O2 | [[docs/archive/onboarding-o2/README|O2 archive]] |
 | DL1 | [[docs/specs/features/SPEC_debt-liability-capital-graph|SPEC_debt-liability]] |
 | M12 | [[docs/specs/features/SPEC_achievements|SPEC_achievements]] |
 | EVT1 | [[docs/specs/features/SPEC_event-system-v2-slots-and-taxonomy|SPEC_event-system-v2]] |

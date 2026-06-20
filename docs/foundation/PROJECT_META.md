@@ -18,7 +18,7 @@ aliases:
 | Поле | Значение |
 |------|----------|
 | **Название** | ТВОЙ ХОД |
-| **Формат** | Telegram Mini App (PWA / standalone в работе) |
+| **Формат** | PWA + web (primary); TMA secondary — [ADR-012](../decisions/ADR-012-primary-channels-pwa-web-over-tma.md) |
 | **Жанр** | Финансовая грамотность, пошаговые «месяцы», события, цели победы |
 | **MVP в prod** | Game mode, шаблоны старта, Victory v2 (chain), события MVP 1.1, инвестиции, страховки, Z-NEEDS (ядро) |
 | **Канон продукта** | [`SPEC_PRODUCT.md`](SPEC_PRODUCT.md) · [`handbook/GAME.md`](../handbook/GAME.md) |

@@ -172,7 +172,7 @@ aliases:
 ### 6.1 TMA и Монетка
 
 - Только **ты / твой / тебе**  
-- Канон реплик: [`CHARACTER_MONETKA.md`](../CHARACTER_MONETKA.md), beats O2 в [`curriculum.py`](../../../backend/app/guidance/curriculum.py) · [`SPEC_onboarding-o2.md`](../../specs/features/SPEC_onboarding-o2.md)
+- Канон реплик: [`CHARACTER_MONETKA.md`](../CHARACTER_MONETKA.md), beats в [`curriculum.py`](../../../backend/app/guidance/curriculum.py) · [`SPEC_onboarding-o3.md`](../../specs/features/SPEC_onboarding-o3.md)
 - Монетка не решает за игрока; не комментирует каждое событие  
 
 ### 6.2 Посты и канал (3-е лицо)

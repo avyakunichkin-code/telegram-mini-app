@@ -33,6 +33,11 @@ import {
   MqxJuiceGainFeedback,
   MqxSafetyFundSheet,
 
+  IconMetricExpense,
+  IconMetricShield,
+  IconMetricTrendUp,
+  IconMetricWallet,
+
 } from './mqx';
 
 
@@ -171,13 +176,7 @@ export function DashboardPremium({
         valueLabel: formatChipMoneyAria(totalIncome, { tone: 'pos' }),
         accent: 'mqx-accent--sky',
         valueTone: 'pos',
-        icon: (
-          <svg viewBox="0 0 24 24" aria-hidden="true">
-            <path d="M4 19V5" />
-            <path d="M4 19h16" />
-            <path d="M7 15l4-4 3 3 5-6" />
-          </svg>
-        ),
+        icon: <IconMetricTrendUp size={18} />,
       },
       {
         title: 'Расходы',
@@ -189,13 +188,7 @@ export function DashboardPremium({
         accent: 'mqx-accent--amber',
         valueTone: 'out',
         expenseIcon: true,
-        icon: (
-          <svg viewBox="0 0 24 24" aria-hidden="true">
-            <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z" />
-            <path d="M3 6h18" />
-            <path d="M16 10a4 4 0 0 1-8 0" />
-          </svg>
-        ),
+        icon: <IconMetricExpense size={18} />,
       },
       {
         title: 'Баланс',
@@ -203,13 +196,7 @@ export function DashboardPremium({
         valueNode: <MoneyText value={cash} />,
         valueLabel: formatChipMoneyAria(cash),
         accent: 'mqx-accent--violet',
-        icon: (
-          <svg viewBox="0 0 24 24" aria-hidden="true">
-            <path d="M7 10V7a5 5 0 0 1 10 0v3" />
-            <path d="M6 10h12v10a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V10Z" />
-            <path d="M10 14h4" />
-          </svg>
-        ),
+        icon: <IconMetricWallet size={18} />,
       },
       {
         title: formatSafetyFundChipTitle(cushionFill?.percent),
@@ -223,12 +210,7 @@ export function DashboardPremium({
         accent: 'mqx-accent--emerald',
         cushionChip: true,
         cushionFill,
-        icon: (
-          <svg viewBox="0 0 24 24" aria-hidden="true">
-            <path d="M12 3 20 7v6c0 5-3.4 8.2-8 9-4.6-.8-8-4-8-9V7l8-4Z" />
-            <path d="M9.5 12.2 11 13.7 14.6 10.1" />
-          </svg>
-        ),
+        icon: <IconMetricShield size={18} />,
       },
     ];
 

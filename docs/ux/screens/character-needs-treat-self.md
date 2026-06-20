@@ -2,7 +2,7 @@
 layer: ux
 status: approved
 last_reviewed: 2026-05-26
-platform: Telegram Mini App
+platform: SPA / PWA
 screen_id: treat-self-sheet
 parent: dashboard-needs
 tags:

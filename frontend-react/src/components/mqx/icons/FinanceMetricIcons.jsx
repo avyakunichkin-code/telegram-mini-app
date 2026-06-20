@@ -43,6 +43,17 @@ export function IconMetricTrendUp({ size = 16 }) {
   );
 }
 
+/** Просрочка — отличить от обычного платежа (↓) в строке долга. */
+export function IconMetricOverdue({ size = 16 }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" aria-hidden>
+      <circle cx="12" cy="13" r="7.25" stroke="currentColor" strokeWidth="1.75" />
+      <path stroke="currentColor" strokeWidth="1.85" strokeLinecap="round" d="M12 10v4" />
+      <path stroke="currentColor" strokeWidth="2" strokeLinecap="round" d="M12 17.5h.01" />
+    </svg>
+  );
+}
+
 /** Срок / период — для страховок и срочных продуктов. */
 export function IconMetricTerm({ size = 16 }) {
   return (
@@ -61,6 +72,60 @@ export function IconMetricPercent({ size = 16 }) {
       <circle cx="7" cy="7" r="2.25" stroke="currentColor" strokeWidth="1.85" />
       <circle cx="17" cy="17" r="2.25" stroke="currentColor" strokeWidth="1.85" />
       <path stroke="currentColor" strokeWidth="1.85" strokeLinecap="round" d="M5 19L19 5" />
+    </svg>
+  );
+}
+
+/** Расходы / корзина — chip «Расходы» на дашборде. */
+export function IconMetricExpense({ size = 16 }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" aria-hidden>
+      <path stroke="currentColor" strokeWidth="1.75" strokeLinejoin="round" d="M8 7V6a4 4 0 0 1 8 0v1" />
+      <path stroke="currentColor" strokeWidth="1.75" strokeLinejoin="round" d="M6 8h12l-1.2 11H7.2L6 8Z" />
+      <path stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" d="M10 12h4" />
+    </svg>
+  );
+}
+
+/** Чистый поток / cashflow — аналитика. */
+export function IconMetricFlow({ size = 16 }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" aria-hidden>
+      <path stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" d="M5 17h14" />
+      <path
+        stroke="currentColor"
+        strokeWidth="1.75"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        d="M13 17l5-7-4-6-7 13"
+      />
+    </svg>
+  );
+}
+
+/** Кошелёк / cash — ritual beats, chips дашборда. */
+export function IconMetricWallet({ size = 16 }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" aria-hidden>
+      <path stroke="currentColor" strokeWidth="1.75" d="M7 10V7a5 5 0 0 1 10 0v3" />
+      <path stroke="currentColor" strokeWidth="1.75" d="M6 10h12v10a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V10Z" />
+      <path stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" d="M10 14h4" />
+    </svg>
+  );
+}
+
+/** Цель сценария / шаг chain выполнен. */
+export function IconMetricGoal({ size = 16 }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" aria-hidden>
+      <circle cx="12" cy="12" r="8.5" stroke="currentColor" strokeWidth="1.75" />
+      <path
+        stroke="currentColor"
+        strokeWidth="1.85"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        d="M8 12.2 10.8 15 16 9"
+      />
     </svg>
   );
 }

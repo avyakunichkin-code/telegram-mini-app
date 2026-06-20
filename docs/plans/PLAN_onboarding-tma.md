@@ -1,17 +1,14 @@
 ---
 layer: plan
 status: superseded
-superseded_by: PLAN_onboarding-o2.md
-last_reviewed: 2026-06-02
+superseded_by: ../specs/features/SPEC_onboarding-o3.md
+redirect: ../archive/onboarding-o1/README.md
 tags:
   - tvoy-hod/layer/plan
   - tvoy-hod/status/superseded
 aliases:
-  - "Онбординг TMA (O1) — архив"
-  - "PLAN onboarding tma"
   - PLAN_onboarding-tma
-  - "Plan: Онбординг TMA (O1) — архив"
 ---
-# Plan: Онбординг TMA (O1) — архив
+# Plan: O1 onboarding (redirect)
 
-**Не использовать.** Заменён [`PLAN_onboarding-o2.md`](PLAN_onboarding-o2.md) (2026-06-01).
+→ **[`docs/archive/onboarding-o1/README.md`](../archive/onboarding-o1/README.md)** · канон: [`SPEC_onboarding-o3.md`](../specs/features/SPEC_onboarding-o3.md)
