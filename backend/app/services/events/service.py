@@ -354,6 +354,8 @@ def _ensure_seed_events(db: Session) -> None:
 
 
 def _load_event_profile_context(db: Session, game_profile_id: int) -> EventProfileContext:
+    from ...finance.liability_kinds import effective_liability_kind
+
     asset_kinds = {
         str(row.kind).strip()
         for row in db.query(FinanceAsset.kind)
@@ -364,14 +366,15 @@ def _load_event_profile_context(db: Session, game_profile_id: int) -> EventProfi
         .all()
         if row.kind
     }
-    liability_count = int(
+    liability_rows = (
         db.query(FinanceLiability)
         .filter(
             FinanceLiability.game_profile_id == game_profile_id,
             FinanceLiability.is_active == 1,
         )
-        .count()
+        .all()
     )
+    liability_kinds = {effective_liability_kind(row) for row in liability_rows}
     ins_keys: set[str] = set()
     for row in (
         db.query(InsurancePolicy.product, InsurancePolicy.insured_object)
@@ -388,7 +391,8 @@ def _load_event_profile_context(db: Session, game_profile_id: int) -> EventProfi
             ins_keys.add(f"{product}:{insured}")
     return EventProfileContext(
         active_asset_kinds=frozenset(asset_kinds),
-        active_liability_count=liability_count,
+        active_liability_count=len(liability_rows),
+        active_liability_kinds=frozenset(liability_kinds),
         active_insurance_claim_keys=frozenset(ins_keys),
     )
 

@@ -67,6 +67,7 @@ class EventProfileContext:
 
     active_asset_kinds: frozenset[str]
     active_liability_count: int
+    active_liability_kinds: frozenset[str]
     active_insurance_claim_keys: frozenset[str]
 
 
@@ -77,12 +78,14 @@ class EventPrerequisites:
 
     active_asset_kinds_any — хотя бы один актив с kind из списка.
     active_asset_kinds_all — все перечисленные kind должны быть среди активов.
+    active_liability_kinds_any — хотя бы одно активное обязательство с liability_kind из списка.
     min_active_liabilities / min_active_assets — нижние границы по числу активных записей.
     requires_insurance_any — хотя бы один активный полис с product+insured_object из списка dict.
     """
 
     active_asset_kinds_any: frozenset[str] = frozenset()
     active_asset_kinds_all: frozenset[str] = frozenset()
+    active_liability_kinds_any: frozenset[str] = frozenset()
     min_active_liabilities: int = 0
     min_active_assets: int = 0
     requires_insurance_any: tuple[tuple[str, str], ...] = ()
@@ -117,6 +120,7 @@ def parse_event_prerequisites_json(raw: str | None) -> EventPrerequisites:
         active_asset_kinds_any=_kind_set("active_asset_kinds_any"),
         active_asset_kinds_all=_kind_set("active_asset_kinds_all"),
         forbid_active_asset_kinds_any=_kind_set("forbid_active_asset_kinds_any"),
+        active_liability_kinds_any=_kind_set("active_liability_kinds_any"),
         min_active_liabilities=max(0, int(data.get("min_active_liabilities") or 0)),
         min_active_assets=max(0, int(data.get("min_active_assets") or 0)),
         requires_insurance_any=tuple(ins_specs),
@@ -130,6 +134,10 @@ def event_prerequisites_met(prereq: EventPrerequisites, ctx: EventProfileContext
     if prereq.active_asset_kinds_any and not (kinds & prereq.active_asset_kinds_any):
         return False
     if prereq.active_asset_kinds_all and not prereq.active_asset_kinds_all.issubset(kinds):
+        return False
+    if prereq.active_liability_kinds_any and not (
+        ctx.active_liability_kinds & prereq.active_liability_kinds_any
+    ):
         return False
     if ctx.active_liability_count < prereq.min_active_liabilities:
         return False

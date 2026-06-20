@@ -86,7 +86,8 @@ events:
   cooldown_periods: 12
   scenario_shape: soft_offer
   prerequisites:
-    min_active_liabilities: 1
+    active_liability_kinds_any:
+    - mortgage
   choices:
   - title: Внести 50 000 ₽ досрочно
     effects:
