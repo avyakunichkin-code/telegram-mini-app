@@ -1,4 +1,5 @@
 import { ensureHashRouterEntry, isLandingPathname } from './utils/hashRouterBoot';
+import { registerPwaUpdates } from './utils/pwaUpdate';
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App';
@@ -9,10 +10,8 @@ import './index.css';
 ensureHashRouterEntry();
 syncTelegramThemeToRoot();
 
-if (import.meta.env.PROD && 'serviceWorker' in navigator && !isLandingPathname()) {
-  import('virtual:pwa-register').then(({ registerSW }) => {
-    registerSW({ immediate: true });
-  });
+if (import.meta.env.PROD && !isLandingPathname()) {
+  registerPwaUpdates();
 }
 
 ReactDOM.createRoot(document.getElementById('root')).render(

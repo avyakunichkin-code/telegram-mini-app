@@ -44,6 +44,9 @@ export default defineConfig(({ mode }) => {
           icons: PWA_ICONS,
         },
         workbox: {
+          // Новый SW активируется сразу; клиент перезагружается в pwaUpdate.js (controllerchange).
+          skipWaiting: true,
+          clientsClaim: true,
           // HashRouter: без NavigationRoute — иначе iOS Safari часто отдаёт пустую/старую страницу.
           globPatterns: ['**/*.{js,css,html,ico,svg,woff2}', 'pwa/**/*.png', 'favicon*.png'],
           globIgnores: [
