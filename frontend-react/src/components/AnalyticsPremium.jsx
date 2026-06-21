@@ -1,13 +1,20 @@
 import { useEffect, useMemo, useState } from 'react';
 import { API, ApiError, formatApiErrorDetail } from '../api';
 import { MoneyText } from './MoneyText';
-import { resolveSafetyFundBaselineTarget } from '../utils/safetyFundFill';
-import { SparkLineSvg, CashForecastSpark } from './AnalyticsCharts';
-import { IconFlowStat, IconGoalStat, IconOverdueStat, IconShieldStat } from './icons/StatIcons';
-import { MqStatRow } from './MqStatRow';
-import { getMonthlyBurn } from '../utils/expensesDisplay';
-import { MqxGoalBar, MqxCashflowBar, pctClamp01 } from './mqx/MqxMetricBars';
+import { IncomeExpenseChart, LiquidityForecastChart } from './AnalyticsCharts';
+import { MqxCashflowBar, pctClamp01 } from './mqx/MqxMetricBars';
 import { MqxTabHero } from './MqxTabHero';
+import { getMonthlyBurn } from '../utils/expensesDisplay';
+import {
+  buildPrimaryInsight,
+  computeCushionMonths,
+  computeLiquidity,
+  computeMonthlyResidual,
+  computeRunwayPeriods,
+  resolveForecastMonthlyDelta,
+  resolveStabilityZone,
+  stabilityZoneLabel,
+} from '../utils/analyticsDisplay';
 
 function formatSignedMoney(n) {
   const v = Number(n) || 0;
@@ -17,6 +24,7 @@ function formatSignedMoney(n) {
 export function AnalyticsPremium({ overview }) {
   const [ts, setTs] = useState(null);
   const [tsError, setTsError] = useState(null);
+  const [forecastMonths, setForecastMonths] = useState(3);
 
   useEffect(() => {
     let cancelled = false;
@@ -41,7 +49,7 @@ export function AnalyticsPremium({ overview }) {
     return () => {
       cancelled = true;
     };
-  }, [overview?.period_index, overview?.cash_balance]);
+  }, [overview?.period_index, overview?.cash_balance, overview?.safety_fund_balance]);
 
   const model = useMemo(() => {
     if (!overview) return null;
@@ -52,42 +60,16 @@ export function AnalyticsPremium({ overview }) {
     const burn = getMonthlyBurn(overview);
     const expenseRatioPct = income > 0 ? (burn / income) * 100 : 0;
     const denom = Math.max(income, liabPay + maintenance + burn, 1);
-
     const cash = Number(overview.cash_balance) || 0;
     const safety = Number(overview.safety_fund_balance) || 0;
-    const net = Number(overview.net_monthly_cashflow) || 0;
-    const obligations = Number(overview.total_monthly_obligations) || 0;
     const ratio = Number(overview.liabilities_to_income_ratio) || 0;
-    const overdue = Number(overview.total_overdue_amount) || 0;
-    const streak = Number(overview.clean_period_streak) || 0;
-
-    const cushionBaseline = resolveSafetyFundBaselineTarget(overview) || 0;
-    const cushionFrac = cushionBaseline > 0 ? safety / cushionBaseline : 0;
-    const winTarget = cushionBaseline;
-
-    const capitalTarget = Math.max(winTarget * 1.25, cash * 1.15, obligations * 6, 1);
-    const capitalFrac = cash / capitalTarget;
-
-    const flowTarget = Math.max(income * 0.25, obligations * 0.5, 1);
-    const flowFracRaw = net >= 0 ? net / flowTarget : 0;
-    const flowFrac = flowFracRaw;
-
-    const goalsProgress =
-      winTarget > 0
-        ? (pctClamp01(capitalFrac) + pctClamp01(cushionFrac) + pctClamp01(flowFracRaw)) / 3
-        : (pctClamp01(capitalFrac) + pctClamp01(flowFracRaw)) / 2;
-
-    const stressIndex = Math.min(
-      99,
-      Math.round(Math.min(ratio, 120) * 0.5 + (overdue > 1 ? 26 : overdue > 0 ? 14 : 0) + (net < 0 ? 20 : 0)),
-    );
-
-    const runwayMonths = obligations > 0 ? Math.floor(cash / obligations) : cash > 0 ? 99 : 0;
-
-    const pts = ts?.points ?? [];
-    const horizonLabel = pts.length;
-
-    const projectedEnd = cash + net * 12;
+    const liquidity = computeLiquidity(overview);
+    const residual = computeMonthlyResidual(overview);
+    const cushionMonths = computeCushionMonths(overview);
+    const runway = computeRunwayPeriods(overview);
+    const zone = resolveStabilityZone(overview);
+    const monthlyDelta = resolveForecastMonthlyDelta(overview);
+    const insight = buildPrimaryInsight(overview);
 
     return {
       income,
@@ -98,25 +80,16 @@ export function AnalyticsPremium({ overview }) {
       denom,
       cash,
       safety,
-      net,
-      obligations,
       ratio,
-      overdue,
-      streak,
-      winTarget,
-      cushionFrac,
-      capitalTarget,
-      capitalFrac,
-      flowTarget,
-      flowFrac,
-      goalsProgress,
-      stressIndex,
-      runwayMonths,
-      horizonLabel,
-      projectedEnd,
-      streak: ts?.clean_period_streak ?? overview.clean_period_streak ?? 0,
+      liquidity,
+      residual,
+      cushionMonths,
+      runway,
+      zone,
+      monthlyDelta,
+      insight,
     };
-  }, [overview, ts]);
+  }, [overview]);
 
   if (!overview || !model) return null;
 
@@ -129,192 +102,77 @@ export function AnalyticsPremium({ overview }) {
     denom,
     cash,
     safety,
-    net,
-    obligations,
     ratio,
-    overdue,
-    winTarget,
-    cushionFrac,
-    capitalTarget,
-    capitalFrac,
-    flowTarget,
-    flowFrac,
-    goalsProgress,
-    stressIndex,
-    runwayMonths,
-    horizonLabel,
-    projectedEnd,
-    streak,
+    liquidity,
+    residual,
+    cushionMonths,
+    runway,
+    zone,
+    monthlyDelta,
+    insight,
   } = model;
 
   const pts = ts?.points ?? [];
-  const lastCash = pts.length ? Number(pts[pts.length - 1]?.cash_balance) : cash;
-  const lastSafety = pts.length ? Number(pts[pts.length - 1]?.safety_fund_balance) : safety;
+  const isGame = overview.save_kind !== 'plan';
 
   return (
     <div className="mqx-tab-page">
       <MqxTabHero
         sectionLabel="Аналитика"
         rightPill={`Ход #${overview.period_index}`}
-        title="Финансовая картина"
-        subtitle="Цели, потоки и динамика — в одном стиле с главной."
+        title="Финансовое состояние"
+        subtitle="Снимок, потоки и прогноз при текущей модели месяца"
       />
 
       <main className="mqx-content mqx-tab-page__scroll mqx-analytics-page">
-        <section className="mqx-card mqx-analytics-level">
-          <div className="mqx-analytics-level__top">
+        <section className="mqx-card mqx-analytics-snapshot">
+          <div className="mqx-analytics-snapshot__top">
             <div>
-              <div className="mqx-card__kicker mqx-card__kicker--violet">Сценарий</div>
-              <div className="mqx-analytics-level__title">Ход #{overview.period_index}</div>
-              <p className="mqx-analytics-level__sub">Чистых ходов подряд без просрочки: {streak}</p>
-            </div>
-            <div className="mqx-analytics-level__score-chip" aria-label="Просрочка">
-              <div className="mqx-analytics-level__score-label">Просрочка</div>
-              <div className="mqx-analytics-level__score-value">
-                <MoneyText value={overdue} decimals={0} />
+              <div className="mqx-card__kicker mqx-card__kicker--emerald">Снимок</div>
+              <div className="mqx-analytics-snapshot__value">
+                <MoneyText value={liquidity} decimals={0} />
+              </div>
+              <div className="mqx-analytics-snapshot__meta">
+                Счёт <MoneyText value={cash} decimals={0} /> + подушка <MoneyText value={safety} decimals={0} />
               </div>
             </div>
-          </div>
-
-        </section>
-
-        <section className="mqx-card mqx-card--analytics-goals">
-          <div className="mqx-analytics-goals__top">
-            <div>
-              <div className="mqx-analytics-goals__kicker">Цели игрока</div>
-              <h2 className="mqx-analytics-goals__title">Прогресс</h2>
-            </div>
-            <div className="mqx-analytics-goals__badge">
-              <div className="mqx-analytics-goals__badge-label">Сводно</div>
-              <div className="mqx-analytics-goals__badge-value">{Math.round(pctClamp01(goalsProgress) * 100)}%</div>
+            <div className={`mqx-analytics-zone mqx-analytics-zone--${zone}`} aria-label={stabilityZoneLabel(zone)}>
+              {stabilityZoneLabel(zone)}
             </div>
           </div>
-
-          <div className="mqx-analytics-goals__list">
-            <MqxGoalBar
-              label="Капитал на счёте"
-              valueNode={
-                <>
-                  <MoneyText value={cash} decimals={0} /> / <MoneyText value={capitalTarget} decimals={0} />
-                </>
-              }
-              fraction={capitalFrac}
-              fillClass="mqx-analytics-goal-fill--violet"
-            />
-            {winTarget > 0 ? (
-              <MqxGoalBar
-                label="Финансовая подушка"
-                valueNode={
-                  <>
-                    <MoneyText value={safety} decimals={0} /> / <MoneyText value={winTarget} decimals={0} />
-                  </>
-                }
-                fraction={cushionFrac}
-                fillClass="mqx-analytics-goal-fill--emerald"
-              />
-            ) : (
-              <MqxGoalBar
-                label="Финансовая подушка"
-                valueNode={<>Цель подушки не задана (нет обязательств в модели)</>}
-                fraction={0}
-                fillClass="mqx-analytics-goal-fill--emerald"
-              />
-            )}
-            <MqxGoalBar
-              label="Чистый поток"
-              valueNode={
-                <>
-                  <MoneyText value={net} decimals={0} /> / ориентир <MoneyText value={flowTarget} decimals={0} />
-                </>
-              }
-              fraction={flowFrac}
-              fillClass="mqx-analytics-goal-fill--sky"
-            />
+          <div
+            className={`mqx-analytics-residual${residual < 0 ? ' mqx-analytics-residual--neg' : ''}`}
+            role="note"
+          >
+            <span>После обязательств и жизни</span>
+            <strong>
+              {formatSignedMoney(residual)} ₽
+            </strong>
           </div>
         </section>
 
-        <section className="mqx-card mqx-card--analytics-dark">
-          <div className="mqx-analytics-dark__head">
-            <div>
-              <div className="mqx-analytics-dark__kicker">Аналитика</div>
-              <h2 className="mqx-analytics-dark__title">Динамика капитала</h2>
-            </div>
-            <div className="mqx-analytics-dark__chip">{horizonLabel ? `${horizonLabel} точек` : '—'}</div>
-          </div>
-
-          <div className="mqx-analytics-dark__charts">
-            {tsError ? <div className="mqx-analytics-dark__err">{tsError}</div> : null}
-            {!ts && !tsError ? <div className="mqx-analytics-dark__err">Загрузка…</div> : null}
-            {ts && !tsError && pts.length > 0 ? (
-              <>
-                <div className="mqx-analytics-dark__spark-wrap">
-                  <SparkLineSvg
-                    series={pts.map((p) => Number(p.cash_balance))}
-                    title="Денежный счёт"
-                    subtitle={`${Number.isFinite(lastCash) ? lastCash.toLocaleString('ru-RU', { maximumFractionDigits: 0 }) : '—'} ₽`}
-                    accent="violet"
-                    dark
-                    height={56}
-                  />
-                </div>
-                <div className="mqx-analytics-dark__spark-wrap">
-                  <SparkLineSvg
-                    series={pts.map((p) => Number(p.safety_fund_balance))}
-                    title="Подушка безопасности"
-                    subtitle={`${Number.isFinite(lastSafety) ? lastSafety.toLocaleString('ru-RU', { maximumFractionDigits: 0 }) : '—'} ₽`}
-                    accent="emerald"
-                    dark
-                    height={52}
-                  />
-                </div>
-                {pts.some((p) => Number(p.monthly_burn_total) > 0) ? (
-                  <div className="mqx-analytics-dark__spark-wrap">
-                    <SparkLineSvg
-                      series={pts.map((p) => Number(p.monthly_burn_total) || 0)}
-                      title="Расходы на жизнь (закрытия)"
-                      subtitle={`${Math.round(burn)} ₽`}
-                      accent="amber"
-                      dark
-                      height={48}
-                    />
-                  </div>
-                ) : null}
-                <p className="mqx-analytics-dark__hint">История завершённых ходов и снимок текущего хода.</p>
-              </>
-            ) : null}
-            {ts && !tsError && pts.length === 0 ? (
-              <div className="mqx-analytics-dark__err">Пока нет завершённых ходов — график появится после первого «Завершить ход».</div>
-            ) : null}
-          </div>
-        </section>
-
-        <section className="mqx-card mqx-analytics-cashflow mqx-analytics-cashflow--after-charts">
-          <div className="mqx-analytics-cashflow__head">
-            <div>
-              <div className="mqx-card__kicker mqx-card__kicker--violet">Потоки месяца</div>
-              <h2 className="mqx-analytics-cashflow__title">Здоровье чистого потока</h2>
-            </div>
-            <div className={`mqx-analytics-cashflow__pill ${net >= 0 ? 'mqx-analytics-cashflow__pill--pos' : 'mqx-analytics-cashflow__pill--neg'}`}>
-              {formatSignedMoney(net)} ₽
-            </div>
-          </div>
-
+        <section className="mqx-card mqx-analytics-cashflow">
+          <div className="mqx-card__kicker">Поток месяца</div>
+          <h2 className="mqx-analytics-cashflow__title">Куда уходит доход</h2>
           <div className="mqx-analytics-cashflow__bars">
             <MqxCashflowBar
               label="Доход"
-              amountNode={
-                <span title="Сумма за ход игры (в модели — помесячный доход)">
-                  <MoneyText value={income} decimals={0} />
-                </span>
-              }
+              amountNode={<MoneyText value={income} decimals={0} />}
               fraction={income / denom}
               fillClass="mqx-analytics-cf-fill--emerald"
             />
             <MqxCashflowBar
-              label="Платежи по долгам"
+              label={
+                <>
+                  Платежи по долгам
+                  {income > 0 ? (
+                    <span className="mqx-analytics-cf-pct"> {ratio.toFixed(0)}%</span>
+                  ) : null}
+                </>
+              }
               amountNode={
-                <span title="Сумма за ход игры (в модели — помесячные платежи)">
-                  <MoneyText value={liabPay} decimals={0} />
+                <span>
+                  −<MoneyText value={liabPay} decimals={0} />
                 </span>
               }
               fraction={liabPay / denom}
@@ -323,8 +181,8 @@ export function AnalyticsPremium({ overview }) {
             <MqxCashflowBar
               label="Обслуживание активов"
               amountNode={
-                <span title="Сумма за ход игры (в модели — помесячное обслуживание)">
-                  <MoneyText value={maintenance} decimals={0} />
+                <span>
+                  −<MoneyText value={maintenance} decimals={0} />
                 </span>
               }
               fraction={maintenance / denom}
@@ -332,14 +190,17 @@ export function AnalyticsPremium({ overview }) {
             />
             {burn > 0 ? (
               <MqxCashflowBar
-                label="Расходы на жизнь"
+                label={
+                  <>
+                    Расходы на жизнь
+                    {income > 0 ? (
+                      <span className="mqx-analytics-cf-pct"> {expenseRatioPct.toFixed(0)}%</span>
+                    ) : null}
+                  </>
+                }
                 amountNode={
-                  <span title="Расходы на жизнь за ход и доля от дохода">
-                    <MoneyText value={burn} decimals={0} />
-                    <span className="mqx-analytics-cf-suffix">
-                      {' '}
-                      · {expenseRatioPct.toFixed(0)}% дохода
-                    </span>
+                  <span>
+                    −<MoneyText value={burn} decimals={0} />
                   </span>
                 }
                 fraction={burn / denom}
@@ -347,101 +208,70 @@ export function AnalyticsPremium({ overview }) {
               />
             ) : null}
           </div>
-          <div className="mqx-analytics-cashflow__hint" role="note">
-            {(() => {
-              const n = Number(overview.avg_net_cashflow_6p_n) || 0;
-              const v = Number(overview.avg_net_cashflow_6p);
-              if (n <= 0) {
-                return (
-                  <>
-                    После нескольких завершённых ходов здесь появится среднее изменение наличных и подушки между
-                    закрытиями (до шести последних интервалов).
-                  </>
-                );
-              }
-              return (
-                <>
-                  Среднее изменение (наличные + подушка) по {n}{' '}
-                  {n === 1 ? 'интервалу' : 'интервалам'} между закрытиями:{' '}
-                  <strong>{formatSignedMoney(v)} ₽</strong>
-                </>
-              );
-            })()}
-          </div>
         </section>
 
-        <section className="mqx-card mqx-analytics-lifestyle">
-          <div className="mqx-analytics-lifestyle__head">
-            <div>
-              <div className="mqx-card__kicker mqx-card__kicker--amber">Нагрузка</div>
-              <h2 className="mqx-analytics-lifestyle__title">Стресс и устойчивость</h2>
+        <section className="mqx-card mqx-analytics-stability">
+          <div className="mqx-card__kicker mqx-card__kicker--amber">Устойчивость</div>
+          <h2 className="mqx-analytics-stability__title">Риски и запас</h2>
+          <div className="mqx-analytics-metrics">
+            <div className="mqx-analytics-metric">
+              <div className="mqx-analytics-metric__label">Подушка, мес.</div>
+              <div className="mqx-analytics-metric__value">{cushionMonths.toFixed(1).replace('.', ',')}</div>
             </div>
-            <div className="mqx-analytics-lifestyle__stress">
-              <div className="mqx-analytics-lifestyle__stress-label">Индекс</div>
-              <div className="mqx-analytics-lifestyle__stress-value">{stressIndex}</div>
+            <div className="mqx-analytics-metric">
+              <div className="mqx-analytics-metric__label">Runway счёта</div>
+              <div className="mqx-analytics-metric__value">
+                {runway >= 99 ? '—' : `${runway} пер.`}
+              </div>
             </div>
-          </div>
-
-          <div className="mqx-analytics-lifestyle__bar-block">
-            <div className="mqx-analytics-lifestyle__bar-row">
-              <span className="mqx-analytics-lifestyle__bar-caption">Обязательства к доходу</span>
-              <span className="mqx-analytics-lifestyle__bar-pct">{ratio.toFixed(1)}%</span>
-            </div>
-            <div className="mqx-analytics-lifestyle__track">
-              <div className="mqx-analytics-lifestyle__fill" style={{ width: `${Math.min(100, Math.max(0, ratio))}%` }} />
-            </div>
-          </div>
-
-          <div className="mqx-analytics-runway">
-            <div className="mqx-analytics-runway__label">Ориентировочно, сколько ходов хватит счёта при текущих обязательствах</div>
-            <div className="mqx-analytics-runway__value">{obligations > 0 ? `${runwayMonths} пер.` : '—'}</div>
-          </div>
-
-          <div className="mqx-analytics-risks" style={{ marginTop: 14 }}>
-            <MqStatRow dense icon={<IconOverdueStat />} label="Просрочки">
-              <MoneyText value={overdue} />
-            </MqStatRow>
-            <MqStatRow dense icon={<IconShieldStat />} label="Обязательства в месяц">
-              <MoneyText value={obligations} />
-            </MqStatRow>
-            <MqStatRow dense icon={<IconFlowStat />} label="Чистый поток (модель)">
-              <MoneyText value={net} />
-            </MqStatRow>
-            <MqStatRow dense icon={<IconGoalStat />} label="Статус победы">
-              <strong>{overview.win_reached ? 'победа' : overview.win_ready ? 'почти' : 'в работе'}</strong>
-            </MqStatRow>
-          </div>
-        </section>
-
-        <section className="mqx-card mqx-card--analytics-forecast">
-          <div className="mqx-analytics-forecast__head">
-            <div>
-              <div className="mqx-analytics-forecast__kicker">Прогноз</div>
-              <h2 className="mqx-analytics-forecast__title">Счёт через 12 ходов</h2>
-            </div>
-            <div className="mqx-analytics-forecast__side">
-              <div className="mqx-analytics-forecast__side-label">+12 пер.</div>
-              <div className="mqx-analytics-forecast__side-value">
-                <MoneyText value={projectedEnd} decimals={0} />
+            <div className="mqx-analytics-metric mqx-analytics-metric--wide">
+              <div className="mqx-analytics-metric__label">Платежи по долгам к доходу (ПДН)</div>
+              <div className="mqx-analytics-metric__value">{ratio.toFixed(0)}%</div>
+              <div className="mqx-analytics-dti-track">
+                <div
+                  className="mqx-analytics-dti-fill"
+                  style={{ width: `${Math.round(pctClamp01(ratio / 100) * 100)}%` }}
+                />
               </div>
             </div>
           </div>
+        </section>
 
-          <div className="mqx-analytics-forecast__chart">
-            {ts && !tsError ? <CashForecastSpark timeseriesPayload={ts} netMonthly={net} /> : null}
-            {!ts && !tsError ? <div className="mqx-analytics-forecast__placeholder">Загрузка прогноза…</div> : null}
-          </div>
+        <section className="mqx-card mqx-card--analytics-dark">
+          <div className="mqx-analytics-dark__kicker">Динамика</div>
+          <h2 className="mqx-analytics-dark__title">Графики по закрытым ходам</h2>
 
-          <div className="mqx-analytics-forecast__callout">
-            <div className="mqx-analytics-forecast__callout-text">
-              Линейная оценка: текущий чистый поток × 12 ходов к последнему значению на графике. Не учитывает события и
-              новые сделки.
-            </div>
-            <div className="mqx-analytics-forecast__callout-sum">
-              <MoneyText value={projectedEnd} decimals={0} />
-            </div>
+          <div className="mqx-analytics-dark__charts">
+            {tsError ? <div className="mqx-analytics-dark__err">{tsError}</div> : null}
+            {!ts && !tsError ? <div className="mqx-analytics-dark__err">Загрузка…</div> : null}
+            {ts && !tsError ? (
+              <>
+                <IncomeExpenseChart points={pts} />
+                <LiquidityForecastChart
+                  points={pts}
+                  liquidityNow={liquidity}
+                  monthlyDelta={monthlyDelta}
+                  forecastMonths={forecastMonths}
+                  onForecastMonthsChange={setForecastMonths}
+                />
+              </>
+            ) : null}
           </div>
         </section>
+
+        <section className="mqx-analytics-insight" aria-live="polite">
+          <div className="mqx-analytics-insight__icon" aria-hidden>
+            !
+          </div>
+          <div>
+            <p className="mqx-analytics-insight__title">{insight.title}</p>
+            <p className="mqx-analytics-insight__body">{insight.body}</p>
+          </div>
+        </section>
+
+        {isGame ? (
+          <p className="mqx-analytics-foot">Цели партии — на вкладке «Главная»</p>
+        ) : null}
       </main>
     </div>
   );

@@ -43,6 +43,8 @@ def get_analytics_timeseries(
             safety_fund_balance=round(float(r.safety_fund_balance), 2),
             total_overdue_amount=round(float(r.total_overdue_amount), 2),
             monthly_burn_total=round(float(getattr(r, "monthly_burn_total", 0) or 0), 2),
+            period_income_rate=round(float(getattr(r, "period_income_rate", 0) or 0), 2),
+            period_expense_total=round(float(getattr(r, "period_expense_total", 0) or 0), 2),
             is_projection=False,
         )
         for r in closings_rows

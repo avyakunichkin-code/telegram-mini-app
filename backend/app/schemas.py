@@ -309,6 +309,8 @@ class AnalyticsTimeseriesPoint(BaseModel):
     safety_fund_balance: float
     total_overdue_amount: float
     monthly_burn_total: float = 0
+    period_income_rate: float = 0
+    period_expense_total: float = 0
     is_projection: bool = False
 
 

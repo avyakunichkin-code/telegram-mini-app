@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="ru" data-theme="light">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>ТВОЙ ХОД — Аналитика v2 (design-lab AN1)</title>
+    <link rel="stylesheet" href="./lab-base.css" />
+  </head>
+  <body>
+    <header class="lab-header">
+      <div>
+        <h1>Аналитика v2 — AN1-002</h1>
+        <p>
+          Вкладка «Аналитика»: снимок, водопад, устойчивость, динамика, прогноз 3/6/12, рекомендации. Без блока
+          «цели победы». Тест-данные одинаковые во всех вариантах.
+        </p>
+      </div>
+      <div class="lab-header__controls">
+        <div class="lab-theme" role="group" aria-label="Тема">
+          <button type="button" class="is-active" data-theme-btn="light">Светлая</button>
+          <button type="button" data-theme-btn="dark">Тёмная</button>
+        </div>
+      </div>
+    </header>
+
+    <main class="lab-main lab-main--analytics">
+      <p class="lab-an-data-note">
+        <strong>Тест-данные:</strong> доход 120&nbsp;000 ₽ · долги 48&nbsp;000 · обслуживание 8&nbsp;000 · жизнь 38&nbsp;000 ·
+        остаток после всего <strong>26&nbsp;000 ₽</strong> · ликвидность 146&nbsp;000 ₽ · подушка 2,3 мес. · ПДН 40% · ход #7.
+      </p>
+
+      <div class="lab-an-grid">
+        <!-- —— A ★ Canonical scroll —— -->
+        <div class="lab-an-col">
+          <h2 class="lab-an-col__title">A ★ — Канонический скролл</h2>
+          <p class="lab-an-col__hint">Рекомендуем: снимок → водопад → устойчивость → <strong>графики</strong> (доход/расход + история|прогноз 3/6/12) → инсайт.</p>
+          <div class="an-phone">
+            <div class="an-phone__scroll" id="phone-a">
+              <header class="an-hero">
+                <div class="an-hero__row">
+                  <div>
+                    <div class="an-hero__kicker">Аналитика</div>
+                    <h2 class="an-hero__title">Финансовое состояние</h2>
+                    <p class="an-hero__sub">Снимок, потоки и прогноз при текущей модели месяца</p>
+                  </div>
+                  <span class="an-hero__pill">Ход #7</span>
+                </div>
+              </header>
+
+              <div class="an-stack">
+                <section class="an-card">
+                  <div class="an-snapshot__top">
+                    <div>
+                      <div class="an-card__kicker an-card__kicker--emerald">Снимок</div>
+                      <div class="an-snapshot__value">146 000 ₽</div>
+                      <div class="an-snapshot__meta">Счёт 92 000 + подушка 54 000</div>
+                    </div>
+                    <div class="an-zone an-zone--warn">Зона<br />внимания</div>
+                  </div>
+                  <div class="an-residual an-residual--tight">
+                    <span>После обязательств и жизни</span>
+                    <strong>+26 000 ₽</strong>
+                  </div>
+                </section>
+
+                <section class="an-card">
+                  <div class="an-card__kicker">Поток месяца</div>
+                  <h3 class="an-card__title">Куда уходит доход</h3>
+                  <div class="an-bar">
+                    <div class="an-bar__row">
+                      <span class="an-bar__label">Доход</span>
+                      <span class="an-bar__amt">120 000 ₽</span>
+                      <div class="an-bar__track"><div class="an-bar__fill an-bar__fill--income" style="width:100%"></div></div>
+                    </div>
+                    <div class="an-bar__row">
+                      <span class="an-bar__label">Платежи по долгам <span class="an-bar__pct">40%</span></span>
+                      <span class="an-bar__amt">−48 000 ₽</span>
+                      <div class="an-bar__track"><div class="an-bar__fill an-bar__fill--debt" style="width:40%"></div></div>
+                    </div>
+                    <div class="an-bar__row">
+                      <span class="an-bar__label">Обслуживание активов</span>
+                      <span class="an-bar__amt">−8 000 ₽</span>
+                      <div class="an-bar__track"><div class="an-bar__fill an-bar__fill--maint" style="width:7%"></div></div>
+                    </div>
+                    <div class="an-bar__row">
+                      <span class="an-bar__label">Расходы на жизнь <span class="an-bar__pct">32%</span></span>
+                      <span class="an-bar__amt">−38 000 ₽</span>
+                      <div class="an-bar__track"><div class="an-bar__fill an-bar__fill--life" style="width:32%"></div></div>
+                    </div>
+                  </div>
+                </section>
+
+                <section class="an-card">
+                  <div class="an-card__kicker an-card__kicker--amber">Устойчивость</div>
+                  <h3 class="an-card__title">Риски и запас</h3>
+                  <div class="an-metrics">
+                    <div class="an-metric">
+                      <div class="an-metric__label">Подушка, мес.</div>
+                      <div class="an-metric__value">2,3</div>
+                    </div>
+                    <div class="an-metric">
+                      <div class="an-metric__label">Runway счёта</div>
+                      <div class="an-metric__value">1 пер.</div>
+                    </div>
+                    <div class="an-metric an-metric--wide">
+                      <div class="an-metric__label">Платежи по долгам к доходу (ПДН)</div>
+                      <div class="an-metric__value">40%</div>
+                      <div class="an-dti-track"><div class="an-dti-fill" style="width:40%"></div></div>
+                    </div>
+                  </div>
+                </section>
+
+                <section class="an-card an-card--dark" data-charts-root>
+                  <div class="an-card__kicker">Динамика</div>
+                  <h3 class="an-card__title">Графики по закрытым ходам</h3>
+
+                  <div class="an-chart-block">
+                    <div class="an-chart-block__head">
+                      <div class="an-chart-block__titles">
+                        <p class="an-chart-block__title">Доходы и расходы</p>
+                        <p class="an-chart-block__sub">Факт за каждый закрытый ход · две линии на одном поле</p>
+                      </div>
+                    </div>
+                    <svg
+                      class="an-chart-svg"
+                      data-chart="income-expense"
+                      viewBox="0 0 320 56"
+                      preserveAspectRatio="none"
+                      aria-hidden="true"
+                    ></svg>
+                    <div class="an-chart-legend">
+                      <span><i class="l-income" aria-hidden="true"></i> Доходы</span>
+                      <span><i class="l-expense" aria-hidden="true"></i> Расходы (обязательства + жизнь)</span>
+                    </div>
+                  </div>
+
+                  <div class="an-chart-block">
+                    <div class="an-chart-block__head">
+                      <div class="an-chart-block__titles">
+                        <p class="an-chart-block__title">Ликвидность: история и прогноз</p>
+                        <p class="an-chart-block__sub" data-forecast-hint>
+                          Слева — закрытые ходы, справа — ориентир при текущей модели месяца
+                        </p>
+                      </div>
+                      <div class="an-chart-block__value" data-forecast-value>224 000 ₽</div>
+                    </div>
+                    <div class="an-seg an-chart-split__seg" role="group" aria-label="Горизонт прогноза" data-forecast-seg>
+                      <button type="button" class="is-active" data-months="3">3 мес</button>
+                      <button type="button" data-months="6">6 мес</button>
+                      <button type="button" data-months="12">12 мес</button>
+                    </div>
+                    <svg
+                      class="an-chart-svg an-chart-svg--tall"
+                      data-chart="liquidity-split"
+                      viewBox="0 0 320 72"
+                      preserveAspectRatio="none"
+                      aria-hidden="true"
+                    ></svg>
+                    <div class="an-chart-legend">
+                      <span><i class="l-liq" aria-hidden="true"></i> Одна траектория: факт слева, прямая экстраполяция справа от «сейчас»</span>
+                    </div>
+                    <p class="an-chart-hint">
+                      Как в prod: живая траектория слева, экстраполяция справа. Без новых сделок и событий.
+                    </p>
+                  </div>
+                </section>
+
+                <section class="an-insight">
+                  <div class="an-insight__icon" aria-hidden="true">!</div>
+                  <div>
+                    <p class="an-insight__title">Платежи по долгам — 40% дохода</p>
+                    <p class="an-insight__body">
+                      Это верхняя граница комфортной зоны. Имеет смысл смотреть, можно ли снизить нагрузку в следующих
+                      ходах.
+                    </p>
+                  </div>
+                </section>
+
+                <p class="an-foot">Цели партии — на вкладке «Главная»</p>
+              </div>
+              <nav class="an-nav" aria-label="Навигация (макет)">
+                <span>Главная</span>
+                <span>Капитал</span>
+                <span class="is-active">Аналитика</span>
+                <span>Меню</span>
+              </nav>
+            </div>
+          </div>
+        </div>
+
+        <!-- —— B Insight-first —— -->
+        <div class="lab-an-col">
+          <h2 class="lab-an-col__title">B — Инсайт сверху</h2>
+          <p class="lab-an-col__hint">Сначала рекомендация Монетки, затем компактный снимок и поток. Для игроков, которые открывают вкладку за советом.</p>
+          <div class="an-phone">
+            <div class="an-phone__scroll">
+              <header class="an-hero">
+                <div class="an-hero__row">
+                  <div>
+                    <div class="an-hero__kicker">Аналитика</div>
+                    <h2 class="an-hero__title">Финансовое состояние</h2>
+                  </div>
+                  <span class="an-hero__pill">Ход #7</span>
+                </div>
+              </header>
+
+              <div class="an-insight-hero">
+                <div class="an-insight">
+                  <div>
+                    <p class="an-insight__title">Подушка — 2,3 месяца давления</p>
+                    <p class="an-insight__body">
+                      Ниже ориентира 3 месяцев. Один неожиданный расход сильнее бьёт по счёту — смотри поток месяца ниже.
+                    </p>
+                  </div>
+                  <img class="an-insight__mascot" src="./assets/monetka-mascot.png" alt="" width="44" height="44" />
+                </div>
+              </div>
+
+              <div class="an-stack">
+                <section class="an-card">
+                  <div class="an-snapshot__top">
+                    <div>
+                      <div class="an-card__kicker an-card__kicker--emerald">Ликвидность</div>
+                      <div class="an-snapshot__value">146 000 ₽</div>
+                    </div>
+                    <div class="an-zone an-zone--warn">Внимание</div>
+                  </div>
+                  <div class="an-residual an-residual--tight">
+                    <span>После всего месяца</span>
+                    <strong>+26 000 ₽</strong>
+                  </div>
+                </section>
+
+                <section class="an-card">
+                  <div class="an-card__kicker">Поток</div>
+                  <h3 class="an-card__title">Структура месяца</h3>
+                  <div class="an-bar">
+                    <div class="an-bar__row">
+                      <span class="an-bar__label">Доход</span>
+                      <span class="an-bar__amt">120 000 ₽</span>
+                      <div class="an-bar__track"><div class="an-bar__fill an-bar__fill--income" style="width:100%"></div></div>
+                    </div>
+                    <div class="an-bar__row">
+                      <span class="an-bar__label">Обязательства + жизнь</span>
+                      <span class="an-bar__amt">−94 000 ₽</span>
+                      <div class="an-bar__track"><div class="an-bar__fill an-bar__fill--debt" style="width:78%"></div></div>
+                    </div>
+                  </div>
+                </section>
+
+                <section class="an-card">
+                  <div class="an-card__kicker">Прогноз</div>
+                  <div class="an-seg">
+                    <button type="button">3 мес</button>
+                    <button type="button" class="is-active">6 мес</button>
+                    <button type="button">12 мес</button>
+                  </div>
+                  <div class="an-forecast__value">302 000 ₽</div>
+                  <p class="an-forecast__hint">Ориентир при текущем остатке месяца.</p>
+                </section>
+              </div>
+              <p class="an-foot">Цели партии — на главной</p>
+              <nav class="an-nav" aria-hidden="true">
+                <span>Главная</span><span>Капитал</span><span class="is-active">Аналитика</span><span>Меню</span>
+              </nav>
+            </div>
+          </div>
+        </div>
+
+        <!-- —— C Collapsible —— -->
+        <div class="lab-an-col">
+          <h2 class="lab-an-col__title">C — Сворачиваемые секции</h2>
+          <p class="lab-an-col__hint">Снимок и инсайт всегда видны; динамика и прогноз — в &lt;details&gt;. Для длинных сессий и повторных визитов.</p>
+          <div class="an-phone">
+            <div class="an-phone__scroll">
+              <header class="an-hero">
+                <div class="an-hero__row">
+                  <div>
+                    <div class="an-hero__kicker">Аналитика</div>
+                    <h2 class="an-hero__title">146 000 ₽ ликвидности</h2>
+                    <p class="an-hero__sub">Остаток месяца +26 000 ₽ · зона внимания</p>
+                  </div>
+                  <span class="an-hero__pill">#7</span>
+                </div>
+              </header>
+
+              <div class="an-stack">
+                <section class="an-insight an-insight--crit" style="border-radius:14px">
+                  <div class="an-insight__icon" aria-hidden="true">!</div>
+                  <div>
+                    <p class="an-insight__title">ПДН 40% — верх комфортной зоны</p>
+                    <p class="an-insight__body">Банковский ориентир — до 40%. Дальше — зона повышенного давления.</p>
+                  </div>
+                </section>
+
+                <details class="an-details" open>
+                  <summary>Поток месяца</summary>
+                  <div class="an-details__body">
+                    <div class="an-bar">
+                      <div class="an-bar__row">
+                        <span class="an-bar__label">Доход 120 000</span>
+                        <div class="an-bar__track"><div class="an-bar__fill an-bar__fill--income" style="width:100%"></div></div>
+                      </div>
+                      <div class="an-bar__row">
+                        <span class="an-bar__label">Списания −94 000</span>
+                        <div class="an-bar__track"><div class="an-bar__fill an-bar__fill--life" style="width:78%"></div></div>
+                      </div>
+                    </div>
+                  </div>
+                </details>
+
+                <details class="an-details">
+                  <summary>Устойчивость</summary>
+                  <div class="an-details__body">
+                    <div class="an-metrics">
+                      <div class="an-metric"><div class="an-metric__label">Подушка</div><div class="an-metric__value">2,3 мес</div></div>
+                      <div class="an-metric"><div class="an-metric__label">Runway</div><div class="an-metric__value">1 пер.</div></div>
+                    </div>
+                  </div>
+                </details>
+
+                <details class="an-details">
+                  <summary>Динамика и прогноз</summary>
+                  <div class="an-details__body">
+                    <div class="an-seg">
+                      <button type="button">3</button>
+                      <button type="button">6</button>
+                      <button type="button" class="is-active">12</button>
+                    </div>
+                    <div class="an-forecast__value">458 000 ₽</div>
+                    <p class="an-forecast__hint">12 мес. при текущей модели.</p>
+                  </div>
+                </details>
+              </div>
+              <p class="an-foot">Подробные цели — на главной</p>
+              <nav class="an-nav" aria-hidden="true">
+                <span>Главная</span><span>Капитал</span><span class="is-active">Аналитика</span><span>Меню</span>
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <script src="./lab.js"></script>
+  </body>
+</html>

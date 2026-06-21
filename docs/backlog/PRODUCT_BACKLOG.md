@@ -240,7 +240,7 @@ aliases:
 #### AN1-0 — фундамент (P0)
 
 - [ ] P0 **[Doc] AN1-001** — gap-аудит: SPEC ↔ `AnalyticsPremium` ↔ API; зафиксировать удаление victory-блоков из фокуса.
-- [ ] P0 **[Doc+Design] AN1-002** — design-lab «Аналитика v2» (MQX): снимок, водопад, прогноз 3/6/12, insight cards.
+- [ ] P0 **[Doc+Design] AN1-002** — design-lab [`analytics/v2-round`](../../design-lab/analytics/v2-round/) 🟡 review
 - [ ] P0 **[Backend] AN1-011** — `analytics_thresholds` config; поле/контракт **остаток после full outflow** в overview.
 - [ ] P0 **[Backend] AN1-012** — `GET /api/finance/analytics/insights` v1 (rule engine, шаблоны RU).
 - [ ] P0 **[Frontend] AN1-010** — переписка вкладки: блоки §3 SPEC; segmented прогноз 3/6/12.
