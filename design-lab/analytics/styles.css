@@ -1,0 +1,30 @@
+/* design-lab/analytics — общие токены темы */
+
+:root {
+  --mq-violet: #6d28d9;
+  --mq-violet-deep: #5b21b6;
+  --mq-emerald: #059669;
+  --mq-sky: #0ea5e9;
+  --mq-amber: #d97706;
+  --mq-rose: #e11d48;
+  --mq-ink: #0f1115;
+  --mq-mist: #f5f6f8;
+  --mqx-ink: #0f1115;
+  --surface: #fff;
+  --text: #0f1115;
+  --text-muted: #6b7280;
+  --glass-border: rgba(15, 17, 21, 0.1);
+  --font: system-ui, 'Segoe UI', Roboto, sans-serif;
+  --an-zone-ok: #059669;
+  --an-zone-warn: #d97706;
+  --an-zone-crit: #e11d48;
+}
+
+[data-theme='dark'] {
+  --surface: #1e1f26;
+  --text: #f3f4f6;
+  --text-muted: #9ca3af;
+  --glass-border: rgba(255, 255, 255, 0.1);
+  --mq-mist: #121318;
+  --mqx-ink: #f3f4f6;
+}

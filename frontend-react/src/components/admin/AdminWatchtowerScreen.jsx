@@ -58,6 +58,98 @@ function OnboardingFunnel({ funnel }) {
   );
 }
 
+function ProductFunnel({ funnel }) {
+  if (!funnel) return null;
+  const days = funnel.window_days ?? 7;
+  const activation = funnel.activation ?? {};
+  const skLabel =
+    funnel.save_kind === 'game' ? 'Game' : funnel.save_kind === 'plan' ? 'Plan' : 'все режимы';
+
+  return (
+    <section className="mq-card admin-watchtower__block admin-watchtower__funnel">
+      <h2 className="admin-watchtower__block-title">
+        Воронка продукта · {days} дн. · {skLabel}
+      </h2>
+      <AdminKpiGrid
+        items={[
+          {
+            key: 'cohort',
+            label: 'Профилей в когорте',
+            value: activation.profiles_cohort ?? 0,
+            sub: `с закрытием: ${activation.profiles_with_close ?? 0}`,
+          },
+          {
+            key: 'ge5',
+            label: '≥5 периодов',
+            value: `${activation.pct_ge5_closes ?? 0}%`,
+            sub: 'PA-A1',
+          },
+          {
+            key: 'ge8',
+            label: '≥8 периодов',
+            value: `${activation.pct_ge8_closes ?? 0}%`,
+            sub: 'PA-A1s',
+          },
+          {
+            key: 'median',
+            label: 'Медиана закрытий',
+            value: activation.median_closes ?? '—',
+            sub: 'среди игравших',
+          },
+        ]}
+      />
+      <div className="admin-watchtower__table-wrap">
+        <table className="admin-watchtower__table admin-watchtower__table--funnel">
+          <thead>
+            <tr>
+              <th>Шаг</th>
+              <th>Кол-во</th>
+              <th>% от стартов</th>
+            </tr>
+          </thead>
+          <tbody>
+            {(funnel.steps ?? []).map((row) => (
+              <tr key={row.step}>
+                <td>{row.label}</td>
+                <td>{row.count}</td>
+                <td>{row.rate_pct != null ? `${row.rate_pct}%` : '—'}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      {(funnel.by_save_kind ?? []).length > 0 ? (
+        <div className="admin-watchtower__table-wrap admin-watchtower__segment-grid">
+          <table className="admin-watchtower__table admin-watchtower__table--funnel">
+            <thead>
+              <tr>
+                <th>Режим</th>
+                <th>Новых профилей</th>
+                <th>≥5 периодов</th>
+                <th>Всего профилей</th>
+              </tr>
+            </thead>
+            <tbody>
+              {funnel.by_save_kind.map((row) => (
+                <tr key={row.save_kind}>
+                  <td>{row.save_kind === 'plan' ? 'Plan' : 'Game'}</td>
+                  <td>{row.profiles_recent}</td>
+                  <td>{row.activation?.pct_ge5_closes ?? 0}%</td>
+                  <td>{row.profiles_total}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      ) : null}
+      <p className="mq-muted admin-watchtower__funnel-hint">
+        Когорта — профили, созданные за окно. Закрытия — из period_economy_closings. Сверка с
+        опросом: PRE_ALPHA_WAVE1_OPS § PA-A*.
+      </p>
+    </section>
+  );
+}
+
 function MetricsSummary({ summary }) {
   if (!summary) return null;
   const days = summary.window_days ?? 7;
@@ -121,11 +213,18 @@ function MetricsSummary({ summary }) {
   );
 }
 
+const SAVE_KIND_FILTERS = [
+  { id: '', label: 'Все режимы' },
+  { id: 'game', label: 'Game' },
+  { id: 'plan', label: 'Plan' },
+];
+
 export function AdminWatchtowerScreen({ onBack }) {
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
   const activeTab = searchParams.get('tab') || 'overview';
   const highlightProfile = searchParams.get('profile');
+  const saveKindFilter = searchParams.get('save_kind') || '';
 
   const [data, setData] = useState(null);
   const [error, setError] = useState(null);
@@ -138,6 +237,8 @@ export function AdminWatchtowerScreen({ onBack }) {
     try {
       const payload = await adminApi.watchtower({
         profile_limit: 80,
+        funnel_days: 30,
+        save_kind: saveKindFilter || undefined,
       });
       setData(payload);
     } catch (e) {
@@ -146,7 +247,7 @@ export function AdminWatchtowerScreen({ onBack }) {
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [saveKindFilter]);
 
   useEffect(() => {
     load();
@@ -320,7 +421,29 @@ export function AdminWatchtowerScreen({ onBack }) {
         <>
           {activeTab === 'overview' ? (
             <>
+              <div className="admin-watchtower__filters" role="group" aria-label="Режим save_kind">
+                {SAVE_KIND_FILTERS.map(({ id, label }) => {
+                  const active = saveKindFilter === id;
+                  return (
+                    <button
+                      key={id || 'all'}
+                      type="button"
+                      className={`admin-watchtower__filter-chip${active ? ' admin-watchtower__filter-chip--active' : ''}`}
+                      aria-pressed={active}
+                      onClick={() => {
+                        const next = new URLSearchParams(searchParams);
+                        if (id) next.set('save_kind', id);
+                        else next.delete('save_kind');
+                        setSearchParams(next, { replace: true });
+                      }}
+                    >
+                      {label}
+                    </button>
+                  );
+                })}
+              </div>
               <MetricsSummary summary={data.metrics_summary} />
+              <ProductFunnel funnel={data.product_funnel} />
               <section className="mq-card admin-watchtower__block admin-attention">
                 <h2 className="admin-watchtower__block-title">Очередь внимания</h2>
                 <p className="mq-muted admin-watchtower__block-hint">

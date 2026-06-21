@@ -37,6 +37,13 @@ def _resolve_admin_web_base_url() -> str:
     return DEFAULT_LOCAL_APP_URL.rstrip("/")
 
 
+def resolve_player_web_app_url() -> str:
+    """Корневой URL Mini App для Telegram web_app кнопки (HashRouter)."""
+    base = _resolve_admin_web_base_url().rstrip("/")
+    origin = base.split("#", 1)[0].rstrip("/")
+    return f"{origin}/#/"
+
+
 class Config:
     DATABASE_URL = os.getenv("DATABASE_URL", "")
     SECRET_KEY = os.getenv("SECRET_KEY", "default-secret-key-change-me")
@@ -50,6 +57,11 @@ class Config:
     # Forum topic in supergroup (sendMessage message_thread_id); empty = General / no topic
     OPS_TELEGRAM_MESSAGE_THREAD_ID = os.getenv("OPS_TELEGRAM_MESSAGE_THREAD_ID", "").strip()
     ADMIN_WEB_BASE_URL = _resolve_admin_web_base_url()
+    PUBLIC_APP_URL = os.getenv("PUBLIC_APP_URL", "").strip()
+
+    # Player bot (PLT-201…204)
+    PLAYER_TELEGRAM_BOT_TOKEN = os.getenv("PLAYER_TELEGRAM_BOT_TOKEN", "").strip()
+    PLAYER_TELEGRAM_WEBHOOK_SECRET = os.getenv("PLAYER_TELEGRAM_WEBHOOK_SECRET", "").strip()
     
     @classmethod
     def get_database_url(cls) -> str:

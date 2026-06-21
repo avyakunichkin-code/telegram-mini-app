@@ -43,6 +43,7 @@ aliases:
 | **O1** | Онбординг TMA — Guided coach (архив) | Frontend+Backend+Doc | **superseded → O2** |
 | **O2** | Progressive Guidance — bottom strip | Frontend+Backend+Doc | ✅ **core prod** (2026-06-01); replay — backlog |
 | **A0** | Admin Watchtower / Ops cockpit | DB+Backend+Frontend | 🟡 **AQ-01…10 ✅**, **C1–C2 ✅** · C2e choices ⬜ · [**ADMIN_BACKLOG**](ADMIN_BACKLOG.md) |
+| **AN1** | **Финансовая аналитика игрока** — вкладка «Аналитика» | Backend+Frontend+Doc | 🟡 **крупный эпик** — переписка `AnalyticsPremium`; состояние → анализ → рекомендации; Game + Plan · [`SPEC_ANALYTICS`](../specs/SPEC_ANALYTICS.md) |
 | **TG1** | Telegram: боты, ops, player notify | Ops+Backend+Frontend | 🟡 ops-alerts ✅ + `OPS_TELEGRAM_MESSAGE_THREAD_ID`; **player bot** ⬜ |
 | **E1** | **Расходы жизнеобеспечения** — категории, статьи, burn, UI | DB+Backend+Frontend+Content | ⏸ **ждём описание + doc**; E1-R и код — после spec ([PLAN](../plans/PLAN_backlog_may2026.md)) |
 | **PW1** | PWA / standalone + стабильный resume (lock/unlock) | Frontend+Ops+Doc | 🟡 фаза 0–1 ✅; **PW1-004/104 PASS**; [PLAN](../plans/PLAN_pwa-standalone.md) |
@@ -53,6 +54,9 @@ aliases:
 | **GE1** | Run Finale — финал партии, feedback, бейджи сохранений | DB+Backend+Frontend+Doc | 🟢 v1 prod · [SPEC_game-run-finale](../specs/features/SPEC_game-run-finale.md) · `run_outcome`, Watchtower feedback |
 | **DL1** | **Реалистичный долг** — актив↔кредит↔страховка, аннуитет, prepay | DB+Backend+Frontend+Doc | 🟡 **MVP в prod** · spec approved; **DL1-143** REVIEW ([отчёт](../balance/reports/DL1-143_balance_playtest_2026-06-02.md)); polish UI |
 | **EVT1** | Система событий v2 (слоты, informational, global) | DB+Backend+Frontend+Content | 🟡 taxonomy `0041` + rebalance ✅; **мульти-слот** EVT1-030…050 ⬜ |
+| **PLT** | Platform: хостинг, product analytics, TG player, auth | Ops+Backend+Frontend+Doc | 🟡 plan [`PLAN_PLT`](../plans/PLAN_PLT.md); P0 gate → M1.2 / M2.0 |
+| **M1.2** | MVP 1.2 — Game для своих (закрытая альфа) | Backend+Frontend+Content+Ops | ✅ **approved** — EVT1 срез, V2-BAL, juice; **P0 = PLT** |
+| **M2.0** | MVP 2.0 — Plan для своих | DB+Backend+Frontend+Doc | ✅ **approved** — квиз **P2-ONB**, **AN1**, E1; **P0 = PLT** |
 
 > **GAME.md §0.2 / M11:** синхронизировано 2026-05-26 (Task 0.1): `cooldown_periods` ✅, MQ-116 → [`MVP_AUDIT_VS_SPEC`](../foundation/MVP_AUDIT_VS_SPEC.md) §M11.
 
@@ -68,6 +72,20 @@ aliases:
 | **Plan Mode** | MVP 2.0, **не** в ближайших волнах |
 | **WD1 wide web** | Четвёртый канал UX: полноширинный layout **в дополнение** к TMA/PWA; цель — **Closed Alpha 50–100** на своём домене; лендинг/FAQ **не** блокер |
 | **AC1 TG+email** | Отложить реализацию; держать в traceability до роста каналов |
+
+### Решения продукта (2026-06-21)
+
+| Тема | Решение |
+|------|---------|
+| **Версии MVP** | **MVP 1.x** = Game (`save_kind=game`); **MVP 2.x** = Plan (`save_kind=plan`) |
+| **Post-playtest** | Два трека + общий **PLT** — [`post-playtest-wave1-two-directions`](../vision/ideas/post-playtest-wave1-two-directions.md) |
+| **PLT P0** | Хостинг, домен, product analytics 2.0, TG player, чат — **до** раздувания EVT1/E1 |
+| **Plan 2.0** | Квиз **P2-ONB** + **AN1** (вкладка «Аналитика»); **E1** — слой расходов; квиз **с нуля** (советник) |
+| **AN1** | Вкладка «Аналитика»; стандарты PF/банк; прогноз 3/6/12; rule engine рекомендаций; **без** фокуса на победу; **не** блокируется E1 |
+| **Analytics** | Watchtower/SQL v1; внешний SaaS — после 2-го плейтеста |
+| **WD1** | Wide web — **после 2-го плейтеста**; вертикаль TMA/PWA до тех пор |
+| **AUTH1** | Email verify — **P3** (последний приоритет PLT) |
+| **TG1 P0** | **5** player-шаблонов на первую волну |
 
 ---
 
@@ -206,6 +224,42 @@ aliases:
 
 **Env (backend):** `ADMIN_USER_IDS`, `OPS_TELEGRAM_BOT_TOKEN`, `OPS_TELEGRAM_CHAT_ID`; ссылки в TG — `ADMIN_WEB_BASE_URL` или `PUBLIC_APP_URL` (на Render без env — дефолт GitHub Pages).
 
+### Эпик AN1 — финансовая аналитика игрока
+
+**Статус (2026-06-21):** крупный эпик; legacy [`AnalyticsPremium.jsx`](../../frontend-react/src/components/AnalyticsPremium.jsx) не обновлялся с первого подхода к игре — **полная переписка**, не точечный polish.
+
+**Канон:** [`player-financial-analytics-an1`](../vision/ideas/player-financial-analytics-an1.md) **approved** · Spec: [`SPEC_ANALYTICS`](../specs/SPEC_ANALYTICS.md) · UI: [`SPEC_FRONTEND_UI`](../specs/SPEC_FRONTEND_UI.md).
+
+| Слой | Не путать с |
+|------|-------------|
+| **AN1** — вкладка «Аналитика» для игрока | **A0 / PA2** — product analytics в `#/admin` |
+| | **E1** — расходы/burn (**не блокирует** AN1-0) |
+
+**Продуктовые якоря (2026-06-21):** единые стандарты (не от сложности Game); прогноз **3/6/12** мес.; победа — вскользь внизу; рекомендации — **автоматический** rule engine на BE; личное/семья — не разделяем в UI.
+
+#### AN1-0 — фундамент (P0)
+
+- [ ] P0 **[Doc] AN1-001** — gap-аудит: SPEC ↔ `AnalyticsPremium` ↔ API; зафиксировать удаление victory-блоков из фокуса.
+- [ ] P0 **[Doc+Design] AN1-002** — design-lab «Аналитика v2» (MQX): снимок, водопад, прогноз 3/6/12, insight cards.
+- [ ] P0 **[Backend] AN1-011** — `analytics_thresholds` config; поле/контракт **остаток после full outflow** в overview.
+- [ ] P0 **[Backend] AN1-012** — `GET /api/finance/analytics/insights` v1 (rule engine, шаблоны RU).
+- [ ] P0 **[Frontend] AN1-010** — переписка вкладки: блоки §3 SPEC; segmented прогноз 3/6/12.
+- [ ] P0 **[Frontend] AN1-013** — `MqxInsightCard` + потребление insights API.
+
+#### AN1-1 — динамика и Plan
+
+- [ ] P1 **[Backend+FE] AN1-100** — timeseries: burn/overdue в точках; таблица 6 закрытий.
+- [ ] P1 **[Backend+FE] AN1-110** — расширение каталога правил insights (тренды, runway).
+- [ ] P1 **[Frontend] AN1-120** — Plan: «Аналитика» после квиза (данные как ввёл пользователь).
+
+#### AN1-2 — сценарии и E1
+
+- [ ] P1 **[Backend+FE] AN1-200** — сценарии «если» (лайт) на клиенте от снимка.
+- [ ] P2 **[Backend+FE] AN1-210** — breakdown по категориям burn при go **E1**.
+- [ ] P2 **[Doc] AN1-220** — граница insights vs будущий Advisor CTA.
+
+**Зависимости:** **E1** — углубление, не gate. **P2-ONB** — gate для AN1-120.
+
 ### Эпик E1 — расходы на жизнеобеспечение (полный слой)
 
 **Статус (2026-05-30):** реализация **на паузе** — сначала **описание фичи и документация**, затем E1-R ([`PLAN_backlog_may2026`](../plans/PLAN_backlog_may2026.md): E1-R1…R3). Волны A–D — **после go**, не раньше.
@@ -214,7 +268,9 @@ aliases:
 
 Идея (idea-refine): [`expenses-mechanic.md`](../vision/ideas/expenses-mechanic.md) · Канон: [`EXPENSES_SYSTEM.md`](../specs/gameplay/EXPENSES_SYSTEM.md) · Spec: [`SPEC_expenses.md`](../specs/features/SPEC_expenses.md) · Plan: [`PLAN_expenses.md`](../plans/PLAN_expenses.md) · **Чеклист слоёв:** [`EXPENSES_LAYER_CHECKLIST.md`](../specs/economy/EXPENSES_LAYER_CHECKLIST.md).
 
-#### E1-R — повторная аналитика (сейчас)
+#### E1-R — экономический снимок перед расходами (Doc)
+
+*Не путать с **AN1** (UI аналитики игрока). E1-R — продуктовый/экономический аудит перед слоем расходов.*
 
 - [ ] P0 **[Doc+Analytics] E1-R1** — снимок экономики: шаблоны × burn/outflow/victory до и после E1.
 - [ ] P0 **[Doc] E1-R2** — gap spec ↔ код ↔ UX; обновить SPEC + LAYER_CHECKLIST.

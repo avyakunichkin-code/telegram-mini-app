@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, DateTime, Text, ForeignKey, Float, UniqueConstraint
+from sqlalchemy import Column, Integer, String, DateTime, Text, ForeignKey, Float, UniqueConstraint, BigInteger
 from sqlalchemy.orm import relationship
 
 from .database import Base
@@ -14,6 +14,8 @@ class User(Base):
     hashed_password = Column(String(200), nullable=False)
     full_name = Column(String(100))
     telegram_id = Column(Integer, unique=True, nullable=True)
+    telegram_chat_id = Column(BigInteger, nullable=True, index=True)
+    telegram_started_at = Column(DateTime, nullable=True)
     guidance_completed = Column(Integer, nullable=False, default=0)
     guidance_progress_json = Column(Text, nullable=False, default="{}")
     guidance_completed_at = Column(DateTime, nullable=True)

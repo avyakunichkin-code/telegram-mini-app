@@ -26,6 +26,7 @@ from ..admin.catalog_write import clone_catalog_row, create_catalog_row
 from ..admin.catalogs import fetch_catalog_rows, get_catalog_spec, list_catalog_meta
 from ..admin.csv_export import profiles_csv_rows, run_feedback_csv_rows, stream_csv
 from ..admin.metrics_summary import build_metrics_summary
+from ..admin.product_funnel import build_product_funnel
 from ..admin.watchtower_profiles import build_admin_profile_row, fetch_profile_rows
 from ..admin.onboarding_funnel import build_onboarding_funnel
 from ..admin.profile_inspector import build_profile_inspector
@@ -114,6 +115,7 @@ class AdminRunFeedbackRow(BaseModel):
 
 class AdminMetricsSummary(BaseModel):
     window_days: int
+    save_kind: Optional[str] = None
     users_total: int
     users_recent: int
     profiles_total: int
@@ -132,6 +134,36 @@ class AdminMetricsSummary(BaseModel):
     run_feedback_recent: int = 0
     profiles_period_3_plus_total: int = 0
     profiles_period_3_plus_active: int = 0
+
+
+class AdminProductFunnelStep(BaseModel):
+    step: str
+    label: str
+    count: int
+    rate_pct: Optional[float] = None
+
+
+class AdminProductFunnelActivation(BaseModel):
+    profiles_cohort: int
+    profiles_with_close: int
+    pct_ge5_closes: float
+    pct_ge8_closes: float
+    median_closes: Optional[float] = None
+
+
+class AdminProductFunnelSegment(BaseModel):
+    save_kind: str
+    profiles_total: int
+    profiles_recent: int
+    activation: AdminProductFunnelActivation
+
+
+class AdminProductFunnel(BaseModel):
+    window_days: int
+    save_kind: Optional[str] = None
+    steps: List[AdminProductFunnelStep]
+    activation: AdminProductFunnelActivation
+    by_save_kind: List[AdminProductFunnelSegment]
 
 
 class AdminPendingEventRow(BaseModel):
@@ -159,6 +191,7 @@ class AdminWatchtowerResponse(BaseModel):
     run_feedback: List[AdminRunFeedbackRow] = []
     onboarding_funnel: AdminOnboardingFunnel
     metrics_summary: AdminMetricsSummary
+    product_funnel: AdminProductFunnel
 
 
 class AdminCatalogColumn(BaseModel):
@@ -623,10 +656,14 @@ async def admin_profile_inspector(
 @router.get("/metrics/summary", response_model=AdminMetricsSummary)
 async def admin_metrics_summary(
     days: int = Query(7, ge=1, le=90),
+    save_kind: str = Query("", max_length=16),
     _admin: User = Depends(require_admin_user),
     db: Session = Depends(get_db),
 ):
-    return AdminMetricsSummary(**build_metrics_summary(db, days=days))
+    sk = save_kind.strip().lower() or None
+    if sk and sk not in ("game", "plan"):
+        raise HTTPException(status_code=400, detail="save_kind must be 'game' or 'plan'")
+    return AdminMetricsSummary(**build_metrics_summary(db, days=days, save_kind=sk))
 
 
 @router.get("/export/profiles.csv")
@@ -672,18 +709,26 @@ async def admin_watchtower(
     profile_limit: int = Query(50, ge=1, le=200),
     notification_limit: int = Query(100, ge=1, le=500),
     run_feedback_limit: int = Query(50, ge=1, le=200),
+    funnel_days: int = Query(7, ge=1, le=90),
     q: str = Query("", max_length=120),
     profile_filter: str = Query("", max_length=32),
+    save_kind: str = Query("", max_length=16),
     stuck_only: bool = Query(False),
     _admin: User = Depends(require_admin_user),
     db: Session = Depends(get_db),
 ):
+    sk = save_kind.strip().lower()
+    if sk and sk not in ("game", "plan"):
+        raise HTTPException(status_code=400, detail="save_kind must be 'game' or 'plan'")
+    sk_param = sk or ""
+
     users = db.query(User).order_by(User.id.desc()).limit(user_limit).all()
     profiles = fetch_profile_rows(
         db,
         limit=profile_limit,
         q=q,
         profile_filter=profile_filter,
+        save_kind=sk_param,
         stuck_only=stuck_only,
     )
     notifications = (
@@ -730,7 +775,12 @@ async def admin_watchtower(
             for p, user in profiles
         ],
         onboarding_funnel=AdminOnboardingFunnel(**build_onboarding_funnel(db)),
-        metrics_summary=AdminMetricsSummary(**build_metrics_summary(db, days=7)),
+        metrics_summary=AdminMetricsSummary(
+            **build_metrics_summary(db, days=funnel_days, save_kind=sk or None)
+        ),
+        product_funnel=AdminProductFunnel(
+            **build_product_funnel(db, days=funnel_days, save_kind=sk or None)
+        ),
         notifications=[
             AdminNotificationRow(
                 id=n.id,

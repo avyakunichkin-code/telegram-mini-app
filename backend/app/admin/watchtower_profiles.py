@@ -29,12 +29,17 @@ def profile_rows_query(
     *,
     q: str = "",
     profile_filter: str = "",
+    save_kind: str = "",
     user_id: int | None = None,
 ) -> Query:
     query = db.query(GameProfile, User).join(User, User.id == GameProfile.user_id)
 
     if user_id is not None:
         query = query.filter(GameProfile.user_id == int(user_id))
+
+    sk = (save_kind or "").strip().lower()
+    if sk in ("game", "plan"):
+        query = query.filter(GameProfile.save_kind == sk)
 
     needle = (q or "").strip()
     if needle:
@@ -53,6 +58,10 @@ def profile_rows_query(
         query = query.filter(GameProfile.run_outcome == "victory")
     elif filt == "guidance_draft":
         query = query.filter(User.guidance_completed == 0)
+    elif filt == "game":
+        query = query.filter(GameProfile.save_kind == "game")
+    elif filt == "plan":
+        query = query.filter(GameProfile.save_kind == "plan")
     # stuck — после scan_stuck_and_emit, см. fetch_profile_rows
 
     return query.order_by(GameProfile.updated_at.desc())
@@ -88,6 +97,7 @@ def fetch_profile_rows(
     limit: int = 50,
     q: str = "",
     profile_filter: str = "",
+    save_kind: str = "",
     stuck_only: bool = False,
     user_id: int | None = None,
 ) -> list[tuple[GameProfile, User]]:
@@ -99,6 +109,7 @@ def fetch_profile_rows(
         db,
         q=q,
         profile_filter=filt if filt != "stuck" else "",
+        save_kind=save_kind,
         user_id=user_id,
     )
     fetch_limit = limit

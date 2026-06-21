@@ -12,25 +12,37 @@ from ..models import GameProfile, NotificationLog, PlayerRunFeedback, User
 from ..timeutil import utc_now_naive
 
 
-def build_metrics_summary(db: Session, *, days: int = 7) -> dict[str, Any]:
+def build_metrics_summary(
+    db: Session, *, days: int = 7, save_kind: str | None = None
+) -> dict[str, Any]:
     window_days = max(1, min(int(days or 7), 90))
     since = utc_now_naive() - timedelta(days=window_days)
+    sk = str(save_kind or "").strip().lower()
+    save_kind_filter = sk if sk in ("game", "plan") else None
+
+    def _profile_query():
+        query = db.query(GameProfile)
+        if save_kind_filter:
+            query = query.filter(GameProfile.save_kind == save_kind_filter)
+        return query
 
     users_total = int(db.query(func.count(User.id)).scalar() or 0)
     users_recent = int(
         db.query(func.count(User.id)).filter(User.created_at >= since).scalar() or 0
     )
 
-    profiles_total = int(db.query(func.count(GameProfile.id)).scalar() or 0)
+    profiles_total = int(_profile_query().with_entities(func.count(GameProfile.id)).scalar() or 0)
     profiles_active = int(
-        db.query(func.count(GameProfile.id))
+        _profile_query()
         .filter(GameProfile.is_active == 1)
+        .with_entities(func.count(GameProfile.id))
         .scalar()
         or 0
     )
     profiles_recent = int(
-        db.query(func.count(GameProfile.id))
+        _profile_query()
         .filter(GameProfile.created_at >= since)
+        .with_entities(func.count(GameProfile.id))
         .scalar()
         or 0
     )
@@ -86,8 +98,9 @@ def build_metrics_summary(db: Session, *, days: int = 7) -> dict[str, Any]:
     )
 
     avg_period_raw = (
-        db.query(func.avg(GameProfile.period_index))
+        _profile_query()
         .filter(GameProfile.is_active == 1)
+        .with_entities(func.avg(GameProfile.period_index))
         .scalar()
     )
     avg_period_index = round(float(avg_period_raw or 0), 1)
@@ -104,17 +117,19 @@ def build_metrics_summary(db: Session, *, days: int = 7) -> dict[str, Any]:
     )
 
     defeats_total = int(
-        db.query(func.count(GameProfile.id))
+        _profile_query()
         .filter(GameProfile.run_outcome == "defeat")
+        .with_entities(func.count(GameProfile.id))
         .scalar()
         or 0
     )
     defeats_recent = int(
-        db.query(func.count(GameProfile.id))
+        _profile_query()
         .filter(
             GameProfile.run_outcome == "defeat",
             GameProfile.updated_at >= since,
         )
+        .with_entities(func.count(GameProfile.id))
         .scalar()
         or 0
     )
@@ -126,20 +141,23 @@ def build_metrics_summary(db: Session, *, days: int = 7) -> dict[str, Any]:
     )
 
     profiles_period_3_plus_total = int(
-        db.query(func.count(GameProfile.id))
+        _profile_query()
         .filter(GameProfile.period_index >= 3)
+        .with_entities(func.count(GameProfile.id))
         .scalar()
         or 0
     )
     profiles_period_3_plus_active = int(
-        db.query(func.count(GameProfile.id))
+        _profile_query()
         .filter(GameProfile.is_active == 1, GameProfile.period_index >= 3)
+        .with_entities(func.count(GameProfile.id))
         .scalar()
         or 0
     )
 
     return {
         "window_days": window_days,
+        "save_kind": save_kind_filter,
         "users_total": users_total,
         "users_recent": users_recent,
         "profiles_total": profiles_total,

@@ -50,6 +50,7 @@ export const adminApi = {
   metricsSummary(params = {}) {
     const qs = new URLSearchParams();
     if (params.days) qs.set('days', String(params.days));
+    if (params.save_kind) qs.set('save_kind', params.save_kind);
     const query = qs.toString();
     return apiCall(`/api/admin/metrics/summary${query ? `?${query}` : ''}`);
   },
@@ -59,8 +60,11 @@ export const adminApi = {
     if (params.user_limit) qs.set('user_limit', String(params.user_limit));
     if (params.profile_limit) qs.set('profile_limit', String(params.profile_limit));
     if (params.notification_limit) qs.set('notification_limit', String(params.notification_limit));
+    if (params.run_feedback_limit) qs.set('run_feedback_limit', String(params.run_feedback_limit));
+    if (params.funnel_days) qs.set('funnel_days', String(params.funnel_days));
     if (params.q) qs.set('q', params.q);
     if (params.profile_filter) qs.set('profile_filter', params.profile_filter);
+    if (params.save_kind) qs.set('save_kind', params.save_kind);
     if (params.stuck_only) qs.set('stuck_only', 'true');
     const query = qs.toString();
     return apiCall(`/api/admin/watchtower${query ? `?${query}` : ''}`);

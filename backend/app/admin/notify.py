@@ -40,6 +40,7 @@ _KIND_EMOJI = {
     "onboarding_brief_done": "✅",
     "onboarding_skipped": "⏭️",
     "event_chosen": "🃏",
+    "player_bot_started": "🤖",
 }
 
 

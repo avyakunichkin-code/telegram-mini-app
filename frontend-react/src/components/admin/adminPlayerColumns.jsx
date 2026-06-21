@@ -70,6 +70,13 @@ export function useAdminProfileColumns({ searchParams, setSearchParams, openProf
         sortValue: (r) => r.name ?? '',
       },
       {
+        key: 'save_kind',
+        label: 'Режим',
+        render: (r) => (r.save_kind === 'plan' ? 'Plan' : 'Game'),
+        sortable: true,
+        sortValue: (r) => r.save_kind ?? '',
+      },
+      {
         key: 'template',
         label: 'Шаблон',
         render: (r) =>
@@ -214,6 +221,8 @@ export function useAdminNotificationColumns({ searchParams, setSearchParams }) {
 
 export const PROFILE_FILTERS = [
   { id: '', label: 'Все' },
+  { id: 'game', label: 'Game' },
+  { id: 'plan', label: 'Plan' },
   { id: 'stuck', label: 'Застрял' },
   { id: 'guidance_draft', label: 'Guidance draft' },
   { id: 'defeat', label: 'Поражение' },

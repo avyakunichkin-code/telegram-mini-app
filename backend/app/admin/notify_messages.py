@@ -25,6 +25,7 @@ _KIND_LABEL_RU: dict[str, str] = {
     "onboarding_brief_done": "Онбординг завершён",
     "onboarding_skipped": "Пропуск онбординга",
     "event_chosen": "Выбор в событии",
+    "player_bot_started": "Старт player-бота",
 }
 
 
@@ -61,6 +62,13 @@ def format_alert_message_ru(kind: str, payload: dict[str, Any]) -> str:
     p = payload
     name = _name(p)
     link = _link_line(p)
+
+    if kind == "player_bot_started":
+        return _lines(
+            "🤖 Игрок нажал /start в player-боте",
+            f"TG: @{p.get('username') or '—'} (id {p.get('telegram_id') or '—'})",
+            f"Аккаунт в игре: {p.get('user_id') or 'ещё не привязан'}",
+        )
 
     if kind == "user_registered":
         return _lines(

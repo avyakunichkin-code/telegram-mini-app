@@ -23,6 +23,7 @@ from app.routers import (
     expenses_router,
     admin_router,
     needs_router,
+    telegram_router,
 )
 
 
@@ -116,6 +117,10 @@ def ensure_schema_compatibility() -> None:
             )
         if "guidance_completed_at" not in user_cols:
             statements.append("ALTER TABLE users ADD COLUMN guidance_completed_at TIMESTAMP NULL")
+        if "telegram_chat_id" not in user_cols:
+            statements.append("ALTER TABLE users ADD COLUMN telegram_chat_id BIGINT NULL")
+        if "telegram_started_at" not in user_cols:
+            statements.append("ALTER TABLE users ADD COLUMN telegram_started_at TIMESTAMP NULL")
 
     if "period_snapshots" in inspector.get_table_names():
         ps_cols = {item["name"] for item in inspector.get_columns("period_snapshots")}
@@ -396,6 +401,7 @@ app.include_router(achievements_router)
 app.include_router(expenses_router)
 app.include_router(admin_router)
 app.include_router(needs_router)
+app.include_router(telegram_router)
 
 @app.on_event("startup")
 def _startup_db_bootstrap() -> None:
