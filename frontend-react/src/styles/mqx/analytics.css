@@ -1,29 +1,23 @@
-﻿/* --- Analytics Premium (AN1 v2 — lab A ★) --- */
-.mqx-analytics-page {
-  padding-top: 10px;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
+﻿/* --- Analytics Premium (AN1 v2 — flat D′ как дашборд) --- */
 
-/* —— Snapshot —— */
-.mqx-analytics-snapshot {
-  border-radius: 22px;
-  padding: 16px;
-}
-
-.mqx-analytics-snapshot__top {
+.mqx-analytics-section__head {
   display: flex;
+  align-items: center;
   justify-content: space-between;
-  align-items: flex-start;
-  gap: 12px;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.mqx-analytics-section__head .mqx-finance-static__title {
+  margin: 0;
+  flex: 1;
+  min-width: 0;
 }
 
 .mqx-analytics-snapshot__value {
-  margin-top: 6px;
-  font-size: var(--mq-fs-display);
-  font-weight: 850;
-  letter-spacing: -0.03em;
+  font-size: var(--mq-fs-title);
+  font-weight: var(--mq-fw-heavy);
+  letter-spacing: -0.02em;
   font-variant-numeric: tabular-nums;
   color: color-mix(in srgb, var(--mqx-ink) 96%, transparent);
 }
@@ -34,7 +28,7 @@
 }
 
 .mqx-analytics-snapshot__meta {
-  margin-top: 4px;
+  margin: 4px 0 0;
   font-size: var(--mq-fs-caption);
   line-height: 1.4;
   color: color-mix(in srgb, var(--mqx-ink) 52%, transparent);
@@ -43,8 +37,8 @@
 .mqx-analytics-zone {
   flex-shrink: 0;
   max-width: 7.5rem;
-  padding: 8px 10px;
-  border-radius: 12px;
+  padding: 4px 8px;
+  border-radius: 8px;
   font-size: var(--mq-fs-small);
   font-weight: 800;
   text-align: center;
@@ -66,50 +60,27 @@
   color: var(--mq-danger, #dc2626);
 }
 
-.mqx-analytics-residual {
-  margin-top: 12px;
-  padding: 10px 12px;
-  border-radius: 12px;
+.mqx-analytics-residual-row {
+  margin-top: 10px;
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: baseline;
   gap: 8px;
   font-size: var(--mq-fs-caption);
-  background: color-mix(in srgb, var(--mq-emerald, #059669) 8%, transparent);
-  border: 1px solid color-mix(in srgb, var(--mq-emerald, #059669) 18%, transparent);
-  color: color-mix(in srgb, var(--mqx-ink) 78%, transparent);
+  color: color-mix(in srgb, var(--mqx-ink) 62%, transparent);
 }
 
-.mqx-analytics-residual strong {
+.mqx-analytics-residual-row strong {
   font-weight: 800;
   font-variant-numeric: tabular-nums;
   color: var(--mq-emerald, #059669);
 }
 
-.mqx-analytics-residual--neg {
-  background: color-mix(in srgb, var(--mq-danger, #dc2626) 8%, transparent);
-  border-color: color-mix(in srgb, var(--mq-danger, #dc2626) 18%, transparent);
-}
-
-.mqx-analytics-residual--neg strong {
+.mqx-analytics-residual-row--neg strong {
   color: var(--mq-danger, #dc2626);
 }
 
-/* —— Cashflow waterfall —— */
-.mqx-analytics-cashflow {
-  border-radius: 22px;
-  padding: 16px;
-}
-
-.mqx-analytics-cashflow__title {
-  margin: 6px 0 0;
-  font-size: var(--mq-fs-title);
-  font-weight: 850;
-  letter-spacing: -0.03em;
-}
-
 .mqx-analytics-cashflow__bars {
-  margin-top: 14px;
   display: flex;
   flex-direction: column;
   gap: 14px;
@@ -120,31 +91,10 @@
   color: color-mix(in srgb, var(--mqx-ink) 45%, transparent);
 }
 
-/* —— Stability metrics —— */
-.mqx-analytics-stability {
-  border-radius: 22px;
-  padding: 16px;
-}
-
-.mqx-analytics-stability__title {
-  margin: 6px 0 0;
-  font-size: var(--mq-fs-title);
-  font-weight: 850;
-  letter-spacing: -0.03em;
-}
-
 .mqx-analytics-metrics {
-  margin-top: 14px;
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 10px;
-}
-
-.mqx-analytics-metric {
-  padding: 10px 12px;
-  border-radius: 14px;
-  background: color-mix(in srgb, var(--mqx-ink) 4%, transparent);
-  border: 1px solid color-mix(in srgb, var(--mqx-ink) 8%, transparent);
+  gap: 12px 16px;
 }
 
 .mqx-analytics-metric--wide {
@@ -152,22 +102,22 @@
 }
 
 .mqx-analytics-metric__label {
-  font-size: var(--mq-fs-small);
+  font-size: var(--mq-fs-caption);
   line-height: 1.35;
   color: color-mix(in srgb, var(--mqx-ink) 55%, transparent);
 }
 
 .mqx-analytics-metric__value {
-  margin-top: 4px;
-  font-size: var(--mq-fs-title);
-  font-weight: 850;
+  margin-top: 2px;
+  font-size: var(--mq-fs-body);
+  font-weight: 800;
   font-variant-numeric: tabular-nums;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.01em;
 }
 
 .mqx-analytics-dti-track {
-  margin-top: 8px;
-  height: 8px;
+  margin-top: 6px;
+  height: 6px;
   border-radius: 999px;
   overflow: hidden;
   background: color-mix(in srgb, var(--mqx-ink) 8%, transparent);
@@ -177,6 +127,41 @@
   height: 100%;
   border-radius: 999px;
   background: linear-gradient(90deg, #fb923c, #f43f5e);
+}
+
+.mqx-analytics-charts-pane {
+  margin-top: 2px;
+  padding: 12px;
+  border-radius: 16px;
+  background: linear-gradient(165deg, #0f172a 0%, #1e1b4b 100%);
+  color: #fff;
+}
+
+.mqx-analytics-insight .mqx-finance-static__title {
+  margin-bottom: 8px;
+}
+
+.mqx-analytics-insight__title {
+  margin: 0;
+  font-size: var(--mq-fs-caption);
+  font-weight: 800;
+  line-height: 1.35;
+  color: color-mix(in srgb, var(--mqx-ink) 92%, transparent);
+}
+
+.mqx-analytics-insight__body {
+  margin: 4px 0 0;
+  font-size: var(--mq-fs-caption);
+  line-height: 1.45;
+  color: color-mix(in srgb, var(--mqx-ink) 62%, transparent);
+}
+
+.mqx-analytics-foot {
+  margin: 0;
+  padding: 0 14px 8px;
+  font-size: var(--mq-fs-caption);
+  text-align: center;
+  color: color-mix(in srgb, var(--mqx-ink) 48%, transparent);
 }
 
 /* —— Cashflow bar rows (MqxMetricBars) —— */
@@ -229,52 +214,6 @@
 
 .mqx-analytics-cf-fill--amber {
   background: linear-gradient(90deg, #fbbf24, #f97316);
-}
-
-/* —— Insight + foot —— */
-.mqx-analytics-insight {
-  display: flex;
-  gap: 12px;
-  padding: 14px;
-  border-radius: 18px;
-  border: 1px solid color-mix(in srgb, var(--mq-violet, #7c3aed) 18%, transparent);
-  background: color-mix(in srgb, var(--mq-violet, #7c3aed) 6%, var(--tg-theme-bg-color, #fff));
-}
-
-.mqx-analytics-insight__icon {
-  flex-shrink: 0;
-  width: 28px;
-  height: 28px;
-  border-radius: 999px;
-  display: grid;
-  place-items: center;
-  font-size: var(--mq-fs-body);
-  font-weight: 900;
-  color: var(--mq-violet-deep, #5b21b6);
-  background: color-mix(in srgb, var(--mq-violet, #7c3aed) 14%, transparent);
-}
-
-.mqx-analytics-insight__title {
-  margin: 0;
-  font-size: var(--mq-fs-caption);
-  font-weight: 800;
-  line-height: 1.35;
-  color: color-mix(in srgb, var(--mqx-ink) 92%, transparent);
-}
-
-.mqx-analytics-insight__body {
-  margin: 4px 0 0;
-  font-size: var(--mq-fs-caption);
-  line-height: 1.45;
-  color: color-mix(in srgb, var(--mqx-ink) 62%, transparent);
-}
-
-.mqx-analytics-foot {
-  margin: 0 0 8px;
-  padding: 0 4px;
-  font-size: var(--mq-fs-caption);
-  text-align: center;
-  color: color-mix(in srgb, var(--mqx-ink) 48%, transparent);
 }
 
 /* E1: редактор Plan */
