@@ -1,7 +1,7 @@
 import { useCallback, useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { AuthFormField } from './mqx/auth/AuthFormField';
-import { AuthMonetkaScreen } from './mqx/auth/AuthMonetkaScreen';
+import { MonetkaBubbleScreen } from './mqx/layout/MonetkaBubbleScreen';
 import { MqxButton } from './mqx/primitives/MqxButton';
 import {
   hasFieldErrors,
@@ -51,7 +51,7 @@ export function LoginForm({ onSwitchToRegister }) {
   };
 
   return (
-    <AuthMonetkaScreen
+    <MonetkaBubbleScreen
       showBrand
       title="Привет, я Монетка!"
       subtitle={
@@ -123,6 +123,6 @@ export function LoginForm({ onSwitchToRegister }) {
           </MqxButton>
         </p>
       </form>
-    </AuthMonetkaScreen>
+    </MonetkaBubbleScreen>
   );
 }

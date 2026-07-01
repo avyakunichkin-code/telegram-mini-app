@@ -24,4 +24,4 @@
 ## Prod
 
 - Сводка: `frontend-react/src/utils/buildCapitalPeriodFlows.js`
-- Панели: текущие `FinanceSection` / `Capital*Panel` — внутрь body соответствующего аккордеона
+- Панели: текущие `FinancePremium` / `Capital*Panel` — внутрь body соответствующего аккордеона

@@ -50,7 +50,7 @@ src/
 
 | Папка | Содержимое | Legacy (до переезда) |
 |-------|------------|----------------------|
-| `pre-game/` | `NewProfileKindScreen`, `GameTemplatePickScreen` | `components/new-game/` (re-export) |
+| `pre-game/` | `NewProfileKindScreen`, `GameTemplatePickScreen` | — (shim `components/new-game/` удалён 2026-07) |
 | `plan/` | Мастер Plan, префилл — **в разработке** | `BaseParamsScreen.jsx` в `components/` |
 | `game/` | Дашборд, финансы, аналитика, `GameScreen` | `*Premium.jsx`, `GameScreen.jsx` |
 
@@ -64,8 +64,7 @@ src/
 
 ## Legacy quarantine
 
-- `components/*Section.jsx` — не добавлять фичи (см. SPEC_FRONTEND_UI).
-- `components/new-game/` — только re-export; правки в `screens/pre-game/`.
+- `components/*Section.jsx` — не добавлять фичи (см. SPEC_FRONTEND_UI). Prod: `InsuranceSection` в `mqx/layout/`.
 - `components/*Premium.jsx` — вкладки игры; переезд в `screens/game/` **по касанию** (touch-it move-it).
 
 ---

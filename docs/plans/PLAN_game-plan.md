@@ -116,7 +116,7 @@ SQL: save_kind, шаблоны, миграция event filter, удаление 
 
 - **Acceptance:** поток новой игры не требует light/hardcore; вызовы `api.js` соответствуют MQ-104; список профилей не показывает legacy режим (достаточно `save_kind`/лейбла game).
 - **Verify:** `npm run build`; ручной проход новой игры в dev.
-- **Files:** `frontend-react/src/api.js`, `App.jsx`, `components/new-game/NewProfileKindScreen.jsx`, `components/new-game/GameTemplatePickScreen.jsx`, `GameStarterPicker.jsx`, список профилей.
+- **Files:** `frontend-react/src/api.js`, `App.jsx`, `screens/pre-game/NewProfileKindScreen.jsx`, `screens/pre-game/GameTemplatePickScreen.jsx`, список профилей.
 - **Estimate:** L · **Depends:** MQ-104, MQ-105
 
 **Расширение (не блокер G1):** overview `avg_net_cashflow_6p` / victory v2 — отдельные пункты бэклога после закрытия MQ-108.

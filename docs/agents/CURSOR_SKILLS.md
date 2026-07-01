@@ -6,7 +6,7 @@ aliases:
 ---
 ﻿# Agent Skills ТВОЙ ХОД — что использовать и когда
 
-**Активные** скиллы: `.cursor/skills/<name>/` (см. [`catalog.yaml`](../../.cursor/skills/catalog.yaml): `status` + **`tier`**). Аудит: [`SKILLS_QUALITY_AUDIT_2026-06-20.md`](SKILLS_QUALITY_AUDIT_2026-06-20.md).
+**Активные** скиллы: `.cursor/skills/<name>/` (см. [`catalog.yaml`](../../.cursor/skills/catalog.yaml): `status` + **`tier`**). Политика качества: [release-ready-quality.md](../../.cursor/skills/_shared/release-ready-quality.md).
 
 **Текущая фаза (контент + данные):** [`SKILLS_PHASE_CONTENT_AND_DATA.md`](SKILLS_PHASE_CONTENT_AND_DATA.md) — `tier: core` / `support` / `deferred` / `archived`.
 
@@ -36,7 +36,7 @@ aliases:
 | [`DESIGN_IMPROVEMENTS_BACKLOG.md`](DESIGN_IMPROVEMENTS_BACKLOG.md) | UI-идеи **вне** скиллов до spec (D1–D12) |
 | [`DESIGN_LAB_NAVIGATION.md`](DESIGN_LAB_NAVIGATION.md) | Хаб vs round vs page parity vs `#/dev/mqx` |
 | [`docs/foundation/DOC_SYNC_LOG.md`](../foundation/DOC_SYNC_LOG.md) | Журнал prod ↔ docs/skills (2026-06: **Капитал**, Z-NEEDS v7) |
-| [`SKILLS_QUALITY_AUDIT_2026-06-20.md`](SKILLS_QUALITY_AUDIT_2026-06-20.md) | Аудит скиллов: G1–G5, границы, release-ready bar |
+| [`SKILLS_QUALITY_AUDIT_2026-06-20.md`](SKILLS_QUALITY_AUDIT_2026-06-20.md) | Аудит скиллов (archived); канон — `_shared/release-ready-quality.md` |
 | [`.cursor/skills/_shared/release-ready-quality.md`](../../.cursor/skills/_shared/release-ready-quality.md) | Стандарт merge-ready (не набросок) |
 | [`.cursor/skills/_shared/clarify-first.md`](../../.cursor/skills/_shared/clarify-first.md) | Уточнение до implement |
 | [`.cursor/skills/_shared/delivery-workflow.md`](../../.cursor/skills/_shared/delivery-workflow.md) | Думаем → уточняем → планируем → делаем |

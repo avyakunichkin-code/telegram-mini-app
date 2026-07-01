@@ -9,9 +9,7 @@ aliases:
 
 Краткий лог, когда **код обогнал docs** или наоборот. Полный чеклист — [`MVP_AUDIT_VS_SPEC.md`](MVP_AUDIT_VS_SPEC.md).
 
-| Дата | Что в prod | Что исправили в docs |
-|------|------------|----------------------|
-| 2026-06-20 | — (legacy wave 4) | Superseded ideas → redirect; UI audit O3/SPA; ADR-012 trim в 10 docs; [`LEGACY_NOISE_AUDIT`](../agents/LEGACY_NOISE_AUDIT_2026-06-20.md) §4 |
+| 2026-07-01 | — (legacy wave 5) | Orphan FE delete, `.agents` nodejs/seo trim, stale docs; [`LEGACY_NOISE_AUDIT`](../agents/LEGACY_NOISE_AUDIT_2026-06-20.md) wave 5 | Superseded ideas → redirect; UI audit O3/SPA; ADR-012 trim в 10 docs; [`LEGACY_NOISE_AUDIT`](../agents/LEGACY_NOISE_AUDIT_2026-06-20.md) §4 |
 | 2026-06-20 | — (legacy wave 3) | Archive O2/XP/hero-compact; O3 канон onboarding; TEAM_UPDATE archived; [`LEGACY_NOISE_AUDIT`](../agents/LEGACY_NOISE_AUDIT_2026-06-20.md) §3 |
 | 2026-06-20 | — (legacy wave 2) | `docs/archive/onboarding-o1/`; UX platform SPA/PWA; marketing ep-000 ADR-012; release-web spec test |
 | 2026-06-20 | — (legacy cleanup) | Удалены `specs/specs/` (21 dup), 8 skill-test results мая, `SKILLS_AUDIT_2026-06-01`; trim TMA-first в README/CLAUDE/handbook/SPEC_FRONTEND_UI; [`LEGACY_NOISE_AUDIT_2026-06-20.md`](../agents/LEGACY_NOISE_AUDIT_2026-06-20.md) |

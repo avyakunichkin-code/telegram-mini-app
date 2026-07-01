@@ -72,9 +72,9 @@ aliases:
 | [`foundation/PRE_ALPHA_PLAYTEST_WAVE0_RESULTS.md`](foundation/PRE_ALPHA_PLAYTEST_WAVE0_RESULTS.md) | Пилот wave-0 (n=1): итоги и правки |
 | [`foundation/PRE_ALPHA_PLAYTEST_FEEDBACK.md`](foundation/PRE_ALPHA_PLAYTEST_FEEDBACK.md) | **Реестр отзывов** wave-0 + внутренние прогоны → backlog |
 | [`specs/features/SPEC_onboarding-o3.md`](specs/features/SPEC_onboarding-o3.md) | **O3** онбординг: spine + триггеры (канон) |
-| [`archive/onboarding-o2/`](archive/onboarding-o2/README.md) | O2 stub (Progressive Guidance) |
-| [`plans/PLAN_onboarding-o2.md`](plans/PLAN_onboarding-o2.md) | План реализации O2 (без hotfix O1) |
-| [`vision/ideas/onboarding-o2-progressive-guidance.md`](vision/ideas/onboarding-o2-progressive-guidance.md) | Idea APPROVED → O2 spec |
+| [`archive/onboarding-o2/`](archive/onboarding-o2/README.md) | O2 stub (superseded → O3) |
+| [`plans/PLAN_onboarding-o2.md`](plans/PLAN_onboarding-o2.md) | План O2 (superseded → O3) |
+| [`vision/ideas/onboarding-o2-progressive-guidance.md`](vision/ideas/onboarding-o2-progressive-guidance.md) | Idea O2 (superseded → O3) |
 | [`foundation/MVP_AUDIT_VS_SPEC.md`](foundation/MVP_AUDIT_VS_SPEC.md) | Чеклист: текущий код vs SPEC_PRODUCT |
 | [`foundation/DOC_SYNC_LOG.md`](foundation/DOC_SYNC_LOG.md) | Журнал синхронизации docs ↔ prod |
 

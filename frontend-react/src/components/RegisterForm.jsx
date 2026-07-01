@@ -6,7 +6,7 @@ import {
   validateRegisterFields,
 } from '../utils/authFormValidation';
 import { AuthFormField } from './mqx/auth/AuthFormField';
-import { AuthMonetkaScreen } from './mqx/auth/AuthMonetkaScreen';
+import { MonetkaBubbleScreen } from './mqx/layout/MonetkaBubbleScreen';
 import { MqxButton } from './mqx/primitives/MqxButton';
 
 export function RegisterForm({ onSwitchToLogin }) {
@@ -66,7 +66,7 @@ export function RegisterForm({ onSwitchToLogin }) {
   };
 
   return (
-    <AuthMonetkaScreen
+    <MonetkaBubbleScreen
       showBrand
       title="Рада знакомству!"
       subtitle={
@@ -156,6 +156,6 @@ export function RegisterForm({ onSwitchToLogin }) {
           </MqxButton>
         </p>
       </form>
-    </AuthMonetkaScreen>
+    </MonetkaBubbleScreen>
   );
 }

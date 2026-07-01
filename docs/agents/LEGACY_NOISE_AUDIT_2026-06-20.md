@@ -1,15 +1,29 @@
 ---
 layer: agents
 status: active
-last_reviewed: 2026-06-20
+last_reviewed: 2026-07-01
 tags:
   - tvoy-hod/layer/agents
 aliases:
   - LEGACY_NOISE_AUDIT
 ---
-# Legacy noise audit (2026-06-20)
+# Legacy noise audit
 
 После [ADR-012](../decisions/ADR-012-primary-channels-pwa-web-over-tma.md): что **удалено**, что **подрезано**, что **оставить**.
+
+---
+
+## Волна 5 (2026-07-01) — выполнено
+
+| Действие | Артефакты |
+|----------|-----------|
+| Orphan FE delete | `GameStarterPicker`, `VictoryGoalsPanel`, `EventsTriggerButton`, `StatIcons`, `AssetMetricIcons`, shim `components/new-game/` |
+| Deprecated wrapper delete | `AuthMonetkaScreen` → `MonetkaBubbleScreen` в `LoginForm`/`RegisterForm` |
+| Irrelevant `.agents` skills | `nodejs-best-practices`, `nodejs-backend-patterns`, `seo` |
+| Stale docs trim | `PLAN_game-plan`, `ARCHITECTURE`, `tvoy-hod-frontend-core`, `docs/README` O2, design-lab FinanceSection refs |
+| June audit | `SKILLS_QUALITY_AUDIT` → archived; актуальная политика — `.cursor/skills/_shared/` |
+
+**Не удалено (осознанно):** `release-tma` alias, `.cursor/skills/_archived/`, `InsuranceSection.jsx`, `docs/archive/` stubs.
 
 ---
 
@@ -55,9 +69,9 @@ aliases:
 
 ---
 
-## Следующая волна (не сделано)
+## Следующая волна
 
-_Все пункты волн 1–4 закрыты 2026-06-20. Опционально: commit legacy-cleanup; investor `deck.html` title (HTML, не критично)._
+_Волны 1–5 закрыты. Опционально: investor `deck.html` title; trim `react-best-practices/rules/server-*` (Next.js-only)._
 
 ## Волна 4 (2026-06-20) — выполнено
 

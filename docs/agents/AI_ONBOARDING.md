@@ -114,7 +114,7 @@ Maintenance: `node .cursor/skills/skill-test/_maintain.mjs help`
 
 CI: [`.github/workflows/skills-check.yml`](../../.github/workflows/skills-check.yml) (static + context + category на PR).
 
-Аудит качества скиллов: [`SKILLS_QUALITY_AUDIT_2026-06-20.md`](SKILLS_QUALITY_AUDIT_2026-06-20.md).
+Аудит качества скиллов (архив): [`SKILLS_QUALITY_AUDIT_2026-06-20.md`](SKILLS_QUALITY_AUDIT_2026-06-20.md). Актуальная политика: [release-ready-quality.md](../../.cursor/skills/_shared/release-ready-quality.md).
 
 ---
 

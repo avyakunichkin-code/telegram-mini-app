@@ -1,11 +1,18 @@
 ---
+layer: agents
+status: archived
+archived_at: 2026-07-01
+last_reviewed: 2026-06-20
 tags:
   - tvoy-hod/layer/agents
+  - tvoy-hod/status/archived
 aliases:
   - "Аудит качества скиллов — 2026-06-20"
   - SKILLS_QUALITY_AUDIT_2026-06-20
 ---
 # Аудит качества скиллов — 2026-06-20
+
+> **Archived 2026-07-01.** Актуальная политика: [release-ready-quality.md](../../.cursor/skills/_shared/release-ready-quality.md), [skill-responsibility-matrix.md](../../.cursor/skills/_shared/skill-responsibility-matrix.md), [catalog.yaml](../../.cursor/skills/catalog.yaml). История cleanup: [LEGACY_NOISE_AUDIT_2026-06-20.md](LEGACY_NOISE_AUDIT_2026-06-20.md).
 
 **Цель:** соответствие `quality-rubric.md` (G1–G6), чёткие границы ответственности, вызов только уместных primary, bar **release-ready** (не набросок).
 
