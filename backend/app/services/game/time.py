@@ -1,4 +1,10 @@
+from __future__ import annotations
+
+import json
+import time
+
 from fastapi import HTTPException
+from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
 from ...game.period import process_period_end
@@ -9,7 +15,7 @@ from ...game.time import (
     set_time_state,
     sync_time,
 )
-from ...models import GameProfile
+from ...models import ApiIdempotencyRecord, GameProfile
 from ...events.mandatory import pending_mandatory_blocking_event_titles
 from ...schemas import (
     AchievementUnlockEvent,
@@ -75,6 +81,7 @@ def period_close_summary(period_result: dict) -> PeriodCloseSummary:
         breakdown=breakdown,
         period_highlights=period_highlights,
         achievement_unlocks=achievement_unlocks,
+        events_spawn_failed=bool(period_result.get("events_spawn_failed")),
     )
 
 
@@ -121,23 +128,96 @@ def set_pause_mode(db: Session, user_id: int) -> TimeStatusResponse:
     return _time_status_response(profile)
 
 
-def go_to_next_period(db: Session, user_id: int) -> TimeStatusResponse:
-    profile = get_active_game_profile(db, user_id)
+TIME_NEXT_ROUTE_KEY = "game.time.next"
+
+
+def close_idempotency_key(profile_id: int, period_index: int) -> str:
+    return f"{int(profile_id)}:{int(period_index)}:close"
+
+
+def _lock_active_profile(db: Session, user_id: int) -> GameProfile:
+    query = db.query(GameProfile).filter(
+        GameProfile.user_id == user_id,
+        GameProfile.is_active == 1,
+        GameProfile.is_archived == 0,
+    )
+    if db.get_bind().dialect.name != "sqlite":
+        query = query.with_for_update()
+    profile = query.first()
     if not profile:
         raise HTTPException(status_code=404, detail="Активный профиль не найден")
+    return profile
 
-    blocking = pending_mandatory_blocking_event_titles(
-        db, profile.id, int(profile.period_index)
-    )
-    if blocking:
-        titles = "», «".join(blocking[:3])
-        raise HTTPException(
-            status_code=400,
-            detail=f"Сначала примите решение по обязательным событиям: «{titles}».",
+
+def _load_stored_close(
+    db: Session, user_id: int, key: str
+) -> TimeStatusResponse | None:
+    record = (
+        db.query(ApiIdempotencyRecord)
+        .filter(
+            ApiIdempotencyRecord.user_id == user_id,
+            ApiIdempotencyRecord.route_key == TIME_NEXT_ROUTE_KEY,
+            ApiIdempotencyRecord.idempotency_key == key,
         )
+        .first()
+    )
+    if not record or not record.response_json or record.response_json == "{}":
+        return None
+    try:
+        data = json.loads(record.response_json)
+    except json.JSONDecodeError:
+        return None
+    if not data:
+        return None
+    return TimeStatusResponse.model_validate(data)
 
-    period_result = process_period_end(db, profile)
 
+def _store_close_response(
+    db: Session, user_id: int, key: str, response: TimeStatusResponse
+) -> None:
+    payload = json.dumps(response.model_dump(mode="json"), ensure_ascii=False)
+    record = (
+        db.query(ApiIdempotencyRecord)
+        .filter(
+            ApiIdempotencyRecord.user_id == user_id,
+            ApiIdempotencyRecord.route_key == TIME_NEXT_ROUTE_KEY,
+            ApiIdempotencyRecord.idempotency_key == key,
+        )
+        .first()
+    )
+    if record:
+        record.status_code = 200
+        record.response_json = payload
+    else:
+        db.add(
+            ApiIdempotencyRecord(
+                user_id=user_id,
+                route_key=TIME_NEXT_ROUTE_KEY,
+                idempotency_key=key,
+                status_code=200,
+                response_json=payload,
+            )
+        )
+    db.commit()
+
+
+def _replay_or_current(db: Session, user_id: int, key: str) -> TimeStatusResponse:
+    stored = _load_stored_close(db, user_id, key)
+    if stored:
+        return stored
+    for _ in range(20):
+        time.sleep(0.05)
+        db.rollback()
+        stored = _load_stored_close(db, user_id, key)
+        if stored:
+            return stored
+    profile = _lock_active_profile(db, user_id)
+    return _time_status_response(profile)
+
+
+def _finish_close_response(
+    db: Session, profile: GameProfile, period_result: dict
+) -> TimeStatusResponse:
     if period_result["game_over"]:
         reason = str(period_result.get("defeat_reason") or "") or None
         return _time_status_response(
@@ -151,11 +231,87 @@ def go_to_next_period(db: Session, user_id: int) -> TimeStatusResponse:
     set_time_state(profile, "pause")
     db.commit()
     db.refresh(profile)
-
     return _time_status_response(
         profile,
         period_close=period_close_summary(period_result),
     )
+
+
+def close_open_period(
+    db: Session, user_id: int, *, intended_period: int
+) -> TimeStatusResponse:
+    """
+    Закрыть конкретный открытый период.
+
+    Повтор того же intended_period возвращает сохранённый ответ (ключ profile+period).
+    Если профиль уже ушёл дальше — replay, без второго process_period_end.
+    """
+    profile = _lock_active_profile(db, user_id)
+    key = close_idempotency_key(profile.id, intended_period)
+
+    if int(profile.period_index) != intended_period:
+        db.rollback()
+        return _replay_or_current(db, user_id, key)
+
+    stored = _load_stored_close(db, user_id, key)
+    if stored:
+        return stored
+
+    blocking = pending_mandatory_blocking_event_titles(
+        db, profile.id, intended_period
+    )
+    if blocking:
+        titles = "», «".join(blocking[:3])
+        raise HTTPException(
+            status_code=400,
+            detail=f"Сначала примите решение по обязательным событиям: «{titles}».",
+        )
+
+    claimed = False
+    try:
+        with db.begin_nested():
+            db.add(
+                ApiIdempotencyRecord(
+                    user_id=user_id,
+                    route_key=TIME_NEXT_ROUTE_KEY,
+                    idempotency_key=key,
+                    status_code=200,
+                    response_json="{}",
+                )
+            )
+            db.flush()
+        claimed = True
+    except IntegrityError:
+        db.rollback()
+        return _replay_or_current(db, user_id, key)
+
+    try:
+        period_result = process_period_end(db, profile)
+        response = _finish_close_response(db, profile, period_result)
+        _store_close_response(db, user_id, key, response)
+        return response
+    except Exception:
+        if claimed:
+            leftover = (
+                db.query(ApiIdempotencyRecord)
+                .filter(
+                    ApiIdempotencyRecord.user_id == user_id,
+                    ApiIdempotencyRecord.route_key == TIME_NEXT_ROUTE_KEY,
+                    ApiIdempotencyRecord.idempotency_key == key,
+                )
+                .first()
+            )
+            if leftover and leftover.response_json == "{}":
+                db.delete(leftover)
+                db.commit()
+        raise
+
+
+def go_to_next_period(db: Session, user_id: int) -> TimeStatusResponse:
+    profile = get_active_game_profile(db, user_id)
+    if not profile:
+        raise HTTPException(status_code=404, detail="Активный профиль не найден")
+    return close_open_period(db, user_id, intended_period=int(profile.period_index))
 
 
 def update_time_config(db: Session, user_id: int, payload: TimeConfigUpdate) -> TimeStatusResponse:

@@ -24,7 +24,8 @@ aliases:
 | 4 | [`.cursor/skills/_shared/clarify-first.md`](../../.cursor/skills/_shared/clarify-first.md) | STOP при неясности |
 | 5 | [`SKILL_DOC_MAP.md`](SKILL_DOC_MAP.md) | Конвейер docs ↔ код |
 
-**Конфликт источников:** код + тесты → `docs/specs/features/SPEC_*.md` → `SPEC_PRODUCT.md` → `docs/vision/ideas/`.
+**Конфликт источников:** код + тесты → `docs/specs/features/SPEC_*.md` → `SPEC_PRODUCT.md` → `docs/vision/ideas/`.  
+**Аудиты:** [`docs/audits/README.md`](../audits/README.md) — снимки, не канон.
 
 ---
 

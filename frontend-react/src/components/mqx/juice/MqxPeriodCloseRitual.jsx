@@ -6,6 +6,10 @@ import {
 } from '../icons/FinanceMetricIcons';
 import { periodCloseRitualBeats, periodCloseRitualPeriodLabel } from '../../../utils/periodCloseRitual';
 import {
+  PERIOD_CLOSE_SPAWN_FAILED_COPY,
+  periodCloseEventsSpawnFailed,
+} from '../../../utils/periodCloseDisplay';
+import {
   formatPeriodMoney,
   periodCloseBalanceHeadline,
   periodCloseDetailLines,
@@ -50,6 +54,11 @@ export function MqxPeriodCloseRitual({ summary, open, onClose }) {
             Ход завершён!
           </h2>
           <p className="mqx-juice-ritual__period">{periodLabel}</p>
+          {periodCloseEventsSpawnFailed(summary) ? (
+            <p className="mqx-juice-ritual__spawn-fail" role="status">
+              {PERIOD_CLOSE_SPAWN_FAILED_COPY}
+            </p>
+          ) : null}
 
           {headline ? (
             <div className="mqx-juice-ritual__balance" aria-label="Итог по счёту">

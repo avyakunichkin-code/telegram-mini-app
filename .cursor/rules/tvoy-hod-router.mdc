@@ -11,6 +11,7 @@ alwaysApply: true
 - **Лексикон игры**: [`.cursor/skills/_shared/game-lexicon.md`](.cursor/skills/_shared/game-lexicon.md)
 - **Продукт**: [`docs/foundation/SPEC_PRODUCT.md`](docs/foundation/SPEC_PRODUCT.md) — §1.1 **каналы: PWA/web primary**, TMA secondary ([ADR-012](docs/decisions/ADR-012-primary-channels-pwa-web-over-tma.md))
 - **Конвейер docs**: [`docs/agents/SKILL_DOC_MAP.md`](docs/agents/SKILL_DOC_MAP.md), [`docs/DOCUMENTATION_SYSTEM.md`](docs/DOCUMENTATION_SYSTEM.md)
+- **Аудиты (снимки)**: [`docs/audits/README.md`](docs/audits/README.md) — `product/` · `engineering/` · шаблон [`docs/templates/AUDIT.md`](docs/templates/AUDIT.md)
 - **Скиллы**: [`docs/agents/CURSOR_SKILLS.md`](docs/agents/CURSOR_SKILLS.md), [`docs/agents/AI_ONBOARDING.md`](docs/agents/AI_ONBOARDING.md), [`docs/agents/SKILLS_PHASE_CONTENT_AND_DATA.md`](docs/agents/SKILLS_PHASE_CONTENT_AND_DATA.md), [`.cursor/skills/catalog.yaml`](.cursor/skills/catalog.yaml) (`tier`)
 - **Баланс / пороги**: [`game-balance-thresholds-and-constraints.md`](docs/vision/ideas/game-balance-thresholds-and-constraints.md)
 - **Баланс событий (authoring)**: [`.cursor/skills/create-event/event-balance-rules.md`](.cursor/skills/create-event/event-balance-rules.md) — §10 lifecycle, §11 needs_axis_map

@@ -24,8 +24,9 @@ allowed-tools: Read, Glob, Grep, Write
 - [`docs/DOCUMENTATION_SYSTEM.md`](../../../docs/DOCUMENTATION_SYSTEM.md)
 - [`docs/foundation/DOC_SYNC_LOG.md`](../../../docs/foundation/DOC_SYNC_LOG.md)
 - [`docs/decisions/`](../../../docs/decisions/)
+- [`docs/audits/README.md`](../../../docs/audits/README.md) — снимки аудитов (не ADR)
 
-**Куда писать:** `docs/decisions/`, `DOC_SYNC_LOG`. **Дальше:** —
+**Куда писать:** `docs/decisions/`, `DOC_SYNC_LOG`; **аудиты** → `docs/audits/<kind>/` (см. README аудитов). **Дальше:** —
 
 ## Overview
 
@@ -290,6 +291,17 @@ Special consideration for AI agent context:
 - No ADRs in a project with significant architectural choices
 - Documentation that restates the code instead of explaining intent
 
+## Аудиты (снимки)
+
+Не ADR и не spec. Полный аудит продукта / архитектуры / UX:
+
+1. Прочитать [`docs/audits/README.md`](../../../docs/audits/README.md).
+2. Записать `docs/audits/<kind>/<YYYY-MM-DD>-<slug>.md` по [`templates/AUDIT.md`](../../../docs/templates/AUDIT.md).
+3. Строка в реестре README + `DOC_SYNC_LOG`.
+4. Verdict **DRAFT**, пока человек не сказал APPROVED.
+
+Технический kind: [`docs/audits/engineering/README.md`](../../../docs/audits/engineering/README.md).
+
 ## Verification
 
 After documenting:
@@ -314,5 +326,6 @@ After documenting:
 ## Следующий шаг
 
 `code-review-and-quality` при изменении публичного API; см. `docs/decisions/`.  
-Narrative / GDD / плейтест-пакет → **`project-handbook-documentation`** (`docs/handbook/`).
+Narrative / GDD / плейтест-пакет → **`project-handbook-documentation`** (`docs/handbook/`).  
+Снимок аудита → **`docs/audits/<kind>/`**.
 

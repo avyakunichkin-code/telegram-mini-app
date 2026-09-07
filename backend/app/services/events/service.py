@@ -9,6 +9,7 @@ from sqlalchemy import or_
 from sqlalchemy.orm import Session
 
 from ...finance.balance_utils import adjust_balance, adjust_safety_fund_balance, TRANSACTION_TYPES
+from ...idempotency import load_stored_body, store_body, try_reserve_key, wait_stored_body
 from ...game.rules import (
     EVENTS_PER_PERIOD,
     MIN_PERIOD_INDEX_FOR_GAME_EVENTS,
@@ -532,18 +533,28 @@ def _period_pool_instance_count(
     return int(q.count())
 
 
-def ensure_period_events(db: Session, game_profile_id: int, period_index: int, save_kind: str) -> None:
+SPAWN_OK = "ok"
+SPAWN_SKIPPED_INTRO = "skipped_intro"
+SPAWN_ALREADY_FULL = "already_full"
+SPAWN_EMPTY_POOL = "empty_pool"
+
+
+def is_events_spawn_failed(status: str | None) -> bool:
+    return status == SPAWN_EMPTY_POOL
+
+
+def ensure_period_events(db: Session, game_profile_id: int, period_index: int, save_kind: str) -> str:
     profile = db.query(GameProfile).filter(GameProfile.id == game_profile_id).first()
     if not profile:
-        return
+        return SPAWN_OK
 
     if int(period_index) < MIN_PERIOD_INDEX_FOR_GAME_EVENTS:
-        return
+        return SPAWN_SKIPPED_INTRO
 
     ensure_scheduled_chain_events(db, game_profile_id, period_index)
 
     if _period_pool_instance_count(db, game_profile_id, period_index) >= EVENTS_PER_PERIOD:
-        return
+        return SPAWN_ALREADY_FULL
 
     defs_all = (
         db.query(EventDefinition)
@@ -559,7 +570,7 @@ def ensure_period_events(db: Session, game_profile_id: int, period_index: int, s
             game_profile_id,
             save_kind,
         )
-        return
+        return SPAWN_EMPTY_POOL
 
     counter_map = _load_event_counter_map(db, game_profile_id)
     profile_ctx = _load_event_profile_context(db, game_profile_id)
@@ -592,7 +603,7 @@ def ensure_period_events(db: Session, game_profile_id: int, period_index: int, s
 
     if not repeat_ok:
         logger.error("ensure_period_events: repeat_ok empty profile=%s", game_profile_id)
-        return
+        return SPAWN_EMPTY_POOL
 
     period_idx = max(1, int(period_index))
     base_k = min(EVENTS_PER_PERIOD, len(repeat_ok))
@@ -611,7 +622,7 @@ def ensure_period_events(db: Session, game_profile_id: int, period_index: int, s
             )
             p1 = [d for d in repeat_ok if _def_tier(d) == 1]
         if not p1:
-            return
+            return SPAWN_EMPTY_POOL
         kk = min(base_k, len(p1))
         picked = _pick_diverse_period_events(p1, kk, counter_map, weight_multiplier_by_id=rescue_mult_by_id)
 
@@ -627,6 +638,14 @@ def ensure_period_events(db: Session, game_profile_id: int, period_index: int, s
         attach_event_instance_choice_snapshot(db, profile, d, inst)
 
     db.commit()
+    if _period_pool_instance_count(db, game_profile_id, period_index) < EVENTS_PER_PERIOD:
+        logger.error(
+            "ensure_period_events: underfilled profile=%s period_index=%s",
+            game_profile_id,
+            period_index,
+        )
+        return SPAWN_EMPTY_POOL
+    return SPAWN_OK
 
 
 def serialize_instance_rows(
@@ -750,21 +769,82 @@ def build_pending_events_payload(db: Session, profile: GameProfile) -> dict:
         }
     return payload
 
-def choose_event(db: Session, profile: GameProfile, event_id: int, choice_id: int) -> dict:
+
+CHOOSE_ROUTE_KEY = "game.events.choose"
 
 
-    inst = (
-        db.query(EventInstance)
-        .filter(
-            EventInstance.id == event_id,
-            EventInstance.game_profile_id == profile.id,
-            EventInstance.status == "pending",
-        )
-        .first()
+def choose_idempotency_key(profile_id: int, event_id: int) -> str:
+    return f"{int(profile_id)}:{int(event_id)}:choose"
+
+
+def _lock_event_instance(
+    db: Session, profile_id: int, event_id: int
+) -> EventInstance | None:
+    query = db.query(EventInstance).filter(
+        EventInstance.id == event_id,
+        EventInstance.game_profile_id == profile_id,
     )
-    if not inst:
-        raise HTTPException(status_code=404, detail="Event not found or already resolved")
+    if db.get_bind().dialect.name != "sqlite":
+        query = query.with_for_update()
+    return query.first()
 
+
+def _choose_replay_or_gone(
+    db: Session, *, user_id: int, key: str, inst: EventInstance | None
+) -> dict:
+    stored = wait_stored_body(
+        db, user_id=user_id, route_key=CHOOSE_ROUTE_KEY, idempotency_key=key
+    )
+    if stored:
+        return stored
+    if inst is not None and inst.status != "pending":
+        return {"status": "success"}
+    raise HTTPException(status_code=404, detail="Event not found or already resolved")
+
+
+def choose_event(db: Session, profile: GameProfile, event_id: int, choice_id: int) -> dict:
+    user_id = int(profile.user_id)
+    key = choose_idempotency_key(profile.id, event_id)
+
+    stored = load_stored_body(
+        db, user_id=user_id, route_key=CHOOSE_ROUTE_KEY, idempotency_key=key
+    )
+    if stored:
+        return stored
+
+    inst = _lock_event_instance(db, profile.id, event_id)
+    if not inst or inst.status != "pending":
+        return _choose_replay_or_gone(db, user_id=user_id, key=key, inst=inst)
+
+    if not try_reserve_key(
+        db, user_id=user_id, route_key=CHOOSE_ROUTE_KEY, idempotency_key=key
+    ):
+        stored = wait_stored_body(
+            db, user_id=user_id, route_key=CHOOSE_ROUTE_KEY, idempotency_key=key
+        )
+        if stored:
+            return stored
+        inst = db.get(EventInstance, event_id)
+        if inst is not None and inst.status != "pending":
+            return {"status": "success"}
+        raise HTTPException(status_code=409, detail="Повторите запрос")
+
+    try:
+        return _apply_event_choice(db, profile, inst, choice_id, user_id=user_id, key=key)
+    except Exception:
+        db.rollback()
+        raise
+
+
+def _apply_event_choice(
+    db: Session,
+    profile: GameProfile,
+    inst: EventInstance,
+    choice_id: int,
+    *,
+    user_id: int,
+    key: str,
+) -> dict:
     ensure_event_instance_choice_snapshot(db, inst, profile)
     snapshot_ids = parse_choice_snapshot(inst)
     if snapshot_ids is not None and int(choice_id) not in snapshot_ids:
@@ -975,4 +1055,11 @@ def choose_event(db: Session, profile: GameProfile, event_id: int, choice_id: in
             "kind": asset_created.kind,
             "asset_value": float(asset_created.asset_value),
         }
+    store_body(
+        db,
+        user_id=user_id,
+        route_key=CHOOSE_ROUTE_KEY,
+        idempotency_key=key,
+        body=response,
+    )
     return response

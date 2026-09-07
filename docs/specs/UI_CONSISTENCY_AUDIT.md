@@ -13,6 +13,8 @@ aliases:
 **Цель:** карта экранов и компонентов для эпика [mqx-ui-unification](../vision/ideas/mqx-ui-unification.md).  
 **Легенда:** ★ prod MQX · ⚠ hybrid · 🗑 удалить/архив · 📋 lab открыт
 
+**Снимок UX (иерархия/FTUE, DRAFT):** [`docs/audits/ux/2026-09-07-player-surface.md`](../audits/ux/2026-09-07-player-surface.md). Этот файл — живой parity-чеклист MQX, не заменяется снимком.
+
 ---
 
 ## Игровые вкладки (GameScreen)

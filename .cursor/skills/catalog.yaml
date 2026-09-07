@@ -467,9 +467,19 @@ skills:
         - docs/DOCUMENTATION_SYSTEM.md
         - docs/foundation/DOC_SYNC_LOG.md
         - docs/decisions/
+      read_if:
+        - when: "product, technical, UX, or QA audit snapshot"
+          paths:
+            - docs/audits/README.md
+            - docs/templates/AUDIT.md
+            - docs/audits/engineering/README.md
+            - docs/audits/qa/README.md
+            - docs/audits/ux/README.md
+            - docs/audits/liveops/README.md
       writes_to:
         - docs/decisions/
         - docs/foundation/DOC_SYNC_LOG.md
+        - docs/audits/
       next_skill:
         - project-handbook-documentation
     last_static: "2026-05-31"

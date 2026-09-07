@@ -147,6 +147,11 @@ def client(db_session, test_user, seed_basic_template):
 
     app.dependency_overrides[get_db] = override_get_db
     app.dependency_overrides[get_current_user] = override_get_current_user
-    with TestClient(app) as test_client:
+    # Не входить в context manager: `with TestClient` гоняет FastAPI startup,
+    # а ensure_schema_compatibility() пишет PostgreSQL DDL (JSONB) в SQLite.
+    # Схема тестов уже создаётся через db_engine + Base.metadata.create_all.
+    test_client = TestClient(app)
+    try:
         yield test_client
-    app.dependency_overrides.clear()
+    finally:
+        app.dependency_overrides.clear()

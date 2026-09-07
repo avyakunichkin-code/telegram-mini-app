@@ -14,6 +14,7 @@ aliases:
 |----------|------------|
 | [`docs/foundation/SPEC_PRODUCT.md`](docs/foundation/SPEC_PRODUCT.md) | Продукт, цикл, экономика |
 | [`docs/DOCUMENTATION_SYSTEM.md`](docs/DOCUMENTATION_SYSTEM.md) | idea → spec → plan → tasks |
+| [`docs/audits/README.md`](docs/audits/README.md) | Снимки аудитов: `product/`, `engineering/`, `qa/`, `ux/`, `liveops/` |
 | [`docs/agents/SKILL_DOC_MAP.md`](docs/agents/SKILL_DOC_MAP.md) | Фаза → скилл → docs |
 | [`backend/app/README.md`](backend/app/README.md) | Домены backend, карта API |
 | [`frontend-react/ARCHITECTURE.md`](frontend-react/ARCHITECTURE.md) | screens, api/, hooks |
@@ -27,7 +28,7 @@ aliases:
 
 Открытый период → действия → **«Закрыть месяц»** (`POST /api/game/time/next` → `process_period_end`) → новый период.
 
-- **`save_kind`:** `game` \| `plan`. Game — `game_starter_templates` + `template_key`. Plan — API есть, UI «Скоро».
+- **`save_kind`:** только **`game`** — `game_starter_templates` + `template_key`. Режим Plan **снят** ([ADR-013](docs/decisions/ADR-013-game-only-drop-plan-mode.md)); вырезание кода — [`PLAN_game-only`](docs/plans/PLAN_game-only.md).
 - **Зарплата** — только по кнопке в периоде; пропуск = нет выплаты за период.
 - **2 события/период**; YAML: `data/events/mvp11/` (ADR-008).
 - **Прогрессия:** `event_tier` от `period_index`, без character XP — [`remove-character-xp-and-levels.md`](docs/vision/ideas/remove-character-xp-and-levels.md).

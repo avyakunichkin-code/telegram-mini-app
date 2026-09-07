@@ -24,6 +24,7 @@ from ..achievements.seeds import ensure_achievement_catalog
 from ..services.events.service import (
     ensure_period_events,
     expire_pending_events_for_closed_period,
+    is_events_spawn_failed,
     _ensure_seed_events,
 )
 from ..services.insurance.service import charge_premiums_for_period
@@ -625,12 +626,21 @@ def process_period_end(db: Session, profile: GameProfile) -> dict:
         )
 
     # 8. Событие на новый период (easy)
+    events_spawn_failed = False
     try:
         _ensure_seed_events(db)
-        ensure_period_events(db, profile.id, profile.period_index, profile.save_kind)
+        spawn_status = ensure_period_events(
+            db, profile.id, profile.period_index, profile.save_kind
+        )
+        events_spawn_failed = is_events_spawn_failed(spawn_status)
     except Exception:
-        # События не должны ломать завершение периода
-        pass
+        # События не должны ломать завершение периода, но молчаливый pass прячет поломку пула.
+        logger.exception(
+            "Period event pool failed after close profile_id=%s period_index=%s",
+            profile.id,
+            profile.period_index,
+        )
+        events_spawn_failed = True
 
     return {
         "closed_period_index": closed_period_index,
@@ -654,4 +664,5 @@ def process_period_end(db: Session, profile: GameProfile) -> dict:
             bond_coupons=bond_coupon_total,
             deposit_interest=deposit_interest_total,
         ),
+        "events_spawn_failed": bool(events_spawn_failed),
     }

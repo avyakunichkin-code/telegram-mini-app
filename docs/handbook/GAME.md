@@ -152,10 +152,10 @@ flowchart LR
 
 Детали: [SPEC_game-character-needs](../specs/features/SPEC_game-character-needs.md), [CHARACTER_NEEDS_UX](../ux/CHARACTER_NEEDS_UX.md), [ADR-005](../decisions/ADR-005-character-needs-state-and-defeat.md), [ADR-006](../decisions/ADR-006-treat-self-options-and-cooldown.md).
 
-### Режимы Game и Plan
+### Режим: только Game
 
-- **`save_kind: game`** — старт из `game_starter_templates`, blueprint.
-- **`save_kind: plan`** — ручной бюджет (MVP 2.0); потребности **выключены**; UI «Скоро».
+- **`save_kind: game`** — единственный режим: старт из `game_starter_templates`, blueprint. [ADR-013](../decisions/ADR-013-game-only-drop-plan-mode.md).
+- ~~**`save_kind: plan`**~~ — **снят**; не обещать мастер «своей жизни» отдельным сохранением.
 - Legacy `light` / `hardcore` сняты — [ADR-001](../decisions/ADR-001-save-kind-remove-light-hardcore.md).
 
 ### Образовательные слои
@@ -275,7 +275,7 @@ TG / партнёр / контент → игра (бесплатно) → оп�
 | **P2** SEO, TG Ads → лендинг | Масштаб после креативов |
 
 **Сигналы в игре для сегментации (план, ⬜ в prod):** ≥7 периодов или game over + новая партия; действия во «Финансах»; шаблон mortgage/debt; клик CTA.  
-**Не обещать в маркетинге:** готовый **Plan Mode** (UI «Скоро»).  
+**Не обещать в маркетинге:** второй режим **Plan** (снят ADR-013); плитка «Скоро» — баг канона до GO-01.  
 **Три потока сообщений:** «Порядок» / «Стабилизация» / «Второе мнение» — §9.3 advisor-doc.
 
 ---
@@ -285,7 +285,7 @@ TG / партнёр / контент → игра (бесплатно) → оп�
 | Документ | Зачем |
 |----------|--------|
 | [`README.md`](README.md) | Путеводитель, три аудитории пакета |
-| [`PRODUCT_BRIEF.md`](PRODUCT_BRIEF.md) | Vision, pillars, MVP 2.0 Plan |
+| [`PRODUCT_BRIEF.md`](PRODUCT_BRIEF.md) | Vision, pillars; Plan как 2.0 снят ADR-013 |
 | [`EVENTS.md`](EVENTS.md) | События: роль, принципы, плейтест |
 | [`PLAYER_EXPERIENCE.md`](PLAYER_EXPERIENCE.md) | Плейтест: 5 минут |
 | [`FEATURE_STATUS.md`](FEATURE_STATUS.md) | Матрица фич |

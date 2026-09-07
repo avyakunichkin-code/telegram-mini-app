@@ -25,9 +25,9 @@ review                 code-review-and-quality (gate G1–G4)
         ↓
 handbook (люди)        project-handbook-documentation  →  docs/handbook/
         ↓
-ADR / sync             documentation-and-adrs  →  docs/decisions/, DOC_SYNC_LOG
+        ADR / sync             documentation-and-adrs  →  docs/decisions/, DOC_SYNC_LOG
         ↓
-release (optional)     release-web
+        release (optional)     release-web
 ```
 
 ## События (контент)
@@ -111,6 +111,27 @@ documentation-and-adrs  →  docs/decisions/
 
 Канон пакета и волны: скилл `project-handbook-documentation` · build-spec [`specs/build/project-handbook-documentation.md`](../specs/build/project-handbook-documentation.md).
 
+## Аудиты (снимки, не конвейер)
+
+```text
+запрос «аудит»  →  docs/audits/README.md + templates/AUDIT.md
+        ↓
+docs/audits/<kind>/<YYYY-MM-DD>-<slug>.md
+        ↓
+реестр в audits/README + DOC_SYNC_LOG
+```
+
+| Kind | Папка | Пример |
+|------|--------|--------|
+| product (GD, экономика игрока, FTUE) | `docs/audits/product/` | [`2026-09-07-product-game-design.md`](../audits/product/2026-09-07-product-game-design.md) |
+| engineering (архитектура, security, infra) | `docs/audits/engineering/` | инструкция [`engineering/README.md`](../audits/engineering/README.md) |
+| qa (edge/stress, гонки, testability) | `docs/audits/qa/` | [`2026-09-07-mechanics.md`](../audits/qa/2026-09-07-mechanics.md) |
+| ux (иерархия, FTUE UI, a11y) | `docs/audits/ux/` | [`2026-09-07-player-surface.md`](../audits/ux/2026-09-07-player-surface.md) |
+| liveops (сезоны, каналы, фидбек-цикл) | `docs/audits/liveops/` | [`2026-09-07-community.md`](../audits/liveops/2026-09-07-community.md) |
+| content / ops | `docs/audits/<kind>/` | создать папку вместе с первым файлом |
+
+Не класть в `vision/ideas/`, `foundation/`, `handbook/`. Чеклист код↔spec — по-прежнему `MVP_AUDIT_VS_SPEC.md`.
+
 ## Источники правды (при конфликте)
 
 1. Код + тесты (production)
@@ -118,5 +139,6 @@ documentation-and-adrs  →  docs/decisions/
 3. `docs/foundation/SPEC_PRODUCT.md`
 4. `docs/vision/ideas/` — направление, не детали реализации
 5. `docs/handbook/` — narrative; при расхождении с 1–3 править handbook
+6. `docs/audits/` — снимок на дату; не канон, пока не утверждён в spec/ADR ([`audits/README.md`](../audits/README.md))
 
 См. [`docs/DOCUMENTATION_SYSTEM.md`](../DOCUMENTATION_SYSTEM.md).

@@ -1,7 +1,7 @@
 ---
 layer: handbook
 status: active
-last_reviewed: 2026-06-02
+last_reviewed: 2026-09-07
 audience: product, playtest, partners
 tags:
   - tvoy-hod/layer/handbook
@@ -56,7 +56,7 @@ aliases:
 
 | Фича | Статус | Комментарий |
 |------|--------|-------------|
-| Выбор персонажа (шаг 2 Game) + растровые портреты | ✅ | [`character-pick.md`](../ux/screens/character-pick.md); lab ★ [`persona-portraits-round`](../../../design-lab/game-templates/persona-portraits-round/) |
+| Выбор персонажа (шаг старта Game) + растровые портреты | ✅ | [`character-pick.md`](../ux/screens/character-pick.md); lab ★ [`persona-portraits-round`](../../../design-lab/game-templates/persona-portraits-round/) |
 | Портрет на Z-NEEDS по `template_key` | ✅ | `MqxNeedsDash` v7-e2e3 + `PersonaPortrait` size `dash` |
 | Справочник потребностей (4 раздела) | ✅ | `GET /api/game/needs/guide`, `MqxNeedsHelpSheet` |
 | Потребности (4 шкалы), decay, treat-self | ✅ | UI «Улучшить» (сердце); spec approved |
@@ -73,8 +73,8 @@ aliases:
 
 | Фича | Статус | Комментарий |
 |------|--------|-------------|
-| Game (`save_kind: game`) | ✅ | Шаблоны старта |
-| Plan (`save_kind: plan`) | 🟡 | **MVP 2.0 обязателен** — UI «Скоро» |
+| Game (`save_kind: game`) | ✅ | Единственный режим; шаблоны старта |
+| Plan (`save_kind: plan`) | ⬜ | **Снят** [ADR-013](../decisions/ADR-013-game-only-drop-plan-mode.md). Плитка «Скоро» в коде — долг GO-01 |
 | PWA / браузер (email+пароль) | ✅ | Primary — [`PWA_INSTALL.md`](../foundation/PWA_INSTALL.md), [ADR-012](../decisions/ADR-012-primary-channels-pwa-web-over-tma.md) |
 | Telegram Mini App | ✅ | Secondary channel |
 | Legacy light/hardcore | ⬜ | Снято [ADR-001](../decisions/ADR-001-save-kind-remove-light-hardcore.md) |

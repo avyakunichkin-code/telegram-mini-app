@@ -16,6 +16,7 @@ aliases:
 | ID | Тема |
 |----|------|
 | [[docs/decisions/ADR-001-save-kind-remove-light-hardcore|ADR-001]] | save_kind, без light/hardcore |
+| [[docs/decisions/ADR-013-game-only-drop-plan-mode|ADR-013]] | Только Game; Plan cancelled |
 | [[docs/decisions/ADR-002-victory-engine-and-template-config|ADR-002]] | Victory v2 engine |
 | [[docs/decisions/ADR-004-mechanics-unlock-victory-chain|ADR-004]] | Mechanics unlock chain |
 | [[docs/decisions/ADR-007-backend-domain-packages|ADR-007]] | Backend domain packages |

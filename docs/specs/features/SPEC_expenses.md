@@ -71,7 +71,7 @@ aliases:
 | **A** | DB + домен + period + overview + миграция шаблонов | Rich UI |
 | **B** | Frontend Game: видимость, копирайт cashflow | Plan редактор |
 | **C** | События, victory, achievements, analytics | Manual pay |
-| **D** | Plan Mode CRUD, префилл | Инфляция, due-даты |
+| **D** | ~~Plan Mode CRUD~~ **cancelled** ADR-013 | Инфляция, due-даты |
 
 ---
 
@@ -173,7 +173,12 @@ aliases:
 
 ---
 
-## 8. Plan Mode (волна D)
+## 8. ~~Plan Mode (волна D)~~ — cancelled ADR-013
+
+Не реализовывать CRUD `save_kind=plan` / мастер `BaseParamsScreen` как второй продукт. Статьи burn **Game** (волны A–C) остаются. Редактор внутри Game — отдельная идея после D7.
+
+<details>
+<summary>Исторический чеклист (не делать)</summary>
 
 | ID | Реализация |
 |----|------------|
@@ -186,6 +191,8 @@ aliases:
 **В игре (Plan):** `GET /api/game/expenses/categories`; `POST/PATCH/DELETE /api/game/expenses/lines` — только для `save_kind=plan`; после изменений пересчитывается `base_monthly_lifestyle_expense`. Game — только чтение (`GET /api/game/expenses`).
 
 **UI:** плитка «План» в `NewProfileKindScreen` → `BaseParamsScreen` → редактор категорий; в сессии — `PlanExpenseEditor` вместо read-only `ExpensesBudgetBlock`.
+
+</details>
 
 ---
 
@@ -209,3 +216,4 @@ aliases:
 | 2026-05-19 | v0.1: узкий lifestyle aggregate |
 | 2026-05-19 | **v1.0 draft:** полный слой жизнеобеспечения, матрица слоёв, волны A–D |
 | 2026-05-19 | **Волна D:** Plan CRUD, мастер бюджета, `save_kind` в overview |
+| 2026-09-07 | Волна D / Plan Mode **cancelled** [ADR-013](../../decisions/ADR-013-game-only-drop-plan-mode.md) |

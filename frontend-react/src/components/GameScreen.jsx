@@ -338,13 +338,12 @@ export function GameScreen({ onLogout, onNewGame, onLoadGame }) {
         >
           <div className="mq-stack mq-stack--tight mq-stack-animate">
             <div className="mqx-card mq-enter-item">
-              <div className="mqx-card__title">Пустой ответ</div>
-              <p className="mqx-card__sub">Активный профиль сейчас не прочитать. Попробуйте ещё раз.</p>
-              <div className="mq-actions-stack" style={{ marginTop: 16 }}>
-                <Button stretched mode="filled" onClick={() => reload()}>
-                  Обновить
-                </Button>
-              </div>
+              <MqxStateError
+                title="Пустой ответ"
+                message="Активный профиль сейчас не прочитать. Попробуйте ещё раз."
+                retryLabel="Обновить"
+                onRetry={() => reload()}
+              />
             </div>
           </div>
         </MqxShell>

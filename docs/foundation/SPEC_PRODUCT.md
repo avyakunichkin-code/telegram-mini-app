@@ -7,7 +7,7 @@ aliases:
   - SPEC_PRODUCT
 layer: foundation
 status: active
-last_reviewed: 2026-06-20
+last_reviewed: 2026-09-07
 doc_sync: foundation/DOC_SYNC_LOG.md
 ---
 
@@ -19,13 +19,13 @@ doc_sync: foundation/DOC_SYNC_LOG.md
 
 ## 0. Дорожная карта концепции (актуально)
 
-Целевое развитие — кратко ниже; **детали, Q&A и план по слоям** только в **[`docs/vision/ideas/tvoy-hod-evolution-after-mvp.md`](../vision/ideas/tvoy-hod-evolution-after-mvp.md) — часть II** (не дублировать здесь):
+Целевое развитие — кратко ниже. **Один режим: Game** ([ADR-013](../decisions/ADR-013-game-only-drop-plan-mode.md)). Исторический дуализм Game/Plan в **[`tvoy-hod-evolution-after-mvp.md`](../vision/ideas/tvoy-hod-evolution-after-mvp.md) §II** — не канон.
 
-- два **режима сохранения** (**Game** / **Plan**), без смены режима у существующего профиля;
+- **единственный `save_kind`: `game`**, без смены типа у существующего профиля; **Plan / MVP 2.0 как второй save — cancelled**;
 - **Game:** старт с **шаблонов** (первый запуск — один базовый шаблон; повторная «новая игра» — 4 шаблона сложности), агрегированные «жизненные» расходы + дельты из **событий** в БД, **достижения** (без character XP), победа по **`victory_config_json`** шаблона — в prod **цепочка целей** (`progression_mode: chain`) или legacy **M из N** (`parallel`); пороги cashflow/подушки/инвестиций — в JSON шаблона ([ADR-002](../decisions/ADR-002-victory-engine-and-template-config.md));
-- **Plan:** ручное планирование, статьи расходов, опция префилла **только стартового снимка** из выбранного сохранения;
+- **расходы:** burn Game из шаблона / статей (E1 A–C); мастер «свой бюджет с нуля» — не второй режим (отдельная идея после D7, если понадобится);
 - **победа** — только по целям Victory v2 (chain / parallel); ворота по номеру периода **сняты** (2026-06);
-- устаревшая пара **`light` / `hardcore`** заменена на **`save_kind`** и шаблоны — см. [ADR-001](../decisions/ADR-001-save-kind-remove-light-hardcore.md) и [`specs/features/SPEC_game-plan.md`](../specs/features/SPEC_game-plan.md).
+- устаревшая пара **`light` / `hardcore`** заменена на **`save_kind`** и шаблоны — [ADR-001](../decisions/ADR-001-save-kind-remove-light-hardcore.md); резерв `plan` снят [ADR-013](../decisions/ADR-013-game-only-drop-plan-mode.md); Game E2E — [`SPEC_game-plan.md`](../specs/features/SPEC_game-plan.md).
 
 Техническая оценка архитектуры, масштаба и infra-roadmap: [`vision/ARCHITECTURE_ASSESSMENT_2026-06.md`](../vision/ARCHITECTURE_ASSESSMENT_2026-06.md). Геймдизайн и рынок: [`vision/GAME_DESIGN_ROADMAP_2026.md`](../vision/GAME_DESIGN_ROADMAP_2026.md).
 
@@ -105,7 +105,7 @@ doc_sync: foundation/DOC_SYNC_LOG.md
 6. Если `cash_balance < 0` — рост `negative_periods_count`; три периода подряд — **поражение** (`is_active = 0`); иначе счётчик сбрасывается.
 7. Запись **снимка** в `PeriodEconomyClosing` для аналитики.
 8. Увеличение `period_index`, обновление якоря времени.
-9. **События** нового периода: `ensure_period_events` — **два** сценария (`EVENTS_PER_PERIOD` в `game/rules.py`; [ADR-009](../decisions/ADR-009-metrics-dictionary-tb1.md)); фильтр **`EventDefinition.mode`** (`game` / `plan` / `any`) + **`profile.save_kind`**; tier от **`period_index`** (см. §7.2, [`remove-character-xp-and-levels.md`](../vision/ideas/remove-character-xp-and-levels.md)); без дозаполнения после ответов в том же периоде.
+9. **События** нового периода: `ensure_period_events` — **два** сценария (`EVENTS_PER_PERIOD` в `game/rules.py`; [ADR-009](../decisions/ADR-009-metrics-dictionary-tb1.md)); фильтр **`EventDefinition.mode`** (`game` / `any`; `plan` — долг GO-04) + профиль **`save_kind=game`**; tier от **`period_index`** (см. §7.2, [`remove-character-xp-and-levels.md`](../vision/ideas/remove-character-xp-and-levels.md)); без дозаполнения после ответов в том же периоде.
 
 **Итог цикла:** жить период → принимать решения → на границе месяца экономика **автоматически** применяет расходы/доходы/просрочки → новый период с новыми (или оставшимися) событиями.
 

@@ -1,4 +1,4 @@
-import { turnCloseTitle } from '../constants/turnCopy';
+import { turnCloseTitle } from '../constants/turnCopy.js';
 
 /**
  * Строки компактного итога хода (иконка + подпись + Δ со стрелкой).
@@ -79,7 +79,15 @@ export function periodCloseTitle(summary) {
   return turnCloseTitle(m?.periodIndex || 0);
 }
 
+export const PERIOD_CLOSE_SPAWN_FAILED_COPY =
+  'Карточки этого хода не собрались. Можно играть дальше — напиши нам, если повторится.';
+
+export function periodCloseEventsSpawnFailed(summary) {
+  return Boolean(summary && summary.events_spawn_failed);
+}
+
 export function shouldAutoOpenPeriodClose(summary, autoMax = 3) {
+  if (periodCloseEventsSpawnFailed(summary)) return true;
   const m = derivePeriodCloseMetrics(summary);
   const n = m?.periodIndex || 0;
   return n > 0 && n <= autoMax;

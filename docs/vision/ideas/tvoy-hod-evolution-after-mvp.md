@@ -1,7 +1,7 @@
 ---
 layer: vision
 status: active
-last_reviewed: 2026-05-25
+last_reviewed: 2026-09-07
 idea_refine: true
 next_spec: specs/features/SPEC_game-plan.md
 tags:
@@ -14,7 +14,9 @@ aliases:
 ---
 # ТВОЙ ХОД — развитие после easy MVP
 
-**Статус документа:** **§§ Problem … Снимок реализации** — исторический контекст и старые формулировки (easy/hard); **актуальная целевая концепция, Q&A и пошаровый план** — в **[части II](#часть-ii--полная-концепция-после-обсуждения-qa-и-план-работ)** внизу файла. Foundation: [`SPEC_PRODUCT.md`](../foundation/SPEC_PRODUCT.md) §0 (краткая выжимка, без дублирования §II).
+> **Канон 2026-09-07:** только **Game**. Режим Plan / MVP 2.0 как второй `save_kind` **снят** — [ADR-013](../decisions/ADR-013-game-only-drop-plan-mode.md). Текст §II ниже — **исторический** (зачем когда-то хотели два режима); не планировать Plan.
+
+**Статус документа:** **§§ Problem … Снимок реализации** — исторический контекст и старые формулировки (easy/hard); **актуальная целевая концепция** — [`SPEC_PRODUCT.md`](../foundation/SPEC_PRODUCT.md) §0 + ADR-013. Часть II сохранена как архив Q&A.
 
 Сессия структурирования по скиллу `idea-refine` с опорой на [`SPEC_PRODUCT.md`](../foundation/SPEC_PRODUCT.md), `CLAUDE.md` и текущую реализацию (периодный цикл, шаблоны активов/долгов, события, инвестиции, страховки, `GameScreen` и связанные экраны).
 

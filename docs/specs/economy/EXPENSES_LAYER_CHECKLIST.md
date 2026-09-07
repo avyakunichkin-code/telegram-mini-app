@@ -136,12 +136,9 @@ aliases:
 
 ---
 
-## 10. Plan Mode (волна D)
+## 10. ~~Plan Mode (волна D)~~ — cancelled ADR-013
 
-- [ ] Spec мастера Plan — секция расходов
-- [ ] CRUD API статей (`save_kind=plan`)
-- [ ] Префилл из `starter_params_json`
-- [ ] UI редактора
+- [x] Не делать мастер / CRUD `save_kind=plan` как второй продукт. Burn Game — волны выше.
 
 ---
 

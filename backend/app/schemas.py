@@ -345,6 +345,7 @@ class PeriodCloseSummary(BaseModel):
     breakdown: List[PeriodCloseBreakdownItem] = Field(default_factory=list)
     period_highlights: List[PeriodCloseHighlight] = Field(default_factory=list)
     achievement_unlocks: List["AchievementUnlockEvent"] = Field(default_factory=list)
+    events_spawn_failed: bool = False
 
 
 class AchievementTierStatus(BaseModel):

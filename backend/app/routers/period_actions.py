@@ -7,13 +7,12 @@ from ..database import get_db
 from ..schemas import (
     SafetyFundContribution,
     PeriodStatusResponse,
-    PeriodSummaryResponse,
     TreatSelfRequest,
     TreatSelfResponse,
 )
 from ..game.time import get_active_game_profile, sync_time
 from ..idempotency import read_idempotency_key, run_idempotent
-from ..services.period.complete import complete_period as service_complete_period
+from ..services.period.complete import COMPLETE_PERIOD_GONE_DETAIL
 from ..services.period.salary import claim_salary as service_claim_salary
 from ..services.period.status import build_period_status
 from ..services.period.safety_fund import (
@@ -77,18 +76,12 @@ async def contribute_to_safety_fund(
     return _execute()
 
 
-@router.post("/complete-period", response_model=PeriodSummaryResponse)
+@router.post("/complete-period")
 async def complete_period(
-    current_user=Depends(get_current_user),
-    db: Session = Depends(get_db)
+    _current_user=Depends(get_current_user),
 ):
-    """
-    Завершает текущий период (вызывается при Next или автоматически)
-    Фиксирует итоги и переносит состояние в следующий период
-    """
-    profile = get_active_game_profile(db, current_user.id)
-    sync_time(profile)
-    return service_complete_period(db, profile)
+    """Gone: legacy close without process_period_end. Canon: POST /api/game/time/next."""
+    raise HTTPException(status_code=410, detail=COMPLETE_PERIOD_GONE_DETAIL)
 
 
 @router.post("/withdraw-from-safety-fund")

@@ -9,6 +9,21 @@ aliases:
 
 Краткий лог, когда **код обогнал docs** или наоборот. Полный чеклист — [`MVP_AUDIT_VS_SPEC.md`](MVP_AUDIT_VS_SPEC.md).
 
+| 2026-09-07 | PR-02 | Lock salary/choose (серверный ключ) + FE `Idempotency-Key` на денежные POST | [`PLAN_pr-02-salary-choose-lock`](../plans/PLAN_pr-02-salary-choose-lock.md) |
+| 2026-09-07 | PR-02 | План lock salary/choose + FE Idempotency-Key **APPROVED** | [`PLAN_pr-02-salary-choose-lock`](../plans/PLAN_pr-02-salary-choose-lock.md) |
+| 2026-09-07 | PR-14 | `period_close.events_spawn_failed` + chip на ритуале close | [`PLAN_pr-14-events-spawn-failed`](../plans/PLAN_pr-14-events-spawn-failed.md) |
+| 2026-09-07 | PR-14 | План `events_spawn_failed` **APPROVED** | [`PLAN_pr-14-events-spawn-failed`](../plans/PLAN_pr-14-events-spawn-failed.md) |
+| 2026-09-07 | — (docs) | Сводный план: **первые шаги** PR-03 → PR-01 → PR-14; spawn-fail поднят в P0-parallel (AI C1) | [`PLAN_production-ready`](../plans/PLAN_production-ready.md) §Первые шаги |
+| 2026-09-07 | — (docs) | Kind **`ai`**: 6 предложений кросс-роли (PR-14 быстрая победа; слоты+вынос picker — стратегия) | [`ai/2026-09-07-ai-proposals.md`](../audits/ai/2026-09-07-ai-proposals.md) |
+| 2026-09-07 | — (docs) | Kind **`ai`**: снимок runtime picker/guidance + Cursor pipeline DRAFT (нет NPC; не BT/GOAP) | [`audits/ai/README.md`](../audits/ai/README.md), [`ai/2026-09-07-runtime-and-dev-ai.md`](../audits/ai/2026-09-07-runtime-and-dev-ai.md); очередь без новых эпиков → PLAN_production-ready |
+| 2026-09-07 | — (docs) | **Единый план текущей доработки:** аудиты + эпик GO в [`PLAN_production-ready`](../plans/PLAN_production-ready.md) | очередь WAVE1 = P0 + GO-01; детали срезов GO — [`PLAN_game-only`](../plans/PLAN_game-only.md) |
+| 2026-09-07 | — (docs) | **ADR-013 Accepted:** только Game; Plan / M2.0 cancelled; эпик GO | [`ADR-013`](../decisions/ADR-013-game-only-drop-plan-mode.md), idea [`game-only-drop-plan-mode`](../vision/ideas/game-only-drop-plan-mode.md), [`PLAN_game-only`](../plans/PLAN_game-only.md) |
+| 2026-09-07 | — (docs) | Сводный план **production-ready** DRAFT (синтез 5 аудитов → P0…P3, RICE) | [`plans/PLAN_production-ready.md`](../plans/PLAN_production-ready.md); TRACEABILITY M1.2; backlog «В работу сейчас» |
+| 2026-09-07 | — (docs) | Kind **`liveops`**: снимок комьюнити/сезонов DRAFT (Season 0, TG daily vs TB1) | [`audits/liveops/README.md`](../audits/liveops/README.md), [`liveops/2026-09-07-community.md`](../audits/liveops/2026-09-07-community.md) |
+| 2026-09-07 | — (docs) | Kind **`ux`**: снимок поверхности игрока DRAFT (иерархия главной, ход/месяц, оверлеи) | [`audits/ux/README.md`](../audits/ux/README.md), [`ux/2026-09-07-player-surface.md`](../audits/ux/2026-09-07-player-surface.md) |
+| 2026-09-07 | — (docs) | Kind **`qa`**: снимок механик DRAFT (гонки close/choose/salary, `/complete-period`, CI) | [`audits/qa/README.md`](../audits/qa/README.md), [`qa/2026-09-07-mechanics.md`](../audits/qa/2026-09-07-mechanics.md) |
+| 2026-09-07 | — (docs) | Слой **`docs/audits/`**: инструкция + шаблон + продуктовый снимок DRAFT + **engineering architecture** DRAFT | [`audits/README.md`](../audits/README.md), [`templates/AUDIT.md`](../templates/AUDIT.md), [`product/2026-09-07-product-game-design.md`](../audits/product/2026-09-07-product-game-design.md), [`engineering/2026-09-07-architecture.md`](../audits/engineering/2026-09-07-architecture.md); наследник [`ARCHITECTURE_ASSESSMENT_2026-06`](../vision/ARCHITECTURE_ASSESSMENT_2026-06.md) |
+
 | 2026-07-01 | — (legacy wave 5) | Orphan FE delete, `.agents` nodejs/seo trim, stale docs; [`LEGACY_NOISE_AUDIT`](../agents/LEGACY_NOISE_AUDIT_2026-06-20.md) wave 5 | Superseded ideas → redirect; UI audit O3/SPA; ADR-012 trim в 10 docs; [`LEGACY_NOISE_AUDIT`](../agents/LEGACY_NOISE_AUDIT_2026-06-20.md) §4 |
 | 2026-06-20 | — (legacy wave 3) | Archive O2/XP/hero-compact; O3 канон onboarding; TEAM_UPDATE archived; [`LEGACY_NOISE_AUDIT`](../agents/LEGACY_NOISE_AUDIT_2026-06-20.md) §3 |
 | 2026-06-20 | — (legacy wave 2) | `docs/archive/onboarding-o1/`; UX platform SPA/PWA; marketing ep-000 ADR-012; release-web spec test |
@@ -81,7 +96,7 @@ aliases:
 |------|----------|-----|
 | Победа | [ADR-002](../decisions/ADR-002-victory-engine-and-template-config.md), [SPEC_victory-v2](../specs/features/SPEC_victory-v2.md) | `victory/engine.py`, `victory/seeds.py` |
 | Механики UI/API | [ADR-004](../decisions/ADR-004-mechanics-unlock-victory-chain.md) | `starters/mechanics.py` |
-| Режим сохранения | [ADR-001](../decisions/ADR-001-save-kind-remove-light-hardcore.md) | `GameProfile.save_kind` |
+| Режим сохранения | [ADR-001](../decisions/ADR-001-save-kind-remove-light-hardcore.md) + [ADR-013](../decisions/ADR-013-game-only-drop-plan-mode.md) | `GameProfile.save_kind` канон `game`; Plan снят |
 | Прогрессия событий (M11) | [SPEC_mvp-11](../specs/features/SPEC_mvp-11-progression-events.md), [handbook/EVENTS.md](../handbook/EVENTS.md), [remove-character-xp](../vision/ideas/remove-character-xp-and-levels.md) | `game_rules.event_tier_*`, `cooldown_periods` (`0007`), `test_mq116_acceptance.py` |
 | Период (TB1) | [SPEC_PRODUCT](SPEC_PRODUCT.md) §3.1, [dashboard UX](../ux/screens/dashboard.md) | `game/time.py`, `MqxDashboardHero.jsx` |
 | Метрики TB1, 2 события/период | [ADR-009](../decisions/ADR-009-metrics-dictionary-tb1.md) | `game/rules.EVENTS_PER_PERIOD`, `overview_build`, `victory/snap` |

@@ -12,16 +12,15 @@ alwaysApply: false
 - **HTTP / use-cases**: `backend/app/routers/`, `backend/app/services/<domain>/`.
 - **Модели и БД**: `backend/app/models.py` + [`backend/migrations/README.md`](backend/migrations/README.md). Схема: `bash backend/scripts/db.sh migrate`; пустая БД: `db.sh bootstrap`. На startup: `create_all` → `ensure_schema_compatibility()` → `app.seeds.runner.seed_all` (шаблоны, `victory_goals`, события из YAML). Таблицы **без ORM** (напр. `victory_goals`) — DDL в baseline/миграции + seed, не только `create_all`. Skill/rule: **`db-baselines-and-migrations`**, `tvoy-hod-db-migrations.mdc`.
 
-## `save_kind` (Game / Plan) — [ADR-001](docs/decisions/ADR-001-save-kind-remove-light-hardcore.md)
+## `save_kind` — только Game ([ADR-013](docs/decisions/ADR-013-game-only-drop-plan-mode.md), [ADR-001](docs/decisions/ADR-001-save-kind-remove-light-hardcore.md))
 
-- На профиле: **`save_kind`** — `game` | `plan`; **immutable** после создания. Legacy **`GameProfile.mode`** (`light`/`hardcore`) **не использовать** — колонка снята.
-- **Game:** старт только из каталога **`game_starter_templates`** (`starter_template_key`, blueprint, `base_monthly_lifestyle_expense`). API создания — `save_kind=game` + `template_key` (см. `backend/app/routers/game.py`).
-- **Plan:** зарезервирован в модели/API; полный мастер и UI — **MVP 2.0** ([`SPEC_game-plan`](docs/specs/features/SPEC_game-plan.md)). В G1 не возвращать выбор light/hardcore.
-- **События:** фильтр по **`EventDefinition.mode`**: `game` | `plan` | `any` в связке с **`profile.save_kind`**, не по legacy сложности профиля.
+- На профиле: **`save_kind`** — канон **`game`**; **immutable**. Legacy **`GameProfile.mode`** (`light`/`hardcore`) **не использовать**. Не создавать `plan`; `POST start` с `plan` → **400** (эпик GO).
+- **Game:** старт только из каталога **`game_starter_templates`** (`starter_template_key`, blueprint, `base_monthly_lifestyle_expense`). API — `save_kind=game` + `template_key`.
+- **События:** фильтр **`EventDefinition.mode`**: `game` \| `any` (значение `plan` в YAML — долг GO-04), не legacy сложность.
 - Изменения контракта профиля/событий → SQL-миграция + `models.py` + при необходимости `main.py` + **`frontend-react/src/api.js`** и экраны старта.
 - **Роутеры**: подключение в `backend/main.py`; префиксы API держать согласованными с фронтом (`/api/...`).
 - **Ошибки API**: предсказуемые статусы и тело ответа; фронт ожидает единый контракт ошибок через `apiCall` в `frontend-react/src/api.js`.
-- **Победа (prod: Victory v2):** `GET /api/finance/overview` → `win_reached` и блок `victory` из `victory/engine.py` + `victory_config_json` шаблона (`chain` | `parallel`, gate `min_period_index_for_victory`, обычно 7). Spec: [`SPEC_victory-v2.md`](docs/specs/features/SPEC_victory-v2.md), [ADR-002](docs/decisions/ADR-002-victory-engine-and-template-config.md). Game/Plan: [`SPEC_game-plan.md`](docs/specs/features/SPEC_game-plan.md).
+- **Победа (prod: Victory v2):** `GET /api/finance/overview` → `win_reached` и блок `victory` из `victory/engine.py` + `victory_config_json` шаблона (`chain` | `parallel`, gate `min_period_index_for_victory`, обычно 7). Spec: [`SPEC_victory-v2.md`](docs/specs/features/SPEC_victory-v2.md), [ADR-002](docs/decisions/ADR-002-victory-engine-and-template-config.md). Старт Game: [`SPEC_game-plan.md`](docs/specs/features/SPEC_game-plan.md); Plan снят [ADR-013](docs/decisions/ADR-013-game-only-drop-plan-mode.md).
 - **Инварианты логики (tier-окно, победа):** `backend/app/game/rules.py`; победа v2 — `backend/app/victory/engine.py`. Роутеры не дублируют условия победы вручную.
 
 ## Локальные тесты (без CI)

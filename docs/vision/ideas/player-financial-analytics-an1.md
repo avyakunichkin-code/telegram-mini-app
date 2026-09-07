@@ -22,7 +22,7 @@ aliases:
 
 # AN1: финансовая аналитика игрока (вкладка «Аналитика»)
 
-One-pager эпика **AN1**: дашборд личной финансовой аналитики в game shell — для **Game** и **Plan** (`save_kind`), без отдельного экрана. «Дашборд реальных данных» в брифах Plan — **лексика**, не второй продукт.
+One-pager эпика **AN1**: дашборд личной финансовой аналитики в game shell — для **Game** (`save_kind=game`). «Дашборд реальных данных» в старых брифах Plan — **лексика**, не второй продукт ([ADR-013](../../decisions/ADR-013-game-only-drop-plan-mode.md)).
 
 **Spec:** [`SPEC_ANALYTICS.md`](../../specs/SPEC_ANALYTICS.md) · **Backlog:** [`PRODUCT_BACKLOG.md`](../../backlog/PRODUCT_BACKLOG.md) § AN1.
 

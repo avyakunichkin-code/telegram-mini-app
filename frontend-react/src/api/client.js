@@ -1,3 +1,5 @@
+import { newIdempotencyKey, shouldAttachIdempotencyKey } from '../utils/idempotencyKey.js';
+
 /** @type {string} fallback prod API (Render), пока нет VITE_API_BASE_URL в CI */
 const DEFAULT_PROD_API = 'https://telegram-mini-app-zwfs.onrender.com';
 
@@ -75,6 +77,9 @@ export class ApiError extends Error {
 export async function apiCall(endpoint, method = 'GET', data = null) {
   const headers = { 'Content-Type': 'application/json' };
   if (authToken) headers['Authorization'] = `Bearer ${authToken}`;
+  if (shouldAttachIdempotencyKey(method, endpoint)) {
+    headers['Idempotency-Key'] = newIdempotencyKey();
+  }
 
   const options = { method, headers };
   if (data && (method === 'POST' || method === 'PUT' || method === 'PATCH')) {

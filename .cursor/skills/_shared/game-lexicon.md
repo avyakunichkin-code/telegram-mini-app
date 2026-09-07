@@ -5,14 +5,14 @@
 ## Цикл и сохранение
 
 - **Период («месяц»):** открыт → действия игрока → **«Закрыть месяц»** (`POST /api/game/time/next` → `process_period_end`) → следующий период.
-- **`save_kind`:** `game` | `plan` (immutable). **Game** — старт из `game_starter_templates` + `template_key`. **Plan** — в API, UI «Скоро».
+- **`save_kind`:** канон **`game`** (immutable). Старт из `game_starter_templates` + `template_key`. Режим **Plan снят** ([ADR-013](../../../docs/decisions/ADR-013-game-only-drop-plan-mode.md)); API `plan` → 400 (эпик GO). Колонка в БД может ещё существовать.
 - **`period_index`:** номер закрытого/текущего периода; gate победы часто **`min_period_index_for_victory`** (дефолт **7**).
 
 ## Прогрессия и события
 
 - **Без character level/XP** — канон: [`docs/vision/ideas/remove-character-xp-and-levels.md`](../../../docs/vision/ideas/remove-character-xp-and-levels.md).
 - **`event_tier`:** от `period_index`, не от уровня персонажа.
-- **`EventDefinition.mode`:** `game` | `plan` | `any` × `profile.save_kind`.
+- **`EventDefinition.mode`:** канон `game` \| `any`. Значение `plan` в YAML — долг GO-04, не второй продукт.
 - **Два события на период** (`EVENTS_PER_PERIOD`); контент — `data/events/mvp11/*.yaml` → seeds (ADR-008).
 
 ## Экономика (MVP)

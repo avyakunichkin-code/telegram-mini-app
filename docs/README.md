@@ -31,6 +31,7 @@ aliases:
 | **Plans** | [`plans/`](plans/) | Как строим (срезы, зависимости) |
 | **Tasks** | [`tasks/`](tasks/) | Выгрузка MQ-* (опционально) |
 | **Decisions** | [`decisions/`](decisions/) | ADR — почему так |
+| **Audits** | [`audits/`](audits/) | Снимки продукта / engineering / QA / UX; **куда класть** — [`audits/README.md`](audits/README.md) |
 | **Backlog** | [`backlog/`](backlog/) | Приоритеты P0–P3 |
 | **Reference** | [`reference/`](reference/) | GDD, брендбук, investor deck |
 | **Marketing** | [`marketing/`](marketing/) | Посты, трекер тем, стиль, Telegram-публикация |
@@ -54,6 +55,7 @@ aliases:
 | Лендинг / скрины MQX | [`specs/LANDING_SCREENSHOTS.md`](specs/LANDING_SCREENSHOTS.md) + [`landing/README.md`](../landing/README.md) |
 | Маркетинг / посты | [`marketing/README.md`](marketing/README.md) + скилл **social-changelog-posts** |
 | Планирование | [`backlog/PRODUCT_BACKLOG.md`](backlog/PRODUCT_BACKLOG.md) + [`TRACEABILITY.md`](TRACEABILITY.md) |
+| Аудит (агент) | [`audits/README.md`](audits/README.md) → `product/` / `engineering/` / `qa/` + [`templates/AUDIT.md`](templates/AUDIT.md) |
 
 ---
 
@@ -96,6 +98,17 @@ aliases:
 
 Архив: [`archive/`](archive/README.md) (O1/O2 onboarding, level/XP, hero-compact).
 
+### Audits (снимки)
+
+| Документ | Содержание |
+|----------|------------|
+| [`audits/README.md`](audits/README.md) | Куда класть, kind, реестр, что не сюда |
+| [`audits/product/2026-09-07-product-game-design.md`](audits/product/2026-09-07-product-game-design.md) | Продукт + GD, DRAFT, 2026-09-07 |
+| [`audits/engineering/README.md`](audits/engineering/README.md) | Куда писать **технический** аудит; снимок [`engineering/2026-09-07-architecture.md`](audits/engineering/2026-09-07-architecture.md) |
+| [`audits/qa/README.md`](audits/qa/README.md) | QA-механики; снимок [`qa/2026-09-07-mechanics.md`](audits/qa/2026-09-07-mechanics.md) |
+| [`audits/ux/README.md`](audits/ux/README.md) | Поверхность игрока; снимок [`ux/2026-09-07-player-surface.md`](audits/ux/2026-09-07-player-surface.md) |
+| [`audits/liveops/README.md`](audits/liveops/README.md) | Live Ops / комьюнити; снимок [`liveops/2026-09-07-community.md`](audits/liveops/2026-09-07-community.md) |
+
 ### Vision
 
 | Документ | Содержание |
@@ -119,7 +132,7 @@ aliases:
 | [`specs/LANDING_SCREENSHOTS.md`](specs/LANDING_SCREENSHOTS.md) | PNG для лендинга, `capture-screens.mjs`, `UI_FOCUS`, чеклист перед deploy |
 | [`specs/SPEC_APP_SHELL.md`](specs/SPEC_APP_SHELL.md) | Pre-game оболочки, `MqxButton`, design-lab `pre-game-shell` |
 | [`specs/SPEC_ANALYTICS.md`](specs/SPEC_ANALYTICS.md) | Вкладка «Аналитика» и данные |
-| [`specs/features/SPEC_game-plan.md`](specs/features/SPEC_game-plan.md) | Эпик G1 — Game E2E, `save_kind`, ADR-001 (**implemented**) |
+| [`specs/features/SPEC_game-plan.md`](specs/features/SPEC_game-plan.md) | Эпик G1 — Game E2E, `save_kind`; Plan-чеклист **cancelled** ADR-013 (**implemented** Game) |
 | [`specs/features/SPEC_mvp-11-progression-events.md`](specs/features/SPEC_mvp-11-progression-events.md) | MVP 1.1 — **`event_tier`**, **`repeat_policy`**, cooldown; tier-окно от **`period_index`** (см. remove-character-xp); план — [`plans/PLAN_mvp-11-progression-events.md`](plans/PLAN_mvp-11-progression-events.md) |
 | [`specs/gameplay/EXPENSES_SYSTEM.md`](specs/gameplay/EXPENSES_SYSTEM.md) | Канон механики **расходов** (категории, burn, Game/Plan) |
 | [`specs/features/SPEC_expenses.md`](specs/features/SPEC_expenses.md) | Эпик **E1** — внедрение на всех слоях; чеклист — [`specs/economy/EXPENSES_LAYER_CHECKLIST.md`](specs/economy/EXPENSES_LAYER_CHECKLIST.md) |
@@ -132,6 +145,7 @@ aliases:
 | Документ | Содержание |
 |----------|------------|
 | [`backlog/PRODUCT_BACKLOG.md`](backlog/PRODUCT_BACKLOG.md) | Бэклог P0–P3 |
+| [`plans/PLAN_production-ready.md`](plans/PLAN_production-ready.md) | Сводный план до production-ready (синтез аудитов 2026-09-07, DRAFT) |
 | [`agents/CURSOR_SKILLS.md`](agents/CURSOR_SKILLS.md) | Приоритет Agent Skills |
 
 ### Decisions (ADR)
@@ -140,7 +154,8 @@ aliases:
 |----------|------------|
 | [`decisions/ADR-007-backend-domain-packages.md`](decisions/ADR-007-backend-domain-packages.md) | **Структура backend:** `app/{game,finance,victory,…}/`, `services/` |
 | [`decisions/ADR-002-victory-engine-and-template-config.md`](decisions/ADR-002-victory-engine-and-template-config.md) | Victory v2, `victory_config_json` |
-| [`decisions/ADR-001-save-kind-remove-light-hardcore.md`](decisions/ADR-001-save-kind-remove-light-hardcore.md) | `save_kind` game/plan |
+| [`decisions/ADR-001-save-kind-remove-light-hardcore.md`](decisions/ADR-001-save-kind-remove-light-hardcore.md) | `save_kind` вместо light/hardcore; резерв Plan **снят** ADR-013 |
+| [`decisions/ADR-013-game-only-drop-plan-mode.md`](decisions/ADR-013-game-only-drop-plan-mode.md) | Только Game; отказ от режима Plan |
 
 Полный список: [`decisions/`](decisions/).
 
@@ -163,6 +178,8 @@ aliases:
 3. **plan** → `plans/PLAN_<slug>.md`
 4. **tasks** → MQ-* в plan или `tasks/`
 5. **код** → PR со ссылкой на spec
+
+**Аудит** (не фаза конвейера): [`audits/README.md`](audits/README.md) → `audits/<kind>/<дата>-<slug>.md`.
 
 ---
 

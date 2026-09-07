@@ -211,7 +211,7 @@ win_reached = period_gate_open AND all(enabled goals in chain are met)
 
 - UI экрана победы / тоста (отдельная задача).
 - Учёт `goals[].required` в логике.
-- Победа в Plan Mode (`save_kind=plan`).
+- Победа в ~~Plan Mode~~ — режима нет (ADR-013).
 - Достижения как цели победы.
 
 ---

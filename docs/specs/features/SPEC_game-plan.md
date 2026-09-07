@@ -21,6 +21,8 @@ audit: foundation/MVP_AUDIT_VS_SPEC.md
 
 # Spec: Game Mode, шаблоны старта, отказ от light/hardcore (эпик G1)
 
+> **ADR-013 (2026-09-07):** путь **Game implemented** остаётся. Чеклист **Plan / MVP 2.0 в этом spec — cancelled**. Не реализовывать мастер Plan; вырезание — [`PLAN_game-only`](../../plans/PLAN_game-only.md).
+
 ## Пояснение терминов (чтобы не теряться)
 
 | Термин | Что это значит практически |
@@ -38,7 +40,7 @@ audit: foundation/MVP_AUDIT_VS_SPEC.md
 1. Legacy **`light` / `hardcore`** снимаются **полностью**; новая ось — **`save_kind`**, см. [ADR-001](../../decisions/ADR-001-save-kind-remove-light-hardcore.md). Переходного dual-read нет.
 2. Первые **6** периодов без победы сохраняются (`min_period_index_for_victory` по умолчанию **7**).
 3. Game Mode: **автоматические** списания «жизни»; ручная оплата расходов — вне scope.
-4. **Plan Mode (мастер, prefill `starter_params_json`)** — **MVP 2.0**, **вне scope эпика G1**; в G1 допускается зарезервировать поля/контракт в БД без UI Plan.
+4. **Plan Mode (мастер, prefill `starter_params_json`)** — **cancelled** [ADR-013](../../decisions/ADR-013-game-only-drop-plan-mode.md); в G1 поля в БД могли быть зарезервированы — не развивать.
 5. **Порядок поставки:** полный путь **Game из каталога шаблонов end-to-end** (БД + API + применение в `process_period_end` + стартовый UI с выбором шаблона), а не отдельный релиз «только `save_kind` без шаблона».
 6. Детали Q&A и таблицы по слоям — [evolution §II](../../vision/ideas/tvoy-hod-evolution-after-mvp.md); этот файл — **исполняемая spec** для G1.
 
@@ -46,7 +48,7 @@ audit: foundation/MVP_AUDIT_VS_SPEC.md
 
 ## Objective
 
-**Why:** перейти от устаревшей пары сложности к **Game-сохранениям со стартовым шаблоном** и заделом на Plan в 2.0.
+**Why:** перейти от устаревшей пары сложности к **Game-сохранениям со стартовым шаблоном**. Задел на Plan 2.0 **снят** (ADR-013).
 
 **Who:** игрок TMA, начинающий новую игру в **Game Mode**.
 

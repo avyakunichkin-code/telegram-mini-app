@@ -13,7 +13,9 @@ aliases:
   - post-playtest-wave1-two-directions
 ---
 
-# Post-playtest: MVP 1.x (Game) и MVP 2.x (Plan)
+# Post-playtest: MVP 1.x (Game) — Plan-трек cancelled
+
+> **2026-09-07:** второй трек **MVP 2.x Plan снят** — [ADR-013](../../decisions/ADR-013-game-only-drop-plan-mode.md). Документ ниже — исторический разбор волны. Канон: один продукт Game; платформа **PLT** остаётся. Эпик вырезания: [`PLAN_game-only`](../../plans/PLAN_game-only.md).
 
 Итог первой волны плейтестов (PA-W1): продукт расходится на **два режима сохранения** с **общей платформенной базой** и разным игровым/продуктовым ядром.
 

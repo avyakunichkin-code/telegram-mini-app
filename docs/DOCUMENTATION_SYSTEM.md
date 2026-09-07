@@ -22,6 +22,7 @@ aliases:
 | Plans / Tasks | `docs/plans/`, `docs/tasks/` |
 | Backlog | `docs/backlog/` |
 | Marketing | `docs/marketing/` — посты, трекер, стратегия (вне dev-цикла) |
+| **Audits** | `docs/audits/` — снимки (продукт, engineering, QA, UX, liveops); инструкция [`audits/README.md`](audits/README.md) |
 | Reference | `docs/reference/` |
 
 Карта: [`README.md`](README.md). Трассировка: [`TRACEABILITY.md`](TRACEABILITY.md).
@@ -59,6 +60,8 @@ docs/
     ADR-NNN-<slug>.md
   backlog/
     PRODUCT_BACKLOG.md           # приоритеты; ссылки на spec/plan
+  audits/                        # снимки на дату (не канон): product/, engineering/, …
+    README.md                    # куда класть + реестр
   reference/                     # вне dev-цикла
     brandbook/
     investor-deck/
@@ -113,7 +116,8 @@ docs/domains/economy/   docs/domains/ui/   docs/domains/api/
 2. **Спека фичи** — `docs/specs/features/SPEC_*.md`  
 3. **Foundation** — `docs/foundation/SPEC_PRODUCT.md`  
 4. **Vision / ideas** — направление, не детали реализации  
-5. **Бэклог** — приоритет, не спецификация
+5. **Бэклог** — приоритет, не спецификация  
+6. **Audits** (`docs/audits/`) — снимок на дату; **не** подменяет п.1–4, пока выводы не утверждены в spec/ADR/backlog. Инструкция: [`audits/README.md`](audits/README.md).
 
 ---
 

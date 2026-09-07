@@ -79,14 +79,14 @@ Tagline бренда: **«Финансы как игра»** — [`BRANDBOOK.md`
 
 ---
 
-## Продуктовые режимы
+## Продуктовый режим
 
 | Режим | Статус | Смысл |
 |-------|--------|--------|
-| **Game** | ✅ prod | Старт из шаблона (`game_starter_templates`), blueprint, потребности по шаблону |
-| **Plan** | 🟡 API есть; UI «Скоро» | Ручной бюджет и сценарий «своей жизни» |
+| **Game** | ✅ prod | Единственный продукт: старт из шаблона (`game_starter_templates`), blueprint, потребности |
+| **Plan** | ⬜ снят | Не второй save — [ADR-013](../decisions/ADR-013-game-only-drop-plan-mode.md) |
 
-**MVP 2.0 (обязательно):** полноценный **Plan Mode** — мастер ввода, префилл, активная плитка в UI, контент `save_kind: plan`. Спека: [`SPEC_game-plan.md`](../specs/features/SPEC_game-plan.md) · vision: [evolution §II](../vision/ideas/tvoy-hod-evolution-after-mvp.md).
+**Не строим** отдельный Plan Mode / MVP 2.0. Аналитика (AN1) и статьи расходов (E1 A–C) — внутри Game.
 
 ---
 
