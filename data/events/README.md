@@ -2,7 +2,7 @@
 
 Канон контента MVP 1.1: **`data/events/mvp11/`**. Рантайм читает БД; синхронизация — `ensure_mvp11_event_catalog()` при API.
 
-См. [ADR-008](../docs/decisions/ADR-008-events-catalog-single-source.md).
+См. [ADR-008](../docs/decisions/ADR-008-events-catalog-single-source.md), принцип [C-4](../../CONVENTIONS.md).
 
 ## Структура
 

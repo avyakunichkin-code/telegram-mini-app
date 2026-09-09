@@ -14,7 +14,7 @@ aliases:
 Структура **вариант A** (слои зрелости): [`DOCUMENTATION_SYSTEM.md`](DOCUMENTATION_SYSTEM.md)  
 Шаблоны: [`templates/`](templates/) · Трассировка эпиков: [`TRACEABILITY.md`](TRACEABILITY.md)
 
-Технический онбординг: [`../CLAUDE.md`](../CLAUDE.md) · **AI агент:** [`agents/AI_ONBOARDING.md`](agents/AI_ONBOARDING.md)
+Технический онбординг: [`../CLAUDE.md`](../CLAUDE.md) · **Свод принципов:** [`../CONVENTIONS.md`](../CONVENTIONS.md) · **AI агент:** [`agents/AI_ONBOARDING.md`](agents/AI_ONBOARDING.md)
 
 ---
 
@@ -24,6 +24,7 @@ aliases:
 |------|------|------------|
 | **Handbook** | [`handbook/`](handbook/) | **Проектная документация для людей:** GDD, путеводитель, role-guides |
 | **Система** | [`DOCUMENTATION_SYSTEM.md`](DOCUMENTATION_SYSTEM.md) | Конвейер idea → spec → plan → tasks |
+| **Принципы** | [`../CONVENTIONS.md`](../CONVENTIONS.md) · [`conventions/`](conventions/) | Вердикт C-X…C-4; журнал разборов |
 | **Foundation** | [`foundation/`](foundation/) | Продукт «как есть», потоки, термины |
 | **Vision** | [`vision/ideas/`](vision/ideas/) | Идеи и целевое направление (idea-refine) |
 | **Specs** | [`specs/`](specs/) (включая [`specs/gameplay/`](specs/gameplay/)) | Что строим |

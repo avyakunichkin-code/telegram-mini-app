@@ -110,7 +110,7 @@ docs/domains/economy/   docs/domains/ui/   docs/domains/api/
 
 `CLAUDE.md` — индекс в корне репозитория.
 
-**Правило единого источника истины (при конфликте):**
+**Правило единого источника истины (при конфликте) — [C-1](../CONVENTIONS.md):**
 
 1. **Поведение в production** — код + тесты  
 2. **Спека фичи** — `docs/specs/features/SPEC_*.md`  

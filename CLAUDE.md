@@ -8,10 +8,13 @@ aliases:
 
 **Игра по финансовой грамотности** (PWA/web primary; TMA secondary — [ADR-012](docs/decisions/ADR-012-primary-channels-pwa-web-over-tma.md)): периоды, cash, обязательства, события, победа.
 
+**Свод принципов (вердикт):** [`CONVENTIONS.md`](CONVENTIONS.md) ([C-X](CONVENTIONS.md), [C-Y](CONVENTIONS.md), [C-1](CONVENTIONS.md)–[C-4](CONVENTIONS.md)). Этот файл — **индекс** для агента в Cursor, не конституция.
+
 **Роутер скиллов:** [`.cursor/rules/tvoy-hod-router.mdc`](.cursor/rules/tvoy-hod-router.mdc) · **Лексикон игры:** [`.cursor/skills/_shared/game-lexicon.md`](.cursor/skills/_shared/game-lexicon.md)
 
 | Документ | Назначение |
 |----------|------------|
+| [`CONVENTIONS.md`](CONVENTIONS.md) | Принципы: соответствует / нарушает |
 | [`docs/foundation/SPEC_PRODUCT.md`](docs/foundation/SPEC_PRODUCT.md) | Продукт, цикл, экономика |
 | [`docs/DOCUMENTATION_SYSTEM.md`](docs/DOCUMENTATION_SYSTEM.md) | idea → spec → plan → tasks |
 | [`docs/audits/README.md`](docs/audits/README.md) | Снимки аудитов: `product/`, `engineering/`, `qa/`, `ux/`, `liveops/` |
@@ -20,7 +23,7 @@ aliases:
 | [`frontend-react/ARCHITECTURE.md`](frontend-react/ARCHITECTURE.md) | screens, api/, hooks |
 | [`DESIGN_WORKFLOW.md`](frontend-react/src/components/mqx/DESIGN_WORKFLOW.md) | MQX: lab → prod |
 
-**При конфликте:** код + тесты → `docs/specs/features/SPEC_*.md` → `SPEC_PRODUCT.md` → `docs/vision/ideas/`.
+**При конфликте ([C-1](CONVENTIONS.md)):** код + тесты → `docs/specs/features/SPEC_*.md` → `SPEC_PRODUCT.md` → `docs/vision/ideas/`.
 
 ---
 
@@ -28,9 +31,9 @@ aliases:
 
 Открытый период → действия → **«Закрыть месяц»** (`POST /api/game/time/next` → `process_period_end`) → новый период.
 
-- **`save_kind`:** только **`game`** — `game_starter_templates` + `template_key`. Режим Plan **снят** ([ADR-013](docs/decisions/ADR-013-game-only-drop-plan-mode.md)); вырезание кода — [`PLAN_game-only`](docs/plans/PLAN_game-only.md).
+- **`save_kind`:** только **`game`** — `game_starter_templates` + `template_key`. Режим Plan **снят** ([ADR-013](docs/decisions/ADR-013-game-only-drop-plan-mode.md), [C-2](CONVENTIONS.md)); вырезание кода — [`PLAN_game-only`](docs/plans/PLAN_game-only.md).
 - **Зарплата** — только по кнопке в периоде; пропуск = нет выплаты за период.
-- **2 события/период**; YAML: `data/events/mvp11/` (ADR-008).
+- **2 события/период**; YAML: `data/events/mvp11/` ([ADR-008](docs/decisions/ADR-008-events-catalog-single-source.md), [C-4](CONVENTIONS.md)).
 - **Прогрессия:** `event_tier` от `period_index`, без character XP — [`remove-character-xp-and-levels.md`](docs/vision/ideas/remove-character-xp-and-levels.md).
 
 ---

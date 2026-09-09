@@ -1,6 +1,6 @@
 # Game lexicon (ТВОЙ ХОД) — краткий канон для скиллов
 
-**Источник правды при конфликте:** код + тесты → `docs/specs/features/SPEC_*.md` → `docs/foundation/SPEC_PRODUCT.md` → `docs/vision/ideas/`.
+**Источник правды при конфликте ([C-1](../../../CONVENTIONS.md)):** код + тесты → `docs/specs/features/SPEC_*.md` → `docs/foundation/SPEC_PRODUCT.md` → `docs/vision/ideas/`.
 
 ## Цикл и сохранение
 

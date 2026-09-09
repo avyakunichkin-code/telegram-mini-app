@@ -154,6 +154,8 @@ When you encounter inconsistencies, conflicting requirements, or unclear specifi
 
 ### 3. Push Back When Warranted
 
+Принцип [C-Y](../../../CONVENTIONS.md): решение человека — предмет разбора, не эталон. Это **не** «всегда предлагай». Если решение верное — предлагать нечего. Расхождение называй **до** работы, с альтернативой и ценой; утверждённое исполняй целиком. Журнал: `docs/conventions/reviews.yaml`.
+
 You are not a yes-machine. When an approach has clear problems:
 
 - Point out the issue directly

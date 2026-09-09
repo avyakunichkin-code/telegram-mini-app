@@ -1,7 +1,7 @@
 """
 PR-03 / QA C2: POST /api/game/period/complete-period не двигает месяц.
 
-Канон close — POST /api/game/time/next → process_period_end.
+Канон close — POST /api/game/time/next → process_period_end ([C-2](../../../../CONVENTIONS.md)).
 Legacy-путь без экономики должен отвечать 410 Gone.
 """
 

@@ -9,6 +9,7 @@ aliases:
 
 Краткий лог, когда **код обогнал docs** или наоборот. Полный чеклист — [`MVP_AUDIT_VS_SPEC.md`](MVP_AUDIT_VS_SPEC.md).
 
+| 2026-09-09 | CONVENTIONS | Свод принципов C-X…C-4 + гейт `scripts/check_conventions.py` (без hook) | [`CONVENTIONS.md`](../../CONVENTIONS.md), [`reviews.yaml`](../conventions/reviews.yaml) |
 | 2026-09-07 | PR-02 | Lock salary/choose (серверный ключ) + FE `Idempotency-Key` на денежные POST | [`PLAN_pr-02-salary-choose-lock`](../plans/PLAN_pr-02-salary-choose-lock.md) |
 | 2026-09-07 | PR-02 | План lock salary/choose + FE Idempotency-Key **APPROVED** | [`PLAN_pr-02-salary-choose-lock`](../plans/PLAN_pr-02-salary-choose-lock.md) |
 | 2026-09-07 | PR-14 | `period_close.events_spawn_failed` + chip на ритуале close | [`PLAN_pr-14-events-spawn-failed`](../plans/PLAN_pr-14-events-spawn-failed.md) |

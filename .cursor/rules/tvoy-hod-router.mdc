@@ -5,6 +5,8 @@ alwaysApply: true
 
 # ТВОЙ ХОД — роутер агента
 
+**Вердикт (почему):** [`CONVENTIONS.md`](CONVENTIONS.md) — C-X/C-Y, C-1…C-4. Точечные «как» — скиллы и rules ниже, не свод.
+
 ## Карта проекта
 
 - **Код и API**: [`CLAUDE.md`](CLAUDE.md)
@@ -17,7 +19,7 @@ alwaysApply: true
 - **Баланс событий (authoring)**: [`.cursor/skills/create-event/event-balance-rules.md`](.cursor/skills/create-event/event-balance-rules.md) — §10 lifecycle, §11 needs_axis_map
 - **MQX**: [`frontend-react/src/components/mqx/DESIGN_WORKFLOW.md`](frontend-react/src/components/mqx/DESIGN_WORKFLOW.md) — читать **целиком** перед новым UI (исключение: hotfix без смены дизайна)
 
-**При конфликте источников:** код + тесты → `docs/specs/features/SPEC_*.md` → `SPEC_PRODUCT.md` → `docs/vision/ideas/`.
+**При конфликте источников ([C-1](CONVENTIONS.md)):** код + тесты → `docs/specs/features/SPEC_*.md` → `SPEC_PRODUCT.md` → `docs/vision/ideas/`.
 
 Studio/GDD: только [`.cursor/skills/_archived/`](.cursor/skills/_archived/) по явному запросу.
 

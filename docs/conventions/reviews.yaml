@@ -1,0 +1,30 @@
+# Журнал разборов C-Y. Схема полей обязательна для гейта scripts/check_conventions.py
+# outcome: pending | accepted | partial | rejected | withdrawn
+# disagreement без alternative — ошибка гейта
+# accepted/partial без repo_trace — ошибка
+# закрытый outcome без decision — ошибка
+
+reviews:
+  - id: CY-2026-09-09-slim-layer
+    date: 2026-09-09
+    subject: Свод принципов CONVENTIONS.md — полный учебный формат vs короткий слой вердикта
+    human_decision: >-
+      Построить CONVENTIONS.md и гейт. Иерархия CONVENTIONS > CONTRIBUTING > AGENTS > CLAUDE.
+      Кандидаты домена (а–к) разобрать. Журнал YAML. Ссылки C-N. Не blocking hook неделю.
+    disagreement: >-
+      В репозитории уже ADR, скиллы Cursor, DOCUMENTATION_SYSTEM и CLAUDE.md как индекс.
+      Полный параллельный «учебник» и несуществующий CONTRIBUTING раздвоят «почему».
+      Среда — Cursor, не Claude. Принципы должны быть фундаментом взаимодействия с ИИ,
+      архитектуры и стратегии, не точечными правилами (для них уже skills/tests).
+    alternative: >-
+      Короткий слой: C-X, C-Y, C-1…C-4. Иерархия CONVENTIONS → ADR/SPEC → Cursor skills/rules
+      → CLAUDE.md (индекс). Без CONTRIBUTING. Гейт-скрипт без hook. Домен а/в/г сжаты в C-3.
+    alternative_cost: >-
+      Нет отдельного CONTRIBUTING и нет 12 принципов; часть доменных гейтов (источник ставки,
+      дисклеймер в UI, seed RNG) уходит в реестр отклонений с датой, а не притворяется готовой.
+    outcome: accepted
+    decision: >-
+      Короткий слой вердикта. Учесть Cursor, не CLAUDE как вершину.
+      Принципы абстрактнее инструкций; C-Y — разбор, не «всегда предлагай».
+    repo_trace: CONVENTIONS.md, docs/conventions/reviews.yaml, scripts/check_conventions.py
+    decision_changed: true

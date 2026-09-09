@@ -17,12 +17,13 @@ aliases:
 **FE adjunct (не в `catalog.yaml`):** `frontend-react/.agents/skills/` — `react-best-practices`, `composition-patterns`, …  
 **Контекст:** в always-on только **slim** [`AGENTS.md`](../../frontend-react/.agents/skills/react-best-practices/AGENTS.md) (~40 строк); полный compile — [`AGENTS.full.md`](../../frontend-react/.agents/skills/react-best-practices/AGENTS.full.md). Продуктовый конвейер — только `.cursor/skills/`.
 
-Ориентир по стеку: [`CLAUDE.md`](../../CLAUDE.md).
+Ориентир по стеку: [`CLAUDE.md`](../../CLAUDE.md). Свод принципов: [`CONVENTIONS.md`](../../CONVENTIONS.md) (`py -3 scripts/check_conventions.py`).
 
 **Интеграция с docs (2026-05-28):**
 
 | Артефакт | Назначение |
 |----------|------------|
+| [`CONVENTIONS.md`](../../CONVENTIONS.md) | Свод принципов; гейт `py -3 scripts/check_conventions.py` (не hook до 2026-09-16) |
 | [`SKILL_DOC_MAP.md`](SKILL_DOC_MAP.md) | Конвейер фаза → скилл → папки docs |
 | [`catalog.yaml`](../../.cursor/skills/catalog.yaml) → `context:` | `must_read` (всегда), `read_if` (условно), `writes_to`, `next_skill` |
 | `SKILL.md` → **Прочитай сначала** | Те же пути для агента при явном вызове |

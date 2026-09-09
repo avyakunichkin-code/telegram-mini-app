@@ -14,6 +14,7 @@
 
 | Что | Где |
 |-----|-----|
+| **Свод принципов (вердикт)** | [`CONVENTIONS.md`](CONVENTIONS.md) · гейт: `py -3 scripts/check_conventions.py` |
 | Карта `docs/` (foundation, specs, plans, backlog) | [`docs/README.md`](docs/README.md) |
 | Быстрый контекст для разработчиков и агентов | [`CLAUDE.md`](CLAUDE.md) |
 | Конвейер idea → spec → plan → tasks | [`docs/DOCUMENTATION_SYSTEM.md`](docs/DOCUMENTATION_SYSTEM.md) |

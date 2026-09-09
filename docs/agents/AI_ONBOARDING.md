@@ -18,13 +18,14 @@ aliases:
 
 | # | Файл | Зачем |
 |---|------|--------|
+| 0 | [`CONVENTIONS.md`](../../CONVENTIONS.md) | Вердикт C-X…C-4 (Cursor, не «конституция Claude») |
 | 1 | [`.cursor/rules/tvoy-hod-router.mdc`](../../.cursor/rules/tvoy-hod-router.mdc) | Фаза → **один primary** + satellites |
 | 2 | [`.cursor/skills/using-agent-skills/SKILL.md`](../../.cursor/skills/using-agent-skills/SKILL.md) | §0 release-ready; выбор скилла |
 | 3 | [`.cursor/skills/_shared/delivery-workflow.md`](../../.cursor/skills/_shared/delivery-workflow.md) | Думаем → уточняем → планируем → делаем |
 | 4 | [`.cursor/skills/_shared/clarify-first.md`](../../.cursor/skills/_shared/clarify-first.md) | STOP при неясности |
 | 5 | [`SKILL_DOC_MAP.md`](SKILL_DOC_MAP.md) | Конвейер docs ↔ код |
 
-**Конфликт источников:** код + тесты → `docs/specs/features/SPEC_*.md` → `SPEC_PRODUCT.md` → `docs/vision/ideas/`.  
+**Конфликт источников ([C-1](../../CONVENTIONS.md)):** код + тесты → `docs/specs/features/SPEC_*.md` → `SPEC_PRODUCT.md` → `docs/vision/ideas/`.  
 **Аудиты:** [`docs/audits/README.md`](../audits/README.md) — снимки, не канон.
 
 ---

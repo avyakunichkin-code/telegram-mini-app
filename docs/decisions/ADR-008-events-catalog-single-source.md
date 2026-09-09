@@ -28,7 +28,7 @@ aliases:
 
 ### 1. Канон контента (MVP 1.1)
 
-**Git-источник:** [`data/events/mvp11/`](../../data/events/mvp11/) — YAML по доменам, массив `events:` в каждом файле.
+**Git-источник:** [`data/events/mvp11/`](../../data/events/mvp11/) — YAML по доменам, массив `events:` в каждом файле. Принцип [C-4](../../CONVENTIONS.md).
 
 - Оглавление: `catalog.yaml` (`includes:`).
 - Домены: `consumption.yaml`, `health.yaml`, `social_family.yaml`, …
