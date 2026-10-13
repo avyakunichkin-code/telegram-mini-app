@@ -137,7 +137,7 @@ def run_balance_simulation(
     import app.models  # noqa: F401
     from app.auth import create_access_token, get_password_hash
     from app.database import Base, engine, get_db
-    from app.events.mvp11_seeds import ensure_mvp11_event_catalog
+    from app.seeds.runner import seed_all
     from app.models import User
     from fastapi.testclient import TestClient
     from main import app, ensure_schema_compatibility
@@ -167,7 +167,7 @@ def run_balance_simulation(
     db.refresh(user)
     user_id = int(user.id)
     try:
-        ensure_mvp11_event_catalog(db)
+        seed_all(db)
         db.commit()
     finally:
         db.close()

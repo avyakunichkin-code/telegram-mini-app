@@ -9,6 +9,7 @@ import json
 import pytest
 
 from app.events.taxonomy import build_metadata_json
+from app.game.rules import MIN_PERIOD_INDEX_FOR_GAME_EVENTS
 from app.models import EventChoice, EventDefinition, EventInstance, GameProfile
 from tests.fixtures.game import create_auto_liability_policy, create_game_profile
 
@@ -18,7 +19,10 @@ pytestmark = pytest.mark.integration
 
 class TestEventsPendingApiContract:
     def test_pending_includes_domain_and_insurance_claim_for_fe(self, client, db_session, test_user):
-        profile = create_game_profile(db_session, user_id=test_user.id)
+        # /pending пуст до хода MIN_PERIOD_INDEX_FOR_GAME_EVENTS
+        profile = create_game_profile(
+            db_session, user_id=test_user.id, period_index=MIN_PERIOD_INDEX_FOR_GAME_EVENTS
+        )
         create_auto_liability_policy(db_session, profile.id)
 
         meta = json.dumps(

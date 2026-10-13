@@ -329,9 +329,11 @@ def ensure_schema_compatibility() -> None:
                 connection.execute(text(stmt))
         print(f"[OK] Схема обновлена: {len(statements)} изм.")
 
-    # victory_goals — каталог без ORM-модели (create_all не создаёт)
+    # victory_goals — каталог без ORM-модели (create_all не создаёт).
+    # DDL Postgres-only (JSONB, ::jsonb); на SQLite (balance_simulate, тесты) пропускаем —
+    # goals_store без таблицы откатывается на goals из victory_config_json.
     inspector = inspect(engine)
-    if "victory_goals" not in inspector.get_table_names():
+    if engine.dialect.name == "postgresql" and "victory_goals" not in inspector.get_table_names():
         from app.seeds.victory_goals import ensure_victory_goals_table
         from app.database import SessionLocal
 

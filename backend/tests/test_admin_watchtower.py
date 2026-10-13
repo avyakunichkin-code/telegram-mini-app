@@ -8,6 +8,7 @@ import pytest
 
 from app.admin.notify import _admin_link, emit_admin_alert
 from app.config import _resolve_admin_web_base_url
+from app.guidance.curriculum import CURRICULUM
 from app.models import NotificationLog
 
 
@@ -67,7 +68,7 @@ def test_admin_watchtower_ok(client, admin_env, auth_headers):
     assert isinstance(data["run_feedback"], list)
     assert "onboarding_funnel" in data
     assert "metrics_summary" in data
-    assert len(data["onboarding_funnel"]["steps"]) == 8
+    assert [s["step"] for s in data["onboarding_funnel"]["steps"]] == [b.id for b in CURRICULUM]
     assert data["onboarding_funnel"].get("guidance_mode") == "o2"
     usernames = [u["username"] for u in data["users"]]
     assert admin_env.username in usernames

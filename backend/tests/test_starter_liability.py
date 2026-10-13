@@ -2,12 +2,22 @@
 
 from __future__ import annotations
 
+import pytest
+
 from app.finance.liability_kinds import PAYMENT_MODE_ANNUITY, PAYMENT_MODE_INTEREST_ONLY
 from app.finance.starter_liability import (
     build_starter_liability,
     resolve_starter_liability_spec,
 )
 from app.models import FinanceAsset, FinanceLiability
+from app.seeds.game_starter_templates import upsert_game_starter_templates
+
+
+@pytest.fixture()
+def seeded_starter_templates(db_session):
+    """Канонический каталог Game-шаблонов (conftest сеет только mq_game_basic_v1)."""
+    upsert_game_starter_templates(db_session)
+    db_session.commit()
 
 
 class TestResolveStarterLiabilitySpec:
@@ -51,7 +61,7 @@ class TestBuildStarterLiability:
         assert liab.monthly_payment > 0
 
 
-def test_starter_template_professional_has_annuity_auto_loan(client, auth_headers, db_session):
+def test_starter_template_professional_has_annuity_auto_loan(client, auth_headers, db_session, seeded_starter_templates):
     start = client.post(
         "/api/game/start",
         headers=auth_headers,
@@ -75,7 +85,7 @@ def test_starter_template_professional_has_annuity_auto_loan(client, auth_header
     assert auto.secured_asset_id is not None
 
 
-def test_starter_entrepreneur_credit_card_no_prepay(client, auth_headers, db_session):
+def test_starter_entrepreneur_credit_card_no_prepay(client, auth_headers, db_session, seeded_starter_templates):
     start = client.post(
         "/api/game/start",
         headers=auth_headers,

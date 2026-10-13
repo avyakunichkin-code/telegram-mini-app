@@ -84,7 +84,11 @@ def upsert_victory_goals(db: Session) -> None:
     """
     Синхронизирует victory_goals с VICTORY_CONFIG_BY_TEMPLATE_KEY.
     Безопасно вызывать на каждом старте API.
+    Postgres-only (JSONB): на других диалектах (SQLite в balance_simulate) — no-op,
+    goals_store тогда берёт goals из victory_config_json.
     """
+    if db.get_bind().dialect.name != "postgresql":
+        return
     ensure_victory_goals_table(db)
     rows = _rows_from_config()
     if not rows:

@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 
+from app.game.rules import MIN_PERIOD_INDEX_FOR_GAME_EVENTS
 from app.models import EventChoice, EventDefinition, EventInstance, GameProfile
 from app.needs.engine import parse_needs_delta
 
@@ -176,7 +177,7 @@ def test_pending_events_expose_needs_delta(client, auth_headers, db_session, tes
         starter_template_key="mq_game_basic_v1",
         is_active=1,
         cash_balance=1000.0,
-        period_index=1,
+        period_index=MIN_PERIOD_INDEX_FOR_GAME_EVENTS,
     )
     db_session.add(profile)
     db_session.commit()
@@ -195,7 +196,7 @@ def test_pending_events_expose_needs_delta(client, auth_headers, db_session, tes
     inst = EventInstance(
         game_profile_id=profile.id,
         definition_id=ed.id,
-        period_index=1,
+        period_index=MIN_PERIOD_INDEX_FOR_GAME_EVENTS,
         status="pending",
     )
     db_session.add(inst)
