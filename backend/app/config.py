@@ -1,8 +1,12 @@
 import logging
 import os
+from pathlib import Path
+
 from dotenv import load_dotenv
 
-load_dotenv()
+# Явный путь к backend/.env: без него python-dotenv под reloader uvicorn (нет __main__.__file__)
+# ищет .env в cwd, и при запуске из корня репо API молча уходит на SQLite.
+load_dotenv(Path(__file__).resolve().parents[1] / ".env")
 
 # Публичный URL Mini App (GitHub Pages + HashRouter). Переопределяется через env.
 DEFAULT_PUBLIC_APP_URL = "https://avyakunichkin-code.github.io/telegram-mini-app/#"
