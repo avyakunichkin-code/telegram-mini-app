@@ -40,6 +40,7 @@ allowed-tools: Read, Glob, Grep, Write, Bash(python -m pytest *), Bash(python sc
 | overview / victory UI contract | [`overview_build.py`](../../../backend/app/finance/overview_build.py) |
 | post-formula balance sim | [`docs/balance/README.md`](../../../docs/balance/README.md) |
 | formula consistency / DL1 | [`DL1_MATH_CONSISTENCY_REVIEW.md`](../../../docs/specs/economy/DL1_MATH_CONSISTENCY_REVIEW.md) |
+| achievements / «Развитие» | [`SPEC_achievements.md`](../../../docs/specs/features/SPEC_achievements.md), [`achievements/engine.py`](../../../backend/app/achievements/engine.py) |
 
 **Satellites (та же задача):** `test-driven-development`, `doubt-driven-development`, **`balance-playtest`** (крупный баланс / seeds / period), **`db-baselines-and-migrations`** (если меняется `victory_goals` / DDL шаблонов).
 
@@ -94,6 +95,7 @@ cd backend && python -m pytest -q
 | HTTP | `routers/` → `services/` (тонкие use-cases) |
 | Данные | `backend/migrations/`, `backend/app/seeds/` |
 | Контракт UI | `GET /api/finance/overview` → `overview.victory`, `win_reached` |
+| Достижения | `backend/app/achievements/` (`engine.py`, `seeds.py`) |
 
 Роутеры **не** копируют формулы победы — только вызывают сервисы/движок.
 
@@ -122,12 +124,21 @@ cd backend && python -m pytest -q tests/unit/events/test_event_balance_contract.
 
 При изменении `victory_config_json` в сидах — проверь tutorial chain и `mechanics_unlock` ([ADR-004](docs/decisions/ADR-004-mechanics-unlock-victory-chain.md)).
 
+## Достижения (цепочки tier)
+
+Spec: [`SPEC_achievements.md`](../../../docs/specs/features/SPEC_achievements.md). Цепочки `safety_fund`, `deposit`, `insurance`, `credit`, `investment`, `capital`; каждая — ступени (`tier_index`) с `criteria_json` (§8 spec).
+
+- **Где считается:** `process_achievement_unlocks` — в `process_period_end` (в savepoint; сбой не ломает закрытие месяца), в `build_finance_overview` и в `GET /api/game/achievements`. Новые критерии — в `evaluate_achievement_criteria` + контекст `build_achievement_context`, не в роутерах.
+- **Каталог — ловушка:** `ensure_achievement_catalog` сеет `ACHIEVEMENT_CHAIN_SPECS` **только в пустую БД** (если есть хоть одна цепочка — выходит), и в `seed_all` его нет. Правка цепочек/порогов в `seeds.py` до существующих БД (prod) **не доходит** — нужен идемпотентный upsert или миграция данных; проверь до merge.
+- **Не путать:** достижения — признание прогресса, не условия победы (Victory v2) и не разблокировка механик (`mechanics_unlock`, ADR-004).
+- **Тесты:** `pytest -q -k achievement`; контракт `recent_unlocks` для полосы на Главной — §10.1.1 spec.
+
 ## Invariants (не ломать без spec + ADR)
 
-- `save_kind`: `game` | `plan`; legacy light/hardcore не возвращать
+- `save_kind`: только `game` ([ADR-013](../../../docs/decisions/ADR-013-game-only-drop-plan-mode.md); `plan` → 400); legacy light/hardcore не возвращать
 - Победа: Victory v2, не только `period_index >= 7`
 - `event_tier` от `period_index`, без character level/XP
-- Поражение: три подряд периода с отрицательным `cash` (если не меняется в spec)
+- Поражение: три подряд периода с отрицательным `cash` (`cash_negative_streak`) или с потребностью на нуле (`needs_depletion`, ADR-005) — если не меняется в spec
 
 ## Verdict
 

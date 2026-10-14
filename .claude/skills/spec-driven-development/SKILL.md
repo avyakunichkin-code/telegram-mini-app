@@ -110,40 +110,7 @@ Don't silently fill in ambiguous requirements. The spec's entire purpose is to s
    - **Ask first:** Database schema changes, adding dependencies, changing CI config
    - **Never do:** Commit secrets, edit vendor directories, remove failing tests without approval
 
-**Spec template:**
-
-```markdown
-# Spec: [Project/Feature Name]
-
-## Objective
-[What we're building and why. User stories or acceptance criteria.]
-
-## Tech Stack
-[Framework, language, key dependencies with versions]
-
-## Commands
-[Build, test, lint, dev — full commands]
-
-## Project Structure
-[Directory layout with descriptions]
-
-## Code Style
-[Example snippet + key conventions]
-
-## Testing Strategy
-[Framework, test locations — **not 100% coverage**; table **Critical scenarios (min gate)** CS-1… per `docs/templates/SPEC_FEATURE.md`; skill `/critical-test-scenarios`]
-
-## Boundaries
-- Always: [...]
-- Ask first: [...]
-- Never: [...]
-
-## Success Criteria
-[How we'll know this is done — specific, testable conditions]
-
-## Open Questions
-[Anything unresolved that needs human input]
-```
+**Spec template:** [`docs/templates/SPEC_FEATURE.md`](../../../docs/templates/SPEC_FEATURE.md) — единственный канон разделов (Assumptions, Objective, Scope, User flows, Data & API, UI / UX, Rules & edge cases, Testing strategy с таблицей **Critical scenarios** CS-*, Boundaries, Open questions, Traceability). Файл — `docs/specs/features/SPEC_<slug>.md`; свой набор разделов не изобретать.
 
 **Reframe instructions as success criteria.** When receiving vague requirements, translate them into concrete conditions:
 

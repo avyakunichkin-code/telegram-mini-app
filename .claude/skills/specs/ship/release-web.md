@@ -20,9 +20,3 @@
 - [ ] Не коммитит без явной просьбы.
 - [ ] Ссылается на `release-web/guardrails.md` и ADR-012.
 - [ ] Не требует Telegram-only smoke как обязательный блокер.
-
----
-
-## Test Case 2: Deprecated alias
-
-**Skill:** `/release-tma` → redirect на `release-web` без отдельного checklist.

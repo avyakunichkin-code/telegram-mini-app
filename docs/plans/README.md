@@ -27,7 +27,7 @@ aliases:
 |----------------------|----------------------|
 | `define` | `planning-and-task-breakdown`, `api-and-interface-design` |
 | `build` | `incremental-implementation`, `frontend-ui-engineering`, `design-lab-mqx` |
-| `verify` | `test-driven-development`, `code-review-and-quality`, `browser-testing-with-devtools` |
+| `verify` | `test-driven-development`, `code-review-and-quality`; браузер — `/run` + встроенный браузер |
 | `ship` | `documentation-and-adrs`, `deprecation-and-migration` |
 
 Карта: [`docs/agents/SKILL_DOC_MAP.md`](../agents/SKILL_DOC_MAP.md). Роутер Cursor: [`.claude/rules/router.md`](../../.claude/rules/router.md).

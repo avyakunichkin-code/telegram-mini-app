@@ -20,7 +20,7 @@ aliases:
 |---|------|--------|
 | 0 | [`CONVENTIONS.md`](../../CONVENTIONS.md) | Вердикт C-X…C-4 (выше `CLAUDE.md` и скиллов) |
 | 1 | [`.claude/rules/router.md`](../../.claude/rules/router.md) | Фаза → **один primary** + satellites |
-| 2 | [`.claude/skills/using-agent-skills/SKILL.md`](../../.claude/skills/using-agent-skills/SKILL.md) | §0 release-ready; выбор скилла |
+| 2 | [`.claude/rules/working-agreements.md`](../../.claude/rules/working-agreements.md) + [`router.md`](../../.claude/rules/router.md) | C-Y, стоп при конфликте, один primary, честный вердикт; выбор скилла |
 | 3 | [`.claude/skills/_shared/delivery-workflow.md`](../../.claude/skills/_shared/delivery-workflow.md) | Думаем → уточняем → планируем → делаем |
 | 4 | [`.claude/skills/_shared/clarify-first.md`](../../.claude/skills/_shared/clarify-first.md) | STOP при неясности |
 | 5 | [`SKILL_DOC_MAP.md`](SKILL_DOC_MAP.md) | Конвейер docs ↔ код |
@@ -40,7 +40,7 @@ aliases:
 | [`SPEC_PRODUCT.md`](../foundation/SPEC_PRODUCT.md) §1.1 | Канон каналов |
 | [`PWA_INSTALL.md`](../foundation/PWA_INSTALL.md) | Install + smoke |
 
-**Release gate:** `/release-web` (не `/release-tma` — deprecated alias).  
+**Release gate:** `/release-web`.  
 **TMA runtime:** `telegram-mini-app-runtime` — только при правках WebApp shell.
 
 ---

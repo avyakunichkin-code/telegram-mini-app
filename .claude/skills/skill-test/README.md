@@ -21,7 +21,6 @@ node .claude/skills/skill-test/_maintain.mjs check-archived
 |---------|------------|
 | `inject-quality` | Блок «Стандарт качества» в product skills |
 | `patch-workflow` | delivery-workflow в устаревших блоках |
-| `patch-last-context` | `last_context` для tiered skills |
 | `sync-smoke-specs` | Dedup smoke behavioral specs |
 | `check-archived` | `_archived/` frontmatter gate |
 

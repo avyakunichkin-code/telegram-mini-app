@@ -23,7 +23,7 @@ allowed-tools: Read, Glob, Grep
 - [`.claude/skills/catalog.yaml`](../catalog.yaml)
 - [`docs/agents/SKILL_DOC_MAP.md`](../../../docs/agents/SKILL_DOC_MAP.md)
 
-**Куда писать:** `.claude/`, `docs/agents/`. **Дальше:** `using-agent-skills`, `skill-test`.
+**Куда писать:** `.claude/`, `docs/agents/`. **Дальше:** `skill-test`.
 
 ## Механизмы и где они лежат
 
@@ -113,4 +113,4 @@ paths:
 
 ## Следующий шаг
 
-`using-agent-skills`, `skill-test` и [`docs/agents/AGENT_SKILLS.md`](../../../docs/agents/AGENT_SKILLS.md).
+`skill-test` и [`docs/agents/AGENT_SKILLS.md`](../../../docs/agents/AGENT_SKILLS.md).

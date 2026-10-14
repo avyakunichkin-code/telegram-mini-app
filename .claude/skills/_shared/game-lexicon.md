@@ -50,7 +50,7 @@
 
 | Приоритет | Канал | Agent focus |
 |-----------|-------|-------------|
-| **Primary** | PWA, web (browser) | Smoke W1–W5 в **`release-web`**; `browser-testing-with-devtools` при UI |
+| **Primary** | PWA, web (browser) | Smoke W1–W5 в **`release-web`**; `/run` + встроенный браузер Claude Code при UI |
 | **Secondary** | Telegram Mini App | **`telegram-mini-app-runtime`** только при правках TMA shell |
 
 Канон: [`SPEC_PRODUCT.md`](../../../docs/foundation/SPEC_PRODUCT.md) §1.1 · [`ADR-012`](../../../docs/decisions/ADR-012-primary-channels-pwa-web-over-tma.md)

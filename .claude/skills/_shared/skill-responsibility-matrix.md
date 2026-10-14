@@ -5,7 +5,6 @@
 
 | Скилл | `tier` | Когда primary | When NOT primary (→ вместо) |
 |-------|--------|---------------|------------------------------|
-| **using-agent-skills** | core | Неясно, какой скилл | Конкретная задача — сразу доменный скилл |
 | **idea-refine** | core | Сырая гипотеза, diverge | Spec готов → `spec-driven-development`; код → `incremental-implementation` |
 | **spec-driven-development** | core | Контракт до кода, новая фича | Правка одной строки; YAML события → `create-event` |
 | **planning-and-task-breakdown** | support | Epic, MQ-* из spec | Один файл / очевидный scope |
@@ -25,9 +24,7 @@
 | **project-handbook-documentation** | support | GDD/handbook для людей | Контракт spec → `spec-driven-development` |
 | **doubt-driven-development** | deferred | Satellite: крупная economy/victory | Каждая мелкая правка |
 | **release-web** | deferred | Явно: перед выкаткой PWA/web | Обычная фича |
-| ~~release-tma~~ | deferred alias | → **release-web** | — |
 | **telegram-mini-app-runtime** | deferred | WebApp SDK, initData, viewport | MQX layout → `frontend-ui-engineering` |
-| **browser-testing-with-devtools** | deferred | Интерактив PWA/web/DOM | Backend pytest |
 | **social-changelog-posts** | deferred | Пост в `docs/marketing/` | Код |
 | **skill-test** | meta | Lint/audit skills | Product work |
 

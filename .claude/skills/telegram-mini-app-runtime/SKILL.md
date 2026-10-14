@@ -28,9 +28,9 @@ allowed-tools: Read, Glob, Grep, Write, Bash(npm run build)
 - [`docs/foundation/TMA_USER_FLOWS.md`](../../../docs/foundation/TMA_USER_FLOWS.md)
 - [`frontend-react/src/api.js`](../../../frontend-react/src/api.js) — auth / init
 
-**Satellite:** `browser-testing-with-devtools` для DOM и сети в WebView.
+**Проверка DOM и сети:** `/run` + встроенный браузер Claude Code (WebView Telegram — вручную на устройстве).
 
-**Дальше:** `browser-testing-with-devtools` (см. `catalog.yaml` → `next_skill`).
+**Дальше:** `release-web` (см. `catalog.yaml` → `next_skill`).
 
 ## Overview
 
@@ -62,5 +62,4 @@ TMA — не обычный браузер: viewport, safe area, `Telegram.WebAp
 
 ## Следующий шаг
 
-- [`browser-testing-with-devtools`](../browser-testing-with-devtools/SKILL.md)
 - [`frontend-ui-engineering`](../frontend-ui-engineering/SKILL.md)

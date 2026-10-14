@@ -12,7 +12,6 @@ const catalogPath = path.resolve(skillTestDir, '../catalog.yaml');
 
 /** Skills whose spec is only smoke (expand before strict /skill-test spec). */
 const SMOKE_ONLY = new Set([
-  'browser-testing-with-devtools',
   'code-review',
   'deprecation-and-migration',
   'documentation-and-adrs',

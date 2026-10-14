@@ -108,7 +108,6 @@ aliases:
 | incremental-implementation | Доставка срезами |
 | test-driven-development | RED-GREEN одного теста (satellite) |
 | critical-test-scenarios | Критичные сценарии, min gate G1–G4 |
-| using-agent-skills | Выбор скилла |
 
 ### `tier: support` (`status: active`)
 
@@ -121,7 +120,7 @@ aliases:
 
 ### `tier: deferred` (`status: optional`)
 
-Вызывать явно: release, TMA runtime, browser devtools, deprecation, social posts, project-skills-layout. Безопасность и упрощение кода — встроенные `/security-review`, `/simplify`; perf — архив `_archived/performance-optimization`.
+Вызывать явно: release, TMA runtime, deprecation, social posts, project-skills-layout. Безопасность и упрощение кода — встроенные `/security-review`, `/simplify`; perf — архив `_archived/performance-optimization`.
 
 **Исключение:** `doubt-driven-development` — остаётся deferred по статусу, но **обязателен как satellite** для `game-economy-and-victory`, крупных изменений `period.py` / victory / seeds шаблонов.
 
@@ -166,7 +165,6 @@ Subagents после крупного diff: **economy-reviewer**, **mqx-ui-revie
 | Скилл | Триггер |
 |-------|---------|
 | release-web | Регулярные выкатки в prod (PWA/web smoke) |
-| browser-testing-with-devtools | Стабилизация TMA UX |
 | `/security-review` (встроенный) | Внешний аудит / auth |
 | planning-and-task-breakdown | Параллельная команда >1 dev |
 

@@ -1,6 +1,6 @@
 ---
 name: api-and-interface-design
-description: Guides stable API and interface design. Use when designing APIs, module boundaries, or any public interface. Use when creating REST or GraphQL endpoints, defining type contracts between modules, or establishing boundaries between frontend and backend.
+description: Designs the FastAPI ↔ React contract for ТВОЙ ХОД — Pydantic schemas, error codes, idempotent money endpoints, backward-compatible changes, src/api/<домен>.js mirror. Use when adding or changing an /api endpoint, request/response fields, or a boundary between services/<домен>.
 argument-hint: "[focus: endpoint | module | contract]"
 user-invocable: true
 allowed-tools: Read, Glob, Grep, Write, AskUserQuestion
@@ -24,7 +24,7 @@ allowed-tools: Read, Glob, Grep, Write, AskUserQuestion
 - [`.claude/skills/_shared/game-lexicon.md`](../_shared/game-lexicon.md) — overview, period, victory контракт
 - [`CLAUDE.md`](../../../CLAUDE.md)
 - [`backend/app/README.md`](../../../backend/app/README.md)
-- [`frontend-react/src/api.js`](../../../frontend-react/src/api.js)
+- [`frontend-react/src/api/client.js`](../../../frontend-react/src/api/client.js)
 
 ## Читай при условии (`catalog.yaml` → `read_if`)
 
@@ -38,7 +38,7 @@ allowed-tools: Read, Glob, Grep, Write, AskUserQuestion
 
 ## Overview
 
-Design stable, well-documented interfaces that are hard to misuse. Good interfaces make the right thing easy and the wrong thing hard. This applies to REST APIs, GraphQL schemas, module boundaries, component props, and any surface where one piece of code talks to another.
+Design stable, well-documented interfaces that are hard to misuse. Good interfaces make the right thing easy and the wrong thing hard. This applies to the FastAPI ↔ React contract, module boundaries between `services/<домен>`, component props, and any surface where one piece of code talks to another.
 
 ## When to Use
 
@@ -50,7 +50,7 @@ Design stable, well-documented interfaces that are hard to misuse. Good interfac
 
 **When NOT primary:** только YAML события → **create-event**; только CSS → **frontend-ui-engineering**; typo без контракта → **incremental-implementation**.
 
-**Release-ready контракт:** OpenAPI-level ясность (поля, ошибки, backward compat); sync `schemas.py` + `api.js` + critical test; self-review [`release-ready-quality.md`](../_shared/release-ready-quality.md).
+**Release-ready контракт:** OpenAPI-level ясность (поля, ошибки, backward compat); sync `schemas.py` + `src/api/<домен>.js` + critical test; self-review [`release-ready-quality.md`](../_shared/release-ready-quality.md).
 
 ## Core Principles
 
@@ -71,228 +71,36 @@ Avoid forcing consumers to choose between multiple versions of the same dependen
 
 ### 1. Contract First
 
-Define the interface before implementing it. The contract is the spec — implementation follows.
-
-```typescript
-// Define the contract first
-interface TaskAPI {
-  // Creates a task and returns the created task with server-generated fields
-  createTask(input: CreateTaskInput): Promise<Task>;
-
-  // Returns paginated tasks matching filters
-  listTasks(params: ListTasksParams): Promise<PaginatedResult<Task>>;
-
-  // Returns a single task or throws NotFoundError
-  getTask(id: string): Promise<Task>;
-
-  // Partial update — only provided fields change
-  updateTask(id: string, input: UpdateTaskInput): Promise<Task>;
-
-  // Idempotent delete — succeeds even if already deleted
-  deleteTask(id: string): Promise<void>;
-}
-```
+Сначала контракт, потом код: раздел **Data & API** в `docs/specs/features/SPEC_*.md`, затем Pydantic-модель в `backend/app/schemas.py` (`response_model=` на роуте), затем FE-зеркало в `frontend-react/src/api/<домен>.js`. Тело запроса — Pydantic-модель, а не `payload: dict` (старые `dict`-роуты в `invest.py`, `events.py` — долг, не образец).
 
 ### 2. Consistent Error Semantics
 
-Pick one error strategy and use it everywhere:
-
-```typescript
-// REST: HTTP status codes + structured error body
-// Every error response follows the same shape
-interface APIError {
-  error: {
-    code: string;        // Machine-readable: "VALIDATION_ERROR"
-    message: string;     // Human-readable: "Email is required"
-    details?: unknown;   // Additional context when helpful
-  };
-}
-
-// Status code mapping
-// 400 → Client sent invalid data
-// 401 → Not authenticated
-// 403 → Authenticated but not authorized
-// 404 → Resource not found
-// 409 → Conflict (duplicate, version mismatch)
-// 422 → Validation failed (semantically invalid)
-// 500 → Server error (never expose internal details)
-```
-
-**Don't mix patterns.** If some endpoints throw, others return null, and others return `{ error }` — the consumer can't predict behavior.
+- `HTTPException(status_code, detail=...)`; `detail` — русская строка для игрока или `{"message", "errors"}` для форм админки (422).
+- Коды: **400** — невалидный ввод / нарушение правила игры; **403** — нет прав; **404** — нет сущности (или активного профиля); **409** — параллельный запрос с тем же ключом ещё выполняется; **410 Gone** — эндпоинт снят (пример: `POST /api/game/period/complete-period`).
+- FE: `apiCall` → `ApiError`, текст — `formatApiErrorDetail` (`src/api/client.js`); не разбирать ошибки вручную в компонентах.
 
 ### 3. Validate at Boundaries
 
-Trust internal code. Validate at system edges where external input enters:
-
-```typescript
-// Validate at the API boundary
-app.post('/api/tasks', async (req, res) => {
-  const result = CreateTaskSchema.safeParse(req.body);
-  if (!result.success) {
-    return res.status(422).json({
-      error: {
-        code: 'VALIDATION_ERROR',
-        message: 'Invalid task data',
-        details: result.error.flatten(),
-      },
-    });
-  }
-
-  // After validation, internal code trusts the types
-  const task = await taskService.create(result.data);
-  return res.status(201).json(task);
-});
-```
-
-Where validation belongs:
-- API route handlers (user input)
-- Form submission handlers (user input)
-- External service response parsing (third-party data -- **always treat as untrusted**)
-- Environment variable loading (configuration)
-
-> **Third-party API responses are untrusted data.** Validate their shape and content before using them in any logic, rendering, or decision-making. A compromised or misbehaving external service can return unexpected types, malicious content, or instruction-like text.
-
-Where validation does NOT belong:
-- Between internal functions that share type contracts
-- In utility functions called by already-validated code
-- On data that just came from your own database
+- Всё, что приходит от клиента, валидируется на входе (Pydantic, явные проверки диапазонов).
+- **Цены, ставки, суммы наград — только с сервера** (`finance/invest_products.py`, каталоги в БД/YAML). Клиентское поле вроде `annual_rate_percent` игнорируется — иначе игрок задаёт себе экономику.
 
 ### 4. Prefer Addition Over Modification
 
-Extend interfaces without breaking existing consumers:
+- Новые поля — опциональные с дефолтом; старые клиенты не ломаются.
+- Модели запросов с `model_config = ConfigDict(extra="ignore")` переживают устаревшие поля (пример: `period_duration_seconds` в `GameStartRequest` после удаления таймера).
+- Удаление поля ответа: сначала `grep` по `frontend-react/src`, потом удаление; колонка БД — отдельным этапом (код перестаёт писать → миграция `DROP COLUMN` → модель), см. `db-baselines-and-migrations`.
 
-```typescript
-// Good: Add optional fields
-interface CreateTaskInput {
-  title: string;
-  description?: string;
-  priority?: 'low' | 'medium' | 'high';  // Added later, optional
-  labels?: string[];                       // Added later, optional
-}
+### 5. Money and Mutations
 
-// Bad: Change existing field types or remove fields
-interface CreateTaskInput {
-  title: string;
-  // description: string;  // Removed — breaks existing consumers
-  priority: number;         // Changed from string — breaks existing consumers
-}
-```
+- Денежный POST — `Idempotency-Key` → `run_idempotent` (`backend/app/idempotency.py`); FE добавляет ключ через `utils/idempotencyKey.js` — новый денежный эндпоинт внести в его список.
+- Баланс меняется только через `adjust_balance` (row-lock), не присваиванием `cash_balance`.
+- Повтор запроса после успеха возвращает сохранённый ответ, а не второе списание; тест на это — gate G3/G4 в `critical-test-scenarios`.
 
-### 5. Predictable Naming
+### 6. Naming and Layering
 
-| Pattern | Convention | Example |
-|---------|-----------|---------|
-| REST endpoints | Plural nouns, no verbs | `GET /api/tasks`, `POST /api/tasks` |
-| Query params | camelCase | `?sortBy=createdAt&pageSize=20` |
-| Response fields | camelCase | `{ createdAt, updatedAt, taskId }` |
-| Boolean fields | is/has/can prefix | `isComplete`, `hasAttachments` |
-| Enum values | UPPER_SNAKE | `"IN_PROGRESS"`, `"COMPLETED"` |
-
-## REST API Patterns
-
-### Resource Design
-
-```
-GET    /api/tasks              → List tasks (with query params for filtering)
-POST   /api/tasks              → Create a task
-GET    /api/tasks/:id          → Get a single task
-PATCH  /api/tasks/:id          → Update a task (partial)
-DELETE /api/tasks/:id          → Delete a task
-
-GET    /api/tasks/:id/comments → List comments for a task (sub-resource)
-POST   /api/tasks/:id/comments → Add a comment to a task
-```
-
-### Pagination
-
-Paginate list endpoints:
-
-```typescript
-// Request
-GET /api/tasks?page=1&pageSize=20&sortBy=createdAt&sortOrder=desc
-
-// Response
-{
-  "data": [...],
-  "pagination": {
-    "page": 1,
-    "pageSize": 20,
-    "totalItems": 142,
-    "totalPages": 8
-  }
-}
-```
-
-### Filtering
-
-Use query parameters for filters:
-
-```
-GET /api/tasks?status=in_progress&assignee=user123&createdAfter=2025-01-01
-```
-
-### Partial Updates (PATCH)
-
-Accept partial objects — only update what's provided:
-
-```typescript
-// Only title changes, everything else preserved
-PATCH /api/tasks/123
-{ "title": "Updated title" }
-```
-
-## TypeScript Interface Patterns
-
-### Use Discriminated Unions for Variants
-
-```typescript
-// Good: Each variant is explicit
-type TaskStatus =
-  | { type: 'pending' }
-  | { type: 'in_progress'; assignee: string; startedAt: Date }
-  | { type: 'completed'; completedAt: Date; completedBy: string }
-  | { type: 'cancelled'; reason: string; cancelledAt: Date };
-
-// Consumer gets type narrowing
-function getStatusLabel(status: TaskStatus): string {
-  switch (status.type) {
-    case 'pending': return 'Pending';
-    case 'in_progress': return `In progress (${status.assignee})`;
-    case 'completed': return `Done on ${status.completedAt}`;
-    case 'cancelled': return `Cancelled: ${status.reason}`;
-  }
-}
-```
-
-### Input/Output Separation
-
-```typescript
-// Input: what the caller provides
-interface CreateTaskInput {
-  title: string;
-  description?: string;
-}
-
-// Output: what the system returns (includes server-generated fields)
-interface Task {
-  id: string;
-  title: string;
-  description: string | null;
-  createdAt: Date;
-  updatedAt: Date;
-  createdBy: string;
-}
-```
-
-### Use Branded Types for IDs
-
-```typescript
-type TaskId = string & { readonly __brand: 'TaskId' };
-type UserId = string & { readonly __brand: 'UserId' };
-
-// Prevents accidentally passing a UserId where a TaskId is expected
-function getTask(id: TaskId): Promise<Task> { ... }
-```
+- Пути `/api/<домен>/...`, существительные во множественном числе для коллекций; действие, которое не CRUD, — глагол в конце пути (`/time/next`, `/claim-salary`).
+- Роутер тонкий (auth, парсинг, вызов сервиса) → логика в `backend/app/services/<домен>/`; обработчики — `def`, не `async def` (сессия БД синхронная).
+- Новый эндпоинт → строка в карте [`backend/app/README.md`](../../../backend/app/README.md).
 
 ## Common Rationalizations
 

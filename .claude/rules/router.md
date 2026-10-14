@@ -53,9 +53,8 @@ Studio/GDD: [`.claude/skills/_archived/`](.claude/skills/_archived/) — Claude 
 | **Критичные сценарии / test gate** | **critical-test-scenarios** (`/critical-test-scenarios`) | `backend/tests/`, FE `__tests__/` |
 | Перед merge | **code-review-and-quality** | read-only |
 | **SQL baseline / `00NN_*.sql` / seeds / `db.sh`** | **db-baselines-and-migrations** | `test-driven-development`; game-economy при `victory_goals` |
-| Неясно какой скилл | **using-agent-skills** | — |
 
-**`tier: deferred`** (явный вызов): `browser-testing-with-devtools`, `deprecation-and-migration`, **`release-web`**, `telegram-mini-app-runtime`, `social-changelog-posts`. Встроенные вместо удалённых скиллов: `/simplify`, `/security-review`, `/code-review`. Legacy **`release-tma`** → redirect на **`release-web`**.
+**`tier: deferred`** (явный вызов): `deprecation-and-migration`, **`release-web`**, `telegram-mini-app-runtime`, `social-changelog-posts`. Встроенные вместо удалённых скиллов: `/simplify`, `/security-review`, `/code-review`.
 
 **`tier: support`:** `planning-and-task-breakdown` (epic), `code-review-and-quality` (merge), `project-handbook-documentation` (handbook для людей), `documentation-and-adrs` (граница доменов), **`db-baselines-and-migrations`** (PostgreSQL baseline/миграции/seeds). **`doubt-driven-development`** — deferred, но satellite для game-economy.
 
@@ -73,7 +72,7 @@ Studio/GDD: [`.claude/skills/_archived/`](.claude/skills/_archived/) — Claude 
 | game-economy-and-victory | test-driven-development, critical-test-scenarios, doubt-driven-development, balance-playtest (крупный баланс) |
 | create-event (крупный YAML) | test-driven-development, **event-analysis** (§10/§11 audit), critical-test-scenarios (опционально) |
 | api-and-interface-design | test-driven-development, critical-test-scenarios (если меняется поведение) |
-| frontend-ui-engineering | design-lab-mqx (новый/смена UI), critical-test-scenarios (контракт UI), browser-testing-with-devtools (интерактив) |
+| frontend-ui-engineering | design-lab-mqx (новый/смена UI), critical-test-scenarios (контракт UI); интерактив — `/run` + встроенный браузер Claude Code |
 | design-lab-mqx | — (canon: rule `.claude/rules/canon-sync.md` + skill) |
 
 ## Path-scoped rules (`.claude/rules/*.md` с `paths:` — подгружаются сами при работе с файлами)

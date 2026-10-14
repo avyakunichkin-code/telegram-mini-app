@@ -15,4 +15,4 @@
 
 ### Assertions
 
-- [ ] Handoff на browser-testing при необходимости DOM.
+- [ ] Handoff на release-web (smoke) или проверку во встроенном браузере при необходимости DOM.

@@ -387,5 +387,5 @@ After any performance-related change:
 
 ## Следующий шаг
 
-`code-review-and-quality`; для UI — `browser-testing-with-devtools`.
+`code-review-and-quality`; для UI — `/run` + встроенный браузер Claude Code.
 

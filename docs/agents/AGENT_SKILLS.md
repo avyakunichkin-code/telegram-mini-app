@@ -71,7 +71,6 @@ aliases:
 | **planning-and-task-breakdown** | Задачи из spec |
 | **project-handbook-documentation** | Пакет `docs/handbook/` для людей / плейтест |
 | **idea-refine** | `docs/vision/ideas/` до spec |
-| **using-agent-skills** | Выбор скилла по фазе |
 | **skill-test** | `audit` / `static` / `spec` / `category` |
 
 ---
@@ -82,16 +81,23 @@ aliases:
 |-------|--------|--------|
 | **project-handbook-documentation** | support | Пакет `docs/handbook/`: GDD, brief, плейтест, матрица фич (`/project-handbook-documentation`) |
 | **documentation-and-adrs** | support | ADR, граница доменов, публичный API |
-| **browser-testing-with-devtools** | deferred | DOM/сеть PWA/web (Chrome DevTools MCP) |
 | **doubt-driven-development** | deferred | Satellite для game-economy; иначе высокие ставки |
 | **deprecation-and-migration** | deferred | Смена контрактов, `save_kind` |
 | **social-changelog-posts** | deferred | Посты → `docs/marketing/` |
 | **release-web** | deferred | Guardrails + design-lab:build + PWA/web smoke перед выкаткой |
-| ~~release-tma~~ | deferred alias | → **release-web** |
 | **telegram-mini-app-runtime** | deferred | WebApp SDK, initData, viewport TMA |
 | **project-skills-layout** | meta | Rules vs skills, контракт `SKILL.md` |
 
 ---
+
+## Консолидация, раунд 2 (применено 2026-10-14)
+
+- Шаблоны документов — только `docs/templates/` (`SPEC_FEATURE`, `PLAN_FEATURE`, `TASK_SLICE`, `ADR`, `IDEA_ONEPAGER`); встроенные копии в `spec-driven-development`, `planning-and-task-breakdown`, `documentation-and-adrs`, `idea-refine` заменены ссылками.
+- `api-and-interface-design` — контракт FastAPI ↔ React вместо TypeScript/GraphQL-примеров.
+- Удалены: `browser-testing-with-devtools` (→ `/run` + встроенный браузер, `release-web`), `release-tma` (алиас), `using-agent-skills` (→ `router.md` + `.claude/rules/working-agreements.md`).
+- Сжаты: `test-driven-development` (431 → ~85 строк, инфраструктура тестов проекта), `skill-test` (433 → ~75, «запусти скрипт → интерпретируй»); поля `last_*` из `catalog.yaml` удалены.
+- `game-economy-and-victory`: раздел «Достижения» (ловушка сидинга каталога), инварианты `save_kind` и поражения обновлены.
+- `deprecation-and-migration` — оставлен по решению PO.
 
 ## Консолидация с built-in Claude Code (применено 2026-10-14)
 
@@ -173,7 +179,6 @@ aliases:
 |-------|------------|
 | **project-skills-layout** | Пути, контракт, `catalog.yaml`, `_archived/` |
 | **skill-test** | Линтер и audit скиллов |
-| **using-agent-skills** | Дерево active/optional |
 
 ---
 

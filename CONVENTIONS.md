@@ -78,7 +78,7 @@ CONVENTIONS.md                         ← вердикт: почему так
 
 **Платим.** Журнал не ловит молчание: пропущенный разбор в него просто не попадает (см. реестр отклонений).
 
-**Порождает правила.** [`.claude/skills/using-agent-skills/SKILL.md`](.claude/skills/using-agent-skills/SKILL.md) § «Push Back When Warranted»; [`.claude/skills/_shared/clarify-first.md`](.claude/skills/_shared/clarify-first.md); [`.claude/skills/_shared/delivery-workflow.md`](.claude/skills/_shared/delivery-workflow.md).
+**Порождает правила.** [`.claude/rules/working-agreements.md`](.claude/rules/working-agreements.md) § «Возражай, когда есть причина»; [`.claude/skills/_shared/clarify-first.md`](.claude/skills/_shared/clarify-first.md); [`.claude/skills/_shared/delivery-workflow.md`](.claude/skills/_shared/delivery-workflow.md).
 
 **Соответствие.** Обязательно.
 

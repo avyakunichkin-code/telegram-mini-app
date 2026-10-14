@@ -40,7 +40,7 @@ allowed-tools: Read, Glob, Grep, Write
 | UI parity audit | [`docs/specs/UI_CONSISTENCY_AUDIT.md`](../../../docs/specs/UI_CONSISTENCY_AUDIT.md) |
 | ideas без spec | [`docs/agents/DESIGN_IMPROVEMENTS_BACKLOG.md`](../../../docs/agents/DESIGN_IMPROVEMENTS_BACKLOG.md) |
 
-**Куда писать:** `frontend-react/src/components/mqx/`, экраны `*Premium.jsx`, `frontend-react/src/styles/`. **Дальше:** `design-lab-mqx`, `browser-testing-with-devtools`, `code-review-and-quality`.
+**Куда писать:** `frontend-react/src/components/mqx/`, экраны `*Premium.jsx`, `frontend-react/src/styles/`. **Дальше:** `design-lab-mqx`, `code-review-and-quality`; проверка в браузере — `/run` + встроенный браузер Claude Code.
 
 ## Overview
 
@@ -477,5 +477,5 @@ After building UI:
 
 ## Следующий шаг
 
-Новый визуальный паттерн → `design-lab-mqx` → `DESIGN_WORKFLOW.md`; проверка — `browser-testing-with-devtools`.
+Новый визуальный паттерн → `design-lab-mqx` → `DESIGN_WORKFLOW.md`; проверка — `/run` + встроенный браузер Claude Code.
 
