@@ -59,12 +59,20 @@
   ],
   "page_order_prod_components": [
     "MqxTabHero",
-    "CapitalMonetkaGuidance",
     "CapitalPeriodFlowsBlock",
-    "MqxCapitalSectionAccordion(title=\"Инвестиции\")",
-    "MqxCapitalSectionAccordion(title=\"Страховки\")",
-    "MqxCapitalSectionAccordion(title=\"Имущество\")",
-    "MqxCapitalSectionAccordion(title=\"Обязательства\")"
-  ]
+    "MqxCapitalPageModeSeg",
+    "CapitalDetailsPanel",
+    "CapitalActionsPanel"
+  ],
+  "details_panel_order": {
+    "prod_entry": "frontend-react/src/components/mqx/layout/CapitalDetailsPanel.jsx",
+    "notes": "Режим «Детали» (docs/ux/screens/finance.md, Z2a): аккордеоны позиций в этом порядке.",
+    "components": [
+      "MqxCapitalSectionAccordion(title=\"Инвестиции\")",
+      "MqxCapitalSectionAccordion(title=\"Страховки\")",
+      "MqxCapitalSectionAccordion(title=\"Имущество\")",
+      "MqxCapitalSectionAccordion(title=\"Обязательства\")"
+    ]
+  }
 }
 

@@ -6,6 +6,8 @@ set -euo pipefail
 # Requires:
 #   - DATABASE_URL="postgresql://..."
 #   - psql in PATH (for migrate/baseline apply)
+#   - Python with backend deps: $PYTHON, else backend/.venv, else python3 / python
+#     (Python-скрипты импортируют `app` — запускаются из backend/ с PYTHONPATH=backend)
 #
 # Commands:
 #   db.sh migrate [--baseline-only|--skip-baseline]
@@ -23,6 +25,15 @@ set -euo pipefail
 
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 MIGRATIONS_DIR="${ROOT}/migrations"
+# PYTHONPATH для нативного Python: на Windows (Git Bash / MSYS) — путь C:\... и разделитель ";"
+BACKEND_PYPATH="${ROOT}"
+PYTHONPATH_SEP=":"
+case "$(uname -s)" in
+  MINGW*|MSYS*|CYGWIN*)
+    PYTHONPATH_SEP=";"
+    if command -v cygpath >/dev/null; then BACKEND_PYPATH="$(cygpath -w "${ROOT}")"; fi
+    ;;
+esac
 BASELINE="${MIGRATIONS_DIR}/0000_schema_baseline.sql"
 
 require_env() {
@@ -33,6 +44,54 @@ require_cmd() {
   command -v "$1" >/dev/null || { echo "$1 not found in PATH" >&2; exit 2; }
 }
 
+# Как scripts/dev-setup.ps1: psql не в PATH → $PG_BIN или новейший C:\Program Files\PostgreSQL\*\bin
+require_psql() {
+  if ! command -v psql >/dev/null; then
+    local bin=""
+    if [[ -n "${PG_BIN:-}" && -x "${PG_BIN}/psql" || -n "${PG_BIN:-}" && -x "${PG_BIN}/psql.exe" ]]; then
+      bin="${PG_BIN}"
+    else
+      bin="$(ls -d "/c/Program Files/PostgreSQL/"*/bin 2>/dev/null | sort -V | tail -n 1 || true)"
+    fi
+    [[ -n "${bin}" ]] && export PATH="${bin}:${PATH}"
+  fi
+  require_cmd psql
+}
+
+# Интерпретатор: $PYTHON → backend/.venv (Windows / POSIX) → python3 → python.
+# Кандидат должен реально запускаться: на Windows `python`/`python3` из WindowsApps — заглушка Store.
+resolve_python() {
+  if [[ -n "${PYTHON:-}" ]]; then
+    echo "${PYTHON}"
+    return 0
+  fi
+  local c
+  for c in "${ROOT}/.venv/Scripts/python.exe" "${ROOT}/.venv/bin/python"; do
+    if [[ -x "${c}" ]]; then
+      echo "${c}"
+      return 0
+    fi
+  done
+  for c in python3 python; do
+    if command -v "${c}" >/dev/null && "${c}" -c "import sys" >/dev/null 2>&1; then
+      echo "${c}"
+      return 0
+    fi
+  done
+  echo "Python not found: create backend/.venv, set PYTHON=..., or install python3" >&2
+  exit 2
+}
+
+# Запуск backend-скрипта: cwd=backend, PYTHONPATH=backend (+ прежний PYTHONPATH).
+run_backend_py() {
+  local py
+  py="$(resolve_python)"
+  (
+    cd "${ROOT}"
+    PYTHONPATH="${BACKEND_PYPATH}${PYTHONPATH:+${PYTHONPATH_SEP}${PYTHONPATH}}" "${py}" "$@"
+  )
+}
+
 mask_url() {
   # mask credentials: postgresql://user:pass@host -> postgresql://***@host
   echo "$DATABASE_URL" | sed -E 's#://[^@]+@#://***@#'
@@ -40,7 +99,7 @@ mask_url() {
 
 cmd_migrate() {
   require_env
-  require_cmd psql
+  require_psql
 
   local mode="auto"
   while [[ $# -gt 0 ]]; do
@@ -91,20 +150,27 @@ cmd_migrate() {
 
 cmd_seed() {
   require_env
-  python "${ROOT}/scripts/seed_db.py"
+  run_backend_py "${ROOT}/scripts/seed_db.py"
 }
 
 cmd_events_sync() {
   require_env
-  python "${ROOT}/scripts/sync_events_catalog.py"
+  run_backend_py "${ROOT}/scripts/sync_events_catalog.py"
 }
 
 cmd_bootstrap() {
   require_env
-  require_cmd psql
+  require_psql
 
-  echo "[1/2] migrate --baseline-only"
-  cmd_migrate --baseline-only
+  # Как scripts/dev-setup.ps1: baseline не идемпотентен (CREATE TABLE) — на существующей схеме пропускаем
+  local has_schema
+  has_schema="$(psql "$DATABASE_URL" -tAc "select to_regclass('public.game_profiles') is not null")"
+  if [[ "${has_schema//[[:space:]]/}" == "t" ]]; then
+    echo "[1/2] schema exists — baseline skipped"
+  else
+    echo "[1/2] migrate --baseline-only"
+    cmd_migrate --baseline-only
+  fi
   echo "[2/2] seed (includes events sync)"
   cmd_seed
   echo "[OK] bootstrap complete"
@@ -116,7 +182,7 @@ cmd_baseline_dump() {
 }
 
 cmd_baseline_verify() {
-  python "${ROOT}/scripts/verify_schema_baseline.py"
+  run_backend_py "${ROOT}/scripts/verify_schema_baseline.py"
 }
 
 cmd_archive_incrementals() {
