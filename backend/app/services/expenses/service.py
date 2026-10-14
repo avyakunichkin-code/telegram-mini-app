@@ -11,7 +11,6 @@ from ...finance.expenses import (
     update_plan_expense_line,
     _category_titles,
 )
-from ...game.time import sync_time
 from ...models import (
     ExpenseCategoryDefinition,
     FinanceAsset,
@@ -46,7 +45,6 @@ def line_response(db: Session, row: ProfileExpenseLine) -> ExpenseLineResponse:
 
 
 def expenses_snapshot(db: Session, profile: GameProfile) -> ExpensesSnapshotResponse:
-    sync_time(profile)
     salary = db.query(FinanceSalary).filter(FinanceSalary.game_profile_id == profile.id).first()
     monthly_income = float(salary.monthly_amount if salary else 0)
 
@@ -103,7 +101,6 @@ def list_expense_categories(db: Session) -> list[ExpenseCategoryPublic]:
 
 
 def list_expense_lines(db: Session, profile: GameProfile) -> list[ExpenseLineResponse]:
-    sync_time(profile)
     burn = compute_monthly_burn(db, profile)
     return [
         ExpenseLineResponse(
@@ -121,7 +118,6 @@ def list_expense_lines(db: Session, profile: GameProfile) -> list[ExpenseLineRes
 
 
 def create_expense_line(db: Session, profile: GameProfile, payload: ExpenseLineCreate) -> ExpenseLineResponse:
-    sync_time(profile)
     line = create_plan_expense_line(
         db,
         profile,
@@ -140,7 +136,6 @@ def patch_expense_line(
     line_id: int,
     payload: ExpenseLineUpdate,
 ) -> ExpenseLineResponse:
-    sync_time(profile)
     line = (
         db.query(ProfileExpenseLine)
         .filter(

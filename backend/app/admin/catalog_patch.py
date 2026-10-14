@@ -7,6 +7,7 @@ from typing import Any, Optional
 
 from sqlalchemy.orm import Session
 
+from ..events.mvp11_seeds import YAML_EVENT_READONLY_DETAIL, is_yaml_catalog_event_key
 from ..models import AssetTemplate, EventDefinition, GameStarterTemplate, LiabilityTemplate
 from .catalog_validate import (
     validate_audience_template_keys,
@@ -154,6 +155,9 @@ def patch_catalog_row(
 
     elif catalog_key == "events":
         assert isinstance(row, EventDefinition)
+        if is_yaml_catalog_event_key(row.key):
+            # ADR-008: канон — data/events/mvp11/*.yaml; правка в БД откатится при следующем синке.
+            return None, {"key": [YAML_EVENT_READONLY_DETAIL]}
         if "key" in data:
             key = str(data["key"] or "").strip()
             if key and key != row.key:

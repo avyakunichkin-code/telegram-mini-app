@@ -67,7 +67,7 @@ def patch_profile_onboarding(
         notify_onboarding_skipped,
         notify_onboarding_step_reached,
     )
-    from ...game.time import get_active_game_profile
+    from ...game.session import get_active_game_profile
 
     profile = get_active_game_profile(db, user_id)
     prev_step = str(getattr(profile, "onboarding_step", "period_timer") or "period_timer")

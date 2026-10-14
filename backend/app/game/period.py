@@ -2,6 +2,7 @@
 
 import logging
 import math
+from dataclasses import dataclass, field
 
 from sqlalchemy.orm import Session
 import json
@@ -16,7 +17,6 @@ from ..models import (
     InvestmentPosition,
     PeriodEconomyClosing,
     PeriodSnapshot,
-    FinanceSalary,
     GameStarterTemplate,
 )
 from ..finance.balance_utils import adjust_balance, add_transaction, TRANSACTION_TYPES
@@ -235,56 +235,40 @@ def _installments_outstanding(amount: float, monthly_due: float) -> int:
     return int(math.ceil(round(amount / monthly_due, 6)))
 
 
-def process_period_end(db: Session, profile: GameProfile) -> dict:
-    """
-    Выполняет завершение текущего периода:
-    - собирает активные активы и обязательства
-    - списывает обслуживание активов и платежи по обязательствам
-    - при отрицательном балансе увеличивает счётчик negative_periods_count
-    - начисляет XP за завершение периода
-    - сбрасывает флаг получения зарплаты
-    - увеличивает period_index
-    - проверяет поражение (3 отрицательных периода подряд)
+@dataclass
+class _PeriodClose:
+    """Состояние одного закрытия месяца, которое этапы конвейера накапливают по очереди."""
 
-    Возвращает словарь со статистикой списаний.
-    """
-    period_index = profile.period_index
-    closed_period_index = int(period_index)
-    invest_positions = (
-        db.query(InvestmentPosition)
-        .filter(
-            InvestmentPosition.game_profile_id == profile.id,
-            InvestmentPosition.is_active == 1,
-        )
-        .all()
-    )
+    db: Session
+    profile: GameProfile
+    period_index: int
+    breakdown: list = field(default_factory=list)
+    total_spend: float = 0.0
+    closed_burn_total: float = 0.0
+    total_overdue_added: float = 0.0
+    deposit_interest_total: float = 0.0
+    bond_coupon_total: float = 0.0
+    defeat_reason: str | None = None
+    needs_result: dict | None = None
+    liabilities: list = field(default_factory=list)
 
-    total_spend = 0.0
-    breakdown = []
-    closed_burn_total = 0.0
-    total_overdue_added = 0.0
-    invest_income = 0.0
-    deposit_interest_total = 0.0
-    bond_coupon_total = 0.0
-    defeat_reason = None
-    needs_result = None
 
-    # 1. Собираем активные активы
+def _charge_assets(ctx: _PeriodClose) -> None:
+    """1–2. Обслуживание активов (может увести в минус) и доход от активов (аренда)."""
+    db, profile, period_index = ctx.db, ctx.profile, ctx.period_index
     assets = db.query(FinanceAsset).filter(
         FinanceAsset.game_profile_id == profile.id,
         FinanceAsset.is_active == 1
     ).all()
     for asset in assets:
         cost = float(asset.monthly_maintenance_cost)
-        total_spend += cost
-        breakdown.append({
+        ctx.total_spend += cost
+        ctx.breakdown.append({
             "type": "asset",
             "title": asset.title,
             "amount": cost
         })
 
-    # 2. Списание обслуживания активов (неизбежные расходы).
-    # На MVP допускаем уход в минус из-за обслуживания (как "неизбежные" траты).
     assets_spend = sum(float(a.monthly_maintenance_cost) for a in assets)
     if assets_spend > 0:
         adjust_balance(
@@ -297,7 +281,6 @@ def process_period_end(db: Session, profile: GameProfile) -> dict:
         )
         db.refresh(profile)
 
-    # 2.1 Доход от активов (аренда и т.п.) — начисляется автоматически в конце периода
     assets_income = sum(float(getattr(a, "monthly_income", 0) or 0) for a in assets)
     if assets_income > 0:
         adjust_balance(
@@ -309,15 +292,18 @@ def process_period_end(db: Session, profile: GameProfile) -> dict:
             period_index=period_index,
         )
         db.refresh(profile)
-        breakdown.append({"type": "asset_income", "title": "Доход от активов", "amount": round(assets_income, 2)})
+        ctx.breakdown.append({"type": "asset_income", "title": "Доход от активов", "amount": round(assets_income, 2)})
 
-    # 3. Обязательства: игрок может забыть/не хватить денег → уходит в просрочку (без штрафов на MVP).
-    liabilities = db.query(FinanceLiability).filter(
+
+def _pay_liabilities(ctx: _PeriodClose) -> None:
+    """3. Обязательства: платим сколько есть, остаток уходит в просрочку (без штрафов на MVP)."""
+    db, profile, period_index = ctx.db, ctx.profile, ctx.period_index
+    ctx.liabilities = db.query(FinanceLiability).filter(
         FinanceLiability.game_profile_id == profile.id,
         FinanceLiability.is_active == 1
     ).all()
 
-    for liability in liabilities:
+    for liability in ctx.liabilities:
         monthly_due = float(liability.monthly_payment)
         previous_overdue = float(getattr(liability, "overdue_amount", 0) or 0)
         due_total = monthly_due + previous_overdue
@@ -366,11 +352,11 @@ def process_period_end(db: Session, profile: GameProfile) -> dict:
             liability.overdue_amount = float(unpaid)
             if unpaid > EPSILON:
                 liability.overdue_periods = int(getattr(liability, "overdue_periods", 0) or 0) + 1
-                total_overdue_added += unpaid
+                ctx.total_overdue_added += unpaid
             else:
                 liability.overdue_periods = 0
 
-        breakdown.append({
+        ctx.breakdown.append({
             "type": "liability",
             "title": liability.title,
             "due": due_total,
@@ -378,54 +364,59 @@ def process_period_end(db: Session, profile: GameProfile) -> dict:
             "unpaid": unpaid,
         })
 
-    # 3.4 Расходы на жизнеобеспечение (статьи бюджета + legacy delta)
+
+def _charge_lifestyle(ctx: _PeriodClose) -> None:
+    """3.4. Расходы на жизнь (статьи бюджета + legacy delta)."""
+    db, profile, period_index = ctx.db, ctx.profile, ctx.period_index
     expire_expense_lines_for_period(db, profile, period_index)
     burn_snapshot = compute_monthly_burn(db, profile)
     lifestyle_total = float(burn_snapshot.total)
-    closed_burn_total = round(lifestyle_total, 2)
-    if lifestyle_total > 0:
-        adjust_balance(
-            db=db,
-            game_profile_id=profile.id,
-            amount=-lifestyle_total,
-            type=TRANSACTION_TYPES["LIFESTYLE_EXPENSE"],
-            description=f"Расходы на жизнь за период #{period_index}",
-            period_index=period_index,
+    ctx.closed_burn_total = round(lifestyle_total, 2)
+    if lifestyle_total <= 0:
+        return
+    adjust_balance(
+        db=db,
+        game_profile_id=profile.id,
+        amount=-lifestyle_total,
+        type=TRANSACTION_TYPES["LIFESTYLE_EXPENSE"],
+        description=f"Расходы на жизнь за период #{period_index}",
+        period_index=period_index,
+    )
+    db.refresh(profile)
+    cat_lines = lifestyle_period_breakdown(burn_snapshot)
+    if cat_lines:
+        ctx.breakdown.extend(cat_lines)
+        ctx.breakdown.append(
+            {
+                "type": "lifestyle",
+                "title": "Итого расходы на жизнь",
+                "amount": round(lifestyle_total, 2),
+            }
         )
-        db.refresh(profile)
-        cat_lines = lifestyle_period_breakdown(burn_snapshot)
-        if cat_lines:
-            breakdown.extend(cat_lines)
-            breakdown.append(
-                {
-                    "type": "lifestyle",
-                    "title": "Итого расходы на жизнь",
-                    "amount": round(lifestyle_total, 2),
-                }
-            )
-        else:
-            breakdown.append({"type": "lifestyle", "title": "Расходы «жизни»", "amount": round(lifestyle_total, 2)})
+    else:
+        ctx.breakdown.append({"type": "lifestyle", "title": "Расходы «жизни»", "amount": round(lifestyle_total, 2)})
 
-    # 3.5 Страховки: списываем премии (на MVP без просрочек — может уйти в минус)
-    insurance_spend = 0.0
+
+def _charge_insurance(ctx: _PeriodClose) -> None:
+    """3.5. Страховые премии (без просрочек — может уйти в минус); сбой откатывается savepoint'ом."""
+    db, profile, period_index = ctx.db, ctx.profile, ctx.period_index
     try:
         with db.begin_nested():
             insurance_spend = float(charge_premiums_for_period(db, profile, period_index) or 0)
         if insurance_spend > 0:
-            breakdown.append({"type": "insurance", "title": "Премии", "amount": insurance_spend})
+            ctx.breakdown.append({"type": "insurance", "title": "Премии", "amount": insurance_spend})
     except Exception:
         # Savepoint откатил частично списанные премии; закрытие месяца продолжается.
         logger.exception(
             "Insurance premiums failed profile_id=%s period_index=%s", profile.id, period_index
         )
-        insurance_spend = 0.0
         db.refresh(profile)
 
-    # 3.6 Инвестиции: начисления (депозит — капитализация, облигации — купон на баланс)
-    deposit_interest_total = 0.0
-    bond_coupon_total = 0.0
-    positions = invest_positions
-    for pos in positions:
+
+def _accrue_investments(ctx: _PeriodClose, invest_positions: list) -> None:
+    """3.6. Депозит — капитализация, облигации — купон на баланс."""
+    db, profile, period_index = ctx.db, ctx.profile, ctx.period_index
+    for pos in invest_positions:
         last_accrued = int(pos.last_accrued_period or 0)
         if last_accrued >= int(period_index):
             continue
@@ -437,109 +428,158 @@ def process_period_end(db: Session, profile: GameProfile) -> dict:
         if pos.kind == "deposit":
             interest = float(pos.principal) * monthly_rate * periods_to_accrue
             pos.principal = float(pos.principal) + interest
-            deposit_interest_total += interest
-            invest_income += interest
+            ctx.deposit_interest_total += interest
         elif pos.kind == "bond":
             coupon = float(pos.principal) * monthly_rate * periods_to_accrue
             if coupon != 0:
                 adjust_balance(db, profile.id, +coupon, "bond_coupon", f"Купон: {pos.title}", period_index)
                 db.refresh(profile)
-                bond_coupon_total += coupon
-                invest_income += coupon
+                ctx.bond_coupon_total += coupon
         pos.last_accrued_period = int(period_index)
-    if deposit_interest_total > EPSILON:
-        breakdown.append(
+    if ctx.deposit_interest_total > EPSILON:
+        ctx.breakdown.append(
             {
                 "type": "deposit_interest",
                 "title": "Проценты на депозитах",
-                "amount": round(deposit_interest_total, 2),
+                "amount": round(ctx.deposit_interest_total, 2),
             }
         )
-    if bond_coupon_total > EPSILON:
-        breakdown.append(
+    if ctx.bond_coupon_total > EPSILON:
+        ctx.breakdown.append(
             {
                 "type": "bond_coupon",
                 "title": "Купоны по облигациям",
-                "amount": round(bond_coupon_total, 2),
+                "amount": round(ctx.bond_coupon_total, 2),
             }
         )
 
-    # 4. Проверка отрицательного баланса
-    if profile.cash_balance < 0:
-        profile.negative_periods_count += 1
-        # Можно добавить транзакцию-предупреждение
-        if profile.negative_periods_count >= 3:
+
+def _apply_cash_streak(ctx: _PeriodClose) -> None:
+    """4. Отрицательный баланс: 3 месяца подряд → поражение `cash_negative_streak`."""
+    profile, period_index = ctx.profile, ctx.period_index
+    if profile.cash_balance >= 0:
+        profile.negative_periods_count = 0
+        return
+    profile.negative_periods_count += 1
+    if profile.negative_periods_count >= 3:
+        _apply_defeat_to_profile(profile)
+        ctx.defeat_reason = "cash_negative_streak"
+        add_transaction(
+            db=ctx.db,
+            game_profile_id=profile.id,
+            amount=0,
+            type=TRANSACTION_TYPES["GAME_OVER"],
+            description=f"Поражение: 3 периода подряд с отрицательным балансом (период #{period_index})",
+            period_index=period_index,
+        )
+
+
+def _apply_needs_decay(ctx: _PeriodClose) -> None:
+    """4.2. Потребности: decay + streak нулей; 3 месяца подряд → поражение `needs_depletion` (ADR-005)."""
+    db, profile, period_index = ctx.db, ctx.profile, ctx.period_index
+    try:
+        if str(getattr(profile, "save_kind", "game") or "game") != "game" or int(profile.is_active or 0) != 1:
+            return
+        tk = str(getattr(profile, "starter_template_key", "") or "")
+        tmpl = (
+            db.query(GameStarterTemplate).filter(GameStarterTemplate.template_key == tk).first()
+            if tk
+            else None
+        )
+        blueprint = {}
+        if tmpl is not None:
+            try:
+                blueprint = json.loads(tmpl.blueprint_json or "{}")
+            except Exception:
+                blueprint = {}
+        cfg = parse_needs_config(blueprint)
+        if not cfg:
+            return
+        before = needs_values_from_profile(profile)
+        dec = apply_decay(cfg, before)
+        set_profile_needs(profile, dec.after)
+
+        if dec.has_zero_after:
+            profile.needs_zero_periods_streak = int(getattr(profile, "needs_zero_periods_streak", 0) or 0) + 1
+        else:
+            profile.needs_zero_periods_streak = 0
+
+        if int(getattr(profile, "needs_zero_periods_streak", 0) or 0) >= 3:
             _apply_defeat_to_profile(profile)
-            defeat_reason = "cash_negative_streak"
+            ctx.defeat_reason = "needs_depletion"
             add_transaction(
                 db=db,
                 game_profile_id=profile.id,
                 amount=0,
                 type=TRANSACTION_TYPES["GAME_OVER"],
-                description=f"Поражение: 3 периода подряд с отрицательным балансом (период #{period_index})",
+                description=f"Поражение: потребности на нуле 3 месяца подряд (период #{period_index})",
                 period_index=period_index,
             )
-    else:
-        # Если баланс неотрицательный – сбрасываем счётчик
-        profile.negative_periods_count = 0
 
-    # 4.2 Character needs: decay + defeat streak (ADR-005); cash-штраф за distressed — отключён
-    try:
-        if str(getattr(profile, "save_kind", "game") or "game") == "game" and int(profile.is_active or 0) == 1:
-            tk = str(getattr(profile, "starter_template_key", "") or "")
-            if tk:
-                tmpl = (
-                    db.query(GameStarterTemplate)
-                    .filter(GameStarterTemplate.template_key == tk)
-                    .first()
-                )
-            else:
-                tmpl = None
-
-            blueprint = {}
-            if tmpl is not None:
-                try:
-                    blueprint = json.loads(tmpl.blueprint_json or "{}")
-                except Exception:
-                    blueprint = {}
-            cfg = parse_needs_config(blueprint)
-            if cfg:
-                before = needs_values_from_profile(profile)
-                dec = apply_decay(cfg, before)
-                set_profile_needs(profile, dec.after)
-
-                # streak: any axis == 0 after decay
-                if dec.has_zero_after:
-                    profile.needs_zero_periods_streak = int(getattr(profile, "needs_zero_periods_streak", 0) or 0) + 1
-                else:
-                    profile.needs_zero_periods_streak = 0
-
-                # defeat: streak >= 3
-                if int(getattr(profile, "needs_zero_periods_streak", 0) or 0) >= 3:
-                    _apply_defeat_to_profile(profile)
-                    defeat_reason = "needs_depletion"
-                    add_transaction(
-                        db=db,
-                        game_profile_id=profile.id,
-                        amount=0,
-                        type=TRANSACTION_TYPES["GAME_OVER"],
-                        description=f"Поражение: потребности на нуле 3 месяца подряд (период #{period_index})",
-                        period_index=period_index,
-                    )
-
-                needs_result = {
-                    "before": before,
-                    "after": dec.after,
-                    "decay": dec.decay,
-                    "min_axis": dec.min_axis,
-                    "has_zero": dec.has_zero_after,
-                    "streak": int(getattr(profile, "needs_zero_periods_streak", 0) or 0),
-                }
+        ctx.needs_result = {
+            "before": before,
+            "after": dec.after,
+            "decay": dec.decay,
+            "min_axis": dec.min_axis,
+            "has_zero": dec.has_zero_after,
+            "streak": int(getattr(profile, "needs_zero_periods_streak", 0) or 0),
+        }
     except Exception:
         logger.exception("Needs processing failed profile_id=%s period_index=%s", profile.id, period_index)
         db.refresh(profile)
 
+
+def _spawn_next_period_events(db: Session, profile: GameProfile) -> bool:
+    """8. Пул событий нового периода. Возвращает True, если спавн сломался (не ломает закрытие)."""
+    try:
+        _ensure_seed_events(db)
+        spawn_status = ensure_period_events(
+            db, profile.id, profile.period_index, profile.save_kind
+        )
+        return is_events_spawn_failed(spawn_status)
+    except Exception:
+        # События не должны ломать завершение периода, но молчаливый pass прячет поломку пула.
+        logger.exception(
+            "Period event pool failed after close profile_id=%s period_index=%s",
+            profile.id,
+            profile.period_index,
+        )
+        return True
+
+
+def process_period_end(db: Session, profile: GameProfile) -> dict:
+    """
+    «Закрыть месяц» (TB1): экономика периода одним конвейером этапов, затем commit и side effects.
+
+    Порядок этапов — часть контракта (баланс на момент платежа зависит от предыдущих списаний):
+    активы → обязательства → расходы на жизнь → страховки → инвестиции → streak минуса →
+    потребности → снимок PeriodEconomyClosing / guidance / достижения → period_index += 1 → commit →
+    admin alerts → события нового периода.
+
+    Возвращает словарь для `period_close_summary` (services/period/close.py).
+    """
+    period_index = int(profile.period_index)
+    # Позиции читаем до списаний: начисление идёт по состоянию на начало закрытия.
+    invest_positions = (
+        db.query(InvestmentPosition)
+        .filter(
+            InvestmentPosition.game_profile_id == profile.id,
+            InvestmentPosition.is_active == 1,
+        )
+        .all()
+    )
+    ctx = _PeriodClose(db=db, profile=profile, period_index=period_index)
+
+    _charge_assets(ctx)
+    _pay_liabilities(ctx)
+    _charge_lifestyle(ctx)
+    _charge_insurance(ctx)
+    _accrue_investments(ctx, invest_positions)
+    _apply_cash_streak(ctx)
+    _apply_needs_decay(ctx)
+
     # 5. Снимок на конец периода для аналитики + счётчик «чистых» месяцев без просрочек
+    breakdown = ctx.breakdown
     snapshot = (
         db.query(PeriodSnapshot)
         .filter(
@@ -565,7 +605,7 @@ def process_period_end(db: Session, profile: GameProfile) -> dict:
     invest_capital_delta = _invest_capital_flow(db, profile.id, period_index)
     debt_delta = _debt_delta(db, profile.id, period_index, debt_after)
 
-    total_overdue_now = round(sum(float(li.overdue_amount or 0) for li in liabilities), 2)
+    total_overdue_now = round(sum(float(li.overdue_amount or 0) for li in ctx.liabilities), 2)
     if total_overdue_now <= 1e-8:
         profile.clean_period_streak = int(getattr(profile, "clean_period_streak", 0) or 0) + 1
     else:
@@ -580,25 +620,25 @@ def process_period_end(db: Session, profile: GameProfile) -> dict:
             salary_claimed=salary_claimed,
             cash_end=cash_end,
         )
-        on_period_closed_guidance(db, profile.user_id, profile, closed_period_index)
+        on_period_closed_guidance(db, profile.user_id, profile, period_index)
     except Exception:
         logger.warning("guidance period close hook failed profile_id=%s", profile.id, exc_info=True)
 
     db.add(
         PeriodEconomyClosing(
             game_profile_id=int(profile.id),
-            period_index=int(period_index),
+            period_index=period_index,
             cash_balance=float(profile.cash_balance),
             safety_fund_balance=float(profile.safety_fund_balance),
             total_overdue_amount=float(total_overdue_now),
-            monthly_burn_total=float(closed_burn_total),
+            monthly_burn_total=float(ctx.closed_burn_total),
             period_income_rate=float(current_income_rate),
             period_expense_total=float(current_expense_total),
             total_debt_balance=float(debt_after),
         )
     )
 
-    expire_pending_events_for_closed_period(db, profile.id, int(period_index))
+    expire_pending_events_for_closed_period(db, profile.id, period_index)
 
     achievement_unlocks: list = []
     try:
@@ -614,10 +654,8 @@ def process_period_end(db: Session, profile: GameProfile) -> dict:
         db.refresh(profile)
         achievement_unlocks = []
 
-    # 7. Увеличиваем номер периода
-    closed_period_index = int(period_index)
+    # 7. Новый период + commit экономики одной транзакцией
     profile.period_index += 1
-
     db.commit()
     db.refresh(profile)
 
@@ -628,7 +666,7 @@ def process_period_end(db: Session, profile: GameProfile) -> dict:
         process_period_admin_alerts(
             db,
             profile,
-            closed_period_index=closed_period_index,
+            closed_period_index=period_index,
             economy={
                 "cash_balance": round(cash_end, 2),
                 "safety_fund_balance": round(safety_end, 2),
@@ -638,52 +676,31 @@ def process_period_end(db: Session, profile: GameProfile) -> dict:
             },
         )
     except Exception:
-        import logging
+        logger.warning("Admin notify failed after period end profile_id=%s", profile.id, exc_info=True)
 
-        logging.getLogger(__name__).warning(
-            "Admin notify failed after period end profile_id=%s",
-            profile.id,
-            exc_info=True,
-        )
-
-    # 8. Событие на новый период (easy)
-    events_spawn_failed = False
-    try:
-        _ensure_seed_events(db)
-        spawn_status = ensure_period_events(
-            db, profile.id, profile.period_index, profile.save_kind
-        )
-        events_spawn_failed = is_events_spawn_failed(spawn_status)
-    except Exception:
-        # События не должны ломать завершение периода, но молчаливый pass прячет поломку пула.
-        logger.exception(
-            "Period event pool failed after close profile_id=%s period_index=%s",
-            profile.id,
-            profile.period_index,
-        )
-        events_spawn_failed = True
+    events_spawn_failed = _spawn_next_period_events(db, profile)
 
     return {
-        "closed_period_index": closed_period_index,
+        "closed_period_index": period_index,
         "cash_delta": cash_delta,
         "income_delta": income_delta,
         "expense_delta": expense_delta,
         "safety_fund_delta": safety_fund_delta,
         "invest_capital_delta": invest_capital_delta,
         "debt_delta": debt_delta,
-        "total_spent": total_spend,
+        "total_spent": ctx.total_spend,
         "breakdown": breakdown,
         "new_balance": profile.cash_balance,
         "negative_streak": profile.negative_periods_count,
         "game_over": profile.is_active == 0,
-        "defeat_reason": defeat_reason,
-        "needs": needs_result,
-        "overdue_added": round(total_overdue_added, 2),
+        "defeat_reason": ctx.defeat_reason,
+        "needs": ctx.needs_result,
+        "overdue_added": round(ctx.total_overdue_added, 2),
         "achievement_unlocks": achievement_unlocks,
         "period_highlights": _build_period_highlights(
             expense_total=current_expense_total,
-            bond_coupons=bond_coupon_total,
-            deposit_interest=deposit_interest_total,
+            bond_coupons=ctx.bond_coupon_total,
+            deposit_interest=ctx.deposit_interest_total,
         ),
         "events_spawn_failed": bool(events_spawn_failed),
     }

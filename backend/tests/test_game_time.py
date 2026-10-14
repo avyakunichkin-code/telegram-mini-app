@@ -1,52 +1,48 @@
-"""TB1: пошаговый период — sync_time не сдвигает period_index."""
+"""TB1: пошаговый месяц — real-time таймера нет (play/pause/config удалены 2026-10-14)."""
 
 from __future__ import annotations
 
-from datetime import timedelta
-
-from app.game.time import get_seconds_until_next, sync_time
-from app.models import GameProfile
-from app.timeutil import utc_now_naive
+import pytest
 
 
-def test_sync_time_does_not_advance_period_index(db_session):
-    profile = GameProfile(
-        user_id=88_001,
-        name="TB1 sync",
-        save_kind="game",
-        is_active=1,
-        time_state="play",
-        period_index=3,
-        period_duration_seconds=300,
-        period_anchor_at=utc_now_naive() - timedelta(seconds=900),
+@pytest.mark.parametrize(
+    ("method", "path"),
+    [
+        ("get", "/api/game/time"),
+        ("post", "/api/game/time/play"),
+        ("post", "/api/game/time/pause"),
+        ("put", "/api/game/time/config"),
+    ],
+)
+def test_timer_endpoints_removed(client, method, path):
+    res = getattr(client, method)(path, json={}) if method != "get" else client.get(path)
+    assert res.status_code in (404, 405), (path, res.status_code, res.text)
+
+
+def test_close_month_response_has_no_timer_fields(client):
+    start = client.post(
+        "/api/game/start",
+        json={"profile_name": "No timer", "save_kind": "game", "template_key": "mq_game_basic_v1"},
     )
-    db_session.add(profile)
-    db_session.commit()
-    db_session.refresh(profile)
+    assert start.status_code == 200, start.text
 
-    passed, elapsed = sync_time(profile)
-    db_session.commit()
-    db_session.refresh(profile)
-
-    assert passed == 0
-    assert elapsed == 0.0
-    assert profile.period_index == 3
+    res = client.post("/api/game/time/next")
+    assert res.status_code == 200, res.text
+    body = res.json()
+    assert body["period_index"] == 2
+    for removed in ("time_state", "period_duration_seconds", "seconds_until_next_period"):
+        assert removed not in body
 
 
-def test_get_seconds_until_next_is_zero_turn_based(db_session):
-    profile = GameProfile(
-        user_id=88_002,
-        name="TB1 seconds",
-        save_kind="game",
-        is_active=1,
-        time_state="play",
-        period_index=1,
-        period_duration_seconds=300,
-        period_anchor_at=utc_now_naive(),
+def test_start_ignores_legacy_period_duration_field(client):
+    """Старые клиенты ещё шлют period_duration_seconds — поле игнорируется, не 422."""
+    res = client.post(
+        "/api/game/start",
+        json={
+            "profile_name": "Legacy client",
+            "save_kind": "game",
+            "template_key": "mq_game_basic_v1",
+            "period_duration_seconds": 5,
+        },
     )
-    db_session.add(profile)
-    db_session.commit()
-
-    assert get_seconds_until_next(profile) == 0
-    profile.time_state = "pause"
-    assert get_seconds_until_next(profile) == 0
+    assert res.status_code == 200, res.text

@@ -165,11 +165,7 @@ export function AdminProfileInspectorPanel({ onClose: onCloseProp }) {
           <div className="admin-inspector__stats">
             <Stat label="Cash" value={formatMoney(p.cash_balance)} />
             <Stat label="Подушка" value={formatMoney(p.safety_fund_balance)} />
-            <Stat
-              label="Период"
-              value={p.period_index}
-              sub={`${p.time_state} · ${p.period_duration_seconds}s`}
-            />
+            <Stat label="Период" value={p.period_index} />
             <Stat
               label="Guidance"
               value={<GuidanceBadge completed={p.guidance_completed} />}

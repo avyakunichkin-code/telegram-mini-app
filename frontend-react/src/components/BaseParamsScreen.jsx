@@ -4,7 +4,6 @@ import { API } from '../api';
 import { showNotification } from './notifications';
 import { MoneyText } from './MoneyText';
 import { sanitizeIntInput, sanitizeDecimalInput, parseNumLoose } from '../utils/numberFields';
-import { DEFAULT_PERIOD_DURATION_SECONDS } from '../config/gameDefaults';
 import { PlanExpenseBudgetEditor } from './mqx/layout/PlanExpenseBudgetEditor';
 import { defaultPlanExpenseBudget, sumExpenseBudget } from '../utils/planExpenseBudget';
 import { MqxShell } from './MqxShell';
@@ -15,7 +14,6 @@ export function BaseParamsScreen({
   profileName,
   saveKind = 'game',
   templateKey = null,
-  periodDuration = DEFAULT_PERIOD_DURATION_SECONDS,
   onBack,
   onGameStarted,
 }) {
@@ -108,7 +106,6 @@ export function BaseParamsScreen({
       const basePayload = {
         profile_name: profileName,
         save_kind: saveKind || 'game',
-        period_duration_seconds: periodDuration,
       };
       const manualPayload = {
         ...basePayload,

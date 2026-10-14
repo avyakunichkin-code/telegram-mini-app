@@ -29,7 +29,6 @@ GAME_STARTER_TEMPLATE_SEEDS = [
                 "Без долгов и активов в старте",
                 "На счёте ~15 000 ₽",
             ],
-            "period_duration_seconds": 300,
             "cash_balance": 15000,
             "monthly_salary": 62500,
             "assets": [],
@@ -90,7 +89,6 @@ GAME_STARTER_TEMPLATE_SEEDS = [
                 "Свободно ~15 000 ₽/мес",
                 "На счёте ~25 000 ₽",
             ],
-            "period_duration_seconds": 300,
             "cash_balance": 25000,
             "monthly_salary": 100000,
             "assets": [
@@ -170,7 +168,6 @@ GAME_STARTER_TEMPLATE_SEEDS = [
                 "Свободно ~10 000 ₽/мес",
                 "На счёте ~35 000 ₽",
             ],
-            "period_duration_seconds": 300,
             "cash_balance": 35000,
             "monthly_salary": 150000,
             "assets": [
@@ -256,7 +253,6 @@ GAME_STARTER_TEMPLATE_SEEDS = [
                 "Свободно ~−3 000 ₽/мес",
                 "На счёте ~45 000 ₽",
             ],
-            "period_duration_seconds": 300,
             "cash_balance": 45000,
             "monthly_salary": 200000,
             "assets": [

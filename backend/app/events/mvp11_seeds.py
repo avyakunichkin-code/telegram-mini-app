@@ -26,6 +26,16 @@ def _metadata_for_spec(spec: dict) -> dict:
 
 _MVP11_CATALOG_KEYS = frozenset(spec["key"] for spec in MVP11_EVENT_SPECS)
 
+YAML_EVENT_READONLY_DETAIL = (
+    "Событие из YAML-каталога (data/events/mvp11/): правьте YAML и запустите "
+    "`db.sh events-sync`, либо склонируйте событие и редактируйте копию."
+)
+
+
+def is_yaml_catalog_event_key(key: str | None) -> bool:
+    """Событие синкается из YAML (ADR-008) — правки в БД через админку откатятся."""
+    return bool(key) and key in _MVP11_CATALOG_KEYS
+
 
 def _json_canon(obj: object) -> str:
     return json.dumps(obj, ensure_ascii=False, sort_keys=True)

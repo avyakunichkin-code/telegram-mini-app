@@ -5,7 +5,7 @@ import { showNotification } from '../../components/notifications';
 import { MqxMonetkaDialogScreen } from '../../components/mqx/layout/MqxMonetkaDialogScreen';
 import { MqxStarterScenarioPicker } from '../../components/mqx/layout/MqxStarterScenarioPicker';
 import { MqxButton } from '../../components/mqx/primitives/MqxButton';
-import { DEFAULT_PERIOD_DURATION_SECONDS, normalizeStarterTemplate } from '../../config/gameDefaults';
+import { normalizeStarterTemplate } from '../../config/gameDefaults';
 import { startGameWithSimplestTemplate } from '../../utils/startGame';
 
 /**
@@ -69,7 +69,6 @@ export function GameTemplatePickScreen({ profileName, onProfileNameChange, onBac
           profile_name: trimmedName,
           save_kind: 'game',
           template_key: key,
-          period_duration_seconds: DEFAULT_PERIOD_DURATION_SECONDS,
         });
         onJumpToGame();
       } catch (error) {

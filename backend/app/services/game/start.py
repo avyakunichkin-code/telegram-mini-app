@@ -20,7 +20,6 @@ from ...models import (
 )
 from ...needs.engine import parse_needs_config, set_profile_needs
 from ...schemas import AssetCreate, GameStartRequest, GameStartResponse, LiabilityCreate
-from ...timeutil import utc_now_naive
 from .templates import validate_save_kind
 
 logger = logging.getLogger(__name__)
@@ -42,7 +41,6 @@ def start_new_game(db: Session, user_id: int, payload: GameStartRequest) -> Game
     starter_template_key = None
     base_monthly_lifestyle = 0.0
     blueprint: dict = {}
-    period_duration_seconds = int(payload.period_duration_seconds)
     cash_balance = float(payload.cash_balance)
     monthly_salary = float(payload.monthly_salary)
     assets_list: List[AssetCreate] = []
@@ -64,7 +62,6 @@ def start_new_game(db: Session, user_id: int, payload: GameStartRequest) -> Game
             blueprint = json.loads(tmpl.blueprint_json or "{}")
         except json.JSONDecodeError:
             blueprint = {}
-        period_duration_seconds = int(blueprint.get("period_duration_seconds") or period_duration_seconds)
         cash_balance = float(blueprint.get("cash_balance", cash_balance))
         monthly_salary = float(blueprint.get("monthly_salary", monthly_salary))
         starter_template_key = tk
@@ -136,13 +133,10 @@ def start_new_game(db: Session, user_id: int, payload: GameStartRequest) -> Game
         base_monthly_lifestyle_expense=base_monthly_lifestyle,
         delta_monthly_lifestyle_expense=0,
         is_active=1,
-        period_duration_seconds=period_duration_seconds,
         cash_balance=cash_balance,
         safety_fund_balance=0,
         negative_periods_count=0,
         period_index=1,
-        time_state="pause",
-        period_anchor_at=utc_now_naive(),
         base_params_locked=1,
         onboarding_state="brief_done" if guidance_done else "draft",
         onboarding_step="farewell" if guidance_done else "period_timer",

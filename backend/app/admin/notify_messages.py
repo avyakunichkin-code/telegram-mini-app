@@ -100,18 +100,10 @@ def format_alert_message_ru(kind: str, payload: dict[str, Any]) -> str:
 
     if kind == "game_started":
         template = p.get("template") or "ручной сценарий"
-        mins = p.get("period_duration_seconds")
-        dur = ""
-        if mins:
-            try:
-                sec = int(mins)
-                dur = f" · месяц ≈ {max(1, sec // 60)} мин"
-            except (TypeError, ValueError):
-                pass
         return _lines(
             "🎮 Начата новая партия",
             f"«{name}»",
-            f"Шаблон: {template}{dur}",
+            f"Шаблон: {template}",
             link,
         )
 
@@ -167,7 +159,7 @@ def format_alert_message_ru(kind: str, payload: dict[str, Any]) -> str:
     if kind == "player_stuck":
         return _lines(
             "⏸️ Игрок давно без действий",
-            f"«{name}» · месяц №{p.get('period_index', '—')} · режим {p.get('time_state', '—')}",
+            f"«{name}» · месяц №{p.get('period_index', '—')}",
             f"Без активности ≥ {p.get('hours_idle', '—')} ч",
             link,
         )

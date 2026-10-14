@@ -3,7 +3,7 @@ from sqlalchemy.orm import Session
 
 from ..auth import get_current_user
 from ..database import get_db
-from ..game.time import get_active_game_profile
+from ..game.session import get_active_game_profile
 from ..schemas import (
     ExpenseCategoryPublic,
     ExpenseLineCreate,
@@ -24,7 +24,7 @@ router = APIRouter(prefix="/api/game/expenses", tags=["expenses"])
 
 
 @router.get("/categories", response_model=list[ExpenseCategoryPublic])
-async def list_expense_categories(
+def list_expense_categories(
     current_user=Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
@@ -34,7 +34,7 @@ async def list_expense_categories(
 
 
 @router.get("", response_model=ExpensesSnapshotResponse)
-async def get_expenses_snapshot(
+def get_expenses_snapshot(
     current_user=Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
@@ -44,7 +44,7 @@ async def get_expenses_snapshot(
 
 
 @router.get("/lines", response_model=list[ExpenseLineResponse])
-async def list_expense_lines(
+def list_expense_lines(
     current_user=Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
@@ -53,7 +53,7 @@ async def list_expense_lines(
 
 
 @router.post("/lines", response_model=ExpenseLineResponse)
-async def create_expense_line(
+def create_expense_line(
     payload: ExpenseLineCreate,
     current_user=Depends(get_current_user),
     db: Session = Depends(get_db),
@@ -63,7 +63,7 @@ async def create_expense_line(
 
 
 @router.patch("/lines/{line_id}", response_model=ExpenseLineResponse)
-async def patch_expense_line(
+def patch_expense_line(
     line_id: int,
     payload: ExpenseLineUpdate,
     current_user=Depends(get_current_user),
@@ -74,7 +74,7 @@ async def patch_expense_line(
 
 
 @router.delete("/lines/{line_id}", status_code=204)
-async def delete_expense_line(
+def delete_expense_line(
     line_id: int,
     current_user=Depends(get_current_user),
     db: Session = Depends(get_db),

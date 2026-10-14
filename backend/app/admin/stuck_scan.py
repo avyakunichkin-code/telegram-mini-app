@@ -27,9 +27,8 @@ def _stale(updated_at, *, hours: int) -> bool:
 
 
 def is_player_stuck(profile: GameProfile) -> bool:
+    # time_state не используется: real-time таймера нет (TB1), профиль всегда «pause».
     if int(profile.is_active or 0) != 1:
-        return False
-    if str(profile.time_state or "") != "play":
         return False
     if int(profile.period_index or 0) >= PLAYER_STUCK_MAX_PERIOD_INDEX:
         return False
@@ -67,7 +66,6 @@ def maybe_emit_player_stuck(db: Session, profile: GameProfile) -> None:
         {
             "name": profile.name,
             "period_index": int(profile.period_index),
-            "time_state": profile.time_state,
             "hours_idle": hours_idle,
             "profile_id": profile.id,
         },

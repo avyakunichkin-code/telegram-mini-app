@@ -6,6 +6,7 @@ import logging
 from typing import Any
 
 from fastapi import APIRouter, Depends, HTTPException, Request
+from fastapi.concurrency import run_in_threadpool
 from sqlalchemy.orm import Session
 
 from ..config import config
@@ -43,7 +44,7 @@ async def player_telegram_webhook(
         raise HTTPException(status_code=400, detail="Invalid JSON") from exc
 
     try:
-        process_player_update(db, update)
+        await run_in_threadpool(process_player_update, db, update)
     except Exception:
         logger.exception("player webhook handler failed")
         # Telegram ретраит при non-2xx — отвечаем 200, ошибка в логах

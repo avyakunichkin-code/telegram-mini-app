@@ -48,8 +48,6 @@ def validate_game_start_request(payload: GameStartRequest, db: Session) -> None:
                 detail="This starter template is only for Game mode",
             )
 
-    if payload.period_duration_seconds < 10:
-        raise HTTPException(status_code=400, detail="period_duration_seconds must be >= 10")
     if payload.cash_balance < 0:
         raise HTTPException(status_code=400, detail="cash_balance cannot be negative")
     if payload.monthly_salary < 0:

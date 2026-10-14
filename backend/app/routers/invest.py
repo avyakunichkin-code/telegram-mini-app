@@ -4,7 +4,7 @@ from sqlalchemy.orm import Session
 
 from ..auth import get_current_user
 from ..database import get_db
-from ..game.time import get_active_game_profile, sync_time
+from ..game.session import get_active_game_profile
 from ..idempotency import read_idempotency_key, run_idempotent
 from ..services.invest.service import (
     buy_bond as service_buy_bond,
@@ -18,14 +18,13 @@ router = APIRouter(prefix="/api/invest", tags=["invest"])
 
 
 @router.get("/positions")
-async def list_positions(current_user=Depends(get_current_user), db: Session = Depends(get_db)):
+def list_positions(current_user=Depends(get_current_user), db: Session = Depends(get_db)):
     profile = get_active_game_profile(db, current_user.id)
-    sync_time(profile)
     return service_list_active_positions(db, profile)
 
 
 @router.post("/deposit/open")
-async def open_deposit(
+def open_deposit(
     request: Request,
     payload: dict,
     current_user=Depends(get_current_user),
@@ -40,7 +39,6 @@ async def open_deposit(
 
     def _execute() -> dict:
         profile = get_active_game_profile(db, current_user.id)
-        sync_time(profile)
         return service_open_deposit(db, profile, amount=amount)
 
     if idem_key:
@@ -56,7 +54,7 @@ async def open_deposit(
 
 
 @router.post("/bond/buy")
-async def buy_bond(
+def buy_bond(
     request: Request,
     payload: dict,
     current_user=Depends(get_current_user),
@@ -72,7 +70,6 @@ async def buy_bond(
 
     def _execute() -> dict:
         profile = get_active_game_profile(db, current_user.id)
-        sync_time(profile)
         return service_buy_bond(
             db,
             profile,
@@ -93,8 +90,7 @@ async def buy_bond(
 
 
 @router.post("/positions/{position_id}/close")
-async def close_position(position_id: int, current_user=Depends(get_current_user), db: Session = Depends(get_db)):
+def close_position(position_id: int, current_user=Depends(get_current_user), db: Session = Depends(get_db)):
     profile = get_active_game_profile(db, current_user.id)
-    sync_time(profile)
     return service_close_position(db, profile, position_id=position_id)
 

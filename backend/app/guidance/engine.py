@@ -8,7 +8,7 @@ from typing import Any
 from sqlalchemy.orm import Session
 
 from ..game.rules import MIN_PERIOD_INDEX_FOR_GAME_EVENTS
-from ..game.time import get_active_game_profile
+from ..game.session import get_active_game_profile
 from ..models import User as UserModel
 from ..models import EventInstance, GameProfile, PeriodSnapshot, User
 from ..services.period.snapshot import get_current_period_snapshot

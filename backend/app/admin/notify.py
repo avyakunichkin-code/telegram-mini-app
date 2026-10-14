@@ -207,7 +207,6 @@ def notify_game_started(db: Session, profile: GameProfile) -> None:
             "name": profile.name,
             "template": profile.starter_template_key or "manual",
             "save_kind": profile.save_kind,
-            "period_duration_seconds": profile.period_duration_seconds,
             "profile_id": profile.id,
             "_admin_link": _admin_link(f"/admin?profile={profile.id}"),
         },

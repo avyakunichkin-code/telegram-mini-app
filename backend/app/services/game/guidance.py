@@ -4,7 +4,7 @@ from sqlalchemy.orm import Session
 from ...guidance.engine import build_guidance_overview, patch_guidance
 from ...models import User
 from ...schemas import GuidanceOverview, GuidancePatchRequest, GuidancePatchResponse
-from ...game.time import get_active_game_profile
+from ...game.session import get_active_game_profile
 
 
 def get_guidance(db: Session, user_id: int) -> GuidanceOverview:

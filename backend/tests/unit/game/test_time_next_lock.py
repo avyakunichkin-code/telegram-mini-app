@@ -13,7 +13,7 @@ import pytest
 from sqlalchemy.orm import sessionmaker
 
 from app.models import GameProfile
-from app.services.game.time import close_open_period, go_to_next_period
+from app.services.period.close import close_open_period, go_to_next_period
 from tests.fixtures.game import create_profile_ready_for_period_close
 
 

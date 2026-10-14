@@ -70,6 +70,9 @@ class GameProfile(Base):
     is_archived = Column(Integer, nullable=False, default=0)
     league = Column(String(50), nullable=False, default="Bronze")
     streak = Column(Integer, nullable=False, default=0)
+    # DEPRECATED (TB1, таймера нет): time_state / period_duration_seconds / period_anchor_at
+    # код не читает и не пишет; ORM-default держит NOT NULL до миграции DROP COLUMN
+    # (см. docs/plans/PLAN_turn-based-period-no-timer.md). Не использовать в новом коде.
     time_state = Column(String(20), nullable=False, default="pause")
     period_index = Column(Integer, nullable=False, default=1)
     period_duration_seconds = Column(Integer, nullable=False, default=300)

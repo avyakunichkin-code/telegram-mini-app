@@ -11,7 +11,7 @@ from fastapi import HTTPException
 
 from app.finance.balance_utils import TRANSACTION_TYPES
 from app.game.period import process_period_end
-from app.game.time import get_active_game_profile, resolve_game_session
+from app.game.session import get_active_game_profile, resolve_game_session
 from app.models import EventChoice, EventDefinition, EventInstance, GameProfile, Transaction
 from tests.fixtures.game import create_game_profile, create_profile_ready_for_period_close
 

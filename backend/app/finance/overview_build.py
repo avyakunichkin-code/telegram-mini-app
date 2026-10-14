@@ -9,7 +9,6 @@ from ..achievements.engine import process_achievement_unlocks
 from ..achievements.seeds import ensure_achievement_catalog
 from ..finance.expenses import burn_breakdown_for_api, compute_monthly_burn
 from .period_metrics import avg_net_cashflow_last_closed_intervals as _avg_net_cashflow_last_closed_intervals
-from ..game.time import get_seconds_until_next
 from ..models import (
     FinanceAsset,
     FinanceLiability,
@@ -314,10 +313,7 @@ def build_finance_overview(db: Session, profile: GameProfile) -> FinanceOverview
         expense_to_income_ratio=expense_to_income_ratio,
         net_monthly_cashflow=round(net_cashflow, 2),
         liabilities_to_income_ratio=round(liabilities_ratio, 2),
-        time_state=profile.time_state,
         period_index=profile.period_index,
-        period_duration_seconds=profile.period_duration_seconds,
-        seconds_until_next_period=get_seconds_until_next(profile),
         cash_balance=round(profile.cash_balance, 2),
         safety_fund_balance=round(profile.safety_fund_balance, 2),
         total_monthly_obligations=round(total_monthly_obligations, 2),

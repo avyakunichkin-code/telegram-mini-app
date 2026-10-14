@@ -11,7 +11,7 @@ router = APIRouter(prefix="/api", tags=["auth"])
 
 
 @router.post("/register", response_model=Token)
-async def register(user_data: UserRegister, db: Session = Depends(get_db)):
+def register(user_data: UserRegister, db: Session = Depends(get_db)):
     """Регистрация нового пользователя — не требует авторизации"""
     
     email_taken = db.query(User).filter(User.email == user_data.email).first()
@@ -58,7 +58,7 @@ async def register(user_data: UserRegister, db: Session = Depends(get_db)):
 
 
 @router.post("/login", response_model=Token)
-async def login(user_data: UserLogin, db: Session = Depends(get_db)):
+def login(user_data: UserLogin, db: Session = Depends(get_db)):
     """Вход в систему — не требует авторизации"""
     
     login_id = (user_data.username or "").strip()

@@ -51,7 +51,7 @@ class TestBootstrapRunFinale:
         assert body["run_finale"]["sections"]
 
     def test_resolve_finds_archived_defeated_profile(self, db_session, test_user):
-        from app.game.time import resolve_game_session
+        from app.game.session import resolve_game_session
 
         profile = create_game_profile(
             db_session,

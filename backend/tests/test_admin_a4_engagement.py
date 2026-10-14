@@ -129,7 +129,8 @@ def test_player_stuck_heuristic(db_session):
         name="E",
         save_kind="game",
         is_active=1,
-        time_state="play",
+        # TB1: таймера нет, реальные профили всегда в «pause» — эвристика не должна от него зависеть.
+        time_state="pause",
         period_index=2,
         updated_at=stale,
     )

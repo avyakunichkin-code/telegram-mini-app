@@ -46,8 +46,9 @@
 
 - `backend/main.py` — FastAPI, создание таблиц, точечная автомиграция колонок (без Alembic), роутеры
 - `backend/app/models.py` — профили (`save_kind`, шаблон старта), финансы, события, инвестиции, страховки
-- `backend/app/game/time.py` — якорь и длительность периода
-- `backend/app/game/period.py` — экономика закрытия периода, просрочки MVP, счётчик поражения при отрицательном cash три периода подряд
+- `backend/app/game/session.py` — активная партия и статус сессии (active | defeated)
+- `backend/app/game/period.py` — экономика закрытия периода: конвейер этапов `process_period_end` (активы → обязательства → расходы → страховки → инвестиции → поражение → потребности → снимок)
+- `backend/app/services/period/close.py` — «Закрыть месяц» (`POST /api/game/time/next`): lock профиля, идемпотентность, replay после поражения
 
 ### Frontend (`frontend-react/`)
 

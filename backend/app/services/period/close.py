@@ -1,3 +1,9 @@
+"""
+«Закрыть месяц» (TB1): POST /api/game/time/next → process_period_end.
+
+Идемпотентность по ключу (profile_id, period_index); повтор после поражения отдаёт сохранённый ответ.
+Real-time таймера нет: play/pause/config и поля time_state / period_duration_seconds удалены (2026-10-14).
+"""
 from __future__ import annotations
 
 import json
@@ -8,13 +14,7 @@ from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
 from ...game.period import process_period_end
-from ...game.time import (
-    get_active_game_profile,
-    get_seconds_until_next,
-    set_period_duration,
-    set_time_state,
-    sync_time,
-)
+from ...game.session import get_active_game_profile
 from ...models import ApiIdempotencyRecord, GameProfile
 from ...events.mandatory import pending_mandatory_blocking_event_titles
 from ...schemas import (
@@ -22,7 +22,6 @@ from ...schemas import (
     PeriodCloseBreakdownItem,
     PeriodCloseHighlight,
     PeriodCloseSummary,
-    TimeConfigUpdate,
     TimeStatusResponse,
 )
 
@@ -93,39 +92,11 @@ def _time_status_response(
     defeat_reason: str | None = None,
 ) -> TimeStatusResponse:
     return TimeStatusResponse(
-        time_state=profile.time_state,
         period_index=profile.period_index,
-        period_duration_seconds=profile.period_duration_seconds,
-        seconds_until_next_period=get_seconds_until_next(profile),
         period_close=period_close,
         game_over=game_over,
         defeat_reason=defeat_reason,
     )
-
-
-def get_time_status(db: Session, user_id: int) -> TimeStatusResponse:
-    profile = get_active_game_profile(db, user_id)
-    sync_time(profile)
-    db.commit()
-    db.refresh(profile)
-    return _time_status_response(profile)
-
-
-def set_play_mode(db: Session, user_id: int) -> TimeStatusResponse:
-    profile = get_active_game_profile(db, user_id)
-    set_time_state(profile, "play")
-    db.commit()
-    db.refresh(profile)
-    return _time_status_response(profile)
-
-
-def set_pause_mode(db: Session, user_id: int) -> TimeStatusResponse:
-    profile = get_active_game_profile(db, user_id)
-    sync_time(profile)
-    set_time_state(profile, "pause")
-    db.commit()
-    db.refresh(profile)
-    return _time_status_response(profile)
 
 
 TIME_NEXT_ROUTE_KEY = "game.time.next"
@@ -211,8 +182,50 @@ def _replay_or_current(db: Session, user_id: int, key: str) -> TimeStatusRespons
         stored = _load_stored_close(db, user_id, key)
         if stored:
             return stored
-    profile = _lock_active_profile(db, user_id)
+    try:
+        profile = _lock_active_profile(db, user_id)
+    except HTTPException:
+        # Параллельный запрос закрыл месяц поражением — профиль уже неактивен.
+        final = _replay_final_close(db, user_id)
+        if final is not None:
+            return final
+        raise
     return _time_status_response(profile)
+
+
+def _replay_final_close(db: Session, user_id: int) -> TimeStatusResponse | None:
+    """
+    Повтор «Закрыть месяц» после поражения: профиль уже is_active=0, но ответ
+    с game_over сохранён под ключом (profile_id, закрытый период).
+    """
+    last = (
+        db.query(GameProfile)
+        .filter(GameProfile.user_id == user_id)
+        .order_by(GameProfile.id.desc())
+        .first()
+    )
+    if last is None or int(last.is_active or 0) == 1 or last.run_outcome != "defeat":
+        return None
+    key = close_idempotency_key(last.id, int(last.period_index) - 1)
+    stored = _load_stored_close(db, user_id, key)
+    if stored is not None and stored.game_over:
+        return stored
+    return None
+
+
+def _release_close_claim(db: Session, user_id: int, key: str) -> None:
+    leftover = (
+        db.query(ApiIdempotencyRecord)
+        .filter(
+            ApiIdempotencyRecord.user_id == user_id,
+            ApiIdempotencyRecord.route_key == TIME_NEXT_ROUTE_KEY,
+            ApiIdempotencyRecord.idempotency_key == key,
+        )
+        .first()
+    )
+    if leftover and leftover.response_json == "{}":
+        db.delete(leftover)
+        db.commit()
 
 
 def _finish_close_response(
@@ -227,8 +240,7 @@ def _finish_close_response(
             defeat_reason=reason,
         )
 
-    sync_time(profile)
-    set_time_state(profile, "pause")
+    # process_period_end коммитит экономику; здесь фиксируем то, что могло остаться после (спавн событий).
     db.commit()
     db.refresh(profile)
     return _time_status_response(
@@ -291,32 +303,30 @@ def close_open_period(
         _store_close_response(db, user_id, key, response)
         return response
     except Exception:
+        # Сначала откатываем незакоммиченные списания process_period_end —
+        # иначе commit ниже (снятие claim) зафиксировал бы половину закрытия месяца.
+        db.rollback()
         if claimed:
-            leftover = (
-                db.query(ApiIdempotencyRecord)
-                .filter(
-                    ApiIdempotencyRecord.user_id == user_id,
-                    ApiIdempotencyRecord.route_key == TIME_NEXT_ROUTE_KEY,
-                    ApiIdempotencyRecord.idempotency_key == key,
-                )
-                .first()
-            )
-            if leftover and leftover.response_json == "{}":
-                db.delete(leftover)
-                db.commit()
+            _release_close_claim(db, user_id, key)
         raise
 
 
 def go_to_next_period(db: Session, user_id: int) -> TimeStatusResponse:
+    has_active = (
+        db.query(GameProfile.id)
+        .filter(
+            GameProfile.user_id == user_id,
+            GameProfile.is_active == 1,
+            GameProfile.is_archived == 0,
+        )
+        .first()
+        is not None
+    )
+    if not has_active:
+        # Повтор после поражения: до get_active_game_profile, который иначе создал бы
+        # новый fallback-профиль (поражение архивирует партию) и закрыл бы его месяц.
+        final = _replay_final_close(db, user_id)
+        if final is not None:
+            return final
     profile = get_active_game_profile(db, user_id)
-    if not profile:
-        raise HTTPException(status_code=404, detail="Активный профиль не найден")
     return close_open_period(db, user_id, intended_period=int(profile.period_index))
-
-
-def update_time_config(db: Session, user_id: int, payload: TimeConfigUpdate) -> TimeStatusResponse:
-    profile = get_active_game_profile(db, user_id)
-    set_period_duration(profile, payload.period_duration_seconds)
-    db.commit()
-    db.refresh(profile)
-    return _time_status_response(profile)

@@ -10,7 +10,7 @@ router = APIRouter(prefix="/api", tags=["health"])
 
 
 @router.get("/health")
-async def health_check(db: Session = Depends(get_db)):
+def health_check(db: Session = Depends(get_db)):
     """Liveness: без тяжёлых COUNT — для Render health check."""
     try:
         db.execute(text("SELECT 1"))

@@ -263,10 +263,7 @@ class FinanceOverview(BaseModel):
     expense_to_income_ratio: float = 0
     net_monthly_cashflow: float
     liabilities_to_income_ratio: float
-    time_state: str
     period_index: int
-    period_duration_seconds: int
-    seconds_until_next_period: int
     cash_balance: float
     safety_fund_balance: float
     total_monthly_obligations: float
@@ -404,9 +401,7 @@ class GameProfileResponse(BaseModel):
     is_archived: int
     league: str
     streak: int
-    time_state: str
     period_index: int
-    period_duration_seconds: int
     base_params_locked: int
     onboarding_state: str
     onboarding_step: str = "period_timer"
@@ -506,15 +501,10 @@ class GuidancePatchResponse(BaseModel):
     guidance: GuidanceOverview
 
 
-class TimeConfigUpdate(BaseModel):
-    period_duration_seconds: int
-
-
 class TimeStatusResponse(BaseModel):
-    time_state: str
+    """Ответ «Закрыть месяц» и блок `time` в bootstrap. Real-time таймера нет (TB1)."""
+
     period_index: int
-    period_duration_seconds: int
-    seconds_until_next_period: int
     period_close: Optional[PeriodCloseSummary] = None
     game_over: bool = False
     defeat_reason: Optional[str] = None
@@ -538,7 +528,6 @@ class GameStartRequest(BaseModel):
     profile_name: str
     save_kind: str = "game"
     template_key: Optional[str] = None
-    period_duration_seconds: int = 300
     cash_balance: float = 0
     monthly_receipts_count: int = 1
     monthly_salary: float = 0

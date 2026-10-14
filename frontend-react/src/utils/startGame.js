@@ -1,5 +1,5 @@
 import { API } from '../api';
-import { DEFAULT_PERIOD_DURATION_SECONDS, normalizeStarterTemplate, pickSimplestGameTemplate } from '../config/gameDefaults';
+import { normalizeStarterTemplate, pickSimplestGameTemplate } from '../config/gameDefaults';
 
 /** Автостарт Game Mode с шаблоном «Студент» (первая партия). */
 export async function startGameWithStudentTemplate(profileName) {
@@ -11,7 +11,6 @@ export async function startGameWithStudentTemplate(profileName) {
     profile_name: name,
     save_kind: 'game',
     template_key: 'mq_game_basic_v1',
-    period_duration_seconds: DEFAULT_PERIOD_DURATION_SECONDS,
   });
 }
 
@@ -29,7 +28,6 @@ export async function startGameWithTemplate(profileName, templateKey) {
     profile_name: name,
     save_kind: 'game',
     template_key: key,
-    period_duration_seconds: DEFAULT_PERIOD_DURATION_SECONDS,
   });
 }
 
@@ -49,6 +47,5 @@ export async function startGameWithSimplestTemplate(profileName) {
     profile_name: name,
     save_kind: 'game',
     template_key: template.template_key,
-    period_duration_seconds: DEFAULT_PERIOD_DURATION_SECONDS,
   });
 }

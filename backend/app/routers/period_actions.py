@@ -10,7 +10,7 @@ from ..schemas import (
     TreatSelfRequest,
     TreatSelfResponse,
 )
-from ..game.time import get_active_game_profile, sync_time
+from ..game.session import get_active_game_profile
 from ..idempotency import read_idempotency_key, run_idempotent
 from ..services.period.complete import COMPLETE_PERIOD_GONE_DETAIL
 from ..services.period.salary import claim_salary as service_claim_salary
@@ -25,29 +25,27 @@ router = APIRouter(prefix="/api/game/period", tags=["period"])
 
 
 @router.get("/status", response_model=PeriodStatusResponse)
-async def get_period_status(
+def get_period_status(
     current_user=Depends(get_current_user),
     db: Session = Depends(get_db)
 ):
     """Получает статус текущего периода — какие действия выполнены"""
     profile = get_active_game_profile(db, current_user.id)
-    sync_time(profile)
     return build_period_status(db, profile)
 
 
 @router.post("/claim-salary")
-async def claim_salary(
+def claim_salary(
     current_user=Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
     """Получить зарплату за текущий период (один раз за период; повтор — идемпотентный 200)."""
     profile = get_active_game_profile(db, current_user.id)
-    sync_time(profile)
     return service_claim_salary(db, profile)
 
 
 @router.post("/contribute-to-safety-fund")
-async def contribute_to_safety_fund(
+def contribute_to_safety_fund(
     request: Request,
     contribution: SafetyFundContribution,
     current_user=Depends(get_current_user),
@@ -61,7 +59,6 @@ async def contribute_to_safety_fund(
 
     def _execute() -> dict:
         profile = get_active_game_profile(db, current_user.id)
-        sync_time(profile)
         return service_contribute_to_safety_fund(db, profile, float(contribution.amount))
 
     if idem_key:
@@ -77,7 +74,7 @@ async def contribute_to_safety_fund(
 
 
 @router.post("/complete-period")
-async def complete_period(
+def complete_period(
     _current_user=Depends(get_current_user),
 ):
     """Gone: legacy close without process_period_end. Canon: POST /api/game/time/next."""
@@ -85,7 +82,7 @@ async def complete_period(
 
 
 @router.post("/withdraw-from-safety-fund")
-async def withdraw_from_safety_fund(
+def withdraw_from_safety_fund(
     request: Request,
     withdrawal: SafetyFundContribution,
     current_user=Depends(get_current_user),
@@ -99,7 +96,6 @@ async def withdraw_from_safety_fund(
 
     def _execute() -> dict:
         profile = get_active_game_profile(db, current_user.id)
-        sync_time(profile)
         return service_withdraw_from_safety_fund(db, profile, float(withdrawal.amount))
 
     if idem_key:
@@ -115,7 +111,7 @@ async def withdraw_from_safety_fund(
 
 
 @router.post("/treat-self", response_model=TreatSelfResponse)
-async def treat_self(
+def treat_self(
     request: Request,
     payload: TreatSelfRequest,
     current_user=Depends(get_current_user),
@@ -130,7 +126,6 @@ async def treat_self(
 
     def _execute() -> dict:
         profile = get_active_game_profile(db, current_user.id)
-        sync_time(profile)
         return service_treat_self(db, profile, option_id)
 
     if idem_key:
