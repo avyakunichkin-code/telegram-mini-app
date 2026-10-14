@@ -27,7 +27,7 @@ def test_admin_link_uses_hash_router(monkeypatch):
 
 
 def test_emit_admin_alert_dedupe(db_session):
-    os.environ.setdefault("SECRET_KEY", "test")
+    os.environ.setdefault("SECRET_KEY", "test-secret-key-for-pytest-only-32b+")
     first = emit_admin_alert(
         db_session,
         "user_registered",

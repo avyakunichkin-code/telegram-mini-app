@@ -5,7 +5,8 @@ from typing import Optional
 
 from fastapi import HTTPException, Depends
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
-from jose import JWTError, jwt
+import jwt
+from jwt import InvalidTokenError
 from sqlalchemy.orm import Session
 
 from .config import config
@@ -59,7 +60,7 @@ def get_current_user_optional(
         if sub is None:
             return None
         user_id = int(sub)
-    except JWTError:
+    except InvalidTokenError:
         return None
     except (TypeError, ValueError):
         return None

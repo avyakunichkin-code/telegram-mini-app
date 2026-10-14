@@ -1,4 +1,5 @@
 import json
+from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
@@ -372,7 +373,13 @@ def ensure_schema_compatibility() -> None:
             db.close()
 
 
-app = FastAPI(title="Telegram Mini App API", version="2.0.0")
+@asynccontextmanager
+async def _lifespan(_app: FastAPI):
+    _startup_db_bootstrap()
+    yield
+
+
+app = FastAPI(title="Telegram Mini App API", version="2.0.0", lifespan=_lifespan)
 
 app.add_middleware(GZipMiddleware, minimum_size=500)
 
@@ -405,7 +412,6 @@ app.include_router(admin_router)
 app.include_router(needs_router)
 app.include_router(telegram_router)
 
-@app.on_event("startup")
 def _startup_db_bootstrap() -> None:
     _validate_database_url()
 
