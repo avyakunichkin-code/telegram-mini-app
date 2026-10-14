@@ -8,6 +8,9 @@ description: >-
 argument-hint: "[persona: student|professional, content_class, idea, or definition_key to clone]"
 user-invocable: true
 allowed-tools: Read, Glob, Grep, Write, Bash(python -m pytest *)
+paths:
+  - "data/events/**"
+  - "backend/app/events/**"
 ---
 
 ## Стандарт качества и вызов

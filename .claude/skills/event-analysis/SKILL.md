@@ -7,6 +7,7 @@ description: >-
 argument-hint: "[scope: all|domain|content_class|slot|persona|tier, optional definition_key]"
 user-invocable: true
 allowed-tools: Read, Glob, Grep
+context: fork
 ---
 
 ## Стандарт качества и вызов
@@ -77,7 +78,8 @@ allowed-tools: Read, Glob, Grep
 
 ## Режим
 
-- **По умолчанию не писать файлы** — отчёт в чат.
+- **Запуск в изолированном subagent** (`context: fork`, тип по умолчанию `general-purpose`): истории чата нет, вопросы пользователю задать нельзя. Scope — только из аргументов `$ARGUMENTS`; пусто или неоднозначно → **all**, допущение — первой строкой отчёта (вместо STOP из clarify-first).
+- **По умолчанию не писать файлы** — отчёт возвращается в основной диалог.
 - Сохранить отчёт — **только по запросу** пользователя.
 - **Не менять** `data/events/mvp11/`, spec, беклог (если не просят).
 
@@ -86,6 +88,8 @@ allowed-tools: Read, Glob, Grep
 ## Workflow
 
 ### 0. Уточни scope
+
+Scope из `$ARGUMENTS` (таблица ниже); не распознан → **all** + явное допущение в отчёте.
 
 | Scope | Пример запроса |
 |-------|----------------|

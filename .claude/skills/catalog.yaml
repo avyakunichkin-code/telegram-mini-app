@@ -1102,6 +1102,7 @@ agents:
       without green backend pytest when game/victory/events data or logic changed
     subagent_type: economy-reviewer
     readonly: true
+    memory: project
     must_read:
       - backend/app/game/period.py
       - backend/app/victory/engine.py

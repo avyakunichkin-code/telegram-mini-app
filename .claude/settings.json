@@ -11,6 +11,8 @@
       "Bash(node .claude/skills/skill-test/_context-check.mjs)",
       "Bash(node .claude/skills/skill-test/_category-check.mjs)",
       "Bash(node .claude/skills/skill-test/_archived-check.mjs)",
+      "Bash(node .claude/skills/skill-test/_claude-config-check.mjs)",
+      "Bash(node .claude/hooks/guards.test.mjs)",
       "Bash(npm run build)",
       "Bash(npm run test:unit)",
       "Bash(npm run check:guardrails)",
@@ -34,6 +36,18 @@
           {
             "type": "command",
             "command": "node \"${CLAUDE_PROJECT_DIR}/.claude/hooks/session-start.mjs\"",
+            "timeout": 10
+          }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "Edit|Write|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"${CLAUDE_PROJECT_DIR}/.claude/hooks/guard-generated.mjs\"",
             "timeout": 10
           }
         ]

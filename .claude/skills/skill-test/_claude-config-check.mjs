@@ -102,7 +102,16 @@ for (const file of fs.readdirSync(AGENTS_DIR).filter((f) => f.endsWith('.md') &&
   if (/read-only|readonly/i.test(raw) && tools && /\b(Write|Edit)\b/.test(tools) && !/^disallowedTools:.*\b(Write|Edit)\b/m.test(fm)) {
     warns.push(`agent ${file}: described as read-only but tools include Write/Edit`);
   }
-  ok.push(`agent ${name ?? file}`);
+  const memory = fm.match(/^memory:\s*(\S+)/m)?.[1];
+  if (memory && !['user', 'project', 'local'].includes(memory)) fails.push(`agent ${file}: memory must be user|project|local, got "${memory}"`);
+  // memory auto-enables Read/Write/Edit — a read-only agent needs a PreToolUse guard limiting writes to its memory dir
+  if (memory && /read-only|readonly/i.test(raw) && !/agent-memory-only\.mjs/.test(fm)) {
+    warns.push(`agent ${file}: read-only with memory: ${memory} but no agent-memory-only.mjs PreToolUse hook — Write/Edit are unrestricted`);
+  }
+  for (const script of fm.matchAll(/\.claude\/hooks\/[\w.-]+/g)) {
+    if (!fs.existsSync(script[0])) fails.push(`agent ${file}: hook script missing ${script[0]}`);
+  }
+  ok.push(`agent ${name ?? file}${memory ? ` (memory: ${memory})` : ''}`);
 }
 
 // --- Hooks ---

@@ -35,7 +35,7 @@ allowed-tools: Read, Glob, Grep
 | **Rules** | `.claude/rules/*.md` | Без `paths` — всегда (`router.md`); с `paths` — когда Claude читает/правит совпадающий файл |
 | **Skills** | `.claude/skills/<name>/SKILL.md` | Описание — всегда; тело — при вызове `/name` или когда Claude решит, что скилл релевантен |
 | **Subagents** | `.claude/agents/*.md` | Отдельный контекст; вызываются по `description` или явно |
-| **Hooks** | `.claude/settings.json` → `hooks`, скрипты в `.claude/hooks/` | Детерминированно на событиях (`SessionStart`, `PostToolUse`) |
+| **Hooks** | `.claude/settings.json` → `hooks`, скрипты в `.claude/hooks/` | Детерминированно на событиях (`SessionStart`, `PreToolUse` — гейт сгенерированных файлов, `PostToolUse` — подсказки) |
 | **FE skills** | `frontend-react/.claude/skills/` | Вложенные: подгружаются, когда Claude работает с файлами в `frontend-react/` |
 
 ```text
@@ -44,6 +44,7 @@ allowed-tools: Read, Glob, Grep
   settings.local.json    # личное (gitignored)
   rules/                 # router.md (всегда) + path-scoped правила
   agents/                # economy-reviewer, mqx-ui-reviewer, economy-balance-runner
+  agent-memory/<agent>/  # persistent memory subagent'ов с `memory: project` (в git)
   hooks/                 # *.mjs для settings.json
   skills/
     <skill-name>/SKILL.md   # active + optional (discoverable)
@@ -65,7 +66,10 @@ user-invocable: true           # false — скрыть из меню «/» (с�
 allowed-tools: Read, Glob, Grep, Bash(python -m pytest *)
 # опционально:
 # disable-model-invocation: true   # только явный /name (deferred, archived, side-effect)
-# paths: ["backend/**"]            # автозагрузка только рядом с файлами
+# paths:                           # авто-вызов моделью только при работе с совпадающими файлами
+#   - "backend/**"                 #   (create-event, db-baselines-and-migrations)
+# context: fork                    # тело = промпт изолированного subagent (без истории чата; event-analysis)
+# agent: Explore                   # тип subagent для fork (по умолчанию general-purpose)
 ---
 ```
 
@@ -76,6 +80,7 @@ allowed-tools: Read, Glob, Grep, Bash(python -m pytest *)
 - `SKILL.md` < 500 строк; длинное — в соседние файлы (один уровень ссылок).
 - Файл **без UTF-8 BOM**, `---` — первая строка (иначе frontmatter игнорируется).
 - В теле: **Итог (Verdict)**, **Согласование** перед записью, **Следующий шаг**.
+- `context: fork` — только для скилла с явной задачей (не свода правил): subagent не видит чат и не может задать вопрос, поэтому scope берётся из `$ARGUMENTS` с дефолтом; нужно ≥ 5 H2/фаз (Check 6).
 
 ## Rules: формат
 

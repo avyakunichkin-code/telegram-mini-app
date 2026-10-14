@@ -6,6 +6,10 @@ description: >-
 argument-hint: "[baseline | migration | seed | review]"
 user-invocable: true
 allowed-tools: Read, Glob, Grep, Write, Bash(bash backend/scripts/db.sh *), Bash(bash .claude/skills/db-baselines-and-migrations/scripts/*), Bash(python -m pytest *)
+paths:
+  - "backend/migrations/**"
+  - "backend/app/seeds/**"
+  - "backend/app/models.py"
 ---
 
 ## Стандарт качества и вызов

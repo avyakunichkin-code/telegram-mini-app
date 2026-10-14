@@ -28,7 +28,7 @@ aliases:
 | [`catalog.yaml`](../../.claude/skills/catalog.yaml) → `context:` | `must_read` (всегда), `read_if` (условно), `writes_to`, `next_skill` |
 | `SKILL.md` → **Прочитай сначала** | Те же пути для агента при явном вызове |
 | `.claude/rules/router.md` | Роутер: фаза → primary skill + satellites (без `paths` → грузится всегда) |
-| `.claude/settings.json` | Напоминания pytest / guardrails / sync-lab после правок |
+| `.claude/settings.json` | Хуки: `PreToolUse` — гейт ручных правок сгенерированных файлов (`design-lab/index.html`, `lab-base.css`, DML в baseline); `PostToolUse` — напоминания pytest / guardrails / sync-lab. См. [`.claude/hooks/README.md`](../../.claude/hooks/README.md) |
 | [`.claude/agents/`](../../.claude/agents/) | Subagents `economy-reviewer`, `economy-balance-runner`, `mqx-ui-reviewer` |
 | [`docs/balance/README.md`](../balance/README.md) | Симуляция 40p, baseline JSON, diff |
 | [`docs/templates/TASK_SLICE.md`](../templates/TASK_SLICE.md) | MQ-*: `phase`, `tier`, `skill`, `satellites`, `next_skill` |
@@ -94,6 +94,44 @@ aliases:
 | ~~release-tma~~ | deferred alias | → **release-web** |
 | **telegram-mini-app-runtime** | deferred | WebApp SDK, initData, viewport TMA |
 | **project-skills-layout** | meta | Rules vs skills, контракт `SKILL.md` |
+
+---
+
+## Предложение: консолидация с built-in Claude Code (на решение PO, 2026-10-14)
+
+> **Статус: предложение.** Ничего не удалено и не переведено в архив; `catalog.yaml` не менялся. Решение — за пользователем; после «утверждаем» — чеклист ниже.
+
+Встроенные команды Claude Code: **`/code-review`** (баги в diff/PR, уровни effort, `--fix`), **`/simplify`** (reuse / упрощение / эффективность изменённого кода с применением правок), **`/security-review`** (security-ревью pending-изменений ветки). Плюс сам механизм скиллов: `description` каждого скилла и так всегда в контексте, а `router.md` + `SessionStart`-хук уже дают выбор primary. Учтён prompt-audit: описания `using-agent-skills`, `test-driven-development`, `incremental-implementation`, `frontend-ui-engineering` сужены, satellites в `router.md` — **по зоне задачи, не обязательные**.
+
+Метрики: «проектное» — сколько строк `SKILL.md` про ТВОЙ ХОД (пути, pytest, MQX, JWT…); «ссылки» — файлов в `.claude/` + `docs/`, где упомянут скилл (цена удаления).
+
+| Скилл | `status` / `tier` | Built-in аналог | Проектное (из строк) | Ссылки | Предложение | Почему |
+|-------|-------------------|-----------------|----------------------|--------|-------------|--------|
+| **code-simplification** | optional / deferred | `/simplify` | 2 / 376 (только `CLAUDE.md`) | 8 | 🔴 **Удалить** → `/simplify` | Полный дубль; проектного содержания нет |
+| **code-review-and-quality** | active / support | `/code-review` (+ `/simplify`) | 1 / 397 (`CLAUDE.md`, `SPEC_PRODUCT.md`) | ~45, `next_skill` у 4+ скиллов, router «Перед merge» | 🟡 **Сжать в обёртку** (≤ 80 строк, имя оставить) | Generic-тело дублирует `/code-review`; ценность ТВОЙ ХОД — только **merge-gate**: `/code-review` → `economy-reviewer` / `mqx-ui-reviewer` по зоне → `pytest -q` / `check:guardrails` → verdict. Имя сохраняем, чтобы не ломать ~45 ссылок |
+| **security-and-hardening** | optional / deferred | `/security-review` | 3 / 386 (`auth.py`) | 12 | 🟡 **Слить** проектный чеклист (JWT в `auth.py`, валидация `initData`, deny `.env`) в `release-web/guardrails.md` + `telegram-mini-app-runtime`; скилл удалить | Ревью diff покрывает built-in; design-time чеклист короткий и уже по зонам |
+| **context-engineering** | optional / deferred | `/init`, `/memory`, механизм rules/skills; проектный аналог — **project-skills-layout** | 2 / 329 (есть устаревшие ссылки на `.cursorrules`) | 9 | 🔴 **Удалить**, 3–5 полезных строк → `project-skills-layout` | Про Cursor-эпоху; контракт rules/skills/hooks уже в `project-skills-layout` |
+| **using-agent-skills** | active / **core** | Встроенное обнаружение по `description` + `router.md` + `SessionStart`-хук | 16 / 291 | 16; спец-случай в `_context-check.mjs` | 🟡 **Понизить до `support`**, дерево выбора → `router.md`; удалить через ~месяц, если не вызывается | После сужения описания — только тай-брейкер «два скилла пересекаются»; `core` для него завышен |
+| **performance-optimization** | optional / deferred | Нет прямого | 3 / 389 | 12 | ⚪ **В `_archived/`** (`disable-model-invocation: true`) | Не дубль built-in, но generic и deferred; вернуть при задаче CWV для PWA |
+| **doubt-driven-development** | optional / deferred | Частично `/code-review high+` | 3 / 282 | 16, satellite game-economy | 🟢 **Оставить** | Satellite для необратимых правок формул/победы — процесс, а не ревью diff |
+| **test-driven-development** | active / core | Нет | 11 / 431 | 37, router ×6, хук-подсказки | 🟢 **Оставить** (описание уже сужено) | Satellite почти всех primary; `pytest -k event`, баги в логике |
+| **incremental-implementation** | active / core | Нет (Plan mode — про план, не срезы) | 7 / 291 | 40 | 🟢 **Оставить** (описание сужено) | Primary «код срезами» в router |
+| **frontend-ui-engineering** | active / core | Нет (`frontend-design` plugin — эстетика, не MQX-процесс) | 37 / 481 | 47 | 🟢 **Оставить** (описание сужено) | MQX, DESIGN_WORKFLOW, canon-sync — сугубо проектное |
+| **planning-and-task-breakdown** | active / support | Plan mode / `Plan` subagent | 2 / 290 | 18 | 🟢 **Оставить** | Пишет артефакты `docs/plans`, `docs/tasks` (TASK_SLICE), built-in — нет |
+| **browser-testing-with-devtools** | optional / deferred | Built-in browser pane, Claude in Chrome, `/run` | 2 / 339 | 17 | ⚪ **Пересмотреть** при следующем аудите | Инструменты теперь встроены; оставить только сценарии PWA-smoke (возможно → `release-web`) |
+| `_archived/code-review` (studio) | archived | `/code-review` | — | — | 🔴 **Удалить** из архива | Тройной дубль: studio + `code-review-and-quality` + built-in |
+
+Без built-in дубля и **вне** предложения: `api-and-interface-design`, `spec-driven-development`, `documentation-and-adrs`, `idea-refine`, `deprecation-and-migration`, все доменные (`create-event`, `event-analysis`, `game-economy-and-victory`, `db-baselines-and-migrations`, `design-lab-mqx`, `balance-playtest`, `critical-test-scenarios`, `release-web`, …).
+
+**Итог при полном принятии:** −4 скилла (`code-simplification`, `context-engineering`, `security-and-hardening`, `_archived/code-review`), −1 в архив (`performance-optimization`), 2 сжаты/понижены (`code-review-and-quality`, `using-agent-skills`); ≈ −1 600 строк generic-текста в `.claude/skills/` (ещё 389 строк `performance-optimization` уходят в архив).
+
+**Чеклист после «утверждаем»** (по каждому принятому пункту):
+
+1. `catalog.yaml`: удалить запись / сменить `status`, `tier`; вычистить из `next_skill` и `read_if` других скиллов.
+2. `.claude/rules/router.md` (список `tier: deferred`, таблица фаз), [`SKILLS_PHASE_CONTENT_AND_DATA.md`](SKILLS_PHASE_CONTENT_AND_DATA.md), [`SKILL_DOC_MAP.md`](SKILL_DOC_MAP.md), этот файл (строка → таблица «Удалённые из репозитория» с заменой).
+3. `.claude/skills/specs/**/<skill>.md` — удалить/перенести; `_shared/skill-responsibility-matrix.md`.
+4. `grep -rn "<skill>" .claude docs CLAUDE.md` → заменить на built-in (`/simplify`, `/code-review`, `/security-review`).
+5. Прогнать: `_static-check`, `_context-check`, `_category-check`, `_archived-check`, `_claude-config-check`, `py -3 scripts/check_conventions.py`; запись в [`DOC_SYNC_LOG.md`](../foundation/DOC_SYNC_LOG.md).
 
 ---
 

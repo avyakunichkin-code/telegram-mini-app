@@ -12,6 +12,8 @@
 
 Метаданные: [`catalog.yaml`](../skills/catalog.yaml) → `agents:`.
 
+**Persistent memory.** `economy-reviewer` — `memory: project`: заметки в `.claude/agent-memory/economy-reviewer/` (в git, первые 200 строк `MEMORY.md` грузятся в его промпт). `memory` автоматически включает Read/Write/Edit, поэтому read-only гарантия держится frontmatter-хуком `PreToolUse` → [`hooks/agent-memory-only.mjs`](../hooks/agent-memory-only.mjs): запись только в свою папку памяти, остальное — exit 2. Без auto memory (`autoMemoryEnabled: false` / `CLAUDE_CODE_DISABLE_AUTO_MEMORY`) поле не действует. Новый read-only агент с `memory` без такого хука — WARN в `_claude-config-check.mjs`.
+
 ## Когда вызывать
 
 ```text
