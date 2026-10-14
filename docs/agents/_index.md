@@ -9,10 +9,10 @@ aliases:
 ---
 # Agents — MOC
 
-Cursor skills, design-lab, authoring событий.
+Claude Code skills, design-lab, authoring событий.
 
 - [[CLAUDE|CLAUDE.md — онбординг кода]]
-- [[docs/agents/CURSOR_SKILLS|Cursor Skills]]
+- [[docs/agents/AGENT_SKILLS|Agent Skills (Claude Code)]]
 - [[docs/agents/AI_ONBOARDING|AI онбординг (агент)]]
 - [[docs/agents/SKILL_DOC_MAP|Skill Doc Map]]
 - [[docs/archive/README|Docs archive (superseded stubs)]]
@@ -22,4 +22,4 @@ Cursor skills, design-lab, authoring событий.
 - [[docs/agents/EVENTS_AGENT|Events Agent]]
 - [[docs/agents/DESIGN_LAB_NAVIGATION|Design Lab Navigation]]
 
-Каталог skills: `.cursor/skills/catalog.yaml`
+Каталог skills: `.claude/skills/catalog.yaml`

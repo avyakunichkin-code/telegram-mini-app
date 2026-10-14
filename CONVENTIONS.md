@@ -14,14 +14,14 @@ aliases:
 
 Это не стиль и не чеклист «как писать код». Здесь выносится вердикт: работа **соответствует** или **нарушает**. Нарушение — предмет правки, не вкусовщины.
 
-**Среда агента — Cursor** (rules, skills, subagents). `CLAUDE.md` — историческое имя индекса, не конституция Anthropic и не слой выше этого файла.
+**Среда агента — Claude Code** (`CLAUDE.md`, `.claude/rules`, `.claude/skills`, `.claude/agents`, hooks в `.claude/settings.json`; Cursor снят 2026-10-14). `CLAUDE.md` — индекс, который Claude Code загружает в каждую сессию, не слой выше этого файла.
 
 ## Иерархия
 
 ```
 CONVENTIONS.md                         ← вердикт: почему так
   → ADR, SPEC, DOCUMENTATION_SYSTEM    ← что решили
-  → .cursor/skills + .cursor/rules     ← как делать в Cursor
+  → .claude/skills + .claude/rules     ← как делать (Claude Code)
   → CLAUDE.md                          ← индекс для агента
   → README                             ← вход для человека
 ```
@@ -51,7 +51,7 @@ CONVENTIONS.md                         ← вердикт: почему так
 
 **Платим.** Пересмотр занимает время человека; агент не имеет права переписать принцип «по ходу задачи».
 
-**Порождает правила.** Раздел «Как менять этот файл» ниже; [`.cursor/skills/_shared/clarify-first.md`](.cursor/skills/_shared/clarify-first.md) (STOP при конфликте spec vs код).
+**Порождает правила.** Раздел «Как менять этот файл» ниже; [`.claude/skills/_shared/clarify-first.md`](.claude/skills/_shared/clarify-first.md) (STOP при конфликте spec vs код).
 
 **Соответствие.** Обязательно.
 
@@ -72,13 +72,13 @@ CONVENTIONS.md                         ← вердикт: почему так
 **Нарушение выглядит так.**
 - Молча собрать полный «учебник принципов» с двенадцатью пунктами и blocking hook, хотя в репозитории уже есть ADR, скиллы и иерархия docs — без предложения короткого слоя (этот срез: разбор [CY-2026-09-09-slim-layer](docs/conventions/reviews.yaml)).
 - «Сделать как сказали» при явном конфликте с ADR-013: снова чинить Plan UI после решения «только Game».
-- Спорить о порядке полей в YAML, когда [event-balance-rules](.cursor/skills/create-event/event-balance-rules.md) уже задаёт канон — вкусовщина.
+- Спорить о порядке полей в YAML, когда [event-balance-rules](.claude/skills/create-event/event-balance-rules.md) уже задаёт канон — вкусовщина.
 
 **Покупаем.** Ошибки и дыры в постановке ловятся до diff; утверждённое не переигрывается каждым агентом.
 
 **Платим.** Журнал не ловит молчание: пропущенный разбор в него просто не попадает (см. реестр отклонений).
 
-**Порождает правила.** [`.cursor/skills/using-agent-skills/SKILL.md`](.cursor/skills/using-agent-skills/SKILL.md) § «Push Back When Warranted»; [`.cursor/skills/_shared/clarify-first.md`](.cursor/skills/_shared/clarify-first.md); [`.cursor/skills/_shared/delivery-workflow.md`](.cursor/skills/_shared/delivery-workflow.md).
+**Порождает правила.** [`.claude/skills/using-agent-skills/SKILL.md`](.claude/skills/using-agent-skills/SKILL.md) § «Push Back When Warranted»; [`.claude/skills/_shared/clarify-first.md`](.claude/skills/_shared/clarify-first.md); [`.claude/skills/_shared/delivery-workflow.md`](.claude/skills/_shared/delivery-workflow.md).
 
 **Соответствие.** Обязательно.
 
@@ -103,7 +103,7 @@ CONVENTIONS.md                         ← вердикт: почему так
 
 **Платим.** Устаревший spec надо чинить явно, а не «побеждать» его кодом втихую; идея не становится законом от того, что она красноречива.
 
-**Порождает правила.** [`docs/DOCUMENTATION_SYSTEM.md`](docs/DOCUMENTATION_SYSTEM.md) §3; [`.cursor/skills/_shared/game-lexicon.md`](.cursor/skills/_shared/game-lexicon.md); [`docs/audits/README.md`](docs/audits/README.md); [`.cursor/rules/tvoy-hod-router.mdc`](.cursor/rules/tvoy-hod-router.mdc).
+**Порождает правила.** [`docs/DOCUMENTATION_SYSTEM.md`](docs/DOCUMENTATION_SYSTEM.md) §3; [`.claude/skills/_shared/game-lexicon.md`](.claude/skills/_shared/game-lexicon.md); [`docs/audits/README.md`](docs/audits/README.md); [`.claude/rules/router.md`](.claude/rules/router.md).
 
 **Соответствие.** Обязательно.
 
@@ -155,7 +155,7 @@ CONVENTIONS.md                         ← вердикт: почему так
 
 **Платим.** Не каждое число в YAML — предмет источника; граница «продукт vs быт» требует суда человека. Полного дисклеймера в клиенте пока нет.
 
-**Порождает правила.** [`TARGET_PLAYER_AND_SESSION.md`](docs/foundation/TARGET_PLAYER_AND_SESSION.md) §3–4; [`SPEC_PRODUCT.md`](docs/foundation/SPEC_PRODUCT.md) §1 педагогический тезис; create-event [event-balance-rules](.cursor/skills/create-event/event-balance-rules.md) (trade-off, не «бесплатный плюс»).
+**Порождает правила.** [`TARGET_PLAYER_AND_SESSION.md`](docs/foundation/TARGET_PLAYER_AND_SESSION.md) §3–4; [`SPEC_PRODUCT.md`](docs/foundation/SPEC_PRODUCT.md) §1 педагогический тезис; create-event [event-balance-rules](.claude/skills/create-event/event-balance-rules.md) (trade-off, не «бесплатный плюс»).
 
 **Соответствие.** По умолчанию.
 
@@ -194,7 +194,7 @@ CONVENTIONS.md                         ← вердикт: почему так
 | Принцип | Где | Почему нельзя проверить / закрыть сейчас | До чего держим |
 |---------|-----|------------------------------------------|----------------|
 | C-Y | Молчание агента | Журнал видит только записанные разборы | Пока C-Y жив: не выдаём «100% разборов пойманы». Снятие: появятся обязательные session-записи — тогда пересмотреть якорь, не делать вид, что молчание ловится |
-| C-Y | `.cursor/hooks.json` | Гейт свода **не** в blocking hook | Не раньше **2026-09-16** и не раньше, чем `check_conventions.py` отработает вхолостую ≥7 дней без ложных красных на main-потоке |
+| C-Y | `.claude/settings.json` | Гейт свода **не** в blocking hook | Не раньше **2026-09-16** и не раньше, чем `check_conventions.py` отработает вхолостую ≥7 дней без ложных красных на main-потоке |
 | C-1 | Поведение агента «аудит = spec» | Нет детектора намерения | Пока жив C-1: якорь только структурный (тексты иерархии). Снятие: не планируется автоматика намерения |
 | C-3 | Источник ставки продукта | В каталоге нет поля `source` / `game_fiction` | **2026-12-01** или раньше: поле в шаблонах вкладов/долгов/страховок **или** явный отказ от (1) в формулировке C-3 |
 | C-3 | Дисклеймер «не совет» в UI | В GDD-outline есть, в клиенте нет | **2026-12-01**: экран/футер с границей образования ≠ совет **или** перенос в «Целевое» с новой датой |

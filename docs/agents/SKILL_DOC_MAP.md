@@ -7,7 +7,7 @@ aliases:
 ---
 # Карта: фаза → скилл → документы (ТВОЙ ХОД)
 
-Машиночитаемый дубль — поле `context:` и **`tier`** в [`.cursor/skills/catalog.yaml`](../../.cursor/skills/catalog.yaml).  
+Машиночитаемый дубль — поле `context:` и **`tier`** в [`.claude/skills/catalog.yaml`](../../.claude/skills/catalog.yaml).  
 Фаза «контент и данные»: [`SKILLS_PHASE_CONTENT_AND_DATA.md`](SKILLS_PHASE_CONTENT_AND_DATA.md).
 
 ## Конвейер документации
@@ -42,9 +42,9 @@ handbook (люди)        project-handbook-documentation  →  docs/handbook/
 create-event
 ```
 
-**Баланс:** [`.cursor/skills/create-event/event-balance-rules.md`](../../.cursor/skills/create-event/event-balance-rules.md) · ideas: [`event-choice-balance-tradeoffs`](../vision/ideas/event-choice-balance-tradeoffs.md), [`event-repeat-and-state-ladder`](../vision/ideas/event-repeat-and-state-ladder.md)
+**Баланс:** [`.claude/skills/create-event/event-balance-rules.md`](../../.claude/skills/create-event/event-balance-rules.md) · ideas: [`event-choice-balance-tradeoffs`](../vision/ideas/event-choice-balance-tradeoffs.md), [`event-repeat-and-state-ladder`](../vision/ideas/event-repeat-and-state-ladder.md)
 
-Персоны: [`create-event/persona-profiles.md`](../../.cursor/skills/create-event/persona-profiles.md).  
+Персоны: [`create-event/persona-profiles.md`](../../.claude/skills/create-event/persona-profiles.md).  
 Карта: [`EVENTS_AGENT.md`](EVENTS_AGENT.md).
 
 ## Игровая экономика (параллельно или вместо generic incremental)
@@ -95,7 +95,7 @@ design-lab/<theme>/    design-lab-mqx  →  mqx/ + prod   frontend-ui-engineerin
 
 | Задача | Скилл | Читать |
 |--------|-------|--------|
-| Какой скилл выбрать | `using-agent-skills` | `CURSOR_SKILLS.md`, `catalog.yaml`, [release-ready-quality.md](../../.cursor/skills/_shared/release-ready-quality.md) |
+| Какой скилл выбрать | `using-agent-skills` | `AGENT_SKILLS.md`, `catalog.yaml`, [release-ready-quality.md](../../.claude/skills/_shared/release-ready-quality.md) |
 | Rules vs skills | `context-engineering` | `DOCUMENTATION_SYSTEM.md` |
 | Линт скиллов | `skill-test` | `catalog.yaml`, `quality-rubric.md` |
 

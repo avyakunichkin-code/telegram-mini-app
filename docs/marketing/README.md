@@ -24,7 +24,7 @@ aliases:
 | [`posts/draft/`](posts/draft/) | Черновики до согласования |
 | [`strategy/`](strategy/) | Стратегия, бюджеты, каналы (заготовка) |
 
-**Agent Skill:** `.cursor/skills/social-changelog-posts/` — посты по коммитам и сессиям.
+**Agent Skill:** `.claude/skills/social-changelog-posts/` — посты по коммитам и сессиям.
 
 **Не трогаем код приложения** при работе скилла; только файлы в `docs/marketing/` (и генерация изображений в артефакты).
 

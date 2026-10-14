@@ -72,7 +72,7 @@ npx serve .
 
 **Events:** `design-lab/events/sync-all-rounds.sh` или `./sync-lab.sh` в папке раунда.
 
-Правило Cursor: `tvoy-hod-design-lab.mdc`. Скилл: `design-lab-mqx`.
+Правило (path-scoped): `.claude/rules/design-lab.md`. Скилл: `design-lab-mqx`.
 
 ---
 

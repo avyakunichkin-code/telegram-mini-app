@@ -57,7 +57,7 @@ aliases:
 | **SQL-миграции** | **43** | `backend/migrations/` |
 | **Контент событий** YAML | **13** | `data/events/` (MVP 1.1 каталог) |
 | **Design Lab** (все файлы) | **410** | Прототипы и статика lab |
-| **Agent skills** `SKILL.md` | **40** | `.cursor/skills/` |
+| **Agent skills** `SKILL.md` | **40** | `.claude/skills/` |
 
 ---
 

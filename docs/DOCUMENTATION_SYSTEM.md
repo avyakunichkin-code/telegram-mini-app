@@ -309,7 +309,7 @@ Spec отвечает на **что**; ADR на **почему так**.
 | `ADR.md` | архитектурное решение |
 | `TRACE_ROW.md` | строка матрицы трассировки |
 
-Команда: `@.cursor/skills/idea-refine` → шаблон IDEA; `@.cursor/skills/spec-driven-development` → SPEC; planning skill → PLAN.
+Команда: `@.claude/skills/idea-refine` → шаблон IDEA; `@.claude/skills/spec-driven-development` → SPEC; planning skill → PLAN.
 
 ---
 

@@ -59,19 +59,15 @@ coverage/
 *.sqlite3
 *.db
 
-# ===== Cursor / tooling =====
-# Версионируем rules, skills, hooks, agents; прочее в .cursor/ — локально
-.cursor/*
-!.cursor/rules/
-!.cursor/rules/**
-!.cursor/skills/
-!.cursor/skills/**
-!.cursor/hooks/
-!.cursor/hooks/**
-.cursor/hooks/.hint-throttle.json
-!.cursor/hooks.json
-!.cursor/agents/
-!.cursor/agents/**
+# ===== Claude Code / tooling =====
+# Версионируем .claude/{rules,skills,hooks,agents,settings.json}; локальное — нет
+.claude/settings.local.json
+.claude/worktrees/
+.claude/hooks/.hint-throttle.json
+.claude/agent-memory-local/
+CLAUDE.local.md
+# Cursor больше не используется (миграция на Claude Code, 2026-10-14)
+.cursor/
 
 # Balance playtest — только baselines в git; reports генерируются локально
 docs/balance/reports/*

@@ -17,8 +17,8 @@ aliases:
 | Тема | Источник правды |
 |------|-----------------|
 | Lab → ★ → MQX → prod | `DESIGN_WORKFLOW.md`, `design-lab-mqx`, `frontend-ui-engineering` |
-| Self-contained lab, sync-lab | `tvoy-hod-design-lab.mdc`, `design-lab-mqx` |
-| Canon Sync после prod | `tvoy-hod-canon-sync.mdc`, `release-web` |
+| Self-contained lab, sync-lab | `.claude/rules/design-lab.md`, `design-lab-mqx` |
+| Canon Sync после prod | `.claude/rules/canon-sync.md`, `release-web` |
 | Приоритет волны C (**Капитал**) | [`mqx-ui-unification.md`](../vision/ideas/mqx-ui-unification.md), `UI_CONSISTENCY_AUDIT` |
 | Z-NEEDS v7-e2e3 + help `sections[]` | prod `MqxNeedsDash`; lab `dashboard-needs-v7-round` |
 | Токены, типографика, tg-theme | `SPEC_FRONTEND_UI`, `tma-base.css`, `BRANDBOOK_MQX` |

@@ -1,12 +1,14 @@
-# Agent skills: contract (G1–G6) + catalog ↔ SKILL.md parity (must_read / read_if).
-name: Agent skills check
+# Claude Code skills/rules/agents/hooks: contract (G1–G6, C1–C5) + catalog ↔ SKILL.md parity (must_read / read_if).
+name: Claude config check
 
 on:
   pull_request:
     paths:
-      - '.cursor/skills/**'
-      - '.cursor/rules/**'
-      - '.cursor/hooks/**'
+      - '.claude/skills/**'
+      - '.claude/rules/**'
+      - '.claude/hooks/**'
+      - '.claude/agents/**'
+      - '.claude/settings.json'
       - 'docs/agents/**'
       - 'docs/templates/TASK_SLICE.md'
       - 'docs/templates/PLAN_FEATURE.md'
@@ -14,9 +16,11 @@ on:
   push:
     branches: [main]
     paths:
-      - '.cursor/skills/**'
-      - '.cursor/rules/**'
-      - '.cursor/hooks/**'
+      - '.claude/skills/**'
+      - '.claude/rules/**'
+      - '.claude/hooks/**'
+      - '.claude/agents/**'
+      - '.claude/settings.json'
       - 'docs/agents/**'
       - 'docs/templates/TASK_SLICE.md'
       - 'docs/templates/PLAN_FEATURE.md'
@@ -37,13 +41,16 @@ jobs:
           node-version: '22'
 
       - name: Static skill contract check
-        run: node .cursor/skills/skill-test/_static-check.mjs
+        run: node .claude/skills/skill-test/_static-check.mjs
 
       - name: Skill context parity check
-        run: node .cursor/skills/skill-test/_context-check.mjs
+        run: node .claude/skills/skill-test/_context-check.mjs
 
       - name: Skill category rubric check
-        run: node .cursor/skills/skill-test/_category-check.mjs
+        run: node .claude/skills/skill-test/_category-check.mjs
 
       - name: Archived skills frontmatter check
-        run: node .cursor/skills/skill-test/_archived-check.mjs
+        run: node .claude/skills/skill-test/_archived-check.mjs
+
+      - name: Claude rules / agents / hooks check
+        run: node .claude/skills/skill-test/_claude-config-check.mjs

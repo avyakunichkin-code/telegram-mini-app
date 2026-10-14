@@ -30,7 +30,7 @@ aliases:
 | `verify` | `test-driven-development`, `code-review-and-quality`, `browser-testing-with-devtools` |
 | `ship` | `documentation-and-adrs`, `deprecation-and-migration` |
 
-Карта: [`docs/agents/SKILL_DOC_MAP.md`](../agents/SKILL_DOC_MAP.md). Роутер Cursor: [`.cursor/rules/tvoy-hod-router.mdc`](../../.cursor/rules/tvoy-hod-router.mdc).
+Карта: [`docs/agents/SKILL_DOC_MAP.md`](../agents/SKILL_DOC_MAP.md). Роутер Cursor: [`.claude/rules/router.md`](../../.claude/rules/router.md).
 
 ## Задачи
 

@@ -9,6 +9,7 @@ aliases:
 
 Краткий лог, когда **код обогнал docs** или наоборот. Полный чеклист — [`MVP_AUDIT_VS_SPEC.md`](MVP_AUDIT_VS_SPEC.md).
 
+| 2026-10-14 | AI-TOOLING | Cursor → Claude Code: `.cursor/{skills,agents,hooks}` → `.claude/`, rules `.mdc` → `.claude/rules/*.md` (`paths:`), hooks → `.claude/settings.json`; `Shell` → scoped `Bash(...)`; deferred → `disable-model-invocation`; гейт `_claude-config-check.mjs` в CI | [`project-skills-layout`](../../.claude/skills/project-skills-layout/SKILL.md), [`AGENT_SKILLS.md`](../agents/AGENT_SKILLS.md) |
 | 2026-09-09 | CONVENTIONS | Свод принципов C-X…C-4 + гейт `scripts/check_conventions.py` (без hook) | [`CONVENTIONS.md`](../../CONVENTIONS.md), [`reviews.yaml`](../conventions/reviews.yaml) |
 | 2026-09-07 | PR-02 | Lock salary/choose (серверный ключ) + FE `Idempotency-Key` на денежные POST | [`PLAN_pr-02-salary-choose-lock`](../plans/PLAN_pr-02-salary-choose-lock.md) |
 | 2026-09-07 | PR-02 | План lock salary/choose + FE Idempotency-Key **APPROVED** | [`PLAN_pr-02-salary-choose-lock`](../plans/PLAN_pr-02-salary-choose-lock.md) |
@@ -37,7 +38,7 @@ aliases:
 | 2026-06-02 | **Admin AQ + P1 срез:** Watchtower фильтры/KPI/CSV/очередь; inspector pending+feedback | [`ADMIN_BACKLOG.md`](../backlog/ADMIN_BACKLOG.md), `watchtower_profiles.py`, `AdminAttentionQueue` |
 | 2026-06-02 | **design-lab:** удалены архивные раунды | v1–v6 needs, `actions-round`, `orient-round`, hub `capital-page/index.html`, витрина `flows-round` (остался `styles.css`); canon → v7 + `details-actions-round`; `npm run design-lab:build` |
 | 2026-06-02 | **Чистка legacy в docs** | Сняты O1/hero-compact тела; FinanceSection tasks; needs accordion/v5; capital «Добавить\|Мои»; help maintenance/critical в UX |
-| 2026-06-02 | **Скиллы / rules / agents:** Капитал + Z-NEEDS v7 | `frontend-ui-engineering`, `design-lab-mqx`, `release-tma`, `tvoy-hod-frontend-mqx.mdc`, `tvoy-hod-canon-sync.mdc`, `catalog.yaml`, `DESIGN_WORKFLOW.md`, `DESIGN_LAB_NAVIGATION`, `frontend-design` skill |
+| 2026-06-02 | **Скиллы / rules / agents:** Капитал + Z-NEEDS v7 | `frontend-ui-engineering`, `design-lab-mqx`, `release-tma`, `.claude/rules/frontend-mqx.md`, `.claude/rules/canon-sync.md`, `catalog.yaml`, `DESIGN_WORKFLOW.md`, `DESIGN_LAB_NAVIGATION`, `frontend-design` skill |
 | 2026-06-02 | **Док-свип (завершение):** «Капитал», v7-e2e3, help `sections[]` | handbook, TMA flows, analytics, landing shots, UI audit, TEAM_UPDATE, backlog, brandbook MQX, design-lab nav/README, `contextual-help-system`, ADR-004, vision ideas |
 | 2026-06-02 | **PRODUCT_BACKLOG** синхронизация | DL1 MVP ✅, Admin AQ/C1–C2 ✅, O2/GE1 в сводке, EVT1 строка, «В работу сейчас», журнал |
 | 2026-06-02 | **DL1-101** spec approved | [`SPEC_debt-liability-capital-graph`](../specs/features/SPEC_debt-liability-capital-graph.md), TRACEABILITY, TASKS, PRODUCT_BACKLOG |
@@ -75,7 +76,7 @@ aliases:
 | 2026-05-29 | Balance playtest: `balance_simulate.py`, diff, baseline, skill + subagent | `docs/balance/`, `/balance-playtest`, `economy-balance-runner`, ADR-009 consequences |
 | 2026-05-29 | Playtest suite: manifest, `safety_first` baseline, THRESHOLDS, hook, pytest | `balance_playtest.py`, `test_balance_simulate.py`, hooks `game/victory/seeds/events` |
 | 2026-05-30 | Пакет handbook Волна 1 (PO): brief, player experience, feature matrix, economy split | `PRODUCT_BRIEF`, `PLAYER_EXPERIENCE`, `FEATURE_STATUS`, `ECONOMY_OVERVIEW`, `internal/ECONOMY_TUNING`, `MONETIZATION`; playtest/marketing guides; Pre-Alpha `active` |
-| 2026-05-30 | Скилл **project-handbook-documentation** | `.cursor/skills/project-handbook-documentation/SKILL.md`, `catalog.yaml`, `SKILL_DOC_MAP`, `docs/specs/build/project-handbook-documentation.md` |
+| 2026-05-30 | Скилл **project-handbook-documentation** | `.claude/skills/project-handbook-documentation/SKILL.md`, `catalog.yaml`, `SKILL_DOC_MAP`, `docs/specs/build/project-handbook-documentation.md` |
 | 2026-05-30 | **ADVISOR_FUNNEL_AUDIENCE** → handbook/foundation | Выжимки в PRODUCT_BRIEF, GAME §воронка, TARGET §8, FEATURE_STATUS, MONETIZATION, roles |
 | 2026-05-30 | **KPI лайт v1** | `handbook/KPI_AND_PHASES.md`; PRE_ALPHA §7, PRODUCT_BRIEF, GAME, FEATURE_STATUS, README |
 | 2026-05-30 | **Pre-Alpha ops волна 1** | `PRE_ALPHA_WAVE1_OPS.md`, `foundation/templates/*`; протокол §10 → решения; Q9 для PA-T1 |

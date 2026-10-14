@@ -103,7 +103,7 @@ aliases:
 | **Seeds** | `app/seeds/runner.py` → `seed_all()` на startup | шаблоны старта, `victory_goals`, каталог капитала |
 | **Контент** | `data/events/mvp11/*.yaml` | сценарии, эффекты, цепочки |
 
-Skill: **db-baselines-and-migrations** (`.cursor/skills/db-baselines-and-migrations/`).
+Skill: **db-baselines-and-migrations** (`.claude/skills/db-baselines-and-migrations/`).
 
 ### 2.3. Критические точки изменения state
 
@@ -425,4 +425,4 @@ flowchart TB
 - [`architecture/architecture.md`](../architecture/architecture.md)
 - [`decisions/ADR-007-backend-domain-packages.md`](../decisions/ADR-007-backend-domain-packages.md)
 - [`ideas/project-structure-standardization.md`](ideas/project-structure-standardization.md)
-- [`.cursor/skills/db-baselines-and-migrations/SKILL.md`](../../.cursor/skills/db-baselines-and-migrations/SKILL.md)
+- [`.claude/skills/db-baselines-and-migrations/SKILL.md`](../../.claude/skills/db-baselines-and-migrations/SKILL.md)

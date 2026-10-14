@@ -60,7 +60,7 @@ aliases:
 
 ## Источники и пробелы в данных
 
-**Читали:** `backend/app/` (period, events/service, auth, config, idempotency, health, main ensure_schema), `frontend-react/src/` (App, GameScreen, useGame, api/client), `.github/workflows/`, `.cursor/hooks.json`, `catalog.yaml`, `backend/tests/README.md`, `migrations/README.md`, ADR-007, `ARCHITECTURE_ASSESSMENT_2026-06.md`, `SPEC_PRODUCT.md`.
+**Читали:** `backend/app/` (period, events/service, auth, config, idempotency, health, main ensure_schema), `frontend-react/src/` (App, GameScreen, useGame, api/client), `.github/workflows/`, `.claude/settings.json`, `catalog.yaml`, `backend/tests/README.md`, `migrations/README.md`, ADR-007, `ARCHITECTURE_ASSESSMENT_2026-06.md`, `SPEC_PRODUCT.md`.
 
 **Нет (не выдумывать):**
 
@@ -138,11 +138,11 @@ PWA / web / TMA (один SPA) ──HTTPS──► FastAPI
 
 | ID | Ур. | Где | Почему | Решение / effort |
 |----|-----|-----|--------|------------------|
-| **M13** | 🟡 | `.cursor/hooks.json` after-edit | Напоминания, не gate | Pre-commit pytest subset. **1 дн.** |
+| **M13** | 🟡 | `.claude/settings.json` after-edit | Напоминания, не gate | Pre-commit pytest subset. **1 дн.** |
 | **M14** | 🟡 | YAML mvp11 **и** `admin/catalog_write.py` | Два SSOT событий | YAML канон **или** export в git. **2–3 дн.** |
 | **M7** | 🟡 | `services/events/service.py` picker+effects+HTTPException | Нельзя гонять picker в sim без FastAPI | Три модуля. **3–5 дн.** |
 | **M8** | 🟡 | `events/chains.py` vs `guidance/engine.py` ~562 | Два FSM без общего контракта | Не сливать; ADR: chains=save, guidance=user. **2 дн. docs** |
-| **m5** | 🟢 | `.cursor/skills/` CI есть, product CI нет | Скиллы проверяются строже экономики | Инвертировать приоритет CI (C1). **0 дн. кода** |
+| **m5** | 🟢 | `.claude/skills/` CI есть, product CI нет | Скиллы проверяются строже экономики | Инвертировать приоритет CI (C1). **0 дн. кода** |
 | **m6** | 🟢 | Docstring `process_period_end` про XP | XP сняты ADR-003 | Поправить комментарий. **15 мин.** |
 | **m8** | 🟢 | Пустой `DATABASE_URL` → SQLite `test.db` | Прод с кривым env молча в файл | Fail-fast вне pytest. **2 ч.** |
 
@@ -158,7 +158,7 @@ Picker событий — **взвешенный random + fatigue + diversity `e
 | **M16** | 🟡 | 14 FE-тестов vs 383 pytest | Ломается UI без красного CI | Контракты bootstrap/pending. **3–5 дн.** |
 | **m7** | 🟢 | Assessment июня 2026 | Частично устарел (skills CI появился) | Этот файл — актуальный снимок. **—** |
 
-Правило `tvoy-hod-backend.mdc` всё ещё говорит «в CI тесты пока не подключаем» — после C1 правило надо сменить.
+Правило `.claude/rules/backend.md` всё ещё говорит «в CI тесты пока не подключаем» — после C1 правило надо сменить.
 
 ---
 

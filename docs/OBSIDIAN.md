@@ -11,7 +11,7 @@ aliases:
 ---
 # Obsidian: документация ТВОЙ ХОД
 
-Как открыть и использовать репозиторий как **Obsidian vault** без поломки GitHub-ссылок и агентов Cursor.
+Как открыть и использовать репозиторий как **Obsidian vault** без поломки GitHub-ссылок и агентов Claude Code.
 
 ---
 
@@ -33,7 +33,7 @@ aliases:
 | **`useMarkdownLinks: true`** (в `.obsidian/app.json`) | Обычные `[text](path.md)` работают в Obsidian, GitHub и у агентов |
 | **`tags` + `aliases` в frontmatter** | Поиск, graph filters, автодополнение `[[wikilink]]` |
 | **MOC `_index.md` в папках** | Быстрый вход в слой без дублирования README |
-| **Не конвертировать все ссылки в wikilinks** | Единый источник для CI, Cursor rules, GitHub preview |
+| **Не конвертировать все ссылки в wikilinks** | Единый источник для CI, `.claude/rules`, GitHub preview |
 
 Дополнительно можно вручную добавлять wikilinks в MOC-файлах — они не мешают остальному конвейеру.
 

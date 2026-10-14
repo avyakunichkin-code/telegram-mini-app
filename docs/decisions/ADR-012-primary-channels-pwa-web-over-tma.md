@@ -59,4 +59,4 @@ aliases:
 - [`PWA_INSTALL.md`](../foundation/PWA_INSTALL.md)
 - [`pwa-standalone-channel.md`](../vision/ideas/pwa-standalone-channel.md)
 - [`TMA_USER_FLOWS.md`](../foundation/TMA_USER_FLOWS.md) — secondary flows
-- Skill: `.cursor/skills/release-web/SKILL.md`
+- Skill: `.claude/skills/release-web/SKILL.md`

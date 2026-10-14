@@ -23,14 +23,14 @@ aliases:
 ### MQ-042 — Краткое название среза
 
 - **Phase:** `build` — `define` | `build` | `verify` | `ship` (см. [`SKILL_DOC_MAP.md`](../agents/SKILL_DOC_MAP.md))
-- **Tier:** `core` — `core` | `support` | `deferred` | `meta` | `archived` (см. [`SKILLS_PHASE_CONTENT_AND_DATA.md`](../agents/SKILLS_PHASE_CONTENT_AND_DATA.md), [`catalog.yaml`](../../.cursor/skills/catalog.yaml))
+- **Tier:** `core` — `core` | `support` | `deferred` | `meta` | `archived` (см. [`SKILLS_PHASE_CONTENT_AND_DATA.md`](../agents/SKILLS_PHASE_CONTENT_AND_DATA.md), [`catalog.yaml`](../../.claude/skills/catalog.yaml))
 - **Skill:** `incremental-implementation` — primary Agent Skill для среза (`tier` скилла в каталоге должен совпадать или быть `support`, если задача явно про plan/review/ADR)
-- **Satellites:** `test-driven-development`, `critical-test-scenarios` — открыть в **той же** сессии до «done» (см. `.cursor/rules/tvoy-hod-router.mdc` → Primary + satellites)
+- **Satellites:** `test-driven-development`, `critical-test-scenarios` — открыть в **той же** сессии до «done» (см. `.claude/rules/router.md` → Primary + satellites)
 - **Next skill:** `critical-test-scenarios` — закрыть min gate G1–G4; затем `code-review-and-quality`
 - **Spec:** `specs/features/SPEC_<slug>.md` §…
-- **Read if:** **`read_if_when`** — список `when` из `catalog.yaml` → `read_if` для **primary skill**; открыть **только** matching paths (не всю папку spec). Справка: `node .cursor/skills/skill-test/_resolve-read-if.mjs <skill>`
+- **Read if:** **`read_if_when`** — список `when` из `catalog.yaml` → `read_if` для **primary skill**; открыть **только** matching paths (не всю папку spec). Справка: `node .claude/skills/skill-test/_resolve-read-if.mjs <skill>`
 - **Acceptance:** …
-- **Critical scenarios:** CS-1 …, CS-2 … (skill `/critical-tests`, gate G1–G4)
+- **Critical scenarios:** CS-1 …, CS-2 … (skill `/critical-test-scenarios`, gate G1–G4)
 - **Verify:** `pytest …` / `npm run test:unit` / ручной сценарий из spec
 - **Files:** `backend/…`, `frontend-react/…`
 - **Estimate:** S | M | L

@@ -8,7 +8,7 @@ aliases:
   - "AI онбординг"
   - AI_ONBOARDING
 ---
-# AI онбординг (агент Cursor)
+# AI онбординг (Claude Code)
 
 Краткий вход для **новой сессии** до кода. Технический контекст продукта — [`CLAUDE.md`](../../CLAUDE.md); этот файл — **как работать** в репозитории.
 
@@ -18,11 +18,11 @@ aliases:
 
 | # | Файл | Зачем |
 |---|------|--------|
-| 0 | [`CONVENTIONS.md`](../../CONVENTIONS.md) | Вердикт C-X…C-4 (Cursor, не «конституция Claude») |
-| 1 | [`.cursor/rules/tvoy-hod-router.mdc`](../../.cursor/rules/tvoy-hod-router.mdc) | Фаза → **один primary** + satellites |
-| 2 | [`.cursor/skills/using-agent-skills/SKILL.md`](../../.cursor/skills/using-agent-skills/SKILL.md) | §0 release-ready; выбор скилла |
-| 3 | [`.cursor/skills/_shared/delivery-workflow.md`](../../.cursor/skills/_shared/delivery-workflow.md) | Думаем → уточняем → планируем → делаем |
-| 4 | [`.cursor/skills/_shared/clarify-first.md`](../../.cursor/skills/_shared/clarify-first.md) | STOP при неясности |
+| 0 | [`CONVENTIONS.md`](../../CONVENTIONS.md) | Вердикт C-X…C-4 (выше `CLAUDE.md` и скиллов) |
+| 1 | [`.claude/rules/router.md`](../../.claude/rules/router.md) | Фаза → **один primary** + satellites |
+| 2 | [`.claude/skills/using-agent-skills/SKILL.md`](../../.claude/skills/using-agent-skills/SKILL.md) | §0 release-ready; выбор скилла |
+| 3 | [`.claude/skills/_shared/delivery-workflow.md`](../../.claude/skills/_shared/delivery-workflow.md) | Думаем → уточняем → планируем → делаем |
+| 4 | [`.claude/skills/_shared/clarify-first.md`](../../.claude/skills/_shared/clarify-first.md) | STOP при неясности |
 | 5 | [`SKILL_DOC_MAP.md`](SKILL_DOC_MAP.md) | Конвейер docs ↔ код |
 
 **Конфликт источников ([C-1](../../CONVENTIONS.md)):** код + тесты → `docs/specs/features/SPEC_*.md` → `SPEC_PRODUCT.md` → `docs/vision/ideas/`.  
@@ -47,10 +47,10 @@ aliases:
 
 ## 3. Выбор primary skill
 
-- **`tier: core`** в [`catalog.yaml`](../../.cursor/skills/catalog.yaml) — primary по умолчанию для product-задач.
+- **`tier: core`** в [`catalog.yaml`](../../.claude/skills/catalog.yaml) — primary по умолчанию для product-задач.
 - **`tier: support`** — plan, review, ADR, DB migrations.
 - **`tier: deferred`** — только по явному запросу (`release-web`, perf, TMA runtime, …).
-- **When NOT primary:** [`skill-responsibility-matrix.md`](../../.cursor/skills/_shared/skill-responsibility-matrix.md).
+- **When NOT primary:** [`skill-responsibility-matrix.md`](../../.claude/skills/_shared/skill-responsibility-matrix.md).
 
 Не смешивать два primary на одну задачу. Satellites открывать **в той же сессии** (см. router → Primary + satellites).
 
@@ -68,7 +68,7 @@ aliases:
 Справка при нарезке задач:
 
 ```bash
-node .cursor/skills/skill-test/_resolve-read-if.mjs <skill-name>
+node .claude/skills/skill-test/_resolve-read-if.mjs <skill-name>
 ```
 
 Шаблон: [`docs/templates/TASK_SLICE.md`](../templates/TASK_SLICE.md).
@@ -77,11 +77,11 @@ node .cursor/skills/skill-test/_resolve-read-if.mjs <skill-name>
 
 ## 5. Release-ready bar
 
-[`release-ready-quality.md`](../../.cursor/skills/_shared/release-ready-quality.md) — результат **готов к merge**, не набросок.
+[`release-ready-quality.md`](../../.claude/skills/_shared/release-ready-quality.md) — результат **готов к merge**, не набросок.
 
 - **COMPLETE** — только при verify + self-review.
 - Идеи / ранний spec → **DRAFT**; lab → **APPROVED** до prod.
-- Иконки/фоны: [`visual-assets-policy.md`](../../.cursor/skills/_shared/visual-assets-policy.md).
+- Иконки/фоны: [`visual-assets-policy.md`](../../.claude/skills/_shared/visual-assets-policy.md).
 
 ---
 
@@ -97,7 +97,7 @@ Subagents **не заменяют** primary skills и pytest. Parent agent ре�
 
 **Не запускать:** hotfix одной строки, docs-only, мелкий тест, authoring YAML по **`create-event`** (достаточно satellite **`event-analysis`** при audit).
 
-Конфиг: `catalog.yaml` → `agents:` + `trigger_globs`. Подробнее: router § Subagents.
+Определения: `.claude/agents/*.md` (frontmatter `tools` ограничивает инструменты). Запуск: «Use economy-reviewer on this diff» или Agent tool с `subagent_type`. Метаданные: `catalog.yaml` → `agents:` + `trigger_globs`. Подробнее: router § Subagents.
 
 ---
 
@@ -106,17 +106,17 @@ Subagents **не заменяют** primary skills и pytest. Parent agent ре�
 Локально из корня репо:
 
 ```bash
-node .cursor/skills/skill-test/_static-check.mjs
-node .cursor/skills/skill-test/_context-check.mjs
-node .cursor/skills/skill-test/_category-check.mjs
-node .cursor/skills/skill-test/_archived-check.mjs
+node .claude/skills/skill-test/_static-check.mjs
+node .claude/skills/skill-test/_context-check.mjs
+node .claude/skills/skill-test/_category-check.mjs
+node .claude/skills/skill-test/_archived-check.mjs
 ```
 
-Maintenance: `node .cursor/skills/skill-test/_maintain.mjs help`
+Maintenance: `node .claude/skills/skill-test/_maintain.mjs help`
 
 CI: [`.github/workflows/skills-check.yml`](../../.github/workflows/skills-check.yml) (static + context + category на PR).
 
-Аудит качества скиллов (архив): [`SKILLS_QUALITY_AUDIT_2026-06-20.md`](SKILLS_QUALITY_AUDIT_2026-06-20.md). Актуальная политика: [release-ready-quality.md](../../.cursor/skills/_shared/release-ready-quality.md).
+Аудит качества скиллов (архив): [`SKILLS_QUALITY_AUDIT_2026-06-20.md`](SKILLS_QUALITY_AUDIT_2026-06-20.md). Актуальная политика: [release-ready-quality.md](../../.claude/skills/_shared/release-ready-quality.md).
 
 ---
 
@@ -128,10 +128,10 @@ idea → spec → plan/MQ-* → incremental (+ TDD + critical-tests) → code-re
 
 События: **`create-event`** / **`event-analysis`** · Экономика: **`game-economy-and-victory`** · UI: **`design-lab-mqx`** → **`frontend-ui-engineering`**.
 
-Полная карта: [`CURSOR_SKILLS.md`](CURSOR_SKILLS.md) · [`SKILLS_PHASE_CONTENT_AND_DATA.md`](SKILLS_PHASE_CONTENT_AND_DATA.md).
+Полная карта: [`AGENT_SKILLS.md`](AGENT_SKILLS.md) · [`SKILLS_PHASE_CONTENT_AND_DATA.md`](SKILLS_PHASE_CONTENT_AND_DATA.md).
 
 ---
 
 ## 9. Hooks
 
-[`.cursor/hooks.json`](../../.cursor/hooks.json) — напоминания после правок economy / UI / lab / migrations. Session start: `must_read` vs `read_if` + delivery workflow.
+[`.claude/settings.json`](../../.claude/settings.json) — напоминания после правок economy / UI / lab / migrations. Session start: `must_read` vs `read_if` + delivery workflow.

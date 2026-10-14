@@ -59,7 +59,7 @@ aliases:
 
 ## Источники и пробелы в данных
 
-**Читали:** `backend/app/services/events/service.py`, `events/taxonomy.py`, `game/period.py` (обёртка пула), `guidance/{curriculum,engine}.py`, `scripts/balance_{simulate,playtest}.py`, `.cursor/skills/{catalog.yaml,create-event,balance-playtest}`, `.github/workflows/skills-check.yml`, `.cursor/hooks.json`, аудиты 2026-09-07 product/engineering/qa.
+**Читали:** `backend/app/services/events/service.py`, `events/taxonomy.py`, `game/period.py` (обёртка пула), `guidance/{curriculum,engine}.py`, `scripts/balance_{simulate,playtest}.py`, `.claude/skills/{catalog.yaml,create-event,balance-playtest}`, `.github/workflows/skills-check.yml`, `.claude/settings.json`, аудиты 2026-09-07 product/engineering/qa.
 
 **Нет (не выдумывать):**
 

@@ -8,9 +8,9 @@ aliases:
 
 **Игра по финансовой грамотности** (PWA/web primary; TMA secondary — [ADR-012](docs/decisions/ADR-012-primary-channels-pwa-web-over-tma.md)): периоды, cash, обязательства, события, победа.
 
-**Свод принципов (вердикт):** [`CONVENTIONS.md`](CONVENTIONS.md) ([C-X](CONVENTIONS.md), [C-Y](CONVENTIONS.md), [C-1](CONVENTIONS.md)–[C-4](CONVENTIONS.md)). Этот файл — **индекс** для агента в Cursor, не конституция.
+**Свод принципов (вердикт):** [`CONVENTIONS.md`](CONVENTIONS.md) ([C-X](CONVENTIONS.md), [C-Y](CONVENTIONS.md), [C-1](CONVENTIONS.md)–[C-4](CONVENTIONS.md)). Этот файл — **индекс** для Claude Code (грузится в каждую сессию), не конституция.
 
-**Роутер скиллов:** [`.cursor/rules/tvoy-hod-router.mdc`](.cursor/rules/tvoy-hod-router.mdc) · **Лексикон игры:** [`.cursor/skills/_shared/game-lexicon.md`](.cursor/skills/_shared/game-lexicon.md)
+**Роутер скиллов:** [`.claude/rules/router.md`](.claude/rules/router.md) · **Лексикон игры:** [`.claude/skills/_shared/game-lexicon.md`](.claude/skills/_shared/game-lexicon.md)
 
 | Документ | Назначение |
 |----------|------------|
@@ -42,6 +42,18 @@ aliases:
 
 Backend: FastAPI, SQLAlchemy, PostgreSQL. Frontend: React + Vite, `@telegram-apps/telegram-ui`, MQX.
 
+### Команды (проверка перед «готово»)
+
+| Что | Команда |
+|-----|---------|
+| Backend тесты | `cd backend && python -m pytest -q` (Windows: `py -3 -m pytest -q`; тесты на SQLite, БД не нужна) |
+| Frontend | `cd frontend-react && npm run build` · `npm run test:unit` · PR: `npm run check:guardrails` |
+| Баланс 30–40 периодов | `/balance-playtest` или `cd backend && python scripts/balance_playtest.py` |
+| Свод принципов | `py -3 scripts/check_conventions.py` |
+| AI-конфиг (skills/rules/agents/hooks) | `node .claude/skills/skill-test/_static-check.mjs` · `node .claude/skills/skill-test/_claude-config-check.mjs` |
+
+AI-конфигурация: `.claude/rules/` (path-scoped), `.claude/skills/`, `.claude/agents/`, хуки в `.claude/settings.json` — карта в скилле `project-skills-layout`.
+
 ---
 
 ### Ключевой код
@@ -51,10 +63,10 @@ Backend: FastAPI, SQLAlchemy, PostgreSQL. Frontend: React + Vite, `@telegram-app
 | Экономика периода | `backend/app/game/period.py` |
 | Победа | `backend/app/victory/engine.py`, `finance/overview_build.py` |
 | HTTP | `backend/app/routers/` → `services/` |
-| FE state/API | `hooks/useGame.js`, `src/api.js` |
+| FE state/API | `hooks/useGame.js`, `src/api/` (`client.js` — `apiCall`/`ApiError`; домены — `game.js`, `finance.js`, …; `src/api.js` — реэкспорт) |
 | Prod UI | `*Premium.jsx`, `components/mqx/` |
 
-Полный список эндпоинтов — [`backend/app/README.md`](backend/app/README.md) и секции ниже в истории файла в git при необходимости.
+Полный список эндпоинтов — [`backend/app/README.md`](backend/app/README.md).
 
 ---
 
@@ -76,4 +88,4 @@ Backend: FastAPI, SQLAlchemy, PostgreSQL. Frontend: React + Vite, `@telegram-app
 
 ### Баланс / пороги
 
-[`game-balance-thresholds-and-constraints.md`](docs/vision/ideas/game-balance-thresholds-and-constraints.md) · события: [`.cursor/skills/create-event/event-balance-rules.md`](.cursor/skills/create-event/event-balance-rules.md)
+[`game-balance-thresholds-and-constraints.md`](docs/vision/ideas/game-balance-thresholds-and-constraints.md) · события: [`.claude/skills/create-event/event-balance-rules.md`](.claude/skills/create-event/event-balance-rules.md)

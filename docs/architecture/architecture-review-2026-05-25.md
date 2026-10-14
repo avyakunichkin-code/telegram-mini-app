@@ -27,7 +27,7 @@ aliases:
 
 ## Verdict: **CONCERNS** → **ближе к PASS** (Q&A 2026-05-25)
 
-**PASS blocked by:** нет CI pytest (решение Q&A: локальный pytest + `tvoy-hod-backend.mdc`); открытые эпики Plan UI, E1, O1, M12.
+**PASS blocked by:** нет CI pytest (решение Q&A: локальный pytest + `.claude/rules/backend.md`); открытые эпики Plan UI, E1, O1, M12.
 
 **Снято с блокеров:** doc-sync GAME/GLOSSARY/TARGET_PLAYER; ADR-002/003; pytest **180 passed**; V2 UI P1 (`MqxGoalDash`) — закрыт в TRACEABILITY/backlog.
 

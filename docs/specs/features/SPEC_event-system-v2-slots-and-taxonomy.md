@@ -442,7 +442,7 @@ metadata:
 
 ## Balance (authoring)
 
-Каждый choice соблюдает **закон trade-off** — см. [`event-choice-balance-tradeoffs.md`](../../vision/ideas/event-choice-balance-tradeoffs.md) и операционный чеклист [`.cursor/skills/create-event/event-balance-rules.md`](../../../.cursor/skills/create-event/event-balance-rules.md).
+Каждый choice соблюдает **закон trade-off** — см. [`event-choice-balance-tradeoffs.md`](../../vision/ideas/event-choice-balance-tradeoffs.md) и операционный чеклист [`.claude/skills/create-event/event-balance-rules.md`](../../../.claude/skills/create-event/event-balance-rules.md).
 
 | Правило | Кратко |
 |---------|--------|

@@ -37,7 +37,7 @@ aliases:
 | **Reference** | [`reference/`](reference/) | GDD, брендбук, investor deck |
 | **Marketing** | [`marketing/`](marketing/) | Посты, трекер тем, стиль, Telegram-публикация |
 | **Ops** | [`ops/`](ops/) | Деплой prod / Pre-Alpha ([`ops/DEPLOY.md`](ops/DEPLOY.md)) |
-| **Agents** | [`agents/`](agents/) | Cursor skills и приоритеты |
+| **Agents** | [`agents/`](agents/) | Claude Code skills, rules, subagents и приоритеты |
 | **Archive** | [`archive/`](archive/) | Superseded stubs (O1 onboarding и др.) |
 
 ---
@@ -147,7 +147,7 @@ aliases:
 |----------|------------|
 | [`backlog/PRODUCT_BACKLOG.md`](backlog/PRODUCT_BACKLOG.md) | Бэклог P0–P3 |
 | [`plans/PLAN_production-ready.md`](plans/PLAN_production-ready.md) | Сводный план до production-ready (синтез аудитов 2026-09-07, DRAFT) |
-| [`agents/CURSOR_SKILLS.md`](agents/CURSOR_SKILLS.md) | Приоритет Agent Skills |
+| [`agents/AGENT_SKILLS.md`](agents/AGENT_SKILLS.md) | Приоритет Agent Skills |
 
 ### Decisions (ADR)
 

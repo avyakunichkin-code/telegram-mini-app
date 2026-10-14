@@ -9,7 +9,7 @@ aliases:
 
 **Версия:** 1.0 (слой Product UI брендбука v2)  
 **Дата:** май 2026  
-**Аудитория:** frontend, дизайн lab, агенты Cursor  
+**Аудитория:** frontend, дизайн lab, агенты Claude Code  
 
 **Связанные документы:**  
 [`BRANDBOOK.md`](BRANDBOOK.md) (identity, лого, голос, Монетка) · [`SPEC_FRONTEND_UI.md`](../../specs/SPEC_FRONTEND_UI.md) · [`DESIGN_WORKFLOW.md`](../../../frontend-react/src/components/mqx/DESIGN_WORKFLOW.md) · стили [`styles/README.md`](../../../frontend-react/src/styles/README.md) (barrel [`index.css`](../../../frontend-react/src/index.css))

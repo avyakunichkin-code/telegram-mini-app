@@ -2,7 +2,7 @@
 
 Цель: **не 100% coverage**, а проверки, которые ловят регрессии продукта (экономика, события, победа, контракты API).
 
-**Agent skill:** [`/critical-tests`](../../.cursor/skills/critical-test-scenarios/SKILL.md) — min gate G1–G4, выбор сценариев, конвейер spec → MQ-* → pytest/vitest.
+**Agent skill:** [`/critical-test-scenarios`](../../.claude/skills/critical-test-scenarios/SKILL.md) — min gate G1–G4, выбор сценариев, конвейер spec → MQ-* → pytest/vitest.
 
 ## Пирамида
 

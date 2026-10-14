@@ -31,7 +31,7 @@ aliases:
 
 **Owner пакета:** владелец продукта · формат: **Markdown** (PDF — по запросу позже).
 
-**Агент Cursor:** скилл **`project-handbook-documentation`** (`/project-handbook-documentation`) — процедура генерации и синхронизации handbook; build-spec: [`docs/specs/build/project-handbook-documentation.md`](../specs/build/project-handbook-documentation.md).
+**Агент (Claude Code):** скилл **`project-handbook-documentation`** (`/project-handbook-documentation`) — процедура генерации и синхронизации handbook; build-spec: [`docs/specs/build/project-handbook-documentation.md`](../specs/build/project-handbook-documentation.md).
 
 ---
 
@@ -44,7 +44,7 @@ aliases:
 | **Specs / Plans** | `docs/specs/`, `docs/plans/` | разработка, QA | Контракты фич, acceptance, задачи MQ-* |
 | **Vision** | `docs/vision/ideas/` | продукт, дизайн | Идеи и целевое направление (не всё в prod) |
 | **Decisions** | `docs/decisions/` | архитектура | ADR — **почему** так решили |
-| **Agents** | `CLAUDE.md`, `docs/agents/` | агенты Cursor | Онбординг кода, скиллы, эндпоинты |
+| **Agents** | `CLAUDE.md`, `docs/agents/` | агенты Claude Code | Онбординг кода, скиллы, эндпоинты |
 
 **При конфликте:** код + тесты → spec фичи → `SPEC_PRODUCT` → vision/ideas → handbook (обзор).
 

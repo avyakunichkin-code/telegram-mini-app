@@ -31,4 +31,4 @@ cd design-lab/events
 
 ## Агентам
 
-См. `.cursor/rules/tvoy-hod-design-lab.mdc` и скилл `design-lab-mqx`.
+См. `.claude/rules/design-lab.md` и скилл `design-lab-mqx`.

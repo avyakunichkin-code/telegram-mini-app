@@ -405,7 +405,7 @@ In-app inbox — **не** в этом spec; см. parent idea Phase 1.
 
 ## Testing strategy
 
-Skill: **`/critical-tests`**. Ref: [`backend/tests/README.md`](../../../backend/tests/README.md).
+Skill: **`/critical-test-scenarios`**. Ref: [`backend/tests/README.md`](../../../backend/tests/README.md).
 
 | Layer | What to prove |
 |-------|----------------|

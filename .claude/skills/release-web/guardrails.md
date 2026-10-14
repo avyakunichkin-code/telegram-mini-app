@@ -1,0 +1,63 @@
+> Вызывать перед PR/выкаткой. Skill: **`release-web`** (primary channels PWA + web, [ADR-012](../../../docs/decisions/ADR-012-primary-channels-pwa-web-over-tma.md)). Legacy **`/release-tma`** → redirect. Hook не дублирует — только напоминания после правок UI/lab.
+
+# Pre-release / выкатка — обязательные проверки
+
+Перед merge в release / deploy прогонять guardrails, design-lab parity и **PWA/web smoke**. TMA — опционально при правках TMA shell.
+
+## Обязательное (каждый раз)
+
+### 1) Guardrails
+
+Из `frontend-react/`:
+
+```bash
+npm run check:guardrails
+```
+
+Ожидаемо включает:
+- boundaries/quarantine
+- canon sync
+- `check:dashboard-canon`
+- `check:finance-canon`
+
+### 2) Design-lab parity + навигатор
+
+Из `frontend-react/`:
+
+```bash
+npm run design-lab:build
+```
+
+Это пересобирает:
+- `design-lab/dashboard/parity-generated-page-round/`
+- `design-lab/finance/parity-generated-page-round/`
+- `design-lab/index.html` (design-lab dashboard)
+
+### 3) Backend (если менялся `backend/`)
+
+```bash
+cd backend && python -m pytest -q
+```
+
+### 4) PWA / web smoke (primary)
+
+- JWT login → новая игра → 4 вкладки, события, закрытие периода
+- **320px** и **~390px**; тёмная тема
+- **`#/`** refresh на deep link
+- PWA install + resume — [`docs/foundation/PWA_INSTALL.md`](../../../docs/foundation/PWA_INSTALL.md)
+
+Полный чеклист: skill **`release-web`**.
+
+## Опционально
+
+### TMA regression
+
+Только если в ветке менялся WebApp SDK / TMA shell — skill **`telegram-mini-app-runtime`**.
+
+### Design-lab baseline compare
+
+```bash
+npm run design-lab:freeze-baseline
+```
+
+Открыть: `design-lab/compare-prod/index.html`

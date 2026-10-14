@@ -4,7 +4,7 @@
 Автоматически: event-balance-rules §1/§3 (free lunch, Pareto, xp_delta).
 Ручной audit: §10 lifecycle, §11 needs_axis — /event-analysis, EVT1-105.
 
-См. .cursor/skills/create-event/event-balance-rules.md
+См. .claude/skills/create-event/event-balance-rules.md
 """
 
 from __future__ import annotations

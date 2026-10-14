@@ -12,11 +12,11 @@ aliases:
 ---
 # Аудит качества скиллов — 2026-06-20
 
-> **Archived 2026-07-01.** Актуальная политика: [release-ready-quality.md](../../.cursor/skills/_shared/release-ready-quality.md), [skill-responsibility-matrix.md](../../.cursor/skills/_shared/skill-responsibility-matrix.md), [catalog.yaml](../../.cursor/skills/catalog.yaml). История cleanup: [LEGACY_NOISE_AUDIT_2026-06-20.md](LEGACY_NOISE_AUDIT_2026-06-20.md).
+> **Archived 2026-07-01.** Актуальная политика: [release-ready-quality.md](../../.claude/skills/_shared/release-ready-quality.md), [skill-responsibility-matrix.md](../../.claude/skills/_shared/skill-responsibility-matrix.md), [catalog.yaml](../../.claude/skills/catalog.yaml). История cleanup: [LEGACY_NOISE_AUDIT_2026-06-20.md](LEGACY_NOISE_AUDIT_2026-06-20.md).
 
 **Цель:** соответствие `quality-rubric.md` (G1–G6), чёткие границы ответственности, вызов только уместных primary, bar **release-ready** (не набросок).
 
-**Static-check:** `node .cursor/skills/skill-test/_static-check.mjs` → 30 COMPLIANT.
+**Static-check:** `node .claude/skills/skill-test/_static-check.mjs` → 30 COMPLIANT.
 
 ---
 
@@ -24,13 +24,13 @@ aliases:
 
 | Файл | Назначение |
 |------|------------|
-| [`.cursor/skills/_shared/release-ready-quality.md`](../../.cursor/skills/_shared/release-ready-quality.md) | Bar merge-ready; чеклист; draft-only исключения |
-| [`.cursor/skills/_shared/skill-responsibility-matrix.md`](../../.cursor/skills/_shared/skill-responsibility-matrix.md) | Когда primary / When NOT / subagents |
-| [`.cursor/skills/_shared/clarify-first.md`](../../.cursor/skills/_shared/clarify-first.md) | STOP при неясности; AskUserQuestion до implement |
-| [`.cursor/skills/_shared/delivery-workflow.md`](../../.cursor/skills/_shared/delivery-workflow.md) | Думаем → Уточняем → Планируем → Делаем |
-| [`.cursor/skills/_shared/visual-assets-policy.md`](../../.cursor/skills/_shared/visual-assets-policy.md) | Иконки/фоны: согласовать формат → сгенерировать → в репо |
+| [`.claude/skills/_shared/release-ready-quality.md`](../../.claude/skills/_shared/release-ready-quality.md) | Bar merge-ready; чеклист; draft-only исключения |
+| [`.claude/skills/_shared/skill-responsibility-matrix.md`](../../.claude/skills/_shared/skill-responsibility-matrix.md) | Когда primary / When NOT / subagents |
+| [`.claude/skills/_shared/clarify-first.md`](../../.claude/skills/_shared/clarify-first.md) | STOP при неясности; AskUserQuestion до implement |
+| [`.claude/skills/_shared/delivery-workflow.md`](../../.claude/skills/_shared/delivery-workflow.md) | Думаем → Уточняем → Планируем → Делаем |
+| [`.claude/skills/_shared/visual-assets-policy.md`](../../.claude/skills/_shared/visual-assets-policy.md) | Иконки/фоны: согласовать формат → сгенерировать → в репо |
 
-Обновлены: `quality-rubric.md` (**G5**, **G6**), `tvoy-hod-router.mdc`, блок «Стандарт качества и вызов» во **всех** product/meta skills.
+Обновлены: `quality-rubric.md` (**G5**, **G6**), `.claude/rules/router.md`, блок «Стандарт качества и вызов» во **всех** product/meta skills.
 
 ---
 
@@ -88,7 +88,7 @@ aliases:
 |---|-----|--------------|
 | 1 | ~~`catalog.yaml` без `read_if`~~ | **Закрыто Sprint B 2026-06-20** — 7 skills tiered |
 | 2 | Не все deferred skills имеют When NOT | Добавить по мере использования |
-| 3 | ~~`_inject-quality-block.mjs`, `_patch-workflow-block.mjs`~~ | **Закрыто Sprint F** — `_maintain.mjs` + [`skill-test/README.md`](../../.cursor/skills/skill-test/README.md) |
+| 3 | ~~`_inject-quality-block.mjs`, `_patch-workflow-block.mjs`~~ | **Закрыто Sprint F** — `_maintain.mjs` + [`skill-test/README.md`](../../.claude/skills/skill-test/README.md) |
 | 4 | ~~Behavioral spec `/skill-test category`~~ | **Частично 2026-06-20:** core trilogy `/skill-test spec` → PASS; отчёты в `results/skill-test-spec-*-2026-06-20.md` |
 
 **Закрыто pass 2 (2026-06-20):** clarify-first, delivery-workflow, visual-assets-policy, G6, When NOT на core skills, UI anti-placeholder.
@@ -122,7 +122,7 @@ aliases:
 
 | Артефакт | Назначение |
 |----------|------------|
-| [`.github/workflows/skills-check.yml`](../../.github/workflows/skills-check.yml) | PR/push → `node .cursor/skills/skill-test/_static-check.mjs` + `_context-check.mjs` |
+| [`.github/workflows/skills-check.yml`](../../.github/workflows/skills-check.yml) | PR/push → `node .claude/skills/skill-test/_static-check.mjs` + `_context-check.mjs` |
 | `catalog.yaml` `last_context` | 11 tiered skills → `2026-06-20` / `COMPLIANT` |
 | `db-baselines-and-migrations/SKILL.md` | `backend/main.py` в «Куда писать»; **Дальше:** + next_skill |
 
@@ -136,9 +136,9 @@ aliases:
 |----------|------------|
 | [`TASK_SLICE.md`](../templates/TASK_SLICE.md) | frontmatter **`read_if_when`** + bullet Read if |
 | [`PLAN_FEATURE.md`](../templates/PLAN_FEATURE.md) | колонка Read if (`when`) в vertical slices |
-| [`_resolve-read-if.mjs`](../../.cursor/skills/skill-test/_resolve-read-if.mjs) | `node … <skill>` → таблица `when` / paths для MQ-* |
+| [`_resolve-read-if.mjs`](../../.claude/skills/skill-test/_resolve-read-if.mjs) | `node … <skill>` → таблица `when` / paths для MQ-* |
 | [`AI_ONBOARDING.md`](AI_ONBOARDING.md) | вход для новой сессии агента |
-| `tvoy-hod-router.mdc` § Subagents | когда запускать / не запускать subagents |
+| `.claude/rules/router.md` § Subagents | когда запускать / не запускать subagents |
 | CI `skills-check.yml` | + `_category-check.mjs` (41 COMPLIANT, 0 WARNINGS) |
 
 ---
@@ -147,12 +147,12 @@ aliases:
 
 | Артефакт | Назначение |
 |----------|------------|
-| [`specs/_shared/SMOKE_STUB.md`](../../.cursor/skills/specs/_shared/SMOKE_STUB.md) | Общий smoke-протокол для 21 stub spec |
-| [`specs/README.md`](../../.cursor/skills/specs/README.md) | Specs ≠ SKILL.md; когда full vs smoke |
-| [`_maintain.mjs`](../../.cursor/skills/skill-test/_maintain.mjs) | inject-quality · patch-workflow · sync-smoke-specs · check-archived |
-| [`_archived-check.mjs`](../../.cursor/skills/skill-test/_archived-check.mjs) | `disable-model-invocation` + banner + catalog (11 COMPLIANT) |
+| [`specs/_shared/SMOKE_STUB.md`](../../.claude/skills/specs/_shared/SMOKE_STUB.md) | Общий smoke-протокол для 21 stub spec |
+| [`specs/README.md`](../../.claude/skills/specs/README.md) | Specs ≠ SKILL.md; когда full vs smoke |
+| [`_maintain.mjs`](../../.claude/skills/skill-test/_maintain.mjs) | inject-quality · patch-workflow · sync-smoke-specs · check-archived |
+| [`_archived-check.mjs`](../../.claude/skills/skill-test/_archived-check.mjs) | `disable-model-invocation` + banner + catalog (11 COMPLIANT) |
 | `after-edit-verify.mjs` | Throttle 2 min/bucket; dedupe hints; seeds block merged |
-| `.cursor/hooks/.hint-throttle.json` | Local state (gitignored) |
+| `.claude/hooks/.hint-throttle.json` | Local state (gitignored) |
 
 ---
 

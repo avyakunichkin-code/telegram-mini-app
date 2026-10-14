@@ -8,7 +8,7 @@ aliases:
 # Design Lab — навигация: что, когда и куда
 
 **Для людей и агентов.** Канон процесса: [`DESIGN_WORKFLOW.md`](../../frontend-react/src/components/mqx/DESIGN_WORKFLOW.md).  
-**Скилл:** `design-lab-mqx` · **Правило:** `tvoy-hod-design-lab.mdc`.
+**Скилл:** `design-lab-mqx` · **Правило:** `.claude/rules/design-lab.md`.
 
 ---
 
@@ -62,7 +62,7 @@ cd frontend-react
 npm run design-lab:build
 ```
 
-Перед релизом: `release-web` / `tvoy-hod-release-guardrails.mdc`.
+Перед релизом: `release-web` / `release-web/guardrails.md`.
 
 ---
 

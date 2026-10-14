@@ -21,9 +21,9 @@ aliases:
 | Deprecated wrapper delete | `AuthMonetkaScreen` → `MonetkaBubbleScreen` в `LoginForm`/`RegisterForm` |
 | Irrelevant `.agents` skills | `nodejs-best-practices`, `nodejs-backend-patterns`, `seo` |
 | Stale docs trim | `PLAN_game-plan`, `ARCHITECTURE`, `tvoy-hod-frontend-core`, `docs/README` O2, design-lab FinanceSection refs |
-| June audit | `SKILLS_QUALITY_AUDIT` → archived; актуальная политика — `.cursor/skills/_shared/` |
+| June audit | `SKILLS_QUALITY_AUDIT` → archived; актуальная политика — `.claude/skills/_shared/` |
 
-**Не удалено (осознанно):** `release-tma` alias, `.cursor/skills/_archived/`, `InsuranceSection.jsx`, `docs/archive/` stubs.
+**Не удалено (осознанно):** `release-tma` alias, `.claude/skills/_archived/`, `InsuranceSection.jsx`, `docs/archive/` stubs.
 
 ---
 
@@ -31,8 +31,8 @@ aliases:
 
 | Путь | Причина |
 |------|---------|
-| `.cursor/skills/specs/specs/` (21 файл) | Случайная вложенная копия `specs/`; 0 ссылок в `catalog.yaml` |
-| `.cursor/skills/results/skill-test-*-2026-05-*.md` (8 файлов) | Устаревшие прогоны; канон — `*-2026-06-20.md` + `catalog.yaml` |
+| `.claude/skills/specs/specs/` (21 файл) | Случайная вложенная копия `specs/`; 0 ссылок в `catalog.yaml` |
+| `.claude/skills/results/skill-test-*-2026-05-*.md` (8 файлов) | Устаревшие прогоны; канон — `*-2026-06-20.md` + `catalog.yaml` |
 | `docs/agents/SKILLS_AUDIT_2026-06-01.md` | Заменён `SKILLS_QUALITY_AUDIT_2026-06-20.md` |
 
 **Политика results:** хранить только последний прогон на skill/mode; старые удалять после обновления `catalog.yaml`.
@@ -49,7 +49,7 @@ aliases:
 | `docs/specs/SPEC_FRONTEND_UI.md` | SPA/PWA spec, не TMA-only |
 | `docs/handbook/FEATURE_STATUS.md` | Порядок платформ |
 | `docs/foundation/PRE_ALPHA_PLAYTEST_PROTOCOL.md` | PW1 smoke на PWA/web |
-| `docs/agents/CURSOR_SKILLS.md` | Убрана дублирующая tier-таблица |
+| `docs/agents/AGENT_SKILLS.md` | Убрана дублирующая tier-таблица |
 | `docs/plans/README.md` | Ссылка на `tvoy-hod-router`, не legacy rule |
 | `.gitignore` | `.obsidian/graph.json` локально |
 | Wave 4 (2026-06-20) | `UI_CONSISTENCY_AUDIT`, `SPEC_ANALYTICS` §6, `mqx-ui-unification`, `marketing.md`, `GAME_DESIGN_ROADMAP`, investor/GDD refs |
@@ -63,7 +63,7 @@ aliases:
 | Redirects | `release-tma` → `release-web` | `/release-tma` invocations |
 | Secondary flows | `TMA_USER_FLOWS.md` | TMA channel, ADR-012 banner |
 | Historical ADR | ADR-001…011 | Контекст решений |
-| Studio archive | `.cursor/skills/_archived/` | Явный баннер + `disable-model-invocation` |
+| Studio archive | `.claude/skills/_archived/` | Явный баннер + `disable-model-invocation` |
 | Marketing drafts | `docs/marketing/posts/draft/` | Narrative; править при публикации |
 | Superseded specs | `SPEC_onboarding-tma`, O2 stubs | [`docs/archive/`](archive/README.md) |
 
@@ -91,7 +91,7 @@ _Волны 1–5 закрыты. Опционально: investor `deck.html` t
 | Backlinks | TRACEABILITY, CHARACTER_MONETKA, PRODUCT_BACKLOG, O2 spec/idea |
 | UX platform | 10 файлов `docs/ux/` |
 | Marketing | ep-000 drafts, NARRATIVE_PLAN, INTERVIEW |
-| release-web spec test | `.cursor/skills/results/skill-test-spec-release-web-2026-06-20.md` |
+| release-web spec test | `.claude/skills/results/skill-test-spec-release-web-2026-06-20.md` |
 
 ## Волна 3 (2026-06-20) — выполнено
 

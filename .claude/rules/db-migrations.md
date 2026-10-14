@@ -1,0 +1,49 @@
+---
+paths:
+  - "backend/migrations/**/*.sql"
+  - "backend/scripts/db.sh"
+  - "backend/scripts/dump_schema_baseline.py"
+  - "backend/scripts/verify_schema_baseline.py"
+  - "backend/scripts/seed_db.py"
+  - "backend/app/seeds/**"
+  - "backend/main.py"
+  - "backend/app/models.py"
+---
+
+# ТВОЙ ХОД — DB migrations guardrails (PostgreSQL)
+
+Короткий guardrail. Процедура и чеклисты — skill **`db-baselines-and-migrations`**.
+
+## Три слоя (не смешивать)
+
+| Слой | Где |
+|------|-----|
+| DDL | `migrations/0000_*.sql`, `migrations/00NN_*.sql`, `create_all`, `ensure_schema_compatibility()` |
+| Seeds | `app/seeds/runner.py` → `seed_all()` на **каждом** startup |
+| Контент событий | `data/events/mvp11/*.yaml` — **не** SQL |
+
+## MUST
+
+- **Baseline** (`0000_schema_baseline.sql`): только DDL; без `INSERT/UPDATE/DELETE` и без `-- >>> 00xx_*.sql`.
+- **Новая схема**: инкремент `00NN_*.sql` + при ORM — `models.py`; prod часто достаточно redeploy + `ensure_schema`, иначе `bash backend/scripts/db.sh migrate`.
+- **Каталог без ORM** (напр. `victory_goals`): DDL в baseline/миграции + seed в `app/seeds/`; не полагаться на `create_all`.
+- **FK на natural key**: `UNIQUE` в родителе до FK.
+- **Индексы**: не на `id`, если уже `PRIMARY KEY (id)`.
+
+## NEVER
+
+- DML в baseline; события в `migrations/*.sql`.
+- Склейка baseline с `archive/` миграциями.
+- Backfill без `WHERE` и идемпотентности.
+
+## Команды
+
+```bash
+bash .claude/skills/db-baselines-and-migrations/scripts/validate_baseline.sh backend/migrations/0000_schema_baseline.sql
+bash backend/scripts/db.sh migrate          # baseline + инкременты
+bash backend/scripts/db.sh bootstrap        # пустая БД
+bash backend/scripts/db.sh seed
+python backend/scripts/verify_schema_baseline.py
+```
+
+Документация: [`backend/migrations/README.md`](backend/migrations/README.md).

@@ -350,7 +350,7 @@ getAchievements: () => apiCall('/api/game/achievements'),
 
 **Принцип:** Главная остаётся **компактной** (цель сценария + финансы периода); достижения — **не** на dashboard в MVP. **Пятого таба** в `BottomGameNav` **нет**.
 
-Сверка: [SPEC_FRONTEND_UI.md](../SPEC_FRONTEND_UI.md), [DESIGN_WORKFLOW.md](../../../frontend-react/src/components/mqx/DESIGN_WORKFLOW.md), [frontend-design skill](../../../frontend-react/.agents/skills/frontend-design/SKILL.md) (канон MQX, не generic AI aesthetic).
+Сверка: [SPEC_FRONTEND_UI.md](../SPEC_FRONTEND_UI.md), [DESIGN_WORKFLOW.md](../../../frontend-react/src/components/mqx/DESIGN_WORKFLOW.md), [frontend-design skill](../../../frontend-react/.claude/skills/frontend-design/SKILL.md) (канон MQX, не generic AI aesthetic).
 
 ### 11.1. Информационная архитектура
 
