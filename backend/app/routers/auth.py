@@ -4,7 +4,7 @@ from sqlalchemy.orm import Session
 from ..database import get_db
 from ..models import User
 from ..schemas import UserRegister, UserLogin, Token
-from ..auth import get_password_hash, verify_password, create_access_token
+from ..auth import get_password_hash, password_needs_rehash, verify_password, create_access_token
 from ..auth_username import allocate_username_from_email
 
 router = APIRouter(prefix="/api", tags=["auth"])
@@ -69,7 +69,12 @@ def login(user_data: UserLogin, db: Session = Depends(get_db)):
 
     if not user or not verify_password(user_data.password, user.hashed_password):
         raise HTTPException(status_code=401, detail="Invalid username or password")
-    
+
+    # Legacy "salt:sha256" или устаревшие параметры argon2 → перехеш, пока известен пароль.
+    if password_needs_rehash(user.hashed_password):
+        user.hashed_password = get_password_hash(user_data.password)
+        db.commit()
+
     access_token = create_access_token(data={"sub": str(user.id)})
     
     return Token(
