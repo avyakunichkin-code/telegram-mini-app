@@ -85,10 +85,6 @@ aliases:
 | **browser-testing-with-devtools** | deferred | DOM/сеть PWA/web (Chrome DevTools MCP) |
 | **doubt-driven-development** | deferred | Satellite для game-economy; иначе высокие ставки |
 | **deprecation-and-migration** | deferred | Смена контрактов, `save_kind` |
-| **security-and-hardening** | deferred | JWT, ввод, интеграции |
-| **code-simplification** | deferred | Рефакторинг после роста UI |
-| **performance-optimization** | deferred | CLS/LCP, ререндеры |
-| **context-engineering** | deferred | Rules vs skills, объём контекста |
 | **social-changelog-posts** | deferred | Посты → `docs/marketing/` |
 | **release-web** | deferred | Guardrails + design-lab:build + PWA/web smoke перед выкаткой |
 | ~~release-tma~~ | deferred alias | → **release-web** |
@@ -97,9 +93,9 @@ aliases:
 
 ---
 
-## Предложение: консолидация с built-in Claude Code (на решение PO, 2026-10-14)
+## Консолидация с built-in Claude Code (применено 2026-10-14)
 
-> **Статус: предложение.** Ничего не удалено и не переведено в архив; `catalog.yaml` не менялся. Решение — за пользователем; после «утверждаем» — чеклист ниже.
+> **Статус: применено 2026-10-14** (утверждено PO). Удалены `code-simplification`, `context-engineering`, `security-and-hardening` (чеклист → `release-web/guardrails.md` §5), `_archived/code-review`; `performance-optimization` → `_archived/`; `code-review-and-quality` сжат в merge-gate (≈60 строк); `using-agent-skills` → `tier: support`. Таблица ниже — обоснование решения.
 
 Встроенные команды Claude Code: **`/code-review`** (баги в diff/PR, уровни effort, `--fix`), **`/simplify`** (reuse / упрощение / эффективность изменённого кода с применением правок), **`/security-review`** (security-ревью pending-изменений ветки). Плюс сам механизм скиллов: `description` каждого скилла и так всегда в контексте, а `router.md` + `SessionStart`-хук уже дают выбор primary. Учтён prompt-audit: описания `using-agent-skills`, `test-driven-development`, `incremental-implementation`, `frontend-ui-engineering` сужены, satellites в `router.md` — **по зоне задачи, не обязательные**.
 

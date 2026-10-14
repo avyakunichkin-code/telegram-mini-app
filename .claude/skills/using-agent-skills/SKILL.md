@@ -99,8 +99,8 @@ Epic / нарезка из spec ──→ planning-and-task-breakdown
 
 ```
 release-web · browser-testing-with-devtools · telegram-mini-app-runtime
-security-and-hardening · performance-optimization · deprecation-and-migration
-social-changelog-posts · code-simplification · context-engineering
+deprecation-and-migration
+social-changelog-posts
 project-skills-layout
 doubt-driven-development  ← исключение: обязателен как satellite для game-economy-and-victory
 ```
@@ -231,7 +231,7 @@ These are the subtle errors that look like productivity but create problems:
 6.  documentation-and-adrs         [support] — при новой границе домена
 ```
 
-`context-engineering`, `release-web` — **deferred**, не в цепочке по умолчанию.
+`release-web` — **deferred**, не в цепочке по умолчанию.
 
 ### Фаза «контент и данные» (типичные короткие цепочки)
 
@@ -263,10 +263,8 @@ These are the subtle errors that look like productivity but create problems:
 | Build | api-and-interface-design | core | REST + api.js contracts |
 | Build | test-driven-development | core | Tests prove behavior |
 | Build | doubt-driven-development | deferred | Adversarial review (satellite for economy) |
-| Build | context-engineering | deferred | Rules vs skills context |
 | Verify | browser-testing-with-devtools | deferred | Chrome DevTools MCP |
-| Verify | security-and-hardening | deferred | OWASP, auth, input |
-| Verify | performance-optimization | deferred | Measure, then optimize |
+| Verify | `/security-review` (встроенный) | — | Auth, input, секреты в diff |
 | Review | code-review-and-quality | support | Pre-merge review |
 | Ship | documentation-and-adrs | support | ADR, domain boundaries |
 | Ship | release-web | deferred | Pre-release guardrails (PWA/web primary) |

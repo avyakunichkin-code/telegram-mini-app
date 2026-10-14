@@ -177,19 +177,6 @@ skills:
     last_category: "2026-05-31"
     last_category_result: COMPLIANT
 
-  code-review:
-    category: review
-    priority: studio
-    status: archived
-    tier: archived
-    spec: .claude/skills/specs/review/code-review.md
-    last_static: "2026-05-31"
-    last_static_result: COMPLIANT
-    last_context: "2026-05-31"
-    last_context_result: COMPLIANT
-    last_category: "2026-05-31"
-    last_category_result: COMPLIANT
-
   code-review-and-quality:
     category: review
     priority: high
@@ -306,50 +293,6 @@ skills:
     last_static: "2026-05-31"
     last_static_result: COMPLIANT
     last_context: "2026-06-20"
-    last_context_result: COMPLIANT
-    last_category: "2026-05-31"
-    last_category_result: COMPLIANT
-
-  code-simplification:
-    category: build
-    priority: medium
-    status: optional
-    tier: deferred
-    spec: .claude/skills/specs/review/code-simplification.md
-    context:
-      must_read:
-        - CLAUDE.md
-      writes_to:
-        - backend/
-        - frontend-react/
-      next_skill:
-        - test-driven-development
-    last_static: "2026-05-31"
-    last_static_result: COMPLIANT
-    last_context: "2026-05-31"
-    last_context_result: COMPLIANT
-    last_category: "2026-05-31"
-    last_category_result: COMPLIANT
-
-  context-engineering:
-    category: meta
-    priority: high
-    status: optional
-    tier: deferred
-    spec: .claude/skills/specs/meta/context-engineering.md
-    context:
-      must_read:
-        - docs/DOCUMENTATION_SYSTEM.md
-        - docs/agents/AGENT_SKILLS.md
-        - CLAUDE.md
-        - .claude/rules/
-      writes_to:
-        - .claude/rules/
-      next_skill:
-        - using-agent-skills
-    last_static: "2026-05-31"
-    last_static_result: COMPLIANT
-    last_context: "2026-05-31"
     last_context_result: COMPLIANT
     last_category: "2026-05-31"
     last_category_result: COMPLIANT
@@ -714,9 +657,9 @@ skills:
   performance-optimization:
     category: verify
     priority: medium
-    status: optional
-    tier: deferred
-    spec: .claude/skills/specs/verify/performance-optimization.md
+    status: archived
+    tier: archived
+    spec: .claude/skills/specs/_archived/performance-optimization.md
     context:
       must_read:
         - frontend-react/ARCHITECTURE.md
@@ -837,28 +780,6 @@ skills:
     status: archived
     tier: archived
     spec: .claude/skills/specs/_archived/studio/retrospective.md
-    last_static: "2026-05-31"
-    last_static_result: COMPLIANT
-    last_context: "2026-05-31"
-    last_context_result: COMPLIANT
-    last_category: "2026-05-31"
-    last_category_result: COMPLIANT
-
-  security-and-hardening:
-    category: verify
-    priority: medium
-    status: optional
-    tier: deferred
-    spec: .claude/skills/specs/verify/security-and-hardening.md
-    context:
-      must_read:
-        - backend/app/auth.py
-        - CLAUDE.md
-      writes_to:
-        - backend/
-        - frontend-react/
-      next_skill:
-        - documentation-and-adrs
     last_static: "2026-05-31"
     last_static_result: COMPLIANT
     last_context: "2026-05-31"
@@ -1032,7 +953,7 @@ skills:
     category: meta
     priority: high
     status: active
-    tier: core
+    tier: support
     spec: .claude/skills/specs/meta/using-agent-skills.md
     context:
       must_read:

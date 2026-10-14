@@ -8,7 +8,7 @@ allowed-tools: Read, Glob, Grep, Write, AskUserQuestion
 
 ## Стандарт качества и вызов
 
-**Release-ready:** [release-ready-quality.md](../_shared/release-ready-quality.md) — готовность к merge, не набросок; **допустимо больше токенов** на чтение spec/кода, анализ и self-review перед verdict.
+**Release-ready:** [release-ready-quality.md](../_shared/release-ready-quality.md) — готовность к merge, не набросок перед verdict.
 
 **Workflow:** [delivery-workflow.md](../_shared/delivery-workflow.md) — думаем → уточняем → планируем → делаем.
 
@@ -191,7 +191,7 @@ Break the plan into discrete, implementable tasks:
 
 ### Phase 4: Implement
 
-Execute tasks one at a time following `incremental-implementation` and `test-driven-development` skills. Use `context-engineering` to load the right spec sections and source files at each step rather than flooding the agent with the entire spec.
+Execute tasks one at a time following `incremental-implementation` and `test-driven-development` skills. Load only the spec sections and source files each step needs rather than the entire spec.
 
 ## Keeping the Spec Alive
 

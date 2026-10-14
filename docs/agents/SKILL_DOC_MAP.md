@@ -82,9 +82,9 @@ design-lab/<theme>/    design-lab-mqx  →  mqx/ + prod   frontend-ui-engineerin
 
 | phase | `tier: core` (primary) | `tier: support` | `tier: deferred` |
 |-------|------------------------|-----------------|------------------|
-| `define` | `idea-refine`, `spec-driven-development`, `api-and-interface-design` | `planning-and-task-breakdown` | `context-engineering` |
-| `build` | `incremental-implementation`, `create-event`, `event-analysis`, `game-economy-and-victory`, `design-lab-mqx`, `frontend-ui-engineering`, `test-driven-development`, `critical-test-scenarios` | — | `code-simplification` |
-| `verify` | `critical-test-scenarios`, `test-driven-development` | `code-review-and-quality` | `browser-testing-with-devtools`, `doubt-driven-development`, `performance-optimization`, `security-and-hardening`, `telegram-mini-app-runtime` |
+| `define` | `idea-refine`, `spec-driven-development`, `api-and-interface-design` | `planning-and-task-breakdown` | — |
+| `build` | `incremental-implementation`, `create-event`, `event-analysis`, `game-economy-and-victory`, `design-lab-mqx`, `frontend-ui-engineering`, `test-driven-development`, `critical-test-scenarios` | — | `/simplify` (встроенный) |
+| `verify` | `critical-test-scenarios`, `test-driven-development` | `code-review-and-quality` | `browser-testing-with-devtools`, `doubt-driven-development`, `telegram-mini-app-runtime`, `/security-review` (встроенный) |
 | `ship` | — | `project-handbook-documentation`, `documentation-and-adrs` | `deprecation-and-migration`, `social-changelog-posts`, **`release-web`** (`release-tma` → alias) |
 
 **Satellites** — в YAML/frontmatter задачи (`satellites:`), не отдельный `tier`. Пример: `game-economy-and-victory` + `doubt-driven-development`.
@@ -96,7 +96,7 @@ design-lab/<theme>/    design-lab-mqx  →  mqx/ + prod   frontend-ui-engineerin
 | Задача | Скилл | Читать |
 |--------|-------|--------|
 | Какой скилл выбрать | `using-agent-skills` | `AGENT_SKILLS.md`, `catalog.yaml`, [release-ready-quality.md](../../.claude/skills/_shared/release-ready-quality.md) |
-| Rules vs skills | `context-engineering` | `DOCUMENTATION_SYSTEM.md` |
+| Rules vs skills | `project-skills-layout` | `DOCUMENTATION_SYSTEM.md` |
 | Линт скиллов | `skill-test` | `catalog.yaml`, `quality-rubric.md` |
 
 ## Handbook (люди, не контракт)

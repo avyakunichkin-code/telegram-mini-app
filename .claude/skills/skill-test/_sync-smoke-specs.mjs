@@ -14,13 +14,10 @@ const catalogPath = path.resolve(skillTestDir, '../catalog.yaml');
 const SMOKE_ONLY = new Set([
   'browser-testing-with-devtools',
   'code-review',
-  'code-simplification',
   'deprecation-and-migration',
   'documentation-and-adrs',
   'doubt-driven-development',
-  'performance-optimization',
   'project-skills-layout',
-  'security-and-hardening',
   'skill-test',
   'social-changelog-posts',
   'brainstorm',

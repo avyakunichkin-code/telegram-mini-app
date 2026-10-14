@@ -9,6 +9,7 @@ aliases:
 
 Краткий лог, когда **код обогнал docs** или наоборот. Полный чеклист — [`MVP_AUDIT_VS_SPEC.md`](MVP_AUDIT_VS_SPEC.md).
 
+| 2026-10-14 | AI-SKILLS | Консолидация: −`code-simplification` (`/simplify`), −`context-engineering`, −`security-and-hardening` (`/security-review` + `release-web/guardrails.md` §5), −`_archived/code-review`; `performance-optimization` → архив; `code-review-and-quality` → merge-gate; гейт C6 (YAML кавычки) | [`AGENT_SKILLS.md`](../agents/AGENT_SKILLS.md) |
 | 2026-10-14 | AI-TOOLING | Cursor → Claude Code: `.cursor/{skills,agents,hooks}` → `.claude/`, rules `.mdc` → `.claude/rules/*.md` (`paths:`), hooks → `.claude/settings.json`; `Shell` → scoped `Bash(...)`; deferred → `disable-model-invocation`; гейт `_claude-config-check.mjs` в CI | [`project-skills-layout`](../../.claude/skills/project-skills-layout/SKILL.md), [`AGENT_SKILLS.md`](../agents/AGENT_SKILLS.md) |
 | 2026-09-09 | CONVENTIONS | Свод принципов C-X…C-4 + гейт `scripts/check_conventions.py` (без hook) | [`CONVENTIONS.md`](../../CONVENTIONS.md), [`reviews.yaml`](../conventions/reviews.yaml) |
 | 2026-09-07 | PR-02 | Lock salary/choose (серверный ключ) + FE `Idempotency-Key` на денежные POST | [`PLAN_pr-02-salary-choose-lock`](../plans/PLAN_pr-02-salary-choose-lock.md) |

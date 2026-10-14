@@ -48,6 +48,17 @@ cd backend && python -m pytest -q
 
 Полный чеклист: skill **`release-web`**.
 
+### 5) Безопасность (если diff трогает auth, деньги, секреты, вебхуки)
+
+`/security-review` по ветке + проектный чеклист (бывший скилл `security-and-hardening`, консолидирован 2026-10-14):
+
+- **JWT** — `backend/app/auth.py`, ключ `SECRET_KEY` из env (`backend/app/config.py`). Дефолт `default-secret-key-change-me` на проде недопустим: убедиться, что переменная задана в окружении деплоя.
+- **Админка** — все `/api/admin/*` через `require_admin_user` (`ADMIN_USER_IDS` из env).
+- **Telegram webhook** — `/api/telegram/webhook/player` проверяет `X-Telegram-Bot-Api-Secret-Token` только если задан `PLAYER_TELEGRAM_WEBHOOK_SECRET`; на проде он обязан быть задан.
+- **Деньги** — денежные POST идемпотентны (`Idempotency-Key` → `run_idempotent`; FE — `utils/idempotencyKey.js`), ставки и цены только с сервера, баланс меняется только через `adjust_balance` (row-lock).
+- **CORS** — origins из env (`app/cors_settings.py`), не `*`.
+- **Секреты** — `.env` не в git (`.env.example` — шаблон); Claude Code не читает `.env` (deny в `.claude/settings.json`).
+
 ## Опционально
 
 ### TMA regression

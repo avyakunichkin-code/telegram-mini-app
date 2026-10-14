@@ -6,10 +6,12 @@ disable-model-invocation: true
 user-invocable: true
 allowed-tools: Read, Glob, Grep, Write, Bash(npm run build)
 ---
+> **АРХИВ (ТВОЙ ХОД)** — generic-скилл, отправлен в архив 2026-10-14 (консолидация скиллов): Claude Code его не обнаруживает. Вернуть в `.claude/skills/performance-optimization/` при измеренной проблеме LCP/CLS PWA или медленных эндпоинтах. Пока — правила React perf в `.claude/rules/frontend-core.md` и `frontend-react/.claude/skills/react-best-practices/`.
+
 
 ## Стандарт качества и вызов
 
-**Release-ready:** [release-ready-quality.md](../_shared/release-ready-quality.md) — готовность к merge, не набросок; **допустимо больше токенов** на чтение spec/кода, анализ и self-review перед verdict.
+**Release-ready:** [release-ready-quality.md](../_shared/release-ready-quality.md) — готовность к merge, не набросок перед verdict.
 
 **Workflow:** [delivery-workflow.md](../_shared/delivery-workflow.md) — думаем → уточняем → планируем → делаем.
 

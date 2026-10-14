@@ -245,7 +245,7 @@ P0 integrity + secrets + CI          (PR-01…06, 08, 09; PR-03 ‖ PR-05 ‖ PR
 |---|------|-------|-------|------------|------|
 | 1 | PR-03 410, затем PR-01 lock, PR-14 spawn-flag | `build` | api-and-interface-design | TDD, critical-tests | PR-02 |
 | 2 | PR-04 CI | `ship` | release-web | — | — |
-| 3 | PR-05…06 secrets | `build` | security-and-hardening (явный вызов) | TDD | — |
+| 3 | PR-05…06 secrets | `build` | `/security-review` (встроенный) | TDD | — |
 | 4 | PR-07 honesty UI | `build` | design-lab-mqx → frontend-ui-engineering | critical-tests | — |
 | 5 | PR-08 schema | `build` | db-baselines-and-migrations | TDD | — |
 | 6 | **GO-01/02** старт без Plan | `build` | frontend-ui-engineering + api | TDD, Canon Sync | GO-03 в P2 |

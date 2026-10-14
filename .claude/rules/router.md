@@ -55,7 +55,7 @@ Studio/GDD: [`.claude/skills/_archived/`](.claude/skills/_archived/) — Claude 
 | **SQL baseline / `00NN_*.sql` / seeds / `db.sh`** | **db-baselines-and-migrations** | `test-driven-development`; game-economy при `victory_goals` |
 | Неясно какой скилл | **using-agent-skills** | — |
 
-**`tier: deferred`** (явный вызов): `browser-testing-with-devtools`, `security-and-hardening`, `performance-optimization`, `deprecation-and-migration`, **`release-web`**, `telegram-mini-app-runtime`, `social-changelog-posts`, `code-simplification`, `context-engineering`. Legacy **`release-tma`** → redirect на **`release-web`**.
+**`tier: deferred`** (явный вызов): `browser-testing-with-devtools`, `deprecation-and-migration`, **`release-web`**, `telegram-mini-app-runtime`, `social-changelog-posts`. Встроенные вместо удалённых скиллов: `/simplify`, `/security-review`, `/code-review`. Legacy **`release-tma`** → redirect на **`release-web`**.
 
 **`tier: support`:** `planning-and-task-breakdown` (epic), `code-review-and-quality` (merge), `project-handbook-documentation` (handbook для людей), `documentation-and-adrs` (граница доменов), **`db-baselines-and-migrations`** (PostgreSQL baseline/миграции/seeds). **`doubt-driven-development`** — deferred, но satellite для game-economy.
 

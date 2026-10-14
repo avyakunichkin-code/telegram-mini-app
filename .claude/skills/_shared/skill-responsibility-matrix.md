@@ -28,9 +28,6 @@
 | ~~release-tma~~ | deferred alias | → **release-web** | — |
 | **telegram-mini-app-runtime** | deferred | WebApp SDK, initData, viewport | MQX layout → `frontend-ui-engineering` |
 | **browser-testing-with-devtools** | deferred | Интерактив PWA/web/DOM | Backend pytest |
-| **performance-optimization** | deferred | Измеренная проблема LCP/CLS | Новый экран → design+FE skills |
-| **security-and-hardening** | deferred | Auth, input, явный аудит | — |
-| **context-engineering** | deferred | Настройка rules/skills | Product slice |
 | **social-changelog-posts** | deferred | Пост в `docs/marketing/` | Код |
 | **skill-test** | meta | Lint/audit skills | Product work |
 

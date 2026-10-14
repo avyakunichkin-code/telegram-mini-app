@@ -121,7 +121,7 @@ aliases:
 
 ### `tier: deferred` (`status: optional`)
 
-Вызывать явно: perf, security, release, TMA runtime, browser devtools, deprecation, social posts, code-simplification, context-engineering, project-skills-layout.
+Вызывать явно: release, TMA runtime, browser devtools, deprecation, social posts, project-skills-layout. Безопасность и упрощение кода — встроенные `/security-review`, `/simplify`; perf — архив `_archived/performance-optimization`.
 
 **Исключение:** `doubt-driven-development` — остаётся deferred по статусу, но **обязателен как satellite** для `game-economy-and-victory`, крупных изменений `period.py` / victory / seeds шаблонов.
 
@@ -167,8 +167,7 @@ Subagents после крупного diff: **economy-reviewer**, **mqx-ui-revie
 |-------|---------|
 | release-web | Регулярные выкатки в prod (PWA/web smoke) |
 | browser-testing-with-devtools | Стабилизация TMA UX |
-| performance-optimization | Жалобы на LCP/рендер |
-| security-and-hardening | Внешний аудит / auth |
+| `/security-review` (встроенный) | Внешний аудит / auth |
 | planning-and-task-breakdown | Параллельная команда >1 dev |
 
 Процедура: поднять `tier` в `catalog.yaml`, обновить этот файл и `.claude/rules/router.md`.

@@ -25,8 +25,8 @@ docs/audits/engineering/<YYYY-MM-DD>-<slug>.md
 | Тема | Slug (пример) | Primary skill (ориентир) |
 |------|----------------|--------------------------|
 | Архитектура, границы доменов, техдолг | `architecture` | `documentation-and-adrs` (запись) + обзор кода |
-| Security / auth / secrets | `security` | `security-and-hardening` (**deferred** — явный запрос) |
-| Performance FE/BE | `performance` | `performance-optimization` (deferred) |
+| Security / auth / secrets | `security` | `/security-review` (встроенный) + чеклист `release-web/guardrails.md` |
+| Performance FE/BE | `performance` | архив `_archived/performance-optimization` (вернуть при задаче) |
 | Infra, хостинг, backup | `platform` | `release-web` / ops docs |
 
 Один PR/сессия — один slug. Security не смешивать с DX-онбордингом.

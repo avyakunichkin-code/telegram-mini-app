@@ -65,4 +65,4 @@ export function Block({ overview }) {
 - Параллельные независимые fetch (`Promise.all`); sync guard до `await`.
 - Lazy `import()` для тяжёлых экранов; без barrel-import иконок.
 - Derived state в render; side effects — в handlers; не вкладывать компоненты.
-- Полный Vercel-гайд: `frontend-react/.claude/skills/react-best-practices/AGENTS.full.md` или skill **performance-optimization** (deferred).
+- Полный Vercel-гайд: `frontend-react/.claude/skills/react-best-practices/AGENTS.full.md` или архивный скилл `_archived/performance-optimization` (вернуть при измеренной проблеме LCP/CLS).
