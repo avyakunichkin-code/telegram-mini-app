@@ -2,7 +2,10 @@
 
 from app.admin.notify import emit_admin_alert
 from app.admin.onboarding_funnel import build_onboarding_funnel
+from app.guidance.curriculum import CURRICULUM
 from app.models import GameProfile, NotificationLog
+
+CURRICULUM_IDS = [beat.id for beat in CURRICULUM]
 
 
 def test_patch_onboarding_emits_step_and_brief_done(client, auth_headers, db_session):
@@ -75,7 +78,7 @@ def test_watchtower_includes_funnel(client, admin_env, auth_headers):
     data = r.json()
     assert "onboarding_funnel" in data
     assert "steps" in data["onboarding_funnel"]
-    assert len(data["onboarding_funnel"]["steps"]) == 8
+    assert [s["step"] for s in data["onboarding_funnel"]["steps"]] == CURRICULUM_IDS
 
 
 def test_admin_metrics_summary_ok(client, admin_env, auth_headers):
@@ -91,7 +94,7 @@ def test_admin_metrics_summary_ok(client, admin_env, auth_headers):
 def test_build_onboarding_funnel_empty(db_session):
     funnel = build_onboarding_funnel(db_session)
     assert funnel["draft_profiles"] == 0
-    assert len(funnel["steps"]) == 8
+    assert [s["step"] for s in funnel["steps"]] == CURRICULUM_IDS
     assert funnel.get("guidance_mode") == "o2"
 
 

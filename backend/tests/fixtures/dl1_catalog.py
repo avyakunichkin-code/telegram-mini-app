@@ -47,6 +47,17 @@ def seed_dl1_catalog(db) -> None:
             is_active=1,
             sort_order=30,
         ),
+        LiabilityTemplate(
+            template_key="credit_card",
+            title="Кредитная карта",
+            total_debt=150_000,
+            annual_rate_percent=22.0,
+            liability_kind="consumer",
+            term_periods=None,
+            disbursement_mode="to_cash",
+            is_active=1,
+            sort_order=40,
+        ),
         AssetTemplate(
             template_key="apt_1br",
             title="1-комнатная",
