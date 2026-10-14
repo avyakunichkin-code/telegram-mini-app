@@ -19,6 +19,24 @@ logger = logging.getLogger(__name__)
 
 STUDENT_TEMPLATE_KEY = "mq_game_basic_v1"
 
+# Действия PATCH /api/game/guidance; `event_chosen` / `p1_close_debrief` / `complete_beat` шлют серверные хуки и тесты.
+GUIDANCE_PATCH_ACTIONS = frozenset(
+    {
+        "skip_all",
+        "screen_enter",
+        "dismiss_beat",
+        "advance_read",
+        "nav",
+        "event_chosen",
+        "p1_close_debrief",
+        "complete_beat",
+    }
+)
+
+
+class UnknownGuidanceAction(ValueError):
+    """Неизвестный `action` в PATCH guidance → 400 (не путать с «user not found» → 404)."""
+
 
 def _load_progress(user: User) -> dict[str, Any]:
     raw = getattr(user, "guidance_progress_json", None) or "{}"
@@ -404,6 +422,20 @@ def complete_guidance(user: User, profile: GameProfile, db: Session) -> None:
         logger.warning("notify_onboarding_brief_done failed", exc_info=True)
 
 
+def _curriculum_done(profile: GameProfile, progress: dict[str, Any]) -> bool:
+    if _spine_complete(progress):
+        return _is_trigger_completed(progress, "t_farewell")
+    return _first_incomplete_spine_beat(profile, progress) is None
+
+
+def _complete_if_curriculum_done(user: User, profile: GameProfile, db: Session) -> None:
+    """Явное завершение после PATCH (dismiss прощания / последнего бита). GET этого не делает."""
+    if int(getattr(user, "guidance_completed", 0) or 0) == 1:
+        return
+    if _curriculum_done(profile, _load_progress(user)):
+        complete_guidance(user, profile, db)
+
+
 def build_guidance_overview(db: Session, user: User | None, profile: GameProfile) -> dict[str, Any]:
     empty = {
         "show_curriculum": False,
@@ -450,13 +482,11 @@ def build_guidance_overview(db: Session, user: User | None, profile: GameProfile
             return _guidance_payload_from_trigger(active_trigger, progress, db, profile)
         if _non_farewell_triggers_done(progress) and not _is_trigger_completed(progress, "t_farewell"):
             return _guidance_payload_from_trigger(TRIGGERS_BY_ID["t_farewell"], progress, db, profile)
-        if _is_trigger_completed(progress, "t_farewell"):
-            complete_guidance(user, profile, db)
+        # Завершение онбординга (commit + ops-алерт) — только в PATCH, см. _complete_if_curriculum_done.
         return empty
 
     active = _first_incomplete_spine_beat(profile, progress)
     if not active:
-        complete_guidance(user, profile, db)
         return empty
 
     view_beat = active
@@ -482,6 +512,8 @@ def patch_guidance(
     view_index: int | None = None,
     trigger_id: str | None = None,
 ) -> dict[str, Any]:
+    if action not in GUIDANCE_PATCH_ACTIONS:
+        raise UnknownGuidanceAction(f"unknown guidance action: {action}")
     user = db.query(User).filter(User.id == user_id).first()
     if not user:
         raise ValueError("user not found")
@@ -520,6 +552,7 @@ def patch_guidance(
         progress["view_beat_id"] = None
         _save_progress(user, progress, db)
         db.commit()
+        _complete_if_curriculum_done(user, profile, db)
         return build_guidance_overview(db, user, profile)
 
     if action == "advance_read" and beat_id:
@@ -544,6 +577,7 @@ def patch_guidance(
                 return build_guidance_overview(db, user, profile)
         _save_progress(user, progress, db)
         db.commit()
+        _complete_if_curriculum_done(user, profile, db)
         return build_guidance_overview(db, user, profile)
 
     if action == "nav" and view_index is not None and active_spine:
@@ -560,9 +594,7 @@ def patch_guidance(
             db.commit()
 
     if action == "event_chosen":
-        progress["events_chosen_p2"] = int(progress.get("events_chosen_p2") or 0) + 1
-        _mark_trigger_completed(progress, "t_events_intro")
-        _sync_auto_gates(db, profile, snapshot, progress)
+        _apply_event_chosen(db, profile, snapshot, progress)
         _save_progress(user, progress, db)
         db.commit()
 
@@ -581,6 +613,7 @@ def patch_guidance(
     _save_progress(user, progress, db)
     db.commit()
     db.refresh(user)
+    _complete_if_curriculum_done(user, profile, db)
     return build_guidance_overview(db, user, profile)
 
 
@@ -602,11 +635,26 @@ def on_period_closed_guidance(db: Session, user_id: int, profile: GameProfile, c
         _save_progress(user, progress, db)
 
 
-def on_event_chosen(db: Session, user_id: int) -> None:
+def _apply_event_chosen(
+    db: Session,
+    profile: GameProfile,
+    snapshot: PeriodSnapshot | None,
+    progress: dict[str, Any],
+) -> None:
+    progress["events_chosen_p2"] = int(progress.get("events_chosen_p2") or 0) + 1
+    _mark_trigger_completed(progress, "t_events_intro")
+    _sync_auto_gates(db, profile, snapshot, progress)
+
+
+def on_event_chosen(db: Session, user_id: int, profile: GameProfile) -> None:
+    """Хук выбора события: меняет прогресс в текущей транзакции вызывающего, без commit."""
     user = db.query(UserModel).filter(UserModel.id == user_id).first()
     if not user or int(getattr(user, "guidance_completed", 0) or 0) == 1:
         return
-    patch_guidance(db, user_id, action="event_chosen")
+    progress = _load_progress(user)
+    snapshot = get_current_period_snapshot(db, profile, create_if_missing=False)
+    _apply_event_chosen(db, profile, snapshot, progress)
+    _save_progress(user, progress, db)
 
 
 def update_nudge_streaks_on_period_close(
