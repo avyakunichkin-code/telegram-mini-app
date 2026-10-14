@@ -7,6 +7,7 @@
 | `SessionStart` | `startup\|resume\|clear\|compact` | `session-start.mjs` | Краткий указатель на роутер, каталог скиллов, workflow |
 | `PreToolUse` | `Edit\|Write\|MultiEdit` | `guard-generated.mjs` | **Гейт:** блокирует ручные правки сгенерированных файлов (см. ниже) |
 | `PostToolUse` | `Edit\|Write\|MultiEdit` | `after-edit-verify.mjs` | Напоминания pytest / guardrails / sync-lab по пути файла |
+| `PostToolUse` | `Bash` | `trim-test-output.mjs` | Сжимает вывод pytest / vitest / `npm run test:unit\|build\|check:guardrails` длиннее 6000 символов до сигнальных строк + хвоста; полный вывод — во временный файл. Отключить для команды: `CLAUDE_FULL_OUTPUT=1` |
 | `PreToolUse` (frontmatter агента `economy-reviewer`) | `Edit\|Write\|MultiEdit\|NotebookEdit` | `agent-memory-only.mjs <agent>` | **Гейт:** read-only агент с `memory: project` пишет только в `.claude/agent-memory/<agent>/` |
 
 ## Контракт

@@ -58,5 +58,38 @@ for (const [hook, args, name, payload, expected] of runs) {
   if (!ok) fails++;
   console.log(`${ok ? 'OK  ' : 'FAIL'}  ${name} → exit ${res.status} (expected ${expected})${ok ? '' : `\n      stderr: ${res.stderr.trim()}`}`);
 }
-console.log(`\nSummary: ${runs.length - fails} OK, ${fails} FAIL`);
+// trim-test-output.mjs (PostToolUse, не блокирует): режет только длинный вывод раннеров тестов/сборки.
+const TRIM_HOOK = path.join(HOOKS_DIR, 'trim-test-output.mjs');
+const longOut =
+  Array.from({ length: 400 }, (_, i) => `tests/test_x.py::test_${i} PASSED`).join('\n') +
+  '\nFAILED tests/test_y.py::test_boom - AssertionError\n446 passed, 1 failed in 300s';
+const bashRes = (stdout) => ({ stdout, stderr: '', interrupted: false, isImage: false });
+const trimCases = [
+  ['trim: long pytest output → rewritten', 'py -3 -m pytest -q', longOut, true],
+  ['trim: short pytest output → untouched', 'py -3 -m pytest -q', '5 passed', false],
+  ['trim: long non-test command → untouched', 'git log', longOut, false],
+  ['trim: opt-out CLAUDE_FULL_OUTPUT=1 → untouched', 'CLAUDE_FULL_OUTPUT=1 py -3 -m pytest -q', longOut, false],
+];
+let trimTotal = 0;
+for (const [name, command, stdout, expectRewrite] of trimCases) {
+  trimTotal++;
+  const payload = { tool_name: 'Bash', tool_input: { command }, tool_response: bashRes(stdout) };
+  const res = spawnSync(process.execPath, [TRIM_HOOK], { input: JSON.stringify(payload), encoding: 'utf8' });
+  let upd = null;
+  try {
+    upd = JSON.parse(res.stdout || 'null')?.hookSpecificOutput?.updatedToolOutput ?? null;
+  } catch {
+    upd = null;
+  }
+  const keepsSignal =
+    !upd ||
+    (upd.stdout.includes('FAILED tests/test_y.py') &&
+      upd.stdout.includes('446 passed, 1 failed') &&
+      upd.stdout.length < longOut.length);
+  const ok = res.status === 0 && Boolean(upd) === expectRewrite && keepsSignal;
+  if (!ok) fails++;
+  console.log(`${ok ? 'OK  ' : 'FAIL'}  ${name} → rewritten=${Boolean(upd)} (expected ${expectRewrite})`);
+}
+
+console.log(`\nSummary: ${runs.length + trimTotal - fails} OK, ${fails} FAIL`);
 process.exit(fails ? 1 : 0);

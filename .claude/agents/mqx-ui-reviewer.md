@@ -5,6 +5,7 @@ description: >-
   *Premium.jsx and design-lab/. Use proactively after large UI diffs or lab→prod changes:
   checks DESIGN_WORKFLOW, canon sync (lab + prod + APPROVED in one PR). Does not review
   game economy or run pytest.
+model: sonnet
 tools: Read, Grep, Glob
 color: purple
 ---

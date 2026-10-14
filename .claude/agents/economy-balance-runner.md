@@ -5,6 +5,7 @@ description: >-
   balance_diff) and interprets regression flags vs docs/balance/baselines. Use after
   large changes to economy, event YAML or seeds, or with /balance-playtest. Complements
   economy-reviewer (pytest/code); does not edit source code.
+model: sonnet
 tools: Read, Grep, Glob, Bash, Write
 disallowedTools: Edit, NotebookEdit
 color: orange
