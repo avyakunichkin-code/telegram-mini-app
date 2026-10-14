@@ -71,7 +71,7 @@ Mission Brief (3 карточки) — **superseded** guided onboarding.
 | `--mq-violet-deep` | `#5B21B6` | Hover, ссылки |
 | `--mq-emerald` | `#059669` | Плюс к деньгам |
 | `--mq-danger` | `#DC2626` | Просрочка, ошибки |
-| `--mq-warning` | `#D97706` | Время, ожидание |
+| `--mq-warning` | `#D97706` | Предупреждение, ожидание |
 | `--mqx-ink` | из `tg-theme-text` | Текст MQX-блоков |
 | `--mqx-glass-strong` … `softer` | mix с `tg-theme-bg` | Карточки «стекло» |
 
@@ -85,7 +85,7 @@ Mission Brief (3 карточки) — **superseded** guided onboarding.
 
 | Токен | px | Роль |
 |-------|-----|------|
-| `--mq-fs-display` | 26 | Таймер hero compact |
+| `--mq-fs-display` | 26 | Крупная цифра hero |
 | `--mq-fs-stat` | 34 | Крупная KPI-цифра (аналитика), не считать в «4 уровнях» экрана |
 | `--mq-fs-title` | 20 | Крупные заголовки экрана |
 | `--mq-fs-heading` | 14 | Заголовки секций (`mqx-finance-static__title`) |
@@ -97,7 +97,7 @@ Mission Brief (3 карточки) — **superseded** guided onboarding.
 Веса: `--mq-fw-regular` 400, `--mq-fw-medium` 550, `--mq-fw-bold` 700, `--mq-fw-heavy` 800.  
 Межстрочные: `--mq-lh-tight` 1.15, `--mq-lh-body` 1.42, `--mq-lh-relaxed` 1.45.
 
-Системный стек платформы; **не** подключать Inter в TMA без продуктового решения.  
+Решение принято ([ADR-014](../../decisions/ADR-014-brand-direction-board-game.md)): отдельная пара webfont для PWA/web/TMA, конкретная пара — ★ раунда design-lab; до него — системный стек.  
 Не более **четырёх** текстовых уровней на одном экране (иерархия, не считая tabular-цифры).
 
 ---

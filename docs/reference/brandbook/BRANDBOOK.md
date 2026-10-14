@@ -43,7 +43,8 @@ aliases:
 |---------|---------|
 | **Подзаголовок** | **Финансы как игра** — обязателен в маркетинге и в G1 |
 | **Монетка** | Маскот и напарница, **не** название продукта |
-| **Game / Plan** | Один визуальный язык; Plan в UI пока «скоро» — не продавать как готовое |
+| **Метафора** | Настольная игра про деньги: ход — клетка, деньги — монеты, цель — финиш ([ADR-014](../../decisions/ADR-014-brand-direction-board-game.md)) |
+| **Главное действие** | Только «Завершить ход» |
 | **Тех. префиксы** | `tvoy-hod`, MQX в коде — не публичный бренд |
 
 ---
@@ -61,6 +62,7 @@ aliases:
 | Dashboard unified | S5 | 2026-05 | [`design-lab/dashboard/APPROVED.md`](../../../design-lab/dashboard/APPROVED.md) | см. MQX doc |
 | Guided onboarding (O2) | Strip | 2026-06-01 | [`design-lab/onboarding-o2/APPROVED.md`](../../../design-lab/onboarding-o2/APPROVED.md) | см. MQX doc |
 | New game mode UI | R2 | 2026-05-20 | [`design-lab/new-game-mode/APPROVED.md`](../../../design-lab/new-game-mode/APPROVED.md) | см. MQX doc |
+| Направление «настольная игра про деньги» | **BG** | 2026-10-14 | [ADR-014](../../decisions/ADR-014-brand-direction-board-game.md) | Роли цвета, шрифт PWA, 3D, «Завершить ход»; визуал — через раунд design-lab |
 
 ---
 
@@ -131,7 +133,7 @@ aliases:
 |-----|-----|-------------------------|------------|
 | Quest Violet | `#6D28D9` | `--mq-violet`, `--mq-accent-fill` | «ХОД», CTA TMA |
 | Quest Violet Deep | `#5B21B6` | `--mq-violet-deep`, `--mq-accent-link` | Hover |
-| Coin Gold | `#EAB308` | *(в lockup)* | «ТВОЙ», акцент tagline |
+| Coin Gold | `#EAB308` | *(токен — в токенах v2)* | «ТВОЙ», деньги и награды в UI (ADR-014) |
 | Signal Emerald | `#059669` | `--mq-emerald` | Плюс, подушка |
 | Ink | `#0F1115` | `--mq-ink` | Заголовки вне TG |
 
@@ -142,7 +144,7 @@ aliases:
 | Mist | `#F5F6F8` | — | Фон веб-секций |
 | Slate | `#6B7280` | — | Подписи |
 | Line | `#E5E7EB` | `--mq-line` | Границы |
-| Warning Amber | `#D97706` | `--mq-warning` | Таймер |
+| Warning Amber | `#D97706` | `--mq-warning` | Предупреждение, ожидание |
 | Danger | `#DC2626` | `--mq-danger` | Просрочка |
 
 ### 4.3 Сочетания
@@ -157,7 +159,7 @@ aliases:
 
 | Носитель | Шрифт |
 |----------|--------|
-| **TMA** | Системный стек; `--mq-fs-body` 15 / caption 12 / small 11 |
+| **PWA / web / TMA** | Пара webfont (display + текст) — выбирается раундом design-lab по ADR-014; до ★ — системный стек, `--mq-fs-body` 15 / caption 12 / small 11 |
 | **Лендинг, PDF, баннеры** | **Inter** (+ system-ui fallback) |
 | **Код в UI** | JetBrains Mono / ui-monospace |
 
@@ -198,6 +200,7 @@ aliases:
 | Параметр | Правило |
 |----------|---------|
 | Формат | PNG, прозрачный фон |
+| Стиль | 3D, как логотип (ADR-014); текущий 2D-маскот — до перерисовки |
 | Дефолт | [`assets/monetka/monetka-mascot.png`](assets/monetka/monetka-mascot.png) |
 | Позы | `monetka-{pose}.png` → `MonetkaAvatar` |
 | Пузырь | CSS, не в PNG |
