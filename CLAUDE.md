@@ -89,3 +89,9 @@ AI-конфигурация: `.claude/rules/` (path-scoped), `.claude/skills/`, 
 ### Баланс / пороги
 
 [`game-balance-thresholds-and-constraints.md`](docs/vision/ideas/game-balance-thresholds-and-constraints.md) · события: [`.claude/skills/create-event/event-balance-rules.md`](.claude/skills/create-event/event-balance-rules.md)
+
+---
+
+### Compact instructions
+
+При сжатии контекста сохраняй: список изменённых файлов и ветку, незакоммиченные изменения, команды проверки и их последний результат (pytest / `npm run build` / `test:unit`), принятые пользователем решения и открытые вопросы.

@@ -1,3 +1,5 @@
+# УСТАРЕЛО (2026-10-14): прода на Render нет; будущий прод — свои серверы (контуры РФ и ЕС),
+# Python 3.14. Файл оставлен как история; локальная разработка — docs/ops/LOCAL_DEV.md.
 # Blueprint Render: API + PostgreSQL для Pre-Alpha / Closed Alpha.
 # Подключение: Dashboard → New → Blueprint → этот репозиторий.
 # После деплоя: env PUBLIC_APP_URL, CORS_*, SECRET_KEY, ADMIN_USER_IDS — см. docs/ops/DEPLOY.md

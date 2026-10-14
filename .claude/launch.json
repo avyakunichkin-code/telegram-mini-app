@@ -4,8 +4,45 @@
     {
       "name": "design-lab",
       "runtimeExecutable": "py",
-      "runtimeArgs": ["-3", "-m", "http.server", "4173", "--directory", "design-lab"],
+      "runtimeArgs": [
+        "-3",
+        "-m",
+        "http.server",
+        "4173",
+        "--directory",
+        "design-lab"
+      ],
       "port": 4173
+    },
+    {
+      "name": "backend",
+      "runtimeExecutable": "backend/.venv/Scripts/python.exe",
+      "runtimeArgs": [
+        "-m",
+        "uvicorn",
+        "main:app",
+        "--reload",
+        "--port",
+        "8000",
+        "--app-dir",
+        "backend"
+      ],
+      "port": 8000
+    },
+    {
+      "name": "frontend",
+      "runtimeExecutable": "npm.cmd",
+      "runtimeArgs": [
+        "--prefix",
+        "frontend-react",
+        "run",
+        "dev",
+        "--",
+        "--port",
+        "5173",
+        "--strictPort"
+      ],
+      "port": 5173
     }
   ]
 }

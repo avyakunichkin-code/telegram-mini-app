@@ -46,7 +46,7 @@ def resolve_player_web_app_url() -> str:
 
 # Значения-заглушки из старого дефолта и .env.example: JWT с ними подделывается кем угодно.
 _PLACEHOLDER_SECRET_KEYS = frozenset({"", "default-secret-key-change-me", "change-me"})
-_DEV_SECRET_KEY = "dev-only-insecure-secret-key"
+_DEV_SECRET_KEY = "dev-only-insecure-secret-key-do-not-deploy"  # ≥32 байт: HS256 (RFC 7518 §3.2)
 
 
 def is_production_env() -> bool:

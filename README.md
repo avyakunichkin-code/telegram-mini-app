@@ -4,9 +4,9 @@
 
 [![Deploy on Render](https://img.shields.io/badge/Deploy%20on-Render-blue?logo=render)](https://render.com)
 [![GitHub Pages](https://img.shields.io/badge/Hosted%20on-GitHub%20Pages-blue?logo=github)](https://avyakunichkin-code.github.io/telegram-mini-app/)
-[![Python](https://img.shields.io/badge/Python-3.11%2B-blue?logo=python)](https://python.org)
+[![Python](https://img.shields.io/badge/Python-3.14-blue?logo=python)](https://python.org)
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.115-blue?logo=fastapi)](https://fastapi.tiangolo.com/)
-[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16-blue?logo=postgresql)](https://postgresql.org)
+[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-18-blue?logo=postgresql)](https://postgresql.org)
 
 ---
 
@@ -60,6 +60,8 @@
 ---
 
 ## Локальный запуск
+
+**Windows, с нуля одной командой:** `powershell -ExecutionPolicy Bypass -File scripts\dev-setup.ps1` — подробно в [`docs/ops/LOCAL_DEV.md`](docs/ops/LOCAL_DEV.md) (Python 3.14, PostgreSQL 18).
 
 ### Backend
 
@@ -132,7 +134,7 @@ bash backend/scripts/db.sh migrate
 
 | Слой | Технологии |
 |------|-------------|
-| Backend | FastAPI, SQLAlchemy, PostgreSQL, JWT (`python-jose`), uvicorn |
+| Backend | FastAPI, SQLAlchemy 2.1, PostgreSQL (`psycopg` 3), JWT (`PyJWT`), uvicorn |
 | Frontend | React 18, Vite 8, `@telegram-apps/telegram-ui`, `@twa-dev/sdk`, axios, React Router |
 
 ---

@@ -508,6 +508,7 @@ CREATE TABLE insurance_policies (
 
 ;
 
+-- victory_goals: без ORM-модели; DEFAULT-ы — как в app/seeds/victory_goals.py (_VICTORY_GOALS_DDL)
 CREATE TABLE victory_goals (
 	id SERIAL NOT NULL,
 	template_key VARCHAR(80) NOT NULL,
@@ -515,11 +516,11 @@ CREATE TABLE victory_goals (
 	goal_type VARCHAR(60) NOT NULL,
 	title TEXT NOT NULL,
 	order_index INTEGER NOT NULL,
-	enabled BOOLEAN NOT NULL,
-	required BOOLEAN NOT NULL,
-	requires_mechanics JSONB NOT NULL,
-	params JSONB NOT NULL,
-	created_at TIMESTAMP WITHOUT TIME ZONE NOT NULL,
+	enabled BOOLEAN NOT NULL DEFAULT TRUE,
+	required BOOLEAN NOT NULL DEFAULT FALSE,
+	requires_mechanics JSONB NOT NULL DEFAULT '[]'::jsonb,
+	params JSONB NOT NULL DEFAULT '{}'::jsonb,
+	created_at TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT NOW(),
 	PRIMARY KEY (id)
 )
 

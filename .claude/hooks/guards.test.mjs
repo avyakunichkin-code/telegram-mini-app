@@ -5,6 +5,8 @@
  * Запуск из корня репо: node .claude/hooks/guards.test.mjs  (exit 1 при FAIL)
  */
 import { spawnSync } from 'child_process';
+import { writeFileSync, rmSync } from 'fs';
+import os from 'os';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
@@ -58,5 +60,47 @@ for (const [hook, args, name, payload, expected] of runs) {
   if (!ok) fails++;
   console.log(`${ok ? 'OK  ' : 'FAIL'}  ${name} → exit ${res.status} (expected ${expected})${ok ? '' : `\n      stderr: ${res.stderr.trim()}`}`);
 }
-console.log(`\nSummary: ${runs.length - fails} OK, ${fails} FAIL`);
+// trim-test-output.mjs (PostToolUse, не блокирует): режет только длинный вывод раннеров тестов/сборки.
+const TRIM_HOOK = path.join(HOOKS_DIR, 'trim-test-output.mjs');
+const longOut =
+  Array.from({ length: 400 }, (_, i) => `tests/test_x.py::test_${i} PASSED`).join('\n') +
+  '\nFAILED tests/test_y.py::test_boom - AssertionError\n446 passed, 1 failed in 300s';
+const bashRes = (stdout) => ({ stdout, stderr: '', interrupted: false, isImage: false });
+const trimCases = [
+  ['trim: long pytest output → rewritten', 'py -3 -m pytest -q', longOut, true],
+  ['trim: short pytest output → untouched', 'py -3 -m pytest -q', '5 passed', false],
+  ['trim: long non-test command → untouched', 'git log', longOut, false],
+  ['trim: opt-out CLAUDE_FULL_OUTPUT=1 → untouched', 'CLAUDE_FULL_OUTPUT=1 py -3 -m pytest -q', longOut, false],
+];
+// Bash отдаёт в stdout только начало длинного вывода, полный текст — в persistedOutputPath:
+// итог прогона («446 passed, 1 failed») есть только в файле и должен попасть в хвост.
+const persisted = path.join(os.tmpdir(), `guards-test-persisted-${process.pid}.txt`);
+writeFileSync(persisted, longOut);
+const headOnly = longOut.slice(0, 7000);
+trimCases.push(['trim: truncated stdout + persistedOutputPath → tail from full file', 'py -3 -m pytest -q', headOnly, true, persisted]);
+let trimTotal = 0;
+for (const [name, command, stdout, expectRewrite, persistedPath] of trimCases) {
+  trimTotal++;
+  const response = persistedPath ? { ...bashRes(stdout), persistedOutputPath: persistedPath } : bashRes(stdout);
+  const payload = { tool_name: 'Bash', tool_input: { command }, tool_response: response };
+  const res = spawnSync(process.execPath, [TRIM_HOOK], { input: JSON.stringify(payload), encoding: 'utf8' });
+  let upd = null;
+  try {
+    upd = JSON.parse(res.stdout || 'null')?.hookSpecificOutput?.updatedToolOutput ?? null;
+  } catch {
+    upd = null;
+  }
+  const keepsSignal =
+    !upd ||
+    (upd.stdout.includes('FAILED tests/test_y.py') &&
+      upd.stdout.includes('446 passed, 1 failed') &&
+      upd.stdout.length < longOut.length);
+  const ok = res.status === 0 && Boolean(upd) === expectRewrite && keepsSignal;
+  if (!ok) fails++;
+  console.log(`${ok ? 'OK  ' : 'FAIL'}  ${name} → rewritten=${Boolean(upd)} (expected ${expectRewrite})`);
+}
+
+rmSync(persisted, { force: true });
+
+console.log(`\nSummary: ${runs.length + trimTotal - fails} OK, ${fails} FAIL`);
 process.exit(fails ? 1 : 0);

@@ -6,11 +6,12 @@
 ## Запуск
 
 ```bash
-cd design-lab
+cd design-lab/run-finale
+./sync-lab.sh   # после правки styles.css → lab-base.css
 npx serve .
 ```
 
-Открыть хаб → **Run finale — GE1** (не `serve` только в этой папке).
+Раунд self-contained: `index.html` подключает только `./lab-base.css`. Также доступен из хаба `design-lab/` → **Run finale — GE1**.
 
 ## Управление на странице
 
