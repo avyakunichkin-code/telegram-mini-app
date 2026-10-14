@@ -8,13 +8,13 @@ import {
 describe('guidanceAnchors', () => {
   it('maps action beats to dashboard anchors', () => {
     assert.equal(getGuidanceAnchorForBeat('p1_salary'), 'salary');
-    assert.equal(getGuidanceAnchorForBeat('p2_events_intro'), 'events');
-    assert.equal(getGuidanceAnchorForBeat('p3_needs'), 'needs');
+    assert.equal(getGuidanceAnchorForBeat('t_events_intro'), 'events');
+    assert.equal(getGuidanceAnchorForBeat('t_needs'), 'needs');
   });
 
-  it('returns null for beats without UI anchor', () => {
-    assert.equal(getGuidanceAnchorForBeat('p2_events_done'), null);
-    assert.equal(getGuidanceAnchorForBeat('p3_farewell'), null);
+  it('returns null for unknown or legacy O2 beat ids', () => {
+    assert.equal(getGuidanceAnchorForBeat('p2_events_intro'), null);
+    assert.equal(getGuidanceAnchorForBeat('p3_needs'), null);
     assert.equal(getGuidanceAnchorForBeat(null), null);
   });
 

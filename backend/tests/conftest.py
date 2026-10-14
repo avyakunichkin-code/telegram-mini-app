@@ -71,17 +71,16 @@ def auth_headers(test_user):
 
 @pytest.fixture()
 def admin_env(test_user, monkeypatch):
-    monkeypatch.setenv("ADMIN_USER_IDS", str(test_user.id))
+    """Админ-allowlist + выключенный Telegram; monkeypatch откатывает config после теста."""
     from app.config import config
 
-    config.ADMIN_USER_IDS = {test_user.id}
+    monkeypatch.setenv("ADMIN_USER_IDS", str(test_user.id))
     monkeypatch.delenv("OPS_TELEGRAM_BOT_TOKEN", raising=False)
     monkeypatch.delenv("OPS_TELEGRAM_CHAT_ID", raising=False)
-    from app import config as config_module
-
-    config_module.config.OPS_TELEGRAM_BOT_TOKEN = ""
-    config_module.config.OPS_TELEGRAM_CHAT_ID = ""
-    config_module.config.OPS_TELEGRAM_MESSAGE_THREAD_ID = ""
+    monkeypatch.setattr(config, "ADMIN_USER_IDS", {test_user.id})
+    monkeypatch.setattr(config, "OPS_TELEGRAM_BOT_TOKEN", "")
+    monkeypatch.setattr(config, "OPS_TELEGRAM_CHAT_ID", "")
+    monkeypatch.setattr(config, "OPS_TELEGRAM_MESSAGE_THREAD_ID", "")
     yield test_user
 
 

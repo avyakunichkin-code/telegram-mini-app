@@ -18,7 +18,7 @@ def build_metrics_summary(
     window_days = max(1, min(int(days or 7), 90))
     since = utc_now_naive() - timedelta(days=window_days)
     sk = str(save_kind or "").strip().lower()
-    save_kind_filter = sk if sk in ("game", "plan") else None
+    save_kind_filter = sk if sk == "game" else None
 
     def _profile_query():
         query = db.query(GameProfile)

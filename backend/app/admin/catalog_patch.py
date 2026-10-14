@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import math
 from typing import Any, Optional
 
 from sqlalchemy.orm import Session
@@ -27,6 +28,21 @@ def _coerce_bool(value: Any) -> bool:
     if isinstance(value, str):
         return value.strip().lower() in ("1", "true", "yes", "on")
     return bool(value)
+
+
+def _coerce_number(value: Any, cast: type, *, nullable: bool = False) -> Any:
+    """int/float из JSON или строки формы; мусор, bool, NaN/inf → ValueError (→ 422, не 500)."""
+    if nullable and (value is None or value == ""):
+        return None
+    if isinstance(value, bool) or value is None:
+        raise ValueError(value)
+    try:
+        result = cast(value)
+    except (TypeError, ValueError, OverflowError) as exc:
+        raise ValueError(value) from exc
+    if cast is float and not math.isfinite(result):
+        raise ValueError(value)
+    return result
 
 
 def patch_catalog_row(
@@ -54,6 +70,14 @@ def patch_catalog_row(
         if msgs:
             errors[field] = msgs
 
+    def set_number(field: str, cast: type, *, nullable: bool = False) -> None:
+        if field not in data:
+            return
+        try:
+            setattr(row, field, _coerce_number(data[field], cast, nullable=nullable))
+        except ValueError:
+            set_errors(field, ["Ожидается целое число" if cast is int else "Ожидается число"])
+
     if catalog_key == "liabilities":
         assert isinstance(row, LiabilityTemplate)
         if "template_key" in data:
@@ -69,14 +93,11 @@ def patch_catalog_row(
                     row.template_key = key
         if "title" in data:
             row.title = str(data["title"] or "").strip() or row.title
-        if "total_debt" in data:
-            row.total_debt = float(data["total_debt"])
-        if "annual_rate_percent" in data:
-            row.annual_rate_percent = float(data["annual_rate_percent"])
+        set_number("total_debt", float)
+        set_number("annual_rate_percent", float)
         if "is_active" in data:
             row.is_active = 1 if _coerce_bool(data["is_active"]) else 0
-        if "sort_order" in data:
-            row.sort_order = int(data["sort_order"])
+        set_number("sort_order", int)
 
     elif catalog_key == "assets":
         assert isinstance(row, AssetTemplate)
@@ -101,17 +122,13 @@ def patch_catalog_row(
             "monthly_rent_cost",
             "monthly_utilities_cost",
         ):
-            if field in data:
-                setattr(row, field, float(data[field]))
-        if "income_yield_annual" in data:
-            val = data["income_yield_annual"]
-            row.income_yield_annual = float(val) if val is not None and val != "" else None
+            set_number(field, float)
+        set_number("income_yield_annual", float, nullable=True)
         if "has_tenants_default" in data:
             row.has_tenants_default = 1 if _coerce_bool(data["has_tenants_default"]) else 0
         if "is_active" in data:
             row.is_active = 1 if _coerce_bool(data["is_active"]) else 0
-        if "sort_order" in data:
-            row.sort_order = int(data["sort_order"])
+        set_number("sort_order", int)
 
     elif catalog_key == "starters":
         assert isinstance(row, GameStarterTemplate)
@@ -128,16 +145,13 @@ def patch_catalog_row(
                     row.template_key = key
         if "title" in data:
             row.title = str(data["title"] or "").strip() or row.title
-        if "difficulty_rank" in data:
-            row.difficulty_rank = int(data["difficulty_rank"])
-        if "base_monthly_lifestyle_expense" in data:
-            row.base_monthly_lifestyle_expense = float(data["base_monthly_lifestyle_expense"])
+        set_number("difficulty_rank", int)
+        set_number("base_monthly_lifestyle_expense", float)
         if "applies_to_save_kind" in data:
             row.applies_to_save_kind = str(data["applies_to_save_kind"] or "game")
         if "is_active" in data:
             row.is_active = 1 if _coerce_bool(data["is_active"]) else 0
-        if "sort_order" in data:
-            row.sort_order = int(data["sort_order"])
+        set_number("sort_order", int)
         if "blueprint_json" in data:
             raw = data["blueprint_json"]
             if isinstance(raw, dict):
@@ -168,15 +182,10 @@ def patch_catalog_row(
         for field in ("title", "description", "mode", "category", "mandatory_gate", "content_class", "event_slot", "repeat_policy"):
             if field in data:
                 setattr(row, field, str(data[field] if data[field] is not None else ""))
-        if "weight" in data:
-            row.weight = int(data["weight"])
-        if "event_tier" in data:
-            row.event_tier = int(data["event_tier"])
-        if "repeat_max" in data:
-            val = data["repeat_max"]
-            row.repeat_max = int(val) if val is not None and val != "" else None
-        if "cooldown_periods" in data:
-            row.cooldown_periods = int(data["cooldown_periods"])
+        set_number("weight", int)
+        set_number("event_tier", int)
+        set_number("repeat_max", int, nullable=True)
+        set_number("cooldown_periods", int)
         if "mandatory" in data:
             row.mandatory = 1 if _coerce_bool(data["mandatory"]) else 0
         if "is_active" in data:

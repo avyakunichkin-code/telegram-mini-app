@@ -63,7 +63,7 @@ function ProductFunnel({ funnel }) {
   const days = funnel.window_days ?? 7;
   const activation = funnel.activation ?? {};
   const skLabel =
-    funnel.save_kind === 'game' ? 'Game' : funnel.save_kind === 'plan' ? 'Plan' : 'все режимы';
+    funnel.save_kind === 'game' ? 'Game' : 'все режимы';
 
   return (
     <section className="mq-card admin-watchtower__block admin-watchtower__funnel">
@@ -216,7 +216,6 @@ function MetricsSummary({ summary }) {
 const SAVE_KIND_FILTERS = [
   { id: '', label: 'Все режимы' },
   { id: 'game', label: 'Game' },
-  { id: 'plan', label: 'Plan' },
 ];
 
 export function AdminWatchtowerScreen({ onBack }) {

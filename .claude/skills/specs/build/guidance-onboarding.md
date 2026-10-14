@@ -20,8 +20,9 @@ Keep O3 onboarding guidance consistent across backend and frontend:
 
 - Backend and FE curriculum stay in sync; renamed ids come with a progress mapping (like `O2_BEAT_TO_TRIGGER`)
 - New non-screen trigger has an eligibility branch in `_trigger_eligible`
-- `pytest -k "guidance or onboarding"` green; FE `node --test src/guidance/...` run manually (not in `npm run test:unit`)
-- Known code pitfalls (GET with commits, spec vs code drift) are reported, not silently "fixed" out of scope
+- `pytest -k "guidance or onboarding"` green; FE `npm run test:guidance` green (part of `npm run test:unit`)
+- Known code pitfalls (GET commits the auto-gate sync, spec vs code drift) are reported, not silently "fixed" out of scope
+- Onboarding completion (`complete_guidance`, ops alert) stays in PATCH actions; GET never completes guidance
 
 ## Negative examples (must reject)
 

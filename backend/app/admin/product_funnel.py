@@ -12,7 +12,7 @@ from sqlalchemy.orm import Session
 from ..models import GameProfile, PeriodEconomyClosing, User
 from ..timeutil import utc_now_naive
 
-_VALID_SAVE_KINDS = frozenset({"game", "plan"})
+_VALID_SAVE_KINDS = frozenset({"game"})  # ADR-013: Plan снят
 
 
 def _normalize_save_kind(save_kind: str | None) -> str | None:
@@ -193,7 +193,7 @@ def build_product_funnel(
     activation = _activation_from_profile_ids(db, profile_ids)
     steps = _milestone_steps(db, since=since, save_kind=sk, profile_ids=profile_ids)
 
-    by_save_kind = [_segment_summary(db, since=since, save_kind=kind) for kind in ("game", "plan")]
+    by_save_kind = [_segment_summary(db, since=since, save_kind=kind) for kind in sorted(_VALID_SAVE_KINDS)]
 
     return {
         "window_days": window_days,

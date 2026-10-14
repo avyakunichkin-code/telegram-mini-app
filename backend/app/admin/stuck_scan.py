@@ -6,14 +6,17 @@
 
 from __future__ import annotations
 
+import logging
 from datetime import timedelta
-from typing import Optional
+from typing import Callable, Optional
 
 from sqlalchemy.orm import Session
 
 from ..models import GameProfile, User
 from ..timeutil import utc_now_naive
 from .notify import emit_admin_alert
+
+logger = logging.getLogger(__name__)
 
 PLAYER_STUCK_HOURS = 24
 ONBOARDING_STUCK_HOURS = 24
@@ -105,3 +108,33 @@ def scan_stuck_and_emit(
     for profile, user in profiles_with_users:
         maybe_emit_onboarding_stuck(db, profile, user)
         maybe_emit_player_stuck(db, profile)
+
+
+def run_stuck_scan_in_background(
+    profile_ids: list[int],
+    session_factory: Optional[Callable[[], Session]] = None,
+) -> None:
+    """
+    Stuck-скан вне HTTP-запроса (BackgroundTasks Watchtower): своя сессия БД,
+    Telegram-отправка не держит ответ GET. Ошибки только логируются.
+    """
+    if not profile_ids:
+        return
+    if session_factory is None:
+        from ..database import SessionLocal
+
+        session_factory = SessionLocal
+    db = session_factory()
+    try:
+        rows = (
+            db.query(GameProfile, User)
+            .join(User, User.id == GameProfile.user_id)
+            .filter(GameProfile.id.in_(profile_ids))
+            .all()
+        )
+        scan_stuck_and_emit(db, rows)
+    except Exception:
+        logger.warning("background stuck_scan failed", exc_info=True)
+        db.rollback()
+    finally:
+        db.close()

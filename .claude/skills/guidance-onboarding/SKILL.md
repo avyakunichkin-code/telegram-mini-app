@@ -99,37 +99,35 @@ paths:
 ```bash
 cd backend && python -m pytest -q -k "guidance or onboarding"
 cd backend && python -m pytest -q tests/test_events_unlock_intro.py tests/test_period_close_current_burn.py tests/test_admin_onboarding_ops.py
-cd frontend-react && node --test src/guidance/curriculum.test.js src/guidance/guidanceStripLayout.test.js src/guidance/sessionDismiss.test.js src/guidance/guidanceAnchors.test.js
+cd frontend-react && npm run test:guidance
 ```
 
-На Windows без `python` в PATH — `py -3 -m pytest …`. FE-тесты `src/guidance/*.test.js` **не входят** в `npm run test:unit` — запускай вручную.
+На Windows без `python` в PATH — `py -3 -m pytest …`. FE-тесты `src/guidance/*.test.js` входят в `npm run test:unit` (скрипт `test:guidance`). Регрессии хуков и PATCH — `tests/test_guidance_hooks.py`.
 
 ## Инварианты (не ломать без spec)
 
 - Прогресс guidance — **на `User`**, не на профиле; `onboarding_state/step` — на `GameProfile` и выставляются из guidance только в `complete_guidance`.
 - Бэкенд `curriculum.py`/`triggers.py` и FE `curriculum.js` — **зеркала**: id, порядок, gate, `MIN_PERIOD_INDEX_FOR_GAME_EVENTS` (= 3 в `game/rules.py`).
 - `_load_progress` отбрасывает неизвестные id: переименование бита «обнуляет» его у живых игроков — нужен маппинг как `O2_BEAT_TO_TRIGGER`.
-- Хуки guidance не должны валить `process_period_end` / выбор события (обёрнуты в try/except).
+- Хуки guidance не должны валить `process_period_end` / выбор события: оба — `try` + `db.begin_nested()` (savepoint, как у достижений) + `logger.warning`; хуки **не коммитят** — изменения уходят в транзакцию вызывающего (`on_event_chosen(db, user_id, profile)` вызывается до commit выбора события, снимок без создания).
+- **Завершение онбординга — только в PATCH (решение PO 2026-10-14, вариант A):** `complete_guidance` (commit + ops-алерт `onboarding_brief_done`) вызывают `skip_all`, `advance_read t_farewell` и `_complete_if_curriculum_done` после `dismiss_beat` / `advance_read` / хвоста PATCH. `GET /api/game/guidance` и `GET /api/finance/overview` только читают + идемпотентно синхронизируют авто-гейты (commit прогресса), без завершения и алертов.
+- PATCH: `action` вне `GUIDANCE_PATCH_ACTIONS` → **400** (`UnknownGuidanceAction`); «user not found» → 404.
 - Guidance-ответ ≠ правило игры: экономика и victory не зависят от guidance (только UI-блокировки в FE `curriculum.js`).
 
 ## Ловушки (найдено в коде)
 
-- **GET с побочными эффектами:** `build_guidance_overview` (в т.ч. из `GET /api/finance/overview`) делает `db.commit()` в `_sync_auto_gates` и может вызвать `complete_guidance` → commit + ops-алерт. Не вызывай его внутри чужой незакоммиченной транзакции.
-- **Двойной commit при выборе события:** `on_event_chosen` → `patch_guidance` коммитит сам; ошибки глушатся `except Exception: pass` без лога.
+- **GET коммитит синхронизацию авто-гейтов:** `build_guidance_overview` (в т.ч. из `GET /api/finance/overview`) делает `db.commit()` после `_sync_auto_gates`. Не вызывай его внутри чужой незакоммиченной транзакции.
 - **`events_chosen_p2`** растёт на любом периоде; триггер-gate `action_event` считает `selected` события **любого** периода, а beat-gate — только `period_index == 2`.
 - **Spec vs код:** в spec `t_events_intro` — «period ≥ 2», в коде — `MIN_PERIOD_INDEX_FOR_GAME_EVENTS` (3); spec ограничивает scope шаблоном «Студент», движок показывает curriculum на любом шаблоне (шаблон влияет только на порог nudge, `STUDENT_TEMPLATE_KEY`).
 - **Лексикон:** главное действие — только «Завершить ход» (решение PO 2026-10-14, ADR-014); «Закрыть месяц» не использовать.
 - `_nudge_threshold(profile, kind)` игнорирует `kind`: порог один на оба nudge — 1 (студент) / 2 (остальные).
-- Хук закрытия периода — без savepoint (в отличие от достижений): DB-ошибка внутри него оставит сессию `process_period_end` в failed-состоянии, try/except этого не лечит.
-- Неизвестный `action` в PATCH не даёт 4xx — молча sync + 200; `ValueError` (только «user not found») → 404.
 - Actions `p1_close_debrief`, `complete_beat`, `event_chosen` FE не шлёт — их вызывают серверные хуки/тесты.
 - FE `handleCurriculumDismiss`: `patch()` уже делает `refreshOverview`, затем handler зовёт его ещё раз (двойной запрос).
-- **Сломанный FE-тест:** `guidanceAnchors.test.js` ждёт O2-id (`p2_events_intro`, `p3_needs`) — сейчас 1 fail; не в npm-скриптах, поэтому незаметен.
 - `guidance_mode: "o2"` и воронка в админке считают только spine-биты, триггеры O3 в воронку не попадают.
 
 ## Итог (Verdict)
 
-Завершай **PASS** / **CONCERNS** / **FAIL**: pytest `-k "guidance or onboarding"` зелёный, FE `node --test src/guidance/...` (с известным fail `guidanceAnchors` — указать отдельно), зеркало BE↔FE сверено, spec обновлён.
+Завершай **PASS** / **CONCERNS** / **FAIL**: pytest `-k "guidance or onboarding"` зелёный, FE `npm run test:guidance` (входит в `test:unit`), зеркало BE↔FE сверено, spec обновлён.
 
 ## Согласование изменений
 

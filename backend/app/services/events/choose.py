@@ -1,5 +1,6 @@
 """Выбор варианта события: идемпотентность, блокировка инстанса, применение эффектов."""
 import json
+import logging
 
 from fastapi import HTTPException
 from sqlalchemy.orm import Session
@@ -28,6 +29,8 @@ from ...needs.engine import apply_needs_delta, needs_values_from_profile, parse_
 from ...timeutil import utc_now_naive
 from .needs_rescue import _needs_config_for_profile
 from .selection import record_event_profile_selection
+
+logger = logging.getLogger(__name__)
 
 
 def _clamp_expense_line_amount(amount: float) -> float:
@@ -309,14 +312,17 @@ def _apply_event_choice(
     inst.selected_choice_id = int(choice_id)
     inst.resolved_at = utc_now_naive()
     record_event_profile_selection(db, profile.id, int(inst.definition_id), int(profile.period_index))
-    db.commit()
 
+    # Guidance — в той же транзакции, что и выбор события; savepoint изолирует его DB-ошибки.
     try:
         from ...guidance.engine import on_event_chosen
 
-        on_event_chosen(db, profile.user_id)
+        with db.begin_nested():
+            on_event_chosen(db, profile.user_id, profile)
     except Exception:
-        pass
+        logger.warning("guidance event_chosen hook failed profile_id=%s", profile.id, exc_info=True)
+
+    db.commit()
 
     try:
         from ...admin.notify import notify_event_chosen
