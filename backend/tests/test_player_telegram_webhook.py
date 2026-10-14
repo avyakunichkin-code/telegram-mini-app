@@ -33,8 +33,8 @@ def test_resolve_player_web_app_url_hash_router(monkeypatch):
     monkeypatch.setenv("PUBLIC_APP_URL", "https://app.example.com/#")
     from app import config as config_module
 
-    config_module.config.PUBLIC_APP_URL = "https://app.example.com/#"
-    config_module.config.ADMIN_WEB_BASE_URL = config_module._resolve_admin_web_base_url()
+    monkeypatch.setattr(config_module.config, "PUBLIC_APP_URL", "https://app.example.com/#")
+    monkeypatch.setattr(config_module.config, "ADMIN_WEB_BASE_URL", config_module._resolve_admin_web_base_url())
     assert resolve_player_web_app_url() == "https://app.example.com/#/"
 
 
@@ -128,7 +128,7 @@ def test_webhook_rejects_bad_secret(db_session, monkeypatch):
     monkeypatch.setenv("PLAYER_TELEGRAM_WEBHOOK_SECRET", "top-secret")
     from app.config import config
 
-    config.PLAYER_TELEGRAM_WEBHOOK_SECRET = "top-secret"
+    monkeypatch.setattr(config, "PLAYER_TELEGRAM_WEBHOOK_SECRET", "top-secret")
 
     mini = FastAPI()
     mini.include_router(router)
@@ -153,7 +153,7 @@ def test_webhook_accepts_update_with_secret(db_session, monkeypatch):
     monkeypatch.setenv("PLAYER_TELEGRAM_WEBHOOK_SECRET", "top-secret")
     from app.config import config
 
-    config.PLAYER_TELEGRAM_WEBHOOK_SECRET = "top-secret"
+    monkeypatch.setattr(config, "PLAYER_TELEGRAM_WEBHOOK_SECRET", "top-secret")
     monkeypatch.setattr("app.telegram.player_webhook.send_player_message", lambda *a, **k: True)
 
     mini = FastAPI()

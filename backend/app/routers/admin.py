@@ -1,4 +1,4 @@
-"""Admin Watchtower API (MVP 1.2 A0) — read-only, allowlist."""
+"""Admin Watchtower API (MVP 1.2 A0) — allowlist; чтение + правки каталогов, stuck-скан в фоне."""
 
 from __future__ import annotations
 
@@ -6,7 +6,7 @@ import json
 from datetime import datetime
 from typing import Any, List, Optional
 
-from fastapi import APIRouter, Depends, HTTPException, Query
+from fastapi import APIRouter, BackgroundTasks, Depends, HTTPException, Query
 from fastapi.responses import StreamingResponse
 from pydantic import BaseModel
 from sqlalchemy import func
@@ -31,7 +31,7 @@ from ..admin.watchtower_profiles import build_admin_profile_row, fetch_profile_r
 from ..admin.onboarding_funnel import build_onboarding_funnel
 from ..admin.profile_inspector import build_profile_inspector
 from ..admin.run_feedback import build_run_feedback_rows
-from ..admin.stuck_scan import scan_stuck_and_emit
+from ..admin.stuck_scan import run_stuck_scan_in_background
 from ..admin.notify_messages import format_alert_message_ru, kind_label_ru
 from ..database import get_db
 from ..events.mvp11_seeds import YAML_EVENT_READONLY_DETAIL, is_yaml_catalog_event_key
@@ -674,8 +674,9 @@ def admin_metrics_summary(
     db: Session = Depends(get_db),
 ):
     sk = save_kind.strip().lower() or None
-    if sk and sk not in ("game", "plan"):
-        raise HTTPException(status_code=400, detail="save_kind must be 'game' or 'plan'")
+    # ADR-013: Plan снят — фильтр только по game (legacy plan-профили видны в «Все»).
+    if sk and sk != "game":
+        raise HTTPException(status_code=400, detail="save_kind must be 'game'")
     return AdminMetricsSummary(**build_metrics_summary(db, days=days, save_kind=sk))
 
 
@@ -727,12 +728,15 @@ def admin_watchtower(
     profile_filter: str = Query("", max_length=32),
     save_kind: str = Query("", max_length=16),
     stuck_only: bool = Query(False),
+    *,
+    background_tasks: BackgroundTasks,
     _admin: User = Depends(require_admin_user),
     db: Session = Depends(get_db),
 ):
     sk = save_kind.strip().lower()
-    if sk and sk not in ("game", "plan"):
-        raise HTTPException(status_code=400, detail="save_kind must be 'game' or 'plan'")
+    # ADR-013: Plan снят — фильтр только по game (legacy plan-профили видны в «Все»).
+    if sk and sk != "game":
+        raise HTTPException(status_code=400, detail="save_kind must be 'game'")
     sk_param = sk or ""
 
     users = db.query(User).order_by(User.id.desc()).limit(user_limit).all()
@@ -763,14 +767,8 @@ def admin_watchtower(
         ):
             profile_counts[int(uid)] = int(cnt)
 
-    try:
-        scan_stuck_and_emit(db, profiles)
-    except Exception:
-        import logging
-
-        logging.getLogger(__name__).warning(
-            "stuck_scan failed during watchtower", exc_info=True
-        )
+    # Stuck-алерты (запись + Telegram до 8 с на сообщение) — после ответа, своей сессией.
+    background_tasks.add_task(run_stuck_scan_in_background, [p.id for p, _ in profiles])
 
     return AdminWatchtowerResponse(
         users=[

@@ -70,9 +70,9 @@ def test_send_telegram_message_thread_id(monkeypatch):
     monkeypatch.setattr(urllib.request, "urlopen", fake_urlopen)
     from app import config as config_module
 
-    config_module.config.OPS_TELEGRAM_BOT_TOKEN = "test-token"
-    config_module.config.OPS_TELEGRAM_CHAT_ID = "-100123"
-    config_module.config.OPS_TELEGRAM_MESSAGE_THREAD_ID = "42"
+    monkeypatch.setattr(config_module.config, "OPS_TELEGRAM_BOT_TOKEN", "test-token")
+    monkeypatch.setattr(config_module.config, "OPS_TELEGRAM_CHAT_ID", "-100123")
+    monkeypatch.setattr(config_module.config, "OPS_TELEGRAM_MESSAGE_THREAD_ID", "42")
 
     assert _send_telegram_message("ping")
     assert "message_thread_id=42" in captured["body"]
@@ -99,9 +99,9 @@ def test_send_telegram_without_thread_id_omits_param(monkeypatch):
     monkeypatch.setattr(urllib.request, "urlopen", fake_urlopen)
     from app import config as config_module
 
-    config_module.config.OPS_TELEGRAM_BOT_TOKEN = "test-token"
-    config_module.config.OPS_TELEGRAM_CHAT_ID = "1"
-    config_module.config.OPS_TELEGRAM_MESSAGE_THREAD_ID = ""
+    monkeypatch.setattr(config_module.config, "OPS_TELEGRAM_BOT_TOKEN", "test-token")
+    monkeypatch.setattr(config_module.config, "OPS_TELEGRAM_CHAT_ID", "1")
+    monkeypatch.setattr(config_module.config, "OPS_TELEGRAM_MESSAGE_THREAD_ID", "")
 
     assert _send_telegram_message("ping")
     assert "message_thread_id" not in captured["body"]
@@ -117,8 +117,8 @@ def test_period_milestone_three_skips_telegram(db_session, monkeypatch):
     monkeypatch.setenv("OPS_TELEGRAM_CHAT_ID", "1")
     from app import config as config_module
 
-    config_module.config.OPS_TELEGRAM_BOT_TOKEN = "test-token"
-    config_module.config.OPS_TELEGRAM_CHAT_ID = "1"
+    monkeypatch.setattr(config_module.config, "OPS_TELEGRAM_BOT_TOKEN", "test-token")
+    monkeypatch.setattr(config_module.config, "OPS_TELEGRAM_CHAT_ID", "1")
 
     profile = GameProfile(
         user_id=1,

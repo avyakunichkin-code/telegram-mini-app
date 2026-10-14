@@ -96,7 +96,7 @@ cd backend && python -m pytest -q -k admin
 cd backend && python -m pytest -q tests/test_admin_yaml_events_readonly.py tests/test_admin_watchtower.py tests/test_admin_catalog_c2.py
 ```
 
-Фикстуры (`backend/tests/conftest.py`): `admin_env` — делает `test_user` админом и обнуляет `OPS_TELEGRAM_*` (Telegram в тестах не уходит); `auth_headers` — JWT того же юзера. Обязательный негатив: без `admin_env` (или `config.ADMIN_USER_IDS = set()`) эндпоинт → 403. На Windows — `py -3 -m pytest …`.
+Фикстуры (`backend/tests/conftest.py`): `admin_env` — делает `test_user` админом и обнуляет `OPS_TELEGRAM_*` (Telegram в тестах не уходит) через `monkeypatch.setattr` — после теста config откатывается; `auth_headers` — JWT того же юзера. Обязательный негатив: без `admin_env` (или `monkeypatch.setattr(config, "ADMIN_USER_IDS", set())`) эндпоинт → 403. Прямое присваивание `config.X = …` в тестах не используй — утечёт в следующие тесты. На Windows — `py -3 -m pytest …`.
 
 ## Инварианты
 
@@ -104,27 +104,24 @@ cd backend && python -m pytest -q tests/test_admin_yaml_events_readonly.py tests
 - **YAML-события read-only (ADR-008):** `is_yaml_catalog_event_key` → PATCH строки даёт 422 с `YAML_EVENT_READONLY_DETAIL`, правки вариантов — 409 (`_require_editable_event`). Путь правки — YAML + `db.sh events-sync` или clone.
 - **Без секретов в алертах:** payload и `format_alert_message_ru` — без токенов, паролей, email, `initData`; токен бота живёт только в URL запроса `_send_telegram_message`. Новые поля payload видны и в Watchtower, и в Telegram.
 - **`dedupe_key`** для всего, что не должно повторяться (уникальный индекс `notification_log.dedupe_key`); формат `<kind>:<profile_id>[:<period|step>]`.
-- `emit_admin_alert` сам решает commit: при чужих pending-изменениях — `begin_nested` + flush без commit. Не коммить вокруг него вручную «на всякий случай».
-- `save_kind` — только `game` (ADR-013); не добавлять новые ветки под `plan`.
+- `emit_admin_alert` сам решает commit: при чужих pending-изменениях — `begin_nested` + flush без commit. Не коммить вокруг него вручную «на всякий случай». Порядок: **сначала строка `NotificationLog`** (dedupe), потом Telegram и `telegram_sent=1`; на гонке dedupe (`IntegrityError`) — rollback и `None` без отправки.
+- **Stuck-скан не в запросе:** `GET /watchtower` только ставит `run_stuck_scan_in_background(profile_ids)` в `BackgroundTasks` (своя сессия `SessionLocal`); новые тяжёлые побочки GET — туда же, не синхронно.
+- `catalog_patch`: числа — через `set_number` (`_coerce_number`): мусор / bool / NaN → ошибка поля → 422, не 500.
+- CSV-экспорт: каждая ячейка через `csv_safe_cell` в `_csv_stream` (строки с `=`, `+`, `-`, `@`, tab, CR → префикс `'`); новый экспорт — только через `stream_csv`.
+- `save_kind` — только `game` (ADR-013): фильтры admin (`watchtower`, `metrics/summary`, `product_funnel`, `watchtower_profiles`) на `plan` → 400 / игнор; не добавлять новые ветки под `plan`.
 
 ## Ловушки (найдено в коде)
 
-- Докстринг роутера «read-only», но справочники и варианты событий пишутся — не ориентируйся на него.
-- **GET с побочным эффектом:** `GET /watchtower` вызывает `scan_stuck_and_emit` → пишет `NotificationLog` и **синхронно** шлёт Telegram (таймаут 8 с на алерт) прямо в запросе.
-- Stuck-алерты — только для профилей, видимых в текущей выдаче Watchtower (cron нет); `dedupe_key=player_stuck:{id}` вечный — повторно не алертит; `hours_idle` в payload — порог, а не факт; `onboarding_stuck` и `player_stuck` могут сработать на один профиль.
+- Stuck-алерты — только для профилей, видимых в текущей выдаче Watchtower (cron нет; скан — фоном после ответа GET); `dedupe_key=player_stuck:{id}` вечный — повторно не алертит; `hours_idle` в payload — порог, а не факт; `onboarding_stuck` и `player_stuck` могут сработать на один профиль.
 - Фильтр `stuck` берёт `limit*5` (≤ 500) свежих профилей и фильтрует в Python — выдача неполная.
-- `emit_admin_alert`: Telegram уходит **до** записи в БД — при гонке dedupe (`IntegrityError`) или сбое записи сообщение уже отправлено; на `IntegrityError` нет `rollback` в ветке без foreign pending.
-- `catalog_patch`: `float()/int()` на мусорном вводе → необработанный `ValueError` → 500 (роутер ловит только `LookupError`/`KeyError`); поле `mode` событий не валидируется.
+- `emit_admin_alert` при чужих pending-изменениях: строка лога и `telegram_sent=1` уходят в транзакцию вызывающего — если тот потом откатится, сообщение в Telegram уже отправлено.
+- `catalog_patch`: поле `mode` событий не валидируется (числа — валидируются, см. инварианты).
 - Create при занятом ключе молча добавляет суффикс `_2` (`_ensure_unique_key`), а PATCH на тот же конфликт даёт ошибку.
 - `build_onboarding_funnel` грузит **всех** `User` в память на каждом `GET /watchtower`; считает только spine-биты (`guidance_mode: "o2"`).
-- Фильтры `save_kind` в admin (`watchtower`, `metrics/summary`, `product_funnel`, `watchtower_profiles`) всё ещё принимают `plan`.
-- CSV: свободный текст (`comment`, `username`, `name`) не экранируется от formula-injection (`=`, `+`, `-`, `@`) при открытии в Excel.
-- `admin_env` присваивает `config.ADMIN_USER_IDS` напрямую (не `monkeypatch.setattr`) — значение живёт после теста.
-- `backend/.env.example` содержит `ADMIN_USER_IDS=1` — при копировании в prod первый зарегистрированный пользователь становится админом.
 
 ## Итог (Verdict)
 
-Завершай **PASS** / **CONCERNS** / **FAIL**: `pytest -k admin` зелёный, есть тест на 403 для нового эндпоинта, YAML-события не редактируются, алерт с `dedupe_key` и без секретов.
+Завершай **PASS** / **CONCERNS** / **FAIL**: `pytest -k admin` зелёный (регрессии ops — `tests/test_admin_ops_hardening.py`), есть тест на 403 для нового эндпоинта, YAML-события не редактируются, алерт с `dedupe_key` и без секретов.
 
 ## Согласование изменений
 

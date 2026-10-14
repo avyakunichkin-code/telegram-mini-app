@@ -12,11 +12,24 @@ from .run_feedback import build_run_feedback_rows
 from .watchtower_profiles import build_admin_profile_row, fetch_profile_rows
 
 
+_FORMULA_PREFIXES = ("=", "+", "-", "@", "\t", "\r")
+
+
+def csv_safe_cell(value: Any) -> Any:
+    """Защита от CSV/formula injection: строка с =,+,-,@ (и tab/CR) в начале — префикс «'».
+
+    Числа не трогаем (отрицательный баланс остаётся числом).
+    """
+    if isinstance(value, str) and value.startswith(_FORMULA_PREFIXES):
+        return "'" + value
+    return value
+
+
 def _csv_stream(rows: Iterable[list[Any]]) -> Iterable[str]:
     buf = io.StringIO()
     writer = csv.writer(buf)
     for row in rows:
-        writer.writerow(row)
+        writer.writerow([csv_safe_cell(cell) for cell in row])
         yield buf.getvalue()
         buf.seek(0)
         buf.truncate(0)

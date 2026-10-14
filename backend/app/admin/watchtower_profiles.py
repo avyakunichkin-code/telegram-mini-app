@@ -38,7 +38,7 @@ def profile_rows_query(
         query = query.filter(GameProfile.user_id == int(user_id))
 
     sk = (save_kind or "").strip().lower()
-    if sk in ("game", "plan"):
+    if sk == "game":  # ADR-013: Plan снят
         query = query.filter(GameProfile.save_kind == sk)
 
     needle = (q or "").strip()
@@ -60,8 +60,6 @@ def profile_rows_query(
         query = query.filter(User.guidance_completed == 0)
     elif filt == "game":
         query = query.filter(GameProfile.save_kind == "game")
-    elif filt == "plan":
-        query = query.filter(GameProfile.save_kind == "plan")
     # stuck — после scan_stuck_and_emit, см. fetch_profile_rows
 
     return query.order_by(GameProfile.updated_at.desc())

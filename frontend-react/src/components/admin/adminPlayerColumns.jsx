@@ -222,7 +222,6 @@ export function useAdminNotificationColumns({ searchParams, setSearchParams }) {
 export const PROFILE_FILTERS = [
   { id: '', label: 'Все' },
   { id: 'game', label: 'Game' },
-  { id: 'plan', label: 'Plan' },
   { id: 'stuck', label: 'Застрял' },
   { id: 'guidance_draft', label: 'Guidance draft' },
   { id: 'defeat', label: 'Поражение' },
