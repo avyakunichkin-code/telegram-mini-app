@@ -1,0 +1,60 @@
+/* hybrid-round — раунд 3: компактность A + шапка-карта B, цели свёрнуты.
+   Базовые блоки (потребности, финансы, действия, карта, тропинка целей) — в lab-base из logic-round. */
+
+/* --- Шапка-карта хода (из B, компактнее) --- */
+.h-card { padding: 12px 14px 14px; gap: 10px; border-radius: 18px; }
+.h-card .b-card__top { align-items: center; gap: 10px; }
+.h-card .b-card__top b { font-size: 18px; }
+.h-card .b-corner { font-size: 26px; }
+.h-card .bg-action { padding: 10px 14px; font-size: 14px; border-radius: 12px; box-shadow: 0 3px 0 var(--turn-deep); }
+.h-card .bg-action:active { box-shadow: 0 1px 0 var(--turn-deep); }
+
+/* 2 события — второе по важности после кнопки: крупно и нажимается */
+.h-events {
+  display: flex; align-items: center; gap: 12px; width: 100%;
+  border: 1.5px solid var(--turn); background: var(--turn-soft); color: var(--ink);
+  border-radius: 12px; padding: 9px 12px; cursor: pointer; text-align: left; font: inherit;
+}
+.h-events .b-deck__cards { width: 38px; height: 30px; }
+.h-events b { font: var(--display-weight) 17px / 1.1 var(--display); color: var(--turn); }
+.h-events small { display: block; color: var(--ink-soft); font-size: 12.5px; }
+.h-events__go { margin-left: auto; color: var(--turn); font: 700 18px / 1 var(--body); }
+.h-events:focus-visible { outline: 3px solid var(--coin); outline-offset: 2px; }
+
+/* --- Цель: свёрнута до дорожки без подписей, раскрывается тропинкой из B --- */
+.h-goal { background: var(--bg-cell); border: var(--hair); border-radius: var(--r-cell); }
+.h-goal > summary {
+  list-style: none; cursor: pointer; padding: 10px 12px; display: grid;
+  grid-template-columns: auto 1fr auto; align-items: center; gap: 12px;
+}
+.h-goal > summary::-webkit-details-marker { display: none; }
+.h-goal > summary:focus-visible { outline: 3px solid var(--coin); outline-offset: 2px; border-radius: var(--r-cell); }
+.h-goal__label { font: var(--display-weight) 15px / 1.1 var(--display); }
+.h-goal__label small { display: block; font: 400 12px / 1.3 var(--body); color: var(--ink-soft); }
+.h-dots { display: flex; align-items: center; gap: 0; }
+.h-dots i { width: 12px; height: 12px; border-radius: 50%; border: 2px solid var(--edge-cell); background: var(--bg-cell); flex: none; }
+.h-dots i + i { margin-left: 10px; position: relative; }
+.h-dots i + i::before { content: ""; position: absolute; right: 100%; top: 3px; width: 10px; border-top: 2px dashed var(--edge-cell); }
+.h-dots i.done { border-color: var(--turn); background: var(--turn-soft); }
+.h-dots i.now { border-color: var(--turn); background: var(--turn); box-shadow: 0 0 0 3px var(--turn-soft); }
+.h-dots .bg-coin { --coin-size: 18px; margin-left: 10px; font-size: 8px; }
+.h-goal__chev { color: var(--ink-soft); font: 700 14px / 1 var(--body); transition: rotate 160ms ease; }
+.h-goal[open] .h-goal__chev { rotate: 180deg; }
+.h-goal__body { padding: 2px 12px 12px; display: grid; gap: 10px; border-top: var(--hair); padding-top: 12px; }
+@media (prefers-reduced-motion: reduce) { .h-goal__chev { transition: none; } }
+
+/* --- Места для Студента и Монетки (варианты расстановки) --- */
+.h-avatar { width: 40px; height: 40px; border-radius: 50%; background: var(--turn-soft); object-fit: cover; flex: none; }
+.h-peek { position: absolute; right: 54px; bottom: calc(100% - 14px); width: 58px; height: 58px; object-fit: contain; pointer-events: none; }
+.h-card--peek { margin-top: 30px; }
+.h-mascot-inline { width: 34px; height: 34px; object-fit: contain; flex: none; }
+.h-money-hero { display: flex; align-items: center; gap: 10px; }
+.h-money-hero img { width: 46px; height: 46px; border-radius: 50%; background: var(--turn-soft); object-fit: cover; }
+.h-money-hero small { display: block; color: var(--ink-soft); font-size: 12.5px; }
+.h-money-hero b { font: var(--display-weight) 24px / 1 var(--display); }
+.h-tip-row { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--ink-soft); }
+
+/* Подсказка Монетки в одну строку (между событиями и кнопкой) */
+.h-tip-row--one { gap: 6px; white-space: nowrap; min-width: 0; }
+.h-tip-row--one .h-mascot-inline { width: 26px; height: 26px; }
+.h-tip-row--one span { overflow: hidden; text-overflow: ellipsis; }

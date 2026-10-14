@@ -63,6 +63,7 @@ aliases:
 | Guided onboarding (O2) | Strip | 2026-06-01 | [`design-lab/onboarding-o2/APPROVED.md`](../../../design-lab/onboarding-o2/APPROVED.md) | см. MQX doc |
 | New game mode UI | R2 | 2026-05-20 | [`design-lab/new-game-mode/APPROVED.md`](../../../design-lab/new-game-mode/APPROVED.md) | см. MQX doc |
 | Направление «настольная игра про деньги» | **BG** | 2026-10-14 | [ADR-014](../../decisions/ADR-014-brand-direction-board-game.md) | Роли цвета, шрифт PWA, 3D, «Завершить ход»; визуал — через раунд design-lab |
+| Дашборд «настольная игра» (концепция) | **BG-1** | 2026-10-14 | [`design-lab/board-game/APPROVED.md`](../../../design-lab/board-game/APPROVED.md) | Карта хода, Nunito + Manrope, лёгкий стиль; в prod ещё не перенесено |
 
 ---
 
@@ -159,7 +160,7 @@ aliases:
 
 | Носитель | Шрифт |
 |----------|--------|
-| **PWA / web / TMA** | Пара webfont (display + текст) — выбирается раундом design-lab по ADR-014; до ★ — системный стек, `--mq-fs-body` 15 / caption 12 / small 11 |
+| **PWA / web / TMA** | Пара webfont: **Nunito** (display) + **Manrope** (текст) — ★ BG-1, 2026-10-14; до переноса в prod — системный стек, `--mq-fs-body` 15 / caption 12 / small 11 |
 | **Лендинг, PDF, баннеры** | **Inter** (+ system-ui fallback) |
 | **Код в UI** | JetBrains Mono / ui-monospace |
 
