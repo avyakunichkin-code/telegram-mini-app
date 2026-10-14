@@ -12,7 +12,8 @@ const PWA_ICONS = [
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), '')
   const base = env.VITE_BASE_PATH || '/telegram-mini-app/'
-  const apiTarget = (env.VITE_API_BASE_URL || 'https://telegram-mini-app-zwfs.onrender.com').replace(/\/$/, '')
+  // Dev-прокси /api: по умолчанию локальный backend (uvicorn :8000). Прода сейчас нет — см. docs/ops/LOCAL_DEV.md.
+  const apiTarget = (env.VITE_API_BASE_URL || 'http://localhost:8000').replace(/\/$/, '')
 
   return {
     plugins: [
@@ -70,7 +71,7 @@ export default defineConfig(({ mode }) => {
         '/api': {
           target: apiTarget,
           changeOrigin: true,
-          secure: true,
+          secure: apiTarget.startsWith('https:'),
         },
       },
     },

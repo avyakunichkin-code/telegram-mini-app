@@ -61,6 +61,8 @@
 
 ## Локальный запуск
 
+**Windows, с нуля одной командой:** `powershell -ExecutionPolicy Bypass -File scripts\dev-setup.ps1` — подробно в [`docs/ops/LOCAL_DEV.md`](docs/ops/LOCAL_DEV.md) (Python 3.14, PostgreSQL 18).
+
 ### Backend
 
 Из каталога `backend`:
