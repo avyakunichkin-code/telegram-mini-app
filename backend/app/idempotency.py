@@ -37,41 +37,66 @@ def run_idempotent(
     success_status: int = 200,
 ) -> tuple[int, dict[str, Any]]:
     """
-    Если передан idempotency_key — сохраняет успешный JSON-ответ и отдаёт его при повторе.
+    Если передан idempotency_key — ключ резервируется ДО handler (уникальный индекс),
+    успешный JSON-ответ сохраняется и отдаётся при повторе.
     handler должен выполнить commit внутри.
     """
-    if idempotency_key:
-        existing = (
-            db.query(ApiIdempotencyRecord)
-            .filter(
-                ApiIdempotencyRecord.user_id == user_id,
-                ApiIdempotencyRecord.route_key == route_key,
-                ApiIdempotencyRecord.idempotency_key == idempotency_key,
-            )
-            .first()
+    if not idempotency_key:
+        return success_status, handler()
+
+    stored = load_stored_body(
+        db, user_id=user_id, route_key=route_key, idempotency_key=idempotency_key
+    )
+    if stored is not None:
+        return success_status, stored
+
+    if not try_reserve_key(
+        db, user_id=user_id, route_key=route_key, idempotency_key=idempotency_key
+    ):
+        # Параллельный запрос с тем же ключом уже выполняется — ждём его ответ.
+        stored = wait_stored_body(
+            db, user_id=user_id, route_key=route_key, idempotency_key=idempotency_key
         )
-        if existing:
-            try:
-                body = json.loads(existing.response_json or "{}")
-            except json.JSONDecodeError:
-                body = {}
-            return int(existing.status_code), body
+        if stored is not None:
+            return success_status, stored
+        raise HTTPException(status_code=409, detail="Запрос с этим Idempotency-Key ещё выполняется")
 
-    body = handler()
-
-    if idempotency_key:
-        db.add(
-            ApiIdempotencyRecord(
-                user_id=user_id,
-                route_key=route_key,
-                idempotency_key=idempotency_key,
-                status_code=success_status,
-                response_json=json.dumps(body, ensure_ascii=False),
-            )
+    try:
+        body = handler()
+    except Exception:
+        db.rollback()
+        _release_reserved_key(
+            db, user_id=user_id, route_key=route_key, idempotency_key=idempotency_key
         )
-        db.commit()
+        raise
 
+    store_body(
+        db,
+        user_id=user_id,
+        route_key=route_key,
+        idempotency_key=idempotency_key,
+        body=body,
+        status_code=success_status,
+    )
     return success_status, body
+
+
+def _release_reserved_key(
+    db: Session, *, user_id: int, route_key: str, idempotency_key: str
+) -> None:
+    """Снять резерв без ответа (handler упал после своего commit), чтобы повтор мог выполниться."""
+    record = (
+        db.query(ApiIdempotencyRecord)
+        .filter(
+            ApiIdempotencyRecord.user_id == user_id,
+            ApiIdempotencyRecord.route_key == route_key,
+            ApiIdempotencyRecord.idempotency_key == idempotency_key,
+        )
+        .first()
+    )
+    if record is not None and record.response_json == "{}":
+        db.delete(record)
+        db.commit()
 
 
 def load_stored_body(

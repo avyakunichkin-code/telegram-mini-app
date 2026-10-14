@@ -1,6 +1,7 @@
 # backend/app/game/period.py
 
 import logging
+import math
 
 from sqlalchemy.orm import Session
 import json
@@ -32,7 +33,6 @@ from ..finance.liability_kinds import PAYMENT_MODE_ANNUITY, effective_payment_mo
 from ..finance.annuity import split_full_payment
 from ..constants import EPSILON
 from ..finance.expenses import compute_monthly_burn, expire_expense_lines_for_period, lifestyle_period_breakdown
-from ..timeutil import utc_now_naive
 from ..needs.engine import (
     apply_decay,
     needs_values_from_profile,
@@ -228,6 +228,13 @@ def _period_compare_delta(current: float, previous: float | None) -> float:
     return round(float(current) - float(previous), 2)
 
 
+def _installments_outstanding(amount: float, monthly_due: float) -> int:
+    """Сколько взносов (включая частично оплаченный) покрывает неоплаченная сумма."""
+    if monthly_due <= EPSILON or amount <= EPSILON:
+        return 0
+    return int(math.ceil(round(amount / monthly_due, 6)))
+
+
 def process_period_end(db: Session, profile: GameProfile) -> dict:
     """
     Выполняет завершение текущего периода:
@@ -330,9 +337,15 @@ def process_period_end(db: Session, profile: GameProfile) -> dict:
             )
             db.refresh(profile)
 
-        full_payment = unpaid <= EPSILON and paid + EPSILON >= due_total
-        if full_payment:
-            if effective_payment_mode(liability) == PAYMENT_MODE_ANNUITY:
+        if effective_payment_mode(liability) == PAYMENT_MODE_ANNUITY:
+            # Платёж гасит самые старые взносы первыми: каждый полностью закрытый взнос
+            # (в т.ч. просроченный) уменьшает тело долга по графику аннуитета.
+            completed = _installments_outstanding(previous_overdue, monthly_due) + 1 - _installments_outstanding(
+                unpaid, monthly_due
+            )
+            for _ in range(max(0, completed)):
+                if int(liability.is_active or 0) != 1:
+                    break
                 _interest, _principal, new_debt = split_full_payment(
                     float(liability.total_debt),
                     float(liability.annual_rate_percent),
@@ -344,6 +357,9 @@ def process_period_end(db: Session, profile: GameProfile) -> dict:
                 if new_debt <= EPSILON or (term > 0 and liability.periods_paid >= term):
                     liability.is_active = 0
                     liability.total_debt = 0.0
+
+        full_payment = unpaid <= EPSILON and paid + EPSILON >= due_total
+        if full_payment:
             liability.overdue_amount = 0.0
             liability.overdue_periods = 0
         else:
@@ -393,11 +409,17 @@ def process_period_end(db: Session, profile: GameProfile) -> dict:
     # 3.5 Страховки: списываем премии (на MVP без просрочек — может уйти в минус)
     insurance_spend = 0.0
     try:
-        insurance_spend = float(charge_premiums_for_period(db, profile, period_index) or 0)
+        with db.begin_nested():
+            insurance_spend = float(charge_premiums_for_period(db, profile, period_index) or 0)
         if insurance_spend > 0:
             breakdown.append({"type": "insurance", "title": "Премии", "amount": insurance_spend})
     except Exception:
-        pass
+        # Savepoint откатил частично списанные премии; закрытие месяца продолжается.
+        logger.exception(
+            "Insurance premiums failed profile_id=%s period_index=%s", profile.id, period_index
+        )
+        insurance_spend = 0.0
+        db.refresh(profile)
 
     # 3.6 Инвестиции: начисления (депозит — капитализация, облигации — купон на баланс)
     deposit_interest_total = 0.0
@@ -595,7 +617,6 @@ def process_period_end(db: Session, profile: GameProfile) -> dict:
     # 7. Увеличиваем номер периода
     closed_period_index = int(period_index)
     profile.period_index += 1
-    profile.period_anchor_at = utc_now_naive()
 
     db.commit()
     db.refresh(profile)

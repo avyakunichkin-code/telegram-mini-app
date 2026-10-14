@@ -31,19 +31,17 @@ async def open_deposit(
     current_user=Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
+    # Ставка — из серверного каталога (finance/invest_products.py); annual_rate_percent клиента игнорируется.
     amount = float(payload.get("amount") or 0)
-    annual_rate_percent = float(payload.get("annual_rate_percent") or 0)
     if amount <= 0:
         raise HTTPException(status_code=400, detail="amount must be > 0")
-    if annual_rate_percent < 0:
-        raise HTTPException(status_code=400, detail="annual_rate_percent must be >= 0")
 
     idem_key = read_idempotency_key(request)
 
     def _execute() -> dict:
         profile = get_active_game_profile(db, current_user.id)
         sync_time(profile)
-        return service_open_deposit(db, profile, amount=amount, annual_rate_percent=annual_rate_percent)
+        return service_open_deposit(db, profile, amount=amount)
 
     if idem_key:
         status, body = run_idempotent(
@@ -64,13 +62,11 @@ async def buy_bond(
     current_user=Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
+    # Ставка — из серверного каталога (finance/invest_products.py); annual_rate_percent клиента игнорируется.
     amount = float(payload.get("amount") or 0)
-    annual_rate_percent = float(payload.get("annual_rate_percent") or 0)
-    title = (payload.get("title") or "ОФЗ (условно)").strip() or "ОФЗ (условно)"
+    title = str(payload.get("title") or "")
     if amount <= 0:
         raise HTTPException(status_code=400, detail="amount must be > 0")
-    if annual_rate_percent < 0:
-        raise HTTPException(status_code=400, detail="annual_rate_percent must be >= 0")
 
     idem_key = read_idempotency_key(request)
 
@@ -81,7 +77,6 @@ async def buy_bond(
             db,
             profile,
             amount=amount,
-            annual_rate_percent=annual_rate_percent,
             title=title,
         )
 

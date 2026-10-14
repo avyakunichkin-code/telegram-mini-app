@@ -55,6 +55,22 @@ def add_transaction(
     return transaction
 
 
+def _lock_profile_for_balance(db: Session, game_profile_id: int) -> Optional[GameProfile]:
+    """
+    Свежая строка профиля под row-lock (PostgreSQL: SELECT ... FOR UPDATE).
+
+    populate_existing перечитывает баланс из БД даже если объект уже в identity map —
+    иначе read-modify-write по устаревшему cash_balance теряет параллельные зачисления.
+    Сначала flush: SessionLocal работает с autoflush=False, а populate_existing
+    иначе затёр бы ещё не записанные изменения профиля в этой сессии.
+    """
+    db.flush()
+    query = db.query(GameProfile).filter(GameProfile.id == game_profile_id).populate_existing()
+    if db.get_bind().dialect.name != "sqlite":
+        query = query.with_for_update()
+    return query.first()
+
+
 def adjust_balance(
         db: Session,
         game_profile_id: int,
@@ -81,7 +97,7 @@ def adjust_balance(
     Raises:
         ValueError: если профиль не найден или неактивен (опционально)
     """
-    profile = db.query(GameProfile).filter(GameProfile.id == game_profile_id).first()
+    profile = _lock_profile_for_balance(db, game_profile_id)
     if not profile:
         raise ValueError(f"GameProfile with id {game_profile_id} not found")
 

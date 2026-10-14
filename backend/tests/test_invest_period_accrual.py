@@ -2,6 +2,9 @@
 
 from __future__ import annotations
 
+import pytest
+
+from app.finance.invest_products import INVEST_PRODUCTS
 from app.game.period import process_period_end
 from app.models import GameProfile, InvestmentPosition, Transaction
 from app.services.invest.service import buy_bond, open_deposit
@@ -34,7 +37,6 @@ def test_bond_coupon_on_period_close_same_period_purchase(db_session, test_user)
         db_session,
         profile,
         amount=100_000,
-        annual_rate_percent=12.0,
         title="ОФЗ тест",
     )
     db_session.refresh(profile)
@@ -60,14 +62,15 @@ def test_bond_coupon_on_period_close_same_period_purchase(db_session, test_user)
         .all()
     )
     assert len(coupons) == 1
-    expected = round(100_000 * (12.0 / 100 / 12), 2)
-    assert float(coupons[0].amount) == expected
+    rate = INVEST_PRODUCTS["bond"].annual_rate_percent
+    expected = round(100_000 * (rate / 100 / 12), 2)
+    assert float(coupons[0].amount) == pytest.approx(expected, abs=0.01)
     assert any(h.get("key") == "bond_coupons" for h in result.get("period_highlights") or [])
 
 
 def test_deposit_interest_capitalized_on_period_close(db_session, test_user):
     profile = _profile_ready(db_session, test_user.id, cash=300_000)
-    open_deposit(db_session, profile, amount=50_000, annual_rate_percent=6.0)
+    open_deposit(db_session, profile, amount=50_000)
     db_session.refresh(profile)
 
     result = process_period_end(db_session, profile)
@@ -78,6 +81,7 @@ def test_deposit_interest_capitalized_on_period_close(db_session, test_user):
         .first()
     )
     assert pos is not None
-    expected_interest = round(50_000 * (6.0 / 100 / 12), 2)
-    assert float(pos.principal) == round(50_000 + expected_interest, 2)
+    rate = INVEST_PRODUCTS["deposit"].annual_rate_percent
+    expected_interest = round(50_000 * (rate / 100 / 12), 2)
+    assert float(pos.principal) == pytest.approx(50_000 + expected_interest, abs=0.01)
     assert any(h.get("key") == "deposit_interest" for h in result.get("period_highlights") or [])
