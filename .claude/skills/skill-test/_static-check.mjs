@@ -122,6 +122,14 @@ function claudeContractIssues(rawContent, fm) {
       }
     }
   }
+  // C6: "a "b" c" — вложенные кавычки того же типа ломают YAML; Claude тогда игнорирует весь frontmatter.
+  for (const m of fm.matchAll(/^([\w-]+):\s*(["'])(.*)$/gm)) {
+    const [, key, q, rest] = m;
+    const close = rest.indexOf(q);
+    if (close !== -1 && rest.slice(close + 1).trim() !== '' && !rest.slice(close + 1).trim().startsWith('#')) {
+      issues.push(`C6: ${key}: nested ${q} quotes break YAML — wrap the value in the other quote type`);
+    }
+  }
   if (/^disable-model-invocation:\s*(true|yes|on|1)\s*$/im.test(fm) && /^user-invocable:\s*(false|no|off|0)\s*$/im.test(fm)) {
     issues.push('C3: disable-model-invocation + user-invocable:false — skill is unreachable');
   }
