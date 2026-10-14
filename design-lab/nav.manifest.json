@@ -119,7 +119,8 @@
         { "label": "Primitives MQX", "path": "primitives/index.html", "kind": "lab", "status": "approved" },
         { "label": "Brand logo", "path": "brand-logo/index.html", "kind": "lab", "status": "approved" },
         { "label": "Brand tagline round", "path": "brand-logo/tagline-round/index.html", "kind": "lab" },
-        { "label": "Настольная игра ★ BG-1 — дашборд (концепция)", "path": "board-game/hybrid-round/index.html", "kind": "lab", "status": "approved" },
+        { "label": "Дашборд ★ BG-1 — prod parity (в prod с 2026-10-14)", "path": "dashboard/bg1-page-round/index.html", "kind": "lab", "status": "approved" },
+        { "label": "Настольная игра ★ BG-1 — дашборд (концепция, канон)", "path": "board-game/hybrid-round/index.html", "kind": "lab", "status": "approved" },
         { "label": "Настольная игра — раунд 2: логика игры (superseded)", "path": "board-game/logic-round/index.html", "kind": "lab" },
         { "label": "Настольная игра — раунд 1: направление (superseded)", "path": "board-game/direction-round/index.html", "kind": "lab" }
       ]

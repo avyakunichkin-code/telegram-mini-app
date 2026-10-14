@@ -1,29 +1,31 @@
+import { useId } from 'react';
+
 import { ACTIONS_OF_TURN } from '../../../constants/turnCopy';
 
-function ActionChipIcon({ accent, children }) {
+function ActionButton({ label, icon, className = '', ...buttonProps }) {
   return (
-    <span className={`mqx-action-chip__icon ${accent}`} aria-hidden="true">
+    <button type="button" className={['mqx-bg-btn', 'mqx-bg-act', className].filter(Boolean).join(' ')} {...buttonProps}>
+      {icon}
+      <span className="mqx-bg-act__label">{label}</span>
+    </button>
+  );
+}
+
+function ActIcon({ children }) {
+  return (
+    <span className="mqx-bg-act__ico" aria-hidden="true">
       {children}
     </span>
   );
 }
 
-function ActionChip({ label, sub, icon, disabled, className = '', ...buttonProps }) {
-  const cls = ['mqx-action-chip', className, disabled && 'is-disabled'].filter(Boolean).join(' ');
-  return (
-    <button type="button" className={cls} disabled={disabled} {...buttonProps}>
-      {icon}
-      <span className="mqx-action-chip__body">
-        <span className="mqx-action-chip__label">{label}</span>
-        {sub ? <span className="mqx-action-chip__sub mqx-action-chip__sub--phrase">{sub}</span> : null}
-      </span>
-    </button>
-  );
-}
-
-/** Блок «Действия хода» — chip 2×2 (★ period-actions-round). */
+/**
+ * Действия хода ★ BG-1: 4 кнопки в ряд. «Зарплата» — монета и золотая подсветка, пока не забрана.
+ * Подписи «Пополнить» / «Снять» — открытая задача, здесь не меняются.
+ */
 export function MqxPeriodActions({
   salaryDisabled = false,
+  salaryHot = false,
   salaryCelebrate = false,
   busy = false,
   activeMoneyMode = null,
@@ -32,99 +34,69 @@ export function MqxPeriodActions({
   onWithdraw,
   onInvest,
 }) {
-  const salaryBusy = busy || salaryDisabled;
+  const titleId = useId();
   const salaryClass = [
-    'mqx-action-chip--salary',
-    'mqx-action-chip--primary',
+    salaryHot && !salaryDisabled ? 'mqx-bg-act--hot' : '',
     salaryCelebrate ? 'mqx-juice-chip--celebrate' : '',
   ]
     .filter(Boolean)
     .join(' ');
 
   return (
-    <section className="mqx-period-actions mqx-period-actions--chips" aria-label={ACTIONS_OF_TURN}>
-      <h2 className="mqx-finance-static__title">{ACTIONS_OF_TURN}</h2>
-      <div className="mqx-action-chips">
-        <ActionChip
+    <section className="mqx-bg-acts" aria-labelledby={titleId}>
+      <h2 id={titleId} className="mqx-bg-sr-only">
+        {ACTIONS_OF_TURN}
+      </h2>
+      <div className="mqx-bg-acts__row">
+        <ActionButton
           label="Зарплата"
-          sub="получить"
           className={salaryClass}
-          disabled={salaryBusy}
+          disabled={busy || salaryDisabled}
           data-onboarding-anchor="salary"
           title={
             salaryDisabled
               ? 'Зарплата за этот ход уже получена или недоступна'
               : 'Получить зарплату за текущий ход'
           }
-          aria-label="Зарплата"
+          aria-label={salaryDisabled ? 'Зарплата, уже получена' : 'Зарплата, получить'}
           onClick={onSalary}
           icon={
-            <ActionChipIcon accent="mqx-accent--violet">
-              <svg viewBox="0 0 24 24">
-                <path d="M12 2v4" />
-                <path d="M8 6h8" />
-                <path d="M6 10h12v8a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2v-8Z" />
-                <path d="M9 14h6" />
-              </svg>
-            </ActionChipIcon>
+            <span className="mqx-bg-coin mqx-bg-coin--act" aria-hidden="true">
+              ₽
+            </span>
           }
         />
 
-        <ActionChip
+        <ActionButton
           label="Вложить"
-          sub="депозиты/облигации"
           disabled={busy || !onInvest}
           title="Открыть раздел инвестиций"
           aria-label="Вложить"
           onClick={onInvest}
-          icon={
-            <ActionChipIcon accent="mqx-accent--amber">
-              <svg viewBox="0 0 24 24">
-                <path d="M4 19V5" />
-                <path d="M4 19h16" />
-                <path d="M7 15l4-4 3 3 5-6" />
-              </svg>
-            </ActionChipIcon>
-          }
+          icon={<ActIcon>↗</ActIcon>}
         />
 
-        <ActionChip
+        <ActionButton
           label="Пополнить"
-          sub="подушку"
           disabled={busy}
-          className={activeMoneyMode === 'in' ? 'mqx-action-chip--active-mode' : ''}
+          className={activeMoneyMode === 'in' ? 'mqx-bg-act--active' : ''}
           data-onboarding-anchor="cushion"
           data-money-trigger="in"
           title="Перевести деньги с карты в подушку"
           aria-label="Пополнить подушку"
           onClick={onContribute}
-          icon={
-            <ActionChipIcon accent="mqx-accent--emerald">
-              <svg viewBox="0 0 24 24">
-                <path d="M12 19V5" />
-                <path d="M19 12 12 19 5 12" />
-              </svg>
-            </ActionChipIcon>
-          }
+          icon={<ActIcon>+</ActIcon>}
         />
 
-        <ActionChip
+        <ActionButton
           label="Снять"
-          sub="с подушки"
           disabled={busy}
-          className={activeMoneyMode === 'out' ? 'mqx-action-chip--active-mode' : ''}
+          className={activeMoneyMode === 'out' ? 'mqx-bg-act--active' : ''}
           data-money-trigger="out"
           title="Снять деньги с подушки на счёт"
           aria-label="Снять с подушки"
           onClick={onWithdraw}
-          icon={
-            <ActionChipIcon accent="mqx-accent--sky">
-              <svg viewBox="0 0 24 24">
-                <path d="M12 5v14" />
-                <path d="M8 9l4-4 4 4" />
-              </svg>
-            </ActionChipIcon>
-          }
+          icon={<ActIcon>−</ActIcon>}
         />
       </div>
     </section>

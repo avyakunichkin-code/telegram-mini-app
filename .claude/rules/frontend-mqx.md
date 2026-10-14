@@ -26,7 +26,7 @@ paths:
 
 ## Каркас вкладки игры
 
-1. Hero: `mqx-hero mqx-hero--tab` + **один `h1`** (`mqx-hero__title--tab` / `--capital`).
+1. Hero: `mqx-hero mqx-hero--tab` + **один `h1`** (`mqx-hero__title--tab` / `--capital`). Исключение — **Главная (★ BG-1)**: вместо hero карта хода `MqxDashboardHero` (`mqx-bg-turn`, h1 «Твой ход») внутри скролла.
 2. Контент: `main.mqx-content` (+ `mqx-capital-page` для финансов).
 3. Карточки: `mqx-card` / `mqx-capital-card` (padding ~16–18px, radius ~22px).
 
@@ -61,7 +61,7 @@ paths:
 
 ## Z-NEEDS (главная)
 
-- `MqxNeedsDash` **v7-e2e3** (`actionsVariant` по умолчанию): **книга+?** → `MqxNeedsHelpSheet` + `GET /api/game/needs/guide` (`sections[]`); **сердце** → treat-self (UI «Улучшить»).
-- Четыре шкалы всегда видимы; портрет — `PersonaPortrait` size `dash`.
-- Lab ★: [`design-lab/character-needs/dashboard-needs-v7-round/`](design-lab/character-needs/dashboard-needs-v7-round/); v5 — архив.
+- `MqxNeedsDash` **★ BG-1** (2026-10-14): 4 тонкие шкалы 2×2 с числом; в заголовке **книга+?** → `MqxNeedsHelpSheet` + `GET /api/game/needs/guide` (`sections[]`); **сердце** → treat-self (UI «Улучшить»).
+- Четыре шкалы всегда видимы; портрет персонажа — **у суммы «На счёте»** в `MqxFinancePeriodBlock`, не в потребностях.
+- Канон: [`design-lab/dashboard/APPROVED.md`](design-lab/dashboard/APPROVED.md), lab [`design-lab/board-game/hybrid-round/`](design-lab/board-game/hybrid-round/); v7-e2e3 (`character-needs/dashboard-needs-v7-round/`) — история.
 - UX: [`docs/ux/screens/character-needs-dashboard.md`](docs/ux/screens/character-needs-dashboard.md), help: [`character-needs-help.md`](docs/ux/screens/character-needs-help.md).

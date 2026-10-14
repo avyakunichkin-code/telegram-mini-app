@@ -1,0 +1,189 @@
+<!doctype html>
+<html lang="ru" data-font="f3">
+  <head>
+    <base href="./" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>ТВОЙ ХОД — дашборд ★ BG-1: prod parity</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700&family=Nunito:wght@800;900&display=swap" />
+    <link rel="stylesheet" href="./lab-base.css" />
+    <link rel="stylesheet" href="./styles.css" />
+      <style data-embed-style>
+      html[data-embed="1"] .lab-header,
+      html[data-embed="1"] .lab-round-note,
+      html[data-embed="1"] .lab-variant-card__label,
+      html[data-embed="1"] .lab-variant-card__idea,
+      html[data-embed="1"] .lab-variant-grid > *:not(:first-child) { display: none !important; }
+      html[data-embed="1"] .lab-main { padding: 0 !important; }
+      html[data-embed="1"] body { padding: 0 !important; }
+    </style>
+    <script>
+      (function(){
+        try {
+          var p = new URLSearchParams(location.search);
+          if (p.get('embed') === '1') document.documentElement.setAttribute('data-embed','1');
+        } catch (e) {}
+      })();
+    </script>
+  </head>
+  <body>
+    <header class="lab-head">
+      <h1>Дашборд ★ BG-1 — как в prod</h1>
+      <p>Prod parity <code>DashboardPremium</code> на 2026-10-14 (ветка claude/bg1-dashboard-prod). Канон концепции — <code>board-game/hybrid-round/</code>. Данные — живая партия «Студент», ход 1. В prod шрифт self-host (Nunito 800/900 + Manrope 400/600/700), здесь — Google Fonts.</p>
+      <div class="lab-controls">
+        <span>Тема</span>
+        <button class="lab-toggle" type="button" data-set-theme="light" aria-pressed="true">Светлая</button>
+        <button class="lab-toggle" type="button" data-set-theme="dark" aria-pressed="false">Тёмная</button>
+      </div>
+    </header>
+
+    <main class="lab-grid">
+      <section class="variant" aria-labelledby="p1">
+        <header>
+          <h2 id="p1">Начало хода: зарплата не забрана</h2>
+          <p>Монетка показывает самое срочное: риск по потребностям → просрочка → зарплата → события → шаг цели. «Зарплата» в золоте, пока доступна.</p>
+        </header>
+        <div class="phone">
+          <article class="b-card h-card">
+            <div class="b-card__top">
+              <div><small>Студент</small><b>Твой ход</b></div>
+              <div class="b-corner">1<small>ход</small></div>
+            </div>
+            <button class="h-events" type="button">
+              <span class="b-deck__cards" aria-hidden="true"><span></span><span></span></span>
+              <span><b>2 события</b><small>ждут решения в этом ходу</small></span>
+              <span class="h-events__go" aria-hidden="true">›</span>
+            </button>
+            <div class="h-tip-row h-tip-row--one"><img class="h-mascot-inline" src="./assets/monetka-mascot.png" alt="Монетка" /><span>Забери зарплату до конца хода</span></div>
+            <button class="bg-action" type="button">Завершить ход</button>
+          </article>
+
+          <div class="p-needs-head"><b>Потребности</b><span class="p-icons" aria-hidden="true"><span>?</span><span>♥</span></span></div>
+          <div class="needs">
+            <div class="need"><span>Комфорт<b>72</b></span><span class="bar"><i style="width:72%"></i></span></div>
+            <div class="need"><span>Статус<b>48</b></span><span class="bar"><i style="width:48%"></i></span></div>
+            <div class="need"><span>Связи<b>58</b></span><span class="bar"><i style="width:58%"></i></span></div>
+            <div class="need"><span>Здоровье<b>76</b></span><span class="bar"><i style="width:76%"></i></span></div>
+          </div>
+
+          <div class="h-money-hero">
+            <img src="./assets/student.png" alt="" />
+            <div><small>На счёте</small><b class="bg-money">15 000 ₽</b></div>
+          </div>
+          <div class="money">
+            <div><small>Подушка · 0%</small><b class="bg-money">0 ₽</b></div>
+            <div><small>Зарплата за ход</small><b class="bg-money bg-gain">+62 500 ₽</b></div>
+            <div style="grid-column:1/-1"><small>Расходы за ход</small><b class="bg-money">−37 500 ₽</b></div>
+          </div>
+
+          <details class="h-goal">
+            <summary>
+              <span class="h-goal__label">Цель<small>шаг 1 из 5</small></span>
+              <span class="h-dots" aria-hidden="true"><i class="now"></i><i></i><i></i><i></i><i></i><span class="bg-coin">₽</span></span>
+              <span class="h-goal__chev" aria-hidden="true">⌄</span>
+            </summary>
+            <div class="h-goal__body">
+              <ol class="b-chain">
+                <li class="now"><span class="b-dot">1</span><span>Забрать зарплату (первый ход)</span></li>
+                <li><span class="b-dot">2</span><span>Подушка: внести любую сумму (фундамент безопасности)</span></li>
+                <li><span class="b-dot">3</span><span>Инвестиции: открыть депозит или купить облигацию (можно от 1 000 ₽)</span></li>
+                <li><span class="b-dot">4</span><span>Подушка ≥ 2× текущих расходов за ход</span></li>
+                <li><span class="b-dot">5</span><span>Доход с инвестиций ≥ 10 000 ₽/мес</span></li>
+                <li class="finish"><span class="b-dot"><span class="bg-coin" style="--coin-size:16px;font-size:8px">₽</span></span><span>Финиш — победа, игра продолжится</span></li>
+              </ol>
+            </div>
+          </details>
+
+          <div class="acts">
+            <button class="act act--hot" type="button"><span class="bg-coin">₽</span>Зарплата</button>
+            <button class="act" type="button"><span class="act__ico">↗</span>Вложить</button>
+            <button class="act" type="button"><span class="act__ico">+</span>Пополнить</button>
+            <button class="act" type="button"><span class="act__ico">−</span>Снять</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="variant" aria-labelledby="p2">
+        <header>
+          <h2 id="p2">После зарплаты: события решены, цель раскрыта</h2>
+          <p>«Зарплата» гаснет, Монетка переключается на шаг цели. Раскрытая цель — список шагов цепочки победы без Монетки.</p>
+        </header>
+        <div class="phone">
+          <article class="b-card h-card">
+            <div class="b-card__top">
+              <div><small>Студент</small><b>Твой ход</b></div>
+              <div class="b-corner">1<small>ход</small></div>
+            </div>
+            <button class="h-events h-events--done" type="button">
+              <span class="b-deck__cards" aria-hidden="true"><span></span><span></span></span>
+              <span><b>События решены</b><small>новые придут в следующем ходу</small></span>
+              <span class="h-events__go" aria-hidden="true">›</span>
+            </button>
+            <div class="h-tip-row h-tip-row--one"><img class="h-mascot-inline" src="./assets/monetka-mascot.png" alt="Монетка" /><span>Шаг цели: Подушка: внести любую сумму (фундамент безопасности)</span></div>
+            <button class="bg-action" type="button">Завершить ход</button>
+          </article>
+
+          <div class="p-needs-head"><b>Потребности</b><span class="p-icons" aria-hidden="true"><span>?</span><span>♥</span></span></div>
+          <div class="needs">
+            <div class="need"><span>Комфорт<b>72</b></span><span class="bar"><i style="width:72%"></i></span></div>
+            <div class="need"><span>Статус<b>48</b></span><span class="bar"><i style="width:48%"></i></span></div>
+            <div class="need"><span>Связи<b>58</b></span><span class="bar"><i style="width:58%"></i></span></div>
+            <div class="need"><span>Здоровье<b>76</b></span><span class="bar"><i style="width:76%"></i></span></div>
+          </div>
+
+          <div class="h-money-hero">
+            <img src="./assets/student.png" alt="" />
+            <div><small>На счёте</small><b class="bg-money">77 500 ₽</b></div>
+          </div>
+          <div class="money">
+            <div><small>Подушка · 0%</small><b class="bg-money">0 ₽</b></div>
+            <div><small>Зарплата за ход</small><b class="bg-money bg-gain">+62 500 ₽</b></div>
+            <div style="grid-column:1/-1"><small>Расходы за ход</small><b class="bg-money">−37 500 ₽</b></div>
+          </div>
+
+          <details class="h-goal" open>
+            <summary>
+              <span class="h-goal__label">Цель<small>шаг 2 из 5</small></span>
+              <span class="h-dots" aria-hidden="true"><i class="done"></i><i class="now"></i><i></i><i></i><i></i><span class="bg-coin">₽</span></span>
+              <span class="h-goal__chev" aria-hidden="true">⌄</span>
+            </summary>
+            <div class="h-goal__body">
+              <ol class="b-chain">
+                <li class="done"><span class="b-dot">✓</span><span>Забрать зарплату (первый ход)</span></li>
+                <li class="now"><span class="b-dot">2</span><span>Подушка: внести любую сумму (фундамент безопасности)</span></li>
+                <li><span class="b-dot">3</span><span>Инвестиции: открыть депозит или купить облигацию (можно от 1 000 ₽)</span></li>
+                <li><span class="b-dot">4</span><span>Подушка ≥ 2× текущих расходов за ход</span></li>
+                <li><span class="b-dot">5</span><span>Доход с инвестиций ≥ 10 000 ₽/мес</span></li>
+                <li class="finish"><span class="b-dot"><span class="bg-coin" style="--coin-size:16px;font-size:8px">₽</span></span><span>Финиш — победа, игра продолжится</span></li>
+              </ol>
+            </div>
+          </details>
+
+          <div class="acts">
+            <button class="act act--off" type="button"><span class="bg-coin">₽</span>Зарплата</button>
+            <button class="act" type="button"><span class="act__ico">↗</span>Вложить</button>
+            <button class="act" type="button"><span class="act__ico">+</span>Пополнить</button>
+            <button class="act" type="button"><span class="act__ico">−</span>Снять</button>
+          </div>
+          <p class="p-note">Победа без ворот по ходу: движок сейчас отдаёт min_period_index = 1, поэтому финиш без «с 7-го хода».</p>
+        </div>
+      </section>
+    </main>
+
+    <script>
+      (function () {
+        var root = document.documentElement;
+        document.addEventListener('click', function (e) {
+          var t = e.target.closest('[data-set-theme]');
+          if (!t) return;
+          root.setAttribute('data-theme', t.dataset.setTheme);
+          document.querySelectorAll('[data-set-theme]').forEach(function (b) {
+            b.setAttribute('aria-pressed', String(b === t));
+          });
+        });
+      })();
+    </script>
+  </body>
+</html>

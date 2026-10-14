@@ -3,7 +3,7 @@
 **Утверждено:** 2026-10-14, в чате («утверждаем»). **Направление:** [ADR-014](../../docs/decisions/ADR-014-brand-direction-board-game.md).
 **Канон-раунд:** [`hybrid-round/`](hybrid-round/) — экран в двух состояниях (цель свёрнута / раскрыта). Раунды `direction-round/` и `logic-round/` — история, не канон.
 
-Статус: **концепция утверждена, в prod не перенесена.** Перенос — отдельной задачей (`frontend-ui-engineering` + canon-sync), токены v2 (Coin Gold) появятся в prod вместе с ним.
+Статус: **перенесено в prod 2026-10-14** (`DashboardPremium`, токены v2, шрифт F3 self-host). Канон prod-дашборда — [`../dashboard/APPROVED.md`](../dashboard/APPROVED.md), prod parity — [`../dashboard/bg1-page-round/`](../dashboard/bg1-page-round/). Расхождение: движок победы отдаёт `min_period_index = 1`, поэтому в prod финиш без «с 7-го хода».
 
 ## Порядок блоков
 

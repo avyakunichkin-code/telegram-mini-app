@@ -1,25 +1,17 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 
-import { MoneyText } from './MoneyText';
 
 import { showNotification } from './notifications';
 import { suggestSafetyFundAmount } from '../utils/safetyFundAmount';
 
-import { CAPITAL_FLOWS_SECTION } from '../utils/capitalFlowsNav';
-import {
-  formatSafetyFundChipTitle,
-  getSafetyFundFillFromOverview,
-  SAFETY_FUND_BASELINE_HINT,
-  SAFETY_FUND_CHIP_LABEL,
-} from '../utils/safetyFundFill';
+import { getSafetyFundFillFromOverview } from '../utils/safetyFundFill';
+import { personaRoleTitle } from './mqx/brand/personaRoles';
+import { buildTurnTip, incomeCell } from './mqx/utils/boardDashDisplay';
+import { buildGoalChainView } from './mqx/utils/goalChainDisplay';
 
 import {
-
-  MqxDashStack,
 
   MqxDashboardHero,
-
-  MqxDivider,
 
   MqxFinancePeriodBlock,
 
@@ -33,40 +25,7 @@ import {
   MqxJuiceGainFeedback,
   MqxSafetyFundSheet,
 
-  IconMetricExpense,
-  IconMetricShield,
-  IconMetricTrendUp,
-  IconMetricWallet,
-
 } from './mqx';
-
-
-
-function formatSignedMoney(n) {
-
-  const v = Number(n) || 0;
-
-  return v >= 0 ? `+${v}` : `${v}`;
-
-}
-
-
-
-function formatChipMoneyAria(value, { tone } = {}) {
-
-  const n = Number(value) || 0;
-
-  const abs = Math.abs(n).toLocaleString('ru-RU', { maximumFractionDigits: 0 });
-
-  if (tone === 'pos' && n > 0) return `плюс ${abs} руб.`;
-
-  if (tone === 'out') return `${abs} руб.`;
-
-  if (n < 0) return `минус ${abs} руб.`;
-
-  return `${abs} руб.`;
-
-}
 
 
 
@@ -155,69 +114,6 @@ export function DashboardPremium({
   const canClaimSalary = periodStatus?.can_claim_salary === true;
   const salaryDisabled = busyAction !== null || salaryClaimed || (periodStatus != null && !canClaimSalary);
 
-  const financeCards = useMemo(() => {
-
-    const cash = Number(overview?.cash_balance) || 0;
-
-    const safety = Number(overview?.safety_fund_balance) || 0;
-
-    const totalIncome = Number(overview?.total_monthly_income) || 0;
-
-    const totalOutflow = Number(overview?.total_monthly_outflow) || 0;
-    const cushionFill = getSafetyFundFillFromOverview(overview);
-
-    return [
-      {
-        title: 'Доходы',
-        chipAction: CAPITAL_FLOWS_SECTION.income,
-        titleHint:
-          'Сумма доходов за ход: зарплата и доход от активов (без вычета расходов и платежей по долгам)',
-        valueNode: <MoneyText value={totalIncome} />,
-        valueLabel: formatChipMoneyAria(totalIncome, { tone: 'pos' }),
-        accent: 'mqx-accent--sky',
-        valueTone: 'pos',
-        icon: <IconMetricTrendUp size={18} />,
-      },
-      {
-        title: 'Расходы',
-        chipAction: CAPITAL_FLOWS_SECTION.expense,
-        titleHint:
-          'Сумма расходов за ход: расходы на жизнь + платежи по обязательствам + содержание имущества',
-        valueNode: <MoneyText value={totalOutflow} />,
-        valueLabel: formatChipMoneyAria(totalOutflow, { tone: 'out' }),
-        accent: 'mqx-accent--amber',
-        valueTone: 'out',
-        expenseIcon: true,
-        icon: <IconMetricExpense size={18} />,
-      },
-      {
-        title: 'Баланс',
-        juiceTarget: 'balance',
-        valueNode: <MoneyText value={cash} />,
-        valueLabel: formatChipMoneyAria(cash),
-        accent: 'mqx-accent--violet',
-        icon: <IconMetricWallet size={18} />,
-      },
-      {
-        title: formatSafetyFundChipTitle(cushionFill?.percent),
-        titleHint: cushionFill
-          ? `${formatSafetyFundChipTitle(cushionFill.percent)} от нормы (${SAFETY_FUND_BASELINE_HINT})`
-          : 'Финансовая подушка — запас на чёрный день',
-        valueNode: <MoneyText value={safety} />,
-        valueLabel: cushionFill
-          ? `${formatChipMoneyAria(safety)}, наполнение ${cushionFill.percent}%`
-          : formatChipMoneyAria(safety),
-        accent: 'mqx-accent--emerald',
-        cushionChip: true,
-        cushionFill,
-        icon: <IconMetricShield size={18} />,
-      },
-    ];
-
-  }, [overview]);
-
-
-
   const goal = useMemo(() => {
 
     const current = Number(overview?.safety_fund_balance) || 0;
@@ -248,6 +144,27 @@ export function DashboardPremium({
   const cashBalance = Math.max(0, Math.floor(Number(overview?.cash_balance) || 0));
   const safetyBalance = Math.max(0, Math.floor(Number(overview?.safety_fund_balance) || 0));
   const cushionFill = getSafetyFundFillFromOverview(overview);
+  const templateKey = overview?.victory?.template_key ?? overview?.starter_template_key;
+  const shownEventsCount = eventsUnlocked ? Number(pendingEventsCount) || 0 : 0;
+  const salaryAvailable = !salaryClaimed && (periodStatus == null || canClaimSalary);
+
+  const goalView = useMemo(
+    () => buildGoalChainView(overview?.victory, goal),
+    [overview?.victory, goal],
+  );
+
+  const turnTip = useMemo(
+    () =>
+      buildTurnTip({
+        needs: overview?.needs,
+        needsZeroStreak: overview?.needs_zero_periods_streak,
+        overdueCount: overview?.overdue_liabilities_count,
+        salaryAvailable,
+        pendingEventsCount: shownEventsCount,
+        goalView,
+      }),
+    [overview, salaryAvailable, shownEventsCount, goalView],
+  );
 
   const openSafetySheet = (mode) => {
     const max = mode === 'in' ? cashBalance : safetyBalance;
@@ -305,21 +222,9 @@ export function DashboardPremium({
 
     <>
 
-      <div className="mqx-tab-page mqx-tab-page--dash-unified">
-
-        <MqxDashboardHero
-          periodIndex={periodIndex}
-          onCloseMonth={onNextPeriod}
-          closeMonthDisabled={closeMonthDisabled || busyAction !== null}
-          pendingEventsCount={eventsUnlocked ? pendingEventsCount : 0}
-          onOpenEvents={eventsUnlocked ? onOpenEvents : undefined}
-        />
-
-
-
-        <main className="mqx-content mqx-tab-page__scroll mqx-content--dash-flat">
-
-          <MqxDashStack className="mqx-dash-stack--unified mqx-juice-host">
+      <div className="mqx-tab-page mqx-tab-page--dash-unified mqx-tab-page--board">
+        <main className="mqx-content mqx-tab-page__scroll">
+          <div className="mqx-bg-stack mqx-juice-host">
             <MqxJuiceGainFeedback
               burstKey={juiceBurstKey}
               amount={juiceAmount}
@@ -327,38 +232,42 @@ export function DashboardPremium({
               toastMessage="Зарплата в кошелёк — ход стал сильнее"
             />
 
+            <MqxDashboardHero
+              roleTitle={personaRoleTitle(templateKey)}
+              periodIndex={periodIndex}
+              onCloseMonth={onNextPeriod}
+              closeMonthDisabled={closeMonthDisabled || busyAction !== null}
+              pendingEventsCount={shownEventsCount}
+              onOpenEvents={eventsUnlocked ? onOpenEvents : undefined}
+              tip={turnTip}
+            />
+
             <MqxNeedsDash
               needs={overview?.needs}
-              templateKey={overview?.victory?.template_key ?? overview?.starter_template_key}
               needsZeroPeriodsStreak={overview?.needs_zero_periods_streak}
               treatSelf={overview?.treat_self}
               onHelp={() => setNeedsHelpOpen(true)}
               onTreatSelf={() => setTreatOpen(true)}
             />
 
-            <MqxDivider />
-
             <MqxFinancePeriodBlock
-              financeCards={financeCards}
-              onGoFinance={onGoFinance}
+              templateKey={templateKey}
+              cash={Number(overview?.cash_balance) || 0}
+              safety={Number(overview?.safety_fund_balance) || 0}
+              cushionPercent={cushionFill?.percent ?? null}
+              income={incomeCell(overview)}
+              outflow={Number(overview?.total_monthly_outflow) || 0}
               onFlowsNavigate={onGoCapitalFlows}
               juiceGainActive={salaryCelebrate}
             />
 
-            <MqxDivider />
-
-            <MqxGoalDash
-              victory={overview?.victory}
-              legacyGoal={goal}
-              periodIndex={periodIndex}
-            />
-
-            <MqxDivider />
+            <MqxGoalDash victory={overview?.victory} legacyGoal={goal} />
 
             <MqxPeriodActions
               busy={busyAction !== null}
               activeMoneyMode={moneyModal}
               salaryDisabled={salaryDisabled}
+              salaryHot={salaryAvailable}
               salaryCelebrate={salaryCelebrate}
               onSalary={async () => {
                 if (salaryClaimed) {
@@ -410,7 +319,7 @@ export function DashboardPremium({
 
             />
 
-          </MqxDashStack>
+          </div>
 
         </main>
 
