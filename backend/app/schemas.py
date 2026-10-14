@@ -238,7 +238,7 @@ class TreatSelfOverview(BaseModel):
 
 
 class PeriodClosePreview(BaseModel):
-    """Оценка итога месяца до нажатия «Закрыть месяц»."""
+    """Оценка итога месяца до нажатия «Завершить ход»."""
 
     estimated_cash_after_close: float = 0
     estimated_charges_total: float = 0
@@ -502,7 +502,7 @@ class GuidancePatchResponse(BaseModel):
 
 
 class TimeStatusResponse(BaseModel):
-    """Ответ «Закрыть месяц» и блок `time` в bootstrap. Real-time таймера нет (TB1)."""
+    """Ответ «Завершить ход» и блок `time` в bootstrap. Real-time таймера нет (TB1)."""
 
     period_index: int
     period_close: Optional[PeriodCloseSummary] = None

@@ -121,7 +121,7 @@ export function CapitalActionsPanel({
       return (
         <MqxStateError
           title="Шаблоны не загружены"
-          message="Проверьте сеть и попробуйте снова"
+          message="Проверь сеть и попробуй снова"
           onRetry={() => void reloadExtra?.()}
         />
       );

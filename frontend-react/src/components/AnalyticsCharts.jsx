@@ -93,7 +93,7 @@ export function IncomeExpenseChart({ points }) {
 
   if (closed.length === 0 || (income.every((v) => v === 0) && expense.every((v) => v === 0))) {
     return (
-      <p className="mqx-analytics-dark__err">Пока нет завершённых ходов — график появится после первого «Закрыть месяц».</p>
+      <p className="mqx-analytics-dark__err">Пока нет завершённых ходов — график появится после первого «Завершить ход».</p>
     );
   }
 

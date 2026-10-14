@@ -118,7 +118,7 @@ cd frontend-react && node --test src/guidance/curriculum.test.js src/guidance/gu
 - **Двойной commit при выборе события:** `on_event_chosen` → `patch_guidance` коммитит сам; ошибки глушатся `except Exception: pass` без лога.
 - **`events_chosen_p2`** растёт на любом периоде; триггер-gate `action_event` считает `selected` события **любого** периода, а beat-gate — только `period_index == 2`.
 - **Spec vs код:** в spec `t_events_intro` — «period ≥ 2», в коде — `MIN_PERIOD_INDEX_FOR_GAME_EVENTS` (3); spec ограничивает scope шаблоном «Студент», движок показывает curriculum на любом шаблоне (шаблон влияет только на порог nudge, `STUDENT_TEMPLATE_KEY`).
-- **Лексикон:** биты говорят «Завершить ход», тексты nudge и spec CTA — «Закрыть месяц».
+- **Лексикон:** главное действие — только «Завершить ход» (решение PO 2026-10-14, ADR-014); «Закрыть месяц» не использовать.
 - `_nudge_threshold(profile, kind)` игнорирует `kind`: порог один на оба nudge — 1 (студент) / 2 (остальные).
 - Хук закрытия периода — без savepoint (в отличие от достижений): DB-ошибка внутри него оставит сессию `process_period_end` в failed-состоянии, try/except этого не лечит.
 - Неизвестный `action` в PATCH не даёт 4xx — молча sync + 200; `ValueError` (только «user not found») → 404.

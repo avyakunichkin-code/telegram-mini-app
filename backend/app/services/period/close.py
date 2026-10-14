@@ -1,5 +1,5 @@
 """
-«Закрыть месяц» (TB1): POST /api/game/time/next → process_period_end.
+«Завершить ход» (TB1): POST /api/game/time/next → process_period_end.
 
 Идемпотентность по ключу (profile_id, period_index); повтор после поражения отдаёт сохранённый ответ.
 Real-time таймера нет: play/pause/config и поля time_state / period_duration_seconds удалены (2026-10-14).
@@ -195,7 +195,7 @@ def _replay_or_current(db: Session, user_id: int, key: str) -> TimeStatusRespons
 
 def _replay_final_close(db: Session, user_id: int) -> TimeStatusResponse | None:
     """
-    Повтор «Закрыть месяц» после поражения: профиль уже is_active=0, но ответ
+    Повтор «Завершить ход» после поражения: профиль уже is_active=0, но ответ
     с game_over сохранён под ключом (profile_id, закрытый период).
     """
     last = (

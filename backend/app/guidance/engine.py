@@ -641,7 +641,7 @@ def _build_nudge_block(db: Session, user: User, profile: GameProfile) -> dict[st
         return {
             "nudge_id": "nudge_salary_miss",
             "nudge_title": "Зарплата",
-            "nudge_body": "Ты закрыл месяц без зарплаты — за этот период выплата уже не повторится. Забирай до «Закрыть месяц».",
+            "nudge_body": "Ты завершил ход без зарплаты — за этот ход выплата уже не повторится. Забирай её до «Завершить ход».",
         }
     if neg_streak >= _nudge_threshold(profile, "negative"):
         return {

@@ -380,7 +380,7 @@ export function MqCatalogScreen() {
 
       <CatalogSection title="Примитивы (D + C + B/A)">
         <p className="mqx-catalog__lead" style={{ marginTop: 0 }}>
-          Размеры D · шрифты 15/13px (C) · прогресс 6px · emerald-градиент цели · sky-градиент XP.
+          Размеры D · шрифты 15/13px (C) · прогресс 6px · emerald-градиент цели.
         </p>
         <div
           style={{
@@ -415,14 +415,12 @@ export function MqCatalogScreen() {
             alignItems: 'center',
           }}
         >
-          <MqxChip xp>+120 XP</MqxChip>
-          <span style={{ fontSize: 'var(--mq-fs-caption)', opacity: 0.65 }}>Ур. 4 → 5</span>
+          <MqxChip>Тег</MqxChip>
+          <span style={{ fontSize: 'var(--mq-fs-caption)', opacity: 0.65 }}>Ход 4 из 12</span>
         </div>
         <div style={{ maxWidth: 360, marginTop: 8 }}>
           <div style={{ fontSize: 'var(--mq-fs-small)', fontWeight: 700, opacity: 0.55, marginBottom: 4 }}>Цель</div>
           <MqxProgress value={62} aria-label="Прогресс цели" />
-          <div style={{ fontSize: 'var(--mq-fs-small)', fontWeight: 700, opacity: 0.55, margin: '10px 0 4px' }}>XP</div>
-          <MqxProgress value={62} xp aria-label="Прогресс опыта" />
         </div>
       </CatalogSection>
 

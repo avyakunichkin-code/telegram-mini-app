@@ -262,7 +262,7 @@ export function DashboardPremium({
     const max = moneyModal === 'in' ? cashBalance : safetyBalance;
     if (!Number.isFinite(amt) || amt <= 0 || amt > max) {
 
-      showNotification('Введите корректную сумму', 'error');
+      showNotification('Введи корректную сумму', 'error');
 
       return;
 

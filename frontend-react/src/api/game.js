@@ -37,7 +37,7 @@ export const gameApi = {
   submitRunFeedback(payload) {
     return apiCall('/api/game/run-feedback', 'POST', payload);
   },
-  /** «Закрыть месяц» (TB1). Real-time таймера нет — play/pause/status удалены. */
+  /** «Завершить ход» (TB1). Real-time таймера нет — play/pause/status удалены. */
   setTimeNext() {
     return apiCall('/api/game/time/next', 'POST');
   },

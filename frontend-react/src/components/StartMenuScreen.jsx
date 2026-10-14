@@ -181,7 +181,7 @@ export function StartMenuScreen({ onNewGame, onLoadGame, onLogout }) {
             <h2 id="mqx-load-profiles-title" className="mqx-card__title">
               Все сохранения
             </h2>
-            <p className="mqx-card__sub">Выберите слот — переключусь без лишних вопросов.</p>
+            <p className="mqx-card__sub">Выбери слот — переключусь без лишних вопросов.</p>
             <div className="mqx-fin-list mqx-start-menu__modal-list">
               {sortedProfiles.map((profile) => (
                 <div key={profile.id} className="mqx-fin-row mqx-start-menu__modal-row">

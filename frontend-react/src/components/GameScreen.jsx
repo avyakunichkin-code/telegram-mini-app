@@ -255,7 +255,7 @@ export function GameScreen({ onLogout, onNewGame, onLoadGame }) {
     try {
       await advancePeriod();
     } catch (e) {
-      showNotification(e?.detail || e?.message || 'Не удалось закрыть месяц', 'error');
+      showNotification(e?.detail || e?.message || 'Не удалось завершить ход', 'error');
     }
   };
 
@@ -264,7 +264,7 @@ export function GameScreen({ onLogout, onNewGame, onLoadGame }) {
     try {
       await advancePeriod();
     } catch (e) {
-      showNotification(e?.detail || e?.message || 'Не удалось закрыть месяц', 'error');
+      showNotification(e?.detail || e?.message || 'Не удалось завершить ход', 'error');
     }
   };
 
@@ -304,7 +304,7 @@ export function GameScreen({ onLogout, onNewGame, onLoadGame }) {
               sectionLabel="Игра"
               rightPill="Ошибка"
               title="Не удалось загрузить"
-              subtitle="Проверьте сеть, VPN и что сессия ещё действительна."
+              subtitle="Проверь сеть, VPN и что сессия ещё действительна."
             />
           }
         >
@@ -312,7 +312,7 @@ export function GameScreen({ onLogout, onNewGame, onLoadGame }) {
             <div className="mqx-card mq-enter-item">
               <MqxStateError
                 title="Не удалось загрузить"
-                message={formatApiErrorDetail(error, 'Проверьте сеть и попробуйте снова')}
+                message={formatApiErrorDetail(error, 'Проверь сеть и попробуй снова')}
                 retryLabel="Повторить загрузку"
                 onRetry={() => reload()}
               />
@@ -340,7 +340,7 @@ export function GameScreen({ onLogout, onNewGame, onLoadGame }) {
             <div className="mqx-card mq-enter-item">
               <MqxStateError
                 title="Пустой ответ"
-                message="Активный профиль сейчас не прочитать. Попробуйте ещё раз."
+                message="Активный профиль сейчас не прочитать. Попробуй ещё раз."
                 retryLabel="Обновить"
                 onRetry={() => reload()}
               />

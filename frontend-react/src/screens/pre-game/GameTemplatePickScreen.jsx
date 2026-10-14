@@ -123,7 +123,7 @@ export function GameTemplatePickScreen({ profileName, onProfileNameChange, onBac
           <Spinner />
         </div>
       ) : templates.length === 0 ? (
-        <p className="mqx-monetka-flow__empty">Шаблоны не загрузились. Проверьте сеть и попробуйте позже.</p>
+        <p className="mqx-monetka-flow__empty">Шаблоны не загрузились. Проверь сеть и попробуй позже.</p>
       ) : (
         <>
           <span id="mq-game-catalog-label-pick" className="mq-game-catalog-label">

@@ -549,7 +549,7 @@ def _spawn_next_period_events(db: Session, profile: GameProfile) -> bool:
 
 def process_period_end(db: Session, profile: GameProfile) -> dict:
     """
-    «Закрыть месяц» (TB1): экономика периода одним конвейером этапов, затем commit и side effects.
+    «Завершить ход» (TB1): экономика периода одним конвейером этапов, затем commit и side effects.
 
     Порядок этапов — часть контракта (баланс на момент платежа зависит от предыдущих списаний):
     активы → обязательства → расходы на жизнь → страховки → инвестиции → streak минуса →

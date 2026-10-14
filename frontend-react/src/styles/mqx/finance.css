@@ -1704,20 +1704,7 @@ body [class*='modal'] {
   flex-shrink: 0;
 }
 
-.mqx-chip--xp {
-  font-size: var(--mq-fs-caption);
-  font-weight: 700;
-  padding: 5px 9px;
-  border-radius: 999px;
-  background: var(--tg-theme-bg-color, #fff);
-  border: 1.5px solid var(--mq-xp-accent);
-  color: var(--mq-xp-accent);
-  font-variant-numeric: tabular-nums;
-}
 
-.mqx-progress__fill--xp {
-  background: linear-gradient(90deg, var(--mq-xp-sky), var(--mq-xp-accent));
-}
 
 .mqx-character__meter {
   margin-top: 12px;
@@ -2400,9 +2387,6 @@ body [class*='modal'] {
   background: linear-gradient(90deg, #059669 0%, #34d399 52%, #2dd4bf 100%);
 }
 
-.mqx-progress__fill.mqx-progress__fill--xp {
-  background: linear-gradient(90deg, var(--mq-xp-sky, #38bdf8), var(--mq-xp-accent, #818cf8));
-}
 
 .mqx-block__head {
   display: flex;
@@ -2485,15 +2469,6 @@ body [class*='modal'] {
   align-items: flex-start;
 }
 
-.mqx-xp {
-  border-radius: 14px;
-  padding: 8px 10px;
-  font-size: var(--mq-fs-caption);
-  font-weight: 700;
-  color: rgba(91, 33, 182, 0.95);
-  background: rgba(109, 40, 217, 0.08);
-  border: 1px solid rgba(91, 33, 182, 0.18);
-}
 
 .mqx-action {
   border-radius: 14px;
@@ -2585,35 +2560,9 @@ body [class*='modal'] {
 .mqx-bar--rose { background: #f43f5e; }
 .mqx-bar--violet { background: #8b5cf6; }
 
-.mqx-xp-card {
-  margin-top: 12px;
-  border-radius: 18px;
-  padding: 12px;
-  border: 1px solid rgba(91, 33, 182, 0.22);
-  background: rgba(109, 40, 217, 0.08);
-}
 
-.mqx-xp-card__row {
-  display: flex;
-  justify-content: space-between;
-  gap: 10px;
-  font-size: var(--mq-fs-caption);
-  color: rgba(91, 33, 182, 0.92);
-}
 
-.mqx-xp-card__track {
-  margin-top: 10px;
-  height: 8px;
-  border-radius: 999px;
-  overflow: hidden;
-  background: color-mix(in srgb, var(--mqx-ink) 22%, transparent);
-}
 
-.mqx-xp-card__fill {
-  height: 100%;
-  border-radius: 999px;
-  background: linear-gradient(90deg, rgba(167, 139, 250, 0.95), rgba(217, 70, 239, 0.9));
-}
 
 /* —— Details | Actions v2 (design-lab details-actions-round) —— */
 

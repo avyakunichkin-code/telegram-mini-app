@@ -161,5 +161,5 @@ def go_to_next_period(
     current_user=Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
-    """«Закрыть месяц» (TB1). Real-time таймера нет: play/pause/config удалены."""
+    """«Завершить ход» (TB1). Real-time таймера нет: play/pause/config удалены."""
     return service_go_to_next_period(db, current_user.id)

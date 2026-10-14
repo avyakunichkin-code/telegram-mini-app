@@ -113,7 +113,7 @@ mqx/
 | `MqxPill` | Пилюли hero, badge событий |
 | `MqxPeriodChip` | «Период» + номер в hero |
 | `MqxChip` | XP outline |
-| `MqxProgress` | 6px; emerald-градиент цели; `xp` — sky-градиент |
+| `MqxProgress` | 6px; emerald-градиент цели |
 | `MqxSubtab` | Вкладки финансов / капитала |
 | `MqxModeButton` | Переход к списку позиций («Позиции»), режимы портфеля, submit инвестиций |
 | `MqxRowAction` | **+** add / **корзина** remove по умолчанию (`removeVisual="minus"` — символ **−**) |

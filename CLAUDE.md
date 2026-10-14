@@ -29,7 +29,7 @@ aliases:
 
 ### Core loop (TB1)
 
-Открытый период → действия → **«Закрыть месяц»** (`POST /api/game/time/next` → `process_period_end`) → новый период.
+Открытый период → действия → **«Завершить ход»** (`POST /api/game/time/next` → `process_period_end`) → новый период.
 
 - **`save_kind`:** только **`game`** — `game_starter_templates` + `template_key`. Режим Plan **снят** ([ADR-013](docs/decisions/ADR-013-game-only-drop-plan-mode.md), [C-2](CONVENTIONS.md)); вырезание кода — [`PLAN_game-only`](docs/plans/PLAN_game-only.md).
 - **Зарплата** — только по кнопке в периоде; пропуск = нет выплаты за период.

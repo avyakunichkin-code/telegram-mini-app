@@ -4,7 +4,7 @@
 
 ## Цикл и сохранение
 
-- **Период («месяц»):** открыт → действия игрока → **«Закрыть месяц»** (`POST /api/game/time/next` → `process_period_end`) → следующий период.
+- **Период («месяц»):** открыт → действия игрока → **«Завершить ход»** (`POST /api/game/time/next` → `process_period_end`) → следующий период.
 - **`save_kind`:** канон **`game`** (immutable). Старт из `game_starter_templates` + `template_key`. Режим **Plan снят** ([ADR-013](../../../docs/decisions/ADR-013-game-only-drop-plan-mode.md)); API `plan` → 400 (эпик GO). Колонка в БД может ещё существовать.
 - **`period_index`:** номер закрытого/текущего периода; gate победы часто **`min_period_index_for_victory`** (дефолт **7**).
 
