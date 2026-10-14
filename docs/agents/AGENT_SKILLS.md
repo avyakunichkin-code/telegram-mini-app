@@ -66,6 +66,8 @@ aliases:
 | **create-event** | **`/create-event`** — brief (`lifecycle_class`, `needs_axis_map`), YAML, §10–§11 |
 | **event-analysis** | **`/event-analysis`** — read-only: gaps, **§10 lifecycle**, **§11 axis**, trade-off |
 | **game-economy-and-victory** | `period.py`, Victory v2, баланс движка (не контент карточек) |
+| **guidance-onboarding** | O3 онбординг: spine-биты, триггеры, gates, nudges, guidance strip (`tier: support`) |
+| **admin-ops** | `/api/admin`, справочники (YAML-события read-only), Watchtower, воронки, ops-алерты Telegram (`tier: support`) |
 | **balance-playtest** (`/balance-playtest`) | 40 периодов, JSON, diff к baseline; subagent `economy-balance-runner` |
 | **code-review-and-quality** | Перед merge |
 | **planning-and-task-breakdown** | Задачи из spec |
@@ -123,7 +125,7 @@ aliases:
 | **browser-testing-with-devtools** | optional / deferred | Built-in browser pane, Claude in Chrome, `/run` | 2 / 339 | 17 | ⚪ **Пересмотреть** при следующем аудите | Инструменты теперь встроены; оставить только сценарии PWA-smoke (возможно → `release-web`) |
 | `_archived/code-review` (studio) | archived | `/code-review` | — | — | 🔴 **Удалить** из архива | Тройной дубль: studio + `code-review-and-quality` + built-in |
 
-Без built-in дубля и **вне** предложения: `api-and-interface-design`, `spec-driven-development`, `documentation-and-adrs`, `idea-refine`, `deprecation-and-migration`, все доменные (`create-event`, `event-analysis`, `game-economy-and-victory`, `db-baselines-and-migrations`, `design-lab-mqx`, `balance-playtest`, `critical-test-scenarios`, `release-web`, …).
+Без built-in дубля и **вне** предложения: `api-and-interface-design`, `spec-driven-development`, `documentation-and-adrs`, `idea-refine`, `deprecation-and-migration`, все доменные (`create-event`, `event-analysis`, `game-economy-and-victory`, `db-baselines-and-migrations`, `guidance-onboarding`, `admin-ops`, `design-lab-mqx`, `balance-playtest`, `critical-test-scenarios`, `release-web`, …).
 
 **Итог при полном принятии:** −4 скилла (`code-simplification`, `context-engineering`, `security-and-hardening`, `_archived/code-review`), −1 в архив (`performance-optimization`), 2 сжаты/понижены (`code-review-and-quality`, `using-agent-skills`); ≈ −1 600 строк generic-текста в `.claude/skills/` (ещё 389 строк `performance-optimization` уходят в архив).
 

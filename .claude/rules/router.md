@@ -53,10 +53,12 @@ Studio/GDD: [`.claude/skills/_archived/`](.claude/skills/_archived/) — Claude 
 | **Критичные сценарии / test gate** | **critical-test-scenarios** (`/critical-test-scenarios`) | `backend/tests/`, FE `__tests__/` |
 | Перед merge | **code-review-and-quality** | read-only |
 | **SQL baseline / `00NN_*.sql` / seeds / `db.sh`** | **db-baselines-and-migrations** | `test-driven-development`; game-economy при `victory_goals` |
+| **Онбординг / guidance** (биты, триггеры, gates, nudges, strip) | **guidance-onboarding** | `backend/app/guidance/`, `frontend-react/src/guidance/` |
+| **Админка / ops** (справочники, Watchtower, воронки, алерты, CSV) | **admin-ops** | `backend/app/admin/`, `routers/admin.py`, `components/admin/` |
 
 **`tier: deferred`** (явный вызов): `deprecation-and-migration`, **`release-web`**, `telegram-mini-app-runtime`, `social-changelog-posts`. Встроенные вместо удалённых скиллов: `/simplify`, `/security-review`, `/code-review`.
 
-**`tier: support`:** `planning-and-task-breakdown` (epic), `code-review-and-quality` (merge), `project-handbook-documentation` (handbook для людей), `documentation-and-adrs` (граница доменов), **`db-baselines-and-migrations`** (PostgreSQL baseline/миграции/seeds). **`doubt-driven-development`** — deferred, но satellite для game-economy.
+**`tier: support`:** `planning-and-task-breakdown` (epic), `code-review-and-quality` (merge), `project-handbook-documentation` (handbook для людей), `documentation-and-adrs` (граница доменов), **`db-baselines-and-migrations`** (PostgreSQL baseline/миграции/seeds), **`guidance-onboarding`** (O3 онбординг), **`admin-ops`** (админка, Watchtower, ops-алерты). **`doubt-driven-development`** — deferred, но satellite для game-economy.
 
 Скилл с `status: active` — блок **«Прочитай сначала»** в `SKILL.md` до процедуры.
 

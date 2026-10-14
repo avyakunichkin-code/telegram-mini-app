@@ -63,6 +63,13 @@ code-review-and-quality
 
 Ключевые файлы: `backend/app/game/period.py`, `backend/app/victory/engine.py`, [`SPEC_victory-v2`](../specs/features/SPEC_victory-v2.md).
 
+## Онбординг и админка (support)
+
+| Зона | Скилл | Канон |
+|------|-------|-------|
+| O3 guidance: биты, триггеры, nudges, strip | `guidance-onboarding` | [`SPEC_onboarding-o3.md`](../specs/features/SPEC_onboarding-o3.md), `backend/app/guidance/` |
+| Админка: справочники, Watchtower, воронки, ops-алерты | `admin-ops` | [`PLAN_admin-analytics-ops.md`](../plans/PLAN_admin-analytics-ops.md), [ADR-008](../decisions/ADR-008-events-catalog-single-source.md), `backend/app/admin/` |
+
 ## UI / MQX (параллельно spec, после утверждения макета)
 
 ```text
@@ -83,7 +90,7 @@ design-lab/<theme>/    design-lab-mqx  →  mqx/ + prod   frontend-ui-engineerin
 | phase | `tier: core` (primary) | `tier: support` | `tier: deferred` |
 |-------|------------------------|-----------------|------------------|
 | `define` | `idea-refine`, `spec-driven-development`, `api-and-interface-design` | `planning-and-task-breakdown` | — |
-| `build` | `incremental-implementation`, `create-event`, `event-analysis`, `game-economy-and-victory`, `design-lab-mqx`, `frontend-ui-engineering`, `test-driven-development`, `critical-test-scenarios` | — | `/simplify` (встроенный) |
+| `build` | `incremental-implementation`, `create-event`, `event-analysis`, `game-economy-and-victory`, `design-lab-mqx`, `frontend-ui-engineering`, `test-driven-development`, `critical-test-scenarios` | `db-baselines-and-migrations`, `guidance-onboarding`, `admin-ops` | `/simplify` (встроенный) |
 | `verify` | `critical-test-scenarios`, `test-driven-development` | `code-review-and-quality` | `doubt-driven-development`, `telegram-mini-app-runtime`, `/security-review` (встроенный) |
 | `ship` | — | `project-handbook-documentation`, `documentation-and-adrs` | `deprecation-and-migration`, `social-changelog-posts`, **`release-web`** |
 

@@ -20,6 +20,8 @@
 | **critical-test-scenarios** | core | Gate CS-* , контрактные тесты | Docs-only, rename без поведения |
 | **code-review-and-quality** | support | Pre-merge, крупный PR | Авторинг контента |
 | **db-baselines-and-migrations** | support | SQL `00NN_*`, baseline, seeds DDL | Контент событий YAML |
+| **guidance-onboarding** | support | Биты/триггеры/gates O3, nudges, guidance strip, `/api/game/guidance` | Экономика периода → `game-economy`; чистый MQX без guidance → `frontend-ui-engineering` |
+| **admin-ops** | support | `/api/admin`, справочники, Watchtower, воронки, ops-алерты, CSV | Контент YAML-событий → `create-event`; игровой UI → `frontend-ui-engineering` |
 | **documentation-and-adrs** | support | Граница доменов, ADR | Narrative handbook → `project-handbook-documentation` |
 | **project-handbook-documentation** | support | GDD/handbook для людей | Контракт spec → `spec-driven-development` |
 | **doubt-driven-development** | deferred | Satellite: крупная economy/victory | Каждая мелкая правка |

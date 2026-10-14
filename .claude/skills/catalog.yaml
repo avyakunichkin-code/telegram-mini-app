@@ -67,6 +67,110 @@ skills:
         - code-review-and-quality
         - documentation-and-adrs
 
+  guidance-onboarding:
+    category: build
+    priority: medium
+    status: active
+    tier: support
+    spec: .claude/skills/specs/build/guidance-onboarding.md
+    context:
+      must_read:
+        - docs/specs/features/SPEC_onboarding-o3.md
+        - backend/app/guidance/engine.py
+        - backend/app/guidance/curriculum.py
+        - backend/app/guidance/triggers.py
+        - frontend-react/src/guidance/curriculum.js
+      read_if:
+        - when: "period close hook / nudge streaks"
+          paths:
+            - backend/app/game/period.py
+        - when: "events unlock / t_events_intro"
+          paths:
+            - backend/app/services/events/spawn.py
+            - backend/app/game/rules.py
+        - when: "guidance strip / anchors / UI"
+          paths:
+            - frontend-react/src/components/GameGuidanceLayer.jsx
+            - frontend-react/src/guidance/useGuidanceAnchorFocus.js
+            - frontend-react/src/guidance/guidanceAnchors.js
+        - when: "admin onboarding funnel"
+          paths:
+            - backend/app/admin/onboarding_funnel.py
+        - when: "Monetka voice / beat texts"
+          paths:
+            - docs/reference/CHARACTER_MONETKA.md
+        - when: "O1/O2 history / legacy beat ids"
+          paths:
+            - docs/archive/onboarding-o2/README.md
+      writes_to:
+        - backend/app/guidance/
+        - frontend-react/src/guidance/
+        - frontend-react/src/components/GameGuidanceLayer.jsx
+        - backend/tests/test_guidance_o2.py
+        - docs/specs/features/SPEC_onboarding-o3.md
+      next_skill:
+        - test-driven-development
+        - frontend-ui-engineering
+        - code-review-and-quality
+
+  admin-ops:
+    category: build
+    priority: medium
+    status: active
+    tier: support
+    spec: .claude/skills/specs/build/admin-ops.md
+    context:
+      must_read:
+        - backend/app/admin/auth.py
+        - backend/app/routers/admin.py
+        - backend/app/admin/catalogs.py
+        - backend/app/admin/notify.py
+        - docs/decisions/ADR-008-events-catalog-single-source.md
+        - docs/plans/PLAN_admin-analytics-ops.md
+      read_if:
+        - when: "new admin catalog / catalog field"
+          paths:
+            - backend/app/admin/catalog_patch.py
+            - backend/app/admin/catalog_write.py
+            - backend/app/admin/catalog_create_payload.py
+            - backend/app/admin/catalog_detail.py
+            - backend/app/admin/catalog_validate.py
+            - frontend-react/src/components/admin/catalogCreateConfig.js
+        - when: "new alert kind / Telegram ops"
+          paths:
+            - backend/app/admin/notify_messages.py
+            - backend/.env.example
+        - when: "Watchtower column / filter"
+          paths:
+            - backend/app/admin/watchtower_profiles.py
+            - frontend-react/src/components/admin/adminPlayerColumns.jsx
+            - frontend-react/src/api/admin.js
+        - when: "funnels / metrics"
+          paths:
+            - backend/app/admin/product_funnel.py
+            - backend/app/admin/metrics_summary.py
+            - backend/app/admin/onboarding_funnel.py
+        - when: "stuck heuristics / stuck alerts"
+          paths:
+            - backend/app/admin/stuck_scan.py
+        - when: "CSV export / profile inspector"
+          paths:
+            - backend/app/admin/csv_export.py
+            - backend/app/admin/profile_inspector.py
+        - when: "catalog registry evolution"
+          paths:
+            - docs/vision/ideas/admin-catalog-registry.md
+      writes_to:
+        - backend/app/admin/
+        - backend/app/routers/admin.py
+        - frontend-react/src/components/admin/
+        - frontend-react/src/api/admin.js
+        - backend/tests/
+      next_skill:
+        - test-driven-development
+        - api-and-interface-design
+        - code-review-and-quality
+
   balance-playtest:
     category: verify
     priority: medium
