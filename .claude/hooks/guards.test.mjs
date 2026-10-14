@@ -5,6 +5,8 @@
  * Запуск из корня репо: node .claude/hooks/guards.test.mjs  (exit 1 при FAIL)
  */
 import { spawnSync } from 'child_process';
+import { writeFileSync, rmSync } from 'fs';
+import os from 'os';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
@@ -70,10 +72,17 @@ const trimCases = [
   ['trim: long non-test command → untouched', 'git log', longOut, false],
   ['trim: opt-out CLAUDE_FULL_OUTPUT=1 → untouched', 'CLAUDE_FULL_OUTPUT=1 py -3 -m pytest -q', longOut, false],
 ];
+// Bash отдаёт в stdout только начало длинного вывода, полный текст — в persistedOutputPath:
+// итог прогона («446 passed, 1 failed») есть только в файле и должен попасть в хвост.
+const persisted = path.join(os.tmpdir(), `guards-test-persisted-${process.pid}.txt`);
+writeFileSync(persisted, longOut);
+const headOnly = longOut.slice(0, 7000);
+trimCases.push(['trim: truncated stdout + persistedOutputPath → tail from full file', 'py -3 -m pytest -q', headOnly, true, persisted]);
 let trimTotal = 0;
-for (const [name, command, stdout, expectRewrite] of trimCases) {
+for (const [name, command, stdout, expectRewrite, persistedPath] of trimCases) {
   trimTotal++;
-  const payload = { tool_name: 'Bash', tool_input: { command }, tool_response: bashRes(stdout) };
+  const response = persistedPath ? { ...bashRes(stdout), persistedOutputPath: persistedPath } : bashRes(stdout);
+  const payload = { tool_name: 'Bash', tool_input: { command }, tool_response: response };
   const res = spawnSync(process.execPath, [TRIM_HOOK], { input: JSON.stringify(payload), encoding: 'utf8' });
   let upd = null;
   try {
@@ -90,6 +99,8 @@ for (const [name, command, stdout, expectRewrite] of trimCases) {
   if (!ok) fails++;
   console.log(`${ok ? 'OK  ' : 'FAIL'}  ${name} → rewritten=${Boolean(upd)} (expected ${expectRewrite})`);
 }
+
+rmSync(persisted, { force: true });
 
 console.log(`\nSummary: ${runs.length + trimTotal - fails} OK, ${fails} FAIL`);
 process.exit(fails ? 1 : 0);
