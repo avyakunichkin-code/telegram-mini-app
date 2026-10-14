@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import hmac
 import logging
 from typing import Any
 
@@ -19,11 +20,12 @@ router = APIRouter(prefix="/api/telegram", tags=["telegram"])
 
 
 def _verify_webhook_secret(request: Request) -> None:
+    """Fail closed: без PLAYER_TELEGRAM_WEBHOOK_SECRET вебхук не принимает ничего (иначе любой POST подделывает апдейт)."""
     secret = config.PLAYER_TELEGRAM_WEBHOOK_SECRET
     if not secret:
-        return
+        raise HTTPException(status_code=403, detail="Webhook disabled: PLAYER_TELEGRAM_WEBHOOK_SECRET is not set")
     header = request.headers.get("X-Telegram-Bot-Api-Secret-Token", "")
-    if header != secret:
+    if not hmac.compare_digest(header.encode(), secret.encode()):
         raise HTTPException(status_code=403, detail="Invalid webhook secret")
 
 

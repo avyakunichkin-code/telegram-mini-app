@@ -44,9 +44,36 @@ def resolve_player_web_app_url() -> str:
     return f"{origin}/#/"
 
 
+# Значения-заглушки из старого дефолта и .env.example: JWT с ними подделывается кем угодно.
+_PLACEHOLDER_SECRET_KEYS = frozenset({"", "default-secret-key-change-me", "change-me"})
+_DEV_SECRET_KEY = "dev-only-insecure-secret-key"
+
+
+def is_production_env() -> bool:
+    """Render выставляет RENDER=true; ENVIRONMENT=production — для других хостингов."""
+    return os.getenv("RENDER", "").strip().lower() == "true" or os.getenv(
+        "ENVIRONMENT", ""
+    ).strip().lower() in {"production", "prod"}
+
+
+def _resolve_secret_key() -> str:
+    raw = os.getenv("SECRET_KEY", "").strip()
+    if raw not in _PLACEHOLDER_SECRET_KEYS:
+        return raw
+    if is_production_env():
+        raise RuntimeError(
+            "SECRET_KEY is not set (or is a placeholder) in production: refusing to sign JWT "
+            "with a known key. Set SECRET_KEY in the deploy environment."
+        )
+    logging.getLogger(__name__).warning(
+        "SECRET_KEY is not set; using an insecure dev-only key. Never deploy like this."
+    )
+    return _DEV_SECRET_KEY
+
+
 class Config:
     DATABASE_URL = os.getenv("DATABASE_URL", "")
-    SECRET_KEY = os.getenv("SECRET_KEY", "default-secret-key-change-me")
+    SECRET_KEY = _resolve_secret_key()
     ALGORITHM = "HS256"
     ACCESS_TOKEN_EXPIRE_MINUTES = 60 * 24 * 7  # 7 дней
 

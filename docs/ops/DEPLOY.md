@@ -49,7 +49,8 @@ Resume после блокировки экрана (PW1): [`foundation/PW1_RESU
 
 | Переменная | Значение |
 |------------|----------|
-| `SECRET_KEY` | длинная случайная строка (если не сгенерировался) |
+| `SECRET_KEY` | длинная случайная строка (если не сгенерировался). **Обязателен:** с пустым или шаблонным значением API на Render не стартует |
+| `PLAYER_TELEGRAM_WEBHOOK_SECRET` | случайная строка, тот же `secret_token` в `setWebhook`. **Без него вебхук игрока отвечает 403** |
 | `PUBLIC_APP_URL` | `https://app.YOUR_DOMAIN/#` |
 | `ADMIN_WEB_BASE_URL` | то же, что `PUBLIC_APP_URL` |
 | `CORS_ALLOW_ORIGINS` | `https://app.YOUR_DOMAIN` |
