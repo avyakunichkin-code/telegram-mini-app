@@ -94,7 +94,7 @@ App (HashRouter)
 3. **Снимок денег за период** (2×2 chips) — scan за 2–3 с.  
 4. **Прогресс сценария** (цель, свёрнуто по умолчанию) — мотивация, не блокирует действия.  
 5. **Действия периода** (2×2 chips) — primary motor loop.  
-6. **Sheet подушки** — только после «Пополнить» / «Снять» (`MqxSafetyFundSheet`).
+6. **Sheet подушки** — только после «В подушку» / «Из подушки» (`MqxSafetyFundSheet`).
 
 ### Layout Zones
 
@@ -218,7 +218,7 @@ App (HashRouter)
 |-------------------|------------------|
 | `period_timer` | `data-onboarding-anchor="hero"` |
 | `salary` | `salary` |
-| `safety_fund` | `cushion` (кнопка «Пополнить») — **шаг 3** |
+| `safety_fund` | `cushion` (кнопка «В подушку») — **шаг 3** |
 | `next_period` | `next_period` — **шаг 4** |
 | `farewell` | без anchor |
 

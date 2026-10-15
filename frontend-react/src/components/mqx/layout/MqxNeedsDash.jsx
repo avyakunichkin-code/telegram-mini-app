@@ -1,6 +1,6 @@
 import { useId, useMemo } from 'react';
 
-import { IconHelpBookQuestionInside, IconTreatHeart } from '../icons/MqxContextHelpIcons';
+import { IconHelpQuestion, IconTreatHeartPlus } from '../icons/MqxContextHelpIcons';
 import { showNotification } from '../../notifications';
 import { MqxProgress } from '../primitives/MqxProgress';
 import { lowestNeedAxis, NEEDS_AXES, pluralRu } from '../utils/boardDashDisplay';
@@ -98,7 +98,7 @@ export function MqxNeedsDash({
         </h2>
         <div className="mqx-bg-needs__actions">
           <button type="button" className="mqx-bg-btn mqx-bg-icon-btn" onClick={() => onHelp?.()} aria-label="Подсказки">
-            <IconHelpBookQuestionInside size={16} />
+            <IconHelpQuestion size={20} />
           </button>
           {treatSelf ? (
             <button
@@ -108,7 +108,7 @@ export function MqxNeedsDash({
               aria-label={treatAvailable ? 'Улучшить потребности' : treatLockedHint}
               onClick={handleTreatClick}
             >
-              <IconTreatHeart filled={treatAvailable} />
+              <IconTreatHeartPlus size={18} filled={treatAvailable} />
             </button>
           ) : null}
         </div>

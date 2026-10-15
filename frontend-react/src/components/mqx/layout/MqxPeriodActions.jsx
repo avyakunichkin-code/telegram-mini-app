@@ -19,9 +19,22 @@ function ActIcon({ children }) {
   );
 }
 
+/** Копилка-подушка со стрелкой: `in` — деньги внутрь, `out` — наружу. */
+function CushionGlyph({ direction }) {
+  const arrow = direction === 'in' ? 'M12 3v8m-3.5-3.5L12 11l3.5-3.5' : 'M12 11V3M8.5 6.5L12 3l3.5 3.5';
+  return (
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path d="M4 13h16v5.5A2.5 2.5 0 0 1 17.5 21h-11A2.5 2.5 0 0 1 4 18.5V13z" stroke="currentColor" strokeWidth="2" strokeLinejoin="round" />
+      <path d="M9.5 17h5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+      <path d={arrow} stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
 /**
  * Действия хода ★ BG-1: 4 кнопки в ряд. «Зарплата» — монета и золотая подсветка, пока не забрана.
- * Подписи «Пополнить» / «Снять» — открытая задача, здесь не меняются.
+ * Кнопки подушки (2026-10-15): «В подушку» / «Из подушки» — подпись и иконка называют,
+ * откуда и куда деньги (стрелка в копилку / из копилки).
  */
 export function MqxPeriodActions({
   salaryDisabled = false,
@@ -77,26 +90,34 @@ export function MqxPeriodActions({
         />
 
         <ActionButton
-          label="Пополнить"
+          label="В подушку"
           disabled={busy}
           className={activeMoneyMode === 'in' ? 'mqx-bg-act--active' : ''}
           data-onboarding-anchor="cushion"
           data-money-trigger="in"
-          title="Перевести деньги с карты в подушку"
-          aria-label="Пополнить подушку"
+          title="Перевести деньги со счёта в подушку"
+          aria-label="Положить в подушку"
           onClick={onContribute}
-          icon={<ActIcon>+</ActIcon>}
+          icon={
+            <ActIcon>
+              <CushionGlyph direction="in" />
+            </ActIcon>
+          }
         />
 
         <ActionButton
-          label="Снять"
+          label="Из подушки"
           disabled={busy}
           className={activeMoneyMode === 'out' ? 'mqx-bg-act--active' : ''}
           data-money-trigger="out"
           title="Снять деньги с подушки на счёт"
-          aria-label="Снять с подушки"
+          aria-label="Снять из подушки"
           onClick={onWithdraw}
-          icon={<ActIcon>−</ActIcon>}
+          icon={
+            <ActIcon>
+              <CushionGlyph direction="out" />
+            </ActIcon>
+          }
         />
       </div>
     </section>

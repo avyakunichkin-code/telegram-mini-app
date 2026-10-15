@@ -18,7 +18,9 @@ function GoalTrack({ chain, phase }) {
       {chain.map((step) => (
         <i key={step.key} className="mqx-bg-track__dot" data-status={step.status} />
       ))}
-      <Coin className={`mqx-bg-track__finish${phase === 'win' ? ' is-won' : ''}`} />
+      <span className={`mqx-bg-track__finish${phase === 'win' ? ' is-won' : ''}`}>
+        <Coin className="mqx-bg-coin--sm" />
+      </span>
     </span>
   );
 }

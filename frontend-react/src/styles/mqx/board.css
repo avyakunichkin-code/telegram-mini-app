@@ -465,6 +465,8 @@
   align-items: center;
   min-width: 0;
   overflow: hidden;
+  /* место под свечение текущего шага и тень финиша — иначе их обрезает overflow */
+  padding: var(--mq-sp-1) var(--mq-sp-1) 5px;
 }
 
 .mqx-bg-track__dot {
@@ -501,9 +503,37 @@
   box-shadow: 0 0 0 3px var(--mq-turn-soft);
 }
 
+/* Финиш — золотая клетка поля с монетой (как финиш в design-lab), пунктир к ней от последнего шага */
 .mqx-bg-track__finish {
-  --coin-size: 18px;
+  position: relative;
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 24px;
+  height: 24px;
   margin-left: var(--mq-sp-4);
+  border: 1.5px solid var(--mq-coin-rim);
+  border-radius: 7px;
+  background: var(--mq-coin-soft);
+  box-shadow: 0 2px 0 var(--mq-coin-rim);
+}
+
+.mqx-bg-track__finish::before {
+  content: '';
+  position: absolute;
+  right: calc(100% + 1.5px);
+  top: 50%;
+  width: 10px;
+  border-top: 2px dashed var(--mq-cell-edge);
+}
+
+.mqx-bg-track__finish .mqx-bg-coin {
+  box-shadow: 0 1px 0 var(--mq-coin-rim);
+}
+
+.mqx-bg-track__finish.is-won {
+  border-color: var(--mq-coin-rim);
+  background: var(--mq-coin);
 }
 
 .mqx-bg-goal__chev {
@@ -689,4 +719,86 @@
   overflow: hidden;
   border: var(--mq-hair);
   border-radius: var(--mq-r-card);
+}
+
+/* —— Плотность (2026-10-15): главная целиком на экране 360×640 при свёрнутой цели ——
+   Деньги — три плитки в ряд; меньше отступов и вторичных размеров.
+   Зоны нажатия не ниже 44px (CTA, цель, действия, иконки потребностей). */
+.mqx-tab-page--board .mqx-tab-page__scroll.mqx-content {
+  padding: var(--mq-sp-4) var(--mq-sp-5) var(--mq-sp-5);
+}
+
+.mqx-bg-stack {
+  gap: var(--mq-sp-4);
+}
+
+.mqx-bg-turn {
+  gap: var(--mq-sp-2);
+  padding: var(--mq-sp-3) var(--mq-sp-5) var(--mq-sp-5);
+}
+
+.mqx-bg-tip .mqx-bg-tip__monetka {
+  width: 22px;
+  height: 22px;
+}
+
+.mqx-bg-turn__num {
+  font-size: var(--mq-fs-money);
+}
+
+.mqx-bg-events {
+  min-height: 44px;
+  padding: var(--mq-sp-2) var(--mq-sp-4);
+}
+
+.mqx-bg-needs {
+  gap: var(--mq-sp-2);
+}
+
+.mqx-bg-needs {
+  margin-top: var(--mq-sp-1);
+}
+
+.mqx-bg-needs__grid {
+  gap: var(--mq-sp-2) var(--mq-sp-6);
+}
+
+.mqx-bg-money {
+  gap: var(--mq-sp-2);
+}
+
+.mqx-bg-money__avatar {
+  width: 40px;
+  height: 40px;
+}
+
+.mqx-bg-money__grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--mq-sp-2);
+}
+
+.mqx-bg-money__cell {
+  padding: var(--mq-sp-3) var(--mq-sp-4);
+}
+
+.mqx-bg-money__cell--wide {
+  grid-column: auto;
+}
+
+.mqx-bg-money__value {
+  font-size: var(--mq-fs-lead);
+}
+
+.mqx-bg-money__cell .mqx-bg-money__label {
+  font-size: var(--mq-fs-small);
+  line-height: 1.25;
+}
+
+.mqx-bg-goal__toggle {
+  padding: var(--mq-sp-3) var(--mq-sp-5);
+}
+
+.mqx-bg-act {
+  min-height: 48px;
+  padding: var(--mq-sp-1);
 }
