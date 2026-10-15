@@ -62,7 +62,7 @@ aliases:
 | Dashboard unified | S5 | 2026-05 | [`design-lab/dashboard/APPROVED.md`](../../../design-lab/dashboard/APPROVED.md) | см. MQX doc |
 | Guided onboarding (O2) | Strip | 2026-06-01 | [`design-lab/onboarding-o2/APPROVED.md`](../../../design-lab/onboarding-o2/APPROVED.md) | см. MQX doc |
 | New game mode UI | R2 | 2026-05-20 | [`design-lab/new-game-mode/APPROVED.md`](../../../design-lab/new-game-mode/APPROVED.md) | см. MQX doc |
-| Направление «настольная игра про деньги» | **BG** | 2026-10-14 | [ADR-014](../../decisions/ADR-014-brand-direction-board-game.md) | Роли цвета, шрифт PWA, 3D, «Завершить ход»; визуал — через раунд design-lab |
+| Направление «настольная игра про деньги» | **BG** | 2026-10-14 | [ADR-014](../../decisions/ADR-014-brand-direction-board-game.md) | Роли цвета, шрифт PWA, псевдо-3D (перерисовка отложена), «Завершить ход»; визуал — через раунд design-lab |
 | Остальные экраны «настольная игра» | **BG-2** | 2026-10-15 | [`design-lab/board-game/APPROVED.md`](../../../design-lab/board-game/APPROVED.md) | Капитал, Аналитика, Меню, событие, вход, выбор жизни, финал; перенос в prod по группам |
 | Дашборд «настольная игра» (концепция) | **BG-1** | 2026-10-14 | [`design-lab/board-game/APPROVED.md`](../../../design-lab/board-game/APPROVED.md) | Карта хода, Nunito + Manrope, лёгкий стиль; в prod ещё не перенесено |
 
@@ -202,7 +202,7 @@ aliases:
 | Параметр | Правило |
 |----------|---------|
 | Формат | PNG, прозрачный фон |
-| Стиль | 3D, как логотип (ADR-014); текущий 2D-маскот — до перерисовки |
+| Стиль | Псевдо-3D в гамме логотипа (ADR-014 п. 3, уточнено 2026-10-15); текущий маскот остаётся до перерисовки перед публичным запуском. PNG — с настоящей альфой и без пустых полей (`scripts/trim-transparent-png.py`) |
 | Дефолт | [`assets/monetka/monetka-mascot.png`](assets/monetka/monetka-mascot.png) |
 | Позы | `monetka-{pose}.png` → `MonetkaAvatar` |
 | Пузырь | CSS, не в PNG |
