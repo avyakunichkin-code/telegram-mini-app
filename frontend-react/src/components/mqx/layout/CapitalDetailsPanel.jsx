@@ -1,46 +1,42 @@
 import { useState } from 'react';
-import { AssetPositionMetrics } from '../metrics/AssetPositionMetrics';
-import { InsurancePolicyMetrics } from '../metrics/InsurancePolicyMetrics';
-import { LiabilityPositionMetrics } from '../metrics/LiabilityPositionMetrics';
-import { MqxCapitalTextRowAction } from '../primitives/MqxCapitalTextRowAction';
 import { MqxStateSkeleton } from '../primitives/MqxStateSkeleton';
 import { useMqxConfirm } from '../hooks/useMqxConfirm';
-import { InvestPositionRow } from './InvestPositionRow';
-import { MqxCapitalDetailEmpty } from './MqxCapitalDetailEmpty';
-import { MqxCapitalMechanicLocked } from './MqxCapitalMechanicLocked';
-import { formatDebtCount, MqxCapitalMetaCount, MqxCapitalMetaLiab } from './MqxCapitalSectionMeta';
-import { MqxCapitalSectionAccordion } from './MqxCapitalSectionAccordion';
-import { MqxFinListRow } from './MqxFinListRow';
+import { CapitalLot, CapitalLotAction, CapitalLotNote, CapitalLotRow } from './CapitalLot';
+import {
+  assetNote,
+  formatLotRub,
+  formatSaleConfirmMessage,
+  investNote,
+  liabilityNote,
+  LOCKED_META,
+  lotMeta,
+  policyNote,
+  sumBy,
+} from './CapitalLotNotes';
 import { MqxCapitalSheet } from './MqxCapitalSheet';
 import { MqxLiabilityPrepayForm } from './MqxLiabilityPrepayForm';
-import {
-  canPrepayLiability,
-  computeSalePreview,
-  findSecuredLiabilityForAsset,
-} from '../../../utils/capitalDl1';
+import { canPrepayLiability, findSecuredLiabilityForAsset } from '../../../utils/capitalDl1';
 
-function liabilityAssetSubtitle(liability, ownedAssets) {
-  if (!liability?.secured_asset_id) return null;
-  const asset = (ownedAssets || []).find((a) => Number(a.id) === Number(liability.secured_asset_id));
-  return asset ? `Под залог: ${asset.title}` : 'Под залог актива';
+/** Пусто: текст и переход во «Действия». */
+function EmptyNote({ what, onGo }) {
+  return (
+    <CapitalLotNote>
+      Пока ничего нет. {what} —{' '}
+      <button type="button" className="mqx-bg-btn mqx-cap-lot-act mqx-cap-lot-act--inline" onClick={onGo}>
+        во вкладке «Действия»
+      </button>
+      .
+    </CapitalLotNote>
+  );
 }
 
-function formatRub(amount) {
-  return `${Math.round(Number(amount) || 0).toLocaleString('ru-RU')} ₽`;
-}
-
-function formatSaleConfirmMessage(asset, liability) {
-  const { payoff, cashNet, topUp } = computeSalePreview(asset, liability);
-  let msg = `Погашение кредита: ${formatRub(payoff)}. На счёт: ${formatRub(cashNet)}.`;
-  if (topUp > 0) msg += ` Доплата с счёта: ${formatRub(topUp)}.`;
-  return msg;
-}
-
-/** Панель «Детали» — только позиции и компактные row-actions. */
+/**
+ * Панель «Детали» ★ BG-2: карточки собственности с цветной полосой.
+ * sections: { invest, insurance, property, liabilities } → 'open' | 'locked' | 'hidden'.
+ */
 export function CapitalDetailsPanel({
-  mechanics,
-  insuranceSectionState,
-  insuranceLockHint,
+  sections,
+  lockHint,
   investPositions,
   policies,
   ownedAssets,
@@ -67,19 +63,18 @@ export function CapitalDetailsPanel({
     if (ok) await onCloseInvest(position.id);
   };
 
-  const requestCancelPolicy = async (policyId) => {
-    const policy = policies.find((p) => p.id === policyId);
+  const requestCancelPolicy = async (policy) => {
     const ok = await confirm({
       title: 'Отменить полис?',
-      message: policy ? `«${policy.title}» перестанет действовать.` : 'Полис перестанет действовать.',
+      message: `«${policy.title}» перестанет действовать.`,
     });
-    if (ok) await onCancelPolicy(policyId);
+    if (ok) await onCancelPolicy(policy.id);
   };
 
   const confirmDeleteAsset = async (asset) => {
     const secured = findSecuredLiabilityForAsset(ownedLiabilities, asset.id);
     const ok = await confirm({
-      title: 'Продать актив?',
+      title: 'Продать?',
       message: secured
         ? formatSaleConfirmMessage(asset, secured)
         : `«${asset.title}» будет продан, выручка зачислится на счёт.`,
@@ -90,10 +85,10 @@ export function CapitalDetailsPanel({
   const confirmDeleteLiability = async (liability) => {
     const secured = Boolean(liability?.secured_asset_id);
     const ok = await confirm({
-      title: 'Закрыть обязательство?',
+      title: 'Погасить долг целиком?',
       message: secured
-        ? `«${liability.title}» будет закрыто: спишется остаток тела и просрочка. Актив останется в портфеле.`
-        : `«${liability.title}» будет закрыто: спишется остаток тела и просрочка со счёта.`,
+        ? `«${liability.title}» будет закрыт: спишется остаток и просрочка. Имущество останется у тебя.`
+        : `«${liability.title}» будет закрыт: остаток и просрочка спишутся со счёта.`,
     });
     if (ok) await onDeleteLiability(liability.id);
   };
@@ -104,202 +99,161 @@ export function CapitalDetailsPanel({
     setPrepayTarget(null);
   };
 
+  /** Подсказка цели — только в первой закрытой карточке, остальные — пунктир и «откроется по цели». */
+  const firstLocked = ['invest', 'insurance', 'property', 'liabilities'].find((k) => sections[k] === 'locked');
+  const lockedLot = (key, tone, title) => (
+    <CapitalLot tone={tone} title={title} meta={LOCKED_META} locked>
+      {lockHint && key === firstLocked ? <CapitalLotNote>{lockHint}</CapitalLotNote> : null}
+    </CapitalLot>
+  );
+
+  const skeleton = (rows) => (
+    <div className="mqx-cap-lot-note">
+      <MqxStateSkeleton variant="rows" rows={rows} />
+    </div>
+  );
+
   return (
-    <>
+    <div className="mqx-cap-lots" role="tabpanel" id="capital-panel-details" aria-labelledby="capital-tab-details">
       {dialog}
-      {mechanics.capital_invest ? (
-        <MqxCapitalSectionAccordion
-          title="Инвестиции"
-          meta={<MqxCapitalMetaCount count={investPositions.length} />}
-          className="mqx-cap-sect--invest"
+      {sections.invest === 'open' ? (
+        <CapitalLot
+          tone="invest"
+          title="Вложения"
+          meta={extraLoading ? null : lotMeta(investPositions.length, sumBy(investPositions, 'principal'))}
         >
-          <div className="mqx-capital-position-list">
-            {extraLoading ? (
-              <MqxStateSkeleton variant="rows" rows={3} />
-            ) : investPositions.length === 0 ? (
-              <MqxCapitalDetailEmpty actionLabel="+ Добавить" onAction={() => onGotoAction('deposit')}>
-                Здесь только <strong>открытые позиции</strong>. Новый инструмент — вкладка{' '}
-                <strong>«Действия»</strong>.
-              </MqxCapitalDetailEmpty>
-            ) : (
-              investPositions.map((p) => (
-                <InvestPositionRow
+          {extraLoading ? (
+            skeleton(2)
+          ) : investPositions.length === 0 ? (
+            <EmptyNote what="Открыть вклад или купить облигации" onGo={() => onGotoAction('deposit')} />
+          ) : (
+            investPositions.map((p) => {
+              const label = p.kind === 'bond' ? 'Продать' : 'Закрыть';
+              return (
+                <CapitalLotRow
                   key={p.id}
-                  position={p}
-                  useTextAction
-                  onCloseRequest={() => void requestCloseInvest(p)}
-                />
-              ))
-            )}
-          </div>
-        </MqxCapitalSectionAccordion>
-      ) : null}
-
-      {insuranceSectionState === 'open' ? (
-        <MqxCapitalSectionAccordion
-          title="Страховки"
-          meta={<MqxCapitalMetaCount count={policies.length} />}
-          className="mqx-cap-sect--insurance"
-        >
-          <div className="mqx-capital-position-list">
-            {extraLoading ? (
-              <MqxStateSkeleton variant="rows" rows={2} />
-            ) : policies.length === 0 ? (
-              <MqxCapitalDetailEmpty
-                actionLabel="+ Добавить"
-                onAction={() => onGotoAction('insurance')}
-              >
-                Здесь только <strong>оформленные полисы</strong>. Новый полис — вкладка{' '}
-                <strong>«Действия»</strong>.
-              </MqxCapitalDetailEmpty>
-            ) : (
-              policies.map((p) => (
-                <MqxFinListRow
-                  key={p.id}
-                  className="mqx-fin-row--ins-policy"
                   title={p.title}
-                  metrics={<InsurancePolicyMetrics policy={p} />}
-                  trailing={
-                    <MqxCapitalTextRowAction
-                      variant="close"
-                      disabled={cancellingPolicyId === p.id}
-                      ariaLabel={`Отменить полис ${p.title}`}
-                      onClick={() => void requestCancelPolicy(p.id)}
+                  value={formatLotRub(p.principal)}
+                  note={investNote(p)}
+                  actions={
+                    <CapitalLotAction
+                      ariaLabel={`${label} ${p.title}`}
+                      onClick={() => void requestCloseInvest(p)}
                     >
-                      Отменить
-                    </MqxCapitalTextRowAction>
+                      {label}
+                    </CapitalLotAction>
                   }
                 />
-              ))
-            )}
-          </div>
-        </MqxCapitalSectionAccordion>
+              );
+            })
+          )}
+        </CapitalLot>
       ) : null}
+      {sections.invest === 'locked' ? lockedLot('invest', 'invest', 'Вложения') : null}
 
-      {insuranceSectionState === 'locked' ? (
-        <MqxCapitalSectionAccordion title="Страховки" meta="скоро" className="mqx-cap-sect--insurance">
-          <MqxCapitalMechanicLocked hint={insuranceLockHint} />
-        </MqxCapitalSectionAccordion>
+      {sections.insurance === 'open' ? (
+        <CapitalLot
+          tone="insure"
+          title="Страховки"
+          meta={extraLoading ? null : policies.length ? String(policies.length) : 'пусто'}
+        >
+          {extraLoading ? (
+            skeleton(1)
+          ) : policies.length === 0 ? (
+            <EmptyNote what="Оформить полис" onGo={() => onGotoAction('insurance')} />
+          ) : (
+            policies.map((p) => (
+              <CapitalLotRow
+                key={p.id}
+                title={p.title}
+                value={`покрытие ${formatLotRub(p.payout_amount ?? p.coverage_limit ?? 0)}`}
+                note={policyNote(p)}
+                actions={
+                  <CapitalLotAction
+                    disabled={cancellingPolicyId === p.id}
+                    ariaLabel={`Отменить полис ${p.title}`}
+                    onClick={() => void requestCancelPolicy(p)}
+                  >
+                    Отменить
+                  </CapitalLotAction>
+                }
+              />
+            ))
+          )}
+        </CapitalLot>
       ) : null}
+      {sections.insurance === 'locked' ? lockedLot('insurance', 'insure', 'Страховки') : null}
 
-      {mechanics.capital_property ? (
-        <MqxCapitalSectionAccordion
+      {sections.property === 'open' ? (
+        <CapitalLot
+          tone="property"
           title="Имущество"
-          meta={<MqxCapitalMetaCount count={ownedAssets.length} />}
-          className="mqx-cap-sect--property"
+          meta={lotMeta(ownedAssets.length, sumBy(ownedAssets, 'asset_value'))}
         >
-          <div className="mqx-capital-position-list">
-            {extraLoading ? (
-              <MqxStateSkeleton variant="rows" rows={3} />
-            ) : ownedAssets.length === 0 ? (
-              <MqxCapitalDetailEmpty
-                actionLabel="+ Добавить"
-                onAction={() => onGotoAction('realestate')}
-              >
-                Здесь только <strong>купленные активы</strong>. Покупка — вкладка{' '}
-                <strong>«Действия»</strong>.
-              </MqxCapitalDetailEmpty>
-            ) : (
-              ownedAssets.map((a) => (
-                <MqxFinListRow
-                  key={a.id}
-                  title={a.title}
-                  subtitle={
-                    a.acquisition_mode === 'secured'
-                      ? 'Куплено в кредит — продажа погасит долг'
-                      : null
-                  }
-                  metrics={
-                    <AssetPositionMetrics
-                      assetValue={a.asset_value}
-                      monthlyMaintenanceCost={a.monthly_maintenance_cost}
-                      monthlyIncome={a.monthly_income}
-                    />
-                  }
-                  trailing={
-                    <MqxCapitalTextRowAction
-                      variant="sell"
-                      ariaLabel={`Продать ${a.title}`}
-                      onClick={() => void confirmDeleteAsset(a)}
-                    >
-                      Продать
-                    </MqxCapitalTextRowAction>
-                  }
-                />
-              ))
-            )}
-          </div>
-        </MqxCapitalSectionAccordion>
+          {ownedAssets.length === 0 ? (
+            <EmptyNote what="Купить квартиру или авто" onGo={() => onGotoAction('realestate')} />
+          ) : (
+            ownedAssets.map((a) => (
+              <CapitalLotRow
+                key={a.id}
+                title={a.title}
+                value={formatLotRub(a.asset_value)}
+                note={assetNote(a)}
+                actions={
+                  <CapitalLotAction ariaLabel={`Продать ${a.title}`} onClick={() => void confirmDeleteAsset(a)}>
+                    Продать
+                  </CapitalLotAction>
+                }
+              />
+            ))
+          )}
+        </CapitalLot>
       ) : null}
+      {sections.property === 'locked' ? lockedLot('property', 'property', 'Имущество') : null}
 
-      {mechanics.capital_liabilities ? (
-        <MqxCapitalSectionAccordion
-          title="Обязательства"
-          meta={
-            <MqxCapitalMetaLiab
-              label={ownedLiabilities.length ? formatDebtCount(ownedLiabilities.length) : '0'}
-            />
-          }
-          className="mqx-cap-sect--liabilities"
+      {sections.liabilities === 'open' ? (
+        <CapitalLot
+          tone="debt"
+          title="Долги"
+          meta={lotMeta(ownedLiabilities.length, sumBy(ownedLiabilities, 'total_debt'))}
         >
-          <div className="mqx-capital-position-list">
-            {extraLoading ? (
-              <MqxStateSkeleton variant="rows" rows={3} />
-            ) : ownedLiabilities.length === 0 ? (
-              <MqxCapitalDetailEmpty
-                actionLabel="+ Добавить"
-                onAction={() => onGotoAction('credit')}
-              >
-                Здесь только <strong>активные долги</strong>. Ипотека — плитка{' '}
-                <strong>«Ипотека»</strong>, потребительский — <strong>«Кредит»</strong>.
-              </MqxCapitalDetailEmpty>
-            ) : (
-              ownedLiabilities.map((l) => {
-                return (
-                  <MqxFinListRow
-                    key={l.id}
-                    title={l.title}
-                    subtitle={liabilityAssetSubtitle(l, ownedAssets)}
-                    metrics={
-                      <LiabilityPositionMetrics
-                        totalDebt={l.total_debt}
-                        monthlyPayment={l.monthly_payment}
-                        annualRatePercent={l.annual_rate_percent}
-                        overdueAmount={l.overdue_amount}
-                        remainingPeriods={l.remaining_periods}
-                      />
-                    }
-                    trailing={
-                      <div className="mqx-cap-row-actions-stack">
-                        {canPrepayLiability(l) ? (
-                          <MqxCapitalTextRowAction
-                            variant="sell"
-                            ariaLabel={`Досрочное погашение ${l.title}`}
-                            onClick={() => setPrepayTarget(l)}
-                          >
-                            Досрочно
-                          </MqxCapitalTextRowAction>
-                        ) : null}
-                        <MqxCapitalTextRowAction
-                          variant="close"
-                          ariaLabel={`Закрыть ${l.title}`}
-                          onClick={() => void confirmDeleteLiability(l)}
-                        >
-                          Закрыть
-                        </MqxCapitalTextRowAction>
-                      </div>
-                    }
-                  />
-                );
-              })
-            )}
-          </div>
-        </MqxCapitalSectionAccordion>
+          {ownedLiabilities.length === 0 ? (
+            <EmptyNote what="Взять кредит или ипотеку" onGo={() => onGotoAction('credit')} />
+          ) : (
+            ownedLiabilities.map((l) => (
+              <CapitalLotRow
+                key={l.id}
+                title={l.title}
+                value={formatLotRub(l.total_debt)}
+                note={liabilityNote(l, ownedAssets)}
+                actions={
+                  <>
+                    {canPrepayLiability(l) ? (
+                      <CapitalLotAction
+                        ariaLabel={`Погасить часть: ${l.title}`}
+                        onClick={() => setPrepayTarget(l)}
+                      >
+                        Погасить часть
+                      </CapitalLotAction>
+                    ) : null}
+                    <CapitalLotAction
+                      ariaLabel={`Погасить целиком: ${l.title}`}
+                      onClick={() => void confirmDeleteLiability(l)}
+                    >
+                      Погасить
+                    </CapitalLotAction>
+                  </>
+                }
+              />
+            ))
+          )}
+        </CapitalLot>
       ) : null}
+      {sections.liabilities === 'locked' ? lockedLot('liabilities', 'debt', 'Долги') : null}
 
       <MqxCapitalSheet
         open={Boolean(prepayTarget)}
-        title="Досрочное погашение"
+        title="Погасить часть долга"
         subtitle={prepayTarget?.title}
         onClose={() => setPrepayTarget(null)}
       >
@@ -312,6 +266,6 @@ export function CapitalDetailsPanel({
           />
         ) : null}
       </MqxCapitalSheet>
-    </>
+    </div>
   );
 }

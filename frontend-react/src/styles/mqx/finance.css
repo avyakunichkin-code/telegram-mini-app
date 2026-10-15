@@ -3231,3 +3231,439 @@ body [class*='modal'] {
   color: color-mix(in srgb, #b91c1c 70%, var(--mqx-ink));
 }
 
+
+/* ==========================================================================
+ * ★ BG-2 «Капитал» — стиль «настольная игра» (ADR-014).
+ * Канон: design-lab/board-game/screens-round/ (Капитал · Детали / Действия),
+ * design-lab/capital-page/APPROVED.md. Токены v2 — tokens.css (как в board.css).
+ * Роли: --mq-turn — действие, --mq-coin — вложения/деньги, --mq-gain — плюс и имущество,
+ * --mq-risk — только долги и риск. Объём (нижняя тень) — только у нажимаемого.
+ * ========================================================================== */
+
+.mqx-capital-page--board.mqx-content {
+  padding: var(--mq-sp-5) var(--mq-sp-6) var(--mq-sp-7);
+  background: var(--mq-board);
+  color: var(--mq-board-ink);
+  font-family: var(--mq-font-body);
+}
+
+.mqx-capital-page--board .mqx-capital-accordion-stack {
+  gap: var(--mq-sp-5);
+}
+
+.mqx-capital-page--board button {
+  font-family: inherit;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.mqx-capital-page--board button:focus-visible {
+  outline: 3px solid var(--mq-coin);
+  outline-offset: 2px;
+}
+
+/* —— Потоки хода —— */
+.mqx-cap-flows {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--mq-sp-3);
+}
+
+.mqx-cap-flows .mqx-cap-flow {
+  display: grid;
+  gap: calc(var(--mq-sp-1) / 2);
+  min-height: 56px;
+  padding: var(--mq-sp-4) var(--mq-sp-5);
+  border: var(--mq-hair);
+  border-radius: var(--mq-r-cell);
+  background: var(--mq-cell);
+  box-shadow: 0 2px 0 var(--mq-cell-edge);
+  color: var(--mq-board-ink);
+  text-align: left;
+  cursor: pointer;
+}
+
+.mqx-cap-flows .mqx-cap-flow:active {
+  transform: translateY(1px);
+  box-shadow: 0 1px 0 var(--mq-cell-edge);
+}
+
+.mqx-cap-flows .mqx-cap-flow.is-open {
+  border-color: var(--mq-turn);
+  box-shadow: 0 2px 0 var(--mq-turn);
+}
+
+.mqx-cap-flow__label {
+  color: var(--mq-board-ink-soft);
+  font: 500 var(--mq-fs-caption) / 1.3 var(--mq-font-body);
+}
+
+.mqx-cap-flow__value {
+  font: 900 var(--mq-fs-cell) / 1.15 var(--mq-font-display);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.mqx-cap-flow__value--gain {
+  color: var(--mq-gain);
+}
+
+.mqx-cap-flows__breakdown {
+  grid-column: 1 / -1;
+  padding: var(--mq-sp-4) var(--mq-sp-5);
+  border: var(--mq-hair);
+  border-radius: var(--mq-r-cell);
+  background: var(--mq-cell);
+}
+
+.mqx-cap-flows__breakdown .mqx-cap-flow-cat__row,
+.mqx-cap-flows__breakdown .mqx-cap-flow-line {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--mq-sp-3);
+  color: var(--mq-board-ink);
+  font-size: var(--mq-fs-note);
+}
+
+.mqx-cap-flows__breakdown .mqx-cap-flow-cat__row {
+  font-weight: 700;
+}
+
+.mqx-cap-flows__breakdown .mqx-cap-flow-line {
+  color: var(--mq-board-ink-soft);
+  font-size: var(--mq-fs-caption);
+}
+
+.mqx-cap-flows__breakdown .mqx-cap-flow-lines {
+  border-left-color: var(--mq-cell-edge);
+}
+
+.mqx-cap-flows__breakdown .mqx-cap-flow-cat + .mqx-cap-flow-cat {
+  border-top-color: var(--mq-cell-edge);
+}
+
+.mqx-cap-flows__empty {
+  margin: 0;
+  color: var(--mq-board-ink-soft);
+  font-size: var(--mq-fs-note);
+}
+
+.mqx-cap-net {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--mq-sp-3);
+  padding: var(--mq-sp-3) var(--mq-sp-5);
+  border-radius: var(--mq-r-cell);
+  font-size: var(--mq-fs-note);
+}
+
+.mqx-cap-net b {
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.mqx-cap-net--gain {
+  background: var(--mq-gain-soft);
+  color: var(--mq-gain);
+}
+
+.mqx-cap-net--risk {
+  background: var(--mq-risk-soft);
+  color: var(--mq-risk);
+}
+
+/* —— Детали | Действия —— */
+.mqx-cap-seg {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--mq-sp-1);
+  padding: var(--mq-sp-1);
+  border: var(--mq-hair);
+  border-radius: 14px;
+  background: var(--mq-cell);
+}
+
+.mqx-cap-seg .mqx-cap-seg__btn {
+  min-height: 44px;
+  border: 0;
+  border-radius: 10px;
+  background: none;
+  box-shadow: none;
+  color: var(--mq-board-ink-soft);
+  font: 700 var(--mq-fs-heading) / 1 var(--mq-font-body);
+  cursor: pointer;
+}
+
+.mqx-cap-seg .mqx-cap-seg__btn.is-active {
+  background: var(--mq-turn);
+  color: var(--mq-turn-on);
+  box-shadow: 0 2px 0 var(--mq-turn-deep);
+}
+
+/* —— Карточки собственности —— */
+.mqx-cap-lots {
+  display: grid;
+  gap: var(--mq-sp-5);
+}
+
+.mqx-cap-lot {
+  overflow: hidden;
+  border: var(--mq-hair);
+  border-radius: var(--mq-r-cell);
+  background: var(--mq-cell);
+}
+
+.mqx-cap-lot__band {
+  height: 8px;
+  background: var(--mq-cell-edge);
+}
+
+.mqx-cap-lot--invest .mqx-cap-lot__band {
+  background: var(--mq-coin);
+}
+
+.mqx-cap-lot--property .mqx-cap-lot__band {
+  background: var(--mq-gain);
+}
+
+.mqx-cap-lot--insure .mqx-cap-lot__band {
+  background: var(--mq-turn);
+}
+
+.mqx-cap-lot--debt .mqx-cap-lot__band {
+  background: var(--mq-risk);
+}
+
+/* Закрыто целью: пунктир, полоса без цвета */
+.mqx-cap-lot--locked {
+  border-style: dashed;
+  background: transparent;
+}
+
+.mqx-cap-lot.mqx-cap-lot--locked .mqx-cap-lot__band {
+  background: var(--mq-cell-edge);
+}
+
+.mqx-cap-lot__head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--mq-sp-3);
+  padding: var(--mq-sp-4) var(--mq-sp-5) var(--mq-sp-1);
+}
+
+.mqx-cap-lot__title {
+  margin: 0;
+  color: var(--mq-board-ink);
+  font: 900 var(--mq-fs-body) / 1.2 var(--mq-font-display);
+}
+
+.mqx-cap-lot--locked .mqx-cap-lot__title {
+  color: var(--mq-board-ink-soft);
+}
+
+.mqx-cap-lot__meta {
+  color: var(--mq-board-ink-soft);
+  font-size: var(--mq-fs-caption);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.mqx-cap-lot-row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  gap: 2px var(--mq-sp-4);
+  padding: var(--mq-sp-3) var(--mq-sp-5);
+  border-top: 1px solid var(--mq-cell-edge);
+}
+
+.mqx-cap-lot-row__title {
+  min-width: 0;
+  color: var(--mq-board-ink);
+  font-size: var(--mq-fs-heading);
+}
+
+.mqx-cap-lot-row__val {
+  grid-column: 2;
+  grid-row: 1;
+  text-align: right;
+  font-weight: 700;
+  font-size: var(--mq-fs-heading);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.mqx-cap-lot-row__note {
+  grid-column: 1;
+  color: var(--mq-board-ink-soft);
+  font-size: var(--mq-fs-caption);
+  line-height: 1.35;
+}
+
+.mqx-cap-lot-row__risk {
+  color: var(--mq-risk);
+  font-weight: 600;
+}
+
+.mqx-cap-lot-row__acts {
+  grid-column: 2;
+  grid-row: 2;
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--mq-sp-4);
+}
+
+/* Текстовое действие: хит-зона 44px по высоте без раздувания строки */
+.mqx-capital-page--board .mqx-cap-lot-act {
+  min-height: 32px;
+  margin: calc(var(--mq-sp-2) * -1) 0;
+  padding: 0 var(--mq-sp-1);
+  border: 0;
+  background: none;
+  color: var(--mq-turn);
+  font: 600 var(--mq-fs-caption) / 1.2 var(--mq-font-body);
+  cursor: pointer;
+}
+
+.mqx-capital-page--board .mqx-cap-lot-act:disabled {
+  color: var(--mq-board-ink-soft);
+  cursor: default;
+}
+
+.mqx-capital-page--board .mqx-cap-lot-act--inline {
+  min-height: 0;
+  margin: 0;
+  font-size: inherit;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.mqx-cap-lot-note {
+  padding: var(--mq-sp-4) var(--mq-sp-5) var(--mq-sp-5);
+  color: var(--mq-board-ink-soft);
+  font-size: var(--mq-fs-note);
+  line-height: 1.4;
+}
+
+/* —— Действия: фишки 3 в ряд —— */
+.mqx-cap-acts {
+  display: grid;
+  gap: var(--mq-sp-6);
+}
+
+.mqx-cap-acts__group {
+  display: grid;
+  gap: var(--mq-sp-3);
+}
+
+.mqx-cap-acts__head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--mq-sp-3);
+}
+
+.mqx-cap-acts__title {
+  margin: 0;
+  color: var(--mq-board-ink);
+  font: 900 var(--mq-fs-body) / 1.2 var(--mq-font-display);
+}
+
+.mqx-cap-acts__hint {
+  color: var(--mq-board-ink-soft);
+  font-size: var(--mq-fs-caption);
+  text-align: right;
+}
+
+.mqx-cap-pieces {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--mq-sp-3);
+}
+
+.mqx-cap-pieces .mqx-cap-piece {
+  display: grid;
+  justify-items: center;
+  align-content: start;
+  gap: var(--mq-sp-2);
+  min-height: 96px;
+  padding: var(--mq-sp-5) var(--mq-sp-2) var(--mq-sp-4);
+  border: var(--mq-hair);
+  border-radius: 14px;
+  background: var(--mq-cell);
+  box-shadow: 0 2px 0 var(--mq-cell-edge);
+  color: var(--mq-board-ink);
+  text-align: center;
+  cursor: pointer;
+}
+
+.mqx-cap-pieces .mqx-cap-piece:active:not(:disabled) {
+  transform: translateY(1px);
+  box-shadow: 0 1px 0 var(--mq-cell-edge);
+}
+
+.mqx-cap-piece__ico {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  background: var(--mq-coin-soft);
+  color: var(--mq-coin-ink);
+  font: 800 var(--mq-fs-body) / 1 var(--mq-font-display);
+}
+
+.mqx-cap-piece--ins .mqx-cap-piece__ico {
+  background: var(--mq-turn-soft);
+  color: var(--mq-turn);
+}
+
+.mqx-cap-piece--prop .mqx-cap-piece__ico {
+  background: var(--mq-gain-soft);
+  color: var(--mq-gain);
+}
+
+.mqx-cap-piece--debt .mqx-cap-piece__ico {
+  background: var(--mq-risk-soft);
+  color: var(--mq-risk);
+}
+
+.mqx-cap-piece__title {
+  font: 600 var(--mq-fs-note) / 1.2 var(--mq-font-body);
+}
+
+.mqx-cap-piece__note {
+  color: var(--mq-board-ink-soft);
+  font: 400 var(--mq-fs-small) / 1.25 var(--mq-font-body);
+}
+
+/* Закрыто целью: пунктир, без объёма — видно, куда ведёт игра */
+.mqx-cap-pieces .mqx-cap-piece--locked {
+  border-style: dashed;
+  background: transparent;
+  box-shadow: none;
+  color: var(--mq-board-ink-soft);
+  cursor: default;
+}
+
+.mqx-cap-pieces .mqx-cap-piece.mqx-cap-piece--locked .mqx-cap-piece__ico {
+  background: var(--mq-cell-edge);
+  color: var(--mq-board-ink-soft);
+}
+
+.mqx-cap-acts__lock-hint {
+  margin: 0;
+  color: var(--mq-board-ink-soft);
+  font-size: var(--mq-fs-caption);
+  line-height: 1.4;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mqx-cap-flows .mqx-cap-flow:active,
+  .mqx-cap-pieces .mqx-cap-piece:active:not(:disabled) {
+    transform: none;
+  }
+}

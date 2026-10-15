@@ -4,6 +4,7 @@ import { AssetTemplateMetrics } from '../metrics/AssetTemplateMetrics';
 import { LiabilityTemplateMetrics } from '../metrics/LiabilityTemplateMetrics';
 import { MqxStateError } from '../primitives/MqxStateError';
 import { MqxStateSkeleton } from '../primitives/MqxStateSkeleton';
+import { formatLotRub } from './CapitalLotNotes';
 import { CapitalPositionCard } from './CapitalPositionCard';
 import { InsuranceProductPicker } from './InsuranceProductPicker';
 import { MqxCapitalActionGrid } from './MqxCapitalActionGrid';
@@ -50,10 +51,20 @@ const SHEET_COPY = {
   },
 };
 
-/** Панель «Действия» — сетка плиток + bottom sheets. */
+function minBy(items, pick) {
+  const vals = (items || []).map(pick).map(Number).filter((n) => Number.isFinite(n) && n > 0);
+  return vals.length ? Math.min(...vals) : null;
+}
+
+function maxBy(items, pick) {
+  const vals = (items || []).map(pick).map(Number).filter((n) => Number.isFinite(n) && n > 0);
+  return vals.length ? Math.max(...vals) : null;
+}
+
+/** Панель «Действия» ★ BG-2 — фишки по группам + bottom sheets. */
 export function CapitalActionsPanel({
-  mechanics,
-  insuranceSectionState,
+  sections,
+  lockHint,
   assetTemplates,
   liabilityTemplates,
   extraLoading,
@@ -78,24 +89,6 @@ export function CapitalActionsPanel({
   securedAcquireBusyKey = null,
   ownedAssets = [],
 }) {
-  const visibleIds = useMemo(() => {
-    const ids = new Set();
-    if (mechanics.capital_invest) {
-      ids.add('deposit');
-      ids.add('bond');
-    }
-    if (insuranceSectionState === 'open') ids.add('insurance');
-    if (mechanics.capital_property) {
-      ids.add('realestate');
-      ids.add('car');
-    }
-    if (mechanics.capital_liabilities) {
-      ids.add('mortgage');
-      ids.add('credit');
-    }
-    return ids;
-  }, [mechanics, insuranceSectionState]);
-
   const propertyTemplates = useMemo(
     () => filterPropertyAssetTemplates(assetTemplates),
     [assetTemplates],
@@ -112,6 +105,21 @@ export function CapitalActionsPanel({
     () => liabilityTemplates.filter(isConsumerLiabilityTemplate),
     [liabilityTemplates],
   );
+
+  const pieceNotes = useMemo(() => {
+    const from = (n) => (n ? `от ${formatLotRub(n)}` : null);
+    const minDown = minBy(filterBundlesForSheet(securedBundles, 'mortgage'), (b) => b.downPayment);
+    const maxCredit = maxBy(creditTemplates, (t) => t.total_debt);
+    return {
+      deposit: `${depositRate}% в год`,
+      bond: `${bondRate}% в год`,
+      insurance: 'защита от событий',
+      realestate: from(minBy(propertyTemplates, (t) => t.asset_value)),
+      car: from(minBy(carTemplates, (t) => t.asset_value)),
+      credit: maxCredit ? `до ${formatLotRub(maxCredit)}` : null,
+      mortgage: minDown ? `взнос ${from(minDown)}` : null,
+    };
+  }, [securedBundles, creditTemplates, propertyTemplates, carTemplates, depositRate, bondRate]);
 
   const sheetCopy = openSheet ? SHEET_COPY[openSheet] : null;
 
@@ -230,7 +238,12 @@ export function CapitalActionsPanel({
 
   return (
     <>
-      <MqxCapitalActionGrid visibleIds={visibleIds} onOpenSheet={onOpenSheet} />
+      <MqxCapitalActionGrid
+        sections={sections}
+        notes={pieceNotes}
+        lockHint={lockHint}
+        onOpenSheet={onOpenSheet}
+      />
       <MqxCapitalSheet
         open={Boolean(openSheet && sheetCopy)}
         title={sheetCopy?.title}
