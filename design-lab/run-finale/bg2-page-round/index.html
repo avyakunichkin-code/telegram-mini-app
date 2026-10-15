@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="ru" data-font="f3">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>ТВОЙ ХОД — финал партии ★ BG-2 (prod parity)</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700&family=Nunito:wght@800;900&display=swap" />
+    <link rel="stylesheet" href="./lab-base.css" />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <header class="lab-head">
+      <h1>Финал партии — prod parity ★ BG-2</h1>
+      <p>Как в prod (<code>MqxRunFinale</code>, 2026-10-15). Канон дизайна — <code>board-game/screens-round/</code> («Финал · Победа», «Финал · Поражение»). Тексты поражения — из API по <code>defeat_reason</code>; три показателя победы — из payload <code>run_finale</code> (<code>period_index</code>, <code>cash_balance</code>, <code>cushion_turns</code>).</p>
+      <div class="lab-controls">
+        <span>Тема</span>
+        <button class="lab-toggle" type="button" data-set-theme="light" aria-pressed="true">Светлая</button>
+        <button class="lab-toggle" type="button" data-set-theme="dark" aria-pressed="false">Тёмная</button>
+      </div>
+    </header>
+
+    <main class="lab-grid s-grid">
+      <!-- Победа -->
+      <section class="variant" aria-labelledby="f1">
+        <header>
+          <h2 id="f1">Победа</h2>
+          <p>Золотая клетка финиша с персонажем и кубком. Фраза — <code>scenario_title</code> сценария. Партия продолжается: главная — «Играть дальше».</p>
+        </header>
+        <div class="phone s-phone s-phone--bare f-phone">
+          <div class="s-finish">
+            <div class="s-finish__cell"><img src="./assets/student-mascot-cup-dash.png" alt="" /></div>
+            <h4>Цель пройдена!</h4>
+            <p>Ты вывел студенческий бюджет в плюс</p>
+            <div class="s-finish__stats">
+              <div><b>38</b><small>ходов</small></div>
+              <div><b class="bg-money">412 000 ₽</b><small>на счёте</small></div>
+              <div><b>6,1</b><small>ходов подушки</small></div>
+            </div>
+            <button class="bg-action" type="button">Играть дальше</button>
+            <button class="s-btn" type="button">Новая игра <small>другая жизнь</small></button>
+            <textarea class="s-feedback" aria-label="Отзыв о партии" placeholder="Как прошла партия? Это увидят разработчики"></textarea>
+            <button class="s-link" type="button" disabled>Отправить отзыв</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Поражение: минус на счёте -->
+      <section class="variant" aria-labelledby="f2">
+        <header>
+          <h2 id="f2">Поражение · минус на счёте</h2>
+          <p><code>cash_negative_streak</code>. Нейтральная клетка, красным — только факт риска, два совета. Партия в архиве.</p>
+        </header>
+        <div class="phone s-phone s-phone--bare f-phone">
+          <div class="s-finish">
+            <div class="s-finish__cell s-finish__cell--neutral"><img src="./assets/student-mascot-dash.png" alt="" /></div>
+            <h4>Партия окончена</h4>
+            <p>Она уйдёт в архив сохранений. Следующая пойдёт лучше.</p>
+            <div class="s-fact"><b>Три хода подряд счёт был в минусе.</b> После последнего хода на счёте: −8 200 ₽.</div>
+            <ul class="s-tips">
+              <li>Забирай зарплату до «Завершить ход» — без кнопки её не будет.</li>
+              <li>Держи подушку хотя бы на 2 хода расходов.</li>
+            </ul>
+            <button class="bg-action" type="button">Новая игра</button>
+            <button class="s-btn" type="button">К сохранениям <small>партия в архиве</small></button>
+            <textarea class="s-feedback" aria-label="Отзыв о партии" placeholder="Что было непонятно? Это увидят разработчики"></textarea>
+            <button class="s-link" type="button" disabled>Отправить отзыв</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Поражение: потребности -->
+      <section class="variant" aria-labelledby="f3">
+        <header>
+          <h2 id="f3">Поражение · потребности</h2>
+          <p><code>needs_depletion</code>. Та же раскладка, другой факт и советы.</p>
+        </header>
+        <div class="phone s-phone s-phone--bare f-phone">
+          <div class="s-finish">
+            <div class="s-finish__cell s-finish__cell--neutral"><img src="./assets/entrepreneur-mascot-dash.png" alt="" /></div>
+            <h4>Партия окончена</h4>
+            <p>Она уйдёт в архив сохранений. Следующая пойдёт лучше.</p>
+            <div class="s-fact"><b>Три хода подряд одна из потребностей была на нуле.</b> Деньги — не единственный ресурс. На счёте в конце: 23 500 ₽.</div>
+            <ul class="s-tips">
+              <li>В событиях выбирай варианты, которые поднимают потребности.</li>
+              <li>Если шкала у нуля — нажми «Улучшить» на главной.</li>
+            </ul>
+            <button class="bg-action" type="button">Новая игра</button>
+            <button class="s-btn" type="button">К сохранениям <small>партия в архиве</small></button>
+            <textarea class="s-feedback" aria-label="Отзыв о партии" placeholder="Что было непонятно? Это увидят разработчики"></textarea>
+            <button class="s-link" type="button" disabled>Отправить отзыв</button>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <script>
+      (function () {
+        var root = document.documentElement;
+        document.addEventListener('click', function (e) {
+          var t = e.target.closest('[data-set-theme]');
+          if (!t) return;
+          root.setAttribute('data-theme', t.dataset.setTheme);
+          document.querySelectorAll('[data-set-theme]').forEach(function (b) {
+            b.setAttribute('aria-pressed', String(b === t));
+          });
+        });
+      })();
+    </script>
+  </body>
+</html>

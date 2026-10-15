@@ -1,38 +1,31 @@
 # Run finale — финал партии (победа / поражение)
 
-**Статус:** черновик на review  
+**Статус:** ★ BG-2 в prod (2026-10-15) — канон [`APPROVED.md`](./APPROVED.md).
 **Идея:** [`docs/vision/ideas/game-run-finale-pre-alpha.md`](../../docs/vision/ideas/game-run-finale-pre-alpha.md) (эпик **GE1**)
+
+## Где смотреть
+
+| Что | Где |
+|-----|-----|
+| Prod parity ★ BG-2 | [`bg2-page-round/`](./bg2-page-round/) |
+| Канон-дизайн BG-2 | [`../board-game/screens-round/`](../board-game/screens-round/) — «Финал · Победа», «Финал · Поражение» |
+| Утверждённый React | `#/dev/mqx` → «Финал партии ★ BG-2» |
+| История: V1 «Газета» (2026-06-01) | [`index.html`](./index.html), [`VARIANTS.md`](./VARIANTS.md) |
 
 ## Запуск
 
+Хаб (по умолчанию): `cd design-lab && npx serve .` → `/run-finale/bg2-page-round/`.
+
+Один раунд:
+
 ```bash
-cd design-lab/run-finale
-./sync-lab.sh   # после правки styles.css → lab-base.css
+cd design-lab/run-finale/bg2-page-round
+./sync-lab.sh   # lab-base.css из board-game (токены ADR-014 + screens-round) и ассеты
 npx serve .
 ```
 
-Раунд self-contained: `index.html` подключает только `./lab-base.css`. Также доступен из хаба `design-lab/` → **Run finale — GE1**.
-
-## Управление на странице
-
-- **Исход:** победа / поражение (меняет копирайт и CTA).
-- **Сценарий** (для V7): Студент / Предприниматель.
-- **Тема:** светлая / тёмная.
-
-## Варианты
-
-См. [VARIANTS.md](./VARIANTS.md).
-
-## Общее для всех вариантов
-
-- Блок **обратной связи**: необязательное поле + «Отправить» (в lab — демо-toast).
-- Без звука.
-- Поражение: намёк на **архив** + бейдж; победа: бейдж **Победа**, кнопка **Играть дальше**.
+История V1: `cd design-lab/run-finale && ./sync-lab.sh && npx serve .`
 
 ## Ассеты победы
 
-Четыре маскота с кубком: `assets/{student,professional,manager,entrepreneur}-mascot-cup-dash.png`. Исходники — `assets/source/`. Пересборка: `python process-cup-assets.py` из этой папки (нужен Pillow).
-
-## Утверждение
-
-**V1 ★** (2026-06-01) — дальше spec → prod.
+Четыре маскота с кубком: `assets/{student,professional,manager,entrepreneur}-mascot-cup-dash.png`. Исходники — `assets/source/`. Пересборка: `python process-cup-assets.py` из этой папки (нужен Pillow). В prod — `frontend-react/src/assets/run-finale-cup/`.

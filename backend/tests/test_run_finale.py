@@ -50,6 +50,26 @@ class TestBootstrapRunFinale:
         assert body["run_finale"]["outcome"] == "defeat"
         assert body["run_finale"]["sections"]
 
+    def test_defeat_payload_bg2_fields(self, db_session, test_user):
+        """★ BG-2: факт риска по defeat_reason, два совета, «на счёте» числом, лексикон «ход»."""
+        from app.game.run_finale import build_run_finale_payload
+
+        profile = create_game_profile(db_session, user_id=test_user.id, period_index=5)
+        profile.cash_balance = -8200
+        db_session.commit()
+
+        for reason in ("cash_negative_streak", "needs_depletion"):
+            payload = build_run_finale_payload(
+                db_session, profile, outcome="defeat", defeat_reason=reason
+            )
+            assert payload.cash_balance == -8200
+            assert payload.fact is not None
+            assert len(payload.fact.tips) == 2
+            assert "−8 200 ₽" in payload.fact.text
+            copy = f"{payload.fact.title} {payload.fact.text} {' '.join(payload.fact.tips)}"
+            assert "месяц" not in copy.lower()
+            assert "cash" not in copy.lower()
+
     def test_resolve_finds_archived_defeated_profile(self, db_session, test_user):
         from app.game.session import resolve_game_session
 
