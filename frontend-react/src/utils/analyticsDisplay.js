@@ -1,4 +1,4 @@
-import { resolveMonthlyPressureForBaseline } from './safetyFundFill';
+import { resolveMonthlyPressureForBaseline } from './safetyFundFill.js';
 
 /** Дефолты из SPEC_ANALYTICS §3.1 (единые для Game и Plan). */
 export const ANALYTICS_THRESHOLDS = {
@@ -56,62 +56,4 @@ export function resolveStabilityZone(overview) {
     return 'warn';
   }
   return 'ok';
-}
-
-const ZONE_LABELS = {
-  ok: 'Комфортная зона',
-  warn: 'Зона внимания',
-  crit: 'Критично',
-};
-
-export function stabilityZoneLabel(zone) {
-  return ZONE_LABELS[zone] ?? ZONE_LABELS.warn;
-}
-
-export function resolveForecastMonthlyDelta(overview) {
-  const n = Number(overview?.avg_net_cashflow_6p_n) || 0;
-  if (n > 0) return Number(overview?.avg_net_cashflow_6p) || 0;
-  return Number(overview?.net_monthly_cashflow) || 0;
-}
-
-export function liquidityFromPoint(point) {
-  return (Number(point?.cash_balance) || 0) + (Number(point?.safety_fund_balance) || 0);
-}
-
-/** Главная рекомендация v1 (до BE insights). */
-export function buildPrimaryInsight(overview) {
-  const dti = Number(overview?.liabilities_to_income_ratio) || 0;
-  if (dti >= ANALYTICS_THRESHOLDS.dtiCriticalPct) {
-    return {
-      title: `Платежи по долгам — ${dti.toFixed(0)}% дохода`,
-      body: 'Это выше комфортной зоны. Стоит пересмотреть нагрузку по обязательствам в ближайших ходах.',
-    };
-  }
-  if (dti >= ANALYTICS_THRESHOLDS.dtiAttentionPct) {
-    return {
-      title: `Платежи по долгам — ${dti.toFixed(0)}% дохода`,
-      body: 'Это верхняя граница комфортной зоны. Имеет смысл смотреть, можно ли снизить нагрузку в следующих ходах.',
-    };
-  }
-
-  const residual = computeMonthlyResidual(overview);
-  if (residual < 0) {
-    return {
-      title: 'После всех расходов остаётся минус',
-      body: 'При текущей модели месяца расходы превышают доход. Проверьте обязательства и траты на жизнь.',
-    };
-  }
-
-  const cushionMonths = computeCushionMonths(overview);
-  if (cushionMonths < ANALYTICS_THRESHOLDS.cushionMonthsMin) {
-    return {
-      title: `Подушка — ${cushionMonths.toFixed(1).replace('.', ',')} мес. давления`,
-      body: 'Запас ниже ориентира в 3 месяца. Имеет смысл наращивать подушку, пока давление на бюджет не выросло.',
-    };
-  }
-
-  return {
-    title: 'Финансовая модель месяца сбалансирована',
-    body: 'Показатели в комфортной зоне. Следите за динамикой на графиках после закрытия ходов.',
-  };
 }
