@@ -1,4 +1,16 @@
-# Dashboard — L3 + S5 Unified ★
+# Dashboard — ★ BG-1 «настольная игра» (prod с 2026-10-14)
+
+Канон: [`APPROVED.md`](APPROVED.md). Prod parity — [`bg1-page-round/`](bg1-page-round/) (страница целиком) и [`parity-generated-page-round/`](parity-generated-page-round/) (`cd frontend-react && npm run design-lab:build`). Концепция — [`../board-game/hybrid-round/`](../board-game/hybrid-round/).
+
+```bash
+cd design-lab && npx serve .
+```
+
+Ниже — история S5 Unified (до BG-1), не канон.
+
+---
+
+## История: L3 + S5 Unified
 
 ```bash
 cd design-lab/dashboard

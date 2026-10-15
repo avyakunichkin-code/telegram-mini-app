@@ -1,49 +1,42 @@
-# Dashboard — утверждено (L3 + S5 Unified)
+# Dashboard — утверждено ★ BG-1 «настольная игра про деньги»
 
-**Витрина:** `design-lab/dashboard/` · скин **S5 Unified**.  
-**Лендинг (скрин):** [`goal-chain-round/`](goal-chain-round/) — не `index.html` (там устаревший «Уровень»).
+**Утверждено:** 2026-10-14, в чате («утверждаем»). **Направление:** [ADR-014](../../docs/decisions/ADR-014-brand-direction-board-game.md).
+**Концепция:** [`../board-game/APPROVED.md`](../board-game/APPROVED.md), раунд [`../board-game/hybrid-round/`](../board-game/hybrid-round/).
+**Prod parity (страница целиком):** [`bg1-page-round/`](bg1-page-round/) и сгенерированная [`parity-generated-page-round/`](parity-generated-page-round/).
 
-## Порядок (L3)
+**BG-1 заменяет S5 Unified** для дашборда. Раунды S5 (`hero-no-timer-round/`, `cushion-fill-round/`, `goal-chain-round/`, `goal-path-stepper-round/`, `period-actions-round/`) и `../character-needs/dashboard-needs-v7-round/` для главной — история, не канон.
 
-1. Hero (цветной, на всю ширину)
-2. **Потребности** — блок Z-NEEDS (`MqxNeedsDash`) *(в prod уже есть; канон должен это включать)*
-3. Финансы периода — **2×2** chip + «Весь капитал →» (вкладка **Капитал**)
-4. **Цель** — аккордеон `MqxGoalDash`, цепочка шагов победы ([`goal-chain-round/`](goal-chain-round/))
-5. Действия — 4 кнопки (`MqxPeriodActions`)
+## Порядок блоков (prod `DashboardPremium`)
 
-## Страница (S5)
+1. **Карта хода** (`MqxDashboardHero`) — сверху, прокручивается с контентом: роль слева («Студент» по `template_key`), «Твой ход» (h1); номер хода справа без «из N».
+2. Внутри карты: плашка **«N событий»** (колода, нажимается, если события открыты; 0 — «События решены») → **Монетка одной строкой** (самое срочное) → компактная **«Завершить ход»**.
+3. **Потребности** (`MqxNeedsDash`) — 4 тонкие шкалы 2×2 с числом; в заголовке книга+? (help sheet) и сердце (treat-self); при нуле — строка риска.
+4. **Деньги** (`MqxFinancePeriodBlock`) — портрет персонажа у суммы «На счёте»; ниже «Подушка · N%», «Зарплата за ход» (или «Доходы за ход», если есть доход кроме зарплаты), «Расходы за ход» на всю ширину. Доход и расход ведут в потоки «Капитала».
+5. **Цель** (`MqxGoalDash`) — свёрнута: «Цель, шаг N из M» + дорожка точек без подписей + золотой финиш; раскрыта: шаги цепочки победы (`victory_config_json`), без Монетки.
+6. **Действия хода** (`MqxPeriodActions`) — 4 кнопки в ряд; «Зарплата» в золоте, пока её можно забрать.
 
-| Зона | Оформление |
-|------|------------|
-| Hero | Фиолетовый градиент, без скругления «карточки» |
-| Контент | Еле заметный вертикальный градиент, **без** рамки `mqx-frame` / `mqx-dash-stack` |
-| Разделы | Только **inset** горизонтальные линии (не до краёв) |
-| Таббар | Белый фон, inset-разделители между вкладками; активная — **вся ячейка** (яркий градиент) |
+## Монетка — что срочнее
 
-## Без объёма
+Риск поражения по потребностям → просрочка → зарплата → события → шаг цели → «все шаги готовы» / победа (`buildTurnTip`, `components/mqx/utils/boardDashDisplay.js`).
 
-- Нет border/box-shadow у `mqx-frame` и `mqx-dash-stack` в игре
-- Акцент только цветом (hero, цель, активный таб)
+## Инварианты
 
-## UX (сохранено)
+- Токены v2 (`styles/tokens.css`): `--mq-coin*`, `--mq-board`, `--mq-cell*`, `--mq-turn*`, `--mq-gain*`, `--mq-risk*`; светлая и тёмная тема (`prefers-color-scheme`, `:root[data-theme='dark']`).
+- Шрифт F3: Nunito 800/900 (заголовки, суммы) + Manrope 400/600/700 (текст), self-host `src/assets/fonts/` (cyrillic + latin, ₽ из latin-ext), системный fallback.
+- Лёгкий стиль: края 1.5px, нижняя тень только у нажимаемого. Роли цвета: фиолет — действие, золото — деньги/награды/финиш, изумруд — плюс, красный — только риск; расход нейтрален.
+- Ходов не ограничено; путь = шаги цели. Движок сейчас отдаёт `min_period_index = 1` (ворота по ходу сняты), поэтому финиш пишется «Финиш — победа, игра продолжится»; «с N-го хода» — только при N > 1.
+- Якоря онбординга сохранены: `hero`, `events`, `next_period`, `needs`, `finance-flows`, `goal`, `salary`, `cushion`.
 
-- Цель: sky-фон раздела, Монетка + пузырь «как достичь»
-- Шеврон: иконка без фона
-- Суммы: уменьшение шрифта, без переноса
+## Открыто (вне ★)
+
+- Подписи действий «Пополнить» / «Снять» — отдельная задача.
+- Таббар, «Капитал», «Аналитика» и остальные экраны — ещё на S5; перенос на токены v2 по ADR-014 — по экранам.
+- Текст бита онбординга `p1_period` ссылается на старый hero («Слева «Ход в процессе»»).
+- Тёмная тема берётся из `prefers-color-scheme`; таббар и остальные экраны пока на `--tg-theme-*` со светлыми fallback, в TMA тема клиента не переключает токены v2.
+- Контраст в тёмной теме: белый на `--mq-turn` #8b5cf6 ≈ 4.2:1 (ниже AA для 14px) — как в lab; поправить вместе с токенами остальных экранов.
 
 ## Prod
 
-- `DashboardPremium` → `mqx-tab-page--dash-unified`
-- `MqxNeedsDash` → `MqxFinancePeriodBlock` → `MqxGoalDash` → `MqxPeriodActions`
-- Стили: `:has(.mqx-tab-page--dash-unified)` в `index.css`
-- **design-lab** `goal-chain-round` — паритет с prod для лендинга и макетов
-- **design-lab** `../character-needs/dashboard-needs-v7-round/` — **★ канон** Z-NEEDS (v7-e2e3, 4 bars, UX-01); v1–v6 — удалены из репо 2026-06-01
-
-## Lab ↔ prod checklist
-
-| Элемент | Lab | Prod |
-|--------|-----|------|
-| Hero pause | `\|\|` + filled | `MqxDashboardHero` |
-| Подушка | chip + действия | `DashboardPremium` |
-| Цель | `mqx-goal-dash` | `MqxGoalDash` |
-| Таббар | `bottom-nav__cell--active` full | `BottomGameNav` |
+- `DashboardPremium` → `mqx-tab-page--dash-unified mqx-tab-page--board`; стили `src/styles/mqx/board.css`, классы `mqx-bg-*`.
+- Витрина: `#/dev/mqx` → «Дашборд ★ BG-1».
+- Порядок компонентов проверяет `npm run check:dashboard-canon` по [`canon.manifest.json`](canon.manifest.json).

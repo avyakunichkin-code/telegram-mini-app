@@ -119,7 +119,7 @@ npx serve .
 | 1 | `primitives/` — кнопки, pills, chips, progress | `mqx/primitives/` |
 | 2 | `shell/` — дашборд main (**D′ flat утверждён**) | **Внедрено:** `MqxDashStack`, `DashboardPremium` |
 | 3 | `finance-insurance/` — **внедрено** | `InsuranceSection`, `Insurance*Card/Row/Picker`, Finance |
-| 4 | `dashboard/` — **S5 ★ в prod**; хвосты: empty/error, иконки | DashboardPremium |
+| 4 | `dashboard/` — S5 (история) → **★ BG-1 в prod** (2026-10-14, [ADR-014](../../../../docs/decisions/ADR-014-brand-direction-board-game.md), `board-game/hybrid-round/`, parity `dashboard/bg1-page-round/`) | DashboardPremium, `styles/mqx/board.css`, токены v2 |
 | 5 | `events/` — pill, карточка, оверлей (**внедрено**) | `EventCard`, `EventCarouselOverlay`, `MqxPill` |
 | 6 | `onboarding-o2/` — **★ утверждён** | `MqxGuidanceStrip`, `GameGuidanceLayer`, `MonetkaAvatar` |
 | 7 | `achievements-progress/` — level collapsible + монетки + каталог | `MqxAchievementCoin`, `AchievementsScreen` |
@@ -130,9 +130,9 @@ npx serve .
 | 12 | **`period-close/`** — хвостик ★; итог — **`game-ui/juice-round` C** | `MqxPeriodCloseRitual`, `MqxPeriodCloseTail` (sheet legacy в каталоге) |
 | 13 | **`game-ui/juice-round/`** ★ A+C+D | `MqxJuiceGainFeedback`, `MqxPeriodCloseRitual`, `MqxSalaryWarnModal` |
 | 13 | **`capital-page/details-actions-round/`** ★ v2 | `FinancePremium`: Детали \| Действия + sheets |
-| 14 | **`character-needs/dashboard-needs-v7-round/`** ★ e2e3 | `MqxNeedsDash`, `MqxNeedsHelpSheet`, `MqxTreatSelfSheet`, events chips |
+| 14 | `character-needs/dashboard-needs-v7-round/` e2e3 (история; на главной заменён ★ BG-1) | `MqxNeedsHelpSheet`, `MqxTreatSelfSheet`, events chips |
 
-Текущий статус: **дашборд S5** + **Z-NEEDS v7-e2e3 ★**, **события L3 + оверлей O1**, **итог периода**, **новая игра**, **онбординг**, **ui-states ★**, **Капитал** (Details \| Actions v2 ★) в prod. Lab оверлея: [`design-lab/events/overlay-round/`](../../../../design-lab/events/overlay-round/). Дальше: **аналитика** (волна C хвост).
+Текущий статус: **дашборд ★ BG-1** (токены v2 + Nunito/Manrope; остальные экраны пока S5) + **Z-NEEDS v7-e2e3 ★**, **события L3 + оверлей O1**, **итог периода**, **новая игра**, **онбординг**, **ui-states ★**, **Капитал** (Details \| Actions v2 ★) в prod. Lab оверлея: [`design-lab/events/overlay-round/`](../../../../design-lab/events/overlay-round/). Дальше: **аналитика** (волна C хвост).
 
 ---
 

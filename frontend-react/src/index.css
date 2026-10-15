@@ -3,6 +3,7 @@
  * Редактируйте модули в ./styles/ (см. styles/README.md).
  * Порядок импортов важен: токены → база → layout → экраны → shell/nav → events → page → admin.
  */
+@import './styles/fonts.css';
 @import './styles/tokens.css';
 @import './styles/tma-base.css';
 @import './styles/mqx/layout.css';
@@ -17,4 +18,5 @@
 @import './styles/shell.css';
 @import './styles/mqx/events.css';
 @import './styles/page.css';
+@import './styles/mqx/board.css';
 @import './styles/admin.css';
