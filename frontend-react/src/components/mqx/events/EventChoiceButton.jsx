@@ -1,12 +1,10 @@
 import { asSafeReactText } from '../../../utils/displayText';
-import { NeedsDeltaChips } from '../needs/NeedsDeltaChips';
 import { EventChoiceImpacts } from './EventChoiceImpacts';
 
-/** Кнопка выбора в карточке события (flat, без цветового акцента). */
+/** ★ BG-2: выбор в карте события — плоская кнопка с чипами последствий. */
 export function EventChoiceButton({ choice, disabled, onPick }) {
-  const hasImpacts = Array.isArray(choice?.impacts) && choice.impacts.length > 0;
-  const hasNeedsDelta = choice?.needs_delta && Object.keys(choice.needs_delta).length > 0;
   const choiceLabel = asSafeReactText(choice?.title, 'Вариант ответа');
+  const description = choice?.description ? asSafeReactText(choice.description, '') : '';
 
   return (
     <button
@@ -14,17 +12,12 @@ export function EventChoiceButton({ choice, disabled, onPick }) {
       className="mqx-events-choice mqx-events-choice--flat"
       disabled={disabled}
       title={choiceLabel}
-      aria-label={choice.description ? `${choiceLabel}. ${asSafeReactText(choice.description, '')}` : choiceLabel}
+      aria-label={description ? `${choiceLabel}. ${description}` : choiceLabel}
       onClick={() => { void onPick(choice.id); }}
     >
       <span className="mqx-events-choice__title">{choiceLabel}</span>
-      {hasImpacts ? <EventChoiceImpacts impacts={choice.impacts} /> : null}
-      {hasNeedsDelta ? (
-        <NeedsDeltaChips delta={choice.needs_delta} className="mqx-events-choice__needs" />
-      ) : null}
-      {choice.description ? (
-        <span className="mqx-events-choice__desc">{asSafeReactText(choice.description)}</span>
-      ) : null}
+      {description ? <span className="mqx-events-choice__desc">{description}</span> : null}
+      <EventChoiceImpacts impacts={choice?.impacts} needsDelta={choice?.needs_delta} />
     </button>
   );
 }

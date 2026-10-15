@@ -234,9 +234,17 @@ body.mqx-events-overlay-open .mqx-tab-page__scroll {
   background: transparent;
 }
 
-/* ТВОЙ ХОД Premium — оверлей событий (наследует разметку events-overlay-*) */
+/*
+ * ★ BG-2 «Событие» — карта, вытянутая из колоды (ADR-014).
+ * Канон: design-lab/board-game/APPROVED.md (BG-2), screens-round/ «Событие»;
+ * структура L3 — design-lab/events/APPROVED.md.
+ * Роли цвета: --mq-turn — карта и действие, --mq-risk — минус денег,
+ * --mq-gain — плюс, --mq-coin — сумма сделки. Тёмная тема — через токены --mq-*.
+ */
 .mqx-events-overlay {
   z-index: 530;
+  font-family: var(--mq-font-body);
+  color: var(--mq-board-ink);
 }
 
 .mqx-events-overlay .mqx-event-help-root {
@@ -247,340 +255,130 @@ body.mqx-events-overlay-open .mqx-tab-page__scroll {
   margin-top: -4px;
 }
 
-.mqx-events-backdrop {
-  background: color-mix(in srgb, #0f0a1f 72%, transparent);
+/* Затемнение одинаково тёмное в обеих темах: на нём белая строка колоды */
+.mqx-events-backdrop.events-overlay-backdrop {
+  background: rgba(29, 21, 48, 0.62);
+  backdrop-filter: blur(3px);
+  -webkit-backdrop-filter: blur(3px);
 }
 
-.mqx-events-panel.events-overlay-panel {
-  background: var(--tg-theme-bg-color, var(--bg));
-  border: 1px solid color-mix(in srgb, var(--tg-theme-hint-color, var(--mq-line)) 35%, transparent);
-  box-shadow: 0 20px 48px rgba(15, 10, 40, 0.22);
-}
-
+/* Панель без собственной поверхности: строка колоды + карта + стрелки */
 .mqx-events-panel--l3.events-overlay-panel {
-  padding: 14px 14px 12px;
-  background: linear-gradient(
-    180deg,
-    var(--tg-theme-bg-color, #fff) 0%,
-    color-mix(in srgb, var(--tg-theme-bg-color, #fff) 94%, var(--tg-theme-hint-color, #e8e8ee) 6%) 100%
-  );
-  border: 1px solid color-mix(in srgb, var(--tg-theme-hint-color, var(--mq-line)) 28%, transparent);
-  box-shadow: 0 20px 48px rgba(15, 10, 40, 0.2);
-}
-
-.mqx-events-nav--l3.events-carousel-nav {
-  margin-top: 10px;
-  padding-top: 4px;
-}
-
-.mqx-events-nav--l3 .mqx-events-counter.events-carousel-counter {
-  font-size: var(--mq-fs-caption);
-  font-weight: 600;
-  font-variant-numeric: tabular-nums;
-  color: var(--tg-theme-hint-color, var(--mqx-ink-muted));
-}
-
-.mqx-events-nav--l3 .mqx-events-arrow.events-carousel-arrow {
-  width: 44px;
-  height: 40px;
-  border: 1px solid color-mix(in srgb, var(--tg-theme-hint-color) 35%, transparent);
-  border-radius: 12px;
-  background: transparent;
-  color: var(--tg-theme-text-color, var(--text));
-}
-
-.mqx-events-nav__gap {
-  display: block;
-}
-
-.mqx-events-card {
-  width: 100%;
-  padding: 14px;
-  margin: 0;
-  border-radius: 14px;
-  box-sizing: border-box;
-  background: color-mix(in srgb, var(--tg-theme-secondary-bg-color, #eef0f8) 55%, transparent);
-  border: 1px solid color-mix(in srgb, var(--tg-theme-hint-color, var(--mq-line)) 35%, transparent);
-}
-
-/* B′ flat (legacy) */
-.mqx-events-card--flat {
-  padding: 4px 2px 0;
-  border: none;
-  background: transparent;
-}
-
-/* L3 ★ — domain band + labels + пузырь (бывш. M2) */
-.mqx-events-card--l3,
-.mqx-events-card--m2 {
-  --mqx-events-accent: var(--mq-violet, #6d28d9);
-  display: flex;
-  flex-direction: column;
-  gap: 0;
+  gap: var(--mq-sp-4);
   padding: 0;
-  margin: 0;
-  border: 1px solid color-mix(in srgb, var(--mqx-events-accent) 30%, transparent);
-  background: var(--tg-theme-bg-color, #fff);
-  border-radius: 14px;
-  overflow: visible;
-  box-sizing: border-box;
-  flex-shrink: 0;
-}
-
-.mqx-events-card__head {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 8px;
-}
-
-.mqx-events-card__head-actions {
-  display: flex;
-  flex-shrink: 0;
-  align-items: flex-start;
-  gap: 2px;
-  margin: -2px -2px 0 0;
-}
-
-.mqx-events-card__help {
-  margin: 0;
-}
-
-.mqx-events-card__head .mqx-events-card__title--l3 {
-  flex: 1;
-  min-width: 0;
-  padding-right: 4px;
-}
-
-button.mqx-events-card__close {
-  flex-shrink: 0;
-  width: 28px;
-  height: 28px;
-  margin: -2px -2px 0 0;
-  padding: 0;
-  border: none;
+  border: 0;
   border-radius: 0;
   background: transparent;
   box-shadow: none;
-  font-size: var(--mq-fs-title);
-  font-weight: 400;
-  line-height: 1;
-  color: var(--tg-theme-hint-color, var(--mqx-ink-muted));
-  cursor: pointer;
+  color: var(--mq-board-ink);
 }
 
-button.mqx-events-card__close:active:not(:disabled) {
-  transform: none;
-  opacity: 0.65;
+@media (max-width: 599px) {
+  .mqx-events-overlay.events-overlay-root {
+    align-items: flex-end;
+  }
 }
 
-.mqx-events-card__band {
-  height: 4px;
+/* Строка «Событие N из M» с мини-колодой (как плашка «2 события» на дашборде) */
+.mqx-events-deckline {
+  display: flex;
+  align-items: center;
+  gap: var(--mq-sp-4);
   flex-shrink: 0;
-  background: linear-gradient(
-    90deg,
-    var(--mqx-events-accent),
-    color-mix(in srgb, var(--mqx-events-accent) 55%, var(--tg-theme-bg-color, #fff))
-  );
+  padding: 0 var(--mq-sp-1);
+  color: #fff;
+  font: 700 var(--mq-fs-caption) / 1.2 var(--mq-font-body);
+  font-variant-numeric: tabular-nums;
 }
 
-.mqx-events-card__frame {
-  padding: 10px 12px 8px;
+.mqx-events-deckline__deck {
+  position: relative;
+  flex: none;
+  width: 30px;
+  height: 22px;
+}
+
+.mqx-events-deckline__deck span {
+  position: absolute;
+  inset: 0;
+  border: 1.5px solid var(--mq-turn-deep);
+  border-radius: 6px;
+  background: var(--mq-turn);
+}
+
+.mqx-events-deckline__deck span:nth-child(1) {
+  opacity: 0.5;
+  transform: rotate(-9deg) translateX(-3px);
+}
+
+.mqx-events-deckline__deck span:nth-child(2) {
+  transform: rotate(6deg) translateX(3px);
+}
+
+/* —— Карта —— */
+.mqx-events-card {
+  width: 100%;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+.mqx-events-card--l3 {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  flex-shrink: 0;
+  overflow: hidden;
+  border: 2px solid var(--mq-turn);
+  border-radius: 20px;
+  background: var(--mq-cell);
+  color: var(--mq-board-ink);
+  box-shadow: 0 4px 0 var(--mq-turn-deep);
+}
+
+/* Полоса домена: пилюли + справка и × */
+.mqx-events-card__band {
+  display: flex;
+  align-items: center;
+  gap: var(--mq-sp-2);
+  padding: var(--mq-sp-3) var(--mq-sp-3) var(--mq-sp-3) var(--mq-sp-5);
+  background: var(--mq-turn-soft);
 }
 
 .mqx-events-card__labels {
   display: flex;
+  flex: 1;
   flex-wrap: wrap;
-  align-items: stretch;
-  gap: 6px;
+  align-items: center;
+  gap: var(--mq-sp-2);
+  min-width: 0;
 }
 
 .mqx-events-domain-pill {
   display: inline-flex;
   align-items: center;
-  gap: 5px;
-  min-height: 22px;
-  padding: 4px 9px;
-  box-sizing: border-box;
+  gap: var(--mq-sp-2);
+  padding: var(--mq-sp-1) var(--mq-sp-3);
   border-radius: 999px;
-  font-size: var(--mq-fs-micro);
-  font-weight: 800;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  color: var(--mqx-events-accent);
-  background: color-mix(in srgb, var(--mqx-events-accent) 12%, transparent);
+  background: var(--mq-cell);
+  color: var(--mq-turn);
+  font: 700 var(--mq-fs-caption) / 1.3 var(--mq-font-body);
 }
 
-.mqx-events-domain-pill__dot {
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: var(--mqx-events-accent);
-  flex-shrink: 0;
+.mqx-events-domain-pill--insurance {
+  background: var(--mq-gain-soft);
+  color: var(--mq-gain);
 }
 
-.mqx-events-card__badge--inline {
-  display: inline-flex;
-  align-items: center;
-  min-height: 22px;
-  margin-bottom: 0;
-  padding: 4px 8px;
-  box-sizing: border-box;
-  flex-shrink: 0;
-}
-
-.mqx-events-card__title--l3,
-.mqx-events-card__title--m2 {
-  margin: 0;
-  font-size: calc(var(--mq-fs-body) + 2px);
-  font-weight: 800;
-  letter-spacing: -0.02em;
-  line-height: 1.2;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-}
-
-.mqx-events-card--domain-consumption { --mqx-events-accent: #d97706; }
-.mqx-events-card--domain-housing { --mqx-events-accent: #4f46e5; }
-.mqx-events-card--domain-health { --mqx-events-accent: #e11d48; }
-.mqx-events-card--domain-insurance { --mqx-events-accent: #059669; }
-.mqx-events-card--domain-auto { --mqx-events-accent: #0284c7; }
-.mqx-events-card--domain-credit-debt { --mqx-events-accent: #5b21b6; }
-.mqx-events-card--domain-investment-education { --mqx-events-accent: #0d9488; }
-.mqx-events-card--domain-social-family { --mqx-events-accent: #7c3aed; }
-.mqx-events-card--domain-income-work { --mqx-events-accent: #64748b; }
-.mqx-events-card--domain-meta { --mqx-events-accent: #6d28d9; }
-
-.mqx-events-card--l3:not(.mqx-events-card--insurance) .mqx-events-card__bubble {
-  background: color-mix(in srgb, var(--mqx-events-accent) 10%, var(--tg-theme-bg-color, var(--bg)));
-  border-color: color-mix(in srgb, var(--mqx-events-accent) 22%, transparent);
-  box-shadow: 0 6px 18px color-mix(in srgb, var(--mqx-events-accent) 12%, transparent);
-}
-
-.mqx-events-card--l3:not(.mqx-events-card--insurance) .mqx-events-card__bubble::before {
-  border-left-color: color-mix(in srgb, var(--mqx-events-accent) 22%, transparent);
-  border-bottom-color: color-mix(in srgb, var(--mqx-events-accent) 22%, transparent);
-}
-
-.mqx-events-card__bubble-row {
-  display: grid;
-  grid-template-columns: 52px 1fr;
-  gap: 8px;
-  align-items: end;
-}
-
-.mqx-events-card__monetka-wrap {
-  display: flex;
-  justify-content: center;
-  align-items: flex-end;
-}
-
-.mqx-events-card__monetka.mqx-onboarding-monetka {
-  width: 50px;
-  height: 50px;
-  object-fit: contain;
-}
-
-.mqx-events-card__bubble {
-  position: relative;
-  padding: 10px 12px;
-  border-radius: 14px 14px 14px 4px;
-  background: color-mix(in srgb, var(--mqx-events-accent, var(--mq-violet, #6d28d9)) 10%, var(--tg-theme-bg-color, var(--bg)));
-  border: 1px solid color-mix(in srgb, var(--mqx-events-accent, var(--mq-violet, #6d28d9)) 22%, transparent);
-  box-shadow: 0 6px 18px color-mix(in srgb, var(--mqx-events-accent, var(--mq-violet, #6d28d9)) 12%, transparent);
-}
-
-.mqx-events-card__bubble::before {
-  content: '';
-  position: absolute;
-  left: -5px;
-  bottom: 10px;
-  width: 10px;
-  height: 10px;
-  background: inherit;
-  border-left: 1px solid color-mix(in srgb, var(--mqx-events-accent, var(--mq-violet, #6d28d9)) 22%, transparent);
-  border-bottom: 1px solid color-mix(in srgb, var(--mqx-events-accent, var(--mq-violet, #6d28d9)) 22%, transparent);
-  transform: rotate(45deg);
-  border-radius: 0 0 0 3px;
-}
-
-.mqx-events-card__bubble-text {
-  margin: 0;
-  font-size: var(--mq-fs-caption);
-  line-height: 1.4;
-  color: color-mix(in srgb, var(--mqx-ink, var(--tg-theme-text-color)) 90%, transparent);
-}
-
-/* E5-B — см. design-lab/events/tails-round/APPROVED.md § E5-B */
-.mqx-events-card--l3 .mqx-events-card__bubble {
-  max-height: 5.6em;
-  overflow-y: auto;
-  overscroll-behavior: contain;
-  -webkit-overflow-scrolling: touch;
-}
-
-.mqx-events-card--l3 .mqx-events-card__bubble-text {
-  padding-right: 2px;
-}
-
-/* E2-B — см. design-lab/events/tails-round/APPROVED.md § E2-B */
-.mqx-events-card--l3.mqx-events-card--insurance {
-  position: relative;
-  overflow: hidden;
-  border-color: color-mix(in srgb, var(--mq-emerald) 28%, transparent);
-  background: linear-gradient(
-    165deg,
-    color-mix(in srgb, var(--mq-emerald) 9%, var(--tg-theme-bg-color, #fff)),
-    var(--tg-theme-bg-color, #fff)
-  );
-}
-
-.mqx-events-card--l3.mqx-events-card--insurance::after {
-  content: '';
-  position: absolute;
-  top: -36px;
-  right: -16px;
-  width: 110px;
-  height: 110px;
-  border-radius: 50%;
-  background: color-mix(in srgb, var(--mq-emerald) 16%, transparent);
-  filter: blur(22px);
-  pointer-events: none;
-  z-index: 0;
-}
-
-.mqx-events-card--insurance .mqx-events-card__band,
-.mqx-events-card--insurance .mqx-events-card__frame {
-  position: relative;
-  z-index: 1;
-}
-
-.mqx-events-card--insurance .mqx-events-card__bubble-row {
-  grid-template-columns: 58px 1fr;
-}
-
-.mqx-events-card--insurance .mqx-events-card__monetka.mqx-onboarding-monetka {
-  width: 56px;
-  height: 56px;
-  filter: drop-shadow(0 6px 12px color-mix(in srgb, var(--mq-emerald) 28%, transparent));
-}
-
-.mqx-events-card__badge--insurance-case {
-  gap: 6px;
+.mqx-events-domain-pill--recommended {
+  font-weight: 600;
 }
 
 .mqx-events-card__badge-pulse {
   width: 7px;
   height: 7px;
-  border-radius: 50%;
   flex-shrink: 0;
-  background: var(--mq-emerald);
-  box-shadow: 0 0 0 3px color-mix(in srgb, var(--mq-emerald) 22%, transparent);
+  border-radius: 50%;
+  background: var(--mq-gain);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--mq-gain) 22%, transparent);
   animation: mqx-events-insurance-pulse 2s ease-in-out infinite;
 }
 
@@ -595,141 +393,167 @@ button.mqx-events-card__close:active:not(:disabled) {
   }
 }
 
-.mqx-events-card--insurance .mqx-events-card__bubble {
-  background: color-mix(in srgb, var(--mq-emerald) 10%, var(--tg-theme-bg-color, var(--bg)));
-  border-color: color-mix(in srgb, var(--mq-emerald) 24%, transparent);
-  box-shadow: 0 6px 18px color-mix(in srgb, var(--mq-emerald) 10%, transparent);
-}
-
-.mqx-events-card--insurance .mqx-events-card__bubble::before {
-  border-left-color: color-mix(in srgb, var(--mq-emerald) 24%, transparent);
-  border-bottom-color: color-mix(in srgb, var(--mq-emerald) 24%, transparent);
-}
-
-.mqx-events-card--l3 .mqx-events-card__choices,
-.mqx-events-card--m2 .mqx-events-card__choices {
-  gap: 0;
-  margin-top: 2px;
-}
-
-.mqx-events-card__badge {
-  display: inline-flex;
+.mqx-events-card__head-actions {
+  display: flex;
+  flex-shrink: 0;
   align-items: center;
-  margin-bottom: 6px;
-  padding: 4px 8px;
-  border-radius: 999px;
-  font-size: var(--mq-fs-micro);
-  font-weight: 700;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  color: var(--mq-emerald);
-  background: color-mix(in srgb, var(--mq-emerald) 14%, transparent);
+  gap: calc(var(--mq-sp-1) / 2);
 }
 
-.mqx-events-card__badge--recommended {
-  color: color-mix(in srgb, var(--mq-violet, #6d28d9) 92%, var(--mqx-ink));
-  background: color-mix(in srgb, var(--mq-violet, #6d28d9) 14%, transparent);
-  text-transform: none;
-  letter-spacing: 0;
-  font-size: 11px;
+.mqx-events-card__help {
+  margin: 0;
 }
 
-.mqx-events-card__kicker--insurance {
-  color: var(--mq-emerald);
+button.mqx-events-card__close {
+  flex-shrink: 0;
+  width: 36px;
+  height: 36px;
+  margin: 0;
+  padding: 0;
+  border: none;
+  border-radius: 10px;
+  background: transparent;
+  box-shadow: none;
+  color: var(--mq-board-ink-soft);
+  font: 700 22px / 1 var(--mq-font-body);
+  cursor: pointer;
 }
 
-.mqx-events-card__divider {
-  margin-top: 12px;
-  margin-bottom: 0;
+button.mqx-events-card__close:active:not(:disabled) {
+  background: color-mix(in srgb, var(--mq-turn) 12%, transparent);
 }
 
-.mqx-events-card--flat .mqx-events-card__choices {
-  gap: 0;
-  margin-top: 0;
+button.mqx-events-card__close:focus-visible,
+button.mqx-events-choice:focus-visible,
+.mqx-events-arrow.events-carousel-arrow:focus-visible {
+  outline: 3px solid var(--mq-coin);
+  outline-offset: 2px;
 }
 
-.mqx-events-card__kicker {
+.mqx-events-card__frame {
+  display: grid;
+  gap: var(--mq-sp-4);
+  padding: var(--mq-sp-5) var(--mq-sp-6) var(--mq-sp-6);
+}
+
+.mqx-events-card__title--l3 {
+  margin: 0;
+  color: var(--mq-board-ink);
+  font: 800 calc(var(--mq-fs-title) + 2px) / 1.15 var(--mq-font-display);
+  letter-spacing: -0.01em;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Пузырь Монетки */
+.mqx-events-card__bubble-row {
   display: flex;
-  flex-wrap: wrap;
-  align-items: baseline;
-  gap: 8px;
-  font-size: var(--mq-fs-small);
-  font-weight: 650;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  color: var(--tg-theme-hint-color);
+  align-items: flex-end;
+  gap: var(--mq-sp-3);
 }
 
-.mqx-events-card__kicker-sep {
-  font-weight: 550;
-  letter-spacing: 0.02em;
+.mqx-events-card__monetka.mqx-onboarding-monetka {
+  flex: none;
+  width: 44px;
+  height: 44px;
+  object-fit: contain;
 }
 
-.mqx-events-card__title {
-  margin: 8px 0 6px;
-  font-size: calc(var(--mq-fs-body) + 4px);
-  font-weight: 720;
-  letter-spacing: -0.03em;
-  line-height: 1.2;
+/* E5-B — design-lab/events/tails-round/APPROVED.md: пузырь скроллится внутри */
+.mqx-events-card--l3 .mqx-events-card__bubble {
+  flex: 1;
+  min-width: 0;
+  max-height: 5.6em;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+  padding: var(--mq-sp-3) var(--mq-sp-4);
+  border: var(--mq-hair);
+  border-radius: 14px 14px 14px 4px;
+  background: var(--mq-board);
 }
 
-.mqx-events-card__desc {
-  font-size: var(--mq-fs-body);
-  line-height: 1.45;
-  opacity: 0.9;
+.mqx-events-card__bubble-text {
+  margin: 0;
+  color: var(--mq-board-ink);
+  font-size: calc(var(--mq-fs-heading) - 0.5px);
+  line-height: 1.4;
 }
 
+/* E2-B — страховой случай: изумрудный halo внутри фиолетовой карты */
+.mqx-events-card--l3.mqx-events-card--insurance {
+  position: relative;
+  background: linear-gradient(165deg, var(--mq-gain-soft), var(--mq-cell) 55%);
+}
+
+.mqx-events-card--l3.mqx-events-card--insurance::after {
+  content: '';
+  position: absolute;
+  top: -36px;
+  right: -16px;
+  width: 110px;
+  height: 110px;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--mq-gain) 16%, transparent);
+  filter: blur(22px);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.mqx-events-card--insurance .mqx-events-card__band,
+.mqx-events-card--insurance .mqx-events-card__frame {
+  position: relative;
+  z-index: 1;
+}
+
+.mqx-events-card--insurance .mqx-events-card__monetka.mqx-onboarding-monetka {
+  width: 56px;
+  height: 56px;
+}
+
+.mqx-events-card--insurance .mqx-events-card__bubble {
+  border-color: color-mix(in srgb, var(--mq-gain) 40%, var(--mq-cell-edge));
+  background: var(--mq-gain-soft);
+}
+
+/* —— Выборы: плоские кнопки с чипами последствий —— */
 .mqx-events-card__choices {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  margin-top: 14px;
+  display: grid;
+  gap: var(--mq-sp-3);
 }
 
 button.mqx-events-choice {
   appearance: none;
-  cursor: pointer;
+  display: grid;
+  gap: var(--mq-sp-2);
   width: 100%;
-  padding: 12px 14px;
-  border-radius: 12px;
-  border: 1px solid color-mix(in srgb, var(--mq-violet, #7c3aed) 45%, transparent);
-  font-family: inherit;
-  background: linear-gradient(
-    165deg,
-    color-mix(in srgb, var(--mq-violet, #7c3aed) 22%, transparent),
-    transparent
-  );
-  color: var(--tg-theme-text-color, var(--text));
-  transition: opacity 0.15s ease, transform 0.06s ease;
+  padding: var(--mq-sp-4) var(--mq-sp-5);
+  border: var(--mq-hair);
+  border-radius: 14px;
+  background: var(--mq-board);
+  color: var(--mq-board-ink);
+  box-shadow: 0 2px 0 var(--mq-cell-edge);
+  font: 600 14.5px / 1.3 var(--mq-font-body);
   text-align: left;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: transform 0.06s ease, box-shadow 0.06s ease, border-color 0.15s ease;
 }
 
-button.mqx-events-choice:disabled {
-  opacity: 0.45;
-  cursor: not-allowed;
+button.mqx-events-choice:hover:not(:disabled) {
+  border-color: var(--mq-turn);
 }
 
 button.mqx-events-choice:active:not(:disabled) {
-  transform: translateY(1px);
+  transform: translateY(2px);
+  box-shadow: 0 0 0 var(--mq-cell-edge);
 }
 
-/* L3 flat-выборы: без рамок и фона, разделители линиями (после базового .mqx-events-choice) */
-button.mqx-events-choice.mqx-events-choice--flat {
-  border: none;
-  border-radius: 0;
-  background: transparent;
-  box-shadow: none;
-  padding: 12px 0;
-  border-bottom: 1px solid color-mix(in srgb, var(--tg-theme-hint-color, var(--mq-line)) 32%, transparent);
-}
-
-button.mqx-events-choice.mqx-events-choice--flat:last-child {
-  border-bottom: none;
-}
-
-button.mqx-events-choice.mqx-events-choice--flat:active:not(:disabled) {
-  transform: none;
-  background: color-mix(in srgb, var(--tg-theme-hint-color, var(--mq-line)) 10%, transparent);
+button.mqx-events-choice:disabled {
+  opacity: 0.5;
+  cursor: default;
 }
 
 .mqx-events-choice__title {
@@ -737,18 +561,6 @@ button.mqx-events-choice.mqx-events-choice--flat:active:not(:disabled) {
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
-  font-weight: 680;
-}
-
-.mqx-events-choice__metrics {
-  margin-top: 6px;
-  flex-wrap: wrap;
-  gap: 8px 12px;
-}
-
-.mqx-events-choice__metrics .mqx-inline-metric__val {
-  font-size: var(--mq-fs-caption);
-  font-weight: 600;
 }
 
 .mqx-events-choice__desc {
@@ -756,18 +568,74 @@ button.mqx-events-choice.mqx-events-choice--flat:active:not(:disabled) {
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
-  margin-top: 4px;
-  font-size: var(--mq-fs-caption);
+  color: var(--mq-board-ink-soft);
+  font-size: calc(var(--mq-fs-caption) + 0.5px);
+  font-weight: 400;
   line-height: 1.35;
-  opacity: 0.82;
 }
 
-.mqx-events-choice__needs.mqx-needs-delta-chips {
-  margin-top: 6px;
+.mqx-events-impacts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--mq-sp-1);
 }
 
-.mqx-events-arrow.events-carousel-arrow {
-  background: color-mix(in srgb, var(--mq-violet, #7c3aed) 18%, transparent);
+.mqx-events-impact {
+  padding: calc(var(--mq-sp-1) / 2) var(--mq-sp-3);
+  border-radius: 999px;
+  background: var(--mq-cell-edge);
+  color: var(--mq-board-ink);
+  font: 600 var(--mq-fs-caption) / 1.35 var(--mq-font-body);
+}
+
+.mqx-events-impact--money {
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.mqx-events-impact--gain {
+  background: var(--mq-gain-soft);
+  color: var(--mq-gain);
+}
+
+.mqx-events-impact--risk {
+  background: var(--mq-risk-soft);
+  color: var(--mq-risk);
+}
+
+.mqx-events-impact--coin {
+  background: var(--mq-coin-soft);
+  color: var(--mq-coin-ink);
+}
+
+/* Нижняя тень карты не обрезается прокруткой viewport */
+.mqx-events-panel--l3 .event-carousel-layer {
+  padding-bottom: var(--mq-sp-1);
+}
+
+/* —— Стрелки карусели —— */
+.mqx-events-nav--l3.events-carousel-nav {
+  display: flex;
+  justify-content: center;
+  gap: var(--mq-sp-5);
+  margin: 0;
+  padding: 0;
+}
+
+.mqx-events-nav--l3 .mqx-events-arrow.events-carousel-arrow {
+  width: 48px;
+  height: 40px;
+  border: var(--mq-hair);
+  border-radius: 12px;
+  background: var(--mq-cell);
+  color: var(--mq-turn);
+  box-shadow: 0 2px 0 var(--mq-cell-edge);
+  font: 700 22px / 1 var(--mq-font-body);
+}
+
+.mqx-events-nav--l3 .mqx-events-arrow.events-carousel-arrow:disabled {
+  opacity: 0.45;
+  box-shadow: none;
 }
 
 .events-carousel-dots {
