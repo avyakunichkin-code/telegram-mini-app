@@ -28,3 +28,25 @@ reviews:
       Принципы абстрактнее инструкций; C-Y — разбор, не «всегда предлагай».
     repo_trace: CONVENTIONS.md, docs/conventions/reviews.yaml, scripts/check_conventions.py
     decision_changed: true
+
+  - id: CY-2026-10-15-needs-set-point
+    date: 2026-10-15
+    subject: Модель потребностей — чистая точка равновесия (вариант B) vs сохранение давления
+    human_decision: >-
+      Вариант B: потребность тянется к уровню жизни (статьи расходов, активы), а не к нулю.
+    disagreement: >-
+      Чистая точка равновесия убирает поражение пассивного игрока: потребности стабилизируются
+      на уровне бюджета шаблона (симуляция: Студент 58/38/46/61). Это меняет смысл ADR-005
+      «без пополнения — ноль за 10–15 периодов» и делает события необязательными.
+    alternative: >-
+      Износ рутиной + притяжение к уровню жизни: N ← N + r(L − N) − w; инвариант давления
+      base + bonus_cap < w / r — без событий любая ось обнуляется, деньги лишь отсрочивают.
+    alternative_cost: >-
+      Активный игрок в симуляции держится на уровне ~21–30 (ниже distressed) — нужна калибровка
+      K_imp и износа; ещё один параметр шаблона (passive_periods_to_zero) и вычисляемый bonus_cap.
+    outcome: accepted
+    decision: >-
+      PO: потребности — двигатель игры и второй путь к поражению; пассивный обязан проигрывать.
+      Принята модель «износ + уровень жизни» с инвариантом давления.
+    repo_trace: docs/specs/features/SPEC_needs-set-point.md, docs/decisions/ADR-015-needs-set-point-model.md, docs/plans/PLAN_needs-set-point.md
+    decision_changed: true
