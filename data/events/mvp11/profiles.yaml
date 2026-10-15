@@ -334,7 +334,7 @@ events:
   event_slot: period_choice
   audience_template_keys:
   - mq_game_debt_stack_v1
-  event_domain: social_status
+  event_domain: income_work
   title: Удержать ключевого сотрудника
   description: 'Программист уходит к конкуренту: «Нужна премия или ухожу в пятницу».'
   weight: 76

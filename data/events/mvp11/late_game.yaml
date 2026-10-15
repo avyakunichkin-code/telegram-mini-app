@@ -119,7 +119,8 @@ events:
   description: Подписки, доставка и мелкие удобства потихоньку раздувают ежемесячные траты.
   weight: 72
   event_tier: 3
-  repeat_policy: repeatable
+  repeat_policy: max_per_profile
+  repeat_max: 2
   cooldown_periods: 12
   scenario_shape: soft_offer
   choices:
