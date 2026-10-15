@@ -6,7 +6,8 @@ import { MqxEventHelpSheet } from './MqxEventHelpSheet';
 import { useEventCarousel } from './useEventCarousel';
 
 /**
- * Полноэкранный оверлей событий: карточка L3, свайп, навигация внизу.
+ * Оверлей событий ★ BG-2: затемнение, строка колоды «Событие N из M», карта L3,
+ * свайп и стрелки внизу (при нескольких событиях).
  */
 export function EventCarouselOverlay({ open, onClose, events, onResolved }) {
   const [busyId, setBusyId] = useState(null);
@@ -87,6 +88,14 @@ export function EventCarouselOverlay({ open, onClose, events, onResolved }) {
       <div className="mqx-events-backdrop events-overlay-backdrop" aria-hidden />
 
       <div className="mqx-events-panel events-overlay-panel mqx-events-panel--l3">
+        <div className="mqx-events-deckline" aria-live="polite">
+          <span className="mqx-events-deckline__deck" aria-hidden>
+            <span />
+            <span />
+          </span>
+          Событие {idx + 1} из {n}
+        </div>
+
         <div
           className={[
             'mqx-events-viewport',
@@ -132,15 +141,15 @@ export function EventCarouselOverlay({ open, onClose, events, onResolved }) {
           ) : null}
         </div>
 
-        <EventCarouselNav
-          index={idx}
-          total={n}
-          canPrev={idx > 0 && canNavigate}
-          canNext={idx < n - 1 && canNavigate}
-          disabled={navBlocked}
-          onPrev={goPrev}
-          onNext={goNext}
-        />
+        {n > 1 ? (
+          <EventCarouselNav
+            canPrev={idx > 0 && canNavigate}
+            canNext={idx < n - 1 && canNavigate}
+            disabled={navBlocked}
+            onPrev={goPrev}
+            onNext={goNext}
+          />
+        ) : null}
       </div>
 
       <MqxEventHelpSheet open={helpOpen} onClose={() => setHelpOpen(false)} />
