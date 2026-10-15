@@ -1,0 +1,10 @@
+/* run-finale/bg2-page-round — только то, чем prod отличается от screens-round (★ BG-2). */
+
+/* Prod: финал — полноэкранная доска, а не лист поверх игры */
+.f-phone { background: var(--bg-board); }
+
+/* Нейтральная клетка поражения (в screens-round — inline style) */
+.s-finish__cell--neutral { background: var(--bg-cell); border-color: var(--edge-cell); box-shadow: 0 5px 0 var(--edge-cell); }
+
+/* Prod: «Отправить отзыв» есть и на поражении; неактивна, пока поле пустое */
+.s-link[disabled] { opacity: 0.6; }

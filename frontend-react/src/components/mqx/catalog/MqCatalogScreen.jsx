@@ -55,6 +55,7 @@ import {
 } from '../index';
 import { MqxStatesCatalogDemo } from './MqxStatesCatalogDemo';
 import { MqxEventsTailsCatalogDemo } from './MqxEventsTailsCatalogDemo';
+import { MqxRunFinaleCatalogDemo } from './MqxRunFinaleCatalogDemo';
 import { CATALOG_LEGACY_GOAL_DEMO, CATALOG_VICTORY_DEMO } from './catalogVictoryDemo';
 import { CATALOG_EVENTS_L3_BASELINE } from './catalogEventsDemo';
 import { CATALOG_INSURANCE_POLICY, catalogInsurancePlan } from './catalogInsuranceDemo';
@@ -262,6 +263,10 @@ export function MqCatalogScreen() {
             summary={CATALOG_PERIOD_CLOSE_SHEET}
           />
         </div>
+      </CatalogSection>
+
+      <CatalogSection title="Финал партии ★ BG-2 (победа · поражение)">
+        <MqxRunFinaleCatalogDemo />
       </CatalogSection>
 
       <CatalogSection title="События — E2 / E5 (хвосты) ★">

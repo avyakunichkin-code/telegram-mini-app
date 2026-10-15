@@ -1,443 +1,247 @@
+/*
+ * Финал партии ★ BG-2 «настольная игра про деньги» (ADR-014).
+ * Канон: design-lab/board-game/screens-round/ («Финал · Победа», «Финал · Поражение»),
+ * design-lab/run-finale/APPROVED.md. Кнопки — .mqx-bg-btn / .mqx-bg-cta из board.css.
+ * Роли цвета: золото — клетка финиша и деньги, фиолет — действие, красный — только факт риска.
+ */
+
 .mqx-run-finale-root {
   position: fixed;
   inset: 0;
   z-index: 1200;
   display: flex;
-  align-items: flex-end;
   justify-content: center;
-  pointer-events: none;
-  opacity: 0;
-  visibility: hidden;
-  transition: opacity 0.2s ease, visibility 0.2s ease;
-}
-
-.mqx-run-finale-root--open {
-  pointer-events: auto;
-  opacity: 1;
-  visibility: visible;
-}
-
-.mqx-run-finale-scrim {
-  position: absolute;
-  inset: 0;
-  background: rgba(15, 17, 21, 0.55);
+  background: var(--mq-board);
 }
 
 .mqx-run-finale {
-  position: relative;
-  z-index: 1;
   width: min(100%, 480px);
-  max-height: min(94vh, 720px);
-  display: flex;
-  flex-direction: column;
-  background: var(--mqx-surface, #fff);
-  border-radius: 16px 16px 0 0;
-  box-shadow: 0 -8px 32px rgba(15, 17, 21, 0.18);
-  overflow: hidden;
-}
-
-.mqx-run-finale__scroll {
-  flex: 1;
+  height: 100%;
   overflow-y: auto;
   overscroll-behavior: contain;
-  padding-bottom: 6px;
+  color: var(--mq-board-ink);
+  font-family: var(--mq-font-body);
 }
 
-.mqx-run-finale-mast {
-  text-align: center;
-  padding: 12px 14px 10px;
-  font-family: Georgia, 'Times New Roman', serif;
-}
-
-[data-outcome='win'] .mqx-run-finale-mast {
-  background: color-mix(in srgb, var(--mq-emerald, #059669) 14%, var(--mqx-surface, #fff));
-}
-
-[data-outcome='defeat'] .mqx-run-finale-mast {
-  background: color-mix(in srgb, var(--mq-danger, #dc2626) 12%, var(--mqx-surface, #fff));
-}
-
-.mqx-run-finale-mast h3 {
-  margin: 8px 0 0;
-  font-size: 0.94rem;
-  letter-spacing: 0.07em;
-  text-transform: uppercase;
-  font-weight: 700;
-}
-
-[data-outcome='win'] .mqx-run-finale-mast h3 {
-  color: color-mix(in srgb, var(--mq-emerald, #059669) 75%, var(--mqx-ink, #0f1115));
-}
-
-[data-outcome='defeat'] .mqx-run-finale-mast h3 {
-  color: color-mix(in srgb, var(--mq-danger, #dc2626) 72%, var(--mqx-ink, #0f1115));
-}
-
-.mqx-run-finale-mast__sub {
-  margin: 4px 0 0;
-  font-size: 0.68rem;
-  font-style: italic;
-  color: var(--mqx-text-muted, #6b7280);
-  font-family: system-ui, sans-serif;
-}
-
-.mqx-run-finale-badge {
-  display: inline-block;
-  padding: 3px 10px;
-  border-radius: 999px;
-  font-size: 0.68rem;
-  font-weight: 800;
-  font-family: system-ui, sans-serif;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-}
-
-.mqx-run-finale-badge--win {
-  background: color-mix(in srgb, var(--mq-emerald, #059669) 18%, transparent);
-  color: var(--mq-emerald, #059669);
-}
-
-.mqx-run-finale-badge--loss {
-  background: color-mix(in srgb, var(--mq-danger, #dc2626) 15%, transparent);
-  color: var(--mq-danger, #dc2626);
-}
-
-.mqx-run-finale-body {
-  padding: 10px 14px 0;
-  min-width: 0;
-  box-sizing: border-box;
-}
-
-.mqx-run-finale-scenario__title {
-  margin: 0 0 4px;
-  font-size: 1rem;
-  line-height: 1.25;
-}
-
-.mqx-run-finale-scenario__line {
-  margin: 0 0 10px;
-  font-size: 0.82rem;
-  color: var(--mqx-text-muted, #6b7280);
-}
-
-.mqx-run-finale-hero {
+.mqx-run-finale__body {
   display: grid;
-  grid-template-columns: auto 1fr;
-  gap: 6px 10px;
-  align-items: end;
-  margin-bottom: 10px;
+  justify-items: center;
+  gap: var(--mq-sp-4);
+  padding: calc(var(--mq-sp-7) + env(safe-area-inset-top, 0px)) var(--mq-sp-7)
+    calc(var(--mq-sp-7) + env(safe-area-inset-bottom, 0px));
+  text-align: center;
 }
 
-.mqx-run-finale-hero__img {
-  display: block;
-  height: 108px;
-  width: auto;
-  max-width: 132px;
-  object-fit: contain;
-  object-position: left bottom;
-  filter: drop-shadow(0 4px 10px rgba(15, 17, 21, 0.1));
-}
-
-.mqx-run-finale-hero__lead {
-  margin: 6px 0 0;
-  font-family: Georgia, 'Times New Roman', serif;
-  font-size: 0.78rem;
-  line-height: 1.35;
-}
-
-.mqx-run-finale-bubble {
-  display: flex;
-  gap: 10px;
-  align-items: flex-start;
-  margin-bottom: 12px;
-  padding: 10px 11px;
-  border-radius: 12px;
-  background: color-mix(in srgb, var(--mq-amber, #d97706) 10%, var(--mqx-surface, #fff));
-  border: 1.5px solid color-mix(in srgb, var(--mq-amber, #d97706) 32%, transparent);
-}
-
-.mqx-run-finale-bubble__title {
-  margin: 0 0 5px;
-  font-size: 0.8rem;
-  font-weight: 800;
-}
-
-.mqx-run-finale-bubble__text {
-  margin: 0;
-  font-size: 0.74rem;
-  line-height: 1.4;
-  color: var(--mqx-text-muted, #6b7280);
-}
-
-.mqx-run-finale-metrics__title {
-  margin: 0 0 6px;
-  font-size: 0.72rem;
-  font-weight: 800;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  color: var(--mqx-text-muted, #6b7280);
-}
-
-.mqx-run-finale-metrics__divider {
-  height: 2px;
-  margin: 10px 0;
-  background: linear-gradient(
-    90deg,
-    transparent,
-    color-mix(in srgb, var(--mq-violet, #6d28d9) 35%, transparent) 20%,
-    color-mix(in srgb, var(--mq-violet, #6d28d9) 35%, transparent) 80%,
-    transparent
-  );
-}
-
-[data-outcome='defeat'] .mqx-run-finale-metrics__divider {
-  background: linear-gradient(
-    90deg,
-    transparent,
-    color-mix(in srgb, var(--mq-danger, #dc2626) 30%, transparent) 20%,
-    color-mix(in srgb, var(--mq-danger, #dc2626) 30%, transparent) 80%,
-    transparent
-  );
-}
-
-.mqx-run-finale-stat {
-  margin-bottom: 8px;
-}
-
-.mqx-run-finale-stat__headline {
-  margin: 0 0 3px;
-  font-size: 0.82rem;
-  font-weight: 800;
-}
-
-.mqx-run-finale-stat__line {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  flex-wrap: wrap;
-}
-
-.mqx-run-finale-stat__glyph {
+/* Клетка финиша: победа — золото с объёмом, поражение — нейтральная */
+.mqx-run-finale-cell {
   display: grid;
   place-items: center;
-  width: 18px;
-  height: 18px;
-  flex-shrink: 0;
+  width: 132px;
+  height: 132px;
+  border-radius: 28px;
+  background: var(--mq-cell);
+  border: 3px solid var(--mq-cell-edge);
+  box-shadow: 0 5px 0 var(--mq-cell-edge);
 }
 
-.mqx-run-finale-stat__glyph svg {
-  width: 16px;
-  height: 16px;
-  stroke: currentColor;
-  fill: none;
-  stroke-width: 2;
-  stroke-linecap: round;
-  stroke-linejoin: round;
+.mqx-run-finale-cell--win {
+  background: var(--mq-coin-soft);
+  border-color: var(--mq-coin-rim);
+  box-shadow: 0 5px 0 var(--mq-coin-rim);
 }
 
-.mqx-run-finale-stat__glyph--up { color: var(--mq-emerald, #059669); }
-.mqx-run-finale-stat__glyph--down { color: var(--mq-danger, #dc2626); }
-.mqx-run-finale-stat__glyph--coin { color: var(--mq-violet-deep, #5b21b6); }
-.mqx-run-finale-stat__glyph--term { color: var(--mq-violet, #6d28d9); }
-.mqx-run-finale-stat__glyph--goal { color: var(--mq-emerald, #059669); }
-
-.mqx-run-finale-stat__name {
-  font-size: 0.7rem;
-  color: var(--mqx-text-muted, #6b7280);
-  flex: 1;
+.mqx-run-finale-cell__img {
+  display: block;
+  width: 116px;
+  height: 116px;
+  object-fit: contain;
 }
 
-.mqx-run-finale-stat__value {
-  font-size: 0.8rem;
-  font-weight: 700;
-  margin-left: auto;
+.mqx-run-finale__title {
+  margin: var(--mq-sp-2) 0 0;
+  font: 900 var(--mq-fs-display) / 1.1 var(--mq-font-display);
 }
 
-.mqx-run-finale-fact {
-  margin: 12px 0 10px;
+.mqx-run-finale__title:focus {
+  outline: none;
 }
 
-.mqx-run-finale-fact__rule {
-  height: 3px;
-  margin-bottom: 8px;
-  border-radius: 2px;
-  background: color-mix(in srgb, var(--mq-danger, #dc2626) 55%, transparent);
-}
-
-.mqx-run-finale-fact__label {
-  margin: 0 0 4px;
-  font-size: 0.72rem;
-  font-weight: 800;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  color: var(--mq-danger, #dc2626);
-}
-
-.mqx-run-finale-fact__text {
-  margin: 0 0 6px;
-  font-size: 0.78rem;
+.mqx-run-finale__lead {
+  margin: 0;
+  max-width: 32ch;
+  color: var(--mq-board-ink-soft);
+  font-size: var(--mq-fs-body);
   line-height: 1.4;
 }
 
-.mqx-run-finale-fact__tips {
-  margin: 0;
-  padding-left: 1.1rem;
-  font-size: 0.72rem;
-  color: var(--mqx-text-muted, #6b7280);
-}
-
-.mqx-run-finale-feedback {
-  margin: 12px 0 8px;
-  padding: 10px 11px;
-  border-radius: 12px;
-  border: 1.5px solid color-mix(in srgb, var(--mq-violet, #6d28d9) 22%, transparent);
-  background: color-mix(in srgb, var(--mq-violet, #6d28d9) 6%, var(--mqx-surface, #fff));
-  min-width: 0;
-  max-width: 100%;
-  box-sizing: border-box;
-}
-
-.mqx-run-finale-feedback__label {
-  display: block;
-  font-size: 0.78rem;
-  font-weight: 700;
-  margin-bottom: 6px;
-}
-
-.mqx-run-finale-feedback__hint {
-  font-weight: 400;
-  color: var(--mqx-text-muted, #6b7280);
-}
-
-.mqx-run-finale-feedback textarea {
-  display: block;
-  width: 100%;
-  max-width: 100%;
-  min-width: 0;
-  min-height: 72px;
-  padding: 8px 10px;
-  border-radius: 10px;
-  border: 1px solid var(--mqx-border, rgba(15, 17, 21, 0.12));
-  font: inherit;
-  resize: vertical;
-  margin-bottom: 8px;
-  background: var(--mqx-surface, #fff);
-  color: inherit;
-  box-sizing: border-box;
-}
-
-.mqx-run-finale__actions {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  padding: 12px 14px calc(14px + env(safe-area-inset-bottom, 0px));
-  border-top: 1px solid var(--mqx-border, rgba(15, 17, 21, 0.1));
-  background: var(--mqx-surface, #fff);
-}
-
-.mqx-run-finale-next {
-  margin: 4px 0 12px;
-  padding: 10px 0 4px;
-  border-top: 1px solid var(--mqx-border, rgba(15, 17, 21, 0.08));
-}
-
-.mqx-run-finale-next__title {
-  margin: 0 0 4px;
-  font-size: 0.82rem;
-  font-weight: 800;
-  text-align: center;
-}
-
-.mqx-run-finale-next__lead {
-  margin: 0 0 10px;
-  font-size: 0.72rem;
-  line-height: 1.35;
-  text-align: center;
-  color: var(--mqx-text-muted, #6b7280);
-}
-
-.mqx-run-finale-next__row {
+/* Три показателя победы */
+.mqx-run-finale-stats {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 8px;
-  align-items: start;
-}
-
-.mqx-run-finale-next__col {
-  display: flex;
-  flex-direction: column;
-  align-items: stretch;
-  min-width: 0;
-}
-
-.mqx-run-finale-next__chip {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 4px;
+  gap: var(--mq-sp-3);
   width: 100%;
+  margin: 0;
+}
+
+.mqx-run-finale-stats__cell {
+  display: flex;
+  flex-direction: column-reverse;
+  gap: var(--mq-sp-1);
+  padding: var(--mq-sp-3);
+  border: var(--mq-hair);
+  border-radius: var(--mq-r-cell);
+  background: var(--mq-cell);
   min-width: 0;
-  padding: 8px 6px 6px;
-  border: 1.5px solid color-mix(in srgb, var(--mq-violet, #6d28d9) 28%, transparent);
-  border-radius: 12px;
-  background: color-mix(in srgb, var(--mq-violet, #6d28d9) 7%, var(--mqx-surface, #fff));
-  cursor: pointer;
-  transition:
-    border-color 0.15s ease,
-    background 0.15s ease,
-    transform 0.12s ease;
 }
 
-.mqx-run-finale-next__chip:hover:not(:disabled) {
-  border-color: color-mix(in srgb, var(--mq-violet, #6d28d9) 52%, transparent);
-  background: color-mix(in srgb, var(--mq-violet, #6d28d9) 11%, var(--mqx-surface, #fff));
+.mqx-run-finale-stats__label {
+  color: var(--mq-board-ink-soft);
+  font-size: var(--mq-fs-small);
 }
 
-.mqx-run-finale-next__chip:active:not(:disabled) {
-  transform: scale(0.98);
+.mqx-run-finale-stats__value {
+  margin: 0;
+  font: 900 var(--mq-fs-lead) / 1.1 var(--mq-font-display);
+  font-variant-numeric: tabular-nums;
+  overflow-wrap: anywhere;
 }
 
-.mqx-run-finale-next__chip:disabled {
-  opacity: 0.55;
-  cursor: default;
+.mqx-run-finale-stats__value--money {
+  color: var(--mq-coin-ink);
 }
 
-.mqx-run-finale-next__mascot {
-  display: block;
-  line-height: 0;
+/* Поражение: факт риска и советы */
+.mqx-run-finale-fact {
+  width: 100%;
+  box-sizing: border-box;
+  margin: 0;
+  padding: var(--mq-sp-4) var(--mq-sp-5);
+  border-radius: var(--mq-r-cell);
+  background: var(--mq-risk-soft);
+  color: var(--mq-board-ink);
+  font-size: var(--mq-fs-note);
+  line-height: 1.4;
+  text-align: left;
 }
 
-.mqx-run-finale-next__mascot img {
-  display: block;
-  height: 52px;
-  width: auto;
-  max-width: 100%;
-  object-fit: contain;
-  object-position: center bottom;
-  filter: drop-shadow(0 3px 8px rgba(15, 17, 21, 0.1));
+.mqx-run-finale-fact__risk {
+  color: var(--mq-risk);
 }
 
-.mqx-run-finale-next__chip-title {
-  font-size: 0.68rem;
-  font-weight: 800;
-  line-height: 1.2;
-  text-align: center;
-  color: var(--mqx-ink, #0f1115);
-}
-
-.mqx-run-finale-next__starter-list {
-  margin: 6px 0 0;
+.mqx-run-finale-tips {
+  display: grid;
+  gap: var(--mq-sp-2);
+  width: 100%;
+  margin: 0;
   padding: 0;
   list-style: none;
-  font-size: 0.62rem;
-  line-height: 1.35;
-  color: var(--mqx-text-muted, #6b7280);
+  text-align: left;
 }
 
-.mqx-run-finale-next__starter-list li {
-  margin: 0;
-  padding: 1px 0;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+.mqx-run-finale-tips li {
+  padding: var(--mq-sp-3) var(--mq-sp-5);
+  border: var(--mq-hair);
+  border-radius: var(--mq-r-cell);
+  background: var(--mq-cell);
+  font-size: var(--mq-fs-note);
+  line-height: 1.4;
+}
+
+/* Кнопки */
+.mqx-run-finale__actions {
+  display: grid;
+  gap: var(--mq-sp-4);
+  width: 100%;
+  margin-top: var(--mq-sp-2);
+}
+
+.mqx-bg-cta.mqx-run-finale__primary {
+  min-height: 48px;
+  font-size: var(--mq-fs-lead);
+}
+
+.mqx-run-finale-btn {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--mq-sp-3);
+  width: 100%;
+  min-height: 48px;
+  padding: var(--mq-sp-5) var(--mq-sp-6);
+  border: var(--mq-hair);
+  border-radius: var(--mq-r-card);
+  background: var(--mq-cell);
+  color: var(--mq-board-ink);
+  font-weight: 700;
+  font-size: var(--mq-fs-body);
+  text-align: left;
+  box-shadow: 0 2px 0 var(--mq-cell-edge);
+  transition:
+    transform 120ms ease,
+    box-shadow 120ms ease;
+}
+
+.mqx-run-finale-btn:active {
+  transform: translateY(1px);
+  box-shadow: 0 1px 0 var(--mq-cell-edge);
+}
+
+.mqx-run-finale-btn small {
+  color: var(--mq-board-ink-soft);
+  font-weight: 400;
+  font-size: var(--mq-fs-caption);
+}
+
+/* Необязательный отзыв */
+.mqx-run-finale-feedback {
+  display: grid;
+  justify-items: center;
+  gap: var(--mq-sp-1);
+  width: 100%;
+  margin-top: var(--mq-sp-2);
+}
+
+.mqx-run-finale-feedback__input {
+  display: block;
+  width: 100%;
+  min-height: 64px;
+  box-sizing: border-box;
+  padding: var(--mq-sp-4) var(--mq-sp-5);
+  border: var(--mq-hair);
+  border-radius: var(--mq-r-cell);
+  background: var(--mq-cell);
+  color: var(--mq-board-ink);
+  font: inherit;
+  font-size: var(--mq-fs-body);
+  resize: none;
+}
+
+.mqx-run-finale-feedback__input::placeholder {
+  color: var(--mq-board-ink-soft);
+}
+
+.mqx-run-finale-feedback__input:focus-visible {
+  outline: 3px solid var(--mq-coin);
+  outline-offset: 1px;
+}
+
+.mqx-run-finale-link {
+  min-height: 44px;
+  padding: var(--mq-sp-3) var(--mq-sp-5);
+  border: 0;
+  background: none;
+  color: var(--mq-turn);
+  font-weight: 700;
+  font-size: var(--mq-fs-body);
+}
+
+.mqx-run-finale-link:disabled {
+  color: var(--mq-board-ink-soft);
+}
+
+/* #/dev/mqx — кнопки открытия демо */
+.mqx-run-finale-demo {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--mq-sp-3);
 }
