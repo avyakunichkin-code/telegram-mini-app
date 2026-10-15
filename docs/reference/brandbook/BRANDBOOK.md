@@ -63,6 +63,7 @@ aliases:
 | Guided onboarding (O2) | Strip | 2026-06-01 | [`design-lab/onboarding-o2/APPROVED.md`](../../../design-lab/onboarding-o2/APPROVED.md) | см. MQX doc |
 | New game mode UI | R2 | 2026-05-20 | [`design-lab/new-game-mode/APPROVED.md`](../../../design-lab/new-game-mode/APPROVED.md) | см. MQX doc |
 | Направление «настольная игра про деньги» | **BG** | 2026-10-14 | [ADR-014](../../decisions/ADR-014-brand-direction-board-game.md) | Роли цвета, шрифт PWA, 3D, «Завершить ход»; визуал — через раунд design-lab |
+| Остальные экраны «настольная игра» | **BG-2** | 2026-10-15 | [`design-lab/board-game/APPROVED.md`](../../../design-lab/board-game/APPROVED.md) | Капитал, Аналитика, Меню, событие, вход, выбор жизни, финал; перенос в prod по группам |
 | Дашборд «настольная игра» (концепция) | **BG-1** | 2026-10-14 | [`design-lab/board-game/APPROVED.md`](../../../design-lab/board-game/APPROVED.md) | Карта хода, Nunito + Manrope, лёгкий стиль; в prod ещё не перенесено |
 
 ---
