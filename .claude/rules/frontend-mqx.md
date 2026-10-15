@@ -26,7 +26,7 @@ paths:
 
 ## Каркас вкладки игры
 
-1. Hero: `mqx-hero mqx-hero--tab` + **один `h1`** (`mqx-hero__title--tab` / `--capital`). Исключение — **Главная (★ BG-1)**: вместо hero карта хода `MqxDashboardHero` (`mqx-bg-turn`, h1 «Твой ход») внутри скролла.
+1. Hero: `mqx-hero mqx-hero--tab` + **один `h1`** (`mqx-hero__title--tab` / `--capital`). Исключения — **Главная (★ BG-1)**: вместо hero карта хода `MqxDashboardHero` (`mqx-bg-turn`, h1 «Твой ход») внутри скролла; **Меню (★ BG-2)**: `mqx-tab-page--board` + шапка `mqx-pg-head` (h1 «Меню») и `MqxSaveCard` — канон `design-lab/pre-game-shell/APPROVED.md`.
 2. Контент: `main.mqx-content` (+ `mqx-capital-page` для финансов).
 3. Карточки: `mqx-card` / `mqx-capital-card` (padding ~16–18px, radius ~22px).
 

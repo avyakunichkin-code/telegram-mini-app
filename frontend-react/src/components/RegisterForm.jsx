@@ -6,9 +6,10 @@ import {
   validateRegisterFields,
 } from '../utils/authFormValidation';
 import { AuthFormField } from './mqx/auth/AuthFormField';
-import { MonetkaBubbleScreen } from './mqx/layout/MonetkaBubbleScreen';
-import { MqxButton } from './mqx/primitives/MqxButton';
+import { BrandLogo } from './BrandLogo';
+import { MqxBoardButton } from './mqx/pregame/MqxBoardButton';
 
+/** Регистрация ★ BG-2: та же оболочка, что вход; одна главная кнопка. */
 export function RegisterForm({ onSwitchToLogin }) {
   const [password, setPassword] = useState('');
   const [passwordConfirm, setPasswordConfirm] = useState('');
@@ -57,7 +58,7 @@ export function RegisterForm({ onSwitchToLogin }) {
       setSubmitError(
         formatApiErrorDetail(
           err?.detail ?? err?.message,
-          'Ошибка регистрации. Возможно, email уже занят.',
+          'Ошибка регистрации. Возможно, почта уже занята.',
         ),
       );
     } finally {
@@ -66,96 +67,74 @@ export function RegisterForm({ onSwitchToLogin }) {
   };
 
   return (
-    <MonetkaBubbleScreen
-      showBrand
-      title="Рада знакомству!"
-      subtitle={
-        <>
-          Регистрируйся по <span className="mqx-voice-em">email</span> — пригодится, если забудешь пароль.
-        </>
-      }
-      titleId="mqx-register-monetka-title"
-    >
-      <form onSubmit={handleSubmit} className="mqx-auth-monetka__form" noValidate>
-        <div className="mqx-form">
-          <AuthFormField
-            id="register-email"
-            name="email"
-            label="Email"
-            type="email"
-            value={email}
-            onChange={(e) => {
-              setEmail(e.target.value);
-              clearFieldError('email');
-            }}
-            onBlur={runValidation}
-            error={fieldErrors.email}
-            placeholder="name@example.com"
-            autoComplete="email"
-            inputMode="email"
-            required
-          />
-          <AuthFormField
-            id="register-password"
-            name="password"
-            label="Пароль"
-            type="password"
-            value={password}
-            onChange={(e) => {
-              setPassword(e.target.value);
-              clearFieldError('password');
-            }}
-            onBlur={runValidation}
-            error={fieldErrors.password}
-            hint="Не короче 6 символов"
-            placeholder="••••••"
-            autoComplete="new-password"
-            required
-            minLength={6}
-          />
-          <AuthFormField
-            id="register-password-confirm"
-            name="password_confirm"
-            label="Повторите пароль"
-            type="password"
-            value={passwordConfirm}
-            onChange={(e) => {
-              setPasswordConfirm(e.target.value);
-              clearFieldError('passwordConfirm');
-            }}
-            onBlur={runValidation}
-            error={fieldErrors.passwordConfirm}
-            placeholder="••••••"
-            autoComplete="new-password"
-            required
-          />
-        </div>
+    <div className="mqx-pg mqx-pg--auth">
+      <h1 className="mqx-bg-sr-only">Регистрация</h1>
+      <BrandLogo variant="full" className="mqx-pg-logo" />
+      <form onSubmit={handleSubmit} className="mqx-pg-form" noValidate aria-label="Регистрация">
+        <AuthFormField
+          id="register-email"
+          name="email"
+          label="Почта"
+          type="email"
+          value={email}
+          onChange={(e) => {
+            setEmail(e.target.value);
+            clearFieldError('email');
+          }}
+          onBlur={runValidation}
+          error={fieldErrors.email}
+          placeholder="name@mail.ru"
+          autoComplete="email"
+          inputMode="email"
+          required
+        />
+        <AuthFormField
+          id="register-password"
+          name="password"
+          label="Пароль"
+          type="password"
+          value={password}
+          onChange={(e) => {
+            setPassword(e.target.value);
+            clearFieldError('password');
+          }}
+          onBlur={runValidation}
+          error={fieldErrors.password}
+          hint="Не короче 6 символов"
+          autoComplete="new-password"
+          required
+          minLength={6}
+        />
+        <AuthFormField
+          id="register-password-confirm"
+          name="password_confirm"
+          label="Повтори пароль"
+          type="password"
+          value={passwordConfirm}
+          onChange={(e) => {
+            setPasswordConfirm(e.target.value);
+            clearFieldError('passwordConfirm');
+          }}
+          onBlur={runValidation}
+          error={fieldErrors.passwordConfirm}
+          autoComplete="new-password"
+          required
+        />
 
         {submitError ? (
-          <div className="mq-form-alert" role="alert" style={{ marginTop: 12 }}>
+          <p className="mqx-pg-form__alert" role="alert">
             {submitError}
-          </div>
+          </p>
         ) : null}
 
-        <div className="pg-actions">
-          <MqxButton
-            variant="primary"
-            type="submit"
-            stretched
-            disabled={isSubmitting}
-            title="Создать аккаунт и войти"
-          >
-            {isSubmitting ? 'Регистрация…' : 'Зарегистрироваться'}
-          </MqxButton>
-        </div>
-
-        <p className="mqx-auth-monetka__link">
-          Уже есть аккаунт?{' '}
-          <MqxButton type="button" variant="link" title="Перейти к входу" onClick={onSwitchToLogin}>
-            Войти
-          </MqxButton>
-        </p>
+        <button type="submit" className="mqx-bg-btn mqx-bg-cta mqx-pg-cta" disabled={isSubmitting}>
+          {isSubmitting ? 'Создаём…' : 'Создать аккаунт'}
+        </button>
       </form>
-    </MonetkaBubbleScreen>
+
+      <MqxBoardButton hint="войти" onClick={onSwitchToLogin}>
+        Уже есть аккаунт
+      </MqxBoardButton>
+    </div>
   );
 }

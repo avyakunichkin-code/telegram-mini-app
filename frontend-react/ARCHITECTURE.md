@@ -50,7 +50,7 @@ src/
 
 | Папка | Содержимое | Legacy (до переезда) |
 |-------|------------|----------------------|
-| `pre-game/` | `NewProfileKindScreen`, `GameTemplatePickScreen` | — (shim `components/new-game/` удалён 2026-07) |
+| `pre-game/` | `GameTemplatePickScreen` (Выбор жизни ★ BG-2; шаг «Игра / План» удалён, ADR-013) | — (shim `components/new-game/` удалён 2026-07) |
 | `plan/` | Мастер Plan, префилл — **в разработке** | `BaseParamsScreen.jsx` в `components/` |
 | `game/` | Дашборд, финансы, аналитика, `GameScreen` | `*Premium.jsx`, `GameScreen.jsx` |
 

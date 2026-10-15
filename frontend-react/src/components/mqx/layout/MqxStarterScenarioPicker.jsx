@@ -1,119 +1,67 @@
+import { useRef } from 'react';
 import { PersonaPortrait } from '../brand/PersonaPortrait';
-import { ScenarioIllustrationIcon } from '../icons/ScenarioIllustrations';
-import { getPersonaPortrait } from '../brand/personaPortraits';
-import { tierFromRank } from '../../../utils/starterTemplateTier';
-
-const COMPACT_MAX_BULLETS = 2;
+import { lifeIncomePerTurn, lifeStartConditions } from '../utils/pregameDisplay';
 
 /**
- * Выбор сценария: название + bullets + цветовая полоска и иконка на градиенте.
- * layout: compact — 2 bullets, без compare (утверждённый шаг 2).
+ * Выбор жизни ★ BG-2: карточки персонажей как выбор фишки перед партией.
+ * Портрет (pick), роль, доход за ход, стартовые условия; выбранная — фиолетовая рамка.
+ * Выбор не стартует игру — старт по кнопке «Начать за …» на экране.
+ * Канон: design-lab/board-game/screens-round/ (Выбор жизни), design-lab/pre-game-shell/APPROVED.md.
  */
-export function MqxStarterScenarioPicker({
-  templates,
-  value,
-  onChange,
-  /** Клик по сценарию (например сразу старт игры). onChange вызывается перед onPick. */
-  onPick,
-  disabled = false,
-  labelledById,
-  layout = 'compact',
-  tbGlass = true,
-  /** Растровые портреты персонажей (design-lab persona-portraits-round) вместо SVG I-Scene */
-  usePersonaPortraits = true,
-}) {
-  const isCompact = layout === 'compact';
-  const isGrid = layout === 'grid';
-  const layoutCls = isGrid
-    ? 'mqx-scenario-picker--grid'
-    : isCompact
-      ? 'mqx-scenario-picker--compact'
-      : 'mqx-scenario-picker--strip';
+export function MqxStarterScenarioPicker({ templates, value, onChange, disabled = false, labelledById, label }) {
+  const refs = useRef([]);
+  const list = templates || [];
+  const selectedIndex = list.findIndex((t) => t.template_key === value);
+
+  const select = (index) => {
+    const t = list[index];
+    if (!t || disabled) return;
+    onChange?.(t.template_key);
+    refs.current[index]?.focus();
+  };
+
+  const onKeyDown = (ev, index) => {
+    const step = { ArrowDown: 1, ArrowRight: 1, ArrowUp: -1, ArrowLeft: -1 }[ev.key];
+    if (!step || list.length === 0) return;
+    ev.preventDefault();
+    select((index + step + list.length) % list.length);
+  };
 
   return (
     <div
-      className={[
-        'mqx-scenario-picker',
-        'mqx-scenario-picker--illus',
-        usePersonaPortraits ? 'mqx-scenario-picker--persona' : '',
-        layoutCls,
-        tbGlass ? 'mqx-scenario-picker--tb-glass' : '',
-      ]
-        .filter(Boolean)
-        .join(' ')}
+      className="mqx-pg-life"
       role="radiogroup"
       aria-labelledby={labelledById}
+      aria-label={labelledById ? undefined : label}
       aria-disabled={disabled || undefined}
     >
-      {(templates || []).map((t) => {
-        const sel = value === t.template_key;
-        const tier = tierFromRank(t.difficulty_rank);
-        const highlights = Array.isArray(t.highlights) ? t.highlights : [];
-        const visibleHighlights = isCompact ? highlights.slice(0, COMPACT_MAX_BULLETS) : highlights;
-        const iconKey = t.scenario_icon || 'fresh_start';
-        const portrait = usePersonaPortraits ? getPersonaPortrait(t.template_key, 'pick') : null;
-
+      {list.map((t, index) => {
+        const sel = index === selectedIndex;
+        const income = lifeIncomePerTurn(t.highlights);
+        const conditions = lifeStartConditions(t);
+        const focusable = sel || (selectedIndex < 0 && index === 0);
         return (
           <button
             key={t.template_key}
+            ref={(el) => {
+              refs.current[index] = el;
+            }}
             type="button"
             role="radio"
             aria-checked={sel}
+            tabIndex={focusable ? 0 : -1}
             disabled={disabled}
-            className={[
-              'mqx-scenario-strip',
-              `mqx-scenario-strip--${tier.slug}`,
-              sel ? 'mqx-scenario-strip--selected' : '',
-            ]
-              .filter(Boolean)
-              .join(' ')}
-            onClick={(ev) => {
-              ev.preventDefault();
-              ev.stopPropagation();
-              if (disabled) return;
-              const key = t.template_key;
-              onChange?.(key);
-              onPick?.(key);
-            }}
+            className={['mqx-bg-btn', 'mqx-pg-person', sel ? 'mqx-pg-person--on' : ''].filter(Boolean).join(' ')}
+            onClick={() => select(index)}
+            onKeyDown={(ev) => onKeyDown(ev, index)}
           >
-            <span
-              className={`mqx-scenario-strip__icon-wrap mqx-scenario-strip__icon-wrap--${tier.slug}`}
-              aria-hidden
-            >
-              {portrait ? (
-                <PersonaPortrait templateKey={t.template_key} size="pick" className="mqx-scenario-strip__persona" />
-              ) : (
-                <ScenarioIllustrationIcon iconKey={iconKey} />
-              )}
+            <PersonaPortrait templateKey={t.template_key} size="pick" className="mqx-pg-person__portrait" />
+            <span className="mqx-pg-person__body">
+              <b className="mqx-pg-person__title">{t.title}</b>
+              {income ? <span className="mqx-pg-person__money">{income}</span> : null}
+              {conditions ? <small className="mqx-pg-person__note">{conditions}</small> : null}
             </span>
-            <span className="mqx-scenario-strip__body">
-              <span className="mqx-scenario-strip__head">
-                <span className="mqx-scenario-strip__title">{t.title}</span>
-              </span>
-              {visibleHighlights.length > 0 ? (
-                <ul className="mqx-scenario-strip__list">
-                  {visibleHighlights.map((line) => (
-                    <li key={line}>{line}</li>
-                  ))}
-                </ul>
-              ) : t.description ? (
-                <p className="mqx-scenario-strip__fallback">{t.description}</p>
-              ) : null}
-              {!isCompact && t.compare_note ? (
-                <p className="mqx-scenario-strip__compare">{t.compare_note}</p>
-              ) : null}
-            </span>
-            <span className="mqx-scenario-strip__trail" aria-hidden>
-              <svg viewBox="0 0 24 24" width="20" height="20" fill="none">
-                <path
-                  d="M9 6l6 6-6 6"
-                  stroke="currentColor"
-                  strokeWidth="2.25"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
-            </span>
+            <span className="mqx-pg-person__check" aria-hidden="true" />
           </button>
         );
       })}

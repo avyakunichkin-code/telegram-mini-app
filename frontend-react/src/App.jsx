@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Spinner } from '@telegram-apps/telegram-ui';
 import { HashRouter, Routes, Route, useNavigate } from 'react-router-dom';
 import { AppRoot } from '@telegram-apps/telegram-ui';  // импортируем AppRoot
@@ -7,9 +7,7 @@ import { AuthGuard } from './components/AuthGuard';
 import { LoginForm } from './components/LoginForm';
 import { RegisterForm } from './components/RegisterForm';
 import { StartMenuScreen } from './components/StartMenuScreen';
-import { NewProfileKindScreen } from './screens/pre-game/NewProfileKindScreen';
 import { GameTemplatePickScreen } from './screens/pre-game/GameTemplatePickScreen';
-import { BaseParamsScreen } from './components/BaseParamsScreen';
 import { GameScreen } from './components/GameScreen';
 import { ToastHost } from './components/ToastHost';
 import { MqCatalogScreen } from './components/mqx/catalog/MqCatalogScreen';
@@ -39,72 +37,39 @@ function GameAppFlowShell({ children }) {
 
 function GameApp() {
   const navigate = useNavigate();
-  const [screen, setScreen] = useState('start'); // start | newProfileKind | gameTemplates | planSetup | game
+  const [screen, setScreen] = useState('start'); // start | newGame | gameTemplates | game
   const [newGameProfileName, setNewGameProfileName] = useState('');
-  const [savedProfileCount, setSavedProfileCount] = useState(null);
-  const [startingFirstGame, setStartingFirstGame] = useState(false);
   const { logout } = useAuth();
 
-  useEffect(() => {
-    if (screen !== 'newProfileKind') return undefined;
-    let cancelled = false;
-    (async () => {
-      try {
-        const rows = await API.getGameProfiles();
-        if (!cancelled) {
-          setSavedProfileCount(Array.isArray(rows) ? rows.length : 0);
-        }
-      } catch {
-        if (!cancelled) setSavedProfileCount(null);
-      }
-    })();
-    return () => {
-      cancelled = true;
-    };
-  }, [screen]);
-
-  const handleNewGame = (initialName) => {
+  /**
+   * «Новая игра» сразу ведёт к выбору жизни (шага «Игра / План» нет — ADR-013, GO-01).
+   * Пустой список сохранений — авто-старт за Студента, как раньше.
+   */
+  const handleNewGame = async (initialName) => {
+    setScreen('newGame');
+    let rows;
+    try {
+      rows = await API.getGameProfiles();
+    } catch {
+      rows = null;
+    }
+    const list = Array.isArray(rows) ? rows : [];
     const name =
       typeof initialName === 'string' && initialName.trim()
         ? initialName.trim()
-        : suggestDefaultProfileName([]);
+        : suggestDefaultProfileName(list);
     setNewGameProfileName(name);
-    setScreen('newProfileKind');
-  };
-
-  const handleChooseGameMode = async () => {
-    if (savedProfileCount === 0) {
-      setStartingFirstGame(true);
+    if (Array.isArray(rows) && rows.length === 0) {
       try {
-        await startGameWithStudentTemplate(newGameProfileName);
-        handleGameStarted();
+        await startGameWithStudentTemplate(name);
+        setScreen('game');
       } catch (error) {
         showNotification(error?.detail || error?.message || 'Не удалось запустить игру', 'error');
-      } finally {
-        setStartingFirstGame(false);
+        setScreen('start');
       }
       return;
     }
     setScreen('gameTemplates');
-  };
-
-  const handleChoosePlanMode = (name) => {
-    setNewGameProfileName(name);
-    setScreen('planSetup');
-  };
-
-  const handleBackFromTemplates = () => {
-    setScreen('newProfileKind');
-  };
-
-  const handleBackFromPlanSetup = () => {
-    setScreen('newProfileKind');
-  };
-
-  const handleBackFromProfileKind = () => setScreen('start');
-
-  const handleLoadGame = () => {
-    setScreen('game');
   };
 
   const handleLogout = () => {
@@ -112,33 +77,23 @@ function GameApp() {
     navigate('/login', { replace: true });
   };
 
-  const handleGameStarted = () => {
-    setScreen('game');
-  };
-
   if (screen === 'start') {
     return (
       <GameAppFlowShell>
-        <StartMenuScreen onNewGame={handleNewGame} onLoadGame={handleLoadGame} onLogout={handleLogout} />
+        <StartMenuScreen onNewGame={handleNewGame} onLoadGame={() => setScreen('game')} onLogout={handleLogout} />
       </GameAppFlowShell>
     );
   }
 
-  if (startingFirstGame) {
+  if (screen === 'newGame') {
     return (
       <GameAppFlowShell>
-        <div className="mqx-card" style={{ margin: 24, padding: 24, textAlign: 'center' }}>
-          <Spinner size="m" />
-          <p style={{ marginTop: 16 }}>Запускаем первую игру…</p>
+        <div className="mqx-pg">
+          <div className="mqx-pg-state" role="status">
+            <Spinner size="m" />
+            <span>Готовим новую партию…</span>
+          </div>
         </div>
-      </GameAppFlowShell>
-    );
-  }
-
-  if (screen === 'newProfileKind') {
-    return (
-      <GameAppFlowShell>
-        <NewProfileKindScreen onChooseGame={handleChooseGameMode} onBack={handleBackFromProfileKind} />
       </GameAppFlowShell>
     );
   }
@@ -148,22 +103,8 @@ function GameApp() {
       <GameAppFlowShell>
         <GameTemplatePickScreen
           profileName={newGameProfileName}
-          onProfileNameChange={setNewGameProfileName}
-          onBack={handleBackFromTemplates}
-          onJumpToGame={handleGameStarted}
-        />
-      </GameAppFlowShell>
-    );
-  }
-
-  if (screen === 'planSetup') {
-    return (
-      <GameAppFlowShell>
-        <BaseParamsScreen
-          profileName={newGameProfileName}
-          saveKind="plan"
-          onBack={handleBackFromPlanSetup}
-          onGameStarted={handleGameStarted}
+          onBack={() => setScreen('start')}
+          onJumpToGame={() => setScreen('game')}
         />
       </GameAppFlowShell>
     );

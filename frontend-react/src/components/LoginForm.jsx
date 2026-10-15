@@ -1,13 +1,14 @@
 import { useCallback, useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { AuthFormField } from './mqx/auth/AuthFormField';
-import { MonetkaBubbleScreen } from './mqx/layout/MonetkaBubbleScreen';
-import { MqxButton } from './mqx/primitives/MqxButton';
+import { BrandLogo } from './BrandLogo';
+import { MqxBoardButton } from './mqx/pregame/MqxBoardButton';
 import {
   hasFieldErrors,
   validateLoginFields,
 } from '../utils/authFormValidation';
 
+/** Вход ★ BG-2: логотип + спокойная форма, одна главная кнопка. */
 export function LoginForm({ onSwitchToRegister }) {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -44,85 +45,64 @@ export function LoginForm({ onSwitchToRegister }) {
       await login(username.trim().toLowerCase(), password);
       window.location.href = `${import.meta.env.BASE_URL}#/`;
     } catch {
-      setSubmitError('Неверный email или пароль');
+      setSubmitError('Неверная почта или пароль');
     } finally {
       setIsSubmitting(false);
     }
   };
 
   return (
-    <MonetkaBubbleScreen
-      showBrand
-      title="Привет, я Монетка!"
-      subtitle={
-        <>
-          Помогу разобраться с финансами. Введи <span className="mqx-voice-em">email</span> и пароль
-        </>
-      }
-      titleId="mqx-login-monetka-title"
-    >
-      <form onSubmit={handleSubmit} className="mqx-auth-monetka__form" noValidate>
-        <div className="mqx-form">
-          <AuthFormField
-            id="login-email"
-            name="email"
-            label="Email"
-            type="email"
-            value={username}
-            onChange={(e) => {
-              setUsername(e.target.value);
-              clearFieldError('username');
-            }}
-            onBlur={runValidation}
-            error={fieldErrors.username}
-            placeholder="name@mail.ru"
-            autoComplete="email"
-            inputMode="email"
-            required
-          />
-          <AuthFormField
-            id="login-password"
-            name="password"
-            label="Пароль"
-            type="password"
-            value={password}
-            onChange={(e) => {
-              setPassword(e.target.value);
-              clearFieldError('password');
-            }}
-            onBlur={runValidation}
-            error={fieldErrors.password}
-            placeholder="••••••"
-            autoComplete="current-password"
-            required
-          />
-        </div>
+    <div className="mqx-pg mqx-pg--auth">
+      <h1 className="mqx-bg-sr-only">Вход</h1>
+      <BrandLogo variant="full" className="mqx-pg-logo" />
+      <form onSubmit={handleSubmit} className="mqx-pg-form" noValidate aria-label="Вход">
+        <AuthFormField
+          id="login-email"
+          name="email"
+          label="Почта"
+          type="email"
+          value={username}
+          onChange={(e) => {
+            setUsername(e.target.value);
+            clearFieldError('username');
+          }}
+          onBlur={runValidation}
+          error={fieldErrors.username}
+          placeholder="name@mail.ru"
+          autoComplete="email"
+          inputMode="email"
+          required
+        />
+        <AuthFormField
+          id="login-password"
+          name="password"
+          label="Пароль"
+          type="password"
+          value={password}
+          onChange={(e) => {
+            setPassword(e.target.value);
+            clearFieldError('password');
+          }}
+          onBlur={runValidation}
+          error={fieldErrors.password}
+          autoComplete="current-password"
+          required
+        />
 
         {submitError ? (
-          <div className="mq-form-alert" role="alert" style={{ marginTop: 12 }}>
+          <p className="mqx-pg-form__alert" role="alert">
             {submitError}
-          </div>
+          </p>
         ) : null}
 
-        <div className="pg-actions">
-          <MqxButton
-            variant="primary"
-            type="submit"
-            stretched
-            disabled={isSubmitting}
-            title="Войти в аккаунт"
-          >
-            {isSubmitting ? 'Входим…' : 'Войти'}
-          </MqxButton>
-        </div>
-
-        <p className="mqx-auth-monetka__link">
-          Нет аккаунта?{' '}
-          <MqxButton type="button" variant="link" title="Перейти к регистрации" onClick={onSwitchToRegister}>
-            Создать
-          </MqxButton>
-        </p>
+        <button type="submit" className="mqx-bg-btn mqx-bg-cta mqx-pg-cta" disabled={isSubmitting}>
+          {isSubmitting ? 'Входим…' : 'Войти'}
+        </button>
       </form>
-    </MonetkaBubbleScreen>
+
+      <MqxBoardButton hint="займёт минуту" onClick={onSwitchToRegister}>
+        Создать аккаунт
+      </MqxBoardButton>
+    </div>
   );
 }

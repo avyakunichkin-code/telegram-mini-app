@@ -46,6 +46,8 @@ GO-01 желателен **до WAVE1** (gate сводного плана). GO-0
 
 ### GO-01 — поток «Новая игра» без выбора режима
 
+**Статус:** сделано 2026-10-15 вместе с переносом ★ BG-2 (`design-lab/pre-game-shell/APPROVED.md`): экран «Игра / План» удалён, маршрут `planSetup` из `App.jsx` снят; `BaseParamsScreen` / Plan editors остаются до GO-03.
+
 | | |
 |--|--|
 | **Слой** | Frontend (+ lab canon) |

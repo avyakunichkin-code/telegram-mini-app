@@ -1,5 +1,7 @@
 # New game — выбор режима (утверждено)
 
+> **Снято (2026-10-15).** Режим План снят ADR-013; экран выбора режима удалён из prod (`NewProfileKindScreen`, `MqxSaveKindPicker`). Канон потока — [`../pre-game-shell/APPROVED.md`](../pre-game-shell/APPROVED.md).
+
 **Дата:** 2026-05-20  
 **Экран:** шаг 1 «Новая игра»
 
