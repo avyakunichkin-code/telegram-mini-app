@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { forwardRef, useMemo } from 'react';
 import { MonetkaAvatar } from '../brand/MonetkaAvatar';
 import { MqxButton } from '../primitives/MqxButton';
 
@@ -20,8 +20,7 @@ function renderBody(text) {
  * O2 bottom guidance strip над tab bar.
  * Curriculum: Монетка sit-edge у заголовка; toolbar variant A ★.
  */
-export function MqxGuidanceStrip({
-  ref,
+export const MqxGuidanceStrip = forwardRef(function MqxGuidanceStrip({
   mode = 'curriculum',
   showMascot = true,
   title,
@@ -38,7 +37,7 @@ export function MqxGuidanceStrip({
   showNav = true,
   dismissHint,
   className = '',
-}) {
+}, ref) {
   const counterLabel = useMemo(() => {
     if (mode === 'nudge') return 'Подсказка';
     return `${viewIndex + 1} из ${moduleStepCount}`;
@@ -122,4 +121,4 @@ export function MqxGuidanceStrip({
       ) : null}
     </aside>
   );
-}
+});

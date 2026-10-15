@@ -24,6 +24,12 @@
 | C — Compact | Мельче tap-target на TMA |
 | D — Floating pill | Хуже стык с tab bar / safe-area |
 
+## Prod-хотфиксы без смены дизайна
+
+| Дата | Что | Почему |
+|------|-----|--------|
+| 2026-10-15 | `MqxGuidanceStrip` — `forwardRef` вместо `ref` в пропсах | React 18.2 не передаёт `ref` функциональному компоненту как проп: `GameGuidanceLayer` не получал ссылку на strip. Визуал и канон варианта A не меняются |
+
 ## Supersedes
 
 O1 `OnboardingCoach` / `GameOnboardingLayer` сняты из prod (2026-06-01); lab `onboarding-guided/` удалён из репо.
