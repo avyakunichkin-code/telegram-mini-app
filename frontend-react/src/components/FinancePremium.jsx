@@ -6,7 +6,6 @@ import {
   DEPOSIT_ANNUAL_RATE_PERCENT,
 } from '../constants/investProducts';
 import { capitalLockHint, capitalSectionState } from '../utils/starterMechanics';
-import { useMqxConfirm } from './mqx';
 import { CapitalActionsPanel } from './mqx/layout/CapitalActionsPanel';
 import { CapitalDetailsPanel } from './mqx/layout/CapitalDetailsPanel';
 import { CapitalPeriodFlowsBlock } from './mqx/layout/CapitalPeriodFlowsBlock';
@@ -25,7 +24,6 @@ export function FinancePremium({
   onPageModeRequestHandled,
   onGuidanceScreenEnter,
 }) {
-  const { dialog } = useMqxConfirm();
   const [pageMode, setPageMode] = useState('details');
   const [openSheet, setOpenSheet] = useState(null);
   const [investPositions, setInvestPositions] = useState([]);
@@ -295,7 +293,6 @@ export function FinancePremium({
 
       <main className="mqx-content mqx-tab-page__scroll mqx-capital-page mqx-capital-page--board">
         <div className="mqx-fin mqx-fin--capital">
-          {dialog}
           <div className="mqx-capital-accordion-stack">
             <CapitalPeriodFlowsBlock
               overview={overview}

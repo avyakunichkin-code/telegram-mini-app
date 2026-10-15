@@ -166,7 +166,7 @@ export function CapitalDetailsPanel({
               <CapitalLotRow
                 key={p.id}
                 title={p.title}
-                value={formatLotRub(p.payout_amount ?? p.coverage_limit ?? 0)}
+                value={`покрытие ${formatLotRub(p.payout_amount ?? p.coverage_limit ?? 0)}`}
                 note={policyNote(p)}
                 actions={
                   <CapitalLotAction

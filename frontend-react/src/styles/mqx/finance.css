@@ -3386,7 +3386,7 @@ body [class*='modal'] {
 }
 
 .mqx-cap-seg .mqx-cap-seg__btn {
-  min-height: 40px;
+  min-height: 44px;
   border: 0;
   border-radius: 10px;
   background: none;
@@ -3518,9 +3518,9 @@ body [class*='modal'] {
 
 /* Текстовое действие: хит-зона 44px по высоте без раздувания строки */
 .mqx-capital-page--board .mqx-cap-lot-act {
-  min-height: 44px;
-  margin: calc(var(--mq-sp-5) * -1) 0;
-  padding: 0;
+  min-height: 32px;
+  margin: calc(var(--mq-sp-2) * -1) 0;
+  padding: 0 var(--mq-sp-1);
   border: 0;
   background: none;
   color: var(--mq-turn);
