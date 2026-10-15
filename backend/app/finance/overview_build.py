@@ -26,6 +26,7 @@ from ..needs.engine import (
     parse_needs_config,
     treat_self_availability,
 )
+from ..needs.set_point import build_set_point_snapshot
 from ..finance.period_close_preview import estimate_period_close_preview
 from ..schemas import (
     AchievementUnlockEvent,
@@ -37,6 +38,7 @@ from ..schemas import (
     PeriodClosePreview,
     SalaryProfileResponse,
     GameMechanicsPermissions,
+    NeedsLevelSourceOverview,
     NeedsMetaOverview,
     NeedsOverview,
     TreatSelfOverview,
@@ -250,7 +252,26 @@ def build_finance_overview(db: Session, profile: GameProfile) -> FinanceOverview
             consequence_profile=str(needs_cfg.get("consequence_profile") or "standard"),
             thresholds=dict(needs_cfg.get("thresholds") or {}),
             player_support=dict(needs_cfg.get("player_support") or {}),
+            model=str(needs_cfg.get("model") or "linear"),
         )
+        try:
+            # Savepoint: ошибка SQL в расчёте уровня не должна ломать транзакцию overview.
+            with db.begin_nested():
+                sp_snap = build_set_point_snapshot(
+                    db, profile, needs_cfg, blueprint, salary=float(monthly_income or 0), needs_now=nv
+                )
+            level = NeedsOverview(**sp_snap.level)
+            wear = NeedsOverview(**sp_snap.wear)
+            sources = [
+                NeedsLevelSourceOverview(
+                    source=s.source, kind=s.kind, title=s.title, axis=s.axis, delta=s.delta
+                )
+                for s in sp_snap.sources
+            ]
+            needs_meta.level, needs_meta.wear, needs_meta.level_sources = level, wear, sources
+            needs_meta.periods_to_zero_if_idle = dict(sp_snap.periods_to_zero_if_idle)
+        except Exception:
+            logger.warning("needs level snapshot failed profile_id=%s", profile.id, exc_info=True)
         ts_av = treat_self_availability(
             needs_cfg,
             period_index=int(profile.period_index or 0),

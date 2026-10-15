@@ -80,7 +80,7 @@ Primary: **game-economy-and-victory** · satellites: api-and-interface-design, t
 | NV-301 | Парсинг `needs.model` и `needs.set_point` с дефолтами spec | `backend/app/needs/engine.py` (`parse_needs_config`) | старые конфиги без изменений |
 | NV-302 | `derive_wear(cfg)` из `passive_periods_to_zero`; `bonus_cap` по оси; проверка инварианта давления | `backend/app/needs/set_point.py` (новый) | CS-5 на всех сидах |
 | NV-303 | `compute_level(db, profile, cfg) → LevelResult(level, sources)`: бюджет относительно нормы, привыкание, активы, стрессоры, потолок | `backend/app/needs/set_point.py` | CS-2, CS-3 (unit на чистых входах) |
-| NV-304 | Период покупки актива для привыкания: проверить наличие поля, иначе миграция (**ask first**) | `models.py`, `backend/migrations/` | возраст актива доступен |
+| NV-304 | Период покупки актива для привыкания: поля нет → миграция `acquired_period_index` (**ask first**, ждёт решения PO). Пока возраст — от начала игры | `models.py`, `backend/migrations/`, места создания `FinanceAsset` | возраст актива доступен |
 | NV-305 | Overview: `needs_meta.model`, `level`, `wear`, `level_sources`, `periods_to_zero_if_idle` | `backend/app/finance/overview_build.py`, `schemas.py` | CS-9 |
 | NV-306 | FE-зеркало: чтение полей без UI | `frontend-react/src/api/finance.js` | `npm run build`, `test:unit` |
 | NV-307 | README карты API | `backend/app/README.md` | |

@@ -12,7 +12,7 @@ app/
 ├── finance/          # overview_build, expenses, balance, helpers, period_metrics
 ├── victory/          # engine, seeds, snap, goals, mechanics_progression
 ├── events/           # chains, taxonomy, mvp11, constants, insurance_hooks
-├── needs/            # engine, guide_content
+├── needs/            # engine (decay, needs_delta), set_point (износ, уровень жизни L), value_curve (цена балла), guide_content
 ├── achievements/     # engine, seeds
 ├── starters/         # mechanics, templates, insurance_catalog
 ├── admin/            # auth, catalogs, notify, onboarding funnel

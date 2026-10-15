@@ -1,6 +1,11 @@
 import { apiCall } from './client.js';
 
 export const financeApi = {
+  /**
+   * Сводка профиля. `needs_meta` (SPEC_needs-set-point): `model` ('linear' | 'set_point'),
+   * `level` и `wear` по осям, `level_sources[]` ({ source, kind, title, axis, delta }),
+   * `periods_to_zero_if_idle` ({ axis: число периодов | null }).
+   */
   getOverview() {
     return apiCall('/api/finance/overview');
   },

@@ -121,7 +121,7 @@ d_c = K_L · ((a_c / b_c)^α − 1)          K_L = 40
 - Если `d_c < 0` (урезал) — без привыкания: потеря ощущается полностью, пока статья урезана.
 - Категория без нормы (`b_c = 0`): `d_c = needs_points(a_c, S) · 0.4`.
 
-Норма `b_c` — `expense_budget_for_template` ([expense_defaults.py](../../../backend/app/finance/expense_defaults.py)). Статьи событий (`expense_line`) идут в свою категорию, `monthly_lifestyle_delta` (legacy) — в `other`.
+Норма `b_c` — `expense_budget_for_template` ([expense_defaults.py](../../../backend/app/finance/expense_defaults.py)). Статьи событий (`expense_line`) идут в свою категорию. Legacy `monthly_lifestyle_delta`: рост — в `other`, урезание — равномерно по категориям пропорционально норме. Возраст роста категории — `created_period_index` последней статьи из событий.
 
 | Категория | comfort | status | social | health |
 |---|---:|---:|---:|---:|
@@ -155,7 +155,11 @@ assets[ax] = Σ_asset min(25, share[kind][ax] · needs_points(value_equiv, S)) �
 | арендованное жильё / `rental_car` | 12 × месячная аренда | 0,8 | 0,2 |
 | финансовые (`deposit`, `bond`, …) | — | 0 | 0 |
 
+**Стартовые активы шаблона** (`blueprint.assets`) — норма персоны, как бюджет шаблона: бонус дают только новые покупки, а продажа стартового актива снижает L (источник `asset_lost`, без привыкания). Сопоставление — по `kind` и стоимости.
+
 Покупка актива дополнительно даёт разовый всплеск по кривой (п. 4) — «радость от покупки».
+
+Финансовые и доходные активы (`rental_*`, `land`, `car_taxi`, депозиты) — 0.
 
 #### 3.4. Привыкание
 
@@ -231,7 +235,7 @@ N ← clamp(N + gain, 0, 100)
 
 `null` / отсутствие — значения по умолчанию из spec. Износ `w` не хранится — выводится из `passive_periods_to_zero`. Сиды — [game_starter_templates.py](../../../backend/app/seeds/game_starter_templates.py).
 
-- Возраст роста статьи и актива: `profile_expense_lines.created_period_index`, у актива — период покупки (поле добавить, если нет: **ask first**, миграция).
+- Возраст роста статьи: `profile_expense_lines.created_period_index`. Период покупки актива **не хранится** — до решения по NV-304 возраст считается от начала игры (новая покупка в середине игры сразу получает почти полное привыкание).
 
 - YAML событий (шаг 2, 5), новые поля выбора:
 
@@ -251,7 +255,7 @@ choices:
 
 | Method | Path | Изменение | Notes |
 |--------|------|-----------|-------|
-| GET | `/api/finance/overview` | `needs_meta.model`, `needs_meta.level: {ax}`, `needs_meta.wear: {ax}`, `needs_meta.level_sources: [{source, kind, axis, delta}]`, `needs_meta.periods_to_zero_if_idle: {ax}` | аддитивно |
+| GET | `/api/finance/overview` | `needs_meta.model`, `needs_meta.level: {ax}`, `needs_meta.wear: {ax}`, `needs_meta.level_sources: [{source, kind, title, axis, delta}]` (`source`: budget / asset / asset_lost / stress / cap), `needs_meta.periods_to_zero_if_idle: {ax}` | аддитивно; `level` и `wear` считаются для любой модели (превью до перевода шаблона), прогноз — по активной модели |
 | POST | `/api/game/time/next` | `needs`: `model`, `level`, `wear`, `after` | `decay` остаётся для `linear` |
 | GET | события (payload choices) | impacts: при `cash_pct_salary` — рассчитанный `cash` | `build_choice_impacts` |
 

@@ -216,11 +216,25 @@ class NeedsOverview(BaseModel):
     health: float = 0
 
 
+class NeedsLevelSourceOverview(BaseModel):
+    source: str  # budget | asset | asset_lost | stress | cap
+    kind: str
+    title: Optional[str] = None
+    axis: str
+    delta: float
+
+
 class NeedsMetaOverview(BaseModel):
     character_label: Optional[str] = None
     consequence_profile: str = "standard"
     thresholds: dict = Field(default_factory=dict)
     player_support: dict = Field(default_factory=dict)
+    # SPEC_needs-set-point: уровень жизни и износ (превью для любой модели до перевода шаблона)
+    model: str = "linear"
+    level: Optional[NeedsOverview] = None
+    wear: Optional[NeedsOverview] = None
+    level_sources: List[NeedsLevelSourceOverview] = Field(default_factory=list)
+    periods_to_zero_if_idle: dict = Field(default_factory=dict)
 
 
 class TreatSelfOptionOverview(BaseModel):

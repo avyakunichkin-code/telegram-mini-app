@@ -86,6 +86,11 @@ def parse_needs_config(blueprint: dict | None) -> dict | None:
         },
     }
 
+    from .set_point import parse_model, parse_set_point_config
+
+    cfg["model"] = parse_model(needs)
+    cfg["set_point"] = parse_set_point_config(needs, initial_norm)
+
     # safety: не даём уйти в ноль/отрицательные значения в конфиге
     if cfg["periods_to_empty_target"] <= 0:
         cfg["periods_to_empty_target"] = 12
