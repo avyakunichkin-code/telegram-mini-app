@@ -33,9 +33,10 @@ events:
   description: Несколько стриминговых сервисов напомнили о продлении.
   weight: 85
   event_tier: 1
-  repeat_policy: repeatable
+  repeat_policy: max_per_profile
+  repeat_max: 2
   scenario_shape: soft_offer
-  cooldown_periods: 3
+  cooldown_periods: 12
   choices:
   - title: Один сервис
     effects:

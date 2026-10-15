@@ -32,3 +32,23 @@ def test_ensure_mvp11_works_from_yaml_catalog(db_session):
     )
     assert row is not None
     assert "Подруга" in row.title
+
+
+def test_yaml_spec_carries_event_domain():
+    clear_mvp11_catalog_cache()
+    specs, taxonomy = load_mvp11_catalog(force_reload=True)
+    for spec in specs:
+        assert spec["event_domain"] == taxonomy[spec["key"]]["event_domain"], spec["key"]
+
+
+def test_validate_mvp11_specs_rejects_unknown_event_domain():
+    import copy
+
+    import pytest
+
+    clear_mvp11_catalog_cache()
+    specs, _ = load_mvp11_catalog(force_reload=True)
+    broken = copy.deepcopy(specs)
+    broken[0]["event_domain"] = "income_bonus"
+    with pytest.raises(AssertionError, match="unknown event_domain"):
+        validate_mvp11_specs(broken)

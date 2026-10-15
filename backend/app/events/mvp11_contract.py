@@ -13,7 +13,11 @@ from sqlalchemy.orm import Session
 from ..models import EventChoice, EventDefinition
 from .balance_contract import validate_mvp11_balance
 from .constants import ALLOWED_EFFECT_KEYS
-from .taxonomy import serialize_audience_template_keys, validate_event_taxonomy
+from .taxonomy import (
+    VALID_EVENT_DOMAINS,
+    serialize_audience_template_keys,
+    validate_event_taxonomy,
+)
 
 # TARGET_PLAYER_AND_SESSION §3 — подстроки в title/description (нижний регистр).
 FORBIDDEN_CONTENT_SUBSTRINGS: tuple[str, ...] = (
@@ -62,6 +66,11 @@ def validate_mvp11_specs(specs: list[dict]) -> None:
         blob = f"{spec.get('title', '')} {spec.get('description', '')}".lower()
         for bad in FORBIDDEN_CONTENT_SUBSTRINGS:
             assert bad not in blob, f"{spec['key']}: forbidden substring {bad!r}"
+        # taxonomy.event_domain() молча подменяет неизвестный домен на consumption.
+        if "event_domain" in spec:
+            assert spec["event_domain"] in VALID_EVENT_DOMAINS, (
+                f"{spec['key']}: unknown event_domain {spec['event_domain']!r}"
+            )
         for ch in spec["choices"]:
             effects = ch.get("effects") or {}
             unknown = set(effects.keys()) - ALLOWED_EFFECT_KEYS
