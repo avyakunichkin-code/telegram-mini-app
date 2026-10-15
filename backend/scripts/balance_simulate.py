@@ -29,7 +29,8 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Literal
 
-PolicyName = Literal["tutorial", "safety_first", "passive"]
+PolicyName = Literal["tutorial", "safety_first", "passive", "idle", "needs_keeper"]
+NEEDS_AXES = ("comfort", "status", "social", "health")
 
 SCHEMA_VERSION = 1
 DEFAULT_TEMPLATE = "mq_game_basic_v1"
@@ -104,6 +105,22 @@ def _pick_event_choice(choices: list[dict], cash: float, mode: Literal["max", "m
     return min(affordable, key=lambda x: x[0])[1]
 
 
+def _pick_needs_choice(choices: list[dict], cash: float, needs: dict, *, cash_buffer: float) -> dict | None:
+    """needs_keeper: максимум прироста на самых низких потребностях среди доступных по деньгам."""
+    if not choices:
+        return None
+    lowest = sorted(NEEDS_AXES, key=lambda ax: float(needs.get(ax) or 0))
+    weight = {ax: w for ax, w in zip(lowest, (3.0, 2.0, 1.0, 0.5))}
+
+    def score(ch: dict) -> float:
+        nd = ch.get("needs_delta") or {}
+        return sum(weight[ax] * float(nd.get(ax) or 0) for ax in NEEDS_AXES)
+
+    affordable = [ch for ch in choices if cash + _choice_cash_delta(ch) >= cash_buffer]
+    pool = affordable or [max(choices, key=_choice_cash_delta)]
+    return max(pool, key=lambda ch: (score(ch), _choice_cash_delta(ch)))
+
+
 @dataclass
 class SimState:
     policy: PolicyName
@@ -122,6 +139,8 @@ def run_balance_simulation(
     policy: PolicyName = "tutorial",
     profile_name: str = "Balance Sim",
     rng_seed: int | None = 42,
+    needs_model: str | None = None,
+    needs_set_point: dict | None = None,
 ) -> dict[str, Any]:
     """Run simulation in isolated SQLite DB; return JSON-serializable report."""
     if rng_seed is not None:
@@ -169,6 +188,19 @@ def run_balance_simulation(
     try:
         seed_all(db)
         db.commit()
+        if needs_model or needs_set_point:
+            # Калибровка NV-406: модель потребностей шаблона только в БД симуляции.
+            from app.models import GameStarterTemplate
+
+            tpl = db.query(GameStarterTemplate).filter(GameStarterTemplate.template_key == template_key).first()
+            bp = json.loads(tpl.blueprint_json or "{}")
+            needs_bp = bp.setdefault("needs", {})
+            if needs_model:
+                needs_bp["model"] = needs_model
+            if needs_set_point:
+                needs_bp["set_point"] = {**(needs_bp.get("set_point") or {}), **needs_set_point}
+            tpl.blueprint_json = json.dumps(bp, ensure_ascii=False)
+            db.commit()
     finally:
         db.close()
 
@@ -209,7 +241,12 @@ def run_balance_simulation(
         if not choices:
             return False
         mode: Literal["max", "min"] = "min" if policy == "passive" else "max"
-        best = _pick_event_choice(choices, cash, mode) if not force else None
+        if policy == "needs_keeper" and not force:
+            needs_now = overview().get("needs") or {}
+            salary = float(overview().get("total_monthly_income") or 0)
+            best = _pick_needs_choice(choices, cash, needs_now, cash_buffer=0.3 * salary)
+        else:
+            best = _pick_event_choice(choices, cash, mode) if not force else None
         if best is None:
             best = choices[0]
         delta = _choice_cash_delta(best)
@@ -291,8 +328,23 @@ def run_balance_simulation(
             if r.status_code == 200:
                 state.safety_once_done = True
 
+    def maybe_treat_self() -> None:
+        if policy != "needs_keeper":
+            return
+        ov = overview()
+        ts = ov.get("treat_self") or {}
+        needs_now = ov.get("needs") or {}
+        if not ts.get("available") or not ts.get("options") or not needs_now:
+            return
+        if min(float(needs_now.get(ax) or 0) for ax in NEEDS_AXES) >= 40:
+            return
+        opt = ts["options"][0]
+        if float(ov.get("cash_balance") or 0) - float(opt.get("cost") or 0) < 0:
+            return
+        client.post("/api/game/period/treat-self", headers=headers, json={"option_id": opt["id"]})
+
     def maybe_invest() -> None:
-        if policy == "passive":
+        if policy in ("passive", "idle", "needs_keeper"):
             return
         if policy == "tutorial" and state.invest_once_done:
             return
@@ -351,7 +403,11 @@ def run_balance_simulation(
         lifestyle = float(ov.get("monthly_burn_total") or 0)
         cash = float(ov.get("cash_balance") or 0)
         safety = float(ov.get("safety_fund_balance") or 0)
+        needs_now = ov.get("needs") or {}
+        needs_row = {ax: round(float(needs_now.get(ax) or 0), 1) for ax in NEEDS_AXES} if needs_now else None
         return {
+            "needs": needs_row,
+            "needs_min": min(needs_row.values()) if needs_row else None,
             "period": period,
             "phase": phase,
             "cash": round(cash, 2),
@@ -390,6 +446,7 @@ def run_balance_simulation(
             elif policy == "safety_first":
                 maybe_safety_first()
             maybe_invest()
+            maybe_treat_self()
             close_body = close_period()
             row = snapshot_row(p, "closed", close_body)
             period_rows.append(row)
@@ -451,6 +508,7 @@ def run_balance_simulation(
             "avg_event_cash_delta": avg_delta,
             "avg_net_cashflow_6p": final_ov.get("avg_net_cashflow_6p"),
             "avg_net_cashflow_6p_n": final_ov.get("avg_net_cashflow_6p_n"),
+            "needs_model": (final_ov.get("needs_meta") or {}).get("model"),
         }
 
         for milestone in (12, 20, 30, 40):
@@ -459,6 +517,7 @@ def run_balance_simulation(
             summary[key] = row_m["cash"] if row_m else None
             summary[f"liquid_p{milestone}"] = row_m["liquid"] if row_m else None
             summary[f"safety_p{milestone}"] = row_m["safety"] if row_m else None
+            summary[f"needs_min_p{milestone}"] = row_m.get("needs_min") if row_m else None
 
         report = {
             "meta": {
@@ -535,8 +594,20 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--periods", type=int, default=DEFAULT_PERIODS)
     parser.add_argument(
         "--policy",
-        choices=["tutorial", "safety_first", "passive"],
+        choices=["tutorial", "safety_first", "passive", "idle", "needs_keeper"],
         default="tutorial",
+    )
+    parser.add_argument(
+        "--needs-model",
+        choices=["linear", "set_point"],
+        default=None,
+        help="Переопределить needs.model шаблона только в БД симуляции (NV-406)",
+    )
+    parser.add_argument(
+        "--needs-set-point",
+        type=json.loads,
+        default=None,
+        help='JSON-переопределения needs.set_point, напр. {"impulse_scale": 30}',
     )
     parser.add_argument("--out", type=Path, help="Write JSON report to file")
     parser.add_argument(
@@ -559,6 +630,8 @@ def main(argv: list[str] | None = None) -> int:
         periods=args.periods,
         policy=args.policy,  # type: ignore[arg-type]
         rng_seed=seed,
+        needs_model=args.needs_model,
+        needs_set_point=args.needs_set_point,
     )
 
     if args.out:

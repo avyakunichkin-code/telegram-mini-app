@@ -21,6 +21,8 @@ from ...schemas import (
     AchievementUnlockEvent,
     PeriodCloseBreakdownItem,
     PeriodCloseHighlight,
+    NeedsOverview,
+    PeriodCloseNeeds,
     PeriodCloseSummary,
     TimeStatusResponse,
 )
@@ -66,6 +68,17 @@ def period_close_summary(period_result: dict) -> PeriodCloseSummary:
         for item in (period_result.get("period_highlights") or [])
         if isinstance(item, dict)
     ]
+    needs = None
+    raw_needs = period_result.get("needs")
+    if isinstance(raw_needs, dict) and isinstance(raw_needs.get("after"), dict):
+        needs = PeriodCloseNeeds(
+            model=str(raw_needs.get("model") or "linear"),
+            before=NeedsOverview(**(raw_needs.get("before") or {})),
+            after=NeedsOverview(**raw_needs["after"]),
+            level=NeedsOverview(**raw_needs["level"]) if isinstance(raw_needs.get("level"), dict) else None,
+            wear=NeedsOverview(**raw_needs["wear"]) if isinstance(raw_needs.get("wear"), dict) else None,
+            zero_streak=int(raw_needs.get("streak") or 0),
+        )
     return PeriodCloseSummary(
         closed_period_index=int(period_result.get("closed_period_index") or 0),
         cash_delta=round(float(period_result.get("cash_delta") or 0), 2),
@@ -81,6 +94,7 @@ def period_close_summary(period_result: dict) -> PeriodCloseSummary:
         period_highlights=period_highlights,
         achievement_unlocks=achievement_unlocks,
         events_spawn_failed=bool(period_result.get("events_spawn_failed")),
+        needs=needs,
     )
 
 

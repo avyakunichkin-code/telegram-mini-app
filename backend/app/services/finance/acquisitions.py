@@ -113,6 +113,7 @@ def create_secured_acquisition(
 
     asset = FinanceAsset(
         game_profile_id=profile.id,
+        acquired_period_index=max(1, int(profile.period_index or 1)),
         title=asset_tpl.title,
         kind=asset_tpl.kind,
         asset_value=purchase_price,

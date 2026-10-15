@@ -342,6 +342,17 @@ class PeriodCloseHighlight(BaseModel):
     note: Optional[str] = None
 
 
+class PeriodCloseNeeds(BaseModel):
+    """Потребности в итоге закрытия периода (SPEC_needs-set-point, NV-404)."""
+
+    model: str = "linear"
+    before: NeedsOverview = Field(default_factory=NeedsOverview)
+    after: NeedsOverview = Field(default_factory=NeedsOverview)
+    level: Optional[NeedsOverview] = None
+    wear: Optional[NeedsOverview] = None
+    zero_streak: int = 0
+
+
 class PeriodCloseSummary(BaseModel):
     closed_period_index: int = 0
     cash_delta: float = 0
@@ -357,6 +368,7 @@ class PeriodCloseSummary(BaseModel):
     period_highlights: List[PeriodCloseHighlight] = Field(default_factory=list)
     achievement_unlocks: List["AchievementUnlockEvent"] = Field(default_factory=list)
     events_spawn_failed: bool = False
+    needs: Optional[PeriodCloseNeeds] = None
 
 
 class AchievementTierStatus(BaseModel):

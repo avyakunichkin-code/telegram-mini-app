@@ -294,6 +294,7 @@ def create_asset_from_deal(
 
     asset = FinanceAsset(
         game_profile_id=profile.id,
+        acquired_period_index=max(1, int(profile.period_index or 1)),
         title=tpl.title,
         kind=tpl.kind,
         asset_value=price,

@@ -90,3 +90,24 @@ def test_overview_survives_level_failure(client, auth_headers, db_session, monke
     meta = _meta(client, auth_headers)
     assert meta["level"] is None and meta["wear"] is None
     assert meta["level_sources"] == []
+
+
+def test_new_asset_bonus_uses_acquired_period(client, auth_headers, db_session):
+    """NV-304: свежая покупка даёт полный вклад, старая — с привыканием."""
+    from app.models import FinanceAsset
+
+    _start(client, auth_headers, db_session)
+    profile = _profile(db_session)
+    profile.period_index = 30
+    car = FinanceAsset(
+        game_profile_id=profile.id, title="Авто", kind="car_personal", asset_value=300_000,
+        monthly_maintenance_cost=0, monthly_income=0, acquired_period_index=30,
+    )
+    db_session.add(car)
+    db_session.commit()
+    fresh = sum(s["delta"] for s in _meta(client, auth_headers)["level_sources"] if s["source"] == "asset")
+
+    car.acquired_period_index = 1
+    db_session.commit()
+    old = sum(s["delta"] for s in _meta(client, auth_headers)["level_sources"] if s["source"] == "asset")
+    assert fresh > old > 0

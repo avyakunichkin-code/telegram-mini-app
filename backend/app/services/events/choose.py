@@ -28,6 +28,7 @@ from ...models import EventChoice, EventDefinition, EventInstance, GameProfile
 from ...needs.engine import apply_needs_delta, needs_values_from_profile, parse_needs_delta
 from ...timeutil import utc_now_naive
 from .needs_rescue import _needs_config_for_profile
+from ...needs.set_point import MODEL_SET_POINT
 from .selection import record_event_profile_selection
 
 logger = logging.getLogger(__name__)
@@ -297,7 +298,7 @@ def _apply_event_choice(
             cfg = _needs_config_for_profile(db, profile)
             if cfg:
                 needs_before = needs_values_from_profile(profile)
-                needs_after = apply_needs_delta(profile, delta)
+                needs_after = apply_needs_delta(profile, delta, headroom=cfg.get("model") == MODEL_SET_POINT)
 
     if def_key == "mq11_used_car_deadline":
         chain = get_active_chain(db, profile.id, USED_CAR_CHAIN_KEY)

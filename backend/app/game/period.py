@@ -18,6 +18,7 @@ from ..models import (
     PeriodEconomyClosing,
     PeriodSnapshot,
     GameStarterTemplate,
+    FinanceSalary,
 )
 from ..finance.balance_utils import adjust_balance, add_transaction, TRANSACTION_TYPES
 from ..achievements.engine import process_achievement_unlocks
@@ -33,8 +34,10 @@ from ..finance.liability_kinds import PAYMENT_MODE_ANNUITY, effective_payment_mo
 from ..finance.annuity import split_full_payment
 from ..constants import EPSILON
 from ..finance.expenses import compute_monthly_burn, expire_expense_lines_for_period, lifestyle_period_breakdown
+from ..needs.set_point import MODEL_SET_POINT, build_set_point_snapshot
 from ..needs.engine import (
     apply_decay,
+    apply_wear_and_level,
     needs_values_from_profile,
     parse_needs_config,
     set_profile_needs,
@@ -496,7 +499,29 @@ def _apply_needs_decay(ctx: _PeriodClose) -> None:
         if not cfg:
             return
         before = needs_values_from_profile(profile)
-        dec = apply_decay(cfg, before)
+        sp_snap = None
+        if cfg.get("model") == MODEL_SET_POINT:
+            # ADR-015: износ рутиной + притяжение к уровню жизни (статьи после списания и истечения).
+            salary_row = db.query(FinanceSalary).filter(FinanceSalary.game_profile_id == profile.id).first()
+            sp_snap = build_set_point_snapshot(
+                db,
+                profile,
+                cfg,
+                blueprint,
+                salary=float(salary_row.monthly_amount if salary_row else 0),
+                needs_now=before,
+            )
+            sp = cfg["set_point"]
+            dec = apply_wear_and_level(
+                before,
+                level=sp_snap.level,
+                wear=sp_snap.wear,
+                rate=float(sp["adaptation_rate"]),
+                zero_threshold=float(sp["zero_threshold"]),
+                distressed=int(cfg.get("thresholds", {}).get("distressed") or 30),
+            )
+        else:
+            dec = apply_decay(cfg, before)
         set_profile_needs(profile, dec.after)
 
         if dec.has_zero_after:
@@ -523,7 +548,11 @@ def _apply_needs_decay(ctx: _PeriodClose) -> None:
             "min_axis": dec.min_axis,
             "has_zero": dec.has_zero_after,
             "streak": int(getattr(profile, "needs_zero_periods_streak", 0) or 0),
+            "model": cfg.get("model") or "linear",
         }
+        if sp_snap is not None:
+            ctx.needs_result["level"] = sp_snap.level
+            ctx.needs_result["wear"] = sp_snap.wear
     except Exception:
         logger.exception("Needs processing failed profile_id=%s period_index=%s", profile.id, period_index)
         db.refresh(profile)

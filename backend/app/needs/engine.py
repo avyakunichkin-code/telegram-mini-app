@@ -139,11 +139,33 @@ def parse_needs_delta(raw: object) -> dict[str, float]:
     return out
 
 
-def apply_needs_delta(profile, delta: dict[str, float]) -> dict[str, float]:
-    """Применяет дельту к колонкам need_* на профиле; возвращает значения после clamp."""
+HEADROOM_MIN = 0.25
+
+
+def gain_with_headroom(current: float, raw: float) -> float:
+    """SPEC_needs-set-point §4: плюс умножается на запас до 100 (не меньше 0.25); минус — как есть."""
+    r = float(raw or 0)
+    if r <= 0:
+        return r
+    return r * max(HEADROOM_MIN, (100.0 - float(current or 0)) / 100.0)
+
+
+def apply_needs_delta(profile, delta: dict[str, float], *, headroom: bool = False) -> dict[str, float]:
+    """Применяет дельту к колонкам need_* на профиле; возвращает значения после clamp.
+
+    headroom=True — модель set_point: плюсы с множителем «запас до 100».
+    """
     before = needs_values_from_profile(profile)
     after = {
-        k: _clamp_need(float(before.get(k) or 0) + float(delta.get(k) or 0)) for k in AXES
+        k: _clamp_need(
+            float(before.get(k) or 0)
+            + (
+                gain_with_headroom(before.get(k) or 0, delta.get(k) or 0)
+                if headroom
+                else float(delta.get(k) or 0)
+            )
+        )
+        for k in AXES
     }
     set_profile_needs(profile, after)
     return after
@@ -184,6 +206,36 @@ def apply_decay(cfg: dict, before: dict[str, float]) -> NeedsDecayResult:
     return NeedsDecayResult(
         before=before,
         decay=decay,
+        after=after,
+        has_zero_after=has_zero,
+        is_distressed_after=is_distressed,
+        min_axis=min_axis,
+    )
+
+
+def apply_wear_and_level(
+    before: dict[str, float],
+    *,
+    level: dict[str, float],
+    wear: dict[str, float],
+    rate: float,
+    zero_threshold: float,
+    distressed: int,
+) -> NeedsDecayResult:
+    """Модель set_point (ADR-015): N ← N + r(L − N) − w; N < zero_threshold считается нулём."""
+    after: dict[str, float] = {}
+    for k in AXES:
+        n = float(before.get(k) or 0)
+        nxt = n + float(rate) * (float(level.get(k) or 0) - n) - float(wear.get(k) or 0)
+        nxt = _clamp_need(nxt)
+        after[k] = 0.0 if nxt < float(zero_threshold) else nxt
+    change = {k: round(float(before.get(k) or 0) - after[k], 1) for k in AXES}
+    has_zero = any(after[k] <= 0.0 for k in AXES)
+    is_distressed = any(0.0 < after[k] < float(distressed) for k in AXES)
+    min_axis = min(AXES, key=lambda k: after[k])
+    return NeedsDecayResult(
+        before=before,
+        decay=change,
         after=after,
         has_zero_after=has_zero,
         is_distressed_after=is_distressed,

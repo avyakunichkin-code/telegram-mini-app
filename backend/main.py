@@ -172,6 +172,11 @@ def ensure_schema_compatibility() -> None:
         if "insured_asset_id" not in pol_columns:
             statements.append("ALTER TABLE insurance_policies ADD COLUMN insured_asset_id INTEGER NULL")
 
+    if "finance_assets" in inspector.get_table_names():
+        fa_cols = {item["name"] for item in inspector.get_columns("finance_assets")}
+        if "acquired_period_index" not in fa_cols:
+            statements.append("ALTER TABLE finance_assets ADD COLUMN acquired_period_index INTEGER NULL")
+
     if "liability_templates" in inspector.get_table_names():
         tpl_columns = {item["name"] for item in inspector.get_columns("liability_templates")}
         if "liability_kind" not in tpl_columns:

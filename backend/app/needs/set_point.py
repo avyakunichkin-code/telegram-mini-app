@@ -365,14 +365,14 @@ def _assets_for_profile(db: Session, profile) -> list[AssetHolding]:
         .filter(FinanceAsset.game_profile_id == profile.id, FinanceAsset.is_active == 1)
         .all()
     )
-    # Период покупки актива не хранится (PLAN NV-304): пока возраст считается от начала игры.
+    # acquired_period_index (NV-304); NULL у старых строк = с начала игры.
     return [
         AssetHolding(
             kind=str(a.kind or ""),
             title=a.title,
             value=float(a.asset_value or 0),
             monthly_cost=float(a.monthly_maintenance_cost or 0),
-            acquired_period=1,
+            acquired_period=int(getattr(a, "acquired_period_index", None) or 1),
         )
         for a in rows
     ]

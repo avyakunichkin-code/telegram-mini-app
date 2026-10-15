@@ -156,6 +156,8 @@ class FinanceAsset(Base):
     has_tenants = Column(Integer, nullable=False, default=0)  # 1 = доходная с арендаторами (задел под события)
     acquisition_mode = Column(String(16), nullable=False, default="cash")  # cash | secured
     is_active = Column(Integer, nullable=False, default=1)   # НОВОЕ
+    # NV-304: период покупки (привыкание в уровне жизни); NULL = с начала игры
+    acquired_period_index = Column(Integer, nullable=True)
     created_at = Column(DateTime, default=utc_now_naive)
     game_profile = relationship("GameProfile", back_populates="finance_assets")
 

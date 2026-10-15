@@ -5,7 +5,9 @@ from sqlalchemy.orm import Session
 
 from ...finance.balance_utils import adjust_balance
 from ...models import FinanceSalary, GameProfile, GameStarterTemplate
+from ...needs.set_point import MODEL_SET_POINT
 from ...needs.engine import (
+    gain_with_headroom,
     needs_values_from_profile,
     normalize_treat_self_options,
     parse_needs_config,
@@ -72,7 +74,13 @@ def treat_self(db: Session, profile: GameProfile, option_id: str) -> dict:
 
     before = needs_values_from_profile(profile)
     delta = opt.get("needs_delta") if isinstance(opt.get("needs_delta"), dict) else {}
-    after = {k: float(before.get(k) or 0) + float(delta.get(k) or 0) for k in before.keys()}
+    if cfg.get("model") == MODEL_SET_POINT:
+        after = {
+            k: float(before.get(k) or 0) + gain_with_headroom(before.get(k) or 0, delta.get(k) or 0)
+            for k in before.keys()
+        }
+    else:
+        after = {k: float(before.get(k) or 0) + float(delta.get(k) or 0) for k in before.keys()}
     set_profile_needs(profile, after)
     profile.treat_self_last_period_index = period_index
     db.commit()

@@ -163,6 +163,7 @@ def start_new_game(db: Session, user_id: int, payload: GameStartRequest) -> Game
     for asset_data in assets_list:
         asset = FinanceAsset(
             game_profile_id=new_profile.id,
+            acquired_period_index=1,
             title=asset_data.title,
             kind=getattr(asset_data, "kind", None) or "generic",
             asset_value=asset_data.asset_value,
