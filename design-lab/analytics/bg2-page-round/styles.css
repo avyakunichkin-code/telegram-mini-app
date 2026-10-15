@@ -1,0 +1,14 @@
+/* analytics/bg2-page-round — отличия prod `AnalyticsPremium` от screens-round (★ BG-2). */
+
+.s-grid { grid-template-columns: repeat(auto-fit, minmax(330px, 1fr)); }
+
+/* Полоса слева: изумруд, когда риска нет; красная — только при риске (пилюля рядом). */
+.s-state--ok { border-left-color: var(--gain); }
+
+/* Содержание имущества — второй нейтральный тон; «Не хватает» — контур риска. */
+.s-legend i.upkeep { background: color-mix(in srgb, var(--ink-soft) 45%, var(--bg-cell)); }
+.s-legend i.short { background: var(--risk-soft); box-shadow: inset 0 0 0 2px var(--risk); }
+.s-legend b.short { color: var(--risk); }
+
+/* Пустое состояние: истории ещё нет */
+.s-empty-note { margin: 0; color: var(--ink-soft); font-size: 13px; }

@@ -1,269 +1,177 @@
 import { useEffect, useMemo, useState } from 'react';
 import { API, ApiError, formatApiErrorDetail } from '../api';
 import { MoneyText } from './MoneyText';
-import { IncomeExpenseChart, LiquidityForecastChart } from './AnalyticsCharts';
-import { MqxCashflowBar, pctClamp01 } from './mqx/MqxMetricBars';
-import { MqxDashStack } from './mqx/layout/MqxDashStack';
-import { MqxDivider } from './mqx/primitives/MqxDivider';
-import { MqxTabHero } from './MqxTabHero';
-import { getMonthlyBurn } from '../utils/expensesDisplay';
+import { IncomeSplitBar, LiquidityForecastChart } from './AnalyticsCharts';
+import { MonetkaAvatar } from './mqx/brand/MonetkaAvatar';
+import { buildGoalChainView } from './mqx/utils/goalChainDisplay';
 import {
-  buildPrimaryInsight,
-  computeCushionMonths,
-  computeLiquidity,
-  computeMonthlyResidual,
-  computeRunwayPeriods,
-  resolveForecastMonthlyDelta,
-  resolveStabilityZone,
-  stabilityZoneLabel,
-} from '../utils/analyticsDisplay';
+  analyticsHeadCaption,
+  buildAnalyticsTip,
+  buildIncomeSplit,
+  buildStabilityMetrics,
+  buildStateCard,
+  resolveForecastDelta,
+} from './mqx/utils/analyticsBoardDisplay';
 
-function formatSignedMoney(n) {
-  const v = Number(n) || 0;
-  return v >= 0 ? `+${v.toLocaleString('ru-RU', { maximumFractionDigits: 0 })}` : v.toLocaleString('ru-RU', { maximumFractionDigits: 0 });
+const FORECAST_TURNS = 3;
+
+function signedMoney(amount, tone) {
+  const sign = amount < 0 ? '−' : '+';
+  return (
+    <b className={`mqx-an-legend__sum mqx-an-legend__sum--${tone}`}>
+      {sign}
+      <MoneyText value={Math.abs(amount)} decimals={0} />
+    </b>
+  );
 }
 
-export function AnalyticsPremium({ overview }) {
-  const [ts, setTs] = useState(null);
-  const [tsError, setTsError] = useState(null);
-  const [forecastMonths, setForecastMonths] = useState(3);
+function useAnalyticsTimeseries(overview) {
+  const [state, setState] = useState({ ts: null, error: null });
+  const [attempt, setAttempt] = useState(0);
 
   useEffect(() => {
     let cancelled = false;
-    (async () => {
-      try {
-        const data = await API.getFinanceAnalyticsTimeseries(48);
-        if (!cancelled) {
-          setTs(data);
-          setTsError(null);
-        }
-      } catch (e) {
-        if (!cancelled) {
-          setTs(null);
-          const msg =
-            e instanceof ApiError
-              ? formatApiErrorDetail(e.detail, e.message)
-              : formatApiErrorDetail(e?.detail ?? e?.message, e?.message || 'Не удалось загрузить ряд');
-          setTsError(msg);
-        }
-      }
-    })();
+    setState((s) => ({ ts: s.ts, error: null }));
+    API.getFinanceAnalyticsTimeseries(48)
+      .then((ts) => !cancelled && setState({ ts, error: null }))
+      .catch((e) => {
+        if (cancelled) return;
+        const msg =
+          e instanceof ApiError
+            ? formatApiErrorDetail(e.detail, e.message)
+            : formatApiErrorDetail(e?.detail ?? e?.message, 'Не удалось загрузить историю');
+        setState({ ts: null, error: msg });
+      });
     return () => {
       cancelled = true;
     };
-  }, [overview?.period_index, overview?.cash_balance, overview?.safety_fund_balance]);
+  }, [overview?.period_index, overview?.cash_balance, overview?.safety_fund_balance, attempt]);
+
+  return { ...state, retry: () => setAttempt((n) => n + 1) };
+}
+
+export function AnalyticsPremium({ overview }) {
+  const { ts, error, retry } = useAnalyticsTimeseries(overview);
 
   const model = useMemo(() => {
     if (!overview) return null;
-
-    const income = Number(overview.total_monthly_income) || 0;
-    const liabPay = Number(overview.total_monthly_liabilities_payment) || 0;
-    const maintenance = Number(overview.total_monthly_assets_maintenance) || 0;
-    const burn = getMonthlyBurn(overview);
-    const expenseRatioPct = income > 0 ? (burn / income) * 100 : 0;
-    const denom = Math.max(income, liabPay + maintenance + burn, 1);
-    const cash = Number(overview.cash_balance) || 0;
-    const safety = Number(overview.safety_fund_balance) || 0;
-    const ratio = Number(overview.liabilities_to_income_ratio) || 0;
-    const liquidity = computeLiquidity(overview);
-    const residual = computeMonthlyResidual(overview);
-    const cushionMonths = computeCushionMonths(overview);
-    const runway = computeRunwayPeriods(overview);
-    const zone = resolveStabilityZone(overview);
-    const monthlyDelta = resolveForecastMonthlyDelta(overview);
-    const insight = buildPrimaryInsight(overview);
-
     return {
-      income,
-      liabPay,
-      maintenance,
-      burn,
-      expenseRatioPct,
-      denom,
-      cash,
-      safety,
-      ratio,
-      liquidity,
-      residual,
-      cushionMonths,
-      runway,
-      zone,
-      monthlyDelta,
-      insight,
+      state: buildStateCard(overview),
+      split: buildIncomeSplit(overview),
+      metrics: buildStabilityMetrics(overview),
+      delta: resolveForecastDelta(overview),
+      tip: buildAnalyticsTip(overview, buildGoalChainView(overview.victory, null)),
     };
   }, [overview]);
 
   if (!overview || !model) return null;
-
-  const {
-    income,
-    liabPay,
-    maintenance,
-    burn,
-    expenseRatioPct,
-    denom,
-    cash,
-    safety,
-    ratio,
-    liquidity,
-    residual,
-    cushionMonths,
-    runway,
-    zone,
-    monthlyDelta,
-    insight,
-  } = model;
-
-  const pts = ts?.points ?? [];
-  const isGame = overview.save_kind !== 'plan';
+  const { state, split, metrics, delta, tip } = model;
+  const turn = Number(overview.period_index) || 0;
+  const hasHistory = (ts?.points ?? []).some((p) => !p.is_projection);
 
   return (
-    <div className="mqx-tab-page mqx-tab-page--dash-unified">
-      <MqxTabHero
-        sectionLabel="Аналитика"
-        rightPill={`Ход #${overview.period_index}`}
-        title="Финансовое состояние"
-        subtitle="Снимок, потоки и прогноз при текущей модели месяца"
-      />
+    <div className="mqx-tab-page mqx-tab-page--dash-unified mqx-tab-page--board mqx-tab-page--analytics">
+      <main className="mqx-content mqx-tab-page__scroll">
+        <div className="mqx-bg-stack">
+          <header className="mqx-an-head">
+            <div>
+              <h1 className="mqx-an-head__title">Аналитика</h1>
+              <p className="mqx-an-head__sub">{analyticsHeadCaption(turn)}</p>
+            </div>
+            {turn > 0 ? (
+              <span className="mqx-an-turn">
+                <span className="mqx-bg-sr-only">Ход </span>
+                {turn}
+              </span>
+            ) : null}
+          </header>
 
-      <main className="mqx-content mqx-tab-page__scroll mqx-content--dash-flat">
-        <MqxDashStack className="mqx-dash-stack--unified">
-          <section className="mqx-finance-static" aria-label="Состояние">
-            <div className="mqx-analytics-section__head">
-              <h2 className="mqx-finance-static__title">Состояние</h2>
-              <span className={`mqx-analytics-zone mqx-analytics-zone--${zone}`}>{stabilityZoneLabel(zone)}</span>
+          <section className={`mqx-an-state${state.risk ? ' mqx-an-state--risk' : ''}`} aria-label="Счёт и подушка">
+            <div className="mqx-an-state__top">
+              <span className="mqx-an-caption">Счёт и подушка</span>
+              {state.risk ? <span className="mqx-an-state__pill">{state.risk}</span> : null}
             </div>
-            <div className="mqx-analytics-snapshot__value">
-              <MoneyText value={liquidity} decimals={0} />
-            </div>
-            <p className="mqx-analytics-snapshot__meta">
-              Счёт <MoneyText value={cash} decimals={0} /> + подушка <MoneyText value={safety} decimals={0} />
-            </p>
-            <div className={`mqx-analytics-residual-row${residual < 0 ? ' mqx-analytics-residual-row--neg' : ''}`}>
-              <span>После обязательств и жизни</span>
-              <strong>{formatSignedMoney(residual)} ₽</strong>
-            </div>
+            <MoneyText value={state.liquidity} decimals={0} className="mqx-an-state__sum" />
+            <p className="mqx-an-caption">{state.note}</p>
           </section>
 
-          <MqxDivider />
+          <section className="mqx-an-sec" aria-labelledby="mqx-an-split-title">
+            <div className="mqx-an-sec__title">
+              <h2 id="mqx-an-split-title">Куда уходит доход</h2>
+              {split.income > 0 ? (
+                <span className="mqx-an-caption">
+                  <MoneyText value={split.income} decimals={0} /> за ход
+                </span>
+              ) : null}
+            </div>
+            {split.empty ? (
+              <p className="mqx-an-empty">Доходов и трат за ход пока нет — забери зарплату на «Главной».</p>
+            ) : (
+              <>
+                <IncomeSplitBar segments={split.segments} />
+                <ul className="mqx-an-legend">
+                  {split.segments.map((s) => (
+                    <li key={s.key}>
+                      <i className={`mqx-an-tone--${s.tone}`} aria-hidden />
+                      <span>{s.label}</span>
+                      {signedMoney(s.amount, s.tone)}
+                    </li>
+                  ))}
+                </ul>
+              </>
+            )}
+          </section>
 
-          <section className="mqx-finance-static" aria-label="Поток месяца">
-            <h2 className="mqx-finance-static__title">Поток месяца</h2>
-            <div className="mqx-analytics-cashflow__bars">
-              <MqxCashflowBar
-                label="Доход"
-                amountNode={<MoneyText value={income} decimals={0} />}
-                fraction={income / denom}
-                fillClass="mqx-analytics-cf-fill--emerald"
-              />
-              <MqxCashflowBar
-                label={
-                  <>
-                    Платежи по долгам
-                    {income > 0 ? <span className="mqx-analytics-cf-pct"> {ratio.toFixed(0)}%</span> : null}
-                  </>
-                }
-                amountNode={
-                  <span>
-                    −<MoneyText value={liabPay} decimals={0} />
-                  </span>
-                }
-                fraction={liabPay / denom}
-                fillClass={liabPay > income ? 'mqx-analytics-cf-fill--rose' : 'mqx-analytics-cf-fill--violet'}
-              />
-              <MqxCashflowBar
-                label="Обслуживание активов"
-                amountNode={
-                  <span>
-                    −<MoneyText value={maintenance} decimals={0} />
-                  </span>
-                }
-                fraction={maintenance / denom}
-                fillClass="mqx-analytics-cf-fill--slate"
-              />
-              {burn > 0 ? (
-                <MqxCashflowBar
-                  label={
-                    <>
-                      Расходы на жизнь
-                      {income > 0 ? <span className="mqx-analytics-cf-pct"> {expenseRatioPct.toFixed(0)}%</span> : null}
-                    </>
-                  }
-                  amountNode={
-                    <span>
-                      −<MoneyText value={burn} decimals={0} />
-                    </span>
-                  }
-                  fraction={burn / denom}
-                  fillClass="mqx-analytics-cf-fill--amber"
+          <ul className="mqx-an-metrics" aria-label="Устойчивость">
+            {metrics.map((m) => (
+              <li key={m.key} className={`mqx-an-metric${m.risk ? ' mqx-an-metric--risk' : ''}`}>
+                <b>{m.value}</b>
+                <span>
+                  {m.label}
+                  {m.risk ? <span className="mqx-bg-sr-only"> — есть риск</span> : null}
+                </span>
+              </li>
+            ))}
+          </ul>
+
+          <section className="mqx-an-sec mqx-an-chart" aria-labelledby="mqx-an-chart-title">
+            <div className="mqx-an-sec__title">
+              <h2 id="mqx-an-chart-title">Счёт + подушка</h2>
+              <span className="mqx-an-caption">история и прогноз на {FORECAST_TURNS} хода</span>
+            </div>
+            {error ? (
+              <p className="mqx-an-empty">
+                {error}{' '}
+                <button type="button" className="mqx-an-retry mqx-bg-btn" onClick={retry}>
+                  Повторить
+                </button>
+              </p>
+            ) : !ts ? (
+              <p className="mqx-an-empty">Загружаем историю…</p>
+            ) : (
+              <>
+                <LiquidityForecastChart
+                  points={ts.points}
+                  liquidityNow={state.liquidity}
+                  delta={delta}
+                  horizon={FORECAST_TURNS}
                 />
-              ) : null}
-            </div>
-          </section>
-
-          <MqxDivider />
-
-          <section className="mqx-finance-static" aria-label="Устойчивость">
-            <h2 className="mqx-finance-static__title">Устойчивость</h2>
-            <div className="mqx-analytics-metrics">
-              <div className="mqx-analytics-metric">
-                <div className="mqx-analytics-metric__label">Подушка, мес.</div>
-                <div className="mqx-analytics-metric__value">{cushionMonths.toFixed(1).replace('.', ',')}</div>
-              </div>
-              <div className="mqx-analytics-metric">
-                <div className="mqx-analytics-metric__label">Runway счёта</div>
-                <div className="mqx-analytics-metric__value">{runway >= 99 ? '—' : `${runway} пер.`}</div>
-              </div>
-              <div className="mqx-analytics-metric mqx-analytics-metric--wide">
-                <div className="mqx-analytics-metric__label">Платежи по долгам к доходу (ПДН)</div>
-                <div className="mqx-analytics-metric__value">{ratio.toFixed(0)}%</div>
-                <div className="mqx-analytics-dti-track">
-                  <div
-                    className="mqx-analytics-dti-fill"
-                    style={{ width: `${Math.round(pctClamp01(ratio / 100) * 100)}%` }}
-                  />
+                <div className="mqx-an-chart__legend">
+                  {hasHistory ? <span>было</span> : null}
+                  <span className="mqx-an-chart__legend-fc">если ничего не менять</span>
                 </div>
-              </div>
-            </div>
+                {!hasHistory ? (
+                  <p className="mqx-an-empty">История появится, когда завершишь первый ход.</p>
+                ) : null}
+              </>
+            )}
           </section>
 
-          <MqxDivider />
-
-          <section className="mqx-finance-static" aria-label="Динамика">
-            <h2 className="mqx-finance-static__title">Динамика</h2>
-            <div className="mqx-analytics-charts-pane">
-              {tsError ? <div className="mqx-analytics-dark__err">{tsError}</div> : null}
-              {!ts && !tsError ? <div className="mqx-analytics-dark__err">Загрузка…</div> : null}
-              {ts && !tsError ? (
-                <>
-                  <IncomeExpenseChart points={pts} />
-                  <LiquidityForecastChart
-                    points={pts}
-                    liquidityNow={liquidity}
-                    monthlyDelta={monthlyDelta}
-                    forecastMonths={forecastMonths}
-                    onForecastMonthsChange={setForecastMonths}
-                  />
-                </>
-              ) : null}
-            </div>
-          </section>
-
-          <MqxDivider />
-
-          <section className="mqx-finance-static mqx-analytics-insight" aria-live="polite">
-            <h2 className="mqx-finance-static__title">Рекомендация</h2>
-            <p className="mqx-analytics-insight__title">{insight.title}</p>
-            <p className="mqx-analytics-insight__body">{insight.body}</p>
-          </section>
-
-          {isGame ? (
-            <>
-              <MqxDivider />
-              <p className="mqx-analytics-foot">Цели партии — на вкладке «Главная»</p>
-            </>
-          ) : null}
-        </MqxDashStack>
+          <p className="mqx-bg-tip mqx-an-tip" data-tone={tip.tone} title={tip.text}>
+            <MonetkaAvatar size={26} className="mqx-bg-tip__monetka" />
+            <span className="mqx-bg-tip__text">{tip.text}</span>
+          </p>
+        </div>
       </main>
     </div>
   );
