@@ -1,0 +1,413 @@
+/*
+ * Оболочка и экраны до партии ★ BG-2: Меню (вкладка и старт), Вход / Регистрация, Выбор жизни.
+ * Канон: design-lab/board-game/screens-round/ (Меню, Вход, Выбор жизни), design-lab/pre-game-shell/APPROVED.md.
+ * Токены v2 (ADR-014): --mq-turn — действие, --mq-coin — деньги, --mq-gain — плюс; объём только у нажимаемого.
+ * Главная кнопка — .mqx-bg-cta из board.css (+ .mqx-pg-cta).
+ */
+
+/* —— Страница до партии —— */
+.mqx-pg {
+  position: relative;
+  z-index: 1;
+  box-sizing: border-box;
+  display: grid;
+  align-content: start;
+  gap: var(--mq-sp-6);
+  width: 100%;
+  max-width: 480px;
+  min-height: 100%;
+  margin-inline: auto;
+  padding: var(--mq-sp-7) var(--mq-sp-7) calc(var(--mq-sp-7) * 2);
+  background: var(--mq-board);
+  color: var(--mq-board-ink);
+  font-family: var(--mq-font-body);
+}
+
+.pg-app-shell:has(> .mqx-pg),
+.mq-page--auth:has(> .mqx-pg) {
+  background: var(--mq-board);
+}
+
+.pg-app-shell:has(> .mqx-pg) > .mq-page__decor,
+.mq-page--auth:has(> .mqx-pg) > .mq-page__decor {
+  display: none;
+}
+
+.mqx-pg--auth {
+  align-content: center;
+}
+
+.mqx-pg-logo {
+  display: block;
+  justify-self: center;
+  width: min(220px, 64vw);
+  height: auto;
+}
+
+/* Шапка: заголовок + пояснение (один h1 на экран) */
+.mqx-pg-head h1 {
+  margin: 0;
+  color: var(--mq-board-ink);
+  font: 900 var(--mq-fs-display) / 1.1 var(--mq-font-display);
+}
+
+.mqx-pg-head small {
+  display: block;
+  margin-top: var(--mq-sp-1);
+  color: var(--mq-board-ink-soft);
+  font-size: var(--mq-fs-caption);
+}
+
+/* Загрузка / пусто / ошибка */
+.mqx-pg-state {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--mq-sp-4);
+  margin: 0;
+  padding: var(--mq-sp-7);
+  border: var(--mq-hair);
+  border-radius: var(--mq-r-card);
+  background: var(--mq-cell);
+  color: var(--mq-board-ink-soft);
+  font-size: var(--mq-fs-body);
+  text-align: center;
+}
+
+/* Главная кнопка экрана */
+.mqx-bg-cta.mqx-pg-cta {
+  min-height: 48px;
+  font-size: var(--mq-fs-body);
+}
+
+/* —— Карта сохранения (Меню) —— */
+.mqx-pg-save,
+.mqx-pg-empty {
+  display: grid;
+  gap: var(--mq-sp-5);
+  padding: var(--mq-sp-7);
+  border: 2px solid var(--mq-turn);
+  border-radius: var(--mq-r-card);
+  background: var(--mq-cell);
+  box-shadow: 0 3px 0 var(--mq-turn);
+}
+
+.mqx-pg-save__info {
+  display: flex;
+  align-items: center;
+  gap: var(--mq-sp-5);
+  min-width: 0;
+}
+
+.mqx-pg-save__portrait {
+  display: grid;
+  flex: none;
+  place-items: end center;
+  width: 56px;
+  height: 56px;
+  overflow: hidden;
+  border-radius: 50%;
+  background: var(--mq-turn-soft);
+}
+
+.mqx-pg-save__portrait .mqx-persona-portrait__img {
+  display: block;
+  width: auto;
+  height: 52px;
+}
+
+.mqx-pg-save__text {
+  display: grid;
+  gap: var(--mq-sp-1);
+  min-width: 0;
+}
+
+.mqx-pg-save__role,
+.mqx-pg-empty b {
+  color: var(--mq-board-ink);
+  font: 900 var(--mq-fs-cell) / 1.15 var(--mq-font-display);
+}
+
+.mqx-pg-save__text small,
+.mqx-pg-empty small {
+  color: var(--mq-board-ink-soft);
+  font-size: var(--mq-fs-caption);
+}
+
+/* Сумма переносится, название сохранения — в одну строку с многоточием */
+.mqx-pg-save__text small:nth-of-type(2) {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.mqx-pg-save__text .mq-money {
+  color: var(--mq-board-ink);
+  font-weight: 700;
+}
+
+.mqx-pg-empty {
+  gap: var(--mq-sp-3);
+}
+
+/* —— Спокойные кнопки —— */
+.mqx-pg-actions {
+  display: grid;
+  gap: var(--mq-sp-4);
+}
+
+.mqx-bg-btn.mqx-pg-btn {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--mq-sp-4);
+  width: 100%;
+  min-height: 48px;
+  padding: var(--mq-sp-5) var(--mq-sp-6);
+  border: var(--mq-hair);
+  border-radius: var(--mq-r-cell);
+  background: var(--mq-cell);
+  box-shadow: 0 2px 0 var(--mq-cell-edge);
+  color: var(--mq-board-ink);
+  font-size: var(--mq-fs-body);
+  font-weight: 700;
+  text-align: left;
+}
+
+.mqx-pg-btn small {
+  color: var(--mq-board-ink-soft);
+  font-size: var(--mq-fs-caption);
+  font-weight: 400;
+}
+
+/* #root — перебить глобальный scale(0.985) из page.css */
+#root .mqx-bg-btn.mqx-pg-btn:active:not(:disabled),
+.mqx-bg-btn.mqx-pg-btn:active:not(:disabled) {
+  transform: translateY(1px);
+  box-shadow: 0 1px 0 var(--mq-cell-edge);
+}
+
+.mqx-bg-btn.mqx-pg-link {
+  justify-self: center;
+  min-height: 44px;
+  padding: var(--mq-sp-3) var(--mq-sp-6);
+  border: 0;
+  background: none;
+  color: var(--mq-board-ink-soft);
+  font-size: var(--mq-fs-body);
+  font-weight: 600;
+}
+
+.mqx-pg-btn:disabled,
+.mqx-pg-link:disabled {
+  opacity: 0.55;
+}
+
+/* —— Вход / регистрация —— */
+.mqx-pg-form {
+  display: grid;
+  gap: var(--mq-sp-4);
+  padding: var(--mq-sp-7);
+  border: var(--mq-hair);
+  border-radius: var(--mq-r-card);
+  background: var(--mq-cell);
+}
+
+.mqx-pg-form .mq-field {
+  display: grid;
+  gap: var(--mq-sp-1);
+  margin: 0;
+}
+
+.mqx-pg-form .mq-field__label {
+  color: var(--mq-board-ink-soft);
+  font-size: var(--mq-fs-caption);
+  font-weight: 600;
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+.mqx-pg-form .mq-field__input {
+  box-sizing: border-box;
+  width: 100%;
+  min-height: 44px;
+  padding: var(--mq-sp-4) var(--mq-sp-5);
+  border: var(--mq-hair);
+  border-radius: var(--mq-r-cell);
+  background: var(--mq-board);
+  color: var(--mq-board-ink);
+  font: var(--mq-fs-body) var(--mq-font-body);
+  box-shadow: none;
+}
+
+.mqx-pg-form .mq-field__input:focus-visible {
+  outline: 3px solid var(--mq-coin);
+  outline-offset: 1px;
+}
+
+.mqx-pg-form .mq-field--invalid .mq-field__input {
+  border-color: var(--mq-risk);
+}
+
+.mqx-pg-form .mq-field__hint {
+  color: var(--mq-board-ink-soft);
+  font-size: var(--mq-fs-caption);
+}
+
+.mqx-pg-form .mq-field__error,
+.mqx-pg-form__alert {
+  margin: 0;
+  color: var(--mq-risk);
+  font-size: var(--mq-fs-caption);
+  font-weight: 600;
+}
+
+/* —— Выбор жизни —— */
+.mqx-pg-life {
+  display: grid;
+  gap: var(--mq-sp-4);
+}
+
+.mqx-bg-btn.mqx-pg-person {
+  display: grid;
+  grid-template-columns: 64px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: var(--mq-sp-5);
+  width: 100%;
+  padding: var(--mq-sp-4) var(--mq-sp-5);
+  border: var(--mq-hair);
+  border-radius: var(--mq-r-card);
+  background: var(--mq-cell);
+  box-shadow: 0 2px 0 var(--mq-cell-edge);
+  color: var(--mq-board-ink);
+  text-align: left;
+}
+
+.mqx-bg-btn.mqx-pg-person--on {
+  padding: calc(var(--mq-sp-4) - 0.5px) calc(var(--mq-sp-5) - 0.5px);
+  border: 2px solid var(--mq-turn);
+  box-shadow: 0 3px 0 var(--mq-turn);
+}
+
+.mqx-pg-person__portrait {
+  display: grid;
+  place-items: center;
+  width: 64px;
+  height: 64px;
+}
+
+.mqx-pg-person__portrait .mqx-persona-portrait__img {
+  display: block;
+  max-width: 64px;
+  max-height: 64px;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+}
+
+.mqx-pg-person__body {
+  display: grid;
+  gap: var(--mq-sp-1);
+  min-width: 0;
+}
+
+.mqx-pg-person__title {
+  font: 900 var(--mq-fs-cell) / 1.15 var(--mq-font-display);
+}
+
+.mqx-pg-person__money {
+  color: var(--mq-gain);
+  font-size: var(--mq-fs-caption);
+  font-weight: 700;
+}
+
+.mqx-pg-person__note {
+  color: var(--mq-board-ink-soft);
+  font-size: var(--mq-fs-caption);
+}
+
+.mqx-pg-person__check {
+  box-sizing: border-box;
+  width: 24px;
+  height: 24px;
+  border: 2px solid var(--mq-cell-edge);
+  border-radius: 50%;
+}
+
+.mqx-pg-person--on .mqx-pg-person__check {
+  border-color: var(--mq-turn);
+  background: var(--mq-turn);
+  box-shadow: inset 0 0 0 4px var(--mq-cell);
+}
+
+/* —— Все сохранения (модалка) —— */
+.mqx-pg-saves {
+  display: grid;
+  gap: var(--mq-sp-4);
+  padding: var(--mq-sp-3) var(--mq-sp-7) calc(var(--mq-sp-7) * 2);
+  font-family: var(--mq-font-body);
+}
+
+.mqx-pg-saves__title {
+  margin: 0;
+  color: var(--mq-board-ink);
+  font: 900 var(--mq-fs-title) / 1.2 var(--mq-font-display);
+}
+
+.mqx-pg-saves__list {
+  display: grid;
+  gap: var(--mq-sp-4);
+}
+
+.mqx-bg-btn.mqx-pg-save-row {
+  display: grid;
+  grid-template-columns: 44px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: var(--mq-sp-5);
+  width: 100%;
+  padding: var(--mq-sp-3) var(--mq-sp-5);
+  border: var(--mq-hair);
+  border-radius: var(--mq-r-cell);
+  background: var(--mq-cell);
+  box-shadow: 0 2px 0 var(--mq-cell-edge);
+  color: var(--mq-board-ink);
+  text-align: left;
+}
+
+.mqx-pg-save-row__portrait .mqx-persona-portrait__img {
+  display: block;
+  max-width: 44px;
+  max-height: 44px;
+  width: auto;
+  height: auto;
+}
+
+.mqx-pg-save-row__text {
+  display: grid;
+  min-width: 0;
+}
+
+.mqx-pg-save-row__text b {
+  font: 900 var(--mq-fs-body) / 1.2 var(--mq-font-display);
+}
+
+.mqx-pg-save-row__text small {
+  overflow: hidden;
+  color: var(--mq-board-ink-soft);
+  font-size: var(--mq-fs-caption);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.mqx-pg-save-row__go {
+  color: var(--mq-turn);
+  font-size: var(--mq-fs-caption);
+  font-weight: 700;
+}
+
+/* Каталог #/dev/mqx */
+.mqx-catalog__pg-demo {
+  min-height: 0;
+  margin: 0;
+  border-radius: var(--mq-r-card);
+}

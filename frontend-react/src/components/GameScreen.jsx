@@ -484,6 +484,8 @@ export function GameScreen({ onLogout, onNewGame, onLoadGame }) {
 
               {activeTab === 'menu' && (
                 <MenuPremium
+                  overview={overview}
+                  onContinue={() => setActiveTab('dashboard')}
                   onLogout={onLogout}
                   onNewGame={onNewGame}
                   onLoadGame={onLoadGame}

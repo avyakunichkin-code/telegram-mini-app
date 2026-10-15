@@ -33,8 +33,9 @@ import {
   MqxChip,
   MqxNeedsDash,
   MqxDashboardHero,
-  MqxSaveKindPicker,
   MqxStarterScenarioPicker,
+  MqxSaveCard,
+  MqxBoardButton,
   MqxFinancePeriodBlock,
   MqxPeriodActions,
   MqxPeriodCloseSheet,
@@ -160,25 +161,15 @@ export function MqCatalogScreen() {
         <MqxGuidanceStripDemo />
       </CatalogSection>
 
-      <CatalogSection title="Новая игра — выбор режима (R1 ★)">
+      <CatalogSection title="Выбор жизни (★ BG-2)">
         <p className="mqx-catalog__lead">
-          Шаг 1: <code>MqxSaveKindPicker</code> vivid (56/40, цветная полоска). План — «Скоро».
-        </p>
-        <div className="mqx-catalog-save-kind-demo">
-          <MqxSaveKindPicker onSelectGame={() => {}} />
-        </div>
-      </CatalogSection>
-
-      <CatalogSection title="Новая игра — выбор персонажа (портреты ★)">
-        <p className="mqx-catalog__lead">
-          Шаг 2: <code>MqxStarterScenarioPicker</code> + <code>PersonaPortrait</code> (pick 56px). Lab:{' '}
-          <code>design-lab/game-templates/persona-portraits-round/</code>. SVG I-Scene — архив, fallback при{' '}
-          <code>usePersonaPortraits=false</code>.
+          <code>MqxStarterScenarioPicker</code>: карточки персонажей (<code>PersonaPortrait</code> pick), доход за ход,
+          стартовые условия; выбранная — фиолетовая рамка. Канон: <code>design-lab/board-game/screens-round/</code>.
         </p>
         <div style={{ maxWidth: 420 }}>
           <MqxStarterScenarioPicker
-            layout="compact"
             value="mq_game_basic_v1"
+            label="Персонаж"
             onChange={() => {}}
             templates={[
               {
@@ -211,6 +202,27 @@ export function MqCatalogScreen() {
               },
             ]}
           />
+        </div>
+      </CatalogSection>
+
+      <CatalogSection title="Меню ★ BG-2 — карта сохранения и спокойные кнопки">
+        <p className="mqx-catalog__lead">
+          <code>MqxSaveCard</code> (портрет, ход, на счёте, цель + «Продолжить игру») и <code>MqxBoardButton</code>{' '}
+          (подпись + пояснение; <code>variant=&quot;link&quot;</code> — текстовая).
+        </p>
+        <div className="mqx-pg mqx-catalog__pg-demo">
+          <MqxSaveCard
+            templateKey="mq_game_basic_v1"
+            periodIndex={12}
+            cash={87400}
+            note="Цель: шаг 4 из 5"
+            onContinue={() => {}}
+          />
+          <div className="mqx-pg-actions">
+            <MqxBoardButton hint="другая жизнь">Новая игра</MqxBoardButton>
+            <MqxBoardButton hint="3 партии">Все сохранения</MqxBoardButton>
+          </div>
+          <MqxBoardButton variant="link">Выйти из аккаунта</MqxBoardButton>
         </div>
       </CatalogSection>
 
