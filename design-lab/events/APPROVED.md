@@ -51,3 +51,4 @@ E2-B (страховой halo) и E5-B (длинные тексты) — [`tails
 
 - 2026-05 — L3 ★ карточка, O1 ★ оверлей (`layout-round/`, `overlay-round/`), E2-B/E5-B (`tails-round/`).
 - 2026-10-15 — ★ BG-2: карта из колоды, чипы последствий, без XP.
+- 2026-10-15 — чистка prod без смены вида: удалены осиротевшие `EventOverlayToolbar`, `EventCarouselDots` и мёртвые правила старого L3 / B′ / TMA в `events.css` (`events-overlay-toolbar*`, `events-carousel-dot*`, `event-deck-*`, `tma-choice-btn*`, `mq-poly-*`).

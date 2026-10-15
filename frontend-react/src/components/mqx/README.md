@@ -40,8 +40,8 @@ mqx/
     InvestPositionRow
   events/
     EventCard, EventChoiceButton
-    EventCarouselOverlay, EventCarouselDots, EventCarouselNav
-    EventOverlayToolbar, useEventCarousel
+    EventCarouselOverlay, EventCarouselNav
+    useEventCarousel
   brand/
     MonetkaAvatar
     PersonaPortrait, personaPortraits.js  — 4 персонажа (pick/md/dash)
@@ -57,7 +57,7 @@ mqx/
 | `EventCard` | L3 ★: domain band + pill, Монетка + пузырь; E2 halo (страховка); E5 clamp/scroll |
 | `EventChoiceButton` | Одна кнопка выбора |
 | `EventCarouselOverlay` | Полноэкранный оверлей с каруселью |
-| `EventCarouselDots` / `EventCarouselNav` | Навигация |
+| `EventCarouselNav` | Стрелки ← → |
 | `BrandLogo` / `BrandMark` | PNG G1/G2: `full` — старт по центру + tagline; `compact` — hero/табы, без фона |
 | `PersonaPortrait` | Растровые портреты 4 жизней (★ persona-portraits-round): pick на `GameTemplatePickScreen`, dash в `MqxNeedsDash` |
 | `useEventCarousel` | Состояние свайпа/слайдов |
