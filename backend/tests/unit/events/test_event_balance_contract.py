@@ -70,3 +70,48 @@ def test_refusal_with_net_needs_down_is_ok():
     }
     violations = validate_event_spec(spec)
     assert not any(v.code == "refusal_needs_bonus" for v in violations), violations
+
+
+# --- NV-102: коридор кривой цены (только предупреждения) ---
+
+from app.events.balance_contract import curve_corridor_warnings  # noqa: E402
+
+_STUDENT_ONLY = {"mq_game_basic_v1": 62_500.0}
+
+
+def _spec(choices, audience=("mq_game_basic_v1",)):
+    return {"key": "test_curve", "audience_template_keys": list(audience), "choices": choices}
+
+
+def test_curve_corridor_flags_overpriced_points():
+    # 1 400 ₽ у Студента ≈ 8 баллов; +24 — выше коридора (×1.5).
+    spec = _spec([{"title": "Кофе", "effects": {"cash_delta": -1400, "needs_delta": {"social": 9, "comfort": 9, "health": 6}}}])
+    codes = {w.code for w in curve_corridor_warnings([spec], salaries=_STUDENT_ONLY)}
+    assert "curve_over" in codes
+
+
+def test_curve_corridor_accepts_curve_value_and_flags_axis_cap():
+    ok = _spec([{"title": "Кино", "effects": {"cash_delta": -1500, "needs_delta": {"social": 6, "comfort": 2}}}])
+    assert curve_corridor_warnings([ok], salaries=_STUDENT_ONLY) == []
+    capped = _spec([{"title": "Кино", "effects": {"cash_delta": -60000, "needs_delta": {"social": 22}}}])
+    assert {w.code for w in curve_corridor_warnings([capped], salaries=_STUDENT_ONLY)} == {"axis_cap"}
+
+
+def test_curve_corridor_skips_recurring_and_free_choices():
+    spec = _spec(
+        [
+            {"title": "Подписка", "effects": {"cash_delta": -599, "expense_line": {"category_key": "communications", "amount_monthly": 400}, "needs_delta": {"comfort": 30}}},
+            {"title": "Отказ", "effects": {"cash_delta": 0, "needs_delta": {"comfort": -3}}},
+        ]
+    )
+    assert curve_corridor_warnings([spec], salaries=_STUDENT_ONLY) == []
+
+
+def test_curve_corridor_is_report_only_for_catalog():
+    clear_mvp11_catalog_cache()
+    specs, _ = load_mvp11_catalog(force_reload=True)
+    warnings = curve_corridor_warnings(specs)
+    # Известный выброс из аудита 2026-10-15 виден в отчёте…
+    assert any(w.event_key == "mq11_friend_outing_student" and w.code == "curve_over" for w in warnings)
+    # …но не попадает в нарушения contract (baseline не меняется).
+    assert all(v.code != "curve_over" for v in validate_mvp11_balance(specs))

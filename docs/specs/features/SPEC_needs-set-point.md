@@ -297,7 +297,7 @@ Skill: **`/critical-test-scenarios`**. Backend — pytest на SQLite.
 | CS-4 | Просрочка → стрессор в L; погашение → снятие | integration | `pytest tests/test_needs_set_point_period.py` |
 | CS-5 | Инвариант: для всех сидов и осей `base + bonus_cap < w / r`; при максимальном бюджете и активах пассивный всё равно доходит до нуля | unit | `pytest tests/test_needs_set_point.py` |
 | CS-6 | Шаблон с `linear` — значения после закрытия идентичны текущим | regression | `pytest tests/test_character_needs.py` |
-| CS-7 | `needs_points` на опорах (S = 62 500, K 25): 300 ₽ → 5,0; 2 500 ₽ → 9,5 | unit | `pytest tests/test_needs_value_curve.py` |
+| CS-7 | `needs_points` на опорах (S = 62 500, K 25): 300 ₽ → 5,0; 2 500 ₽ → 9,5 | unit | `pytest tests/unit/needs/test_needs_value_curve.py` |
 | CS-8 | Линтер: выбор с `social_outing` и `health+` без `physical_activity` → нарушение; каталог mvp11 → 0 | contract | `pytest tests/ -k "mvp11 and balance"` |
 | CS-9 | Overview отдаёт `level`, `wear`, `level_sources`, `periods_to_zero_if_idle` | contract | `pytest tests/ -k overview` |
 | CS-10 | Активный бот (2 × 4% + treat-self) живёт 40 периодов на всех 4 шаблонах | balance | `python scripts/balance_playtest.py` |

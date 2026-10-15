@@ -252,3 +252,99 @@ def validate_mvp11_balance(specs: list[dict]) -> list[BalanceViolation]:
     for spec in specs:
         all_v.extend(validate_event_spec(spec))
     return all_v
+
+
+# --- Коридор кривой цены (SPEC_needs-set-point §1, PLAN NV-102) ---
+# Только отчёт: предупреждения не входят в validate_mvp11_balance и не ломают contract.
+
+CURVE_TOLERANCE = 0.5
+PLEASURE_AXIS_CAP = 10.0
+
+
+@dataclass(frozen=True)
+class CurveWarning:
+    event_key: str
+    choice_title: str
+    code: str  # curve_over | curve_under | axis_cap
+    needs_plus: float
+    expected_min: float
+    expected_max: float
+    detail: str
+
+
+def template_salaries() -> dict[str, float]:
+    """template_key → monthly_salary из сидов стартовых шаблонов."""
+    from ..seeds.game_starter_templates import GAME_STARTER_TEMPLATE_SEEDS
+
+    out: dict[str, float] = {}
+    for seed in GAME_STARTER_TEMPLATE_SEEDS:
+        salary = (seed.get("blueprint") or {}).get("monthly_salary")
+        if salary:
+            out[str(seed["template_key"])] = float(salary)
+    return out
+
+
+def _audience_salaries(spec: dict[str, Any], salaries: dict[str, float]) -> list[float]:
+    keys = [str(k) for k in (spec.get("audience_template_keys") or []) if k]
+    if not keys or "all" in keys:
+        return sorted(salaries.values())
+    picked = [salaries[k] for k in keys if k in salaries]
+    return sorted(picked) or sorted(salaries.values())
+
+
+def _is_one_off_spend(effects: dict[str, Any]) -> bool:
+    """Разовая трата без регулярных расходов и действий движка — к ней применима кривая."""
+    if _cash(effects) >= -1e-6:
+        return False
+    if _has_future_money_cost(effects) or _monthly_burn_delta_rub(effects) < -1e-6:
+        return False
+    if _has_insurance_claim(effects) or _has_special_engine_action(effects):
+        return False
+    if isinstance(effects.get("asset_from_template"), dict):
+        return False
+    return True
+
+
+def curve_corridor_warnings(
+    specs: list[dict],
+    *,
+    salaries: dict[str, float] | None = None,
+    tolerance: float = CURVE_TOLERANCE,
+    axis_cap: float = PLEASURE_AXIS_CAP,
+) -> list[CurveWarning]:
+    """Выборы с разовой тратой, чьи needs+ выходят из коридора needs_points ± tolerance."""
+    from ..needs.value_curve import needs_points
+
+    sal = salaries if salaries is not None else template_salaries()
+    out: list[CurveWarning] = []
+    for spec in specs:
+        key = str(spec.get("key") or spec.get("definition_key") or "")
+        audience = _audience_salaries(spec, sal)
+        if not audience:
+            continue
+        for ch in spec.get("choices") or []:
+            if not isinstance(ch, dict):
+                continue
+            effects = ch.get("effects") or {}
+            if not isinstance(effects, dict) or not _is_one_off_spend(effects):
+                continue
+            plus = _needs_sum_positive(effects)
+            if plus <= 0.5:
+                continue
+            title = str(ch.get("title") or "")
+            cost = -_cash(effects)
+            # Богатая персона получает за ту же сумму меньше баллов.
+            lo = needs_points(cost, audience[-1]) * (1 - tolerance)
+            hi = needs_points(cost, audience[0]) * (1 + tolerance)
+            if plus > hi:
+                out.append(CurveWarning(key, title, "curve_over", plus, lo, hi,
+                                        f"needs+ {plus:g} > {hi:.1f} за {cost:g} руб"))
+            elif plus < lo:
+                out.append(CurveWarning(key, title, "curve_under", plus, lo, hi,
+                                        f"needs+ {plus:g} < {lo:.1f} за {cost:g} руб"))
+            raw = effects.get("needs_delta") or {}
+            over_axes = [ax for ax in NEEDS_AXES if float(raw.get(ax, 0) or 0) > axis_cap]
+            if over_axes:
+                out.append(CurveWarning(key, title, "axis_cap", plus, lo, hi,
+                                        f"оси {', '.join(over_axes)} > {axis_cap:g} за выбор"))
+    return out

@@ -51,7 +51,7 @@ Primary: **game-economy-and-victory** · satellite: test-driven-development
 | ID | Задача | Файлы | DoD |
 |----|--------|-------|-----|
 | NV-101 | `needs_points(cost, salary, *, k=25, alpha=0.3)` | `backend/app/needs/value_curve.py` (новый) | CS-7 зелёный |
-| NV-102 | Коридор ±50% для выборов с `needs+` и ценой; warnings, не errors | `backend/app/events/balance_contract.py` | отчёт со списком выбросов; baseline violations = 0 не меняется |
+| NV-102 | Коридор ±50% для выборов с `needs+` и ценой; warnings, не errors | `backend/app/events/balance_contract.py`, `scripts/event_catalog_report.py` | отчёт со списком выбросов; baseline violations = 0 не меняется |
 | NV-103 | MCE §12: месячный платёж за горизонт, ссылка на кривую | `.claude/skills/create-event/event-balance-rules.md` §6, §12 | правила согласованы с кодом |
 
 Проверка: `cd backend && py -3 -m pytest -q`.

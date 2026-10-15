@@ -161,7 +161,23 @@ choices:
 | 2 | 5–15% | +5…+12 | −3…−10 |
 | 3+ mandatory | 10–25%+ | по сюжету | редко без cost |
 
-**Правило большого пальца:** каждые **+10 needs** на главной оси ≈ **3–8% salary** или заметный burn (+0.03…+0.08 `monthly_burn_delta_pct`).
+**Цена балла — кривая** ([SPEC_needs-set-point](../../../docs/specs/features/SPEC_needs-set-point.md) §1, код [`needs/value_curve.py`](../../../backend/app/needs/value_curve.py)):
+
+```text
+needs_points(C, S) = 25 · (C / S)^0.30      C — разовая трата, S — зарплата персоны
+```
+
+| Студент, S = 62 500 | Цена | Баллы (сумма needs+) |
+|---|---:|---:|
+| кофе | 300 | 5 |
+| 4% зарплаты | 2 500 | 9,5 |
+| ужин в баре | 5 000 | 11,7 |
+| зарплата | 62 500 | 25 |
+
+- Сумма плюсов выбора с **разовой** тратой — в коридоре `needs_points × [0.5; 1.5]` по зарплатам аудитории события; каждая ось ≤ **10**.
+- Подбор цены под нужные баллы: `cost_for_points(points, S)`.
+- Регулярные расходы (`expense_line`, `monthly_*`) кривой не проверяются: в модели износа они поднимают уровень жизни, а не дают разовые баллы (spec §3).
+- Проверка: `cd backend && python scripts/event_catalog_report.py` → раздел «needs price curve corridor» (предупреждения, не ошибки contract).
 
 Сверяй **`build_choice_impacts`** — игрок видит «Счёт сейчас» и «Расходы на жизнь».
 
@@ -315,24 +331,11 @@ needs_axis_map: housing → comfort primary; status secondary
 
 ## 12. Подсказка MCE (авторинг, не автозапись YAML)
 
-**MCE** (monthly cost equivalent) — перевод effects в «долю зарплаты» для проверки §1 и §6.
+> **Заменено кривой цены (§6)** с 2026-10-15. Старая формула MCE считала рост ежемесячного расхода как **один** месяц и поэтому недооценивала подписки и аренду в 10–20 раз ([idea](../../../docs/vision/ideas/needs-value-curve.md)).
 
-```text
-cost     = (-cash_delta / S) + (Δburn_monthly / S) + (|monthly_lifestyle_delta| / S если < 0)
-benefit  = Σ w_axis · max(0, needs_delta[axis]) / 100
-penalty  = Σ w_axis · max(0, -needs_delta[axis]) / 100   # отказ
-
-L1: если benefit > ε  →  cost + penalty ≥ k_tier · benefit
-```
-
-| Tier | k_tier *(старт)* |
-|------|------------------|
-| 1 soft | 0.35–0.50 |
-| 2 | 0.45–0.60 |
-
-**Веса осей `w_axis`:** см. [`persona-profiles.md`](persona-profiles.md) (студент: social/health выше; про: status/comfort).
-
-**Использование:** подобрать `|cash_delta|` под целевой `needs+` (**не** генерировать весь YAML из формулы). Ориентир §6 «правило большого пальца»; калибровка — playtest / EVT1-105.
+- Разовая трата → баллы по `needs_points` (§6).
+- Регулярная трата → **не** разовые баллы: вклад в уровень жизни (spec §3.1), считается движком.
+- Веса осей по персонам — [`persona-profiles.md`](persona-profiles.md); какие оси трогать — §11.
 
 ---
 
