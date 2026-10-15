@@ -5,7 +5,7 @@ import {
   clampInvestAmount,
   DEPOSIT_ANNUAL_RATE_PERCENT,
 } from '../constants/investProducts';
-import { capitalPageSubtitle, capitalLockHint, capitalSectionState, getEffectiveMechanicsFromOverview } from '../utils/starterMechanics';
+import { capitalLockHint, capitalSectionState } from '../utils/starterMechanics';
 import { useMqxConfirm } from './mqx';
 import { CapitalActionsPanel } from './mqx/layout/CapitalActionsPanel';
 import { CapitalDetailsPanel } from './mqx/layout/CapitalDetailsPanel';
@@ -40,14 +40,19 @@ export function FinancePremium({
   const [securedAcquireBusyKey, setSecuredAcquireBusyKey] = useState(null);
   const [prepayBusy, setPrepayBusy] = useState(false);
 
-  const mechanics = useMemo(() => getEffectiveMechanicsFromOverview(overview), [overview]);
-  const insuranceSectionState = useMemo(
-    () => capitalSectionState(overview, 'capital_insurance'),
+  /** open | locked | hidden на раздел: закрытые механики видны пунктиром (★ BG-2). */
+  const sections = useMemo(
+    () => ({
+      invest: capitalSectionState(overview, 'capital_invest'),
+      insurance: capitalSectionState(overview, 'capital_insurance'),
+      property: capitalSectionState(overview, 'capital_property'),
+      liabilities: capitalSectionState(overview, 'capital_liabilities'),
+    }),
     [overview],
   );
-  const insuranceLockHint = useMemo(
-    () => (insuranceSectionState === 'locked' ? capitalLockHint(overview) : null),
-    [insuranceSectionState, overview],
+  const lockHint = useMemo(
+    () => (Object.values(sections).includes('locked') ? capitalLockHint(overview) : null),
+    [sections, overview],
   );
 
   useEffect(() => {
@@ -285,10 +290,10 @@ export function FinancePremium({
         title="Капитал"
         titleClassName="mqx-hero__title--capital"
         subtitleClassName="mqx-hero__sub--capital"
-        subtitle={capitalPageSubtitle(mechanics)}
+        subtitle="Что приносит и забирает деньги"
       />
 
-      <main className="mqx-content mqx-tab-page__scroll mqx-capital-page">
+      <main className="mqx-content mqx-tab-page__scroll mqx-capital-page mqx-capital-page--board">
         <div className="mqx-fin mqx-fin--capital">
           {dialog}
           <div className="mqx-capital-accordion-stack">
@@ -297,15 +302,15 @@ export function FinancePremium({
               investPositions={investPositions}
               policies={policies}
               openFlowsSection={openFlowsSection}
+              showNet={pageMode === 'details'}
             />
 
             <MqxCapitalPageModeSeg mode={pageMode} onModeChange={setPageMode} />
 
             {pageMode === 'details' ? (
               <CapitalDetailsPanel
-                mechanics={mechanics}
-                insuranceSectionState={insuranceSectionState}
-                insuranceLockHint={insuranceLockHint}
+                sections={sections}
+                lockHint={lockHint}
                 investPositions={investPositions}
                 policies={policies}
                 ownedAssets={ownedAssets}
@@ -323,8 +328,8 @@ export function FinancePremium({
               />
             ) : (
               <CapitalActionsPanel
-                mechanics={mechanics}
-                insuranceSectionState={insuranceSectionState}
+                sections={sections}
+                lockHint={lockHint}
                 assetTemplates={assetTemplates}
                 liabilityTemplates={liabilityTemplates}
                 extraLoading={extraLoading}

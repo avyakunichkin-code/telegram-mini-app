@@ -2,15 +2,18 @@
 
 Этап 1 MQX: статика до React. Правила: [`DESIGN_WORKFLOW.md`](../../frontend-react/src/components/mqx/DESIGN_WORKFLOW.md).
 
-## Канон prod (2026-06)
+## Канон prod — ★ BG-2 (2026-10-15)
+
+Канон и инварианты — [`APPROVED.md`](APPROVED.md); макет — [`../board-game/screens-round/`](../board-game/screens-round/) («Капитал · Детали», «Капитал · Действия»).
 
 | Решение | Детали |
 |---------|--------|
-| **Экран** | `FinancePremium`, hero **«Капитал»**, `mqx-capital-page` |
-| **Порядок** | **Доходы / Расходы** → **Детали \| Действия** → позиции или сетка + sheet |
-| **Детали** | Аккордеоны позиций (инвестиции → страховки → имущество → обязательства); meta M8/M5 |
-| **Действия** | `MqxCapitalActionGrid` + `MqxCapitalSheet`; ипотека и кредит раздельно |
-| **Lab ★** | [`details-actions-round/`](details-actions-round/) — sync `./sync-lab.sh` |
+| **Экран** | `FinancePremium`, hero **«Капитал»**, `mqx-capital-page mqx-capital-page--board` |
+| **Порядок** | Доходы/Расходы за ход → «Остаётся после хода» (Детали) → **Детали \| Действия** → карточки или фишки + sheet |
+| **Детали** | `CapitalLot` — карточки собственности с цветной полосой: Вложения → Страховки → Имущество → Долги |
+| **Действия** | `MqxCapitalActionGrid` — фишки 3 в ряд «Вложить / Купить / Занять», закрытые — пунктиром; `MqxCapitalSheet` |
+| **Prod parity** | `screens-round/` + [`../finance/parity-generated-page-round/`](../finance/parity-generated-page-round/) |
+| **История** | [`details-actions-round/`](details-actions-round/) — канон v2 (2026-06), структура сохранена |
 
 UX: [`docs/ux/screens/finance.md`](../../docs/ux/screens/finance.md).
 
