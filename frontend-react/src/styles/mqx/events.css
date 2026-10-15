@@ -243,12 +243,15 @@ body.mqx-events-overlay-open .mqx-tab-page__scroll {
  */
 .mqx-events-overlay {
   z-index: 530;
-  font-family: var(--mq-font-body);
-  color: var(--mq-board-ink);
 }
 
 .mqx-events-overlay .mqx-event-help-root {
   z-index: 5;
+}
+
+/* Глобальный тёмный h2 не должен бледнеть на светлом листе справки */
+.mqx-event-help-sheet .mqx-sheet__title {
+  color: inherit;
 }
 
 .mqx-event-help-sheet__lead {
@@ -271,6 +274,7 @@ body.mqx-events-overlay-open .mqx-tab-page__scroll {
   background: transparent;
   box-shadow: none;
   color: var(--mq-board-ink);
+  font-family: var(--mq-font-body);
 }
 
 @media (max-width: 599px) {
@@ -339,7 +343,7 @@ body.mqx-events-overlay-open .mqx-tab-page__scroll {
   display: flex;
   align-items: center;
   gap: var(--mq-sp-2);
-  padding: var(--mq-sp-3) var(--mq-sp-3) var(--mq-sp-3) var(--mq-sp-5);
+  padding: var(--mq-sp-1) var(--mq-sp-1) var(--mq-sp-1) var(--mq-sp-5);
   background: var(--mq-turn-soft);
 }
 
@@ -400,14 +404,16 @@ body.mqx-events-overlay-open .mqx-tab-page__scroll {
   gap: calc(var(--mq-sp-1) / 2);
 }
 
-.mqx-events-card__help {
+.mqx-events-card__help.mqx-help-icon-btn {
+  min-width: 44px;
+  min-height: 44px;
   margin: 0;
 }
 
 button.mqx-events-card__close {
   flex-shrink: 0;
-  width: 36px;
-  height: 36px;
+  width: 44px;
+  height: 44px;
   margin: 0;
   padding: 0;
   border: none;
@@ -623,8 +629,8 @@ button.mqx-events-choice:disabled {
 }
 
 .mqx-events-nav--l3 .mqx-events-arrow.events-carousel-arrow {
-  width: 48px;
-  height: 40px;
+  width: 52px;
+  height: 44px;
   border: var(--mq-hair);
   border-radius: 12px;
   background: var(--mq-cell);
