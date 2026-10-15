@@ -1,5 +1,6 @@
 import { Modal } from '@telegram-apps/telegram-ui';
 import { PersonaPortrait } from '../brand/PersonaPortrait';
+import { MqxModalTitle } from '../primitives/MqxModalTitle';
 import { personaRoleTitle } from '../brand/personaRoles';
 import { runOutcomeLabel } from '../utils/pregameDisplay';
 
@@ -14,10 +15,10 @@ function sortProfiles(profiles) {
 /** «Все сохранения» ★ BG-2: строка = партия (портрет, роль, название и ход); тап — открыть. */
 export function MqxSavesSheet({ open, onClose, profiles, onPick, busyId = null }) {
   return (
-    <Modal open={open} onOpenChange={(next) => (!next ? onClose?.() : null)}>
+    <Modal open={open} onOpenChange={(next) => (!next ? onClose?.() : null)} aria-describedby={undefined}>
       <div className="mqx-pg-saves">
-        <h2 className="mqx-pg-saves__title" id="mqx-pg-saves-title">Все сохранения</h2>
-        <div className="mqx-pg-saves__list" role="list" aria-labelledby="mqx-pg-saves-title">
+        <MqxModalTitle className="mqx-pg-saves__title">Все сохранения</MqxModalTitle>
+        <div className="mqx-pg-saves__list" role="list" aria-label="Сохранённые партии">
           {sortProfiles(profiles).map((p) => {
             const outcome = runOutcomeLabel(p);
             const sub = [`«${p.name}»`, `ход ${p.period_index}`, outcome].filter(Boolean).join(' · ');

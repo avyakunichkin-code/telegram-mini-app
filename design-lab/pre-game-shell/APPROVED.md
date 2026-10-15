@@ -37,3 +37,9 @@
 - MQX: `mqx/pregame/MqxSaveCard`, `MqxBoardButton`, `MqxSavesSheet`; `mqx/layout/MqxStarterScenarioPicker`; подписи — `mqx/utils/pregameDisplay.js`.
 - Стили: `styles/mqx/pregame.css` (главная кнопка — `.mqx-bg-cta` из `board.css`), таббар — `styles/shell.css`.
 - Удалены: `NewProfileKindScreen`, `MqxSaveKindPicker`, `ModeIllustrations`, `MqxMonetkaDialogScreen`.
+
+## Prod-хотфиксы без смены дизайна
+
+| Дата | Что | Почему |
+|------|-----|--------|
+| 2026-10-15 | `MqxSavesSheet` и `MqxConfirmDialog`: заголовок через `MqxModalTitle` (Radix `Drawer.Title`), описание — `MqxModalDescription` или `aria-describedby={undefined}`; `MqxConfirmDialog` закрывается через `onOpenChange` | Radix: «DialogContent requires a DialogTitle» — скринридер не объявлял окно; у `Modal` нет пропсов `onClose`/`title`, смахивание и тап по фону не вызывали `onClose` |
