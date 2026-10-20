@@ -16,7 +16,8 @@ aliases:
 | ID | Тема |
 |----|------|
 | [[docs/decisions/ADR-001-save-kind-remove-light-hardcore|ADR-001]] | save_kind, без light/hardcore |
-| [[docs/decisions/ADR-013-game-only-drop-plan-mode|ADR-013]] | Только Game; Plan cancelled |
+| [[docs/decisions/ADR-013-game-only-drop-plan-mode|ADR-013]] | Только Game; Plan как save cancelled (п.3 → ADR-016) |
+| [[docs/decisions/ADR-016-two-products-shared-fincore|ADR-016]] | Game и Plan — два продукта; общий `fincore` |
 | [[docs/decisions/ADR-014-brand-direction-board-game|ADR-014]] | Бренд: настольная игра, webfont, 3D, «Завершить ход» |
 | [[docs/decisions/ADR-015-needs-set-point-model|ADR-015]] | Потребности: износ рутиной + уровень жизни (proposed) |
 | [[docs/decisions/ADR-002-victory-engine-and-template-config|ADR-002]] | Victory v2 engine |

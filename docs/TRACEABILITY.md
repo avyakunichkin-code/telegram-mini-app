@@ -31,8 +31,9 @@ aliases:
 | **EVT1** | События v2: слоты, informational, global | [event-types-and-taxonomy](vision/ideas/event-types-and-taxonomy.md) | [SPEC_event-system-v2-slots-and-taxonomy](specs/features/SPEC_event-system-v2-slots-and-taxonomy.md) **draft** | — | [EVT1 в backlog](backlog/PRODUCT_BACKLOG.md) | taxonomy `0041` + rebalance ✅; мульти-слот планировщик ⬜ |
 | **PLT** | Platform: host, product analytics, TG player, auth | [post-playtest-wave1-two-directions](vision/ideas/post-playtest-wave1-two-directions.md) **approved** | ⚠ PA2 — нет | [PLAN_PLT](plans/PLAN_PLT.md) **approved** · [PLAN_INFRA](plans/PLAN_INFRA.md) draft | [PLT в backlog](backlog/PRODUCT_BACKLOG.md) | **in dev** фаза 1 funnel ✅ |
 | **M1.2** | MVP 1.2 — Game для своих | [post-playtest §1.2](vision/ideas/post-playtest-wave1-two-directions.md) | EVT1, V2-BAL (частично) | [PLAN_production-ready](plans/PLAN_production-ready.md) **draft**; [PR-14](plans/PLAN_pr-14-events-spawn-failed.md) · [PR-02](plans/PLAN_pr-02-salary-choose-lock.md) **approved** | [M1.2 в backlog](backlog/PRODUCT_BACKLOG.md) | **approved**; production-ready план DRAFT |
-| **M2.0** | ~~MVP 2.0 — Plan для своих~~ | [post-playtest](vision/ideas/post-playtest-wave1-two-directions.md) (баннер ADR-013) | — | — | — | **`cancelled`** 2026-09-07 — [ADR-013](decisions/ADR-013-game-only-drop-plan-mode.md). AN1/E1 A–C живут в Game, не как второй save |
+| **M2.0** | ~~MVP 2.0 — Plan для своих~~ | [post-playtest](vision/ideas/post-playtest-wave1-two-directions.md) (баннер ADR-013) | — | — | — | **`cancelled`** 2026-09-07 — [ADR-013](decisions/ADR-013-game-only-drop-plan-mode.md). AN1/E1 A–C живут в Game, не как второй save. Plan-продукт — эпик **SPL**, не M2.0 |
 | **GO** | Только Game: снять Plan UI/API | [game-only-drop-plan-mode](vision/ideas/game-only-drop-plan-mode.md) **refined** | канон = ADR-013 | **Очередь:** [PLAN_production-ready](plans/PLAN_production-ready.md); **детали срезов:** [PLAN_game-only](plans/PLAN_game-only.md) | [GO в backlog](backlog/PRODUCT_BACKLOG.md) | **approved**; GO-01/02 = P1 до WAVE1 |
+| **SPL** | Два продукта (Game и Plan) на общем `fincore` | [plan-financial-assistant](vision/ideas/plan-financial-assistant.md) **draft** | канон = [ADR-016](decisions/ADR-016-two-products-shared-fincore.md); SPEC_plan-v1 — после α (SPL-401) | [PLAN_game-plan-split](plans/PLAN_game-plan-split.md) **approved** | — | **approved** 2026-10-21; фазы 0–3 (ядро) сейчас, Plan — после Pre-Alpha gate |
 
 **Статусы:** `idea` → `spec draft` → `spec approved` → `in dev` → `implemented`
 
@@ -51,7 +52,7 @@ aliases:
 1. Продуктовая приёмка при необходимости (sign-off).
 2. ~~**Эпик M11:** MQ-116 doc + GAME §0.2~~ — ✅ 2026-05-26 (Task 0.1).
 3. **Эпик M12:** design-lab `achievements-progress` → collapsible «Уровень» + страница каталога + Меню; плейтест §16 spec.
-4. ~~**Plan Mode**~~ — **cancelled** [ADR-013](decisions/ADR-013-game-only-drop-plan-mode.md); вырезание — эпик **GO**.
+4. ~~**Plan Mode**~~ — **cancelled** [ADR-013](decisions/ADR-013-game-only-drop-plan-mode.md); вырезание — эпик **GO**. Plan как **отдельный продукт** — эпик **SPL** ([ADR-016](decisions/ADR-016-two-products-shared-fincore.md)).
 5. **Victory v2 (V2):** плейтест порогов и баланс целей в шаблонах (базовый UI целей — ✅).
 6. ~~Level gates~~ — сняты; ограничения механик — шаблоны старта ([remove-character-xp](vision/ideas/remove-character-xp-and-levels.md)).
 7. **Pre-Alpha (α):** протокол плейтеста 10–20 игроков — [`GAME.md`](../GAME.md) раздел 11.1; черновик протокола — [`foundation/PRE_ALPHA_PLAYTEST_PROTOCOL.md`](foundation/PRE_ALPHA_PLAYTEST_PROTOCOL.md).

@@ -14,7 +14,7 @@ aliases:
 
 ## Status
 
-**Accepted** (2026-09-07).
+**Accepted** (2026-09-07). **П.3 заменён [ADR-016](ADR-016-two-products-shared-fincore.md) (2026-10-21):** Plan возвращается **отдельным продуктом**, не `save_kind`; остальные пункты в силе.
 
 Дополняет [ADR-001](ADR-001-save-kind-remove-light-hardcore.md): отказ от `light`/`hardcore` и введение `save_kind` остаются в силе. **Резерв `plan` под MVP 2.0** в ADR-001 **снят** этим ADR. ADR-001 не удалять.
 

@@ -50,3 +50,28 @@ reviews:
       Принята модель «износ + уровень жизни» с инвариантом давления.
     repo_trace: docs/specs/features/SPEC_needs-set-point.md, docs/decisions/ADR-015-needs-set-point-model.md, docs/plans/PLAN_needs-set-point.md
     decision_changed: true
+
+  - id: CY-2026-10-21-game-plan-split
+    date: 2026-10-21
+    subject: Разделение Game и Plan на два продукта — раскладка репозитория, аккаунты, сроки
+    human_decision: >-
+      Game и Plan — два отдельных приложения с переиспользуемым backend. Монорепо, два деплоя,
+      полностью раздельные аккаунты, ядро сейчас, Plan после α, ручной обезличенный ввод.
+    disagreement: >-
+      Очевидный путь — сразу разложить репозиторий в apps/game-* и apps/plan-* и перенести
+      старый Plan-UI. На пути backend/ и frontend-react/ ~16.8 тыс. ссылок в ~4 тыс. файлов
+      (.claude, docs, guardrails, CI); старый Plan-код спроектирован как save_kind игры.
+      Раздельные аккаунты убирают воронку «игрок → клиент Plan».
+    alternative: >-
+      «Добавляем рядом, не двигаем»: packages/fincore + packages/platform, apps/plan-* рядом,
+      игра остаётся на месте (переезд — опционально SPL-090 после α). Старый Plan-код удалить
+      в GO-03. Общая identity при раздельных данных.
+    alternative_cost: >-
+      Два стиля раскладки в репо до SPL-090; Plan проектируется с нуля. Общая identity —
+      общий сервис auth и связанность продуктов по пользователям.
+    outcome: partial
+    decision: >-
+      Принят план PLAN_game-plan-split («добавляем рядом», fincore как Shared Kernel,
+      старый Plan-код не переносится). Общая identity отклонена PO — аккаунты раздельные.
+    repo_trace: docs/decisions/ADR-016-two-products-shared-fincore.md, docs/plans/PLAN_game-plan-split.md
+    decision_changed: true
