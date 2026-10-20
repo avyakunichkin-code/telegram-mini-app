@@ -264,10 +264,14 @@ def apply_edits(path: Path, edits_by_key: dict[str, list[dict]]) -> int:
 
 
 def main(argv: list[str] | None = None) -> int:
+    global PLEASURE_AXIS_CAP, REFUSAL_SHARE
     ap = argparse.ArgumentParser(description=__doc__.split("\n")[1])
     ap.add_argument("--k", type=float, default=25.0, help="масштаб кривой K_imp")
     ap.add_argument("--dry-run", action="store_true")
+    ap.add_argument("--axis-cap", type=int, default=PLEASURE_AXIS_CAP, help="потолок плюса на ось (pleasure)")
+    ap.add_argument("--refusal-share", type=float, default=REFUSAL_SHARE, help="минус отказа ≤ доля лучшего плюса")
     args = ap.parse_args(argv)
+    PLEASURE_AXIS_CAP, REFUSAL_SHARE = args.axis_cap, args.refusal_share
 
     total = 0
     for f in sorted(glob.glob(str(CATALOG / "**" / "*.yaml"), recursive=True)):
