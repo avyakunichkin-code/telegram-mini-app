@@ -1,0 +1,19 @@
+# Границы модулей (ADR-016). Проверка: tests/test_import_boundaries.py
+# или вручную из backend/: python -m importlinter.cli  (lint-imports)
+[importlinter]
+root_packages =
+    fincore
+    app
+include_external_packages = True
+
+[importlinter:contract:fincore-pure]
+name = fincore: без фреймворков, ORM и кода приложений
+type = forbidden
+source_modules =
+    fincore
+forbidden_modules =
+    app
+    fastapi
+    starlette
+    sqlalchemy
+    pydantic

@@ -47,7 +47,8 @@ Backend: FastAPI, SQLAlchemy, PostgreSQL. Frontend: React + Vite, `@telegram-app
 
 | Что | Команда |
 |-----|---------|
-| Backend тесты | `cd backend && python -m pytest -q` (Windows: `py -3 -m pytest -q`; тесты на SQLite, БД не нужна) |
+| Backend тесты | `cd backend && python -m pytest -q` (Windows: `py -3 -m pytest -q`; тесты на SQLite, БД не нужна). Зависимости ставить **из `backend/`** (`-e ../packages/fincore`) |
+| Ядро fincore | `cd packages/fincore && python -m pytest -q` — при правках `packages/fincore/` (в backend pytest не входит) |
 | Frontend | `cd frontend-react && npm run build` · `npm run test:unit` · PR: `npm run check:guardrails` |
 | Баланс 30–40 периодов | `/balance-playtest` или `cd backend && python scripts/balance_playtest.py` |
 | Свод принципов | `py -3 scripts/check_conventions.py` |

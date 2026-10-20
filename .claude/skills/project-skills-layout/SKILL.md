@@ -153,6 +153,7 @@ Studio/GDD: [`.claude/skills/_archived/`](../../../.claude/skills/_archived/) �
 |------|--------|
 | `.claude/rules/backend.md` | `backend/**` |
 | `.claude/rules/db-migrations.md` | `backend/migrations/**`, `backend/app/seeds/**`, `backend/scripts/db.sh` |
+| `.claude/rules/fincore.md` | `packages/fincore/**`, `backend/.importlinter` — общее ядро Game/Plan (ADR-016) |
 | `frontend-*.md` | `frontend-react/**` |
 | `.claude/rules/design-lab.md` | `design-lab/**` — хаб `nav.manifest` → `design-lab:build-nav`; см. `docs/agents/DESIGN_LAB_NAVIGATION.md` |
 | `.claude/rules/canon-sync.md` | утверждённый UI → prod |

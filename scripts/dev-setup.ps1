@@ -60,8 +60,12 @@ if (Test-Path $VenvPy) {
     & py -3.14 -m venv (Join-Path $Backend '.venv')
 }
 & $VenvPy -m pip install --upgrade pip --quiet
-& $VenvPy -m pip install -r (Join-Path $Backend 'requirements-dev.txt') --quiet
-if ($LASTEXITCODE -ne 0) { Fail 'pip install завершился с ошибкой.' }
+# Из backend/: путь `-e ../packages/fincore` в requirements.txt pip считает от текущей папки (ADR-016).
+Push-Location $Backend
+& $VenvPy -m pip install -r 'requirements-dev.txt' --quiet
+$pipExit = $LASTEXITCODE
+Pop-Location
+if ($pipExit -ne 0) { Fail 'pip install завершился с ошибкой.' }
 Write-Host 'OK'
 
 # --- 3. Env-файлы ---------------------------------------------------------------

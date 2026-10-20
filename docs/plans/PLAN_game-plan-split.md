@@ -141,6 +141,21 @@ data/events/          # только игра
 | SPL-102 | `import-linter` в dev-зависимости + контракт «кандидаты в fincore не импортируют sqlalchemy/fastapi». Пока режим *report*: список нарушений = backlog фазы 2 | контракт в CI, отчёт в плане |
 | SPL-103 | Path-scoped rule `.claude/rules/fincore.md`: без игровых терминов, без IO; обновить `project-skills-layout` | `_claude-config-check.mjs` зелёный |
 
+**Статус фазы 1 (2026-10-21, ветка `claude/spl-fincore`):**
+- **SPL-102 ✅.** Enforce-контракт `backend/.importlinter` (fincore ↛ app/fastapi/starlette/sqlalchemy/pydantic) проверяется тестом `backend/tests/test_import_boundaries.py`. Негативная проба (`import sqlalchemy` в ядре) ловится. Report-контракт — `backend/importlinter-report.ini`. Backend CI для pytest пока нет (PR-04), поэтому гейт = локальный pytest.
+- **SPL-103 ✅.** Rule `.claude/rules/fincore.md` + строка в `project-skills-layout`.
+- **SPL-101 ⏸.** Отложен до закрытия NV-406/407: калибровка needs меняет YAML и закрытие периода, golden сразу устарели бы. Для SPL-201/202 хватает сравнения двух прогонов `balance_playtest` до и после на одном дереве.
+
+**Backlog фазы 2 из report-контракта** (прямые импорты ORM/HTTP в кандидатах):
+
+| Модуль | Нарушения | Срез |
+|--------|-----------|------|
+| `finance/expenses.py` | `sqlalchemy`, `app.models`, `fastapi` (в plan-CRUD — уйдёт в GO-03) | SPL-204 |
+| `finance/period_close_preview.py` | `sqlalchemy`, `app.models` | SPL-206 |
+| `finance/period_metrics.py` | `sqlalchemy`, `app.models` | SPL-207 |
+| `finance/starter_liability.py` | `app.models` | SPL-203 |
+| `finance/balance_utils.py` | `sqlalchemy`, `app.models` (ledger — остаётся адаптером, см. таблицу «общее/уникальное») | SPL-205 |
+
 ### Фаза 2 — Выделение `packages/fincore` · ~1.5–2 н
 
 Gate каждого среза: **balance diff = 0** относительно SPL-101 и pytest зелёный. Primary: game-economy-and-victory; satellites: test-driven-development, doubt-driven-development; второй проход — `economy-reviewer`.
@@ -155,6 +170,17 @@ Gate каждого среза: **balance diff = 0** относительно SP
 | SPL-206 | `fincore.forecast(snapshot, months=N)` на базе `month_step`; `period_close_preview` → тонкий адаптер | golden = 0 |
 | SPL-207 | `fincore.metrics` (ADR-009): DTI, норма сбережений, месяцы подушки, net worth | unit + сверка с overview |
 | SPL-208 | Контракт import-linter переводим из *report* в *enforce*; шимы из SPL-202 удаляем | CI падает при нарушении |
+
+**Статус (2026-10-21, ветка `claude/spl-fincore`):**
+- **SPL-201 ✅.** `packages/fincore`: pyproject, `money`, тесты пакета. Подключение — `-e ../packages/fincore` в `backend/requirements.txt` (ставить из `backend/`). uv workspace не заводили: pip-path-dependency хватает, отдельный инструмент не нужен.
+- **SPL-202 ✅.**
+  - `fincore.annuity` (+ `monthly_interest_payment` из `finance/helpers`), `fincore.liabilities`, `fincore.invest` (`UnknownInvestProduct` вместо `HTTPException`).
+  - `backend/app/finance/{annuity,helpers}` — реэкспорт.
+  - `liability_kinds`, `invest_products` — адаптеры: ORM-сигнатуры и HTTP 400.
+  - `MAX_ACTIVE_CONSUMER_LOANS` и `ASSET_KIND_FOR_AUTO` остались в игре: это игровые лимиты и каталог.
+  - Каталог инвест-продуктов со ставками 14/16% тоже остался в игре (`INVEST_PRODUCTS`): ставки — баланс игры. В ядре — тип `InvestProduct` и `find_invest_product(catalog, kind)`. Решение по ревью economy-reviewer.
+  - Проверено: pytest backend, тесты ядра, balance playtest до/после идентичен; economy-reviewer — APPROVED.
+  - Тесты ядра не входят в backend pytest (`testpaths = tests`) — до CI (PR-04) это ручной шаг из таблицы «Команды» в `CLAUDE.md`.
 
 ### Фаза 3 — `packages/platform` · ~0.5 н (после PR-05, PR-06, PR-08)
 

@@ -12,3 +12,5 @@ argon2-cffi-bindings==26.1.0
 pydantic==2.14.1
 pydantic-core==2.50.1
 pyyaml==6.0.3
+# Финансовое ядро Game/Plan (ADR-016). Путь относительно backend/ — устанавливать из этой папки.
+-e ../packages/fincore

@@ -1,7 +1,7 @@
 """
 Golden vectors for DL1 annuity / payoff (SPEC §4.4).
 
-Rounding: HALF_UP to 0.01 on each component — must match finance/annuity.py.
+Rounding: HALF_UP to 0.01 on each component — must match packages/fincore/src/fincore/annuity.py (ADR-016).
 """
 
 from __future__ import annotations
