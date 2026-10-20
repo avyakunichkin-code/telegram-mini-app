@@ -370,12 +370,27 @@ def resolve_used_car_deadline_choice(
     return out
 
 
+def resolve_cash_pct_salary(db: Session, profile: GameProfile, effects: dict[str, Any]) -> dict[str, Any]:
+    """cash_pct_salary → cash_delta = −round(зарплата · pct, −1) (SPEC_needs-set-point, NV-501)."""
+    pct = effects.get("cash_pct_salary")
+    if pct is None or "cash_delta" in effects:
+        return effects
+    from ..models import FinanceSalary
+
+    row = db.query(FinanceSalary).filter(FinanceSalary.game_profile_id == profile.id).first()
+    salary = float(row.monthly_amount) if row else 0.0
+    out = dict(effects)
+    out["cash_delta"] = -round(salary * float(pct), -1)
+    return out
+
+
 def resolve_choice_effects_for_definition(
     db: Session,
     profile: GameProfile,
     definition_key: str,
     effects: dict[str, Any],
 ) -> dict[str, Any]:
+    effects = resolve_cash_pct_salary(db, profile, effects)
     if definition_key != "mq11_used_car_deadline":
         return effects
     chain = get_active_chain(db, profile.id, USED_CAR_CHAIN_KEY, statuses=(CHAIN_STATUS_SURFACED, CHAIN_STATUS_SCHEDULED))

@@ -242,9 +242,11 @@ def run_balance_simulation(
             return False
         mode: Literal["max", "min"] = "min" if policy == "passive" else "max"
         if policy == "needs_keeper" and not force:
-            needs_now = overview().get("needs") or {}
-            salary = float(overview().get("total_monthly_income") or 0)
-            best = _pick_needs_choice(choices, cash, needs_now, cash_buffer=0.3 * salary)
+            ov_now = overview()
+            needs_now = ov_now.get("needs") or {}
+            # Запас: все месячные платежи и расходы + 20% зарплаты — иначе бот уходит в минус по деньгам.
+            buffer = float(ov_now.get("total_monthly_outflow") or 0) + 0.2 * float(ov_now.get("total_monthly_income") or 0)
+            best = _pick_needs_choice(choices, cash, needs_now, cash_buffer=buffer)
         else:
             best = _pick_event_choice(choices, cash, mode) if not force else None
         if best is None:
@@ -339,7 +341,8 @@ def run_balance_simulation(
         if min(float(needs_now.get(ax) or 0) for ax in NEEDS_AXES) >= 40:
             return
         opt = ts["options"][0]
-        if float(ov.get("cash_balance") or 0) - float(opt.get("cost") or 0) < 0:
+        buffer = float(ov.get("total_monthly_outflow") or 0)
+        if float(ov.get("cash_balance") or 0) - float(opt.get("cost") or 0) < buffer:
             return
         client.post("/api/game/period/treat-self", headers=headers, json={"option_id": opt["id"]})
 
@@ -440,6 +443,7 @@ def run_balance_simulation(
         for p in range(1, periods + 1):
             state.periods_attempted = p
             claim_salary()
+            needs_before_events = dict(overview().get("needs") or {})
             pick_events()
             if policy == "tutorial":
                 maybe_safety_tutorial()
@@ -447,8 +451,17 @@ def run_balance_simulation(
                 maybe_safety_first()
             maybe_invest()
             maybe_treat_self()
+            needs_before_close = dict(overview().get("needs") or {})
             close_body = close_period()
             row = snapshot_row(p, "closed", close_body)
+            if needs_before_events and row.get("needs"):
+                # Разбивка динамики потребностей: события (+ «Порадовать себя») и закрытие периода.
+                row["needs_events_delta"] = round(
+                    sum(float(needs_before_close.get(a) or 0) - float(needs_before_events.get(a) or 0) for a in NEEDS_AXES), 1
+                )
+                row["needs_close_delta"] = round(
+                    sum(float(row["needs"].get(a) or 0) - float(needs_before_close.get(a) or 0) for a in NEEDS_AXES), 1
+                )
             period_rows.append(row)
 
             ov = overview()

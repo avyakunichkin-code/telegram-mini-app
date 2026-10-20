@@ -93,6 +93,9 @@ def _yaml_event_to_spec_and_meta(event: dict[str, Any]) -> tuple[dict[str, Any],
         }
         if ch.get("description"):
             choice["description"] = str(ch["description"])
+        if ch.get("purpose"):
+            # Только авторинг/линтер (SPEC_needs-set-point): в БД не пишется.
+            choice["purpose"] = str(ch["purpose"])
         choices_out.append(choice)
     if len(choices_out) < 2:
         raise ValueError(f"{key}: need at least 2 choices")

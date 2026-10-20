@@ -56,7 +56,12 @@ def _needs_sum_negative(effects: dict[str, Any]) -> float:
     return sum(min(0.0, float(raw.get(ax, 0) or 0)) for ax in NEEDS_AXES)
 
 
+REFERENCE_SALARY = 62_500.0  # Студент — для сравнения выборов с cash_pct_salary без профиля
+
+
 def _cash(effects: dict[str, Any]) -> float:
+    if "cash_delta" not in effects and effects.get("cash_pct_salary") is not None:
+        return -float(effects["cash_pct_salary"]) * REFERENCE_SALARY
     return float(effects.get("cash_delta", 0) or 0)
 
 
@@ -332,10 +337,20 @@ def curve_corridor_warnings(
             if plus <= 0.5:
                 continue
             title = str(ch.get("title") or "")
-            cost = -_cash(effects)
-            # Богатая персона получает за ту же сумму меньше баллов.
-            lo = needs_points(cost, audience[-1]) * (1 - tolerance)
-            hi = needs_points(cost, audience[0]) * (1 + tolerance)
+            purpose = str(ch.get("purpose") or "pleasure")
+            if purpose != "pleasure":
+                continue  # смягчение, вложение, обязательство — не покупка удовольствия
+            pct = effects.get("cash_pct_salary")
+            if pct is not None and "cash_delta" not in effects:
+                # Доля зарплаты: баллы одинаковы у всех персон.
+                cost = float(pct) * REFERENCE_SALARY
+                lo = needs_points(cost, REFERENCE_SALARY) * (1 - tolerance)
+                hi = needs_points(cost, REFERENCE_SALARY) * (1 + tolerance)
+            else:
+                cost = -_cash(effects)
+                # Богатая персона получает за ту же сумму меньше баллов.
+                lo = needs_points(cost, audience[-1]) * (1 - tolerance)
+                hi = needs_points(cost, audience[0]) * (1 + tolerance)
             if plus > hi:
                 out.append(CurveWarning(key, title, "curve_over", plus, lo, hi,
                                         f"needs+ {plus:g} > {hi:.1f} за {cost:g} руб"))

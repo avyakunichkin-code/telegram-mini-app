@@ -18,7 +18,8 @@ from ...events.constants import EVENTS_UNLOCK_INTRO_KEY
 from ...events.taxonomy import event_domain
 from ...game.rules import MIN_PERIOD_INDEX_FOR_GAME_EVENTS
 from ...models import EventChoice, EventDefinition, EventInstance, GameProfile
-from ...needs.engine import parse_needs_delta
+from ...needs.engine import effective_needs_delta, needs_values_from_profile, parse_needs_delta
+from ...needs.set_point import MODEL_SET_POINT
 from .needs_rescue import (
     NEEDS_AXIS_LABELS,
     _event_rescue_matches_min_axis,
@@ -88,10 +89,15 @@ def serialize_instance_rows(
                 row["insurance_claim"] = True
             if profile is not None:
                 row["impacts"] = build_choice_impacts(db, profile, effects)
-                if _needs_config_for_profile(db, profile) and effects.get("needs_delta") is not None:
+                needs_cfg = _needs_config_for_profile(db, profile)
+                if needs_cfg and effects.get("needs_delta") is not None:
                     try:
                         nd = parse_needs_delta(effects.get("needs_delta"))
                         if any(abs(v) >= 1e-6 for v in nd.values()):
+                            if needs_cfg.get("model") == MODEL_SET_POINT:
+                                # Показываем фактический прирост (запас до 100), сырой — отдельно.
+                                row["needs_delta_raw"] = nd
+                                nd = effective_needs_delta(needs_values_from_profile(profile), nd)
                             row["needs_delta"] = nd
                     except ValueError:
                         pass

@@ -163,3 +163,50 @@ def test_treat_self_applies_headroom_on_set_point(client, auth_headers, db_sessi
     assert res.status_code == 200, res.text
     db_session.refresh(profile)
     assert profile.need_social == 85.5  # 22 × 0.25
+
+
+def test_previews_show_effective_gain_on_set_point(client, auth_headers, db_session):
+    """Блокер NV-406: подсказки показывают фактический прирост, а не сырой needs_delta."""
+    from app.game.rules import MIN_PERIOD_INDEX_FOR_GAME_EVENTS
+
+    profile = _start_set_point(client, auth_headers, db_session)
+    profile.need_social = 80.0
+    profile.period_index = max(int(profile.period_index), MIN_PERIOD_INDEX_FOR_GAME_EVENTS)
+    ed = EventDefinition(key="test_preview_evt", mode="any", title="Тест", is_active=1, weight=100)
+    db_session.add(ed)
+    db_session.flush()
+    db_session.add(EventChoice(definition_id=ed.id, title="Встреча",
+                               effects_json=json.dumps({"cash_delta": 0, "needs_delta": {"social": 10}})))
+    db_session.add(EventInstance(game_profile_id=profile.id, definition_id=ed.id,
+                                 period_index=int(profile.period_index), status="pending"))
+    db_session.commit()
+
+    events = client.get("/api/game/events/pending", headers=auth_headers).json()["events"]
+    ch = next(e for e in events if e.get("key") == "test_preview_evt")["choices"][0]
+    assert ch["needs_delta"]["social"] == 2.5
+    assert ch["needs_delta_raw"]["social"] == 10
+
+    opts = client.get("/api/finance/overview", headers=auth_headers).json()["treat_self"]["options"]
+    assert opts[0]["needs_delta"]["social"] == 5.5  # 22 × 0.25
+
+
+def test_cash_pct_salary_resolves_to_rubles(client, auth_headers, db_session):
+    """NV-501: доля зарплаты → рубли по зарплате персоны: −round(S × 4%, −1)."""
+    from app.models import FinanceSalary
+
+    profile = _start_set_point(client, auth_headers, db_session, model="linear")
+    cash_before = float(profile.cash_balance)
+    salary = float(db_session.query(FinanceSalary).filter(FinanceSalary.game_profile_id == profile.id).first().monthly_amount)
+    ed = EventDefinition(key="test_pct_evt", mode="any", title="Тест", is_active=1, weight=100)
+    db_session.add(ed)
+    db_session.flush()
+    choice = EventChoice(definition_id=ed.id, title="Кино", effects_json=json.dumps({"cash_pct_salary": 0.04}))
+    db_session.add(choice)
+    db_session.flush()
+    inst = EventInstance(game_profile_id=profile.id, definition_id=ed.id, period_index=int(profile.period_index), status="pending")
+    db_session.add(inst)
+    db_session.commit()
+    res = client.post(f"/api/game/events/{inst.id}/choose", headers=auth_headers, json={"choice_id": choice.id})
+    assert res.status_code == 200, res.text
+    db_session.refresh(profile)
+    assert float(profile.cash_balance) == cash_before - round(salary * 0.04, -1)

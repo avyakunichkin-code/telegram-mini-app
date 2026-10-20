@@ -150,6 +150,11 @@ def gain_with_headroom(current: float, raw: float) -> float:
     return r * max(HEADROOM_MIN, (100.0 - float(current or 0)) / 100.0)
 
 
+def effective_needs_delta(current: dict[str, float], delta: dict[str, float]) -> dict[str, float]:
+    """Фактический прирост при set_point (для подсказок на кнопках): плюсы с «запасом до 100»."""
+    return {k: round(gain_with_headroom(current.get(k) or 0, delta.get(k) or 0), 1) for k in AXES}
+
+
 def apply_needs_delta(profile, delta: dict[str, float], *, headroom: bool = False) -> dict[str, float]:
     """Применяет дельту к колонкам need_* на профиле; возвращает значения после clamp.
 

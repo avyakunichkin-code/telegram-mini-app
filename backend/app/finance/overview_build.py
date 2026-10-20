@@ -21,12 +21,13 @@ from ..models import (
 import json
 
 from ..needs.engine import (
+    effective_needs_delta,
     needs_values_from_profile,
     normalize_treat_self_options,
     parse_needs_config,
     treat_self_availability,
 )
-from ..needs.set_point import build_set_point_snapshot
+from ..needs.set_point import MODEL_SET_POINT, build_set_point_snapshot
 from ..finance.period_close_preview import estimate_period_close_preview
 from ..schemas import (
     AchievementUnlockEvent,
@@ -290,7 +291,13 @@ def build_finance_overview(db: Session, profile: GameProfile) -> FinanceOverview
                     title=str(o.get("title") or ""),
                     subtitle=o.get("subtitle"),
                     cost=float(o.get("cost") or 0),
-                    needs_delta=NeedsOverview(**(o.get("needs_delta") or {})),
+                    needs_delta=NeedsOverview(
+                        **(
+                            effective_needs_delta(nv, o.get("needs_delta") or {})
+                            if needs_cfg.get("model") == MODEL_SET_POINT
+                            else (o.get("needs_delta") or {})
+                        )
+                    ),
                 )
                 for o in options_norm
                 if isinstance(o, dict)

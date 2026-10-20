@@ -107,11 +107,21 @@ def test_curve_corridor_skips_recurring_and_free_choices():
     assert curve_corridor_warnings([spec], salaries=_STUDENT_ONLY) == []
 
 
-def test_curve_corridor_is_report_only_for_catalog():
-    clear_mvp11_catalog_cache()
-    specs, _ = load_mvp11_catalog(force_reload=True)
-    warnings = curve_corridor_warnings(specs)
-    # Известный выброс из аудита 2026-10-15 виден в отчёте…
-    assert any(w.event_key == "mq11_friend_outing_student" and w.code == "curve_over" for w in warnings)
-    # …но не попадает в нарушения contract (baseline не меняется).
-    assert all(v.code != "curve_over" for v in validate_mvp11_balance(specs))
+def test_curve_corridor_is_report_only():
+    """Выброс по кривой — предупреждение, а не нарушение contract."""
+    over = _spec([
+        {"title": "Кино", "effects": {"cash_delta": -1400, "needs_delta": {"social": 20, "health": 10}}},
+        {"title": "Отказ", "effects": {"cash_delta": 0, "needs_delta": {"social": -2}}},
+    ])
+    assert any(w.code == "curve_over" for w in curve_corridor_warnings([over], salaries=_STUDENT_ONLY))
+    assert all(v.code != "curve_over" for v in validate_mvp11_balance([over]))
+
+
+def test_curve_corridor_skips_non_pleasure_and_handles_pct():
+    mitigation = _spec([{"title": "Ремонт", "purpose": "mitigation", "effects": {"cash_delta": -80000, "needs_delta": {"comfort": 1}}}])
+    assert curve_corridor_warnings([mitigation], salaries=_STUDENT_ONLY) == []
+    # 4% зарплаты ≈ 9.5 баллов у любой персоны; +30 — выше коридора.
+    pct = _spec([{"title": "Кино", "effects": {"cash_pct_salary": 0.04, "needs_delta": {"social": 7, "comfort": 3}}}], audience=("all",))
+    assert curve_corridor_warnings([pct]) == []
+    over = _spec([{"title": "Кино", "effects": {"cash_pct_salary": 0.04, "needs_delta": {"social": 10, "comfort": 10, "health": 10}}}], audience=("all",))
+    assert {w.code for w in curve_corridor_warnings([over])} == {"curve_over"}
