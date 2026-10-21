@@ -59,19 +59,19 @@ events:
       cash_delta: -2600
       needs_delta:
         comfort: 6
-        social: 8
+        social: 9
   - title: Только свою половину
     effects:
       cash_delta: -1300
       needs_delta:
-        comfort: 3
-        social: 4
+        comfort: 6
+        social: 7
   - title: Попросить отсрочку
     effects:
       cash_delta: 0
       needs_delta:
-        social: -8
-        comfort: -3
+        social: -4
+        comfort: -2
 - definition_key: mq11_car_service_pro
   content_class: profile
   event_slot: period_choice
@@ -90,18 +90,20 @@ events:
     - car_personal
   choices:
   - title: Официальный дилер
+    purpose: mitigation
     effects:
       cash_delta: -18500
       needs_delta:
-        comfort: 8
-        status: 5
-        health: 2
+        comfort: 2
+        status: 1
+        health: 1
   - title: Независимый сервис
+    purpose: mitigation
     effects:
       cash_delta: -9800
       needs_delta:
-        comfort: 4
-        status: 2
+        comfort: 2
+        status: 1
   - title: Отложить ТО
     effects:
       cash_delta: 0
@@ -138,8 +140,8 @@ events:
     effects:
       cash_delta: -6000
       needs_delta:
-        comfort: 2
-        status: 5
+        comfort: 5
+        status: 12
   - title: Искать квартиру подешевле
     effects:
       cash_delta: -9000
@@ -166,22 +168,22 @@ events:
     effects:
       cash_delta: -12000
       needs_delta:
-        social: 14
-        status: 10
-        comfort: 4
+        social: 9
+        status: 7
+        comfort: 3
   - title: Обычная группа
     effects:
       cash_delta: -4500
       needs_delta:
-        social: 8
-        status: 4
+        social: 9
+        status: 5
   - title: Отложить до следующего года
     effects:
       cash_delta: 0
       needs_delta:
-        social: -10
-        status: -5
-        comfort: -2
+        social: -5
+        status: -2
+        comfort: -1
 - definition_key: mq11_hoa_assessment_manager
   content_class: profile
   event_slot: period_choice
@@ -198,12 +200,14 @@ events:
   cooldown_periods: 12
   choices:
   - title: Оплатить полностью
+    purpose: mitigation
     effects:
       cash_delta: -22000
       needs_delta:
-        comfort: 6
-        status: 5
+        comfort: 2
+        status: 1
   - title: Рассрочка на три месяца
+    purpose: mitigation
     effects:
       cash_delta: -8000
       expense_line:
@@ -212,9 +216,10 @@ events:
         title: Взнос ТСЖ (рассрочка)
         expires_after_periods: 3
       needs_delta:
-        comfort: 3
+        comfort: 2
         status: 2
   - title: Оспорить сумму в ТСЖ
+    purpose: mitigation
     effects:
       cash_delta: -3000
       needs_delta:
@@ -239,18 +244,20 @@ events:
     - car_personal
   choices:
   - title: Срочный ремонт у дилера
+    purpose: mitigation
     effects:
       cash_delta: -28000
       needs_delta:
-        comfort: 7
-        social: 6
-        status: 3
+        comfort: 2
+        social: 1
+        status: 1
   - title: Починить по страховке КАСКО
+    purpose: mitigation
     effects:
       cash_delta: -12000
       needs_delta:
-        comfort: 5
-        social: 4
+        comfort: 2
+        social: 1
   - title: Ездить на одной машине месяц
     effects:
       cash_delta: 0
@@ -273,17 +280,19 @@ events:
   cooldown_periods: 4
   choices:
   - title: Оплатить полностью
+    purpose: mitigation
     effects:
       cash_delta: -35000
       needs_delta:
-        status: 10
-        comfort: 4
+        status: 2
+        comfort: 2
   - title: Частичная предоплата
+    purpose: mitigation
     effects:
       cash_delta: -18000
       needs_delta:
-        status: 3
         comfort: -2
+        status: 3
   - title: Попросить отсрочку
     effects:
       cash_delta: 0
@@ -307,18 +316,21 @@ events:
     min_active_liabilities: 1
   choices:
   - title: Минимальный платёж
+    purpose: mitigation
     effects:
       cash_delta: -8500
       needs_delta:
-        comfort: 2
         status: -2
+        comfort: 2
   - title: Закрыть весь долг по карте
+    purpose: mitigation
     effects:
       cash_delta: -42000
       needs_delta:
-        comfort: 8
-        status: 8
+        comfort: 2
+        status: 2
   - title: Пропустить платёж
+    purpose: mitigation
     effects:
       cash_delta: 0
       expense_line:
@@ -348,8 +360,8 @@ events:
     effects:
       cash_delta: -28000
       needs_delta:
-        social: 12
-        status: 14
+        social: 10
+        status: 12
   - title: Повысить оклад с следующего месяца
     effects:
       cash_delta: -5000
@@ -359,11 +371,11 @@ events:
         title: Повышение оклада сотруднику
       needs_delta:
         social: 8
-        status: 8
+        status: 7
   - title: Отпустить без доплат
     effects:
       cash_delta: 0
       needs_delta:
-        social: -8
-        status: -6
-        comfort: -4
+        social: -4
+        status: -3
+        comfort: -2

@@ -41,15 +41,15 @@ events:
   choices:
   - title: Пойти (взнос и ужин)
     effects:
-      cash_delta: -4500
+      cash_pct_salary: 0.07
       needs_delta:
-        status: 14
-        social: 10
+        status: 11
+        social: 7
   - title: Онлайн-участие
     effects:
-      cash_delta: -1200
+      cash_pct_salary: 0.02
       needs_delta:
-        status: 8
+        status: 7
         social: 5
   - title: Отказаться
     effects:
@@ -75,19 +75,19 @@ events:
     effects:
       cash_delta: -8000
       needs_delta:
-        social: 18
-        status: 4
+        social: 15
+        status: 5
   - title: Частично — 3 500 ₽
     effects:
       cash_delta: -3500
       needs_delta:
-        social: 10
+        social: 15
   - title: Отказать сейчас
     effects:
       cash_delta: 0
       needs_delta:
-        social: -10
-        comfort: -3
+        social: -6
+        comfort: -2
 - definition_key: mq11_status_wardrobe
   content_class: profile
   event_slot: period_choice
@@ -106,14 +106,14 @@ events:
     effects:
       cash_delta: -15000
       needs_delta:
-        status: 16
-        comfort: 6
+        status: 15
+        comfort: 7
   - title: Аксессуары и уход
     effects:
       cash_delta: -4500
       needs_delta:
-        status: 8
-        comfort: 3
+        status: 12
+        comfort: 4
   - title: Пока не тратиться
     effects:
       cash_delta: 0

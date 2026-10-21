@@ -216,7 +216,7 @@ interaction_kind: choice
   - §6: кривая цены `needs_points` — подбор `cash` под целевой needs+ (`cost_for_points`); §12 MCE заменён.
 - **`needs_delta`:** §11 + persona-profiles; в brief — `needs_axis_map`.
 - **`repeat_policy` / `cooldown_periods`:** класс A/B/C из §10; см. [`event-repeat-and-state-ladder.md`](../../../docs/vision/ideas/event-repeat-and-state-ladder.md).
-- **`cash_delta`:** % от salary; needs+ разовой траты — в коридоре кривой `needs_points` ±50%, ось ≤ 10 (§6).
+- **`cash_delta`:** % от salary; needs+ разовой траты — в коридоре кривой `needs_points` ±50%, ось ≤ 15 (§6).
 - Цепочки: `enqueue_event`, follow-up с отсылкой — [`event-catalog-qna-refine.md`](../../../docs/vision/ideas/event-catalog-qna-refine.md).
 
 **Перед записью YAML:** мысленный тест «игрок жмёт только плюсы» и **«могу ли снова удешевить без сюжета»**; impacts по каждой кнопке (§6.1). **Нет `xp_delta`.**

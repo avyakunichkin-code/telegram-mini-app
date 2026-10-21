@@ -45,7 +45,7 @@ SALARY_BY_TEMPLATE = {
     "mq_game_mortgage_stress_v1": 150_000.0,
     "mq_game_debt_stack_v1": 200_000.0,
 }
-PLEASURE_AXIS_CAP = 10
+PLEASURE_AXIS_CAP = 15
 REFUSAL_SHARE = 0.4
 NON_PLEASURE_AXIS_CAP = 3
 NON_PLEASURE_TOTAL_CAP = 4
@@ -68,10 +68,18 @@ PURPOSE_BY_EVENT = {
 SKIP_KEYS = ("enqueue_event", "requires_chain_branch", "used_car_action", "insurance_claim", "safety_grant")
 
 
+def _temporary_line_cost(e: dict) -> float:
+    """Строка расходов с expires_after_periods — по сути разовая трата: сумма за срок."""
+    line = e.get("expense_line")
+    if not isinstance(line, dict) or not line.get("expires_after_periods"):
+        return 0.0
+    return float(line.get("amount_monthly", line.get("amount", 0)) or 0) * int(line["expires_after_periods"])
+
+
 def _recurring_monthly(e: dict) -> float:
     m = max(0.0, float(e.get("monthly_lifestyle_delta") or 0)) + max(0.0, float(e.get("monthly_expense_delta") or 0))
     line = e.get("expense_line")
-    if isinstance(line, dict):
+    if isinstance(line, dict) and not line.get("expires_after_periods"):
         m += max(0.0, float(line.get("amount_monthly", line.get("amount", 0)) or 0))
     return m
 
@@ -122,8 +130,9 @@ def plan_event(ev: dict, k: float) -> list[dict]:
         if any(e.get(s) is not None for s in SKIP_KEYS) or e.get("monthly_burn_delta_pct") is not None:
             continue
         monthly = _recurring_monthly(e)
-        if cash < 0 and monthly <= 0 and float(e.get("monthly_lifestyle_delta") or 0) >= 0:
-            cost = -cash
+        temp_cost = _temporary_line_cost(e)
+        if (cash < 0 or temp_cost > 0) and monthly <= 0 and float(e.get("monthly_lifestyle_delta") or 0) >= 0:
+            cost = max(0.0, -cash) + temp_cost
             if event_purpose:
                 if plus:
                     new_plus = _scale_down({ax: int(v) for ax, v in plus.items()}, NON_PLEASURE_AXIS_CAP, NON_PLEASURE_TOTAL_CAP)
@@ -136,7 +145,7 @@ def plan_event(ev: dict, k: float) -> list[dict]:
                 continue
             pct = None
             # Сумма в названии («Перевести 8 000 ₽») — цену оставляем в рублях, иначе текст врёт.
-            if for_all and "₽" not in str(ch.get("title") or ""):
+            if for_all and temp_cost <= 0 and "₽" not in str(ch.get("title") or ""):
                 pct = max(PCT_STEP, round(cost / REF_SALARY / PCT_STEP) * PCT_STEP)
                 pct = round(pct, 3)
                 cost = pct * REF_SALARY
@@ -266,7 +275,7 @@ def apply_edits(path: Path, edits_by_key: dict[str, list[dict]]) -> int:
 def main(argv: list[str] | None = None) -> int:
     global PLEASURE_AXIS_CAP, REFUSAL_SHARE
     ap = argparse.ArgumentParser(description=__doc__.split("\n")[1])
-    ap.add_argument("--k", type=float, default=25.0, help="масштаб кривой K_imp")
+    ap.add_argument("--k", type=float, default=40.0, help="масштаб кривой K_imp")
     ap.add_argument("--dry-run", action="store_true")
     ap.add_argument("--axis-cap", type=int, default=PLEASURE_AXIS_CAP, help="потолок плюса на ось (pleasure)")
     ap.add_argument("--refusal-share", type=float, default=REFUSAL_SHARE, help="минус отказа ≤ доля лучшего плюса")

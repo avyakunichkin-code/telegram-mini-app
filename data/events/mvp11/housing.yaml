@@ -134,8 +134,9 @@ events:
         comfort: 6
         health: 1
   - title: Ремонт за свой счёт
+    purpose: mitigation
     effects:
       cash_delta: -80000
       needs_delta:
-        comfort: 6
         health: -2
+        comfort: 3

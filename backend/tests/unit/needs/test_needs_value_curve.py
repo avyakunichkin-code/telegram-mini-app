@@ -10,11 +10,11 @@ STUDENT_SALARY = 62_500
 @pytest.mark.parametrize(
     ("cost", "expected"),
     [
-        (10, 1.8),
-        (300, 5.0),
-        (2_500, 9.5),
-        (5_000, 11.7),
-        (1_200_000, 60.7),
+        (10, 2.9),
+        (300, 8.1),
+        (2_500, 15.2),
+        (5_000, 18.7),
+        (1_200_000, 97.1),
     ],
 )
 def test_needs_points_anchors_student(cost, expected):

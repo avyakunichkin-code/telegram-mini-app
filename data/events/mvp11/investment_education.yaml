@@ -10,11 +10,11 @@ events:
   choices:
   - title: Записаться на курс
     effects:
-      cash_delta: -8900
+      cash_pct_salary: 0.14
       needs_delta:
-        status: 10
-        comfort: 3
         health: -3
+        status: 15
+        comfort: 6
   - title: Отказаться
     effects:
       cash_delta: 0
@@ -32,10 +32,10 @@ events:
   choices:
   - title: Платное участие
     effects:
-      cash_delta: -3490
+      cash_pct_salary: 0.055
       needs_delta:
-        status: 6
-        comfort: 2
+        status: 13
+        comfort: 4
   - title: Не участвовать
     effects:
       cash_delta: 0
@@ -59,14 +59,14 @@ events:
     effects:
       cash_delta: -5200
       needs_delta:
-        status: 8
-        comfort: 3
+        status: 14
+        comfort: 5
   - title: Б/у и конспекты
     effects:
       cash_delta: -2100
       needs_delta:
-        status: 4
-        comfort: 1
+        status: 11
+        comfort: 3
   - title: Только библиотека
     effects:
       cash_delta: 0
@@ -91,15 +91,15 @@ events:
     effects:
       cash_delta: -11500
       needs_delta:
-        status: 14
-        comfort: 2
         health: -3
+        status: 15
+        comfort: 3
   - title: Только материалы для самоподготовки
     effects:
       cash_delta: -3200
       needs_delta:
-        status: 6
-        comfort: 1
+        status: 12
+        comfort: 2
   - title: Отложить на следующий год
     effects:
       cash_delta: 0
