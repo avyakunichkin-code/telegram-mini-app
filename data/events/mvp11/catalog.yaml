@@ -13,6 +13,9 @@ includes:
 - late_game.yaml
 - chains/family_money.yaml
 - chains/family_vacation.yaml
+- chains/second_car.yaml
+- chains/car_cushion.yaml
+- chains/refinance_loan.yaml
 - chains/used_car.yaml
 - chains/freelance_project.yaml
 - profiles.yaml

@@ -8,6 +8,7 @@ events:
   title: Предложение рефинансирования
   description: Банк предлагает объединить платежи под новую ставку — комиссия сейчас, но платёж может стать легче.
   weight: 58
+  is_active: 0  # заменено цепочкой refinance_loan (A3, PO 2026-10-22)
   event_tier: 4
   repeat_policy: repeatable
   cooldown_periods: 12

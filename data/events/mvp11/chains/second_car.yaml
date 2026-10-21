@@ -1,0 +1,245 @@
+# Цепочка A1 «Вторая машина — лишняя» (принято PO 2026-10-22, brief chains-proposals-2026-10-21).
+# Урок: актив, который только ест деньги, — скрытый долг. Продажа → гашение дорогих долгов → свободный поток.
+# Руководитель и Предприниматель начинают с двумя машинами (обслуживание 18 000 ₽/пер. каждая).
+# Цена времени: срочно 90% сразу; торг 95% через 2 пер. (−36 000 обслуживания); держать цену 97% через 4 пер.
+# (−72 000) — итог 1 080 / 1 104 / 1 092 тыс. ₽ при машине за 1 200 000.
+# Шаги: N → [bargain N+2 → [sold_late N+4]] → proceeds (+1 после продажи) → epilogue (+3).
+events:
+- definition_key: mq11_second_car_offer
+  content_class: instrumental
+  event_slot: period_choice
+  audience_template_keys:
+  - mq_game_mortgage_stress_v1
+  - mq_game_debt_stack_v1
+  event_domain: auto
+  title: Вторая машина простаивает
+  description: 'Вторая машина стоит во дворе почти весь месяц, а страховка, налог и обслуживание обходятся
+    в 18 000 ₽ каждый период. Перекупщик заберёт её сегодня за 90% рыночной цены; на сайте объявлений
+    можно выручить больше, но придётся подождать.'
+  weight: 62
+  event_tier: 3
+  repeat_policy: once_per_profile
+  scenario_shape: chain
+  prerequisites:
+    min_assets_of_kind:
+      car_personal: 2
+  choices:
+  - title: Продать перекупщику сейчас (90%)
+    purpose: investment
+    effects:
+      chain_action:
+        action: sell_asset
+        kind: car_personal
+        price_factor: 0.9
+      needs_delta:
+        status: -3
+        comfort: -3
+      enqueue_event:
+        chain_key: second_car
+        followup_definition_key: mq11_second_car_proceeds
+        after_periods: 1
+        context:
+          branch: quick
+    description: Деньги сегодня, обслуживание −18 000 ₽ со следующего периода.
+  - title: Выставить по рыночной цене
+    effects:
+      cash_delta: 0
+      enqueue_event:
+        chain_key: second_car
+        followup_definition_key: mq11_second_car_bargain
+        after_periods: 2
+        context:
+          branch: listed
+    description: Покупатель найдётся через пару периодов; пока машина стоит — обслуживание идёт.
+  - title: Оставить обе машины
+    effects:
+      cash_delta: 0
+- definition_key: mq11_second_car_bargain
+  content_class: instrumental
+  event_slot: chain_followup
+  audience_template_keys:
+  - mq_game_mortgage_stress_v1
+  - mq_game_debt_stack_v1
+  event_domain: auto
+  interaction_kind: chain_followup
+  title: Покупатель торгуется
+  description: 'Два периода назад вы выставили машину по рыночной цене. Покупатель приехал, посмотрел и
+    просит скидку 5%. Можно согласиться или ждать того, кто заплатит полную цену.'
+  weight: 1
+  event_tier: 3
+  repeat_policy: once_per_profile
+  scenario_shape: chain
+  mandatory_gate: blocks_period_end
+  choices:
+  - title: Уступить 5%
+    purpose: investment
+    effects:
+      chain_action:
+        action: sell_asset
+        kind: car_personal
+        price_factor: 0.95
+      needs_delta:
+        status: -3
+        comfort: -3
+      enqueue_event:
+        chain_key: second_car
+        followup_definition_key: mq11_second_car_proceeds
+        after_periods: 1
+        context:
+          branch: bargain
+    description: Продажа сейчас за 95% рынка.
+  - title: Держать цену
+    effects:
+      cash_delta: 0
+      needs_delta:
+        comfort: -1
+      enqueue_event:
+        chain_key: second_car
+        followup_definition_key: mq11_second_car_sold_late
+        after_periods: 2
+        context:
+          branch: hold
+    description: Ждать покупателя ещё пару периодов — обслуживание идёт, рынок может просесть.
+- definition_key: mq11_second_car_sold_late
+  content_class: instrumental
+  event_slot: chain_followup
+  audience_template_keys:
+  - mq_game_mortgage_stress_v1
+  - mq_game_debt_stack_v1
+  event_domain: auto
+  interaction_kind: chain_followup
+  title: Машину купили — но рынок просел
+  description: 'Покупатель на полную цену так и не пришёл, а цены на такие машины за это время просели.
+    Новый покупатель берёт её за 97% от прежней рыночной цены.'
+  weight: 1
+  event_tier: 3
+  repeat_policy: once_per_profile
+  scenario_shape: chain
+  mandatory_gate: blocks_period_end
+  choices:
+  - title: Продать за 97%
+    purpose: investment
+    effects:
+      chain_action:
+        action: sell_asset
+        kind: car_personal
+        price_factor: 0.97
+      needs_delta:
+        status: -3
+        comfort: -3
+      enqueue_event:
+        chain_key: second_car
+        followup_definition_key: mq11_second_car_proceeds
+        after_periods: 1
+        context:
+          branch: hold
+    description: 'Четыре периода назад вы решили ждать полной цены → 97% рынка, но ещё 4 периода
+      обслуживания (−72 000 ₽). Срочная продажа принесла бы почти столько же сразу.'
+  - title: Продать за 97% и закрыть объявление
+    purpose: investment
+    effects:
+      chain_action:
+        action: sell_asset
+        kind: car_personal
+        price_factor: 0.97
+      needs_delta:
+        status: -3
+        comfort: -3
+      enqueue_event:
+        chain_key: second_car
+        followup_definition_key: mq11_second_car_proceeds
+        after_periods: 1
+        context:
+          branch: hold
+- definition_key: mq11_second_car_proceeds
+  content_class: instrumental
+  event_slot: chain_followup
+  audience_template_keys:
+  - mq_game_mortgage_stress_v1
+  - mq_game_debt_stack_v1
+  event_domain: credit_debt
+  interaction_kind: chain_followup
+  title: Куда деньги от продажи машины?
+  description: 'Деньги за вторую машину на счёте. Можно закрыть самые дорогие долги (сначала те, где
+    ставка выше), положить в подушку безопасности или оставить на счёте.'
+  weight: 1
+  event_tier: 3
+  repeat_policy: once_per_profile
+  scenario_shape: chain
+  mandatory_gate: blocks_period_end
+  choices:
+  - title: Закрыть самые дорогие долги
+    purpose: investment
+    effects:
+      chain_action:
+        action: prepay_debts
+        amount: sale_proceeds
+      needs_delta:
+        comfort: 3
+        status: -1
+      enqueue_event:
+        chain_key: second_car
+        followup_definition_key: mq11_second_car_epilogue
+        after_periods: 3
+        context:
+          branch: debt
+    description: Кредитная карта закрывается целиком, остаток — досрочно в кредит с самой высокой ставкой.
+  - title: Положить в подушку
+    purpose: investment
+    effects:
+      chain_action:
+        action: to_safety
+        amount: sale_proceeds
+      needs_delta:
+        comfort: 2
+        status: -1
+      enqueue_event:
+        chain_key: second_car
+        followup_definition_key: mq11_second_car_epilogue
+        after_periods: 3
+        context:
+          branch: safety
+    description: Запас на чёрный день; долги платятся по прежнему графику.
+  - title: Оставить на счёте
+    effects:
+      cash_delta: 0
+      enqueue_event:
+        chain_key: second_car
+        followup_definition_key: mq11_second_car_epilogue
+        after_periods: 3
+        context:
+          branch: cash
+    description: Деньги под рукой, но не работают.
+- definition_key: mq11_second_car_epilogue
+  content_class: instrumental
+  event_slot: informational
+  audience_template_keys:
+  - mq_game_mortgage_stress_v1
+  - mq_game_debt_stack_v1
+  event_domain: credit_debt
+  interaction_kind: informational
+  title: Без второй машины
+  description: 'Прошло несколько периодов с продажи второй машины. Семья привыкла обходиться одной.
+
+    Мелким шрифтом: дешевле всего обходится тот платёж, которого больше нет.'
+  weight: 1
+  event_tier: 3
+  repeat_policy: once_per_profile
+  scenario_shape: chain
+  mandatory_gate: none
+  choices:
+  - title: Понятно
+    effects:
+      requires_chain_branch: debt
+    description: 'Четыре периода назад вы продали вторую машину и закрыли дорогие долги → минус 18 000 ₽
+      обслуживания и меньше платежей по кредитам каждый период. Это самый быстрый рост свободного потока.'
+  - title: Понятно
+    effects:
+      requires_chain_branch: safety
+    description: 'Четыре периода назад вы продали вторую машину и положили деньги в подушку → минус
+      18 000 ₽ обслуживания, а запаса хватит надолго. Кредиты платятся по прежнему графику.'
+  - title: Понятно
+    effects:
+      requires_chain_branch: cash
+    description: 'Четыре периода назад вы продали вторую машину и оставили деньги на счёте → минус
+      18 000 ₽ обслуживания, но деньги лежат без дела, а проценты по долгам идут.'

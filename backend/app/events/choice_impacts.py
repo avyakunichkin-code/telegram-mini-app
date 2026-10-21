@@ -53,7 +53,9 @@ def _secured_loan_impact(db: Session, loan: dict[str, Any]) -> dict[str, Any] | 
     }
 
 
-def build_choice_impacts(db: Session, profile, effects: dict[str, Any]) -> list[dict[str, Any]]:
+def build_choice_impacts(
+    db: Session, profile, effects: dict[str, Any], *, chain_ctx: dict[str, Any] | None = None
+) -> list[dict[str, Any]]:
     """Структура для UI: kind, delta, value_after (опц.), tip."""
     if not isinstance(effects, dict):
         return []
@@ -169,5 +171,11 @@ def build_choice_impacts(db: Session, profile, effects: dict[str, Any]) -> list[
             loan_impact = _secured_loan_impact(db, loan)
             if loan_impact:
                 impacts.append(loan_impact)
+
+    action = effects.get("chain_action")
+    if isinstance(action, dict):
+        from .chain_actions import preview_chain_action
+
+        impacts.extend(preview_chain_action(db, profile, action, chain_ctx))
 
     return impacts

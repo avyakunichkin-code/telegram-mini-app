@@ -89,16 +89,19 @@ def _def_tier(d: EventDefinition) -> int:
 def _load_event_profile_context(db: Session, game_profile_id: int) -> EventProfileContext:
     from ...finance.liability_kinds import effective_liability_kind
 
-    asset_kinds = {
-        str(row.kind).strip()
-        for row in db.query(FinanceAsset.kind)
+    kind_counts: dict[str, int] = {}
+    for row in (
+        db.query(FinanceAsset.kind)
         .filter(
             FinanceAsset.game_profile_id == game_profile_id,
             FinanceAsset.is_active == 1,
         )
         .all()
-        if row.kind
-    }
+    ):
+        if row.kind:
+            kind = str(row.kind).strip()
+            kind_counts[kind] = kind_counts.get(kind, 0) + 1
+    asset_kinds = set(kind_counts)
     liability_rows = (
         db.query(FinanceLiability)
         .filter(
@@ -127,6 +130,7 @@ def _load_event_profile_context(db: Session, game_profile_id: int) -> EventProfi
         active_liability_count=len(liability_rows),
         active_liability_kinds=frozenset(liability_kinds),
         active_insurance_claim_keys=frozenset(ins_keys),
+        active_asset_kind_counts=tuple(sorted(kind_counts.items())),
     )
 
 
