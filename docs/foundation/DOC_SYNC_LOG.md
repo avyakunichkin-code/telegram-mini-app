@@ -9,6 +9,7 @@ aliases:
 
 Краткий лог, когда **код обогнал docs** или наоборот. Полный чеклист — [`MVP_AUDIT_VS_SPEC.md`](MVP_AUDIT_VS_SPEC.md).
 
+| 2026-10-21 | EVT-CHAINS | family_money снята (`is_active: 0`), вместо неё цепочка `family_vacation` (B3): копить 55% зп против 75–85% по кредитке; Руководитель и Предприниматель | [`family_vacation.yaml`](../../data/events/mvp11/chains/family_vacation.yaml) |
 | 2026-10-21 | EVT-CHAINS | Цепочки mvp11: freelance — аванс как риск, цена времени 0.5, эпилоги без ложного выбора, «откат» причины в описании кнопки; used_car — рынок 1 000 000, задаток → 750 000 / «подумать» → 900 000, машина в имущество по рыночной цене, ветка автокредита (`used_car_action: complete_with_loan`, шаблон `car_loan`), аудитория Профи+ без машины, раз за партию | [`chains/`](../../data/events/mvp11/chains/), [`mq11_freelance_project_chain.md`](../vision/ideas/event-briefs/mq11_freelance_project_chain.md) |
 | 2026-10-21 | SPL | **ADR-016 Accepted:** Game и Plan — два продукта в монорепо, общий `packages/fincore` + `platform`, раздельные аккаунты/БД; ADR-013 п.3 заменён; Plan-код после Pre-Alpha gate | [ADR-016](../decisions/ADR-016-two-products-shared-fincore.md), [`PLAN_game-plan-split`](../plans/PLAN_game-plan-split.md), idea [`plan-financial-assistant`](../vision/ideas/plan-financial-assistant.md) |
 | 2026-10-14 | BRAND | ADR-014: настольная игра, webfont PWA, 3D-иллюстрации, «Завершить ход» везде; XP и «вы» убраны из UI | [ADR-014](../decisions/ADR-014-brand-direction-board-game.md) |

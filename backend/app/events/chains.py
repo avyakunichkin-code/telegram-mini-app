@@ -29,7 +29,8 @@ CHAIN_STATUS_COMPLETED = "completed"
 CHAIN_STATUS_CANCELLED = "cancelled"
 
 USED_CAR_CHAIN_KEY = "used_car_deal"
-FAMILY_MONEY_CHAIN_KEY = "family_money_refusal"
+FAMILY_MONEY_CHAIN_KEY = "family_money_refusal"  # снята 2026-10-21, ключ — для старых сохранений
+FAMILY_VACATION_CHAIN_KEY = "family_vacation"
 FREELANCE_PROJECT_CHAIN_KEY = "freelance_project"
 USED_CAR_TEMPLATE_KEY = "car_personal"
 USED_CAR_DEFAULT_DISCOUNT = 0.25
@@ -40,6 +41,9 @@ CHAIN_FOLLOWUP_EXCLUDE_FROM_RANDOM_POOL = frozenset(
     {
         "mq11_used_car_deadline",
         "mq11_family_money_callback",
+        "mq11_family_vacation_card_bill",
+        "mq11_family_vacation_card_tail",
+        "mq11_family_vacation_trip",
         "mq11_freelance_project_midperiod",
         "mq11_freelance_project_deadline_rush",
         "mq11_freelance_project_deadline_steady",
@@ -57,6 +61,15 @@ CHAIN_KEY_BY_DEFINITION: dict[str, str] = {
     "mq11_freelance_project_epilogue_rush": FREELANCE_PROJECT_CHAIN_KEY,
     "mq11_freelance_project_epilogue_steady": FREELANCE_PROJECT_CHAIN_KEY,
 }
+
+# Шаги family_vacation, на которых цепочка заканчивается, если выбор не ставит следующий шаг.
+FAMILY_VACATION_FINAL_DEFINITION_KEYS = frozenset(
+    {
+        "mq11_family_vacation_card_bill",
+        "mq11_family_vacation_card_tail",
+        "mq11_family_vacation_trip",
+    }
+)
 
 FREELANCE_EPILOGUE_DEFINITION_KEYS = frozenset(
     {

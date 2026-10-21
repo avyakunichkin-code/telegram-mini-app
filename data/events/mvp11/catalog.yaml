@@ -12,6 +12,7 @@ includes:
 - credit_debt.yaml
 - late_game.yaml
 - chains/family_money.yaml
+- chains/family_vacation.yaml
 - chains/used_car.yaml
 - chains/freelance_project.yaml
 - profiles.yaml
