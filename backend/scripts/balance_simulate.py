@@ -320,7 +320,8 @@ def run_balance_simulation(
         target = float(ov.get("safety_fund_baseline_target") or 0)
         if target <= 0 or safety >= target - 1:
             return
-        buffer_cash = 5_000.0
+        # Оставляем на счёте месячные платежи и расходы — иначе бот уходит в минус (баг до 2026-10-22).
+        buffer_cash = max(5_000.0, float(ov.get("total_monthly_outflow") or 0))
         need = target - safety
         amt = min(need, max(0.0, cash - buffer_cash))
         if amt >= 500:
@@ -333,19 +334,29 @@ def run_balance_simulation(
                 state.safety_once_done = True
 
     def maybe_restructure() -> None:
-        """restructure: продать машины (обслуживание дороже дохода), свободные деньги — в досрочное
+        """restructure: продать лишние машины (обслуживание дороже дохода), свободные деньги — в досрочное
         погашение самых дорогих кредитов. Проверка тезиса PO 2026-10-21 о перестройке активов."""
         if policy != "restructure":
             return
         ov = overview()
-        for a in ov.get("assets") or []:
-            if a.get("kind") in CAR_KINDS and float(a.get("monthly_maintenance_cost") or 0) > float(a.get("monthly_income") or 0):
-                r = client.delete(f"/api/finance/assets/{a['id']}", headers=headers)
-                if r.status_code == 200:
-                    state.assets_sold += 1
+        cars = [
+            a for a in (ov.get("assets") or [])
+            if a.get("kind") in CAR_KINDS
+            and float(a.get("monthly_maintenance_cost") or 0) > float(a.get("monthly_income") or 0)
+        ]
+        # Вторая и следующие машины — лишние; единственную продаём (как Профи с автокредитом).
+        # При 2+ машинах оставляем самую дешёвую в содержании, чтобы не обнулять комфорт/статус.
+        if len(cars) >= 2:
+            cars.sort(key=lambda a: float(a.get("monthly_maintenance_cost") or 0))
+            cars = cars[1:]
+        for a in cars:
+            r = client.delete(f"/api/finance/assets/{a['id']}", headers=headers)
+            if r.status_code == 200:
+                state.assets_sold += 1
         ov = overview()
         cash = float(ov.get("cash_balance") or 0)
-        buffer = float(ov.get("total_monthly_outflow") or 0) + 0.2 * float(ov.get("total_monthly_income") or 0)
+        # Запас на платежи + резерв на события (иначе needs_keeper не может платить и копит отказы).
+        buffer = float(ov.get("total_monthly_outflow") or 0) + 0.5 * float(ov.get("total_monthly_income") or 0)
         for liab in sorted(ov.get("liabilities") or [], key=lambda l: -float(l.get("annual_rate_percent") or 0)):
             free = cash - buffer
             debt = float(liab.get("total_debt") or 0)

@@ -4,9 +4,9 @@
     "template_key": "mq_game_basic_v1",
     "policy": "idle",
     "periods_requested": 40,
-    "periods_closed": 13,
-    "git_sha": "1a1c61f",
-    "timestamp": "2026-10-21T06:22:54.330008+00:00",
+    "periods_closed": 15,
+    "git_sha": "960c8db",
+    "timestamp": "2026-10-21T22:14:44.806473+00:00",
     "rng_seed": 42
   },
   "summary": {
@@ -24,20 +24,20 @@
     "liquid_end": 0.0,
     "max_neg_streak": 0,
     "max_overdue": 0,
-    "periods_closed": 13,
+    "periods_closed": 15,
     "periods_to_safety_3x": null,
     "safety_target": 0.0,
     "salary_claim_rate": 1.0,
-    "events_resolved": 22,
-    "avg_event_cash_delta": 631.82,
+    "events_resolved": 26,
+    "avg_event_cash_delta": 49.23,
     "avg_net_cashflow_6p": 0.0,
     "avg_net_cashflow_6p_n": 0,
     "needs_model": "set_point",
     "assets_sold": 0,
-    "cash_p12": 327450.0,
-    "liquid_p12": 327450.0,
+    "cash_p12": 320450.0,
+    "liquid_p12": 320450.0,
     "safety_p12": 0.0,
-    "needs_min_p12": 0.0,
+    "needs_min_p12": 2.3,
     "cash_p20": null,
     "liquid_p20": null,
     "safety_p20": null,
@@ -371,17 +371,17 @@
     },
     {
       "needs": {
-        "comfort": 0.0,
-        "status": 13.9,
-        "social": 10.6,
-        "health": 6.4
+        "comfort": 7.2,
+        "status": 6.8,
+        "social": 15.4,
+        "health": 12.1
       },
-      "needs_min": 0.0,
+      "needs_min": 6.8,
       "period": 11,
       "phase": "closed",
-      "cash": 301950.0,
+      "cash": 294950.0,
       "safety": 0.0,
-      "liquid": 301950.0,
+      "liquid": 294950.0,
       "net_cf": 62500.0,
       "structural_obligations": 0.0,
       "lifestyle_burn": 37000.0,
@@ -395,22 +395,51 @@
       "goals_enabled": 5,
       "goals_required": 5,
       "period_gate_open": true,
-      "needs_events_delta": 1.8,
+      "needs_events_delta": 13.2,
+      "needs_close_delta": -9.7
+    },
+    {
+      "needs": {
+        "comfort": 4.7,
+        "status": 2.3,
+        "social": 11.1,
+        "health": 9.4
+      },
+      "needs_min": 2.3,
+      "period": 12,
+      "phase": "closed",
+      "cash": 320450.0,
+      "safety": 0.0,
+      "liquid": 320450.0,
+      "net_cf": 62500.0,
+      "structural_obligations": 0.0,
+      "lifestyle_burn": 37000.0,
+      "outflow": 37000.0,
+      "overdue": 0.0,
+      "neg_streak": 0,
+      "win": false,
+      "is_active": true,
+      "goal": "tutorial_cushion",
+      "goals_met": 1,
+      "goals_enabled": 5,
+      "goals_required": 5,
+      "period_gate_open": true,
+      "needs_events_delta": -5.1,
       "needs_close_delta": -8.9
     },
     {
       "needs": {
         "comfort": 0.0,
-        "status": 11.9,
-        "social": 6.5,
-        "health": 3.9
+        "status": 0.0,
+        "social": 6.1,
+        "health": 4.9
       },
       "needs_min": 0.0,
-      "period": 12,
+      "period": 13,
       "phase": "closed",
-      "cash": 327450.0,
+      "cash": 345950.0,
       "safety": 0.0,
-      "liquid": 327450.0,
+      "liquid": 345950.0,
       "net_cf": 62500.0,
       "structural_obligations": 0.0,
       "lifestyle_burn": 37000.0,
@@ -424,8 +453,37 @@
       "goals_enabled": 5,
       "goals_required": 5,
       "period_gate_open": true,
-      "needs_events_delta": -2.0,
-      "needs_close_delta": -6.6
+      "needs_events_delta": -9.3,
+      "needs_close_delta": -7.2
+    },
+    {
+      "needs": {
+        "comfort": 0.0,
+        "status": 0.0,
+        "social": 0.0,
+        "health": 9.7
+      },
+      "needs_min": 0.0,
+      "period": 14,
+      "phase": "closed",
+      "cash": 370830.0,
+      "safety": 0.0,
+      "liquid": 370830.0,
+      "net_cf": 62500.0,
+      "structural_obligations": 0.0,
+      "lifestyle_burn": 37000.0,
+      "outflow": 37000.0,
+      "overdue": 0.0,
+      "neg_streak": 0,
+      "win": false,
+      "is_active": true,
+      "goal": "tutorial_cushion",
+      "goals_met": 1,
+      "goals_enabled": 5,
+      "goals_required": 5,
+      "period_gate_open": true,
+      "needs_events_delta": 3.5,
+      "needs_close_delta": -4.8
     },
     {
       "needs": {
@@ -435,7 +493,7 @@
         "health": 0.0
       },
       "needs_min": 0.0,
-      "period": 13,
+      "period": 15,
       "phase": "closed",
       "cash": 0.0,
       "safety": 0.0,
@@ -453,8 +511,8 @@
       "goals_enabled": 5,
       "goals_required": 5,
       "period_gate_open": true,
-      "needs_events_delta": -1.0,
-      "needs_close_delta": -21.3
+      "needs_events_delta": 0.0,
+      "needs_close_delta": -9.7
     }
   ]
 }
