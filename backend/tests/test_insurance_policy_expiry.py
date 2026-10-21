@@ -8,13 +8,26 @@ from fastapi import HTTPException
 from app.models import InsurancePolicy, Transaction
 from app.services.insurance.service import (
     buy_policy,
-    charge_premiums_for_period,
     expire_policies_for_period,
     list_policies,
+    post_premiums_for_period,
+    premium_due_for_period,
 )
 from tests.fixtures.game import create_game_profile
 from tests.test_insurance_events import INSURANCE_TEST_TEMPLATE_KEY, _ensure_insurance_test_template
 
+
+
+def charge_premiums_for_period(db, profile, period_index: int) -> float:
+    """Как в закрытии периода: сумма по правилу ядра (`premium_due_for_period`), затем списание."""
+    active = (
+        db.query(InsurancePolicy)
+        .filter(InsurancePolicy.game_profile_id == profile.id, InsurancePolicy.is_active == 1)
+        .order_by(InsurancePolicy.id)
+        .all()
+    )
+    total = sum(premium_due_for_period(p, period_index) for p in active)
+    return post_premiums_for_period(db, profile, period_index, total)
 
 def _policy(
     db,

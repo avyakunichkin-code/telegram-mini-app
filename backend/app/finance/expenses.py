@@ -10,7 +10,7 @@ from typing import Any
 
 from sqlalchemy.orm import Session
 
-from fincore.expenses import ExpenseCategory, monthly_burn
+from fincore.expenses import ExpenseCategory, MonthlyBurn, monthly_burn
 from fincore.household import ExpenseLine
 
 from .expense_defaults import expense_budget_for_template
@@ -475,8 +475,8 @@ def revoke_plan_expense_line(db: Session, profile: GameProfile, line: ProfileExp
     sync_profile_lifestyle_base_from_lines(db, profile)
 
 
-def lifestyle_period_breakdown(snapshot: BurnSnapshot) -> list[dict[str, Any]]:
-    """Строки для game_period breakdown."""
+def lifestyle_period_breakdown(snapshot: BurnSnapshot | MonthlyBurn) -> list[dict[str, Any]]:
+    """Строки для game_period breakdown (`BurnSnapshot` игры или `MonthlyBurn` ядра — те же поля)."""
     if snapshot.by_category:
         return [
             {

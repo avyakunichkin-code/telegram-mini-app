@@ -24,6 +24,7 @@ from ...finance.expenses import (
     lifestyle_extra,
 )
 from ...finance.liability_kinds import effective_liability_kind, effective_payment_mode
+from ...services.insurance.service import policy_for_core
 from ...models import (
     FinanceAsset,
     FinanceLiability,
@@ -101,17 +102,7 @@ def build_household_snapshot(db: Session, profile: GameProfile) -> hh.HouseholdS
     )
 
     policies = tuple(
-        hh.InsurancePolicy(
-            id=int(p.id),
-            title=p.title,
-            kind=p.kind,
-            monthly_premium=_f(p.monthly_premium),
-            coverage_limit=_f(p.coverage_limit),
-            started_month_index=_opt_int(p.started_period_index),
-            expires_month_index=_opt_int(p.expires_period_index),
-            claimed_month_index=_opt_int(p.claimed_period_index),
-            insured_asset_id=_opt_int(p.insured_asset_id),
-        )
+        policy_for_core(p)
         for p in db.query(InsurancePolicy)
         .filter(InsurancePolicy.game_profile_id == profile.id, InsurancePolicy.is_active == 1)
         .order_by(InsurancePolicy.id)

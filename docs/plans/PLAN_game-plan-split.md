@@ -219,6 +219,37 @@ Gate каждого среза: **balance diff = 0** относительно SP
   - Баланс: шесть эталонов совпадают байт в байт. `main__student_tutorial_40p` перегенерирован. Он не совпадал с кодом уже на `c46d883`, где его закоммитили: прогон tutorial в worktree на `c46d883` даёт 14 периодов, как HEAD, а в эталоне 13. SPL здесь ни при чём.
   - Проверено: backend pytest 537 passed; golden SPL-101 без изменений; balance playtest — все 7 эталонов совпадают; economy-reviewer — APPROVED (со второго прохода). Запись в `DOC_SYNC_LOG`.
 
+- **SPL-205 ✅ (2026-10-22).**
+  - `fincore.month.month_step(snapshot, categories, credit_income=False) → MonthResult`. Внутри:
+    - проводки по порядку: обслуживание активов → доход активов → каждый долг → расходы на жизнь → премии → купоны;
+    - остаток после каждой проводки округляется `quantize_money`, как в `adjust_balance`;
+    - итоги по долгам `LiabilityOutcome`: платёж, просрочка, аннуитет по закрытым взносам;
+    - итоги по вкладам `InvestmentOutcome`;
+    - расходы на жизнь `MonthlyBurn`.
+  - Правило премии — `fincore.insurance.premium_due`; `premium_due_for_period` игры делегирует ядру через `policy_for_core`.
+  - `installments_outstanding` перенесён в ядро, туда же — `fincore.money.EPSILON`.
+  - **Игра** (`period.py`). `_prepare_month` по порядку: истечение статей → backfill → снимок → `month_step`. Это критерий 1.
+    - Этапы применяют результат: те же вызовы `adjust_balance` в том же порядке, с теми же типами и описаниями. Тип транзакции берётся из явной таблицы `_TRANSACTION_TYPE_BY_POSTING`.
+    - Итоги переносятся в ORM, breakdown тот же.
+    - Премии списываются в savepoint через `post_premiums_for_period`: истечение полисов + сумма ядра. Старая `charge_premiums_for_period` удалена.
+    - Минус-серия, потребности, снимок закрытия, guidance и достижения остались в игре.
+  - **Доход** ядро зачисляет только при `credit_income=True` (критерий 4). Игра флаг не ставит: зарплата уже лежит в `cash`.
+  - **Сверка** `_check_cash_matches_core`: остаток в БД после расходов на жизнь против остатка ядра. Расхождение — только `warning` в лог, потому что премии в savepoint могут законно откатиться. На практике его не будет: закрытие держит блокировку профиля (`services/period/close.py`, `_lock_active_profile`).
+  - **Сужение относительно плана:** в `MonthResult` нет `warnings`. Просрочка отдаётся числом `overdue_added`, а итоги долгов — `LiabilityOutcome`.
+  - **Проверено:**
+    - golden SPL-101 без изменений;
+    - backend pytest 557 passed (вместе с тестами влитых цепочек `960c8db`);
+    - fincore 42 passed;
+    - balance playtest: до слияния цепочек (`960c8db`) все 7 эталонов совпадали байт в байт. После слияния — сравнение A/B в двух worktree от одного HEAD с одинаковой правкой бота баланса: без SPL-205 и с ним. Все 7 отчётов идентичны. Расхождение с эталонами даёт слияние цепочек, а не этот срез;
+    - economy-reviewer — APPROVED.
+    - Новые тесты (`tests/unit/game/test_period_close_month_step.py`):
+      - backfill до снимка (база > 0, дельта ≠ 0); негативная проба с backfill после снимка тест роняет;
+      - предупреждение при расхождении остатка;
+      - таблица соответствия видов проводок типам транзакций.
+  - **Открыто, вне среза:**
+    - `expire_policies_for_period` делает `db.commit()` посреди закрытия и снимает блокировку профиля раньше времени. Это нарушает атомарность закрытия — нужна отдельная задача.
+    - `month_index_for_period` даёт `max(1, period_index)`: для `period_index = 0` премии и вклады раньше считались с 0. В игре профиль стартует с 1.
+
 **Критерии приёмки SPL-207b (из ревью SPL-207):**
 1. Цель победы `expense_to_income_ratio` сохраняет базу «зарплата» — не брать `HouseholdMetrics.expense_to_income_ratio` (база — доход с проекцией вкладов).
 2. `net_monthly_cashflow` во входе победы — без проекции вкладов, в overview — с проекцией.

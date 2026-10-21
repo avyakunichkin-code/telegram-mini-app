@@ -1,6 +1,9 @@
 from fastapi import HTTPException
 from sqlalchemy.orm import Session
 
+from fincore import household as hh
+from fincore.insurance import premium_due
+
 from ...constants import EPSILON
 from ...finance.balance_utils import adjust_balance
 from ...starters.insurance_catalog import list_catalog, list_grid_catalog, list_plans, resolve_plan, resolve_product_object
@@ -47,16 +50,24 @@ def list_policies(db: Session, profile: GameProfile) -> list[dict]:
     return [policy_to_dict(r) for r in rows]
 
 
+def policy_for_core(policy: InsurancePolicy) -> hh.InsurancePolicy:
+    """ORM-полис → DTO ядра (месяц ядра = период игры)."""
+    return hh.InsurancePolicy(
+        id=int(policy.id),
+        title=policy.title,
+        kind=policy.kind,
+        monthly_premium=float(policy.monthly_premium or 0),
+        coverage_limit=float(policy.coverage_limit or 0),
+        started_month_index=int(policy.started_period_index) if policy.started_period_index is not None else None,
+        expires_month_index=int(policy.expires_period_index) if policy.expires_period_index is not None else None,
+        claimed_month_index=int(policy.claimed_period_index) if policy.claimed_period_index is not None else None,
+        insured_asset_id=int(policy.insured_asset_id) if policy.insured_asset_id is not None else None,
+    )
+
+
 def premium_due_for_period(policy: InsurancePolicy, period_index: int) -> float:
-    """Премия к списанию в конце period_index (первая — при оформлении, не здесь)."""
-    if policy.claimed_period_index is not None:
-        return 0.0
-    exp = policy.expires_period_index
-    if exp is not None and period_index >= int(exp):
-        return 0.0
-    if int(policy.started_period_index or 0) == period_index:
-        return 0.0
-    return float(policy.monthly_premium or 0)
+    """Премия к списанию в конце period_index (первая — при оформлении, не здесь). Правило — `fincore.insurance`."""
+    return premium_due(policy_for_core(policy), int(period_index))
 
 
 def _parse_buy_payload(payload: dict):
@@ -236,20 +247,12 @@ def expire_policies_for_period(db: Session, profile: GameProfile, period_index: 
     return n
 
 
-def charge_premiums_for_period(db: Session, profile: GameProfile, period_index: int) -> float:
-    """Списывает премии по активным полисам (не истёкшим и не использованным)."""
+def post_premiums_for_period(db: Session, profile: GameProfile, period_index: int, total: float) -> float:
+    """
+    Закрытие периода: деактивирует истёкшие полисы и списывает премии, посчитанные ядром
+    (`fincore.month.month_step`, правило — `premium_due_for_period`).
+    """
     expire_policies_for_period(db, profile, period_index)
-    policies = (
-        db.query(InsurancePolicy)
-        .filter(InsurancePolicy.game_profile_id == profile.id, InsurancePolicy.is_active == 1)
-        .order_by(InsurancePolicy.id)
-        .all()
-    )
-    total = 0.0
-    for p in policies:
-        due = premium_due_for_period(p, period_index)
-        if due > 0:
-            total += due
     if total > 0:
         adjust_balance(
             db,

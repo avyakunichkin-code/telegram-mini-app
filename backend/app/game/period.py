@@ -1,7 +1,6 @@
 # backend/app/game/period.py
 
 import logging
-import math
 from dataclasses import dataclass, field
 
 from sqlalchemy.orm import Session
@@ -29,11 +28,27 @@ from ..services.events.service import (
     is_events_spawn_failed,
     _ensure_seed_events,
 )
-from ..services.insurance.service import charge_premiums_for_period
-from ..finance.liability_kinds import PAYMENT_MODE_ANNUITY, effective_payment_mode
-from ..finance.annuity import split_full_payment
+from ..services.insurance.service import post_premiums_for_period
 from ..constants import EPSILON
-from ..finance.expenses import compute_monthly_burn, expire_expense_lines_for_period, lifestyle_period_breakdown
+from ..finance.expenses import (
+    ensure_expense_category_catalog,
+    ensure_profile_expense_lines,
+    expense_categories_for_core,
+    expire_expense_lines_for_period,
+    lifestyle_period_breakdown,
+)
+from .adapters.fincore_snapshot import build_household_snapshot
+from fincore.month import (
+    POSTING_ASSET_INCOME,
+    POSTING_ASSET_MAINTENANCE,
+    POSTING_BOND_COUPON,
+    POSTING_INSURANCE_PREMIUM,
+    POSTING_LIABILITY_PAYMENT,
+    POSTING_LIFESTYLE_EXPENSE,
+    MonthResult,
+    Posting,
+    month_step,
+)
 from ..needs.set_point import MODEL_SET_POINT, build_set_point_snapshot
 from ..needs.engine import (
     apply_decay,
@@ -233,13 +248,6 @@ def _period_compare_delta(current: float, previous: float | None) -> float:
     return round(float(current) - float(previous), 2)
 
 
-def _installments_outstanding(amount: float, monthly_due: float) -> int:
-    """Сколько взносов (включая частично оплаченный) покрывает неоплаченная сумма."""
-    if monthly_due <= EPSILON or amount <= EPSILON:
-        return 0
-    return int(math.ceil(round(amount / monthly_due, 6)))
-
-
 @dataclass
 class _PeriodClose:
     """Состояние одного закрытия месяца, которое этапы конвейера накапливают по очереди."""
@@ -256,11 +264,50 @@ class _PeriodClose:
     defeat_reason: str | None = None
     needs_result: dict | None = None
     liabilities: list = field(default_factory=list)
+    month: MonthResult | None = None
+
+
+def _prepare_month(ctx: _PeriodClose) -> None:
+    """
+    Подготовка игры к расчёту месяца ядром: истечение статей, затем backfill (если статей не осталось)
+    и снимок финансов. Снимок берётся до списаний: ядро ведёт остаток по проводкам само.
+    """
+    db, profile, period_index = ctx.db, ctx.profile, ctx.period_index
+    expire_expense_lines_for_period(db, profile, period_index)
+    ensure_expense_category_catalog(db)
+    ensure_profile_expense_lines(db, profile)
+    ctx.month = month_step(
+        build_household_snapshot(db, profile),
+        categories=expense_categories_for_core(db),
+    )
+
+
+# Вид проводки ядра → тип транзакции игры. Явно: переименование в ядре не должно молча менять журнал.
+# Премии игра списывает через `post_premiums_for_period` (savepoint), а не проводкой.
+_TRANSACTION_TYPE_BY_POSTING = {
+    POSTING_ASSET_MAINTENANCE: TRANSACTION_TYPES["ASSET_MAINTENANCE"],
+    POSTING_ASSET_INCOME: "asset_income",
+    POSTING_LIABILITY_PAYMENT: TRANSACTION_TYPES["LIABILITY_PAYMENT"],
+    POSTING_LIFESTYLE_EXPENSE: TRANSACTION_TYPES["LIFESTYLE_EXPENSE"],
+    POSTING_BOND_COUPON: "bond_coupon",
+}
+
+
+def _post(ctx: _PeriodClose, posting: Posting, description: str) -> None:
+    adjust_balance(
+        db=ctx.db,
+        game_profile_id=ctx.profile.id,
+        amount=posting.amount,
+        type=_TRANSACTION_TYPE_BY_POSTING[posting.kind],
+        description=description,
+        period_index=ctx.period_index,
+    )
+    ctx.db.refresh(ctx.profile)
 
 
 def _charge_assets(ctx: _PeriodClose) -> None:
     """1–2. Обслуживание активов (может увести в минус) и доход от активов (аренда)."""
-    db, profile, period_index = ctx.db, ctx.profile, ctx.period_index
+    db, profile, period_index, month = ctx.db, ctx.profile, ctx.period_index, ctx.month
     assets = db.query(FinanceAsset).filter(
         FinanceAsset.game_profile_id == profile.id,
         FinanceAsset.is_active == 1
@@ -274,140 +321,100 @@ def _charge_assets(ctx: _PeriodClose) -> None:
             "amount": cost
         })
 
-    assets_spend = sum(float(a.monthly_maintenance_cost) for a in assets)
-    if assets_spend > 0:
-        adjust_balance(
-            db=db,
-            game_profile_id=profile.id,
-            amount=-assets_spend,
-            type=TRANSACTION_TYPES["ASSET_MAINTENANCE"],
-            description=f"Обслуживание активов за период #{period_index}",
-            period_index=period_index,
-        )
-        db.refresh(profile)
-
-    assets_income = sum(float(getattr(a, "monthly_income", 0) or 0) for a in assets)
-    if assets_income > 0:
-        adjust_balance(
-            db=db,
-            game_profile_id=profile.id,
-            amount=assets_income,
-            type="asset_income",
-            description=f"Доход от активов за период #{period_index}",
-            period_index=period_index,
-        )
-        db.refresh(profile)
-        ctx.breakdown.append({"type": "asset_income", "title": "Доход от активов", "amount": round(assets_income, 2)})
+    for posting in month.postings_of(POSTING_ASSET_MAINTENANCE):
+        _post(ctx, posting, f"Обслуживание активов за период #{period_index}")
+    for posting in month.postings_of(POSTING_ASSET_INCOME):
+        _post(ctx, posting, f"Доход от активов за период #{period_index}")
+    if month.asset_income > 0:
+        ctx.breakdown.append({"type": "asset_income", "title": "Доход от активов", "amount": round(month.asset_income, 2)})
 
 
 def _pay_liabilities(ctx: _PeriodClose) -> None:
-    """3. Обязательства: платим сколько есть, остаток уходит в просрочку (без штрафов на MVP)."""
-    db, profile, period_index = ctx.db, ctx.profile, ctx.period_index
+    """3. Обязательства: платим сколько есть, остаток уходит в просрочку (без штрафов на MVP). Расчёт — ядро."""
+    db, profile, period_index, month = ctx.db, ctx.profile, ctx.period_index, ctx.month
     ctx.liabilities = db.query(FinanceLiability).filter(
         FinanceLiability.game_profile_id == profile.id,
         FinanceLiability.is_active == 1
     ).order_by(FinanceLiability.id).all()
+    by_id = {int(li.id): li for li in ctx.liabilities}
+    payments = {p.ref_id: p for p in month.postings_of(POSTING_LIABILITY_PAYMENT)}
 
-    for liability in ctx.liabilities:
-        monthly_due = float(liability.monthly_payment)
-        previous_overdue = float(getattr(liability, "overdue_amount", 0) or 0)
-        due_total = monthly_due + previous_overdue
+    for outcome in month.liabilities:
+        liability = by_id[int(outcome.id)]
+        posting = payments.get(outcome.id)
+        if posting is not None:
+            _post(ctx, posting, f"Платёж по обязательству: {liability.title} (период #{period_index})")
 
-        available = max(0.0, float(profile.cash_balance))
-        paid = min(available, due_total)
-        unpaid = round(due_total - paid, 2)
-
-        if paid > 0:
-            adjust_balance(
-                db=db,
-                game_profile_id=profile.id,
-                amount=-paid,
-                type=TRANSACTION_TYPES["LIABILITY_PAYMENT"],
-                description=f"Платёж по обязательству: {liability.title} (период #{period_index})",
-                period_index=period_index,
-            )
-            db.refresh(profile)
-
-        if effective_payment_mode(liability) == PAYMENT_MODE_ANNUITY:
-            # Платёж гасит самые старые взносы первыми: каждый полностью закрытый взнос
-            # (в т.ч. просроченный) уменьшает тело долга по графику аннуитета.
-            completed = _installments_outstanding(previous_overdue, monthly_due) + 1 - _installments_outstanding(
-                unpaid, monthly_due
-            )
-            for _ in range(max(0, completed)):
-                if int(liability.is_active or 0) != 1:
-                    break
-                _interest, _principal, new_debt = split_full_payment(
-                    float(liability.total_debt),
-                    float(liability.annual_rate_percent),
-                    monthly_due,
-                )
-                liability.total_debt = new_debt
-                liability.periods_paid = int(getattr(liability, "periods_paid", 0) or 0) + 1
-                term = int(getattr(liability, "term_periods", 0) or 0)
-                if new_debt <= EPSILON or (term > 0 and liability.periods_paid >= term):
-                    liability.is_active = 0
-                    liability.total_debt = 0.0
-
-        full_payment = unpaid <= EPSILON and paid + EPSILON >= due_total
-        if full_payment:
-            liability.overdue_amount = 0.0
-            liability.overdue_periods = 0
-        else:
-            liability.overdue_amount = float(unpaid)
-            if unpaid > EPSILON:
-                liability.overdue_periods = int(getattr(liability, "overdue_periods", 0) or 0) + 1
-                ctx.total_overdue_added += unpaid
-            else:
-                liability.overdue_periods = 0
+        liability.total_debt = outcome.total_debt
+        liability.periods_paid = outcome.months_paid
+        if not outcome.is_active:
+            liability.is_active = 0
+        liability.overdue_amount = outcome.overdue_amount
+        liability.overdue_periods = outcome.overdue_months
 
         ctx.breakdown.append({
             "type": "liability",
             "title": liability.title,
-            "due": due_total,
-            "paid": paid,
-            "unpaid": unpaid,
+            "due": outcome.due,
+            "paid": outcome.paid,
+            "unpaid": outcome.unpaid,
         })
+    ctx.total_overdue_added = month.overdue_added
 
 
 def _charge_lifestyle(ctx: _PeriodClose) -> None:
-    """3.4. Расходы на жизнь (статьи бюджета + legacy delta)."""
-    db, profile, period_index = ctx.db, ctx.profile, ctx.period_index
-    expire_expense_lines_for_period(db, profile, period_index)
-    burn_snapshot = compute_monthly_burn(db, profile)
-    lifestyle_total = float(burn_snapshot.total)
-    ctx.closed_burn_total = round(lifestyle_total, 2)
-    if lifestyle_total <= 0:
+    """3.4. Расходы на жизнь (статьи бюджета + legacy delta); статьи истекли в `_prepare_month`."""
+    period_index, burn = ctx.period_index, ctx.month.burn
+    ctx.closed_burn_total = round(float(burn.total), 2)
+    for posting in ctx.month.postings_of(POSTING_LIFESTYLE_EXPENSE):
+        _post(ctx, posting, f"Расходы на жизнь за период #{period_index}")
+    if burn.total <= 0:
         return
-    adjust_balance(
-        db=db,
-        game_profile_id=profile.id,
-        amount=-lifestyle_total,
-        type=TRANSACTION_TYPES["LIFESTYLE_EXPENSE"],
-        description=f"Расходы на жизнь за период #{period_index}",
-        period_index=period_index,
-    )
-    db.refresh(profile)
-    cat_lines = lifestyle_period_breakdown(burn_snapshot)
+    cat_lines = lifestyle_period_breakdown(burn)
     if cat_lines:
         ctx.breakdown.extend(cat_lines)
         ctx.breakdown.append(
             {
                 "type": "lifestyle",
                 "title": "Итого расходы на жизнь",
-                "amount": round(lifestyle_total, 2),
+                "amount": round(burn.total, 2),
             }
         )
     else:
-        ctx.breakdown.append({"type": "lifestyle", "title": "Расходы «жизни»", "amount": round(lifestyle_total, 2)})
+        ctx.breakdown.append({"type": "lifestyle", "title": "Расходы «жизни»", "amount": round(burn.total, 2)})
+
+
+def _check_cash_matches_core(ctx: _PeriodClose) -> None:
+    """
+    Сверка после расходов на жизнь: остаток в БД = остаток ядра после последней проводки до премий.
+    Расхождение значит, что баланс менялся мимо закрытия (платежи по долгам посчитаны от снимка).
+    Только лог: дальше премии в savepoint могут законно откатиться.
+    """
+    expected = ctx.month.cash_start
+    for posting in ctx.month.postings:
+        if posting.kind in (POSTING_INSURANCE_PREMIUM, POSTING_BOND_COUPON):
+            break
+        expected = posting.cash_after
+    actual = float(ctx.profile.cash_balance)
+    if abs(actual - expected) > EPSILON:
+        logger.warning(
+            "Period close cash drift profile_id=%s period_index=%s db=%s core=%s",
+            ctx.profile.id, ctx.period_index, actual, expected,
+        )
 
 
 def _charge_insurance(ctx: _PeriodClose) -> None:
-    """3.5. Страховые премии (без просрочек — может уйти в минус); сбой откатывается savepoint'ом."""
+    """
+    3.5. Страховые премии (без просрочек — может уйти в минус); сбой откатывается savepoint'ом.
+    Сумму считает ядро (`MonthResult.insurance_premiums`); проводку ядра игра не переносит,
+    а списывает сумму вместе с деактивацией истёкших полисов.
+    """
     db, profile, period_index = ctx.db, ctx.profile, ctx.period_index
     try:
         with db.begin_nested():
-            insurance_spend = float(charge_premiums_for_period(db, profile, period_index) or 0)
+            insurance_spend = float(
+                post_premiums_for_period(db, profile, period_index, ctx.month.insurance_premiums) or 0
+            )
         if insurance_spend > 0:
             ctx.breakdown.append({"type": "insurance", "title": "Премии", "amount": insurance_spend})
     except Exception:
@@ -419,28 +426,19 @@ def _charge_insurance(ctx: _PeriodClose) -> None:
 
 
 def _accrue_investments(ctx: _PeriodClose, invest_positions: list) -> None:
-    """3.6. Депозит — капитализация, облигации — купон на баланс."""
-    db, profile, period_index = ctx.db, ctx.profile, ctx.period_index
-    for pos in invest_positions:
-        last_accrued = int(pos.last_accrued_period or 0)
-        if last_accrued >= int(period_index):
-            continue
-        periods_to_accrue = int(period_index) - last_accrued
-        if periods_to_accrue <= 0:
-            continue
-
-        monthly_rate = float(pos.annual_rate_percent) / 100.0 / 12.0
-        if pos.kind == "deposit":
-            interest = float(pos.principal) * monthly_rate * periods_to_accrue
-            pos.principal = float(pos.principal) + interest
-            ctx.deposit_interest_total += interest
-        elif pos.kind == "bond":
-            coupon = float(pos.principal) * monthly_rate * periods_to_accrue
-            if coupon != 0:
-                adjust_balance(db, profile.id, +coupon, "bond_coupon", f"Купон: {pos.title}", period_index)
-                db.refresh(profile)
-                ctx.bond_coupon_total += coupon
-        pos.last_accrued_period = int(period_index)
+    """3.6. Депозит — капитализация, облигации — купон на баланс. Расчёт — ядро (по состоянию на начало закрытия)."""
+    month = ctx.month
+    by_id = {int(pos.id): pos for pos in invest_positions}
+    coupons = {p.ref_id: p for p in month.postings_of(POSTING_BOND_COUPON)}
+    for outcome in month.investments:
+        pos = by_id[int(outcome.id)]
+        posting = coupons.get(outcome.id)
+        if posting is not None:
+            _post(ctx, posting, f"Купон: {pos.title}")
+        pos.principal = outcome.principal
+        pos.last_accrued_period = outcome.last_accrued_month_index
+    ctx.deposit_interest_total = month.deposit_interest
+    ctx.bond_coupon_total = month.bond_coupons
     if ctx.deposit_interest_total > EPSILON:
         ctx.breakdown.append(
             {
@@ -602,9 +600,11 @@ def process_period_end(db: Session, profile: GameProfile) -> dict:
     )
     ctx = _PeriodClose(db=db, profile=profile, period_index=period_index)
 
+    _prepare_month(ctx)
     _charge_assets(ctx)
     _pay_liabilities(ctx)
     _charge_lifestyle(ctx)
+    _check_cash_matches_core(ctx)
     _charge_insurance(ctx)
     _accrue_investments(ctx, invest_positions)
     _apply_cash_streak(ctx)

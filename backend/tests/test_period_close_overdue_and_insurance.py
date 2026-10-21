@@ -85,11 +85,11 @@ def test_insurance_failure_is_rolled_back_and_logged(db_session, test_user, monk
     )
     closed = int(profile.period_index)
 
-    def half_charged(db, prof, period_index):
+    def half_charged(db, prof, period_index, total):
         adjust_balance(db, prof.id, -2_000, "insurance_premium", "Премия", period_index)
         raise RuntimeError("premium calc failed")
 
-    monkeypatch.setattr(period_module, "charge_premiums_for_period", half_charged)
+    monkeypatch.setattr(period_module, "post_premiums_for_period", half_charged)
 
     with _NO_EVENTS, caplog.at_level(logging.ERROR, logger="app.game.period"):
         result = process_period_end(db_session, profile)
