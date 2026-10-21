@@ -1,11 +1,12 @@
-"""Стартовые долги из blueprint шаблона: annuity + привязка к активу (DL1)."""
+"""Стартовые долги из blueprint шаблона: annuity + привязка к активу (DL1).
+Разбор blueprint и подбор залога — игровой контент; платёж и срок — `fincore.liabilities` (ADR-016)."""
 
 from __future__ import annotations
 
 from dataclasses import dataclass
 
-from .annuity import monthly_payment
-from .helpers import monthly_interest_payment
+from fincore.liabilities import new_liability_schedule
+
 from .liability_kinds import (
     LIABILITY_KIND_AUTO_LOAN,
     LIABILITY_KIND_CONSUMER,
@@ -128,17 +129,11 @@ def build_starter_liability(
             used_secured_asset_ids.add(asset.id)
             asset.acquisition_mode = "secured"
 
-    if spec.payment_mode == PAYMENT_MODE_ANNUITY:
-        term = int(spec.term_periods or 0)
-        if term <= 0:
-            raise ValueError(f"Annuity starter liability requires term_periods: {title}")
-        mp = monthly_payment(principal, rate, term)
-        pay_mode = PAYMENT_MODE_ANNUITY
-        term_periods = term
-    else:
-        mp = monthly_interest_payment(principal, rate)
-        pay_mode = PAYMENT_MODE_INTEREST_ONLY
-        term_periods = None
+    pay_mode = PAYMENT_MODE_ANNUITY if spec.payment_mode == PAYMENT_MODE_ANNUITY else PAYMENT_MODE_INTEREST_ONLY
+    try:
+        mp, term_periods = new_liability_schedule(principal, rate, pay_mode, spec.term_periods)
+    except ValueError as exc:
+        raise ValueError(f"Annuity starter liability requires term_periods: {title}") from exc
 
     return FinanceLiability(
         game_profile_id=profile_id,

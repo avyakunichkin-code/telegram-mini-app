@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+from .annuity import monthly_interest_payment, monthly_payment
+
 LIABILITY_KIND_UNSECURED = "unsecured"
 LIABILITY_KIND_CONSUMER = "consumer"
 LIABILITY_KIND_MORTGAGE = "mortgage"
@@ -31,6 +33,24 @@ def effective_payment_mode(payment_mode: str | None, term_periods: int | None) -
     if term_periods is not None and int(term_periods) > 0:
         return PAYMENT_MODE_ANNUITY
     return PAYMENT_MODE_INTEREST_ONLY
+
+
+def new_liability_schedule(
+    principal: float,
+    annual_rate_percent: float,
+    payment_mode: str,
+    term_months: int | None,
+) -> tuple[float, int | None]:
+    """
+    Платёж и срок нового долга: аннуитет — по графику на `term_months`,
+    иначе — только проценты без срока. Аннуитет без срока — ошибка.
+    """
+    if payment_mode == PAYMENT_MODE_ANNUITY:
+        term = int(term_months or 0)
+        if term <= 0:
+            raise ValueError("annuity liability requires term_months > 0")
+        return monthly_payment(principal, annual_rate_percent, term), term
+    return monthly_interest_payment(principal, annual_rate_percent), None
 
 
 def remaining_periods(term_periods: int | None, periods_paid: int | None) -> int:

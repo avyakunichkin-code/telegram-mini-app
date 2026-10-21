@@ -10,6 +10,7 @@ from fincore.liabilities import (
     PAYMENT_MODE_INTEREST_ONLY,
     effective_kind,
     effective_payment_mode,
+    new_liability_schedule,
     remaining_periods,
 )
 from fincore.money import quantize_money
@@ -43,6 +44,13 @@ def test_liability_defaults_for_legacy_rows():
     assert effective_payment_mode(None, 24) == PAYMENT_MODE_ANNUITY
     assert effective_payment_mode(None, None) == PAYMENT_MODE_INTEREST_ONLY
     assert effective_payment_mode("interest_only", 24) == PAYMENT_MODE_INTEREST_ONLY
+
+
+def test_new_liability_schedule_by_payment_mode():
+    assert new_liability_schedule(120_000, 12, PAYMENT_MODE_ANNUITY, 12) == (monthly_payment(120_000, 12, 12), 12)
+    assert new_liability_schedule(120_000, 12, PAYMENT_MODE_INTEREST_ONLY, 36) == (1200.0, None)
+    with pytest.raises(ValueError):
+        new_liability_schedule(120_000, 12, PAYMENT_MODE_ANNUITY, None)
 
 
 def test_remaining_periods():

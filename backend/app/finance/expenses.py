@@ -77,7 +77,7 @@ def _category_titles(db: Session) -> dict[str, str]:
     return {r.category_key: r.title for r in rows}
 
 
-def _active_lines_query(db: Session, profile_id: int, period_index: int):
+def active_expense_lines_query(db: Session, profile_id: int, period_index: int):
     q = db.query(ProfileExpenseLine).filter(
         ProfileExpenseLine.game_profile_id == profile_id,
         ProfileExpenseLine.is_active == 1,
@@ -179,7 +179,7 @@ def compute_monthly_burn(db: Session, profile: GameProfile) -> BurnSnapshot:
     legacy_delta = float(getattr(profile, "delta_monthly_lifestyle_expense", 0) or 0)
     titles = _category_titles(db)
 
-    rows = _active_lines_query(db, profile.id, period_index).all()
+    rows = active_expense_lines_query(db, profile.id, period_index).all()
     lines: list[ExpenseLineView] = []
     by_cat: dict[str, float] = {}
 
@@ -342,7 +342,7 @@ def assert_plan_profile(profile: GameProfile) -> None:
 def sync_profile_lifestyle_base_from_lines(db: Session, profile: GameProfile) -> float:
     """Пересчитывает base_monthly_lifestyle_expense из суммы активных статей (без legacy delta)."""
     period_index = max(1, int(profile.period_index or 1))
-    rows = _active_lines_query(db, profile.id, period_index).all()
+    rows = active_expense_lines_query(db, profile.id, period_index).all()
     total = round(sum(max(0.0, float(r.amount_monthly or 0)) for r in rows), 2)
     profile.base_monthly_lifestyle_expense = total
     db.flush()

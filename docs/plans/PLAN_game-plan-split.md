@@ -153,7 +153,7 @@ data/events/          # только игра
 | `finance/expenses.py` | `sqlalchemy`, `app.models`, `fastapi` (в plan-CRUD — уйдёт в GO-03) | SPL-204 |
 | `finance/period_close_preview.py` | `sqlalchemy`, `app.models` | SPL-206 |
 | `finance/period_metrics.py` | `sqlalchemy`, `app.models` | SPL-207 |
-| `finance/starter_liability.py` | `app.models` | SPL-203 |
+| ~~`finance/starter_liability.py`~~ | `app.models` — остаётся адаптером (строит ORM-строку), расчёт в ядре | SPL-203 ✅ |
 | `finance/balance_utils.py` | `sqlalchemy`, `app.models` (ledger — остаётся адаптером, см. таблицу «общее/уникальное») | SPL-205 |
 
 ### Фаза 2 — Выделение `packages/fincore` · ~1.5–2 н
@@ -181,6 +181,19 @@ Gate каждого среза: **balance diff = 0** относительно SP
   - Каталог инвест-продуктов со ставками 14/16% тоже остался в игре (`INVEST_PRODUCTS`): ставки — баланс игры. В ядре — тип `InvestProduct` и `find_invest_product(catalog, kind)`. Решение по ревью economy-reviewer.
   - Проверено: pytest backend, тесты ядра, balance playtest до/после идентичен; economy-reviewer — APPROVED.
   - Тесты ядра не входят в backend pytest (`testpaths = tests`) — до CI (PR-04) это ручной шаг из таблицы «Команды» в `CLAUDE.md`.
+- **SPL-203 ✅.**
+  - `fincore.household`: `HouseholdSnapshot` и DTO `Income`, `Liability`, `Asset`, `ExpenseLine`, `InsurancePolicy`, `InvestmentPosition`. Время — `month_index`; id — непрозрачные ключи приложения.
+  - Адаптер `backend/app/game/adapters/fincore_snapshot.py` (`build_household_snapshot`): только чтение — без backfill статей и без истечения полисов. `month_index = period_index`. Расходы вне статей (legacy-дельта или база шаблона без статей) → `extra_monthly_expense`. Сумма статей + extra совпадает с `compute_monthly_burn` (тест).
+  - `fincore.liabilities.new_liability_schedule` — платёж и срок нового долга по режиму. `starter_liability` оставил себе разбор blueprint и подбор залога: это игровой контент (эвристики названий, сроки 240/60/36 по умолчанию).
+  - `expenses._active_lines_query` → публичный `active_expense_lines_query` (нужен адаптеру).
+  - Проверено: backend pytest 528 passed, fincore 12 passed, balance playtest совпадает с исходным baseline (кроме `meta.git_sha`/`timestamp`); economy-reviewer — APPROVED.
+
+**Критерии приёмки SPL-204/205 (из ревью SPL-203):**
+1. **Backfill до снимка.** Игра вызывает `ensure_profile_expense_lines` и `expire_expense_lines_for_period` *до* `build_household_snapshot`. Тест: профиль без статей, base > 0, delta ≠ 0.
+2. **Ограничение снизу.** Расходы на жизнь = `max(0, Σ статей + extra)` считает ядро; тест с отрицательной delta уже есть в адаптере.
+3. **Порядок долгов — изменение поведения.** `_pay_liabilities` читает долги без ORDER BY, а при нехватке денег порядок решает, какой долг уйдёт в просрочку. До переноса — отдельный срез `order_by(FinanceLiability.id)` в `period.py` (и в активах, полисах, вкладах для стабильного breakdown) с явной записью в DOC_SYNC_LOG и balance diff. Не делать параллельно с NV-406/407.
+4. **Доход не зачисляется дважды.** Зарплата в игре приходит по кнопке и уже лежит в `cash`. `month_step` не зачисляет `incomes`, если вызывающий не попросил.
+5. **Полисы.** Премия по правилу `premium_due_for_period` (0 в месяц оформления, после истечения или выплаты) уходит в ядро. Деактивация `expire_policies_for_period` (пишет в БД) остаётся в игре.
 
 ### Фаза 3 — `packages/platform` · ~0.5 н (после PR-05, PR-06, PR-08)
 
