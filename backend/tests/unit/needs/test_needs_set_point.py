@@ -49,7 +49,7 @@ def _level(cfg, *, spends=None, assets=(), stress=None, period=1):
 
 def test_defaults_from_initial():
     cfg = _cfg()
-    assert cfg["model"] == "linear"
+    assert cfg["model"] == "set_point"  # все сиды переведены (ADR-015, 2026-10-21)
     sp = cfg["set_point"]
     assert sp["base"] == {ax: round(0.8 * cfg["initial"][ax]) for ax in AXES}
     assert sp["adaptation_rate"] == pytest.approx(0.05)

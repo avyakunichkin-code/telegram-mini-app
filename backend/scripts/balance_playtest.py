@@ -54,7 +54,7 @@ def main(argv: list[str] | None = None) -> int:
         "--only",
         action="append",
         dest="only_policies",
-        help="Run only these policies (tutorial, safety_first, passive)",
+        help="Run only these policies (tutorial, safety_first, passive, idle, needs_keeper, restructure)",
     )
     parser.add_argument(
         "--periods",
@@ -81,7 +81,7 @@ def main(argv: list[str] | None = None) -> int:
         bid = entry["id"]
         baseline_path = baselines_dir / entry["file"]
         periods = args.periods or int(defaults.get("periods", 40))
-        template = defaults.get("template_key", "mq_game_basic_v1")
+        template = entry.get("template_key") or defaults.get("template_key", "mq_game_basic_v1")
         rng_seed = defaults.get("rng_seed", 42)
 
         print(f"\n=== {bid} ({policy}, {periods}p) ===", file=sys.stderr)

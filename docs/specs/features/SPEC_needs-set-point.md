@@ -16,7 +16,7 @@ aliases:
 ---
 # Spec: Потребности — износ, уровень жизни и нелинейная цена балла
 
-Расширяет [SPEC_game-character-needs](SPEC_game-character-needs.md). Заменяет линейный decay из [ADR-005](../../decisions/ADR-005-character-needs-state-and-defeat.md) §3 моделью «износ + уровень жизни» ([ADR-015](../../decisions/ADR-015-needs-set-point-model.md), proposed). Правило поражения (ноль 3 периода подряд) сохраняется.
+Расширяет [SPEC_game-character-needs](SPEC_game-character-needs.md). Заменяет линейный decay из [ADR-005](../../decisions/ADR-005-character-needs-state-and-defeat.md) §3 моделью «износ + уровень жизни» ([ADR-015](../../decisions/ADR-015-needs-set-point-model.md), accepted 2026-10-21). Правило поражения (ноль 3 периода подряд) сохраняется.
 
 ## Assumptions
 
@@ -335,7 +335,7 @@ py -3 scripts/check_conventions.py
 | Artifact | Link |
 |----------|------|
 | Idea | [`vision/ideas/needs-value-curve.md`](../../vision/ideas/needs-value-curve.md) |
-| ADR | [`decisions/ADR-015-needs-set-point-model.md`](../../decisions/ADR-015-needs-set-point-model.md) (proposed) |
+| ADR | [`decisions/ADR-015-needs-set-point-model.md`](../../decisions/ADR-015-needs-set-point-model.md) (accepted 2026-10-21) |
 | Base spec | [`SPEC_game-character-needs.md`](SPEC_game-character-needs.md) |
 | Plan | [`plans/PLAN_needs-set-point.md`](../../plans/PLAN_needs-set-point.md) |
 | Rules | [`event-balance-rules.md`](../../../.claude/skills/create-event/event-balance-rules.md) §6, §11, §12 — обновить в шаге 2 |

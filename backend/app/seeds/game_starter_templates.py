@@ -10,7 +10,7 @@ from sqlalchemy.orm import Session
 from app.finance.expense_defaults import expense_budget_for_template
 from app.victory.seeds import VICTORY_CONFIG_BY_TEMPLATE_KEY, victory_config_json_for_template
 
-# Сортируется sort_order; ON CONFLICT не обновляет существующие строки.
+# Порядок по sort_order. ON CONFLICT обновляет blueprint_json — так смена needs.model доходит до живой БД на старте.
 GAME_STARTER_TEMPLATE_SEEDS = [
     {
         "template_key": "mq_game_basic_v1",
@@ -44,6 +44,8 @@ GAME_STARTER_TEMPLATE_SEEDS = [
             ],
             "needs": {
                 "enabled": True,
+                # ADR-015: износ рутиной + уровень жизни (SPEC_needs-set-point); параметры — дефолты spec.
+                "model": "set_point",
                 "character_label": "Студент",
                 "initial": {"comfort": 72, "status": 48, "social": 58, "health": 76},
                 "periods_to_empty_target": 14,
@@ -122,6 +124,8 @@ GAME_STARTER_TEMPLATE_SEEDS = [
             ],
             "needs": {
                 "enabled": True,
+                # ADR-015: износ рутиной + уровень жизни (SPEC_needs-set-point); параметры — дефолты spec.
+                "model": "set_point",
                 "character_label": "Профессионал",
                 "initial": {"comfort": 65, "status": 35, "social": 52, "health": 60},
                 "periods_to_empty_target": 12,
@@ -208,6 +212,8 @@ GAME_STARTER_TEMPLATE_SEEDS = [
             ],
             "needs": {
                 "enabled": True,
+                # ADR-015: износ рутиной + уровень жизни (SPEC_needs-set-point); параметры — дефолты spec.
+                "model": "set_point",
                 "character_label": "Руководитель",
                 "initial": {"comfort": 55, "status": 60, "social": 45, "health": 28},
                 "periods_to_empty_target": 12,
@@ -298,6 +304,8 @@ GAME_STARTER_TEMPLATE_SEEDS = [
             ],
             "needs": {
                 "enabled": True,
+                # ADR-015: износ рутиной + уровень жизни (SPEC_needs-set-point); параметры — дефолты spec.
+                "model": "set_point",
                 "character_label": "Предприниматель",
                 "initial": {"comfort": 50, "status": 32, "social": 22, "health": 40},
                 "periods_to_empty_target": 10,
