@@ -55,7 +55,7 @@ class TestCashDelta:
         db.query.return_value.filter.return_value.first.return_value = None
         tx_salary = MagicMock(amount=50_000)
         tx_life = MagicMock(amount=-30_000)
-        db.query.return_value.filter.return_value.all.return_value = [tx_salary, tx_life]
+        db.query.return_value.filter.return_value.order_by.return_value.all.return_value = [tx_salary, tx_life]
         assert _cash_delta(db, 1, 1, 120_000) == 20_000
 
 
@@ -65,7 +65,7 @@ class TestSafetyFundDelta:
         db.query.return_value.filter.return_value.first.return_value = None
         contrib = MagicMock(type="safety_fund_contribution", amount=-10_000)
         withdraw = MagicMock(type="safety_fund_withdrawal", amount=2_500)
-        db.query.return_value.filter.return_value.all.return_value = [contrib, withdraw]
+        db.query.return_value.filter.return_value.order_by.return_value.all.return_value = [contrib, withdraw]
         assert _safety_fund_flow_from_transactions(db, 1, 1) == 7_500
         assert _safety_fund_delta(db, 1, 1, 7_500) == 7_500
 
@@ -75,7 +75,7 @@ class TestInvestCapitalFlow:
         db = MagicMock()
         open_tx = MagicMock(type="deposit_open", amount=-20_000)
         close_tx = MagicMock(type="invest_close", amount=21_500)
-        db.query.return_value.filter.return_value.all.return_value = [open_tx, close_tx]
+        db.query.return_value.filter.return_value.order_by.return_value.all.return_value = [open_tx, close_tx]
         assert _invest_capital_flow(db, 1, 1) == -1_500
 
 
@@ -90,5 +90,5 @@ class TestDebtDelta:
         db = MagicMock()
         db.query.return_value.filter.return_value.first.return_value = None
         loan = MagicMock(type="liability_disbursement", amount=100_000)
-        db.query.return_value.filter.return_value.all.return_value = [loan]
+        db.query.return_value.filter.return_value.order_by.return_value.all.return_value = [loan]
         assert _debt_delta(db, 1, 1, 100_000) == 100_000

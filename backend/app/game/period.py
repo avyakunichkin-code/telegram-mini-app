@@ -70,6 +70,7 @@ def _transactions_for_period(db: Session, profile_id: int, period_index: int) ->
             Transaction.game_profile_id == profile_id,
             Transaction.period_index == int(period_index),
         )
+        .order_by(Transaction.id)
         .all()
     )
 
@@ -146,6 +147,7 @@ def _total_debt_balance(db: Session, profile_id: int) -> float:
             FinanceLiability.game_profile_id == profile_id,
             FinanceLiability.is_active == 1,
         )
+        .order_by(FinanceLiability.id)
         .all()
     )
     return round(sum(float(row.total_debt or 0) for row in rows), 2)
@@ -262,7 +264,7 @@ def _charge_assets(ctx: _PeriodClose) -> None:
     assets = db.query(FinanceAsset).filter(
         FinanceAsset.game_profile_id == profile.id,
         FinanceAsset.is_active == 1
-    ).all()
+    ).order_by(FinanceAsset.id).all()
     for asset in assets:
         cost = float(asset.monthly_maintenance_cost)
         ctx.total_spend += cost
@@ -304,7 +306,7 @@ def _pay_liabilities(ctx: _PeriodClose) -> None:
     ctx.liabilities = db.query(FinanceLiability).filter(
         FinanceLiability.game_profile_id == profile.id,
         FinanceLiability.is_active == 1
-    ).all()
+    ).order_by(FinanceLiability.id).all()
 
     for liability in ctx.liabilities:
         monthly_due = float(liability.monthly_payment)
@@ -595,6 +597,7 @@ def process_period_end(db: Session, profile: GameProfile) -> dict:
             InvestmentPosition.game_profile_id == profile.id,
             InvestmentPosition.is_active == 1,
         )
+        .order_by(InvestmentPosition.id)
         .all()
     )
     ctx = _PeriodClose(db=db, profile=profile, period_index=period_index)

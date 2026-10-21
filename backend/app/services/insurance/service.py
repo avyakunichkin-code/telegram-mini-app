@@ -222,6 +222,7 @@ def expire_policies_for_period(db: Session, profile: GameProfile, period_index: 
             InsurancePolicy.is_active == 1,
             InsurancePolicy.claimed_period_index.is_(None),
         )
+        .order_by(InsurancePolicy.id)
         .all()
     )
     n = 0
@@ -241,6 +242,7 @@ def charge_premiums_for_period(db: Session, profile: GameProfile, period_index: 
     policies = (
         db.query(InsurancePolicy)
         .filter(InsurancePolicy.game_profile_id == profile.id, InsurancePolicy.is_active == 1)
+        .order_by(InsurancePolicy.id)
         .all()
     )
     total = 0.0

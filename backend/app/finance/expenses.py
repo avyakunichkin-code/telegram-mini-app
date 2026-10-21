@@ -89,7 +89,7 @@ def active_expense_lines_query(db: Session, profile_id: int, period_index: int):
     return q.filter(
         (ProfileExpenseLine.expires_period_index.is_(None))
         | (ProfileExpenseLine.expires_period_index > period_index)
-    )
+    ).order_by(ProfileExpenseLine.id)
 
 
 def ensure_profile_expense_lines(db: Session, profile: GameProfile) -> None:
@@ -262,6 +262,7 @@ def expire_expense_lines_for_period(db: Session, profile: GameProfile, period_in
             ProfileExpenseLine.expires_period_index.isnot(None),
             ProfileExpenseLine.expires_period_index <= int(period_index),
         )
+        .order_by(ProfileExpenseLine.id)
         .all()
     )
     for row in rows:

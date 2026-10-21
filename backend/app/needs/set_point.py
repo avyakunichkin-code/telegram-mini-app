@@ -345,6 +345,7 @@ def _spends_for_profile(db: Session, profile, blueprint: dict) -> list[CategoryS
         rows = (
             db.query(ProfileExpenseLine.category_key, ProfileExpenseLine.created_period_index)
             .filter(ProfileExpenseLine.id.in_(line_ids))
+            .order_by(ProfileExpenseLine.id)
             .all()
         )
         for cat, created in rows:
@@ -363,6 +364,7 @@ def _assets_for_profile(db: Session, profile) -> list[AssetHolding]:
     rows = (
         db.query(FinanceAsset)
         .filter(FinanceAsset.game_profile_id == profile.id, FinanceAsset.is_active == 1)
+        .order_by(FinanceAsset.id)  # compute_level сопоставляет активы со стартовыми по порядку
         .all()
     )
     # acquired_period_index (NV-304); NULL у старых строк = с начала игры.

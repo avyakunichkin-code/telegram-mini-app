@@ -8,7 +8,7 @@
 `ensure_profile_expense_lines` (backfill статей из базы шаблона) и
 `expire_expense_lines_for_period`. Иначе профиль без статей с base > 0 и delta ≠ 0
 даст в снимке только delta, а игра спишет base + delta.
-Порядок долгов — по `id`; закрытие периода пока читает их без ORDER BY (выровнять в SPL-205).
+Порядок долгов, активов, полисов, вкладов и статей — по `id`, как в закрытии периода.
 """
 
 from __future__ import annotations

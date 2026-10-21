@@ -20,6 +20,7 @@ def _estimate_insurance_premiums(db: Session, profile: GameProfile) -> float:
                 InsurancePolicy.game_profile_id == profile.id,
                 InsurancePolicy.is_active == 1,
             )
+            .order_by(InsurancePolicy.id)
             .all()
         )
         for pol in rows:
@@ -41,6 +42,7 @@ def estimate_period_close_preview(db: Session, profile: GameProfile) -> dict:
     assets = (
         db.query(FinanceAsset)
         .filter(FinanceAsset.game_profile_id == profile.id, FinanceAsset.is_active == 1)
+        .order_by(FinanceAsset.id)
         .all()
     )
     maintenance = sum(float(a.monthly_maintenance_cost or 0) for a in assets)
@@ -57,6 +59,7 @@ def estimate_period_close_preview(db: Session, profile: GameProfile) -> dict:
     liabilities = (
         db.query(FinanceLiability)
         .filter(FinanceLiability.game_profile_id == profile.id, FinanceLiability.is_active == 1)
+        .order_by(FinanceLiability.id)
         .all()
     )
     liability_paid = 0.0
