@@ -32,6 +32,10 @@ USED_CAR_CHAIN_KEY = "used_car_deal"
 FAMILY_MONEY_CHAIN_KEY = "family_money_refusal"  # снята 2026-10-21, ключ — для старых сохранений
 FAMILY_VACATION_CHAIN_KEY = "family_vacation"
 FREELANCE_PROJECT_CHAIN_KEY = "freelance_project"
+# Перестройка активов (A1–A3, PO 2026-10-22): действия — chain_actions.py.
+SECOND_CAR_CHAIN_KEY = "second_car"
+CAR_CUSHION_CHAIN_KEY = "car_cushion"
+REFINANCE_CHAIN_KEY = "refinance_loan"
 USED_CAR_TEMPLATE_KEY = "car_personal"
 USED_CAR_DEFAULT_DISCOUNT = 0.25
 USED_CAR_DEPOSIT_AMOUNT = 50_000.0
@@ -49,6 +53,14 @@ CHAIN_FOLLOWUP_EXCLUDE_FROM_RANDOM_POOL = frozenset(
         "mq11_freelance_project_deadline_steady",
         "mq11_freelance_project_epilogue_rush",
         "mq11_freelance_project_epilogue_steady",
+        "mq11_second_car_bargain",
+        "mq11_second_car_sold_late",
+        "mq11_second_car_proceeds",
+        "mq11_second_car_epilogue",
+        "mq11_car_cushion_accident",
+        "mq11_car_cushion_epilogue",
+        "mq11_refinance_freed",
+        "mq11_refinance_epilogue",
     }
 )
 
@@ -60,16 +72,25 @@ CHAIN_KEY_BY_DEFINITION: dict[str, str] = {
     "mq11_freelance_project_deadline_steady": FREELANCE_PROJECT_CHAIN_KEY,
     "mq11_freelance_project_epilogue_rush": FREELANCE_PROJECT_CHAIN_KEY,
     "mq11_freelance_project_epilogue_steady": FREELANCE_PROJECT_CHAIN_KEY,
+    "mq11_second_car_bargain": SECOND_CAR_CHAIN_KEY,
+    "mq11_second_car_sold_late": SECOND_CAR_CHAIN_KEY,
+    "mq11_second_car_proceeds": SECOND_CAR_CHAIN_KEY,
+    "mq11_second_car_epilogue": SECOND_CAR_CHAIN_KEY,
+    "mq11_car_cushion_accident": CAR_CUSHION_CHAIN_KEY,
+    "mq11_car_cushion_epilogue": CAR_CUSHION_CHAIN_KEY,
+    "mq11_refinance_freed": REFINANCE_CHAIN_KEY,
+    "mq11_refinance_epilogue": REFINANCE_CHAIN_KEY,
 }
 
-# Шаги family_vacation, на которых цепочка заканчивается, если выбор не ставит следующий шаг.
-FAMILY_VACATION_FINAL_DEFINITION_KEYS = frozenset(
-    {
-        "mq11_family_vacation_card_bill",
-        "mq11_family_vacation_card_tail",
-        "mq11_family_vacation_trip",
-    }
-)
+# Шаг, на котором цепочка заканчивается, если выбор не ставит следующий (enqueue_event).
+CHAIN_KEY_BY_FINAL_DEFINITION: dict[str, str] = {
+    "mq11_family_vacation_card_bill": FAMILY_VACATION_CHAIN_KEY,
+    "mq11_family_vacation_card_tail": FAMILY_VACATION_CHAIN_KEY,
+    "mq11_family_vacation_trip": FAMILY_VACATION_CHAIN_KEY,
+    "mq11_second_car_epilogue": SECOND_CAR_CHAIN_KEY,
+    "mq11_car_cushion_epilogue": CAR_CUSHION_CHAIN_KEY,
+    "mq11_refinance_epilogue": REFINANCE_CHAIN_KEY,
+}
 
 FREELANCE_EPILOGUE_DEFINITION_KEYS = frozenset(
     {
@@ -257,6 +278,29 @@ def ensure_scheduled_chain_events(db: Session, game_profile_id: int, period_inde
     elif rows:
         db.commit()
     return created
+
+
+def carry_chain_context(
+    db: Session,
+    profile: GameProfile,
+    enqueue_spec: object,
+    *,
+    previous: dict[str, Any] | None,
+    produced: dict[str, Any],
+) -> None:
+    """Следующий шаг цепочки получает результаты действий (выручка, id кредита) прошлых шагов."""
+    from .chain_actions import CHAIN_ACTION_CONTEXT_KEYS
+
+    if not isinstance(enqueue_spec, dict):
+        return
+    carried = {k: previous[k] for k in CHAIN_ACTION_CONTEXT_KEYS if previous and k in previous}
+    if not carried and not produced:
+        return
+    row = get_active_chain(db, profile.id, str(enqueue_spec.get("chain_key") or ""), statuses=(CHAIN_STATUS_SCHEDULED,))
+    if row is None:
+        return
+    ctx = {**carried, **_parse_json_obj(row.context_json), **produced}
+    row.context_json = json.dumps(ctx, ensure_ascii=False)
 
 
 def complete_chain(

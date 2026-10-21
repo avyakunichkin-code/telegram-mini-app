@@ -69,6 +69,7 @@ class EventProfileContext:
     active_liability_count: int
     active_liability_kinds: frozenset[str]
     active_insurance_claim_keys: frozenset[str]
+    active_asset_kind_counts: tuple[tuple[str, int], ...] = ()
 
 
 @dataclass(frozen=True)
@@ -81,6 +82,7 @@ class EventPrerequisites:
     active_liability_kinds_any — хотя бы одно активное обязательство с liability_kind из списка.
     min_active_liabilities / min_active_assets — нижние границы по числу активных записей.
     requires_insurance_any — хотя бы один активный полис с product+insured_object из списка dict.
+    min_assets_of_kind — {kind: N}: не меньше N активных активов этого kind (вторая машина).
     """
 
     active_asset_kinds_any: frozenset[str] = frozenset()
@@ -90,6 +92,7 @@ class EventPrerequisites:
     min_active_assets: int = 0
     requires_insurance_any: tuple[tuple[str, str], ...] = ()
     forbid_active_asset_kinds_any: frozenset[str] = frozenset()
+    min_assets_of_kind: tuple[tuple[str, int], ...] = ()
 
 
 def parse_event_prerequisites_json(raw: str | None) -> EventPrerequisites:
@@ -116,7 +119,15 @@ def parse_event_prerequisites_json(raw: str | None) -> EventPrerequisites:
             if product and insured:
                 ins_specs.append((product, insured))
 
+    min_of_kind: list[tuple[str, int]] = []
+    raw_min = data.get("min_assets_of_kind")
+    if isinstance(raw_min, dict):
+        for kind, n in raw_min.items():
+            if str(kind).strip() and int(n or 0) > 0:
+                min_of_kind.append((str(kind).strip(), int(n)))
+
     return EventPrerequisites(
+        min_assets_of_kind=tuple(min_of_kind),
         active_asset_kinds_any=_kind_set("active_asset_kinds_any"),
         active_asset_kinds_all=_kind_set("active_asset_kinds_all"),
         forbid_active_asset_kinds_any=_kind_set("forbid_active_asset_kinds_any"),
@@ -143,6 +154,10 @@ def event_prerequisites_met(prereq: EventPrerequisites, ctx: EventProfileContext
         return False
     if len(kinds) < prereq.min_active_assets:
         return False
+    counts = dict(ctx.active_asset_kind_counts)
+    for kind, need in prereq.min_assets_of_kind:
+        if counts.get(kind, 0) < need:
+            return False
     for product, insured in prereq.requires_insurance_any:
         key = f"{product}:{insured}"
         if key not in ctx.active_insurance_claim_keys:

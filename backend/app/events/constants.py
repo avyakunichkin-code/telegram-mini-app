@@ -21,6 +21,7 @@ ALLOWED_EFFECT_KEYS = frozenset(
         "enqueue_event",
         "asset_from_template",
         "used_car_action",
+        "chain_action",
         "requires_chain_branch",
         "needs_delta",
     }

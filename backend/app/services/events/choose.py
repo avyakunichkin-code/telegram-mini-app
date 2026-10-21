@@ -6,8 +6,8 @@ from fastapi import HTTPException
 from sqlalchemy.orm import Session
 
 from ...events.chains import (
-    FAMILY_VACATION_CHAIN_KEY,
-    FAMILY_VACATION_FINAL_DEFINITION_KEYS,
+    CHAIN_KEY_BY_FINAL_DEFINITION,
+    carry_chain_context,
     FREELANCE_EPILOGUE_DEFINITION_KEYS,
     FREELANCE_PROJECT_CHAIN_KEY,
     USED_CAR_CHAIN_KEY,
@@ -19,6 +19,7 @@ from ...events.chains import (
     get_active_chain,
     resolve_choice_effects_for_definition,
 )
+from ...events.chain_actions import apply_chain_action
 from ...events.choice_snapshot import ensure_event_instance_choice_snapshot, parse_choice_snapshot
 from ...events.constants import ALLOWED_EFFECT_KEYS
 from ...events.insurance_hooks import apply_insurance_claim_from_effects
@@ -288,6 +289,17 @@ def _apply_event_choice(
         except ValueError as e:
             raise HTTPException(status_code=400, detail=str(e) or "Покупка актива недоступна") from e
 
+    chain_action_spec = effects.get("chain_action")
+    produced: dict = {}
+    if chain_action_spec is not None:
+        try:
+            produced = apply_chain_action(db, profile, chain_action_spec, chain_ctx)
+            db.refresh(profile)
+        except ValueError as e:
+            raise HTTPException(status_code=400, detail=str(e) or "Действие недоступно") from e
+    if enqueue_spec is not None:
+        carry_chain_context(db, profile, enqueue_spec, previous=chain_ctx, produced=produced)
+
     needs_delta_spec = effects.get("needs_delta")
     needs_before = None
     needs_after = None
@@ -310,9 +322,9 @@ def _apply_event_choice(
         chain = get_active_chain(db, profile.id, FREELANCE_PROJECT_CHAIN_KEY)
         if chain:
             complete_chain(db, chain, period_index=int(profile.period_index))
-    elif def_key in FAMILY_VACATION_FINAL_DEFINITION_KEYS and enqueue_spec is None:
+    elif def_key in CHAIN_KEY_BY_FINAL_DEFINITION and enqueue_spec is None:
         # С enqueue_event активна уже следующая строка цепочки — её не закрываем.
-        chain = get_active_chain(db, profile.id, FAMILY_VACATION_CHAIN_KEY)
+        chain = get_active_chain(db, profile.id, CHAIN_KEY_BY_FINAL_DEFINITION[def_key])
         if chain:
             complete_chain(db, chain, period_index=int(profile.period_index))
 

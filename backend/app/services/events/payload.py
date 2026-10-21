@@ -88,7 +88,7 @@ def serialize_instance_rows(
             if effects.get("insurance_claim"):
                 row["insurance_claim"] = True
             if profile is not None:
-                row["impacts"] = build_choice_impacts(db, profile, effects)
+                row["impacts"] = build_choice_impacts(db, profile, effects, chain_ctx=chain_ctx)
                 needs_cfg = _needs_config_for_profile(db, profile)
                 if needs_cfg and effects.get("needs_delta") is not None:
                     try:
