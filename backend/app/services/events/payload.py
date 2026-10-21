@@ -30,6 +30,47 @@ from .seeds import _ensure_seed_events
 from .spawn import _o2_guidance_replaces_events_intro, ensure_events_unlock_intro, ensure_period_events
 
 
+
+def _rub(v: float) -> str:
+    return f"{int(round(v)):,}".replace(",", " ") + " ₽"
+
+
+class _SafeVars(dict):
+    def __missing__(self, key: str) -> str:
+        return "{" + key + "}"
+
+
+def _render_description(db: Session, profile: GameProfile | None, definition: EventDefinition) -> str:
+    """metadata.description_vars: подставить в описание {monthly_gap}, {income}, {outflow}, {runway_periods}."""
+    text = definition.description or ""
+    if profile is None or "{" not in text:
+        return text
+    try:
+        meta = json.loads(definition.metadata_json or "{}")
+    except (TypeError, ValueError):
+        return text
+    if not isinstance(meta, dict) or not meta.get("description_vars"):
+        return text
+    from ...finance.cashflow import monthly_flow
+
+    flow = monthly_flow(db, profile)
+    gap = max(0.0, -flow.net)
+    if gap <= 0 and meta.get("description_when_resolved"):
+        # Дыру уже закрыли в этом же периоде (например, продали машину через A1).
+        return str(meta["description_when_resolved"])
+    cash = max(0.0, float(profile.cash_balance or 0))
+    runway = int(cash // gap) if gap > 0 else 0
+    runway_text = f"примерно на {runway} пер." if runway >= 1 else "меньше чем на один период"
+    return text.format_map(
+        _SafeVars(
+            monthly_gap=_rub(gap),
+            income=_rub(flow.income),
+            outflow=_rub(flow.outflow),
+            runway_periods=str(runway),
+            runway_text=runway_text,
+        )
+    )
+
 def _order_events_recommended_first(events: list[dict]) -> list[dict]:
     """Рекомендуемые (по min-оси) — в начале списка, остальные — в исходном порядке."""
     indexed = list(enumerate(events))
@@ -108,7 +149,7 @@ def serialize_instance_rows(
             "key": definition.key,
             "event_domain": event_domain(definition),
             "title": definition.title,
-            "description": definition.description,
+            "description": _render_description(db, profile, definition),
             "choices": choice_rows,
         }
         if min_axis and _event_rescue_matches_min_axis(definition, min_axis):

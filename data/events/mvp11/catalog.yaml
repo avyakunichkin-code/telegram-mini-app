@@ -20,3 +20,4 @@ includes:
 - chains/freelance_project.yaml
 - profiles.yaml
 - meta/unlock_intro.yaml
+- meta/cashflow_warning.yaml

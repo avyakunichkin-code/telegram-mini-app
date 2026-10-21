@@ -8,14 +8,14 @@ from app.events.mvp11_seeds import MVP11_EVENT_SPECS, ensure_mvp11_event_catalog
 def test_mvp11_yaml_loads_full_catalog():
     clear_mvp11_catalog_cache()
     specs, taxonomy = load_mvp11_catalog(force_reload=True)
-    assert len(specs) == 75
-    assert len(taxonomy) == 75
+    assert len(specs) == 76
+    assert len(taxonomy) == 76
     assert {s["key"] for s in specs} == set(taxonomy.keys())
     validate_mvp11_specs(specs)
 
 
 def test_mvp11_module_exports_match_loader():
-    assert len(MVP11_EVENT_SPECS) == 75
+    assert len(MVP11_EVENT_SPECS) == 76
     keys = {s["key"] for s in MVP11_EVENT_SPECS}
     assert "mq11_friend_outing_student" in keys
     assert "mq11_refinance_bank" in keys

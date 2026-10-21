@@ -307,7 +307,7 @@ GAME_STARTER_TEMPLATE_SEEDS = [
                 # ADR-015: износ рутиной + уровень жизни (SPEC_needs-set-point); параметры — дефолты spec.
                 "model": "set_point",
                 "character_label": "Предприниматель",
-                "initial": {"comfort": 50, "status": 32, "social": 22, "health": 40},
+                "initial": {"comfort": 50, "status": 55, "social": 45, "health": 25},
                 "periods_to_empty_target": 10,
                 "thresholds": {"low": 40, "distressed": 30},
                 "consequence_profile": "hard",

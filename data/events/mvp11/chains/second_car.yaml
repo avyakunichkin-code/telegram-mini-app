@@ -23,6 +23,10 @@ events:
   prerequisites:
     min_assets_of_kind:
       car_personal: 2
+  extra:
+    # При отрицательном потоке (Предприниматель на старте) — в первом периоде с событиями.
+    spawn_priority_when: negative_monthly_flow
+    spawn_priority_rank: 2
   choices:
   - title: Продать перекупщику сейчас (90%)
     purpose: investment

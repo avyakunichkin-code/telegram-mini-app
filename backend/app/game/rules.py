@@ -70,6 +70,7 @@ class EventProfileContext:
     active_liability_kinds: frozenset[str]
     active_insurance_claim_keys: frozenset[str]
     active_asset_kind_counts: tuple[tuple[str, int], ...] = ()
+    monthly_net_flow: float | None = None  # доход − расходы за месяц; None = не считали
 
 
 @dataclass(frozen=True)
@@ -83,6 +84,7 @@ class EventPrerequisites:
     min_active_liabilities / min_active_assets — нижние границы по числу активных записей.
     requires_insurance_any — хотя бы один активный полис с product+insured_object из списка dict.
     min_assets_of_kind — {kind: N}: не меньше N активных активов этого kind (вторая машина).
+    negative_monthly_flow — месячные расходы больше доходов (подсказка о дыре в бюджете).
     """
 
     active_asset_kinds_any: frozenset[str] = frozenset()
@@ -93,6 +95,7 @@ class EventPrerequisites:
     requires_insurance_any: tuple[tuple[str, str], ...] = ()
     forbid_active_asset_kinds_any: frozenset[str] = frozenset()
     min_assets_of_kind: tuple[tuple[str, int], ...] = ()
+    negative_monthly_flow: bool = False
 
 
 def parse_event_prerequisites_json(raw: str | None) -> EventPrerequisites:
@@ -135,6 +138,7 @@ def parse_event_prerequisites_json(raw: str | None) -> EventPrerequisites:
         min_active_liabilities=max(0, int(data.get("min_active_liabilities") or 0)),
         min_active_assets=max(0, int(data.get("min_active_assets") or 0)),
         requires_insurance_any=tuple(ins_specs),
+        negative_monthly_flow=bool(data.get("negative_monthly_flow")),
     )
 
 
@@ -162,7 +166,26 @@ def event_prerequisites_met(prereq: EventPrerequisites, ctx: EventProfileContext
         key = f"{product}:{insured}"
         if key not in ctx.active_insurance_claim_keys:
             return False
+    if prereq.negative_monthly_flow and not (
+        ctx.monthly_net_flow is not None and ctx.monthly_net_flow < 0
+    ):
+        return False
     return True
+
+
+SPAWN_PRIORITY_NEGATIVE_FLOW = "negative_monthly_flow"
+
+
+def spawn_priority_active(when: str | None, ctx: EventProfileContext) -> bool:
+    """metadata.spawn_priority_when: событие занимает слот периода раньше случайного отбора."""
+    w = str(when or "").strip()
+    if not w:
+        return False
+    if w == "always":
+        return True
+    if w == SPAWN_PRIORITY_NEGATIVE_FLOW:
+        return ctx.monthly_net_flow is not None and ctx.monthly_net_flow < 0
+    return False
 
 
 def is_event_definition_eligible(

@@ -131,7 +131,18 @@ def _load_event_profile_context(db: Session, game_profile_id: int) -> EventProfi
         active_liability_kinds=frozenset(liability_kinds),
         active_insurance_claim_keys=frozenset(ins_keys),
         active_asset_kind_counts=tuple(sorted(kind_counts.items())),
+        monthly_net_flow=_monthly_net_flow(db, game_profile_id),
     )
+
+
+def _monthly_net_flow(db: Session, game_profile_id: int) -> float | None:
+    from ...finance.cashflow import monthly_flow
+    from ...models import GameProfile
+
+    profile = db.query(GameProfile).filter(GameProfile.id == game_profile_id).first()
+    if profile is None:
+        return None
+    return monthly_flow(db, profile).net
 
 
 def _definition_prerequisites_met(d: EventDefinition, ctx: EventProfileContext) -> bool:

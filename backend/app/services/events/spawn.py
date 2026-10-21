@@ -14,6 +14,7 @@ from ...game.rules import (
     event_tier_in_core_window,
     event_tier_in_fallback_primary,
     is_event_definition_eligible,
+    spawn_priority_active,
 )
 from ...models import EventDefinition, EventInstance, GameProfile, User
 from .needs_rescue import _needs_config_for_profile, _rescue_weight_multiplier
@@ -24,6 +25,23 @@ from .selection import (
     _load_event_profile_context,
     _pick_diverse_period_events,
 )
+
+def _definition_meta(d: EventDefinition) -> dict:
+    import json
+
+    try:
+        meta = json.loads(getattr(d, "metadata_json", None) or "{}")
+    except (TypeError, ValueError):
+        return {}
+    return meta if isinstance(meta, dict) else {}
+
+
+def _priority_rank(d: EventDefinition) -> int:
+    try:
+        return int(_definition_meta(d).get("spawn_priority_rank") or 100)
+    except (TypeError, ValueError):
+        return 100
+
 
 # Имя логгера исторически — модуль service; сохраняем для фильтров/алертов.
 logger = logging.getLogger("app.services.events.service")
@@ -202,9 +220,39 @@ def ensure_period_events(db: Session, game_profile_id: int, period_index: int, s
     period_idx = max(1, int(period_index))
     base_k = min(EVENTS_PER_PERIOD, len(repeat_ok))
 
+    # Приоритетные события (metadata.spawn_priority_when) занимают слоты первыми, мимо окна tier:
+    # подсказка о дыре в бюджете и A1 «Вторая машина» при отрицательном потоке.
+    # Приоритет — только если событие этому профилю ещё ни разу не выпадало: пропущенная подсказка
+    # не возвращается каждый период и не вытесняет случайную колоду (ревью 2026-10-22).
+    already_shown = {
+        int(row.definition_id)
+        for row in db.query(EventInstance.definition_id)
+        .filter(EventInstance.game_profile_id == game_profile_id)
+        .distinct()
+        .all()
+    }
+    priority = sorted(
+        (
+            d
+            for d in repeat_ok
+            if int(d.id) not in already_shown
+            and spawn_priority_active(_definition_meta(d).get("spawn_priority_when"), profile_ctx)
+        ),
+        key=lambda d: (_priority_rank(d), int(d.id)),
+    )[:base_k]
+    priority_ids = {int(d.id) for d in priority}
+    # priority_only (подсказка о дыре в бюджете) не попадает в случайную колоду никогда.
+    repeat_ok = [
+        d for d in repeat_ok
+        if int(d.id) not in priority_ids and not _definition_meta(d).get("priority_only")
+    ]
+    base_k -= len(priority)
+
     core = [d for d in repeat_ok if event_tier_in_core_window(_def_tier(d), period_idx)]
 
-    if len(core) >= base_k:
+    if base_k <= 0:
+        picked = []
+    elif len(core) >= base_k:
         picked = _pick_diverse_period_events(core, base_k, counter_map, weight_multiplier_by_id=rescue_mult_by_id)
     else:
         p1 = [d for d in repeat_ok if event_tier_in_fallback_primary(_def_tier(d), period_idx)]
@@ -215,10 +263,15 @@ def ensure_period_events(db: Session, game_profile_id: int, period_index: int, s
                 period_idx,
             )
             p1 = [d for d in repeat_ok if _def_tier(d) == 1]
-        if not p1:
+        if not p1 and not priority:
             return SPAWN_EMPTY_POOL
         kk = min(base_k, len(p1))
-        picked = _pick_diverse_period_events(p1, kk, counter_map, weight_multiplier_by_id=rescue_mult_by_id)
+        picked = (
+            _pick_diverse_period_events(p1, kk, counter_map, weight_multiplier_by_id=rescue_mult_by_id)
+            if kk > 0
+            else []
+        )
+    picked = priority + list(picked)
 
     for d in picked:
         inst = EventInstance(

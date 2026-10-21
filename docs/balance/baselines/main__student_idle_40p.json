@@ -5,8 +5,8 @@
     "policy": "idle",
     "periods_requested": 40,
     "periods_closed": 15,
-    "git_sha": "960c8db",
-    "timestamp": "2026-10-21T22:14:44.806473+00:00",
+    "git_sha": "88dd35f",
+    "timestamp": "2026-10-21T23:06:07.775025+00:00",
     "rng_seed": 42
   },
   "summary": {
