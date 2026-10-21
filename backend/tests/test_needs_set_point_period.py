@@ -11,7 +11,7 @@ from app.needs.engine import gain_with_headroom
 from tests.test_character_needs import _patch_template_needs
 
 _NO_EVENTS = patch("app.game.period.ensure_period_events", return_value=None)
-T = 16  # passive_periods_to_zero по умолчанию
+T = 20  # passive_periods_to_zero по умолчанию
 
 
 def _start_set_point(client, auth_headers, db_session, *, model="set_point") -> GameProfile:

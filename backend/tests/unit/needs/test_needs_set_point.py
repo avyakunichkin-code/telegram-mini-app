@@ -49,18 +49,18 @@ def _level(cfg, *, spends=None, assets=(), stress=None, period=1):
 
 def test_defaults_from_initial():
     cfg = _cfg()
-    assert cfg["model"] == "linear"
+    assert cfg["model"] == "set_point"  # все сиды переведены (ADR-015, 2026-10-21)
     sp = cfg["set_point"]
     assert sp["base"] == {ax: round(0.8 * cfg["initial"][ax]) for ax in AXES}
-    assert sp["adaptation_rate"] == pytest.approx(0.10)
-    assert sp["passive_periods_to_zero"] == 16
+    assert sp["adaptation_rate"] == pytest.approx(0.05)
+    assert sp["passive_periods_to_zero"] == 20
 
 
 def test_wear_brings_idle_player_to_zero_in_t_periods():
     cfg = _cfg()
     sp = cfg["set_point"]
     wear = derive_wear(cfg["initial"], sp)
-    assert wear["comfort"] == pytest.approx(7.44, abs=0.01)
+    assert wear["comfort"] == pytest.approx(4.91, abs=0.01)
     # Пассивный с L = base: ровно к T (±1 из-за порога нуля) — ноль по каждой оси.
     idle = periods_to_zero_if_idle(cfg["initial"], sp["base"], wear, sp)
     for ax in AXES:

@@ -84,10 +84,10 @@ def parse_set_point_config(needs: dict, initial: dict[str, float]) -> dict:
         if st_raw
         else dict(DEFAULT_STRESSORS)
     )
-    rate = min(0.9, max(0.01, _num(raw.get("adaptation_rate"), 0.10)))
+    rate = min(0.9, max(0.01, _num(raw.get("adaptation_rate"), 0.05)))
     return {
         "adaptation_rate": rate,
-        "passive_periods_to_zero": max(2, int(_num(raw.get("passive_periods_to_zero"), 16))),
+        "passive_periods_to_zero": max(2, int(_num(raw.get("passive_periods_to_zero"), 20))),
         "base": base,
         "bonus_cap_max": max(0.0, _num(raw.get("bonus_cap_max"), 12.0)),
         "budget_scale": max(0.0, _num(raw.get("budget_scale"), 40.0)),

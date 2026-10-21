@@ -187,6 +187,8 @@ aliases:
 
 ### Decay (конец периода N, до N+1)
 
+> С 2026-10-21 шаблоны используют модель «износ + уровень жизни»: [SPEC_needs-set-point](SPEC_needs-set-point.md), [ADR-015](../../decisions/ADR-015-needs-set-point-model.md). Ниже — модель `linear` (fallback).
+
 ```text
 for key in axes:
   decay[key] = decay_per_period[key] if set

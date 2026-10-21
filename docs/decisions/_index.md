@@ -19,7 +19,7 @@ aliases:
 | [[docs/decisions/ADR-013-game-only-drop-plan-mode|ADR-013]] | Только Game; Plan как save cancelled (п.3 → ADR-016) |
 | [[docs/decisions/ADR-016-two-products-shared-fincore|ADR-016]] | Game и Plan — два продукта; общий `fincore` |
 | [[docs/decisions/ADR-014-brand-direction-board-game|ADR-014]] | Бренд: настольная игра, webfont, 3D, «Завершить ход» |
-| [[docs/decisions/ADR-015-needs-set-point-model|ADR-015]] | Потребности: износ рутиной + уровень жизни (proposed) |
+| [[docs/decisions/ADR-015-needs-set-point-model|ADR-015]] | Потребности: износ рутиной + уровень жизни (accepted) |
 | [[docs/decisions/ADR-002-victory-engine-and-template-config|ADR-002]] | Victory v2 engine |
 | [[docs/decisions/ADR-004-mechanics-unlock-victory-chain|ADR-004]] | Mechanics unlock chain |
 | [[docs/decisions/ADR-007-backend-domain-packages|ADR-007]] | Backend domain packages |

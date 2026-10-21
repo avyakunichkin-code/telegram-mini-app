@@ -17,3 +17,32 @@ baselines:
     file: main__student_safety_first_40p.json
     policy: safety_first
     description: Студент, приоритет подушки до baseline target, 40p
+
+  # NV-506 (SPEC_needs-set-point): боты по потребностям, модель «износ + уровень жизни»
+  - id: main__student_idle_40p
+    file: main__student_idle_40p.json
+    policy: idle
+    description: Студент, только зарплата + самый дешёвый выбор — ожидаемо needs_depletion ~13
+
+  - id: main__student_needs_keeper_40p
+    file: main__student_needs_keeper_40p.json
+    policy: needs_keeper
+    description: Студент, события на самые низкие потребности + «Порадовать себя», 40p
+
+  - id: main__pro_restructure_40p
+    file: main__pro_restructure_40p.json
+    policy: restructure
+    template_key: mq_game_tight_budget_v1
+    description: Профессионал, перестройка активов (продажа машины, досрочное погашение) + needs_keeper
+
+  - id: main__manager_restructure_40p
+    file: main__manager_restructure_40p.json
+    policy: restructure
+    template_key: mq_game_mortgage_stress_v1
+    description: Руководитель, перестройка активов — бот продаёт обе машины (см. PLAN_needs-set-point, известное ограничение)
+
+  - id: main__entrepreneur_restructure_40p
+    file: main__entrepreneur_restructure_40p.json
+    policy: restructure
+    template_key: mq_game_debt_stack_v1
+    description: Предприниматель — экономика шаблона (поражение ~10), фиксирует текущее состояние

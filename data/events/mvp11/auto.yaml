@@ -32,6 +32,7 @@ events:
         comfort: 5
         health: 1
   - title: Оплатить ремонт из своих
+    purpose: mitigation
     effects:
       cash_delta: -45000
       needs_delta:

@@ -14,12 +14,13 @@ events:
   scenario_shape: soft_offer
   choices:
   - title: Больше в облигации
+    purpose: investment
     effects:
       cash_delta: -2500
       needs_delta:
-        status: 7
-        comfort: 3
         health: -2
+        status: 2
+        comfort: 2
   - title: Оставить как есть
     effects:
       cash_delta: 0
@@ -27,11 +28,12 @@ events:
         status: -3
         comfort: -1
   - title: Усилить депозит
+    purpose: investment
     effects:
       cash_delta: -1200
       needs_delta:
-        comfort: 5
-        status: 2
+        comfort: 1
+        status: 1
         health: 1
 - definition_key: mq11_rent_room_student
   content_class: profile
@@ -90,12 +92,13 @@ events:
     - mortgage
   choices:
   - title: Внести 50 000 ₽ досрочно
+    purpose: investment
     effects:
       cash_delta: -50000
       needs_delta:
-        comfort: 8
-        status: 6
-        health: 2
+        comfort: 2
+        status: 1
+        health: 1
   - title: Только обязательный платёж
     effects:
       cash_delta: 0
@@ -131,9 +134,9 @@ events:
         amount_monthly: 900
         title: Подписки и сервисы
       needs_delta:
-        comfort: 9
-        status: 5
-        social: 3
+        comfort: 6
+        status: 3
+        social: 2
   - title: Отрезать лишнее
     effects:
       monthly_lifestyle_delta: -450

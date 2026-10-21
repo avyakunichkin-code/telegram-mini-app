@@ -29,7 +29,8 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Literal
 
-PolicyName = Literal["tutorial", "safety_first", "passive", "idle", "needs_keeper"]
+PolicyName = Literal["tutorial", "safety_first", "passive", "idle", "needs_keeper", "restructure"]
+CAR_KINDS = frozenset({"car", "car_personal"})
 NEEDS_AXES = ("comfort", "status", "social", "health")
 
 SCHEMA_VERSION = 1
@@ -130,6 +131,7 @@ class SimState:
     periods_attempted: int = 0
     events_resolved: int = 0
     event_cash_deltas: list[float] = field(default_factory=list)
+    assets_sold: int = 0
 
 
 def run_balance_simulation(
@@ -241,7 +243,7 @@ def run_balance_simulation(
         if not choices:
             return False
         mode: Literal["max", "min"] = "min" if policy == "passive" else "max"
-        if policy == "needs_keeper" and not force:
+        if policy in ("needs_keeper", "restructure") and not force:
             ov_now = overview()
             needs_now = ov_now.get("needs") or {}
             # Запас: все месячные платежи и расходы + 20% зарплаты — иначе бот уходит в минус по деньгам.
@@ -330,8 +332,32 @@ def run_balance_simulation(
             if r.status_code == 200:
                 state.safety_once_done = True
 
+    def maybe_restructure() -> None:
+        """restructure: продать машины (обслуживание дороже дохода), свободные деньги — в досрочное
+        погашение самых дорогих кредитов. Проверка тезиса PO 2026-10-21 о перестройке активов."""
+        if policy != "restructure":
+            return
+        ov = overview()
+        for a in ov.get("assets") or []:
+            if a.get("kind") in CAR_KINDS and float(a.get("monthly_maintenance_cost") or 0) > float(a.get("monthly_income") or 0):
+                r = client.delete(f"/api/finance/assets/{a['id']}", headers=headers)
+                if r.status_code == 200:
+                    state.assets_sold += 1
+        ov = overview()
+        cash = float(ov.get("cash_balance") or 0)
+        buffer = float(ov.get("total_monthly_outflow") or 0) + 0.2 * float(ov.get("total_monthly_income") or 0)
+        for liab in sorted(ov.get("liabilities") or [], key=lambda l: -float(l.get("annual_rate_percent") or 0)):
+            free = cash - buffer
+            debt = float(liab.get("total_debt") or 0)
+            if free < 1_000 or debt <= 0:
+                break
+            amount = round(min(free, debt), 2)
+            r = client.post(f"/api/finance/liabilities/{liab['id']}/prepay", headers=headers, json={"amount": amount})
+            if r.status_code == 200:
+                cash -= amount
+
     def maybe_treat_self() -> None:
-        if policy != "needs_keeper":
+        if policy not in ("needs_keeper", "restructure"):
             return
         ov = overview()
         ts = ov.get("treat_self") or {}
@@ -347,7 +373,7 @@ def run_balance_simulation(
         client.post("/api/game/period/treat-self", headers=headers, json={"option_id": opt["id"]})
 
     def maybe_invest() -> None:
-        if policy in ("passive", "idle", "needs_keeper"):
+        if policy in ("passive", "idle", "needs_keeper", "restructure"):
             return
         if policy == "tutorial" and state.invest_once_done:
             return
@@ -443,6 +469,7 @@ def run_balance_simulation(
         for p in range(1, periods + 1):
             state.periods_attempted = p
             claim_salary()
+            maybe_restructure()
             needs_before_events = dict(overview().get("needs") or {})
             pick_events()
             if policy == "tutorial":
@@ -522,6 +549,7 @@ def run_balance_simulation(
             "avg_net_cashflow_6p": final_ov.get("avg_net_cashflow_6p"),
             "avg_net_cashflow_6p_n": final_ov.get("avg_net_cashflow_6p_n"),
             "needs_model": (final_ov.get("needs_meta") or {}).get("model"),
+            "assets_sold": state.assets_sold,
         }
 
         for milestone in (12, 20, 30, 40):
@@ -607,7 +635,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--periods", type=int, default=DEFAULT_PERIODS)
     parser.add_argument(
         "--policy",
-        choices=["tutorial", "safety_first", "passive", "idle", "needs_keeper"],
+        choices=["tutorial", "safety_first", "passive", "idle", "needs_keeper", "restructure"],
         default="tutorial",
     )
     parser.add_argument(

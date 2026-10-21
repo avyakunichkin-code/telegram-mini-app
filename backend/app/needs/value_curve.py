@@ -11,7 +11,7 @@ from __future__ import annotations
 import math
 
 CURVE_ALPHA = 0.30
-IMPULSE_SCALE = 25.0
+IMPULSE_SCALE = 40.0  # калибровка NV-406 (2026-10-21): 2 события за период, потолок оси 15
 
 
 def needs_points(

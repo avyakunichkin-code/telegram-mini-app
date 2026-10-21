@@ -16,13 +16,15 @@ events:
     min_active_liabilities: 1
   choices:
   - title: Оформить рефинанс
+    purpose: investment
     effects:
       cash_delta: -6500
       needs_delta:
-        comfort: 4
-        status: 2
         health: -4
+        comfort: 2
+        status: 2
   - title: Только консультация
+    purpose: investment
     effects:
       cash_delta: -1200
       needs_delta:

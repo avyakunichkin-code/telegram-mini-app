@@ -263,7 +263,7 @@ def validate_mvp11_balance(specs: list[dict]) -> list[BalanceViolation]:
 # Только отчёт: предупреждения не входят в validate_mvp11_balance и не ломают contract.
 
 CURVE_TOLERANCE = 0.5
-PLEASURE_AXIS_CAP = 10.0
+PLEASURE_AXIS_CAP = 15.0
 
 
 @dataclass(frozen=True)
