@@ -10,6 +10,7 @@ from __future__ import annotations
 from collections.abc import Sequence
 from dataclasses import dataclass
 
+from .expenses import monthly_burn
 from .household import HouseholdSnapshot, Liability
 from .liabilities import PAYMENT_MODE_ANNUITY
 
@@ -28,8 +29,8 @@ def asset_maintenance(snap: HouseholdSnapshot) -> float:
 
 
 def lifestyle_burn(snap: HouseholdSnapshot) -> float:
-    """Расходы на жизнь за месяц: статьи + расходы вне статей, не меньше нуля."""
-    return max(0.0, sum(line.amount_monthly for line in snap.expense_lines) + snap.extra_monthly_expense)
+    """Расходы на жизнь за месяц: статьи + расходы вне статей, не меньше нуля (`expenses.monthly_burn`)."""
+    return monthly_burn(snap.expense_lines, month_index=snap.month_index, extra=snap.extra_monthly_expense).total
 
 
 def asset_income(snap: HouseholdSnapshot) -> float:

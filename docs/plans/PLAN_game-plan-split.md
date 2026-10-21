@@ -144,13 +144,20 @@ data/events/          # только игра
 **Статус фазы 1 (2026-10-21, ветка `claude/spl-fincore`):**
 - **SPL-102 ✅.** Enforce-контракт `backend/.importlinter` (fincore ↛ app/fastapi/starlette/sqlalchemy/pydantic) проверяется тестом `backend/tests/test_import_boundaries.py`. Негативная проба (`import sqlalchemy` в ядре) ловится. Report-контракт — `backend/importlinter-report.ini`. Backend CI для pytest пока нет (PR-04), поэтому гейт = локальный pytest.
 - **SPL-103 ✅.** Rule `.claude/rules/fincore.md` + строка в `project-skills-layout`.
-- **SPL-101 ⏸.** Отложен до закрытия NV-406/407: калибровка needs меняет YAML и закрытие периода, golden сразу устарели бы. Для SPL-201/202 хватает сравнения двух прогонов `balance_playtest` до и после на одном дереве.
+- **SPL-101 ✅ (2026-10-21, после NV-406/407).**
+  - `backend/tests/unit/game/test_period_close_golden.py` и `backend/tests/golden/period_close_*.json`. На каждом периоде фиксируются `compute_monthly_burn`, `estimate_period_close_preview` до закрытия, результат `process_period_end`, транзакции периода, `PeriodEconomyClosing` и состояние долгов, вкладов, полисов и статей после закрытия.
+  - Три сценария без событий (`ensure_period_events` замокан), зарплата — через `claim_salary`. `full_house` (7 периодов): все виды списаний и начислений, аннуитет гасится сроком, статья и полис истекают. `shortfall_defeat`: просрочка по двум долгам, backfill статей из base, поражение `cash_negative_streak`. `partial_recovery`: частичная оплата и минус, затем зарплата гасит просрочку двумя взносами, отрицательная delta.
+  - Шаблон фикстуры не существует: потребности не участвуют, backfill идёт по долям по умолчанию. Поэтому golden не зависят ни от каталога событий, ни от баланса шаблонов.
+  - Сравнение с точностью 4 знака. Достижения, guidance и пул событий из результата исключены.
+  - Перегенерация — `UPDATE_GOLDEN=1`, только при осознанном изменении поведения.
+  - Проверено: два прогона подряд стабильны. Негативная проба (обратный порядок долгов в `_pay_liabilities`) роняет `full_house` и `shortfall_defeat`. Golden фиксирует текущий порядок без ORDER BY, так что срез «порядок долгов» (критерий 3 SPL-204/205) перегенерирует их явно. Backend pytest — 535 passed.
+  - Расхождение, которое golden фиксирует, а не чинит: превью не учитывает купоны облигаций (в `full_house` факт на 200 больше оценки). Для SPL-206 это входное условие: прогноз в ядре должен либо сохранить расхождение, либо исправить его отдельным срезом.
 
 **Backlog фазы 2 из report-контракта** (прямые импорты ORM/HTTP в кандидатах):
 
 | Модуль | Нарушения | Срез |
 |--------|-----------|------|
-| `finance/expenses.py` | `sqlalchemy`, `app.models`, `fastapi` (в plan-CRUD — уйдёт в GO-03) | SPL-204 |
+| `finance/expenses.py` | `sqlalchemy`, `app.models`, `fastapi` (в plan-CRUD — уйдёт в GO-03) — остаётся адаптером (backfill, ORM), расчёт в ядре | SPL-204 ✅ |
 | `finance/period_close_preview.py` | `sqlalchemy`, `app.models` | SPL-206 |
 | ~~`finance/period_metrics.py`~~ | читает закрытия из БД — адаптер, формула в ядре | SPL-207 ✅ |
 | ~~`finance/starter_liability.py`~~ | `app.models` — остаётся адаптером (строит ORM-строку), расчёт в ядре | SPL-203 ✅ |
@@ -194,6 +201,14 @@ Gate каждого среза: **balance diff = 0** относительно SP
   - Паритет-тест `tests/unit/game/test_fincore_metrics_parity.py`: метрики ядра на снимке профиля совпадают с `build_finance_overview` (с округлением API) и с `build_victory_evaluation_input`.
   - **Не переключены** `overview_build` и `victory/snap`: проекция вкладов там считается в другом порядке float-операций (`p*(r/100)/12` против `p*r/100/12`), разница до округления в последнем знаке. Перевод потребителей на `compute_metrics` — отдельный срез **SPL-207b** с balance diff. Он закрывает и целевой рефакторинг ADR-009 §4 (один снимок метрик для overview, победы и аналитики).
   - Проверено: backend pytest 532 passed, fincore 18 passed, balance playtest совпадает с baseline; economy-reviewer — APPROVED. По ревью: `net_worth` не вычитает просрочку аннуитета повторно (`liability_owed`), свойство снимка переименовано в `debt_with_overdue`, чтобы не путать с `HouseholdMetrics.total_debt` (только тела).
+
+- **SPL-204 ✅ (2026-10-21).**
+  - `fincore.expenses.monthly_burn(lines, month_index, extra, categories) → MonthlyBurn`: статья активна при `expires_month_index > month_index`, сумма статьи ≥ 0 и `round(…, 2)`, итог = `max(0, Σ статей + extra)`. Суммы по категориям считаются до округления статей и сортируются по убыванию, при равенстве — в порядке появления. Уровень категории — из справочника, а не из статьи. Всё как в игре до переноса.
+  - `compute_monthly_burn` сохранил сигнатуру и `BurnSnapshot` (12 потребителей) и стал адаптером: backfill статей → ORM → DTO → ядро. Backfill и справочник категорий остаются в игре — это IO и контент.
+  - Правило «расходы вне статей» (дельта, а без статей и при нулевой дельте — база шаблона) теперь одно: `finance.expenses.lifestyle_extra`, его использует и адаптер снимка.
+  - Перевод статьи из ORM в DTO — тоже один: `finance.expenses.expense_line_for_core`. Его вызывают и `compute_monthly_burn`, и адаптер снимка. Сумма передаётся как в БД: обрезку снизу и округление делает только ядро (по ревью economy-reviewer).
+  - `fincore.metrics.lifestyle_burn` считает через `monthly_burn`: одна формула для игры, метрик и будущего Plan. Побочный эффект — метрика теперь округлена до копеек и не даёт отрицательных статей. Потребители метрики в игре ещё не переключены (SPL-207b).
+  - Проверено: golden SPL-101 без изменений; backend pytest 535 passed; fincore 27 passed; economy-reviewer — APPROVED; balance playtest — 6 из 7 эталонов совпадают байт в байт. `main__student_tutorial_40p` расходится с эталоном (13 → 14 периодов, с периода 3 по выбору в событиях), но так же расходится и на дереве без SPL-204: эталон устарел раньше, отчёт после SPL-204 совпадает с отчётом до него.
 
 **Критерии приёмки SPL-207b (из ревью SPL-207):**
 1. Цель победы `expense_to_income_ratio` сохраняет базу «зарплата» — не брать `HouseholdMetrics.expense_to_income_ratio` (база — доход с проекцией вкладов).

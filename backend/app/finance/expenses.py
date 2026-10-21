@@ -10,6 +10,9 @@ from typing import Any
 
 from sqlalchemy.orm import Session
 
+from fincore.expenses import ExpenseCategory, monthly_burn
+from fincore.household import ExpenseLine
+
 from .expense_defaults import expense_budget_for_template
 from ..models import ExpenseCategoryDefinition, GameProfile, GameStarterTemplate, ProfileExpenseLine
 from ..timeutil import utc_now_naive
@@ -171,67 +174,82 @@ def seed_expense_lines_from_budget(
     return created
 
 
+def lifestyle_extra(profile: GameProfile, has_lines: bool) -> float:
+    """
+    Расходы вне статей для ядра: legacy-дельта профиля, а если статей нет и дельта 0 —
+    базовый бюджет шаблона (профиль без backfill статей).
+    """
+    legacy_delta = float(getattr(profile, "delta_monthly_lifestyle_expense", 0) or 0)
+    if not has_lines and legacy_delta == 0:
+        return float(getattr(profile, "base_monthly_lifestyle_expense", 0) or 0)
+    return legacy_delta
+
+
+def expense_categories_for_core(db: Session) -> dict[str, ExpenseCategory]:
+    return {
+        r.category_key: ExpenseCategory(title=r.title, default_tier=r.default_tier)
+        for r in db.query(ExpenseCategoryDefinition).filter(ExpenseCategoryDefinition.is_active == 1).all()
+    }
+
+
+def expense_line_for_core(row: ProfileExpenseLine, categories: dict[str, ExpenseCategory]) -> ExpenseLine:
+    """ORM-статья → DTO ядра. Сумма как в БД: ограничение снизу и округление делает ядро."""
+    return ExpenseLine(
+        id=int(row.id),
+        category_key=row.category_key,
+        title=(row.title_override or "").strip() or _category_title(categories, row.category_key),
+        amount_monthly=float(row.amount_monthly or 0),
+        tier=str(row.tier or "must"),
+        expires_month_index=int(row.expires_period_index) if row.expires_period_index is not None else None,
+    )
+
+
 def compute_monthly_burn(db: Session, profile: GameProfile) -> BurnSnapshot:
+    """Игровой адаптер `fincore.expenses.monthly_burn`: backfill статей, ORM → DTO, DTO → BurnSnapshot."""
     ensure_expense_category_catalog(db)
     ensure_profile_expense_lines(db, profile)
 
     period_index = max(1, int(profile.period_index or 1))
     legacy_delta = float(getattr(profile, "delta_monthly_lifestyle_expense", 0) or 0)
-    titles = _category_titles(db)
+    categories = expense_categories_for_core(db)
 
-    rows = active_expense_lines_query(db, profile.id, period_index).all()
-    lines: list[ExpenseLineView] = []
-    by_cat: dict[str, float] = {}
+    rows = {int(row.id): row for row in active_expense_lines_query(db, profile.id, period_index).all()}
+    burn = monthly_burn(
+        [expense_line_for_core(row, categories) for row in rows.values()],
+        month_index=period_index,
+        extra=lifestyle_extra(profile, bool(rows)),
+        categories=categories,
+    )
 
-    for row in rows:
-        cat_title = titles.get(row.category_key, row.category_key)
-        display = (row.title_override or "").strip() or cat_title
-        amt = max(0.0, float(row.amount_monthly or 0))
-        lines.append(
-            ExpenseLineView(
-                id=int(row.id),
-                category_key=row.category_key,
-                category_title=cat_title,
-                title=display,
-                amount_monthly=round(amt, 2),
-                tier=str(row.tier or "must"),
-                source_kind=str(row.source_kind or "template"),
-                expires_period_index=int(row.expires_period_index)
-                if row.expires_period_index is not None
-                else None,
-            )
+    lines = [
+        ExpenseLineView(
+            id=int(line.id),
+            category_key=line.category_key,
+            category_title=_category_title(categories, line.category_key),
+            title=line.title,
+            amount_monthly=line.amount_monthly,
+            tier=line.tier,
+            source_kind=str(rows[line.id].source_kind or "template"),
+            expires_period_index=line.expires_month_index,
         )
-        by_cat[row.category_key] = by_cat.get(row.category_key, 0.0) + amt
-
-    lines_sum = sum(l.amount_monthly for l in lines)
-
-    if not lines and legacy_delta == 0:
-        base = float(getattr(profile, "base_monthly_lifestyle_expense", 0) or 0)
-        total = max(0.0, base + legacy_delta)
-    else:
-        total = max(0.0, lines_sum + legacy_delta)
-
-    tier_by_key = {
-        r.category_key: r.default_tier
-        for r in db.query(ExpenseCategoryDefinition).filter(ExpenseCategoryDefinition.is_active == 1).all()
-    }
+        for line in burn.lines
+    ]
     by_category = [
-        CategoryBurnView(
-            category_key=k,
-            title=titles.get(k, k),
-            amount=round(v, 2),
-            tier=tier_by_key.get(k, "must"),
-        )
-        for k, v in sorted(by_cat.items(), key=lambda x: -x[1])
+        CategoryBurnView(category_key=c.category_key, title=c.title, amount=c.amount, tier=c.tier)
+        for c in burn.by_category
     ]
 
     return BurnSnapshot(
-        total=round(total, 2),
-        lines_sum=round(lines_sum, 2),
+        total=burn.total,
+        lines_sum=burn.lines_sum,
         legacy_delta=round(legacy_delta, 2),
         lines=lines,
         by_category=by_category,
     )
+
+
+def _category_title(categories: dict[str, ExpenseCategory], key: str) -> str:
+    return categories[key].title if key in categories else key
 
 
 def expire_expense_lines_for_period(db: Session, profile: GameProfile, period_index: int) -> int:

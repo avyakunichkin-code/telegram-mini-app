@@ -17,10 +17,14 @@ from sqlalchemy.orm import Session
 
 from fincore import household as hh
 
-from ...finance.expenses import active_expense_lines_query
+from ...finance.expenses import (
+    active_expense_lines_query,
+    expense_categories_for_core,
+    expense_line_for_core,
+    lifestyle_extra,
+)
 from ...finance.liability_kinds import effective_liability_kind, effective_payment_mode
 from ...models import (
-    ExpenseCategoryDefinition,
     FinanceAsset,
     FinanceLiability,
     FinanceSalary,
@@ -42,33 +46,12 @@ def _opt_int(value) -> int | None:
     return int(value) if value is not None else None
 
 
-def _lifestyle_extra(profile: GameProfile, has_lines: bool) -> float:
-    """Расходы вне статей — та же логика, что в `compute_monthly_burn`."""
-    legacy_delta = _f(getattr(profile, "delta_monthly_lifestyle_expense", 0))
-    if not has_lines and legacy_delta == 0:
-        return _f(getattr(profile, "base_monthly_lifestyle_expense", 0))
-    return legacy_delta
-
-
 def _expense_lines(db: Session, profile: GameProfile, period_index: int) -> tuple[hh.ExpenseLine, ...]:
-    titles = {
-        r.category_key: r.title
-        for r in db.query(ExpenseCategoryDefinition).filter(ExpenseCategoryDefinition.is_active == 1).all()
-    }
-    lines = []
-    for row in active_expense_lines_query(db, profile.id, period_index).all():
-        cat_title = titles.get(row.category_key, row.category_key)
-        lines.append(
-            hh.ExpenseLine(
-                id=int(row.id),
-                category_key=row.category_key,
-                title=(row.title_override or "").strip() or cat_title,
-                amount_monthly=round(max(0.0, _f(row.amount_monthly)), 2),
-                tier=str(row.tier or "must"),
-                expires_month_index=_opt_int(row.expires_period_index),
-            )
-        )
-    return tuple(lines)
+    categories = expense_categories_for_core(db)
+    return tuple(
+        expense_line_for_core(row, categories)
+        for row in active_expense_lines_query(db, profile.id, period_index).all()
+    )
 
 
 def build_household_snapshot(db: Session, profile: GameProfile) -> hh.HouseholdSnapshot:
@@ -160,7 +143,7 @@ def build_household_snapshot(db: Session, profile: GameProfile) -> hh.HouseholdS
         liabilities=liabilities,
         assets=assets,
         expense_lines=expense_lines,
-        extra_monthly_expense=_lifestyle_extra(profile, bool(expense_lines)),
+        extra_monthly_expense=lifestyle_extra(profile, bool(expense_lines)),
         policies=policies,
         investments=investments,
     )
