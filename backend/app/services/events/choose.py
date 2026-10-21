@@ -6,6 +6,8 @@ from fastapi import HTTPException
 from sqlalchemy.orm import Session
 
 from ...events.chains import (
+    FAMILY_VACATION_CHAIN_KEY,
+    FAMILY_VACATION_FINAL_DEFINITION_KEYS,
     FREELANCE_EPILOGUE_DEFINITION_KEYS,
     FREELANCE_PROJECT_CHAIN_KEY,
     USED_CAR_CHAIN_KEY,
@@ -306,6 +308,11 @@ def _apply_event_choice(
             complete_chain(db, chain, period_index=int(profile.period_index))
     elif def_key in FREELANCE_EPILOGUE_DEFINITION_KEYS:
         chain = get_active_chain(db, profile.id, FREELANCE_PROJECT_CHAIN_KEY)
+        if chain:
+            complete_chain(db, chain, period_index=int(profile.period_index))
+    elif def_key in FAMILY_VACATION_FINAL_DEFINITION_KEYS and enqueue_spec is None:
+        # С enqueue_event активна уже следующая строка цепочки — её не закрываем.
+        chain = get_active_chain(db, profile.id, FAMILY_VACATION_CHAIN_KEY)
         if chain:
             complete_chain(db, chain, period_index=int(profile.period_index))
 

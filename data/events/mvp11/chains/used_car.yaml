@@ -1,25 +1,35 @@
+# Цепочка «Подержанное авто» (разбор 2026-10-21): рыночная цена 1 000 000 ₽,
+# задаток 50 000 → выкуп 750 000 (−25%), «подумать» → 900 000 (−10%).
+# В имущество машина встаёт по рыночной цене; выкуп за свои или остаток в автокредит (шаблон car_loan).
+# Урок: кредит под выгодную сделку может принести деньги — продать машину сразу дороже, чем купили.
+# Аудитория — персоны с открытыми «Имуществом» и «Обязательствами», когда своей машины нет;
+# сделка раз за партию, чтобы не стала фермой.
 events:
 - definition_key: mq11_used_car_offer
+  content_class: instrumental
+  event_slot: period_choice
+  audience_template_keys:
+  - mq_game_tight_budget_v1
+  - mq_game_mortgage_stress_v1
+  - mq_game_debt_stack_v1
   event_domain: auto
   title: Предложение о подержанном авто
-  description: Выгодная сделка на личный автомобиль с пробегом. Можно внести задаток или взять паузу —
-    финальное решение придёт через 2 периода.
+  description: 'Знакомый уезжает и срочно продаёт машину: на рынке такая стоит 1 000 000 ₽. С задатком
+    50 000 ₽ он держит цену 750 000 ₽; без задатка готов ждать, но уступит только до 900 000 ₽. Решать
+    окончательно — через 2 периода.'
   weight: 65
   event_tier: 3
-  repeat_policy: repeatable
+  repeat_policy: once_per_profile
   scenario_shape: chain
-  cooldown_periods: 6
   prerequisites:
     forbid_active_asset_kinds_any:
     - car_personal
     - car_taxi
   choices:
-  - title: Внести задаток
+  - title: Внести задаток 50 000 ₽
+    purpose: investment
     effects:
       cash_delta: -50000
-      needs_delta:
-        status: 8
-        comfort: 6
       enqueue_event:
         chain_key: used_car_deal
         followup_definition_key: mq11_used_car_deadline
@@ -28,15 +38,12 @@ events:
           branch: deposit
           deposit_amount: 50000
           template_key: car_personal
+          list_price: 1000000
           discount_rate: 0.25
-    description: 50 000 ₽ сейчас; выкуп со скидкой ~25% от цены в каталоге.
+    description: Выкуп за 750 000 ₽ (из них 50 000 — уже сейчас). Откажетесь — задаток не вернут.
   - title: Попросить время на решение
     effects:
       cash_delta: 0
-      needs_delta:
-        status: -1
-        comfort: -2
-        social: -2
       enqueue_event:
         chain_key: used_car_deal
         followup_definition_key: mq11_used_car_deadline
@@ -45,19 +52,24 @@ events:
           branch: thinking
           deposit_amount: 0
           template_key: car_personal
-          discount_rate: 0.25
-    description: Без платежа сейчас; через 2 периода — финальный выбор.
+          list_price: 1000000
+          discount_rate: 0.10
+    description: Без платежа сейчас; через 2 периода выкуп за 900 000 ₽ или отказ без потерь.
   - title: Отказаться от сделки
     effects:
       cash_delta: 0
-      needs_delta:
-        comfort: -2
-        status: -2
 - definition_key: mq11_used_car_deadline
+  content_class: instrumental
+  event_slot: chain_followup
+  audience_template_keys:
+  - mq_game_tight_budget_v1
+  - mq_game_mortgage_stress_v1
+  - mq_game_debt_stack_v1
   event_domain: auto
   title: 'Пора решить: подержанное авто'
-  description: Срок по сделке истекает. Завершите покупку по скидочной цене или откажитесь (задаток не
-    вернётся, если уже платили).
+  description: 'Срок по сделке истекает. Машина стоит на рынке 1 000 000 ₽ — можно выкупить за свои,
+    оформить остаток в автокредит или отказаться. Купленную машину можно сразу продать по рыночной цене
+    в «Имуществе»: кредит погасится из выручки.'
   weight: 1
   event_tier: 3
   repeat_policy: once_per_profile
@@ -65,35 +77,59 @@ events:
   scenario_shape: chain
   mandatory_gate: blocks_period_end
   choices:
-  - title: Завершить покупку
+  - title: Выкупить за свои
+    purpose: investment
     effects:
       used_car_action: complete_purchase
       requires_chain_branch: deposit
-      cash_delta: -3000
       needs_delta:
         status: 6
         comfort: 4
-    description: Доплата остатка; машина появится в активах.
-  - title: Завершить покупку
+    description: 'Два периода назад вы внесли задаток → доплата 700 000 ₽, итого 750 000 за машину
+      ценой 1 000 000.'
+  - title: Выкупить за свои
+    purpose: investment
     effects:
       used_car_action: complete_purchase
       requires_chain_branch: thinking
-      cash_delta: -3000
       needs_delta:
         status: 6
         comfort: 4
-    description: Полная цена со скидкой; машина в активах.
+    description: 'Два периода назад вы не стали вносить задаток → платите 900 000 ₽ за машину ценой
+      1 000 000.'
+  - title: Оформить остаток в автокредит
+    purpose: investment
+    effects:
+      used_car_action: complete_with_loan
+      requires_chain_branch: deposit
+      needs_delta:
+        status: 6
+        comfort: 4
+    description: 'Задаток 50 000 ₽ — первый взнос, 700 000 ₽ — автокредит. Продадите машину сразу —
+      кредит закроется, а разница останется вам.'
+  - title: Оформить остаток в автокредит
+    purpose: investment
+    effects:
+      used_car_action: complete_with_loan
+      requires_chain_branch: thinking
+      needs_delta:
+        status: 6
+        comfort: 4
+    description: 'Без задатка весь выкуп 900 000 ₽ — в автокредит. Продадите машину сразу — кредит
+      закроется, а разница останется вам.'
   - title: Отказаться (задаток не вернуть)
     effects:
       used_car_action: decline_with_deposit
       requires_chain_branch: deposit
       needs_delta:
-        comfort: -8
-        status: -4
+        comfort: -3
+        status: -2
+    description: Два периода назад вы внесли задаток → 50 000 ₽ пропадают.
   - title: Отказаться от покупки
     effects:
       used_car_action: decline
       requires_chain_branch: thinking
       needs_delta:
-        comfort: -3
-        status: -2
+        comfort: -1
+        status: -1
+    description: Два периода назад вы ничего не платили → отказ без потерь.

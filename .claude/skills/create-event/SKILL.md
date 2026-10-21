@@ -261,8 +261,8 @@ cd backend && python -m pytest -q -k "event"
 | **Деньги** | Шаг 1: в тексте **остаток только после защиты**; аванс на кнопке; шаги 2–3 — **без cash**; эпилог — остаток; steady — +35% бонус; rush — без бонуса, ремарка про опечатки |
 | **Отказ / срыв** | Отказ **только** на шаге 1; **нет** кнопки «сдаться» на дедлайне; **нет** автопровала |
 | **Кнопки** | Шаг 2 — ровно **2**; шаг 3 — **2** (rush: сам / инструмент; steady: сдать / вычитать) |
-| **Обязательность** | `mandatory_gate: blocks_period_end` на шагах 2–3 |
-| **Informational** | `event_slot: informational`, ≥2 кнопки с лёгким trade-off needs (не дубли 0/0); урок — второй абзац `description` |
+| **Обязательность** | `mandatory_gate: blocks_period_end` на шагах 2–3 и на эпилоге с выплатой (иначе деньги сгорают при expire) |
+| **Informational** | `event_slot: informational`, ≥2 одинаковые кнопки (без ложного выбора); урок — второй абзац `description`; «откат» причины — `description` первой кнопки ветки («N периодов назад вы … → …») |
 | **Тайминг** | `after_periods: 2` → `2` → `1` (периоды **N → N+2 → N+4 → N+5** от старта цепочки) |
 | **Движок** | `chain_key: freelance_project`; `CHAIN_KEY_BY_DEFINITION` + `active_chain_context`; все follow-up в `CHAIN_FOLLOWUP_EXCLUDE_FROM_RANDOM_POOL`; цепочка `complete` на эпилоге |
 | **Баланс** | Pareto не сравнивает пары с `requires_chain_branch` ([`event-balance-rules.md`](event-balance-rules.md) §3.1) |

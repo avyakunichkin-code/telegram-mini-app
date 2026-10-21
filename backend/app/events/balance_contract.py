@@ -172,7 +172,8 @@ def validate_choice_effects(
                 event_key, choice_title, "forbidden_effect", f"{bad} removed from product (ADR-003)"
             )
         )
-    if is_free_lunch(effects):
+    # Цену used_car_action подставляет движок (выкуп / кредит) — needs+ здесь не бесплатны.
+    if is_free_lunch(effects) and not _has_special_engine_action(effects):
         out.append(
             BalanceViolation(
                 event_key,

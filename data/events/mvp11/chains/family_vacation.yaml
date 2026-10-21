@@ -1,0 +1,152 @@
+# Цепочка «Семейный бюджет на отпуск» (B3, PO 2026-10-21) — замена family_money.
+# Урок: одно и то же удовольствие дешевле, если копить, чем брать в кредит.
+# Отпуск = 60% зарплаты. Копить 3 периода → ранняя бронь 55%. Кредитка → через 3 периода 75% разом
+# или 40% + 45% ещё через 3 периода (итого 85%). Needs от отпуска одинаковы в обеих ветках.
+# Ветки: N → (card_bill N+3 [→ card_tail N+6]) | (trip N+3).
+events:
+- definition_key: mq11_family_vacation_offer
+  content_class: profile
+  event_slot: period_choice
+  audience_template_keys:
+  - mq_game_mortgage_stress_v1
+  - mq_game_debt_stack_v1
+  event_domain: social_family
+  title: Семья хочет в отпуск
+  description: 'Дети считают дни до каникул, вторая половина присмотрела отель у моря. Поездка обойдётся
+    примерно в 60% вашей зарплаты. Можно поехать сейчас по кредитке, можно три периода копить — ранняя
+    бронь дешевле, — а можно перенести отпуск на следующий год.'
+  weight: 70
+  event_tier: 2
+  repeat_policy: max_per_profile
+  repeat_max: 2
+  cooldown_periods: 12
+  scenario_shape: chain
+  choices:
+  - title: Поехать сейчас по кредитке
+    effects:
+      cash_delta: 0
+      needs_delta:
+        social: 14
+        health: 12
+        comfort: -2
+      enqueue_event:
+        chain_key: family_vacation
+        followup_definition_key: mq11_family_vacation_card_bill
+        after_periods: 3
+        context:
+          branch: card
+    description: Отпуск сейчас, со счёта ничего. Через 3 периода придёт выписка по карте — уже с процентами.
+  - title: Копить 3 периода и поехать
+    effects:
+      cash_delta: 0
+      needs_delta:
+        social: -3
+      enqueue_event:
+        chain_key: family_vacation
+        followup_definition_key: mq11_family_vacation_trip
+        after_periods: 3
+        context:
+          branch: save
+    description: Семье придётся подождать. Через 3 периода — поездка по ранней брони, если накопите.
+  - title: Перенести отпуск на год
+    effects:
+      cash_delta: 0
+      needs_delta:
+        social: -6
+        comfort: -2
+- definition_key: mq11_family_vacation_card_bill
+  content_class: profile
+  event_slot: chain_followup
+  audience_template_keys:
+  - mq_game_mortgage_stress_v1
+  - mq_game_debt_stack_v1
+  event_domain: social_family
+  interaction_kind: chain_followup
+  title: Выписка по карте за отпуск
+  description: 'Три периода назад семья съездила к морю по кредитке. Льготный срок кончился: банк ждёт
+    долг за поездку вместе с процентами.'
+  weight: 1
+  event_tier: 2
+  repeat_policy: repeatable
+  scenario_shape: chain
+  mandatory_gate: blocks_period_end
+  choices:
+  - title: Погасить всё сразу
+    purpose: obligation
+    effects:
+      cash_pct_salary: 0.75
+    description: 'Три периода назад вы поехали в кредит → отпуск ценой 60% зарплаты обошёлся в 75%: 15% —
+      проценты по карте.'
+  - title: Платить частями
+    purpose: obligation
+    effects:
+      cash_pct_salary: 0.40
+      needs_delta:
+        comfort: -3
+      enqueue_event:
+        chain_key: family_vacation
+        followup_definition_key: mq11_family_vacation_card_tail
+        after_periods: 3
+        context:
+          branch: card_split
+    description: Сейчас 40% зарплаты, через 3 периода ещё 45% — проценты на остаток продолжают капать.
+- definition_key: mq11_family_vacation_card_tail
+  content_class: profile
+  event_slot: informational
+  audience_template_keys:
+  - mq_game_mortgage_stress_v1
+  - mq_game_debt_stack_v1
+  event_domain: social_family
+  interaction_kind: informational
+  title: Последний платёж за отпуск
+  description: 'Банк списывает остаток долга по карте за отпуск.
+
+    Мелким шрифтом: море давно позади, а платить за него пришлось полгода.'
+  weight: 1
+  event_tier: 2
+  repeat_policy: repeatable
+  scenario_shape: chain
+  mandatory_gate: blocks_period_end
+  choices:
+  - title: Понятно
+    purpose: obligation
+    effects:
+      cash_pct_salary: 0.45
+    description: 'Шесть периодов назад вы поехали в кредит и платили частями → отпуск стоил 85% зарплаты
+      вместо 55% при накоплении.'
+  - title: Закрыть
+    purpose: obligation
+    effects:
+      cash_pct_salary: 0.45
+- definition_key: mq11_family_vacation_trip
+  content_class: profile
+  event_slot: chain_followup
+  audience_template_keys:
+  - mq_game_mortgage_stress_v1
+  - mq_game_debt_stack_v1
+  event_domain: social_family
+  interaction_kind: chain_followup
+  title: Накопили на отпуск
+  description: 'Три периода назад вы решили копить. Ранняя бронь открыта: тот же отель дешевле, чем
+    в последний момент.'
+  weight: 1
+  event_tier: 2
+  repeat_policy: repeatable
+  scenario_shape: chain
+  mandatory_gate: blocks_period_end
+  choices:
+  - title: Ехать по ранней брони
+    effects:
+      cash_pct_salary: 0.55
+      needs_delta:
+        social: 14
+        health: 12
+    description: 'Три периода назад вы решили копить → тот же отпуск за 55% зарплаты вместо 75–85%
+      по кредитке.'
+  - title: Деньги нужнее — не ехать
+    effects:
+      cash_delta: 0
+      needs_delta:
+        social: -6
+        comfort: -2
+    description: Накопленное остаётся на счёте, но семья разочарована.

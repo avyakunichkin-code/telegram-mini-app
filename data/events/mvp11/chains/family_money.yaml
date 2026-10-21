@@ -1,3 +1,4 @@
+# Снята PO 2026-10-21: заменена цепочкой family_vacation (B3). is_active: 0 — строки в БД гасятся при сиде.
 events:
 - definition_key: mq11_family_money_request
   event_domain: social_family
@@ -5,6 +6,7 @@ events:
   description: Близкий человек просит небольшую сумму в затруднительной ситуации. Помощь — разовая; при
     отказе может снова обратиться через период.
   weight: 75
+  is_active: 0
   event_tier: 2
   repeat_policy: repeatable
   scenario_shape: chain
@@ -41,6 +43,7 @@ events:
   description: После вашего отказа ситуация не улучшилась — просят уже больше. Можно помочь снова или
     твёрдо отказать.
   weight: 1
+  is_active: 0
   event_tier: 2
   repeat_policy: once_per_profile
   interaction_kind: chain_followup

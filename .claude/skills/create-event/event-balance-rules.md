@@ -98,7 +98,7 @@
 | Условие | Почему |
 |---------|--------|
 | `insurance_claim` в choice | выплата полиса не в YAML |
-| `used_car_action` | cash/asset подставляет движок |
+| `used_car_action` | cash/asset/кредит подставляет движок (пропускается и `free_lunch`) |
 | `enqueue_event` у **любого** choice в паре | отложенный исход цепочки; сравниваем trade-off в **первом** звене |
 | `requires_chain_branch` у **любого** choice в паре | в UI одновременно видна одна ветка; см. эталон `freelance_project` |
 
