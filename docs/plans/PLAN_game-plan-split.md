@@ -152,7 +152,7 @@ data/events/          # только игра
 |--------|-----------|------|
 | `finance/expenses.py` | `sqlalchemy`, `app.models`, `fastapi` (в plan-CRUD — уйдёт в GO-03) | SPL-204 |
 | `finance/period_close_preview.py` | `sqlalchemy`, `app.models` | SPL-206 |
-| `finance/period_metrics.py` | `sqlalchemy`, `app.models` | SPL-207 |
+| ~~`finance/period_metrics.py`~~ | читает закрытия из БД — адаптер, формула в ядре | SPL-207 ✅ |
 | ~~`finance/starter_liability.py`~~ | `app.models` — остаётся адаптером (строит ORM-строку), расчёт в ядре | SPL-203 ✅ |
 | `finance/balance_utils.py` | `sqlalchemy`, `app.models` (ledger — остаётся адаптером, см. таблицу «общее/уникальное») | SPL-205 |
 
@@ -187,6 +187,20 @@ Gate каждого среза: **balance diff = 0** относительно SP
   - `fincore.liabilities.new_liability_schedule` — платёж и срок нового долга по режиму. `starter_liability` оставил себе разбор blueprint и подбор залога: это игровой контент (эвристики названий, сроки 240/60/36 по умолчанию).
   - `expenses._active_lines_query` → публичный `active_expense_lines_query` (нужен адаптеру).
   - Проверено: backend pytest 528 passed, fincore 12 passed, balance playtest совпадает с исходным baseline (кроме `meta.git_sha`/`timestamp`); economy-reviewer — APPROVED.
+
+- **SPL-207 ✅ (ядро + паритет; потребители — частично).**
+  - `fincore.metrics`: `compute_metrics(snapshot) → HouseholdMetrics` по словарю ADR-009 §2. Структурные обязательства, расходы на жизнь (`max(0, …)`), полный отток, доход steady и с проекцией вкладов, пассивный доход, структурный поток с проекцией и без, доли расходов и платежей к доходу, долг, просрочка, ликвидность, месяцы подушки. Плюс `net_worth` — новая метрика для Plan, игра её пока не показывает. И `average_liquid_delta` — среднее Δ (cash + подушка) по закрытиям.
+  - Игра: `period_metrics.avg_net_cashflow_last_closed_intervals` считает через ядро. Арифметика та же: тест на записях закрытий зелёный и на старой, и на новой реализации.
+  - Паритет-тест `tests/unit/game/test_fincore_metrics_parity.py`: метрики ядра на снимке профиля совпадают с `build_finance_overview` (с округлением API) и с `build_victory_evaluation_input`.
+  - **Не переключены** `overview_build` и `victory/snap`: проекция вкладов там считается в другом порядке float-операций (`p*(r/100)/12` против `p*r/100/12`), разница до округления в последнем знаке. Перевод потребителей на `compute_metrics` — отдельный срез **SPL-207b** с balance diff. Он закрывает и целевой рефакторинг ADR-009 §4 (один снимок метрик для overview, победы и аналитики).
+  - Проверено: backend pytest 532 passed, fincore 18 passed, balance playtest совпадает с baseline; economy-reviewer — APPROVED. По ревью: `net_worth` не вычитает просрочку аннуитета повторно (`liability_owed`), свойство снимка переименовано в `debt_with_overdue`, чтобы не путать с `HouseholdMetrics.total_debt` (только тела).
+
+**Критерии приёмки SPL-207b (из ревью SPL-207):**
+1. Цель победы `expense_to_income_ratio` сохраняет базу «зарплата» — не брать `HouseholdMetrics.expense_to_income_ratio` (база — доход с проекцией вкладов).
+2. `net_monthly_cashflow` во входе победы — без проекции вкладов, в overview — с проекцией.
+3. Проекция вкладов: в ядре по всем видам позиций, во входе победы — только deposit и bond. Пока видов два, это одно и то же; при новом виде — решить явно.
+4. Overview глотает исключение при чтении вкладов (проекция = 0) — решить, сохранять ли это поведение.
+5. Порядок float-операций меняется (`p*r/100/12` → `p*(r/100)/12`, сумма по id). Gate — паритет-тест + balance diff по округлённым полям.
 
 **Критерии приёмки SPL-204/205 (из ревью SPL-203):**
 1. **Backfill до снимка.** Игра вызывает `ensure_profile_expense_lines` и `expire_expense_lines_for_period` *до* `build_household_snapshot`. Тест: профиль без статей, base > 0, delta ≠ 0.

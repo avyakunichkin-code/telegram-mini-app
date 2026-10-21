@@ -109,5 +109,7 @@ class HouseholdSnapshot:
         return sum(i.monthly_amount for i in self.incomes)
 
     @property
-    def total_debt(self) -> float:
+    def debt_with_overdue(self) -> float:
+        """Σ (тело + просрочка) — сколько нужно, чтобы закрыть всё сейчас. Не путать с
+        `HouseholdMetrics.total_debt` (ADR-009 §2.1: только тела)."""
         return sum(li.total_debt + li.overdue_amount for li in self.liabilities)

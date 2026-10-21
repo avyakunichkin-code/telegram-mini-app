@@ -108,7 +108,7 @@ def test_snapshot_maps_financial_state(db_session, profile):
     assert liability.payment_mode == "annuity"
     assert (liability.term_months, liability.months_paid) == (24, 2)
     assert (liability.overdue_amount, liability.overdue_months) == (500.0, 1)
-    assert snap.total_debt == 90_500.0
+    assert snap.debt_with_overdue == 90_500.0
 
     (asset,) = snap.assets
     assert (asset.kind, asset.value, asset.monthly_maintenance) == ("car", 400_000.0, 3_000.0)

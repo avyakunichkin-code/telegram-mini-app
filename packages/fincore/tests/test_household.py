@@ -18,7 +18,7 @@ def test_snapshot_aggregates_income_and_debt():
         ),
     )
     assert snap.monthly_income == 55_000.0
-    assert snap.total_debt == 10_250.0
+    assert snap.debt_with_overdue == 10_250.0
 
 
 def test_snapshot_is_immutable():
