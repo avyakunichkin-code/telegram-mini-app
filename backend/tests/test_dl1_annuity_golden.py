@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import pytest
 
-from app.finance.annuity import (
+from fincore.annuity import (
     apply_partial_payment,
     monthly_payment,
     prepay_waterfall,

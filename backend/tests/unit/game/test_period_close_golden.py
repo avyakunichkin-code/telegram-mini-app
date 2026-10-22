@@ -18,7 +18,7 @@ from unittest.mock import patch
 
 import pytest
 
-from app.finance.annuity import monthly_payment
+from fincore.annuity import monthly_payment
 from app.finance.expenses import burn_breakdown_for_api, compute_monthly_burn, ensure_expense_category_catalog
 from app.finance.period_close_preview import estimate_period_close_preview
 from app.game.period import process_period_end

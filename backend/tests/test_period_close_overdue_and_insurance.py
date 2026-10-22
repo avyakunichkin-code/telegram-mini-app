@@ -7,7 +7,7 @@ from unittest.mock import patch
 
 import pytest
 
-from app.finance.annuity import monthly_payment, split_full_payment
+from fincore.annuity import monthly_payment, split_full_payment
 from app.finance.balance_utils import adjust_balance
 from app.game import period as period_module
 from app.game.period import process_period_end

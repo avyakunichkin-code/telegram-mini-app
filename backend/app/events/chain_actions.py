@@ -14,10 +14,10 @@ from typing import Any
 
 from sqlalchemy.orm import Session
 
+from fincore.annuity import monthly_interest_payment, monthly_payment, prepay_waterfall
+
 from ..constants import EPSILON
-from ..finance.annuity import monthly_payment, prepay_waterfall
 from ..finance.balance_utils import adjust_balance, adjust_safety_fund_balance
-from ..finance.helpers import monthly_interest_payment
 from ..finance.liability_kinds import (
     ASSET_KIND_FOR_AUTO,
     LIABILITY_KIND_CONSUMER,

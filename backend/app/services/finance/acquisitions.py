@@ -5,8 +5,9 @@ from __future__ import annotations
 from fastapi import HTTPException
 from sqlalchemy.orm import Session
 
+from fincore.annuity import monthly_payment
+
 from ...constants import EPSILON
-from ...finance.annuity import monthly_payment
 from ...finance.balance_utils import adjust_balance
 from ...finance.liability_kinds import (
     ASSET_KIND_FOR_AUTO,

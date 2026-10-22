@@ -153,7 +153,7 @@ data/events/          # только игра
   - Проверено: два прогона подряд стабильны. Негативная проба (обратный порядок долгов в `_pay_liabilities`) роняет `full_house` и `shortfall_defeat`. Golden фиксирует текущий порядок без ORDER BY, так что срез «порядок долгов» (критерий 3 SPL-204/205) перегенерирует их явно. Backend pytest — 535 passed.
   - Расхождение, которое golden фиксирует, а не чинит: превью не учитывает купоны облигаций (в `full_house` факт на 200 больше оценки). Для SPL-206 это входное условие: прогноз в ядре должен либо сохранить расхождение, либо исправить его отдельным срезом.
 
-**Backlog фазы 2 из report-контракта** (прямые импорты ORM/HTTP в кандидатах):
+**Backlog фазы 2 из report-контракта** (прямые импорты ORM/HTTP в кандидатах; контракт удалён в SPL-208):
 
 | Модуль | Нарушения | Срез |
 |--------|-----------|------|
@@ -280,6 +280,13 @@ Gate каждого среза: **balance diff = 0** относительно SP
     - economy-reviewer — APPROVED.
   - **Хвост ADR-009 §4, вне среза:** `game/run_finale.py` (итоги забега) всё ещё вручную считает пассивный доход, проекцию вкладов, просрочку и долг. Формула та же, но это копия, и она может разойтись с ядром. Перевести на `household_metrics` отдельным мелким срезом.
 
+- **SPL-208 ✅ (2026-10-22).**
+  - Шимы SPL-202 `app/finance/annuity.py` и `app/finance/helpers.py` удалены. 10 модулей приложения и 6 тестов импортируют `fincore.annuity` напрямую.
+  - **Report-контракт удалён, а не переведён в enforce.** Его модули (`finance/expenses`, `period_close_preview`, `balance_utils`) по решениям SPL-204–206 стали адаптерами ORM → ядро. Запрет ORM для них неверен по смыслу: расчёт ушёл в `fincore`, а чтение и запись БД остались там намеренно.
+  - Границу охраняет enforce-контракт `fincore-pure` (`backend/.importlinter`, тест `test_import_boundaries.py`): ядро не импортирует `app`, FastAPI, Starlette, SQLAlchemy и Pydantic.
+  - Тесты ядра входят в backend pytest (`testpaths` в `backend/pytest.ini`): ручной шаг из SPL-201 закрыт. Без CI (PR-04) гейт по-прежнему — локальный pytest. Строка «Ядро fincore» в `CLAUDE.md` обновлена.
+  - Проверено: backend pytest 627 passed (575 backend + 52 fincore); balance playtest — все 7 эталонов совпадают байт в байт; `check_conventions.py` и `_claude-config-check.mjs` зелёные. Срез механический (импорты и конфиг), economy-reviewer не запускался.
+
 **Критерии приёмки SPL-207b (из ревью SPL-207):**
 1. Цель победы `expense_to_income_ratio` сохраняет базу «зарплата» — не брать `HouseholdMetrics.expense_to_income_ratio` (база — доход с проекцией вкладов).
 2. `net_monthly_cashflow` во входе победы — без проекции вкладов, в overview — с проекцией.
@@ -357,6 +364,6 @@ PR-05/06/08 (production-ready) ─► SPL-301 ─► 302
 
 - [x] Владелец продукта: **APPROVED** этот план (2026-10-21)
 - [x] ADR-016 accepted, канон синхронизирован (SPL-003)
-- [ ] fincore выделен, balance diff = 0, import-linter enforce (SPL-208)
+- [x] fincore выделен, balance diff = 0, import-linter enforce (SPL-208)
 - [ ] platform выделен (SPL-302)
 - [ ] Pre-Alpha gate игры пройден → старт фазы 4

@@ -28,5 +28,5 @@ Shared Kernel для Game (`backend/`) и будущего Plan (`apps/plan-api`
 
 ```bash
 cd backend && python -m pip install -r requirements-dev.txt   # ставит ../packages/fincore editable
-cd packages/fincore && python -m pytest -q
+cd packages/fincore && python -m pytest -q   # входят и в backend pytest (testpaths)
 ```

@@ -31,7 +31,7 @@ def resolve_lifestyle_delta_from_effects(
 
 def _secured_loan_impact(db: Session, loan: dict[str, Any]) -> dict[str, Any] | None:
     """Чип «Автокредит: долг и платёж» — те же ставка и срок, что применит движок."""
-    from ..finance.annuity import monthly_payment
+    from fincore.annuity import monthly_payment
     from ..models import LiabilityTemplate
 
     principal = float(loan.get("principal") or 0)

@@ -207,7 +207,7 @@ class TestUsedCarDealV2:
         assert thinking["deal_price"] == 900_000
 
     def test_deposit_loan_creates_car_at_market_value_and_auto_loan(self, db_session, pro_profile):
-        from app.finance.annuity import monthly_payment
+        from fincore.annuity import monthly_payment
         from app.models import FinanceLiability
         from app.services.events.choose import choose_event
 

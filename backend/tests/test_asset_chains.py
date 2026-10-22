@@ -17,7 +17,7 @@ from app.events.chains import (
     get_active_chain,
 )
 from app.events.mvp11_seeds import ensure_mvp11_event_catalog
-from app.finance.annuity import monthly_payment
+from fincore.annuity import monthly_payment
 from app.game.rules import EventProfileContext, event_prerequisites_met, parse_event_prerequisites_json
 from app.models import (
     EventChoice,

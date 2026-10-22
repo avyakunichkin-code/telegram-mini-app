@@ -1,10 +1,10 @@
 from fastapi import HTTPException
 from sqlalchemy.orm import Session
 
+from fincore.annuity import monthly_interest_payment, monthly_payment, prepay_waterfall
+
 from ...constants import EPSILON
-from ...finance.annuity import monthly_payment, prepay_waterfall
 from ...finance.balance_utils import adjust_balance
-from ...finance.helpers import monthly_interest_payment
 from ...finance.liability_kinds import (
     CONSUMER_KINDS,
     DISBURSE_TO_ASSET,

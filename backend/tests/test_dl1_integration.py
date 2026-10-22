@@ -260,7 +260,7 @@ def test_annuity_period_close_reduces_debt(db_session, test_user):
         cash_balance=200_000.0,
         period_index=1,
     )
-    from app.finance.annuity import monthly_payment
+    from fincore.annuity import monthly_payment
 
     pay = monthly_payment(V1_PRINCIPAL, V1_ANNUAL_RATE, V1_TERM)
     assert pay == V1_MONTHLY_PAYMENT

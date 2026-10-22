@@ -391,7 +391,7 @@ def create_secured_loan_for_asset(
     principal: float,
 ) -> FinanceLiability:
     """Кредит под купленный в цепочке актив: ставка и срок — из шаблона, тело — остаток сделки."""
-    from ..finance.annuity import monthly_payment
+    from fincore.annuity import monthly_payment
     from ..finance.liability_kinds import PAYMENT_MODE_ANNUITY
 
     tpl = (
