@@ -16,9 +16,12 @@ from __future__ import annotations
 from sqlalchemy.orm import Session
 
 from fincore import household as hh
+from fincore.metrics import HouseholdMetrics, compute_metrics
 
 from ...finance.expenses import (
     active_expense_lines_query,
+    ensure_expense_category_catalog,
+    ensure_profile_expense_lines,
     expense_categories_for_core,
     expense_line_for_core,
     lifestyle_extra,
@@ -138,3 +141,18 @@ def build_household_snapshot(db: Session, profile: GameProfile) -> hh.HouseholdS
         policies=policies,
         investments=investments,
     )
+
+
+def prepared_household_snapshot(db: Session, profile: GameProfile) -> hh.HouseholdSnapshot:
+    """
+    Снимок для расчётов вне закрытия (overview, превью, цели победы): сначала backfill статей из базы
+    шаблона, если их нет, — как делал `compute_monthly_burn`. Пишет в БД только этот backfill.
+    """
+    ensure_expense_category_catalog(db)
+    ensure_profile_expense_lines(db, profile)
+    return build_household_snapshot(db, profile)
+
+
+def household_metrics(db: Session, profile: GameProfile) -> HouseholdMetrics:
+    """Метрики ADR-009 профиля — одна формула для overview, целей победы и аналитики (SPL-207b)."""
+    return compute_metrics(prepared_household_snapshot(db, profile))

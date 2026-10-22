@@ -5,8 +5,8 @@ from sqlalchemy.orm import Session
 
 from fincore.forecast import forecast
 
-from ..finance.expenses import ensure_expense_category_catalog, ensure_profile_expense_lines, expense_categories_for_core
-from ..game.adapters.fincore_snapshot import build_household_snapshot
+from ..finance.expenses import expense_categories_for_core
+from ..game.adapters.fincore_snapshot import prepared_household_snapshot
 from ..models import GameProfile
 
 
@@ -20,10 +20,8 @@ def estimate_period_close_preview(db: Session, profile: GameProfile) -> dict:
     создаёт заново из базы шаблона. Превью ничего не деактивирует и посчитает только дельту.
     Так было и до SPL-206.
     """
-    ensure_expense_category_catalog(db)
-    ensure_profile_expense_lines(db, profile)
     (month,) = forecast(
-        build_household_snapshot(db, profile),
+        prepared_household_snapshot(db, profile),
         months=1,
         categories=expense_categories_for_core(db),
     )

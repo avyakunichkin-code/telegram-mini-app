@@ -9,13 +9,13 @@ from ..achievements.engine import process_achievement_unlocks
 from ..achievements.seeds import ensure_achievement_catalog
 from ..finance.expenses import burn_breakdown_for_api, compute_monthly_burn
 from .period_metrics import avg_net_cashflow_last_closed_intervals as _avg_net_cashflow_last_closed_intervals
+from ..game.adapters.fincore_snapshot import household_metrics
 from ..models import (
     FinanceAsset,
     FinanceLiability,
     FinanceSalary,
     GameProfile,
     GameStarterTemplate,
-    InvestmentPosition,
     User,
 )
 import json
@@ -111,45 +111,22 @@ def build_finance_overview(db: Session, profile: GameProfile) -> FinanceOverview
         for a in assets_orm
     ]
 
-    assets_income = sum(float(a.monthly_income or 0) for a in assets_orm)
-
-    # Инвестиции: доход за один период (1/12 годовой ставки) по активным позициям.
-    # Для deposit: начисление капитализируется на principal в конце периода, но в UI это тоже "доход за период".
-    # Для bond: купон начисляется на баланс в конце периода.
-    invest_income = 0.0
-    try:
-        invest_rows = (
-            db.query(InvestmentPosition)
-            .filter(
-                InvestmentPosition.game_profile_id == profile.id,
-                InvestmentPosition.is_active == 1,
-            )
-            .all()
-        )
-        for pos in invest_rows:
-            principal = float(getattr(pos, "principal", 0) or 0)
-            annual_rate = float(getattr(pos, "annual_rate_percent", 0) or 0)
-            if principal <= 0 or annual_rate <= 0:
-                continue
-            invest_income += principal * (annual_rate / 100.0) / 12.0
-    except Exception:
-        invest_income = 0.0
-
-    total_liability_payment = sum(l.monthly_payment for l in liabilities)
-    total_asset_maintenance = sum(a.monthly_maintenance_cost for a in assets)
-    total_monthly_obligations = total_liability_payment + total_asset_maintenance
+    # Денежные метрики — одна формула `fincore.metrics` для overview, целей победы и аналитики (SPL-207b, ADR-009 §4).
+    # Проекция вкладов (1/12 годовой ставки): депозит капитализирует, облигация платит купон — в UI это «доход за период».
+    metrics = household_metrics(db, profile)
+    total_liability_payment = metrics.liability_payments
+    total_asset_maintenance = metrics.asset_maintenance
+    total_monthly_obligations = metrics.structural_obligations
     burn_snapshot = compute_monthly_burn(db, profile)
-    monthly_burn_total = float(burn_snapshot.total)
+    monthly_burn_total = float(metrics.lifestyle_burn)
     monthly_lifestyle_expense = monthly_burn_total
     burn_breakdown = MonthlyBurnBreakdown(**burn_breakdown_for_api(burn_snapshot))
-    total_income = monthly_income + assets_income + invest_income
-    total_monthly_outflow = total_monthly_obligations + monthly_burn_total
-    expense_to_income_ratio = (
-        round(monthly_burn_total / total_income, 4) if total_income > 0 else 0.0
-    )
-    net_cashflow = total_income - total_monthly_obligations
-    liabilities_ratio = (total_liability_payment / total_income * 100) if total_income > 0 else 0
-    total_overdue_amount = sum(float(l.overdue_amount or 0) for l in liabilities_orm)
+    total_income = metrics.income_with_invest_projection
+    total_monthly_outflow = metrics.total_monthly_outflow
+    expense_to_income_ratio = round(metrics.expense_to_income_ratio, 4)
+    net_cashflow = metrics.net_structural_cashflow_with_invest
+    liabilities_ratio = metrics.liabilities_to_income_percent
+    total_overdue_amount = metrics.total_overdue
     overdue_liabilities_count = sum(
         1 for l in liabilities_orm if float(getattr(l, "overdue_amount", 0) or 0) > 0
     )
@@ -175,7 +152,7 @@ def build_finance_overview(db: Session, profile: GameProfile) -> FinanceOverview
 
     victory_cfg = parse_victory_config(raw_victory, template_key=template_key)
     victory_cfg = override_config_goals_from_db(db, template_key=template_key, victory_cfg=victory_cfg)
-    victory_snap = build_victory_evaluation_input(db, profile)
+    victory_snap = build_victory_evaluation_input(db, profile, metrics)
     template_cap, mechanics_unlock, template_key = resolve_template_and_unlock(db, profile)
     victory_result = evaluate_victory(
         victory_cfg,
