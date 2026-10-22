@@ -310,3 +310,10 @@ def test_period_close_matches_golden(db_session, test_user, name):
     assert path.exists(), f"нет {path.name}: сгенерируйте с UPDATE_GOLDEN=1"
     expected = json.loads(path.read_text(encoding="utf-8"))
     assert actual == expected
+
+
+@pytest.mark.parametrize("name", sorted(SCENARIOS))
+def test_preview_matches_actual_close(db_session, test_user, name):
+    """SPL-206: превью и закрытие считают месяц одним `fincore.month_step` — остаток совпадает до копейки."""
+    for step in _run(db_session, test_user.id, name)["periods"]:
+        assert step["preview"]["estimated_cash_after_close"] == step["state"]["profile"]["cash_balance"], step["period_index"]

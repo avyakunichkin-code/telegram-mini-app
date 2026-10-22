@@ -304,15 +304,22 @@ def build_finance_overview(db: Session, profile: GameProfile) -> FinanceOverview
             ],
         )
 
-    close_preview_raw = estimate_period_close_preview(db, profile)
-    period_close_preview = PeriodClosePreview(
-        estimated_cash_after_close=float(close_preview_raw.get("estimated_cash_after_close") or 0),
-        estimated_charges_total=float(close_preview_raw.get("estimated_charges_total") or 0),
-        negative_periods_count=int(close_preview_raw.get("negative_periods_count") or 0),
-        would_be_negative_after_close=bool(close_preview_raw.get("would_be_negative_after_close")),
-        defeat_if_close_negative=bool(close_preview_raw.get("defeat_if_close_negative")),
-        needs_distressed_penalty_estimate=0,
-    )
+    # Превью — необязательная часть overview: битые данные снимка не должны ронять весь экран.
+    period_close_preview = None
+    try:
+        with db.begin_nested():
+            close_preview_raw = estimate_period_close_preview(db, profile)
+        period_close_preview = PeriodClosePreview(
+            estimated_cash_after_close=float(close_preview_raw.get("estimated_cash_after_close") or 0),
+            estimated_charges_total=float(close_preview_raw.get("estimated_charges_total") or 0),
+            negative_periods_count=int(close_preview_raw.get("negative_periods_count") or 0),
+            would_be_negative_after_close=bool(close_preview_raw.get("would_be_negative_after_close")),
+            defeat_if_close_negative=bool(close_preview_raw.get("defeat_if_close_negative")),
+            needs_distressed_penalty_estimate=0,
+        )
+    except Exception:
+        logger.exception("Period close preview failed profile_id=%s", profile.id)
+        db.refresh(profile)
 
     user = db.query(User).filter(User.id == profile.user_id).first()
     guidance = None

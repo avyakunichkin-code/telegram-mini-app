@@ -406,7 +406,7 @@
         "total": 23000.0
       },
       "preview": {
-        "estimated_cash_after_close": 77066.62,
+        "estimated_cash_after_close": 77266.62,
         "estimated_charges_total": 47066.69,
         "negative_periods_count": 0,
         "would_be_negative_after_close": false,
@@ -436,6 +436,11 @@
             "type": "insurance",
             "title": "Страховые премии",
             "amount": 1200.0
+          },
+          {
+            "type": "bond_coupon",
+            "title": "Купоны по облигациям",
+            "amount": 200.0
           }
         ]
       },
@@ -702,7 +707,7 @@
         "total": 20000.0
       },
       "preview": {
-        "estimated_cash_after_close": 108199.93,
+        "estimated_cash_after_close": 108399.93,
         "estimated_charges_total": 44066.69,
         "negative_periods_count": 0,
         "would_be_negative_after_close": false,
@@ -732,6 +737,11 @@
             "type": "insurance",
             "title": "Страховые премии",
             "amount": 1200.0
+          },
+          {
+            "type": "bond_coupon",
+            "title": "Купоны по облигациям",
+            "amount": 200.0
           }
         ]
       },
@@ -992,7 +1002,7 @@
         "total": 20000.0
       },
       "preview": {
-        "estimated_cash_after_close": 139333.24,
+        "estimated_cash_after_close": 139533.24,
         "estimated_charges_total": 44066.69,
         "negative_periods_count": 0,
         "would_be_negative_after_close": false,
@@ -1022,6 +1032,11 @@
             "type": "insurance",
             "title": "Страховые премии",
             "amount": 1200.0
+          },
+          {
+            "type": "bond_coupon",
+            "title": "Купоны по облигациям",
+            "amount": 200.0
           }
         ]
       },
@@ -1282,7 +1297,7 @@
         "total": 20000.0
       },
       "preview": {
-        "estimated_cash_after_close": 187233.24,
+        "estimated_cash_after_close": 187433.24,
         "estimated_charges_total": 27300.0,
         "negative_periods_count": 0,
         "would_be_negative_after_close": false,
@@ -1307,6 +1322,11 @@
             "type": "lifestyle",
             "title": "Расходы на жизнь",
             "amount": 20000.0
+          },
+          {
+            "type": "bond_coupon",
+            "title": "Купоны по облигациям",
+            "amount": 200.0
           }
         ]
       },
@@ -1545,7 +1565,7 @@
         "total": 20000.0
       },
       "preview": {
-        "estimated_cash_after_close": 235133.24,
+        "estimated_cash_after_close": 235333.24,
         "estimated_charges_total": 27300.0,
         "negative_periods_count": 0,
         "would_be_negative_after_close": false,
@@ -1570,6 +1590,11 @@
             "type": "lifestyle",
             "title": "Расходы на жизнь",
             "amount": 20000.0
+          },
+          {
+            "type": "bond_coupon",
+            "title": "Купоны по облигациям",
+            "amount": 200.0
           }
         ]
       },
@@ -1808,7 +1833,7 @@
         "total": 20000.0
       },
       "preview": {
-        "estimated_cash_after_close": 283033.24,
+        "estimated_cash_after_close": 283233.24,
         "estimated_charges_total": 27300.0,
         "negative_periods_count": 0,
         "would_be_negative_after_close": false,
@@ -1833,6 +1858,11 @@
             "type": "lifestyle",
             "title": "Расходы на жизнь",
             "amount": 20000.0
+          },
+          {
+            "type": "bond_coupon",
+            "title": "Купоны по облигациям",
+            "amount": 200.0
           }
         ]
       },
