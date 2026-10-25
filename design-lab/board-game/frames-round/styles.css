@@ -1,0 +1,93 @@
+/* frames-round — сколько рамок нужно экрану. Один и тот же канон BG-1/BG-2 (Ход, Капитал · Действия)
+   в четырёх вариантах: base (как есть), a (фишки на поле), b (одна панель), d (рамка = нажимается). */
+
+/* --- Оболочка страницы: экраны на всё окно --- */
+.f-bar {
+  position: sticky; top: 0; z-index: 2; background: var(--bg-board); border-bottom: var(--hair);
+  padding: 12px 16px; display: grid; gap: 8px;
+}
+.f-bar__row { display: flex; flex-wrap: wrap; gap: 8px 16px; align-items: center; }
+.f-bar h1 { margin: 0 8px 0 0; font: var(--display-weight) 20px / 1.2 var(--display); }
+.f-note { margin: 0; max-width: 90ch; color: var(--ink-soft); font-size: 14px; }
+.f-stage {
+  display: flex; flex-wrap: wrap; justify-content: center; align-items: flex-start;
+  gap: 32px; padding: 24px 16px 48px;
+}
+.f-screen { width: 390px; max-width: 100%; }
+.f-screen .phone { max-width: none; min-height: 780px; gap: 16px; padding-bottom: 96px; }
+.money__wide { grid-column: 1 / -1; }
+
+/* ===== A. Фишки на поле: рамок у блоков нет, фишка — заливка + кромка.
+   Поле и карта хода из A — общие с E (итог раунда). ===== */
+:is([data-variant="a"], [data-variant="e"]) .phone { gap: 22px; }
+:is([data-variant="a"], [data-variant="e"]) .h-events { border: 0; }
+:is([data-variant="a"], [data-variant="e"]) .money { gap: 12px 16px; }
+:is([data-variant="a"], [data-variant="e"]) .money > div,
+:is([data-variant="a"], [data-variant="e"]) .s-flow { border: 0; background: none; padding: 0; }
+:is([data-variant="a"], [data-variant="e"]) .h-goal { border: 0; background: none; }
+:is([data-variant="a"], [data-variant="e"]) .h-goal > summary { padding: 0; }
+:is([data-variant="a"], [data-variant="e"]) .h-goal__body { border-top: 0; padding: 12px 0 0; }
+[data-variant="a"] .act { border: 0; background: var(--bg-cell); box-shadow: 0 3px 0 var(--edge-cell); }
+[data-variant="a"] .act__ico { background: none; width: auto; height: 24px; font-size: 20px; }
+[data-variant="a"] .act--hot { background: var(--coin-soft); box-shadow: 0 3px 0 var(--coin-rim); color: var(--coin-ink); }
+:is([data-variant="a"], [data-variant="e"]) .s-seg { border: 0; background: var(--edge-cell); }
+
+
+/* ===== E. Итог: карта хода и поле из A, действия хода — залитые фишки.
+   Зарплата, пока не забрана, — главная золотая кнопка на всю ширину; остальные — фиолетовая заливка. ===== */
+:is([data-variant="a"], [data-variant="e"]) .s-piece { border: 0; background: var(--bg-cell); box-shadow: 0 3px 0 var(--edge-cell); }
+:is([data-variant="a"], [data-variant="e"]) .s-piece__ico { background: none; width: auto; height: 24px; font-size: 20px; }
+:is([data-variant="a"], [data-variant="e"]) .s-piece--locked { border: 1.5px dashed var(--edge-cell); background: none; box-shadow: none; }
+[data-variant="e"] .acts { grid-template-columns: repeat(3, 1fr); gap: 10px 8px; }
+[data-variant="e"] .act {
+  border: 0; background: var(--turn-soft); color: var(--ink); box-shadow: 0 3px 0 var(--turn);
+  padding: 12px 4px 10px; gap: 6px; font: 700 13px / 1.2 var(--body);
+  transition: transform 80ms ease, box-shadow 80ms ease;
+}
+[data-variant="e"] .act:active { transform: translateY(2px); box-shadow: 0 1px 0 var(--turn); }
+[data-variant="e"] .act__ico { background: none; width: 24px; height: 24px; color: var(--turn); }
+[data-variant="e"] .act--hot {
+  grid-column: 1 / -1; display: flex; align-items: center; gap: 12px; padding: 12px 16px;
+  background: var(--coin); color: #3d2600; box-shadow: 0 4px 0 var(--coin-rim);
+  font: var(--display-weight) 17px / 1.1 var(--display); text-align: left;
+}
+[data-variant="e"] .act--hot:active { box-shadow: 0 1px 0 var(--coin-rim); }
+/* Монета как у Монетки: золотое лицо, фиолетовое кольцо, тонкий золотой обод и толщина ребра снизу. */
+[data-variant="e"] .act--hot .bg-coin {
+  --coin-size: 32px;
+  background: radial-gradient(circle at 36% 30%, #fff7cf 0 10%, var(--coin) 26%);
+  border: 3px solid var(--turn);
+  box-shadow:
+    inset 0 0 0 1px var(--coin-rim),
+    0 0 0 1.5px var(--coin),
+    0 0 0 2.5px var(--coin-rim),
+    0 3px 0 2px var(--coin-rim);
+  font: 900 13px / 1 var(--display);
+  color: #3d2600;
+}
+[data-variant="e"] .act__sum { margin-left: auto; font: 700 15px / 1 var(--body); font-variant-numeric: tabular-nums; }
+[data-variant="e"] .act--hot.is-done {
+  background: var(--bg-cell); color: var(--ink-soft); box-shadow: none; border: 1.5px dashed var(--edge-cell);
+  font: 600 14px / 1.2 var(--body);
+}
+[data-variant="e"] .act--hot.is-done .bg-coin { --coin-size: 24px; box-shadow: none; opacity: 0.6; }
+@media (prefers-reduced-motion: reduce) { [data-variant="e"] .act { transition: none; } }
+.act__sum { display: none; }
+[data-variant="e"] .act__sum { display: inline; }
+
+/* ===== D. Рамка = нажимается: информация на поле, контур только у действий ===== */
+[data-variant="d"] .phone { gap: 22px; }
+[data-variant="d"] .h-card { border: 0; box-shadow: none; }
+[data-variant="d"] .money { gap: 12px 16px; }
+[data-variant="d"] .money > div,
+[data-variant="d"] .s-flow { border: 0; background: none; padding: 0; }
+[data-variant="d"] .h-goal { background: none; border-color: var(--turn); }
+[data-variant="d"] .act,
+[data-variant="d"] .s-piece { background: none; border: 1.5px solid var(--turn); box-shadow: 0 2px 0 var(--turn); color: var(--ink); }
+[data-variant="d"] .act__ico,
+[data-variant="d"] .s-piece__ico { background: none; width: auto; height: 24px; font-size: 20px; color: var(--turn); }
+[data-variant="d"] .act--hot { border-color: var(--coin-rim); box-shadow: 0 2px 0 var(--coin-rim); background: var(--coin-soft); color: var(--coin-ink); }
+[data-variant="d"] .s-piece--debt .s-piece__ico { color: var(--risk); }
+[data-variant="d"] .s-piece--locked { border: 1.5px dashed var(--edge-cell); box-shadow: none; color: var(--ink-soft); }
+[data-variant="d"] .s-piece--locked .s-piece__ico { color: var(--ink-soft); }
+[data-variant="d"] .s-seg { border-color: var(--turn); }
