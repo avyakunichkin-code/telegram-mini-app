@@ -628,33 +628,40 @@
   background: var(--mq-coin-soft);
 }
 
-/* —— Действия хода: 4 фишки —— */
+/* —— Действия хода ★ BG-3: «Зарплата» — главная строка, ниже 3 залитые фишки ——
+   Канон: design-lab/board-game/frames-round/ (вариант E). Рамок нет — заливка и нижняя кромка. */
+.mqx-bg-acts {
+  display: grid;
+  gap: var(--mq-sp-3);
+}
+
 .mqx-bg-acts__row {
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: var(--mq-sp-2);
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--mq-sp-3);
 }
 
 .mqx-bg-act {
   display: grid;
   justify-items: center;
+  align-content: center;
   gap: var(--mq-sp-1);
   min-height: 56px;
   padding: var(--mq-sp-3) var(--mq-sp-1);
-  border: var(--mq-hair);
+  border: 0;
   border-radius: var(--mq-r-cell);
-  background: var(--mq-cell);
+  background: var(--mq-turn-soft);
   color: var(--mq-board-ink);
-  font: 600 var(--mq-fs-caption) / 1.2 var(--mq-font-body);
-  box-shadow: 0 2px 0 var(--mq-cell-edge);
+  font: 700 var(--mq-fs-caption) / 1.2 var(--mq-font-body);
+  box-shadow: 0 3px 0 var(--mq-turn);
   transition:
-    transform 120ms ease,
-    box-shadow 120ms ease;
+    transform 80ms ease,
+    box-shadow 80ms ease;
 }
 
 .mqx-bg-act:active:not(:disabled) {
   transform: translateY(2px);
-  box-shadow: 0 0 0 var(--mq-cell-edge);
+  box-shadow: 0 1px 0 var(--mq-turn);
 }
 
 .mqx-bg-act:disabled {
@@ -668,47 +675,106 @@
   white-space: nowrap;
 }
 
+/* Иконка без плашки — цвет действия */
 .mqx-bg-act__ico {
   display: grid;
   place-items: center;
   width: 22px;
   height: 22px;
-  border-radius: 50%;
-  background: var(--mq-turn-soft);
   color: var(--mq-turn);
-  font: 700 var(--mq-fs-note) / 1 var(--mq-font-body);
 }
 
-.mqx-bg-coin--act {
-  --coin-size: 22px;
-}
-
-/* «Зарплата», пока не забрана — золото */
-.mqx-bg-act--hot {
-  border-color: var(--mq-coin-rim);
-  background: var(--mq-coin-soft);
-  box-shadow: 0 2px 0 var(--mq-coin-rim);
-}
-
+/* Открыт лист «В подушку» / «Из подушки» */
 .mqx-bg-act--active {
-  border-color: var(--mq-turn);
-  background: var(--mq-turn-soft);
+  background: var(--mq-turn);
+  color: var(--mq-turn-on);
+  box-shadow: 0 3px 0 var(--mq-turn-deep);
 }
 
-.mqx-bg-act.mqx-juice-chip--celebrate {
+.mqx-bg-act--active .mqx-bg-act__ico {
+  color: var(--mq-turn-on);
+}
+
+/* «Зарплата» */
+.mqx-bg-salary {
+  display: flex;
+  align-items: center;
+  gap: var(--mq-sp-5);
+  width: 100%;
+  min-height: 52px;
+  padding: var(--mq-sp-3) var(--mq-sp-7);
+  border: 0;
+  border-radius: var(--mq-r-cell);
+  text-align: left;
+  transition:
+    transform 80ms ease,
+    box-shadow 80ms ease;
+}
+
+.mqx-bg-salary__label {
+  flex: 1;
+  min-width: 0;
+}
+
+.mqx-bg-salary__sum {
+  font: 700 var(--mq-fs-body) / 1 var(--mq-font-body);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+/* Пока не забрана — главная кнопка: сплошное золото */
+.mqx-bg-salary--hot {
+  background: var(--mq-coin);
+  color: var(--mq-coin-on);
+  box-shadow: 0 4px 0 var(--mq-coin-rim);
+  font: 900 var(--mq-fs-lead) / 1.1 var(--mq-font-display);
+}
+
+.mqx-bg-salary--hot:active:not(:disabled) {
+  transform: translateY(3px);
+  box-shadow: 0 1px 0 var(--mq-coin-rim);
+}
+
+/* Забрана или недоступна — спокойная пунктирная строка */
+.mqx-bg-salary--quiet {
+  border: 1.5px dashed var(--mq-cell-edge);
+  background: var(--mq-cell);
+  color: var(--mq-board-ink-soft);
+  font: 600 var(--mq-fs-body) / 1.2 var(--mq-font-body);
+}
+
+.mqx-bg-salary--quiet .mqx-bg-coin {
+  opacity: 0.6;
+  box-shadow: none;
+}
+
+/* Монета с ₽ — как Монетка: золотое лицо, фиолетовое кольцо, золотой обод, толщина ребра */
+.mqx-bg-coin--salary {
+  --coin-size: 32px;
+  border: 3px solid var(--mq-turn);
+  background: radial-gradient(circle at 36% 30%, var(--mq-coin-face) 0 10%, var(--mq-coin) 26%);
+  box-shadow:
+    inset 0 0 0 1px var(--mq-coin-rim),
+    0 0 0 1.5px var(--mq-coin),
+    0 0 0 2.5px var(--mq-coin-rim),
+    0 3px 0 2px var(--mq-coin-rim);
+  font-size: var(--mq-fs-caption);
+}
+
+.mqx-bg-salary.mqx-juice-chip--celebrate {
   animation: mqx-juice-chip-pop 0.5s cubic-bezier(0.34, 1.5, 0.64, 1);
-  box-shadow: 0 0 0 3px var(--mq-gain-soft);
 }
 
 @media (prefers-reduced-motion: reduce) {
   .mqx-bg-cta,
   .mqx-bg-act,
+  .mqx-bg-salary,
   .mqx-bg-goal__chev,
   .mqx-bg-money__cash-value {
     transition: none;
   }
 
-  .mqx-bg-act.mqx-juice-chip--celebrate {
+  .mqx-bg-salary.mqx-juice-chip--celebrate {
     animation: none;
   }
 }
@@ -721,7 +787,8 @@
   border-radius: var(--mq-r-card);
 }
 
-/* —— Плотность (2026-10-15): главная целиком на экране 360×640 при свёрнутой цели ——
+/* —— Плотность (2026-10-15): компактные зазоры и вторичные размеры ——
+   Требование «главная целиком на 360×640» снято с ★ BG-3 (2026-10-26): там она прокручивается.
    Деньги — три плитки в ряд; меньше отступов и вторичных размеров.
    Зоны нажатия не ниже 44px (CTA, цель, действия, иконки потребностей). */
 .mqx-tab-page--board .mqx-tab-page__scroll.mqx-content {
@@ -801,4 +868,52 @@
 .mqx-bg-act {
   min-height: 48px;
   padding: var(--mq-sp-1);
+}
+
+/* —— ★ BG-3 (2026-10-25): одна рамка на уровень ——
+   Канон: design-lab/board-game/APPROVED.md, раунд frames-round/ (вариант E).
+   Край и кромка — только у карты хода; деньги, цель и потребности лежат на поле,
+   группу держат заголовок и отступ. Плашка «N событий» — заливка без своей рамки. */
+.mqx-bg-events,
+.mqx-bg-events--done {
+  border-color: transparent;
+}
+
+.mqx-bg-events--done {
+  background: var(--mq-board);
+}
+
+.mqx-bg-money__cell {
+  align-content: start;
+  min-height: 44px;
+  padding: 0;
+  border: 0;
+  background: none;
+}
+
+.mqx-bg-money__cell--action,
+.mqx-bg-money__cell--action:active {
+  transform: none;
+  box-shadow: none;
+}
+
+/* Ячейка ведёт в «Капитал» — без рамки, поэтому стрелка у подписи */
+.mqx-bg-money__cell--action .mqx-bg-money__label::after {
+  content: ' ›';
+  color: var(--mq-turn);
+  font-weight: 700;
+}
+
+.mqx-bg-goal {
+  border: 0;
+  background: none;
+}
+
+.mqx-bg-goal__toggle {
+  padding-inline: 0;
+}
+
+.mqx-bg-goal__body {
+  padding: var(--mq-sp-2) 0 0;
+  border-top: 0;
 }

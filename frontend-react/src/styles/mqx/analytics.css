@@ -37,7 +37,6 @@
   color: var(--mq-turn);
   font: 900 var(--mq-fs-lead) / 1 var(--mq-font-display);
   font-variant-numeric: tabular-nums;
-  box-shadow: 0 2px 0 var(--mq-turn);
 }
 
 .mqx-an-caption {
@@ -46,20 +45,26 @@
   font: 400 var(--mq-fs-caption) / 1.35 var(--mq-font-body);
 }
 
-/* —— Вывод: счёт + подушка; полоса слева красная только при риске —— */
+/* ★ BG-3: секции без рамок — группы разделяет отступ, а не край */
+.mqx-tab-page--analytics .mqx-bg-stack {
+  gap: var(--mq-sp-7);
+}
+
+/* —— Вывод: счёт + подушка ——
+   ★ BG-3: единственная клетка с краем на экране (главный блок, как карта хода на главной).
+   Риск — плашкой со словом и красной суммой, без цветной полосы сбоку. */
 .mqx-an-state {
   display: grid;
   gap: var(--mq-sp-3);
   padding: var(--mq-sp-5);
   border: var(--mq-hair);
-  border-left: 6px solid var(--mq-gain);
-  border-radius: var(--mq-r-cell);
+  border-radius: var(--mq-r-card);
   background: var(--mq-cell);
   color: var(--mq-board-ink);
 }
 
-.mqx-an-state--risk {
-  border-left-color: var(--mq-risk);
+.mqx-an-state--risk .mqx-an-state__sum {
+  color: var(--mq-risk);
 }
 
 .mqx-an-state__top {
@@ -189,7 +194,7 @@
   color: var(--mq-risk);
 }
 
-/* —— Три показателя устойчивости —— */
+/* —— Три показателя устойчивости: ★ BG-3 — без рамок, колонками на поле —— */
 .mqx-an-metrics {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -203,10 +208,7 @@
   display: grid;
   align-content: start;
   gap: calc(var(--mq-sp-1) / 2);
-  padding: var(--mq-sp-4);
-  border: var(--mq-hair);
-  border-radius: var(--mq-r-cell);
-  background: var(--mq-cell);
+  padding: 0;
 }
 
 .mqx-an-metric b {
@@ -224,12 +226,9 @@
   font: 400 var(--mq-fs-small) / 1.3 var(--mq-font-body);
 }
 
-/* —— История + прогноз: факт фиолетовый, прогноз пунктиром золотом —— */
+/* —— История + прогноз: факт фиолетовый, прогноз пунктиром золотом; ★ BG-3 — график на поле, без рамки —— */
 .mqx-an-chart {
-  padding: var(--mq-sp-5);
-  border: var(--mq-hair);
-  border-radius: var(--mq-r-cell);
-  background: var(--mq-cell);
+  padding: 0;
 }
 
 .mqx-an-chart__svg {

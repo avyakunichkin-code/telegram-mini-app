@@ -3548,7 +3548,8 @@ body [class*='modal'] {
   line-height: 1.4;
 }
 
-/* —— Действия: фишки 3 в ряд —— */
+/* —— Действия: фишки 3 в ряд ——
+   ★ BG-3: фишка — заливка клетки и нижняя кромка, без контура; иконка без плашки, цвет — тон раздела. */
 .mqx-cap-acts {
   display: grid;
   gap: var(--mq-sp-6);
@@ -3591,10 +3592,10 @@ body [class*='modal'] {
   gap: var(--mq-sp-2);
   min-height: 96px;
   padding: var(--mq-sp-5) var(--mq-sp-2) var(--mq-sp-4);
-  border: var(--mq-hair);
-  border-radius: 14px;
+  border: 0;
+  border-radius: var(--mq-r-cell);
   background: var(--mq-cell);
-  box-shadow: 0 2px 0 var(--mq-cell-edge);
+  box-shadow: 0 3px 0 var(--mq-cell-edge);
   color: var(--mq-board-ink);
   text-align: center;
   cursor: pointer;
@@ -3608,26 +3609,20 @@ body [class*='modal'] {
 .mqx-cap-piece__ico {
   display: grid;
   place-items: center;
-  width: 34px;
-  height: 34px;
-  border-radius: 10px;
-  background: var(--mq-coin-soft);
+  height: 28px;
   color: var(--mq-coin-ink);
-  font: 800 var(--mq-fs-body) / 1 var(--mq-font-display);
+  font: 900 var(--mq-fs-title) / 1 var(--mq-font-display);
 }
 
 .mqx-cap-piece--ins .mqx-cap-piece__ico {
-  background: var(--mq-turn-soft);
   color: var(--mq-turn);
 }
 
 .mqx-cap-piece--prop .mqx-cap-piece__ico {
-  background: var(--mq-gain-soft);
   color: var(--mq-gain);
 }
 
 .mqx-cap-piece--debt .mqx-cap-piece__ico {
-  background: var(--mq-risk-soft);
   color: var(--mq-risk);
 }
 
@@ -3642,7 +3637,7 @@ body [class*='modal'] {
 
 /* Закрыто целью: пунктир, без объёма — видно, куда ведёт игра */
 .mqx-cap-pieces .mqx-cap-piece--locked {
-  border-style: dashed;
+  border: 1.5px dashed var(--mq-cell-edge);
   background: transparent;
   box-shadow: none;
   color: var(--mq-board-ink-soft);
@@ -3650,7 +3645,6 @@ body [class*='modal'] {
 }
 
 .mqx-cap-pieces .mqx-cap-piece.mqx-cap-piece--locked .mqx-cap-piece__ico {
-  background: var(--mq-cell-edge);
   color: var(--mq-board-ink-soft);
 }
 

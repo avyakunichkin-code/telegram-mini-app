@@ -268,6 +268,8 @@ export function DashboardPremium({
               activeMoneyMode={moneyModal}
               salaryDisabled={salaryDisabled}
               salaryHot={salaryAvailable}
+              salaryClaimed={salaryClaimed}
+              salaryAmount={Number(overview?.salary?.monthly_amount) || 0}
               salaryCelebrate={salaryCelebrate}
               onSalary={async () => {
                 if (salaryClaimed) {

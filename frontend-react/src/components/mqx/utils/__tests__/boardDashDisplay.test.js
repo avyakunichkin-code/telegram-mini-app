@@ -69,15 +69,16 @@ describe('BG-1 dashboard display', () => {
     assert.equal(goalFinishText({ phase: 'active', minPeriod: 1 }), 'Финиш — победа, игра продолжится');
   });
 
-  it('income cell says salary while income equals salary', () => {
+  it('income cell is always «Доходы за ход» from all sources (★ BG-3)', () => {
     assert.deepEqual(
       incomeCell({ total_monthly_income: 62500, salary: { monthly_amount: 62500 } }),
-      { label: 'Зарплата за ход', value: 62500 },
+      { label: 'Доходы за ход', value: 62500 },
     );
     assert.deepEqual(
       incomeCell({ total_monthly_income: 70000, salary: { monthly_amount: 62500 } }),
       { label: 'Доходы за ход', value: 70000 },
     );
+    assert.deepEqual(incomeCell({ salary: { monthly_amount: 62500 } }), { label: 'Доходы за ход', value: 62500 });
   });
 
   it('maps template keys to role titles', () => {

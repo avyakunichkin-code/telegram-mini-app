@@ -37,15 +37,15 @@ function MoneyCell({ label, children, ariaLabel, section, onNavigate, className 
 }
 
 /**
- * Деньги ★ BG-1: персонаж у суммы «На счёте»; ниже подушка, доход и расходы за ход.
- * Расход нейтрален (ADR-014), доход — изумруд со знаком «+».
+ * Деньги ★ BG-3: персонаж у суммы «На счёте»; ниже доходы и расходы за ход, затем подушка.
+ * Без рамок — прямо на поле. Расход нейтрален (ADR-014), доход — изумруд со знаком «+».
  */
 export function MqxFinancePeriodBlock({
   templateKey,
   cash = 0,
   safety = 0,
   cushionPercent = null,
-  income = { label: 'Зарплата за ход', value: 0 },
+  income = { label: 'Доходы за ход', value: 0 },
   outflow = 0,
   onFlowsNavigate,
   juiceGainActive = false,
@@ -74,16 +74,6 @@ export function MqxFinancePeriodBlock({
 
       <div className="mqx-bg-money__grid">
         <MoneyCell
-          label={cushionLabel}
-          ariaLabel={
-            cushionPercent != null
-              ? `Подушка ${moneyAria(safety)}, наполнение ${cushionPercent}% от нормы`
-              : `Подушка ${moneyAria(safety)}`
-          }
-        >
-          <MoneyText value={safety} decimals={0} />
-        </MoneyCell>
-        <MoneyCell
           label={income.label}
           ariaLabel={`${income.label} плюс ${moneyAria(incomeValue)}`}
           section={CAPITAL_FLOWS_SECTION.income}
@@ -97,9 +87,18 @@ export function MqxFinancePeriodBlock({
           ariaLabel={`Расходы за ход ${moneyAria(outflowValue)}`}
           section={CAPITAL_FLOWS_SECTION.expense}
           onNavigate={onFlowsNavigate}
-          className="mqx-bg-money__cell--wide"
         >
           −<MoneyText value={outflowValue} decimals={0} />
+        </MoneyCell>
+        <MoneyCell
+          label={cushionLabel}
+          ariaLabel={
+            cushionPercent != null
+              ? `Подушка ${moneyAria(safety)}, наполнение ${cushionPercent}% от нормы`
+              : `Подушка ${moneyAria(safety)}`
+          }
+        >
+          <MoneyText value={safety} decimals={0} />
         </MoneyCell>
       </div>
     </section>

@@ -253,12 +253,13 @@ export function MqCatalogScreen() {
                 cash={87400}
                 safety={45000}
                 cushionPercent={60}
-                income={{ label: 'Зарплата за ход', value: 62500 }}
+                income={{ label: 'Доходы за ход', value: 64300 }}
                 outflow={37500}
                 onFlowsNavigate={() => {}}
               />
               <MqxGoalDash victory={CATALOG_VICTORY_DEMO} legacyGoal={CATALOG_LEGACY_GOAL_DEMO} />
-              <MqxPeriodActions salaryHot onSalary={() => {}} onContribute={() => {}} onWithdraw={() => {}} onInvest={() => {}} />
+              <MqxPeriodActions salaryHot salaryAmount={62500} onSalary={() => {}} onContribute={() => {}} onWithdraw={() => {}} onInvest={() => {}} />
+              <MqxPeriodActions salaryClaimed salaryDisabled onSalary={() => {}} onContribute={() => {}} onWithdraw={() => {}} onInvest={() => {}} />
             </div>
           </div>
         </div>

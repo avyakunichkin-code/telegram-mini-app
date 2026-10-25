@@ -97,14 +97,13 @@ export function goalFinishText(view) {
 }
 
 /**
- * Ячейка дохода: «Зарплата за ход», пока доход = зарплата; иначе «Доходы за ход».
+ * Ячейка дохода ★ BG-3: всегда «Доходы за ход» — плановый доход хода из всех источников
+ * (`total_monthly_income`: зарплата + доход с вложений), как «Доходы за ход» в «Капитале».
+ * Сумма самой зарплаты показана на её кнопке в «Действиях хода».
  * @returns {{ label: string, value: number }}
  */
 export function incomeCell(overview) {
   const total = Number(overview?.total_monthly_income) || 0;
   const salary = Number(overview?.salary?.monthly_amount) || 0;
-  if (total > 0 && Math.round(total) !== Math.round(salary)) {
-    return { label: 'Доходы за ход', value: total };
-  }
-  return { label: 'Зарплата за ход', value: salary || total };
+  return { label: 'Доходы за ход', value: total || salary };
 }
