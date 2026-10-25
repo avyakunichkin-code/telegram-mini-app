@@ -31,6 +31,9 @@ import {
 } from '../guidance/curriculum';
 import { startGameWithTemplate } from '../utils/startGame';
 import { suggestDefaultProfileName } from '../utils/suggestDefaultProfileName';
+import { applyPwaUpdateAtTurnBoundary } from '../utils/pwaUpdate';
+import { useOffline } from '../hooks/useNetworkStatus';
+import { BACK_ONLINE_COPY, OFFLINE_COPY } from '../utils/networkStatus';
 
 /** Эмоциональный слой страницы (TB1: без play/pause — активная партия = playing mood). */
 function gamePageMoodClass(timeStatus) {
@@ -81,6 +84,20 @@ export function GameScreen({ onLogout, onNewGame, onLoadGame }) {
     dismissVictoryFinale,
     submitRunFeedback,
   } = useGame();
+
+  const offline = useOffline();
+  const wasOfflineRef = useRef(offline);
+  useEffect(() => {
+    if (offline === wasOfflineRef.current) return;
+    wasOfflineRef.current = offline;
+    if (offline) {
+      showNotification(OFFLINE_COPY, 'error', { ttlMs: 5000 });
+    } else {
+      showNotification(BACK_ONLINE_COPY, 'success');
+      // Пока сети не было, другая вкладка/устройство могли сделать ход — подтягиваем сервер.
+      void refreshGameState?.();
+    }
+  }, [offline, refreshGameState]);
 
   const closeEventsOverlay = useCallback(() => {
     setEventsOpen(false);
@@ -238,6 +255,8 @@ export function GameScreen({ onLogout, onNewGame, onLoadGame }) {
 
   const handleClosePeriodClose = useCallback(() => {
     setPeriodCloseOpen(false);
+    // Граница хода: итоги прочитаны, состояние на сервере — безопасно поставить новую версию PWA.
+    applyPwaUpdateAtTurnBoundary();
   }, []);
 
   const handleRequestNextPeriod = async () => {
@@ -452,7 +471,7 @@ export function GameScreen({ onLogout, onNewGame, onLoadGame }) {
                     pendingEventsCount={eventsUnlocked ? (pendingEvents?.length ?? 0) : 0}
                     onOpenEvents={eventsUnlocked ? () => setEventsOpen(true) : undefined}
                     onNextPeriod={handleRequestNextPeriod}
-                    closeMonthDisabled={syncing}
+                    closeMonthDisabled={syncing || offline}
                     claimSalary={claimSalary}
                     contributeToSafetyFund={contributeToSafetyFund}
                     withdrawFromSafetyFund={withdrawFromSafetyFund}

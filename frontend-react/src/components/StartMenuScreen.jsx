@@ -12,6 +12,7 @@ import { MqxBoardButton } from './mqx/pregame/MqxBoardButton';
 import { MqxSavesSheet } from './mqx/pregame/MqxSavesSheet';
 import { savesCountHint } from './mqx/utils/pregameDisplay';
 import { suggestDefaultProfileName } from '../utils/suggestDefaultProfileName';
+import { setPwaUpdateSafeZone } from '../utils/pwaUpdate';
 
 /**
  * Меню до партии ★ BG-2: логотип, карта последнего сохранения с «Продолжить игру»,
@@ -23,6 +24,12 @@ export function StartMenuScreen({ onNewGame, onLoadGame, onLogout }) {
   const [activatingId, setActivatingId] = useState(null);
   const [showLoadModal, setShowLoadModal] = useState(false);
   const { logout } = useAuth();
+
+  // Меню — партии нет на экране: новая версия PWA ставится сразу.
+  useEffect(() => {
+    setPwaUpdateSafeZone(true);
+    return () => setPwaUpdateSafeZone(false);
+  }, []);
 
   const loadProfiles = useCallback(async () => {
     setLoading(true);

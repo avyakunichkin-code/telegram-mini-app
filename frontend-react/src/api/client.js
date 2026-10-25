@@ -1,4 +1,5 @@
 import { newIdempotencyKey, shouldAttachIdempotencyKey } from '../utils/idempotencyKey.js';
+import { isNetworkFailure, networkStatus, OFFLINE_COPY } from '../utils/networkStatus.js';
 
 /** @type {string} fallback prod API (Render), пока нет VITE_API_BASE_URL в CI */
 const DEFAULT_PROD_API = 'https://telegram-mini-app-zwfs.onrender.com';
@@ -86,7 +87,16 @@ export async function apiCall(endpoint, method = 'GET', data = null) {
     options.body = JSON.stringify(data);
   }
 
-  const response = await fetch(`${API_BASE}${endpoint}`, options);
+  let response;
+  try {
+    response = await fetch(`${API_BASE}${endpoint}`, options);
+  } catch (err) {
+    if (!isNetworkFailure(err)) throw err;
+    networkStatus.markFailure();
+    // status 0 — ответа не было; текст для тоста вместо «Failed to fetch».
+    throw new ApiError({ status: 0, detail: OFFLINE_COPY, raw: null, endpoint, method });
+  }
+  networkStatus.markOk();
 
   if (response.status === 204) {
     return null;

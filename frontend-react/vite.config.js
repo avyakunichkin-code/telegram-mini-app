@@ -19,7 +19,8 @@ export default defineConfig(({ mode }) => {
     plugins: [
       react(),
       VitePWA({
-        registerType: 'autoUpdate',
+        // prompt: новый SW ждёт; pwaUpdate.js ставит его в безопасный момент (меню / после итогов хода).
+        registerType: 'prompt',
         injectRegister: false,
         includeAssets: [
           'favicon-32.png',
@@ -45,8 +46,7 @@ export default defineConfig(({ mode }) => {
           icons: PWA_ICONS,
         },
         workbox: {
-          // Новый SW активируется сразу; клиент перезагружается в pwaUpdate.js (controllerchange).
-          skipWaiting: true,
+          // Без skipWaiting: активация только через updateSW(true) из pwaUpdate.js — не посреди события.
           clientsClaim: true,
           // HashRouter: без NavigationRoute — иначе iOS Safari часто отдаёт пустую/старую страницу.
           globPatterns: ['**/*.{js,css,html,ico,svg,woff2}', 'pwa/**/*.png', 'favicon*.png'],
