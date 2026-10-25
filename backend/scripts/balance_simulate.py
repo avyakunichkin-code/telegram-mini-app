@@ -6,6 +6,8 @@ Policies:
   tutorial      — salary -> events (max affordable cash_delta) -> safety 5k (1x) -> deposit 10k (1x)
   safety_first  — same events; prioritize safety fund until baseline target
   passive       — salary -> events (min affordable cash_delta); no proactive safety/invest
+  chain_runner  — events/treat-self как needs_keeper + исполняет текущий шаг victory chain
+                  (подушка до цели, облигации под пассивный доход, полис); проверка победимости
 
 See docs/decisions/ADR-009-metrics-dictionary-tb1.md, docs/balance/README.md
 
@@ -29,7 +31,12 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Literal
 
-PolicyName = Literal["tutorial", "safety_first", "passive", "idle", "needs_keeper", "restructure"]
+PolicyName = Literal["tutorial", "safety_first", "passive", "idle", "needs_keeper", "restructure", "chain_runner"]
+POLICY_CHOICES = ("tutorial", "safety_first", "passive", "idle", "needs_keeper", "restructure", "chain_runner")
+# Политики, которые выбирают события ради потребностей (инварианты победимости — docs/balance/THRESHOLDS.md).
+NEEDS_AWARE_POLICIES = frozenset({"needs_keeper", "restructure", "chain_runner"})
+# Ставка облигации из app/finance/invest_products.py: дешевле неё долг выгоднее не гасить, а вкладывать.
+CHAIN_RUNNER_BOND_RATE = 16.0
 CAR_KINDS = frozenset({"car", "car_personal"})
 NEEDS_AXES = ("comfort", "status", "social", "health")
 
@@ -145,8 +152,6 @@ def run_balance_simulation(
     needs_set_point: dict | None = None,
 ) -> dict[str, Any]:
     """Run simulation in isolated SQLite DB; return JSON-serializable report."""
-    if rng_seed is not None:
-        random.seed(rng_seed)
 
     db_file = os.path.join(tempfile.gettempdir(), f"balance_sim_{uuid.uuid4().hex}.db")
     os.environ.setdefault("SECRET_KEY", "balance-sim-dev")
@@ -243,7 +248,7 @@ def run_balance_simulation(
         if not choices:
             return False
         mode: Literal["max", "min"] = "min" if policy == "passive" else "max"
-        if policy in ("needs_keeper", "restructure") and not force:
+        if policy in NEEDS_AWARE_POLICIES and not force:
             ov_now = overview()
             needs_now = ov_now.get("needs") or {}
             # Запас: все месячные платежи и расходы + 20% зарплаты — иначе бот уходит в минус по деньгам.
@@ -335,8 +340,9 @@ def run_balance_simulation(
 
     def maybe_restructure() -> None:
         """restructure: продать лишние машины (обслуживание дороже дохода), свободные деньги — в досрочное
-        погашение самых дорогих кредитов. Проверка тезиса PO 2026-10-21 о перестройке активов."""
-        if policy != "restructure":
+        погашение самых дорогих кредитов. Проверка тезиса PO 2026-10-21 о перестройке активов.
+        chain_runner гасит досрочно только долги дороже облигации — остальное идёт под цели цепочки."""
+        if policy not in ("restructure", "chain_runner"):
             return
         ov = overview()
         cars = [
@@ -362,13 +368,60 @@ def run_balance_simulation(
             debt = float(liab.get("total_debt") or 0)
             if free < 1_000 or debt <= 0:
                 break
+            if policy == "chain_runner" and float(liab.get("annual_rate_percent") or 0) <= CHAIN_RUNNER_BOND_RATE:
+                break
             amount = round(min(free, debt), 2)
             r = client.post(f"/api/finance/liabilities/{liab['id']}/prepay", headers=headers, json={"amount": amount})
             if r.status_code == 200:
                 cash -= amount
 
+    def maybe_chain_runner() -> None:
+        """chain_runner: один шаг текущей цели victory chain за ход, свободные деньги — под цель.
+        Свободные = cash − (платежи и расходы хода + 50% дохода на события и потребности); для разовых
+        шагов на 1 000 ₽ хватает cash − расходы хода, иначе на сложных шаблонах бот не делает даже их."""
+        if policy != "chain_runner":
+            return
+        ov = overview()
+        v = ov.get("victory") or {}
+        goal = next((g for g in v.get("goals") or [] if g.get("key") == v.get("current_goal_key")), None)
+        if not goal or goal.get("met") or not goal.get("available", True):
+            return
+        cash = float(ov.get("cash_balance") or 0)
+        buffer = float(ov.get("total_monthly_outflow") or 0) + 0.5 * float(ov.get("total_monthly_income") or 0)
+        free = cash - buffer
+        free_token = cash - float(ov.get("total_monthly_outflow") or 0)
+        gtype = goal.get("type")
+        detail = goal.get("detail") or {}
+
+        if gtype == "action_once":
+            action = detail.get("action")
+            if action == "safety_contributed" and free_token >= 1_000:
+                client.post("/api/game/period/contribute-to-safety-fund", headers=headers, json={"amount": 1_000})
+            elif action == "invest_opened" and free_token >= 1_000:
+                client.post("/api/invest/bond/buy", headers=headers, json={"amount": 1_000})
+            elif action == "insurance_purchased":
+                r = client.get("/api/insurance/catalog")
+                plans = sorted((r.json().get("plans") or []) if r.status_code == 200 else [],
+                               key=lambda pl: float(pl.get("monthly_premium") or 0))
+                for pl in plans:
+                    # Премия списывается каждый ход — берём полис, только если она влезает в запас.
+                    if free_token < float(pl.get("monthly_premium") or 0) * 3:
+                        break
+                    if client.post("/api/insurance/buy", headers=headers,
+                                   json={"plan_key": pl["plan_key"]}).status_code == 200:
+                        break
+        elif gtype == "safety_fund_months":
+            need = float(detail.get("target") or 0) - float(detail.get("current") or 0)
+            amt = round(min(need, free), 2)
+            if amt >= 500:
+                client.post("/api/game/period/contribute-to-safety-fund", headers=headers, json={"amount": amt})
+        elif gtype in ("passive_income_monthly_min", "passive_income_net_monthly_min"):
+            if free >= 1_000:
+                client.post("/api/invest/bond/buy", headers=headers, json={"amount": round(free, 2)})
+        # cash_balance_min и прочее: деньги просто копятся на счёте.
+
     def maybe_treat_self() -> None:
-        if policy not in ("needs_keeper", "restructure"):
+        if policy not in NEEDS_AWARE_POLICIES:
             return
         ov = overview()
         ts = ov.get("treat_self") or {}
@@ -384,7 +437,7 @@ def run_balance_simulation(
         client.post("/api/game/period/treat-self", headers=headers, json={"option_id": opt["id"]})
 
     def maybe_invest() -> None:
-        if policy in ("passive", "idle", "needs_keeper", "restructure"):
+        if policy in ("passive", "idle", "needs_keeper", "restructure", "chain_runner"):
             return
         if policy == "tutorial" and state.invest_once_done:
             return
@@ -445,6 +498,14 @@ def run_balance_simulation(
         safety = float(ov.get("safety_fund_balance") or 0)
         needs_now = ov.get("needs") or {}
         needs_row = {ax: round(float(needs_now.get(ax) or 0), 1) for ax in NEEDS_AXES} if needs_now else None
+        passive = next(
+            (float((g.get("detail") or {}).get("monthly_passive_income") or 0)
+             for g in v.get("goals") or [] if "monthly_passive_income" in (g.get("detail") or {})),
+            None,
+        )
+        pr = client.get("/api/invest/positions", headers=headers)
+        positions = pr.json() if pr.status_code == 200 else []
+        invested = sum(float(pos.get("principal") or 0) for pos in positions if isinstance(pos, dict))
         return {
             "needs": needs_row,
             "needs_min": min(needs_row.values()) if needs_row else None,
@@ -453,6 +514,8 @@ def run_balance_simulation(
             "cash": round(cash, 2),
             "safety": round(safety, 2),
             "liquid": round(cash + safety, 2),
+            "invested": round(invested, 2),
+            "passive_income": round(passive, 2) if passive is not None else None,
             "net_cf": round(float(ov.get("net_monthly_cashflow") or 0), 2),
             "structural_obligations": round(structural, 2),
             "lifestyle_burn": round(lifestyle, 2),
@@ -467,6 +530,11 @@ def run_balance_simulation(
             "goals_required": v.get("goals_required"),
             "period_gate_open": v.get("period_gate_open"),
         }
+
+    # Сид — после импортов и seed_all: первый импорт приложения в процессе тратит глобальный random,
+    # и без этого первый прогон в процессе расходился с последующими (полный набор ≠ --only).
+    if rng_seed is not None:
+        random.seed(rng_seed)
 
     try:
         start_game()
@@ -488,6 +556,7 @@ def run_balance_simulation(
             elif policy == "safety_first":
                 maybe_safety_first()
             maybe_invest()
+            maybe_chain_runner()
             maybe_treat_self()
             needs_before_close = dict(overview().get("needs") or {})
             close_body = close_period()
@@ -539,6 +608,8 @@ def run_balance_simulation(
             "defeated": defeated,
             "defeat_reason": defeat_reason,
             "goals_met": v.get("goals_met"),
+            # После поражения overview обнулён (goals_met 0) — пик по ряду показывает, докуда дошла цепочка.
+            "goals_met_peak": max((r.get("goals_met") or 0) for r in period_rows),
             "goals_enabled": v.get("goals_enabled"),
             "goals_required": v.get("goals_required"),
             "period_gate_open": v.get("period_gate_open"),
@@ -646,7 +717,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--periods", type=int, default=DEFAULT_PERIODS)
     parser.add_argument(
         "--policy",
-        choices=["tutorial", "safety_first", "passive", "idle", "needs_keeper", "restructure"],
+        choices=list(POLICY_CHOICES),
         default="tutorial",
     )
     parser.add_argument(

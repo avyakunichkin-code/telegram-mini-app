@@ -46,3 +46,27 @@ baselines:
     policy: restructure
     template_key: mq_game_debt_stack_v1
     description: Предприниматель — экономика шаблона (поражение ~10), фиксирует текущее состояние
+
+  # Аудит 2026-10-25: эталон победимости — бот исполняет шаги victory chain (INV-1/INV-3, THRESHOLDS.md)
+  - id: main__student_chain_runner_40p
+    file: main__student_chain_runner_40p.json
+    policy: chain_runner
+    description: Студент, бот проходит victory chain (подушка, облигации, полис) + потребности как needs_keeper
+
+  - id: main__pro_chain_runner_40p
+    file: main__pro_chain_runner_40p.json
+    policy: chain_runner
+    template_key: mq_game_tight_budget_v1
+    description: Профессионал, бот проходит victory chain
+
+  - id: main__manager_chain_runner_40p
+    file: main__manager_chain_runner_40p.json
+    policy: chain_runner
+    template_key: mq_game_mortgage_stress_v1
+    description: Руководитель, бот проходит victory chain
+
+  - id: main__entrepreneur_chain_runner_40p
+    file: main__entrepreneur_chain_runner_40p.json
+    policy: chain_runner
+    template_key: mq_game_debt_stack_v1
+    description: Предприниматель, бот проходит victory chain

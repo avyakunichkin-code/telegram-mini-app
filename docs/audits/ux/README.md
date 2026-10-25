@@ -26,4 +26,6 @@ docs/audits/ux/<YYYY-MM-DD>-<slug>.md
 
 ## Текущий снимок
 
-[`2026-09-07-player-surface.md`](2026-09-07-player-surface.md) (DRAFT).
+[`2026-10-25-constraints-design-gamefeel.md`](2026-10-25-constraints-design-gamefeel.md) (DRAFT) — лишние ограничения: токены, motion, ритуал хода, PWA, победимость баланса.
+
+Предыдущий: [`2026-09-07-player-surface.md`](2026-09-07-player-surface.md) (DRAFT).
