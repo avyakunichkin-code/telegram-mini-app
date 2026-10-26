@@ -7,6 +7,7 @@ import { MenuPremium } from './MenuPremium';
 import { showNotification } from './notifications';
 import { API, formatApiErrorDetail } from '../api';
 import { EventCarouselOverlay } from './mqx/events/EventCarouselOverlay';
+import { needsChangeToastText } from './mqx/events/eventImpactChips';
 import { MqxShell } from './MqxShell';
 import { MqxTabHero } from './MqxTabHero';
 import { GameScreenLayout, GameScreenTabNav } from './GameScreenLayout';
@@ -28,6 +29,7 @@ import {
   shouldBlockAutoEventsOverlay,
   shouldDeferGuidanceForPeriodCloseRitual,
   shouldDeferPeriodCloseDuringGuidance,
+  shouldForceCloseEventsOverlay,
 } from '../guidance/curriculum';
 import { startGameWithTemplate } from '../utils/startGame';
 import { suggestDefaultProfileName } from '../utils/suggestDefaultProfileName';
@@ -188,8 +190,12 @@ export function GameScreen({ onLogout, onNewGame, onLoadGame }) {
 
     setLastPeriodClose(payload);
     setQueuedPeriodClose(null);
-    setPeriodCloseOpen(shouldAutoOpenPeriodClose(payload, PERIOD_CLOSE_AUTO_MAX));
+    const autoOpenRitual = shouldAutoOpenPeriodClose(payload, PERIOD_CLOSE_AUTO_MAX);
+    setPeriodCloseOpen(autoOpenRitual);
     dismissPeriodClose();
+    // С хода PERIOD_CLOSE_AUTO_MAX+1 итоги сами не открываются — граница хода наступает здесь,
+    // иначе ожидающая версия PWA так и не встала бы до конца партии.
+    if (!autoOpenRitual) applyPwaUpdateAtTurnBoundary();
   }, [periodCloseSummary, inOnboarding, deferPeriodCloseInGuidance, dismissPeriodClose]);
 
   useEffect(() => {
@@ -221,11 +227,18 @@ export function GameScreen({ onLogout, onNewGame, onLoadGame }) {
     }
   }, [eventsUnlocked]);
 
+  // Закрываем открытую карусель только на итогах хода; intro событий откладывает лишь автопоказ.
+  const forceCloseEventsOverlay = shouldForceCloseEventsOverlay({
+    periodCloseOpen,
+    periodCloseSummary,
+    queuedPeriodClose,
+    guidance,
+  });
   useEffect(() => {
-    if (blockAutoEventsOverlay && eventsOpen) {
+    if (forceCloseEventsOverlay && eventsOpen) {
       setEventsOpen(false);
     }
-  }, [blockAutoEventsOverlay, eventsOpen]);
+  }, [forceCloseEventsOverlay, eventsOpen]);
 
   useEffect(() => {
     if (!eventsUnlocked) return;
@@ -427,27 +440,7 @@ export function GameScreen({ onLogout, onNewGame, onLoadGame }) {
                   'success',
                 );
               } else if (needsAfter && typeof needsAfter === 'object') {
-                const labels = {
-                  comfort: 'Комфорт',
-                  status: 'Статус',
-                  social: 'Связи',
-                  health: 'Здоровье',
-                };
-                const deltas = [];
-                if (needsBefore && typeof needsBefore === 'object') {
-                  for (const key of Object.keys(labels)) {
-                    const before = Number(needsBefore?.[key]);
-                    const after = Number(needsAfter?.[key]);
-                    if (!Number.isFinite(before) || !Number.isFinite(after)) continue;
-                    const d = Math.round((after - before) * 10) / 10;
-                    if (Math.abs(d) < 1e-6) continue;
-                    deltas.push(`${labels[key]} ${d > 0 ? `+${d}` : String(d)}`);
-                  }
-                }
-                showNotification(
-                  deltas.length ? `Потребности: ${deltas.join(', ')}` : 'Потребности изменились',
-                  'success',
-                );
+                showNotification(needsChangeToastText(needsBefore, needsAfter), 'success');
               } else {
                 showNotification('Решение применено', 'success');
               }

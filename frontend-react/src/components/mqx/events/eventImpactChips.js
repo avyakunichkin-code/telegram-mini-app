@@ -71,6 +71,20 @@ export function buildImpactChips(impacts) {
   });
 }
 
+/**
+ * Тост после выбора: те же округление и подписи, что у чипов карточки,
+ * иначе игрок видит «Связи +4» до выбора и «Связи +3.6» после.
+ */
+export function needsChangeToastText(needsBefore, needsAfter) {
+  if (!needsAfter || typeof needsAfter !== 'object') return null;
+  if (!needsBefore || typeof needsBefore !== 'object') return 'Потребности изменились';
+  const delta = Object.fromEntries(
+    NEED_AXES.map(([key]) => [key, Number(needsAfter[key]) - Number(needsBefore[key])]),
+  );
+  const chips = buildNeedsChips(delta);
+  return chips.length ? `Потребности: ${chips.map((c) => c.text).join(', ')}` : 'Потребности изменились';
+}
+
 /** Потребности: «Комфорт −8» нейтрально, «Статус +5» изумрудом. Нулевые оси скрыты. */
 export function buildNeedsChips(needsDelta) {
   if (!needsDelta || typeof needsDelta !== 'object') return [];

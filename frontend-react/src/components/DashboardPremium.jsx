@@ -192,7 +192,7 @@ export function DashboardPremium({
       if (moneyModal === 'in') {
 
         const res = await contributeToSafetyFund(amt);
-        showNotification('Фин.подушка пополнена', 'success');
+        showNotification('Подушка пополнена', 'success');
 
       } else {
 

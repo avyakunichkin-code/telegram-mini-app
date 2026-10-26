@@ -14,7 +14,8 @@ export function MqxTabHero({
   /** Заголовок вкладки в одной строке с логотипом (компактная шапка). */
   inlineTitle = false,
 }) {
-  const titleNode = <div className={`mqx-hero__title ${titleClassName}`.trim()}>{title}</div>;
+  // Один h1 на экран вкладки — по нему скринридер и навигация по заголовкам находят экран.
+  const titleNode = <h1 className={`mqx-hero__title ${titleClassName}`.trim()}>{title}</h1>;
 
   return (
     <header

@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import { describe, it } from 'node:test';
 
-import { buildImpactChips, buildNeedsChips, impactChipTone } from '../eventImpactChips.js';
+import { buildImpactChips, buildNeedsChips, impactChipTone, needsChangeToastText } from '../eventImpactChips.js';
 
 const NBSP = ' ';
 const MINUS = '−';
@@ -58,5 +58,21 @@ describe('eventImpactChips — needs chips', () => {
 
   it('empty for missing delta', () => {
     assert.deepEqual(buildNeedsChips(undefined), []);
+  });
+});
+
+describe('needsChangeToastText — тост после выбора совпадает с чипами карточки', () => {
+  it('округляет как чипы: +3.6 → +4, −1.8 → −2, нулевые оси скрыты', () => {
+    const text = needsChangeToastText(
+      { comfort: 63.4, status: 40.7, social: 49.2, health: 64.5 },
+      { comfort: 61.6, status: 40.7, social: 52.8, health: 64.6 },
+    );
+    assert.equal(text, `Потребности: Комфорт ${MINUS}2, Связи +4`);
+  });
+
+  it('без «до» или без изменений — общий текст', () => {
+    assert.equal(needsChangeToastText(null, { comfort: 50 }), 'Потребности изменились');
+    assert.equal(needsChangeToastText({ comfort: 50 }, { comfort: 50.2 }), 'Потребности изменились');
+    assert.equal(needsChangeToastText({ comfort: 50 }, null), null);
   });
 });

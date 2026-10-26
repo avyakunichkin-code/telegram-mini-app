@@ -121,7 +121,8 @@
   justify-content: center;
   padding: 12px;
   padding-top: calc(12px + env(safe-area-inset-top, 0px));
-  padding-bottom: calc(12px + env(safe-area-inset-bottom, 0px));
+  /* Подсказка Монетки (z 545) поверх карусели: карта заканчивается над ней, иначе варианты ответа под полоской. */
+  padding-bottom: max(calc(12px + env(safe-area-inset-bottom, 0px)), var(--mqx-guidance-strip-lift, 0px));
   pointer-events: auto;
   overflow: hidden;
   overscroll-behavior: none;

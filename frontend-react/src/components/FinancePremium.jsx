@@ -252,7 +252,7 @@ export function FinancePremium({
       await API.buyBond({
         amount: bondAmount,
         annual_rate_percent: BOND_ANNUAL_RATE_PERCENT,
-        title: 'Облигации (easy)',
+        title: 'Облигации',
       });
       showNotification('Облигации добавлены', 'success');
       setBondAmount(0);

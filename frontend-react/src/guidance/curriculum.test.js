@@ -8,6 +8,7 @@ import {
   shouldDeferEventsAutoOpen,
   shouldDeferGuidanceForPeriodCloseRitual,
   shouldDeferPeriodCloseDuringGuidance,
+  shouldForceCloseEventsOverlay,
 } from './curriculum.js';
 
 test('isP1GuidanceComplete when p1_close done', () => {
@@ -172,6 +173,42 @@ test('shouldBlockAutoEventsOverlay during period close pipeline', () => {
         completed_beats: ['p1_close', 'p2_new_month'],
       },
       periodIndex: 3,
+    }),
+    true,
+  );
+});
+
+test('shouldForceCloseEventsOverlay: ручное открытие на t_events_intro не закрывается', () => {
+  // Регресс: шаг просит «открой События», а эффект закрывал карусель — шаг не пройти.
+  const introGuidance = {
+    show_curriculum: true,
+    beat_id: 't_events_intro',
+    completed_beats: ['p1_close', 'p2_new_month'],
+  };
+  assert.equal(
+    shouldForceCloseEventsOverlay({
+      periodCloseOpen: false,
+      periodCloseSummary: null,
+      queuedPeriodClose: null,
+      guidance: introGuidance,
+    }),
+    false,
+  );
+  assert.equal(
+    shouldForceCloseEventsOverlay({
+      periodCloseOpen: true,
+      periodCloseSummary: null,
+      queuedPeriodClose: null,
+      guidance: introGuidance,
+    }),
+    true,
+  );
+  assert.equal(
+    shouldForceCloseEventsOverlay({
+      periodCloseOpen: false,
+      periodCloseSummary: null,
+      queuedPeriodClose: null,
+      guidance: { beat_id: 'p1_close', show_debrief: true },
     }),
     true,
   );

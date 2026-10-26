@@ -142,6 +142,23 @@ export function shouldDeferGuidanceForPeriodCloseRitual(periodCloseOpen, guidanc
   return true;
 }
 
+/**
+ * Закрыть уже открытую карусель: только пока идут итоги хода или debrief P1.
+ * Intro событий откладывает лишь автопоказ — ручное открытие на t_events_intro шаг и просит.
+ */
+export function shouldForceCloseEventsOverlay({
+  periodCloseOpen,
+  periodCloseSummary,
+  queuedPeriodClose,
+  guidance,
+}) {
+  if (periodCloseOpen) return true;
+  if (periodCloseSummary) return true;
+  if (queuedPeriodClose) return true;
+  if (guidance?.beat_id === 'p1_close' && guidance?.show_debrief) return true;
+  return false;
+}
+
 /** Блокирует автопоказ карусели событий, пока идёт ритуал итогов, debrief P1 или intro событий. */
 export function shouldBlockAutoEventsOverlay({
   periodCloseOpen,
@@ -150,10 +167,8 @@ export function shouldBlockAutoEventsOverlay({
   guidance,
   periodIndex = null,
 }) {
-  if (periodCloseOpen) return true;
-  if (periodCloseSummary) return true;
-  if (queuedPeriodClose) return true;
-  if (guidance?.beat_id === 'p1_close' && guidance?.show_debrief) return true;
-  if (shouldDeferEventsAutoOpen(guidance, periodIndex)) return true;
-  return false;
+  if (shouldForceCloseEventsOverlay({ periodCloseOpen, periodCloseSummary, queuedPeriodClose, guidance })) {
+    return true;
+  }
+  return shouldDeferEventsAutoOpen(guidance, periodIndex);
 }

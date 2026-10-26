@@ -32,4 +32,6 @@ docs/audits/qa/<YYYY-MM-DD>-<slug>.md
 
 ## Текущий снимок
 
-[`2026-09-07-mechanics.md`](2026-09-07-mechanics.md) (DRAFT).
+[`2026-10-26-browser-playtest.md`](2026-10-26-browser-playtest.md) (DRAFT) — плейтест в браузере, ходы 1–10; e2e-сценарии `frontend-react/e2e/`.
+
+Предыдущий: [`2026-09-07-mechanics.md`](2026-09-07-mechanics.md) (DRAFT).

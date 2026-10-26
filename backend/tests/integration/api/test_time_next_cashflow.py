@@ -100,3 +100,23 @@ class TestTimeNextCashflowWithLiabilities:
         assert float(ov["total_overdue_amount"]) == pytest.approx(
             float(liability.overdue_amount), abs=0.01
         )
+
+
+class TestFirstPeriodCashDelta:
+    def test_first_close_cash_delta_excludes_starting_balance(self, client, auth_headers, db_session):
+        """Регресс: на ходу 1 стартовый баланс (initial_balance) считался доходом хода — «+21 000 за ход»."""
+        assert (
+            client.post(
+                "/api/game/start",
+                headers=auth_headers,
+                json={"profile_name": "First delta", "save_kind": "game", "template_key": "mq_game_basic_v1"},
+            ).status_code
+            == 200
+        )
+        start_cash = float(_active_profile(db_session).cash_balance)
+        assert start_cash > 0
+
+        assert client.post("/api/game/period/claim-salary", headers=auth_headers).status_code == 200
+        pc = client.post("/api/game/time/next", headers=auth_headers).json()["period_close"]
+
+        assert pc["cash_delta"] == pytest.approx(float(pc["new_balance"]) - start_cash)

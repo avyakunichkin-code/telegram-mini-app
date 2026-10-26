@@ -91,8 +91,14 @@ def _transactions_for_period(db: Session, profile_id: int, period_index: int) ->
 
 
 def _cash_flow_from_transactions(db: Session, profile_id: int, period_index: int) -> float:
+    # Стартовый баланс пишется транзакцией в период 1, но это не поток хода:
+    # иначе первый ход показывал «+15 000 за ход» сверх реального прироста.
     return round(
-        sum(float(t.amount) for t in _transactions_for_period(db, profile_id, period_index)),
+        sum(
+            float(t.amount)
+            for t in _transactions_for_period(db, profile_id, period_index)
+            if str(t.type or "") != TRANSACTION_TYPES["INITIAL_BALANCE"]
+        ),
         2,
     )
 
