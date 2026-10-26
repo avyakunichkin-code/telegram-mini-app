@@ -166,7 +166,7 @@
   padding: 12px;
   border-radius: 16px;
   background: var(--mqx-glass-softer, rgba(255, 255, 255, 0.72));
-  border: 1px solid color-mix(in srgb, var(--mqx-ink, #0f1115) 8%, transparent);
+  border: 1px solid color-mix(in srgb, var(--mqx-ink) 8%, transparent);
 }
 
 .mqx-catalog-states__ritual-host {
@@ -176,5 +176,5 @@
   margin-top: 12px;
   border-radius: 22px;
   overflow: hidden;
-  border: 1px solid color-mix(in srgb, var(--mqx-ink, #0f1115) 10%, transparent);
+  border: 1px solid color-mix(in srgb, var(--mqx-ink) 10%, transparent);
 }

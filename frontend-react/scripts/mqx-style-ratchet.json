@@ -1,0 +1,57 @@
+{
+  "note": "Храповик check-mqx-ratchet: счётчики могут только убывать. Обновлять --update после уменьшения долга.",
+  "files": {
+    "analytics.css": {
+      "colors": 17,
+      "fontUnder12": 3
+    },
+    "board.css": {
+      "colors": 0,
+      "fontUnder12": 1
+    },
+    "dashboard.css": {
+      "colors": 75,
+      "fontUnder12": 31
+    },
+    "events.css": {
+      "colors": 6,
+      "fontUnder12": 0
+    },
+    "finance.css": {
+      "colors": 163,
+      "fontUnder12": 34
+    },
+    "flows.css": {
+      "colors": 7,
+      "fontUnder12": 2
+    },
+    "guidance.css": {
+      "colors": 23,
+      "fontUnder12": 3
+    },
+    "juice.css": {
+      "colors": 26,
+      "fontUnder12": 3
+    },
+    "layout.css": {
+      "colors": 48,
+      "fontUnder12": 5
+    },
+    "pregame.css": {
+      "colors": 0,
+      "fontUnder12": 0
+    },
+    "run-finale.css": {
+      "colors": 0,
+      "fontUnder12": 1
+    },
+    "states.css": {
+      "colors": 2,
+      "fontUnder12": 1
+    }
+  },
+  "totals": {
+    "colors": 367,
+    "fontUnder12": 84
+  }
+}

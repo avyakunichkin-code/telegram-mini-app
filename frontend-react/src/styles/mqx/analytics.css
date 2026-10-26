@@ -609,7 +609,7 @@
   padding: 12px 14px 14px;
   border-radius: 16px 16px 0 0;
   background: var(--tg-theme-bg-color, #fff);
-  border: 1px solid color-mix(in srgb, var(--mq-violet, #7c3aed) 18%, transparent);
+  border: 1px solid color-mix(in srgb, var(--mq-violet) 18%, transparent);
   border-bottom: none;
   box-shadow: 0 -8px 28px color-mix(in srgb, var(--mqx-ink) 12%, transparent);
   pointer-events: auto;
@@ -639,7 +639,7 @@
   font-weight: 800;
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: var(--mq-violet-deep, #5b21b6);
+  color: var(--mq-violet-deep);
 }
 
 .mqx-pclose-sheet__rows {
@@ -666,18 +666,18 @@
   display: grid;
   place-items: center;
   border-radius: 8px;
-  background: color-mix(in srgb, var(--mq-violet, #7c3aed) 8%, transparent);
-  color: var(--mq-violet, #7c3aed);
+  background: color-mix(in srgb, var(--mq-violet) 8%, transparent);
+  color: var(--mq-violet);
 }
 
 .mqx-pclose-row__glyph.mqx-metric-glyph--up {
-  color: var(--mq-emerald, #059669);
-  background: color-mix(in srgb, var(--mq-emerald, #059669) 10%, transparent);
+  color: var(--mq-emerald);
+  background: color-mix(in srgb, var(--mq-emerald) 10%, transparent);
 }
 
 .mqx-pclose-row__glyph.mqx-metric-glyph--down {
-  color: var(--mq-danger, #dc2626);
-  background: color-mix(in srgb, var(--mq-danger, #dc2626) 8%, transparent);
+  color: var(--mq-danger);
+  background: color-mix(in srgb, var(--mq-danger) 8%, transparent);
 }
 
 .mqx-pclose-row__label {
@@ -698,11 +698,11 @@
 }
 
 .mqx-pclose-row__value--pos {
-  color: var(--mq-emerald, #059669);
+  color: var(--mq-emerald);
 }
 
 .mqx-pclose-row__value--neg {
-  color: var(--mq-danger, #dc2626);
+  color: var(--mq-danger);
 }
 
 .mqx-pclose-row__arrow {
@@ -711,11 +711,11 @@
 }
 
 .mqx-pclose-row__arrow--up {
-  color: var(--mq-emerald, #059669);
+  color: var(--mq-emerald);
 }
 
 .mqx-pclose-row__arrow--down {
-  color: var(--mq-danger, #dc2626);
+  color: var(--mq-danger);
 }
 
 .mqx-pclose-row__arrow--flat {
@@ -771,18 +771,18 @@
 }
 
 .mqx-pclose-sheet__detail-value--income {
-  color: var(--mq-emerald, #059669);
+  color: var(--mq-emerald);
 }
 
 .mqx-pclose-sheet__detail-value--expense {
-  color: var(--mq-danger, #dc2626);
+  color: var(--mq-danger);
 }
 
 .mqx-pclose-sheet__detail-note {
   grid-column: 1 / -1;
   font-size: 11px;
   font-weight: 650;
-  color: var(--mq-danger, #dc2626);
+  color: var(--mq-danger);
 }
 
 
@@ -799,13 +799,13 @@
   padding: 8px 14px 8px 10px;
   border: none;
   border-radius: 999px 999px 999px 6px;
-  background: linear-gradient(135deg, var(--mq-violet, #7c3aed), var(--mq-violet-deep, #5b21b6));
+  background: linear-gradient(135deg, var(--mq-violet), var(--mq-violet-deep));
   color: #fff;
   font: inherit;
   font-size: var(--mq-fs-caption);
   font-weight: 700;
   cursor: pointer;
-  box-shadow: 0 6px 20px color-mix(in srgb, var(--mq-violet, #7c3aed) 32%, transparent);
+  box-shadow: 0 6px 20px color-mix(in srgb, var(--mq-violet) 32%, transparent);
 }
 
 /* Bottom-sheets (needs/treat-self) должны быть выше хвостика итогов периода. */
@@ -910,7 +910,7 @@
 }
 
 .mqx-level-block__hint--max {
-  color: var(--tg-theme-link-color, #6d28d9);
+  color: var(--tg-theme-link-color, var(--mq-turn));
   font-weight: 600;
 }
 

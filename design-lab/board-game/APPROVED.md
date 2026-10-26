@@ -20,6 +20,8 @@
 - Лёгкий стиль: края 1.5px, объём (нижняя тень) только у нажимаемого — кнопки, фишки, монеты; без сплошных заливок клеток.
 - Роли цвета ADR-014: фиолетовый — действие, Coin Gold — деньги/награды/финиш, изумруд — плюс, красный — только риск.
 - Путь на поле = шаги цели (`victory_config_json`), не счётчик ходов; финиш открывается с `min_period_index_for_victory`, после победы игра продолжается.
+- **Токены (2026-10-26, аудит 2026-10-25 п. 6–8):** legacy `--mq-violet / -deep / --mq-emerald / --mq-danger / --mq-ink / --mq-line` — алиасы v2 (`--mq-turn`, `--mq-gain`, `--mq-risk`, `--mq-board-ink`, `--mq-cell-edge`) и следуют тёмной теме; `--mq-warning` #b45309 (контраст текста ≥ 4.5:1). Движение — `--mq-dur-press/fast/base/slow/scene` (80/150/250/350/500 мс) и `--mq-ease-standard/enter/exit/reward`; `prefers-reduced-motion` — глобально в `tokens.css`.
+- **Стилевой долг в `styles/mqx` только убывает:** новые HEX/rgba (кроме запасного `var(--tg-theme-*, #…)`) и шрифты < 12 px запрещены (`check:style-discipline`), счётчики по файлам — `check:mqx-ratchet` (`frontend-react/scripts/mqx-style-ratchet.json`). Подъём шрифтов до 12 px и сокращение палитры — отдельным раундом lab.
 
 ## Открыто (вне ★)
 

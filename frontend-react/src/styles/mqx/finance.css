@@ -58,8 +58,8 @@
   min-width: 0;
   padding: 10px 12px 9px;
   border-radius: 12px;
-  background: color-mix(in srgb, var(--mq-violet, #7c3aed) 6%, var(--mqx-glass-soft));
-  border: 1px solid color-mix(in srgb, var(--mq-violet, #7c3aed) 14%, transparent);
+  background: color-mix(in srgb, var(--mq-violet) 6%, var(--mqx-glass-soft));
+  border: 1px solid color-mix(in srgb, var(--mq-violet) 14%, transparent);
 }
 
 .mqx-capital-monetka__title {
@@ -68,7 +68,7 @@
   font-weight: 850;
   letter-spacing: 0.02em;
   line-height: 1.25;
-  color: color-mix(in srgb, var(--mq-violet, #7c3aed) 78%, var(--mqx-ink));
+  color: color-mix(in srgb, var(--mq-violet) 78%, var(--mqx-ink));
 }
 
 .mqx-capital-monetka__text {
@@ -122,7 +122,7 @@
   border-bottom: 2px solid color-mix(in srgb, var(--mqx-ink) 45%, transparent);
   transform: rotate(45deg);
   margin-right: 2px;
-  transition: transform 0.15s ease;
+  transition: transform var(--mq-dur-fast) ease;
 }
 
 .mqx-cap-sect[open] > .mqx-cap-sect__head::after {
@@ -155,7 +155,7 @@
 }
 
 .mqx-cap-sect--in {
-  --mqx-cap-sect-accent: var(--mq-emerald, #059669);
+  --mqx-cap-sect-accent: var(--mq-emerald);
 }
 
 .mqx-cap-sect--out {
@@ -195,7 +195,7 @@
 }
 
 .mqx-cap-flow-amt--in {
-  color: var(--mq-emerald, #059669);
+  color: var(--mq-emerald);
 }
 
 .mqx-cap-flow-amt--out {
@@ -500,7 +500,7 @@
 }
 
 .mqx-capital-template-row__accent--ins-mortgage {
-  background: linear-gradient(180deg, #6d28d9, #7c3aed);
+  background: linear-gradient(180deg, var(--mq-turn), #7c3aed);
 }
 
 .mqx-capital-template-row__accent--ins-default {
@@ -600,7 +600,7 @@
 }
 
 .mqx-inline-metric__val--pos {
-  color: var(--mq-emerald, #059669);
+  color: var(--mq-emerald);
 }
 
 .mqx-inline-metric[data-tip]::before {
@@ -618,7 +618,7 @@
   white-space: nowrap;
   opacity: 0;
   pointer-events: none;
-  transition: opacity 0.15s ease, transform 0.15s ease;
+  transition: opacity var(--mq-dur-fast) ease, transform var(--mq-dur-fast) ease;
   z-index: 5;
   box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
 }
@@ -651,7 +651,7 @@
 }
 
 .mqx-metric-glyph--up {
-  color: var(--mq-emerald, #059669);
+  color: var(--mq-emerald);
 }
 
 .mqx-metric-glyph--neg {
@@ -659,11 +659,11 @@
 }
 
 .mqx-metric-glyph--pos {
-  color: var(--mq-emerald, #059669);
+  color: var(--mq-emerald);
 }
 
 .mqx-metric-glyph--term {
-  color: var(--mq-violet-deep, #5b21b6);
+  color: var(--mq-violet-deep);
 }
 
 .mqx-metric-glyph--overdue {
@@ -671,7 +671,7 @@
 }
 
 .mqx-metric-glyph--shield {
-  color: var(--mq-emerald, #059669);
+  color: var(--mq-emerald);
 }
 
 .mqx-metric-glyph--wallet {
@@ -679,7 +679,7 @@
 }
 
 .mqx-metric-glyph--goal {
-  color: var(--mq-emerald, #059669);
+  color: var(--mq-emerald);
 }
 
 .mqx-metric-glyph--warn {
@@ -715,8 +715,8 @@
 }
 
 .mqx-ins-catalog__item.is-on {
-  border-color: var(--mq-violet-deep, #5b21b6);
-  background: color-mix(in srgb, var(--mq-violet, #6d28d9) 10%, var(--mqx-glass-strong));
+  border-color: var(--mq-violet-deep);
+  background: color-mix(in srgb, var(--mq-violet) 10%, var(--mqx-glass-strong));
 }
 
 .mqx-ins-catalog__product {
@@ -1009,7 +1009,7 @@
 }
 
 .mqx-invest-rate__val--neg {
-  color: var(--mq-danger, #dc2626);
+  color: var(--mq-danger);
 }
 
 .mqx-invest-rate__val {
@@ -1462,7 +1462,7 @@ body [class*='modal'] {
   font-weight: 800;
   line-height: 1;
   transition:
-    background 0.15s ease,
+    background var(--mq-dur-fast) ease,
     transform 0.12s ease;
 }
 
@@ -1758,8 +1758,8 @@ body [class*='modal'] {
   background: color-mix(in srgb, var(--tg-theme-secondary-bg-color, var(--bg)) 96%, transparent);
   cursor: pointer;
   transition:
-    border-color 0.15s ease,
-    box-shadow 0.15s ease,
+    border-color var(--mq-dur-fast) ease,
+    box-shadow var(--mq-dur-fast) ease,
     transform 0.12s ease;
 }
 
@@ -1893,9 +1893,9 @@ body [class*='modal'] {
   -webkit-tap-highlight-color: transparent;
   touch-action: manipulation;
   transition:
-    border-color 0.15s ease,
-    box-shadow 0.15s ease,
-    background 0.15s ease;
+    border-color var(--mq-dur-fast) ease,
+    box-shadow var(--mq-dur-fast) ease,
+    background var(--mq-dur-fast) ease;
 }
 
 .mq-game-template-card:disabled {
@@ -2047,15 +2047,15 @@ body [class*='modal'] {
   font: inherit;
   box-sizing: border-box;
   cursor: pointer;
-  background: color-mix(in srgb, var(--mq-violet, #7c3aed) 5%, var(--tg-theme-bg-color, #fff));
+  background: color-mix(in srgb, var(--mq-violet) 5%, var(--tg-theme-bg-color, #fff));
   transition:
-    background 0.15s ease,
+    background var(--mq-dur-fast) ease,
     transform 0.12s ease;
 }
 
 .mqx-scenario-strip--selected {
-  background: color-mix(in srgb, var(--mq-violet, #7c3aed) 10%, var(--tg-theme-bg-color, #fff));
-  box-shadow: 0 0 0 1px color-mix(in srgb, var(--mq-violet, #7c3aed) 28%, transparent);
+  background: color-mix(in srgb, var(--mq-violet) 10%, var(--tg-theme-bg-color, #fff));
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--mq-violet) 28%, transparent);
 }
 
 .mqx-scenario-strip:active:not(:disabled) {
@@ -2063,7 +2063,7 @@ body [class*='modal'] {
 }
 
 .mqx-scenario-strip:focus-visible {
-  outline: 2px solid var(--mq-violet, #7c3aed);
+  outline: 2px solid var(--mq-violet);
   outline-offset: 2px;
 }
 
@@ -2300,7 +2300,7 @@ body [class*='modal'] {
   font-size: var(--mq-fs-small, 11px);
   line-height: 1.38;
   font-weight: 650;
-  color: color-mix(in srgb, var(--mq-violet-deep, #5b21b6) 72%, var(--mqx-ink));
+  color: color-mix(in srgb, var(--mq-violet-deep) 72%, var(--mqx-ink));
 }
 
 .mqx-scenario-strip__trail {
@@ -2308,7 +2308,7 @@ body [class*='modal'] {
   display: grid;
   place-items: center;
   align-self: center;
-  color: var(--mq-violet, #7c3aed);
+  color: var(--mq-violet);
 }
 
 .mqx-goal__top {
@@ -2479,7 +2479,7 @@ body [class*='modal'] {
   font-size: var(--mq-fs-body);
   font-weight: 750;
   cursor: pointer;
-  transition: transform 0.12s cubic-bezier(0.22, 1, 0.32, 1), border-color 0.15s ease, background 0.15s ease;
+  transition: transform 0.12s cubic-bezier(0.22, 1, 0.32, 1), border-color var(--mq-dur-fast) ease, background var(--mq-dur-fast) ease;
 }
 
 .mqx-action:active {
@@ -2492,17 +2492,17 @@ body [class*='modal'] {
 }
 
 .mqx-action--primary {
-  background: linear-gradient(165deg, var(--mq-violet, #7c3aed), var(--mq-violet-deep, #5b21b6));
+  background: linear-gradient(165deg, var(--mq-violet), var(--mq-violet-deep));
   color: #fff;
   border-color: transparent;
   font-weight: 750;
-  box-shadow: 0 4px 14px color-mix(in srgb, var(--mq-violet, #7c3aed) 28%, transparent);
+  box-shadow: 0 4px 14px color-mix(in srgb, var(--mq-violet) 28%, transparent);
 }
 
 .mqx-action--primary:hover {
   filter: brightness(1.05);
   border-color: transparent;
-  background: linear-gradient(165deg, var(--mq-violet, #7c3aed), var(--mq-violet-deep, #5b21b6));
+  background: linear-gradient(165deg, var(--mq-violet), var(--mq-violet-deep));
 }
 
 .mqx-action--primary:active:not(:disabled) {
@@ -2617,8 +2617,8 @@ body [class*='modal'] {
   border-radius: 6px;
   font-size: 10px;
   font-weight: 800;
-  background: color-mix(in srgb, var(--mq-emerald, #059669) 12%, transparent);
-  color: var(--mq-emerald, #059669);
+  background: color-mix(in srgb, var(--mq-emerald) 12%, transparent);
+  color: var(--mq-emerald);
 }
 
 .mqx-cap-meta-v5--empty {
@@ -2627,8 +2627,8 @@ body [class*='modal'] {
 }
 
 .mqx-cap-meta-v5--liab {
-  background: color-mix(in srgb, var(--mq-danger, #dc2626) 12%, transparent);
-  color: var(--mq-danger, #dc2626);
+  background: color-mix(in srgb, var(--mq-danger) 12%, transparent);
+  color: var(--mq-danger);
 }
 
 .mqx-cap-meta-v7 {
@@ -2681,8 +2681,8 @@ body [class*='modal'] {
 
 .mqx-cap-row-action--sell,
 .mqx-cap-row-action--close {
-  border-color: color-mix(in srgb, var(--mq-danger, #dc2626) 22%, var(--mqx-glass-border, var(--mq-line)));
-  color: var(--mq-danger, #dc2626);
+  border-color: color-mix(in srgb, var(--mq-danger) 22%, var(--mqx-glass-border, var(--mq-line)));
+  color: var(--mq-danger);
 }
 
 .mqx-cap-row-action:disabled {
@@ -2814,7 +2814,7 @@ body [class*='modal'] {
 }
 
 .mqx-cap-act-row__icon--debt {
-  background: color-mix(in srgb, var(--mq-danger, #dc2626) 10%, transparent);
+  background: color-mix(in srgb, var(--mq-danger) 10%, transparent);
 }
 
 .mqx-cap-act-row__icon--credit {
@@ -2853,7 +2853,7 @@ body [class*='modal'] {
 }
 
 .mqx-cap-act-list--wrap .mqx-cap-act-row__icon--debt {
-  background: color-mix(in srgb, var(--mq-danger, #dc2626) 14%, transparent);
+  background: color-mix(in srgb, var(--mq-danger) 14%, transparent);
 }
 
 .mqx-cap-act-list--wrap .mqx-cap-act-row__icon--prop {

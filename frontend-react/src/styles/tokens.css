@@ -1,14 +1,29 @@
 ﻿:root {
-  /* ТВОЙ ХОД palette (fallback вне темы Telegram) — см. docs/reference/brandbook/BRANDBOOK.md */
-  --mq-violet: #6d28d9;
+  /* Legacy-палитра — алиасы токенов v2 (ADR-014; аудит 2026-10-25, улучшение 8).
+     Новый код пишет v2 напрямую: --mq-turn, --mq-gain, --mq-risk, --mq-board-ink, --mq-cell-edge.
+     Алиасы сразу следуют тёмной теме v2; контраст текста ≥ 4.5:1 (#059669 давал 3.77, #d97706 — 3.19). */
+  --mq-violet: var(--mq-turn);
+  /* Не алиас: --mq-turn-deep (#4c1d95) заметно темнее на больших фонах (итоги хода) — без раунда lab не меняем. */
   --mq-violet-deep: #5b21b6;
-  --mq-emerald: #059669;
-  --mq-emerald-soft: rgba(5, 150, 105, 0.14);
-  --mq-danger: #dc2626;
-  --mq-danger-soft: rgba(220, 38, 38, 0.12);
-  --mq-warning: #d97706;
-  --mq-ink: #0f1115;
-  --mq-line: #e5e7eb;
+  --mq-emerald: var(--mq-gain);
+  --mq-emerald-soft: var(--mq-gain-soft);
+  --mq-danger: var(--mq-risk);
+  --mq-danger-soft: var(--mq-risk-soft);
+  --mq-warning: #b45309;
+  --mq-ink: var(--mq-board-ink);
+  --mq-line: var(--mq-cell-edge);
+
+  /* Motion (аудит 2026-10-25, улучшение 6): длительности и кривые — только через токены.
+     Значения совпадают с уже используемыми в styles/mqx, чтобы перевод на токены не менял ощущения. */
+  --mq-dur-press: 80ms; /* нажатие */
+  --mq-dur-fast: 150ms; /* смена состояния, чип, hover */
+  --mq-dur-base: 250ms; /* появление элемента, вкладка */
+  --mq-dur-slow: 350ms; /* лист, модалка, карта события */
+  --mq-dur-scene: 500ms; /* акты итогов хода, награда */
+  --mq-ease-standard: ease;
+  --mq-ease-enter: cubic-bezier(0.22, 1, 0.36, 1); /* вход с замедлением */
+  --mq-ease-exit: ease-in; /* уход с ускорением */
+  --mq-ease-reward: cubic-bezier(0.34, 1.5, 0.64, 1); /* overshoot — только монета/награда */
 
   /* —— Токены v2 (ADR-014, ★ BG-1 «настольная игра про деньги») ——
      Роли: фиолет — ход/действие, Coin Gold — деньги/награды/финиш,
@@ -106,6 +121,7 @@
     --mq-gain-soft: #12302a;
     --mq-risk: #f87171;
     --mq-risk-soft: #3b1717;
+    --mq-warning: #fbbf24;
   }
 
   #social .button-icon {
@@ -131,6 +147,28 @@
   --mq-gain-soft: #12302a;
   --mq-risk: #f87171;
   --mq-risk-soft: #3b1717;
+  --mq-warning: #fbbf24;
+}
+
+/* Уменьшение движения — глобально, а не точечными блоками в каждом файле:
+   анимации и переходы почти мгновенны (события *end всё равно срабатывают), бесконечные — один раз. */
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --mq-dur-press: 0.01ms;
+    --mq-dur-fast: 0.01ms;
+    --mq-dur-base: 0.01ms;
+    --mq-dur-slow: 0.01ms;
+    --mq-dur-scene: 0.01ms;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }
 
 body {

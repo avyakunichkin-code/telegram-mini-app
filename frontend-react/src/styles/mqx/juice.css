@@ -19,14 +19,14 @@
   opacity: 0;
   font-size: 22px;
   font-weight: 800;
-  color: var(--mq-emerald, #059669);
-  text-shadow: 0 2px 12px color-mix(in srgb, var(--mq-emerald, #059669) 40%, transparent);
+  color: var(--mq-emerald);
+  text-shadow: 0 2px 12px color-mix(in srgb, var(--mq-emerald) 40%, transparent);
   z-index: 12;
   font-variant-numeric: tabular-nums;
 }
 
 .mqx-juice-flyout--active {
-  animation: mqx-juice-fly-up 0.85s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  animation: mqx-juice-fly-up 0.85s var(--mq-ease-enter) forwards;
 }
 
 .mqx-juice-toast {
@@ -36,8 +36,8 @@
   bottom: 14px;
   padding: 10px 12px;
   border-radius: 12px;
-  background: color-mix(in srgb, var(--mq-emerald, #059669) 12%, var(--tg-theme-bg-color, #fff));
-  border: 1px solid color-mix(in srgb, var(--mq-emerald, #059669) 35%, transparent);
+  background: color-mix(in srgb, var(--mq-emerald) 12%, var(--tg-theme-bg-color, #fff));
+  border: 1px solid color-mix(in srgb, var(--mq-emerald) 35%, transparent);
   display: flex;
   align-items: center;
   gap: 10px;
@@ -45,7 +45,7 @@
   font-weight: 700;
   transform: translateY(120%);
   opacity: 0;
-  transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.25s ease;
+  transition: transform var(--mq-dur-slow) var(--mq-ease-enter), opacity var(--mq-dur-base) ease;
   z-index: 11;
   color: var(--mqx-ink, var(--tg-theme-text-color, #0f1115));
 }
@@ -59,7 +59,7 @@
   width: 28px;
   height: 28px;
   border-radius: 8px;
-  background: var(--mq-emerald, #059669);
+  background: var(--mq-emerald);
   color: #fff;
   display: grid;
   place-items: center;
@@ -68,8 +68,8 @@
 }
 
 .mqx-action-chip.mqx-juice-chip--celebrate {
-  animation: mqx-juice-chip-pop 0.5s cubic-bezier(0.34, 1.5, 0.64, 1);
-  box-shadow: 0 0 0 3px color-mix(in srgb, var(--mq-emerald, #059669) 35%, transparent);
+  animation: mqx-juice-chip-pop var(--mq-dur-scene) var(--mq-ease-reward);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--mq-emerald) 35%, transparent);
 }
 
 .mqx-finance-chip.mqx-juice-resource--gain {
@@ -79,15 +79,15 @@
 
 .mqx-finance-chip.mqx-juice-resource--gain .mqx-finance-chip__value {
   transform: scale(1.06);
-  color: var(--mq-emerald, #059669);
-  transition: color 0.2s ease, transform 0.35s cubic-bezier(0.34, 1.4, 0.64, 1);
+  color: var(--mq-emerald);
+  transition: color 0.2s ease, transform var(--mq-dur-slow) cubic-bezier(0.34, 1.4, 0.64, 1);
 }
 
 .mqx-finance-chip.mqx-juice-resource--gain::after {
   content: '';
   position: absolute;
   inset: 0;
-  background: radial-gradient(circle at 30% 20%, color-mix(in srgb, var(--mq-emerald, #059669) 35%, transparent), transparent 65%);
+  background: radial-gradient(circle at 30% 20%, color-mix(in srgb, var(--mq-emerald) 35%, transparent), transparent 65%);
   pointer-events: none;
   animation: mqx-juice-flash 0.55s ease-out;
 }
@@ -124,7 +124,7 @@
   align-items: stretch;
   justify-content: flex-end;
   padding: 20px 18px calc(16px + var(--tma-tabbar-inset, 64px));
-  background: color-mix(in srgb, var(--mq-violet-deep, #5b21b6) 88%, #0f1115);
+  background: color-mix(in srgb, var(--mq-violet-deep) 88%, #0f1115);
   color: #fff;
   text-align: center;
   opacity: 0;
@@ -173,6 +173,8 @@
 }
 
 .mqx-juice-ritual__title {
+  /* Глобальный h2 (shell.css) красил заголовок в почти чёрный на фиолетовом (~2:1) — берём цвет ритуала. */
+  color: inherit;
   margin: 0;
   font-size: 26px;
   font-weight: 800;
@@ -223,7 +225,7 @@
 }
 
 .mqx-juice-ritual__balance-delta--pos {
-  color: color-mix(in srgb, var(--mq-emerald, #059669) 85%, #fff);
+  color: color-mix(in srgb, var(--mq-emerald) 85%, #fff);
 }
 
 .mqx-juice-ritual__balance-delta--neg {
@@ -296,7 +298,7 @@
 }
 
 .mqx-juice-ritual__detail-value--income {
-  color: color-mix(in srgb, var(--mq-emerald, #059669) 80%, #fff);
+  color: color-mix(in srgb, var(--mq-emerald) 80%, #fff);
 }
 
 .mqx-juice-ritual__detail-value--expense {
@@ -369,11 +371,11 @@
 }
 
 .mqx-juice-ritual__beat-icon--pos {
-  background: color-mix(in srgb, var(--mq-emerald, #059669) 55%, transparent);
+  background: color-mix(in srgb, var(--mq-emerald) 55%, transparent);
 }
 
 .mqx-juice-ritual__beat-icon--neg {
-  background: color-mix(in srgb, var(--mq-danger, #dc2626) 45%, transparent);
+  background: color-mix(in srgb, var(--mq-danger) 45%, transparent);
 }
 
 .mqx-juice-ritual__dismiss {
@@ -384,7 +386,7 @@
   border-radius: 12px;
   border: none;
   background: #fff;
-  color: var(--mq-violet-deep, #5b21b6);
+  color: var(--mq-violet-deep);
   font-weight: 800;
   font-size: 14px;
   cursor: pointer;
@@ -419,9 +421,9 @@
   border: none;
   padding: 0;
   margin: 0;
-  background: color-mix(in srgb, var(--mqx-ink, #0f1115) 55%, transparent);
+  background: color-mix(in srgb, var(--mqx-ink) 55%, transparent);
   opacity: 0;
-  transition: opacity 0.25s ease;
+  transition: opacity var(--mq-dur-base) ease;
   cursor: pointer;
 }
 
@@ -437,11 +439,11 @@
   padding: 14px;
   border-radius: 18px;
   background: var(--tg-theme-bg-color, #fff);
-  border: 1px solid color-mix(in srgb, var(--mqx-ink, #0f1115) 10%, transparent);
-  box-shadow: 0 16px 48px color-mix(in srgb, var(--mqx-ink, #0f1115) 25%, transparent);
+  border: 1px solid color-mix(in srgb, var(--mqx-ink) 10%, transparent);
+  box-shadow: 0 16px 48px color-mix(in srgb, var(--mqx-ink) 25%, transparent);
   transform: translateY(24px) scale(0.96);
   opacity: 0;
-  transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.25s ease;
+  transition: transform var(--mq-dur-slow) var(--mq-ease-enter), opacity var(--mq-dur-base) ease;
 }
 
 .mqx-juice-warn-root--open .mqx-juice-warn-modal {
@@ -480,7 +482,7 @@
 .mqx-juice-warn-modal__text {
   margin: 8px 0 0;
   font-size: 13px;
-  color: color-mix(in srgb, var(--mqx-ink, #0f1115) 68%, transparent);
+  color: color-mix(in srgb, var(--mqx-ink) 68%, transparent);
   line-height: 1.45;
 }
 
@@ -489,11 +491,11 @@
   padding-left: 18px;
   font-size: 12px;
   line-height: 1.4;
-  color: color-mix(in srgb, var(--mqx-ink, #0f1115) 70%, transparent);
+  color: color-mix(in srgb, var(--mqx-ink) 70%, transparent);
 }
 
 .mqx-juice-warn-modal__text strong {
-  color: var(--mq-danger, #dc2626);
+  color: var(--mq-danger);
   font-weight: 750;
 }
 
@@ -509,8 +511,8 @@
 }
 
 .mqx-juice-warn-modal__btn-skip {
-  border-color: color-mix(in srgb, var(--mq-danger, #dc2626) 35%, transparent) !important;
-  color: var(--mq-danger, #dc2626) !important;
+  border-color: color-mix(in srgb, var(--mq-danger) 35%, transparent) !important;
+  color: var(--mq-danger) !important;
 }
 
 @keyframes mqx-juice-flash {

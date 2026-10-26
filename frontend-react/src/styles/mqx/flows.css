@@ -23,7 +23,7 @@
 
 .pg-auth-logo .mqx-brand-logo--full {
   max-width: min(280px, 92%);
-  filter: drop-shadow(0 10px 22px color-mix(in srgb, var(--mq-violet, #6d28d9) 22%, transparent))
+  filter: drop-shadow(0 10px 22px color-mix(in srgb, var(--mq-violet) 22%, transparent))
     drop-shadow(0 4px 12px rgba(0, 0, 0, 0.2));
 }
 
@@ -34,17 +34,17 @@
   min-width: 0;
   padding: 12px;
   border-radius: 20px;
-  background-color: var(--mqx-onboarding-bubble-bg, #ffffff);
+  background-color: var(--mqx-onboarding-bubble-bg);
   background-image: linear-gradient(
     165deg,
-    color-mix(in srgb, var(--mq-violet, #6d28d9) 7%, var(--mqx-onboarding-bubble-bg, #ffffff)) 0%,
-    var(--mqx-onboarding-bubble-bg, #ffffff) 38%
+    color-mix(in srgb, var(--mq-violet) 7%, var(--mqx-onboarding-bubble-bg)) 0%,
+    var(--mqx-onboarding-bubble-bg) 38%
   );
   border: 1px solid var(--mqx-onboarding-bubble-border);
   /* Без крупного blur наружу — не раздувает scrollport и не клипается асимметрично */
   box-shadow:
-    0 0 0 1px color-mix(in srgb, var(--mq-violet, #6d28d9) 8%, transparent),
-    0 6px 16px color-mix(in srgb, var(--mq-violet, #6d28d9) 10%, transparent);
+    0 0 0 1px color-mix(in srgb, var(--mq-violet) 8%, transparent),
+    0 6px 16px color-mix(in srgb, var(--mq-violet) 10%, transparent);
 }
 
 .pg-auth-panel__head {
@@ -61,7 +61,7 @@
   height: 72px;
   flex-shrink: 0;
   margin: 0 !important;
-  filter: drop-shadow(0 4px 10px color-mix(in srgb, var(--mq-violet, #6d28d9) 20%, transparent));
+  filter: drop-shadow(0 4px 10px color-mix(in srgb, var(--mq-violet) 20%, transparent));
 }
 
 .pg-auth-panel__voice {
@@ -97,7 +97,7 @@
 .pg-voice-em,
 .mqx-voice-em {
   font-weight: var(--mq-fw-heavy, 800);
-  color: var(--mq-warning, #d97706);
+  color: var(--mq-warning);
 }
 
 .pg-auth-panel__link,
@@ -146,7 +146,7 @@
   padding: 0;
   font: inherit;
   font-weight: 650;
-  color: var(--mq-violet-deep, #5b21b6);
+  color: var(--mq-violet-deep);
   text-decoration: underline;
   text-underline-offset: 2px;
   cursor: pointer;
