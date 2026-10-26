@@ -498,3 +498,17 @@ body.mqx-page--guidance-active .mqx-sheet-root--portal {
   gap: 8px;
   margin-bottom: 4px;
 }
+
+/* Тосты (ToastHost): над таббаром, а при полоске Монетки — над ней, иначе тост закрывает её текст. */
+.mq-toast-host {
+  bottom: max(
+    calc(var(--tma-tabbar-inset, 64px) + var(--mq-sp-7) + var(--mq-sp-5)),
+    calc(var(--mqx-guidance-strip-lift, 0px) + var(--mq-sp-3))
+  );
+}
+
+/* Пунктир к якорю не рисуем, пока якорь закрыт оверлеем (карусель событий, итоги хода). */
+body.mqx-events-overlay-open .mqx-guidance-anchor-link,
+body:has(.mqx-juice-ritual-root--open) .mqx-guidance-anchor-link {
+  display: none;
+}

@@ -61,10 +61,8 @@ export async function startNewGameFromMenu(page) {
   await expect(page.getByRole('button', { name: 'Завершить ход и перейти к следующему' })).toBeVisible();
 }
 
-/**
- * Контент вкладки игры. На экране два вложенных <main> (оболочка и скролл вкладки) — берём внутренний.
- */
-export const gameMain = (page) => page.getByRole('main').last();
+/** Контент вкладки игры — единственный ориентир main (скролл вкладки *Premium). */
+export const gameMain = (page) => page.getByRole('main');
 
 /** Текущая сумма «На счёте» на главной, в рублях. */
 export async function readCash(page) {

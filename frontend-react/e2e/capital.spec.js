@@ -12,7 +12,10 @@ test.describe('Капитал', () => {
     await page.getByRole('button', { name: 'Вложить' }).click();
     await expect(page.getByRole('heading', { name: 'Капитал' })).toBeVisible();
     await page.getByText('Облигации', { exact: true }).click();
-    await page.getByRole('textbox', { name: 'Сумма' }).fill('10000');
+    const amount = page.getByRole('textbox', { name: 'Сумма' });
+    await amount.fill('10000');
+    // Регресс 2026-10-26: поле показывало «10000» без разрядов.
+    await expect(amount).toHaveValue(/^10\s000$/);
     await page.getByRole('button', { name: 'Купить облигации' }).click();
     await expect(page.getByText('Облигации добавлены')).toBeVisible();
 

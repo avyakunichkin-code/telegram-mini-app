@@ -36,3 +36,9 @@ export function parseNumLoose(str, fallback = 0) {
   const n = typeof str === 'number' ? str : Number(String(str).replace(',', '.'));
   return Number.isFinite(n) ? n : fallback;
 }
+
+/** Целая сумма для поля ввода: «100 000» (разделитель — как в MoneyText), 0 → пусто. */
+export function formatIntGrouped(n) {
+  const v = Math.floor(Number(n) || 0);
+  return v > 0 ? v.toLocaleString('ru-RU') : '';
+}

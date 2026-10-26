@@ -41,4 +41,13 @@ test.describe('Регистрация и первый ход', () => {
     expect(await readCash(page)).toBe(balance);
     await expect(guidanceStrip(page)).toContainText('Новый ход');
   });
+
+  test('перезагрузка во время партии возвращает в игру, а не в меню', async ({ page, player }) => {
+    await startNewGameFromMenu(page);
+    // Регресс 2026-10-26: после F5 / обновления PWA игрок оказывался в «Меню».
+    await page.reload();
+    await expect(page.getByRole('button', { name: 'Завершить ход и перейти к следующему' })).toBeVisible();
+    // Регресс 2026-10-26: вложенные <main> — ориентир должен быть один.
+    await expect(page.getByRole('main')).toHaveCount(1);
+  });
 });

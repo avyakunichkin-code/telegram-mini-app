@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Spinner } from '@telegram-apps/telegram-ui';
 import { HashRouter, Routes, Route, useNavigate } from 'react-router-dom';
 import { AppRoot } from '@telegram-apps/telegram-ui';  // импортируем AppRoot
@@ -25,6 +25,7 @@ import { API } from './api';
 import { showNotification } from './components/notifications';
 import { startGameWithStudentTemplate } from './utils/startGame';
 import { AppBootstrapGate } from './components/AppBootstrapGate';
+import { readResumeScreen, rememberScreen } from './utils/gameScreenSession';
 
 function GameAppFlowShell({ children }) {
   return (
@@ -37,9 +38,14 @@ function GameAppFlowShell({ children }) {
 
 function GameApp() {
   const navigate = useNavigate();
-  const [screen, setScreen] = useState('start'); // start | newGame | gameTemplates | game
+  // start | newGame | gameTemplates | game; партия переживает перезагрузку вкладки.
+  const [screen, setScreen] = useState(readResumeScreen);
   const [newGameProfileName, setNewGameProfileName] = useState('');
   const { logout } = useAuth();
+
+  useEffect(() => {
+    rememberScreen(screen);
+  }, [screen]);
 
   /**
    * «Новая игра» сразу ведёт к выбору жизни (шага «Игра / План» нет — ADR-013, GO-01).
@@ -73,6 +79,7 @@ function GameApp() {
   };
 
   const handleLogout = () => {
+    rememberScreen('start');
     logout();
     navigate('/login', { replace: true });
   };

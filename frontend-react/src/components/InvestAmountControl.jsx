@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react';
 import { MoneyText } from './MoneyText';
 import { clampInvestAmount, investAmountStep } from '../constants/investProducts';
+import { formatIntGrouped } from '../utils/numberFields';
 
 /**
  * Сумма: подчёркнутый ввод + ползунок 0 … maxAmount.
@@ -45,7 +46,7 @@ export function InvestAmountControl({
         inputMode="numeric"
         autoComplete="off"
         className="mqx-invest-amount__input"
-        value={value === 0 ? '' : String(value)}
+        value={formatIntGrouped(value)}
         placeholder="0"
         disabled={disabled}
         aria-label={label}
