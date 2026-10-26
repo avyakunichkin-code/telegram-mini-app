@@ -66,6 +66,8 @@ export default defineConfig(({ mode }) => {
       }),
     ],
     base,
+    // Отдельный кэш для e2e-стенда (playwright.config.js), чтобы не делить его с dev-сервером.
+    cacheDir: env.VITE_CACHE_DIR || 'node_modules/.vite',
     server: {
       proxy: {
         '/api': {

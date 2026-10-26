@@ -50,6 +50,7 @@ Backend: FastAPI, SQLAlchemy, PostgreSQL. Frontend: React + Vite, `@telegram-app
 | Backend тесты | `cd backend && python -m pytest -q` (Windows: `py -3 -m pytest -q`; тесты на SQLite, БД не нужна). Зависимости ставить **из `backend/`** (`-e ../packages/fincore`) |
 | Ядро fincore | входит в backend pytest (`testpaths` в `backend/pytest.ini`); отдельно — `cd packages/fincore && python -m pytest -q` |
 | Frontend | `cd frontend-react && npm run build` · `npm run test:unit` · PR: `npm run check:guardrails` |
+| UI-сценарии (Playwright, системный Chrome) | `cd frontend-react && npm run test:e2e` — сам поднимает стенд: backend на SQLite :8011 + Vite :5181 ([`e2e/README.md`](frontend-react/e2e/README.md)) |
 | Баланс 30–40 периодов | `/balance-playtest` или `cd backend && python scripts/balance_playtest.py` |
 | Свод принципов | `py -3 scripts/check_conventions.py` |
 | AI-конфиг (skills/rules/agents/hooks) | `node .claude/skills/skill-test/_static-check.mjs` · `node .claude/skills/skill-test/_claude-config-check.mjs` |
