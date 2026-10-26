@@ -178,6 +178,8 @@ Gate каждого среза: **balance diff = 0** относительно SP
 | SPL-207 | `fincore.metrics` (ADR-009): DTI, норма сбережений, месяцы подушки, net worth | unit + сверка с overview |
 | SPL-208 | Контракт import-linter переводим из *report* в *enforce*; шимы из SPL-202 удаляем | CI падает при нарушении |
 
+**Статус фазы 2 (сверка 2026-10-26): ✅ SPL-201…208 закрыты** (`packages/fincore/src/fincore`: `money`, `annuity`, `household`, `expenses`, `month`, `forecast`, `metrics`, `liabilities`, `insurance`, `invest`; шимы удалены, контракт `fincore-pure` — enforce в `backend/.importlinter`, проверяется `tests/test_import_boundaries.py`). Фазы 0 (SPL-001…003) и 1 (SPL-101…103) тоже ✅. Оговорка: «CI падает при нарушении» выполняется локально — backend-CI в репозитории нет (PR-04).
+
 **Статус (2026-10-21, ветка `claude/spl-fincore`):**
 - **SPL-201 ✅.** `packages/fincore`: pyproject, `money`, тесты пакета. Подключение — `-e ../packages/fincore` в `backend/requirements.txt` (ставить из `backend/`). uv workspace не заводили: pip-path-dependency хватает, отдельный инструмент не нужен.
 - **SPL-202 ✅.**
@@ -307,6 +309,8 @@ Gate каждого среза: **balance diff = 0** относительно SP
 |----|------|------|
 | SPL-301 | `config`, `database` (session factory), `idempotency`, `health`, единый формат ошибок API → platform | game-api на platform, pytest зелёный |
 | SPL-302 | Auth-примитивы (JWT с `iss`/`aud` по приложению, Argon2id, rehash) → platform. Пользователи и модели остаются в приложении | токен game не принимается plan-api (тест появится в SPL-402) |
+
+**Статус фазы 3 (сверка 2026-10-26): ⬜ не начата** (`packages/platform` нет). План ставит предусловия PR-05, PR-06, PR-08: PR-06 ✅, PR-05 🟡 (`SECRET_KEY` ✅, `/api/health` при мёртвой БД всё ещё 200), **PR-08 ⬜** (старт API делает `create_all` + `ensure_schema_compatibility`). Пока PR-05/PR-08 не закрыты, SPL-301 перенесёт долг в platform.
 
 **Gate α:** дальше идём только после Pre-Alpha gate игры (фаза 0 [`PLAN_backlog_may2026`](PLAN_backlog_may2026.md)).
 

@@ -59,6 +59,8 @@ GO-01 желателен **до WAVE1** (gate сводного плана). GO-0
 
 ### GO-02 — API только `game`
 
+**Статус (сверка 2026-10-26):** ⬜ не сделано. `validate_save_kind` (`services/game/templates.py`) принимает `game` и `plan`, `services/game/start.py` ещё содержит ветки `save_kind == "plan"`. GO-03 (`BaseParamsScreen`, plan-ветка `services/expenses`, колонка Plan в Watchtower), GO-04 (не проверено), GO-05 — тоже не начаты.
+
 | | |
 |--|--|
 | **Слой** | Backend + tests |

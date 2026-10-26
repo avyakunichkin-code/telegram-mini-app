@@ -43,6 +43,55 @@ aliases:
 
 ---
 
+## Статус задач (сверка с кодом, 2026-10-26)
+
+Легенда: ✅ подтверждено кодом/тестом · 🟡 сделано частично · ⬜ не найдено в коде · ❓ не проверялось (процесс, люди, ops) · ✖ отменено. Сверка — по ветке `new_functions` (`9f765a3`); сам план по-прежнему DRAFT.
+
+| ID | Статус | Основание |
+|----|--------|-----------|
+| PR-01 | ✅ | `services/period/close.py` (идемпотентность), `tests/unit/game/test_time_next_lock.py` |
+| PR-02 | ✅ | `salary.py`, `events/choose.py`, тесты `test_salary_lock`, `test_choose_lock`; FE `api/client.js` + `utils/idempotencyKey.js` |
+| PR-03 | ✅ | `period_actions.py` → 410; `test_complete_period_gone.py` (integration + unit) |
+| PR-04 | 🟡 | `.github/workflows/ci.yml` (PR + `workflow_call`): backend `pytest -q` (с `packages/fincore`), frontend `test:unit`, `check:guardrails`, `build`; `deploy-app.yml` → `needs: test`. Локально все команды зелёные (637 passed). Осталось вручную: Settings → Branches → main → required checks «Backend pytest», «Frontend unit + guardrails»; первый прогон на GitHub (Python 3.14) не проверен |
+| PR-05 | 🟡 | `SECRET_KEY` без дефолта в prod — ✅ (`config.py`). `/api/health` при мёртвой БД отдаёт 200 с `status: error` вместо 503 — ⬜ |
+| PR-06 | ✅ | `auth.py`: argon2id, legacy `salt:sha256`, `password_needs_rehash` |
+| PR-07 | 🟡 | Бэкенд: `PeriodClosePreview` в `schemas.py`, прогноз на `fincore.forecast`. FE `period_close_preview` не использует — превью на CTA и chip «подушка ≠ жизнь» не выведены |
+| PR-08 | ⬜ | `backend/main.py` на старте по-прежнему `create_all` + `ensure_schema_compatibility()`; канон `db.sh migrate` не единственный путь |
+| PR-09 | ❓ | Freeze-чеклист (TG-шаблон 4, CTA советника) — конфиг/ops, в коде не проверяется |
+| PR-14 | ✅ | `events_spawn_failed` в `period.py`, `schemas.py`, FE `periodCloseDisplay.js`; тест `test_period_event_pool_failure.py`; план approved |
+| GO-01 | ✅ | Сделан 2026-10-15 (см. `PLAN_game-only`) |
+| GO-02 | ⬜ | `validate_save_kind` допускает `game` и `plan`; `services/game/start.py` ещё ветвится на `plan` |
+| PR-10 | ✅ | ★ BG-3 «одна рамка на уровень» в prod (`d0186c9`); метрика Q1≥3.5 не измерялась |
+| PR-11 | ❓ | Grep-проверка «ход vs месяц» по UI не делалась |
+| PR-12 | ❓ | Скролл к salary в O3 / CLS strip — только в Playwright-сценариях, отдельно не сверялось |
+| PR-13 | ❓ | Решение «skip событий close» в `SPEC_PRODUCT` не найдено (grep по «skip» пуст) |
+| PR-15 | ❓ | `PRE_ALPHA_WAVE1_OPS.md` есть; `PRE_ALPHA_WAVE1_RESULTS.md` — draft, пустой шаблон |
+| PR-16 | ⬜ | Волна 10–20 не проведена (результаты не заполнены). Фаза 0 `PLAN_backlog_may2026` не закрыта |
+| PR-17 | ⬜ | `last_seen_at` нет ни в коде, ни в миграциях |
+| PR-18 | ⬜ | Акт 1 победы не сделан; инварианты баланса INV-1 падают на всех 4 шаблонах (DOC_SYNC_LOG 2026-10-25) |
+| PR-19 | ⬜ | Spec на правило подушки/burn не найден |
+| PR-20 | ❓ | Z-index оверлея (α-FB-19) — вне сверки |
+| GO-03 | ⬜ | `BaseParamsScreen`, `expenses/service.py` (plan-ветка), колонка Plan в Watchtower и `adminPlayerColumns` на месте |
+| GO-04 | ❓ | `mode: plan` в `data/events` не найден; `EventDefinition.mode` в коде не сверялся |
+| PR-21 | ⬜ | Зависит от PR-18 |
+| PR-22 | 🟡 | Поле `cooldown_periods` в каталоге есть; эффект на повторы (α-FB-03) не измерялся |
+| PR-23 | ⬜ | Информационный слот событий (EVT1) не найден |
+| PR-24 | ❓ | YAML-пак: в 2026-10 добавлены цепочки A1–A3, B3, freelance/used_car; тематический пак 8–10 ключей не сверялся |
+| PR-25 | ⬜ | `game/period.py` по-прежнему импортирует `services.events.service` |
+| PR-26 | ❓ | Empty-состояние Капитала: есть `capital.spec.js` (e2e), `CapitalActionsPanel`; α-FB-06 не сверялся |
+| PR-27 | ❓ | Ритуал close 3 строки — не сверялся |
+| PR-28 | ⬜ | `definition_key` в `admin/` не найден |
+| PR-29 | ⬜ | Player TG D+7 / `/quiet` не найдены |
+| PR-30 | ⬜ | Экрана достижений в `App.jsx` нет |
+| PR-31 | ⬜ | Sentry не подключён |
+| PR-32…34 | ⬜ | Не начаты |
+| GO-05 | ⬜ | Зависит от GO-02/03 и SQL-аудита |
+| PR-35 | ✖ | Cancelled (ADR-013); Plan теперь — эпик SPL |
+
+**Итог по фазам:** P0 закрыт на 6 из 10 (PR-04, PR-08 не сделаны; PR-05, PR-07 частично; PR-09 вне кода). Gate «можно звать людей» по пунктам 2 (required CI) и 4 (честный close на CTA) **не выполнен**.
+
+---
+
 ## Ключевые выводы
 
 - **Главный технический риск:** регрессия экономики уезжает в Pages без pytest, а `POST /time/next` (и choose/salary) без lock закрывает **два хода** или удваивает деньги. Игрок и баланс-sim больше не источник истины.

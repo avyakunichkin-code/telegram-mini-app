@@ -21,7 +21,12 @@ permissions:
   id-token: write
 
 jobs:
+  # PR-04: Pages публикуется только после backend pytest и frontend unit/guardrails/build.
+  test:
+    uses: ./.github/workflows/ci.yml
+
   deploy:
+    needs: test
     runs-on: ubuntu-latest
     environment:
       name: github-pages
