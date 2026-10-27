@@ -6,8 +6,8 @@ last_reviewed: 2026-10-26
 tracks: spl, plan-v1, family-checkup
 epic_id: SPL
 task_id: SPL-401
-idea: vision/ideas/plan-financial-assistant.md
-plan: plans/PLAN_game-plan-split.md
+idea: plan/vision/plan-financial-assistant.md
+plan: plan/ROADMAP.md
 adr: decisions/ADR-016-two-products-shared-fincore.md
 related: decisions/ADR-009-metrics-dictionary-tb1.md
 tags:
@@ -25,7 +25,7 @@ aliases:
 
 **Статус:** approved владельцем продукта 2026-10-26.
 
-**Gate реализации:** код — только после Pre-Alpha gate игры (D4) и SPL-302 (`packages/platform`). Этот spec можно утверждать сейчас.
+**Gate реализации (ред. 2026-10-27, D4):** **рабочий прототип** (`apps/plan-api`, `apps/plan-web`) — сейчас: только поверх `fincore`, хранилище в памяти, код входа в ответе (`dev_code`), без деплоя и реальных пользователей. **Продуктовая реализация** — своя БД `plan`, реальный вход, хостинг в РФ, деплой (SPL-402+) — после Pre-Alpha gate игры, SPL-302 (`packages/platform`) и юриста. Роадмап — [`ROADMAP.md`](../ROADMAP.md).
 
 ## Assumptions
 
@@ -319,7 +319,8 @@ cd apps/plan-web && npm run build && npm run test:unit && npm run test:e2e
 
 | Artifact | Link |
 |----------|------|
-| Idea | [`vision/ideas/plan-financial-assistant.md`](../../vision/ideas/plan-financial-assistant.md) |
+| Idea | [`plan/vision/plan-financial-assistant.md`](../vision/plan-financial-assistant.md) |
 | ADR | [ADR-016](../../decisions/ADR-016-two-products-shared-fincore.md), метрики — [ADR-009](../../decisions/ADR-009-metrics-dictionary-tb1.md) |
-| Plan | [`plans/PLAN_game-plan-split.md`](../../plans/PLAN_game-plan-split.md) — SPL-401; дальше SPL-402 (plan-api), SPL-403 (ui-kit, api-client), SPL-404 (plan-web, lab), SPL-405 (CI), SPL-406 (деплой) |
+| Roadmap | [`plan/ROADMAP.md`](../ROADMAP.md) — P0 рабочий прототип; после gate SPL-402 (plan-api), SPL-403 (ui-kit, api-client), SPL-404 (plan-web, lab), SPL-405 (CI), SPL-406 (деплой) |
+| Ядро (план выноса) | [`plans/PLAN_game-plan-split.md`](../../plans/PLAN_game-plan-split.md) — SPL-0xx…3xx |
 | Ядро | [`packages/fincore`](../../../packages/fincore/README.md) |

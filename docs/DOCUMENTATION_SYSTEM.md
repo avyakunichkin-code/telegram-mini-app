@@ -27,6 +27,8 @@ aliases:
 
 Карта: [`README.md`](README.md). Трассировка: [`TRACEABILITY.md`](TRACEABILITY.md).
 
+**Направления (с 2026-10-27).** Таблица выше — слои документов **игры**. Продукт **Plan** ([ADR-016](decisions/ADR-016-two-products-shared-fincore.md)) живёт в [`plan/`](plan/README.md) с теми же слоями внутри (`vision/`, `specs/`, `plans/`) и своим `ROADMAP.md`. Ядро (`fincore`, `platform`) — ADR в `decisions/` и [`plans/PLAN_game-plan-split.md`](plans/PLAN_game-plan-split.md). Карта роадмапов — [`ROADMAPS.md`](ROADMAPS.md). Порядок канона C-1 действует внутри направления: для Plan spec — `plan/specs/SPEC_*.md`.
+
 **Остаётся улучшать:** сверка оглавления `SPEC_PRODUCT` (раздел 0) и «Часть II» в evolution-документе через ссылки, не дублирование; нарезка MQ-* для G1; ADR по миграции `mode`.
 
 ---

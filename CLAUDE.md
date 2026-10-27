@@ -17,6 +17,7 @@ aliases:
 | [`CONVENTIONS.md`](CONVENTIONS.md) | Принципы: соответствует / нарушает |
 | [`docs/foundation/SPEC_PRODUCT.md`](docs/foundation/SPEC_PRODUCT.md) | Продукт, цикл, экономика |
 | [`docs/DOCUMENTATION_SYSTEM.md`](docs/DOCUMENTATION_SYSTEM.md) | idea → spec → plan → tasks |
+| [`docs/ROADMAPS.md`](docs/ROADMAPS.md) | Роадмапы направлений: Game, Plan ([`docs/plan/`](docs/plan/README.md)), ядро |
 | [`docs/audits/README.md`](docs/audits/README.md) | Снимки аудитов: `product/`, `engineering/`, `qa/`, `ux/`, `liveops/` |
 | [`docs/agents/SKILL_DOC_MAP.md`](docs/agents/SKILL_DOC_MAP.md) | Фаза → скилл → docs |
 | [`backend/app/README.md`](backend/app/README.md) | Домены backend, карта API |
@@ -32,7 +33,7 @@ aliases:
 Открытый период → действия → **«Завершить ход»** (`POST /api/game/time/next` → `process_period_end`) → новый период.
 
 - **`save_kind`:** только **`game`** — `game_starter_templates` + `template_key`. Режим Plan внутри игры **снят** ([ADR-013](docs/decisions/ADR-013-game-only-drop-plan-mode.md), [C-2](CONVENTIONS.md)); вырезание кода — [`PLAN_game-only`](docs/plans/PLAN_game-only.md).
-- **Plan — отдельный продукт** (финансовый помощник, не игра), общий с игрой только `packages/fincore` + `packages/platform` ([ADR-016](docs/decisions/ADR-016-two-products-shared-fincore.md), [`PLAN_game-plan-split`](docs/plans/PLAN_game-plan-split.md)). Игровые понятия (needs, события, победа, ход) в `fincore` не заносить; Plan-код — только после Pre-Alpha gate.
+- **Plan — отдельный продукт** (финансовый помощник, не игра), общий с игрой только `packages/fincore` + `packages/platform` ([ADR-016](docs/decisions/ADR-016-two-products-shared-fincore.md), [`PLAN_game-plan-split`](docs/plans/PLAN_game-plan-split.md)). Игровые понятия (needs, события, победа, ход) в `fincore` не заносить. Plan-**прототип** (`apps/plan-*`: без БД, без деплоя, без реальных пользователей) — сейчас; продуктовый Plan — после Pre-Alpha gate. Документы и роадмап Plan — [`docs/plan/`](docs/plan/README.md).
 - **Зарплата** — только по кнопке в периоде; пропуск = нет выплаты за период.
 - **2 события/период**; YAML: `data/events/mvp11/` ([ADR-008](docs/decisions/ADR-008-events-catalog-single-source.md), [C-4](CONVENTIONS.md)).
 - **Прогрессия:** `event_tier` от `period_index`, без character XP — [`remove-character-xp-and-levels.md`](docs/vision/ideas/remove-character-xp-and-levels.md).

@@ -75,3 +75,28 @@ reviews:
       старый Plan-код не переносится). Общая identity отклонена PO — аккаунты раздельные.
     repo_trace: docs/decisions/ADR-016-two-products-shared-fincore.md, docs/plans/PLAN_game-plan-split.md
     decision_changed: true
+
+  - id: CY-2026-10-27-plan-prototype
+    date: 2026-10-27
+    subject: Рабочий прототип Plan до Pre-Alpha gate игры; раздельные документы и роадмапы направлений
+    human_decision: >-
+      Главная цель направления Plan — рабочий прототип. Разделить документацию и роадмапы
+      Game, ядра и Plan.
+    disagreement: >-
+      D4 (ADR-016, PLAN_game-plan-split) и SPEC_plan-v1 закрывали код Plan до Pre-Alpha gate,
+      а apps/plan-* уже написаны: документы и код расходились. Без границ прототип тянет за
+      собой БД, вход и деплой — то есть ПДн по 152-ФЗ до юриста — и отвлекает от P0 игры
+      (PR-04 required checks, PR-09).
+    alternative: >-
+      Поправка D4 с границами: прототип только поверх fincore, хранилище в памяти, dev_code,
+      без деплоя и реальных пользователей; правки fincore аддитивные с balance diff = 0.
+      Продуктовый Plan (SPL-402+) — после gate, SPL-302 и юриста. Документы Plan — в docs/plan/.
+    alternative_cost: >-
+      Прототип не проверяет хранение, вход по почте и деплой; их риски остаются на SPL-402.
+      Переезд spec и idea Plan в docs/plan/ — правка ссылок в ~12 файлах.
+    outcome: accepted
+    decision: >-
+      Прототип сейчас в границах поправки D4; продуктовый Plan после gate. docs/plan/ —
+      README, ROADMAP, spec, idea; docs/ROADMAPS.md — карта роадмапов Game, ядра и Plan.
+    repo_trace: docs/decisions/ADR-016-two-products-shared-fincore.md, docs/plans/PLAN_game-plan-split.md, docs/plan/ROADMAP.md, docs/ROADMAPS.md
+    decision_changed: true

@@ -24,6 +24,11 @@ function detectLayer(relPath) {
   if (p === 'docs/Home.md' || p === 'docs/OBSIDIAN.md') return 'obsidian';
   if (p === 'docs/DOCUMENTATION_SYSTEM.md') return 'system';
   if (p === 'docs/TRACEABILITY.md') return 'trace';
+  if (p === 'docs/ROADMAPS.md') return 'index';
+  if (p === 'docs/plan/README.md') return 'index';
+  if (p.startsWith('docs/plan/vision/')) return 'idea';
+  if (p.startsWith('docs/plan/specs/')) return 'spec';
+  if (p.startsWith('docs/plan/')) return 'plan';
   if (p.startsWith('docs/handbook/')) return 'handbook';
   if (p.startsWith('docs/foundation/')) return 'foundation';
   if (p.startsWith('docs/vision/ideas/')) return 'idea';

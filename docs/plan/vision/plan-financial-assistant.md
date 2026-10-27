@@ -137,5 +137,5 @@ ADR-016 п.6 и D5 в `PLAN_game-plan-split` приведены к этим ре
 - Foundation: [`foundation/SPEC_PRODUCT.md`](../../foundation/SPEC_PRODUCT.md)
 - ADR: [ADR-016](../../decisions/ADR-016-two-products-shared-fincore.md), [ADR-013](../../decisions/ADR-013-game-only-drop-plan-mode.md)
 - План: [`PLAN_game-plan-split.md`](../../plans/PLAN_game-plan-split.md)
-- Spec: [`SPEC_plan-v1.md`](../../specs/features/SPEC_plan-v1.md) (SPL-401)
+- Spec: [`SPEC_plan-v1.md`](../specs/SPEC_plan-v1.md) (SPL-401)
 - Ядро: [`packages/fincore`](../../../packages/fincore/README.md)

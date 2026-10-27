@@ -12,6 +12,7 @@ aliases:
 **Obsidian vault:** откройте корень репозитория → [`Home.md`](Home.md) · [`OBSIDIAN.md`](OBSIDIAN.md)
 
 Структура **вариант A** (слои зрелости): [`DOCUMENTATION_SYSTEM.md`](DOCUMENTATION_SYSTEM.md)  
+**Направления:** документы игры — этот `docs/`; продукт Plan — [`plan/`](plan/README.md); роадмапы Game, Plan и ядра — [`ROADMAPS.md`](ROADMAPS.md)  
 Шаблоны: [`templates/`](templates/) · Трассировка эпиков: [`TRACEABILITY.md`](TRACEABILITY.md)
 
 Технический онбординг: [`../CLAUDE.md`](../CLAUDE.md) · **Свод принципов:** [`../CONVENTIONS.md`](../CONVENTIONS.md) · **AI агент:** [`agents/AI_ONBOARDING.md`](agents/AI_ONBOARDING.md)
@@ -38,6 +39,8 @@ aliases:
 | **Marketing** | [`marketing/`](marketing/) | Посты, трекер тем, стиль, Telegram-публикация |
 | **Ops** | [`ops/`](ops/) | Деплой prod / Pre-Alpha ([`ops/DEPLOY.md`](ops/DEPLOY.md)) |
 | **Agents** | [`agents/`](agents/) | Claude Code skills, rules, subagents и приоритеты |
+| **Plan (продукт)** | [`plan/`](plan/README.md) | «ТВОЙ ПЛАН»: роадмап, spec, idea — отдельно от игры |
+| **Роадмапы** | [`ROADMAPS.md`](ROADMAPS.md) | Game, Plan, ядро: цель, роадмап, связи |
 | **Archive** | [`archive/`](archive/) | Superseded stubs (O1 onboarding и др.) |
 
 ---

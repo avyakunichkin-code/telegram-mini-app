@@ -15,7 +15,7 @@ aliases:
 
 ## Status
 
-**Accepted** (2026-10-21). **Amended** 2026-10-26: п.6 и риски Plan пересмотрены по итогам idea-refine ([`plan-financial-assistant.md`](../vision/ideas/plan-financial-assistant.md)) — вход с персональными данными, контур РФ, обобщённый анализ инвестиций, пенсии и страховок в v1.
+**Accepted** (2026-10-21). **Amended** 2026-10-26: п.6 и риски Plan пересмотрены по итогам idea-refine ([`plan-financial-assistant.md`](../plan/vision/plan-financial-assistant.md)) — вход с персональными данными, контур РФ, обобщённый анализ инвестиций, пенсии и страховок в v1. **Amended** 2026-10-27: п.8 — рабочий прототип Plan разрешён до Pre-Alpha gate игры в границах «без БД, без деплоя, без реальных пользователей»; продуктовый Plan по-прежнему после gate. Роадмап направления — [`docs/plan/ROADMAP.md`](../plan/ROADMAP.md).
 
 **Частично заменяет [ADR-013](ADR-013-game-only-drop-plan-mode.md):** снимается только п.3 («не обещать Plan, M2.0 cancelled»). Остальные пункты ADR-013 остаются в силе для игры. План работ — [`PLAN_game-plan-split.md`](../plans/PLAN_game-plan-split.md) (эпик **SPL**).
 
@@ -58,6 +58,11 @@ ADR-013 убрал Plan как **второй `save_kind`** внутри игр�
 6. **Plan v1 принимает только ручной ввод; аккаунт — с персональными данными, хостинг в РФ** (ред. 2026-10-26; было «обезличенно»). Вход по e-mail и/или Telegram, способ — в spec SPL-401. Plan — оператор ПДн по 152-ФЗ: согласие, политика, хранение в РФ, удаление по запросу. Импорт выписок и open banking — отдельным решением.
 7. **«Добавляем рядом, не двигаем».** `backend/` (= game-api) и `frontend-react/` (= game-web) остаются на местах. Новое появляется в `packages/` и `apps/plan-*`. Переезд игры в `apps/` — опциональный срез SPL-090 после α.
 8. **Порядок.** Ядро и platform выделяем сейчас. Продуктовая разработка Plan начинается только после Pre-Alpha gate игры.
+   - **Исключение — рабочий прототип Plan (ред. 2026-10-27).** `apps/plan-api` и `apps/plan-web` можно строить до gate, чтобы проверить SPEC_plan-v1 на живом пути «вход → анкета → отчёт → шаг». Границы прототипа:
+     - только поверх `fincore`; ни `backend/`, ни `frontend-react/` не импортирует и не меняет;
+     - без БД (хранилище в памяти процесса), код входа не отправляется (`dev_code` в ответе), без деплоя и без реальных пользователей — значит, без персональных данных и без 152-ФЗ-обязательств;
+     - правки `fincore` под прототип — только аддитивные, с golden и balance diff игры = 0.
+   - Продуктовый Plan — своя БД `plan` и миграции, реальный вход, хостинг в РФ, деплой (SPL-402+) — после Pre-Alpha gate, SPL-302 и консультации юриста.
    - Каждый срез выноса расчётов — при условии, что balance diff = 0 относительно golden-baseline.
    - Общий движок шагов (`guidance` → `journey`), админ-каркас и UI-kit выносим только при втором реальном потребителе.
 9. **Старый Plan-код не переносится.** `BaseParamsScreen`, `PlanExpenseEditor` и `create/update/revoke_plan_expense_line` удаляются по [`PLAN_game-only`](../plans/PLAN_game-only.md) GO-03. Plan проектируется заново поверх `fincore`.
@@ -87,5 +92,5 @@ ADR-013 убрал Plan как **второй `save_kind`** внутри игр�
 ## Связанные артефакты
 
 - План: [`PLAN_game-plan-split.md`](../plans/PLAN_game-plan-split.md)
-- Idea Plan: [`plan-financial-assistant.md`](../vision/ideas/plan-financial-assistant.md)
+- Idea Plan: [`plan-financial-assistant.md`](../plan/vision/plan-financial-assistant.md)
 - Предшественник: [ADR-013](ADR-013-game-only-drop-plan-mode.md); модульный монолит — [ADR-007](ADR-007-backend-domain-packages.md); эффекты закрытия — [ADR-011](ADR-011-period-effects-at-close.md); метрики — [ADR-009](ADR-009-metrics-dictionary-tb1.md)
