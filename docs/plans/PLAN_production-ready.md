@@ -56,7 +56,7 @@ aliases:
 | PR-05 | 🟡 | `SECRET_KEY` без дефолта в prod — ✅ (`config.py`). `/api/health` при мёртвой БД отдаёт 200 с `status: error` вместо 503 — ⬜ |
 | PR-06 | ✅ | `auth.py`: argon2id, legacy `salt:sha256`, `password_needs_rehash` |
 | PR-07 | 🟡 | Бэкенд: `PeriodClosePreview` в `schemas.py`, прогноз на `fincore.forecast`. FE `period_close_preview` не использует — превью на CTA и chip «подушка ≠ жизнь» не выведены |
-| PR-08 | ⬜ | `backend/main.py` на старте по-прежнему `create_all` + `ensure_schema_compatibility()`; канон `db.sh migrate` не единственный путь |
+| PR-08 | ✅ | 2026-10-26: `ensure_schema_compatibility` и DDL `victory_goals` в сиде удалены; старт — `app/db_schema.prepare_schema` (PostgreSQL: только сверка с ORM, `SchemaOutOfDateError` с подсказкой `db.sh migrate`; SQLite: `create_all`). `db.sh migrate` пропускает baseline на живой схеме. `tests/test_schema_canon.py` — ORM ⊆ SQL. Прогон на живом PostgreSQL не делался |
 | PR-09 | ❓ | Freeze-чеклист (TG-шаблон 4, CTA советника) — конфиг/ops, в коде не проверяется |
 | PR-14 | ✅ | `events_spawn_failed` в `period.py`, `schemas.py`, FE `periodCloseDisplay.js`; тест `test_period_event_pool_failure.py`; план approved |
 | GO-01 | ✅ | Сделан 2026-10-15 (см. `PLAN_game-only`) |

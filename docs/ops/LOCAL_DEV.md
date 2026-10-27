@@ -37,7 +37,7 @@ powershell -ExecutionPolicy Bypass -File scripts\dev-setup.ps1
 | venv | `backend\.venv` на 3.14 + `requirements-dev.txt` |
 | Env | Создаёт `backend\.env` (локальная БД, случайный `SECRET_KEY`) и `frontend-react\.env.local` (`VITE_API_BASE_URL=http://localhost:8000`, `VITE_BASE_PATH=/`). Существующие файлы не перезаписывает; если `backend\.env` смотрит не на localhost — останавливается |
 | БД | Роль и база `tvoy_hod` / пароль `tvoy_hod` (спросит пароль `postgres` один раз) |
-| Схема | `0000_schema_baseline.sql`, если схемы ещё нет, затем сиды `scripts/seed_db.py` (как `db.sh bootstrap`) |
+| Схема | `0000_schema_baseline.sql`, если схемы ещё нет, инкременты `00NN_*`, затем сиды `scripts/seed_db.py` (как `db.sh bootstrap`). API сам схему не создаёт — после `git pull` с новой миграцией: `bash backend/scripts/db.sh migrate` |
 | Frontend | `npm install` |
 
 ## Каждый день: запуск

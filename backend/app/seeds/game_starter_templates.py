@@ -1,4 +1,4 @@
-﻿"""Каталог стартовых шаблонов Game (идемпотентный upsert в main.ensure_schema_compatibility)."""
+﻿"""Каталог стартовых шаблонов Game (идемпотентный upsert в seed_all на старте)."""
 
 # NOTE: Сиды запускаются через app.seeds.runner.seed_all (startup) или scripts/seed_db.py.
 

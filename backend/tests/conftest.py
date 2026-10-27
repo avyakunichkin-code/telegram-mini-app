@@ -146,8 +146,8 @@ def client(db_session, test_user, seed_basic_template):
 
     app.dependency_overrides[get_db] = override_get_db
     app.dependency_overrides[get_current_user] = override_get_current_user
-    # Не входить в context manager: `with TestClient` гоняет FastAPI startup,
-    # а ensure_schema_compatibility() пишет PostgreSQL DDL (JSONB) в SQLite.
+    # Не входить в context manager: `with TestClient` гоняет FastAPI startup
+    # (prepare_schema + seed_all) на глобальном engine, а не на db_engine теста.
     # Схема тестов уже создаётся через db_engine + Base.metadata.create_all.
     test_client = TestClient(app)
     try:

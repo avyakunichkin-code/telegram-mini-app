@@ -12,42 +12,6 @@ from app.victory.seeds import VICTORY_CONFIG_BY_TEMPLATE_KEY
 
 _GOAL_META_KEYS = frozenset({"key", "type", "title", "enabled", "required", "requires_mechanics"})
 
-_VICTORY_GOALS_DDL = """
-CREATE TABLE IF NOT EXISTS victory_goals (
-  id SERIAL PRIMARY KEY,
-  template_key VARCHAR(80) NOT NULL,
-  goal_key VARCHAR(80) NOT NULL,
-  goal_type VARCHAR(60) NOT NULL,
-  title TEXT NOT NULL,
-  order_index INT NOT NULL,
-  enabled BOOLEAN NOT NULL DEFAULT TRUE,
-  required BOOLEAN NOT NULL DEFAULT FALSE,
-  requires_mechanics JSONB NOT NULL DEFAULT '[]'::jsonb,
-  params JSONB NOT NULL DEFAULT '{}'::jsonb,
-  created_at TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT NOW()
-)
-"""
-
-_VICTORY_GOALS_INDEXES = (
-    """
-    CREATE UNIQUE INDEX IF NOT EXISTS uq_victory_goals_template_goal_key
-      ON victory_goals(template_key, goal_key)
-    """,
-    """
-    CREATE INDEX IF NOT EXISTS ix_victory_goals_template_order
-      ON victory_goals(template_key, order_index)
-    """,
-)
-
-
-def ensure_victory_goals_table(db: Session) -> None:
-    """DDL для каталога victory_goals (нет в SQLAlchemy models / create_all)."""
-    db.execute(text(_VICTORY_GOALS_DDL))
-    for stmt in _VICTORY_GOALS_INDEXES:
-        db.execute(text(stmt))
-    db.commit()
-
-
 def _goal_params(goal: dict[str, Any]) -> dict[str, Any]:
     return {k: v for k, v in goal.items() if k not in _GOAL_META_KEYS}
 
@@ -86,10 +50,10 @@ def upsert_victory_goals(db: Session) -> None:
     Безопасно вызывать на каждом старте API.
     Postgres-only (JSONB): на других диалектах (SQLite в balance_simulate) — no-op,
     goals_store тогда берёт goals из victory_config_json.
+    Таблица — из migrations/ (baseline); наличие проверяет app.db_schema на старте (PR-08).
     """
     if db.get_bind().dialect.name != "postgresql":
         return
-    ensure_victory_goals_table(db)
     rows = _rows_from_config()
     if not rows:
         return

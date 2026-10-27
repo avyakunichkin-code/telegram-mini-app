@@ -508,7 +508,7 @@ CREATE TABLE insurance_policies (
 
 ;
 
--- victory_goals: без ORM-модели; DEFAULT-ы — как в app/seeds/victory_goals.py (_VICTORY_GOALS_DDL)
+-- victory_goals: без ORM-модели; DDL только здесь (сид — upsert, PR-08)
 CREATE TABLE victory_goals (
 	id SERIAL NOT NULL,
 	template_key VARCHAR(80) NOT NULL,

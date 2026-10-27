@@ -63,7 +63,7 @@ def _rebind_sqlite_engine(db_file: str) -> None:
     database.SessionLocal = sessionmaker(
         autocommit=False, autoflush=False, bind=database.engine,
     )
-    # main.py keeps its own `engine` import — sync for ensure_schema_compatibility()
+    # main.py keeps its own `engine` import — sync for startup prepare_schema()
     import main as main_module
 
     main_module.engine = database.engine
@@ -166,11 +166,10 @@ def run_balance_simulation(
     from app.seeds.runner import seed_all
     from app.models import User
     from fastapi.testclient import TestClient
-    from main import app, ensure_schema_compatibility
+    from main import app
     from sqlalchemy.orm import sessionmaker
 
     Base.metadata.create_all(bind=engine)
-    ensure_schema_compatibility()
     SessionLocal = sessionmaker(bind=engine)
 
     def _override_get_db():

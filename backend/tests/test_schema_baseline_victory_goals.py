@@ -1,19 +1,24 @@
-"""Baseline и сид victory_goals должны совпадать по DEFAULT-ам.
+"""Baseline victory_goals должен принимать INSERT из сида.
 
-Таблица без ORM-модели: на пустой PostgreSQL сначала применяется baseline, потом
-upsert_victory_goals вставляет строки без created_at. Без DEFAULT NOW() в baseline
-сиды падают с NotNullViolation (тесты на SQLite этого не видят — там таблицу создаёт сид).
+Таблица без ORM-модели: DDL только в migrations/ (PR-08 — сид её больше не создаёт).
+upsert_victory_goals вставляет строки без части колонок (created_at, id) — без
+DEFAULT в baseline сиды на пустой PostgreSQL падают с NotNullViolation
+(тесты на SQLite этого не видят: там сид victory_goals — no-op).
 """
 
+import inspect
 import re
 from pathlib import Path
 
-from app.seeds.victory_goals import _VICTORY_GOALS_DDL
+from app.seeds.victory_goals import upsert_victory_goals
 
 BASELINE = Path(__file__).resolve().parents[1] / "migrations" / "0000_schema_baseline.sql"
 
 
-def _columns(ddl: str) -> dict[str, str]:
+def _baseline_columns() -> dict[str, str]:
+    text = BASELINE.read_text(encoding="utf-8")
+    start = text.index("CREATE TABLE victory_goals (")
+    ddl = text[start : text.index(";", start)]
     body = ddl[ddl.index("(") + 1 : ddl.rindex(")")]
     cols: dict[str, str] = {}
     for line in body.splitlines():
@@ -25,20 +30,25 @@ def _columns(ddl: str) -> dict[str, str]:
     return cols
 
 
-def _baseline_victory_goals_ddl() -> str:
-    text = BASELINE.read_text(encoding="utf-8")
-    start = text.index("CREATE TABLE victory_goals (")
-    return text[start : text.index(";", start)]
+def _seed_insert_columns() -> set[str]:
+    src = inspect.getsource(upsert_victory_goals)
+    m = re.search(r"INSERT INTO victory_goals \((.*?)\)", src, re.S)
+    assert m, "upsert_victory_goals: не найден INSERT INTO victory_goals (...)"
+    return {c.strip() for c in m.group(1).split(",") if c.strip()}
 
 
-def test_baseline_victory_goals_defaults_match_seed_ddl():
-    baseline = _columns(_baseline_victory_goals_ddl())
-    seed = _columns(_VICTORY_GOALS_DDL)
-    for name, spec in seed.items():
-        if "DEFAULT" not in spec:
-            continue
-        default = spec.split("DEFAULT", 1)[1].strip()
-        assert name in baseline, f"baseline: нет колонки victory_goals.{name}"
-        assert f"DEFAULT {default}" in baseline[name], (
-            f"baseline victory_goals.{name}: нет DEFAULT {default} (есть: {baseline[name]})"
+def test_seed_inserts_only_existing_baseline_columns():
+    baseline = _baseline_columns()
+    unknown = _seed_insert_columns() - set(baseline)
+    assert not unknown, f"сид пишет колонки, которых нет в baseline: {sorted(unknown)}"
+
+
+def test_columns_omitted_by_seed_have_defaults_in_baseline():
+    baseline = _baseline_columns()
+    omitted = set(baseline) - _seed_insert_columns()
+    for name in sorted(omitted):
+        spec = baseline[name]
+        assert "SERIAL" in spec or "DEFAULT" in spec or "NOT NULL" not in spec, (
+            f"baseline victory_goals.{name}: сид её не заполняет, нужен DEFAULT (есть: {spec})"
         )
+    assert "DEFAULT NOW()" in baseline["created_at"]

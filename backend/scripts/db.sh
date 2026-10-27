@@ -92,6 +92,13 @@ run_backend_py() {
   )
 }
 
+# Схема уже есть? (baseline не идемпотентен — на живую БД его не гоняем)
+schema_exists() {
+  local has_schema
+  has_schema="$(psql "$DATABASE_URL" -tAc "select to_regclass('public.game_profiles') is not null")"
+  [[ "${has_schema//[[:space:]]/}" == "t" ]]
+}
+
 mask_url() {
   # mask credentials: postgresql://user:pass@host -> postgresql://***@host
   echo "$DATABASE_URL" | sed -E 's#://[^@]+@#://***@#'
@@ -131,12 +138,18 @@ cmd_migrate() {
   elif [[ "$mode" == "skip-baseline" ]]; then
     for f in "${files[@]}"; do [[ "$f" == 0000_* ]] || selected+=("$f"); done
   else
-    if [[ $has_baseline -eq 1 && $inc_count -eq 0 ]]; then
-      echo "[info] Baseline mode: only 0000_schema_baseline.sql"
-      selected=("$(basename "${BASELINE}")")
-    else
-      selected=("${files[@]}")
-    fi
+    # auto: baseline (CREATE TABLE, не идемпотентен) — только на пустую БД;
+    # инкременты 00NN_* идемпотентны (IF NOT EXISTS) и гоняются всегда.
+    local apply_baseline=0
+    if [[ $has_baseline -eq 1 ]] && ! schema_exists; then apply_baseline=1; fi
+    for f in "${files[@]}"; do
+      if [[ "$f" == 0000_* ]]; then
+        [[ $apply_baseline -eq 1 ]] && selected+=("$f")
+      else
+        selected+=("$f")
+      fi
+    done
+    [[ $has_baseline -eq 1 && $apply_baseline -eq 0 ]] && echo "[info] schema exists — baseline skipped"
   fi
 
   echo "DATABASE_URL: $(mask_url)"
@@ -162,15 +175,10 @@ cmd_bootstrap() {
   require_env
   require_psql
 
-  # Как scripts/dev-setup.ps1: baseline не идемпотентен (CREATE TABLE) — на существующей схеме пропускаем
-  local has_schema
-  has_schema="$(psql "$DATABASE_URL" -tAc "select to_regclass('public.game_profiles') is not null")"
-  if [[ "${has_schema//[[:space:]]/}" == "t" ]]; then
-    echo "[1/2] schema exists — baseline skipped"
-  else
-    echo "[1/2] migrate --baseline-only"
-    cmd_migrate --baseline-only
-  fi
+  # migrate (auto): baseline только на пустую БД + все инкременты — иначе seed
+  # упадёт на сверке схемы (app/db_schema.py, PR-08).
+  echo "[1/2] migrate"
+  cmd_migrate
   echo "[2/2] seed (includes events sync)"
   cmd_seed
   echo "[OK] bootstrap complete"

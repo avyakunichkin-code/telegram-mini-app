@@ -7,6 +7,7 @@ paths:
   - "backend/scripts/seed_db.py"
   - "backend/app/seeds/**"
   - "backend/main.py"
+  - "backend/app/db_schema.py"
   - "backend/app/models.py"
 ---
 
@@ -18,14 +19,14 @@ paths:
 
 | Слой | Где |
 |------|-----|
-| DDL | `migrations/0000_*.sql`, `migrations/00NN_*.sql`, `create_all`, `ensure_schema_compatibility()` |
+| DDL | `migrations/0000_*.sql`, `migrations/00NN_*.sql` — единственный путь для PostgreSQL (PR-08); `create_all` — только SQLite (e2e, sim) |
 | Seeds | `app/seeds/runner.py` → `seed_all()` на **каждом** startup |
 | Контент событий | `data/events/mvp11/*.yaml` — **не** SQL |
 
 ## MUST
 
 - **Baseline** (`0000_schema_baseline.sql`): только DDL; без `INSERT/UPDATE/DELETE` и без `-- >>> 00xx_*.sql`.
-- **Новая схема**: инкремент `00NN_*.sql` + при ORM — `models.py`; prod часто достаточно redeploy + `ensure_schema`, иначе `bash backend/scripts/db.sh migrate`.
+- **Новая схема**: идемпотентный инкремент `00NN_*.sql` (`IF NOT EXISTS`) + при ORM — `models.py`; на prod — `bash backend/scripts/db.sh migrate` до deploy (иначе API не стартует: `SchemaOutOfDateError`). `tests/test_schema_canon.py` ловит колонку ORM без SQL.
 - **Каталог без ORM** (напр. `victory_goals`): DDL в baseline/миграции + seed в `app/seeds/`; не полагаться на `create_all`.
 - **FK на natural key**: `UNIQUE` в родителе до FK.
 - **Индексы**: не на `id`, если уже `PRIMARY KEY (id)`.

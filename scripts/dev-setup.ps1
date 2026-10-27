@@ -144,6 +144,14 @@ if ("$hasSchema".Trim() -eq 't') {
     if ($LASTEXITCODE -ne 0) { Fail 'baseline не применился.' }
     Write-Host 'Baseline применён'
 }
+# Инкременты 00NN_* идемпотентны (IF NOT EXISTS) — гоняем всегда: API на старте
+# DDL не делает, а сверяет схему с моделями (PR-08, backend/app/db_schema.py).
+Get-ChildItem (Join-Path $Backend 'migrations') -Filter '*.sql' |
+    Where-Object { $_.Name -notlike '0000_*' } | Sort-Object Name | ForEach-Object {
+        & psql -h localhost -U $DbUser -d $DbName -v ON_ERROR_STOP=1 -q -f $_.FullName
+        if ($LASTEXITCODE -ne 0) { Fail "миграция $($_.Name) не применилась." }
+    }
+Write-Host 'Миграции применены'
 Push-Location $Backend
 try {
     $env:PYTHONPATH = $Backend

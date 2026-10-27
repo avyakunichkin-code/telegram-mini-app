@@ -37,7 +37,11 @@ export DATABASE_URL="postgresql://USER:PASS@HOST:5432/DBNAME"
 bash backend/scripts/db.sh bootstrap
 ```
 
-После SQL при старте API `backend/main.py` выполняет **лёгкую автомиграцию** (`ensure_schema_compatibility`), **`create_all`**, затем **`seed_all`**:
+**Схема — только этот путь (PR-08).** API на старте DDL в PostgreSQL не пишет: [`app/db_schema.py`](../app/db_schema.py) сверяет таблицы и колонки с `app.models` (+ `victory_goals`) и, если миграции не прогнаны, **падает на старте** с подсказкой `db.sh migrate`. SQLite (e2e-стенд, `balance_simulate`) — одноразовая БД без SQL: там `create_all`.
+
+`db.sh migrate` (auto) накатывает baseline **только на пустую БД** и все инкременты `00NN_*` каждый раз — поэтому инкременты обязаны быть идемпотентными. Тест [`tests/test_schema_canon.py`](../tests/test_schema_canon.py) падает, если колонка есть в ORM, но не в SQL.
+
+После проверки схемы старт API выполняет **`seed_all`** (DML, идемпотентно):
 
 - справочники расходов;
 - `game_starter_templates`, каталог капитала/обязательств;
@@ -79,7 +83,7 @@ bash backend/scripts/db.sh bootstrap
    - `ALTER TABLE … ADD COLUMN IF NOT EXISTS` (PostgreSQL)
    - `INSERT … ON CONFLICT … DO UPDATE`
    - `UPDATE`/`DELETE` с явным `WHERE`
-4. Синхронизировать **`backend/app/models.py`** и при необходимости блок в **`main.py`**.
+4. Синхронизировать **`backend/app/models.py`** (тест `test_schema_canon` сверит ORM с SQL). Блока в `main.py` больше нет.
 5. Прогнать: `bash backend/scripts/db.sh migrate`, затем pytest.
 
 ## Когда SQL vs только `main.py`
@@ -89,7 +93,7 @@ bash backend/scripts/db.sh bootstrap
 | Новая таблица, индексы, **схема** `event_*` | **`.sql`** в `migrations/` |
 | **Новое/изменённое событие** (контент) | **`data/events/mvp11/*.yaml`** → sync ([ADR-008](../../docs/decisions/ADR-008-events-catalog-single-source.md)) |
 | Массовый одноразовый backfill | **`.sql`** по отдельному решению |
-| Одна колонка, как у `save_kind` | **`.sql`** + guard в **`main.py`** |
+| Одна колонка, как у `save_kind` | **`.sql`** (`ADD COLUMN IF NOT EXISTS`) — без правок `main.py` |
 
 ## Prod (Render)
 
@@ -97,9 +101,9 @@ bash backend/scripts/db.sh bootstrap
 
 | Ситуация | Действие |
 |----------|----------|
-| Обычный релиз (колонки покрыты `ensure_schema` + seeds) | Redeploy API — startup поднимет схему и сиды |
-| В релизе новый `00NN_*.sql` (DDL, не покрытый startup) | `bash backend/scripts/db.sh migrate` на prod **до/после** deploy |
-| Пустая БД | `db.sh bootstrap` или migrate + deploy |
+| Любой релиз | `bash backend/scripts/db.sh migrate` на prod **до** deploy (повторный прогон безопасен), затем redeploy — startup применит сиды |
+| Забыли migrate | API не стартует: `SchemaOutOfDateError` со списком недостающих колонок — прогнать migrate |
+| Пустая БД | `db.sh bootstrap` (= migrate + seed) или migrate + deploy |
 
 Internal `DATABASE_URL` на Render (host `dpg-…-a`) — только внутри сети Render; локально — External URL.
 

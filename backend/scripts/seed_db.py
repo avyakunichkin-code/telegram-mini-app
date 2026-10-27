@@ -9,12 +9,14 @@ Usage (bash):
 
 from __future__ import annotations
 
-from app.database import Base, SessionLocal, engine
+from app.database import SessionLocal, engine
+from app.db_schema import prepare_schema
 from app.seeds.runner import seed_all
 
 
 def main() -> None:
-    Base.metadata.create_all(bind=engine)
+    # PostgreSQL: схема — db.sh migrate (PR-08); здесь только сверка. SQLite — create_all.
+    prepare_schema(engine)
     db = SessionLocal()
     try:
         seed_all(db)

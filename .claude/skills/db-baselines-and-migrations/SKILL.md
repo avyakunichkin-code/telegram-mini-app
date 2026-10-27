@@ -2,7 +2,7 @@
 name: db-baselines-and-migrations
 description: >-
   PostgreSQL: baseline DDL, incremental migrations, db.sh, seeds vs SQL.
-  Use when editing backend/migrations/*.sql, models.py, app/seeds/, ensure_schema in main.py, or regenerating 0000_schema_baseline.sql.
+  Use when editing backend/migrations/*.sql, models.py, app/seeds/, app/db_schema.py, or regenerating 0000_schema_baseline.sql.
 argument-hint: "[baseline | migration | seed | review]"
 user-invocable: true
 allowed-tools: Read, Glob, Grep, Write, Bash(bash backend/scripts/db.sh *), Bash(bash .claude/skills/db-baselines-and-migrations/scripts/*), Bash(python -m pytest *)
@@ -32,7 +32,7 @@ paths:
 - [`backend/app/seeds/runner.py`](../../../backend/app/seeds/runner.py) — что наполняется на старте API
 - [`backend/scripts/dump_schema_baseline.py`](../../../backend/scripts/dump_schema_baseline.py) — перегенерация baseline
 
-**Куда писать:** `backend/migrations/`, `backend/app/seeds/`, `backend/scripts/`, [`backend/main.py`](../../../backend/main.py) (`ensure_schema_compatibility`).  
+**Куда писать:** `backend/migrations/`, `backend/app/seeds/`, `backend/scripts/`, [`backend/app/db_schema.py`](../../../backend/app/db_schema.py) (сверка схемы на старте).  
 **Satellites:** `test-driven-development`; при смене контракта/каталога — `documentation-and-adrs`, `game-economy-and-victory` (цели победы).  
 **Дальше:** `test-driven-development`, `game-economy-and-victory`, `code-review-and-quality`, `documentation-and-adrs` (см. `catalog.yaml` → `next_skill`).
 
@@ -40,9 +40,9 @@ paths:
 
 | Слой | Где | Когда |
 |------|-----|--------|
-| **Schema** | `0000_schema_baseline.sql` + `00NN_*.sql` + `create_all` + `ensure_schema_compatibility()` | Таблицы, колонки, индексы, FK |
+| **Schema** | `0000_schema_baseline.sql` + `00NN_*.sql` через `db.sh migrate` (SQLite: `create_all`) | Таблицы, колонки, индексы, FK |
 | **Seeds** | `app/seeds/*`, `seed_all()` на startup | Справочники, шаблоны старта, `victory_goals`, каталог событий из YAML |
-| **Runtime patch** | `main.py` `ensure_schema_compatibility()` | Только лёгкие `ADD COLUMN` для уже существующих prod-БД без полного migrate |
+| **Startup check** | `app/db_schema.prepare_schema` | Только сверка PostgreSQL с ORM + `victory_goals`; DDL не пишет (PR-08) |
 
 **Контент событий** — только `data/events/mvp11/*.yaml` → `ensure_mvp11_event_catalog` (не SQL, не baseline). См. ADR-008.
 
@@ -56,17 +56,17 @@ paths:
 
 ## Prod / Render (типовой путь)
 
-1. **Деплой API** — на startup: `create_all` → `ensure_schema_compatibility()` (в т.ч. таблицы без ORM) → `seed_all()`.
-2. **Отдельный migrate** — если в релизе есть новый `00NN_*.sql` и БД уже жила без redeploy-only DDL:
+1. **Migrate до деплоя** — каждый релиз (baseline только на пустую БД, инкременты идемпотентны):
 
    ```bash
    export DATABASE_URL="postgresql://..."
    bash backend/scripts/db.sh migrate
    ```
 
-3. **Пустая БД локально / CI:** `bash backend/scripts/db.sh bootstrap` (= baseline-only migrate + seed).
+2. **Деплой API** — startup: `prepare_schema` (сверка, без DDL) → `seed_all()`. Не прогнали migrate → `SchemaOutOfDateError`.
+3. **Пустая БД локально / CI:** `bash backend/scripts/db.sh bootstrap` (= migrate + seed).
 
-На prod с **уже накатанной** историей: **не** перегонять весь `0000` повторно — только новые инкременты (или полагаться на startup, если изменение покрыто `ensure_schema` + seed).
+На prod с **уже накатанной** историей: **не** перегонять весь `0000` повторно — `db.sh migrate` сам пропустит baseline на существующей схеме.
 
 ## Правила (must-follow)
 
@@ -80,7 +80,7 @@ paths:
 
 Пример: **`victory_goals`** (каталог целей по `template_key`; читает `app/victory/goals_store.py`).
 
-- DDL: в **baseline** и/или `00NN_*.sql`, плюс `ensure_victory_goals_table()` при отсутствии таблицы на старте.
+- DDL: только в **baseline** и/или `00NN_*.sql`; наличие таблицы проверяет `app/db_schema.RAW_TABLES_BY_DIALECT`.
 - Данные: **`app/seeds/victory_goals.py`** из `VICTORY_CONFIG_BY_TEMPLATE_KEY` (не DML в baseline).
 - `create_all` **не** создаёт такие таблицы — не забывать DDL.
 
@@ -152,7 +152,7 @@ bash .claude/skills/db-baselines-and-migrations/scripts/validate_baseline.sh bac
 - [ ] Новый `00NN_*.sql` — следующий номер после `ls backend/migrations/*.sql`
 - [ ] `models.py` согласован (если таблица в ORM)
 - [ ] Каталоги/цели победы — сид, не baseline DML
-- [ ] Таблица без ORM: baseline + `ensure_schema` или инкремент + seed
+- [ ] Таблица без ORM: baseline/инкремент + seed + `RAW_TABLES_BY_DIALECT`
 - [ ] `bash … validate_baseline.sh` для правок `0000_*`
 - [ ] `pytest` после migrate/логики
 
