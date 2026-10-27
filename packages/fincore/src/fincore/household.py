@@ -19,6 +19,7 @@ class Income:
 
     monthly_amount: float
     receipts_per_month: int = 1
+    member_id: int | str | None = None  # чей доход в домохозяйстве (Plan); игра не заполняет
 
 
 @dataclass(frozen=True)
@@ -35,6 +36,7 @@ class Liability:
     term_months: int | None = None
     months_paid: int = 0
     secured_asset_id: int | str | None = None
+    member_id: int | str | None = None  # чей долг (Plan); None — общий или игра
 
 
 @dataclass(frozen=True)

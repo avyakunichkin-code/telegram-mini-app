@@ -43,6 +43,32 @@
         "--strictPort"
       ],
       "port": 5173
+    },
+    {
+      "name": "plan-api",
+      "runtimeExecutable": "backend/.venv/Scripts/python.exe",
+      "runtimeArgs": [
+        "-m",
+        "uvicorn",
+        "plan_api.main:app",
+        "--reload",
+        "--port",
+        "8020",
+        "--app-dir",
+        "apps/plan-api"
+      ],
+      "port": 8020
+    },
+    {
+      "name": "plan-web",
+      "runtimeExecutable": "npm.cmd",
+      "runtimeArgs": [
+        "--prefix",
+        "apps/plan-web",
+        "run",
+        "dev"
+      ],
+      "port": 5190
     }
   ]
 }
