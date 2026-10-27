@@ -244,6 +244,38 @@
   opacity: 0.55;
 }
 
+/* Превью конца хода ★ close-preview-round A (PR-07): строка под «Завершить ход» */
+.mqx-bg-close-preview {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 2px var(--mq-sp-2);
+  margin: calc(var(--mq-sp-1) * -1) 0 0;
+  color: var(--mq-board-ink-soft);
+  font: 600 var(--mq-fs-caption) / 1.3 var(--mq-font-body);
+  text-align: center;
+}
+
+.mqx-bg-close-preview b {
+  color: var(--mq-board-ink);
+  font-weight: 700;
+}
+
+.mqx-bg-close-preview .mqx-bg-close-preview__risk,
+.mqx-bg-close-preview .mqx-bg-close-preview__risk b {
+  color: var(--mq-risk);
+}
+
+.mqx-bg-close-defeat {
+  margin: 0;
+  padding: var(--mq-sp-3) var(--mq-sp-4);
+  border-radius: var(--mq-r-cell);
+  background: var(--mq-risk-soft);
+  color: var(--mq-risk);
+  font: 700 var(--mq-fs-caption) / 1.3 var(--mq-font-body);
+  text-align: center;
+}
+
 /* —— Заголовки секций —— */
 .mqx-bg-sec-title {
   margin: 0;
@@ -916,4 +948,17 @@
 .mqx-bg-goal__body {
   padding: var(--mq-sp-2) 0 0;
   border-top: 0;
+}
+
+/* Подушка: вторая строка «не платит расходы» (PR-07); красная — если счёт уйдёт в минус */
+.mqx-bg-money__note {
+  display: block;
+  color: var(--mq-board-ink-soft);
+  font-size: var(--mq-fs-caption);
+  line-height: 1.25;
+}
+
+.mqx-bg-money__note--risk {
+  color: var(--mq-risk);
+  font-weight: 700;
 }

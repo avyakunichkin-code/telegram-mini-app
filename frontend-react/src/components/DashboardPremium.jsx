@@ -6,7 +6,7 @@ import { suggestSafetyFundAmount } from '../utils/safetyFundAmount';
 
 import { getSafetyFundFillFromOverview } from '../utils/safetyFundFill';
 import { personaRoleTitle } from './mqx/brand/personaRoles';
-import { buildTurnTip, incomeCell } from './mqx/utils/boardDashDisplay';
+import { buildTurnTip, closePreviewView, incomeCell } from './mqx/utils/boardDashDisplay';
 import { buildGoalChainView } from './mqx/utils/goalChainDisplay';
 
 import {
@@ -153,6 +153,11 @@ export function DashboardPremium({
     [overview?.victory, goal],
   );
 
+  const closePreview = useMemo(
+    () => closePreviewView(overview?.period_close_preview),
+    [overview?.period_close_preview],
+  );
+
   const turnTip = useMemo(
     () =>
       buildTurnTip({
@@ -162,8 +167,10 @@ export function DashboardPremium({
         salaryAvailable,
         pendingEventsCount: shownEventsCount,
         goalView,
+        closePreview,
+        safetyBalance,
       }),
-    [overview, salaryAvailable, shownEventsCount, goalView],
+    [overview, salaryAvailable, shownEventsCount, goalView, closePreview, safetyBalance],
   );
 
   const openSafetySheet = (mode) => {
@@ -240,6 +247,7 @@ export function DashboardPremium({
               pendingEventsCount={shownEventsCount}
               onOpenEvents={eventsUnlocked ? onOpenEvents : undefined}
               tip={turnTip}
+              closePreview={closePreview}
             />
 
             <MqxNeedsDash
@@ -259,6 +267,7 @@ export function DashboardPremium({
               outflow={Number(overview?.total_monthly_outflow) || 0}
               onFlowsNavigate={onGoCapitalFlows}
               juiceGainActive={salaryCelebrate}
+              cushionRisk={Boolean(closePreview?.negative)}
             />
 
             <MqxGoalDash victory={overview?.victory} legacyGoal={goal} />

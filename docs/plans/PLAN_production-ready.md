@@ -55,7 +55,7 @@ aliases:
 | PR-04 | 🟡 | `.github/workflows/ci.yml` (PR + `workflow_call`): backend `pytest -q` (с `packages/fincore`), frontend `test:unit`, `check:guardrails`, `build`; `deploy-app.yml` → `needs: test`. Локально все команды зелёные (637 passed). Осталось вручную: Settings → Branches → main → required checks «Backend pytest», «Frontend unit + guardrails»; первый прогон на GitHub (Python 3.14) не проверен |
 | PR-05 | ✅ | `SECRET_KEY` без дефолта в prod (`config.py`); `/api/health` при мёртвой БД → **503** без текста исключения (`routers/health.py`, `tests/integration/api/test_health.py`, 2026-10-26) |
 | PR-06 | ✅ | `auth.py`: argon2id, legacy `salt:sha256`, `password_needs_rehash` |
-| PR-07 | 🟡 | Бэкенд: `PeriodClosePreview` в `schemas.py`, прогноз на `fincore.forecast`. FE `period_close_preview` не использует — превью на CTA и chip «подушка ≠ жизнь» не выведены |
+| PR-07 | ✅ | 2026-10-26: lab `board-game/close-preview-round` вариант A утверждён и перенесён: строка «Спишется · останется» под «Завершить ход», плашка третьего минуса, «не платит расходы» у подушки, Монетка о минусе (`MqxDashboardHero`, `MqxFinancePeriodBlock`, `closePreviewView`/`buildTurnTip` + unit). Метрика «игрок называет списание до тапа» — на волне 10–20 |
 | PR-08 | ✅ | 2026-10-26: `ensure_schema_compatibility` и DDL `victory_goals` в сиде удалены; старт — `app/db_schema.prepare_schema` (PostgreSQL: только сверка с ORM, `SchemaOutOfDateError` с подсказкой `db.sh migrate`; SQLite: `create_all`). `db.sh migrate` пропускает baseline на живой схеме. `tests/test_schema_canon.py` — ORM ⊆ SQL. Прогон на живом PostgreSQL не делался |
 | PR-09 | ❓ | Freeze-чеклист (TG-шаблон 4, CTA советника) — конфиг/ops, в коде не проверяется |
 | PR-14 | ✅ | `events_spawn_failed` в `period.py`, `schemas.py`, FE `periodCloseDisplay.js`; тест `test_period_event_pool_failure.py`; план approved |
@@ -88,7 +88,7 @@ aliases:
 | GO-05 | ⬜ | Зависит от GO-02/03 и SQL-аудита |
 | PR-35 | ✖ | Cancelled (ADR-013); Plan теперь — эпик SPL |
 
-**Итог по фазам:** P0 закрыт на 6 из 10 (PR-04, PR-08 не сделаны; PR-05, PR-07 частично; PR-09 вне кода). Gate «можно звать людей» по пунктам 2 (required CI) и 4 (честный close на CTA) **не выполнен**.
+**Итог по фазам:** P0 закрыт на 9 из 10 по коду (2026-10-26: PR-05, PR-07, PR-08 ✅; PR-04 ждёт required checks в GitHub; PR-09 вне кода). Gate «можно звать людей» по пунктам 2 (required CI) и 4 (честный close на CTA) **не выполнен**.
 
 ---
 

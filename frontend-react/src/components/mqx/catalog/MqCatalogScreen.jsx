@@ -241,6 +241,7 @@ export function MqCatalogScreen() {
                 pendingEventsCount={2}
                 onOpenEvents={() => {}}
                 tip={{ text: 'Забери зарплату до конца хода', tone: 'normal' }}
+                closePreview={{ charges: 37500, after: 49900, negative: false, defeat: false }}
               />
               <MqxNeedsDash
                 needs={{ comfort: 70, status: 45, social: 60, health: 80 }}

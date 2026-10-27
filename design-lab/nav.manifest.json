@@ -120,6 +120,7 @@
         { "label": "Brand logo", "path": "brand-logo/index.html", "kind": "lab", "status": "approved" },
         { "label": "Brand tagline round", "path": "brand-logo/tagline-round/index.html", "kind": "lab" },
         { "label": "Дашборд ★ BG-1 — prod parity (в prod с 2026-10-14)", "path": "dashboard/bg1-page-round/index.html", "kind": "lab", "status": "approved" },
+        { "label": "Настольная игра ★ конец хода: превью списания и подушка (PR-07, канон A)", "path": "board-game/close-preview-round/index.html", "kind": "lab", "status": "approved" },
         { "label": "Настольная игра ★ BG-3 — дашборд: одна рамка на уровень (канон)", "path": "board-game/frames-round/index.html", "kind": "lab", "status": "approved" },
         { "label": "Настольная игра ★ BG-2 — остальные экраны (канон)", "path": "board-game/screens-round/index.html", "kind": "lab", "status": "approved" },
         { "label": "Настольная игра ★ BG-1 — дашборд (концепция, канон)", "path": "board-game/hybrid-round/index.html", "kind": "lab", "status": "approved" },

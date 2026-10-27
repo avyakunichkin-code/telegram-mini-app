@@ -1,4 +1,5 @@
 import { FINISH_TURN_BUTTON, TURN_SINGULAR } from '../../../constants/turnCopy';
+import { MoneyText } from '../../MoneyText';
 import { MonetkaAvatar } from '../brand/MonetkaAvatar';
 import { eventsPlateHint, eventsPlateTitle } from '../utils/boardDashDisplay';
 
@@ -26,9 +27,52 @@ function EventsPlate({ count, onOpen }) {
   );
 }
 
+function rubAria(n) {
+  return `${Math.abs(Math.round(Number(n) || 0)).toLocaleString('ru-RU')} руб.`;
+}
+
+/**
+ * Превью конца хода ★ close-preview-round A (PR-07): «Спишется N ₽ · останется M ₽» под кнопкой.
+ * Минус после хода — красным; третий минус подряд — плашка о поражении.
+ */
+function ClosePreview({ preview }) {
+  const { charges, after, negative, defeat } = preview;
+  const afterText = `${negative ? 'минус ' : ''}${rubAria(after)}`;
+  return (
+    <>
+      <p
+        id="mqx-close-preview"
+        className="mqx-bg-close-preview"
+        aria-label={`В конце хода спишется ${rubAria(charges)}, на счёте останется ${afterText}`}
+      >
+        <span>
+          Спишется{' '}
+          <b>
+            <MoneyText value={charges} decimals={0} />
+          </b>
+        </span>
+        <span aria-hidden="true">·</span>
+        <span className={negative ? 'mqx-bg-close-preview__risk' : undefined}>
+          останется{' '}
+          <b>
+            {after < 0 ? '−' : ''}
+            <MoneyText value={Math.abs(after)} decimals={0} />
+          </b>
+        </span>
+      </p>
+      {defeat ? (
+        <p className="mqx-bg-close-defeat" role="alert">
+          Третий минус подряд — игра закончится
+        </p>
+      ) : null}
+    </>
+  );
+}
+
 /**
  * Карта хода ★ BG-1 (ADR-014): роль и «Твой ход» слева, номер хода справа (ходов не ограничено),
- * плашка событий → Монетка одной строкой → компактная «Завершить ход».
+ * плашка событий → Монетка одной строкой → компактная «Завершить ход» → превью списания (PR-07).
+ * `closePreview` — из `closePreviewView(overview.period_close_preview)`; null — строки нет.
  */
 export function MqxDashboardHero({
   roleTitle = 'Игрок',
@@ -38,6 +82,7 @@ export function MqxDashboardHero({
   pendingEventsCount = 0,
   onOpenEvents,
   tip = null,
+  closePreview = null,
 }) {
   const turn = Number(periodIndex) || 0;
 
@@ -71,9 +116,12 @@ export function MqxDashboardHero({
         onClick={onCloseMonth}
         data-onboarding-anchor="next_period"
         aria-label="Завершить ход и перейти к следующему"
+        aria-describedby={closePreview ? 'mqx-close-preview' : undefined}
       >
         {FINISH_TURN_BUTTON}
       </button>
+
+      {closePreview ? <ClosePreview preview={closePreview} /> : null}
     </header>
   );
 }

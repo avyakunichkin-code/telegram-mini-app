@@ -45,7 +45,8 @@ export function lowestNeedAxis(needs) {
 
 /**
  * Монетка одной строкой — самое срочное в этом ходу.
- * Порядок: риск поражения по потребностям → просрочка → зарплата → события → шаг цели.
+ * Порядок: риск поражения по потребностям → просрочка → минус после хода → зарплата → события → шаг цели.
+ * `closePreview` — из `closePreviewView`; `safetyBalance` — подушка (подскажем снять, PR-07).
  * @returns {{ text: string, tone: 'risk' | 'normal' }}
  */
 export function buildTurnTip({
@@ -55,6 +56,8 @@ export function buildTurnTip({
   salaryAvailable = false,
   pendingEventsCount = 0,
   goalView = null,
+  closePreview = null,
+  safetyBalance = 0,
 } = {}) {
   if (Number(needsZeroStreak) > 0) {
     const axis = lowestNeedAxis(needs);
@@ -63,6 +66,12 @@ export function buildTurnTip({
   }
   if (Number(overdueCount) > 0) {
     return { text: 'Есть просрочка — погаси долг в «Капитале»', tone: 'risk' };
+  }
+  if (closePreview?.negative) {
+    // Превью без зарплаты: не забрана — в конце хода её не будет (C-2).
+    if (salaryAvailable) return { text: 'Не хватит на расходы — забери зарплату', tone: 'risk' };
+    if (Number(safetyBalance) > 0) return { text: 'Не хватит на расходы — сними из подушки', tone: 'risk' };
+    return { text: 'Не хватит на расходы хода — уйдёшь в минус', tone: 'risk' };
   }
   if (salaryAvailable) return { text: 'Забери зарплату до конца хода', tone: 'normal' };
   if (Number(pendingEventsCount) > 0) return { text: 'Реши события до конца хода', tone: 'normal' };
@@ -76,6 +85,22 @@ export function buildTurnTip({
   }
   if (phase === 'win') return { text: 'Победа! Можно играть дальше', tone: 'normal' };
   return { text: 'Всё сделано — можно завершать ход', tone: 'normal' };
+}
+
+/**
+ * Превью конца хода ★ close-preview-round A (PR-07): строка под «Завершить ход».
+ * Источник — `period_close_preview` из `GET /api/finance/overview` (тот же расчёт, что закрытие хода).
+ * @returns {{ charges: number, after: number, negative: boolean, defeat: boolean } | null}
+ */
+export function closePreviewView(preview) {
+  if (!preview || typeof preview !== 'object') return null;
+  const after = Number(preview.estimated_cash_after_close) || 0;
+  return {
+    charges: Math.max(0, Number(preview.estimated_charges_total) || 0),
+    after,
+    negative: Boolean(preview.would_be_negative_after_close),
+    defeat: Boolean(preview.defeat_if_close_negative),
+  };
 }
 
 /** Подпись свёрнутой цели: «шаг 3 из 5». */

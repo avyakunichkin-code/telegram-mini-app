@@ -9,12 +9,13 @@ function moneyAria(n) {
 }
 
 /** Ячейка денег: кнопка в раздел «Капитала», если есть навигация, иначе статичная. */
-function MoneyCell({ label, children, ariaLabel, section, onNavigate, className = '' }) {
+function MoneyCell({ label, children, ariaLabel, section, onNavigate, className = '', note = null }) {
   const cls = ['mqx-bg-money__cell', className].filter(Boolean).join(' ');
   const body = (
     <>
       <small className="mqx-bg-money__label">{label}</small>
       <b className="mqx-bg-money__value">{children}</b>
+      {note}
     </>
   );
   if (section && onNavigate) {
@@ -39,6 +40,7 @@ function MoneyCell({ label, children, ariaLabel, section, onNavigate, className 
 /**
  * Деньги ★ BG-3: персонаж у суммы «На счёте»; ниже доходы и расходы за ход, затем подушка.
  * Без рамок — прямо на поле. Расход нейтрален (ADR-014), доход — изумруд со знаком «+».
+ * У подушки вторая строка «не платит расходы» (PR-07); `cushionRisk` — счёт уйдёт в минус, строка красная.
  */
 export function MqxFinancePeriodBlock({
   templateKey,
@@ -49,6 +51,7 @@ export function MqxFinancePeriodBlock({
   outflow = 0,
   onFlowsNavigate,
   juiceGainActive = false,
+  cushionRisk = false,
 }) {
   const incomeValue = Math.max(0, Number(income?.value) || 0);
   const outflowValue = Math.max(0, Number(outflow) || 0);
@@ -93,9 +96,17 @@ export function MqxFinancePeriodBlock({
         <MoneyCell
           label={cushionLabel}
           ariaLabel={
-            cushionPercent != null
+            (cushionPercent != null
               ? `Подушка ${moneyAria(safety)}, наполнение ${cushionPercent}% от нормы`
-              : `Подушка ${moneyAria(safety)}`
+              : `Подушка ${moneyAria(safety)}`) + ', не платит расходы хода'
+          }
+          note={
+            <small
+              className={['mqx-bg-money__note', cushionRisk && 'mqx-bg-money__note--risk'].filter(Boolean).join(' ')}
+              aria-hidden="true"
+            >
+              не платит расходы
+            </small>
           }
         >
           <MoneyText value={safety} decimals={0} />

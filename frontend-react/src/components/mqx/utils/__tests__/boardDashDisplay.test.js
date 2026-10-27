@@ -3,6 +3,7 @@ import { describe, it } from 'node:test';
 
 import {
   buildTurnTip,
+  closePreviewView,
   eventsPlateHint,
   eventsPlateTitle,
   goalFinishText,
@@ -84,5 +85,59 @@ describe('BG-1 dashboard display', () => {
   it('maps template keys to role titles', () => {
     assert.equal(personaRoleTitle('mq_game_basic_v1'), 'Студент');
     assert.equal(personaRoleTitle('unknown'), 'Игрок');
+  });
+});
+
+// PR-07: превью конца хода ★ close-preview-round A (period_close_preview из overview).
+describe('close preview under «Завершить ход»', () => {
+  const preview = {
+    estimated_cash_after_close: 49900,
+    estimated_charges_total: 37500,
+    would_be_negative_after_close: false,
+    defeat_if_close_negative: false,
+  };
+
+  it('returns null without preview data', () => {
+    assert.equal(closePreviewView(null), null);
+    assert.equal(closePreviewView(undefined), null);
+  });
+
+  it('shows charges and cash left after the turn', () => {
+    assert.deepEqual(closePreviewView(preview), {
+      charges: 37500,
+      after: 49900,
+      negative: false,
+      defeat: false,
+    });
+  });
+
+  it('flags a negative close and the third minus in a row', () => {
+    const minus = { ...preview, estimated_cash_after_close: -16500, would_be_negative_after_close: true };
+    assert.equal(closePreviewView(minus).negative, true);
+    assert.equal(closePreviewView(minus).defeat, false);
+    assert.equal(closePreviewView({ ...minus, defeat_if_close_negative: true }).defeat, true);
+  });
+
+  it('never shows a negative charge', () => {
+    assert.equal(closePreviewView({ ...preview, estimated_charges_total: -5 }).charges, 0);
+  });
+
+  it('Монетка warns before a negative close, after needs and overdue', () => {
+    const minus = closePreviewView({
+      ...preview,
+      estimated_cash_after_close: -16500,
+      would_be_negative_after_close: true,
+    });
+    assert.deepEqual(buildTurnTip({ closePreview: minus, safetyBalance: 45000 }), {
+      text: 'Не хватит на расходы — сними из подушки',
+      tone: 'risk',
+    });
+    assert.equal(
+      buildTurnTip({ closePreview: minus, salaryAvailable: true, safetyBalance: 45000 }).text,
+      'Не хватит на расходы — забери зарплату',
+    );
+    assert.equal(buildTurnTip({ closePreview: minus, safetyBalance: 0 }).text, 'Не хватит на расходы хода — уйдёшь в минус');
+    assert.equal(buildTurnTip({ closePreview: minus, overdueCount: 1 }).text, 'Есть просрочка — погаси долг в «Капитале»');
+    assert.equal(buildTurnTip({ closePreview: closePreviewView(preview), salaryAvailable: true }).text, 'Забери зарплату до конца хода');
   });
 });
