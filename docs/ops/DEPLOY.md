@@ -58,14 +58,14 @@ Resume после блокировки экрана (PW1): [`foundation/PW1_RESU
 | `OPS_TELEGRAM_BOT_TOKEN` / `OPS_TELEGRAM_CHAT_ID` | по желанию (Watchtower) |
 
 4. **Custom Domain** на Web Service: `api.YOUR_DOMAIN` → CNAME из панели Render.
-5. Миграции на prod (из корня репо): — см. [`backend/migrations/README.md`](../../backend/migrations/README.md).
+5. Миграции на prod (из корня репо) — **до** deploy, иначе API не стартует (`SchemaOutOfDateError`, PR-08); повторный прогон безопасен. См. [`backend/migrations/README.md`](../../backend/migrations/README.md).
 
 ```bash
 export DATABASE_URL="<Internal Database URL из Render>"
 bash backend/scripts/db.sh migrate
 ```
 
-6. Smoke: `GET https://api.YOUR_DOMAIN/api/health` → `200`.
+6. Smoke: `GET https://api.YOUR_DOMAIN/api/health` → `200` (БД недоступна → `503`).
 
 ### 2.2 Уже есть сервис `telegram-mini-app-zwfs`
 
@@ -198,8 +198,8 @@ HashRouter (`#/game`) менять не нужно.
 | 404 на refresh без hash | BrowserRouter на static host | Оставляем HashRouter |
 | API 401 после деплоя | другой `SECRET_KEY` | Тестерам перелогиниться |
 | Пустая БД | миграции не прогнаны | `bash backend/scripts/db.sh migrate` на prod `DATABASE_URL` |
-
-| Пустая БД | миграции не прогнаны | `bash backend/scripts/db.sh migrate` на prod `DATABASE_URL` |
+| API не стартует: `SchemaOutOfDateError` | migrate не прогнан для релиза | `bash backend/scripts/db.sh migrate`, затем redeploy |
+| `/api/health` → 503 | БД недоступна | проверить `DATABASE_URL`, состояние PostgreSQL |
 
 ---
 

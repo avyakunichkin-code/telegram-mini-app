@@ -53,7 +53,7 @@ aliases:
 | PR-02 | ✅ | `salary.py`, `events/choose.py`, тесты `test_salary_lock`, `test_choose_lock`; FE `api/client.js` + `utils/idempotencyKey.js` |
 | PR-03 | ✅ | `period_actions.py` → 410; `test_complete_period_gone.py` (integration + unit) |
 | PR-04 | 🟡 | `.github/workflows/ci.yml` (PR + `workflow_call`): backend `pytest -q` (с `packages/fincore`), frontend `test:unit`, `check:guardrails`, `build`; `deploy-app.yml` → `needs: test`. Локально все команды зелёные (637 passed). Осталось вручную: Settings → Branches → main → required checks «Backend pytest», «Frontend unit + guardrails»; первый прогон на GitHub (Python 3.14) не проверен |
-| PR-05 | 🟡 | `SECRET_KEY` без дефолта в prod — ✅ (`config.py`). `/api/health` при мёртвой БД отдаёт 200 с `status: error` вместо 503 — ⬜ |
+| PR-05 | ✅ | `SECRET_KEY` без дефолта в prod (`config.py`); `/api/health` при мёртвой БД → **503** без текста исключения (`routers/health.py`, `tests/integration/api/test_health.py`, 2026-10-26) |
 | PR-06 | ✅ | `auth.py`: argon2id, legacy `salt:sha256`, `password_needs_rehash` |
 | PR-07 | 🟡 | Бэкенд: `PeriodClosePreview` в `schemas.py`, прогноз на `fincore.forecast`. FE `period_close_preview` не использует — превью на CTA и chip «подушка ≠ жизнь» не выведены |
 | PR-08 | ✅ | 2026-10-26: `ensure_schema_compatibility` и DDL `victory_goals` в сиде удалены; старт — `app/db_schema.prepare_schema` (PostgreSQL: только сверка с ORM, `SchemaOutOfDateError` с подсказкой `db.sh migrate`; SQLite: `create_all`). `db.sh migrate` пропускает baseline на живой схеме. `tests/test_schema_canon.py` — ORM ⊆ SQL. Прогон на живом PostgreSQL не делался |
