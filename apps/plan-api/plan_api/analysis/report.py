@@ -331,7 +331,9 @@ def _steps(ctx: Ctx, areas: list[dict]) -> list[dict]:
         add("goal_unrealistic", f"Пересмотреть цель «{bad_goal['title']}»",
             f"Нужно откладывать {rub(bad_goal['monthly_needed'])}/мес — больше, чем остаётся. Реалистичный срок: {when}.",
             {"monthly_needed": bad_goal["monthly_needed"], "realistic_month": bad_goal["realistic_month"]})
-    if config.CUSHION_MIN_MONTHS <= m.safety_fund_months < ctx.cushion_target_months and ctx.cushion_contrib > 0:
+    # SPEC §7: «подушка < цели», без нижней границы — при пустой подушке идёт следом за first_cushion.
+    # cushion_contrib > 0 нужен шаблону («по N ₽/мес — за M мес.»); при дефиците сработает stop_deficit.
+    if m.safety_fund_months < ctx.cushion_target_months and ctx.cushion_contrib > 0:
         months = math.ceil(max(0.0, target_amount - ctx.cushion) / ctx.cushion_contrib)
         add("cushion_target", f"Довести подушку до {rub(target_amount)}",
             f"Сейчас {m.safety_fund_months:.1f} мес. из {ctx.cushion_target_months:g}. По {rub(ctx.cushion_contrib)}/мес — за {months} мес.",

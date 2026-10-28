@@ -105,6 +105,14 @@ def test_three_steps_unique_rules():
     assert all(s["why"] for s in report["steps"])
 
 
+def test_cushion_target_fires_without_lower_bound():
+    # SPEC §7 правило 7: «подушка < цели» — без нижней границы; при нулевой подушке рядом с first_cushion
+    report = build_report(checkup(simple(income=100_000, expenses=70_000, cushion=0)))
+    keys = [s["rule_key"] for s in report["steps"]]
+    assert keys.index("first_cushion") < keys.index("cushion_target")
+    assert len(keys) == 3
+
+
 def test_all_green_suggests_surplus():
     report = build_report(checkup(simple(income=200_000, expenses=80_000, cushion=600_000)))
     assert all(a["light"] == "green" for a in report["areas"])
