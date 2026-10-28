@@ -16,7 +16,7 @@ aliases:
 | Направление | Цель сейчас | Роадмап | Документы |
 |-------------|-------------|---------|-----------|
 | **Game** — «ТВОЙ ХОД», игра по финансовой грамотности | Pre-Alpha gate: «можно звать людей» | [`plans/PLAN_production-ready.md`](plans/PLAN_production-ready.md) (P0–P2 до α) · дальний горизонт — [`vision/GAME_DESIGN_ROADMAP_2026.md`](vision/GAME_DESIGN_ROADMAP_2026.md) · приоритеты — [`backlog/PRODUCT_BACKLOG.md`](backlog/PRODUCT_BACKLOG.md) | весь `docs/`, кроме `docs/plan/`; канон — [`foundation/SPEC_PRODUCT.md`](foundation/SPEC_PRODUCT.md) |
-| **Plan** — «ТВОЙ ПЛАН», семейный финансовый чекап | Рабочий прототип (P0) | [`plan/ROADMAP.md`](plan/ROADMAP.md) | [`plan/`](plan/README.md) |
+| **Plan** — «ТВОЙ ПЛАН», семейный финансовый чекап | Рабочий прототип: P0 закрыт 2026-10-28, дальше — решение по P1 (проверка на людях) | [`plan/ROADMAP.md`](plan/ROADMAP.md) | [`plan/`](plan/README.md) |
 | **Ядро** — `packages/fincore`, `packages/platform` | `platform` (SPL-301/302) после P0 игры | [`plans/PLAN_game-plan-split.md`](plans/PLAN_game-plan-split.md) (фазы 0–3) | [ADR-016](decisions/ADR-016-two-products-shared-fincore.md), [`packages/fincore/README.md`](../packages/fincore/README.md) |
 
 ## Как направления связаны

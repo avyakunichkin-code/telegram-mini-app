@@ -38,7 +38,7 @@ aliases:
 | [`apps/plan-web`](../../apps/plan-web/) | Vite + React: экраны входа, вопроса, семьи, быстрого старта, уточнения и отчёта |
 | [`packages/fincore`](../../packages/fincore/README.md) | Общее ядро; для Plan добавлено только `member_id` в `Income` и `Liability` |
 
-Запуск (Claude Code, `.claude/launch.json`): `plan-api` (:8020) и `plan-web` (:5190). Тесты: `cd apps/plan-api && py -3 -m pytest -q`; сверка до копейки — `packages/fincore/tests/test_reconciliation.py`.
+Запуск (Claude Code, `.claude/launch.json`): `plan-api` (:8020) и `plan-web` (:5190). Тесты: `cd apps/plan-api && py -3 -m pytest -q`; сверка до копейки — `packages/fincore/tests/test_reconciliation.py`; e2e (CS-11, 375 px и десктоп, свой стенд :8021/:5191) — `cd apps/plan-web && npm run test:e2e`.
 
 ## Канон при конфликте
 

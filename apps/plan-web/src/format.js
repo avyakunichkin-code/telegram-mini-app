@@ -3,7 +3,8 @@ export function rub(value, { sign = false } = {}) {
   const n = Math.round(value)
   const s = Math.abs(n).toLocaleString('ru-RU')
   const prefix = n < 0 ? '−' : sign && n > 0 ? '+' : ''
-  return `${prefix}${s} ₽`
+  // Неразрывный пробел перед ₽: разряды toLocaleString уже неразрывные, знак рубля тоже не отрываем
+  return `${prefix}${s}\u00a0₽`
 }
 
 export function pct(value, digits = 0) {
