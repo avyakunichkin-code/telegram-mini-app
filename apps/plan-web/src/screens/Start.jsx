@@ -107,7 +107,7 @@ export function Quick({ checkup, onDone, onDemo, onSkip }) {
 
   return (
     <form className="stack narrow" onSubmit={submit}>
-      <p className="eyebrow">Быстрый старт · 5 вопросов</p>
+      <p className="eyebrow">Быстрый старт, 5 вопросов</p>
       <h1>Примерно — уже достаточно</h1>
       <p className="lead">Отвечайте диапазоном, если не помните точно. Черновой разбор появится сразу, точность вырастет при уточнении.</p>
       <Card>

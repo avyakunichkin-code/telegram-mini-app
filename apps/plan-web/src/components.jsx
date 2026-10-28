@@ -28,6 +28,7 @@ export function Card({ title, aside, children, className = '' }) {
   )
 }
 
+// Статус = слово + форма значка (CSS) + цвет: цвет никогда не единственный носитель
 export function Light({ value }) {
   const label = { green: 'Хорошо', yellow: 'Внимание', red: 'Риск' }[value] || '—'
   return <span className={`light light-${value}`}>{label}</span>
@@ -38,7 +39,66 @@ export function Verdict({ value }) {
   return <span className={`verdict verdict-${value}`}>{label}</span>
 }
 
+/** Шкала из трёх делений под заголовком области: уровень читается и без цвета. */
+export function AreaMeter() {
+  return <span className="area-meter" aria-hidden><i /><i /><i /></span>
+}
+
+/**
+ * Сумма карандашом или чернилами. Черновая (из вилок) — карандаш и «≈»;
+ * inking — момент уточнения: чернила проходят поверх карандаша.
+ */
+export function Money({ value, draft, inking, sign }) {
+  const text = rub(value, { sign })
+  if (inking) return <span className="pencil inking" data-v={text}>{text}</span>
+  if (draft) return <span className="pencil">≈&nbsp;{text}</span>
+  return <span className="ink">{text}</span>
+}
+
+/** Точность разбора: какая часть сумм уже обведена чернилами. */
+export function Precision({ label, share, hint }) {
+  const pctShare = Math.round((share ?? 0) * 100)
+  return (
+    <div className="precision" title={hint}>
+      <span className="precision-label">{label}<span>{pctShare} % ручкой</span></span>
+      <span className="precision-line" aria-hidden><i style={{ width: `${pctShare}%` }} /></span>
+    </div>
+  )
+}
+
+/** Линейка запаса: один «сантиметр» — один месяц, красная риска — цель. */
+export function Ruler({ months, target, draft, length = 6 }) {
+  const at = (m) => `${(Math.min(m, length) / length) * 100}%`
+  return (
+    <div className="ruler" role="img" aria-label={`Подушки хватит на ${months.toFixed(1)} мес. при цели ${target} мес.`}>
+      <div className="ruler-body">
+        <div className="ruler-nums" aria-hidden>{Array.from({ length }, (_, i) => <span key={i}>{i}</span>)}</div>
+        <span className={`ruler-fill ${draft ? 'draft' : ''}`} style={{ width: at(months) }} />
+        <span className="ruler-target" style={{ left: at(target) }}><b>цель {target} мес.</b></span>
+      </div>
+    </div>
+  )
+}
+
 const num = (v) => (v === '' || v === null || v === undefined ? '' : String(v))
+
+/** Вилка в клетках: отрезок от min до max, штриховка карандашом, база — крестик ручкой. */
+function Fork({ min, max }) {
+  const lo = Number(min) || 0
+  const hi = Number(max) || 0
+  if (!(hi > lo)) return null
+  const scale = hi * 1.5
+  const at = (v) => `${(v / scale) * 100}%`
+  return (
+    <span className="fork" aria-hidden>
+      <span className="fork-track">
+        <span className="fork-band" style={{ left: at(lo), width: `${((hi - lo) / scale) * 100}%` }} />
+        <span className="fork-base" style={{ left: at((lo + hi) / 2) }} />
+      </span>
+      <span className="fork-ends"><span>0</span><span>база {rub((lo + hi) / 2)}</span><span>{rub(scale)}</span></span>
+    </span>
+  )
+}
 
 /** Сумма точно или «примерно от–до». Значение — { min, max }. */
 export function RangeInput({ label, value, onChange, hint }) {
@@ -59,14 +119,17 @@ export function RangeInput({ label, value, onChange, hint }) {
         </button>
       </span>
       {ranged ? (
-        <span className="range">
-          <input inputMode="numeric" aria-label={`${label}: от`} value={num(v.min)}
-            onChange={(e) => set({ min: toNum(e.target.value) })} />
-          <span>—</span>
-          <input inputMode="numeric" aria-label={`${label}: до`} value={num(v.max)}
-            onChange={(e) => set({ max: toNum(e.target.value) })} />
-          <span className="unit">₽</span>
-        </span>
+        <>
+          <span className="range ranged">
+            <input inputMode="numeric" aria-label={`${label}: от`} value={num(v.min)}
+              onChange={(e) => set({ min: toNum(e.target.value) })} />
+            <span>—</span>
+            <input inputMode="numeric" aria-label={`${label}: до`} value={num(v.max)}
+              onChange={(e) => set({ max: toNum(e.target.value) })} />
+            <span className="unit">₽</span>
+          </span>
+          <Fork min={v.min} max={v.max} />
+        </>
       ) : (
         <span className="range">
           <input inputMode="numeric" aria-label={label} value={num(v.min)}
@@ -104,7 +167,10 @@ function short(n) {
   return String(n)
 }
 
-/** Линии ликвидности по месяцам. series: [{ name, points: [{month, liquid}], tone }] */
+/**
+ * Линии ликвидности по месяцам на клетке. series: [{ name, points: [{month, liquid}], tone }].
+ * Ноль — красная линия полей; где последняя серия уходит под ноль — кружок и пометка от руки.
+ */
 export function LineChart({ series, height = 180, compact = false }) {
   const all = series.flatMap((s) => s.points.map((p) => p.liquid))
   if (!all.length) return null
@@ -117,19 +183,45 @@ export function LineChart({ series, height = 180, compact = false }) {
   const pad = compact ? 4 : 28
   const x = (i) => pad + (i * (W - pad * 2)) / Math.max(1, n - 1)
   const y = (v) => pad / 2 + ((max - v) * (H - pad)) / span
+  const line = (s) => s.points.map((p, i) => `${x(i)},${y(p.liquid)}`).join(' ')
+
+  // Коридор между двумя сериями — та же вилка, растянутая во времени
+  const [a, b] = series
+  const band = !compact && b && b.points.length === n
+    ? `${line(a)} ${b.points.map((p, i) => `${x(i)},${y(p.liquid)}`).reverse().join(' ')}`
+    : null
+
+  // Первый месяц, где последняя серия опускается ниже нуля (линейная интерполяция)
+  const last = series[series.length - 1].points
+  let hitX = null
+  for (let i = 1; i < last.length; i++) {
+    const p0 = last[i - 1].liquid
+    const p1 = last[i].liquid
+    if (p0 >= 0 && p1 < 0) {
+      hitX = x(i - 1) + ((x(i) - x(i - 1)) * p0) / (p0 - p1)
+      break
+    }
+  }
+  const cells = compact ? [] : Array.from({ length: Math.floor(H / 24) }, (_, i) => (i + 1) * 24).filter((v) => v < H)
+
   return (
-    <svg className="chart" viewBox={`0 0 ${W} ${H}`} role="img"
+    <svg className="chart" viewBox={`0 0 ${W} ${H + (compact ? 0 : 28)}`} role="img"
       aria-label={series.map((s) => `${s.name}: от ${rub(Math.min(...s.points.map((p) => p.liquid)))} до ${rub(Math.max(...s.points.map((p) => p.liquid)))}`).join('; ')}>
-      <line x1={pad} x2={W - pad} y1={y(0)} y2={y(0)} className="chart-zero" />
+      {cells.map((cy) => <line key={cy} x1={0} x2={W} y1={cy} y2={cy} className="chart-cell" />)}
+      {band && <polygon className="chart-band" points={band} />}
+      <line x1={0} x2={W} y1={y(0)} y2={y(0)} className="chart-zero" />
       {series.map((s) => (
-        <polyline key={s.name} className={`chart-line tone-${s.tone}`} fill="none"
-          points={s.points.map((p, i) => `${x(i)},${y(p.liquid)}`).join(' ')} />
+        <polyline key={s.name} className={`chart-line tone-${s.tone}`} points={line(s)} />
       ))}
+      {hitX !== null && <circle className="chart-hit" cx={hitX} cy={y(0)} r={compact ? 4 : 6} />}
       {!compact && (
         <>
-          <text x={pad} y={H - 4} className="chart-label">{monthLabel(series[0].points[0].month)}</text>
-          <text x={W - pad} y={H - 4} className="chart-label" textAnchor="end">{monthLabel(series[0].points[n - 1].month)}</text>
-          <text x={W - pad} y={y(0) - 6} className="chart-label" textAnchor="end">0 ₽</text>
+          {hitX !== null && (
+            <text x={Math.min(hitX + 10, W - 190)} y={Math.min(y(0) + 30, H + 4)} className="chart-note">тут кончатся деньги</text>
+          )}
+          <text x={pad} y={H + 22} className="chart-label">{monthLabel(series[0].points[0].month)}</text>
+          <text x={W - pad} y={H + 22} className="chart-label" textAnchor="end">{monthLabel(series[0].points[n - 1].month)}</text>
+          <text x={2} y={y(0) - 6} className="chart-label">0 ₽</text>
         </>
       )}
     </svg>

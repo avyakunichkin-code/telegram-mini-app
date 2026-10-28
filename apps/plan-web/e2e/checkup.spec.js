@@ -80,7 +80,7 @@ test('чекап: вход → черновой разбор → итоговы�
   await expectMoneyUnbroken(page)
 
   const first = page.locator('.steps .step').first()
-  await first.getByRole('button', { name: '✓ Сделано' }).click()
+  await first.getByRole('button', { name: 'Сделано', exact: true }).click()
   await expect(first.locator('.done-note')).toHaveText('Сделано')
   await expect(first).toHaveClass(/step-done/)
 

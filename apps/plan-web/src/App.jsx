@@ -129,7 +129,7 @@ export default function App() {
           </nav>
         )}
       </header>
-      <span className="proto-badge">Прототип · данные в памяти сервера</span>
+      <span className="proto-badge">Прототип: данные хранятся в памяти сервера</span>
       <main className="main">
         <ErrorNote error={error} />
         {screen === 'loading' && <p className="muted">Загружаем…</p>}
@@ -162,7 +162,7 @@ export default function App() {
                     setReport(await api.report(ck.id))
                     setScreen('report')
                   })}>
-                    {c.as_of} · {c.status === 'completed' ? 'итоговый' : 'черновик'}
+                    {c.as_of}, {c.status === 'completed' ? 'итоговый' : 'черновик'}
                   </button>
                 </li>
               ))}
