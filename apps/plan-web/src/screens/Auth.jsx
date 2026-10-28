@@ -44,7 +44,7 @@ export default function Auth({ meta, onLoggedIn }) {
   return (
     <div className="hero">
       <div className="hero-copy">
-        <h1>Финансы <mark className="mark swipe">как есть</mark></h1>
+        <h1>Финансы как есть</h1>
         <p className="lead">
           Внесите деньги семьи — доходы, расходы, кредиты и накопления — и получите честный разбор:
           где вы сейчас, что может сломать бюджет и с какого шага начать.

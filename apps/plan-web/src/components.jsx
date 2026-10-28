@@ -39,50 +39,39 @@ export function Verdict({ value }) {
   return <span className={`verdict verdict-${value}`}>{label}</span>
 }
 
-/** Шкала из трёх делений под заголовком области: уровень читается и без цвета. */
-export function AreaMeter() {
-  return <span className="area-meter" aria-hidden><i /><i /><i /></span>
-}
-
-/**
- * Сумма карандашом или чернилами. Черновая (из вилок) — карандаш и «≈»;
- * inking — момент уточнения: чернила проходят поверх карандаша.
- */
-export function Money({ value, draft, inking, sign }) {
+/** Сумма; черновая (посчитана из вилок) — со знаком «≈». */
+export function Money({ value, draft, sign }) {
   const text = rub(value, { sign })
-  if (inking) return <span className="pencil inking" data-v={text}>{text}</span>
-  if (draft) return <span className="pencil">≈&nbsp;{text}</span>
-  return <span className="ink">{text}</span>
+  return draft ? <span>≈&nbsp;{text}</span> : <span>{text}</span>
 }
 
-/** Точность разбора: какая часть сумм уже обведена чернилами. */
-export function Precision({ label, share, hint }) {
-  const pctShare = Math.round((share ?? 0) * 100)
+/** Точность разбора: десять делений, закрашено — доля сумм, введённых точно. */
+export function Precision({ share, hint }) {
+  const on = Math.round((share ?? 0) * 10)
   return (
-    <div className="precision" title={hint}>
-      <span className="precision-label">{label}<span>{pctShare} % ручкой</span></span>
-      <span className="precision-line" aria-hidden><i style={{ width: `${pctShare}%` }} /></span>
-    </div>
+    <span className="precision" title={hint} role="img" aria-label={`Точно введено ${Math.round((share ?? 0) * 100)} % сумм`}>
+      {Array.from({ length: 10 }, (_, i) => <i key={i} className={i < on ? 'on' : ''} />)}
+    </span>
   )
 }
 
-/** Линейка запаса: один «сантиметр» — один месяц, красная риска — цель. */
-export function Ruler({ months, target, draft, length = 6 }) {
-  const at = (m) => `${(Math.min(m, length) / length) * 100}%`
+/** Прогноз столбиками: остаток на конец каждого месяца, последний подсвечен. points: [{month, liquid}] */
+export function Bars({ points, label }) {
+  if (!points?.length) return null
+  const max = Math.max(1, ...points.map((p) => Math.abs(p.liquid)))
   return (
-    <div className="ruler" role="img" aria-label={`Подушки хватит на ${months.toFixed(1)} мес. при цели ${target} мес.`}>
-      <div className="ruler-body">
-        <div className="ruler-nums" aria-hidden>{Array.from({ length }, (_, i) => <span key={i}>{i}</span>)}</div>
-        <span className={`ruler-fill ${draft ? 'draft' : ''}`} style={{ width: at(months) }} />
-        <span className="ruler-target" style={{ left: at(target) }}><b>цель {target} мес.</b></span>
-      </div>
+    <div className="bars" role="img" aria-label={label}>
+      {points.map((p, i) => (
+        <i key={p.month} className={p.liquid < 0 ? 'neg' : i === points.length - 1 ? 'now' : ''}
+          style={{ height: `${Math.max(4, (Math.abs(p.liquid) / max) * 100)}%` }} />
+      ))}
     </div>
   )
 }
 
 const num = (v) => (v === '' || v === null || v === undefined ? '' : String(v))
 
-/** Вилка в клетках: отрезок от min до max, штриховка карандашом, база — крестик ручкой. */
+/** Вилка «от–до»: жёлтый отрезок на дорожке, риска — база (середина). */
 function Fork({ min, max }) {
   const lo = Number(min) || 0
   const hi = Number(max) || 0

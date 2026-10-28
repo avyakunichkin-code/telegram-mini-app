@@ -1,27 +1,38 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { api } from '../api.js'
-import { AreaMeter, Button, Card, ErrorNote, Light, LineChart, Money, Precision, Ruler, Verdict } from '../components.jsx'
+import { Bars, Button, Card, ErrorNote, Light, LineChart, Money, Precision, Verdict } from '../components.jsx'
 import { monthLabel, pct, plural, rub } from '../format.js'
 
 const PRECISION = {
-  draft: ['Черновик', 'Много ответов диапазонами или оценок — уточните разделы, и разбор станет точнее.', 'карандашом — это прикидка, уточните крупные суммы'],
-  approximate: ['Приблизительно', 'Часть цифр примерная. Для итогового разбора стоит уточнить крупные суммы.', 'часть цифр ещё карандашом'],
-  refined: ['Уточнено', 'Почти все суммы введены точно.', 'почти всё обведено ручкой'],
+  draft: ['Черновая точность', 'Много ответов диапазонами или оценок — уточните разделы, и разбор станет точнее.'],
+  approximate: ['Приблизительная точность', 'Часть цифр примерная. Для итогового разбора стоит уточнить крупные суммы.'],
+  refined: ['Уточнённые данные', 'Почти все суммы введены точно.'],
 }
 
-// Точность прошлого показа отчёта: если она выросла, цифры «обводятся ручкой» поверх карандаша
-let lastPrecision = null
+/** Главная цифра плитки-ответа — своя для каждого вопроса со входа. */
+function heroFor(ea) {
+  const n = ea.numbers || {}
+  if (n.dti_after !== undefined && n.dti_after !== null) return [Math.round(n.dti_after), ['% дохода', 'уйдёт на платежи']]
+  if (n.current?.months) return [n.current.months, [plural(n.current.months, 'месяц', 'месяца', 'месяцев'), 'до закрытия кредитов']]
+  if ('months_until_negative' in n) {
+    return n.months_until_negative
+      ? [n.months_until_negative, [plural(n.months_until_negative, 'месяц', 'месяца', 'месяцев'), 'продержитесь']]
+      : ['12+', ['месяцев', 'бюджет выдерживает']]
+  }
+  if ('green' in n) return [n.green, ['из 4 областей', 'в порядке']]
+  return null
+}
 
-function AreaMetrics({ area, draft, inking }) {
+function AreaMetrics({ area, draft }) {
   const m = area.metrics
-  const $ = (v) => <Money value={v} draft={draft} inking={inking} />
+  const $ = (v) => <Money value={v} draft={draft} />
   switch (area.key) {
     case 'budget':
       return (
         <dl className="kv">
           <dt>Доход</dt><dd>{$(m.income)}</dd>
           <dt>Расходы и платежи</dt><dd>{$(m.outflow)}</dd>
-          <dt>Остаётся</dt><dd className={m.free_cashflow < 0 ? 'neg' : ''}>{$(m.free_cashflow)}</dd>
+          <dt>Остаётся</dt><dd>{$(m.free_cashflow)}</dd>
           <dt>Норма сбережений</dt><dd>{m.savings_rate === null ? '—' : pct(m.savings_rate)}</dd>
         </dl>
       )
@@ -30,19 +41,16 @@ function AreaMetrics({ area, draft, inking }) {
         <dl className="kv">
           <dt>Платежи от дохода</dt><dd>{m.dti_percent.toFixed(0)} %</dd>
           <dt>Всего долга</dt><dd>{$(m.total_debt)}</dd>
-          <dt>Просрочка</dt><dd className={m.overdue > 0 ? 'neg' : ''}>{$(m.overdue)}</dd>
+          <dt>Просрочка</dt><dd>{$(m.overdue)}</dd>
         </dl>
       )
     case 'cushion':
       return (
-        <>
-          <Ruler months={m.months} target={m.target_months} draft={draft} />
-          <dl className="kv">
-            <dt>Подушка</dt><dd>{$(m.cushion)}</dd>
-            <dt>Хватит на</dt><dd>{m.months.toFixed(1)} мес. из {m.target_months}</dd>
-            <dt>Цели</dt><dd>{m.goals_realistic ? 'реалистичны' : 'есть нереалистичные'}</dd>
-          </dl>
-        </>
+        <dl className="kv">
+          <dt>Подушка</dt><dd>{$(m.cushion)}</dd>
+          <dt>Хватит на</dt><dd>{m.months.toFixed(1)} мес. из {m.target_months}</dd>
+          <dt>Цели</dt><dd>{m.goals_realistic ? 'реалистичны' : 'есть нереалистичные'}</dd>
+        </dl>
       )
     default:
       return (
@@ -59,15 +67,15 @@ function AreaMetrics({ area, draft, inking }) {
 }
 
 function Steps({ steps, final, onPatch }) {
-  // Маркер — одна пометка на экран: на первом ещё не сделанном шаге
+  // Жёлтая плитка — первый ещё не сделанный шаг
   const next = steps.find((s) => s.status === 'suggested')
   return (
     <ol className="steps">
       {steps.map((s) => (
-        <li key={s.rule_key} className={`step step-${s.status}`}>
+        <li key={s.rule_key} className={`step step-${s.status} ${s === next ? 'step-next' : ''}`}>
           <span className="step-rank">{s.rank}</span>
           <div>
-            <b>{s === next ? <mark className="mark swipe">{s.title}</mark> : s.title}</b>
+            <b>{s.title}</b>
             <p>{s.why}</p>
             {final && s.id && (
               <div className="row gap">
@@ -116,11 +124,12 @@ function DebtStrategy({ d }) {
 export default function Report({ checkup, report, onRefine, onComplete, onNew, onReport }) {
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState(null)
-  const [inking] = useState(() => lastPrecision === 'draft' && report.precision !== 'draft')
-  useEffect(() => { lastPrecision = report.precision }, [report.precision])
-  const [p1, p2, note] = PRECISION[report.precision]
+  const [p1, p2] = PRECISION[report.precision]
   const draft = report.precision === 'draft'
   const ea = report.entry_answer
+  const hero = heroFor(ea)
+  const base = report.forecast.base
+  const pessNegative = report.forecast.pessimistic.find((p) => p.liquid < 0)
 
   async function complete() {
     setBusy(true)
@@ -145,53 +154,48 @@ export default function Report({ checkup, report, onRefine, onComplete, onNew, o
 
   return (
     <div className="stack report">
-      <section className={`report-head answer answer-${ea.verdict}`}>
-        <div className="stack" style={{ gap: 12 }}>
-          <p className="eyebrow">{report.final ? 'Итоговый разбор' : 'Черновой разбор'} на {monthLabel(report.as_of)}</p>
+      <div className="board">
+        <section className={`card tile-inverse report-head answer answer-${ea.verdict} t-full`}>
+          <div className="card-head">
+            <p className="eyebrow" style={{ margin: 0 }}>{report.final ? 'Итоговый разбор' : 'Черновой разбор'} на {monthLabel(report.as_of)}</p>
+            <Verdict value={ea.verdict} />
+          </div>
           <h1>{ea.question}</h1>
-          <div><Verdict value={ea.verdict} /></div>
+          {hero && <div className="hero-num"><b>{hero[0]}</b><span>{hero[1][0]}<br />{hero[1][1]}</span></div>}
           <p className="answer-text">{ea.text}</p>
-        </div>
-        <div className="aside">
-          <Precision label={p1} share={report.precision_share} hint={p2} />
-          <p className={`note ${draft ? 'warn' : ''}`}>{note}</p>
-        </div>
-      </section>
+        </section>
 
-      <Card title="С чего начать">
-        <Steps steps={report.steps} final={report.final} onPatch={patch} />
-      </Card>
+        <section className={`card tile-tall t-half ${report.free_cashflow < 0 ? 'area-red' : 'area-green'}`}>
+          <h3>Остаётся в месяц</h3>
+          <div><div className="stat-value long">{rub(report.free_cashflow, { sign: true })}</div><p className="muted">капитал семьи — {rub(report.net_worth)}</p></div>
+        </section>
+        <section className="card tile-tall t-half" title={p2}>
+          <h3>{p1}</h3>
+          <div><div className="stat-value">{Math.round((report.precision_share ?? 0) * 100)} %</div><p className="muted" style={{ marginBottom: 8 }}>сумм введено точно</p><Precision share={report.precision_share} hint={p2} /></div>
+        </section>
 
-      <div className="areas">
+        <Card title="С чего начать" className="t-full">
+          <Steps steps={report.steps} final={report.final} onPatch={patch} />
+        </Card>
+
         {report.areas.map((a) => (
-          <Card key={a.key} title={a.title} aside={<Light value={a.light} />} className={`area area-${a.light}`}>
-            <AreaMeter />
-            <AreaMetrics area={a} draft={draft} inking={inking} />
+          <Card key={a.key} title={a.title} aside={<Light value={a.light} />} className={`area area-${a.light} t-area`}>
+            <AreaMetrics area={a} draft={draft} />
           </Card>
         ))}
-      </div>
 
-      <Card title="Прогноз на 12 месяцев" aside={<span className="muted">если ничего не менять</span>} className="forecast-card">
-        <div className="forecast">
-          <LineChart series={[
-            { name: 'Обычный сценарий', tone: 'base', points: report.forecast.base },
-            { name: 'Пессимистичный', tone: 'pess', points: report.forecast.pessimistic },
-          ]} />
-        </div>
-        <p className="legend">
-          <span><i className="sw" />по серединам диапазонов</span>
-          <span><i className="sw pess" />худший край диапазонов</span>
-          <span><i className="sw zero" />ноль денег</span>
-        </p>
-        <p className="muted">Свободный остаток — {rub(report.free_cashflow, { sign: true })} в месяц. Капитал семьи — {rub(report.net_worth)}.</p>
-      </Card>
+        <section className="card tile-inverse t-full">
+          <header className="card-head"><h3>Прогноз на 12 месяцев</h3><span className="muted">если ничего не менять</span></header>
+          <Bars points={base} label={`Остаток денег по месяцам: от ${rub(base[0]?.liquid)} до ${rub(base[base.length - 1]?.liquid)}`} />
+          <div className="bars-axis"><span>{monthLabel(base[0]?.month)}</span><span>{monthLabel(base[base.length - 1]?.month)}: {rub(base[base.length - 1]?.liquid)}</span></div>
+          {pessNegative && <p className="bars-warn">В пессимистичном сценарии деньги кончатся в {monthLabel(pessNegative.month)}.</p>}
+        </section>
 
-      <h2>Стресс-тест</h2>
-      <div className="scenarios">
+        <h2 className="t-full" style={{ padding: '0 6px' }}>Стресс-тест</h2>
         {report.scenarios.map((s) => (
-          <Card key={s.id} title={s.title} aside={<Verdict value={s.verdict} />} className={`scenario scenario-${s.verdict}`}>
+          <Card key={s.id} title={s.title} aside={<Verdict value={s.verdict} />} className={`scenario scenario-${s.verdict} t-quarter`}>
             <p className="muted">{s.description}</p>
-            <LineChart compact height={70} series={[{ name: s.title, tone: s.verdict, points: s.series }]} />
+            <LineChart compact height={60} series={[{ name: s.title, tone: s.verdict, points: s.series }]} />
             <p>
               {s.months_until_negative
                 ? `Деньги кончатся через ${s.months_until_negative} ${plural(s.months_until_negative, 'месяц', 'месяца', 'месяцев')}.`
@@ -200,30 +204,30 @@ export default function Report({ checkup, report, onRefine, onComplete, onNew, o
             </p>
           </Card>
         ))}
-      </div>
 
-      <Card title="Кредиты: как закрыть быстрее">
-        <DebtStrategy d={report.debt_strategy} />
-      </Card>
-
-      {report.goals.length > 0 && (
-        <Card title="Цели">
-          <div className="table-wrap">
-            <table className="table">
-              <thead><tr><th>Цель</th><th className="num">Нужно в месяц</th><th>Срок</th></tr></thead>
-              <tbody>
-                {report.goals.map((g) => (
-                  <tr key={g.title}>
-                    <td>{g.title}, {rub(g.target_amount)}</td>
-                    <td className="num">{rub(g.monthly_needed)}</td>
-                    <td>{g.realistic ? `${monthLabel(g.target_month)}, успеваете` : `реально: ${g.realistic_month ? monthLabel(g.realistic_month) : '—'}`}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+        <Card title="Кредиты: как закрыть быстрее" className="t-full">
+          <DebtStrategy d={report.debt_strategy} />
         </Card>
-      )}
+
+        {report.goals.length > 0 && (
+          <Card title="Цели" className="t-full">
+            <div className="table-wrap">
+              <table className="table">
+                <thead><tr><th>Цель</th><th className="num">Нужно в месяц</th><th>Срок</th></tr></thead>
+                <tbody>
+                  {report.goals.map((g) => (
+                    <tr key={g.title}>
+                      <td>{g.title}, {rub(g.target_amount)}</td>
+                      <td className="num">{rub(g.monthly_needed)}</td>
+                      <td>{g.realistic ? `${monthLabel(g.target_month)}, успеваете` : `реально: ${g.realistic_month ? monthLabel(g.realistic_month) : '—'}`}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </Card>
+        )}
+      </div>
 
       <ErrorNote error={error} />
       {!report.final ? (
