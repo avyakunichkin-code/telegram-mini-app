@@ -378,10 +378,10 @@
 
 /* ================= Листы (sheets) ================= */
 
-/* Лист — поле игры поверх затемнения: чернильный край сверху и по бокам, без мягкой тени */
+/* Лист — поле игры поверх затемнения: только чернильная линия сверху, без мягкой тени */
 :root[data-mqx-style='ink'] .mqx-sheet {
-  border: var(--mq-ink-w) solid var(--mq-ink-line);
-  border-bottom: 0;
+  border: 0;
+  border-top: var(--mq-ink-w) solid var(--mq-ink-line);
   border-radius: var(--mq-r-card) var(--mq-r-card) 0 0;
   background: var(--mq-board);
   color: var(--mq-board-ink);
@@ -396,9 +396,10 @@
   color: var(--mq-board-ink-soft);
 }
 
+/* Крестик во всех окнах — фишка без обводки: заливка + тень (как K1) */
 :root[data-mqx-style='ink'] .mqx-sheet__close {
   --mq-ink-off: var(--mq-ink-off-s);
-  border: var(--mq-ink-w) solid var(--mq-ink-line);
+  border: 0;
   border-radius: var(--mq-r-cell);
   background: var(--mq-cell);
   color: var(--mq-board-ink);
@@ -460,12 +461,11 @@
   color: var(--mq-danger);
 }
 
-/* Ползунок — шкала как у потребностей, бегунок — фишка хода */
+/* Ползунок — полоса заливкой без обводки, бегунок — фишка хода */
 :root[data-mqx-style='ink'] .mqx-sheet .mqx-invest-slider {
-  height: 12px;
-  box-sizing: border-box;
-  border: var(--mq-ink-w) solid var(--mq-ink-line);
-  background: var(--mq-cell);
+  height: 8px;
+  border: 0;
+  background: var(--mq-cell-edge);
 }
 
 :root[data-mqx-style='ink'] .mqx-sheet .mqx-invest-slider::-webkit-slider-thumb {
