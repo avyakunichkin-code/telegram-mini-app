@@ -1,0 +1,118 @@
+/* companions-round — напарники персонажей: знакомство.
+   База (токены v3, шрифты, панель лаборатории, --nb-line / --nb-drop) — board-game/neobrutal-round через lab-base.css.
+   Персонажи и напарники — characters.js, цвета зашиты в SVG; экраны — на токенах и следуют теме. */
+
+.cp { --bw: 2px; max-width: 1180px; margin: 0 auto; padding: var(--mq-space-6) var(--mq-space-4) var(--mq-space-8); display: grid; gap: var(--mq-space-8); }
+.cp-sec { display: grid; gap: var(--mq-space-4); }
+.cp-sec h2 { margin: 0; font: 900 26px/32px var(--font-display); }
+.cp-lead { max-width: 68ch; margin: 0; color: var(--mq-board-ink-soft); }
+.cp-rim { font-family: var(--font-display); font-weight: 900; }
+svg { display: block; width: 100%; height: auto; }
+
+/* ---------- Знакомство: два телефона ---------- */
+.cp-phones { display: flex; flex-wrap: wrap; gap: var(--mq-space-6); align-items: flex-start; }
+.cp-variant { display: grid; gap: var(--mq-space-3); margin: 0; }
+.cp-variant figcaption { display: grid; gap: 2px; max-width: 375px; }
+.cp-variant figcaption b { font: 800 16px/22px var(--font-display); }
+.cp-variant figcaption small { color: var(--mq-board-ink-soft); font: 400 13px/18px var(--font-body); }
+
+.ph {
+  width: 375px;
+  max-width: 100%;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: var(--mq-space-4);
+  padding: var(--mq-space-5) var(--mq-space-4);
+  border: var(--bw) solid var(--nb-line);
+  border-radius: 28px;
+  background: var(--mq-board);
+}
+.ph__title { margin: 0; font: 900 28px/34px var(--font-display); }
+.ph__sub { margin: 4px 0 0; color: var(--mq-board-ink-soft); }
+
+/* A: сцена пары — главная карта экрана, цветная тень */
+.meet {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: var(--mq-space-1);
+  padding: var(--mq-space-4) var(--mq-space-3) var(--mq-space-3);
+  border: var(--bw) solid var(--nb-line);
+  border-radius: var(--mq-r-card);
+  background: var(--mq-turn-soft);
+  box-shadow: 4px 4px 0 var(--mq-turn);
+}
+.meet__persona { width: 180px; }
+.meet__companion { width: 136px; margin-bottom: 4px; }
+
+.tip { display: flex; align-items: center; gap: var(--mq-space-3); }
+.tip__monetka { flex-shrink: 0; width: 120px; }
+.tip__bubble {
+  margin: 0;
+  padding: var(--mq-space-3) var(--mq-space-4);
+  border-radius: var(--mq-r-card);
+  background: var(--mq-coin-soft);
+  color: var(--mq-board-ink);
+}
+
+.cta {
+  margin-top: auto;
+  min-height: var(--mq-tap);
+  padding: var(--mq-space-3);
+  border: var(--bw) solid var(--nb-line);
+  border-radius: var(--mq-r-card);
+  background: var(--mq-turn);
+  color: var(--mq-turn-on);
+  font: 900 18px/22px var(--font-display);
+  box-shadow: 3px 3px 0 var(--nb-drop);
+  cursor: pointer;
+  transition: transform var(--mq-dur-press) var(--mq-ease-standard), box-shadow var(--mq-dur-press) var(--mq-ease-standard);
+}
+.cta:active { transform: translate(3px, 3px); box-shadow: 0 0 0 var(--nb-drop); }
+
+/* B: карточка героя — одна рамка, внутри без обводок */
+.hero-card {
+  display: grid;
+  gap: var(--mq-space-3);
+  padding: var(--mq-space-4);
+  border: var(--bw) solid var(--nb-line);
+  border-radius: var(--mq-r-card);
+  background: var(--mq-cell);
+  box-shadow: 4px 4px 0 var(--mq-turn);
+}
+.hero-card__head h3 { margin: 0; font: 900 26px/32px var(--font-display); }
+.hero-card__head p { margin: 2px 0 0; color: var(--mq-board-ink-soft); font: 400 14px/20px var(--font-body); }
+.hero-card__art {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: var(--mq-space-1);
+  padding-top: var(--mq-space-3);
+  border-radius: var(--mq-r-cell);
+  background: var(--mq-turn-soft);
+}
+.hero-card__persona { width: 168px; }
+.hero-card__companion { width: 96px; margin-bottom: 4px; }
+.hero-card__mate { margin: 0; }
+.hero-card__mate b { font: 800 16px/22px var(--font-display); }
+
+/* Появление напарника: единственное движение на экране, на выбор персонажа */
+.is-in { animation: cp-pop 520ms var(--mq-ease-reward) both; }
+@keyframes cp-pop {
+  from { transform: translateY(24px) scale(0.6); opacity: 0; }
+  to { transform: none; opacity: 1; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .is-in { animation: none; }
+  .cta { transition: none; }
+}
+
+/* Тёмная тема: персонажей не перекрашиваем — светлая обводка-наклейка по силуэту */
+:root[data-theme="dark"] :is(.meet svg, .hero-card__art svg, .tip__monetka svg) {
+  filter:
+    drop-shadow(1.5px 0 0 var(--mq-board-ink-faint))
+    drop-shadow(-1.5px 0 0 var(--mq-board-ink-faint))
+    drop-shadow(0 1.5px 0 var(--mq-board-ink-faint))
+    drop-shadow(0 -1.5px 0 var(--mq-board-ink-faint));
+}

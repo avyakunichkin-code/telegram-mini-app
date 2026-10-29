@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>ТВОЙ ХОД — Монетка на экранах до выбора роли</title>
+    <link rel="stylesheet" href="./lab-base.css" />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <header class="lab-bar">
+      <div class="lab-bar__row">
+        <h1>Монетка на экранах до выбора роли</h1>
+        <div class="lab-controls" role="group" aria-label="Подача Монетки">
+          <button class="lab-toggle" type="button" data-set-variant="a" aria-pressed="false">A · Монетка ведёт</button>
+          <button class="lab-toggle" type="button" data-set-variant="b" aria-pressed="true">B · Монетка в шапке (выбрано)</button>
+        </div>
+        <div class="lab-controls" role="group" aria-label="Тема">
+          <button class="lab-toggle" type="button" data-set-theme="light" aria-pressed="true">Светлая</button>
+          <button class="lab-toggle" type="button" data-set-theme="dark" aria-pressed="false">Тёмная</button>
+        </div>
+      </div>
+      <p class="lab-note">Роли (PO 2026-10-29): Монетка — экраны до выбора роли и глобальные подсказки, напарник — первые шаги. Возвращаем Монетку с репликами на вход, регистрацию, меню и выбор жизни; это меняет канон ★ BG-2 («Без Монетки и пузыря»). Состав и формы экранов — как в BG-2.</p>
+    </header>
+
+    <main class="pg" data-screens></main>
+
+    <script src="./characters.js"></script>
+    <script src="./monetka.js"></script>
+    <script>
+      (function () {
+        var C = window.TH_CHARACTERS;
+        var M = window.TH_MONETKA;
+        var root = document.documentElement;
+
+        var LOGO = '<p class="pg-logo">ТВОЙ ХОД</p>';
+        function field(label, type, value) {
+          var id = 'f' + Math.random().toString(36).slice(2, 8);
+          return '<div class="pg-field"><label for="' + id + '">' + label + '</label><input id="' + id + '" type="' + type + '" value="' + (value || '') + '" autocomplete="off" /></div>';
+        }
+        var PERSONAS = [
+          { key: 'student', role: 'Студент', income: '+62 500 ₽ за ход', line: 'Чистый старт — без долгов и активов' },
+          { key: 'pro', role: 'Профессионал', income: '+100 000 ₽ за ход', line: 'Аренда, авто и автокредит с первого периода' },
+          { key: 'boss', role: 'Руководитель', income: '+150 000 ₽ за ход', line: 'Своё жильё, ипотека и два автомобиля' },
+          { key: 'biz', role: 'Предприниматель', income: '+200 000 ₽ за ход', line: 'Ипотека, два авто и кредитная карта' }
+        ];
+        function bust(key, label) { return '<span class="pg-portrait">' + C.persona(key, label, '50 26 100 100') + '</span>'; }
+
+        var SCREENS = [
+          { id: 'login', label: 'Вход', rim: 'ПРИВЕТ', face: 'smile', arms: 'wave',
+            title: 'Привет, я Монетка!', text: 'Помогу разобраться с деньгами в игре. Введи почту и пароль — и продолжим.',
+            body: LOGO +
+              '<form class="pg-card" onsubmit="return false">' + field('Почта', 'email', 'anna@example.com') + field('Пароль', 'password', 'password') + '</form>' +
+              '<button class="pg-cta" type="button">Войти</button>' +
+              '<button class="pg-calm" type="button">Создать аккаунт · займёт минуту</button>' },
+          { id: 'register', label: 'Регистрация', rim: 'РАДА ЗНАКОМСТВУ', face: 'joy', arms: 'up',
+            title: 'Рада знакомству!', text: 'Регистрируйся по почте — пригодится, если забудешь пароль.',
+            body: LOGO +
+              '<form class="pg-card" onsubmit="return false">' + field('Почта', 'email', '') + field('Пароль', 'password', '') + field('Повтори пароль', 'password', '') + '</form>' +
+              '<button class="pg-cta" type="button">Создать аккаунт</button>' +
+              '<button class="pg-calm" type="button">Уже есть аккаунт · войти</button>' },
+          { id: 'menu', label: 'Меню: есть сохранение', rim: 'С ВОЗВРАЩЕНИЕМ', face: 'wink', arms: 'thumb',
+            title: 'Продолжим с того же места?', text: 'Последняя партия ждёт ниже. Остальные — в «Все сохранения».',
+            body: LOGO +
+              '<article class="pg-save">' + bust('student', 'Портрет: Студент') +
+              '<div class="pg-save__txt"><b>Студент</b><span class="money">Ход 12 · на счёте 87 400 ₽</span><small>Моя игра 1</small></div></article>' +
+              '<button class="pg-cta" type="button">Продолжить игру</button>' +
+              '<button class="pg-calm" type="button">Новая игра · другая жизнь</button>' +
+              '<button class="pg-calm" type="button">Все сохранения · 3 партии</button>' +
+              '<button class="pg-link" type="button">Выйти из аккаунта</button>' },
+          { id: 'empty', label: 'Меню: пусто', rim: 'НОВАЯ ИГРА', face: 'smile', arms: 'wave',
+            title: 'Пока пусто на полке', text: 'Начнём первую партию? Жми «Новая игра» и выбери жизнь.',
+            body: LOGO +
+              '<article class="pg-save pg-save--empty"><div class="pg-save__txt"><b>Сохранений пока нет</b><small>Выбери жизнь и сделай первый ход</small></div></article>' +
+              '<button class="pg-cta" type="button">Новая игра</button>' +
+              '<button class="pg-link" type="button">Выйти из аккаунта</button>' },
+          { id: 'pick', label: 'Выбор жизни', rim: 'ВЫБЕРИ ЖИЗНЬ', face: 'smile', arms: 'wave',
+            title: 'Выбери жизнь', text: 'У каждой свой старт и своя цель. Играешь впервые — начни со Студента: у него чистый старт.',
+            body: '<div class="pg-pick" role="radiogroup" aria-label="Жизнь">' +
+              PERSONAS.map(function (p, i) {
+                return '<label class="pg-opt' + (i === 0 ? ' is-on' : '') + '"><input type="radio" name="life" value="' + p.key + '"' + (i === 0 ? ' checked' : '') + ' />' +
+                  bust(p.key, 'Портрет: ' + p.role) +
+                  '<span class="pg-opt__txt"><b>' + p.role + '</b><span class="gain money">' + p.income + '</span><small>' + p.line + '</small></span><span class="pg-opt__dot" aria-hidden="true"></span></label>';
+              }).join('') + '</div>' +
+              '<button class="pg-cta" type="button">Начать за Студента</button>' +
+              '<button class="pg-link" type="button">Назад</button>' }
+        ];
+
+        /* A — Монетка ведёт: крупная, с надписью на ободе, реплика рядом.
+           B — Монетка в шапке: маленькая без надписи, реплика вместо заголовка экрана. */
+        function voice(s, v) {
+          if (v === 'a') {
+            /* без рук: монета на всю ширину, надпись на ободе читается (от 120 px монеты) */
+            return '<div class="pg-voice pg-voice--a"><span class="pg-voice__m">' + M({ face: s.face, arms: 'none', top: s.rim, label: 'Монетка, на ободе: ' + s.rim.toLowerCase() }) + '</span>' +
+              '<div class="pg-voice__bubble"><h2>' + s.title + '</h2><p>' + s.text + '</p></div></div>';
+          }
+          return '<div class="pg-voice pg-voice--b"><span class="pg-voice__m">' + M({ face: s.face, arms: 'none', rim: false, label: 'Монетка' }) + '</span>' +
+            '<div><h2>' + s.title + '</h2><p>' + s.text + '</p></div></div>';
+        }
+
+        function render(v) {
+          document.querySelector('[data-screens]').innerHTML = SCREENS.map(function (s) {
+            var body = v === 'a' ? s.body.replace(LOGO, '') : s.body;
+            return '<figure class="pg-screen"><figcaption>' + s.label + '</figcaption><div class="ph">' +
+              (v === 'b' ? body.indexOf('pg-logo') > -1 ? LOGO + voice(s, v) + body.replace(LOGO, '') : voice(s, v) + body : voice(s, v) + body) +
+              '</div></figure>';
+          }).join('');
+        }
+        render('b');
+
+        document.addEventListener('click', function (e) {
+          var th = e.target.closest('[data-set-theme]');
+          if (th) {
+            root.setAttribute('data-theme', th.dataset.setTheme);
+            document.querySelectorAll('[data-set-theme]').forEach(function (b) { b.setAttribute('aria-pressed', String(b === th)); });
+            return;
+          }
+          var va = e.target.closest('[data-set-variant]');
+          if (va) {
+            render(va.dataset.setVariant);
+            document.querySelectorAll('[data-set-variant]').forEach(function (b) { b.setAttribute('aria-pressed', String(b === va)); });
+            return;
+          }
+          var opt = e.target.closest('.pg-opt');
+          if (opt) {
+            var group = opt.parentElement;
+            group.querySelectorAll('.pg-opt').forEach(function (o) { o.classList.toggle('is-on', o === opt); });
+            var role = opt.querySelector('b').textContent;
+            var gen = { 'Студент': 'Студента', 'Профессионал': 'Профессионала', 'Руководитель': 'Руководителя', 'Предприниматель': 'Предпринимателя' }[role];
+            group.parentElement.querySelector('.pg-cta').textContent = 'Начать за ' + gen;
+          }
+        });
+      })();
+    </script>
+  </body>
+</html>

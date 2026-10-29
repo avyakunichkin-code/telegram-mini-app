@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>ТВОЙ ХОД — напарники персонажей: знакомство</title>
+    <link rel="stylesheet" href="./lab-base.css" />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <header class="lab-bar">
+      <div class="lab-bar__row">
+        <h1>Напарники персонажей: знакомство</h1>
+        <div class="lab-controls" role="group" aria-label="Персонаж">
+          <button class="lab-toggle" type="button" data-set-persona="student" aria-pressed="true">Студент</button>
+          <button class="lab-toggle" type="button" data-set-persona="pro" aria-pressed="false">Профессионал</button>
+          <button class="lab-toggle" type="button" data-set-persona="boss" aria-pressed="false">Руководитель</button>
+          <button class="lab-toggle" type="button" data-set-persona="biz" aria-pressed="false">Предприниматель</button>
+        </div>
+        <div class="lab-controls" role="group" aria-label="Тема">
+          <button class="lab-toggle" type="button" data-set-theme="light" aria-pressed="true">Светлая</button>
+          <button class="lab-toggle" type="button" data-set-theme="dark" aria-pressed="false">Тёмная</button>
+        </div>
+      </div>
+      <p class="lab-note">Монетка — экраны до выбора роли и глобальные подсказки. Напарник — первые шаги после выбора. На экране выбора сценария только люди; знакомство передаёт эстафету от Монетки напарнику. Идея: docs/vision/ideas/persona-companions.md.</p>
+    </header>
+
+    <main class="cp">
+      <section class="cp-sec" aria-labelledby="sec-meet">
+        <h2 id="sec-meet">Знакомство</h2>
+        <p class="cp-lead">Один экран между выбором сценария и первым ходом. Два варианта подачи на одних данных.</p>
+        <div class="cp-phones">
+          <figure class="cp-variant">
+            <figcaption><b>A. Монетка знакомит</b><small>Пара на сцене, Монетка представляет напарника одной репликой</small></figcaption>
+            <div class="ph">
+              <div>
+                <h3 class="ph__title" data-bind="name"></h3>
+                <p class="ph__sub" data-bind="line"></p>
+              </div>
+              <div class="meet">
+                <span class="meet__persona" data-art="persona"></span>
+                <span class="meet__companion" data-art="companion"></span>
+              </div>
+              <div class="tip">
+                <span class="tip__monetka" data-art="monetka"></span>
+                <p class="tip__bubble" data-bind="intro"></p>
+              </div>
+              <button class="cta" type="button">Начать первый ход</button>
+            </div>
+          </figure>
+
+          <figure class="cp-variant">
+            <figcaption><b>B. Карточка персонажа</b><small>Как карта героя в настольной игре: пара и одна строка о том, что напарник проведёт по первым шагам</small></figcaption>
+            <div class="ph">
+              <article class="hero-card">
+                <header class="hero-card__head">
+                  <h3 data-bind="name"></h3>
+                  <p data-bind="line"></p>
+                </header>
+                <div class="hero-card__art">
+                  <span class="hero-card__persona" data-art="persona"></span>
+                  <span class="hero-card__companion" data-art="companion"></span>
+                </div>
+                <p class="hero-card__mate"><b data-bind="compName"></b> <span data-bind="care"></span></p>
+              </article>
+              <button class="cta" type="button">Начать первый ход</button>
+            </div>
+          </figure>
+        </div>
+      </section>
+
+    </main>
+
+    <script src="./characters.js"></script>
+    <script>
+      (function () {
+        var C = window.TH_CHARACTERS;
+        var root = document.documentElement;
+        /* Монетка передаёт эстафету: первые шаги ведёт напарник, она остаётся с глобальными подсказками */
+        var P = {
+          student: { name: 'Студент', line: 'Чистый старт — без долгов и активов', comp: 'studbilet', compName: 'Студбилет',
+            care: 'проведёт тебя через первые шаги.',
+            intro: 'Знакомься: это твой студбилет. Первые шаги пройдёшь с ним, а я буду рядом с подсказками.' },
+          pro: { name: 'Профессионал', line: 'Аренда, авто и автокредит с первого периода', comp: 'card', compName: 'Зарплатная карта',
+            care: 'проведёт тебя через первые шаги.',
+            intro: 'Это твоя зарплатная карта. Первые шаги пройдёшь с ней, а я буду рядом с подсказками.' },
+          boss: { name: 'Руководитель', line: 'Своё жильё, ипотека и два автомобиля', comp: 'briefcase', compName: 'Портфель',
+            care: 'проведёт тебя через первые шаги.',
+            intro: 'Знакомься, твой портфель. Первые шаги пройдёшь с ним, а я буду рядом с подсказками.' },
+          biz: { name: 'Предприниматель', line: 'Ипотека, два авто и кредитная карта', comp: 'phone', compName: 'Смартфон',
+            care: 'проведёт тебя через первые шаги.',
+            intro: 'Это твой смартфон. Первые шаги пройдёшь с ним, а я буду рядом с подсказками.' }
+        };
+
+        /* Монетка из mascots/ink-mascots-round: надпись на ободе — «знакомься» */
+        function monetka() {
+          var INK = '#1d1530';
+          return '<svg viewBox="30 20 140 140" role="img" aria-label="Монетка, на ободе: знакомься">' +
+            '<path id="cpRimT" d="M55.5 88 A44.5 44.5 0 0 1 144.5 88" fill="none"/><path id="cpRimB" d="M50 88 A50 50 0 0 0 150 88" fill="none"/>' +
+            '<g stroke="' + INK + '" stroke-width="5" stroke-linecap="round" stroke-linejoin="round">' +
+            '<circle cx="106" cy="94" r="62" fill="' + INK + '" stroke="none"/><circle cx="100" cy="88" r="62" fill="#eab308"/>' +
+            '<circle cx="100" cy="88" r="47" fill="#fcf1c8" stroke="#6d28d9" stroke-width="12"/>' +
+            '<circle cx="100" cy="88" r="53.5" fill="none" stroke-width="3"/><circle cx="100" cy="88" r="40.5" fill="none" stroke-width="3"/>' +
+            '<ellipse cx="87" cy="82" rx="5" ry="8" fill="' + INK + '" stroke="none"/><path d="M106 84 Q113 76 120 84" fill="none" stroke-width="4.5"/>' +
+            '<path d="M84 98 Q100 116 116 98 Z" fill="' + INK + '" stroke-width="3"/></g>' +
+            '<text class="cp-rim" font-size="9" fill="#fff" letter-spacing="1.4"><textPath href="#cpRimT" startOffset="50%" text-anchor="middle">ЗНАКОМЬСЯ</textPath></text>' +
+            '<text class="cp-rim" font-size="7.5" fill="#ece4fb" letter-spacing="1.6"><textPath href="#cpRimB" startOffset="50%" text-anchor="middle">★ ТВОЙ ХОД ★</textPath></text></svg>';
+        }
+
+        function render(key) {
+          var p = P[key];
+          var data = { name: p.name, line: p.line, intro: p.intro, compName: p.compName, care: p.care };
+          document.querySelectorAll('[data-bind]').forEach(function (el) { el.textContent = data[el.dataset.bind]; });
+          var art = {
+            persona: C.persona(key, p.name),
+            companion: C.companion(p.comp, 'calm', p.compName),
+            monetka: monetka()
+          };
+          document.querySelectorAll('[data-art]').forEach(function (el) { el.innerHTML = art[el.dataset.art]; });
+          /* одно движение на экран: напарник выпрыгивает к персонажу при знакомстве */
+          document.querySelectorAll('.meet__companion, .hero-card__companion').forEach(function (el) {
+            el.classList.remove('is-in'); void el.offsetWidth; el.classList.add('is-in');
+          });
+        }
+
+        render('student');
+
+        document.addEventListener('click', function (e) {
+          var th = e.target.closest('[data-set-theme]');
+          if (th) {
+            root.setAttribute('data-theme', th.dataset.setTheme);
+            document.querySelectorAll('[data-set-theme]').forEach(function (b) { b.setAttribute('aria-pressed', String(b === th)); });
+            return;
+          }
+          var pe = e.target.closest('[data-set-persona]');
+          if (pe) {
+            render(pe.dataset.setPersona);
+            document.querySelectorAll('[data-set-persona]').forEach(function (b) { b.setAttribute('aria-pressed', String(b === pe)); });
+          }
+        });
+      })();
+    </script>
+  </body>
+</html>
