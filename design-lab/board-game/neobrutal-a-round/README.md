@@ -63,3 +63,7 @@ cd design-lab/board-game/neobrutal-a-round && ./sync-lab.sh
 ```
 
 Статус: **review** — не утверждено.
+
+## В prod (пробно, 2026-10-28)
+
+Слой `frontend-react/src/styles/mqx/ink.css` под `data-mqx-style="ink"`, по умолчанию включён; `?style=classic` — прежний вид. Подробно — [`../APPROVED.md`](../APPROVED.md#пробное-внедрение-стиль-чернильный-край-необрутализм-a-2026-10-28).

@@ -39,6 +39,9 @@
   --mq-cell-edge: #d9d0ea;
   --mq-board-ink: #1d1530;
   --mq-board-ink-soft: #5d5470;
+  /* v3: третичный текст и граница поля ввода (≥3:1) — слой ink.css */
+  --mq-board-ink-faint: #71688a;
+  --mq-control-edge: #857b9f;
   --mq-turn: #6d28d9;
   --mq-turn-deep: #4c1d95;
   --mq-turn-soft: #ece4fb;
@@ -114,6 +117,8 @@
     --mq-cell-edge: #3a2f52;
     --mq-board-ink: #f2eefa;
     --mq-board-ink-soft: #b4abc6;
+    --mq-board-ink-faint: #8f86a3;
+    --mq-control-edge: #75699a;
     --mq-turn: #8b5cf6;
     --mq-turn-deep: #5b21b6;
     --mq-turn-soft: #2e2347;
@@ -140,6 +145,8 @@
   --mq-cell-edge: #3a2f52;
   --mq-board-ink: #f2eefa;
   --mq-board-ink-soft: #b4abc6;
+  --mq-board-ink-faint: #8f86a3;
+  --mq-control-edge: #75699a;
   --mq-turn: #8b5cf6;
   --mq-turn-deep: #5b21b6;
   --mq-turn-soft: #2e2347;

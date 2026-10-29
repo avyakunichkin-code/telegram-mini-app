@@ -1,0 +1,390 @@
+/*
+ * Стиль «Чернильный край» (необрутализм A) — слой поверх ★ BG-1…BG-3.
+ * Lab: design-lab/board-game/neobrutal-a-round/ (K1, сегмент-шов, чипы и реплика без обводки).
+ * Включается <html data-mqx-style="ink"> (utils/mqxStyle.js); без атрибута — прежний вид.
+ *
+ * Правило: чернильная тень — у того, что нажимается (нажатие вдавливает фишку в поле);
+ * цветная тень — у главной карты экрана, одна на экран (ход и событие — фиолетовая, финиш — золотая);
+ * всё остальное — чернильный край без тени. Внутри карты с рамкой — без обводок (одна рамка на уровень).
+ */
+
+:root[data-mqx-style='ink'] {
+  --mq-ink-w: 2px;
+  --mq-ink-line: var(--mq-board-ink);
+  --mq-ink-drop: var(--mq-board-ink);
+  --mq-ink-off: 3px;
+  --mq-ink-off-s: 2px;
+}
+
+/* Светлые чернила на тёмном поле слепят — край и тень на тон тише текста */
+@media (prefers-color-scheme: dark) {
+  :root[data-mqx-style='ink'] {
+    --mq-ink-line: var(--mq-board-ink-faint);
+    --mq-ink-drop: var(--mq-board-ink-faint);
+  }
+}
+
+:root[data-mqx-style='ink'][data-theme='dark'] {
+  --mq-ink-line: var(--mq-board-ink-faint);
+  --mq-ink-drop: var(--mq-board-ink-faint);
+}
+
+/* —— Нажатие: фишка вдавливается в поле —— */
+:root[data-mqx-style='ink'] :is(
+    .mqx-bg-cta,
+    .mqx-bg-events,
+    .mqx-bg-act,
+    .mqx-bg-salary--hot,
+    .mqx-bg-money__cell--action,
+    .mqx-cap-flow,
+    .mqx-cap-piece,
+    .mqx-cap-lot-act,
+    .mqx-events-choice,
+    .mqx-run-finale-btn
+  ) {
+  transition:
+    transform var(--mq-dur-press) var(--mq-ease-standard),
+    box-shadow var(--mq-dur-press) var(--mq-ease-standard);
+}
+
+:root[data-mqx-style='ink'] :is(
+    .mqx-bg-cta,
+    .mqx-bg-events,
+    .mqx-bg-act,
+    .mqx-bg-salary--hot,
+    .mqx-bg-money__cell--action,
+    .mqx-cap-flows .mqx-cap-flow,
+    .mqx-cap-pieces .mqx-cap-piece,
+    .mqx-cap-lot-act,
+    button.mqx-events-choice,
+    .mqx-run-finale-btn
+  ):active:not(:disabled) {
+  transform: translate(var(--mq-ink-off), var(--mq-ink-off));
+  box-shadow: 0 0 0 var(--mq-ink-drop);
+}
+
+/* ================= Главная ================= */
+
+/* Карта хода — единственная рамка; цветная тень = главная карта экрана */
+:root[data-mqx-style='ink'] .mqx-bg-turn {
+  border: var(--mq-ink-w) solid var(--mq-ink-line);
+  box-shadow: var(--mq-ink-off) var(--mq-ink-off) 0 var(--mq-turn);
+}
+
+/* K1: фишки внутри карты — заливка + тень, без обводки */
+:root[data-mqx-style='ink'] .mqx-bg-events {
+  border: 0;
+  background: var(--mq-coin-soft);
+  box-shadow: var(--mq-ink-off) var(--mq-ink-off) 0 var(--mq-ink-drop);
+}
+
+:root[data-mqx-style='ink'] .mqx-bg-events--done {
+  background: var(--mq-board);
+  box-shadow: none;
+}
+
+:root[data-mqx-style='ink'] .mqx-bg-events__title {
+  color: var(--mq-board-ink);
+}
+
+:root[data-mqx-style='ink'] .mqx-bg-deck span,
+:root[data-mqx-style='ink'] .mqx-events-deckline__deck span {
+  border: var(--mq-ink-w) solid var(--mq-ink-line);
+  border-radius: 4px;
+}
+
+:root[data-mqx-style='ink'] .mqx-bg-deck span:nth-child(1),
+:root[data-mqx-style='ink'] .mqx-events-deckline__deck span:nth-child(1) {
+  opacity: 1;
+  background: var(--mq-cell);
+}
+
+:root[data-mqx-style='ink'] .mqx-bg-cta {
+  border: 0;
+  box-shadow: var(--mq-ink-off) var(--mq-ink-off) 0 var(--mq-ink-drop);
+}
+
+/* Потребности: шкала в чернильном крае */
+:root[data-mqx-style='ink'] .mqx-bg-need .mqx-progress.mqx-bg-need__bar {
+  height: 12px;
+  box-sizing: border-box;
+  border: var(--mq-ink-w) solid var(--mq-ink-line);
+  background: var(--mq-cell);
+}
+
+:root[data-mqx-style='ink'] .mqx-bg-need .mqx-progress .mqx-progress__fill {
+  border-radius: 0;
+  box-shadow: var(--mq-ink-w) 0 0 var(--mq-ink-line);
+}
+
+/* Деньги: плитки — край без тени; ведущая в «Капитал» — нажимается */
+/* Три плитки в ряд: узкий боковой отступ, иначе «›» у подписи уходит на вторую строку */
+:root[data-mqx-style='ink'] .mqx-bg-money__cell {
+  padding: var(--mq-sp-3);
+  border: var(--mq-ink-w) solid var(--mq-ink-line);
+  border-radius: var(--mq-r-cell);
+  background: var(--mq-cell);
+}
+
+:root[data-mqx-style='ink'] .mqx-bg-money__cell--action {
+  box-shadow: var(--mq-ink-off) var(--mq-ink-off) 0 var(--mq-ink-drop);
+}
+
+:root[data-mqx-style='ink'] .mqx-bg-money__avatar {
+  border: var(--mq-ink-w) solid var(--mq-ink-line);
+}
+
+/* Цель — свёрнутая фишка */
+:root[data-mqx-style='ink'] .mqx-bg-goal {
+  border: var(--mq-ink-w) solid var(--mq-ink-line);
+  border-radius: var(--mq-r-cell);
+  background: var(--mq-cell);
+  box-shadow: var(--mq-ink-off) var(--mq-ink-off) 0 var(--mq-ink-drop);
+}
+
+:root[data-mqx-style='ink'] .mqx-bg-goal__toggle {
+  padding-inline: var(--mq-sp-5);
+}
+
+:root[data-mqx-style='ink'] .mqx-bg-goal__body {
+  padding: var(--mq-sp-2) var(--mq-sp-5) var(--mq-sp-4);
+}
+
+:root[data-mqx-style='ink'] .mqx-bg-track__dot {
+  border-color: var(--mq-ink-line);
+}
+
+:root[data-mqx-style='ink'] .mqx-bg-track__dot[data-status='current'] {
+  box-shadow: none;
+  outline: 2px solid var(--mq-turn);
+  outline-offset: 1px;
+}
+
+/* Действия хода */
+:root[data-mqx-style='ink'] .mqx-bg-act {
+  border: var(--mq-ink-w) solid var(--mq-ink-line);
+  box-shadow: var(--mq-ink-off) var(--mq-ink-off) 0 var(--mq-ink-drop);
+}
+
+:root[data-mqx-style='ink'] .mqx-bg-act--active {
+  background: var(--mq-turn);
+}
+
+:root[data-mqx-style='ink'] .mqx-bg-salary--hot {
+  border: var(--mq-ink-w) solid var(--mq-ink-line);
+  box-shadow: var(--mq-ink-off) var(--mq-ink-off) 0 var(--mq-ink-drop);
+}
+
+:root[data-mqx-style='ink'] .mqx-bg-salary--quiet {
+  border: var(--mq-ink-w) dashed var(--mq-control-edge);
+}
+
+/* ================= Таббар ================= */
+
+:root[data-mqx-style='ink'] .bottom-nav--unified {
+  border-top: var(--mq-ink-w) solid var(--mq-ink-line);
+}
+
+:root[data-mqx-style='ink'] .bottom-nav--unified .bottom-nav__cell {
+  border: var(--mq-ink-w) solid transparent;
+}
+
+:root[data-mqx-style='ink'] .bottom-nav--unified .bottom-nav__cell--active {
+  border-color: var(--mq-ink-line);
+  background: var(--mq-turn);
+  color: var(--mq-turn-on);
+  box-shadow: none;
+}
+
+:root[data-mqx-style='ink'] .bottom-nav--unified .bottom-nav__cell--active svg {
+  color: var(--mq-turn-on);
+}
+
+/* ================= Капитал ================= */
+
+:root[data-mqx-style='ink'] .mqx-cap-flows .mqx-cap-flow {
+  border: var(--mq-ink-w) solid var(--mq-ink-line);
+  box-shadow: var(--mq-ink-off) var(--mq-ink-off) 0 var(--mq-ink-drop);
+}
+
+:root[data-mqx-style='ink'] .mqx-cap-flows .mqx-cap-flow.is-open {
+  border-color: var(--mq-ink-line);
+  background: var(--mq-turn-soft);
+}
+
+:root[data-mqx-style='ink'] .mqx-cap-flows__breakdown,
+:root[data-mqx-style='ink'] .mqx-cap-net {
+  border: var(--mq-ink-w) solid var(--mq-ink-line);
+}
+
+/* Сегмент: две кнопки одним блоком, прямой шов посередине, без подложки */
+:root[data-mqx-style='ink'] .mqx-cap-seg {
+  gap: 0;
+  padding: 0;
+  overflow: hidden;
+  border: var(--mq-ink-w) solid var(--mq-ink-line);
+  border-radius: var(--mq-r-cell);
+  box-shadow: var(--mq-ink-off) var(--mq-ink-off) 0 var(--mq-ink-drop);
+}
+
+:root[data-mqx-style='ink'] .mqx-cap-seg .mqx-cap-seg__btn {
+  border-radius: 0;
+  transition:
+    background-color var(--mq-dur-fast) var(--mq-ease-standard),
+    color var(--mq-dur-fast) var(--mq-ease-standard);
+}
+
+:root[data-mqx-style='ink'] .mqx-cap-seg .mqx-cap-seg__btn + .mqx-cap-seg__btn {
+  border-left: var(--mq-ink-w) solid var(--mq-ink-line);
+}
+
+:root[data-mqx-style='ink'] .mqx-cap-seg .mqx-cap-seg__btn.is-active {
+  box-shadow: none;
+}
+
+:root[data-mqx-style='ink'] .mqx-cap-seg .mqx-cap-seg__btn:focus-visible {
+  outline-offset: -4px;
+}
+
+/* Карточки собственности: цветная полоса сверху под чернильной линией */
+:root[data-mqx-style='ink'] .mqx-cap-lot {
+  border: var(--mq-ink-w) solid var(--mq-ink-line);
+  border-radius: var(--mq-r-card);
+}
+
+:root[data-mqx-style='ink'] .mqx-cap-lot__band {
+  height: 12px;
+  border-bottom: var(--mq-ink-w) solid var(--mq-ink-line);
+}
+
+:root[data-mqx-style='ink'] .mqx-cap-lot--locked {
+  border: var(--mq-ink-w) dashed var(--mq-control-edge);
+}
+
+:root[data-mqx-style='ink'] .mqx-cap-lot--locked .mqx-cap-lot__band {
+  border-bottom-color: var(--mq-control-edge);
+}
+
+/* Действие в строке — маленькая фишка (ссылка в тексте остаётся ссылкой) */
+:root[data-mqx-style='ink'] .mqx-capital-page--board .mqx-cap-lot-act:not(.mqx-cap-lot-act--inline) {
+  --mq-ink-off: var(--mq-ink-off-s);
+  min-height: 36px;
+  margin: var(--mq-sp-1) 0 0;
+  padding: 0 var(--mq-sp-4);
+  border: var(--mq-ink-w) solid var(--mq-ink-line);
+  border-radius: var(--mq-r-cell);
+  background: var(--mq-cell);
+  color: var(--mq-board-ink);
+  font-weight: 700;
+  box-shadow: var(--mq-ink-off) var(--mq-ink-off) 0 var(--mq-ink-drop);
+}
+
+:root[data-mqx-style='ink'] .mqx-capital-page--board .mqx-cap-lot-act:not(.mqx-cap-lot-act--inline):disabled {
+  border-style: dashed;
+  border-color: var(--mq-control-edge);
+  box-shadow: none;
+}
+
+/* Фишки капитала 3 в ряд */
+:root[data-mqx-style='ink'] .mqx-cap-pieces .mqx-cap-piece {
+  border: var(--mq-ink-w) solid var(--mq-ink-line);
+  box-shadow: var(--mq-ink-off) var(--mq-ink-off) 0 var(--mq-ink-drop);
+}
+
+:root[data-mqx-style='ink'] .mqx-cap-pieces .mqx-cap-piece--locked {
+  border: var(--mq-ink-w) dashed var(--mq-control-edge);
+  box-shadow: none;
+}
+
+/* ================= Событие ================= */
+
+:root[data-mqx-style='ink'] .mqx-events-card--l3 {
+  border: var(--mq-ink-w) solid var(--mq-ink-line);
+  border-radius: var(--mq-r-card);
+  box-shadow: var(--mq-ink-off) var(--mq-ink-off) 0 var(--mq-turn);
+}
+
+/* Полоса — цвет карты, чтобы фиолетовый чип не терялся на фиолетовой подложке */
+:root[data-mqx-style='ink'] .mqx-events-card__band {
+  border-bottom: var(--mq-ink-w) solid var(--mq-ink-line);
+  background: var(--mq-cell);
+}
+
+:root[data-mqx-style='ink'] .mqx-events-domain-pill {
+  border: 0;
+  border-radius: var(--mq-r-s);
+  background: var(--mq-turn-soft);
+  color: var(--mq-turn);
+}
+
+:root[data-mqx-style='ink'] .mqx-events-domain-pill--insurance {
+  background: var(--mq-gain-soft);
+  color: var(--mq-gain);
+}
+
+/* Реплика Монетки — без обводки, только фон */
+:root[data-mqx-style='ink'] .mqx-events-card--l3 .mqx-events-card__bubble {
+  border: 0;
+  background: var(--mq-coin-soft);
+}
+
+:root[data-mqx-style='ink'] .mqx-events-card--insurance .mqx-events-card__bubble {
+  background: var(--mq-gain-soft);
+}
+
+:root[data-mqx-style='ink'] button.mqx-events-choice {
+  border: var(--mq-ink-w) solid var(--mq-ink-line);
+  border-radius: var(--mq-r-cell);
+  background: var(--mq-cell);
+  box-shadow: var(--mq-ink-off) var(--mq-ink-off) 0 var(--mq-ink-drop);
+}
+
+:root[data-mqx-style='ink'] button.mqx-events-choice:hover:not(:disabled) {
+  border-color: var(--mq-ink-line);
+  background: var(--mq-turn-soft);
+}
+
+/* ================= Финал ================= */
+
+:root[data-mqx-style='ink'] .mqx-run-finale-cell {
+  border: var(--mq-ink-w) solid var(--mq-ink-line);
+  border-radius: var(--mq-r-card);
+  box-shadow: none;
+}
+
+:root[data-mqx-style='ink'] .mqx-run-finale-cell--win {
+  background: var(--mq-coin);
+  box-shadow: 6px 6px 0 var(--mq-coin-rim);
+}
+
+:root[data-mqx-style='ink'] .mqx-run-finale-stats__cell,
+:root[data-mqx-style='ink'] .mqx-run-finale-fact {
+  border: var(--mq-ink-w) solid var(--mq-ink-line);
+}
+
+:root[data-mqx-style='ink'] .mqx-run-finale-btn {
+  border: var(--mq-ink-w) solid var(--mq-ink-line);
+  border-radius: var(--mq-r-cell);
+  box-shadow: var(--mq-ink-off) var(--mq-ink-off) 0 var(--mq-ink-drop);
+}
+
+:root[data-mqx-style='ink'] .mqx-run-finale-feedback__input {
+  border: var(--mq-ink-w) solid var(--mq-control-edge);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root[data-mqx-style='ink'] :is(
+      .mqx-bg-cta,
+      .mqx-bg-events,
+      .mqx-bg-act,
+      .mqx-bg-salary--hot,
+      .mqx-bg-money__cell--action,
+      .mqx-cap-flows .mqx-cap-flow,
+      .mqx-cap-pieces .mqx-cap-piece,
+      .mqx-cap-lot-act,
+      button.mqx-events-choice,
+      .mqx-run-finale-btn
+    ):active:not(:disabled) {
+    transform: none;
+  }
+}

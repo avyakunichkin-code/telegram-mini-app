@@ -20,4 +20,5 @@
 @import './styles/page.css';
 @import './styles/mqx/board.css';
 @import './styles/mqx/pregame.css';
+@import './styles/mqx/ink.css';
 @import './styles/admin.css';
