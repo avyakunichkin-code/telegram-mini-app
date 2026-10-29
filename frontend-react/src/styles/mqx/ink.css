@@ -40,7 +40,9 @@
     .mqx-cap-piece,
     .mqx-cap-lot-act,
     .mqx-events-choice,
-    .mqx-run-finale-btn
+    .mqx-run-finale-btn,
+    .mqx-sheet__close,
+    .mqx-sheet .mqx-invest-form__submit
   ) {
   transition:
     transform var(--mq-dur-press) var(--mq-ease-standard),
@@ -57,7 +59,9 @@
     .mqx-cap-pieces .mqx-cap-piece,
     .mqx-cap-lot-act,
     button.mqx-events-choice,
-    .mqx-run-finale-btn
+    .mqx-run-finale-btn,
+    .mqx-sheet__close,
+    .mqx-sheet .mqx-invest-form__submit
   ):active:not(:disabled) {
   transform: translate(var(--mq-ink-off), var(--mq-ink-off));
   box-shadow: 0 0 0 var(--mq-ink-drop);
@@ -372,6 +376,134 @@
   border: var(--mq-ink-w) solid var(--mq-control-edge);
 }
 
+/* ================= Листы (sheets) ================= */
+
+/* Лист — поле игры поверх затемнения: чернильный край сверху и по бокам, без мягкой тени */
+:root[data-mqx-style='ink'] .mqx-sheet {
+  border: var(--mq-ink-w) solid var(--mq-ink-line);
+  border-bottom: 0;
+  border-radius: var(--mq-r-card) var(--mq-r-card) 0 0;
+  background: var(--mq-board);
+  color: var(--mq-board-ink);
+  box-shadow: none;
+}
+
+:root[data-mqx-style='ink'] .mqx-sheet__title {
+  color: var(--mq-board-ink);
+}
+
+:root[data-mqx-style='ink'] .mqx-sheet__sub {
+  color: var(--mq-board-ink-soft);
+}
+
+:root[data-mqx-style='ink'] .mqx-sheet__close {
+  --mq-ink-off: var(--mq-ink-off-s);
+  border: var(--mq-ink-w) solid var(--mq-ink-line);
+  border-radius: var(--mq-r-cell);
+  background: var(--mq-cell);
+  color: var(--mq-board-ink);
+  font-weight: 700;
+  box-shadow: var(--mq-ink-off) var(--mq-ink-off) 0 var(--mq-ink-drop);
+}
+
+/* Форма суммы: поле в рамке ввода, ставка — чип без обводки */
+:root[data-mqx-style='ink'] .mqx-sheet .mqx-invest-amount__field {
+  padding: var(--mq-sp-3) var(--mq-sp-5);
+  border: var(--mq-ink-w) solid var(--mq-control-edge);
+  border-radius: var(--mq-r-cell);
+  background: var(--mq-cell);
+}
+
+:root[data-mqx-style='ink'] .mqx-sheet .mqx-invest-amount__field:focus-within {
+  border-color: var(--mq-ink-line);
+}
+
+:root[data-mqx-style='ink'] .mqx-sheet .mqx-invest-amount__input {
+  color: var(--mq-board-ink);
+}
+
+:root[data-mqx-style='ink'] .mqx-sheet .mqx-invest-amount__input::placeholder {
+  color: var(--mq-board-ink-faint);
+}
+
+:root[data-mqx-style='ink'] .mqx-sheet .mqx-invest-amount__unit,
+:root[data-mqx-style='ink'] .mqx-sheet .mqx-invest-amount__label,
+:root[data-mqx-style='ink'] .mqx-sheet .mqx-invest-amount__range-hint {
+  color: var(--mq-board-ink-soft);
+}
+
+:root[data-mqx-style='ink'] .mqx-sheet .mqx-invest-rate {
+  align-self: stretch;
+  justify-content: center;
+  border: 0;
+  border-radius: var(--mq-r-cell);
+  background: var(--mq-gain-soft);
+}
+
+:root[data-mqx-style='ink'] .mqx-sheet .mqx-invest-rate__val {
+  color: var(--mq-gain);
+}
+
+:root[data-mqx-style='ink'] .mqx-sheet .mqx-invest-form--safety-out .mqx-invest-rate {
+  background: var(--mq-turn-soft);
+}
+
+:root[data-mqx-style='ink'] .mqx-sheet .mqx-invest-form--safety-out .mqx-invest-rate__val {
+  color: var(--mq-turn);
+}
+
+:root[data-mqx-style='ink'] .mqx-sheet .mqx-invest-rate--neg {
+  background: var(--mq-danger-soft);
+}
+
+:root[data-mqx-style='ink'] .mqx-sheet .mqx-invest-rate--neg .mqx-invest-rate__val {
+  color: var(--mq-danger);
+}
+
+/* Ползунок — шкала как у потребностей, бегунок — фишка хода */
+:root[data-mqx-style='ink'] .mqx-sheet .mqx-invest-slider {
+  height: 12px;
+  box-sizing: border-box;
+  border: var(--mq-ink-w) solid var(--mq-ink-line);
+  background: var(--mq-cell);
+}
+
+:root[data-mqx-style='ink'] .mqx-sheet .mqx-invest-slider::-webkit-slider-thumb {
+  width: 22px;
+  height: 22px;
+  border: var(--mq-ink-w) solid var(--mq-ink-line);
+  background: var(--mq-turn);
+  box-shadow: var(--mq-ink-off-s) var(--mq-ink-off-s) 0 var(--mq-ink-drop);
+}
+
+:root[data-mqx-style='ink'] .mqx-sheet .mqx-invest-slider::-moz-range-thumb {
+  width: 22px;
+  height: 22px;
+  box-sizing: border-box;
+  border: var(--mq-ink-w) solid var(--mq-ink-line);
+  background: var(--mq-turn);
+  box-shadow: var(--mq-ink-off-s) var(--mq-ink-off-s) 0 var(--mq-ink-drop);
+}
+
+:root[data-mqx-style='ink'] .mqx-sheet .mqx-invest-form__submit {
+  min-height: 48px;
+  border: var(--mq-ink-w) solid var(--mq-ink-line);
+  border-radius: var(--mq-r-cell);
+  background: var(--mq-turn);
+  color: var(--mq-turn-on);
+  box-shadow: var(--mq-ink-off) var(--mq-ink-off) 0 var(--mq-ink-drop);
+}
+
+/* Нельзя нажать — пунктир закрытого, без тени (как у заблокированных фишек) */
+:root[data-mqx-style='ink'] .mqx-sheet .mqx-invest-form__submit:disabled {
+  opacity: 1;
+  border-style: dashed;
+  border-color: var(--mq-control-edge);
+  background: var(--mq-cell);
+  color: var(--mq-board-ink-faint);
+  box-shadow: none;
+}
+
 @media (prefers-reduced-motion: reduce) {
   :root[data-mqx-style='ink'] :is(
       .mqx-bg-cta,
@@ -383,7 +515,9 @@
       .mqx-cap-pieces .mqx-cap-piece,
       .mqx-cap-lot-act,
       button.mqx-events-choice,
-      .mqx-run-finale-btn
+      .mqx-run-finale-btn,
+      .mqx-sheet__close,
+      .mqx-sheet .mqx-invest-form__submit
     ):active:not(:disabled) {
     transform: none;
   }
