@@ -119,6 +119,7 @@
         { "label": "Primitives MQX", "path": "primitives/index.html", "kind": "lab", "status": "approved" },
         { "label": "Brand logo", "path": "brand-logo/index.html", "kind": "lab", "status": "approved" },
         { "label": "Brand tagline round", "path": "brand-logo/tagline-round/index.html", "kind": "lab" },
+        { "label": "Маскоты в «Чернильном крае»: Монетка с надписью на ободе и Квитя (review)", "path": "mascots/ink-mascots-round/index.html", "kind": "lab" },
         { "label": "Дашборд ★ BG-1 — prod parity (в prod с 2026-10-14)", "path": "dashboard/bg1-page-round/index.html", "kind": "lab", "status": "approved" },
         { "label": "Настольная игра — окна Капитала в «Чернильном крае»: A / B / C (выбран A)", "path": "board-game/ink-sheets-round/index.html", "kind": "lab" },
         { "label": "Настольная игра — необрутализм A на экранах (review)", "path": "board-game/neobrutal-a-round/index.html", "kind": "lab" },

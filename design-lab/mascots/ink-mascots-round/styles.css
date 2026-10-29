@@ -1,0 +1,135 @@
+/* ink-mascots-round — Монетка и Квитя в «Чернильном крае».
+   База (токены v3, шрифты, панель лаборатории, --nb-line / --bw) — board-game/neobrutal-round через lab-base.css.
+   Цвета персонажей зашиты в SVG и не зависят от темы: персонаж не перекрашивается.
+   Экран итогов хода — на токенах, следует теме. */
+
+/* --bw в базе задан только внутри вариантов .nb-stage — здесь толщина края варианта A */
+.mx { --bw: 2px; max-width: 1120px; margin: 0 auto; padding: var(--mq-space-6) var(--mq-space-4) var(--mq-space-8); display: grid; gap: var(--mq-space-8); }
+.mx-sec { display: grid; gap: var(--mq-space-4); }
+.mx-sec h2 { margin: 0; font: 900 26px/32px var(--font-display); }
+.mx-lead { max-width: 68ch; margin: 0; color: var(--mq-board-ink-soft); }
+
+/* ---------- Карточки поз ---------- */
+.mx-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: var(--mq-space-4); }
+.mx-card {
+  display: grid;
+  justify-items: center;
+  align-content: center;
+  gap: var(--mq-space-2);
+  margin: 0;
+  padding: var(--mq-space-4) var(--mq-space-3);
+  border: var(--bw) solid var(--nb-line);
+  border-radius: var(--mq-r-card);
+  background: var(--mq-cell);
+}
+.mx-card figcaption { display: grid; gap: 2px; text-align: center; }
+.mx-card figcaption b { font: 800 15px/20px var(--font-display); }
+.mx-card figcaption small { color: var(--mq-board-ink-soft); font: 400 13px/18px var(--font-body); }
+.mx-card--hero { grid-column: span 2; background: var(--mq-turn-soft); box-shadow: 4px 4px 0 var(--mq-turn); }
+.mx-card img { display: block; width: 150px; height: auto; }
+
+/* Монетка рисуется скриптом из data-атрибутов (см. index.html) */
+.mx-m { display: block; }
+.mx-m svg { display: block; width: 100%; height: auto; }
+.mx-rim { font-family: var(--font-display); font-weight: 900; }
+
+/* ---------- Размеры ---------- */
+.mx-sizes { display: flex; flex-wrap: wrap; align-items: flex-end; gap: var(--mq-space-6); }
+.mx-size { display: grid; justify-items: center; gap: var(--mq-space-2); color: var(--mq-board-ink-soft); font: 400 13px/18px var(--font-body); }
+
+/* ---------- В интерфейсе ---------- */
+.mx-use { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: var(--mq-space-4); align-items: start; }
+.mx-tip { display: flex; align-items: center; gap: var(--mq-space-3); }
+.mx-tip img { flex-shrink: 0; width: 40px; height: 40px; }
+.mx-bubble {
+  margin: 0;
+  padding: var(--mq-space-3) var(--mq-space-4);
+  border-radius: var(--mq-r-card);
+  background: var(--mq-coin-soft);
+  color: var(--mq-board-ink);
+}
+.mx-panel {
+  display: grid;
+  justify-items: center;
+  gap: var(--mq-space-2);
+  padding: var(--mq-space-4);
+  border: var(--bw) solid var(--nb-line);
+  border-radius: var(--mq-r-card);
+  background: var(--mq-cell);
+  text-align: center;
+}
+.mx-panel h3 { margin: 0; font: 800 20px/26px var(--font-display); }
+.mx-panel p { margin: 0; color: var(--mq-board-ink-soft); }
+
+/* ---------- Итоги хода ---------- */
+.mx-phone {
+  width: 375px;
+  max-width: 100%;
+  display: grid;
+  gap: var(--mq-space-4);
+  padding: var(--mq-space-5) var(--mq-space-4);
+  border: var(--bw) solid var(--nb-line);
+  border-radius: 28px;
+  background: var(--mq-board);
+}
+.mx-phone h3 { margin: 0; font: 900 28px/34px var(--font-display); }
+.mx-phone__sub { margin: 4px 0 0; color: var(--mq-board-ink-soft); }
+
+/* Чек = тело Квити: край зубцами сверху и снизу, одна цветная тень на силуэт */
+.rc { display: grid; filter: drop-shadow(5px 5px 0 var(--mq-turn)); }
+.rc svg { display: block; width: 100%; height: auto; }
+.rc__paper { fill: var(--mq-cell); }
+.rc__edge { fill: none; stroke: var(--nb-line); stroke-width: 3; stroke-linejoin: round; stroke-linecap: round; }
+.rc__band { fill: var(--mq-turn); }
+.rc__ink { fill: var(--mq-board-ink); }
+.rc__smile { fill: none; stroke: var(--mq-board-ink); stroke-width: 3; stroke-linecap: round; }
+.rc__body {
+  display: grid;
+  gap: var(--mq-space-2);
+  margin: 0;
+  padding: var(--mq-space-1) var(--mq-space-4) var(--mq-space-3);
+  border-inline: 3px solid var(--nb-line);
+  background: var(--mq-cell);
+}
+.rc__row { display: flex; justify-content: space-between; gap: var(--mq-space-3); }
+.rc__row dt, .rc__row dd { margin: 0; }
+.rc__rule { border-top: 2px dashed var(--nb-line); margin: var(--mq-space-1) 0; }
+.rc__total {
+  margin: 0 calc(var(--mq-space-2) * -1);
+  padding: var(--mq-space-1) var(--mq-space-2);
+  border-radius: var(--mq-r-s);
+  background: var(--mq-coin);
+  color: var(--mq-coin-on);
+}
+.rc__total dt, .rc__total dd { font: 900 19px/26px var(--font-display); }
+
+.mx-cta {
+  min-height: var(--mq-tap);
+  padding: var(--mq-space-3);
+  border: var(--bw) solid var(--nb-line);
+  border-radius: var(--mq-r-card);
+  background: var(--mq-turn);
+  color: var(--mq-turn-on);
+  font: 900 18px/22px var(--font-display);
+  box-shadow: 3px 3px 0 var(--nb-drop);
+  cursor: pointer;
+  transition: transform var(--mq-dur-press) var(--mq-ease-standard), box-shadow var(--mq-dur-press) var(--mq-ease-standard);
+}
+.mx-cta:active { transform: translate(3px, 3px); box-shadow: 0 0 0 var(--nb-drop); }
+
+/* Тёмная тема: персонаж не перекрашиваем — чернильный силуэт получает светлую обводку-наклейку,
+   иначе ноги, руки и тень сливаются с тёмным полем */
+:root[data-theme="dark"] :is(.mx-m svg, .mx-card img, .mx-size img, .mx-tip img) {
+  filter:
+    drop-shadow(1.5px 0 0 var(--mq-board-ink-faint))
+    drop-shadow(-1.5px 0 0 var(--mq-board-ink-faint))
+    drop-shadow(0 1.5px 0 var(--mq-board-ink-faint))
+    drop-shadow(0 -1.5px 0 var(--mq-board-ink-faint));
+}
+
+@media (max-width: 520px) {
+  .mx-card--hero { grid-column: auto; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .mx-cta { transition: none; }
+}

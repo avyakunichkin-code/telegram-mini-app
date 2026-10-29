@@ -1,0 +1,227 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>ТВОЙ ХОД — Монетка и Квитя в «Чернильном крае»</title>
+    <link rel="stylesheet" href="./lab-base.css" />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <header class="lab-bar">
+      <div class="lab-bar__row">
+        <h1>Монетка и Квитя в «Чернильном крае»</h1>
+        <div class="lab-controls" role="group" aria-label="Тема">
+          <button class="lab-toggle" type="button" data-set-theme="light" aria-pressed="true">Светлая</button>
+          <button class="lab-toggle" type="button" data-set-theme="dark" aria-pressed="false">Тёмная</button>
+        </div>
+      </div>
+      <p class="lab-note">Перерисовка маскота из псевдо-3D в необрутализм (ADR-014 п. 3). Монетка — главная: надпись на ободе меняется по ситуации, снизу всегда «твой ход». Квитя — напарник, появляется только в итогах хода.</p>
+    </header>
+
+    <main class="mx">
+      <section class="mx-sec" aria-labelledby="sec-monetka">
+        <h2 id="sec-monetka">Монетка: надпись на ободе</h2>
+        <p class="mx-lead">Как на настоящей монете: снизу имя того, кто её выпустил, — «твой ход». Сверху надпись под ситуацию, лицо и руки меняются вместе с ней. Цифр нет: ходов в партии сколько угодно.</p>
+        <div class="mx-grid">
+          <figure class="mx-card mx-card--hero">
+            <span class="mx-m" style="width: 260px" data-face="smile" data-arms="wave" data-top="ДЕНЬ ЗАРПЛАТЫ" data-label="Монетка машет рукой, на ободе: день зарплаты"></span>
+            <figcaption><b>Приветствие</b><small>Старт, меню, онбординг</small></figcaption>
+          </figure>
+          <figure class="mx-card">
+            <span class="mx-m" style="width: 150px" data-face="smile" data-arms="wave" data-top="НОВЫЙ ХОД" data-label="Монетка улыбается, на ободе: новый ход"></span>
+            <figcaption><b>Новый ход</b><small>Начало периода</small></figcaption>
+          </figure>
+          <figure class="mx-card">
+            <span class="mx-m" style="width: 150px" data-face="wink" data-arms="thumb" data-top="ЖМИ ЗАРПЛАТУ" data-label="Монетка подмигивает, на ободе: жми зарплату"></span>
+            <figcaption><b>Напоминание</b><small>Зарплата не взята</small></figcaption>
+          </figure>
+          <figure class="mx-card">
+            <span class="mx-m" style="width: 150px" data-face="surprised" data-arms="up" data-top="СОБЫТИЕ!" data-label="Монетка удивлена, на ободе: событие"></span>
+            <figcaption><b>Событие</b><small>Пришла карта события</small></figcaption>
+          </figure>
+          <figure class="mx-card">
+            <span class="mx-m" style="width: 150px" data-face="think" data-arms="chin" data-top="ИНТЕРЕСНО…" data-label="Монетка думает, на ободе: интересно"></span>
+            <figcaption><b>Объясняет</b><small>Подсказка о механике</small></figcaption>
+          </figure>
+          <figure class="mx-card">
+            <span class="mx-m" style="width: 150px" data-face="joy" data-arms="up" data-top="ПОДУШКА РАСТЁТ" data-label="Монетка радуется, на ободе: подушка растёт"></span>
+            <figcaption><b>Похвала</b><small>Шаг цели, рост подушки</small></figcaption>
+          </figure>
+          <figure class="mx-card">
+            <span class="mx-m" style="width: 150px" data-face="worried" data-arms="chin" data-top="ДОЛГ РАСТЁТ" data-label="Монетка встревожена, на ободе: долг растёт"></span>
+            <figcaption><b>Предупреждение</b><small>Риск, просрочка, долг</small></figcaption>
+          </figure>
+          <figure class="mx-card">
+            <span class="mx-m" style="width: 150px" data-face="victory" data-arms="up" data-top="ПОБЕДА" data-label="Монетка ликует, на ободе: победа"></span>
+            <figcaption><b>Победа</b><small>Финал партии</small></figcaption>
+          </figure>
+        </div>
+      </section>
+
+      <section class="mx-sec" aria-labelledby="sec-sizes">
+        <h2 id="sec-sizes">Размеры</h2>
+        <p class="mx-lead">Надпись на ободе читается от 120 px. Мельче — аватар без надписи: только обод и лицо.</p>
+        <div class="mx-sizes">
+          <div class="mx-size"><span class="mx-m" style="width: 120px" data-face="smile" data-arms="none" data-top="НОВЫЙ ХОД" data-label="Монетка 120 пикселей"></span>120 px</div>
+          <div class="mx-size"><img src="./assets/monetka-ink-avatar.svg" width="64" height="64" alt="Монетка, аватар 64 пикселя" />64 px</div>
+          <div class="mx-size"><img src="./assets/monetka-ink-avatar.svg" width="40" height="40" alt="Монетка, аватар 40 пикселей" />40 px</div>
+          <div class="mx-size"><img src="./assets/monetka-ink-avatar.svg" width="24" height="24" alt="Монетка, аватар 24 пикселя" />24 px</div>
+          <div class="mx-size"><img src="./assets/kvitya-avatar.svg" width="40" height="40" alt="Квитя, аватар 40 пикселей" />Квитя 40 px</div>
+          <div class="mx-size"><img src="./assets/kvitya-avatar.svg" width="24" height="24" alt="Квитя, аватар 24 пикселя" />Квитя 24 px</div>
+        </div>
+      </section>
+
+      <section class="mx-sec" aria-labelledby="sec-use">
+        <h2 id="sec-use">В интерфейсе</h2>
+        <div class="mx-use">
+          <div class="mx-tip">
+            <img src="./assets/monetka-ink-avatar.svg" alt="" />
+            <p class="mx-bubble">Оказывается, зарплата сама не приходит. Жми кнопку в периоде, иначе месяц пройдёт впустую.</p>
+          </div>
+          <div class="mx-panel">
+            <span class="mx-m" style="width: 140px" data-face="smile" data-arms="wave" data-top="НОВЫЙ ХОД" data-label="Монетка машет рукой"></span>
+            <h3>Твой первый ход</h3>
+            <p>Я покажу, где зарплата и что будет, если её пропустить.</p>
+          </div>
+          <div class="mx-panel">
+            <span class="mx-m" style="width: 140px" data-face="surprised" data-arms="up" data-top="СОБЫТИЕ!" data-label="Монетка удивлена"></span>
+            <h3>Сломался телефон</h3>
+            <p>Интересно, а что если ремонт дешевле нового?</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="mx-sec" aria-labelledby="sec-kvitya">
+        <h2 id="sec-kvitya">Квитя</h2>
+        <p class="mx-lead">Живой кассовый чек, оторванный с обеих сторон: шапка магазина, строчки покупок, итог на животе, QR-код и штамп. Рулона нет.</p>
+        <div class="mx-grid">
+          <figure class="mx-card"><img src="./assets/kvitya-default.svg" width="150" height="158" alt="Квитя" /><figcaption><b>По умолчанию</b><small>Итоги хода</small></figcaption></figure>
+          <figure class="mx-card"><img src="./assets/kvitya-joy.svg" width="150" height="158" alt="Квитя радуется, итог выделен маркером" /><figcaption><b>Итог в плюс</b><small>Ход закрыт с прибылью</small></figcaption></figure>
+          <figure class="mx-card"><img src="./assets/kvitya-think.svg" width="150" height="158" alt="Квитя сверяет строчки" /><figcaption><b>Сверяет строчки</b><small>Разбор расходов</small></figcaption></figure>
+        </div>
+      </section>
+
+      <section class="mx-sec" aria-labelledby="sec-summary">
+        <h2 id="sec-summary">Итоги хода</h2>
+        <p class="mx-lead">Чек — это и есть Квитя: лицо на оторванном крае, строчки — тело. Монетка остаётся главной и комментирует ниже.</p>
+        <div class="mx-phone">
+          <div>
+            <h3>Ход 7 завершён</h3>
+            <p class="mx-phone__sub">Квитя распечатала, что случилось за период.</p>
+          </div>
+          <div class="rc">
+            <svg viewBox="0 0 340 62" role="img" aria-label="Квитя: лицо на верхнем крае чека">
+              <path class="rc__paper" data-zig="top-fill" />
+              <path class="rc__edge" data-zig="top-edge" />
+              <rect class="rc__band" x="145" y="26" width="50" height="7" rx="3.5" />
+              <circle class="rc__ink" cx="155" cy="42" r="4.5" />
+              <circle class="rc__ink" cx="185" cy="42" r="4.5" />
+              <path class="rc__smile" d="M160 52 Q170 58 180 52" />
+            </svg>
+            <dl class="rc__body money">
+              <div class="rc__row"><dt>Зарплата</dt><dd class="gain">+60 000 ₽</dd></div>
+              <div class="rc__row"><dt>Аренда</dt><dd>−25 000 ₽</dd></div>
+              <div class="rc__row"><dt>Еда</dt><dd>−12 400 ₽</dd></div>
+              <div class="rc__row"><dt>Кофе с собой</dt><dd>−3 900 ₽</dd></div>
+              <div class="rc__row"><dt>Сломался телефон</dt><dd>−8 000 ₽</dd></div>
+              <div class="rc__rule" role="presentation"></div>
+              <div class="rc__row rc__total"><dt>Итого за ход</dt><dd>+10 700 ₽</dd></div>
+            </dl>
+            <svg viewBox="0 0 340 14" aria-hidden="true">
+              <path class="rc__paper" data-zig="bottom-fill" />
+              <path class="rc__edge" data-zig="bottom-edge" />
+            </svg>
+          </div>
+          <div class="mx-tip">
+            <img src="./assets/monetka-ink-avatar.svg" alt="" />
+            <p class="mx-bubble">Ход в плюс! Интересно, а что если десять тысяч отложить в подушку?</p>
+          </div>
+          <button class="mx-cta" type="button">Следующий ход</button>
+        </div>
+      </section>
+    </main>
+
+    <script>
+      (function () {
+        var root = document.documentElement;
+
+        /* ---- Монетка: один шаблон, поза = лицо + руки + надпись (так же будет устроен компонент) ---- */
+        var INK = '#1d1530', COIN = '#eab308', SOFT = '#fcf1c8', TURN = '#6d28d9', TURN_SOFT = '#ece4fb';
+        var FACES = {
+          smile: '<ellipse cx="87" cy="82" rx="5" ry="8" fill="' + INK + '" stroke="none"/><ellipse cx="113" cy="82" rx="5" ry="8" fill="' + INK + '" stroke="none"/><path d="M87 100 Q100 111 113 100" fill="none" stroke-width="4.5"/>',
+          wink: '<ellipse cx="87" cy="82" rx="5" ry="8" fill="' + INK + '" stroke="none"/><path d="M106 84 Q113 76 120 84" fill="none" stroke-width="4.5"/><path d="M84 98 Q100 116 116 98 Z" fill="' + INK + '" stroke-width="3"/>',
+          surprised: '<circle cx="87" cy="80" r="7" fill="#ffffff" stroke-width="3"/><circle cx="113" cy="80" r="7" fill="#ffffff" stroke-width="3"/><circle cx="87" cy="80" r="3" fill="' + INK + '" stroke="none"/><circle cx="113" cy="80" r="3" fill="' + INK + '" stroke="none"/><ellipse cx="100" cy="103" rx="5" ry="7" fill="' + INK + '" stroke="none"/>',
+          think: '<ellipse cx="91" cy="77" rx="4.5" ry="7" fill="' + INK + '" stroke="none"/><ellipse cx="116" cy="77" rx="4.5" ry="7" fill="' + INK + '" stroke="none"/><path d="M92 104 L108 101" fill="none" stroke-width="4.5"/>',
+          joy: '<path d="M80 84 L87 76 L94 84" fill="none" stroke-width="4.5"/><path d="M106 84 L113 76 L120 84" fill="none" stroke-width="4.5"/><path d="M86 96 Q100 114 114 96 Z" fill="' + INK + '" stroke-width="3"/>',
+          worried: '<path d="M79 74 L93 69 M121 74 L107 69" fill="none" stroke-width="3.5"/><ellipse cx="87" cy="83" rx="4.5" ry="6" fill="' + INK + '" stroke="none"/><ellipse cx="113" cy="83" rx="4.5" ry="6" fill="' + INK + '" stroke="none"/><path d="M86 104 Q93 99 100 104 Q107 109 114 104" fill="none" stroke-width="4"/>',
+          victory: '<path d="M80 84 L87 76 L94 84" fill="none" stroke-width="4.5"/><path d="M106 84 L113 76 L120 84" fill="none" stroke-width="4.5"/><path d="M82 94 L118 94 Q118 116 100 116 Q82 116 82 94 Z" fill="' + INK + '" stroke-width="3"/>'
+        };
+        var hand = function (x, y) { return '<circle cx="' + x + '" cy="' + y + '" r="9" fill="' + SOFT + '"/>'; };
+        /* back — за монетой, front — поверх (рука у подбородка) */
+        var ARMS = {
+          none: { back: '', front: '' },
+          wave: { back: '<path d="M44 96 Q24 88 28 62" fill="none"/>' + hand(28, 55) + '<path d="M154 102 Q178 114 160 130" fill="none"/>' + hand(157, 133), front: '' },
+          thumb: { back: '<path d="M46 96 Q26 92 30 70" fill="none"/><rect x="26" y="40" width="9" height="18" rx="4.5" fill="' + SOFT + '"/><rect x="20" y="54" width="22" height="18" rx="7" fill="' + SOFT + '"/><path d="M154 102 Q178 114 160 130" fill="none"/>' + hand(157, 133), front: '' },
+          up: { back: '<path d="M46 80 Q26 66 28 44" fill="none"/>' + hand(28, 37) + '<path d="M154 80 Q174 66 172 44" fill="none"/>' + hand(172, 37), front: '' },
+          chin: { back: '<path d="M44 102 Q30 122 38 142" fill="none"/>' + hand(39, 149), front: '<path d="M158 106 Q150 132 124 126" fill="none"/>' + hand(118, 123) }
+        };
+        var STARS = '<path d="M24 112 L26.5 119.5 L34 122 L26.5 124.5 L24 132 L21.5 124.5 L14 122 L21.5 119.5 Z" fill="#ffffff" stroke-width="2.5"/><path d="M178 100 L180 106 L186 108 L180 110 L178 116 L176 110 L170 108 L176 106 Z" fill="' + COIN + '" stroke-width="2.5"/>';
+        var uid = 0;
+
+        function monetka(face, arms, top, label) {
+          var id = 'mxr' + (uid++);
+          var a = ARMS[arms] || ARMS.none;
+          var full = arms !== 'none';
+          var vb = full ? '0 0 200 210' : '30 20 140 140';
+          var legs = full
+            ? '<path d="M86 146 L82 182" fill="none"/><path d="M114 146 L118 182" fill="none"/><path d="M64 192 Q64 180 78 180 L86 180 Q92 180 92 192 Z" fill="' + INK + '"/><path d="M108 192 Q108 180 114 180 L122 180 Q136 180 136 192 Z" fill="' + INK + '"/>'
+            : '';
+          return '<svg viewBox="' + vb + '" role="img" aria-label="' + label + '">' +
+            '<path id="' + id + 't" d="M55.5 88 A44.5 44.5 0 0 1 144.5 88" fill="none"/>' +
+            '<path id="' + id + 'b" d="M50 88 A50 50 0 0 0 150 88" fill="none"/>' +
+            '<g stroke="' + INK + '" stroke-width="5" stroke-linecap="round" stroke-linejoin="round">' +
+            legs + a.back + (face === 'victory' ? STARS : '') +
+            '<circle cx="108" cy="96" r="62" fill="' + INK + '" stroke="none"/>' +
+            '<circle cx="100" cy="88" r="62" fill="' + COIN + '"/>' +
+            '<circle cx="100" cy="88" r="47" fill="' + SOFT + '" stroke="' + TURN + '" stroke-width="12"/>' +
+            '<circle cx="100" cy="88" r="53.5" fill="none" stroke-width="3"/>' +
+            '<circle cx="100" cy="88" r="40.5" fill="none" stroke-width="3"/>' +
+            FACES[face] + a.front +
+            '</g>' +
+            '<text class="mx-rim" font-size="9" fill="' + (face === 'victory' ? SOFT : '#ffffff') + '" letter-spacing="1.4"><textPath href="#' + id + 't" startOffset="50%" text-anchor="middle">' + top + '</textPath></text>' +
+            '<text class="mx-rim" font-size="7.5" fill="' + TURN_SOFT + '" letter-spacing="1.6"><textPath href="#' + id + 'b" startOffset="50%" text-anchor="middle">★ ТВОЙ ХОД ★</textPath></text>' +
+            '</svg>';
+        }
+
+        document.querySelectorAll('.mx-m').forEach(function (el) {
+          el.innerHTML = monetka(el.dataset.face, el.dataset.arms, el.dataset.top, el.dataset.label);
+        });
+
+        /* ---- Зубцы чека: 20 зубцов; края на 1.5 и 338.5 — по центру 3-px боковой рамки тела ---- */
+        var L = 1.5, R = 338.5;
+        function zig(yValley, yPeak) {
+          var d = '', step = (R - L) / 20;
+          for (var k = 0; k < 20; k++) {
+            var x = L + step * k;
+            d += (k === 0 ? 'M' : 'L') + x.toFixed(2) + ' ' + yValley + ' L' + (x + step / 2).toFixed(2) + ' ' + yPeak + ' ';
+          }
+          return d + 'L' + R + ' ' + yValley;
+        }
+        var top = zig(16, 8), bottom = zig(0, 10);
+        var set = function (k, d) { var p = document.querySelector('[data-zig="' + k + '"]'); if (p) p.setAttribute('d', d); };
+        set('top-fill', top + ' L' + R + ' 62 L' + L + ' 62 Z');
+        set('top-edge', 'M' + L + ' 62 L' + top.slice(1) + ' L' + R + ' 62');
+        set('bottom-fill', bottom + ' Z');
+        set('bottom-edge', bottom);
+
+        document.addEventListener('click', function (e) {
+          var th = e.target.closest('[data-set-theme]');
+          if (!th) return;
+          root.setAttribute('data-theme', th.dataset.setTheme);
+          document.querySelectorAll('[data-set-theme]').forEach(function (b) { b.setAttribute('aria-pressed', String(b === th)); });
+        });
+      })();
+    </script>
+  </body>
+</html>
