@@ -225,6 +225,32 @@
   border: var(--mq-ink-w) solid var(--mq-ink-line);
 }
 
+/* Шапка вкладки (lab neobrutal-a-round, «Шапка вкладки»): без фиолетовой плашки и свечения —
+   заголовок и подпись чернилами прямо на поле, без логотипа */
+:root[data-mqx-style='ink'] .mqx-hero--capital {
+  padding: var(--mq-sp-6) var(--mq-sp-7) var(--mq-sp-2);
+  border-bottom: 0;
+  background: var(--mq-board);
+  box-shadow: none;
+}
+
+:root[data-mqx-style='ink'] .mqx-hero--capital :is(.mqx-hero__glow, .mqx-hero-tab__logo) {
+  display: none;
+}
+
+:root[data-mqx-style='ink'] .mqx-hero--capital .mqx-hero__title--capital {
+  color: var(--mq-board-ink);
+  font-size: var(--mq-fs-title);
+  font-weight: 800;
+  line-height: 1.3;
+}
+
+:root[data-mqx-style='ink'] .mqx-hero--capital .mqx-hero__sub--capital {
+  margin-top: 0;
+  color: var(--mq-board-ink-soft);
+  font-size: var(--mq-fs-note);
+}
+
 /* Сегмент: две кнопки одним блоком, прямой шов посередине, без подложки */
 :root[data-mqx-style='ink'] .mqx-cap-seg {
   gap: 0;
