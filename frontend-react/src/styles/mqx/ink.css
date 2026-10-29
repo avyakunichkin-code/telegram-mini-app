@@ -42,7 +42,9 @@
     .mqx-events-choice,
     .mqx-run-finale-btn,
     .mqx-sheet__close,
-    .mqx-sheet .mqx-invest-form__submit
+    .mqx-sheet .mqx-invest-form__submit,
+    .mqx-sheet .mqx-row-action:has(.mqx-row-action__verb),
+    .mqx-confirm-dialog .mqx-btn
   ) {
   transition:
     transform var(--mq-dur-press) var(--mq-ease-standard),
@@ -61,7 +63,9 @@
     button.mqx-events-choice,
     .mqx-run-finale-btn,
     .mqx-sheet__close,
-    .mqx-sheet .mqx-invest-form__submit
+    .mqx-sheet .mqx-invest-form__submit,
+    .mqx-sheet .mqx-row-action:has(.mqx-row-action__verb),
+    .mqx-confirm-dialog .mqx-btn
   ):active:not(:disabled) {
   transform: translate(var(--mq-ink-off), var(--mq-ink-off));
   box-shadow: 0 0 0 var(--mq-ink-drop);
@@ -504,6 +508,177 @@
   box-shadow: none;
 }
 
+/* —— Списки в окнах (вариант A «список», lab ink-sheets-round, 2026-10-29) ——
+   Строки прямо на поле окна, тонкая линия между ними; цветной полосы группы нет — группу называет
+   заголовок окна. Действие — фишка со словом («Купить», «Взять», «Оформить»): заливка + тень, без обводки. */
+:root[data-mqx-style='ink'] .mqx-sheet :is(.mqx-capital-template-list, .mqx-ins-plan-list) {
+  gap: 0;
+}
+
+:root[data-mqx-style='ink'] .mqx-sheet :is(
+    .mqx-capital-template-row--asset-h,
+    .mqx-capital-template-row--liability-h,
+    .mqx-capital-template-row--insurance-h
+  ) {
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  gap: var(--mq-sp-5);
+  margin: 0;
+  padding: var(--mq-sp-5) 0;
+  border-bottom: 1px solid var(--mq-cell-edge);
+}
+
+:root[data-mqx-style='ink'] .mqx-sheet :is(
+    .mqx-capital-template-row--asset-h,
+    .mqx-capital-template-row--liability-h,
+    .mqx-capital-template-row--insurance-h
+  ):last-child {
+  border-bottom: 0;
+}
+
+:root[data-mqx-style='ink'] .mqx-sheet .mqx-capital-template-row__accent {
+  display: none;
+}
+
+:root[data-mqx-style='ink'] .mqx-sheet .mqx-capital-template-row__title {
+  color: var(--mq-board-ink);
+  font-size: var(--mq-fs-body);
+  font-weight: 700;
+}
+
+:root[data-mqx-style='ink'] .mqx-sheet .mqx-capital-template-row__kicker {
+  color: var(--mq-board-ink-soft);
+}
+
+:root[data-mqx-style='ink'] .mqx-sheet .mqx-row-action:has(.mqx-row-action__verb) {
+  --mq-ink-off: var(--mq-ink-off-s);
+  width: auto;
+  min-height: 36px;
+  height: auto;
+  padding: 0 var(--mq-sp-5);
+  border-radius: var(--mq-r-cell);
+  background: var(--mq-cell);
+  color: var(--mq-board-ink);
+  box-shadow: var(--mq-ink-off) var(--mq-ink-off) 0 var(--mq-ink-drop);
+}
+
+:root[data-mqx-style='ink'] .mqx-sheet .mqx-row-action:has(.mqx-row-action__verb) .mqx-row-action__glyph {
+  display: none;
+}
+
+:root[data-mqx-style='ink'] .mqx-sheet .mqx-row-action__verb {
+  display: block;
+  font-size: var(--mq-fs-heading);
+  font-weight: 800;
+}
+
+:root[data-mqx-style='ink'] .mqx-sheet .mqx-row-action:has(.mqx-row-action__verb):disabled {
+  opacity: 1;
+  color: var(--mq-board-ink-faint);
+  box-shadow: none;
+}
+
+/* Заголовки групп — читаемые на поле окна (в базе — белый muted по светлому) */
+:root[data-mqx-style='ink'] .mqx-sheet :is(.mqx-capital-sheet-section-label, .mqx-ins-picker__heading) {
+  margin: var(--mq-sp-5) 0 0;
+  color: var(--mq-board-ink-soft);
+  font-size: var(--mq-fs-caption);
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+:root[data-mqx-style='ink'] .mqx-sheet :is(.mqx-ins-picker__hint, .mqx-ins-picker__asset-label) {
+  color: var(--mq-board-ink-soft);
+}
+
+/* Поле выбора — рамка ввода, как поле суммы */
+:root[data-mqx-style='ink'] .mqx-sheet .mqx-ins-picker__asset-select {
+  min-height: 44px;
+  border: var(--mq-ink-w) solid var(--mq-control-edge);
+  border-radius: var(--mq-r-cell);
+  background: var(--mq-cell);
+  color: var(--mq-board-ink);
+  font-weight: 600;
+}
+
+/* Виды страховки — заливка без обводки, выбранный — фиолетовый */
+:root[data-mqx-style='ink'] .mqx-sheet .mqx-ins-catalog__item {
+  border: 0;
+  background: var(--mq-cell);
+  color: var(--mq-board-ink);
+}
+
+:root[data-mqx-style='ink'] .mqx-sheet .mqx-ins-catalog__item.is-on {
+  background: var(--mq-turn);
+  color: var(--mq-turn-on);
+}
+
+:root[data-mqx-style='ink'] .mqx-sheet .mqx-ins-catalog__item :is(.mqx-ins-catalog__product, .mqx-ins-catalog__hint) {
+  color: var(--mq-board-ink-soft);
+}
+
+:root[data-mqx-style='ink'] .mqx-sheet .mqx-ins-catalog__item.is-on :is(.mqx-ins-catalog__product, .mqx-ins-catalog__hint) {
+  color: inherit;
+  opacity: 0.85;
+}
+
+/* —— Подтверждение (MqxConfirmDialog в Modal telegram-ui) — как лист: линия сверху, поле окна ——
+   «Отмена» — фишка заливкой без обводки; опасное действие — красная фишка с чернильным краем, рядом. */
+:root[data-mqx-style='ink'] div:has(> div > .mqx-confirm-dialog) {
+  border-top: var(--mq-ink-w) solid var(--mq-ink-line);
+  border-radius: var(--mq-r-card) var(--mq-r-card) 0 0;
+  background: var(--mq-board);
+}
+
+:root[data-mqx-style='ink'] .mqx-confirm-dialog {
+  padding: var(--mq-sp-7) var(--mq-sp-7) var(--mq-sp-7);
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+  color: var(--mq-board-ink);
+}
+
+:root[data-mqx-style='ink'] .mqx-confirm-dialog__message {
+  color: var(--mq-board-ink-soft);
+}
+
+:root[data-mqx-style='ink'] .mqx-confirm-dialog__actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--mq-sp-5);
+}
+
+:root[data-mqx-style='ink'] .mqx-confirm-dialog .mqx-btn {
+  min-height: 48px;
+  border-radius: var(--mq-r-cell);
+  box-shadow: var(--mq-ink-off) var(--mq-ink-off) 0 var(--mq-ink-drop);
+  font-weight: 800;
+}
+
+:root[data-mqx-style='ink'] .mqx-confirm-dialog .mqx-btn--secondary {
+  border: 0;
+  background: var(--mq-cell);
+  color: var(--mq-board-ink);
+}
+
+:root[data-mqx-style='ink'] .mqx-confirm-dialog .mqx-btn--destructive {
+  border: var(--mq-ink-w) solid var(--mq-ink-line);
+  background: var(--mq-danger);
+  color: var(--mq-turn-on);
+}
+
+/* В тёмной теме красный светлый — белый текст на нём < 4.5:1, берём тёмный цвет поля */
+@media (prefers-color-scheme: dark) {
+  :root[data-mqx-style='ink'] .mqx-confirm-dialog .mqx-btn--destructive {
+    color: var(--mq-board);
+  }
+}
+
+:root[data-mqx-style='ink'][data-theme='dark'] .mqx-confirm-dialog .mqx-btn--destructive {
+  color: var(--mq-board);
+}
+
 @media (prefers-reduced-motion: reduce) {
   :root[data-mqx-style='ink'] :is(
       .mqx-bg-cta,
@@ -517,7 +692,9 @@
       button.mqx-events-choice,
       .mqx-run-finale-btn,
       .mqx-sheet__close,
-      .mqx-sheet .mqx-invest-form__submit
+      .mqx-sheet .mqx-invest-form__submit,
+      .mqx-sheet .mqx-row-action:has(.mqx-row-action__verb),
+      .mqx-confirm-dialog .mqx-btn
     ):active:not(:disabled) {
     transform: none;
   }

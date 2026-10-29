@@ -59,6 +59,7 @@ export function CapitalDetailsPanel({
     const ok = await confirm({
       title: 'Закрыть позицию?',
       message: `«${position.title}» будет закрыта.`,
+      confirmLabel: 'Закрыть',
     });
     if (ok) await onCloseInvest(position.id);
   };
@@ -67,6 +68,7 @@ export function CapitalDetailsPanel({
     const ok = await confirm({
       title: 'Отменить полис?',
       message: `«${policy.title}» перестанет действовать.`,
+      confirmLabel: 'Отменить полис',
     });
     if (ok) await onCancelPolicy(policy.id);
   };
@@ -78,6 +80,7 @@ export function CapitalDetailsPanel({
       message: secured
         ? formatSaleConfirmMessage(asset, secured)
         : `«${asset.title}» будет продан, выручка зачислится на счёт.`,
+      confirmLabel: 'Продать',
     });
     if (ok) await onDeleteAsset(asset.id);
   };
@@ -89,6 +92,7 @@ export function CapitalDetailsPanel({
       message: secured
         ? `«${liability.title}» будет закрыт: спишется остаток и просрочка. Имущество останется у тебя.`
         : `«${liability.title}» будет закрыт: остаток и просрочка спишутся со счёта.`,
+      confirmLabel: 'Погасить',
     });
     if (ok) await onDeleteLiability(liability.id);
   };

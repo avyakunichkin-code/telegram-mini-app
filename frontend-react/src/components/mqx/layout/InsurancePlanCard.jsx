@@ -26,6 +26,7 @@ export function InsurancePlanCard({ plan, busy, disabled = false, onBuy }) {
         onClick: () => !busy && !disabled && onBuy(plan),
       }}
       actionLabel="+"
+      actionVerb="Оформить"
       actionAriaLabel={`Оформить ${catalog.title} — ${plan.label}`}
     />
   );

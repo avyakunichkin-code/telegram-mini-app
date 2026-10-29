@@ -158,6 +158,7 @@ export function CapitalActionsPanel({
             }
             action={{ onClick: () => void onAdd(t) }}
             actionLabel="+"
+            actionVerb={variant === 'liability' ? 'Взять' : Number(t.asset_value) > 0 ? 'Купить' : 'Снять'}
             actionAriaLabel={`Добавить: ${t.title}`}
           />
         ))}

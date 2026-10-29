@@ -1,0 +1,244 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>ТВОЙ ХОД — окна в «Чернильном крае»</title>
+    <link rel="stylesheet" href="./lab-base.css" />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <header class="lab-bar">
+      <div class="lab-bar__row">
+        <h1>Окна Капитала в «Чернильном крае»</h1>
+        <div class="lab-controls" role="group" aria-label="Вариант">
+          <button class="lab-toggle" type="button" data-set-variant="a" aria-pressed="true">A · список</button>
+          <button class="lab-toggle" type="button" data-set-variant="b" aria-pressed="false">B · лоты</button>
+          <button class="lab-toggle" type="button" data-set-variant="c" aria-pressed="false">C · плитки</button>
+        </div>
+        <div class="lab-controls" role="group" aria-label="Тема">
+          <button class="lab-toggle" type="button" data-set-theme="light" aria-pressed="true">Светлая</button>
+          <button class="lab-toggle" type="button" data-set-theme="dark" aria-pressed="false">Тёмная</button>
+        </div>
+      </div>
+      <p class="lab-note" data-variant-note></p>
+    </header>
+
+    <main class="nb-stage ws-stage" data-variant="a">
+      <section class="screen" aria-labelledby="scr-sell">
+        <h2 class="screen__name" id="scr-sell">Продать?</h2>
+        <div class="phone phone--sheet" data-behind>
+          <div class="scrim" aria-hidden="true"></div>
+          <section class="sheet sheet--confirm" role="dialog" aria-labelledby="t-sell">
+            <header class="sheet__head">
+              <h3 id="t-sell">Продать?</h3>
+              <p>«Студия (аренда)» будет продана, выручка зачислится на счёт.</p>
+              <button class="sheet__close" type="button" aria-label="Закрыть">×</button>
+            </header>
+            <div class="confirm">
+              <button class="btn btn--quiet" type="button">Отмена</button>
+              <button class="btn btn--danger" type="button">Продать</button>
+            </div>
+          </section>
+          <nav class="tabbar" aria-label="Разделы" data-tabbar="1"></nav>
+        </div>
+      </section>
+
+      <section class="screen" aria-labelledby="scr-ins">
+        <h2 class="screen__name" id="scr-ins">Страховки</h2>
+        <div class="phone phone--sheet" data-behind>
+          <div class="scrim" aria-hidden="true"></div>
+          <section class="sheet" role="dialog" aria-labelledby="t-ins">
+            <header class="sheet__head">
+              <h3 id="t-ins">Страховки</h3>
+              <p>Первая премия — при оформлении, дальше в конце хода. При страховом случае — полная выплата, полис закрывается.</p>
+              <button class="sheet__close" type="button" aria-label="Закрыть">×</button>
+            </header>
+            <div class="kinds" role="radiogroup" aria-label="Вид страховки" data-kinds></div>
+            <h4 class="group">ОСАГО</h4>
+            <p class="hint">Выбери тариф — премия списывается сразу при оформлении, дальше в конце каждого хода.</p>
+            <label class="field">
+              <span class="field__label">Объект страхования</span>
+              <select><option>Личная машина</option></select>
+            </label>
+            <div class="list" data-list="insurance"></div>
+          </section>
+          <nav class="tabbar" aria-label="Разделы" data-tabbar="1"></nav>
+        </div>
+      </section>
+
+      <section class="screen" aria-labelledby="scr-home">
+        <h2 class="screen__name" id="scr-home">Жильё</h2>
+        <div class="phone phone--sheet" data-behind>
+          <div class="scrim" aria-hidden="true"></div>
+          <section class="sheet" role="dialog" aria-labelledby="t-home">
+            <header class="sheet__head">
+              <h3 id="t-home">Жильё</h3>
+              <p>Покупка за наличные: полная стоимость списывается со счёта, без кредита.</p>
+              <button class="sheet__close" type="button" aria-label="Закрыть">×</button>
+            </header>
+            <h4 class="group">Для себя</h4>
+            <div class="list" data-list="own"></div>
+            <h4 class="group">Сдавать</h4>
+            <div class="list" data-list="rent-out"></div>
+            <h4 class="group">Снимать</h4>
+            <div class="list" data-list="rent"></div>
+          </section>
+          <nav class="tabbar" aria-label="Разделы" data-tabbar="1"></nav>
+        </div>
+      </section>
+
+      <section class="screen" aria-labelledby="scr-credit">
+        <h2 class="screen__name" id="scr-credit">Кредиты</h2>
+        <div class="phone phone--sheet" data-behind>
+          <div class="scrim" aria-hidden="true"></div>
+          <section class="sheet" role="dialog" aria-labelledby="t-credit">
+            <header class="sheet__head">
+              <h3 id="t-credit">Кредиты</h3>
+              <p>Автокредит, потребительский кредит (до 2). Ипотека — отдельная плитка.</p>
+              <button class="sheet__close" type="button" aria-label="Закрыть">×</button>
+            </header>
+            <h4 class="group">Автокредит</h4>
+            <div class="list" data-list="car"></div>
+            <h4 class="group">Потребительские</h4>
+            <div class="list" data-list="consumer"></div>
+          </section>
+          <nav class="tabbar" aria-label="Разделы" data-tabbar="1"></nav>
+        </div>
+      </section>
+    </main>
+
+    <script>
+      (function () {
+        var root = document.documentElement;
+        var stage = document.querySelector('.ws-stage');
+        var fmt = new Intl.NumberFormat('ru-RU', { maximumFractionDigits: 0 });
+        function rub(n) { return fmt.format(n).replace(/\s/g, ' ') + ' ₽'; }
+
+        var NOTES = {
+          a: 'A · список. Строки прямо на поле окна, между ними тонкая линия. Цвета группы нет — группу называет заголовок окна. Действие — фишка со словом («Купить», «Взять», «Оформить»): заливка и тень, без обводки.',
+          b: 'B · лоты. Каждая позиция — карточка собственности, как на странице Капитала: чернильный край и цветная полоса сверху (изумруд — имущество, красный — долг, фиолетовый — защита). Действие внутри карточки — фишка без обводки.',
+          c: 'C · плитки. Позиции — плитки заливкой без края, цвет группы — тонкая полоса слева. Действие — фиолетовая «+» с чернильной тенью, без обводки. Ближе всего к нынешнему виду, но без рамок.'
+        };
+
+        // Таббар — как в neobrutal-a-round
+        var tabs = [
+          ['Главная', '<path d="M4 11l8-6 8 6v8H4z"/>'],
+          ['Капитал', '<rect x="3" y="6" width="18" height="13" rx="2"/><path d="M16 12h2"/>'],
+          ['Аналитика', '<path d="M5 19V11M12 19V5M19 19v-6"/>'],
+          ['Меню', '<path d="M4 7h16M4 12h16M4 17h16"/>']
+        ];
+        document.querySelectorAll('[data-tabbar]').forEach(function (nav) {
+          var on = Number(nav.dataset.tabbar);
+          nav.innerHTML = tabs.map(function (t, i) {
+            return '<button class="tab' + (i === on ? ' tab--on" aria-current="page' : '') + '" type="button">' +
+              '<svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + t[1] + '</svg>' + t[0] + '</button>';
+          }).join('');
+        });
+
+        // Страница Капитала под затемнением — одна заглушка на все экраны
+        document.querySelectorAll('[data-behind]').forEach(function (phone) {
+          var page = document.createElement('div');
+          page.className = 'behind';
+          page.setAttribute('aria-hidden', 'true');
+          page.innerHTML =
+            '<div class="behind__head"><b>Капитал</b><small>Что приносит и забирает деньги</small></div>' +
+            '<div class="behind__flows"><span><small>Доходы за ход</small><b class="gain">+100 000 ₽</b></span><span><small>Расходы за ход</small><b>−94 886 ₽</b></span></div>' +
+            '<div class="behind__seg"><span>Детали</span><span class="on">Действия</span></div>' +
+            '<div class="behind__acts"><span>Вклад</span><span>Облигации</span><span>Страховка</span><span>Жильё</span><span>Авто</span></div>';
+          phone.insertBefore(page, phone.firstChild);
+        });
+
+        var KINDS = [
+          { kick: 'Ипотека', name: 'Жизнь' },
+          { kick: 'Ипотека', name: 'Имущество' },
+          { kick: 'Авто', name: 'Имущество', sub: 'КАСКО' },
+          { kick: 'Авто', name: 'Ответственность', sub: 'ОСАГО', on: true }
+        ];
+        document.querySelector('[data-kinds]').innerHTML = KINDS.map(function (k) {
+          return '<button class="kind" type="button" role="radio" aria-checked="' + Boolean(k.on) + '">' +
+            '<small>' + k.kick + '</small><b>' + k.name + '</b>' + (k.sub ? '<span>' + k.sub + '</span>' : '') + '</button>';
+        }).join('');
+
+        // tone: группа (gain — имущество, risk — долг, turn — защита); verb — подпись действия в A/B
+        var LISTS = {
+          insurance: { tone: 'turn', verb: 'Оформить', items: [
+            { kick: 'Авто · ответственность', title: 'ОСАГО — Базовый', price: 300000, out: 1800, term: 12 },
+            { kick: 'Авто · ответственность', title: 'ОСАГО — Стандарт', price: 400000, out: 2400, term: 12 },
+            { kick: 'Авто · ответственность', title: 'ОСАГО — Плюс', price: 600000, out: 3600, term: 12 }
+          ] },
+          own: { tone: 'gain', verb: 'Купить', items: [
+            { title: '1-комнатная квартира', price: 5000000, out: 15000 },
+            { title: '2-комнатная квартира', price: 10000000, out: 30000 },
+            { title: 'Частный дом', price: 20000000, out: 80000 }
+          ] },
+          'rent-out': { tone: 'gain', verb: 'Купить', items: [
+            { title: '1-комнатная (сдача)', price: 5000000, out: 7500, inc: 37500 },
+            { title: '2-комнатная (сдача)', price: 10000000, out: 15000, inc: 66667 }
+          ] },
+          rent: { tone: 'gain', verb: 'Снять', items: [
+            { title: 'Студия (аренда)', price: 0, out: 27500 },
+            { title: '2-комнатная (аренда)', price: 0, out: 52500 }
+          ] },
+          car: { tone: 'risk', verb: 'Взять', items: [
+            { kick: 'Первый взнос 300 000 ₽ · кредит 900 000 ₽', title: 'Личная машина · автокредит', price: 1200000, out: 20941, rate: 14 }
+          ] },
+          consumer: { tone: 'risk', verb: 'Взять', items: [
+            { title: 'Потребительский кредит', price: 400000, out: 14461, rate: 18 },
+            { title: 'Кредитная карта', price: 150000, out: 2750, rate: 22 }
+          ] }
+        };
+
+        function meta(it) {
+          var m = ['<span class="m m--price">' + (it.price ? rub(it.price) : 'без покупки') + '</span>'];
+          if (it.out) m.push('<span class="m m--out">−' + rub(it.out) + ' за ход</span>');
+          if (it.inc) m.push('<span class="m m--inc">+' + rub(it.inc) + ' за ход</span>');
+          if (it.rate) m.push('<span class="m">' + it.rate + '% годовых</span>');
+          if (it.term) m.push('<span class="m">' + it.term + ' ходов</span>');
+          return m.join('');
+        }
+
+        Object.keys(LISTS).forEach(function (key) {
+          var l = LISTS[key];
+          var host = document.querySelector('[data-list="' + key + '"]');
+          host.dataset.tone = l.tone;
+          host.innerHTML = l.items.map(function (it) {
+            return '<article class="row">' +
+              '<span class="row__band" aria-hidden="true"></span>' +
+              '<div class="row__main">' +
+                (it.kick ? '<small class="row__kick">' + it.kick + '</small>' : '') +
+                '<b class="row__title">' + it.title + '</b>' +
+                '<div class="row__meta money">' + meta(it) + '</div>' +
+              '</div>' +
+              '<button class="row__act" type="button" aria-label="' + l.verb + ': ' + it.title + '">' +
+                '<span class="row__verb">' + l.verb + '</span><span class="row__plus" aria-hidden="true">+</span>' +
+              '</button>' +
+            '</article>';
+          }).join('');
+        });
+
+        function setVariant(v) {
+          stage.dataset.variant = v;
+          document.querySelector('[data-variant-note]').textContent = NOTES[v];
+          document.querySelectorAll('[data-set-variant]').forEach(function (b) { b.setAttribute('aria-pressed', String(b.dataset.setVariant === v)); });
+        }
+        setVariant('a');
+
+        document.addEventListener('click', function (e) {
+          var th = e.target.closest('[data-set-theme]');
+          if (th) {
+            root.setAttribute('data-theme', th.dataset.setTheme);
+            document.querySelectorAll('[data-set-theme]').forEach(function (b) { b.setAttribute('aria-pressed', String(b === th)); });
+            return;
+          }
+          var va = e.target.closest('[data-set-variant]');
+          if (va) { setVariant(va.dataset.setVariant); return; }
+          var k = e.target.closest('.kind');
+          if (k) {
+            k.parentElement.querySelectorAll('.kind').forEach(function (x) { x.setAttribute('aria-checked', String(x === k)); });
+          }
+        });
+      })();
+    </script>
+  </body>
+</html>

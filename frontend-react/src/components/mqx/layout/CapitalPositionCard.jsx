@@ -13,6 +13,7 @@ export function CapitalPositionCard({
   metrics,
   action,
   actionLabel,
+  actionVerb,
   actionAriaLabel,
 }) {
   const accentClass =
@@ -32,6 +33,7 @@ export function CapitalPositionCard({
         actionLabel === '+' || actionLabel === '−' ? (
           <MqxRowAction
             variant={actionLabel === '+' ? 'add' : 'remove'}
+            verb={actionVerb}
             ariaLabel={actionAriaLabel}
             onClick={action.onClick}
             disabled={action.disabled}

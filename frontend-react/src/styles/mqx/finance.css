@@ -1466,6 +1466,11 @@ body [class*='modal'] {
     transform 0.12s ease;
 }
 
+/* Подпись действия — только в стиле ink (ink.css), в классическом — глиф */
+.mqx-row-action__verb {
+  display: none;
+}
+
 .mqx-row-action--add .mqx-row-action__glyph {
   border: none;
   background: var(--mq-violet);
