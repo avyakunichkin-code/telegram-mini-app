@@ -225,8 +225,8 @@
   border: var(--mq-ink-w) solid var(--mq-ink-line);
 }
 
-/* Шапка вкладки (lab neobrutal-a-round, «Шапка вкладки»): без фиолетовой плашки и свечения —
-   заголовок и подпись чернилами прямо на поле, без логотипа */
+/* Шапка вкладки — как у Аналитики (★ BG-3, .mqx-an-head): без фиолетовой плашки и свечения,
+   заголовок и подпись чернилами прямо на поле, без логотипа; справа фишка хода */
 :root[data-mqx-style='ink'] .mqx-hero--capital {
   padding: var(--mq-sp-6) var(--mq-sp-7) var(--mq-sp-2);
   border-bottom: 0;
@@ -240,15 +240,41 @@
 
 :root[data-mqx-style='ink'] .mqx-hero--capital .mqx-hero__title--capital {
   color: var(--mq-board-ink);
-  font-size: var(--mq-fs-title);
-  font-weight: 800;
-  line-height: 1.3;
+  font: 900 var(--mq-fs-money) / 1.1 var(--mq-font-display);
+  letter-spacing: normal;
 }
 
 :root[data-mqx-style='ink'] .mqx-hero--capital .mqx-hero__sub--capital {
   margin-top: 0;
   color: var(--mq-board-ink-soft);
-  font-size: var(--mq-fs-note);
+  font: 400 var(--mq-fs-caption) / 1.35 var(--mq-font-body);
+}
+
+/* Сетка как у .mqx-an-head: заголовок и подпись слева, фишка хода справа по центру обеих строк */
+:root[data-mqx-style='ink'] .mqx-hero--capital {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  column-gap: var(--mq-sp-4);
+}
+
+:root[data-mqx-style='ink'] .mqx-hero--capital .mqx-hero__top--inline-title {
+  display: contents;
+}
+
+:root[data-mqx-style='ink'] .mqx-hero--capital .mqx-hero__sub--capital {
+  grid-column: 1;
+}
+
+/* Логотип скрыт — без зазора перед заголовком, иначе он съезжает вправо от подписи */
+:root[data-mqx-style='ink'] .mqx-hero--capital .mqx-hero__brand-title {
+  gap: 0;
+}
+
+:root[data-mqx-style='ink'] .mqx-hero--capital .mqx-hero__turn {
+  display: inline-grid;
+  grid-column: 2;
+  grid-row: 1 / span 2;
 }
 
 /* Сегмент: две кнопки одним блоком, прямой шов посередине, без подложки */

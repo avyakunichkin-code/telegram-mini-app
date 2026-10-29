@@ -289,6 +289,7 @@ export function FinancePremium({
         titleClassName="mqx-hero__title--capital"
         subtitleClassName="mqx-hero__sub--capital"
         subtitle="Что приносит и забирает деньги"
+        turn={Number(overview?.period_index) || 0}
       />
 
       <main className="mqx-content mqx-tab-page__scroll mqx-capital-page mqx-capital-page--board">
