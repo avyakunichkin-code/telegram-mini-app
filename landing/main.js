@@ -17,3 +17,23 @@ reset.addEventListener('click', () => {
   result.hidden = true; reset.hidden = true; document.querySelector('.choices').hidden = false;
   document.querySelector('[data-choice]').focus();
 });
+
+// Static, same-origin design examples size to their actual content and fonts.
+// Frames remain script-disabled; no viewport-height padding or inner scrolling.
+document.querySelectorAll('.example-grid iframe').forEach(frame => {
+  let observer;
+  const fit = () => {
+    const doc = frame.contentDocument;
+    if (!doc?.body || doc.URL === 'about:blank') return;
+    observer?.disconnect();
+    const measure = () => {
+      frame.style.height = `${Math.ceil(doc.body.getBoundingClientRect().height) + 4}px`;
+    };
+    observer = new ResizeObserver(measure);
+    observer.observe(doc.body);
+    doc.fonts.ready.then(measure);
+    measure();
+  };
+  frame.addEventListener('load', fit);
+  fit();
+});
