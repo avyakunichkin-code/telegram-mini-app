@@ -67,3 +67,47 @@ jobs:
       - name: Build
         working-directory: frontend-react
         run: npm run build
+
+  # Прототип Plan (ADR-016), лендинг и свод принципов: не входят в required checks игры.
+  extras:
+    name: Plan prototype + landing + conventions
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.14'
+          cache: pip
+          cache-dependency-path: |
+            apps/plan-api/requirements.txt
+            packages/fincore/pyproject.toml
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: |
+            apps/plan-web/package-lock.json
+            landing/package-lock.json
+
+      - name: Conventions
+        run: python scripts/check_conventions.py
+
+      - name: Plan API pytest
+        working-directory: apps/plan-api
+        run: |
+          pip install -r requirements.txt
+          python -m pytest -q
+
+      - name: Plan web build
+        working-directory: apps/plan-web
+        run: |
+          npm ci
+          npm run build
+
+      - name: Landing build
+        working-directory: landing
+        run: |
+          npm ci
+          npm run build

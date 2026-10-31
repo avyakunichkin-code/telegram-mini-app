@@ -87,3 +87,6 @@ docs/balance/reports/*
 logs/
 *.log
 
+
+# Отдельные репозитории сайтов (свой origin), не часть этого репо
+sites/

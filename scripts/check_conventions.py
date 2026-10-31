@@ -38,7 +38,7 @@ TRACE_OUTCOMES = frozenset({"accepted", "partial"})
 PLAYER_SCAN_DIRS = (
     ROOT / "data" / "events",
     ROOT / "frontend-react" / "src",
-    ROOT / "landing" / "src",
+    ROOT / "landing" / "site",
 )
 PLAYER_SUFFIXES = {".yaml", ".yml", ".js", ".jsx", ".css", ".html"}
 FORBIDDEN_PLAYER = (
