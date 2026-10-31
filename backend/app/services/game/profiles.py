@@ -10,6 +10,7 @@ from ...schemas import (
     OnboardingPatchRequest,
     OnboardingPatchResponse,
 )
+from ...game.session import PLAN_REMOVED_DETAIL
 from .templates import validate_save_kind
 
 logger = logging.getLogger(__name__)
@@ -21,7 +22,7 @@ _ONBOARDING_STEPS = frozenset({"period_timer", "salary", "next_period", "safety_
 def list_game_profiles(db: Session, user_id: int) -> list[GameProfile]:
     return (
         db.query(GameProfile)
-        .filter(GameProfile.user_id == user_id)
+        .filter(GameProfile.user_id == user_id, GameProfile.save_kind == "game")
         .order_by(GameProfile.is_active.desc(), GameProfile.updated_at.desc(), GameProfile.id.desc())
         .all()
     )
@@ -131,6 +132,9 @@ def activate_game_profile(db: Session, user_id: int, profile_id: int) -> dict:
     )
     if not profile:
         raise HTTPException(status_code=404, detail="Game profile not found")
+
+    if profile.save_kind != "game":
+        raise HTTPException(status_code=410, detail=PLAN_REMOVED_DETAIL)
 
     db.query(GameProfile).filter(GameProfile.user_id == user_id).update({"is_active": 0})
     profile.is_active = 1

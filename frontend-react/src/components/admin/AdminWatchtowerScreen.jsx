@@ -132,7 +132,7 @@ function ProductFunnel({ funnel }) {
             <tbody>
               {funnel.by_save_kind.map((row) => (
                 <tr key={row.save_kind}>
-                  <td>{row.save_kind === 'plan' ? 'Plan' : 'Game'}</td>
+                  <td>{row.save_kind === 'game' ? 'Game' : 'Архивный режим'}</td>
                   <td>{row.profiles_recent}</td>
                   <td>{row.activation?.pct_ge5_closes ?? 0}%</td>
                   <td>{row.profiles_total}</td>

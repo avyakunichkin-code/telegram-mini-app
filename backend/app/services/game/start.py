@@ -5,7 +5,7 @@ from typing import List
 from fastapi import HTTPException
 from sqlalchemy.orm import Session
 
-from ...finance.expense_defaults import default_plan_expense_budget, expense_budget_for_template
+from ...finance.expense_defaults import expense_budget_for_template
 from ...finance.expenses import ensure_expense_category_catalog, seed_expense_lines_from_budget
 from ...finance.starter_liability import build_starter_liability
 from ...game.start_validation import validate_game_start_request
@@ -19,19 +19,14 @@ from ...models import (
     User,
 )
 from ...needs.engine import parse_needs_config, set_profile_needs
-from ...schemas import AssetCreate, GameStartRequest, GameStartResponse, LiabilityCreate
+from ...schemas import AssetCreate, GameStartRequest, GameStartResponse
 from .templates import validate_save_kind
 
 logger = logging.getLogger(__name__)
 
 
 def start_new_game(db: Session, user_id: int, payload: GameStartRequest) -> GameStartResponse:
-    """
-    Новый профиль:
-    - **game** — только из каталога (`template_key` обязателен);
-    - **plan** — мастер BaseParamsScreen без `template_key` (ручной бюджет) или опционально
-      префилл из каталога plan-шаблонов.
-    """
+    """Новая игра из каталога; template_key обязателен."""
     validate_game_start_request(payload, db)
     save_kind = validate_save_kind(payload.save_kind)
 
@@ -44,7 +39,6 @@ def start_new_game(db: Session, user_id: int, payload: GameStartRequest) -> Game
     cash_balance = float(payload.cash_balance)
     monthly_salary = float(payload.monthly_salary)
     assets_list: List[AssetCreate] = []
-    liabilities_list: List[LiabilityCreate] = []
     starter_liabilities_raw: List[dict] = []
     seeded_budget: dict[str, float] | None = None
     starter_params_json = "{}"
@@ -81,13 +75,6 @@ def start_new_game(db: Session, user_id: int, payload: GameStartRequest) -> Game
         for li in blueprint.get("liabilities") or []:
             if isinstance(li, dict):
                 starter_liabilities_raw.append(li)
-                liabilities_list.append(
-                    LiabilityCreate(
-                        title=li.get("title") or "Обязательство",
-                        total_debt=float(li.get("total_debt") or 0),
-                        annual_rate_percent=float(li.get("annual_rate_percent") or 0),
-                    )
-                )
 
         if base_monthly_lifestyle > 0:
             seeded_budget = expense_budget_for_template(
@@ -96,28 +83,6 @@ def start_new_game(db: Session, user_id: int, payload: GameStartRequest) -> Game
                 blueprint,
                 db,
             )
-
-        if save_kind == "plan" and seeded_budget is not None:
-            starter_params_json = json.dumps(
-                {
-                    "template_key": starter_template_key,
-                    "expense_budget": seeded_budget,
-                    "cash_balance": cash_balance,
-                    "monthly_salary": monthly_salary,
-                },
-                ensure_ascii=False,
-            )
-    else:
-        assets_list = list(payload.assets)
-        liabilities_list = list(payload.liabilities)
-        starter_liabilities_raw = [
-            {
-                "title": li.title or "Обязательство",
-                "total_debt": li.total_debt,
-                "annual_rate_percent": li.annual_rate_percent,
-            }
-            for li in liabilities_list
-        ]
 
     db.query(GameProfile).filter(
         GameProfile.user_id == user_id,
@@ -196,43 +161,14 @@ def start_new_game(db: Session, user_id: int, payload: GameStartRequest) -> Game
     )
     db.add(start_transaction)
 
-    if save_kind == "plan" and not tk:
-        raw_budget = payload.expense_budget or {}
-        budget = {
-            str(k): max(0.0, float(v))
-            for k, v in raw_budget.items()
-            if max(0.0, float(v or 0)) > 0
-        }
-        if not budget and monthly_salary > 0:
-            budget = default_plan_expense_budget(monthly_salary)
-        budget_total = round(sum(budget.values()), 2)
-        if budget_total > 0:
-            new_profile.base_monthly_lifestyle_expense = budget_total
-        starter_params = {
-            "expense_budget": budget,
-            "cash_balance": cash_balance,
-            "monthly_salary": monthly_salary,
-        }
-        new_profile.starter_params_json = json.dumps(starter_params, ensure_ascii=False)
-        if budget:
-            ensure_expense_category_catalog(db)
-            seed_expense_lines_from_budget(
-                db,
-                new_profile,
-                budget,
-                period_index=1,
-                source_kind="plan",
-                source_ref="wizard",
-            )
-    elif base_monthly_lifestyle > 0 and seeded_budget:
+    if base_monthly_lifestyle > 0 and seeded_budget:
         ensure_expense_category_catalog(db)
-        line_source = "plan" if save_kind == "plan" else "template"
         seed_expense_lines_from_budget(
             db,
             new_profile,
             seeded_budget,
             period_index=1,
-            source_kind=line_source,
+            source_kind="template",
             source_ref=starter_template_key,
         )
 

@@ -172,7 +172,7 @@ def ensure_period_events(db: Session, game_profile_id: int, period_index: int, s
         db.query(EventDefinition)
         .filter(
             EventDefinition.is_active == 1,
-            or_(EventDefinition.mode == save_kind, EventDefinition.mode == "any"),
+            or_(EventDefinition.mode == "game", EventDefinition.mode == "any"),
         )
         .all()
     )

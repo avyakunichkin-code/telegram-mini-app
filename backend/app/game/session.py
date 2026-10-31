@@ -6,6 +6,9 @@ from sqlalchemy.orm import Session
 from ..models import GameProfile, Transaction
 from ..finance.balance_utils import TRANSACTION_TYPES
 
+# ADR-013: старые plan-профили хранятся, но в игре не открываются.
+PLAN_REMOVED_DETAIL = "Режим «План» убран из игры. Начни новую игру или открой другое сохранение."
+
 
 def get_active_game_profile(db: Session, user_id: int) -> GameProfile:
     """Активная партия. Не создаёт новую, если у пользователя уже есть сохранения."""
@@ -15,6 +18,8 @@ def get_active_game_profile(db: Session, user_id: int) -> GameProfile:
         .first()
     )
     if profile:
+        if profile.save_kind != "game":
+            raise HTTPException(status_code=410, detail=PLAN_REMOVED_DETAIL)
         return profile
 
     has_any = (
@@ -66,14 +71,21 @@ def resolve_game_session(
         .first()
     )
     if active:
+        if active.save_kind != "game":
+            raise HTTPException(status_code=410, detail=PLAN_REMOVED_DETAIL)
         return active, "active", None, None
 
     last = (
         db.query(GameProfile)
-        .filter(GameProfile.user_id == user_id)
+        .filter(GameProfile.user_id == user_id, GameProfile.save_kind == "game")
         .order_by(GameProfile.updated_at.desc(), GameProfile.id.desc())
         .first()
     )
+    if not last:
+        has_legacy = db.query(GameProfile.id).filter(GameProfile.user_id == user_id).limit(1).first()
+        if has_legacy:
+            raise HTTPException(status_code=410, detail=PLAN_REMOVED_DETAIL)
+
     if last and int(last.is_active or 0) == 0:
         reason = _infer_defeat_reason(db, last.id)
         period_idx = int(last.period_index or 0)

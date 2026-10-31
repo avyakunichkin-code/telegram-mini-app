@@ -4,7 +4,7 @@ epic_id: M1.2
 phase: define
 status: draft
 owner: product
-last_reviewed: 2026-09-07
+last_reviewed: 2026-10-29
 spec:
 idea: ../vision/ideas/post-playtest-wave1-two-directions.md
 related:
@@ -35,6 +35,8 @@ aliases:
 **Источники аудитов (DRAFT, 2026-09-07):** [продукт](../audits/product/2026-09-07-product-game-design.md) · [архитектура](../audits/engineering/2026-09-07-architecture.md) · [QA](../audits/qa/2026-09-07-mechanics.md) · [UX](../audits/ux/2026-09-07-player-surface.md) · [Live Ops](../audits/liveops/2026-09-07-community.md) · [AI](../audits/ai/2026-09-07-runtime-and-dev-ai.md).  
 **Game-only:** idea [`game-only-drop-plan-mode`](../vision/ideas/game-only-drop-plan-mode.md) · детализация срезов [`PLAN_game-only.md`](PLAN_game-only.md) (не второй roadmap).
 
+**Сверка 2026-10-29 (локальные изменения):** GO-02/03 реализованы, GO-04 — пул game/any без Plan-контента в mvp11. Прежние оценки очереди ниже исторические; актуальное поведение и оставшийся SQL-аудит до выкладки — в `PLAN_game-only`. GO-05 не выполнялся.
+
 Это **один** план текущей доработки: синтез **шести** аудитов (product / engineering / qa / ux / liveops / ai) **и** вырезание режима Plan. Не седьмой аудит. Дубли схлопнуты, взята **максимальная** критичность, техдолг связан с эффектом на игрока. RICE: Reach ≈ когорта CA **100** (волна 10–20 = Reach **20** где явно); Impact 3/2/1/0.5; Confidence 0.8/0.5/0.2; Effort в человеко-неделях.
 
 **Не ломать:** TB1 без таймера, два кошелька, сгорание зарплаты, YAML ADR-008, Victory v2, 4 шаблона, этика (нет pay-to-win / CTA советника в α).
@@ -43,9 +45,9 @@ aliases:
 
 ---
 
-## Статус задач (сверка с кодом, 2026-10-26)
+## Статус задач (сверка с кодом, 2026-10-26; дополнено 2026-10-29)
 
-Легенда: ✅ подтверждено кодом/тестом · 🟡 сделано частично · ⬜ не найдено в коде · ❓ не проверялось (процесс, люди, ops) · ✖ отменено. Сверка — по ветке `new_functions` (`9f765a3`); сам план по-прежнему DRAFT.
+Легенда: ✅ подтверждено кодом/тестом · 🟡 сделано частично · ⬜ не найдено в коде · ❓ не проверялось (процесс, люди, ops) · ✖ отменено. Сверка — по ветке `new_functions` (`9f765a3`), 2026-10-29 дополнена по `f0cd113`; сам план по-прежнему DRAFT. Что сделано по датам — [`CHANGELOG.md`](../CHANGELOG.md).
 
 | ID | Статус | Основание |
 |----|--------|-----------|
@@ -60,9 +62,9 @@ aliases:
 | PR-09 | ❓ | Freeze-чеклист (TG-шаблон 4, CTA советника) — конфиг/ops, в коде не проверяется |
 | PR-14 | ✅ | `events_spawn_failed` в `period.py`, `schemas.py`, FE `periodCloseDisplay.js`; тест `test_period_event_pool_failure.py`; план approved |
 | GO-01 | ✅ | Сделан 2026-10-15 (см. `PLAN_game-only`) |
-| GO-02 | ⬜ | `validate_save_kind` допускает `game` и `plan`; `services/game/start.py` ещё ветвится на `plan` |
-| PR-10 | ✅ | ★ BG-3 «одна рамка на уровень» в prod (`d0186c9`); метрика Q1≥3.5 не измерялась |
-| PR-11 | ❓ | Grep-проверка «ход vs месяц» по UI не делалась |
+| GO-02 | ✅ | 2026-10-29 (локально): `save_kind=plan` → 400 в start/profiles/templates; старые plan-профили → 410 (`game/session.py`, `PLAN_REMOVED_DETAIL`), данные не трогаются; `tests/integration/api/test_game_only_contract.py`. До выкладки — SQL `count(save_kind='plan')` |
+| PR-10 | ✅ | ★ BG-3 «одна рамка на уровень» в prod (`d0186c9`); метрика Q1≥3.5 не измерялась. С 2026-10-28 поверх — пробный стиль «Чернильный край» (`ink.css`, не ★): он включён по умолчанию, значит волна 10–20 увидит его, если до неё не будет ★ или отката |
+| PR-11 | 🟡 | 2026-10-31: в `frontend-react/src` вне демо-каталога «месяц» в смысле хода не найден; `BaseParamsScreen`, `PlanExpenseEditor`, `MqxGameOverModal`, `ExpensesBudgetBlock` удалены (CSS `.mqx-expenses-budget*` остался в `design/system/runtime` — снять там). Тосты и тексты с backend (`guidance/curriculum.py`, YAML событий) не сверялись |
 | PR-12 | ❓ | Скролл к salary в O3 / CLS strip — только в Playwright-сценариях, отдельно не сверялось |
 | PR-13 | ❓ | Решение «skip событий close» в `SPEC_PRODUCT` не найдено (grep по «skip» пуст) |
 | PR-15 | ❓ | `PRE_ALPHA_WAVE1_OPS.md` есть; `PRE_ALPHA_WAVE1_RESULTS.md` — draft, пустой шаблон |
@@ -71,8 +73,8 @@ aliases:
 | PR-18 | ⬜ | Акт 1 победы не сделан; инварианты баланса INV-1 падают на всех 4 шаблонах (DOC_SYNC_LOG 2026-10-25) |
 | PR-19 | ⬜ | Spec на правило подушки/burn не найден |
 | PR-20 | ❓ | Z-index оверлея (α-FB-19) — вне сверки |
-| GO-03 | ⬜ | `BaseParamsScreen`, `expenses/service.py` (plan-ветка), колонка Plan в Watchtower и `adminPlayerColumns` на месте |
-| GO-04 | ❓ | `mode: plan` в `data/events` не найден; `EventDefinition.mode` в коде не сверялся |
+| GO-03 | ✅ | 2026-10-29 (локально): `BaseParamsScreen`, Plan-редакторы, plan-ветка `expenses/service.py` удалены; CRUD статей → 410; Watchtower и `adminPlayerColumns` показывают plan как «Архивный режим» |
+| GO-04 | ✅ | `services/events/spawn.py` фильтрует пул только по `game`/`any`; `mode: plan` в `data/events` нет |
 | PR-21 | ⬜ | Зависит от PR-18 |
 | PR-22 | 🟡 | Поле `cooldown_periods` в каталоге есть; эффект на повторы (α-FB-03) не измерялся |
 | PR-23 | ⬜ | Информационный слот событий (EVT1) не найден |

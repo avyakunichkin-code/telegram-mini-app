@@ -177,22 +177,7 @@ aliases:
 
 Не реализовывать CRUD `save_kind=plan` / мастер `BaseParamsScreen` как второй продукт. Статьи burn **Game** (волны A–C) остаются. Редактор внутри Game — отдельная идея после D7.
 
-<details>
-<summary>Исторический чеклист (не делать)</summary>
-
-| ID | Реализация |
-|----|------------|
-| E1-410 | Этот раздел + `EXPENSES_SYSTEM.md` §8 |
-| E1-411 | `POST /api/game/start` с `expense_budget`; CRUD `/api/game/expenses/lines` только при `save_kind=plan` |
-| E1-412 | Мастер `BaseParamsScreen` + `PlanExpenseEditor` во вкладке «Финансы» |
-
-**Старт Plan:** игрок задаёт `cash_balance`, `monthly_salary`, `expense_budget` (категория → ₽/мес). Пустой бюджет при зарплате > 0 → автоподстановка ~55% зарплаты по долям категорий (`default_plan_expense_budget`). Создаются `profile_expense_lines` с `source_kind=plan`; `starter_params_json` хранит снимок бюджета.
-
-**В игре (Plan):** `GET /api/game/expenses/categories`; `POST/PATCH/DELETE /api/game/expenses/lines` — только для `save_kind=plan`; после изменений пересчитывается `base_monthly_lifestyle_expense`. Game — только чтение (`GET /api/game/expenses`).
-
-**UI:** плитка «План» в `NewProfileKindScreen` → `BaseParamsScreen` → редактор категорий; в сессии — `PlanExpenseEditor` вместо read-only `ExpensesBudgetBlock`.
-
-</details>
+Встроенный Plan удалён 2026-10-29 (GO-02/03). Игра предоставляет чтение расходов; `POST/PATCH/DELETE /api/game/expenses/lines` возвращают **410 Gone**. Новый Plan — отдельный продукт (`apps/plan-*`, ADR-016).
 
 ---
 

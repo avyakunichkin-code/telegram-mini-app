@@ -60,7 +60,7 @@ def main() -> None:
     roots = [
         ROOT / "docs",
         ROOT / "CLAUDE.md",
-        ROOT / "GAME.md",
+        ROOT / "docs" / "handbook" / "GAME.md",
         ROOT / "design-lab",
         ROOT / "frontend-react" / "ARCHITECTURE.md",
         ROOT / "frontend-react" / "src" / "components" / "mqx" / "README.md",

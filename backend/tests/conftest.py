@@ -107,6 +107,7 @@ def seed_basic_template(db_session):
             sort_order=10,
         )
     )
+    # Historical row: game-only API must hide/reject templates left by removed Plan.
     db_session.add(
         GameStarterTemplate(
             template_key="mq_plan_basic_v1",

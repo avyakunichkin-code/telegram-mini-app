@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
 from ..auth import get_current_user
@@ -12,12 +12,9 @@ from ..schemas import (
     ExpensesSnapshotResponse,
 )
 from ..services.expenses.service import (
-    create_expense_line as service_create_expense_line,
-    delete_expense_line as service_delete_expense_line,
     expenses_snapshot as service_expenses_snapshot,
     list_expense_categories as service_list_expense_categories,
     list_expense_lines as service_list_expense_lines,
-    patch_expense_line as service_patch_expense_line,
 )
 
 router = APIRouter(prefix="/api/game/expenses", tags=["expenses"])
@@ -28,7 +25,7 @@ def list_expense_categories(
     current_user=Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
-    """Справочник категорий расходов (для редактора Plan)."""
+    """Справочник категорий расходов игры."""
     del current_user
     return service_list_expense_categories(db)
 
@@ -58,8 +55,7 @@ def create_expense_line(
     current_user=Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
-    profile = get_active_game_profile(db, current_user.id)
-    return service_create_expense_line(db, profile, payload)
+    raise HTTPException(status_code=410, detail="Статьи расходов в игре задаёт шаблон, их нельзя менять вручную.")
 
 
 @router.patch("/lines/{line_id}", response_model=ExpenseLineResponse)
@@ -69,8 +65,7 @@ def patch_expense_line(
     current_user=Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
-    profile = get_active_game_profile(db, current_user.id)
-    return service_patch_expense_line(db, profile, line_id, payload)
+    raise HTTPException(status_code=410, detail="Статьи расходов в игре задаёт шаблон, их нельзя менять вручную.")
 
 
 @router.delete("/lines/{line_id}", status_code=204)
@@ -79,5 +74,4 @@ def delete_expense_line(
     current_user=Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
-    profile = get_active_game_profile(db, current_user.id)
-    service_delete_expense_line(db, profile, line_id)
+    raise HTTPException(status_code=410, detail="Статьи расходов в игре задаёт шаблон, их нельзя менять вручную.")

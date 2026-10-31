@@ -14,7 +14,7 @@ from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
 from ...game.period import process_period_end
-from ...game.session import get_active_game_profile
+from ...game.session import PLAN_REMOVED_DETAIL, get_active_game_profile
 from ...models import ApiIdempotencyRecord, GameProfile
 from ...events.mandatory import pending_mandatory_blocking_event_titles
 from ...schemas import (
@@ -131,6 +131,8 @@ def _lock_active_profile(db: Session, user_id: int) -> GameProfile:
     profile = query.first()
     if not profile:
         raise HTTPException(status_code=404, detail="Активный профиль не найден")
+    if profile.save_kind != "game":
+        raise HTTPException(status_code=410, detail=PLAN_REMOVED_DETAIL)
     return profile
 
 

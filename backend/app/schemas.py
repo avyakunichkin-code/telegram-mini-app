@@ -173,7 +173,7 @@ class ExpenseLineResponse(BaseModel):
     title: str
     amount_monthly: float
     tier: str = "must"
-    source_kind: str = "plan"
+    source_kind: str = "template"
     expires_period_index: Optional[int] = None
 
 
@@ -563,13 +563,14 @@ class GameStartRequest(BaseModel):
     monthly_amount: Optional[float] = None
     assets: List[AssetCreate] = Field(default_factory=list)
     liabilities: List[LiabilityCreate] = Field(default_factory=list)
-    expense_budget: dict[str, float] = Field(default_factory=dict)
 
     @model_validator(mode="after")
     def normalize_game_start(self):
         sk = (self.save_kind or "game").strip().lower()
+        # Removed Plan is recognized here so the service returns the documented 400.
+        # Unknown values remain schema errors (422).
         if sk not in ("game", "plan"):
-            raise ValueError("save_kind must be 'game' or 'plan'")
+            raise ValueError("save_kind must be 'game'")
         self.save_kind = sk
         if self.monthly_salary in (0, 0.0) and self.monthly_amount is not None:
             self.monthly_salary = float(self.monthly_amount)

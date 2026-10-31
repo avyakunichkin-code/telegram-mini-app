@@ -72,7 +72,7 @@ export function useAdminProfileColumns({ searchParams, setSearchParams, openProf
       {
         key: 'save_kind',
         label: 'Режим',
-        render: (r) => (r.save_kind === 'plan' ? 'Plan' : 'Game'),
+        render: (r) => (r.save_kind === 'game' ? 'Game' : 'Архивный режим'),
         sortable: true,
         sortValue: (r) => r.save_kind ?? '',
       },

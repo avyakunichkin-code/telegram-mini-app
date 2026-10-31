@@ -4,8 +4,8 @@
 
 | Режим | Когда | Что гоняется |
 |-------|--------|--------------|
-| **Legacy (сейчас)** | Нет `0000_schema_baseline.sql` | Все `migrations/*.sql` по порядку имени |
-| **Baseline + delta** | После squash | `0000_schema_baseline.sql` + новые `00NN_*.sql` в корне; старые — в [`archive/`](archive/README.md) |
+| **Legacy (совместимость)** | Нет `0000_schema_baseline.sql` | Все `migrations/*.sql` по порядку имени |
+| **Baseline + delta (сейчас)** | Baseline уже создан | `0000_schema_baseline.sql` + новые `00NN_*.sql` в корне; старые — в [`archive/`](archive/README.md) |
 
 Порядок — **лексикографический по имени** (`0000_…`, `0002_…`, …). Подпапки (`archive/`) **не** выполняются.
 
@@ -48,7 +48,7 @@ bash backend/scripts/db.sh bootstrap
 - **`victory_goals`** (цели победы по шаблону; таблица без ORM-модели);
 - каталог событий из `data/events/mvp11/*.yaml`.
 
-## Baseline: одним файлом поднять схему
+## Обновление baseline (при следующем squash)
 
 1. На БД, где уже применены все текущие миграции:
 
@@ -76,7 +76,7 @@ bash backend/scripts/db.sh bootstrap
 
 ## Новая миграция
 
-1. Следующий номер: смотреть `ls migrations/*.sql` (сейчас после `0046_*` → `0047_*`).
+1. Следующий номер: смотреть `ls migrations/*.sql` (номер определяется по актуальным файлам в корне).
 2. Имя: `NNNN_short_snake_case.sql` (латиница, одна тема на файл).
 3. Писать **идемпотентно**, где возможно:
    - `CREATE TABLE IF NOT EXISTS`

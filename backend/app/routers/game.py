@@ -81,7 +81,7 @@ def post_run_feedback(
 def list_game_templates(
     for_save_kind: Optional[str] = Query(
         None,
-        description="Фильтр каталога: game | plan. Без параметра — только шаблоны Game.",
+        description="Фильтр каталога: game. Без параметра — только шаблоны Game.",
     ),
     db: Session = Depends(get_db),
 ):

@@ -403,7 +403,7 @@ export function MqCatalogScreen() {
         >
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, alignItems: 'center' }}>
             <MqxButton variant="hero-filled">Пауза</MqxButton>
-            <MqxButton variant="hero-outline">След. месяц</MqxButton>
+            <MqxButton variant="hero-outline">Завершить ход</MqxButton>
             <MqxPeriodChip value="#3" />
           </div>
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, marginTop: 10 }}>

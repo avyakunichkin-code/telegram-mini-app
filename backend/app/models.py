@@ -61,7 +61,7 @@ class GameProfile(Base):
     id = Column(Integer, primary_key=True, index=True)
     user_id = Column(Integer, ForeignKey("users.id"), nullable=False, index=True)
     name = Column(String(100), nullable=False)
-    save_kind = Column(String(16), nullable=False, default="game")  # game | plan (plan — MVP 2.0)
+    save_kind = Column(String(16), nullable=False, default="game")  # Только game; старые plan-строки сохранены для аудита.
     starter_template_key = Column(String(80), nullable=True)
     starter_params_json = Column(Text, nullable=False, default="{}")
     base_monthly_lifestyle_expense = Column(Float, nullable=False, default=0)
@@ -257,7 +257,7 @@ class GameStarterTemplate(Base):
     is_active = Column(Integer, nullable=False, default=1)
     sort_order = Column(Integer, nullable=False, default=100)
     created_at = Column(DateTime, default=utc_now_naive)
-    # game — только каталог Game; plan — только Plan; any — оба (редко)
+    # Игровой каталог: game / any. Старые plan-строки API не выдаёт.
     applies_to_save_kind = Column(String(20), nullable=False, default="game")
 
 
@@ -285,7 +285,7 @@ class EventDefinition(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     key = Column(String(80), unique=True, nullable=False, index=True)
-    # Совместимость с профилем: game | plan | any (legacy light/hardcore → game в миграции)
+    # Игровой пул: game / any; старый plan больше не используется.
     mode = Column(String(20), nullable=False, default="game")
     title = Column(String(160), nullable=False)
     description = Column(Text, nullable=False, default="")
