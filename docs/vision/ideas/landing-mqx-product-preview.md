@@ -32,13 +32,13 @@ aliases:
 4. **Светлые секции** (#how, #learn, #modes) — карточки MQX + при необходимости тёмные скрины в рамке.
 5. **#partners** — без скринов, edutainment-тон.
 
-Источник скринов: [`landing/scripts/capture-screens.mjs`](../../../landing/scripts/capture-screens.mjs) → [`landing/public/screens/`](../../../landing/public/screens/). Подробно: [`specs/LANDING_SCREENSHOTS.md`](../../specs/LANDING_SCREENSHOTS.md).
+Источник скринов: [`design/archive/classic-v3/landing-source/scripts/capture-screens.mjs`](../../../design/archive/classic-v3/landing-source/scripts/capture-screens.mjs) → [`design/archive/classic-v3/landing-source/public/screens/`](../../../design/archive/classic-v3/landing-source/public/screens/). Подробно: [`specs/LANDING_SCREENSHOTS.md`](../../specs/LANDING_SCREENSHOTS.md).
 
 ## Key Assumptions to Validate
 
 - [ ] Скрин дашборда (финансы + цель) узнаётся без подписи «это игра» (5-секундный тест).
 - [ ] Контраст light-on-dark / dark-on-light не режет глаз на мобиле.
-- [x] Пайплайн пересъёма задокументирован; дата последнего кадра — `landing/public/screens/README.md` (2026-05-25).
+- [x] Пайплайн пересъёма задокументирован; дата последнего кадра — `design/archive/classic-v3/landing-source/public/screens/README.md` (2026-05-25).
 - [ ] Перед публичным запуском — пересъём в **app**-режиме (не только lab-fallback).
 
 ## MVP Scope

@@ -12,7 +12,7 @@ aliases:
 ---
 # Деплой: Pre-Alpha → Closed Alpha
 
-Целевая схема на ближайшие две волны плейтеста (**10–20** и **50–100** игроков по [`GAME.md`](../../GAME.md) §11):
+Целевая схема на ближайшие две волны плейтеста (**10–20** и **50–100** игроков по [`GAME.md`](../handbook/GAME.md) §11):
 
 | Компонент | Где | Зачем |
 |-----------|-----|--------|
@@ -126,7 +126,7 @@ npm run build:pages
 npx gh-pages -d dist
 ```
 
-**Лендинг и скрины UI:** если менялся видимый MQX в игре — перед `build:pages` переснять PNG ([`specs/LANDING_SCREENSHOTS.md`](../specs/LANDING_SCREENSHOTS.md)): `cd landing && npm run capture-screens` (предпочтительно при запущенных dev + backend).
+**Лендинг:** `build:pages` собирает `landing/site/` (`landing/scripts/build-static.mjs`) в `dist/landing/`; скрины игры пересъёмки не требуют — прежний пайплайн PNG снят 2026-10-30 ([`specs/LANDING_SCREENSHOTS.md`](../specs/LANDING_SCREENSHOTS.md), архив). Ресурсы дизайна сверяет `npm run check:design-assets` (он же `prebuild`).
 
 ---
 
@@ -171,7 +171,7 @@ HashRouter (`#/game`) менять не нужно.
 
 - отдельная **когорта** или флаг в БД не обязателен на старте;
 - при росте нагрузки — апгрейд плана Render DB/API;
-- метрики D1/D7 — по [`GAME.md`](../../GAME.md) и эпику admin/analytics.
+- метрики D1/D7 — по [`GAME.md`](../handbook/GAME.md) и эпику admin/analytics.
 
 Отдельный staging (`staging.app.*`) — по желанию, дублирует Variables в GitHub (`VITE_*` на preview workflow).
 

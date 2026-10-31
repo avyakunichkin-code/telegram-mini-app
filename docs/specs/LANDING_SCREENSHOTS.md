@@ -1,24 +1,26 @@
 ---
 layer: spec
-status: active
-last_reviewed: 2026-05-25
+status: superseded
+last_reviewed: 2026-10-31
 audience: frontend, marketing, agents
 tags:
   - tvoy-hod/layer/spec
-  - tvoy-hod/status/active
+  - tvoy-hod/status/superseded
 aliases:
   - "Лендинг — скриншоты UI (MQX)"
   - LANDING_SCREENSHOTS
 ---
 # Лендинг — скриншоты UI (MQX)
 
-**Связано:** [`landing/README.md`](../../landing/README.md) · [`vision/ideas/landing-mqx-product-preview.md`](../vision/ideas/landing-mqx-product-preview.md) · [`landing/public/screens/README.md`](../../landing/public/screens/README.md) · [`landing/src/scripts/screens.js`](../../landing/src/scripts/screens.js)
+> **Снято 2026-10-30.** Новый лендинг (`landing/site/`, вариант A) не использует PNG-скрины игры: пример хода собран в самой странице. Пайплайн ниже относится к прежнему лендингу, перенесённому в `design/archive/classic-v3/landing-source/`, и хранится для истории. Актуальное — [`landing/README.md`](../../landing/README.md).
+
+**Связано:** [`landing/README.md`](../../landing/README.md) · [`vision/ideas/landing-mqx-product-preview.md`](../vision/ideas/landing-mqx-product-preview.md) · [`design/archive/classic-v3/landing-source/public/screens/README.md`](../../design/archive/classic-v3/landing-source/public/screens/README.md) · [`design/archive/classic-v3/landing-source/src/scripts/screens.js`](../../design/archive/classic-v3/landing-source/src/scripts/screens.js)
 
 ---
 
 ## Назначение
 
-Статические PNG в `landing/public/screens/` показывают **тот же MQX**, что в Mini App: дашборд (финансы 2×2, цель, действия), капитал (аккордеоны), события (карточка L3). На лендинге одна вертикальная PNG на экран обрезается через `UI_FOCUS` (`object-position`), без отдельных файлов на каждый фрагмент.
+Статические PNG в `design/archive/classic-v3/landing-source/public/screens/` показывают **тот же MQX**, что в Mini App: дашборд (финансы 2×2, цель, действия), капитал (аккордеоны), события (карточка L3). На лендинге одна вертикальная PNG на экран обрезается через `UI_FOCUS` (`object-position`), без отдельных файлов на каждый фрагмент.
 
 **Контраст тем на лендинге:** тёмная секция → PNG `*-light.png` (светлый UI); светлая секция → `*-dark.png`.
 
@@ -32,7 +34,7 @@ aliases:
 | `capital-light.png` / `capital-dark.png` | Вкладка «Капитал»: потоки → Детали \| Действия |
 | `events-light.png` / `events-dark.png` | Карточка события L3 (пузырь Монетки, выборы) |
 
-**Локали:** тексты в `landing/public/locales/*.json`; **картинки общие** для RU и EN.
+**Локали:** тексты в `design/archive/classic-v3/landing-source/public/locales/*.json`; **картинки общие** для RU и EN.
 
 ---
 
@@ -47,7 +49,7 @@ npm run capture-screens
 
 ### Режим по умолчанию — живое приложение
 
-Скрипт [`landing/scripts/capture-screens.mjs`](../../landing/scripts/capture-screens.mjs):
+Скрипт [`design/archive/classic-v3/landing-source/scripts/capture-screens.mjs`](../../design/archive/classic-v3/landing-source/scripts/capture-screens.mjs):
 
 1. `POST /api/login` → токен в `localStorage`
 2. Продолжить сохранение → `GameScreen`
@@ -83,7 +85,7 @@ node scripts/capture-screens.mjs --source=lab
 
 ## Кроп на лендинге (`UI_FOCUS`)
 
-Определено в [`landing/src/scripts/screens.js`](../../landing/src/scripts/screens.js):
+Определено в [`design/archive/classic-v3/landing-source/src/scripts/screens.js`](../../design/archive/classic-v3/landing-source/src/scripts/screens.js):
 
 | `focus` | Фрагмент | `y` (примерно) |
 |---------|----------|----------------|
@@ -102,7 +104,7 @@ node scripts/capture-screens.mjs --source=lab
 
 1. [ ] UI в игре изменился → `npm run capture-screens` (предпочтительно app-режим)
 2. [ ] Визуально проверить hero, `#peek`, `#features` на `landing` dev/preview
-3. [ ] Обновить `last_capture` в [`landing/public/screens/README.md`](../../landing/public/screens/README.md)
+3. [ ] Обновить `last_capture` в [`design/archive/classic-v3/landing-source/public/screens/README.md`](../../design/archive/classic-v3/landing-source/public/screens/README.md)
 4. [ ] `npm run build:pages` в `frontend-react` → деплой Pages (см. [`ops/DEPLOY.md`](../ops/DEPLOY.md))
 
 ---

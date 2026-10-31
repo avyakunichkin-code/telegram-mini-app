@@ -61,7 +61,7 @@ aliases:
 | [`GAME.md`](GAME.md#воронка-привлечения-игроков) | Стадии Pre-Alpha → Soft Launch |
 | [`MONETIZATION.md`](MONETIZATION.md) | B2C TBD; воронка советника — **отдельная гипотеза** |
 | [`roles/marketing.md`](roles/marketing.md) | Маршрут маркетолога |
-| [`landing/public/locales/ru.json`](../../landing/public/locales/ru.json) | Куда переносить тексты с лендинга |
+| [`design/archive/classic-v3/landing-source/public/locales/ru.json`](../../design/archive/classic-v3/landing-source/public/locales/ru.json) | Куда переносить тексты с лендинга |
 
 ---
 
@@ -330,7 +330,7 @@ aliases:
 
 ### Лендинг (зародыш → наполнение)
 
-Источник текстов: §9.3–9.4 и **язык ЦА** из профилей. Файлы: [`landing/public/locales/ru.json`](../../landing/public/locales/ru.json), [`en.json`](../../landing/public/locales/en.json).
+Источник текстов: §9.3–9.4 и **язык ЦА** из профилей. Файлы: [`design/archive/classic-v3/landing-source/public/locales/ru.json`](../../design/archive/classic-v3/landing-source/public/locales/ru.json), [`en.json`](../../design/archive/classic-v3/landing-source/public/locales/en.json).
 
 | Блок лендинга | Смысл (RU, черновик) |
 |---------------|----------------------|

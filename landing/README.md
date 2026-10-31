@@ -1,95 +1,19 @@
----
-tags:
-  - tvoy-hod/layer/landing
-aliases:
-  - "ТВОЙ ХОД — лендинг (отдельный модуль)"
----
-# ТВОЙ ХОД — лендинг (отдельный модуль)
+# ТВОЙ ХОД · лендинг
 
-Статический маркетинговый сайт **не связан** с `frontend-react/` и URL Mini App. Игру по-прежнему открывают по адресу GitHub Pages приложения (`/telegram-mini-app/`).
+Актуальный production-источник: `site/`. Вариант A утверждён владельцем 30.10.2026. Светлая композиция, полный логотип с подписью, «Чернильный край», чиби-рассказчики сбоку от разделов, крупные вехи роадмапа.
 
-## Запуск локально
+- Локально: `npm run dev` (Vite запускает `site/`).
+- Проверка ресурсов: `npm run check:design-assets`.
+- Сборка: `npm run build` → `dist/`, без установки новых зависимостей.
+- Для GitHub Pages: PowerShell `$env:BASE_PATH='/telegram-mini-app/landing/'; npm run build`.
+- Опубликованный адрес: https://avyakunichkin-code.github.io/telegram-mini-app/landing/
 
-```bash
-cd landing
-npm install
-npm run dev
-```
+Сборка buildless: `scripts/build-static.mjs` копирует утверждённый сайт и добавляет base path. Все ресурсы локальные. Интерактивный пример работает в браузере, не обращается к игровому API. Текущий срез — русский; прежние RU/EN-локали не являются источником текста новой страницы.
 
-Откройте URL из терминала Vite (обычно `http://localhost:5173`).
+Дизайн — `design/` из корня: источники CSS/шрифтов/персонажей и архив. `node scripts/design-assets.mjs` экспортирует ресурсы в `site/assets` и `site/ds`. Страница и композиционные CSS лежат в `site/`; `ds/*` вручную не редактируются. Подтверждение и lab-снимок — `design-lab/landing-refresh-20261030/APPROVED.md`.
 
-## Сборка
+Прежние `index.html`, `src/`, `public/locales`, `public/screens`, `public/monetka` и `scripts/capture-screens.mjs` перенесены в `design/archive/classic-v3/landing-source/`; текущая сборка их не включает. В `public/brand/` — живые экспорты логотипа из `design/`. Полная история ранее опубликованного лендинга сохранена также в Git.
 
-```bash
-npm run build
-npm run preview
-```
+Публикация 30.10: отдельный checkout `gh-pages`, заменён только каталог `landing/`. Корневые файлы опубликованной игры не пересобирались и не менялись. Коммит последней правки: b58a29975e2870a1084ade66635d84c09ba1adc5. Не запускать общий deploy из грязного рабочего дерева только ради маркетинговой страницы.
 
-Артефакт: `landing/dist/`.
-
-## Языки (RU / EN)
-
-- Тексты: [`public/locales/ru.json`](public/locales/ru.json), [`public/locales/en.json`](public/locales/en.json)
-- Переключатель в шапке; выбор сохраняется в `localStorage` (`mq-landing-lang`)
-- Новые ключи добавляйте в **оба** файла с одинаковой структурой
-
-## Контакты для партнёров
-
-Контакт: `hello@tvoyhod.app` в [`src/scripts/main.js`](src/scripts/main.js) (`CONTACT_EMAIL`) и `href` в `index.html` (синхронизировать при смене домена).
-
-**Игра (Pre-Alpha):** кнопки «Играть» ведут на  
-`https://avyakunichkin-code.github.io/telegram-mini-app/#/` (браузер / PWA).  
-Публичный бот в Telegram — в подготовке; в hero указан статус Pre-Alpha.
-
-**Платные услуги / советник:** на лендинге **не показываем** (канон воронки — [`docs/handbook/ADVISOR_FUNNEL_AUDIENCE.md`](../docs/handbook/ADVISOR_FUNNEL_AUDIENCE.md), только handbook).
-
-## Деплой на GitHub Pages (вместе с игрой)
-
-Основной способ — из `frontend-react/`:
-
-```bash
-cd ../frontend-react
-npm run deploy
-```
-
-Скрипт [`scripts/build-pages.mjs`](../frontend-react/scripts/build-pages.mjs) собирает лендинг с `BASE_PATH=/telegram-mini-app/landing/`, игру с `/telegram-mini-app/`, копирует лендинг в `dist/landing/` и выкладывает один `dist/` на ветку `gh-pages`.
-
-Локальная сборка без публикации: `cd frontend-react && npm run build:pages`.
-
-Отдельный деплой только лендинга (другой хостинг): `BASE_PATH=/путь/ npm run build` в каталоге `landing/`.
-
-## Бренд
-
-Палитра и тон: [`docs/reference/brandbook/BRANDBOOK.md`](../docs/reference/brandbook/BRANDBOOK.md).
-
-Логотипы на лендинге — те же, что в приложении (**G1** / **G2**):
-
-| Файл | Назначение |
-|------|------------|
-| `public/brand/logo-full.webp` (+ `.png`) | Hero, CTA — G1 с 3D tagline в растре |
-| `public/brand/logo-compact.webp` (+ `.png`) | Шапка, футер — без tagline |
-
-Источник истины: `frontend-react/src/assets/brand/`. Плоские SVG L1–L4 **не используются**.
-
-## Скриншоты интерфейса (design-lab)
-
-PNG лежат в [`public/screens/`](public/screens/). На лендинге **тёмный блок → светлая тема UI**, **светлый блок → тёмная** (контраст рамки).
-
-| Файл | Экран |
-|------|--------|
-| `dashboard-light.png` / `dashboard-dark.png` | Дашборд: финансы 2×2, цель, действия |
-| `capital-light.png` / `capital-dark.png` | Капитал: аккордеоны доходы/расходы/… |
-| `events-light.png` / `events-dark.png` | События L3 (карточка) |
-
-Пересъём (Playwright; по умолчанию — **живое приложение**, иначе lab):
-
-```bash
-cd landing
-npm install
-npx playwright install chromium
-npm run capture-screens
-```
-
-Подробности: [`public/screens/README.md`](public/screens/README.md). Спеки: [`docs/specs/LANDING_SCREENSHOTS.md`](../docs/specs/LANDING_SCREENSHOTS.md), идея: [`docs/vision/ideas/landing-mqx-product-preview.md`](../docs/vision/ideas/landing-mqx-product-preview.md).
-
-**EN** использует те же PNG, что и RU (тексты в локалях, картинки общие).
+Роадмап основан на карте направлений и уточнении стратегии от 30.10. Сроки не обещаются; открытое демо отмечено как будущий этап. Контакт hello@tvoyhod.app и ссылка игры сохранены из прежнего проекта. Доставка почты и backend игры этим срезом не проверялись.
