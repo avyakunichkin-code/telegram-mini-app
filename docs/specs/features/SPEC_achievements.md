@@ -29,7 +29,7 @@ aliases:
 
 Читать вместе с:
 
-- [GAME.md](../../../GAME.md) §5.2–5.3, §10.5 — продуктовая анкета и философия
+- [GAME.md](../../handbook/GAME.md) §5.2–5.3, §10.5 — продуктовая анкета и философия
 - [remove-character-xp-and-levels.md](../../vision/ideas/remove-character-xp-and-levels.md) — канон прогрессии
 - [SPEC_victory-v2.md](SPEC_victory-v2.md) — победа по шаблону; достижения **не** входят в цели победы
 - [SPEC_mvp-11-progression-events.md](SPEC_mvp-11-progression-events.md) — события, `event_tier` от периода

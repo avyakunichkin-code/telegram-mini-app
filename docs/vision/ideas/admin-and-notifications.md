@@ -263,7 +263,7 @@ flowchart TB
 - [`SPEC_PRODUCT.md`](../../foundation/SPEC_PRODUCT.md) — продукт и цикл
 - [`TMA_USER_FLOWS.md`](../../foundation/TMA_USER_FLOWS.md) — короткие сессии, приоритет in-app
 - [`PRODUCT_BACKLOG.md`](../../backlog/PRODUCT_BACKLOG.md) — завести эпик Admin/Ops после Phase 0
-- [`QUESTIONNAIRE.md`](../../../QUESTIONNAIRE.md) — предвестники за 1–2 месяца (продуктовая идея → metadata + narrative)
+- исходный диалог (удалён; история сохранена в git) — предвестники за 1–2 месяца (продуктовая идея → metadata + narrative)
 
 ---
 

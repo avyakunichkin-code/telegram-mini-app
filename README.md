@@ -28,7 +28,7 @@
 
 - JWT-авторизация (логин и пароль)
 - Старт **только Game** (`save_kind=game`) из каталога **`game_starter_templates`**. Режим Plan **снят** ([ADR-013](docs/decisions/ADR-013-game-only-drop-plan-mode.md))
-- Периоды с таймером: пауза, продолжение, ручной переход к концу периода (`process_period_end`)
+- Пошаговые периоды без таймера: «Завершить ход» запускает `process_period_end`
 - Зарплата **раз в период** по кнопке; не забрал до закрытия — за период не повторяется
 - Подушка безопасности, активы и обязательства из шаблонов БД, **два** события с выбором на период
 - Инвестиции MVP: депозит (капитализация), облигации (купоны на cash)
@@ -44,7 +44,7 @@
 
 ### Backend (`backend/`)
 
-- `backend/main.py` — FastAPI, создание таблиц, точечная автомиграция колонок (без Alembic), роутеры
+- `backend/main.py` — FastAPI, проверка схемы PostgreSQL, идемпотентные сиды и роутеры; схема меняется SQL-миграциями (без Alembic)
 - `backend/app/models.py` — профили (`save_kind`, шаблон старта), финансы, события, инвестиции, страховки
 - `backend/app/game/session.py` — активная партия и статус сессии (active | defeated)
 - `backend/app/game/period.py` — экономика закрытия периода: конвейер этапов `process_period_end` (активы → обязательства → расходы → страховки → инвестиции → поражение → потребности → снимок)
@@ -95,7 +95,7 @@ npm run dev
 ## Игровая механика (кратко)
 
 - **Закрытие периода** списывает обслуживание активов, платежи по обязательствам (при нехватке cash — просрочка без штрафов MVP), базовые расходы «жизни», премии страховок и начисляет инвестдоход по правилам продукта
-- **Условия победы MVP** считаются в `GET /api/finance/overview`: подушка ≥ **3 ×** месячных обязательств при нулевой суммарной просрочке и **`net_monthly_cashflow ≥ 0`**; флаг победы **не выставляется раньше** `period_index >= 7` (см. код и [`docs/vision/ideas/game-balance-thresholds-and-constraints.md`](docs/vision/ideas/game-balance-thresholds-and-constraints.md))
+- **Победа:** Victory v2 оценивает цепочку целей из конфигурации стартового шаблона; результат доступен в `GET /api/finance/overview`.
 - **Поражение:** три подряд периода с отрицательным **`cash`** после закрытия периода
 - Финансовый «рейтинг» в overview ([`docs/specs/SPEC_ANALYTICS.md`](docs/specs/SPEC_ANALYTICS.md)) не управляет выпадением событий по уровню персонажа
 
@@ -103,7 +103,7 @@ npm run dev
 
 ## Миграции БД
 
-Alembic не используется. Идемпотентные SQL-файлы в [`backend/migrations/`](backend/migrations/) (нумерация `0002`…`0037+`, см. [`backend/migrations/README.md`](backend/migrations/README.md)).
+Alembic не используется. Актуальная схема — DDL-baseline и идемпотентные SQL-инкременты в [`backend/migrations/`](backend/migrations/) (исторические инкременты — в `archive/`, см. [`backend/migrations/README.md`](backend/migrations/README.md)).
 
 Запуск (нужны `psql` и `DATABASE_URL`):
 

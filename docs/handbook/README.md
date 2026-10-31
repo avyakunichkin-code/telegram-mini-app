@@ -143,7 +143,6 @@ aliases:
 
 | Материал | Сейчас | План |
 |----------|--------|------|
-| [`QUESTIONNAIRE.md`](../../QUESTIONNAIRE.md) | корень репо | `handbook/archive/` + баннер «архив» |
 | Foundation, specs, ADR | `docs/*` | остаются; handbook только ссылается |
 | [`CLAUDE.md`](../../CLAUDE.md) | корень | остаётся (инженерный индекс) |
 
@@ -155,7 +154,6 @@ aliases:
 2. **Сейчас:** заполнить URL опроса/чата в ops-листе → smoke → пригласить 10–20.  
 3. **Отдельные сессии:** KPI v2; CustDev советника; третий design pillar (опционально).  
 4. **Волна 2:** `CONTENT_GUIDE.md`, опрос+CRM в продукте (§9.6 advisor).  
-5. **Потом:** `handbook/archive/QUESTIONNAIRE.md`, factsheet для партнёров.
 
 ---
 

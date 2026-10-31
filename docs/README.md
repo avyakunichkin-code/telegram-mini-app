@@ -41,6 +41,8 @@ aliases:
 | **Agents** | [`agents/`](agents/) | Claude Code skills, rules, subagents и приоритеты |
 | **Plan (продукт)** | [`plan/`](plan/README.md) | «ТВОЙ ПЛАН»: роадмап, spec, idea — отдельно от игры |
 | **Роадмапы** | [`ROADMAPS.md`](ROADMAPS.md) | Game, Plan, ядро: цель, роадмап, связи |
+| **Журнал доработок** | [`CHANGELOG.md`](CHANGELOG.md) | Что сделано по датам: фичи, решения, инструменты |
+| **Дизайн-система** | [`design/claude-design-system/`](../design/README.md) | MQX v3: токены, компоненты, рецепты (выгрузка артефакта Claude) |
 | **Archive** | [`archive/`](archive/) | Superseded stubs (O1 onboarding и др.) |
 
 ---
@@ -58,7 +60,7 @@ aliases:
 | UI/UX | [`specs/SPEC_FRONTEND_UI.md`](specs/SPEC_FRONTEND_UI.md) + [`ux/screens/`](ux/screens/) + [`ux/CHARACTER_NEEDS_UX.md`](ux/CHARACTER_NEEDS_UX.md) + [`reference/brandbook/BRANDBOOK.md`](reference/brandbook/BRANDBOOK.md) + [`BRANDBOOK_MQX.md`](reference/brandbook/BRANDBOOK_MQX.md) |
 | Лендинг / скрины MQX | [`specs/LANDING_SCREENSHOTS.md`](specs/LANDING_SCREENSHOTS.md) + [`landing/README.md`](../landing/README.md) |
 | Маркетинг / посты | [`marketing/README.md`](marketing/README.md) + скилл **social-changelog-posts** |
-| Планирование | [`backlog/PRODUCT_BACKLOG.md`](backlog/PRODUCT_BACKLOG.md) + [`TRACEABILITY.md`](TRACEABILITY.md) |
+| Планирование | [`ROADMAPS.md`](ROADMAPS.md) + [`CHANGELOG.md`](CHANGELOG.md) + [`backlog/PRODUCT_BACKLOG.md`](backlog/PRODUCT_BACKLOG.md) + [`TRACEABILITY.md`](TRACEABILITY.md) |
 | Аудит (агент) | [`audits/README.md`](audits/README.md) → `product/` / `engineering/` / `qa/` + [`templates/AUDIT.md`](templates/AUDIT.md) |
 
 ---
@@ -82,7 +84,7 @@ aliases:
 | [`plans/PLAN_onboarding-o2.md`](plans/PLAN_onboarding-o2.md) | План O2 (superseded → O3) |
 | [`vision/ideas/onboarding-o2-progressive-guidance.md`](vision/ideas/onboarding-o2-progressive-guidance.md) | Idea O2 (superseded → O3) |
 | [`foundation/MVP_AUDIT_VS_SPEC.md`](foundation/MVP_AUDIT_VS_SPEC.md) | Чеклист: текущий код vs SPEC_PRODUCT |
-| [`foundation/DOC_SYNC_LOG.md`](foundation/DOC_SYNC_LOG.md) | Журнал синхронизации docs ↔ prod |
+| [`foundation/DOC_SYNC_LOG.md`](foundation/DOC_SYNC_LOG.md) | Журнал синхронизации docs ↔ prod; что сделано по датам — [`CHANGELOG.md`](CHANGELOG.md) |
 
 ### Gameplay (прогрессия контента, события)
 
@@ -133,7 +135,7 @@ aliases:
 | Документ | Содержание |
 |----------|------------|
 | [`specs/SPEC_FRONTEND_UI.md`](specs/SPEC_FRONTEND_UI.md) | UI/UX MQX, a11y, границы |
-| [`specs/LANDING_SCREENSHOTS.md`](specs/LANDING_SCREENSHOTS.md) | PNG для лендинга, `capture-screens.mjs`, `UI_FOCUS`, чеклист перед deploy |
+| [`specs/LANDING_SCREENSHOTS.md`](specs/LANDING_SCREENSHOTS.md) | Снято: PNG прежнего лендинга (архив `design/archive/classic-v3/landing-source/`) |
 | [`specs/SPEC_APP_SHELL.md`](specs/SPEC_APP_SHELL.md) | Pre-game оболочки, `MqxButton`, design-lab `pre-game-shell` |
 | [`specs/SPEC_ANALYTICS.md`](specs/SPEC_ANALYTICS.md) | Вкладка «Аналитика» и данные |
 | [`specs/features/SPEC_game-plan.md`](specs/features/SPEC_game-plan.md) | Эпик G1 — Game E2E, `save_kind`; Plan-чеклист **cancelled** ADR-013 (**implemented** Game) |

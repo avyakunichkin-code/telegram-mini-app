@@ -1,7 +1,7 @@
 ---
 layer: handbook
 status: active
-last_reviewed: 2026-09-07
+last_reviewed: 2026-10-29
 audience: product, playtest, partners
 tags:
   - tvoy-hod/layer/handbook
@@ -12,7 +12,7 @@ aliases:
 ---
 # Матрица фич — что в prod
 
-Сводка для **плейтестеров и партнёров** без чтения бэклога. Детали поведения — [`GAME.md`](GAME.md) · сверка с кодом — [`MVP_AUDIT_VS_SPEC.md`](../foundation/MVP_AUDIT_VS_SPEC.md).
+Сводка для **плейтестеров и партнёров** без чтения бэклога. Детали поведения — [`GAME.md`](GAME.md) · сверка с кодом — [`MVP_AUDIT_VS_SPEC.md`](../foundation/MVP_AUDIT_VS_SPEC.md) · что менялось по датам — [`CHANGELOG.md`](../CHANGELOG.md).
 
 | Маркер | Значение |
 |--------|----------|
@@ -26,7 +26,8 @@ aliases:
 
 | Фича | Статус | Комментарий |
 |------|--------|-------------|
-| Игровой месяц (TB1), «Закрыть месяц» | ✅ | Без real-time таймера |
+| Ход (TB1), «Завершить ход» | ✅ | Без real-time таймера; закрытие идемпотентно (PR-01) |
+| Превью конца хода «Спишется · останется» | ✅ | Под «Завершить ход», плашка третьего минуса (PR-07, 2026-10-27) |
 | Зарплата по кнопке (пропуск = нет выплаты за период) | ✅ | |
 | Поражение: 3 периода cash &lt; 0 | ✅ | |
 | Победа Victory v2 (`chain` / legacy `parallel`) | ✅ | Только по целям chain; period gate снят (2026-06); полная кампания **~40–60** мес. |
@@ -56,12 +57,12 @@ aliases:
 
 | Фича | Статус | Комментарий |
 |------|--------|-------------|
-| Выбор персонажа (шаг старта Game) + растровые портреты | ✅ | [`character-pick.md`](../ux/screens/character-pick.md); lab ★ [`persona-portraits-round`](../../../design-lab/game-templates/persona-portraits-round/) |
+| Выбор персонажа (шаг старта Game) + растровые портреты | ✅ | [`character-pick.md`](../ux/screens/character-pick.md); lab ★ [`persona-portraits-round`](../../design-lab/game-templates/persona-portraits-round/) |
 | Портрет на Z-NEEDS по `template_key` | ✅ | `MqxNeedsDash` v7-e2e3 + `PersonaPortrait` size `dash` |
 | Справочник потребностей (4 раздела) | ✅ | `GET /api/game/needs/guide`, `MqxNeedsHelpSheet` |
-| Потребности (4 шкалы), decay, treat-self | ✅ | UI «Улучшить» (сердце); spec approved |
+| Потребности (4 шкалы), treat-self | ✅ | Модель «износ + уровень жизни», нелинейная цена балла — [ADR-015](../decisions/ADR-015-needs-set-point-model.md), все 4 шаблона (2026-10-21) |
 | Поражение: 3 периода шкала = 0 | 🟡 | [ADR-005](../decisions/ADR-005-character-needs-state-and-defeat.md) |
-| Каталог событий MVP 1.1 | ✅ | `data/events/mvp11/` |
+| Каталог событий MVP 1.1 | ✅ | `data/events/mvp11/`; цепочки freelance, used_car (автокредит), family_vacation, перестройка активов A1–A3 (2026-10-22) |
 | Продуктовая глава событий (trade-off, повторы) | ✅ | [`EVENTS.md`](EVENTS.md) |
 | Сверка каталога с trade-off / lifecycle / axis | ✅ | EVT1-105 (2026-05-30): pytest balance baseline **0** |
 | Достижения (движок) | 🟡 | UI «Развитие» — M12 |
@@ -74,10 +75,21 @@ aliases:
 | Фича | Статус | Комментарий |
 |------|--------|-------------|
 | Game (`save_kind: game`) | ✅ | Единственный режим; шаблоны старта |
-| Plan (`save_kind: plan`) | ⬜ | **Снят** [ADR-013](../decisions/ADR-013-game-only-drop-plan-mode.md). Плитка «Скоро» в коде — долг GO-01 |
-| PWA / браузер (email+пароль) | ✅ | Primary — [`PWA_INSTALL.md`](../foundation/PWA_INSTALL.md), [ADR-012](../decisions/ADR-012-primary-channels-pwa-web-over-tma.md) |
+| Plan внутри игры (`save_kind: plan`) | ⬜ | **Снят** [ADR-013](../decisions/ADR-013-game-only-drop-plan-mode.md); плитки «Скоро» нет (GO-01, 2026-10-15), GO-02/03 реализованы локально 2026-10-29: API закрыт, редакторы удалены; данные старых профилей сохранены |
+| «ТВОЙ ПЛАН» — отдельный продукт | 🟡 | Прототип без БД и деплоя (`apps/plan-*`), не для реальных пользователей — [`plan/ROADMAP.md`](../plan/ROADMAP.md), [ADR-016](../decisions/ADR-016-two-products-shared-fincore.md) |
+| PWA / браузер (email+пароль) | ✅ | Обновление только на границе хода, статус офлайн (2026-10-25). Primary — [`PWA_INSTALL.md`](../foundation/PWA_INSTALL.md), [ADR-012](../decisions/ADR-012-primary-channels-pwa-web-over-tma.md) |
 | Telegram Mini App | ✅ | Secondary channel |
 | Legacy light/hardcore | ⬜ | Снято [ADR-001](../decisions/ADR-001-save-kind-remove-light-hardcore.md) |
+
+---
+
+## Внешний вид
+
+| Фича | Статус | Комментарий |
+|------|--------|-------------|
+| Стиль «настольная игра» (★ BG-1…BG-3) | ✅ | Все экраны партии, [ADR-014](../decisions/ADR-014-brand-direction-board-game.md), канон — [`board-game/APPROVED.md`](../../design-lab/board-game/APPROVED.md) |
+| «Чернильный край» (необрутализм) | 🟡 | Пробно, по умолчанию включён; `?style=classic` — прежний вид. Аналитика, Меню, онбординг — ещё в прежнем виде |
+| Маскоты в новом стиле, напарники персонажей | ⬜ | Макеты в design-lab на ревью |
 
 ---
 
@@ -87,7 +99,8 @@ aliases:
 |------|--------|-------------|
 | Онбординг O3 (hybrid guidance) | ✅ / 🟡 | [SPEC_onboarding-o3](../specs/features/SPEC_onboarding-o3.md); O2 в prod, O3 spec approved |
 | Экран аналитики | ✅ | [SPEC_ANALYTICS](../specs/SPEC_ANALYTICS.md) |
-| Balance playtest (headless) | ✅ | [`docs/balance/`](../balance/README.md) |
+| Balance playtest (headless) | ✅ | [`docs/balance/`](../balance/README.md); инварианты победимости INV-1…3 — INV-1 пока FAIL (PR-18) |
+| UI-сценарии Playwright | ✅ | 6 сценариев игрока, свой стенд — [`e2e/README.md`](../../frontend-react/e2e/README.md) |
 | Ops-алерты + Watchtower `#/admin` | 🟡 | RU-тексты в TG; KPI summary (PA-A*) — backlog A2 |
 | Pre-Alpha волна 10–20 | 🟡 | Доки + KPI v1.2 (PA-T* / PA-A*) готовы; **набор не начат** — [Ops](../foundation/PRE_ALPHA_WAVE1_OPS.md) |
 | Closed Alpha D1/D7 | ⬜ | KPI в [`KPI_AND_PHASES.md`](KPI_AND_PHASES.md); Amplitude / digest ⬜ |

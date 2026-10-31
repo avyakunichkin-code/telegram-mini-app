@@ -1,7 +1,7 @@
 ---
 layer: plan
 status: active
-last_reviewed: 2026-10-27
+last_reviewed: 2026-10-29
 epic_id: SPL
 tracks: spl, plan-v1
 spec: plan/specs/SPEC_plan-v1.md
@@ -55,6 +55,8 @@ Spec: [`SPEC_plan-v1.md`](specs/SPEC_plan-v1.md) · Idea: [`plan-financial-assis
 
 **Расхождение spec ↔ код — закрыто 2026-10-28:** в коде у `cushion_target` была лишняя нижняя граница «подушка ≥ 1 мес.», из-за неё при пустой подушке выходило меньше трёх шагов. Код приведён к spec §7 («подушка < цели»): теперь `cushion_target` идёт следом за `first_cushion` (`test_cushion_target_fires_without_lower_bound`). Условие `cushion_contrib > 0` осталось — оно нужно шаблону «по N ₽/мес — за M мес.»; при дефиците срабатывает `stop_deficit`.
 
+**Дизайн-система прототипа (2026-10-28):** своя, не MQX игры. Сначала «Тетрадь» (`43318de`: Geologica + Caveat, клетка под страницей, черновые суммы карандашом), в тот же день заменена на **«Бенто»** (`5ba23ae`): токены v4 из артефакта Design System (светлая и тёмная тема), шрифты Unbounded + Onest; отчёт — бенто-сетка: графитовая плитка-ответ с главной цифрой, «Остаётся в месяц», точность ввода, шаги с выделенным следующим, прогноз столбиками. Токены — `apps/plan-web/src/styles.css`. Lab-раунда не было — он остаётся в SPL-404.
+
 **Критерий закрытия P0:** CS-1…CS-6, CS-9…CS-11 автоматизированы и зелёные; путь проходится в браузере на 375 px и на десктопе без ошибок в консоли.
 
 ## P1 — проверка на людях (кандидат)
@@ -74,7 +76,7 @@ Spec: [`SPEC_plan-v1.md`](specs/SPEC_plan-v1.md) · Idea: [`plan-financial-assis
 | SPL-401 | [`SPEC_plan-v1.md`](specs/SPEC_plan-v1.md): шаги, сущности, метрики, рекомендации, ограничения D5 | spec-driven-development | ✅ approved 2026-10-26 |
 | SPL-402 | `apps/plan-api` на `platform`: своя БД `plan` и миграции, свои users, вход по e-mail-коду, JWT `iss=plan`; хранилище прототипа заменяется репозиторием | api-and-interface-design + TDD | e2e: регистрация → ввод → прогноз из fincore; CS-7 (токен игры → 401), CS-8 (purge) |
 | SPL-403 | `packages/ui-kit` + `packages/api-client` (npm workspaces): из MQX выносим **только** примитивы и токены | frontend-ui-engineering | game-web собирается на ui-kit, guardrails зелёные |
-| SPL-404 | `apps/plan-web`: своя тема и бренд, lab-раунд в `design-lab/plan-*` (в прототипе пропущен) | design-lab-mqx → frontend-ui-engineering | путь «ввод → обзор → первый шаг» |
+| SPL-404 | `apps/plan-web`: своя тема и бренд, lab-раунд в `design-lab/plan-*` (в прототипе пропущен; исходная точка — «Бенто») | design-lab-mqx → frontend-ui-engineering | путь «ввод → обзор → первый шаг» |
 | SPL-405 | CI: фильтры по путям; изменение `fincore` или `platform` → тесты **обоих** приложений + balance diff игры | release-web | required checks |
 | SPL-406 | Деплой: два контейнера, два домена, раздельные `SECRET_KEY` и БД, бэкапы, хостинг в РФ | release-web | smoke обоих |
 

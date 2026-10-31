@@ -12,7 +12,7 @@ aliases:
 ---
 # ТВОЙ ХОД — игра по финансовой грамотности
 
-Описание **текущей** игры: механики, логика, статус в production. Детали API и полей — в [`SPEC_PRODUCT.md`](../foundation/SPEC_PRODUCT.md) и spec фич. История решений и анкета — [`HISTORY.md`](HISTORY.md), [`QUESTIONNAIRE.md`](../../QUESTIONNAIRE.md).
+Описание **текущей** игры: механики, логика, статус в production. Детали API и полей — в [`SPEC_PRODUCT.md`](../foundation/SPEC_PRODUCT.md) и spec фич. История решений — [`HISTORY.md`](HISTORY.md).
 
 **Путеводитель:** [`README.md`](README.md)
 
@@ -233,7 +233,7 @@ Vision «глав жизни» — [`HISTORY.md`](HISTORY.md), [evolution §II](
 | Рандом | 2/период, cooldown, tier |
 | Два game over | Cash и потребности — раздельно, осознанно |
 
-Развёрнутые ответы и история критики — [`HISTORY.md`](HISTORY.md), QUESTIONNAIRE.
+Развёрнутые ответы и история критики — [`HISTORY.md`](HISTORY.md).
 
 ---
 

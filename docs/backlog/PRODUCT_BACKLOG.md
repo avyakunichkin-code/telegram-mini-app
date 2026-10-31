@@ -6,7 +6,7 @@ aliases:
 ---
 ﻿# ТВОЙ ХОД — бэклог и дорожная карта
 
-Живой список работ по слоям **DB / Backend / Frontend / Doc**. Источник идей для этой итерации: **[`GAME.md`](../../GAME.md)** (синтез анкеты, кода, Pre-Alpha → Closed Alpha).
+Живой список работ по слоям **DB / Backend / Frontend / Doc**. Источник идей для этой итерации: **[`GAME.md`](../handbook/GAME.md)** (синтез анкеты, кода, Pre-Alpha → Closed Alpha).
 
 **Трассировка эпиков:** [`TRACEABILITY.md`](../TRACEABILITY.md)  
 **Связанные документы:** [`CLAUDE.md`](../../CLAUDE.md), [evolution §II](../vision/ideas/tvoy-hod-evolution-after-mvp.md), [`GAME_DESIGN_ROADMAP_2026.md`](../vision/GAME_DESIGN_ROADMAP_2026.md) (геймдизайн, сравнение с рынком, фазы 12–18 мес.), актуальный тех. снимок [`audits/engineering/2026-09-07-architecture.md`](../audits/engineering/2026-09-07-architecture.md) (DRAFT; исторический [`ARCHITECTURE_ASSESSMENT_2026-06.md`](../vision/ARCHITECTURE_ASSESSMENT_2026-06.md)), [`foundation/SPEC_PRODUCT.md`](../foundation/SPEC_PRODUCT.md), [`foundation/TMA_USER_FLOWS.md`](../foundation/TMA_USER_FLOWS.md), [`specs/SPEC_ANALYTICS.md`](../specs/SPEC_ANALYTICS.md), [`specs/SPEC_FRONTEND_UI.md`](../specs/SPEC_FRONTEND_UI.md).
@@ -617,12 +617,12 @@ aliases:
 | **P0** | **PR-07** | Превью списания на close + chip «подушка ≠ жизнь» | Frontend+Doc |
 | **P0** | **PR-08** | Один путь схемы (`migrate` до API) | DB+Ops |
 | **P0** | **PR-09** | Freeze: нет TG daily-close, нет CTA советника | Ops+Product |
-| **P1** | **GO-01 / GO-02** | Нет «Скоро»; `plan` start → 400 — **до WAVE1** (можно ‖ P0, не тот же PR что close) | Frontend+Backend |
+| **P1** | **GO-01 / GO-02** | Реализовано локально 2026-10-29: нет «Скоро», `plan` start → 400. Перед выкладкой — SQL-аудит старых Plan-профилей | Frontend+Backend |
 | **P1** | **PR-16** | PA-W1 10–20 **после** PR-01…07 **и** GO-01 | Product |
 | P1 | **PR-10** | Lab дашборд: действия под hero | Frontend |
 | P1 | **V2-BAL / PR-18** | Пороги chain / акт 1 за 12–18p (spec до кода) | Doc+Balance |
 | P1 | 1.7 | **TG1** player bot `/start` (без шаблона «сегодня не закрыл») | Ops+Backend |
-| P2 | **GO-03 / GO-04** | Снять мёртвый Plan UI; YAML `mode: plan` | FE+BE+Content |
+| P2 | **GO-03 / GO-04** | Реализовано локально 2026-10-29: редакторы удалены; пул game/any, в YAML mvp11 нет `mode: plan` | FE+BE+Content |
 | P2 | **EVT1-030** | Мульти-слот + informational UI | BE+FE |
 | P2 | α-FB-03 | Повторы событий: cooldown/once | Content+BE |
 | P2 | α-FB-06/08 | Empty states «Капитал» | Frontend |
@@ -644,7 +644,7 @@ aliases:
 | 2026-09-07 | **Единый план:** аудиты P0–P3 + GO в одной очереди (WAVE1 после P0 и GO-01) | [`PLAN_production-ready`](../plans/PLAN_production-ready.md); детали GO — [`PLAN_game-only`](../plans/PLAN_game-only.md) |
 | 2026-09-07 | **ADR-013 Game only:** Plan Mode / M2.0 cancelled; эпик **GO** (срезы UI/API) | [`ADR-013`](../decisions/ADR-013-game-only-drop-plan-mode.md), [`PLAN_game-only`](../plans/PLAN_game-only.md) |
 | 2026-09-07 | **Сводный план production-ready** (DRAFT): целостность close → честный preview → волна 10–20; PA-W1 больше не единственный P0 | [`PLAN_production-ready`](../plans/PLAN_production-ready.md); аудиты 2026-09-07 |
-| 2026-05-19 | Синхронизация с [`GAME.md`](../../GAME.md): слои DB/BE/FE/Doc; M11 отмечен выполненным в коде; заведены M12, V2, I1, α; пробелы ⚠ spec; исправлена устаревшая пометка про cooldown. |
+| 2026-05-19 | Синхронизация с [`GAME.md`](../handbook/GAME.md): слои DB/BE/FE/Doc; M11 отмечен выполненным в коде; заведены M12, V2, I1, α; пробелы ⚠ spec; исправлена устаревшая пометка про cooldown. |
 | 2026-05-19 | **MVP 1.2 / A0:** эпик Admin Watchtower Phase 0 — `notification_log`, ops-алерты, `#/admin`. |
 | 2026-05-19 | **Q1** quality-release; **V2** victory engine; **M12** критерии достижений + API level-gates (`level_gates.py`, overview `character_unlocks`). |
 | 2026-05-25 | **PW1:** эпик PWA/standalone — драйвер нестабильный resume TMA при блокировке экрана; фаза 0 (lifecycle resync) перед install prompt. |

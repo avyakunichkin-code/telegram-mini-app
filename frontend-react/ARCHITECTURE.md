@@ -17,7 +17,6 @@ src/
     index.js             # API = { ...domains }
   screens/               # route- / flow-level экраны (тонкие сборки)
     pre-game/            # новая игра: режим, шаблоны
-    plan/                # Plan mode (мастер, скоро)
     game/                # (цель) вкладки GameScreen — пока legacy *Premium.jsx
     admin/, dev/         # по мере появления
   components/            # legacy + мелкие блоки; не расширять для новых экранов
@@ -51,14 +50,9 @@ src/
 | Папка | Содержимое | Legacy (до переезда) |
 |-------|------------|----------------------|
 | `pre-game/` | `GameTemplatePickScreen` (Выбор жизни ★ BG-2; шаг «Игра / План» удалён, ADR-013) | — (shim `components/new-game/` удалён 2026-07) |
-| `plan/` | Мастер Plan, префилл — **в разработке** | `BaseParamsScreen.jsx` в `components/` |
 | `game/` | Дашборд, финансы, аналитика, `GameScreen` | `*Premium.jsx`, `GameScreen.jsx` |
 
-### Plan mode (`screens/plan/`)
-
-- **Цель:** мастер ввода, `save_kind: plan`, префилл из `starter_params_json` (см. evolution §II.3).
-- **Сейчас:** `App.jsx` → `BaseParamsScreen` (`components/BaseParamsScreen.jsx`, `saveKind="plan"`).
-- **Следующий шаг:** перенести/разбить на `screens/plan/PlanSetupScreen.jsx` (и подэкраны) при старте работ по Plan.
+Plan — отдельное приложение в `apps/plan-web`, см. [ADR-016](../docs/decisions/ADR-016-two-products-shared-fincore.md). Встроенный режим и его редакторы удалены.
 
 ---
 

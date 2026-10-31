@@ -43,7 +43,7 @@ Prod API: **`VITE_API_BASE_URL`** (см. [`.env.example`](.env.example)); fallba
 - UI/поведение клиента: [`../docs/specs/SPEC_FRONTEND_UI.md`](../docs/specs/SPEC_FRONTEND_UI.md)
 - Бренд и тон: [`../docs/reference/brandbook/BRANDBOOK.md`](../docs/reference/brandbook/BRANDBOOK.md)
 - Карта всей документации: [`../docs/README.md`](../docs/README.md)
-- Описание концепции: [`../GAME.md`](../GAME.md)
+- Описание концепции: [`GAME.md`](../docs/handbook/GAME.md)
 
 ---
 

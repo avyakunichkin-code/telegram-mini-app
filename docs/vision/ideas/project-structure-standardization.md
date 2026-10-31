@@ -101,14 +101,14 @@ backend/
 ## Key Assumptions to Validate
 
 - [ ] **Один разработчик + агенты** остаются основной моделью — явные папки важнее «идеального» DDD на backend.
-- [ ] **Plan mode и список сейвов** появятся в ближайших кварталах — резерв `screens/plan/` оправдан.
+- Встроенный Plan снят ADR-013; отдельный продукт находится в `apps/plan-web` (ADR-016).
 - [ ] **Split CSS не меняет каскад** в prod (проверено build + порядок в бандле) — перенос JS не должен трогать стили.
 - [ ] **Touch-it move-it** реально соблюдается в PR — иначе flat `components/` никогда не сожмётся.
 - [ ] **Имя `screens/`** понятнее `features/` для TMA (экран = route/flow, не бизнес-домен).
 
 Как проверить:
 
-- Новый агент по `ARCHITECTURE.md` кладёт заглушку Plan в `screens/plan/` без вопросов.
+- Новые экраны игры размещаются по `ARCHITECTURE.md`; Plan развивается отдельно в `apps/plan-web`.
 - PR с фичей финансов указывает в spec три артефакта (screen / api / css).
 - `main.py` < ~150 строк wiring после выноса seeds.
 
@@ -152,7 +152,7 @@ backend/
 | Вопрос | Решение |
 |--------|---------|
 | Имя папки route-level UI | **`screens/`** (не `features/`) |
-| Plan mode в архитектуре | **`screens/plan/`** зарезервирован; README + перенос `BaseParamsScreen` при старте Plan |
+| Plan | Отдельное приложение `apps/plan-web`; встроенный режим удалён |
 | MVP one-pager | **Выполнен** — см. ниже |
 
 ## Open Questions
@@ -170,7 +170,7 @@ backend/
 | Карта кода frontend | [`frontend-react/ARCHITECTURE.md`](../../../frontend-react/ARCHITECTURE.md) |
 | API по доменам | [`frontend-react/src/api/`](../../../frontend-react/src/api/) |
 | Pre-game screens | [`frontend-react/src/screens/pre-game/`](../../../frontend-react/src/screens/pre-game/) |
-| Plan (задел) | [`frontend-react/src/screens/plan/README.md`](../../../frontend-react/src/screens/plan/README.md) |
+| Plan (отдельный продукт) | [`docs/plan/README.md`](../../plan/README.md) |
 | Seeds Game templates | [`backend/app/seeds/game_starter_templates.py`](../../../backend/app/seeds/game_starter_templates.py) |
 
 ---

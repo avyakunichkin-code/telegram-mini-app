@@ -21,10 +21,10 @@ aliases:
 |------|------|
 | Любой человек | [[docs/handbook/README|Handbook]] → [[docs/handbook/GAME|GAME]] |
 | Разработчик | [[CLAUDE]] → [[docs/foundation/SPEC_PRODUCT|SPEC_PRODUCT]] → [[docs/specs/_index|Specs]] |
-| Продукт | [[docs/foundation/SPEC_PRODUCT]] · [[docs/vision/ideas/tvoy-hod-evolution-after-mvp|Evolution §II]] · [[docs/backlog/PRODUCT_BACKLOG|Backlog]] |
+| Продукт | [[docs/foundation/SPEC_PRODUCT]] · [[docs/vision/ideas/tvoy-hod-evolution-after-mvp|Evolution §II]] · [[docs/ROADMAPS|Роадмапы]] · [[docs/CHANGELOG|Журнал доработок]] · [[docs/backlog/PRODUCT_BACKLOG|Backlog]] |
 | Геймдизайн | [[docs/handbook/GAME]] · [[docs/vision/GAME_DESIGN_ROADMAP_2026|GD Roadmap]] · [[docs/agents/EVENTS_AGENT|Events Agent]] |
 | Плейтест | [[docs/handbook/PLAYER_EXPERIENCE|Player Experience]] · [[docs/foundation/PRE_ALPHA_PLAYTEST_PROTOCOL|Playtest Protocol]] |
-| UI/UX | [[docs/specs/SPEC_FRONTEND_UI|Frontend UI]] · [[docs/ux/README|UX screens]] · [[docs/reference/brandbook/BRANDBOOK_MQX|MQX Brandbook]] |
+| UI/UX | [[docs/specs/SPEC_FRONTEND_UI|Frontend UI]] · [[docs/ux/README|UX screens]] · [[docs/reference/brandbook/BRANDBOOK_MQX|MQX Brandbook]] · [[design/README|Дизайн-система v3]] |
 | Архитектура | [[docs/decisions/_index|ADR]] · [[docs/vision/ARCHITECTURE_ASSESSMENT_2026-06|Architecture 2026-06]] |
 
 ---

@@ -127,7 +127,7 @@ Overview, victory snap и аналитика потребляют один сн�
 ## Связанные артефакты
 
 - [`SPEC_PRODUCT.md`](../foundation/SPEC_PRODUCT.md) §3.3, §7
-- [`GAME.md`](../../GAME.md) §0.2
+- [`GAME.md`](../handbook/GAME.md) §0.2
 - [`MVP_AUDIT_VS_SPEC.md`](../foundation/MVP_AUDIT_VS_SPEC.md)
 - [`ADR-002`](ADR-002-victory-engine-and-template-config.md), [`ADR-004`](ADR-004-mechanics-unlock-victory-chain.md), [`ADR-008`](ADR-008-events-catalog-single-source.md)
 - [`SKILLS_PHASE_CONTENT_AND_DATA.md`](../agents/SKILLS_PHASE_CONTENT_AND_DATA.md) — границы скиллов
