@@ -1,0 +1,3 @@
+- [Preview vs close: expiry-before-backfill gap](project_preview_vs_close_expiry.md) — preview skips expire_expense_lines; all-lines-expire edge diverges
+- [Event counters recorded on choose only](project_event_counters_on_choose.md) — ignored once_per_profile events respawn; deterministic spawns can starve pool; several "net flow" formulas
+- [Money metrics single source (SPL-207b)](project_money_metrics_single_source.md) — overview/victory via fincore.metrics; run_finale still duplicates; parity test is mapping-only

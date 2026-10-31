@@ -89,7 +89,7 @@ PROPOSED → ACCEPTED → (SUPERSEDED or DEPRECATED)
 ## README и журнал изменений
 
 - README — на уровне домена: `backend/app/README.md`, `backend/app/services/README.md`, `frontend-react/ARCHITECTURE.md`, `design-lab/README.md`.
-- CHANGELOG в проекте не ведётся: расхождения кода и docs — [`DOC_SYNC_LOG.md`](../../../docs/foundation/DOC_SYNC_LOG.md), история — git.
+- Журнал доработок — [`docs/CHANGELOG.md`](../../../docs/CHANGELOG.md): заметная доработка (фича, решение, инструмент) — строка в разделе дня с областью и коммитом. Расхождения кода и docs — [`DOC_SYNC_LOG.md`](../../../docs/foundation/DOC_SYNC_LOG.md), полная история — git.
 
 ## Documentation for Agents
 

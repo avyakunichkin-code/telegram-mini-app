@@ -1,0 +1,595 @@
+[
+  {
+    "source": ".claude/skills/admin-ops/SKILL.md",
+    "purpose": ">-\n  Admin panel and ops tooling for ТВОЙ ХОД — /api/admin (require_admin_user,\n  ADMIN_USER_IDS), Watchtower, catalog registry (liabilities/assets/starters/events,\n  YAML events read-only), funnels and metrics, stuck scan, CSV export, profile\n  inspector, and Telegram ops alerts via emit_admin_alert / notification_log. Use when\n  adding an admin catalog, column, filter, metric, export or alert kind, or changing\n  backend/app/admin, routers/admin.py or components/admin on the frontend.",
+    "trigger": "admin-ops / delivery: admin-ops",
+    "input": "Scoped task + current spec/code; catalog must_read/read_if",
+    "output": "delivery: admin-ops artifact/verdict",
+    "write_scope": [
+      "backend/app/admin/",
+      "backend/app/routers/admin.py",
+      "frontend-react/src/components/admin/",
+      "frontend-react/src/api/admin.js",
+      "backend/tests/"
+    ],
+    "dependencies": [
+      "backend/app/admin/auth.py",
+      "backend/app/routers/admin.py",
+      "backend/app/admin/catalogs.py",
+      "backend/app/admin/notify.py",
+      "docs/decisions/ADR-008-events-catalog-single-source.md",
+      "docs/plans/PLAN_admin-analytics-ops.md"
+    ],
+    "side_effects": "Source permitted tools/Write/Bash are Claude-only; source runner may write reports. No source executed.",
+    "transfer": "adapted",
+    "new_location": ".agents/skills/delivery/SKILL.md",
+    "verification": "26 bodies fully read by independent source_audit; mapping checked against actual sources",
+    "decision": "Проектное назначение сохранено, Claude tool/approval syntax не копируется."
+  },
+  {
+    "source": ".claude/skills/api-and-interface-design/SKILL.md",
+    "purpose": "Designs the FastAPI ↔ React contract for ТВОЙ ХОД — Pydantic schemas, error codes, idempotent money endpoints, backward-compatible changes, src/api/<домен>.js mirror. Use when adding or changing an /api endpoint, request/response fields, or a boundary between services/<домен>.",
+    "trigger": "api-and-interface-design / api-contract-change",
+    "input": "Scoped task + current spec/code; catalog must_read/read_if",
+    "output": "api-contract-change artifact/verdict",
+    "write_scope": [
+      "backend/app/routers/",
+      "backend/app/schemas.py",
+      "frontend-react/src/api/",
+      "docs/specs/features/"
+    ],
+    "dependencies": [
+      ".claude/skills/_shared/game-lexicon.md",
+      "CLAUDE.md",
+      "backend/app/README.md",
+      "frontend-react/src/api/client.js"
+    ],
+    "side_effects": "Source permitted tools/Write/Bash are Claude-only; source runner may write reports. No source executed.",
+    "transfer": "adapted",
+    "new_location": ".agents/skills/api-contract-change/SKILL.md",
+    "verification": "26 bodies fully read by independent source_audit; mapping checked against actual sources",
+    "decision": "Проектное назначение сохранено, Claude tool/approval syntax не копируется."
+  },
+  {
+    "source": ".claude/skills/balance-playtest/SKILL.md",
+    "purpose": ">-\n  Runs headless 30-40 period balance simulation, compares JSON report to baseline,\n  produces diff markdown. Use for /balance-playtest after economy/events/seeds changes.\n  Does not replace economy-reviewer (pytest/code) or human playtest.",
+    "trigger": "balance-playtest / balance-playtest",
+    "input": "Scoped task + current spec/code; catalog must_read/read_if",
+    "output": "balance-playtest artifact/verdict",
+    "write_scope": [
+      "docs/balance/reports/",
+      "docs/balance/baselines/"
+    ],
+    "dependencies": [
+      "docs/balance/README.md",
+      "docs/decisions/ADR-009-metrics-dictionary-tb1.md",
+      "backend/scripts/balance_simulate.py",
+      "backend/scripts/balance_diff.py"
+    ],
+    "side_effects": "Source permitted tools/Write/Bash are Claude-only; source runner may write reports. No source executed.",
+    "transfer": "adapted",
+    "new_location": ".agents/skills/balance-playtest/SKILL.md",
+    "verification": "26 bodies fully read by independent source_audit; mapping checked against actual sources",
+    "decision": "Проектное назначение сохранено, Claude tool/approval syntax не копируется."
+  },
+  {
+    "source": ".claude/skills/code-review-and-quality/SKILL.md",
+    "purpose": "Merge gate for ТВОЙ ХОД — runs the built-in /code-review on the diff, routes economy and MQX changes to their reviewer subagents, checks pytest and guardrails, and returns one verdict. Use before merging a branch or PR, or when the user asks whether a change is ready to merge.",
+    "trigger": "code-review-and-quality / review-change",
+    "input": "Scoped task + current spec/code; catalog must_read/read_if",
+    "output": "review-change artifact/verdict",
+    "write_scope": [
+      "report only or scoped files defined by process"
+    ],
+    "dependencies": [
+      "CLAUDE.md",
+      "docs/foundation/SPEC_PRODUCT.md"
+    ],
+    "side_effects": "Source permitted tools/Write/Bash are Claude-only; source runner may write reports. No source executed.",
+    "transfer": "adapted",
+    "new_location": ".agents/skills/review-change/SKILL.md",
+    "verification": "26 bodies fully read by independent source_audit; mapping checked against actual sources",
+    "decision": "Проектное назначение сохранено, Claude tool/approval syntax не копируется."
+  },
+  {
+    "source": ".claude/skills/create-event/SKILL.md",
+    "purpose": ">-\n  Creates and extends game events (EventDefinition seeds, choices, effects, chains).\n  Use for /create-event or when adding scenarios for Student vs Professional personas,\n  content_class, event_slot, audience, needs_risk, global macro, needs_delta, burn preview.\n  Not a reviewer — co-author with checklists. Engine v2 fields — author in YAML; loader EVT1.",
+    "trigger": "create-event / event-authoring",
+    "input": "Scoped task + current spec/code; catalog must_read/read_if",
+    "output": "event-authoring artifact/verdict",
+    "write_scope": [
+      "data/events/mvp11/",
+      "docs/vision/ideas/event-briefs/"
+    ],
+    "dependencies": [
+      "docs/specs/features/SPEC_event-system-v2-slots-and-taxonomy.md",
+      "docs/handbook/EVENTS_TERMS_RU.md",
+      ".claude/skills/create-event/persona-profiles.md",
+      "docs/templates/EVENT_BRIEF.md",
+      "data/events/README.md",
+      "data/events/mvp11/catalog.yaml",
+      ".claude/skills/create-event/event-balance-rules.md",
+      "backend/app/events/constants.py"
+    ],
+    "side_effects": "Source permitted tools/Write/Bash are Claude-only; source runner may write reports. No source executed.",
+    "transfer": "adapted",
+    "new_location": ".agents/skills/event-authoring/SKILL.md",
+    "verification": "26 bodies fully read by independent source_audit; mapping checked against actual sources",
+    "decision": "Brief/effects/lifecycle сохранены; taxonomy проверена по loader, stale duplicate extra не переносится."
+  },
+  {
+    "source": ".claude/skills/critical-test-scenarios/SKILL.md",
+    "purpose": ">-\n  Plans and adds critical-path tests (not 100% coverage). Use when shipping new\n  approved functionality, expanding the test suite, reviewing test quality, or\n  mapping spec acceptance criteria to pytest/vitest. Use after spec approval and\n  before merge to ensure at least the highest-risk scenarios are automated.",
+    "trigger": "critical-test-scenarios / verify-change",
+    "input": "Scoped task + current spec/code; catalog must_read/read_if",
+    "output": "verify-change artifact/verdict",
+    "write_scope": [
+      "backend/tests/",
+      "frontend-react/src/"
+    ],
+    "dependencies": [
+      "backend/tests/README.md",
+      "docs/templates/SPEC_FEATURE.md",
+      "docs/agents/SKILL_DOC_MAP.md",
+      "backend/pytest.ini",
+      "frontend-react/package.json"
+    ],
+    "side_effects": "Source permitted tools/Write/Bash are Claude-only; source runner may write reports. No source executed.",
+    "transfer": "adapted",
+    "new_location": ".agents/skills/verify-change/SKILL.md",
+    "verification": "26 bodies fully read by independent source_audit; mapping checked against actual sources",
+    "decision": "Проектное назначение сохранено, Claude tool/approval syntax не копируется."
+  },
+  {
+    "source": ".claude/skills/db-baselines-and-migrations/SKILL.md",
+    "purpose": ">-\n  PostgreSQL: baseline DDL, incremental migrations, db.sh, seeds vs SQL.\n  Use when editing backend/migrations/*.sql, models.py, app/seeds/, app/db_schema.py, or regenerating 0000_schema_baseline.sql.",
+    "trigger": "db-baselines-and-migrations / db-migration",
+    "input": "Scoped task + current spec/code; catalog must_read/read_if",
+    "output": "db-migration artifact/verdict",
+    "write_scope": [
+      "backend/migrations/",
+      "backend/app/seeds/",
+      "backend/scripts/",
+      "backend/main.py"
+    ],
+    "dependencies": [
+      "backend/migrations/README.md",
+      "backend/scripts/db.sh",
+      "backend/app/seeds/runner.py",
+      "backend/scripts/dump_schema_baseline.py",
+      "backend/migrations/0000_schema_baseline.sql"
+    ],
+    "side_effects": "Source permitted tools/Write/Bash are Claude-only; source runner may write reports. No source executed.",
+    "transfer": "adapted",
+    "new_location": ".agents/skills/db-migration/SKILL.md",
+    "verification": "26 bodies fully read by independent source_audit; mapping checked against actual sources",
+    "decision": "Проектное назначение сохранено, Claude tool/approval syntax не копируется."
+  },
+  {
+    "source": ".claude/skills/deprecation-and-migration/SKILL.md",
+    "purpose": "Manages deprecation and migration. Use when removing old systems, APIs, or features. Use when migrating users from one implementation to another. Use when deciding whether to maintain or sunset existing code.",
+    "trigger": "deprecation-and-migration / delivery: deprecation (deferred)",
+    "input": "Scoped task + current spec/code; catalog must_read/read_if",
+    "output": "delivery: deprecation (deferred) artifact/verdict",
+    "write_scope": [
+      "backend/migrations/",
+      "docs/decisions/"
+    ],
+    "dependencies": [
+      "docs/decisions/",
+      "backend/migrations/README.md"
+    ],
+    "side_effects": "Source permitted tools/Write/Bash are Claude-only; source runner may write reports. No source executed.",
+    "transfer": "adapted",
+    "new_location": ".agents/skills/delivery/SKILL.md",
+    "verification": "26 bodies fully read by independent source_audit; mapping checked against actual sources",
+    "decision": "Проектное назначение сохранено, Claude tool/approval syntax не копируется."
+  },
+  {
+    "source": ".claude/skills/design-lab-mqx/SKILL.md",
+    "purpose": "Design-lab rounds for MQX — self-contained HTML/CSS, sync-lab scripts, serve without broken ../ paths. Use when creating or editing design-lab/, layout variants, or before saying a lab mockup is ready for review.",
+    "trigger": "design-lab-mqx / mqx-design",
+    "input": "Scoped task + current spec/code; catalog must_read/read_if",
+    "output": "mqx-design artifact/verdict",
+    "write_scope": [
+      "design-lab/"
+    ],
+    "dependencies": [
+      "frontend-react/src/components/mqx/DESIGN_WORKFLOW.md",
+      "docs/specs/SPEC_FRONTEND_UI.md",
+      "docs/agents/DESIGN_LAB_NAVIGATION.md",
+      ".claude/rules/design-lab.md",
+      ".claude/rules/canon-sync.md"
+    ],
+    "side_effects": "Source permitted tools/Write/Bash are Claude-only; source runner may write reports. No source executed.",
+    "transfer": "adapted",
+    "new_location": ".agents/skills/mqx-design/SKILL.md",
+    "verification": "26 bodies fully read by independent source_audit; mapping checked against actual sources",
+    "decision": "Проектное назначение сохранено, Claude tool/approval syntax не копируется."
+  },
+  {
+    "source": ".claude/skills/documentation-and-adrs/SKILL.md",
+    "purpose": "Records decisions and documentation. Use when making architectural decisions, changing public APIs, shipping features, or when you need to record context that future engineers and agents will need to understand the codebase.",
+    "trigger": "documentation-and-adrs / architecture-decision / delivery docs",
+    "input": "Scoped task + current spec/code; catalog must_read/read_if",
+    "output": "architecture-decision / delivery docs artifact/verdict",
+    "write_scope": [
+      "docs/decisions/",
+      "docs/foundation/DOC_SYNC_LOG.md",
+      "docs/audits/"
+    ],
+    "dependencies": [
+      "docs/DOCUMENTATION_SYSTEM.md",
+      "docs/foundation/DOC_SYNC_LOG.md",
+      "docs/decisions/"
+    ],
+    "side_effects": "Source permitted tools/Write/Bash are Claude-only; source runner may write reports. No source executed.",
+    "transfer": "adapted",
+    "new_location": ".agents/skills/architecture-decision/SKILL.md",
+    "verification": "26 bodies fully read by independent source_audit; mapping checked against actual sources",
+    "decision": "Проектное назначение сохранено, Claude tool/approval syntax не копируется."
+  },
+  {
+    "source": ".claude/skills/doubt-driven-development/SKILL.md",
+    "purpose": "Subjects every non-trivial decision to a fresh-context adversarial review before it stands. Use when correctness matters more than speed, when working in unfamiliar code, when stakes are high (production, security-sensitive logic, irreversible operations), or any time a confident output would be cheaper to verify now than to debug later.",
+    "trigger": "doubt-driven-development / review-change: adversarial pass (deferred)",
+    "input": "Scoped task + current spec/code; catalog must_read/read_if",
+    "output": "review-change: adversarial pass (deferred) artifact/verdict",
+    "write_scope": [
+      "report only or scoped files defined by process"
+    ],
+    "dependencies": [
+      "docs/specs/features/",
+      "CLAUDE.md"
+    ],
+    "side_effects": "Source permitted tools/Write/Bash are Claude-only; source runner may write reports. No source executed.",
+    "transfer": "adapted",
+    "new_location": ".agents/skills/review-change/SKILL.md",
+    "verification": "26 bodies fully read by independent source_audit; mapping checked against actual sources",
+    "decision": "Не обязательный cross-model/CLI; отдельный проход по риску без смены модели."
+  },
+  {
+    "source": ".claude/skills/event-analysis/SKILL.md",
+    "purpose": ">-\n  Read-only analysis of the MVP 1.1 event YAML catalog: content_class, event_slot,\n  audience coverage, personas, chains, needs_risk/global gaps, balance hints.\n  Use for /event-analysis or before large catalog changes. Does not edit YAML.",
+    "trigger": "event-analysis / event-audit",
+    "input": "Scoped task + current spec/code; catalog must_read/read_if",
+    "output": "event-audit artifact/verdict",
+    "write_scope": [
+      "docs/vision/analysis/"
+    ],
+    "dependencies": [
+      "docs/specs/features/SPEC_event-system-v2-slots-and-taxonomy.md",
+      "docs/handbook/EVENTS_TERMS_RU.md",
+      "data/events/README.md",
+      "data/events/mvp11/catalog.yaml",
+      ".claude/skills/create-event/persona-profiles.md",
+      "docs/templates/EVENT_CATALOG_ANALYSIS.md",
+      ".claude/skills/create-event/event-balance-rules.md",
+      "docs/decisions/ADR-008-events-catalog-single-source.md"
+    ],
+    "side_effects": "Source permitted tools/Write/Bash are Claude-only; source runner may write reports. No source executed.",
+    "transfer": "adapted",
+    "new_location": ".agents/skills/event-audit/SKILL.md",
+    "verification": "26 bodies fully read by independent source_audit; mapping checked against actual sources",
+    "decision": "Read-only; epilogue exception не переносится без проверки blocks_period_end."
+  },
+  {
+    "source": ".claude/skills/frontend-ui-engineering/SKILL.md",
+    "purpose": "Production UI for ТВОЙ ХОД on MQX — *Premium.jsx screens and components/mqx, after design-lab approval. Use when implementing or changing game screens, MQX components, or their states (loading/empty/error).",
+    "trigger": "frontend-ui-engineering / frontend-implementation",
+    "input": "Scoped task + current spec/code; catalog must_read/read_if",
+    "output": "frontend-implementation artifact/verdict",
+    "write_scope": [
+      "frontend-react/src/components/mqx/",
+      "frontend-react/src/components/",
+      "frontend-react/src/styles/"
+    ],
+    "dependencies": [
+      ".claude/skills/_shared/game-lexicon.md",
+      "frontend-react/src/components/mqx/DESIGN_WORKFLOW.md",
+      "docs/specs/SPEC_FRONTEND_UI.md",
+      "docs/reference/brandbook/BRANDBOOK_MQX.md",
+      "frontend-react/ARCHITECTURE.md",
+      "CLAUDE.md"
+    ],
+    "side_effects": "Source permitted tools/Write/Bash are Claude-only; source runner may write reports. No source executed.",
+    "transfer": "adapted",
+    "new_location": ".agents/skills/frontend-implementation/SKILL.md",
+    "verification": "26 bodies fully read by independent source_audit; mapping checked against actual sources",
+    "decision": "Проектное назначение сохранено, Claude tool/approval syntax не копируется."
+  },
+  {
+    "source": ".claude/skills/game-economy-and-victory/SKILL.md",
+    "purpose": ">-\n  Changes game period economics, victory engine, events, templates, and balance\n  thresholds. Use when editing process_period_end, win_reached, victory_config_json,\n  starter templates, or financial game rules.",
+    "trigger": "game-economy-and-victory / game-economy",
+    "input": "Scoped task + current spec/code; catalog must_read/read_if",
+    "output": "game-economy artifact/verdict",
+    "write_scope": [
+      "backend/app/game/",
+      "backend/app/victory/",
+      "backend/app/events/",
+      "backend/app/seeds/",
+      "backend/migrations/",
+      "docs/specs/features/"
+    ],
+    "dependencies": [
+      ".claude/skills/_shared/game-lexicon.md",
+      "CLAUDE.md",
+      "docs/specs/features/SPEC_victory-v2.md",
+      "docs/decisions/ADR-002-victory-engine-and-template-config.md",
+      "docs/decisions/ADR-004-mechanics-unlock-victory-chain.md",
+      "backend/app/game/period.py",
+      "backend/app/victory/engine.py"
+    ],
+    "side_effects": "Source permitted tools/Write/Bash are Claude-only; source runner may write reports. No source executed.",
+    "transfer": "adapted",
+    "new_location": ".agents/skills/game-economy/SKILL.md",
+    "verification": "26 bodies fully read by independent source_audit; mapping checked against actual sources",
+    "decision": "Проектное назначение сохранено, Claude tool/approval syntax не копируется."
+  },
+  {
+    "source": ".claude/skills/guidance-onboarding/SKILL.md",
+    "purpose": ">-\n  O3 onboarding guidance for ТВОЙ ХОД — spine curriculum beats (P1/P2), contextual\n  triggers, gates, nudges after guidance, GameProfile onboarding_state/step and the\n  Monetka guidance strip. Use when adding or editing a beat, trigger, gate or guidance\n  text, changing GET/PATCH /api/game/guidance, the period-close guidance hooks, or\n  GameGuidanceLayer / src/guidance on the frontend.",
+    "trigger": "guidance-onboarding / delivery: guidance",
+    "input": "Scoped task + current spec/code; catalog must_read/read_if",
+    "output": "delivery: guidance artifact/verdict",
+    "write_scope": [
+      "backend/app/guidance/",
+      "frontend-react/src/guidance/",
+      "frontend-react/src/components/GameGuidanceLayer.jsx",
+      "backend/tests/test_guidance_o2.py",
+      "docs/specs/features/SPEC_onboarding-o3.md"
+    ],
+    "dependencies": [
+      "docs/specs/features/SPEC_onboarding-o3.md",
+      "backend/app/guidance/engine.py",
+      "backend/app/guidance/curriculum.py",
+      "backend/app/guidance/triggers.py",
+      "frontend-react/src/guidance/curriculum.js"
+    ],
+    "side_effects": "Source permitted tools/Write/Bash are Claude-only; source runner may write reports. No source executed.",
+    "transfer": "adapted",
+    "new_location": ".agents/skills/delivery/SKILL.md",
+    "verification": "26 bodies fully read by independent source_audit; mapping checked against actual sources",
+    "decision": "BE/FE mirrors; guidance hook до commit внутри savepoint по коду."
+  },
+  {
+    "source": ".claude/skills/idea-refine/SKILL.md",
+    "purpose": "Refines ideas iteratively. Refine ideas through structured divergent and convergent thinking. Use \"idea-refine\" or \"ideate\" to trigger.",
+    "trigger": "idea-refine / delivery: idea",
+    "input": "Scoped task + current spec/code; catalog must_read/read_if",
+    "output": "delivery: idea artifact/verdict",
+    "write_scope": [
+      "docs/vision/ideas/"
+    ],
+    "dependencies": [
+      "docs/DOCUMENTATION_SYSTEM.md",
+      "docs/foundation/SPEC_PRODUCT.md",
+      "docs/vision/ideas/tvoy-hod-evolution-after-mvp.md",
+      "docs/backlog/PRODUCT_BACKLOG.md"
+    ],
+    "side_effects": "Source permitted tools/Write/Bash are Claude-only; source runner may write reports. No source executed.",
+    "transfer": "adapted",
+    "new_location": ".agents/skills/delivery/SKILL.md",
+    "verification": "26 bodies fully read by independent source_audit; mapping checked against actual sources",
+    "decision": "Проектное назначение сохранено, Claude tool/approval syntax не копируется."
+  },
+  {
+    "source": ".claude/skills/incremental-implementation/SKILL.md",
+    "purpose": "Slices a spec or plan (MQ-* tasks) into verifiable increments across backend/ and frontend-react/. Use when implementing a feature from docs/specs or docs/plans that spans several modules.",
+    "trigger": "incremental-implementation / delivery: implementation",
+    "input": "Scoped task + current spec/code; catalog must_read/read_if",
+    "output": "delivery: implementation artifact/verdict",
+    "write_scope": [
+      "backend/",
+      "frontend-react/"
+    ],
+    "dependencies": [
+      "CLAUDE.md",
+      "backend/app/README.md",
+      "frontend-react/ARCHITECTURE.md"
+    ],
+    "side_effects": "Source permitted tools/Write/Bash are Claude-only; source runner may write reports. No source executed.",
+    "transfer": "adapted",
+    "new_location": ".agents/skills/delivery/SKILL.md",
+    "verification": "26 bodies fully read by independent source_audit; mapping checked against actual sources",
+    "decision": "Без generic npm test/tsc, обязательного commit и требования чистого пользовательского дерева."
+  },
+  {
+    "source": ".claude/skills/planning-and-task-breakdown/SKILL.md",
+    "purpose": "Breaks work into ordered tasks. Use when you have a spec or clear requirements and need to break work into implementable tasks. Use when a task feels too large to start, when you need to estimate scope, or when parallel work is possible.",
+    "trigger": "planning-and-task-breakdown / delivery: plan",
+    "input": "Scoped task + current spec/code; catalog must_read/read_if",
+    "output": "delivery: plan artifact/verdict",
+    "write_scope": [
+      "docs/plans/",
+      "docs/tasks/",
+      "docs/TRACEABILITY.md"
+    ],
+    "dependencies": [
+      "docs/DOCUMENTATION_SYSTEM.md",
+      "docs/foundation/SPEC_PRODUCT.md",
+      "docs/templates/PLAN_FEATURE.md",
+      "docs/templates/TASK_SLICE.md"
+    ],
+    "side_effects": "Source permitted tools/Write/Bash are Claude-only; source runner may write reports. No source executed.",
+    "transfer": "adapted",
+    "new_location": ".agents/skills/delivery/SKILL.md",
+    "verification": "26 bodies fully read by independent source_audit; mapping checked against actual sources",
+    "decision": "Проектное назначение сохранено, Claude tool/approval syntax не копируется."
+  },
+  {
+    "source": ".claude/skills/project-handbook-documentation/SKILL.md",
+    "purpose": ">-\n  Plans and maintains the human-readable project documentation package in\n  docs/handbook/ (GDD, product brief, playtest guides, feature matrix, economy\n  split). Use when building or updating handbook for playtesters, partners, or\n  internal team; when PO asks for project documentation package or GDD refresh;\n  not for ADRs or feature specs (use documentation-and-adrs / spec-driven-development).",
+    "trigger": "project-handbook-documentation / delivery: handbook",
+    "input": "Scoped task + current spec/code; catalog must_read/read_if",
+    "output": "delivery: handbook artifact/verdict",
+    "write_scope": [
+      "docs/handbook/",
+      "docs/handbook/roles/",
+      "docs/handbook/internal/",
+      "docs/foundation/DOC_SYNC_LOG.md",
+      "docs/foundation/PRE_ALPHA_PLAYTEST_PROTOCOL.md",
+      "docs/foundation/TARGET_PLAYER_AND_SESSION.md"
+    ],
+    "dependencies": [
+      "docs/handbook/README.md",
+      "docs/handbook/GAME_FORMAT.md",
+      "docs/handbook/ADVISOR_FUNNEL_AUDIENCE.md",
+      "docs/DOCUMENTATION_SYSTEM.md",
+      "docs/foundation/SPEC_PRODUCT.md",
+      "docs/foundation/TARGET_PLAYER_AND_SESSION.md",
+      "docs/foundation/MVP_AUDIT_VS_SPEC.md"
+    ],
+    "side_effects": "Source permitted tools/Write/Bash are Claude-only; source runner may write reports. No source executed.",
+    "transfer": "adapted",
+    "new_location": ".agents/skills/delivery/SKILL.md",
+    "verification": "26 bodies fully read by independent source_audit; mapping checked against actual sources",
+    "decision": "Удалено противоречащее ADR-013/016 требование MVP2 Plan Mode."
+  },
+  {
+    "source": ".claude/skills/project-skills-layout/SKILL.md",
+    "purpose": ">-\n  Explains where Claude Code project skills, rules, subagents and hooks live in this\n  repository and the SKILL.md contract. Use when adding, moving or validating a skill,\n  rule or subagent, onboarding contributors, or troubleshooting a skill that does not load.",
+    "trigger": "project-skills-layout / codex-config-audit (meta)",
+    "input": "Scoped task + current spec/code; catalog must_read/read_if",
+    "output": "codex-config-audit (meta) artifact/verdict",
+    "write_scope": [
+      ".claude/skills/",
+      "docs/agents/"
+    ],
+    "dependencies": [
+      "docs/agents/AGENT_SKILLS.md",
+      ".claude/skills/catalog.yaml",
+      "docs/agents/SKILL_DOC_MAP.md"
+    ],
+    "side_effects": "Source permitted tools/Write/Bash are Claude-only; source runner may write reports. No source executed.",
+    "transfer": "adapted",
+    "new_location": ".agents/skills/codex-config-audit/SKILL.md",
+    "verification": "26 bodies fully read by independent source_audit; mapping checked against actual sources",
+    "decision": "Явная навигация AGENTS; matrix покрывала 24/26, новый map все 26."
+  },
+  {
+    "source": ".claude/skills/release-web/SKILL.md",
+    "purpose": ">-\n  Pre-release checklist for PWA and web (primary channels) — guardrails,\n  design-lab parity, pytest, PWA/web smoke. Use before merge to release branch,\n  deploy, or when user says ready to ship or PR. TMA regression optional.",
+    "trigger": "release-web / delivery: release (deferred)",
+    "input": "Scoped task + current spec/code; catalog must_read/read_if",
+    "output": "delivery: release (deferred) artifact/verdict",
+    "write_scope": [
+      "report only or scoped files defined by process"
+    ],
+    "dependencies": [
+      ".claude/skills/release-web/guardrails.md",
+      ".claude/rules/canon-sync.md",
+      "docs/decisions/ADR-012-primary-channels-pwa-web-over-tma.md",
+      "docs/foundation/SPEC_PRODUCT.md",
+      "docs/foundation/PWA_INSTALL.md",
+      "docs/foundation/DOC_SYNC_LOG.md"
+    ],
+    "side_effects": "Source permitted tools/Write/Bash are Claude-only; source runner may write reports. No source executed.",
+    "transfer": "adapted",
+    "new_location": ".agents/skills/delivery/SKILL.md",
+    "verification": "26 bodies fully read by independent source_audit; mapping checked against actual sources",
+    "decision": "Проектное назначение сохранено, Claude tool/approval syntax не копируется."
+  },
+  {
+    "source": ".claude/skills/skill-test/SKILL.md",
+    "purpose": "\"Validates ТВОЙ ХОД Claude Code config — skills, rules, subagents, hooks — by running the repo checkers and interpreting results; spec mode checks a skill against its behavioral test spec. Modes: static, context, category, archived, config, spec, audit.\"",
+    "trigger": "skill-test / codex-config-audit (meta)",
+    "input": "Scoped task + current spec/code; catalog must_read/read_if",
+    "output": "codex-config-audit (meta) artifact/verdict",
+    "write_scope": [
+      ".claude/skills/results/"
+    ],
+    "dependencies": [
+      ".claude/skills/catalog.yaml",
+      ".claude/skills/quality-rubric.md",
+      "docs/agents/AGENT_SKILLS.md"
+    ],
+    "side_effects": "Source permitted tools/Write/Bash are Claude-only; source runner may write reports. No source executed.",
+    "transfer": "adapted",
+    "new_location": ".agents/skills/codex-config-audit/SKILL.md",
+    "verification": "26 bodies fully read by independent source_audit; mapping checked against actual sources",
+    "decision": "Новые Codex checks; Claude report writers не запускать."
+  },
+  {
+    "source": ".claude/skills/social-changelog-posts/SKILL.md",
+    "purpose": ">-\n  Готовит посты для соцсетей по коммитам и сессиям разработки ТВОЙ ХОД:\n  группирует фичи, пишет тексты, генерирует картинки с Монеткой, ведёт трекер\n  тем. Use when the user asks to summarize work for social media, write posts,\n  share progress, or says «подведём итог», «напиши пост», «напиши посты»,\n  «давай расскажем», «что нового», «итоги сессии», «анонс», «материалы для\n  публикации», «changelog для соцсетей», «пост в телеграм/канал».",
+    "trigger": "social-changelog-posts / delivery: marketing (deferred)",
+    "input": "Scoped task + current spec/code; catalog must_read/read_if",
+    "output": "delivery: marketing (deferred) artifact/verdict",
+    "write_scope": [
+      "docs/marketing/"
+    ],
+    "dependencies": [
+      "docs/foundation/DOC_SYNC_LOG.md",
+      "docs/marketing/"
+    ],
+    "side_effects": "Source permitted tools/Write/Bash are Claude-only; source runner may write reports. No source executed.",
+    "transfer": "adapted",
+    "new_location": ".agents/skills/delivery/SKILL.md",
+    "verification": "26 bodies fully read by independent source_audit; mapping checked against actual sources",
+    "decision": "Проектное назначение сохранено, Claude tool/approval syntax не копируется."
+  },
+  {
+    "source": ".claude/skills/spec-driven-development/SKILL.md",
+    "purpose": "Creates specs before coding. Use when starting a new project, feature, or significant change and no specification exists yet. Use when requirements are unclear, ambiguous, or only exist as a vague idea.",
+    "trigger": "spec-driven-development / delivery: spec",
+    "input": "Scoped task + current spec/code; catalog must_read/read_if",
+    "output": "delivery: spec artifact/verdict",
+    "write_scope": [
+      "docs/specs/features/"
+    ],
+    "dependencies": [
+      "docs/DOCUMENTATION_SYSTEM.md",
+      "docs/foundation/SPEC_PRODUCT.md"
+    ],
+    "side_effects": "Source permitted tools/Write/Bash are Claude-only; source runner may write reports. No source executed.",
+    "transfer": "adapted",
+    "new_location": ".agents/skills/delivery/SKILL.md",
+    "verification": "26 bodies fully read by independent source_audit; mapping checked against actual sources",
+    "decision": "Проектное назначение сохранено, Claude tool/approval syntax не копируется."
+  },
+  {
+    "source": ".claude/skills/telegram-mini-app-runtime/SKILL.md",
+    "purpose": ">-\n  Telegram Mini App runtime — WebApp SDK, initData, viewport, theme, and TMA-specific\n  UX. Use when integrating Telegram APIs, debugging in WebView, or shell/navigation issues.",
+    "trigger": "telegram-mini-app-runtime / delivery: TMA (deferred)",
+    "input": "Scoped task + current spec/code; catalog must_read/read_if",
+    "output": "delivery: TMA (deferred) artifact/verdict",
+    "write_scope": [
+      "frontend-react/src/"
+    ],
+    "dependencies": [
+      "docs/specs/SPEC_APP_SHELL.md",
+      "docs/specs/SPEC_FRONTEND_UI.md",
+      "docs/foundation/TMA_USER_FLOWS.md"
+    ],
+    "side_effects": "Source permitted tools/Write/Bash are Claude-only; source runner may write reports. No source executed.",
+    "transfer": "adapted",
+    "new_location": ".agents/skills/delivery/SKILL.md",
+    "verification": "26 bodies fully read by independent source_audit; mapping checked against actual sources",
+    "decision": "Проектное назначение сохранено, Claude tool/approval syntax не копируется."
+  },
+  {
+    "source": ".claude/skills/test-driven-development/SKILL.md",
+    "purpose": "Test-first workflow for ТВОЙ ХОД — pytest for backend game logic (period, victory, events, finance) and FE contract tests. Use when fixing a bug with a reproducible failure or changing economy or API behavior that tests should pin.",
+    "trigger": "test-driven-development / verify-change / delivery regression",
+    "input": "Scoped task + current spec/code; catalog must_read/read_if",
+    "output": "verify-change / delivery regression artifact/verdict",
+    "write_scope": [
+      "backend/tests/",
+      "frontend-react/src/"
+    ],
+    "dependencies": [
+      "CLAUDE.md",
+      "docs/specs/features/",
+      "backend/app/game/period.py",
+      "backend/app/README.md",
+      "backend/tests/README.md"
+    ],
+    "side_effects": "Source permitted tools/Write/Bash are Claude-only; source runner may write reports. No source executed.",
+    "transfer": "adapted",
+    "new_location": ".agents/skills/verify-change/SKILL.md",
+    "verification": "26 bodies fully read by independent source_audit; mapping checked against actual sources",
+    "decision": "Проектное назначение сохранено, Claude tool/approval syntax не копируется."
+  }
+]

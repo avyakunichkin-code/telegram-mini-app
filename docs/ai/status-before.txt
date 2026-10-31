@@ -1,0 +1,74 @@
+ M .claude/rules/frontend-core.md
+ M .claude/skills/documentation-and-adrs/SKILL.md
+ M CLAUDE.md
+ M CONVENTIONS.md
+ D GAME.md
+ D QUESTIONNAIRE.md
+ M README.md
+ M backend/app/finance/expense_defaults.py
+ M backend/app/finance/expenses.py
+ M backend/app/game/session.py
+ M backend/app/game/start_validation.py
+ M backend/app/models.py
+ M backend/app/routers/expenses.py
+ M backend/app/routers/game.py
+ M backend/app/schemas.py
+ M backend/app/services/README.md
+ M backend/app/services/events/spawn.py
+ M backend/app/services/expenses/service.py
+ M backend/app/services/game/profiles.py
+ M backend/app/services/game/start.py
+ M backend/app/services/game/templates.py
+ M backend/app/services/period/close.py
+ M backend/migrations/README.md
+ M backend/scripts/patch_docs_backend_paths.py
+ M backend/tests/conftest.py
+ D backend/tests/fixtures/plan.py
+ D backend/tests/integration/api/test_plan_expenses_contract.py
+ M design-lab/new-game-mode/README.md
+ M docs/Home.md
+ M docs/README.md
+ M docs/ROADMAPS.md
+ M docs/TRACEABILITY.md
+ M docs/backlog/PRODUCT_BACKLOG.md
+ M docs/decisions/ADR-009-metrics-dictionary-tb1.md
+ M docs/foundation/DOC_SYNC_LOG.md
+ M docs/foundation/PRE_ALPHA_PLAYTEST_WAVE0_RESULTS.md
+ M docs/foundation/PROJECT_META.md
+ M docs/handbook/FEATURE_STATUS.md
+ M docs/handbook/GAME.md
+ M docs/handbook/HISTORY.md
+ M docs/handbook/README.md
+ M docs/ops/DEPLOY.md
+ M docs/plan/README.md
+ M docs/plan/ROADMAP.md
+ M docs/plans/PLAN_backlog_may2026.md
+ M docs/plans/PLAN_game-only.md
+ M docs/plans/PLAN_production-ready.md
+ M docs/reference/brandbook/BRANDBOOK_MQX.md
+ M docs/specs/features/SPEC_achievements.md
+ M docs/specs/features/SPEC_expenses.md
+ M docs/specs/features/SPEC_game-plan.md
+ M docs/specs/features/SPEC_victory-v2.md
+ M docs/vision/ideas/admin-and-notifications.md
+ M docs/vision/ideas/project-structure-standardization.md
+ M frontend-react/ARCHITECTURE.md
+ M frontend-react/README.md
+ M frontend-react/src/api/expenses.js
+ D frontend-react/src/components/BaseParamsScreen.jsx
+ M frontend-react/src/components/admin/AdminCatalogEditorScreen.jsx
+ M frontend-react/src/components/admin/AdminWatchtowerScreen.jsx
+ M frontend-react/src/components/admin/adminPlayerColumns.jsx
+ M frontend-react/src/components/mqx/DESIGN_WORKFLOW.md
+ M frontend-react/src/components/mqx/index.js
+ D frontend-react/src/components/mqx/layout/PlanExpenseBudgetEditor.jsx
+ D frontend-react/src/components/mqx/layout/PlanExpenseEditor.jsx
+ M frontend-react/src/screens/README.md
+ D frontend-react/src/screens/plan/README.md
+ D frontend-react/src/utils/planExpenseBudget.js
+?? .claude/agent-memory/
+?? backend/tests/integration/api/test_game_only_contract.py
+?? docs/CHANGELOG.md
+?? docs/ai/
+?? docs/design/claude-design-system/
+?? scripts/codex/
