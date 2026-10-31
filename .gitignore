@@ -34,6 +34,8 @@ venv/
 # ===== Node / Frontend =====
 **/node_modules/
 **/dist/
+# Lab-раунд лендинга: dist — сама страница и цель design-assets --check, не сборка
+!design-lab/landing-refresh-20261030/dist/
 **/dist-ssr/
 **/.vite/
 **/.vite-temp/
