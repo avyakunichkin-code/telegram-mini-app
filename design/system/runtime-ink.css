@@ -1,0 +1,753 @@
+/*
+ * Стиль «Чернильный край» (необрутализм A) — слой поверх ★ BG-1…BG-3.
+ * Lab: design-lab/board-game/neobrutal-a-round/ (K1, сегмент-шов, чипы и реплика без обводки).
+ * Включается <html data-mqx-style="ink"> (utils/mqxStyle.js); без атрибута — прежний вид.
+ *
+ * Правило: чернильная тень — у того, что нажимается (нажатие вдавливает фишку в поле);
+ * цветная тень — у главной карты экрана, одна на экран (ход и событие — фиолетовая, финиш — золотая);
+ * всё остальное — чернильный край без тени. Внутри карты с рамкой — без обводок (одна рамка на уровень).
+ */
+
+:root[data-mqx-style='ink'] {
+  --mq-ink-w: 2px;
+  --mq-ink-line: var(--mq-board-ink);
+  --mq-ink-drop: var(--mq-board-ink);
+  --mq-ink-off: 3px;
+  --mq-ink-off-s: 2px;
+}
+
+/* Светлые чернила на тёмном поле слепят — край и тень на тон тише текста */
+@media (prefers-color-scheme: dark) {
+  :root[data-mqx-style='ink'] {
+    --mq-ink-line: var(--mq-board-ink-faint);
+    --mq-ink-drop: var(--mq-board-ink-faint);
+  }
+}
+
+:root[data-mqx-style='ink'][data-theme='dark'] {
+  --mq-ink-line: var(--mq-board-ink-faint);
+  --mq-ink-drop: var(--mq-board-ink-faint);
+}
+
+/* —— Нажатие: фишка вдавливается в поле —— */
+:root[data-mqx-style='ink'] :is(
+    .mqx-bg-cta,
+    .mqx-bg-events,
+    .mqx-bg-act,
+    .mqx-bg-salary--hot,
+    .mqx-bg-money__cell--action,
+    .mqx-cap-flow,
+    .mqx-cap-piece,
+    .mqx-cap-lot-act,
+    .mqx-events-choice,
+    .mqx-run-finale-btn,
+    .mqx-sheet__close,
+    .mqx-sheet .mqx-invest-form__submit,
+    .mqx-sheet .mqx-row-action:has(.mqx-row-action__verb),
+    .mqx-confirm-dialog .mqx-btn
+  ) {
+  transition:
+    transform var(--mq-dur-press) var(--mq-ease-standard),
+    box-shadow var(--mq-dur-press) var(--mq-ease-standard);
+}
+
+:root[data-mqx-style='ink'] :is(
+    .mqx-bg-cta,
+    .mqx-bg-events,
+    .mqx-bg-act,
+    .mqx-bg-salary--hot,
+    .mqx-bg-money__cell--action,
+    .mqx-cap-flows .mqx-cap-flow,
+    .mqx-cap-pieces .mqx-cap-piece,
+    .mqx-cap-lot-act,
+    button.mqx-events-choice,
+    .mqx-run-finale-btn,
+    .mqx-sheet__close,
+    .mqx-sheet .mqx-invest-form__submit,
+    .mqx-sheet .mqx-row-action:has(.mqx-row-action__verb),
+    .mqx-confirm-dialog .mqx-btn
+  ):active:not(:disabled) {
+  transform: translate(var(--mq-ink-off), var(--mq-ink-off));
+  box-shadow: 0 0 0 var(--mq-ink-drop);
+}
+
+/* ================= Главная ================= */
+
+/* Карта хода — единственная рамка; цветная тень = главная карта экрана */
+:root[data-mqx-style='ink'] .mqx-bg-turn {
+  border: var(--mq-ink-w) solid var(--mq-ink-line);
+  box-shadow: var(--mq-ink-off) var(--mq-ink-off) 0 var(--mq-turn);
+}
+
+/* K1: фишки внутри карты — заливка + тень, без обводки */
+:root[data-mqx-style='ink'] .mqx-bg-events {
+  border: 0;
+  background: var(--mq-coin-soft);
+  box-shadow: var(--mq-ink-off) var(--mq-ink-off) 0 var(--mq-ink-drop);
+}
+
+:root[data-mqx-style='ink'] .mqx-bg-events--done {
+  background: var(--mq-board);
+  box-shadow: none;
+}
+
+:root[data-mqx-style='ink'] .mqx-bg-events__title {
+  color: var(--mq-board-ink);
+}
+
+:root[data-mqx-style='ink'] .mqx-bg-deck span,
+:root[data-mqx-style='ink'] .mqx-events-deckline__deck span {
+  border: var(--mq-ink-w) solid var(--mq-ink-line);
+  border-radius: 4px;
+}
+
+:root[data-mqx-style='ink'] .mqx-bg-deck span:nth-child(1),
+:root[data-mqx-style='ink'] .mqx-events-deckline__deck span:nth-child(1) {
+  opacity: 1;
+  background: var(--mq-cell);
+}
+
+:root[data-mqx-style='ink'] .mqx-bg-cta {
+  border: 0;
+  box-shadow: var(--mq-ink-off) var(--mq-ink-off) 0 var(--mq-ink-drop);
+}
+
+/* Потребности: шкала в чернильном крае */
+:root[data-mqx-style='ink'] .mqx-bg-need .mqx-progress.mqx-bg-need__bar {
+  height: 12px;
+  box-sizing: border-box;
+  border: var(--mq-ink-w) solid var(--mq-ink-line);
+  background: var(--mq-cell);
+}
+
+:root[data-mqx-style='ink'] .mqx-bg-need .mqx-progress .mqx-progress__fill {
+  border-radius: 0;
+  box-shadow: var(--mq-ink-w) 0 0 var(--mq-ink-line);
+}
+
+/* Деньги: плитки — край без тени; ведущая в «Капитал» — нажимается */
+/* Три плитки в ряд: узкий боковой отступ, иначе «›» у подписи уходит на вторую строку */
+:root[data-mqx-style='ink'] .mqx-bg-money__cell {
+  padding: var(--mq-sp-3);
+  border: var(--mq-ink-w) solid var(--mq-ink-line);
+  border-radius: var(--mq-r-cell);
+  background: var(--mq-cell);
+}
+
+:root[data-mqx-style='ink'] .mqx-bg-money__cell--action {
+  box-shadow: var(--mq-ink-off) var(--mq-ink-off) 0 var(--mq-ink-drop);
+}
+
+:root[data-mqx-style='ink'] .mqx-bg-money__avatar {
+  border: var(--mq-ink-w) solid var(--mq-ink-line);
+}
+
+/* Цель — свёрнутая фишка */
+:root[data-mqx-style='ink'] .mqx-bg-goal {
+  border: var(--mq-ink-w) solid var(--mq-ink-line);
+  border-radius: var(--mq-r-cell);
+  background: var(--mq-cell);
+  box-shadow: var(--mq-ink-off) var(--mq-ink-off) 0 var(--mq-ink-drop);
+}
+
+:root[data-mqx-style='ink'] .mqx-bg-goal__toggle {
+  padding-inline: var(--mq-sp-5);
+}
+
+:root[data-mqx-style='ink'] .mqx-bg-goal__body {
+  padding: var(--mq-sp-2) var(--mq-sp-5) var(--mq-sp-4);
+}
+
+:root[data-mqx-style='ink'] .mqx-bg-track__dot {
+  border-color: var(--mq-ink-line);
+}
+
+:root[data-mqx-style='ink'] .mqx-bg-track__dot[data-status='current'] {
+  box-shadow: none;
+  outline: 2px solid var(--mq-turn);
+  outline-offset: 1px;
+}
+
+/* Действия хода */
+:root[data-mqx-style='ink'] .mqx-bg-act {
+  border: var(--mq-ink-w) solid var(--mq-ink-line);
+  box-shadow: var(--mq-ink-off) var(--mq-ink-off) 0 var(--mq-ink-drop);
+}
+
+:root[data-mqx-style='ink'] .mqx-bg-act--active {
+  background: var(--mq-turn);
+}
+
+:root[data-mqx-style='ink'] .mqx-bg-salary--hot {
+  border: var(--mq-ink-w) solid var(--mq-ink-line);
+  box-shadow: var(--mq-ink-off) var(--mq-ink-off) 0 var(--mq-ink-drop);
+}
+
+:root[data-mqx-style='ink'] .mqx-bg-salary--quiet {
+  border: var(--mq-ink-w) dashed var(--mq-control-edge);
+}
+
+/* ================= Таббар ================= */
+
+:root[data-mqx-style='ink'] .bottom-nav--unified {
+  border-top: var(--mq-ink-w) solid var(--mq-ink-line);
+}
+
+:root[data-mqx-style='ink'] .bottom-nav--unified .bottom-nav__cell {
+  border: var(--mq-ink-w) solid transparent;
+}
+
+:root[data-mqx-style='ink'] .bottom-nav--unified .bottom-nav__cell--active {
+  border-color: var(--mq-ink-line);
+  background: var(--mq-turn);
+  color: var(--mq-turn-on);
+  box-shadow: none;
+}
+
+:root[data-mqx-style='ink'] .bottom-nav--unified .bottom-nav__cell--active svg {
+  color: var(--mq-turn-on);
+}
+
+/* ================= Капитал ================= */
+
+:root[data-mqx-style='ink'] .mqx-cap-flows .mqx-cap-flow {
+  border: var(--mq-ink-w) solid var(--mq-ink-line);
+  box-shadow: var(--mq-ink-off) var(--mq-ink-off) 0 var(--mq-ink-drop);
+}
+
+:root[data-mqx-style='ink'] .mqx-cap-flows .mqx-cap-flow.is-open {
+  border-color: var(--mq-ink-line);
+  background: var(--mq-turn-soft);
+}
+
+:root[data-mqx-style='ink'] .mqx-cap-flows__breakdown,
+:root[data-mqx-style='ink'] .mqx-cap-net {
+  border: var(--mq-ink-w) solid var(--mq-ink-line);
+}
+
+/* Шапка вкладки — как у Аналитики (★ BG-3, .mqx-an-head): без фиолетовой плашки и свечения,
+   заголовок и подпись чернилами прямо на поле, без логотипа; справа фишка хода */
+:root[data-mqx-style='ink'] .mqx-hero--capital {
+  padding: var(--mq-sp-6) var(--mq-sp-7) var(--mq-sp-2);
+  border-bottom: 0;
+  background: var(--mq-board);
+  box-shadow: none;
+}
+
+:root[data-mqx-style='ink'] .mqx-hero--capital :is(.mqx-hero__glow, .mqx-hero-tab__logo) {
+  display: none;
+}
+
+:root[data-mqx-style='ink'] .mqx-hero--capital .mqx-hero__title--capital {
+  color: var(--mq-board-ink);
+  font: 900 var(--mq-fs-money) / 1.1 var(--mq-font-display);
+  letter-spacing: normal;
+}
+
+:root[data-mqx-style='ink'] .mqx-hero--capital .mqx-hero__sub--capital {
+  margin-top: 0;
+  color: var(--mq-board-ink-soft);
+  font: 400 var(--mq-fs-caption) / 1.35 var(--mq-font-body);
+}
+
+/* Сетка как у .mqx-an-head: заголовок и подпись слева, фишка хода справа по центру обеих строк */
+:root[data-mqx-style='ink'] .mqx-hero--capital {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  column-gap: var(--mq-sp-4);
+}
+
+:root[data-mqx-style='ink'] .mqx-hero--capital .mqx-hero__top--inline-title {
+  display: contents;
+}
+
+:root[data-mqx-style='ink'] .mqx-hero--capital .mqx-hero__sub--capital {
+  grid-column: 1;
+}
+
+/* Логотип скрыт — без зазора перед заголовком, иначе он съезжает вправо от подписи */
+:root[data-mqx-style='ink'] .mqx-hero--capital .mqx-hero__brand-title {
+  gap: 0;
+}
+
+:root[data-mqx-style='ink'] .mqx-hero--capital .mqx-hero__turn {
+  display: inline-grid;
+  grid-column: 2;
+  grid-row: 1 / span 2;
+}
+
+/* Сегмент: две кнопки одним блоком, прямой шов посередине, без подложки */
+:root[data-mqx-style='ink'] .mqx-cap-seg {
+  gap: 0;
+  padding: 0;
+  overflow: hidden;
+  border: var(--mq-ink-w) solid var(--mq-ink-line);
+  border-radius: var(--mq-r-cell);
+  box-shadow: var(--mq-ink-off) var(--mq-ink-off) 0 var(--mq-ink-drop);
+}
+
+:root[data-mqx-style='ink'] .mqx-cap-seg .mqx-cap-seg__btn {
+  border-radius: 0;
+  transition:
+    background-color var(--mq-dur-fast) var(--mq-ease-standard),
+    color var(--mq-dur-fast) var(--mq-ease-standard);
+}
+
+:root[data-mqx-style='ink'] .mqx-cap-seg .mqx-cap-seg__btn + .mqx-cap-seg__btn {
+  border-left: var(--mq-ink-w) solid var(--mq-ink-line);
+}
+
+:root[data-mqx-style='ink'] .mqx-cap-seg .mqx-cap-seg__btn.is-active {
+  box-shadow: none;
+}
+
+:root[data-mqx-style='ink'] .mqx-cap-seg .mqx-cap-seg__btn:focus-visible {
+  outline-offset: -4px;
+}
+
+/* Карточки собственности: цветная полоса сверху под чернильной линией */
+:root[data-mqx-style='ink'] .mqx-cap-lot {
+  border: var(--mq-ink-w) solid var(--mq-ink-line);
+  border-radius: var(--mq-r-card);
+}
+
+:root[data-mqx-style='ink'] .mqx-cap-lot__band {
+  height: 12px;
+  border-bottom: var(--mq-ink-w) solid var(--mq-ink-line);
+}
+
+:root[data-mqx-style='ink'] .mqx-cap-lot--locked {
+  border: var(--mq-ink-w) dashed var(--mq-control-edge);
+}
+
+:root[data-mqx-style='ink'] .mqx-cap-lot--locked .mqx-cap-lot__band {
+  border-bottom-color: var(--mq-control-edge);
+}
+
+/* Действие в строке — маленькая фишка (ссылка в тексте остаётся ссылкой) */
+:root[data-mqx-style='ink'] .mqx-capital-page--board .mqx-cap-lot-act:not(.mqx-cap-lot-act--inline) {
+  --mq-ink-off: var(--mq-ink-off-s);
+  min-height: 36px;
+  margin: var(--mq-sp-1) 0 0;
+  padding: 0 var(--mq-sp-4);
+  border: var(--mq-ink-w) solid var(--mq-ink-line);
+  border-radius: var(--mq-r-cell);
+  background: var(--mq-cell);
+  color: var(--mq-board-ink);
+  font-weight: 700;
+  box-shadow: var(--mq-ink-off) var(--mq-ink-off) 0 var(--mq-ink-drop);
+}
+
+:root[data-mqx-style='ink'] .mqx-capital-page--board .mqx-cap-lot-act:not(.mqx-cap-lot-act--inline):disabled {
+  border-style: dashed;
+  border-color: var(--mq-control-edge);
+  box-shadow: none;
+}
+
+/* Фишки капитала 3 в ряд */
+:root[data-mqx-style='ink'] .mqx-cap-pieces .mqx-cap-piece {
+  border: var(--mq-ink-w) solid var(--mq-ink-line);
+  box-shadow: var(--mq-ink-off) var(--mq-ink-off) 0 var(--mq-ink-drop);
+}
+
+:root[data-mqx-style='ink'] .mqx-cap-pieces .mqx-cap-piece--locked {
+  border: var(--mq-ink-w) dashed var(--mq-control-edge);
+  box-shadow: none;
+}
+
+/* ================= Событие ================= */
+
+:root[data-mqx-style='ink'] .mqx-events-card--l3 {
+  border: var(--mq-ink-w) solid var(--mq-ink-line);
+  border-radius: var(--mq-r-card);
+  box-shadow: var(--mq-ink-off) var(--mq-ink-off) 0 var(--mq-turn);
+}
+
+/* Полоса — цвет карты, чтобы фиолетовый чип не терялся на фиолетовой подложке */
+:root[data-mqx-style='ink'] .mqx-events-card__band {
+  border-bottom: var(--mq-ink-w) solid var(--mq-ink-line);
+  background: var(--mq-cell);
+}
+
+:root[data-mqx-style='ink'] .mqx-events-domain-pill {
+  border: 0;
+  border-radius: var(--mq-r-s);
+  background: var(--mq-turn-soft);
+  color: var(--mq-turn);
+}
+
+:root[data-mqx-style='ink'] .mqx-events-domain-pill--insurance {
+  background: var(--mq-gain-soft);
+  color: var(--mq-gain);
+}
+
+/* Реплика Монетки — без обводки, только фон */
+:root[data-mqx-style='ink'] .mqx-events-card--l3 .mqx-events-card__bubble {
+  border: 0;
+  background: var(--mq-coin-soft);
+}
+
+:root[data-mqx-style='ink'] .mqx-events-card--insurance .mqx-events-card__bubble {
+  background: var(--mq-gain-soft);
+}
+
+:root[data-mqx-style='ink'] button.mqx-events-choice {
+  border: var(--mq-ink-w) solid var(--mq-ink-line);
+  border-radius: var(--mq-r-cell);
+  background: var(--mq-cell);
+  box-shadow: var(--mq-ink-off) var(--mq-ink-off) 0 var(--mq-ink-drop);
+}
+
+:root[data-mqx-style='ink'] button.mqx-events-choice:hover:not(:disabled) {
+  border-color: var(--mq-ink-line);
+  background: var(--mq-turn-soft);
+}
+
+/* ================= Финал ================= */
+
+:root[data-mqx-style='ink'] .mqx-run-finale-cell {
+  border: var(--mq-ink-w) solid var(--mq-ink-line);
+  border-radius: var(--mq-r-card);
+  box-shadow: none;
+}
+
+:root[data-mqx-style='ink'] .mqx-run-finale-cell--win {
+  background: var(--mq-coin);
+  box-shadow: 6px 6px 0 var(--mq-coin-rim);
+}
+
+:root[data-mqx-style='ink'] .mqx-run-finale-stats__cell,
+:root[data-mqx-style='ink'] .mqx-run-finale-fact {
+  border: var(--mq-ink-w) solid var(--mq-ink-line);
+}
+
+:root[data-mqx-style='ink'] .mqx-run-finale-btn {
+  border: var(--mq-ink-w) solid var(--mq-ink-line);
+  border-radius: var(--mq-r-cell);
+  box-shadow: var(--mq-ink-off) var(--mq-ink-off) 0 var(--mq-ink-drop);
+}
+
+:root[data-mqx-style='ink'] .mqx-run-finale-feedback__input {
+  border: var(--mq-ink-w) solid var(--mq-control-edge);
+}
+
+/* ================= Листы (sheets) ================= */
+
+/* Лист — поле игры поверх затемнения: только чернильная линия сверху, без мягкой тени */
+:root[data-mqx-style='ink'] .mqx-sheet {
+  border: 0;
+  border-top: var(--mq-ink-w) solid var(--mq-ink-line);
+  border-radius: var(--mq-r-card) var(--mq-r-card) 0 0;
+  background: var(--mq-board);
+  color: var(--mq-board-ink);
+  box-shadow: none;
+}
+
+:root[data-mqx-style='ink'] .mqx-sheet__title {
+  color: var(--mq-board-ink);
+}
+
+:root[data-mqx-style='ink'] .mqx-sheet__sub {
+  color: var(--mq-board-ink-soft);
+}
+
+/* Крестик во всех окнах — фишка без обводки: заливка + тень (как K1) */
+:root[data-mqx-style='ink'] .mqx-sheet__close {
+  --mq-ink-off: var(--mq-ink-off-s);
+  border: 0;
+  border-radius: var(--mq-r-cell);
+  background: var(--mq-cell);
+  color: var(--mq-board-ink);
+  font-weight: 700;
+  box-shadow: var(--mq-ink-off) var(--mq-ink-off) 0 var(--mq-ink-drop);
+}
+
+/* Форма суммы: поле в рамке ввода, ставка — чип без обводки */
+:root[data-mqx-style='ink'] .mqx-sheet .mqx-invest-amount__field {
+  padding: var(--mq-sp-3) var(--mq-sp-5);
+  border: var(--mq-ink-w) solid var(--mq-control-edge);
+  border-radius: var(--mq-r-cell);
+  background: var(--mq-cell);
+}
+
+:root[data-mqx-style='ink'] .mqx-sheet .mqx-invest-amount__field:focus-within {
+  border-color: var(--mq-ink-line);
+}
+
+:root[data-mqx-style='ink'] .mqx-sheet .mqx-invest-amount__input {
+  color: var(--mq-board-ink);
+}
+
+:root[data-mqx-style='ink'] .mqx-sheet .mqx-invest-amount__input::placeholder {
+  color: var(--mq-board-ink-faint);
+}
+
+:root[data-mqx-style='ink'] .mqx-sheet .mqx-invest-amount__unit,
+:root[data-mqx-style='ink'] .mqx-sheet .mqx-invest-amount__label,
+:root[data-mqx-style='ink'] .mqx-sheet .mqx-invest-amount__range-hint {
+  color: var(--mq-board-ink-soft);
+}
+
+:root[data-mqx-style='ink'] .mqx-sheet .mqx-invest-rate {
+  align-self: stretch;
+  justify-content: center;
+  border: 0;
+  border-radius: var(--mq-r-cell);
+  background: var(--mq-gain-soft);
+}
+
+:root[data-mqx-style='ink'] .mqx-sheet .mqx-invest-rate__val {
+  color: var(--mq-gain);
+}
+
+:root[data-mqx-style='ink'] .mqx-sheet .mqx-invest-form--safety-out .mqx-invest-rate {
+  background: var(--mq-turn-soft);
+}
+
+:root[data-mqx-style='ink'] .mqx-sheet .mqx-invest-form--safety-out .mqx-invest-rate__val {
+  color: var(--mq-turn);
+}
+
+:root[data-mqx-style='ink'] .mqx-sheet .mqx-invest-rate--neg {
+  background: var(--mq-danger-soft);
+}
+
+:root[data-mqx-style='ink'] .mqx-sheet .mqx-invest-rate--neg .mqx-invest-rate__val {
+  color: var(--mq-danger);
+}
+
+/* Ползунок — полоса заливкой без обводки, бегунок — фишка хода */
+:root[data-mqx-style='ink'] .mqx-sheet .mqx-invest-slider {
+  height: 8px;
+  border: 0;
+  background: var(--mq-cell-edge);
+}
+
+:root[data-mqx-style='ink'] .mqx-sheet .mqx-invest-slider::-webkit-slider-thumb {
+  width: 22px;
+  height: 22px;
+  border: var(--mq-ink-w) solid var(--mq-ink-line);
+  background: var(--mq-turn);
+  box-shadow: var(--mq-ink-off-s) var(--mq-ink-off-s) 0 var(--mq-ink-drop);
+}
+
+:root[data-mqx-style='ink'] .mqx-sheet .mqx-invest-slider::-moz-range-thumb {
+  width: 22px;
+  height: 22px;
+  box-sizing: border-box;
+  border: var(--mq-ink-w) solid var(--mq-ink-line);
+  background: var(--mq-turn);
+  box-shadow: var(--mq-ink-off-s) var(--mq-ink-off-s) 0 var(--mq-ink-drop);
+}
+
+:root[data-mqx-style='ink'] .mqx-sheet .mqx-invest-form__submit {
+  min-height: 48px;
+  border: var(--mq-ink-w) solid var(--mq-ink-line);
+  border-radius: var(--mq-r-cell);
+  background: var(--mq-turn);
+  color: var(--mq-turn-on);
+  box-shadow: var(--mq-ink-off) var(--mq-ink-off) 0 var(--mq-ink-drop);
+}
+
+/* Нельзя нажать — пунктир закрытого, без тени (как у заблокированных фишек) */
+:root[data-mqx-style='ink'] .mqx-sheet .mqx-invest-form__submit:disabled {
+  opacity: 1;
+  border-style: dashed;
+  border-color: var(--mq-control-edge);
+  background: var(--mq-cell);
+  color: var(--mq-board-ink-faint);
+  box-shadow: none;
+}
+
+/* —— Списки в окнах (вариант A «список», lab ink-sheets-round, 2026-10-29) ——
+   Строки прямо на поле окна, тонкая линия между ними; цветной полосы группы нет — группу называет
+   заголовок окна. Действие — фишка со словом («Купить», «Взять», «Оформить»): заливка + тень, без обводки. */
+:root[data-mqx-style='ink'] .mqx-sheet :is(.mqx-capital-template-list, .mqx-ins-plan-list) {
+  gap: 0;
+}
+
+:root[data-mqx-style='ink'] .mqx-sheet :is(
+    .mqx-capital-template-row--asset-h,
+    .mqx-capital-template-row--liability-h,
+    .mqx-capital-template-row--insurance-h
+  ) {
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  gap: var(--mq-sp-5);
+  margin: 0;
+  padding: var(--mq-sp-5) 0;
+  border-bottom: 1px solid var(--mq-cell-edge);
+}
+
+:root[data-mqx-style='ink'] .mqx-sheet :is(
+    .mqx-capital-template-row--asset-h,
+    .mqx-capital-template-row--liability-h,
+    .mqx-capital-template-row--insurance-h
+  ):last-child {
+  border-bottom: 0;
+}
+
+:root[data-mqx-style='ink'] .mqx-sheet .mqx-capital-template-row__accent {
+  display: none;
+}
+
+:root[data-mqx-style='ink'] .mqx-sheet .mqx-capital-template-row__title {
+  color: var(--mq-board-ink);
+  font-size: var(--mq-fs-body);
+  font-weight: 700;
+}
+
+:root[data-mqx-style='ink'] .mqx-sheet .mqx-capital-template-row__kicker {
+  color: var(--mq-board-ink-soft);
+}
+
+:root[data-mqx-style='ink'] .mqx-sheet .mqx-row-action:has(.mqx-row-action__verb) {
+  --mq-ink-off: var(--mq-ink-off-s);
+  width: auto;
+  min-height: 36px;
+  height: auto;
+  padding: 0 var(--mq-sp-5);
+  border-radius: var(--mq-r-cell);
+  background: var(--mq-cell);
+  color: var(--mq-board-ink);
+  box-shadow: var(--mq-ink-off) var(--mq-ink-off) 0 var(--mq-ink-drop);
+}
+
+:root[data-mqx-style='ink'] .mqx-sheet .mqx-row-action:has(.mqx-row-action__verb) .mqx-row-action__glyph {
+  display: none;
+}
+
+:root[data-mqx-style='ink'] .mqx-sheet .mqx-row-action__verb {
+  display: block;
+  font-size: var(--mq-fs-heading);
+  font-weight: 800;
+}
+
+:root[data-mqx-style='ink'] .mqx-sheet .mqx-row-action:has(.mqx-row-action__verb):disabled {
+  opacity: 1;
+  color: var(--mq-board-ink-faint);
+  box-shadow: none;
+}
+
+/* Заголовки групп — читаемые на поле окна (в базе — белый muted по светлому) */
+:root[data-mqx-style='ink'] .mqx-sheet :is(.mqx-capital-sheet-section-label, .mqx-ins-picker__heading) {
+  margin: var(--mq-sp-5) 0 0;
+  color: var(--mq-board-ink-soft);
+  font-size: var(--mq-fs-caption);
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+:root[data-mqx-style='ink'] .mqx-sheet :is(.mqx-ins-picker__hint, .mqx-ins-picker__asset-label) {
+  color: var(--mq-board-ink-soft);
+}
+
+/* Поле выбора — рамка ввода, как поле суммы */
+:root[data-mqx-style='ink'] .mqx-sheet .mqx-ins-picker__asset-select {
+  min-height: 44px;
+  border: var(--mq-ink-w) solid var(--mq-control-edge);
+  border-radius: var(--mq-r-cell);
+  background: var(--mq-cell);
+  color: var(--mq-board-ink);
+  font-weight: 600;
+}
+
+/* Виды страховки — заливка без обводки, выбранный — фиолетовый */
+:root[data-mqx-style='ink'] .mqx-sheet .mqx-ins-catalog__item {
+  border: 0;
+  background: var(--mq-cell);
+  color: var(--mq-board-ink);
+}
+
+:root[data-mqx-style='ink'] .mqx-sheet .mqx-ins-catalog__item.is-on {
+  background: var(--mq-turn);
+  color: var(--mq-turn-on);
+}
+
+:root[data-mqx-style='ink'] .mqx-sheet .mqx-ins-catalog__item :is(.mqx-ins-catalog__product, .mqx-ins-catalog__hint) {
+  color: var(--mq-board-ink-soft);
+}
+
+:root[data-mqx-style='ink'] .mqx-sheet .mqx-ins-catalog__item.is-on :is(.mqx-ins-catalog__product, .mqx-ins-catalog__hint) {
+  color: inherit;
+  opacity: 0.85;
+}
+
+/* —— Подтверждение (MqxConfirmDialog в Modal telegram-ui) — как лист: линия сверху, поле окна ——
+   «Отмена» — фишка заливкой без обводки; опасное действие — красная фишка с чернильным краем, рядом. */
+:root[data-mqx-style='ink'] div:has(> div > .mqx-confirm-dialog) {
+  border-top: var(--mq-ink-w) solid var(--mq-ink-line);
+  border-radius: var(--mq-r-card) var(--mq-r-card) 0 0;
+  background: var(--mq-board);
+}
+
+:root[data-mqx-style='ink'] .mqx-confirm-dialog {
+  padding: var(--mq-sp-7) var(--mq-sp-7) var(--mq-sp-7);
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+  color: var(--mq-board-ink);
+}
+
+:root[data-mqx-style='ink'] .mqx-confirm-dialog__message {
+  color: var(--mq-board-ink-soft);
+}
+
+:root[data-mqx-style='ink'] .mqx-confirm-dialog__actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--mq-sp-5);
+}
+
+:root[data-mqx-style='ink'] .mqx-confirm-dialog .mqx-btn {
+  min-height: 48px;
+  border-radius: var(--mq-r-cell);
+  box-shadow: var(--mq-ink-off) var(--mq-ink-off) 0 var(--mq-ink-drop);
+  font-weight: 800;
+}
+
+:root[data-mqx-style='ink'] .mqx-confirm-dialog .mqx-btn--secondary {
+  border: 0;
+  background: var(--mq-cell);
+  color: var(--mq-board-ink);
+}
+
+:root[data-mqx-style='ink'] .mqx-confirm-dialog .mqx-btn--destructive {
+  border: var(--mq-ink-w) solid var(--mq-ink-line);
+  background: var(--mq-danger);
+  color: var(--mq-turn-on);
+}
+
+/* В тёмной теме красный светлый — белый текст на нём < 4.5:1, берём тёмный цвет поля */
+@media (prefers-color-scheme: dark) {
+  :root[data-mqx-style='ink'] .mqx-confirm-dialog .mqx-btn--destructive {
+    color: var(--mq-board);
+  }
+}
+
+:root[data-mqx-style='ink'][data-theme='dark'] .mqx-confirm-dialog .mqx-btn--destructive {
+  color: var(--mq-board);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root[data-mqx-style='ink'] :is(
+      .mqx-bg-cta,
+      .mqx-bg-events,
+      .mqx-bg-act,
+      .mqx-bg-salary--hot,
+      .mqx-bg-money__cell--action,
+      .mqx-cap-flows .mqx-cap-flow,
+      .mqx-cap-pieces .mqx-cap-piece,
+      .mqx-cap-lot-act,
+      button.mqx-events-choice,
+      .mqx-run-finale-btn,
+      .mqx-sheet__close,
+      .mqx-sheet .mqx-invest-form__submit,
+      .mqx-sheet .mqx-row-action:has(.mqx-row-action__verb),
+      .mqx-confirm-dialog .mqx-btn
+    ):active:not(:disabled) {
+    transform: none;
+  }
+}

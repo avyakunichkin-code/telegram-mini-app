@@ -1,0 +1,24 @@
+/**
+ * Стили TMA / MQX — barrel-файл.
+ * Редактируйте модули в ./styles/ (см. styles/README.md).
+ * Порядок импортов важен: токены → база → layout → экраны → shell/nav → events → page → admin.
+ */
+@import './styles/fonts.css';
+@import './styles/tokens.css';
+@import './styles/tma-base.css';
+@import './styles/mqx/layout.css';
+@import './styles/mqx/dashboard.css';
+@import './styles/mqx/juice.css';
+@import './styles/mqx/run-finale.css';
+@import './styles/mqx/flows.css';
+@import './styles/mqx/guidance.css';
+@import './styles/mqx/finance.css';
+@import './styles/mqx/states.css';
+@import './styles/mqx/analytics.css';
+@import './styles/shell.css';
+@import './styles/mqx/events.css';
+@import './styles/page.css';
+@import './styles/mqx/board.css';
+@import './styles/mqx/pregame.css';
+@import './styles/mqx/ink.css';
+@import './styles/admin.css';

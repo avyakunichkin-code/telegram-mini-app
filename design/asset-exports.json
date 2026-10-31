@@ -1,0 +1,530 @@
+{
+  "version": 1,
+  "description": "Only sources in this project are editable. Targets are generated compatibility exports.",
+  "exports": [
+    {
+      "source": "archive/classic-v3/assets/Misc/hero.png",
+      "target": "frontend-react/src/assets/hero.png"
+    },
+    {
+      "source": "archive/classic-v3/assets/Monetka/monetka-mascot.png",
+      "target": "frontend-react/src/assets/monetka-mascot.png"
+    },
+    {
+      "source": "archive/classic-v3/assets/Monetka/monetka-mascot.webp",
+      "target": "frontend-react/src/assets/monetka-mascot.webp"
+    },
+    {
+      "source": "archive/classic-v3/assets/Misc/react.svg",
+      "target": "frontend-react/src/assets/react.svg"
+    },
+    {
+      "source": "archive/classic-v3/assets/Misc/vite.svg",
+      "target": "frontend-react/src/assets/vite.svg"
+    },
+    {
+      "source": "system/assets/Logos/logo-compact.png",
+      "target": "frontend-react/src/assets/brand/logo-compact.png"
+    },
+    {
+      "source": "system/assets/Logos/logo-compact.webp",
+      "target": "frontend-react/src/assets/brand/logo-compact.webp"
+    },
+    {
+      "source": "system/assets/Logos/logo-full.png",
+      "target": "frontend-react/src/assets/brand/logo-full.png"
+    },
+    {
+      "source": "system/assets/Logos/logo-full.webp",
+      "target": "frontend-react/src/assets/brand/logo-full.webp"
+    },
+    {
+      "source": "archive/classic-v3/assets/Needs/monetka-mascot.webp",
+      "target": "frontend-react/src/assets/character-needs/monetka-mascot.webp"
+    },
+    {
+      "source": "archive/classic-v3/assets/Needs/student-mascot.png",
+      "target": "frontend-react/src/assets/character-needs/student-mascot.png"
+    },
+    {
+      "source": "archive/classic-v3/assets/Needs/student-mascot.webp",
+      "target": "frontend-react/src/assets/character-needs/student-mascot.webp"
+    },
+    {
+      "source": "archive/classic-v3/assets/Personas/entrepreneur-mascot-dash.png",
+      "target": "frontend-react/src/assets/character-portraits/entrepreneur-mascot-dash.png"
+    },
+    {
+      "source": "archive/classic-v3/assets/Personas/entrepreneur-mascot-dash.webp",
+      "target": "frontend-react/src/assets/character-portraits/entrepreneur-mascot-dash.webp"
+    },
+    {
+      "source": "archive/classic-v3/assets/Personas/entrepreneur-mascot-md.png",
+      "target": "frontend-react/src/assets/character-portraits/entrepreneur-mascot-md.png"
+    },
+    {
+      "source": "archive/classic-v3/assets/Personas/entrepreneur-mascot-md.webp",
+      "target": "frontend-react/src/assets/character-portraits/entrepreneur-mascot-md.webp"
+    },
+    {
+      "source": "archive/classic-v3/assets/Personas/entrepreneur-mascot-pick.png",
+      "target": "frontend-react/src/assets/character-portraits/entrepreneur-mascot-pick.png"
+    },
+    {
+      "source": "archive/classic-v3/assets/Personas/entrepreneur-mascot-pick.webp",
+      "target": "frontend-react/src/assets/character-portraits/entrepreneur-mascot-pick.webp"
+    },
+    {
+      "source": "archive/classic-v3/assets/Personas/entrepreneur-mascot.png",
+      "target": "frontend-react/src/assets/character-portraits/entrepreneur-mascot.png"
+    },
+    {
+      "source": "archive/classic-v3/assets/Personas/entrepreneur-mascot.webp",
+      "target": "frontend-react/src/assets/character-portraits/entrepreneur-mascot.webp"
+    },
+    {
+      "source": "archive/classic-v3/assets/Personas/manager-mascot-dash.png",
+      "target": "frontend-react/src/assets/character-portraits/manager-mascot-dash.png"
+    },
+    {
+      "source": "archive/classic-v3/assets/Personas/manager-mascot-dash.webp",
+      "target": "frontend-react/src/assets/character-portraits/manager-mascot-dash.webp"
+    },
+    {
+      "source": "archive/classic-v3/assets/Personas/manager-mascot-md.png",
+      "target": "frontend-react/src/assets/character-portraits/manager-mascot-md.png"
+    },
+    {
+      "source": "archive/classic-v3/assets/Personas/manager-mascot-md.webp",
+      "target": "frontend-react/src/assets/character-portraits/manager-mascot-md.webp"
+    },
+    {
+      "source": "archive/classic-v3/assets/Personas/manager-mascot-pick.png",
+      "target": "frontend-react/src/assets/character-portraits/manager-mascot-pick.png"
+    },
+    {
+      "source": "archive/classic-v3/assets/Personas/manager-mascot-pick.webp",
+      "target": "frontend-react/src/assets/character-portraits/manager-mascot-pick.webp"
+    },
+    {
+      "source": "archive/classic-v3/assets/Personas/manager-mascot.png",
+      "target": "frontend-react/src/assets/character-portraits/manager-mascot.png"
+    },
+    {
+      "source": "archive/classic-v3/assets/Personas/manager-mascot.webp",
+      "target": "frontend-react/src/assets/character-portraits/manager-mascot.webp"
+    },
+    {
+      "source": "archive/classic-v3/assets/Personas/professional-mascot-dash.png",
+      "target": "frontend-react/src/assets/character-portraits/professional-mascot-dash.png"
+    },
+    {
+      "source": "archive/classic-v3/assets/Personas/professional-mascot-dash.webp",
+      "target": "frontend-react/src/assets/character-portraits/professional-mascot-dash.webp"
+    },
+    {
+      "source": "archive/classic-v3/assets/Personas/professional-mascot-md.png",
+      "target": "frontend-react/src/assets/character-portraits/professional-mascot-md.png"
+    },
+    {
+      "source": "archive/classic-v3/assets/Personas/professional-mascot-md.webp",
+      "target": "frontend-react/src/assets/character-portraits/professional-mascot-md.webp"
+    },
+    {
+      "source": "archive/classic-v3/assets/Personas/professional-mascot-pick.png",
+      "target": "frontend-react/src/assets/character-portraits/professional-mascot-pick.png"
+    },
+    {
+      "source": "archive/classic-v3/assets/Personas/professional-mascot-pick.webp",
+      "target": "frontend-react/src/assets/character-portraits/professional-mascot-pick.webp"
+    },
+    {
+      "source": "archive/classic-v3/assets/Personas/professional-mascot.png",
+      "target": "frontend-react/src/assets/character-portraits/professional-mascot.png"
+    },
+    {
+      "source": "archive/classic-v3/assets/Personas/professional-mascot.webp",
+      "target": "frontend-react/src/assets/character-portraits/professional-mascot.webp"
+    },
+    {
+      "source": "archive/classic-v3/assets/Personas/student-mascot-dash.png",
+      "target": "frontend-react/src/assets/character-portraits/student-mascot-dash.png"
+    },
+    {
+      "source": "archive/classic-v3/assets/Personas/student-mascot-dash.webp",
+      "target": "frontend-react/src/assets/character-portraits/student-mascot-dash.webp"
+    },
+    {
+      "source": "archive/classic-v3/assets/Personas/student-mascot-md.png",
+      "target": "frontend-react/src/assets/character-portraits/student-mascot-md.png"
+    },
+    {
+      "source": "archive/classic-v3/assets/Personas/student-mascot-md.webp",
+      "target": "frontend-react/src/assets/character-portraits/student-mascot-md.webp"
+    },
+    {
+      "source": "archive/classic-v3/assets/Personas/student-mascot-pick.png",
+      "target": "frontend-react/src/assets/character-portraits/student-mascot-pick.png"
+    },
+    {
+      "source": "archive/classic-v3/assets/Personas/student-mascot-pick.webp",
+      "target": "frontend-react/src/assets/character-portraits/student-mascot-pick.webp"
+    },
+    {
+      "source": "archive/classic-v3/assets/Personas/student-mascot.png",
+      "target": "frontend-react/src/assets/character-portraits/student-mascot.png"
+    },
+    {
+      "source": "archive/classic-v3/assets/Personas/student-mascot.webp",
+      "target": "frontend-react/src/assets/character-portraits/student-mascot.webp"
+    },
+    {
+      "source": "archive/classic-v3/fonts/legacy/manrope-cyrillic-400-normal.woff2",
+      "target": "frontend-react/src/assets/fonts/manrope-cyrillic-400-normal.woff2"
+    },
+    {
+      "source": "archive/classic-v3/fonts/legacy/manrope-cyrillic-600-normal.woff2",
+      "target": "frontend-react/src/assets/fonts/manrope-cyrillic-600-normal.woff2"
+    },
+    {
+      "source": "archive/classic-v3/fonts/legacy/manrope-cyrillic-700-normal.woff2",
+      "target": "frontend-react/src/assets/fonts/manrope-cyrillic-700-normal.woff2"
+    },
+    {
+      "source": "archive/classic-v3/fonts/legacy/manrope-latin-400-normal.woff2",
+      "target": "frontend-react/src/assets/fonts/manrope-latin-400-normal.woff2"
+    },
+    {
+      "source": "archive/classic-v3/fonts/legacy/manrope-latin-600-normal.woff2",
+      "target": "frontend-react/src/assets/fonts/manrope-latin-600-normal.woff2"
+    },
+    {
+      "source": "archive/classic-v3/fonts/legacy/manrope-latin-700-normal.woff2",
+      "target": "frontend-react/src/assets/fonts/manrope-latin-700-normal.woff2"
+    },
+    {
+      "source": "archive/classic-v3/fonts/legacy/manrope-latin-ext-400-normal.woff2",
+      "target": "frontend-react/src/assets/fonts/manrope-latin-ext-400-normal.woff2"
+    },
+    {
+      "source": "archive/classic-v3/fonts/legacy/manrope-latin-ext-600-normal.woff2",
+      "target": "frontend-react/src/assets/fonts/manrope-latin-ext-600-normal.woff2"
+    },
+    {
+      "source": "archive/classic-v3/fonts/legacy/manrope-latin-ext-700-normal.woff2",
+      "target": "frontend-react/src/assets/fonts/manrope-latin-ext-700-normal.woff2"
+    },
+    {
+      "source": "archive/classic-v3/fonts/legacy/nunito-cyrillic-800-normal.woff2",
+      "target": "frontend-react/src/assets/fonts/nunito-cyrillic-800-normal.woff2"
+    },
+    {
+      "source": "archive/classic-v3/fonts/legacy/nunito-cyrillic-900-normal.woff2",
+      "target": "frontend-react/src/assets/fonts/nunito-cyrillic-900-normal.woff2"
+    },
+    {
+      "source": "archive/classic-v3/fonts/legacy/nunito-latin-800-normal.woff2",
+      "target": "frontend-react/src/assets/fonts/nunito-latin-800-normal.woff2"
+    },
+    {
+      "source": "archive/classic-v3/fonts/legacy/nunito-latin-900-normal.woff2",
+      "target": "frontend-react/src/assets/fonts/nunito-latin-900-normal.woff2"
+    },
+    {
+      "source": "archive/classic-v3/fonts/legacy/nunito-latin-ext-800-normal.woff2",
+      "target": "frontend-react/src/assets/fonts/nunito-latin-ext-800-normal.woff2"
+    },
+    {
+      "source": "archive/classic-v3/fonts/legacy/nunito-latin-ext-900-normal.woff2",
+      "target": "frontend-react/src/assets/fonts/nunito-latin-ext-900-normal.woff2"
+    },
+    {
+      "source": "system/assets/Icons/finance-metrics-sprite.svg",
+      "target": "frontend-react/src/assets/icons/finance-metrics-sprite.svg"
+    },
+    {
+      "source": "archive/classic-v3/assets/Monetka/monetka-sit-edge.png",
+      "target": "frontend-react/src/assets/monetka-poses/monetka-sit-edge.png"
+    },
+    {
+      "source": "archive/classic-v3/assets/Monetka/monetka-sit-edge.webp",
+      "target": "frontend-react/src/assets/monetka-poses/monetka-sit-edge.webp"
+    },
+    {
+      "source": "archive/classic-v3/assets/Monetka/monetka-wink.png",
+      "target": "frontend-react/src/assets/monetka-poses/monetka-wink.png"
+    },
+    {
+      "source": "archive/classic-v3/assets/Monetka/monetka-wink.webp",
+      "target": "frontend-react/src/assets/monetka-poses/monetka-wink.webp"
+    },
+    {
+      "source": "archive/classic-v3/assets/Finale/entrepreneur-mascot-cup-dash.png",
+      "target": "frontend-react/src/assets/run-finale-cup/entrepreneur-mascot-cup-dash.png"
+    },
+    {
+      "source": "archive/classic-v3/assets/Finale/entrepreneur-mascot-cup-dash.webp",
+      "target": "frontend-react/src/assets/run-finale-cup/entrepreneur-mascot-cup-dash.webp"
+    },
+    {
+      "source": "archive/classic-v3/assets/Finale/manager-mascot-cup-dash.png",
+      "target": "frontend-react/src/assets/run-finale-cup/manager-mascot-cup-dash.png"
+    },
+    {
+      "source": "archive/classic-v3/assets/Finale/manager-mascot-cup-dash.webp",
+      "target": "frontend-react/src/assets/run-finale-cup/manager-mascot-cup-dash.webp"
+    },
+    {
+      "source": "archive/classic-v3/assets/Finale/professional-mascot-cup-dash.png",
+      "target": "frontend-react/src/assets/run-finale-cup/professional-mascot-cup-dash.png"
+    },
+    {
+      "source": "archive/classic-v3/assets/Finale/professional-mascot-cup-dash.webp",
+      "target": "frontend-react/src/assets/run-finale-cup/professional-mascot-cup-dash.webp"
+    },
+    {
+      "source": "archive/classic-v3/assets/Finale/student-mascot-cup-dash.png",
+      "target": "frontend-react/src/assets/run-finale-cup/student-mascot-cup-dash.png"
+    },
+    {
+      "source": "archive/classic-v3/assets/Finale/student-mascot-cup-dash.webp",
+      "target": "frontend-react/src/assets/run-finale-cup/student-mascot-cup-dash.webp"
+    },
+    {
+      "source": "system/assets/Logos/logo-full-sizes/logo-full-h105.png",
+      "target": "frontend-react/src/assets/brand/logo-full-sizes/logo-full-h105.png"
+    },
+    {
+      "source": "system/assets/Logos/logo-full-sizes/logo-full-h105.webp",
+      "target": "frontend-react/src/assets/brand/logo-full-sizes/logo-full-h105.webp"
+    },
+    {
+      "source": "system/assets/Logos/logo-full-sizes/logo-full-h140.png",
+      "target": "frontend-react/src/assets/brand/logo-full-sizes/logo-full-h140.png"
+    },
+    {
+      "source": "system/assets/Logos/logo-full-sizes/logo-full-h140.webp",
+      "target": "frontend-react/src/assets/brand/logo-full-sizes/logo-full-h140.webp"
+    },
+    {
+      "source": "system/assets/Logos/logo-full-sizes/logo-full-h210.png",
+      "target": "frontend-react/src/assets/brand/logo-full-sizes/logo-full-h210.png"
+    },
+    {
+      "source": "system/assets/Logos/logo-full-sizes/logo-full-h210.webp",
+      "target": "frontend-react/src/assets/brand/logo-full-sizes/logo-full-h210.webp"
+    },
+    {
+      "source": "system/assets/Logos/logo-full-sizes/logo-full-h280.png",
+      "target": "frontend-react/src/assets/brand/logo-full-sizes/logo-full-h280.png"
+    },
+    {
+      "source": "system/assets/Logos/logo-full-sizes/logo-full-h280.webp",
+      "target": "frontend-react/src/assets/brand/logo-full-sizes/logo-full-h280.webp"
+    },
+    {
+      "source": "system/assets/Logos/logo-full-sizes/logo-full-h70.png",
+      "target": "frontend-react/src/assets/brand/logo-full-sizes/logo-full-h70.png"
+    },
+    {
+      "source": "system/assets/Logos/logo-full-sizes/logo-full-h70.webp",
+      "target": "frontend-react/src/assets/brand/logo-full-sizes/logo-full-h70.webp"
+    },
+    {
+      "source": "system/assets/Logos/logo-full-sizes/logo-full-master.png",
+      "target": "frontend-react/src/assets/brand/logo-full-sizes/logo-full-master.png"
+    },
+    {
+      "source": "system/assets/Logos/logo-full-sizes/logo-full-master.webp",
+      "target": "frontend-react/src/assets/brand/logo-full-sizes/logo-full-master.webp"
+    },
+    {
+      "source": "system/assets/Icons/metrics/coin.svg",
+      "target": "frontend-react/src/assets/icons/metrics/coin.svg"
+    },
+    {
+      "source": "system/assets/Icons/metrics/expense.svg",
+      "target": "frontend-react/src/assets/icons/metrics/expense.svg"
+    },
+    {
+      "source": "system/assets/Icons/metrics/flow.svg",
+      "target": "frontend-react/src/assets/icons/metrics/flow.svg"
+    },
+    {
+      "source": "system/assets/Icons/metrics/goal.svg",
+      "target": "frontend-react/src/assets/icons/metrics/goal.svg"
+    },
+    {
+      "source": "system/assets/Icons/metrics/overdue.svg",
+      "target": "frontend-react/src/assets/icons/metrics/overdue.svg"
+    },
+    {
+      "source": "system/assets/Icons/metrics/percent.svg",
+      "target": "frontend-react/src/assets/icons/metrics/percent.svg"
+    },
+    {
+      "source": "system/assets/Icons/metrics/shield.svg",
+      "target": "frontend-react/src/assets/icons/metrics/shield.svg"
+    },
+    {
+      "source": "system/assets/Icons/metrics/term.svg",
+      "target": "frontend-react/src/assets/icons/metrics/term.svg"
+    },
+    {
+      "source": "system/assets/Icons/metrics/trash.svg",
+      "target": "frontend-react/src/assets/icons/metrics/trash.svg"
+    },
+    {
+      "source": "system/assets/Icons/metrics/trend-down.svg",
+      "target": "frontend-react/src/assets/icons/metrics/trend-down.svg"
+    },
+    {
+      "source": "system/assets/Icons/metrics/trend-up.svg",
+      "target": "frontend-react/src/assets/icons/metrics/trend-up.svg"
+    },
+    {
+      "source": "system/assets/Icons/metrics/wallet.svg",
+      "target": "frontend-react/src/assets/icons/metrics/wallet.svg"
+    },
+    {
+      "source": "system/assets/Icons/metrics/warn.svg",
+      "target": "frontend-react/src/assets/icons/metrics/warn.svg"
+    },
+    {
+      "source": "system/assets/Logos/logo-full.png",
+      "target": "landing/public/brand/logo-full.png"
+    },
+    {
+      "source": "system/assets/Logos/logo-full.png",
+      "target": "docs/reference/brandbook/assets/logos/logo-full.png"
+    },
+    {
+      "source": "system/assets/Logos/logo-full.webp",
+      "target": "landing/public/brand/logo-full.webp"
+    },
+    {
+      "source": "system/assets/Logos/logo-full.webp",
+      "target": "docs/reference/brandbook/assets/logos/logo-full.webp"
+    },
+    {
+      "source": "system/assets/Logos/logo-compact.png",
+      "target": "landing/public/brand/logo-compact.png"
+    },
+    {
+      "source": "system/assets/Logos/logo-compact.png",
+      "target": "docs/reference/brandbook/assets/logos/logo-compact.png"
+    },
+    {
+      "source": "system/assets/Logos/logo-compact.webp",
+      "target": "landing/public/brand/logo-compact.webp"
+    },
+    {
+      "source": "system/assets/Logos/logo-compact.webp",
+      "target": "docs/reference/brandbook/assets/logos/logo-compact.webp"
+    },
+    {
+      "source": "archive/classic-v3/assets/Monetka/monetka-mascot.png",
+      "target": "docs/reference/brandbook/assets/monetka/monetka-mascot.png"
+    },
+    {
+      "source": "archive/classic-v3/assets/Needs/monetka-mascot.webp",
+      "target": "docs/reference/assets/monetka-mascot.webp"
+    },
+    {
+      "source": "system/illustrations/characters.js",
+      "target": "design-lab/mascots/companions-round/characters.js"
+    },
+    {
+      "source": "system/illustrations/characters.js",
+      "target": "design-lab/mascots/pregame-monetka-round/characters.js"
+    },
+    {
+      "source": "system/illustrations/monetka.js",
+      "target": "design-lab/mascots/pregame-monetka-round/monetka.js"
+    },
+    {
+      "source": "system/runtime/styles/admin.css",
+      "target": "frontend-react/src/styles/admin.css"
+    },
+    {
+      "source": "system/runtime/styles/fonts.css",
+      "target": "frontend-react/src/styles/fonts.css"
+    },
+    {
+      "source": "system/runtime/styles/page.css",
+      "target": "frontend-react/src/styles/page.css"
+    },
+    {
+      "source": "system/runtime/styles/shell.css",
+      "target": "frontend-react/src/styles/shell.css"
+    },
+    {
+      "source": "system/runtime/styles/tma-base.css",
+      "target": "frontend-react/src/styles/tma-base.css"
+    },
+    {
+      "source": "system/runtime/styles/tokens.css",
+      "target": "frontend-react/src/styles/tokens.css"
+    },
+    {
+      "source": "system/runtime/styles/mqx/analytics.css",
+      "target": "frontend-react/src/styles/mqx/analytics.css"
+    },
+    {
+      "source": "system/runtime/styles/mqx/board.css",
+      "target": "frontend-react/src/styles/mqx/board.css"
+    },
+    {
+      "source": "system/runtime/styles/mqx/dashboard.css",
+      "target": "frontend-react/src/styles/mqx/dashboard.css"
+    },
+    {
+      "source": "system/runtime/styles/mqx/events.css",
+      "target": "frontend-react/src/styles/mqx/events.css"
+    },
+    {
+      "source": "system/runtime/styles/mqx/finance.css",
+      "target": "frontend-react/src/styles/mqx/finance.css"
+    },
+    {
+      "source": "system/runtime/styles/mqx/flows.css",
+      "target": "frontend-react/src/styles/mqx/flows.css"
+    },
+    {
+      "source": "system/runtime/styles/mqx/guidance.css",
+      "target": "frontend-react/src/styles/mqx/guidance.css"
+    },
+    {
+      "source": "system/runtime/styles/mqx/ink.css",
+      "target": "frontend-react/src/styles/mqx/ink.css"
+    },
+    {
+      "source": "system/runtime/styles/mqx/juice.css",
+      "target": "frontend-react/src/styles/mqx/juice.css"
+    },
+    {
+      "source": "system/runtime/styles/mqx/layout.css",
+      "target": "frontend-react/src/styles/mqx/layout.css"
+    },
+    {
+      "source": "system/runtime/styles/mqx/pregame.css",
+      "target": "frontend-react/src/styles/mqx/pregame.css"
+    },
+    {
+      "source": "system/runtime/styles/mqx/run-finale.css",
+      "target": "frontend-react/src/styles/mqx/run-finale.css"
+    },
+    {
+      "source": "system/runtime/styles/mqx/states.css",
+      "target": "frontend-react/src/styles/mqx/states.css"
+    },
+    {
+      "source": "system/runtime/index.css",
+      "target": "frontend-react/src/index.css"
+    },
+    {
+      "source": "system/assets/Animations/Fintech.tgs",
+      "target": "frontend-react/src/assets/lottie/Fintech.tgs"
+    }
+  ]
+}

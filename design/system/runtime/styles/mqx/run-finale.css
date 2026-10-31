@@ -1,0 +1,247 @@
+/*
+ * Финал партии ★ BG-2 «настольная игра про деньги» (ADR-014).
+ * Канон: design-lab/board-game/screens-round/ («Финал · Победа», «Финал · Поражение»),
+ * design-lab/run-finale/APPROVED.md. Кнопки — .mqx-bg-btn / .mqx-bg-cta из board.css.
+ * Роли цвета: золото — клетка финиша и деньги, фиолет — действие, красный — только факт риска.
+ */
+
+.mqx-run-finale-root {
+  position: fixed;
+  inset: 0;
+  z-index: 1200;
+  display: flex;
+  justify-content: center;
+  background: var(--mq-board);
+}
+
+.mqx-run-finale {
+  width: min(100%, 480px);
+  height: 100%;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  color: var(--mq-board-ink);
+  font-family: var(--mq-font-body);
+}
+
+.mqx-run-finale__body {
+  display: grid;
+  justify-items: center;
+  gap: var(--mq-sp-4);
+  padding: calc(var(--mq-sp-7) + env(safe-area-inset-top, 0px)) var(--mq-sp-7)
+    calc(var(--mq-sp-7) + env(safe-area-inset-bottom, 0px));
+  text-align: center;
+}
+
+/* Клетка финиша: победа — золото с объёмом, поражение — нейтральная */
+.mqx-run-finale-cell {
+  display: grid;
+  place-items: center;
+  width: 132px;
+  height: 132px;
+  border-radius: 28px;
+  background: var(--mq-cell);
+  border: 3px solid var(--mq-cell-edge);
+  box-shadow: 0 5px 0 var(--mq-cell-edge);
+}
+
+.mqx-run-finale-cell--win {
+  background: var(--mq-coin-soft);
+  border-color: var(--mq-coin-rim);
+  box-shadow: 0 5px 0 var(--mq-coin-rim);
+}
+
+.mqx-run-finale-cell__img {
+  display: block;
+  width: 116px;
+  height: 116px;
+  object-fit: contain;
+}
+
+.mqx-run-finale__title {
+  margin: var(--mq-sp-2) 0 0;
+  font: 900 var(--mq-fs-display) / 1.1 var(--mq-font-display);
+}
+
+.mqx-run-finale__title:focus {
+  outline: none;
+}
+
+.mqx-run-finale__lead {
+  margin: 0;
+  max-width: 32ch;
+  color: var(--mq-board-ink-soft);
+  font-size: var(--mq-fs-body);
+  line-height: 1.4;
+}
+
+/* Три показателя победы */
+.mqx-run-finale-stats {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--mq-sp-3);
+  width: 100%;
+  margin: 0;
+}
+
+.mqx-run-finale-stats__cell {
+  display: flex;
+  flex-direction: column-reverse;
+  gap: var(--mq-sp-1);
+  padding: var(--mq-sp-3);
+  border: var(--mq-hair);
+  border-radius: var(--mq-r-cell);
+  background: var(--mq-cell);
+  min-width: 0;
+}
+
+.mqx-run-finale-stats__label {
+  color: var(--mq-board-ink-soft);
+  font-size: var(--mq-fs-small);
+}
+
+.mqx-run-finale-stats__value {
+  margin: 0;
+  font: 900 var(--mq-fs-lead) / 1.1 var(--mq-font-display);
+  font-variant-numeric: tabular-nums;
+  overflow-wrap: anywhere;
+}
+
+.mqx-run-finale-stats__value--money {
+  color: var(--mq-coin-ink);
+}
+
+/* Поражение: факт риска и советы */
+.mqx-run-finale-fact {
+  width: 100%;
+  box-sizing: border-box;
+  margin: 0;
+  padding: var(--mq-sp-4) var(--mq-sp-5);
+  border-radius: var(--mq-r-cell);
+  background: var(--mq-risk-soft);
+  color: var(--mq-board-ink);
+  font-size: var(--mq-fs-note);
+  line-height: 1.4;
+  text-align: left;
+}
+
+.mqx-run-finale-fact__risk {
+  color: var(--mq-risk);
+}
+
+.mqx-run-finale-tips {
+  display: grid;
+  gap: var(--mq-sp-2);
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  text-align: left;
+}
+
+.mqx-run-finale-tips li {
+  padding: var(--mq-sp-3) var(--mq-sp-5);
+  border: var(--mq-hair);
+  border-radius: var(--mq-r-cell);
+  background: var(--mq-cell);
+  font-size: var(--mq-fs-note);
+  line-height: 1.4;
+}
+
+/* Кнопки */
+.mqx-run-finale__actions {
+  display: grid;
+  gap: var(--mq-sp-4);
+  width: 100%;
+  margin-top: var(--mq-sp-2);
+}
+
+.mqx-bg-cta.mqx-run-finale__primary {
+  min-height: 48px;
+  font-size: var(--mq-fs-lead);
+}
+
+.mqx-run-finale-btn {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--mq-sp-3);
+  width: 100%;
+  min-height: 48px;
+  padding: var(--mq-sp-5) var(--mq-sp-6);
+  border: var(--mq-hair);
+  border-radius: var(--mq-r-card);
+  background: var(--mq-cell);
+  color: var(--mq-board-ink);
+  font-weight: 700;
+  font-size: var(--mq-fs-body);
+  text-align: left;
+  box-shadow: 0 2px 0 var(--mq-cell-edge);
+  transition:
+    transform 120ms ease,
+    box-shadow 120ms ease;
+}
+
+.mqx-run-finale-btn:active {
+  transform: translateY(1px);
+  box-shadow: 0 1px 0 var(--mq-cell-edge);
+}
+
+.mqx-run-finale-btn small {
+  color: var(--mq-board-ink-soft);
+  font-weight: 400;
+  font-size: var(--mq-fs-caption);
+}
+
+/* Необязательный отзыв */
+.mqx-run-finale-feedback {
+  display: grid;
+  justify-items: center;
+  gap: var(--mq-sp-1);
+  width: 100%;
+  margin-top: var(--mq-sp-2);
+}
+
+.mqx-run-finale-feedback__input {
+  display: block;
+  width: 100%;
+  min-height: 64px;
+  box-sizing: border-box;
+  padding: var(--mq-sp-4) var(--mq-sp-5);
+  border: var(--mq-hair);
+  border-radius: var(--mq-r-cell);
+  background: var(--mq-cell);
+  color: var(--mq-board-ink);
+  font: inherit;
+  font-size: var(--mq-fs-body);
+  resize: none;
+}
+
+.mqx-run-finale-feedback__input::placeholder {
+  color: var(--mq-board-ink-soft);
+}
+
+.mqx-run-finale-feedback__input:focus-visible {
+  outline: 3px solid var(--mq-coin);
+  outline-offset: 1px;
+}
+
+.mqx-run-finale-link {
+  min-height: 44px;
+  padding: var(--mq-sp-3) var(--mq-sp-5);
+  border: 0;
+  background: none;
+  color: var(--mq-turn);
+  font-weight: 700;
+  font-size: var(--mq-fs-body);
+}
+
+.mqx-run-finale-link:disabled {
+  color: var(--mq-board-ink-soft);
+}
+
+/* #/dev/mqx — кнопки открытия демо */
+.mqx-run-finale-demo {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--mq-sp-3);
+}

@@ -37,7 +37,9 @@
     "deploy:game-only": "npm run build && gh-pages -d dist",
     "test:e2e": "playwright test",
     "check:mqx-ratchet": "node scripts/check-mqx-ratchet.mjs",
-    "test:scripts": "node --test scripts/*.test.mjs"
+    "test:scripts": "node --test scripts/*.test.mjs",
+    "check:design-assets": "node ../scripts/design-assets.mjs --check",
+    "prebuild": "node ../scripts/design-assets.mjs --check"
   },
   "dependencies": {
     "@tanstack/react-table": "^8.21.3",

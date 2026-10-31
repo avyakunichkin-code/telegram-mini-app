@@ -80,7 +80,7 @@ aliases:
 | **G2** | Без tagline — hero в игре, табы, **слева** |
 | **ТХ** | Только pill/chip и квадратный аватар; не замена G1/G2 в шапке |
 
-Файлы: [`assets/logos/`](assets/logos/) · prod: `frontend-react/src/assets/brand/`.
+Источник файлов: [дизайн-система](../../../design/system/index.html), `assets/Logos/`. [`assets/logos/`](assets/logos/) и `frontend-react/src/assets/brand/` — генерируемые экспорты (`node scripts/design-assets.mjs`).
 
 ### 2.2 Tagline — рекомендация продукта (до отдельного ★)
 
