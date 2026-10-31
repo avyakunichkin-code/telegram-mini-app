@@ -1,6 +1,10 @@
 from fastapi import HTTPException
 from sqlalchemy.orm import Session
 
+from fincore import household as hh
+from fincore.insurance import premium_due
+
+from ...constants import EPSILON
 from ...finance.balance_utils import adjust_balance
 from ...starters.insurance_catalog import list_catalog, list_grid_catalog, list_plans, resolve_plan, resolve_product_object
 from ...finance.liability_kinds import ASSET_KIND_FOR_AUTO
@@ -44,6 +48,26 @@ def list_policies(db: Session, profile: GameProfile) -> list[dict]:
         .all()
     )
     return [policy_to_dict(r) for r in rows]
+
+
+def policy_for_core(policy: InsurancePolicy) -> hh.InsurancePolicy:
+    """ORM-полис → DTO ядра (месяц ядра = период игры)."""
+    return hh.InsurancePolicy(
+        id=int(policy.id),
+        title=policy.title,
+        kind=policy.kind,
+        monthly_premium=float(policy.monthly_premium or 0),
+        coverage_limit=float(policy.coverage_limit or 0),
+        started_month_index=int(policy.started_period_index) if policy.started_period_index is not None else None,
+        expires_month_index=int(policy.expires_period_index) if policy.expires_period_index is not None else None,
+        claimed_month_index=int(policy.claimed_period_index) if policy.claimed_period_index is not None else None,
+        insured_asset_id=int(policy.insured_asset_id) if policy.insured_asset_id is not None else None,
+    )
+
+
+def premium_due_for_period(policy: InsurancePolicy, period_index: int) -> float:
+    """Премия к списанию в конце period_index (первая — при оформлении, не здесь). Правило — `fincore.insurance`."""
+    return premium_due(policy_for_core(policy), int(period_index))
 
 
 def _parse_buy_payload(payload: dict):
@@ -138,6 +162,11 @@ def buy_policy(db: Session, profile: GameProfile, payload: dict) -> dict:
     insured_asset_id = _resolve_insured_asset_id(
         db, profile, payload, spec.product, spec.insured_object
     )
+    if float(profile.cash_balance) + EPSILON < monthly_premium:
+        raise HTTPException(
+            status_code=400,
+            detail="Недостаточно средств на счёте для оформления полиса",
+        )
     started = int(profile.period_index or 1)
     expires = started + term_periods
     policy = InsurancePolicy(
@@ -157,9 +186,25 @@ def buy_policy(db: Session, profile: GameProfile, payload: dict) -> dict:
         is_active=1,
     )
     db.add(policy)
+    db.flush()
+    adjust_balance(
+        db,
+        profile.id,
+        -monthly_premium,
+        "insurance_premium",
+        f"Оформление полиса: {title}",
+        started,
+    )
     db.commit()
     db.refresh(policy)
-    return {"status": "success", "policy_id": policy.id, "policy": policy_to_dict(policy)}
+    db.refresh(profile)
+    return {
+        "status": "success",
+        "policy_id": policy.id,
+        "policy": policy_to_dict(policy),
+        "premium_charged": monthly_premium,
+        "cash_balance": float(profile.cash_balance),
+    }
 
 
 def cancel_policy(db: Session, profile: GameProfile, policy_id: int) -> dict:
@@ -188,6 +233,7 @@ def expire_policies_for_period(db: Session, profile: GameProfile, period_index: 
             InsurancePolicy.is_active == 1,
             InsurancePolicy.claimed_period_index.is_(None),
         )
+        .order_by(InsurancePolicy.id)
         .all()
     )
     n = 0
@@ -201,22 +247,12 @@ def expire_policies_for_period(db: Session, profile: GameProfile, period_index: 
     return n
 
 
-def charge_premiums_for_period(db: Session, profile: GameProfile, period_index: int) -> float:
-    """Списывает премии по активным полисам (не истёкшим и не использованным)."""
+def post_premiums_for_period(db: Session, profile: GameProfile, period_index: int, total: float) -> float:
+    """
+    Закрытие периода: деактивирует истёкшие полисы и списывает премии, посчитанные ядром
+    (`fincore.month.month_step`, правило — `premium_due_for_period`).
+    """
     expire_policies_for_period(db, profile, period_index)
-    policies = (
-        db.query(InsurancePolicy)
-        .filter(InsurancePolicy.game_profile_id == profile.id, InsurancePolicy.is_active == 1)
-        .all()
-    )
-    total = 0.0
-    for p in policies:
-        if p.claimed_period_index is not None:
-            continue
-        exp = p.expires_period_index
-        if exp is not None and period_index >= int(exp):
-            continue
-        total += float(p.monthly_premium)
     if total > 0:
         adjust_balance(
             db,

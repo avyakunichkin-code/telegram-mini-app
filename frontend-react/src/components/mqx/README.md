@@ -2,7 +2,7 @@
 
 Канонические React-компоненты финансового UI (метрики с иконками, карточки портфеля, формы инвестиций, страховки, примитивы).
 
-**Обязательный FLOW (для агента и людей):** новые или существенно меняющие вид паттерны — **только** по циклу в [`DESIGN_WORKFLOW.md`](./DESIGN_WORKFLOW.md): `design-lab/` → выбор → **явное утверждение** → `mqx/` + `#/dev/mqx` → prod. Не пропускать этапы без согласования (исключение: минимальный багфикс/hotfix без смены дизайна). То же зафиксировано в `.cursor/rules/tvoy-hod-frontend-mqx.mdc`, скилле **frontend-ui-engineering** и [`docs/agents/CURSOR_SKILLS.md`](../../../../docs/agents/CURSOR_SKILLS.md).
+**Обязательный FLOW (для агента и людей):** новые или существенно меняющие вид паттерны — **только** по циклу в [`DESIGN_WORKFLOW.md`](./DESIGN_WORKFLOW.md): `design-lab/` → выбор → **явное утверждение** → `mqx/` + `#/dev/mqx` → prod. Не пропускать этапы без согласования (исключение: минимальный багфикс/hotfix без смены дизайна). То же зафиксировано в `.claude/rules/frontend-mqx.md`, скилле **frontend-ui-engineering** и [`docs/agents/AGENT_SKILLS.md`](../../../../docs/agents/AGENT_SKILLS.md).
 
 ## Как смотреть все компоненты
 
@@ -21,7 +21,7 @@ http://localhost:5173/#/dev/mqx
 ```text
 mqx/
   primitives/                         — кнопки, пилюли, чипы, прогресс
-  icons/FinanceMetricIcons.jsx        — монеты, ↓ ↑ %, срок (term), корзина (trash) для `MqxRowAction`
+  icons/FinanceMetricIcons.jsx        — монеты, ↓ ↑ %, срок (term), shield, wallet, goal, warn, корзина (trash)
   metrics/
     MetricInlineItem, MetricsRow
     Asset*Metrics, Liability*Metrics, InvestPositionMetrics
@@ -40,8 +40,8 @@ mqx/
     InvestPositionRow
   events/
     EventCard, EventChoiceButton
-    EventCarouselOverlay, EventCarouselDots, EventCarouselNav
-    EventOverlayToolbar, useEventCarousel
+    EventCarouselOverlay, EventCarouselNav
+    useEventCarousel
   brand/
     MonetkaAvatar
     PersonaPortrait, personaPortraits.js  — 4 персонажа (pick/md/dash)
@@ -57,7 +57,7 @@ mqx/
 | `EventCard` | L3 ★: domain band + pill, Монетка + пузырь; E2 halo (страховка); E5 clamp/scroll |
 | `EventChoiceButton` | Одна кнопка выбора |
 | `EventCarouselOverlay` | Полноэкранный оверлей с каруселью |
-| `EventCarouselDots` / `EventCarouselNav` | Навигация |
+| `EventCarouselNav` | Стрелки ← → |
 | `BrandLogo` / `BrandMark` | PNG G1/G2: `full` — старт по центру + tagline; `compact` — hero/табы, без фона |
 | `PersonaPortrait` | Растровые портреты 4 жизней (★ persona-portraits-round): pick на `GameTemplatePickScreen`, dash в `MqxNeedsDash` |
 | `useEventCarousel` | Состояние свайпа/слайдов |
@@ -113,7 +113,7 @@ mqx/
 | `MqxPill` | Пилюли hero, badge событий |
 | `MqxPeriodChip` | «Период» + номер в hero |
 | `MqxChip` | XP outline |
-| `MqxProgress` | 6px; emerald-градиент цели; `xp` — sky-градиент |
+| `MqxProgress` | 6px; emerald-градиент цели |
 | `MqxSubtab` | Вкладки финансов / капитала |
 | `MqxModeButton` | Переход к списку позиций («Позиции»), режимы портфеля, submit инвестиций |
 | `MqxRowAction` | **+** add / **корзина** remove по умолчанию (`removeVisual="minus"` — символ **−**) |

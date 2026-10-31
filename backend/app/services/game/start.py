@@ -5,9 +5,9 @@ from typing import List
 from fastapi import HTTPException
 from sqlalchemy.orm import Session
 
-from ...finance.expense_defaults import default_plan_expense_budget, expense_budget_for_template
+from ...finance.expense_defaults import expense_budget_for_template
 from ...finance.expenses import ensure_expense_category_catalog, seed_expense_lines_from_budget
-from ...finance.helpers import monthly_interest_payment
+from ...finance.starter_liability import build_starter_liability
 from ...game.start_validation import validate_game_start_request
 from ...models import (
     FinanceAsset,
@@ -19,20 +19,14 @@ from ...models import (
     User,
 )
 from ...needs.engine import parse_needs_config, set_profile_needs
-from ...schemas import AssetCreate, GameStartRequest, GameStartResponse, LiabilityCreate
-from ...timeutil import utc_now_naive
+from ...schemas import AssetCreate, GameStartRequest, GameStartResponse
 from .templates import validate_save_kind
 
 logger = logging.getLogger(__name__)
 
 
 def start_new_game(db: Session, user_id: int, payload: GameStartRequest) -> GameStartResponse:
-    """
-    Новый профиль:
-    - **game** — только из каталога (`template_key` обязателен);
-    - **plan** — мастер BaseParamsScreen без `template_key` (ручной бюджет) или опционально
-      префилл из каталога plan-шаблонов.
-    """
+    """Новая игра из каталога; template_key обязателен."""
     validate_game_start_request(payload, db)
     save_kind = validate_save_kind(payload.save_kind)
 
@@ -42,11 +36,10 @@ def start_new_game(db: Session, user_id: int, payload: GameStartRequest) -> Game
     starter_template_key = None
     base_monthly_lifestyle = 0.0
     blueprint: dict = {}
-    period_duration_seconds = int(payload.period_duration_seconds)
     cash_balance = float(payload.cash_balance)
     monthly_salary = float(payload.monthly_salary)
     assets_list: List[AssetCreate] = []
-    liabilities_list: List[LiabilityCreate] = []
+    starter_liabilities_raw: List[dict] = []
     seeded_budget: dict[str, float] | None = None
     starter_params_json = "{}"
 
@@ -63,7 +56,6 @@ def start_new_game(db: Session, user_id: int, payload: GameStartRequest) -> Game
             blueprint = json.loads(tmpl.blueprint_json or "{}")
         except json.JSONDecodeError:
             blueprint = {}
-        period_duration_seconds = int(blueprint.get("period_duration_seconds") or period_duration_seconds)
         cash_balance = float(blueprint.get("cash_balance", cash_balance))
         monthly_salary = float(blueprint.get("monthly_salary", monthly_salary))
         starter_template_key = tk
@@ -82,13 +74,7 @@ def start_new_game(db: Session, user_id: int, payload: GameStartRequest) -> Game
                 )
         for li in blueprint.get("liabilities") or []:
             if isinstance(li, dict):
-                liabilities_list.append(
-                    LiabilityCreate(
-                        title=li.get("title") or "Обязательство",
-                        total_debt=float(li.get("total_debt") or 0),
-                        annual_rate_percent=float(li.get("annual_rate_percent") or 0),
-                    )
-                )
+                starter_liabilities_raw.append(li)
 
         if base_monthly_lifestyle > 0:
             seeded_budget = expense_budget_for_template(
@@ -97,20 +83,6 @@ def start_new_game(db: Session, user_id: int, payload: GameStartRequest) -> Game
                 blueprint,
                 db,
             )
-
-        if save_kind == "plan" and seeded_budget is not None:
-            starter_params_json = json.dumps(
-                {
-                    "template_key": starter_template_key,
-                    "expense_budget": seeded_budget,
-                    "cash_balance": cash_balance,
-                    "monthly_salary": monthly_salary,
-                },
-                ensure_ascii=False,
-            )
-    else:
-        assets_list = list(payload.assets)
-        liabilities_list = list(payload.liabilities)
 
     db.query(GameProfile).filter(
         GameProfile.user_id == user_id,
@@ -126,13 +98,10 @@ def start_new_game(db: Session, user_id: int, payload: GameStartRequest) -> Game
         base_monthly_lifestyle_expense=base_monthly_lifestyle,
         delta_monthly_lifestyle_expense=0,
         is_active=1,
-        period_duration_seconds=period_duration_seconds,
         cash_balance=cash_balance,
         safety_fund_balance=0,
         negative_periods_count=0,
         period_index=1,
-        time_state="pause",
-        period_anchor_at=utc_now_naive(),
         base_params_locked=1,
         onboarding_state="brief_done" if guidance_done else "draft",
         onboarding_step="farewell" if guidance_done else "period_timer",
@@ -155,9 +124,11 @@ def start_new_game(db: Session, user_id: int, payload: GameStartRequest) -> Game
     )
     db.add(salary)
 
+    created_assets: List[FinanceAsset] = []
     for asset_data in assets_list:
         asset = FinanceAsset(
             game_profile_id=new_profile.id,
+            acquired_period_index=1,
             title=asset_data.title,
             kind=getattr(asset_data, "kind", None) or "generic",
             asset_value=asset_data.asset_value,
@@ -167,17 +138,17 @@ def start_new_game(db: Session, user_id: int, payload: GameStartRequest) -> Game
             is_active=1,
         )
         db.add(asset)
+        created_assets.append(asset)
 
-    for liability_data in liabilities_list:
-        liability = FinanceLiability(
-            game_profile_id=new_profile.id,
-            title=liability_data.title,
-            total_debt=liability_data.total_debt,
-            annual_rate_percent=liability_data.annual_rate_percent,
-            monthly_payment=monthly_interest_payment(
-                liability_data.total_debt, liability_data.annual_rate_percent
-            ),
-            is_active=1,
+    db.flush()
+
+    used_secured_asset_ids: set[int] = set()
+    for blueprint_li in starter_liabilities_raw:
+        liability = build_starter_liability(
+            profile_id=new_profile.id,
+            blueprint_li=blueprint_li,
+            assets=created_assets,
+            used_secured_asset_ids=used_secured_asset_ids,
         )
         db.add(liability)
 
@@ -190,43 +161,14 @@ def start_new_game(db: Session, user_id: int, payload: GameStartRequest) -> Game
     )
     db.add(start_transaction)
 
-    if save_kind == "plan" and not tk:
-        raw_budget = payload.expense_budget or {}
-        budget = {
-            str(k): max(0.0, float(v))
-            for k, v in raw_budget.items()
-            if max(0.0, float(v or 0)) > 0
-        }
-        if not budget and monthly_salary > 0:
-            budget = default_plan_expense_budget(monthly_salary)
-        budget_total = round(sum(budget.values()), 2)
-        if budget_total > 0:
-            new_profile.base_monthly_lifestyle_expense = budget_total
-        starter_params = {
-            "expense_budget": budget,
-            "cash_balance": cash_balance,
-            "monthly_salary": monthly_salary,
-        }
-        new_profile.starter_params_json = json.dumps(starter_params, ensure_ascii=False)
-        if budget:
-            ensure_expense_category_catalog(db)
-            seed_expense_lines_from_budget(
-                db,
-                new_profile,
-                budget,
-                period_index=1,
-                source_kind="plan",
-                source_ref="wizard",
-            )
-    elif base_monthly_lifestyle > 0 and seeded_budget:
+    if base_monthly_lifestyle > 0 and seeded_budget:
         ensure_expense_category_catalog(db)
-        line_source = "plan" if save_kind == "plan" else "template"
         seed_expense_lines_from_budget(
             db,
             new_profile,
             seeded_budget,
             period_index=1,
-            source_kind=line_source,
+            source_kind="template",
             source_ref=starter_template_key,
         )
 

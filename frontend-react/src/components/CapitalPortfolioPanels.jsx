@@ -59,7 +59,7 @@ export function CapitalPropertyPanel({
           ) : assetTemplates.length === 0 ? (
             <MqxStateError
               title="Шаблоны не загружены"
-              message="Проверьте сеть и попробуйте снова"
+              message="Проверь сеть и попробуй снова"
               onRetry={() => void reloadExtra?.()}
             />
           ) : (
@@ -172,7 +172,7 @@ export function CapitalLiabilitiesPanel({
           ) : liabilityTemplates.length === 0 ? (
             <MqxStateError
               title="Шаблоны не загружены"
-              message="Проверьте сеть и попробуйте снова"
+              message="Проверь сеть и попробуй снова"
               onRetry={() => void reloadExtra?.()}
             />
           ) : (

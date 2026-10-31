@@ -1,10 +1,10 @@
 from fastapi import HTTPException
 from sqlalchemy.orm import Session
 
+from fincore.annuity import monthly_interest_payment, monthly_payment, prepay_waterfall
+
 from ...constants import EPSILON
-from ...finance.annuity import monthly_payment, prepay_waterfall
 from ...finance.balance_utils import adjust_balance
-from ...finance.helpers import monthly_interest_payment
 from ...finance.liability_kinds import (
     CONSUMER_KINDS,
     DISBURSE_TO_ASSET,
@@ -186,6 +186,12 @@ def prepay_liability(db: Session, profile: GameProfile, liability_id: int, amoun
     )
     if not liability:
         raise HTTPException(status_code=404, detail="Liability not found")
+
+    if effective_payment_mode(liability) == PAYMENT_MODE_INTEREST_ONLY:
+        raise HTTPException(
+            status_code=400,
+            detail="Частичное погашение недоступно для этого типа долга",
+        )
 
     if float(profile.cash_balance) + EPSILON < float(amount):
         raise HTTPException(status_code=400, detail="Недостаточно средств на счёте")

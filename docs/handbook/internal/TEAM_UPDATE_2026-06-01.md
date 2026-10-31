@@ -1,12 +1,21 @@
 ---
 layer: handbook-internal
-status: active
-last_reviewed: 2026-06-02
+status: archived
+last_reviewed: 2026-06-01
+archived_at: 2026-06-20
 audience: команда ТВОЙ ХОД (продукт, дизайн, разработка, QA)
 confidentiality: team-only
+tags:
+  - tvoy-hod/layer/handbook
+  - tvoy-hod/layer/handbook-internal
+  - tvoy-hod/status/active
+aliases:
+  - "Внутренний дайджест: что изменилось (конец мая — 1 июня 2026)"
+  - TEAM_UPDATE_2026-06-01
 ---
-
 # Внутренний дайджест: что изменилось (конец мая — 1 июня 2026)
+
+> **Архив 2026-06-20.** Исторический снимок до ADR-012 и O3. Актуальный smoke: **`release-web`**, канон onboarding: [`SPEC_onboarding-o3.md`](../../specs/features/SPEC_onboarding-o3.md).
 
 Коротко о том, что уже в ветке разработки и что стоит проверить при смоуке и плейтесте. Тон — для коллег, не для канала игроков.
 
@@ -62,12 +71,12 @@ confidentiality: team-only
 ### Онбординг O2 (guidance)
 
 - В prod: полоса подсказок на главной, прогресс guidance в профиле, chip подушки **«ФИН.ПОДУШКА · N%»**.
-- Спека: [`SPEC_onboarding-o2.md`](../../specs/features/SPEC_onboarding-o2.md).
+- Спека: [`SPEC_onboarding-o3.md`](../../specs/features/SPEC_onboarding-o3.md) (O2 → archive [`onboarding-o2/`](../../archive/onboarding-o2/README.md)).
 
 ### Контент и баланс событий
 
 - Ребаланс каталога MVP11 (lifecycle, trade-off), усилены проверки **Pareto / free lunch** в тестах.
-- Миграции: упрощение baseline, параметры `-BaselineOnly` / `-SkipBaseline` в `migrate.ps1`.
+- Миграции: упрощение baseline, режимы `--baseline-only` / `--skip-baseline` в `backend/scripts/db.sh migrate`.
 
 ### Инфраструктура docs / агентов
 
@@ -101,7 +110,7 @@ confidentiality: team-only
 | **design-lab-mqx** | Обновлён: `details-actions-round` → `sync-lab.sh`; capital v2 в prod |
 | **design-lab-mqx** (checklist) | Для capital-round — `sync-lab.sh`, не только `.ps1` |
 | **social-changelog-posts** | Без изменений процедуры; этот текст — **внутренний**, не пост в канал |
-| **release-tma / canon-sync** | При релизе: parity finance-page, smoke по чеклисту выше |
+| **release-web / canon-sync** | При релизе: parity finance-page, PWA/web smoke по чеклисту выше |
 | **incremental-implementation** | Без правок — общий процесс |
 | **mqx-ui-unification** (idea) | Частично закрыт этап C для Finance; Analytics — по-прежнему ⚠ |
 

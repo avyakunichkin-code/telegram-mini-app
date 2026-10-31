@@ -104,3 +104,75 @@ class TestFreelanceProjectChain:
         defn = db_session.query(EventDefinition).filter(EventDefinition.id == inst.definition_id).first()
         assert defn.key == "mq11_freelance_project_deadline_rush"
         assert defn.mandatory_gate == "blocks_period_end"
+
+
+def _specs() -> dict[str, dict]:
+    from app.events.mvp11_catalog import load_mvp11_catalog
+
+    specs, _ = load_mvp11_catalog(force_reload=True)
+    return {s["key"]: s for s in specs if s["key"].startswith("mq11_freelance_project_")}
+
+
+def _branch_choices(spec: dict, branch: str) -> list[dict]:
+    return [c for c in spec["choices"] if c["effects"].get("requires_chain_branch") == branch]
+
+
+def _needs_sum(effects: dict) -> float:
+    return sum(float(v) for v in (effects.get("needs_delta") or {}).values())
+
+
+class TestFreelanceChainEconomics:
+    """Разбор 2026-10-21: аванс — риск, цена времени 0.5, эпилоги без ложного выбора."""
+
+    def test_advance_is_risky_when_work_is_rushed(self):
+        s = _specs()
+        advance = 8000
+        rush_adv = _branch_choices(s["mq11_freelance_project_epilogue_rush"], "advance")[0]["effects"]["cash_delta"]
+        rush_def = _branch_choices(s["mq11_freelance_project_epilogue_rush"], "deferred")[0]["effects"]["cash_delta"]
+        steady_adv = _branch_choices(s["mq11_freelance_project_epilogue_steady"], "advance")[0]["effects"]["cash_delta"]
+        steady_def = _branch_choices(s["mq11_freelance_project_epilogue_steady"], "deferred")[0]["effects"]["cash_delta"]
+        assert advance + rush_adv < rush_def  # спешка: аванс стоит удержания
+        assert advance + steady_adv == steady_def  # качество: аванс ничего не стоит, просто раньше
+
+    def test_epilogue_buttons_do_not_differ_within_branch(self):
+        s = _specs()
+        for key in ("mq11_freelance_project_epilogue_rush", "mq11_freelance_project_epilogue_steady"):
+            for branch in ("advance", "deferred"):
+                effects = [c["effects"] for c in _branch_choices(s[key], branch)]
+                assert len(effects) == 2
+                assert effects[0] == effects[1], f"{key}/{branch}"
+
+    def test_epilogue_payout_cannot_expire_unopened(self):
+        """Выплата только в эпилоге — без блокировки она сгорает при закрытии месяца (expire)."""
+        s = _specs()
+        for key in ("mq11_freelance_project_epilogue_rush", "mq11_freelance_project_epilogue_steady"):
+            assert s[key]["mandatory_gate"] == "blocks_period_end", key
+
+    def test_epilogue_recaps_the_earlier_choice(self):
+        s = _specs()
+        for key in ("mq11_freelance_project_epilogue_rush", "mq11_freelance_project_epilogue_steady"):
+            for branch in ("advance", "deferred"):
+                text = _branch_choices(s[key], branch)[0].get("description", "")
+                assert "периодов назад" in text, f"{key}/{branch}"
+
+    def test_rest_path_pays_back_in_needs_at_half_price_of_bonus(self):
+        """Путь «шашлыки» ≈ 0.5 · needs_points(бонус / зарплата Студента) выше пути «работа» по needs."""
+        from app.needs.value_curve import needs_points
+
+        s = _specs()
+        mid = s["mq11_freelance_project_midperiod"]
+        grill = next(c for c in _branch_choices(mid, "advance") if "Шашлыки" in c["title"])["effects"]
+        grind = next(c for c in _branch_choices(mid, "advance") if "проект" in c["title"])["effects"]
+        rush_self = next(
+            c for c in _branch_choices(s["mq11_freelance_project_deadline_rush"], "advance_grill") if "самому" in c["title"]
+        )["effects"]
+        steady_min = min(
+            _needs_sum(c["effects"]) for c in _branch_choices(s["mq11_freelance_project_deadline_steady"], "advance_grind")
+        )
+        epi_rush = _branch_choices(s["mq11_freelance_project_epilogue_rush"], "advance")[0]["effects"]
+        epi_steady = _branch_choices(s["mq11_freelance_project_epilogue_steady"], "advance")[0]["effects"]
+
+        rest_path = _needs_sum(grill) + _needs_sum(rush_self) + _needs_sum(epi_rush)
+        work_path = _needs_sum(grind) + steady_min + _needs_sum(epi_steady)
+        target = 0.5 * needs_points(7700, 62_500)
+        assert rest_path - work_path == pytest.approx(target, abs=3)

@@ -1,31 +1,41 @@
 events:
 - definition_key: mq11_refinance_bank
+  content_class: universal
+  event_slot: period_choice
+  audience_template_keys:
+  - all
   event_domain: credit_debt
   title: Предложение рефинансирования
-  description: Банк предлагает объединить платежи под новую ставку.
+  description: Банк предлагает объединить платежи под новую ставку — комиссия сейчас, но платёж может стать легче.
   weight: 58
-  event_tier: 5
+  is_active: 0  # заменено цепочкой refinance_loan (A3, PO 2026-10-22)
+  event_tier: 4
   repeat_policy: repeatable
+  cooldown_periods: 12
   scenario_shape: soft_offer
-  is_active: 0
   prerequisites:
     min_active_liabilities: 1
   choices:
-  - title: Оформить пакет документов
+  - title: Оформить рефинанс
+    purpose: investment
     effects:
       cash_delta: -6500
       needs_delta:
-        comfort: 8
-        status: 3
+        health: -4
+        comfort: 2
+        status: 2
   - title: Только консультация
+    purpose: investment
     effects:
-      cash_delta: 0
+      cash_delta: -1200
       needs_delta:
         comfort: -2
-        status: -3
+        status: -1
+        health: 2
   - title: Отклонить предложение
     effects:
       cash_delta: 0
       needs_delta:
         comfort: -3
-        status: -2
+        status: -4
+        social: -1

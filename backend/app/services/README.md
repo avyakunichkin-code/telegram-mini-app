@@ -10,7 +10,7 @@
 | `period/` | зарплата за период, подушка, treat-self, snapshot, complete | `routers/period_actions.py` |
 | `finance/` | salary, assets, liabilities, templates, transactions, overview, analytics | `routers/finance.py` |
 | `events/` | пул событий, pending, выбор | `routers/events.py` |
-| `expenses/` | burn / строки бюджета Plan | `routers/expenses.py` |
+| `expenses/` | чтение burn и статей расходов Game; старый CRUD возвращает 410 | `routers/expenses.py` |
 | `insurance/` | полисы, премии (в т.ч. из `game_period`) | `routers/insurance.py` |
 | `invest/` | депозиты, облигации | `routers/invest.py` |
 

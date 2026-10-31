@@ -1,0 +1,47 @@
+{
+  "description": "Project adapters; activation evidence in docs/ai/CODEX-HOOKS.md.",
+  "hooks": {
+    "SessionStart": [
+      {
+        "matcher": "startup|resume",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"$(git rev-parse --show-toplevel)/scripts/codex/hook.mjs\" session",
+            "commandWindows": "powershell.exe -NoProfile -Command \"& { $codexRepo = git rev-parse --show-toplevel; if ($LASTEXITCODE -ne 0) { exit 2 }; & node (Join-Path $codexRepo 'scripts/codex/hook.mjs') session; exit $LASTEXITCODE }\"",
+            "timeout": 10,
+            "statusMessage": "Codex repository session"
+          }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": ".*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"$(git rev-parse --show-toplevel)/scripts/codex/hook.mjs\" pre",
+            "commandWindows": "powershell.exe -NoProfile -Command \"& { $codexRepo = git rev-parse --show-toplevel; if ($LASTEXITCODE -ne 0) { exit 2 }; & node (Join-Path $codexRepo 'scripts/codex/hook.mjs') pre; exit $LASTEXITCODE }\"",
+            "timeout": 10,
+            "statusMessage": "Codex repository pre"
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "apply_patch|Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"$(git rev-parse --show-toplevel)/scripts/codex/hook.mjs\" post",
+            "commandWindows": "powershell.exe -NoProfile -Command \"& { $codexRepo = git rev-parse --show-toplevel; if ($LASTEXITCODE -ne 0) { exit 2 }; & node (Join-Path $codexRepo 'scripts/codex/hook.mjs') post; exit $LASTEXITCODE }\"",
+            "timeout": 10,
+            "statusMessage": "Codex repository post"
+          }
+        ]
+      }
+    ]
+  }
+}

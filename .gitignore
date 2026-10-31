@@ -23,6 +23,8 @@ __pycache__/
 *.egg-info/
 dist/
 build/
+# Спеки скиллов категории build — не артефакт сборки (на них ссылается catalog.yaml)
+!.claude/skills/specs/build/
 .pytest_cache/
 .mypy_cache/
 .ruff_cache/
@@ -32,6 +34,8 @@ venv/
 # ===== Node / Frontend =====
 **/node_modules/
 **/dist/
+# Lab-раунд лендинга: dist — сама страница и цель design-assets --check, не сборка
+!design-lab/landing-refresh-20261030/dist/
 **/dist-ssr/
 **/.vite/
 **/.vite-temp/
@@ -59,24 +63,32 @@ coverage/
 *.sqlite3
 *.db
 
-# ===== Cursor / tooling =====
-# Версионируем rules, skills, hooks, agents; прочее в .cursor/ — локально
-.cursor/*
-!.cursor/rules/
-!.cursor/rules/**
-!.cursor/skills/
-!.cursor/skills/**
-!.cursor/hooks/
-!.cursor/hooks/**
-!.cursor/hooks.json
-!.cursor/agents/
-!.cursor/agents/**
+# ===== Claude Code / tooling =====
+# Версионируем .claude/{rules,skills,hooks,agents,settings.json}; локальное — нет
+.claude/settings.local.json
+.claude/worktrees/
+.claude/hooks/.hint-throttle.json
+.claude/agent-memory-local/
+CLAUDE.local.md
+# Cursor больше не используется (миграция на Claude Code, 2026-10-14)
+.cursor/
 
 # Balance playtest — только baselines в git; reports генерируются локально
 docs/balance/reports/*
 !docs/balance/reports/.gitkeep
 
+# ===== Obsidian (vault settings — shared; workspace — local) =====
+.obsidian/workspace.json
+.obsidian/workspace-mobile.json
+.obsidian/graph.json
+.obsidian/graph.json.bak
+.obsidian/plugins/
+.obsidian/themes/
+
 # ===== Logs =====
 logs/
 *.log
 
+
+# Отдельные репозитории сайтов (свой origin), не часть этого репо
+sites/

@@ -7,10 +7,15 @@ import {
   AssetTemplateMetrics,
   CapitalPositionCard,
   IconMetricCoins,
+  IconMetricGoal,
   IconMetricPercent,
+  IconMetricShield,
   IconMetricTerm,
+  IconMetricTrash,
   IconMetricTrendDown,
   IconMetricTrendUp,
+  IconMetricWallet,
+  IconMetricWarn,
   InsurancePlanCard,
   InsurancePlanMetrics,
   InsurancePolicyMetrics,
@@ -26,11 +31,11 @@ import {
   MetricsRow,
   MqxButton,
   MqxChip,
-  MqxDashStack,
+  MqxNeedsDash,
   MqxDashboardHero,
-  MqxSaveKindPicker,
   MqxStarterScenarioPicker,
-  MqxDivider,
+  MqxSaveCard,
+  MqxBoardButton,
   MqxFinancePeriodBlock,
   MqxPeriodActions,
   MqxPeriodCloseSheet,
@@ -51,11 +56,11 @@ import {
 } from '../index';
 import { MqxStatesCatalogDemo } from './MqxStatesCatalogDemo';
 import { MqxEventsTailsCatalogDemo } from './MqxEventsTailsCatalogDemo';
+import { MqxRunFinaleCatalogDemo } from './MqxRunFinaleCatalogDemo';
 import { CATALOG_LEGACY_GOAL_DEMO, CATALOG_VICTORY_DEMO } from './catalogVictoryDemo';
 import { CATALOG_EVENTS_L3_BASELINE } from './catalogEventsDemo';
 import { CATALOG_INSURANCE_POLICY, catalogInsurancePlan } from './catalogInsuranceDemo';
 import { CATALOG_PERIOD_CLOSE_SHEET } from './catalogStatesDemo';
-import { MoneyText } from '../../MoneyText';
 
 const CATALOG_INSURANCE_PLAN = catalogInsurancePlan();
 
@@ -156,25 +161,15 @@ export function MqCatalogScreen() {
         <MqxGuidanceStripDemo />
       </CatalogSection>
 
-      <CatalogSection title="Новая игра — выбор режима (R1 ★)">
+      <CatalogSection title="Выбор жизни (★ BG-2)">
         <p className="mqx-catalog__lead">
-          Шаг 1: <code>MqxSaveKindPicker</code> vivid (56/40, цветная полоска). План — «Скоро».
-        </p>
-        <div className="mqx-catalog-save-kind-demo">
-          <MqxSaveKindPicker onSelectGame={() => {}} />
-        </div>
-      </CatalogSection>
-
-      <CatalogSection title="Новая игра — выбор персонажа (портреты ★)">
-        <p className="mqx-catalog__lead">
-          Шаг 2: <code>MqxStarterScenarioPicker</code> + <code>PersonaPortrait</code> (pick 56px). Lab:{' '}
-          <code>design-lab/game-templates/persona-portraits-round/</code>. SVG I-Scene — архив, fallback при{' '}
-          <code>usePersonaPortraits=false</code>.
+          <code>MqxStarterScenarioPicker</code>: карточки персонажей (<code>PersonaPortrait</code> pick), доход за ход,
+          стартовые условия; выбранная — фиолетовая рамка. Канон: <code>design-lab/board-game/screens-round/</code>.
         </p>
         <div style={{ maxWidth: 420 }}>
           <MqxStarterScenarioPicker
-            layout="compact"
             value="mq_game_basic_v1"
+            label="Персонаж"
             onChange={() => {}}
             templates={[
               {
@@ -210,47 +205,64 @@ export function MqCatalogScreen() {
         </div>
       </CatalogSection>
 
-      <CatalogSection title="Hero — H2 turn-based (дашборд)">
-        <div style={{ maxWidth: 420, borderRadius: 16, overflow: 'hidden' }}>
-          <MqxDashboardHero
-            periodIndex={4}
-            onCloseMonth={() => {}}
-            pendingEventsCount={2}
-            onOpenEvents={() => {}}
+      <CatalogSection title="Меню ★ BG-2 — карта сохранения и спокойные кнопки">
+        <p className="mqx-catalog__lead">
+          <code>MqxSaveCard</code> (портрет, ход, на счёте, цель + «Продолжить игру») и <code>MqxBoardButton</code>{' '}
+          (подпись + пояснение; <code>variant=&quot;link&quot;</code> — текстовая).
+        </p>
+        <div className="mqx-pg mqx-catalog__pg-demo">
+          <MqxSaveCard
+            templateKey="mq_game_basic_v1"
+            periodIndex={12}
+            cash={87400}
+            note="Цель: шаг 4 из 5"
+            onContinue={() => {}}
           />
+          <div className="mqx-pg-actions">
+            <MqxBoardButton hint="другая жизнь">Новая игра</MqxBoardButton>
+            <MqxBoardButton hint="3 партии">Все сохранения</MqxBoardButton>
+          </div>
+          <MqxBoardButton variant="link">Выйти из аккаунта</MqxBoardButton>
         </div>
       </CatalogSection>
 
-      <CatalogSection title="Shell — L3 (утверждённый дашборд)">
-        <div style={{ maxWidth: 420 }}>
-          <MqxDashStack>
-            <MqxFinancePeriodBlock
-              financeCards={[
-                { title: 'Доходы', valueNode: <MoneyText value={3200} />, accent: 'mqx-accent--sky', valueTone: 'pos', icon: <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 19V5" /></svg> },
-                {
-                  title: 'Расходы',
-                  valueNode: <MoneyText value={9600} />,
-                  accent: 'mqx-accent--amber',
-                  valueTone: 'out',
-                  expenseIcon: true,
-                  icon: (
-                    <svg viewBox="0 0 24 24" aria-hidden="true">
-                      <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z" />
-                      <path d="M3 6h18" />
-                      <path d="M16 10a4 4 0 0 1-8 0" />
-                    </svg>
-                  ),
-                },
-                { title: 'Баланс', valueNode: <MoneyText value={42150} />, accent: 'mqx-accent--violet', icon: <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 10V7a5 5 0 0 1 10 0v3" /></svg> },
-                { title: 'Подушка', valueNode: <MoneyText value={18000} />, accent: 'mqx-accent--emerald', icon: <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3 20 7v6c0 5" /></svg> },
-              ]}
-              onGoFinance={() => {}}
-            />
-            <MqxDivider />
-            <MqxPeriodActions onSalary={() => {}} onContribute={() => {}} onWithdraw={() => {}} onInvest={() => {}} />
-            <MqxDivider />
-            <MqxGoalDash victory={CATALOG_VICTORY_DEMO} legacyGoal={CATALOG_LEGACY_GOAL_DEMO} />
-          </MqxDashStack>
+      <CatalogSection title="Дашборд ★ BG-1 — настольная игра (ADR-014)">
+        <p className="mqx-catalog__lead">
+          Карта хода → потребности → деньги → цель → действия. Lab:{' '}
+          <code>design-lab/board-game/hybrid-round/</code>.
+        </p>
+        <div className="mqx-catalog__board-demo mqx-tab-page--board">
+          <div className="mqx-content mqx-tab-page__scroll">
+            <div className="mqx-bg-stack">
+              <MqxDashboardHero
+                roleTitle="Студент"
+                periodIndex={4}
+                onCloseMonth={() => {}}
+                pendingEventsCount={2}
+                onOpenEvents={() => {}}
+                tip={{ text: 'Забери зарплату до конца хода', tone: 'normal' }}
+                closePreview={{ charges: 37500, after: 49900, negative: false, defeat: false }}
+              />
+              <MqxNeedsDash
+                needs={{ comfort: 70, status: 45, social: 60, health: 80 }}
+                treatSelf={{ available: true }}
+                onHelp={() => {}}
+                onTreatSelf={() => {}}
+              />
+              <MqxFinancePeriodBlock
+                templateKey="mq_game_basic_v1"
+                cash={87400}
+                safety={45000}
+                cushionPercent={60}
+                income={{ label: 'Доходы за ход', value: 64300 }}
+                outflow={37500}
+                onFlowsNavigate={() => {}}
+              />
+              <MqxGoalDash victory={CATALOG_VICTORY_DEMO} legacyGoal={CATALOG_LEGACY_GOAL_DEMO} />
+              <MqxPeriodActions salaryHot salaryAmount={62500} onSalary={() => {}} onContribute={() => {}} onWithdraw={() => {}} onInvest={() => {}} />
+              <MqxPeriodActions salaryClaimed salaryDisabled onSalary={() => {}} onContribute={() => {}} onWithdraw={() => {}} onInvest={() => {}} />
+            </div>
+          </div>
         </div>
       </CatalogSection>
 
@@ -265,6 +277,10 @@ export function MqCatalogScreen() {
             summary={CATALOG_PERIOD_CLOSE_SHEET}
           />
         </div>
+      </CatalogSection>
+
+      <CatalogSection title="Финал партии ★ BG-2 (победа · поражение)">
+        <MqxRunFinaleCatalogDemo />
       </CatalogSection>
 
       <CatalogSection title="События — E2 / E5 (хвосты) ★">
@@ -288,25 +304,40 @@ export function MqCatalogScreen() {
       </CatalogSection>
 
       <CatalogSection title="Иконки метрик">
+        <p className="mqx-catalog__lead" style={{ marginTop: 0 }}>
+          Канон: <code>FinanceMetricIcons</code> · SVG в <code>src/assets/icons/metrics/</code>
+        </p>
         <div className="mqx-catalog-glyphs">
-          <span className="mqx-metric-glyph mqx-metric-glyph--coin">
-            <IconMetricCoins />
-          </span>
-          <span className="mqx-metric-glyph mqx-metric-glyph--down">
-            <IconMetricTrendDown />
-          </span>
-          <span className="mqx-metric-glyph mqx-metric-glyph--up">
-            <IconMetricTrendUp />
-          </span>
-          <span className="mqx-metric-glyph mqx-metric-glyph--percent mqx-metric-glyph--pos">
-            <IconMetricPercent />
-          </span>
-          <span className="mqx-metric-glyph mqx-metric-glyph--percent mqx-metric-glyph--neg">
-            <IconMetricPercent />
-          </span>
-          <span className="mqx-metric-glyph mqx-metric-glyph--term">
-            <IconMetricTerm />
-          </span>
+          {[
+            { key: 'coin', label: 'coin · сумма', className: 'mqx-metric-glyph--coin', Icon: IconMetricCoins },
+            { key: 'down', label: 'down · расход', className: 'mqx-metric-glyph--down', Icon: IconMetricTrendDown },
+            { key: 'up', label: 'up · доход', className: 'mqx-metric-glyph--up', Icon: IconMetricTrendUp },
+            {
+              key: 'percent-pos',
+              label: '% · получаем',
+              className: 'mqx-metric-glyph--percent mqx-metric-glyph--pos',
+              Icon: IconMetricPercent,
+            },
+            {
+              key: 'percent-neg',
+              label: '% · платим',
+              className: 'mqx-metric-glyph--percent mqx-metric-glyph--neg',
+              Icon: IconMetricPercent,
+            },
+            { key: 'term', label: 'term · срок', className: 'mqx-metric-glyph--term', Icon: IconMetricTerm },
+            { key: 'shield', label: 'shield · защита', className: 'mqx-metric-glyph--shield', Icon: IconMetricShield },
+            { key: 'wallet', label: 'wallet · cash', className: 'mqx-metric-glyph--wallet', Icon: IconMetricWallet },
+            { key: 'goal', label: 'goal · chain', className: 'mqx-metric-glyph--goal', Icon: IconMetricGoal },
+            { key: 'warn', label: 'warn · ошибка', className: 'mqx-metric-glyph--warn', Icon: IconMetricWarn },
+            { key: 'trash', label: 'trash · удалить', className: 'mqx-metric-glyph--trash', Icon: IconMetricTrash },
+          ].map(({ key, label, className, Icon }) => (
+            <div key={key} className="mqx-catalog-glyphs__item">
+              <span className={`mqx-metric-glyph ${className}`}>
+                <Icon size={key === 'trash' ? 18 : 16} />
+              </span>
+              <span className="mqx-catalog-glyphs__label">{label}</span>
+            </div>
+          ))}
         </div>
       </CatalogSection>
 
@@ -360,7 +391,7 @@ export function MqCatalogScreen() {
 
       <CatalogSection title="Примитивы (D + C + B/A)">
         <p className="mqx-catalog__lead" style={{ marginTop: 0 }}>
-          Размеры D · шрифты 15/13px (C) · прогресс 6px · emerald-градиент цели · sky-градиент XP.
+          Размеры D · шрифты 15/13px (C) · прогресс 6px · emerald-градиент цели.
         </p>
         <div
           style={{
@@ -372,7 +403,7 @@ export function MqCatalogScreen() {
         >
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, alignItems: 'center' }}>
             <MqxButton variant="hero-filled">Пауза</MqxButton>
-            <MqxButton variant="hero-outline">След. месяц</MqxButton>
+            <MqxButton variant="hero-outline">Завершить ход</MqxButton>
             <MqxPeriodChip value="#3" />
           </div>
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, marginTop: 10 }}>
@@ -395,14 +426,12 @@ export function MqCatalogScreen() {
             alignItems: 'center',
           }}
         >
-          <MqxChip xp>+120 XP</MqxChip>
-          <span style={{ fontSize: 'var(--mq-fs-caption)', opacity: 0.65 }}>Ур. 4 → 5</span>
+          <MqxChip>Тег</MqxChip>
+          <span style={{ fontSize: 'var(--mq-fs-caption)', opacity: 0.65 }}>Ход 4 из 12</span>
         </div>
         <div style={{ maxWidth: 360, marginTop: 8 }}>
           <div style={{ fontSize: 'var(--mq-fs-small)', fontWeight: 700, opacity: 0.55, marginBottom: 4 }}>Цель</div>
           <MqxProgress value={62} aria-label="Прогресс цели" />
-          <div style={{ fontSize: 'var(--mq-fs-small)', fontWeight: 700, opacity: 0.55, margin: '10px 0 4px' }}>XP</div>
-          <MqxProgress value={62} xp aria-label="Прогресс опыта" />
         </div>
       </CatalogSection>
 
@@ -505,13 +534,14 @@ export function MqCatalogScreen() {
         />
       </CatalogSection>
 
-      <CatalogSection title="Цель на дашборде (MqxGoalDash · G1 ★)">
-        <p className="mqx-catalog__lead" style={{ marginTop: 0 }}>
-          Канон B4: один паттерн целей — <code>MqxGoalDash</code> (не <code>MqxLevelDash</code> / плоская карточка). Lab:{' '}
-          <code>design-lab/dashboard/goal-chain-round/</code>.
+      <CatalogSection title="Цель раскрыта (MqxGoalDash · ★ BG-1)">
+        <p className="mqx-catalog__lead">
+          Шаги цепочки победы без Монетки, золотой финиш. Lab: <code>design-lab/board-game/hybrid-round/</code>.
         </p>
-        <div style={{ maxWidth: 420 }}>
-          <MqxGoalDash victory={CATALOG_VICTORY_DEMO} legacyGoal={CATALOG_LEGACY_GOAL_DEMO} defaultExpanded />
+        <div className="mqx-catalog__board-demo mqx-tab-page--board">
+          <div className="mqx-content mqx-tab-page__scroll">
+            <MqxGoalDash victory={CATALOG_VICTORY_DEMO} legacyGoal={CATALOG_LEGACY_GOAL_DEMO} defaultExpanded />
+          </div>
         </div>
       </CatalogSection>
 

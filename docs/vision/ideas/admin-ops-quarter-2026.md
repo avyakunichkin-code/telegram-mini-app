@@ -6,8 +6,14 @@ idea_refine: true
 parent: admin-and-notifications.md
 plan: ../../plans/PLAN_admin-analytics-ops.md
 next_spec: specs/features/SPEC_admin-and-notifications.md
+tags:
+  - tvoy-hod/layer/idea
+  - tvoy-hod/layer/vision
+  - tvoy-hod/status/active
+aliases:
+  - "Admin Ops — квартальный фокус (2026 Q2)"
+  - admin-ops-quarter-2026
 ---
-
 # Admin Ops — квартальный фокус (2026 Q2)
 
 Сессия **idea-refine** (2026-05-25): оператор / solo-dev, горизонт **квартал**, Telegram **минимальный шум**, после сводки KPI — **inspector профиля** и **эвристики «застрял»**.

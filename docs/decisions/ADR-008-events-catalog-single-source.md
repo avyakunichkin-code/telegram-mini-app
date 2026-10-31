@@ -2,8 +2,14 @@
 status: accepted
 date: 2026-05-29
 deciders: продукт + агентный конвейер (/create-event)
+tags:
+  - tvoy-hod/layer/adr
+  - tvoy-hod/status/accepted
+aliases:
+  - ADR-008
+  - ADR-008-events-catalog-single-source
+  - "ADR-008: Единый канон каталога событий (git → БД)"
 ---
-
 # ADR-008: Единый канон каталога событий (git → БД)
 
 ## Context
@@ -22,7 +28,7 @@ deciders: продукт + агентный конвейер (/create-event)
 
 ### 1. Канон контента (MVP 1.1)
 
-**Git-источник:** [`data/events/mvp11/`](../../data/events/mvp11/) — YAML по доменам, массив `events:` в каждом файле.
+**Git-источник:** [`data/events/mvp11/`](../../data/events/mvp11/) — YAML по доменам, массив `events:` в каждом файле. Принцип [C-4](../../CONVENTIONS.md).
 
 - Оглавление: `catalog.yaml` (`includes:`).
 - Домены: `consumption.yaml`, `health.yaml`, `social_family.yaml`, …

@@ -4,6 +4,7 @@ import { AssetTemplateMetrics } from '../metrics/AssetTemplateMetrics';
 import { LiabilityTemplateMetrics } from '../metrics/LiabilityTemplateMetrics';
 import { MqxStateError } from '../primitives/MqxStateError';
 import { MqxStateSkeleton } from '../primitives/MqxStateSkeleton';
+import { formatLotRub } from './CapitalLotNotes';
 import { CapitalPositionCard } from './CapitalPositionCard';
 import { InsuranceProductPicker } from './InsuranceProductPicker';
 import { MqxCapitalActionGrid } from './MqxCapitalActionGrid';
@@ -12,21 +13,20 @@ import { SecuredAcquisitionList } from './SecuredAcquisitionList';
 import {
   buildSecuredBundles,
   filterBundlesForSheet,
+  filterCarAssetTemplates,
+  filterPropertyAssetTemplates,
   isConsumerLiabilityTemplate,
 } from '../../../utils/capitalDl1';
-
-const PROPERTY_KINDS = new Set(['home', 'rental_home']);
-const CAR_KINDS = new Set(['car_personal', 'car_taxi']);
 
 const SHEET_COPY = {
   deposit: {
     title: 'Депозит',
-    subtitle: 'Проценты (1/12 годовой ставки) капитализируются в сумму вклада при закрытии периода.',
+    subtitle: 'Проценты (1/12 годовой ставки) капитализируются в сумму вклада при завершении хода.',
   },
   bond: {
     title: 'Облигации',
     subtitle:
-      'Купон (1/12 годовой ставки) зачисляется на счёт при закрытии периода.',
+      'Купон (1/12 годовой ставки) зачисляется на счёт при завершении хода.',
   },
   realestate: {
     title: 'Жильё',
@@ -38,7 +38,8 @@ const SHEET_COPY = {
   },
   insurance: {
     title: 'Страховки',
-    subtitle: 'Премия списывается в конце периода. При страховом случае — полная выплата, полис закрывается.',
+    subtitle:
+      'Первая премия — при оформлении, далее в конце хода. При страховом случае — полная выплата, полис закрывается.',
   },
   mortgage: {
     title: 'Ипотека',
@@ -50,18 +51,20 @@ const SHEET_COPY = {
   },
 };
 
-function filterAssetTemplates(templates, kindSet) {
-  return templates.filter((t) => kindSet.has(t.kind));
+function minBy(items, pick) {
+  const vals = (items || []).map(pick).map(Number).filter((n) => Number.isFinite(n) && n > 0);
+  return vals.length ? Math.min(...vals) : null;
 }
 
-function filterLiabilityTemplates(templates, predicate) {
-  return templates.filter(predicate);
+function maxBy(items, pick) {
+  const vals = (items || []).map(pick).map(Number).filter((n) => Number.isFinite(n) && n > 0);
+  return vals.length ? Math.max(...vals) : null;
 }
 
-/** Панель «Действия» — сетка плиток + bottom sheets. */
+/** Панель «Действия» ★ BG-2 — фишки по группам + bottom sheets. */
 export function CapitalActionsPanel({
-  mechanics,
-  insuranceSectionState,
+  sections,
+  lockHint,
   assetTemplates,
   liabilityTemplates,
   extraLoading,
@@ -86,37 +89,37 @@ export function CapitalActionsPanel({
   securedAcquireBusyKey = null,
   ownedAssets = [],
 }) {
-  const visibleIds = useMemo(() => {
-    const ids = new Set();
-    if (mechanics.capital_invest) {
-      ids.add('deposit');
-      ids.add('bond');
-    }
-    if (insuranceSectionState === 'open') ids.add('insurance');
-    if (mechanics.capital_property) {
-      ids.add('realestate');
-      ids.add('car');
-    }
-    if (mechanics.capital_liabilities) {
-      ids.add('mortgage');
-      ids.add('credit');
-    }
-    return ids;
-  }, [mechanics, insuranceSectionState]);
-
   const propertyTemplates = useMemo(
-    () => filterAssetTemplates(assetTemplates, PROPERTY_KINDS),
+    () => filterPropertyAssetTemplates(assetTemplates),
     [assetTemplates],
   );
-  const carTemplates = useMemo(() => filterAssetTemplates(assetTemplates, CAR_KINDS), [assetTemplates]);
+  const carTemplates = useMemo(
+    () => filterCarAssetTemplates(assetTemplates),
+    [assetTemplates],
+  );
   const securedBundles = useMemo(
     () => buildSecuredBundles(liabilityTemplates, assetTemplates),
     [liabilityTemplates, assetTemplates],
   );
   const creditTemplates = useMemo(
-    () => filterLiabilityTemplates(liabilityTemplates, isConsumerLiabilityTemplate),
+    () => liabilityTemplates.filter(isConsumerLiabilityTemplate),
     [liabilityTemplates],
   );
+
+  const pieceNotes = useMemo(() => {
+    const from = (n) => (n ? `от ${formatLotRub(n)}` : null);
+    const minDown = minBy(filterBundlesForSheet(securedBundles, 'mortgage'), (b) => b.downPayment);
+    const maxCredit = maxBy(creditTemplates, (t) => t.total_debt);
+    return {
+      deposit: `${depositRate}% в год`,
+      bond: `${bondRate}% в год`,
+      insurance: 'защита от событий',
+      realestate: from(minBy(propertyTemplates, (t) => t.asset_value)),
+      car: from(minBy(carTemplates, (t) => t.asset_value)),
+      credit: maxCredit ? `до ${formatLotRub(maxCredit)}` : null,
+      mortgage: minDown ? `взнос ${from(minDown)}` : null,
+    };
+  }, [securedBundles, creditTemplates, propertyTemplates, carTemplates, depositRate, bondRate]);
 
   const sheetCopy = openSheet ? SHEET_COPY[openSheet] : null;
 
@@ -126,7 +129,7 @@ export function CapitalActionsPanel({
       return (
         <MqxStateError
           title="Шаблоны не загружены"
-          message="Проверьте сеть и попробуйте снова"
+          message="Проверь сеть и попробуй снова"
           onRetry={() => void reloadExtra?.()}
         />
       );
@@ -155,6 +158,7 @@ export function CapitalActionsPanel({
             }
             action={{ onClick: () => void onAdd(t) }}
             actionLabel="+"
+            actionVerb={variant === 'liability' ? 'Взять' : Number(t.asset_value) > 0 ? 'Купить' : 'Снять'}
             actionAriaLabel={`Добавить: ${t.title}`}
           />
         ))}
@@ -235,7 +239,12 @@ export function CapitalActionsPanel({
 
   return (
     <>
-      <MqxCapitalActionGrid visibleIds={visibleIds} onOpenSheet={onOpenSheet} />
+      <MqxCapitalActionGrid
+        sections={sections}
+        notes={pieceNotes}
+        lockHint={lockHint}
+        onOpenSheet={onOpenSheet}
+      />
       <MqxCapitalSheet
         open={Boolean(openSheet && sheetCopy)}
         title={sheetCopy?.title}

@@ -1,5 +1,8 @@
 """O2 Progressive Guidance — user-level progress, overview, PATCH."""
 
+from types import SimpleNamespace
+
+from app.guidance.engine import _first_incomplete_beat
 from app.models import GameProfile, User
 
 
@@ -135,6 +138,52 @@ def test_dismiss_beat_skips_beat_without_completing_guidance(client, auth_header
     assert int(user.guidance_completed or 0) == 0
 
 
+def test_first_incomplete_beat_period2_still_returns_p1_close():
+    """На периоде 2 не показывать P2, пока не закрыт шаг p1_close в progress."""
+    profile = SimpleNamespace(period_index=2)
+    progress = {
+        "completed_beats": ["p1_period", "p1_flows", "p1_salary", "p1_cushion"],
+        "completed_triggers": [],
+        "view_beat_id": None,
+        "p1_close_debrief": True,
+    }
+    beat = _first_incomplete_beat(profile, progress)
+    assert beat is not None
+    assert beat.id == "p1_close"
+
+
+def test_first_incomplete_beat_period2_after_p1_close_goes_to_p2_new_month():
+    profile = SimpleNamespace(period_index=2)
+    progress = {
+        "completed_beats": ["p1_period", "p1_flows", "p1_salary", "p1_cushion", "p1_close"],
+        "completed_triggers": [],
+        "view_beat_id": None,
+    }
+    beat = _first_incomplete_beat(profile, progress)
+    assert beat is not None
+    assert beat.id == "p2_new_month"
+
+
+def test_advance_p1_period_next_is_p1_flows(client, auth_headers):
+    client.post(
+        "/api/game/start",
+        json={
+            "profile_name": "Guidance Flows",
+            "save_kind": "game",
+            "template_key": "mq_game_basic_v1",
+        },
+        headers=auth_headers,
+    )
+    client.patch(
+        "/api/game/guidance",
+        json={"action": "advance_read", "beat_id": "p1_period"},
+        headers=auth_headers,
+    )
+    ov = client.get("/api/finance/overview", headers=auth_headers)
+    guidance = ov.json().get("guidance") or {}
+    assert guidance.get("beat_id") == "p1_flows"
+
+
 def test_p1_close_body_includes_close_preview(client, auth_headers):
     client.post(
         "/api/game/start",
@@ -145,7 +194,7 @@ def test_p1_close_body_includes_close_preview(client, auth_headers):
         },
         headers=auth_headers,
     )
-    for _ in range(3):
+    for _ in range(4):
         client.patch(
             "/api/game/guidance",
             json={"action": "dismiss_beat"},

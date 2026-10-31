@@ -1,3 +1,9 @@
+---
+tags:
+  - tvoy-hod/layer/balance
+aliases:
+  - "Balance playtest (симуляция партии)"
+---
 # Balance playtest (симуляция партии)
 
 Детерминированный прогон **N периодов** через headless API (`TestClient` + SQLite), фиксированные **политики бота**, JSON-отчёт и **diff** к baseline.
@@ -13,7 +19,7 @@ cd backend
 python scripts/balance_playtest.py
 
 # Или PowerShell-обёртка
-.\scripts\balance_playtest.ps1
+bash backend/scripts/balance_playtest.sh
 
 # Один сценарий
 python scripts/balance_simulate.py --policy tutorial --periods 40 --out ../docs/balance/reports/current.json --format md
@@ -25,8 +31,14 @@ python scripts/balance_diff.py --current ../docs/balance/reports/current.json --
 | ID | Поведение |
 |----|-----------|
 | `tutorial` | зарплата → события (max affordable Δcash) → подушка 5k (1×) → депозит 10k @14% (1×) |
-| `safety_first` | то же по событиям; переводы в подушку до `safety_fund_baseline_target` |
+| `safety_first` | то же по событиям; переводы в подушку до `safety_fund_baseline_target`, оставляя на счёте месячные платежи и расходы |
 | `passive` | зарплата → события (min affordable Δcash); без проактивной подушки/инвеста |
+| `idle` | зарплата → события (самый дешёвый выбор); без подушки/инвеста — проверка давления потребностей |
+| `needs_keeper` | зарплата → события на две самые низкие потребности (с запасом на обязательные платежи) → «Порадовать себя» при min < 40 |
+| `restructure` | как `needs_keeper` + продажа лишних машин (при 2+ остаётся самая дешёвая в содержании; единственная продаётся) и досрочное погашение дорогих долгов |
+| `chain_runner` | как `needs_keeper` по событиям и «Порадовать себя»; продажа лишних машин как `restructure`, досрочно гасит только долги дороже облигации (16%) + шаг текущей цели victory chain: взнос в подушку / облигация 1 000 ₽ / самый дешёвый полис для `action_once` (запас — расходы хода), подушка до цели `safety_fund_months`, все свободные деньги в облигации для пассивного дохода (свободные = cash − расходы хода − 50% дохода). Эталон для инвариантов победимости ([`THRESHOLDS.md`](THRESHOLDS.md#инварианты-победимости)) |
+
+Запись manifest может переопределить `template_key` (по умолчанию из `defaults`).
 
 Бот **не** заменяет плейтест человеком; ловит регрессии формул и данных.
 

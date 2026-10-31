@@ -1,7 +1,8 @@
 from sqlalchemy.orm import Session
 
-from ...finance.annuity import monthly_payment as annuity_monthly_payment
-from ...finance.helpers import monthly_interest_payment
+from fincore.annuity import monthly_interest_payment
+from fincore.annuity import monthly_payment as annuity_monthly_payment
+
 from ...models import AssetTemplate, LiabilityTemplate
 
 

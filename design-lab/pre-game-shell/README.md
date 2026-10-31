@@ -1,5 +1,7 @@
 # Pre-game shell v2 ★ — оболочки и кнопки MQX
 
+> **★ BG-2 (2026-10-15):** канон и prod — [`APPROVED.md`](APPROVED.md); раунд v2 ниже — история.
+
 **Статус:** раунд v2 на утверждение (2026-05-25)  
 **Спека:** [`docs/specs/SPEC_APP_SHELL.md`](../../docs/specs/SPEC_APP_SHELL.md)
 

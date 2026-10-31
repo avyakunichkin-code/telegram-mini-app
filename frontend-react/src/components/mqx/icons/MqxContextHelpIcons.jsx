@@ -59,6 +59,34 @@ export function IconHelpBookWithBadge({ size = 18, className }) {
   return <IconHelpBook size={size} className={className} />;
 }
 
+/** «?» в круге — справка (★ BG-1, вместо книги). */
+export function IconHelpQuestion({ size = 20, className }) {
+  return (
+    <svg className={className} width={size} height={size} viewBox="0 0 24 24" fill="none" aria-hidden>
+      <circle cx="12" cy="12" r="9.25" {...stroke} />
+      <path d="M9.6 9.4a2.45 2.45 0 1 1 3.55 2.2c-.7.35-1.15.9-1.15 1.65v.35" {...stroke} />
+      <circle cx="12" cy="16.9" r="1.15" fill="currentColor" />
+    </svg>
+  );
+}
+
+/** Сердце с «+» справа — «улучшить потребности» (не «вопрос + сердце»). */
+export function IconTreatHeartPlus({ size = 22, className, filled = false }) {
+  return (
+    <svg className={className} width={size * (30 / 24)} height={size} viewBox="0 0 30 24" fill="none" aria-hidden>
+      <path
+        d="M18.84 5.61a5 5 0 0 0-7.07 0L10.8 6.6l-.98-.98a5 5 0 0 0-7.07 7.07l8.05 8.05 8.04-8.05a5 5 0 0 0 0-7.07z"
+        fill={filled ? 'currentColor' : 'none'}
+        stroke="currentColor"
+        strokeWidth={filled ? 1.5 : 2}
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path d="M25.5 3.5v6M22.5 6.5h6" {...stroke} strokeWidth={2.25} />
+    </svg>
+  );
+}
+
 /** Сердце — treat / «улучшить потребности». */
 export function IconTreatHeart({ size = 16, className, filled = false }) {
   return (

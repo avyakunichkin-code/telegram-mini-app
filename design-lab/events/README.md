@@ -1,6 +1,8 @@
 # Events — оверлей и карточка
 
-**Статус:** **L3 ★** карточка + **O1 ★** оверлей в prod.
+**Статус:** ★ **BG-2 «Событие»** (карта из колоды) в prod поверх **L3 ★** карточки и **O1 ★** оверлея — канон [`APPROVED.md`](APPROVED.md).
+
+**Prod parity:** [`../board-game/screens-round/`](../board-game/screens-round/) → секция «Событие» (хаб: `design-lab/` → board-game). Раунды ниже — история L3/O1 и хвосты E2/E5.
 
 | Раунд | Папка | Задача |
 |-------|--------|--------|
@@ -57,4 +59,4 @@ Ideation: [`IDEATION.md`](./IDEATION.md) · эпик: [`docs/vision/ideas/mqx-ui
 
 ## API
 
-`GET /api/game/events/pending` — у выбора с `insurance_claim` в effects: `"insurance_claim": true`, опционально `xp_delta`.
+`GET /api/game/events/pending` — у выбора с `insurance_claim` в effects: `"insurance_claim": true`; последствия — `impacts[]` и `needs_delta` (чипы, см. [`APPROVED.md`](APPROVED.md)). XP в UI не выводится.

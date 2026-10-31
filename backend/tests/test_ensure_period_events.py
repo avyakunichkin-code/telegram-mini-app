@@ -2,6 +2,7 @@
 
 from app.models import EventDefinition, EventInstance, EventProfileCounter, FinanceAsset, GameProfile
 from app.events.mvp11_seeds import ensure_mvp11_event_catalog
+from app.game.rules import MIN_PERIOD_INDEX_FOR_GAME_EVENTS
 from app.routers.events import EVENTS_PER_PERIOD, ensure_period_events
 
 
@@ -23,8 +24,38 @@ def _add_def(db, key: str, *, tier: int = 1, cooldown: int = 0, repeat_policy: s
 
 
 class TestEnsurePeriodEvents:
-    def test_period_1_picks_only_tier1_in_window(self, db_session):
-        profile = GameProfile(user_id=1, name="p", save_kind="game", is_active=1, period_index=1)
+    def test_periods_1_and_2_spawn_no_events(self, db_session):
+        for period_index in (1, 2):
+            profile = GameProfile(
+                user_id=1,
+                name=f"p{period_index}",
+                save_kind="game",
+                is_active=1,
+                period_index=period_index,
+            )
+            db_session.add(profile)
+            db_session.commit()
+
+            _add_def(db_session, f"tier1_p{period_index}_a", tier=1)
+            _add_def(db_session, f"tier1_p{period_index}_b", tier=1)
+
+            ensure_period_events(db_session, profile.id, period_index, "game")
+
+            count = (
+                db_session.query(EventInstance)
+                .filter(
+                    EventInstance.game_profile_id == profile.id,
+                    EventInstance.period_index == period_index,
+                )
+                .count()
+            )
+            assert count == 0
+
+    def test_period_3_picks_only_tier1_in_window(self, db_session):
+        period_index = MIN_PERIOD_INDEX_FOR_GAME_EVENTS
+        profile = GameProfile(
+            user_id=1, name="p", save_kind="game", is_active=1, period_index=period_index
+        )
         db_session.add(profile)
         db_session.commit()
 
@@ -32,11 +63,14 @@ class TestEnsurePeriodEvents:
         _add_def(db_session, "tier1_b", tier=1)
         _add_def(db_session, "tier5_far", tier=5)
 
-        ensure_period_events(db_session, profile.id, 1, "game")
+        ensure_period_events(db_session, profile.id, period_index, "game")
 
         instances = (
             db_session.query(EventInstance)
-            .filter(EventInstance.game_profile_id == profile.id, EventInstance.period_index == 1)
+            .filter(
+                EventInstance.game_profile_id == profile.id,
+                EventInstance.period_index == period_index,
+            )
             .all()
         )
         def_ids = {i.definition_id for i in instances}
@@ -101,7 +135,13 @@ class TestEnsurePeriodEvents:
         assert cooled.id not in picked_ids
 
     def test_once_per_profile_never_repeats(self, db_session):
-        profile = GameProfile(user_id=1, name="p3", save_kind="game", is_active=1, period_index=2)
+        profile = GameProfile(
+            user_id=1,
+            name="p3",
+            save_kind="game",
+            is_active=1,
+            period_index=MIN_PERIOD_INDEX_FOR_GAME_EVENTS,
+        )
         db_session.add(profile)
         db_session.commit()
 
@@ -118,25 +158,34 @@ class TestEnsurePeriodEvents:
         )
         db_session.commit()
 
-        ensure_period_events(db_session, profile.id, 2, "game")
+        ensure_period_events(db_session, profile.id, MIN_PERIOD_INDEX_FOR_GAME_EVENTS, "game")
 
         instances = (
             db_session.query(EventInstance)
-            .filter(EventInstance.game_profile_id == profile.id, EventInstance.period_index == 2)
+            .filter(
+                EventInstance.game_profile_id == profile.id,
+                EventInstance.period_index == MIN_PERIOD_INDEX_FOR_GAME_EVENTS,
+            )
             .all()
         )
         assert once.id not in {i.definition_id for i in instances}
 
     def test_car_accident_not_drawn_without_car_asset(self, db_session):
         ensure_mvp11_event_catalog(db_session)
-        profile = GameProfile(user_id=1, name="no-car", save_kind="game", is_active=1, period_index=2)
+        profile = GameProfile(
+            user_id=1,
+            name="no-car",
+            save_kind="game",
+            is_active=1,
+            period_index=MIN_PERIOD_INDEX_FOR_GAME_EVENTS,
+        )
         db_session.add(profile)
         db_session.commit()
 
         for i in range(6):
             _add_def(db_session, f"generic_evt_{i}", tier=1)
 
-        ensure_period_events(db_session, profile.id, 2, "game")
+        ensure_period_events(db_session, profile.id, MIN_PERIOD_INDEX_FOR_GAME_EVENTS, "game")
 
         dtp = db_session.query(EventDefinition).filter(EventDefinition.key == "mq11_car_accident").first()
         assert dtp is not None
@@ -144,7 +193,7 @@ class TestEnsurePeriodEvents:
             db_session.query(EventInstance)
             .filter(
                 EventInstance.game_profile_id == profile.id,
-                EventInstance.period_index == 2,
+                EventInstance.period_index == MIN_PERIOD_INDEX_FOR_GAME_EVENTS,
             )
             .all()
         )

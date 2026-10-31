@@ -1,4 +1,4 @@
-"""Admin Watchtower API (MVP 1.2 A0) — read-only, allowlist."""
+"""Admin Watchtower API (MVP 1.2 A0) — allowlist; чтение + правки каталогов, stuck-скан в фоне."""
 
 from __future__ import annotations
 
@@ -6,7 +6,7 @@ import json
 from datetime import datetime
 from typing import Any, List, Optional
 
-from fastapi import APIRouter, Depends, HTTPException, Query
+from fastapi import APIRouter, BackgroundTasks, Depends, HTTPException, Query
 from fastapi.responses import StreamingResponse
 from pydantic import BaseModel
 from sqlalchemy import func
@@ -26,14 +26,16 @@ from ..admin.catalog_write import clone_catalog_row, create_catalog_row
 from ..admin.catalogs import fetch_catalog_rows, get_catalog_spec, list_catalog_meta
 from ..admin.csv_export import profiles_csv_rows, run_feedback_csv_rows, stream_csv
 from ..admin.metrics_summary import build_metrics_summary
+from ..admin.product_funnel import build_product_funnel
 from ..admin.watchtower_profiles import build_admin_profile_row, fetch_profile_rows
 from ..admin.onboarding_funnel import build_onboarding_funnel
 from ..admin.profile_inspector import build_profile_inspector
 from ..admin.run_feedback import build_run_feedback_rows
-from ..admin.stuck_scan import scan_stuck_and_emit
+from ..admin.stuck_scan import run_stuck_scan_in_background
 from ..admin.notify_messages import format_alert_message_ru, kind_label_ru
 from ..database import get_db
-from ..models import EventDefinition, GameProfile, NotificationLog, User
+from ..events.mvp11_seeds import YAML_EVENT_READONLY_DETAIL, is_yaml_catalog_event_key
+from ..models import EventChoice, EventDefinition, GameProfile, NotificationLog, User
 
 router = APIRouter(prefix="/api/admin", tags=["admin"])
 
@@ -114,6 +116,7 @@ class AdminRunFeedbackRow(BaseModel):
 
 class AdminMetricsSummary(BaseModel):
     window_days: int
+    save_kind: Optional[str] = None
     users_total: int
     users_recent: int
     profiles_total: int
@@ -132,6 +135,36 @@ class AdminMetricsSummary(BaseModel):
     run_feedback_recent: int = 0
     profiles_period_3_plus_total: int = 0
     profiles_period_3_plus_active: int = 0
+
+
+class AdminProductFunnelStep(BaseModel):
+    step: str
+    label: str
+    count: int
+    rate_pct: Optional[float] = None
+
+
+class AdminProductFunnelActivation(BaseModel):
+    profiles_cohort: int
+    profiles_with_close: int
+    pct_ge5_closes: float
+    pct_ge8_closes: float
+    median_closes: Optional[float] = None
+
+
+class AdminProductFunnelSegment(BaseModel):
+    save_kind: str
+    profiles_total: int
+    profiles_recent: int
+    activation: AdminProductFunnelActivation
+
+
+class AdminProductFunnel(BaseModel):
+    window_days: int
+    save_kind: Optional[str] = None
+    steps: List[AdminProductFunnelStep]
+    activation: AdminProductFunnelActivation
+    by_save_kind: List[AdminProductFunnelSegment]
 
 
 class AdminPendingEventRow(BaseModel):
@@ -159,6 +192,7 @@ class AdminWatchtowerResponse(BaseModel):
     run_feedback: List[AdminRunFeedbackRow] = []
     onboarding_funnel: AdminOnboardingFunnel
     metrics_summary: AdminMetricsSummary
+    product_funnel: AdminProductFunnel
 
 
 class AdminCatalogColumn(BaseModel):
@@ -250,14 +284,12 @@ class AdminProfileInspectorProfile(BaseModel):
     is_active: bool
     is_archived: bool = False
     period_index: int
-    time_state: str
     cash_balance: float
     safety_fund_balance: float
     negative_periods_count: int
     clean_period_streak: int
     onboarding_state: str = ""
     onboarding_step: str = ""
-    period_duration_seconds: int = 0
     guidance_completed: bool = False
     guidance_current_beat: Optional[str] = None
     guidance_completed_beats: List[str] = []
@@ -303,14 +335,14 @@ class AdminProfileInspectorResponse(BaseModel):
 
 
 @router.get("/catalogs", response_model=list[AdminCatalogMeta])
-async def admin_list_catalogs(
+def admin_list_catalogs(
     _admin: User = Depends(require_admin_user),
 ):
     return list_catalog_meta()
 
 
 @router.get("/catalogs/{catalog_key}/rows", response_model=AdminCatalogRowsResponse)
-async def admin_catalog_rows(
+def admin_catalog_rows(
     catalog_key: str,
     q: str = Query("", max_length=120),
     active_only: bool = Query(False),
@@ -339,7 +371,7 @@ async def admin_catalog_rows(
 
 
 @router.post("/catalogs/{catalog_key}/rows", response_model=AdminCatalogRowMutationResponse)
-async def admin_catalog_create_row(
+def admin_catalog_create_row(
     catalog_key: str,
     body: AdminCatalogCreateRequest,
     _admin: User = Depends(require_admin_user),
@@ -375,7 +407,7 @@ async def admin_catalog_create_row(
     "/catalogs/{catalog_key}/rows/{row_id}/clone",
     response_model=AdminCatalogRowMutationResponse,
 )
-async def admin_catalog_clone_row(
+def admin_catalog_clone_row(
     catalog_key: str,
     row_id: int,
     _admin: User = Depends(require_admin_user),
@@ -399,7 +431,7 @@ async def admin_catalog_clone_row(
 
 
 @router.get("/catalogs/{catalog_key}/rows/{row_id}", response_model=AdminCatalogRowDetailResponse)
-async def admin_catalog_row_detail(
+def admin_catalog_row_detail(
     catalog_key: str,
     row_id: int,
     _admin: User = Depends(require_admin_user),
@@ -417,7 +449,7 @@ async def admin_catalog_row_detail(
 
 
 @router.patch("/catalogs/{catalog_key}/rows/{row_id}", response_model=AdminCatalogPatchResponse)
-async def admin_catalog_patch_row(
+def admin_catalog_patch_row(
     catalog_key: str,
     row_id: int,
     body: dict[str, Any],
@@ -442,7 +474,7 @@ async def admin_catalog_patch_row(
 
 
 @router.get("/users", response_model=AdminUsersListResponse)
-async def admin_list_users(
+def admin_list_users(
     q: str = Query("", max_length=120),
     limit: int = Query(100, ge=1, le=500),
     _admin: User = Depends(require_admin_user),
@@ -482,7 +514,7 @@ async def admin_list_users(
 
 
 @router.get("/profiles", response_model=AdminProfilesListResponse)
-async def admin_list_profiles(
+def admin_list_profiles(
     user_id: Optional[int] = Query(None, ge=1),
     q: str = Query("", max_length=120),
     profile_filter: str = Query("", max_length=32),
@@ -521,7 +553,7 @@ async def admin_list_profiles(
     "/catalogs/events/rows/{row_id}/choices",
     response_model=AdminEventChoicesResponse,
 )
-async def admin_event_choices_list(
+def admin_event_choices_list(
     row_id: int,
     _admin: User = Depends(require_admin_user),
     db: Session = Depends(get_db),
@@ -531,18 +563,34 @@ async def admin_event_choices_list(
     return AdminEventChoicesResponse(choices=list_event_choices(db, row_id))
 
 
+def _require_editable_event(db: Session, row_id: int, choice_id: int | None = None) -> None:
+    """404 для чужого/несуществующего события и варианта; 409 для событий из YAML (ADR-008)."""
+    definition = db.query(EventDefinition).filter(EventDefinition.id == row_id).first()
+    if definition is None:
+        raise HTTPException(status_code=404, detail="Event not found")
+    if choice_id is not None:
+        owned = (
+            db.query(EventChoice.id)
+            .filter(EventChoice.id == choice_id, EventChoice.definition_id == row_id)
+            .first()
+        )
+        if owned is None:
+            raise HTTPException(status_code=404, detail="Choice not found")
+    if is_yaml_catalog_event_key(definition.key):
+        raise HTTPException(status_code=409, detail=YAML_EVENT_READONLY_DETAIL)
+
+
 @router.post(
     "/catalogs/events/rows/{row_id}/choices",
     response_model=AdminEventChoicesResponse,
 )
-async def admin_event_choice_create(
+def admin_event_choice_create(
     row_id: int,
     body: AdminEventChoiceBody,
     _admin: User = Depends(require_admin_user),
     db: Session = Depends(get_db),
 ):
-    if db.query(EventDefinition).filter(EventDefinition.id == row_id).first() is None:
-        raise HTTPException(status_code=404, detail="Event not found")
+    _require_editable_event(db, row_id)
     try:
         create_event_choice(
             db,
@@ -561,15 +609,14 @@ async def admin_event_choice_create(
     "/catalogs/events/rows/{row_id}/choices/{choice_id}",
     response_model=AdminEventChoicesResponse,
 )
-async def admin_event_choice_patch(
+def admin_event_choice_patch(
     row_id: int,
     choice_id: int,
     body: AdminEventChoicePatchBody,
     _admin: User = Depends(require_admin_user),
     db: Session = Depends(get_db),
 ):
-    if db.query(EventDefinition).filter(EventDefinition.id == row_id).first() is None:
-        raise HTTPException(status_code=404, detail="Event not found")
+    _require_editable_event(db, row_id, choice_id)
     try:
         updated = patch_event_choice(
             db,
@@ -587,14 +634,13 @@ async def admin_event_choice_patch(
 
 
 @router.delete("/catalogs/events/rows/{row_id}/choices/{choice_id}")
-async def admin_event_choice_delete(
+def admin_event_choice_delete(
     row_id: int,
     choice_id: int,
     _admin: User = Depends(require_admin_user),
     db: Session = Depends(get_db),
 ):
-    if db.query(EventDefinition).filter(EventDefinition.id == row_id).first() is None:
-        raise HTTPException(status_code=404, detail="Event not found")
+    _require_editable_event(db, row_id, choice_id)
     if not delete_event_choice(db, choice_id):
         raise HTTPException(status_code=404, detail="Choice not found")
     db.commit()
@@ -602,7 +648,7 @@ async def admin_event_choice_delete(
 
 
 @router.get("/profiles/{profile_id}", response_model=AdminProfileInspectorResponse)
-async def admin_profile_inspector(
+def admin_profile_inspector(
     profile_id: int,
     log_limit: int = Query(50, ge=1, le=200),
     closing_limit: int = Query(12, ge=1, le=60),
@@ -621,16 +667,21 @@ async def admin_profile_inspector(
 
 
 @router.get("/metrics/summary", response_model=AdminMetricsSummary)
-async def admin_metrics_summary(
+def admin_metrics_summary(
     days: int = Query(7, ge=1, le=90),
+    save_kind: str = Query("", max_length=16),
     _admin: User = Depends(require_admin_user),
     db: Session = Depends(get_db),
 ):
-    return AdminMetricsSummary(**build_metrics_summary(db, days=days))
+    sk = save_kind.strip().lower() or None
+    # ADR-013: Plan снят — фильтр только по game (legacy plan-профили видны в «Все»).
+    if sk and sk != "game":
+        raise HTTPException(status_code=400, detail="save_kind must be 'game'")
+    return AdminMetricsSummary(**build_metrics_summary(db, days=days, save_kind=sk))
 
 
 @router.get("/export/profiles.csv")
-async def admin_export_profiles_csv(
+def admin_export_profiles_csv(
     limit: int = Query(500, ge=1, le=2000),
     q: str = Query("", max_length=120),
     profile_filter: str = Query("", max_length=32),
@@ -653,7 +704,7 @@ async def admin_export_profiles_csv(
 
 
 @router.get("/export/run-feedback.csv")
-async def admin_export_run_feedback_csv(
+def admin_export_run_feedback_csv(
     limit: int = Query(500, ge=1, le=2000),
     _admin: User = Depends(require_admin_user),
     db: Session = Depends(get_db),
@@ -667,23 +718,34 @@ async def admin_export_run_feedback_csv(
 
 
 @router.get("/watchtower", response_model=AdminWatchtowerResponse)
-async def admin_watchtower(
+def admin_watchtower(
     user_limit: int = Query(50, ge=1, le=200),
     profile_limit: int = Query(50, ge=1, le=200),
     notification_limit: int = Query(100, ge=1, le=500),
     run_feedback_limit: int = Query(50, ge=1, le=200),
+    funnel_days: int = Query(7, ge=1, le=90),
     q: str = Query("", max_length=120),
     profile_filter: str = Query("", max_length=32),
+    save_kind: str = Query("", max_length=16),
     stuck_only: bool = Query(False),
+    *,
+    background_tasks: BackgroundTasks,
     _admin: User = Depends(require_admin_user),
     db: Session = Depends(get_db),
 ):
+    sk = save_kind.strip().lower()
+    # ADR-013: Plan снят — фильтр только по game (legacy plan-профили видны в «Все»).
+    if sk and sk != "game":
+        raise HTTPException(status_code=400, detail="save_kind must be 'game'")
+    sk_param = sk or ""
+
     users = db.query(User).order_by(User.id.desc()).limit(user_limit).all()
     profiles = fetch_profile_rows(
         db,
         limit=profile_limit,
         q=q,
         profile_filter=profile_filter,
+        save_kind=sk_param,
         stuck_only=stuck_only,
     )
     notifications = (
@@ -705,14 +767,8 @@ async def admin_watchtower(
         ):
             profile_counts[int(uid)] = int(cnt)
 
-    try:
-        scan_stuck_and_emit(db, profiles)
-    except Exception:
-        import logging
-
-        logging.getLogger(__name__).warning(
-            "stuck_scan failed during watchtower", exc_info=True
-        )
+    # Stuck-алерты (запись + Telegram до 8 с на сообщение) — после ответа, своей сессией.
+    background_tasks.add_task(run_stuck_scan_in_background, [p.id for p, _ in profiles])
 
     return AdminWatchtowerResponse(
         users=[
@@ -730,7 +786,12 @@ async def admin_watchtower(
             for p, user in profiles
         ],
         onboarding_funnel=AdminOnboardingFunnel(**build_onboarding_funnel(db)),
-        metrics_summary=AdminMetricsSummary(**build_metrics_summary(db, days=7)),
+        metrics_summary=AdminMetricsSummary(
+            **build_metrics_summary(db, days=funnel_days, save_kind=sk or None)
+        ),
+        product_funnel=AdminProductFunnel(
+            **build_product_funnel(db, days=funnel_days, save_kind=sk or None)
+        ),
         notifications=[
             AdminNotificationRow(
                 id=n.id,

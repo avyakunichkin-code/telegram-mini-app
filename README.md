@@ -1,12 +1,12 @@
-# ТВОЙ ХОД — Telegram Mini App
+# ТВОЙ ХОД — игра по финансовой грамотности
 
-Игра по финансовой грамотности в формате Telegram Mini App: периоды («месяц»), подушка, обязательства, события, инвестиции и страховки MVP.
+**PWA и web** — primary каналы; **Telegram Mini App** — secondary ([ADR-012](docs/decisions/ADR-012-primary-channels-pwa-web-over-tma.md)). Периоды («месяц»), подушка, обязательства, события, инвестиции и страховки MVP.
 
 [![Deploy on Render](https://img.shields.io/badge/Deploy%20on-Render-blue?logo=render)](https://render.com)
 [![GitHub Pages](https://img.shields.io/badge/Hosted%20on-GitHub%20Pages-blue?logo=github)](https://avyakunichkin-code.github.io/telegram-mini-app/)
-[![Python](https://img.shields.io/badge/Python-3.11%2B-blue?logo=python)](https://python.org)
+[![Python](https://img.shields.io/badge/Python-3.14-blue?logo=python)](https://python.org)
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.115-blue?logo=fastapi)](https://fastapi.tiangolo.com/)
-[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16-blue?logo=postgresql)](https://postgresql.org)
+[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-18-blue?logo=postgresql)](https://postgresql.org)
 
 ---
 
@@ -14,6 +14,7 @@
 
 | Что | Где |
 |-----|-----|
+| **Свод принципов (вердикт)** | [`CONVENTIONS.md`](CONVENTIONS.md) · гейт: `py -3 scripts/check_conventions.py` |
 | Карта `docs/` (foundation, specs, plans, backlog) | [`docs/README.md`](docs/README.md) |
 | Быстрый контекст для разработчиков и агентов | [`CLAUDE.md`](CLAUDE.md) |
 | Конвейер idea → spec → plan → tasks | [`docs/DOCUMENTATION_SYSTEM.md`](docs/DOCUMENTATION_SYSTEM.md) |
@@ -26,8 +27,8 @@
 ## Возможности (текущий MVP)
 
 - JWT-авторизация (логин и пароль)
-- Режимы сохранения **`save_kind`**: `game` (старт из каталога **`game_starter_templates`**) и `plan` (в UI пока заглушка «Скоро»)
-- Периоды с таймером: пауза, продолжение, ручной переход к концу периода (`process_period_end`)
+- Старт **только Game** (`save_kind=game`) из каталога **`game_starter_templates`**. Режим Plan **снят** ([ADR-013](docs/decisions/ADR-013-game-only-drop-plan-mode.md))
+- Пошаговые периоды без таймера: «Завершить ход» запускает `process_period_end`
 - Зарплата **раз в период** по кнопке; не забрал до закрытия — за период не повторяется
 - Подушка безопасности, активы и обязательства из шаблонов БД, **два** события с выбором на период
 - Инвестиции MVP: депозит (капитализация), облигации (купоны на cash)
@@ -43,10 +44,11 @@
 
 ### Backend (`backend/`)
 
-- `backend/main.py` — FastAPI, создание таблиц, точечная автомиграция колонок (без Alembic), роутеры
+- `backend/main.py` — FastAPI, проверка схемы PostgreSQL, идемпотентные сиды и роутеры; схема меняется SQL-миграциями (без Alembic)
 - `backend/app/models.py` — профили (`save_kind`, шаблон старта), финансы, события, инвестиции, страховки
-- `backend/app/game/time.py` — якорь и длительность периода
-- `backend/app/game/period.py` — экономика закрытия периода, просрочки MVP, счётчик поражения при отрицательном cash три периода подряд
+- `backend/app/game/session.py` — активная партия и статус сессии (active | defeated)
+- `backend/app/game/period.py` — экономика закрытия периода: конвейер этапов `process_period_end` (активы → обязательства → расходы → страховки → инвестиции → поражение → потребности → снимок)
+- `backend/app/services/period/close.py` — «Закрыть месяц» (`POST /api/game/time/next`): lock профиля, идемпотентность, replay после поражения
 
 ### Frontend (`frontend-react/`)
 
@@ -58,6 +60,8 @@
 ---
 
 ## Локальный запуск
+
+**Windows, с нуля одной командой:** `powershell -ExecutionPolicy Bypass -File scripts\dev-setup.ps1` — подробно в [`docs/ops/LOCAL_DEV.md`](docs/ops/LOCAL_DEV.md) (Python 3.14, PostgreSQL 18).
 
 ### Backend
 
@@ -73,7 +77,7 @@ pip install -r requirements.txt
 python main.py
 ```
 
-На Windows для применения SQL-миграций при наличии `psql`: [`backend/migrate.ps1`](backend/migrate.ps1).
+Применение SQL-миграций: `bash backend/scripts/db.sh migrate` (нужны `psql` и `DATABASE_URL`).
 
 ### Frontend
 
@@ -91,7 +95,7 @@ npm run dev
 ## Игровая механика (кратко)
 
 - **Закрытие периода** списывает обслуживание активов, платежи по обязательствам (при нехватке cash — просрочка без штрафов MVP), базовые расходы «жизни», премии страховок и начисляет инвестдоход по правилам продукта
-- **Условия победы MVP** считаются в `GET /api/finance/overview`: подушка ≥ **3 ×** месячных обязательств при нулевой суммарной просрочке и **`net_monthly_cashflow ≥ 0`**; флаг победы **не выставляется раньше** `period_index >= 7` (см. код и [`docs/vision/ideas/game-balance-thresholds-and-constraints.md`](docs/vision/ideas/game-balance-thresholds-and-constraints.md))
+- **Победа:** Victory v2 оценивает цепочку целей из конфигурации стартового шаблона; результат доступен в `GET /api/finance/overview`.
 - **Поражение:** три подряд периода с отрицательным **`cash`** после закрытия периода
 - Финансовый «рейтинг» в overview ([`docs/specs/SPEC_ANALYTICS.md`](docs/specs/SPEC_ANALYTICS.md)) не управляет выпадением событий по уровню персонажа
 
@@ -99,14 +103,13 @@ npm run dev
 
 ## Миграции БД
 
-Alembic не используется. Идемпотентные SQL-файлы в [`backend/migrations/`](backend/migrations/) (нумерация `0002`…`0037+`, см. [`backend/migrations/README.md`](backend/migrations/README.md)).
+Alembic не используется. Актуальная схема — DDL-baseline и идемпотентные SQL-инкременты в [`backend/migrations/`](backend/migrations/) (исторические инкременты — в `archive/`, см. [`backend/migrations/README.md`](backend/migrations/README.md)).
 
-Запуск под Windows (нужны `psql` и `DATABASE_URL`):
+Запуск (нужны `psql` и `DATABASE_URL`):
 
-```powershell
-cd backend
-$env:DATABASE_URL = "postgresql://..."
-.\migrate.ps1
+```bash
+export DATABASE_URL="postgresql://..."
+bash backend/scripts/db.sh migrate
 ```
 
 ---
@@ -131,7 +134,7 @@ $env:DATABASE_URL = "postgresql://..."
 
 | Слой | Технологии |
 |------|-------------|
-| Backend | FastAPI, SQLAlchemy, PostgreSQL, JWT (`python-jose`), uvicorn |
+| Backend | FastAPI, SQLAlchemy 2.1, PostgreSQL (`psycopg` 3), JWT (`PyJWT`), uvicorn |
 | Frontend | React 18, Vite 8, `@telegram-apps/telegram-ui`, `@twa-dev/sdk`, axios, React Router |
 
 ---

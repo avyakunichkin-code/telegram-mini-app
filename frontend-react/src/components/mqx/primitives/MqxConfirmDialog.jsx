@@ -1,5 +1,6 @@
 import { Modal } from '@telegram-apps/telegram-ui';
 import { MqxButton } from './MqxButton';
+import { MqxModalDescription, MqxModalTitle } from './MqxModalTitle';
 
 /** Подтверждение опасного действия (удаление, отмена полиса). */
 export function MqxConfirmDialog({
@@ -15,20 +16,19 @@ export function MqxConfirmDialog({
   const titleText = title || 'Подтверждение';
 
   return (
-    <Modal open={open} onClose={busy ? undefined : onClose} title={titleText}>
-      <div
-        className="mqx-card mqx-confirm-dialog"
-        role="document"
-        aria-labelledby="mqx-confirm-dialog-title"
-        aria-describedby={message ? 'mqx-confirm-dialog-message' : undefined}
-      >
-        <h2 id="mqx-confirm-dialog-title" className="mqx-card__title">
+    <Modal
+      open={open}
+      onOpenChange={(next) => (!next && !busy ? onClose?.() : null)}
+      {...(message ? {} : { 'aria-describedby': undefined })}
+    >
+      <div className="mqx-card mqx-confirm-dialog">
+        <MqxModalTitle className="mqx-card__title">
           {titleText}
-        </h2>
+        </MqxModalTitle>
         {message ? (
-          <p id="mqx-confirm-dialog-message" className="mqx-card__sub mqx-confirm-dialog__message">
+          <MqxModalDescription className="mqx-card__sub mqx-confirm-dialog__message">
             {message}
-          </p>
+          </MqxModalDescription>
         ) : null}
         <div className="mqx-confirm-dialog__actions">
           <MqxButton

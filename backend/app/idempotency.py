@@ -5,9 +5,11 @@
 from __future__ import annotations
 
 import json
+import time
 from typing import Any, Callable
 
 from fastapi import HTTPException, Request
+from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
 from .models import ApiIdempotencyRecord
@@ -35,38 +37,166 @@ def run_idempotent(
     success_status: int = 200,
 ) -> tuple[int, dict[str, Any]]:
     """
-    Если передан idempotency_key — сохраняет успешный JSON-ответ и отдаёт его при повторе.
+    Если передан idempotency_key — ключ резервируется ДО handler (уникальный индекс),
+    успешный JSON-ответ сохраняется и отдаётся при повторе.
     handler должен выполнить commit внутри.
     """
-    if idempotency_key:
-        existing = (
-            db.query(ApiIdempotencyRecord)
-            .filter(
-                ApiIdempotencyRecord.user_id == user_id,
-                ApiIdempotencyRecord.route_key == route_key,
-                ApiIdempotencyRecord.idempotency_key == idempotency_key,
-            )
-            .first()
+    if not idempotency_key:
+        return success_status, handler()
+
+    stored = load_stored_body(
+        db, user_id=user_id, route_key=route_key, idempotency_key=idempotency_key
+    )
+    if stored is not None:
+        return success_status, stored
+
+    if not try_reserve_key(
+        db, user_id=user_id, route_key=route_key, idempotency_key=idempotency_key
+    ):
+        # Параллельный запрос с тем же ключом уже выполняется — ждём его ответ.
+        stored = wait_stored_body(
+            db, user_id=user_id, route_key=route_key, idempotency_key=idempotency_key
         )
-        if existing:
-            try:
-                body = json.loads(existing.response_json or "{}")
-            except json.JSONDecodeError:
-                body = {}
-            return int(existing.status_code), body
+        if stored is not None:
+            return success_status, stored
+        raise HTTPException(status_code=409, detail="Запрос с этим Idempotency-Key ещё выполняется")
 
-    body = handler()
+    try:
+        body = handler()
+    except Exception:
+        db.rollback()
+        _release_reserved_key(
+            db, user_id=user_id, route_key=route_key, idempotency_key=idempotency_key
+        )
+        raise
 
-    if idempotency_key:
+    store_body(
+        db,
+        user_id=user_id,
+        route_key=route_key,
+        idempotency_key=idempotency_key,
+        body=body,
+        status_code=success_status,
+    )
+    return success_status, body
+
+
+def _release_reserved_key(
+    db: Session, *, user_id: int, route_key: str, idempotency_key: str
+) -> None:
+    """Снять резерв без ответа (handler упал после своего commit), чтобы повтор мог выполниться."""
+    record = (
+        db.query(ApiIdempotencyRecord)
+        .filter(
+            ApiIdempotencyRecord.user_id == user_id,
+            ApiIdempotencyRecord.route_key == route_key,
+            ApiIdempotencyRecord.idempotency_key == idempotency_key,
+        )
+        .first()
+    )
+    if record is not None and record.response_json == "{}":
+        db.delete(record)
+        db.commit()
+
+
+def load_stored_body(
+    db: Session, *, user_id: int, route_key: str, idempotency_key: str
+) -> dict[str, Any] | None:
+    record = (
+        db.query(ApiIdempotencyRecord)
+        .filter(
+            ApiIdempotencyRecord.user_id == user_id,
+            ApiIdempotencyRecord.route_key == route_key,
+            ApiIdempotencyRecord.idempotency_key == idempotency_key,
+        )
+        .first()
+    )
+    if not record or not record.response_json or record.response_json == "{}":
+        return None
+    try:
+        data = json.loads(record.response_json)
+    except json.JSONDecodeError:
+        return None
+    return data if isinstance(data, dict) and data else None
+
+
+def store_body(
+    db: Session,
+    *,
+    user_id: int,
+    route_key: str,
+    idempotency_key: str,
+    body: dict[str, Any],
+    status_code: int = 200,
+) -> None:
+    payload = json.dumps(body, ensure_ascii=False)
+    record = (
+        db.query(ApiIdempotencyRecord)
+        .filter(
+            ApiIdempotencyRecord.user_id == user_id,
+            ApiIdempotencyRecord.route_key == route_key,
+            ApiIdempotencyRecord.idempotency_key == idempotency_key,
+        )
+        .first()
+    )
+    if record:
+        record.status_code = status_code
+        record.response_json = payload
+    else:
         db.add(
             ApiIdempotencyRecord(
                 user_id=user_id,
                 route_key=route_key,
                 idempotency_key=idempotency_key,
-                status_code=success_status,
-                response_json=json.dumps(body, ensure_ascii=False),
+                status_code=status_code,
+                response_json=payload,
             )
         )
-        db.commit()
+    db.commit()
 
-    return success_status, body
+
+def try_reserve_key(
+    db: Session, *, user_id: int, route_key: str, idempotency_key: str
+) -> bool:
+    """True, если этот запрос владеет ключом. False — ключ уже занят."""
+    try:
+        with db.begin_nested():
+            db.add(
+                ApiIdempotencyRecord(
+                    user_id=user_id,
+                    route_key=route_key,
+                    idempotency_key=idempotency_key,
+                    status_code=200,
+                    response_json="{}",
+                )
+            )
+            db.flush()
+        return True
+    except IntegrityError:
+        db.rollback()
+        return False
+
+
+def wait_stored_body(
+    db: Session,
+    *,
+    user_id: int,
+    route_key: str,
+    idempotency_key: str,
+    attempts: int = 20,
+    delay_s: float = 0.05,
+) -> dict[str, Any] | None:
+    body = load_stored_body(
+        db, user_id=user_id, route_key=route_key, idempotency_key=idempotency_key
+    )
+    if body:
+        return body
+    for _ in range(attempts):
+        time.sleep(delay_s)
+        db.rollback()
+        body = load_stored_body(
+            db, user_id=user_id, route_key=route_key, idempotency_key=idempotency_key
+        )
+        if body:
+            return body
+    return None

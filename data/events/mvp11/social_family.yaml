@@ -15,16 +15,16 @@ events:
   choices:
   - title: Созвониться
     effects:
-      cash_delta: -400
+      cash_pct_salary: 0.005
       needs_delta:
-        social: 8
+        social: 6
         comfort: 2
   - title: Отложить
     effects:
       cash_delta: 0
       needs_delta:
-        social: -5
-        comfort: -2
+        social: -2
+        comfort: -1
 - definition_key: mq11_friend_outing_student
   content_class: profile
   event_slot: period_choice
@@ -48,16 +48,16 @@ events:
     effects:
       cash_delta: -3200
       needs_delta:
-        social: 20
-        health: 10
-        comfort: 8
+        social: 9
+        health: 4
+        comfort: 3
   - title: Погулять и выпить кофе
     effects:
       cash_delta: -1400
       needs_delta:
-        social: 14
-        health: 6
-        comfort: 4
+        social: 8
+        health: 3
+        comfort: 2
   - title: Отложить — занят учёбой
     effects:
       cash_delta: 0
@@ -74,23 +74,23 @@ events:
   choices:
   - title: Подарок и поездка
     effects:
-      cash_delta: -22000
+      cash_pct_salary: 0.35
       needs_delta:
-        social: 16
-        status: 6
-        comfort: 4
+        social: 15
+        status: 7
+        comfort: 5
   - title: Только подарок
     effects:
-      cash_delta: -8000
+      cash_pct_salary: 0.13
       needs_delta:
-        social: 12
-        status: 3
+        social: 15
+        status: 5
   - title: Поздравить дистанционно
     effects:
-      cash_delta: -2000
+      cash_pct_salary: 0.03
       needs_delta:
-        social: 4
         comfort: -2
+        social: 14
 - definition_key: mq11_friend_outing_pro
   content_class: profile
   event_slot: period_choice
@@ -110,20 +110,20 @@ events:
     effects:
       cash_delta: -5800
       needs_delta:
-        social: 18
-        status: 10
         health: -2
+        social: 11
+        status: 6
   - title: Только кофе с коллегами
     effects:
       cash_delta: -2200
       needs_delta:
-        social: 12
-        status: 5
-        comfort: 3
+        social: 8
+        status: 3
+        comfort: 2
   - title: Отказаться — устал
     effects:
       cash_delta: 0
       needs_delta:
-        social: -6
-        status: -3
         comfort: 2
+        social: -5
+        status: -2

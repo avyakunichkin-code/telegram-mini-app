@@ -1,3 +1,9 @@
+---
+tags:
+  - tvoy-hod/layer/task
+aliases:
+  - "Задачи (`docs/tasks/`)"
+---
 # Задачи (`docs/tasks/`)
 
 Опциональная выгрузка MQ-* для трекера. **Канон** — секция **Tasks** в `docs/plans/PLAN_<feature>.md`; файл `TASKS_<slug>.md` — когда нужен отдельный чеклист или импорт в Linear/Jira.
@@ -14,7 +20,7 @@
 |---------|--------|------------------------|
 | `define` | Spec, контракт, нарезка плана | `spec-driven-development`, `planning-and-task-breakdown`, `api-and-interface-design` |
 | `build` | Код, UI, design-lab | `incremental-implementation`, `frontend-ui-engineering`, `design-lab-mqx` |
-| `verify` | Тесты, ревью, браузер | `test-driven-development`, `code-review-and-quality`, `browser-testing-with-devtools` |
+| `verify` | Тесты, ревью, браузер | `test-driven-development`, `code-review-and-quality`; браузер — `/run` + встроенный браузер |
 | `ship` | ADR, миграции, посты | `documentation-and-adrs`, `deprecation-and-migration`, `social-changelog-posts` |
 
 В каждой задаче также укажи **`skill`** (кто ведёт срез) и **`next_skill`** (что после done).

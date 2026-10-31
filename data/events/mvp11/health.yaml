@@ -11,15 +11,15 @@ events:
   choices:
   - title: Полный набор
     effects:
-      cash_delta: -3200
+      cash_pct_salary: 0.05
       needs_delta:
-        health: 10
-        comfort: 3
+        health: 12
+        comfort: 4
   - title: Только необходимое
     effects:
-      cash_delta: -1100
+      cash_pct_salary: 0.02
       needs_delta:
-        health: 6
+        health: 12
   - title: Обойтись без покупок
     effects:
       cash_delta: -600
@@ -43,18 +43,21 @@ events:
   mandatory_gate: blocks_period_end
   choices:
   - title: Травмпункт и перевязки
+    purpose: mitigation
     effects:
       cash_delta: -8500
       needs_delta:
-        health: 14
-        comfort: 4
+        health: 2
+        comfort: 1
   - title: МРТ и ортез
+    purpose: mitigation
     effects:
       cash_delta: -24000
       needs_delta:
-        health: 18
-        comfort: 8
+        health: 2
+        comfort: 2
   - title: Терпеть без врача
+    purpose: mitigation
     effects:
       cash_delta: -3000
       expense_line:
@@ -82,16 +85,16 @@ events:
   choices:
   - title: Прогуляться
     effects:
-      cash_delta: -800
+      cash_pct_salary: 0.015
       needs_delta:
-        health: 7
+        health: 6
         comfort: 5
   - title: Остаться дома
     effects:
       cash_delta: 0
       needs_delta:
-        health: -4
-        comfort: -3
+        health: -2
+        comfort: -2
 - definition_key: mq11_dental_checkup
   content_class: universal
   event_slot: period_choice
@@ -108,19 +111,19 @@ events:
   choices:
   - title: Полный осмотр и чистка
     effects:
-      cash_delta: -9500
+      cash_pct_salary: 0.15
       needs_delta:
-        health: 14
-        comfort: 5
+        health: 15
+        comfort: 7
   - title: Только осмотр
     effects:
-      cash_delta: -3800
+      cash_pct_salary: 0.06
       needs_delta:
-        health: 8
-        comfort: 2
+        health: 14
+        comfort: 3
   - title: Отложить визит
     effects:
       cash_delta: 0
       needs_delta:
-        health: -6
+        health: -5
         comfort: -4

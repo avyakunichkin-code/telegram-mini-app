@@ -1,0 +1,102 @@
+# Журнал разборов C-Y. Схема полей обязательна для гейта scripts/check_conventions.py
+# outcome: pending | accepted | partial | rejected | withdrawn
+# disagreement без alternative — ошибка гейта
+# accepted/partial без repo_trace — ошибка
+# закрытый outcome без decision — ошибка
+
+reviews:
+  - id: CY-2026-09-09-slim-layer
+    date: 2026-09-09
+    subject: Свод принципов CONVENTIONS.md — полный учебный формат vs короткий слой вердикта
+    human_decision: >-
+      Построить CONVENTIONS.md и гейт. Иерархия CONVENTIONS > CONTRIBUTING > AGENTS > CLAUDE.
+      Кандидаты домена (а–к) разобрать. Журнал YAML. Ссылки C-N. Не blocking hook неделю.
+    disagreement: >-
+      В репозитории уже ADR, скиллы Cursor, DOCUMENTATION_SYSTEM и CLAUDE.md как индекс.
+      Полный параллельный «учебник» и несуществующий CONTRIBUTING раздвоят «почему».
+      Среда — Cursor, не Claude. Принципы должны быть фундаментом взаимодействия с ИИ,
+      архитектуры и стратегии, не точечными правилами (для них уже skills/tests).
+    alternative: >-
+      Короткий слой: C-X, C-Y, C-1…C-4. Иерархия CONVENTIONS → ADR/SPEC → Cursor skills/rules
+      → CLAUDE.md (индекс). Без CONTRIBUTING. Гейт-скрипт без hook. Домен а/в/г сжаты в C-3.
+    alternative_cost: >-
+      Нет отдельного CONTRIBUTING и нет 12 принципов; часть доменных гейтов (источник ставки,
+      дисклеймер в UI, seed RNG) уходит в реестр отклонений с датой, а не притворяется готовой.
+    outcome: accepted
+    decision: >-
+      Короткий слой вердикта. Учесть Cursor, не CLAUDE как вершину.
+      Принципы абстрактнее инструкций; C-Y — разбор, не «всегда предлагай».
+    repo_trace: CONVENTIONS.md, docs/conventions/reviews.yaml, scripts/check_conventions.py
+    decision_changed: true
+
+  - id: CY-2026-10-15-needs-set-point
+    date: 2026-10-15
+    subject: Модель потребностей — чистая точка равновесия (вариант B) vs сохранение давления
+    human_decision: >-
+      Вариант B: потребность тянется к уровню жизни (статьи расходов, активы), а не к нулю.
+    disagreement: >-
+      Чистая точка равновесия убирает поражение пассивного игрока: потребности стабилизируются
+      на уровне бюджета шаблона (симуляция: Студент 58/38/46/61). Это меняет смысл ADR-005
+      «без пополнения — ноль за 10–15 периодов» и делает события необязательными.
+    alternative: >-
+      Износ рутиной + притяжение к уровню жизни: N ← N + r(L − N) − w; инвариант давления
+      base + bonus_cap < w / r — без событий любая ось обнуляется, деньги лишь отсрочивают.
+    alternative_cost: >-
+      Активный игрок в симуляции держится на уровне ~21–30 (ниже distressed) — нужна калибровка
+      K_imp и износа; ещё один параметр шаблона (passive_periods_to_zero) и вычисляемый bonus_cap.
+    outcome: accepted
+    decision: >-
+      PO: потребности — двигатель игры и второй путь к поражению; пассивный обязан проигрывать.
+      Принята модель «износ + уровень жизни» с инвариантом давления.
+    repo_trace: docs/specs/features/SPEC_needs-set-point.md, docs/decisions/ADR-015-needs-set-point-model.md, docs/plans/PLAN_needs-set-point.md
+    decision_changed: true
+
+  - id: CY-2026-10-21-game-plan-split
+    date: 2026-10-21
+    subject: Разделение Game и Plan на два продукта — раскладка репозитория, аккаунты, сроки
+    human_decision: >-
+      Game и Plan — два отдельных приложения с переиспользуемым backend. Монорепо, два деплоя,
+      полностью раздельные аккаунты, ядро сейчас, Plan после α, ручной обезличенный ввод.
+    disagreement: >-
+      Очевидный путь — сразу разложить репозиторий в apps/game-* и apps/plan-* и перенести
+      старый Plan-UI. На пути backend/ и frontend-react/ ~16.8 тыс. ссылок в ~4 тыс. файлов
+      (.claude, docs, guardrails, CI); старый Plan-код спроектирован как save_kind игры.
+      Раздельные аккаунты убирают воронку «игрок → клиент Plan».
+    alternative: >-
+      «Добавляем рядом, не двигаем»: packages/fincore + packages/platform, apps/plan-* рядом,
+      игра остаётся на месте (переезд — опционально SPL-090 после α). Старый Plan-код удалить
+      в GO-03. Общая identity при раздельных данных.
+    alternative_cost: >-
+      Два стиля раскладки в репо до SPL-090; Plan проектируется с нуля. Общая identity —
+      общий сервис auth и связанность продуктов по пользователям.
+    outcome: partial
+    decision: >-
+      Принят план PLAN_game-plan-split («добавляем рядом», fincore как Shared Kernel,
+      старый Plan-код не переносится). Общая identity отклонена PO — аккаунты раздельные.
+    repo_trace: docs/decisions/ADR-016-two-products-shared-fincore.md, docs/plans/PLAN_game-plan-split.md
+    decision_changed: true
+
+  - id: CY-2026-10-27-plan-prototype
+    date: 2026-10-27
+    subject: Рабочий прототип Plan до Pre-Alpha gate игры; раздельные документы и роадмапы направлений
+    human_decision: >-
+      Главная цель направления Plan — рабочий прототип. Разделить документацию и роадмапы
+      Game, ядра и Plan.
+    disagreement: >-
+      D4 (ADR-016, PLAN_game-plan-split) и SPEC_plan-v1 закрывали код Plan до Pre-Alpha gate,
+      а apps/plan-* уже написаны: документы и код расходились. Без границ прототип тянет за
+      собой БД, вход и деплой — то есть ПДн по 152-ФЗ до юриста — и отвлекает от P0 игры
+      (PR-04 required checks, PR-09).
+    alternative: >-
+      Поправка D4 с границами: прототип только поверх fincore, хранилище в памяти, dev_code,
+      без деплоя и реальных пользователей; правки fincore аддитивные с balance diff = 0.
+      Продуктовый Plan (SPL-402+) — после gate, SPL-302 и юриста. Документы Plan — в docs/plan/.
+    alternative_cost: >-
+      Прототип не проверяет хранение, вход по почте и деплой; их риски остаются на SPL-402.
+      Переезд spec и idea Plan в docs/plan/ — правка ссылок в ~12 файлах.
+    outcome: accepted
+    decision: >-
+      Прототип сейчас в границах поправки D4; продуктовый Plan после gate. docs/plan/ —
+      README, ROADMAP, spec, idea; docs/ROADMAPS.md — карта роадмапов Game, ядра и Plan.
+    repo_trace: docs/decisions/ADR-016-two-products-shared-fincore.md, docs/plans/PLAN_game-plan-split.md, docs/plan/ROADMAP.md, docs/ROADMAPS.md
+    decision_changed: true

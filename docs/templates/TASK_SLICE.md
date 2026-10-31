@@ -7,22 +7,30 @@ skill: incremental-implementation
 satellites:
   - test-driven-development
   - critical-test-scenarios
+read_if_when:
+  - "progression / event_tier / pool"
 next_skill: critical-test-scenarios
 spec: ../specs/features/SPEC_<slug>.md
 plan: ../plans/PLAN_<slug>.md
 traceability: ../TRACEABILITY.md
+tags:
+  - tvoy-hod/layer/task
+  - tvoy-hod/layer/template
+aliases:
+  - E1
+  - TASK_SLICE
 ---
-
 ### MQ-042 — Краткое название среза
 
 - **Phase:** `build` — `define` | `build` | `verify` | `ship` (см. [`SKILL_DOC_MAP.md`](../agents/SKILL_DOC_MAP.md))
-- **Tier:** `core` — `core` | `support` | `deferred` | `meta` | `archived` (см. [`SKILLS_PHASE_CONTENT_AND_DATA.md`](../agents/SKILLS_PHASE_CONTENT_AND_DATA.md), [`catalog.yaml`](../../.cursor/skills/catalog.yaml))
+- **Tier:** `core` — `core` | `support` | `deferred` | `meta` | `archived` (см. [`SKILLS_PHASE_CONTENT_AND_DATA.md`](../agents/SKILLS_PHASE_CONTENT_AND_DATA.md), [`catalog.yaml`](../../.claude/skills/catalog.yaml))
 - **Skill:** `incremental-implementation` — primary Agent Skill для среза (`tier` скилла в каталоге должен совпадать или быть `support`, если задача явно про plan/review/ADR)
-- **Satellites:** `test-driven-development`, `critical-test-scenarios` — открыть в **той же** сессии до «done» (см. `.cursor/rules/tvoy-hod-router.mdc` → Primary + satellites)
+- **Satellites:** `test-driven-development`, `critical-test-scenarios` — открыть в **той же** сессии до «done» (см. `.claude/rules/router.md` → Primary + satellites)
 - **Next skill:** `critical-test-scenarios` — закрыть min gate G1–G4; затем `code-review-and-quality`
 - **Spec:** `specs/features/SPEC_<slug>.md` §…
+- **Read if:** **`read_if_when`** — список `when` из `catalog.yaml` → `read_if` для **primary skill**; открыть **только** matching paths (не всю папку spec). Справка: `node .claude/skills/skill-test/_resolve-read-if.mjs <skill>`
 - **Acceptance:** …
-- **Critical scenarios:** CS-1 …, CS-2 … (skill `/critical-tests`, gate G1–G4)
+- **Critical scenarios:** CS-1 …, CS-2 … (skill `/critical-test-scenarios`, gate G1–G4)
 - **Verify:** `pytest …` / `npm run test:unit` / ручной сценарий из spec
 - **Files:** `backend/…`, `frontend-react/…`
 - **Estimate:** S | M | L
@@ -42,6 +50,6 @@ traceability: ../TRACEABILITY.md
 | Нарезка epic из spec | `support` | `planning-and-task-breakdown` | — |
 | Ревью перед merge | `support` | `code-review-and-quality` | — |
 | ADR: кто владеет полем API | `support` | `documentation-and-adrs` | `spec-driven-development` |
-| Pre-release checklist | `deferred` | `release-tma` | `code-review-and-quality` |
+| Pre-release checklist | `deferred` | `release-web` | `code-review-and-quality` |
 
 `tier: deferred` в задаче — только если пользователь явно просит (release, perf, TMA runtime, …).

@@ -1,6 +1,6 @@
 import {
   IconMetricCoins,
-  IconMetricPercent,
+  IconMetricShield,
   IconMetricTrendDown,
   IconMetricTrendUp,
 } from '../icons/FinanceMetricIcons';
@@ -11,7 +11,7 @@ const GLYPHS = {
   coin: IconMetricCoins,
   up: IconMetricTrendUp,
   down: IconMetricTrendDown,
-  percent: IconMetricPercent,
+  shield: IconMetricShield,
 };
 
 function formatSignedDelta(n) {
@@ -93,7 +93,7 @@ export function MqxPeriodCloseSheet({ summary, open, onClose }) {
         </ul>
         {detailLines.length > 0 ? (
           <div className="mqx-pclose-sheet__details">
-            <h3 className="mqx-pclose-sheet__details-title">Итоги периода</h3>
+            <h3 className="mqx-pclose-sheet__details-title">Итоги хода</h3>
             <ul className="mqx-pclose-sheet__detail-list">
               {detailLines.map((line) => (
                 <li key={line.id} className="mqx-pclose-sheet__detail-row">

@@ -1,3 +1,10 @@
+---
+tags:
+  - tvoy-hod/layer/idea
+aliases:
+  - "Victory goals как записи в БД (по template_key)"
+  - victory-goals-as-db-records-by-template
+---
 # Victory goals как записи в БД (по template_key)
 
 ## Problem Statement

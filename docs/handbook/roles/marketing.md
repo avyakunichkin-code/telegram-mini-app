@@ -2,9 +2,14 @@
 layer: handbook
 status: active
 role: marketing
-last_reviewed: 2026-05-30
+last_reviewed: 2026-06-20
+tags:
+  - tvoy-hod/layer/handbook
+  - tvoy-hod/status/active
+aliases:
+  - "Маркетинг / партнёр — guide"
+  - marketing
 ---
-
 # Маркетинг / партнёр — guide
 
 УТП, стадия, бренд — **без** внутреннего backlog, формул экономики и `handbook/internal/`.
@@ -29,7 +34,7 @@ last_reviewed: 2026-05-30
 
 **ТВОЙ ХОД** — умная игра про финансовые решения в формате игровых месяцев: зарплата, подушка, жизненные события, инвестиции и страховки, плюс слой **потребностей** персонажа. Ошибки безопасны, последствия читаются в цифрах.
 
-**Каналы:** Telegram Mini App, браузер, PWA — один продукт, не «только TMA».
+**Каналы:** PWA + web (primary), браузер, Telegram Mini App — один продукт ([ADR-012](../../decisions/ADR-012-primary-channels-pwa-web-over-tma.md)).
 
 **Стадия:** Pre-Alpha; массовый набор не открыт. **MVP 2.0:** режим **Plan** (свой бюджет) — в roadmap обязателен.
 
@@ -57,7 +62,7 @@ last_reviewed: 2026-05-30
 
 - Канон ЦА и креативы: [`ADVISOR_FUNNEL_AUDIENCE.md`](../ADVISOR_FUNNEL_AUDIENCE.md)  
 - Партнёр сейчас + расширение штата — §9.6 того же документа  
-- Лендинг: черновики блоков в §9.6 → перенос в `landing/public/locales/`  
+- Лендинг: черновики блоков в §9.6 → перенос в `landing/site/index.html` (новый лендинг без файлов локалей)  
 
 ## TBD (волна 3)
 

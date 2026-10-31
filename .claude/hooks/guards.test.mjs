@@ -1,0 +1,106 @@
+#!/usr/bin/env node
+/**
+ * Self-test блокирующих хуков (guard-generated.mjs, agent-memory-only.mjs):
+ * гоняет хук через stdin как Claude Code и сверяет exit code.
+ * Запуск из корня репо: node .claude/hooks/guards.test.mjs  (exit 1 при FAIL)
+ */
+import { spawnSync } from 'child_process';
+import { writeFileSync, rmSync } from 'fs';
+import os from 'os';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const HOOKS_DIR = path.dirname(fileURLToPath(import.meta.url));
+const HOOK = path.join(HOOKS_DIR, 'guard-generated.mjs');
+const MEMORY_HOOK = path.join(HOOKS_DIR, 'agent-memory-only.mjs');
+const REPO = path.resolve(HOOKS_DIR, '..', '..');
+const MEM = path.join(REPO, '.claude', 'agent-memory');
+const ROOT = 'C:\\repo\\telegram-mini-app';
+const BASELINE = `${ROOT}\\backend\\migrations\\0000_schema_baseline.sql`;
+
+const cases = [
+  ['Write design-lab/index.html', { tool_name: 'Write', tool_input: { file_path: `${ROOT}\\design-lab\\index.html`, content: '<html>' } }, 2],
+  ['Edit round lab-base.css', { tool_name: 'Edit', tool_input: { file_path: `${ROOT}/design-lab/dashboard/goal-round/lab-base.css`, old_string: 'a', new_string: 'b' } }, 2],
+  ['Edit nested _baseline lab-base.css', { tool_name: 'Edit', tool_input: { file_path: `${ROOT}/design-lab/_baseline/dashboard/blocks/goal/lab-base.css`, old_string: 'a', new_string: 'b' } }, 2],
+  ['Edit round index.html (allowed)', { tool_name: 'Edit', tool_input: { file_path: `${ROOT}/design-lab/dashboard/goal-round/index.html`, old_string: 'a', new_string: 'b' } }, 0],
+  ['Edit round styles.css (allowed)', { tool_name: 'Edit', tool_input: { file_path: `${ROOT}/design-lab/dashboard/goal-round/styles.css`, old_string: 'a', new_string: 'b' } }, 0],
+  ['Edit baseline INSERT', { tool_name: 'Edit', tool_input: { file_path: BASELINE, old_string: 'x', new_string: "CREATE TABLE t (id int);\nINSERT INTO t VALUES (1);" } }, 2],
+  ['Edit baseline lowercase update after ;', { tool_name: 'Edit', tool_input: { file_path: BASELINE, old_string: 'x', new_string: 'ALTER TABLE t ADD c int; update t set c = 0;' } }, 2],
+  ['Write baseline DELETE', { tool_name: 'Write', tool_input: { file_path: BASELINE, content: 'CREATE TABLE t (id int);\n  DELETE FROM t;\n' } }, 2],
+  ['MultiEdit baseline INSERT', { tool_name: 'MultiEdit', tool_input: { file_path: BASELINE, edits: [{ old_string: 'a', new_string: 'b' }, { old_string: 'c', new_string: 'INSERT INTO t VALUES (1);' }] } }, 2],
+  ['Edit baseline DDL with ON DELETE CASCADE (allowed)', { tool_name: 'Edit', tool_input: { file_path: BASELINE, old_string: 'x', new_string: 'FOREIGN KEY(k) REFERENCES p (k) ON DELETE CASCADE ON UPDATE CASCADE' } }, 0],
+  ['Edit baseline comment mentioning INSERT (allowed)', { tool_name: 'Edit', tool_input: { file_path: BASELINE, old_string: 'x', new_string: '-- INSERT INTO is forbidden here\nCREATE INDEX ix ON t (c);' } }, 0],
+  ['Edit incremental migration with INSERT (allowed)', { tool_name: 'Edit', tool_input: { file_path: `${ROOT}/backend/migrations/0042_backfill.sql`, old_string: 'x', new_string: 'INSERT INTO t VALUES (1);' } }, 0],
+  ['Unrelated file (allowed)', { tool_name: 'Write', tool_input: { file_path: `${ROOT}/backend/app/game/period.py`, content: 'x' } }, 0],
+  ['Malformed stdin (allowed)', 'not json', 0],
+];
+
+// agent-memory-only.mjs economy-reviewer — запись только в .claude/agent-memory/economy-reviewer/
+const memCases = [
+  ['memory: Write own MEMORY.md (allowed)', { tool_name: 'Write', tool_input: { file_path: path.join(MEM, 'economy-reviewer', 'MEMORY.md'), content: 'x' } }, 0],
+  ['memory: Edit relative path in memory dir (allowed)', { tool_name: 'Edit', cwd: REPO, tool_input: { file_path: '.claude/agent-memory/economy-reviewer/notes.md', old_string: 'a', new_string: 'b' } }, 0],
+  ['memory: Edit backend source', { tool_name: 'Edit', tool_input: { file_path: path.join(REPO, 'backend', 'app', 'game', 'period.py'), old_string: 'a', new_string: 'b' } }, 2],
+  ['memory: traversal out of memory dir', { tool_name: 'Write', tool_input: { file_path: path.join(MEM, 'economy-reviewer', '..', '..', 'settings.json'), content: '{}' } }, 2],
+  ['memory: other agent memory dir', { tool_name: 'Write', tool_input: { file_path: path.join(MEM, 'mqx-ui-reviewer', 'MEMORY.md'), content: 'x' } }, 2],
+  ['memory: sibling prefix dir', { tool_name: 'Write', tool_input: { file_path: path.join(MEM, 'economy-reviewer-evil', 'x.md'), content: 'x' } }, 2],
+  ['memory: no file_path', { tool_name: 'Write', tool_input: {} }, 2],
+];
+
+const runs = [
+  ...cases.map((c) => [HOOK, [], ...c]),
+  ...memCases.map((c) => [MEMORY_HOOK, ['economy-reviewer'], ...c]),
+];
+
+let fails = 0;
+for (const [hook, args, name, payload, expected] of runs) {
+  const input = typeof payload === 'string' ? payload : JSON.stringify(payload);
+  const env = { ...process.env, CLAUDE_PROJECT_DIR: REPO };
+  const res = spawnSync(process.execPath, [hook, ...args], { input, encoding: 'utf8', env });
+  const ok = res.status === expected && (expected === 0 || res.stderr.trim().length > 0);
+  if (!ok) fails++;
+  console.log(`${ok ? 'OK  ' : 'FAIL'}  ${name} → exit ${res.status} (expected ${expected})${ok ? '' : `\n      stderr: ${res.stderr.trim()}`}`);
+}
+// trim-test-output.mjs (PostToolUse, не блокирует): режет только длинный вывод раннеров тестов/сборки.
+const TRIM_HOOK = path.join(HOOKS_DIR, 'trim-test-output.mjs');
+const longOut =
+  Array.from({ length: 400 }, (_, i) => `tests/test_x.py::test_${i} PASSED`).join('\n') +
+  '\nFAILED tests/test_y.py::test_boom - AssertionError\n446 passed, 1 failed in 300s';
+const bashRes = (stdout) => ({ stdout, stderr: '', interrupted: false, isImage: false });
+const trimCases = [
+  ['trim: long pytest output → rewritten', 'py -3 -m pytest -q', longOut, true],
+  ['trim: short pytest output → untouched', 'py -3 -m pytest -q', '5 passed', false],
+  ['trim: long non-test command → untouched', 'git log', longOut, false],
+  ['trim: opt-out CLAUDE_FULL_OUTPUT=1 → untouched', 'CLAUDE_FULL_OUTPUT=1 py -3 -m pytest -q', longOut, false],
+];
+// Bash отдаёт в stdout только начало длинного вывода, полный текст — в persistedOutputPath:
+// итог прогона («446 passed, 1 failed») есть только в файле и должен попасть в хвост.
+const persisted = path.join(os.tmpdir(), `guards-test-persisted-${process.pid}.txt`);
+writeFileSync(persisted, longOut);
+const headOnly = longOut.slice(0, 7000);
+trimCases.push(['trim: truncated stdout + persistedOutputPath → tail from full file', 'py -3 -m pytest -q', headOnly, true, persisted]);
+let trimTotal = 0;
+for (const [name, command, stdout, expectRewrite, persistedPath] of trimCases) {
+  trimTotal++;
+  const response = persistedPath ? { ...bashRes(stdout), persistedOutputPath: persistedPath } : bashRes(stdout);
+  const payload = { tool_name: 'Bash', tool_input: { command }, tool_response: response };
+  const res = spawnSync(process.execPath, [TRIM_HOOK], { input: JSON.stringify(payload), encoding: 'utf8' });
+  let upd = null;
+  try {
+    upd = JSON.parse(res.stdout || 'null')?.hookSpecificOutput?.updatedToolOutput ?? null;
+  } catch {
+    upd = null;
+  }
+  const keepsSignal =
+    !upd ||
+    (upd.stdout.includes('FAILED tests/test_y.py') &&
+      upd.stdout.includes('446 passed, 1 failed') &&
+      upd.stdout.length < longOut.length);
+  const ok = res.status === 0 && Boolean(upd) === expectRewrite && keepsSignal;
+  if (!ok) fails++;
+  console.log(`${ok ? 'OK  ' : 'FAIL'}  ${name} → rewritten=${Boolean(upd)} (expected ${expectRewrite})`);
+}
+
+rmSync(persisted, { force: true });
+
+console.log(`\nSummary: ${runs.length + trimTotal - fails} OK, ${fails} FAIL`);
+process.exit(fails ? 1 : 0);

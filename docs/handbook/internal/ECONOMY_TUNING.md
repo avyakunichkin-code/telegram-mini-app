@@ -4,8 +4,14 @@ status: active
 last_reviewed: 2026-05-30
 audience: product, game-design, engineering
 source_of_truth: code + ADR-009
+tags:
+  - tvoy-hod/layer/handbook
+  - tvoy-hod/layer/handbook-internal
+  - tvoy-hod/status/active
+aliases:
+  - "Экономика — формулы и tuning (команда)"
+  - ECONOMY_TUNING
 ---
-
 # Экономика — формулы и tuning (команда)
 
 Синхронизировать при изменении `overview_build`, `victory/snap`, `game/rules.py`, `needs/engine.py`, seeds шаблонов.

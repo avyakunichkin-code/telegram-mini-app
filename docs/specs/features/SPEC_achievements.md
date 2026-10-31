@@ -10,8 +10,17 @@ related:
   - SPEC_mvp-11-progression-events.md
   - SPEC_victory-v2.md
   - ../../../GAME.md
+tags:
+  - tvoy-hod/layer/spec
+  - tvoy-hod/status/approved
+  - tvoy-hod/topic/achievements
+  - tvoy-hod/topic/m12
+aliases:
+  - "Достижения (M12) — цепочки tier, экран «Развитие»"
+  - "SPEC achievements"
+  - SPEC_achievements
+  - "Spec: Достижения (M12) — цепочки tier, экран «Развитие»"
 ---
-
 # Spec: Достижения (M12) — цепочки tier, экран «Развитие»
 
 > **Prod (2026-05-24+):** достижения **без** награды character XP и **без** level gates ([ADR-003](../../decisions/ADR-003-remove-character-progression.md)). Разблокировка капитала — **`mechanics_unlock`** ([ADR-004](../../decisions/ADR-004-mechanics-unlock-victory-chain.md)). Отдельно от **Victory v2**.
@@ -20,7 +29,7 @@ related:
 
 Читать вместе с:
 
-- [GAME.md](../../../GAME.md) §5.2–5.3, §10.5 — продуктовая анкета и философия
+- [GAME.md](../../handbook/GAME.md) §5.2–5.3, §10.5 — продуктовая анкета и философия
 - [remove-character-xp-and-levels.md](../../vision/ideas/remove-character-xp-and-levels.md) — канон прогрессии
 - [SPEC_victory-v2.md](SPEC_victory-v2.md) — победа по шаблону; достижения **не** входят в цели победы
 - [SPEC_mvp-11-progression-events.md](SPEC_mvp-11-progression-events.md) — события, `event_tier` от периода
@@ -341,7 +350,7 @@ getAchievements: () => apiCall('/api/game/achievements'),
 
 **Принцип:** Главная остаётся **компактной** (цель сценария + финансы периода); достижения — **не** на dashboard в MVP. **Пятого таба** в `BottomGameNav` **нет**.
 
-Сверка: [SPEC_FRONTEND_UI.md](../SPEC_FRONTEND_UI.md), [DESIGN_WORKFLOW.md](../../../frontend-react/src/components/mqx/DESIGN_WORKFLOW.md), [frontend-design skill](../../../frontend-react/.agents/skills/frontend-design/SKILL.md) (канон MQX, не generic AI aesthetic).
+Сверка: [SPEC_FRONTEND_UI.md](../SPEC_FRONTEND_UI.md), [DESIGN_WORKFLOW.md](../../../frontend-react/src/components/mqx/DESIGN_WORKFLOW.md), [frontend-design skill](../../../frontend-react/.claude/skills/frontend-design/SKILL.md) (канон MQX, не generic AI aesthetic).
 
 ### 11.1. Информационная архитектура
 

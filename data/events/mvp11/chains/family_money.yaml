@@ -1,3 +1,4 @@
+# Снята PO 2026-10-21: заменена цепочкой family_vacation (B3). is_active: 0 — строки в БД гасятся при сиде.
 events:
 - definition_key: mq11_family_money_request
   event_domain: social_family
@@ -5,6 +6,7 @@ events:
   description: Близкий человек просит небольшую сумму в затруднительной ситуации. Помощь — разовая; при
     отказе может снова обратиться через период.
   weight: 75
+  is_active: 0
   event_tier: 2
   repeat_policy: repeatable
   scenario_shape: chain
@@ -12,16 +14,16 @@ events:
   choices:
   - title: Помочь полностью
     effects:
-      cash_delta: -15000
+      cash_pct_salary: 0.24
       needs_delta:
-        social: 14
         comfort: -3
+        social: 15
   - title: Помочь частично
     effects:
-      cash_delta: -7000
+      cash_pct_salary: 0.11
       needs_delta:
-        social: 8
-        health: 2
+        social: 11
+        health: 3
   - title: Отказаться вежливо
     effects:
       cash_delta: 0
@@ -41,6 +43,7 @@ events:
   description: После вашего отказа ситуация не улучшилась — просят уже больше. Можно помочь снова или
     твёрдо отказать.
   weight: 1
+  is_active: 0
   event_tier: 2
   repeat_policy: once_per_profile
   interaction_kind: chain_followup
@@ -49,19 +52,19 @@ events:
   choices:
   - title: Помочь полностью
     effects:
-      cash_delta: -18000
+      cash_pct_salary: 0.29
       needs_delta:
-        social: 12
         comfort: -4
+        social: 15
   - title: Помочь частично
     effects:
-      cash_delta: -9000
+      cash_pct_salary: 0.145
       needs_delta:
-        social: 7
-        health: 1
+        social: 12
+        health: 2
   - title: Твёрдый отказ
     effects:
       cash_delta: 0
       needs_delta:
-        social: -8
-        comfort: -3
+        social: -4
+        comfort: -2

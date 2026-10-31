@@ -4,8 +4,16 @@ status: approved
 owner: product
 last_reviewed: 2026-05-30
 tracks: events, balance, content-pipeline
+tags:
+  - tvoy-hod/layer/idea
+  - tvoy-hod/status/approved
+  - tvoy-hod/topic/balance
+  - tvoy-hod/topic/content-pipeline
+  - tvoy-hod/topic/events
+aliases:
+  - "Повтор событий, cooldown и state ladder"
+  - event-repeat-and-state-ladder
 ---
-
 # Повтор событий, cooldown и state ladder
 
 ## Problem Statement
@@ -14,7 +22,7 @@ tracks: events, balance, content-pipeline
 
 ## Recommended Direction
 
-1. **Классификация lifecycle** в авторинге (A/B/C/D) — канон в [`.cursor/skills/create-event/event-balance-rules.md`](../../.cursor/skills/create-event/event-balance-rules.md) §10.
+1. **Классификация lifecycle** в авторинге (A/B/C/D) — канон в [`.claude/skills/create-event/event-balance-rules.md`](../../.claude/skills/create-event/event-balance-rules.md) §10.
 2. **Контент-фикс (EVT1-105):** `mq11_downsize_flat`, `mq11_home_internet`, `mq11_relocation_bonus` — cooldown / `once_per_profile` / `max_per_profile`.
 3. **Движок (EVT1 backlog):** флаги партии `housing_tier`, `internet_tier` + prereq в `prerequisites_json` для класса **C**.
 4. **Пол расходов:** floor 0 на `profile_expense_lines` по категории; опционально prereq «уже minimal_housing».

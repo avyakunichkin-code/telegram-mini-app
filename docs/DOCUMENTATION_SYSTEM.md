@@ -1,3 +1,9 @@
+---
+tags:
+  - tvoy-hod/layer/system
+aliases:
+  - DOCUMENTATION_SYSTEM
+---
 ﻿# Система документации ТВОЙ ХОД
 
 Как хранить знания о продукте и превращать их в **спеки → планы → задачи → разработку**.  
@@ -16,9 +22,12 @@
 | Plans / Tasks | `docs/plans/`, `docs/tasks/` |
 | Backlog | `docs/backlog/` |
 | Marketing | `docs/marketing/` — посты, трекер, стратегия (вне dev-цикла) |
+| **Audits** | `docs/audits/` — снимки (продукт, engineering, QA, UX, liveops); инструкция [`audits/README.md`](audits/README.md) |
 | Reference | `docs/reference/` |
 
 Карта: [`README.md`](README.md). Трассировка: [`TRACEABILITY.md`](TRACEABILITY.md).
+
+**Направления (с 2026-10-27).** Таблица выше — слои документов **игры**. Продукт **Plan** ([ADR-016](decisions/ADR-016-two-products-shared-fincore.md)) живёт в [`plan/`](plan/README.md) с теми же слоями внутри (`vision/`, `specs/`, `plans/`) и своим `ROADMAP.md`. Ядро (`fincore`, `platform`) — ADR в `decisions/` и [`plans/PLAN_game-plan-split.md`](plans/PLAN_game-plan-split.md). Карта роадмапов — [`ROADMAPS.md`](ROADMAPS.md). Порядок канона C-1 действует внутри направления: для Plan spec — `plan/specs/SPEC_*.md`.
 
 **Остаётся улучшать:** сверка оглавления `SPEC_PRODUCT` (раздел 0) и «Часть II» в evolution-документе через ссылки, не дублирование; нарезка MQ-* для G1; ADR по миграции `mode`.
 
@@ -53,6 +62,8 @@ docs/
     ADR-NNN-<slug>.md
   backlog/
     PRODUCT_BACKLOG.md           # приоритеты; ссылки на spec/plan
+  audits/                        # снимки на дату (не канон): product/, engineering/, …
+    README.md                    # куда класть + реестр
   reference/                     # вне dev-цикла
     brandbook/
     investor-deck/
@@ -101,13 +112,14 @@ docs/domains/economy/   docs/domains/ui/   docs/domains/api/
 
 `CLAUDE.md` — индекс в корне репозитория.
 
-**Правило единого источника истины (при конфликте):**
+**Правило единого источника истины (при конфликте) — [C-1](../CONVENTIONS.md):**
 
 1. **Поведение в production** — код + тесты  
 2. **Спека фичи** — `docs/specs/features/SPEC_*.md`  
 3. **Foundation** — `docs/foundation/SPEC_PRODUCT.md`  
 4. **Vision / ideas** — направление, не детали реализации  
-5. **Бэклог** — приоритет, не спецификация
+5. **Бэклог** — приоритет, не спецификация  
+6. **Audits** (`docs/audits/`) — снимок на дату; **не** подменяет п.1–4, пока выводы не утверждены в spec/ADR/backlog. Инструкция: [`audits/README.md`](audits/README.md).
 
 ---
 
@@ -234,8 +246,14 @@ status: draft | review | approved | implemented | stale
 owner: имя или роль
 last_reviewed: 2026-05-16
 tracks: save-kind, game-plan
+tags:
+  - tvoy-hod/layer/spec
+aliases:
+  - SPEC_example
 ---
 ```
+
+Поля **`tags`** и **`aliases`** для Obsidian генерирует `node scripts/docs/obsidian-enrich.mjs` (не править вручную, кроме редких псевдонимов). Гайд vault: [`OBSIDIAN.md`](OBSIDIAN.md).
 
 ### 5.2. Матрица трассировки (одна таблица в backlog или отдельный файл)
 
@@ -293,7 +311,7 @@ Spec отвечает на **что**; ADR на **почему так**.
 | `ADR.md` | архитектурное решение |
 | `TRACE_ROW.md` | строка матрицы трассировки |
 
-Команда: `@.cursor/skills/idea-refine` → шаблон IDEA; `@.cursor/skills/spec-driven-development` → SPEC; planning skill → PLAN.
+Команда: `@.claude/skills/idea-refine` → шаблон IDEA; `@.claude/skills/spec-driven-development` → SPEC; planning skill → PLAN.
 
 ---
 
@@ -315,6 +333,14 @@ Spec отвечает на **что**; ADR на **почему так**.
 Задачи:    «разбей PLAN на задачи MQ-*» → секция Tasks
 Бэклог:    «добавь в backlog P1 со ссылкой на spec»
 ```
+
+---
+
+## 9. Obsidian
+
+Репозиторий — **Obsidian vault** (корень `telegram-mini-app/`). Markdown-ссылки сохраняются для GitHub и агентов; навигация в Obsidian — через `tags`, `aliases`, MOC (`docs/*/_index.md`) и [`Home.md`](Home.md).
+
+После правок frontmatter: `node scripts/docs/obsidian-enrich.mjs`.
 
 ---
 

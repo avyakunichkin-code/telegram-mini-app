@@ -4,8 +4,13 @@ status: approved
 owner: product
 last_reviewed: 2026-05-30
 approved: 2026-05-30
+tags:
+  - tvoy-hod/layer/handbook
+  - tvoy-hod/status/approved
+aliases:
+  - "Формат GAME.md (утверждено)"
+  - GAME_FORMAT
 ---
-
 # Формат GAME.md (утверждено)
 
 Решения продукта (2026-05-30):

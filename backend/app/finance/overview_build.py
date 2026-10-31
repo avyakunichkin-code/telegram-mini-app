@@ -9,24 +9,25 @@ from ..achievements.engine import process_achievement_unlocks
 from ..achievements.seeds import ensure_achievement_catalog
 from ..finance.expenses import burn_breakdown_for_api, compute_monthly_burn
 from .period_metrics import avg_net_cashflow_last_closed_intervals as _avg_net_cashflow_last_closed_intervals
-from ..game.time import get_seconds_until_next
+from ..game.adapters.fincore_snapshot import household_metrics
 from ..models import (
     FinanceAsset,
     FinanceLiability,
     FinanceSalary,
     GameProfile,
     GameStarterTemplate,
-    InvestmentPosition,
     User,
 )
 import json
 
 from ..needs.engine import (
+    effective_needs_delta,
     needs_values_from_profile,
     normalize_treat_self_options,
     parse_needs_config,
     treat_self_availability,
 )
+from ..needs.set_point import MODEL_SET_POINT, build_set_point_snapshot
 from ..finance.period_close_preview import estimate_period_close_preview
 from ..schemas import (
     AchievementUnlockEvent,
@@ -38,6 +39,7 @@ from ..schemas import (
     PeriodClosePreview,
     SalaryProfileResponse,
     GameMechanicsPermissions,
+    NeedsLevelSourceOverview,
     NeedsMetaOverview,
     NeedsOverview,
     TreatSelfOverview,
@@ -109,45 +111,22 @@ def build_finance_overview(db: Session, profile: GameProfile) -> FinanceOverview
         for a in assets_orm
     ]
 
-    assets_income = sum(float(a.monthly_income or 0) for a in assets_orm)
-
-    # Инвестиции: доход за один период (1/12 годовой ставки) по активным позициям.
-    # Для deposit: начисление капитализируется на principal в конце периода, но в UI это тоже "доход за период".
-    # Для bond: купон начисляется на баланс в конце периода.
-    invest_income = 0.0
-    try:
-        invest_rows = (
-            db.query(InvestmentPosition)
-            .filter(
-                InvestmentPosition.game_profile_id == profile.id,
-                InvestmentPosition.is_active == 1,
-            )
-            .all()
-        )
-        for pos in invest_rows:
-            principal = float(getattr(pos, "principal", 0) or 0)
-            annual_rate = float(getattr(pos, "annual_rate_percent", 0) or 0)
-            if principal <= 0 or annual_rate <= 0:
-                continue
-            invest_income += principal * (annual_rate / 100.0) / 12.0
-    except Exception:
-        invest_income = 0.0
-
-    total_liability_payment = sum(l.monthly_payment for l in liabilities)
-    total_asset_maintenance = sum(a.monthly_maintenance_cost for a in assets)
-    total_monthly_obligations = total_liability_payment + total_asset_maintenance
+    # Денежные метрики — одна формула `fincore.metrics` для overview, целей победы и аналитики (SPL-207b, ADR-009 §4).
+    # Проекция вкладов (1/12 годовой ставки): депозит капитализирует, облигация платит купон — в UI это «доход за период».
+    metrics = household_metrics(db, profile)
+    total_liability_payment = metrics.liability_payments
+    total_asset_maintenance = metrics.asset_maintenance
+    total_monthly_obligations = metrics.structural_obligations
     burn_snapshot = compute_monthly_burn(db, profile)
-    monthly_burn_total = float(burn_snapshot.total)
+    monthly_burn_total = float(metrics.lifestyle_burn)
     monthly_lifestyle_expense = monthly_burn_total
     burn_breakdown = MonthlyBurnBreakdown(**burn_breakdown_for_api(burn_snapshot))
-    total_income = monthly_income + assets_income + invest_income
-    total_monthly_outflow = total_monthly_obligations + monthly_burn_total
-    expense_to_income_ratio = (
-        round(monthly_burn_total / total_income, 4) if total_income > 0 else 0.0
-    )
-    net_cashflow = total_income - total_monthly_obligations
-    liabilities_ratio = (total_liability_payment / total_income * 100) if total_income > 0 else 0
-    total_overdue_amount = sum(float(l.overdue_amount or 0) for l in liabilities_orm)
+    total_income = metrics.income_with_invest_projection
+    total_monthly_outflow = metrics.total_monthly_outflow
+    expense_to_income_ratio = round(metrics.expense_to_income_ratio, 4)
+    net_cashflow = metrics.net_structural_cashflow_with_invest
+    liabilities_ratio = metrics.liabilities_to_income_percent
+    total_overdue_amount = metrics.total_overdue
     overdue_liabilities_count = sum(
         1 for l in liabilities_orm if float(getattr(l, "overdue_amount", 0) or 0) > 0
     )
@@ -173,7 +152,7 @@ def build_finance_overview(db: Session, profile: GameProfile) -> FinanceOverview
 
     victory_cfg = parse_victory_config(raw_victory, template_key=template_key)
     victory_cfg = override_config_goals_from_db(db, template_key=template_key, victory_cfg=victory_cfg)
-    victory_snap = build_victory_evaluation_input(db, profile)
+    victory_snap = build_victory_evaluation_input(db, profile, metrics)
     template_cap, mechanics_unlock, template_key = resolve_template_and_unlock(db, profile)
     victory_result = evaluate_victory(
         victory_cfg,
@@ -251,7 +230,26 @@ def build_finance_overview(db: Session, profile: GameProfile) -> FinanceOverview
             consequence_profile=str(needs_cfg.get("consequence_profile") or "standard"),
             thresholds=dict(needs_cfg.get("thresholds") or {}),
             player_support=dict(needs_cfg.get("player_support") or {}),
+            model=str(needs_cfg.get("model") or "linear"),
         )
+        try:
+            # Savepoint: ошибка SQL в расчёте уровня не должна ломать транзакцию overview.
+            with db.begin_nested():
+                sp_snap = build_set_point_snapshot(
+                    db, profile, needs_cfg, blueprint, salary=float(monthly_income or 0), needs_now=nv
+                )
+            level = NeedsOverview(**sp_snap.level)
+            wear = NeedsOverview(**sp_snap.wear)
+            sources = [
+                NeedsLevelSourceOverview(
+                    source=s.source, kind=s.kind, title=s.title, axis=s.axis, delta=s.delta
+                )
+                for s in sp_snap.sources
+            ]
+            needs_meta.level, needs_meta.wear, needs_meta.level_sources = level, wear, sources
+            needs_meta.periods_to_zero_if_idle = dict(sp_snap.periods_to_zero_if_idle)
+        except Exception:
+            logger.warning("needs level snapshot failed profile_id=%s", profile.id, exc_info=True)
         ts_av = treat_self_availability(
             needs_cfg,
             period_index=int(profile.period_index or 0),
@@ -270,22 +268,35 @@ def build_finance_overview(db: Session, profile: GameProfile) -> FinanceOverview
                     title=str(o.get("title") or ""),
                     subtitle=o.get("subtitle"),
                     cost=float(o.get("cost") or 0),
-                    needs_delta=NeedsOverview(**(o.get("needs_delta") or {})),
+                    needs_delta=NeedsOverview(
+                        **(
+                            effective_needs_delta(nv, o.get("needs_delta") or {})
+                            if needs_cfg.get("model") == MODEL_SET_POINT
+                            else (o.get("needs_delta") or {})
+                        )
+                    ),
                 )
                 for o in options_norm
                 if isinstance(o, dict)
             ],
         )
 
-    close_preview_raw = estimate_period_close_preview(db, profile)
-    period_close_preview = PeriodClosePreview(
-        estimated_cash_after_close=float(close_preview_raw.get("estimated_cash_after_close") or 0),
-        estimated_charges_total=float(close_preview_raw.get("estimated_charges_total") or 0),
-        negative_periods_count=int(close_preview_raw.get("negative_periods_count") or 0),
-        would_be_negative_after_close=bool(close_preview_raw.get("would_be_negative_after_close")),
-        defeat_if_close_negative=bool(close_preview_raw.get("defeat_if_close_negative")),
-        needs_distressed_penalty_estimate=0,
-    )
+    # Превью — необязательная часть overview: битые данные снимка не должны ронять весь экран.
+    period_close_preview = None
+    try:
+        with db.begin_nested():
+            close_preview_raw = estimate_period_close_preview(db, profile)
+        period_close_preview = PeriodClosePreview(
+            estimated_cash_after_close=float(close_preview_raw.get("estimated_cash_after_close") or 0),
+            estimated_charges_total=float(close_preview_raw.get("estimated_charges_total") or 0),
+            negative_periods_count=int(close_preview_raw.get("negative_periods_count") or 0),
+            would_be_negative_after_close=bool(close_preview_raw.get("would_be_negative_after_close")),
+            defeat_if_close_negative=bool(close_preview_raw.get("defeat_if_close_negative")),
+            needs_distressed_penalty_estimate=0,
+        )
+    except Exception:
+        logger.exception("Period close preview failed profile_id=%s", profile.id)
+        db.refresh(profile)
 
     user = db.query(User).filter(User.id == profile.user_id).first()
     guidance = None
@@ -314,10 +325,7 @@ def build_finance_overview(db: Session, profile: GameProfile) -> FinanceOverview
         expense_to_income_ratio=expense_to_income_ratio,
         net_monthly_cashflow=round(net_cashflow, 2),
         liabilities_to_income_ratio=round(liabilities_ratio, 2),
-        time_state=profile.time_state,
         period_index=profile.period_index,
-        period_duration_seconds=profile.period_duration_seconds,
-        seconds_until_next_period=get_seconds_until_next(profile),
         cash_balance=round(profile.cash_balance, 2),
         safety_fund_balance=round(profile.safety_fund_balance, 2),
         total_monthly_obligations=round(total_monthly_obligations, 2),

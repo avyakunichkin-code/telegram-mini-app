@@ -5,8 +5,16 @@ last_reviewed:
 tracks:
 idea:
 plan:
+# tags + aliases — после сохранения: node scripts/docs/obsidian-enrich.mjs
+tags:
+  - tvoy-hod/layer/template
+  - tvoy-hod/status/draft
+aliases:
+  - "[Feature name]"
+  - "SPEC FEATURE"
+  - SPEC_FEATURE
+  - "Spec: [Feature name]"
 ---
-
 # Spec: [Feature name]
 
 ## Assumptions
@@ -67,7 +75,7 @@ Sync: `frontend-react/src/api.js`, `CLAUDE.md` if public contract changes.
 
 ## Testing strategy
 
-Skill: **`/critical-tests`** ([`critical-test-scenarios`](../../.cursor/skills/critical-test-scenarios/SKILL.md)).  
+Skill: **`/critical-test-scenarios`** ([`critical-test-scenarios`](../../.claude/skills/critical-test-scenarios/SKILL.md)).  
 Цель — **не 100% coverage**, а критичные сценарии (gate G1–G4). Ref: [`backend/tests/README.md`](../../backend/tests/README.md).
 
 | Layer | What to prove |

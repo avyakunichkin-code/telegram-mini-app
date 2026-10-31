@@ -1,0 +1,213 @@
+/* ink-sheets-round — окна Капитала в «Чернильном крае» (prod: styles/mqx/ink.css).
+   База (токены v3, .phone, .tabbar, .piece) — neobrutal-round через lab-base.css.
+   Рамка окна и крестик одинаковы во всех вариантах (решено 2026-10-29): только чернильная линия сверху,
+   крестик — заливка + тень без обводки. Варианты A/B/C меняют содержимое окна. */
+
+.ws-stage { align-items: flex-start; }
+
+/* ---------- Телефон с окном ---------- */
+.phone--sheet { gap: 0; padding: 0; min-height: 760px; }
+
+.behind { display: grid; gap: var(--mq-space-4); padding: var(--mq-space-4); }
+.behind__head { margin: calc(var(--mq-space-4) * -1) calc(var(--mq-space-4) * -1) 0; padding: var(--mq-space-4); background: var(--mq-turn); color: var(--mq-turn-on); }
+.behind__head b { display: block; font: 800 22px/28px var(--font-display); }
+.behind__head small { font: 400 12px/16px var(--font-body); }
+.behind__flows, .behind__seg { display: grid; grid-template-columns: 1fr 1fr; gap: var(--mq-space-2); }
+.behind__flows span, .behind__acts span {
+  display: grid;
+  padding: var(--mq-space-3);
+  border: var(--bw) solid var(--nb-line);
+  border-radius: var(--r-cell);
+  background: var(--mq-cell);
+  box-shadow: var(--off) var(--off) 0 var(--nb-drop);
+  font: 800 17px/22px var(--font-body);
+}
+.behind__flows small { font: 400 12px/16px var(--font-body); color: var(--mq-board-ink-soft); }
+.behind__seg { gap: 0; border: var(--bw) solid var(--nb-line); border-radius: var(--r-cell); overflow: hidden; }
+.behind__seg span { padding: var(--mq-space-2); text-align: center; font-weight: 700; background: var(--mq-cell); }
+.behind__seg span.on { background: var(--mq-turn); color: var(--mq-turn-on); }
+.behind__acts { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--mq-space-2); }
+.behind__acts span { min-height: 88px; place-items: end center; font: 600 14px/18px var(--font-body); }
+
+.scrim { position: absolute; inset: 0; z-index: 1; background: var(--mq-scrim); }
+
+.phone--sheet .tabbar {
+  position: absolute;
+  inset: auto 0 0;
+  z-index: 3;
+  margin: 0;
+}
+
+/* ---------- Окно: общее для всех вариантов ---------- */
+.sheet {
+  position: absolute;
+  inset: auto 0 76px;
+  z-index: 2;
+  display: grid;
+  gap: var(--mq-space-3);
+  max-height: 600px;
+  overflow: auto;
+  padding: var(--mq-space-4) var(--mq-space-4) var(--mq-space-5);
+  border-top: var(--bw) solid var(--nb-line);
+  border-radius: var(--mq-r-card) var(--mq-r-card) 0 0;
+  background: var(--mq-board);
+}
+.sheet__head { position: relative; padding-right: 44px; }
+.sheet__head h3 { margin: 0; font: 800 20px/26px var(--font-display); }
+.sheet__head p { margin: var(--mq-space-1) 0 0; color: var(--mq-board-ink-soft); font: 400 13px/18px var(--font-body); }
+.sheet__close {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 36px;
+  height: 36px;
+  border: 0;
+  border-radius: var(--r-cell);
+  background: var(--mq-cell);
+  box-shadow: 2px 2px 0 var(--nb-drop);
+  font: 700 18px/1 var(--font-body);
+  cursor: pointer;
+}
+.sheet__close:active { transform: translate(2px, 2px); box-shadow: none; }
+
+/* Заголовок группы — читаемый на поле окна (в prod «Потребительские» белым по светлому — не видно) */
+.group {
+  margin: var(--mq-space-2) 0 0;
+  color: var(--mq-board-ink-soft);
+  font: 800 12px/16px var(--font-body);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.hint { margin: calc(var(--mq-space-2) * -1) 0 0; color: var(--mq-board-ink-soft); font: 400 13px/18px var(--font-body); }
+
+/* Поле выбора — рамка ввода, как поле суммы в депозите */
+.field { display: grid; gap: var(--mq-space-1); }
+.field__label { color: var(--mq-board-ink-soft); font: 600 12px/16px var(--font-body); }
+.field select {
+  min-height: var(--mq-tap);
+  padding: 0 var(--mq-space-3);
+  border: var(--bw) solid var(--mq-control-edge);
+  border-radius: var(--r-cell);
+  background: var(--mq-cell);
+  color: var(--mq-board-ink);
+  font: 600 15px/20px var(--font-body);
+}
+
+/* Подтверждение */
+.confirm { display: grid; grid-template-columns: 1fr 1fr; gap: var(--mq-space-3); margin-top: var(--mq-space-1); }
+.btn {
+  min-height: 48px;
+  border-radius: var(--r-cell);
+  font: 800 16px/20px var(--font-body);
+  cursor: pointer;
+}
+.btn:active { transform: translate(var(--off), var(--off)); box-shadow: none; }
+.btn--danger {
+  border: var(--bw) solid var(--nb-line);
+  background: var(--mq-risk);
+  color: var(--mq-turn-on);
+  box-shadow: var(--off) var(--off) 0 var(--nb-drop);
+}
+.btn--quiet { border: 0; background: var(--mq-cell); box-shadow: var(--off) var(--off) 0 var(--nb-drop); }
+
+/* Виды страховки */
+.kinds { display: grid; grid-template-columns: 1fr 1fr; gap: var(--mq-space-2); }
+.kind {
+  display: grid;
+  justify-items: start;
+  gap: 0;
+  padding: var(--mq-space-2) var(--mq-space-3);
+  border: 0;
+  border-radius: var(--r-cell);
+  background: var(--mq-cell);
+  text-align: left;
+  cursor: pointer;
+}
+.kind small { color: var(--mq-board-ink-soft); font: 800 11px/14px var(--font-body); letter-spacing: 0.08em; text-transform: uppercase; }
+.kind b { font: 700 15px/20px var(--font-body); }
+.kind span { color: var(--mq-board-ink-soft); font: 600 12px/16px var(--font-body); }
+.kind[aria-checked="true"] { background: var(--mq-turn); color: var(--mq-turn-on); }
+.kind[aria-checked="true"] :is(small, span) { color: inherit; opacity: 0.85; }
+
+/* ---------- Строка позиции ---------- */
+.list { display: grid; }
+.list[data-tone="gain"] { --tone: var(--mq-gain); }
+.list[data-tone="risk"] { --tone: var(--mq-risk); }
+.list[data-tone="turn"] { --tone: var(--mq-turn); }
+
+.row { position: relative; display: flex; align-items: center; gap: var(--mq-space-3); }
+.row__band { display: none; }
+.row__main { flex: 1; min-width: 0; display: grid; gap: 2px; }
+.row__kick { color: var(--tone); font: 800 11px/14px var(--font-body); letter-spacing: 0.06em; text-transform: uppercase; }
+.row__title { font: 700 15px/20px var(--font-body); }
+.row__meta { display: flex; flex-wrap: wrap; gap: 0 var(--mq-space-2); color: var(--mq-board-ink-soft); font: 600 12px/18px var(--font-body); white-space: normal; }
+.m--price { color: var(--mq-board-ink); }
+.m--out { color: var(--mq-risk); }
+.m--inc { color: var(--mq-gain); }
+.row__act {
+  flex: none;
+  min-height: 36px;
+  border: 0;
+  border-radius: var(--r-cell);
+  cursor: pointer;
+  font: 800 14px/18px var(--font-body);
+}
+.row__act:active { transform: translate(2px, 2px); box-shadow: none; }
+
+/* ---------- A · список ----------
+   Строки на поле окна, тонкая линия между ними; цвета группы нет. Действие — фишка со словом. */
+.ws-stage[data-variant="a"] .row { padding: var(--mq-space-3) 0; border-bottom: 1px solid var(--mq-cell-edge); }
+.ws-stage[data-variant="a"] .row:last-child { border-bottom: 0; }
+.ws-stage[data-variant="a"] .row__kick { color: var(--mq-board-ink-soft); }
+.ws-stage[data-variant="a"] .row__act { padding: 0 var(--mq-space-3); background: var(--mq-cell); box-shadow: 2px 2px 0 var(--nb-drop); }
+.ws-stage[data-variant="a"] .row__plus { display: none; }
+
+/* ---------- B · лоты ----------
+   Карточка собственности как на странице Капитала: чернильный край, цветная полоса сверху.
+   Внутри рамки — фишка без обводки (одна рамка на уровень). */
+.ws-stage[data-variant="b"] .list { gap: var(--mq-space-3); }
+.ws-stage[data-variant="b"] .row {
+  flex-wrap: wrap;
+  padding: 20px var(--mq-space-3) var(--mq-space-3);
+  border: var(--bw) solid var(--nb-line);
+  border-radius: var(--r-card);
+  background: var(--mq-cell);
+  overflow: hidden;
+}
+.ws-stage[data-variant="b"] .row__band {
+  display: block;
+  position: absolute;
+  inset: 0 0 auto;
+  height: 8px;
+  border-bottom: var(--bw) solid var(--nb-line);
+  background: var(--tone);
+}
+.ws-stage[data-variant="b"] .row__act { padding: 0 var(--mq-space-3); background: var(--mq-turn-soft); color: var(--mq-turn-ink); box-shadow: 2px 2px 0 var(--nb-drop); }
+.ws-stage[data-variant="b"] .row__plus { display: none; }
+
+/* ---------- C · плитки ----------
+   Плитка заливкой без края, цвет группы — полоса слева. Действие — фиолетовая «+» с тенью. */
+.ws-stage[data-variant="c"] .list { gap: var(--mq-space-2); }
+.ws-stage[data-variant="c"] .row {
+  padding: var(--mq-space-3) var(--mq-space-3) var(--mq-space-3) var(--mq-space-4);
+  border-radius: var(--r-cell);
+  background: var(--mq-cell);
+  overflow: hidden;
+}
+.ws-stage[data-variant="c"] .row__band { display: block; position: absolute; inset: 0 auto 0 0; width: 4px; background: var(--tone); }
+.ws-stage[data-variant="c"] .row__act { width: 40px; min-height: 40px; background: var(--mq-turn); color: var(--mq-turn-on); box-shadow: 2px 2px 0 var(--nb-drop); font-size: 20px; }
+.ws-stage[data-variant="c"] .row__verb { display: none; }
+
+/* Подтверждение по вариантам: A — две фишки в ряд; B — главная сверху во всю ширину, «Отмена» текстом; C — как A, «Отмена» в рамке ввода без тени */
+.ws-stage[data-variant="b"] .confirm { grid-template-columns: 1fr; }
+.ws-stage[data-variant="b"] .btn--danger { order: -1; }
+.ws-stage[data-variant="b"] .btn--quiet { min-height: var(--mq-tap); background: none; box-shadow: none; color: var(--mq-board-ink-soft); }
+.ws-stage[data-variant="c"] .btn--quiet { border: var(--bw) solid var(--mq-control-edge); box-shadow: none; }
+
+/* Виды страховки по вариантам: B — фишки с краем (это выбор, он нажимается) */
+.ws-stage[data-variant="b"] .kind { border: var(--bw) solid var(--nb-line); box-shadow: 2px 2px 0 var(--nb-drop); }
+.ws-stage[data-variant="b"] .kind[aria-checked="true"] { box-shadow: none; transform: translate(2px, 2px); }
+
+@media (prefers-reduced-motion: reduce) {
+  .sheet__close:active, .btn:active, .row__act:active { transform: none; }
+}

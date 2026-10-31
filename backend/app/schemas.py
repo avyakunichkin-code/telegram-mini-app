@@ -173,7 +173,7 @@ class ExpenseLineResponse(BaseModel):
     title: str
     amount_monthly: float
     tier: str = "must"
-    source_kind: str = "plan"
+    source_kind: str = "template"
     expires_period_index: Optional[int] = None
 
 
@@ -216,11 +216,25 @@ class NeedsOverview(BaseModel):
     health: float = 0
 
 
+class NeedsLevelSourceOverview(BaseModel):
+    source: str  # budget | asset | asset_lost | stress | cap
+    kind: str
+    title: Optional[str] = None
+    axis: str
+    delta: float
+
+
 class NeedsMetaOverview(BaseModel):
     character_label: Optional[str] = None
     consequence_profile: str = "standard"
     thresholds: dict = Field(default_factory=dict)
     player_support: dict = Field(default_factory=dict)
+    # SPEC_needs-set-point: уровень жизни и износ (превью для любой модели до перевода шаблона)
+    model: str = "linear"
+    level: Optional[NeedsOverview] = None
+    wear: Optional[NeedsOverview] = None
+    level_sources: List[NeedsLevelSourceOverview] = Field(default_factory=list)
+    periods_to_zero_if_idle: dict = Field(default_factory=dict)
 
 
 class TreatSelfOptionOverview(BaseModel):
@@ -238,7 +252,7 @@ class TreatSelfOverview(BaseModel):
 
 
 class PeriodClosePreview(BaseModel):
-    """Оценка итога месяца до нажатия «Закрыть месяц»."""
+    """Оценка итога месяца до нажатия «Завершить ход»."""
 
     estimated_cash_after_close: float = 0
     estimated_charges_total: float = 0
@@ -263,10 +277,7 @@ class FinanceOverview(BaseModel):
     expense_to_income_ratio: float = 0
     net_monthly_cashflow: float
     liabilities_to_income_ratio: float
-    time_state: str
     period_index: int
-    period_duration_seconds: int
-    seconds_until_next_period: int
     cash_balance: float
     safety_fund_balance: float
     total_monthly_obligations: float
@@ -309,6 +320,8 @@ class AnalyticsTimeseriesPoint(BaseModel):
     safety_fund_balance: float
     total_overdue_amount: float
     monthly_burn_total: float = 0
+    period_income_rate: float = 0
+    period_expense_total: float = 0
     is_projection: bool = False
 
 
@@ -329,6 +342,17 @@ class PeriodCloseHighlight(BaseModel):
     note: Optional[str] = None
 
 
+class PeriodCloseNeeds(BaseModel):
+    """Потребности в итоге закрытия периода (SPEC_needs-set-point, NV-404)."""
+
+    model: str = "linear"
+    before: NeedsOverview = Field(default_factory=NeedsOverview)
+    after: NeedsOverview = Field(default_factory=NeedsOverview)
+    level: Optional[NeedsOverview] = None
+    wear: Optional[NeedsOverview] = None
+    zero_streak: int = 0
+
+
 class PeriodCloseSummary(BaseModel):
     closed_period_index: int = 0
     cash_delta: float = 0
@@ -343,6 +367,8 @@ class PeriodCloseSummary(BaseModel):
     breakdown: List[PeriodCloseBreakdownItem] = Field(default_factory=list)
     period_highlights: List[PeriodCloseHighlight] = Field(default_factory=list)
     achievement_unlocks: List["AchievementUnlockEvent"] = Field(default_factory=list)
+    events_spawn_failed: bool = False
+    needs: Optional[PeriodCloseNeeds] = None
 
 
 class AchievementTierStatus(BaseModel):
@@ -401,9 +427,7 @@ class GameProfileResponse(BaseModel):
     is_archived: int
     league: str
     streak: int
-    time_state: str
     period_index: int
-    period_duration_seconds: int
     base_params_locked: int
     onboarding_state: str
     onboarding_step: str = "period_timer"
@@ -444,6 +468,9 @@ class RunFinalePayload(BaseModel):
     fact: Optional[RunFinaleFact] = None
     defeat_reason: Optional[str] = None
     can_dismiss: bool = False
+    # ★ BG-2 финал: три показателя (ходов = period_index, на счёте, подушка в ходах расходов)
+    cash_balance: Optional[float] = None
+    cushion_turns: Optional[float] = None
 
 
 class RunFinaleDismissResponse(BaseModel):
@@ -489,27 +516,24 @@ class GuidanceOverview(BaseModel):
     nudge_id: Optional[str] = None
     nudge_title: Optional[str] = None
     nudge_body: Optional[str] = None
+    is_trigger: bool = False
 
 
 class GuidancePatchRequest(BaseModel):
     action: str
     beat_id: Optional[str] = None
     view_index: Optional[int] = None
+    trigger_id: Optional[str] = None
 
 
 class GuidancePatchResponse(BaseModel):
     guidance: GuidanceOverview
 
 
-class TimeConfigUpdate(BaseModel):
-    period_duration_seconds: int
-
-
 class TimeStatusResponse(BaseModel):
-    time_state: str
+    """Ответ «Завершить ход» и блок `time` в bootstrap. Real-time таймера нет (TB1)."""
+
     period_index: int
-    period_duration_seconds: int
-    seconds_until_next_period: int
     period_close: Optional[PeriodCloseSummary] = None
     game_over: bool = False
     defeat_reason: Optional[str] = None
@@ -533,20 +557,20 @@ class GameStartRequest(BaseModel):
     profile_name: str
     save_kind: str = "game"
     template_key: Optional[str] = None
-    period_duration_seconds: int = 300
     cash_balance: float = 0
     monthly_receipts_count: int = 1
     monthly_salary: float = 0
     monthly_amount: Optional[float] = None
     assets: List[AssetCreate] = Field(default_factory=list)
     liabilities: List[LiabilityCreate] = Field(default_factory=list)
-    expense_budget: dict[str, float] = Field(default_factory=dict)
 
     @model_validator(mode="after")
     def normalize_game_start(self):
         sk = (self.save_kind or "game").strip().lower()
+        # Removed Plan is recognized here so the service returns the documented 400.
+        # Unknown values remain schema errors (422).
         if sk not in ("game", "plan"):
-            raise ValueError("save_kind must be 'game' or 'plan'")
+            raise ValueError("save_kind must be 'game'")
         self.save_kind = sk
         if self.monthly_salary in (0, 0.0) and self.monthly_amount is not None:
             self.monthly_salary = float(self.monthly_amount)

@@ -1,0 +1,35 @@
+---
+paths:
+  - "backend/**/*.{py,sql}"
+---
+
+# Backend
+
+Карта слоёв: [`backend/app/README.md`](backend/app/README.md), [`backend/app/services/README.md`](backend/app/services/README.md) — [ADR-007](docs/decisions/ADR-007-backend-domain-packages.md).
+
+- **Конец периода и экономика**: `backend/app/game/period.py` (`process_period_end` и связанная логика).
+- **HTTP / use-cases**: `backend/app/routers/`, `backend/app/services/<domain>/`.
+- **Модели и БД**: `backend/app/models.py` + [`backend/migrations/README.md`](backend/migrations/README.md). Схема: `bash backend/scripts/db.sh migrate`; пустая БД: `db.sh bootstrap`. На startup DDL **нет** (PR-08): `app/db_schema.prepare_schema` сверяет PostgreSQL с ORM и падает с подсказкой `db.sh migrate` (SQLite — `create_all`), затем `app.seeds.runner.seed_all` (шаблоны, `victory_goals`, события из YAML). Таблицы **без ORM** (напр. `victory_goals`) — DDL только в baseline/миграции. Skill/rule: **`db-baselines-and-migrations`**, `.claude/rules/db-migrations.md`.
+
+## `save_kind` — только Game ([ADR-013](docs/decisions/ADR-013-game-only-drop-plan-mode.md), [ADR-001](docs/decisions/ADR-001-save-kind-remove-light-hardcore.md))
+
+- На профиле: **`save_kind`** — канон **`game`**; **immutable**. Legacy **`GameProfile.mode`** (`light`/`hardcore`) **не использовать**. Не создавать `plan`; `POST start` с `plan` → **400** (эпик GO).
+- **Game:** старт только из каталога **`game_starter_templates`** (`starter_template_key`, blueprint, `base_monthly_lifestyle_expense`). API — `save_kind=game` + `template_key`.
+- **События:** фильтр **`EventDefinition.mode`**: `game` \| `any` (значение `plan` в YAML — долг GO-04), не legacy сложность.
+- Изменения контракта профиля/событий → SQL-миграция + `models.py` + **`frontend-react/src/api/<домен>.js`** и экраны старта.
+- **Роутеры**: подключение в `backend/main.py`; префиксы API держать согласованными с фронтом (`/api/...`).
+- **Ошибки API**: предсказуемые статусы и тело ответа; фронт ожидает единый контракт ошибок через `apiCall` в `frontend-react/src/api/client.js`.
+- **Победа (prod: Victory v2):** `GET /api/finance/overview` → `win_reached` и блок `victory` из `victory/engine.py` + `victory_config_json` шаблона (`chain` | `parallel`, gate `min_period_index_for_victory`, обычно 7). Spec: [`SPEC_victory-v2.md`](docs/specs/features/SPEC_victory-v2.md), [ADR-002](docs/decisions/ADR-002-victory-engine-and-template-config.md). Старт Game: [`SPEC_game-plan.md`](docs/specs/features/SPEC_game-plan.md); Plan снят [ADR-013](docs/decisions/ADR-013-game-only-drop-plan-mode.md).
+- **Инварианты логики (tier-окно, победа):** `backend/app/game/rules.py`; победа v2 — `backend/app/victory/engine.py`. Роутеры не дублируют условия победы вручную.
+
+## Локальные тесты (без CI)
+
+После правок в `backend/` (особенно `game/`, `victory/`, `events/`, `routers/`, `services/`) **запускай** и в ответе пользователю **напоминай**, если не запускал:
+
+```bash
+cd backend && python -m pytest -q
+```
+
+Первый раз или после смены окружения: `python -m pip install -r requirements-dev.txt`.
+
+В CI тесты пока не подключаем — только локальная проверка перед завершением задачи.

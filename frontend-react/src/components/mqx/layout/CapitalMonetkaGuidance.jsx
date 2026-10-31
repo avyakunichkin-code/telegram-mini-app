@@ -5,7 +5,7 @@ export const MQ_CAPITAL_MONETKA_KEY = 'mq-capital-monetka-v1';
 
 const CAPITAL_MONETKA_COPY = (
   <>
-    Здесь разберись с <strong>ДОХОДАМИ</strong> и <strong>РАСХОДАМИ</strong> за период — из чего складывается поток.
+    Здесь разберись с <strong>ДОХОДАМИ</strong> и <strong>РАСХОДАМИ</strong> за ход — из чего складывается поток.
     Ниже, в разделах, можно <strong>добавлять</strong> и <strong>удалять</strong> инвестиции, страховки, имущество и
     обязательства.
   </>

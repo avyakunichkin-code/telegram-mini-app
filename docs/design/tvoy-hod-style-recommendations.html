@@ -1,0 +1,262 @@
+<title>Стиль ТВОЙ ХОД</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600&family=Unbounded:wght@500;700;800&display=swap">
+<style>
+/* Layout: одна колонка-«доска» ~760px; разделы — клетки хода, каждый со своей фишкой-номером только там, где порядок важен (дорожная карта). */
+:root {
+  --bg: #f7f5fb;          /* фон с лёгким фиолетовым уклоном */
+  --surface: #ffffff;
+  --fg: #17131f;
+  --muted: #5d566b;
+  --line: #e6e1ef;
+  --violet: #6d28d9;      /* Quest Violet — «ход», действие */
+  --violet-soft: #efe8fc;
+  --gold: #eab308;        /* Coin Gold — монета, награда */
+  --gold-ink: #8a5a00;    /* золото для текста на светлом */
+  --gold-soft: #fdf3cf;
+  --emerald: #059669;
+  --emerald-soft: #def5ec;
+  --rose: #be123c;
+  --rose-soft: #fde4ea;
+  --display: "Unbounded", "Arial Black", system-ui, sans-serif;
+  --body: "Golos Text", "Segoe UI", Roboto, system-ui, sans-serif;
+  --mono: ui-monospace, "JetBrains Mono", Consolas, monospace;
+  --r-card: 18px;
+  --r-chip: 999px;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #14111b; --surface: #1d1828; --fg: #f1edf8; --muted: #b0a8c0; --line: #332b44;
+    --violet: #a78bfa; --violet-soft: #2b2140; --gold: #f2c94c; --gold-ink: #f2c94c; --gold-soft: #33290f;
+    --emerald: #34d399; --emerald-soft: #12302a; --rose: #fb7185; --rose-soft: #3a1820;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #14111b; --surface: #1d1828; --fg: #f1edf8; --muted: #b0a8c0; --line: #332b44;
+  --violet: #a78bfa; --violet-soft: #2b2140; --gold: #f2c94c; --gold-ink: #f2c94c; --gold-soft: #33290f;
+  --emerald: #34d399; --emerald-soft: #12302a; --rose: #fb7185; --rose-soft: #3a1820;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--fg); font: 16px/1.55 var(--body); }
+.wrap { max-width: 780px; margin: 0 auto; padding-inline: 18px; padding-block: 28px 64px; display: grid; gap: 40px; }
+h1, h2, h3 { font-family: var(--display); text-wrap: balance; margin: 0; letter-spacing: -0.01em; }
+h1 { font-size: clamp(30px, 6vw, 46px); font-weight: 800; line-height: 1.05; }
+h2 { font-size: 22px; font-weight: 700; line-height: 1.2; }
+h3 { font-size: 15px; font-weight: 700; }
+p { margin: 0; max-width: 66ch; }
+.lead { color: var(--muted); font-size: 17px; }
+.eyebrow { font: 600 12px/1 var(--body); letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+section { display: grid; gap: 16px; }
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-card); padding: 18px; display: grid; gap: 10px; min-width: 0; }
+.grid2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px; }
+code { font: 13px var(--mono); background: var(--violet-soft); color: var(--fg); padding: 1px 6px; border-radius: 6px; overflow-wrap: anywhere; }
+ul { margin: 0; padding-left: 20px; display: grid; gap: 6px; }
+.num { font-variant-numeric: tabular-nums; }
+
+/* Hero: игровое поле, а не фиолетовый градиент */
+.hero { display: grid; gap: 18px; }
+.board { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.tile { width: 46px; height: 46px; border-radius: 12px; border: 2px solid var(--line); background: var(--surface); display: grid; place-items: center; font: 700 14px var(--display); color: var(--muted); }
+.tile.done { background: var(--violet-soft); border-color: var(--violet); color: var(--violet); }
+.tile.now { background: var(--violet); border-color: var(--violet); color: #fff; box-shadow: 0 6px 0 -2px color-mix(in srgb, var(--violet) 45%, transparent); }
+.coin { width: 46px; height: 46px; border-radius: 50%; background: radial-gradient(circle at 35% 30%, #fff6c8 0 12%, var(--gold) 13% 62%, #c58a00 63%); border: 3px solid var(--violet); display: grid; place-items: center; font: 800 15px var(--display); color: #3b2500; }
+
+/* Диагноз */
+.finding { border-left: 4px solid var(--rose); }
+.finding .stat { font: 800 28px/1 var(--display); color: var(--rose); }
+.finding.ok { border-left-color: var(--emerald); }
+.finding.ok .stat { color: var(--emerald); }
+
+/* Палитра */
+.swatches { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; }
+.sw { border-radius: 14px; border: 1px solid var(--line); overflow: hidden; background: var(--surface); }
+.sw .chip { height: 64px; }
+.sw .meta { padding: 10px 12px; display: grid; gap: 2px; }
+.sw b { font: 700 13px var(--display); }
+.sw small { color: var(--muted); font-size: 13px; }
+
+/* Типографика */
+.type-row { display: grid; grid-template-columns: 74px 1fr; gap: 12px; align-items: baseline; border-bottom: 1px dashed var(--line); padding-block: 8px; }
+.type-row:last-child { border-bottom: 0; }
+.type-row span:first-child { color: var(--muted); font: 12px var(--mono); }
+
+/* Мини-мокап */
+.mock { display: grid; gap: 12px; }
+.phone { background: var(--surface); border: 1px solid var(--line); border-radius: 26px; padding: 16px; display: grid; gap: 12px; max-width: 360px; width: 100%; }
+.phone .top { display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+.phone .turn { font: 800 13px var(--display); color: var(--violet); }
+.phone .cash { font: 800 30px/1 var(--display); }
+.phone .row { display: flex; justify-content: space-between; gap: 8px; font-size: 14px; }
+.pill { display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; border-radius: var(--r-chip); font: 600 12px var(--body); }
+.pill.gold { background: var(--gold-soft); color: var(--gold-ink); }
+.pill.green { background: var(--emerald-soft); color: var(--emerald); }
+.btn { display: block; text-align: center; border: 0; border-radius: 14px; padding: 14px; font: 700 15px var(--display); background: var(--violet); color: #fff; box-shadow: 0 5px 0 0 color-mix(in srgb, var(--violet) 55%, #000); }
+.choice { border: 1px solid var(--line); border-radius: 14px; padding: 12px; display: grid; gap: 4px; }
+.choice small { color: var(--muted); }
+
+/* Таблицы */
+.tbl { overflow-x: auto; }
+table { border-collapse: collapse; width: 100%; font-size: 14px; }
+th, td { text-align: left; padding: 9px 10px; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { font: 600 12px var(--body); letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); }
+
+/* Дорожная карта: порядок — это информация */
+.steps { display: grid; gap: 10px; }
+.step { display: grid; grid-template-columns: 46px 1fr; gap: 14px; align-items: start; }
+.step .tile { width: 40px; height: 40px; }
+.decide { background: var(--gold-soft); border: 1px solid color-mix(in srgb, var(--gold) 45%, var(--line)); }
+a { color: var(--violet); }
+:focus-visible { outline: 3px solid var(--violet); outline-offset: 2px; }
+</style>
+
+<div class="wrap">
+
+<header class="hero">
+  <span class="eyebrow">Разбор фирменного стиля · октябрь 2026</span>
+  <h1>Финансы как игра — и интерфейс тоже должен быть игрой</h1>
+  <p class="lead">Логотип обещает казуальную игру: объёмные буквы, золото и фиолет, искры. Интерфейс отвечает стандартным fintech-стеклом с фиолетовым градиентом. Ниже — что именно расходится, какое направление предлагаю и как довести его до прода через design-lab.</p>
+  <div class="board" aria-label="Пример игрового трека: ходы 1–3 пройдены, 4-й текущий">
+    <div class="tile done">1</div><div class="tile done">2</div><div class="tile done">3</div><div class="tile now">4</div><div class="tile">5</div><div class="tile">6</div><div class="tile">7</div><div class="coin" aria-label="Цель">₽</div>
+  </div>
+</header>
+
+<section aria-labelledby="diag">
+  <h2 id="diag">Диагноз</h2>
+  <div class="grid2">
+    <div class="card finding"><span class="stat num">3 стиля</span><p><b>Иллюстрации не дружат.</b> Логотип — объёмный «игрушечный» 3D, Монетка — плоский 2D-мультфильм, персонажи — 3D в духе Pixar. UI — четвёртый язык: стекло и градиенты.</p></div>
+    <div class="card finding"><span class="stat num">~700</span><p><b>Цветов в обход токенов.</b> На 13,5 тыс. строк CSS — 34 токена. Брендовый фиолет <code>#6d28d9</code> вписан литералом 74 раза, рядом живёт второй фиолет <code>#7c3aed</code> (52 раза), плюс голубой, синий и оранжевый вне палитры.</p></div>
+    <div class="card finding"><span class="stat">0</span><p><b>Coin Gold в интерфейсе нет.</b> Золото — половина логотипа и цвет Монетки, но в UI вместо него случайные <code>#fbbf24</code> / <code>#f59e0b</code>. Главный «денежный» цвет бренда не работает.</p></div>
+    <div class="card finding"><span class="stat num">6,5 px</span><p><b>Нечитаемо мелкий текст.</b> Восемь размеров шрифта, из них 9, 10 и 11 px встречаются десятки раз, есть даже 6,5 px. Для PWA на телефоне это ниже порога читаемости.</p></div>
+    <div class="card finding"><span class="stat">2 названия</span><p><b>Главная кнопка называется по-разному:</b> «Завершить ход» (17 раз) и «Закрыть месяц» (3 раза). Модалка поражения обращается на «вы», хотя бренд говорит «ты».</p></div>
+    <div class="card finding"><span class="stat">XP</span><p><b>Следы снятых механик.</b> XP убран ADR-003, но в UI остались <code>MqxChip xp</code>, <code>MqxProgress xp</code>, «XP +4» в карточках событий, токены <code>--mq-xp-*</code>; в <code>tokens.css</code> — переменные стартового шаблона Vite.</p></div>
+    <div class="card finding"><span class="stat">TMA-first</span><p><b>Система спроектирована от Telegram,</b> цвета берутся из <code>tg-theme-*</code>. Но основной канал по ADR-012 — PWA и web, где темы Telegram нет: там работают fallback-значения, которые никто отдельно не проектировал.</p></div>
+    <div class="card finding ok"><span class="stat">Сильные стороны</span><p>Узнаваемый логотип и маскот, живой голос на «ты», процесс design-lab → утверждение → прод, понятная шкала шрифтов-токенов. Фундамент есть — нужна последовательность.</p></div>
+  </div>
+</section>
+
+<section aria-labelledby="dir">
+  <h2 id="dir">Направление: «настольная игра про деньги»</h2>
+  <p>Опорная метафора уже есть в названии: <b>ход</b>. Месяц — клетка на поле, деньги — монеты-фишки, цель — финиш. Интерфейс собирается из трёх материалов: игровое поле (нейтральная доска), фишки действий (фиолет) и монеты (золото). Стекло и градиенты уходят, остаётся один яркий акцент на экран.</p>
+  <div class="swatches">
+    <div class="sw"><div class="chip" style="background:var(--violet)"></div><div class="meta"><b>Ход · фиолет</b><small>Действие: CTA, текущий ход, активный таб. Только то, что игрок нажимает.</small></div></div>
+    <div class="sw"><div class="chip" style="background:var(--gold)"></div><div class="meta"><b>Монета · золото</b><small>Деньги и награды: баланс, зарплата, достижения, цель. Новый первоклассный токен.</small></div></div>
+    <div class="sw"><div class="chip" style="background:var(--emerald)"></div><div class="meta"><b>Рост · изумруд</b><small>Плюс к деньгам, подушка, «норма» потребностей.</small></div></div>
+    <div class="sw"><div class="chip" style="background:var(--rose)"></div><div class="meta"><b>Риск · роза</b><small>Только опасность: просрочка, поражение. Обычный расход — не красный.</small></div></div>
+    <div class="sw"><div class="chip" style="background:var(--bg); border-bottom:1px solid var(--line)"></div><div class="meta"><b>Поле · фон</b><small>Нейтраль с фиолетовым уклоном; своя тёмная тема для PWA, не только Telegram.</small></div></div>
+  </div>
+  <div class="card">
+    <h3>Почему так</h3>
+    <ul>
+      <li>Расход сейчас красный, как и просрочка: игрок видит «опасность» в каждой оплате ОСАГО. Обычный расход — нейтральный текст со знаком «−», красный только для риска.</li>
+      <li>Золото делает деньги осязаемыми и связывает UI с Монеткой и логотипом.</li>
+      <li>Фиолетовый градиент на белом — самый частый шаблон «AI-fintech»; отказ от него сразу отличает продукт.</li>
+    </ul>
+  </div>
+</section>
+
+<section aria-labelledby="type">
+  <h2 id="type">Типографика</h2>
+  <p>Логотип — округлые жирные буквы. Системный шрифт с ним не спорит, но и не продолжает. Предложение: выразительный дисплейный шрифт для заголовков и крупных цифр, спокойный текстовый для всего остального. Оба с кириллицей; эта страница набрана именно ими.</p>
+  <div class="card">
+    <div class="type-row"><span>Display</span><span style="font:800 30px/1.1 var(--display)" class="num">87 400 ₽</span></div>
+    <div class="type-row"><span>Title</span><span style="font:700 20px/1.2 var(--display)">Ход 4 · Капитал</span></div>
+    <div class="type-row"><span>Body</span><span style="font:400 16px/1.5 var(--body)">Зарплата пришла. Отложи часть в подушку, пока не съели расходы.</span></div>
+    <div class="type-row"><span>Caption</span><span style="font:500 13px/1.4 var(--body); color:var(--muted)">Премия списывается в конце хода</span></div>
+    <div class="type-row"><span>Минимум</span><span style="font:500 12px/1.4 var(--body); color:var(--muted)">12 px — ниже не опускаемся</span></div>
+  </div>
+  <ul>
+    <li><b>Пары-кандидаты</b> для раунда в design-lab: Unbounded + Golos Text (на этой странице), Rubik + Golos Text, Nunito + Inter. Решение — через ★, как требует брендбук («не подключать webfont в TMA без продуктового решения»).</li>
+    <li>Шкала 12 / 13 / 16 / 20 / 30 вместо восьми уровней; суммы всегда <code>tabular-nums</code>, пробел тысяч, «₽» через неразрывный пробел.</li>
+    <li>Шрифт — самохостинг с подмножеством кириллицы и латиницы, чтобы не просела загрузка PWA.</li>
+  </ul>
+</section>
+
+<section aria-labelledby="mock">
+  <h2 id="mock">Как это может выглядеть</h2>
+  <p>Набросок главной в предлагаемом направлении — для обсуждения, не макет к внедрению. Настоящие варианты собираются в design-lab.</p>
+  <div class="mock">
+    <div class="phone" role="img" aria-label="Набросок главного экрана: ход 4, баланс, зарплата, кнопка завершить ход, событие с нейтральными вариантами">
+      <div class="top"><span class="turn">ХОД 4 ИЗ 12</span><span class="pill gold">Цель: подушка 3×</span></div>
+      <div class="board" style="gap:6px"><div class="tile done" style="width:30px;height:30px;font-size:11px">1</div><div class="tile done" style="width:30px;height:30px;font-size:11px">2</div><div class="tile done" style="width:30px;height:30px;font-size:11px">3</div><div class="tile now" style="width:30px;height:30px;font-size:11px">4</div><div class="tile" style="width:30px;height:30px;font-size:11px">5</div><div class="tile" style="width:30px;height:30px;font-size:11px">6</div></div>
+      <div><span class="eyebrow">На счёте</span><div class="cash num">87 400 ₽</div></div>
+      <div class="row"><span>Зарплата</span><span class="pill green num">+62 500 ₽</span></div>
+      <div class="row"><span>Расходы на жизнь</span><span class="num">−37 500 ₽</span></div>
+      <div class="choice"><b>ДТП: что делаешь?</b><small>Три варианта одного веса — решение за игроком.</small></div>
+      <div class="choice"><span>Оформить по ОСАГО</span><small>Выплата по полису</small></div>
+      <div class="choice"><span>Оплатить из своих</span><small class="num">−45 000 ₽</small></div>
+      <span class="btn">Завершить ход</span>
+    </div>
+  </div>
+</section>
+
+<section aria-labelledby="ill">
+  <h2 id="ill">Иллюстрации и Монетка</h2>
+  <div class="grid2">
+    <div class="card"><h3>Один стиль на всё</h3><p>Выбрать язык логотипа — объёмный «игрушечный» 3D с мягким светом — и перерисовать в нём Монетку и четырёх персонажей. Либо наоборот: всё во flat-2D Монетки, а логотип оставить единственным 3D-исключением. Смешивать нельзя.</p></div>
+    <div class="card"><h3>Позы Монетки как система</h3><p>Набор поз под эмоции хода: радость (зарплата), тревога (просрочка), гордость (цель), подсказка (онбординг). Позы закрепить в <code>MonetkaAvatar</code> и использовать по событию, а не по вкусу.</p></div>
+    <div class="card"><h3>Пустые места</h3><p>На parity-странице дашборда вместо логотипа в hero стоят серые плашки. Каждый экран без иллюстрации — шанс для Монетки или фишки, а не для заглушки.</p></div>
+  </div>
+</section>
+
+<section aria-labelledby="voice">
+  <h2 id="voice">Голос, термины, честность выбора</h2>
+  <div class="tbl"><table>
+    <thead><tr><th>Сейчас</th><th>Предлагаю</th><th>Почему</th></tr></thead>
+    <tbody>
+      <tr><td>«Закрыть месяц» и «Завершить ход»</td><td><b>«Завершить ход»</b> везде</td><td>Продукт называется ТВОЙ ХОД; одно действие — одно имя</td></tr>
+      <tr><td>«Начните новую» (модалка поражения)</td><td>«Начни новую партию»</td><td>Бренд обращается на «ты»</td></tr>
+      <tr><td>Первый вариант события залит зелёным</td><td>Все варианты одного веса</td><td>Подсветка «правильного» ответа превращает решение в викторину</td></tr>
+      <tr><td>«XP +4» в карточках</td><td>Убрать</td><td>XP снят ADR-003</td></tr>
+      <tr><td>Расход красным</td><td>Нейтральный «−»</td><td>Красный только для риска</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section aria-labelledby="hyg">
+  <h2 id="hyg">Гигиена — можно сделать сразу, без нового дизайна</h2>
+  <div class="card">
+    <ul>
+      <li><code>styles/tokens.css</code>: убрать переменные стартового шаблона Vite (<code>--social-bg</code>, <code>--code-bg</code>, <code>font: 18px</code>) и XP-токены <code>--mq-xp-*</code>; один фиолет вместо двух.</li>
+      <li>Семантический слой токенов поверх палитры: <code>--color-action</code>, <code>--color-money</code>, <code>--color-gain</code>, <code>--color-risk</code>, <code>--color-surface</code>; компоненты ссылаются только на него.</li>
+      <li>stylelint-правило «hex только в tokens.css» в <code>check:guardrails</code>, чтобы литералы не возвращались.</li>
+      <li>Минимум 12 px: заменить 6,5 / 9 / 10 / 11 px на токены.</li>
+      <li>Удалить XP-варианты <code>MqxChip</code> / <code>MqxProgress</code> и «XP» из событий; поправить «вы» в <code>MqxGameOverModal</code>.</li>
+      <li>Отдельно спроектировать тёмную и светлую тему PWA, а не полагаться на fallback вне Telegram.</li>
+    </ul>
+  </div>
+</section>
+
+<section aria-labelledby="tools">
+  <h2 id="tools">Как пользоваться подключёнными инструментами</h2>
+  <div class="grid2">
+    <div class="card"><h3>Плагин frontend-design</h3><p>Для <b>поиска направлений</b>: 2–3 непохожих варианта экрана в раунде design-lab. В прод-код <code>mqx/</code> — только после ★ и через токены. В репозитории лежит ещё и проектная копия <code>frontend-design</code> — её стоит удалить, чтобы не было двух одноимённых скиллов, а оговорку про MQX перенести в <code>design-lab-mqx</code>.</p></div>
+    <div class="card"><h3>Скилл canvas-design</h3><p>Для <b>статичной графики</b>: мудборды направлений, постеры, обложки постов с Монеткой, печатная версия брендбука. Не для UI-экранов и не для перерисовки персонажей — объёмных персонажей он не рендерит.</p></div>
+    <div class="card"><h3>Design System (артефакт)</h3><p>После утверждения направления — собрать <b>одну живую справку</b>: токены в обеих темах, шрифты, компоненты с превью, ассеты. Её читают и люди, и агенты; брендбук-markdown превращается в ссылку на неё.</p></div>
+    <div class="card"><h3>Процесс остаётся прежним</h3><p>Варианты → design-lab → «утверждаем X» → <code>mqx/</code> → <code>#/dev/mqx</code> → прод. Инструменты ускоряют первый шаг, а не отменяют утверждение.</p></div>
+  </div>
+</section>
+
+<section aria-labelledby="road">
+  <h2 id="road">Порядок работы</h2>
+  <div class="steps">
+    <div class="step"><div class="tile done">1</div><div><h3>Гигиена</h3><p>Токены, мелкий шрифт, XP, термины и «ты». Без смены облика, 1–2 дня.</p></div></div>
+    <div class="step"><div class="tile done">2</div><div><h3>Раунд направлений</h3><p>Три мудборда в design-lab: «настольная игра», «тёплый наставник», «текущий MQX, вычищенный». Выбор ★.</p></div></div>
+    <div class="step"><div class="tile now">3</div><div><h3>Токены v2 и шрифты</h3><p>Семантический слой, обе темы PWA, пара шрифтов. Миграция CSS по экранам, начиная с дашборда.</p></div></div>
+    <div class="step"><div class="tile">4</div><div><h3>Иллюстрации</h3><p>Единый стиль, Монетка и персонажи, набор поз.</p></div></div>
+    <div class="step"><div class="tile">5</div><div><h3>Design System</h3><p>Живая справка, обновлённый брендбук, скилл <code>design-lab-mqx</code> ссылается на неё.</p></div></div>
+  </div>
+  <div class="card decide">
+    <h3>Решения приняты 14 октября (ADR-014)</h3>
+    <ul>
+      <li>Метафора «настольная игра про деньги» — <b>да</b>, основа направления.</li>
+      <li>Отдельный шрифт в PWA — <b>да</b>, пара выбирается раундом в design-lab.</li>
+      <li>Стиль иллюстраций — <b>3D</b>, как у логотипа; Монетка и персонажи перерисовываются.</li>
+      <li>«Завершить ход» — <b>единственное</b> название главного действия; уже применено в UI, подсказках и документации.</li>
+    </ul>
+  </div>
+</section>
+
+</div>

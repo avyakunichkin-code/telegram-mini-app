@@ -12,6 +12,7 @@ if str(BACKEND) not in sys.path:
     sys.path.insert(0, str(BACKEND))
 
 from app.events.mvp11_catalog import load_mvp11_catalog  # noqa: E402
+from app.events.balance_contract import curve_corridor_warnings  # noqa: E402
 from app.events.mvp11_contract import validate_mvp11_specs  # noqa: E402
 
 STUDENT_SALARY = 62_500
@@ -97,6 +98,13 @@ def main() -> None:
         print("student-leaning prereq:", ", ".join(sorted(student_only)))
     if pro_only:
         print("pro-leaning prereq:", ", ".join(sorted(pro_only)))
+
+    curve = curve_corridor_warnings(specs)
+    print()
+    print(f"--- needs price curve corridor (warnings, SPEC_needs-set-point §1): {len(curve)} ---")
+    print("by code:", dict(Counter(w.code for w in curve)))
+    for w in sorted(curve, key=lambda w: (w.code, w.event_key)):
+        print(f"{w.code}	{w.event_key}	{w.choice_title}	{w.detail}")
 
 
 if __name__ == "__main__":

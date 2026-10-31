@@ -5,8 +5,7 @@ import {
   clampInvestAmount,
   DEPOSIT_ANNUAL_RATE_PERCENT,
 } from '../constants/investProducts';
-import { capitalPageSubtitle, capitalLockHint, capitalSectionState, getEffectiveMechanicsFromOverview } from '../utils/starterMechanics';
-import { useMqxConfirm } from './mqx';
+import { capitalLockHint, capitalSectionState } from '../utils/starterMechanics';
 import { CapitalActionsPanel } from './mqx/layout/CapitalActionsPanel';
 import { CapitalDetailsPanel } from './mqx/layout/CapitalDetailsPanel';
 import { CapitalPeriodFlowsBlock } from './mqx/layout/CapitalPeriodFlowsBlock';
@@ -20,8 +19,11 @@ export function FinancePremium({
   refreshOverview,
   openFlowsSection = null,
   onFlowsSectionOpened,
+  /** 'details' | 'actions' — одноразовый запрос с дашборда (напр. chip «Вложить»). */
+  pageModeRequest = null,
+  onPageModeRequestHandled,
+  onGuidanceScreenEnter,
 }) {
-  const { dialog } = useMqxConfirm();
   const [pageMode, setPageMode] = useState('details');
   const [openSheet, setOpenSheet] = useState(null);
   const [investPositions, setInvestPositions] = useState([]);
@@ -36,15 +38,32 @@ export function FinancePremium({
   const [securedAcquireBusyKey, setSecuredAcquireBusyKey] = useState(null);
   const [prepayBusy, setPrepayBusy] = useState(false);
 
-  const mechanics = useMemo(() => getEffectiveMechanicsFromOverview(overview), [overview]);
-  const insuranceSectionState = useMemo(
-    () => capitalSectionState(overview, 'capital_insurance'),
+  /** open | locked | hidden на раздел: закрытые механики видны пунктиром (★ BG-2). */
+  const sections = useMemo(
+    () => ({
+      invest: capitalSectionState(overview, 'capital_invest'),
+      insurance: capitalSectionState(overview, 'capital_insurance'),
+      property: capitalSectionState(overview, 'capital_property'),
+      liabilities: capitalSectionState(overview, 'capital_liabilities'),
+    }),
     [overview],
   );
-  const insuranceLockHint = useMemo(
-    () => (insuranceSectionState === 'locked' ? capitalLockHint(overview) : null),
-    [insuranceSectionState, overview],
+  const lockHint = useMemo(
+    () => (Object.values(sections).includes('locked') ? capitalLockHint(overview) : null),
+    [sections, overview],
   );
+
+  useEffect(() => {
+    if (pageModeRequest !== 'details' && pageModeRequest !== 'actions') return undefined;
+    setPageMode(pageModeRequest);
+    onPageModeRequestHandled?.();
+    return undefined;
+  }, [pageModeRequest, onPageModeRequestHandled]);
+
+  useEffect(() => {
+    if (pageMode === 'actions') onGuidanceScreenEnter?.('finance:actions');
+    else if (pageMode === 'details') onGuidanceScreenEnter?.('finance:details');
+  }, [pageMode, onGuidanceScreenEnter]);
 
   useEffect(() => {
     if (!openFlowsSection) return undefined;
@@ -127,7 +146,10 @@ export function FinancePremium({
     setBuyingPlanKey(plan.plan_key);
     try {
       await API.buyPolicy(payload);
-      showNotification('Полис оформлен', 'success');
+      showNotification(
+        `Полис оформлен · премия ${Math.round(Number(plan?.monthly_premium) || 0).toLocaleString('ru-RU')} ₽`,
+        'success',
+      );
       await refreshOverview();
       await reloadExtra();
       setOpenSheet(null);
@@ -230,7 +252,7 @@ export function FinancePremium({
       await API.buyBond({
         amount: bondAmount,
         annual_rate_percent: BOND_ANNUAL_RATE_PERCENT,
-        title: 'Облигации (easy)',
+        title: 'Облигации',
       });
       showNotification('Облигации добавлены', 'success');
       setBondAmount(0);
@@ -266,27 +288,27 @@ export function FinancePremium({
         title="Капитал"
         titleClassName="mqx-hero__title--capital"
         subtitleClassName="mqx-hero__sub--capital"
-        subtitle={capitalPageSubtitle(mechanics)}
+        subtitle="Что приносит и забирает деньги"
+        turn={Number(overview?.period_index) || 0}
       />
 
-      <main className="mqx-content mqx-tab-page__scroll mqx-capital-page">
+      <main className="mqx-content mqx-tab-page__scroll mqx-capital-page mqx-capital-page--board">
         <div className="mqx-fin mqx-fin--capital">
-          {dialog}
           <div className="mqx-capital-accordion-stack">
             <CapitalPeriodFlowsBlock
               overview={overview}
               investPositions={investPositions}
               policies={policies}
               openFlowsSection={openFlowsSection}
+              showNet={pageMode === 'details'}
             />
 
             <MqxCapitalPageModeSeg mode={pageMode} onModeChange={setPageMode} />
 
             {pageMode === 'details' ? (
               <CapitalDetailsPanel
-                mechanics={mechanics}
-                insuranceSectionState={insuranceSectionState}
-                insuranceLockHint={insuranceLockHint}
+                sections={sections}
+                lockHint={lockHint}
                 investPositions={investPositions}
                 policies={policies}
                 ownedAssets={ownedAssets}
@@ -304,8 +326,8 @@ export function FinancePremium({
               />
             ) : (
               <CapitalActionsPanel
-                mechanics={mechanics}
-                insuranceSectionState={insuranceSectionState}
+                sections={sections}
+                lockHint={lockHint}
                 assetTemplates={assetTemplates}
                 liabilityTemplates={liabilityTemplates}
                 extraLoading={extraLoading}

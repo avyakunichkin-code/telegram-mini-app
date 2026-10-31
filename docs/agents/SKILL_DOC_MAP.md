@@ -1,6 +1,13 @@
+---
+tags:
+  - tvoy-hod/layer/agents
+aliases:
+  - "Карта: фаза → скилл → документы (ТВОЙ ХОД)"
+  - SKILL_DOC_MAP
+---
 # Карта: фаза → скилл → документы (ТВОЙ ХОД)
 
-Машиночитаемый дубль — поле `context:` и **`tier`** в [`.cursor/skills/catalog.yaml`](../../.cursor/skills/catalog.yaml).  
+Машиночитаемый дубль — поле `context:` и **`tier`** в [`.claude/skills/catalog.yaml`](../../.claude/skills/catalog.yaml).  
 Фаза «контент и данные»: [`SKILLS_PHASE_CONTENT_AND_DATA.md`](SKILLS_PHASE_CONTENT_AND_DATA.md).
 
 ## Конвейер документации
@@ -18,9 +25,9 @@ review                 code-review-and-quality (gate G1–G4)
         ↓
 handbook (люди)        project-handbook-documentation  →  docs/handbook/
         ↓
-ADR / sync             documentation-and-adrs  →  docs/decisions/, DOC_SYNC_LOG
+        ADR / sync             documentation-and-adrs  →  docs/decisions/, DOC_SYNC_LOG
         ↓
-release (optional)     release-tma
+        release (optional)     release-web
 ```
 
 ## События (контент)
@@ -35,9 +42,9 @@ release (optional)     release-tma
 create-event
 ```
 
-**Баланс:** [`.cursor/skills/create-event/event-balance-rules.md`](../../.cursor/skills/create-event/event-balance-rules.md) · ideas: [`event-choice-balance-tradeoffs`](../vision/ideas/event-choice-balance-tradeoffs.md), [`event-repeat-and-state-ladder`](../vision/ideas/event-repeat-and-state-ladder.md)
+**Баланс:** [`.claude/skills/create-event/event-balance-rules.md`](../../.claude/skills/create-event/event-balance-rules.md) · ideas: [`event-choice-balance-tradeoffs`](../vision/ideas/event-choice-balance-tradeoffs.md), [`event-repeat-and-state-ladder`](../vision/ideas/event-repeat-and-state-ladder.md)
 
-Персоны: [`create-event/persona-profiles.md`](../../.cursor/skills/create-event/persona-profiles.md).  
+Персоны: [`create-event/persona-profiles.md`](../../.claude/skills/create-event/persona-profiles.md).  
 Карта: [`EVENTS_AGENT.md`](EVENTS_AGENT.md).
 
 ## Игровая экономика (параллельно или вместо generic incremental)
@@ -55,6 +62,13 @@ code-review-and-quality
 ```
 
 Ключевые файлы: `backend/app/game/period.py`, `backend/app/victory/engine.py`, [`SPEC_victory-v2`](../specs/features/SPEC_victory-v2.md).
+
+## Онбординг и админка (support)
+
+| Зона | Скилл | Канон |
+|------|-------|-------|
+| O3 guidance: биты, триггеры, nudges, strip | `guidance-onboarding` | [`SPEC_onboarding-o3.md`](../specs/features/SPEC_onboarding-o3.md), `backend/app/guidance/` |
+| Админка: справочники, Watchtower, воронки, ops-алерты | `admin-ops` | [`PLAN_admin-analytics-ops.md`](../plans/PLAN_admin-analytics-ops.md), [ADR-008](../decisions/ADR-008-events-catalog-single-source.md), `backend/app/admin/` |
 
 ## UI / MQX (параллельно spec, после утверждения макета)
 
@@ -75,10 +89,10 @@ design-lab/<theme>/    design-lab-mqx  →  mqx/ + prod   frontend-ui-engineerin
 
 | phase | `tier: core` (primary) | `tier: support` | `tier: deferred` |
 |-------|------------------------|-----------------|------------------|
-| `define` | `idea-refine`, `spec-driven-development`, `api-and-interface-design` | `planning-and-task-breakdown` | `context-engineering` |
-| `build` | `incremental-implementation`, `create-event`, `event-analysis`, `game-economy-and-victory`, `design-lab-mqx`, `frontend-ui-engineering`, `test-driven-development`, `critical-test-scenarios` | — | `code-simplification` |
-| `verify` | `critical-test-scenarios`, `test-driven-development` | `code-review-and-quality` | `browser-testing-with-devtools`, `doubt-driven-development`, `performance-optimization`, `security-and-hardening`, `telegram-mini-app-runtime` |
-| `ship` | — | `project-handbook-documentation`, `documentation-and-adrs` | `deprecation-and-migration`, `social-changelog-posts`, `release-tma` |
+| `define` | `idea-refine`, `spec-driven-development`, `api-and-interface-design` | `planning-and-task-breakdown` | — |
+| `build` | `incremental-implementation`, `create-event`, `event-analysis`, `game-economy-and-victory`, `design-lab-mqx`, `frontend-ui-engineering`, `test-driven-development`, `critical-test-scenarios` | `db-baselines-and-migrations`, `guidance-onboarding`, `admin-ops` | `/simplify` (встроенный) |
+| `verify` | `critical-test-scenarios`, `test-driven-development` | `code-review-and-quality` | `doubt-driven-development`, `telegram-mini-app-runtime`, `/security-review` (встроенный) |
+| `ship` | — | `project-handbook-documentation`, `documentation-and-adrs` | `deprecation-and-migration`, `social-changelog-posts`, **`release-web`** |
 
 **Satellites** — в YAML/frontmatter задачи (`satellites:`), не отдельный `tier`. Пример: `game-economy-and-victory` + `doubt-driven-development`.
 
@@ -88,8 +102,8 @@ design-lab/<theme>/    design-lab-mqx  →  mqx/ + prod   frontend-ui-engineerin
 
 | Задача | Скилл | Читать |
 |--------|-------|--------|
-| Какой скилл выбрать | `using-agent-skills` | `CURSOR_SKILLS.md`, `catalog.yaml`, [`SKILLS_AUDIT_2026-06-01.md`](SKILLS_AUDIT_2026-06-01.md) |
-| Rules vs skills | `context-engineering` | `DOCUMENTATION_SYSTEM.md` |
+| Какой скилл выбрать | `.claude/rules/router.md` | `AGENT_SKILLS.md`, `catalog.yaml`, [release-ready-quality.md](../../.claude/skills/_shared/release-ready-quality.md) |
+| Rules vs skills | `project-skills-layout` | `DOCUMENTATION_SYSTEM.md` |
 | Линт скиллов | `skill-test` | `catalog.yaml`, `quality-rubric.md` |
 
 ## Handbook (люди, не контракт)
@@ -104,6 +118,27 @@ documentation-and-adrs  →  docs/decisions/
 
 Канон пакета и волны: скилл `project-handbook-documentation` · build-spec [`specs/build/project-handbook-documentation.md`](../specs/build/project-handbook-documentation.md).
 
+## Аудиты (снимки, не конвейер)
+
+```text
+запрос «аудит»  →  docs/audits/README.md + templates/AUDIT.md
+        ↓
+docs/audits/<kind>/<YYYY-MM-DD>-<slug>.md
+        ↓
+реестр в audits/README + DOC_SYNC_LOG
+```
+
+| Kind | Папка | Пример |
+|------|--------|--------|
+| product (GD, экономика игрока, FTUE) | `docs/audits/product/` | [`2026-09-07-product-game-design.md`](../audits/product/2026-09-07-product-game-design.md) |
+| engineering (архитектура, security, infra) | `docs/audits/engineering/` | инструкция [`engineering/README.md`](../audits/engineering/README.md) |
+| qa (edge/stress, гонки, testability) | `docs/audits/qa/` | [`2026-09-07-mechanics.md`](../audits/qa/2026-09-07-mechanics.md) |
+| ux (иерархия, FTUE UI, a11y) | `docs/audits/ux/` | [`2026-09-07-player-surface.md`](../audits/ux/2026-09-07-player-surface.md) |
+| liveops (сезоны, каналы, фидбек-цикл) | `docs/audits/liveops/` | [`2026-09-07-community.md`](../audits/liveops/2026-09-07-community.md) |
+| content / ops | `docs/audits/<kind>/` | создать папку вместе с первым файлом |
+
+Не класть в `vision/ideas/`, `foundation/`, `handbook/`. Чеклист код↔spec — по-прежнему `MVP_AUDIT_VS_SPEC.md`.
+
 ## Источники правды (при конфликте)
 
 1. Код + тесты (production)
@@ -111,5 +146,6 @@ documentation-and-adrs  →  docs/decisions/
 3. `docs/foundation/SPEC_PRODUCT.md`
 4. `docs/vision/ideas/` — направление, не детали реализации
 5. `docs/handbook/` — narrative; при расхождении с 1–3 править handbook
+6. `docs/audits/` — снимок на дату; не канон, пока не утверждён в spec/ADR ([`audits/README.md`](../audits/README.md))
 
 См. [`docs/DOCUMENTATION_SYSTEM.md`](../DOCUMENTATION_SYSTEM.md).

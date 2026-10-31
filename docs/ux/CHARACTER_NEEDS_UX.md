@@ -3,9 +3,14 @@ layer: ux
 status: approved
 last_reviewed: 2026-06-02
 feature: character-needs-phase-1
-platform: Telegram Mini App (touch-first, 320–480px)
+platform: SPA / PWA (touch-first, 320–480px)
+tags:
+  - tvoy-hod/layer/ux
+  - tvoy-hod/status/approved
+aliases:
+  - CHARACTER_NEEDS_UX
+  - "UX: Потребности персонажа — сводка и решения"
 ---
-
 # UX: Потребности персонажа — сводка и решения
 
 Мастер-документ для фазы 1. Детальные per-screen спеки — в [`screens/`](screens/). Продуктовая механика — [`specs/features/SPEC_game-character-needs.md`](../specs/features/SPEC_game-character-needs.md).

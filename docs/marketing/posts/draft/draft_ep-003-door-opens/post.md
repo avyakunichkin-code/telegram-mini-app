@@ -1,3 +1,10 @@
+---
+tags:
+  - tvoy-hod/layer/marketing
+aliases:
+  - "Платформа: Telegram (канал)"
+  - post
+---
 # Платформа: Telegram (канал)
 # Приём: C (контраст до/после)
 

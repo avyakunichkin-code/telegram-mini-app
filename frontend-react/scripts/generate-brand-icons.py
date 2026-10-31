@@ -7,7 +7,7 @@ from pathlib import Path
 from PIL import Image
 
 ROOT = Path(__file__).resolve().parents[1]
-SRC = ROOT / "src" / "assets" / "brand" / "logo-compact.png"
+SRC = ROOT.parent / "design/system/assets/Logos/logo-compact.png"
 PUBLIC = ROOT / "public"
 PWA = PUBLIC / "pwa"
 

@@ -6,8 +6,13 @@ owner: product
 audience: product, dev, ops, marketing
 spec: ../specs/features/SPEC_telegram-bots-and-notifications.md
 product_phase: pre-alpha → closed-alpha
+tags:
+  - tvoy-hod/layer/backlog
+  - tvoy-hod/status/draft
+aliases:
+  - "Telegram — бэклог и этапы"
+  - TELEGRAM_BACKLOG
 ---
-
 # Telegram — бэклог и этапы
 
 Понятный план: **что делаем с ботами и каналом**, в каком порядке и когда считаем этап готовым.
@@ -113,7 +118,7 @@ gantt
 | TG-102 | P0 | Ops | BotFather: **Web App URL** = prod (`…/#/`), привязать **domain** | Menu Button открывает игру |
 | TG-103 | P0 | Marketing | Оформить description / about (тон Монетки, 30+, финграмотность) | Текст согласован |
 | TG-104 | P0 | Dev | Webhook `POST /api/telegram/webhook/player` + `/start` → сохранить `telegram_chat_id` | CS-4 |
-| TG-105 | P0 | Dev | Миграция: `users.telegram_chat_id`, `telegram_started_at` | migrate.ps1 prod |
+| TG-105 | P0 | Dev | Миграция: `users.telegram_chat_id`, `telegram_started_at` | `bash backend/scripts/db.sh migrate` on prod |
 | TG-106 | P1 | Dev | Ответ на `/start`: текст + InlineKeyboard `web_app` «Играть» | Ручной TMA smoke |
 | TG-107 | P1 | Dev | `/help` — 3–4 строки + ссылка на чат фидбека волны | Copy из invite |
 | TG-108 | P1 | Marketing | Первый пост в канале + invite Pre-Alpha с **deeplink на бота** | Wave 1 ушла |

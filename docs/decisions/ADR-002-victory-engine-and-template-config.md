@@ -1,3 +1,11 @@
+---
+tags:
+  - tvoy-hod/layer/adr
+aliases:
+  - ADR-002
+  - ADR-002-victory-engine-and-template-config
+  - "ADR-002: Движок победы v2 и `victory_config_json` в шаблонах"
+---
 ﻿---
 status: accepted
 date: 2026-05-24

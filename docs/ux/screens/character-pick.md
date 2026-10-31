@@ -2,11 +2,16 @@
 layer: ux
 status: approved
 last_reviewed: 2026-06-01
-platform: Telegram Mini App
+platform: SPA / PWA
 screen_id: character-pick
 prod_route: GameTemplatePickScreen
+tags:
+  - tvoy-hod/layer/ux
+  - tvoy-hod/status/approved
+aliases:
+  - character-pick
+  - "UX Spec: Выбор персонажа (старт Game)"
 ---
-
 # UX Spec: Выбор персонажа (старт Game)
 
 > **Replaces copy:** «Шаблон» / «сценарий» → **«персонаж» / «жизнь»** где уместно  

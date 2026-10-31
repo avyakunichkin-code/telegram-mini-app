@@ -1,11 +1,15 @@
-<!DOCTYPE html>
-<html lang="ru" data-theme="light">
+<!doctype html>
+<html lang="ru" data-font="f3">
   <head>
     <base href="./" />
-    <meta charset="UTF-8" />
+    <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>ТВОЙ ХОД — Финансы: Детали | Действия v2</title>
+    <title>ТВОЙ ХОД — настольная игра: остальные экраны</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700&family=Nunito:wght@800;900&display=swap" />
     <link rel="stylesheet" href="./lab-base.css" />
+    <link rel="stylesheet" href="./styles.css" />
       <style data-embed-style>
       html[data-embed="1"] .lab-header,
       html[data-embed="1"] .lab-round-note,
@@ -25,452 +29,297 @@
     </script>
   </head>
   <body>
-    <svg xmlns="http://www.w3.org/2000/svg" style="display: none" aria-hidden="true">
-      <symbol id="ico-coin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75">
-        <ellipse cx="8" cy="7" rx="5" ry="2.2" /><path d="M3 7v4c0 1.2 2.2 2.2 5 2.2s5-1 5-2.2V7" />
-      </symbol>
-      <symbol id="ico-up" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25">
-        <path stroke-linecap="round" d="M12 19V9" /><path stroke-linecap="round" stroke-linejoin="round" d="M8 11l4-4 4 4" />
-      </symbol>
-      <symbol id="ico-down" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25">
-        <path stroke-linecap="round" d="M12 5v10" /><path stroke-linecap="round" stroke-linejoin="round" d="M8 13l4 4 4-4" />
-      </symbol>
-      <symbol id="ico-pct" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.85">
-        <circle cx="7" cy="7" r="2.25" /><circle cx="17" cy="17" r="2.25" /><path stroke-linecap="round" d="M5 19L19 5" />
-      </symbol>
-      <symbol id="ico-x" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <path stroke-linecap="round" d="M6 6l12 12M18 6 6 18" />
-      </symbol>
-    </svg>
-
-    <header class="lab-header">
-      <h1>Финансы — Детали | Действия (v2)</h1>
-      <p>
-        Сверху — <strong>Доходы / Расходы</strong>, затем переключатель <strong>Детали | Действия</strong> как разделитель.
-        Meta: <strong>M7</strong> на потоках, <strong>M8</strong> на позициях, <strong>M5</strong> на обязательствах.
-      </p>
-      <div class="lab-theme-row">
-        <button type="button" class="is-active" data-theme-btn="light">Светлая</button>
-        <button type="button" data-theme-btn="dark">Тёмная</button>
+    <header class="lab-head">
+      <h1>Настольная игра про деньги: остальные экраны</h1>
+      <p>Раунд 4. Стиль ★ BG-1 с дашборда — на всех остальных экранах. Одна партия везде: Студент, 12-й ход, на счёте 87 400 ₽, подушка 45 000 ₽, вклад и облигации, потребкредит. Правила те же: фиолетовый — то, что игрок делает; золото — деньги и награды; изумруд — плюс; красный — только риск. Объём — только у нажимаемого.</p>
+      <div class="lab-controls">
+        <span>Тема</span>
+        <button class="lab-toggle" type="button" data-set-theme="light" aria-pressed="true">Светлая</button>
+        <button class="lab-toggle" type="button" data-set-theme="dark" aria-pressed="false">Тёмная</button>
       </div>
     </header>
 
-    <main class="lab-wrap">
-      <section class="lab-section" id="proto">
-        <div class="lab-section__label">
-          <span class="lab-section__id lab-section__id--ok">★</span>
-          <span>Интерактивный прототип</span>
-        </div>
-        <p class="cap-proto-note">
-          Порядок: потоки → сегмент → контент. «Действия» — плитки 2–3 в ряд (flex-wrap).
-        </p>
-        <div class="cap-deep-link-bar">
-          <span>С дашборда:</span>
-          <button type="button" data-deep-link="income">Доходы</button>
-          <button type="button" data-deep-link="expense">Расходы</button>
-        </div>
-
-        <article class="phone" data-proto-phone>
-          <div class="phone__hero">
-            <div class="phone__hero-kicker">Финансы</div>
-            <h2 class="phone__hero-title">Управление капиталом</h2>
+    <!-- ===================== Внутри партии ===================== -->
+    <div class="s-group">
+      <h2>Внутри партии</h2>
+      <p>Вкладки «Капитал», «Аналитика», «Меню» и событие. Таббар — светлый в обеих темах через токены, активная вкладка — фиолетовая фишка.</p>
+    </div>
+    <main class="lab-grid s-grid">
+      <!-- Капитал · Детали -->
+      <section class="variant" aria-labelledby="s1">
+        <header>
+          <h2 id="s1">Капитал · Детали</h2>
+          <p>Имущество — как карточки собственности: цветная полоса говорит, что это. Красная полоса только у долгов. Под потоками — итог хода.</p>
+        </header>
+        <div class="phone s-phone">
+          <div class="s-head"><div><h3>Капитал</h3><small>Что приносит и забирает деньги</small></div><span class="turn-token" aria-label="Ход 12">12</span></div>
+          <div class="s-flows">
+            <div class="s-flow"><small>Доходы за ход</small><b class="bg-money bg-gain">+65 400 ₽</b></div>
+            <div class="s-flow"><small>Расходы за ход</small><b class="bg-money">−46 500 ₽</b></div>
+            <div class="s-net s-net--gain"><span>Остаётся после хода</span><b class="bg-money">+18 900 ₽</b></div>
           </div>
-          <div class="phone__main" style="padding: 12px">
-            <div class="cap-flows-pinned" data-flows-pinned>
-              <div class="cap-page-sheet__stack" data-flow-stack>
-                <details class="cap-sect-acc cap-sect-acc--in" id="capital-flows-income" data-flow="income">
-                  <summary class="cap-sect-acc__head">
-                    <span class="cap-sect-acc__title">Доходы</span>
-                    <span class="cap-meta-v7">88 400 ₽</span>
-                  </summary>
-                  <div class="cap-sect-acc__body">
-                    <div class="cap-cat">
-                      <div class="cap-cat__row"><span>Зарплата</span><span class="cap-amt">45 000 ₽</span></div>
-                    </div>
-                    <div class="cap-cat">
-                      <div class="cap-cat__row"><span>Инвестиции</span><span class="cap-amt">8 400 ₽</span></div>
-                      <div class="cap-lines">
-                        <div class="cap-line"><span>Депозит «Сбер»</span><span>2 400 ₽</span></div>
-                        <div class="cap-line"><span>Облигации OFZ</span><span>6 000 ₽</span></div>
-                      </div>
-                    </div>
-                  </div>
-                </details>
-                <details class="cap-sect-acc cap-sect-acc--out" id="capital-flows-expense" data-flow="expense">
-                  <summary class="cap-sect-acc__head">
-                    <span class="cap-sect-acc__title">Расходы</span>
-                    <span class="cap-meta-v7">99 900 ₽</span>
-                  </summary>
-                  <div class="cap-sect-acc__body">
-                    <div class="cap-cat">
-                      <div class="cap-cat__row"><span>На жизнь</span><span class="cap-amt">32 500 ₽</span></div>
-                    </div>
-                    <div class="cap-cat">
-                      <div class="cap-cat__row"><span>Обязательства</span><span class="cap-amt">51 000 ₽</span></div>
-                    </div>
-                  </div>
-                </details>
-              </div>
-            </div>
-
-            <div class="cap-mode-seg-zone">
-              <div class="cap-page-seg cap-mode-seg" data-page-seg>
-                <button type="button" class="cap-page-seg__btn is-active" data-mode="details">Детали</button>
-                <button type="button" class="cap-page-seg__btn" data-mode="actions">Действия</button>
-              </div>
-            </div>
-
-            <!-- ДЕТАЛИ -->
-            <div data-panel="details">
-              <div class="cap-page-sheet__stack">
-                <details class="cap-sect-acc cap-sect-acc--invest">
-                  <summary class="cap-sect-acc__head">
-                    <span class="cap-sect-acc__title">Инвестиции</span>
-                    <span class="cap-meta-v8"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h10"/></svg>2</span>
-                  </summary>
-                  <div class="cap-sect-acc__body">
-                    <div class="cap-pos-list">
-                      <div class="cap-pos-row">
-                        <div>
-                          <div class="cap-pos-row__title">Депозит «Сбер»</div>
-                          <div class="cap-pos-row__metrics">
-                            <span class="cap-metric"><span class="cap-metric__glyph cap-metric__glyph--coin"><svg><use href="#ico-coin" /></svg></span>120 000 ₽</span>
-                            <span class="cap-metric cap-metric--pos"><span class="cap-metric__glyph cap-metric__glyph--up"><svg><use href="#ico-up" /></svg></span>+2 400</span>
-                            <span class="cap-metric"><span class="cap-metric__glyph cap-metric__glyph--pct"><svg><use href="#ico-pct" /></svg></span>12</span>
-                          </div>
-                        </div>
-                        <button type="button" class="cap-row-action cap-row-action--close">Закрыть</button>
-                      </div>
-                      <div class="cap-pos-row">
-                        <div>
-                          <div class="cap-pos-row__title">Облигации OFZ</div>
-                          <div class="cap-pos-row__metrics">
-                            <span class="cap-metric"><span class="cap-metric__glyph cap-metric__glyph--coin"><svg><use href="#ico-coin" /></svg></span>50 000 ₽</span>
-                            <span class="cap-metric cap-metric--pos"><span class="cap-metric__glyph cap-metric__glyph--up"><svg><use href="#ico-up" /></svg></span>+500</span>
-                            <span class="cap-metric"><span class="cap-metric__glyph cap-metric__glyph--pct"><svg><use href="#ico-pct" /></svg></span>10</span>
-                          </div>
-                        </div>
-                        <button type="button" class="cap-row-action cap-row-action--sell">Продать</button>
-                      </div>
-                    </div>
-                  </div>
-                </details>
-
-                <details class="cap-sect-acc cap-sect-acc--insurance">
-                  <summary class="cap-sect-acc__head">
-                    <span class="cap-sect-acc__title">Страховки</span>
-                    <span class="cap-meta-v8 cap-meta-v8--empty"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h10"/></svg>0</span>
-                  </summary>
-                  <div class="cap-sect-acc__body">
-                    <div class="cap-detail-empty">
-                      <p class="cap-detail-empty__text">
-                        Здесь только <strong>оформленные полисы</strong>. Новый полис — вкладка <strong>«Действия»</strong>.
-                      </p>
-                      <div class="cap-detail-empty__actions">
-                        <button type="button" class="cap-add-cta" data-goto-action="insurance">+ Добавить</button>
-                      </div>
-                    </div>
-                  </div>
-                </details>
-
-                <details class="cap-sect-acc cap-sect-acc--property">
-                  <summary class="cap-sect-acc__head">
-                    <span class="cap-sect-acc__title">Имущество</span>
-                    <span class="cap-meta-v8"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h10"/></svg>2</span>
-                  </summary>
-                  <div class="cap-sect-acc__body">
-                    <div class="cap-pos-list">
-                      <div class="cap-pos-row">
-                        <div>
-                          <div class="cap-pos-row__title">Квартира (аренда)</div>
-                          <div class="cap-pos-row__metrics">
-                            <span class="cap-metric cap-metric--pos"><span class="cap-metric__glyph cap-metric__glyph--up"><svg><use href="#ico-up" /></svg></span>+35 000 ₽/мес</span>
-                          </div>
-                        </div>
-                        <button type="button" class="cap-row-action cap-row-action--sell">Продать</button>
-                      </div>
-                      <div class="cap-pos-row">
-                        <div>
-                          <div class="cap-pos-row__title">Авто (такси)</div>
-                          <div class="cap-pos-row__metrics">
-                            <span class="cap-metric cap-metric--pos"><span class="cap-metric__glyph cap-metric__glyph--up"><svg><use href="#ico-up" /></svg></span>+12 000 ₽/мес</span>
-                          </div>
-                        </div>
-                        <button type="button" class="cap-row-action cap-row-action--sell">Продать</button>
-                      </div>
-                    </div>
-                  </div>
-                </details>
-
-                <details class="cap-sect-acc cap-sect-acc--liabilities">
-                  <summary class="cap-sect-acc__head">
-                    <span class="cap-sect-acc__title">Обязательства</span>
-                    <span class="cap-meta-v5 cap-meta-v5--liab">2 долга</span>
-                  </summary>
-                  <div class="cap-sect-acc__body">
-                    <div class="cap-pos-list">
-                      <div class="cap-pos-row">
-                        <div>
-                          <div class="cap-pos-row__title">Ипотека</div>
-                          <div class="cap-pos-row__metrics">
-                            <span class="cap-metric cap-metric--neg"><span class="cap-metric__glyph cap-metric__glyph--down"><svg><use href="#ico-down" /></svg></span>−42 000 ₽/мес</span>
-                            <span class="cap-metric"><span class="cap-metric__glyph cap-metric__glyph--coin"><svg><use href="#ico-coin" /></svg></span>2,1 млн</span>
-                          </div>
-                        </div>
-                        <button type="button" class="cap-row-action cap-row-action--close">Закрыть</button>
-                      </div>
-                      <div class="cap-pos-row">
-                        <div>
-                          <div class="cap-pos-row__title">Потребительский кредит</div>
-                          <div class="cap-pos-row__metrics">
-                            <span class="cap-metric cap-metric--neg"><span class="cap-metric__glyph cap-metric__glyph--down"><svg><use href="#ico-down" /></svg></span>−9 000 ₽/мес</span>
-                            <span class="cap-metric"><span class="cap-metric__glyph cap-metric__glyph--coin"><svg><use href="#ico-coin" /></svg></span>180 000 ₽</span>
-                          </div>
-                        </div>
-                        <button type="button" class="cap-row-action cap-row-action--close">Закрыть</button>
-                      </div>
-                    </div>
-                  </div>
-                </details>
-              </div>
-            </div>
-
-            <!-- ДЕЙСТВИЯ -->
-            <div data-panel="actions" class="cap-panel-hidden">
-              <div class="cap-act-list cap-act-list--wrap">
-                <button type="button" class="cap-act-row cap-act-tile" data-open-sheet="deposit">
-                  <span class="cap-act-row__icon">🏦</span>
-                  <span class="cap-act-row__title">Депозит</span>
-                </button>
-                <button type="button" class="cap-act-row cap-act-tile" data-open-sheet="bond">
-                  <span class="cap-act-row__icon cap-act-row__icon--bond">📈</span>
-                  <span class="cap-act-row__title">Облигации</span>
-                </button>
-                <button type="button" class="cap-act-row cap-act-tile" data-open-sheet="realestate">
-                  <span class="cap-act-row__icon cap-act-row__icon--prop">🏠</span>
-                  <span class="cap-act-row__title">Недвижимость</span>
-                </button>
-                <button type="button" class="cap-act-row cap-act-tile" data-open-sheet="car">
-                  <span class="cap-act-row__icon cap-act-row__icon--car">🚗</span>
-                  <span class="cap-act-row__title">Авто</span>
-                </button>
-                <button type="button" class="cap-act-row cap-act-tile cap-act-tile--highlight" data-open-sheet="insurance">
-                  <span class="cap-act-row__icon cap-act-row__icon--ins">🛡</span>
-                  <span class="cap-act-row__title">Страховки</span>
-                </button>
-                <button type="button" class="cap-act-row cap-act-tile" data-open-sheet="mortgage">
-                  <span class="cap-act-row__icon cap-act-row__icon--debt">🏠</span>
-                  <span class="cap-act-row__title">Ипотека</span>
-                </button>
-                <button type="button" class="cap-act-row cap-act-tile" data-open-sheet="credit">
-                  <span class="cap-act-row__icon cap-act-row__icon--credit">💳</span>
-                  <span class="cap-act-row__title">Кредит</span>
-                </button>
-              </div>
-            </div>
+          <div class="s-seg" role="tablist" aria-label="Раздел капитала"><button class="on" type="button" role="tab" aria-selected="true">Детали</button><button type="button" role="tab" aria-selected="false">Действия</button></div>
+          <div class="s-lot s-lot--invest">
+            <div class="s-lot__band"></div>
+            <div class="s-lot__head"><b>Вложения</b><small>2 · 170 000 ₽</small></div>
+            <div class="s-row"><span>Вклад «Надёжный»</span><b class="s-row__val bg-money">120 000 ₽</b><small>+2 400 ₽ за ход · 2% за ход</small><button class="s-row__act" type="button">Закрыть</button></div>
+            <div class="s-row"><span>Облигации ОФЗ</span><b class="s-row__val bg-money">50 000 ₽</b><small>+500 ₽ за ход · купон</small><button class="s-row__act" type="button">Продать</button></div>
           </div>
-        </article>
+          <div class="s-lot s-lot--debt">
+            <div class="s-lot__band"></div>
+            <div class="s-lot__head"><b>Долги</b><small>1 · 180 000 ₽</small></div>
+            <div class="s-row"><span>Потребкредит</span><b class="s-row__val bg-money">180 000 ₽</b><small>−9 000 ₽ за ход · ещё 20 ходов</small><button class="s-row__act" type="button">Погасить</button></div>
+          </div>
+          <div class="s-lot s-lot--property">
+            <div class="s-lot__band"></div>
+            <div class="s-lot__head"><b>Имущество</b><small>пусто</small></div>
+            <div class="s-empty">Пока ничего нет. Купить квартиру или авто — во вкладке «Действия».</div>
+          </div>
+          <nav class="s-tabbar" aria-label="Разделы"><button class="s-tab" type="button"><i></i>Главная</button><button class="s-tab s-tab--on" type="button" aria-current="page"><i></i>Капитал</button><button class="s-tab" type="button"><i></i>Аналитика</button><button class="s-tab" type="button"><i></i>Меню</button></nav>
+        </div>
       </section>
 
-      <!-- Meta variants -->
-      <section class="lab-section">
-        <div class="lab-section__label"><span class="lab-section__id">M</span><span>Meta в заголовке (выберите)</span></div>
-        <p class="lab-section__note">В прототипе ★: M7 на потоках, M8 на позициях (icon+число), M5 tint на обязательствах.</p>
-        <div class="cap-meta-pick" data-meta-pick>
-          <div class="cap-meta-pick__item"><span class="cap-meta-v1"><span class="cap-meta-v1__dot"></span>2</span>M1 pill</div>
-          <div class="cap-meta-pick__item"><span class="cap-meta-v2">2</span>M2 square</div>
-          <div class="cap-meta-pick__item"><span class="cap-meta-v3"><strong>2</strong> поз.</span>M3 текст</div>
-          <div class="cap-meta-pick__item"><span class="cap-meta-v4">поз. <span class="cap-meta-v4__n">2</span></span>M4 label</div>
-          <div class="cap-meta-pick__item cap-meta-pick__item--applied"><span class="cap-meta-v5 cap-meta-v5--liab">2 долга</span>M5 tint ★</div>
-          <div class="cap-meta-pick__item"><span class="cap-meta-v6"></span>M6 dot</div>
-          <div class="cap-meta-pick__item cap-meta-pick__item--applied"><span class="cap-meta-v7">88 400 ₽</span>M7 сумма ★</div>
-          <div class="cap-meta-pick__item cap-meta-pick__item--applied"><span class="cap-meta-v8"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h16M4 18h10"/></svg>2</span>M8 icon ★</div>
-          <div class="cap-meta-pick__item"><span class="cap-meta-v1 cap-meta-v1--empty"><span class="cap-meta-v1__dot"></span>Пусто</span>empty</div>
-          <div class="cap-meta-pick__item"><span class="cap-meta-v2 cap-meta-v2--empty">—</span>empty²</div>
+      <!-- Капитал · Действия -->
+      <section class="variant" aria-labelledby="s2">
+        <header>
+          <h2 id="s2">Капитал · Действия</h2>
+          <p>Что можно купить или открыть — фишки по 3 в ряд. Закрытые механики не прячем: пунктир и «откроется по цели» показывают, куда игра ведёт.</p>
+        </header>
+        <div class="phone s-phone">
+          <div class="s-head"><div><h3>Капитал</h3><small>Что приносит и забирает деньги</small></div><span class="turn-token" aria-label="Ход 12">12</span></div>
+          <div class="s-flows">
+            <div class="s-flow"><small>Доходы за ход</small><b class="bg-money bg-gain">+65 400 ₽</b></div>
+            <div class="s-flow"><small>Расходы за ход</small><b class="bg-money">−46 500 ₽</b></div>
+          </div>
+          <div class="s-seg" role="tablist" aria-label="Раздел капитала"><button type="button" role="tab" aria-selected="false">Детали</button><button class="on" type="button" role="tab" aria-selected="true">Действия</button></div>
+          <div class="sec">
+            <div class="sec__title"><b>Вложить</b><small>доход каждый ход</small></div>
+            <div class="s-pieces">
+              <button class="s-piece" type="button"><span class="s-piece__ico">%</span>Вклад<small>от 1 000 ₽</small></button>
+              <button class="s-piece" type="button"><span class="s-piece__ico">₽</span>Облигации<small>от 1 000 ₽</small></button>
+              <button class="s-piece s-piece--ins" type="button"><span class="s-piece__ico">✓</span>Страховка<small>защита от событий</small></button>
+            </div>
+          </div>
+          <div class="sec">
+            <div class="sec__title"><b>Купить</b><small>доход или удобство</small></div>
+            <div class="s-pieces">
+              <button class="s-piece s-piece--prop s-piece--locked" type="button" disabled><span class="s-piece__ico">⌂</span>Квартира<small>откроется по цели</small></button>
+              <button class="s-piece s-piece--prop s-piece--locked" type="button" disabled><span class="s-piece__ico">◐</span>Авто<small>откроется по цели</small></button>
+            </div>
+          </div>
+          <div class="sec">
+            <div class="sec__title"><b>Занять</b><small>деньги сейчас, платёж каждый ход</small></div>
+            <div class="s-pieces">
+              <button class="s-piece s-piece--debt" type="button"><span class="s-piece__ico">−</span>Кредит<small>до 300 000 ₽</small></button>
+              <button class="s-piece s-piece--debt s-piece--locked" type="button" disabled><span class="s-piece__ico">⌂</span>Ипотека<small>откроется по цели</small></button>
+            </div>
+          </div>
+          <nav class="s-tabbar" aria-label="Разделы"><button class="s-tab" type="button"><i></i>Главная</button><button class="s-tab s-tab--on" type="button" aria-current="page"><i></i>Капитал</button><button class="s-tab" type="button"><i></i>Аналитика</button><button class="s-tab" type="button"><i></i>Меню</button></nav>
         </div>
-        <p class="cap-meta-selected-note" data-meta-note hidden>Выбран: —</p>
+      </section>
+
+      <!-- Аналитика -->
+      <section class="variant" aria-labelledby="s3">
+        <header>
+          <h2 id="s3">Аналитика</h2>
+          <p>Сначала вывод (состояние с полосой риска), потом из чего он: куда уходит доход, три показателя устойчивости, история и прогноз. Совет — одной строкой от Монетки.</p>
+        </header>
+        <div class="phone s-phone">
+          <div class="s-head"><div><h3>Аналитика</h3><small>Как ты стоишь на 12-м ходу</small></div><span class="turn-token" aria-label="Ход 12">12</span></div>
+          <div class="s-state">
+            <div class="s-state__top"><small>Счёт и подушка</small><span class="s-state__pill">Подушка тонкая</span></div>
+            <b class="bg-money">132 400 ₽</b>
+            <small>Подушки хватит на 1 ход расходов. Ориентир — 3 хода.</small>
+          </div>
+          <div class="sec">
+            <div class="sec__title"><b>Куда уходит доход</b><small>65 400 ₽ за ход</small></div>
+            <div class="s-stack" role="img" aria-label="Жизнь 57%, кредит 14%, остаётся 29%"><i style="width:57%;background:var(--ink-soft)"></i><i style="width:14%;background:var(--risk)"></i><i style="width:29%;background:var(--gain)"></i></div>
+            <div class="s-legend">
+              <div><i style="background:var(--ink-soft)"></i><span>Расходы на жизнь</span><b class="bg-money">−37 500 ₽</b></div>
+              <div><i style="background:var(--risk)"></i><span>Платёж по кредиту</span><b class="bg-money">−9 000 ₽</b></div>
+              <div><i style="background:var(--gain)"></i><span>Остаётся тебе</span><b class="bg-money bg-gain">+18 900 ₽</b></div>
+            </div>
+          </div>
+          <div class="s-metrics">
+            <div class="s-metric s-metric--risk"><b>1,0</b><small>подушка, ходов расходов</small></div>
+            <div class="s-metric"><b>1,9</b><small>хода продержится счёт</small></div>
+            <div class="s-metric"><b>14%</b><small>дохода на долги</small></div>
+          </div>
+          <div class="s-chart">
+            <div class="sec__title"><b>Счёт + подушка</b><small>история и прогноз на 3 хода</small></div>
+            <svg viewBox="0 0 300 110" role="img" aria-label="Растёт с 15 000 до 132 400 рублей за 12 ходов, прогноз 189 000 через 3 хода">
+              <line x1="0" y1="100" x2="300" y2="100" stroke="var(--edge-cell)" stroke-width="1.5" />
+              <line x1="0" y1="55" x2="300" y2="55" stroke="var(--edge-cell)" stroke-width="1" stroke-dasharray="2 4" />
+              <polyline fill="none" stroke="var(--turn)" stroke-width="3" stroke-linejoin="round" stroke-linecap="round" points="6,96 24,92 42,90 60,84 78,86 96,78 114,72 132,70 150,62 168,58 186,52 222,46" />
+              <polyline fill="none" stroke="var(--coin-rim)" stroke-width="3" stroke-dasharray="6 5" stroke-linecap="round" points="222,46 246,38 270,30 294,22" />
+              <line x1="222" y1="12" x2="222" y2="100" stroke="var(--ink-soft)" stroke-width="1" stroke-dasharray="3 3" />
+              <circle cx="222" cy="46" r="5" fill="var(--turn)" stroke="var(--bg-cell)" stroke-width="2" />
+              <text x="216" y="10" text-anchor="end" font-size="10" fill="var(--ink-soft)">сейчас</text>
+              <text x="294" y="14" text-anchor="end" font-size="10" fill="var(--coin-ink)">≈189 000</text>
+            </svg>
+            <div class="s-chart__legend"><span>было</span><span class="fc">если ничего не менять</span></div>
+          </div>
+          <div class="h-tip-row h-tip-row--one"><img class="h-mascot-inline" src="./assets/monetka-mascot.png" alt="Монетка" /><span>Следующий шаг цели — подушка на 2 хода</span></div>
+          <nav class="s-tabbar" aria-label="Разделы"><button class="s-tab" type="button"><i></i>Главная</button><button class="s-tab" type="button"><i></i>Капитал</button><button class="s-tab s-tab--on" type="button" aria-current="page"><i></i>Аналитика</button><button class="s-tab" type="button"><i></i>Меню</button></nav>
+        </div>
+      </section>
+
+      <!-- Меню -->
+      <section class="variant" aria-labelledby="s4">
+        <header>
+          <h2 id="s4">Меню</h2>
+          <p>Игра на паузе — карта текущего сохранения с главным действием «Продолжить». Остальное — спокойные кнопки. Без служебных текстов вроде «в том же каркасе».</p>
+        </header>
+        <div class="phone s-phone">
+          <div class="s-head"><div><h3>Меню</h3><small>Игра на паузе</small></div></div>
+          <div class="s-pause">
+            <div class="s-pause__save"><img src="./assets/student.png" alt="" /><div><b>Студент</b><small>Ход 12 · на счёте 87 400 ₽</small><small>Цель: шаг 4 из 5</small></div></div>
+            <button class="bg-action" type="button">Продолжить игру</button>
+          </div>
+          <div class="sec">
+            <button class="s-btn" type="button">Новая игра <small>другая жизнь</small></button>
+            <button class="s-btn" type="button">Все сохранения <small>3 партии</small></button>
+            <button class="s-btn" type="button">Как играть <small>правила и подсказки</small></button>
+          </div>
+          <button class="s-link" type="button">Выйти из аккаунта</button>
+          <nav class="s-tabbar" aria-label="Разделы"><button class="s-tab" type="button"><i></i>Главная</button><button class="s-tab" type="button"><i></i>Капитал</button><button class="s-tab" type="button"><i></i>Аналитика</button><button class="s-tab s-tab--on" type="button" aria-current="page"><i></i>Меню</button></nav>
+        </div>
+      </section>
+
+      <!-- Событие -->
+      <section class="variant" aria-labelledby="s5">
+        <header>
+          <h2 id="s5">Событие</h2>
+          <p>Событие — карта, вытянутая из колоды «2 события» с дашборда. Канон L3 сохранён: полоса домена, заголовок, пузырь Монетки, выборы с последствиями. Последствия — чипами: деньги, потребности. Без XP.</p>
+        </header>
+        <div class="phone s-phone s-phone--bare">
+          <article class="b-card h-card" aria-hidden="true">
+            <div class="b-card__top"><div><small>Студент</small><b>Твой ход</b></div><div class="b-corner">12<small>ход</small></div></div>
+            <button class="bg-action" type="button" tabindex="-1">Завершить ход</button>
+          </article>
+          <div class="needs" aria-hidden="true">
+            <div class="need"><span>Комфорт<b>64</b></span><span class="bar"><i style="width:64%"></i></span></div>
+            <div class="need"><span>Статус<b>52</b></span><span class="bar"><i style="width:52%"></i></span></div>
+          </div>
+          <div class="s-dim"></div>
+          <div class="s-sheet" role="dialog" aria-modal="true" aria-labelledby="ev-title">
+            <div class="s-deckline"><span class="b-deck__cards" aria-hidden="true"><span></span><span></span></span>Событие 1 из 2</div>
+            <article class="s-event">
+              <div class="s-event__band"><span>Техника</span><span>Непредвиденное</span><button class="x" type="button" aria-label="Закрыть">×</button></div>
+              <div class="s-event__body">
+                <h4 id="ev-title">Сломался ноутбук</h4>
+                <div class="tip"><img src="./assets/monetka-mascot.png" alt="Монетка" /><p>Без ноутбука учёба встанет. Посмотри, что выдержит подушка.</p></div>
+                <button class="s-choice s-choice--best" type="button">Починить в сервисе<span class="s-impacts"><span class="risk bg-money">−12 000 ₽</span></span></button>
+                <button class="s-choice" type="button">Купить новый в кредит<span class="s-impacts"><span class="risk bg-money">−3 000 ₽ × 6 ходов</span><span class="gain">Статус +5</span></span></button>
+                <button class="s-choice" type="button">Пока обойтись без него<span class="s-impacts"><span>Комфорт −8</span><span>Связи −3</span></span></button>
+              </div>
+            </article>
+          </div>
+        </div>
       </section>
     </main>
 
-    <div class="cap-sheet-backdrop" data-sheet-backdrop aria-hidden="true"></div>
-    <div class="cap-sheet" data-sheet-panel aria-hidden="true" role="dialog" aria-modal="true">
-      <div class="cap-sheet__head">
-        <h3 class="cap-sheet__title" data-sheet-title>Раздел</h3>
-        <button type="button" class="cap-sheet__close" data-sheet-close aria-label="Закрыть">✕</button>
-      </div>
-      <div class="cap-sheet__body" data-sheet-body></div>
+    <!-- ===================== До и после партии ===================== -->
+    <div class="s-group">
+      <h2>До и после партии</h2>
+      <p>Вход, выбор жизни и финал. Без таббара. Шаг «Игра / План» убран: по ADR-013 режима План нет, «Новая игра» сразу ведёт к выбору жизни.</p>
     </div>
+    <main class="lab-grid s-grid">
+      <!-- Вход -->
+      <section class="variant" aria-labelledby="s6">
+        <header>
+          <h2 id="s6">Вход</h2>
+          <p>Логотип — главный объект, форма — спокойная карточка. Одна главная кнопка.</p>
+        </header>
+        <div class="phone s-phone s-phone--bare">
+          <img class="s-logo" src="./assets/logo-full.png" alt="Твой ход — финансы как игра" />
+          <form class="s-form" onsubmit="event.preventDefault()">
+            <label for="em">Почта<input id="em" type="email" autocomplete="email" value="student@example.com" /></label>
+            <label for="pw">Пароль<input id="pw" type="password" autocomplete="current-password" value="••••••••" /></label>
+            <button class="bg-action" type="submit">Войти</button>
+          </form>
+          <button class="s-btn" type="button">Создать аккаунт <small>займёт минуту</small></button>
+        </div>
+      </section>
+
+      <!-- Выбор жизни -->
+      <section class="variant" aria-labelledby="s7">
+        <header>
+          <h2 id="s7">Выбор жизни</h2>
+          <p>Карточки персонажей, как выбор фишки перед партией. Выбранная — фиолетовая рамка; кнопка внизу называет действие.</p>
+        </header>
+        <div class="phone s-phone s-phone--bare">
+          <div class="s-head"><div><h3>Выбери жизнь</h3><small>У каждой свой старт и своя цель</small></div></div>
+          <div class="s-life" role="radiogroup" aria-label="Персонаж">
+            <button class="s-person s-person--on" type="button" role="radio" aria-checked="true"><img src="./assets/student-mascot-pick.png" alt="" /><span><b>Студент</b><span class="s-person__money">~62 500 ₽ за ход</span><small>Без долгов на старте</small></span><span class="s-person__check"></span></button>
+            <button class="s-person" type="button" role="radio" aria-checked="false"><img src="./assets/professional-mascot-pick.png" alt="" /><span><b>Профессионал</b><span class="s-person__money">~100 000 ₽ за ход</span><small>Авто и кредит</small></span><span class="s-person__check"></span></button>
+            <button class="s-person" type="button" role="radio" aria-checked="false"><img src="./assets/manager-mascot-pick.png" alt="" /><span><b>Руководитель</b><span class="s-person__money">~46 500 ₽ за ход</span><small>Ипотека и авто</small></span><span class="s-person__check"></span></button>
+            <button class="s-person" type="button" role="radio" aria-checked="false"><img src="./assets/entrepreneur-mascot-pick.png" alt="" /><span><b>Предприниматель</b><span class="s-person__money">~43 500 ₽ за ход</span><small>Ипотека и кредитная карта</small></span><span class="s-person__check"></span></button>
+          </div>
+          <button class="bg-action" type="button">Начать за Студента</button>
+        </div>
+      </section>
+
+      <!-- Финал: победа -->
+      <section class="variant" aria-labelledby="s8">
+        <header>
+          <h2 id="s8">Финал · Победа</h2>
+          <p>Финиш дорожки цели — золотая клетка с персонажем. Партия не заканчивается: главная кнопка — «Играть дальше».</p>
+        </header>
+        <div class="phone s-phone s-phone--bare">
+          <div class="s-finish">
+            <div class="s-finish__cell"><img src="./assets/student-mascot-cup-dash.png" alt="" /></div>
+            <h4>Цель пройдена!</h4>
+            <p>Студент собрал подушку и доход с вложений за 38 ходов.</p>
+            <div class="s-finish__stats">
+              <div><b>38</b><small>ходов</small></div>
+              <div><b class="bg-money">412 000 ₽</b><small>на счёте</small></div>
+              <div><b>6,1</b><small>ходов подушки</small></div>
+            </div>
+            <button class="bg-action" type="button">Играть дальше</button>
+            <button class="s-btn" type="button">Новая игра <small>другая жизнь</small></button>
+            <textarea class="s-feedback" aria-label="Отзыв о партии" placeholder="Как прошла партия? Это увидят разработчики"></textarea>
+            <button class="s-link" type="button">Отправить отзыв</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Финал: поражение -->
+      <section class="variant" aria-labelledby="s9">
+        <header>
+          <h2 id="s9">Финал · Поражение</h2>
+          <p>Спокойно и по делу: что случилось (красным — только факт риска), два совета на следующую партию, отзыв. Партия уходит в архив.</p>
+        </header>
+        <div class="phone s-phone s-phone--bare">
+          <div class="s-finish">
+            <div class="s-finish__cell" style="background:var(--bg-cell);border-color:var(--edge-cell);box-shadow:0 5px 0 var(--edge-cell)"><img src="./assets/student-mascot-pick.png" alt="" /></div>
+            <h4>Партия окончена</h4>
+            <p>Она уйдёт в архив сохранений. Следующая пойдёт лучше.</p>
+            <div class="s-fact"><b>Три хода подряд счёт был в минусе.</b> После последнего хода: −8 200 ₽.</div>
+            <ul class="s-tips">
+              <li>Забирай зарплату до «Завершить ход» — без кнопки её не будет.</li>
+              <li>Держи подушку хотя бы на 2 хода расходов.</li>
+            </ul>
+            <button class="bg-action" type="button">Новая игра</button>
+            <button class="s-btn" type="button">К сохранениям <small>3 партии</small></button>
+            <textarea class="s-feedback" aria-label="Отзыв о партии" placeholder="Что было непонятно? Это увидят разработчики"></textarea>
+          </div>
+        </div>
+      </section>
+    </main>
 
     <script>
-      const FLOW_DEPOSIT = `
-        <div class="mqx-safety-flow" aria-label="Со счёта в депозит">
-          <div class="mqx-safety-flow__node mqx-safety-flow__node--violet">
-            <span class="mqx-safety-flow__node-label">Счёт</span>
-            <span class="mqx-safety-flow__node-value">84 200 ₽</span>
-            <span class="mqx-safety-flow__node-after">→ 34 200 ₽</span>
-          </div>
-          <span class="mqx-safety-flow__arrow">→</span>
-          <div class="mqx-safety-flow__node mqx-safety-flow__node--emerald">
-            <span class="mqx-safety-flow__node-label">Депозит</span>
-            <span class="mqx-safety-flow__node-value">120 000 ₽</span>
-            <span class="mqx-safety-flow__node-after">→ 170 000 ₽</span>
-          </div>
-        </div>
-        <div class="mqx-safety-presets">
-          <button type="button" class="mqx-safety-preset">25%</button>
-          <button type="button" class="mqx-safety-preset is-active">50 000</button>
-          <button type="button" class="mqx-safety-preset">Макс</button>
-        </div>
-        <div class="inv-b">
-          <div class="inv-b__accent"></div>
-          <div>
-            <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px">
-              <strong>Депозит</strong>
-              <div class="inv-rate-chip"><div class="inv-rate-chip__val">12%</div><div class="inv-rate-chip__hint">годовых</div></div>
-            </div>
-            <label class="inv-amount-label">Сумма</label>
-            <div class="inv-underline"><input type="text" value="50 000" /><span class="inv-underline__unit">₽</span></div>
-            <input type="range" class="inv-slider" min="0" max="84200" value="50000" />
-            <div class="inv-range-hint"><span>0</span><span>На счёте: 84 200 ₽</span></div>
-            <button type="button" class="inv-btn">Открыть депозит</button>
-          </div>
-        </div>`;
-
-      const FLOW_BOND = `
-        <div class="mqx-safety-flow">
-          <div class="mqx-safety-flow__node mqx-safety-flow__node--violet">
-            <span class="mqx-safety-flow__node-label">Счёт</span>
-            <span class="mqx-safety-flow__node-value">84 200 ₽</span>
-          </div>
-          <span class="mqx-safety-flow__arrow">→</span>
-          <div class="mqx-safety-flow__node mqx-safety-flow__node--sky">
-            <span class="mqx-safety-flow__node-label">Облигации</span>
-            <span class="mqx-safety-flow__node-value">50 000 ₽</span>
-          </div>
-        </div>
-        <div class="mqx-safety-presets">
-          <button type="button" class="mqx-safety-preset is-active">50 000</button>
-          <button type="button" class="mqx-safety-preset">100 000</button>
-        </div>
-        <div class="inv-b">
-          <div class="inv-b__accent inv-b__accent--bond"></div>
-          <div>
-            <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px">
-              <strong>Облигации</strong>
-              <div class="inv-rate-chip inv-rate-chip--bond"><div class="inv-rate-chip__val">10%</div><div class="inv-rate-chip__hint">годовых</div></div>
-            </div>
-            <label class="inv-amount-label">Сумма</label>
-            <div class="inv-underline inv-underline--bond"><input type="text" value="50 000" /><span class="inv-underline__unit">₽</span></div>
-            <input type="range" class="inv-slider" min="0" max="84200" value="50000" />
-            <div class="inv-range-hint"><span>0</span><span>Купон на счёт каждый период</span></div>
-            <button type="button" class="inv-btn inv-btn--bond">Купить облигации</button>
-          </div>
-        </div>`;
-
-      const SHEET_TEMPLATES = {
-        deposit: FLOW_DEPOSIT,
-        bond: FLOW_BOND,
-        realestate: `<span class="cap-form-label">Недвижимость</span><div class="cap-row"><span class="cap-row__accent cap-row__accent--asset"></span><div><div class="cap-row__title">Арендная квартира</div><div class="cap-row__metrics"><span class="pos">+35 000 ₽/мес</span></div></div><button type="button" class="cap-btn-plus">+</button></div><div class="cap-row"><span class="cap-row__accent cap-row__accent--asset"></span><div><div class="cap-row__title">Жильё (своё)</div><div class="cap-row__metrics"><span>−6 000 ₽ содерж.</span></div></div><button type="button" class="cap-btn-plus">+</button></div>`,
-        car: `<span class="cap-form-label">Авто</span><div class="cap-row"><span class="cap-row__accent cap-row__accent--asset"></span><div><div class="cap-row__title">Авто (такси)</div><div class="cap-row__metrics"><span class="pos">+12 000 ₽/мес</span></div></div><button type="button" class="cap-btn-plus">+</button></div><div class="cap-row"><span class="cap-row__accent cap-row__accent--asset"></span><div><div class="cap-row__title">Личный автомобиль</div></div><button type="button" class="cap-btn-plus">+</button></div>`,
-        insurance: `<span class="cap-form-label">Выберите полис</span><div class="cap-ins-grid"><button type="button" class="cap-ins-tile"><span class="cap-ins-tile__title">ОСАГО</span><span class="cap-ins-tile__price">2 400 ₽/мес</span></button><button type="button" class="cap-ins-tile"><span class="cap-ins-tile__title">Каско</span><span class="cap-ins-tile__price">4 100 ₽/мес</span></button><button type="button" class="cap-ins-tile"><span class="cap-ins-tile__title">Жильё</span><span class="cap-ins-tile__price">900 ₽/мес</span></button><button type="button" class="cap-ins-tile"><span class="cap-ins-tile__title">Жизнь</span><span class="cap-ins-tile__price">1 200 ₽/мес</span></button></div>`,
-        mortgage: `<span class="cap-form-label">Ипотека</span><div class="cap-row"><span class="cap-row__accent cap-row__accent--liab"></span><div><div class="cap-row__title">Ипотека (шаблон)</div><div class="cap-row__metrics"><span class="neg">−42 000 ₽/мес</span></div></div><button type="button" class="cap-btn-plus">+</button></div>`,
-        credit: `<span class="cap-form-label">Кредит</span><div class="cap-row"><span class="cap-row__accent cap-row__accent--liab"></span><div><div class="cap-row__title">Потребительский</div><div class="cap-row__metrics"><span class="neg">−9 000 ₽/мес</span></div></div><button type="button" class="cap-btn-plus">+</button></div><div class="cap-row"><span class="cap-row__accent cap-row__accent--liab"></span><div><div class="cap-row__title">Автокредит</div><div class="cap-row__metrics"><span class="neg">−14 000 ₽/мес</span></div></div><button type="button" class="cap-btn-plus">+</button></div>`,
-      };
-
-      const SHEET_TITLES = {
-        deposit: 'Депозит',
-        bond: 'Облигации',
-        realestate: 'Недвижимость',
-        car: 'Авто',
-        insurance: 'Страховки',
-        mortgage: 'Ипотека',
-        credit: 'Кредит',
-      };
-
-      document.querySelectorAll('[data-theme-btn]').forEach((btn) => {
-        btn.addEventListener('click', () => {
-          document.documentElement.dataset.theme = btn.dataset.themeBtn;
-          document.querySelectorAll('[data-theme-btn]').forEach((b) => b.classList.toggle('is-active', b === btn));
+      (function () {
+        var root = document.documentElement;
+        document.addEventListener('click', function (e) {
+          var t = e.target.closest('[data-set-theme]');
+          if (!t) return;
+          root.setAttribute('data-theme', t.dataset.setTheme);
+          document.querySelectorAll('[data-set-theme]').forEach(function (b) {
+            b.setAttribute('aria-pressed', String(b === t));
+          });
         });
-      });
-
-      const backdrop = document.querySelector('[data-sheet-backdrop]');
-      const sheet = document.querySelector('[data-sheet-panel]');
-      const sheetTitle = document.querySelector('[data-sheet-title]');
-      const sheetBody = document.querySelector('[data-sheet-body]');
-
-      function openSheet(key) {
-        sheetTitle.textContent = SHEET_TITLES[key] || 'Раздел';
-        sheetBody.innerHTML = SHEET_TEMPLATES[key] || '';
-        sheet.classList.add('is-open');
-        backdrop.classList.add('is-open');
-        sheet.setAttribute('aria-hidden', 'false');
-        backdrop.setAttribute('aria-hidden', 'false');
-      }
-
-      function closeSheet() {
-        sheet.classList.remove('is-open');
-        backdrop.classList.remove('is-open');
-        sheet.setAttribute('aria-hidden', 'true');
-        backdrop.setAttribute('aria-hidden', 'true');
-      }
-
-      document.querySelector('[data-sheet-close]')?.addEventListener('click', closeSheet);
-      backdrop?.addEventListener('click', closeSheet);
-
-      const proto = document.getElementById('proto');
-
-      function setMode(section, mode) {
-        section.querySelector('[data-panel="details"]')?.classList.toggle('cap-panel-hidden', mode !== 'details');
-        section.querySelector('[data-panel="actions"]')?.classList.toggle('cap-panel-hidden', mode !== 'actions');
-        section.querySelectorAll('[data-page-seg] [data-mode]').forEach((b) => {
-          b.classList.toggle('is-active', b.dataset.mode === mode);
-        });
-      }
-
-      function openFlowSection(section, flow) {
-        const el = section.querySelector(`#capital-flows-${flow}`);
-        if (!el) return;
-        el.open = true;
-        el.classList.add('cap-flow-target-flash');
-        el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-        setTimeout(() => el.classList.remove('cap-flow-target-flash'), 1400);
-      }
-
-      proto.querySelectorAll('[data-deep-link]').forEach((btn) => {
-        btn.addEventListener('click', () => {
-          proto.querySelectorAll('[data-deep-link]').forEach((b) => b.classList.toggle('is-active', b === btn));
-          openFlowSection(proto, btn.dataset.deepLink);
-        });
-      });
-
-      proto.querySelectorAll('[data-page-seg] [data-mode]').forEach((btn) => {
-        btn.addEventListener('click', () => setMode(proto, btn.dataset.mode));
-      });
-
-      proto.querySelectorAll('[data-goto-action]').forEach((btn) => {
-        btn.addEventListener('click', () => {
-          const key = btn.dataset.gotoAction;
-          setMode(proto, 'actions');
-          openSheet(key);
-        });
-      });
-
-      proto.querySelectorAll('[data-open-sheet]').forEach((btn) => {
-        btn.addEventListener('click', () => openSheet(btn.dataset.openSheet));
-      });
-
-      document.querySelectorAll('[data-meta-pick] .cap-meta-pick__item').forEach((item) => {
-        item.addEventListener('click', () => {
-          document.querySelectorAll('[data-meta-pick] .cap-meta-pick__item').forEach((i) => i.style.outline = '');
-          item.style.outline = '2px solid var(--mq-emerald)';
-          const note = document.querySelector('[data-meta-note]');
-          if (note) {
-            note.hidden = false;
-            note.textContent = `Выбран: ${item.textContent.trim()}`;
-          }
-        });
-      });
+      })();
     </script>
   </body>
 </html>

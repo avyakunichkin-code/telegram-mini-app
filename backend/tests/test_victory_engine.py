@@ -58,7 +58,7 @@ def _safety_months_target(snap_kwargs: dict | None = None, *, mult: float = 3) -
 
 
 def _tutorial_complete_snap(**kwargs):
-    target = _safety_months_target(kwargs, mult=3)
+    target = _safety_months_target(kwargs, mult=2)
     defaults = dict(
         salary_ever_claimed=True,
         safety_ever_contributed=True,
@@ -97,7 +97,7 @@ class TestBasicTutorialChain:
         invest = next(g for g in r.goals if g.key == "tutorial_invest")
         assert invest.available is True
         assert invest.met is False
-        passive = next(g for g in r.goals if g.key == "invest_income_15k")
+        passive = next(g for g in r.goals if g.key == "invest_income_10k")
         assert passive.available is True
 
     def test_invest_unlocks_after_tutorial_cushion_met(self):
@@ -122,7 +122,7 @@ class TestBasicTutorialChain:
                 net_monthly_cashflow=-100.0,
             )
         )
-        passive = next(g for g in r.goals if g.key == "invest_income_15k")
+        passive = next(g for g in r.goals if g.key == "invest_income_10k")
         assert passive.detail.get("raw_met") is True
         assert passive.met is False
         assert r.current_goal_key == "tutorial_invest"

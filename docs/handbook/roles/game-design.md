@@ -3,8 +3,13 @@ layer: handbook
 status: active
 role: game-design
 last_reviewed: 2026-05-30
+tags:
+  - tvoy-hod/layer/handbook
+  - tvoy-hod/status/active
+aliases:
+  - "Геймдизайн — guide"
+  - game-design
 ---
-
 # Геймдизайн — guide
 
 ## Зачем читать

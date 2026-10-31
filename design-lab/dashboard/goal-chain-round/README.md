@@ -23,7 +23,7 @@ npx serve .
 ## Prod и лендинг
 
 - **Prod:** `MqxGoalDash` в `DashboardPremium` (между финансами и действиями).
-- **Лендинг:** fallback-источник PNG дашборда для `landing/scripts/capture-screens.mjs --source=lab`. Спека: [`docs/specs/LANDING_SCREENSHOTS.md`](../../../docs/specs/LANDING_SCREENSHOTS.md).
+- **Лендинг:** fallback-источник PNG дашборда для `design/archive/classic-v3/landing-source/scripts/capture-screens.mjs --source=lab`. Спека: [`docs/specs/LANDING_SCREENSHOTS.md`](../../../docs/specs/LANDING_SCREENSHOTS.md).
 
 ## Следующий шаг (контент)
 

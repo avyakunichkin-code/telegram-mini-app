@@ -63,7 +63,7 @@ export function buildGoalChainView(victory, legacyGoal) {
   const doneCount = chain.filter((s) => s.status === 'done').length;
   let stepAriaLabel = `Шаги сценария: ${doneCount} выполнено, активен шаг ${stepNum} из ${total}`;
   if (phase === 'win') stepAriaLabel = `Все ${total} шагов выполнены, победа`;
-  else if (phase === 'gate') stepAriaLabel = `Все шаги выполнены, победа с ${summary.minPeriod ?? '—'}-го периода`;
+  else if (phase === 'gate') stepAriaLabel = `Все шаги выполнены, победа с ${summary.minPeriod ?? '—'}-го хода`;
   else if (allMet) stepAriaLabel = `Все ${total} шагов выполнены`;
 
   return {

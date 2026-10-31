@@ -122,6 +122,7 @@ function pickCanonicalRound(block) {
 function iframeHeightForBlockId(blockId) {
   // Conservative defaults: each embedded round has its own scroll.
   // Adjust later if/when we add a postMessage auto-resizer.
+  if (blockId === 'page') return 1500
   switch (blockId) {
     case 'hero':
       return 260
@@ -250,6 +251,15 @@ function main() {
       }
     })
     .filter(Boolean)
+    // Раунд «страница целиком» (★ BG-1) общий для всех блоков — встраиваем его один раз.
+    .reduce((acc, item) => {
+      const same = acc.find((p) => p.rel === item.rel)
+      if (same) {
+        same.label = `${same.label} · ${item.label}`
+        same.id = 'page'
+      } else acc.push(item)
+      return acc
+    }, [])
 
   const blockIds = plan.map((p) => p.id)
   const prep = prepareOutputDir(outRoundDir, outBlocksDir, blockIds)

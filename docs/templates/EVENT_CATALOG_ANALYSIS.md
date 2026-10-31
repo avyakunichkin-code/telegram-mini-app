@@ -1,8 +1,15 @@
+---
+tags:
+  - tvoy-hod/layer/template
+aliases:
+  - "Event Catalog Analysis — шаблон отчёта"
+  - EVENT_CATALOG_ANALYSIS
+---
 # Event Catalog Analysis — шаблон отчёта
 
 Скопируйте в `docs/vision/analysis/event-catalog-<topic>-<YYYY-MM-DD>.md` или отдайте в чат по `/event-analysis`.
 
-**Чеклист skill:** [`.cursor/skills/event-analysis/SKILL.md`](../../.cursor/skills/event-analysis/SKILL.md) · **Баланс:** [`event-balance-rules.md`](../../.cursor/skills/create-event/event-balance-rules.md)
+**Чеклист skill:** [`.claude/skills/event-analysis/SKILL.md`](../../.claude/skills/event-analysis/SKILL.md) · **Баланс:** [`event-balance-rules.md`](../../.claude/skills/create-event/event-balance-rules.md)
 
 ```yaml
 scope: all | domain:<name> | tier:<n> | persona:student|professional|pairs
@@ -45,7 +52,7 @@ verdict: HEALTHY | GAPS | CONCERNS | BLOCKED
 
 ## Баланс trade-off (§1–4, §6)
 
-См. [`event-balance-rules.md`](../../.cursor/skills/create-event/event-balance-rules.md).
+См. [`event-balance-rules.md`](../../.claude/skills/create-event/event-balance-rules.md).
 
 | key | free lunch? | Pareto? | отказ 0₽ + needs+? | max \|cash\| | % student | % pro |
 |-----|-------------|---------|---------------------|--------------|-----------|-------|

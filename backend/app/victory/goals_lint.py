@@ -16,7 +16,7 @@ from dataclasses import dataclass
 from typing import Any, Iterable
 
 from sqlalchemy import text
-from sqlalchemy.exc import OperationalError
+from sqlalchemy.exc import OperationalError, ProgrammingError
 from sqlalchemy.orm import Session
 
 from ..victory.mechanics_progression import ALL_MECHANIC_KEYS
@@ -166,7 +166,7 @@ def lint_victory_goals(db: Session, *, template_keys: Iterable[str] | None = Non
                     """
                 )
             ).mappings().all()
-    except OperationalError:
+    except (OperationalError, ProgrammingError):
         return []
 
     grouped: dict[str, list[dict[str, Any]]] = {}

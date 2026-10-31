@@ -3,10 +3,12 @@ import { IconMetricTrash } from '../icons/FinanceMetricIcons';
 /**
  * Компактное действие в строке: + (add) или − / корзина (remove).
  * Канон B — см. design-lab/row-actions; removeVisual: `trash` (по умолчанию, F2) | `minus` (F1).
+ * verb — подпись действия («Купить»); видна только в стиле ink (окна Капитала, вариант A), иначе — глиф.
  */
 export function MqxRowAction({
   variant = 'remove',
   removeVisual = 'trash',
+  verb,
   ariaLabel,
   onClick,
   disabled = false,
@@ -34,6 +36,7 @@ export function MqxRowAction({
       <span className="mqx-row-action__glyph" aria-hidden>
         {isAdd ? label : showTrash ? <IconMetricTrash size={18} /> : label}
       </span>
+      {verb ? <span className="mqx-row-action__verb">{verb}</span> : null}
     </button>
   );
 }

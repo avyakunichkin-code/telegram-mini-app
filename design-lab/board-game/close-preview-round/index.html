@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="ru" data-font="f3">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>ТВОЙ ХОД — превью конца хода: раунд</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700&family=Nunito:wght@800;900&display=swap" />
+    <link rel="stylesheet" href="./lab-base.css" />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <header class="f-bar">
+      <div class="f-bar__row">
+        <h1>Конец хода: сколько уйдёт</h1>
+        <div class="lab-controls" role="group" aria-label="Вариант">
+          <button class="lab-toggle" type="button" data-set-variant="a" aria-pressed="true">A · Строка под кнопкой</button>
+          <button class="lab-toggle" type="button" data-set-variant="b" aria-pressed="false">B · Сумма в кнопке</button>
+          <button class="lab-toggle" type="button" data-set-variant="c" aria-pressed="false">C · Итог над кнопкой</button>
+        </div>
+        <div class="lab-controls" role="group" aria-label="Состояние">
+          <span>Денег</span>
+          <button class="lab-toggle" type="button" data-set-state="ok" aria-pressed="true">хватает</button>
+          <button class="lab-toggle" type="button" data-set-state="minus" aria-pressed="false">уйдём в минус</button>
+          <button class="lab-toggle" type="button" data-set-state="defeat" aria-pressed="false">третий минус</button>
+        </div>
+        <div class="lab-controls" role="group" aria-label="Тема">
+          <button class="lab-toggle" type="button" data-set-theme="light" aria-pressed="true">Светлая</button>
+          <button class="lab-toggle" type="button" data-set-theme="dark" aria-pressed="false">Тёмная</button>
+        </div>
+      </div>
+      <p class="f-note" data-note="a">Кнопка не меняется. Под ней одна строка: сколько спишется в конце хода и сколько останется на счёте. Минус — красным.</p>
+      <p class="f-note" data-note="b">Сумма списания — второй строкой внутри «Завершить ход»: игрок читает её в момент тапа. «Останется» не показываем — кнопка остаётся короткой.</p>
+      <p class="f-note" data-note="c">Над кнопкой — мини-итог хода: на счёте → спишется → останется. Самый подробный; в минусе подложка красная.</p>
+      <p class="f-note">Во всех вариантах у «Подушки» вторая строка: «не платит расходы»; если на счёте не хватит — та же строка красным, а Монетка подсказывает «сними из подушки». Суммы — из <code>period_close_preview</code> (<code>GET /api/finance/overview</code>), зарплата в превью не входит.</p>
+    </header>
+
+    <main class="f-stage" data-variant="e" data-cp="a" data-state="ok">
+      <section class="f-screen" aria-label="Ход">
+        <div class="phone s-phone">
+          <article class="b-card h-card">
+            <div class="b-card__top">
+              <div><small>Студент</small><b>Твой ход</b></div>
+              <div class="b-corner">4<small>ход</small></div>
+            </div>
+            <button class="h-events" type="button">
+              <span class="b-deck__cards" aria-hidden="true"><span></span><span></span></span>
+              <span><b>2 события</b><small>ждут решения в этом ходу</small></span>
+              <span class="h-events__go" aria-hidden="true">›</span>
+            </button>
+            <div class="h-tip-row h-tip-row--one"><img class="h-mascot-inline" src="./assets/monetka-mascot.png" alt="Монетка" /><span data-k="tip">Забери зарплату до конца хода</span></div>
+
+            <dl class="cp-ledger" data-show="c">
+              <dt>На счёте сейчас</dt><dd class="bg-money" data-k="cash">87 400 ₽</dd>
+              <dt>Спишется в конце хода</dt><dd class="bg-money" data-k="charges">−37 500 ₽</dd>
+              <dt class="cp-ledger__total">Останется</dt><dd class="bg-money cp-ledger__total" data-k="after">49 900 ₽</dd>
+            </dl>
+
+            <button class="bg-action" type="button">
+              Завершить ход
+              <span class="cp-cta-sum bg-money" data-show="b" data-k="cta">−37 500 ₽ со счёта</span>
+            </button>
+
+            <p class="cp-under" data-show="a">
+              <span>Спишется <b class="bg-money" data-k="charges-a">37 500 ₽</b></span>
+              <span aria-hidden="true">·</span>
+              <span data-k="after-a-wrap">останется <b class="bg-money" data-k="after-a">49 900 ₽</b></span>
+            </p>
+
+            <p class="cp-defeat" data-k="defeat" hidden>Третий минус подряд — игра закончится</p>
+          </article>
+
+          <div class="sec">
+            <div class="sec__title"><b>Потребности</b></div>
+            <div class="needs">
+              <div class="need"><span>Комфорт<b>70</b></span><span class="bar"><i style="width:70%"></i></span></div>
+              <div class="need"><span>Статус<b>45</b></span><span class="bar"><i style="width:45%"></i></span></div>
+              <div class="need"><span>Связи<b>60</b></span><span class="bar"><i style="width:60%"></i></span></div>
+              <div class="need"><span>Здоровье<b>80</b></span><span class="bar"><i style="width:80%"></i></span></div>
+            </div>
+          </div>
+
+          <div class="sec">
+            <div class="h-money-hero">
+              <img src="./assets/student.png" alt="" />
+              <div><small>На счёте</small><b class="bg-money" data-k="cash-hero">87 400 ₽</b></div>
+            </div>
+            <div class="money">
+              <div><small>Доходы за ход</small><b class="bg-money bg-gain">+64 300 ₽</b></div>
+              <div><small>Расходы за ход</small><b class="bg-money">−37 500 ₽</b></div>
+              <div class="cp-cushion">
+                <small>Подушка</small><b class="bg-money">45 000 ₽</b>
+                <small class="cp-cushion__note" data-k="cushion">не платит расходы</small>
+              </div>
+            </div>
+          </div>
+
+          <div class="sec">
+            <div class="sec__title"><b>Действия хода</b></div>
+            <div class="acts">
+              <button class="act act--hot" type="button"><span class="bg-coin">₽</span><span class="act__label">Зарплата</span><span class="act__sum bg-money">+62 500 ₽</span></button>
+              <button class="act" type="button"><span class="act__ico"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg></span>В подушку</button>
+              <button class="act" type="button"><span class="act__ico"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M5 12h14"/></svg></span>Из подушки</button>
+              <button class="act" type="button"><span class="act__ico"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 17l6-6 4 4 8-8"/><path d="M14 7h7v7"/></svg></span>Вложить</button>
+            </div>
+          </div>
+
+          <nav class="s-tabbar" aria-label="Разделы"><button class="s-tab s-tab--on" type="button" aria-current="page"><i></i>Главная</button><button class="s-tab" type="button"><i></i>Капитал</button><button class="s-tab" type="button"><i></i>Аналитика</button><button class="s-tab" type="button"><i></i>Меню</button></nav>
+        </div>
+      </section>
+    </main>
+
+    <script>
+      (function () {
+        var root = document.documentElement;
+        var stage = document.querySelector('.f-stage');
+        // Одни и те же суммы во всех вариантах. Зарплата не забрана — в превью не входит.
+        var STATES = {
+          ok: { cash: 87400, charges: 37500, streak: 0 },
+          minus: { cash: 21000, charges: 37500, streak: 0 },
+          defeat: { cash: 21000, charges: 37500, streak: 2 },
+        };
+        function rub(n) { return Math.abs(n).toLocaleString('ru-RU').replace(/ /g, ' ') + ' ₽'; }
+        function signed(n) { return (n < 0 ? '−' : '') + rub(n); }
+        function k(name) { return document.querySelector('[data-k="' + name + '"]'); }
+        function press(attr, t) {
+          document.querySelectorAll('[' + attr + ']').forEach(function (b) { b.setAttribute('aria-pressed', String(b === t)); });
+        }
+        function setState(s) {
+          var d = STATES[s];
+          var after = d.cash - d.charges;
+          var neg = after < 0;
+          stage.dataset.state = s;
+          k('cash').textContent = rub(d.cash);
+          k('cash-hero').textContent = rub(d.cash);
+          k('charges').textContent = '−' + rub(d.charges);
+          k('after').textContent = signed(after);
+          k('after').classList.toggle('cp-warn', neg);
+          k('charges-a').textContent = rub(d.charges);
+          k('after-a').textContent = signed(after);
+          k('after-a-wrap').classList.toggle('cp-warn', neg);
+          k('cta').textContent = '−' + rub(d.charges) + ' со счёта' + (neg ? ' · в минус' : '');
+          k('defeat').hidden = !(neg && d.streak >= 2);
+          var note = k('cushion');
+          note.classList.toggle('cp-warn', neg);
+          k('tip').textContent = neg ? 'Не хватит на расходы — сними из подушки' : 'Забери зарплату до конца хода';
+        }
+        function setVariant(v) {
+          stage.dataset.cp = v;
+          document.querySelectorAll('[data-note]').forEach(function (n) { n.hidden = n.dataset.note !== v; });
+          history.replaceState(null, '', '#' + v);
+        }
+        document.addEventListener('click', function (e) {
+          var th = e.target.closest('[data-set-theme]');
+          if (th) { root.setAttribute('data-theme', th.dataset.setTheme); press('data-set-theme', th); return; }
+          var st = e.target.closest('[data-set-state]');
+          if (st) { setState(st.dataset.setState); press('data-set-state', st); return; }
+          var v = e.target.closest('[data-set-variant]');
+          if (v) { setVariant(v.dataset.setVariant); press('data-set-variant', v); }
+        });
+        var start = (location.hash || '#a').slice(1);
+        var btn = document.querySelector('[data-set-variant="' + start + '"]') || document.querySelector('[data-set-variant="a"]');
+        setVariant(btn.dataset.setVariant); press('data-set-variant', btn);
+        setState('ok');
+      })();
+    </script>
+  </body>
+</html>

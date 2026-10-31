@@ -37,7 +37,7 @@ export function goalProgressHintText(goal) {
     if (thr != null) {
       return { kind: 'avg_threshold', avg: Math.round(avg), threshold: Math.round(thr), samples: n };
     }
-    return n > 0 ? `Среднее: ${Math.round(avg)}` : 'Нужно больше периодов';
+    return n > 0 ? `Среднее: ${Math.round(avg)}` : 'Нужно больше ходов';
   }
   if (type === 'cash_balance_min') {
     return { kind: 'money_pair', current: d.cash_balance ?? 0, target: d.min_cash ?? 0 };

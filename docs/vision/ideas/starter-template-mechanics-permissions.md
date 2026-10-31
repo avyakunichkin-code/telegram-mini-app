@@ -8,8 +8,13 @@ related_specs:
   - ../../foundation/SPEC_PRODUCT.md
   - remove-character-xp-and-levels.md
   - ../../decisions/ADR-004-mechanics-unlock-victory-chain.md
+tags:
+  - tvoy-hod/layer/idea
+  - tvoy-hod/status/implemented
+aliases:
+  - "Разрешения механик в blueprint шаблона"
+  - starter-template-mechanics-permissions
 ---
-
 # Разрешения механик в blueprint шаблона
 
 ## Решение

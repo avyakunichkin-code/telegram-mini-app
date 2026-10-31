@@ -3,8 +3,14 @@ layer: vision
 status: active
 last_reviewed: 2026-05-26
 supersedes_xp_direction: remove-character-xp-and-levels.md
+tags:
+  - tvoy-hod/layer/idea
+  - tvoy-hod/layer/vision
+  - tvoy-hod/status/active
+aliases:
+  - "Achievements M12 — направление (idea-refine)"
+  - achievements-m12-direction
 ---
-
 # Achievements M12 — направление (idea-refine)
 
 > **Обновлено 2026-05-26:** без XP персонажа и level gates. Канон: [`SPEC_achievements`](../specs/features/SPEC_achievements.md), [`remove-character-xp-and-levels`](remove-character-xp-and-levels.md).

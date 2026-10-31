@@ -24,3 +24,8 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Playwright (e2e/README.md)
+test-results/
+playwright-report/
+blob-report/

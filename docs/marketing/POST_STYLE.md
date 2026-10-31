@@ -1,3 +1,10 @@
+---
+tags:
+  - tvoy-hod/layer/marketing
+aliases:
+  - "Стиль постов Твой ход"
+  - POST_STYLE
+---
 ﻿---
 status: draft
 last_reviewed: 2026-05-23

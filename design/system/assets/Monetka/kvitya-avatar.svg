@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" role="img" aria-label="Квитя">
+<g stroke="#1d1530" stroke-linejoin="round" stroke-linecap="round">
+<path d="M10 10 L14 5 L18 10 L22 5 L26 10 L30 5 L34 10 L38 5 L38 39 L34 44 L30 39 L26 44 L22 39 L18 44 L14 39 L10 44 Z" fill="#ffffff" stroke-width="2.5"/>
+<rect x="17" y="13" width="14" height="3" rx="1.5" fill="#6d28d9" stroke="none"/>
+<circle cx="19" cy="22" r="2.4" fill="#1d1530" stroke="none"/>
+<circle cx="29" cy="22" r="2.4" fill="#1d1530" stroke="none"/>
+<path d="M20 28 Q24 31 28 28" fill="none" stroke-width="2"/>
+<path d="M15 34 L33 34" fill="none" stroke="#71688a" stroke-width="2"/>
+</g>
+</svg>

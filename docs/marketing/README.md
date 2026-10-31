@@ -2,8 +2,12 @@
 layer: marketing
 status: active
 last_reviewed: 2026-05-23
+tags:
+  - tvoy-hod/layer/marketing
+  - tvoy-hod/status/active
+aliases:
+  - "Маркетинг и коммуникации «Твой ход»"
 ---
-
 # Маркетинг и коммуникации «Твой ход»
 
 Публичное имя: **ТВОЙ ХОД** · подзаголовок **«Финансы как игра»** · маскот **Монетка**. Решение и проверка ТЗ: [`docs/vision/ideas/product-name-tvoy-hod.md`](../vision/ideas/product-name-tvoy-hod.md).
@@ -20,7 +24,7 @@ last_reviewed: 2026-05-23
 | [`posts/draft/`](posts/draft/) | Черновики до согласования |
 | [`strategy/`](strategy/) | Стратегия, бюджеты, каналы (заготовка) |
 
-**Agent Skill:** `.cursor/skills/social-changelog-posts/` — посты по коммитам и сессиям.
+**Agent Skill:** `.claude/skills/social-changelog-posts/` — посты по коммитам и сессиям.
 
 **Не трогаем код приложения** при работе скилла; только файлы в `docs/marketing/` (и генерация изображений в артефакты).
 

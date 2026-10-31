@@ -1,3 +1,10 @@
+---
+tags:
+  - tvoy-hod/layer/idea
+aliases:
+  - "Design-lab всегда актуален: Canon Manifest + Page Parity"
+  - design-lab-always-actual-canon-manifest-and-parity
+---
 # Design-lab всегда актуален: Canon Manifest + Page Parity
 
 ## Problem Statement

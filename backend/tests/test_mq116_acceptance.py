@@ -10,7 +10,7 @@ import json
 import pytest
 from sqlalchemy import or_
 
-from app.game.rules import event_tier_in_core_window
+from app.game.rules import MIN_PERIOD_INDEX_FOR_GAME_EVENTS, event_tier_in_core_window
 from app.models import EventChoice, EventDefinition, EventInstance, GameProfile, User
 from app.events.constants import EVENTS_UNLOCK_INTRO_KEY
 from app.events.mvp11_contract import validate_mvp11_db_catalog, validate_mvp11_specs
@@ -56,7 +56,7 @@ class TestEnsurePeriodEventsAcceptance:
     @pytest.mark.parametrize(
         "period_index, allowed_tiers",
         [
-            (1, {1}),
+            (MIN_PERIOD_INDEX_FOR_GAME_EVENTS, {1}),
             (10, {1}),
             (11, {1, 2}),
             (20, {1, 2}),
@@ -103,7 +103,7 @@ class TestEnsurePeriodEventsAcceptance:
             name="once-expired",
             save_kind="game",
             is_active=1,
-            period_index=2,
+            period_index=3,
         )
         db_session.add(profile)
         db_session.commit()
@@ -115,17 +115,17 @@ class TestEnsurePeriodEventsAcceptance:
             EventInstance(
                 game_profile_id=profile.id,
                 definition_id=once.id,
-                period_index=1,
+                period_index=2,
                 status="expired",
             )
         )
         db_session.commit()
 
-        ensure_period_events(db_session, profile.id, 2, "game")
+        ensure_period_events(db_session, profile.id, 3, "game")
         picked = {
             i.definition_id
             for i in db_session.query(EventInstance)
-            .filter(EventInstance.game_profile_id == profile.id, EventInstance.period_index == 2)
+            .filter(EventInstance.game_profile_id == profile.id, EventInstance.period_index == 3)
             .all()
         }
         assert once.id in picked
@@ -191,15 +191,8 @@ class TestMq116ApiIntegration:
         events = body.get("events") or []
 
         profile = self._active_profile(db_session)
-        user = db_session.query(User).filter(User.id == profile.user_id).first()
-        o2_replaces_intro = user is not None and int(getattr(user, "guidance_completed", 0) or 0) == 0
-
-        if o2_replaces_intro:
-            assert len(events) == EVENTS_PER_PERIOD
-            assert all(ev.get("key") != EVENTS_UNLOCK_INTRO_KEY for ev in events)
-        else:
-            assert len(events) == EVENTS_PER_PERIOD + 1
-            assert events[0].get("key") == EVENTS_UNLOCK_INTRO_KEY
+        assert int(profile.period_index) < MIN_PERIOD_INDEX_FOR_GAME_EVENTS
+        assert len(events) == 0
 
         for ev in events:
             assert ev.get("key", "").startswith("mq11_") or ev.get("key") in {

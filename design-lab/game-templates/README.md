@@ -1,5 +1,7 @@
 # Design-lab: Четыре ритма (шаг 2) ★
 
+> **История (2026-10-15).** Канон экранов до партии — ★ BG-2: [`../pre-game-shell/APPROVED.md`](../pre-game-shell/APPROVED.md), макет [`../board-game/screens-round/`](../board-game/screens-round/). Портреты персонажей (`persona-portraits-round/`) остаются в prod.
+
 ```bash
 cd design-lab/game-templates
 npx serve .

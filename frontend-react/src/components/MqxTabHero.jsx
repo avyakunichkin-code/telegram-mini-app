@@ -13,8 +13,11 @@ export function MqxTabHero({
   heroClassName = '',
   /** Заголовок вкладки в одной строке с логотипом (компактная шапка). */
   inlineTitle = false,
+  /** Номер хода — фишка справа, как в шапке Аналитики; видна только в стиле ink (ink.css). */
+  turn = 0,
 }) {
-  const titleNode = <div className={`mqx-hero__title ${titleClassName}`.trim()}>{title}</div>;
+  // Один h1 на экран вкладки — по нему скринридер и навигация по заголовкам находят экран.
+  const titleNode = <h1 className={`mqx-hero__title ${titleClassName}`.trim()}>{title}</h1>;
 
   return (
     <header
@@ -28,6 +31,12 @@ export function MqxTabHero({
             {titleNode}
           </div>
           {rightPill ? <span className="mqx-hero-pill mqx-hero-pill--ghost">{rightPill}</span> : null}
+          {turn > 0 ? (
+            <span className="mqx-an-turn mqx-hero__turn">
+              <span className="mqx-bg-sr-only">Ход </span>
+              {turn}
+            </span>
+          ) : null}
         </div>
       ) : (
         <>

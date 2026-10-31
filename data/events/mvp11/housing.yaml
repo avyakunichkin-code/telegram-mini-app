@@ -112,6 +112,7 @@ events:
   weight: 50
   event_tier: 3
   repeat_policy: repeatable
+  cooldown_periods: 8
   scenario_shape: asset_linked
   extra:
     secondary_domains:
@@ -133,8 +134,9 @@ events:
         comfort: 6
         health: 1
   - title: Ремонт за свой счёт
+    purpose: mitigation
     effects:
       cash_delta: -80000
       needs_delta:
-        comfort: 6
         health: -2
+        comfort: 3

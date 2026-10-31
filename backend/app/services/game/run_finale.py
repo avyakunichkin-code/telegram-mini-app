@@ -5,7 +5,7 @@ from fastapi import HTTPException
 from sqlalchemy.orm import Session
 
 from ...game.run_finale import build_run_finale_payload
-from ...game.time import get_active_game_profile, resolve_game_session
+from ...game.session import get_active_game_profile, resolve_game_session
 from ...models import GameProfile, PlayerRunFeedback
 from ...schemas import RunFeedbackRequest, RunFeedbackResponse, RunFinaleDismissResponse
 from ...timeutil import utc_now_naive

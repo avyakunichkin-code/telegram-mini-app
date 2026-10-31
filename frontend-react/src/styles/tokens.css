@@ -1,16 +1,68 @@
 ﻿:root {
-  /* ТВОЙ ХОД palette (fallback вне темы Telegram) — см. docs/reference/brandbook/BRANDBOOK.md */
-  --mq-violet: #6d28d9;
+  /* Legacy-палитра — алиасы токенов v2 (ADR-014; аудит 2026-10-25, улучшение 8).
+     Новый код пишет v2 напрямую: --mq-turn, --mq-gain, --mq-risk, --mq-board-ink, --mq-cell-edge.
+     Алиасы сразу следуют тёмной теме v2; контраст текста ≥ 4.5:1 (#059669 давал 3.77, #d97706 — 3.19). */
+  --mq-violet: var(--mq-turn);
+  /* Не алиас: --mq-turn-deep (#4c1d95) заметно темнее на больших фонах (итоги хода) — без раунда lab не меняем. */
   --mq-violet-deep: #5b21b6;
-  --mq-emerald: #059669;
-  --mq-emerald-soft: rgba(5, 150, 105, 0.14);
-  --mq-danger: #dc2626;
-  --mq-danger-soft: rgba(220, 38, 38, 0.12);
-  --mq-warning: #d97706;
-  --mq-xp-sky: #38bdf8;
-  --mq-xp-accent: #818cf8;
-  --mq-ink: #0f1115;
-  --mq-line: #e5e7eb;
+  --mq-emerald: var(--mq-gain);
+  --mq-emerald-soft: var(--mq-gain-soft);
+  --mq-danger: var(--mq-risk);
+  --mq-danger-soft: var(--mq-risk-soft);
+  --mq-warning: #b45309;
+  --mq-ink: var(--mq-board-ink);
+  --mq-line: var(--mq-cell-edge);
+
+  /* Motion (аудит 2026-10-25, улучшение 6): длительности и кривые — только через токены.
+     Значения совпадают с уже используемыми в styles/mqx, чтобы перевод на токены не менял ощущения. */
+  --mq-dur-press: 80ms; /* нажатие */
+  --mq-dur-fast: 150ms; /* смена состояния, чип, hover */
+  --mq-dur-base: 250ms; /* появление элемента, вкладка */
+  --mq-dur-slow: 350ms; /* лист, модалка, карта события */
+  --mq-dur-scene: 500ms; /* акты итогов хода, награда */
+  --mq-ease-standard: ease;
+  --mq-ease-enter: cubic-bezier(0.22, 1, 0.36, 1); /* вход с замедлением */
+  --mq-ease-exit: ease-in; /* уход с ускорением */
+  --mq-ease-reward: cubic-bezier(0.34, 1.5, 0.64, 1); /* overshoot — только монета/награда */
+
+  /* —— Токены v2 (ADR-014, ★ BG-1 «настольная игра про деньги») ——
+     Роли: фиолет — ход/действие, Coin Gold — деньги/награды/финиш,
+     изумруд — рост/плюс, красный — только риск. Обычный расход нейтрален. */
+  --mq-coin: #eab308;
+  --mq-coin-rim: #b98200;
+  --mq-coin-ink: #6f4a00;
+  --mq-coin-soft: #fcf1c8;
+  --mq-coin-face: #fff7cf;
+  --mq-coin-on: #3d2600;
+  --mq-board: #f4f0fb;
+  --mq-cell: #ffffff;
+  --mq-cell-edge: #d9d0ea;
+  --mq-board-ink: #1d1530;
+  --mq-board-ink-soft: #5d5470;
+  /* v3: третичный текст и граница поля ввода (≥3:1) — слой ink.css */
+  --mq-board-ink-faint: #71688a;
+  --mq-control-edge: #857b9f;
+  --mq-turn: #6d28d9;
+  --mq-turn-deep: #4c1d95;
+  --mq-turn-soft: #ece4fb;
+  --mq-turn-on: #ffffff;
+  --mq-gain: #047857;
+  --mq-gain-soft: #dcf3ea;
+  --mq-risk: #c81e1e;
+  --mq-risk-soft: #fde3e3;
+  --mq-font-display: 'Nunito', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --mq-font-body: 'Manrope', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --mq-hair: 1.5px solid var(--mq-cell-edge);
+  --mq-r-cell: 12px;
+  --mq-r-card: 18px;
+  /* Шаг отступов BG-1 */
+  --mq-sp-1: 4px;
+  --mq-sp-2: 6px;
+  --mq-sp-3: 8px;
+  --mq-sp-4: 10px;
+  --mq-sp-5: 12px;
+  --mq-sp-6: 14px;
+  --mq-sp-7: 16px;
 
   --text: #6b6375;
   --text-h: #08060d;
@@ -20,7 +72,6 @@
   --accent: #6d28d9;
   --accent-bg: rgba(109, 40, 217, 0.1);
   --accent-border: rgba(109, 40, 217, 0.42);
-  --social-bg: rgba(244, 243, 236, 0.5);
   --shadow:
     rgba(0, 0, 0, 0.1) 0 10px 15px -3px, rgba(0, 0, 0, 0.05) 0 4px 6px -2px;
 
@@ -53,13 +104,77 @@
     --accent: #c084fc;
     --accent-bg: rgba(192, 132, 252, 0.15);
     --accent-border: rgba(192, 132, 252, 0.5);
-    --social-bg: rgba(47, 48, 58, 0.5);
     --shadow:
       rgba(0, 0, 0, 0.4) 0 10px 15px -3px, rgba(0, 0, 0, 0.25) 0 4px 6px -2px;
+
+    /* Токены v2 (ADR-014) — тёмная тема */
+    --mq-coin: #f2c94c;
+    --mq-coin-rim: #a87b00;
+    --mq-coin-ink: #f6d878;
+    --mq-coin-soft: #352a0c;
+    --mq-board: #15101f;
+    --mq-cell: #211a30;
+    --mq-cell-edge: #3a2f52;
+    --mq-board-ink: #f2eefa;
+    --mq-board-ink-soft: #b4abc6;
+    --mq-board-ink-faint: #8f86a3;
+    --mq-control-edge: #75699a;
+    --mq-turn: #8b5cf6;
+    --mq-turn-deep: #5b21b6;
+    --mq-turn-soft: #2e2347;
+    --mq-gain: #34d399;
+    --mq-gain-soft: #12302a;
+    --mq-risk: #f87171;
+    --mq-risk-soft: #3b1717;
+    --mq-warning: #fbbf24;
   }
 
   #social .button-icon {
     filter: invert(1) brightness(2);
+  }
+}
+
+/* Явная тёмная тема (переключатель / превью) — те же значения v2 */
+:root[data-theme='dark'] {
+  --mq-coin: #f2c94c;
+  --mq-coin-rim: #a87b00;
+  --mq-coin-ink: #f6d878;
+  --mq-coin-soft: #352a0c;
+  --mq-board: #15101f;
+  --mq-cell: #211a30;
+  --mq-cell-edge: #3a2f52;
+  --mq-board-ink: #f2eefa;
+  --mq-board-ink-soft: #b4abc6;
+  --mq-board-ink-faint: #8f86a3;
+  --mq-control-edge: #75699a;
+  --mq-turn: #8b5cf6;
+  --mq-turn-deep: #5b21b6;
+  --mq-turn-soft: #2e2347;
+  --mq-gain: #34d399;
+  --mq-gain-soft: #12302a;
+  --mq-risk: #f87171;
+  --mq-risk-soft: #3b1717;
+  --mq-warning: #fbbf24;
+}
+
+/* Уменьшение движения — глобально, а не точечными блоками в каждом файле:
+   анимации и переходы почти мгновенны (события *end всё равно срабатывают), бесконечные — один раз. */
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --mq-dur-press: 0.01ms;
+    --mq-dur-fast: 0.01ms;
+    --mq-dur-base: 0.01ms;
+    --mq-dur-slow: 0.01ms;
+    --mq-dur-scene: 0.01ms;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
   }
 }
 

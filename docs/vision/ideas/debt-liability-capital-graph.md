@@ -5,8 +5,15 @@ last_reviewed: 2026-06-01
 audience: product, design, engineering
 idea_refine: true
 epic_id: DL1
+tags:
+  - tvoy-hod/layer/idea
+  - tvoy-hod/layer/vision
+  - tvoy-hod/status/approved
+aliases:
+  - debt-liability-capital-graph
+  - DL1
+  - "DL1 — Граф «актив ↔ долг ↔ страховка»"
 ---
-
 # DL1 — Граф «актив ↔ долг ↔ страховка»
 
 ## Problem Statement

@@ -1,9 +1,21 @@
-﻿# Документация ТВОЙ ХОД
+---
+layer: index
+status: active
+tags:
+  - tvoy-hod/layer/index
+  - tvoy-hod/status/active
+aliases:
+  - "Документация ТВОЙ ХОД"
+---
+# Документация ТВОЙ ХОД
+
+**Obsidian vault:** откройте корень репозитория → [`Home.md`](Home.md) · [`OBSIDIAN.md`](OBSIDIAN.md)
 
 Структура **вариант A** (слои зрелости): [`DOCUMENTATION_SYSTEM.md`](DOCUMENTATION_SYSTEM.md)  
+**Направления:** документы игры — этот `docs/`; продукт Plan — [`plan/`](plan/README.md); роадмапы Game, Plan и ядра — [`ROADMAPS.md`](ROADMAPS.md)  
 Шаблоны: [`templates/`](templates/) · Трассировка эпиков: [`TRACEABILITY.md`](TRACEABILITY.md)
 
-Технический онбординг: [`../CLAUDE.md`](../CLAUDE.md)
+Технический онбординг: [`../CLAUDE.md`](../CLAUDE.md) · **Свод принципов:** [`../CONVENTIONS.md`](../CONVENTIONS.md) · **AI агент:** [`agents/AI_ONBOARDING.md`](agents/AI_ONBOARDING.md)
 
 ---
 
@@ -13,6 +25,7 @@
 |------|------|------------|
 | **Handbook** | [`handbook/`](handbook/) | **Проектная документация для людей:** GDD, путеводитель, role-guides |
 | **Система** | [`DOCUMENTATION_SYSTEM.md`](DOCUMENTATION_SYSTEM.md) | Конвейер idea → spec → plan → tasks |
+| **Принципы** | [`../CONVENTIONS.md`](../CONVENTIONS.md) · [`conventions/`](conventions/) | Вердикт C-X…C-4; журнал разборов |
 | **Foundation** | [`foundation/`](foundation/) | Продукт «как есть», потоки, термины |
 | **Vision** | [`vision/ideas/`](vision/ideas/) | Идеи и целевое направление (idea-refine) |
 | **Specs** | [`specs/`](specs/) (включая [`specs/gameplay/`](specs/gameplay/)) | Что строим |
@@ -20,11 +33,17 @@
 | **Plans** | [`plans/`](plans/) | Как строим (срезы, зависимости) |
 | **Tasks** | [`tasks/`](tasks/) | Выгрузка MQ-* (опционально) |
 | **Decisions** | [`decisions/`](decisions/) | ADR — почему так |
+| **Audits** | [`audits/`](audits/) | Снимки продукта / engineering / QA / UX; **куда класть** — [`audits/README.md`](audits/README.md) |
 | **Backlog** | [`backlog/`](backlog/) | Приоритеты P0–P3 |
 | **Reference** | [`reference/`](reference/) | GDD, брендбук, investor deck |
 | **Marketing** | [`marketing/`](marketing/) | Посты, трекер тем, стиль, Telegram-публикация |
 | **Ops** | [`ops/`](ops/) | Деплой prod / Pre-Alpha ([`ops/DEPLOY.md`](ops/DEPLOY.md)) |
-| **Agents** | [`agents/`](agents/) | Cursor skills и приоритеты |
+| **Agents** | [`agents/`](agents/) | Claude Code skills, rules, subagents и приоритеты |
+| **Plan (продукт)** | [`plan/`](plan/README.md) | «ТВОЙ ПЛАН»: роадмап, spec, idea — отдельно от игры |
+| **Роадмапы** | [`ROADMAPS.md`](ROADMAPS.md) | Game, Plan, ядро: цель, роадмап, связи |
+| **Журнал доработок** | [`CHANGELOG.md`](CHANGELOG.md) | Что сделано по датам: фичи, решения, инструменты |
+| **Дизайн-система** | [`design/claude-design-system/`](../design/README.md) | MQX v3: токены, компоненты, рецепты (выгрузка артефакта Claude) |
+| **Archive** | [`archive/`](archive/) | Superseded stubs (O1 onboarding и др.) |
 
 ---
 
@@ -41,7 +60,8 @@
 | UI/UX | [`specs/SPEC_FRONTEND_UI.md`](specs/SPEC_FRONTEND_UI.md) + [`ux/screens/`](ux/screens/) + [`ux/CHARACTER_NEEDS_UX.md`](ux/CHARACTER_NEEDS_UX.md) + [`reference/brandbook/BRANDBOOK.md`](reference/brandbook/BRANDBOOK.md) + [`BRANDBOOK_MQX.md`](reference/brandbook/BRANDBOOK_MQX.md) |
 | Лендинг / скрины MQX | [`specs/LANDING_SCREENSHOTS.md`](specs/LANDING_SCREENSHOTS.md) + [`landing/README.md`](../landing/README.md) |
 | Маркетинг / посты | [`marketing/README.md`](marketing/README.md) + скилл **social-changelog-posts** |
-| Планирование | [`backlog/PRODUCT_BACKLOG.md`](backlog/PRODUCT_BACKLOG.md) + [`TRACEABILITY.md`](TRACEABILITY.md) |
+| Планирование | [`ROADMAPS.md`](ROADMAPS.md) + [`CHANGELOG.md`](CHANGELOG.md) + [`backlog/PRODUCT_BACKLOG.md`](backlog/PRODUCT_BACKLOG.md) + [`TRACEABILITY.md`](TRACEABILITY.md) |
+| Аудит (агент) | [`audits/README.md`](audits/README.md) → `product/` / `engineering/` / `qa/` + [`templates/AUDIT.md`](templates/AUDIT.md) |
 
 ---
 
@@ -52,18 +72,19 @@
 | Документ | Содержание |
 |----------|------------|
 | [`foundation/SPEC_PRODUCT.md`](foundation/SPEC_PRODUCT.md) | Продукт, цикл, экономика MVP; **раздел 0** — краткая дорожная карта Game/Plan |
-| [`foundation/TMA_USER_FLOWS.md`](foundation/TMA_USER_FLOWS.md) | Потоки и боли Telegram Mini App |
+| [`foundation/TMA_USER_FLOWS.md`](foundation/TMA_USER_FLOWS.md) | Потоки TMA (secondary channel, ADR-012) |
 | [`foundation/TARGET_PLAYER_AND_SESSION.md`](foundation/TARGET_PLAYER_AND_SESSION.md) | ЦА **30+**, умная игра; сессия, рамки контента, копирайт событий |
 | [`foundation/GLOSSARY.md`](foundation/GLOSSARY.md) | Термины (период, подушка, save_kind, …) |
 | [`foundation/PROJECT_META.md`](foundation/PROJECT_META.md) | **Снимок метрик:** размер репо, LOC, эпики, бэклог, дни с `init` |
 | [`foundation/PRE_ALPHA_PLAYTEST_PROTOCOL.md`](foundation/PRE_ALPHA_PLAYTEST_PROTOCOL.md) | **Черновик** протокола плейтеста Pre-Alpha (10–20), опрос, чеклист перед волной |
 | [`foundation/PRE_ALPHA_PLAYTEST_WAVE0_RESULTS.md`](foundation/PRE_ALPHA_PLAYTEST_WAVE0_RESULTS.md) | Пилот wave-0 (n=1): итоги и правки |
 | [`foundation/PRE_ALPHA_PLAYTEST_FEEDBACK.md`](foundation/PRE_ALPHA_PLAYTEST_FEEDBACK.md) | **Реестр отзывов** wave-0 + внутренние прогоны → backlog |
-| [`specs/features/SPEC_onboarding-o2.md`](specs/features/SPEC_onboarding-o2.md) | **O2** онбординг: bottom strip, 3 периода, user-once |
-| [`plans/PLAN_onboarding-o2.md`](plans/PLAN_onboarding-o2.md) | План реализации O2 (без hotfix O1) |
-| [`vision/ideas/onboarding-o2-progressive-guidance.md`](vision/ideas/onboarding-o2-progressive-guidance.md) | Idea APPROVED → O2 spec |
+| [`specs/features/SPEC_onboarding-o3.md`](specs/features/SPEC_onboarding-o3.md) | **O3** онбординг: spine + триггеры (канон) |
+| [`archive/onboarding-o2/`](archive/onboarding-o2/README.md) | O2 stub (superseded → O3) |
+| [`plans/PLAN_onboarding-o2.md`](plans/PLAN_onboarding-o2.md) | План O2 (superseded → O3) |
+| [`vision/ideas/onboarding-o2-progressive-guidance.md`](vision/ideas/onboarding-o2-progressive-guidance.md) | Idea O2 (superseded → O3) |
 | [`foundation/MVP_AUDIT_VS_SPEC.md`](foundation/MVP_AUDIT_VS_SPEC.md) | Чеклист: текущий код vs SPEC_PRODUCT |
-| [`foundation/DOC_SYNC_LOG.md`](foundation/DOC_SYNC_LOG.md) | Журнал синхронизации docs ↔ prod |
+| [`foundation/DOC_SYNC_LOG.md`](foundation/DOC_SYNC_LOG.md) | Журнал синхронизации docs ↔ prod; что сделано по датам — [`CHANGELOG.md`](CHANGELOG.md) |
 
 ### Gameplay (прогрессия контента, события)
 
@@ -81,7 +102,18 @@
 | [`vision/ideas/turn-based-period-no-timer.md`](vision/ideas/turn-based-period-no-timer.md) | **TB1 (implemented):** период без real-time таймера; закрытие «Закрыть месяц» |
 | [`ux/screens/dashboard.md`](ux/screens/dashboard.md) | UX главной вкладки (hero H2, chips, онбординг) |
 
-Архив level/XP (только git history): `specs/gameplay/LEVEL_XP_SYSTEM.md`, `catalogs/XP_EVENTS_ACTIONS_MATRIX.md`, `plans/PLAN_level-xp-progression.md`.
+Архив: [`archive/`](archive/README.md) (O1/O2 onboarding, level/XP, hero-compact).
+
+### Audits (снимки)
+
+| Документ | Содержание |
+|----------|------------|
+| [`audits/README.md`](audits/README.md) | Куда класть, kind, реестр, что не сюда |
+| [`audits/product/2026-09-07-product-game-design.md`](audits/product/2026-09-07-product-game-design.md) | Продукт + GD, DRAFT, 2026-09-07 |
+| [`audits/engineering/README.md`](audits/engineering/README.md) | Куда писать **технический** аудит; снимок [`engineering/2026-09-07-architecture.md`](audits/engineering/2026-09-07-architecture.md) |
+| [`audits/qa/README.md`](audits/qa/README.md) | QA-механики; снимок [`qa/2026-09-07-mechanics.md`](audits/qa/2026-09-07-mechanics.md) |
+| [`audits/ux/README.md`](audits/ux/README.md) | Поверхность игрока; снимок [`ux/2026-09-07-player-surface.md`](audits/ux/2026-09-07-player-surface.md) |
+| [`audits/liveops/README.md`](audits/liveops/README.md) | Live Ops / комьюнити; снимок [`liveops/2026-09-07-community.md`](audits/liveops/2026-09-07-community.md) |
 
 ### Vision
 
@@ -89,6 +121,7 @@
 |----------|------------|
 | [`vision/ideas/tvoy-hod-evolution-after-mvp.md`](vision/ideas/tvoy-hod-evolution-after-mvp.md) | **Часть II** — Game/Plan, Q&A, план по слоям (источник истины для цели) |
 | [`vision/GAME_DESIGN_ROADMAP_2026.md`](vision/GAME_DESIGN_ROADMAP_2026.md) | Геймдизайн: сравнение с рынком, идеи механик (GD-xxx), roadmap по фазам |
+| [`vision/ARCHITECTURE_ASSESSMENT_2026-06.md`](vision/ARCHITECTURE_ASSESSMENT_2026-06.md) | **Software architecture:** масштаб, онбординг, тех. roadmap, infra, IN-идеи |
 | [`vision/ideas/mvp-1-1-product-direction.md`](vision/ideas/mvp-1-1-product-direction.md) | MVP 1.1: закрытые ответы + направления доработки (перед spec эпика) |
 | [`vision/ideas/game-balance-thresholds-and-constraints.md`](vision/ideas/game-balance-thresholds-and-constraints.md) | Черновик баланса: победа/поражение MVP, ограничения, пакеты для калибровки по шаблонам |
 | [`vision/ideas/event-catalog-qna-refine.md`](vision/ideas/event-catalog-qna-refine.md) | Q&A каталога событий, цепочки (авто, родственник) |
@@ -102,14 +135,14 @@
 | Документ | Содержание |
 |----------|------------|
 | [`specs/SPEC_FRONTEND_UI.md`](specs/SPEC_FRONTEND_UI.md) | UI/UX MQX, a11y, границы |
-| [`specs/LANDING_SCREENSHOTS.md`](specs/LANDING_SCREENSHOTS.md) | PNG для лендинга, `capture-screens.mjs`, `UI_FOCUS`, чеклист перед deploy |
+| [`specs/LANDING_SCREENSHOTS.md`](specs/LANDING_SCREENSHOTS.md) | Снято: PNG прежнего лендинга (архив `design/archive/classic-v3/landing-source/`) |
 | [`specs/SPEC_APP_SHELL.md`](specs/SPEC_APP_SHELL.md) | Pre-game оболочки, `MqxButton`, design-lab `pre-game-shell` |
 | [`specs/SPEC_ANALYTICS.md`](specs/SPEC_ANALYTICS.md) | Вкладка «Аналитика» и данные |
-| [`specs/features/SPEC_game-plan.md`](specs/features/SPEC_game-plan.md) | Эпик G1 — Game E2E, `save_kind`, ADR-001 (**implemented**) |
+| [`specs/features/SPEC_game-plan.md`](specs/features/SPEC_game-plan.md) | Эпик G1 — Game E2E, `save_kind`; Plan-чеклист **cancelled** ADR-013 (**implemented** Game) |
 | [`specs/features/SPEC_mvp-11-progression-events.md`](specs/features/SPEC_mvp-11-progression-events.md) | MVP 1.1 — **`event_tier`**, **`repeat_policy`**, cooldown; tier-окно от **`period_index`** (см. remove-character-xp); план — [`plans/PLAN_mvp-11-progression-events.md`](plans/PLAN_mvp-11-progression-events.md) |
 | [`specs/gameplay/EXPENSES_SYSTEM.md`](specs/gameplay/EXPENSES_SYSTEM.md) | Канон механики **расходов** (категории, burn, Game/Plan) |
 | [`specs/features/SPEC_expenses.md`](specs/features/SPEC_expenses.md) | Эпик **E1** — внедрение на всех слоях; чеклист — [`specs/economy/EXPENSES_LAYER_CHECKLIST.md`](specs/economy/EXPENSES_LAYER_CHECKLIST.md) |
-| [`specs/features/SPEC_onboarding-o2.md`](specs/features/SPEC_onboarding-o2.md) | Эпик **O2** — Progressive Guidance (prod) |
+| [`specs/features/SPEC_onboarding-o3.md`](specs/features/SPEC_onboarding-o3.md) | Эпик **O3** — hybrid guidance (канon spec) |
 | [`specs/features/SPEC_telegram-bots-and-notifications.md`](specs/features/SPEC_telegram-bots-and-notifications.md) | **TG:** player + ops боты, каталог `kind`, webhook, initData, digest (draft) |
 | [`reference/CHARACTER_MONETKA.md`](reference/CHARACTER_MONETKA.md) | Персонаж-наставник **Монетка** (онбординг) |
 
@@ -118,7 +151,8 @@
 | Документ | Содержание |
 |----------|------------|
 | [`backlog/PRODUCT_BACKLOG.md`](backlog/PRODUCT_BACKLOG.md) | Бэклог P0–P3 |
-| [`agents/CURSOR_SKILLS.md`](agents/CURSOR_SKILLS.md) | Приоритет Agent Skills |
+| [`plans/PLAN_production-ready.md`](plans/PLAN_production-ready.md) | Сводный план до production-ready (синтез аудитов 2026-09-07, DRAFT) |
+| [`agents/AGENT_SKILLS.md`](agents/AGENT_SKILLS.md) | Приоритет Agent Skills |
 
 ### Decisions (ADR)
 
@@ -126,7 +160,8 @@
 |----------|------------|
 | [`decisions/ADR-007-backend-domain-packages.md`](decisions/ADR-007-backend-domain-packages.md) | **Структура backend:** `app/{game,finance,victory,…}/`, `services/` |
 | [`decisions/ADR-002-victory-engine-and-template-config.md`](decisions/ADR-002-victory-engine-and-template-config.md) | Victory v2, `victory_config_json` |
-| [`decisions/ADR-001-save-kind-remove-light-hardcore.md`](decisions/ADR-001-save-kind-remove-light-hardcore.md) | `save_kind` game/plan |
+| [`decisions/ADR-001-save-kind-remove-light-hardcore.md`](decisions/ADR-001-save-kind-remove-light-hardcore.md) | `save_kind` вместо light/hardcore; резерв Plan **снят** ADR-013 |
+| [`decisions/ADR-013-game-only-drop-plan-mode.md`](decisions/ADR-013-game-only-drop-plan-mode.md) | Только Game; отказ от режима Plan |
 
 Полный список: [`decisions/`](decisions/).
 
@@ -149,6 +184,8 @@
 3. **plan** → `plans/PLAN_<slug>.md`
 4. **tasks** → MQ-* в plan или `tasks/`
 5. **код** → PR со ссылкой на spec
+
+**Аудит** (не фаза конвейера): [`audits/README.md`](audits/README.md) → `audits/<kind>/<дата>-<slug>.md`.
 
 ---
 

@@ -31,6 +31,7 @@ def create_asset(db: Session, profile: GameProfile, payload) -> FinanceAsset:
         monthly_maintenance_cost=payload.monthly_maintenance_cost,
         monthly_income=payload.monthly_income,
         game_profile_id=profile.id,
+        acquired_period_index=max(1, int(profile.period_index or 1)),
     )
     db.add(asset)
     db.commit()
@@ -83,6 +84,7 @@ def create_asset_from_template(db: Session, profile: GameProfile, *, key: str) -
         has_tenants=has_tenants,
         acquisition_mode="cash",
         game_profile_id=profile.id,
+        acquired_period_index=max(1, int(profile.period_index or 1)),
     )
     db.add(asset)
     db.commit()

@@ -2,8 +2,13 @@
 layer: foundation
 status: active
 audience: product
+tags:
+  - tvoy-hod/layer/foundation
+  - tvoy-hod/status/active
+aliases:
+  - "Трекер волны Pre-Alpha (шаблон)"
+  - PRE_ALPHA_WAVE1_TRACKER
 ---
-
 # Трекер волны Pre-Alpha (шаблон)
 
 Дублируйте в **Google Sheet** / Notion. **Не** храните в git строки с ФИО, телефонами, @username — только агрегаты и ID.

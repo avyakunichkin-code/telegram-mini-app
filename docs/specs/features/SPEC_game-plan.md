@@ -1,3 +1,12 @@
+---
+tags:
+  - tvoy-hod/layer/spec
+aliases:
+  - "Game Mode, шаблоны старта, отказ от light/hardcore (эпик G1)"
+  - "SPEC game plan"
+  - SPEC_game-plan
+  - "Spec: Game Mode, шаблоны старта, отказ от light/hardcore (эпик G1)"
+---
 ﻿---
 layer: spec
 status: implemented
@@ -11,6 +20,8 @@ audit: foundation/MVP_AUDIT_VS_SPEC.md
 ---
 
 # Spec: Game Mode, шаблоны старта, отказ от light/hardcore (эпик G1)
+
+> **ADR-013 (2026-09-07):** путь **Game implemented** остаётся. Чеклист **Plan / MVP 2.0 в этом spec — cancelled**. Не реализовывать мастер Plan; вырезание — [`PLAN_game-only`](../../plans/PLAN_game-only.md).
 
 ## Пояснение терминов (чтобы не теряться)
 
@@ -27,9 +38,9 @@ audit: foundation/MVP_AUDIT_VS_SPEC.md
 ## Assumptions
 
 1. Legacy **`light` / `hardcore`** снимаются **полностью**; новая ось — **`save_kind`**, см. [ADR-001](../../decisions/ADR-001-save-kind-remove-light-hardcore.md). Переходного dual-read нет.
-2. Первые **6** периодов без победы сохраняются (`min_period_index_for_victory` по умолчанию **7**).
+2. Победа определяется целями шаблона (Victory v2); ограничение «не раньше 7-го периода» снято, `min_period_index_for_victory` игнорируется (миграция 0042).
 3. Game Mode: **автоматические** списания «жизни»; ручная оплата расходов — вне scope.
-4. **Plan Mode (мастер, prefill `starter_params_json`)** — **MVP 2.0**, **вне scope эпика G1**; в G1 допускается зарезервировать поля/контракт в БД без UI Plan.
+4. **Plan Mode (мастер, prefill `starter_params_json`)** — **cancelled** [ADR-013](../../decisions/ADR-013-game-only-drop-plan-mode.md); в G1 поля в БД могли быть зарезервированы — не развивать.
 5. **Порядок поставки:** полный путь **Game из каталога шаблонов end-to-end** (БД + API + применение в `process_period_end` + стартовый UI с выбором шаблона), а не отдельный релиз «только `save_kind` без шаблона».
 6. Детали Q&A и таблицы по слоям — [evolution §II](../../vision/ideas/tvoy-hod-evolution-after-mvp.md); этот файл — **исполняемая spec** для G1.
 
@@ -37,7 +48,7 @@ audit: foundation/MVP_AUDIT_VS_SPEC.md
 
 ## Objective
 
-**Why:** перейти от устаревшей пары сложности к **Game-сохранениям со стартовым шаблоном** и заделом на Plan в 2.0.
+**Why:** перейти от устаревшей пары сложности к **Game-сохранениям со стартовым шаблоном**. Задел на Plan 2.0 **снят** (ADR-013).
 
 **Who:** игрок TMA, начинающий новую игру в **Game Mode**.
 
@@ -125,7 +136,7 @@ Ref: [`SPEC_FRONTEND_UI.md`](../SPEC_FRONTEND_UI.md).
 ## Rules & edge cases
 
 - `save_kind` immutable после create.
-- Победа MVP: до внедрения victory v2 сохраняем текущие правила `win_reached` и `period_index >= 7`.
+- Победа: Victory v2 оценивает цели шаблона без ограничения по номеру периода.
 - События: не использовать `profile.mode` как light/hardcore после миграции.
 
 ---

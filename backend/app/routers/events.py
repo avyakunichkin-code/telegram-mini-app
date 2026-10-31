@@ -5,7 +5,7 @@ from ..auth import get_current_user
 from ..database import get_db
 from ..events.constants import ALLOWED_EFFECT_KEYS, EVENTS_UNLOCK_INTRO_KEY
 from ..game.rules import EVENTS_PER_PERIOD
-from ..game.time import get_active_game_profile, sync_time
+from ..game.session import get_active_game_profile
 from ..models import GameProfile
 from ..services.events import service as svc
 
@@ -28,14 +28,13 @@ router = APIRouter(prefix="/api/game/events", tags=["events"])
 
 
 @router.get("/pending")
-async def get_pending_event(current_user=Depends(get_current_user), db: Session = Depends(get_db)):
+def get_pending_event(current_user=Depends(get_current_user), db: Session = Depends(get_db)):
     profile = get_active_game_profile(db, current_user.id)
-    sync_time(profile)
     return build_pending_events_payload(db, profile)
 
 
 @router.post("/{event_id}/choose")
-async def choose_event_endpoint(
+def choose_event_endpoint(
     event_id: int,
     payload: dict,
     current_user=Depends(get_current_user),
@@ -46,5 +45,4 @@ async def choose_event_endpoint(
         raise HTTPException(status_code=400, detail="choice_id is required")
 
     profile = get_active_game_profile(db, current_user.id)
-    sync_time(profile)
     return choose_event(db, profile, event_id, int(choice_id))

@@ -3,8 +3,12 @@ layer: handbook
 status: active
 last_reviewed: 2026-05-30
 audience: all human readers
+tags:
+  - tvoy-hod/layer/handbook
+  - tvoy-hod/status/active
+aliases:
+  - "Путеводитель по документации ТВОЙ ХОД"
 ---
-
 # Путеводитель по документации ТВОЙ ХОД
 
 Эта папка — **проектная документация для людей**: что за игра, как она устроена, что уже в prod и куда смотреть дальше. Технический конвейер (spec → plan → tasks → код) остаётся в [`../`](../README.md).
@@ -27,7 +31,7 @@ audience: all human readers
 
 **Owner пакета:** владелец продукта · формат: **Markdown** (PDF — по запросу позже).
 
-**Агент Cursor:** скилл **`project-handbook-documentation`** (`/project-handbook-documentation`) — процедура генерации и синхронизации handbook; build-spec: [`docs/specs/build/project-handbook-documentation.md`](../specs/build/project-handbook-documentation.md).
+**Агент (Claude Code):** скилл **`project-handbook-documentation`** (`/project-handbook-documentation`) — процедура генерации и синхронизации handbook; build-spec: [`docs/specs/build/project-handbook-documentation.md`](../specs/build/project-handbook-documentation.md).
 
 ---
 
@@ -40,7 +44,7 @@ audience: all human readers
 | **Specs / Plans** | `docs/specs/`, `docs/plans/` | разработка, QA | Контракты фич, acceptance, задачи MQ-* |
 | **Vision** | `docs/vision/ideas/` | продукт, дизайн | Идеи и целевое направление (не всё в prod) |
 | **Decisions** | `docs/decisions/` | архитектура | ADR — **почему** так решили |
-| **Agents** | `CLAUDE.md`, `docs/agents/` | агенты Cursor | Онбординг кода, скиллы, эндпоинты |
+| **Agents** | `CLAUDE.md`, `docs/agents/` | агенты Claude Code | Онбординг кода, скиллы, эндпоинты |
 
 **При конфликте:** код + тесты → spec фичи → `SPEC_PRODUCT` → vision/ideas → handbook (обзор).
 
@@ -139,7 +143,6 @@ audience: all human readers
 
 | Материал | Сейчас | План |
 |----------|--------|------|
-| [`QUESTIONNAIRE.md`](../../QUESTIONNAIRE.md) | корень репо | `handbook/archive/` + баннер «архив» |
 | Foundation, specs, ADR | `docs/*` | остаются; handbook только ссылается |
 | [`CLAUDE.md`](../../CLAUDE.md) | корень | остаётся (инженерный индекс) |
 
@@ -151,7 +154,6 @@ audience: all human readers
 2. **Сейчас:** заполнить URL опроса/чата в ops-листе → smoke → пригласить 10–20.  
 3. **Отдельные сессии:** KPI v2; CustDev советника; третий design pillar (опционально).  
 4. **Волна 2:** `CONTENT_GUIDE.md`, опрос+CRM в продукте (§9.6 advisor).  
-5. **Потом:** `handbook/archive/QUESTIONNAIRE.md`, factsheet для партнёров.
 
 ---
 

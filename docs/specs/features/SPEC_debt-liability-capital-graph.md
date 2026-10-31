@@ -8,8 +8,16 @@ idea: ../../vision/ideas/debt-liability-capital-graph.md
 plan: ../../plans/PLAN_debt-liability-capital-graph.md
 traceability: ../../TRACEABILITY.md
 adr: decisions/ADR-010-liability-asset-insurance-graph.md
+tags:
+  - tvoy-hod/layer/spec
+  - tvoy-hod/status/approved
+aliases:
+  - DL1
+  - "DL1 — Реалистичный долг и граф капитала"
+  - "SPEC debt liability capital graph"
+  - SPEC_debt-liability-capital-graph
+  - "SPEC: DL1 — Реалистичный долг и граф капитала"
 ---
-
 # SPEC: DL1 — Реалистичный долг и граф капитала
 
 **Статус:** `approved` (2026-06-02) — **MVP ядро в prod**; миграции `0044`–`0046`; pytest: `test_dl1_annuity_golden.py`, `test_dl1_integration.py`, `test_liability_legacy_compat.py`. **Открыто:** balance-playtest (**DL1-143**), polish UI сроков полиса, DTI (**DL1-200**), события по `insured_asset_id` (**DL1-210**).

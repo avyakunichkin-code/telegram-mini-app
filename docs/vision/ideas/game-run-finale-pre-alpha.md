@@ -7,8 +7,18 @@ idea_refine: 2026-06-01
 design_lab: design-lab/run-finale/
 related: specs/features/SPEC_game-run-finale.md, specs/features/SPEC_victory-v2.md, foundation/SPEC_PRODUCT.md §3.3
 not_in_scope: specs/features/SPEC_achievements.md (M12 chains — MVP 2.0 / Plan)
+tags:
+  - tvoy-hod/layer/idea
+  - tvoy-hod/layer/vision
+  - tvoy-hod/status/active
+  - tvoy-hod/topic/ge1
+  - tvoy-hod/topic/player-feedback
+  - tvoy-hod/topic/pre-alpha
+  - tvoy-hod/topic/run-finale
+aliases:
+  - "Game Run Finale (Pre-Alpha) — GE1"
+  - game-run-finale-pre-alpha
 ---
-
 # Game Run Finale (Pre-Alpha) — GE1
 
 ## Problem Statement

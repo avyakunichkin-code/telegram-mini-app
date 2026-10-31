@@ -1,145 +1,117 @@
-import { useEffect, useRef } from 'react';
-import { fitChipValuesIn } from '../../../utils/fitChipValue';
+import { CAPITAL_FLOWS_SECTION } from '../../../utils/capitalFlowsNav';
+import { FINANCES_OF_TURN } from '../../../constants/turnCopy';
+import { MoneyText } from '../../MoneyText';
+import { PersonaPortrait } from '../brand/PersonaPortrait';
 
-function CushionFillBar({ percent, tier }) {
-  return (
-    <div
-      className="mqx-cushion-fill"
-      role="progressbar"
-      aria-valuenow={percent}
-      aria-valuemin={0}
-      aria-valuemax={100}
-      aria-label={`Наполнение подушки ${percent}%`}
-    >
-      <span
-        className="mqx-cushion-fill__bar"
-        style={{ width: `${percent}%` }}
-        data-tier={tier}
-      />
-    </div>
-  );
+function moneyAria(n) {
+  const abs = Math.abs(Math.round(Number(n) || 0)).toLocaleString('ru-RU');
+  return `${abs} руб.`;
 }
 
-function chipAriaLabel(card, onFlowsNavigate) {
-  const valuePart = card.valueLabel ? `, ${card.valueLabel}` : '';
-  const actionPart = card.chipAction && onFlowsNavigate ? ', открыть раздел' : '';
-  return `${card.title}${valuePart}${actionPart}`;
-}
-
-/** Статичный блок «Финансы периода» (L3): 2×2 chips + ссылка на вкладку «Капитал». */
-function FinanceChip({ card, onFlowsNavigate, juiceGainActive = false }) {
-  const className = [
-    'mqx-finance-chip',
-    card.chipAction ? 'mqx-finance-chip--action' : '',
-    card.cushionChip ? 'mqx-finance-chip--cushion' : '',
-    card.juiceTarget === 'balance' && juiceGainActive ? 'mqx-juice-resource--gain' : '',
-  ]
-    .filter(Boolean)
-    .join(' ');
-
-  const inner = (
+/** Ячейка денег: кнопка в раздел «Капитала», если есть навигация, иначе статичная. */
+function MoneyCell({ label, children, ariaLabel, section, onNavigate, className = '', note = null }) {
+  const cls = ['mqx-bg-money__cell', className].filter(Boolean).join(' ');
+  const body = (
     <>
-      <div
-        className={[
-          'mqx-finance-chip__icon',
-          card.accent,
-          card.expenseIcon ? 'mqx-accent--expense' : '',
-        ]
-          .filter(Boolean)
-          .join(' ')}
-        aria-hidden
-      >
-        {card.icon}
-      </div>
-      <div className="mqx-finance-chip__body">
-        <div className="mqx-finance-chip__label">{card.title}</div>
-        <div
-          className={[
-            'mqx-finance-chip__value',
-            card.valueTone ? `mqx-finance-chip__value--${card.valueTone}` : '',
-          ]
-            .filter(Boolean)
-            .join(' ')}
-        >
-          {card.valueNode}
-        </div>
-        {card.cushionChip ? (
-          <CushionFillBar
-            percent={card.cushionFill?.percent ?? 0}
-            tier={card.cushionFill?.tier ?? 'low'}
-          />
-        ) : null}
-      </div>
+      <small className="mqx-bg-money__label">{label}</small>
+      <b className="mqx-bg-money__value">{children}</b>
+      {note}
     </>
   );
-
-  const juiceProps =
-    card.juiceTarget != null ? { 'data-mqx-juice-target': card.juiceTarget } : undefined;
-
-  if (card.chipAction && onFlowsNavigate) {
+  if (section && onNavigate) {
     return (
       <button
         type="button"
-        className={className}
-        title={card.titleHint}
-        aria-label={chipAriaLabel(card, onFlowsNavigate)}
-        onClick={() => onFlowsNavigate(card.chipAction)}
-        {...juiceProps}
+        className={`mqx-bg-btn ${cls} mqx-bg-money__cell--action`}
+        aria-label={`${ariaLabel}, открыть раздел`}
+        onClick={() => onNavigate(section)}
       >
-        {inner}
+        {body}
       </button>
     );
   }
-
   return (
-    <div
-      className={className}
-      title={card.titleHint}
-      aria-label={chipAriaLabel(card, onFlowsNavigate)}
-      {...juiceProps}
-    >
-      {inner}
+    <div className={cls} role="group" aria-label={ariaLabel}>
+      {body}
     </div>
   );
 }
 
+/**
+ * Деньги ★ BG-3: персонаж у суммы «На счёте»; ниже доходы и расходы за ход, затем подушка.
+ * Без рамок — прямо на поле. Расход нейтрален (ADR-014), доход — изумруд со знаком «+».
+ * У подушки вторая строка «не платит расходы» (PR-07); `cushionRisk` — счёт уйдёт в минус, строка красная.
+ */
 export function MqxFinancePeriodBlock({
-  financeCards = [],
-  onGoFinance,
+  templateKey,
+  cash = 0,
+  safety = 0,
+  cushionPercent = null,
+  income = { label: 'Доходы за ход', value: 0 },
+  outflow = 0,
   onFlowsNavigate,
   juiceGainActive = false,
+  cushionRisk = false,
 }) {
-  const chipsRef = useRef(null);
-
-  useEffect(() => {
-    const root = chipsRef.current;
-    if (!root) return undefined;
-    const run = () => fitChipValuesIn(root);
-    run();
-    const ro = new ResizeObserver(run);
-    ro.observe(root);
-    return () => ro.disconnect();
-  }, [financeCards]);
+  const incomeValue = Math.max(0, Number(income?.value) || 0);
+  const outflowValue = Math.max(0, Number(outflow) || 0);
+  const cushionLabel = cushionPercent != null ? `Подушка · ${cushionPercent}%` : 'Подушка';
 
   return (
-    <section className="mqx-finance-static" aria-label="Финансы периода">
-      <h2 className="mqx-finance-static__title">Финансы периода</h2>
-      <div ref={chipsRef} className="mqx-finance-static__chips">
-        {financeCards.map((c) => (
-          <FinanceChip
-            key={c.title}
-            card={c}
-            onFlowsNavigate={onFlowsNavigate}
-            juiceGainActive={juiceGainActive && c.juiceTarget === 'balance'}
-          />
-        ))}
+    <section className="mqx-bg-money" aria-label={FINANCES_OF_TURN} data-onboarding-anchor="finance-flows">
+      <h2 className="mqx-bg-sr-only">{FINANCES_OF_TURN}</h2>
+      <div
+        className={['mqx-bg-money__hero', juiceGainActive && 'mqx-bg-money__hero--gain'].filter(Boolean).join(' ')}
+        data-mqx-juice-target="balance"
+      >
+        <span className="mqx-bg-money__avatar" aria-hidden="true">
+          <PersonaPortrait templateKey={templateKey || 'mq_game_basic_v1'} size="pick" />
+        </span>
+        <div className="mqx-bg-money__cash" role="group" aria-label={`На счёте ${moneyAria(cash)}`}>
+          <small className="mqx-bg-money__label">На счёте</small>
+          <b className="mqx-bg-money__cash-value">
+            <MoneyText value={cash} decimals={0} />
+          </b>
+        </div>
       </div>
 
-      {onGoFinance ? (
-        <button type="button" className="mqx-dash-link" onClick={onGoFinance}>
-          Весь капитал →
-        </button>
-      ) : null}
+      <div className="mqx-bg-money__grid">
+        <MoneyCell
+          label={income.label}
+          ariaLabel={`${income.label} плюс ${moneyAria(incomeValue)}`}
+          section={CAPITAL_FLOWS_SECTION.income}
+          onNavigate={onFlowsNavigate}
+          className="mqx-bg-money__cell--gain"
+        >
+          +<MoneyText value={incomeValue} decimals={0} />
+        </MoneyCell>
+        <MoneyCell
+          label="Расходы за ход"
+          ariaLabel={`Расходы за ход ${moneyAria(outflowValue)}`}
+          section={CAPITAL_FLOWS_SECTION.expense}
+          onNavigate={onFlowsNavigate}
+        >
+          −<MoneyText value={outflowValue} decimals={0} />
+        </MoneyCell>
+        <MoneyCell
+          label={cushionLabel}
+          ariaLabel={
+            (cushionPercent != null
+              ? `Подушка ${moneyAria(safety)}, наполнение ${cushionPercent}% от нормы`
+              : `Подушка ${moneyAria(safety)}`) + ', не платит расходы хода'
+          }
+          note={
+            <small
+              className={['mqx-bg-money__note', cushionRisk && 'mqx-bg-money__note--risk'].filter(Boolean).join(' ')}
+              aria-hidden="true"
+            >
+              не платит расходы
+            </small>
+          }
+        >
+          <MoneyText value={safety} decimals={0} />
+        </MoneyCell>
+      </div>
     </section>
   );
 }

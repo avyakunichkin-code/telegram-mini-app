@@ -40,6 +40,7 @@ _KIND_EMOJI = {
     "onboarding_brief_done": "✅",
     "onboarding_skipped": "⏭️",
     "event_chosen": "🃏",
+    "player_bot_started": "🤖",
 }
 
 
@@ -129,15 +130,8 @@ def emit_admin_alert(
     elif game_profile_id and "_admin_link" not in payload:
         payload["_admin_link"] = _admin_link(f"/admin?profile={game_profile_id}")
 
-    telegram_sent = 0
-    if (
-        send_telegram
-        and config.OPS_TELEGRAM_BOT_TOKEN
-        and config.OPS_TELEGRAM_CHAT_ID
-    ):
-        if _send_telegram_message(_format_telegram_text(kind, payload)):
-            telegram_sent = 1
-
+    # Сначала строка лога (dedupe по unique dedupe_key), потом Telegram: гонка двух запросов
+    # не должна отправить дубль, а упавшая запись — сообщение без следа в notification_log.
     row = NotificationLog(
         audience="admin",
         kind=kind,
@@ -145,7 +139,7 @@ def emit_admin_alert(
         user_id=user_id,
         game_profile_id=game_profile_id,
         payload_json=json.dumps(payload, ensure_ascii=False),
-        telegram_sent=telegram_sent,
+        telegram_sent=0,
     )
     try:
         with db.no_autoflush:
@@ -157,15 +151,34 @@ def emit_admin_alert(
                 db.add(row)
         if not foreign_pending:
             db.commit()
-        db.refresh(row)
-        return row
     except IntegrityError:
+        # Дубль dedupe_key: savepoint (foreign_pending) уже откатился, иначе откатываем сами.
+        if not foreign_pending:
+            db.rollback()
         return None
     except Exception:
         if not foreign_pending:
             db.rollback()
         logger.exception("Failed to persist admin alert kind=%s", kind)
         return None
+
+    if (
+        send_telegram
+        and config.OPS_TELEGRAM_BOT_TOKEN
+        and config.OPS_TELEGRAM_CHAT_ID
+        and _send_telegram_message(_format_telegram_text(kind, payload))
+    ):
+        row.telegram_sent = 1
+        if not foreign_pending:
+            try:
+                db.commit()
+            except Exception:
+                db.rollback()
+                logger.exception("Failed to mark admin alert as sent kind=%s", kind)
+                return row
+    if not foreign_pending:
+        db.refresh(row)
+    return row
 
 
 def notify_user_registered(db: Session, user: User) -> None:
@@ -206,7 +219,6 @@ def notify_game_started(db: Session, profile: GameProfile) -> None:
             "name": profile.name,
             "template": profile.starter_template_key or "manual",
             "save_kind": profile.save_kind,
-            "period_duration_seconds": profile.period_duration_seconds,
             "profile_id": profile.id,
             "_admin_link": _admin_link(f"/admin?profile={profile.id}"),
         },

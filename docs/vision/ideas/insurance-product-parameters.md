@@ -1,3 +1,10 @@
+---
+tags:
+  - tvoy-hod/layer/idea
+aliases:
+  - "Страховка — параметры продукта (утверждено)"
+  - insurance-product-parameters
+---
 # Страховка — параметры продукта (утверждено)
 
 ## Problem Statement

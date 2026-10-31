@@ -1,3 +1,10 @@
+---
+tags:
+  - tvoy-hod/layer/idea
+aliases:
+  - "Идея: механика «Расходы» (жизнеобеспечение)"
+  - expenses-mechanic
+---
 ﻿---
 layer: idea
 status: refined

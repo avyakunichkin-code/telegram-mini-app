@@ -36,7 +36,7 @@ export function MqxStatesCatalogDemo() {
           <div className="mqx-catalog-states__panel">
             <MqxStateError
               title="Не удалось загрузить данные"
-              message="Проверьте сеть и попробуйте снова"
+              message="Проверь сеть и попробуй снова"
               onRetry={() => {}}
             />
           </div>

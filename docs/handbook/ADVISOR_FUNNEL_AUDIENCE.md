@@ -5,8 +5,13 @@ last_reviewed: 2026-05-30
 owner: product / marketing
 audience: marketing, partners, product
 method: hypothesis-driven (продуктовый канон + рыночная модель; не замена CustDev)
+tags:
+  - tvoy-hod/layer/handbook
+  - tvoy-hod/status/active
+aliases:
+  - "ЦА воронки «игра → финансовый советник»"
+  - ADVISOR_FUNNEL_AUDIENCE
 ---
-
 # ЦА воронки «игра → финансовый советник»
 
 Исследование целевой аудитории для конверсии игроков **ТВОЙ ХОД** в клиентов услуг **финансового советника**.
@@ -56,7 +61,7 @@ method: hypothesis-driven (продуктовый канон + рыночная 
 | [`GAME.md`](GAME.md#воронка-привлечения-игроков) | Стадии Pre-Alpha → Soft Launch |
 | [`MONETIZATION.md`](MONETIZATION.md) | B2C TBD; воронка советника — **отдельная гипотеза** |
 | [`roles/marketing.md`](roles/marketing.md) | Маршрут маркетолога |
-| [`landing/public/locales/ru.json`](../../landing/public/locales/ru.json) | Куда переносить тексты с лендинга |
+| [`design/archive/classic-v3/landing-source/public/locales/ru.json`](../../design/archive/classic-v3/landing-source/public/locales/ru.json) | Куда переносить тексты с лендинга |
 
 ---
 
@@ -325,7 +330,7 @@ method: hypothesis-driven (продуктовый канон + рыночная 
 
 ### Лендинг (зародыш → наполнение)
 
-Источник текстов: §9.3–9.4 и **язык ЦА** из профилей. Файлы: [`landing/public/locales/ru.json`](../../landing/public/locales/ru.json), [`en.json`](../../landing/public/locales/en.json).
+Источник текстов: §9.3–9.4 и **язык ЦА** из профилей. Файлы: [`design/archive/classic-v3/landing-source/public/locales/ru.json`](../../design/archive/classic-v3/landing-source/public/locales/ru.json), [`en.json`](../../design/archive/classic-v3/landing-source/public/locales/en.json).
 
 | Блок лендинга | Смысл (RU, черновик) |
 |---------------|----------------------|

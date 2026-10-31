@@ -1,3 +1,9 @@
+---
+tags:
+  - tvoy-hod/layer/reference
+aliases:
+  - BRANDBOOK
+---
 ﻿# Брендбук ТВОЙ ХОД — Brand Guidelines
 
 **Версия документа:** 2.0  
@@ -37,7 +43,8 @@
 |---------|---------|
 | **Подзаголовок** | **Финансы как игра** — обязателен в маркетинге и в G1 |
 | **Монетка** | Маскот и напарница, **не** название продукта |
-| **Game / Plan** | Один визуальный язык; Plan в UI пока «скоро» — не продавать как готовое |
+| **Метафора** | Настольная игра про деньги: ход — клетка, деньги — монеты, цель — финиш ([ADR-014](../../decisions/ADR-014-brand-direction-board-game.md)) |
+| **Главное действие** | Только «Завершить ход» |
 | **Тех. префиксы** | `tvoy-hod`, MQX в коде — не публичный бренд |
 
 ---
@@ -55,6 +62,10 @@
 | Dashboard unified | S5 | 2026-05 | [`design-lab/dashboard/APPROVED.md`](../../../design-lab/dashboard/APPROVED.md) | см. MQX doc |
 | Guided onboarding (O2) | Strip | 2026-06-01 | [`design-lab/onboarding-o2/APPROVED.md`](../../../design-lab/onboarding-o2/APPROVED.md) | см. MQX doc |
 | New game mode UI | R2 | 2026-05-20 | [`design-lab/new-game-mode/APPROVED.md`](../../../design-lab/new-game-mode/APPROVED.md) | см. MQX doc |
+| Направление «настольная игра про деньги» | **BG** | 2026-10-14 | [ADR-014](../../decisions/ADR-014-brand-direction-board-game.md) | Роли цвета, шрифт PWA, псевдо-3D (перерисовка отложена), «Завершить ход»; визуал — через раунд design-lab |
+| Остальные экраны «настольная игра» | **BG-2** | 2026-10-15 | [`design-lab/board-game/APPROVED.md`](../../../design-lab/board-game/APPROVED.md) | Капитал, Аналитика, Меню, событие, вход, выбор жизни, финал; перенос в prod по группам |
+| Дашборд «настольная игра» (концепция) | **BG-1** | 2026-10-14 | [`design-lab/board-game/APPROVED.md`](../../../design-lab/board-game/APPROVED.md) | Карта хода, Nunito + Manrope, лёгкий стиль; в prod ещё не перенесено |
+| Дашборд: одна рамка на уровень | **BG-3** | 2026-10-25 | [`design-lab/board-game/APPROVED.md`](../../../design-lab/board-game/APPROVED.md) | Рамка только у карты хода, блоки на поле; залитые действия хода, «Зарплата» — главная золотая; «Доходы / Расходы за ход»; в prod не перенесено |
 
 ---
 
@@ -69,7 +80,7 @@
 | **G2** | Без tagline — hero в игре, табы, **слева** |
 | **ТХ** | Только pill/chip и квадратный аватар; не замена G1/G2 в шапке |
 
-Файлы: [`assets/logos/`](assets/logos/) · prod: `frontend-react/src/assets/brand/`.
+Источник файлов: [дизайн-система](../../../design/system/index.html), `assets/Logos/`. [`assets/logos/`](assets/logos/) и `frontend-react/src/assets/brand/` — генерируемые экспорты (`node scripts/design-assets.mjs`).
 
 ### 2.2 Tagline — рекомендация продукта (до отдельного ★)
 
@@ -125,7 +136,7 @@
 |-----|-----|-------------------------|------------|
 | Quest Violet | `#6D28D9` | `--mq-violet`, `--mq-accent-fill` | «ХОД», CTA TMA |
 | Quest Violet Deep | `#5B21B6` | `--mq-violet-deep`, `--mq-accent-link` | Hover |
-| Coin Gold | `#EAB308` | *(в lockup)* | «ТВОЙ», акцент tagline |
+| Coin Gold | `#EAB308` | *(токен — в токенах v2)* | «ТВОЙ», деньги и награды в UI (ADR-014) |
 | Signal Emerald | `#059669` | `--mq-emerald` | Плюс, подушка |
 | Ink | `#0F1115` | `--mq-ink` | Заголовки вне TG |
 
@@ -136,7 +147,7 @@
 | Mist | `#F5F6F8` | — | Фон веб-секций |
 | Slate | `#6B7280` | — | Подписи |
 | Line | `#E5E7EB` | `--mq-line` | Границы |
-| Warning Amber | `#D97706` | `--mq-warning` | Таймер |
+| Warning Amber | `#D97706` | `--mq-warning` | Предупреждение, ожидание |
 | Danger | `#DC2626` | `--mq-danger` | Просрочка |
 
 ### 4.3 Сочетания
@@ -151,7 +162,7 @@
 
 | Носитель | Шрифт |
 |----------|--------|
-| **TMA** | Системный стек; `--mq-fs-body` 15 / caption 12 / small 11 |
+| **PWA / web / TMA** | Пара webfont: **Nunito** (display) + **Manrope** (текст) — ★ BG-1, 2026-10-14; до переноса в prod — системный стек, `--mq-fs-body` 15 / caption 12 / small 11 |
 | **Лендинг, PDF, баннеры** | **Inter** (+ system-ui fallback) |
 | **Код в UI** | JetBrains Mono / ui-monospace |
 
@@ -166,7 +177,7 @@
 ### 6.1 TMA и Монетка
 
 - Только **ты / твой / тебе**  
-- Канон реплик: [`CHARACTER_MONETKA.md`](../CHARACTER_MONETKA.md), beats O2 в [`curriculum.py`](../../../backend/app/guidance/curriculum.py) · [`SPEC_onboarding-o2.md`](../../specs/features/SPEC_onboarding-o2.md)
+- Канон реплик: [`CHARACTER_MONETKA.md`](../CHARACTER_MONETKA.md), beats в [`curriculum.py`](../../../backend/app/guidance/curriculum.py) · [`SPEC_onboarding-o3.md`](../../specs/features/SPEC_onboarding-o3.md)
 - Монетка не решает за игрока; не комментирует каждое событие  
 
 ### 6.2 Посты и канал (3-е лицо)
@@ -192,6 +203,7 @@
 | Параметр | Правило |
 |----------|---------|
 | Формат | PNG, прозрачный фон |
+| Стиль | Псевдо-3D в гамме логотипа (ADR-014 п. 3, уточнено 2026-10-15); текущий маскот остаётся до перерисовки перед публичным запуском. PNG — с настоящей альфой и без пустых полей (`scripts/trim-transparent-png.py`) |
 | Дефолт | [`assets/monetka/monetka-mascot.png`](assets/monetka/monetka-mascot.png) |
 | Позы | `monetka-{pose}.png` → `MonetkaAvatar` |
 | Пузырь | CSS, не в PNG |

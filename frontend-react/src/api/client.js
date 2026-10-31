@@ -1,3 +1,6 @@
+import { newIdempotencyKey, shouldAttachIdempotencyKey } from '../utils/idempotencyKey.js';
+import { isNetworkFailure, networkStatus, OFFLINE_COPY } from '../utils/networkStatus.js';
+
 /** @type {string} fallback prod API (Render), пока нет VITE_API_BASE_URL в CI */
 const DEFAULT_PROD_API = 'https://telegram-mini-app-zwfs.onrender.com';
 
@@ -8,6 +11,15 @@ function resolveApiBase() {
 }
 
 const API_BASE = resolveApiBase();
+
+/** Prod/staging URL (не dev-proxy). Пустая строка — локальный Vite proxy. */
+export function getApiBase() {
+  return API_BASE;
+}
+
+export function isRemoteProdApi() {
+  return Boolean(API_BASE);
+}
 
 let authToken = localStorage.getItem('tg_miniapp_token');
 
@@ -66,13 +78,25 @@ export class ApiError extends Error {
 export async function apiCall(endpoint, method = 'GET', data = null) {
   const headers = { 'Content-Type': 'application/json' };
   if (authToken) headers['Authorization'] = `Bearer ${authToken}`;
+  if (shouldAttachIdempotencyKey(method, endpoint)) {
+    headers['Idempotency-Key'] = newIdempotencyKey();
+  }
 
   const options = { method, headers };
   if (data && (method === 'POST' || method === 'PUT' || method === 'PATCH')) {
     options.body = JSON.stringify(data);
   }
 
-  const response = await fetch(`${API_BASE}${endpoint}`, options);
+  let response;
+  try {
+    response = await fetch(`${API_BASE}${endpoint}`, options);
+  } catch (err) {
+    if (!isNetworkFailure(err)) throw err;
+    networkStatus.markFailure();
+    // status 0 — ответа не было; текст для тоста вместо «Failed to fetch».
+    throw new ApiError({ status: 0, detail: OFFLINE_COPY, raw: null, endpoint, method });
+  }
+  networkStatus.markOk();
 
   if (response.status === 204) {
     return null;

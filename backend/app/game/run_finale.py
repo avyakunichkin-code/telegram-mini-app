@@ -67,34 +67,27 @@ SCENARIO_COPY: dict[str, dict[str, str]] = {
     },
 }
 
+# ★ BG-2 финал · поражение: title — факт риска (красным), text — деталь, ровно два совета.
 DEFEAT_FACT_COPY: dict[str, dict[str, Any]] = {
     "cash_negative_streak": {
-        "title": "Минус три месяца подряд",
-        "fact_template": (
-            "Три месяца подряд итоговый cash после закрытия был отрицательным"
-            "{balance_suffix}."
-        ),
+        "title": "Три хода подряд счёт был в минусе.",
+        "fact_template": "После последнего хода на счёте: {balance}.",
         "tips": [
-            "Забирай зарплату до «Закрыть месяц»",
-            "Следи за прогнозом на дашборде",
-            "Держи подушку на обязательные платежи",
+            "Забирай зарплату до «Завершить ход» — без кнопки её не будет.",
+            "Держи подушку хотя бы на 2 хода расходов.",
         ],
     },
     "needs_depletion": {
-        "title": "Потребности на нуле",
-        "fact_template": (
-            "Любая шкала потребностей три месяца подряд оставалась на нуле"
-            "{balance_suffix}."
-        ),
+        "title": "Три хода подряд одна из потребностей была на нуле.",
+        "fact_template": "Деньги — не единственный ресурс. На счёте в конце: {balance}.",
         "tips": [
-            "События с needs_delta поднимают шкалы",
-            "«Побаловать себя» — запасной путь",
-            "Не игнорируй красные предупреждения",
+            "В событиях выбирай варианты, которые поднимают потребности.",
+            "Если шкала у нуля — нажми «Улучшить» на главной.",
         ],
     },
     "unknown": {
-        "title": "Игра окончена",
-        "fact_template": "Партия завершена{balance_suffix}.",
+        "title": "Партия завершена.",
+        "fact_template": "На счёте в конце: {balance}.",
         "tips": [],
     },
 }
@@ -139,11 +132,9 @@ def _build_defeat_fact(profile: GameProfile, defeat_reason: str | None) -> RunFi
     reason = defeat_reason or "unknown"
     pack = DEFEAT_FACT_COPY.get(reason, DEFEAT_FACT_COPY["unknown"])
     cash = float(profile.cash_balance or 0)
-    suffix = ""
-    if cash != 0:
-        sign = "+" if cash > 0 else ""
-        suffix = f" ({sign}{_fmt_rub(cash)} ₽ на счёте сейчас)"
-    text = pack["fact_template"].format(balance_suffix=suffix)
+    sign = "−" if cash < 0 else ""
+    balance = f"{sign}{_fmt_rub(abs(cash))} ₽"
+    text = pack["fact_template"].format(balance=balance)
     return RunFinaleFact(title=pack["title"], text=text, tips=list(pack.get("tips") or []))
 
 
@@ -261,9 +252,9 @@ def build_run_finale_payload(
             title="Доходы, расходы и подушка",
             divider_before=False,
             metrics=[
-                _metric("term", "Периодов сыграно", "До исхода", str(period_index)),
-                _metric("up", "Доходы", "В среднем за период", f"{_fmt_rub(avg_income)} ₽"),
-                _metric("down", "Расходы", "В среднем за период", f"{_fmt_rub(avg_expense)} ₽"),
+                _metric("term", "Ходов сыграно", "До исхода", str(period_index)),
+                _metric("up", "Доходы", "В среднем за ход", f"{_fmt_rub(avg_income)} ₽"),
+                _metric("down", "Расходы", "В среднем за ход", f"{_fmt_rub(avg_expense)} ₽"),
                 _metric(
                     "coin",
                     "Подушка",
@@ -318,4 +309,6 @@ def build_run_finale_payload(
         fact=fact,
         defeat_reason=defeat_reason if not is_win else None,
         can_dismiss=is_win,
+        cash_balance=round(float(profile.cash_balance or 0), 2),
+        cushion_turns=cushion_months if monthly_burn > 0 else None,
     )

@@ -35,15 +35,16 @@ export function ToastHost() {
     return () => listeners.delete(listener);
   }, [api]);
 
-  if (items.length === 0) return null;
-
+  // Контейнер в DOM всегда: live-регион должен существовать до текста, иначе скринридер молчит.
   return (
     <div
+      className="mq-toast-host"
+      role="status"
+      aria-live="polite"
       style={{
         position: 'fixed',
         left: 12,
         right: 12,
-        bottom: 92,
         display: 'flex',
         flexDirection: 'column',
         gap: 8,

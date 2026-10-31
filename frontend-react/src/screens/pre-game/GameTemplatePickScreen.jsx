@@ -1,43 +1,34 @@
-import { useCallback, useEffect, useState } from 'react';
-import { Input, Spinner } from '@telegram-apps/telegram-ui';
+import { useEffect, useState } from 'react';
+import { Spinner } from '@telegram-apps/telegram-ui';
 import { API } from '../../api';
 import { showNotification } from '../../components/notifications';
-import { MqxMonetkaDialogScreen } from '../../components/mqx/layout/MqxMonetkaDialogScreen';
 import { MqxStarterScenarioPicker } from '../../components/mqx/layout/MqxStarterScenarioPicker';
-import { MqxButton } from '../../components/mqx/primitives/MqxButton';
-import { DEFAULT_PERIOD_DURATION_SECONDS, normalizeStarterTemplate } from '../../config/gameDefaults';
-import { startGameWithSimplestTemplate } from '../../utils/startGame';
+import { MqxBoardButton } from '../../components/mqx/pregame/MqxBoardButton';
+import { lifeStartLabel } from '../../components/mqx/utils/pregameDisplay';
+import { normalizeStarterTemplate } from '../../config/gameDefaults';
 
 /**
- * Шаг 2 (Game): название игры + шаблон старта (клик по сценарию = старт).
+ * Выбор жизни ★ BG-2: «Новая игра» ведёт сюда сразу (шага «Игра / План» нет — ADR-013).
+ * Карточка выбирает персонажа, старт — кнопкой «Начать за …». Название сохранения — авто.
  */
-export function GameTemplatePickScreen({ profileName, onProfileNameChange, onBack, onJumpToGame }) {
+export function GameTemplatePickScreen({ profileName, onBack, onJumpToGame }) {
   const [templates, setTemplates] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [loadFailed, setLoadFailed] = useState(false);
   const [starting, setStarting] = useState(false);
-  const [quickStarting, setQuickStarting] = useState(false);
   const [selectedKey, setSelectedKey] = useState(null);
-
-  const trimmedName = profileName?.trim() || '';
 
   useEffect(() => {
     let cancelled = false;
     (async () => {
-      setLoading(true);
       try {
         const rows = await API.listGameTemplates('game');
         if (cancelled) return;
-        const raw = Array.isArray(rows) ? rows : [];
-        const list = raw.map(normalizeStarterTemplate).filter(Boolean);
+        const list = (Array.isArray(rows) ? rows : []).map(normalizeStarterTemplate).filter(Boolean);
         setTemplates(list);
-        const firstKey = list.length ? list[0].template_key : null;
-        setSelectedKey(firstKey ? String(firstKey) : null);
+        setSelectedKey(list.length ? list[0].template_key : null);
       } catch {
-        if (!cancelled) {
-          setTemplates([]);
-          setSelectedKey(null);
-          showNotification('Не удалось загрузить шаблоны', 'error');
-        }
+        if (!cancelled) setLoadFailed(true);
       } finally {
         if (!cancelled) setLoading(false);
       }
@@ -47,124 +38,56 @@ export function GameTemplatePickScreen({ profileName, onProfileNameChange, onBac
     };
   }, []);
 
-  const ensureGameName = () => {
-    if (!trimmedName) {
-      showNotification('Введите название игры', 'error');
-      return false;
-    }
-    return true;
-  };
+  const selected = templates.find((t) => t.template_key === selectedKey) || null;
 
-  const startWithTemplate = useCallback(
-    async (templateKey) => {
-      if (!ensureGameName()) return;
-      const key = templateKey == null ? null : String(templateKey);
-      if (!key) return;
-      if (starting || quickStarting) return;
-
-      setSelectedKey(key);
-      setStarting(true);
-      try {
-        await API.startNewGame({
-          profile_name: trimmedName,
-          save_kind: 'game',
-          template_key: key,
-          period_duration_seconds: DEFAULT_PERIOD_DURATION_SECONDS,
-        });
-        onJumpToGame();
-      } catch (error) {
-        showNotification(error?.detail || error?.message || 'Не удалось запустить игру', 'error');
-      } finally {
-        setStarting(false);
-      }
-    },
-    [trimmedName, starting, quickStarting, onJumpToGame],
-  );
-
-  const handleQuickStart = async () => {
-    if (!ensureGameName()) return;
-    setQuickStarting(true);
+  const handleStart = async () => {
+    const name = profileName?.trim();
+    if (!selected || !name || starting) return;
+    setStarting(true);
     try {
-      await startGameWithSimplestTemplate(trimmedName);
+      await API.startNewGame({ profile_name: name, save_kind: 'game', template_key: selected.template_key });
       onJumpToGame();
     } catch (error) {
       showNotification(error?.detail || error?.message || 'Не удалось запустить игру', 'error');
-    } finally {
-      setQuickStarting(false);
+      setStarting(false);
     }
   };
 
-  const busy = starting || quickStarting;
-
   return (
-    <MqxMonetkaDialogScreen
-      title="Выбери свою жизнь"
-      subtitle={
-        <p>
-          Начни <span className="mqx-voice-em">студентом</span> с первой зарплатой или попробуй себя в роли{' '}
-          <span className="mqx-voice-em">предпринимателя</span> — с ипотекой, авто и плотным бюджетом.
-        </p>
-      }
-      titleId="mqx-new-game-templates-title"
-    >
-      <div className="mqx-form mqx-monetka-flow__form">
-        <Input
-          id="new-game-profile-name"
-          name="profile_name"
-          header="Название игры"
-          value={profileName}
-          onChange={(e) => onProfileNameChange(e.target.value)}
-          autoComplete="off"
-          required
-        />
-      </div>
+    <div className="mqx-pg">
+      <header className="mqx-pg-head">
+        <h1 id="mqx-life-pick-title">Выбери жизнь</h1>
+        <small>У каждой свой старт и своя цель</small>
+      </header>
 
       {loading ? (
-        <div className="mqx-monetka-flow__loading">
-          <Spinner />
+        <div className="mqx-pg-state" role="status">
+          <Spinner size="m" />
+          <span>Раскладываю фишки…</span>
         </div>
       ) : templates.length === 0 ? (
-        <p className="mqx-monetka-flow__empty">Шаблоны не загрузились. Проверьте сеть и попробуйте позже.</p>
+        <p className="mqx-pg-state" role="alert">
+          {loadFailed ? 'Не удалось загрузить персонажей. Проверь сеть и попробуй позже.' : 'Персонажей пока нет.'}
+        </p>
       ) : (
-        <>
-          <span id="mq-game-catalog-label-pick" className="mq-game-catalog-label">
-            Персонаж — нажми, чтобы начать
-          </span>
-          <MqxStarterScenarioPicker
-            templates={templates}
-            value={selectedKey}
-            onChange={(key) => setSelectedKey(key == null ? null : String(key))}
-            onPick={startWithTemplate}
-            disabled={loading || busy}
-            labelledById="mq-game-catalog-label-pick"
-            layout="compact"
-          />
-        </>
+        <MqxStarterScenarioPicker
+          templates={templates}
+          value={selectedKey}
+          onChange={setSelectedKey}
+          disabled={starting}
+          labelledById="mqx-life-pick-title"
+        />
       )}
 
-      <div className="pg-actions mqx-monetka-flow__actions">
-        <MqxButton
-          type="button"
-          variant="secondary"
-          stretched
-          disabled={loading || busy || templates.length === 0}
-          onClick={handleQuickStart}
-          title="Сразу начать с самым простым сценарием"
-        >
-          {quickStarting ? 'Быстрый старт…' : 'Быстрый старт'}
-        </MqxButton>
-        <MqxButton
-          type="button"
-          variant="ghost"
-          stretched
-          onClick={onBack}
-          disabled={busy}
-          title="Вернуться к выбору режима"
-        >
-          Назад
-        </MqxButton>
-      </div>
-    </MqxMonetkaDialogScreen>
+      {selected ? (
+        <button type="button" className="mqx-bg-btn mqx-bg-cta mqx-pg-cta" onClick={handleStart} disabled={starting}>
+          {starting ? 'Начинаем…' : lifeStartLabel(selected.title)}
+        </button>
+      ) : null}
+
+      <MqxBoardButton variant="link" onClick={onBack} disabled={starting}>
+        Назад
+      </MqxBoardButton>
+    </div>
   );
 }
-

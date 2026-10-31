@@ -1,0 +1,120 @@
+/* direction-round — три варианта верха дашборда (A трек, B карта хода, C поле). */
+
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg-board); color: var(--ink); font: 15px / 1.45 var(--body); }
+
+/* --- Шапка раунда --- */
+.lab-head { max-width: 1180px; margin: 0 auto; padding: 24px 16px 8px; display: grid; gap: 12px; }
+.lab-head h1 { margin: 0; font: var(--display-weight) clamp(22px, 4vw, 30px) / 1.1 var(--display); text-wrap: balance; }
+.lab-head p { margin: 0; max-width: 70ch; color: var(--ink-soft); }
+.lab-controls { display: flex; flex-wrap: wrap; gap: 8px 18px; align-items: center; }
+.lab-controls fieldset { border: 0; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+.lab-controls legend { float: left; margin-right: 6px; color: var(--ink-soft); font-size: 13px; }
+.lab-toggle {
+  border: 2px solid var(--edge-cell); background: var(--bg-cell); color: var(--ink);
+  border-radius: 999px; padding: 6px 12px; font: 600 13px / 1 var(--body); cursor: pointer;
+}
+.lab-toggle[aria-pressed="true"] { border-color: var(--turn); background: var(--turn-soft); color: var(--turn); }
+.lab-toggle:focus-visible { outline: 3px solid var(--coin); outline-offset: 2px; }
+
+.lab-grid {
+  max-width: 1180px; margin: 0 auto; padding: 12px 16px 48px;
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(330px, 1fr)); gap: 28px;
+  align-items: start;
+}
+.variant { display: grid; gap: 10px; min-width: 0; }
+.variant > header h2 { margin: 0; font: var(--display-weight) 17px / 1.2 var(--display); }
+.variant > header p { margin: 4px 0 0; color: var(--ink-soft); font-size: 13.5px; }
+
+/* Телефон 360px */
+.phone {
+  width: 100%; max-width: 360px; justify-self: center;
+  background: var(--bg-board); border: 2px solid var(--edge-cell); border-radius: 30px;
+  padding: 18px 16px 20px; display: grid; gap: 16px;
+}
+.who { display: flex; align-items: center; gap: 10px; }
+.who img { width: 40px; height: 40px; border-radius: 50%; background: var(--turn-soft); object-fit: cover; }
+.who b { display: block; font: var(--display-weight) 15px / 1.1 var(--display); }
+.who small { color: var(--ink-soft); font-size: 12.5px; }
+.who .who__events { margin-left: auto; display: inline-flex; align-items: center; gap: 6px; border-radius: 999px; padding: 6px 10px; background: var(--bg-cell); border: 2px solid var(--edge-cell); font: 600 13px var(--body); color: var(--ink); }
+.who__dot { width: 18px; height: 18px; border-radius: 50%; background: var(--turn); color: #fff; display: grid; place-items: center; font: 700 11px var(--body); }
+
+/* ===== A. Трек ===== */
+.a-track { display: grid; grid-template-columns: repeat(6, 1fr); gap: 8px; }
+.a-track .bg-cell { aspect-ratio: 1; position: relative; }
+.a-pawn {
+  position: absolute; top: -12px; right: -6px; width: 22px; height: 22px; border-radius: 50%;
+  background: var(--bg-cell); border: 3px solid var(--turn-deep); box-shadow: 0 2px 0 var(--turn-deep);
+}
+.a-track__label { display: flex; justify-content: space-between; font-size: 13px; color: var(--ink-soft); }
+.a-cash { display: flex; align-items: center; gap: 12px; }
+.a-cash .bg-coin { --coin-size: 52px; }
+.a-cash__sum { font: var(--display-weight) 32px / 1 var(--display); }
+.a-cash small { display: block; color: var(--ink-soft); font-size: 13px; margin-bottom: 4px; }
+.a-flow { display: grid; gap: 8px; }
+.a-flow__row { display: flex; justify-content: space-between; gap: 12px; padding-bottom: 8px; border-bottom: 2px dashed var(--edge-cell); }
+.a-flow__row:last-child { border-bottom: 0; padding-bottom: 0; }
+
+/* ===== B. Карта хода ===== */
+.b-card {
+  position: relative; border-radius: 22px; background: var(--bg-cell);
+  border: 3px solid var(--turn); box-shadow: 0 6px 0 var(--turn-deep);
+  padding: 20px 18px 18px; display: grid; gap: 14px;
+}
+.b-corner {
+  position: absolute; top: 12px; right: 14px; text-align: center;
+  font: var(--display-weight) 30px / 0.9 var(--display); color: var(--turn);
+}
+.b-corner small { display: block; font: 600 11px / 1.2 var(--body); color: var(--ink-soft); }
+.b-title { font: var(--display-weight) 22px / 1.1 var(--display); max-width: 14ch; }
+.b-stack { display: flex; align-items: flex-end; gap: 14px; }
+.b-coins { position: relative; width: 46px; height: 66px; flex: none; }
+.b-coins .bg-coin { --coin-size: 46px; position: absolute; left: 0; }
+.b-coins .bg-coin:nth-child(1) { bottom: 0; }
+.b-coins .bg-coin:nth-child(2) { bottom: 10px; }
+.b-coins .bg-coin:nth-child(3) { bottom: 20px; }
+.b-sum { font: var(--display-weight) 30px / 1 var(--display); }
+.b-sum small { display: block; font: 400 13px / 1.3 var(--body); color: var(--ink-soft); margin-bottom: 4px; }
+.b-chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.b-chip { border-radius: 999px; padding: 6px 11px; font: 600 13px / 1.2 var(--body); }
+.b-chip--gain { background: var(--gain-soft); color: var(--gain); }
+.b-chip--plain { background: var(--turn-soft); color: var(--ink); }
+.b-deck { display: flex; align-items: center; gap: 12px; }
+.b-deck__cards { position: relative; width: 52px; height: 40px; flex: none; }
+.b-deck__cards span {
+  position: absolute; inset: 0; border-radius: 8px; background: var(--turn);
+  border: 2px solid var(--turn-deep);
+}
+.b-deck__cards span:nth-child(1) { transform: rotate(-8deg) translateX(-4px); opacity: 0.55; }
+.b-deck__cards span:nth-child(2) { transform: rotate(6deg) translateX(4px); }
+.b-deck p { margin: 0; font-size: 14px; }
+
+/* ===== C. Поле ===== */
+.c-steps { display: flex; gap: 6px; align-items: center; }
+.c-steps i { flex: 1; height: 10px; border-radius: 6px; background: var(--edge-cell); }
+.c-steps i.done { background: var(--turn); }
+.c-steps i.now { background: var(--turn); box-shadow: 0 0 0 3px var(--turn-soft); }
+.c-steps__label { display: flex; justify-content: space-between; font-size: 13px; color: var(--ink-soft); margin-top: 6px; }
+.c-board { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.c-lot {
+  border-radius: var(--r-cell); background: var(--bg-cell); border: 2px solid var(--edge-cell);
+  box-shadow: 0 3px 0 var(--edge-cell); overflow: hidden; display: grid;
+}
+.c-lot__band { height: 10px; }
+.c-lot__body { padding: 10px 12px 12px; display: grid; gap: 4px; }
+.c-lot__body small { color: var(--ink-soft); font-size: 12.5px; }
+.c-lot__body b { font: var(--display-weight) 19px / 1.1 var(--display); }
+.c-lot--income .c-lot__band { background: var(--gain); }
+.c-lot--spend .c-lot__band { background: var(--ink-soft); }
+.c-lot--cash .c-lot__band { background: var(--coin); }
+.c-lot--goal { grid-column: 1 / -1; border-color: var(--coin-rim); box-shadow: 0 3px 0 var(--coin-rim); }
+.c-lot--goal .c-lot__band { background: var(--coin); }
+.c-goal { display: flex; align-items: center; gap: 12px; }
+.c-goal .bg-coin { --coin-size: 38px; }
+.c-meter { height: 12px; border-radius: 8px; background: var(--coin-soft); border: 2px solid var(--coin-rim); overflow: hidden; }
+.c-meter span { display: block; height: 100%; width: 40%; background: var(--coin); }
+
+/* Монетка-подсказка (общая) */
+.tip { display: flex; gap: 10px; align-items: flex-end; }
+.tip img { width: 54px; height: 54px; object-fit: contain; flex: none; }
+.tip p { margin: 0; background: var(--bg-cell); border: 2px solid var(--edge-cell); border-radius: 14px 14px 14px 4px; padding: 9px 12px; font-size: 14px; }

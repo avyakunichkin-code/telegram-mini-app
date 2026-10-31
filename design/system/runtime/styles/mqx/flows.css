@@ -1,0 +1,259 @@
+﻿/* Pre-game auth / меню — design-lab pre-game-playful-v3 ★ pg-auth-panel */
+.pg-auth-stack {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 400px;
+  margin-inline: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  box-sizing: border-box;
+  /* Место под box-shadow карточки — иначе обрезка + горизонтальный overflow у scroll-контейнера */
+  padding-inline: 10px;
+  overflow: visible;
+}
+
+.pg-auth-logo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 4px 8px 6px;
+}
+
+.pg-auth-logo .mqx-brand-logo--full {
+  max-width: min(280px, 92%);
+  filter: drop-shadow(0 10px 22px color-mix(in srgb, var(--mq-violet) 22%, transparent))
+    drop-shadow(0 4px 12px rgba(0, 0, 0, 0.2));
+}
+
+.pg-auth-panel {
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  padding: 12px;
+  border-radius: 20px;
+  background-color: var(--mqx-onboarding-bubble-bg);
+  background-image: linear-gradient(
+    165deg,
+    color-mix(in srgb, var(--mq-violet) 7%, var(--mqx-onboarding-bubble-bg)) 0%,
+    var(--mqx-onboarding-bubble-bg) 38%
+  );
+  border: 1px solid var(--mqx-onboarding-bubble-border);
+  /* Без крупного blur наружу — не раздувает scrollport и не клипается асимметрично */
+  box-shadow:
+    0 0 0 1px color-mix(in srgb, var(--mq-violet) 8%, transparent),
+    0 6px 16px color-mix(in srgb, var(--mq-violet) 10%, transparent);
+}
+
+.pg-auth-panel__head {
+  display: flex;
+  align-items: flex-end;
+  gap: 10px;
+  margin-bottom: 12px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid color-mix(in srgb, var(--mqx-ink) 8%, transparent);
+}
+
+.pg-auth-panel__mascot {
+  width: 72px;
+  height: 72px;
+  flex-shrink: 0;
+  margin: 0 !important;
+  filter: drop-shadow(0 4px 10px color-mix(in srgb, var(--mq-violet) 20%, transparent));
+}
+
+.pg-auth-panel__voice {
+  flex: 1;
+  min-width: 0;
+}
+
+.pg-auth-panel__title {
+  margin: 0 0 4px;
+  font-size: var(--mq-fs-body);
+  font-weight: var(--mq-fw-heavy, 800);
+  line-height: 1.35;
+  text-align: left;
+  color: var(--mqx-ink);
+}
+
+.pg-auth-panel__subtitle {
+  margin: 0;
+  font-size: var(--mq-fs-heading);
+  line-height: 1.48;
+  text-align: left;
+  color: color-mix(in srgb, var(--mqx-ink) 76%, var(--tg-theme-hint-color, #6b7280));
+}
+
+.pg-auth-panel__subtitle p {
+  margin: 0 0 8px;
+}
+
+.pg-auth-panel__subtitle p:last-child {
+  margin-bottom: 0;
+}
+
+.pg-voice-em,
+.mqx-voice-em {
+  font-weight: var(--mq-fw-heavy, 800);
+  color: var(--mq-warning);
+}
+
+.pg-auth-panel__link,
+.mqx-auth-monetka__link {
+  margin: 10px 0 0;
+  text-align: center;
+  font-size: var(--mq-fs-caption);
+  color: var(--tg-theme-hint-color, var(--text-muted, #6b7280));
+}
+
+.pg-actions,
+.mqx-auth-monetka__actions,
+.pg-actions,
+.mqx-auth-monetka__actions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.mqx-auth-monetka__form {
+  margin: 0;
+}
+
+/* iOS/TMA: поля <16px вызывают авто-зум при фокусе — «страница 200%» */
+.mq-page--auth .mq-field__input {
+  font-size: 16px;
+}
+
+.mq-page--auth button,
+.mq-page--auth .tgui-button {
+  touch-action: manipulation;
+}
+
+.mqx-auth-monetka__link {
+  margin: 12px 0 0;
+  text-align: center;
+  font-size: var(--mq-fs-caption);
+  color: var(--tg-theme-hint-color, #6b7280);
+}
+
+.mqx-auth-monetka__link button,
+.mqx-auth-monetka__link .mqx-btn--link {
+  border: none;
+  background: none;
+  padding: 0;
+  font: inherit;
+  font-weight: 650;
+  color: var(--mq-violet-deep);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  cursor: pointer;
+}
+
+/* Pre-game + new-game: без внешней «коробки» mqx-frame (legacy MqxShell) */
+.mqx-frame--pre-game,
+.mqx-frame--flat-flow {
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+  background: transparent;
+  min-height: 0;
+  overflow: visible;
+  max-width: 100%;
+}
+
+.mqx-screen:has(.mqx-frame--pre-game) {
+  min-height: 0;
+  padding: 0;
+}
+
+.mqx-flow--monetka-dialog {
+  min-height: 0;
+}
+
+.mqx-auth-monetka__mode-grid,
+.mqx-auth-monetka__save-kind {
+  margin-top: 14px;
+}
+
+.mqx-auth-monetka__loading {
+  display: flex;
+  justify-content: center;
+  padding: 24px 0;
+}
+
+.mqx-api-cold-start {
+  text-align: center;
+}
+
+.mqx-api-cold-start__hint {
+  margin: 0 0 8px;
+  font-size: var(--mq-fs-small);
+  line-height: 1.4;
+  color: color-mix(in srgb, var(--mqx-ink) 68%, var(--tg-theme-hint-color, #6b7280));
+}
+
+.mqx-auth-monetka__empty {
+  margin: 8px 0 0;
+  font-size: var(--mq-fs-heading);
+  line-height: 1.45;
+  color: color-mix(in srgb, var(--mqx-ink) 75%, var(--tg-theme-hint-color, #6b7280));
+}
+
+.mqx-auth-monetka__bubble--wide .mq-game-template-picker {
+  margin-top: 4px;
+}
+
+.mqx-hero--tab {
+  padding: 14px 14px 14px;
+}
+
+.mqx-hero__title--tab {
+  margin-top: 10px;
+  font-size: var(--mq-fs-title);
+  letter-spacing: -0.02em;
+}
+
+.mqx-hero__sub {
+  margin-top: 6px;
+  font-size: var(--mq-fs-caption);
+  color: rgba(245, 243, 255, 0.82);
+  max-width: 34ch;
+}
+
+.mqx-hero-pills {
+  display: inline-flex;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.mqx-hero-pill {
+  display: inline-flex;
+  align-items: center;
+  height: 26px;
+  padding: 0 10px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.14);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  color: rgba(255, 255, 255, 0.92);
+  font-size: var(--mq-fs-small);
+  font-weight: 750;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+.mqx-hero-pill--brand {
+  font-weight: 800;
+  letter-spacing: 0.06em;
+}
+
+.mqx-hero-pill--ghost {
+  background: rgba(255, 255, 255, 0.10);
+}
+
+.mqx-hero--inline-title .mqx-hero__brand-title .mqx-hero__title {
+  margin-top: 0;
+}

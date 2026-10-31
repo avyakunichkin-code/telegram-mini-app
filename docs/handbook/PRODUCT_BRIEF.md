@@ -4,8 +4,13 @@ status: active
 last_reviewed: 2026-05-30
 owner: product (владелец продукта)
 audience: product, playtest, partners
+tags:
+  - tvoy-hod/layer/handbook
+  - tvoy-hod/status/active
+aliases:
+  - "Product Brief — ТВОЙ ХОД"
+  - PRODUCT_BRIEF
 ---
-
 # Product Brief — ТВОЙ ХОД
 
 Одностраничный **продуктовый якорь**: зачем игра существует, для кого, какие принципы не торгуем, что в scope сейчас и что обязательно в **MVP 2.0**. Детали механик — [`GAME.md`](GAME.md); контракт prod — [`SPEC_PRODUCT.md`](../foundation/SPEC_PRODUCT.md).
@@ -18,7 +23,7 @@ audience: product, playtest, partners
 
 **ТВОЙ ХОД** — **умная игра** про финансовые решения в формате игровых «месяцев»: зарплата, обязательства, подушка, события из жизни, инвестиции, страховки и слой **потребностей** (комфорт, статус, связи, здоровье). Ошибки допустимы; последствия видны в цифрах и в состоянии персонажа.
 
-**Платформы:** Telegram Mini App, браузер и **PWA** (тот же клиент и сохранения) — см. [`PWA_INSTALL.md`](../foundation/PWA_INSTALL.md). Продукт **не привязан** к одному каналу дистрибуции.
+**Платформы:** **PWA и web (primary)**; Telegram Mini App (secondary) — один клиент и сохранения, см. [`PWA_INSTALL.md`](../foundation/PWA_INSTALL.md) и [`SPEC_PRODUCT`](../foundation/SPEC_PRODUCT.md) §1.1.
 
 **Стадия:** поздний **Pre-Alpha** → подготовка **Closed Alpha**. Массовый набор не открыт.
 
@@ -74,14 +79,14 @@ Tagline бренда: **«Финансы как игра»** — [`BRANDBOOK.md`
 
 ---
 
-## Продуктовые режимы
+## Продуктовый режим
 
 | Режим | Статус | Смысл |
 |-------|--------|--------|
-| **Game** | ✅ prod | Старт из шаблона (`game_starter_templates`), blueprint, потребности по шаблону |
-| **Plan** | 🟡 API есть; UI «Скоро» | Ручной бюджет и сценарий «своей жизни» |
+| **Game** | ✅ prod | Единственный продукт: старт из шаблона (`game_starter_templates`), blueprint, потребности |
+| **Plan** | ⬜ снят | Не второй save — [ADR-013](../decisions/ADR-013-game-only-drop-plan-mode.md) |
 
-**MVP 2.0 (обязательно):** полноценный **Plan Mode** — мастер ввода, префилл, активная плитка в UI, контент `save_kind: plan`. Спека: [`SPEC_game-plan.md`](../specs/features/SPEC_game-plan.md) · vision: [evolution §II](../vision/ideas/tvoy-hod-evolution-after-mvp.md).
+**Не строим** отдельный Plan Mode / MVP 2.0. Аналитика (AN1) и статьи расходов (E1 A–C) — внутри Game.
 
 ---
 

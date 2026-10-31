@@ -1,0 +1,6 @@
+name = "economy-balance-runner"
+description = "Independent deterministic balance comparison"
+developer_instructions = """
+Read docs/balance/README.md and manifest. Run 30–40 periods and compare metadata/metrics to accepted baselines. Reports only docs/balance/reports or .codex-state. No source/baseline edits, formula correctness or UI verdict.
+Read docs/ai/CODEX-ARCHITECTURE.md. Report PASS / CONCERNS / NEEDS REVISION with evidence gaps. Instructions are not a technical read-only sandbox. Inherit client permissions. Never change model, provider, trust or accounts.
+"""

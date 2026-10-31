@@ -1,3 +1,10 @@
+---
+tags:
+  - tvoy-hod/layer/agents
+aliases:
+  - "Агент событий (ТВОЙ ХОД)"
+  - EVENTS_AGENT
+---
 # Агент событий (ТВОЙ ХОД)
 
 ## Три инструмента
@@ -22,7 +29,7 @@ git: data/events/mvp11/*.yaml  →  mvp11_catalog.load  →  ensure_mvp11_event_
 
 | Слой | Документ | Что проверяет |
 |------|----------|---------------|
-| **Операционный канон** | [`.cursor/skills/create-event/event-balance-rules.md`](../../.cursor/skills/create-event/event-balance-rules.md) | §1–4 trade-off; **§10 lifecycle**; **§11 needs_axis_map**; §12 MCE |
+| **Операционный канон** | [`.claude/skills/create-event/event-balance-rules.md`](../../.claude/skills/create-event/event-balance-rules.md) | §1–4 trade-off; **§10 lifecycle**; **§11 needs_axis_map**; §12 MCE |
 | **Продукт** | [`event-choice-balance-tradeoffs.md`](../vision/ideas/event-choice-balance-tradeoffs.md) | Зачем нет free lunch |
 | **Повтор / downgrade** | [`event-repeat-and-state-ladder.md`](../vision/ideas/event-repeat-and-state-ladder.md) | Классы A–D, плейтест |
 | **Spec v2 (draft)** | [`SPEC_event-system-v2-slots-and-taxonomy.md`](../specs/features/SPEC_event-system-v2-slots-and-taxonomy.md) | Слоты + Balance |
@@ -68,9 +75,9 @@ PR с data/events/ или backend/app/events/ → economy-reviewer → pytest (b
 
 | Артефакт | Путь |
 |----------|------|
-| Create skill | [`.cursor/skills/create-event/`](../../.cursor/skills/create-event/) |
-| Analysis skill | [`.cursor/skills/event-analysis/`](../../.cursor/skills/event-analysis/) |
-| Balance rules | [`.cursor/skills/create-event/event-balance-rules.md`](../../.cursor/skills/create-event/event-balance-rules.md) |
+| Create skill | [`.claude/skills/create-event/`](../../.claude/skills/create-event/) |
+| Analysis skill | [`.claude/skills/event-analysis/`](../../.claude/skills/event-analysis/) |
+| Balance rules | [`.claude/skills/create-event/event-balance-rules.md`](../../.claude/skills/create-event/event-balance-rules.md) |
 | Brief | [`docs/templates/EVENT_BRIEF.md`](../templates/EVENT_BRIEF.md) |
 | Отчёт анализа | [`docs/templates/EVENT_CATALOG_ANALYSIS.md`](../templates/EVENT_CATALOG_ANALYSIS.md) |
 | Handbook (продукт) | [`handbook/EVENTS.md`](../handbook/EVENTS.md) |
@@ -78,4 +85,4 @@ PR с data/events/ или backend/app/events/ → economy-reviewer → pytest (b
 | Сводка CLI | [`backend/scripts/event_catalog_report.py`](../../backend/scripts/event_catalog_report.py) |
 | Spec M11 | [`SPEC_mvp-11-progression-events`](../specs/features/SPEC_mvp-11-progression-events.md) |
 | Spec v2 (draft) | [`SPEC_event-system-v2-slots-and-taxonomy`](../specs/features/SPEC_event-system-v2-slots-and-taxonomy.md) |
-| Rule (globs) | [`.cursor/rules/tvoy-hod-events.mdc`](../../.cursor/rules/tvoy-hod-events.mdc) |
+| Rule (`paths`) | [`.claude/rules/events.md`](../../.claude/rules/events.md) |

@@ -1,6 +1,16 @@
-﻿"""Каталог стартовых шаблонов Game (идемпотентный upsert в main.ensure_schema_compatibility)."""
+﻿"""Каталог стартовых шаблонов Game (идемпотентный upsert в seed_all на старте)."""
 
-# Сортируется sort_order; ON CONFLICT не обновляет существующие строки.
+# NOTE: Сиды запускаются через app.seeds.runner.seed_all (startup) или scripts/seed_db.py.
+
+import json
+
+from sqlalchemy import text
+from sqlalchemy.orm import Session
+
+from app.finance.expense_defaults import expense_budget_for_template
+from app.victory.seeds import VICTORY_CONFIG_BY_TEMPLATE_KEY, victory_config_json_for_template
+
+# Порядок по sort_order. ON CONFLICT обновляет blueprint_json — так смена needs.model доходит до живой БД на старте.
 GAME_STARTER_TEMPLATE_SEEDS = [
     {
         "template_key": "mq_game_basic_v1",
@@ -19,7 +29,6 @@ GAME_STARTER_TEMPLATE_SEEDS = [
                 "Без долгов и активов в старте",
                 "На счёте ~15 000 ₽",
             ],
-            "period_duration_seconds": 300,
             "cash_balance": 15000,
             "monthly_salary": 62500,
             "assets": [],
@@ -35,6 +44,8 @@ GAME_STARTER_TEMPLATE_SEEDS = [
             ],
             "needs": {
                 "enabled": True,
+                # ADR-015: износ рутиной + уровень жизни (SPEC_needs-set-point); параметры — дефолты spec.
+                "model": "set_point",
                 "character_label": "Студент",
                 "initial": {"comfort": 72, "status": 48, "social": 58, "health": 76},
                 "periods_to_empty_target": 14,
@@ -80,7 +91,6 @@ GAME_STARTER_TEMPLATE_SEEDS = [
                 "Свободно ~15 000 ₽/мес",
                 "На счёте ~25 000 ₽",
             ],
-            "period_duration_seconds": 300,
             "cash_balance": 25000,
             "monthly_salary": 100000,
             "assets": [
@@ -114,6 +124,8 @@ GAME_STARTER_TEMPLATE_SEEDS = [
             ],
             "needs": {
                 "enabled": True,
+                # ADR-015: износ рутиной + уровень жизни (SPEC_needs-set-point); параметры — дефолты spec.
+                "model": "set_point",
                 "character_label": "Профессионал",
                 "initial": {"comfort": 65, "status": 35, "social": 52, "health": 60},
                 "periods_to_empty_target": 12,
@@ -160,7 +172,6 @@ GAME_STARTER_TEMPLATE_SEEDS = [
                 "Свободно ~10 000 ₽/мес",
                 "На счёте ~35 000 ₽",
             ],
-            "period_duration_seconds": 300,
             "cash_balance": 35000,
             "monthly_salary": 150000,
             "assets": [
@@ -201,6 +212,8 @@ GAME_STARTER_TEMPLATE_SEEDS = [
             ],
             "needs": {
                 "enabled": True,
+                # ADR-015: износ рутиной + уровень жизни (SPEC_needs-set-point); параметры — дефолты spec.
+                "model": "set_point",
                 "character_label": "Руководитель",
                 "initial": {"comfort": 55, "status": 60, "social": 45, "health": 28},
                 "periods_to_empty_target": 12,
@@ -246,7 +259,6 @@ GAME_STARTER_TEMPLATE_SEEDS = [
                 "Свободно ~−3 000 ₽/мес",
                 "На счёте ~45 000 ₽",
             ],
-            "period_duration_seconds": 300,
             "cash_balance": 45000,
             "monthly_salary": 200000,
             "assets": [
@@ -292,8 +304,10 @@ GAME_STARTER_TEMPLATE_SEEDS = [
             ],
             "needs": {
                 "enabled": True,
+                # ADR-015: износ рутиной + уровень жизни (SPEC_needs-set-point); параметры — дефолты spec.
+                "model": "set_point",
                 "character_label": "Предприниматель",
-                "initial": {"comfort": 50, "status": 32, "social": 22, "health": 40},
+                "initial": {"comfort": 50, "status": 55, "social": 45, "health": 25},
                 "periods_to_empty_target": 10,
                 "thresholds": {"low": 40, "distressed": 30},
                 "consequence_profile": "hard",
@@ -320,3 +334,63 @@ GAME_STARTER_TEMPLATE_SEEDS = [
         },
     },
 ]
+
+
+def upsert_game_starter_templates(db: Session) -> None:
+    """
+    Идемпотентно синхронизирует game_starter_templates:
+    - upsert базовых полей и blueprint_json
+    - синхронизирует victory_config_json из app.victory.seeds
+
+    Важно: это DML (seed), не миграция схемы.
+    """
+    stmt = text(
+        """
+        INSERT INTO game_starter_templates
+          (template_key, title, difficulty_rank, base_monthly_lifestyle_expense,
+           blueprint_json, victory_config_json, is_active, sort_order, applies_to_save_kind)
+        VALUES
+          (:template_key, :title, :difficulty_rank, :base_expense,
+           :blueprint_json, '{}', 1, :sort_order, 'game')
+        ON CONFLICT (template_key) DO UPDATE SET
+          title = EXCLUDED.title,
+          difficulty_rank = EXCLUDED.difficulty_rank,
+          base_monthly_lifestyle_expense = EXCLUDED.base_monthly_lifestyle_expense,
+          blueprint_json = EXCLUDED.blueprint_json,
+          sort_order = EXCLUDED.sort_order
+        """
+    )
+    for seed in GAME_STARTER_TEMPLATE_SEEDS:
+        tk = seed["template_key"]
+        bp = dict(seed["blueprint"])
+        base_exp = float(seed["base_expense"])
+        bp["expense_budget"] = expense_budget_for_template(tk, base_exp, bp, db)
+        db.execute(
+            stmt,
+            {
+                "template_key": tk,
+                "title": seed["title"],
+                "difficulty_rank": int(seed["difficulty_rank"]),
+                "base_expense": base_exp,
+                "sort_order": int(seed["sort_order"]),
+                "blueprint_json": json.dumps(bp, ensure_ascii=False),
+            },
+        )
+
+    update_victory = text(
+        """
+        UPDATE game_starter_templates
+        SET victory_config_json = :victory_json
+        WHERE template_key = :template_key
+        """
+    )
+    for tk in VICTORY_CONFIG_BY_TEMPLATE_KEY:
+        db.execute(
+            update_victory,
+            {
+                "template_key": tk,
+                "victory_json": victory_config_json_for_template(tk),
+            },
+        )
+
+    db.flush()

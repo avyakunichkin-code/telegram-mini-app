@@ -10,7 +10,7 @@ import pytest
 
 from app.game.period import process_period_end
 from app.models import FinanceSalary, GameProfile, PeriodSnapshot
-from app.services.game.time import period_close_summary as _period_close_summary
+from app.services.period.close import period_close_summary as _period_close_summary
 
 
 class TestPeriodCloseSummaryMapping:

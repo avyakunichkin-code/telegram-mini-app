@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, DateTime, Text, ForeignKey, Float, UniqueConstraint
+from sqlalchemy import Column, Integer, String, DateTime, Text, ForeignKey, Float, UniqueConstraint, BigInteger
 from sqlalchemy.orm import relationship
 
 from .database import Base
@@ -14,6 +14,8 @@ class User(Base):
     hashed_password = Column(String(200), nullable=False)
     full_name = Column(String(100))
     telegram_id = Column(Integer, unique=True, nullable=True)
+    telegram_chat_id = Column(BigInteger, nullable=True, index=True)
+    telegram_started_at = Column(DateTime, nullable=True)
     guidance_completed = Column(Integer, nullable=False, default=0)
     guidance_progress_json = Column(Text, nullable=False, default="{}")
     guidance_completed_at = Column(DateTime, nullable=True)
@@ -59,7 +61,7 @@ class GameProfile(Base):
     id = Column(Integer, primary_key=True, index=True)
     user_id = Column(Integer, ForeignKey("users.id"), nullable=False, index=True)
     name = Column(String(100), nullable=False)
-    save_kind = Column(String(16), nullable=False, default="game")  # game | plan (plan — MVP 2.0)
+    save_kind = Column(String(16), nullable=False, default="game")  # Только game; старые plan-строки сохранены для аудита.
     starter_template_key = Column(String(80), nullable=True)
     starter_params_json = Column(Text, nullable=False, default="{}")
     base_monthly_lifestyle_expense = Column(Float, nullable=False, default=0)
@@ -68,6 +70,9 @@ class GameProfile(Base):
     is_archived = Column(Integer, nullable=False, default=0)
     league = Column(String(50), nullable=False, default="Bronze")
     streak = Column(Integer, nullable=False, default=0)
+    # DEPRECATED (TB1, таймера нет): time_state / period_duration_seconds / period_anchor_at
+    # код не читает и не пишет; ORM-default держит NOT NULL до миграции DROP COLUMN
+    # (см. docs/plans/PLAN_turn-based-period-no-timer.md). Не использовать в новом коде.
     time_state = Column(String(20), nullable=False, default="pause")
     period_index = Column(Integer, nullable=False, default=1)
     period_duration_seconds = Column(Integer, nullable=False, default=300)
@@ -151,6 +156,8 @@ class FinanceAsset(Base):
     has_tenants = Column(Integer, nullable=False, default=0)  # 1 = доходная с арендаторами (задел под события)
     acquisition_mode = Column(String(16), nullable=False, default="cash")  # cash | secured
     is_active = Column(Integer, nullable=False, default=1)   # НОВОЕ
+    # NV-304: период покупки (привыкание в уровне жизни); NULL = с начала игры
+    acquired_period_index = Column(Integer, nullable=True)
     created_at = Column(DateTime, default=utc_now_naive)
     game_profile = relationship("GameProfile", back_populates="finance_assets")
 
@@ -250,7 +257,7 @@ class GameStarterTemplate(Base):
     is_active = Column(Integer, nullable=False, default=1)
     sort_order = Column(Integer, nullable=False, default=100)
     created_at = Column(DateTime, default=utc_now_naive)
-    # game — только каталог Game; plan — только Plan; any — оба (редко)
+    # Игровой каталог: game / any. Старые plan-строки API не выдаёт.
     applies_to_save_kind = Column(String(20), nullable=False, default="game")
 
 
@@ -278,7 +285,7 @@ class EventDefinition(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     key = Column(String(80), unique=True, nullable=False, index=True)
-    # Совместимость с профилем: game | plan | any (legacy light/hardcore → game в миграции)
+    # Игровой пул: game / any; старый plan больше не используется.
     mode = Column(String(20), nullable=False, default="game")
     title = Column(String(160), nullable=False)
     description = Column(Text, nullable=False, default="")
@@ -339,6 +346,7 @@ class EventInstance(Base):
     definition_id = Column(Integer, ForeignKey("event_definitions.id"), nullable=False, index=True)
     status = Column(String(20), nullable=False, default="pending")  # pending/selected/expired
     selected_choice_id = Column(Integer, ForeignKey("event_choices.id"), nullable=True)
+    available_choice_ids_json = Column(Text, nullable=False, default="[]")
     created_at = Column(DateTime, default=utc_now_naive)
     resolved_at = Column(DateTime, nullable=True)
 

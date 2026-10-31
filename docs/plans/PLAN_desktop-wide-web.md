@@ -6,8 +6,15 @@ idea: ../vision/ideas/desktop-wide-web-channel.md
 epic: WD1
 product_phase: closed-alpha
 target_wave: CA 50-100
+tags:
+  - tvoy-hod/layer/plan
+  - tvoy-hod/status/draft
+aliases:
+  - "полноразмерный веб-канал (эпик WD1)"
+  - "PLAN desktop wide web"
+  - PLAN_desktop-wide-web
+  - "Plan: полноразмерный веб-канал (эпик WD1)"
 ---
-
 # Plan: полноразмерный веб-канал (эпик WD1)
 
 **Драйвер:** игрок на desktop не должен видеть «вертикальное мини-приложение по центру экрана».  
@@ -147,7 +154,7 @@ flowchart TB
 
 | Канал | Роль в CA |
 |-------|-----------|
-| TMA | Основной привлечение (после TG1) |
-| PWA / mobile browser | Телефон вне TG |
-| **WD1 wide** | Desktop и широкий браузер — **целевой UX этой идеи** |
+| **PWA / mobile browser** | **Primary** — телефон, install, JWT |
+| **Web (desktop + mobile)** | **Primary** — браузер; wide layout — DW1 |
+| TMA | **Secondary** — поддержка, опциональная регрессия |
 | Лендинг | Номинальный; прямая ссылка на игру достаточна |

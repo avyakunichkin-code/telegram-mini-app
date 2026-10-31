@@ -3,13 +3,18 @@ layer: handbook
 status: archive
 last_reviewed: 2026-05-30
 audience: team, historians
+tags:
+  - tvoy-hod/layer/handbook
+  - tvoy-hod/status/archive
+aliases:
+  - "История продукта и отступления от первой анкеты"
+  - HISTORY
 ---
-
 # История продукта и отступления от первой анкеты
 
 Материал **не описывает текущую игру** — только как мы пришли к решениям. Актуальное состояние — [`GAME.md`](GAME.md).
 
-**Первичный источник:** [`QUESTIONNAIRE.md`](../../QUESTIONNAIRE.md) (диалог с ИИ, ~1300 строк).  
+**Первичный источник:** исходный диалог с ИИ удалён из рабочей документации 2026-10-29; доступен в истории git.
 **Журнал docs ↔ prod:** [`DOC_SYNC_LOG.md`](../foundation/DOC_SYNC_LOG.md).
 
 ---
@@ -30,7 +35,7 @@ audience: team, historians
 
 ## Дорожная карта из анкеты (исторический план)
 
-Оригинал — QUESTIONNAIRE, раздел «Рекомендации к началу разработки». Сводка на 2026-05-30:
+Историческая сводка раздела «Рекомендации к началу разработки» на 2026-05-30:
 
 | Этап анкеты | Оценка |
 |-------------|--------|
@@ -77,13 +82,13 @@ audience: team, historians
 
 ## Character level / XP (снято)
 
-Шкала уровней 1–10 и источники XP **не в коде**. Архив: [`LEVEL_XP_SYSTEM.md`](../specs/gameplay/LEVEL_XP_SYSTEM.md), git history `GAME.md` до 2026-05-30.
+Шкала уровней 1–10 и источники XP **не в коде**. Архив: [`archive/character-xp-progression/`](../archive/character-xp-progression/README.md), git history `GAME.md` до 2026-05-30.
 
 ---
 
 ## Анализ концепции (анкета)
 
-Octalysis, SWOT, развёрнутые рекомендации — только в [`QUESTIONNAIRE.md`](../../QUESTIONNAIRE.md). Краткие ответы продукта на типичную критику — в [`GAME.md`](GAME.md) (раздел «Продуктовые принципы»).
+Octalysis, SWOT, развёрнутые рекомендации — сохранены в исходном диалоге в истории git. Краткие ответы продукта на типичную критику — в [`GAME.md`](GAME.md) (раздел «Продуктовые принципы»).
 
 ---
 

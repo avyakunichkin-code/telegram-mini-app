@@ -27,7 +27,7 @@ class TestEventTaxonomyPool:
                     (
                         "mq11_groceries_discount",
                         "mq11_home_internet",
-                        "mq11_family_money_request",
+                        "mq11_family_vacation_offer",
                     )
                 ),
             )
@@ -108,43 +108,10 @@ class TestConsumptionVariantsSeeded:
         assert legacy.is_active == 0
 
 
-class TestFamilyMoneyChain:
-    def test_refuse_schedules_callback_next_period(self, catalog):
-        from app.events.chains import FAMILY_MONEY_CHAIN_KEY, ensure_scheduled_chain_events, get_active_chain
-        from app.events.chains import schedule_event_chain
-
-        profile = GameProfile(
-            user_id=2,
-            name="family",
-            save_kind="game",
-            is_active=1,
-            period_index=2,
-            cash_balance=80_000,
-        )
-        catalog.add(profile)
-        catalog.commit()
-
-        schedule_event_chain(
-            catalog,
-            profile,
-            chain_key=FAMILY_MONEY_CHAIN_KEY,
-            followup_definition_key="mq11_family_money_callback",
-            after_periods=1,
-            context={"branch": "refused_once"},
-        )
-        catalog.commit()
-
-        chain = get_active_chain(catalog, profile.id, FAMILY_MONEY_CHAIN_KEY)
-        assert chain is not None
-        assert chain.due_period_index == 3
-
-        created = ensure_scheduled_chain_events(catalog, profile.id, 3)
-        assert created == 1
-
-        defn = (
-            catalog.query(EventDefinition)
-            .filter(EventDefinition.key == "mq11_family_money_callback")
-            .first()
-        )
-        meta = json.loads(defn.metadata_json)
-        assert meta["interaction_kind"] == "chain_followup"
+class TestFamilyMoneyRetired:
+    def test_family_money_events_inactive(self, catalog):
+        """Снята PO 2026-10-21 (замена — family_vacation); строки в БД гасятся, а не удаляются."""
+        for key in ("mq11_family_money_request", "mq11_family_money_callback"):
+            row = catalog.query(EventDefinition).filter(EventDefinition.key == key).first()
+            assert row is not None, key
+            assert row.is_active == 0, key

@@ -2,13 +2,16 @@ import { useEffect, useState } from 'react';
 import { showNotification } from '../../notifications';
 import { EventCard } from './EventCard';
 import { EventCarouselNav } from './EventCarouselNav';
+import { MqxEventHelpSheet } from './MqxEventHelpSheet';
 import { useEventCarousel } from './useEventCarousel';
 
 /**
- * Полноэкранный оверлей событий: карточка L3, свайп, навигация внизу.
+ * Оверлей событий ★ BG-2: затемнение, строка колоды «Событие N из M», карта L3,
+ * свайп и стрелки внизу (при нескольких событиях).
  */
 export function EventCarouselOverlay({ open, onClose, events, onResolved }) {
   const [busyId, setBusyId] = useState(null);
+  const [helpOpen, setHelpOpen] = useState(false);
 
   const carousel = useEventCarousel(events, {
     open,
@@ -41,6 +44,10 @@ export function EventCarouselOverlay({ open, onClose, events, onResolved }) {
     window.addEventListener('keydown', onKeyDown);
     return () => window.removeEventListener('keydown', onKeyDown);
   }, [open, onClose]);
+
+  useEffect(() => {
+    if (!open) setHelpOpen(false);
+  }, [open]);
 
   useEffect(() => {
     if (!open) return undefined;
@@ -81,6 +88,14 @@ export function EventCarouselOverlay({ open, onClose, events, onResolved }) {
       <div className="mqx-events-backdrop events-overlay-backdrop" aria-hidden />
 
       <div className="mqx-events-panel events-overlay-panel mqx-events-panel--l3">
+        <div className="mqx-events-deckline" aria-live="polite">
+          <span className="mqx-events-deckline__deck" aria-hidden>
+            <span />
+            <span />
+          </span>
+          Событие {idx + 1} из {n}
+        </div>
+
         <div
           className={[
             'mqx-events-viewport',
@@ -103,6 +118,7 @@ export function EventCarouselOverlay({ open, onClose, events, onResolved }) {
                 busyId={busyId}
                 onPick={handlePick}
                 onClose={onClose}
+                onHelp={() => setHelpOpen(true)}
                 titleId={titleId}
               />
             </div>
@@ -118,22 +134,25 @@ export function EventCarouselOverlay({ open, onClose, events, onResolved }) {
                 busyId={busyId}
                 onPick={handlePick}
                 onClose={onClose}
+                onHelp={() => setHelpOpen(true)}
                 titleId={titleId}
               />
             </div>
           ) : null}
         </div>
 
-        <EventCarouselNav
-          index={idx}
-          total={n}
-          canPrev={idx > 0 && canNavigate}
-          canNext={idx < n - 1 && canNavigate}
-          disabled={navBlocked}
-          onPrev={goPrev}
-          onNext={goNext}
-        />
+        {n > 1 ? (
+          <EventCarouselNav
+            canPrev={idx > 0 && canNavigate}
+            canNext={idx < n - 1 && canNavigate}
+            disabled={navBlocked}
+            onPrev={goPrev}
+            onNext={goNext}
+          />
+        ) : null}
       </div>
+
+      <MqxEventHelpSheet open={helpOpen} onClose={() => setHelpOpen(false)} />
     </div>
   );
 }

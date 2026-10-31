@@ -15,6 +15,7 @@ MIN_PERIOD_INDEX_FOR_WIN = 7
 MVP_SAFETY_FUND_OBLIGATIONS_MULTIPLIER = 3.0
 
 # --- События ---
+MIN_PERIOD_INDEX_FOR_GAME_EVENTS = 3
 EVENTS_PER_PERIOD = 2
 EVENT_TIER_WINDOW_BELOW_BAND = 2
 PERIODS_PER_EVENT_TIER = 10
@@ -66,7 +67,10 @@ class EventProfileContext:
 
     active_asset_kinds: frozenset[str]
     active_liability_count: int
+    active_liability_kinds: frozenset[str]
     active_insurance_claim_keys: frozenset[str]
+    active_asset_kind_counts: tuple[tuple[str, int], ...] = ()
+    monthly_net_flow: float | None = None  # доход − расходы за месяц; None = не считали
 
 
 @dataclass(frozen=True)
@@ -76,16 +80,22 @@ class EventPrerequisites:
 
     active_asset_kinds_any — хотя бы один актив с kind из списка.
     active_asset_kinds_all — все перечисленные kind должны быть среди активов.
+    active_liability_kinds_any — хотя бы одно активное обязательство с liability_kind из списка.
     min_active_liabilities / min_active_assets — нижние границы по числу активных записей.
     requires_insurance_any — хотя бы один активный полис с product+insured_object из списка dict.
+    min_assets_of_kind — {kind: N}: не меньше N активных активов этого kind (вторая машина).
+    negative_monthly_flow — месячные расходы больше доходов (подсказка о дыре в бюджете).
     """
 
     active_asset_kinds_any: frozenset[str] = frozenset()
     active_asset_kinds_all: frozenset[str] = frozenset()
+    active_liability_kinds_any: frozenset[str] = frozenset()
     min_active_liabilities: int = 0
     min_active_assets: int = 0
     requires_insurance_any: tuple[tuple[str, str], ...] = ()
     forbid_active_asset_kinds_any: frozenset[str] = frozenset()
+    min_assets_of_kind: tuple[tuple[str, int], ...] = ()
+    negative_monthly_flow: bool = False
 
 
 def parse_event_prerequisites_json(raw: str | None) -> EventPrerequisites:
@@ -112,13 +122,23 @@ def parse_event_prerequisites_json(raw: str | None) -> EventPrerequisites:
             if product and insured:
                 ins_specs.append((product, insured))
 
+    min_of_kind: list[tuple[str, int]] = []
+    raw_min = data.get("min_assets_of_kind")
+    if isinstance(raw_min, dict):
+        for kind, n in raw_min.items():
+            if str(kind).strip() and int(n or 0) > 0:
+                min_of_kind.append((str(kind).strip(), int(n)))
+
     return EventPrerequisites(
+        min_assets_of_kind=tuple(min_of_kind),
         active_asset_kinds_any=_kind_set("active_asset_kinds_any"),
         active_asset_kinds_all=_kind_set("active_asset_kinds_all"),
         forbid_active_asset_kinds_any=_kind_set("forbid_active_asset_kinds_any"),
+        active_liability_kinds_any=_kind_set("active_liability_kinds_any"),
         min_active_liabilities=max(0, int(data.get("min_active_liabilities") or 0)),
         min_active_assets=max(0, int(data.get("min_active_assets") or 0)),
         requires_insurance_any=tuple(ins_specs),
+        negative_monthly_flow=bool(data.get("negative_monthly_flow")),
     )
 
 
@@ -130,15 +150,42 @@ def event_prerequisites_met(prereq: EventPrerequisites, ctx: EventProfileContext
         return False
     if prereq.active_asset_kinds_all and not prereq.active_asset_kinds_all.issubset(kinds):
         return False
+    if prereq.active_liability_kinds_any and not (
+        ctx.active_liability_kinds & prereq.active_liability_kinds_any
+    ):
+        return False
     if ctx.active_liability_count < prereq.min_active_liabilities:
         return False
     if len(kinds) < prereq.min_active_assets:
         return False
+    counts = dict(ctx.active_asset_kind_counts)
+    for kind, need in prereq.min_assets_of_kind:
+        if counts.get(kind, 0) < need:
+            return False
     for product, insured in prereq.requires_insurance_any:
         key = f"{product}:{insured}"
         if key not in ctx.active_insurance_claim_keys:
             return False
+    if prereq.negative_monthly_flow and not (
+        ctx.monthly_net_flow is not None and ctx.monthly_net_flow < 0
+    ):
+        return False
     return True
+
+
+SPAWN_PRIORITY_NEGATIVE_FLOW = "negative_monthly_flow"
+
+
+def spawn_priority_active(when: str | None, ctx: EventProfileContext) -> bool:
+    """metadata.spawn_priority_when: событие занимает слот периода раньше случайного отбора."""
+    w = str(when or "").strip()
+    if not w:
+        return False
+    if w == "always":
+        return True
+    if w == SPAWN_PRIORITY_NEGATIVE_FLOW:
+        return ctx.monthly_net_flow is not None and ctx.monthly_net_flow < 0
+    return False
 
 
 def is_event_definition_eligible(

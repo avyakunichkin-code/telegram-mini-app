@@ -12,8 +12,12 @@ from sqlalchemy.orm import Session
 
 from ..models import EventChoice, EventDefinition
 from .balance_contract import validate_mvp11_balance
-from .constants import ALLOWED_EFFECT_KEYS
-from .taxonomy import serialize_audience_template_keys, validate_event_taxonomy
+from .constants import ALLOWED_EFFECT_KEYS, CHOICE_PURPOSES
+from .taxonomy import (
+    VALID_EVENT_DOMAINS,
+    serialize_audience_template_keys,
+    validate_event_taxonomy,
+)
 
 # TARGET_PLAYER_AND_SESSION §3 — подстроки в title/description (нижний регистр).
 FORBIDDEN_CONTENT_SUBSTRINGS: tuple[str, ...] = (
@@ -62,11 +66,24 @@ def validate_mvp11_specs(specs: list[dict]) -> None:
         blob = f"{spec.get('title', '')} {spec.get('description', '')}".lower()
         for bad in FORBIDDEN_CONTENT_SUBSTRINGS:
             assert bad not in blob, f"{spec['key']}: forbidden substring {bad!r}"
+        # taxonomy.event_domain() молча подменяет неизвестный домен на consumption.
+        if "event_domain" in spec:
+            assert spec["event_domain"] in VALID_EVENT_DOMAINS, (
+                f"{spec['key']}: unknown event_domain {spec['event_domain']!r}"
+            )
         for ch in spec["choices"]:
             effects = ch.get("effects") or {}
             unknown = set(effects.keys()) - ALLOWED_EFFECT_KEYS
             assert not unknown, f"{spec['key']}: unknown effect keys {unknown}"
             assert "xp_delta" not in effects, f"{spec['key']}: xp_delta removed (ADR-003)"
+            purpose = ch.get("purpose")
+            assert purpose is None or purpose in CHOICE_PURPOSES, (
+                f"{spec['key']}: unknown purpose {purpose!r}"
+            )
+            pct = effects.get("cash_pct_salary")
+            if pct is not None:
+                assert "cash_delta" not in effects, f"{spec['key']}: cash_pct_salary и cash_delta вместе"
+                assert 0 < float(pct) <= 1, f"{spec['key']}: cash_pct_salary вне (0, 1]"
         validate_event_taxonomy(
             content_class_value=str(spec.get("content_class", "universal")),
             audience_keys=list(spec.get("audience_template_keys") or ["all"]),

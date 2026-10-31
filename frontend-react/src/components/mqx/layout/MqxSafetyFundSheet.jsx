@@ -4,16 +4,16 @@ import { MqxCapitalSheet } from './MqxCapitalSheet';
 
 const SHEET_COPY = {
   in: {
-    title: 'Пополнить подушку',
-    subtitle: 'Перевод со счёта в фин.подушку — запас на неожиданные расходы.',
-    submitLabel: 'Перевести в подушку',
+    title: 'В подушку',
+    subtitle: 'Перевод со счёта в подушку — запас на неожиданные расходы.',
+    submitLabel: 'Положить в подушку',
     productId: 'safety-in',
     maxHintLabel: 'На счёте',
     emptyHint: 'Нет средств на счёте',
   },
   out: {
-    title: 'Снять с подушки',
-    subtitle: 'Перевод с подушки на счёт для трат в этом периоде.',
+    title: 'Из подушки',
+    subtitle: 'Перевод с подушки на счёт для трат в этом ходе.',
     submitLabel: 'Снять на счёт',
     productId: 'safety-out',
     maxHintLabel: 'В подушке',

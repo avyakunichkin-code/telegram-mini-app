@@ -3,12 +3,17 @@ layer: idea
 status: draft
 last_reviewed: 2026-06-02
 related:
-  - ../../specs/features/SPEC_onboarding-o2.md
+  - ../../specs/features/SPEC_onboarding-o3.md
   - onboarding-o2-progressive-guidance.md
   - ../../ux/screens/character-needs-help.md
   - ../../foundation/PRE_ALPHA_PLAYTEST_FEEDBACK.md
+tags:
+  - tvoy-hod/layer/idea
+  - tvoy-hod/status/draft
+aliases:
+  - "Контекстная помощь: справочник по блокам без шума"
+  - contextual-help-system
 ---
-
 # Контекстная помощь: справочник по блокам без шума
 
 ## Problem Statement

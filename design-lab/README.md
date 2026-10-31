@@ -69,7 +69,7 @@ cd design-lab/<тема>/<раунд>
 npx serve .
 ```
 
-**Важно:** в HTML макета только пути `./` — не `../` (иначе стили 404). См. `tvoy-hod-design-lab.mdc` и скилл `design-lab-mqx`.
+**Важно:** в HTML макета только пути `./` — не `../` (иначе стили 404). См. `.claude/rules/design-lab.md` и скилл `design-lab-mqx`.
 
 **Events:** `design-lab/events/sync-all-rounds.sh` — все раунды сразу.
 

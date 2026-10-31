@@ -7,7 +7,7 @@ def test_admin_catalogs_forbidden(client, auth_headers, monkeypatch):
     monkeypatch.setenv("ADMIN_USER_IDS", "")
     from app.config import config
 
-    config.ADMIN_USER_IDS = set()
+    monkeypatch.setattr(config, "ADMIN_USER_IDS", set())
     resp = client.get("/api/admin/catalogs", headers=auth_headers)
     assert resp.status_code == 403
 

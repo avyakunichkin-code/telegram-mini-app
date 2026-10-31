@@ -16,8 +16,19 @@ related:
   - SPEC_FRONTEND_UI.md
   - ../../plans/PLAN_expenses.md
   - ../../specs/economy/EXPENSES_LAYER_CHECKLIST.md
+tags:
+  - tvoy-hod/layer/spec
+  - tvoy-hod/status/draft
+  - tvoy-hod/topic/e1
+  - tvoy-hod/topic/economy
+  - tvoy-hod/topic/expenses
+  - tvoy-hod/topic/life-sustaining-budget
+aliases:
+  - "Эпик E1 — Расходы на жизнеобеспечение"
+  - "SPEC expenses"
+  - SPEC_expenses
+  - "Spec: Эпик E1 — Расходы на жизнеобеспечение"
 ---
-
 # Spec: Эпик E1 — Расходы на жизнеобеспечение
 
 Норматив эпика: **полноценный слой бюджета жизни** (еда, жильё, одежда, связь, здоровье, досуг…), а не только отображение агрегата `base + delta`.
@@ -60,7 +71,7 @@ related:
 | **A** | DB + домен + period + overview + миграция шаблонов | Rich UI |
 | **B** | Frontend Game: видимость, копирайт cashflow | Plan редактор |
 | **C** | События, victory, achievements, analytics | Manual pay |
-| **D** | Plan Mode CRUD, префилл | Инфляция, due-даты |
+| **D** | ~~Plan Mode CRUD~~ **cancelled** ADR-013 | Инфляция, due-даты |
 
 ---
 
@@ -162,19 +173,11 @@ related:
 
 ---
 
-## 8. Plan Mode (волна D)
+## 8. ~~Plan Mode (волна D)~~ — cancelled ADR-013
 
-| ID | Реализация |
-|----|------------|
-| E1-410 | Этот раздел + `EXPENSES_SYSTEM.md` §8 |
-| E1-411 | `POST /api/game/start` с `expense_budget`; CRUD `/api/game/expenses/lines` только при `save_kind=plan` |
-| E1-412 | Мастер `BaseParamsScreen` + `PlanExpenseEditor` во вкладке «Финансы» |
+Не реализовывать CRUD `save_kind=plan` / мастер `BaseParamsScreen` как второй продукт. Статьи burn **Game** (волны A–C) остаются. Редактор внутри Game — отдельная идея после D7.
 
-**Старт Plan:** игрок задаёт `cash_balance`, `monthly_salary`, `expense_budget` (категория → ₽/мес). Пустой бюджет при зарплате > 0 → автоподстановка ~55% зарплаты по долям категорий (`default_plan_expense_budget`). Создаются `profile_expense_lines` с `source_kind=plan`; `starter_params_json` хранит снимок бюджета.
-
-**В игре (Plan):** `GET /api/game/expenses/categories`; `POST/PATCH/DELETE /api/game/expenses/lines` — только для `save_kind=plan`; после изменений пересчитывается `base_monthly_lifestyle_expense`. Game — только чтение (`GET /api/game/expenses`).
-
-**UI:** плитка «План» в `NewProfileKindScreen` → `BaseParamsScreen` → редактор категорий; в сессии — `PlanExpenseEditor` вместо read-only `ExpensesBudgetBlock`.
+Встроенный Plan удалён 2026-10-29 (GO-02/03). Игра предоставляет чтение расходов; `POST/PATCH/DELETE /api/game/expenses/lines` возвращают **410 Gone**. Новый Plan — отдельный продукт (`apps/plan-*`, ADR-016).
 
 ---
 
@@ -198,3 +201,4 @@ related:
 | 2026-05-19 | v0.1: узкий lifestyle aggregate |
 | 2026-05-19 | **v1.0 draft:** полный слой жизнеобеспечения, матрица слоёв, волны A–D |
 | 2026-05-19 | **Волна D:** Plan CRUD, мастер бюджета, `save_kind` в overview |
+| 2026-09-07 | Волна D / Plan Mode **cancelled** [ADR-013](../../decisions/ADR-013-game-only-drop-plan-mode.md) |

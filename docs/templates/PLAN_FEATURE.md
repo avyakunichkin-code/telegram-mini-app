@@ -10,8 +10,17 @@ idea: ../vision/ideas/<slug>.md
 tasks: ../tasks/TASKS_<slug>.md
 traceability: ../TRACEABILITY.md
 next_skill: incremental-implementation
+tags:
+  - tvoy-hod/layer/plan
+  - tvoy-hod/layer/template
+  - tvoy-hod/status/draft
+aliases:
+  - "[Feature name]"
+  - E1
+  - "PLAN FEATURE"
+  - PLAN_FEATURE
+  - "Plan: [Feature name]"
 ---
-
 # Plan: [Feature name]
 
 **Epic ID:** `E1` (строка в [`TRACEABILITY.md`](../TRACEABILITY.md))  
@@ -34,11 +43,11 @@ DB / migrations
 
 ## Vertical slices
 
-| # | Срез | Phase | Tier | Skill | Satellites | Next skill |
-|---|------|-------|------|-------|------------|------------|
-| 1 | … end-to-end | `build` | `core` | `incremental-implementation` | `test-driven-development` | `test-driven-development` |
-| 2 | UI / MQX | `build` | `core` | `design-lab-mqx` → `frontend-ui-engineering` | — | `code-review-and-quality` |
-| 3 | Контракт API | `define` | `core` | `api-and-interface-design` | `test-driven-development` | `incremental-implementation` |
+| # | Срез | Phase | Tier | Skill | Satellites | Read if (`when`) | Next skill |
+|---|------|-------|------|-------|------------|------------------|------------|
+| 1 | … end-to-end | `build` | `core` | `incremental-implementation` | `test-driven-development` | — | `test-driven-development` |
+| 2 | UI / MQX | `build` | `core` | `design-lab-mqx` → `frontend-ui-engineering` | — | `lab parity / canon` | `code-review-and-quality` |
+| 3 | Контракт API | `define` | `core` | `api-and-interface-design` | `test-driven-development` | `breaking API change` | `incremental-implementation` |
 | 4 | События YAML | `build` | `core` | `create-event` | `test-driven-development` | — |
 
 `tier` / satellites: [`TASK_SLICE.md`](TASK_SLICE.md), [`SKILLS_PHASE_CONTENT_AND_DATA.md`](../agents/SKILLS_PHASE_CONTENT_AND_DATA.md).

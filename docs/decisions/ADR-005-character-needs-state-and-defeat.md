@@ -2,8 +2,14 @@
 status: accepted
 date: 2026-05-26
 deciders: продукт (сессия character needs)
+tags:
+  - tvoy-hod/layer/adr
+  - tvoy-hod/status/accepted
+aliases:
+  - ADR-005
+  - ADR-005-character-needs-state-and-defeat
+  - "ADR-005: Потребности персонажа, медленный decay и поражение при нуле"
 ---
-
 # ADR-005: Потребности персонажа, медленный decay и поражение при нуле
 
 ## Context
@@ -21,7 +27,7 @@ deciders: продукт (сессия character needs)
 
 1. **Хранение:** четыре колонки `need_*` на `game_profiles` + `needs_zero_periods_streak` + `treat_self_last_period_index`.
 2. **Конфиг** в `game_starter_templates.blueprint_json.needs`: `initial`, `periods_to_empty_target` (дефолт **12**), опциональный override `decay_per_period`, пороги, `consequence_profile`, блок помощи.
-3. **Decay** в `process_period_end` (до `period_index += 1`):
+3. **Decay** в `process_period_end` (до `period_index += 1`) — *для шаблонов с `needs.model = linear`; с 2026-10-21 все шаблоны на модели «износ + уровень жизни» ([ADR-015](ADR-015-needs-set-point-model.md))*:
    ```text
    decay[key] = decay_per_period[key]
      ?? round(initial[key] / periods_to_empty_target, 1)

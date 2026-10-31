@@ -3,8 +3,14 @@ layer: tasks
 epic_id: DL1
 plan: ../plans/PLAN_debt-liability-capital-graph.md
 spec: ../specs/features/SPEC_debt-liability-capital-graph.md
+tags:
+  - tvoy-hod/layer/task
+  - tvoy-hod/layer/tasks
+aliases:
+  - "Задачи эпика DL1"
+  - DL1
+  - TASKS_debt-liability-capital-graph
 ---
-
 # Задачи эпика DL1
 
 Формат среза: [`TASK_SLICE.md`](../templates/TASK_SLICE.md).

@@ -2,8 +2,12 @@ import assert from 'node:assert/strict';
 import { describe, it } from 'node:test';
 import {
   buildSecuredBundles,
+  canPrepayLiability,
   computeSalePreview,
+  filterCarAssetTemplates,
+  filterPropertyAssetTemplates,
   isConsumerLiabilityTemplate,
+  isPropertyAssetKind,
   isSecuredLiabilityTemplate,
 } from './capitalDl1.js';
 
@@ -39,5 +43,24 @@ describe('capitalDl1', () => {
     assert.equal(r.payoff, 796_513.93);
     assert.equal(r.cashNet, 303_486.07);
     assert.equal(r.topUp, 0);
+  });
+
+  it('canPrepayLiability excludes interest_only', () => {
+    assert.equal(canPrepayLiability({ payment_mode: 'annuity', term_periods: 36 }), true);
+    assert.equal(canPrepayLiability({ payment_mode: 'interest_only', term_periods: null }), false);
+    assert.equal(canPrepayLiability({ payment_mode: 'interest_only', term_periods: 12 }), false);
+  });
+
+  it('filters property vs car asset templates', () => {
+    const templates = [
+      { key: 'apt_1br', kind: 'home' },
+      { key: 'house_private_income', kind: 'rental_house' },
+      { key: 'lease_studio', kind: 'leased_dwelling' },
+      { key: 'car_personal', kind: 'car_personal' },
+    ];
+    assert.equal(filterPropertyAssetTemplates(templates).length, 3);
+    assert.equal(filterCarAssetTemplates(templates).length, 1);
+    assert.equal(isPropertyAssetKind('rental_house'), true);
+    assert.equal(isPropertyAssetKind('car_taxi'), false);
   });
 });

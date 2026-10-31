@@ -6,8 +6,14 @@ catalog: mvp11
 date: 2026-05-29
 verdict: GAPS
 source: /event-analysis
+tags:
+  - tvoy-hod/layer/analysis
+  - tvoy-hod/layer/vision
+  - tvoy-hod/status/snapshot
+aliases:
+  - "Event Catalog Analysis — scope: persona"
+  - event-catalog-persona-2026-05-29
 ---
-
 # Event Catalog Analysis — scope: persona
 
 ## Executive summary

@@ -8,8 +8,14 @@ related:
   - ./tvoy-hod-evolution-after-mvp.md
   - ./remove-character-xp-and-levels.md
   - ../../specs/features/SPEC_mvp-11-progression-events.md
+tags:
+  - tvoy-hod/layer/idea
+  - tvoy-hod/layer/vision
+  - tvoy-hod/status/draft
+aliases:
+  - "Персонаж и потребности: фундамент и дорожная карта"
+  - game-character-needs-foundation
 ---
-
 # Персонаж и потребности: фундамент и дорожная карта
 
 ## Problem Statement

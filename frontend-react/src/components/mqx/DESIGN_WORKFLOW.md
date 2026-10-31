@@ -72,7 +72,7 @@ npx serve .
 
 **Events:** `design-lab/events/sync-all-rounds.sh` или `./sync-lab.sh` в папке раунда.
 
-Правило Cursor: `tvoy-hod-design-lab.mdc`. Скилл: `design-lab-mqx`.
+Правило (path-scoped): `.claude/rules/design-lab.md`. Скилл: `design-lab-mqx`.
 
 ---
 
@@ -119,7 +119,7 @@ npx serve .
 | 1 | `primitives/` — кнопки, pills, chips, progress | `mqx/primitives/` |
 | 2 | `shell/` — дашборд main (**D′ flat утверждён**) | **Внедрено:** `MqxDashStack`, `DashboardPremium` |
 | 3 | `finance-insurance/` — **внедрено** | `InsuranceSection`, `Insurance*Card/Row/Picker`, Finance |
-| 4 | `dashboard/` — **S5 ★ в prod**; хвосты: empty/error, иконки | DashboardPremium |
+| 4 | `dashboard/` — S5 (история) → **★ BG-1 в prod** (2026-10-14, [ADR-014](../../../../docs/decisions/ADR-014-brand-direction-board-game.md), `board-game/hybrid-round/`, parity `dashboard/bg1-page-round/`) | DashboardPremium, `styles/mqx/board.css`, токены v2 |
 | 5 | `events/` — pill, карточка, оверлей (**внедрено**) | `EventCard`, `EventCarouselOverlay`, `MqxPill` |
 | 6 | `onboarding-o2/` — **★ утверждён** | `MqxGuidanceStrip`, `GameGuidanceLayer`, `MonetkaAvatar` |
 | 7 | `achievements-progress/` — level collapsible + монетки + каталог | `MqxAchievementCoin`, `AchievementsScreen` |
@@ -130,9 +130,13 @@ npx serve .
 | 12 | **`period-close/`** — хвостик ★; итог — **`game-ui/juice-round` C** | `MqxPeriodCloseRitual`, `MqxPeriodCloseTail` (sheet legacy в каталоге) |
 | 13 | **`game-ui/juice-round/`** ★ A+C+D | `MqxJuiceGainFeedback`, `MqxPeriodCloseRitual`, `MqxSalaryWarnModal` |
 | 13 | **`capital-page/details-actions-round/`** ★ v2 | `FinancePremium`: Детали \| Действия + sheets |
-| 14 | **`character-needs/dashboard-needs-v7-round/`** ★ e2e3 | `MqxNeedsDash`, `MqxNeedsHelpSheet`, `MqxTreatSelfSheet`, events chips |
+| 14 | `character-needs/dashboard-needs-v7-round/` e2e3 (история; на главной заменён ★ BG-1) | `MqxNeedsHelpSheet`, `MqxTreatSelfSheet`, events chips |
+| 15 | **`board-game/screens-round/`** ★ BG-2 (2026-10-15) | события, Капитал, Аналитика, Меню, Вход, Выбор жизни, финал, таббар |
+| 16 | **`board-game/frames-round/`** ★ BG-3 E + **`close-preview-round/`** ★ A (2026-10-25/26) | `DashboardPremium`, «Капитал · Действия», Аналитика; `MqxDashboardHero` (превью списания) |
+| 17 | **`board-game/neobrutal-round/`** → **`neobrutal-a-round/`** K1 + **`ink-sheets-round/`** A — «Чернильный край», **пробно, не ★** (2026-10-28/29) | слой `styles/mqx/ink.css` под `data-mqx-style="ink"`, `utils/mqxStyle.js` |
+| 18 | **`mascots/`** — `ink-mascots-round`, `companions-round`, `pregame-monetka-round` — **review** (2026-10-29) | — (ждёт «утверждаем»; `pregame-monetka` меняет канон BG-2) |
 
-Текущий статус: **дашборд S5** + **Z-NEEDS v7-e2e3 ★**, **события L3 + оверлей O1**, **итог периода**, **новая игра**, **онбординг**, **ui-states ★**, **Капитал** (Details \| Actions v2 ★) в prod. Lab оверлея: [`design-lab/events/overlay-round/`](../../../../design-lab/events/overlay-round/). Дальше: **аналитика** (волна C хвост).
+Текущий статус (2026-10-29): **все экраны партии — ★ BG-1…BG-3** «настольная игра» (токены v2, Nunito + Manrope), превью конца хода ★ PR-07; поверх — **пробный слой «Чернильный край»** (`ink.css`, по умолчанию включён, `?style=classic` — без него; не тронуты Аналитика, Меню, онбординг). Канон — [`design-lab/board-game/APPROVED.md`](../../../../design-lab/board-game/APPROVED.md), цель по токенам — дизайн-система v3 [`design/`](../../../../design/README.md). Дальше: ★ или откат «Чернильного края» после игры; маскоты и напарники (review); type & rhythm v3 (шрифты < 12 px, 4-pt отступы) — отдельным раундом lab.
 
 ---
 

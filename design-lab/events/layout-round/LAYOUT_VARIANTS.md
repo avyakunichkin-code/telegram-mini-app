@@ -32,7 +32,7 @@ cd design-lab/events/layout-round
 npx serve .
 ```
 
-Self-contained: только `./` в HTML. Общий sync: `design-lab/events/sync-all-rounds.sh`. Правило: `tvoy-hod-design-lab.mdc`.
+Self-contained: только `./` в HTML. Общий sync: `design-lab/events/sync-all-rounds.sh`. Правило: `.claude/rules/design-lab.md`.
 
 ## После ★ компоновки
 

@@ -5,8 +5,15 @@ owner: product
 last_reviewed: 2026-05-29
 tracks: events, student-persona
 definition_key: mq11_friend_outing_student
+tags:
+  - tvoy-hod/layer/idea
+  - tvoy-hod/status/approved
+  - tvoy-hod/topic/events
+  - tvoy-hod/topic/student-persona
+aliases:
+  - "Event brief: Подруга зовёт погулять (Студент)"
+  - mq11_friend_outing_student
 ---
-
 # Event brief: Подруга зовёт погулять (Студент)
 
 ## Суть

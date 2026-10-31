@@ -126,11 +126,13 @@ class TestEventPrerequisites:
         no_car = EventProfileContext(
             active_asset_kinds=frozenset({"home"}),
             active_liability_count=0,
+            active_liability_kinds=frozenset(),
             active_insurance_claim_keys=frozenset(),
         )
         with_car = EventProfileContext(
             active_asset_kinds=frozenset({"car_personal"}),
             active_liability_count=0,
+            active_liability_kinds=frozenset(),
             active_insurance_claim_keys=frozenset(),
         )
         assert not event_prerequisites_met(prereq, no_car)
@@ -141,15 +143,34 @@ class TestEventPrerequisites:
         ctx = EventProfileContext(
             active_asset_kinds=frozenset(),
             active_liability_count=0,
+            active_liability_kinds=frozenset(),
             active_insurance_claim_keys=frozenset(),
         )
         assert not event_prerequisites_met(prereq, ctx)
         ctx_ok = EventProfileContext(
             active_asset_kinds=frozenset(),
             active_liability_count=1,
+            active_liability_kinds=frozenset({"consumer"}),
             active_insurance_claim_keys=frozenset(),
         )
         assert event_prerequisites_met(prereq, ctx_ok)
+
+    def test_mortgage_prepay_requires_mortgage_liability(self):
+        prereq = parse_event_prerequisites_json('{"active_liability_kinds_any":["mortgage"]}')
+        consumer_only = EventProfileContext(
+            active_asset_kinds=frozenset(),
+            active_liability_count=1,
+            active_liability_kinds=frozenset({"consumer"}),
+            active_insurance_claim_keys=frozenset(),
+        )
+        with_mortgage = EventProfileContext(
+            active_asset_kinds=frozenset({"home"}),
+            active_liability_count=1,
+            active_liability_kinds=frozenset({"mortgage"}),
+            active_insurance_claim_keys=frozenset(),
+        )
+        assert not event_prerequisites_met(prereq, consumer_only)
+        assert event_prerequisites_met(prereq, with_mortgage)
 
 
 class TestMvpVictory:

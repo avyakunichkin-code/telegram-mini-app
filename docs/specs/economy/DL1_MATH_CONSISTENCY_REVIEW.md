@@ -5,8 +5,14 @@ epic_id: DL1
 last_reviewed: 2026-06-01
 audience: product, engineering
 parent_spec: ../features/SPEC_debt-liability-capital-graph.md
+tags:
+  - tvoy-hod/layer/spec
+  - tvoy-hod/status/active
+aliases:
+  - DL1
+  - "DL1 — ревью согласованности математики"
+  - DL1_MATH_CONSISTENCY_REVIEW
 ---
-
 # DL1 — ревью согласованности математики
 
 Ревью как **финансовая модель** (не код). Итог: эпик реализуем, но без §4.0 «Канон полей» и правок ниже в реализации будут расхождения UI ↔ ledger ↔ победа.

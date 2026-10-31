@@ -4,7 +4,8 @@
 
 Режимы (по приоритету):
   1. pg_dump --schema-only (если в PATH и DATABASE_URL доступен с локальной машины)
-  2. --from-migrations — SQLAlchemy models + склейка migrations/*.sql
+  2. models-only (default fallback) — SQLAlchemy models → DDL (без истории миграций)
+  3. --from-migrations — SQLAlchemy models + склейка migrations/*.sql (legacy/debug)
 
 Использование:
   cd backend
@@ -34,7 +35,7 @@ def _header(source: str) -> str:
 -- Generated: {stamp}
 -- Source: {source}
 -- Regenerate: python scripts/dump_schema_baseline.py
--- Apply empty DB: .\\migrate.ps1 -BaselineOnly
+-- Apply empty DB: bash backend/scripts/db.sh migrate --baseline-only
 --
 -- DDL only. Reference data: main.py seeds + data/events/mvp11 YAML sync.
 --
@@ -77,6 +78,10 @@ def dump_from_models_and_migrations() -> str:
     return _load_models_ddl() + _incremental_migrations_sql()
 
 
+def dump_models_only() -> str:
+    return _load_models_ddl()
+
+
 def dump_pg_dump(database_url: str) -> str | None:
     if not shutil.which("pg_dump"):
         return None
@@ -108,12 +113,17 @@ def main() -> None:
         action="store_true",
         help="Skip pg_dump; models DDL + incremental SQL files",
     )
+    parser.add_argument(
+        "--models-only",
+        action="store_true",
+        help="Skip pg_dump; models DDL only (no incremental SQL files)",
+    )
     args = parser.parse_args()
 
     body: str | None = None
     source = ""
 
-    if not args.from_migrations:
+    if not args.from_migrations and not args.models_only:
         url = os.getenv("DATABASE_URL", "").strip()
         if url.startswith("postgresql://") or url.startswith("postgres://"):
             print("[info] Trying pg_dump …")
@@ -124,16 +134,21 @@ def main() -> None:
             print("[info] DATABASE_URL not set or not PostgreSQL — skip pg_dump")
 
     if body is None:
-        print("[info] Building baseline from models + migrations/*.sql …")
-        body = dump_from_models_and_migrations()
-        source = "SQLAlchemy models + concat migrations/*.sql"
+        if args.from_migrations:
+            print("[info] Building baseline from models + migrations/*.sql …")
+            body = dump_from_models_and_migrations()
+            source = "SQLAlchemy models + concat migrations/*.sql"
+        else:
+            print("[info] Building baseline from models DDL only …")
+            body = dump_models_only()
+            source = "SQLAlchemy models (DDL only)"
 
     OUT.write_text(_header(source) + body.strip() + "\n", encoding="utf-8")
     size_kb = OUT.stat().st_size // 1024
     print(f"[OK] {OUT.relative_to(ROOT)} ({size_kb} KiB)")
     print("Next: python scripts/verify_schema_baseline.py")
-    print("      .\\migrate.ps1 -BaselineOnly  (empty PostgreSQL)")
-    print("      .\\scripts\\archive_incremental_migrations.ps1 -Force")
+    print("      bash backend/scripts/db.sh migrate --baseline-only  (empty PostgreSQL)")
+    print("      bash backend/scripts/db.sh archive-incrementals --force")
 
 
 if __name__ == "__main__":

@@ -1,9 +1,15 @@
+---
+tags:
+  - tvoy-hod/layer/backlog
+aliases:
+  - PRODUCT_BACKLOG
+---
 ﻿# ТВОЙ ХОД — бэклог и дорожная карта
 
-Живой список работ по слоям **DB / Backend / Frontend / Doc**. Источник идей для этой итерации: **[`GAME.md`](../../GAME.md)** (синтез анкеты, кода, Pre-Alpha → Closed Alpha).
+Живой список работ по слоям **DB / Backend / Frontend / Doc**. Источник идей для этой итерации: **[`GAME.md`](../handbook/GAME.md)** (синтез анкеты, кода, Pre-Alpha → Closed Alpha).
 
 **Трассировка эпиков:** [`TRACEABILITY.md`](../TRACEABILITY.md)  
-**Связанные документы:** [`CLAUDE.md`](../../CLAUDE.md), [evolution §II](../vision/ideas/tvoy-hod-evolution-after-mvp.md), [`GAME_DESIGN_ROADMAP_2026.md`](../vision/GAME_DESIGN_ROADMAP_2026.md) (геймдизайн, сравнение с рынком, фазы 12–18 мес.), [`foundation/SPEC_PRODUCT.md`](../foundation/SPEC_PRODUCT.md), [`foundation/TMA_USER_FLOWS.md`](../foundation/TMA_USER_FLOWS.md), [`specs/SPEC_ANALYTICS.md`](../specs/SPEC_ANALYTICS.md), [`specs/SPEC_FRONTEND_UI.md`](../specs/SPEC_FRONTEND_UI.md).
+**Связанные документы:** [`CLAUDE.md`](../../CLAUDE.md), [evolution §II](../vision/ideas/tvoy-hod-evolution-after-mvp.md), [`GAME_DESIGN_ROADMAP_2026.md`](../vision/GAME_DESIGN_ROADMAP_2026.md) (геймдизайн, сравнение с рынком, фазы 12–18 мес.), актуальный тех. снимок [`audits/engineering/2026-09-07-architecture.md`](../audits/engineering/2026-09-07-architecture.md) (DRAFT; исторический [`ARCHITECTURE_ASSESSMENT_2026-06.md`](../vision/ARCHITECTURE_ASSESSMENT_2026-06.md)), [`foundation/SPEC_PRODUCT.md`](../foundation/SPEC_PRODUCT.md), [`foundation/TMA_USER_FLOWS.md`](../foundation/TMA_USER_FLOWS.md), [`specs/SPEC_ANALYTICS.md`](../specs/SPEC_ANALYTICS.md), [`specs/SPEC_FRONTEND_UI.md`](../specs/SPEC_FRONTEND_UI.md).
 
 ---
 
@@ -27,7 +33,7 @@
 
 | ID | Название | Слои | Статус |
 |----|----------|------|--------|
-| **G1** | Game / Plan, шаблоны старта | DB+Backend+Frontend | ✅ MQ-101–108 |
+| **G1** | Game, шаблоны старта (`save_kind`; Plan снят ADR-013) | DB+Backend+Frontend | ✅ MQ-101–108 |
 | **M11** | MVP 1.1: tier, события, cooldown | DB+Backend+Frontend | ✅ MQ-111–116; без character XP (2026-05-24); плейтест Pre-Alpha — ⬜ |
 | **M12** | Достижения / «Развитие» | DB+Backend+Frontend | ⏸ **idea-refine** (2026-05-30): после снятия XP роль UI под вопросом; BE в коде, FE не в scope α |
 | **V2** | Victory M из N | DB+Backend+Frontend+Doc | ✅ **P1 закрыт**: `victory_engine` + `MqxGoalDash`; period gate снят (2026-06); дальше — **V2-BAL** / balance-playtest |
@@ -37,6 +43,7 @@
 | **O1** | Онбординг TMA — Guided coach (архив) | Frontend+Backend+Doc | **superseded → O2** |
 | **O2** | Progressive Guidance — bottom strip | Frontend+Backend+Doc | ✅ **core prod** (2026-06-01); replay — backlog |
 | **A0** | Admin Watchtower / Ops cockpit | DB+Backend+Frontend | 🟡 **AQ-01…10 ✅**, **C1–C2 ✅** · C2e choices ⬜ · [**ADMIN_BACKLOG**](ADMIN_BACKLOG.md) |
+| **AN1** | **Финансовая аналитика игрока** — вкладка «Аналитика» | Backend+Frontend+Doc | 🟡 **крупный эпик** — переписка `AnalyticsPremium`; состояние → анализ → рекомендации; только Game · [`SPEC_ANALYTICS`](../specs/SPEC_ANALYTICS.md) |
 | **TG1** | Telegram: боты, ops, player notify | Ops+Backend+Frontend | 🟡 ops-alerts ✅ + `OPS_TELEGRAM_MESSAGE_THREAD_ID`; **player bot** ⬜ |
 | **E1** | **Расходы жизнеобеспечения** — категории, статьи, burn, UI | DB+Backend+Frontend+Content | ⏸ **ждём описание + doc**; E1-R и код — после spec ([PLAN](../plans/PLAN_backlog_may2026.md)) |
 | **PW1** | PWA / standalone + стабильный resume (lock/unlock) | Frontend+Ops+Doc | 🟡 фаза 0–1 ✅; **PW1-004/104 PASS**; [PLAN](../plans/PLAN_pwa-standalone.md) |
@@ -47,6 +54,10 @@
 | **GE1** | Run Finale — финал партии, feedback, бейджи сохранений | DB+Backend+Frontend+Doc | 🟢 v1 prod · [SPEC_game-run-finale](../specs/features/SPEC_game-run-finale.md) · `run_outcome`, Watchtower feedback |
 | **DL1** | **Реалистичный долг** — актив↔кредит↔страховка, аннуитет, prepay | DB+Backend+Frontend+Doc | 🟡 **MVP в prod** · spec approved; **DL1-143** REVIEW ([отчёт](../balance/reports/DL1-143_balance_playtest_2026-06-02.md)); polish UI |
 | **EVT1** | Система событий v2 (слоты, informational, global) | DB+Backend+Frontend+Content | 🟡 taxonomy `0041` + rebalance ✅; **мульти-слот** EVT1-030…050 ⬜ |
+| **PLT** | Platform: хостинг, product analytics, TG player, auth | Ops+Backend+Frontend+Doc | 🟡 plan [`PLAN_PLT`](../plans/PLAN_PLT.md); P0 gate → M1.2 |
+| **M1.2** | MVP 1.2 — Game для своих (закрытая альфа) | Backend+Frontend+Content+Ops | ✅ **approved** — EVT1 срез, V2-BAL, juice; **P0 = PLT** |
+| **M2.0** | ~~MVP 2.0 — Plan для своих~~ | — | ❌ **cancelled** [ADR-013](../decisions/ADR-013-game-only-drop-plan-mode.md) |
+| **GO** | Только Game: снять Plan UI/API | Frontend+Backend+Doc | ✅ **approved** — [`PLAN_game-only`](../plans/PLAN_game-only.md); GO-01 до WAVE1 |
 
 > **GAME.md §0.2 / M11:** синхронизировано 2026-05-26 (Task 0.1): `cooldown_periods` ✅, MQ-116 → [`MVP_AUDIT_VS_SPEC`](../foundation/MVP_AUDIT_VS_SPEC.md) §M11.
 
@@ -59,9 +70,30 @@
 | **M12 «Развитие»** | ⏸ idea-refine с нуля — см. [`achievements-m12-direction.md`](../vision/ideas/achievements-m12-direction.md); экран FE **не** в Pre-Alpha |
 | **E1 расходы** | Нужны, но **ждём описание и документацию**; миграции не начинать |
 | **Advisor CTA** | **100% без** CTA на советника в Pre-Alpha (только внешний опрос) |
-| **Plan Mode** | MVP 2.0, **не** в ближайших волнах |
+| **Plan Mode** | **Cancelled** [ADR-013](../decisions/ADR-013-game-only-drop-plan-mode.md) — не строить; вырезать (GO) |
 | **WD1 wide web** | Четвёртый канал UX: полноширинный layout **в дополнение** к TMA/PWA; цель — **Closed Alpha 50–100** на своём домене; лендинг/FAQ **не** блокер |
 | **AC1 TG+email** | Отложить реализацию; держать в traceability до роста каналов |
+
+### Решения продукта (2026-09-07)
+
+| Тема | Решение |
+|------|---------|
+| **Только Game** | [ADR-013](../decisions/ADR-013-game-only-drop-plan-mode.md) **Accepted**: нет второго `save_kind`; M2.0 cancelled; вырезание — эпик **GO** |
+| **GO vs P0 close** | Не смешивать с lock `/time/next`; **GO-01** (убрать «Скоро») — P1 до WAVE1 |
+
+### Решения продукта (2026-06-21)
+
+| Тема | Решение |
+|------|---------|
+| **Версии MVP** | **MVP 1.x** = единственный продукт Game (`save_kind=game`). **MVP 2.x Plan — cancelled** [ADR-013](../decisions/ADR-013-game-only-drop-plan-mode.md) |
+| **Post-playtest** | Исторически два трека; **Plan-трек cancelled** ADR-013 — [`post-playtest-wave1-two-directions`](../vision/ideas/post-playtest-wave1-two-directions.md) |
+| **PLT P0** | Хостинг, домен, product analytics 2.0, TG player, чат — **до** раздувания EVT1/E1 |
+| **Plan 2.0** | **Cancelled** 2026-09-07 (ADR-013). AN1 и E1 A–C остаются в Game |
+| **AN1** | Вкладка «Аналитика»; стандарты PF/банк; прогноз 3/6/12; rule engine рекомендаций; **без** фокуса на победу; **не** блокируется E1 |
+| **Analytics** | Watchtower/SQL v1; внешний SaaS — после 2-го плейтеста |
+| **WD1** | Wide web — **после 2-го плейтеста**; вертикаль TMA/PWA до тех пор |
+| **AUTH1** | Email verify — **P3** (последний приоритет PLT) |
+| **TG1 P0** | **5** player-шаблонов на первую волну |
 
 ---
 
@@ -80,7 +112,7 @@
 - [ ] P0 **[DB]** Бэкапы БД и проверка восстановления на staging.
 - [ ] P1 **[DB]** Alembic / версионируемые миграции — снижение дрейфа схемы (сейчас SQL + автодобавление в `main.py`).
 - [x] P1 **[DB]** Victory v2 — `victory_config_json` в шаблонах, сиды 0010+, чистка `character_level` (0031).
-- [ ] P1 **[DB] ⚠ spec** Plan Mode — поля префилла / `starter_params_json` на шаблоне или снимке.
+- [x] ~~P1 **[DB] ⚠ spec** Plan Mode — поля префилла / `starter_params_json`~~ — **cancelled** ADR-013 / GO.
 - [ ] P2 **[DB] ⚠ spec** События: `prerequisites_json`, `chain_id`, веса 🟢🔴🟡 по уровню (GAME §7.3–7.4) — нет каталога колонок в spec.
 - [x] P2 **[DB]** Сиды достижений по GAME §5.3 (6×4) — `achievements/seeds.py`, [SPEC_achievements](../specs/features/SPEC_achievements.md) §7.
 - [ ] P2 **[DB]** Расширить сиды событий до 20–25 на tier (рекомендация GAME §8.3) + значения `cooldown_periods` в контенте.
@@ -200,6 +232,42 @@
 
 **Env (backend):** `ADMIN_USER_IDS`, `OPS_TELEGRAM_BOT_TOKEN`, `OPS_TELEGRAM_CHAT_ID`; ссылки в TG — `ADMIN_WEB_BASE_URL` или `PUBLIC_APP_URL` (на Render без env — дефолт GitHub Pages).
 
+### Эпик AN1 — финансовая аналитика игрока
+
+**Статус (2026-06-21):** крупный эпик; legacy [`AnalyticsPremium.jsx`](../../frontend-react/src/components/AnalyticsPremium.jsx) не обновлялся с первого подхода к игре — **полная переписка**, не точечный polish.
+
+**Канон:** [`player-financial-analytics-an1`](../vision/ideas/player-financial-analytics-an1.md) **approved** · Spec: [`SPEC_ANALYTICS`](../specs/SPEC_ANALYTICS.md) · UI: [`SPEC_FRONTEND_UI`](../specs/SPEC_FRONTEND_UI.md).
+
+| Слой | Не путать с |
+|------|-------------|
+| **AN1** — вкладка «Аналитика» для игрока | **A0 / PA2** — product analytics в `#/admin` |
+| | **E1** — расходы/burn (**не блокирует** AN1-0) |
+
+**Продуктовые якоря (2026-06-21):** единые стандарты (не от сложности Game); прогноз **3/6/12** мес.; победа — вскользь внизу; рекомендации — **автоматический** rule engine на BE; личное/семья — не разделяем в UI.
+
+#### AN1-0 — фундамент (P0)
+
+- [ ] P0 **[Doc] AN1-001** — gap-аудит: SPEC ↔ `AnalyticsPremium` ↔ API; зафиксировать удаление victory-блоков из фокуса.
+- [ ] P0 **[Doc+Design] AN1-002** — design-lab [`analytics/v2-round`](../../design-lab/analytics/v2-round/) 🟡 review
+- [ ] P0 **[Backend] AN1-011** — `analytics_thresholds` config; поле/контракт **остаток после full outflow** в overview.
+- [ ] P0 **[Backend] AN1-012** — `GET /api/finance/analytics/insights` v1 (rule engine, шаблоны RU).
+- [ ] P0 **[Frontend] AN1-010** — переписка вкладки: блоки §3 SPEC; segmented прогноз 3/6/12.
+- [ ] P0 **[Frontend] AN1-013** — `MqxInsightCard` + потребление insights API.
+
+#### AN1-1 — динамика и Plan
+
+- [ ] P1 **[Backend+FE] AN1-100** — timeseries: burn/overdue в точках; таблица 6 закрытий.
+- [ ] P1 **[Backend+FE] AN1-110** — расширение каталога правил insights (тренды, runway).
+- [ ] P1 **[Frontend] AN1-120** — Plan: «Аналитика» после квиза (данные как ввёл пользователь).
+
+#### AN1-2 — сценарии и E1
+
+- [ ] P1 **[Backend+FE] AN1-200** — сценарии «если» (лайт) на клиенте от снимка.
+- [ ] P2 **[Backend+FE] AN1-210** — breakdown по категориям burn при go **E1**.
+- [ ] P2 **[Doc] AN1-220** — граница insights vs будущий Advisor CTA.
+
+**Зависимости:** **E1** — углубление, не gate. **P2-ONB** — gate для AN1-120.
+
 ### Эпик E1 — расходы на жизнеобеспечение (полный слой)
 
 **Статус (2026-05-30):** реализация **на паузе** — сначала **описание фичи и документация**, затем E1-R ([`PLAN_backlog_may2026`](../plans/PLAN_backlog_may2026.md): E1-R1…R3). Волны A–D — **после go**, не раньше.
@@ -208,7 +276,9 @@
 
 Идея (idea-refine): [`expenses-mechanic.md`](../vision/ideas/expenses-mechanic.md) · Канон: [`EXPENSES_SYSTEM.md`](../specs/gameplay/EXPENSES_SYSTEM.md) · Spec: [`SPEC_expenses.md`](../specs/features/SPEC_expenses.md) · Plan: [`PLAN_expenses.md`](../plans/PLAN_expenses.md) · **Чеклист слоёв:** [`EXPENSES_LAYER_CHECKLIST.md`](../specs/economy/EXPENSES_LAYER_CHECKLIST.md).
 
-#### E1-R — повторная аналитика (сейчас)
+#### E1-R — экономический снимок перед расходами (Doc)
+
+*Не путать с **AN1** (UI аналитики игрока). E1-R — продуктовый/экономический аудит перед слоем расходов.*
 
 - [ ] P0 **[Doc+Analytics] E1-R1** — снимок экономики: шаблоны × burn/outflow/victory до и после E1.
 - [ ] P0 **[Doc] E1-R2** — gap spec ↔ код ↔ UX; обновить SPEC + LAYER_CHECKLIST.
@@ -234,9 +304,9 @@
 - [ ] P1 **[Backend] E1-310–311** — effects `expense_line` + сиды событий.
 - [ ] P1 **[Backend+FE] E1-312–314** — victory `expense_to_income_ratio`, analytics.
 
-#### Волна D — Plan Mode (P2, после Game)
+#### Волна D — ~~Plan Mode~~ (cancelled ADR-013)
 
-- [ ] P2 **[Spec+BE+FE] E1-410–412** — редактор статей, префилл.
+- [x] ~~P2 E1-410–412 редактор / префилл как второй save~~ — **cancelled**. Редактор внутри Game — отдельная идея после D7, не M2.0.
 
 ### Экономика и давление
 
@@ -247,9 +317,9 @@
 - [ ] P2 **[Backend] ⚠ spec** «Банкротство» / второй шанс с последствиями (GAME §2.6).
 - [ ] P3 **[Backend]** Кредитный скоринг / репутация; сезонность ставок.
 
-### Plan Mode (MVP 2.0)
+### Plan Mode (MVP 2.0) — cancelled ADR-013
 
-- [ ] P1 **[Backend]** `starter_params_json` и префилл новой Plan из снимка — evolution §II.3; **не G1**.
+- [x] ~~P1 `starter_params_json` / префилл Plan~~ — **cancelled**. Срезы GO — [`PLAN_game-only`](../plans/PLAN_game-only.md).
 
 ### API и качество
 
@@ -337,7 +407,7 @@
 
 ### Эпик O1 — онбординг TMA (Pre-Alpha) — **superseded → O2**
 
-Идея: [`onboarding-tma-mission-brief.md`](../vision/ideas/onboarding-tma-mission-brief.md) · Spec: [`SPEC_onboarding-tma.md`](../specs/features/SPEC_onboarding-tma.md) (superseded) · Plan: [`PLAN_onboarding-tma.md`](../plans/PLAN_onboarding-tma.md) · **O2:** [`SPEC_onboarding-o2.md`](../specs/features/SPEC_onboarding-o2.md) · Lab: [`onboarding-o2/`](../design-lab/onboarding-o2/) (lab `onboarding-guided/` удалён 2026-06-01)
+Идея (архив): [`onboarding-tma-mission-brief.md`](../vision/ideas/onboarding-tma-mission-brief.md) · Stubs: [`archive/onboarding-o1/`](../archive/onboarding-o1/README.md), [`archive/onboarding-o2/`](../archive/onboarding-o2/README.md) · **O3:** [`SPEC_onboarding-o3.md`](../specs/features/SPEC_onboarding-o3.md) · Lab: [`onboarding-o2/`](../design-lab/onboarding-o2/)
 
 - [x] P0 **[Doc+Design]** Guided coach **5 шагов ★** (O1, 2026-05-20; lab снят → O2 strip).
 - [x] P0 **[Doc]** Spec O1 → guided coach (2026-05-20).
@@ -445,9 +515,9 @@
 - [x] P1 **[Backend+Frontend] I1-B** — Claim: `insurance_claim` в событиях, payout на cash, тост + pytest buy/claim/cancel (2026-06-01).
 - [ ] P2 **[Frontend]** Метрики полиса и сравнение планов во вкладке «Капитал» (`FinancePremium` / sheets).
 
-### Plan Mode UI
+### Plan Mode UI — cancelled ADR-013
 
-- [ ] P1 **[Frontend] + [Doc]** Мастер Plan, префилл — заглушка «Скоро» → полный поток; spec нет.
+- [x] ~~Мастер Plan / «Скоро»~~ — вырезать в **GO-01…03**, не достраивать.
 
 ### Дизайн / бренд
 
@@ -478,7 +548,7 @@
 |------|------|----------|
 | Достижения M12 | §5.3, §10.5 | [SPEC_achievements](../specs/features/SPEC_achievements.md); UI «Развитие» |
 | Victory v2 | §1.8, §13 | Spec движка целей; связь с `victory_config` |
-| Plan Mode | §1.10, §13 | Spec мастера + префилл (отдельно от G1) |
+| ~~Plan Mode~~ | — | **Cancelled** ADR-013; не мастер 2.0 |
 | `mandatory_gate` | §13 | Дополнение SPEC событий или ADR |
 | Онбординг 3 шага | §0.2, §12 | Spec UX + копирайт; чеклист Pre-Alpha §11.1 |
 | ~~API-gates по уровню~~ | — | **Снято** → `mechanics_unlock` ([ADR-004](../decisions/ADR-004-mechanics-unlock-victory-chain.md)) |
@@ -519,7 +589,7 @@
 | I1 Insurance | ✅ 0008 | ✅ buy/claim | ✅ catalog UI | ⚠ SPEC |
 | α Playtest | — | 🟡 PA-A* SQL | опрос | ✅ KPI v1.2 |
 | A0 Watchtower | ✅ 0012 | ✅ notify + metrics | ✅ AQ + C1–C2 | [ADMIN_BACKLOG](ADMIN_BACKLOG.md) |
-| O2 Guidance | ✅ users.* | ✅ curriculum | ✅ strip | [SPEC_onboarding-o2](../specs/features/SPEC_onboarding-o2.md) |
+| O3 Guidance | 🟡 spec | ✅ curriculum | ✅ strip | [SPEC_onboarding-o3](../specs/features/SPEC_onboarding-o3.md) · O2 [archive](../archive/onboarding-o2/README.md) |
 | GE1 Run Finale | ✅ feedback | ✅ run_outcome | ✅ finale UI | [SPEC_game-run-finale](../specs/features/SPEC_game-run-finale.md) |
 | DL1 Debt graph | ✅ 0044–46 | ✅ secured/annuity | ✅ Capital UI | ✅ SPEC approved |
 | EVT1 Events v2 | ✅ 0041 | 🟡 choice pool | ⬜ multi-slot | SPEC draft |
@@ -535,28 +605,32 @@
 
 ## В работу сейчас
 
-Синхронизировано **2026-06-02** с [`PLAN_backlog_may2026.md`](../plans/PLAN_backlog_may2026.md) и [`ADMIN_BACKLOG.md`](ADMIN_BACKLOG.md).
+Синхронизировано **2026-09-07** с объединённым [`PLAN_production-ready.md`](../plans/PLAN_production-ready.md) (аудиты + ADR-013/GO). **PA-W1 не единственный P0.** WAVE1 после P0 **и** GO-01.
 
 | Приоритет | Task ID | Пункт | Слой |
 |-----------|---------|-------|------|
-| **P0** | — | **PA-W1** Pre-Alpha волна (10–20 игроков, [`PRE_ALPHA_WAVE1_OPS`](../foundation/PRE_ALPHA_WAVE1_OPS.md)) | Product |
-| P2 | DL1 | Смягчение needs / новый baseline manifest **или** бот secured на mortgage_stress | Balance+Product |
-| **P1** | **EVT1-030** | Мульти-слот `ensure_period_events` + informational UI | BE+FE |
-| P1 | 1.6 | A0 env Render (`ADMIN_*`, ops TG) + **TG-001…005** | Ops |
-| P1 | 1.7 | **TG1** player bot: BotFather + webhook `/start` (этап 1) | Ops+Backend |
-| P1 | **C2e** | Admin: правка choices событий | BE+FE |
-| P1 | **V2-BAL** | Пороги chain-целей vs экономика шаблонов | Doc+Balance |
+| **P0** | **PR-03** | `POST /complete-period` → 410 — **первый срез** | Backend |
+| **P0** | **PR-01** | Lock + идемпотентность `time/next` | Backend |
+| **P0** | **PR-14** | Флаг пустого спавна событий на close (AI C1) | Backend+FE |
+| **P0** | **PR-02** | Concurrent salary/choose + FE Idempotency-Key | Backend+FE |
+| **P0** | **PR-04…06** | CI pytest, SECRET_KEY, Argon2 | Backend+CI |
+| **P0** | **PR-07** | Превью списания на close + chip «подушка ≠ жизнь» | Frontend+Doc |
+| **P0** | **PR-08** | Один путь схемы (`migrate` до API) | DB+Ops |
+| **P0** | **PR-09** | Freeze: нет TG daily-close, нет CTA советника | Ops+Product |
+| **P1** | **GO-01 / GO-02** | Реализовано локально 2026-10-29: нет «Скоро», `plan` start → 400. Перед выкладкой — SQL-аудит старых Plan-профилей | Frontend+Backend |
+| **P1** | **PR-16** | PA-W1 10–20 **после** PR-01…07 **и** GO-01 | Product |
+| P1 | **PR-10** | Lab дашборд: действия под hero | Frontend |
+| P1 | **V2-BAL / PR-18** | Пороги chain / акт 1 за 12–18p (spec до кода) | Doc+Balance |
+| P1 | 1.7 | **TG1** player bot `/start` (без шаблона «сегодня не закрыл») | Ops+Backend |
+| P2 | **GO-03 / GO-04** | Реализовано локально 2026-10-29: редакторы удалены; пул game/any, в YAML mvp11 нет `mode: plan` | FE+BE+Content |
+| P2 | **EVT1-030** | Мульти-слот + informational UI | BE+FE |
+| P2 | α-FB-03 | Повторы событий: cooldown/once | Content+BE |
+| P2 | α-FB-06/08 | Empty states «Капитал» | Frontend |
+| P2 | **WD1-001** | design-lab `wide-game-shell` → spec | Frontend+Doc |
 | — | CN1-001 | One-pager + пересмотр SPEC needs (**gate**) | Doc |
 | — | M12 | Idea-refine «Развитие» | Doc |
-| — | E1 | Описание фичи + doc (**gate** для E1-R) | Doc |
-| ⏸ | E1-R, M12 FE, CN1-010+ | После gate-доков | — |
-| ⏸ | Plan Mode | MVP 2.0 | — |
-| P2 | **WD1-001** | design-lab `wide-game-shell` → spec | Frontend+Doc |
-| P2 | α-FB-03 | Повторы событий: state ladder | Content+BE |
-| P2 | α-FB-06/08 | Empty states «Капитал» + RU labels kind | Frontend |
-| P2 | α-FB-13 | First-run подсказки needs | Frontend |
-| — | TB1.1 | Чипы плана месяца | Frontend |
-| — | O2-replay | «Повторить обучение» из меню | Frontend |
+| P3 | **GO-05** | Опционально CHECK `save_kind='game'` | DB |
+| ⏸ | E1-редактор «свой бюджет», advisor CTA | После D7≥8% n≥50; **не** второй `save_kind` | — |
 
 **Закрыто недавно:** **AQ-01…10**, **C1–C2** admin ✅ (2026-06-02); **DL1** волны A–F (ядро) ✅; **α-FB-04** `event_chosen` log ✅; **α-FB-18** highlights периода ✅ (часть); PW1-004/104; I1-A/B; O2 core; Victory period gate; GE1 finale.
 
@@ -566,8 +640,11 @@
 
 | Дата | Что сделали |
 |------|-------------|
-| 2026-05-16 | MVP audit; MQ-101–108 (G1). |
-| 2026-05-19 | Синхронизация с [`GAME.md`](../../GAME.md): слои DB/BE/FE/Doc; M11 отмечен выполненным в коде; заведены M12, V2, I1, α; пробелы ⚠ spec; исправлена устаревшая пометка про cooldown. |
+| 2026-09-07 | **AI-аудит DRAFT:** picker/guidance/Cursor; C1–C3 → PR-14 / каталог / PR-04; без NPC | [`audits/ai/2026-09-07-runtime-and-dev-ai`](../audits/ai/2026-09-07-runtime-and-dev-ai.md) |
+| 2026-09-07 | **Единый план:** аудиты P0–P3 + GO в одной очереди (WAVE1 после P0 и GO-01) | [`PLAN_production-ready`](../plans/PLAN_production-ready.md); детали GO — [`PLAN_game-only`](../plans/PLAN_game-only.md) |
+| 2026-09-07 | **ADR-013 Game only:** Plan Mode / M2.0 cancelled; эпик **GO** (срезы UI/API) | [`ADR-013`](../decisions/ADR-013-game-only-drop-plan-mode.md), [`PLAN_game-only`](../plans/PLAN_game-only.md) |
+| 2026-09-07 | **Сводный план production-ready** (DRAFT): целостность close → честный preview → волна 10–20; PA-W1 больше не единственный P0 | [`PLAN_production-ready`](../plans/PLAN_production-ready.md); аудиты 2026-09-07 |
+| 2026-05-19 | Синхронизация с [`GAME.md`](../handbook/GAME.md): слои DB/BE/FE/Doc; M11 отмечен выполненным в коде; заведены M12, V2, I1, α; пробелы ⚠ spec; исправлена устаревшая пометка про cooldown. |
 | 2026-05-19 | **MVP 1.2 / A0:** эпик Admin Watchtower Phase 0 — `notification_log`, ops-алерты, `#/admin`. |
 | 2026-05-19 | **Q1** quality-release; **V2** victory engine; **M12** критерии достижений + API level-gates (`level_gates.py`, overview `character_unlocks`). |
 | 2026-05-25 | **PW1:** эпик PWA/standalone — драйвер нестабильный resume TMA при блокировке экрана; фаза 0 (lifecycle resync) перед install prompt. |

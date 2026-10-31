@@ -1,17 +1,20 @@
 import { asSafeReactText } from '../../../utils/displayText';
 import { MonetkaAvatar } from '../brand/MonetkaAvatar';
+import { IconHelpBookWithBadge } from '../icons/MqxContextHelpIcons';
 import { EventChoiceButton } from './EventChoiceButton';
 import { eventDomainTheme } from './eventDomainDisplay';
 import { eventHasInsuranceClaimChoice } from './eventDisplay';
 
 /**
- * Карточка события L3 ★: полоса домена, заголовок (+ × в оверлее), лейблы, пузырь, flat-выборы.
+ * Карта события ★ BG-2 (канон L3): полоса домена с пилюлями и ×, заголовок,
+ * пузырь Монетки, плоские выборы с чипами последствий.
  */
 export function EventCard({
   event,
   busyId,
   onPick,
   onClose,
+  onHelp,
   titleId = 'mqx-event-card-title',
 }) {
   const disabled = busyId !== null;
@@ -34,16 +37,40 @@ export function EventCard({
         .filter(Boolean)
         .join(' ')}
     >
-      <div className="mqx-events-card__band" aria-hidden />
-      <div className="mqx-events-card__frame">
-        <div className="mqx-events-card__head">
-          <h3
-            id={titleId}
-            className="mqx-events-card__title mqx-events-card__title--l3"
-            title={titleText}
-          >
-            {titleText}
-          </h3>
+      <div className="mqx-events-card__band">
+        <div className="mqx-events-card__labels">
+          <span className="mqx-events-domain-pill">{domain.label}</span>
+          {insuranceEvent ? (
+            <span className="mqx-events-domain-pill mqx-events-domain-pill--insurance">
+              <span className="mqx-events-card__badge-pulse" aria-hidden />
+              Страховой случай
+            </span>
+          ) : null}
+          {recommended ? (
+            <span
+              className="mqx-events-domain-pill mqx-events-domain-pill--recommended"
+              title={asSafeReactText(event?.recommended_hint, 'Рекомендуемое событие')}
+            >
+              Рекомендуемое
+              {recommendedForNeed ? ` · ${recommendedForNeed}` : ''}
+            </span>
+          ) : null}
+        </div>
+        <div className="mqx-events-card__head-actions">
+          {onHelp ? (
+            <button
+              type="button"
+              className="mqx-help-icon-btn mqx-help-icon-btn--badge mqx-events-card__help"
+              aria-label="Как читать событие"
+              title="Как читать событие"
+              onClick={onHelp}
+            >
+              <IconHelpBookWithBadge size={17} />
+              <span className="mqx-help-icon-btn__badge" aria-hidden="true">
+                ?
+              </span>
+            </button>
+          ) : null}
           {onClose ? (
             <button
               type="button"
@@ -56,34 +83,16 @@ export function EventCard({
             </button>
           ) : null}
         </div>
+      </div>
 
-        <div className="mqx-events-card__labels">
-          <span className="mqx-events-domain-pill">
-            <span className="mqx-events-domain-pill__dot" aria-hidden />
-            {domain.label}
-          </span>
-          {recommended ? (
-            <span
-              className="mqx-events-card__badge mqx-events-card__badge--inline mqx-events-card__badge--recommended"
-              title={asSafeReactText(event?.recommended_hint, 'Рекомендуемое событие')}
-            >
-              Рекомендуемое
-              {recommendedForNeed ? ` · ${recommendedForNeed}` : ''}
-            </span>
-          ) : null}
-          {insuranceEvent ? (
-            <span className="mqx-events-card__badge mqx-events-card__badge--inline mqx-events-card__badge--insurance-case">
-              <span className="mqx-events-card__badge-pulse" aria-hidden />
-              Страховой случай
-            </span>
-          ) : null}
-        </div>
+      <div className="mqx-events-card__frame">
+        <h3 id={titleId} className="mqx-events-card__title mqx-events-card__title--l3" title={titleText}>
+          {titleText}
+        </h3>
 
         {description ? (
           <div className="mqx-events-card__bubble-row">
-            <div className="mqx-events-card__monetka-wrap">
-              <MonetkaAvatar size={50} className="mqx-events-card__monetka" />
-            </div>
+            <MonetkaAvatar size={44} className="mqx-events-card__monetka" />
             <div className="mqx-events-card__bubble">
               <p className="mqx-events-card__bubble-text">{description}</p>
             </div>

@@ -1,15 +1,9 @@
 import { useEffect } from 'react';
 import {
   getGuidanceAnchorForBeat,
-  getGuidanceBottomReservePx,
   GUIDANCE_ANCHOR_FOCUS_CLASS,
   scrollGuidanceAnchorIntoView,
 } from './guidanceAnchors';
-
-function parsePx(value) {
-  const n = parseFloat(String(value || '').trim());
-  return Number.isFinite(n) ? n : 64;
-}
 
 function clearFocusMarkers(root) {
   if (!root) return;
@@ -45,21 +39,22 @@ export function useGuidanceAnchorFocus({ rootRef, beatId, active, stripHeightPx 
 
     target.classList.add(GUIDANCE_ANCHOR_FOCUS_CLASS);
 
-    const tabInset = parsePx(
-      getComputedStyle(document.documentElement).getPropertyValue('--tma-tabbar-inset'),
-    );
-    const reserve = getGuidanceBottomReservePx(stripHeightPx, tabInset);
-
     const runScroll = () => {
-      scrollGuidanceAnchorIntoView({ scrollEl, target, bottomReservePx: reserve });
+      scrollGuidanceAnchorIntoView({ scrollEl, target, stripHeightPx });
     };
 
     const raf = requestAnimationFrame(runScroll);
     const t2 = window.setTimeout(runScroll, 320);
+    scrollEl?.addEventListener('scroll', runScroll, { passive: true });
+    window.addEventListener('resize', runScroll);
+    window.visualViewport?.addEventListener('resize', runScroll);
 
     return () => {
       cancelAnimationFrame(raf);
       window.clearTimeout(t2);
+      scrollEl?.removeEventListener('scroll', runScroll);
+      window.removeEventListener('resize', runScroll);
+      window.visualViewport?.removeEventListener('resize', runScroll);
       clearFocusMarkers(root);
     };
   }, [rootRef, beatId, active, stripHeightPx]);

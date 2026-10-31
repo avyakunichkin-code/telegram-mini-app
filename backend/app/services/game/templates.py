@@ -10,8 +10,8 @@ from ...schemas import GameStarterTemplatePublic
 
 def validate_save_kind(save_kind: str) -> str:
     normalized = (save_kind or "").strip().lower()
-    if normalized not in ("game", "plan"):
-        raise HTTPException(status_code=400, detail="save_kind must be 'game' or 'plan'")
+    if normalized != "game":
+        raise HTTPException(status_code=400, detail="save_kind must be 'game'")
     return normalized
 
 
@@ -69,8 +69,8 @@ def list_game_templates(db: Session, for_save_kind: Optional[str] = None) -> lis
     q = db.query(GameStarterTemplate).filter(GameStarterTemplate.is_active == 1)
     if for_save_kind:
         sk = for_save_kind.strip().lower()
-        if sk not in ("game", "plan"):
-            raise HTTPException(status_code=400, detail="for_save_kind must be 'game' or 'plan'")
+        if sk != "game":
+            raise HTTPException(status_code=400, detail="for_save_kind must be 'game'")
         q = q.filter(
             or_(
                 GameStarterTemplate.applies_to_save_kind == sk,

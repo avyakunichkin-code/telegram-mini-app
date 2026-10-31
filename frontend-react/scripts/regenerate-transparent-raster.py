@@ -3,22 +3,22 @@
 from __future__ import annotations
 
 from collections import deque
+import subprocess
 from pathlib import Path
 
 from PIL import Image
 
-FRONTEND_ASSETS = Path(__file__).resolve().parents[1] / "src" / "assets"
-DOCS_ASSETS = Path(__file__).resolve().parents[2] / "docs" / "reference" / "assets"
+REPO = Path(__file__).resolve().parents[2]
+ASSETS = REPO / "design/system/assets"
+
+LEGACY = REPO / "design/archive/classic-v3/assets"
 
 RASTER_TARGETS = [
-    FRONTEND_ASSETS / "monetka-mascot.png",
-    FRONTEND_ASSETS / "monetka-poses" / "monetka-sit-edge.png",
-    FRONTEND_ASSETS / "character-needs" / "student-mascot.png",
-    FRONTEND_ASSETS / "brand" / "logo-compact.png",
-    FRONTEND_ASSETS / "brand" / "logo-full.png",
-    DOCS_ASSETS / "monetka-mascot.png",
-    DOCS_ASSETS / "monetka-poses" / "monetka-sit-edge.png",
-    *sorted((DOCS_ASSETS / "monetka-poses").glob("monetka-*.png")),
+    LEGACY / "Monetka/monetka-mascot.png",
+    ASSETS / "Monetka/monetka-sit-edge.png",
+    LEGACY / "Needs/student-mascot.png",
+    ASSETS / "Logos/logo-compact.png",
+    ASSETS / "Logos/logo-full.png",
 ]
 
 
@@ -138,6 +138,7 @@ def main() -> None:
             print(f"skip missing {path}")
             continue
         process_png(path)
+    subprocess.run(["node", str(REPO / "scripts/design-assets.mjs")], check=True)
 
 
 if __name__ == "__main__":

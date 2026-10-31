@@ -1,6 +1,8 @@
+import { turnCloseTitle } from '../constants/turnCopy.js';
+
 /**
- * Строки компактного итога периода (иконка + подпись + Δ со стрелкой).
- * @typedef {{ key: string, label: string, glyph: 'coin'|'up'|'down'|'percent', delta: number, tone?: 'pos'|'neg'|'' }} PeriodCloseRow
+ * Строки компактного итога хода (иконка + подпись + Δ со стрелкой).
+ * @typedef {{ key: string, label: string, glyph: 'coin'|'up'|'down'|'shield', delta: number, tone?: 'pos'|'neg'|'' }} PeriodCloseRow
  */
 
 function sumBreakdown(breakdown, types, field = 'amount') {
@@ -64,8 +66,8 @@ export function periodCloseRows(summary) {
     { key: 'balance', label: 'Баланс', glyph: 'coin', delta: m.cashDelta },
     { key: 'income', label: 'Доходы', glyph: 'up', delta: m.incomeDelta },
     { key: 'expense', label: 'Расходы', glyph: 'down', delta: m.expenseDelta },
-    { key: 'safety', label: 'Фин.подушка', glyph: 'coin', delta: m.safetyDelta },
-    { key: 'invest', label: 'Инвестиции', glyph: 'percent', delta: m.investDelta },
+    { key: 'safety', label: 'Фин.подушка', glyph: 'shield', delta: m.safetyDelta },
+    { key: 'invest', label: 'Инвестиции', glyph: 'coin', delta: m.investDelta },
     { key: 'debt', label: 'Долги', glyph: 'down', delta: m.debtDelta },
   ];
 
@@ -74,11 +76,18 @@ export function periodCloseRows(summary) {
 
 export function periodCloseTitle(summary) {
   const m = derivePeriodCloseMetrics(summary);
-  const n = m?.periodIndex || 0;
-  return n > 0 ? `Итоги периода #${n}` : 'Итоги периода';
+  return turnCloseTitle(m?.periodIndex || 0);
+}
+
+export const PERIOD_CLOSE_SPAWN_FAILED_COPY =
+  'Карточки этого хода не собрались. Можно играть дальше — напиши нам, если повторится.';
+
+export function periodCloseEventsSpawnFailed(summary) {
+  return Boolean(summary && summary.events_spawn_failed);
 }
 
 export function shouldAutoOpenPeriodClose(summary, autoMax = 3) {
+  if (periodCloseEventsSpawnFailed(summary)) return true;
   const m = derivePeriodCloseMetrics(summary);
   const n = m?.periodIndex || 0;
   return n > 0 && n <= autoMax;

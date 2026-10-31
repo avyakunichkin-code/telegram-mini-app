@@ -2,12 +2,17 @@
 layer: ux
 status: approved
 last_reviewed: 2026-06-02
-platform: Telegram Mini App
+platform: SPA / PWA
 screen_id: dashboard-needs
 parent: dashboard
 prod_route: GameScreen tab `dashboard` → Z-NEEDS
+tags:
+  - tvoy-hod/layer/ux
+  - tvoy-hod/status/approved
+aliases:
+  - character-needs-dashboard
+  - "UX Spec: Потребности на главной (Z-NEEDS)"
 ---
-
 # UX Spec: Потребности на главной (Z-NEEDS)
 
 > **Status:** Approved (базовые решения UX-01…UX-08)  

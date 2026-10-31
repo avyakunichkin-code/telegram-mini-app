@@ -4,8 +4,18 @@ status: active
 last_reviewed: 2026-06-02
 tracks: backlog, pre-alpha, m12, i1, pw1, e1, a0
 source: ../backlog/PRODUCT_BACKLOG.md
+tags:
+  - tvoy-hod/layer/plan
+  - tvoy-hod/status/active
+  - tvoy-hod/topic/backlog
+  - tvoy-hod/topic/i1
+  - tvoy-hod/topic/m12
+  - tvoy-hod/topic/pre-alpha
+aliases:
+  - "План работ: май 2026 (из беклога)"
+  - "PLAN backlog_may2026"
+  - PLAN_backlog_may2026
 ---
-
 # План работ: май 2026 (из беклога)
 
 > **Синхронизация 2026-06-02:** актуальный статус эпиков и «В работу сейчас» — [`PRODUCT_BACKLOG.md`](../backlog/PRODUCT_BACKLOG.md). Закрыто с мая: **O2**, **DL1** (ядро), **Admin AQ/C1–C2**, **GE1**, period highlights.
@@ -25,7 +35,7 @@ source: ../backlog/PRODUCT_BACKLOG.md
 
 ### Task 0.1: Синхронизация документации M11 и cooldown
 
-**Описание:** В [`GAME.md`](../../GAME.md) §0.2 и связанных doc всё ещё может фигурировать «cooldown не реализован» и незакрытая приёмка M11. Привести GAME, [`MVP_AUDIT_VS_SPEC.md`](../foundation/MVP_AUDIT_VS_SPEC.md) и [`TRACEABILITY.md`](../TRACEABILITY.md) в соответствие с кодом (`game_rules`, миграция 0007, `test_mq116_acceptance.py`).
+**Описание:** В [`GAME.md`](../handbook/GAME.md) §0.2 и связанных doc всё ещё может фигурировать «cooldown не реализован» и незакрытая приёмка M11. Привести GAME, [`MVP_AUDIT_VS_SPEC.md`](../foundation/MVP_AUDIT_VS_SPEC.md) и [`TRACEABILITY.md`](../TRACEABILITY.md) в соответствие с кодом (`game_rules`, миграция 0007, `test_mq116_acceptance.py`).
 
 **Критерии приёмки:**
 - [x] GAME.md §0.2: cooldown ✅, M11 ✅, достижения 🟡, ссылка на PRODUCT_BACKLOG

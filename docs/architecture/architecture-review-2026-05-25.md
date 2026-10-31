@@ -1,7 +1,13 @@
+---
+tags:
+  - tvoy-hod/layer/architecture
+aliases:
+  - architecture-review-2026-05-25
+---
 ﻿# Architecture Review Report
 
 **Date:** 2026-05-25  
-**Project:** ТВОЙ ХОД (Telegram Mini App)  
+**Project:** ТВОЙ ХОД (PWA + web primary; TMA secondary — [ADR-012](../decisions/ADR-012-primary-channels-pwa-web-over-tma.md))  
 **Mode:** full (adapted: foundation + feature specs + vision ideas; stack FastAPI / PostgreSQL / React)
 
 **Loaded:** 0 GDD · **1 ADR** (at review start) · **~12 normative specs** · **~40 vision ideas** · [`TRACEABILITY.md`](../TRACEABILITY.md) · **178 backend tests** (2 failures in `test_victory_engine.py`)
@@ -21,7 +27,7 @@
 
 ## Verdict: **CONCERNS** → **ближе к PASS** (Q&A 2026-05-25)
 
-**PASS blocked by:** нет CI pytest (решение Q&A: локальный pytest + `tvoy-hod-backend.mdc`); открытые эпики Plan UI, E1, O1, M12.
+**PASS blocked by:** нет CI pytest (решение Q&A: локальный pytest + `.claude/rules/backend.md`); открытые эпики Plan UI, E1, O1, M12.
 
 **Снято с блокеров:** doc-sync GAME/GLOSSARY/TARGET_PLAYER; ADR-002/003; pytest **180 passed**; V2 UI P1 (`MqxGoalDash`) — закрыт в TRACEABILITY/backlog.
 

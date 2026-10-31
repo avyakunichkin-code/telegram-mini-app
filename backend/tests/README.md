@@ -2,7 +2,7 @@
 
 Цель: **не 100% coverage**, а проверки, которые ловят регрессии продукта (экономика, события, победа, контракты API).
 
-**Agent skill:** [`/critical-tests`](../../.cursor/skills/critical-test-scenarios/SKILL.md) — min gate G1–G4, выбор сценариев, конвейер spec → MQ-* → pytest/vitest.
+**Agent skill:** [`/critical-test-scenarios`](../../.claude/skills/critical-test-scenarios/SKILL.md) — min gate G1–G4, выбор сценариев, конвейер spec → MQ-* → pytest/vitest.
 
 ## Пирамида
 
@@ -63,6 +63,7 @@ tests/
 3. **Victory v2:** chain vs parallel по template_key — ★ `unit/victory/test_progression_modes.py`, `integration/api/test_overview_victory_contract.py`
 4. **Plan mode:** CRUD plan expenses — ★ `integration/api/test_plan_expenses_contract.py` (legacy `test_plan_expense_crud.py` удалён)
 5. **Property-lite:** cash finite (choose, salary, safety) — ★ `test_choose_cash_property_lite.py`, `unit/game/test_period_money_property_lite.py`
+6. **PR-02 lock:** concurrent salary/choose + replay 200 — ★ `unit/period/test_salary_lock.py`, `unit/events/test_choose_lock.py`, `integration/api/test_choose_replay.py`
 
 ## Запуск
 

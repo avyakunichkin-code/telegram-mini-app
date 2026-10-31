@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import importlib.util
-import shutil
+import subprocess
 import sys
 from pathlib import Path
 
@@ -20,13 +20,9 @@ _raster_spec.loader.exec_module(_raster)
 
 ROOT = Path(__file__).resolve().parents[1]
 REPO = ROOT.parent
-BRAND = ROOT / "src" / "assets" / "brand"
+BRAND = REPO / "design/system/assets/Logos"
 HEIGHTS = (70, 105, 140, 210, 280)
 TRIM_PAD = 2
-SYNC_TARGETS = (
-    REPO / "landing" / "public" / "brand",
-    REPO / "docs" / "reference" / "brandbook" / "assets" / "logos",
-)
 
 
 def trim_transparent(im: Image.Image, pad: int = TRIM_PAD) -> Image.Image:
@@ -68,12 +64,7 @@ def save_png_webp(im: Image.Image, path: Path) -> None:
 
 
 def sync_canonical(png: Path, webp: Path) -> None:
-    for dest_dir in SYNC_TARGETS:
-        if not dest_dir.parent.exists():
-            continue
-        dest_dir.mkdir(parents=True, exist_ok=True)
-        shutil.copy2(png, dest_dir / png.name)
-        shutil.copy2(webp, dest_dir / webp.name)
+    subprocess.run(["node", str(REPO / "scripts/design-assets.mjs")], check=True)
 
 
 def main() -> None:

@@ -5,8 +5,9 @@ from __future__ import annotations
 from fastapi import HTTPException
 from sqlalchemy.orm import Session
 
+from fincore.annuity import monthly_payment
+
 from ...constants import EPSILON
-from ...finance.annuity import monthly_payment
 from ...finance.balance_utils import adjust_balance
 from ...finance.liability_kinds import (
     ASSET_KIND_FOR_AUTO,
@@ -113,6 +114,7 @@ def create_secured_acquisition(
 
     asset = FinanceAsset(
         game_profile_id=profile.id,
+        acquired_period_index=max(1, int(profile.period_index or 1)),
         title=asset_tpl.title,
         kind=asset_tpl.kind,
         asset_value=purchase_price,

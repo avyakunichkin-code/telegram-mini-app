@@ -5,8 +5,13 @@ last_reviewed: 2026-05-30
 owner: product
 audience: product
 branch_note: Гипотезы и модель — отдельная git-ветка; не блокирует Pre-Alpha
+tags:
+  - tvoy-hod/layer/handbook
+  - tvoy-hod/status/draft
+aliases:
+  - "Монетизация — TBD"
+  - MONETIZATION
 ---
-
 # Монетизация — TBD
 
 **Статус:** решение **не принято**. Документ фиксирует границу, чтобы плейтест и партнёры не ожидали платёжной воронки в Pre-Alpha / ранней Closed Alpha.

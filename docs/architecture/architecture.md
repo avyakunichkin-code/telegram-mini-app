@@ -1,3 +1,10 @@
+---
+tags:
+  - tvoy-hod/layer/architecture
+aliases:
+  - "ТВОЙ ХОД — Master Architecture (Character Needs + контекст стека)"
+  - architecture
+---
 # ТВОЙ ХОД — Master Architecture (Character Needs + контекст стека)
 
 ## Document Status
@@ -12,6 +19,7 @@
 | ADRs referenced | ADR-001 … ADR-006 (needs: 005, 006) |
 | Technical Director Sign-Off | 2026-05-26 — **APPROVED** (lean: LP-FEASIBILITY skipped) |
 | Lead Programmer Feasibility | **FEASIBLE** (lean) |
+| Related | [`vision/ARCHITECTURE_ASSESSMENT_2026-06.md`](../vision/ARCHITECTURE_ASSESSMENT_2026-06.md) — общая оценка стека, масштаб, ops roadmap |
 
 ---
 

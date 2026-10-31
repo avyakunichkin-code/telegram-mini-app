@@ -110,7 +110,7 @@
 .mqx-hero {
   position: relative;
   padding: 18px 18px 14px;
-  background: linear-gradient(135deg, #6d28d9 0%, #5b21b6 52%, #4338ca 100%);
+  background: linear-gradient(135deg, var(--mq-turn) 0%, #5b21b6 52%, #4338ca 100%);
   border-bottom: 1px solid rgba(255, 255, 255, 0.18);
   overflow: hidden;
 }
@@ -139,7 +139,9 @@
 }
 
 .mqx-hero__title {
-  margin-top: 8px;
+  /* Заголовок вкладки — h1 (a11y): гасим глобальные h1 из shell.css, вид как у прежнего div. */
+  margin: var(--mq-sp-3) 0 0;
+  font-family: inherit;
   font-size: var(--mq-fs-display);
   line-height: 1.02;
   font-weight: 800;
@@ -222,7 +224,7 @@
   background: rgba(255, 255, 255, 0.1);
   color: rgba(255, 255, 255, 0.92);
   cursor: pointer;
-  transition: transform 0.12s cubic-bezier(0.22, 1, 0.32, 1), opacity 0.15s ease;
+  transition: transform 0.12s cubic-bezier(0.22, 1, 0.32, 1), opacity var(--mq-dur-fast) ease;
 }
 
 .mqx-btn:disabled {

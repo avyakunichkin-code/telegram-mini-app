@@ -6,11 +6,10 @@ from sqlalchemy.orm import Session
 from ..auth import get_current_user
 from ..database import get_db
 from ..game.bootstrap import build_game_bootstrap
-from ..game.time import resolve_game_session
+from ..game.session import resolve_game_session
 from ..schemas import (
     GameProfileCreate,
     GameProfileResponse,
-    TimeConfigUpdate,
     TimeStatusResponse,
     GameStartRequest,
     GameStartResponse,
@@ -38,19 +37,13 @@ from ..services.game.run_finale import (
     dismiss_victory_finale as service_dismiss_victory_finale,
     submit_run_feedback as service_submit_run_feedback,
 )
-from ..services.game.time import (
-    get_time_status as service_get_time_status,
-    go_to_next_period as service_go_to_next_period,
-    set_pause_mode as service_set_pause_mode,
-    set_play_mode as service_set_play_mode,
-    update_time_config as service_update_time_config,
-)
+from ..services.period.close import go_to_next_period as service_go_to_next_period
 
 router = APIRouter(prefix="/api/game", tags=["game"])
 
 
 @router.get("/bootstrap", response_model=GameBootstrapResponse)
-async def game_bootstrap(
+def game_bootstrap(
     current_user=Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
@@ -68,7 +61,7 @@ async def game_bootstrap(
 
 
 @router.post("/run-finale/dismiss", response_model=RunFinaleDismissResponse)
-async def dismiss_run_finale(
+def dismiss_run_finale(
     current_user=Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
@@ -76,7 +69,7 @@ async def dismiss_run_finale(
 
 
 @router.post("/run-feedback", response_model=RunFeedbackResponse)
-async def post_run_feedback(
+def post_run_feedback(
     payload: RunFeedbackRequest,
     current_user=Depends(get_current_user),
     db: Session = Depends(get_db),
@@ -85,10 +78,10 @@ async def post_run_feedback(
 
 
 @router.get("/templates", response_model=list[GameStarterTemplatePublic])
-async def list_game_templates(
+def list_game_templates(
     for_save_kind: Optional[str] = Query(
         None,
-        description="Фильтр каталога: game | plan. Без параметра — только шаблоны Game.",
+        description="Фильтр каталога: game. Без параметра — только шаблоны Game.",
     ),
     db: Session = Depends(get_db),
 ):
@@ -96,7 +89,7 @@ async def list_game_templates(
 
 
 @router.get("/profiles", response_model=list[GameProfileResponse])
-async def list_game_profiles(
+def list_game_profiles(
     current_user=Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
@@ -104,7 +97,7 @@ async def list_game_profiles(
 
 
 @router.post("/profiles", response_model=GameProfileResponse)
-async def create_game_profile(
+def create_game_profile(
     payload: GameProfileCreate,
     current_user=Depends(get_current_user),
     db: Session = Depends(get_db),
@@ -113,7 +106,7 @@ async def create_game_profile(
 
 
 @router.patch("/profile/onboarding", response_model=OnboardingPatchResponse)
-async def patch_profile_onboarding(
+def patch_profile_onboarding(
     payload: OnboardingPatchRequest,
     current_user=Depends(get_current_user),
     db: Session = Depends(get_db),
@@ -122,7 +115,7 @@ async def patch_profile_onboarding(
 
 
 @router.get("/guidance", response_model=GuidanceOverview)
-async def get_game_guidance(
+def get_game_guidance(
     current_user=Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
@@ -130,7 +123,7 @@ async def get_game_guidance(
 
 
 @router.patch("/guidance", response_model=GuidancePatchResponse)
-async def patch_game_guidance(
+def patch_game_guidance(
     payload: GuidancePatchRequest,
     current_user=Depends(get_current_user),
     db: Session = Depends(get_db),
@@ -139,14 +132,14 @@ async def patch_game_guidance(
 
 
 @router.post("/guidance/replay")
-async def replay_game_guidance(
+def replay_game_guidance(
     current_user=Depends(get_current_user),
 ):
     raise HTTPException(status_code=501, detail="Guidance replay is not available in O2")
 
 
 @router.post("/profiles/{profile_id}/activate")
-async def activate_game_profile(
+def activate_game_profile(
     profile_id: int,
     current_user=Depends(get_current_user),
     db: Session = Depends(get_db),
@@ -155,7 +148,7 @@ async def activate_game_profile(
 
 
 @router.post("/start", response_model=GameStartResponse)
-async def start_new_game(
+def start_new_game(
     payload: GameStartRequest,
     current_user=Depends(get_current_user),
     db: Session = Depends(get_db),
@@ -163,42 +156,10 @@ async def start_new_game(
     return service_start_new_game(db, current_user.id, payload)
 
 
-@router.get("/time", response_model=TimeStatusResponse)
-async def get_time_status(
-    current_user=Depends(get_current_user),
-    db: Session = Depends(get_db),
-):
-    return service_get_time_status(db, current_user.id)
-
-
-@router.post("/time/play", response_model=TimeStatusResponse)
-async def set_play_mode(
-    current_user=Depends(get_current_user),
-    db: Session = Depends(get_db),
-):
-    return service_set_play_mode(db, current_user.id)
-
-
-@router.post("/time/pause", response_model=TimeStatusResponse)
-async def set_pause_mode(
-    current_user=Depends(get_current_user),
-    db: Session = Depends(get_db),
-):
-    return service_set_pause_mode(db, current_user.id)
-
-
 @router.post("/time/next", response_model=TimeStatusResponse)
-async def go_to_next_period(
+def go_to_next_period(
     current_user=Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
+    """«Завершить ход» (TB1). Real-time таймера нет: play/pause/config удалены."""
     return service_go_to_next_period(db, current_user.id)
-
-
-@router.put("/time/config", response_model=TimeStatusResponse)
-async def update_time_config(
-    payload: TimeConfigUpdate,
-    current_user=Depends(get_current_user),
-    db: Session = Depends(get_db),
-):
-    return service_update_time_config(db, current_user.id, payload)

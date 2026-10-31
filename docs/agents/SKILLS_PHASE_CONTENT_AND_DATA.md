@@ -1,9 +1,16 @@
+---
+tags:
+  - tvoy-hod/layer/agents
+aliases:
+  - "Фаза скиллов: контент, данные, согласованность механик"
+  - SKILLS_PHASE_CONTENT_AND_DATA
+---
 # Фаза скиллов: контент, данные, согласованность механик
 
 **Статус:** действует с 2026-05-29, пока приоритет — наполнение игры данными и фиксация концепции, а не «идеальный» инженерный контур.
 
-**Машиночитаемо:** поле `tier` в [`.cursor/skills/catalog.yaml`](../../.cursor/skills/catalog.yaml).  
-**Роутер:** [`.cursor/rules/tvoy-hod-router.mdc`](../../.cursor/rules/tvoy-hod-router.mdc) → блок «Фаза: контент и данные».
+**Машиночитаемо:** поле `tier` в [`.claude/skills/catalog.yaml`](../../.claude/skills/catalog.yaml).  
+**Роутер:** [`.claude/rules/router.md`](../../.claude/rules/router.md) → блок «Фаза: контент и данные».
 
 ---
 
@@ -22,13 +29,13 @@
 
 ## Модель уровней (`tier`)
 
-| `tier` | Смысл | Где лежит SKILL.md | Автоподключение Cursor |
+| `tier` | Смысл | Где лежит SKILL.md | Автоподключение Claude |
 |--------|--------|-------------------|-------------------------|
-| **core** | Primary почти всегда в этой фазе | `.cursor/skills/<name>/` | Да, по смыслу задачи |
+| **core** | Primary почти всегда в этой фазе | `.claude/skills/<name>/` | Да, по смыслу задачи |
 | **support** | Обязательный satellite, редко primary | корень | По паре с core |
-| **deferred** | Полезно позже или по явному запросу | корень | Нет (`status: optional`) |
+| **deferred** | Полезно позже или по явному запросу | корень | Нет для широких (`disable-model-invocation: true`), узкие — по description |
 | **meta** | Каталог, линт, layout | корень | Только `/skill-test`, настройка |
-| **archived** | Studio / GDD-наследие | `_archived/` | Нет (`disable-model-invocation`) |
+| **archived** | Studio / GDD-наследие | `_archived/` | Нет — Claude не обнаруживает `_archived/<name>/` |
 
 **Не делаем папку `_medium/`:** перенос = тот же overhead, что у `_archived/`, без выигрыша. `tier: deferred` + `status: optional` достаточно. Если скилл совсем не нужен год — `_archived/`.
 
@@ -80,6 +87,8 @@
 
 Канон событий: [ADR-008](../decisions/ADR-008-events-catalog-single-source.md), [EVENTS_AGENT.md](EVENTS_AGENT.md).
 
+**Release-ready (все product-скиллы):** [release-ready-quality.md](../../.claude/skills/_shared/release-ready-quality.md) · [clarify-first.md](../../.claude/skills/_shared/clarify-first.md) · [delivery-workflow.md](../../.claude/skills/_shared/delivery-workflow.md) · [visual-assets-policy.md](../../.claude/skills/_shared/visual-assets-policy.md) · [skill-responsibility-matrix.md](../../.claude/skills/_shared/skill-responsibility-matrix.md).
+
 ---
 
 ## Core / support / deferred (сводка)
@@ -99,7 +108,6 @@
 | incremental-implementation | Доставка срезами |
 | test-driven-development | RED-GREEN одного теста (satellite) |
 | critical-test-scenarios | Критичные сценарии, min gate G1–G4 |
-| using-agent-skills | Выбор скилла |
 
 ### `tier: support` (`status: active`)
 
@@ -112,13 +120,13 @@
 
 ### `tier: deferred` (`status: optional`)
 
-Вызывать явно: perf, security, release, TMA runtime, browser devtools, deprecation, social posts, code-simplification, context-engineering, project-cursor-skills-layout.
+Вызывать явно: release, TMA runtime, deprecation, social posts, project-skills-layout. Безопасность и упрощение кода — встроенные `/security-review`, `/simplify`; perf — архив `_archived/performance-optimization`.
 
 **Исключение:** `doubt-driven-development` — остаётся deferred по статусу, но **обязателен как satellite** для `game-economy-and-victory`, крупных изменений `period.py` / victory / seeds шаблонов.
 
 ### `tier: archived`
 
-`.cursor/skills/_archived/` — brainstorm, ux-design, design-system, … См. [CURSOR_SKILLS.md](CURSOR_SKILLS.md).
+`.claude/skills/_archived/` — brainstorm, ux-design, design-system, … См. [AGENT_SKILLS.md](AGENT_SKILLS.md).
 
 ---
 
@@ -135,7 +143,7 @@
 | spec-driven-development | documentation-and-adrs (если новый домен) |
 | incremental-implementation | test-driven-development, critical-test-scenarios |
 
-Subagents после крупного diff: **economy-reviewer**, **mqx-ui-reviewer** ([`catalog.yaml`](../../.cursor/skills/catalog.yaml) → `agents:`).
+Subagents после крупного diff: **economy-reviewer**, **mqx-ui-reviewer** ([`catalog.yaml`](../../.claude/skills/catalog.yaml) → `agents:`).
 
 ---
 
@@ -148,7 +156,7 @@ Subagents после крупного diff: **economy-reviewer**, **mqx-ui-revie
 - **documentation-and-adrs** (ADR при споре «кто владелец»),
 - **economy-reviewer** на PR.
 
-Если чеклист разрастётся — вынести в `.cursor/skills/mechanics-consistency/` с `tier: support`.
+Если чеклист разрастётся — вынести в `.claude/skills/mechanics-consistency/` с `tier: support`.
 
 ---
 
@@ -156,14 +164,12 @@ Subagents после крупного diff: **economy-reviewer**, **mqx-ui-revie
 
 | Скилл | Триггер |
 |-------|---------|
-| release-tma | Регулярные выкатки в prod |
-| browser-testing-with-devtools | Стабилизация TMA UX |
-| performance-optimization | Жалобы на LCP/рендер |
-| security-and-hardening | Внешний аудит / auth |
+| release-web | Регулярные выкатки в prod (PWA/web smoke) |
+| `/security-review` (встроенный) | Внешний аудит / auth |
 | planning-and-task-breakdown | Параллельная команда >1 dev |
 
-Процедура: поднять `tier` в `catalog.yaml`, обновить этот файл и `tvoy-hod-router.mdc`.
+Процедура: поднять `tier` в `catalog.yaml`, обновить этот файл и `.claude/rules/router.md`.
 
 ---
 
-*См. также: [SKILL_DOC_MAP.md](SKILL_DOC_MAP.md), [CURSOR_SKILLS.md](CURSOR_SKILLS.md).*
+*См. также: [SKILL_DOC_MAP.md](SKILL_DOC_MAP.md), [AGENT_SKILLS.md](AGENT_SKILLS.md).*

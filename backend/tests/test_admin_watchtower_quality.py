@@ -2,28 +2,10 @@
 
 from __future__ import annotations
 
-import pytest
-
 from app.admin.notify import _admin_link, emit_admin_alert
 from app.auth import get_password_hash
 from app.config import _resolve_admin_web_base_url
 from app.models import GameProfile, NotificationLog, User
-
-
-@pytest.fixture()
-def admin_env(test_user, monkeypatch):
-    monkeypatch.setenv("ADMIN_USER_IDS", str(test_user.id))
-    from app.config import config
-
-    config.ADMIN_USER_IDS = {test_user.id}
-    monkeypatch.delenv("OPS_TELEGRAM_BOT_TOKEN", raising=False)
-    monkeypatch.delenv("OPS_TELEGRAM_CHAT_ID", raising=False)
-    from app import config as config_module
-
-    config_module.config.OPS_TELEGRAM_BOT_TOKEN = ""
-    config_module.config.OPS_TELEGRAM_CHAT_ID = ""
-    config_module.config.OPS_TELEGRAM_MESSAGE_THREAD_ID = ""
-    yield test_user
 
 
 def test_emit_admin_alert_does_not_commit_parent_session_pending(db_session, monkeypatch):

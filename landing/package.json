@@ -4,10 +4,11 @@
   "version": "0.1.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
-    "build": "vite build",
+    "dev": "vite site --config vite.config.js",
+    "build": "node scripts/build-static.mjs",
     "preview": "vite preview",
-    "capture-screens": "node scripts/capture-screens.mjs"
+    "check:design-assets": "node ../scripts/design-assets.mjs --check",
+    "prebuild": "node ../scripts/design-assets.mjs --check"
   },
   "devDependencies": {
     "playwright": "^1.60.0",

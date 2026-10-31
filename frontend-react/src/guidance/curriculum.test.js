@@ -3,7 +3,12 @@ import test from 'node:test';
 import {
   areGameEventsUnlocked,
   isP1GuidanceComplete,
+  MIN_PERIOD_INDEX_FOR_GAME_EVENTS,
+  shouldBlockAutoEventsOverlay,
+  shouldDeferEventsAutoOpen,
+  shouldDeferGuidanceForPeriodCloseRitual,
   shouldDeferPeriodCloseDuringGuidance,
+  shouldForceCloseEventsOverlay,
 } from './curriculum.js';
 
 test('isP1GuidanceComplete when p1_close done', () => {
@@ -24,17 +29,188 @@ test('isP1GuidanceComplete when curriculum hidden', () => {
   assert.equal(isP1GuidanceComplete({ show_curriculum: false }), true);
 });
 
-test('areGameEventsUnlocked during P2 curriculum after P1', () => {
+test('areGameEventsUnlocked locked on turns 1-2 during curriculum', () => {
   assert.equal(
     areGameEventsUnlocked(
       { show_curriculum: true, completed_beats: ['p1_close'] },
       'started',
+      2,
+    ),
+    false,
+  );
+  assert.equal(
+    areGameEventsUnlocked(
+      { show_curriculum: true, beat_id: 'p2_new_month', completed_beats: ['p1_close'] },
+      'started',
+      2,
+    ),
+    false,
+  );
+});
+
+test('areGameEventsUnlocked on turn 3 after P1 spine', () => {
+  assert.equal(
+    areGameEventsUnlocked(
+      { show_curriculum: true, completed_beats: ['p1_close'] },
+      'started',
+      MIN_PERIOD_INDEX_FOR_GAME_EVENTS,
+    ),
+    true,
+  );
+});
+
+test('areGameEventsUnlocked locked during p1_close debrief even on turn 3', () => {
+  assert.equal(
+    areGameEventsUnlocked(
+      {
+        show_curriculum: true,
+        beat_id: 'p1_close',
+        show_debrief: true,
+        completed_beats: ['p1_period', 'p1_salary', 'p1_cushion'],
+      },
+      'started',
+      3,
+    ),
+    false,
+  );
+});
+
+test('areGameEventsUnlocked t_events_intro beat on turn 3', () => {
+  assert.equal(
+    areGameEventsUnlocked(
+      { show_curriculum: true, beat_id: 't_events_intro', completed_beats: ['p1_close', 'p2_new_month'] },
+      'started',
+      3,
+    ),
+    true,
+  );
+});
+
+test('areGameEventsUnlocked locked on period 1 until p1_close', () => {
+  assert.equal(
+    areGameEventsUnlocked(
+      { show_curriculum: true, completed_beats: ['p1_period', 'p1_salary', 'p1_cushion'] },
+      'started',
+      1,
+    ),
+    false,
+  );
+});
+
+test('shouldDeferGuidanceForPeriodCloseRitual while month stats sheet open', () => {
+  assert.equal(shouldDeferGuidanceForPeriodCloseRitual(true), true);
+  assert.equal(shouldDeferGuidanceForPeriodCloseRitual(false), false);
+});
+
+test('shouldDeferGuidanceForPeriodCloseRitual false during p1_close debrief', () => {
+  assert.equal(
+    shouldDeferGuidanceForPeriodCloseRitual(true, {
+      beat_id: 'p1_close',
+      show_debrief: true,
+    }),
+    false,
+  );
+});
+
+test('shouldDeferEventsAutoOpen until t_events_intro on turn 3+', () => {
+  assert.equal(
+    shouldDeferEventsAutoOpen(
+      { show_curriculum: true, beat_id: 't_events_intro', completed_beats: ['p1_close', 'p2_new_month'] },
+      3,
     ),
     true,
   );
   assert.equal(
-    areGameEventsUnlocked({ show_curriculum: true, completed_beats: ['p1_period'] }, 'started'),
+    shouldDeferEventsAutoOpen(
+      {
+        show_curriculum: true,
+        beat_id: 't_finance_actions',
+        completed_beats: ['p1_close', 'p2_new_month', 't_events_intro'],
+      },
+      3,
+    ),
     false,
+  );
+});
+
+test('shouldBlockAutoEventsOverlay during period close pipeline', () => {
+  assert.equal(
+    shouldBlockAutoEventsOverlay({
+      periodCloseOpen: false,
+      periodCloseSummary: { closed_period_index: 1 },
+      queuedPeriodClose: null,
+      guidance: null,
+    }),
+    true,
+  );
+  assert.equal(
+    shouldBlockAutoEventsOverlay({
+      periodCloseOpen: false,
+      periodCloseSummary: null,
+      queuedPeriodClose: null,
+      guidance: { beat_id: 'p1_close', show_debrief: true },
+    }),
+    true,
+  );
+  assert.equal(
+    shouldBlockAutoEventsOverlay({
+      periodCloseOpen: false,
+      periodCloseSummary: null,
+      queuedPeriodClose: null,
+      guidance: { beat_id: 'p2_new_month', show_debrief: false },
+      periodIndex: 2,
+    }),
+    false,
+  );
+  assert.equal(
+    shouldBlockAutoEventsOverlay({
+      periodCloseOpen: false,
+      periodCloseSummary: null,
+      queuedPeriodClose: null,
+      guidance: {
+        show_curriculum: true,
+        beat_id: 't_events_intro',
+        completed_beats: ['p1_close', 'p2_new_month'],
+      },
+      periodIndex: 3,
+    }),
+    true,
+  );
+});
+
+test('shouldForceCloseEventsOverlay: ручное открытие на t_events_intro не закрывается', () => {
+  // Регресс: шаг просит «открой События», а эффект закрывал карусель — шаг не пройти.
+  const introGuidance = {
+    show_curriculum: true,
+    beat_id: 't_events_intro',
+    completed_beats: ['p1_close', 'p2_new_month'],
+  };
+  assert.equal(
+    shouldForceCloseEventsOverlay({
+      periodCloseOpen: false,
+      periodCloseSummary: null,
+      queuedPeriodClose: null,
+      guidance: introGuidance,
+    }),
+    false,
+  );
+  assert.equal(
+    shouldForceCloseEventsOverlay({
+      periodCloseOpen: true,
+      periodCloseSummary: null,
+      queuedPeriodClose: null,
+      guidance: introGuidance,
+    }),
+    true,
+  );
+  assert.equal(
+    shouldForceCloseEventsOverlay({
+      periodCloseOpen: false,
+      periodCloseSummary: null,
+      queuedPeriodClose: null,
+      guidance: { beat_id: 'p1_close', show_debrief: true },
+    }),
+    true,
   );
 });
 

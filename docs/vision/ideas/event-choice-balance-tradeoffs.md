@@ -4,9 +4,14 @@ status: approved-direction
 last_reviewed: 2026-05-30
 idea_refine: true
 spec: ../../specs/features/SPEC_event-system-v2-slots-and-taxonomy.md
-skills: .cursor/skills/create-event/event-balance-rules.md
+skills: .claude/skills/create-event/event-balance-rules.md
+tags:
+  - tvoy-hod/layer/idea
+  - tvoy-hod/status/approved-direction
+aliases:
+  - "Баланс выборов в событиях — «нет бесплатных плюсов»"
+  - event-choice-balance-tradeoffs
 ---
-
 # Баланс выборов в событиях — «нет бесплатных плюсов»
 
 ## Problem Statement (HMW)
@@ -23,7 +28,7 @@ skills: .cursor/skills/create-event/event-balance-rules.md
 
 3. **Needs risk / просадка &lt; 33%:** событие — **риск или последствие**, не подарок. Платное смягчение допустимо; вариант «поднять needs без затрат» — **запрещён** (или только с сильным narrative-cost в brief).
 
-4. **Операционно:** чеклист в [`event-balance-rules.md`](../../../.cursor/skills/create-event/event-balance-rules.md) (§1–4 trade-off, §10 lifecycle, §11 оси needs, §12 MCE); аудит — `/event-analysis` + `/balance-playtest` после массовых правок.
+4. **Операционно:** чеклист в [`event-balance-rules.md`](../../../.claude/skills/create-event/event-balance-rules.md) (§1–4 trade-off, §10 lifecycle, §11 оси needs, §12 MCE); аудит — `/event-analysis` + `/balance-playtest` после массовых правок.
 
 5. **Повтор и «лестница»:** не бесконечный downgrade/переезд — [`event-repeat-and-state-ladder.md`](event-repeat-and-state-ladder.md).
 
@@ -68,7 +73,7 @@ skills: .cursor/skills/create-event/event-balance-rules.md
 
 | Документ | Роль |
 |----------|------|
-| [`event-balance-rules.md`](../../.cursor/skills/create-event/event-balance-rules.md) | чеклист агента §1–12 |
+| [`event-balance-rules.md`](../../.claude/skills/create-event/event-balance-rules.md) | чеклист агента §1–12 |
 | [`EVENT_BRIEF.md`](../../templates/EVENT_BRIEF.md) | lifecycle_class → YAML |
 | [`EVENTS_AGENT.md`](../../agents/EVENTS_AGENT.md) | конвейер create / analysis |
 | [`SPEC_event-system-v2-slots-and-taxonomy.md`](../../specs/features/SPEC_event-system-v2-slots-and-taxonomy.md) | § Balance |

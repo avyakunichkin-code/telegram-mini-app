@@ -4,8 +4,16 @@ status: approved
 owner: product
 last_reviewed: 2026-05-22
 tracks: events, gameplay, content-pipeline
+tags:
+  - tvoy-hod/layer/idea
+  - tvoy-hod/status/approved
+  - tvoy-hod/topic/content-pipeline
+  - tvoy-hod/topic/events
+  - tvoy-hod/topic/gameplay
+aliases:
+  - "Вовлечённость событий: анти-усталость"
+  - event-engagement-anti-fatigue
 ---
-
 # Вовлечённость событий: анти-усталость
 
 ## Problem Statement
@@ -59,7 +67,7 @@ tracks: events, gameplay, content-pipeline
 | 1 | Скопировать **шаблон spec** из `events/mvp11_seeds.py` (key, tier, domain, 2–3 choices, effects). |
 | 2 | Новый **уникальный `key`** (`mq11_streaming_offer_b` — новый текст, те же effect-типы). |
 | 3 | Строка в **`EVENT_TAXONOMY`** с тем же `event_domain`, при необходимости другой `event_tier`. |
-| 4 | `cooldown_periods` ≥ 2 для repeatable **consumption (класс D)**; **жильё/downgrade (класс B)** — ≥ 12, см. [`event-balance-rules.md`](../../.cursor/skills/create-event/event-balance-rules.md) §10 |
+| 4 | `cooldown_periods` ≥ 2 для repeatable **consumption (класс D)**; **жильё/downgrade (класс B)** — ≥ 12, см. [`event-balance-rules.md`](../../.claude/skills/create-event/event-balance-rules.md) §10 |
 | 5 | Идемпотентный сид + при необходимости SQL-миграция для prod БД. |
 | 6 | Строка в матрице XP / Q&A doc при нетривиальном балансе. |
 

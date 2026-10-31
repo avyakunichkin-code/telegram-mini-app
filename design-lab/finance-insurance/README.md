@@ -36,6 +36,6 @@ npx serve .
 
 ## После выбора
 
-Напишите в чате: **«утверждаем B»** (или A/C/D) → перенос в `frontend-react/src/components/mqx/` (`InsuranceProductForm`, карточка полиса, токены в `index.css`), замена блока в `FinanceSection` / capital layout.
+Напишите в чате: **«утверждаем B»** (или A/C/D) → перенос в `frontend-react/src/components/mqx/` (`InsuranceProductForm`, карточка полиса, токены в `index.css`), замена блока в `FinancePremium` / `InsuranceSection`.
 
 **Prod (MQX):** `InsuranceSection`, `InsuranceProductPicker`, `InsurancePlanCard`, `InsurancePolicyRow`, `Insurance*Metrics`, `IconMetricTerm`. Каталог: `#/dev/mqx`. Тарифы: `constants/insuranceProducts.js` + `GET /api/insurance/catalog`.

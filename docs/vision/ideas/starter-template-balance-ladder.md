@@ -1,3 +1,10 @@
+---
+tags:
+  - tvoy-hod/layer/idea
+aliases:
+  - "Лестница баланса Game-шаблонов (4 ранга)"
+  - starter-template-balance-ladder
+---
 # Лестница баланса Game-шаблонов (4 ранга)
 
 **Статус:** актуально после выноса жилья из burn (май 2026).  

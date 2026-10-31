@@ -3,8 +3,13 @@ layer: handbook
 status: active
 last_reviewed: 2026-05-30
 audience: product, game-design, partners
+tags:
+  - tvoy-hod/layer/handbook
+  - tvoy-hod/status/active
+aliases:
+  - "Экономика — обзор (публичный)"
+  - ECONOMY_OVERVIEW
 ---
-
 # Экономика — обзор (публичный)
 
 Концептуальное описание **без tuning-констант**. Формулы, дефолты шаблонов и пороги diff — только в [`internal/ECONOMY_TUNING.md`](internal/ECONOMY_TUNING.md) (команда).

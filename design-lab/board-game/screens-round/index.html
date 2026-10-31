@@ -1,0 +1,306 @@
+<!doctype html>
+<html lang="ru" data-font="f3">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>ТВОЙ ХОД — настольная игра: остальные экраны</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700&family=Nunito:wght@800;900&display=swap" />
+    <link rel="stylesheet" href="./lab-base.css" />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <header class="lab-head">
+      <h1>Настольная игра про деньги: остальные экраны</h1>
+      <p>Раунд 4. Стиль ★ BG-1 с дашборда — на всех остальных экранах. Одна партия везде: Студент, 12-й ход, на счёте 87 400 ₽, подушка 45 000 ₽, вклад и облигации, потребкредит. Правила те же: фиолетовый — то, что игрок делает; золото — деньги и награды; изумруд — плюс; красный — только риск. Объём — только у нажимаемого.</p>
+      <div class="lab-controls">
+        <span>Тема</span>
+        <button class="lab-toggle" type="button" data-set-theme="light" aria-pressed="true">Светлая</button>
+        <button class="lab-toggle" type="button" data-set-theme="dark" aria-pressed="false">Тёмная</button>
+      </div>
+    </header>
+
+    <!-- ===================== Внутри партии ===================== -->
+    <div class="s-group">
+      <h2>Внутри партии</h2>
+      <p>Вкладки «Капитал», «Аналитика», «Меню» и событие. Таббар — светлый в обеих темах через токены, активная вкладка — фиолетовая фишка.</p>
+    </div>
+    <main class="lab-grid s-grid">
+      <!-- Капитал · Детали -->
+      <section class="variant" aria-labelledby="s1">
+        <header>
+          <h2 id="s1">Капитал · Детали</h2>
+          <p>Имущество — как карточки собственности: цветная полоса говорит, что это. Красная полоса только у долгов. Под потоками — итог хода.</p>
+        </header>
+        <div class="phone s-phone">
+          <div class="s-head"><div><h3>Капитал</h3><small>Что приносит и забирает деньги</small></div><span class="turn-token" aria-label="Ход 12">12</span></div>
+          <div class="s-flows">
+            <div class="s-flow"><small>Доходы за ход</small><b class="bg-money bg-gain">+65 400 ₽</b></div>
+            <div class="s-flow"><small>Расходы за ход</small><b class="bg-money">−46 500 ₽</b></div>
+            <div class="s-net s-net--gain"><span>Остаётся после хода</span><b class="bg-money">+18 900 ₽</b></div>
+          </div>
+          <div class="s-seg" role="tablist" aria-label="Раздел капитала"><button class="on" type="button" role="tab" aria-selected="true">Детали</button><button type="button" role="tab" aria-selected="false">Действия</button></div>
+          <div class="s-lot s-lot--invest">
+            <div class="s-lot__band"></div>
+            <div class="s-lot__head"><b>Вложения</b><small>2 · 170 000 ₽</small></div>
+            <div class="s-row"><span>Вклад «Надёжный»</span><b class="s-row__val bg-money">120 000 ₽</b><small>+2 400 ₽ за ход · 2% за ход</small><button class="s-row__act" type="button">Закрыть</button></div>
+            <div class="s-row"><span>Облигации ОФЗ</span><b class="s-row__val bg-money">50 000 ₽</b><small>+500 ₽ за ход · купон</small><button class="s-row__act" type="button">Продать</button></div>
+          </div>
+          <div class="s-lot s-lot--debt">
+            <div class="s-lot__band"></div>
+            <div class="s-lot__head"><b>Долги</b><small>1 · 180 000 ₽</small></div>
+            <div class="s-row"><span>Потребкредит</span><b class="s-row__val bg-money">180 000 ₽</b><small>−9 000 ₽ за ход · ещё 20 ходов</small><button class="s-row__act" type="button">Погасить</button></div>
+          </div>
+          <div class="s-lot s-lot--property">
+            <div class="s-lot__band"></div>
+            <div class="s-lot__head"><b>Имущество</b><small>пусто</small></div>
+            <div class="s-empty">Пока ничего нет. Купить квартиру или авто — во вкладке «Действия».</div>
+          </div>
+          <nav class="s-tabbar" aria-label="Разделы"><button class="s-tab" type="button"><i></i>Главная</button><button class="s-tab s-tab--on" type="button" aria-current="page"><i></i>Капитал</button><button class="s-tab" type="button"><i></i>Аналитика</button><button class="s-tab" type="button"><i></i>Меню</button></nav>
+        </div>
+      </section>
+
+      <!-- Капитал · Действия -->
+      <section class="variant" aria-labelledby="s2">
+        <header>
+          <h2 id="s2">Капитал · Действия</h2>
+          <p>Что можно купить или открыть — фишки по 3 в ряд. Закрытые механики не прячем: пунктир и «откроется по цели» показывают, куда игра ведёт.</p>
+        </header>
+        <div class="phone s-phone">
+          <div class="s-head"><div><h3>Капитал</h3><small>Что приносит и забирает деньги</small></div><span class="turn-token" aria-label="Ход 12">12</span></div>
+          <div class="s-flows">
+            <div class="s-flow"><small>Доходы за ход</small><b class="bg-money bg-gain">+65 400 ₽</b></div>
+            <div class="s-flow"><small>Расходы за ход</small><b class="bg-money">−46 500 ₽</b></div>
+          </div>
+          <div class="s-seg" role="tablist" aria-label="Раздел капитала"><button type="button" role="tab" aria-selected="false">Детали</button><button class="on" type="button" role="tab" aria-selected="true">Действия</button></div>
+          <div class="sec">
+            <div class="sec__title"><b>Вложить</b><small>доход каждый ход</small></div>
+            <div class="s-pieces">
+              <button class="s-piece" type="button"><span class="s-piece__ico">%</span>Вклад<small>от 1 000 ₽</small></button>
+              <button class="s-piece" type="button"><span class="s-piece__ico">₽</span>Облигации<small>от 1 000 ₽</small></button>
+              <button class="s-piece s-piece--ins" type="button"><span class="s-piece__ico">✓</span>Страховка<small>защита от событий</small></button>
+            </div>
+          </div>
+          <div class="sec">
+            <div class="sec__title"><b>Купить</b><small>доход или удобство</small></div>
+            <div class="s-pieces">
+              <button class="s-piece s-piece--prop s-piece--locked" type="button" disabled><span class="s-piece__ico">⌂</span>Квартира<small>откроется по цели</small></button>
+              <button class="s-piece s-piece--prop s-piece--locked" type="button" disabled><span class="s-piece__ico">◐</span>Авто<small>откроется по цели</small></button>
+            </div>
+          </div>
+          <div class="sec">
+            <div class="sec__title"><b>Занять</b><small>деньги сейчас, платёж каждый ход</small></div>
+            <div class="s-pieces">
+              <button class="s-piece s-piece--debt" type="button"><span class="s-piece__ico">−</span>Кредит<small>до 300 000 ₽</small></button>
+              <button class="s-piece s-piece--debt s-piece--locked" type="button" disabled><span class="s-piece__ico">⌂</span>Ипотека<small>откроется по цели</small></button>
+            </div>
+          </div>
+          <nav class="s-tabbar" aria-label="Разделы"><button class="s-tab" type="button"><i></i>Главная</button><button class="s-tab s-tab--on" type="button" aria-current="page"><i></i>Капитал</button><button class="s-tab" type="button"><i></i>Аналитика</button><button class="s-tab" type="button"><i></i>Меню</button></nav>
+        </div>
+      </section>
+
+      <!-- Аналитика -->
+      <section class="variant" aria-labelledby="s3">
+        <header>
+          <h2 id="s3">Аналитика</h2>
+          <p>Сначала вывод (состояние с полосой риска), потом из чего он: куда уходит доход, три показателя устойчивости, история и прогноз. Совет — одной строкой от Монетки.</p>
+        </header>
+        <div class="phone s-phone">
+          <div class="s-head"><div><h3>Аналитика</h3><small>Как ты стоишь на 12-м ходу</small></div><span class="turn-token" aria-label="Ход 12">12</span></div>
+          <div class="s-state">
+            <div class="s-state__top"><small>Счёт и подушка</small><span class="s-state__pill">Подушка тонкая</span></div>
+            <b class="bg-money">132 400 ₽</b>
+            <small>Подушки хватит на 1 ход расходов. Ориентир — 3 хода.</small>
+          </div>
+          <div class="sec">
+            <div class="sec__title"><b>Куда уходит доход</b><small>65 400 ₽ за ход</small></div>
+            <div class="s-stack" role="img" aria-label="Жизнь 57%, кредит 14%, остаётся 29%"><i style="width:57%;background:var(--ink-soft)"></i><i style="width:14%;background:var(--risk)"></i><i style="width:29%;background:var(--gain)"></i></div>
+            <div class="s-legend">
+              <div><i style="background:var(--ink-soft)"></i><span>Расходы на жизнь</span><b class="bg-money">−37 500 ₽</b></div>
+              <div><i style="background:var(--risk)"></i><span>Платёж по кредиту</span><b class="bg-money">−9 000 ₽</b></div>
+              <div><i style="background:var(--gain)"></i><span>Остаётся тебе</span><b class="bg-money bg-gain">+18 900 ₽</b></div>
+            </div>
+          </div>
+          <div class="s-metrics">
+            <div class="s-metric s-metric--risk"><b>1,0</b><small>подушка, ходов расходов</small></div>
+            <div class="s-metric"><b>1,9</b><small>хода продержится счёт</small></div>
+            <div class="s-metric"><b>14%</b><small>дохода на долги</small></div>
+          </div>
+          <div class="s-chart">
+            <div class="sec__title"><b>Счёт + подушка</b><small>история и прогноз на 3 хода</small></div>
+            <svg viewBox="0 0 300 110" role="img" aria-label="Растёт с 15 000 до 132 400 рублей за 12 ходов, прогноз 189 000 через 3 хода">
+              <line x1="0" y1="100" x2="300" y2="100" stroke="var(--edge-cell)" stroke-width="1.5" />
+              <line x1="0" y1="55" x2="300" y2="55" stroke="var(--edge-cell)" stroke-width="1" stroke-dasharray="2 4" />
+              <polyline fill="none" stroke="var(--turn)" stroke-width="3" stroke-linejoin="round" stroke-linecap="round" points="6,96 24,92 42,90 60,84 78,86 96,78 114,72 132,70 150,62 168,58 186,52 222,46" />
+              <polyline fill="none" stroke="var(--coin-rim)" stroke-width="3" stroke-dasharray="6 5" stroke-linecap="round" points="222,46 246,38 270,30 294,22" />
+              <line x1="222" y1="12" x2="222" y2="100" stroke="var(--ink-soft)" stroke-width="1" stroke-dasharray="3 3" />
+              <circle cx="222" cy="46" r="5" fill="var(--turn)" stroke="var(--bg-cell)" stroke-width="2" />
+              <text x="216" y="10" text-anchor="end" font-size="10" fill="var(--ink-soft)">сейчас</text>
+              <text x="294" y="14" text-anchor="end" font-size="10" fill="var(--coin-ink)">≈189 000</text>
+            </svg>
+            <div class="s-chart__legend"><span>было</span><span class="fc">если ничего не менять</span></div>
+          </div>
+          <div class="h-tip-row h-tip-row--one"><img class="h-mascot-inline" src="./assets/monetka-mascot.png" alt="Монетка" /><span>Следующий шаг цели — подушка на 2 хода</span></div>
+          <nav class="s-tabbar" aria-label="Разделы"><button class="s-tab" type="button"><i></i>Главная</button><button class="s-tab" type="button"><i></i>Капитал</button><button class="s-tab s-tab--on" type="button" aria-current="page"><i></i>Аналитика</button><button class="s-tab" type="button"><i></i>Меню</button></nav>
+        </div>
+      </section>
+
+      <!-- Меню -->
+      <section class="variant" aria-labelledby="s4">
+        <header>
+          <h2 id="s4">Меню</h2>
+          <p>Игра на паузе — карта текущего сохранения с главным действием «Продолжить». Остальное — спокойные кнопки. Без служебных текстов вроде «в том же каркасе».</p>
+        </header>
+        <div class="phone s-phone">
+          <div class="s-head"><div><h3>Меню</h3><small>Игра на паузе</small></div></div>
+          <div class="s-pause">
+            <div class="s-pause__save"><img src="./assets/student.png" alt="" /><div><b>Студент</b><small>Ход 12 · на счёте 87 400 ₽</small><small>Цель: шаг 4 из 5</small></div></div>
+            <button class="bg-action" type="button">Продолжить игру</button>
+          </div>
+          <div class="sec">
+            <button class="s-btn" type="button">Новая игра <small>другая жизнь</small></button>
+            <button class="s-btn" type="button">Все сохранения <small>3 партии</small></button>
+          </div>
+          <button class="s-link" type="button">Выйти из аккаунта</button>
+          <nav class="s-tabbar" aria-label="Разделы"><button class="s-tab" type="button"><i></i>Главная</button><button class="s-tab" type="button"><i></i>Капитал</button><button class="s-tab" type="button"><i></i>Аналитика</button><button class="s-tab s-tab--on" type="button" aria-current="page"><i></i>Меню</button></nav>
+        </div>
+      </section>
+
+      <!-- Событие -->
+      <section class="variant" aria-labelledby="s5">
+        <header>
+          <h2 id="s5">Событие</h2>
+          <p>Событие — карта, вытянутая из колоды «2 события» с дашборда. Канон L3 сохранён: полоса домена, заголовок, пузырь Монетки, выборы с последствиями. Последствия — чипами: деньги, потребности. Без XP.</p>
+        </header>
+        <div class="phone s-phone s-phone--bare">
+          <article class="b-card h-card" aria-hidden="true">
+            <div class="b-card__top"><div><small>Студент</small><b>Твой ход</b></div><div class="b-corner">12<small>ход</small></div></div>
+            <button class="bg-action" type="button" tabindex="-1">Завершить ход</button>
+          </article>
+          <div class="needs" aria-hidden="true">
+            <div class="need"><span>Комфорт<b>64</b></span><span class="bar"><i style="width:64%"></i></span></div>
+            <div class="need"><span>Статус<b>52</b></span><span class="bar"><i style="width:52%"></i></span></div>
+          </div>
+          <div class="s-dim"></div>
+          <div class="s-sheet" role="dialog" aria-modal="true" aria-labelledby="ev-title">
+            <div class="s-deckline"><span class="b-deck__cards" aria-hidden="true"><span></span><span></span></span>Событие 1 из 2</div>
+            <article class="s-event">
+              <div class="s-event__band"><span>Техника</span><span>Непредвиденное</span><button class="x" type="button" aria-label="Закрыть">×</button></div>
+              <div class="s-event__body">
+                <h4 id="ev-title">Сломался ноутбук</h4>
+                <div class="tip"><img src="./assets/monetka-mascot.png" alt="Монетка" /><p>Без ноутбука учёба встанет. Посмотри, что выдержит подушка.</p></div>
+                <button class="s-choice s-choice--best" type="button">Починить в сервисе<span class="s-impacts"><span class="risk bg-money">−12 000 ₽</span></span></button>
+                <button class="s-choice" type="button">Купить новый в кредит<span class="s-impacts"><span class="risk bg-money">−3 000 ₽ × 6 ходов</span><span class="gain">Статус +5</span></span></button>
+                <button class="s-choice" type="button">Пока обойтись без него<span class="s-impacts"><span>Комфорт −8</span><span>Связи −3</span></span></button>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- ===================== До и после партии ===================== -->
+    <div class="s-group">
+      <h2>До и после партии</h2>
+      <p>Вход, выбор жизни и финал. Без таббара. Шаг «Игра / План» убран: по ADR-013 режима План нет, «Новая игра» сразу ведёт к выбору жизни.</p>
+    </div>
+    <main class="lab-grid s-grid">
+      <!-- Вход -->
+      <section class="variant" aria-labelledby="s6">
+        <header>
+          <h2 id="s6">Вход</h2>
+          <p>Логотип — главный объект, форма — спокойная карточка. Одна главная кнопка.</p>
+        </header>
+        <div class="phone s-phone s-phone--bare">
+          <img class="s-logo" src="./assets/logo-full.png" alt="Твой ход — финансы как игра" />
+          <form class="s-form" onsubmit="event.preventDefault()">
+            <label for="em">Почта<input id="em" type="email" autocomplete="email" value="student@example.com" /></label>
+            <label for="pw">Пароль<input id="pw" type="password" autocomplete="current-password" value="••••••••" /></label>
+            <button class="bg-action" type="submit">Войти</button>
+          </form>
+          <button class="s-btn" type="button">Создать аккаунт <small>займёт минуту</small></button>
+        </div>
+      </section>
+
+      <!-- Выбор жизни -->
+      <section class="variant" aria-labelledby="s7">
+        <header>
+          <h2 id="s7">Выбор жизни</h2>
+          <p>Карточки персонажей, как выбор фишки перед партией. Выбранная — фиолетовая рамка; кнопка внизу называет действие.</p>
+        </header>
+        <div class="phone s-phone s-phone--bare">
+          <div class="s-head"><div><h3>Выбери жизнь</h3><small>У каждой свой старт и своя цель</small></div></div>
+          <div class="s-life" role="radiogroup" aria-label="Персонаж">
+            <button class="s-person s-person--on" type="button" role="radio" aria-checked="true"><img src="./assets/student-mascot-pick.png" alt="" /><span><b>Студент</b><span class="s-person__money">~62 500 ₽ за ход</span><small>Без долгов на старте</small></span><span class="s-person__check"></span></button>
+            <button class="s-person" type="button" role="radio" aria-checked="false"><img src="./assets/professional-mascot-pick.png" alt="" /><span><b>Профессионал</b><span class="s-person__money">~100 000 ₽ за ход</span><small>Авто и кредит</small></span><span class="s-person__check"></span></button>
+            <button class="s-person" type="button" role="radio" aria-checked="false"><img src="./assets/manager-mascot-pick.png" alt="" /><span><b>Руководитель</b><span class="s-person__money">~46 500 ₽ за ход</span><small>Ипотека и авто</small></span><span class="s-person__check"></span></button>
+            <button class="s-person" type="button" role="radio" aria-checked="false"><img src="./assets/entrepreneur-mascot-pick.png" alt="" /><span><b>Предприниматель</b><span class="s-person__money">~43 500 ₽ за ход</span><small>Ипотека и кредитная карта</small></span><span class="s-person__check"></span></button>
+          </div>
+          <button class="bg-action" type="button">Начать за Студента</button>
+        </div>
+      </section>
+
+      <!-- Финал: победа -->
+      <section class="variant" aria-labelledby="s8">
+        <header>
+          <h2 id="s8">Финал · Победа</h2>
+          <p>Финиш дорожки цели — золотая клетка с персонажем. Партия не заканчивается: главная кнопка — «Играть дальше».</p>
+        </header>
+        <div class="phone s-phone s-phone--bare">
+          <div class="s-finish">
+            <div class="s-finish__cell"><img src="./assets/student-mascot-cup-dash.png" alt="" /></div>
+            <h4>Цель пройдена!</h4>
+            <p>Студент собрал подушку и доход с вложений за 38 ходов.</p>
+            <div class="s-finish__stats">
+              <div><b>38</b><small>ходов</small></div>
+              <div><b class="bg-money">412 000 ₽</b><small>на счёте</small></div>
+              <div><b>6,1</b><small>ходов подушки</small></div>
+            </div>
+            <button class="bg-action" type="button">Играть дальше</button>
+            <button class="s-btn" type="button">Новая игра <small>другая жизнь</small></button>
+            <textarea class="s-feedback" aria-label="Отзыв о партии" placeholder="Как прошла партия? Это увидят разработчики"></textarea>
+            <button class="s-link" type="button">Отправить отзыв</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Финал: поражение -->
+      <section class="variant" aria-labelledby="s9">
+        <header>
+          <h2 id="s9">Финал · Поражение</h2>
+          <p>Спокойно и по делу: что случилось (красным — только факт риска), два совета на следующую партию, отзыв. Партия уходит в архив.</p>
+        </header>
+        <div class="phone s-phone s-phone--bare">
+          <div class="s-finish">
+            <div class="s-finish__cell" style="background:var(--bg-cell);border-color:var(--edge-cell);box-shadow:0 5px 0 var(--edge-cell)"><img src="./assets/student-mascot-pick.png" alt="" /></div>
+            <h4>Партия окончена</h4>
+            <p>Она уйдёт в архив сохранений. Следующая пойдёт лучше.</p>
+            <div class="s-fact"><b>Три хода подряд счёт был в минусе.</b> После последнего хода: −8 200 ₽.</div>
+            <ul class="s-tips">
+              <li>Забирай зарплату до «Завершить ход» — без кнопки её не будет.</li>
+              <li>Держи подушку хотя бы на 2 хода расходов.</li>
+            </ul>
+            <button class="bg-action" type="button">Новая игра</button>
+            <button class="s-btn" type="button">К сохранениям <small>3 партии</small></button>
+            <textarea class="s-feedback" aria-label="Отзыв о партии" placeholder="Что было непонятно? Это увидят разработчики"></textarea>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <script>
+      (function () {
+        var root = document.documentElement;
+        document.addEventListener('click', function (e) {
+          var t = e.target.closest('[data-set-theme]');
+          if (!t) return;
+          root.setAttribute('data-theme', t.dataset.setTheme);
+          document.querySelectorAll('[data-set-theme]').forEach(function (b) {
+            b.setAttribute('aria-pressed', String(b === t));
+          });
+        });
+      })();
+    </script>
+  </body>
+</html>

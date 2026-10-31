@@ -1,3 +1,12 @@
+---
+tags:
+  - tvoy-hod/layer/spec
+aliases:
+  - "SPEC victory v2"
+  - SPEC_victory-v2
+  - "Spec: Victory v2 — M из N по шаблону"
+  - "Victory v2 — M из N по шаблону"
+---
 ﻿---
 layer: spec
 status: approved
@@ -44,7 +53,6 @@ supersedes_goal_types: character_level (removed 2026-05-24, migration 0031)
 ```json
 {
   "schema_version": 1,
-  "min_period_index_for_victory": 7,
   "required_goals_met": 3,
   "goals": [
     {
@@ -62,7 +70,7 @@ supersedes_goal_types: character_level (removed 2026-05-24, migration 0031)
 | Поле | Тип | Описание |
 |------|-----|----------|
 | `schema_version` | int | Сейчас только `1` |
-| `min_period_index_for_victory` | int | Победа недоступна при `period_index` ниже (дефолт **7**) |
+| `min_period_index_for_victory` | int | Устаревшее поле: игнорируется движком (миграция 0042); ограничение по номеру периода снято |
 | `required_goals_met` | int | **M** в режиме **`parallel`**; в **`chain`** не ограничивает победу (нужны все шаги цепочки) |
 | `progression_mode` | string | `chain` (prod tutorial) или `parallel` (legacy M из N) |
 | `goals[]` | array | Список целей |
@@ -97,14 +105,14 @@ supersedes_goal_types: character_level (removed 2026-05-24, migration 0031)
 
 ## Логика победы
 
-**Ворота периода (оба режима):** `period_gate_open = period_index >= min_period_index_for_victory`.
+**Оба режима:** ограничение по номеру периода снято. Поля ответа для совместимости: `period_gate_open = true`, `min_period_index = 1`. Победа определяется целями шаблона.
 
 ### `progression_mode: parallel` (legacy)
 
 ```
 enabled_goals = [g for g in goals if g.enabled]
 met_count = count(g.met for g in enabled_goals)
-win_reached = period_gate_open AND met_count >= required_goals_met
+win_reached = met_count >= required_goals_met AND enabled_goals is not empty
 ```
 
 ### `progression_mode: chain` (prod, tutorial)
@@ -112,7 +120,7 @@ win_reached = period_gate_open AND met_count >= required_goals_met
 Цели обрабатываются **по порядку** в `goals[]`: шаг *i* может стать `met` только если шаг *i−1* уже `met`. Победа:
 
 ```
-win_reached = period_gate_open AND all(enabled goals in chain are met)
+win_reached = all(enabled goals in chain are met) AND enabled_goals is not empty
 ```
 
 `required_goals_met` в chain-режиме **игнорируется** для `win_reached` (в сидах обычно = длине цепочки для ясности).
@@ -139,7 +147,7 @@ win_reached = period_gate_open AND all(enabled goals in chain are met)
 ### `mq_game_basic_v1` — tutorial chain (5 шагов)
 
 1. `tutorial_salary` → 2. `tutorial_cushion` → 3. `tutorial_invest` → 4. `safety_3x` → 5. `invest_income_15k`  
-`progression_mode: chain`, `min_period_index_for_victory: 7`
+`progression_mode: chain`; ограничения по номеру периода нет.
 
 ### `mq_game_tight_budget_v1`, `mq_game_mortgage_stress_v1`
 
@@ -202,7 +210,7 @@ win_reached = period_gate_open AND all(enabled goals in chain are met)
 
 - UI экрана победы / тоста (отдельная задача).
 - Учёт `goals[].required` в логике.
-- Победа в Plan Mode (`save_kind=plan`).
+- Победа в ~~Plan Mode~~ — режима нет (ADR-013).
 - Достижения как цели победы.
 
 ---
@@ -225,4 +233,4 @@ win_reached = period_gate_open AND all(enabled goals in chain are met)
 
 - [evolution §II.3](../../vision/ideas/tvoy-hod-evolution-after-mvp.md)
 - [SPEC_game-plan](SPEC_game-plan.md) — задел `victory_config_json`
-- [GAME.md](../../../GAME.md) § победа
+- [GAME.md](../../handbook/GAME.md) § победа

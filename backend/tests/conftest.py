@@ -13,7 +13,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
 os.environ["DATABASE_URL"] = "sqlite:///:memory:"
-os.environ.setdefault("SECRET_KEY", "test-secret-key")
+os.environ.setdefault("SECRET_KEY", "test-secret-key-for-pytest-only-32b+")
 
 import app.models  # noqa: F401
 
@@ -71,17 +71,16 @@ def auth_headers(test_user):
 
 @pytest.fixture()
 def admin_env(test_user, monkeypatch):
-    monkeypatch.setenv("ADMIN_USER_IDS", str(test_user.id))
+    """Админ-allowlist + выключенный Telegram; monkeypatch откатывает config после теста."""
     from app.config import config
 
-    config.ADMIN_USER_IDS = {test_user.id}
+    monkeypatch.setenv("ADMIN_USER_IDS", str(test_user.id))
     monkeypatch.delenv("OPS_TELEGRAM_BOT_TOKEN", raising=False)
     monkeypatch.delenv("OPS_TELEGRAM_CHAT_ID", raising=False)
-    from app import config as config_module
-
-    config_module.config.OPS_TELEGRAM_BOT_TOKEN = ""
-    config_module.config.OPS_TELEGRAM_CHAT_ID = ""
-    config_module.config.OPS_TELEGRAM_MESSAGE_THREAD_ID = ""
+    monkeypatch.setattr(config, "ADMIN_USER_IDS", {test_user.id})
+    monkeypatch.setattr(config, "OPS_TELEGRAM_BOT_TOKEN", "")
+    monkeypatch.setattr(config, "OPS_TELEGRAM_CHAT_ID", "")
+    monkeypatch.setattr(config, "OPS_TELEGRAM_MESSAGE_THREAD_ID", "")
     yield test_user
 
 
@@ -108,6 +107,7 @@ def seed_basic_template(db_session):
             sort_order=10,
         )
     )
+    # Historical row: game-only API must hide/reject templates left by removed Plan.
     db_session.add(
         GameStarterTemplate(
             template_key="mq_plan_basic_v1",
@@ -147,6 +147,11 @@ def client(db_session, test_user, seed_basic_template):
 
     app.dependency_overrides[get_db] = override_get_db
     app.dependency_overrides[get_current_user] = override_get_current_user
-    with TestClient(app) as test_client:
+    # Не входить в context manager: `with TestClient` гоняет FastAPI startup
+    # (prepare_schema + seed_all) на глобальном engine, а не на db_engine теста.
+    # Схема тестов уже создаётся через db_engine + Base.metadata.create_all.
+    test_client = TestClient(app)
+    try:
         yield test_client
-    app.dependency_overrides.clear()
+    finally:
+        app.dependency_overrides.clear()

@@ -6,6 +6,8 @@ Policies:
   tutorial      — salary -> events (max affordable cash_delta) -> safety 5k (1x) -> deposit 10k (1x)
   safety_first  — same events; prioritize safety fund until baseline target
   passive       — salary -> events (min affordable cash_delta); no proactive safety/invest
+  chain_runner  — events/treat-self как needs_keeper + исполняет текущий шаг victory chain
+                  (подушка до цели, облигации под пассивный доход, полис); проверка победимости
 
 See docs/decisions/ADR-009-metrics-dictionary-tb1.md, docs/balance/README.md
 
@@ -29,7 +31,14 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Literal
 
-PolicyName = Literal["tutorial", "safety_first", "passive"]
+PolicyName = Literal["tutorial", "safety_first", "passive", "idle", "needs_keeper", "restructure", "chain_runner"]
+POLICY_CHOICES = ("tutorial", "safety_first", "passive", "idle", "needs_keeper", "restructure", "chain_runner")
+# Политики, которые выбирают события ради потребностей (инварианты победимости — docs/balance/THRESHOLDS.md).
+NEEDS_AWARE_POLICIES = frozenset({"needs_keeper", "restructure", "chain_runner"})
+# Ставка облигации из app/finance/invest_products.py: дешевле неё долг выгоднее не гасить, а вкладывать.
+CHAIN_RUNNER_BOND_RATE = 16.0
+CAR_KINDS = frozenset({"car", "car_personal"})
+NEEDS_AXES = ("comfort", "status", "social", "health")
 
 SCHEMA_VERSION = 1
 DEFAULT_TEMPLATE = "mq_game_basic_v1"
@@ -54,7 +63,7 @@ def _rebind_sqlite_engine(db_file: str) -> None:
     database.SessionLocal = sessionmaker(
         autocommit=False, autoflush=False, bind=database.engine,
     )
-    # main.py keeps its own `engine` import — sync for ensure_schema_compatibility()
+    # main.py keeps its own `engine` import — sync for startup prepare_schema()
     import main as main_module
 
     main_module.engine = database.engine
@@ -104,6 +113,22 @@ def _pick_event_choice(choices: list[dict], cash: float, mode: Literal["max", "m
     return min(affordable, key=lambda x: x[0])[1]
 
 
+def _pick_needs_choice(choices: list[dict], cash: float, needs: dict, *, cash_buffer: float) -> dict | None:
+    """needs_keeper: максимум прироста на самых низких потребностях среди доступных по деньгам."""
+    if not choices:
+        return None
+    lowest = sorted(NEEDS_AXES, key=lambda ax: float(needs.get(ax) or 0))
+    weight = {ax: w for ax, w in zip(lowest, (3.0, 2.0, 1.0, 0.5))}
+
+    def score(ch: dict) -> float:
+        nd = ch.get("needs_delta") or {}
+        return sum(weight[ax] * float(nd.get(ax) or 0) for ax in NEEDS_AXES)
+
+    affordable = [ch for ch in choices if cash + _choice_cash_delta(ch) >= cash_buffer]
+    pool = affordable or [max(choices, key=_choice_cash_delta)]
+    return max(pool, key=lambda ch: (score(ch), _choice_cash_delta(ch)))
+
+
 @dataclass
 class SimState:
     policy: PolicyName
@@ -113,6 +138,7 @@ class SimState:
     periods_attempted: int = 0
     events_resolved: int = 0
     event_cash_deltas: list[float] = field(default_factory=list)
+    assets_sold: int = 0
 
 
 def run_balance_simulation(
@@ -122,10 +148,10 @@ def run_balance_simulation(
     policy: PolicyName = "tutorial",
     profile_name: str = "Balance Sim",
     rng_seed: int | None = 42,
+    needs_model: str | None = None,
+    needs_set_point: dict | None = None,
 ) -> dict[str, Any]:
     """Run simulation in isolated SQLite DB; return JSON-serializable report."""
-    if rng_seed is not None:
-        random.seed(rng_seed)
 
     db_file = os.path.join(tempfile.gettempdir(), f"balance_sim_{uuid.uuid4().hex}.db")
     os.environ.setdefault("SECRET_KEY", "balance-sim-dev")
@@ -137,14 +163,13 @@ def run_balance_simulation(
     import app.models  # noqa: F401
     from app.auth import create_access_token, get_password_hash
     from app.database import Base, engine, get_db
-    from app.events.mvp11_seeds import ensure_mvp11_event_catalog
+    from app.seeds.runner import seed_all
     from app.models import User
     from fastapi.testclient import TestClient
-    from main import app, ensure_schema_compatibility
+    from main import app
     from sqlalchemy.orm import sessionmaker
 
     Base.metadata.create_all(bind=engine)
-    ensure_schema_compatibility()
     SessionLocal = sessionmaker(bind=engine)
 
     def _override_get_db():
@@ -167,8 +192,21 @@ def run_balance_simulation(
     db.refresh(user)
     user_id = int(user.id)
     try:
-        ensure_mvp11_event_catalog(db)
+        seed_all(db)
         db.commit()
+        if needs_model or needs_set_point:
+            # Калибровка NV-406: модель потребностей шаблона только в БД симуляции.
+            from app.models import GameStarterTemplate
+
+            tpl = db.query(GameStarterTemplate).filter(GameStarterTemplate.template_key == template_key).first()
+            bp = json.loads(tpl.blueprint_json or "{}")
+            needs_bp = bp.setdefault("needs", {})
+            if needs_model:
+                needs_bp["model"] = needs_model
+            if needs_set_point:
+                needs_bp["set_point"] = {**(needs_bp.get("set_point") or {}), **needs_set_point}
+            tpl.blueprint_json = json.dumps(bp, ensure_ascii=False)
+            db.commit()
     finally:
         db.close()
 
@@ -209,7 +247,14 @@ def run_balance_simulation(
         if not choices:
             return False
         mode: Literal["max", "min"] = "min" if policy == "passive" else "max"
-        best = _pick_event_choice(choices, cash, mode) if not force else None
+        if policy in NEEDS_AWARE_POLICIES and not force:
+            ov_now = overview()
+            needs_now = ov_now.get("needs") or {}
+            # Запас: все месячные платежи и расходы + 20% зарплаты — иначе бот уходит в минус по деньгам.
+            buffer = float(ov_now.get("total_monthly_outflow") or 0) + 0.2 * float(ov_now.get("total_monthly_income") or 0)
+            best = _pick_needs_choice(choices, cash, needs_now, cash_buffer=buffer)
+        else:
+            best = _pick_event_choice(choices, cash, mode) if not force else None
         if best is None:
             best = choices[0]
         delta = _choice_cash_delta(best)
@@ -279,7 +324,8 @@ def run_balance_simulation(
         target = float(ov.get("safety_fund_baseline_target") or 0)
         if target <= 0 or safety >= target - 1:
             return
-        buffer_cash = 5_000.0
+        # Оставляем на счёте месячные платежи и расходы — иначе бот уходит в минус (баг до 2026-10-22).
+        buffer_cash = max(5_000.0, float(ov.get("total_monthly_outflow") or 0))
         need = target - safety
         amt = min(need, max(0.0, cash - buffer_cash))
         if amt >= 500:
@@ -291,8 +337,106 @@ def run_balance_simulation(
             if r.status_code == 200:
                 state.safety_once_done = True
 
+    def maybe_restructure() -> None:
+        """restructure: продать лишние машины (обслуживание дороже дохода), свободные деньги — в досрочное
+        погашение самых дорогих кредитов. Проверка тезиса PO 2026-10-21 о перестройке активов.
+        chain_runner гасит досрочно только долги дороже облигации — остальное идёт под цели цепочки."""
+        if policy not in ("restructure", "chain_runner"):
+            return
+        ov = overview()
+        cars = [
+            a for a in (ov.get("assets") or [])
+            if a.get("kind") in CAR_KINDS
+            and float(a.get("monthly_maintenance_cost") or 0) > float(a.get("monthly_income") or 0)
+        ]
+        # Вторая и следующие машины — лишние; единственную продаём (как Профи с автокредитом).
+        # При 2+ машинах оставляем самую дешёвую в содержании, чтобы не обнулять комфорт/статус.
+        if len(cars) >= 2:
+            cars.sort(key=lambda a: float(a.get("monthly_maintenance_cost") or 0))
+            cars = cars[1:]
+        for a in cars:
+            r = client.delete(f"/api/finance/assets/{a['id']}", headers=headers)
+            if r.status_code == 200:
+                state.assets_sold += 1
+        ov = overview()
+        cash = float(ov.get("cash_balance") or 0)
+        # Запас на платежи + резерв на события (иначе needs_keeper не может платить и копит отказы).
+        buffer = float(ov.get("total_monthly_outflow") or 0) + 0.5 * float(ov.get("total_monthly_income") or 0)
+        for liab in sorted(ov.get("liabilities") or [], key=lambda l: -float(l.get("annual_rate_percent") or 0)):
+            free = cash - buffer
+            debt = float(liab.get("total_debt") or 0)
+            if free < 1_000 or debt <= 0:
+                break
+            if policy == "chain_runner" and float(liab.get("annual_rate_percent") or 0) <= CHAIN_RUNNER_BOND_RATE:
+                break
+            amount = round(min(free, debt), 2)
+            r = client.post(f"/api/finance/liabilities/{liab['id']}/prepay", headers=headers, json={"amount": amount})
+            if r.status_code == 200:
+                cash -= amount
+
+    def maybe_chain_runner() -> None:
+        """chain_runner: один шаг текущей цели victory chain за ход, свободные деньги — под цель.
+        Свободные = cash − (платежи и расходы хода + 50% дохода на события и потребности); для разовых
+        шагов на 1 000 ₽ хватает cash − расходы хода, иначе на сложных шаблонах бот не делает даже их."""
+        if policy != "chain_runner":
+            return
+        ov = overview()
+        v = ov.get("victory") or {}
+        goal = next((g for g in v.get("goals") or [] if g.get("key") == v.get("current_goal_key")), None)
+        if not goal or goal.get("met") or not goal.get("available", True):
+            return
+        cash = float(ov.get("cash_balance") or 0)
+        buffer = float(ov.get("total_monthly_outflow") or 0) + 0.5 * float(ov.get("total_monthly_income") or 0)
+        free = cash - buffer
+        free_token = cash - float(ov.get("total_monthly_outflow") or 0)
+        gtype = goal.get("type")
+        detail = goal.get("detail") or {}
+
+        if gtype == "action_once":
+            action = detail.get("action")
+            if action == "safety_contributed" and free_token >= 1_000:
+                client.post("/api/game/period/contribute-to-safety-fund", headers=headers, json={"amount": 1_000})
+            elif action == "invest_opened" and free_token >= 1_000:
+                client.post("/api/invest/bond/buy", headers=headers, json={"amount": 1_000})
+            elif action == "insurance_purchased":
+                r = client.get("/api/insurance/catalog")
+                plans = sorted((r.json().get("plans") or []) if r.status_code == 200 else [],
+                               key=lambda pl: float(pl.get("monthly_premium") or 0))
+                for pl in plans:
+                    # Премия списывается каждый ход — берём полис, только если она влезает в запас.
+                    if free_token < float(pl.get("monthly_premium") or 0) * 3:
+                        break
+                    if client.post("/api/insurance/buy", headers=headers,
+                                   json={"plan_key": pl["plan_key"]}).status_code == 200:
+                        break
+        elif gtype == "safety_fund_months":
+            need = float(detail.get("target") or 0) - float(detail.get("current") or 0)
+            amt = round(min(need, free), 2)
+            if amt >= 500:
+                client.post("/api/game/period/contribute-to-safety-fund", headers=headers, json={"amount": amt})
+        elif gtype in ("passive_income_monthly_min", "passive_income_net_monthly_min"):
+            if free >= 1_000:
+                client.post("/api/invest/bond/buy", headers=headers, json={"amount": round(free, 2)})
+        # cash_balance_min и прочее: деньги просто копятся на счёте.
+
+    def maybe_treat_self() -> None:
+        if policy not in NEEDS_AWARE_POLICIES:
+            return
+        ov = overview()
+        ts = ov.get("treat_self") or {}
+        needs_now = ov.get("needs") or {}
+        if not ts.get("available") or not ts.get("options") or not needs_now:
+            return
+        if min(float(needs_now.get(ax) or 0) for ax in NEEDS_AXES) >= 40:
+            return
+        opt = ts["options"][0]
+        buffer = float(ov.get("total_monthly_outflow") or 0)
+        if float(ov.get("cash_balance") or 0) - float(opt.get("cost") or 0) < buffer:
+            return
+        client.post("/api/game/period/treat-self", headers=headers, json={"option_id": opt["id"]})
+
     def maybe_invest() -> None:
-        if policy == "passive":
+        if policy in ("passive", "idle", "needs_keeper", "restructure", "chain_runner"):
             return
         if policy == "tutorial" and state.invest_once_done:
             return
@@ -351,12 +495,26 @@ def run_balance_simulation(
         lifestyle = float(ov.get("monthly_burn_total") or 0)
         cash = float(ov.get("cash_balance") or 0)
         safety = float(ov.get("safety_fund_balance") or 0)
+        needs_now = ov.get("needs") or {}
+        needs_row = {ax: round(float(needs_now.get(ax) or 0), 1) for ax in NEEDS_AXES} if needs_now else None
+        passive = next(
+            (float((g.get("detail") or {}).get("monthly_passive_income") or 0)
+             for g in v.get("goals") or [] if "monthly_passive_income" in (g.get("detail") or {})),
+            None,
+        )
+        pr = client.get("/api/invest/positions", headers=headers)
+        positions = pr.json() if pr.status_code == 200 else []
+        invested = sum(float(pos.get("principal") or 0) for pos in positions if isinstance(pos, dict))
         return {
+            "needs": needs_row,
+            "needs_min": min(needs_row.values()) if needs_row else None,
             "period": period,
             "phase": phase,
             "cash": round(cash, 2),
             "safety": round(safety, 2),
             "liquid": round(cash + safety, 2),
+            "invested": round(invested, 2),
+            "passive_income": round(passive, 2) if passive is not None else None,
             "net_cf": round(float(ov.get("net_monthly_cashflow") or 0), 2),
             "structural_obligations": round(structural, 2),
             "lifestyle_burn": round(lifestyle, 2),
@@ -372,6 +530,11 @@ def run_balance_simulation(
             "period_gate_open": v.get("period_gate_open"),
         }
 
+    # Сид — после импортов и seed_all: первый импорт приложения в процессе тратит глобальный random,
+    # и без этого первый прогон в процессе расходился с последующими (полный набор ≠ --only).
+    if rng_seed is not None:
+        random.seed(rng_seed)
+
     try:
         start_game()
         period_rows.append(snapshot_row(0, "start"))
@@ -384,14 +547,27 @@ def run_balance_simulation(
         for p in range(1, periods + 1):
             state.periods_attempted = p
             claim_salary()
+            maybe_restructure()
+            needs_before_events = dict(overview().get("needs") or {})
             pick_events()
             if policy == "tutorial":
                 maybe_safety_tutorial()
             elif policy == "safety_first":
                 maybe_safety_first()
             maybe_invest()
+            maybe_chain_runner()
+            maybe_treat_self()
+            needs_before_close = dict(overview().get("needs") or {})
             close_body = close_period()
             row = snapshot_row(p, "closed", close_body)
+            if needs_before_events and row.get("needs"):
+                # Разбивка динамики потребностей: события (+ «Порадовать себя») и закрытие периода.
+                row["needs_events_delta"] = round(
+                    sum(float(needs_before_close.get(a) or 0) - float(needs_before_events.get(a) or 0) for a in NEEDS_AXES), 1
+                )
+                row["needs_close_delta"] = round(
+                    sum(float(row["needs"].get(a) or 0) - float(needs_before_close.get(a) or 0) for a in NEEDS_AXES), 1
+                )
             period_rows.append(row)
 
             ov = overview()
@@ -431,6 +607,8 @@ def run_balance_simulation(
             "defeated": defeated,
             "defeat_reason": defeat_reason,
             "goals_met": v.get("goals_met"),
+            # После поражения overview обнулён (goals_met 0) — пик по ряду показывает, докуда дошла цепочка.
+            "goals_met_peak": max((r.get("goals_met") or 0) for r in period_rows),
             "goals_enabled": v.get("goals_enabled"),
             "goals_required": v.get("goals_required"),
             "period_gate_open": v.get("period_gate_open"),
@@ -451,6 +629,8 @@ def run_balance_simulation(
             "avg_event_cash_delta": avg_delta,
             "avg_net_cashflow_6p": final_ov.get("avg_net_cashflow_6p"),
             "avg_net_cashflow_6p_n": final_ov.get("avg_net_cashflow_6p_n"),
+            "needs_model": (final_ov.get("needs_meta") or {}).get("model"),
+            "assets_sold": state.assets_sold,
         }
 
         for milestone in (12, 20, 30, 40):
@@ -459,6 +639,7 @@ def run_balance_simulation(
             summary[key] = row_m["cash"] if row_m else None
             summary[f"liquid_p{milestone}"] = row_m["liquid"] if row_m else None
             summary[f"safety_p{milestone}"] = row_m["safety"] if row_m else None
+            summary[f"needs_min_p{milestone}"] = row_m.get("needs_min") if row_m else None
 
         report = {
             "meta": {
@@ -535,8 +716,20 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--periods", type=int, default=DEFAULT_PERIODS)
     parser.add_argument(
         "--policy",
-        choices=["tutorial", "safety_first", "passive"],
+        choices=list(POLICY_CHOICES),
         default="tutorial",
+    )
+    parser.add_argument(
+        "--needs-model",
+        choices=["linear", "set_point"],
+        default=None,
+        help="Переопределить needs.model шаблона только в БД симуляции (NV-406)",
+    )
+    parser.add_argument(
+        "--needs-set-point",
+        type=json.loads,
+        default=None,
+        help='JSON-переопределения needs.set_point, напр. {"impulse_scale": 30}',
     )
     parser.add_argument("--out", type=Path, help="Write JSON report to file")
     parser.add_argument(
@@ -559,6 +752,8 @@ def main(argv: list[str] | None = None) -> int:
         periods=args.periods,
         policy=args.policy,  # type: ignore[arg-type]
         rng_seed=seed,
+        needs_model=args.needs_model,
+        needs_set_point=args.needs_set_point,
     )
 
     if args.out:

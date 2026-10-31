@@ -29,7 +29,33 @@ def resolve_lifestyle_delta_from_effects(
     return delta
 
 
-def build_choice_impacts(db: Session, profile, effects: dict[str, Any]) -> list[dict[str, Any]]:
+def _secured_loan_impact(db: Session, loan: dict[str, Any]) -> dict[str, Any] | None:
+    """Чип «Автокредит: долг и платёж» — те же ставка и срок, что применит движок."""
+    from fincore.annuity import monthly_payment
+    from ..models import LiabilityTemplate
+
+    principal = float(loan.get("principal") or 0)
+    tpl = (
+        db.query(LiabilityTemplate)
+        .filter(LiabilityTemplate.template_key == str(loan.get("liability_template_key") or ""))
+        .first()
+    )
+    if principal <= 0 or not tpl or not int(tpl.term_periods or 0):
+        return None
+    pay = monthly_payment(principal, float(tpl.annual_rate_percent), int(tpl.term_periods))
+    return {
+        "kind": "term",
+        "delta": int(tpl.term_periods),
+        "tip": (
+            f"{tpl.title}: {int(round(principal)):,} ₽ под {tpl.annual_rate_percent:g}%, "
+            f"платёж {int(round(pay)):,} ₽/пер."
+        ).replace(",", " "),
+    }
+
+
+def build_choice_impacts(
+    db: Session, profile, effects: dict[str, Any], *, chain_ctx: dict[str, Any] | None = None
+) -> list[dict[str, Any]]:
     """Структура для UI: kind, delta, value_after (опц.), tip."""
     if not isinstance(effects, dict):
         return []
@@ -132,13 +158,24 @@ def build_choice_impacts(db: Session, profile, effects: dict[str, Any]) -> list[
 
     asset_spec = effects.get("asset_from_template")
     if isinstance(asset_spec, dict) and asset_spec.get("purchase_price") is not None:
-        price = float(asset_spec["purchase_price"])
+        value = float(asset_spec.get("asset_value") or asset_spec["purchase_price"])
         impacts.append(
             {
                 "kind": "coin",
-                "delta": price,
-                "tip": "Стоимость актива после сделки",
+                "delta": value,
+                "tip": "Рыночная стоимость актива в имуществе",
             }
         )
+        loan = asset_spec.get("secured_loan")
+        if isinstance(loan, dict):
+            loan_impact = _secured_loan_impact(db, loan)
+            if loan_impact:
+                impacts.append(loan_impact)
+
+    action = effects.get("chain_action")
+    if isinstance(action, dict):
+        from .chain_actions import preview_chain_action
+
+        impacts.extend(preview_chain_action(db, profile, action, chain_ctx))
 
     return impacts

@@ -3,8 +3,13 @@ layer: foundation
 status: active
 last_reviewed: 2026-05-25
 epic: PW1
+tags:
+  - tvoy-hod/layer/foundation
+  - tvoy-hod/status/active
+aliases:
+  - "Как установить ТВОЙ ХОД как PWA"
+  - PWA_INSTALL
 ---
-
 # Как установить ТВОЙ ХОД как PWA
 
 PWA — **тот же** фронт, что и Mini App, но открытый **вне Telegram** и (опционально) закреплённый на домашнем экране. Вход: **email + пароль** (как в браузере), те же сохранения на API.

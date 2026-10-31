@@ -12,7 +12,7 @@ export function InvestPositionMetrics({ principal, annualRatePercent, rateTone =
       <MetricInlineItem tip="Сумма позиции (остаток)" glyph="coin">
         <MoneyText value={principal} decimals={0} />
       </MetricInlineItem>
-      <MetricInlineItem tip="Доход за период (начисление в конце периода; в модели — 1/12 годовой ставки)" glyph="up" tone="pos">
+      <MetricInlineItem tip="Доход за ход (начисление в конце хода; в модели — 1/12 годовой ставки)" glyph="up" tone="pos">
         <MoneyText value={monthly} decimals={0} />
       </MetricInlineItem>
       <MetricInlineItem

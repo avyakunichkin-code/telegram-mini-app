@@ -4,15 +4,20 @@ status: active
 last_reviewed: 2026-05-30
 audience: product owner, game-design, engineering
 confidentiality: team-only
+tags:
+  - tvoy-hod/layer/handbook
+  - tvoy-hod/layer/handbook-internal
+  - tvoy-hod/status/active
+aliases:
+  - "Handbook — внутренняя часть"
 ---
-
 # Handbook — внутренняя часть
 
 Документы здесь содержат **формулы, пороги tuning и операционные детали**, которые **не** входят в пакет для плейтестеров и внешних партнёров.
 
 | Документ | Содержание |
 |----------|------------|
-| [`TEAM_UPDATE_2026-06-01.md`](TEAM_UPDATE_2026-06-01.md) | Внутренний дайджест: финансы v2, исправления lab, смоук, аудит скиллов |
+| [`TEAM_UPDATE_2026-06-01.md`](TEAM_UPDATE_2026-06-01.md) | Внутренний дайджест (archived 2026-06-20): финансы v2, lab, смоук |
 | [`ECONOMY_TUNING.md`](ECONOMY_TUNING.md) | Формулы метрик TB1, decay потребностей, event tier, поражение |
 
 **Публичный обзор без формул:** [`../ECONOMY_OVERVIEW.md`](../ECONOMY_OVERVIEW.md).

@@ -8,6 +8,7 @@ import pytest
 
 from app.admin.notify import _admin_link, emit_admin_alert
 from app.config import _resolve_admin_web_base_url
+from app.guidance.curriculum import CURRICULUM
 from app.models import NotificationLog
 
 
@@ -26,7 +27,7 @@ def test_admin_link_uses_hash_router(monkeypatch):
 
 
 def test_emit_admin_alert_dedupe(db_session):
-    os.environ.setdefault("SECRET_KEY", "test")
+    os.environ.setdefault("SECRET_KEY", "test-secret-key-for-pytest-only-32b+")
     first = emit_admin_alert(
         db_session,
         "user_registered",
@@ -50,7 +51,7 @@ def test_admin_watchtower_forbidden(client, auth_headers, monkeypatch):
     monkeypatch.setenv("ADMIN_USER_IDS", "")
     from app.config import config
 
-    config.ADMIN_USER_IDS = set()
+    monkeypatch.setattr(config, "ADMIN_USER_IDS", set())
     resp = client.get("/api/admin/watchtower", headers=auth_headers)
     assert resp.status_code == 403
 
@@ -67,7 +68,7 @@ def test_admin_watchtower_ok(client, admin_env, auth_headers):
     assert isinstance(data["run_feedback"], list)
     assert "onboarding_funnel" in data
     assert "metrics_summary" in data
-    assert len(data["onboarding_funnel"]["steps"]) == 8
+    assert [s["step"] for s in data["onboarding_funnel"]["steps"]] == [b.id for b in CURRICULUM]
     assert data["onboarding_funnel"].get("guidance_mode") == "o2"
     usernames = [u["username"] for u in data["users"]]
     assert admin_env.username in usernames
@@ -77,7 +78,7 @@ def test_register_emits_admin_notification(client, db_session, monkeypatch):
     monkeypatch.setenv("ADMIN_USER_IDS", "99999")
     from app.config import config
 
-    config.ADMIN_USER_IDS = set()
+    monkeypatch.setattr(config, "ADMIN_USER_IDS", set())
     resp = client.post(
         "/api/register",
         json={

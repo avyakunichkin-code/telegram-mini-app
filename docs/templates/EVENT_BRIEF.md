@@ -1,8 +1,15 @@
+---
+tags:
+  - tvoy-hod/layer/template
+aliases:
+  - "Event Brief — одно событие (шаблон)"
+  - EVENT_BRIEF
+---
 # Event Brief — одно событие (шаблон)
 
 Скопируйте блок в `docs/vision/ideas/event-briefs/<definition_key>.md` или в описание задачи перед `/create-event`.
 
-**Канон баланса:** [`.cursor/skills/create-event/event-balance-rules.md`](../../.cursor/skills/create-event/event-balance-rules.md) — §1–4 trade-off, **§10 lifecycle**, **§11 оси needs**, §12 MCE.
+**Канон баланса:** [`.claude/skills/create-event/event-balance-rules.md`](../../.claude/skills/create-event/event-balance-rules.md) — §1–4 trade-off, **§10 lifecycle**, **§11 оси needs**, §12 MCE.
 
 **Lifecycle (idea):** [`event-repeat-and-state-ladder.md`](../vision/ideas/event-repeat-and-state-ladder.md)
 

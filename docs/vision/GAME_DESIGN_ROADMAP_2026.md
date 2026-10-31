@@ -1,11 +1,16 @@
 ---
 layer: vision
 status: active
-last_reviewed: 2026-06-01
+last_reviewed: 2026-06-20
 audience: product, design, engineering
 idea_refine: true
+tags:
+  - tvoy-hod/layer/vision
+  - tvoy-hod/status/active
+aliases:
+  - "ТВОЙ ХОД — геймдизайн, сравнение с рынком и roadmap 2026"
+  - GAME_DESIGN_ROADMAP_2026
 ---
-
 # ТВОЙ ХОД — геймдизайн, сравнение с рынком и roadmap 2026
 
 Синтез для продуктовых решений: **оценка относительно современных пошаговых и finance/life sim**, **идеи улучшения текущих механик**, **дорожная карта 12–18 мес.** с привязкой к эпикам [`PRODUCT_BACKLOG.md`](../backlog/PRODUCT_BACKLOG.md).
@@ -29,7 +34,7 @@ idea_refine: true
 | Слой | Суть |
 |------|------|
 | **Жанр** | Пошаговый симулятор личного бюджета (1 период = месяц), **TB1** без real-time давления |
-| **Платформа** | Telegram Mini App + PWA; целевой темп опытного игрока **1–3 мин/период** |
+| **Платформа** | PWA + web (primary), TMA (secondary — [ADR-012](../decisions/ADR-012-primary-channels-pwa-web-over-tma.md)); темп **1–3 мин/период** |
 | **Core loop** | Действия в открытом месяце → **«Закрыть месяц»** → автоматическая экономика → **2** события → прогресс к целям |
 | **Глубина** | Cash + подушка, активы/долги, инвестиции, страховки (claim), события, **Z-NEEDS**, Victory v2 (chain / parallel) |
 | **Мета** | Шаблоны старта, `mechanics_unlock`, достижения (BE есть, UI на паузе), Run Finale, Admin/Ops |

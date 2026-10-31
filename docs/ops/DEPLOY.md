@@ -3,11 +3,16 @@ layer: ops
 status: active
 last_reviewed: 2026-05-24
 audience_note: Pre-Alpha и Closed Alpha — один prod-стенд с своим доменом, API без cold start.
+tags:
+  - tvoy-hod/layer/ops
+  - tvoy-hod/status/active
+aliases:
+  - "Деплой: Pre-Alpha → Closed Alpha"
+  - DEPLOY
 ---
-
 # Деплой: Pre-Alpha → Closed Alpha
 
-Целевая схема на ближайшие две волны плейтеста (**10–20** и **50–100** игроков по [`GAME.md`](../../GAME.md) §11):
+Целевая схема на ближайшие две волны плейтеста (**10–20** и **50–100** игроков по [`GAME.md`](../handbook/GAME.md) §11):
 
 | Компонент | Где | Зачем |
 |-----------|-----|--------|
@@ -44,7 +49,8 @@ Resume после блокировки экрана (PW1): [`foundation/PW1_RESU
 
 | Переменная | Значение |
 |------------|----------|
-| `SECRET_KEY` | длинная случайная строка (если не сгенерировался) |
+| `SECRET_KEY` | длинная случайная строка (если не сгенерировался). **Обязателен:** с пустым или шаблонным значением API на Render не стартует |
+| `PLAYER_TELEGRAM_WEBHOOK_SECRET` | случайная строка, тот же `secret_token` в `setWebhook`. **Без него вебхук игрока отвечает 403** |
 | `PUBLIC_APP_URL` | `https://app.YOUR_DOMAIN/#` |
 | `ADMIN_WEB_BASE_URL` | то же, что `PUBLIC_APP_URL` |
 | `CORS_ALLOW_ORIGINS` | `https://app.YOUR_DOMAIN` |
@@ -52,14 +58,14 @@ Resume после блокировки экрана (PW1): [`foundation/PW1_RESU
 | `OPS_TELEGRAM_BOT_TOKEN` / `OPS_TELEGRAM_CHAT_ID` | по желанию (Watchtower) |
 
 4. **Custom Domain** на Web Service: `api.YOUR_DOMAIN` → CNAME из панели Render.
-5. Миграции на prod (Windows, из `backend/`): все `migrations/*.sql` по порядку — см. [`backend/migrations/README.md`](../../backend/migrations/README.md).
+5. Миграции на prod (из корня репо) — **до** deploy, иначе API не стартует (`SchemaOutOfDateError`, PR-08); повторный прогон безопасен. См. [`backend/migrations/README.md`](../../backend/migrations/README.md).
 
-```powershell
-$env:DATABASE_URL = "<Internal Database URL из Render>"
-.\migrate.ps1
+```bash
+export DATABASE_URL="<Internal Database URL из Render>"
+bash backend/scripts/db.sh migrate
 ```
 
-6. Smoke: `GET https://api.YOUR_DOMAIN/api/health` → `200`.
+6. Smoke: `GET https://api.YOUR_DOMAIN/api/health` → `200` (БД недоступна → `503`).
 
 ### 2.2 Уже есть сервис `telegram-mini-app-zwfs`
 
@@ -120,7 +126,7 @@ npm run build:pages
 npx gh-pages -d dist
 ```
 
-**Лендинг и скрины UI:** если менялся видимый MQX в игре — перед `build:pages` переснять PNG ([`specs/LANDING_SCREENSHOTS.md`](../specs/LANDING_SCREENSHOTS.md)): `cd landing && npm run capture-screens` (предпочтительно при запущенных dev + backend).
+**Лендинг:** `build:pages` собирает `landing/site/` (`landing/scripts/build-static.mjs`) в `dist/landing/`; скрины игры пересъёмки не требуют — прежний пайплайн PNG снят 2026-10-30 ([`specs/LANDING_SCREENSHOTS.md`](../specs/LANDING_SCREENSHOTS.md), архив). Ресурсы дизайна сверяет `npm run check:design-assets` (он же `prebuild`).
 
 ---
 
@@ -135,11 +141,12 @@ HashRouter (`#/game`) менять не нужно.
 
 ## 5. Зафиксировать билд для волны (Pre-Alpha §3)
 
-Перед набором 10–20 человек:
+Перед набором 10–20 человек (чеклист и шаблон pin: [`PRE_ALPHA_WAVE1_OPS.md`](../foundation/PRE_ALPHA_WAVE1_OPS.md) §«Закреплённый билд»):
 
-1. Записать **commit SHA** `main` после успешного workflow Deploy.
-2. Записать **тег API** (Render deploy id или commit, если деплой с ветки).
-3. В канале тестеров одна строка: «стенд от `2026-05-24`, commit `abc1234`».
+1. Merge в `main` билд **O3 + I1 + notify**; дождаться GitHub Pages workflow и Render autoDeploy.
+2. Записать **commit SHA** `main` (`git rev-parse --short HEAD`).
+3. Записать **Pages asset** (`index-*.js`) и проверить `GET /api/health` на том же билде.
+4. В канале тестеров — pin-сообщение (commit, дата, **«первый вход 10–15 с»**).
 
 При hotfix — коротко сообщить «билд обновлён», не менять механику mid-session без нужды.
 
@@ -164,7 +171,7 @@ HashRouter (`#/game`) менять не нужно.
 
 - отдельная **когорта** или флаг в БД не обязателен на старте;
 - при росте нагрузки — апгрейд плана Render DB/API;
-- метрики D1/D7 — по [`GAME.md`](../../GAME.md) и эпику admin/analytics.
+- метрики D1/D7 — по [`GAME.md`](../handbook/GAME.md) и эпику admin/analytics.
 
 Отдельный staging (`staging.app.*`) — по желанию, дублирует Variables в GitHub (`VITE_*` на preview workflow).
 
@@ -190,9 +197,9 @@ HashRouter (`#/game`) менять не нужно.
 | CORS error в консоли | Неверный origin | `PUBLIC_APP_URL`, `CORS_ALLOW_ORIGINS` |
 | 404 на refresh без hash | BrowserRouter на static host | Оставляем HashRouter |
 | API 401 после деплоя | другой `SECRET_KEY` | Тестерам перелогиниться |
-| Пустая БД | миграции не прогнаны | `migrate.ps1` на prod `DATABASE_URL` |
-
-| Пустая БД | миграции не прогнаны | `migrate.ps1` на prod `DATABASE_URL` |
+| Пустая БД | миграции не прогнаны | `bash backend/scripts/db.sh migrate` на prod `DATABASE_URL` |
+| API не стартует: `SchemaOutOfDateError` | migrate не прогнан для релиза | `bash backend/scripts/db.sh migrate`, затем redeploy |
+| `/api/health` → 503 | БД недоступна | проверить `DATABASE_URL`, состояние PostgreSQL |
 
 ---
 

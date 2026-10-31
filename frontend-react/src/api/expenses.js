@@ -1,6 +1,6 @@
 import { apiCall } from './client.js';
 
-/** `/api/game/expenses` — снимок burn rate и строки бюджета Plan. */
+/** `/api/game/expenses` — снимок burn rate и статьи расходов игры. */
 export const expensesApi = {
   getExpenses() {
     return apiCall('/api/game/expenses');
@@ -10,14 +10,5 @@ export const expensesApi = {
   },
   listExpenseLines() {
     return apiCall('/api/game/expenses/lines');
-  },
-  createExpenseLine(payload) {
-    return apiCall('/api/game/expenses/lines', 'POST', payload);
-  },
-  patchExpenseLine(lineId, payload) {
-    return apiCall(`/api/game/expenses/lines/${lineId}`, 'PATCH', payload);
-  },
-  deleteExpenseLine(lineId) {
-    return apiCall(`/api/game/expenses/lines/${lineId}`, 'DELETE');
   },
 };

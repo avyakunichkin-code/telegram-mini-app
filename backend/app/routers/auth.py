@@ -4,14 +4,14 @@ from sqlalchemy.orm import Session
 from ..database import get_db
 from ..models import User
 from ..schemas import UserRegister, UserLogin, Token
-from ..auth import get_password_hash, verify_password, create_access_token
+from ..auth import get_password_hash, password_needs_rehash, verify_password, create_access_token
 from ..auth_username import allocate_username_from_email
 
 router = APIRouter(prefix="/api", tags=["auth"])
 
 
 @router.post("/register", response_model=Token)
-async def register(user_data: UserRegister, db: Session = Depends(get_db)):
+def register(user_data: UserRegister, db: Session = Depends(get_db)):
     """Регистрация нового пользователя — не требует авторизации"""
     
     email_taken = db.query(User).filter(User.email == user_data.email).first()
@@ -58,7 +58,7 @@ async def register(user_data: UserRegister, db: Session = Depends(get_db)):
 
 
 @router.post("/login", response_model=Token)
-async def login(user_data: UserLogin, db: Session = Depends(get_db)):
+def login(user_data: UserLogin, db: Session = Depends(get_db)):
     """Вход в систему — не требует авторизации"""
     
     login_id = (user_data.username or "").strip()
@@ -69,7 +69,12 @@ async def login(user_data: UserLogin, db: Session = Depends(get_db)):
 
     if not user or not verify_password(user_data.password, user.hashed_password):
         raise HTTPException(status_code=401, detail="Invalid username or password")
-    
+
+    # Legacy "salt:sha256" или устаревшие параметры argon2 → перехеш, пока известен пароль.
+    if password_needs_rehash(user.hashed_password):
+        user.hashed_password = get_password_hash(user_data.password)
+        db.commit()
+
     access_token = create_access_token(data={"sub": str(user.id)})
     
     return Token(

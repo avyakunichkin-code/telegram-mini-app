@@ -1,3 +1,4 @@
+import { turnClosedTitle } from '../constants/turnCopy';
 import { derivePeriodCloseMetrics } from './periodCloseDisplay';
 
 function formatMoneyAbs(n) {
@@ -82,6 +83,5 @@ export function periodCloseRitualBeats(summary) {
 
 export function periodCloseRitualPeriodLabel(summary) {
   const m = derivePeriodCloseMetrics(summary);
-  const n = m?.periodIndex || 0;
-  return n > 0 ? `Период №${n} закрыт` : 'Период закрыт';
+  return turnClosedTitle(m?.periodIndex || 0);
 }

@@ -4,8 +4,13 @@ status: active
 role: product
 last_reviewed: 2026-05-30
 owner: product
+tags:
+  - tvoy-hod/layer/handbook
+  - tvoy-hod/status/active
+aliases:
+  - "Продукт — guide"
+  - product
 ---
-
 # Продукт — guide
 
 Маршрут владельца продукта. **Owner документации:** владелец продукта.

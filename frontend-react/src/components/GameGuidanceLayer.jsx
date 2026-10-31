@@ -1,13 +1,26 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { API } from '../api';
 import {
   bumpGuidanceSessionDismissCount,
   getGuidanceSessionDismissCount,
   resetGuidanceSessionDismissCount,
 } from '../guidance/sessionDismiss';
+import {
+  computeGuidanceScrollPad,
+  computeGuidanceSheetLift,
+  parseCssPx,
+} from '../guidance/guidanceStripLayout';
 import { useGuidanceAnchorFocus } from '../guidance/useGuidanceAnchorFocus';
 import { MqxGuidanceAnchorLink } from './mqx/guidance/MqxGuidanceAnchorLink';
 import { MqxGuidanceStrip } from './mqx/guidance/MqxGuidanceStrip';
+
+function readTabInsetPx() {
+  const root = getComputedStyle(document.documentElement);
+  const measured = parseCssPx(root.getPropertyValue('--mqx-tabbar-measured'), 0);
+  if (measured > 0) return measured;
+  return parseCssPx(root.getPropertyValue('--tma-tabbar-inset'), 64);
+}
 
 /**
  * O2 Progressive Guidance — bottom strip, синхронизация с overview.guidance + PATCH.
@@ -18,6 +31,7 @@ export function GameGuidanceLayer({
   refreshOverview,
   onOverlayStateChange,
   scrollRootRef = null,
+  deferForPeriodClose = false,
 }) {
   const stripRef = useRef(null);
   const [stripHeightPx, setStripHeightPx] = useState(0);
@@ -28,7 +42,8 @@ export function GameGuidanceLayer({
 
   const showCurriculum = guidance?.show_curriculum === true;
   const showNudge = !showCurriculum && guidance?.nudge_id && guidance.nudge_id !== dismissedNudgeId;
-  const visible = showCurriculum || showNudge;
+  const wouldShow = showCurriculum || showNudge;
+  const visible = wouldShow && !deferForPeriodClose;
 
   const patch = useCallback(
     async (payload) => {
@@ -49,9 +64,20 @@ export function GameGuidanceLayer({
   useEffect(() => {
     onOverlayStateChange?.({
       visible: !!visible,
-      lockTabs: !!showCurriculum,
+      lockTabs: !!showCurriculum && !!visible,
     });
   }, [visible, showCurriculum, onOverlayStateChange]);
+
+  useEffect(() => {
+    if (!visible) {
+      document.body.classList.remove('mqx-page--guidance-active');
+      return undefined;
+    }
+    document.body.classList.add('mqx-page--guidance-active');
+    return () => {
+      document.body.classList.remove('mqx-page--guidance-active');
+    };
+  }, [visible]);
 
   useGuidanceAnchorFocus({
     rootRef: scrollRootRef,
@@ -65,8 +91,12 @@ export function GameGuidanceLayer({
       setStripHeightPx(0);
       document.documentElement.style.removeProperty('--mqx-guidance-scroll-pad');
       document.documentElement.style.removeProperty('--mqx-guidance-strip-lift');
+      document.documentElement.style.removeProperty('--mqx-guidance-strip-bottom');
+      document.documentElement.style.removeProperty('--mqx-guidance-strip-offset');
       return undefined;
     }
+
+    document.documentElement.style.removeProperty('--mqx-guidance-strip-bottom');
 
     const node = stripRef.current;
     if (!node) return undefined;
@@ -74,11 +104,12 @@ export function GameGuidanceLayer({
     const apply = () => {
       const h = Math.ceil(node.getBoundingClientRect().height);
       setStripHeightPx(h);
-      const tabRaw = getComputedStyle(document.documentElement).getPropertyValue('--tma-tabbar-inset');
-      const tab = parseFloat(tabRaw) || 64;
-      const lift = `calc(${h}px + ${tab}px + 4px)`;
-      document.documentElement.style.setProperty('--mqx-guidance-scroll-pad', `calc(${lift} + 16px)`);
+      const tab = readTabInsetPx();
+      const scrollPad = computeGuidanceScrollPad(h, 12);
+      const lift = computeGuidanceSheetLift(h, tab, 4);
+      document.documentElement.style.setProperty('--mqx-guidance-scroll-pad', scrollPad);
       document.documentElement.style.setProperty('--mqx-guidance-strip-lift', lift);
+      document.documentElement.style.setProperty('--mqx-guidance-strip-offset', `${h}px`);
     };
 
     apply();
@@ -88,15 +119,9 @@ export function GameGuidanceLayer({
       ro.disconnect();
       document.documentElement.style.removeProperty('--mqx-guidance-scroll-pad');
       document.documentElement.style.removeProperty('--mqx-guidance-strip-lift');
+      document.documentElement.style.removeProperty('--mqx-guidance-strip-offset');
     };
   }, [visible, guidance?.beat_id, guidance?.view_index, guidance?.title, guidance?.body]);
-
-  useEffect(() => {
-    if (guidance?.show_curriculum === false && !guidance?.nudge_id) {
-      resetGuidanceSessionDismissCount();
-      setSessionDismissCount(0);
-    }
-  }, [guidance?.show_curriculum, guidance?.nudge_id]);
 
   const handleCurriculumDismiss = useCallback(async () => {
     const next = bumpGuidanceSessionDismissCount();
@@ -105,10 +130,15 @@ export function GameGuidanceLayer({
       resetGuidanceSessionDismissCount();
       setSessionDismissCount(0);
       await patch({ action: 'skip_all' });
+      await refreshOverview?.();
       return;
     }
-    await patch({ action: 'dismiss_beat' });
-  }, [patch]);
+    await patch({
+      action: 'dismiss_beat',
+      beat_id: guidance?.beat_id ?? undefined,
+    });
+    await refreshOverview?.();
+  }, [patch, guidance?.beat_id, refreshOverview]);
 
   const handleNudgeDismiss = useCallback(() => {
     setDismissedNudgeId(guidance?.nudge_id ?? null);
@@ -118,8 +148,10 @@ export function GameGuidanceLayer({
     return null;
   }
 
+  let layer = null;
+
   if (showNudge) {
-    return (
+    layer = (
       <MqxGuidanceStrip
         ref={stripRef}
         mode="nudge"
@@ -130,61 +162,72 @@ export function GameGuidanceLayer({
         onDismiss={handleNudgeDismiss}
       />
     );
+  } else {
+    const beatId = guidance.beat_id;
+    const isReadGate =
+      beatId === 'p1_period' ||
+      beatId === 'p1_flows' ||
+      beatId === 'p2_new_month' ||
+      beatId === 't_finance_actions' ||
+      beatId === 't_finance_details' ||
+      beatId === 't_needs' ||
+      beatId === 't_farewell' ||
+      (beatId === 'p1_close' && guidance.show_debrief);
+
+    const showContinue =
+      isReadGate && (!guidance.beat_completed || (guidance.beat_id === 'p1_close' && guidance.show_debrief));
+
+    const dismissHint =
+      sessionDismissCount === 1 ? 'Ещё раз — пропустить всё обучение' : undefined;
+
+    layer = (
+      <>
+        <MqxGuidanceAnchorLink
+          stripRef={stripRef}
+          scrollRootRef={scrollRootRef}
+          beatId={guidance.beat_id}
+          active={showCurriculum && visible}
+        />
+        <MqxGuidanceStrip
+          ref={stripRef}
+          mode="curriculum"
+          showMascot
+          title={guidance.title}
+          body={guidance.body}
+          moduleStep={guidance.module_step}
+          moduleStepCount={guidance.module_step_count}
+          viewIndex={guidance.view_index}
+          lastCompletedIndex={guidance.last_completed_index}
+          beatCompleted={guidance.beat_completed && !showContinue}
+          dismissHint={dismissHint}
+          showNav
+          onDismiss={handleCurriculumDismiss}
+          onPrev={() =>
+            patch({
+              action: 'nav',
+              view_index: Math.max(0, (guidance.view_index ?? 0) - 1),
+            })
+          }
+          onNext={() =>
+            patch({
+              action: 'nav',
+              view_index: (guidance.view_index ?? 0) + 1,
+            })
+          }
+          onContinue={
+            showContinue
+              ? () => patch({ action: 'advance_read', beat_id: guidance.beat_id })
+              : undefined
+          }
+        />
+      </>
+    );
   }
 
-  const isReadGate =
-    guidance.beat_id === 'p1_period' ||
-    guidance.beat_id === 'p2_events_done' ||
-    guidance.beat_id === 'p3_needs' ||
-    guidance.beat_id === 'p3_farewell' ||
-    (guidance.beat_id === 'p1_close' && guidance.show_debrief);
-
-  const showContinue =
-    isReadGate && (!guidance.beat_completed || (guidance.beat_id === 'p1_close' && guidance.show_debrief));
-
-  const dismissHint =
-    sessionDismissCount === 1 ? 'Ещё раз — пропустить всё обучение' : undefined;
-
-  return (
-    <>
-      <MqxGuidanceAnchorLink
-        stripRef={stripRef}
-        scrollRootRef={scrollRootRef}
-        beatId={guidance.beat_id}
-        active={showCurriculum && visible}
-      />
-      <MqxGuidanceStrip
-        ref={stripRef}
-        mode="curriculum"
-        showMascot
-        title={guidance.title}
-        body={guidance.body}
-      moduleStep={guidance.module_step}
-      moduleStepCount={guidance.module_step_count}
-      viewIndex={guidance.view_index}
-      lastCompletedIndex={guidance.last_completed_index}
-      beatCompleted={guidance.beat_completed && !showContinue}
-      dismissHint={dismissHint}
-      showNav
-      onDismiss={handleCurriculumDismiss}
-      onPrev={() =>
-        patch({
-          action: 'nav',
-          view_index: Math.max(0, (guidance.view_index ?? 0) - 1),
-        })
-      }
-      onNext={() =>
-        patch({
-          action: 'nav',
-          view_index: (guidance.view_index ?? 0) + 1,
-        })
-      }
-      onContinue={
-        showContinue
-          ? () => patch({ action: 'advance_read', beat_id: guidance.beat_id })
-          : undefined
-      }
-      />
-    </>
+  return createPortal(
+    <div className="mqx-guidance-portal" data-testid="mqx-guidance-portal">
+      {layer}
+    </div>,
+    document.body,
   );
 }

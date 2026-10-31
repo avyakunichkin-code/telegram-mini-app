@@ -9,7 +9,8 @@ export function GameScreenLayout({ moodClass = '', overlays = null, children, ta
       <div className="mq-page__decor" aria-hidden />
       <div className="mq-page__grain" aria-hidden />
       {overlays}
-      <main className="mq-game-shell__main">{children}</main>
+      {/* Не <main>: ориентир main — у скролла вкладки (*Premium), вложенный main сбивал скринридер. */}
+      <div className="mq-game-shell__main">{children}</div>
       {tabNav}
     </div>
   );

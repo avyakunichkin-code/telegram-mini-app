@@ -2,11 +2,16 @@
 layer: ux
 status: approved
 last_reviewed: 2026-05-26
-platform: Telegram Mini App
+platform: SPA / PWA
 screen_id: needs-period-warnings-defeat
 parent: dashboard + period-close
+tags:
+  - tvoy-hod/layer/ux
+  - tvoy-hod/status/approved
+aliases:
+  - character-needs-period-defeat
+  - "UX Spec: Предупреждения периода и поражение по потребностям"
 ---
-
 # UX Spec: Предупреждения периода и поражение по потребностям
 
 > **Mechanics:** [ADR-005](../../decisions/ADR-005-character-needs-state-and-defeat.md)  

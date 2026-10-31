@@ -53,18 +53,27 @@
       "prod_component": "Capital page",
       "status": "approved",
       "canonical_rounds": [
-        { "path": "design-lab/capital-page/details-actions-round/", "status": "approved" }
+        { "path": "design-lab/board-game/screens-round/", "status": "approved" },
+        { "path": "design-lab/capital-page/details-actions-round/", "status": "superseded" }
       ]
     }
   ],
   "page_order_prod_components": [
     "MqxTabHero",
-    "CapitalMonetkaGuidance",
     "CapitalPeriodFlowsBlock",
-    "MqxCapitalSectionAccordion(title=\"Инвестиции\")",
-    "MqxCapitalSectionAccordion(title=\"Страховки\")",
-    "MqxCapitalSectionAccordion(title=\"Имущество\")",
-    "MqxCapitalSectionAccordion(title=\"Обязательства\")"
-  ]
+    "MqxCapitalPageModeSeg",
+    "CapitalDetailsPanel",
+    "CapitalActionsPanel"
+  ],
+  "details_panel_order": {
+    "prod_entry": "frontend-react/src/components/mqx/layout/CapitalDetailsPanel.jsx",
+    "notes": "Режим «Детали» ★ BG-2 (design-lab/board-game/screens-round): карточки собственности с цветной полосой в этом порядке — Вложения (золото), Страховки (фиолетовый), Имущество (изумруд), Долги (красный).",
+    "components": [
+      "CapitalLot(tone=\"invest\")",
+      "CapitalLot(tone=\"insure\")",
+      "CapitalLot(tone=\"property\")",
+      "CapitalLot(tone=\"debt\")"
+    ]
+  }
 }
 

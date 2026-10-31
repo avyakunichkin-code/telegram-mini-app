@@ -5,8 +5,13 @@ last_reviewed: 2026-06-01
 owner: product
 audience: product, playtest, marketing
 phase_note: Лайтовые пороги на старте; ужесточать после 1–2 волн с фактами
+tags:
+  - tvoy-hod/layer/handbook
+  - tvoy-hod/status/active
+aliases:
+  - "KPI по фазам продукта (лайтовый набор)"
+  - KPI_AND_PHASES
 ---
-
 # KPI по фазам продукта (лайтовый набор)
 
 Числовые ориентиры для **решений go / no-go**. Не заменяют здравый смысл и качественный разбор фидбека.

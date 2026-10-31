@@ -3,8 +3,13 @@ layer: reference
 purpose: implementation-checklist
 epic: E1
 spec: ../features/SPEC_expenses.md
+tags:
+  - tvoy-hod/layer/reference
+  - tvoy-hod/layer/spec
+aliases:
+  - "Чеклист внедрения E1 «Расходы» (все слои)"
+  - EXPENSES_LAYER_CHECKLIST
 ---
-
 # Чеклист внедрения E1 «Расходы» (все слои)
 
 Использовать при планировании спринтов и ревью PR: отмечать `[x]` по мере готовности.  
@@ -31,7 +36,7 @@ spec: ../features/SPEC_expenses.md
 - [ ] Таблица `profile_expense_lines` (индексы, FK)
 - [ ] Миграция `0013_...sql` (+ `0014` если нужны ALTER шаблонов)
 - [ ] SQLAlchemy модели в `models.py`
-- [ ] `main.py` / `migrate.ps1` — порядок применения
+- [ ] `main.py` / `backend/scripts/db.sh migrate` — порядок применения
 - [ ] Скрипт/сиды: разложить `base_monthly_lifestyle_expense` → `expense_budget` для каждого `game_starter_template`
 - [ ] `starter_params_json.expense_budget_snapshot` при `game/start`
 - [ ] Backfill: существующие активные профили — строки из base+delta (одна строка `other` или полная разбивка по дефолту)
@@ -131,12 +136,9 @@ spec: ../features/SPEC_expenses.md
 
 ---
 
-## 10. Plan Mode (волна D)
+## 10. ~~Plan Mode (волна D)~~ — cancelled ADR-013
 
-- [ ] Spec мастера Plan — секция расходов
-- [ ] CRUD API статей (`save_kind=plan`)
-- [ ] Префилл из `starter_params_json`
-- [ ] UI редактора
+- [x] Не делать мастер / CRUD `save_kind=plan` как второй продукт. Burn Game — волны выше.
 
 ---
 

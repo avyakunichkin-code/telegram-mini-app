@@ -1,14 +1,21 @@
 ---
 layer: plan
 status: draft
-last_reviewed: 2026-05-25
+last_reviewed: 2026-06-20
 idea: ../vision/ideas/pwa-standalone-channel.md
 epic: PW1
+tags:
+  - tvoy-hod/layer/plan
+  - tvoy-hod/status/draft
+aliases:
+  - "PLAN pwa standalone"
+  - PLAN_pwa-standalone
+  - "Plan: PWA / standalone (эпик PW1)"
+  - "PWA / standalone (эпик PW1)"
 ---
-
 # Plan: PWA / standalone (эпик PW1)
 
-**Драйвер:** нестабильный resume в TMA при блокировке экрана.  
+**Драйвер:** нестабильный resume в TMA при блокировке экрана; **стратегия 2026-06 ([ADR-012](../decisions/ADR-012-primary-channels-pwa-web-over-tma.md)):** PWA — **primary channel**, не «запасной вход».  
 **Принцип:** сначала исправить lifecycle на клиенте (выигрыш для всех каналов), потом упаковка PWA.
 
 ---

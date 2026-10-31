@@ -10,8 +10,19 @@ idea: ../vision/ideas/debt-liability-capital-graph.md
 tasks: ../tasks/TASKS_debt-liability-capital-graph.md
 traceability: ../TRACEABILITY.md
 next_skill: spec-driven-development
+tags:
+  - tvoy-hod/layer/plan
+  - tvoy-hod/status/active
+  - tvoy-hod/topic/capital
+  - tvoy-hod/topic/debt
+  - tvoy-hod/topic/insurance
+  - tvoy-hod/topic/liability
+aliases:
+  - "План эпика DL1: Реалистичный долг и граф капитала"
+  - DL1
+  - "PLAN debt liability capital graph"
+  - PLAN_debt-liability-capital-graph
 ---
-
 # План эпика DL1: Реалистичный долг и граф капитала
 
 **Эпик:** `DL1` — перед **Pre-Alpha PA-W2** (после PA-W1 / стабилизации O2+I1), **параллельно не конкурирует** с E1 (расходы ждут go).

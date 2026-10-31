@@ -1,10 +1,10 @@
 from fastapi import HTTPException
 from sqlalchemy.orm import Session
 
-from ...guidance.engine import build_guidance_overview, patch_guidance
+from ...guidance.engine import UnknownGuidanceAction, build_guidance_overview, patch_guidance
 from ...models import User
 from ...schemas import GuidanceOverview, GuidancePatchRequest, GuidancePatchResponse
-from ...game.time import get_active_game_profile
+from ...game.session import get_active_game_profile
 
 
 def get_guidance(db: Session, user_id: int) -> GuidanceOverview:
@@ -24,7 +24,10 @@ def patch_user_guidance(db: Session, user_id: int, payload: GuidancePatchRequest
             action=payload.action.strip(),
             beat_id=payload.beat_id,
             view_index=payload.view_index,
+            trigger_id=payload.trigger_id,
         )
+    except UnknownGuidanceAction as e:
+        raise HTTPException(status_code=400, detail=str(e)) from e
     except ValueError as e:
         raise HTTPException(status_code=404, detail=str(e)) from e
     return GuidancePatchResponse(guidance=GuidanceOverview(**data))

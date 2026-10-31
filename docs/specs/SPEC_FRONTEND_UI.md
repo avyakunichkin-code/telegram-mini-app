@@ -1,21 +1,30 @@
-# Spec: Frontend UI/UX — ТВОЙ ХОД TMA
+---
+tags:
+  - tvoy-hod/layer/spec
+aliases:
+  - "Frontend UI/UX — ТВОЙ ХОД (SPA / PWA)"
+  - "SPEC FRONTEND_UI"
+  - SPEC_FRONTEND_UI
+  - "Spec: Frontend UI/UX — ТВОЙ ХОД"
+---
+# Spec: Frontend UI/UX — ТВОЙ ХОД
 
-**Статус:** принят (аудит 2026-05)  
-**Связанные документы:** [`reference/brandbook/BRANDBOOK.md`](../reference/brandbook/BRANDBOOK.md) (identity), [`reference/brandbook/BRANDBOOK_MQX.md`](../reference/brandbook/BRANDBOOK_MQX.md) (MQX UI), [`foundation/TMA_USER_FLOWS.md`](../foundation/TMA_USER_FLOWS.md), [`CLAUDE.md`](../../CLAUDE.md)  
-Проектные Agent Skills и приоритеты — [`agents/CURSOR_SKILLS.md`](../agents/CURSOR_SKILLS.md).
+**Статус:** принят (аудит 2026-05; каналы — [ADR-012](../decisions/ADR-012-primary-channels-pwa-web-over-tma.md))  
+**Связанные документы:** [`reference/brandbook/BRANDBOOK.md`](../reference/brandbook/BRANDBOOK.md) (identity), [`reference/brandbook/BRANDBOOK_MQX.md`](../reference/brandbook/BRANDBOOK_MQX.md) (MQX UI), [`foundation/TMA_USER_FLOWS.md`](../foundation/TMA_USER_FLOWS.md) (secondary channel), [`CLAUDE.md`](../../CLAUDE.md)  
+Проектные Agent Skills и приоритеты — [`agents/AGENT_SKILLS.md`](../agents/AGENT_SKILLS.md).
 
 ---
 
 ## Objective
 
-Зафиксировать единые правила интерфейса Telegram Mini App **ТВОЙ ХОД**: визуальный язык MQX, доступность, состояния экрана и границы между кастомным UI и `@telegram-apps/telegram-ui`.
+Зафиксировать единые правила интерфейса **SPA ТВОЙ ХОД** (PWA/web primary; TMA — subset constraints): визуальный язык MQX, доступность, состояния экрана и границы между кастомным UI и `@telegram-apps/telegram-ui`.
 
-**Пользователь:** игрок в TMA (мобильный, 320–480px, светлая/тёмная тема Telegram).
+**Пользователь:** игрок на **touch-first** viewport 320–480px (браузер, PWA, опционально TMA); светлая/тёмная тема.
 
 **Успех спецификации:**
 - Новые и изменённые экраны выглядят как часть одного приложения (не «два продукта»).
 - Нет англоязычных хвостов и ложных индикаторов прогресса в production UI.
-- Агент и разработчик могут свериться с spec + `.cursor/rules/tvoy-hod-frontend-*.mdc` без повторного аудита.
+- Агент и разработчик могут свериться с spec + `.claude/rules/frontend-*.md` без повторного аудита.
 
 **Вне scope этой spec:** продуктовый переход Game/Plan ([`SPEC_game-plan`](features/SPEC_game-plan.md), [evolution §II](../vision/ideas/tvoy-hod-evolution-after-mvp.md)), бэкенд-контракты.
 
@@ -25,7 +34,7 @@
 2. Premium-вкладки игры (`DashboardPremium`, `FinancePremium`, `AnalyticsPremium`, `MenuPremium`) — **эталон**; legacy `*Section.jsx` не расширяем, только поддерживаем до удаления.
 3. Язык интерфейса — **русский**; латиница допустима в терминах API/коде, не в видимых подписях.
 4. TMA: одна колонка `#root` max-width 480px, нижний таббар с safe-area.
-5. **Компонентная база MQX:** новые или существенно меняющие внешний вид элементы в `mqx/` и на premium-экранах проходят цикл из [`DESIGN_WORKFLOW.md`](../../frontend-react/src/components/mqx/DESIGN_WORKFLOW.md); этапы не пропускаются без явного согласования (исключение: багфикс/hotfix). Правило дублируется в `.cursor/rules/tvoy-hod-frontend-mqx.mdc` и [`agents/CURSOR_SKILLS.md`](../agents/CURSOR_SKILLS.md).
+5. **Компонентная база MQX:** новые или существенно меняющие внешний вид элементы в `mqx/` и на premium-экранах проходят цикл из [`DESIGN_WORKFLOW.md`](../../frontend-react/src/components/mqx/DESIGN_WORKFLOW.md); этапы не пропускаются без явного согласования (исключение: багфикс/hotfix). Правило дублируется в `.claude/rules/frontend-mqx.md` и [`agents/AGENT_SKILLS.md`](../agents/AGENT_SKILLS.md).
 
 ---
 
@@ -80,8 +89,8 @@ docs/
   reference/brandbook/BRANDBOOK.md      # Identity: лого, цвет, голос, Монетка
   reference/brandbook/BRANDBOOK_MQX.md  # Product UI: MQX, токены, паттерны
   foundation/TMA_USER_FLOWS.md      # Потоки и боли
-.cursor/rules/
-  tvoy-hod-frontend-*.mdc  # Правила для агента
+.claude/rules/
+  frontend-*.md  # Правила для агента (Claude Code)
 ```
 
 ---
@@ -344,4 +353,4 @@ Lab ★: [`design-lab/game-templates/persona-portraits-round/`](../../design-lab
 
 ---
 
-*Живой документ: при изменении паттерна MQX обновляйте этот файл и `.cursor/rules/tvoy-hod-frontend-*.mdc`.*
+*Живой документ: при изменении паттерна MQX обновляйте этот файл и `.claude/rules/frontend-*.md`.*

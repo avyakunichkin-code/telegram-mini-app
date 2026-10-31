@@ -1,3 +1,10 @@
+---
+tags:
+  - tvoy-hod/layer/idea
+aliases:
+  - "MQX — оболочки pre-game и кнопки"
+  - mqx-app-shell-pre-game-unification
+---
 # MQX — оболочки pre-game и кнопки
 
 **Статус:** утверждено направление (2026-05-25)  

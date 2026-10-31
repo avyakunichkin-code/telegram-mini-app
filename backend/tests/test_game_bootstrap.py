@@ -25,7 +25,11 @@ def test_game_bootstrap_shape(client):
     assert "events" in body
 
     assert body["overview"]["cash_balance"] is not None
-    assert body["time"]["time_state"] in ("play", "pause")
+    assert body["time"]["period_index"] >= 1
+    # TB1: real-time таймера нет — полей таймера в ответе быть не должно
+    for removed in ("time_state", "period_duration_seconds", "seconds_until_next_period"):
+        assert removed not in body["time"]
+        assert removed not in body["overview"]
     assert body["period"]["period_index"] >= 1
     assert isinstance(body["events"]["events"], list)
 

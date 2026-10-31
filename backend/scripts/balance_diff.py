@@ -4,6 +4,10 @@ Diff two balance_simulate.py JSON reports (current vs baseline).
 
 Thresholds: docs/balance/THRESHOLDS.md
 
+Кроме дрейфа к baseline — абсолютные инварианты победимости (INVARIANT FAIL): они ловят
+непобедимую экономику, даже если baseline уже непобедим. Отчёт — check_report_invariants,
+набор отчётов (полный прогон manifest) — check_suite_invariants.
+
 Usage (from backend/):
   python scripts/balance_diff.py --current report.json --baseline docs/balance/baselines/main__student_tutorial_40p.json
 """
@@ -14,7 +18,11 @@ import argparse
 import json
 import sys
 from pathlib import Path
-from typing import Any
+from typing import Any, Literal
+
+from balance_simulate import NEEDS_AWARE_POLICIES
+
+InvariantMode = Literal["fail", "warn"]
 
 DIFF_THRESHOLDS = {
     "periods_closed_delta_warning": 3,
@@ -23,6 +31,95 @@ DIFF_THRESHOLDS = {
     "cash_pct_regression": 25.0,
     "events_resolved_pct_warning": 10.0,
 }
+
+# Инварианты дизайна (аудит 2026-10-25, docs/balance/THRESHOLDS.md § «Инварианты победимости»).
+INVARIANTS = {
+    # INV-1: на каждом шаблоне хотя бы одна политика побеждает в этом окне ходов.
+    "win_window": (12, 30),
+    # INV-2: needs-aware бот с cash > N × расходов хода не гибнет от потребностей раньше этого хода.
+    "rich_death_cash_x_outflow": 3.0,
+    "rich_death_before_period": 20,
+    # INV-3: одно-осевая политика не побеждает быстрее эталона chain_runner с запасом.
+    "dominance_margin": 1.3,
+    "single_axis_policies": ("needs_keeper", "idle"),
+    "reference_policy": "chain_runner",
+}
+
+
+def _invariant_flag(mode: InvariantMode, code: str, text: str) -> str:
+    prefix = "INVARIANT FAIL" if mode == "fail" else "WARNING: invariant"
+    return f"{prefix} {code}: {text}"
+
+
+def check_report_invariants(report: dict, *, mode: InvariantMode = "fail") -> list[str]:
+    """INV-2: смерть от потребностей при полном кошельке — деньги не покупают выживание."""
+    meta, s = report.get("meta", {}), report.get("summary", {})
+    if meta.get("policy") not in NEEDS_AWARE_POLICIES:
+        return []
+    if not s.get("defeated") or s.get("defeat_reason") != "needs_depletion":
+        return []
+    closed = int(s.get("periods_closed") or 0)
+    if closed >= INVARIANTS["rich_death_before_period"]:
+        return []
+    # Последняя строка — уже обнулённый профиль; смотрим ход перед поражением.
+    rows = [r for r in report.get("periods") or [] if r.get("phase") == "closed" and r.get("is_active", True)]
+    if not rows:
+        return []
+    last = rows[-1]
+    cash, outflow = float(last.get("cash") or 0), float(last.get("outflow") or 0)
+    k = INVARIANTS["rich_death_cash_x_outflow"]
+    if outflow > 0 and cash > k * outflow:
+        return [
+            _invariant_flag(
+                mode,
+                "INV-2",
+                f"needs_depletion на P{closed} при cash {cash:,.0f} > {k:g}× расходов хода ({outflow:,.0f})",
+            )
+        ]
+    return []
+
+
+def check_suite_invariants(reports: list[dict], *, mode: InvariantMode = "fail") -> list[str]:
+    """INV-1 (окно победы) и INV-3 (доминирование) по шаблонам полного прогона."""
+    lo, hi = INVARIANTS["win_window"]
+    margin = INVARIANTS["dominance_margin"]
+    ref_policy = INVARIANTS["reference_policy"]
+    by_template: dict[str, dict[str, dict]] = {}
+    for r in reports:
+        meta = r.get("meta", {})
+        by_template.setdefault(str(meta.get("template_key")), {})[str(meta.get("policy"))] = r.get("summary", {})
+
+    flags: list[str] = []
+    for tpl, by_policy in sorted(by_template.items()):
+        wins = {pol: s.get("win_at_period") for pol, s in by_policy.items() if s.get("win_at_period") is not None}
+        if not any(lo <= int(w) <= hi for w in wins.values()):
+            best = ", ".join(
+                f"{pol} {s.get('goals_met_peak', s.get('goals_met'))}/{s.get('goals_enabled')}"
+                + (f" win P{s['win_at_period']}" if s.get("win_at_period") is not None else "")
+                for pol, s in sorted(by_policy.items())
+            )
+            flags.append(_invariant_flag(mode, "INV-1", f"{tpl}: нет победы в окне P{lo}–P{hi} ({best})"))
+
+        if ref_policy not in by_policy:
+            continue
+        ref_win = by_policy[ref_policy].get("win_at_period")
+        for pol in INVARIANTS["single_axis_policies"]:
+            win = wins.get(pol)
+            if win is None:
+                continue
+            if ref_win is None:
+                flags.append(_invariant_flag(mode, "INV-3", f"{tpl}: {pol} побеждает (P{win}), {ref_policy} — нет"))
+            elif int(win) * margin < int(ref_win):
+                flags.append(
+                    _invariant_flag(
+                        mode, "INV-3", f"{tpl}: {pol} P{win} быстрее {ref_policy} P{ref_win} больше чем в {margin:g}×"
+                    )
+                )
+    return flags
+
+
+def has_blocking_flags(flags: list[str]) -> bool:
+    return any("REGRESSION" in f or f.startswith("INVARIANT FAIL") for f in flags)
 
 
 def _load(path: Path) -> dict[str, Any]:
@@ -54,7 +151,7 @@ def _cash_shift_flags(
         flags.append(f"WARNING: {key} сдвиг {pct:.0f}% ({base_v} -> {cur_v})")
 
 
-def diff_reports(current: dict, baseline: dict) -> dict[str, Any]:
+def diff_reports(current: dict, baseline: dict, *, invariants: InvariantMode = "fail") -> dict[str, Any]:
     cm, bm = current.get("meta", {}), baseline.get("meta", {})
     cs, bs = current.get("summary", {}), baseline.get("summary", {})
 
@@ -79,6 +176,7 @@ def diff_reports(current: dict, baseline: dict) -> dict[str, Any]:
         "defeated",
         "defeat_reason",
         "goals_met",
+        "goals_met_peak",
         "goals_enabled",
         "periods_closed",
         "cash_end",
@@ -190,6 +288,8 @@ def diff_reports(current: dict, baseline: dict) -> dict[str, Any]:
             if abs(int(pc) - int(pb)) >= DIFF_THRESHOLDS["periods_closed_delta_warning"]:
                 flags.append(f"WARNING: periods_closed {pb} -> {pc}")
 
+    flags.extend(check_report_invariants(current, mode=invariants))
+
     return {
         "meta_mismatch": mismatch,
         "baseline_git": bm.get("git_sha"),
@@ -236,6 +336,8 @@ def format_diff_markdown(diff: dict, current: dict, baseline: dict) -> str:
 
     if diff.get("meta_mismatch"):
         verdict = "INVALID COMPARISON"
+    elif any(f.startswith("INVARIANT FAIL") for f in diff.get("flags", [])):
+        verdict = "INVARIANT FAIL"
     elif any("REGRESSION" in f for f in diff.get("flags", [])):
         verdict = "REGRESSION LIKELY"
     elif any("WARNING" in f for f in diff.get("flags", [])):
@@ -255,11 +357,17 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--current", type=Path, required=True)
     parser.add_argument("--baseline", type=Path, required=True)
     parser.add_argument("--out", type=Path, help="Write markdown to file")
+    parser.add_argument(
+        "--invariants",
+        choices=["fail", "warn"],
+        default="fail",
+        help="Инварианты победимости: fail (exit 1) или warn (на время перекалибровки)",
+    )
     args = parser.parse_args(argv)
 
     current = _load(args.current)
     baseline = _load(args.baseline)
-    diff = diff_reports(current, baseline)
+    diff = diff_reports(current, baseline, invariants=args.invariants)
     md = format_diff_markdown(diff, current, baseline)
 
     if args.out:
@@ -270,7 +378,7 @@ def main(argv: list[str] | None = None) -> int:
     print(md)
     if diff.get("meta_mismatch"):
         return 2
-    return 1 if any("REGRESSION" in f for f in diff.get("flags", [])) else 0
+    return 1 if has_blocking_flags(diff.get("flags", [])) else 0
 
 
 if __name__ == "__main__":

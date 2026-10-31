@@ -6,15 +6,20 @@ last_reviewed: 2026-05-30
 implemented: 2026-05-24
 note: Историческая запись ADR-003. Не дизайн-док для новых фич; xp_delta в каталоге запрещён.
 supersedes_in_spirit:
-  - ../../specs/gameplay/LEVEL_XP_SYSTEM.md
-  - ../../plans/PLAN_level-xp-progression.md
+  - ../../archive/character-xp-progression/README.md
+  - ../../archive/character-xp-progression/README.md
 related_specs:
   - ../../specs/features/SPEC_victory-v2.md
   - ../../specs/features/SPEC_mvp-11-progression-events.md
   - ../../foundation/SPEC_PRODUCT.md
 adr: ../../decisions/ADR-003-remove-character-progression.md
+tags:
+  - tvoy-hod/layer/idea
+  - tvoy-hod/status/implemented-archive
+aliases:
+  - "Убрать уровень персонажа, XP и «геймификационный» рейтинг"
+  - remove-character-xp-and-levels
 ---
-
 # Убрать уровень персонажа, XP и «геймификационный» рейтинг
 
 ## Решения продукта (2026-05-24)
@@ -107,7 +112,7 @@ adr: ../../decisions/ADR-003-remove-character-progression.md
 
 ### Документация (этот PR)
 
-- [x] `LEVEL_XP_SYSTEM.md`, матрица XP, `PLAN_level-xp-progression` → **superseded**
+- [x] level/XP docs → [`archive/character-xp-progression/`](../../archive/character-xp-progression/README.md)
 - [x] `docs/README.md`, `SPEC_PRODUCT.md` §7.2
 - [x] `GAME.md` §0 — сводка статуса (без character XP)
 - [x] `PRODUCT_BACKLOG` — M11 / MQ-111–116 и level-gates отмечены выполненными; character XP снят

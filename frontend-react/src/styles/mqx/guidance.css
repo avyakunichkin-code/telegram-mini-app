@@ -1,8 +1,27 @@
+.mqx-guidance-portal {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 508;
+  max-width: 480px;
+  margin-inline: auto;
+}
+
+.mqx-guidance-portal > * {
+  pointer-events: auto;
+}
+
 .mqx-guidance-strip {
   position: fixed;
   left: var(--mqx-dash-inline-pad, 14px);
   right: var(--mqx-dash-inline-pad, 14px);
-  bottom: calc(var(--tma-tabbar-inset, 64px) + 4px);
+  bottom: var(--mqx-tabbar-measured, var(--tma-tabbar-inset, 64px));
+  max-height: min(
+    46vh,
+    calc(100dvh - var(--mqx-tabbar-measured, var(--tma-tabbar-inset, 64px)) - 16px)
+  );
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
   z-index: 510;
   width: auto;
   max-width: var(--mqx-content-max, 480px);
@@ -108,7 +127,7 @@
   max-height: 62px;
   object-fit: contain;
   object-position: left bottom;
-  filter: drop-shadow(0 3px 8px color-mix(in srgb, var(--mq-violet, #6d28d9) 18%, transparent));
+  filter: drop-shadow(0 3px 8px color-mix(in srgb, var(--mq-violet) 18%, transparent));
 }
 
 .mqx-guidance-strip__title {
@@ -152,8 +171,8 @@
   font-weight: 700;
   line-height: 1;
   color: #fff;
-  background: var(--mq-emerald, #059669);
-  box-shadow: 0 0 0 2px color-mix(in srgb, var(--mq-emerald, #059669) 22%, transparent);
+  background: var(--mq-emerald);
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--mq-emerald) 22%, transparent);
 }
 
 .mqx-guidance-strip__cta {
@@ -177,8 +196,13 @@
   padding-bottom: var(--mqx-guidance-scroll-pad, calc(200px + env(safe-area-inset-bottom, 0px)));
 }
 
+body.mqx-page--guidance-active .mqx-guidance-strip,
 .mqx-page--guidance-active .mqx-guidance-strip {
   z-index: 545;
+}
+
+body.mqx-page--guidance-active .mqx-guidance-portal {
+  z-index: 540;
 }
 
 /* Sheet подушки (portal) — над полоской обучения, не перекрывается ею */
@@ -200,10 +224,18 @@ body.mqx-page--guidance-active .mqx-sheet-root--portal {
 .mqx-onboarding-anchor--focus {
   position: relative;
   z-index: 5;
-  outline: 2px solid color-mix(in srgb, var(--mq-violet, #6d28d9) 72%, transparent);
+  outline: 2px solid color-mix(in srgb, var(--mq-violet) 72%, transparent);
   outline-offset: 3px;
   border-radius: 12px;
   animation: mqx-onboarding-anchor-pulse 1.6s ease-in-out infinite;
+}
+
+.mqx-finance-static.mqx-onboarding-anchor--focus,
+.mqx-finance-static__chips.mqx-onboarding-anchor--focus {
+  border-radius: 14px;
+  box-shadow:
+    0 0 0 3px color-mix(in srgb, var(--mq-violet) 45%, transparent),
+    0 8px 24px color-mix(in srgb, var(--mq-violet) 18%, transparent);
 }
 
 .mqx-action-chip.mqx-onboarding-anchor--focus,
@@ -219,12 +251,12 @@ body.mqx-page--guidance-active .mqx-sheet-root--portal {
   outline: none;
   border-radius: 16px;
   box-shadow:
-    inset 0 0 0 3px var(--mq-violet, #6d28d9),
-    0 0 0 5px color-mix(in srgb, var(--mq-violet, #6d28d9) 32%, transparent),
-    0 14px 36px color-mix(in srgb, var(--mq-violet, #6d28d9) 24%, transparent);
+    inset 0 0 0 3px var(--mq-violet),
+    0 0 0 5px color-mix(in srgb, var(--mq-violet) 32%, transparent),
+    0 14px 36px color-mix(in srgb, var(--mq-violet) 24%, transparent);
   background: linear-gradient(
     165deg,
-    color-mix(in srgb, var(--mq-violet, #6d28d9) 11%, var(--tg-theme-bg-color, #fff)) 0%,
+    color-mix(in srgb, var(--mq-violet) 11%, var(--tg-theme-bg-color, #fff)) 0%,
     color-mix(in srgb, var(--mq-sky, #0ea5e9) 5%, var(--tg-theme-bg-color, #fff)) 100%
   );
   animation: mqx-onboarding-needs-spotlight 1.35s ease-in-out infinite;
@@ -235,7 +267,7 @@ body.mqx-page--guidance-active .mqx-sheet-root--portal {
   position: absolute;
   inset: -2px;
   border-radius: 18px;
-  border: 2px dashed color-mix(in srgb, var(--mq-violet, #6d28d9) 70%, #fff);
+  border: 2px dashed color-mix(in srgb, var(--mq-violet) 70%, #fff);
   pointer-events: none;
   animation: mqx-onboarding-needs-frame-pulse 1.35s ease-in-out infinite;
 }
@@ -246,7 +278,7 @@ body.mqx-page--guidance-active .mqx-sheet-root--portal {
   z-index: 2;
   box-shadow:
     0 0 0 2px #fff,
-    0 0 0 4px var(--mq-violet, #6d28d9);
+    0 0 0 4px var(--mq-violet);
   border-radius: 12px;
   animation: mqx-onboarding-needs-icon-pulse 1.35s ease-in-out infinite;
 }
@@ -254,22 +286,22 @@ body.mqx-page--guidance-active .mqx-sheet-root--portal {
 .mqx-needs-section.mqx-onboarding-anchor--focus .mqx-treat-heart-btn {
   box-shadow:
     0 0 0 2px #fff,
-    0 0 0 4px color-mix(in srgb, var(--mq-emerald, #059669) 55%, var(--mq-violet, #6d28d9));
+    0 0 0 4px color-mix(in srgb, var(--mq-emerald) 55%, var(--mq-violet));
 }
 
 @keyframes mqx-onboarding-needs-spotlight {
   0%,
   100% {
     box-shadow:
-      inset 0 0 0 3px color-mix(in srgb, var(--mq-violet, #6d28d9) 78%, transparent),
-      0 0 0 5px color-mix(in srgb, var(--mq-violet, #6d28d9) 22%, transparent),
-      0 10px 28px color-mix(in srgb, var(--mq-violet, #6d28d9) 16%, transparent);
+      inset 0 0 0 3px color-mix(in srgb, var(--mq-violet) 78%, transparent),
+      0 0 0 5px color-mix(in srgb, var(--mq-violet) 22%, transparent),
+      0 10px 28px color-mix(in srgb, var(--mq-violet) 16%, transparent);
   }
   50% {
     box-shadow:
-      inset 0 0 0 3px var(--mq-violet, #6d28d9),
-      0 0 0 7px color-mix(in srgb, var(--mq-violet, #6d28d9) 38%, transparent),
-      0 16px 40px color-mix(in srgb, var(--mq-violet, #6d28d9) 28%, transparent);
+      inset 0 0 0 3px var(--mq-violet),
+      0 0 0 7px color-mix(in srgb, var(--mq-violet) 38%, transparent),
+      0 16px 40px color-mix(in srgb, var(--mq-violet) 28%, transparent);
   }
 }
 
@@ -293,14 +325,33 @@ body.mqx-page--guidance-active .mqx-sheet-root--portal {
   }
 }
 
-/* Hero / «Закрыть месяц» — фиолетовый фон, кольцо белое */
+/* Hero / «Завершить ход» — фиолетовый фон, кольцо белое */
 .mqx-hero.mqx-onboarding-anchor--focus,
 .mqx-hero-turn__cta-primary.mqx-onboarding-anchor--focus {
-  outline-color: #fff;
+  outline: 2px solid #fff;
+  outline-offset: 3px;
   box-shadow:
-    0 0 0 1px color-mix(in srgb, var(--mq-violet-deep, #4c1d95) 40%, transparent),
+    0 0 0 1px color-mix(in srgb, var(--mq-violet-deep) 40%, transparent),
     0 2px 12px color-mix(in srgb, #000 22%, transparent);
   animation: mqx-onboarding-anchor-pulse-light 1.6s ease-in-out infinite;
+}
+
+/* «События» на t_events_intro: полупрозрачная пилюля + белый outline не читаются на hero */
+.mqx-hero-turn__events-pill.mqx-onboarding-anchor--focus {
+  outline: none;
+  border: 2px solid #fff;
+  background: #fff;
+  color: var(--mq-violet-deep);
+  box-shadow:
+    0 0 0 2px var(--mq-violet-deep),
+    0 0 0 5px #fff,
+    0 6px 20px rgba(15, 17, 21, 0.32);
+  animation: mqx-onboarding-events-pill-pulse 1.5s ease-in-out infinite;
+}
+
+.mqx-hero-turn__events-pill.mqx-onboarding-anchor--focus .mqx-pill__badge {
+  background: color-mix(in srgb, var(--mq-violet-deep) 14%, #fff);
+  color: var(--mq-violet-deep);
 }
 
 .mqx-guidance-anchor-link {
@@ -315,7 +366,7 @@ body.mqx-page--guidance-active .mqx-sheet-root--portal {
 
 .mqx-guidance-anchor-link__path {
   fill: none;
-  stroke: color-mix(in srgb, var(--mq-violet, #6d28d9) 62%, #fff 38%);
+  stroke: color-mix(in srgb, var(--mq-violet) 62%, #fff 38%);
   stroke-width: 2;
   stroke-linecap: round;
   stroke-dasharray: 7 6;
@@ -323,7 +374,7 @@ body.mqx-page--guidance-active .mqx-sheet-root--portal {
 }
 
 .mqx-guidance-anchor-link__dot {
-  fill: color-mix(in srgb, var(--mq-violet, #6d28d9) 75%, transparent);
+  fill: color-mix(in srgb, var(--mq-violet) 75%, transparent);
 }
 
 .mqx-page--guidance-active:has(.mqx-needs-section.mqx-onboarding-anchor--focus) .mqx-guidance-anchor-link__path {
@@ -332,7 +383,7 @@ body.mqx-page--guidance-active .mqx-sheet-root--portal {
 
 .mqx-page--guidance-active:has(.mqx-needs-section.mqx-onboarding-anchor--focus) .mqx-guidance-anchor-link__dot {
   r: 6;
-  fill: var(--mq-violet, #6d28d9);
+  fill: var(--mq-violet);
 }
 
 @keyframes mqx-guidance-link-dash {
@@ -344,10 +395,10 @@ body.mqx-page--guidance-active .mqx-sheet-root--portal {
 @keyframes mqx-onboarding-anchor-pulse {
   0%,
   100% {
-    outline-color: color-mix(in srgb, var(--mq-violet, #6d28d9) 55%, transparent);
+    outline-color: color-mix(in srgb, var(--mq-violet) 55%, transparent);
   }
   50% {
-    outline-color: color-mix(in srgb, var(--mq-violet, #6d28d9) 88%, transparent);
+    outline-color: color-mix(in srgb, var(--mq-violet) 88%, transparent);
   }
 }
 
@@ -361,6 +412,22 @@ body.mqx-page--guidance-active .mqx-sheet-root--portal {
   }
 }
 
+@keyframes mqx-onboarding-events-pill-pulse {
+  0%,
+  100% {
+    box-shadow:
+      0 0 0 2px var(--mq-violet-deep),
+      0 0 0 5px rgba(255, 255, 255, 0.88),
+      0 6px 18px rgba(15, 17, 21, 0.26);
+  }
+  50% {
+    box-shadow:
+      0 0 0 2px var(--mq-violet-deep),
+      0 0 0 6px #fff,
+      0 10px 28px rgba(15, 17, 21, 0.36);
+  }
+}
+
 /* #/dev/mqx — strip внутри phone mockup, не fixed viewport */
 .mqx-guidance-strip-demo__phone {
   position: relative;
@@ -370,7 +437,7 @@ body.mqx-page--guidance-active .mqx-sheet-root--portal {
   border-radius: 20px;
   overflow: hidden;
   background: var(--tg-theme-bg-color, #fff);
-  box-shadow: 0 12px 40px color-mix(in srgb, var(--mq-ink, #0f1115) 10%, transparent);
+  box-shadow: 0 12px 40px color-mix(in srgb, var(--mq-ink) 10%, transparent);
 }
 
 .mqx-guidance-strip-demo__dash {
@@ -413,7 +480,7 @@ body.mqx-page--guidance-active .mqx-sheet-root--portal {
 }
 
 .mqx-guidance-strip-demo__tabbar .is-active {
-  color: var(--mq-violet, #6d28d9);
+  color: var(--mq-violet);
   font-weight: 700;
 }
 
@@ -430,4 +497,18 @@ body.mqx-page--guidance-active .mqx-sheet-root--portal {
   flex-wrap: wrap;
   gap: 8px;
   margin-bottom: 4px;
+}
+
+/* Тосты (ToastHost): над таббаром, а при полоске Монетки — над ней, иначе тост закрывает её текст. */
+.mq-toast-host {
+  bottom: max(
+    calc(var(--tma-tabbar-inset, 64px) + var(--mq-sp-7) + var(--mq-sp-5)),
+    calc(var(--mqx-guidance-strip-lift, 0px) + var(--mq-sp-3))
+  );
+}
+
+/* Пунктир к якорю не рисуем, пока якорь закрыт оверлеем (карусель событий, итоги хода). */
+body.mqx-events-overlay-open .mqx-guidance-anchor-link,
+body:has(.mqx-juice-ritual-root--open) .mqx-guidance-anchor-link {
+  display: none;
 }

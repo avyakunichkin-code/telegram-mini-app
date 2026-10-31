@@ -5,8 +5,9 @@ from __future__ import annotations
 from fastapi import HTTPException
 from sqlalchemy.orm import Session
 
+from fincore.annuity import sale_cashflow
+
 from ...constants import EPSILON
-from ...finance.annuity import sale_cashflow
 from ...finance.balance_utils import adjust_balance
 from ...models import FinanceAsset, FinanceLiability, GameProfile, InsurancePolicy
 

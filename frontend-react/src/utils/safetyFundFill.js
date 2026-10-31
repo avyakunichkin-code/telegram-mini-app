@@ -1,6 +1,6 @@
 /**
  * Индикатор подушки — базовая норма финансовой безопасности, не цели сценария.
- * Норма = ×3 всех текущих расходов за период (обязательства + burn).
+ * Норма = ×3 всех текущих расходов за ход (обязательства + burn).
  */
 
 export const SAFETY_FUND_BASELINE_MULTIPLIER = 3;
@@ -17,10 +17,10 @@ export function formatSafetyFundChipTitle(percent) {
 }
 
 /** Подсказка для chip: от чего считается полоска */
-export const SAFETY_FUND_BASELINE_HINT = '×3 всех расходов за период';
+export const SAFETY_FUND_BASELINE_HINT = '×3 всех расходов за ход';
 
 /**
- * Сумма расходов за период: платежи по долгам + обслуживание активов + «на жизнь» (burn).
+ * Сумма расходов за ход: платежи по долгам + обслуживание активов + «на жизнь» (burn).
  * @param {{ total_monthly_outflow?: number, total_monthly_obligations?: number, monthly_burn_total?: number }} overview
  */
 export function resolveMonthlyPressureForBaseline(overview) {

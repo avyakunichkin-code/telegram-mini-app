@@ -10,8 +10,20 @@ related:
   - ../../ops/DEPLOY.md
   - ../../marketing/TELEGRAM_PUBLISHING.md
   - ../../foundation/KPI_AND_PHASES.md
+tags:
+  - tvoy-hod/layer/spec
+  - tvoy-hod/status/draft
+  - tvoy-hod/topic/a0
+  - tvoy-hod/topic/notifications
+  - tvoy-hod/topic/pre-alpha
+  - tvoy-hod/topic/telegram
+aliases:
+  - A0
+  - "SPEC telegram bots and notifications"
+  - SPEC_telegram-bots-and-notifications
+  - "Spec: Telegram-боты, уведомления и ops-аналитика"
+  - "Telegram-боты, уведомления и ops-аналитика"
 ---
-
 # Spec: Telegram-боты, уведомления и ops-аналитика
 
 ## Assumptions
@@ -393,7 +405,7 @@ In-app inbox — **не** в этом spec; см. parent idea Phase 1.
 
 ## Testing strategy
 
-Skill: **`/critical-tests`**. Ref: [`backend/tests/README.md`](../../../backend/tests/README.md).
+Skill: **`/critical-test-scenarios`**. Ref: [`backend/tests/README.md`](../../../backend/tests/README.md).
 
 | Layer | What to prove |
 |-------|----------------|

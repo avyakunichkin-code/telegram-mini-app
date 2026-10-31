@@ -96,8 +96,8 @@ export function MqxGuidanceStripDemo() {
       <div className="mqx-guidance-strip-demo__phone">
         <div className="mqx-guidance-strip-demo__dash">
           <div className="mqx-guidance-strip-demo__hero-kicker">Месяц открыт</div>
-          <div className="mqx-guidance-strip-demo__hero-title">Закрыть месяц</div>
-          <div className="mqx-guidance-strip-demo__hero-meta">Период №1 · 42 150 ₽</div>
+          <div className="mqx-guidance-strip-demo__hero-title">Завершить ход</div>
+          <div className="mqx-guidance-strip-demo__hero-meta">Ход №1 · 42 150 ₽</div>
         </div>
         <nav className="mqx-guidance-strip-demo__tabbar" aria-hidden="true">
           <span className="is-active">Обзор</span>

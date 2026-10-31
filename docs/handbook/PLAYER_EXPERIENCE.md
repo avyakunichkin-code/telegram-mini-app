@@ -3,8 +3,13 @@ layer: handbook
 status: active
 last_reviewed: 2026-06-01
 audience: playtest
+tags:
+  - tvoy-hod/layer/handbook
+  - tvoy-hod/status/active
+aliases:
+  - "Как играть — за 5 минут (для плейтеста)"
+  - PLAYER_EXPERIENCE
 ---
-
 # Как играть — за 5 минут (для плейтеста)
 
 Короткая инструкция **без** технических деталей. Полный протокол сессии — [`PRE_ALPHA_PLAYTEST_PROTOCOL.md`](../foundation/PRE_ALPHA_PLAYTEST_PROTOCOL.md). Термины — [`GLOSSARY.md`](../foundation/GLOSSARY.md).

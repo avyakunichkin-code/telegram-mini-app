@@ -2,11 +2,16 @@
 layer: ux
 status: approved
 last_reviewed: 2026-05-26
-platform: Telegram Mini App
+platform: SPA / PWA
 screen_id: events-needs-delta
 parent: events-overlay
+tags:
+  - tvoy-hod/layer/ux
+  - tvoy-hod/status/approved
+aliases:
+  - character-needs-events
+  - "UX Spec: Потребности в событиях (`needs_delta`)"
 ---
-
 # UX Spec: Потребности в событиях (`needs_delta`)
 
 > **Parent flows:** [`TMA_USER_FLOWS.md`](../../foundation/TMA_USER_FLOWS.md) §4  

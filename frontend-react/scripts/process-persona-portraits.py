@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import importlib.util
+import subprocess
 from pathlib import Path
 
 from PIL import Image
@@ -20,8 +21,8 @@ defringe_gray_halo = _raster.defringe_gray_halo
 
 ROOT = Path(__file__).resolve().parents[1]
 REPO = ROOT.parent
-LAB_ASSETS = REPO / "design-lab" / "game-templates" / "persona-portraits-round" / "assets"
-PROD_ASSETS = ROOT / "src" / "assets" / "character-portraits"
+LAB_ASSETS = REPO / "design/archive/classic-v3/assets/Personas"
+PROD_ASSETS = REPO / "design/archive/classic-v3/assets/Personas"
 
 PERSONAS = ("student", "professional", "manager", "entrepreneur")
 HEIGHTS = {"pick": 56, "md": 72, "dash": 108}
@@ -99,14 +100,14 @@ def resolve_source(slug: str) -> Path | None:
     if lab_src.exists():
         return lab_src
     if slug == "student":
-        legacy = ROOT / "src" / "assets" / "character-needs" / "student-mascot.png"
+        legacy = REPO / "design/archive/classic-v3/assets/Needs/student-mascot.png"
         if legacy.exists():
             return legacy
     return None
 
 
 def main() -> None:
-    targets = [LAB_ASSETS, PROD_ASSETS]
+    targets = [PROD_ASSETS]
     for slug in PERSONAS:
         src = resolve_source(slug)
         if not src:
@@ -117,13 +118,14 @@ def main() -> None:
             write_outputs(base, slug, out_dir)
 
     # обратная совместимость: дашборд needs пока читает character-needs/
-    needs_dir = ROOT / "src" / "assets" / "character-needs"
+    needs_dir = REPO / "design/archive/classic-v3/assets/Needs"
     student_master = PROD_ASSETS / "student-mascot.png"
     if student_master.exists():
         im = Image.open(student_master)
         im.save(needs_dir / "student-mascot.png", "PNG")
         im.save(needs_dir / "student-mascot.webp", "WEBP", quality=86, method=6)
         print("OK synced student -> character-needs/")
+    subprocess.run(["node", str(REPO / "scripts/design-assets.mjs")], check=True)
 
 
 if __name__ == "__main__":

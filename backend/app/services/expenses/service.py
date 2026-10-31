@@ -1,52 +1,26 @@
-from fastapi import HTTPException
 from sqlalchemy.orm import Session
 
 from ...finance.expenses import (
     burn_breakdown_for_api,
     compute_monthly_burn,
-    create_plan_expense_line,
     ensure_expense_category_catalog,
-    line_to_overview_item,
-    revoke_plan_expense_line,
-    update_plan_expense_line,
-    _category_titles,
 )
-from ...game.time import sync_time
 from ...models import (
     ExpenseCategoryDefinition,
     FinanceAsset,
     FinanceLiability,
     FinanceSalary,
     GameProfile,
-    ProfileExpenseLine,
 )
 from ...schemas import (
     ExpenseCategoryPublic,
-    ExpenseLineCreate,
     ExpenseLineResponse,
-    ExpenseLineUpdate,
     ExpensesSnapshotResponse,
     MonthlyBurnBreakdown,
 )
 
 
-def line_response(db: Session, row: ProfileExpenseLine) -> ExpenseLineResponse:
-    titles = _category_titles(db)
-    view = line_to_overview_item(row, titles)
-    return ExpenseLineResponse(
-        id=view.id,
-        category_key=view.category_key,
-        category_title=view.category_title,
-        title=view.title,
-        amount_monthly=view.amount_monthly,
-        tier=view.tier,
-        source_kind=view.source_kind,
-        expires_period_index=view.expires_period_index,
-    )
-
-
 def expenses_snapshot(db: Session, profile: GameProfile) -> ExpensesSnapshotResponse:
-    sync_time(profile)
     salary = db.query(FinanceSalary).filter(FinanceSalary.game_profile_id == profile.id).first()
     monthly_income = float(salary.monthly_amount if salary else 0)
 
@@ -103,7 +77,6 @@ def list_expense_categories(db: Session) -> list[ExpenseCategoryPublic]:
 
 
 def list_expense_lines(db: Session, profile: GameProfile) -> list[ExpenseLineResponse]:
-    sync_time(profile)
     burn = compute_monthly_burn(db, profile)
     return [
         ExpenseLineResponse(
@@ -118,64 +91,3 @@ def list_expense_lines(db: Session, profile: GameProfile) -> list[ExpenseLineRes
         )
         for ln in burn.lines
     ]
-
-
-def create_expense_line(db: Session, profile: GameProfile, payload: ExpenseLineCreate) -> ExpenseLineResponse:
-    sync_time(profile)
-    line = create_plan_expense_line(
-        db,
-        profile,
-        category_key=payload.category_key.strip(),
-        amount_monthly=payload.amount_monthly,
-        title=payload.title,
-    )
-    db.commit()
-    db.refresh(line)
-    return line_response(db, line)
-
-
-def patch_expense_line(
-    db: Session,
-    profile: GameProfile,
-    line_id: int,
-    payload: ExpenseLineUpdate,
-) -> ExpenseLineResponse:
-    sync_time(profile)
-    line = (
-        db.query(ProfileExpenseLine)
-        .filter(
-            ProfileExpenseLine.id == line_id,
-            ProfileExpenseLine.game_profile_id == profile.id,
-            ProfileExpenseLine.is_active == 1,
-        )
-        .first()
-    )
-    if not line:
-        raise HTTPException(status_code=404, detail="Expense line not found")
-    update_plan_expense_line(
-        db,
-        profile,
-        line,
-        category_key=payload.category_key,
-        amount_monthly=payload.amount_monthly,
-        title=payload.title,
-    )
-    db.commit()
-    db.refresh(line)
-    return line_response(db, line)
-
-
-def delete_expense_line(db: Session, profile: GameProfile, line_id: int) -> None:
-    line = (
-        db.query(ProfileExpenseLine)
-        .filter(
-            ProfileExpenseLine.id == line_id,
-            ProfileExpenseLine.game_profile_id == profile.id,
-            ProfileExpenseLine.is_active == 1,
-        )
-        .first()
-    )
-    if not line:
-        raise HTTPException(status_code=404, detail="Expense line not found")
-    revoke_plan_expense_line(db, profile, line)
-    db.commit()

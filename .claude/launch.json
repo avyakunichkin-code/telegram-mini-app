@@ -1,0 +1,74 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "design-lab",
+      "runtimeExecutable": "py",
+      "runtimeArgs": [
+        "-3",
+        "-m",
+        "http.server",
+        "4173",
+        "--directory",
+        "design-lab"
+      ],
+      "port": 4173
+    },
+    {
+      "name": "backend",
+      "runtimeExecutable": "backend/.venv/Scripts/python.exe",
+      "runtimeArgs": [
+        "-m",
+        "uvicorn",
+        "main:app",
+        "--reload",
+        "--port",
+        "8000",
+        "--app-dir",
+        "backend"
+      ],
+      "port": 8000
+    },
+    {
+      "name": "frontend",
+      "runtimeExecutable": "npm.cmd",
+      "runtimeArgs": [
+        "--prefix",
+        "frontend-react",
+        "run",
+        "dev",
+        "--",
+        "--port",
+        "5173",
+        "--strictPort"
+      ],
+      "port": 5173
+    },
+    {
+      "name": "plan-api",
+      "runtimeExecutable": "backend/.venv/Scripts/python.exe",
+      "runtimeArgs": [
+        "-m",
+        "uvicorn",
+        "plan_api.main:app",
+        "--reload",
+        "--port",
+        "8020",
+        "--app-dir",
+        "apps/plan-api"
+      ],
+      "port": 8020
+    },
+    {
+      "name": "plan-web",
+      "runtimeExecutable": "npm.cmd",
+      "runtimeArgs": [
+        "--prefix",
+        "apps/plan-web",
+        "run",
+        "dev"
+      ],
+      "port": 5190
+    }
+  ]
+}

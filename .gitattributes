@@ -1,0 +1,13 @@
+# design-assets --check сверяет экспорты побайтно: на Windows с core.autocrlf=true
+# CRLF в рабочей копии даёт ложные STALE. Источники и экспорты дизайна — всегда LF.
+design/** text=auto eol=lf
+landing/site/** text=auto eol=lf
+landing/public/brand/** text=auto eol=lf
+design-lab/landing-refresh-20261030/dist/** text=auto eol=lf
+frontend-react/src/styles/** text=auto eol=lf
+frontend-react/src/index.css text=auto eol=lf
+frontend-react/src/assets/** text=auto eol=lf
+design-lab/mascots/companions-round/** text=auto eol=lf
+design-lab/mascots/pregame-monetka-round/** text=auto eol=lf
+docs/reference/assets/** text=auto eol=lf
+docs/reference/brandbook/assets/** text=auto eol=lf

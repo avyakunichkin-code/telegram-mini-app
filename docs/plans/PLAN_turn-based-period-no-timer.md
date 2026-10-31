@@ -5,8 +5,14 @@ last_reviewed: 2026-05-26
 idea: ../vision/ideas/turn-based-period-no-timer.md
 epic: TB1
 design_lab: ../../design-lab/dashboard/hero-no-timer-round/
+tags:
+  - tvoy-hod/layer/plan
+  - tvoy-hod/status/implemented
+aliases:
+  - "Implementation Plan: Пошаговый месяц без таймера (TB1)"
+  - "PLAN turn based period no timer"
+  - PLAN_turn-based-period-no-timer
 ---
-
 # Implementation Plan: Пошаговый месяц без таймера (TB1)
 
 ## Overview
@@ -191,7 +197,7 @@ Onboarding + docs + landing demo (если есть таймер)
 
 #### Task 8: Онбординг
 
-**Description:** `onboardingSteps.js`: шаг 1 — период без таймера/play; шаг 4 — только primary «Закрыть месяц». `SPEC_onboarding-tma.md`, demo `OnboardingCoachDemo.jsx`.
+**Description:** `onboardingSteps.js`: шаг 1 — период без таймера/play; шаг 4 — только primary «Закрыть месяц». O1 archive [`archive/onboarding-o1/`](../../archive/onboarding-o1/README.md), demo `OnboardingCoachDemo.jsx`.
 
 **Acceptance criteria:**
 
@@ -248,7 +254,16 @@ Onboarding + docs + landing demo (если есть таймер)
 ## Open Questions
 
 - [x] Hero: **H2**; CTA: **«Закрыть месяц»**; чипы плана: **TB1.1**
-- [ ] Deprecate `POST time/play|pause` в OpenAPI или оставить silent no-op?
+- [x] `POST time/play|pause`, `PUT time/config`, `GET time` — **удалены** (2026-10-14): FE их не вызывал, `sync_time` — no-op. Живой только `POST time/next`. Поля ответов (`time_state`, `period_duration_seconds`, `seconds_until_next_period`), `sync_time` и пр. — **удалены** из кода; `game/time.py` → `game/session.py`, `services/game/time.py` → `services/period/close.py`.
+
+### Этап 2 — DROP COLUMN (не сделан)
+
+Колонки `game_profiles.time_state` / `period_duration_seconds` / `period_anchor_at` остаются в БД и в `models.py` (помечены DEPRECATED): они `NOT NULL`, значение даёт ORM-default — удалить из модели раньше миграции = падение INSERT на prod. Порядок:
+
+1. Миграция `00NN_drop_timer_columns.sql`: `ALTER TABLE game_profiles DROP COLUMN IF EXISTS time_state, DROP COLUMN IF EXISTS period_duration_seconds, DROP COLUMN IF EXISTS period_anchor_at;`
+2. `bash backend/scripts/db.sh migrate` на prod **до** деплоя кода из п.3.
+3. Убрать колонки из `models.py`, фикстур тестов (`time_state=`, `period_duration_seconds=`) и `ensure_schema_compatibility()` в `main.py` (если там есть).
+4. Перегенерировать baseline (`dump_schema_baseline.py`) по skill `db-baselines-and-migrations`.
 - [ ] Эпик **TB1.1**: scope чипов плана (derived из `periodStatus` / events) — отдельный plan после TB1
 
 ## Follow-up: TB1.1 (отдельный эпик)

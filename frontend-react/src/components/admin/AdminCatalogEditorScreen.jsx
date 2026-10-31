@@ -31,7 +31,7 @@ const SCALAR_FIELDS = {
     { key: 'title', label: 'Название', type: 'text' },
     { key: 'difficulty_rank', label: 'Сложность', type: 'number' },
     { key: 'base_monthly_lifestyle_expense', label: 'База расходов', type: 'number' },
-    { key: 'applies_to_save_kind', label: 'Режим (game/plan)', type: 'text' },
+    { key: 'applies_to_save_kind', label: 'Применимость (game/any)', type: 'text' },
     { key: 'sort_order', label: 'Порядок', type: 'number' },
     { key: 'is_active', label: 'Активен', type: 'checkbox' },
   ],

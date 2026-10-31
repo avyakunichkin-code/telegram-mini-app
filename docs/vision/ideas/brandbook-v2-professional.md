@@ -1,8 +1,13 @@
 ---
 status: approved
 last_reviewed: 2026-05-25
+tags:
+  - tvoy-hod/layer/idea
+  - tvoy-hod/status/approved
+aliases:
+  - "Брендбук v2 — двухуровневая структура"
+  - brandbook-v2-professional
 ---
-
 # Брендбук v2 — двухуровневая структура
 
 ## Problem Statement

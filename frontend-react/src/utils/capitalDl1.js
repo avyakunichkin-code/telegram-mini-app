@@ -2,6 +2,24 @@
 
 const SECURED_KINDS = new Set(['mortgage', 'auto_loan']);
 
+export function isCarAssetKind(kind) {
+  return (kind || '').toLowerCase().startsWith('car');
+}
+
+export function isPropertyAssetKind(kind) {
+  const k = (kind || '').toLowerCase();
+  if (!k || k === 'generic' || isCarAssetKind(k)) return false;
+  return true;
+}
+
+export function filterCarAssetTemplates(templates) {
+  return (templates || []).filter((t) => isCarAssetKind(t.kind));
+}
+
+export function filterPropertyAssetTemplates(templates) {
+  return (templates || []).filter((t) => isPropertyAssetKind(t.kind));
+}
+
 export function isSecuredLiabilityTemplate(t) {
   if (!t) return false;
   if (SECURED_KINDS.has(t.liability_kind)) return true;
@@ -77,8 +95,8 @@ export function findSecuredLiabilityForAsset(liabilities, assetId) {
 
 export function canPrepayLiability(liability) {
   if (!liability) return false;
-  if (liability.payment_mode === 'annuity') return true;
-  return Number(liability.term_periods) > 0;
+  if (liability.payment_mode === 'interest_only') return false;
+  return liability.payment_mode === 'annuity' || Number(liability.term_periods) > 0;
 }
 
 export function insuranceKindNeedsAsset(kind) {

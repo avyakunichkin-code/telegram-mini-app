@@ -4,8 +4,13 @@ status: active
 last_reviewed: 2026-06-01
 audience: product, playtest moderators
 sources: wave-0 (n=1), авторские прогоны (INT, INT-2), vision-ideas из плейтеста, O2 prod 2026-06-01
+tags:
+  - tvoy-hod/layer/foundation
+  - tvoy-hod/status/active
+aliases:
+  - PRE_ALPHA_PLAYTEST_FEEDBACK
+  - "Pre-Alpha — реестр отзывов (α-FB)"
 ---
-
 # Pre-Alpha — реестр отзывов (α-FB)
 
 Единая **triage-таблица** отзывов с первых прогонов. Часть закрыта **O2** (2026-06-01) — статус «ждём PA-T2» = код в prod, нужна валидация на следующей волне. Сырые цитаты — в канале фидбека / Sheet, не в git.
@@ -103,8 +108,8 @@ sources: wave-0 (n=1), авторские прогоны (INT, INT-2), vision-id
 
 | # | Действие |
 |---|----------|
-| 1 | Деплой с **O2** + I1 + notify; pin commit в ops-листе |
-| 2 | В приглашении: **холодный старт API ~10–15 с** (α-FB-02) |
+| 1 | Деплой с **O3** + I1 + notify; pin commit в [`PRE_ALPHA_WAVE1_OPS.md`](PRE_ALPHA_WAVE1_OPS.md) §«Закреплённый билд» |
+| 2 | В приглашении: **холодный старт API ~10–15 с** (α-FB-02) — [`PRE_ALPHA_INVITE_RU.md`](templates/PRE_ALPHA_INVITE_RU.md) |
 | 3 | Опрос с **Q11** (повторы / осмысленность выбора) — [`templates/PRE_ALPHA_SURVEY_COPY.md`](templates/PRE_ALPHA_SURVEY_COPY.md) |
 | 4 | Модератор: теги в чате `BLOCKER` / `UX` / `CONTENT` / `PERF` |
 | 5 | В Q5 подсказать: **расходы в конце месяца**, **шкалы**, **отчёт после закрытия**, **наложение карточек** |

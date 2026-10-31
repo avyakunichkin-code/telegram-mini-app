@@ -3,8 +3,15 @@ status: accepted
 date: 2026-06-01
 deciders: product + engineering (эпик DL1)
 epic_id: DL1
+tags:
+  - tvoy-hod/layer/adr
+  - tvoy-hod/status/accepted
+aliases:
+  - ADR-010
+  - ADR-010-liability-asset-insurance-graph
+  - "ADR-010: Граф актив ↔ долг ↔ страховка (DL1)"
+  - DL1
 ---
-
 # ADR-010: Граф актив ↔ долг ↔ страховка (DL1)
 
 ## Context

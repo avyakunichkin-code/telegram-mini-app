@@ -3,11 +3,16 @@ layer: handbook
 status: active
 last_reviewed: 2026-05-30
 audience: product, game-design, partners, playtest
+tags:
+  - tvoy-hod/layer/handbook
+  - tvoy-hod/status/active
+aliases:
+  - "ТВОЙ ХОД — игра по финансовой грамотности"
+  - GAME
 ---
-
 # ТВОЙ ХОД — игра по финансовой грамотности
 
-Описание **текущей** игры: механики, логика, статус в production. Детали API и полей — в [`SPEC_PRODUCT.md`](../foundation/SPEC_PRODUCT.md) и spec фич. История решений и анкета — [`HISTORY.md`](HISTORY.md), [`QUESTIONNAIRE.md`](../../QUESTIONNAIRE.md).
+Описание **текущей** игры: механики, логика, статус в production. Детали API и полей — в [`SPEC_PRODUCT.md`](../foundation/SPEC_PRODUCT.md) и spec фич. История решений — [`HISTORY.md`](HISTORY.md).
 
 **Путеводитель:** [`README.md`](README.md)
 
@@ -17,7 +22,7 @@ audience: product, game-design, partners, playtest
 
 ## В двух словах
 
-**ТВОЙ ХОД** — Telegram Mini App: **игра про финансовую грамотность**, а не сухой курс. Игрок проживает **игровые месяцы** (периоды): зарплата, обязательства, подушка, события из жизни, инвестиции и страховки — в безопасной песочнице с правилами, близкими к реальности.
+**ТВОЙ ХОД** — **игра про финансовую грамотность** (PWA/web primary; TMA — secondary, [`SPEC_PRODUCT`](../foundation/SPEC_PRODUCT.md) §1.1). Игрок проживает **игровые месяцы** (периоды): зарплата, обязательства, подушка, события из жизни, инвестиции и страховки — в безопасной песочнице с правилами, близкими к реальности.
 
 **ЦА:** люди **30+**, готовые поиграть в **умную игру** (финансовая тема, осмысленные решения) — [`TARGET_PLAYER_AND_SESSION.md`](../foundation/TARGET_PLAYER_AND_SESSION.md).
 
@@ -32,7 +37,7 @@ audience: product, game-design, partners, playtest
 | Блок | Статус | Комментарий |
 |------|--------|-------------|
 | Стек | ✅ | FastAPI, PostgreSQL, React + Vite, TMA |
-| Core loop периода | ✅ | «Закрыть месяц», `process_period_end`, поражение по cash |
+| Core loop периода | ✅ | «Завершить ход», `process_period_end`, поражение по cash |
 | Зарплата, подушка, финансы | ✅ | Шаблоны, вклад, облигации, страховки |
 | События (M11) | ✅ | **2/период**, tier от `period_index`, cooldown — [ADR-009](../decisions/ADR-009-metrics-dictionary-tb1.md) |
 | Победа Victory v2 | ✅ BE | `victory_engine`, `min_period_index` обычно **7** |
@@ -41,7 +46,7 @@ audience: product, game-design, partners, playtest
 | **Потребности (Z-NEEDS)** | 🟡 | BE + UI на дашборде; [SPEC](../specs/features/SPEC_game-character-needs.md) draft |
 | `mechanics_unlock` | ✅ | [ADR-004](../decisions/ADR-004-mechanics-unlock-victory-chain.md) |
 | Достижения | 🟡 | Движок + API; UI «Развитие» — M12 |
-| Онбординг O2 | ✅ | [SPEC_onboarding-o2](../specs/features/SPEC_onboarding-o2.md) |
+| Онбординг | ✅ O2 core / O3 spec | [SPEC_onboarding-o3](../specs/features/SPEC_onboarding-o3.md) |
 | Balance playtest | ✅ | [`docs/balance/`](../balance/README.md) |
 | Pre-Alpha 10–20 | 🟡 | [Протокол](../foundation/PRE_ALPHA_PLAYTEST_PROTOCOL.md) · [Ops](../foundation/PRE_ALPHA_WAVE1_OPS.md) · [5 мин](PLAYER_EXPERIENCE.md) |
 | Closed Alpha D1/D7 | ⬜ | KPI лайт: D7 gate **≥8%** — [`KPI_AND_PHASES.md`](KPI_AND_PHASES.md) |
@@ -54,7 +59,7 @@ audience: product, game-design, partners, playtest
 
 ## Core loop
 
-**Один период = один игровой месяц.** Закрытие только кнопкой **«Закрыть месяц»** — без real-time таймера (TB1).
+**Один период = один игровой месяц.** Закрытие только кнопкой **«Завершить ход»** — без real-time таймера (TB1).
 
 **Фазы периода:**
 
@@ -68,7 +73,7 @@ audience: product, game-design, partners, playtest
 ```mermaid
 flowchart LR
   A[Открытый месяц] --> B[Действия и события]
-  B --> C[Закрыть месяц]
+  B --> C[Завершить ход]
   C --> D[Списания + decay]
   D --> E{Поражение?}
   E -->|нет| A
@@ -128,7 +133,7 @@ flowchart LR
 - Сложность пула — от **номера месяца** (`event_tier`), не от «уровня персонажа».
 - **Честный выбор:** нет бесплатного роста потребностей; отказ часто имеет цену.
 - **Cooldown** и правила повтора — чтобы одна и та же «история переезда» не приходила каждые 2–3 месяца (каталог дорабатывается).
-- Цепочки и обязательные карточки (блок «Закрыть месяц») — см. [`EVENTS.md`](EVENTS.md).
+- Цепочки и обязательные карточки (блок «Завершить ход») — см. [`EVENTS.md`](EVENTS.md).
 
 Техника: каталог [`data/events/mvp11/`](../../data/events/mvp11/) · [SPEC_mvp-11](../specs/features/SPEC_mvp-11-progression-events.md) · глоссарий кодов [`EVENTS_TERMS_RU.md`](EVENTS_TERMS_RU.md).
 
@@ -147,10 +152,10 @@ flowchart LR
 
 Детали: [SPEC_game-character-needs](../specs/features/SPEC_game-character-needs.md), [CHARACTER_NEEDS_UX](../ux/CHARACTER_NEEDS_UX.md), [ADR-005](../decisions/ADR-005-character-needs-state-and-defeat.md), [ADR-006](../decisions/ADR-006-treat-self-options-and-cooldown.md).
 
-### Режимы Game и Plan
+### Режим: только Game
 
-- **`save_kind: game`** — старт из `game_starter_templates`, blueprint.
-- **`save_kind: plan`** — ручной бюджет (MVP 2.0); потребности **выключены**; UI «Скоро».
+- **`save_kind: game`** — единственный режим: старт из `game_starter_templates`, blueprint. [ADR-013](../decisions/ADR-013-game-only-drop-plan-mode.md).
+- ~~**`save_kind: plan`**~~ — **снят**; не обещать мастер «своей жизни» отдельным сохранением.
 - Legacy `light` / `hardcore` сняты — [ADR-001](../decisions/ADR-001-save-kind-remove-light-hardcore.md).
 
 ### Образовательные слои
@@ -181,7 +186,7 @@ Vision «глав жизни» — [`HISTORY.md`](HISTORY.md), [evolution §II](
 |---|----------|--------|
 | 1 | Вход | Логин → меню → GameScreen |
 | 1a | Новая партия | Game/Plan → выбор персонажа (шаблон) |
-| 2 | Период | «Закрыть месяц» |
+| 2 | Период | «Завершить ход» |
 | 3 | Зарплата | До конца периода |
 | 3a | **Потребности** | Z-NEEDS: раскрыть → treat-self / «?» |
 | 4 | События | Карусель, чипы `needs_delta` |
@@ -228,7 +233,7 @@ Vision «глав жизни» — [`HISTORY.md`](HISTORY.md), [evolution §II](
 | Рандом | 2/период, cooldown, tier |
 | Два game over | Cash и потребности — раздельно, осознанно |
 
-Развёрнутые ответы и история критики — [`HISTORY.md`](HISTORY.md), QUESTIONNAIRE.
+Развёрнутые ответы и история критики — [`HISTORY.md`](HISTORY.md).
 
 ---
 
@@ -270,7 +275,7 @@ TG / партнёр / контент → игра (бесплатно) → оп�
 | **P2** SEO, TG Ads → лендинг | Масштаб после креативов |
 
 **Сигналы в игре для сегментации (план, ⬜ в prod):** ≥7 периодов или game over + новая партия; действия во «Финансах»; шаблон mortgage/debt; клик CTA.  
-**Не обещать в маркетинге:** готовый **Plan Mode** (UI «Скоро»).  
+**Не обещать в маркетинге:** второй режим **Plan** (снят ADR-013); плитка «Скоро» — баг канона до GO-01.  
 **Три потока сообщений:** «Порядок» / «Стабилизация» / «Второе мнение» — §9.3 advisor-doc.
 
 ---
@@ -280,7 +285,7 @@ TG / партнёр / контент → игра (бесплатно) → оп�
 | Документ | Зачем |
 |----------|--------|
 | [`README.md`](README.md) | Путеводитель, три аудитории пакета |
-| [`PRODUCT_BRIEF.md`](PRODUCT_BRIEF.md) | Vision, pillars, MVP 2.0 Plan |
+| [`PRODUCT_BRIEF.md`](PRODUCT_BRIEF.md) | Vision, pillars; Plan как 2.0 снят ADR-013 |
 | [`EVENTS.md`](EVENTS.md) | События: роль, принципы, плейтест |
 | [`PLAYER_EXPERIENCE.md`](PLAYER_EXPERIENCE.md) | Плейтест: 5 минут |
 | [`FEATURE_STATUS.md`](FEATURE_STATUS.md) | Матрица фич |

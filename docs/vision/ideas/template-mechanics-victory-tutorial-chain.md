@@ -1,3 +1,10 @@
+---
+tags:
+  - tvoy-hod/layer/idea
+aliases:
+  - "Шаблон как узкий учебник: цели ↔ механики ↔ «прикосновение»"
+  - template-mechanics-victory-tutorial-chain
+---
 ﻿---
 layer: idea
 status: draft

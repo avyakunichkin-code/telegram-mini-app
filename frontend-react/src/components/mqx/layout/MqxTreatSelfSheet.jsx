@@ -77,11 +77,11 @@ export function MqxTreatSelfSheet({ open, onClose, treatSelf, treatSelfState }) 
         <h2 id="mqx-treat-title" className="mqx-sheet__title">
           Порадовать себя
         </h2>
-        <p className="mqx-sheet__sub">Списание с карты. Не заменяет события — запасной путь.</p>
+        <p className="mqx-sheet__sub">Списание со счёта. Не заменяет события — запасной путь.</p>
 
         {!available ? (
           <div className="mqx-treat__cooldown" role="note">
-            Доступно через {cooldown} периодов
+            Доступно через {cooldown} ходов
           </div>
         ) : null}
 

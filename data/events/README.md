@@ -2,7 +2,7 @@
 
 Канон контента MVP 1.1: **`data/events/mvp11/`**. Рантайм читает БД; синхронизация — `ensure_mvp11_event_catalog()` при API.
 
-См. [ADR-008](../docs/decisions/ADR-008-events-catalog-single-source.md).
+См. [ADR-008](../docs/decisions/ADR-008-events-catalog-single-source.md), принцип [C-4](../../CONVENTIONS.md).
 
 ## Структура
 
@@ -25,7 +25,7 @@ mvp11/
 5. `cd backend && python -m pytest -q -k event`
 6. Перезапустить backend (YAML кэшируется при старте).
 
-**Баланс:** [`.cursor/skills/create-event/event-balance-rules.md`](../.cursor/skills/create-event/event-balance-rules.md) · [`EVENTS_AGENT.md`](../docs/agents/EVENTS_AGENT.md)
+**Баланс:** [`.claude/skills/create-event/event-balance-rules.md`](../.claude/skills/create-event/event-balance-rules.md) · [`EVENTS_AGENT.md`](../docs/agents/EVENTS_AGENT.md)
 
 Brief в `docs/vision/ideas/event-briefs/` **опционален**; **обязателен** для downgrade/housing, цепочек и спорного trade-off.
 

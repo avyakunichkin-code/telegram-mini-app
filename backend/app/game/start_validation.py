@@ -17,11 +17,11 @@ def validate_game_start_request(payload: GameStartRequest, db: Session) -> None:
         raise HTTPException(status_code=400, detail="profile_name is required")
 
     save_kind = (payload.save_kind or "game").strip().lower()
-    if save_kind not in ("game", "plan"):
-        raise HTTPException(status_code=400, detail="save_kind must be 'game' or 'plan'")
+    if save_kind != "game":
+        raise HTTPException(status_code=400, detail="save_kind must be 'game'")
 
     tk = (payload.template_key or "").strip()
-    if save_kind == "game" and not tk:
+    if not tk:
         raise HTTPException(
             status_code=400,
             detail="game saves require template_key (starter template from catalog)",
@@ -37,19 +37,12 @@ def validate_game_start_request(payload: GameStartRequest, db: Session) -> None:
             raise HTTPException(status_code=404, detail="starter template not found")
 
         applies = (getattr(tmpl, "applies_to_save_kind", None) or "game").strip().lower()
-        if save_kind == "game" and applies not in ("game", "any"):
+        if applies not in ("game", "any"):
             raise HTTPException(
                 status_code=400,
-                detail="This starter template is only for Plan mode",
-            )
-        if save_kind == "plan" and applies not in ("plan", "any"):
-            raise HTTPException(
-                status_code=400,
-                detail="This starter template is only for Game mode",
+                detail="This starter template is not available for Game",
             )
 
-    if payload.period_duration_seconds < 10:
-        raise HTTPException(status_code=400, detail="period_duration_seconds must be >= 10")
     if payload.cash_balance < 0:
         raise HTTPException(status_code=400, detail="cash_balance cannot be negative")
     if payload.monthly_salary < 0:

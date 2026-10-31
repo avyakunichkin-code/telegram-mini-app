@@ -1,3 +1,10 @@
+---
+tags:
+  - tvoy-hod/layer/foundation
+aliases:
+  - "Аудит: текущая реализация vs foundation (SPEC_PRODUCT §1–11)"
+  - MVP_AUDIT_VS_SPEC
+---
 # Аудит: текущая реализация vs foundation (SPEC_PRODUCT §1–11)
 
 Цель — **перед началом эпика Game-шаблон / `save_kind`** убедиться, что описанный в [`SPEC_PRODUCT.md`](SPEC_PRODUCT.md) уже реализованный MVP **не расходится** с кодом. Расхождения ниже — либо баги/долг документации, либо намеренный технический долг (тогда ссылка на эпик).

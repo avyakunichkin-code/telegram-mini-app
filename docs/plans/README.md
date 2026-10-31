@@ -1,3 +1,9 @@
+---
+tags:
+  - tvoy-hod/layer/plan
+aliases:
+  - "Планы (`docs/plans/`)"
+---
 # Планы (`docs/plans/`)
 
 **PLAN_*.md** — как строим фичу после утверждённой spec: граф зависимостей, вертикальные срезы, checkpoints.
@@ -21,10 +27,10 @@
 |----------------------|----------------------|
 | `define` | `planning-and-task-breakdown`, `api-and-interface-design` |
 | `build` | `incremental-implementation`, `frontend-ui-engineering`, `design-lab-mqx` |
-| `verify` | `test-driven-development`, `code-review-and-quality`, `browser-testing-with-devtools` |
+| `verify` | `test-driven-development`, `code-review-and-quality`; браузер — `/run` + встроенный браузер |
 | `ship` | `documentation-and-adrs`, `deprecation-and-migration` |
 
-Карта: [`docs/agents/SKILL_DOC_MAP.md`](../agents/SKILL_DOC_MAP.md). Правило Cursor: `tvoy-hod-agent-skills-phase.mdc`.
+Карта: [`docs/agents/SKILL_DOC_MAP.md`](../agents/SKILL_DOC_MAP.md). Роутер Cursor: [`.claude/rules/router.md`](../../.claude/rules/router.md).
 
 ## Задачи
 

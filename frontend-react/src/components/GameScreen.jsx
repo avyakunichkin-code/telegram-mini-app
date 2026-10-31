@@ -7,6 +7,7 @@ import { MenuPremium } from './MenuPremium';
 import { showNotification } from './notifications';
 import { API, formatApiErrorDetail } from '../api';
 import { EventCarouselOverlay } from './mqx/events/EventCarouselOverlay';
+import { needsChangeToastText } from './mqx/events/eventImpactChips';
 import { MqxShell } from './MqxShell';
 import { MqxTabHero } from './MqxTabHero';
 import { GameScreenLayout, GameScreenTabNav } from './GameScreenLayout';
@@ -21,10 +22,20 @@ import {
 import { PERIOD_CLOSE_AUTO_MAX } from '../constants/periodClose';
 import { shouldAutoOpenPeriodClose } from '../utils/periodCloseDisplay';
 import { GameGuidanceLayer } from './GameGuidanceLayer';
+import { useTabBarInset } from '../guidance/useTabBarInset';
 import {
   areGameEventsUnlocked,
+  GUIDANCE_SCREEN_TRIGGERS,
+  shouldBlockAutoEventsOverlay,
+  shouldDeferGuidanceForPeriodCloseRitual,
   shouldDeferPeriodCloseDuringGuidance,
+  shouldForceCloseEventsOverlay,
 } from '../guidance/curriculum';
+import { startGameWithTemplate } from '../utils/startGame';
+import { suggestDefaultProfileName } from '../utils/suggestDefaultProfileName';
+import { applyPwaUpdateAtTurnBoundary } from '../utils/pwaUpdate';
+import { useOffline } from '../hooks/useNetworkStatus';
+import { BACK_ONLINE_COPY, OFFLINE_COPY } from '../utils/networkStatus';
 
 /** Эмоциональный слой страницы (TB1: без play/pause — активная партия = playing mood). */
 function gamePageMoodClass(timeStatus) {
@@ -36,6 +47,8 @@ export function GameScreen({ onLogout, onNewGame, onLoadGame }) {
   const [activeTab, setActiveTab] = useState('dashboard');
   /** @type {['income'|'expense'|null, function]} */
   const [capitalFlowsOpen, setCapitalFlowsOpen] = useState(null);
+  /** @type {['details'|'actions'|null, function]} */
+  const [capitalPageModeRequest, setCapitalPageModeRequest] = useState(null);
   const [salaryWarnOpen, setSalaryWarnOpen] = useState(false);
   const [eventsOpen, setEventsOpen] = useState(false);
   const [onboardingUi, setOnboardingUi] = useState({ visible: false, lockTabs: false });
@@ -45,6 +58,7 @@ export function GameScreen({ onLogout, onNewGame, onLoadGame }) {
   const onboardingRootRef = useRef(null);
   const lastOpenedEventsTickRef = useRef(0);
   const deferredEventsTickRef = useRef(0);
+  useTabBarInset();
   const {
     overview,
     timeStatus,
@@ -73,11 +87,74 @@ export function GameScreen({ onLogout, onNewGame, onLoadGame }) {
     submitRunFeedback,
   } = useGame();
 
-  const closeEventsOverlay = useCallback(() => setEventsOpen(false), []);
+  const offline = useOffline();
+  const wasOfflineRef = useRef(offline);
+  useEffect(() => {
+    if (offline === wasOfflineRef.current) return;
+    wasOfflineRef.current = offline;
+    if (offline) {
+      showNotification(OFFLINE_COPY, 'error', { ttlMs: 5000 });
+    } else {
+      showNotification(BACK_ONLINE_COPY, 'success');
+      // Пока сети не было, другая вкладка/устройство могли сделать ход — подтягиваем сервер.
+      void refreshGameState?.();
+    }
+  }, [offline, refreshGameState]);
+
+  const closeEventsOverlay = useCallback(() => {
+    setEventsOpen(false);
+    void refreshOverview?.();
+  }, [refreshOverview]);
+
+  const handleStartAdvancedScenario = useCallback(
+    async (templateKey = 'mq_game_tight_budget_v1') => {
+      const titles = {
+        mq_game_tight_budget_v1: 'Профессионал',
+        mq_game_mortgage_stress_v1: 'Руководитель',
+        mq_game_debt_stack_v1: 'Предприниматель',
+      };
+      const label = titles[templateKey] || 'новый сценарий';
+      try {
+        const profiles = await API.getGameProfiles();
+        const name = suggestDefaultProfileName(Array.isArray(profiles) ? profiles : []);
+        await startGameWithTemplate(name, templateKey);
+        await reload();
+        showNotification(`Запущен сценарий «${label}»`, 'success');
+      } catch (err) {
+        showNotification(
+          formatApiErrorDetail(err?.detail ?? err?.message, 'Не удалось начать новый сценарий'),
+          'error',
+        );
+      }
+    },
+    [reload],
+  );
+
+  const goFinanceTab = useCallback(({ flowsSection = null, pageMode = null } = {}) => {
+    setCapitalFlowsOpen(flowsSection);
+    setCapitalPageModeRequest(pageMode);
+    setActiveTab('finance');
+  }, []);
+
+  const reportGuidanceScreen = useCallback(
+    (screenKey) => {
+      if (!overview?.guidance?.show_curriculum) return;
+      const triggerId = GUIDANCE_SCREEN_TRIGGERS[screenKey];
+      if (!triggerId) return;
+      void API.patchGuidance({ action: 'screen_enter', trigger_id: triggerId }).then(() =>
+        refreshOverview?.(),
+      );
+    },
+    [overview?.guidance?.show_curriculum, refreshOverview],
+  );
 
   const guidance = overview?.guidance;
   const inGuidanceCurriculum = guidance?.show_curriculum === true;
-  const p1GuidanceDone = areGameEventsUnlocked(guidance, overview?.onboarding_state);
+  const p1GuidanceDone = areGameEventsUnlocked(
+    guidance,
+    overview?.onboarding_state,
+    overview?.period_index ?? timeStatus?.period_index,
+  );
   const eventsUnlocked = p1GuidanceDone;
   const inOnboarding = inGuidanceCurriculum;
   const deferPeriodCloseInGuidance = shouldDeferPeriodCloseDuringGuidance(
@@ -87,6 +164,18 @@ export function GameScreen({ onLogout, onNewGame, onLoadGame }) {
   const periodCloseForUi = lastPeriodClose;
   const showPeriodCloseTail =
     !inOnboarding && activeTab === 'dashboard' && periodCloseForUi && !periodCloseOpen;
+  const deferGuidanceForPeriodClose = shouldDeferGuidanceForPeriodCloseRitual(
+    periodCloseOpen,
+    guidance,
+  );
+  const periodIndex = overview?.period_index ?? timeStatus?.period_index;
+  const blockAutoEventsOverlay = shouldBlockAutoEventsOverlay({
+    periodCloseOpen,
+    periodCloseSummary,
+    queuedPeriodClose,
+    guidance,
+    periodIndex,
+  });
 
   // Итоги периода — до эффектов событий: в одном коммите сначала выставляем periodCloseOpen.
   useEffect(() => {
@@ -101,8 +190,12 @@ export function GameScreen({ onLogout, onNewGame, onLoadGame }) {
 
     setLastPeriodClose(payload);
     setQueuedPeriodClose(null);
-    setPeriodCloseOpen(shouldAutoOpenPeriodClose(payload, PERIOD_CLOSE_AUTO_MAX));
+    const autoOpenRitual = shouldAutoOpenPeriodClose(payload, PERIOD_CLOSE_AUTO_MAX);
+    setPeriodCloseOpen(autoOpenRitual);
     dismissPeriodClose();
+    // С хода PERIOD_CLOSE_AUTO_MAX+1 итоги сами не открываются — граница хода наступает здесь,
+    // иначе ожидающая версия PWA так и не встала бы до конца партии.
+    if (!autoOpenRitual) applyPwaUpdateAtTurnBoundary();
   }, [periodCloseSummary, inOnboarding, deferPeriodCloseInGuidance, dismissPeriodClose]);
 
   useEffect(() => {
@@ -116,8 +209,8 @@ export function GameScreen({ onLogout, onNewGame, onLoadGame }) {
     if (!eventsUnlocked) return;
     if (eventsPromptTick <= lastOpenedEventsTickRef.current) return;
     if ((pendingEvents?.length ?? 0) > 0) {
-      // Пока открыт лист итогов — откладываем автопоказ событий (хвостик не блокирует).
-      if (periodCloseOpen) {
+      // Пока итоги хода или debrief P1 — откладываем автопоказ событий.
+      if (blockAutoEventsOverlay) {
         deferredEventsTickRef.current = eventsPromptTick;
         return;
       }
@@ -126,7 +219,7 @@ export function GameScreen({ onLogout, onNewGame, onLoadGame }) {
       // eslint-disable-next-line react-hooks/set-state-in-effect -- открытие только при новом bumpEvents
       setEventsOpen(true);
     }
-  }, [eventsPromptTick, pendingEvents?.length, eventsUnlocked, periodCloseOpen]);
+  }, [eventsPromptTick, pendingEvents?.length, eventsUnlocked, blockAutoEventsOverlay]);
 
   useEffect(() => {
     if (!eventsUnlocked) {
@@ -134,10 +227,23 @@ export function GameScreen({ onLogout, onNewGame, onLoadGame }) {
     }
   }, [eventsUnlocked]);
 
+  // Закрываем открытую карусель только на итогах хода; intro событий откладывает лишь автопоказ.
+  const forceCloseEventsOverlay = shouldForceCloseEventsOverlay({
+    periodCloseOpen,
+    periodCloseSummary,
+    queuedPeriodClose,
+    guidance,
+  });
+  useEffect(() => {
+    if (forceCloseEventsOverlay && eventsOpen) {
+      setEventsOpen(false);
+    }
+  }, [forceCloseEventsOverlay, eventsOpen]);
+
   useEffect(() => {
     if (!eventsUnlocked) return;
     if ((pendingEvents?.length ?? 0) <= 0) return;
-    if (periodCloseOpen) return;
+    if (blockAutoEventsOverlay) return;
 
     const deferredTick = deferredEventsTickRef.current;
     if (deferredTick > lastOpenedEventsTickRef.current && deferredTick <= eventsPromptTick) {
@@ -146,7 +252,7 @@ export function GameScreen({ onLogout, onNewGame, onLoadGame }) {
       // eslint-disable-next-line react-hooks/set-state-in-effect -- однократный автопоказ после итогов
       setEventsOpen(true);
     }
-  }, [eventsPromptTick, pendingEvents?.length, eventsUnlocked, periodCloseOpen]);
+  }, [eventsPromptTick, pendingEvents?.length, eventsUnlocked, blockAutoEventsOverlay]);
 
   useEffect(() => {
     if (onboardingUi.visible && activeTab !== 'dashboard') {
@@ -162,6 +268,8 @@ export function GameScreen({ onLogout, onNewGame, onLoadGame }) {
 
   const handleClosePeriodClose = useCallback(() => {
     setPeriodCloseOpen(false);
+    // Граница хода: итоги прочитаны, состояние на сервере — безопасно поставить новую версию PWA.
+    applyPwaUpdateAtTurnBoundary();
   }, []);
 
   const handleRequestNextPeriod = async () => {
@@ -179,7 +287,7 @@ export function GameScreen({ onLogout, onNewGame, onLoadGame }) {
     try {
       await advancePeriod();
     } catch (e) {
-      showNotification(e?.detail || e?.message || 'Не удалось закрыть месяц', 'error');
+      showNotification(e?.detail || e?.message || 'Не удалось завершить ход', 'error');
     }
   };
 
@@ -188,7 +296,7 @@ export function GameScreen({ onLogout, onNewGame, onLoadGame }) {
     try {
       await advancePeriod();
     } catch (e) {
-      showNotification(e?.detail || e?.message || 'Не удалось закрыть месяц', 'error');
+      showNotification(e?.detail || e?.message || 'Не удалось завершить ход', 'error');
     }
   };
 
@@ -204,12 +312,12 @@ export function GameScreen({ onLogout, onNewGame, onLoadGame }) {
               sectionLabel="Игра"
               rightPill="Загрузка"
               title="Подключаемся"
-              subtitle="Период, баланс и события появятся в привычной рамке."
+              subtitle="Ход, баланс и события появятся в привычной рамке."
             />
           }
         >
           <div className="mqx-card" style={{ padding: 14 }}>
-            <MqxStateSkeleton variant="chips" label="Финансы периода" />
+            <MqxStateSkeleton variant="chips" label="Финансы хода" />
             <div style={{ marginTop: 16 }}>
               <MqxStateSkeleton variant="rows" rows={2} label="Цели и действия" />
             </div>
@@ -228,7 +336,7 @@ export function GameScreen({ onLogout, onNewGame, onLoadGame }) {
               sectionLabel="Игра"
               rightPill="Ошибка"
               title="Не удалось загрузить"
-              subtitle="Проверьте сеть, VPN и что сессия ещё действительна."
+              subtitle="Проверь сеть, VPN и что сессия ещё действительна."
             />
           }
         >
@@ -236,7 +344,7 @@ export function GameScreen({ onLogout, onNewGame, onLoadGame }) {
             <div className="mqx-card mq-enter-item">
               <MqxStateError
                 title="Не удалось загрузить"
-                message={formatApiErrorDetail(error, 'Проверьте сеть и попробуйте снова')}
+                message={formatApiErrorDetail(error, 'Проверь сеть и попробуй снова')}
                 retryLabel="Повторить загрузку"
                 onRetry={() => reload()}
               />
@@ -262,13 +370,12 @@ export function GameScreen({ onLogout, onNewGame, onLoadGame }) {
         >
           <div className="mq-stack mq-stack--tight mq-stack-animate">
             <div className="mqx-card mq-enter-item">
-              <div className="mqx-card__title">Пустой ответ</div>
-              <p className="mqx-card__sub">Активный профиль сейчас не прочитать. Попробуйте ещё раз.</p>
-              <div className="mq-actions-stack" style={{ marginTop: 16 }}>
-                <Button stretched mode="filled" onClick={() => reload()}>
-                  Обновить
-                </Button>
-              </div>
+              <MqxStateError
+                title="Пустой ответ"
+                message="Активный профиль сейчас не прочитать. Попробуй ещё раз."
+                retryLabel="Обновить"
+                onRetry={() => reload()}
+              />
             </div>
           </div>
         </MqxShell>
@@ -300,6 +407,7 @@ export function GameScreen({ onLogout, onNewGame, onLoadGame }) {
             payload={runFinale}
             onDismissVictory={dismissVictoryFinale}
             onNewGame={onNewGame}
+            onStartAdvancedScenario={handleStartAdvancedScenario}
             onMenu={onLoadGame}
             onSubmitFeedback={submitRunFeedback}
           />
@@ -332,27 +440,7 @@ export function GameScreen({ onLogout, onNewGame, onLoadGame }) {
                   'success',
                 );
               } else if (needsAfter && typeof needsAfter === 'object') {
-                const labels = {
-                  comfort: 'Комфорт',
-                  status: 'Статус',
-                  social: 'Связи',
-                  health: 'Здоровье',
-                };
-                const deltas = [];
-                if (needsBefore && typeof needsBefore === 'object') {
-                  for (const key of Object.keys(labels)) {
-                    const before = Number(needsBefore?.[key]);
-                    const after = Number(needsAfter?.[key]);
-                    if (!Number.isFinite(before) || !Number.isFinite(after)) continue;
-                    const d = Math.round((after - before) * 10) / 10;
-                    if (Math.abs(d) < 1e-6) continue;
-                    deltas.push(`${labels[key]} ${d > 0 ? `+${d}` : String(d)}`);
-                  }
-                }
-                showNotification(
-                  deltas.length ? `Потребности: ${deltas.join(', ')}` : 'Потребности изменились',
-                  'success',
-                );
+                showNotification(needsChangeToastText(needsBefore, needsAfter), 'success');
               } else {
                 showNotification('Решение применено', 'success');
               }
@@ -376,20 +464,16 @@ export function GameScreen({ onLogout, onNewGame, onLoadGame }) {
                     pendingEventsCount={eventsUnlocked ? (pendingEvents?.length ?? 0) : 0}
                     onOpenEvents={eventsUnlocked ? () => setEventsOpen(true) : undefined}
                     onNextPeriod={handleRequestNextPeriod}
-                    closeMonthDisabled={syncing}
+                    closeMonthDisabled={syncing || offline}
                     claimSalary={claimSalary}
                     contributeToSafetyFund={contributeToSafetyFund}
                     withdrawFromSafetyFund={withdrawFromSafetyFund}
                     treatSelf={treatSelf}
                     getNeedsGuide={getNeedsGuide}
-                    onGoFinance={() => {
-                      setCapitalFlowsOpen(null);
-                      setActiveTab('finance');
-                    }}
-                    onGoCapitalFlows={(section) => {
-                      setCapitalFlowsOpen(section);
-                      setActiveTab('finance');
-                    }}
+                    onGoFinance={() => goFinanceTab()}
+                    onGoFinanceInvest={() => goFinanceTab({ pageMode: 'actions' })}
+                    onGoCapitalFlows={(section) => goFinanceTab({ flowsSection: section })}
+                    onGuidanceScreenEnter={reportGuidanceScreen}
                   />
                 </div>
               )}
@@ -400,6 +484,9 @@ export function GameScreen({ onLogout, onNewGame, onLoadGame }) {
                   refreshOverview={refreshOverview}
                   openFlowsSection={capitalFlowsOpen}
                   onFlowsSectionOpened={() => setCapitalFlowsOpen(null)}
+                  pageModeRequest={capitalPageModeRequest}
+                  onPageModeRequestHandled={() => setCapitalPageModeRequest(null)}
+                  onGuidanceScreenEnter={reportGuidanceScreen}
                 />
               )}
 
@@ -409,6 +496,8 @@ export function GameScreen({ onLogout, onNewGame, onLoadGame }) {
 
               {activeTab === 'menu' && (
                 <MenuPremium
+                  overview={overview}
+                  onContinue={() => setActiveTab('dashboard')}
                   onLogout={onLogout}
                   onNewGame={onNewGame}
                   onLoadGame={onLoadGame}
@@ -422,6 +511,7 @@ export function GameScreen({ onLogout, onNewGame, onLoadGame }) {
         guidance={guidance}
         refreshOverview={refreshOverview}
         scrollRootRef={onboardingRootRef}
+        deferForPeriodClose={deferGuidanceForPeriodClose}
         onOverlayStateChange={setOnboardingUi}
       />
     </GameScreenLayout>

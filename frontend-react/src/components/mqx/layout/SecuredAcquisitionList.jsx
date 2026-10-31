@@ -43,6 +43,7 @@ export function SecuredAcquisitionList({ bundles, onAcquire, busyKey = null }) {
               disabled: busyKey === rowKey,
             }}
             actionLabel="+"
+            actionVerb="Взять"
             actionAriaLabel={`Оформить: ${b.assetTitle}`}
           />
         );

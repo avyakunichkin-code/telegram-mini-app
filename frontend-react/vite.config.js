@@ -12,13 +12,15 @@ const PWA_ICONS = [
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), '')
   const base = env.VITE_BASE_PATH || '/telegram-mini-app/'
-  const apiTarget = (env.VITE_API_BASE_URL || 'https://telegram-mini-app-zwfs.onrender.com').replace(/\/$/, '')
+  // Dev-прокси /api: по умолчанию локальный backend (uvicorn :8000). Прода сейчас нет — см. docs/ops/LOCAL_DEV.md.
+  const apiTarget = (env.VITE_API_BASE_URL || 'http://localhost:8000').replace(/\/$/, '')
 
   return {
     plugins: [
       react(),
       VitePWA({
-        registerType: 'autoUpdate',
+        // prompt: новый SW ждёт; pwaUpdate.js ставит его в безопасный момент (меню / после итогов хода).
+        registerType: 'prompt',
         injectRegister: false,
         includeAssets: [
           'favicon-32.png',
@@ -44,6 +46,8 @@ export default defineConfig(({ mode }) => {
           icons: PWA_ICONS,
         },
         workbox: {
+          // Без skipWaiting: активация только через updateSW(true) из pwaUpdate.js — не посреди события.
+          clientsClaim: true,
           // HashRouter: без NavigationRoute — иначе iOS Safari часто отдаёт пустую/старую страницу.
           globPatterns: ['**/*.{js,css,html,ico,svg,woff2}', 'pwa/**/*.png', 'favicon*.png'],
           globIgnores: [
@@ -62,12 +66,14 @@ export default defineConfig(({ mode }) => {
       }),
     ],
     base,
+    // Отдельный кэш для e2e-стенда (playwright.config.js), чтобы не делить его с dev-сервером.
+    cacheDir: env.VITE_CACHE_DIR || 'node_modules/.vite',
     server: {
       proxy: {
         '/api': {
           target: apiTarget,
           changeOrigin: true,
-          secure: true,
+          secure: apiTarget.startsWith('https:'),
         },
       },
     },

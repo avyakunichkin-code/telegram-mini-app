@@ -1,226 +1,150 @@
-import { useCallback, useState } from 'react';
-import { MonetkaAvatar } from '../brand/MonetkaAvatar';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { getPersonaPortrait } from '../brand/personaPortraits';
 import { getRunFinaleCupPortrait } from '../brand/runFinalePortraits';
-import { MqxButton } from '../primitives/MqxButton';
 import { showNotification } from '../../notifications';
+import {
+  FINALE_LOSS_LEAD,
+  FINALE_LOSS_TITLE,
+  FINALE_WIN_TITLE,
+  finaleDefeatFact,
+  finaleWinStats,
+  isFinaleWin,
+} from './runFinaleDisplay';
 
-const GLYPHS = {
-  up: (
-    <svg viewBox="0 0 24 24" aria-hidden="true">
-      <path d="M12 19V7" />
-      <path d="m7 12 5-5 5 5" />
-    </svg>
-  ),
-  down: (
-    <svg viewBox="0 0 24 24" aria-hidden="true">
-      <path d="M12 5v12" />
-      <path d="m7 10 5 5 5-5" />
-    </svg>
-  ),
-  coin: (
-    <svg viewBox="0 0 24 24" aria-hidden="true">
-      <circle cx="12" cy="12" r="8" />
-      <path d="M12 8v8" />
-      <path d="M9 12h6" />
-    </svg>
-  ),
-  term: (
-    <svg viewBox="0 0 24 24" aria-hidden="true">
-      <path d="M7 4v16" />
-      <path d="M17 4v16" />
-      <path d="M7 8h10" />
-      <path d="M7 16h6" />
-    </svg>
-  ),
-  goal: (
-    <svg viewBox="0 0 24 24" aria-hidden="true">
-      <path d="M6 12 10 16 18 8" />
-    </svg>
-  ),
-};
-
-function GazetaStat({ metric }) {
-  const glyph = GLYPHS[metric.glyph] || GLYPHS.coin;
+/**
+ * Финал партии ★ BG-2 (design-lab/board-game/screens-round, «Финал · Победа / Поражение»).
+ * Победа — золотая клетка финиша, «Играть дальше» (партия продолжается); поражение — факт риска и советы, партия в архиве.
+ */
+function FinaleCell({ portrait, win }) {
   return (
-    <article className="mqx-run-finale-stat">
-      <h5 className="mqx-run-finale-stat__headline">{metric.headline}</h5>
-      <div className="mqx-run-finale-stat__line">
-        <span className={`mqx-run-finale-stat__glyph mqx-run-finale-stat__glyph--${metric.glyph}`}>
-          {glyph}
-        </span>
-        <span className="mqx-run-finale-stat__name">{metric.name}</span>
-        <span className="mqx-run-finale-stat__value">{metric.value}</span>
-      </div>
-    </article>
+    <div className={`mqx-run-finale-cell${win ? ' mqx-run-finale-cell--win' : ''}`} aria-hidden="true">
+      {portrait ? (
+        <picture>
+          {portrait.webp ? <source srcSet={portrait.webp} type="image/webp" /> : null}
+          <img className="mqx-run-finale-cell__img" src={portrait.png} alt="" decoding="async" />
+        </picture>
+      ) : null}
+    </div>
   );
 }
 
-export function MqxRunFinale({
-  open,
-  payload,
-  onDismissVictory,
-  onNewGame,
-  onMenu,
-  onSubmitFeedback,
-}) {
+function FinaleFeedback({ win, onSubmit }) {
   const [comment, setComment] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const canSend = comment.trim().length >= 2 && !submitting && !submitted;
 
-  const isWin = payload?.outcome === 'victory';
-  const cup = getRunFinaleCupPortrait(payload?.persona_slug);
-
-  const handleSubmitFeedback = useCallback(
+  const handleSubmit = useCallback(
     async (e) => {
       e.preventDefault();
-      const text = comment.trim();
-      if (text.length < 2 || submitting || submitted) return;
+      if (!canSend) return;
       setSubmitting(true);
       try {
-        await onSubmitFeedback?.({ text, outcome: payload?.outcome });
+        await onSubmit?.(comment.trim());
         setSubmitted(true);
-        showNotification('Спасибо, комментарий отправлен', 'success');
+        showNotification('Спасибо, отзыв отправлен', 'success');
       } catch (err) {
         showNotification(err?.message || 'Не удалось отправить', 'error');
       } finally {
         setSubmitting(false);
       }
     },
-    [comment, submitting, submitted, onSubmitFeedback, payload?.outcome],
+    [canSend, comment, onSubmit],
+  );
+
+  return (
+    <form className="mqx-run-finale-feedback" onSubmit={handleSubmit}>
+      <textarea
+        className="mqx-run-finale-feedback__input"
+        aria-label="Отзыв о партии (необязательно)"
+        value={comment}
+        onChange={(e) => setComment(e.target.value)}
+        placeholder={
+          win ? 'Как прошла партия? Это увидят разработчики' : 'Что было непонятно? Это увидят разработчики'
+        }
+        rows={2}
+        disabled={submitted}
+      />
+      <button type="submit" className="mqx-bg-btn mqx-run-finale-link" disabled={!canSend}>
+        {submitted ? 'Отзыв отправлен' : 'Отправить отзыв'}
+      </button>
+    </form>
+  );
+}
+
+export function MqxRunFinale({ open, payload, onDismissVictory, onNewGame, onMenu, onSubmitFeedback }) {
+  const titleRef = useRef(null);
+  const win = isFinaleWin(payload);
+
+  useEffect(() => {
+    if (open && payload) titleRef.current?.focus();
+  }, [open, payload]);
+
+  const submitFeedback = useCallback(
+    (text) => onSubmitFeedback?.({ text, outcome: payload?.outcome }),
+    [onSubmitFeedback, payload?.outcome],
   );
 
   if (!open || !payload) return null;
 
-  const mastSub = isWin ? 'победа сценария' : 'итог партии';
-  const badgeLabel = isWin ? 'Победа' : 'Поражение';
+  const portrait = win
+    ? getRunFinaleCupPortrait(payload.persona_slug)
+    : getPersonaPortrait(payload.template_key, 'dash') || getRunFinaleCupPortrait(payload.persona_slug);
+  const fact = win ? null : finaleDefeatFact(payload);
 
   return (
-    <div
-      className="mqx-run-finale-root mqx-run-finale-root--open"
-      data-outcome={isWin ? 'win' : 'defeat'}
-      role="presentation"
-    >
-      <div className="mqx-run-finale-scrim" aria-hidden="true" />
-      <section
-        className="mqx-run-finale"
-        role="dialog"
-        aria-modal="true"
-        aria-labelledby="mqx-run-finale-title"
-      >
-        <div className="mqx-run-finale__scroll">
-          <header className="mqx-run-finale-mast">
-            <span className={`mqx-run-finale-badge mqx-run-finale-badge--${isWin ? 'win' : 'loss'}`}>
-              {badgeLabel}
-            </span>
-            <h3 id="mqx-run-finale-title">ТВОЙ ХОД · выпуск</h3>
-            <p className="mqx-run-finale-mast__sub">
-              Период {payload.period_index} · {mastSub}
-            </p>
-          </header>
+    <div className="mqx-run-finale-root" data-outcome={win ? 'win' : 'defeat'} role="presentation">
+      <section className="mqx-run-finale" role="dialog" aria-modal="true" aria-labelledby="mqx-run-finale-title">
+        <div className="mqx-run-finale__body">
+          <FinaleCell portrait={portrait} win={win} />
+          <h2 id="mqx-run-finale-title" className="mqx-run-finale__title" tabIndex={-1} ref={titleRef}>
+            {win ? FINALE_WIN_TITLE : FINALE_LOSS_TITLE}
+          </h2>
+          <p className="mqx-run-finale__lead">{win ? payload.scenario_title : FINALE_LOSS_LEAD}</p>
 
-          <div className="mqx-run-finale-body">
-            <div className="mqx-run-finale-scenario">
-              <h4 className="mqx-run-finale-scenario__title">{payload.scenario_title}</h4>
-              <p className="mqx-run-finale-scenario__line">{payload.scenario_line}</p>
-            </div>
-
-            {isWin ? (
-              <div className="mqx-run-finale-hero">
-                <div className="mqx-run-finale-hero__persona">
-                  <picture>
-                    {cup?.webp ? <source srcSet={cup.webp} type="image/webp" /> : null}
-                    <img
-                      className="mqx-run-finale-hero__img"
-                      src={cup?.png}
-                      alt=""
-                      height={108}
-                      decoding="async"
-                    />
-                  </picture>
-                </div>
-                {payload.gazeta_lead ? (
-                  <p className="mqx-run-finale-hero__lead">{payload.gazeta_lead}</p>
-                ) : null}
-              </div>
-            ) : (
-              <div className="mqx-run-finale-bubble">
-                <MonetkaAvatar pose="default" size={44} className="mqx-run-finale-bubble__monetka" />
-                <div>
-                  <p className="mqx-run-finale-bubble__title">{payload.coach_title}</p>
-                  <p className="mqx-run-finale-bubble__text">{payload.coach_text}</p>
-                </div>
-              </div>
-            )}
-
-            <div className="mqx-run-finale-metrics" aria-label="Итоги партии">
-              {payload.sections?.map((section) => (
-                <div key={section.title}>
-                  {section.divider_before ? (
-                    <div className="mqx-run-finale-metrics__divider" role="presentation" />
-                  ) : null}
-                  <section className="mqx-run-finale-metrics__group">
-                    <h4 className="mqx-run-finale-metrics__title">{section.title}</h4>
-                    {section.metrics?.map((m) => (
-                      <GazetaStat key={`${section.title}-${m.headline}`} metric={m} />
-                    ))}
-                  </section>
+          {win ? (
+            <dl className="mqx-run-finale-stats" aria-label="Итоги партии">
+              {finaleWinStats(payload).map((s) => (
+                <div key={s.key} className="mqx-run-finale-stats__cell">
+                  <dt className="mqx-run-finale-stats__label">{s.label}</dt>
+                  <dd className={`mqx-run-finale-stats__value${s.money ? ' mqx-run-finale-stats__value--money' : ''}`}>
+                    {s.value}
+                  </dd>
                 </div>
               ))}
-            </div>
+            </dl>
+          ) : null}
 
-            {!isWin && payload.fact ? (
-              <section className="mqx-run-finale-fact" aria-labelledby="mqx-run-finale-fact-label">
-                <div className="mqx-run-finale-fact__rule" aria-hidden="true" />
-                <h4 id="mqx-run-finale-fact-label" className="mqx-run-finale-fact__label">
-                  Факт
-                </h4>
-                <p className="mqx-run-finale-fact__text">{payload.fact.text}</p>
-                {payload.fact.tips?.length ? (
-                  <ul className="mqx-run-finale-fact__tips">
-                    {payload.fact.tips.map((t) => (
-                      <li key={t}>{t}</li>
-                    ))}
-                  </ul>
-                ) : null}
-              </section>
-            ) : null}
+          {fact ? (
+            <>
+              <p className="mqx-run-finale-fact">
+                <b className="mqx-run-finale-fact__risk">{fact.title}</b> {fact.text}
+              </p>
+              {fact.tips.length ? (
+                <ul className="mqx-run-finale-tips" aria-label="Советы на следующую партию">
+                  {fact.tips.map((t) => (
+                    <li key={t}>{t}</li>
+                  ))}
+                </ul>
+              ) : null}
+            </>
+          ) : null}
 
-            <form className="mqx-run-finale-feedback" onSubmit={handleSubmitFeedback}>
-              <label className="mqx-run-finale-feedback__label">
-                Расскажите, как прошла партия
-                <span className="mqx-run-finale-feedback__hint"> (необязательно)</span>
-              </label>
-              <textarea
-                value={comment}
-                onChange={(e) => setComment(e.target.value)}
-                placeholder="Что было непонятно или что понравилось?"
-                rows={3}
-                disabled={submitted}
-              />
-              <MqxButton
-                type="submit"
-                variant="primary"
-                disabled={comment.trim().length < 2 || submitting || submitted}
-              >
-                {submitted ? 'Отправлено' : 'Отправить отзыв'}
-              </MqxButton>
-            </form>
+          <div className="mqx-run-finale__actions">
+            <button
+              type="button"
+              className="mqx-bg-btn mqx-bg-cta mqx-run-finale__primary"
+              onClick={win ? onDismissVictory : onNewGame}
+            >
+              {win ? 'Играть дальше' : 'Новая игра'}
+            </button>
+            <button type="button" className="mqx-bg-btn mqx-run-finale-btn" onClick={win ? onNewGame : onMenu}>
+              <span>{win ? 'Новая игра' : 'К сохранениям'}</span>
+              <small>{win ? 'другая жизнь' : 'партия в архиве'}</small>
+            </button>
           </div>
-        </div>
 
-        <div className="mqx-run-finale__actions">
-          {isWin ? (
-            <MqxButton variant="primary" onClick={onDismissVictory}>
-              Играть дальше
-            </MqxButton>
-          ) : (
-            <MqxButton variant="primary" onClick={onNewGame}>
-              Новая игра
-            </MqxButton>
-          )}
-          <MqxButton variant="secondary" onClick={onMenu}>
-            К сохранениям
-          </MqxButton>
+          <FinaleFeedback key={payload.outcome} win={win} onSubmit={submitFeedback} />
         </div>
       </section>
     </div>

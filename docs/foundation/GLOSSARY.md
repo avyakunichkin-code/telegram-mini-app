@@ -1,3 +1,10 @@
+---
+tags:
+  - tvoy-hod/layer/foundation
+aliases:
+  - "Глоссарий ТВОЙ ХОД"
+  - GLOSSARY
+---
 # Глоссарий ТВОЙ ХОД
 
 Единые термины для foundation, spec и UI. При добавлении поля в API — обновлять здесь и в [`SPEC_PRODUCT.md`](SPEC_PRODUCT.md).
@@ -17,9 +24,11 @@
 | **Победа MVP** | Упрощённое описание для игрока/онбординга: подушка, нет просрочки, поток ≥ 0; с 7-го периода. **В prod** победа считается движком **Victory v2** (M из N из `victory_config_json`) — см. [`SPEC_victory-v2`](../specs/features/SPEC_victory-v2.md), [ADR-002](../decisions/ADR-002-victory-engine-and-template-config.md) | `GET /api/finance/overview` → `win_reached`, блок `victory` |
 | **Victory v2** | Победа по `victory_config_json`: в prod **`progression_mode: chain`** (все шаги по порядку) или legacy **`parallel`** (M из N); `min_period_index_for_victory` (обычно 7) | `victory/engine.py`, `overview.victory`, [ADR-002](../decisions/ADR-002-victory-engine-and-template-config.md) |
 | **mechanics_unlock** | Выдача флагов `capital_*` после ключей целей цепочки победы | `blueprint_json`, [ADR-004](../decisions/ADR-004-mechanics-unlock-victory-chain.md) |
-| **save_kind** | Режим сохранения: `game` \| `plan`; **immutable** после создания | `GameProfile.save_kind`; [ADR-001](../decisions/ADR-001-save-kind-remove-light-hardcore.md) |
-| **Game** *(цель)* | Игра со стартовым шаблоном, агрегированные расходы, победа M из N | evolution §II |
-| **Plan** *(цель)* | Ручное планирование, статьи расходов | evolution §II |
+| **save_kind** | Тип сохранения: канон **`game`**; **immutable**. **`plan` снят** ([ADR-013](../decisions/ADR-013-game-only-drop-plan-mode.md)); колонка может остаться | `GameProfile.save_kind`; [ADR-001](../decisions/ADR-001-save-kind-remove-light-hardcore.md) (light/hardcore → save_kind) |
+| **Game** | Единственный режим продукта: старт из шаблона, агрегированные расходы, Victory v2 | [ADR-013](../decisions/ADR-013-game-only-drop-plan-mode.md) |
+| **Plan** *(как save снят)* | Бывший второй save (`save_kind=plan`) — не строить внутри игры | ADR-013; исторически evolution §II |
+| **Plan (продукт)** | Отдельное приложение «финансовый помощник»: шаги, аналитика, рекомендации на ручном вводе пользователя. Не игра и не `save_kind`; свои аккаунты и БД | [ADR-016](../decisions/ADR-016-two-products-shared-fincore.md), [`plan-financial-assistant`](../plan/vision/plan-financial-assistant.md) |
+| **fincore** | Общее финансовое ядро Game и Plan (`packages/fincore`): чистые функции без фреймворков и игровых понятий; время — `month_index` | [ADR-016](../decisions/ADR-016-two-products-shared-fincore.md), [`PLAN_game-plan-split`](../plans/PLAN_game-plan-split.md) |
 | **MQX** | Визуальный слой premium-вкладок (`mqx-*`) | см. [`SPEC_FRONTEND_UI.md`](../specs/SPEC_FRONTEND_UI.md) |
 | **event_tier** | Сложность сценария; окно выпадения от **периода** (10 периодов = 1 band), не тема | `event_definitions.event_tier`, `game_rules.event_tier_progression_level(period_index)`, [`remove-character-xp-and-levels.md`](../vision/ideas/remove-character-xp-and-levels.md) |
 | **event_domain** | **Тематическая область** карточки (еда, авто, семья…) — для пула и аналитики; не путать с глубиной | `metadata_json.event_domain`; см. [`handbook/EVENTS_TERMS_RU.md`](../handbook/EVENTS_TERMS_RU.md) |

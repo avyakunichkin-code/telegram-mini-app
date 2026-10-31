@@ -27,7 +27,7 @@ export function MqxSalaryWarnModal({ open, salaryAmount = 0, onClose, onConfirmS
               Зарплата сгорит
             </h3>
             <p className="mqx-juice-warn-modal__text">
-              Если закроешь месяц сейчас, <strong>{amountLabel}</strong> за этот период не придут — в
+              Если завершишь ход сейчас, <strong>{amountLabel}</strong> за этот ход не придут — в
               следующем ходу их уже не забрать.
             </p>
           </div>

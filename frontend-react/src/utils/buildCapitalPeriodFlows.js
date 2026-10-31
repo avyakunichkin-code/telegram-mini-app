@@ -133,7 +133,11 @@ export function buildCapitalPeriodFlows({ overview, investPositions = [], polici
   const liabilityTotal = sumAmount(liabilityGroups);
 
   const insuranceBucket = {};
+  const periodIndex = Number(overview?.period_index) || null;
   for (const pol of policies) {
+    if (periodIndex != null && Number(pol.started_period_index) === periodIndex) {
+      continue;
+    }
     const amount = Number(pol.monthly_premium) || 0;
     if (amount <= 0) continue;
     const key = pol.plan_key || pol.product || 'insurance';

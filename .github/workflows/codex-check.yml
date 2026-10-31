@@ -1,0 +1,24 @@
+name: Codex architecture check
+on:
+  pull_request:
+    paths:
+      - 'AGENTS.md'
+      - '.agents/**'
+      - '.codex/**'
+      - 'scripts/codex/**'
+      - 'docs/ai/**'
+      - '.claude/skills/**'
+      - 'backend/migrations/0000_schema_baseline.sql'
+      - '.github/workflows/codex-check.yml'
+permissions:
+  contents: read
+jobs:
+  codex:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: node scripts/codex/check.mjs
+      - run: node --test scripts/codex/*.test.mjs

@@ -4,7 +4,7 @@ from sqlalchemy.orm import Session
 
 from ..auth import get_current_user
 from ..database import get_db
-from ..game.time import get_active_game_profile, sync_time
+from ..game.session import get_active_game_profile
 from ..idempotency import read_idempotency_key, run_idempotent
 from ..services.invest.service import (
     buy_bond as service_buy_bond,
@@ -18,32 +18,28 @@ router = APIRouter(prefix="/api/invest", tags=["invest"])
 
 
 @router.get("/positions")
-async def list_positions(current_user=Depends(get_current_user), db: Session = Depends(get_db)):
+def list_positions(current_user=Depends(get_current_user), db: Session = Depends(get_db)):
     profile = get_active_game_profile(db, current_user.id)
-    sync_time(profile)
     return service_list_active_positions(db, profile)
 
 
 @router.post("/deposit/open")
-async def open_deposit(
+def open_deposit(
     request: Request,
     payload: dict,
     current_user=Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
+    # Ставка — из серверного каталога (finance/invest_products.py); annual_rate_percent клиента игнорируется.
     amount = float(payload.get("amount") or 0)
-    annual_rate_percent = float(payload.get("annual_rate_percent") or 0)
     if amount <= 0:
         raise HTTPException(status_code=400, detail="amount must be > 0")
-    if annual_rate_percent < 0:
-        raise HTTPException(status_code=400, detail="annual_rate_percent must be >= 0")
 
     idem_key = read_idempotency_key(request)
 
     def _execute() -> dict:
         profile = get_active_game_profile(db, current_user.id)
-        sync_time(profile)
-        return service_open_deposit(db, profile, amount=amount, annual_rate_percent=annual_rate_percent)
+        return service_open_deposit(db, profile, amount=amount)
 
     if idem_key:
         status, body = run_idempotent(
@@ -58,30 +54,26 @@ async def open_deposit(
 
 
 @router.post("/bond/buy")
-async def buy_bond(
+def buy_bond(
     request: Request,
     payload: dict,
     current_user=Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
+    # Ставка — из серверного каталога (finance/invest_products.py); annual_rate_percent клиента игнорируется.
     amount = float(payload.get("amount") or 0)
-    annual_rate_percent = float(payload.get("annual_rate_percent") or 0)
-    title = (payload.get("title") or "ОФЗ (условно)").strip() or "ОФЗ (условно)"
+    title = str(payload.get("title") or "")
     if amount <= 0:
         raise HTTPException(status_code=400, detail="amount must be > 0")
-    if annual_rate_percent < 0:
-        raise HTTPException(status_code=400, detail="annual_rate_percent must be >= 0")
 
     idem_key = read_idempotency_key(request)
 
     def _execute() -> dict:
         profile = get_active_game_profile(db, current_user.id)
-        sync_time(profile)
         return service_buy_bond(
             db,
             profile,
             amount=amount,
-            annual_rate_percent=annual_rate_percent,
             title=title,
         )
 
@@ -98,8 +90,7 @@ async def buy_bond(
 
 
 @router.post("/positions/{position_id}/close")
-async def close_position(position_id: int, current_user=Depends(get_current_user), db: Session = Depends(get_db)):
+def close_position(position_id: int, current_user=Depends(get_current_user), db: Session = Depends(get_db)):
     profile = get_active_game_profile(db, current_user.id)
-    sync_time(profile)
     return service_close_position(db, profile, position_id=position_id)
 

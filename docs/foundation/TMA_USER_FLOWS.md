@@ -1,4 +1,12 @@
+---
+tags:
+  - tvoy-hod/layer/foundation
+aliases:
+  - TMA_USER_FLOWS
+---
 ﻿# ТВОЙ ХОД — user flows и болевые точки (TMA)
+
+> **Каналы (ADR-012):** этот документ описывает **Telegram Mini App** — **secondary channel**. Primary smoke и playtest: **PWA + web** — [`PWA_INSTALL.md`](PWA_INSTALL.md), skill **`release-web`**.
 
 Документ для приоритизации UX: кратко **потоки**, **типичные ошибки пользователя** и **что уже сделано / что брать следующим**.
 
@@ -59,7 +67,7 @@ Real-time таймера нет (TB1); паузы и блокировка экр
 ## Чеклист доработки (коротко)
 
 - [x] Выбор **Game / Plan** (Plan — заглушка) и поток **шаблонов** вместо `light` / `hardcore` (см. [`SPEC_game-plan.md`](../specs/features/SPEC_game-plan.md)).
-- [x] **O2 Progressive Guidance** на первой игре — [`SPEC_onboarding-o2.md`](../specs/features/SPEC_onboarding-o2.md); валидация α-FB-01/15/17 на PA-T2.
+- [x] **O2/O3 guidance** на первой игре — канон [`SPEC_onboarding-o3.md`](../specs/features/SPEC_onboarding-o3.md); O2 core в prod.
 - [ ] Локализованные подписи типов активов / событий (не сырое поле API).
 - [ ] Прогресс цели победы визуально на главной (в т.ч. после перехода на **M из N** целей из шаблона).
 - [ ] Пустые состояния вкладки «Капитал».

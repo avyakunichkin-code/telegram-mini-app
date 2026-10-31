@@ -9,10 +9,10 @@ app/
 ├── routers/          # FastAPI: auth, game, period, finance, events, …
 ├── services/         # тонкие use-cases под роутеры (см. services/README.md)
 ├── game/             # период, время, bootstrap, rules, start_validation
-├── finance/          # overview_build, expenses, balance, helpers, period_metrics
+├── finance/          # overview_build, expenses, balance, period_metrics; annuity/liability_kinds/invest_products — адаптеры над packages/fincore
 ├── victory/          # engine, seeds, snap, goals, mechanics_progression
 ├── events/           # chains, taxonomy, mvp11, constants, insurance_hooks
-├── needs/            # engine, guide_content
+├── needs/            # engine (decay, needs_delta), set_point (износ, уровень жизни L), value_curve (цена балла), guide_content
 ├── achievements/     # engine, seeds
 ├── starters/         # mechanics, templates, insurance_catalog
 ├── admin/            # auth, catalogs, notify, onboarding funnel
@@ -28,6 +28,7 @@ app/
 |-----|------|
 | Эндпоинт | `routers/<domain>.py` + вызов `services/<domain>/` |
 | Правило домена (без HTTP) | `app/<domain>/` |
+| Финансовый расчёт, нужный и Plan (без ORM, без игровых понятий) | `packages/fincore/` + адаптер в `app/finance/` ([ADR-016](../../docs/decisions/ADR-016-two-products-shared-fincore.md)) |
 | Общая инфраструктура | корень `app/` |
 | Сиды каталогов | `seeds/` |
 
