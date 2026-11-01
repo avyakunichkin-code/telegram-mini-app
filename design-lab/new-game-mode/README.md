@@ -24,4 +24,4 @@ npx serve .
 
 ## Очистка 2026-10-29
 
-GO-02/03: удалены старый мастер `BaseParamsScreen`, редакторы `PlanExpenseEditor` / `PlanExpenseBudgetEditor` и их экспорты MQX. В игре остался старт по шаблонам; Plan развивается отдельно в `apps/plan-web` (ADR-016). Исторический макет не является каноном текущего UI.
+GO-02/03: удалены старый мастер `BaseParamsScreen`, редакторы `PlanExpenseEditor` / `PlanExpenseBudgetEditor` и их экспорты MQX. В игре остался старт по шаблонам; Plan развивается отдельно в `apps/plan-web` (ADR-016). Исторический макет не является каноном текущего UI. 2026-11-01: сняты и их стили `.mqx-plan-expense-editor*`, `.mqx-expenses-budget*` (исходник — `design/system/runtime/styles/mqx/analytics.css`, `finance.css`); видимый UI игры не меняется.

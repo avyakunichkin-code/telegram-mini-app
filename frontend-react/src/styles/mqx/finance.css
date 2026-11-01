@@ -340,22 +340,6 @@
   box-shadow: 0 1px 4px rgba(15, 17, 21, 0.06);
 }
 
-.mqx-expenses-budget--embedded {
-  margin-top: 0;
-  padding: 0;
-  box-shadow: none;
-  border: none;
-  background: transparent;
-}
-
-.mqx-plan-expense-editor--embedded {
-  margin-top: 0;
-  padding: 0;
-  box-shadow: none;
-  border: none;
-  background: transparent;
-}
-
 .mqx-capital-tab {
   border-radius: 14px;
   padding: 14px 12px;
@@ -1714,8 +1698,6 @@ body [class*='modal'] {
   flex-shrink: 0;
 }
 
-
-
 .mqx-character__meter {
   margin-top: 12px;
 }
@@ -2397,7 +2379,6 @@ body [class*='modal'] {
   background: linear-gradient(90deg, #059669 0%, #34d399 52%, #2dd4bf 100%);
 }
 
-
 .mqx-block__head {
   display: flex;
   justify-content: space-between;
@@ -2478,7 +2459,6 @@ body [class*='modal'] {
   gap: 12px;
   align-items: flex-start;
 }
-
 
 .mqx-action {
   border-radius: 14px;
@@ -2569,10 +2549,6 @@ body [class*='modal'] {
 .mqx-bar--emerald { background: #10b981; }
 .mqx-bar--rose { background: #f43f5e; }
 .mqx-bar--violet { background: #8b5cf6; }
-
-
-
-
 
 /* —— Details | Actions v2 (design-lab details-actions-round) —— */
 
@@ -3240,7 +3216,6 @@ body [class*='modal'] {
 .mqx-capital-page .mqx-cap-sect--liabilities .mqx-cap-sect__meta {
   color: color-mix(in srgb, #b91c1c 70%, var(--mqx-ink));
 }
-
 
 /* ==========================================================================
  * ★ BG-2 «Капитал» — стиль «настольная игра» (ADR-014).
