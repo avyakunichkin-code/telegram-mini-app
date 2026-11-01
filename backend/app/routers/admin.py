@@ -174,6 +174,7 @@ class AdminProductFunnel(BaseModel):
 class AdminPendingEventRow(BaseModel):
     id: int
     title: str
+    definition_key: Optional[str] = None
     event_slot: Optional[str] = None
     content_class: Optional[str] = None
 

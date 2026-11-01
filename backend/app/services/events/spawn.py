@@ -218,6 +218,7 @@ def ensure_period_events(db: Session, game_profile_id: int, period_index: int, s
         return SPAWN_EMPTY_POOL
 
     period_idx = max(1, int(period_index))
+    pool_size = len(repeat_ok)
     base_k = min(EVENTS_PER_PERIOD, len(repeat_ok))
 
     # Приоритетные события (metadata.spawn_priority_when) занимают слоты первыми, мимо окна tier:
@@ -250,11 +251,13 @@ def ensure_period_events(db: Session, game_profile_id: int, period_index: int, s
 
     core = [d for d in repeat_ok if event_tier_in_core_window(_def_tier(d), period_idx)]
 
+    used_fallback = False
     if base_k <= 0:
         picked = []
     elif len(core) >= base_k:
         picked = _pick_diverse_period_events(core, base_k, counter_map, weight_multiplier_by_id=rescue_mult_by_id)
     else:
+        used_fallback = True
         p1 = [d for d in repeat_ok if event_tier_in_fallback_primary(_def_tier(d), period_idx)]
         if not p1:
             logger.error(
@@ -285,6 +288,18 @@ def ensure_period_events(db: Session, game_profile_id: int, period_index: int, s
         attach_event_instance_choice_snapshot(db, profile, d, inst)
 
     db.commit()
+    # PR-28 (AI-аудит M1): RNG прода без seed — набор выпавших карточек и пул пишем в лог,
+    # чтобы «почему эта карта» разбиралось по профилю и ходу.
+    logger.info(
+        "events_spawned profile=%s period=%s picked=%s priority=%s pool=%s core=%s fallback=%s",
+        game_profile_id,
+        period_index,
+        [d.key for d in picked],
+        [d.key for d in priority],
+        pool_size,
+        len(core),
+        used_fallback,
+    )
     if _period_pool_instance_count(db, game_profile_id, period_index) < EVENTS_PER_PERIOD:
         logger.error(
             "ensure_period_events: underfilled profile=%s period_index=%s",

@@ -220,6 +220,7 @@ export function AdminProfileInspectorPanel({ onClose: onCloseProp }) {
                     <strong>{ev.title}</strong>
                     <span className="mq-muted">
                       #{ev.id}
+                      {ev.definition_key ? ` · ${ev.definition_key}` : ''}
                       {ev.event_slot ? ` · ${ev.event_slot}` : ''}
                       {ev.content_class ? ` · ${ev.content_class}` : ''}
                     </span>

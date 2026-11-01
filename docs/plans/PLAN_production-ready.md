@@ -82,7 +82,7 @@ aliases:
 | PR-25 | ⬜ | `game/period.py` по-прежнему импортирует `services.events.service` |
 | PR-26 | ❓ | Empty-состояние Капитала: есть `capital.spec.js` (e2e), `CapitalActionsPanel`; α-FB-06 не сверялся |
 | PR-27 | ❓ | Ритуал close 3 строки — не сверялся |
-| PR-28 | ⬜ | `definition_key` в `admin/` не найден |
+| PR-28 | ✅ | 2026-11-01: лог `events_spawned profile/period/picked/priority/pool/core/fallback` в `ensure_period_events` (`test_events_spawn_log.py`); `definition_key` у событий «ждут выбора» в инспекторе профиля; выбор уже пишет `event_key` в журнал (`event_chosen`). Seed RNG на профиль (AI-01) не делался |
 | PR-29 | ⬜ | Player TG D+7 / `/quiet` не найдены |
 | PR-30 | ⬜ | Экрана достижений в `App.jsx` нет |
 | PR-31 | ⬜ | Sentry не подключён |

@@ -158,6 +158,7 @@ def _pending_events_admin(db: Session, profile: GameProfile) -> list[dict[str, A
             {
                 "id": int(event_id),
                 "title": str(title),
+                "definition_key": raw.get("key"),
                 "event_slot": raw.get("event_slot"),
                 "content_class": raw.get("content_class"),
             }
