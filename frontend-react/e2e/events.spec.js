@@ -8,6 +8,15 @@ import {
   test,
 } from './fixtures.js';
 
+/** Что лежит в центре элемента: 'self' или класс перекрывающего слоя (для сообщения об ошибке). */
+async function topmostAt(locator) {
+  return locator.evaluate((el) => {
+    const r = el.getBoundingClientRect();
+    const hit = document.elementFromPoint(r.x + r.width / 2, r.y + r.height / 2);
+    return el.contains(hit) ? 'self' : `${hit?.tagName ?? 'none'}.${hit?.className ?? ''}`;
+  });
+}
+
 /** Центр кнопки не перекрыт другим слоем (подсказка, таббар, тост). */
 async function isTopmost(locator) {
   return locator.evaluate((el) => {
@@ -73,6 +82,9 @@ test.describe('Карусель событий и нижняя навигаци�
     await expect(dialog).toBeHidden();
     await expect(capitalTab).toBeVisible();
     // Переход не проверяем: на шаге вводной событий онбординг держит вкладки закрытыми.
-    expect(await isTopmost(capitalTab), 'после закрытия карусели вкладка перекрыта').toBe(true);
+    // Ждём, пока уйдут исчезающие слои (фон карусели, тосты, «+N ₽»): в CI проверка шла раньше них.
+    await expect
+      .poll(() => topmostAt(capitalTab), { message: 'после закрытия карусели вкладку перекрывает слой' })
+      .toBe('self');
   });
 });
