@@ -65,14 +65,14 @@ aliases:
 | GO-02 | ✅ | 2026-10-29 (локально): `save_kind=plan` → 400 в start/profiles/templates; старые plan-профили → 410 (`game/session.py`, `PLAN_REMOVED_DETAIL`), данные не трогаются; `tests/integration/api/test_game_only_contract.py`. До выкладки — SQL `count(save_kind='plan')` |
 | PR-10 | ✅ | ★ BG-3 «одна рамка на уровень» в prod (`d0186c9`); метрика Q1≥3.5 не измерялась. С 2026-10-28 поверх — пробный стиль «Чернильный край» (`ink.css`, не ★): он включён по умолчанию, значит волна 10–20 увидит его, если до неё не будет ★ или отката |
 | PR-11 | 🟡 | 2026-10-31: в `frontend-react/src` вне демо-каталога «месяц» в смысле хода не найден; `BaseParamsScreen`, `PlanExpenseEditor`, `MqxGameOverModal`, `ExpensesBudgetBlock` удалены (CSS `.mqx-expenses-budget*` остался в `design/system/runtime` — снять там). Тосты и тексты с backend (`guidance/curriculum.py`, YAML событий) не сверялись |
-| PR-12 | ❓ | Скролл к salary в O3 / CLS strip — только в Playwright-сценариях, отдельно не сверялось |
+| PR-12 | ✅ | 2026-11-01: на ★ BG-3 полоска закрывала «Зарплату» в O3 — `board.css` затирал резерв скролла; правило в `guidance.css` усилено. Ловили e2e (на main падали 4 из 7), e2e добавлены в CI (не required). CLS полоски отдельно не мерился |
 | PR-13 | ❓ | Решение «skip событий close» в `SPEC_PRODUCT` не найдено (grep по «skip» пуст) |
 | PR-15 | ❓ | `PRE_ALPHA_WAVE1_OPS.md` есть; `PRE_ALPHA_WAVE1_RESULTS.md` — draft, пустой шаблон |
 | PR-16 | ⬜ | Волна 10–20 не проведена (результаты не заполнены). Фаза 0 `PLAN_backlog_may2026` не закрыта |
 | PR-17 | ⬜ | `last_seen_at` нет ни в коде, ни в миграциях |
 | PR-18 | ⬜ | Акт 1 победы не сделан; инварианты баланса INV-1 падают на всех 4 шаблонах (DOC_SYNC_LOG 2026-10-25) |
 | PR-19 | ⬜ | Spec на правило подушки/burn не найден |
-| PR-20 | ❓ | Z-index оверлея (α-FB-19) — вне сверки |
+| PR-20 | ✅ | 2026-11-01: не воспроизводится — открытая карусель событий перекрывает нижнюю навигацию, после закрытия вкладки не перекрыты; закреплено в `e2e/events.spec.js` (мобильный viewport; desktop не проверялся) |
 | GO-03 | ✅ | 2026-10-29 (локально): `BaseParamsScreen`, Plan-редакторы, plan-ветка `expenses/service.py` удалены; CRUD статей → 410; Watchtower и `adminPlayerColumns` показывают plan как «Архивный режим» |
 | GO-04 | ✅ | `services/events/spawn.py` фильтрует пул только по `game`/`any`; `mode: plan` в `data/events` нет |
 | PR-21 | ⬜ | Зависит от PR-18 |
