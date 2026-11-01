@@ -191,7 +191,10 @@
   padding-bottom: 0;
 }
 
-.mqx-page--guidance-active .mqx-tab-page__scroll.mqx-content {
+/* Вариант с --board специфичнее «плотности» board.css (нижний отступ --mq-sp-5, подключён позже):
+   без него подсказка закрывала кнопку шага — «Зарплата» в O3 (PR-12, регресс 2026-11-01). */
+.mqx-page--guidance-active .mqx-tab-page__scroll.mqx-content,
+.mqx-page--guidance-active .mqx-tab-page--board .mqx-tab-page__scroll.mqx-content {
   scroll-padding-bottom: var(--mqx-guidance-scroll-pad, calc(200px + env(safe-area-inset-bottom, 0px)));
   padding-bottom: var(--mqx-guidance-scroll-pad, calc(200px + env(safe-area-inset-bottom, 0px)));
 }
