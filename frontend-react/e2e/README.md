@@ -1,6 +1,6 @@
 # UI-сценарии (Playwright)
 
-Сквозные сценарии игрока в настоящем браузере — системный Google Chrome (`channel: 'chrome'`), браузеры не скачиваются. Мобильный viewport (Pixel 7).
+Сквозные сценарии игрока в настоящем браузере — системный Google Chrome (`channel: 'chrome'`), браузеры не скачиваются. Два профиля: `mobile-chrome` (Pixel 7, 412×915, touch) и `desktop-chrome` (1440×900, PWA/веб — ADR-012); один профиль — `npx playwright test --project=desktop-chrome`.
 
 ```bash
 npm run test:e2e            # прогон, отчёт — playwright-report/
