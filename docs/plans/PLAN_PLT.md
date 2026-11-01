@@ -144,7 +144,7 @@ Render Starter + домен
 | **PLT-104** | P1 | BE | Поле `channel` tma/pwa/web | Сегмент воронки | ⬜ |
 | **PLT-105** | P1 | BE | Log-only emits с `save_kind` | notification_log | ⬜ |
 | **PLT-106** | P1 | FE | Колонка + фильтр `save_kind` в профилях | Admin profiles + WT | ✅ 2026-06-21 |
-| **PLT-107** | P2 | BE | `last_seen_at` на user (bootstrap) — для D7 / stuck | См. TG-407, A4+ |
+| **PLT-107** | P2 | BE | `last_seen_at` на user (bootstrap) — для D7 / stuck | См. TG-407, A4+. ✅ 2026-11-01 (PR-17): D7-прокси = вернулись через 7+ дней после регистрации среди закрывших ≥1 ход; по одному `last_seen_at` это «когда-либо после D7», не строгий заход на 7-й день |
 
 **Связь с существующим планом:** фазы A2–A4 [`PLAN_admin-analytics-ops.md`](PLAN_admin-analytics-ops.md) — **база**; PLT-101…106 — дельта под **1.x / 2.x** и CA.
 

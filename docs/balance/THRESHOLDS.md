@@ -44,4 +44,6 @@ aliases:
 
 На время перекалибровки экономики: `--invariants warn` у `balance_playtest.py` / `balance_diff.py` — флаги становятся `WARNING: invariant …` и не блокируют. Константы — `INVARIANTS` в `balance_diff.py`.
 
+Разбор INV-1 на коде 2026-11-01 (почему нет победы в P12–P30 и варианты для spec PR-18) — [`INV-1_2026-11-01.md`](INV-1_2026-11-01.md).
+
 `goals_met_peak` — максимум `goals_met` по ряду: после поражения overview обнулён и итоговый `goals_met` = 0.

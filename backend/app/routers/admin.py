@@ -45,6 +45,7 @@ class AdminUserRow(BaseModel):
     username: str
     telegram_id: Optional[int] = None
     created_at: Optional[datetime] = None
+    last_seen_at: Optional[datetime] = None
     profiles_count: int = 0
 
 
@@ -135,6 +136,9 @@ class AdminMetricsSummary(BaseModel):
     run_feedback_recent: int = 0
     profiles_period_3_plus_total: int = 0
     profiles_period_3_plus_active: int = 0
+    users_seen_recent: int = 0
+    d7_eligible: int = 0
+    d7_returned: int = 0
 
 
 class AdminProductFunnelStep(BaseModel):
@@ -170,6 +174,7 @@ class AdminProductFunnel(BaseModel):
 class AdminPendingEventRow(BaseModel):
     id: int
     title: str
+    definition_key: Optional[str] = None
     event_slot: Optional[str] = None
     content_class: Optional[str] = None
 
@@ -504,6 +509,7 @@ def admin_list_users(
                 username=u.username,
                 telegram_id=u.telegram_id,
                 created_at=u.created_at,
+                last_seen_at=u.last_seen_at,
                 profiles_count=profile_counts.get(u.id, 0),
             )
             for u in users
@@ -777,6 +783,7 @@ def admin_watchtower(
                 username=u.username,
                 telegram_id=u.telegram_id,
                 created_at=u.created_at,
+                last_seen_at=u.last_seen_at,
                 profiles_count=profile_counts.get(u.id, 0),
             )
             for u in users

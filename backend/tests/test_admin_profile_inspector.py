@@ -67,3 +67,18 @@ def test_admin_profile_inspector_forbidden(client, auth_headers, monkeypatch):
     monkeypatch.setattr(config, "ADMIN_USER_IDS", set())
     resp = client.get("/api/admin/profiles/1", headers=auth_headers)
     assert resp.status_code == 403
+
+
+def test_inspector_pending_event_has_definition_key(monkeypatch):
+    """PR-28: в инспекторе виден ключ события из каталога, не только id инстанса."""
+    from app.admin import profile_inspector
+
+    monkeypatch.setattr(
+        profile_inspector,
+        "build_pending_events_payload",
+        lambda db, profile: {"events": [{"id": 7, "title": "Кофе", "key": "coffee_habit", "event_slot": "period_choice"}]},
+    )
+    rows = profile_inspector._pending_events_admin(None, None)
+    assert rows == [
+        {"id": 7, "title": "Кофе", "definition_key": "coffee_habit", "event_slot": "period_choice", "content_class": None}
+    ]

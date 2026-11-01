@@ -27,6 +27,7 @@ export function useGame() {
   /** Фоновое обновление после действий — без полноэкранного спиннера. */
   const [syncing, setSyncing] = useState(false);
   const [error, setError] = useState(null);
+  const [errorStatus, setErrorStatus] = useState(null);
   const [periodCloseSummary, setPeriodCloseSummary] = useState(null);
   const [gameSessionStatus, setGameSessionStatus] = useState('active');
   const [defeatInfo, setDefeatInfo] = useState(null);
@@ -87,6 +88,7 @@ export function useGame() {
       const data = await API.getGameBootstrap();
       applyBootstrapPayload(data, { bumpEvents: true });
       setError(null);
+      setErrorStatus(null);
     } catch (err) {
       setOverview(null);
       setTimeStatus(null);
@@ -97,6 +99,7 @@ export function useGame() {
           ? formatApiErrorDetail(err.detail, err.message)
           : formatApiErrorDetail(err?.detail ?? err?.message, err?.message || 'Не удалось загрузить данные');
       setError(msg);
+      setErrorStatus(err instanceof ApiError ? err.status : null);
     } finally {
       setLoading(false);
       loadingRef.current = false;
@@ -257,6 +260,7 @@ export function useGame() {
     loading,
     syncing,
     error,
+    errorStatus,
     advancePeriod,
     fetchPeriodStatus,
     reload: loadData,

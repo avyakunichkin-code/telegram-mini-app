@@ -64,13 +64,13 @@ aliases:
 | GO-01 | ✅ | Сделан 2026-10-15 (см. `PLAN_game-only`) |
 | GO-02 | ✅ | 2026-10-29 (локально): `save_kind=plan` → 400 в start/profiles/templates; старые plan-профили → 410 (`game/session.py`, `PLAN_REMOVED_DETAIL`), данные не трогаются; `tests/integration/api/test_game_only_contract.py`. До выкладки — SQL `count(save_kind='plan')` |
 | PR-10 | ✅ | ★ BG-3 «одна рамка на уровень» в prod (`d0186c9`); метрика Q1≥3.5 не измерялась. С 2026-10-28 поверх — пробный стиль «Чернильный край» (`ink.css`, не ★): он включён по умолчанию, значит волна 10–20 увидит его, если до неё не будет ★ или отката |
-| PR-11 | 🟡 | 2026-10-31: в `frontend-react/src` вне демо-каталога «месяц» в смысле хода не найден; `BaseParamsScreen`, `PlanExpenseEditor`, `MqxGameOverModal`, `ExpensesBudgetBlock` удалены (CSS `.mqx-expenses-budget*` остался в `design/system/runtime` — снять там). Тосты и тексты с backend (`guidance/curriculum.py`, YAML событий) не сверялись |
+| PR-11 | 🟡 | 2026-10-31: в `frontend-react/src` вне демо-каталога «месяц» в смысле хода не найден; `BaseParamsScreen`, `PlanExpenseEditor`, `MqxGameOverModal`, `ExpensesBudgetBlock` удалены; их CSS снят 2026-11-01. Тосты и тексты с backend (`guidance/curriculum.py`, YAML событий) не сверялись |
 | PR-12 | ✅ | 2026-11-01: на ★ BG-3 полоска закрывала «Зарплату» в O3 — `board.css` затирал резерв скролла; правило в `guidance.css` усилено. Ловили e2e (на main падали 4 из 7), e2e добавлены в CI (не required). CLS полоски отдельно не мерился |
 | PR-13 | ❓ | Решение «skip событий close» в `SPEC_PRODUCT` не найдено (grep по «skip» пуст) |
 | PR-15 | ❓ | `PRE_ALPHA_WAVE1_OPS.md` есть; `PRE_ALPHA_WAVE1_RESULTS.md` — draft, пустой шаблон |
 | PR-16 | ⬜ | Волна 10–20 не проведена (результаты не заполнены). Фаза 0 `PLAN_backlog_may2026` не закрыта |
-| PR-17 | ⬜ | `last_seen_at` нет ни в коде, ни в миграциях |
-| PR-18 | ⬜ | Акт 1 победы не сделан; инварианты баланса INV-1 падают на всех 4 шаблонах (DOC_SYNC_LOG 2026-10-25) |
+| PR-17 | ✅ | 2026-11-01: `users.last_seen_at` (миграция `0050`), отметка в `GET /api/game/bootstrap` не чаще 10 мин (`game/presence.py`); Watchtower — «Заходили» и «D7 (прокси)»: из зарегистрированных ≥7 дней назад и закрывших ≥1 ход — доля заходивших через 7+ дней; колонка «Заходил» в «Игроках». `tests/integration/api/test_last_seen.py`. До выкладки — `db.sh migrate` |
+| PR-18 | ⬜ | Акт 1 победы не сделан; INV-1 падает на всех 4 шаблонах. Диагностика 2026-11-01 — [`balance/INV-1_2026-11-01.md`](../balance/INV-1_2026-11-01.md): цепочка проходится к P4–5, предпоследний шаг «доход с инвестиций ≥ 10 тыс. / 80 тыс. ₽/мес» достижим лишь к P67…P1296; варианты A–D для spec |
 | PR-19 | ⬜ | Spec на правило подушки/burn не найден |
 | PR-20 | ✅ | 2026-11-01: не воспроизводится — открытая карусель событий перекрывает нижнюю навигацию, после закрытия вкладки не перекрыты; закреплено в `e2e/events.spec.js` (мобильный viewport; desktop не проверялся) |
 | GO-03 | ✅ | 2026-10-29 (локально): `BaseParamsScreen`, Plan-редакторы, plan-ветка `expenses/service.py` удалены; CRUD статей → 410; Watchtower и `adminPlayerColumns` показывают plan как «Архивный режим» |
@@ -82,7 +82,7 @@ aliases:
 | PR-25 | ⬜ | `game/period.py` по-прежнему импортирует `services.events.service` |
 | PR-26 | ❓ | Empty-состояние Капитала: есть `capital.spec.js` (e2e), `CapitalActionsPanel`; α-FB-06 не сверялся |
 | PR-27 | ❓ | Ритуал close 3 строки — не сверялся |
-| PR-28 | ⬜ | `definition_key` в `admin/` не найден |
+| PR-28 | ✅ | 2026-11-01: лог `events_spawned profile/period/picked/priority/pool/core/fallback` в `ensure_period_events` (`test_events_spawn_log.py`); `definition_key` у событий «ждут выбора» в инспекторе профиля; выбор уже пишет `event_key` в журнал (`event_chosen`). Seed RNG на профиль (AI-01) не делался |
 | PR-29 | ⬜ | Player TG D+7 / `/quiet` не найдены |
 | PR-30 | ⬜ | Экрана достижений в `App.jsx` нет |
 | PR-31 | ⬜ | Sentry не подключён |

@@ -364,209 +364,6 @@
   background: linear-gradient(90deg, #fbbf24, #f97316);
 }
 
-/* E1: редактор Plan */
-.mqx-plan-expense-editor {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-.mqx-plan-expense-editor__head {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 10px;
-}
-
-.mqx-plan-expense-editor__hint {
-  margin: 0;
-  font-size: var(--mq-fs-caption);
-  color: color-mix(in srgb, var(--mqx-ink) 70%, transparent);
-  line-height: 1.35;
-  flex: 1 1 12rem;
-}
-
-.mqx-plan-expense-editor__total {
-  text-align: right;
-}
-
-.mqx-plan-expense-editor__total-label {
-  font-size: var(--mq-fs-caption);
-  color: color-mix(in srgb, var(--mqx-ink) 65%, transparent);
-}
-
-.mqx-plan-expense-editor__total-value {
-  font-weight: 700;
-  font-size: 1.1rem;
-}
-
-.mqx-plan-expense-editor__list {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.mqx-plan-expense-editor__lines-edit {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.mqx-plan-expense-editor__line-edit {
-  display: grid;
-  grid-template-columns: 1fr auto;
-  gap: 8px;
-  align-items: center;
-}
-
-.mqx-plan-expense-editor__line-edit-meta {
-  grid-column: 1 / -1;
-}
-
-.mqx-plan-expense-editor__line-edit-title {
-  font-weight: 600;
-  display: block;
-}
-
-.mqx-plan-expense-editor__line-edit-cat {
-  font-size: var(--mq-fs-caption);
-  color: color-mix(in srgb, var(--mqx-ink) 65%, transparent);
-}
-
-/* E1: расходы на жизнеобеспечение */
-.mqx-expenses-budget {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-.mqx-expenses-budget__head {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 12px;
-}
-
-.mqx-expenses-budget__title {
-  margin: 4px 0 0;
-  font-size: var(--mq-fs-title-sm, 1.05rem);
-  font-weight: 700;
-}
-
-.mqx-expenses-budget__sub,
-.mqx-expenses-budget__empty,
-.mqx-expenses-budget__outflow {
-  margin: 6px 0 0;
-  font-size: var(--mq-fs-caption);
-  color: color-mix(in srgb, var(--mqx-ink) 72%, transparent);
-  line-height: 1.35;
-}
-
-.mqx-expenses-budget__total {
-  text-align: right;
-  flex-shrink: 0;
-}
-
-.mqx-expenses-budget__total-label {
-  font-size: var(--mq-fs-caption);
-  color: color-mix(in srgb, var(--mqx-ink) 65%, transparent);
-}
-
-.mqx-expenses-budget__total-value {
-  font-size: 1.15rem;
-  font-weight: 700;
-  margin-top: 2px;
-}
-
-.mqx-expenses-budget__list {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.mqx-expenses-budget__row-top {
-  display: flex;
-  justify-content: space-between;
-  gap: 8px;
-  font-size: var(--mq-fs-body-sm);
-}
-
-.mqx-expenses-budget__row-title {
-  font-weight: 600;
-}
-
-.mqx-expenses-budget__track {
-  margin-top: 6px;
-  height: 8px;
-  border-radius: 999px;
-  overflow: hidden;
-  background: color-mix(in srgb, var(--mqx-ink) 8%, transparent);
-}
-
-.mqx-expenses-budget__fill {
-  height: 100%;
-  border-radius: 999px;
-  background: linear-gradient(90deg, #fbbf24, #f97316);
-}
-
-.mqx-expenses-budget__toggle {
-  align-self: flex-start;
-  border: none;
-  background: none;
-  padding: 0;
-  font-size: var(--mq-fs-caption);
-  font-weight: 600;
-  color: var(--tg-theme-link-color, #2563eb);
-  cursor: pointer;
-}
-
-.mqx-expenses-budget__lines {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.mqx-expenses-budget__line {
-  display: grid;
-  grid-template-columns: 1fr auto;
-  grid-template-rows: auto auto;
-  gap: 2px 10px;
-  padding: 8px 10px;
-  border-radius: 12px;
-  background: color-mix(in srgb, var(--tg-theme-secondary-bg-color, #f1f5f9) 55%, transparent);
-}
-
-.mqx-expenses-budget__line-title {
-  font-weight: 600;
-  font-size: var(--mq-fs-body-sm);
-}
-
-.mqx-expenses-budget__line-meta {
-  grid-column: 1;
-  font-size: var(--mq-fs-caption);
-  color: color-mix(in srgb, var(--mqx-ink) 65%, transparent);
-}
-
-.mqx-expenses-budget__line-amount {
-  grid-column: 2;
-  grid-row: 1 / span 2;
-  align-self: center;
-  font-weight: 700;
-}
-
 .mqx-dash-burn-hint {
   margin: 0;
   padding: 0 2px;
@@ -785,7 +582,6 @@
   color: var(--mq-danger);
 }
 
-
 .mqx-pclose-tail {
   position: fixed;
   left: 50%;
@@ -828,7 +624,6 @@
   text-overflow: ellipsis;
 }
 
-
 .mqx-period-close__title {
   margin: 4px 0 0;
   font-size: var(--mq-fs-title-sm, 1.05rem);
@@ -870,12 +665,6 @@
   font-size: var(--mq-fs-body-sm);
 }
 
-
-
-
-
-
-
 .mqx-period-close__achievements {
   list-style: none;
   margin: 0;
@@ -900,7 +689,6 @@
   font-size: var(--mq-fs-body-sm);
   font-weight: 600;
 }
-
 
 .mqx-level-block__hint {
   margin: 8px 0 0;
