@@ -20,6 +20,8 @@ class User(Base):
     guidance_progress_json = Column(Text, nullable=False, default="{}")
     guidance_completed_at = Column(DateTime, nullable=True)
     created_at = Column(DateTime, default=utc_now_naive)
+    # Последний bootstrap (PR-17): D7-прокси и «застрявшие»; запись не чаще LAST_SEEN_TOUCH_INTERVAL.
+    last_seen_at = Column(DateTime, nullable=True, index=True)
 
 
 class PlayerRunFeedback(Base):

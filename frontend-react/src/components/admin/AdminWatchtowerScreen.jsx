@@ -9,6 +9,7 @@ import { useAdminNotificationColumns } from './adminPlayerColumns';
 import { AdminTable } from './adminTable';
 import { AdminKpiGrid } from './ui/AdminKpiGrid';
 import { notificationProfileId } from './adminUtils';
+import { d7ProxyTile } from '../../utils/d7Proxy';
 
 const WATCHTOWER_TAB_LABELS = {
   overview: 'Обзор',
@@ -200,6 +201,17 @@ function MetricsSummary({ summary }) {
             label: 'Период ≥3',
             value: summary.profiles_period_3_plus_active ?? 0,
             sub: `всего ${summary.profiles_period_3_plus_total ?? 0}`,
+          },
+          {
+            key: 'seen',
+            label: 'Заходили',
+            value: summary.users_seen_recent ?? 0,
+            sub: `за ${days}д`,
+          },
+          {
+            key: 'd7',
+            label: 'D7 (прокси)',
+            ...d7ProxyTile(summary),
           },
           {
             key: 'avg',
