@@ -36,6 +36,7 @@ import { suggestDefaultProfileName } from '../utils/suggestDefaultProfileName';
 import { applyPwaUpdateAtTurnBoundary } from '../utils/pwaUpdate';
 import { useOffline } from '../hooks/useNetworkStatus';
 import { BACK_ONLINE_COPY, OFFLINE_COPY } from '../utils/networkStatus';
+import { bootstrapErrorAction } from '../utils/bootstrapErrorAction';
 
 /** Эмоциональный слой страницы (TB1: без play/pause — активная партия = playing mood). */
 function gamePageMoodClass(timeStatus) {
@@ -67,6 +68,7 @@ export function GameScreen({ onLogout, onNewGame, onLoadGame }) {
     loading,
     syncing,
     error,
+    errorStatus,
     advancePeriod,
     fetchPeriodStatus,
     reload,
@@ -86,6 +88,13 @@ export function GameScreen({ onLogout, onNewGame, onLoadGame }) {
     dismissVictoryFinale,
     submitRunFeedback,
   } = useGame();
+
+  // Сохранение снятого режима не открывается — уводим в меню, где есть другие партии и «Новая игра».
+  useEffect(() => {
+    if (!error || bootstrapErrorAction(errorStatus) !== 'menu') return;
+    showNotification(error, 'info', { ttlMs: 6000 });
+    onLoadGame?.();
+  }, [error, errorStatus, onLoadGame]);
 
   const offline = useOffline();
   const wasOfflineRef = useRef(offline);
