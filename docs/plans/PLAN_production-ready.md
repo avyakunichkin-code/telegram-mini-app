@@ -69,7 +69,7 @@ aliases:
 | PR-13 | ❓ | Решение «skip событий close» в `SPEC_PRODUCT` не найдено (grep по «skip» пуст) |
 | PR-15 | ❓ | `PRE_ALPHA_WAVE1_OPS.md` есть; `PRE_ALPHA_WAVE1_RESULTS.md` — draft, пустой шаблон |
 | PR-16 | ⬜ | Волна 10–20 не проведена (результаты не заполнены). Фаза 0 `PLAN_backlog_may2026` не закрыта |
-| PR-17 | ⬜ | `last_seen_at` нет ни в коде, ни в миграциях |
+| PR-17 | ✅ | 2026-11-01: `users.last_seen_at` (миграция `0050`), отметка в `GET /api/game/bootstrap` не чаще 10 мин (`game/presence.py`); Watchtower — «Заходили» и «D7 (прокси)»: из зарегистрированных ≥7 дней назад и закрывших ≥1 ход — доля заходивших через 7+ дней; колонка «Заходил» в «Игроках». `tests/integration/api/test_last_seen.py`. До выкладки — `db.sh migrate` |
 | PR-18 | ⬜ | Акт 1 победы не сделан; инварианты баланса INV-1 падают на всех 4 шаблонах (DOC_SYNC_LOG 2026-10-25) |
 | PR-19 | ⬜ | Spec на правило подушки/burn не найден |
 | PR-20 | ❓ | Z-index оверлея (α-FB-19) — вне сверки |

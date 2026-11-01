@@ -38,6 +38,13 @@ export function useAdminUserColumns() {
         sortable: true,
         sortValue: (r) => (r.created_at ? new Date(r.created_at).getTime() : 0),
       },
+      {
+        key: 'last_seen',
+        label: 'Заходил',
+        render: (r) => (r.last_seen_at ? formatAdminDt(r.last_seen_at) : '—'),
+        sortable: true,
+        sortValue: (r) => (r.last_seen_at ? new Date(r.last_seen_at).getTime() : 0),
+      },
     ],
     [],
   );

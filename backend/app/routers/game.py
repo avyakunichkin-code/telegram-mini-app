@@ -6,6 +6,7 @@ from sqlalchemy.orm import Session
 from ..auth import get_current_user
 from ..database import get_db
 from ..game.bootstrap import build_game_bootstrap
+from ..game.presence import touch_last_seen
 from ..game.session import resolve_game_session
 from ..schemas import (
     GameProfileCreate,
@@ -48,6 +49,8 @@ def game_bootstrap(
     db: Session = Depends(get_db),
 ):
     """Overview + time + period + events одним запросом (Mini App cold start / refresh)."""
+    # Заход считаем до открытия партии: 410 на старом сохранении — тоже визит.
+    touch_last_seen(db, current_user)
     profile, session_status, defeat_reason, defeat_period_index = resolve_game_session(
         db, current_user.id
     )

@@ -8,7 +8,7 @@
 app/
 ├── routers/          # FastAPI: auth, game, period, finance, events, …
 ├── services/         # тонкие use-cases под роутеры (см. services/README.md)
-├── game/             # период, время, bootstrap, rules, start_validation
+├── game/             # период, время, bootstrap, presence (last_seen_at), rules, start_validation
 ├── finance/          # overview_build, expenses, balance, period_metrics; annuity/liability_kinds/invest_products — адаптеры над packages/fincore
 ├── victory/          # engine, seeds, snap, goals, mechanics_progression
 ├── events/           # chains, taxonomy, mvp11, constants, insurance_hooks

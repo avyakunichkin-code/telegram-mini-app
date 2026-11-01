@@ -12,6 +12,32 @@ from ..models import GameProfile, NotificationLog, PlayerRunFeedback, User
 from ..timeutil import utc_now_naive
 
 
+D7_DAYS = 7
+
+
+def _d7_proxy(db: Session) -> tuple[int, int]:
+    """D7-прокси (PR-17): из тех, кто зарегистрирован ≥7 дней назад и закрыл хотя бы один ход
+    (есть партия Game с period_index ≥ 2), сколько заходили через 7+ дней после регистрации.
+
+    По одному last_seen_at это «вернулся когда-либо после D7», а не строгий заход ровно на 7-й день.
+    """
+    cutoff = utc_now_naive() - timedelta(days=D7_DAYS)
+    closed_any = (
+        db.query(GameProfile.user_id)
+        .filter(GameProfile.save_kind == "game", GameProfile.period_index >= 2)
+        .distinct()
+    )
+    rows = (
+        db.query(User.created_at, User.last_seen_at)
+        .filter(User.created_at.isnot(None), User.created_at <= cutoff, User.id.in_(closed_any))
+        .all()
+    )
+    returned = sum(
+        1 for created, seen in rows if seen is not None and seen >= created + timedelta(days=D7_DAYS)
+    )
+    return len(rows), returned
+
+
 def build_metrics_summary(
     db: Session, *, days: int = 7, save_kind: str | None = None
 ) -> dict[str, Any]:
@@ -155,6 +181,11 @@ def build_metrics_summary(
         or 0
     )
 
+    users_seen_recent = int(
+        db.query(func.count(User.id)).filter(User.last_seen_at >= since).scalar() or 0
+    )
+    d7_eligible, d7_returned = _d7_proxy(db)
+
     return {
         "window_days": window_days,
         "save_kind": save_kind_filter,
@@ -173,6 +204,9 @@ def build_metrics_summary(
         "game_started_recent": game_started_recent,
         "defeats_total": defeats_total,
         "defeats_recent": defeats_recent,
+        "users_seen_recent": users_seen_recent,
+        "d7_eligible": d7_eligible,
+        "d7_returned": d7_returned,
         "run_feedback_recent": run_feedback_recent,
         "profiles_period_3_plus_total": profiles_period_3_plus_total,
         "profiles_period_3_plus_active": profiles_period_3_plus_active,
