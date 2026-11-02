@@ -15,7 +15,7 @@ aliases:
 
 ## Status
 
-**Accepted** (2026-10-21). **Amended** 2026-10-26: п.6 и риски Plan пересмотрены по итогам idea-refine ([`plan-financial-assistant.md`](../plan/vision/plan-financial-assistant.md)) — вход с персональными данными, контур РФ, обобщённый анализ инвестиций, пенсии и страховок в v1. **Amended** 2026-10-27: п.8 — рабочий прототип Plan разрешён до Pre-Alpha gate игры в границах «без БД, без деплоя, без реальных пользователей»; продуктовый Plan по-прежнему после gate. Роадмап направления — [`docs/plan/ROADMAP.md`](../plan/ROADMAP.md).
+**Accepted** (2026-10-21). **Amended** 2026-10-26: п.6 и риски Plan пересмотрены по итогам idea-refine ([`plan-financial-assistant.md`](../plan/vision/plan-financial-assistant.md)) — вход с персональными данными, контур РФ, обобщённый анализ инвестиций, пенсии и страховок в v1. **Amended** 2026-10-27: п.8 — рабочий прототип Plan разрешён до Pre-Alpha gate игры в границах «без БД, без деплоя, без реальных пользователей»; продуктовый Plan по-прежнему после gate. **Amended** 2026-11-02 [ADR-017](ADR-017-plan-p2-without-game-gate.md): п.8 — продуктовый каркас Plan (P2) не ждёт Pre-Alpha gate; юрист до реальных пользователей, аддитивность ядра и изоляция приложений остаются. Роадмап направления — [`docs/plan/ROADMAP.md`](../plan/ROADMAP.md).
 
 **Частично заменяет [ADR-013](ADR-013-game-only-drop-plan-mode.md):** снимается только п.3 («не обещать Plan, M2.0 cancelled»). Остальные пункты ADR-013 остаются в силе для игры. План работ — [`PLAN_game-plan-split.md`](../plans/PLAN_game-plan-split.md) (эпик **SPL**).
 

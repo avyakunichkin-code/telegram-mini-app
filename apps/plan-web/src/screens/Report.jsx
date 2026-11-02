@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { api } from '../api.js'
-import { Bars, Button, Card, ErrorNote, Light, LineChart, Money, Precision, Verdict } from '../components.jsx'
+import { Button, Card, ErrorNote, Light, LineChart, Money, Precision, Verdict } from '../components.jsx'
 import { monthLabel, pct, plural, rub } from '../format.js'
 
 const PRECISION = {
@@ -63,6 +63,23 @@ function AreaMetrics({ area, draft }) {
           )}
         </>
       )
+  }
+}
+
+/** Плитка светофора наверху отчёта (★ C2, bento-round): одна главная цифра области и подпись. */
+function areaSummary(area) {
+  const m = area.metrics
+  switch (area.key) {
+    case 'budget':
+      return m.savings_rate === null ? ['—', 'нет дохода'] : [pct(m.savings_rate), 'норма сбережений']
+    case 'debts':
+      return m.overdue > 0 ? [`${m.dti_percent.toFixed(0)} %`, `просрочка ${rub(m.overdue)}`] : [`${m.dti_percent.toFixed(0)} %`, 'платежи от дохода']
+    case 'cushion':
+      return [`${m.months.toFixed(1).replace('.', ',')} мес.`, `цель ${m.target_months} мес.`]
+    default: {
+      const n = area.flags?.length || 0
+      return n ? [`${n} ${plural(n, 'флаг', 'флага', 'флагов')}`, area.flags[0].text] : ['в порядке', 'пробелов не видно']
+    }
   }
 }
 
@@ -129,6 +146,7 @@ export default function Report({ checkup, report, onRefine, onComplete, onNew, o
   const ea = report.entry_answer
   const hero = heroFor(ea)
   const base = report.forecast.base
+  const pess = report.forecast.pessimistic
   const pessNegative = report.forecast.pessimistic.find((p) => p.liquid < 0)
 
   async function complete() {
@@ -154,15 +172,48 @@ export default function Report({ checkup, report, onRefine, onComplete, onNew, o
 
   return (
     <div className="stack report">
+      <div className="report-top">
+        <p className="eyebrow">{report.final ? 'Итоговый разбор' : 'Черновой разбор'} на {monthLabel(report.as_of)}</p>
+        <span className="pill" title={p2}>{p1} · {Math.round((report.precision_share ?? 0) * 100)} %</span>
+      </div>
       <div className="board">
+        {/* ★ C2 (bento-round, утверждён 2026-11-02): светофор 2×2 → прогноз линиями → ответ с шагами */}
+        {report.areas.map((a) => {
+          const [value, caption] = areaSummary(a)
+          return (
+            <section key={a.key} className={`card area-${a.light} t-quarter area-summary`}>
+              <p className="eyebrow">{a.title}</p>
+              <div className="stat-value">{value}</div>
+              <p className="area-caption">{caption}</p>
+            </section>
+          )
+        })}
+
+        <section className="card t-full forecast">
+          <header className="card-head"><h3>Деньги на счетах</h3><span className="muted">12 мес., если ничего не менять</span></header>
+          <LineChart
+            height={150}
+            series={[
+              { name: 'Как сейчас', tone: 'base', points: base },
+              { name: 'Если хуже', tone: 'pess', points: pess },
+            ]}
+          />
+          <div className="legend">
+            <span><i className="lg-base" />как сейчас · {rub(base[base.length - 1]?.liquid)}</span>
+            <span><i className="lg-pess" />если хуже · {rub(pess[pess.length - 1]?.liquid)}</span>
+          </div>
+          {pessNegative && <p className="bars-warn">Если доходы окажутся по нижней границе, а расходы — по верхней, деньги кончатся в {monthLabel(pessNegative.month)}.</p>}
+        </section>
+
         <section className={`card tile-inverse report-head answer answer-${ea.verdict} t-full`}>
           <div className="card-head">
-            <p className="eyebrow" style={{ margin: 0 }}>{report.final ? 'Итоговый разбор' : 'Черновой разбор'} на {monthLabel(report.as_of)}</p>
+            <h1>{ea.question}</h1>
             <Verdict value={ea.verdict} />
           </div>
-          <h1>{ea.question}</h1>
           {hero && <div className="hero-num"><b>{hero[0]}</b><span>{hero[1][0]}<br />{hero[1][1]}</span></div>}
           <p className="answer-text">{ea.text}</p>
+          <h3>С чего начать</h3>
+          <Steps steps={report.steps} final={report.final} onPatch={patch} />
         </section>
 
         <section className={`card tile-tall t-half ${report.free_cashflow < 0 ? 'area-red' : 'area-green'}`}>
@@ -174,22 +225,12 @@ export default function Report({ checkup, report, onRefine, onComplete, onNew, o
           <div><div className="stat-value">{Math.round((report.precision_share ?? 0) * 100)} %</div><p className="muted" style={{ marginBottom: 8 }}>сумм введено точно</p><Precision share={report.precision_share} hint={p2} /></div>
         </section>
 
-        <Card title="С чего начать" className="t-full">
-          <Steps steps={report.steps} final={report.final} onPatch={patch} />
-        </Card>
-
+        <h2 className="t-full" style={{ padding: '0 6px' }}>Подробно по областям</h2>
         {report.areas.map((a) => (
           <Card key={a.key} title={a.title} aside={<Light value={a.light} />} className={`area area-${a.light} t-area`}>
             <AreaMetrics area={a} draft={draft} />
           </Card>
         ))}
-
-        <section className="card tile-inverse t-full">
-          <header className="card-head"><h3>Прогноз на 12 месяцев</h3><span className="muted">если ничего не менять</span></header>
-          <Bars points={base} label={`Остаток денег по месяцам: от ${rub(base[0]?.liquid)} до ${rub(base[base.length - 1]?.liquid)}`} />
-          <div className="bars-axis"><span>{monthLabel(base[0]?.month)}</span><span>{monthLabel(base[base.length - 1]?.month)}: {rub(base[base.length - 1]?.liquid)}</span></div>
-          {pessNegative && <p className="bars-warn">В пессимистичном сценарии деньги кончатся в {monthLabel(pessNegative.month)}.</p>}
-        </section>
 
         <h2 className="t-full" style={{ padding: '0 6px' }}>Стресс-тест</h2>
         {report.scenarios.map((s) => (
