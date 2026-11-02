@@ -33,7 +33,7 @@
             <figcaption><b>Новый ход</b><small>Начало периода</small></figcaption>
           </figure>
           <figure class="mx-card">
-            <span class="mx-m" style="width: 150px" data-face="wink" data-arms="thumb" data-top="ЖМИ ЗАРПЛАТУ" data-label="Монетка подмигивает, на ободе: жми зарплату"></span>
+            <span class="mx-m" style="width: 150px" data-face="wink" data-arms="hey" data-top="ЖМИ ЗАРПЛАТУ" data-label="Монетка подмигивает, на ободе: жми зарплату"></span>
             <figcaption><b>Напоминание</b><small>Зарплата не взята</small></figcaption>
           </figure>
           <figure class="mx-card">
@@ -162,7 +162,7 @@
         var ARMS = {
           none: { back: '', front: '' },
           wave: { back: '<path d="M44 96 Q24 88 28 62" fill="none"/>' + hand(28, 55) + '<path d="M154 102 Q178 114 160 130" fill="none"/>' + hand(157, 133), front: '' },
-          thumb: { back: '<path d="M46 96 Q26 92 30 70" fill="none"/><rect x="26" y="40" width="9" height="18" rx="4.5" fill="' + SOFT + '"/><rect x="20" y="54" width="22" height="18" rx="7" fill="' + SOFT + '"/><path d="M154 102 Q178 114 160 130" fill="none"/>' + hand(157, 133), front: '' },
+          hey: { back: '<path d="M46 96 Q26 90 26 62" fill="none"/>' + hand(26, 54) + '<path d="M10 38 L15 43 M6 52 L13 52 M10 66 L15 61" fill="none" stroke-width="3.5"/><path d="M156 98 Q184 108 162 128" fill="none"/>' + hand(160, 131), front: '' },
           up: { back: '<path d="M46 80 Q26 66 28 44" fill="none"/>' + hand(28, 37) + '<path d="M154 80 Q174 66 172 44" fill="none"/>' + hand(172, 37), front: '' },
           chin: { back: '<path d="M44 102 Q30 122 38 142" fill="none"/>' + hand(39, 149), front: '<path d="M158 106 Q150 132 124 126" fill="none"/>' + hand(118, 123) }
         };
@@ -187,10 +187,12 @@
             '<circle cx="100" cy="88" r="47" fill="' + SOFT + '" stroke="' + TURN + '" stroke-width="12"/>' +
             '<circle cx="100" cy="88" r="53.5" fill="none" stroke-width="3"/>' +
             '<circle cx="100" cy="88" r="40.5" fill="none" stroke-width="3"/>' +
-            FACES[face] + a.front +
+            FACES[face] +
             '</g>' +
             '<text class="mx-rim" font-size="9" fill="' + (face === 'victory' ? SOFT : '#ffffff') + '" letter-spacing="1.4"><textPath href="#' + id + 't" startOffset="50%" text-anchor="middle">' + top + '</textPath></text>' +
             '<text class="mx-rim" font-size="7.5" fill="' + TURN_SOFT + '" letter-spacing="1.6"><textPath href="#' + id + 'b" startOffset="50%" text-anchor="middle">★ ТВОЙ ХОД ★</textPath></text>' +
+            /* рука у подбородка — поверх надписи на ободе (решение PO 2026-11-02) */
+            (a.front ? '<g stroke="' + INK + '" stroke-width="5" stroke-linecap="round" stroke-linejoin="round">' + a.front + '</g>' : '') +
             '</svg>';
         }
 
