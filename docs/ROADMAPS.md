@@ -15,7 +15,7 @@ aliases:
 
 | Направление | Цель сейчас | Роадмап | Документы |
 |-------------|-------------|---------|-----------|
-| **Game** — «ТВОЙ ХОД», игра по финансовой грамотности | Pre-Alpha gate: «можно звать людей». P0 — 10 из 10 по коду (2026-11-02: required checks на `main`, PR-04); дальше P1: волна 10–20 (PR-16), победа: калибровка A (PR #16) и два акта — план [`PLAN_victory-acts`](plans/PLAN_victory-acts.md) (DRAFT), хвост GO-02…05. Дизайн: пробный стиль «Чернильный край» и маскоты — ждут решения PO, материал — `design-lab/board-game/ink-decision-round/` | [`plans/PLAN_production-ready.md`](plans/PLAN_production-ready.md) (P0–P2 до α) · дальний горизонт — [`vision/GAME_DESIGN_ROADMAP_2026.md`](vision/GAME_DESIGN_ROADMAP_2026.md) · приоритеты — [`backlog/PRODUCT_BACKLOG.md`](backlog/PRODUCT_BACKLOG.md) | весь `docs/`, кроме `docs/plan/`; канон — [`foundation/SPEC_PRODUCT.md`](foundation/SPEC_PRODUCT.md) |
+| **Game** — «ТВОЙ ХОД», игра по финансовой грамотности | Pre-Alpha gate: «можно звать людей». P0 — 10 из 10 по коду (2026-11-02: required checks на `main`, PR-04); дальше P1: волна 10–20 (PR-16), победа: калибровка A (PR #16) и два акта — план [`PLAN_victory-acts`](plans/PLAN_victory-acts.md) (DRAFT), хвост GO-02…05. Дизайн: ★ «Чернильный край» и маскоты ink утверждены 2026-11-02 (`design-lab/board-game/APPROVED.md`); дальше — снять переключатель classic и перенести новых маскотов в prod | [`plans/PLAN_production-ready.md`](plans/PLAN_production-ready.md) (P0–P2 до α) · дальний горизонт — [`vision/GAME_DESIGN_ROADMAP_2026.md`](vision/GAME_DESIGN_ROADMAP_2026.md) · приоритеты — [`backlog/PRODUCT_BACKLOG.md`](backlog/PRODUCT_BACKLOG.md) | весь `docs/`, кроме `docs/plan/`; канон — [`foundation/SPEC_PRODUCT.md`](foundation/SPEC_PRODUCT.md) |
 | **Plan** — «ТВОЙ ПЛАН», семейный финансовый чекап | Рабочий прототип: P0 закрыт 2026-10-28 (дизайн-система прототипа — «Бенто»), дальше — решение по P1 (проверка на людях) | [`plan/ROADMAP.md`](plan/ROADMAP.md) | [`plan/`](plan/README.md) |
 | **Ядро** — `packages/fincore`, `packages/platform` | Фазы 0–2 ✅ (fincore, SPL-101…208); `platform` (SPL-301/302) — после P0 игры, предусловия PR-05/PR-08 выполнены | [`plans/PLAN_game-plan-split.md`](plans/PLAN_game-plan-split.md) (фазы 0–3) | [ADR-016](decisions/ADR-016-two-products-shared-fincore.md), [`packages/fincore/README.md`](../packages/fincore/README.md) |
 
@@ -38,7 +38,7 @@ aliases:
 | Что | Статус | Где |
 |-----|--------|-----|
 | Канон игры — ★ BG-1…BG-3, превью конца хода (PR-07) | ✅ в prod | [`design-lab/board-game/APPROVED.md`](../design-lab/board-game/APPROVED.md) |
-| «Чернильный край» (необрутализм A) | 🟡 пробно в prod слоем `ink.css`, по умолчанию включён; не тронуты Аналитика, Меню, онбординг | там же, раздел «Пробное внедрение» |
+| «Чернильный край» (необрутализм A) | ✅ ★ 2026-11-02, в prod слоем `ink.css` по умолчанию; осталось снять переключатель `?style=classic`; не тронуты экраны до партии | там же, раздел «Пробное внедрение» |
 | Маскоты: Монетка на ободе, Квитя, напарники персонажей, Монетка до выбора роли | 🟡 review в lab | [`design-lab/mascots/`](../design-lab/mascots/), idea [`persona-companions`](vision/ideas/persona-companions.md) |
 | Дизайн-система MQX v3 | 🟡 цель; в prod перенесены токены движения, алиасы legacy, храповик стилевого долга | [`design/claude-design-system/`](../design/README.md) |
 | Plan — «Бенто» | ✅ в прототипе | [`apps/plan-web/src/styles.css`](../apps/plan-web/src/styles.css) |

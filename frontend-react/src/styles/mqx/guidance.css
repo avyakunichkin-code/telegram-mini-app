@@ -180,6 +180,19 @@
   min-height: 40px;
 }
 
+/* «Нажми «Понятно»…» — подпись под кнопкой (splitContinueHint) */
+.mqx-guidance-strip__after {
+  margin: var(--mq-sp-2) 0 0;
+  font-size: var(--mq-fs-caption);
+  line-height: 1.35;
+  text-align: center;
+  color: var(--tg-theme-hint-color, #8e8e93);
+}
+
+.mqx-guidance-strip__after strong {
+  color: var(--tg-theme-text-color, #111);
+}
+
 .mqx-guidance-strip__hint {
   margin: -2px 0 6px;
   font-size: 11px;
