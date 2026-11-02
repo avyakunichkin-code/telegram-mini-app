@@ -2,25 +2,12 @@ import { useState } from 'react'
 import { api } from '../api.js'
 import { Button, Card, ErrorNote, Light, LineChart, Money, Precision, Verdict } from '../components.jsx'
 import { monthLabel, pct, plural, rub } from '../format.js'
+import { areaSummary, heroFor, nextStep } from '../logic.js'
 
 const PRECISION = {
   draft: ['Черновая точность', 'Много ответов диапазонами или оценок — уточните разделы, и разбор станет точнее.'],
   approximate: ['Приблизительная точность', 'Часть цифр примерная. Для итогового разбора стоит уточнить крупные суммы.'],
   refined: ['Уточнённые данные', 'Почти все суммы введены точно.'],
-}
-
-/** Главная цифра плитки-ответа — своя для каждого вопроса со входа. */
-function heroFor(ea) {
-  const n = ea.numbers || {}
-  if (n.dti_after !== undefined && n.dti_after !== null) return [Math.round(n.dti_after), ['% дохода', 'уйдёт на платежи']]
-  if (n.current?.months) return [n.current.months, [plural(n.current.months, 'месяц', 'месяца', 'месяцев'), 'до закрытия кредитов']]
-  if ('months_until_negative' in n) {
-    return n.months_until_negative
-      ? [n.months_until_negative, [plural(n.months_until_negative, 'месяц', 'месяца', 'месяцев'), 'продержитесь']]
-      : ['12+', ['месяцев', 'бюджет выдерживает']]
-  }
-  if ('green' in n) return [n.green, ['из 4 областей', 'в порядке']]
-  return null
 }
 
 function AreaMetrics({ area, draft }) {
@@ -66,26 +53,9 @@ function AreaMetrics({ area, draft }) {
   }
 }
 
-/** Плитка светофора наверху отчёта (★ C2, bento-round): одна главная цифра области и подпись. */
-function areaSummary(area) {
-  const m = area.metrics
-  switch (area.key) {
-    case 'budget':
-      return m.savings_rate === null ? ['—', 'нет дохода'] : [pct(m.savings_rate), 'норма сбережений']
-    case 'debts':
-      return m.overdue > 0 ? [`${m.dti_percent.toFixed(0)} %`, `просрочка ${rub(m.overdue)}`] : [`${m.dti_percent.toFixed(0)} %`, 'платежи от дохода']
-    case 'cushion':
-      return [`${m.months.toFixed(1).replace('.', ',')} мес.`, `цель ${m.target_months} мес.`]
-    default: {
-      const n = area.flags?.length || 0
-      return n ? [`${n} ${plural(n, 'флаг', 'флага', 'флагов')}`, area.flags[0].text] : ['в порядке', 'пробелов не видно']
-    }
-  }
-}
-
 function Steps({ steps, final, onPatch }) {
   // Жёлтая плитка — первый ещё не сделанный шаг
-  const next = steps.find((s) => s.status === 'suggested')
+  const next = nextStep(steps)
   return (
     <ol className="steps">
       {steps.map((s) => (

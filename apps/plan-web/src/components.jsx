@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { monthLabel, rub } from './format.js'
+import { isWideRange, toNum } from './logic.js'
 
 export function Button({ variant = 'primary', busy, children, ...props }) {
   return (
@@ -118,6 +119,7 @@ export function RangeInput({ label, value, onChange, hint }) {
             <span className="unit">₽</span>
           </span>
           <Fork min={v.min} max={v.max} />
+          {isWideRange(v) && <span className="hint warn">Вилка шире чем в 3 раза — разбор будет грубым. Сузьте, если можете.</span>}
         </>
       ) : (
         <span className="range">
@@ -131,12 +133,7 @@ export function RangeInput({ label, value, onChange, hint }) {
   )
 }
 
-export function toNum(s) {
-  const cleaned = String(s).replace(/\s/g, '').replace(',', '.')
-  if (cleaned === '') return ''
-  const n = Number(cleaned)
-  return Number.isFinite(n) ? n : ''
-}
+export { toNum }
 
 export function Presets({ values, onPick }) {
   return (

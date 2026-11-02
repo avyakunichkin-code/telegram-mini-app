@@ -2,6 +2,9 @@ import { useState } from 'react'
 import { api } from '../api.js'
 import { Button, Card, ErrorNote, RangeInput, toNum } from '../components.jsx'
 import { SECTIONS, sectionOrder } from '../sections.js'
+import { normalizeRow, precisionOf, precisionTip } from '../logic.js'
+
+const LEVEL = { draft: 'черновая', approximate: 'приблизительная', refined: 'уточнённая' }
 
 function FieldInput({ field, value, onChange, members }) {
   switch (field.type) {
@@ -64,17 +67,6 @@ function FieldInput({ field, value, onChange, members }) {
   }
 }
 
-function normalize(section, row) {
-  const out = { ...row }
-  for (const f of SECTIONS[section].fields) {
-    const v = out[f.key]
-    if (f.type === 'range') out[f.key] = { min: Number(v?.min) || 0, max: Number(v?.max) || 0 }
-    else if (['money', 'number', 'int'].includes(f.type)) out[f.key] = v === null || v === '' ? (f.optional ? null : 0) : Number(v)
-  }
-  if (section === 'expenses' && !out.category_key) out.category_key = 'other'
-  return out
-}
-
 export default function Refine({ checkup, onChange, onShowReport }) {
   const order = sectionOrder(checkup.entry_question)
   const [active, setActive] = useState(order[0])
@@ -94,7 +86,7 @@ export default function Refine({ checkup, onChange, onShowReport }) {
     setBusy(true)
     setError(null)
     try {
-      const body = rows.map((r) => normalize(active, r))
+      const body = rows.map((r) => normalizeRow(active, r))
       await api.putSection(checkup.id, active, body)
       const fresh = await api.getCheckup(checkup.id)
       onChange(fresh)
@@ -113,6 +105,8 @@ export default function Refine({ checkup, onChange, onShowReport }) {
 
   const idx = order.indexOf(active)
   const next = order[idx + 1]
+  const prec = precisionOf(checkup.data)
+  const tip = prec.level !== 'refined' ? precisionTip(checkup.data) : null
   const update = (i, patch) => setRows(rows.map((r, j) => (j === i ? { ...r, ...patch } : r)))
 
   return (
@@ -130,6 +124,10 @@ export default function Refine({ checkup, onChange, onShowReport }) {
           <p className="eyebrow">Раздел {idx + 1} из {order.length}</p>
           <h1>{meta.title}</h1>
           <p className="lead">{meta.lead}</p>
+        </div>
+        <div className="precision-note" role="status">
+          <span className="pill">Точность: {LEVEL[prec.level]} · {Math.round(prec.share * 100)} %</span>
+          {tip && <p className="muted">{tip}</p>}
         </div>
         {rows.length === 0 && <p className="muted">Пока пусто. Если такого нет — просто идите дальше.</p>}
         {rows.map((row, i) => (

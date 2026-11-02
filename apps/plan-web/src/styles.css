@@ -330,3 +330,7 @@ select { font: 600 15px/22px var(--font-text); }
 .mini { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 4px; }
 .mini i { height: 46px; border-radius: 12px; }
 .mini-calm { background: var(--tile-calm); }
+
+/* ── P3-11: точность в мастере и широкая вилка ── */
+.precision-note { display: grid; gap: 6px; padding: 0 6px; justify-items: start; }
+.hint.warn { color: var(--edge-ink); font-weight: 600; }
