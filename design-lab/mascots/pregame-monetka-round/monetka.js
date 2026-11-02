@@ -1,5 +1,5 @@
 /* Монетка в «Чернильном крае» — тот же шаблон, что в mascots/ink-mascots-round:
-   лицо + руки + надпись сверху на ободе, снизу всегда «★ ТВОЙ ХОД ★». Надпись читается от 120 px;
+   лицо + руки + надпись сверху на ободе (руки без жестов пальцами: «палец вверх» читался как средний), снизу всегда «★ ТВОЙ ХОД ★». Надпись читается от 120 px;
    мельче — вариант без рук и без надписи (rim: false). */
 (function () {
   var INK = '#1d1530', COIN = '#eab308', SOFT = '#fcf1c8', TURN = '#6d28d9', TURN_SOFT = '#ece4fb';
@@ -13,7 +13,7 @@
   var ARMS = {
     none: { back: '', front: '' },
     wave: { back: '<path d="M44 96 Q24 88 28 62" fill="none"/>' + hand(28, 55) + '<path d="M154 102 Q178 114 160 130" fill="none"/>' + hand(157, 133), front: '' },
-    thumb: { back: '<path d="M46 96 Q26 92 30 70" fill="none"/><rect x="26" y="40" width="9" height="18" rx="4.5" fill="' + SOFT + '"/><rect x="20" y="54" width="22" height="18" rx="7" fill="' + SOFT + '"/><path d="M154 102 Q178 114 160 130" fill="none"/>' + hand(157, 133), front: '' },
+    hey: { back: '<path d="M46 96 Q26 90 26 62" fill="none"/>' + hand(26, 54) + '<path d="M10 38 L15 43 M6 52 L13 52 M10 66 L15 61" fill="none" stroke-width="3.5"/><path d="M156 98 Q184 108 162 128" fill="none"/>' + hand(160, 131), front: '' },
     up: { back: '<path d="M46 80 Q26 66 28 44" fill="none"/>' + hand(28, 37) + '<path d="M154 80 Q174 66 172 44" fill="none"/>' + hand(172, 37), front: '' },
     chin: { back: '<path d="M44 102 Q30 122 38 142" fill="none"/>' + hand(39, 149), front: '<path d="M158 106 Q150 132 124 126" fill="none"/>' + hand(118, 123) }
   };
@@ -40,6 +40,8 @@
       '<circle cx="100" cy="88" r="47" fill="' + SOFT + '" stroke="' + TURN + '" stroke-width="12"/>' +
       '<circle cx="100" cy="88" r="53.5" fill="none" stroke-width="3"/>' +
       '<circle cx="100" cy="88" r="40.5" fill="none" stroke-width="3"/>' +
-      FACES[opts.face || 'smile'] + a.front + '</g>' + rim + '</svg>';
+      FACES[opts.face || 'smile'] + '</g>' + rim +
+      /* рука у подбородка — поверх надписи на ободе, иначе буквы и звёздочка рисуются на руке */
+      (a.front ? '<g stroke="' + INK + '" stroke-width="5" stroke-linecap="round" stroke-linejoin="round">' + a.front + '</g>' : '') + '</svg>';
   };
 })();

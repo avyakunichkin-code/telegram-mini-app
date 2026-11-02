@@ -109,11 +109,9 @@
   pointer-events: auto;
 }
 
-/* Debrief P1: полоска guidance fixed у tab bar — отступ снизу у ритуала */
+/* Debrief P1: итог хода закрывает таббар, подсказка прижата к низу — отступ снизу у ритуала */
 .mqx-page--guidance-active .mqx-juice-ritual {
-  padding-bottom: calc(
-    16px + var(--tma-tabbar-inset, 64px) + var(--mqx-guidance-strip-offset, 0px) + 8px
-  );
+  padding-bottom: calc(16px + var(--mqx-guidance-strip-offset, 0px) + 8px);
 }
 
 .mqx-juice-ritual {
@@ -187,14 +185,17 @@
   opacity: 0.9;
 }
 
+/* «На счёте» — главная карта экрана: клетка поля с чернильным краем и золотой тенью (награда хода) */
 .mqx-juice-ritual__balance {
   margin-top: 16px;
   width: 100%;
   max-width: 320px;
   padding: 12px 14px;
-  border-radius: 14px;
-  background: color-mix(in srgb, #fff 10%, transparent);
-  border: 1px solid color-mix(in srgb, #fff 16%, transparent);
+  border: var(--mq-ink-w) solid var(--mq-ink-line);
+  border-radius: var(--mq-r-card);
+  background: var(--mq-cell);
+  color: var(--mq-board-ink);
+  box-shadow: var(--mq-ink-off) var(--mq-ink-off) 0 var(--mq-coin);
 }
 
 .mqx-juice-ritual__balance-main {
@@ -225,11 +226,11 @@
 }
 
 .mqx-juice-ritual__balance-delta--pos {
-  color: color-mix(in srgb, var(--mq-emerald) 85%, #fff);
+  color: var(--mq-gain);
 }
 
 .mqx-juice-ritual__balance-delta--neg {
-  color: color-mix(in srgb, #fecaca 88%, #fff);
+  color: var(--mq-danger);
 }
 
 .mqx-juice-ritual__overdue {
@@ -264,13 +265,14 @@
   opacity: 0.78;
 }
 
+/* Списания — информация: без рамки, строки на поле экрана */
 .mqx-juice-ritual__detail-list {
   margin: 0;
   padding: 0;
   list-style: none;
+  border: 0;
   border-radius: 12px;
   background: color-mix(in srgb, #fff 8%, transparent);
-  border: 1px solid color-mix(in srgb, #fff 12%, transparent);
 }
 
 .mqx-juice-ritual__detail-row {
@@ -383,8 +385,8 @@
   margin-top: 14px;
   align-self: center;
   padding: 10px 20px;
-  border-radius: 12px;
-  border: none;
+  border: var(--mq-ink-w) solid var(--mq-ink-line);
+  border-radius: var(--mq-r-cell);
   background: #fff;
   color: var(--mq-violet-deep);
   font-weight: 800;
@@ -392,6 +394,18 @@
   cursor: pointer;
   opacity: 0;
   pointer-events: auto;
+  box-shadow: var(--mq-ink-off) var(--mq-ink-off) 0 var(--mq-ink-drop);
+}
+
+.mqx-juice-ritual__dismiss:active {
+  transform: translate(var(--mq-ink-off), var(--mq-ink-off));
+  box-shadow: 0 0 0 var(--mq-ink-drop);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mqx-juice-ritual__dismiss:active:not(:disabled) {
+    transform: none;
+  }
 }
 
 .mqx-juice-ritual--active .mqx-juice-ritual__dismiss {

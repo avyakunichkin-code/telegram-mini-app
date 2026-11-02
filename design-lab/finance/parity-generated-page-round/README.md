@@ -19,3 +19,4 @@ npm run design-lab:build-finance-page-round
 Источник правды:
 
 - `design-lab/finance/canon.manifest.json`
+- кадры prod «Чернильный край» — `design-lab/finance/prod-ink-shots/` (`shots.json`)

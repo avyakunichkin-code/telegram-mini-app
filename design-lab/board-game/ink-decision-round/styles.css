@@ -1,0 +1,40 @@
+/* board-game/ink-decision-round — страница сравнения ink ↔ classic для решения PO. */
+
+body { margin: 0; background: var(--bg-board); color: var(--ink); font: 400 15px / 1.5 var(--body); }
+.lab-head { max-width: 1180px; margin: 0 auto; padding: 24px 16px 8px; display: grid; gap: 10px; }
+.lab-head h1 { margin: 0; font: var(--display-weight) clamp(22px, 4vw, 30px) / 1.15 var(--display); text-wrap: balance; }
+.lab-head p { margin: 0; max-width: 80ch; color: var(--ink-soft); }
+.lab-head__status { padding: 8px 12px; border-radius: var(--r-cell); background: var(--coin-soft); color: var(--ink) !important; }
+
+.page { max-width: 1180px; margin: 0 auto; padding: 8px 16px 48px; display: grid; gap: 20px; }
+.toc { display: flex; flex-wrap: wrap; gap: 8px; position: sticky; top: 0; z-index: 2; padding: 8px 0; background: var(--bg-board); }
+.toc a { padding: 4px 10px; border-radius: 999px; background: var(--bg-cell); border: 1px solid var(--edge-cell); color: var(--ink); text-decoration: none; font-size: 13px; }
+
+.block { background: var(--bg-cell); border: 1px solid var(--edge-cell); border-radius: 16px; padding: 16px; display: grid; gap: 12px; min-width: 0; }
+.block h2 { margin: 0; font: var(--display-weight) 20px / 1.2 var(--display); }
+.block ul { margin: 0; padding-left: 20px; display: grid; gap: 6px; }
+.block--decide { border: 2px solid var(--turn); }
+.block__head { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px; }
+
+.vp { display: inline-flex; border: 1px solid var(--edge-cell); border-radius: 999px; overflow: hidden; }
+.vp button { border: 0; background: transparent; padding: 6px 12px; font: 600 13px var(--body); color: var(--ink-soft); cursor: pointer; }
+.vp button[aria-selected='true'] { background: var(--turn); color: #fff; }
+
+.cmp { display: grid; gap: 8px; padding: 12px 0; border-top: 1px solid var(--edge-cell); }
+.cmp__head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 8px; justify-content: space-between; }
+.cmp__head h3 { margin: 0; font: 700 16px / 1.3 var(--body); }
+.cmp__badge { font: 700 12px / 1.4 var(--body); padding: 2px 8px; border-radius: 999px; background: var(--turn-soft); color: var(--turn); }
+.cmp--same .cmp__badge { background: var(--gain-soft); color: var(--gain); }
+.cmp__note { margin: 0; color: var(--ink-soft); font-size: 13.5px; max-width: 90ch; }
+.cmp__pair { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.cmp__pair figure { margin: 0; display: grid; gap: 4px; min-width: 0; }
+.cmp__pair figcaption { font: 600 12px / 1.3 var(--body); color: var(--ink-soft); }
+.cmp__pair img { width: 100%; height: auto; border: 1px solid var(--edge-cell); border-radius: 10px; display: block; }
+[data-panel='m412'] .cmp__pair { max-width: 860px; }
+@media (max-width: 560px) { [data-panel='d1440'] .cmp__pair { grid-template-columns: 1fr; } }
+
+table { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+th, td { text-align: left; vertical-align: top; padding: 8px; border-top: 1px solid var(--edge-cell); }
+th { font-weight: 700; color: var(--ink-soft); }
+.block { overflow-x: auto; }
+code { font-size: 0.92em; overflow-wrap: anywhere; }

@@ -1,6 +1,7 @@
 import { forwardRef, useMemo } from 'react';
 import { MonetkaAvatar } from '../brand/MonetkaAvatar';
 import { MqxButton } from '../primitives/MqxButton';
+import { splitContinueHint } from '../../../guidance/continueHint';
 
 function renderBody(text) {
   if (!text) return null;
@@ -46,6 +47,10 @@ export const MqxGuidanceStrip = forwardRef(function MqxGuidanceStrip({
   const prevDisabled = viewIndex <= 0;
   const nextDisabled = viewIndex >= lastCompletedIndex + 1;
   const mascotOn = showMascot && Boolean(title);
+  // «Нажми «Понятно»…» — подпись под кнопкой, а не последняя строка текста над ней
+  const { main: mainBody, hint: continueHint } = onContinue
+    ? splitContinueHint(body)
+    : { main: body, hint: null };
 
   return (
     <aside
@@ -112,13 +117,14 @@ export const MqxGuidanceStrip = forwardRef(function MqxGuidanceStrip({
           <h2 className="mqx-guidance-strip__title">{title}</h2>
         </div>
       ) : null}
-      {body ? <p className="mqx-guidance-strip__body">{renderBody(body)}</p> : null}
+      {mainBody ? <p className="mqx-guidance-strip__body">{renderBody(mainBody)}</p> : null}
       {dismissHint ? <p className="mqx-guidance-strip__hint">{dismissHint}</p> : null}
       {onContinue ? (
         <MqxButton variant="primary" className="mqx-guidance-strip__cta" onClick={onContinue}>
           Понятно
         </MqxButton>
       ) : null}
+      {continueHint ? <p className="mqx-guidance-strip__after">{renderBody(continueHint)}</p> : null}
     </aside>
   );
 });

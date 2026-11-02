@@ -227,41 +227,59 @@
   margin-top: 4px;
 }
 
+/* Шапка вкладки — как у Аналитики (★ BG-3, .mqx-an-head): без фиолетовой плашки и свечения,
+   заголовок и подпись чернилами прямо на поле, без логотипа; справа фишка хода.
+   Сетка: заголовок и подпись слева, фишка хода справа по центру обеих строк. */
 .mqx-hero--capital {
-  padding: 10px 14px 10px;
-}
-
-.mqx-hero--capital.mqx-hero--inline-title .mqx-hero__top--inline-title {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
   align-items: center;
+  column-gap: var(--mq-sp-4);
+  padding: var(--mq-sp-6) var(--mq-sp-7) var(--mq-sp-2);
+  border-bottom: 0;
+  background: var(--mq-board);
+  box-shadow: none;
 }
 
+.mqx-hero--capital :is(.mqx-hero__glow, .mqx-hero-tab__logo) {
+  display: none;
+}
+
+.mqx-hero--capital .mqx-hero__top--inline-title {
+  display: contents;
+}
+
+/* Логотип скрыт — без зазора перед заголовком, иначе он съезжает вправо от подписи */
 .mqx-hero--capital .mqx-hero__brand-title {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 0;
   min-width: 0;
   flex: 1;
 }
 
-/* Фишка хода в шапке — только в стиле ink (ink.css) */
-.mqx-hero .mqx-hero__turn {
-  display: none;
+.mqx-hero--capital .mqx-hero__turn {
+  display: inline-grid;
+  grid-column: 2;
+  grid-row: 1 / span 2;
 }
 
-.mqx-hero__title--capital {
+.mqx-hero--capital .mqx-hero__title--capital {
   margin-top: 0;
-  font-size: clamp(22px, 5.8vw, 28px);
-  line-height: 1.05;
+  color: var(--mq-board-ink);
+  font: 900 var(--mq-fs-money) / 1.1 var(--mq-font-display);
+  letter-spacing: normal;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
-.mqx-hero__sub--capital {
-  margin-top: 6px;
+.mqx-hero--capital .mqx-hero__sub--capital {
+  grid-column: 1;
+  margin-top: 0;
   max-width: 100%;
-  font-size: var(--mq-fs-small);
-  line-height: 1.38;
+  color: var(--mq-board-ink-soft);
+  font: 400 var(--mq-fs-caption) / 1.35 var(--mq-font-body);
 }
 
 .mqx-capital-card {
@@ -1455,7 +1473,7 @@ body [class*='modal'] {
     transform 0.12s ease;
 }
 
-/* Подпись действия — только в стиле ink (ink.css), в классическом — глиф */
+/* Подпись действия («Купить») — только в списках окон (вариант A, раздел «Листы» ниже); в строках экрана — глиф */
 .mqx-row-action__verb {
   display: none;
 }
@@ -3258,23 +3276,25 @@ body [class*='modal'] {
   gap: calc(var(--mq-sp-1) / 2);
   min-height: 56px;
   padding: var(--mq-sp-4) var(--mq-sp-5);
-  border: var(--mq-hair);
+  border: var(--mq-ink-w) solid var(--mq-ink-line);
   border-radius: var(--mq-r-cell);
   background: var(--mq-cell);
-  box-shadow: 0 2px 0 var(--mq-cell-edge);
+  box-shadow: var(--mq-ink-off) var(--mq-ink-off) 0 var(--mq-ink-drop);
   color: var(--mq-board-ink);
   text-align: left;
   cursor: pointer;
-}
-
-.mqx-cap-flows .mqx-cap-flow:active {
-  transform: translateY(1px);
-  box-shadow: 0 1px 0 var(--mq-cell-edge);
+  transition:
+    transform var(--mq-dur-press) var(--mq-ease-standard),
+    box-shadow var(--mq-dur-press) var(--mq-ease-standard);
 }
 
 .mqx-cap-flows .mqx-cap-flow.is-open {
-  border-color: var(--mq-turn);
-  box-shadow: 0 2px 0 var(--mq-turn);
+  background: var(--mq-turn-soft);
+}
+
+.mqx-cap-flows .mqx-cap-flow:active:not(:disabled) {
+  transform: translate(var(--mq-ink-off), var(--mq-ink-off));
+  box-shadow: 0 0 0 var(--mq-ink-drop);
 }
 
 .mqx-cap-flow__label {
@@ -3295,7 +3315,7 @@ body [class*='modal'] {
 .mqx-cap-flows__breakdown {
   grid-column: 1 / -1;
   padding: var(--mq-sp-4) var(--mq-sp-5);
-  border: var(--mq-hair);
+  border: var(--mq-ink-w) solid var(--mq-ink-line);
   border-radius: var(--mq-r-cell);
   background: var(--mq-cell);
 }
@@ -3359,32 +3379,44 @@ body [class*='modal'] {
   color: var(--mq-risk);
 }
 
-/* —— Детали | Действия —— */
+/* —— Детали | Действия: две кнопки одним блоком, прямой шов посередине, без подложки —— */
 .mqx-cap-seg {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: var(--mq-sp-1);
-  padding: var(--mq-sp-1);
-  border: var(--mq-hair);
-  border-radius: 14px;
+  gap: 0;
+  padding: 0;
+  overflow: hidden;
+  border: var(--mq-ink-w) solid var(--mq-ink-line);
+  border-radius: var(--mq-r-cell);
   background: var(--mq-cell);
+  box-shadow: var(--mq-ink-off) var(--mq-ink-off) 0 var(--mq-ink-drop);
 }
 
 .mqx-cap-seg .mqx-cap-seg__btn {
   min-height: 44px;
   border: 0;
-  border-radius: 10px;
+  border-radius: 0;
   background: none;
   box-shadow: none;
   color: var(--mq-board-ink-soft);
   font: 700 var(--mq-fs-heading) / 1 var(--mq-font-body);
   cursor: pointer;
+  transition:
+    background-color var(--mq-dur-fast) var(--mq-ease-standard),
+    color var(--mq-dur-fast) var(--mq-ease-standard);
+}
+
+.mqx-cap-seg .mqx-cap-seg__btn + .mqx-cap-seg__btn {
+  border-left: var(--mq-ink-w) solid var(--mq-ink-line);
 }
 
 .mqx-cap-seg .mqx-cap-seg__btn.is-active {
   background: var(--mq-turn);
   color: var(--mq-turn-on);
-  box-shadow: 0 2px 0 var(--mq-turn-deep);
+}
+
+.mqx-cap-seg .mqx-cap-seg__btn:focus-visible {
+  outline-offset: -4px;
 }
 
 /* —— Карточки собственности —— */
@@ -3393,15 +3425,17 @@ body [class*='modal'] {
   gap: var(--mq-sp-5);
 }
 
+/* Цветная полоса сверху под чернильной линией */
 .mqx-cap-lot {
   overflow: hidden;
-  border: var(--mq-hair);
-  border-radius: var(--mq-r-cell);
+  border: var(--mq-ink-w) solid var(--mq-ink-line);
+  border-radius: var(--mq-r-card);
   background: var(--mq-cell);
 }
 
 .mqx-cap-lot__band {
-  height: 8px;
+  height: 12px;
+  border-bottom: var(--mq-ink-w) solid var(--mq-ink-line);
   background: var(--mq-cell-edge);
 }
 
@@ -3423,11 +3457,12 @@ body [class*='modal'] {
 
 /* Закрыто целью: пунктир, полоса без цвета */
 .mqx-cap-lot--locked {
-  border-style: dashed;
+  border: var(--mq-ink-w) dashed var(--mq-control-edge);
   background: transparent;
 }
 
 .mqx-cap-lot.mqx-cap-lot--locked .mqx-cap-lot__band {
+  border-bottom-color: var(--mq-control-edge);
   background: var(--mq-cell-edge);
 }
 
@@ -3526,6 +3561,34 @@ body [class*='modal'] {
   text-underline-offset: 2px;
 }
 
+/* Действие в строке — маленькая фишка (ссылка в тексте остаётся ссылкой) */
+.mqx-capital-page--board .mqx-cap-lot-act:not(.mqx-cap-lot-act--inline) {
+  --mq-ink-off: var(--mq-ink-off-s);
+  min-height: 36px;
+  margin: var(--mq-sp-1) 0 0;
+  padding: 0 var(--mq-sp-4);
+  border: var(--mq-ink-w) solid var(--mq-ink-line);
+  border-radius: var(--mq-r-cell);
+  background: var(--mq-cell);
+  color: var(--mq-board-ink);
+  font-weight: 700;
+  box-shadow: var(--mq-ink-off) var(--mq-ink-off) 0 var(--mq-ink-drop);
+  transition:
+    transform var(--mq-dur-press) var(--mq-ease-standard),
+    box-shadow var(--mq-dur-press) var(--mq-ease-standard);
+}
+
+.mqx-capital-page--board .mqx-cap-lot-act:not(.mqx-cap-lot-act--inline):active:not(:disabled) {
+  transform: translate(var(--mq-ink-off), var(--mq-ink-off));
+  box-shadow: 0 0 0 var(--mq-ink-drop);
+}
+
+.mqx-capital-page--board .mqx-cap-lot-act:not(.mqx-cap-lot-act--inline):disabled {
+  border-style: dashed;
+  border-color: var(--mq-control-edge);
+  box-shadow: none;
+}
+
 .mqx-cap-lot-note {
   padding: var(--mq-sp-4) var(--mq-sp-5) var(--mq-sp-5);
   color: var(--mq-board-ink-soft);
@@ -3534,7 +3597,7 @@ body [class*='modal'] {
 }
 
 /* —— Действия: фишки 3 в ряд ——
-   ★ BG-3: фишка — заливка клетки и нижняя кромка, без контура; иконка без плашки, цвет — тон раздела. */
+   Фишка — заливка клетки, чернильный край и тень; иконка без плашки, цвет — тон раздела. */
 .mqx-cap-acts {
   display: grid;
   gap: var(--mq-sp-6);
@@ -3577,18 +3640,21 @@ body [class*='modal'] {
   gap: var(--mq-sp-2);
   min-height: 96px;
   padding: var(--mq-sp-5) var(--mq-sp-2) var(--mq-sp-4);
-  border: 0;
+  border: var(--mq-ink-w) solid var(--mq-ink-line);
   border-radius: var(--mq-r-cell);
   background: var(--mq-cell);
-  box-shadow: 0 3px 0 var(--mq-cell-edge);
+  box-shadow: var(--mq-ink-off) var(--mq-ink-off) 0 var(--mq-ink-drop);
   color: var(--mq-board-ink);
   text-align: center;
   cursor: pointer;
+  transition:
+    transform var(--mq-dur-press) var(--mq-ease-standard),
+    box-shadow var(--mq-dur-press) var(--mq-ease-standard);
 }
 
 .mqx-cap-pieces .mqx-cap-piece:active:not(:disabled) {
-  transform: translateY(1px);
-  box-shadow: 0 1px 0 var(--mq-cell-edge);
+  transform: translate(var(--mq-ink-off), var(--mq-ink-off));
+  box-shadow: 0 0 0 var(--mq-ink-drop);
 }
 
 .mqx-cap-piece__ico {
@@ -3622,7 +3688,7 @@ body [class*='modal'] {
 
 /* Закрыто целью: пунктир, без объёма — видно, куда ведёт игра */
 .mqx-cap-pieces .mqx-cap-piece--locked {
-  border: 1.5px dashed var(--mq-cell-edge);
+  border: var(--mq-ink-w) dashed var(--mq-control-edge);
   background: transparent;
   box-shadow: none;
   color: var(--mq-board-ink-soft);
@@ -3641,8 +3707,342 @@ body [class*='modal'] {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .mqx-cap-flows .mqx-cap-flow:active,
-  .mqx-cap-pieces .mqx-cap-piece:active:not(:disabled) {
+  .mqx-cap-flows .mqx-cap-flow:active:not(:disabled),
+  .mqx-cap-pieces .mqx-cap-piece:active:not(:disabled),
+  .mqx-capital-page--board .mqx-cap-lot-act:not(.mqx-cap-lot-act--inline):active:not(:disabled) {
+    transform: none;
+  }
+}
+
+/* ================= Листы (sheets) и подтверждение — «Чернильный край» =================
+   Последним разделом файла: перекрывает базовые правила листов выше и в dashboard.css. */
+
+/* Лист — поле игры поверх затемнения: только чернильная линия сверху, без мягкой тени */
+.mqx-sheet {
+  border: 0;
+  border-top: var(--mq-ink-w) solid var(--mq-ink-line);
+  border-radius: var(--mq-r-card) var(--mq-r-card) 0 0;
+  background: var(--mq-board);
+  color: var(--mq-board-ink);
+  box-shadow: none;
+}
+
+.mqx-sheet__title {
+  color: var(--mq-board-ink);
+}
+
+.mqx-sheet__sub {
+  color: var(--mq-board-ink-soft);
+}
+
+/* Крестик во всех окнах — фишка без обводки: заливка + тень (как K1) */
+.mqx-sheet__close {
+  --mq-ink-off: var(--mq-ink-off-s);
+  border: 0;
+  border-radius: var(--mq-r-cell);
+  background: var(--mq-cell);
+  color: var(--mq-board-ink);
+  font-weight: 700;
+  box-shadow: var(--mq-ink-off) var(--mq-ink-off) 0 var(--mq-ink-drop);
+}
+
+/* Форма суммы: поле в рамке ввода, ставка — чип без обводки */
+.mqx-sheet .mqx-invest-amount__field {
+  padding: var(--mq-sp-3) var(--mq-sp-5);
+  border: var(--mq-ink-w) solid var(--mq-control-edge);
+  border-radius: var(--mq-r-cell);
+  background: var(--mq-cell);
+}
+
+.mqx-sheet .mqx-invest-amount__field:focus-within {
+  border-color: var(--mq-ink-line);
+}
+
+.mqx-sheet .mqx-invest-amount__input {
+  color: var(--mq-board-ink);
+}
+
+.mqx-sheet .mqx-invest-amount__input::placeholder {
+  color: var(--mq-board-ink-faint);
+}
+
+.mqx-sheet .mqx-invest-amount__unit,
+.mqx-sheet .mqx-invest-amount__label,
+.mqx-sheet .mqx-invest-amount__range-hint {
+  color: var(--mq-board-ink-soft);
+}
+
+.mqx-sheet .mqx-invest-rate {
+  align-self: stretch;
+  justify-content: center;
+  border: 0;
+  border-radius: var(--mq-r-cell);
+  background: var(--mq-gain-soft);
+}
+
+.mqx-sheet .mqx-invest-rate__val {
+  color: var(--mq-gain);
+}
+
+.mqx-sheet .mqx-invest-form--safety-out .mqx-invest-rate {
+  background: var(--mq-turn-soft);
+}
+
+.mqx-sheet .mqx-invest-form--safety-out .mqx-invest-rate__val {
+  color: var(--mq-turn);
+}
+
+.mqx-sheet .mqx-invest-rate--neg {
+  background: var(--mq-danger-soft);
+}
+
+.mqx-sheet .mqx-invest-rate--neg .mqx-invest-rate__val {
+  color: var(--mq-danger);
+}
+
+/* Ползунок — полоса заливкой без обводки, бегунок — фишка хода */
+.mqx-sheet .mqx-invest-slider {
+  height: 8px;
+  border: 0;
+  background: var(--mq-cell-edge);
+}
+
+.mqx-sheet .mqx-invest-slider::-webkit-slider-thumb {
+  width: 22px;
+  height: 22px;
+  border: var(--mq-ink-w) solid var(--mq-ink-line);
+  background: var(--mq-turn);
+  box-shadow: var(--mq-ink-off-s) var(--mq-ink-off-s) 0 var(--mq-ink-drop);
+}
+
+.mqx-sheet .mqx-invest-slider::-moz-range-thumb {
+  width: 22px;
+  height: 22px;
+  box-sizing: border-box;
+  border: var(--mq-ink-w) solid var(--mq-ink-line);
+  background: var(--mq-turn);
+  box-shadow: var(--mq-ink-off-s) var(--mq-ink-off-s) 0 var(--mq-ink-drop);
+}
+
+.mqx-sheet .mqx-invest-form__submit {
+  min-height: 48px;
+  border: var(--mq-ink-w) solid var(--mq-ink-line);
+  border-radius: var(--mq-r-cell);
+  background: var(--mq-turn);
+  color: var(--mq-turn-on);
+  box-shadow: var(--mq-ink-off) var(--mq-ink-off) 0 var(--mq-ink-drop);
+}
+
+/* Нельзя нажать — пунктир закрытого, без тени (как у заблокированных фишек) */
+.mqx-sheet .mqx-invest-form__submit:disabled {
+  opacity: 1;
+  border-style: dashed;
+  border-color: var(--mq-control-edge);
+  background: var(--mq-cell);
+  color: var(--mq-board-ink-faint);
+  box-shadow: none;
+}
+
+/* —— Списки в окнах (вариант A «список», lab ink-sheets-round, 2026-10-29) ——
+   Строки прямо на поле окна, тонкая линия между ними; цветной полосы группы нет — группу называет
+   заголовок окна. Действие — фишка со словом («Купить», «Взять», «Оформить»): заливка + тень, без обводки. */
+.mqx-sheet :is(.mqx-capital-template-list, .mqx-ins-plan-list) {
+  gap: 0;
+}
+
+.mqx-sheet :is(
+    .mqx-capital-template-row--asset-h,
+    .mqx-capital-template-row--liability-h,
+    .mqx-capital-template-row--insurance-h
+  ) {
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  gap: var(--mq-sp-5);
+  margin: 0;
+  padding: var(--mq-sp-5) 0;
+  border-bottom: 1px solid var(--mq-cell-edge);
+}
+
+.mqx-sheet :is(
+    .mqx-capital-template-row--asset-h,
+    .mqx-capital-template-row--liability-h,
+    .mqx-capital-template-row--insurance-h
+  ):last-child {
+  border-bottom: 0;
+}
+
+.mqx-sheet .mqx-capital-template-row__accent {
+  display: none;
+}
+
+.mqx-sheet .mqx-capital-template-row__title {
+  color: var(--mq-board-ink);
+  font-size: var(--mq-fs-body);
+  font-weight: 700;
+}
+
+.mqx-sheet .mqx-capital-template-row__kicker {
+  color: var(--mq-board-ink-soft);
+}
+
+.mqx-sheet .mqx-row-action:has(.mqx-row-action__verb) {
+  --mq-ink-off: var(--mq-ink-off-s);
+  width: auto;
+  min-height: 36px;
+  height: auto;
+  padding: 0 var(--mq-sp-5);
+  border-radius: var(--mq-r-cell);
+  background: var(--mq-cell);
+  color: var(--mq-board-ink);
+  box-shadow: var(--mq-ink-off) var(--mq-ink-off) 0 var(--mq-ink-drop);
+}
+
+.mqx-sheet .mqx-row-action:has(.mqx-row-action__verb) .mqx-row-action__glyph {
+  display: none;
+}
+
+.mqx-sheet .mqx-row-action__verb {
+  display: block;
+  font-size: var(--mq-fs-heading);
+  font-weight: 800;
+}
+
+.mqx-sheet .mqx-row-action:has(.mqx-row-action__verb):disabled {
+  opacity: 1;
+  color: var(--mq-board-ink-faint);
+  box-shadow: none;
+}
+
+/* Заголовки групп — читаемые на поле окна (в базе — белый muted по светлому) */
+.mqx-sheet :is(.mqx-capital-sheet-section-label, .mqx-ins-picker__heading) {
+  margin: var(--mq-sp-5) 0 0;
+  color: var(--mq-board-ink-soft);
+  font-size: var(--mq-fs-caption);
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.mqx-sheet :is(.mqx-ins-picker__hint, .mqx-ins-picker__asset-label) {
+  color: var(--mq-board-ink-soft);
+}
+
+/* Поле выбора — рамка ввода, как поле суммы */
+.mqx-sheet .mqx-ins-picker__asset-select {
+  min-height: 44px;
+  border: var(--mq-ink-w) solid var(--mq-control-edge);
+  border-radius: var(--mq-r-cell);
+  background: var(--mq-cell);
+  color: var(--mq-board-ink);
+  font-weight: 600;
+}
+
+/* Виды страховки — заливка без обводки, выбранный — фиолетовый */
+.mqx-sheet .mqx-ins-catalog__item {
+  border: 0;
+  background: var(--mq-cell);
+  color: var(--mq-board-ink);
+}
+
+.mqx-sheet .mqx-ins-catalog__item.is-on {
+  background: var(--mq-turn);
+  color: var(--mq-turn-on);
+}
+
+.mqx-sheet .mqx-ins-catalog__item :is(.mqx-ins-catalog__product, .mqx-ins-catalog__hint) {
+  color: var(--mq-board-ink-soft);
+}
+
+.mqx-sheet .mqx-ins-catalog__item.is-on :is(.mqx-ins-catalog__product, .mqx-ins-catalog__hint) {
+  color: inherit;
+  opacity: 0.85;
+}
+
+/* —— Подтверждение (MqxConfirmDialog в Modal telegram-ui) — как лист: линия сверху, поле окна ——
+   «Отмена» — фишка заливкой без обводки; опасное действие — красная фишка с чернильным краем, рядом. */
+div:has(> div > .mqx-confirm-dialog) {
+  border-top: var(--mq-ink-w) solid var(--mq-ink-line);
+  border-radius: var(--mq-r-card) var(--mq-r-card) 0 0;
+  background: var(--mq-board);
+}
+
+.mqx-confirm-dialog {
+  padding: var(--mq-sp-7) var(--mq-sp-7) var(--mq-sp-7);
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+  color: var(--mq-board-ink);
+}
+
+.mqx-confirm-dialog__message {
+  color: var(--mq-board-ink-soft);
+}
+
+.mqx-confirm-dialog__actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--mq-sp-5);
+}
+
+.mqx-confirm-dialog .mqx-btn {
+  min-height: 48px;
+  border-radius: var(--mq-r-cell);
+  box-shadow: var(--mq-ink-off) var(--mq-ink-off) 0 var(--mq-ink-drop);
+  font-weight: 800;
+}
+
+.mqx-confirm-dialog .mqx-btn--secondary {
+  border: 0;
+  background: var(--mq-cell);
+  color: var(--mq-board-ink);
+}
+
+.mqx-confirm-dialog .mqx-btn--destructive {
+  border: var(--mq-ink-w) solid var(--mq-ink-line);
+  background: var(--mq-danger);
+  color: var(--mq-turn-on);
+}
+
+/* В тёмной теме красный светлый — белый текст на нём < 4.5:1, берём тёмный цвет поля */
+@media (prefers-color-scheme: dark) {
+  .mqx-confirm-dialog .mqx-btn--destructive {
+    color: var(--mq-board);
+  }
+}
+
+:root[data-theme='dark'] .mqx-confirm-dialog .mqx-btn--destructive {
+  color: var(--mq-board);
+}
+
+/* Нажатие в окнах: фишка вдавливается в поле */
+:is(
+    .mqx-sheet__close,
+    .mqx-sheet .mqx-invest-form__submit,
+    .mqx-sheet .mqx-row-action:has(.mqx-row-action__verb),
+    .mqx-confirm-dialog .mqx-btn
+  ) {
+  transition:
+    transform var(--mq-dur-press) var(--mq-ease-standard),
+    box-shadow var(--mq-dur-press) var(--mq-ease-standard);
+}
+
+:is(
+    .mqx-sheet__close,
+    .mqx-sheet .mqx-invest-form__submit,
+    .mqx-sheet .mqx-row-action:has(.mqx-row-action__verb),
+    .mqx-confirm-dialog .mqx-btn
+  ):active:not(:disabled) {
+  transform: translate(var(--mq-ink-off), var(--mq-ink-off));
+  box-shadow: 0 0 0 var(--mq-ink-drop);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :is(
+      .mqx-sheet__close,
+      .mqx-sheet .mqx-invest-form__submit,
+      .mqx-sheet .mqx-row-action:has(.mqx-row-action__verb),
+      .mqx-confirm-dialog .mqx-btn
+    ):active:not(:disabled) {
     transform: none;
   }
 }

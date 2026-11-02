@@ -46,7 +46,7 @@ aliases:
 | Остальные экраны в стиле BG | ★ BG-2 | 2026-10-15 | [`board-game/screens-round/`](../../../design-lab/board-game/screens-round/) | события, Капитал, Аналитика, Меню, Вход, Выбор жизни, финал |
 | Одна рамка на уровень | ★ BG-3 | 2026-10-25 | [`board-game/frames-round/`](../../../design-lab/board-game/frames-round/) (E) | главная, Капитал · Действия, Аналитика (2026-10-26) |
 | Превью конца хода «Спишется · останется» | ★ PR-07 | 2026-10-26 | [`board-game/close-preview-round/`](../../../design-lab/board-game/close-preview-round/) (A) | `MqxDashboardHero`, `MqxFinancePeriodBlock`, `buildTurnTip` |
-| «Чернильный край» (необрутализм A) | пробно, не ★ | 2026-10-28 | [`board-game/neobrutal-a-round/`](../../../design-lab/board-game/neobrutal-a-round/README.md), [`ink-sheets-round/`](../../../design-lab/board-game/ink-sheets-round/README.md) | слой `styles/mqx/ink.css`, `utils/mqxStyle.js`; `?style=classic` — без слоя |
+| «Чернильный край» (необрутализм A) | ★ | 2026-11-02 | [`board-game/neobrutal-a-round/`](../../../design-lab/board-game/neobrutal-a-round/README.md), [`ink-sheets-round/`](../../../design-lab/board-game/ink-sheets-round/README.md) | единственный стиль prod: правила в CSS блоков, токены `--mq-ink-*` в `tokens.css`; инварианты — `board-game/APPROVED.md` |
 | Маскоты: Монетка на ободе, Квитя, напарники | review | 2026-10-29 | [`mascots/`](../../../design-lab/mascots/) | — (в prod не переносить без «утверждаем») |
 
 Mission Brief (3 карточки) — **superseded** guided onboarding. Dashboard S5 и стеклянные карточки — **superseded** ★ BG-1 (ADR-014).
@@ -160,7 +160,7 @@ Mission Brief (3 карточки) — **superseded** guided onboarding. Dashboa
 - [ ] Один доминирующий фиолетовый блок на экран; красный — только риск, обычный расход нейтральный  
 - [ ] Цвет, размер, радиус, длительность — токеном; новых HEX/rgba и шрифтов < 12 px нет (`check:style-discipline`, `check:mqx-ratchet`)  
 - [ ] Главное действие — «Завершить ход»; обращение на «ты»; опасная кнопка названа действием («Продать», «Погасить»), не «Удалить»  
-- [ ] Проверено в обоих стилях: `?style=ink` и `?style=classic`, светлая и тёмная тема  
+- [ ] Проверено в светлой и тёмной теме; обводка и тени — по правилам «Чернильного края» (`board-game/APPROVED.md`, инварианты)  
 - [ ] Состояния loading / empty / error; хит-зона ≥ 44 px; фокус виден  
 
 ---

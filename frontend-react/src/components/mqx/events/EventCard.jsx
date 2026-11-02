@@ -1,6 +1,6 @@
 import { asSafeReactText } from '../../../utils/displayText';
 import { MonetkaAvatar } from '../brand/MonetkaAvatar';
-import { IconHelpBookWithBadge } from '../icons/MqxContextHelpIcons';
+import { IconHelpQuestion } from '../icons/MqxContextHelpIcons';
 import { EventChoiceButton } from './EventChoiceButton';
 import { eventDomainTheme } from './eventDomainDisplay';
 import { eventHasInsuranceClaimChoice } from './eventDisplay';
@@ -60,15 +60,12 @@ export function EventCard({
           {onHelp ? (
             <button
               type="button"
-              className="mqx-help-icon-btn mqx-help-icon-btn--badge mqx-events-card__help"
+              className="mqx-help-icon-btn mqx-events-card__help"
               aria-label="Как читать событие"
               title="Как читать событие"
               onClick={onHelp}
             >
-              <IconHelpBookWithBadge size={17} />
-              <span className="mqx-help-icon-btn__badge" aria-hidden="true">
-                ?
-              </span>
+              <IconHelpQuestion size={20} />
             </button>
           ) : null}
           {onClose ? (

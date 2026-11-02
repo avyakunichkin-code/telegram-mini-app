@@ -51,16 +51,18 @@
 }
 
 /* —— Вывод: счёт + подушка ——
-   ★ BG-3: единственная клетка с краем на экране (главный блок, как карта хода на главной).
+   ★ BG-3: главная карта экрана (как карта хода на главной) — чернильный край и фиолетовая тень;
+   метрики, график и подсказка — информация, без рамок.
    Риск — плашкой со словом и красной суммой, без цветной полосы сбоку. */
 .mqx-an-state {
   display: grid;
   gap: var(--mq-sp-3);
   padding: var(--mq-sp-5);
-  border: var(--mq-hair);
+  border: var(--mq-ink-w) solid var(--mq-ink-line);
   border-radius: var(--mq-r-card);
   background: var(--mq-cell);
   color: var(--mq-board-ink);
+  box-shadow: var(--mq-ink-off) var(--mq-ink-off) 0 var(--mq-turn);
 }
 
 .mqx-an-state--risk .mqx-an-state__sum {
