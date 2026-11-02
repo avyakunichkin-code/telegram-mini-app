@@ -92,7 +92,35 @@ function iframeHeightForBlockId(blockId) {
   }
 }
 
-function buildIndexHtml({ title, blocks }) {
+/** Кадры prod «Чернильный край» (★ 2026-11-02): design-lab/finance/prod-ink-shots/shots.json + картинки. */
+function readProdShots(srcDir) {
+  const listPath = path.join(srcDir, 'shots.json')
+  if (!fs.existsSync(listPath)) return null
+  return readJson(listPath)
+}
+
+function buildProdShotsHtml(prod) {
+  if (!prod) return ''
+  const figures = prod.shots
+    .map(
+      (s) => `
+          <figure class="pgx-shot">
+            <img src="./prod-ink/${s.file}" alt="${s.caption}" loading="lazy" />
+            <figcaption>${s.caption}</figcaption>
+          </figure>`,
+    )
+    .join('')
+  return `
+      <section class="pgx-prod" aria-labelledby="pgx-prod-title">
+        <div class="pgx-kicker" id="pgx-prod-title">PROD СЕЙЧАС · ★ «ЧЕРНИЛЬНЫЙ КРАЙ»</div>
+        <p class="pgx-sub">${prod.note}</p>
+        <div class="pgx-shots">${figures}
+        </div>
+      </section>
+      <p class="pgx-sub">Ниже — канонические lab-раунды блоков (раскладка и состав); края и тени в них — до «Чернильного края», актуальная подача — кадры выше.</p>`
+}
+
+function buildIndexHtml({ title, blocks, prod }) {
   const cardsHtml = blocks
     .map((b) => {
       const h = iframeHeightForBlockId(b.id)
@@ -149,6 +177,11 @@ function buildIndexHtml({ title, blocks }) {
       .pgx-link:hover { text-decoration: underline; }
       .pgx-frame { display: block; width: 100%; border: 0; background: transparent; }
       code { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; }
+      .pgx-prod { margin: 0 0 18px; }
+      .pgx-shots { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; }
+      .pgx-shot { margin: 0; }
+      .pgx-shot img { display: block; width: 100%; height: auto; border-radius: 12px; border: 1px solid rgba(255,255,255,.12); }
+      .pgx-shot figcaption { margin-top: 6px; font-size: 12px; opacity: .8; }
     </style>
   </head>
   <body>
@@ -158,6 +191,7 @@ function buildIndexHtml({ title, blocks }) {
         Сгенерировано из <code>design-lab/finance/canon.manifest.json</code>. Каждый блок — отдельная витрина в <code>iframe</code>,
         без склейки CSS, чтобы конфликты стилей не ломали страницу.
       </p>
+      ${buildProdShotsHtml(prod)}
       <div class="pgx-grid">
         ${cardsHtml}
       </div>
@@ -261,9 +295,19 @@ function main() {
     patchBlockForEmbed(dst)
   }
 
+  const prodShotsDir = path.join(repoRoot, 'design-lab', 'finance', 'prod-ink-shots')
+  const prod = readProdShots(prodShotsDir)
+  if (prod) {
+    const dst = path.join(outRoundDir, 'prod-ink')
+    rmSafe(dst)
+    fs.mkdirSync(dst, { recursive: true })
+    for (const s of prod.shots) fs.copyFileSync(path.join(prodShotsDir, s.file), path.join(dst, s.file))
+  }
+
   const html = buildIndexHtml({
     title: 'Финансы — prod parity (generated)',
     blocks: plan,
+    prod,
   })
 
   fs.mkdirSync(outRoundDir, { recursive: true })
@@ -298,6 +342,7 @@ function main() {
       'Источник правды:',
       '',
       `- \`${posixPath(path.relative(repoRoot, manifestPath))}\``,
+      `- кадры prod «Чернильный край» — \`${posixPath(path.relative(repoRoot, prodShotsDir))}/\` (\`shots.json\`)`,
       '',
     ].join('\n'),
     'utf8',

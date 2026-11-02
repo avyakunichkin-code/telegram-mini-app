@@ -80,13 +80,14 @@ code {
   padding-bottom: calc(8px + env(safe-area-inset-bottom, 0px));
 }
 
-/* ★ BG-2: светлая поверхность через токены в обеих темах; активная вкладка — фиолетовая фишка */
+/* ★ BG-2: светлая поверхность через токены в обеих темах; активная вкладка — фиолетовая фишка
+   с чернильным краем, сверху — чернильная линия */
 .bottom-nav--unified {
   padding: var(--mq-sp-2) var(--mq-sp-4) calc(var(--mq-sp-3) + env(safe-area-inset-bottom, 0px));
   gap: 0;
   background: var(--mq-cell);
   backdrop-filter: none;
-  border-top: var(--mq-hair);
+  border-top: var(--mq-ink-w) solid var(--mq-ink-line);
   box-shadow: none;
 }
 
@@ -105,7 +106,7 @@ code {
   justify-content: center;
   margin: 0;
   padding: var(--mq-sp-2) var(--mq-sp-1);
-  border: none;
+  border: var(--mq-ink-w) solid transparent;
   border-radius: var(--mq-r-cell);
   box-shadow: none;
   background: transparent;
@@ -144,13 +145,13 @@ code {
 }
 
 .bottom-nav--unified .bottom-nav__cell--active {
-  color: var(--mq-turn);
-  background: var(--mq-turn-soft);
-  box-shadow: 0 2px 0 var(--mq-turn);
+  border-color: var(--mq-ink-line);
+  color: var(--mq-turn-on);
+  background: var(--mq-turn);
 }
 
 .bottom-nav--unified .bottom-nav__cell--active svg {
-  color: var(--mq-turn);
+  color: var(--mq-turn-on);
 }
 
 .bottom-nav--unified .bottom-nav__cell:disabled {

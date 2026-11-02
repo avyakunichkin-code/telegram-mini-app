@@ -1,7 +1,9 @@
 /*
  * Дашборд ★ BG-1 «настольная игра про деньги» (ADR-014).
  * Канон: design-lab/board-game/APPROVED.md, раунд hybrid-round/.
- * Лёгкий стиль: края 1.5px, объём (нижняя тень) только у нажимаемого.
+ * Стиль «Чернильный край» (★ PO 2026-11-02, design-lab/board-game/ink-decision-round/):
+ * чернильная тень — у того, что нажимается (нажатие вдавливает фишку в поле); цветная тень — у главной
+ * карты экрана, одна на экран; информация (потребности, деньги, подсказки) — без обводки.
  * Роли цвета: --mq-turn — действие, --mq-coin — деньги/награды/финиш, --mq-gain — плюс, --mq-risk — только риск.
  */
 
@@ -73,10 +75,10 @@
   display: grid;
   gap: var(--mq-sp-4);
   padding: var(--mq-sp-5) var(--mq-sp-6) var(--mq-sp-6);
-  border: 2px solid var(--mq-turn);
+  border: var(--mq-ink-w) solid var(--mq-ink-line);
   border-radius: var(--mq-r-card);
   background: var(--mq-cell);
-  box-shadow: 0 3px 0 var(--mq-turn);
+  box-shadow: var(--mq-ink-off) var(--mq-ink-off) 0 var(--mq-turn);
 }
 
 .mqx-bg-turn__top {
@@ -116,7 +118,7 @@
   font: 600 var(--mq-fs-small) / 1.3 var(--mq-font-body);
 }
 
-/* «N событий» — крупная нажимаемая плашка с колодой */
+/* «N событий» — крупная нажимаемая плашка с колодой; K1: фишка внутри карты — заливка + тень, без обводки */
 .mqx-bg-events {
   display: flex;
   align-items: center;
@@ -124,15 +126,24 @@
   width: 100%;
   min-height: 48px;
   padding: var(--mq-sp-3) var(--mq-sp-5);
-  border: 1.5px solid var(--mq-turn);
+  border: 0;
   border-radius: var(--mq-r-cell);
-  background: var(--mq-turn-soft);
+  background: var(--mq-coin-soft);
   text-align: left;
+  box-shadow: var(--mq-ink-off) var(--mq-ink-off) 0 var(--mq-ink-drop);
+  transition:
+    transform var(--mq-dur-press) var(--mq-ease-standard),
+    box-shadow var(--mq-dur-press) var(--mq-ease-standard);
+}
+
+.mqx-bg-events:active:not(:disabled) {
+  transform: translate(var(--mq-ink-off), var(--mq-ink-off));
+  box-shadow: 0 0 0 var(--mq-ink-drop);
 }
 
 .mqx-bg-events--done {
-  border-color: var(--mq-cell-edge);
-  background: var(--mq-cell);
+  background: var(--mq-board);
+  box-shadow: none;
 }
 
 .mqx-bg-deck {
@@ -145,13 +156,13 @@
 .mqx-bg-deck span {
   position: absolute;
   inset: 0;
-  border: 1.5px solid var(--mq-turn-deep);
-  border-radius: 6px;
+  border: var(--mq-ink-w) solid var(--mq-ink-line);
+  border-radius: 4px;
   background: var(--mq-turn);
 }
 
 .mqx-bg-deck span:nth-child(1) {
-  opacity: 0.5;
+  background: var(--mq-cell);
   transform: rotate(-9deg) translateX(-3px);
 }
 
@@ -159,8 +170,7 @@
   transform: rotate(6deg) translateX(3px);
 }
 
-.mqx-bg-events--done .mqx-bg-deck span {
-  border-color: var(--mq-cell-edge);
+.mqx-bg-events--done .mqx-bg-deck span:nth-child(2) {
   background: var(--mq-turn-soft);
 }
 
@@ -170,12 +180,8 @@
 }
 
 .mqx-bg-events__title {
-  color: var(--mq-turn);
-  font: 900 var(--mq-fs-lead) / 1.1 var(--mq-font-display);
-}
-
-.mqx-bg-events--done .mqx-bg-events__title {
   color: var(--mq-board-ink);
+  font: 900 var(--mq-fs-lead) / 1.1 var(--mq-font-display);
 }
 
 .mqx-bg-events__hint {
@@ -229,15 +235,15 @@
   background: var(--mq-turn);
   color: var(--mq-turn-on);
   font: 900 var(--mq-fs-heading) / 1.1 var(--mq-font-display);
-  box-shadow: 0 3px 0 var(--mq-turn-deep);
+  box-shadow: var(--mq-ink-off) var(--mq-ink-off) 0 var(--mq-ink-drop);
   transition:
-    transform 120ms ease,
-    box-shadow 120ms ease;
+    transform var(--mq-dur-press) var(--mq-ease-standard),
+    box-shadow var(--mq-dur-press) var(--mq-ease-standard);
 }
 
 .mqx-bg-cta:active:not(:disabled) {
-  transform: translateY(2px);
-  box-shadow: 0 1px 0 var(--mq-turn-deep);
+  transform: translate(var(--mq-ink-off), var(--mq-ink-off));
+  box-shadow: 0 0 0 var(--mq-ink-drop);
 }
 
 .mqx-bg-cta:disabled {
@@ -458,11 +464,12 @@
   color: var(--mq-gain);
 }
 
-/* —— Цель: свёрнута до дорожки, раскрывается цепочкой —— */
+/* —— Цель: свёрнутая фишка с дорожкой, раскрывается цепочкой —— */
 .mqx-bg-goal {
-  border: var(--mq-hair);
+  border: var(--mq-ink-w) solid var(--mq-ink-line);
   border-radius: var(--mq-r-cell);
   background: var(--mq-cell);
+  box-shadow: var(--mq-ink-off) var(--mq-ink-off) 0 var(--mq-ink-drop);
 }
 
 .mqx-bg-goal__toggle {
@@ -506,7 +513,7 @@
   flex: none;
   width: 12px;
   height: 12px;
-  border: 2px solid var(--mq-cell-edge);
+  border: 2px solid var(--mq-ink-line);
   border-radius: 50%;
   background: var(--mq-cell);
 }
@@ -525,14 +532,13 @@
 }
 
 .mqx-bg-track__dot[data-status='done'] {
-  border-color: var(--mq-turn);
   background: var(--mq-turn-soft);
 }
 
 .mqx-bg-track__dot[data-status='current'] {
-  border-color: var(--mq-turn);
   background: var(--mq-turn);
-  box-shadow: 0 0 0 3px var(--mq-turn-soft);
+  outline: 2px solid var(--mq-turn);
+  outline-offset: 1px;
 }
 
 /* Финиш — золотая клетка поля с монетой (как финиш в design-lab), пунктир к ней от последнего шага */
@@ -581,8 +587,7 @@
 }
 
 .mqx-bg-goal__body {
-  padding: var(--mq-sp-5);
-  border-top: var(--mq-hair);
+  padding: var(--mq-sp-2) var(--mq-sp-5) var(--mq-sp-4);
 }
 
 .mqx-bg-chain {
@@ -661,7 +666,7 @@
 }
 
 /* —— Действия хода ★ BG-3: «Зарплата» — главная строка, ниже 3 залитые фишки ——
-   Канон: design-lab/board-game/frames-round/ (вариант E). Рамок нет — заливка и нижняя кромка. */
+   Канон: design-lab/board-game/frames-round/ (вариант E); фишки — чернильный край и тень. */
 .mqx-bg-acts {
   display: grid;
   gap: var(--mq-sp-3);
@@ -680,20 +685,20 @@
   gap: var(--mq-sp-1);
   min-height: 56px;
   padding: var(--mq-sp-3) var(--mq-sp-1);
-  border: 0;
+  border: var(--mq-ink-w) solid var(--mq-ink-line);
   border-radius: var(--mq-r-cell);
   background: var(--mq-turn-soft);
   color: var(--mq-board-ink);
   font: 700 var(--mq-fs-caption) / 1.2 var(--mq-font-body);
-  box-shadow: 0 3px 0 var(--mq-turn);
+  box-shadow: var(--mq-ink-off) var(--mq-ink-off) 0 var(--mq-ink-drop);
   transition:
-    transform 80ms ease,
-    box-shadow 80ms ease;
+    transform var(--mq-dur-press) var(--mq-ease-standard),
+    box-shadow var(--mq-dur-press) var(--mq-ease-standard);
 }
 
 .mqx-bg-act:active:not(:disabled) {
-  transform: translateY(2px);
-  box-shadow: 0 1px 0 var(--mq-turn);
+  transform: translate(var(--mq-ink-off), var(--mq-ink-off));
+  box-shadow: 0 0 0 var(--mq-ink-drop);
 }
 
 .mqx-bg-act:disabled {
@@ -720,7 +725,6 @@
 .mqx-bg-act--active {
   background: var(--mq-turn);
   color: var(--mq-turn-on);
-  box-shadow: 0 3px 0 var(--mq-turn-deep);
 }
 
 .mqx-bg-act--active .mqx-bg-act__ico {
@@ -756,20 +760,24 @@
 
 /* Пока не забрана — главная кнопка: сплошное золото */
 .mqx-bg-salary--hot {
+  border: var(--mq-ink-w) solid var(--mq-ink-line);
   background: var(--mq-coin);
   color: var(--mq-coin-on);
-  box-shadow: 0 4px 0 var(--mq-coin-rim);
+  box-shadow: var(--mq-ink-off) var(--mq-ink-off) 0 var(--mq-ink-drop);
   font: 900 var(--mq-fs-lead) / 1.1 var(--mq-font-display);
+  transition:
+    transform var(--mq-dur-press) var(--mq-ease-standard),
+    box-shadow var(--mq-dur-press) var(--mq-ease-standard);
 }
 
 .mqx-bg-salary--hot:active:not(:disabled) {
-  transform: translateY(3px);
-  box-shadow: 0 1px 0 var(--mq-coin-rim);
+  transform: translate(var(--mq-ink-off), var(--mq-ink-off));
+  box-shadow: 0 0 0 var(--mq-ink-drop);
 }
 
 /* Забрана или недоступна — спокойная пунктирная строка */
 .mqx-bg-salary--quiet {
-  border: 1.5px dashed var(--mq-cell-edge);
+  border: var(--mq-ink-w) dashed var(--mq-control-edge);
   background: var(--mq-cell);
   color: var(--mq-board-ink-soft);
   font: 600 var(--mq-fs-body) / 1.2 var(--mq-font-body);
@@ -804,6 +812,10 @@
   .mqx-bg-goal__chev,
   .mqx-bg-money__cash-value {
     transition: none;
+  }
+
+  :is(.mqx-bg-cta, .mqx-bg-events, .mqx-bg-act, .mqx-bg-salary--hot):active:not(:disabled) {
+    transform: none;
   }
 
   .mqx-bg-salary.mqx-juice-chip--celebrate {
@@ -904,17 +916,7 @@
 
 /* —— ★ BG-3 (2026-10-25): одна рамка на уровень ——
    Канон: design-lab/board-game/APPROVED.md, раунд frames-round/ (вариант E).
-   Край и кромка — только у карты хода; деньги, цель и потребности лежат на поле,
-   группу держат заголовок и отступ. Плашка «N событий» — заливка без своей рамки. */
-.mqx-bg-events,
-.mqx-bg-events--done {
-  border-color: transparent;
-}
-
-.mqx-bg-events--done {
-  background: var(--mq-board);
-}
-
+   Деньги и потребности лежат на поле, группу держат заголовок и отступ. */
 .mqx-bg-money__cell {
   align-content: start;
   min-height: 44px;
@@ -934,20 +936,6 @@
   content: ' ›';
   color: var(--mq-turn);
   font-weight: 700;
-}
-
-.mqx-bg-goal {
-  border: 0;
-  background: none;
-}
-
-.mqx-bg-goal__toggle {
-  padding-inline: 0;
-}
-
-.mqx-bg-goal__body {
-  padding: var(--mq-sp-2) 0 0;
-  border-top: 0;
 }
 
 /* Подушка: вторая строка «не платит расходы» (PR-07); красная — если счёт уйдёт в минус */

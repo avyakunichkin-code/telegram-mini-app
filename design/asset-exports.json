@@ -495,10 +495,6 @@
       "target": "frontend-react/src/styles/mqx/guidance.css"
     },
     {
-      "source": "system/runtime/styles/mqx/ink.css",
-      "target": "frontend-react/src/styles/mqx/ink.css"
-    },
-    {
       "source": "system/runtime/styles/mqx/juice.css",
       "target": "frontend-react/src/styles/mqx/juice.css"
     },

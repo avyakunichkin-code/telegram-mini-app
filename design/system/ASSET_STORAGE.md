@@ -5,7 +5,7 @@
 - `illustrations/characters.js` — чиби и напарники из выбранного холста: Студент + Студбилет, Профессионал + Зарплатная карта, Руководитель + Портфель, Предприниматель + Смартфон.
 - `illustrations/monetka.js`, `assets/Monetka/*.svg` — новая Монетка и Квитя. Прежних PNG в активной галерее нет.
 - `assets/Logos/` — G1 с подписью, G2 и размеры. `assets/Icons/`, `fonts/`, `tokens.json`, `components/` — библиотека системы. InkEdge — текущая подача.
-- `runtime-ink.css` — экспорт реального CSS приложения, не второй редактируемый источник.
+- `runtime/` — редактируемый CSS приложения (экспорт в `frontend-react/src/` — `scripts/design-assets.mjs`). Отдельного слоя «Чернильного края» нет: его правила — в CSS блоков, токены `--mq-ink-*` — в `tokens.json` и `runtime/styles/tokens.css`.
 
 SVG чиби, напарников и полной Монетки генерируются из JS. Копии JS в двух lab-раундах теперь тоже экспорты. Синхронизация из корня: `node scripts/design-assets.mjs`. Проверка без записи: та же команда с `--check`.
 

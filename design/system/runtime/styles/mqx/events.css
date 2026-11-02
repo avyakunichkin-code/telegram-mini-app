@@ -121,8 +121,12 @@
   justify-content: center;
   padding: 12px;
   padding-top: calc(12px + env(safe-area-inset-top, 0px));
-  /* Подсказка Монетки (z 545) поверх карусели: карта заканчивается над ней, иначе варианты ответа под полоской. */
-  padding-bottom: max(calc(12px + env(safe-area-inset-bottom, 0px)), var(--mqx-guidance-strip-lift, 0px));
+  /* Подсказка Монетки (z 545) поверх карусели прижата к низу: карта заканчивается над ней,
+     иначе варианты ответа под полоской. */
+  padding-bottom: max(
+    calc(12px + env(safe-area-inset-bottom, 0px)),
+    calc(var(--mqx-guidance-strip-offset, 0px) + 4px)
+  );
   pointer-events: auto;
   overflow: hidden;
   overscroll-behavior: none;
@@ -186,11 +190,6 @@ body.mqx-events-overlay-open .mqx-tab-page__scroll {
   z-index: 5;
 }
 
-/* Глобальный тёмный h2 не должен бледнеть на светлом листе справки */
-.mqx-event-help-sheet .mqx-sheet__title {
-  color: inherit;
-}
-
 .mqx-event-help-sheet__lead {
   margin-top: -4px;
 }
@@ -242,13 +241,13 @@ body.mqx-events-overlay-open .mqx-tab-page__scroll {
 .mqx-events-deckline__deck span {
   position: absolute;
   inset: 0;
-  border: 1.5px solid var(--mq-turn-deep);
-  border-radius: 6px;
+  border: var(--mq-ink-w) solid var(--mq-ink-line);
+  border-radius: 4px;
   background: var(--mq-turn);
 }
 
 .mqx-events-deckline__deck span:nth-child(1) {
-  opacity: 0.5;
+  background: var(--mq-cell);
   transform: rotate(-9deg) translateX(-3px);
 }
 
@@ -268,11 +267,11 @@ body.mqx-events-overlay-open .mqx-tab-page__scroll {
   flex-direction: column;
   flex-shrink: 0;
   overflow: hidden;
-  border: 2px solid var(--mq-turn);
-  border-radius: 20px;
+  border: var(--mq-ink-w) solid var(--mq-ink-line);
+  border-radius: var(--mq-r-card);
   background: var(--mq-cell);
   color: var(--mq-board-ink);
-  box-shadow: 0 4px 0 var(--mq-turn-deep);
+  box-shadow: var(--mq-ink-off) var(--mq-ink-off) 0 var(--mq-turn);
 }
 
 /* Полоса домена: пилюли + справка и × */
@@ -293,19 +292,21 @@ body.mqx-events-overlay-open .mqx-tab-page__scroll {
   min-width: 0;
 }
 
+/* Полоса — цвет домена, без линии под ней (одна рамка — у карты);
+   чип — белая заливка без обводки, чтобы не терялся на цветной полосе */
 .mqx-events-domain-pill {
   display: inline-flex;
   align-items: center;
   gap: var(--mq-sp-2);
   padding: var(--mq-sp-1) var(--mq-sp-3);
-  border-radius: 999px;
+  border: 0;
+  border-radius: var(--mq-r-s);
   background: var(--mq-cell);
   color: var(--mq-turn);
   font: 700 var(--mq-fs-caption) / 1.3 var(--mq-font-body);
 }
 
 .mqx-events-domain-pill--insurance {
-  background: var(--mq-gain-soft);
   color: var(--mq-gain);
 }
 
@@ -404,7 +405,7 @@ button.mqx-events-choice:focus-visible,
   object-fit: contain;
 }
 
-/* E5-B — design-lab/events/tails-round/APPROVED.md: пузырь скроллится внутри */
+/* E5-B — design-lab/events/tails-round/APPROVED.md: пузырь скроллится внутри; реплика без обводки, только фон */
 .mqx-events-card--l3 .mqx-events-card__bubble {
   flex: 1;
   min-width: 0;
@@ -413,9 +414,9 @@ button.mqx-events-choice:focus-visible,
   overscroll-behavior: contain;
   -webkit-overflow-scrolling: touch;
   padding: var(--mq-sp-3) var(--mq-sp-4);
-  border: var(--mq-hair);
+  border: 0;
   border-radius: 14px 14px 14px 4px;
-  background: var(--mq-board);
+  background: var(--mq-coin-soft);
 }
 
 .mqx-events-card__bubble-text {
@@ -457,7 +458,6 @@ button.mqx-events-choice:focus-visible,
 }
 
 .mqx-events-card--insurance .mqx-events-card__bubble {
-  border-color: color-mix(in srgb, var(--mq-gain) 40%, var(--mq-cell-edge));
   background: var(--mq-gain-soft);
 }
 
@@ -473,25 +473,33 @@ button.mqx-events-choice {
   gap: var(--mq-sp-2);
   width: 100%;
   padding: var(--mq-sp-4) var(--mq-sp-5);
-  border: var(--mq-hair);
-  border-radius: 14px;
-  background: var(--mq-board);
+  border: var(--mq-ink-w) solid var(--mq-ink-line);
+  border-radius: var(--mq-r-cell);
+  background: var(--mq-cell);
   color: var(--mq-board-ink);
-  box-shadow: 0 2px 0 var(--mq-cell-edge);
+  box-shadow: var(--mq-ink-off) var(--mq-ink-off) 0 var(--mq-ink-drop);
   font: 600 14.5px / 1.3 var(--mq-font-body);
   text-align: left;
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
-  transition: transform 0.06s ease, box-shadow 0.06s ease, border-color var(--mq-dur-fast) ease;
+  transition:
+    transform var(--mq-dur-press) var(--mq-ease-standard),
+    box-shadow var(--mq-dur-press) var(--mq-ease-standard);
 }
 
 button.mqx-events-choice:hover:not(:disabled) {
-  border-color: var(--mq-turn);
+  background: var(--mq-turn-soft);
 }
 
 button.mqx-events-choice:active:not(:disabled) {
-  transform: translateY(2px);
-  box-shadow: 0 0 0 var(--mq-cell-edge);
+  transform: translate(var(--mq-ink-off), var(--mq-ink-off));
+  box-shadow: 0 0 0 var(--mq-ink-drop);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  button.mqx-events-choice:active:not(:disabled) {
+    transform: none;
+  }
 }
 
 button.mqx-events-choice:disabled {
