@@ -112,3 +112,37 @@ export function areaSummary(area) {
 export function nextStep(steps) {
   return steps.find((s) => s.status === 'suggested') || null
 }
+
+// ── ★ Повторный чекап (recheck-round R2 + G2, утверждено 2026-11-02) ──
+
+const STEP_STATUS = { done: ['сделано', 'st-done'], suggested: ['в работе', 'st-open'], dismissed: ['не подошло', 'st-no'] }
+
+/** Подпись и класс статуса прошлого шага. */
+export function stepStatus(status) {
+  return STEP_STATUS[status] || STEP_STATUS.suggested
+}
+
+const comma1 = (v) => v.toFixed(1).replace('.', ',')
+const thousands = (v) => `${v > 0 ? '+' : v < 0 ? '−' : ''}${Math.round(Math.abs(v) / 1000)}`
+
+/** Плитка «С прошлого раза»: три метрики было → стало. Нет значения — «—». */
+export function previousCells(prev) {
+  const m = prev?.metrics || {}
+  const pair = (key, fmt) => {
+    const { before, now } = m[key] || {}
+    return [before, now].map((v) => (v === null || v === undefined ? '—' : fmt(v))).join(' → ')
+  }
+  return [
+    { label: 'Подушка', value: pair('cushion_months', comma1), unit: 'мес.' },
+    { label: 'Платежи', value: `${pair('dti_percent', (v) => v.toFixed(0))} %`, unit: 'от дохода' },
+    { label: 'Остаётся', value: pair('free_cashflow', thousands), unit: 'тыс. ₽/мес' },
+  ]
+}
+
+/** Полоска цели: сколько накоплено сейчас и где были в прошлый раз, в % от суммы цели. */
+export function goalBar(goal) {
+  const target = Number(goal.target_amount) || 0
+  const share = (v) => (target > 0 ? Math.max(0, Math.min(100, (v / target) * 100)) : 0)
+  const before = goal.progress ? share(goal.progress.saved_before) : null
+  return { now: share(Number(goal.saved_amount) || 0), before }
+}

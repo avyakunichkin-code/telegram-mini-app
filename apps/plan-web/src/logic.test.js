@@ -2,7 +2,7 @@ import assert from 'node:assert/strict'
 import test from 'node:test'
 
 import { rub } from './format.js'
-import { areaSummary, heroFor, isWideRange, nextStep, normalizeRow, precisionOf, precisionTip, toNum } from './logic.js'
+import { areaSummary, goalBar, heroFor, isWideRange, nextStep, normalizeRow, precisionOf, precisionTip, previousCells, stepStatus, toNum } from './logic.js'
 import { sectionOrder } from './sections.js'
 
 const R = (min, max = min) => ({ min, max })
@@ -77,4 +77,23 @@ test('шаги: выделяется первый несделанный; всё
 test('порядок мастера задаёт вопрос со входа', () => {
   assert.equal(sectionOrder('debts')[0], 'liabilities')
   assert.equal(new Set(sectionOrder('overview')).size, sectionOrder('overview').length)
+})
+
+test('повторный чекап R2: было → стало, пустое — прочерк', () => {
+  const cells = previousCells({
+    metrics: {
+      cushion_months: { before: 0.4, now: 1.23 },
+      dti_percent: { before: 36.4, now: 31 },
+      free_cashflow: { before: 21_400, now: null },
+    },
+  })
+  assert.deepEqual(cells.map((c) => c.value), ['0,4 → 1,2', '36 → 31 %', '+21 → —'])
+  assert.deepEqual(stepStatus('dismissed'), ['не подошло', 'st-no'])
+  assert.deepEqual(stepStatus('weird'), ['в работе', 'st-open'])
+})
+
+test('прогресс цели G2: доля накопленного и риска прошлого раза', () => {
+  assert.deepEqual(goalBar({ target_amount: 250_000, saved_amount: 80_000, progress: { saved_before: 20_000 } }), { now: 32, before: 8 })
+  assert.deepEqual(goalBar({ target_amount: 100, saved_amount: 150, progress: null }), { now: 100, before: null })
+  assert.deepEqual(goalBar({ target_amount: 0, saved_amount: 5 }), { now: 0, before: null })
 })

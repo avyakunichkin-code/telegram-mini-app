@@ -102,3 +102,33 @@ test('демо-семья: полный разбор без переносов �
 
   expect(errors, 'ошибки в консоли браузера').toEqual([])
 })
+
+// P3-03 / P3-07 (★ R2 + G2): повторный чекап показывает прошлые шаги и карточку цели с прогрессом.
+test('повторный чекап: «С прошлого раза» и карточка цели', async ({ page }) => {
+  const errors = collectConsoleErrors(page)
+  await login(page)
+  await page.getByRole('button', { name: /Успеем ли накопить/ }).click()
+  await page.getByRole('button', { name: 'Дальше' }).click()
+  await page.getByRole('button', { name: 'заполнить демо-семьёй' }).click()
+  await page.getByRole('button', { name: 'Получить итоговый разбор' }).click()
+  await expect(page.getByText(/^Итоговый разбор/)).toBeVisible()
+  await expect(page.locator('.recheck')).toHaveCount(0)
+  await page.locator('.steps .step').first().getByRole('button', { name: 'Сделано', exact: true }).click()
+
+  await page.getByRole('button', { name: /новый чекап/ }).click()
+  await page.getByRole('button', { name: /Успеем ли накопить/ }).click()
+  await page.getByRole('button', { name: 'Дальше' }).click()
+  await page.getByRole('button', { name: 'Сохранить и к разбору' }).click()
+
+  await expect(page.getByText(/^Черновой разбор/)).toBeVisible()
+  const recheck = page.locator('.recheck')
+  await expect(recheck.getByRole('heading', { name: 'С прошлого раза' })).toBeVisible()
+  await expect(recheck.locator('.was > div')).toHaveCount(3)
+  await expect(recheck.locator('.st-done')).toHaveCount(1)
+  await expect(page.locator('.goal').first().getByRole('heading', { name: 'Отпуск на море' })).toBeVisible()
+  await expect(page.locator('.goal .bar .mark')).toHaveCount(1)
+  await expectNoHorizontalScroll(page)
+  await expectMoneyUnbroken(page)
+
+  expect(errors, 'ошибки в консоли браузера').toEqual([])
+})

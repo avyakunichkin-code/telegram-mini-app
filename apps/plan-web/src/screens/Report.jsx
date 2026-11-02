@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { api } from '../api.js'
 import { Button, Card, ErrorNote, Light, LineChart, Money, Precision, Verdict } from '../components.jsx'
 import { monthLabel, pct, plural, rub } from '../format.js'
-import { areaSummary, heroFor, nextStep } from '../logic.js'
+import { areaSummary, goalBar, heroFor, nextStep, previousCells, stepStatus } from '../logic.js'
 
 const PRECISION = {
   draft: ['Черновая точность', 'Много ответов диапазонами или оценок — уточните разделы, и разбор станет точнее.'],
@@ -175,6 +175,24 @@ export default function Report({ checkup, report, onRefine, onComplete, onNew, o
           {pessNegative && <p className="bars-warn">Если доходы окажутся по нижней границе, а расходы — по верхней, деньги кончатся в {monthLabel(pessNegative.month)}.</p>}
         </section>
 
+        {report.previous && (
+          // ★ R2 (recheck-round, утверждено 2026-11-02): что сдвинулось с прошлого итогового разбора
+          <section className="card t-full recheck">
+            <header className="card-head"><h3>С прошлого раза</h3><span className="muted">{monthLabel(report.previous.as_of)} → {monthLabel(report.as_of)}</span></header>
+            <div className="was">
+              {previousCells(report.previous).map((c) => (
+                <div key={c.label}>{c.label}<b>{c.value}</b>{c.unit}</div>
+              ))}
+            </div>
+            <ul className="prev">
+              {report.previous.steps.map((st) => {
+                const [label, cls] = stepStatus(st.status)
+                return <li key={st.rule_key} className="prev-row"><span>{st.title}</span><span className={`st ${cls}`}>{label}</span></li>
+              })}
+            </ul>
+          </section>
+        )}
+
         <section className={`card tile-inverse report-head answer answer-${ea.verdict} t-full`}>
           <div className="card-head">
             <h1>{ea.question}</h1>
@@ -220,24 +238,32 @@ export default function Report({ checkup, report, onRefine, onComplete, onNew, o
           <DebtStrategy d={report.debt_strategy} />
         </Card>
 
-        {report.goals.length > 0 && (
-          <Card title="Цели" className="t-full">
-            <div className="table-wrap">
-              <table className="table">
-                <thead><tr><th>Цель</th><th className="num">Нужно в месяц</th><th>Срок</th></tr></thead>
-                <tbody>
-                  {report.goals.map((g) => (
-                    <tr key={g.title}>
-                      <td>{g.title}, {rub(g.target_amount)}</td>
-                      <td className="num">{rub(g.monthly_needed)}</td>
-                      <td>{g.realistic ? `${monthLabel(g.target_month)}, успеваете` : `реально: ${g.realistic_month ? monthLabel(g.realistic_month) : '—'}`}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </Card>
-        )}
+        {report.goals.map((g) => {
+          // ★ G2 (recheck-round): карточка цели с полоской «накоплено» и риской прошлого раза
+          const bar = goalBar(g)
+          const pr = g.progress
+          return (
+            <section key={g.id || g.title} className="card t-goal goal">
+              <header className="card-head"><h3>{g.title}</h3><span className="muted">к {monthLabel(g.target_month)}</span></header>
+              <div className="stat-value long">{rub(g.saved_amount)} <span className="muted goal-of">из {rub(g.target_amount)}</span></div>
+              <div className="bar" role="img" aria-label={`Накоплено ${Math.round(bar.now)} % цели`}>
+                <i className="now" style={{ width: `${bar.now}%` }} />
+                {bar.before !== null && <i className="before" style={{ width: `${bar.before}%` }} />}
+                {bar.before !== null && <span className="mark" style={{ left: `${bar.before}%` }} />}
+              </div>
+              <div className="goal-meta">
+                {pr && <span>с {monthLabel(pr.since)} <b>{rub(pr.saved_delta, { sign: true })}</b></span>}
+                <span>
+                  {pr?.monthly_pace !== null && pr?.monthly_pace !== undefined ? `темп ${rub(pr.monthly_pace)}/мес · ` : ''}
+                  нужно {rub(g.monthly_needed)}/мес
+                </span>
+              </div>
+              <p className={g.realistic ? 'muted' : 'goal-warn'}>
+                {g.realistic ? 'Успеваете к сроку.' : `Реальный срок — ${g.realistic_month ? monthLabel(g.realistic_month) : 'не видно при текущем остатке'}.`}
+              </p>
+            </section>
+          )
+        })}
       </div>
 
       <ErrorNote error={error} />
