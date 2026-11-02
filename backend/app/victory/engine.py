@@ -49,6 +49,10 @@ class VictoryEvaluationInput:
     has_active_deposit: bool = False
     has_active_bond: bool = False
     has_active_insurance: bool = False
+    # «Было хоть раз за партию» — action_once не откатывается, когда вклад закрыт или полис истёк.
+    deposit_ever_opened: bool = False
+    bond_ever_bought: bool = False
+    insurance_ever_purchased: bool = False
 
 
 @dataclass(frozen=True)
@@ -139,13 +143,15 @@ def _evaluate_goal(goal: dict[str, Any], snap: VictoryEvaluationInput) -> Victor
         elif action == "safety_contributed":
             met = bool(snap.safety_ever_contributed)
         elif action == "invest_deposit_opened":
-            met = bool(snap.has_active_deposit)
+            met = bool(snap.deposit_ever_opened or snap.has_active_deposit)
         elif action == "invest_bond_bought":
-            met = bool(snap.has_active_bond)
+            met = bool(snap.bond_ever_bought or snap.has_active_bond)
         elif action == "invest_opened":
-            met = bool(snap.has_active_deposit or snap.has_active_bond)
+            met = bool(
+                snap.deposit_ever_opened or snap.bond_ever_bought or snap.has_active_deposit or snap.has_active_bond
+            )
         elif action == "insurance_purchased":
-            met = bool(snap.has_active_insurance)
+            met = bool(snap.insurance_ever_purchased or snap.has_active_insurance)
         else:
             detail["error"] = f"unknown_action:{action}"
         progress = 1.0 if met else 0.0
