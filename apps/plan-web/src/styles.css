@@ -171,10 +171,6 @@ select { font: 600 15px/22px var(--font-text); }
 .hero-copy { background: var(--inverse); color: var(--on-inverse); border-radius: var(--radius-hero); padding: 28px var(--pad-wide); display: flex; flex-direction: column; justify-content: space-between; gap: 20px; }
 .hero h1 { font-size: clamp(36px, 7vw, 56px); line-height: 1; font-weight: 700; letter-spacing: -0.05em; margin: 0; }
 .hero .lead { color: var(--on-inverse-2); }
-.ticks { list-style: none; padding: 0; margin: 0; display: grid; gap: 8px; }
-.ticks li { background: var(--tile-edge); color: var(--on-tile); border-radius: var(--radius-inner); padding: 10px 14px; font-size: 14px; line-height: 20px; font-weight: 600; }
-.ticks li:nth-child(2) { background: var(--tile-calm); }
-.ticks li:nth-child(3) { background: var(--tile-ok); }
 .auth { border-radius: var(--radius-hero); padding: 24px var(--pad-wide); }
 .auth h2 { margin: 0; }
 
@@ -273,7 +269,7 @@ select { font: 600 15px/22px var(--font-text); }
 .chart-zero { stroke: var(--hairline); stroke-width: 1.5; }
 .chart-line { stroke-width: 2.5; stroke-linejoin: round; stroke-linecap: round; fill: none; }
 .chart-hit { fill: var(--tile); stroke: var(--risk-ink); stroke-width: 2.5; }
-.chart-band, .chart-cell, .chart-note, .chart-label { display: none; }
+.chart-band, .chart-cell, .chart-note, .chart-label, .chart-neg { display: none; }
 .tone-ok, .tone-base { stroke: var(--ink); }
 .tone-edge, .tone-pess { stroke: var(--edge-ink); }
 .tone-fail { stroke: var(--risk-ink); }
@@ -302,3 +298,35 @@ select { font: 600 15px/22px var(--font-text); }
 @media (prefers-reduced-motion: reduce) {
   .btn, .question { transition: none; }
 }
+
+/* ── ★ C2 (design-lab/plan-checkup/bento-round, утверждён 2026-11-02): светофор 2×2 → прогноз → ответ с шагами ── */
+.report-top { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 8px; padding: 0 6px; }
+.report-top .eyebrow { margin: 0; }
+.pill { display: inline-flex; border-radius: var(--radius-pill); padding: 4px 12px; font-size: 13px; line-height: 18px; font-weight: 600; background: var(--tile); }
+.area-summary { gap: var(--space-2); }
+.area-summary .eyebrow { margin: 0; color: var(--on-tile); opacity: 0.8; }
+.area-caption { font-size: 13px; line-height: 18px; overflow-wrap: anywhere; }
+.forecast .chart-label { display: block; fill: var(--ink-3); font: 500 20px/1 var(--font-text); }
+.forecast .tone-pess { stroke-dasharray: 10 8; }
+.forecast .chart-line { stroke-width: 4; }
+.legend { display: flex; flex-wrap: wrap; gap: 6px 16px; font-size: 13px; line-height: 18px; color: var(--ink-2); }
+.legend i { display: inline-block; width: 16px; height: 3px; border-radius: 2px; vertical-align: middle; margin-right: 6px; }
+.lg-base { background: var(--ink); }
+.lg-pess { background: repeating-linear-gradient(90deg, var(--edge-ink) 0 5px, transparent 5px 8px); }
+.answer h3 { margin-top: var(--space-2); }
+.tile-inverse .step p, .tile-inverse .step-rank { color: var(--on-inverse-2); }
+.tile-inverse .step-next p, .tile-inverse .step-next .step-rank { color: var(--on-tile); }
+.tile-inverse .step .link { color: inherit; }
+.forecast .chart-neg { display: block; fill: var(--tile-risk); opacity: 0.18; }
+.forecast .chart-zero { stroke: var(--rule); stroke-dasharray: 6 6; }
+/* viewBox графика растягивается на ширину плитки: на десктопе подписи ×1,6 — уменьшаем */
+@media (min-width: 760px) { .forecast .chart-label { font-size: 12px; } }
+
+/* ── ★ Вход: лозунг U1 «Деньги отвечают» в раскладке S4 — контраст «таблица → три плитки» ── */
+.vs { display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); align-items: center; gap: 10px; max-width: 420px; margin-top: var(--space-3); }
+.sheet { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 2px; padding: 6px; border-radius: 10px; background: var(--tile); }
+.sheet i { height: 7px; background: var(--hairline); border-radius: 1px; }
+.arrow { font: 600 22px/1 var(--font-display); color: var(--ink-3); }
+.mini { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 4px; }
+.mini i { height: 46px; border-radius: 12px; }
+.mini-calm { background: var(--tile-calm); }

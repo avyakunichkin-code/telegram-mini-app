@@ -17,7 +17,7 @@ aliases:
 ---
 # Роадмап направления Plan
 
-**Цель сейчас — рабочий прототип (P0).** Продуктовые этапы P2–P3 закрыты Pre-Alpha gate игры (D4, ред. 2026-10-27, [ADR-016](../decisions/ADR-016-two-products-shared-fincore.md) п.8).
+**Цель сейчас — продуктовый каркас (P2).** С 2026-11-02 P2 не ждёт Pre-Alpha gate игры ([ADR-017](../decisions/ADR-017-plan-p2-without-game-gate.md), поправка D4). Реальные пользователи и деплой — только после юриста по ПДн и отдельного решения PO.
 
 Spec: [`SPEC_plan-v1.md`](specs/SPEC_plan-v1.md) · Idea: [`plan-financial-assistant.md`](vision/plan-financial-assistant.md) · Ядро и `platform`: [`PLAN_game-plan-split.md`](../plans/PLAN_game-plan-split.md) · Все направления: [`../ROADMAPS.md`](../ROADMAPS.md)
 
@@ -25,7 +25,7 @@ Spec: [`SPEC_plan-v1.md`](specs/SPEC_plan-v1.md) · Idea: [`plan-financial-assis
 |------|-----|------------|--------|
 | **P0** | Рабочий прототип: весь путь чекапа на `fincore`, без БД и деплоя | — (поправка D4) | ✅ закрыт 2026-10-28 |
 | P1 | Проверка прототипа на людях: ключевые допущения idea | P0 закрыт | ⬜ кандидат, решаем после P0 |
-| P2 | Продуктовый каркас SPL-402…406: БД `plan`, вход по почте, ui-kit, CI, деплой | Pre-Alpha gate игры, SPL-302, юрист | ⬜ |
+| P2 | Продуктовый каркас SPL-402…405: БД `plan`, вход по почте, ui-kit, CI; SPL-406 — план деплоя | SPL-302 (ADR-017); юрист и решение PO — до реальных пользователей и деплоя | 🔄 |
 | P3 | Plan v1 продукт: шаги-сценарии, цели, аналитика | P2 | ⬜ |
 
 ## Границы прототипа (P0–P1)
@@ -69,28 +69,29 @@ Spec: [`SPEC_plan-v1.md`](specs/SPEC_plan-v1.md) · Idea: [`plan-financial-assis
 
 Открытый вопрос: формат сессий (модерируемые, на чьём устройстве, вводят ли люди свои цифры) — решаем после P0. Если люди вводят свои цифры, это уже обработка ПДн: до юриста — только модерируемо и без сохранения.
 
-## P2 — продуктовый каркас · после gate · ~2 н
+## P2 — продуктовый каркас · с 2026-11-02 (ADR-017) · ~2 н
 
-| ID | Срез | Skill | Done |
-|----|------|-------|------|
-| SPL-401 | [`SPEC_plan-v1.md`](specs/SPEC_plan-v1.md): шаги, сущности, метрики, рекомендации, ограничения D5 | spec-driven-development | ✅ approved 2026-10-26 |
-| SPL-402 | `apps/plan-api` на `platform`: своя БД `plan` и миграции, свои users, вход по e-mail-коду, JWT `iss=plan`; хранилище прототипа заменяется репозиторием | api-and-interface-design + TDD | e2e: регистрация → ввод → прогноз из fincore; CS-7 (токен игры → 401), CS-8 (purge) |
-| SPL-403 | `packages/ui-kit` + `packages/api-client` (npm workspaces): из MQX выносим **только** примитивы и токены | frontend-ui-engineering | game-web собирается на ui-kit, guardrails зелёные |
-| SPL-404 | `apps/plan-web`: своя тема и бренд, lab-раунд в `design-lab/plan-*` (в прототипе пропущен; исходная точка — «Бенто») | design-lab-mqx → frontend-ui-engineering | путь «ввод → обзор → первый шаг» |
-| SPL-405 | CI: фильтры по путям; изменение `fincore` или `platform` → тесты **обоих** приложений + balance diff игры | release-web | required checks |
-| SPL-406 | Деплой: два контейнера, два домена, раздельные `SECRET_KEY` и БД, бэкапы, хостинг в РФ | release-web | smoke обоих |
+| ID | Срез | Skill | Done | Статус 2026-11-02 |
+|----|------|-------|------|------|
+| SPL-401 | [`SPEC_plan-v1.md`](specs/SPEC_plan-v1.md): шаги, сущности, метрики, рекомендации, ограничения D5 | spec-driven-development | ✅ approved 2026-10-26 | ✅ |
+| SPL-402 | `apps/plan-api` на `platform`: своя БД `plan` и миграции, свои users, вход по e-mail-коду, JWT `iss=plan`; хранилище прототипа заменяется репозиторием | api-and-interface-design + TDD | e2e: регистрация → ввод → прогноз из fincore; CS-7 (токен игры → 401), CS-8 (purge) | ✅ `e7eb1be`: БД через `tvoy_platform` (SQL-миграции, SQLite в тестах), код — HMAC, TTL 10 мин, 5 попыток, лимиты; письма — в лог; 27 тестов + e2e 4/4. Разделы чекапа — JSON-документ `checkups.data_json`, а не нормализованные таблицы spec (решаем в P3-10) |
+| SPL-403 | `packages/ui-kit` + `packages/api-client` (npm workspaces): из MQX выносим **только** примитивы и токены | frontend-ui-engineering | game-web собирается на ui-kit, guardrails зелёные | 🟡 `c6177e6`: `packages/api-client` готов, plan-web на нём. **ui-kit ждёт решения PO**: plan-web на «Бенто» не использует MQX, второго потребителя примитивов нет (ADR-016 п.8) |
+| SPL-404 | `apps/plan-web`: своя тема и бренд, lab-раунд в `design-lab/plan-*` (в прототипе пропущен; исходная точка — «Бенто») | design-lab-mqx → frontend-ui-engineering | путь «ввод → обзор → первый шаг» | 🟡 раунд [`plan-checkup/bento-round`](../../design-lab/plan-checkup/bento-round/README.md): ★ отчёт C2 и лозунг U1 «Деньги отвечают» (раскладка S4) утверждены 2026-11-02 и перенесены в plan-web. Путь «ввод → обзор → первый шаг» — e2e 4/4 |
+| SPL-405 | CI: фильтры по путям; изменение `fincore` или `platform` → тесты **обоих** приложений + balance diff игры | release-web | required checks | ✅ `b510fe1`: job `changes` по путям; `packages/` и `.github/` → игра + balance diff + Plan; job `plan` с e2e. Required checks — в GitHub вручную |
+| SPL-406 | Деплой: два контейнера, два домена, раздельные `SECRET_KEY` и БД, бэкапы, хостинг в РФ | release-web | smoke обоих | 📝 только план: [`plans/PLAN_plan-deploy.md`](plans/PLAN_plan-deploy.md); выкатка — решение PO после юриста |
 
-Предусловия: Pre-Alpha gate игры; SPL-302 (`packages/platform`); юрист — согласие, политика ПДн, данные членов семьи от третьего лица, тексты правил 8–10 (open question 4 spec).
+Предусловия (ADR-017): SPL-302 (`packages/platform`) — первым срезом. Gate игры больше не нужен. **До реальных пользователей и деплоя** — юрист (согласие, политика ПДн, данные членов семьи от третьего лица, тексты правил 8–10, open question 4 spec) и отдельное решение PO. До этого — только синтетические данные, письма с кодом — в лог.
 
 ## P3 — Plan v1 продукт
 
-Шаги-сценарии (кандидат на общий `journey` с guidance игры — решаем здесь, а не раньше), цели накоплений, рекомендации, аналитика. План срезов — `plans/PLAN_plan-v1.md` в этой папке, когда начнём P3.
+Шаги-сценарии (движок шагов и онбординга — **свой**, не общий `journey` с guidance игры: решение PO 2026-11-02, P3-01), цели накоплений, рекомендации, аналитика. План срезов — [`plans/PLAN_plan-v1.md`](plans/PLAN_plan-v1.md) (P3-01…P3-14, draft 2026-11-02); код — после закрытия P2.
 
 ## Зависимости
 
 ```text
 P0 прототип ─► P1 люди (кандидат)
-[Pre-Alpha gate игры] + SPL-302 + юрист ─► SPL-402 ─► 403 ─► 404 ─► 405 ─► 406 ─► P3
+SPL-302 ─► SPL-402 ─► 403 ─► 404 ─► 405 ─► 406 (план) ─► P3
+[юрист] + [решение PO] ─► реальные пользователи, деплой 406
 ```
 
 ## Checkpoints
@@ -98,4 +99,7 @@ P0 прототип ─► P1 люди (кандидат)
 - [x] SPEC_plan-v1 approved (SPL-401, 2026-10-26)
 - [x] Поправка D4: прототип до gate (2026-10-27)
 - [x] P0 закрыт (2026-10-28)
-- [ ] Pre-Alpha gate игры + SPL-302 + юрист → старт P2
+- [x] Поправка D4: P2 без gate игры (ADR-017, 2026-11-02)
+- [x] SPL-302 → старт P2 (`bc9f554`, 2026-11-02)
+- [ ] Юрист по ПДн → реальные пользователи
+- [ ] Решение PO → деплой (SPL-406)
