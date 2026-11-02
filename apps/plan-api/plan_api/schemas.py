@@ -132,6 +132,7 @@ class InsuranceRow(BaseModel):
 
 
 class GoalRow(BaseModel):
+    id: str | None = None  # стабилен между версиями чекапа — по нему считается прогресс (P3-07)
     title: Annotated[str, Field(min_length=1, max_length=60)]
     target_amount: Money
     target_month: Month
