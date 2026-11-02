@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>ТВОЙ ПЛАН — bento-round (SPL-404)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;600;700&family=Onest:wght@400;500;600;700&display=swap" />
+  <link rel="stylesheet" href="./lab-base.css" />
+</head>
+<body>
+<main class="lab">
+  <header class="lab-head">
+    <span class="pill pill-edge" style="justify-self:start">review · не утверждено</span>
+    <h1>ТВОЙ ПЛАН — «Бенто»: отчёт и вход</h1>
+    <p>Lab-раунд SPL-404 от дизайн-системы прототипа P0 («Бенто», tokens v4). Сравниваем три порядка первого экрана отчёта на 375 px и четыре лозунга на входе. Цифры — синтетическая демо-семья, не данные людей. Тема светлая/тёмная — по системе.</p>
+  </header>
+
+  <!-- ─────────────── Отчёт: первый экран ─────────────── -->
+  <section class="lab-section">
+    <h2>1. Первый экран итогового отчёта</h2>
+    <p class="note">Spec (UI/UX): «ответ на вопрос → три шага → светофор → прогноз…». A — как в прототипе сейчас (parity), B — порядок spec буквально, C — светофор первым. Вопрос со входа: «Выдержим ли, если что-то случится?»</p>
+    <div class="frames">
+
+      <!-- A -->
+      <div class="frame">
+        <div class="frame-cap"><b>A · Прототип (parity)</b><span>Графитовая плитка-ответ, «Остаётся в месяц» и точность рядом, шаги ниже</span></div>
+        <div class="phone">
+          <div class="top"><div class="brand"><b>твой план</b><small>Чекап · ноябрь 2026</small></div><span class="pill">Итоговый</span></div>
+          <div class="tile tile-inverse">
+            <span class="eyebrow">Выдержим ли, если что-то случится?</span>
+            <div class="big">4 мес.</div>
+            <p class="muted">Столько семья продержится без крупнейшего дохода. Цель — 6 мес.: в семье ребёнок и один доход даёт 72 %.</p>
+          </div>
+          <div class="grid2">
+            <div class="tile"><span class="eyebrow muted">Остаётся в месяц</span><div class="mid">28 400 ₽</div></div>
+            <div class="tile"><span class="eyebrow muted">Точность</span><div class="mid">86 %</div><div class="precision"><span class="on"></span><span class="on"></span><span class="on"></span><span class="on"></span><span class="on"></span><span class="on"></span><span class="on"></span><span class="on"></span><span class="on"></span><span></span></div></div>
+          </div>
+          <div class="tile">
+            <div class="t-title">Три шага</div>
+            <div class="steps">
+              <div class="step next"><span class="n">1</span><div><b>Довести подушку до 540 000 ₽</b><span class="muted">25 000 ₽/мес — 8 мес.</span></div></div>
+              <div class="step"><span class="n">2</span><div><b>Гасить досрочно кредитную карту</b><span class="muted">экономия 31 200 ₽</span></div></div>
+              <div class="step"><span class="n">3</span><div><b>Проверить страхование жизни</b><span class="muted">ипотека и ребёнок</span></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- B -->
+      <div class="frame">
+        <div class="frame-cap"><b>B · Ответ → шаги → светофор (spec)</b><span>Шаги сразу под ответом; светофор — строка из 4 мини-плиток; прогноз видно без прокрутки</span></div>
+        <div class="phone">
+          <div class="top"><div class="brand"><b>твой план</b><small>Чекап · ноябрь 2026</small></div><span class="pill">Итоговый · 86 %</span></div>
+          <div class="tile tile-inverse">
+            <span class="eyebrow">Выдержим ли, если что-то случится?</span>
+            <div class="big">4 мес.</div>
+            <p class="muted">без крупнейшего дохода · цель 6 мес.</p>
+            <div class="steps">
+              <div class="step next"><span class="n">1</span><div><b>Подушка до 540 000 ₽</b><span class="muted">25 000 ₽/мес — 8 мес.</span></div></div>
+            </div>
+          </div>
+          <div class="steps">
+            <div class="step" style="background:var(--tile)"><span class="n" style="background:var(--well)">2</span><div><b>Гасить досрочно кредитную карту</b><span class="muted">экономия 31 200 ₽ · на 9 мес. раньше</span></div></div>
+            <div class="step" style="background:var(--tile)"><span class="n" style="background:var(--well)">3</span><div><b>Проверить страхование жизни</b><span class="muted">ипотека и ребёнок, полиса нет</span></div></div>
+          </div>
+          <div class="lights">
+            <div class="light tile-ok">Бюджет<i>+12 %</i></div>
+            <div class="light tile-edge">Долги<i>DTI 34 %</i></div>
+            <div class="light tile-edge">Подушка<i>4 мес.</i></div>
+            <div class="light tile-calm">Защита<i>1 флаг</i></div>
+          </div>
+          <div class="tile">
+            <div style="display:flex;justify-content:space-between;align-items:baseline"><span class="t-title">Прогноз 12 мес.</span><span class="muted">в плюсе</span></div>
+            <div class="bars"><span style="height:40%"></span><span style="height:44%"></span><span style="height:47%"></span><span style="height:52%"></span><span style="height:55%"></span><span style="height:58%"></span><span style="height:62%"></span><span style="height:66%"></span><span style="height:70%"></span><span style="height:74%"></span><span style="height:79%"></span><span style="height:84%"></span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- C -->
+      <div class="frame">
+        <div class="frame-cap"><b>C · Светофор первым</b><span>Четыре цветные плитки 2×2 — общая картина; ответ на вопрос — второй плиткой, шаги ниже</span></div>
+        <div class="phone">
+          <div class="top"><div class="brand"><b>твой план</b><small>Чекап · ноябрь 2026</small></div><span class="pill">Итоговый</span></div>
+          <div class="grid2">
+            <div class="tile tile-ok"><span class="eyebrow">Бюджет</span><div class="mid">+12 %</div><span>норма сбережений</span></div>
+            <div class="tile tile-edge"><span class="eyebrow">Долги</span><div class="mid">34 %</div><span>платежи от дохода</span></div>
+            <div class="tile tile-edge"><span class="eyebrow">Подушка</span><div class="mid">4 мес.</div><span>цель 6 мес.</span></div>
+            <div class="tile tile-calm"><span class="eyebrow">Защита</span><div class="mid">1 флаг</div><span>нет страховки жизни</span></div>
+          </div>
+          <div class="tile tile-inverse">
+            <span class="eyebrow">Выдержим ли, если что-то случится?</span>
+            <p><b>Да, 4 месяца</b> без крупнейшего дохода. Чтобы 6 — ещё 180 000 ₽ в подушку.</p>
+          </div>
+          <div class="tile">
+            <div class="t-title">С чего начать</div>
+            <div class="steps">
+              <div class="step next"><span class="n">1</span><div><b>Подушка до 540 000 ₽</b><span class="muted">25 000 ₽/мес — 8 мес.</span></div></div>
+              <div class="step"><span class="n">2</span><div><b>Гасить досрочно кредитную карту</b><span class="muted">экономия 31 200 ₽</span></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─────────────── Вход: лозунги ─────────────── -->
+  <section class="lab-section">
+    <h2>2. Вход: лозунг к «ТВОЙ ПЛАН»</h2>
+    <p class="note">Рабочий — «Финансы как есть» (зеркало игры «Финансы как игра»); кандидаты из idea (open question 4): «Финансы без тумана», «Семья в плюсе», «Финансы на ладони». Экран одинаковый — меняется только лозунг.</p>
+    <div class="frames">
+      <div class="frame"><div class="frame-cap"><b>L1 · Финансы как есть</b><span>рабочий, честная картина</span></div>
+        <div class="phone"><div class="top"><span class="mark">П</span></div>
+          <div class="tile"><span class="eyebrow muted">твой план</span><div class="slogan">Финансы как есть</div><p class="muted">Разбор семьи за вечер: где вы сейчас, что вас сломает и с чего начать.</p><div class="field">почта@пример.рф</div><button class="btn">Получить код</button></div></div></div>
+      <div class="frame"><div class="frame-cap"><b>L2 · Финансы без тумана</b><span>про ясность</span></div>
+        <div class="phone"><div class="top"><span class="mark">П</span></div>
+          <div class="tile"><span class="eyebrow muted">твой план</span><div class="slogan">Финансы без тумана</div><p class="muted">Разбор семьи за вечер: где вы сейчас, что вас сломает и с чего начать.</p><div class="field">почта@пример.рф</div><button class="btn">Получить код</button></div></div></div>
+      <div class="frame"><div class="frame-cap"><b>L3 · Семья в плюсе</b><span>про результат, тёплый</span></div>
+        <div class="phone"><div class="top"><span class="mark">П</span></div>
+          <div class="tile"><span class="eyebrow muted">твой план</span><div class="slogan">Семья в плюсе</div><p class="muted">Разбор семьи за вечер: где вы сейчас, что вас сломает и с чего начать.</p><div class="field">почта@пример.рф</div><button class="btn">Получить код</button></div></div></div>
+      <div class="frame"><div class="frame-cap"><b>L4 · Финансы на ладони</b><span>про обзор целиком</span></div>
+        <div class="phone"><div class="top"><span class="mark">П</span></div>
+          <div class="tile"><span class="eyebrow muted">твой план</span><div class="slogan">Финансы на ладони</div><p class="muted">Разбор семьи за вечер: где вы сейчас, что вас сломает и с чего начать.</p><div class="field">почта@пример.рф</div><button class="btn">Получить код</button></div></div></div>
+    </div>
+  </section>
+
+  <section class="lab-section">
+    <h2>3. Что решить</h2>
+    <div class="table-wrap">
+      <table class="compare">
+        <tr><th>Вопрос</th><th>Варианты</th><th>Рекомендация</th></tr>
+        <tr><td>Порядок первого экрана</td><td>A · B · C</td><td><b>B</b>: совпадает со spec, первый шаг виден без прокрутки на 375 px, светофор не спорит с ответом за внимание. A оставляет шаги ниже сгиба; C отвечает на вопрос, который пользователь не задавал.</td></tr>
+        <tr><td>Лозунг</td><td>L1 · L2 · L3 · L4</td><td><b>L1</b> «Финансы как есть» — пара к «Финансы как игра», обещает честность, а не результат. L3 обещает то, чего разбор не гарантирует.</td></tr>
+      </table>
+    </div>
+  </section>
+</main>
+</body>
+</html>

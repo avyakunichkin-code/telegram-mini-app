@@ -133,6 +133,13 @@
         { "label": "Настольная игра — раунд 2: логика игры (superseded)", "path": "board-game/logic-round/index.html", "kind": "lab" },
         { "label": "Настольная игра — раунд 1: направление (superseded)", "path": "board-game/direction-round/index.html", "kind": "lab" }
       ]
+    },
+    {
+      "id": "plan-product",
+      "title": "ТВОЙ ПЛАН (отдельный продукт)",
+      "items": [
+        { "label": "ТВОЙ ПЛАН · bento-round: первый экран отчёта A/B/C и лозунги (review, SPL-404)", "path": "plan-checkup/bento-round/index.html", "kind": "lab" }
+      ]
     }
   ]
 }
