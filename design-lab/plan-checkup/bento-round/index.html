@@ -1,0 +1,434 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>ТВОЙ ПЛАН — bento-round (SPL-404)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;600;700&family=Onest:wght@400;500;600;700&display=swap" />
+  <link rel="stylesheet" href="./lab-base.css" />
+</head>
+<body>
+<main class="lab">
+  <header class="lab-head">
+    <span class="pill pill-edge" style="justify-self:start">C2 утверждён · лозунг — итерация 4</span>
+    <h1>ТВОЙ ПЛАН — «Бенто»: отчёт и вход</h1>
+    <p>Lab-раунд SPL-404 от дизайн-системы прототипа P0 («Бенто», tokens v4). Сравниваем три порядка первого экрана отчёта на 375 px и четыре лозунга на входе. Цифры — синтетическая демо-семья, не данные людей. Тема светлая/тёмная — по системе.</p>
+  </header>
+
+  <!-- ─────────────── Отчёт: первый экран ─────────────── -->
+  <section class="lab-section">
+    <h2>1. Первый экран итогового отчёта</h2>
+    <p class="note">Spec (UI/UX): «ответ на вопрос → три шага → светофор → прогноз…». A — как в прототипе сейчас (parity), B — порядок spec буквально, C — светофор первым. Вопрос со входа: «Выдержим ли, если что-то случится?»</p>
+    <div class="frames">
+
+      <!-- A -->
+      <div class="frame">
+        <div class="frame-cap"><b>A · Прототип (parity)</b><span>Графитовая плитка-ответ, «Остаётся в месяц» и точность рядом, шаги ниже</span></div>
+        <div class="phone">
+          <div class="top"><div class="brand"><b>твой план</b><small>Чекап · ноябрь 2026</small></div><span class="pill">Итоговый</span></div>
+          <div class="tile tile-inverse">
+            <span class="eyebrow">Выдержим ли, если что-то случится?</span>
+            <div class="big">4 мес.</div>
+            <p class="muted">Столько семья продержится без крупнейшего дохода. Цель — 6 мес.: в семье ребёнок и один доход даёт 72 %.</p>
+          </div>
+          <div class="grid2">
+            <div class="tile"><span class="eyebrow muted">Остаётся в месяц</span><div class="mid">28 400 ₽</div></div>
+            <div class="tile"><span class="eyebrow muted">Точность</span><div class="mid">86 %</div><div class="precision"><span class="on"></span><span class="on"></span><span class="on"></span><span class="on"></span><span class="on"></span><span class="on"></span><span class="on"></span><span class="on"></span><span class="on"></span><span></span></div></div>
+          </div>
+          <div class="tile">
+            <div class="t-title">Три шага</div>
+            <div class="steps">
+              <div class="step next"><span class="n">1</span><div><b>Довести подушку до 540 000 ₽</b><span class="muted">25 000 ₽/мес — 8 мес.</span></div></div>
+              <div class="step"><span class="n">2</span><div><b>Гасить досрочно кредитную карту</b><span class="muted">экономия 31 200 ₽</span></div></div>
+              <div class="step"><span class="n">3</span><div><b>Проверить страхование жизни</b><span class="muted">ипотека и ребёнок</span></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- B -->
+      <div class="frame">
+        <div class="frame-cap"><b>B · Ответ → шаги → светофор (spec)</b><span>Шаги сразу под ответом; светофор — строка из 4 мини-плиток; прогноз видно без прокрутки</span></div>
+        <div class="phone">
+          <div class="top"><div class="brand"><b>твой план</b><small>Чекап · ноябрь 2026</small></div><span class="pill">Итоговый · 86 %</span></div>
+          <div class="tile tile-inverse">
+            <span class="eyebrow">Выдержим ли, если что-то случится?</span>
+            <div class="big">4 мес.</div>
+            <p class="muted">без крупнейшего дохода · цель 6 мес.</p>
+            <div class="steps">
+              <div class="step next"><span class="n">1</span><div><b>Подушка до 540 000 ₽</b><span class="muted">25 000 ₽/мес — 8 мес.</span></div></div>
+            </div>
+          </div>
+          <div class="steps">
+            <div class="step" style="background:var(--tile)"><span class="n" style="background:var(--well)">2</span><div><b>Гасить досрочно кредитную карту</b><span class="muted">экономия 31 200 ₽ · на 9 мес. раньше</span></div></div>
+            <div class="step" style="background:var(--tile)"><span class="n" style="background:var(--well)">3</span><div><b>Проверить страхование жизни</b><span class="muted">ипотека и ребёнок, полиса нет</span></div></div>
+          </div>
+          <div class="lights">
+            <div class="light tile-ok">Бюджет<i>+12 %</i></div>
+            <div class="light tile-edge">Долги<i>DTI 34 %</i></div>
+            <div class="light tile-edge">Подушка<i>4 мес.</i></div>
+            <div class="light tile-calm">Защита<i>1 флаг</i></div>
+          </div>
+          <div class="tile">
+            <div style="display:flex;justify-content:space-between;align-items:baseline"><span class="t-title">Прогноз 12 мес.</span><span class="muted">в плюсе</span></div>
+            <div class="bars"><span style="height:40%"></span><span style="height:44%"></span><span style="height:47%"></span><span style="height:52%"></span><span style="height:55%"></span><span style="height:58%"></span><span style="height:62%"></span><span style="height:66%"></span><span style="height:70%"></span><span style="height:74%"></span><span style="height:79%"></span><span style="height:84%"></span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- C -->
+      <div class="frame">
+        <div class="frame-cap"><b>C · Светофор первым</b><span>Четыре цветные плитки 2×2 — общая картина; ответ на вопрос — второй плиткой, шаги ниже</span></div>
+        <div class="phone">
+          <div class="top"><div class="brand"><b>твой план</b><small>Чекап · ноябрь 2026</small></div><span class="pill">Итоговый</span></div>
+          <div class="grid2">
+            <div class="tile tile-ok"><span class="eyebrow">Бюджет</span><div class="mid">+12 %</div><span>норма сбережений</span></div>
+            <div class="tile tile-edge"><span class="eyebrow">Долги</span><div class="mid">34 %</div><span>платежи от дохода</span></div>
+            <div class="tile tile-edge"><span class="eyebrow">Подушка</span><div class="mid">4 мес.</div><span>цель 6 мес.</span></div>
+            <div class="tile tile-calm"><span class="eyebrow">Защита</span><div class="mid">1 флаг</div><span>нет страховки жизни</span></div>
+          </div>
+          <div class="tile tile-inverse">
+            <span class="eyebrow">Выдержим ли, если что-то случится?</span>
+            <p><b>Да, 4 месяца</b> без крупнейшего дохода. Чтобы 6 — ещё 180 000 ₽ в подушку.</p>
+          </div>
+          <div class="tile">
+            <div class="t-title">С чего начать</div>
+            <div class="steps">
+              <div class="step next"><span class="n">1</span><div><b>Подушка до 540 000 ₽</b><span class="muted">25 000 ₽/мес — 8 мес.</span></div></div>
+              <div class="step"><span class="n">2</span><div><b>Гасить досрочно кредитную карту</b><span class="muted">экономия 31 200 ₽</span></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─────────────── Итерация 2: развитие C ─────────────── -->
+  <section class="lab-section">
+    <h2>1b. Итерация 2 — развитие C (выбор PO 2026-11-02)</h2>
+    <p class="note">Основа — C (светофор 2×2 первым). Что добавляем: C2 — график прогноза на 12 месяцев (база и «если хуже»), C3 — стресс-тесты карточками и капитал семьи, C4 — тренд в каждой плитке светофора и быстрые «а что если». Цифры те же, демо-семья.</p>
+    <div class="frames">
+
+      <!-- C2 -->
+      <div class="frame">
+        <div class="frame-cap"><b>C2 · C + график прогноза</b><span>Под светофором — две линии на 12 мес.: база и «если хуже»; ноль подписан, минус — красной зоной</span></div>
+        <div class="phone">
+          <div class="top"><div class="brand"><b>твой план</b><small>Чекап · ноябрь 2026</small></div><span class="pill">Итоговый</span></div>
+          <div class="grid2">
+            <div class="tile tile-ok"><span class="eyebrow">Бюджет</span><div class="mid">+12 %</div><span>норма сбережений</span></div>
+            <div class="tile tile-edge"><span class="eyebrow">Долги</span><div class="mid">34 %</div><span>платежи от дохода</span></div>
+            <div class="tile tile-edge"><span class="eyebrow">Подушка</span><div class="mid">4 мес.</div><span>цель 6 мес.</span></div>
+            <div class="tile tile-calm"><span class="eyebrow">Защита</span><div class="mid">1 флаг</div><span>нет страховки жизни</span></div>
+          </div>
+          <div class="tile">
+            <div class="chart-head"><span class="t-title">Деньги на счетах</span><span class="muted">12 мес.</span></div>
+            <svg class="chart" viewBox="0 0 320 140" role="img" aria-label="Прогноз: база растёт с 360 до 700 тыс. ₽, при худшем сценарии — с 300 до 410 тыс. ₽">
+              <rect class="zone-neg" x="0" y="112" width="320" height="28" />
+              <line class="zero" x1="0" y1="112" x2="320" y2="112" />
+              <text class="axis" x="4" y="108">0 ₽</text>
+              <polyline class="line-base" points="10,76 38,73 66,69 94,65 122,61 150,57 178,52 206,48 234,43 262,38 290,33 314,28" />
+              <polyline class="line-pess" points="10,84 38,84 66,83 94,82 122,81 150,80 178,79 206,77 234,76 262,74 290,73 314,71" />
+              <circle class="dot-base" cx="314" cy="28" r="4" />
+              <circle class="dot-pess" cx="314" cy="71" r="4" />
+            </svg>
+            <div class="legend"><span><i class="lg-base"></i>как сейчас · 700 тыс. ₽</span><span><i class="lg-pess"></i>если хуже · 410 тыс. ₽</span></div>
+          </div>
+          <div class="tile tile-inverse">
+            <span class="eyebrow">Выдержим ли, если что-то случится?</span>
+            <p><b>Да, 4 месяца</b> без крупнейшего дохода. Чтобы 6 — ещё 180 000 ₽ в подушку.</p>
+            <div class="step next"><span class="n">1</span><div><b>Подушка до 540 000 ₽</b><span class="muted">25 000 ₽/мес — 8 мес.</span></div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- C3 -->
+      <div class="frame">
+        <div class="frame-cap"><b>C3 · C + стресс-тесты и капитал</b><span>Ответ на вопрос раскрыт четырьмя сценариями; внизу — сколько у семьи всего (капитал) с мини-графиком</span></div>
+        <div class="phone">
+          <div class="top"><div class="brand"><b>твой план</b><small>Чекап · ноябрь 2026</small></div><span class="pill">Итоговый</span></div>
+          <div class="grid2">
+            <div class="tile tile-ok"><span class="eyebrow">Бюджет</span><div class="mid">+12 %</div></div>
+            <div class="tile tile-edge"><span class="eyebrow">Долги</span><div class="mid">34 %</div></div>
+            <div class="tile tile-edge"><span class="eyebrow">Подушка</span><div class="mid">4 мес.</div></div>
+            <div class="tile tile-calm"><span class="eyebrow">Защита</span><div class="mid">1 флаг</div></div>
+          </div>
+          <div class="tile">
+            <div class="chart-head"><span class="t-title">Если что-то случится</span><span class="muted">на 12 мес.</span></div>
+            <div class="scen">
+              <div class="sc sc-edge"><b>Потеря дохода</b><span>хватит на 4 мес.</span></div>
+              <div class="sc sc-ok"><b>Рост цен +10 %</b><span>держимся</span></div>
+              <div class="sc sc-ok"><b>Рождение ребёнка</b><span>держимся</span></div>
+              <div class="sc sc-risk"><b>Оба сразу</b><span>минус с 6-го мес.</span></div>
+            </div>
+          </div>
+          <div class="tile tile-inverse">
+            <div class="chart-head"><span class="eyebrow">Капитал семьи</span><span class="muted">за вычетом долгов</span></div>
+            <div class="big">3,1 млн ₽</div>
+            <svg class="spark" viewBox="0 0 300 40" aria-hidden="true"><polyline points="0,34 30,32 60,31 90,29 120,27 150,25 180,22 210,20 240,17 270,14 300,10" /></svg>
+            <p class="muted">через год при текущем темпе — 3,5 млн ₽</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- C4 -->
+      <div class="frame">
+        <div class="frame-cap"><b>C4 · C + тренды и «а что если»</b><span>В каждой плитке — куда идёт показатель; под ответом — переключатели сценария, ответ пересчитывается на месте</span></div>
+        <div class="phone">
+          <div class="top"><div class="brand"><b>твой план</b><small>Чекап · ноябрь 2026</small></div><span class="pill">Итоговый</span></div>
+          <div class="grid2">
+            <div class="tile tile-ok"><span class="eyebrow">Бюджет</span><div class="mid">+12 %</div><svg class="spark spark-ink" viewBox="0 0 100 24" aria-hidden="true"><polyline points="0,18 20,16 40,15 60,12 80,10 100,8" /></svg></div>
+            <div class="tile tile-edge"><span class="eyebrow">Долги</span><div class="mid">34 %</div><svg class="spark spark-ink" viewBox="0 0 100 24" aria-hidden="true"><polyline points="0,6 20,8 40,10 60,12 80,15 100,18" /></svg></div>
+            <div class="tile tile-edge"><span class="eyebrow">Подушка</span><div class="mid">4 мес.</div><svg class="spark spark-ink" viewBox="0 0 100 24" aria-hidden="true"><polyline points="0,20 20,18 40,15 60,13 80,10 100,7" /></svg></div>
+            <div class="tile tile-calm"><span class="eyebrow">Защита</span><div class="mid">1 флаг</div><span>нет страховки жизни</span></div>
+          </div>
+          <div class="tile tile-inverse">
+            <span class="eyebrow">Выдержим ли, если…</span>
+            <div class="chips">
+              <span class="chip on">уйдёт главный доход</span>
+              <span class="chip">цены +10 %</span>
+              <span class="chip">родится ребёнок</span>
+            </div>
+            <div class="big">4 мес.</div>
+            <p class="muted">столько продержимся. Цель — 6 мес.: ещё 180 000 ₽ в подушку.</p>
+          </div>
+          <div class="tile">
+            <div class="t-title">С чего начать</div>
+            <div class="steps">
+              <div class="step next"><span class="n">1</span><div><b>Подушка до 540 000 ₽</b><span class="muted">25 000 ₽/мес — 8 мес.</span></div></div>
+              <div class="step"><span class="n">2</span><div><b>Гасить досрочно кредитную карту</b><span class="muted">экономия 31 200 ₽</span></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─────────────── Вход: лозунги ─────────────── -->
+  <section class="lab-section">
+    <h2>2. Вход: лозунг к «ТВОЙ ПЛАН»</h2>
+    <p class="note">Рабочий — «Финансы как есть» (зеркало игры «Финансы как игра»); кандидаты из idea (open question 4): «Финансы без тумана», «Семья в плюсе», «Финансы на ладони». Экран одинаковый — меняется только лозунг.</p>
+    <div class="frames">
+      <div class="frame"><div class="frame-cap"><b>L1 · Финансы как есть</b><span>рабочий, честная картина</span></div>
+        <div class="phone"><div class="top"><span class="mark">П</span></div>
+          <div class="tile"><span class="eyebrow muted">твой план</span><div class="slogan">Финансы как есть</div><p class="muted">Разбор семьи за вечер: где вы сейчас, что вас сломает и с чего начать.</p><div class="field">почта@пример.рф</div><button class="btn">Получить код</button></div></div></div>
+      <div class="frame"><div class="frame-cap"><b>L2 · Финансы без тумана</b><span>про ясность</span></div>
+        <div class="phone"><div class="top"><span class="mark">П</span></div>
+          <div class="tile"><span class="eyebrow muted">твой план</span><div class="slogan">Финансы без тумана</div><p class="muted">Разбор семьи за вечер: где вы сейчас, что вас сломает и с чего начать.</p><div class="field">почта@пример.рф</div><button class="btn">Получить код</button></div></div></div>
+      <div class="frame"><div class="frame-cap"><b>L3 · Семья в плюсе</b><span>про результат, тёплый</span></div>
+        <div class="phone"><div class="top"><span class="mark">П</span></div>
+          <div class="tile"><span class="eyebrow muted">твой план</span><div class="slogan">Семья в плюсе</div><p class="muted">Разбор семьи за вечер: где вы сейчас, что вас сломает и с чего начать.</p><div class="field">почта@пример.рф</div><button class="btn">Получить код</button></div></div></div>
+      <div class="frame"><div class="frame-cap"><b>L4 · Финансы на ладони</b><span>про обзор целиком</span></div>
+        <div class="phone"><div class="top"><span class="mark">П</span></div>
+          <div class="tile"><span class="eyebrow muted">твой план</span><div class="slogan">Финансы на ладони</div><p class="muted">Разбор семьи за вечер: где вы сейчас, что вас сломает и с чего начать.</p><div class="field">почта@пример.рф</div><button class="btn">Получить код</button></div></div></div>
+    </div>
+  </section>
+
+  <!-- ─────────────── Итерация 2: лозунги про простоту ─────────────── -->
+  <section class="lab-section">
+    <h2>2b. Итерация 2 — «личные финансы — это просто»</h2>
+    <p class="note">Задача PO: с первого экрана понятно, что здесь не будет огромных таблиц — несколько ответов, и готов разбор. Под лозунгом — полоска «как это работает»: 5 вопросов → ответ, ≈ 3 минуты (это обещание spec: черновой отчёт ≤ 3 мин по медиане, быстрый старт — 5 вопросов диапазонами). S4 показывает контраст «таблица → три плитки».</p>
+    <div class="frames">
+      <div class="frame"><div class="frame-cap"><b>S1 · Финансы — это просто</b><span>прямое обещание, пара к «Финансы как игра»</span></div>
+        <div class="phone"><div class="top"><span class="mark">П</span></div>
+          <div class="tile"><span class="eyebrow muted">твой план</span><div class="slogan">Финансы — это просто</div><p class="muted">Без таблиц и формул. Ответьте на 5 вопросов — увидите, где семья сейчас и с чего начать.</p>
+            <div class="how"><span><b>5</b>вопросов</span><span><b>3</b>минуты</span><span><b>1</b>ответ</span></div>
+            <div class="field">почта@пример.рф</div><button class="btn">Начать</button></div></div></div>
+      <div class="frame"><div class="frame-cap"><b>S2 · Без таблиц. Просто ответ</b><span>называет боль — Excel — и снимает её</span></div>
+        <div class="phone"><div class="top"><span class="mark">П</span></div>
+          <div class="tile"><span class="eyebrow muted">твой план</span><div class="slogan">Без таблиц.<br />Просто ответ.</div><p class="muted">«Потянем ипотеку?», «Выдержим, если что-то случится?» — выберите вопрос и ответьте в несколько кликов.</p>
+            <div class="qlist"><span>Потянем ли ипотеку?</span><span>Когда закроем кредиты?</span><span>Выдержим, если что-то случится?</span></div>
+            <button class="btn">Задать свой вопрос</button></div></div></div>
+      <div class="frame"><div class="frame-cap"><b>S3 · Деньги семьи — в несколько кликов</b><span>про скорость; пресеты вместо ввода цифр</span></div>
+        <div class="phone"><div class="top"><span class="mark">П</span></div>
+          <div class="tile"><span class="eyebrow muted">твой план</span><div class="slogan">Деньги семьи — в несколько кликов</div><p class="muted">Не помните точно? Выберите «примерно» — этого хватит для первого разбора.</p>
+            <div class="eyebrow muted">Доход семьи в месяц</div>
+            <div class="chips chips-light"><span class="chip">до 80 тыс.</span><span class="chip on">80–150 тыс.</span><span class="chip">150–250 тыс.</span><span class="chip">больше</span></div>
+            <div class="dots"><i class="on"></i><i></i><i></i><i></i><i></i><span class="muted">1 из 5</span></div>
+            <button class="btn">Дальше</button></div></div></div>
+      <div class="frame"><div class="frame-cap"><b>S4 · Финансы как есть — и просто</b><span>рабочий лозунг + контраст «таблица → три плитки»</span></div>
+        <div class="phone"><div class="top"><span class="mark">П</span></div>
+          <div class="tile"><span class="eyebrow muted">твой план</span><div class="slogan">Финансы как есть</div><p class="muted">Вместо таблицы на сто строк — три плитки и следующий шаг.</p>
+            <div class="vs">
+              <div class="sheet" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+              <span class="arrow">→</span>
+              <div class="mini"><i class="tile-ok"></i><i class="tile-edge"></i><i class="tile-calm"></i></div>
+            </div>
+            <div class="field">почта@пример.рф</div><button class="btn">Получить разбор</button></div></div></div>
+    </div>
+  </section>
+
+  <!-- ─────────────── Итерация 3: короткий лозунг в раскладке S4 ─────────────── -->
+  <section class="lab-section">
+    <h2>2c. Итерация 3 — лозунг из 2–3 слов в раскладке S4</h2>
+    <p class="note">PO 2026-11-02: раскладка S4 нравится, лозунг — нет. Нужен короткий (2–3 слова) и ёмкий: сразу понятно, что и о чём приложение, и что это просто — без огромных таблиц. Раскладка S4 одна на все варианты, меняется только лозунг.</p>
+    <div class="frames">
+      <div class="frame"><div class="frame-cap"><b>T1 · Финансы в двух словах</b><span>Пара к игре: «Финансы как игра» ↔ «Финансы в двух словах». Сам лозунг — обещание краткости: длинное не нужно.</span></div>
+        <div class="phone"><div class="top"><span class="mark">П</span></div>
+          <div class="tile"><span class="eyebrow muted">твой план</span><div class="slogan">Финансы в двух словах</div><p class="muted">Вместо таблицы на сто строк — три плитки и следующий шаг.</p>
+            <div class="vs">
+              <div class="sheet" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+              <span class="arrow">→</span>
+              <div class="mini"><i class="tile-ok"></i><i class="tile-edge"></i><i class="tile-calm"></i></div>
+            </div>
+            <div class="field">почта@пример.рф</div><button class="btn">Получить разбор</button></div></div></div>
+      <div class="frame"><div class="frame-cap"><b>T2 · Деньги по полочкам</b><span>Конкретная картинка: был хаос — стало разложено. Сразу ясно, о чём (деньги) и как (порядок без усилий).</span></div>
+        <div class="phone"><div class="top"><span class="mark">П</span></div>
+          <div class="tile"><span class="eyebrow muted">твой план</span><div class="slogan">Деньги по полочкам</div><p class="muted">Вместо таблицы на сто строк — три плитки и следующий шаг.</p>
+            <div class="vs">
+              <div class="sheet" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+              <span class="arrow">→</span>
+              <div class="mini"><i class="tile-ok"></i><i class="tile-edge"></i><i class="tile-calm"></i></div>
+            </div>
+            <div class="field">почта@пример.рф</div><button class="btn">Получить разбор</button></div></div></div>
+      <div class="frame"><div class="frame-cap"><b>T3 · Без таблиц</b><span>Два слова, называет врага прямо — тот самый Excel на сто строк. Работает в паре с картинкой S4.</span></div>
+        <div class="phone"><div class="top"><span class="mark">П</span></div>
+          <div class="tile"><span class="eyebrow muted">твой план</span><div class="slogan">Без таблиц</div><p class="muted">Вместо таблицы на сто строк — три плитки и следующий шаг.</p>
+            <div class="vs">
+              <div class="sheet" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+              <span class="arrow">→</span>
+              <div class="mini"><i class="tile-ok"></i><i class="tile-edge"></i><i class="tile-calm"></i></div>
+            </div>
+            <div class="field">почта@пример.рф</div><button class="btn">Получить разбор</button></div></div></div>
+      <div class="frame"><div class="frame-cap"><b>T4 · Ясно за вечер</b><span>Скорость и результат: один вечер — и понятно, где семья. Совпадает с обещанием spec «разбор за вечер».</span></div>
+        <div class="phone"><div class="top"><span class="mark">П</span></div>
+          <div class="tile"><span class="eyebrow muted">твой план</span><div class="slogan">Ясно за вечер</div><p class="muted">Вместо таблицы на сто строк — три плитки и следующий шаг.</p>
+            <div class="vs">
+              <div class="sheet" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+              <span class="arrow">→</span>
+              <div class="mini"><i class="tile-ok"></i><i class="tile-edge"></i><i class="tile-calm"></i></div>
+            </div>
+            <div class="field">почта@пример.рф</div><button class="btn">Получить разбор</button></div></div></div>
+      <div class="frame"><div class="frame-cap"><b>T5 · Финансы короче</b><span>Разговорное «короче»: и «кратко», и «по сути». Дерзко, запоминается; риск — звучит небрежно для 35+.</span></div>
+        <div class="phone"><div class="top"><span class="mark">П</span></div>
+          <div class="tile"><span class="eyebrow muted">твой план</span><div class="slogan">Финансы короче</div><p class="muted">Вместо таблицы на сто строк — три плитки и следующий шаг.</p>
+            <div class="vs">
+              <div class="sheet" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+              <span class="arrow">→</span>
+              <div class="mini"><i class="tile-ok"></i><i class="tile-edge"></i><i class="tile-calm"></i></div>
+            </div>
+            <div class="field">почта@пример.рф</div><button class="btn">Получить разбор</button></div></div></div>
+      <div class="frame"><div class="frame-cap"><b>T6 · Пять ответов — план</b><span>Механика в лозунге: ответили на 5 вопросов — получили ТВОЙ ПЛАН. Имя продукта дочитывает фразу.</span></div>
+        <div class="phone"><div class="top"><span class="mark">П</span></div>
+          <div class="tile"><span class="eyebrow muted">твой план</span><div class="slogan">Пять ответов — план</div><p class="muted">Вместо таблицы на сто строк — три плитки и следующий шаг.</p>
+            <div class="vs">
+              <div class="sheet" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+              <span class="arrow">→</span>
+              <div class="mini"><i class="tile-ok"></i><i class="tile-edge"></i><i class="tile-calm"></i></div>
+            </div>
+            <div class="field">почта@пример.рф</div><button class="btn">Получить разбор</button></div></div></div>
+      <div class="frame"><div class="frame-cap"><b>T7 · Просто о деньгах</b><span>Спокойный тон без жаргона и запугивания (spec UI/UX). Надёжный, но менее отличимый.</span></div>
+        <div class="phone"><div class="top"><span class="mark">П</span></div>
+          <div class="tile"><span class="eyebrow muted">твой план</span><div class="slogan">Просто о деньгах</div><p class="muted">Вместо таблицы на сто строк — три плитки и следующий шаг.</p>
+            <div class="vs">
+              <div class="sheet" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+              <span class="arrow">→</span>
+              <div class="mini"><i class="tile-ok"></i><i class="tile-edge"></i><i class="tile-calm"></i></div>
+            </div>
+            <div class="field">почта@пример.рф</div><button class="btn">Получить разбор</button></div></div></div>
+      <div class="frame"><div class="frame-cap"><b>T8 · Счёт без счётов</b><span>Игра слов: считаем за вас — без счётов, калькуляторов и таблиц. Самый креативный; требует секунды на «щелчок».</span></div>
+        <div class="phone"><div class="top"><span class="mark">П</span></div>
+          <div class="tile"><span class="eyebrow muted">твой план</span><div class="slogan">Счёт без счётов</div><p class="muted">Вместо таблицы на сто строк — три плитки и следующий шаг.</p>
+            <div class="vs">
+              <div class="sheet" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+              <span class="arrow">→</span>
+              <div class="mini"><i class="tile-ok"></i><i class="tile-edge"></i><i class="tile-calm"></i></div>
+            </div>
+            <div class="field">почта@пример.рф</div><button class="btn">Получить разбор</button></div></div></div>
+    </div>
+  </section>
+
+  <!-- ─────────────── Итерация 4: лозунг заново ─────────────── -->
+  <section class="lab-section">
+    <h2>2d. Итерация 4 — лозунг заново («попробуй ещё раз», PO 2026-11-02)</h2>
+    <p class="note">Ушли от конструкции «Финансы + …»: она звучит как учебник. Новые направления — деньги, которые отвечают на вопрос (это и есть механика входа), цифры обычным языком вместо таблиц, ясность за пару кликов. 2–3 слова, раскладка S4.</p>
+    <div class="frames">
+      <div class="frame"><div class="frame-cap"><b>U1 · Деньги отвечают</b><span>Персонификация и сама механика: вы задаёте вопрос («потянем ипотеку?») — деньги отвечают. Два слова, ни на что не похоже.</span></div>
+        <div class="phone"><div class="top"><span class="mark">П</span></div>
+          <div class="tile"><span class="eyebrow muted">твой план</span><div class="slogan">Деньги отвечают</div><p class="muted">Вместо таблицы на сто строк — три плитки и следующий шаг.</p>
+            <div class="vs">
+              <div class="sheet" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+              <span class="arrow">→</span>
+              <div class="mini"><i class="tile-ok"></i><i class="tile-edge"></i><i class="tile-calm"></i></div>
+            </div>
+            <div class="field">почта@пример.рф</div><button class="btn">Получить разбор</button></div></div></div>
+      <div class="frame"><div class="frame-cap"><b>U2 · Спроси у денег</b><span>То же, но призывом к действию: человек сразу понимает, что делать первым кликом — задать свой вопрос.</span></div>
+        <div class="phone"><div class="top"><span class="mark">П</span></div>
+          <div class="tile"><span class="eyebrow muted">твой план</span><div class="slogan">Спроси у денег</div><p class="muted">Вместо таблицы на сто строк — три плитки и следующий шаг.</p>
+            <div class="vs">
+              <div class="sheet" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+              <span class="arrow">→</span>
+              <div class="mini"><i class="tile-ok"></i><i class="tile-edge"></i><i class="tile-calm"></i></div>
+            </div>
+            <div class="field">почта@пример.рф</div><button class="btn">Получить разбор</button></div></div></div>
+      <div class="frame"><div class="frame-cap"><b>U3 · Цифры по-человечески</b><span>Самый прямой удар по Excel: никаких формул и жаргона, ваши цифры — обычным языком.</span></div>
+        <div class="phone"><div class="top"><span class="mark">П</span></div>
+          <div class="tile"><span class="eyebrow muted">твой план</span><div class="slogan">Цифры по-человечески</div><p class="muted">Вместо таблицы на сто строк — три плитки и следующий шаг.</p>
+            <div class="vs">
+              <div class="sheet" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+              <span class="arrow">→</span>
+              <div class="mini"><i class="tile-ok"></i><i class="tile-edge"></i><i class="tile-calm"></i></div>
+            </div>
+            <div class="field">почта@пример.рф</div><button class="btn">Получить разбор</button></div></div></div>
+      <div class="frame"><div class="frame-cap"><b>U4 · Сразу ясно</b><span>Два слова, обещание скорости и ясности. Короче некуда; риск — не говорит, что речь о деньгах (это сделает подзаголовок).</span></div>
+        <div class="phone"><div class="top"><span class="mark">П</span></div>
+          <div class="tile"><span class="eyebrow muted">твой план</span><div class="slogan">Сразу ясно</div><p class="muted">Вместо таблицы на сто строк — три плитки и следующий шаг.</p>
+            <div class="vs">
+              <div class="sheet" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+              <span class="arrow">→</span>
+              <div class="mini"><i class="tile-ok"></i><i class="tile-edge"></i><i class="tile-calm"></i></div>
+            </div>
+            <div class="field">почта@пример.рф</div><button class="btn">Получить разбор</button></div></div></div>
+      <div class="frame"><div class="frame-cap"><b>U5 · План без таблиц</b><span>Дочитывает имя продукта: ТВОЙ ПЛАН — и без таблиц. Называет врага и не оставляет вопросов, о чём приложение.</span></div>
+        <div class="phone"><div class="top"><span class="mark">П</span></div>
+          <div class="tile"><span class="eyebrow muted">твой план</span><div class="slogan">План без таблиц</div><p class="muted">Вместо таблицы на сто строк — три плитки и следующий шаг.</p>
+            <div class="vs">
+              <div class="sheet" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+              <span class="arrow">→</span>
+              <div class="mini"><i class="tile-ok"></i><i class="tile-edge"></i><i class="tile-calm"></i></div>
+            </div>
+            <div class="field">почта@пример.рф</div><button class="btn">Получить разбор</button></div></div></div>
+      <div class="frame"><div class="frame-cap"><b>U6 · Деньги на виду</b><span>Вся картина семьи — одним взглядом: доходы, долги, подушка. Спокойный, без обещаний результата.</span></div>
+        <div class="phone"><div class="top"><span class="mark">П</span></div>
+          <div class="tile"><span class="eyebrow muted">твой план</span><div class="slogan">Деньги на виду</div><p class="muted">Вместо таблицы на сто строк — три плитки и следующий шаг.</p>
+            <div class="vs">
+              <div class="sheet" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+              <span class="arrow">→</span>
+              <div class="mini"><i class="tile-ok"></i><i class="tile-edge"></i><i class="tile-calm"></i></div>
+            </div>
+            <div class="field">почта@пример.рф</div><button class="btn">Получить разбор</button></div></div></div>
+      <div class="frame"><div class="frame-cap"><b>U7 · Пара кликов — ясность</b><span>Механика в цифрах: мало действий — понятный итог. Тире даёт ритм «действие → результат».</span></div>
+        <div class="phone"><div class="top"><span class="mark">П</span></div>
+          <div class="tile"><span class="eyebrow muted">твой план</span><div class="slogan">Пара кликов — ясность</div><p class="muted">Вместо таблицы на сто строк — три плитки и следующий шаг.</p>
+            <div class="vs">
+              <div class="sheet" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+              <span class="arrow">→</span>
+              <div class="mini"><i class="tile-ok"></i><i class="tile-edge"></i><i class="tile-calm"></i></div>
+            </div>
+            <div class="field">почта@пример.рф</div><button class="btn">Получить разбор</button></div></div></div>
+      <div class="frame"><div class="frame-cap"><b>U8 · Просто о сложном</b><span>Знакомая формула, понятна мгновенно. Надёжная, но наименее отличимая — запасной вариант.</span></div>
+        <div class="phone"><div class="top"><span class="mark">П</span></div>
+          <div class="tile"><span class="eyebrow muted">твой план</span><div class="slogan">Просто о сложном</div><p class="muted">Вместо таблицы на сто строк — три плитки и следующий шаг.</p>
+            <div class="vs">
+              <div class="sheet" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+              <span class="arrow">→</span>
+              <div class="mini"><i class="tile-ok"></i><i class="tile-edge"></i><i class="tile-calm"></i></div>
+            </div>
+            <div class="field">почта@пример.рф</div><button class="btn">Получить разбор</button></div></div></div>
+    </div>
+  </section>
+
+  <section class="lab-section">
+    <h2>3. Что решить</h2>
+    <div class="table-wrap">
+      <table class="compare">
+        <tr><th>Вопрос</th><th>Варианты</th><th>Рекомендация</th></tr>
+        <tr><td>Порядок первого экрана</td><td>A · B · C → C2–C4</td><td><b>Утверждено: C2</b> (PO, 2026-11-02) — светофор 2×2 → график прогноза → ответ с шагами. Перенесено в <code>apps/plan-web</code>. C3 и C4 — кандидаты в P3.</td></tr>
+        <tr><td>Лозунг</td><td>L1–L4 · S1–S4 → раскладка <b>S4</b> (PO) · T1–T8 → <b>U1–U8</b></td><td><b>U1 «Деньги отвечают»</b> — объясняет механику (задал вопрос — получил ответ) и запоминается; вместе с именем: «ТВОЙ ПЛАН. Деньги отвечают.» Если важнее прямо сказать «без Excel» — <b>U3 «Цифры по-человечески»</b>.</td></tr>
+      </table>
+    </div>
+  </section>
+</main>
+</body>
+</html>

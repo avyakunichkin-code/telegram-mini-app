@@ -198,6 +198,7 @@ export function LineChart({ series, height = 180, compact = false }) {
       aria-label={series.map((s) => `${s.name}: от ${rub(Math.min(...s.points.map((p) => p.liquid)))} до ${rub(Math.max(...s.points.map((p) => p.liquid)))}`).join('; ')}>
       {cells.map((cy) => <line key={cy} x1={0} x2={W} y1={cy} y2={cy} className="chart-cell" />)}
       {band && <polygon className="chart-band" points={band} />}
+      {!compact && <rect className="chart-neg" x={0} y={y(0)} width={W} height={Math.max(0, H - y(0))} />}
       <line x1={0} x2={W} y1={y(0)} y2={y(0)} className="chart-zero" />
       {series.map((s) => (
         <polyline key={s.name} className={`chart-line tone-${s.tone}`} points={line(s)} />

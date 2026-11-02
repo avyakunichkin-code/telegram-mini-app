@@ -43,17 +43,15 @@ export default function Auth({ meta, onLoggedIn }) {
 
   return (
     <div className="hero">
+      {/* ★ U1 + раскладка S4 (design-lab/plan-checkup/bento-round, утверждено 2026-11-02) */}
       <div className="hero-copy">
-        <h1>Финансы как есть</h1>
-        <p className="lead">
-          Внесите деньги семьи — доходы, расходы, кредиты и накопления — и получите честный разбор:
-          где вы сейчас, что может сломать бюджет и с какого шага начать.
-        </p>
-        <ul className="ticks">
-          <li>Прогноз на 12 месяцев и стресс-тест: потеря дохода, ребёнок, рост цен</li>
-          <li>Можно отвечать «примерно от–до» — уточните потом</li>
-          <li>Три конкретных шага с объяснением «почему»</li>
-        </ul>
+        <h1>Деньги отвечают</h1>
+        <p className="lead">Вместо таблицы на сто строк — три плитки и следующий шаг.</p>
+        <div className="vs" aria-hidden="true">
+          <div className="sheet">{Array.from({ length: 18 }, (_, i) => <i key={i} />)}</div>
+          <span className="arrow">→</span>
+          <div className="mini"><i className="area-green" /><i className="area-yellow" /><i className="mini-calm" /></div>
+        </div>
       </div>
       <form className="card auth" onSubmit={stage === 'email' ? send : verify}>
         {stage === 'email' ? (
@@ -70,7 +68,7 @@ export default function Auth({ meta, onLoggedIn }) {
           <>
             <h2>Код из письма</h2>
             {devCode && (
-              <p className="stub">Прототип: письма не отправляются. Ваш код — <b>{devCode}</b></p>
+              <p className="stub">Тестовый стенд: письма не отправляются. Ваш код — <b>{devCode}</b></p>
             )}
             <label className="field">
               <span className="field-label">6 цифр</span>

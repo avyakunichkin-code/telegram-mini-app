@@ -16,12 +16,12 @@ aliases:
 | Направление | Цель сейчас | Роадмап | Документы |
 |-------------|-------------|---------|-----------|
 | **Game** — «ТВОЙ ХОД», игра по финансовой грамотности | Pre-Alpha gate: «можно звать людей». P0 — 10 из 10 по коду (2026-11-02: required checks на `main`, PR-04); дальше P1: волна 10–20 (PR-16), победа: калибровка A (PR #16) и два акта — план [`PLAN_victory-acts`](plans/PLAN_victory-acts.md) (DRAFT), хвост GO-02…05. Дизайн: ★ «Чернильный край» и маскоты ink утверждены 2026-11-02 (`design-lab/board-game/APPROVED.md`); дальше — снять переключатель classic и перенести новых маскотов в prod | [`plans/PLAN_production-ready.md`](plans/PLAN_production-ready.md) (P0–P2 до α) · дальний горизонт — [`vision/GAME_DESIGN_ROADMAP_2026.md`](vision/GAME_DESIGN_ROADMAP_2026.md) · приоритеты — [`backlog/PRODUCT_BACKLOG.md`](backlog/PRODUCT_BACKLOG.md) | весь `docs/`, кроме `docs/plan/`; канон — [`foundation/SPEC_PRODUCT.md`](foundation/SPEC_PRODUCT.md) |
-| **Plan** — «ТВОЙ ПЛАН», семейный финансовый чекап | Рабочий прототип: P0 закрыт 2026-10-28 (дизайн-система прототипа — «Бенто»), дальше — решение по P1 (проверка на людях) | [`plan/ROADMAP.md`](plan/ROADMAP.md) | [`plan/`](plan/README.md) |
-| **Ядро** — `packages/fincore`, `packages/platform` | Фазы 0–2 ✅ (fincore, SPL-101…208); `platform` (SPL-301/302) — после P0 игры, предусловия PR-05/PR-08 выполнены | [`plans/PLAN_game-plan-split.md`](plans/PLAN_game-plan-split.md) (фазы 0–3) | [ADR-016](decisions/ADR-016-two-products-shared-fincore.md), [`packages/fincore/README.md`](../packages/fincore/README.md) |
+| **Plan** — «ТВОЙ ПЛАН», семейный финансовый чекап | Продуктовый каркас P2 (с 2026-11-02, [ADR-017](decisions/ADR-017-plan-p2-without-game-gate.md)): `platform`, БД `plan`, вход, ui-kit, CI; P0 закрыт 2026-10-28 | [`plan/ROADMAP.md`](plan/ROADMAP.md) | [`plan/`](plan/README.md) |
+| **Ядро** — `packages/fincore`, `packages/platform` | Фазы 0–2 ✅ (fincore, SPL-101…208); `platform`: SPL-302 ✅ 2026-11-02 (аддитивно, потребитель — plan-api); SPL-301 (игра на `platform`) ⬜ | [`plans/PLAN_game-plan-split.md`](plans/PLAN_game-plan-split.md) (фазы 0–3) | [ADR-016](decisions/ADR-016-two-products-shared-fincore.md), [`packages/fincore/README.md`](../packages/fincore/README.md) |
 
 ## Как направления связаны
 
-- **Game → Plan:** продуктовые этапы Plan (P2+) ждут Pre-Alpha gate игры. Прототип Plan (P0–P1) gate не ждёт, но и не трогает `backend/` и `frontend-react/` (D4, ред. 2026-10-27).
+- **Game → Plan:** с 2026-11-02 продуктовый каркас Plan (P2) gate игры не ждёт ([ADR-017](decisions/ADR-017-plan-p2-without-game-gate.md), поправка D4). Plan не импортирует и не меняет `backend/` и `frontend-react/`, кроме выноса примитивов MQX в `packages/ui-kit` (SPL-403) с зелёными проверками игры. Реальные пользователи и деплой Plan — после юриста по ПДн и решения PO.
 - **Ядро → оба:** изменение `fincore` проверяется golden-тестами и balance diff игры; Plan добавляет в ядро только аддитивные поля.
 - **Plan → Ядро:** `platform` (JWT, БД, health) нужен Plan в P2 (SPL-402), поэтому SPL-302 — предусловие P2.
 
