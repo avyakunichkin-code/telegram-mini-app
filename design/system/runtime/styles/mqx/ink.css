@@ -2,6 +2,8 @@
  * Стиль «Чернильный край» (необрутализм A) — слой поверх ★ BG-1…BG-3.
  * Lab: design-lab/board-game/neobrutal-a-round/ (K1, сегмент-шов, чипы и реплика без обводки).
  * Включается <html data-mqx-style="ink"> (utils/mqxStyle.js); без атрибута — прежний вид.
+ * Доработка 2026-11-02 по ink-decision-round: обводка — у главной карты экрана и нажимаемого,
+ * информация (потребности, деньги на Главной, «Остаётся после хода», метрики) — без обводки.
  *
  * Правило: чернильная тень — у того, что нажимается (нажатие вдавливает фишку в поле);
  * цветная тень — у главной карты экрана, одна на экран (ход и событие — фиолетовая, финиш — золотая);
@@ -35,7 +37,6 @@
     .mqx-bg-events,
     .mqx-bg-act,
     .mqx-bg-salary--hot,
-    .mqx-bg-money__cell--action,
     .mqx-cap-flow,
     .mqx-cap-piece,
     .mqx-cap-lot-act,
@@ -56,7 +57,6 @@
     .mqx-bg-events,
     .mqx-bg-act,
     .mqx-bg-salary--hot,
-    .mqx-bg-money__cell--action,
     .mqx-cap-flows .mqx-cap-flow,
     .mqx-cap-pieces .mqx-cap-piece,
     .mqx-cap-lot-act,
@@ -112,35 +112,8 @@
   box-shadow: var(--mq-ink-off) var(--mq-ink-off) 0 var(--mq-ink-drop);
 }
 
-/* Потребности: шкала в чернильном крае */
-:root[data-mqx-style='ink'] .mqx-bg-need .mqx-progress.mqx-bg-need__bar {
-  height: 12px;
-  box-sizing: border-box;
-  border: var(--mq-ink-w) solid var(--mq-ink-line);
-  background: var(--mq-cell);
-}
-
-:root[data-mqx-style='ink'] .mqx-bg-need .mqx-progress .mqx-progress__fill {
-  border-radius: 0;
-  box-shadow: var(--mq-ink-w) 0 0 var(--mq-ink-line);
-}
-
-/* Деньги: плитки — край без тени; ведущая в «Капитал» — нажимается */
-/* Три плитки в ряд: узкий боковой отступ, иначе «›» у подписи уходит на вторую строку */
-:root[data-mqx-style='ink'] .mqx-bg-money__cell {
-  padding: var(--mq-sp-3);
-  border: var(--mq-ink-w) solid var(--mq-ink-line);
-  border-radius: var(--mq-r-cell);
-  background: var(--mq-cell);
-}
-
-:root[data-mqx-style='ink'] .mqx-bg-money__cell--action {
-  box-shadow: var(--mq-ink-off) var(--mq-ink-off) 0 var(--mq-ink-drop);
-}
-
-:root[data-mqx-style='ink'] .mqx-bg-money__avatar {
-  border: var(--mq-ink-w) solid var(--mq-ink-line);
-}
+/* Потребности, «На счёте», доходы / расходы / подушка — без обводки: информация, а не фишки
+   (решение PO 2026-11-02 по ink-decision-round). Обводка — у карты хода, цели, действий и таббара. */
 
 /* Цель — свёрнутая фишка */
 :root[data-mqx-style='ink'] .mqx-bg-goal {
@@ -208,6 +181,32 @@
   color: var(--mq-turn-on);
 }
 
+/* ================= Подсказка онбординга ================= */
+
+/* Лежит на линии таббара и закрывает её: по ширине как таббар, внизу заходит на 2 px линии,
+   сверху — своя чернильная линия, как у листов. Решение PO 2026-11-02. */
+:root[data-mqx-style='ink'] .mqx-guidance-strip {
+  left: 0;
+  right: 0;
+  bottom: calc(var(--mqx-tabbar-measured, var(--tma-tabbar-inset, 64px)) - var(--mq-ink-w));
+  border: 0;
+  border-top: var(--mq-ink-w) solid var(--mq-ink-line);
+  border-radius: var(--mq-r-card) var(--mq-r-card) 0 0;
+  box-shadow: none;
+}
+
+/* Карусель затемняет весь экран вместе с таббаром — подсказка прижата к низу, карта над ней */
+:root[data-mqx-style='ink'] body:has(.events-overlay-root) .mqx-guidance-strip {
+  bottom: 0;
+}
+
+:root[data-mqx-style='ink'] .events-overlay-root {
+  padding-bottom: max(
+    calc(12px + env(safe-area-inset-bottom, 0px)),
+    calc(var(--mqx-guidance-strip-offset, 0px) + 4px)
+  );
+}
+
 /* ================= Капитал ================= */
 
 :root[data-mqx-style='ink'] .mqx-cap-flows .mqx-cap-flow {
@@ -220,10 +219,11 @@
   background: var(--mq-turn-soft);
 }
 
-:root[data-mqx-style='ink'] .mqx-cap-flows__breakdown,
-:root[data-mqx-style='ink'] .mqx-cap-net {
+:root[data-mqx-style='ink'] .mqx-cap-flows__breakdown {
   border: var(--mq-ink-w) solid var(--mq-ink-line);
 }
+
+/* «Остаётся после хода» — итог, не фишка: без обводки (как на Главной) */
 
 /* Шапка вкладки — как у Аналитики (★ BG-3, .mqx-an-head): без фиолетовой плашки и свечения,
    заголовок и подпись чернилами прямо на поле, без логотипа; справа фишка хода */
@@ -364,21 +364,16 @@
   box-shadow: var(--mq-ink-off) var(--mq-ink-off) 0 var(--mq-turn);
 }
 
-/* Полоса — цвет карты, чтобы фиолетовый чип не терялся на фиолетовой подложке */
-:root[data-mqx-style='ink'] .mqx-events-card__band {
-  border-bottom: var(--mq-ink-w) solid var(--mq-ink-line);
-  background: var(--mq-cell);
-}
-
+/* Полоса — цвет домена, как в classic, без линии под ней (одна рамка — у карты);
+   чип — белая заливка без обводки, чтобы не терялся на цветной полосе */
 :root[data-mqx-style='ink'] .mqx-events-domain-pill {
   border: 0;
   border-radius: var(--mq-r-s);
-  background: var(--mq-turn-soft);
+  background: var(--mq-cell);
   color: var(--mq-turn);
 }
 
 :root[data-mqx-style='ink'] .mqx-events-domain-pill--insurance {
-  background: var(--mq-gain-soft);
   color: var(--mq-gain);
 }
 
@@ -731,14 +726,77 @@
   color: var(--mq-board);
 }
 
+/* ================= Итог хода ================= */
+
+/* «На счёте» — главная карта экрана: клетка поля с чернильным краем и золотой тенью (награда хода) */
+:root[data-mqx-style='ink'] .mqx-juice-ritual__balance {
+  border: var(--mq-ink-w) solid var(--mq-ink-line);
+  border-radius: var(--mq-r-card);
+  background: var(--mq-cell);
+  color: var(--mq-board-ink);
+  box-shadow: var(--mq-ink-off) var(--mq-ink-off) 0 var(--mq-coin);
+}
+
+:root[data-mqx-style='ink'] .mqx-juice-ritual__balance-delta--pos {
+  color: var(--mq-gain);
+}
+
+:root[data-mqx-style='ink'] .mqx-juice-ritual__balance-delta--neg {
+  color: var(--mq-danger);
+}
+
+/* Списания — информация: без рамки, строки на поле экрана */
+:root[data-mqx-style='ink'] .mqx-juice-ritual__detail-list {
+  border: 0;
+}
+
+:root[data-mqx-style='ink'] .mqx-juice-ritual__dismiss {
+  border: var(--mq-ink-w) solid var(--mq-ink-line);
+  border-radius: var(--mq-r-cell);
+  box-shadow: var(--mq-ink-off) var(--mq-ink-off) 0 var(--mq-ink-drop);
+}
+
+:root[data-mqx-style='ink'] .mqx-juice-ritual__dismiss:active {
+  transform: translate(var(--mq-ink-off), var(--mq-ink-off));
+  box-shadow: 0 0 0 var(--mq-ink-drop);
+}
+
+/* ================= Аналитика ================= */
+
+/* «Счёт и подушка» — главная карта экрана; метрики, график и подсказка — информация, без рамок */
+:root[data-mqx-style='ink'] .mqx-an-state {
+  border: var(--mq-ink-w) solid var(--mq-ink-line);
+  box-shadow: var(--mq-ink-off) var(--mq-ink-off) 0 var(--mq-turn);
+}
+
+/* ================= Меню (в партии) ================= */
+
+/* Только вкладка Меню (.mqx-tab-page); экраны до партии (.mqx-pg) — прежний ★ BG-2 */
+:root[data-mqx-style='ink'] .mqx-tab-page .mqx-pg-save {
+  border: var(--mq-ink-w) solid var(--mq-ink-line);
+  box-shadow: var(--mq-ink-off) var(--mq-ink-off) 0 var(--mq-turn);
+}
+
+:root[data-mqx-style='ink'] .mqx-tab-page .mqx-bg-btn.mqx-pg-btn {
+  border: var(--mq-ink-w) solid var(--mq-ink-line);
+  box-shadow: var(--mq-ink-off) var(--mq-ink-off) 0 var(--mq-ink-drop);
+  transition:
+    transform var(--mq-dur-press) var(--mq-ease-standard),
+    box-shadow var(--mq-dur-press) var(--mq-ease-standard);
+}
+
+:root[data-mqx-style='ink'] .mqx-tab-page .mqx-bg-btn.mqx-pg-btn:active:not(:disabled) {
+  transform: translate(var(--mq-ink-off), var(--mq-ink-off));
+  box-shadow: 0 0 0 var(--mq-ink-drop);
+}
+
 @media (prefers-reduced-motion: reduce) {
   :root[data-mqx-style='ink'] :is(
       .mqx-bg-cta,
       .mqx-bg-events,
       .mqx-bg-act,
       .mqx-bg-salary--hot,
-      .mqx-bg-money__cell--action,
-      .mqx-cap-flows .mqx-cap-flow,
+        .mqx-cap-flows .mqx-cap-flow,
       .mqx-cap-pieces .mqx-cap-piece,
       .mqx-cap-lot-act,
       button.mqx-events-choice,
@@ -746,7 +804,9 @@
       .mqx-sheet__close,
       .mqx-sheet .mqx-invest-form__submit,
       .mqx-sheet .mqx-row-action:has(.mqx-row-action__verb),
-      .mqx-confirm-dialog .mqx-btn
+      .mqx-confirm-dialog .mqx-btn,
+      .mqx-juice-ritual__dismiss,
+      .mqx-tab-page .mqx-bg-btn.mqx-pg-btn
     ):active:not(:disabled) {
     transform: none;
   }
