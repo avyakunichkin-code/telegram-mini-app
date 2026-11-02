@@ -24,6 +24,12 @@ aliases:
 
 **Эпик:** PR-18 (spec + sim) → PR-21 (внедрение) в [`PLAN_production-ready`](PLAN_production-ready.md).  
 **Spec:** [`SPEC_victory-acts.md`](../specs/features/SPEC_victory-acts.md) — **DRAFT**. Спека и калибровка A приходят с PR #16 (`feat/victory-calibration-a`). До merge PR #16 ссылка на спеку в `main` не открывается.  
+**Исходные данные:** ветка PR #16 на `e383ef5`; эталоны — `292fd7e`, коммит `e383ef5` их не менял.
+
+- Акт 1 = цепочка калибровки A: «Студент» (`basic`) — 5 шагов, взрослые шаблоны — 6 шагов (со страховкой).
+- Последний шаг — `passive_income_monthly_min` по `PASSIVE_INCOME_GOAL_BY_TEMPLATE` (basic 2 500, tight_budget 6 000, mortgage_stress 30 000, debt_stack 22 000 ₽ за ход); финала `cash_10m` нет.
+- `action_once` для вклада, облигации и полиса — «было хоть раз» (`deposit_ever_opened`, `bond_ever_bought`, `insurance_ever_purchased` в снимке).
+
 **Статус плана:** DRAFT, только план. **Код не начинать**, пока PO не скажет APPROVED по спеке и этому плану (решение PO 2026-11-01: «C как цель, временно A»).  
 **После утверждения:** `incremental-implementation` по задачам ниже; экономические срезы ведёт primary `game-economy-and-victory`.
 
