@@ -1,4 +1,5 @@
-// Клиент plan-api (прототип). Формат ошибок: { error: { code, message } }.
+// Клиент plan-api поверх общего @tvoy/api-client (SPL-403). Формат ошибок: { error: { code, message } }.
+import { createApiClient } from '@tvoy/api-client'
 
 const TOKEN_KEY = 'plan.token'
 
@@ -19,33 +20,9 @@ export function setToken(token) {
   }
 }
 
-export class ApiError extends Error {
-  constructor(status, code, message) {
-    super(message)
-    this.status = status
-    this.code = code
-  }
-}
+export { ApiError } from '@tvoy/api-client'
 
-async function call(method, path, body, headers = {}) {
-  const token = getToken()
-  const res = await fetch(path, {
-    method,
-    headers: {
-      'Content-Type': 'application/json',
-      ...(token ? { Authorization: `Bearer ${token}` } : {}),
-      ...headers,
-    },
-    body: body === undefined ? undefined : JSON.stringify(body),
-  })
-  if (res.status === 204) return null
-  const data = await res.json().catch(() => ({}))
-  if (!res.ok) {
-    const err = data.error || {}
-    throw new ApiError(res.status, err.code || 'error', err.message || 'Что-то пошло не так')
-  }
-  return data
-}
+const call = createApiClient({ getToken })
 
 export const api = {
   meta: () => call('GET', '/api/meta'),

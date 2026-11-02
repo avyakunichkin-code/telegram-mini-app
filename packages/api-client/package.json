@@ -1,0 +1,11 @@
+{
+  "name": "@tvoy/api-client",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "description": "HTTP-клиент Game и Plan (SPL-403): fetch + Bearer + Idempotency-Key + ApiError, без зависимостей",
+  "exports": "./src/index.js",
+  "scripts": {
+    "test": "node --test test/*.test.js"
+  }
+}
