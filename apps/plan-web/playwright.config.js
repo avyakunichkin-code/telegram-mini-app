@@ -1,10 +1,12 @@
+import os from 'node:os'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { defineConfig } from '@playwright/test'
 
 /**
  * E2E прототипа ТВОЙ ПЛАН (CS-11, docs/plan/specs/SPEC_plan-v1.md) в системном Google Chrome.
- * Стенд свой: plan-api на 8021 (БД `plan` — SQLite в памяти процесса, миграции при старте в dev) и Vite на 5191 —
+ * Стенд свой: plan-api на 8021 (БД `plan` — временный файл SQLite на прогон: у `sqlite://` одно соединение
+ * на все потоки, параллельные запросы веба его ломают; миграции при старте в dev) и Vite на 5191 —
  * не пересекается с dev (8020/5190). Python — `E2E_PYTHON` или `backend/.venv` (нужны fastapi, sqlalchemy, pyjwt).
  * Запуск: `npm run test:e2e`.
  */
@@ -45,7 +47,7 @@ export default defineConfig({
       env: {
         PYTHONIOENCODING: 'utf-8',
         PLAN_CORS_ORIGINS: E2E_WEB,
-        PLAN_DATABASE_URL: 'sqlite://',
+        PLAN_DATABASE_URL: `sqlite:///${path.join(os.tmpdir(), `plan-e2e-${Date.now()}.db`).replaceAll('\\', '/')}`,
         PYTHONPATH: path.join(root, 'packages', 'platform', 'src'),
       },
       reuseExistingServer: false,

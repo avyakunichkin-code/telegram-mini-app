@@ -129,7 +129,7 @@ export default function App() {
           </nav>
         )}
       </header>
-      <span className="proto-badge">Прототип: данные хранятся в памяти сервера</span>
+      <span className="proto-badge">Тестовый стенд: только демо-данные, письма не отправляются</span>
       <main className="main">
         <ErrorNote error={error} />
         {screen === 'loading' && <p className="muted">Загружаем…</p>}

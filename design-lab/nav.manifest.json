@@ -138,7 +138,7 @@
       "id": "plan-product",
       "title": "ТВОЙ ПЛАН (отдельный продукт)",
       "items": [
-        { "label": "ТВОЙ ПЛАН · bento-round: первый экран отчёта A/B/C и лозунги (review, SPL-404)", "path": "plan-checkup/bento-round/index.html", "kind": "lab" }
+        { "label": "ТВОЙ ПЛАН · bento-round: отчёт ★ C2, лозунги U1–U8 (review, SPL-404)", "path": "plan-checkup/bento-round/index.html", "kind": "lab" }
       ]
     }
   ]
