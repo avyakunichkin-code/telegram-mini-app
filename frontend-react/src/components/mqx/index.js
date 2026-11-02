@@ -13,6 +13,7 @@ export { MqxStarterScenarioPicker } from './layout/MqxStarterScenarioPicker';
 export { MqxSaveCard } from './pregame/MqxSaveCard';
 export { MqxBoardButton } from './pregame/MqxBoardButton';
 export { MqxSavesSheet } from './pregame/MqxSavesSheet';
+export { MqxMonetkaVoice } from './pregame/MqxMonetkaVoice';
 export { PersonaPortrait } from './brand/PersonaPortrait';
 export { getPersonaPortrait, TEMPLATE_KEY_TO_PERSONA_SLUG } from './brand/personaPortraits';
 export { MqxPeriodCloseSheet } from './layout/MqxPeriodCloseSheet';

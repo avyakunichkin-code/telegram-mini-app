@@ -1,8 +1,9 @@
 import { BrandLogo } from '../../BrandLogo';
-import { MonetkaAvatar } from '../brand/MonetkaAvatar';
+import { Monetka } from '../brand/Monetka';
 
 /**
  * Pre-game / auth: design-lab pg-auth-panel (логотип сверху, Монетка в шапке карточки).
+ * Монетка ink 56 px без надписи — ★ pregame-monetka-round B.
  * Без MqxShell — та же вложенность, что P1–P3 в design-lab (pg-auth-stack в shell).
  * @see design-lab/pre-game-playful-v3/index.html P1–P3
  */
@@ -22,7 +23,7 @@ export function MonetkaBubbleScreen({
       ) : null}
       <section className="pg-auth-panel" aria-labelledby={titleId}>
         <div className="pg-auth-panel__head">
-          <MonetkaAvatar size={72} className="pg-auth-panel__mascot" />
+          <Monetka className="pg-auth-panel__mascot" />
           <div className="pg-auth-panel__voice">
             <h1 id={titleId} className="pg-auth-panel__title">
               {title}

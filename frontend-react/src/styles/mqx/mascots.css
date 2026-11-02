@@ -30,3 +30,47 @@
   font-size: var(--mq-fs-caption);
   color: var(--mq-board-ink-soft);
 }
+
+/* ---------- Монетка в шапке ★ pregame-monetka-round B: экраны до выбора роли ---------- */
+.mqx-pg-voice {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--mq-sp-5);
+}
+
+.mqx-pg-voice__m {
+  width: 56px;
+  height: 56px;
+}
+
+.mqx-pg-voice__title {
+  margin: 0;
+  color: var(--mq-board-ink);
+  font: 900 var(--mq-fs-title) / 1.25 var(--mq-font-display);
+}
+
+.mqx-pg-voice__text {
+  margin: var(--mq-sp-1) 0 0;
+  color: var(--mq-board-ink-soft);
+  font-size: var(--mq-fs-body);
+  line-height: 1.4;
+}
+
+/* Тёмная тема: персонажей не перекрашиваем — светлая обводка-наклейка по силуэту */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) .mqx-pg-voice__m {
+    filter: var(--mqx-mascot-sticker);
+  }
+}
+
+:root[data-theme='dark'] .mqx-pg-voice__m {
+  filter: var(--mqx-mascot-sticker);
+}
+
+:root {
+  --mqx-mascot-sticker:
+    drop-shadow(1.5px 0 0 var(--mq-board-ink-faint))
+    drop-shadow(-1.5px 0 0 var(--mq-board-ink-faint))
+    drop-shadow(0 1.5px 0 var(--mq-board-ink-faint))
+    drop-shadow(0 -1.5px 0 var(--mq-board-ink-faint));
+}

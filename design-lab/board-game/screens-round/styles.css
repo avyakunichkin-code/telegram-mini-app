@@ -135,6 +135,11 @@
 
 /* Вход */
 .s-logo { width: 220px; justify-self: center; margin-top: 8px; }
+/* Монетка в шапке ★ pregame-monetka-round B: 56 px без надписи, реплика вместо заголовка */
+.s-voice { display: flex; align-items: flex-start; gap: 12px; }
+.s-voice img { flex-shrink: 0; width: 56px; height: 56px; }
+.s-voice h3 { margin: 0; font: var(--display-weight) 20px / 1.25 var(--display); }
+.s-voice p { margin: 4px 0 0; color: var(--ink-soft); font-size: 15px; line-height: 1.4; }
 .s-form { display: grid; gap: 10px; background: var(--bg-cell); border: var(--hair); border-radius: 18px; padding: 16px; }
 .s-form label { display: grid; gap: 4px; font-size: 13px; color: var(--ink-soft); }
 .s-form input { border: var(--hair); border-radius: 12px; padding: 11px 12px; font: 15px var(--body); background: var(--bg-board); color: var(--ink); }
