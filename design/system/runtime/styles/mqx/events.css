@@ -186,11 +186,6 @@ body.mqx-events-overlay-open .mqx-tab-page__scroll {
   z-index: 5;
 }
 
-/* Глобальный тёмный h2 не должен бледнеть на светлом листе справки */
-.mqx-event-help-sheet .mqx-sheet__title {
-  color: inherit;
-}
-
 .mqx-event-help-sheet__lead {
   margin-top: -4px;
 }
