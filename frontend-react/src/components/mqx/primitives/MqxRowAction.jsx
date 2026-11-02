@@ -3,7 +3,7 @@ import { IconMetricTrash } from '../icons/FinanceMetricIcons';
 /**
  * Компактное действие в строке: + (add) или − / корзина (remove).
  * Канон B — см. design-lab/row-actions; removeVisual: `trash` (по умолчанию, F2) | `minus` (F1).
- * verb — подпись действия («Купить»); видна только в стиле ink (окна Капитала, вариант A), иначе — глиф.
+ * verb — подпись действия («Купить»); видна в списках окон (окна Капитала, вариант A), в строках экрана — глиф.
  */
 export function MqxRowAction({
   variant = 'remove',

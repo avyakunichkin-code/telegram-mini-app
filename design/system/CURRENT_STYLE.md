@@ -1,24 +1,18 @@
 # Актуальный стиль приложения: «Чернильный край»
 
-Проверено 30.10.2026 по коду и существующим документам, без изменения приложения.
+Проверено 02.11.2026 по коду: стиль ★ (PO 2026-11-02) и единственный в prod — переключателя `?style=classic` и атрибута `data-mqx-style` больше нет.
 
-После централизации редактируемый runtime CSS находится в `design/system/runtime/`. Пути `frontend-react/src/index.css` и `frontend-react/src/styles/` ниже — его проверяемые экспорты, которые реально импортируются приложением. Прежняя выгрузка и PNG вынесены в `design/archive/classic-v3/`; новые персонажи — `illustrations/characters.js`, SVG-экспорты в `assets/Characters/` и `assets/Companions/`.
+Редактируемый runtime CSS находится в `design/system/runtime/`. Пути `frontend-react/src/index.css` и `frontend-react/src/styles/` ниже — его проверяемые экспорты, которые реально импортируются приложением. Прежняя выгрузка и PNG вынесены в `design/archive/classic-v3/`; новые персонажи — `illustrations/characters.js`, SVG-экспорты в `assets/Characters/` и `assets/Companions/`.
 
 ## Цепочка источников
 
-1. `frontend-react/src/main.jsx` вызывает `applyMqxStyle()` перед React render.
-2. `frontend-react/src/utils/mqxStyle.js`: `DEFAULT_MQX_STYLE = 'ink'`; URL `?style=classic|ink` и сохранённый выбор могут переопределить значение. Функция выставляет `data-mqx-style` на `<html>`.
-3. `frontend-react/src/index.css` подключает `styles/mqx/ink.css` после базовых экранных стилей.
-4. `frontend-react/src/styles/mqx/ink.css` — реальный слой необрутализма приложения. Его комментарий ссылается на `design-lab/board-game/neobrutal-a-round/`, карта K1.
-5. `design-lab/board-game/APPROVED.md`, § «Пробное внедрение», связывает выбранный A, K1, окна `ink-sheets-round`, реализацию и переключатель. Документ отмечает внедрение как пробное, не ★; это не означает, что оно отсутствует в приложении.
-6. В этой дизайн-системе уже были `components/InkEdge/README.md`, `preview.html`, классы `.th-ink` в `components/bundle.css` и раздел в `README.md`, ссылающиеся на тот же runtime. Базовые превью без этого слоя показывают прежнюю подачу.
+1. `runtime/styles/tokens.css` — токены «Чернильного края»: `--mq-ink-w`, `--mq-ink-line`, `--mq-ink-drop`, `--mq-ink-off`, `--mq-ink-off-s` (в тёмной теме край и тень — `--mq-board-ink-faint`). Те же токены — в `tokens.json` дизайн-системы.
+2. `runtime/styles/mqx/*.css` — правила стиля в CSS своего блока: `board.css` (Главная), `finance.css` (Капитал, листы и подтверждение — последним разделом файла), `events.css`, `juice.css` (итог хода), `analytics.css`, `pregame.css` (вкладка Меню), `run-finale.css`, `guidance.css` (подсказка онбординга), `shell.css` (таббар).
+3. `design-lab/board-game/APPROVED.md` — инварианты стиля (обводка, цветная и чернильная тень, одна рамка на уровень) и история: выбранный A, карта хода K1, окна `ink-sheets-round`, доработка и ★ по `ink-decision-round`.
+4. В этой дизайн-системе — `components/InkEdge/README.md`, `preview.html`, классы `.th-ink` в `components/bundle.css`: те же правила на примерах `th-*`.
 
-Внешний артефакт в README — происхождение выгрузки, а не доказательство текущего runtime. Локальные дополнения от 29.10 включают InkEdge. Нового внешнего артефакта для нахождения внедрённого стиля не требовалось.
+До 2026-11-02 стиль был пробным слоем `styles/mqx/ink.css` под `:root[data-mqx-style='ink']` с переключателем `utils/mqxStyle.js`; слой влит в CSS блоков, переключатель удалён.
 
-## Что было исправлено в текущей работе
+## Превью и лендинг
 
-Предыдущий генератор лендинга экспортировал базовые TurnCard/MoneyTiles/EventCard без InkEdge, а каталог показывал только изображения. Поэтому результат визуально расходился с текущим приложением. Это была ошибка выбора слоя, а не отсутствие новой системы в репозитории.
-
-Теперь `runtime-ink.css` — байтовый экспорт настоящего `ink.css`, а `ink-preview.html` показывает существующий пример InkEdge. Адаптер `components/InkEdge/examples.css` применяет его правила к трём базовым примерам. Лендинг использует те же чернила, твёрдые тени и правило «одна рамка на уровень». Образцы по-прежнему помечены как примеры системы, не скриншоты production.
-
-Централизация бинарных ассетов сама по себе не меняла CSS приложения. Она сохранена; утверждать новую композицию лендинга или окончательный ★ за владельца эта работа не может.
+`ink-preview.html` показывает пример InkEdge. Адаптер `components/InkEdge/examples.css` применяет правила к трём базовым примерам; переменные `--mq-ink-*` берутся из `tokens.css`, отдельный `runtime-ink.css` больше не экспортируется. Образцы по-прежнему помечены как примеры системы, не скриншоты production.

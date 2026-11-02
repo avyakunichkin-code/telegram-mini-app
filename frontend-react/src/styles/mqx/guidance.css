@@ -11,11 +11,13 @@
   pointer-events: auto;
 }
 
+/* Подсказка лежит на линии таббара и закрывает её: по ширине как таббар, внизу заходит на 2 px линии,
+   сверху — своя чернильная линия, как у листов (решение PO 2026-11-02) */
 .mqx-guidance-strip {
   position: fixed;
-  left: var(--mqx-dash-inline-pad, 14px);
-  right: var(--mqx-dash-inline-pad, 14px);
-  bottom: var(--mqx-tabbar-measured, var(--tma-tabbar-inset, 64px));
+  left: 0;
+  right: 0;
+  bottom: calc(var(--mqx-tabbar-measured, var(--tma-tabbar-inset, 64px)) - var(--mq-ink-w));
   max-height: min(
     46vh,
     calc(100dvh - var(--mqx-tabbar-measured, var(--tma-tabbar-inset, 64px)) - 16px)
@@ -28,11 +30,19 @@
   margin-inline: auto;
   padding: 8px 12px calc(8px + env(safe-area-inset-bottom, 0px));
   box-sizing: border-box;
-  border-radius: 14px 14px 0 0;
+  border: 0;
+  border-top: var(--mq-ink-w) solid var(--mq-ink-line);
+  border-radius: var(--mq-r-card) var(--mq-r-card) 0 0;
   background: var(--mqx-onboarding-bubble-bg, color-mix(in srgb, #fff 92%, #ede9fe 8%));
-  border: 1px solid var(--mqx-onboarding-bubble-border, rgba(120, 100, 200, 0.2));
-  box-shadow: var(--mqx-onboarding-bubble-shadow, 0 -8px 32px rgba(20, 24, 48, 0.12));
+  box-shadow: none;
   animation: mqx-guidance-slide-up 0.28s ease-out;
+}
+
+/* Карусель и итог хода закрывают весь экран вместе с таббаром — подсказка прижата к низу,
+   содержимое над ней */
+body:has(.events-overlay-root) .mqx-guidance-strip,
+body:has(.mqx-juice-ritual-root--open) .mqx-guidance-strip {
+  bottom: 0;
 }
 
 @keyframes mqx-guidance-slide-up {

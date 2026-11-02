@@ -68,3 +68,33 @@
 .h-events--done .b-deck__cards span { background: var(--turn-soft); border-color: var(--edge-cell); }
 .act--off { opacity: 0.5; }
 .p-note { margin: 0; font-size: 12.5px; color: var(--ink-soft); }
+
+/* Кадры prod «Чернильный край» (★ 2026-11-02) — сверху страницы */
+.prod-ink {
+  grid-column: 1 / -1;
+}
+
+.prod-ink__shots {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.prod-ink__shots figure {
+  margin: 0;
+  width: min(100%, 300px);
+}
+
+.prod-ink__shots img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 14px;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.12);
+}
+
+.prod-ink__shots figcaption {
+  margin-top: 6px;
+  font-size: 13px;
+  opacity: 0.8;
+}

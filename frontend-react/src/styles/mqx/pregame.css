@@ -187,6 +187,21 @@
   box-shadow: 0 1px 0 var(--mq-cell-edge);
 }
 
+/* Вкладка Меню в партии (.mqx-tab-page) — «Чернильный край»: карта сохранения — главная карта экрана,
+   кнопки — фишки с чернильным краем. Экраны до партии (.mqx-pg) — прежний ★ BG-2. */
+.mqx-tab-page .mqx-pg-save {
+  border: var(--mq-ink-w) solid var(--mq-ink-line);
+  box-shadow: var(--mq-ink-off) var(--mq-ink-off) 0 var(--mq-turn);
+}
+
+.mqx-tab-page .mqx-bg-btn.mqx-pg-btn {
+  border: var(--mq-ink-w) solid var(--mq-ink-line);
+  box-shadow: var(--mq-ink-off) var(--mq-ink-off) 0 var(--mq-ink-drop);
+  transition:
+    transform var(--mq-dur-press) var(--mq-ease-standard),
+    box-shadow var(--mq-dur-press) var(--mq-ease-standard);
+}
+
 .mqx-bg-btn.mqx-pg-link {
   justify-self: center;
   min-height: 44px;
