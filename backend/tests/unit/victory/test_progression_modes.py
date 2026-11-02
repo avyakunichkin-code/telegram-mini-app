@@ -78,6 +78,7 @@ class TestVictoryConfigByTemplateKey:
         assert cfg["required_goals_met"] == len(cfg["goals"])
 
     def test_debt_stack_finale_goal_type(self):
+        # Калибровка A: финал «наличные 10 млн» снят, последний шаг — доход с инвестиций.
         cfg = victory_config_for_template("mq_game_debt_stack_v1")
-        assert cfg["goals"][-1]["key"] == "cash_10m"
-        assert cfg["goals"][-1]["type"] == "cash_balance_min"
+        assert cfg["goals"][-1]["key"] == "invest_income_22k"
+        assert cfg["goals"][-1]["type"] == "passive_income_monthly_min"
