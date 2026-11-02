@@ -38,6 +38,11 @@
       .pgx-link:hover { text-decoration: underline; }
       .pgx-frame { display: block; width: 100%; border: 0; background: transparent; }
       code { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; }
+      .pgx-prod { margin: 0 0 18px; }
+      .pgx-shots { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; }
+      .pgx-shot { margin: 0; }
+      .pgx-shot img { display: block; width: 100%; height: auto; border-radius: 12px; border: 1px solid rgba(255,255,255,.12); }
+      .pgx-shot figcaption { margin-top: 6px; font-size: 12px; opacity: .8; }
     </style>
   </head>
   <body>
@@ -47,6 +52,26 @@
         Сгенерировано из <code>design-lab/finance/canon.manifest.json</code>. Каждый блок — отдельная витрина в <code>iframe</code>,
         без склейки CSS, чтобы конфликты стилей не ломали страницу.
       </p>
+      
+      <section class="pgx-prod" aria-labelledby="pgx-prod-title">
+        <div class="pgx-kicker" id="pgx-prod-title">PROD СЕЙЧАС · ★ «ЧЕРНИЛЬНЫЙ КРАЙ»</div>
+        <p class="pgx-sub">Вкладка «Капитал» в prod на 2026-11-02 (★ «Чернильный край», единственный стиль): 412×915, светлая тема, ход 2 «Студента». Снято со стенда e2e. Переснять — тем же сценарием (Главная → «Вложить» → «Детали» → «Облигации») и пересобрать: npm run design-lab:build-finance-page-round.</p>
+        <div class="pgx-shots">
+          <figure class="pgx-shot">
+            <img src="./prod-ink/capital-actions.webp" alt="Капитал · Действия: потоки, сегмент-шов, фишки «Вложить»" loading="lazy" />
+            <figcaption>Капитал · Действия: потоки, сегмент-шов, фишки «Вложить»</figcaption>
+          </figure>
+          <figure class="pgx-shot">
+            <img src="./prod-ink/capital-details.webp" alt="Капитал · Детали: «Остаётся после хода» без обводки, лот с полосой" loading="lazy" />
+            <figcaption>Капитал · Детали: «Остаётся после хода» без обводки, лот с полосой</figcaption>
+          </figure>
+          <figure class="pgx-shot">
+            <img src="./prod-ink/sheet-bonds.webp" alt="Лист «Облигации»: линия сверху, поле суммы, ставка-чип, кнопка-фишка" loading="lazy" />
+            <figcaption>Лист «Облигации»: линия сверху, поле суммы, ставка-чип, кнопка-фишка</figcaption>
+          </figure>
+        </div>
+      </section>
+      <p class="pgx-sub">Ниже — канонические lab-раунды блоков (раскладка и состав); края и тени в них — до «Чернильного края», актуальная подача — кадры выше.</p>
       <div class="pgx-grid">
         <section class="pgx-card" data-block="finance-page">
           <header class="pgx-card__header">

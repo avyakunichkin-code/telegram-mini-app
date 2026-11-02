@@ -1,5 +1,5 @@
 /* Adapter of v3 examples to the current ink runtime. Rules: InkEdge/README.md;
- * runtime variables are read from frontend-react/src/styles/mqx/ink.css verbatim.
+ * ink tokens (--mq-ink-*) come from tokens.css, the same values as the app runtime tokens.
  * Not a replacement for production components or new design approval. */
 .th-ink :is(.th-turn,.th-event){border:var(--mq-ink-w) solid var(--mq-ink-line);box-shadow:var(--mq-ink-off) var(--mq-ink-off) 0 var(--mq-turn)}
 .th-ink .th-tile{border:var(--mq-ink-w) solid var(--mq-ink-line);box-shadow:none}

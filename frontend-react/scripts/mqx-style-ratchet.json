@@ -2,7 +2,7 @@
   "note": "Храповик check-mqx-ratchet: счётчики могут только убывать. Обновлять --update после уменьшения долга.",
   "files": {
     "analytics.css": {
-      "colors": 17,
+      "colors": 15,
       "fontUnder12": 3
     },
     "board.css": {
@@ -19,18 +19,18 @@
     },
     "finance.css": {
       "colors": 163,
-      "fontUnder12": 34
+      "fontUnder12": 33
     },
     "flows.css": {
       "colors": 7,
       "fontUnder12": 2
     },
     "guidance.css": {
-      "colors": 23,
+      "colors": 21,
       "fontUnder12": 3
     },
     "juice.css": {
-      "colors": 26,
+      "colors": 20,
       "fontUnder12": 3
     },
     "layout.css": {
@@ -51,7 +51,7 @@
     }
   },
   "totals": {
-    "colors": 367,
-    "fontUnder12": 84
+    "colors": 357,
+    "fontUnder12": 83
   }
 }
