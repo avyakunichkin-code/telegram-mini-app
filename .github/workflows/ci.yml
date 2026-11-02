@@ -1,6 +1,6 @@
 # PR-04: required CI. Backend pytest (вместе с packages/fincore и packages/platform) + frontend unit/guardrails/build.
 # Вызывается и из deploy-app.yml (workflow_call): Pages публикуется только после зелёных проверок.
-# Required checks в Settings → Branches → main: «Backend pytest», «Frontend unit + guardrails».
+# Required checks в Settings → Branches → main: «Backend pytest», «Frontend unit + guardrails», «Game balance diff» (с 2026-11-02).
 #
 # SPL-405: фильтры по путям. На PR каждый job идёт только если тронута его зона; общий код
 # (packages/, .github/) гоняет ВСЁ — тесты игры, balance diff игры и тесты Plan. Job, пропущенный
