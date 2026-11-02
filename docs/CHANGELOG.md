@@ -34,7 +34,10 @@ aliases:
 
 | Область | Что сделано | Коммит |
 |---------|-------------|--------|
-| Инфра | PR-04: на `main` включены required checks «Backend pytest» и «Frontend unit + guardrails» (branch protection через `gh api`; ревью не обязательны, E2E не обязателен) | — |
+| Инфра | PR-04: на `main` включены required checks «Backend pytest» и «Frontend unit + guardrails» (branch protection через `gh api`; ревью не обязательны, E2E не обязателен) | `204fa0d` |
+| Docs | План «победа в два акта» (PR-18 → PR-21, DRAFT): 13 задач MQ-ACT, расчёт порога акта 2 по эталонам `chain_runner` — одного X на все шаблоны нет ([`PLAN_victory-acts`](plans/PLAN_victory-acts.md)) | — |
+| Lab | Цель в два акта: «Акт N из 2» A / B / C и финалы актов 1 и 2 (`dashboard/goal-acts-round`). Статус **review** | — |
+| Lab | «Чернильный край» ↔ classic: скриншоты prod 412 и 1440, риски, что не тронуто, маскоты — материал для решения PO (`board-game/ink-decision-round`) | — |
 
 ### 01.11
 

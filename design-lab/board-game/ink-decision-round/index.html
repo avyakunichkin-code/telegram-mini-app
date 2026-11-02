@@ -1,0 +1,298 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>ТВОЙ ХОД — «Чернильный край»: материал для решения PO</title>
+    <link rel="stylesheet" href="./lab-base.css" />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <header class="lab-head">
+      <h1>«Чернильный край» и маскоты — материал для решения PO</h1>
+      <p>Скриншоты prod на e2e-стенде (backend SQLite :8011 + Vite :5181), 2026-11-02, ветка <code>claude/game-gate-prep-39c10b</code> от <code>main</code> <code>d9e3bcb</code>. Партия «Студент», светлая тема.
+      Слева — стиль по умолчанию <b>ink</b> (<code>styles/mqx/ink.css</code>, 753 строки поверх ★ BG-1…BG-3), справа — <b>classic</b> (<code>?style=classic</code>).
+      Процент — доля пикселей, отличающихся между стилями на одном кадре.</p>
+      <p class="lab-head__status">Статус ink — <b>пробный, не ★</b>. Решение «утвердить / откатить / доработать» принимает PO; эта страница решения не содержит.</p>
+    </header>
+
+    <main class="page">
+      <nav class="toc" aria-label="Разделы">
+        <a href="#screens">Скриншоты</a><a href="#changes">Что меняется</a><a href="#risks">Риски</a><a href="#untouched">Что не тронуто</a><a href="#mascots">Маскоты</a><a href="#decide">Решение</a>
+      </nav>
+
+      <section id="screens" class="block">
+        <div class="block__head">
+          <h2>Скриншоты: ink ↔ classic</h2>
+          <div class="vp" role="tablist" aria-label="Ширина экрана">
+            <button type="button" role="tab" aria-selected="true" data-vp="m412">Телефон 412×915</button>
+            <button type="button" role="tab" aria-selected="false" data-vp="d1440">Десктоп 1440×900</button>
+          </div>
+        </div>
+        <div class="vp-panel" data-panel="m412">
+        <section class="cmp">
+          <header class="cmp__head">
+            <h3>Главная (ход 3, без онбординга)</h3>
+            <span class="cmp__badge">меняется · 25,4% пикселей</span>
+          </header>
+          <p class="cmp__note">Карта хода — чернильная рамка и фиолетовая тень; «3 события» — жёлтая фишка без обводки; потребности — шкалы в рамке; деньги — три плитки в рамке, «Доходы/Расходы» нажимаются; цель — фишка с тенью; действия — фишки с тенью; таббар — активная вкладка залита.</p>
+          <div class="cmp__pair">
+            <figure><figcaption>ink · по умолчанию</figcaption><img loading="lazy" src="./assets/shots/m412-ink-01c-home-no-onboarding.webp" alt="Главная (ход 3, без онбординга), стиль ink" /></figure>
+            <figure><figcaption>classic · <code>?style=classic</code></figcaption><img loading="lazy" src="./assets/shots/m412-classic-01c-home-no-onboarding.webp" alt="Главная (ход 3, без онбординга), стиль classic" /></figure>
+          </div>
+        </section>
+        <section class="cmp">
+          <header class="cmp__head">
+            <h3>Главная с онбордингом (ход 3)</h3>
+            <span class="cmp__badge">меняется · 20,2% пикселей</span>
+          </header>
+          <p class="cmp__note">То же, плюс полоска Монетки снизу — она в ink не перекрашена (прежний вид поверх нового).</p>
+          <div class="cmp__pair">
+            <figure><figcaption>ink · по умолчанию</figcaption><img loading="lazy" src="./assets/shots/m412-ink-01b-home-turn3.webp" alt="Главная с онбордингом (ход 3), стиль ink" /></figure>
+            <figure><figcaption>classic · <code>?style=classic</code></figcaption><img loading="lazy" src="./assets/shots/m412-classic-01b-home-turn3.webp" alt="Главная с онбордингом (ход 3), стиль classic" /></figure>
+          </div>
+        </section>
+        <section class="cmp">
+          <header class="cmp__head">
+            <h3>Главная, первый ход</h3>
+            <span class="cmp__badge">меняется · 13,7% пикселей</span>
+          </header>
+          <p class="cmp__note">Первый экран партии: зарплата «горячая», цель свёрнута.</p>
+          <div class="cmp__pair">
+            <figure><figcaption>ink · по умолчанию</figcaption><img loading="lazy" src="./assets/shots/m412-ink-01-home-turn1.webp" alt="Главная, первый ход, стиль ink" /></figure>
+            <figure><figcaption>classic · <code>?style=classic</code></figcaption><img loading="lazy" src="./assets/shots/m412-classic-01-home-turn1.webp" alt="Главная, первый ход, стиль classic" /></figure>
+          </div>
+        </section>
+        <section class="cmp">
+          <header class="cmp__head">
+            <h3>Капитал</h3>
+            <span class="cmp__badge">меняется · 18,3% пикселей</span>
+          </header>
+          <p class="cmp__note">Шапка без фиолетовой плашки и логотипа (как у Аналитики), справа фишка хода; потоки и «Остаётся после хода» в рамке; сегмент «Детали / Действия» — один блок со швом; лоты — цветная полоса под чернильной линией.</p>
+          <div class="cmp__pair">
+            <figure><figcaption>ink · по умолчанию</figcaption><img loading="lazy" src="./assets/shots/m412-ink-02-capital.webp" alt="Капитал, стиль ink" /></figure>
+            <figure><figcaption>classic · <code>?style=classic</code></figcaption><img loading="lazy" src="./assets/shots/m412-classic-02-capital.webp" alt="Капитал, стиль classic" /></figure>
+          </div>
+        </section>
+        <section class="cmp">
+          <header class="cmp__head">
+            <h3>Карусель события</h3>
+            <span class="cmp__badge">меняется · 10,7% пикселей</span>
+          </header>
+          <p class="cmp__note">Карта события — рамка и фиолетовая тень; полоса — цвет карты; домен-чип без обводки; реплика Монетки без обводки; варианты ответа — фишки с тенью, при нажатии вдавливаются.</p>
+          <div class="cmp__pair">
+            <figure><figcaption>ink · по умолчанию</figcaption><img loading="lazy" src="./assets/shots/m412-ink-05-event-carousel.webp" alt="Карусель события, стиль ink" /></figure>
+            <figure><figcaption>classic · <code>?style=classic</code></figcaption><img loading="lazy" src="./assets/shots/m412-classic-05-event-carousel.webp" alt="Карусель события, стиль classic" /></figure>
+          </div>
+        </section>
+        <section class="cmp cmp--same">
+          <header class="cmp__head">
+            <h3>Итог хода</h3>
+            <span class="cmp__badge">не тронуто · 0,0% пикселей</span>
+          </header>
+          <p class="cmp__note">Не тронут: попиксельно совпадает с classic.</p>
+          <div class="cmp__pair">
+            <figure><figcaption>ink · по умолчанию</figcaption><img loading="lazy" src="./assets/shots/m412-ink-06-turn-summary.webp" alt="Итог хода, стиль ink" /></figure>
+            <figure><figcaption>classic · <code>?style=classic</code></figcaption><img loading="lazy" src="./assets/shots/m412-classic-06-turn-summary.webp" alt="Итог хода, стиль classic" /></figure>
+          </div>
+        </section>
+        <section class="cmp cmp--same">
+          <header class="cmp__head">
+            <h3>Аналитика</h3>
+            <span class="cmp__badge">не тронуто · 2,0% пикселей</span>
+          </header>
+          <p class="cmp__note">Не тронута: отличается только таббар внизу.</p>
+          <div class="cmp__pair">
+            <figure><figcaption>ink · по умолчанию</figcaption><img loading="lazy" src="./assets/shots/m412-ink-03-analytics.webp" alt="Аналитика, стиль ink" /></figure>
+            <figure><figcaption>classic · <code>?style=classic</code></figcaption><img loading="lazy" src="./assets/shots/m412-classic-03-analytics.webp" alt="Аналитика, стиль classic" /></figure>
+          </div>
+        </section>
+        <section class="cmp cmp--same">
+          <header class="cmp__head">
+            <h3>Меню</h3>
+            <span class="cmp__badge">не тронуто · 2,3% пикселей</span>
+          </header>
+          <p class="cmp__note">Не тронуто: отличается только таббар внизу.</p>
+          <div class="cmp__pair">
+            <figure><figcaption>ink · по умолчанию</figcaption><img loading="lazy" src="./assets/shots/m412-ink-04-menu.webp" alt="Меню, стиль ink" /></figure>
+            <figure><figcaption>classic · <code>?style=classic</code></figcaption><img loading="lazy" src="./assets/shots/m412-classic-04-menu.webp" alt="Меню, стиль classic" /></figure>
+          </div>
+        </section>
+        </div>
+        <div class="vp-panel" data-panel="d1440" hidden>
+          <p class="cmp__note">На 1440 игра — колонка шириной с телефон по центру, в обоих стилях: процент ниже, потому что большая часть кадра — пустое поле. Это не про ink; широкий веб — отдельный план (<code>PLAN_desktop-wide-web</code>).</p>
+        <section class="cmp">
+          <header class="cmp__head">
+            <h3>Главная (ход 3, без онбординга)</h3>
+            <span class="cmp__badge">меняется · 7,4% пикселей</span>
+          </header>
+          <p class="cmp__note">Карта хода — чернильная рамка и фиолетовая тень; «3 события» — жёлтая фишка без обводки; потребности — шкалы в рамке; деньги — три плитки в рамке, «Доходы/Расходы» нажимаются; цель — фишка с тенью; действия — фишки с тенью; таббар — активная вкладка залита.</p>
+          <div class="cmp__pair">
+            <figure><figcaption>ink · по умолчанию</figcaption><img loading="lazy" src="./assets/shots/d1440-ink-01c-home-no-onboarding.webp" alt="Главная (ход 3, без онбординга), стиль ink" /></figure>
+            <figure><figcaption>classic · <code>?style=classic</code></figcaption><img loading="lazy" src="./assets/shots/d1440-classic-01c-home-no-onboarding.webp" alt="Главная (ход 3, без онбординга), стиль classic" /></figure>
+          </div>
+        </section>
+        <section class="cmp">
+          <header class="cmp__head">
+            <h3>Главная с онбордингом (ход 3)</h3>
+            <span class="cmp__badge">меняется · 5,8% пикселей</span>
+          </header>
+          <p class="cmp__note">То же, плюс полоска Монетки снизу — она в ink не перекрашена (прежний вид поверх нового).</p>
+          <div class="cmp__pair">
+            <figure><figcaption>ink · по умолчанию</figcaption><img loading="lazy" src="./assets/shots/d1440-ink-01b-home-turn3.webp" alt="Главная с онбордингом (ход 3), стиль ink" /></figure>
+            <figure><figcaption>classic · <code>?style=classic</code></figcaption><img loading="lazy" src="./assets/shots/d1440-classic-01b-home-turn3.webp" alt="Главная с онбордингом (ход 3), стиль classic" /></figure>
+          </div>
+        </section>
+        <section class="cmp">
+          <header class="cmp__head">
+            <h3>Главная, первый ход</h3>
+            <span class="cmp__badge">меняется · 4,6% пикселей</span>
+          </header>
+          <p class="cmp__note">Первый экран партии: зарплата «горячая», цель свёрнута.</p>
+          <div class="cmp__pair">
+            <figure><figcaption>ink · по умолчанию</figcaption><img loading="lazy" src="./assets/shots/d1440-ink-01-home-turn1.webp" alt="Главная, первый ход, стиль ink" /></figure>
+            <figure><figcaption>classic · <code>?style=classic</code></figcaption><img loading="lazy" src="./assets/shots/d1440-classic-01-home-turn1.webp" alt="Главная, первый ход, стиль classic" /></figure>
+          </div>
+        </section>
+        <section class="cmp">
+          <header class="cmp__head">
+            <h3>Капитал</h3>
+            <span class="cmp__badge">меняется · 6,0% пикселей</span>
+          </header>
+          <p class="cmp__note">Шапка без фиолетовой плашки и логотипа (как у Аналитики), справа фишка хода; потоки и «Остаётся после хода» в рамке; сегмент «Детали / Действия» — один блок со швом; лоты — цветная полоса под чернильной линией.</p>
+          <div class="cmp__pair">
+            <figure><figcaption>ink · по умолчанию</figcaption><img loading="lazy" src="./assets/shots/d1440-ink-02-capital.webp" alt="Капитал, стиль ink" /></figure>
+            <figure><figcaption>classic · <code>?style=classic</code></figcaption><img loading="lazy" src="./assets/shots/d1440-classic-02-capital.webp" alt="Капитал, стиль classic" /></figure>
+          </div>
+        </section>
+        <section class="cmp">
+          <header class="cmp__head">
+            <h3>Карусель события</h3>
+            <span class="cmp__badge">меняется · 7,3% пикселей</span>
+          </header>
+          <p class="cmp__note">Карта события — рамка и фиолетовая тень; полоса — цвет карты; домен-чип без обводки; реплика Монетки без обводки; варианты ответа — фишки с тенью, при нажатии вдавливаются.</p>
+          <div class="cmp__pair">
+            <figure><figcaption>ink · по умолчанию</figcaption><img loading="lazy" src="./assets/shots/d1440-ink-05-event-carousel.webp" alt="Карусель события, стиль ink" /></figure>
+            <figure><figcaption>classic · <code>?style=classic</code></figcaption><img loading="lazy" src="./assets/shots/d1440-classic-05-event-carousel.webp" alt="Карусель события, стиль classic" /></figure>
+          </div>
+        </section>
+        <section class="cmp cmp--same">
+          <header class="cmp__head">
+            <h3>Итог хода</h3>
+            <span class="cmp__badge">не тронуто · 0,0% пикселей</span>
+          </header>
+          <p class="cmp__note">Не тронут: попиксельно совпадает с classic.</p>
+          <div class="cmp__pair">
+            <figure><figcaption>ink · по умолчанию</figcaption><img loading="lazy" src="./assets/shots/d1440-ink-06-turn-summary.webp" alt="Итог хода, стиль ink" /></figure>
+            <figure><figcaption>classic · <code>?style=classic</code></figcaption><img loading="lazy" src="./assets/shots/d1440-classic-06-turn-summary.webp" alt="Итог хода, стиль classic" /></figure>
+          </div>
+        </section>
+        <section class="cmp cmp--same">
+          <header class="cmp__head">
+            <h3>Аналитика</h3>
+            <span class="cmp__badge">не тронуто · 0,7% пикселей</span>
+          </header>
+          <p class="cmp__note">Не тронута: отличается только таббар внизу.</p>
+          <div class="cmp__pair">
+            <figure><figcaption>ink · по умолчанию</figcaption><img loading="lazy" src="./assets/shots/d1440-ink-03-analytics.webp" alt="Аналитика, стиль ink" /></figure>
+            <figure><figcaption>classic · <code>?style=classic</code></figcaption><img loading="lazy" src="./assets/shots/d1440-classic-03-analytics.webp" alt="Аналитика, стиль classic" /></figure>
+          </div>
+        </section>
+        <section class="cmp cmp--same">
+          <header class="cmp__head">
+            <h3>Меню</h3>
+            <span class="cmp__badge">не тронуто · 0,8% пикселей</span>
+          </header>
+          <p class="cmp__note">Не тронуто: отличается только таббар внизу.</p>
+          <div class="cmp__pair">
+            <figure><figcaption>ink · по умолчанию</figcaption><img loading="lazy" src="./assets/shots/d1440-ink-04-menu.webp" alt="Меню, стиль ink" /></figure>
+            <figure><figcaption>classic · <code>?style=classic</code></figcaption><img loading="lazy" src="./assets/shots/d1440-classic-04-menu.webp" alt="Меню, стиль classic" /></figure>
+          </div>
+        </section>
+        </div>
+      </section>
+
+      <section id="changes" class="block">
+        <h2>Что меняется</h2>
+        <ul>
+          <li><b>Одно правило на все экраны.</b> Чернильная тень (сдвиг 3 px) — у того, что нажимается; при нажатии фишка «вдавливается» в поле. Цветная тень — у одной главной карты экрана: ход и событие — фиолетовая, финиш — золотая. Остальное — чернильный край 2 px без тени.</li>
+          <li><b>Главная:</b> карта хода, события, потребности, деньги, цель, действия, таббар.</li>
+          <li><b>Капитал:</b> шапка как у Аналитики (без плашки и логотипа), потоки, сегмент со швом, лоты, фишки капитала.</li>
+          <li><b>Событие:</b> карта, полоса, чипы и реплика Монетки без обводки, варианты ответа.</li>
+          <li><b>Финал партии</b> и <b>все листы</b> (окна): линия только сверху, крестик, форма суммы, списки «вариант A», подтверждение.</li>
+          <li>Тёмная тема: край и тень на тон тише текста (<code>--mq-board-ink-faint</code>). На этой странице не снята — только светлая.</li>
+          <li>Кнопки «Продать / Закрыть / Погасить / Отменить полис» вместо «Удалить» — <b>в обоих стилях</b>, откат ink их не вернёт.</li>
+        </ul>
+      </section>
+
+      <section id="risks" class="block">
+        <h2>Риски</h2>
+        <ul>
+          <li><b>Смешанный язык экранов.</b> Аналитика, Меню, итог хода, полоска онбординга и экраны до партии остаются в прежнем виде. Игрок переходит с «чернильной» Главной на «мягкую» Аналитику: на 412 это видно сразу.</li>
+          <li><b>Два стиля в prod — двойная поверхность проверки.</b> e2e и unit гоняют только стиль по умолчанию (ink); classic никто не проверяет. Любая правка вёрстки — проверять дважды или принять, что classic тихо ломается.</li>
+          <li><b>Хрупкость слоя.</b> 753 строки переопределений по классам prod (<code>:root[data-mqx-style='ink'] .mqx-…</code>, есть <code>:has()</code>); переименование класса в компоненте молча снимает ink с блока — guardrails этого не ловят.</li>
+          <li><b>Канон отстаёт.</b> Lab-каноны ★ BG-1…BG-3 описывают classic; ink описан в <code>board-game/APPROVED.md</code> как пробный. При ★ нужен canon sync: parity-раунды дашборда, Капитала, финала — в ink.</li>
+          <li><b>Плотность на 412.</b> Рамки 2 px, тени и плитки денег в рамках добавляют высоты: на Главной «Действия хода» опускаются примерно на 50 px (кадр «Главная, ход 3»). На 915 всё влезает, но на телефонах пониже запас до сгиба меньше.</li>
+          <li><b>Маскоты завязаны на стиль.</b> Раунд <code>ink-mascots-round</code> рисует Монетку и Квитю под необрутализм; при откате ink их нужно пересмотреть.</li>
+          <li><b>Не проверено здесь:</b> тёмная тема, Telegram WebView, плавность «вдавливания» на слабых Android, восприятие игроками (это вопрос волны 10–20).</li>
+        </ul>
+      </section>
+
+      <section id="untouched" class="block">
+        <h2>Что не тронуто ink-слоем</h2>
+        <table>
+          <thead><tr><th>Экран</th><th>Как проверено</th><th>Что это значит</th></tr></thead>
+          <tbody>
+            <tr><td>Аналитика</td><td>2,0% пикселей (412) — только таббар</td><td>Прежний ★ BG-3; шапку Капитала в ink подогнали под неё</td></tr>
+            <tr><td>Меню</td><td>2,3% (412) — только таббар</td><td>Прежний вид</td></tr>
+            <tr><td>Итог хода</td><td>0,0%</td><td>Полностью прежний</td></tr>
+            <tr><td>Онбординг (полоска Монетки)</td><td>По <code>ink.css</code>: селекторов <code>mqx-guidance-*</code> нет</td><td>Прежняя полоска поверх ink-экранов (кадр «Главная с онбордингом»)</td></tr>
+            <tr><td>Экраны до партии (вход, сохранения, выбор жизни)</td><td>По <code>ink.css</code> и <code>APPROVED.md</code></td><td>Прежний ★ BG-2</td></tr>
+            <tr><td>Содержимое листов кроме формы суммы и списков</td><td>По <code>APPROVED.md</code></td><td>Прежний вид</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section id="mascots" class="block">
+        <h2>Маскоты — текущие раунды</h2>
+        <p>В prod маскоты не перенесены; все три раунда ждут решения.</p>
+        <table>
+          <thead><tr><th>Раунд</th><th>Что</th><th>Статус</th></tr></thead>
+          <tbody>
+            <tr><td><a href="../../mascots/ink-mascots-round/index.html">mascots/ink-mascots-round</a></td><td>Монетка с надписью на ободе (8 ситуаций, без цифр) и Квитя — кассовый чек без рулона; перерисовка из псевдо-3D (ADR-014 п. 3)</td><td><b>review</b> · зависит от решения по ink</td></tr>
+            <tr><td><a href="../../mascots/companions-round/index.html">mascots/companions-round</a></td><td>Напарники персонажей: знакомство, варианты A / B</td><td><b>review</b></td></tr>
+            <tr><td><a href="../../mascots/pregame-monetka-round/index.html">mascots/pregame-monetka-round</a></td><td>Монетка на экранах до выбора роли: вход, меню, выбор жизни; выбран B «в шапке»</td><td><b>review</b> · при ★ меняет канон ★ BG-2 (<code>pre-game-shell/APPROVED.md</code>)</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section id="decide" class="block block--decide">
+        <h2>Решение PO</h2>
+        <p>Вопрос: <b>«Чернильный край» — утвердить / откатить / доработать?</b> Отдельно — маскоты по трём раундам выше.</p>
+        <table>
+          <thead><tr><th>Вариант</th><th>Что произойдёт в коде</th></tr></thead>
+          <tbody>
+            <tr><td>Утвердить</td><td>★ в <code>board-game/APPROVED.md</code>; правила ink — в инварианты; переключатель <code>?style</code> снять; canon sync parity-раундов; решить, тянуть ли ink на Аналитику, Меню, итог хода и онбординг (отдельный lab-раунд)</td></tr>
+            <tr><td>Откатить</td><td>Удалить <code>styles/mqx/ink.css</code>, <code>utils/mqxStyle.js</code> и вызов <code>applyMqxStyle</code>; пометить в <code>APPROVED.md</code>; переименования кнопок «Продать / Погасить…» остаются</td></tr>
+            <tr><td>Доработать</td><td>Оставить пробным; назвать, что именно (например, дотянуть Аналитику / Меню / онбординг, проверить тёмную тему); повторить сравнение</td></tr>
+          </tbody>
+        </table>
+      </section>
+    </main>
+
+    <script>
+      (function () {
+        document.addEventListener('click', function (e) {
+          var t = e.target.closest('[data-vp]');
+          if (!t) return;
+          document.querySelectorAll('[data-vp]').forEach(function (b) {
+            b.setAttribute('aria-selected', String(b === t));
+          });
+          document.querySelectorAll('[data-panel]').forEach(function (p) {
+            p.hidden = p.dataset.panel !== t.dataset.vp;
+          });
+        });
+      })();
+    </script>
+  </body>
+</html>
