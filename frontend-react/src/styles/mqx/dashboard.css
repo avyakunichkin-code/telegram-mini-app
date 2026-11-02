@@ -849,53 +849,6 @@
   color: color-mix(in srgb, var(--mq-danger) 88%, var(--mqx-ink));
 }
 /* Period actions — chip ★ (period-actions-round) */
-.mqx-period-hint {
-  display: flex;
-  flex-direction: row;
-  align-items: flex-end;
-  gap: 6px;
-  margin: 0 var(--mqx-dash-inline-pad, 14px) 10px;
-  padding: 0;
-}
-
-.mqx-period-hint__bubble {
-  position: relative;
-  flex: 1;
-  min-width: 0;
-  margin: 0;
-  padding: 10px 12px;
-  border-radius: 14px;
-  font-size: var(--mq-fs-caption);
-  font-weight: var(--mq-fw-regular);
-  line-height: var(--mq-lh-relaxed);
-  color: color-mix(in srgb, var(--mqx-ink) 90%, transparent);
-  background: color-mix(in srgb, var(--mq-violet) 5%, var(--tg-theme-bg-color, #fff));
-  border: 1px solid color-mix(in srgb, var(--mqx-ink) 8%, transparent);
-}
-
-.mqx-period-hint__bubble::after {
-  content: '';
-  position: absolute;
-  right: -6px;
-  bottom: 10px;
-  border: 6px solid transparent;
-  border-left-color: color-mix(in srgb, var(--mq-violet) 5%, var(--tg-theme-bg-color, #fff));
-  filter: drop-shadow(1px 0 0 color-mix(in srgb, var(--mqx-ink) 8%, transparent));
-}
-
-.mqx-period-hint__bubble strong {
-  font-weight: 800;
-  letter-spacing: 0.02em;
-  color: color-mix(in srgb, var(--mq-amber, #f59e0b) 92%, var(--mqx-ink));
-}
-
-.mqx-period-hint__mascot.mqx-onboarding-monetka {
-  width: 48px;
-  height: auto;
-  flex-shrink: 0;
-  filter: drop-shadow(0 2px 6px color-mix(in srgb, var(--mqx-ink) 12%, transparent));
-}
-
 .mqx-period-actions--chips {
   padding: 12px var(--mqx-dash-inline-pad, 14px) 14px;
 }

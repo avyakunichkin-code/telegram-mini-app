@@ -125,19 +125,12 @@ body:has(.mqx-juice-ritual-root--open) .mqx-guidance-strip {
 
 .mqx-guidance-strip__perch {
   flex: 0 0 auto;
-  width: 50px;
-  margin: -4px 0 -2px;
   line-height: 0;
   pointer-events: none;
 }
 
-.mqx-guidance-strip__mascot.mqx-onboarding-monetka--sit-edge {
-  width: 54px !important;
-  max-width: none;
-  max-height: 62px;
-  object-fit: contain;
-  object-position: left bottom;
-  filter: drop-shadow(0 3px 8px color-mix(in srgb, var(--mq-violet) 18%, transparent));
+.mqx-guidance-strip__mascot {
+  display: block;
 }
 
 .mqx-guidance-strip__title {

@@ -1,0 +1,32 @@
+/* Маскоты ★ PO 2026-11-02 — design-lab/mascots/ (ink-mascots-round, pregame-monetka-round, companions-round).
+   Цвета персонажей зашиты в SVG и от темы не зависят. */
+
+.mqx-monetka,
+.mqx-monetka-avatar {
+  display: block;
+  flex-shrink: 0;
+}
+
+/* Надпись на ободе — шрифтом игры (inline SVG получает шрифт страницы) */
+.mqx-monetka__rim {
+  font-family: var(--mq-font-display);
+  font-weight: 900;
+}
+
+/* ---------- #/dev/mqx ---------- */
+.mqx-catalog-mascots {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  align-items: flex-end;
+  margin-top: 12px;
+}
+
+.mqx-catalog-mascots__cell {
+  display: grid;
+  justify-items: center;
+  gap: 4px;
+  margin: 0;
+  font-size: var(--mq-fs-caption);
+  color: var(--mq-board-ink-soft);
+}
