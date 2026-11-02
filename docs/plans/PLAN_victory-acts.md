@@ -23,14 +23,14 @@ aliases:
 # Plan: победа в два акта (PR-18 → PR-21, вариант C)
 
 **Эпик:** PR-18 (spec + sim) → PR-21 (внедрение) в [`PLAN_production-ready`](PLAN_production-ready.md).  
-**Spec:** [`SPEC_victory-acts.md`](../specs/features/SPEC_victory-acts.md) — **DRAFT**. Спека и калибровка A приходят с PR #16 (`feat/victory-calibration-a`). До merge PR #16 ссылка на спеку в `main` не открывается.  
-**Исходные данные:** ветка PR #16 на `e383ef5`; эталоны — `292fd7e`, коммит `e383ef5` их не менял.
+**Spec:** [`SPEC_victory-acts.md`](../specs/features/SPEC_victory-acts.md) — **DRAFT**. Спека и калибровка A — в `main` с PR #16 (merge `2911261`, 2026-11-02).  
+**Исходные данные:** эталоны — `292fd7e` (в `main` с PR #16). Фикс `action_once` «было хоть раз» (`e383ef5`) в PR #16 **не попал** — в `main` его нет; ниже он описан как часть акта 1, до его мержа это расхождение.
 
 - Акт 1 = цепочка калибровки A: «Студент» (`basic`) — 5 шагов, взрослые шаблоны — 6 шагов (со страховкой).
 - Последний шаг — `passive_income_monthly_min` по `PASSIVE_INCOME_GOAL_BY_TEMPLATE` (basic 2 500, tight_budget 6 000, mortgage_stress 30 000, debt_stack 22 000 ₽ за ход); финала `cash_10m` нет.
 - `action_once` для вклада, облигации и полиса — «было хоть раз» (`deposit_ever_opened`, `bond_ever_bought`, `insurance_ever_purchased` в снимке).
 
-**Решения PO 2026-11-02** (раунд lab `goal-acts-round` v1 → v2). Они расходятся со спекой — §User flows 1–3, §Endpoints `run_finale`, §UI. Внести в спеку при APPROVED (спека в PR #16, её ведёт другая сессия).
+**Решения PO 2026-11-02** (раунд lab `goal-acts-round` v1 → v2). Они расходятся со спекой — §User flows 1–3, §Endpoints `run_finale`, §UI. Внести в спеку при APPROVED.
 
 1. **Достижение акта не прерывает игру.** У акта 1 нет экрана финала, «Играть дальше» и «К сохранениям». Ход закрывается как обычно; на итоге хода (`MqxPeriodCloseRitual`) — строка «Акт 1 пройден» и пунктирная карточка «Дальше — акт 2: <цель>».
 2. **Одна шкала на оба акта** (вариант A). Шаги акта 1 → цель акта 1 (особая точка: крупнее, залита цветом) → шаги акта 2 → монета финиша. При переходе к акту 2 шкала не меняется, меняется только подпись «Акт 2 из 2».
@@ -101,8 +101,8 @@ MQ-ACT-13 docs: SPEC → implemented, victory-v2, run-finale, THRESHOLDS, CHANGE
 - [ ] PO: Open question 3 (где хранить ходы актов) — до MQ-ACT-07
 - [ ] PO: OQ5 (конец акта 2) — до MQ-ACT-08 и MQ-ACT-11
 - [x] PO: OQ6 — счёт шагов сквозной; раунд lab ★ 2026-11-02
-- [ ] Spec **APPROVED** (сейчас DRAFT, лежит в PR #16)
-- [ ] Строка в `TRACEABILITY.md` (колонка Plan) — после merge PR #16 и APPROVED
+- [ ] Spec **APPROVED** (сейчас DRAFT, в `main`)
+- [ ] Строка в `TRACEABILITY.md` (колонка Plan) — после APPROVED
 - [ ] **Checkpoint A** (после MQ-ACT-02…06): `py -3 -m pytest -q` зелёный; CS-1, CS-3, CS-6 зелёные; `balance_diff` по акту 1 без изменений
 - [ ] **Checkpoint B** (после MQ-ACT-07…09): CS-2, CS-4, CS-5, CS-7 зелёные; INV-4 и INV-1 (акт 2) проходят на 4 шаблонах; `economy-reviewer` без NEEDS REVISION; эталоны обновлены с согласия PO
 - [ ] **Checkpoint C** (после MQ-ACT-10…12): раунд lab APPROVED; `npm run test:unit && npm run build && npm run check:guardrails && npm run test:e2e` зелёные; CS-8 на mobile и desktop
@@ -173,7 +173,7 @@ MQ-ACT-13 docs: SPEC → implemented, victory-v2, run-finale, THRESHOLDS, CHANGE
   - таблица OQ1 пересчитана по этой политике на 4 шаблонах и вписана в этот план (или в `docs/balance/`).
 - **Verify:** `cd backend && py -3 scripts/balance_playtest.py` (4 шаблона × `act2_runner`); `py -3 -m pytest -q`; эталоны других политик не меняются
 - **Files:** `backend/scripts/balance_simulate.py`, `backend/scripts/balance_playtest.py`, отчёт `docs/balance/reports/…`
-- **Estimate:** M · **Depends:** PR #16 в `main`
+- **Estimate:** M · **Depends:** — (PR #16 в `main`)
 
 ### MQ-ACT-02 — Контракт: `acts`, поля overview/bootstrap, хранение ходов актов
 
