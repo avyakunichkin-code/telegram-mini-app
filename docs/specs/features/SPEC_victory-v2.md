@@ -90,7 +90,7 @@ supersedes_goal_types: character_level (removed 2026-05-24, migration 0031)
 | `avg_liquid_delta_6p` | `window` (default 6), `min_samples`, `salary_multiplier` **или** `min_avg` | `samples >= min_samples` и (`avg >= salary * multiplier` или `avg >= min_avg`) |
 | `cash_balance_min` | `min_cash` | `cash_balance >= min_cash` |
 | `expense_to_income_ratio` | `max_ratio` | lifestyle burn ≤ доля дохода |
-| `action_once` | `action`, `requires_mechanics?` | флаг действия игрока (учебная цепочка) |
+| `action_once` | `action`, `requires_mechanics?` | флаг действия игрока (учебная цепочка): «сделано хоть раз за партию». Закрытый вклад, проданная облигация или истёкший полис шаг **не откатывают** (с 2026-11-01; раньше `invest_*` и `insurance_purchased` требовали активный объект) |
 | `passive_income_monthly_min` | `min_monthly` | пассивный доход ≥ порога |
 | `passive_income_net_monthly_min` | `min_net` | пассив − расходы ≥ порога |
 | `asset_kind_any_owned` | `asset_kinds_any[]` | владение активом вида из списка |

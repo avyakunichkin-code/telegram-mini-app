@@ -67,29 +67,22 @@ def _safety_ever_contributed(db: Session, profile_id: int) -> bool:
     return tx is not None
 
 
-def _has_active_insurance(db: Session, profile_id: int) -> bool:
-    row = (
-        db.query(InsurancePolicy.id)
-        .filter(
-            InsurancePolicy.game_profile_id == profile_id,
-            InsurancePolicy.is_active == 1,
-        )
-        .first()
-    )
-    return row is not None
+def _has_insurance(db: Session, profile_id: int, *, active_only: bool) -> bool:
+    query = db.query(InsurancePolicy.id).filter(InsurancePolicy.game_profile_id == profile_id)
+    if active_only:
+        query = query.filter(InsurancePolicy.is_active == 1)
+    return query.first() is not None
 
 
-def _has_active_investment(db: Session, profile_id: int, kind: str) -> bool:
-    row = (
-        db.query(InvestmentPosition.id)
-        .filter(
-            InvestmentPosition.game_profile_id == profile_id,
-            InvestmentPosition.is_active == 1,
-            InvestmentPosition.kind == kind,
-        )
-        .first()
+def _has_investment(db: Session, profile_id: int, kind: str, *, active_only: bool) -> bool:
+    # Закрытые позиции и полисы не удаляются (is_active = 0) — по ним и считается «было хоть раз».
+    query = db.query(InvestmentPosition.id).filter(
+        InvestmentPosition.game_profile_id == profile_id,
+        InvestmentPosition.kind == kind,
     )
-    return row is not None
+    if active_only:
+        query = query.filter(InvestmentPosition.is_active == 1)
+    return query.first() is not None
 
 
 def active_asset_kinds(db: Session, profile_id: int) -> frozenset[str]:
@@ -134,7 +127,10 @@ def build_victory_evaluation_input(
         owned_asset_kinds=active_asset_kinds(db, profile.id),
         salary_ever_claimed=_salary_ever_claimed(db, profile),
         safety_ever_contributed=_safety_ever_contributed(db, profile.id),
-        has_active_deposit=_has_active_investment(db, profile.id, "deposit"),
-        has_active_bond=_has_active_investment(db, profile.id, "bond"),
-        has_active_insurance=_has_active_insurance(db, profile.id),
+        has_active_deposit=_has_investment(db, profile.id, "deposit", active_only=True),
+        has_active_bond=_has_investment(db, profile.id, "bond", active_only=True),
+        has_active_insurance=_has_insurance(db, profile.id, active_only=True),
+        deposit_ever_opened=_has_investment(db, profile.id, "deposit", active_only=False),
+        bond_ever_bought=_has_investment(db, profile.id, "bond", active_only=False),
+        insurance_ever_purchased=_has_insurance(db, profile.id, active_only=False),
     )
