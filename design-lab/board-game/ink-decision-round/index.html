@@ -13,7 +13,7 @@
       <p>Скриншоты prod на e2e-стенде (backend SQLite :8011 + Vite :5181), ветка <code>claude/game-gate-prep-39c10b</code>. Партия «Студент», светлая тема.
       Слева — стиль по умолчанию <b>ink</b> (<code>design/system/runtime/styles/mqx/ink.css</code>), справа — <b>classic</b> (<code>?style=classic</code>).
       Процент — доля пикселей, отличающихся между стилями на одном кадре.</p>
-      <p class="lab-head__status">2026-11-02, раунд 2: ink доработан по 8 пунктам PO (см. «Что меняется»). Статус — <b>пробный, не ★</b>: перенос в канон — после «утверждаем ink».</p>
+      <p class="lab-head__status">2026-11-02, раунд 3: ink доработан по 8 пунктам PO и двум замечаниям к раунду 2 (тост над подсказкой, подсказка у низа на итоге хода) (см. «Что меняется»). Статус — <b>пробный, не ★</b>: перенос в канон — после «утверждаем ink».</p>
     </header>
 
     <main class="page">
@@ -33,7 +33,7 @@
         <section class="cmp">
           <header class="cmp__head">
             <h3>Главная (ход 3, без онбординга)</h3>
-            <span class="cmp__badge">13,6% пикселей отличается</span>
+            <span class="cmp__badge">12,3% пикселей отличается</span>
           </header>
           <p class="cmp__note">П. 1: с обводкой — карта хода, цель, действия хода, таббар. Без обводки — потребности, «На счёте», доходы / расходы / подушка (как в classic).</p>
           <div class="cmp__pair">
@@ -44,9 +44,9 @@
         <section class="cmp">
           <header class="cmp__head">
             <h3>Главная с онбордингом (ход 3)</h3>
-            <span class="cmp__badge">16,7% пикселей отличается</span>
+            <span class="cmp__badge">16,5% пикселей отличается</span>
           </header>
-          <p class="cmp__note">П. 2: подсказка Монетки лежит на линии таббара и закрывает её — по ширине как таббар, сверху своя чернильная линия, как у листов.</p>
+          <p class="cmp__note">П. 2: подсказка Монетки лежит на линии таббара и закрывает её — по ширине как таббар, сверху своя чернильная линия, как у листов. Тост «Зарплата в кошелёк» при видимой подсказке стоит над ней (раунд 3, в обоих стилях).</p>
           <div class="cmp__pair">
             <figure><figcaption>ink · по умолчанию</figcaption><img loading="lazy" src="./assets/shots/m412-ink-01b-home-turn3.webp" alt="Главная с онбордингом (ход 3), стиль ink" /></figure>
             <figure><figcaption>classic · <code>?style=classic</code></figcaption><img loading="lazy" src="./assets/shots/m412-classic-01b-home-turn3.webp" alt="Главная с онбордингом (ход 3), стиль classic" /></figure>
@@ -77,7 +77,7 @@
         <section class="cmp">
           <header class="cmp__head">
             <h3>Карусель события</h3>
-            <span class="cmp__badge">37,4% пикселей отличается</span>
+            <span class="cmp__badge">45,0% пикселей отличается</span>
           </header>
           <p class="cmp__note">П. 5: полоса — цвет домена, как в classic, без линии; чип — белый без обводки; вместо книжки — «?» в кружке, как у потребностей; реплика Монетки и варианты — ink. Экран затемнён целиком — подсказка прижата к низу, карта стоит над ней. Иконка «?» — в обоих стилях (это разметка, не CSS).</p>
           <div class="cmp__pair">
@@ -88,9 +88,9 @@
         <section class="cmp">
           <header class="cmp__head">
             <h3>Итог хода</h3>
-            <span class="cmp__badge">17,9% пикселей отличается</span>
+            <span class="cmp__badge">28,6% пикселей отличается</span>
           </header>
-          <p class="cmp__note">П. 6: «На счёте» — главная карта, клетка поля с чернильным краем и золотой тенью; «Дальше» — фишка; списания — без рамки.</p>
+          <p class="cmp__note">П. 6: подсказка прижата к низу (раунд 3), «Дальше» не перекрыта; «На счёте» — главная карта, клетка поля с чернильным краем и золотой тенью; «Дальше» — фишка; списания — без рамки.</p>
           <div class="cmp__pair">
             <figure><figcaption>ink · по умолчанию</figcaption><img loading="lazy" src="./assets/shots/m412-ink-06-turn-summary.webp" alt="Итог хода, стиль ink" /></figure>
             <figure><figcaption>classic · <code>?style=classic</code></figcaption><img loading="lazy" src="./assets/shots/m412-classic-06-turn-summary.webp" alt="Итог хода, стиль classic" /></figure>
@@ -124,7 +124,7 @@
         <section class="cmp">
           <header class="cmp__head">
             <h3>Главная (ход 3, без онбординга)</h3>
-            <span class="cmp__badge">4,3% пикселей отличается</span>
+            <span class="cmp__badge">3,9% пикселей отличается</span>
           </header>
           <p class="cmp__note">П. 1: с обводкой — карта хода, цель, действия хода, таббар. Без обводки — потребности, «На счёте», доходы / расходы / подушка (как в classic).</p>
           <div class="cmp__pair">
@@ -135,9 +135,9 @@
         <section class="cmp">
           <header class="cmp__head">
             <h3>Главная с онбордингом (ход 3)</h3>
-            <span class="cmp__badge">4,9% пикселей отличается</span>
+            <span class="cmp__badge">4,8% пикселей отличается</span>
           </header>
-          <p class="cmp__note">П. 2: подсказка Монетки лежит на линии таббара и закрывает её — по ширине как таббар, сверху своя чернильная линия, как у листов.</p>
+          <p class="cmp__note">П. 2: подсказка Монетки лежит на линии таббара и закрывает её — по ширине как таббар, сверху своя чернильная линия, как у листов. Тост «Зарплата в кошелёк» при видимой подсказке стоит над ней (раунд 3, в обоих стилях).</p>
           <div class="cmp__pair">
             <figure><figcaption>ink · по умолчанию</figcaption><img loading="lazy" src="./assets/shots/d1440-ink-01b-home-turn3.webp" alt="Главная с онбордингом (ход 3), стиль ink" /></figure>
             <figure><figcaption>classic · <code>?style=classic</code></figcaption><img loading="lazy" src="./assets/shots/d1440-classic-01b-home-turn3.webp" alt="Главная с онбордингом (ход 3), стиль classic" /></figure>
@@ -168,7 +168,7 @@
         <section class="cmp">
           <header class="cmp__head">
             <h3>Карусель события</h3>
-            <span class="cmp__badge">11,3% пикселей отличается</span>
+            <span class="cmp__badge">11,6% пикселей отличается</span>
           </header>
           <p class="cmp__note">П. 5: полоса — цвет домена, как в classic, без линии; чип — белый без обводки; вместо книжки — «?» в кружке, как у потребностей; реплика Монетки и варианты — ink. Экран затемнён целиком — подсказка прижата к низу, карта стоит над ней. Иконка «?» — в обоих стилях (это разметка, не CSS).</p>
           <div class="cmp__pair">
@@ -179,9 +179,9 @@
         <section class="cmp">
           <header class="cmp__head">
             <h3>Итог хода</h3>
-            <span class="cmp__badge">4,6% пикселей отличается</span>
+            <span class="cmp__badge">8,9% пикселей отличается</span>
           </header>
-          <p class="cmp__note">П. 6: «На счёте» — главная карта, клетка поля с чернильным краем и золотой тенью; «Дальше» — фишка; списания — без рамки.</p>
+          <p class="cmp__note">П. 6: подсказка прижата к низу (раунд 3), «Дальше» не перекрыта; «На счёте» — главная карта, клетка поля с чернильным краем и золотой тенью; «Дальше» — фишка; списания — без рамки.</p>
           <div class="cmp__pair">
             <figure><figcaption>ink · по умолчанию</figcaption><img loading="lazy" src="./assets/shots/d1440-ink-06-turn-summary.webp" alt="Итог хода, стиль ink" /></figure>
             <figure><figcaption>classic · <code>?style=classic</code></figcaption><img loading="lazy" src="./assets/shots/d1440-classic-06-turn-summary.webp" alt="Итог хода, стиль classic" /></figure>
@@ -235,7 +235,6 @@
         <ul>
           <li><b>«Доходы / Расходы» на Главной нажимаются, но без обводки</b> (п. 1). Это исключение из правила «нажимаемое — с тенью»; на нажатие намекает только «›» у подписи. В Капитале те же доходы и расходы — фишки с тенью.</li>
           <li><b>Экраны до партии</b> (вход, сохранения, выбор жизни) и <b>содержимое подсказки</b> — по-прежнему classic. Карта партии и кнопки Меню в ink, а те же компоненты на экране сохранений — нет.</li>
-          <li><b>«Дальше» на итоге хода перекрыт тостом «Подушка пополнена» и подсказкой</b> — видно на кадре. Это не ink: в classic так же. Отдельный баг.</li>
           <li><b>Подсказка онбординга закрывает «Действия хода»</b> ниже карты (кадр «Главная с онбордингом»): прокрутка доступна, но кнопки под подсказкой не видны без скролла. Было и до доработки.</li>
           <li><b>Два стиля в prod.</b> e2e и unit проверяют только ink; classic никто не проверяет. После решения переключатель стоит снять.</li>
           <li><b>Хрупкость слоя.</b> Около 800 строк переопределений по классам prod; переименование класса молча снимает ink с блока.</li>

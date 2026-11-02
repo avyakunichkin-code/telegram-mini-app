@@ -195,9 +195,15 @@
   box-shadow: none;
 }
 
-/* Карусель затемняет весь экран вместе с таббаром — подсказка прижата к низу, карта над ней */
-:root[data-mqx-style='ink'] body:has(.events-overlay-root) .mqx-guidance-strip {
+/* Карусель и итог хода закрывают весь экран вместе с таббаром — подсказка прижата к низу,
+   содержимое над ней */
+:root[data-mqx-style='ink'] body:has(.events-overlay-root) .mqx-guidance-strip,
+:root[data-mqx-style='ink'] body:has(.mqx-juice-ritual-root--open) .mqx-guidance-strip {
   bottom: 0;
+}
+
+:root[data-mqx-style='ink'] .mqx-page--guidance-active .mqx-juice-ritual {
+  padding-bottom: calc(16px + var(--mqx-guidance-strip-offset, 0px) + 8px);
 }
 
 :root[data-mqx-style='ink'] .events-overlay-root {
