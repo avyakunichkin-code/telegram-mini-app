@@ -1,6 +1,6 @@
 # plan-checkup / bento-round (SPL-404)
 
-**Статус:** отчёт — ★ **C2 утверждён** PO 2026-11-02 и перенесён в `apps/plan-web` (канон — [`../APPROVED.md`](../APPROVED.md)). Лозунг — review, итерация 4 (U1–U8 в раскладке S4).
+**Статус:** отчёт — ★ **C2 утверждён** PO 2026-11-02 и перенесён в `apps/plan-web` (канон — [`../APPROVED.md`](../APPROVED.md)). Лозунг — ★ **U1 «Деньги отвечают»** в раскладке S4, утверждён PO 2026-11-02 и перенесён в `apps/plan-web`.
 
 Исходная точка — дизайн-система прототипа P0 «Бенто» (токены — `apps/plan-web/src/styles.css`, копия в `../styles.css`). Lab-раунда в P0 не было ([`docs/plan/ROADMAP.md`](../../../docs/plan/ROADMAP.md)).
 

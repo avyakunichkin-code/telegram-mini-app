@@ -117,7 +117,7 @@ export default function App() {
       <header className="topbar">
         <button className="brand" onClick={() => checkup && setScreen(report ? 'report' : 'question')}>
           <span className="brand-mark" aria-hidden>П</span>
-          <span><b>ТВОЙ ПЛАН</b><small>Финансы как есть</small></span>
+          <span><b>ТВОЙ ПЛАН</b><small>Деньги отвечают</small></span>
         </button>
         {screen !== 'auth' && (
           <nav className="topnav">
