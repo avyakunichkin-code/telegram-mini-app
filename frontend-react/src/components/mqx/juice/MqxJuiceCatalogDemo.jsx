@@ -43,7 +43,7 @@ export function MqxJuiceCatalogDemo() {
       </div>
       <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, marginTop: 16 }}>
         <MqxButton variant="secondary" onClick={() => setRitualOpen(true)}>
-          C — ритуал хода
+          C — итоги хода (Квитя)
         </MqxButton>
         <MqxButton variant="secondary" onClick={() => setWarnOpen(true)}>
           D — зарплата сгорит

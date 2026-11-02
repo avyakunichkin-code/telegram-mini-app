@@ -58,12 +58,12 @@ export function MqxStatesCatalogDemo() {
       </div>
 
       <div className="mqx-catalog-states__ritual" style={{ marginTop: 20 }}>
-        <h3 className="mqx-catalog-states__label">S4 — Ritual beats (A)</h3>
+        <h3 className="mqx-catalog-states__label">Итоги хода — чек-Квитя</h3>
         <p className="mqx-catalog__note" style={{ margin: '0 0 10px' }}>
-          SVG <code>FinanceMetricIcons</code> в <code>MqxPeriodCloseRitual</code> (не символы + / !).
+          <code>MqxPeriodCloseRitual</code> + <code>KvityaReceipt</code> (★ <code>mascots/ink-mascots-round</code>, 2026-11-02).
         </p>
         <MqxButton variant="secondary" onClick={() => setRitualOpen(true)}>
-          Показать ритуал закрытия
+          Показать итоги хода
         </MqxButton>
         <div className="mqx-catalog-states__ritual-host">
           <MqxPeriodCloseRitual summary={CATALOG_PERIOD_CLOSE_RITUAL} open={ritualOpen} onClose={() => setRitualOpen(false)} />

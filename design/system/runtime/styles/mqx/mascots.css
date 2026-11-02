@@ -13,6 +13,112 @@
   font-weight: 900;
 }
 
+/* ---------- Квитя: чек = тело, лицо на оторванном крае (★ ink-mascots-round «Итоги хода») ---------- */
+.mqx-kvitya {
+  display: grid;
+  filter: drop-shadow(5px 5px 0 var(--mq-turn));
+}
+
+.mqx-kvitya svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+/* Края чека заходят на тело на 1 px — иначе в шве просвечивает цветная тень */
+.mqx-kvitya svg:first-child {
+  margin-block-end: calc(var(--mq-ink-w) / -2);
+}
+
+.mqx-kvitya svg:last-child {
+  margin-block-start: calc(var(--mq-ink-w) / -2);
+}
+
+.mqx-kvitya__paper {
+  fill: var(--mq-cell);
+}
+
+.mqx-kvitya__edge {
+  fill: none;
+  stroke: var(--mq-ink-line);
+  stroke-width: 3;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+}
+
+.mqx-kvitya__band {
+  fill: var(--mq-turn);
+}
+
+.mqx-kvitya__ink {
+  fill: var(--mq-board-ink);
+}
+
+.mqx-kvitya__smile {
+  fill: none;
+  stroke: var(--mq-board-ink);
+  stroke-width: 3;
+  stroke-linecap: round;
+}
+
+.mqx-kvitya__body {
+  display: grid;
+  gap: var(--mq-sp-3);
+  margin: 0;
+  padding: var(--mq-sp-1) var(--mq-sp-7) var(--mq-sp-5);
+  border-inline: 3px solid var(--mq-ink-line);
+  background: var(--mq-cell);
+  font-size: var(--mq-fs-body);
+}
+
+.mqx-kvitya__row {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--mq-sp-5);
+}
+
+.mqx-kvitya__row dt,
+.mqx-kvitya__row dd {
+  margin: 0;
+}
+
+.mqx-kvitya__row dd {
+  flex-shrink: 0;
+  font-variant-numeric: tabular-nums;
+  font-weight: 700;
+}
+
+.mqx-kvitya__value--gain {
+  color: var(--mq-gain);
+}
+
+.mqx-kvitya__value--loss {
+  color: var(--mq-risk);
+}
+
+.mqx-kvitya__rule {
+  margin: var(--mq-sp-1) 0;
+  border-top: 2px dashed var(--mq-ink-line);
+}
+
+/* Итог за ход выделен маркером — золото «денег» */
+.mqx-kvitya__total {
+  margin: 0 calc(var(--mq-sp-3) * -1);
+  padding: var(--mq-sp-1) var(--mq-sp-3);
+  border-radius: var(--mq-r-cell);
+  background: var(--mq-coin);
+  color: var(--mq-coin-on);
+}
+
+.mqx-kvitya__total dt,
+.mqx-kvitya__total dd {
+  font: 900 var(--mq-fs-cell) / 1.4 var(--mq-font-display);
+}
+
+.mqx-kvitya__foot {
+  color: var(--mq-board-ink-soft);
+}
+
 /* ---------- #/dev/mqx ---------- */
 .mqx-catalog-mascots {
   display: flex;

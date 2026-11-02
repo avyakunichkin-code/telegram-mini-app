@@ -113,7 +113,7 @@ export async function dismissRitual(page) {
   if (await strip.getByRole('button', { name: 'Понятно' }).isVisible().catch(() => false)) {
     await pressGotIt(page);
   }
-  await page.locator('.mqx-juice-ritual').getByRole('button', { name: 'Дальше' }).click();
+  await page.locator('.mqx-juice-ritual').getByRole('button', { name: 'Следующий ход' }).click();
   await expect(page.locator('.mqx-juice-ritual')).toBeHidden();
 }
 

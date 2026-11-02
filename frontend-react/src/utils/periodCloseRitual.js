@@ -1,5 +1,5 @@
-import { turnClosedTitle } from '../constants/turnCopy';
-import { derivePeriodCloseMetrics } from './periodCloseDisplay';
+import { turnClosedTitle } from '../constants/turnCopy.js';
+import { derivePeriodCloseMetrics } from './periodCloseDisplay.js';
 
 function formatMoneyAbs(n) {
   const v = Math.round(Math.abs(Number(n) || 0));
@@ -7,78 +7,21 @@ function formatMoneyAbs(n) {
 }
 
 /**
- * 2–4 «удара» истории для ритуала закрытия хода (★ juice C + icons S4-A).
- * @returns {{ id: string, tone: 'pos'|'neg'|'neutral', icon: 'up'|'down'|'coin'|'shield', lead: string, emphasis?: string, tail: string }[]}
+ * Реплика Монетки под чеком Квити (★ ink-mascots-round «Итоги хода»): одна строка о главном за ход.
+ * Приоритет: просрочка → подушка выросла → итог хода в плюс / в минус / в ноль.
  */
-export function periodCloseRitualBeats(summary) {
+export function periodCloseMonetkaLine(summary) {
   const m = derivePeriodCloseMetrics(summary);
-  if (!m) return [];
-
-  const beats = [];
-
-  if (m.incomeDelta > 0) {
-    beats.push({
-      id: 'income',
-      tone: 'pos',
-      icon: 'up',
-      lead: 'Доходы ',
-      emphasis: `+${formatMoneyAbs(m.incomeDelta)} ₽`,
-      tail: ' — деньги пришли в этот ход',
-    });
+  if (!m) return null;
+  if (Number(summary?.overdue_added) > 0) {
+    return 'Появилась просрочка — долг растёт. Закрой её в «Капитале», пока не набежали пени.';
   }
-
-  if (m.expenseDelta > 0) {
-    beats.push({
-      id: 'expense',
-      tone: 'neg',
-      icon: 'down',
-      lead: 'Расходы и платежи ',
-      emphasis: `−${formatMoneyAbs(m.expenseDelta)} ₽`,
-      tail: ' — часть прироста ушла на жизнь и долги',
-    });
-  } else if (m.cashDelta < 0) {
-    beats.push({
-      id: 'cash',
-      tone: 'neg',
-      icon: 'down',
-      lead: 'Наличные ',
-      emphasis: `−${formatMoneyAbs(m.cashDelta)} ₽`,
-      tail: ' за ход — баланс просел',
-    });
+  if (m.safetyDelta > 0) {
+    return `Подушка выросла на ${formatMoneyAbs(m.safetyDelta)} ₽ — так держать!`;
   }
-
-  if (m.cashDelta > 0 && m.incomeDelta <= m.expenseDelta) {
-    beats.push({
-      id: 'cash-pos',
-      tone: 'pos',
-      icon: 'coin',
-      lead: 'Наличные ',
-      emphasis: `+${formatMoneyAbs(m.cashDelta)} ₽`,
-      tail: ' — итог хода в плюс',
-    });
-  }
-
-  if (m.safetyDelta !== 0) {
-    const sign = m.safetyDelta > 0 ? '+' : '−';
-    beats.push({
-      id: 'safety',
-      tone: m.safetyDelta > 0 ? 'pos' : 'neutral',
-      icon: 'shield',
-      lead: 'Подушка ',
-      emphasis: `${sign}${formatMoneyAbs(m.safetyDelta)} ₽`,
-      tail: ` — запас на чёрный день ${m.safetyDelta > 0 ? 'вырос' : 'изменился'}`,
-    });
-  } else {
-    beats.push({
-      id: 'safety-hold',
-      tone: 'neutral',
-      icon: 'shield',
-      lead: '',
-      tail: 'Подушка держится — запас на чёрный день без сюрпризов',
-    });
-  }
-
-  return beats.slice(0, 4);
+  if (m.cashDelta > 0) return 'Ход в плюс! Интересно, а что если часть отложить в подушку?';
+  if (m.cashDelta < 0) return 'Ход в минус. Интересно, какая строчка чека съела больше всего?';
+  return 'Ход в ноль: сколько пришло, столько и ушло.';
 }
 
 export function periodCloseRitualPeriodLabel(summary) {

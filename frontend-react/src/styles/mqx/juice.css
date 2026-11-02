@@ -92,7 +92,8 @@
   animation: mqx-juice-flash 0.55s ease-out;
 }
 
-/* C — ритуал закрытия хода */
+/* Итоги хода ★ ink-mascots-round (PO 2026-11-02): поле доски, чек-Квитя, Монетка ниже, одна главная кнопка.
+   Прежний ритуал ★ juice C (фиолетовый экран, «удары») заменён. Стили чека — mascots.css. */
 .mqx-juice-ritual-root {
   position: fixed;
   top: 0;
@@ -122,9 +123,9 @@
   align-items: stretch;
   justify-content: flex-end;
   padding: 20px 18px calc(16px + var(--tma-tabbar-inset, 64px));
-  background: color-mix(in srgb, var(--mq-violet-deep) 88%, #0f1115);
-  color: #fff;
-  text-align: center;
+  background: var(--mq-board);
+  color: var(--mq-board-ink);
+  text-align: start;
   opacity: 0;
 }
 
@@ -136,7 +137,8 @@
   -webkit-overflow-scrolling: touch;
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: stretch;
+  gap: var(--mq-sp-7);
   width: 100%;
   padding-bottom: 8px;
 }
@@ -145,99 +147,33 @@
   animation: mqx-juice-ritual-in 0.4s ease-out forwards;
 }
 
-.mqx-juice-ritual__spark {
-  position: absolute;
-  width: 120px;
-  height: 120px;
-  border-radius: 50%;
-  background: radial-gradient(circle, color-mix(in srgb, #fff 25%, transparent), transparent 70%);
-  top: 18%;
-  left: 50%;
-  transform: translateX(-50%) scale(0);
-  pointer-events: none;
-}
-
-.mqx-juice-ritual--active .mqx-juice-ritual__spark {
-  animation: mqx-juice-spark 0.7s ease-out 0.1s;
-}
-
-.mqx-juice-ritual__badge {
-  font-size: 11px;
-  font-weight: 800;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  opacity: 0.85;
-  margin-bottom: 8px;
-}
-
 .mqx-juice-ritual__title {
-  /* Глобальный h2 (shell.css) красил заголовок в почти чёрный на фиолетовом (~2:1) — берём цвет ритуала. */
-  color: inherit;
-  margin: 0;
-  font-size: 26px;
-  font-weight: 800;
-  line-height: 1.1;
-}
-
-.mqx-juice-ritual__period {
-  margin-top: 6px;
-  font-size: 14px;
-  opacity: 0.9;
-}
-
-/* «На счёте» — главная карта экрана: клетка поля с чернильным краем и золотой тенью (награда хода) */
-.mqx-juice-ritual__balance {
-  margin-top: 16px;
-  width: 100%;
-  max-width: 320px;
-  padding: 12px 14px;
-  border: var(--mq-ink-w) solid var(--mq-ink-line);
-  border-radius: var(--mq-r-card);
-  background: var(--mq-cell);
   color: var(--mq-board-ink);
-  box-shadow: var(--mq-ink-off) var(--mq-ink-off) 0 var(--mq-coin);
+  margin: 0;
+  font: 900 var(--mq-fs-display) / 1.2 var(--mq-font-display);
 }
 
-.mqx-juice-ritual__balance-main {
+.mqx-juice-ritual__sub {
+  margin: calc(var(--mq-sp-7) * -1 + var(--mq-sp-1)) 0 0;
+  color: var(--mq-board-ink-soft);
+  font-size: var(--mq-fs-body);
+}
+
+/* Монетка комментирует ход: аватар + реплика на мягком золоте */
+.mqx-juice-ritual__tip {
   display: flex;
-  flex-direction: column;
-  gap: 2px;
+  align-items: center;
+  gap: var(--mq-sp-5);
 }
 
-.mqx-juice-ritual__balance-label {
-  font-size: 12px;
-  font-weight: 700;
-  opacity: 0.82;
-}
-
-.mqx-juice-ritual__balance-value {
-  font-size: 24px;
-  font-weight: 850;
-  font-variant-numeric: tabular-nums;
-  letter-spacing: -0.02em;
-}
-
-.mqx-juice-ritual__balance-delta {
-  margin-top: 6px;
-  font-size: 13px;
-  font-weight: 700;
-  font-variant-numeric: tabular-nums;
-  opacity: 0.92;
-}
-
-.mqx-juice-ritual__balance-delta--pos {
-  color: var(--mq-gain);
-}
-
-.mqx-juice-ritual__balance-delta--neg {
-  color: var(--mq-danger);
-}
-
-.mqx-juice-ritual__overdue {
-  margin: 8px 0 0;
-  font-size: 12px;
-  font-weight: 700;
-  color: color-mix(in srgb, #fecaca 90%, #fff);
+.mqx-juice-ritual__bubble {
+  margin: 0;
+  padding: var(--mq-sp-5) var(--mq-sp-7);
+  border-radius: var(--mq-r-card);
+  background: var(--mq-coin-soft);
+  color: var(--mq-board-ink);
+  font-size: var(--mq-fs-body);
+  line-height: 1.4;
 }
 
 .mqx-juice-ritual__spawn-fail {
@@ -246,151 +182,20 @@
   font-size: 13px;
   font-weight: 650;
   line-height: 1.35;
-  color: color-mix(in srgb, #fecaca 88%, #fff);
-}
-
-.mqx-juice-ritual__details {
-  margin-top: 16px;
-  width: 100%;
-  max-width: 320px;
-  text-align: left;
-}
-
-.mqx-juice-ritual__details-title {
-  margin: 0 0 8px;
-  font-size: 12px;
-  font-weight: 800;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  opacity: 0.78;
-}
-
-/* Списания — информация: без рамки, строки на поле экрана */
-.mqx-juice-ritual__detail-list {
-  margin: 0;
-  padding: 0;
-  list-style: none;
-  border: 0;
-  border-radius: 12px;
-  background: color-mix(in srgb, #fff 8%, transparent);
-}
-
-.mqx-juice-ritual__detail-row {
-  display: grid;
-  grid-template-columns: 1fr auto;
-  gap: 4px 10px;
-  padding: 9px 12px;
-  border-bottom: 1px solid color-mix(in srgb, #fff 10%, transparent);
-  font-size: 13px;
-  line-height: 1.3;
-}
-
-.mqx-juice-ritual__detail-row:last-child {
-  border-bottom: none;
-}
-
-.mqx-juice-ritual__detail-label {
-  font-weight: 650;
-}
-
-.mqx-juice-ritual__detail-value {
-  font-weight: 800;
-  font-variant-numeric: tabular-nums;
-  white-space: nowrap;
-}
-
-.mqx-juice-ritual__detail-value--income {
-  color: color-mix(in srgb, var(--mq-emerald) 80%, #fff);
-}
-
-.mqx-juice-ritual__detail-value--expense {
-  color: color-mix(in srgb, #fecaca 88%, #fff);
-}
-
-.mqx-juice-ritual__detail-note {
-  grid-column: 1 / -1;
-  font-size: 11px;
-  font-weight: 650;
-  opacity: 0.82;
-  color: color-mix(in srgb, #fecaca 85%, #fff);
-}
-
-.mqx-juice-ritual__beats {
-  margin: 20px 0 0;
-  padding: 0;
-  list-style: none;
-  width: 100%;
-  max-width: 280px;
-  text-align: left;
-}
-
-.mqx-juice-ritual__beats li {
-  display: flex;
-  align-items: flex-start;
-  gap: 10px;
-  padding: 10px 0;
-  border-bottom: 1px solid color-mix(in srgb, #fff 18%, transparent);
-  font-size: 14px;
-  line-height: 1.35;
-  opacity: 0;
-  transform: translateX(-12px);
-}
-
-.mqx-juice-ritual--active .mqx-juice-ritual__beats li {
-  animation: mqx-juice-beat-in 0.45s ease-out forwards;
-}
-
-.mqx-juice-ritual--active .mqx-juice-ritual__beats li:nth-child(1) {
-  animation-delay: 0.15s;
-}
-.mqx-juice-ritual--active .mqx-juice-ritual__beats li:nth-child(2) {
-  animation-delay: 0.28s;
-}
-.mqx-juice-ritual--active .mqx-juice-ritual__beats li:nth-child(3) {
-  animation-delay: 0.41s;
-}
-.mqx-juice-ritual--active .mqx-juice-ritual__beats li:nth-child(4) {
-  animation-delay: 0.54s;
-}
-
-.mqx-juice-ritual__beats li:last-child {
-  border-bottom: none;
-}
-
-.mqx-juice-ritual__beat-icon {
-  width: 28px;
-  height: 28px;
-  border-radius: 8px;
-  display: grid;
-  place-items: center;
-  flex-shrink: 0;
-  color: #fff;
-  background: color-mix(in srgb, #fff 16%, transparent);
-}
-
-.mqx-juice-ritual__beat-icon svg {
-  display: block;
-}
-
-.mqx-juice-ritual__beat-icon--pos {
-  background: color-mix(in srgb, var(--mq-emerald) 55%, transparent);
-}
-
-.mqx-juice-ritual__beat-icon--neg {
-  background: color-mix(in srgb, var(--mq-danger) 45%, transparent);
+  color: var(--mq-risk);
 }
 
 .mqx-juice-ritual__dismiss {
   flex: 0 0 auto;
-  margin-top: 14px;
-  align-self: center;
-  padding: 10px 20px;
+  margin-top: var(--mq-sp-6);
+  align-self: stretch;
+  min-height: 48px;
+  padding: var(--mq-sp-5);
   border: var(--mq-ink-w) solid var(--mq-ink-line);
-  border-radius: var(--mq-r-cell);
-  background: #fff;
-  color: var(--mq-violet-deep);
-  font-weight: 800;
-  font-size: 14px;
+  border-radius: var(--mq-r-card);
+  background: var(--mq-turn);
+  color: var(--mq-turn-on);
+  font: 900 var(--mq-fs-cell) / 1.2 var(--mq-font-display);
   cursor: pointer;
   opacity: 0;
   pointer-events: auto;
@@ -580,25 +385,12 @@
   }
 }
 
-@keyframes mqx-juice-spark {
-  0% {
-    transform: translateX(-50%) scale(0);
-    opacity: 0.8;
-  }
-  100% {
-    transform: translateX(-50%) scale(2.2);
-    opacity: 0;
-  }
-}
-
 @media (prefers-reduced-motion: reduce) {
   .mqx-juice-flyout--active,
   .mqx-action-chip.mqx-juice-chip--celebrate,
   .mqx-finance-chip.mqx-juice-resource--gain::after,
   .mqx-juice-ritual--active,
-  .mqx-juice-ritual--active .mqx-juice-ritual__beats li,
-  .mqx-juice-ritual--active .mqx-juice-ritual__dismiss,
-  .mqx-juice-ritual--active .mqx-juice-ritual__spark {
+  .mqx-juice-ritual--active .mqx-juice-ritual__dismiss {
     animation: none !important;
   }
 
@@ -615,7 +407,6 @@
     opacity: 1;
   }
 
-  .mqx-juice-ritual--active .mqx-juice-ritual__beats li,
   .mqx-juice-ritual--active .mqx-juice-ritual__dismiss {
     opacity: 1;
     transform: none;
