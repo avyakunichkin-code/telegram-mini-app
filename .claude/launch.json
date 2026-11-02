@@ -50,13 +50,15 @@
       "runtimeArgs": [
         "-m",
         "uvicorn",
-        "plan_api.main:app",
+        "plan_api.main:create_app",
+        "--factory",
         "--reload",
         "--port",
         "8020",
         "--app-dir",
         "apps/plan-api"
       ],
+      "env": { "PYTHONPATH": "packages/platform/src", "PLAN_DATABASE_URL": "sqlite:///./apps/plan-api/plan_dev.db" },
       "port": 8020
     },
     {
