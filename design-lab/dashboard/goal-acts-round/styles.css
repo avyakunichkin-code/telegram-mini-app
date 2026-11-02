@@ -1,0 +1,35 @@
+/* dashboard/goal-acts-round — подпись акта в блоке «Цель» и финал акта 1 (SPEC_victory-acts, DRAFT). */
+
+.lab-note { margin: 0; color: var(--ink-soft); font-size: 13px; }
+.lab-state { margin: 4px 0 -4px; font: 600 12px / 1.3 var(--body); color: var(--ink-soft); text-transform: uppercase; letter-spacing: .04em; }
+.variant-tag { display: inline-block; padding: 2px 8px; border-radius: 999px; background: var(--coin-soft); border: 1px solid var(--coin-rim); font: 700 12px / 1.4 var(--body); }
+
+/* A ★ — акт в подписи: «Акт 1 из 2 · шаг 3 из 5» (минимум нового) */
+.h-goal__act { color: var(--ink); font-weight: 600; }
+
+/* B — плашка акта над целью */
+.ga-chip { display: inline-flex; align-items: center; gap: 4px; margin-bottom: 4px; padding: 1px 8px; border-radius: 999px; background: var(--turn-soft); color: var(--turn); font: 700 11px / 1.5 var(--body); text-transform: uppercase; letter-spacing: .05em; }
+.ga-chip--done { background: var(--coin-soft); color: var(--ink); }
+
+/* C — пройденный акт сжат в медаль перед точками текущего акта */
+.h-dots .ga-medal { width: 18px; height: 18px; border-radius: 50%; display: grid; place-items: center; flex: none; background: var(--coin-soft); border: 2px solid var(--coin-rim); font: 800 9px / 1 var(--body); color: var(--ink); margin-right: 10px; position: relative; }
+.h-dots .ga-medal::after { content: ""; position: absolute; left: 100%; top: 6px; width: 10px; border-top: 2px solid var(--coin-rim); }
+
+/* Раскрытая цель: строка про прошлый акт и реплика Монетки */
+.ga-past { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--ink-soft); }
+.ga-past .bg-coin { --coin-size: 18px; font-size: 8px; }
+.ga-tip { display: flex; gap: 8px; align-items: flex-start; font-size: 13px; color: var(--ink-soft); background: var(--bg-board); border-radius: 12px; padding: 8px 10px; }
+.ga-tip img { width: 28px; height: 28px; object-fit: contain; flex: none; }
+
+/* Прогресс цели акта 2 (доля, а не точка) */
+.ga-meter { display: grid; gap: 4px; font-size: 12.5px; color: var(--ink-soft); }
+.ga-meter .bar { height: 8px; border-radius: 999px; background: var(--bg-board); overflow: hidden; }
+.ga-meter .bar i { display: block; height: 100%; background: var(--turn); border-radius: inherit; }
+
+/* Финал акта 1: строка «дальше» */
+.ga-next { width: 100%; text-align: left; display: grid; gap: 2px; background: var(--bg-cell); border: 2px dashed var(--turn); border-radius: 14px; padding: 10px 12px; }
+.ga-next small { font: 700 11px / 1.4 var(--body); color: var(--turn); text-transform: uppercase; letter-spacing: .05em; }
+.ga-next b { font: var(--display-weight) 15px / 1.25 var(--display); }
+.s-finish__kicker { font: 700 12px / 1 var(--body); color: var(--ink-soft); text-transform: uppercase; letter-spacing: .06em; }
+
+.phone.ga-phone { min-height: 0; }

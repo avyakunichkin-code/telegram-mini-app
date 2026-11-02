@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="ru" data-font="f3">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>ТВОЙ ХОД — цель в два акта (design-lab, review)</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700&family=Nunito:wght@800;900&display=swap" />
+    <link rel="stylesheet" href="./lab-base.css" />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <header class="lab-head">
+      <h1>Цель в два акта — «Акт N из 2» и финал акта 1</h1>
+      <p>Раунд по <code>SPEC_victory-acts</code> (DRAFT, PR-18/PR-21). Статус: <b>review</b>, в prod не переносить до ★ от PO. База — prod parity ★ BG-1 (<code>dashboard/bg1-page-round</code>) и ★ BG-2 (<code>run-finale/bg2-page-round</code>). Партия «Студент»; цель акта 2 — черновой порог 15% (Open question 1 в <code>docs/plans/PLAN_victory-acts.md</code>).</p>
+      <div class="lab-controls">
+        <span>Тема</span>
+        <button class="lab-toggle" type="button" data-set-theme="light" aria-pressed="true">Светлая</button>
+        <button class="lab-toggle" type="button" data-set-theme="dark" aria-pressed="false">Тёмная</button>
+      </div>
+    </header>
+
+    <main class="lab-grid">
+      <section class="variant" aria-labelledby="va">
+        <header>
+          <span class="variant-tag">A ★ рекомендую</span>
+          <h2 id="va">Акт в подписи</h2>
+          <p>Минимум нового: к подписи «шаг N из M» спереди добавляется «Акт K из 2». Точки — только шаги текущего акта. Если в конфиге нет актов, подпись остаётся как сейчас (обратная совместимость).</p>
+        </header>
+        <p class="lab-state">Акт 1 · шаг 3 из 5 · свёрнуто</p>
+        <div class="phone ga-phone">
+            <details class="h-goal">
+              <summary><span class="h-goal__label">Цель<small><span class="h-goal__act">Акт 1 из 2</span> · шаг 3 из 5</small></span><span class="h-dots" aria-hidden="true"><i class="done"></i><i class="done"></i><i class="now"></i><i></i><i></i><span class="bg-coin">₽</span></span><span class="h-goal__chev" aria-hidden="true">⌄</span></summary>
+            </details>
+        </div>
+        <p class="lab-state">Акт 2 · старт · свёрнуто</p>
+        <div class="phone ga-phone">
+            <details class="h-goal">
+              <summary><span class="h-goal__label">Цель<small><span class="h-goal__act">Акт 2 из 2</span> · шаг 1 из 1</small></span><span class="h-dots" aria-hidden="true"><i class="now"></i><span class="bg-coin">₽</span></span><span class="h-goal__chev" aria-hidden="true">⌄</span></summary>
+            </details>
+        </div>
+        <p class="lab-state">Акт 2 · раскрыто · первый показ (реплика Монетки один раз)</p>
+        <div class="phone ga-phone">
+            <details class="h-goal" open>
+              <summary><span class="h-goal__label">Цель<small><span class="h-goal__act">Акт 2 из 2</span> · шаг 1 из 1</small></span><span class="h-dots" aria-hidden="true"><i class="now"></i><span class="bg-coin">₽</span></span><span class="h-goal__chev" aria-hidden="true">⌄</span></summary>
+              <div class="h-goal__body"><div class="ga-past"><span class="bg-coin">₽</span><span>Акт 1 пройден на ходу 15</span></div><div class="ga-tip"><img src="./assets/monetka-mascot.png" alt="Монетка" /><span>Новая цель — пусть вложения платят за твою жизнь. Чем больше дохода с них, тем меньше зависишь от зарплаты.</span></div><ol class="b-chain"><li class="now"><span class="b-dot">1</span><span>Пассивный доход покрывает 15% расходов на жизнь</span></li><li class="finish"><span class="b-dot"><span class="bg-coin" style="--coin-size:16px;font-size:8px">₽</span></span><span>Финиш — партия пройдена</span></li></ol><div class="ga-meter"><span>Сейчас 7% · нужно 15%</span><span class="bar"><i style="width:47%"></i></span></div></div>
+            </details>
+        </div>
+        <p class="lab-state">Акт 2 · цель почти выполнена · раскрыто</p>
+        <div class="phone ga-phone">
+            <details class="h-goal" open>
+              <summary><span class="h-goal__label">Цель<small><span class="h-goal__act">Акт 2 из 2</span> · шаг 1 из 1</small></span><span class="h-dots" aria-hidden="true"><i class="now"></i><span class="bg-coin">₽</span></span><span class="h-goal__chev" aria-hidden="true">⌄</span></summary>
+              <div class="h-goal__body"><div class="ga-past"><span class="bg-coin">₽</span><span>Акт 1 пройден на ходу 15</span></div><ol class="b-chain"><li class="now"><span class="b-dot">1</span><span>Пассивный доход покрывает 15% расходов на жизнь</span></li><li class="finish"><span class="b-dot"><span class="bg-coin" style="--coin-size:16px;font-size:8px">₽</span></span><span>Финиш — партия пройдена</span></li></ol><div class="ga-meter"><span>Сейчас 14% · нужно 15%</span><span class="bar"><i style="width:93%"></i></span></div></div>
+            </details>
+        </div>
+      </section>
+      <section class="variant" aria-labelledby="vb">
+        <header>
+          <span class="variant-tag">B</span>
+          <h2 id="vb">Плашка акта</h2>
+          <p>Акт — отдельная плашка над словом «Цель». Номер акта заметнее, но блок выше примерно на 18 px, и на экране появляется ещё один акцент.</p>
+        </header>
+        <p class="lab-state">Акт 1 · шаг 3 из 5 · свёрнуто</p>
+        <div class="phone ga-phone">
+            <details class="h-goal">
+              <summary><span class="h-goal__label"><span class="ga-chip">Акт 1 из 2</span><br />Цель<small>шаг 3 из 5</small></span><span class="h-dots" aria-hidden="true"><i class="done"></i><i class="done"></i><i class="now"></i><i></i><i></i><span class="bg-coin">₽</span></span><span class="h-goal__chev" aria-hidden="true">⌄</span></summary>
+            </details>
+        </div>
+        <p class="lab-state">Акт 2 · старт · свёрнуто</p>
+        <div class="phone ga-phone">
+            <details class="h-goal">
+              <summary><span class="h-goal__label"><span class="ga-chip">Акт 2 из 2</span><br />Цель<small>шаг 1 из 1</small></span><span class="h-dots" aria-hidden="true"><i class="now"></i><span class="bg-coin">₽</span></span><span class="h-goal__chev" aria-hidden="true">⌄</span></summary>
+            </details>
+        </div>
+      </section>
+      <section class="variant" aria-labelledby="vc">
+        <header>
+          <span class="variant-tag">C</span>
+          <h2 id="vc">Медаль пройденного акта</h2>
+          <p>Подпись как в A, а пройденный акт 1 сжат в золотую медаль «1» перед точками акта 2: видно, что путь продолжается, а не начат заново. Медаль — новый элемент, ей нужен текст для экранного диктора.</p>
+        </header>
+        <p class="lab-state">Акт 1 · шаг 3 из 5 · свёрнуто (как A)</p>
+        <div class="phone ga-phone">
+            <details class="h-goal">
+              <summary><span class="h-goal__label">Цель<small><span class="h-goal__act">Акт 1 из 2</span> · шаг 3 из 5</small></span><span class="h-dots" aria-hidden="true"><i class="done"></i><i class="done"></i><i class="now"></i><i></i><i></i><span class="bg-coin">₽</span></span><span class="h-goal__chev" aria-hidden="true">⌄</span></summary>
+            </details>
+        </div>
+        <p class="lab-state">Акт 2 · старт · свёрнуто</p>
+        <div class="phone ga-phone">
+            <details class="h-goal">
+              <summary><span class="h-goal__label">Цель<small><span class="h-goal__act">Акт 2 из 2</span> · шаг 1 из 1</small></span><span class="h-dots" aria-hidden="true"><span class="ga-medal" title="Акт 1 пройден">1</span><i class="now"></i><span class="bg-coin">₽</span></span><span class="h-goal__chev" aria-hidden="true">⌄</span></summary>
+            </details>
+        </div>
+      </section>
+      <section class="variant" aria-labelledby="f1">
+        <header>
+          <span class="variant-tag">Финал · акт 1</span>
+          <h2 id="f1">Акт 1 пройден</h2>
+          <p>Тот же финал ★ BG-2, отличия: надпись «Акт 1 из 2», заголовок, пунктирная карточка «Дальше — акт 2» с целью. Вторая кнопка — «К сохранениям», а не «Новая игра»: партия продолжается, новая жизнь не нужна.</p>
+        </header>
+        <div class="phone s-phone s-phone--bare f-phone">
+          <div class="s-finish">
+            <span class="s-finish__kicker">Акт 1 из 2</span>
+            <div class="s-finish__cell"><img src="./assets/student-mascot-cup-dash.png" alt="" /></div>
+            <h4>Акт 1 пройден!</h4>
+            <p>Ты вывел студенческий бюджет в плюс</p>
+            <div class="s-finish__stats"><div><b>15</b><small>ходов</small></div><div><b class="bg-money">34 900 ₽</b><small>на счёте</small></div><div><b>2,1</b><small>ходов подушки</small></div></div>
+            <div class="ga-next"><small>Дальше — акт 2</small><b>Пассивный доход покрывает 15% расходов на жизнь</b></div>
+            <button class="bg-action" type="button">Играть дальше</button>
+            <button class="s-btn" type="button">К сохранениям <small>партия сохранится</small></button>
+            <textarea class="s-feedback" aria-label="Отзыв о партии" placeholder="Как прошёл акт 1? Это увидят разработчики"></textarea>
+            <button class="s-link" type="button" disabled>Отправить отзыв</button>
+          </div>
+        </div>
+      </section>
+      <section class="variant" aria-labelledby="f2">
+        <header>
+          <span class="variant-tag">Финал · акт 2</span>
+          <h2 id="f2">Партия пройдена</h2>
+          <p>Нынешний финал победы ★ BG-2 с надписью «Акт 2 из 2». Третий показатель — доля расходов, которую покрывает пассивный доход, вместо «ходов подушки».</p>
+        </header>
+        <div class="phone s-phone s-phone--bare f-phone">
+          <div class="s-finish">
+            <span class="s-finish__kicker">Акт 2 из 2</span>
+            <div class="s-finish__cell"><img src="./assets/student-mascot-cup-dash.png" alt="" /></div>
+            <h4>Партия пройдена!</h4>
+            <p>Вложения платят за твою жизнь</p>
+            <div class="s-finish__stats"><div><b>31</b><small>ходов</small></div><div><b class="bg-money">58 200 ₽</b><small>на счёте</small></div><div><b>15%</b><small>расходов из пассива</small></div></div>
+            <button class="bg-action" type="button">Играть дальше</button>
+            <button class="s-btn" type="button">Новая игра <small>другая жизнь</small></button>
+            <textarea class="s-feedback" aria-label="Отзыв о партии" placeholder="Как прошла партия? Это увидят разработчики"></textarea>
+            <button class="s-link" type="button" disabled>Отправить отзыв</button>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <script>
+      (function () {
+        var root = document.documentElement;
+        document.addEventListener('click', function (e) {
+          var t = e.target.closest('[data-set-theme]');
+          if (!t) return;
+          root.setAttribute('data-theme', t.dataset.setTheme);
+          document.querySelectorAll('[data-set-theme]').forEach(function (b) {
+            b.setAttribute('aria-pressed', String(b === t));
+          });
+        });
+      })();
+    </script>
+  </body>
+</html>
