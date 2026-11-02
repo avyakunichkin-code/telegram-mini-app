@@ -1,7 +1,7 @@
 ---
 layer: index
 status: active
-last_reviewed: 2026-10-29
+last_reviewed: 2026-11-02
 tags:
   - tvoy-hod/layer/index
   - tvoy-hod/status/active
@@ -15,7 +15,7 @@ aliases:
 
 | Направление | Цель сейчас | Роадмап | Документы |
 |-------------|-------------|---------|-----------|
-| **Game** — «ТВОЙ ХОД», игра по финансовой грамотности | Pre-Alpha gate: «можно звать людей». P0 — 10 из 10 по коду (2026-11-02: required checks на `main`, PR-04); дальше P1: волна 10–20 (PR-16), победа: калибровка A (PR #16) и два акта — план [`PLAN_victory-acts`](plans/PLAN_victory-acts.md) (DRAFT), хвост GO-02…05. Дизайн: ★ «Чернильный край» и маскоты ink утверждены 2026-11-02 (`design-lab/board-game/APPROVED.md`); «Чернильный край» — единственный стиль prod (переключатель classic снят 2026-11-02); дальше — перенести новых маскотов в prod | [`plans/PLAN_production-ready.md`](plans/PLAN_production-ready.md) (P0–P2 до α) · дальний горизонт — [`vision/GAME_DESIGN_ROADMAP_2026.md`](vision/GAME_DESIGN_ROADMAP_2026.md) · приоритеты — [`backlog/PRODUCT_BACKLOG.md`](backlog/PRODUCT_BACKLOG.md) | весь `docs/`, кроме `docs/plan/`; канон — [`foundation/SPEC_PRODUCT.md`](foundation/SPEC_PRODUCT.md) |
+| **Game** — «ТВОЙ ХОД», игра по финансовой грамотности | Pre-Alpha gate: «можно звать людей». P0 — 10 из 10 по коду (2026-11-02: required checks на `main`, PR-04); дальше P1: волна 10–20 (PR-16), победа: калибровка A в `main` (PR #16; фикс `action_once` — PR #19), два акта — spec и план [`PLAN_victory-acts`](plans/PLAN_victory-acts.md) DRAFT, lab ★ (одна шкала, акт без финала), хвост GO-02…05. Дизайн: ★ «Чернильный край» и маскоты ink утверждены 2026-11-02 (`design-lab/board-game/APPROVED.md`); «Чернильный край» — единственный стиль prod (переключатель classic снят 2026-11-02); маскоты ink, напарники (B) и Монетка до выбора роли (B) ★ — перенос в prod в работе | [`plans/PLAN_production-ready.md`](plans/PLAN_production-ready.md) (P0–P2 до α) · дальний горизонт — [`vision/GAME_DESIGN_ROADMAP_2026.md`](vision/GAME_DESIGN_ROADMAP_2026.md) · приоритеты — [`backlog/PRODUCT_BACKLOG.md`](backlog/PRODUCT_BACKLOG.md) | весь `docs/`, кроме `docs/plan/`; канон — [`foundation/SPEC_PRODUCT.md`](foundation/SPEC_PRODUCT.md) |
 | **Plan** — «ТВОЙ ПЛАН», семейный финансовый чекап | Продуктовый каркас P2 (с 2026-11-02, [ADR-017](decisions/ADR-017-plan-p2-without-game-gate.md)): `platform`, БД `plan`, вход, ui-kit, CI; P0 закрыт 2026-10-28 | [`plan/ROADMAP.md`](plan/ROADMAP.md) | [`plan/`](plan/README.md) |
 | **Ядро** — `packages/fincore`, `packages/platform` | Фазы 0–2 ✅ (fincore, SPL-101…208); `platform`: SPL-302 ✅ 2026-11-02 (аддитивно, потребитель — plan-api); SPL-301 (игра на `platform`) ⬜ | [`plans/PLAN_game-plan-split.md`](plans/PLAN_game-plan-split.md) (фазы 0–3) | [ADR-016](decisions/ADR-016-two-products-shared-fincore.md), [`packages/fincore/README.md`](../packages/fincore/README.md) |
 
