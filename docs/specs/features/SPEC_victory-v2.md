@@ -11,7 +11,7 @@ aliases:
 layer: spec
 status: approved
 owner: product
-last_reviewed: 2026-05-25
+last_reviewed: 2026-11-01
 tracks: victory-v2, game-plan
 idea: vision/ideas/tvoy-hod-evolution-after-mvp.md
 related: specs/features/SPEC_game-plan.md
@@ -144,18 +144,25 @@ win_reached = all(enabled goals in chain are met) AND enabled_goals is not empty
 
 Источник: `backend/app/victory/seeds.py` (`VICTORY_CONFIG_BY_TEMPLATE_KEY`). Откат: `VICTORY_CONFIG_LEGACY_BY_TEMPLATE_KEY` (`progression_mode: parallel`).
 
+> **Временная калибровка A (решение PO 2026-11-01).** Прежние пороги дохода (10 000 / 80 000 ₽/мес) и финал «наличные ≥ 10 млн ₽» за 40 ходов недостижимы (INV-1, [`balance/INV-1_2026-11-01.md`](../../balance/INV-1_2026-11-01.md)). Порог дохода теперь свой у шаблона, чтобы победа приходилась на ходы 12–18; финал снят. Это мера до акта 1 / акта 2 (вариант C, spec PR-18): финалы `cash_10m` / `rental_home_owned` остаются в `seeds.py` как кандидаты в цель акта 2.
+
 ### `mq_game_basic_v1` — tutorial chain (5 шагов)
 
-1. `tutorial_salary` → 2. `tutorial_cushion` → 3. `tutorial_invest` → 4. `safety_3x` → 5. `invest_income_15k`  
+1. `tutorial_salary` → 2. `tutorial_cushion` → 3. `tutorial_invest` → 4. `safety_2x` → 5. `invest_income_2_5k` (≥ 2 500 ₽/мес)  
 `progression_mode: chain`; ограничения по номеру периода нет.
 
-### `mq_game_tight_budget_v1`, `mq_game_mortgage_stress_v1`
+### `mq_game_debt_stack_v1`, `mq_game_mortgage_stress_v1`, `mq_game_tight_budget_v1` (6 шагов)
 
-7 шагов: tutorial (зарплата, подушка, инвест) → `safety_6x` → `invest_income_80k` → `tutorial_insurance` → финал `cash_balance_min` (10M ₽)
+`tutorial_salary` → `tutorial_cushion` → `tutorial_invest` → `tutorial_insurance` → `safety_6x` → доход с инвестиций, порог по шаблону (`PASSIVE_INCOME_GOAL_BY_TEMPLATE`):
 
-### `mq_game_debt_stack_v1`
+| Шаблон | Цель | Порог, ₽/мес | Победа бота `chain_runner` (seed 42) |
+|---|---|---|---|
+| `mq_game_tight_budget_v1` (профессионал) | `invest_income_6k` | 6 000 | P14 |
+| `mq_game_mortgage_stress_v1` (руководитель) | `invest_income_30k` | 30 000 | P14 |
+| `mq_game_debt_stack_v1` (предприниматель) | `invest_income_22k` | 22 000 | P17 |
+| `mq_game_basic_v1` (студент) | `invest_income_2_5k` | 2 500 | P15 |
 
-То же ядро + финал `rental_home_owned` (сдаваемая недвижимость)
+Цифры подобраны под бота; живой игрок может прийти к цели раньше или позже. Пересмотр — после волны 10–20 или вместе с актом 1.
 
 ### `mechanics_unlock` (жёсткие шаблоны)
 

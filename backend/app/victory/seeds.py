@@ -142,16 +142,32 @@ _BASIC_TUTORIAL_CHAIN: list[dict[str, Any]] = [
         "required": False,
         "enabled": True,
     },
-    {
-        "key": "invest_income_10k",
+]
+
+
+# Временная калибровка A (решение PO 2026-11-01, docs/balance/INV-1_2026-11-01.md): прежние
+# 10 000 / 80 000 ₽/мес достигались лишь к P67…P1296. Порог — под шаблон, чтобы chain_runner
+# побеждал в окне P12–P18; заменится актом 1 (вариант C, spec PR-18).
+PASSIVE_INCOME_GOAL_BY_TEMPLATE: dict[str, tuple[str, int]] = {
+    DEFAULT_TEMPLATE_KEY: ("invest_income_2_5k", 2_500),
+    "mq_game_tight_budget_v1": ("invest_income_6k", 6_000),  # профессионал
+    "mq_game_mortgage_stress_v1": ("invest_income_30k", 30_000),  # руководитель
+    "mq_game_debt_stack_v1": ("invest_income_22k", 22_000),  # предприниматель
+}
+
+
+def _passive_income_goal(template_key: str) -> dict[str, Any]:
+    key, min_monthly = PASSIVE_INCOME_GOAL_BY_TEMPLATE[template_key]
+    amount = f"{min_monthly:,}".replace(",", " ")
+    return {
+        "key": key,
         "type": "passive_income_monthly_min",
-        "title": "Доход с инвестиций ≥ 10 000 ₽/мес",
-        "min_monthly": 10_000,
+        "title": f"Доход с инвестиций ≥ {amount} ₽/мес",
+        "min_monthly": min_monthly,
         "requires_mechanics": [MECHANIC_CAPITAL_INVEST],
         "required": False,
         "enabled": True,
-    },
-]
+    }
 
 
 _HARDER_TUTORIAL_CORE: list[dict[str, Any]] = [
@@ -200,15 +216,6 @@ _HARDER_TUTORIAL_CORE: list[dict[str, Any]] = [
         "required": False,
         "enabled": True,
     },
-    {
-        "key": "invest_income_80k",
-        "type": "passive_income_monthly_min",
-        "title": "Доход с инвестиций ≥ 80 000 ₽/мес",
-        "min_monthly": 80_000,
-        "requires_mechanics": [MECHANIC_CAPITAL_INVEST],
-        "required": False,
-        "enabled": True,
-    },
 ]
 
 _HARDER_FINALE_CASH_10M: dict[str, Any] = {
@@ -232,13 +239,15 @@ _HARDER_FINALE_RENTAL: dict[str, Any] = {
 }
 
 
+def _basic_tutorial_chain() -> list[dict[str, Any]]:
+    return [*_BASIC_TUTORIAL_CHAIN, _passive_income_goal(DEFAULT_TEMPLATE_KEY)]
+
+
 def _harder_tutorial_chain(template_key: str) -> list[dict[str, Any]]:
-    goals = list(_HARDER_TUTORIAL_CORE)
-    # Временный финал: "наличные" для всех harder-шаблонов.
-    # Причина: цель "сдаваемая квартира" легко эксплойтится (нет связи ипотека↔объект,
-    # нет первоначальных взносов/лимитов, можно брать много ипотек и купить что угодно).
-    goals.append(dict(_HARDER_FINALE_CASH_10M))
-    return goals
+    # Финалы _HARDER_FINALE_* (наличные 10 млн / сдаваемая квартира) сняты калибровкой A:
+    # за 40 ходов недостижимы; вернутся целью акта 2 (вариант C). Квартира к тому же
+    # эксплойтится (нет связи ипотека↔объект, взносов и лимитов).
+    return [*_HARDER_TUTORIAL_CORE, _passive_income_goal(template_key)]
 
 
 def _config(
@@ -261,8 +270,8 @@ def _config(
 
 VICTORY_CONFIG_BY_TEMPLATE_KEY: dict[str, dict[str, Any]] = {
     DEFAULT_TEMPLATE_KEY: _config(
-        required_goals_met=len(_BASIC_TUTORIAL_CHAIN),
-        goals=list(_BASIC_TUTORIAL_CHAIN),
+        required_goals_met=len(_basic_tutorial_chain()),
+        goals=_basic_tutorial_chain(),
     ),
     "mq_game_tight_budget_v1": _config(
         required_goals_met=len(_harder_tutorial_chain("mq_game_tight_budget_v1")),

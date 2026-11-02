@@ -1,6 +1,6 @@
 # UI-сценарии (Playwright)
 
-Сквозные сценарии игрока в настоящем браузере — системный Google Chrome (`channel: 'chrome'`), браузеры не скачиваются. Мобильный viewport (Pixel 7).
+Сквозные сценарии игрока в настоящем браузере — системный Google Chrome (`channel: 'chrome'`), браузеры не скачиваются. Два профиля: `mobile-chrome` (Pixel 7, 412×915, touch) и `desktop-chrome` (1440×900, PWA/веб — ADR-012); один профиль — `npx playwright test --project=desktop-chrome`.
 
 ```bash
 npm run test:e2e            # прогон, отчёт — playwright-report/
@@ -32,6 +32,7 @@ npx playwright show-report  # открыть отчёт и trace упавших 
 | `events.spec.js` | ход 3: «N события» открывает карусель на шаге вводной, варианты не перекрыты подсказкой, тост с целыми числами; открытая карусель не даёт нажать вкладку сквозь карточку (α-FB-19) |
 | `offline.spec.js` | офлайн блокирует «Завершить ход», возврат связи; сетевой сбой — понятный текст |
 | `capital.spec.js` | покупка облигаций: купон в доходах, русское название позиции |
+| `keyboard.spec.js` | только десктоп: Tab доходит до «Завершить ход» раньше действий, у фокуса видна рамка, Enter берёт зарплату (PR-32) |
 
 В CI — джоб «E2E (Playwright)» в `.github/workflows/ci.yml` (не required, отчёт — артефакт `playwright-report` при падении). Python стенда в CI — `E2E_PYTHON=python`.
 
