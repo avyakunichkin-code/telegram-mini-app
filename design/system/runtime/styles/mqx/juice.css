@@ -109,11 +109,9 @@
   pointer-events: auto;
 }
 
-/* Debrief P1: полоска guidance fixed у tab bar — отступ снизу у ритуала */
+/* Debrief P1: итог хода закрывает таббар, подсказка прижата к низу — отступ снизу у ритуала */
 .mqx-page--guidance-active .mqx-juice-ritual {
-  padding-bottom: calc(
-    16px + var(--tma-tabbar-inset, 64px) + var(--mqx-guidance-strip-offset, 0px) + 8px
-  );
+  padding-bottom: calc(16px + var(--mqx-guidance-strip-offset, 0px) + 8px);
 }
 
 .mqx-juice-ritual {
