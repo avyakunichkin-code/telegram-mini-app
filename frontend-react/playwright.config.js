@@ -33,13 +33,19 @@ export default defineConfig({
   use: {
     baseURL: E2E_WEB,
     channel: 'chrome',
-    ...devices['Pixel 7'],
-    // Pixel 7 = мобильный viewport 412×915 + touch; ЦА играет с телефона.
     locale: 'ru-RU',
     trace: 'retain-on-failure',
     screenshot: 'only-on-failure',
   },
-  projects: [{ name: 'mobile-chrome' }],
+  projects: [
+    // Pixel 7 = мобильный viewport 412×915 + touch; ЦА играет с телефона.
+    { name: 'mobile-chrome', use: { ...devices['Pixel 7'], channel: 'chrome' } },
+    // PWA / веб — основной канал (ADR-012): тот же сценарий на широком экране.
+    {
+      name: 'desktop-chrome',
+      use: { ...devices['Desktop Chrome'], channel: 'chrome', viewport: { width: 1440, height: 900 } },
+    },
+  ],
   webServer: [
     {
       command: `"${python}" -m uvicorn main:app --port ${apiPort}`,

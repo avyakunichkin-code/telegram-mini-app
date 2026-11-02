@@ -97,7 +97,7 @@ class TestBasicTutorialChain:
         invest = next(g for g in r.goals if g.key == "tutorial_invest")
         assert invest.available is True
         assert invest.met is False
-        passive = next(g for g in r.goals if g.key == "invest_income_10k")
+        passive = next(g for g in r.goals if g.key == "invest_income_2_5k")
         assert passive.available is True
 
     def test_invest_unlocks_after_tutorial_cushion_met(self):
@@ -122,7 +122,7 @@ class TestBasicTutorialChain:
                 net_monthly_cashflow=-100.0,
             )
         )
-        passive = next(g for g in r.goals if g.key == "invest_income_10k")
+        passive = next(g for g in r.goals if g.key == "invest_income_2_5k")
         assert passive.detail.get("raw_met") is True
         assert passive.met is False
         assert r.current_goal_key == "tutorial_invest"
@@ -179,15 +179,44 @@ def _harder_complete_snap(**kwargs):
     return _snap(**defaults)
 
 
+# Временная калибровка A (2026-11-01, docs/balance/INV-1_2026-11-01.md): порог дохода свой у шаблона,
+# финал «наличные 10 млн» снят до акта 2 (вариант C).
+PASSIVE_GOAL_BY_TEMPLATE = {
+    "mq_game_basic_v1": ("invest_income_2_5k", 2_500),
+    "mq_game_tight_budget_v1": ("invest_income_6k", 6_000),
+    "mq_game_mortgage_stress_v1": ("invest_income_30k", 30_000),
+    "mq_game_debt_stack_v1": ("invest_income_22k", 22_000),
+}
+
+
+class TestCalibrationA:
+    def test_last_goal_is_template_passive_income(self):
+        for template_key, (key, threshold) in PASSIVE_GOAL_BY_TEMPLATE.items():
+            last = victory_config_for_template(template_key)["goals"][-1]
+            assert last["key"] == key, template_key
+            assert last["type"] == "passive_income_monthly_min"
+            assert last["min_monthly"] == threshold
+
+    def test_no_cash_finale_in_any_chain(self):
+        for template_key in PASSIVE_GOAL_BY_TEMPLATE:
+            keys = [g["key"] for g in victory_config_for_template(template_key)["goals"]]
+            assert "cash_10m" not in keys, template_key
+
+    def test_threshold_boundary(self):
+        key, threshold = PASSIVE_GOAL_BY_TEMPLATE["mq_game_mortgage_stress_v1"]
+        below = _eval_harder("mq_game_mortgage_stress_v1", _harder_complete_snap(monthly_passive_income=threshold - 1))
+        assert below.win_reached is False
+        assert below.current_goal_key == key
+        exact = _eval_harder("mq_game_mortgage_stress_v1", _harder_complete_snap(monthly_passive_income=threshold))
+        assert exact.win_reached is True
+
+
 class TestHarderTutorialChain:
-    def test_config_has_seven_goals(self):
+    def test_config_has_six_goals(self):
         cfg = victory_config_for_template("mq_game_tight_budget_v1")
         assert cfg.get("playtest_mode") == "tutorial"
-        assert len(cfg["goals"]) == 7
-
-    def test_debt_stack_finale_is_cash(self):
-        cfg = victory_config_for_template("mq_game_debt_stack_v1")
-        assert cfg["goals"][-1]["key"] == "cash_10m"
+        assert len(cfg["goals"]) == 6
+        assert cfg["required_goals_met"] == 6
 
     def test_liabilities_locked_until_cushion(self):
         r = _eval_harder("mq_game_tight_budget_v1", _snap())
@@ -205,13 +234,13 @@ class TestHarderTutorialChain:
 
     def test_tight_budget_full_chain_win(self):
         r = _eval_harder("mq_game_tight_budget_v1", _harder_complete_snap())
-        assert r.goals_enabled == 7
-        assert r.goals_met == 7
+        assert r.goals_enabled == 6
+        assert r.goals_met == 6
         assert r.win_reached is True
 
-    def test_debt_stack_full_chain_win(self):
-        r = _eval_harder("mq_game_debt_stack_v1", _harder_complete_snap())
-        assert r.goals_met == 7
+    def test_debt_stack_full_chain_win_without_cash_finale(self):
+        r = _eval_harder("mq_game_debt_stack_v1", _harder_complete_snap(cash_balance=0.0))
+        assert r.goals_met == 6
         assert r.win_reached is True
 
 
