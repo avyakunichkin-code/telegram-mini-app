@@ -100,3 +100,27 @@ reviews:
       README, ROADMAP, spec, idea; docs/ROADMAPS.md — карта роадмапов Game, ядра и Plan.
     repo_trace: docs/decisions/ADR-016-two-products-shared-fincore.md, docs/plans/PLAN_game-plan-split.md, docs/plan/ROADMAP.md, docs/ROADMAPS.md
     decision_changed: true
+
+  - id: CY-2026-11-02-plan-ui-kit
+    date: 2026-11-02
+    subject: SPL-403 — вынос примитивов и токенов MQX в packages/ui-kit
+    human_decision: >-
+      SPL-403: packages/ui-kit + packages/api-client; из MQX только примитивы и токены,
+      игра должна собираться на ui-kit.
+    disagreement: >-
+      У ui-kit сейчас нет второго потребителя: plan-web построен на своей системе «Бенто»
+      (токены и компоненты в apps/plan-web), MQX не использует, и lab SPL-404 исходит из «Бенто».
+      ADR-016 п.8 сам требует выносить UI-kit только при втором реальном потребителе. Вынос
+      меняет код игры до gate: 16 файлов primitives/, 42 места импорта, vite-алиас и dedupe
+      React, node-тесты test:mqx — без пользы для Plan.
+    alternative: >-
+      Сейчас — только packages/api-client (у него второй потребитель есть: plan-web переведён).
+      ui-kit — когда plan-web понадобится примитив игры, или как ui-kit «Бенто» без MQX.
+    alternative_cost: >-
+      Дублирование кнопок/плиток между играми и Plan остаётся; если позже бренды сойдутся,
+      вынос придётся делать тогда же с теми же 42 импортами.
+    outcome: pending
+    decision: >-
+      Ждёт решения PO; api-client сделан (c6177e6), код игры не тронут.
+    repo_trace: packages/api-client, docs/plan/ROADMAP.md
+    decision_changed: false
