@@ -122,7 +122,7 @@
         { "label": "Маскоты в «Чернильном крае»: Монетка с надписью на ободе и Квитя (review)", "path": "mascots/ink-mascots-round/index.html", "kind": "lab" },
         { "label": "Напарники персонажей: знакомство A / B (review)", "path": "mascots/companions-round/index.html", "kind": "lab" },
         { "label": "Монетка на экранах до выбора роли: вход, меню, выбор жизни (выбран B · в шапке)", "path": "mascots/pregame-monetka-round/index.html", "kind": "lab" },
-        { "label": "Цель в два акта: «Акт N из 2» + финал акта 1 — A / B / C (review, PR-18)", "path": "dashboard/goal-acts-round/index.html", "kind": "lab" },
+        { "label": "Цель в два акта: одна шкала, акт без финала — раунд 2 (review, PR-18)", "path": "dashboard/goal-acts-round/index.html", "kind": "lab" },
         { "label": "Дашборд ★ BG-1 — prod parity (в prod с 2026-10-14)", "path": "dashboard/bg1-page-round/index.html", "kind": "lab", "status": "approved" },
         { "label": "Настольная игра — «Чернильный край» ↔ classic: скриншоты prod, риски, маскоты (для решения PO)", "path": "board-game/ink-decision-round/index.html", "kind": "lab" },
         { "label": "Настольная игра — окна Капитала в «Чернильном крае»: A / B / C (выбран A)", "path": "board-game/ink-sheets-round/index.html", "kind": "lab" },

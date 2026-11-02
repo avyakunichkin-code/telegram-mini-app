@@ -30,17 +30,23 @@ aliases:
 - Последний шаг — `passive_income_monthly_min` по `PASSIVE_INCOME_GOAL_BY_TEMPLATE` (basic 2 500, tight_budget 6 000, mortgage_stress 30 000, debt_stack 22 000 ₽ за ход); финала `cash_10m` нет.
 - `action_once` для вклада, облигации и полиса — «было хоть раз» (`deposit_ever_opened`, `bond_ever_bought`, `insurance_ever_purchased` в снимке).
 
+**Решения PO 2026-11-02** (раунд lab `goal-acts-round` v1 → v2). Они расходятся со спекой — §User flows 1–3, §Endpoints `run_finale`, §UI. Внести в спеку при APPROVED (спека в PR #16, её ведёт другая сессия).
+
+1. **Достижение акта не прерывает игру.** У акта 1 нет экрана финала, «Играть дальше» и «К сохранениям». Ход закрывается как обычно; на итоге хода (`MqxPeriodCloseRitual`) — строка «Акт 1 пройден» и пунктирная карточка «Дальше — акт 2: <цель>».
+2. **Одна шкала на оба акта** (вариант A). Шаги акта 1 → цель акта 1 (особая точка: крупнее, залита цветом) → шаги акта 2 → монета финиша. При переходе к акту 2 шкала не меняется, меняется только подпись «Акт 2 из 2».
+3. Открыто: конец акта 2 — итог хода или нынешний финал партии (OQ5); счёт шагов в подписи — сквозной или внутри акта (OQ6).
+
 **Статус плана:** DRAFT, только план. **Код не начинать**, пока PO не скажет APPROVED по спеке и этому плану (решение PO 2026-11-01: «C как цель, временно A»).  
 **После утверждения:** `incremental-implementation` по задачам ниже; экономические срезы ведёт primary `game-economy-and-victory`.
 
 ## Summary
 
-Цепочка победы после калибровки A становится **актом 1** без изменений в балансе. **Акт 2** — долгая цель «финансовая независимость» со своим финалом в окне P25–P40. Работа идёт снизу вверх с проверкой рисков в начале:
+Цепочка победы после калибровки A становится **актом 1** без изменений в балансе. **Акт 2** — долгая цель «финансовая независимость» с завершением в окне P25–P40. Ни один акт не прерывает игру: переход виден на итоге хода и в блоке «Цель». Работа идёт снизу вверх с проверкой рисков в начале:
 
 1. Сначала симуляция: можно ли вообще дойти до акта 2 за 40 ходов (MQ-ACT-01).
 2. Затем контракт данных.
 3. Затем движок и хранение.
-4. Затем overview, bootstrap и финал.
+4. Затем overview, итог хода и (для конца партии — по OQ5) финал.
 5. Затем инварианты баланса.
 6. UI — только после ★ раунда в design-lab, e2e — последним.
 
@@ -55,9 +61,9 @@ MQ-ACT-02 контракт: victory_config_json.acts + overview/bootstrap пол
   │     ├── MQ-ACT-04 тип цели passive_income_share_min + lint
   │     │     └── MQ-ACT-06 сиды: acts в 4 шаблонах (после OQ1)
   │     └── MQ-ACT-05 victory_goals.act_key: миграция + sync   (CS-6)
-  ├── MQ-ACT-07 профиль: ходы актов, «не два финала за ход»    (CS-4, CS-5)
-  │     └── MQ-ACT-08 overview + bootstrap + run_finale после каждого акта (CS-2)
-  │           └── MQ-ACT-11 FE: api + MqxGoalDash + финал акта 1   ◄── MQ-ACT-10 lab ★ (APPROVED)
+  ├── MQ-ACT-07 профиль: ходы актов, «не два акта за ход»      (CS-4, CS-5)
+  │     └── MQ-ACT-08 overview + итог хода (act_completed); run_finale без акта 1 (CS-2)
+  │           └── MQ-ACT-11 FE: api + MqxGoalDash (одна шкала) + итог хода   ◄── MQ-ACT-10 lab ★ (APPROVED)
   │                 └── MQ-ACT-12 e2e CS-8
   └── MQ-ACT-09 баланс: INV-4 (акт 1) + INV-1 (акт 2) в balance_diff, эталоны (CS-7)
 MQ-ACT-13 docs: SPEC → implemented, victory-v2, run-finale, THRESHOLDS, CHANGELOG
@@ -71,9 +77,9 @@ MQ-ACT-13 docs: SPEC → implemented, victory-v2, run-finale, THRESHOLDS, CHANGE
 | 2 | Контракт конфига, API и хранения (MQ-ACT-02) | `define` | `core` | `api-and-interface-design` | `test-driven-development` | `breaking API change` — нет, всё аддитивно | `game-economy-and-victory` |
 | 3 | Движок + тип цели + сиды (MQ-ACT-03, 04, 06) | `build` | `core` | `game-economy-and-victory` | `test-driven-development`, `doubt-driven-development`, `critical-test-scenarios` | victory / `victory_config_json` | `critical-test-scenarios` |
 | 4 | `victory_goals.act_key` (MQ-ACT-05) | `build` | `core` | `db-baselines-and-migrations` | `test-driven-development` | `00NN_*.sql`, seeds | `game-economy-and-victory` |
-| 5 | Профиль, финал, overview/bootstrap (MQ-ACT-07, 08) | `build` | `core` | `game-economy-and-victory` | `api-and-interface-design`, `critical-test-scenarios` | run_finale | `critical-test-scenarios` |
+| 5 | Профиль, итог хода, overview/bootstrap (MQ-ACT-07, 08) | `build` | `core` | `game-economy-and-victory` | `api-and-interface-design`, `critical-test-scenarios` | run_finale | `critical-test-scenarios` |
 | 6 | Инварианты баланса и эталоны (MQ-ACT-09) | `verify` | `core` | `balance-playtest` | `economy-reviewer` (субагент) | — | `code-review-and-quality` |
-| 7 | Lab «Цель · Акт N из 2» + финал акта 1 (MQ-ACT-10) | `define` | `core` | `design-lab-mqx` | — | lab parity / canon | `frontend-ui-engineering` |
+| 7 | Lab «Цель · Акт N из 2» + итог хода с актом (MQ-ACT-10) | `define` | `core` | `design-lab-mqx` | — | lab parity / canon | `frontend-ui-engineering` |
 | 8 | FE prod + e2e (MQ-ACT-11, 12) | `build` | `core` | `frontend-ui-engineering` | `critical-test-scenarios`, `mqx-ui-reviewer` | — | `code-review-and-quality` |
 
 ## Risks & mitigations
@@ -82,9 +88,10 @@ MQ-ACT-13 docs: SPEC → implemented, victory-v2, run-finale, THRESHOLDS, CHANGE
 |------|------------|
 | Цель акта 2 недостижима за 40 ходов у части шаблонов: по оценке ниже у предпринимателя (`debt_stack`) — недостижима при любом пороге | MQ-ACT-01 идёт первым. Порог задаётся в конфиге каждого шаблона, а не одним числом на все. Для предпринимателя есть вариант «погашение долга как шаг акта 2» (OQ1-b) |
 | `chain_runner` после победы перестаёт вкладывать, поэтому эталоны не показывают ход акта 2 | Новая политика `act2_runner` в `balance_simulate.py`: после акта 1 вкладывает свободный поток. INV-1 считается по ней |
-| Два финала за один ход (акт 1 и цель акта 2 выполнены одновременно) | Гейт в движке: акт 2 считается выполненным только при `period_index > act1_at_period` (CS-4). Нужен сохранённый ход акта 1 (OQ3) |
+| Два акта за один ход (акт 1 и цель акта 2 выполнены одновременно) | Гейт в движке: акт 2 считается выполненным только при `period_index > act1_at_period` (CS-4). Нужен сохранённый ход акта 1 (OQ3) |
 | Старые партии без `acts` на старте получают акты на лету | Конфиг читается из шаблона при каждом `evaluate_victory`, как сейчас. Если `run_outcome=victory` уже стоит, акт 1 считается пройденным, а ход акта 1 = `NULL` (без гейта CS-4) |
 | `win_reached` начинает означать «акт 2», и старый FE ломается | `win_reached` остаётся флагом акта 1 (spec, контракт). Новый смысл несут только новые поля |
+| Нынешний prod показывает финал партии на первой победе; после внедрения актов акт 1 перестаёт его вызывать | `should_show_run_finale` смотрит на последний акт (или на OQ5); для конфигов без `acts` поведение прежнее (CS-1). Метрика «победа» в Watchtower — по `victory_act1_at_period`, а не по показу финала |
 | `mechanics_unlock` (ADR-004) начинает зависеть от шагов акта 2 | Unlock-шаги считаются только по ключам акта 1. Unit-тест на это — в MQ-ACT-03 |
 | Сдвиг баланса акта 1 из-за рефакторинга движка | Эталоны `chain_runner` по акту 1 должны совпасть побайтно по `win_at_period` (P15/P14/P14/P17); `balance_diff` до и после |
 
@@ -92,6 +99,7 @@ MQ-ACT-13 docs: SPEC → implemented, victory-v2, run-finale, THRESHOLDS, CHANGE
 
 - [ ] PO: Open question 1 (цель и порог акта 2) — после MQ-ACT-01
 - [ ] PO: Open question 3 (где хранить ходы актов) — до MQ-ACT-07
+- [ ] PO: OQ5 (конец акта 2) и OQ6 (счёт шагов) — до MQ-ACT-08 и MQ-ACT-11
 - [ ] Spec **APPROVED** (сейчас DRAFT, лежит в PR #16)
 - [ ] Строка в `TRACEABILITY.md` (колонка Plan) — после merge PR #16 и APPROVED
 - [ ] **Checkpoint A** (после MQ-ACT-02…06): `py -3 -m pytest -q` зелёный; CS-1, CS-3, CS-6 зелёные; `balance_diff` по акту 1 без изменений
@@ -147,6 +155,8 @@ MQ-ACT-13 docs: SPEC → implemented, victory-v2, run-finale, THRESHOLDS, CHANGE
 2. **Сколько актов:** план рассчитан на 2. Формат `acts` — массив, поэтому третий акт добавляется без смены контракта.
 3. **Где хранить ходы актов.** Рекомендация — колонки `game_profiles.victory_act1_at_period` и `victory_final_at_period` (INT NULL). Гейт CS-4 читает их на каждом `evaluate_victory`; лезть за ними в `NotificationLog` в горячем пути дороже и хрупче. Миграция одна, аддитивная.
 4. **Пороги акта 1** — после волны 10–20, не в этом плане.
+5. **Конец акта 2:** итог хода без прерывания, как у акта 1 (раунд lab v2, состояние «акт 2 пройден»), или нынешний финал партии ★ BG-2 с «Играть дальше»? *Рекомендация:* финал оставить только для конца партии — это единственный момент «партия пройдена», и в нём сбор отзыва. Решение за PO.
+6. **Счёт шагов в подписи:** сквозной по шкале («Акт 2 из 2 · шаг 6 из 6», так в lab) или внутри акта («шаг 1 из 1»)? *Рекомендация:* сквозной — шкала одна, номер совпадает с точкой.
 
 ---
 
@@ -169,7 +179,7 @@ MQ-ACT-13 docs: SPEC → implemented, victory-v2, run-finale, THRESHOLDS, CHANGE
 - **Phase:** `define` · **Tier:** `core` · **Skill:** `api-and-interface-design` · **Satellites:** `test-driven-development` · **Next skill:** `game-economy-and-victory`
 - **Spec:** Data & API
 - **Acceptance:**
-  - Pydantic-схемы описывают поля, все необязательные с дефолтом «один акт»: `victory.act_index`, `acts_total`, `act_title`, `acts_completed[]`; `run_finale.kind` (`victory` | `victory_act` | `defeat`) и `act_index`;
+  - Pydantic-схемы описывают поля, все необязательные с дефолтом «один акт»: `victory.act_index`, `acts_total`, `act_title`, `acts_completed[]`, `milestones[]` (индексы целей актов на общей шкале); в ответе закрытия хода (`POST /api/game/time/next`) — `act_completed: {act_index, acts_total, goal_title, next_act_goal_title}` или `null`;
   - в `docs/specs/features/SPEC_victory-acts.md` §Data зафиксированы JSON-формат `acts` и решение OQ3;
   - зеркало в `frontend-react/src/api/finance.js` и `game.js` описано (JSDoc), но экраны его ещё не читают.
 - **Verify:** контрактный тест: ответ overview для конфига без `acts` совпадает с текущим снапшотом (CS-1, уровень API)
@@ -226,7 +236,7 @@ MQ-ACT-13 docs: SPEC → implemented, victory-v2, run-finale, THRESHOLDS, CHANGE
 - **Files:** `backend/app/victory/seeds.py`, тест на структуру конфигов
 - **Estimate:** S · **Depends:** MQ-ACT-04, OQ1
 
-### MQ-ACT-07 — Профиль: ходы актов и «не два финала за ход»
+### MQ-ACT-07 — Профиль: ходы актов и «не два акта за ход»
 
 - **Phase:** `build` · **Tier:** `core` · **Skill:** `game-economy-and-victory` · **Satellites:** `critical-test-scenarios`, `db-baselines-and-migrations` · **Next skill:** MQ-ACT-08
 - **Spec:** Rules & edge cases; Models / DB
@@ -239,14 +249,14 @@ MQ-ACT-13 docs: SPEC → implemented, victory-v2, run-finale, THRESHOLDS, CHANGE
 - **Files:** `backend/migrations/00NN_game_profiles_victory_acts.sql`, `backend/app/models.py`, `backend/app/game/run_finale.py`, `backend/app/game/period.py` (только вызов), тесты
 - **Estimate:** M · **Depends:** MQ-ACT-03, OQ3
 
-### MQ-ACT-08 — Overview, bootstrap и финал после каждого акта
+### MQ-ACT-08 — Overview, итог хода с актом, финал только у конца партии
 
 - **Phase:** `build` · **Tier:** `core` · **Skill:** `game-economy-and-victory` · **Satellites:** `api-and-interface-design`, `critical-test-scenarios` · **Next skill:** `critical-test-scenarios`
-- **Spec:** Endpoints; User flows 1–3
+- **Spec:** Endpoints; User flows 1–3 (с поправкой PO 2026-11-02)
 - **Acceptance:**
-  - `GET /api/finance/overview` → `victory` отдаёт поля акта;
-  - `GET /api/game/bootstrap` → `run_finale.kind=victory_act`, `act_index=1` после акта 1; после dismiss финал акта 1 больше не показывается, а финал акта 2 — показывается;
-  - `dismiss_victory_finale` различает акты: метка показа финала хранится по каждому акту, без потери нынешней `victory_finale_shown_at` для одноактных конфигов.
+  - `GET /api/finance/overview` → `victory` отдаёт поля акта и `milestones[]`;
+  - ответ закрытия хода несёт `act_completed` ровно в том ходу, где акт завершён (иначе `null`); повторный запрос того же закрытия (идемпотентность PR-01) возвращает то же значение;
+  - `GET /api/game/bootstrap` после акта 1 **не** отдаёт `run_finale`; для конфигов без `acts` — как сейчас; конец акта 2 — по решению OQ5.
 - **Critical scenarios:** CS-2
 - **Verify:** integration bootstrap/overview; `py -3 -m pytest -q`
 - **Files:** `backend/app/finance/overview_build.py`, `backend/app/game/run_finale.py`, `backend/app/services/game/run_finale.py`, `backend/app/routers/game.py` (без логики, только DTO), тесты
@@ -258,43 +268,43 @@ MQ-ACT-13 docs: SPEC → implemented, victory-v2, run-finale, THRESHOLDS, CHANGE
 - **Spec:** Objective «Успех»; CS-7
 - **Acceptance:**
   - `INVARIANTS` в `backend/scripts/balance_diff.py`: `act1_window = (12, 18)` для `chain_runner` (INV-4); `win_window` у INV-1 читает `act2_at_period` (хотя бы одна политика, по умолчанию `act2_runner`, в P25–P40);
-  - в отчёте симуляции в `summary` есть `act1_at_period`, `act2_at_period`; проверка «нет пустых 10+ ходов между P5 и финалом акта 1» по `goals_met`;
+  - в отчёте симуляции в `summary` есть `act1_at_period`, `act2_at_period`; проверка «нет пустых 10+ ходов между P5 и завершением акта 1» по `goals_met`;
   - эталоны `docs/balance/baselines/` обновлены **только с согласия PO**; `docs/balance/THRESHOLDS.md` дополнен.
 - **Critical scenarios:** CS-7
 - **Verify:** `cd backend && py -3 scripts/balance_playtest.py --invariants fail` зелёный на 4 шаблонах
 - **Files:** `backend/scripts/balance_diff.py`, `backend/scripts/balance_simulate.py`, `docs/balance/baselines/*`, `docs/balance/THRESHOLDS.md`
 - **Estimate:** M · **Depends:** MQ-ACT-06, MQ-ACT-07
 
-### MQ-ACT-10 — Design-lab: «Цель · Акт N из 2» и финал акта 1
+### MQ-ACT-10 — Design-lab: «Цель · Акт N из 2» и итог хода с актом
 
 - **Phase:** `define` · **Tier:** `core` · **Skill:** `design-lab-mqx` · **Satellites:** — · **Next skill:** `frontend-ui-engineering`
 - **Spec:** UI / UX
 - **Acceptance:**
-  - раунд `design-lab/dashboard/goal-acts-round/` (self-contained, `sync-lab.sh`, в `nav.manifest.json`) с вариантами подписи акта, состояниями (акт 1 в процессе, финал акта 1, акт 2 старт, акт 2 близко) на 412 и 1440;
+  - раунд `design-lab/dashboard/goal-acts-round/` (self-contained, `sync-lab.sh`, в `nav.manifest.json`): одна шкала с точкой цели акта 1, состояния (акт 1 в процессе, цель акта 1 текущая, акт 2 свёрнуто и раскрыто), итог хода с «Акт 1 пройден» и «Дальше — акт 2»;
   - ★ от PO записан в README раунда; перенос в prod — только после APPROVED (lab + prod + APPROVED в одном PR, `canon-sync`).
 - **Verify:** `cd frontend-react && npm run check:guardrails`; открыть раунд через `cd design-lab && npx serve .`
 - **Files:** `design-lab/dashboard/goal-acts-round/*`, `design-lab/nav.manifest.json`
-- **Estimate:** S · **Depends:** — (можно параллельно с бэкендом; черновой раунд сделан 2026-11-02, статус review)
+- **Estimate:** S · **Depends:** — (раунды 1 и 2 сделаны 2026-11-02; PO выбрал A; раунд 2 — review, открыты OQ5, OQ6 и вид точки)
 
-### MQ-ACT-11 — FE prod: блок «Цель» с актом и финал акта 1
+### MQ-ACT-11 — FE prod: блок «Цель» с актом и итог хода
 
 - **Phase:** `build` · **Tier:** `core` · **Skill:** `frontend-ui-engineering` · **Satellites:** `critical-test-scenarios`, `mqx-ui-reviewer` · **Next skill:** `code-review-and-quality`
 - **Spec:** User flows 1–2; UI / UX
 - **Acceptance:**
-  - `MqxGoalDash` показывает подпись «Акт N из 2» и точки только текущего акта; без полей акта рендер как сейчас;
-  - финал акта 1: заголовок «Акт 1 пройден» и строка «Дальше — акт 2: …»; «Играть дальше» ведёт на Главную с «Акт 2 из 2»;
+  - `MqxGoalDash`: одна шкала на все акты, цель акта — особая точка (`milestones[]`), подпись «Акт N из 2 · шаг K из M»; без полей акта рендер как сейчас;
+  - `MqxPeriodCloseRitual`: при `act_completed` — плашка «Акт 1 пройден» и пунктирная карточка «Дальше — акт 2: <цель>»; «Дальше» ведёт на Главную, как обычно, игра не прерывается;
   - одна реплика Монетки о новой цели при первом показе акта 2 (не новый онбординг); копирайт «ход», не «месяц».
 - **Verify:** `npm run test:unit` (`buildGoalChainView` с актами и без), `npm run build`, `npm run check:guardrails`
-- **Files:** `frontend-react/src/components/mqx/layout/MqxGoalDash.jsx`, модуль `buildGoalChainView`, компонент финала партии, `frontend-react/src/guidance/…` (реплика), unit-тесты
+- **Files:** `frontend-react/src/components/mqx/layout/MqxGoalDash.jsx`, модуль `buildGoalChainView`, `frontend-react/src/components/mqx/juice/MqxPeriodCloseRitual.jsx`, `frontend-react/src/guidance/…` (реплика), unit-тесты
 - **Estimate:** M · **Depends:** MQ-ACT-08, MQ-ACT-10 APPROVED
 
-### MQ-ACT-12 — e2e CS-8: «Играть дальше» → «Акт 2 из 2»
+### MQ-ACT-12 — e2e CS-8: итог хода «Акт 1 пройден» → «Акт 2 из 2»
 
 - **Phase:** `verify` · **Tier:** `core` · **Skill:** `critical-test-scenarios` · **Satellites:** `frontend-ui-engineering` · **Next skill:** `code-review-and-quality`
 - **Spec:** CS-8
 - **Acceptance:**
-  - Playwright-сценарий на mobile (412×915) и desktop (1440×900): партия доводится до финала акта 1, затем «Играть дальше» → на Главной видна подпись «Акт 2 из 2»;
-  - быстрый путь к финалу — через e2e-шаблон с малыми порогами или тестовый сид стенда (`e2e/fixtures.js`); prod-код не получает тестовых ручек.
+  - Playwright-сценарий на mobile (412×915) и desktop (1440×900): партия доводится до хода, где закрывается акт 1; на итоге хода видны «Акт 1 пройден» и «Дальше — акт 2», экрана финала нет; после «Дальше» на Главной подпись «Акт 2 из 2», шкала та же;
+  - быстрый путь к акту 1 — через e2e-шаблон с малыми порогами или тестовый сид стенда (`e2e/fixtures.js`); prod-код не получает тестовых ручек.
 - **Verify:** `cd frontend-react && npm run test:e2e`
 - **Files:** `frontend-react/e2e/victory-acts.spec.js`, `frontend-react/e2e/fixtures.js`, при необходимости сид e2e-стенда
 - **Estimate:** S/M · **Depends:** MQ-ACT-11

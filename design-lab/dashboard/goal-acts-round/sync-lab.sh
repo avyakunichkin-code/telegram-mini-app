@@ -34,7 +34,6 @@ HDR
 } > "$OUT"
 
 mkdir -p "$ROUND/assets"
-cp "$LAB/run-finale/assets/student-mascot-cup-dash.png" "$ROUND/assets/"
 cp "$LAB/dashboard/bg1-page-round/assets/monetka-mascot.png" "$ROUND/assets/"
 
 echo "OK: $OUT"

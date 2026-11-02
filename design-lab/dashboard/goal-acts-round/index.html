@@ -12,8 +12,8 @@
   </head>
   <body>
     <header class="lab-head">
-      <h1>Цель в два акта — «Акт N из 2» и финал акта 1</h1>
-      <p>Раунд по <code>SPEC_victory-acts</code> (DRAFT, PR-18/PR-21). Статус: <b>review</b>, в prod не переносить до ★ от PO. База — prod parity ★ BG-1 (<code>dashboard/bg1-page-round</code>) и ★ BG-2 (<code>run-finale/bg2-page-round</code>). Партия «Студент»; цель акта 2 — черновой порог 15% (Open question 1 в <code>docs/plans/PLAN_victory-acts.md</code>).</p>
+      <h1>Цель в два акта — раунд 2: одна шкала, акт без финала</h1>
+      <p>По замечаниям PO 2026-11-02 к раунду 1: вариант A; шкала общая на оба акта, цель акта 1 — особая точка; при переходе шкала не меняется, только «Акт 2 из 2»; достижение акта не прерывает игру — вместо финала строка и карточка «Дальше — акт 2» на итоге хода. Статус: <b>review</b>, в prod не переносить до ★. Партия «Студент»; порог акта 2 — черновик 15% (<code>PLAN_victory-acts</code>, OQ1).</p>
       <div class="lab-controls">
         <span>Тема</span>
         <button class="lab-toggle" type="button" data-set-theme="light" aria-pressed="true">Светлая</button>
@@ -22,115 +22,98 @@
     </header>
 
     <main class="lab-grid">
-      <section class="variant" aria-labelledby="va">
+      <section class="variant" aria-labelledby="a2">
         <header>
-          <span class="variant-tag">A ★ рекомендую</span>
-          <h2 id="va">Акт в подписи</h2>
-          <p>Минимум нового: к подписи «шаг N из M» спереди добавляется «Акт K из 2». Точки — только шаги текущего акта. Если в конфиге нет актов, подпись остаётся как сейчас (обратная совместимость).</p>
+          <span class="variant-tag">A ★ рекомендую · цель акта 1 — золотая</span>
+          <h2 id="a2">Одна шкала, цель акта 1 — крупная золотая точка</h2>
+          <p>Шкала одна на всю партию: шаги акта 1 → цель акта 1 → шаги акта 2 → монета финиша. При переходе к акту 2 шкала не меняется, меняется только подпись «Акт 2 из 2». Цель акта 1 — крупнее остальных и залита золотом (цвет награды, как монета финиша); после выполнения — галочка.</p>
         </header>
-        <p class="lab-state">Акт 1 · шаг 3 из 5 · свёрнуто</p>
+        <p class="lab-state">Акт 1 · шаг 3 из 6 · свёрнуто</p>
         <div class="phone ga-phone">
             <details class="h-goal">
-              <summary><span class="h-goal__label">Цель<small><span class="h-goal__act">Акт 1 из 2</span> · шаг 3 из 5</small></span><span class="h-dots" aria-hidden="true"><i class="done"></i><i class="done"></i><i class="now"></i><i></i><i></i><span class="bg-coin">₽</span></span><span class="h-goal__chev" aria-hidden="true">⌄</span></summary>
+              <summary><span class="h-goal__label">Цель<small><span class="h-goal__act">Акт 1 из 2</span> · шаг 3 из 6</small></span><span class="h-dots ga-dots" aria-hidden="true"><i class="done"></i><i class="done"></i><i class="now"></i><i class=""></i><i class="ga-ms ga-ms--gold ">1</i><i class=""></i><span class="bg-coin">₽</span></span><span class="h-goal__chev" aria-hidden="true">⌄</span></summary>
             </details>
         </div>
-        <p class="lab-state">Акт 2 · старт · свёрнуто</p>
+        <p class="lab-state">Акт 1 · цель акта 1 — текущая · свёрнуто</p>
         <div class="phone ga-phone">
             <details class="h-goal">
-              <summary><span class="h-goal__label">Цель<small><span class="h-goal__act">Акт 2 из 2</span> · шаг 1 из 1</small></span><span class="h-dots" aria-hidden="true"><i class="now"></i><span class="bg-coin">₽</span></span><span class="h-goal__chev" aria-hidden="true">⌄</span></summary>
+              <summary><span class="h-goal__label">Цель<small><span class="h-goal__act">Акт 1 из 2</span> · шаг 5 из 6</small></span><span class="h-dots ga-dots" aria-hidden="true"><i class="done"></i><i class="done"></i><i class="done"></i><i class="done"></i><i class="ga-ms ga-ms--gold now">1</i><i class=""></i><span class="bg-coin">₽</span></span><span class="h-goal__chev" aria-hidden="true">⌄</span></summary>
+            </details>
+        </div>
+        <p class="lab-state">Акт 2 · свёрнуто — та же шкала, другая подпись</p>
+        <div class="phone ga-phone">
+            <details class="h-goal">
+              <summary><span class="h-goal__label">Цель<small><span class="h-goal__act">Акт 2 из 2</span> · шаг 6 из 6</small></span><span class="h-dots ga-dots" aria-hidden="true"><i class="done"></i><i class="done"></i><i class="done"></i><i class="done"></i><i class="ga-ms ga-ms--gold done">✓</i><i class="now"></i><span class="bg-coin">₽</span></span><span class="h-goal__chev" aria-hidden="true">⌄</span></summary>
             </details>
         </div>
         <p class="lab-state">Акт 2 · раскрыто · первый показ (реплика Монетки один раз)</p>
         <div class="phone ga-phone">
             <details class="h-goal" open>
-              <summary><span class="h-goal__label">Цель<small><span class="h-goal__act">Акт 2 из 2</span> · шаг 1 из 1</small></span><span class="h-dots" aria-hidden="true"><i class="now"></i><span class="bg-coin">₽</span></span><span class="h-goal__chev" aria-hidden="true">⌄</span></summary>
-              <div class="h-goal__body"><div class="ga-past"><span class="bg-coin">₽</span><span>Акт 1 пройден на ходу 15</span></div><div class="ga-tip"><img src="./assets/monetka-mascot.png" alt="Монетка" /><span>Новая цель — пусть вложения платят за твою жизнь. Чем больше дохода с них, тем меньше зависишь от зарплаты.</span></div><ol class="b-chain"><li class="now"><span class="b-dot">1</span><span>Пассивный доход покрывает 15% расходов на жизнь</span></li><li class="finish"><span class="b-dot"><span class="bg-coin" style="--coin-size:16px;font-size:8px">₽</span></span><span>Финиш — партия пройдена</span></li></ol><div class="ga-meter"><span>Сейчас 7% · нужно 15%</span><span class="bar"><i style="width:47%"></i></span></div></div>
-            </details>
-        </div>
-        <p class="lab-state">Акт 2 · цель почти выполнена · раскрыто</p>
-        <div class="phone ga-phone">
-            <details class="h-goal" open>
-              <summary><span class="h-goal__label">Цель<small><span class="h-goal__act">Акт 2 из 2</span> · шаг 1 из 1</small></span><span class="h-dots" aria-hidden="true"><i class="now"></i><span class="bg-coin">₽</span></span><span class="h-goal__chev" aria-hidden="true">⌄</span></summary>
-              <div class="h-goal__body"><div class="ga-past"><span class="bg-coin">₽</span><span>Акт 1 пройден на ходу 15</span></div><ol class="b-chain"><li class="now"><span class="b-dot">1</span><span>Пассивный доход покрывает 15% расходов на жизнь</span></li><li class="finish"><span class="b-dot"><span class="bg-coin" style="--coin-size:16px;font-size:8px">₽</span></span><span>Финиш — партия пройдена</span></li></ol><div class="ga-meter"><span>Сейчас 14% · нужно 15%</span><span class="bar"><i style="width:93%"></i></span></div></div>
+              <summary><span class="h-goal__label">Цель<small><span class="h-goal__act">Акт 2 из 2</span> · шаг 6 из 6</small></span><span class="h-dots ga-dots" aria-hidden="true"><i class="done"></i><i class="done"></i><i class="done"></i><i class="done"></i><i class="ga-ms ga-ms--gold done">✓</i><i class="now"></i><span class="bg-coin">₽</span></span><span class="h-goal__chev" aria-hidden="true">⌄</span></summary>
+              <div class="h-goal__body"><div class="ga-tip"><img src="./assets/monetka-mascot.png" alt="Монетка" /><span>Новая цель — пусть вложения платят за твою жизнь. Чем больше дохода с них, тем меньше зависишь от зарплаты.</span></div><ol class="b-chain"><li class="ga-act-sep"><span></span><span>Акт 1 из 2</span></li><li class="done"><span class="b-dot">✓</span><span>Забрать зарплату (первый ход)</span></li><li class="done"><span class="b-dot">✓</span><span>Подушка: внести любую сумму</span></li><li class="done"><span class="b-dot">✓</span><span>Открыть депозит или купить облигацию</span></li><li class="done"><span class="b-dot">✓</span><span>Подушка ≥ 2× расходов за ход</span></li><li class="done ga-chain-ms"><span class="b-dot">✓</span><span>Доход с инвестиций ≥ 2 500 ₽ за ход <small>· цель акта 1</small></span></li><li class="ga-act-sep"><span></span><span>Акт 2 из 2</span></li><li class="now"><span class="b-dot">6</span><span>Пассивный доход покрывает 15% расходов на жизнь</span></li><li class="finish"><span class="b-dot"><span class="bg-coin" style="--coin-size:16px;font-size:8px">₽</span></span><span>Финиш — партия пройдена, игра продолжится</span></li></ol><div class="ga-meter"><span>Сейчас 7% · нужно 15%</span><span class="bar"><i style="width:47%"></i></span></div></div>
             </details>
         </div>
       </section>
-      <section class="variant" aria-labelledby="vb">
+      <section class="variant" aria-labelledby="a1">
         <header>
-          <span class="variant-tag">B</span>
-          <h2 id="vb">Плашка акта</h2>
-          <p>Акт — отдельная плашка над словом «Цель». Номер акта заметнее, но блок выше примерно на 18 px, и на экране появляется ещё один акцент.</p>
+          <span class="variant-tag">A · вариант точки</span>
+          <h2 id="a1">Цель акта 1 — крупнее, без золота</h2>
+          <p>То же, но цель акта 1 отличается только размером и номером «1» в кольце цвета хода; золото остаётся только у финиша.</p>
         </header>
-        <p class="lab-state">Акт 1 · шаг 3 из 5 · свёрнуто</p>
+        <p class="lab-state">Акт 1 · шаг 3 из 6 · свёрнуто</p>
         <div class="phone ga-phone">
             <details class="h-goal">
-              <summary><span class="h-goal__label"><span class="ga-chip">Акт 1 из 2</span><br />Цель<small>шаг 3 из 5</small></span><span class="h-dots" aria-hidden="true"><i class="done"></i><i class="done"></i><i class="now"></i><i></i><i></i><span class="bg-coin">₽</span></span><span class="h-goal__chev" aria-hidden="true">⌄</span></summary>
+              <summary><span class="h-goal__label">Цель<small><span class="h-goal__act">Акт 1 из 2</span> · шаг 3 из 6</small></span><span class="h-dots ga-dots" aria-hidden="true"><i class="done"></i><i class="done"></i><i class="now"></i><i class=""></i><i class="ga-ms ga-ms--ring ">1</i><i class=""></i><span class="bg-coin">₽</span></span><span class="h-goal__chev" aria-hidden="true">⌄</span></summary>
             </details>
         </div>
-        <p class="lab-state">Акт 2 · старт · свёрнуто</p>
+        <p class="lab-state">Акт 2 · свёрнуто</p>
         <div class="phone ga-phone">
             <details class="h-goal">
-              <summary><span class="h-goal__label"><span class="ga-chip">Акт 2 из 2</span><br />Цель<small>шаг 1 из 1</small></span><span class="h-dots" aria-hidden="true"><i class="now"></i><span class="bg-coin">₽</span></span><span class="h-goal__chev" aria-hidden="true">⌄</span></summary>
+              <summary><span class="h-goal__label">Цель<small><span class="h-goal__act">Акт 2 из 2</span> · шаг 6 из 6</small></span><span class="h-dots ga-dots" aria-hidden="true"><i class="done"></i><i class="done"></i><i class="done"></i><i class="done"></i><i class="ga-ms ga-ms--ring done">✓</i><i class="now"></i><span class="bg-coin">₽</span></span><span class="h-goal__chev" aria-hidden="true">⌄</span></summary>
             </details>
         </div>
       </section>
-      <section class="variant" aria-labelledby="vc">
+      <section class="variant" aria-labelledby="s1">
         <header>
-          <span class="variant-tag">C</span>
-          <h2 id="vc">Медаль пройденного акта</h2>
-          <p>Подпись как в A, а пройденный акт 1 сжат в золотую медаль «1» перед точками акта 2: видно, что путь продолжается, а не начат заново. Медаль — новый элемент, ей нужен текст для экранного диктора.</p>
+          <span class="variant-tag">Итог хода · акт 1 пройден</span>
+          <h2 id="s1">Акт 1 — на итоге хода, без финала</h2>
+          <p>Игра не прерывается: нет экрана финала, «Играть дальше» и «К сохранениям». Обычный итог хода (ink) получает строку «Акт 1 пройден» и пунктирную карточку «Дальше — акт 2». «Дальше» — как всегда, на Главную; там шкала уже с подписью «Акт 2 из 2».</p>
         </header>
-        <p class="lab-state">Акт 1 · шаг 3 из 5 · свёрнуто (как A)</p>
-        <div class="phone ga-phone">
-            <details class="h-goal">
-              <summary><span class="h-goal__label">Цель<small><span class="h-goal__act">Акт 1 из 2</span> · шаг 3 из 5</small></span><span class="h-dots" aria-hidden="true"><i class="done"></i><i class="done"></i><i class="now"></i><i></i><i></i><span class="bg-coin">₽</span></span><span class="h-goal__chev" aria-hidden="true">⌄</span></summary>
-            </details>
-        </div>
-        <p class="lab-state">Акт 2 · старт · свёрнуто</p>
-        <div class="phone ga-phone">
-            <details class="h-goal">
-              <summary><span class="h-goal__label">Цель<small><span class="h-goal__act">Акт 2 из 2</span> · шаг 1 из 1</small></span><span class="h-dots" aria-hidden="true"><span class="ga-medal" title="Акт 1 пройден">1</span><i class="now"></i><span class="bg-coin">₽</span></span><span class="h-goal__chev" aria-hidden="true">⌄</span></summary>
-            </details>
-        </div>
-      </section>
-      <section class="variant" aria-labelledby="f1">
-        <header>
-          <span class="variant-tag">Финал · акт 1</span>
-          <h2 id="f1">Акт 1 пройден</h2>
-          <p>Тот же финал ★ BG-2, отличия: надпись «Акт 1 из 2», заголовок, пунктирная карточка «Дальше — акт 2» с целью. Вторая кнопка — «К сохранениям», а не «Новая игра»: партия продолжается, новая жизнь не нужна.</p>
-        </header>
-        <div class="phone s-phone s-phone--bare f-phone">
-          <div class="s-finish">
-            <span class="s-finish__kicker">Акт 1 из 2</span>
-            <div class="s-finish__cell"><img src="./assets/student-mascot-cup-dash.png" alt="" /></div>
-            <h4>Акт 1 пройден!</h4>
-            <p>Ты вывел студенческий бюджет в плюс</p>
-            <div class="s-finish__stats"><div><b>15</b><small>ходов</small></div><div><b class="bg-money">34 900 ₽</b><small>на счёте</small></div><div><b>2,1</b><small>ходов подушки</small></div></div>
+        <div class="phone ga-phone ga-phone--ritual">
+          <div class="ga-ritual">
+            <span class="ga-ritual__badge">твой ход сделан</span>
+            <h3 class="ga-ritual__title">Ход завершён!</h3>
+            <span class="ga-ritual__period">Ход №15 завершён</span>
+            <div class="ga-ritual__act"><span class="bg-coin">₽</span><span><b>Акт 1 пройден · доход с инвестиций ≥ 2 500 ₽ за ход</b></span></div>
+            <div class="ga-ritual__balance"><small>На счёте</small><b>34 900 ₽</b><span>+18 300 ₽ за ход</span></div>
             <div class="ga-next"><small>Дальше — акт 2</small><b>Пассивный доход покрывает 15% расходов на жизнь</b></div>
-            <button class="bg-action" type="button">Играть дальше</button>
-            <button class="s-btn" type="button">К сохранениям <small>партия сохранится</small></button>
-            <textarea class="s-feedback" aria-label="Отзыв о партии" placeholder="Как прошёл акт 1? Это увидят разработчики"></textarea>
-            <button class="s-link" type="button" disabled>Отправить отзыв</button>
+            <ul class="ga-ritual__beats">
+              <li>Наличные <b>+18 300 ₽</b> — итог хода в плюс</li>
+              <li>Доход с вложений <b>+2 536 ₽</b> за ход</li>
+            </ul>
+            <button class="ga-ritual__dismiss" type="button">Дальше</button>
           </div>
         </div>
       </section>
-      <section class="variant" aria-labelledby="f2">
+      <section class="variant" aria-labelledby="s2">
         <header>
-          <span class="variant-tag">Финал · акт 2</span>
-          <h2 id="f2">Партия пройдена</h2>
-          <p>Нынешний финал победы ★ BG-2 с надписью «Акт 2 из 2». Третий показатель — доля расходов, которую покрывает пассивный доход, вместо «ходов подушки».</p>
+          <span class="variant-tag">Итог хода · акт 2 пройден (вопрос)</span>
+          <h2 id="s2">Акт 2 — тоже на итоге хода?</h2>
+          <p>Если и последний акт не прерывает игру, его итог выглядит так же. Сейчас в prod победа открывает финал партии ★ BG-2 («Играть дальше» / «Новая игра» / отзыв). Решение — за PO, см. README раунда.</p>
         </header>
-        <div class="phone s-phone s-phone--bare f-phone">
-          <div class="s-finish">
-            <span class="s-finish__kicker">Акт 2 из 2</span>
-            <div class="s-finish__cell"><img src="./assets/student-mascot-cup-dash.png" alt="" /></div>
-            <h4>Партия пройдена!</h4>
-            <p>Вложения платят за твою жизнь</p>
-            <div class="s-finish__stats"><div><b>31</b><small>ходов</small></div><div><b class="bg-money">58 200 ₽</b><small>на счёте</small></div><div><b>15%</b><small>расходов из пассива</small></div></div>
-            <button class="bg-action" type="button">Играть дальше</button>
-            <button class="s-btn" type="button">Новая игра <small>другая жизнь</small></button>
-            <textarea class="s-feedback" aria-label="Отзыв о партии" placeholder="Как прошла партия? Это увидят разработчики"></textarea>
-            <button class="s-link" type="button" disabled>Отправить отзыв</button>
+        <div class="phone ga-phone ga-phone--ritual">
+          <div class="ga-ritual">
+            <span class="ga-ritual__badge">твой ход сделан</span>
+            <h3 class="ga-ritual__title">Ход завершён!</h3>
+            <span class="ga-ritual__period">Ход №31 завершён</span>
+            <div class="ga-ritual__act"><span class="bg-coin">₽</span><span><b>Акт 2 пройден · пассивный доход покрывает 15% расходов</b></span></div>
+            <div class="ga-ritual__balance"><small>На счёте</small><b>58 200 ₽</b><span>+21 400 ₽ за ход</span></div>
+            <div class="ga-next ga-next--done"><small>Цель партии выполнена</small><b>Игра продолжается — можно копить дальше</b></div>
+            <ul class="ga-ritual__beats">
+              <li>Наличные <b>+18 300 ₽</b> — итог хода в плюс</li>
+              <li>Доход с вложений <b>+2 536 ₽</b> за ход</li>
+            </ul>
+            <button class="ga-ritual__dismiss" type="button">Дальше</button>
           </div>
         </div>
       </section>
