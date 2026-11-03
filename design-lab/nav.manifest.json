@@ -140,7 +140,8 @@
       "id": "plan-product",
       "title": "ТВОЙ ПЛАН (отдельный продукт)",
       "items": [
-        { "label": "ТВОЙ ПЛАН · bento-round: ★ отчёт C2 и лозунг U1 «Деньги отвечают» (SPL-404)", "path": "plan-checkup/bento-round/index.html", "kind": "lab" }
+        { "label": "ТВОЙ ПЛАН · bento-round: ★ отчёт C2 и лозунг U1 «Деньги отвечают» (SPL-404)", "path": "plan-checkup/bento-round/index.html", "kind": "lab" },
+        { "label": "ТВОЙ ПЛАН · recheck-round: ★ повторный чекап R2 + прогресс цели G2 (P3)", "path": "plan-checkup/recheck-round/index.html", "kind": "lab" }
       ]
     }
   ]

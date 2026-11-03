@@ -147,3 +147,16 @@ def test_cs6_no_trading_advice_in_texts():
         text = " ".join([report["entry_answer"]["text"]] + [s["title"] + s["why"] for s in report["steps"]])
         assert not banned.search(text)
         assert "не индивидуальная инвестиционная рекомендация" in report["disclaimer"]
+
+
+def test_precision_thresholds_match_web():
+    """Мастер plan-web считает точность сам (P3-11): пороги обязаны совпадать с сервером."""
+    from plan_api.analysis import config
+
+    src = (Path(__file__).parents[2] / "plan-web" / "src" / "logic.js").read_text(encoding="utf-8")
+    web = {k: float(v) for k, v in re.findall(r"export const (PRECISION_\w+) = ([\d.]+)", src)}
+    assert web == {
+        "PRECISION_EXACT_RATIO": config.PRECISION_EXACT_RATIO,
+        "PRECISION_APPROX": config.PRECISION_APPROX,
+        "PRECISION_REFINED": config.PRECISION_REFINED,
+    }

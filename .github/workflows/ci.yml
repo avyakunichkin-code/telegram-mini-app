@@ -223,10 +223,11 @@ jobs:
           pip install -r requirements.txt
           python -m pytest -q
 
-      - name: Plan web build
+      - name: Plan web unit + build
         working-directory: apps/plan-web
         run: |
           npm ci
+          npm run test:unit
           npm run build
 
       - name: Plan web e2e
