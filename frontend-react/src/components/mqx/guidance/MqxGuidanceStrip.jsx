@@ -19,7 +19,7 @@ function renderBody(text) {
 
 /**
  * O2 bottom guidance strip над tab bar.
- * Curriculum: Монетка sit-edge у заголовка; toolbar variant A ★.
+ * Curriculum: Монетка-аватар ink у заголовка (★ ink-mascots-round); toolbar variant A ★.
  */
 export const MqxGuidanceStrip = forwardRef(function MqxGuidanceStrip({
   mode = 'curriculum',
@@ -107,11 +107,7 @@ export const MqxGuidanceStrip = forwardRef(function MqxGuidanceStrip({
         <div className="mqx-guidance-strip__title-row">
           {mascotOn ? (
             <div className="mqx-guidance-strip__perch" aria-hidden="true">
-              <MonetkaAvatar
-                pose="sit-edge"
-                size={54}
-                className="mqx-guidance-strip__mascot"
-              />
+              <MonetkaAvatar size={54} className="mqx-guidance-strip__mascot" />
             </div>
           ) : null}
           <h2 className="mqx-guidance-strip__title">{title}</h2>

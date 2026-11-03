@@ -398,11 +398,10 @@ button.mqx-events-choice:focus-visible,
   gap: var(--mq-sp-3);
 }
 
-.mqx-events-card__monetka.mqx-onboarding-monetka {
+.mqx-events-card__monetka {
   flex: none;
   width: 44px;
   height: 44px;
-  object-fit: contain;
 }
 
 /* E5-B — design-lab/events/tails-round/APPROVED.md: пузырь скроллится внутри; реплика без обводки, только фон */
@@ -452,7 +451,7 @@ button.mqx-events-choice:focus-visible,
   z-index: 1;
 }
 
-.mqx-events-card--insurance .mqx-events-card__monetka.mqx-onboarding-monetka {
+.mqx-events-card--insurance .mqx-events-card__monetka {
   width: 56px;
   height: 56px;
 }

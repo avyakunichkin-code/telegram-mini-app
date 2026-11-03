@@ -9,7 +9,7 @@
 | ID | Компонент / стили |
 |----|-------------------|
 | A | `MqxJuiceGainFeedback`, `mqx-juice-*` на дашборде / зарплата |
-| C | `MqxPeriodCloseRitual` вместо `MqxPeriodCloseSheet` |
+| C | `MqxPeriodCloseRitual` вместо `MqxPeriodCloseSheet`. **С 2026-11-02 подача заменена** на чек-Квитю ★ [`mascots/ink-mascots-round`](../../mascots/ink-mascots-round/) «Итоги хода»: бейджа, «ударов» с иконками и фиолетового экрана больше нет |
 | D | `MqxSalaryWarnModal` перед закрытием месяца |
 
 Витрина: `#/dev/mqx` → `MqxJuiceCatalogDemo`.

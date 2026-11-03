@@ -7,14 +7,6 @@
       "target": "frontend-react/src/assets/hero.png"
     },
     {
-      "source": "archive/classic-v3/assets/Monetka/monetka-mascot.png",
-      "target": "frontend-react/src/assets/monetka-mascot.png"
-    },
-    {
-      "source": "archive/classic-v3/assets/Monetka/monetka-mascot.webp",
-      "target": "frontend-react/src/assets/monetka-mascot.webp"
-    },
-    {
       "source": "archive/classic-v3/assets/Misc/react.svg",
       "target": "frontend-react/src/assets/react.svg"
     },
@@ -37,10 +29,6 @@
     {
       "source": "system/assets/Logos/logo-full.webp",
       "target": "frontend-react/src/assets/brand/logo-full.webp"
-    },
-    {
-      "source": "archive/classic-v3/assets/Needs/monetka-mascot.webp",
-      "target": "frontend-react/src/assets/character-needs/monetka-mascot.webp"
     },
     {
       "source": "archive/classic-v3/assets/Needs/student-mascot.png",
@@ -241,22 +229,6 @@
     {
       "source": "system/assets/Icons/finance-metrics-sprite.svg",
       "target": "frontend-react/src/assets/icons/finance-metrics-sprite.svg"
-    },
-    {
-      "source": "archive/classic-v3/assets/Monetka/monetka-sit-edge.png",
-      "target": "frontend-react/src/assets/monetka-poses/monetka-sit-edge.png"
-    },
-    {
-      "source": "archive/classic-v3/assets/Monetka/monetka-sit-edge.webp",
-      "target": "frontend-react/src/assets/monetka-poses/monetka-sit-edge.webp"
-    },
-    {
-      "source": "archive/classic-v3/assets/Monetka/monetka-wink.png",
-      "target": "frontend-react/src/assets/monetka-poses/monetka-wink.png"
-    },
-    {
-      "source": "archive/classic-v3/assets/Monetka/monetka-wink.webp",
-      "target": "frontend-react/src/assets/monetka-poses/monetka-wink.webp"
     },
     {
       "source": "archive/classic-v3/assets/Finale/entrepreneur-mascot-cup-dash.png",
@@ -515,12 +487,48 @@
       "target": "frontend-react/src/styles/mqx/states.css"
     },
     {
+      "source": "system/runtime/styles/mqx/mascots.css",
+      "target": "frontend-react/src/styles/mqx/mascots.css"
+    },
+    {
       "source": "system/runtime/index.css",
       "target": "frontend-react/src/index.css"
     },
     {
       "source": "system/assets/Animations/Fintech.tgs",
       "target": "frontend-react/src/assets/lottie/Fintech.tgs"
+    },
+    {
+      "source": "system/assets/Characters/student-chibi.svg",
+      "target": "frontend-react/src/assets/companions/student-chibi.svg"
+    },
+    {
+      "source": "system/assets/Characters/pro-chibi.svg",
+      "target": "frontend-react/src/assets/companions/pro-chibi.svg"
+    },
+    {
+      "source": "system/assets/Characters/boss-chibi.svg",
+      "target": "frontend-react/src/assets/companions/boss-chibi.svg"
+    },
+    {
+      "source": "system/assets/Characters/biz-chibi.svg",
+      "target": "frontend-react/src/assets/companions/biz-chibi.svg"
+    },
+    {
+      "source": "system/assets/Companions/studbilet.svg",
+      "target": "frontend-react/src/assets/companions/studbilet.svg"
+    },
+    {
+      "source": "system/assets/Companions/card.svg",
+      "target": "frontend-react/src/assets/companions/card.svg"
+    },
+    {
+      "source": "system/assets/Companions/briefcase.svg",
+      "target": "frontend-react/src/assets/companions/briefcase.svg"
+    },
+    {
+      "source": "system/assets/Companions/phone.svg",
+      "target": "frontend-react/src/assets/companions/phone.svg"
     }
   ]
 }

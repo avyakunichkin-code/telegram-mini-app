@@ -4,7 +4,8 @@ import { API } from '../../api';
 import { showNotification } from '../../components/notifications';
 import { MqxStarterScenarioPicker } from '../../components/mqx/layout/MqxStarterScenarioPicker';
 import { MqxBoardButton } from '../../components/mqx/pregame/MqxBoardButton';
-import { lifeStartLabel } from '../../components/mqx/utils/pregameDisplay';
+import { MqxMonetkaVoice } from '../../components/mqx/pregame/MqxMonetkaVoice';
+import { PREGAME_VOICE, lifeStartLabel } from '../../components/mqx/utils/pregameDisplay';
 import { normalizeStarterTemplate } from '../../config/gameDefaults';
 
 /**
@@ -46,7 +47,7 @@ export function GameTemplatePickScreen({ profileName, onBack, onJumpToGame }) {
     setStarting(true);
     try {
       await API.startNewGame({ profile_name: name, save_kind: 'game', template_key: selected.template_key });
-      onJumpToGame();
+      onJumpToGame(selected.template_key);
     } catch (error) {
       showNotification(error?.detail || error?.message || 'Не удалось запустить игру', 'error');
       setStarting(false);
@@ -55,10 +56,7 @@ export function GameTemplatePickScreen({ profileName, onBack, onJumpToGame }) {
 
   return (
     <div className="mqx-pg">
-      <header className="mqx-pg-head">
-        <h1 id="mqx-life-pick-title">Выбери жизнь</h1>
-        <small>У каждой свой старт и своя цель</small>
-      </header>
+      <MqxMonetkaVoice {...PREGAME_VOICE.lifePick} titleId="mqx-life-pick-title" />
 
       {loading ? (
         <div className="mqx-pg-state" role="status">

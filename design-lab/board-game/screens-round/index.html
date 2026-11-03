@@ -141,7 +141,7 @@
             </svg>
             <div class="s-chart__legend"><span>было</span><span class="fc">если ничего не менять</span></div>
           </div>
-          <div class="h-tip-row h-tip-row--one"><img class="h-mascot-inline" src="./assets/monetka-mascot.png" alt="Монетка" /><span>Следующий шаг цели — подушка на 2 хода</span></div>
+          <div class="h-tip-row h-tip-row--one"><img class="h-mascot-inline" src="./assets/monetka-ink-avatar.svg" alt="Монетка" /><span>Следующий шаг цели — подушка на 2 хода</span></div>
           <nav class="s-tabbar" aria-label="Разделы"><button class="s-tab" type="button"><i></i>Главная</button><button class="s-tab" type="button"><i></i>Капитал</button><button class="s-tab s-tab--on" type="button" aria-current="page"><i></i>Аналитика</button><button class="s-tab" type="button"><i></i>Меню</button></nav>
         </div>
       </section>
@@ -189,7 +189,7 @@
               <div class="s-event__band"><span>Техника</span><span>Непредвиденное</span><button class="x" type="button" aria-label="Закрыть">×</button></div>
               <div class="s-event__body">
                 <h4 id="ev-title">Сломался ноутбук</h4>
-                <div class="tip"><img src="./assets/monetka-mascot.png" alt="Монетка" /><p>Без ноутбука учёба встанет. Посмотри, что выдержит подушка.</p></div>
+                <div class="tip"><img src="./assets/monetka-ink-avatar.svg" alt="Монетка" /><p>Без ноутбука учёба встанет. Посмотри, что выдержит подушка.</p></div>
                 <button class="s-choice s-choice--best" type="button">Починить в сервисе<span class="s-impacts"><span class="risk bg-money">−12 000 ₽</span></span></button>
                 <button class="s-choice" type="button">Купить новый в кредит<span class="s-impacts"><span class="risk bg-money">−3 000 ₽ × 6 ходов</span><span class="gain">Статус +5</span></span></button>
                 <button class="s-choice" type="button">Пока обойтись без него<span class="s-impacts"><span>Комфорт −8</span><span>Связи −3</span></span></button>
@@ -210,10 +210,11 @@
       <section class="variant" aria-labelledby="s6">
         <header>
           <h2 id="s6">Вход</h2>
-          <p>Логотип — главный объект, форма — спокойная карточка. Одна главная кнопка.</p>
+          <p>Логотип, под ним Монетка «в шапке» с репликой вместо заголовка (★ <code>mascots/pregame-monetka-round</code> B, 2026-11-02), форма — спокойная карточка. Одна главная кнопка.</p>
         </header>
         <div class="phone s-phone s-phone--bare">
           <img class="s-logo" src="./assets/logo-full.png" alt="Твой ход — финансы как игра" />
+          <div class="s-voice"><img src="./assets/monetka-ink-head.svg" alt="" /><div><h3>Привет, я Монетка!</h3><p>Помогу разобраться с деньгами в игре. Введи почту и пароль — и продолжим.</p></div></div>
           <form class="s-form" onsubmit="event.preventDefault()">
             <label for="em">Почта<input id="em" type="email" autocomplete="email" value="student@example.com" /></label>
             <label for="pw">Пароль<input id="pw" type="password" autocomplete="current-password" value="••••••••" /></label>
@@ -230,7 +231,7 @@
           <p>Карточки персонажей, как выбор фишки перед партией. Выбранная — фиолетовая рамка; кнопка внизу называет действие.</p>
         </header>
         <div class="phone s-phone s-phone--bare">
-          <div class="s-head"><div><h3>Выбери жизнь</h3><small>У каждой свой старт и своя цель</small></div></div>
+          <div class="s-voice"><img src="./assets/monetka-ink-head.svg" alt="" /><div><h3>Выбери жизнь</h3><p>У каждой свой старт и своя цель. Играешь впервые — начни со Студента: у него чистый старт.</p></div></div>
           <div class="s-life" role="radiogroup" aria-label="Персонаж">
             <button class="s-person s-person--on" type="button" role="radio" aria-checked="true"><img src="./assets/student-mascot-pick.png" alt="" /><span><b>Студент</b><span class="s-person__money">~62 500 ₽ за ход</span><small>Без долгов на старте</small></span><span class="s-person__check"></span></button>
             <button class="s-person" type="button" role="radio" aria-checked="false"><img src="./assets/professional-mascot-pick.png" alt="" /><span><b>Профессионал</b><span class="s-person__money">~100 000 ₽ за ход</span><small>Авто и кредит</small></span><span class="s-person__check"></span></button>

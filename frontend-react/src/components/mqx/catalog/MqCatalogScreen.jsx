@@ -57,6 +57,7 @@ import {
 import { MqxStatesCatalogDemo } from './MqxStatesCatalogDemo';
 import { MqxEventsTailsCatalogDemo } from './MqxEventsTailsCatalogDemo';
 import { MqxRunFinaleCatalogDemo } from './MqxRunFinaleCatalogDemo';
+import { MqxMascotsCatalogDemo } from './MqxMascotsCatalogDemo';
 import { CATALOG_LEGACY_GOAL_DEMO, CATALOG_VICTORY_DEMO } from './catalogVictoryDemo';
 import { CATALOG_EVENTS_L3_BASELINE } from './catalogEventsDemo';
 import { CATALOG_INSURANCE_POLICY, catalogInsurancePlan } from './catalogInsuranceDemo';
@@ -156,6 +157,10 @@ export function MqCatalogScreen() {
           ← В игру
         </Link>
       </header>
+
+      <CatalogSection title="Маскоты — Монетка ink (★ 2026-11-02)">
+        <MqxMascotsCatalogDemo />
+      </CatalogSection>
 
       <CatalogSection title="Онбординг — Guidance strip (O2 ★)">
         <MqxGuidanceStripDemo />

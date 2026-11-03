@@ -2,6 +2,8 @@
 
 Решение PO 2026-10-29: **Монетка** — экраны до выбора роли и глобальные подсказки внутри партии, **напарник** — первые шаги после выбора роли ([`docs/vision/ideas/persona-companions.md`](../../../docs/vision/ideas/persona-companions.md)). Статус: ★ **APPROVED** 2026-11-02 — в чате: «Монетка на экранах до выбора роли — утверждаем B, Монетка в шапке». При переносе в prod в том же PR обновить [`pre-game-shell/APPROVED.md`](../../pre-game-shell/APPROVED.md) и canon-раунд `board-game/screens-round/` (см. ниже). Также 2026-11-02: на карте «Меню: есть сохранение» жест `thumb` (палец вверх) заменён на `hey` — решение PO при утверждении `ink-mascots-round`.
 
+**В prod** (2026-11-02, вариант B): вход, регистрация, меню на старте, выбор жизни и экран загрузки — `MqxMonetkaVoice` (Монетка 56 px без надписи, реплика = h1). `pre-game-shell/APPROVED.md` и `board-game/screens-round/` обновлены в том же коммите.
+
 Раунд меняет канон ★ BG-2 ([`../../pre-game-shell/APPROVED.md`](../../pre-game-shell/APPROVED.md)): там «Вход / регистрация… Без Монетки и пузыря», а реплики Монетки на меню убраны при переносе BG-2 в prod (коммит `931c0c8`). После «утверждаем» — обновить `APPROVED.md` и canon-раунд `board-game/screens-round/` в том же PR, что и prod.
 
 ## Экраны

@@ -3,6 +3,8 @@ import { useAuth } from '../context/AuthContext';
 import { AuthFormField } from './mqx/auth/AuthFormField';
 import { BrandLogo } from './BrandLogo';
 import { MqxBoardButton } from './mqx/pregame/MqxBoardButton';
+import { MqxMonetkaVoice } from './mqx/pregame/MqxMonetkaVoice';
+import { PREGAME_VOICE } from './mqx/utils/pregameDisplay';
 import {
   hasFieldErrors,
   validateLoginFields,
@@ -53,8 +55,8 @@ export function LoginForm({ onSwitchToRegister }) {
 
   return (
     <div className="mqx-pg mqx-pg--auth">
-      <h1 className="mqx-bg-sr-only">Вход</h1>
       <BrandLogo variant="full" className="mqx-pg-logo" />
+      <MqxMonetkaVoice {...PREGAME_VOICE.login} />
       <form onSubmit={handleSubmit} className="mqx-pg-form" noValidate aria-label="Вход">
         <AuthFormField
           id="login-email"

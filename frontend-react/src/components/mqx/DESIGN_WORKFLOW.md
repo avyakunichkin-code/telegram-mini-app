@@ -134,9 +134,9 @@ npx serve .
 | 15 | **`board-game/screens-round/`** ★ BG-2 (2026-10-15) | события, Капитал, Аналитика, Меню, Вход, Выбор жизни, финал, таббар |
 | 16 | **`board-game/frames-round/`** ★ BG-3 E + **`close-preview-round/`** ★ A (2026-10-25/26) | `DashboardPremium`, «Капитал · Действия», Аналитика; `MqxDashboardHero` (превью списания) |
 | 17 | **`board-game/neobrutal-round/`** → **`neobrutal-a-round/`** K1 + **`ink-sheets-round/`** A — «Чернильный край», **★ 2026-11-02** (пробно с 2026-10-28) | правила в CSS блоков (`styles/mqx/*.css`), токены `--mq-ink-*`; слой `ink.css` и переключатель сняты 2026-11-02 |
-| 18 | **`mascots/`** — `ink-mascots-round`, `companions-round`, `pregame-monetka-round` — **review** (2026-10-29) | — (ждёт «утверждаем»; `pregame-monetka` меняет канон BG-2) |
+| 18 | **`mascots/`** — `ink-mascots-round` ★, `companions-round` ★ B, `pregame-monetka-round` ★ B (2026-11-02) | `Monetka`, `MonetkaAvatar` (ink, inline SVG) — все места Монетки в prod; `MqxMonetkaVoice` (до выбора роли); `KvityaReceipt` (итоги хода); `MqxCompanionCard` + `CompanionIntroScreen` (знакомство); `#/dev/mqx` «Маскоты» |
 
-Текущий статус (2026-11-02): **все экраны партии — ★ BG-1…BG-3** «настольная игра» (токены v2, Nunito + Manrope), превью конца хода ★ PR-07, подача — **★ «Чернильный край»** (единственный стиль, без переключателя; экраны до партии — ★ BG-2). Канон — [`design-lab/board-game/APPROVED.md`](../../../../design-lab/board-game/APPROVED.md), цель по токенам — дизайн-система v3 [`design/`](../../../../design/README.md). Дальше: маскоты и напарники (review); type & rhythm v3 (шрифты < 12 px, 4-pt отступы) — отдельным раундом lab.
+Текущий статус (2026-11-02): **все экраны партии — ★ BG-1…BG-3** «настольная игра» (токены v2, Nunito + Manrope), превью конца хода ★ PR-07, подача — **★ «Чернильный край»** (единственный стиль, без переключателя; экраны до партии — ★ BG-2). Канон — [`design-lab/board-game/APPROVED.md`](../../../../design-lab/board-game/APPROVED.md), цель по токенам — дизайн-система v3 [`design/`](../../../../design/README.md). Маскоты (Монетка ink, Монетка в шапке, Квитя на итогах хода, знакомство с напарником) — ★ в prod 2026-11-02. Дальше: type & rhythm v3 (шрифты < 12 px, 4-pt отступы) — отдельным раундом lab.
 
 ---
 

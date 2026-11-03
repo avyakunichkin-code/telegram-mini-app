@@ -5,6 +5,7 @@ import {
   lifeIncomePerTurn,
   lifeStartConditions,
   lifeStartLabel,
+  PREGAME_VOICE,
   roleAccusative,
   runOutcomeLabel,
   savesCountHint,
@@ -46,5 +47,16 @@ describe('BG-2 pre-game display', () => {
     assert.equal(runOutcomeLabel({ run_outcome: 'victory' }), 'Победа');
     assert.equal(runOutcomeLabel({ is_archived: 1, is_active: 0 }), 'Поражение');
     assert.equal(runOutcomeLabel({ is_active: 1 }), null);
+  });
+});
+
+describe('PREGAME_VOICE — Монетка в шапке ★ pregame-monetka-round B', () => {
+  it('каждый экран до выбора роли: реплика-заголовок, пояснение и лицо без жестов', () => {
+    for (const key of ['login', 'register', 'menuSave', 'menuEmpty', 'lifePick']) {
+      const v = PREGAME_VOICE[key];
+      assert.ok(v.title && v.text, key);
+      assert.ok(['smile', 'joy', 'wink'].includes(v.face), key);
+    }
+    assert.equal(PREGAME_VOICE.lifePick.face, 'smile');
   });
 });

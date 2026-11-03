@@ -8,6 +8,8 @@ import {
 import { AuthFormField } from './mqx/auth/AuthFormField';
 import { BrandLogo } from './BrandLogo';
 import { MqxBoardButton } from './mqx/pregame/MqxBoardButton';
+import { MqxMonetkaVoice } from './mqx/pregame/MqxMonetkaVoice';
+import { PREGAME_VOICE } from './mqx/utils/pregameDisplay';
 
 /** Регистрация ★ BG-2: та же оболочка, что вход; одна главная кнопка. */
 export function RegisterForm({ onSwitchToLogin }) {
@@ -68,8 +70,8 @@ export function RegisterForm({ onSwitchToLogin }) {
 
   return (
     <div className="mqx-pg mqx-pg--auth">
-      <h1 className="mqx-bg-sr-only">Регистрация</h1>
       <BrandLogo variant="full" className="mqx-pg-logo" />
+      <MqxMonetkaVoice {...PREGAME_VOICE.register} />
       <form onSubmit={handleSubmit} className="mqx-pg-form" noValidate aria-label="Регистрация">
         <AuthFormField
           id="register-email"

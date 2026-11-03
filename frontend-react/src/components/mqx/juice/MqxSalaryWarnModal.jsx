@@ -20,7 +20,7 @@ export function MqxSalaryWarnModal({ open, salaryAmount = 0, onClose, onConfirmS
         aria-labelledby="mqx-juice-warn-title"
       >
         <div className="mqx-juice-warn-modal__head">
-          <MonetkaAvatar pose="default" size={56} />
+          <MonetkaAvatar size={56} />
           <div className="mqx-juice-warn-modal__copy">
             <p className="mqx-juice-warn-modal__kicker">Перед ходом</p>
             <h3 id="mqx-juice-warn-title" className="mqx-juice-warn-modal__title">

@@ -8,6 +8,7 @@ import { LoginForm } from './components/LoginForm';
 import { RegisterForm } from './components/RegisterForm';
 import { StartMenuScreen } from './components/StartMenuScreen';
 import { GameTemplatePickScreen } from './screens/pre-game/GameTemplatePickScreen';
+import { CompanionIntroScreen } from './screens/pre-game/CompanionIntroScreen';
 import { GameScreen } from './components/GameScreen';
 import { ToastHost } from './components/ToastHost';
 import { MqCatalogScreen } from './components/mqx/catalog/MqCatalogScreen';
@@ -38,14 +39,22 @@ function GameAppFlowShell({ children }) {
 
 function GameApp() {
   const navigate = useNavigate();
-  // start | newGame | gameTemplates | game; партия переживает перезагрузку вкладки.
+  // start | newGame | gameTemplates | intro | game; партия переживает перезагрузку вкладки.
   const [screen, setScreen] = useState(readResumeScreen);
   const [newGameProfileName, setNewGameProfileName] = useState('');
+  const [introTemplateKey, setIntroTemplateKey] = useState(null);
   const { logout } = useAuth();
 
   useEffect(() => {
-    rememberScreen(screen);
+    // Партия уже создана на экране знакомства: перезагрузка ведёт в игру, а не в меню.
+    rememberScreen(screen === 'intro' ? 'game' : screen);
   }, [screen]);
+
+  /** Партия создана → знакомство с напарником (★ companions-round B) → первый ход. */
+  const openCompanionIntro = (templateKey) => {
+    setIntroTemplateKey(templateKey);
+    setScreen('intro');
+  };
 
   /**
    * «Новая игра» сразу ведёт к выбору жизни (шага «Игра / План» нет — ADR-013, GO-01).
@@ -68,7 +77,7 @@ function GameApp() {
     if (Array.isArray(rows) && rows.length === 0) {
       try {
         await startGameWithStudentTemplate(name);
-        setScreen('game');
+        openCompanionIntro('mq_game_basic_v1');
       } catch (error) {
         showNotification(error?.detail || error?.message || 'Не удалось запустить игру', 'error');
         setScreen('start');
@@ -111,8 +120,16 @@ function GameApp() {
         <GameTemplatePickScreen
           profileName={newGameProfileName}
           onBack={() => setScreen('start')}
-          onJumpToGame={() => setScreen('game')}
+          onJumpToGame={openCompanionIntro}
         />
+      </GameAppFlowShell>
+    );
+  }
+
+  if (screen === 'intro') {
+    return (
+      <GameAppFlowShell>
+        <CompanionIntroScreen templateKey={introTemplateKey} onStart={() => setScreen('game')} />
       </GameAppFlowShell>
     );
   }

@@ -1,49 +1,25 @@
-import monetkaDefaultPng from '../../../assets/monetka-mascot.png';
-import monetkaDefaultWebp from '../../../assets/monetka-mascot.webp';
-import monetkaSitEdgePng from '../../../assets/monetka-poses/monetka-sit-edge.png';
-import monetkaSitEdgeWebp from '../../../assets/monetka-poses/monetka-sit-edge.webp';
-import monetkaWinkPng from '../../../assets/monetka-poses/monetka-wink.png';
-import monetkaWinkWebp from '../../../assets/monetka-poses/monetka-wink.webp';
-
-const POSE_SRC = {
-  default: { webp: monetkaDefaultWebp, png: monetkaDefaultPng },
-  'sit-edge': { webp: monetkaSitEdgeWebp, png: monetkaSitEdgePng },
-  wink: { webp: monetkaWinkWebp, png: monetkaWinkPng },
-};
-
 /**
- * @param {'default' | 'sit-edge' | 'wink'} [pose]
- * sit-edge — сидит на краю блока, ноги свисают (WebP + alpha, PNG fallback).
+ * Аватар Монетки до 120 px — `design-lab/mascots/ink-mascots-round/assets/monetka-ink-avatar.svg` ★ PO 2026-11-02:
+ * только обод и лицо, без рук и надписи (надпись на ободе читается от 120 px — там `Monetka` с `caption`).
+ * Декоративный: рядом всегда есть реплика или заголовок.
  */
-export function MonetkaAvatar({ size = 72, className = '', pose = 'default' }) {
-  const { webp, png } = POSE_SRC[pose] ?? POSE_SRC.default;
-  const sitEdge = pose === 'sit-edge';
-  const imgClass = [
-    'mqx-onboarding-monetka',
-    sitEdge && 'mqx-onboarding-monetka--sit-edge',
-    className,
-  ]
-    .filter(Boolean)
-    .join(' ');
-
+export function MonetkaAvatar({ size = 40, className = '' }) {
   return (
-    <picture>
-      <source type="image/webp" srcSet={webp} />
-      <img
-        src={png}
-        alt=""
-        aria-hidden="true"
-        width={sitEdge ? undefined : size}
-        height={sitEdge ? undefined : size}
-        className={imgClass}
-        style={
-          sitEdge
-            ? { width: size, maxWidth: '34vw', height: 'auto', minWidth: 0 }
-            : undefined
-        }
-        draggable={false}
-        decoding="async"
-      />
-    </picture>
+    <svg
+      className={['mqx-monetka-avatar', className].filter(Boolean).join(' ')}
+      viewBox="0 0 48 48"
+      width={size}
+      height={size}
+      aria-hidden="true"
+      focusable="false"
+    >
+      <g stroke="#1d1530" strokeLinecap="round">
+        <circle cx="24" cy="24" r="21" fill="#eab308" strokeWidth="3" />
+        <circle cx="24" cy="24" r="14" fill="#fcf1c8" stroke="#6d28d9" strokeWidth="5" />
+        <ellipse cx="19.5" cy="22" rx="1.8" ry="2.8" fill="#1d1530" stroke="none" />
+        <ellipse cx="28.5" cy="22" rx="1.8" ry="2.8" fill="#1d1530" stroke="none" />
+        <path d="M19.5 28 Q24 32 28.5 28" fill="none" strokeWidth="2" />
+      </g>
+    </svg>
   );
 }

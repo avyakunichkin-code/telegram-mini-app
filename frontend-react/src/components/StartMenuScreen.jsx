@@ -10,7 +10,8 @@ import { BrandLogo } from './BrandLogo';
 import { MqxSaveCard } from './mqx/pregame/MqxSaveCard';
 import { MqxBoardButton } from './mqx/pregame/MqxBoardButton';
 import { MqxSavesSheet } from './mqx/pregame/MqxSavesSheet';
-import { savesCountHint } from './mqx/utils/pregameDisplay';
+import { MqxMonetkaVoice } from './mqx/pregame/MqxMonetkaVoice';
+import { PREGAME_VOICE, savesCountHint } from './mqx/utils/pregameDisplay';
 import { suggestDefaultProfileName } from '../utils/suggestDefaultProfileName';
 import { setPwaUpdateSafeZone } from '../utils/pwaUpdate';
 
@@ -77,16 +78,19 @@ export function StartMenuScreen({ onNewGame, onLoadGame, onLogout }) {
 
   return (
     <div className="mqx-pg">
-      <h1 className="mqx-bg-sr-only">Меню</h1>
       <BrandLogo variant="full" className="mqx-pg-logo" />
 
       {loading ? (
-        <div className="mqx-pg-state" role="status">
-          <Spinner size="m" />
-          <span>Подтягиваю сохранения…</span>
-        </div>
+        <>
+          <h1 className="mqx-bg-sr-only">Меню</h1>
+          <div className="mqx-pg-state" role="status">
+            <Spinner size="m" />
+            <span>Подтягиваю сохранения…</span>
+          </div>
+        </>
       ) : (
         <>
+          <MqxMonetkaVoice {...(primaryProfile ? PREGAME_VOICE.menuSave : PREGAME_VOICE.menuEmpty)} />
           {primaryProfile ? (
             <MqxSaveCard
               templateKey={primaryProfile.starter_template_key}
