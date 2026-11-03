@@ -33,7 +33,7 @@ paths:
 ## Поток старта и `save_kind`
 
 - Ось сохранения: канон **`save_kind=game`** ([ADR-013](docs/decisions/ADR-013-game-only-drop-plan-mode.md)); legacy **`mode`** light/hardcore **не возвращать**. Не показывать плитку Plan / «Скоро».
-- Новая игра: сразу **`GameTemplatePickScreen`** — «Выбор жизни» ★ BG-2 (`template_key`, `save_kind=game`, старт кнопкой «Начать за …») → игра (или авто-Студент при 0 сейвов). `NewProfileKindScreen` / `MqxSaveKindPicker` удалены (GO-01, 2026-10-15); канон — `design-lab/pre-game-shell/APPROVED.md`. **`DifficultyScreen`** удалён.
+- Новая игра: сразу **`GameTemplatePickScreen`** — «Выбор жизни» ★ BG-2 (`template_key`, `save_kind=game`, старт кнопкой «Начать за …») → знакомство с напарником `CompanionIntroScreen` (★ companions-round B) → игра (или авто-Студент при 0 сейвов — тоже через знакомство). `NewProfileKindScreen` / `MqxSaveKindPicker` удалены (GO-01, 2026-10-15); канон — `design-lab/pre-game-shell/APPROVED.md`. **`DifficultyScreen`** удалён.
 - **Встроенный Plan удалён (GO-03).** Новый продукт находится в `apps/plan-web`. Для Game ручной «свой сценарий» на экране шаблона не показывать (`MqxStarterScenarioPicker` без manual).
 - Создание/список профилей — поля и тела запросов как в `src/api/game.js` / `routers/game.py`; при смене контракта синхронизировать **`src/api/game.js`**, хуки и экраны старта.
 

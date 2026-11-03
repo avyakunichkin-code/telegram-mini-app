@@ -107,7 +107,7 @@ export const MqxGuidanceStrip = forwardRef(function MqxGuidanceStrip({
         <div className="mqx-guidance-strip__title-row">
           {mascotOn ? (
             <div className="mqx-guidance-strip__perch" aria-hidden="true">
-              <MonetkaAvatar size={48} className="mqx-guidance-strip__mascot" />
+              <MonetkaAvatar size={54} className="mqx-guidance-strip__mascot" />
             </div>
           ) : null}
           <h2 className="mqx-guidance-strip__title">{title}</h2>

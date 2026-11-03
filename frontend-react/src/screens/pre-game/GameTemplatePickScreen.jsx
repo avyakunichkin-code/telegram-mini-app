@@ -47,7 +47,7 @@ export function GameTemplatePickScreen({ profileName, onBack, onJumpToGame }) {
     setStarting(true);
     try {
       await API.startNewGame({ profile_name: name, save_kind: 'game', template_key: selected.template_key });
-      onJumpToGame();
+      onJumpToGame(selected.template_key);
     } catch (error) {
       showNotification(error?.detail || error?.message || 'Не удалось запустить игру', 'error');
       setStarting(false);

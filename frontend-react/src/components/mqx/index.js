@@ -88,6 +88,7 @@ export { MqxFinListRow } from './layout/MqxFinListRow';
 export { useMqxConfirm } from './hooks/useMqxConfirm';
 export { Monetka } from './brand/Monetka';
 export { MonetkaAvatar } from './brand/MonetkaAvatar';
+export { MqxCompanionCard } from './brand/MqxCompanionCard';
 export { AuthFormField } from './auth/AuthFormField';
 export { MonetkaBubbleScreen } from './layout/MonetkaBubbleScreen';
 export { MqxJuiceGainFeedback } from './juice/MqxJuiceGainFeedback';

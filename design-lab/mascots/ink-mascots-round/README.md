@@ -7,7 +7,7 @@
 
 Шаблон — `design/system/illustrations/monetka.js` (канон, экспорт в `pregame-monetka-round/monetka.js`); inline-копия в `index.html` этого раунда синхронизирована вручную.
 
-**В prod** (2026-11-02): псевдо-3D Монетка заменена везде. `frontend-react/src/components/mqx/brand/Monetka.jsx` — шаблон целиком (`face`, `arms`, `caption`; все 7 лиц, включая `surprised` / `worried` / `victory`, которых нет в `monetka.js`); `MonetkaAvatar.jsx` — `monetka-ink-avatar.svg` для мест до 120 px: подсказка онбординга (48), событие (44, страховка 56), «Зарплата сгорит» (56), строка-подсказка на главной и в Аналитике (26). Витрина — `#/dev/mqx` → «Маскоты». PNG `monetka-mascot.*` и `monetka-poses/*` из приложения удалены.
+**В prod** (2026-11-02): псевдо-3D Монетка заменена везде. `frontend-react/src/components/mqx/brand/Monetka.jsx` — шаблон целиком (`face`, `arms`, `caption`; все 7 лиц, включая `surprised` / `worried` / `victory`, которых нет в `monetka.js`); `MonetkaAvatar.jsx` — `monetka-ink-avatar.svg` для мест до 120 px: подсказка онбординга (54), событие (44, страховка 56), «Зарплата сгорит» (56), строка-подсказка на главной и в Аналитике (26). Витрина — `#/dev/mqx` → «Маскоты». PNG `monetka-mascot.*` и `monetka-poses/*` из приложения удалены.
 
 **Квитя в prod** (2026-11-02, место подтвердил PO — «чек-Квитя по раунду»): итоги хода `MqxPeriodCloseRitual` — поле доски, заголовок «Ход №N завершён», чек `KvityaReceipt` (строчки хода из `period_highlights`, просрочка, «Итого за ход» маркером, «На счёте»), ниже Монетка с репликой (`periodCloseMonetkaLine`: просрочка → подушка выросла → ход в плюс / минус / ноль), главная кнопка «Следующий ход». Прежний ритуал ★ juice C заменён. Лицо Квити — одно (по умолчанию); `kvitya-joy` / `kvitya-think` пока не используются.
 

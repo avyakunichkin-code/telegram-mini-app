@@ -497,6 +497,38 @@
     {
       "source": "system/assets/Animations/Fintech.tgs",
       "target": "frontend-react/src/assets/lottie/Fintech.tgs"
+    },
+    {
+      "source": "system/assets/Characters/student-chibi.svg",
+      "target": "frontend-react/src/assets/companions/student-chibi.svg"
+    },
+    {
+      "source": "system/assets/Characters/pro-chibi.svg",
+      "target": "frontend-react/src/assets/companions/pro-chibi.svg"
+    },
+    {
+      "source": "system/assets/Characters/boss-chibi.svg",
+      "target": "frontend-react/src/assets/companions/boss-chibi.svg"
+    },
+    {
+      "source": "system/assets/Characters/biz-chibi.svg",
+      "target": "frontend-react/src/assets/companions/biz-chibi.svg"
+    },
+    {
+      "source": "system/assets/Companions/studbilet.svg",
+      "target": "frontend-react/src/assets/companions/studbilet.svg"
+    },
+    {
+      "source": "system/assets/Companions/card.svg",
+      "target": "frontend-react/src/assets/companions/card.svg"
+    },
+    {
+      "source": "system/assets/Companions/briefcase.svg",
+      "target": "frontend-react/src/assets/companions/briefcase.svg"
+    },
+    {
+      "source": "system/assets/Companions/phone.svg",
+      "target": "frontend-react/src/assets/companions/phone.svg"
     }
   ]
 }
