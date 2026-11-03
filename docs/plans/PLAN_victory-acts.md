@@ -24,7 +24,7 @@ aliases:
 
 **Эпик:** PR-18 (spec + sim) → PR-21 (внедрение) в [`PLAN_production-ready`](PLAN_production-ready.md).  
 **Spec:** [`SPEC_victory-acts.md`](../specs/features/SPEC_victory-acts.md) — **DRAFT**. Спека и калибровка A — в `main` с PR #16 (merge `2911261`, 2026-11-02).  
-**Исходные данные:** эталоны — `292fd7e` (в `main` с PR #16). Фикс `action_once` «было хоть раз» (`e383ef5`) в PR #16 **не попал** — в `main` его нет; ниже он описан как часть акта 1, до его мержа это расхождение.
+**Исходные данные:** эталоны — `292fd7e` (в `main` с PR #16). Фикс `action_once` «было хоть раз» (`e383ef5`) в PR #16 **не попал** — он в отдельном PR #19; ниже он описан как часть акта 1, до мержа #19 это расхождение.
 
 - Акт 1 = цепочка калибровки A: «Студент» (`basic`) — 5 шагов, взрослые шаблоны — 6 шагов (со страховкой).
 - Последний шаг — `passive_income_monthly_min` по `PASSIVE_INCOME_GOAL_BY_TEMPLATE` (basic 2 500, tight_budget 6 000, mortgage_stress 30 000, debt_stack 22 000 ₽ за ход); финала `cash_10m` нет.
