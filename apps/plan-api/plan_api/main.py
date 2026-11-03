@@ -111,6 +111,31 @@ def create_app(settings: Settings | None = None, mailer: LogMailer | None = None
             raise error(404, "not_found", "Чекап не найден")
         return ck
 
+    def parent_of(r: Repo, user: User, ck: Checkup) -> Checkup | None:
+        return r.checkup(user, ck.parent_checkup_id) if ck.parent_checkup_id else None
+
+    def with_previous(r: Repo, user: User, ck: Checkup, report: dict) -> dict:
+        """P3-03: что было в прошлом разборе — шаги со статусами и как сдвинулись метрики их правил."""
+        prev = r.report_with_step_status(ck.parent_checkup_id) if ck.parent_checkup_id else None
+        if not prev:
+            report["previous"] = None
+            return report
+
+        def area(rep: dict, key: str) -> dict:
+            return next((a["metrics"] for a in rep["areas"] if a["key"] == key), {})
+
+        pairs = {
+            "cushion_months": (area(prev, "cushion").get("months"), area(report, "cushion").get("months")),
+            "dti_percent": (area(prev, "debts").get("dti_percent"), area(report, "debts").get("dti_percent")),
+            "free_cashflow": (prev.get("free_cashflow"), report.get("free_cashflow")),
+        }
+        report["previous"] = {
+            "as_of": prev["as_of"],
+            "steps": [{"rule_key": s["rule_key"], "title": s["title"], "status": s.get("status", "suggested")} for s in prev["steps"]],
+            "metrics": {k: {"before": a, "now": b} for k, (a, b) in pairs.items()},
+        }
+        return report
+
     def editable(ck: Checkup) -> None:
         if ck.status != "draft":
             raise error(409, "checkup_completed", "Завершённый чекап не меняется — создайте новый")
@@ -277,8 +302,9 @@ def create_app(settings: Settings | None = None, mailer: LogMailer | None = None
                 raise error(422, "unknown_member", "Нет такого члена семьи")
             if mid in child_ids and section in ("incomes", "liabilities"):
                 raise error(422, "child_finance", "У ребёнка не может быть доходов и долгов")
-        if section == "liabilities":
-            parsed = [x if x.id else x.model_copy(update={"id": new_id("li")}) for x in parsed]
+        if section in ("liabilities", "goals"):
+            prefix = "li" if section == "liabilities" else "g"
+            parsed = [x if x.id else x.model_copy(update={"id": new_id(prefix)}) for x in parsed]
         if section == "decision" and len(parsed) > 1:
             raise error(422, "single_decision", "Решение одно")
         setattr(ck.data, section, parsed)
@@ -305,7 +331,7 @@ def create_app(settings: Settings | None = None, mailer: LogMailer | None = None
         else:
             if not ck.data.incomes and not ck.data.expenses:
                 raise error(409, "not_enough_data", "Заполните хотя бы доходы и расходы")
-            report = jsonable_encoder(build_report(ck))
+            report = with_previous(r, user, ck, jsonable_encoder(build_report(ck, parent_of(r, user, ck))))
         r.track(user.id, "report_viewed", {"final": report["final"], "precision": report["precision"]})
         return report
 
@@ -323,7 +349,7 @@ def create_app(settings: Settings | None = None, mailer: LogMailer | None = None
         if not r.mark_completed(user, ck.id, at):
             raise error(409, "checkup_completed", "Чекап уже завершён")
         ck.status, ck.completed_at = "completed", at
-        report = jsonable_encoder(build_report(ck))
+        report = with_previous(r, user, ck, jsonable_encoder(build_report(ck, parent_of(r, user, ck))))
         report["idempotency_key"] = idempotency_key
         r.insert_report(user, ck.id, report)
         r.track(user.id, "checkup_completed", {})

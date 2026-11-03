@@ -58,6 +58,7 @@ class Ctx:
     scenarios: dict[str, dict] = field(default_factory=dict)
     flags: list[dict] = field(default_factory=list)
     goals: list[dict] = field(default_factory=list)
+    parent: Checkup | None = None
     debt: dict = field(default_factory=dict)
 
 
@@ -173,6 +174,26 @@ def _debts(ctx: Ctx) -> None:
     }
 
 
+def _progress(goal, parent: Checkup | None, as_of: int, need: float) -> dict | None:
+    """Накоплено с прошлого чекапа и темп против нужного взноса (P3-07). Цель сопоставляется по id."""
+    if parent is None or not goal.id:
+        return None
+    before = next((g for g in parent.data.goals if g.id == goal.id), None)
+    if before is None:
+        return None
+    delta = round(float(goal.saved_amount) - float(before.saved_amount), 2)
+    months = as_of - month_index(parent.as_of)
+    pace = round(delta / months, 2) if months > 0 else None
+    return {
+        "since": parent.as_of,
+        "saved_before": float(before.saved_amount),
+        "saved_delta": delta,
+        "months": months,
+        "monthly_pace": pace,
+        "on_pace": pace is not None and pace + 0.005 >= need,
+    }
+
+
 def _goals(ctx: Ctx) -> None:
     as_of = month_index(ctx.checkup.as_of)
     available = max(0.0, ctx.free_cf - ctx.cushion_contrib)
@@ -188,7 +209,10 @@ def _goals(ctx: Ctx) -> None:
             when = month_label(as_of + math.ceil(left / available)) if available > 0 else None
         ctx.goals.append(
             {
+                "id": g.id,
                 "title": g.title,
+                "saved_amount": float(g.saved_amount),
+                "progress": _progress(g, ctx.parent, as_of, need),
                 "target_amount": float(g.target_amount),
                 "target_month": g.target_month,
                 "monthly_needed": need,
@@ -435,7 +459,8 @@ def _metrics_view(m: HouseholdMetrics) -> dict:
     }
 
 
-def build_report(ck: Checkup) -> dict:
+def build_report(ck: Checkup, parent: Checkup | None = None) -> dict:
+    """`parent` — прошлый завершённый чекап, из которого скопирован этот: для прогресса целей."""
     data = ck.data
     base = build_snapshot(data, ck.as_of, "base")
     pess = build_snapshot(data, ck.as_of, "pessimistic")
@@ -458,6 +483,7 @@ def build_report(ck: Checkup) -> dict:
         cushion_target_months=target_months,
         cushion_contrib=cushion_contrib,
         extra=extra,
+        parent=parent,
     )
     _scenarios(ctx)
     _debts(ctx)

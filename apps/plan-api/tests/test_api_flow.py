@@ -220,3 +220,45 @@ def test_cs9_plan_does_not_import_game():
                 names = [node.module or ""]
             for name in names:
                 assert name.split(".")[0] not in forbidden, f"{path}: {name}"
+
+
+# --- повторный чекап: прогресс целей (P3-07) и шаги прошлого разбора (P3-03) -------------------
+
+
+def test_recheck_shows_goal_progress_and_previous_steps(app, client):
+    h = login(client, "re@example.com")
+    ck = client.post("/api/checkups", json={"entry_question": "goal"}, headers=h).json()
+    client.post(f"/api/checkups/{ck['id']}/demo", headers=h)
+    first = client.post(f"/api/checkups/{ck['id']}/complete", headers=h).json()
+    assert first["previous"] is None
+    assert first["goals"][0]["id"] == "g_vacation" and first["goals"][0]["progress"] is None
+    done = first["steps"][0]
+    client.patch(f"/api/steps/{done['id']}", json={"status": "done"}, headers=h)
+
+    # тот же чекап «через 3 месяца»: отложили 60 000 на цель
+    with app.state.db.session() as s:
+        s.execute(text("UPDATE checkups SET as_of = '2026-08' WHERE id = :id"), {"id": ck["id"]})
+    nxt = client.post("/api/checkups", json={"entry_question": "goal"}, headers=h).json()
+    goal = nxt["data"]["goals"][0]
+    assert goal["id"] == "g_vacation"
+    goal["saved_amount"] = goal["saved_amount"] + 60_000
+    client.put(f"/api/checkups/{nxt['id']}/sections/goals", json=[goal], headers=h)
+
+    report = client.get(f"/api/checkups/{nxt['id']}/report", headers=h).json()
+    progress = report["goals"][0]["progress"]
+    assert progress["saved_delta"] == 60_000
+    assert progress["months"] >= 3 and progress["monthly_pace"] == round(60_000 / progress["months"], 2)
+    prev = report["previous"]
+    assert prev["as_of"] == first["as_of"]  # из сохранённого отчёта, он не пересчитывается
+    assert prev["steps"][0] == {"rule_key": done["rule_key"], "title": done["title"], "status": "done"}
+    assert set(prev["metrics"]) == {"cushion_months", "dti_percent", "free_cashflow"}
+
+
+def test_new_goal_gets_stable_id(client):
+    h = login(client, "gid@example.com")
+    ck = client.post("/api/checkups", json={"entry_question": "goal"}, headers=h).json()
+    goal = {"title": "Машина", "target_amount": 900_000, "target_month": "2028-01"}
+    saved = client.put(f"/api/checkups/{ck['id']}/sections/goals", json=[goal], headers=h).json()
+    assert saved[0]["id"].startswith("g_")
+    again = client.put(f"/api/checkups/{ck['id']}/sections/goals", json=saved, headers=h).json()
+    assert again[0]["id"] == saved[0]["id"]
