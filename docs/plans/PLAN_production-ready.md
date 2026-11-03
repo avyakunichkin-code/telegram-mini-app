@@ -4,7 +4,7 @@ epic_id: M1.2
 phase: define
 status: draft
 owner: product
-last_reviewed: 2026-10-29
+last_reviewed: 2026-11-02
 spec:
 idea: ../vision/ideas/post-playtest-wave1-two-directions.md
 related:
@@ -70,12 +70,12 @@ aliases:
 | PR-15 | ❓ | `PRE_ALPHA_WAVE1_OPS.md` есть; `PRE_ALPHA_WAVE1_RESULTS.md` — draft, пустой шаблон |
 | PR-16 | ⬜ | Волна 10–20 не проведена (результаты не заполнены). Фаза 0 `PLAN_backlog_may2026` не закрыта |
 | PR-17 | ✅ | 2026-11-01: `users.last_seen_at` (миграция `0050`), отметка в `GET /api/game/bootstrap` не чаще 10 мин (`game/presence.py`); Watchtower — «Заходили» и «D7 (прокси)»: из зарегистрированных ≥7 дней назад и закрывших ≥1 ход — доля заходивших через 7+ дней; колонка «Заходил» в «Игроках». `tests/integration/api/test_last_seen.py`. До выкладки — `db.sh migrate` |
-| PR-18 | 🟡 | 2026-11-01, решение PO «C, временно A». **A в коде:** порог дохода по шаблону (2 500 / 6 000 / 30 000 / 22 000 ₽/мес), финал «10 млн» снят; `chain_runner` побеждает на P15 / P14 / P14 / P17, INV-1 снят, эталоны пересняты ([`SPEC_victory-v2`](../specs/features/SPEC_victory-v2.md)). **C:** spec DRAFT [`SPEC_victory-acts`](../specs/features/SPEC_victory-acts.md) — ждёт APPROVED и выбора цели акта 2 |
+| PR-18 | 🟡 | 2026-11-01, решение PO «C, временно A». **A в коде:** порог дохода по шаблону (2 500 / 6 000 / 30 000 / 22 000 ₽/мес), финал «10 млн» снят; `chain_runner` побеждает на P15 / P14 / P14 / P17, INV-1 снят, эталоны пересняты ([`SPEC_victory-v2`](../specs/features/SPEC_victory-v2.md)). **C:** spec DRAFT [`SPEC_victory-acts`](../specs/features/SPEC_victory-acts.md), план [`PLAN_victory-acts`](PLAN_victory-acts.md) (DRAFT, 13 задач); lab ★ 2026-11-02 — одна шкала, акт не прерывает игру. Ждёт APPROVED spec/плана и цели акта 2 (OQ1). Фикс `action_once` «было хоть раз» в PR #16 не попал — PR #19 |
 | PR-19 | ⬜ | Spec на правило подушки/burn не найден |
 | PR-20 | ✅ | 2026-11-01: не воспроизводится — открытая карусель событий перекрывает нижнюю навигацию, после закрытия вкладки не перекрыты; закреплено в `e2e/events.spec.js` (e2e на мобильном и десктопе 1440×900) |
 | GO-03 | ✅ | 2026-10-29 (локально): `BaseParamsScreen`, Plan-редакторы, plan-ветка `expenses/service.py` удалены; CRUD статей → 410; Watchtower и `adminPlayerColumns` показывают plan как «Архивный режим» |
 | GO-04 | ✅ | `services/events/spawn.py` фильтрует пул только по `game`/`any`; `mode: plan` в `data/events` нет |
-| PR-21 | ⬜ | Зависит от PR-18 |
+| PR-21 | ⬜ | Зависит от PR-18; срезы — MQ-ACT-01…13 в [`PLAN_victory-acts`](PLAN_victory-acts.md), первый — симуляция акта 2 (MQ-ACT-01) |
 | PR-22 | 🟡 | Поле `cooldown_periods` в каталоге есть; эффект на повторы (α-FB-03) не измерялся |
 | PR-23 | ⬜ | Информационный слот событий (EVT1) не найден |
 | PR-24 | ❓ | YAML-пак: в 2026-10 добавлены цепочки A1–A3, B3, freelance/used_car; тематический пак 8–10 ключей не сверялся |

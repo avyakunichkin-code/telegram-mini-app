@@ -1,7 +1,7 @@
 ---
 layer: handbook
 status: active
-last_reviewed: 2026-10-29
+last_reviewed: 2026-11-02
 audience: product, playtest, partners
 tags:
   - tvoy-hod/layer/handbook
@@ -31,6 +31,7 @@ aliases:
 | Зарплата по кнопке (пропуск = нет выплаты за период) | ✅ | |
 | Поражение: 3 периода cash &lt; 0 | ✅ | |
 | Победа Victory v2 (`chain` / legacy `parallel`) | ✅ | Только по целям chain; period gate снят (2026-06); полная кампания **~40–60** мес. |
+| Победа в два акта | ⬜ | Spec и план DRAFT (`SPEC_victory-acts`, `PLAN_victory-acts`); lab ★ 2026-11-02 — одна шкала, акт не прерывает игру; кода нет |
 | UI целей (`MqxGoalDash`) | ✅ | |
 | 2 события на период, tier/cooldown | ✅ | [ADR-009](../decisions/ADR-009-metrics-dictionary-tb1.md) |
 
@@ -89,7 +90,7 @@ aliases:
 |------|--------|-------------|
 | Стиль «настольная игра» (★ BG-1…BG-3) | ✅ | Все экраны партии, [ADR-014](../decisions/ADR-014-brand-direction-board-game.md), канон — [`board-game/APPROVED.md`](../../design-lab/board-game/APPROVED.md) |
 | «Чернильный край» (необрутализм) | ✅ | ★ 2026-11-02, единственный стиль prod (переключатель `?style=classic` снят). Экраны до партии — ★ BG-2 |
-| Маскоты в новом стиле, напарники персонажей | ⬜ | Макеты в design-lab на ревью |
+| Маскоты в новом стиле, напарники персонажей | 🟡 | ★ 2026-11-02 в design-lab: Монетка и Квитя в ink, напарники (знакомство B), Монетка до выбора роли (B «в шапке»); перенос в prod в работе |
 
 ---
 
