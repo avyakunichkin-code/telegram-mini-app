@@ -1,0 +1,8 @@
+{
+  "date": "2026-11-04",
+  "source": "CurrentDashboardDemo → production MQX dashboard components",
+  "fixtures": "synthetic, no backend writes",
+  "css": "index-C9KH5bw8.css",
+  "sha256": "29f6bee47f87d7c9930f56e84af0f0c7c71c65b0a3b7eb2d947fc7ad7b12dfe3",
+  "refresh": "build frontend, then node design-lab/dashboard/current-page-round/render-reference.mjs"
+}
