@@ -77,6 +77,11 @@ export default function Refine({ checkup, onChange, onShowReport }) {
   const meta = SECTIONS[active]
 
   function open(section) {
+    if (section === active || busy) return
+    if (JSON.stringify(rows) !== JSON.stringify(checkup.data[active] || [])) {
+      save(section)
+      return
+    }
     setActive(section)
     setRows(checkup.data[section] || [])
     setError(null)
@@ -113,7 +118,7 @@ export default function Refine({ checkup, onChange, onShowReport }) {
     <div className="refine">
       <nav className="tabs" aria-label="Разделы">
         {order.map((s) => (
-          <button key={s} className={`tab ${s === active ? 'on' : ''}`} onClick={() => open(s)}>
+          <button key={s} className={`tab ${s === active ? 'on' : ''}`} disabled={busy} onClick={() => open(s)}>
             {SECTIONS[s].title}
             {(checkup.data[s] || []).length > 0 && <span className="dot" aria-label="заполнено" />}
           </button>

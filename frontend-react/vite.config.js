@@ -1,6 +1,7 @@
 import { defineConfig, loadEnv } from 'vite'
 import react from '@vitejs/plugin-react'
 import { VitePWA } from 'vite-plugin-pwa'
+import { fileURLToPath } from 'node:url'
 
 const PWA_ICONS = [
   { src: 'pwa/icon-192.png', sizes: '192x192', type: 'image/png', purpose: 'any' },
@@ -16,6 +17,10 @@ export default defineConfig(({ mode }) => {
   const apiTarget = (env.VITE_API_BASE_URL || 'http://localhost:8000').replace(/\/$/, '')
 
   return {
+    resolve: {
+      alias: { '@tvoy/ui-kit': fileURLToPath(new URL('../packages/ui-kit/src/index.js', import.meta.url)) },
+      dedupe: ['react', 'react-dom'],
+    },
     plugins: [
       react(),
       VitePWA({

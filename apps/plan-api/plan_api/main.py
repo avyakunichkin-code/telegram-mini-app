@@ -201,11 +201,22 @@ def create_app(settings: Settings | None = None, mailer: LogMailer | None = None
             raise error(422, "members_limit", "В семье от 1 до 8 человек")
         members = [m if m.id else m.model_copy(update={"id": new_id("m")}) for m in body]
         ids = {m.id for m in members}
+        if len(ids) != len(members):
+            raise error(422, "duplicate_member", "Идентификаторы членов семьи должны быть уникальными")
+        child_ids = {m.id for m in members if m.role == "child"}
         drafts = [c for c in r.checkups(user) if c.status == "draft"]
         for ck in drafts:
-            used = {x.member_id for x in ck.data.incomes} | {x.member_id for x in ck.data.liabilities if x.member_id}
+            used = {
+                row.member_id
+                for section in SECTION_ROW
+                for row in getattr(ck.data, section)
+                if getattr(row, "member_id", None)
+            }
             if used - ids:
-                raise error(409, "member_in_use", "У этого человека есть доходы или долги — сначала уберите их")
+                raise error(409, "member_in_use", "У этого человека есть финансовые записи — сначала уберите их")
+            adult_finance = {x.member_id for x in ck.data.incomes + ck.data.liabilities + ck.data.pension}
+            if adult_finance & child_ids:
+                raise error(409, "member_in_use", "У этого взрослого есть доходы, долги или пенсионные данные")
         r.set_members(user, members)
         for ck in drafts:
             ck.members = members
@@ -229,7 +240,7 @@ def create_app(settings: Settings | None = None, mailer: LogMailer | None = None
             entry_question=body.entry_question,
             as_of=f"{today.year:04d}-{today.month:02d}",
             parent_checkup_id=last.id if last else None,
-            members=list(user.members),
+            members=[m.model_copy(deep=True) for m in (last.members if last else user.members)],
             data=last.data.model_copy(deep=True) if last else CheckupData(),
         )
         r.insert_checkup(user, ck)
@@ -305,6 +316,8 @@ def create_app(settings: Settings | None = None, mailer: LogMailer | None = None
         if section in ("liabilities", "goals"):
             prefix = "li" if section == "liabilities" else "g"
             parsed = [x if x.id else x.model_copy(update={"id": new_id(prefix)}) for x in parsed]
+        if section == "liabilities" and len({x.id for x in parsed}) != len(parsed):
+            raise error(422, "duplicate_liability", "Идентификаторы долгов должны быть уникальными")
         if section == "decision" and len(parsed) > 1:
             raise error(422, "single_decision", "Решение одно")
         setattr(ck.data, section, parsed)

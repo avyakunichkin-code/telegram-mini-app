@@ -41,7 +41,7 @@ export default defineConfig({
   ],
   webServer: [
     {
-      command: `"${python}" -m uvicorn plan_api.main:create_app --factory --port ${apiPort}`,
+      command: `"${python}" -m uvicorn e2e_app:create_app --app-dir tests --factory --port ${apiPort}`,
       cwd: path.join(root, 'apps', 'plan-api'),
       url: `${E2E_API}/api/health`,
       env: {

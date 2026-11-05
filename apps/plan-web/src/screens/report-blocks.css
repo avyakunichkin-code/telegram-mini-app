@@ -1,0 +1,55 @@
+/* Approved Plan direction-round M1/F2/A2/S1, 2026-11-04. */
+.report-answer-pair, .report-detail-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--gap); min-width: 0; }
+.report .forecast-tracks { background: #202923; color: #fff; padding: var(--pad-wide); }
+.forecast-tracks .eyebrow, .forecast-tracks .forecast-assumption { color: #d0d8cf; }
+.forecast-tracks h2 { font-size: clamp(24px, 3vw, 34px); line-height: 1.15; }
+.forecast-start { border-left: 1px solid #99a28f; padding-left: 14px; margin-top: 10px; }
+.forecast-start b { display: block; font-size: 20px; margin-top: 6px; }
+.forecast-paths { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+.forecast-path { background: var(--tile-ok); color: var(--on-tile); border-radius: var(--radius-inner); padding: 20px; min-width: 0; display: grid; gap: 8px; }
+.forecast-path-pess { background: #39433b; color: #fff; border: 1px dashed #99a28f; }
+.forecast-path strong { font-size: clamp(22px, 3vw, 34px); line-height: 1.2; overflow-wrap: anywhere; }
+.forecast-path strong span { white-space: nowrap; }
+.forecast-assumption { font-size: 13px; line-height: 1.5; }
+.forecast-tracks .bars-warn { background: var(--tile-risk); color: var(--on-tile); border-radius: 12px; padding: 12px; }
+.report .answer-note { background: var(--tile-edge); color: var(--on-tile); padding: 26px; }
+.answer-note .eyebrow { color: inherit; }
+.answer-note h1 { font: 400 clamp(29px, 3.5vw, 40px)/1.08 Georgia, serif; letter-spacing: -.045em; }
+.answer-note .answer-text { color: inherit; }
+.note-metric { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; margin: 18px 0; }
+.note-metric b { font: 500 clamp(42px, 5vw, 64px)/1 var(--font-text); text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 10px; }
+.note-metric span { font-size: 13px; line-height: 1.4; }
+.answer-explanation { margin-top: auto; font-size: 14px; }
+.answer-explanation summary { cursor: pointer; min-height: 44px; padding: 12px 0; font-weight: 700; }
+.answer-explanation p { margin-top: 12px; }
+.report .first-step-ticket { background: var(--tile-ok); color: var(--on-tile); padding: 26px; }
+.ticket-steps { margin: 0; padding: 0; flex: 1; }
+.ticket-steps .step { display: flex; flex-direction: column; border: 0; background: transparent; padding: 0; height: 100%; }
+.ticket-steps .step > div { display: flex; flex-direction: column; gap: 18px; flex: 1; min-width: 0; }
+.ticket-steps .step > div > b { font-size: clamp(23px, 3vw, 30px); line-height: 1.15; letter-spacing: -.035em; overflow-wrap: anywhere; }
+.ticket-steps .step p, .ticket-steps .step-rank { color: inherit; }
+.ticket-steps .step-rank { padding: 0; margin-bottom: 18px; }
+.ticket-result { border-top: 1px dashed currentColor; padding-top: 18px; }
+.ticket-result b { display: block; margin-top: 8px; }
+.ticket-steps .row { margin-top: auto; }
+.ticket-steps .chip { background: #202923; color: #fff; min-height: 48px; padding: 12px 20px; }
+.ticket-steps .link, .remaining-steps .link { min-height: 44px; }
+.ticket-draft { font-size: 13px; }
+.report-detail-notes { display: grid; gap: var(--gap); min-width: 0; }
+.report-detail-grid .t-area { grid-column: auto; }
+.reserve-card { padding: 26px; }
+.reserve-layout { display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr); gap: 20px; margin: 14px 0; align-items: center; }
+.reserve-heading { font-size: 24px; line-height: 1.15; font-weight: 700; letter-spacing: -.035em; }
+.reserve-amount { margin: 24px 0 8px; font-size: clamp(22px, 2.5vw, 34px); line-height: 1.2; }
+.reserve-amount span { white-space: nowrap; }
+.reserve-vessel { height: 220px; position: relative; border: 1px solid currentColor; border-radius: 12px 12px 36px 36px; overflow: hidden; transform: rotate(3deg); }
+.reserve-goal { position: absolute; z-index: 1; top: 12px; left: 10px; font-size: 12px; }
+.reserve-liquid { position: absolute; bottom: 0; width: 100%; background: #3b613c; border-radius: 35% 30% 0 0 / 10% 8% 0 0; }
+.reserve-vessel b { position: absolute; bottom: 20px; left: 0; right: 0; text-align: center; color: var(--on-tile); background: var(--tile-ok); border-radius: 16px; margin: 0 8px; font-size: 28px; line-height: 1.4; }
+.reserve-foot { margin-top: auto; border-top: 1px solid currentColor; padding-top: 14px; font-size: 13px; display: flex; flex-wrap: wrap; gap: 8px 18px; }
+@media (max-width: 760px) {
+  .report-answer-pair, .report-detail-grid, .forecast-paths { grid-template-columns: minmax(0, 1fr); }
+  .answer-note, .first-step-ticket, .reserve-card { padding: 24px; }
+}
+
+.ticket-steps .step-rank { font: 600 13px/1.4 var(--font-text); width: auto; }

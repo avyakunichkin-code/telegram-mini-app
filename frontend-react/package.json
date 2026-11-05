@@ -36,6 +36,7 @@
     "deploy": "npm run build:pages && gh-pages -d dist",
     "deploy:game-only": "npm run build && gh-pages -d dist",
     "test:e2e": "playwright test",
+    "test:ui-kit": "playwright test --config playwright.ui-kit.config.js",
     "check:mqx-ratchet": "node scripts/check-mqx-ratchet.mjs",
     "test:scripts": "node --test scripts/*.test.mjs",
     "check:design-assets": "node ../scripts/design-assets.mjs --check",
