@@ -10,7 +10,11 @@ const packages = path.resolve(here, '../../packages')
 export default defineConfig({
   plugins: [react()],
   resolve: {
-    alias: { '@tvoy/api-client': path.join(packages, 'api-client/src/index.js') },
+    alias: {
+      '@tvoy/api-client': path.join(packages, 'api-client/src/index.js'),
+      '@tvoy/ui-kit': path.join(packages, 'ui-kit/src/index.js'),
+    },
+    dedupe: ['react', 'react-dom'],
   },
   server: {
     fs: { allow: [here, packages] },

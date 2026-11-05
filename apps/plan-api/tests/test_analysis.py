@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import re
+import json
 from decimal import Decimal
 from pathlib import Path
 
@@ -34,6 +35,46 @@ def simple(income=100_000, expenses=70_000, cushion=50_000, liabilities=()) -> C
         savings=[SavingsRow(amount=R(cushion), is_safety_fund=True)],
         liabilities=list(liabilities),
     )
+
+
+def test_zero_values_report_is_finite_and_has_no_surplus_action():
+    report = build_report(checkup(simple(income=0, expenses=0, cushion=0)))
+    json.dumps(report, allow_nan=False)
+    assert report['free_cashflow'] == 0
+    assert all(p['liquid'] == 0 for p in report['forecast']['base'])
+    assert 'direct_surplus' not in [s['rule_key'] for s in report['steps']]
+
+
+def test_wide_income_range_shows_deficit_in_pessimistic_forecast():
+    # Irregular income expressed as a range: base +10k/month, lower bound -40k/month.
+    data = simple(income=0, expenses=80_000, cushion=100_000)
+    data.incomes = [IncomeRow(member_id='m_me', kind='self_employed', amount=R(40_000, 140_000))]
+    report = build_report(checkup(data))
+    assert report['free_cashflow'] == 10_000
+    assert report['forecast']['base'][0]['liquid'] == 110_000
+    assert report['forecast']['pessimistic'][0]['liquid'] == 60_000
+    assert report['forecast']['pessimistic_months_until_negative'] == 3
+    assert report['precision'] != 'refined'
+    assert report['metrics_pessimistic']['income'] == 40_000
+
+
+def test_income_loss_keeps_second_family_members_income():
+    data = simple(expenses=80_000, cushion=100_000)
+    data.incomes = [IncomeRow(member_id='m_me', amount=R(120_000)),
+                    IncomeRow(member_id='partner', amount=R(50_000))]
+    members = [Member(id='m_me', label='Я'), Member(id='partner', label='Партнёр')]
+    report = build_report(checkup(data, members))
+    loss = next(s for s in report['scenarios'] if s['id'] == 'S1')
+    assert loss['series'][0]['liquid'] == 70_000  # 100k + 50k - 80k
+    assert loss['months_until_negative'] == 4
+
+
+def test_deficit_and_empty_reserve_prioritize_reducing_expenses():
+    report = build_report(checkup(simple(income=60_000, expenses=80_000, cushion=0)))
+    assert report['free_cashflow'] == -20_000
+    assert report['steps'][0]['rule_key'] == 'stop_deficit'
+    assert '20\u00a0000' in report['steps'][0]['title']
+    assert 'cushion_target' not in [s['rule_key'] for s in report['steps']]
 
 
 def test_month_index_roundtrip():
@@ -136,6 +177,12 @@ def test_avalanche_beats_current():
     assert avalanche.months < current.months
     assert avalanche.total_interest < current.total_interest
     assert avalanche.order[0] == "Карта"
+
+
+def test_payoff_includes_debt_with_only_overdue_remaining():
+    debt = Liability(id="overdue", title="Overdue", total_debt=0, overdue_amount=1000,
+                     annual_rate_percent=0, monthly_payment=500)
+    assert simulate((debt,)).months == 2
 
 
 def test_cs6_no_trading_advice_in_texts():

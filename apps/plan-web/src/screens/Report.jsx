@@ -3,6 +3,8 @@ import { api } from '../api.js'
 import { Button, Card, ErrorNote, Light, LineChart, Money, Precision, Verdict } from '../components.jsx'
 import { monthLabel, pct, plural, rub } from '../format.js'
 import { areaSummary, goalBar, heroFor, nextStep, previousCells, stepStatus } from '../logic.js'
+import { ForecastTracks, ReserveVessel, StepResult } from './ReportBlocks.jsx'
+import './report-blocks.css'
 
 const PRECISION = {
   draft: ['Черновая точность', 'Много ответов диапазонами или оценок — уточните разделы, и разбор станет точнее.'],
@@ -53,26 +55,28 @@ function AreaMetrics({ area, draft }) {
   }
 }
 
-function Steps({ steps, final, onPatch }) {
+function Steps({ steps, final, onPatch, ticket = false, cushion = 0, busy }) {
   // Жёлтая плитка — первый ещё не сделанный шаг
   const next = nextStep(steps)
   return (
-    <ol className="steps">
+    <ol className={`steps ${ticket ? 'ticket-steps' : ''}`} >
       {steps.map((s) => (
         <li key={s.rule_key} className={`step step-${s.status} ${s === next ? 'step-next' : ''}`}>
-          <span className="step-rank">{s.rank}</span>
+          <span className="step-rank">{ticket ? `Шаг ${s.rank}` : s.rank}</span>
           <div>
             <b>{s.title}</b>
             <p>{s.why}</p>
+            {ticket && <StepResult step={s} cushion={cushion} />}
+            {ticket && !final && <p className="ticket-draft">Завершите разбор, чтобы отмечать выполнение.</p>}
             {final && s.id && (
               <div className="row gap">
                 {s.status !== 'done' ? (
-                  <button className="chip" onClick={() => onPatch(s, 'done')}>Сделано</button>
+                  <button className="chip" disabled={busy} onClick={() => onPatch(s, 'done')}>Сделано</button>
                 ) : (
                   <span className="done-note">Сделано</span>
                 )}
-                {s.status === 'suggested' && <button className="link" onClick={() => onPatch(s, 'dismissed')}>Не подходит</button>}
-                {s.status !== 'suggested' && <button className="link" onClick={() => onPatch(s, 'suggested')}>Вернуть</button>}
+                {s.status === 'suggested' && <button className="link" disabled={busy} onClick={() => onPatch(s, 'dismissed')}>Не подходит</button>}
+                {s.status !== 'suggested' && <button className="link" disabled={busy} onClick={() => onPatch(s, 'suggested')}>Вернуть</button>}
               </div>
             )}
           </div>
@@ -111,13 +115,14 @@ function DebtStrategy({ d }) {
 export default function Report({ checkup, report, onRefine, onComplete, onNew, onReport }) {
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState(null)
+  const [patching, setPatching] = useState(false)
   const [p1, p2] = PRECISION[report.precision]
   const draft = report.precision === 'draft'
   const ea = report.entry_answer
   const hero = heroFor(ea)
-  const base = report.forecast.base
-  const pess = report.forecast.pessimistic
-  const pessNegative = report.forecast.pessimistic.find((p) => p.liquid < 0)
+  const cushion = report.areas.find(a => a.key === 'cushion')?.metrics.cushion ?? 0
+  const starting = (checkup.data?.savings || []).filter(s => s.is_safety_fund || s.kind !== 'deposit').reduce((sum, s) => sum + (Number(s.amount.min) + Number(s.amount.max)) / 2, 0)
+  const [firstStep, ...otherSteps] = report.steps
 
   async function complete() {
     setBusy(true)
@@ -132,11 +137,16 @@ export default function Report({ checkup, report, onRefine, onComplete, onNew, o
   }
 
   async function patch(step, status) {
+    if (patching) return
+    setPatching(true)
+    setError(null)
     try {
       const fresh = await api.patchStep(step.id, status)
       onReport({ ...report, steps: report.steps.map((s) => (s.id === step.id ? { ...s, ...fresh } : s)) })
     } catch (err) {
       setError(err)
+    } finally {
+      setPatching(false)
     }
   }
 
@@ -147,7 +157,7 @@ export default function Report({ checkup, report, onRefine, onComplete, onNew, o
         <span className="pill" title={p2}>{p1} · {Math.round((report.precision_share ?? 0) * 100)} %</span>
       </div>
       <div className="board">
-        {/* ★ C2 (bento-round, утверждён 2026-11-02): светофор 2×2 → прогноз линиями → ответ с шагами */}
+        {/* ★ C2 (bento-round, утверждён 2026-11-02): светофор → F2 → A2/S1 → остаток/точность → подробности с M1 */}
         {report.areas.map((a) => {
           const [value, caption] = areaSummary(a)
           return (
@@ -159,21 +169,7 @@ export default function Report({ checkup, report, onRefine, onComplete, onNew, o
           )
         })}
 
-        <section className="card t-full forecast">
-          <header className="card-head"><h3>Деньги на счетах</h3><span className="muted">12 мес., если ничего не менять</span></header>
-          <LineChart
-            height={150}
-            series={[
-              { name: 'Как сейчас', tone: 'base', points: base },
-              { name: 'Если хуже', tone: 'pess', points: pess },
-            ]}
-          />
-          <div className="legend">
-            <span><i className="lg-base" />как сейчас · {rub(base[base.length - 1]?.liquid)}</span>
-            <span><i className="lg-pess" />если хуже · {rub(pess[pess.length - 1]?.liquid)}</span>
-          </div>
-          {pessNegative && <p className="bars-warn">Если доходы окажутся по нижней границе, а расходы — по верхней, деньги кончатся в {monthLabel(pessNegative.month)}.</p>}
-        </section>
+        <ForecastTracks forecast={report.forecast} starting={starting} draft={draft} />
 
         {report.previous && (
           // ★ R2 (recheck-round, утверждено 2026-11-02): что сдвинулось с прошлого итогового разбора
@@ -193,16 +189,20 @@ export default function Report({ checkup, report, onRefine, onComplete, onNew, o
           </section>
         )}
 
-        <section className={`card tile-inverse report-head answer answer-${ea.verdict} t-full`}>
-          <div className="card-head">
+        <div className="report-answer-pair t-full">
+          <section className={`card report-head answer answer-note answer-${ea.verdict}`}>
+            <div className="card-head"><p className="eyebrow">Деньги отвечают</p><Verdict value={ea.verdict} /></div>
             <h1>{ea.question}</h1>
-            <Verdict value={ea.verdict} />
-          </div>
-          {hero && <div className="hero-num"><b>{hero[0]}</b><span>{hero[1][0]}<br />{hero[1][1]}</span></div>}
-          <p className="answer-text">{ea.text}</p>
-          <h3>С чего начать</h3>
-          <Steps steps={report.steps} final={report.final} onPatch={patch} />
-        </section>
+            {hero && <div className="note-metric"><b>{hero[0]}</b><span>{hero[1][0]}<br />{hero[1][1]}</span></div>}
+            <p className="answer-text">{ea.text}</p>
+            <details className="answer-explanation"><summary>Разобраться в ответе</summary><p>{p2}</p><p>Прогноз опирается на введённые доходы, расходы, накопления и обязательства. Подробности и стресс-сценарии приведены ниже.</p></details>
+          </section>
+          <section className="card first-step-ticket" aria-label="Первый шаг">
+            <h2>С чего начать</h2>
+            {firstStep ? <Steps steps={[firstStep]} final={report.final} onPatch={patch} ticket cushion={cushion} busy={patching} />
+              : <p>Для этих данных пока нет предложенных шагов. Уточните разделы чекапа.</p>}
+          </section>
+        </div>
 
         <section className={`card tile-tall t-half ${report.free_cashflow < 0 ? 'area-red' : 'area-green'}`}>
           <h3>Остаётся в месяц</h3>
@@ -214,11 +214,14 @@ export default function Report({ checkup, report, onRefine, onComplete, onNew, o
         </section>
 
         <h2 className="t-full" style={{ padding: '0 6px' }}>Подробно по областям</h2>
-        {report.areas.map((a) => (
-          <Card key={a.key} title={a.title} aside={<Light value={a.light} />} className={`area area-${a.light} t-area`}>
-            <AreaMetrics area={a} draft={draft} />
-          </Card>
-        ))}
+        <div className="report-detail-grid t-full">
+          {report.areas.filter(a => a.key === 'cushion').map(a => <ReserveVessel key={a.key} area={a} outflow={report.metrics_base.outflow} draft={draft} />)}
+          <div className="report-detail-notes">
+            {report.areas.filter(a => a.key !== 'cushion').map(a => <Card key={a.key} title={a.title} aside={<Light value={a.light} />} className={`area area-${a.light}`}><AreaMetrics area={a} draft={draft} /></Card>)}
+          </div>
+        </div>
+
+        {otherSteps.length > 0 && <Card title="Остальные шаги" className="t-full remaining-steps"><Steps steps={otherSteps} final={report.final} onPatch={patch} busy={patching} /></Card>}
 
         <h2 className="t-full" style={{ padding: '0 6px' }}>Стресс-тест</h2>
         {report.scenarios.map((s) => (

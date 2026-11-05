@@ -25,6 +25,10 @@ export default function App() {
     } catch (err) {
       if (err.status === 401) {
         setToken(null)
+        setMe(null)
+        setCheckup(null)
+        setReport(null)
+        setHistory([])
         setScreen('auth')
       } else {
         setError(err)
@@ -69,6 +73,8 @@ export default function App() {
   const pickQuestion = (q) => guard(async () => {
     const ck = await api.createCheckup(q)
     setCheckup(ck)
+    setReport(null)
+    setHistory(await api.listCheckups())
     setScreen('family')
   })
 
@@ -101,8 +107,10 @@ export default function App() {
 
   const logout = () => {
     setToken(null)
+    setMe(null)
     setCheckup(null)
     setReport(null)
+    setHistory([])
     setScreen('auth')
   }
 

@@ -187,7 +187,7 @@ jobs:
           retention-days: 7
 
   # Plan (ADR-016, ADR-017): plan-api на БД (SQLite в тестах) + platform, plan-web build и e2e.
-  # Не входит в required checks игры.
+  # Required check for main; game-only PRs skip it through the path filter.
   plan:
     name: Plan API + web
     needs: changes

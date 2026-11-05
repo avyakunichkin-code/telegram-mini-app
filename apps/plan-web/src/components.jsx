@@ -1,14 +1,15 @@
-import { useState } from 'react'
+import { forwardRef, useState } from 'react'
+import { ButtonBase } from '@tvoy/ui-kit'
 import { monthLabel, rub } from './format.js'
 import { isWideRange, toNum } from './logic.js'
 
-export function Button({ variant = 'primary', busy, children, ...props }) {
+export const Button = forwardRef(function Button({ variant = 'primary', busy, children, className = '', ...props }, ref) {
   return (
-    <button className={`btn btn-${variant}`} disabled={busy || props.disabled} {...props}>
+    <ButtonBase {...props} ref={ref} className={`btn btn-${variant}${className ? ` ${className}` : ''}`} busy={busy}>
       {busy ? 'Секунду…' : children}
-    </button>
+    </ButtonBase>
   )
-}
+})
 
 export function ErrorNote({ error }) {
   if (!error) return null
@@ -101,7 +102,8 @@ export function RangeInput({ label, value, onChange, hint }) {
     <label className="field">
       <span className="field-label">
         {label}
-        <button type="button" className="link" onClick={() => {
+        <button type="button" className="link"
+          aria-label={`${ranged ? 'знаю точно' : 'примерно от–до'}: ${label}`} onClick={() => {
           if (ranged) set({ max: v.min })
           setRanged(!ranged)
         }}>
