@@ -1,8 +1,7 @@
 {
-  "date": "2026-11-04",
-  "source": "CurrentDashboardDemo → production MQX dashboard components",
-  "fixtures": "synthetic, no backend writes",
-  "css": "index-C9KH5bw8.css",
-  "sha256": "29f6bee47f87d7c9930f56e84af0f0c7c71c65b0a3b7eb2d947fc7ad7b12dfe3",
-  "refresh": "build frontend, then node design-lab/dashboard/current-page-round/render-reference.mjs"
+  "source": "design-lab/dashboard/pocket-page-round/reference.js",
+  "sha256": "7f2baab66ed988f419ffa32ce72fe2b8b565ba3dbf6952b06ae9bedd9c0f654d",
+  "state": "ready",
+  "style": "Pocket Board G / Monetka B",
+  "note": "Static native fragments, sample data; buttons are passive spans."
 }
