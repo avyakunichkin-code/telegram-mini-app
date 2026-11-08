@@ -32,3 +32,9 @@ body[data-direction=a] .masthead{top:0}
 @media(max-width:760px){.how-with-mascot{padding-right:100px;min-height:150px}.how-mascot{right:0;top:0;width:85px;height:120px}.how .how-with-mascot>p:not(.overline){margin-right:-100px;padding-top:10px}}
 
 .money-history{margin:28px 0 0;padding:0}.money-history figcaption{display:flex;justify-content:space-between;gap:15px;align-items:center}.money-history .overline{font-size:10px;letter-spacing:1px;color:#8c7793}.money-history h4{font:800 21px/1.3 Nunito,sans-serif;margin:7px 0 0;color:#302039}.money-history figcaption>strong{font:900 22px/1.2 Nunito,sans-serif;white-space:nowrap;text-align:right}.money-history figcaption>strong small{display:block;font:400 11px/1.6 Manrope,sans-serif;color:#8c7793;margin-top:4px}.money-history svg{width:100%;height:auto;display:block;margin-top:12px;max-height:205px}.money-history>p{font-size:12px;line-height:1.7;margin:8px 0 5px;color:#796577}.money-history>small{font-size:10px;line-height:1.6;color:#8c7793;display:block}@media(max-width:400px){.money-history h4{font-size:19px}.money-history figcaption>strong{font-size:20px}.money-history .overline{font-size:9px;letter-spacing:.5px}}
+
+/* Landing improvements 08.11.2026: CTA after the example, phone CTA. */
+.result:focus{outline:none}.result .result-cta{display:inline-flex;margin-top:6px}
+.mobile-cta{display:none}
+@media(max-width:760px){.mobile-cta{display:block;position:fixed;left:14px;right:14px;bottom:calc(14px + env(safe-area-inset-bottom));z-index:15;visibility:hidden;opacity:0;transform:translateY(24px);transition:opacity .2s,transform .2s,visibility .2s}.mobile-cta.is-visible{visibility:visible;opacity:1;transform:none}.mobile-cta .play{display:flex;justify-content:center;gap:12px;width:100%}}
+@media(prefers-reduced-motion:reduce){.mobile-cta{transition:none;transform:none}}
