@@ -2,13 +2,14 @@ import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
+import { offlineShell } from './scripts/offline-shell.mjs'
 
 const here = path.dirname(fileURLToPath(import.meta.url))
 const packages = path.resolve(here, '../../packages')
 
 // /api проксируется на plan-api (uvicorn :8020). Общие JS-пакеты (SPL-403) — по алиасу из packages/.
 export default defineConfig({
-  plugins: [react()],
+  plugins: [react(), offlineShell()],
   resolve: {
     alias: {
       '@tvoy/api-client': path.join(packages, 'api-client/src/index.js'),

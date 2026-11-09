@@ -65,6 +65,6 @@ def demo_data(as_of: str) -> CheckupData:
         investments=[InvestmentRow(member_id="m_me", asset_class="stocks", amount=Decimal(150_000), liquidity="days")],
         pension=[PensionRow(member_id="m_partner", savings_amount=Decimal(0))],
         insurance=[InsuranceRow(kind="property", monthly_premium=Decimal(900), coverage=Decimal(3_000_000))],
-        goals=[GoalRow(id="g_vacation", title="Отпуск на море", target_amount=Decimal(250_000), target_month=f"{year + 1}-07", saved_amount=Decimal(20_000))],
+        goals=[GoalRow(title="Отпуск на море", target_amount=Decimal(250_000), target_month=f"{year + 1}-07", saved_amount=Decimal(20_000))],
         decision=[DecisionRow(price=Decimal(1_500_000), down_payment=Decimal(100_000), annual_rate=Decimal(18), term_months=60)],
     )

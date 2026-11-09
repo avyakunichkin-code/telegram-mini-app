@@ -20,7 +20,7 @@ export function ReserveVessel({ area, outflow, draft }) {
         <b>{target > 0 ? `${Math.round(share)} %` : '—'}</b>
       </div>
     </div>
-    <div className="reserve-foot"><span>Цель — {targetMonths} мес. расходов</span><span>{area.metrics.goals_realistic ? 'Цели реалистичны' : 'Есть нереалистичные цели'}</span></div>
+    <div className="reserve-foot"><span>Цель — {targetMonths} мес. расходов</span><span>{area.metrics.goals_realistic == null ? 'Уточните сроки целей' : area.metrics.goals_realistic ? 'Цели реалистичны' : 'Есть нереалистичные цели'}</span></div>
   </section>
 }
 

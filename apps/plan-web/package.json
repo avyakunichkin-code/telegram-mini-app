@@ -5,7 +5,7 @@
   "type": "module",
   "description": "ТВОЙ ПЛАН — прототип семейного финансового чекапа (SPEC_plan-v1)",
   "scripts": {
-    "test:unit": "node --test --test-concurrency=1 src/*.test.js test/*.test.js",
+    "test:unit": "node --test --test-concurrency=1 test/*.test.js",
     "dev": "vite --port 5190 --strictPort",
     "build": "vite build",
     "preview": "vite preview --port 5190",

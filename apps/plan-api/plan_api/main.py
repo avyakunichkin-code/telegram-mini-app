@@ -29,10 +29,15 @@ from tvoy_platform.migrations import migrate
 from tvoy_platform.tokens import InvalidToken, TokenIssuer
 
 from .analysis import config
+from .analysis.preview import PreviewIn, preview as build_preview
+from .analytics import CONSENT_VERSION
 from .analysis.report import ENTRY_TITLES, build_report
+from .history import compare
+from .continuity import parent_context
+from .goal_progress import add_goal_progress
 from .demo import demo_data, demo_members
 from .mailer import LogMailer
-from .repo import Repo, User, new_id, now_iso
+from .repo import CheckupChanged, Repo, User, new_id, now_iso
 from .schemas import (
     SECTION_ROW,
     Checkup,
@@ -49,11 +54,11 @@ from .schemas import (
     SavingsRow,
     Section,
     StepPatch,
+    StepActionPatch,
     VerifyIn,
 )
 from .settings import MIGRATIONS, Settings
 
-CONSENT_VERSION = "2026-10-proto"  # текст согласия — через юриста (spec open question 4)
 ISSUER, AUDIENCE = "plan", "plan-web"
 FUNNEL = ["signup", "checkup_started", "quick_done", "report_viewed", "checkup_completed", "step_done"]
 
@@ -68,7 +73,7 @@ def create_app(settings: Settings | None = None, mailer: LogMailer | None = None
     if not settings.production:
         migrate(db.engine, MIGRATIONS)  # в production — только `py -3 -m plan_api.migrate`
     tokens = TokenIssuer(secret=settings.secret_key, issuer=ISSUER, audience=AUDIENCE, ttl=settings.token_ttl)
-    mailer = mailer or LogMailer()
+    mailer = mailer or LogMailer(log_code=not settings.production)  # код входа не попадает в логи production
 
     app = FastAPI(title="ТВОЙ ПЛАН API", version="0.2.0")
     app.state.settings, app.state.db, app.state.tokens, app.state.mailer = settings, db, tokens, mailer
@@ -79,6 +84,11 @@ def create_app(settings: Settings | None = None, mailer: LogMailer | None = None
     async def _http_error(_: Request, exc: HTTPException) -> JSONResponse:
         detail = exc.detail if isinstance(exc.detail, dict) else {"code": "error", "message": str(exc.detail)}
         return JSONResponse(status_code=exc.status_code, content={"error": detail})
+
+    @app.exception_handler(CheckupChanged)
+    async def _checkup_changed(_: Request, __: CheckupChanged) -> JSONResponse:
+        message = "Данные изменились на другом устройстве. Обновите страницу и повторите"
+        return JSONResponse(status_code=409, content={"error": {"code": "checkup_changed", "message": message}})
 
     def repo(session: Annotated[Session, Depends(db.get_session)]) -> Repo:
         return Repo(session)
@@ -98,8 +108,16 @@ def create_app(settings: Settings | None = None, mailer: LogMailer | None = None
 
     UserDep = Annotated[User, Depends(current_user)]
 
+    def client_ip(request: Request) -> str:
+        # Только свои прокси дописывают адреса справа: левая часть заголовка подделывается клиентом.
+        if settings.trusted_proxies:
+            chain = [p.strip() for p in request.headers.get("x-forwarded-for", "").split(",") if p.strip()]
+            if len(chain) >= settings.trusted_proxies:
+                return chain[-settings.trusted_proxies]
+        return request.client.host if request.client else ""
+
     def ip_hash(request: Request) -> str:
-        ip = request.client.host if request.client else ""
+        ip = client_ip(request)
         return hmac.new(settings.secret_key.encode(), ip.encode(), hashlib.sha256).hexdigest()
 
     def code_hash(email: str, code: str) -> str:
@@ -110,31 +128,6 @@ def create_app(settings: Settings | None = None, mailer: LogMailer | None = None
         if not ck:
             raise error(404, "not_found", "Чекап не найден")
         return ck
-
-    def parent_of(r: Repo, user: User, ck: Checkup) -> Checkup | None:
-        return r.checkup(user, ck.parent_checkup_id) if ck.parent_checkup_id else None
-
-    def with_previous(r: Repo, user: User, ck: Checkup, report: dict) -> dict:
-        """P3-03: что было в прошлом разборе — шаги со статусами и как сдвинулись метрики их правил."""
-        prev = r.report_with_step_status(ck.parent_checkup_id) if ck.parent_checkup_id else None
-        if not prev:
-            report["previous"] = None
-            return report
-
-        def area(rep: dict, key: str) -> dict:
-            return next((a["metrics"] for a in rep["areas"] if a["key"] == key), {})
-
-        pairs = {
-            "cushion_months": (area(prev, "cushion").get("months"), area(report, "cushion").get("months")),
-            "dti_percent": (area(prev, "debts").get("dti_percent"), area(report, "debts").get("dti_percent")),
-            "free_cashflow": (prev.get("free_cashflow"), report.get("free_cashflow")),
-        }
-        report["previous"] = {
-            "as_of": prev["as_of"],
-            "steps": [{"rule_key": s["rule_key"], "title": s["title"], "status": s.get("status", "suggested")} for s in prev["steps"]],
-            "metrics": {k: {"before": a, "now": b} for k, (a, b) in pairs.items()},
-        }
-        return report
 
     def editable(ck: Checkup) -> None:
         if ck.status != "draft":
@@ -192,6 +185,7 @@ def create_app(settings: Settings | None = None, mailer: LogMailer | None = None
     @app.delete("/api/me", status_code=202)
     def delete_me(user: UserDep, r: RepoDep) -> dict:
         r.mark_deleted(user.id)
+        r.delete_events(user.id)
         r.track(None, "account_deleted", {})
         return {"deleted": True}
 
@@ -243,20 +237,44 @@ def create_app(settings: Settings | None = None, mailer: LogMailer | None = None
             members=[m.model_copy(deep=True) for m in (last.members if last else user.members)],
             data=last.data.model_copy(deep=True) if last else CheckupData(),
         )
+        for goal in ck.data.goals:
+            if not goal.id:
+                goal.id = new_id("goal")
         r.insert_checkup(user, ck)
         r.track(user.id, "checkup_started", {"entry_question": body.entry_question})
         return ck
 
     @app.get("/api/checkups")
     def list_checkups(user: UserDep, r: RepoDep) -> list[dict]:
-        return [
-            {"id": c.id, "status": c.status, "as_of": c.as_of, "entry_question": c.entry_question, "completed_at": c.completed_at}
-            for c in sorted(r.checkups(user), key=lambda c: c.completed_at or "~", reverse=True)
-        ]
+        return r.history(user)
+
+    @app.get("/api/checkups/{checkup_id}/compare/{previous_id}")
+    def compare_checkups(checkup_id: str, previous_id: str, user: UserDep, r: RepoDep) -> dict:
+        after, before = own_checkup(r, user, checkup_id), own_checkup(r, user, previous_id)
+        if after.id == before.id or after.status != "completed" or before.status != "completed":
+            raise error(422, "invalid_comparison", "Выберите два разных завершённых чекапа")
+        if before.completed_at > after.completed_at:
+            raise error(422, "invalid_comparison", "В поле «Было» нужен более ранний чекап")
+        saved_before, saved_after = r.report(before.id), r.report(after.id)
+        if saved_before is None or saved_after is None:
+            raise error(409, "report_unavailable", "Сохранённый отчёт недоступен. Пересчёт не выполнялся")
+        return compare(before, saved_before, after, saved_after)
 
     @app.get("/api/checkups/{checkup_id}")
     def get_checkup(checkup_id: str, user: UserDep, r: RepoDep) -> Checkup:
         return own_checkup(r, user, checkup_id)
+
+    @app.post("/api/checkups/{checkup_id}/preview")
+    def preview_checkup(checkup_id: str, body: PreviewIn, user: UserDep, r: RepoDep) -> dict:
+        ck = own_checkup(r, user, checkup_id)
+        if ck.status == 'completed':
+            saved = r.report(ck.id)
+            if not saved or str(saved.get('rules_version')) != str(config.RULES_VERSION):
+                raise error(409, 'preview_version', 'Версия сохранённого отчёта не поддерживает новый расчёт')
+        try:
+            return build_preview(ck, body)
+        except ValueError as exc:
+            raise error(422, 'preview_input', str(exc))
 
     @app.post("/api/checkups/{checkup_id}/quick")
     def quick(checkup_id: str, body: QuickIn, user: UserDep, r: RepoDep) -> Checkup:
@@ -291,7 +309,7 @@ def create_app(settings: Settings | None = None, mailer: LogMailer | None = None
             data.liabilities = []
         r.set_members(user, ck.members)
         r.save_draft(user, ck)
-        r.track(user.id, "quick_done", {})
+        r.track(user.id, "quick_done", {"duration_seconds": r.checkup_elapsed(user, ck.id)}, once_key=ck.id)
         return ck
 
     @app.put("/api/checkups/{checkup_id}/sections/{section}")
@@ -313,16 +331,22 @@ def create_app(settings: Settings | None = None, mailer: LogMailer | None = None
                 raise error(422, "unknown_member", "Нет такого члена семьи")
             if mid in child_ids and section in ("incomes", "liabilities"):
                 raise error(422, "child_finance", "У ребёнка не может быть доходов и долгов")
-        if section in ("liabilities", "goals"):
-            prefix = "li" if section == "liabilities" else "g"
-            parsed = [x if x.id else x.model_copy(update={"id": new_id(prefix)}) for x in parsed]
-        if section == "liabilities" and len({x.id for x in parsed}) != len(parsed):
-            raise error(422, "duplicate_liability", "Идентификаторы долгов должны быть уникальными")
+        if section == "liabilities":
+            parsed = [x if x.id else x.model_copy(update={"id": new_id("li")}) for x in parsed]
+            if len({x.id for x in parsed}) != len(parsed):
+                raise error(422, "duplicate_liability", "Идентификаторы долгов должны быть уникальными")
+        if section == "goals":
+            existing = {g.id for g in ck.data.goals if g.id}
+            if any(g.id and g.id not in existing for g in parsed):
+                raise error(422, "unknown_goal", "Нет такой цели в этом чекапе")
+            parsed = [g if g.id else g.model_copy(update={"id": new_id("goal")}) for g in parsed]
+            if len({g.id for g in parsed}) != len(parsed):
+                raise error(422, "duplicate_goal", "Идентификаторы целей должны быть уникальными")
         if section == "decision" and len(parsed) > 1:
             raise error(422, "single_decision", "Решение одно")
         setattr(ck.data, section, parsed)
         r.save_draft(user, ck)
-        r.track(user.id, "section_done", {"section": section})
+        r.track(user.id, "section_done", {"section": section}, once_key=f"{ck.id}:{section}")
         return parsed
 
     @app.post("/api/checkups/{checkup_id}/demo")
@@ -332,6 +356,8 @@ def create_app(settings: Settings | None = None, mailer: LogMailer | None = None
         editable(ck)
         ck.members = demo_members()
         ck.data = demo_data(ck.as_of)
+        for goal in ck.data.goals:
+            goal.id = new_id("goal")
         r.set_members(user, ck.members)
         r.save_draft(user, ck)
         return ck
@@ -341,10 +367,14 @@ def create_app(settings: Settings | None = None, mailer: LogMailer | None = None
         ck = own_checkup(r, user, checkup_id)
         if ck.status == "completed":
             report = r.report_with_step_status(ck.id)
+            if report is None:
+                raise error(409, "report_unavailable", "Сохранённый отчёт недоступен. Пересчёт не выполнялся")
         else:
             if not ck.data.incomes and not ck.data.expenses:
                 raise error(409, "not_enough_data", "Заполните хотя бы доходы и расходы")
-            report = with_previous(r, user, ck, jsonable_encoder(build_report(ck, parent_of(r, user, ck))))
+            report = jsonable_encoder(build_report(ck))
+            report["previous_steps"] = parent_context(r, user, ck, report)
+            add_goal_progress(r, user, ck, report)
         r.track(user.id, "report_viewed", {"final": report["final"], "precision": report["precision"]})
         return report
 
@@ -354,18 +384,22 @@ def create_app(settings: Settings | None = None, mailer: LogMailer | None = None
         if ck.status == "completed":
             saved = r.report_with_step_status(ck.id)
             if idempotency_key and saved and saved.get("idempotency_key") == idempotency_key:
+                r.track(user.id, "report_viewed", {"final": saved["final"], "precision": saved["precision"]})
                 return saved
             raise error(409, "checkup_completed", "Чекап уже завершён")
         if not ck.data.incomes or not ck.data.expenses:
             raise error(409, "not_enough_data", "Для итогового разбора нужны доходы и расходы")
-        at = now_iso()
+        at = now_iso(precise=True)
         if not r.mark_completed(user, ck.id, at):
             raise error(409, "checkup_completed", "Чекап уже завершён")
         ck.status, ck.completed_at = "completed", at
-        report = with_previous(r, user, ck, jsonable_encoder(build_report(ck, parent_of(r, user, ck))))
+        report = jsonable_encoder(build_report(ck))
+        report["previous_steps"] = parent_context(r, user, ck, report)
+        add_goal_progress(r, user, ck, report)
         report["idempotency_key"] = idempotency_key
         r.insert_report(user, ck.id, report)
-        r.track(user.id, "checkup_completed", {})
+        r.track(user.id, "checkup_completed", {"duration_seconds": r.checkup_elapsed(user, ck.id, at)})
+        r.track(user.id, "report_viewed", {"final": report["final"], "precision": report["precision"]})
         return report
 
     @app.patch("/api/steps/{step_id}")
@@ -374,13 +408,43 @@ def create_app(settings: Settings | None = None, mailer: LogMailer | None = None
         if not step:
             raise error(404, "not_found", "Шаг не найден")
         at = now_iso()
-        r.set_step_status(user, step_id, body.status, at)
+        updated = {**step, "status": body.status, "status_at": at}
+        if body.status == "suggested" and step.get("actions") and all(a["done"] for a in step["actions"]):
+            updated["actions"] = [{**a, "done": False} if i == len(step["actions"]) - 1 else a for i, a in enumerate(step["actions"])]
+        if updated == step or body.status == step["status"]:
+            return step
+        if not r.save_step(user, step, updated):
+            raise error(409, "step_changed", "Шаг изменился. Обновите отчёт и повторите действие")
         if body.status in ("done", "dismissed"):
             r.track(user.id, f"step_{body.status}", {"rule_key": step["rule_key"]})
-        return {**step, "status": body.status, "status_at": at}
+        return updated
+
+    @app.patch("/api/steps/{step_id}/actions/{action_key}")
+    def patch_step_action(step_id: str, action_key: str, body: StepActionPatch, user: UserDep, r: RepoDep) -> dict:
+        step = r.step(user, step_id)
+        if not step:
+            raise error(404, "not_found", "Шаг не найден")
+        action = next((a for a in step.get("actions", []) if a["key"] == action_key), None)
+        if action is None:
+            raise error(404, "not_found", "Действие не найдено")
+        if action["done"] == body.done:
+            return step
+        if step["status"] != "suggested":
+            raise error(409, "step_closed", "Сначала верните шаг в работу")
+        actions = [{**a, "done": body.done} if a["key"] == action_key else a for a in step["actions"]]
+        updated = {**step, "actions": actions, "status": "done" if all(a["done"] for a in actions) else "suggested", "status_at": now_iso()}
+        if not r.save_step(user, step, updated):
+            raise error(409, "step_changed", "Шаг изменился. Обновите отчёт и повторите действие")
+        if body.done:
+            r.track(user.id, "step_action_done", {"rule_key": step["rule_key"], "action": action_key})
+        if updated["status"] == "done":
+            r.track(user.id, "step_done", {"rule_key": step["rule_key"]})
+        return updated
 
     @app.post("/api/events", status_code=204)
     def post_event(body: EventIn, user: UserDep, r: RepoDep) -> None:
+        if body.name != "report_viewed":
+            raise error(422, "server_event_only", "Событие создаётся сервером при выполнении действия")
         r.track(user.id, body.name, body.props)
 
     if not settings.production:

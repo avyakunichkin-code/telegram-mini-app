@@ -1,7 +1,8 @@
 // Клиент plan-api поверх общего @tvoy/api-client (SPL-403). Формат ошибок: { error: { code, message } }.
 import { createApiClient } from '@tvoy/api-client'
+import { TOKEN_KEY, reportCache } from './offline.js'
+import { draftCache } from './draft.js'
 
-const TOKEN_KEY = 'plan.token'
 
 export function getToken() {
   try {
@@ -12,6 +13,8 @@ export function getToken() {
 }
 
 export function setToken(token) {
+  reportCache.clear()
+  draftCache.clear()
   try {
     if (token) localStorage.setItem(TOKEN_KEY, token)
     else localStorage.removeItem(TOKEN_KEY)
@@ -34,12 +37,15 @@ export const api = {
   putMembers: (members) => call('PUT', '/api/household/members', members),
   createCheckup: (entryQuestion) => call('POST', '/api/checkups', { entry_question: entryQuestion }),
   listCheckups: () => call('GET', '/api/checkups'),
+  compareCheckups: (current, previous) => call('GET', `/api/checkups/${current}/compare/${previous}`),
   getCheckup: (id) => call('GET', `/api/checkups/${id}`),
   quick: (id, answers) => call('POST', `/api/checkups/${id}/quick`, answers),
   putSection: (id, section, rows) => call('PUT', `/api/checkups/${id}/sections/${section}`, rows),
   demo: (id) => call('POST', `/api/checkups/${id}/demo`),
   report: (id) => call('GET', `/api/checkups/${id}/report`),
+  preview: (id, body) => call('POST', `/api/checkups/${id}/preview`, body),
   complete: (id) =>
     call('POST', `/api/checkups/${id}/complete`, undefined, { 'Idempotency-Key': `complete-${id}` }),
+  patchStepAction: (id, key, done) => call('PATCH', `/api/steps/${id}/actions/${encodeURIComponent(key)}`, { done }),
   patchStep: (id, status) => call('PATCH', `/api/steps/${id}`, { status }),
 }
