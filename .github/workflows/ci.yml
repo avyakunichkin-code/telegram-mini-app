@@ -127,11 +127,12 @@ jobs:
         working-directory: backend
         run: pip install -r requirements-dev.txt
 
-      - name: Schema drift (models vs migrations)
+      # Срез 2 + 3: дрейф схемы и критичные тесты (backend/tests/conftest.py::PG_CRITICAL) на PostgreSQL
+      - name: Postgres tests (schema drift + critical)
         working-directory: backend
         env:
           TEST_DATABASE_URL: postgresql://ci:ci@localhost:5432/tvoyhod_ci
-        run: python -m pytest tests/test_pg_schema_drift.py -q -rs
+        run: python -m pytest -m pg -q -rs
 
   # Balance diff игры к эталонам docs/balance/baselines: ядро (fincore/platform) меняется только с diff = 0.
   # Инварианты победимости — warn: их провал известен до SPL-405 (INV-1, DOC_SYNC_LOG 2026-10-25),
