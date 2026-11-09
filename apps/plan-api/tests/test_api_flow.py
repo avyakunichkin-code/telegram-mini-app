@@ -91,6 +91,16 @@ def test_completed_checkup_is_read_only_and_recheck_copies(client):
     assert nxt["parent_checkup_id"] == ck["id"] and nxt["data"]["incomes"]
 
 
+def test_recheck_copies_members_with_financial_data(client):
+    h = login(client, "recheck@example.com")
+    ck = client.post("/api/checkups", json={"entry_question": "overview"}, headers=h).json()
+    demo = client.post(f"/api/checkups/{ck['id']}/demo", headers=h).json()
+    client.post(f"/api/checkups/{ck['id']}/complete", headers=h)
+    assert client.put("/api/household/members", json=[{"id": "new", "label": "New"}], headers=h).status_code == 200
+    nxt = client.post("/api/checkups", json={"entry_question": "overview"}, headers=h).json()
+    assert nxt["members"] == demo["members"]
+
+
 def test_section_validation(client):
     h = login(client, "c@example.com")
     ck = client.post("/api/checkups", json={"entry_question": "overview"}, headers=h).json()
@@ -98,6 +108,38 @@ def test_section_validation(client):
     assert client.put(f"/api/checkups/{ck['id']}/sections/incomes", json=bad, headers=h).status_code == 422
     unknown = [{"member_id": "nobody", "amount": {"min": 5, "max": 10}}]
     assert client.put(f"/api/checkups/{ck['id']}/sections/incomes", json=unknown, headers=h).status_code == 422
+
+
+def test_family_rejects_duplicate_ids_and_child_with_income(client):
+    h = login(client, "family@example.com")
+    ck = client.post("/api/checkups", json={"entry_question": "overview"}, headers=h).json()
+    client.post(f"/api/checkups/{ck['id']}/quick", json=QUICK, headers=h)
+    duplicate = [{"id": "m_me", "label": "Я"}, {"id": "m_me", "label": "Партнёр"}]
+    assert client.put("/api/household/members", json=duplicate, headers=h).status_code == 422
+    child = [{"id": "m_me", "label": "Я", "role": "child"}]
+    assert client.put("/api/household/members", json=child, headers=h).status_code == 409
+
+
+@pytest.mark.parametrize("section,row", [
+    ("savings", {"member_id": "missing", "amount": {"min": 1, "max": 1}}),
+    ("investments", {"member_id": "missing", "asset_class": "stocks", "amount": 1}),
+    ("pension", {"member_id": "missing"}),
+    ("insurance", {"member_id": "missing", "kind": "life"}),
+])
+def test_member_references_prevent_removal(client, section, row):
+    h = login(client, f"{section}@example.com")
+    members = [{"id": "m_me", "label": "Я"}, {"id": "missing", "label": "Партнёр"}]
+    assert client.put("/api/household/members", json=members, headers=h).status_code == 200
+    ck = client.post("/api/checkups", json={"entry_question": "overview"}, headers=h).json()
+    assert client.put(f"/api/checkups/{ck['id']}/sections/{section}", json=[row], headers=h).status_code == 200
+    assert client.put("/api/household/members", json=members[:1], headers=h).status_code == 409
+
+
+def test_duplicate_liability_ids_rejected(client):
+    h = login(client, "debts@example.com")
+    ck = client.post("/api/checkups", json={"entry_question": "debts"}, headers=h).json()
+    row = {"id": "same", "balance": 1000, "annual_rate": 0, "monthly_payment": 100}
+    assert client.put(f"/api/checkups/{ck['id']}/sections/liabilities", json=[row, row], headers=h).status_code == 422
 
 
 # --- вход по коду -----------------------------------------------------------------------------
@@ -220,45 +262,3 @@ def test_cs9_plan_does_not_import_game():
                 names = [node.module or ""]
             for name in names:
                 assert name.split(".")[0] not in forbidden, f"{path}: {name}"
-
-
-# --- повторный чекап: прогресс целей (P3-07) и шаги прошлого разбора (P3-03) -------------------
-
-
-def test_recheck_shows_goal_progress_and_previous_steps(app, client):
-    h = login(client, "re@example.com")
-    ck = client.post("/api/checkups", json={"entry_question": "goal"}, headers=h).json()
-    client.post(f"/api/checkups/{ck['id']}/demo", headers=h)
-    first = client.post(f"/api/checkups/{ck['id']}/complete", headers=h).json()
-    assert first["previous"] is None
-    assert first["goals"][0]["id"] == "g_vacation" and first["goals"][0]["progress"] is None
-    done = first["steps"][0]
-    client.patch(f"/api/steps/{done['id']}", json={"status": "done"}, headers=h)
-
-    # тот же чекап «через 3 месяца»: отложили 60 000 на цель
-    with app.state.db.session() as s:
-        s.execute(text("UPDATE checkups SET as_of = '2026-08' WHERE id = :id"), {"id": ck["id"]})
-    nxt = client.post("/api/checkups", json={"entry_question": "goal"}, headers=h).json()
-    goal = nxt["data"]["goals"][0]
-    assert goal["id"] == "g_vacation"
-    goal["saved_amount"] = goal["saved_amount"] + 60_000
-    client.put(f"/api/checkups/{nxt['id']}/sections/goals", json=[goal], headers=h)
-
-    report = client.get(f"/api/checkups/{nxt['id']}/report", headers=h).json()
-    progress = report["goals"][0]["progress"]
-    assert progress["saved_delta"] == 60_000
-    assert progress["months"] >= 3 and progress["monthly_pace"] == round(60_000 / progress["months"], 2)
-    prev = report["previous"]
-    assert prev["as_of"] == first["as_of"]  # из сохранённого отчёта, он не пересчитывается
-    assert prev["steps"][0] == {"rule_key": done["rule_key"], "title": done["title"], "status": "done"}
-    assert set(prev["metrics"]) == {"cushion_months", "dti_percent", "free_cashflow"}
-
-
-def test_new_goal_gets_stable_id(client):
-    h = login(client, "gid@example.com")
-    ck = client.post("/api/checkups", json={"entry_question": "goal"}, headers=h).json()
-    goal = {"title": "Машина", "target_amount": 900_000, "target_month": "2028-01"}
-    saved = client.put(f"/api/checkups/{ck['id']}/sections/goals", json=[goal], headers=h).json()
-    assert saved[0]["id"].startswith("g_")
-    again = client.put(f"/api/checkups/{ck['id']}/sections/goals", json=saved, headers=h).json()
-    assert again[0]["id"] == saved[0]["id"]

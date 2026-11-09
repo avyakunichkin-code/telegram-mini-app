@@ -25,6 +25,7 @@ jobs:
     outputs:
       game: ${{ steps.areas.outputs.game }}
       plan: ${{ steps.areas.outputs.plan }}
+      shared_ui: ${{ steps.areas.outputs.shared_ui }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -37,19 +38,39 @@ jobs:
           BASE: ${{ github.event.pull_request.base.sha }}
         run: |
           if [ "$EVENT" != "pull_request" ]; then
-            echo "game=true" >> "$GITHUB_OUTPUT"; echo "plan=true" >> "$GITHUB_OUTPUT"; exit 0
+            echo "game=true" >> "$GITHUB_OUTPUT"; echo "plan=true" >> "$GITHUB_OUTPUT"; echo "shared_ui=true" >> "$GITHUB_OUTPUT"; exit 0
           fi
           files=$(git diff --name-only "$BASE"...HEAD)
           echo "$files"
           shared='^(packages/|\.github/)'
           game='^(backend/|frontend-react/|data/|scripts/|docs/balance/baselines/)'
-          plan='^apps/plan-'
+          plan='^(apps/plan-|design-lab/plan-checkup/)'
           has() { echo "$files" | grep -Eq "$1" && echo true || echo false; }
           s=$(has "$shared")
           [ "$s" = true ] && g=true || g=$(has "$game")
           [ "$s" = true ] && p=true || p=$(has "$plan")
           echo "game=$g" >> "$GITHUB_OUTPUT"
           echo "plan=$p" >> "$GITHUB_OUTPUT"
+          echo "shared_ui=$(has '^(frontend-react/|apps/plan-web/|packages/|tests/shared-ui/|\.github/)')" >> "$GITHUB_OUTPUT"
+
+  # Общий ButtonBase: настоящие адаптеры Plan и Game. Правка игры не должна ломать Plan незаметно.
+  shared-ui:
+    name: Shared UI contract
+    needs: changes
+    if: needs.changes.outputs.shared_ui == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: apps/plan-web/package-lock.json
+      - name: Install contract runtime
+        working-directory: apps/plan-web
+        run: npm ci
+      - name: Check both adapters
+        run: node --test tests/shared-ui/*.test.mjs
 
   backend:
     name: Backend pytest
@@ -77,6 +98,62 @@ jobs:
       - name: Pytest
         working-directory: backend
         run: python -m pytest -q
+
+  # SQL-миграции на настоящем PostgreSQL (docs/plans/PLAN_ci-postgres-parity.md, срез 1).
+  # Backend pytest идёт на SQLite и строит схему из моделей, поэтому миграции нигде не выполнялись.
+  # Не required: сначала понаблюдать за стабильностью (срез 4).
+  migrations-pg:
+    name: Postgres migrations
+    needs: changes
+    if: needs.changes.outputs.game == 'true'
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: ci
+          POSTGRES_PASSWORD: ci
+          POSTGRES_DB: tvoyhod_ci
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U ci -d tvoyhod_ci"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    env:
+      DATABASE_URL: postgresql://ci:ci@localhost:5432/tvoyhod_ci
+    steps:
+      - uses: actions/checkout@v4
+
+      # baseline на пустую БД + все инкременты 00NN_* (ON_ERROR_STOP=1: любая ошибка SQL валит job)
+      - name: Migrate from empty database
+        run: bash backend/scripts/db.sh migrate
+
+      # baseline пропускается (схема есть), инкременты обязаны быть идемпотентными (IF NOT EXISTS)
+      - name: Migrate again (idempotency)
+        run: bash backend/scripts/db.sh migrate
+
+      # Срез 2: схема после миграций против моделей (backend/tests/test_pg_schema_drift.py)
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.14'
+          cache: pip
+          cache-dependency-path: |
+            backend/requirements.txt
+            backend/requirements-dev.txt
+            packages/fincore/pyproject.toml
+
+      - name: Install dependencies
+        working-directory: backend
+        run: pip install -r requirements-dev.txt
+
+      # Срез 2 + 3: дрейф схемы и критичные тесты (backend/tests/conftest.py::PG_CRITICAL) на PostgreSQL
+      - name: Postgres tests (schema drift + critical)
+        working-directory: backend
+        env:
+          TEST_DATABASE_URL: postgresql://ci:ci@localhost:5432/tvoyhod_ci
+        run: python -m pytest -m pg -q -rs
 
   # Balance diff игры к эталонам docs/balance/baselines: ядро (fincore/platform) меняется только с diff = 0.
   # Инварианты победимости — warn: их провал известен до SPL-405 (INV-1, DOC_SYNC_LOG 2026-10-25),
@@ -187,7 +264,7 @@ jobs:
           retention-days: 7
 
   # Plan (ADR-016, ADR-017): plan-api на БД (SQLite в тестах) + platform, plan-web build и e2e.
-  # Не входит в required checks игры.
+  # Required check for main; game-only PRs skip it through the path filter.
   plan:
     name: Plan API + web
     needs: changes

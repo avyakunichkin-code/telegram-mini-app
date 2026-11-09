@@ -22,7 +22,7 @@ paths:
 - **Победа (prod: Victory v2):** `GET /api/finance/overview` → `win_reached` и блок `victory` из `victory/engine.py` + `victory_config_json` шаблона (`chain` | `parallel`, gate `min_period_index_for_victory`, обычно 7). Spec: [`SPEC_victory-v2.md`](docs/specs/features/SPEC_victory-v2.md), [ADR-002](docs/decisions/ADR-002-victory-engine-and-template-config.md). Старт Game: [`SPEC_game-plan.md`](docs/specs/features/SPEC_game-plan.md); Plan снят [ADR-013](docs/decisions/ADR-013-game-only-drop-plan-mode.md).
 - **Инварианты логики (tier-окно, победа):** `backend/app/game/rules.py`; победа v2 — `backend/app/victory/engine.py`. Роутеры не дублируют условия победы вручную.
 
-## Локальные тесты (без CI)
+## Локальные тесты
 
 После правок в `backend/` (особенно `game/`, `victory/`, `events/`, `routers/`, `services/`) **запускай** и в ответе пользователю **напоминай**, если не запускал:
 
@@ -32,4 +32,4 @@ cd backend && python -m pytest -q
 
 Первый раз или после смены окружения: `python -m pip install -r requirements-dev.txt`.
 
-В CI тесты пока не подключаем — только локальная проверка перед завершением задачи.
+CI тоже гоняет их (`.github/workflows/ci.yml`), это не отменяет локальный прогон перед завершением задачи.

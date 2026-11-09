@@ -4,7 +4,8 @@
  */
 export const CATALOG_RUN_FINALE_WIN = {
   outcome: 'victory',
-  period_index: 38,
+  period_index: 39,
+  turns_completed: 38,
   template_key: 'mq_game_basic_v1',
   persona_slug: 'student',
   scenario_title: 'Ты вывел студенческий бюджет в плюс',

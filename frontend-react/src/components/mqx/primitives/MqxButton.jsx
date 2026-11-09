@@ -1,4 +1,5 @@
 import { forwardRef } from 'react';
+import { ButtonBase } from '@tvoy/ui-kit';
 
 const VARIANT_CLASS = {
   'hero-filled': 'mqx-btn mqx-btn--filled',
@@ -31,5 +32,5 @@ export const MqxButton = forwardRef(function MqxButton(
   ]
     .filter(Boolean)
     .join(' ');
-  return <button ref={ref} type={type} className={cls} {...props} />;
+  return <ButtonBase ref={ref} type={type} className={cls} {...props} />;
 });

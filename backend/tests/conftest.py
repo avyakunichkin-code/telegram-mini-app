@@ -24,8 +24,62 @@ from app.victory.seeds import victory_config_json_for_template  # noqa: E402
 from main import app  # noqa: E402
 
 
+# Срез 3 PLAN_ci-postgres-parity: критичные существующие тесты дополнительно гоняются на PostgreSQL
+# (`TEST_DATABASE_URL=postgresql://... pytest -m pg`; схему заранее строит `db.sh migrate`).
+# Без TEST_DATABASE_URL эти же тесты идут на SQLite как обычно. Пополнять осознанно: каждый
+# добавленный тест должен быть чувствителен к движку БД (деньги, транзакции, идемпотентность).
+PG_CRITICAL = (
+    "tests/test_idempotency.py",
+    "tests/test_close_period_failure_and_replay.py",
+    "tests/test_game_time.py::test_close_month_response_has_no_timer_fields",
+    "tests/integration/api/test_time_next_lock.py",
+    "tests/integration/api/test_overview_victory_contract.py",
+    "tests/integration/api/test_choose_replay.py",
+    # Блокировки и гонки: на SQLite запись сериализуется, на PostgreSQL проверяются настоящие блокировки строк.
+    "tests/test_balance_utils_lost_update.py",
+    "tests/unit/period/test_salary_lock.py",
+    "tests/unit/events/test_choose_lock.py",
+    "tests/unit/game/test_time_next_lock.py",
+    # Агрегаты и даты админки: строгий GROUP BY и сравнение времени в PostgreSQL.
+    "tests/test_admin_watchtower.py",
+    "tests/test_admin_product_funnel.py",
+    "tests/test_admin_a4_engagement.py",
+    "tests/integration/api/test_last_seen.py",
+    # Сроки полисов и старт игры (даты, транзакции).
+    "tests/test_insurance_policy_expiry.py",
+    "tests/test_game_bootstrap.py",
+)
+
+
+def pytest_collection_modifyitems(items):
+    for item in items:
+        if item.nodeid.startswith(PG_CRITICAL):
+            item.add_marker(pytest.mark.pg)
+
+
+def _pg_test_url() -> str | None:
+    url = os.environ.get("TEST_DATABASE_URL", "")
+    if not url.startswith("postgres"):
+        return None
+    if url.startswith("postgresql://"):
+        url = "postgresql+psycopg://" + url[len("postgresql://"):]
+    return url
+
+
 @pytest.fixture()
-def db_engine():
+def db_engine(request):
+    pg_url = _pg_test_url() if request.node.get_closest_marker("pg") else None
+    if pg_url:
+        # Схема уже применена миграциями; данные чистим перед каждым тестом (как пустая SQLite).
+        engine = create_engine(pg_url)
+        tables = ", ".join(f'"{t.name}"' for t in Base.metadata.sorted_tables)
+        with engine.begin() as conn:
+            conn.exec_driver_sql(f"TRUNCATE TABLE {tables} RESTART IDENTITY CASCADE")
+        try:
+            yield engine
+        finally:
+            engine.dispose()
+        return
     # Файловый SQLite — одна БД видна из thread pool TestClient (in-memory :memory: — нет).
     db_path = os.path.join(tempfile.gettempdir(), f"money_quest_pytest_{uuid.uuid4().hex}.db")
     url = f"sqlite:///{db_path}"

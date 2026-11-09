@@ -18,6 +18,7 @@ from ..schemas import Checkup
 from . import config
 from .adapter import build_snapshot, month_index, month_label, precision
 from .debts import simulate
+from .insights import build_insights
 from .scenarios import Run, combine, main_earner, run, s1_income_loss, s2_child, s3_prices, verdict, with_decision
 
 AREAS = ("budget", "debts", "cushion", "protection")
@@ -29,6 +30,11 @@ ENTRY_TITLES = {
     "goal": "Успеем ли накопить на цель?",
     "overview": "Как у нас дела в целом?",
 }
+
+
+def _ru_num(value: float, spec: str = ".1f") -> str:
+    """Дробное число в тексте для человека — с запятой, как и на плитках отчёта."""
+    return format(value, spec).replace(".", ",")
 
 
 def _fincore_version() -> str:
@@ -58,7 +64,6 @@ class Ctx:
     scenarios: dict[str, dict] = field(default_factory=dict)
     flags: list[dict] = field(default_factory=list)
     goals: list[dict] = field(default_factory=list)
-    parent: Checkup | None = None
     debt: dict = field(default_factory=dict)
 
 
@@ -174,45 +179,26 @@ def _debts(ctx: Ctx) -> None:
     }
 
 
-def _progress(goal, parent: Checkup | None, as_of: int, need: float) -> dict | None:
-    """Накоплено с прошлого чекапа и темп против нужного взноса (P3-07). Цель сопоставляется по id."""
-    if parent is None or not goal.id:
-        return None
-    before = next((g for g in parent.data.goals if g.id == goal.id), None)
-    if before is None:
-        return None
-    delta = round(float(goal.saved_amount) - float(before.saved_amount), 2)
-    months = as_of - month_index(parent.as_of)
-    pace = round(delta / months, 2) if months > 0 else None
-    return {
-        "since": parent.as_of,
-        "saved_before": float(before.saved_amount),
-        "saved_delta": delta,
-        "months": months,
-        "monthly_pace": pace,
-        "on_pace": pace is not None and pace + 0.005 >= need,
-    }
-
-
 def _goals(ctx: Ctx) -> None:
     as_of = month_index(ctx.checkup.as_of)
     available = max(0.0, ctx.free_cf - ctx.cushion_contrib)
     for g in sorted(ctx.checkup.data.goals, key=lambda g: g.priority):
         left = max(0.0, float(g.target_amount) - float(g.saved_amount))
-        months = max(1, month_index(g.target_month) - as_of)
-        need = round(left / months, 2)
-        realistic = need <= available + 0.005
+        months = max(1, month_index(g.target_month) - as_of) if g.target_month else None
+        need = round(left / months, 2) if months else (0.0 if left == 0 else None)
+        realistic = need <= available + 0.005 if need is not None else None
         if realistic:
             available -= need
             when = g.target_month
-        else:
+        elif realistic is False:
             when = month_label(as_of + math.ceil(left / available)) if available > 0 else None
+        else:
+            when = None
         ctx.goals.append(
             {
                 "id": g.id,
                 "title": g.title,
                 "saved_amount": float(g.saved_amount),
-                "progress": _progress(g, ctx.parent, as_of, need),
                 "target_amount": float(g.target_amount),
                 "target_month": g.target_month,
                 "monthly_needed": need,
@@ -235,7 +221,7 @@ def _flags(ctx: Ctx) -> None:
         top_class, top = max(by.items(), key=lambda kv: kv[1])
         if top / invest_total > config.CONCENTRATION_SHARE and len(data.investments) > 0:
             ctx.flags.append({"key": "concentration", "text": f"Больше половины вложений в одном классе активов ({top_class})"})
-        near_goal = any(month_index(g.target_month) - month_index(ck.as_of) <= 12 for g in data.goals)
+        near_goal = any(g.target_month and month_index(g.target_month) - month_index(ck.as_of) <= 12 for g in data.goals)
         if near_goal and any(i.liquidity == "years" for i in data.investments):
             ctx.flags.append({"key": "illiquid_vs_goal", "text": "Цель в ближайший год, а часть вложений неликвидна"})
     kinds = {p.kind for p in data.insurance}
@@ -270,10 +256,10 @@ def _areas(ctx: Ctx) -> list[dict]:
     else:
         debts = "green"
     months = m.safety_fund_months
-    goals_ok = all(g["realistic"] for g in ctx.goals)
+    goals_ok = False if any(g["realistic"] is False for g in ctx.goals) else None if any(g["realistic"] is None for g in ctx.goals) else True
     if months < config.CUSHION_MIN_MONTHS:
         cushion = "red"
-    elif months < ctx.cushion_target_months or not goals_ok:
+    elif months < ctx.cushion_target_months or goals_ok is not True:
         cushion = "yellow"
     else:
         cushion = "green"
@@ -313,7 +299,8 @@ def _steps(ctx: Ctx, areas: list[dict]) -> list[dict]:
     out: list[dict] = []
 
     def add(rule_key: str, title: str, why: str, numbers: dict) -> None:
-        out.append({"rule_key": rule_key, "rank": len(out) + 1, "title": title, "why": why, "numbers": numbers, "status": "suggested"})
+        actions = [{"key": key, "title": text, "done": False} for key, text in config.STEP_ACTIONS.get(rule_key, [])]
+        out.append({"rule_key": rule_key, "rank": len(out) + 1, "title": title, "why": why, "numbers": numbers, "status": "suggested", "actions": actions})
 
     target_amount = ctx.cushion_target_months * ctx.outflow
     if m.total_overdue > 0:
@@ -330,14 +317,14 @@ def _steps(ctx: Ctx, areas: list[dict]) -> list[dict]:
     if m.safety_fund_months < config.CUSHION_MIN_MONTHS:
         need = max(0.0, ctx.outflow - ctx.cushion)
         add("first_cushion", f"Отложить {rub(need)} — первый месяц подушки",
-            f"Подушки хватит на {m.safety_fund_months:.1f} мес. Месяц расходов — первая ступень защиты от любой неожиданности.",
+            f"Подушки хватит на {_ru_num(m.safety_fund_months)} мес. Месяц расходов — первая ступень защиты от любой неожиданности.",
             {"need": need, "months": m.safety_fund_months})
     if ctx.debt.get("high_rate") and m.safety_fund_months >= config.CUSHION_MIN_MONTHS and ctx.extra > 0:
         hr = ctx.debt["high_rate"][0]
         saved = ctx.debt["saved_by_avalanche"]
         cur, av = ctx.debt["current"]["months"], ctx.debt["avalanche"]["months"]
         sooner = (cur - av) if cur and av else None
-        add("avalanche", f"Гасить досрочно «{hr['title']}» ({hr['rate']:g} %)",
+        add("avalanche", f"Гасить досрочно «{hr['title']}» ({_ru_num(hr['rate'], 'g')} %)",
             f"Если добавлять {rub(ctx.extra)}/мес к самому дорогому долгу, переплата снизится на {rub(saved)}"
             + (f", кредиты закроются на {sooner} мес. раньше." if sooner else "."),
             {"extra": ctx.extra, "saved": saved, "sooner_months": sooner})
@@ -349,7 +336,7 @@ def _steps(ctx: Ctx, areas: list[dict]) -> list[dict]:
                 f"В этом сценарии деньги кончатся через {n} мес. Подушка {rub(target_amount)} даст время перестроиться.",
                 {"scenario": key, "months_until_negative": n, "target": target_amount})
             break
-    bad_goal = next((g for g in ctx.goals if not g["realistic"]), None)
+    bad_goal = next((g for g in ctx.goals if g["realistic"] is False), None)
     if bad_goal:
         when = bad_goal["realistic_month"] or "позже"
         add("goal_unrealistic", f"Пересмотреть цель «{bad_goal['title']}»",
@@ -360,7 +347,7 @@ def _steps(ctx: Ctx, areas: list[dict]) -> list[dict]:
     if m.safety_fund_months < ctx.cushion_target_months and ctx.cushion_contrib > 0:
         months = math.ceil(max(0.0, target_amount - ctx.cushion) / ctx.cushion_contrib)
         add("cushion_target", f"Довести подушку до {rub(target_amount)}",
-            f"Сейчас {m.safety_fund_months:.1f} мес. из {ctx.cushion_target_months:g}. По {rub(ctx.cushion_contrib)}/мес — за {months} мес.",
+            f"Сейчас {_ru_num(m.safety_fund_months)} мес. из {_ru_num(ctx.cushion_target_months, 'g')}. По {rub(ctx.cushion_contrib)}/мес — за {months} мес.",
             {"target": target_amount, "monthly": ctx.cushion_contrib, "months": months})
     flag_keys = {f["key"] for f in ctx.flags}
     if flag_keys & {"mortgage_unprotected", "single_earner_unprotected"}:
@@ -436,6 +423,10 @@ def _entry_answer(ctx: Ctx, areas: list[dict]) -> dict:
         if not ctx.goals:
             return {"question": title, "verdict": "unknown", "text": "Добавьте цель: сумму и срок."}
         g = ctx.goals[0]
+        if g["saved_amount"] >= g["target_amount"]:
+            return {"question": title, "verdict": "ok", "text": f"«{g['title']}»: нужная сумма уже собрана.", "numbers": g}
+        if not g["target_month"]:
+            return {"question": title, "verdict": "unknown", "text": f"«{g['title']}»: добавьте срок, чтобы оценить нужный взнос.", "numbers": g}
         if g["realistic"]:
             text = f"«{g['title']}»: да, если откладывать {rub(g['monthly_needed'])}/мес до {g['target_month']}."
         else:
@@ -459,8 +450,7 @@ def _metrics_view(m: HouseholdMetrics) -> dict:
     }
 
 
-def build_report(ck: Checkup, parent: Checkup | None = None) -> dict:
-    """`parent` — прошлый завершённый чекап, из которого скопирован этот: для прогресса целей."""
+def build_report(ck: Checkup) -> dict:
     data = ck.data
     base = build_snapshot(data, ck.as_of, "base")
     pess = build_snapshot(data, ck.as_of, "pessimistic")
@@ -483,7 +473,6 @@ def build_report(ck: Checkup, parent: Checkup | None = None) -> dict:
         cushion_target_months=target_months,
         cushion_contrib=cushion_contrib,
         extra=extra,
-        parent=parent,
     )
     _scenarios(ctx)
     _debts(ctx)
@@ -518,5 +507,6 @@ def build_report(ck: Checkup, parent: Checkup | None = None) -> dict:
         "debt_strategy": ctx.debt,
         "goals": ctx.goals,
         "steps": steps,
+        "insights": build_insights(ctx),
         "disclaimer": config.DISCLAIMER,
     }

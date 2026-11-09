@@ -55,7 +55,7 @@ export const SECTIONS = {
       { key: 'title', label: 'Цель', type: 'text', placeholder: 'Отпуск, ремонт, машина' },
       { key: 'target_amount', label: 'Сколько нужно, ₽', type: 'money' },
       { key: 'saved_amount', label: 'Уже отложено, ₽', type: 'money' },
-      { key: 'target_month', label: 'К какому месяцу', type: 'month' },
+      { key: 'target_month', label: 'К какому месяцу (можно позже)', type: 'month' },
       { key: 'priority', label: 'Приоритет (1 — главная)', type: 'int' },
     ],
   },

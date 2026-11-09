@@ -1,0 +1,3192 @@
+[
+  {
+    "name": "empty",
+    "data": {
+      "incomes": [],
+      "expenses": [],
+      "liabilities": [],
+      "savings": [],
+      "assets": [],
+      "investments": [],
+      "pension": [],
+      "insurance": [],
+      "goals": [],
+      "decision": []
+    },
+    "expected": {
+      "level": "draft",
+      "share": 0.0
+    }
+  },
+  {
+    "name": "zero",
+    "data": {
+      "incomes": [
+        {
+          "member_id": "synthetic",
+          "kind": "salary",
+          "amount": {
+            "min": 0.0,
+            "max": 0.0
+          }
+        }
+      ],
+      "expenses": [],
+      "liabilities": [],
+      "savings": [],
+      "assets": [],
+      "investments": [],
+      "pension": [],
+      "insurance": [],
+      "goals": [],
+      "decision": []
+    },
+    "expected": {
+      "level": "draft",
+      "share": 0.0
+    }
+  },
+  {
+    "name": "exact boundary 1.1",
+    "data": {
+      "incomes": [
+        {
+          "member_id": "synthetic",
+          "kind": "salary",
+          "amount": {
+            "min": 100.0,
+            "max": 110.0
+          }
+        }
+      ],
+      "expenses": [],
+      "liabilities": [],
+      "savings": [],
+      "assets": [],
+      "investments": [],
+      "pension": [],
+      "insurance": [],
+      "goals": [],
+      "decision": []
+    },
+    "expected": {
+      "level": "refined",
+      "share": 1.0
+    }
+  },
+  {
+    "name": "just above 1.1",
+    "data": {
+      "incomes": [
+        {
+          "member_id": "synthetic",
+          "kind": "salary",
+          "amount": {
+            "min": 100.0,
+            "max": 110.01
+          }
+        }
+      ],
+      "expenses": [],
+      "liabilities": [],
+      "savings": [],
+      "assets": [],
+      "investments": [],
+      "pension": [],
+      "insurance": [],
+      "goals": [],
+      "decision": []
+    },
+    "expected": {
+      "level": "draft",
+      "share": 0.0
+    }
+  },
+  {
+    "name": "50 percent",
+    "data": {
+      "incomes": [
+        {
+          "member_id": "synthetic",
+          "kind": "salary",
+          "amount": {
+            "min": 50.0,
+            "max": 50.0
+          }
+        },
+        {
+          "member_id": "synthetic",
+          "kind": "salary",
+          "amount": {
+            "min": 0.0,
+            "max": 50.0
+          }
+        }
+      ],
+      "expenses": [],
+      "liabilities": [],
+      "savings": [],
+      "assets": [],
+      "investments": [],
+      "pension": [],
+      "insurance": [],
+      "goals": [],
+      "decision": []
+    },
+    "expected": {
+      "level": "approximate",
+      "share": 0.5
+    }
+  },
+  {
+    "name": "85 percent",
+    "data": {
+      "incomes": [
+        {
+          "member_id": "synthetic",
+          "kind": "salary",
+          "amount": {
+            "min": 85.0,
+            "max": 85.0
+          }
+        },
+        {
+          "member_id": "synthetic",
+          "kind": "salary",
+          "amount": {
+            "min": 0.0,
+            "max": 15.0
+          }
+        }
+      ],
+      "expenses": [],
+      "liabilities": [],
+      "savings": [],
+      "assets": [],
+      "investments": [],
+      "pension": [],
+      "insurance": [],
+      "goals": [],
+      "decision": []
+    },
+    "expected": {
+      "level": "refined",
+      "share": 0.85
+    }
+  },
+  {
+    "name": "approved demo",
+    "data": {
+      "incomes": [
+        {
+          "member_id": "synthetic",
+          "kind": "salary",
+          "amount": {
+            "min": 120000.0,
+            "max": 120000.0
+          }
+        }
+      ],
+      "expenses": [
+        {
+          "category_key": "life",
+          "title": "",
+          "tier": "must",
+          "amount": {
+            "min": 20000.0,
+            "max": 100000.0
+          }
+        }
+      ],
+      "liabilities": [
+        {
+          "id": null,
+          "member_id": null,
+          "kind": "consumer",
+          "title": "Кредит",
+          "balance": 100000.0,
+          "annual_rate": 18.0,
+          "monthly_payment": 30000.0,
+          "term_months_left": null,
+          "overdue_amount": 0.0,
+          "estimated": true
+        }
+      ],
+      "savings": [
+        {
+          "member_id": null,
+          "kind": "account",
+          "amount": {
+            "min": 270000.0,
+            "max": 270000.0
+          },
+          "annual_rate": 0.0,
+          "is_safety_fund": false
+        }
+      ],
+      "assets": [],
+      "investments": [],
+      "pension": [],
+      "insurance": [],
+      "goals": [],
+      "decision": []
+    },
+    "expected": {
+      "level": "approximate",
+      "share": 0.75
+    }
+  },
+  {
+    "name": "synthetic-0",
+    "data": {
+      "incomes": [
+        {
+          "member_id": "synthetic",
+          "kind": "salary",
+          "amount": {
+            "min": 10000.0,
+            "max": 10000.0
+          }
+        },
+        {
+          "member_id": "synthetic",
+          "kind": "salary",
+          "amount": {
+            "min": 65000.0,
+            "max": 130000.0
+          }
+        }
+      ],
+      "expenses": [
+        {
+          "category_key": "life",
+          "title": "",
+          "tier": "must",
+          "amount": {
+            "min": 10000.0,
+            "max": 30100.0
+          }
+        }
+      ],
+      "liabilities": [
+        {
+          "id": null,
+          "member_id": null,
+          "kind": "consumer",
+          "title": "Кредит",
+          "balance": 100000.0,
+          "annual_rate": 18.0,
+          "monthly_payment": 1000.0,
+          "term_months_left": null,
+          "overdue_amount": 0.0,
+          "estimated": true
+        },
+        {
+          "id": null,
+          "member_id": null,
+          "kind": "consumer",
+          "title": "Кредит",
+          "balance": 100000.0,
+          "annual_rate": 18.0,
+          "monthly_payment": 20000.0,
+          "term_months_left": null,
+          "overdue_amount": 0.0,
+          "estimated": false
+        }
+      ],
+      "savings": [],
+      "assets": [],
+      "investments": [],
+      "pension": [],
+      "insurance": [],
+      "goals": [],
+      "decision": []
+    },
+    "expected": {
+      "level": "draft",
+      "share": 0.15698587127158556
+    }
+  },
+  {
+    "name": "synthetic-1",
+    "data": {
+      "incomes": [
+        {
+          "member_id": "synthetic",
+          "kind": "salary",
+          "amount": {
+            "min": 0.0,
+            "max": 0.0
+          }
+        },
+        {
+          "member_id": "synthetic",
+          "kind": "salary",
+          "amount": {
+            "min": 120000.0,
+            "max": 132120.0
+          }
+        }
+      ],
+      "expenses": [
+        {
+          "category_key": "life",
+          "title": "",
+          "tier": "must",
+          "amount": {
+            "min": 0.0,
+            "max": 0.0
+          }
+        },
+        {
+          "category_key": "life",
+          "title": "",
+          "tier": "must",
+          "amount": {
+            "min": 100.0,
+            "max": 301.0
+          }
+        }
+      ],
+      "liabilities": [],
+      "savings": [
+        {
+          "member_id": null,
+          "kind": "account",
+          "amount": {
+            "min": 10000.0,
+            "max": 11010.0
+          },
+          "annual_rate": 0.0,
+          "is_safety_fund": false
+        },
+        {
+          "member_id": null,
+          "kind": "account",
+          "amount": {
+            "min": 65000.0,
+            "max": 130000.0
+          },
+          "annual_rate": 0.0,
+          "is_safety_fund": false
+        }
+      ],
+      "assets": [],
+      "investments": [],
+      "pension": [],
+      "insurance": [],
+      "goals": [],
+      "decision": []
+    },
+    "expected": {
+      "level": "draft",
+      "share": 0.0
+    }
+  },
+  {
+    "name": "synthetic-2",
+    "data": {
+      "incomes": [
+        {
+          "member_id": "synthetic",
+          "kind": "salary",
+          "amount": {
+            "min": 0.0,
+            "max": 0.0
+          }
+        },
+        {
+          "member_id": "synthetic",
+          "kind": "salary",
+          "amount": {
+            "min": 120000.0,
+            "max": 361200.0
+          }
+        }
+      ],
+      "expenses": [],
+      "liabilities": [],
+      "savings": [
+        {
+          "member_id": null,
+          "kind": "account",
+          "amount": {
+            "min": 100.0,
+            "max": 110.0
+          },
+          "annual_rate": 0.0,
+          "is_safety_fund": false
+        },
+        {
+          "member_id": null,
+          "kind": "account",
+          "amount": {
+            "min": 0.0,
+            "max": 0.0
+          },
+          "annual_rate": 0.0,
+          "is_safety_fund": false
+        },
+        {
+          "member_id": null,
+          "kind": "account",
+          "amount": {
+            "min": 10000.0,
+            "max": 30100.0
+          },
+          "annual_rate": 0.0,
+          "is_safety_fund": false
+        }
+      ],
+      "assets": [],
+      "investments": [],
+      "pension": [],
+      "insurance": [],
+      "goals": [],
+      "decision": []
+    },
+    "expected": {
+      "level": "draft",
+      "share": 0.0002810352315985795
+    }
+  },
+  {
+    "name": "synthetic-3",
+    "data": {
+      "incomes": [
+        {
+          "member_id": "synthetic",
+          "kind": "salary",
+          "amount": {
+            "min": 0.0,
+            "max": 0.0
+          }
+        }
+      ],
+      "expenses": [
+        {
+          "category_key": "life",
+          "title": "",
+          "tier": "must",
+          "amount": {
+            "min": 120000.0,
+            "max": 240000.0
+          }
+        }
+      ],
+      "liabilities": [
+        {
+          "id": null,
+          "member_id": null,
+          "kind": "consumer",
+          "title": "Кредит",
+          "balance": 100000.0,
+          "annual_rate": 18.0,
+          "monthly_payment": 0.0,
+          "term_months_left": null,
+          "overdue_amount": 0.0,
+          "estimated": false
+        }
+      ],
+      "savings": [],
+      "assets": [],
+      "investments": [],
+      "pension": [],
+      "insurance": [],
+      "goals": [],
+      "decision": []
+    },
+    "expected": {
+      "level": "draft",
+      "share": 0.0
+    }
+  },
+  {
+    "name": "synthetic-4",
+    "data": {
+      "incomes": [],
+      "expenses": [
+        {
+          "category_key": "life",
+          "title": "",
+          "tier": "must",
+          "amount": {
+            "min": 65000.0,
+            "max": 71565.0
+          }
+        },
+        {
+          "category_key": "life",
+          "title": "",
+          "tier": "must",
+          "amount": {
+            "min": 100.0,
+            "max": 301.0
+          }
+        }
+      ],
+      "liabilities": [
+        {
+          "id": null,
+          "member_id": null,
+          "kind": "consumer",
+          "title": "Кредит",
+          "balance": 100000.0,
+          "annual_rate": 18.0,
+          "monthly_payment": 20000.0,
+          "term_months_left": null,
+          "overdue_amount": 0.0,
+          "estimated": true
+        },
+        {
+          "id": null,
+          "member_id": null,
+          "kind": "consumer",
+          "title": "Кредит",
+          "balance": 100000.0,
+          "annual_rate": 18.0,
+          "monthly_payment": 20000.0,
+          "term_months_left": null,
+          "overdue_amount": 0.0,
+          "estimated": true
+        }
+      ],
+      "savings": [
+        {
+          "member_id": null,
+          "kind": "account",
+          "amount": {
+            "min": 0.0,
+            "max": 0.0
+          },
+          "annual_rate": 0.0,
+          "is_safety_fund": false
+        }
+      ],
+      "assets": [],
+      "investments": [],
+      "pension": [],
+      "insurance": [],
+      "goals": [],
+      "decision": []
+    },
+    "expected": {
+      "level": "draft",
+      "share": 0.0
+    }
+  },
+  {
+    "name": "synthetic-5",
+    "data": {
+      "incomes": [],
+      "expenses": [
+        {
+          "category_key": "life",
+          "title": "",
+          "tier": "must",
+          "amount": {
+            "min": 120000.0,
+            "max": 361200.0
+          }
+        },
+        {
+          "category_key": "life",
+          "title": "",
+          "tier": "must",
+          "amount": {
+            "min": 10000.0,
+            "max": 30100.0
+          }
+        }
+      ],
+      "liabilities": [
+        {
+          "id": null,
+          "member_id": null,
+          "kind": "consumer",
+          "title": "Кредит",
+          "balance": 100000.0,
+          "annual_rate": 18.0,
+          "monthly_payment": 20000.0,
+          "term_months_left": null,
+          "overdue_amount": 0.0,
+          "estimated": false
+        },
+        {
+          "id": null,
+          "member_id": null,
+          "kind": "consumer",
+          "title": "Кредит",
+          "balance": 100000.0,
+          "annual_rate": 18.0,
+          "monthly_payment": 1000.0,
+          "term_months_left": null,
+          "overdue_amount": 0.0,
+          "estimated": true
+        }
+      ],
+      "savings": [
+        {
+          "member_id": null,
+          "kind": "account",
+          "amount": {
+            "min": 100.0,
+            "max": 301.0
+          },
+          "annual_rate": 0.0,
+          "is_safety_fund": false
+        }
+      ],
+      "assets": [],
+      "investments": [],
+      "pension": [],
+      "insurance": [],
+      "goals": [],
+      "decision": []
+    },
+    "expected": {
+      "level": "draft",
+      "share": 0.04847297994915185
+    }
+  },
+  {
+    "name": "synthetic-6",
+    "data": {
+      "incomes": [
+        {
+          "member_id": "synthetic",
+          "kind": "salary",
+          "amount": {
+            "min": 100.0,
+            "max": 110.1
+          }
+        },
+        {
+          "member_id": "synthetic",
+          "kind": "salary",
+          "amount": {
+            "min": 65000.0,
+            "max": 195650.0
+          }
+        }
+      ],
+      "expenses": [
+        {
+          "category_key": "life",
+          "title": "",
+          "tier": "must",
+          "amount": {
+            "min": 0.0,
+            "max": 0.0
+          }
+        },
+        {
+          "category_key": "life",
+          "title": "",
+          "tier": "must",
+          "amount": {
+            "min": 65000.0,
+            "max": 71500.0
+          }
+        },
+        {
+          "category_key": "life",
+          "title": "",
+          "tier": "must",
+          "amount": {
+            "min": 120000.0,
+            "max": 132120.0
+          }
+        }
+      ],
+      "liabilities": [
+        {
+          "id": null,
+          "member_id": null,
+          "kind": "consumer",
+          "title": "Кредит",
+          "balance": 100000.0,
+          "annual_rate": 18.0,
+          "monthly_payment": 1000.0,
+          "term_months_left": null,
+          "overdue_amount": 0.0,
+          "estimated": false
+        },
+        {
+          "id": null,
+          "member_id": null,
+          "kind": "consumer",
+          "title": "Кредит",
+          "balance": 100000.0,
+          "annual_rate": 18.0,
+          "monthly_payment": 1000.0,
+          "term_months_left": null,
+          "overdue_amount": 0.0,
+          "estimated": true
+        }
+      ],
+      "savings": [
+        {
+          "member_id": null,
+          "kind": "account",
+          "amount": {
+            "min": 0.0,
+            "max": 0.0
+          },
+          "annual_rate": 0.0,
+          "is_safety_fund": false
+        }
+      ],
+      "assets": [],
+      "investments": [],
+      "pension": [],
+      "insurance": [],
+      "goals": [],
+      "decision": []
+    },
+    "expected": {
+      "level": "draft",
+      "share": 0.18062679240948917
+    }
+  },
+  {
+    "name": "synthetic-7",
+    "data": {
+      "incomes": [],
+      "expenses": [
+        {
+          "category_key": "life",
+          "title": "",
+          "tier": "must",
+          "amount": {
+            "min": 100.0,
+            "max": 100.0
+          }
+        },
+        {
+          "category_key": "life",
+          "title": "",
+          "tier": "must",
+          "amount": {
+            "min": 65000.0,
+            "max": 195650.0
+          }
+        },
+        {
+          "category_key": "life",
+          "title": "",
+          "tier": "must",
+          "amount": {
+            "min": 0.0,
+            "max": 0.0
+          }
+        }
+      ],
+      "liabilities": [],
+      "savings": [
+        {
+          "member_id": null,
+          "kind": "account",
+          "amount": {
+            "min": 10000.0,
+            "max": 11000.0
+          },
+          "annual_rate": 0.0,
+          "is_safety_fund": false
+        },
+        {
+          "member_id": null,
+          "kind": "account",
+          "amount": {
+            "min": 100.0,
+            "max": 110.1
+          },
+          "annual_rate": 0.0,
+          "is_safety_fund": false
+        },
+        {
+          "member_id": null,
+          "kind": "account",
+          "amount": {
+            "min": 65000.0,
+            "max": 65000.0
+          },
+          "annual_rate": 0.0,
+          "is_safety_fund": false
+        }
+      ],
+      "assets": [],
+      "investments": [],
+      "pension": [],
+      "insurance": [],
+      "goals": [],
+      "decision": []
+    },
+    "expected": {
+      "level": "draft",
+      "share": 0.2799233870656268
+    }
+  },
+  {
+    "name": "synthetic-8",
+    "data": {
+      "incomes": [
+        {
+          "member_id": "synthetic",
+          "kind": "salary",
+          "amount": {
+            "min": 0.0,
+            "max": 0.0
+          }
+        },
+        {
+          "member_id": "synthetic",
+          "kind": "salary",
+          "amount": {
+            "min": 65000.0,
+            "max": 65000.0
+          }
+        },
+        {
+          "member_id": "synthetic",
+          "kind": "salary",
+          "amount": {
+            "min": 120000.0,
+            "max": 132120.0
+          }
+        }
+      ],
+      "expenses": [],
+      "liabilities": [],
+      "savings": [
+        {
+          "member_id": null,
+          "kind": "account",
+          "amount": {
+            "min": 10000.0,
+            "max": 11000.0
+          },
+          "annual_rate": 0.0,
+          "is_safety_fund": false
+        },
+        {
+          "member_id": null,
+          "kind": "account",
+          "amount": {
+            "min": 10000.0,
+            "max": 10000.0
+          },
+          "annual_rate": 0.0,
+          "is_safety_fund": false
+        }
+      ],
+      "assets": [],
+      "investments": [],
+      "pension": [],
+      "insurance": [],
+      "goals": [],
+      "decision": []
+    },
+    "expected": {
+      "level": "draft",
+      "share": 0.3942783788740143
+    }
+  },
+  {
+    "name": "synthetic-9",
+    "data": {
+      "incomes": [],
+      "expenses": [
+        {
+          "category_key": "life",
+          "title": "",
+          "tier": "must",
+          "amount": {
+            "min": 10000.0,
+            "max": 11000.0
+          }
+        }
+      ],
+      "liabilities": [
+        {
+          "id": null,
+          "member_id": null,
+          "kind": "consumer",
+          "title": "Кредит",
+          "balance": 100000.0,
+          "annual_rate": 18.0,
+          "monthly_payment": 0.0,
+          "term_months_left": null,
+          "overdue_amount": 0.0,
+          "estimated": false
+        }
+      ],
+      "savings": [
+        {
+          "member_id": null,
+          "kind": "account",
+          "amount": {
+            "min": 120000.0,
+            "max": 120000.0
+          },
+          "annual_rate": 0.0,
+          "is_safety_fund": false
+        },
+        {
+          "member_id": null,
+          "kind": "account",
+          "amount": {
+            "min": 100.0,
+            "max": 200.0
+          },
+          "annual_rate": 0.0,
+          "is_safety_fund": false
+        }
+      ],
+      "assets": [],
+      "investments": [],
+      "pension": [],
+      "insurance": [],
+      "goals": [],
+      "decision": []
+    },
+    "expected": {
+      "level": "refined",
+      "share": 0.9984756097560976
+    }
+  },
+  {
+    "name": "synthetic-10",
+    "data": {
+      "incomes": [
+        {
+          "member_id": "synthetic",
+          "kind": "salary",
+          "amount": {
+            "min": 0.0,
+            "max": 0.0
+          }
+        },
+        {
+          "member_id": "synthetic",
+          "kind": "salary",
+          "amount": {
+            "min": 0.0,
+            "max": 0.0
+          }
+        }
+      ],
+      "expenses": [
+        {
+          "category_key": "life",
+          "title": "",
+          "tier": "must",
+          "amount": {
+            "min": 0.0,
+            "max": 0.0
+          }
+        },
+        {
+          "category_key": "life",
+          "title": "",
+          "tier": "must",
+          "amount": {
+            "min": 65000.0,
+            "max": 71565.0
+          }
+        }
+      ],
+      "liabilities": [
+        {
+          "id": null,
+          "member_id": null,
+          "kind": "consumer",
+          "title": "Кредит",
+          "balance": 100000.0,
+          "annual_rate": 18.0,
+          "monthly_payment": 20000.0,
+          "term_months_left": null,
+          "overdue_amount": 0.0,
+          "estimated": true
+        }
+      ],
+      "savings": [
+        {
+          "member_id": null,
+          "kind": "account",
+          "amount": {
+            "min": 120000.0,
+            "max": 132120.0
+          },
+          "annual_rate": 0.0,
+          "is_safety_fund": false
+        },
+        {
+          "member_id": null,
+          "kind": "account",
+          "amount": {
+            "min": 120000.0,
+            "max": 361200.0
+          },
+          "annual_rate": 0.0,
+          "is_safety_fund": false
+        },
+        {
+          "member_id": null,
+          "kind": "account",
+          "amount": {
+            "min": 65000.0,
+            "max": 65000.0
+          },
+          "annual_rate": 0.0,
+          "is_safety_fund": false
+        }
+      ],
+      "assets": [],
+      "investments": [],
+      "pension": [],
+      "insurance": [],
+      "goals": [],
+      "decision": []
+    },
+    "expected": {
+      "level": "draft",
+      "share": 0.10001769543842372
+    }
+  },
+  {
+    "name": "synthetic-11",
+    "data": {
+      "incomes": [],
+      "expenses": [
+        {
+          "category_key": "life",
+          "title": "",
+          "tier": "must",
+          "amount": {
+            "min": 10000.0,
+            "max": 10000.0
+          }
+        },
+        {
+          "category_key": "life",
+          "title": "",
+          "tier": "must",
+          "amount": {
+            "min": 100.0,
+            "max": 110.1
+          }
+        }
+      ],
+      "liabilities": [],
+      "savings": [
+        {
+          "member_id": null,
+          "kind": "account",
+          "amount": {
+            "min": 0.0,
+            "max": 0.0
+          },
+          "annual_rate": 0.0,
+          "is_safety_fund": false
+        },
+        {
+          "member_id": null,
+          "kind": "account",
+          "amount": {
+            "min": 0.0,
+            "max": 0.0
+          },
+          "annual_rate": 0.0,
+          "is_safety_fund": false
+        },
+        {
+          "member_id": null,
+          "kind": "account",
+          "amount": {
+            "min": 0.0,
+            "max": 0.0
+          },
+          "annual_rate": 0.0,
+          "is_safety_fund": false
+        }
+      ],
+      "assets": [],
+      "investments": [],
+      "pension": [],
+      "insurance": [],
+      "goals": [],
+      "decision": []
+    },
+    "expected": {
+      "level": "refined",
+      "share": 0.9891099000009891
+    }
+  },
+  {
+    "name": "synthetic-12",
+    "data": {
+      "incomes": [],
+      "expenses": [],
+      "liabilities": [],
+      "savings": [
+        {
+          "member_id": null,
+          "kind": "account",
+          "amount": {
+            "min": 100.0,
+            "max": 100.0
+          },
+          "annual_rate": 0.0,
+          "is_safety_fund": false
+        },
+        {
+          "member_id": null,
+          "kind": "account",
+          "amount": {
+            "min": 100.0,
+            "max": 100.0
+          },
+          "annual_rate": 0.0,
+          "is_safety_fund": false
+        },
+        {
+          "member_id": null,
+          "kind": "account",
+          "amount": {
+            "min": 0.0,
+            "max": 0.0
+          },
+          "annual_rate": 0.0,
+          "is_safety_fund": false
+        }
+      ],
+      "assets": [],
+      "investments": [],
+      "pension": [],
+      "insurance": [],
+      "goals": [],
+      "decision": []
+    },
+    "expected": {
+      "level": "refined",
+      "share": 1.0
+    }
+  },
+  {
+    "name": "synthetic-13",
+    "data": {
+      "incomes": [],
+      "expenses": [
+        {
+          "category_key": "life",
+          "title": "",
+          "tier": "must",
+          "amount": {
+            "min": 65000.0,
+            "max": 130000.0
+          }
+        }
+      ],
+      "liabilities": [
+        {
+          "id": null,
+          "member_id": null,
+          "kind": "consumer",
+          "title": "Кредит",
+          "balance": 100000.0,
+          "annual_rate": 18.0,
+          "monthly_payment": 0.0,
+          "term_months_left": null,
+          "overdue_amount": 0.0,
+          "estimated": true
+        }
+      ],
+      "savings": [
+        {
+          "member_id": null,
+          "kind": "account",
+          "amount": {
+            "min": 100.0,
+            "max": 110.1
+          },
+          "annual_rate": 0.0,
+          "is_safety_fund": false
+        },
+        {
+          "member_id": null,
+          "kind": "account",
+          "amount": {
+            "min": 10000.0,
+            "max": 11000.0
+          },
+          "annual_rate": 0.0,
+          "is_safety_fund": false
+        }
+      ],
+      "assets": [],
+      "investments": [],
+      "pension": [],
+      "insurance": [],
+      "goals": [],
+      "decision": []
+    },
+    "expected": {
+      "level": "draft",
+      "share": 0.07795331446863123
+    }
+  },
+  {
+    "name": "synthetic-14",
+    "data": {
+      "incomes": [
+        {
+          "member_id": "synthetic",
+          "kind": "salary",
+          "amount": {
+            "min": 100.0,
+            "max": 301.0
+          }
+        }
+      ],
+      "expenses": [
+        {
+          "category_key": "life",
+          "title": "",
+          "tier": "must",
+          "amount": {
+            "min": 100.0,
+            "max": 110.1
+          }
+        },
+        {
+          "category_key": "life",
+          "title": "",
+          "tier": "must",
+          "amount": {
+            "min": 120000.0,
+            "max": 240000.0
+          }
+        },
+        {
+          "category_key": "life",
+          "title": "",
+          "tier": "must",
+          "amount": {
+            "min": 65000.0,
+            "max": 65000.0
+          }
+        }
+      ],
+      "liabilities": [
+        {
+          "id": null,
+          "member_id": null,
+          "kind": "consumer",
+          "title": "Кредит",
+          "balance": 100000.0,
+          "annual_rate": 18.0,
+          "monthly_payment": 1000.0,
+          "term_months_left": null,
+          "overdue_amount": 0.0,
+          "estimated": true
+        },
+        {
+          "id": null,
+          "member_id": null,
+          "kind": "consumer",
+          "title": "Кредит",
+          "balance": 100000.0,
+          "annual_rate": 18.0,
+          "monthly_payment": 20000.0,
+          "term_months_left": null,
+          "overdue_amount": 0.0,
+          "estimated": false
+        }
+      ],
+      "savings": [
+        {
+          "member_id": null,
+          "kind": "account",
+          "amount": {
+            "min": 65000.0,
+            "max": 130000.0
+          },
+          "annual_rate": 0.0,
+          "is_safety_fund": false
+        },
+        {
+          "member_id": null,
+          "kind": "account",
+          "amount": {
+            "min": 120000.0,
+            "max": 132000.0
+          },
+          "annual_rate": 0.0,
+          "is_safety_fund": false
+        },
+        {
+          "member_id": null,
+          "kind": "account",
+          "amount": {
+            "min": 0.0,
+            "max": 0.0
+          },
+          "annual_rate": 0.0,
+          "is_safety_fund": false
+        }
+      ],
+      "assets": [],
+      "investments": [],
+      "pension": [],
+      "insurance": [],
+      "goals": [],
+      "decision": []
+    },
+    "expected": {
+      "level": "draft",
+      "share": 0.36878977979851163
+    }
+  },
+  {
+    "name": "synthetic-15",
+    "data": {
+      "incomes": [],
+      "expenses": [
+        {
+          "category_key": "life",
+          "title": "",
+          "tier": "must",
+          "amount": {
+            "min": 120000.0,
+            "max": 361200.0
+          }
+        }
+      ],
+      "liabilities": [
+        {
+          "id": null,
+          "member_id": null,
+          "kind": "consumer",
+          "title": "Кредит",
+          "balance": 100000.0,
+          "annual_rate": 18.0,
+          "monthly_payment": 0.0,
+          "term_months_left": null,
+          "overdue_amount": 0.0,
+          "estimated": true
+        }
+      ],
+      "savings": [
+        {
+          "member_id": null,
+          "kind": "account",
+          "amount": {
+            "min": 10000.0,
+            "max": 10000.0
+          },
+          "annual_rate": 0.0,
+          "is_safety_fund": false
+        },
+        {
+          "member_id": null,
+          "kind": "account",
+          "amount": {
+            "min": 120000.0,
+            "max": 132000.0
+          },
+          "annual_rate": 0.0,
+          "is_safety_fund": false
+        }
+      ],
+      "assets": [],
+      "investments": [],
+      "pension": [],
+      "insurance": [],
+      "goals": [],
+      "decision": []
+    },
+    "expected": {
+      "level": "draft",
+      "share": 0.2821939586645469
+    }
+  },
+  {
+    "name": "synthetic-16",
+    "data": {
+      "incomes": [],
+      "expenses": [],
+      "liabilities": [],
+      "savings": [],
+      "assets": [],
+      "investments": [],
+      "pension": [],
+      "insurance": [],
+      "goals": [],
+      "decision": []
+    },
+    "expected": {
+      "level": "draft",
+      "share": 0.0
+    }
+  },
+  {
+    "name": "synthetic-17",
+    "data": {
+      "incomes": [
+        {
+          "member_id": "synthetic",
+          "kind": "salary",
+          "amount": {
+            "min": 100.0,
+            "max": 301.0
+          }
+        },
+        {
+          "member_id": "synthetic",
+          "kind": "salary",
+          "amount": {
+            "min": 120000.0,
+            "max": 132120.0
+          }
+        },
+        {
+          "member_id": "synthetic",
+          "kind": "salary",
+          "amount": {
+            "min": 65000.0,
+            "max": 71565.0
+          }
+        }
+      ],
+      "expenses": [
+        {
+          "category_key": "life",
+          "title": "",
+          "tier": "must",
+          "amount": {
+            "min": 10000.0,
+            "max": 11000.0
+          }
+        },
+        {
+          "category_key": "life",
+          "title": "",
+          "tier": "must",
+          "amount": {
+            "min": 0.0,
+            "max": 0.0
+          }
+        }
+      ],
+      "liabilities": [],
+      "savings": [
+        {
+          "member_id": null,
+          "kind": "account",
+          "amount": {
+            "min": 120000.0,
+            "max": 120000.0
+          },
+          "annual_rate": 0.0,
+          "is_safety_fund": false
+        }
+      ],
+      "assets": [],
+      "investments": [],
+      "pension": [],
+      "insurance": [],
+      "goals": [],
+      "decision": []
+    },
+    "expected": {
+      "level": "draft",
+      "share": 0.39106111897213613
+    }
+  },
+  {
+    "name": "synthetic-18",
+    "data": {
+      "incomes": [
+        {
+          "member_id": "synthetic",
+          "kind": "salary",
+          "amount": {
+            "min": 10000.0,
+            "max": 11000.0
+          }
+        },
+        {
+          "member_id": "synthetic",
+          "kind": "salary",
+          "amount": {
+            "min": 100.0,
+            "max": 100.0
+          }
+        }
+      ],
+      "expenses": [
+        {
+          "category_key": "life",
+          "title": "",
+          "tier": "must",
+          "amount": {
+            "min": 0.0,
+            "max": 0.0
+          }
+        }
+      ],
+      "liabilities": [
+        {
+          "id": null,
+          "member_id": null,
+          "kind": "consumer",
+          "title": "Кредит",
+          "balance": 100000.0,
+          "annual_rate": 18.0,
+          "monthly_payment": 20000.0,
+          "term_months_left": null,
+          "overdue_amount": 0.0,
+          "estimated": true
+        },
+        {
+          "id": null,
+          "member_id": null,
+          "kind": "consumer",
+          "title": "Кредит",
+          "balance": 100000.0,
+          "annual_rate": 18.0,
+          "monthly_payment": 20000.0,
+          "term_months_left": null,
+          "overdue_amount": 0.0,
+          "estimated": false
+        }
+      ],
+      "savings": [
+        {
+          "member_id": null,
+          "kind": "account",
+          "amount": {
+            "min": 65000.0,
+            "max": 130000.0
+          },
+          "annual_rate": 0.0,
+          "is_safety_fund": false
+        },
+        {
+          "member_id": null,
+          "kind": "account",
+          "amount": {
+            "min": 10000.0,
+            "max": 30100.0
+          },
+          "annual_rate": 0.0,
+          "is_safety_fund": false
+        },
+        {
+          "member_id": null,
+          "kind": "account",
+          "amount": {
+            "min": 0.0,
+            "max": 0.0
+          },
+          "annual_rate": 0.0,
+          "is_safety_fund": false
+        }
+      ],
+      "assets": [],
+      "investments": [],
+      "pension": [],
+      "insurance": [],
+      "goals": [],
+      "decision": []
+    },
+    "expected": {
+      "level": "draft",
+      "share": 0.14725378787878787
+    }
+  },
+  {
+    "name": "synthetic-19",
+    "data": {
+      "incomes": [],
+      "expenses": [
+        {
+          "category_key": "life",
+          "title": "",
+          "tier": "must",
+          "amount": {
+            "min": 100.0,
+            "max": 100.0
+          }
+        },
+        {
+          "category_key": "life",
+          "title": "",
+          "tier": "must",
+          "amount": {
+            "min": 65000.0,
+            "max": 71565.0
+          }
+        },
+        {
+          "category_key": "life",
+          "title": "",
+          "tier": "must",
+          "amount": {
+            "min": 120000.0,
+            "max": 120000.0
+          }
+        }
+      ],
+      "liabilities": [],
+      "savings": [],
+      "assets": [],
+      "investments": [],
+      "pension": [],
+      "insurance": [],
+      "goals": [],
+      "decision": []
+    },
+    "expected": {
+      "level": "approximate",
+      "share": 0.6266141444708215
+    }
+  },
+  {
+    "name": "synthetic-20",
+    "data": {
+      "incomes": [
+        {
+          "member_id": "synthetic",
+          "kind": "salary",
+          "amount": {
+            "min": 0.0,
+            "max": 0.0
+          }
+        },
+        {
+          "member_id": "synthetic",
+          "kind": "salary",
+          "amount": {
+            "min": 0.0,
+            "max": 0.0
+          }
+        },
+        {
+          "member_id": "synthetic",
+          "kind": "salary",
+          "amount": {
+            "min": 65000.0,
+            "max": 65000.0
+          }
+        }
+      ],
+      "expenses": [
+        {
+          "category_key": "life",
+          "title": "",
+          "tier": "must",
+          "amount": {
+            "min": 0.0,
+            "max": 0.0
+          }
+        },
+        {
+          "category_key": "life",
+          "title": "",
+          "tier": "must",
+          "amount": {
+            "min": 120000.0,
+            "max": 132120.0
+          }
+        }
+      ],
+      "liabilities": [
+        {
+          "id": null,
+          "member_id": null,
+          "kind": "consumer",
+          "title": "Кредит",
+          "balance": 100000.0,
+          "annual_rate": 18.0,
+          "monthly_payment": 1000.0,
+          "term_months_left": null,
+          "overdue_amount": 0.0,
+          "estimated": false
+        },
+        {
+          "id": null,
+          "member_id": null,
+          "kind": "consumer",
+          "title": "Кредит",
+          "balance": 100000.0,
+          "annual_rate": 18.0,
+          "monthly_payment": 1000.0,
+          "term_months_left": null,
+          "overdue_amount": 0.0,
+          "estimated": false
+        }
+      ],
+      "savings": [
+        {
+          "member_id": null,
+          "kind": "account",
+          "amount": {
+            "min": 0.0,
+            "max": 0.0
+          },
+          "annual_rate": 0.0,
+          "is_safety_fund": false
+        },
+        {
+          "member_id": null,
+          "kind": "account",
+          "amount": {
+            "min": 10000.0,
+            "max": 20000.0
+          },
+          "annual_rate": 0.0,
+          "is_safety_fund": false
+        }
+      ],
+      "assets": [],
+      "investments": [],
+      "pension": [],
+      "insurance": [],
+      "goals": [],
+      "decision": []
+    },
+    "expected": {
+      "level": "draft",
+      "share": 0.3057685286600949
+    }
+  },
+  {
+    "name": "synthetic-21",
+    "data": {
+      "incomes": [],
+      "expenses": [
+        {
+          "category_key": "life",
+          "title": "",
+          "tier": "must",
+          "amount": {
+            "min": 65000.0,
+            "max": 71500.0
+          }
+        },
+        {
+          "category_key": "life",
+          "title": "",
+          "tier": "must",
+          "amount": {
+            "min": 10000.0,
+            "max": 20000.0
+          }
+        }
+      ],
+      "liabilities": [
+        {
+          "id": null,
+          "member_id": null,
+          "kind": "consumer",
+          "title": "Кредит",
+          "balance": 100000.0,
+          "annual_rate": 18.0,
+          "monthly_payment": 0.0,
+          "term_months_left": null,
+          "overdue_amount": 0.0,
+          "estimated": false
+        },
+        {
+          "id": null,
+          "member_id": null,
+          "kind": "consumer",
+          "title": "Кредит",
+          "balance": 100000.0,
+          "annual_rate": 18.0,
+          "monthly_payment": 1000.0,
+          "term_months_left": null,
+          "overdue_amount": 0.0,
+          "estimated": false
+        }
+      ],
+      "savings": [
+        {
+          "member_id": null,
+          "kind": "account",
+          "amount": {
+            "min": 10000.0,
+            "max": 30100.0
+          },
+          "annual_rate": 0.0,
+          "is_safety_fund": false
+        }
+      ],
+      "assets": [],
+      "investments": [],
+      "pension": [],
+      "insurance": [],
+      "goals": [],
+      "decision": []
+    },
+    "expected": {
+      "level": "approximate",
+      "share": 0.5913539967373572
+    }
+  },
+  {
+    "name": "synthetic-22",
+    "data": {
+      "incomes": [
+        {
+          "member_id": "synthetic",
+          "kind": "salary",
+          "amount": {
+            "min": 65000.0,
+            "max": 65000.0
+          }
+        }
+      ],
+      "expenses": [
+        {
+          "category_key": "life",
+          "title": "",
+          "tier": "must",
+          "amount": {
+            "min": 10000.0,
+            "max": 30100.0
+          }
+        },
+        {
+          "category_key": "life",
+          "title": "",
+          "tier": "must",
+          "amount": {
+            "min": 65000.0,
+            "max": 195650.0
+          }
+        }
+      ],
+      "liabilities": [
+        {
+          "id": null,
+          "member_id": null,
+          "kind": "consumer",
+          "title": "Кредит",
+          "balance": 100000.0,
+          "annual_rate": 18.0,
+          "monthly_payment": 1000.0,
+          "term_months_left": null,
+          "overdue_amount": 0.0,
+          "estimated": false
+        }
+      ],
+      "savings": [
+        {
+          "member_id": null,
+          "kind": "account",
+          "amount": {
+            "min": 120000.0,
+            "max": 120000.0
+          },
+          "annual_rate": 0.0,
+          "is_safety_fund": false
+        },
+        {
+          "member_id": null,
+          "kind": "account",
+          "amount": {
+            "min": 120000.0,
+            "max": 132000.0
+          },
+          "annual_rate": 0.0,
+          "is_safety_fund": false
+        },
+        {
+          "member_id": null,
+          "kind": "account",
+          "amount": {
+            "min": 0.0,
+            "max": 0.0
+          },
+          "annual_rate": 0.0,
+          "is_safety_fund": false
+        }
+      ],
+      "assets": [],
+      "investments": [],
+      "pension": [],
+      "insurance": [],
+      "goals": [],
+      "decision": []
+    },
+    "expected": {
+      "level": "approximate",
+      "share": 0.5848275862068966
+    }
+  },
+  {
+    "name": "synthetic-23",
+    "data": {
+      "incomes": [
+        {
+          "member_id": "synthetic",
+          "kind": "salary",
+          "amount": {
+            "min": 100.0,
+            "max": 110.1
+          }
+        },
+        {
+          "member_id": "synthetic",
+          "kind": "salary",
+          "amount": {
+            "min": 10000.0,
+            "max": 11010.0
+          }
+        }
+      ],
+      "expenses": [
+        {
+          "category_key": "life",
+          "title": "",
+          "tier": "must",
+          "amount": {
+            "min": 65000.0,
+            "max": 71565.0
+          }
+        },
+        {
+          "category_key": "life",
+          "title": "",
+          "tier": "must",
+          "amount": {
+            "min": 10000.0,
+            "max": 11010.0
+          }
+        }
+      ],
+      "liabilities": [
+        {
+          "id": null,
+          "member_id": null,
+          "kind": "consumer",
+          "title": "Кредит",
+          "balance": 100000.0,
+          "annual_rate": 18.0,
+          "monthly_payment": 0.0,
+          "term_months_left": null,
+          "overdue_amount": 0.0,
+          "estimated": false
+        },
+        {
+          "id": null,
+          "member_id": null,
+          "kind": "consumer",
+          "title": "Кредит",
+          "balance": 100000.0,
+          "annual_rate": 18.0,
+          "monthly_payment": 0.0,
+          "term_months_left": null,
+          "overdue_amount": 0.0,
+          "estimated": true
+        }
+      ],
+      "savings": [
+        {
+          "member_id": null,
+          "kind": "account",
+          "amount": {
+            "min": 120000.0,
+            "max": 240000.0
+          },
+          "annual_rate": 0.0,
+          "is_safety_fund": false
+        },
+        {
+          "member_id": null,
+          "kind": "account",
+          "amount": {
+            "min": 0.0,
+            "max": 0.0
+          },
+          "annual_rate": 0.0,
+          "is_safety_fund": false
+        }
+      ],
+      "assets": [],
+      "investments": [],
+      "pension": [],
+      "insurance": [],
+      "goals": [],
+      "decision": []
+    },
+    "expected": {
+      "level": "draft",
+      "share": 0.0
+    }
+  },
+  {
+    "name": "synthetic-24",
+    "data": {
+      "incomes": [
+        {
+          "member_id": "synthetic",
+          "kind": "salary",
+          "amount": {
+            "min": 65000.0,
+            "max": 71565.0
+          }
+        },
+        {
+          "member_id": "synthetic",
+          "kind": "salary",
+          "amount": {
+            "min": 0.0,
+            "max": 0.0
+          }
+        }
+      ],
+      "expenses": [
+        {
+          "category_key": "life",
+          "title": "",
+          "tier": "must",
+          "amount": {
+            "min": 10000.0,
+            "max": 20000.0
+          }
+        },
+        {
+          "category_key": "life",
+          "title": "",
+          "tier": "must",
+          "amount": {
+            "min": 10000.0,
+            "max": 11000.0
+          }
+        }
+      ],
+      "liabilities": [],
+      "savings": [
+        {
+          "member_id": null,
+          "kind": "account",
+          "amount": {
+            "min": 65000.0,
+            "max": 130000.0
+          },
+          "annual_rate": 0.0,
+          "is_safety_fund": false
+        },
+        {
+          "member_id": null,
+          "kind": "account",
+          "amount": {
+            "min": 100.0,
+            "max": 110.1
+          },
+          "annual_rate": 0.0,
+          "is_safety_fund": false
+        },
+        {
+          "member_id": null,
+          "kind": "account",
+          "amount": {
+            "min": 10000.0,
+            "max": 30100.0
+          },
+          "annual_rate": 0.0,
+          "is_safety_fund": false
+        }
+      ],
+      "assets": [],
+      "investments": [],
+      "pension": [],
+      "insurance": [],
+      "goals": [],
+      "decision": []
+    },
+    "expected": {
+      "level": "draft",
+      "share": 0.041860891690270505
+    }
+  },
+  {
+    "name": "synthetic-25",
+    "data": {
+      "incomes": [
+        {
+          "member_id": "synthetic",
+          "kind": "salary",
+          "amount": {
+            "min": 65000.0,
+            "max": 195650.0
+          }
+        }
+      ],
+      "expenses": [],
+      "liabilities": [
+        {
+          "id": null,
+          "member_id": null,
+          "kind": "consumer",
+          "title": "Кредит",
+          "balance": 100000.0,
+          "annual_rate": 18.0,
+          "monthly_payment": 0.0,
+          "term_months_left": null,
+          "overdue_amount": 0.0,
+          "estimated": true
+        },
+        {
+          "id": null,
+          "member_id": null,
+          "kind": "consumer",
+          "title": "Кредит",
+          "balance": 100000.0,
+          "annual_rate": 18.0,
+          "monthly_payment": 1000.0,
+          "term_months_left": null,
+          "overdue_amount": 0.0,
+          "estimated": false
+        }
+      ],
+      "savings": [
+        {
+          "member_id": null,
+          "kind": "account",
+          "amount": {
+            "min": 120000.0,
+            "max": 132120.0
+          },
+          "annual_rate": 0.0,
+          "is_safety_fund": false
+        },
+        {
+          "member_id": null,
+          "kind": "account",
+          "amount": {
+            "min": 0.0,
+            "max": 0.0
+          },
+          "annual_rate": 0.0,
+          "is_safety_fund": false
+        },
+        {
+          "member_id": null,
+          "kind": "account",
+          "amount": {
+            "min": 120000.0,
+            "max": 120000.0
+          },
+          "annual_rate": 0.0,
+          "is_safety_fund": false
+        }
+      ],
+      "assets": [],
+      "investments": [],
+      "pension": [],
+      "insurance": [],
+      "goals": [],
+      "decision": []
+    },
+    "expected": {
+      "level": "draft",
+      "share": 0.2696258662566571
+    }
+  },
+  {
+    "name": "synthetic-26",
+    "data": {
+      "incomes": [
+        {
+          "member_id": "synthetic",
+          "kind": "salary",
+          "amount": {
+            "min": 10000.0,
+            "max": 20000.0
+          }
+        }
+      ],
+      "expenses": [
+        {
+          "category_key": "life",
+          "title": "",
+          "tier": "must",
+          "amount": {
+            "min": 10000.0,
+            "max": 11000.0
+          }
+        },
+        {
+          "category_key": "life",
+          "title": "",
+          "tier": "must",
+          "amount": {
+            "min": 0.0,
+            "max": 0.0
+          }
+        },
+        {
+          "category_key": "life",
+          "title": "",
+          "tier": "must",
+          "amount": {
+            "min": 100.0,
+            "max": 200.0
+          }
+        }
+      ],
+      "liabilities": [],
+      "savings": [
+        {
+          "member_id": null,
+          "kind": "account",
+          "amount": {
+            "min": 120000.0,
+            "max": 361200.0
+          },
+          "annual_rate": 0.0,
+          "is_safety_fund": false
+        },
+        {
+          "member_id": null,
+          "kind": "account",
+          "amount": {
+            "min": 65000.0,
+            "max": 130000.0
+          },
+          "annual_rate": 0.0,
+          "is_safety_fund": false
+        }
+      ],
+      "assets": [],
+      "investments": [],
+      "pension": [],
+      "insurance": [],
+      "goals": [],
+      "decision": []
+    },
+    "expected": {
+      "level": "draft",
+      "share": 0.02105666156202144
+    }
+  },
+  {
+    "name": "synthetic-27",
+    "data": {
+      "incomes": [
+        {
+          "member_id": "synthetic",
+          "kind": "salary",
+          "amount": {
+            "min": 120000.0,
+            "max": 120000.0
+          }
+        }
+      ],
+      "expenses": [],
+      "liabilities": [],
+      "savings": [
+        {
+          "member_id": null,
+          "kind": "account",
+          "amount": {
+            "min": 0.0,
+            "max": 0.0
+          },
+          "annual_rate": 0.0,
+          "is_safety_fund": false
+        },
+        {
+          "member_id": null,
+          "kind": "account",
+          "amount": {
+            "min": 100.0,
+            "max": 301.0
+          },
+          "annual_rate": 0.0,
+          "is_safety_fund": false
+        },
+        {
+          "member_id": null,
+          "kind": "account",
+          "amount": {
+            "min": 120000.0,
+            "max": 361200.0
+          },
+          "annual_rate": 0.0,
+          "is_safety_fund": false
+        }
+      ],
+      "assets": [],
+      "investments": [],
+      "pension": [],
+      "insurance": [],
+      "goals": [],
+      "decision": []
+    },
+    "expected": {
+      "level": "draft",
+      "share": 0.24922066620837754
+    }
+  },
+  {
+    "name": "synthetic-28",
+    "data": {
+      "incomes": [
+        {
+          "member_id": "synthetic",
+          "kind": "salary",
+          "amount": {
+            "min": 120000.0,
+            "max": 361200.0
+          }
+        }
+      ],
+      "expenses": [
+        {
+          "category_key": "life",
+          "title": "",
+          "tier": "must",
+          "amount": {
+            "min": 65000.0,
+            "max": 130000.0
+          }
+        }
+      ],
+      "liabilities": [
+        {
+          "id": null,
+          "member_id": null,
+          "kind": "consumer",
+          "title": "Кредит",
+          "balance": 100000.0,
+          "annual_rate": 18.0,
+          "monthly_payment": 1000.0,
+          "term_months_left": null,
+          "overdue_amount": 0.0,
+          "estimated": true
+        }
+      ],
+      "savings": [
+        {
+          "member_id": null,
+          "kind": "account",
+          "amount": {
+            "min": 120000.0,
+            "max": 361200.0
+          },
+          "annual_rate": 0.0,
+          "is_safety_fund": false
+        }
+      ],
+      "assets": [],
+      "investments": [],
+      "pension": [],
+      "insurance": [],
+      "goals": [],
+      "decision": []
+    },
+    "expected": {
+      "level": "draft",
+      "share": 0.0
+    }
+  },
+  {
+    "name": "synthetic-29",
+    "data": {
+      "incomes": [
+        {
+          "member_id": "synthetic",
+          "kind": "salary",
+          "amount": {
+            "min": 100.0,
+            "max": 110.0
+          }
+        },
+        {
+          "member_id": "synthetic",
+          "kind": "salary",
+          "amount": {
+            "min": 120000.0,
+            "max": 120000.0
+          }
+        },
+        {
+          "member_id": "synthetic",
+          "kind": "salary",
+          "amount": {
+            "min": 10000.0,
+            "max": 11000.0
+          }
+        }
+      ],
+      "expenses": [
+        {
+          "category_key": "life",
+          "title": "",
+          "tier": "must",
+          "amount": {
+            "min": 120000.0,
+            "max": 132000.0
+          }
+        },
+        {
+          "category_key": "life",
+          "title": "",
+          "tier": "must",
+          "amount": {
+            "min": 120000.0,
+            "max": 132000.0
+          }
+        },
+        {
+          "category_key": "life",
+          "title": "",
+          "tier": "must",
+          "amount": {
+            "min": 65000.0,
+            "max": 65000.0
+          }
+        }
+      ],
+      "liabilities": [
+        {
+          "id": null,
+          "member_id": null,
+          "kind": "consumer",
+          "title": "Кредит",
+          "balance": 100000.0,
+          "annual_rate": 18.0,
+          "monthly_payment": 1000.0,
+          "term_months_left": null,
+          "overdue_amount": 0.0,
+          "estimated": false
+        },
+        {
+          "id": null,
+          "member_id": null,
+          "kind": "consumer",
+          "title": "Кредит",
+          "balance": 100000.0,
+          "annual_rate": 18.0,
+          "monthly_payment": 0.0,
+          "term_months_left": null,
+          "overdue_amount": 0.0,
+          "estimated": true
+        }
+      ],
+      "savings": [],
+      "assets": [],
+      "investments": [],
+      "pension": [],
+      "insurance": [],
+      "goals": [],
+      "decision": []
+    },
+    "expected": {
+      "level": "refined",
+      "share": 1.0
+    }
+  },
+  {
+    "name": "synthetic-30",
+    "data": {
+      "incomes": [
+        {
+          "member_id": "synthetic",
+          "kind": "salary",
+          "amount": {
+            "min": 120000.0,
+            "max": 361200.0
+          }
+        },
+        {
+          "member_id": "synthetic",
+          "kind": "salary",
+          "amount": {
+            "min": 100.0,
+            "max": 301.0
+          }
+        }
+      ],
+      "expenses": [
+        {
+          "category_key": "life",
+          "title": "",
+          "tier": "must",
+          "amount": {
+            "min": 100.0,
+            "max": 110.0
+          }
+        }
+      ],
+      "liabilities": [
+        {
+          "id": null,
+          "member_id": null,
+          "kind": "consumer",
+          "title": "Кредит",
+          "balance": 100000.0,
+          "annual_rate": 18.0,
+          "monthly_payment": 20000.0,
+          "term_months_left": null,
+          "overdue_amount": 0.0,
+          "estimated": true
+        },
+        {
+          "id": null,
+          "member_id": null,
+          "kind": "consumer",
+          "title": "Кредит",
+          "balance": 100000.0,
+          "annual_rate": 18.0,
+          "monthly_payment": 1000.0,
+          "term_months_left": null,
+          "overdue_amount": 0.0,
+          "estimated": true
+        }
+      ],
+      "savings": [
+        {
+          "member_id": null,
+          "kind": "account",
+          "amount": {
+            "min": 120000.0,
+            "max": 132000.0
+          },
+          "annual_rate": 0.0,
+          "is_safety_fund": false
+        },
+        {
+          "member_id": null,
+          "kind": "account",
+          "amount": {
+            "min": 65000.0,
+            "max": 195650.0
+          },
+          "annual_rate": 0.0,
+          "is_safety_fund": false
+        },
+        {
+          "member_id": null,
+          "kind": "account",
+          "amount": {
+            "min": 120000.0,
+            "max": 361200.0
+          },
+          "annual_rate": 0.0,
+          "is_safety_fund": false
+        }
+      ],
+      "assets": [],
+      "investments": [],
+      "pension": [],
+      "insurance": [],
+      "goals": [],
+      "decision": []
+    },
+    "expected": {
+      "level": "draft",
+      "share": 0.12329893481890615
+    }
+  },
+  {
+    "name": "synthetic-31",
+    "data": {
+      "incomes": [
+        {
+          "member_id": "synthetic",
+          "kind": "salary",
+          "amount": {
+            "min": 120000.0,
+            "max": 132000.0
+          }
+        }
+      ],
+      "expenses": [
+        {
+          "category_key": "life",
+          "title": "",
+          "tier": "must",
+          "amount": {
+            "min": 120000.0,
+            "max": 240000.0
+          }
+        },
+        {
+          "category_key": "life",
+          "title": "",
+          "tier": "must",
+          "amount": {
+            "min": 65000.0,
+            "max": 65000.0
+          }
+        }
+      ],
+      "liabilities": [
+        {
+          "id": null,
+          "member_id": null,
+          "kind": "consumer",
+          "title": "Кредит",
+          "balance": 100000.0,
+          "annual_rate": 18.0,
+          "monthly_payment": 20000.0,
+          "term_months_left": null,
+          "overdue_amount": 0.0,
+          "estimated": true
+        }
+      ],
+      "savings": [
+        {
+          "member_id": null,
+          "kind": "account",
+          "amount": {
+            "min": 100.0,
+            "max": 100.0
+          },
+          "annual_rate": 0.0,
+          "is_safety_fund": false
+        },
+        {
+          "member_id": null,
+          "kind": "account",
+          "amount": {
+            "min": 100.0,
+            "max": 110.0
+          },
+          "annual_rate": 0.0,
+          "is_safety_fund": false
+        },
+        {
+          "member_id": null,
+          "kind": "account",
+          "amount": {
+            "min": 0.0,
+            "max": 0.0
+          },
+          "annual_rate": 0.0,
+          "is_safety_fund": false
+        }
+      ],
+      "assets": [],
+      "investments": [],
+      "pension": [],
+      "insurance": [],
+      "goals": [],
+      "decision": []
+    },
+    "expected": {
+      "level": "draft",
+      "share": 0.4313335228888257
+    }
+  },
+  {
+    "name": "synthetic-32",
+    "data": {
+      "incomes": [
+        {
+          "member_id": "synthetic",
+          "kind": "salary",
+          "amount": {
+            "min": 0.0,
+            "max": 0.0
+          }
+        }
+      ],
+      "expenses": [
+        {
+          "category_key": "life",
+          "title": "",
+          "tier": "must",
+          "amount": {
+            "min": 0.0,
+            "max": 0.0
+          }
+        }
+      ],
+      "liabilities": [
+        {
+          "id": null,
+          "member_id": null,
+          "kind": "consumer",
+          "title": "Кредит",
+          "balance": 100000.0,
+          "annual_rate": 18.0,
+          "monthly_payment": 20000.0,
+          "term_months_left": null,
+          "overdue_amount": 0.0,
+          "estimated": true
+        }
+      ],
+      "savings": [],
+      "assets": [],
+      "investments": [],
+      "pension": [],
+      "insurance": [],
+      "goals": [],
+      "decision": []
+    },
+    "expected": {
+      "level": "draft",
+      "share": 0.0
+    }
+  },
+  {
+    "name": "synthetic-33",
+    "data": {
+      "incomes": [
+        {
+          "member_id": "synthetic",
+          "kind": "salary",
+          "amount": {
+            "min": 120000.0,
+            "max": 132000.0
+          }
+        },
+        {
+          "member_id": "synthetic",
+          "kind": "salary",
+          "amount": {
+            "min": 100.0,
+            "max": 100.0
+          }
+        }
+      ],
+      "expenses": [],
+      "liabilities": [
+        {
+          "id": null,
+          "member_id": null,
+          "kind": "consumer",
+          "title": "Кредит",
+          "balance": 100000.0,
+          "annual_rate": 18.0,
+          "monthly_payment": 20000.0,
+          "term_months_left": null,
+          "overdue_amount": 0.0,
+          "estimated": true
+        }
+      ],
+      "savings": [
+        {
+          "member_id": null,
+          "kind": "account",
+          "amount": {
+            "min": 120000.0,
+            "max": 120000.0
+          },
+          "annual_rate": 0.0,
+          "is_safety_fund": false
+        },
+        {
+          "member_id": null,
+          "kind": "account",
+          "amount": {
+            "min": 0.0,
+            "max": 0.0
+          },
+          "annual_rate": 0.0,
+          "is_safety_fund": false
+        }
+      ],
+      "assets": [],
+      "investments": [],
+      "pension": [],
+      "insurance": [],
+      "goals": [],
+      "decision": []
+    },
+    "expected": {
+      "level": "refined",
+      "share": 0.9264976111723631
+    }
+  },
+  {
+    "name": "synthetic-34",
+    "data": {
+      "incomes": [
+        {
+          "member_id": "synthetic",
+          "kind": "salary",
+          "amount": {
+            "min": 10000.0,
+            "max": 20000.0
+          }
+        },
+        {
+          "member_id": "synthetic",
+          "kind": "salary",
+          "amount": {
+            "min": 100.0,
+            "max": 110.0
+          }
+        },
+        {
+          "member_id": "synthetic",
+          "kind": "salary",
+          "amount": {
+            "min": 65000.0,
+            "max": 71500.0
+          }
+        }
+      ],
+      "expenses": [
+        {
+          "category_key": "life",
+          "title": "",
+          "tier": "must",
+          "amount": {
+            "min": 120000.0,
+            "max": 240000.0
+          }
+        }
+      ],
+      "liabilities": [],
+      "savings": [
+        {
+          "member_id": null,
+          "kind": "account",
+          "amount": {
+            "min": 10000.0,
+            "max": 20000.0
+          },
+          "annual_rate": 0.0,
+          "is_safety_fund": false
+        }
+      ],
+      "assets": [],
+      "investments": [],
+      "pension": [],
+      "insurance": [],
+      "goals": [],
+      "decision": []
+    },
+    "expected": {
+      "level": "draft",
+      "share": 0.20366314951224368
+    }
+  },
+  {
+    "name": "synthetic-35",
+    "data": {
+      "incomes": [
+        {
+          "member_id": "synthetic",
+          "kind": "salary",
+          "amount": {
+            "min": 65000.0,
+            "max": 130000.0
+          }
+        }
+      ],
+      "expenses": [],
+      "liabilities": [],
+      "savings": [],
+      "assets": [],
+      "investments": [],
+      "pension": [],
+      "insurance": [],
+      "goals": [],
+      "decision": []
+    },
+    "expected": {
+      "level": "draft",
+      "share": 0.0
+    }
+  },
+  {
+    "name": "synthetic-36",
+    "data": {
+      "incomes": [
+        {
+          "member_id": "synthetic",
+          "kind": "salary",
+          "amount": {
+            "min": 0.0,
+            "max": 0.0
+          }
+        },
+        {
+          "member_id": "synthetic",
+          "kind": "salary",
+          "amount": {
+            "min": 10000.0,
+            "max": 10000.0
+          }
+        }
+      ],
+      "expenses": [
+        {
+          "category_key": "life",
+          "title": "",
+          "tier": "must",
+          "amount": {
+            "min": 65000.0,
+            "max": 195650.0
+          }
+        }
+      ],
+      "liabilities": [],
+      "savings": [
+        {
+          "member_id": null,
+          "kind": "account",
+          "amount": {
+            "min": 120000.0,
+            "max": 361200.0
+          },
+          "annual_rate": 0.0,
+          "is_safety_fund": false
+        },
+        {
+          "member_id": null,
+          "kind": "account",
+          "amount": {
+            "min": 120000.0,
+            "max": 132000.0
+          },
+          "annual_rate": 0.0,
+          "is_safety_fund": false
+        }
+      ],
+      "assets": [],
+      "investments": [],
+      "pension": [],
+      "insurance": [],
+      "goals": [],
+      "decision": []
+    },
+    "expected": {
+      "level": "draft",
+      "share": 0.20319095657151034
+    }
+  },
+  {
+    "name": "synthetic-37",
+    "data": {
+      "incomes": [],
+      "expenses": [],
+      "liabilities": [
+        {
+          "id": null,
+          "member_id": null,
+          "kind": "consumer",
+          "title": "Кредит",
+          "balance": 100000.0,
+          "annual_rate": 18.0,
+          "monthly_payment": 0.0,
+          "term_months_left": null,
+          "overdue_amount": 0.0,
+          "estimated": true
+        }
+      ],
+      "savings": [
+        {
+          "member_id": null,
+          "kind": "account",
+          "amount": {
+            "min": 65000.0,
+            "max": 65000.0
+          },
+          "annual_rate": 0.0,
+          "is_safety_fund": false
+        }
+      ],
+      "assets": [],
+      "investments": [],
+      "pension": [],
+      "insurance": [],
+      "goals": [],
+      "decision": []
+    },
+    "expected": {
+      "level": "refined",
+      "share": 1.0
+    }
+  },
+  {
+    "name": "synthetic-38",
+    "data": {
+      "incomes": [
+        {
+          "member_id": "synthetic",
+          "kind": "salary",
+          "amount": {
+            "min": 100.0,
+            "max": 110.0
+          }
+        },
+        {
+          "member_id": "synthetic",
+          "kind": "salary",
+          "amount": {
+            "min": 65000.0,
+            "max": 130000.0
+          }
+        }
+      ],
+      "expenses": [
+        {
+          "category_key": "life",
+          "title": "",
+          "tier": "must",
+          "amount": {
+            "min": 120000.0,
+            "max": 120000.0
+          }
+        },
+        {
+          "category_key": "life",
+          "title": "",
+          "tier": "must",
+          "amount": {
+            "min": 10000.0,
+            "max": 30100.0
+          }
+        },
+        {
+          "category_key": "life",
+          "title": "",
+          "tier": "must",
+          "amount": {
+            "min": 10000.0,
+            "max": 20000.0
+          }
+        }
+      ],
+      "liabilities": [
+        {
+          "id": null,
+          "member_id": null,
+          "kind": "consumer",
+          "title": "Кредит",
+          "balance": 100000.0,
+          "annual_rate": 18.0,
+          "monthly_payment": 1000.0,
+          "term_months_left": null,
+          "overdue_amount": 0.0,
+          "estimated": true
+        },
+        {
+          "id": null,
+          "member_id": null,
+          "kind": "consumer",
+          "title": "Кредит",
+          "balance": 100000.0,
+          "annual_rate": 18.0,
+          "monthly_payment": 0.0,
+          "term_months_left": null,
+          "overdue_amount": 0.0,
+          "estimated": true
+        }
+      ],
+      "savings": [],
+      "assets": [],
+      "investments": [],
+      "pension": [],
+      "insurance": [],
+      "goals": [],
+      "decision": []
+    },
+    "expected": {
+      "level": "draft",
+      "share": 0.39875834135652866
+    }
+  },
+  {
+    "name": "synthetic-39",
+    "data": {
+      "incomes": [
+        {
+          "member_id": "synthetic",
+          "kind": "salary",
+          "amount": {
+            "min": 100.0,
+            "max": 110.1
+          }
+        }
+      ],
+      "expenses": [
+        {
+          "category_key": "life",
+          "title": "",
+          "tier": "must",
+          "amount": {
+            "min": 100.0,
+            "max": 200.0
+          }
+        },
+        {
+          "category_key": "life",
+          "title": "",
+          "tier": "must",
+          "amount": {
+            "min": 10000.0,
+            "max": 30100.0
+          }
+        },
+        {
+          "category_key": "life",
+          "title": "",
+          "tier": "must",
+          "amount": {
+            "min": 10000.0,
+            "max": 20000.0
+          }
+        }
+      ],
+      "liabilities": [
+        {
+          "id": null,
+          "member_id": null,
+          "kind": "consumer",
+          "title": "Кредит",
+          "balance": 100000.0,
+          "annual_rate": 18.0,
+          "monthly_payment": 0.0,
+          "term_months_left": null,
+          "overdue_amount": 0.0,
+          "estimated": true
+        }
+      ],
+      "savings": [
+        {
+          "member_id": null,
+          "kind": "account",
+          "amount": {
+            "min": 100.0,
+            "max": 100.0
+          },
+          "annual_rate": 0.0,
+          "is_safety_fund": false
+        },
+        {
+          "member_id": null,
+          "kind": "account",
+          "amount": {
+            "min": 10000.0,
+            "max": 20000.0
+          },
+          "annual_rate": 0.0,
+          "is_safety_fund": false
+        }
+      ],
+      "assets": [],
+      "investments": [],
+      "pension": [],
+      "insurance": [],
+      "goals": [],
+      "decision": []
+    },
+    "expected": {
+      "level": "draft",
+      "share": 0.0014182365363260014
+    }
+  }
+]

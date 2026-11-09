@@ -7,7 +7,8 @@ describe('runFinaleDisplay (★ BG-2 финал)', () => {
   it('победа: три показателя из payload', () => {
     const stats = finaleWinStats({
       outcome: 'victory',
-      period_index: 38,
+      period_index: 39,
+      turns_completed: 38,
       cash_balance: 412000,
       cushion_turns: 6.1,
     });
@@ -22,7 +23,7 @@ describe('runFinaleDisplay (★ BG-2 финал)', () => {
   });
 
   it('склонение «ход» и пустые данные', () => {
-    const stats = finaleWinStats({ period_index: 21, cash_balance: null, cushion_turns: 0 });
+    const stats = finaleWinStats({ turns_completed: 21, cash_balance: null, cushion_turns: 0 });
     assert.equal(stats[0].label, 'ход');
     assert.equal(stats[1].value, '—');
     assert.equal(stats[2].value, '—');

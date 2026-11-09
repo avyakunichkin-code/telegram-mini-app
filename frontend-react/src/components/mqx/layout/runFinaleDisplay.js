@@ -26,7 +26,7 @@ function fmtTurns(value) {
 
 /** Три показателя победы: ходов · на счёте · ходов подушки. Нет данных — «—». */
 export function finaleWinStats(payload) {
-  const turns = Math.max(0, Math.trunc(Number(payload?.period_index) || 0));
+  const turns = Math.max(0, Math.trunc(Number(payload?.turns_completed) || 0));
   const cushion = fmtTurns(payload?.cushion_turns);
   return [
     { key: 'turns', value: String(turns), label: pluralRu(turns, 'ход', 'хода', 'ходов') },

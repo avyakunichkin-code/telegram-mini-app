@@ -472,7 +472,8 @@ class RunFinalePayload(BaseModel):
     fact: Optional[RunFinaleFact] = None
     defeat_reason: Optional[str] = None
     can_dismiss: bool = False
-    # ★ BG-2 финал: три показателя (ходов = period_index, на счёте, подушка в ходах расходов)
+    # ★ BG-2 финал: три показателя (завершённые ходы, на счёте, подушка в ходах расходов)
+    turns_completed: int = 0
     cash_balance: Optional[float] = None
     cushion_turns: Optional[float] = None
 
