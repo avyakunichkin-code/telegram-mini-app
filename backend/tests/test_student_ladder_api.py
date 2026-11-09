@@ -76,6 +76,21 @@ def test_free_form_asset_stays_closed_for_student(client, auth_headers, db_sessi
     assert res.status_code == 403
 
 
+@pytest.mark.parametrize("template_key", ["mq_game_tight_budget_v1", "mq_game_mortgage_stress_v1", "mq_game_debt_stack_v1"])
+def test_free_form_asset_closed_for_other_roles(client, auth_headers, template_key):
+    client.post(
+        "/api/game/start",
+        headers=auth_headers,
+        json={"profile_name": "Other", "save_kind": "game", "template_key": template_key},
+    )
+    res = client.post(
+        "/api/finance/assets",
+        headers=auth_headers,
+        json={"kind": "generic", "asset_value": 0, "monthly_maintenance_cost": 0, "monthly_income": 1_000_000},
+    )
+    assert res.status_code == 403
+
+
 def test_real_flags_surface_unlock_card(db_session, laddered):
     _at(db_session, laddered, 6)
     ensure_period_events(db_session, laddered.id, 6, "game")

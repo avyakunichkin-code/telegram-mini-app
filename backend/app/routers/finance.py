@@ -17,7 +17,6 @@ from ..schemas import (
     SalaryProfileResponse,
     LiabilityCreate,
     LiabilityResponse,
-    AssetCreate,
     AssetResponse,
     SecuredAcquisitionResponse,
     FinanceOverview,
@@ -34,7 +33,6 @@ from ..services.finance.liabilities import (
     prepay_liability as service_prepay_liability,
 )
 from ..services.finance.assets import (
-    create_asset as service_create_asset,
     list_assets as service_list_assets,
     delete_asset as service_delete_asset,
     create_asset_from_template as service_create_asset_from_template,
@@ -170,24 +168,16 @@ def create_liability_from_template(
 
 
 @router.post("/assets", response_model=AssetResponse)
-def create_asset(
-    payload: AssetCreate,
-    current_user=Depends(get_current_user),
-    db: Session = Depends(get_db),
-):
-    game_profile = get_active_game_profile(db, current_user.id)
-    # Свободная форма принимает любую цену и доход: студенту покупки только из каталога.
-    if getattr(game_profile, "starter_template_key", None) == "mq_game_basic_v1":
-        raise HTTPException(
-            status_code=403,
-            detail={
-                "code": "mechanic_disabled",
-                "mechanic": MECHANIC_CAPITAL_PROPERTY,
-                "message": "Эта механика недоступна в текущем сценарии",
-            },
-        )
-    require_asset_kind_mechanic(db, game_profile, getattr(payload, "kind", None))
-    return service_create_asset(db, game_profile, payload)
+def create_asset(current_user=Depends(get_current_user)):
+    """Свободная форма принимала любую цену и доход: имущество покупается только из каталога."""
+    raise HTTPException(
+        status_code=403,
+        detail={
+            "code": "mechanic_disabled",
+            "mechanic": MECHANIC_CAPITAL_PROPERTY,
+            "message": "Имущество покупается только из каталога",
+        },
+    )
 
 
 @router.get("/assets", response_model=list[AssetResponse])
