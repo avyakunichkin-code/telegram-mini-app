@@ -30,6 +30,10 @@ aliases:
 
 ## 2026-11
 
+### 09.11
+
+- `UI` · `Docs` — уведомление о cookie (`packages/cookie-consent`, копии раздаёт `scripts/sync-cookie-consent.mjs`) на лендинге, Plan и в игре; черновик политики ПДн с заглушками — `docs/legal/DRAFT_privacy-and-cookies.md` (пробно, нужен юрист).
+
 ### 02.11
 
 | Область | Что сделано | Коммит |
