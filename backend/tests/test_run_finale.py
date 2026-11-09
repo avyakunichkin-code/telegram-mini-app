@@ -70,6 +70,18 @@ class TestBootstrapRunFinale:
             assert "месяц" not in copy.lower()
             assert "cash" not in copy.lower()
 
+    def test_finale_counts_only_completed_turns(self, db_session, test_user):
+        """Регресс 2026-11-09: победа после закрытия 15-го хода показывала «16 ходов»."""
+        from app.game.run_finale import build_run_finale_payload
+
+        profile = create_game_profile(db_session, user_id=test_user.id, period_index=16)
+        payload = build_run_finale_payload(db_session, profile, outcome="victory")
+
+        assert payload.period_index == 16
+        assert payload.turns_completed == 15
+        term = next(m for m in payload.sections[0].metrics if m.headline == "Ходов сыграно")
+        assert term.value == "15"
+
     def test_resolve_finds_archived_defeated_profile(self, db_session, test_user):
         from app.game.session import resolve_game_session
 
