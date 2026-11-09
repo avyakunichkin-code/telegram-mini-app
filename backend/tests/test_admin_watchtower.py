@@ -26,21 +26,21 @@ def test_admin_link_uses_hash_router(monkeypatch):
     assert link == "https://example.github.io/telegram-mini-app/#/admin?profile=7"
 
 
-def test_emit_admin_alert_dedupe(db_session):
+def test_emit_admin_alert_dedupe(db_session, test_user):
     os.environ.setdefault("SECRET_KEY", "test-secret-key-for-pytest-only-32b+")
     first = emit_admin_alert(
         db_session,
         "user_registered",
         {"username": "a"},
-        user_id=1,
-        dedupe_key="user_registered:1",
+        user_id=test_user.id,
+        dedupe_key=f"user_registered:{test_user.id}",
     )
     second = emit_admin_alert(
         db_session,
         "user_registered",
         {"username": "a"},
-        user_id=1,
-        dedupe_key="user_registered:1",
+        user_id=test_user.id,
+        dedupe_key=f"user_registered:{test_user.id}",
     )
     assert first is not None
     assert second is None
