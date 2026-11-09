@@ -6,6 +6,7 @@ events:
   weight: 88
   event_tier: 2
   repeat_policy: repeatable
+  cooldown_periods: 6
   scenario_shape: soft_offer
   choices:
   - title: Записаться на курс
