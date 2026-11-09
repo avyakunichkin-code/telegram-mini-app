@@ -21,7 +21,7 @@ SQL-миграций (`backend/migrations/0000_schema_baseline.sql` + `00NN_*.sq
 | # | Срез | Результат |
 |---|------|-----------|
 | 1 ✅ код 2026-11-09 (ждёт первого прогона в GitHub) | Job `Postgres migrations` в `.github/workflows/ci.yml`: сервис `postgres:16`, `bash backend/scripts/db.sh migrate` на пустой БД | Все миграции применяются с нуля без ошибок |
-| 2 | Тест дрейфа схемы: после миграций сравнить таблицы/колонки/типы/NOT NULL с `Base.metadata` (SQLAlchemy inspector) | Расхождение модель↔SQL = красный CI |
+| 2 ✅ код 2026-11-09 | Тест дрейфа схемы `tests/test_pg_schema_drift.py`: наличие через `db_schema.missing_schema` (уже роняет старт API) + сверка NOT NULL; типы отложены (ложные срабатывания) | Расхождение модель↔SQL = красный CI |
 | 3 | Прогон критичного набора на PG: закрытие периода, победа, идемпотентность денежных эндпоинтов. В `conftest.py` брать URL из `TEST_DATABASE_URL`, иначе SQLite; схему на PG строить миграциями | Критичные сценарии проверены на движке прода |
 | 4 | Сделать job required в Settings → Branches → main после недели зелёных прогонов | Защита main |
 
