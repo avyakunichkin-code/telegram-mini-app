@@ -2,38 +2,71 @@
   "schema_version": 1,
   "theme": "dashboard",
   "page_parity": {
-    "name": "Dashboard (★ BG-1 board game, ADR-014)",
-    "prod_entry": "frontend-react/src/components/DashboardPremium.jsx",
+    "name": "Главная — Игровой пульт А (06.11.2026)",
+    "prod_entry": "frontend-react/src/screens/game/DashboardScreen.jsx",
     "canonical_page_round": {
-      "path": "design-lab/dashboard/parity-generated-page-round/",
+      "path": "design-lab/dashboard/pocket-page-round/",
       "status": "approved",
-      "notes": "Generated from manifest. BG-1 is one whole-page round: blocks sharing a round are embedded once."
+      "notes": "Native React snapshot of Pocket Board A. Approved in chat 06.11.2026; full raster G1, cash in hero, steady contextual help B, labels-only tickets.",
+      "approved_at": "2026-11-06"
     },
     "concept_round": {
       "path": "design-lab/board-game/hybrid-round/",
       "status": "approved",
-      "approved_at": "2026-10-14"
-    }
+      "approved_at": "2026-10-14",
+      "notes": "Historical origin of BG-1; use canonical_page_round for current visuals."
+    },
+    "history_rounds": [
+      {
+        "path": "design-lab/dashboard/current-page-round/",
+        "notes": "BG-4 snapshot retained unchanged; replaced by Pocket Board A after human approval 06.11.2026."
+      },
+      {
+        "path": "design-lab/dashboard/bg1-page-round/",
+        "notes": "BG-1 historical snapshot, superseded as current parity"
+      },
+      {
+        "path": "design-lab/board-game/frames-round/",
+        "notes": "Approved E: source of the hierarchy"
+      },
+      {
+        "path": "design-lab/board-game/neobrutal-a-round/",
+        "notes": "Approved K1: source of the main card"
+      }
+    ]
   },
   "blocks": [
     {
       "id": "hero",
       "kind": "page-block",
-      "prod_component": "MqxDashboardHero",
+      "prod_component": "MqxPocketHero",
       "status": "approved",
       "canonical_rounds": [
         {
-          "path": "design-lab/dashboard/bg1-page-round/",
-          "status": "approved"
-        },
-        {
-          "path": "design-lab/board-game/hybrid-round/",
+          "path": "design-lab/dashboard/pocket-page-round/",
           "status": "approved"
         }
       ],
       "invariants": [
-        "Turn card on top inside scroll: role left + «Твой ход» (h1), turn number top-right without «из N».",
-        "Order inside card: events plate (N событий) → Monetka one line (most urgent) → compact «Завершить ход»."
+        "Approved Г 07.11.2026: logo, horizontal turn token, role and larger mascot above cash row.",
+        "Cash left-aligned, full-width close action, forecast on bottom edge.",
+        "Existing server data, defeat warning and onboarding actions preserved."
+      ]
+    },
+    {
+      "id": "tickets",
+      "kind": "page-block",
+      "prod_component": "MqxPocketTickets",
+      "status": "approved",
+      "canonical_rounds": [
+        {
+          "path": "design-lab/dashboard/pocket-page-round/",
+          "status": "approved"
+        }
+      ],
+      "invariants": [
+        "Events and salary in one row, fixed ticket height and label tracks before/after payment.",
+        "Existing event unlocks, salary availability, onboarding anchors and handlers are preserved."
       ]
     },
     {
@@ -43,57 +76,12 @@
       "status": "approved",
       "canonical_rounds": [
         {
-          "path": "design-lab/dashboard/bg1-page-round/",
-          "status": "approved"
-        },
-        {
-          "path": "design-lab/board-game/hybrid-round/",
+          "path": "design-lab/dashboard/pocket-page-round/",
           "status": "approved"
         }
       ],
       "invariants": [
-        "4 thin bars 2×2 with numbers; book+? → help sheet, heart → treat-self (Z-NEEDS kept).",
-        "Bars are gain (as in ★ BG-1); red only for risk (distressed < 30 / zero)."
-      ]
-    },
-    {
-      "id": "finance",
-      "kind": "page-block",
-      "prod_component": "MqxFinancePeriodBlock",
-      "status": "approved",
-      "canonical_rounds": [
-        {
-          "path": "design-lab/dashboard/bg1-page-round/",
-          "status": "approved"
-        },
-        {
-          "path": "design-lab/board-game/hybrid-round/",
-          "status": "approved"
-        }
-      ],
-      "invariants": [
-        "Persona portrait next to «На счёте»; below: cushion, salary (or income) per turn, expenses per turn.",
-        "Expense neutral (ADR-014), income green with «+»."
-      ]
-    },
-    {
-      "id": "goal",
-      "kind": "page-block",
-      "prod_component": "MqxGoalDash",
-      "status": "approved",
-      "canonical_rounds": [
-        {
-          "path": "design-lab/dashboard/bg1-page-round/",
-          "status": "approved"
-        },
-        {
-          "path": "design-lab/board-game/hybrid-round/",
-          "status": "approved"
-        }
-      ],
-      "invariants": [
-        "Collapsed: «Цель, шаг N из M» + unlabeled dot track + gold finish coin.",
-        "Expanded: victory chain steps, no Monetka; finish text shows «с N-го хода» only when min_period_index > 1."
+        "Four needs and existing risk/recovery UI; help and treat-self remain available."
       ]
     },
     {
@@ -103,25 +91,98 @@
       "status": "approved",
       "canonical_rounds": [
         {
-          "path": "design-lab/dashboard/bg1-page-round/",
-          "status": "approved"
-        },
-        {
-          "path": "design-lab/board-game/hybrid-round/",
+          "path": "design-lab/dashboard/pocket-page-round/",
           "status": "approved"
         }
       ],
       "invariants": [
-        "4 buttons in one row; «Зарплата» gold while claimable.",
-        "Labels «Пополнить» / «Снять» unchanged — separate open task."
+        "No second salary; cushion in/out and investments use existing flows."
+      ]
+    },
+    {
+      "id": "finance",
+      "kind": "page-block",
+      "prod_component": "MqxFinancePeriodBlock",
+      "status": "approved",
+      "canonical_rounds": [
+        {
+          "path": "design-lab/dashboard/pocket-page-round/",
+          "status": "approved"
+        }
+      ],
+      "invariants": [
+        "Cash is in hero; this block retains income, outflow and separate cushion."
+      ]
+    },
+    {
+      "id": "goal",
+      "kind": "page-block",
+      "prod_component": "MqxPocketGoal",
+      "status": "approved",
+      "canonical_rounds": [
+        {
+          "path": "design-lab/dashboard/pocket-page-round/",
+          "status": "approved"
+        }
+      ],
+      "invariants": [
+        "Native Victory v2 chain and thresholds only; goal on desktop sidebar, below actions on phones."
       ]
     }
   ],
   "page_order_prod_components": [
-    "MqxDashboardHero",
+    "MqxPocketHero",
+    "MqxPocketTickets",
     "MqxNeedsDash",
+    "MqxPeriodActions",
     "MqxFinancePeriodBlock",
-    "MqxGoalDash",
-    "MqxPeriodActions"
-  ]
+    "MqxPocketGoal"
+  ],
+  "last_confirmed": "2026-11-04",
+  "visual_contract": {
+    "needs": {
+      "height_px": 6,
+      "border": "none",
+      "fill_edge": "none",
+      "axes": [
+        "comfort",
+        "status",
+        "social",
+        "health"
+      ]
+    },
+    "finance": {
+      "columns": [
+        "income",
+        "expense",
+        "cushion"
+      ],
+      "border": "none",
+      "background": "transparent",
+      "shadow": "none"
+    },
+    "goal": {
+      "border": "none",
+      "background": "transparent",
+      "shadow": "none"
+    },
+    "actions": {
+      "border": "none",
+      "edge": "colored lower edge",
+      "salary": "gold full-width, dashed after claim"
+    },
+    "turn_card": {
+      "variant": "K1",
+      "border": "ink",
+      "shadow": "violet",
+      "inner_button_borders": "none"
+    }
+  },
+  "visual_invariants": {
+    "source": "design-lab/screen-refresh/pocket-board-round/APPROVED.md",
+    "cash": "hero",
+    "logo": "G1 with raster tagline",
+    "salary": "fixed-height labels-only ticket; no reminder row",
+    "goal": "native server chain, no synthetic content"
+  }
 }

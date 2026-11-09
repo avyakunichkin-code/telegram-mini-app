@@ -1,0 +1,25 @@
+{
+  "ok": true,
+  "checks": [
+    {
+      "width": 1440,
+      "narrators": 4,
+      "retinaHeight": 560,
+      "avatar": "B",
+      "overflow": false,
+      "choicesAndReset": "passed"
+    },
+    {
+      "width": 390,
+      "narrators": 4,
+      "retinaHeight": 560,
+      "avatar": "B",
+      "overflow": false,
+      "choicesAndReset": "passed"
+    }
+  ],
+  "errors": [],
+  "httpErrors": [],
+  "source": "http://127.0.0.1:4190/telegram-mini-app/landing/",
+  "published": false
+}

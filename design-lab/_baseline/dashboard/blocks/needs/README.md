@@ -1,6 +1,6 @@
 # Round: Dashboard Z-NEEDS
 
-**UX:** [`docs/ux/screens/character-needs-dashboard.md`](../../../docs/ux/screens/character-needs-dashboard.md)
+**UX:** [`docs/game/ux/screens/character-needs-dashboard.md`](../../../docs/game/ux/screens/character-needs-dashboard.md)
 
 ## Варианты (нарисовать 2–4)
 

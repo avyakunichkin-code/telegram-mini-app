@@ -15,7 +15,16 @@
 | **Prod parity** | `screens-round/` + [`../finance/parity-generated-page-round/`](../finance/parity-generated-page-round/) |
 | **История** | [`details-actions-round/`](details-actions-round/) — канон v2 (2026-06), структура сохранена |
 
-UX: [`docs/ux/screens/finance.md`](../../docs/ux/screens/finance.md).
+UX: [`docs/game/ux/screens/finance.md`](../../docs/game/ux/screens/finance.md).
+
+## Первое вложение · компактный A (2026-11-05)
+
+[Утверждённый раунд](first-investment-round/README.md) и
+[выбор владельца](first-investment-round/APPROVED.md): две прямые кнопки
+в пустом портфеле, компактный MqxFirstInvestmentSheet снизу без подробного
+чека. Обычная форма ≤400 px, остальные механики и порядок страницы сохранены.
+Каталог — MqxFirstInvestmentDemo, интеграция — CapitalDetailsPanel /
+CapitalActionsPanel / FinancePremium. [Отчёт](../../docs/game/ops/FIRST_INVESTMENT_A_2026-11-05.md).
 
 ## CSS-пакет (не отдельная витрина)
 

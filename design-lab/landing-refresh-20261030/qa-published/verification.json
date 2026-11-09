@@ -1,0 +1,25 @@
+{
+  "ok": true,
+  "checks": [
+    {
+      "width": 1440,
+      "narrators": 4,
+      "retinaHeight": 560,
+      "avatar": "B",
+      "overflow": false,
+      "choicesAndReset": "passed"
+    },
+    {
+      "width": 390,
+      "narrators": 4,
+      "retinaHeight": 560,
+      "avatar": "B",
+      "overflow": false,
+      "choicesAndReset": "passed"
+    }
+  ],
+  "errors": [],
+  "httpErrors": [],
+  "source": "https://avyakunichkin-code.github.io/telegram-mini-app/landing/",
+  "published": true
+}

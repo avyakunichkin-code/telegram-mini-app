@@ -1,6 +1,14 @@
-# Dashboard — ★ BG-1 «настольная игра» (prod с 2026-10-14)
+# Главная · текущий канон BG-3 E + BG-4 K1
 
-Канон: [`APPROVED.md`](APPROVED.md). Prod parity — [`bg1-page-round/`](bg1-page-round/) (страница целиком) и [`parity-generated-page-round/`](parity-generated-page-round/) (`cd frontend-react && npm run design-lab:build`). Концепция — [`../board-game/hybrid-round/`](../board-game/hybrid-round/).
+Текущая витрина: [current-page-round](current-page-round/), зафиксирована владельцем
+04.11.2026. Правила: [APPROVED](APPROVED.md), структурированный контракт:
+[canon.manifest.json](canon.manifest.json). Derived parity:
+[parity-generated-page-round](parity-generated-page-round/).
+
+Шкалы 6 px без обводки; доходы/расходы/подушка и цель без рамок; действия —
+заливки с нижней кромкой, карта хода K1 с контуром. Новые маскоты B/A.
+`bg1-page-round` и `board-game/hybrid-round` — историческая основа, не текущий вид.
+[Предложения A/B/C](../board-game/ink-refinement-round/) — REVIEW, не канон.
 
 ```bash
 cd design-lab && npx serve .
@@ -19,28 +27,28 @@ npx serve .
 
 Открыть `index.html` — **S5** крупно + S1–S3 для сравнения. **L3 / V0**, **«Длинные суммы»**, тема.
 
-См. [`VARIANTS.md`](VARIANTS.md), [`APPROVED.md`](APPROVED.md), [`CONTENT.md`](CONTENT.md).
+Состав старого макета: [CONTENT.md](CONTENT.md). Действующие решения: [APPROVED.md](APPROVED.md).
 
 ## Раунды
 
 | Раунд | Тема |
 |-------|------|
-| [`../character-needs/dashboard-needs-round/`](../character-needs/dashboard-needs-round/) | **Потребности** (Z-NEEDS) на дашборде — `MqxNeedsDash` |
+| [`../character-needs/dashboard-needs-v7-round/`](../character-needs/dashboard-needs-v7-round/) | **Потребности** (Z-NEEDS) на дашборде — `MqxNeedsDash` |
 | [`period-actions-round/`](period-actions-round/) | Chip-действия, Монетка справа, подписи кнопок |
 | [`../type-scale-round/`](../type-scale-round/) | Шкала типографики MQX (13→12, 9→10, hero 26/28) |
 | [`goal-chain-round/`](goal-chain-round/) | Блок «Цель» |
 | [`cushion-fill-round/`](cushion-fill-round/) | Индикатор подушки на chip |
 | [`hero-no-timer-round/`](hero-no-timer-round/) | Hero без таймера, primary «Закрыть месяц» (TB1) |
 
-## Prod parity (S5)
+## Историческая prod parity S5 (до BG-1)
 
-**Канон дашборда в prod:** `../character-needs/dashboard-needs-round/` + `goal-chain-round` + `period-actions-round`
+**Источники исторического этапа S5:** `../character-needs/dashboard-needs-v7-round/` + `goal-chain-round` + `period-actions-round`
 (не галерея `index.html` с блоком «Уровень»).
 
-Витрина синхронизирована с `DashboardPremium` + `index.css` (`mqx-tab-page--dash-unified`):
+На том этапе витрина была синхронизирована с `DashboardPremium` + `index.css` (`mqx-tab-page--dash-unified`):
 
 - Hero: Play + Pause (`mqx-btn--filled`), пауза `||`
-- **Потребности:** `MqxNeedsDash` — сразу после hero (канон: [`../character-needs/dashboard-needs-round/`](../character-needs/dashboard-needs-round/))
+- **Потребности:** `MqxNeedsDash` — сразу после hero (канон: [`../character-needs/dashboard-needs-v7-round/`](../character-needs/dashboard-needs-v7-round/))
 - Финансы 2×2 (`MqxFinancePeriodBlock`), `mqx-dash-link`, Монетка
 - **Цель:** `MqxGoalDash` — между финансами и действиями ([`goal-chain-round/`](goal-chain-round/))
 - Действия: `MqxPeriodActions`; панель подушки inline
@@ -49,3 +57,6 @@ npx serve .
 **Лендинг:** PNG дашборда — [`goal-chain-round/`](goal-chain-round/) или app-capture; см. [`docs/specs/LANDING_SCREENSHOTS.md`](../../docs/specs/LANDING_SCREENSHOTS.md).
 
 Дальнейшие правки UI дашборда — сначала lab, затем перенос в `frontend-react`.
+
+
+Текущая главная с 06.11.2026: [Игровой пульт А · native React parity](pocket-page-round/README.md). BG-4 current-page-round остаётся историческим снимком.

@@ -1,0 +1,13 @@
+/* Adapter of v3 examples to the current ink runtime. Rules: InkEdge/README.md;
+ * runtime variables are read from frontend-react/src/styles/mqx/ink.css verbatim.
+ * Not a replacement for production components or new design approval. */
+.th-ink :is(.th-turn,.th-event){border:var(--mq-ink-w) solid var(--mq-ink-line);box-shadow:var(--mq-ink-off) var(--mq-ink-off) 0 var(--mq-turn)}
+.th-ink .th-tile{border:var(--mq-ink-w) solid var(--mq-ink-line);box-shadow:none}
+.th-ink :is(.th-deck,.th-turn .th-btn,.th-choice){border:0;box-shadow:var(--mq-ink-off) var(--mq-ink-off) 0 var(--mq-ink-drop)}
+.th-ink :is(.th-tip,.th-chip,.th-pill){border:0;box-shadow:none}
+.th-ink .th-event__band{background:var(--mq-cell)}
+.th-ink :is(.th-pill,.th-chip){background:var(--mq-turn-soft);color:var(--mq-turn-ink)}
+.th-ink .th-tip{background:var(--mq-coin-soft)}
+.th-ink .th-cell--now{border:0;box-shadow:none;background:transparent;color:var(--mq-board-ink)}
+.th-ink .th-ink-seg>div{min-height:var(--mq-tap);padding:var(--mq-space-3);font:700 15px/22px var(--font-body)}
+.th-ink .th-ink-seg>div+div{border-left:var(--mq-ink-w) solid var(--mq-ink-line)}

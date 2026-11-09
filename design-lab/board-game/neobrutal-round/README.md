@@ -36,4 +36,4 @@ cd design-lab && npx serve .
 cd design-lab/board-game/neobrutal-round && ./sync-lab.sh
 ```
 
-Статус: **выбран A** (2026-10-28, в чате: «Развить A») — продолжение на экранах партии в [`../neobrutal-a-round/`](../neobrutal-a-round/README.md). B и C остаются здесь для сравнения. Не утверждено для prod.
+Статус: **выбран A** (2026-10-28, в чате: «Развить A») — продолжение на экранах партии в [`../neobrutal-a-round/`](../neobrutal-a-round/README.md). B и C остаются здесь для сравнения. Историческая проба: базовый A/K1 затем утверждён как BG-4 03.11.2026. Текущий вид — [current-page-round](../../dashboard/current-page-round/). B/C этого раунда не утверждены.

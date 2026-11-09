@@ -42,7 +42,7 @@ npx serve .
 
 ## Prod
 
-- **2026-06-01:** перенесено в `FinancePremium.jsx` + `frontend-react/src/styles/mqx/finance.css` (см. `docs/ux/screens/finance.md`).
+- **2026-06-01:** перенесено в `FinancePremium.jsx` + `frontend-react/src/styles/mqx/finance.css` (см. `docs/game/ux/screens/finance.md`).
 
 ## Открыто
 

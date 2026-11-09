@@ -43,139 +43,139 @@
       "target": "frontend-react/src/assets/character-needs/monetka-mascot.webp"
     },
     {
-      "source": "archive/classic-v3/assets/Needs/student-mascot.png",
+      "source": "system/assets/Personas/student-mascot.png",
       "target": "frontend-react/src/assets/character-needs/student-mascot.png"
     },
     {
-      "source": "archive/classic-v3/assets/Needs/student-mascot.webp",
+      "source": "system/assets/Personas/student-mascot.webp",
       "target": "frontend-react/src/assets/character-needs/student-mascot.webp"
     },
     {
-      "source": "archive/classic-v3/assets/Personas/entrepreneur-mascot-dash.png",
+      "source": "system/assets/Personas/entrepreneur-mascot-dash.png",
       "target": "frontend-react/src/assets/character-portraits/entrepreneur-mascot-dash.png"
     },
     {
-      "source": "archive/classic-v3/assets/Personas/entrepreneur-mascot-dash.webp",
+      "source": "system/assets/Personas/entrepreneur-mascot-dash.webp",
       "target": "frontend-react/src/assets/character-portraits/entrepreneur-mascot-dash.webp"
     },
     {
-      "source": "archive/classic-v3/assets/Personas/entrepreneur-mascot-md.png",
+      "source": "system/assets/Personas/entrepreneur-mascot-md.png",
       "target": "frontend-react/src/assets/character-portraits/entrepreneur-mascot-md.png"
     },
     {
-      "source": "archive/classic-v3/assets/Personas/entrepreneur-mascot-md.webp",
+      "source": "system/assets/Personas/entrepreneur-mascot-md.webp",
       "target": "frontend-react/src/assets/character-portraits/entrepreneur-mascot-md.webp"
     },
     {
-      "source": "archive/classic-v3/assets/Personas/entrepreneur-mascot-pick.png",
+      "source": "system/assets/Personas/entrepreneur-mascot-pick.png",
       "target": "frontend-react/src/assets/character-portraits/entrepreneur-mascot-pick.png"
     },
     {
-      "source": "archive/classic-v3/assets/Personas/entrepreneur-mascot-pick.webp",
+      "source": "system/assets/Personas/entrepreneur-mascot-pick.webp",
       "target": "frontend-react/src/assets/character-portraits/entrepreneur-mascot-pick.webp"
     },
     {
-      "source": "archive/classic-v3/assets/Personas/entrepreneur-mascot.png",
+      "source": "system/assets/Personas/entrepreneur-mascot.png",
       "target": "frontend-react/src/assets/character-portraits/entrepreneur-mascot.png"
     },
     {
-      "source": "archive/classic-v3/assets/Personas/entrepreneur-mascot.webp",
+      "source": "system/assets/Personas/entrepreneur-mascot.webp",
       "target": "frontend-react/src/assets/character-portraits/entrepreneur-mascot.webp"
     },
     {
-      "source": "archive/classic-v3/assets/Personas/manager-mascot-dash.png",
+      "source": "system/assets/Personas/manager-mascot-dash.png",
       "target": "frontend-react/src/assets/character-portraits/manager-mascot-dash.png"
     },
     {
-      "source": "archive/classic-v3/assets/Personas/manager-mascot-dash.webp",
+      "source": "system/assets/Personas/manager-mascot-dash.webp",
       "target": "frontend-react/src/assets/character-portraits/manager-mascot-dash.webp"
     },
     {
-      "source": "archive/classic-v3/assets/Personas/manager-mascot-md.png",
+      "source": "system/assets/Personas/manager-mascot-md.png",
       "target": "frontend-react/src/assets/character-portraits/manager-mascot-md.png"
     },
     {
-      "source": "archive/classic-v3/assets/Personas/manager-mascot-md.webp",
+      "source": "system/assets/Personas/manager-mascot-md.webp",
       "target": "frontend-react/src/assets/character-portraits/manager-mascot-md.webp"
     },
     {
-      "source": "archive/classic-v3/assets/Personas/manager-mascot-pick.png",
+      "source": "system/assets/Personas/manager-mascot-pick.png",
       "target": "frontend-react/src/assets/character-portraits/manager-mascot-pick.png"
     },
     {
-      "source": "archive/classic-v3/assets/Personas/manager-mascot-pick.webp",
+      "source": "system/assets/Personas/manager-mascot-pick.webp",
       "target": "frontend-react/src/assets/character-portraits/manager-mascot-pick.webp"
     },
     {
-      "source": "archive/classic-v3/assets/Personas/manager-mascot.png",
+      "source": "system/assets/Personas/manager-mascot.png",
       "target": "frontend-react/src/assets/character-portraits/manager-mascot.png"
     },
     {
-      "source": "archive/classic-v3/assets/Personas/manager-mascot.webp",
+      "source": "system/assets/Personas/manager-mascot.webp",
       "target": "frontend-react/src/assets/character-portraits/manager-mascot.webp"
     },
     {
-      "source": "archive/classic-v3/assets/Personas/professional-mascot-dash.png",
+      "source": "system/assets/Personas/professional-mascot-dash.png",
       "target": "frontend-react/src/assets/character-portraits/professional-mascot-dash.png"
     },
     {
-      "source": "archive/classic-v3/assets/Personas/professional-mascot-dash.webp",
+      "source": "system/assets/Personas/professional-mascot-dash.webp",
       "target": "frontend-react/src/assets/character-portraits/professional-mascot-dash.webp"
     },
     {
-      "source": "archive/classic-v3/assets/Personas/professional-mascot-md.png",
+      "source": "system/assets/Personas/professional-mascot-md.png",
       "target": "frontend-react/src/assets/character-portraits/professional-mascot-md.png"
     },
     {
-      "source": "archive/classic-v3/assets/Personas/professional-mascot-md.webp",
+      "source": "system/assets/Personas/professional-mascot-md.webp",
       "target": "frontend-react/src/assets/character-portraits/professional-mascot-md.webp"
     },
     {
-      "source": "archive/classic-v3/assets/Personas/professional-mascot-pick.png",
+      "source": "system/assets/Personas/professional-mascot-pick.png",
       "target": "frontend-react/src/assets/character-portraits/professional-mascot-pick.png"
     },
     {
-      "source": "archive/classic-v3/assets/Personas/professional-mascot-pick.webp",
+      "source": "system/assets/Personas/professional-mascot-pick.webp",
       "target": "frontend-react/src/assets/character-portraits/professional-mascot-pick.webp"
     },
     {
-      "source": "archive/classic-v3/assets/Personas/professional-mascot.png",
+      "source": "system/assets/Personas/professional-mascot.png",
       "target": "frontend-react/src/assets/character-portraits/professional-mascot.png"
     },
     {
-      "source": "archive/classic-v3/assets/Personas/professional-mascot.webp",
+      "source": "system/assets/Personas/professional-mascot.webp",
       "target": "frontend-react/src/assets/character-portraits/professional-mascot.webp"
     },
     {
-      "source": "archive/classic-v3/assets/Personas/student-mascot-dash.png",
+      "source": "system/assets/Personas/student-mascot-dash.png",
       "target": "frontend-react/src/assets/character-portraits/student-mascot-dash.png"
     },
     {
-      "source": "archive/classic-v3/assets/Personas/student-mascot-dash.webp",
+      "source": "system/assets/Personas/student-mascot-dash.webp",
       "target": "frontend-react/src/assets/character-portraits/student-mascot-dash.webp"
     },
     {
-      "source": "archive/classic-v3/assets/Personas/student-mascot-md.png",
+      "source": "system/assets/Personas/student-mascot-md.png",
       "target": "frontend-react/src/assets/character-portraits/student-mascot-md.png"
     },
     {
-      "source": "archive/classic-v3/assets/Personas/student-mascot-md.webp",
+      "source": "system/assets/Personas/student-mascot-md.webp",
       "target": "frontend-react/src/assets/character-portraits/student-mascot-md.webp"
     },
     {
-      "source": "archive/classic-v3/assets/Personas/student-mascot-pick.png",
+      "source": "system/assets/Personas/student-mascot-pick.png",
       "target": "frontend-react/src/assets/character-portraits/student-mascot-pick.png"
     },
     {
-      "source": "archive/classic-v3/assets/Personas/student-mascot-pick.webp",
+      "source": "system/assets/Personas/student-mascot-pick.webp",
       "target": "frontend-react/src/assets/character-portraits/student-mascot-pick.webp"
     },
     {
-      "source": "archive/classic-v3/assets/Personas/student-mascot.png",
+      "source": "system/assets/Personas/student-mascot.png",
       "target": "frontend-react/src/assets/character-portraits/student-mascot.png"
     },
     {
-      "source": "archive/classic-v3/assets/Personas/student-mascot.webp",
+      "source": "system/assets/Personas/student-mascot.webp",
       "target": "frontend-react/src/assets/character-portraits/student-mascot.webp"
     },
     {
@@ -523,8 +523,256 @@
       "target": "frontend-react/src/index.css"
     },
     {
+      "source": "system/runtime/styles/mqx/survey.css",
+      "target": "frontend-react/src/styles/mqx/survey.css"
+    },
+    {
       "source": "system/assets/Animations/Fintech.tgs",
       "target": "frontend-react/src/assets/lottie/Fintech.tgs"
+    },
+    {
+      "source": "system/assets/Personas/student-mascot-avatar.png",
+      "target": "frontend-react/src/assets/character-portraits/student-mascot-avatar.png"
+    },
+    {
+      "source": "system/assets/Personas/student-mascot-avatar.webp",
+      "target": "frontend-react/src/assets/character-portraits/student-mascot-avatar.webp"
+    },
+    {
+      "source": "system/assets/Personas/professional-mascot-avatar.png",
+      "target": "frontend-react/src/assets/character-portraits/professional-mascot-avatar.png"
+    },
+    {
+      "source": "system/assets/Personas/professional-mascot-avatar.webp",
+      "target": "frontend-react/src/assets/character-portraits/professional-mascot-avatar.webp"
+    },
+    {
+      "source": "system/assets/Personas/manager-mascot-avatar.png",
+      "target": "frontend-react/src/assets/character-portraits/manager-mascot-avatar.png"
+    },
+    {
+      "source": "system/assets/Personas/manager-mascot-avatar.webp",
+      "target": "frontend-react/src/assets/character-portraits/manager-mascot-avatar.webp"
+    },
+    {
+      "source": "system/assets/Personas/entrepreneur-mascot-avatar.png",
+      "target": "frontend-react/src/assets/character-portraits/entrepreneur-mascot-avatar.png"
+    },
+    {
+      "source": "system/assets/Personas/entrepreneur-mascot-avatar.webp",
+      "target": "frontend-react/src/assets/character-portraits/entrepreneur-mascot-avatar.webp"
+    },
+    {
+      "source": "system/assets/Companions/student-soft-volume.png",
+      "target": "frontend-react/src/assets/companions/student.png"
+    },
+    {
+      "source": "system/assets/Companions/student-soft-volume.webp",
+      "target": "frontend-react/src/assets/companions/student.webp"
+    },
+    {
+      "source": "system/assets/Companions/professional-soft-volume.png",
+      "target": "frontend-react/src/assets/companions/professional.png"
+    },
+    {
+      "source": "system/assets/Companions/professional-soft-volume.webp",
+      "target": "frontend-react/src/assets/companions/professional.webp"
+    },
+    {
+      "source": "system/assets/Companions/manager-soft-volume.png",
+      "target": "frontend-react/src/assets/companions/manager.png"
+    },
+    {
+      "source": "system/assets/Companions/manager-soft-volume.webp",
+      "target": "frontend-react/src/assets/companions/manager.webp"
+    },
+    {
+      "source": "system/assets/Companions/entrepreneur-soft-volume.png",
+      "target": "frontend-react/src/assets/companions/entrepreneur.png"
+    },
+    {
+      "source": "system/assets/Companions/entrepreneur-soft-volume.webp",
+      "target": "frontend-react/src/assets/companions/entrepreneur.webp"
+    },
+    {
+      "source": "system/assets/Guides/coin-welcome.png",
+      "target": "frontend-react/src/assets/guides/coin-welcome.png"
+    },
+    {
+      "source": "system/assets/Guides/coin-welcome.webp",
+      "target": "frontend-react/src/assets/guides/coin-welcome.webp"
+    },
+    {
+      "source": "system/assets/Guides/coin-welcome-avatar.png",
+      "target": "frontend-react/src/assets/guides/coin-welcome-avatar.png"
+    },
+    {
+      "source": "system/assets/Guides/coin-welcome-avatar.webp",
+      "target": "frontend-react/src/assets/guides/coin-welcome-avatar.webp"
+    },
+    {
+      "source": "system/assets/Guides/coin-wink.png",
+      "target": "frontend-react/src/assets/guides/coin-wink.png"
+    },
+    {
+      "source": "system/assets/Guides/coin-wink.webp",
+      "target": "frontend-react/src/assets/guides/coin-wink.webp"
+    },
+    {
+      "source": "system/assets/Guides/coin-wink-avatar.png",
+      "target": "frontend-react/src/assets/guides/coin-wink-avatar.png"
+    },
+    {
+      "source": "system/assets/Guides/coin-wink-avatar.webp",
+      "target": "frontend-react/src/assets/guides/coin-wink-avatar.webp"
+    },
+    {
+      "source": "system/assets/Guides/coin-surprised.png",
+      "target": "frontend-react/src/assets/guides/coin-surprised.png"
+    },
+    {
+      "source": "system/assets/Guides/coin-surprised.webp",
+      "target": "frontend-react/src/assets/guides/coin-surprised.webp"
+    },
+    {
+      "source": "system/assets/Guides/coin-surprised-avatar.png",
+      "target": "frontend-react/src/assets/guides/coin-surprised-avatar.png"
+    },
+    {
+      "source": "system/assets/Guides/coin-surprised-avatar.webp",
+      "target": "frontend-react/src/assets/guides/coin-surprised-avatar.webp"
+    },
+    {
+      "source": "system/assets/Guides/coin-think.png",
+      "target": "frontend-react/src/assets/guides/coin-think.png"
+    },
+    {
+      "source": "system/assets/Guides/coin-think.webp",
+      "target": "frontend-react/src/assets/guides/coin-think.webp"
+    },
+    {
+      "source": "system/assets/Guides/coin-think-avatar.png",
+      "target": "frontend-react/src/assets/guides/coin-think-avatar.png"
+    },
+    {
+      "source": "system/assets/Guides/coin-think-avatar.webp",
+      "target": "frontend-react/src/assets/guides/coin-think-avatar.webp"
+    },
+    {
+      "source": "system/assets/Guides/coin-joy.png",
+      "target": "frontend-react/src/assets/guides/coin-joy.png"
+    },
+    {
+      "source": "system/assets/Guides/coin-joy.webp",
+      "target": "frontend-react/src/assets/guides/coin-joy.webp"
+    },
+    {
+      "source": "system/assets/Guides/coin-joy-avatar.png",
+      "target": "frontend-react/src/assets/guides/coin-joy-avatar.png"
+    },
+    {
+      "source": "system/assets/Guides/coin-joy-avatar.webp",
+      "target": "frontend-react/src/assets/guides/coin-joy-avatar.webp"
+    },
+    {
+      "source": "system/assets/Guides/coin-worried.png",
+      "target": "frontend-react/src/assets/guides/coin-worried.png"
+    },
+    {
+      "source": "system/assets/Guides/coin-worried.webp",
+      "target": "frontend-react/src/assets/guides/coin-worried.webp"
+    },
+    {
+      "source": "system/assets/Guides/coin-worried-avatar.png",
+      "target": "frontend-react/src/assets/guides/coin-worried-avatar.png"
+    },
+    {
+      "source": "system/assets/Guides/coin-worried-avatar.webp",
+      "target": "frontend-react/src/assets/guides/coin-worried-avatar.webp"
+    },
+    {
+      "source": "system/assets/Guides/coin-victory.png",
+      "target": "frontend-react/src/assets/guides/coin-victory.png"
+    },
+    {
+      "source": "system/assets/Guides/coin-victory.webp",
+      "target": "frontend-react/src/assets/guides/coin-victory.webp"
+    },
+    {
+      "source": "system/assets/Guides/coin-victory-avatar.png",
+      "target": "frontend-react/src/assets/guides/coin-victory-avatar.png"
+    },
+    {
+      "source": "system/assets/Guides/coin-victory-avatar.webp",
+      "target": "frontend-react/src/assets/guides/coin-victory-avatar.webp"
+    },
+    {
+      "source": "system/assets/Guides/kvitya-default.png",
+      "target": "frontend-react/src/assets/guides/kvitya-default.png"
+    },
+    {
+      "source": "system/assets/Guides/kvitya-default.webp",
+      "target": "frontend-react/src/assets/guides/kvitya-default.webp"
+    },
+    {
+      "source": "system/assets/Guides/kvitya-joy.png",
+      "target": "frontend-react/src/assets/guides/kvitya-joy.png"
+    },
+    {
+      "source": "system/assets/Guides/kvitya-joy.webp",
+      "target": "frontend-react/src/assets/guides/kvitya-joy.webp"
+    },
+    {
+      "source": "system/assets/Guides/kvitya-think.png",
+      "target": "frontend-react/src/assets/guides/kvitya-think.png"
+    },
+    {
+      "source": "system/assets/Guides/kvitya-think.webp",
+      "target": "frontend-react/src/assets/guides/kvitya-think.webp"
+    },
+    {
+      "source": "system/illustrations/soft-volume/landing-poses/student-introduce.webp",
+      "target": "landing/site/assets/student-introduce.webp"
+    },
+    {
+      "source": "system/illustrations/soft-volume/landing-poses/student-introduce.webp",
+      "target": "design-lab/landing-refresh-20261030/dist/assets/student-introduce.webp"
+    },
+    {
+      "source": "system/illustrations/soft-volume/landing-poses/professional-explain.webp",
+      "target": "landing/site/assets/professional-explain.webp"
+    },
+    {
+      "source": "system/illustrations/soft-volume/landing-poses/professional-explain.webp",
+      "target": "design-lab/landing-refresh-20261030/dist/assets/professional-explain.webp"
+    },
+    {
+      "source": "system/illustrations/soft-volume/landing-poses/manager-choice.webp",
+      "target": "landing/site/assets/manager-choice.webp"
+    },
+    {
+      "source": "system/illustrations/soft-volume/landing-poses/manager-choice.webp",
+      "target": "design-lab/landing-refresh-20261030/dist/assets/manager-choice.webp"
+    },
+    {
+      "source": "system/illustrations/soft-volume/landing-poses/entrepreneur-roadmap.webp",
+      "target": "landing/site/assets/entrepreneur-roadmap.webp"
+    },
+    {
+      "source": "system/illustrations/soft-volume/landing-poses/entrepreneur-roadmap.webp",
+      "target": "design-lab/landing-refresh-20261030/dist/assets/entrepreneur-roadmap.webp"
+    },
+    {
+      "source": "system/runtime/styles/mqx/pocket-board.css",
+      "target": "frontend-react/src/styles/mqx/pocket-board.css"
+    },
+    {
+      "source": "system/runtime/styles/mqx/pocket-surfaces.css",
+      "target": "frontend-react/src/styles/mqx/pocket-surfaces.css"
+    },
+    {
+      "source": "system/runtime/styles/mqx/guest-welcome.css",
+      "target": "frontend-react/src/styles/mqx/guest-welcome.css"
     }
   ]
 }

@@ -20,6 +20,10 @@ cd frontend-react
 npm run design-lab:check-rounds   # self-contained CSS (./lab-base.css, без ../)
 npm run design-lab:build            # check → parity → check
 # или только дашборд:
+
+**Раздельные входы:** [Game](index.html?product=game) · [Plan](index.html?product=plan).
+Процессы: [Game design](../docs/game/DESIGN.md) · [Plan design](../docs/plan/DESIGN.md).
+Игровой MQX workflow ниже относится к Game; Plan использует свой процесс.
 npm run design-lab:build-dashboard-page-round
 ```
 
@@ -35,7 +39,15 @@ cd design-lab/<тема>/<round>
 
 Конфиг ссылок: [`nav.manifest.json`](nav.manifest.json) · канон дашборда: [`dashboard/canon.manifest.json`](dashboard/canon.manifest.json).
 
-**Когда что использовать (хаб / round / parity / dev):** [`docs/agents/DESIGN_LAB_NAVIGATION.md`](../docs/agents/DESIGN_LAB_NAVIGATION.md).
+### Актуальное и архив
+
+По умолчанию хаб показывает актуальные витрины и открытые review. Заменённые раунды доступны через кнопку **Архив** или [прямой вход в архив](index.html?archive=1). Первая очередь — прежние варианты главной и маскотов, заменённые утверждённым каноном 04.11.2026.
+
+Реестр — `archive.paths` в `nav.manifest.json`; статусы `archived` и `superseded` также скрываются. Адреса сохраняются ради ссылок из решений и сравнений. Архивный раунд не является источником текущего оформления. Review не архивируется автоматически. Удаление файлов — отдельный последующий срез после проверки входящих ссылок и зависимостей генераторов.
+
+Текущая главная: [current-page-round](dashboard/current-page-round/). Историческое утверждение в архиве относится к решению на дату, а не к действующему канону.
+
+**Когда что использовать (хаб / round / parity / dev):** [`docs/game/agents/DESIGN_LAB_NAVIGATION.md`](../docs/game/agents/DESIGN_LAB_NAVIGATION.md).
 
 ## Папки
 

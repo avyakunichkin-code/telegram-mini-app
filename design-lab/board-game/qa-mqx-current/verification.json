@@ -1,0 +1,18 @@
+{
+  "ok": true,
+  "widths": [
+    1440,
+    390
+  ],
+  "themes": [
+    "light",
+    "dark"
+  ],
+  "checks": [
+    "primitives",
+    "segment switching",
+    "salary and reset",
+    "cancel/delete/buy in capital sheet"
+  ],
+  "errors": []
+}

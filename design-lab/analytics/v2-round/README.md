@@ -31,12 +31,12 @@ npx serve .
 
 ## Варианты
 
-См. [VARIANTS.md](./VARIANTS.md).
+См. [VARIANTS.md](VARIANTS.md).
 
 ## Spec
 
-- [`SPEC_ANALYTICS`](../../../docs/specs/SPEC_ANALYTICS.md)
-- [`player-financial-analytics-an1`](../../../docs/vision/ideas/player-financial-analytics-an1.md)
+- [`SPEC_ANALYTICS`](../../../docs/game/specs/SPEC_ANALYTICS.md)
+- [`player-financial-analytics-an1`](../../../docs/game/vision/ideas/player-financial-analytics-an1.md)
 
 ## Статус
 

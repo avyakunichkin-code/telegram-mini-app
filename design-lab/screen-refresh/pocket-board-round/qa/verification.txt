@@ -1,0 +1,1 @@
+PASS: 192 layout/state checks; 16 priority-group viewport checks (320x640 through 430x932); 44x44 close target and edge click, hint placement/dismiss/navigation/new turn; salary once, transfer, event, closing; 11 additional dialogs; mobile iframe and side-by-side comparison; no page errors/HTTP failures; previous prototype SHA256 unchanged.

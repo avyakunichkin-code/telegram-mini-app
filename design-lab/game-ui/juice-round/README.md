@@ -22,7 +22,7 @@ npx serve .
 | **C** | Turn ritual | После «Закрыть месяц» |
 | **D** | Warning | Modal без зарплаты |
 
-Подробнее: [VARIANTS.md](./VARIANTS.md)
+Подробнее: [VARIANTS.md](VARIANTS.md)
 
 ## Утверждение
 
@@ -30,5 +30,5 @@ npx serve .
 
 ## Связанные docs
 
-- Идея: `docs/vision/ideas/game-ui-juice-and-tab-modes.md` (после сохранения one-pager)
+- Идея: `docs/game/vision/ideas/game-ui-juice-and-tab-modes.md` (после сохранения one-pager)
 - MQX процесс: `frontend-react/src/components/mqx/DESIGN_WORKFLOW.md`

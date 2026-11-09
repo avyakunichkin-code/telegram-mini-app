@@ -1,0 +1,148 @@
+{
+  "ok": true,
+  "checks": [
+    {
+      "width": 1440,
+      "theme": "light",
+      "state": "ready"
+    },
+    {
+      "width": 1440,
+      "theme": "light",
+      "state": "paid"
+    },
+    {
+      "width": 1440,
+      "theme": "light",
+      "state": "events"
+    },
+    {
+      "width": 1440,
+      "theme": "light",
+      "state": "risk"
+    },
+    {
+      "width": 1440,
+      "theme": "light",
+      "state": "loading"
+    },
+    {
+      "width": 1440,
+      "theme": "light",
+      "state": "error"
+    },
+    {
+      "width": 1440,
+      "theme": "light",
+      "state": "empty"
+    },
+    {
+      "width": 1440,
+      "theme": "dark",
+      "state": "ready"
+    },
+    {
+      "width": 1440,
+      "theme": "dark",
+      "state": "paid"
+    },
+    {
+      "width": 1440,
+      "theme": "dark",
+      "state": "events"
+    },
+    {
+      "width": 1440,
+      "theme": "dark",
+      "state": "risk"
+    },
+    {
+      "width": 1440,
+      "theme": "dark",
+      "state": "loading"
+    },
+    {
+      "width": 1440,
+      "theme": "dark",
+      "state": "error"
+    },
+    {
+      "width": 1440,
+      "theme": "dark",
+      "state": "empty"
+    },
+    {
+      "width": 390,
+      "theme": "light",
+      "state": "ready"
+    },
+    {
+      "width": 390,
+      "theme": "light",
+      "state": "paid"
+    },
+    {
+      "width": 390,
+      "theme": "light",
+      "state": "events"
+    },
+    {
+      "width": 390,
+      "theme": "light",
+      "state": "risk"
+    },
+    {
+      "width": 390,
+      "theme": "light",
+      "state": "loading"
+    },
+    {
+      "width": 390,
+      "theme": "light",
+      "state": "error"
+    },
+    {
+      "width": 390,
+      "theme": "light",
+      "state": "empty"
+    },
+    {
+      "width": 390,
+      "theme": "dark",
+      "state": "ready"
+    },
+    {
+      "width": 390,
+      "theme": "dark",
+      "state": "paid"
+    },
+    {
+      "width": 390,
+      "theme": "dark",
+      "state": "events"
+    },
+    {
+      "width": 390,
+      "theme": "dark",
+      "state": "risk"
+    },
+    {
+      "width": 390,
+      "theme": "dark",
+      "state": "loading"
+    },
+    {
+      "width": 390,
+      "theme": "dark",
+      "state": "error"
+    },
+    {
+      "width": 390,
+      "theme": "dark",
+      "state": "empty"
+    }
+  ],
+  "generatedParity": "same bytes + native hierarchy + working navigation",
+  "errors": [],
+  "httpErrors": []
+}

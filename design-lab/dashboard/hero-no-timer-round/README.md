@@ -16,8 +16,8 @@ npx serve .
 
 - [`CONTENT.md`](CONTENT.md) — копирайт и видение
 - [`VARIANTS.md`](VARIANTS.md) — H1 / H2 / H3, ★ FINAL
-- Idea: [`docs/vision/ideas/turn-based-period-no-timer.md`](../../../docs/vision/ideas/turn-based-period-no-timer.md)
-- Plan: [`docs/plans/PLAN_turn-based-period-no-timer.md`](../../../docs/plans/PLAN_turn-based-period-no-timer.md)
+- Idea: [`docs/game/vision/ideas/turn-based-period-no-timer.md`](../../../docs/game/vision/ideas/turn-based-period-no-timer.md)
+- Plan: [`docs/game/plans/PLAN_turn-based-period-no-timer.md`](../../../docs/game/plans/PLAN_turn-based-period-no-timer.md)
 
 ## Prod
 

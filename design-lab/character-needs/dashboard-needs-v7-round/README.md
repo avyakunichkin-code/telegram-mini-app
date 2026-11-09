@@ -10,4 +10,4 @@ npx serve .
 
 Хаб: **Z-NEEDS v7 (плоский блок)**.
 
-См. [`VARIANTS.md`](./VARIANTS.md).
+См. [`VARIANTS.md`](VARIANTS.md).

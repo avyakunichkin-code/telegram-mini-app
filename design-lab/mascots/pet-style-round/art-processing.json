@@ -1,0 +1,242 @@
+{
+  "student-a": {
+    "id": "student-a",
+    "source_size": [
+      1476,
+      1065
+    ],
+    "split_x_in_trimmed": 520,
+    "person_size": [
+      486,
+      1014
+    ],
+    "mate_size": [
+      497,
+      494
+    ],
+    "presentation_size": [
+      1050,
+      760
+    ]
+  },
+  "student-b": {
+    "id": "student-b",
+    "source_size": [
+      1476,
+      1065
+    ],
+    "split_x_in_trimmed": 527,
+    "person_size": [
+      508,
+      1036
+    ],
+    "mate_size": [
+      514,
+      501
+    ],
+    "presentation_size": [
+      1050,
+      760
+    ]
+  },
+  "pro-a": {
+    "id": "pro-a",
+    "source_size": [
+      1476,
+      1065
+    ],
+    "split_x_in_trimmed": 494,
+    "person_size": [
+      486,
+      1021
+    ],
+    "mate_size": [
+      486,
+      414
+    ],
+    "presentation_size": [
+      1050,
+      760
+    ]
+  },
+  "pro-b": {
+    "id": "pro-b",
+    "source_size": [
+      1476,
+      1065
+    ],
+    "split_x_in_trimmed": "connected-components",
+    "person_size": [
+      523,
+      1023
+    ],
+    "mate_size": [
+      554,
+      443
+    ],
+    "presentation_size": [
+      1050,
+      760
+    ]
+  },
+  "boss-a": {
+    "id": "boss-a",
+    "source_size": [
+      1476,
+      1065
+    ],
+    "split_x_in_trimmed": "connected-components",
+    "person_size": [
+      541,
+      981
+    ],
+    "mate_size": [
+      562,
+      503
+    ],
+    "presentation_size": [
+      1050,
+      760
+    ]
+  },
+  "boss-b": {
+    "id": "boss-b",
+    "source_size": [
+      1476,
+      1065
+    ],
+    "split_x_in_trimmed": "connected-components",
+    "person_size": [
+      583,
+      1021
+    ],
+    "mate_size": [
+      554,
+      519
+    ],
+    "presentation_size": [
+      1050,
+      760
+    ]
+  },
+  "biz-a": {
+    "id": "biz-a",
+    "source_size": [
+      1476,
+      1065
+    ],
+    "split_x_in_trimmed": 476,
+    "person_size": [
+      464,
+      1020
+    ],
+    "mate_size": [
+      417,
+      520
+    ],
+    "presentation_size": [
+      1050,
+      760
+    ]
+  },
+  "biz-b": {
+    "id": "biz-b",
+    "source_size": [
+      1476,
+      1065
+    ],
+    "split_x_in_trimmed": "connected-components",
+    "person_size": [
+      525,
+      1043
+    ],
+    "mate_size": [
+      435,
+      555
+    ],
+    "presentation_size": [
+      1050,
+      760
+    ]
+  },
+  "student-before": {
+    "id": "student-before",
+    "source_size": [
+      1800,
+      1300
+    ],
+    "split_x_in_trimmed": 614,
+    "person_size": [
+      488,
+      891
+    ],
+    "mate_size": [
+      582,
+      514
+    ],
+    "presentation_size": [
+      1050,
+      760
+    ]
+  },
+  "pro-before": {
+    "id": "pro-before",
+    "source_size": [
+      1800,
+      1300
+    ],
+    "split_x_in_trimmed": 607,
+    "person_size": [
+      483,
+      828
+    ],
+    "mate_size": [
+      600,
+      432
+    ],
+    "presentation_size": [
+      1050,
+      760
+    ]
+  },
+  "boss-before": {
+    "id": "boss-before",
+    "source_size": [
+      1800,
+      1300
+    ],
+    "split_x_in_trimmed": 604,
+    "person_size": [
+      480,
+      790
+    ],
+    "mate_size": [
+      585,
+      490
+    ],
+    "presentation_size": [
+      1050,
+      760
+    ]
+  },
+  "biz-before": {
+    "id": "biz-before",
+    "source_size": [
+      1800,
+      1300
+    ],
+    "split_x_in_trimmed": 636,
+    "person_size": [
+      480,
+      875
+    ],
+    "mate_size": [
+      447,
+      541
+    ],
+    "presentation_size": [
+      1050,
+      760
+    ]
+  }
+}

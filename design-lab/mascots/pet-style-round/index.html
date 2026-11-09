@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="ru" data-theme="light">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="color-scheme" content="light dark" />
+  <title>ТВОЙ ХОД · Маскоты в стиле питомца</title>
+  <link rel="stylesheet" href="./lab-base.css" />
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="#top" aria-label="В начало витрины">ТВОЙ ХОД<span>Дизайн-лаборатория</span></a>
+    <div class="topbar__end"><span class="review-label">★ Утверждён B · Мягкий объём</span><button id="theme-toggle" type="button" aria-pressed="false">Тёмная тема</button></div>
+  </header>
+  <main id="top">
+    <section class="intro" aria-labelledby="page-title">
+      <div><p class="eyebrow">Маскоты / Новый рисунок, знакомые герои</p><h1 id="page-title">Те же герои.<br><span>Больше характера.</span></h1><p class="intro__copy">Переносим выразительность питомца в мир «ТВОЙ ХОД»: живые лица, аккуратный контур и напарники, с которыми хочется познакомиться.</p></div>
+      <aside class="direction-note"><span class="direction-note__mark" aria-hidden="true">↗</span><b>Сохраняем идею каждой пары</b><p>Студент и студбилет. Профессионал и карта. Руководитель и портфель. Предприниматель и смартфон.</p><small>Меняем графику. Роли и характеры остаются.</small></aside>
+    </section>
+
+    <section class="explorer" aria-labelledby="compare-title">
+      <div class="section-head"><div><p class="eyebrow">01 / Сравнение рисунка</p><h2 id="compare-title">Выберите знакомую пару</h2></div><p>Два исполнения в одной стилистике</p></div>
+      <div class="persona-tabs" role="group" aria-label="Пара персонажей">
+        <button type="button" data-persona="student" aria-pressed="true">Студент<span>Студбилет</span></button>
+        <button type="button" data-persona="pro" aria-pressed="false">Профессионал<span>Зарплатная карта</span></button>
+        <button type="button" data-persona="boss" aria-pressed="false">Руководитель<span>Портфель</span></button>
+        <button type="button" data-persona="biz" aria-pressed="false">Предприниматель<span>Смартфон</span></button>
+      </div>
+      <p class="pair-description" id="pair-description" aria-live="polite"></p>
+      <div class="compare-grid">
+        <figure class="art-card art-card--before"><figcaption><span class="card-letter">До</span><div><h3>Исходный lab</h3><p>Идея, одежда и цветовые роли</p></div></figcaption><div class="art-stage"><img id="current-art" src="./assets/student-before.webp" alt="Исходная пара: Студент и Студбилет" /></div><footer>Точка сравнения · текущий рисунок</footer></figure>
+        <figure class="art-card"><figcaption><span class="card-letter">A</span><div><h3>Чёткий стикер</h3><p>Ближе всего к стилю питомца</p></div></figcaption><div class="art-stage"><img id="art-a" src="./assets/student-a.webp" alt="Студент и Студбилет — вариант A" /></div><footer>Чистые формы · ясные тени · живые глаза</footer></figure>
+        <figure class="art-card"><figcaption><span class="card-letter card-letter--soft">B</span><div><h3>Мягкий объём</h3><p>Тот же мир, более мягкий свет</p></div></figcaption><div class="art-stage"><img id="art-b" src="./assets/student-b.webp" alt="Студент и Студбилет — вариант B" /></div><footer>Округлые формы · плавные блики · тёплый свет</footer></figure>
+      </div>
+    </section>
+
+    <section class="family" aria-labelledby="family-title">
+      <div class="section-head"><div><p class="eyebrow">02 / Единая семья</p><h2 id="family-title">Четыре жизни. Четыре напарника.</h2></div><div class="variant-switch" role="group" aria-label="Вариант для всей семьи"><button data-variant="a" type="button" aria-pressed="true">A · Чёткий стикер</button><button data-variant="b" type="button" aria-pressed="false">B · Мягкий объём</button></div></div>
+      <div class="family-grid" id="family-grid"></div>
+    </section>
+
+    <section class="contexts" aria-labelledby="context-title">
+      <div class="section-head"><div><p class="eyebrow">03 / Проверка масштаба</p><h2 id="context-title">От иллюстрации до маленького аватара</h2></div><p id="context-variant">Вариант A · Студент</p></div>
+      <div class="context-grid">
+        <article class="context-card"><p class="context-caption">Выбор жизни · только персонаж</p><div class="scenario"><div><span class="mini-label">Твоя новая жизнь</span><h3 data-bind="name"></h3><p data-bind="line"></p></div><img id="pick-art" src="./assets/student-a-person.webp" alt="Студент на карточке выбора" /></div><p class="context-footnote">Напарник появляется после выбора роли.</p></article>
+        <article class="context-card"><p class="context-caption">Знакомство · персонаж и напарник</p><div class="meet"><h3>Знакомься, <span data-bind="mateLower"></span></h3><img id="meet-art" src="./assets/student-a.webp" alt="Знакомство Студента со Студбилетом" /><p data-bind="intro"></p></div></article>
+        <article class="context-card"><p class="context-caption">Маленький размер · лицо и силуэт</p><div class="scale-row"><div><img class="scale-face" id="avatar-art" src="./assets/student-a-avatar.webp" alt="Аватар Студента, 40 пикселей" /><span>40 px</span></div><div><img class="scale-mate" id="mate-small" src="./assets/student-a-mate.webp" alt="Студбилет, 56 пикселей" /><span>56 px</span></div><div><img class="scale-person" id="person-small" src="./assets/student-a-person.webp" alt="Студент, 108 пикселей" /><span>108 px</span></div></div><div class="guidance"><img id="guide-art" src="./assets/student-a-mate.webp" alt="" /><p><b data-bind="mate"></b><span>Давай начнём с первого хода. Я рядом!</span></p></div></article>
+      </div>
+    </section>
+
+    <section class="principles" aria-labelledby="principles-title"><div><p class="eyebrow">Ориентир для обсуждения</p><h2 id="principles-title">Узнаваемые, даже когда маленькие.</h2><p>Проверяем не только большой красивый рисунок: важно сохранить лицо, характер предмета и цвет пары в реальном размере.</p></div><ul><li><b>Персонажи различаются</b><span>Возраст, причёска, одежда и характер — у каждого свои.</span></li><li><b>Напарник остаётся предметом</b><span>Студбилет, карта, портфель и смартфон читаются с первого взгляда.</span></li><li><b>Одна графическая система</b><span>Пропорции, глаза, контур и освещение связывают всю семью.</span></li></ul></section>
+    <footer class="page-footer"><span>ТВОЙ ХОД · Маскоты · 03.11.2026</span><span>★ B · Мягкий объём утверждён для всех четырёх пар.</span></footer>
+  </main>
+  <script src="./round.js"></script>
+</body>
+</html>

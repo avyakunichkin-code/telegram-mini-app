@@ -36,7 +36,7 @@ cd design-lab/events
 
 В `index.html` только `./lab-base.css` и `./styles.css` — без `../`.
 
-Ideation: [`IDEATION.md`](./IDEATION.md) · эпик: [`docs/vision/ideas/mqx-ui-unification.md`](../../docs/vision/ideas/mqx-ui-unification.md).
+Ideation: [`IDEATION.md`](IDEATION.md) · эпик: [`docs/game/vision/ideas/mqx-ui-unification.md`](../../docs/game/vision/ideas/mqx-ui-unification.md).
 
 ## Раунд 1 (legacy)
 

@@ -1,6 +1,6 @@
 # Round: Treat-self sheet
 
-**UX:** [`docs/ux/screens/character-needs-treat-self.md`](../../../docs/ux/screens/character-needs-treat-self.md)
+**UX:** [`docs/game/ux/screens/character-needs-treat-self.md`](../../../docs/game/ux/screens/character-needs-treat-self.md)
 
 ## Варианты
 

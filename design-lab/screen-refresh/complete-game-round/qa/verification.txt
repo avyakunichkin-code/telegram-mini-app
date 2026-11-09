@@ -1,0 +1,1 @@
+PASS: 144 page/direction/width/state combinations; 63 modal checks; current canon iframe; transfer, event, closing and salary; no horizontal overflow, page errors or HTTP failures.

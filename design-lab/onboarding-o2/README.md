@@ -6,7 +6,7 @@
 
 | Раунд | Компонент | Статус |
 |-------|-----------|--------|
-| [`guidance-strip-round/`](./guidance-strip-round/) | `MqxGuidanceStrip` | **A ★ prod parity** (retroactive) |
+| [`guidance-strip-round/`](guidance-strip-round/) | `MqxGuidanceStrip` | **A ★ prod parity** (retroactive) |
 
 **Prod:** `frontend-react/src/components/mqx/guidance/MqxGuidanceStrip.jsx`, `styles/mqx/guidance.css`.
 

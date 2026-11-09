@@ -245,3 +245,60 @@
   flex-wrap: wrap;
   gap: var(--mq-sp-3);
 }
+
+/* Лента решений ★ вариант Б, recap-round (09.11.2026). */
+.mqx-run-finale-recap {
+  width: 100%;
+  display: grid;
+  gap: var(--mq-sp-3);
+  text-align: left;
+}
+
+.mqx-run-finale-recap__label {
+  margin: 0;
+  color: var(--mq-board-ink-soft);
+  font-size: var(--mq-fs-caption);
+}
+
+.mqx-run-finale-recap__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: var(--mq-sp-3);
+}
+
+.mqx-run-finale-recap__item {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 1px var(--mq-sp-4);
+  align-items: center;
+  padding: var(--mq-sp-3) var(--mq-sp-4);
+  border: 1px solid var(--mq-cell-edge);
+  border-radius: var(--mq-r-cell);
+  background: var(--mq-cell);
+}
+
+.mqx-run-finale-recap__meta {
+  grid-column: 1 / -1;
+  color: var(--mq-board-ink-soft);
+  font-size: var(--mq-fs-caption);
+  overflow-wrap: anywhere;
+}
+
+.mqx-run-finale-recap__choice {
+  min-width: 0;
+  font-size: var(--mq-fs-note);
+  overflow-wrap: anywhere;
+}
+
+.mqx-run-finale-recap__amount {
+  font-style: normal;
+  font-weight: 700;
+  font-size: var(--mq-fs-note);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.mqx-run-finale-recap__amount--gain { color: var(--mq-gain); }
+.mqx-run-finale-recap__amount--risk { color: var(--mq-risk); }

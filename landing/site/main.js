@@ -10,8 +10,12 @@ document.querySelectorAll('[data-choice]').forEach(button => button.addEventList
   result.replaceChildren();
   const strong = document.createElement('strong'); strong.textContent = title;
   const paragraph = document.createElement('p'); paragraph.textContent = body;
-  result.append(strong, paragraph); result.hidden = false; reset.hidden = false;
+  const play = document.createElement('a'); play.className = 'play small result-cta';
+  play.href = document.querySelector('.hero-actions .play').href; play.textContent = 'Сыграть всю партию ↗';
+  result.append(strong, paragraph, play); result.hidden = false; reset.hidden = false;
   document.querySelector('.choices').hidden = true;
+  // The pressed button is now hidden: keep keyboard and screen-reader users on the outcome.
+  result.tabIndex = -1; result.focus();
 }));
 reset.addEventListener('click', () => {
   result.hidden = true; reset.hidden = true; document.querySelector('.choices').hidden = false;
@@ -37,3 +41,14 @@ document.querySelectorAll('.example-grid iframe').forEach(frame => {
   frame.addEventListener('load', fit);
   fit();
 });
+
+// Phones have no menu or fixed header: keep the main action within reach between the hero and final CTAs.
+const mobileCta = document.querySelector('#mobile-cta');
+if (mobileCta && 'IntersectionObserver' in window) {
+  const onScreen = new Set();
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => entry.isIntersecting ? onScreen.add(entry.target) : onScreen.delete(entry.target));
+    mobileCta.classList.toggle('is-visible', onScreen.size === 0);
+  });
+  document.querySelectorAll('.hero, .choice-card, .final, footer').forEach(target => observer.observe(target));
+}

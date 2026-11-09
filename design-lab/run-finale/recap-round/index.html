@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="ru" data-font="f3">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>ТВОЙ ХОД — разбор партии в финале</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700&family=Nunito:wght@800;900&display=swap" />
+    <link rel="stylesheet" href="./lab-base.css" />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <header class="lab-head">
+      <h1>Разбор партии в финале — раунд на выбор</h1>
+      <p>Статус: <b>review</b>, не утверждено. Одна демо-партия во всех вариантах: суммы и решения условные. Показываем только факты: что выбрал и сколько это стоило. Причинность не утверждаем.</p>
+      <div class="lab-controls">
+        <span>Тема</span>
+        <button class="lab-toggle" type="button" data-set-theme="light" aria-pressed="true">Светлая</button>
+        <button class="lab-toggle" type="button" data-set-theme="dark" aria-pressed="false">Тёмная</button>
+      </div>
+    </header>
+
+    <main class="lab-grid s-grid">
+      <section class="variant" aria-labelledby="a">
+        <header>
+          <h2 id="a">А · График с отметками</h2>
+          <p>Сначала форма всей партии, затем три отметки с расшифровкой. Больше всего данных на экране.</p>
+        </header>
+        <div class="phone s-phone s-phone--bare f-phone">
+          <div class="s-finish">
+            <div class="s-finish__cell r-cell--small"><img src="./assets/student-mascot-cup-dash.png" alt="" /></div>
+            <h4>Цель пройдена!</h4>
+            <div class="s-finish__stats">
+              <div><b>38</b><small>ходов</small></div>
+              <div><b class="bg-money">412 000 ₽</b><small>на счёте</small></div>
+              <div><b>6,1</b><small>ходов подушки</small></div>
+            </div>
+            <figure class="r-chart">
+              <figcaption>Деньги за партию: счёт и подушка минус долги</figcaption>
+              <svg viewBox="0 0 300 120" role="img" aria-label="Деньги росли с 15 тысяч до 457 тысяч рублей, просадка на ходу 13">
+                <polyline class="r-line" points="6,112 44,98 80,84 104,92 140,72 190,52 240,30 294,10" />
+                <g class="r-mark"><circle cx="44" cy="98" r="9" /><text x="44" y="102">1</text></g>
+                <g class="r-mark"><circle cx="104" cy="92" r="9" /><text x="104" y="96">2</text></g>
+                <g class="r-mark"><circle cx="190" cy="52" r="9" /><text x="190" y="56">3</text></g>
+              </svg>
+            </figure>
+            <ol class="r-list">
+              <li><b>Ход 5.</b> Взял подработку с авансом: +8 000 ₽</li>
+              <li><b>Ход 13.</b> Купил ноутбук в рассрочку: −48 000 ₽</li>
+              <li><b>Ход 24.</b> Открыл вклад: 120 000 ₽</li>
+            </ol>
+            <button class="bg-action" type="button">Играть дальше</button>
+            <button class="s-btn" type="button">Новая игра <small>другая жизнь</small></button>
+            <button class="s-link" type="button">Поделиться итогом</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="variant" aria-labelledby="b">
+        <header>
+          <h2 id="b">Б · Лента решений</h2>
+          <p>Партия как короткая история. Без графика: читается быстрее, но форма партии не видна.</p>
+        </header>
+        <div class="phone s-phone s-phone--bare f-phone">
+          <div class="s-finish">
+            <div class="s-finish__cell r-cell--small"><img src="./assets/student-mascot-cup-dash.png" alt="" /></div>
+            <h4>Цель пройдена!</h4>
+            <div class="s-finish__stats">
+              <div><b>38</b><small>ходов</small></div>
+              <div><b class="bg-money">412 000 ₽</b><small>на счёте</small></div>
+              <div><b>6,1</b><small>ходов подушки</small></div>
+            </div>
+            <ol class="r-feed" aria-label="Решения партии">
+              <li><span>Ход 5</span><b>Подработка с авансом</b><em class="r-gain">+8 000 ₽</em></li>
+              <li><span>Ход 13</span><b>Ноутбук в рассрочку</b><em class="r-risk">−48 000 ₽</em></li>
+              <li><span>Ход 24</span><b>Вклад</b><em>120 000 ₽ вложено</em></li>
+            </ol>
+            <button class="bg-action" type="button">Играть дальше</button>
+            <button class="s-btn" type="button">Новая игра <small>другая жизнь</small></button>
+            <button class="s-link" type="button">Поделиться итогом</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="variant" aria-labelledby="c">
+        <header>
+          <h2 id="c">В · Один поворот</h2>
+          <p>Спокойнее всего: маленький график и одно главное решение. Остальное — по кнопке «Вся партия».</p>
+        </header>
+        <div class="phone s-phone s-phone--bare f-phone">
+          <div class="s-finish">
+            <div class="s-finish__cell r-cell--small"><img src="./assets/student-mascot-cup-dash.png" alt="" /></div>
+            <h4>Цель пройдена!</h4>
+            <div class="s-finish__stats">
+              <div><b>38</b><small>ходов</small></div>
+              <div><b class="bg-money">412 000 ₽</b><small>на счёте</small></div>
+              <div><b>6,1</b><small>ходов подушки</small></div>
+            </div>
+            <article class="r-turn">
+              <small>Самая крупная трата партии · ход 13</small>
+              <b>Ноутбук в рассрочку: −48 000 ₽</b>
+              <svg viewBox="0 0 300 60" role="img" aria-label="Деньги за партию с просадкой на ходу 13">
+                <polyline class="r-line" points="6,56 44,49 80,42 104,46 140,36 190,26 240,15 294,5" />
+                <circle class="r-dot" cx="104" cy="46" r="5" />
+              </svg>
+            </article>
+            <button class="s-btn" type="button">Вся партия <small>3 решения</small></button>
+            <button class="bg-action" type="button">Играть дальше</button>
+            <button class="s-btn" type="button">Новая игра <small>другая жизнь</small></button>
+            <button class="s-link" type="button">Поделиться итогом</button>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <script>
+      (function () {
+        var root = document.documentElement;
+        document.addEventListener('click', function (e) {
+          var t = e.target.closest('[data-set-theme]');
+          if (!t) return;
+          root.setAttribute('data-theme', t.dataset.setTheme);
+          document.querySelectorAll('[data-set-theme]').forEach(function (b) {
+            b.setAttribute('aria-pressed', String(b === t));
+          });
+        });
+      })();
+    </script>
+  </body>
+</html>

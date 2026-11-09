@@ -1,0 +1,35 @@
+{
+  "generator": "built-in imagegen",
+  "transparent_background": true,
+  "jobs": [
+    {
+      "id": "coin-expressions-1",
+      "ref": "coin-a.webp",
+      "names": [
+        "wink",
+        "surprised",
+        "think"
+      ],
+      "prompt": "Use the attached approved A Clean Volume mascot as the exact identity reference. Same face construction, palette, precise dark-purple outlines, controlled soft shading, limb design and proportions. Production illustration, perfectly transparent background, NO glow/halo/background haze/floor/shadow/labels/numbers/written text/effects. Exactly the specified separated full-body figures in ONE horizontal row, generous transparent gaps, every finger and shoe visible, no overlaps, no cut parts. Keep front-facing body, shared apparent size and standing baseline. No new props. Only MONETKA the gold circular coin with cream face and broad EMPTY violet annular rim, thin gold outer edge. Preserve exact circular rim geometry in every pose: no tilting or turning coin, no different coin diameter. Change expression and attached arms only; feet planted. Keep entire violet rim free of text, hands or eyebrows so native captions can be overlaid. Exactly THREE poses ordered left-to-right: 1) WINK/THUMBS-UP: one eye softly closed, other warm brown eye open, cheerful grin, one attached hand gives clear thumbs-up. 2) SURPRISED: both eyes open wider with raised brows, small round surprised mouth, both arms raised. 3) THINKING: eyes glance slightly upward to one side, mildly focused brows, small thoughtful closed mouth, one hand rests beneath chin, other relaxed. Clear different expressions, not copies."
+    },
+    {
+      "id": "coin-expressions-2",
+      "ref": "coin-a.webp",
+      "names": [
+        "joy",
+        "worried",
+        "victory"
+      ],
+      "prompt": "Use the attached approved A Clean Volume mascot as the exact identity reference. Same face construction, palette, precise dark-purple outlines, controlled soft shading, limb design and proportions. Production illustration, perfectly transparent background, NO glow/halo/background haze/floor/shadow/labels/numbers/written text/effects. Exactly the specified separated full-body figures in ONE horizontal row, generous transparent gaps, every finger and shoe visible, no overlaps, no cut parts. Keep front-facing body, shared apparent size and standing baseline. No new props. Only MONETKA the gold circular coin with cream face and broad EMPTY violet annular rim, thin gold outer edge. Preserve exact circular rim geometry in every pose: no tilting or turning coin, no different coin diameter. Change expression and attached arms only; feet planted. Keep entire violet rim free of text, hands or eyebrows so native captions can be overlaid. Exactly THREE poses ordered left-to-right: 1) JOY: happy closed crescent eyes, broad laughing smile, both attached hands raised joyfully. 2) WORRIED: open warm brown eyes with brows raised toward center, concerned small downward mouth, one hand near cheek/chin, other resting lower, caring gentle concern, not terror. 3) VICTORY: both brown eyes open with confident happy brows, broad smile, both arms held higher outward in a strong celebratory V, legs planted. No crowns, trophies, stars, confetti, sweat, floating marks or tears. Joy and victory differ clearly by eyes and arms."
+    },
+    {
+      "id": "kvitya-expressions",
+      "ref": "kvitya-a.webp",
+      "names": [
+        "joy",
+        "think"
+      ],
+      "prompt": "Use the attached approved A Clean Volume mascot as the exact identity reference. Same face construction, palette, precise dark-purple outlines, controlled soft shading, limb design and proportions. Production illustration, perfectly transparent background, NO glow/halo/background haze/floor/shadow/labels/numbers/written text/effects. Exactly the specified separated full-body figures in ONE horizontal row, generous transparent gaps, every finger and shoe visible, no overlaps, no cut parts. Keep front-facing body, shared apparent size and standing baseline. No new props. Only KVITYA the off-white receipt PAPER mascot, exactly like reference: body is a tall flat sheet with zigzag torn top/bottom, violet short header bar, expressive face integrated into upper paper, gray abstract rows, dotted divider, bold total bars, small QR-like motif and circular violet stamp. No rolls, curls, tube, human head or extra paper. Exactly TWO poses ordered left-to-right: 1) JOY: happy closed crescent eyes, warm open smile, both short attached arms raised outward, feet planted, receipt itself remains rectangular. 2) CHECKING ROWS: open brown eyes glance down toward its own printed rows, focused gentle brows, small satisfied closed smile, one hand points to a gray item row near lower body, other relaxed. Preserve paper width, length, exact print layout and scale across both poses. Do not add readable text or numbers."
+    }
+  ]
+}

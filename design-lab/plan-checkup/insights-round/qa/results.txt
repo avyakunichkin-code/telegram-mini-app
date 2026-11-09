@@ -1,0 +1,1 @@
+PASS: A/B x 2 families at 375/701/1440; no overflow or JS/resource errors; tabs, deficit, loading/legacy/error/offline; allocations sum to free cashflow. Lab only, no app integration.

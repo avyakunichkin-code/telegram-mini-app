@@ -1,5 +1,7 @@
 # hybrid-round — раунд 3: гибрид A + B
 
+Историческая основа BG-1. Текущий утверждённый вид главной — [current-page-round](../../dashboard/current-page-round/), фиксация 04.11.2026.
+
 Раунд 3 направления [ADR-014](../../../docs/decisions/ADR-014-brand-direction-board-game.md). Собран по отзыву на раунд 2 (`../logic-round/`):
 
 - компактность — из A;

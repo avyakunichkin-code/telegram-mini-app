@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="ru" data-theme="light"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>ТВОЙ ХОД · Монетка и Квитя · Мягкий объём</title><link rel="stylesheet" href="./lab-base.css"><link rel="stylesheet" href="./styles.css"></head>
+<body><header class="topbar"><a class="brand" href="#top">ТВОЙ ХОД<span>Дизайн-лаборатория</span></a><div class="topbar__end"><span class="review-label">★ A · В игре и лендинге</span><button id="theme-toggle" type="button" aria-pressed="false">Тёмная тема</button></div></header>
+<main id="top"><section class="intro"><div><p class="eyebrow">Главные маскоты / Продолжаем мягкую графику</p><h1>Монетка и Квитя.<br><span>Из одной истории.</span></h1><p class="intro__copy">Тот же характер и знакомые роли — в графике, которая уже связала героев и их напарников.</p></div><aside class="direction-note"><img class="family-reference" src="./assets/reference/family-b.png" alt="Утверждённые Студент и Студбилет в стиле Мягкий объём"><b>Одна семья с персонажами B</b><p>Тёплые глаза, аккуратный контур, мягкие тени. Золото Монетки и бумага Квити остаются узнаваемыми.</p></aside></section>
+<section><div class="section-head"><div><p class="eyebrow">01 / Сравнение рисунка</p><h2>Знакомые идеи. Новая пластика.</h2></div><p>Два исполнения внутри «Мягкого объёма»</p></div><div class="compare-grid">
+<figure class="art-card art-card--before"><figcaption><span class="card-letter">До</span><div><h3>Исходный lab</h3><p>Монетка и оторванный чек</p></div></figcaption><div class="art-stage"><img src="./assets/before.webp" alt="Исходные Монетка и Квитя"></div><footer>Сохраняем силуэт, палитру и роли</footer></figure>
+<figure class="art-card"><figcaption><span class="card-letter">A</span><div><h3>Чистый объём</h3><p>Сдержанный свет, ясные формы</p></div></figcaption><div class="art-stage"><img src="./assets/a.webp" alt="Монетка и Квитя — A Чистый объём"></div><footer>Матовое золото · белая бумага · чёткие детали</footer></figure>
+<figure class="art-card"><figcaption><span class="card-letter card-letter--soft">B</span><div><h3>Тёплые блики</h3><p>Больше света и округлости</p></div></figcaption><div class="art-stage"><img src="./assets/b.webp" alt="Монетка и Квитя — B Тёплые блики"></div><footer>Золотое сияние · тёплая бумага · мягкие переходы</footer></figure></div></section>
+<section class="contexts" id="interface-check" aria-labelledby="interface-title">
+  <div class="section-head"><div><p class="eyebrow">02 / Проверка в интерфейсе</p><h2 id="interface-title">Живая реакция. Аккуратный интерфейс.</h2></div><span class="approved-chip">Основа A · Чистый объём</span></div>
+  <div class="mascot-contexts">
+    <article class="context-card coin-panel" aria-labelledby="coin-title">
+      <header class="preview-heading"><span class="preview-kicker">Главная наставница</span><h3 id="coin-title">Монетка</h3><p>Реагирует на то, что происходит в игре.</p></header>
+      <div class="preview-control"><label for="caption">Игровая ситуация</label><select id="caption"><option>НОВЫЙ ХОД</option><option>ДЕНЬ ЗАРПЛАТЫ</option><option>ЖМИ ЗАРПЛАТУ</option><option>СОБЫТИЕ!</option><option>ИНТЕРЕСНО…</option><option>ПОДУШКА РАСТЁТ</option><option>ДОЛГ РАСТЁТ</option><option>ПОБЕДА</option></select></div>
+      <div class="coin-preview"><div id="coin-live" class="coin-live"></div></div>
+      <div class="guidance"><img id="coin-guide" src="./assets/coin-state-welcome-avatar.webp" alt=""><p><b>Монетка</b><span id="coin-copy">Новый ход начался. Давай посмотрим, что изменилось.</span></p></div>
+      <div class="coin-sizes" aria-label="Проверка маленьких размеров"><div><img data-coin-size="64" width="64" height="64" alt="Монетка 64 пикселя"><span>64 px</span></div><div><img data-coin-size="40" width="40" height="40" alt="Монетка 40 пикселей"><span>40 px</span></div><div><img data-coin-size="24" width="24" height="24" alt="Монетка 24 пикселя"><span>24 px</span></div></div>
+      <p class="preview-note">Без номинала и счётчика. В маленьком размере — только лицо и обод.</p>
+    </article>
+    <article class="context-card receipt-panel" aria-labelledby="receipt-title">
+      <header class="preview-heading"><span class="preview-kicker">Бумажные итоги хода</span><h3 id="receipt-title">Квитя</h3><p>Показывает результат и помогает сверить строки.</p></header>
+      <div class="preview-control"><label for="receipt-state">Состояние чека</label><select id="receipt-state"><option value="default">Обычные итоги</option><option value="joy">Итог в плюс</option><option value="think">Сверить строки</option></select></div>
+      <div class="receipt-demo">
+        <div class="receipt-paper" data-receipt-state="default">
+          <header class="receipt-header"><span class="receipt-brand">ТВОЙ ХОД</span><img id="kvitya-face" src="./assets/kvitya-state-default-face.webp" alt="Квитя улыбается"><h4>Ход 7 завершён</h4><p id="receipt-copy">Все изменения — в одном чеке</p></header>
+          <dl><div><dt>Зарплата</dt><dd>+60 000 ₽</dd></div><div><dt>Аренда</dt><dd>−25 000 ₽</dd></div><div><dt>Еда</dt><dd>−12 400 ₽</dd></div><div><dt>Кофе с собой</dt><dd>−3 900 ₽</dd></div><div><dt>Сломался телефон</dt><dd>−8 000 ₽</dd></div><div class="receipt-total"><dt>Итого за ход</dt><dd>+10 700 ₽</dd></div></dl>
+          <div class="receipt-footer"><span class="receipt-stamp">ХОД ЗАВЕРШЁН</span><span>7 / ИТОГИ</span></div>
+        </div>
+      </div>
+      <p class="preview-note">Условные суммы. Лицо — часть бумаги; строки и итог остаются текстом.</p>
+    </article>
+  </div>
+</section>
+<section class="contexts" id="emotion-set" aria-labelledby="emotion-title">
+  <div class="section-head"><div><p class="eyebrow">03 / Эмоции и позы на основе A</p><h2 id="emotion-title">Один характер — разные реакции.</h2></div><p>Состояния перенесены в MQX</p></div>
+  <h3 class="states-heading">Монетка</h3><div class="emotion-grid" id="coin-states"></div>
+  <h3 class="states-heading">Квитя</h3><div class="emotion-grid receipt-states" id="receipt-states"></div>
+</section>
+<section class="principles"><div><p class="eyebrow">Что сохраняем</p><h2>Предмет важнее декора.</h2><p>Монетка остаётся монетой, Квитя — оторванным чеком. Свет помогает почувствовать материал и не мешает читать лицо.</p></div><ul><li><b>Монетка — главный маскот</b><span>Золотой круг, фиолетовый обод, лицо и чистый обод без надписей. Без валютного символа и номинала.</span></li><li><b>Квитя — бумажная квитанция</b><span>Оторванные верх и низ, строки, итог, штамп и QR-подобный знак. Без рулона.</span></li><li><b>Сначала выбор графики</b><span>Основа A утверждена. Набор эмоций перенесён в MQX и игру по поручению владельца.</span></li></ul></section>
+<footer class="page-footer"><span>ТВОЙ ХОД · Монетка и Квитя · 03.11.2026</span><span>★ A · Чистый объём утверждён для Монетки и Квити.</span></footer></main><script src="./emotion-geometry.js"></script><script src="./round.js"></script></body></html>

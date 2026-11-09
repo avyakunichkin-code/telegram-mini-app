@@ -1,8 +1,8 @@
 # UI states + icon family — единый lab-раунд
 
-**Статус:** ★ утверждено 2026-05-29 → в prod ([`APPROVED.md`](./APPROVED.md))  
-**Эпик:** [`mqx-ui-unification`](../../docs/vision/ideas/mqx-ui-unification.md) · **B1 + B2 + B3**  
-**Backlog:** [`DESIGN_IMPROVEMENTS_BACKLOG.md`](../../docs/agents/DESIGN_IMPROVEMENTS_BACKLOG.md) (закрывает D8 после ★)
+**Статус:** ★ утверждено 2026-05-29 → в prod ([`APPROVED.md`](APPROVED.md))  
+**Эпик:** [`mqx-ui-unification`](../../docs/game/vision/ideas/mqx-ui-unification.md) · **B1 + B2 + B3**  
+**Backlog:** [`DESIGN_IMPROVEMENTS_BACKLOG.md`](../../docs/game/agents/DESIGN_IMPROVEMENTS_BACKLOG.md) (закрывает D8 после ★)
 
 Один раунд на **два связанных разрыва**: «третий язык» пустых экранов и **разные иконки** (дашборд 2×2, ритуал итога периода, метрики капитала).
 
@@ -34,8 +34,8 @@
 | **S4 Icons — ritual** | A–C | 4 beats: доход, расход, cash, подушка |
 | **S5 Icons — dash chips** | A–C | 2×2: Доходы, Расходы, Баланс, Подушка |
 
-Подробная таблица: [`VARIANTS.md`](./VARIANTS.md).  
-Копирайт и суммы: [`CONTENT.md`](./CONTENT.md).
+Подробная таблица: [`VARIANTS.md`](VARIANTS.md).  
+Копирайт и суммы: [`CONTENT.md`](CONTENT.md).
 
 ---
 
@@ -103,11 +103,11 @@ npx serve .
 
 | Документ | Роль |
 |----------|------|
-| [`VARIANTS.md`](./VARIANTS.md) | A/B/C/D по секциям |
-| [`CONTENT.md`](./CONTENT.md) | Фикстуры данных |
+| [`VARIANTS.md`](VARIANTS.md) | A/B/C/D по секциям |
+| [`CONTENT.md`](CONTENT.md) | Фикстуры данных |
 | [`design-lab/row-actions/README.md`](../row-actions/README.md) | Канон метрик (coin/down/up/percent/term) |
 | [`design-lab/game-ui/juice-round/APPROVED.md`](../game-ui/juice-round/APPROVED.md) | Ритуал C — не ломать композицию |
-| [`docs/ux/accessibility-requirements.md`](../../docs/ux/accessibility-requirements.md) | Basic tier |
+| [`docs/game/ux/accessibility-requirements.md`](../../docs/game/ux/accessibility-requirements.md) | Basic tier |
 
 ---
 

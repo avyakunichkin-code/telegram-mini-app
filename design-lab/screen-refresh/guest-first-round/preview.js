@@ -1,0 +1,7 @@
+const state=document.querySelector('#state');
+state.addEventListener('change',()=>{document.querySelectorAll('.start').forEach(button=>{button.disabled=state.value==='loading';button.innerHTML=state.value==='loading'?'Готовим твою партию…':state.value==='return'?'Продолжить · ход 02 <span>→</span>':state.value==='error'?'Попробовать ещё раз <span>↻</span>':'Начать играть <span>→</span>';});document.querySelectorAll('.error').forEach(node=>node.textContent=state.value==='error'?'Не удалось подключиться. Повтори попытку — новая партия не создастся дважды.':'');});
+document.querySelectorAll('.start').forEach(button=>button.addEventListener('click',()=>{document.querySelector('.result').scrollIntoView({behavior:'smooth',block:'center'});}));
+document.querySelectorAll('.login').forEach(button=>button.addEventListener('click',()=>{button.textContent='Макет: вход в существующий аккаунт';}));
+document.querySelector('#claim').addEventListener('click',()=>{document.querySelector('#claim-form').hidden=false;document.querySelector('#claim-form input').focus();});
+document.querySelector('#later').addEventListener('click',()=>{document.querySelector('.claim').hidden=true;document.querySelector('#claim-form').hidden=true;document.querySelector('#continue-status').textContent='Следующий ход открыт. Создать аккаунт можно позже в меню.';});
+document.querySelector('#save').addEventListener('click',()=>{document.querySelector('#form-status').textContent='Предпросмотр: в приложении здесь привязывается текущая партия без потери прогресса.';});

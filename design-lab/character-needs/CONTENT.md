@@ -1,6 +1,6 @@
 # Копирайт: потребности (фаза 1)
 
-Источник правды для lab и prod. Спека: [`docs/ux/CHARACTER_NEEDS_UX.md`](../../docs/ux/CHARACTER_NEEDS_UX.md).
+Источник правды для lab и prod. Спека: [`docs/game/ux/CHARACTER_NEEDS_UX.md`](../../docs/game/ux/CHARACTER_NEEDS_UX.md).
 
 ## Секция главной
 
@@ -22,7 +22,7 @@
 
 ## Treat-self
 
-См. [`character-needs-treat-self.md`](../../docs/ux/screens/character-needs-treat-self.md).
+См. [`character-needs-treat-self.md`](../../docs/game/ux/screens/character-needs-treat-self.md).
 
 ## Help (maintenance)
 

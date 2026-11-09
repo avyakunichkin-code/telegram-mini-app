@@ -1,0 +1,27 @@
+/* ★ Guest-first A · 07.11.2026. Scoped to the public welcome. */
+.mqx-guest-page{min-height:100dvh;display:grid;place-items:center;padding:20px;background:var(--mq-page-bg,var(--mq-welcome-paper))}
+.mqx-guest-welcome{box-sizing:border-box;width:min(100%,380px);padding:24px 22px;display:flex;flex-direction:column;min-height:720px;border-radius:30px;background:repeating-linear-gradient(135deg,transparent 0 22px,var(--mq-welcome-hatch) 22px 23px),var(--mq-welcome-plum);color:var(--mq-welcome-on);font-family:Nunito,Arial,sans-serif}
+.mqx-guest-welcome__logo{width:104px;height:74px;object-fit:contain;object-position:left center}
+.mqx-guest-welcome__scene{height:210px;position:relative;margin-top:6px}
+.mqx-guest-welcome__scene img{height:220px;position:absolute;right:15px;bottom:-4px;filter:drop-shadow(0 12px 14px var(--mq-welcome-shadow))}
+.mqx-guest-welcome__stamp{position:absolute;top:28px;left:4px;background:var(--mq-welcome-stamp);color:var(--mq-welcome-stamp-ink);font-weight:1000;font-size:15px;transform:rotate(-9deg);padding:14px 12px;border:2px dashed var(--mq-welcome-stamp-edge);border-radius:12px;line-height:1.2}
+.mqx-guest-welcome__coin{position:absolute;left:36px;bottom:5px;background:var(--mq-welcome-coin);border:4px solid var(--mq-welcome-coin-edge);border-radius:50%;width:53px;height:53px;text-align:center;font-size:30px;font-weight:1000;transform:rotate(15deg)}
+.mqx-guest-welcome__copy small{font-size:12px;letter-spacing:1px;color:var(--mq-welcome-eyebrow)}
+.mqx-guest-welcome__copy h1{color:var(--mq-welcome-on);font-size:clamp(27px,7.6vw,32px);font-weight:1000;line-height:1.12;margin:14px 0}
+.mqx-guest-welcome__copy p{font-size:14px;line-height:1.5;color:var(--mq-welcome-copy);margin:0 0 24px}
+.mqx-guest-welcome__actions{margin-top:auto}
+.mqx-guest-welcome__actions button{font:inherit;cursor:pointer;min-height:48px;border:0;border-radius:13px;font-weight:900;width:100%;background:var(--mq-welcome-gold);color:var(--mq-welcome-plum);padding:12px 16px;display:flex;justify-content:space-between;box-shadow:0 4px var(--mq-welcome-gold-shadow)}
+.mqx-guest-welcome__actions p{font-size:12px;color:var(--mq-welcome-muted);text-align:center;line-height:1.5}
+.mqx-guest-welcome__actions .mqx-guest-welcome__login{background:transparent;color:var(--mq-welcome-link);box-shadow:none;justify-content:center;min-height:44px}
+.mqx-guest-welcome__actions .mqx-guest-welcome__error{color:var(--mq-welcome-error);font-size:12px}
+.mqx-guest-welcome button:focus-visible{outline:3px solid var(--mq-welcome-focus);outline-offset:4px}
+.mqx-guest-welcome button:disabled{opacity:.65;cursor:wait}
+@media(max-width:450px){.mqx-guest-page{padding:0;align-items:start;background:var(--mq-welcome-plum)}.mqx-guest-welcome{width:100%;min-height:100dvh;border-radius:0;padding:22px 18px}}
+.mqx-guest-claim{border:1px solid var(--mq-welcome-edge);border-radius:20px;padding:20px;background:var(--mq-welcome-claim-paper);color:var(--mq-welcome-ink);margin-bottom:16px}
+.mqx-guest-claim>img{width:44px;float:right}
+.mqx-guest-claim h2{font-size:19px;margin:10px 0}
+.mqx-guest-claim p{font-size:14px;line-height:1.5;color:var(--mq-welcome-claim-copy)}
+.mqx-guest-claim button{font:inherit;font-weight:900;min-height:48px;width:100%;border:0;border-radius:13px;background:var(--mq-welcome-action);color:white;box-shadow:0 3px var(--mq-welcome-action-shadow);cursor:pointer}
+.mqx-guest-claim .mqx-guest-claim__later{background:transparent;box-shadow:none;color:inherit;min-height:48px}
+.mqx-guest-claim small{display:block;text-align:center;font-size:12px;line-height:1.5;color:var(--mq-welcome-claim-muted);margin-top:12px}
+.mqx-guest-claim button:focus-visible{outline:3px solid var(--mq-welcome-focus);outline-offset:3px}

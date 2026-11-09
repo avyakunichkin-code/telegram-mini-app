@@ -32,6 +32,6 @@ npx serve .
 
 ## Связь
 
-- UX: [`docs/ux/screens/dashboard.md`](../../../docs/ux/screens/dashboard.md) § Z2
-- Idea: [`docs/vision/ideas/template-mechanics-victory-tutorial-chain.md`](../../../docs/vision/ideas/template-mechanics-victory-tutorial-chain.md)
+- UX: [`docs/game/ux/screens/dashboard.md`](../../../docs/game/ux/screens/dashboard.md) § Z2
+- Idea: [`docs/game/vision/ideas/template-mechanics-victory-tutorial-chain.md`](../../../docs/game/vision/ideas/template-mechanics-victory-tutorial-chain.md)
 - Prod: `MqxGoalDash` + `buildGoalChainView`

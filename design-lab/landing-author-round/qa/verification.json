@@ -1,0 +1,104 @@
+{
+  "results": [
+    {
+      "variant": "a",
+      "width": 320,
+      "overflow": false,
+      "images": true,
+      "main": 1,
+      "h1": 1
+    },
+    {
+      "variant": "a",
+      "width": 390,
+      "overflow": false,
+      "images": true,
+      "main": 1,
+      "h1": 1
+    },
+    {
+      "variant": "a",
+      "width": 1440,
+      "overflow": false,
+      "images": true,
+      "main": 1,
+      "h1": 1
+    },
+    {
+      "variant": "a",
+      "home": "76 880 ₽",
+      "delivery": "75 100 ₽",
+      "reset": "77 500 ₽",
+      "faq": true,
+      "cta": "http://127.0.0.1:5186/#/",
+      "native": true
+    },
+    {
+      "variant": "b",
+      "width": 320,
+      "overflow": false,
+      "images": true,
+      "main": 1,
+      "h1": 1
+    },
+    {
+      "variant": "b",
+      "width": 390,
+      "overflow": false,
+      "images": true,
+      "main": 1,
+      "h1": 1
+    },
+    {
+      "variant": "b",
+      "width": 1440,
+      "overflow": false,
+      "images": true,
+      "main": 1,
+      "h1": 1
+    },
+    {
+      "variant": "b",
+      "home": "76 880 ₽",
+      "delivery": "75 100 ₽",
+      "reset": "77 500 ₽",
+      "faq": true,
+      "cta": "http://127.0.0.1:5186/#/",
+      "native": true
+    },
+    {
+      "variant": "c",
+      "width": 320,
+      "overflow": false,
+      "images": true,
+      "main": 1,
+      "h1": 1
+    },
+    {
+      "variant": "c",
+      "width": 390,
+      "overflow": false,
+      "images": true,
+      "main": 1,
+      "h1": 1
+    },
+    {
+      "variant": "c",
+      "width": 1440,
+      "overflow": false,
+      "images": true,
+      "main": 1,
+      "h1": 1
+    },
+    {
+      "variant": "c",
+      "home": "76 880 ₽",
+      "delivery": "75 100 ₽",
+      "reset": "77 500 ₽",
+      "faq": true,
+      "cta": "http://127.0.0.1:5186/#/",
+      "native": true
+    }
+  ],
+  "failures": []
+}

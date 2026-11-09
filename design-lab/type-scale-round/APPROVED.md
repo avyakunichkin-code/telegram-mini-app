@@ -33,8 +33,8 @@
 
 ## Документация
 
-- `docs/reference/brandbook/BRANDBOOK_MQX.md` §5  
-- `docs/specs/SPEC_FRONTEND_UI.md` — токены Design System
+- `docs/game/reference/brandbook/BRANDBOOK_MQX.md` §5  
+- `docs/game/specs/SPEC_FRONTEND_UI.md` — токены Design System
 
 ## Lab
 

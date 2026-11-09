@@ -22,7 +22,7 @@ npm run design-lab:sync-round -- design-lab/onboarding-o2/guidance-strip-round
 
 ## Варианты
 
-См. [`VARIANTS.md`](./VARIANTS.md). Тестовые данные одинаковые: beat `p1_period`, баланс **42 150 ₽**, период **1**.
+См. [`VARIANTS.md`](VARIANTS.md). Тестовые данные одинаковые: beat `p1_period`, баланс **42 150 ₽**, период **1**.
 
 ## Состояния (секция 2)
 

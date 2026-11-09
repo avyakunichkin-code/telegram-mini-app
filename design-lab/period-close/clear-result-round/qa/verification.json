@@ -1,0 +1,594 @@
+{
+  "ok": true,
+  "checks": [
+    {
+      "width": 360,
+      "height": 640,
+      "theme": "light",
+      "variant": "a",
+      "scenario": "normal"
+    },
+    {
+      "width": 360,
+      "height": 640,
+      "theme": "light",
+      "variant": "a",
+      "scenario": "simple"
+    },
+    {
+      "width": 360,
+      "height": 640,
+      "theme": "light",
+      "variant": "a",
+      "scenario": "negative"
+    },
+    {
+      "width": 360,
+      "height": 640,
+      "theme": "light",
+      "variant": "a",
+      "scenario": "overdue"
+    },
+    {
+      "width": 360,
+      "height": 640,
+      "theme": "light",
+      "variant": "a",
+      "scenario": "mismatch"
+    },
+    {
+      "width": 360,
+      "height": 640,
+      "theme": "light",
+      "variant": "a",
+      "scenario": "historical"
+    },
+    {
+      "width": 360,
+      "height": 640,
+      "theme": "light",
+      "variant": "a",
+      "scenario": "events"
+    },
+    {
+      "width": 360,
+      "height": 640,
+      "theme": "light",
+      "variant": "b",
+      "scenario": "normal"
+    },
+    {
+      "width": 360,
+      "height": 640,
+      "theme": "light",
+      "variant": "b",
+      "scenario": "simple"
+    },
+    {
+      "width": 360,
+      "height": 640,
+      "theme": "light",
+      "variant": "b",
+      "scenario": "negative"
+    },
+    {
+      "width": 360,
+      "height": 640,
+      "theme": "light",
+      "variant": "b",
+      "scenario": "overdue"
+    },
+    {
+      "width": 360,
+      "height": 640,
+      "theme": "light",
+      "variant": "b",
+      "scenario": "mismatch"
+    },
+    {
+      "width": 360,
+      "height": 640,
+      "theme": "light",
+      "variant": "b",
+      "scenario": "historical"
+    },
+    {
+      "width": 360,
+      "height": 640,
+      "theme": "light",
+      "variant": "b",
+      "scenario": "events"
+    },
+    {
+      "width": 360,
+      "height": 640,
+      "theme": "dark",
+      "variant": "a",
+      "scenario": "normal"
+    },
+    {
+      "width": 360,
+      "height": 640,
+      "theme": "dark",
+      "variant": "a",
+      "scenario": "simple"
+    },
+    {
+      "width": 360,
+      "height": 640,
+      "theme": "dark",
+      "variant": "a",
+      "scenario": "negative"
+    },
+    {
+      "width": 360,
+      "height": 640,
+      "theme": "dark",
+      "variant": "a",
+      "scenario": "overdue"
+    },
+    {
+      "width": 360,
+      "height": 640,
+      "theme": "dark",
+      "variant": "a",
+      "scenario": "mismatch"
+    },
+    {
+      "width": 360,
+      "height": 640,
+      "theme": "dark",
+      "variant": "a",
+      "scenario": "historical"
+    },
+    {
+      "width": 360,
+      "height": 640,
+      "theme": "dark",
+      "variant": "a",
+      "scenario": "events"
+    },
+    {
+      "width": 360,
+      "height": 640,
+      "theme": "dark",
+      "variant": "b",
+      "scenario": "normal"
+    },
+    {
+      "width": 360,
+      "height": 640,
+      "theme": "dark",
+      "variant": "b",
+      "scenario": "simple"
+    },
+    {
+      "width": 360,
+      "height": 640,
+      "theme": "dark",
+      "variant": "b",
+      "scenario": "negative"
+    },
+    {
+      "width": 360,
+      "height": 640,
+      "theme": "dark",
+      "variant": "b",
+      "scenario": "overdue"
+    },
+    {
+      "width": 360,
+      "height": 640,
+      "theme": "dark",
+      "variant": "b",
+      "scenario": "mismatch"
+    },
+    {
+      "width": 360,
+      "height": 640,
+      "theme": "dark",
+      "variant": "b",
+      "scenario": "historical"
+    },
+    {
+      "width": 360,
+      "height": 640,
+      "theme": "dark",
+      "variant": "b",
+      "scenario": "events"
+    },
+    {
+      "width": 390,
+      "height": 744,
+      "theme": "light",
+      "variant": "a",
+      "scenario": "normal"
+    },
+    {
+      "width": 390,
+      "height": 744,
+      "theme": "light",
+      "variant": "a",
+      "scenario": "simple"
+    },
+    {
+      "width": 390,
+      "height": 744,
+      "theme": "light",
+      "variant": "a",
+      "scenario": "negative"
+    },
+    {
+      "width": 390,
+      "height": 744,
+      "theme": "light",
+      "variant": "a",
+      "scenario": "overdue"
+    },
+    {
+      "width": 390,
+      "height": 744,
+      "theme": "light",
+      "variant": "a",
+      "scenario": "mismatch"
+    },
+    {
+      "width": 390,
+      "height": 744,
+      "theme": "light",
+      "variant": "a",
+      "scenario": "historical"
+    },
+    {
+      "width": 390,
+      "height": 744,
+      "theme": "light",
+      "variant": "a",
+      "scenario": "events"
+    },
+    {
+      "width": 390,
+      "height": 744,
+      "theme": "light",
+      "variant": "b",
+      "scenario": "normal"
+    },
+    {
+      "width": 390,
+      "height": 744,
+      "theme": "light",
+      "variant": "b",
+      "scenario": "simple"
+    },
+    {
+      "width": 390,
+      "height": 744,
+      "theme": "light",
+      "variant": "b",
+      "scenario": "negative"
+    },
+    {
+      "width": 390,
+      "height": 744,
+      "theme": "light",
+      "variant": "b",
+      "scenario": "overdue"
+    },
+    {
+      "width": 390,
+      "height": 744,
+      "theme": "light",
+      "variant": "b",
+      "scenario": "mismatch"
+    },
+    {
+      "width": 390,
+      "height": 744,
+      "theme": "light",
+      "variant": "b",
+      "scenario": "historical"
+    },
+    {
+      "width": 390,
+      "height": 744,
+      "theme": "light",
+      "variant": "b",
+      "scenario": "events"
+    },
+    {
+      "width": 390,
+      "height": 744,
+      "theme": "dark",
+      "variant": "a",
+      "scenario": "normal"
+    },
+    {
+      "width": 390,
+      "height": 744,
+      "theme": "dark",
+      "variant": "a",
+      "scenario": "simple"
+    },
+    {
+      "width": 390,
+      "height": 744,
+      "theme": "dark",
+      "variant": "a",
+      "scenario": "negative"
+    },
+    {
+      "width": 390,
+      "height": 744,
+      "theme": "dark",
+      "variant": "a",
+      "scenario": "overdue"
+    },
+    {
+      "width": 390,
+      "height": 744,
+      "theme": "dark",
+      "variant": "a",
+      "scenario": "mismatch"
+    },
+    {
+      "width": 390,
+      "height": 744,
+      "theme": "dark",
+      "variant": "a",
+      "scenario": "historical"
+    },
+    {
+      "width": 390,
+      "height": 744,
+      "theme": "dark",
+      "variant": "a",
+      "scenario": "events"
+    },
+    {
+      "width": 390,
+      "height": 744,
+      "theme": "dark",
+      "variant": "b",
+      "scenario": "normal"
+    },
+    {
+      "width": 390,
+      "height": 744,
+      "theme": "dark",
+      "variant": "b",
+      "scenario": "simple"
+    },
+    {
+      "width": 390,
+      "height": 744,
+      "theme": "dark",
+      "variant": "b",
+      "scenario": "negative"
+    },
+    {
+      "width": 390,
+      "height": 744,
+      "theme": "dark",
+      "variant": "b",
+      "scenario": "overdue"
+    },
+    {
+      "width": 390,
+      "height": 744,
+      "theme": "dark",
+      "variant": "b",
+      "scenario": "mismatch"
+    },
+    {
+      "width": 390,
+      "height": 744,
+      "theme": "dark",
+      "variant": "b",
+      "scenario": "historical"
+    },
+    {
+      "width": 390,
+      "height": 744,
+      "theme": "dark",
+      "variant": "b",
+      "scenario": "events"
+    },
+    {
+      "width": 1440,
+      "height": 950,
+      "theme": "light",
+      "variant": "a",
+      "scenario": "normal"
+    },
+    {
+      "width": 1440,
+      "height": 950,
+      "theme": "light",
+      "variant": "a",
+      "scenario": "simple"
+    },
+    {
+      "width": 1440,
+      "height": 950,
+      "theme": "light",
+      "variant": "a",
+      "scenario": "negative"
+    },
+    {
+      "width": 1440,
+      "height": 950,
+      "theme": "light",
+      "variant": "a",
+      "scenario": "overdue"
+    },
+    {
+      "width": 1440,
+      "height": 950,
+      "theme": "light",
+      "variant": "a",
+      "scenario": "mismatch"
+    },
+    {
+      "width": 1440,
+      "height": 950,
+      "theme": "light",
+      "variant": "a",
+      "scenario": "historical"
+    },
+    {
+      "width": 1440,
+      "height": 950,
+      "theme": "light",
+      "variant": "a",
+      "scenario": "events"
+    },
+    {
+      "width": 1440,
+      "height": 950,
+      "theme": "light",
+      "variant": "b",
+      "scenario": "normal"
+    },
+    {
+      "width": 1440,
+      "height": 950,
+      "theme": "light",
+      "variant": "b",
+      "scenario": "simple"
+    },
+    {
+      "width": 1440,
+      "height": 950,
+      "theme": "light",
+      "variant": "b",
+      "scenario": "negative"
+    },
+    {
+      "width": 1440,
+      "height": 950,
+      "theme": "light",
+      "variant": "b",
+      "scenario": "overdue"
+    },
+    {
+      "width": 1440,
+      "height": 950,
+      "theme": "light",
+      "variant": "b",
+      "scenario": "mismatch"
+    },
+    {
+      "width": 1440,
+      "height": 950,
+      "theme": "light",
+      "variant": "b",
+      "scenario": "historical"
+    },
+    {
+      "width": 1440,
+      "height": 950,
+      "theme": "light",
+      "variant": "b",
+      "scenario": "events"
+    },
+    {
+      "width": 1440,
+      "height": 950,
+      "theme": "dark",
+      "variant": "a",
+      "scenario": "normal"
+    },
+    {
+      "width": 1440,
+      "height": 950,
+      "theme": "dark",
+      "variant": "a",
+      "scenario": "simple"
+    },
+    {
+      "width": 1440,
+      "height": 950,
+      "theme": "dark",
+      "variant": "a",
+      "scenario": "negative"
+    },
+    {
+      "width": 1440,
+      "height": 950,
+      "theme": "dark",
+      "variant": "a",
+      "scenario": "overdue"
+    },
+    {
+      "width": 1440,
+      "height": 950,
+      "theme": "dark",
+      "variant": "a",
+      "scenario": "mismatch"
+    },
+    {
+      "width": 1440,
+      "height": 950,
+      "theme": "dark",
+      "variant": "a",
+      "scenario": "historical"
+    },
+    {
+      "width": 1440,
+      "height": 950,
+      "theme": "dark",
+      "variant": "a",
+      "scenario": "events"
+    },
+    {
+      "width": 1440,
+      "height": 950,
+      "theme": "dark",
+      "variant": "b",
+      "scenario": "normal"
+    },
+    {
+      "width": 1440,
+      "height": 950,
+      "theme": "dark",
+      "variant": "b",
+      "scenario": "simple"
+    },
+    {
+      "width": 1440,
+      "height": 950,
+      "theme": "dark",
+      "variant": "b",
+      "scenario": "negative"
+    },
+    {
+      "width": 1440,
+      "height": 950,
+      "theme": "dark",
+      "variant": "b",
+      "scenario": "overdue"
+    },
+    {
+      "width": 1440,
+      "height": 950,
+      "theme": "dark",
+      "variant": "b",
+      "scenario": "mismatch"
+    },
+    {
+      "width": 1440,
+      "height": 950,
+      "theme": "dark",
+      "variant": "b",
+      "scenario": "historical"
+    },
+    {
+      "width": 1440,
+      "height": 950,
+      "theme": "dark",
+      "variant": "b",
+      "scenario": "events"
+    }
+  ],
+  "errors": []
+}

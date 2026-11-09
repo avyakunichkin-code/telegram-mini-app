@@ -6,7 +6,7 @@
 
 | Документ | Назначение |
 |----------|------------|
-| [`../../docs/reference/brandbook/BRANDBOOK.md`](../../docs/reference/brandbook/BRANDBOOK.md) | Палитра, тон |
+| [`../../docs/game/reference/brandbook/BRANDBOOK.md`](../../docs/game/reference/brandbook/BRANDBOOK.md) | Палитра, тон |
 | [`../../frontend-react/src/components/mqx/DESIGN_WORKFLOW.md`](../../frontend-react/src/components/mqx/DESIGN_WORKFLOW.md) | Цикл lab → MQX → prod |
 
 **Связь с prod:** `LoginForm.jsx`, `RegisterForm.jsx` (`/login`, `/register`).

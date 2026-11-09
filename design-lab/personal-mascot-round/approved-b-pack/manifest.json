@@ -1,0 +1,62 @@
+{
+  "date": "2026-11-08",
+  "reference": "../variant-b-no-cap.png",
+  "files": [
+    {
+      "file": "avatar-telegram.png",
+      "width": 1254,
+      "height": 1254,
+      "bytes": 1757835,
+      "pngColorType": 2
+    },
+    {
+      "file": "pose-confident.png",
+      "width": 879,
+      "height": 1789,
+      "bytes": 946991,
+      "pngColorType": 6
+    },
+    {
+      "file": "pose-welcome.png",
+      "width": 879,
+      "height": 1789,
+      "bytes": 1081378,
+      "pngColorType": 6
+    },
+    {
+      "file": "pose-explain.png",
+      "width": 879,
+      "height": 1789,
+      "bytes": 1006967,
+      "pngColorType": 6
+    },
+    {
+      "file": "pose-think.png",
+      "width": 880,
+      "height": 1788,
+      "bytes": 926097,
+      "pngColorType": 6
+    },
+    {
+      "file": "pose-work.png",
+      "width": 1157,
+      "height": 1360,
+      "bytes": 1163707,
+      "pngColorType": 6
+    },
+    {
+      "file": "pose-success.png",
+      "width": 879,
+      "height": 1789,
+      "bytes": 1056971,
+      "pngColorType": 6
+    },
+    {
+      "file": "cover-wide.png",
+      "width": 1672,
+      "height": 941,
+      "bytes": 1711371,
+      "pngColorType": 2
+    }
+  ]
+}

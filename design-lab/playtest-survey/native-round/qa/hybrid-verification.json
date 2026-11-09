@@ -1,0 +1,221 @@
+{
+  "ok": true,
+  "checks": [
+    {
+      "width": 360,
+      "height": 640,
+      "theme": "light",
+      "step": 0,
+      "state": "form"
+    },
+    {
+      "width": 360,
+      "height": 640,
+      "theme": "light",
+      "step": 1,
+      "state": "form"
+    },
+    {
+      "width": 360,
+      "height": 640,
+      "theme": "light",
+      "step": 2,
+      "state": "form"
+    },
+    {
+      "width": 360,
+      "height": 640,
+      "theme": "light",
+      "step": 2,
+      "state": "sending"
+    },
+    {
+      "width": 360,
+      "height": 640,
+      "theme": "light",
+      "step": 2,
+      "state": "error"
+    },
+    {
+      "width": 360,
+      "height": 640,
+      "theme": "dark",
+      "step": 0,
+      "state": "form"
+    },
+    {
+      "width": 360,
+      "height": 640,
+      "theme": "dark",
+      "step": 1,
+      "state": "form"
+    },
+    {
+      "width": 360,
+      "height": 640,
+      "theme": "dark",
+      "step": 2,
+      "state": "form"
+    },
+    {
+      "width": 360,
+      "height": 640,
+      "theme": "dark",
+      "step": 2,
+      "state": "sending"
+    },
+    {
+      "width": 360,
+      "height": 640,
+      "theme": "dark",
+      "step": 2,
+      "state": "error"
+    },
+    {
+      "width": 390,
+      "height": 744,
+      "theme": "light",
+      "step": 0,
+      "state": "form"
+    },
+    {
+      "width": 390,
+      "height": 744,
+      "theme": "light",
+      "step": 1,
+      "state": "form"
+    },
+    {
+      "width": 390,
+      "height": 744,
+      "theme": "light",
+      "step": 2,
+      "state": "form"
+    },
+    {
+      "width": 390,
+      "height": 744,
+      "theme": "light",
+      "step": 2,
+      "state": "sending"
+    },
+    {
+      "width": 390,
+      "height": 744,
+      "theme": "light",
+      "step": 2,
+      "state": "error"
+    },
+    {
+      "width": 390,
+      "height": 744,
+      "theme": "dark",
+      "step": 0,
+      "state": "form"
+    },
+    {
+      "width": 390,
+      "height": 744,
+      "theme": "dark",
+      "step": 1,
+      "state": "form"
+    },
+    {
+      "width": 390,
+      "height": 744,
+      "theme": "dark",
+      "step": 2,
+      "state": "form"
+    },
+    {
+      "width": 390,
+      "height": 744,
+      "theme": "dark",
+      "step": 2,
+      "state": "sending"
+    },
+    {
+      "width": 390,
+      "height": 744,
+      "theme": "dark",
+      "step": 2,
+      "state": "error"
+    },
+    {
+      "width": 1440,
+      "height": 950,
+      "theme": "light",
+      "step": 0,
+      "state": "form"
+    },
+    {
+      "width": 1440,
+      "height": 950,
+      "theme": "light",
+      "step": 1,
+      "state": "form"
+    },
+    {
+      "width": 1440,
+      "height": 950,
+      "theme": "light",
+      "step": 2,
+      "state": "form"
+    },
+    {
+      "width": 1440,
+      "height": 950,
+      "theme": "light",
+      "step": 2,
+      "state": "sending"
+    },
+    {
+      "width": 1440,
+      "height": 950,
+      "theme": "light",
+      "step": 2,
+      "state": "error"
+    },
+    {
+      "width": 1440,
+      "height": 950,
+      "theme": "dark",
+      "step": 0,
+      "state": "form"
+    },
+    {
+      "width": 1440,
+      "height": 950,
+      "theme": "dark",
+      "step": 1,
+      "state": "form"
+    },
+    {
+      "width": 1440,
+      "height": 950,
+      "theme": "dark",
+      "step": 2,
+      "state": "form"
+    },
+    {
+      "width": 1440,
+      "height": 950,
+      "theme": "dark",
+      "step": 2,
+      "state": "sending"
+    },
+    {
+      "width": 1440,
+      "height": 950,
+      "theme": "dark",
+      "step": 2,
+      "state": "error"
+    }
+  ],
+  "errors": [],
+  "interactions": [
+    "three grouped steps",
+    "back retains answers and free text",
+    "error/retry/success"
+  ]
+}

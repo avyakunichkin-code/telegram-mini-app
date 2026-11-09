@@ -2,12 +2,131 @@
   "schema_version": 1,
   "title": "ТВОЙ ХОД — Design Lab",
   "subtitle": "Единая навигация по витринам, блокам и prod parity. Не ищите index.html по папкам вручную.",
-  "canon_sources": ["dashboard/canon.manifest.json", "finance/canon.manifest.json"],
+  "canon_sources": [
+    "dashboard/canon.manifest.json",
+    "finance/canon.manifest.json"
+  ],
   "discover": {
     "enabled": true,
-    "exclude_path_contains": ["parity-generated-page-round/blocks/"]
+    "exclude_path_contains": [
+      "parity-generated-page-round/blocks/"
+    ]
   },
   "sections": [
+    {
+      "id": "landing-author-20261107",
+      "title": "Новый авторский лендинг · три направления",
+      "items": [
+        {
+          "label": "Сравнить А / Б / В · новый раунд",
+          "path": "landing-author-round/index.html",
+          "kind": "lab",
+          "status": "draft"
+        },
+        {
+          "label": "А · Первый ход",
+          "path": "landing-author-round/a.html",
+          "kind": "lab",
+          "status": "draft"
+        },
+        {
+          "label": "Б · Режим: жизнь",
+          "path": "landing-author-round/b.html",
+          "kind": "lab",
+          "status": "draft"
+        },
+        {
+          "label": "В · Цена выбора",
+          "path": "landing-author-round/c.html",
+          "kind": "lab",
+          "status": "draft"
+        }
+      ]
+    },
+    {
+      "id": "plan-financial-atlas",
+      "title": "ТВОЙ ПЛАН · Финансовый атлас",
+      "items": [
+        {
+          "label": "Пять улучшений · А утверждён · от ввода к решению",
+          "path": "plan-checkup/decision-value-round/index.html",
+          "kind": "lab",
+          "status": "approved"
+        },
+        {
+          "label": "Куда идут деньги · А утверждён",
+          "path": "plan-checkup/insights-round/index.html",
+          "kind": "lab",
+          "status": "approved"
+        },
+        {
+        "label": "P3-11 · точность данных · A утверждён",
+        "path": "plan-checkup/precision-round/index.html",
+        "kind": "lab",
+        "status": "approved"
+        },
+        {
+          "label": "Атлас B2 / C1 · утверждён · компактный ответ",
+          "path": "plan-checkup/atlas-report-round/index.html",
+          "kind": "lab",
+          "status": "approved"
+        },
+        {
+          "label": "Атлас A1 · утверждён · адаптивный отчёт и состояния",
+          "path": "plan-checkup/atlas-round/index.html",
+          "kind": "lab",
+          "status": "approved"
+        }
+      ]
+    },
+    {
+      "id": "player-decisions-clear-next-step",
+      "title": "Понятный выбор · цель · потребности",
+      "items": [
+        {
+          "label": "Последствия B · цель A · потребности A (утверждены)",
+          "path": "player-decisions/clear-next-step-round/index.html",
+          "kind": "lab",
+          "status": "approved"
+        }
+      ]
+    },
+    {
+      "id": "period-close-clear-result",
+      "title": "Итоги хода · понятный результат",
+      "items": [
+        {
+          "label": "Итог без повторов · A (утверждён)",
+          "path": "period-close/clear-result-round/index.html",
+          "kind": "lab",
+          "status": "approved"
+        }
+      ]
+    },
+    {
+      "id": "capital-first-investment",
+      "title": "Капитал · первое вложение",
+      "items": [
+        {
+          "label": "Первое вложение · A · компактное окно (внедрено локально)",
+          "path": "capital-page/first-investment-round/index.html",
+          "kind": "lab",
+          "status": "approved"
+        }
+      ]
+    },
+    {
+      "id": "playtest-survey",
+      "title": "Опрос первых ходов",
+      "items": [
+        {
+          "label": "Нативный опрос · v2: девять вопросов и свой отзыв (реализован)",
+          "path": "playtest-survey/native-round/index.html",
+          "kind": "lab",
+          "status": "approved"
+        }
+      ]
+    },
     {
       "id": "analytics",
       "title": "Аналитика (AN1)",
@@ -51,33 +170,104 @@
       "id": "events",
       "title": "События",
       "items": [
-        { "label": "Events — обзор", "path": "events/index.html", "kind": "lab" },
-        { "label": "Overlay O1", "path": "events/overlay-round/index.html", "kind": "lab", "status": "approved" },
-        { "label": "Layout", "path": "events/layout-round/index.html", "kind": "lab" },
-        { "label": "Domains", "path": "events/domains-round/index.html", "kind": "lab" },
-        { "label": "Tails E2/E5", "path": "events/tails-round/index.html", "kind": "lab", "status": "approved" }
+        {
+          "label": "Events — обзор",
+          "path": "events/index.html",
+          "kind": "lab"
+        },
+        {
+          "label": "Overlay O1",
+          "path": "events/overlay-round/index.html",
+          "kind": "lab",
+          "status": "approved"
+        },
+        {
+          "label": "Layout",
+          "path": "events/layout-round/index.html",
+          "kind": "lab"
+        },
+        {
+          "label": "Domains",
+          "path": "events/domains-round/index.html",
+          "kind": "lab"
+        },
+        {
+          "label": "Tails E2/E5",
+          "path": "events/tails-round/index.html",
+          "kind": "lab",
+          "status": "approved"
+        }
       ]
     },
     {
       "id": "finance-capital",
       "title": "Капитал",
       "items": [
-        { "label": "Finance + insurance", "path": "finance-insurance/index.html", "kind": "lab", "status": "approved" },
-        { "label": "Capital — Детали|Действия ★", "path": "capital-page/details-actions-round/index.html", "kind": "lab", "status": "approved" },
-        { "label": "Invest forms", "path": "invest-forms/index.html", "kind": "lab", "status": "approved" },
-        { "label": "Asset cards", "path": "asset-cards/index.html", "kind": "lab", "status": "approved" },
-        { "label": "Row actions", "path": "row-actions/index.html", "kind": "lab", "status": "approved" }
+        {
+          "label": "Finance + insurance",
+          "path": "finance-insurance/index.html",
+          "kind": "lab",
+          "status": "approved"
+        },
+        {
+          "label": "Capital — Детали|Действия ★",
+          "path": "capital-page/details-actions-round/index.html",
+          "kind": "lab",
+          "status": "approved"
+        },
+        {
+          "label": "Invest forms",
+          "path": "invest-forms/index.html",
+          "kind": "lab",
+          "status": "approved"
+        },
+        {
+          "label": "Asset cards",
+          "path": "asset-cards/index.html",
+          "kind": "lab",
+          "status": "approved"
+        },
+        {
+          "label": "Row actions",
+          "path": "row-actions/index.html",
+          "kind": "lab",
+          "status": "approved"
+        }
       ]
     },
     {
       "id": "pre-game",
       "title": "Pre-game / старт",
       "items": [
-        { "label": "Pre-game shell v2", "path": "pre-game-shell/index.html", "kind": "lab" },
-        { "label": "Auth flow", "path": "auth-flow/index.html", "kind": "lab", "status": "approved" },
-        { "label": "New game mode", "path": "new-game-mode/index.html", "kind": "lab", "status": "approved" },
-        { "label": "Game templates", "path": "game-templates/index.html", "kind": "lab", "status": "approved" },
-        { "label": "Scenario icons (архив SVG)", "path": "game-templates/scenario-icons/index.html", "kind": "lab", "status": "archived" },
+        {
+          "label": "Pre-game shell v2",
+          "path": "pre-game-shell/index.html",
+          "kind": "lab"
+        },
+        {
+          "label": "Auth flow",
+          "path": "auth-flow/index.html",
+          "kind": "lab",
+          "status": "approved"
+        },
+        {
+          "label": "New game mode",
+          "path": "new-game-mode/index.html",
+          "kind": "lab",
+          "status": "approved"
+        },
+        {
+          "label": "Game templates",
+          "path": "game-templates/index.html",
+          "kind": "lab",
+          "status": "approved"
+        },
+        {
+          "label": "Scenario icons (архив SVG)",
+          "path": "game-templates/scenario-icons/index.html",
+          "kind": "lab",
+          "status": "archived"
+        },
         {
           "label": "Портреты персонажей (4 жизни)",
           "path": "game-templates/persona-portraits-round/index.html",
@@ -96,50 +286,233 @@
       "id": "game-ui",
       "title": "Игровой UI",
       "items": [
-        { "label": "Period close", "path": "period-close/index.html", "kind": "lab", "status": "approved" },
+        {
+          "label": "Period close",
+          "path": "period-close/index.html",
+          "kind": "lab",
+          "status": "approved"
+        },
         {
           "label": "Run finale — GE1 (победа / поражение)",
           "path": "run-finale/index.html",
           "kind": "lab"
         },
-        { "label": "Juice round", "path": "game-ui/juice-round/index.html", "kind": "lab", "status": "approved" },
+        {
+          "label": "Run finale — разбор партии (★ Б)",
+          "path": "run-finale/recap-round/index.html",
+          "kind": "lab",
+          "status": "approved"
+        },
+        {
+          "label": "Juice round",
+          "path": "game-ui/juice-round/index.html",
+          "kind": "lab",
+          "status": "approved"
+        },
         {
           "label": "UI states + icons (B1-B3)",
           "path": "ui-states-unified/states-icons-round/index.html",
           "kind": "lab",
           "status": "approved"
         },
-        { "label": "Achievements", "path": "achievements-progress/index.html", "kind": "lab" }
+        {
+          "label": "Achievements",
+          "path": "achievements-progress/index.html",
+          "kind": "lab"
+        }
       ]
     },
     {
       "id": "primitives-brand",
       "title": "Примитивы и бренд",
       "items": [
-        { "label": "Primitives MQX", "path": "primitives/index.html", "kind": "lab", "status": "approved" },
-        { "label": "Brand logo", "path": "brand-logo/index.html", "kind": "lab", "status": "approved" },
-        { "label": "Brand tagline round", "path": "brand-logo/tagline-round/index.html", "kind": "lab" },
-        { "label": "Маскоты в «Чернильном крае»: Монетка с надписью на ободе и Квитя (review)", "path": "mascots/ink-mascots-round/index.html", "kind": "lab" },
-        { "label": "Напарники персонажей: знакомство A / B (review)", "path": "mascots/companions-round/index.html", "kind": "lab" },
-        { "label": "Монетка на экранах до выбора роли: вход, меню, выбор жизни (выбран B · в шапке)", "path": "mascots/pregame-monetka-round/index.html", "kind": "lab" },
-        { "label": "Дашборд ★ BG-1 — prod parity (в prod с 2026-10-14)", "path": "dashboard/bg1-page-round/index.html", "kind": "lab", "status": "approved" },
-        { "label": "Настольная игра — окна Капитала в «Чернильном крае»: A / B / C (выбран A)", "path": "board-game/ink-sheets-round/index.html", "kind": "lab" },
-        { "label": "Настольная игра — необрутализм A на экранах (review)", "path": "board-game/neobrutal-a-round/index.html", "kind": "lab" },
-        { "label": "Настольная игра — необрутализм в цветах игры: A / B / C (выбран A)", "path": "board-game/neobrutal-round/index.html", "kind": "lab" },
-        { "label": "Настольная игра ★ конец хода: превью списания и подушка (PR-07, канон A)", "path": "board-game/close-preview-round/index.html", "kind": "lab", "status": "approved" },
-        { "label": "Настольная игра ★ BG-3 — дашборд: одна рамка на уровень (канон)", "path": "board-game/frames-round/index.html", "kind": "lab", "status": "approved" },
-        { "label": "Настольная игра ★ BG-2 — остальные экраны (канон)", "path": "board-game/screens-round/index.html", "kind": "lab", "status": "approved" },
-        { "label": "Настольная игра ★ BG-1 — дашборд (концепция, канон)", "path": "board-game/hybrid-round/index.html", "kind": "lab", "status": "approved" },
-        { "label": "Настольная игра — раунд 2: логика игры (superseded)", "path": "board-game/logic-round/index.html", "kind": "lab" },
-        { "label": "Настольная игра — раунд 1: направление (superseded)", "path": "board-game/direction-round/index.html", "kind": "lab" }
+        {
+          "label": "Primitives MQX",
+          "path": "primitives/index.html",
+          "kind": "lab",
+          "status": "approved"
+        },
+        {
+          "label": "Brand logo",
+          "path": "brand-logo/index.html",
+          "kind": "lab",
+          "status": "approved"
+        },
+        {
+          "label": "Brand tagline round",
+          "path": "brand-logo/tagline-round/index.html",
+          "kind": "lab"
+        },
+        {
+          "label": "Маскоты в «Чернильном крае»: Монетка с надписью на ободе и Квитя (review)",
+          "path": "mascots/ink-mascots-round/index.html",
+          "kind": "lab"
+        },
+        {
+          "label": "Напарники персонажей: знакомство A / B (review)",
+          "path": "mascots/companions-round/index.html",
+          "kind": "lab"
+        },
+        {
+          "label": "Маскоты в стиле питомца: четыре пары · B Мягкий объём ★",
+          "path": "mascots/pet-style-round/index.html",
+          "kind": "lab",
+          "status": "approved"
+        },
+        {
+          "label": "Монетка и Квитя · A Чистый объём ★",
+          "path": "mascots/monetka-kvitya-soft-round/index.html",
+          "kind": "lab",
+          "status": "approved"
+        },
+        {
+          "label": "Монетка на экранах до выбора роли: вход, меню, выбор жизни (выбран B · в шапке)",
+          "path": "mascots/pregame-monetka-round/index.html",
+          "kind": "lab"
+        },
+        {
+          "label": "История: главная BG-1 до BG-3/BG-4 (не текущий вид)",
+          "path": "dashboard/bg1-page-round/index.html",
+          "kind": "lab",
+          "status": "approved"
+        },
+        {
+          "label": "Настольная игра — окна Капитала в «Чернильном крае»: A / B / C (выбран A)",
+          "path": "board-game/ink-sheets-round/index.html",
+          "kind": "lab"
+        },
+        {
+          "label": "Чернильный край: источник утверждённой карты K1 (исторический раунд)",
+          "path": "board-game/neobrutal-a-round/index.html",
+          "kind": "lab"
+        },
+        {
+          "label": "Настольная игра — необрутализм в цветах игры: A / B / C (выбран A)",
+          "path": "board-game/neobrutal-round/index.html",
+          "kind": "lab"
+        },
+        {
+          "label": "Настольная игра ★ конец хода: превью списания и подушка (PR-07, канон A)",
+          "path": "board-game/close-preview-round/index.html",
+          "kind": "lab",
+          "status": "approved"
+        },
+        {
+          "label": "Источник канона BG-3 E — одна рамка на уровень",
+          "path": "board-game/frames-round/index.html",
+          "kind": "lab",
+          "status": "approved"
+        },
+        {
+          "label": "Настольная игра ★ BG-2 — остальные экраны (канон)",
+          "path": "board-game/screens-round/index.html",
+          "kind": "lab",
+          "status": "approved"
+        },
+        {
+          "label": "История: BG-1 — исходная концепция главной",
+          "path": "board-game/hybrid-round/index.html",
+          "kind": "lab",
+          "status": "approved"
+        },
+        {
+          "label": "Настольная игра — раунд 2: логика игры (superseded)",
+          "path": "board-game/logic-round/index.html",
+          "kind": "lab"
+        },
+        {
+          "label": "Настольная игра — раунд 1: направление (superseded)",
+          "path": "board-game/direction-round/index.html",
+          "kind": "lab"
+        }
       ]
     },
     {
       "id": "plan-product",
       "title": "ТВОЙ ПЛАН (отдельный продукт)",
       "items": [
-        { "label": "ТВОЙ ПЛАН · bento-round: ★ отчёт C2 и лозунг U1 «Деньги отвечают» (SPL-404)", "path": "plan-checkup/bento-round/index.html", "kind": "lab" }
+        {
+          "label": "ТВОЙ ПЛАН · P3-07: ★ 2 · Маршрут цели",
+          "path": "plan-checkup/goals-round/index.html",
+          "kind": "lab",
+          "status": "approved"
+        },
+        {
+          "label": "ТВОЙ ПЛАН · P3-03: ★ 3 · Мост между шагами",
+          "path": "plan-checkup/continuity-round/index.html",
+          "kind": "lab",
+          "status": "approved"
+        },
+        {
+          "label": "ТВОЙ ПЛАН · P3-08: ★ 2 · Журнал с полями",
+          "path": "plan-checkup/history-round/index.html",
+          "kind": "lab",
+          "status": "approved"
+        },
+        {
+          "label": "ТВОЙ ПЛАН · P3-02: ★ компактные действия B",
+          "path": "plan-checkup/actions-round/index.html",
+          "kind": "lab",
+          "status": "approved"
+        },
+        {
+          "label": "ТВОЙ ПЛАН · Бенто: лаборатория блоков M/F/A/S (review)",
+          "path": "plan-checkup/direction-round/index.html",
+          "kind": "lab"
+        },
+        {
+          "label": "ТВОЙ ПЛАН · bento-round: ★ отчёт C2 и лозунг U1 «Деньги отвечают» (SPL-404)",
+          "path": "plan-checkup/bento-round/index.html",
+          "kind": "lab"
+        }
+      ]
+    },
+    {
+      "id": "board-game",
+      "title": "Настольная игра",
+      "items": [
+        {
+          "label": "Архив: улучшения ink — оставлен текущий вид, A/B/C отклонены",
+          "path": "board-game/ink-refinement-round/index.html",
+          "kind": "lab",
+          "status": "archived"
+        }
+      ]
+    },
+    {
+      "id": "landing-narrator-poses",
+      "title": "Лендинг · рассказчики",
+      "items": [
+        {
+          "label": "Лендинг · контекстные позы и чередование · B ★",
+          "path": "landing-narrator-poses-round/index.html",
+          "kind": "lab",
+          "status": "approved"
+        }
       ]
     }
-  ]
+  ],
+  "archive": {
+    "policy": "Заменённые раунды скрыты из основной навигации; адреса и история решений сохраняются. Review не архивируется автоматически.",
+    "paths": [
+      "dashboard/index.html",
+      "dashboard/bg1-page-round/index.html",
+      "dashboard/goal-chain-round/index.html",
+      "dashboard/period-actions-round/index.html",
+      "dashboard/hero-no-timer-round/index.html",
+      "dashboard/cushion-fill-round/index.html",
+      "dashboard/goal-path-stepper-round/index.html",
+      "character-needs/dashboard-needs-v7-round/index.html",
+      "board-game/hybrid-round/index.html",
+      "board-game/frames-round/index.html",
+      "board-game/neobrutal-a-round/index.html",
+      "board-game/neobrutal-round/index.html",
+      "board-game/logic-round/index.html",
+      "board-game/direction-round/index.html",
+      "mascots/ink-mascots-round/index.html",
+      "mascots/companions-round/index.html",
+      "game-templates/persona-portraits-round/index.html",
+      "board-game/ink-refinement-round/index.html"
+    ]
+  }
 }

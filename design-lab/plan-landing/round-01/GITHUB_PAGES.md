@@ -1,6 +1,6 @@
 # GitHub: исходники и размещение лендинга
 
-Состояние: вариант A опубликован 2026-10-30 в отдельном репозитории. Сайт: https://avyakunichkin-code.github.io/tvoy-plan-landing/. Ниже сохранён способ размещения; фактические результаты — [DEPLOYMENT.md](./DEPLOYMENT.md).
+Состояние: вариант A опубликован 2026-10-30 в отдельном репозитории. Сайт: https://avyakunichkin-code.github.io/tvoy-plan-landing/. Ниже сохранён способ размещения; фактические результаты — [DEPLOYMENT.md](DEPLOYMENT.md).
 
 ## Можно ли разместить
 

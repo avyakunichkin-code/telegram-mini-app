@@ -1,0 +1,109 @@
+{
+  "coins": {
+    "welcome": {
+      "file": "coin-state-welcome.webp",
+      "cx": 120,
+      "cy": 116.667,
+      "topR": 57.2,
+      "bottomR": 63.067,
+      "sourceRadius": 210.25,
+      "scale": 1.0464
+    },
+    "wink": {
+      "file": "coin-state-wink.webp",
+      "cx": 120,
+      "cy": 116.667,
+      "topR": 57.2,
+      "bottomR": 63.067,
+      "sourceRadius": 243.5,
+      "scale": 0.9035
+    },
+    "surprised": {
+      "file": "coin-state-surprised.webp",
+      "cx": 120,
+      "cy": 116.667,
+      "topR": 57.2,
+      "bottomR": 63.067,
+      "sourceRadius": 243.75,
+      "scale": 0.9026
+    },
+    "think": {
+      "file": "coin-state-think.webp",
+      "cx": 120,
+      "cy": 116.667,
+      "topR": 57.2,
+      "bottomR": 63.067,
+      "sourceRadius": 246.25,
+      "scale": 0.8934
+    },
+    "joy": {
+      "file": "coin-state-joy.webp",
+      "cx": 120,
+      "cy": 116.667,
+      "topR": 57.2,
+      "bottomR": 63.067,
+      "sourceRadius": 234.75,
+      "scale": 0.9372
+    },
+    "worried": {
+      "file": "coin-state-worried.webp",
+      "cx": 120,
+      "cy": 116.667,
+      "topR": 57.2,
+      "bottomR": 63.067,
+      "sourceRadius": 235.0,
+      "scale": 0.9362
+    },
+    "victory": {
+      "file": "coin-state-victory.webp",
+      "cx": 120,
+      "cy": 116.667,
+      "topR": 57.2,
+      "bottomR": 63.067,
+      "sourceRadius": 235.0,
+      "scale": 0.9362
+    }
+  },
+  "receipts": {
+    "default": {
+      "file": "kvitya-state-default.webp",
+      "face": "kvitya-state-default-face.webp"
+    },
+    "joy": {
+      "file": "kvitya-state-joy.webp",
+      "face": "kvitya-state-joy-face.webp"
+    },
+    "think": {
+      "file": "kvitya-state-think.webp",
+      "face": "kvitya-state-think-face.webp"
+    }
+  },
+  "strips": [
+    {
+      "source": "coin-expressions-1",
+      "names": [
+        "wink",
+        "surprised",
+        "think"
+      ],
+      "groups": 3
+    },
+    {
+      "source": "coin-expressions-2",
+      "names": [
+        "joy",
+        "worried",
+        "victory"
+      ],
+      "groups": 3
+    },
+    {
+      "source": "kvitya-expressions",
+      "names": [
+        "joy",
+        "think"
+      ],
+      "groups": 2
+    }
+  ]
+}

@@ -1,7 +1,7 @@
 # UI states + icons — утверждено
 
 **Дата:** 2026-05-29  
-**Раунд:** [`states-icons-round/`](./states-icons-round/)
+**Раунд:** [`states-icons-round/`](states-icons-round/)
 
 | Секция | ID | Решение |
 |--------|-----|---------|

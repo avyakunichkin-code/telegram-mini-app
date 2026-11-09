@@ -1,6 +1,6 @@
-# bg1-page-round — дашборд ★ BG-1, prod parity
+# bg1-page-round — исторический снимок BG-1
 
-Страница целиком, как в prod `DashboardPremium` после переноса ★ BG-1 (2026-10-14).
+Историческая страница после переноса BG-1 (14.10.2026). Текущий канон — [current-page-round](../current-page-round/). Этот снимок не отражает BG-3/BG-4 и уточнения 04.11.
 Концепция и утверждение — [`../../board-game/APPROVED.md`](../../board-game/APPROVED.md), раунд [`../../board-game/hybrid-round/`](../../board-game/hybrid-round/).
 
 Два состояния одного хода: зарплата не забрана (цель свёрнута) и после зарплаты (цель раскрыта).

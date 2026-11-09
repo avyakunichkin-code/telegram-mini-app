@@ -1,0 +1,192 @@
+{
+  "ok": true,
+  "checks": [
+    {
+      "width": 360,
+      "theme": "light",
+      "state": "invite"
+    },
+    {
+      "width": 360,
+      "theme": "light",
+      "state": "form"
+    },
+    {
+      "width": 360,
+      "theme": "light",
+      "state": "sending"
+    },
+    {
+      "width": 360,
+      "theme": "light",
+      "state": "error"
+    },
+    {
+      "width": 360,
+      "theme": "light",
+      "state": "success"
+    },
+    {
+      "width": 360,
+      "theme": "light",
+      "state": "empty"
+    },
+    {
+      "width": 360,
+      "theme": "dark",
+      "state": "invite"
+    },
+    {
+      "width": 360,
+      "theme": "dark",
+      "state": "form"
+    },
+    {
+      "width": 360,
+      "theme": "dark",
+      "state": "sending"
+    },
+    {
+      "width": 360,
+      "theme": "dark",
+      "state": "error"
+    },
+    {
+      "width": 360,
+      "theme": "dark",
+      "state": "success"
+    },
+    {
+      "width": 360,
+      "theme": "dark",
+      "state": "empty"
+    },
+    {
+      "width": 390,
+      "theme": "light",
+      "state": "invite"
+    },
+    {
+      "width": 390,
+      "theme": "light",
+      "state": "form"
+    },
+    {
+      "width": 390,
+      "theme": "light",
+      "state": "sending"
+    },
+    {
+      "width": 390,
+      "theme": "light",
+      "state": "error"
+    },
+    {
+      "width": 390,
+      "theme": "light",
+      "state": "success"
+    },
+    {
+      "width": 390,
+      "theme": "light",
+      "state": "empty"
+    },
+    {
+      "width": 390,
+      "theme": "dark",
+      "state": "invite"
+    },
+    {
+      "width": 390,
+      "theme": "dark",
+      "state": "form"
+    },
+    {
+      "width": 390,
+      "theme": "dark",
+      "state": "sending"
+    },
+    {
+      "width": 390,
+      "theme": "dark",
+      "state": "error"
+    },
+    {
+      "width": 390,
+      "theme": "dark",
+      "state": "success"
+    },
+    {
+      "width": 390,
+      "theme": "dark",
+      "state": "empty"
+    },
+    {
+      "width": 1440,
+      "theme": "light",
+      "state": "invite"
+    },
+    {
+      "width": 1440,
+      "theme": "light",
+      "state": "form"
+    },
+    {
+      "width": 1440,
+      "theme": "light",
+      "state": "sending"
+    },
+    {
+      "width": 1440,
+      "theme": "light",
+      "state": "error"
+    },
+    {
+      "width": 1440,
+      "theme": "light",
+      "state": "success"
+    },
+    {
+      "width": 1440,
+      "theme": "light",
+      "state": "empty"
+    },
+    {
+      "width": 1440,
+      "theme": "dark",
+      "state": "invite"
+    },
+    {
+      "width": 1440,
+      "theme": "dark",
+      "state": "form"
+    },
+    {
+      "width": 1440,
+      "theme": "dark",
+      "state": "sending"
+    },
+    {
+      "width": 1440,
+      "theme": "dark",
+      "state": "error"
+    },
+    {
+      "width": 1440,
+      "theme": "dark",
+      "state": "success"
+    },
+    {
+      "width": 1440,
+      "theme": "dark",
+      "state": "empty"
+    }
+  ],
+  "interactions": [
+    "A answers/error/retry",
+    "B back/retained answers/complete",
+    "later/menu",
+    "no localStorage"
+  ],
+  "errors": []
+}

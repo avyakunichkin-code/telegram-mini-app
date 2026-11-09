@@ -1,4 +1,8 @@
-# Period close — итог месяца
+# Period close — итоги хода
+
+Новый раунд 05.11.2026: [понятный итог A/B](clear-result-round/README.md)
+без дублирования сумм; A утверждён владельцем. Старые пять вариантов
+ниже — историческая витрина, не описание актуального runtime.
 
 Статичная витрина: **5 вариантов** UI + демо **механики** (авто до 3-го периода, хвостик с 4-го).
 
@@ -19,11 +23,12 @@ npx serve .
 
 | Файл | Назначение |
 |------|------------|
-| [VARIANTS.md](./VARIANTS.md) | Таблица вариантов, механика, задел API |
-| [index.html](./index.html) | Макеты A–E в phone frame |
-| [styles.css](./styles.css) | Стили (MQ-токены) |
-| [lab.js](./lab.js) | Слайдер периода, открытие панелей |
+| [VARIANTS.md](VARIANTS.md) | Таблица вариантов, механика, задел API |
+| [index.html](index.html) | Макеты A–E в phone frame |
+| [styles.css](styles.css) | Стили (MQ-токены) |
+| [lab.js](lab.js) | Слайдер периода, открытие панелей |
 
 ## Текущий prod
 
-[`PeriodCloseModal.jsx`](../../frontend-react/src/components/PeriodCloseModal.jsx) — полноэкранный modal + длинные списки breakdown.
+[`MqxPeriodCloseRitual.jsx`](../../frontend-react/src/components/mqx/juice/MqxPeriodCloseRitual.jsx)
+— баланс, изменение за весь ход, beats и highlights. Компактный A из нового раунда перенесён в этот компонент.

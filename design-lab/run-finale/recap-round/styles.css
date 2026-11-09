@@ -1,0 +1,30 @@
+/* run-finale/recap-round — разбор партии: только новые блоки поверх финала ★ BG-2. Без новых цветов. */
+
+.f-phone { background: var(--bg-board); }
+.s-link { background: none; border: 0; color: var(--turn); font: 700 14px var(--body); min-height: 44px; }
+
+.s-finish__cell.r-cell--small { width: 84px; height: 84px; border-radius: 20px; }
+.s-finish__cell.r-cell--small img { width: 72px; height: 72px; }
+
+.r-chart { margin: 0; width: 100%; background: var(--bg-cell); border: var(--hair); border-radius: var(--r-cell); padding: 10px; }
+.r-chart figcaption { color: var(--ink-soft); font-size: 12.5px; text-align: left; margin-bottom: 6px; }
+.r-chart svg, .r-turn svg { display: block; width: 100%; height: auto; }
+
+.r-line { fill: none; stroke: var(--turn); stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
+.r-mark circle { fill: var(--coin-soft); stroke: var(--coin-rim); stroke-width: 2; }
+.r-mark text { fill: var(--ink); font: 800 11px var(--body); text-anchor: middle; }
+.r-dot { fill: var(--risk); }
+
+.r-list { margin: 0; padding: 0 0 0 22px; width: 100%; text-align: left; font-size: 13.5px; display: grid; gap: 4px; }
+
+.r-feed { list-style: none; margin: 0; padding: 0; width: 100%; display: grid; gap: 8px; text-align: left; }
+.r-feed li { background: var(--bg-cell); border: var(--hair); border-radius: 12px; padding: 9px 12px; display: grid; grid-template-columns: 1fr auto; gap: 1px 10px; align-items: center; }
+.r-feed span { grid-column: 1 / -1; color: var(--ink-soft); font-size: 12px; }
+.r-feed b { font-size: 14px; }
+.r-feed em { font-style: normal; font-weight: 700; font-size: 13.5px; white-space: nowrap; }
+.r-gain { color: var(--gain); }
+.r-risk { color: var(--risk); }
+
+.r-turn { width: 100%; background: var(--bg-cell); border: var(--hair); border-radius: var(--r-cell); padding: 12px; display: grid; gap: 4px; text-align: left; }
+.r-turn small { color: var(--ink-soft); font-size: 12.5px; }
+.r-turn b { font-size: 15px; }

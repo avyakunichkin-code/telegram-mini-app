@@ -1,0 +1,58 @@
+[
+  {
+    "name": "student-introduce",
+    "source": "exec-21cf0183-b7c7-450e-95fe-2d013fd5f2a9.png",
+    "alpha_bbox": [
+      0,
+      16,
+      878,
+      1747
+    ],
+    "export_size": [
+      284,
+      560
+    ]
+  },
+  {
+    "name": "professional-explain",
+    "source": "exec-001a8a73-0804-445f-8106-085c58dbe293.png",
+    "alpha_bbox": [
+      0,
+      14,
+      842,
+      1756
+    ],
+    "export_size": [
+      271,
+      560
+    ]
+  },
+  {
+    "name": "manager-choice",
+    "source": "exec-22f9037c-5069-4058-b89f-296a38dadcd2.png",
+    "alpha_bbox": [
+      0,
+      71,
+      947,
+      1661
+    ],
+    "export_size": [
+      334,
+      560
+    ]
+  },
+  {
+    "name": "entrepreneur-roadmap",
+    "source": "exec-3e2b4668-d624-49f0-acd4-bce7873a3e7d.png",
+    "alpha_bbox": [
+      9,
+      0,
+      871,
+      1752
+    ],
+    "export_size": [
+      276,
+      560
+    ]
+  }
+]

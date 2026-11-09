@@ -1,0 +1,12 @@
+{
+  "ok": true,
+  "checks": [
+    "catalog 1440: all pairs/sizes, PNG fallback, no overflow",
+    "menu/saves/picker 1440: all four roles, no companions before selection",
+    "catalog 390: all pairs/sizes, PNG fallback, no overflow",
+    "menu/saves/picker 390: all four roles, no companions before selection"
+  ],
+  "pageErrors": [],
+  "httpErrors": [],
+  "fixtures": "synthetic API only; no backend writes"
+}

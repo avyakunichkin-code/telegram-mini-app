@@ -1,0 +1,393 @@
+{
+  "ok": true,
+  "combinations": 48,
+  "checks": [
+    {
+      "width": 1440,
+      "theme": "light",
+      "persona": "student",
+      "variant": "a",
+      "images": "loaded",
+      "overflow": false
+    },
+    {
+      "width": 1440,
+      "theme": "light",
+      "persona": "student",
+      "variant": "b",
+      "images": "loaded",
+      "overflow": false
+    },
+    {
+      "width": 1440,
+      "theme": "light",
+      "persona": "pro",
+      "variant": "a",
+      "images": "loaded",
+      "overflow": false
+    },
+    {
+      "width": 1440,
+      "theme": "light",
+      "persona": "pro",
+      "variant": "b",
+      "images": "loaded",
+      "overflow": false
+    },
+    {
+      "width": 1440,
+      "theme": "light",
+      "persona": "boss",
+      "variant": "a",
+      "images": "loaded",
+      "overflow": false
+    },
+    {
+      "width": 1440,
+      "theme": "light",
+      "persona": "boss",
+      "variant": "b",
+      "images": "loaded",
+      "overflow": false
+    },
+    {
+      "width": 1440,
+      "theme": "light",
+      "persona": "biz",
+      "variant": "a",
+      "images": "loaded",
+      "overflow": false
+    },
+    {
+      "width": 1440,
+      "theme": "light",
+      "persona": "biz",
+      "variant": "b",
+      "images": "loaded",
+      "overflow": false
+    },
+    {
+      "width": 1440,
+      "theme": "dark",
+      "persona": "student",
+      "variant": "a",
+      "images": "loaded",
+      "overflow": false
+    },
+    {
+      "width": 1440,
+      "theme": "dark",
+      "persona": "student",
+      "variant": "b",
+      "images": "loaded",
+      "overflow": false
+    },
+    {
+      "width": 1440,
+      "theme": "dark",
+      "persona": "pro",
+      "variant": "a",
+      "images": "loaded",
+      "overflow": false
+    },
+    {
+      "width": 1440,
+      "theme": "dark",
+      "persona": "pro",
+      "variant": "b",
+      "images": "loaded",
+      "overflow": false
+    },
+    {
+      "width": 1440,
+      "theme": "dark",
+      "persona": "boss",
+      "variant": "a",
+      "images": "loaded",
+      "overflow": false
+    },
+    {
+      "width": 1440,
+      "theme": "dark",
+      "persona": "boss",
+      "variant": "b",
+      "images": "loaded",
+      "overflow": false
+    },
+    {
+      "width": 1440,
+      "theme": "dark",
+      "persona": "biz",
+      "variant": "a",
+      "images": "loaded",
+      "overflow": false
+    },
+    {
+      "width": 1440,
+      "theme": "dark",
+      "persona": "biz",
+      "variant": "b",
+      "images": "loaded",
+      "overflow": false
+    },
+    {
+      "width": 768,
+      "theme": "light",
+      "persona": "student",
+      "variant": "a",
+      "images": "loaded",
+      "overflow": false
+    },
+    {
+      "width": 768,
+      "theme": "light",
+      "persona": "student",
+      "variant": "b",
+      "images": "loaded",
+      "overflow": false
+    },
+    {
+      "width": 768,
+      "theme": "light",
+      "persona": "pro",
+      "variant": "a",
+      "images": "loaded",
+      "overflow": false
+    },
+    {
+      "width": 768,
+      "theme": "light",
+      "persona": "pro",
+      "variant": "b",
+      "images": "loaded",
+      "overflow": false
+    },
+    {
+      "width": 768,
+      "theme": "light",
+      "persona": "boss",
+      "variant": "a",
+      "images": "loaded",
+      "overflow": false
+    },
+    {
+      "width": 768,
+      "theme": "light",
+      "persona": "boss",
+      "variant": "b",
+      "images": "loaded",
+      "overflow": false
+    },
+    {
+      "width": 768,
+      "theme": "light",
+      "persona": "biz",
+      "variant": "a",
+      "images": "loaded",
+      "overflow": false
+    },
+    {
+      "width": 768,
+      "theme": "light",
+      "persona": "biz",
+      "variant": "b",
+      "images": "loaded",
+      "overflow": false
+    },
+    {
+      "width": 768,
+      "theme": "dark",
+      "persona": "student",
+      "variant": "a",
+      "images": "loaded",
+      "overflow": false
+    },
+    {
+      "width": 768,
+      "theme": "dark",
+      "persona": "student",
+      "variant": "b",
+      "images": "loaded",
+      "overflow": false
+    },
+    {
+      "width": 768,
+      "theme": "dark",
+      "persona": "pro",
+      "variant": "a",
+      "images": "loaded",
+      "overflow": false
+    },
+    {
+      "width": 768,
+      "theme": "dark",
+      "persona": "pro",
+      "variant": "b",
+      "images": "loaded",
+      "overflow": false
+    },
+    {
+      "width": 768,
+      "theme": "dark",
+      "persona": "boss",
+      "variant": "a",
+      "images": "loaded",
+      "overflow": false
+    },
+    {
+      "width": 768,
+      "theme": "dark",
+      "persona": "boss",
+      "variant": "b",
+      "images": "loaded",
+      "overflow": false
+    },
+    {
+      "width": 768,
+      "theme": "dark",
+      "persona": "biz",
+      "variant": "a",
+      "images": "loaded",
+      "overflow": false
+    },
+    {
+      "width": 768,
+      "theme": "dark",
+      "persona": "biz",
+      "variant": "b",
+      "images": "loaded",
+      "overflow": false
+    },
+    {
+      "width": 390,
+      "theme": "light",
+      "persona": "student",
+      "variant": "a",
+      "images": "loaded",
+      "overflow": false
+    },
+    {
+      "width": 390,
+      "theme": "light",
+      "persona": "student",
+      "variant": "b",
+      "images": "loaded",
+      "overflow": false
+    },
+    {
+      "width": 390,
+      "theme": "light",
+      "persona": "pro",
+      "variant": "a",
+      "images": "loaded",
+      "overflow": false
+    },
+    {
+      "width": 390,
+      "theme": "light",
+      "persona": "pro",
+      "variant": "b",
+      "images": "loaded",
+      "overflow": false
+    },
+    {
+      "width": 390,
+      "theme": "light",
+      "persona": "boss",
+      "variant": "a",
+      "images": "loaded",
+      "overflow": false
+    },
+    {
+      "width": 390,
+      "theme": "light",
+      "persona": "boss",
+      "variant": "b",
+      "images": "loaded",
+      "overflow": false
+    },
+    {
+      "width": 390,
+      "theme": "light",
+      "persona": "biz",
+      "variant": "a",
+      "images": "loaded",
+      "overflow": false
+    },
+    {
+      "width": 390,
+      "theme": "light",
+      "persona": "biz",
+      "variant": "b",
+      "images": "loaded",
+      "overflow": false
+    },
+    {
+      "width": 390,
+      "theme": "dark",
+      "persona": "student",
+      "variant": "a",
+      "images": "loaded",
+      "overflow": false
+    },
+    {
+      "width": 390,
+      "theme": "dark",
+      "persona": "student",
+      "variant": "b",
+      "images": "loaded",
+      "overflow": false
+    },
+    {
+      "width": 390,
+      "theme": "dark",
+      "persona": "pro",
+      "variant": "a",
+      "images": "loaded",
+      "overflow": false
+    },
+    {
+      "width": 390,
+      "theme": "dark",
+      "persona": "pro",
+      "variant": "b",
+      "images": "loaded",
+      "overflow": false
+    },
+    {
+      "width": 390,
+      "theme": "dark",
+      "persona": "boss",
+      "variant": "a",
+      "images": "loaded",
+      "overflow": false
+    },
+    {
+      "width": 390,
+      "theme": "dark",
+      "persona": "boss",
+      "variant": "b",
+      "images": "loaded",
+      "overflow": false
+    },
+    {
+      "width": 390,
+      "theme": "dark",
+      "persona": "biz",
+      "variant": "a",
+      "images": "loaded",
+      "overflow": false
+    },
+    {
+      "width": 390,
+      "theme": "dark",
+      "persona": "biz",
+      "variant": "b",
+      "images": "loaded",
+      "overflow": false
+    }
+  ],
+  "pageErrors": [],
+  "httpErrors": [],
+  "urlStateRestored": true
+}

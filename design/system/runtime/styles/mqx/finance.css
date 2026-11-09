@@ -2208,7 +2208,49 @@ body [class*='modal'] {
   height: 56px;
 }
 
-/* Портреты персонажей (persona-portraits-round) */
+/* ★ B «Мягкий объём»: общий предмет-напарник и каталог ассетов. */
+.mqx-persona-companion,
+.mqx-persona-companion img {
+  display: block;
+  width: auto;
+  max-width: 100%;
+  object-fit: contain;
+}
+.mqx-kvitya-image { object-fit: contain; }
+.mqx-guide-mascots figure { margin: 0; padding: var(--mq-sp-3); text-align: center; }
+.mqx-guide-mascots img { margin: 0 auto var(--mq-sp-2); }
+.mqx-catalog-mascots, .mqx-guide-mascots {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr));
+  gap: var(--mq-sp-4);
+}
+.mqx-guide-mascots { grid-template-columns: repeat(auto-fit, minmax(min(100%, 140px), 1fr)); }
+.mqx-catalog-mascots__card {
+  margin: 0;
+  padding: var(--mq-sp-4);
+  border: 1px solid var(--mq-board-ink-soft);
+  border-radius: 12px;
+  background: var(--mq-cell);
+}
+.mqx-catalog-mascots__pair,
+.mqx-catalog-mascots__sizes {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: var(--mq-sp-4);
+}
+.mqx-catalog-mascots__pair { min-height: 108px; }
+.mqx-catalog-mascots__card figcaption {
+  display: grid;
+  gap: var(--mq-sp-1);
+  margin: var(--mq-sp-4) 0;
+}
+.mqx-catalog-mascots__card figcaption span {
+  font-size: var(--mq-fs-caption);
+  color: var(--mq-board-ink-soft);
+}
+
+/* Портреты персонажей: ★ B «Мягкий объём», mascots/pet-style-round. */
 .mqx-scenario-picker--persona .mqx-scenario-strip__icon-wrap {
   overflow: hidden;
   display: flex;
@@ -3175,7 +3217,7 @@ body [class*='modal'] {
   margin: 0 0 10px;
   font-size: 13px;
   line-height: 1.4;
-  color: var(--mqx-text-muted, rgba(255, 255, 255, 0.55));
+  color: var(--mq-board-ink-soft);
 }
 
 .mqx-cap-row-actions-stack {
@@ -3646,3 +3688,34 @@ body [class*='modal'] {
     transform: none;
   }
 }
+
+/* First investment A: approved compact bottom sheet, 2026-11-05. */
+.mqx-first-investment-empty p { margin: 0 0 var(--mq-sp-5); font-size: .875rem; }
+.mqx-first-investment-empty p + p { color: var(--mq-board-ink-soft); }
+.mqx-first-investment-empty__actions { display: grid; grid-template-columns: 1fr 1fr; gap: var(--mq-sp-4); }
+.mqx-first-investment-empty__bond { min-height: 2.75rem; padding: var(--mq-sp-4); border: 1px solid var(--mq-control-edge); border-radius: var(--mq-r-cell); background: var(--mq-cell); color: var(--mq-board-ink); font: inherit; font-size: .8125rem; font-weight: 800; }
+.mqx-sheet-root--portal .mqx-first-investment { left: 0; right: 0; width: 100%; max-width: 460px; padding: 16px 20px calc(12px + env(safe-area-inset-bottom, 0px)); border-radius: 24px 24px 0 0; background: var(--mq-board); color: var(--mq-board-ink); max-height: calc(100dvh - 16px); animation: mqx-first-investment-rise .3s cubic-bezier(.2,.8,.2,1); }
+.mqx-first-investment::before { content: ''; position: absolute; top: 8px; left: calc(50% - 18px); width: 36px; height: 4px; border-radius: 4px; background: var(--mq-cell-edge); }
+.mqx-first-investment .mqx-sheet__title { font-family: var(--mq-font-display); font-size: 1.5rem; }
+.mqx-first-investment .mqx-sheet__close { width: 44px; height: 44px; top: -8px; right: -8px; }
+.mqx-first-investment .mqx-sheet__sub { color: var(--mq-board-ink-soft); font-size: .75rem; }
+.mqx-first-investment .mqx-sheet__body { margin-top: var(--mq-sp-3); }
+.mqx-first-investment__form { display: flex; flex-direction: column; }
+.mqx-first-investment__main > label { display: block; font-size: .8125rem; font-weight: 800; }
+.mqx-first-investment__amount { position: relative; display: flex; align-items: center; border-bottom: 2px solid var(--mq-turn); margin: 2px 0 6px; }
+.mqx-first-investment__amount input { box-sizing: border-box; width: 100%; min-width: 0; min-height: 48px; padding: 4px 36px 4px 0; border: 0; border-radius: 0; background: transparent; color: var(--mq-board-ink); font: 900 2.25rem/1.2 var(--mq-font-display); letter-spacing: -.03em; }
+.mqx-first-investment__amount > span { position: absolute; right: 0; font: 900 1.5rem var(--mq-font-display); color: var(--mq-board-ink-soft); }
+.mqx-first-investment__hint { margin: 0; color: var(--mq-board-ink-soft); font-size: .75rem; line-height: 1.4; }
+.mqx-first-investment__presets { display: flex; gap: var(--mq-sp-3); margin: 10px 0 12px; }
+.mqx-first-investment__presets button { flex: 1; min-width: 0; min-height: 44px; padding: var(--mq-sp-2); border: 0; border-radius: var(--mq-r-cell); background: var(--mq-cell); color: var(--mq-board-ink); box-shadow: 0 2px 0 var(--mq-cell-edge); font: inherit; font-size: .8125rem; font-weight: 700; }
+.mqx-first-investment__remaining { display: flex; justify-content: space-between; gap: var(--mq-sp-3); border-top: 1px solid var(--mq-cell-edge); padding-top: var(--mq-sp-4); font-size: .8125rem; }
+.mqx-first-investment__remaining strong { white-space: nowrap; }
+.mqx-first-investment__warning { margin: var(--mq-sp-4) 0 0; padding: var(--mq-sp-4); color: var(--mq-risk); background: var(--mq-risk-soft); border-radius: var(--mq-r-cell); font-size: .8125rem; }
+.mqx-first-investment__footer { position: sticky; bottom: 0; padding-top: var(--mq-sp-5); background: var(--mq-board); }
+.mqx-bg-btn.mqx-first-investment__submit { display: block; width: 100%; min-height: 48px; padding: var(--mq-sp-4); border: 0; border-radius: var(--mq-r-cell); background: var(--mq-turn); color: var(--mq-turn-on); box-shadow: 0 3px 0 var(--mq-turn-deep); font: inherit; font-size: .875rem; font-weight: 800; cursor: pointer; }
+.mqx-first-investment__footer .mqx-first-investment__hint { margin-top: var(--mq-sp-3); text-align: center; font-size: .75rem; }
+.mqx-first-investment button:disabled { opacity: .5; cursor: default; }
+.mqx-first-investment button:focus-visible, .mqx-first-investment input:focus-visible { outline: 2px solid var(--mq-turn); outline-offset: 2px; }
+@keyframes mqx-first-investment-rise { from { transform: translateY(100%); } to { transform: translateY(0); } }
+@media (max-width: 390px) { .mqx-first-investment-empty__actions { grid-template-columns: 1fr; } }
+@media (prefers-reduced-motion: reduce) { .mqx-sheet-root--portal .mqx-first-investment { animation: none; } }

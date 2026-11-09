@@ -182,3 +182,62 @@ body {
   margin: 0;
   background: var(--tg-theme-secondary-bg-color, var(--tg-theme-bg-color, #f5f6f8));
 }
+/* Pocket Board A — human approval 06.11.2026. Stable materials in both themes. */
+:root {
+  --mq-pocket-plum: #382449;
+  --mq-pocket-ink: #30223e;
+  --mq-pocket-on: #fff7e9;
+  --mq-pocket-muted-on: #ddc8ec;
+  --mq-pocket-gold: #ffd165;
+  --mq-pocket-lilac: #eee2fd;
+  --mq-pocket-lilac-edge: #c6b4d5;
+  --mq-pocket-salary: #f9d893;
+  --mq-pocket-salary-edge: #d3b37a;
+  --mq-pocket-paid: #e2edcc;
+  --mq-pocket-paid-edge: #bccba5;
+  --mq-pocket-paper: #f7f5f0;
+  --mq-pocket-note: #efe6d3;
+  --mq-pocket-note-edge: #d5c7af;
+  --mq-pocket-risk-on: #ffd0bc;
+  --mq-pocket-shadow: #21182c;
+  --mq-pocket-board-ink: #30223e;
+  --mq-pocket-board-muted: #6c6173;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --mq-pocket-paper: #211c2a;
+    --mq-pocket-board-ink: #f4eff8;
+    --mq-pocket-board-muted: #c2b6cf;
+    --mq-pocket-note: #302539;
+    --mq-pocket-note-edge: #705d7d;
+  }
+}
+
+/* Guest-first A: stable branded materials in both themes. */
+:root {
+  --mq-welcome-paper: #f4f0e9;
+  --mq-welcome-hatch: #ffffff03;
+  --mq-welcome-plum: #2c1b3d;
+  --mq-welcome-on: #fff;
+  --mq-welcome-shadow: #130c2390;
+  --mq-welcome-stamp: #eadbff;
+  --mq-welcome-stamp-ink: #51237d;
+  --mq-welcome-stamp-edge: #aa81c8;
+  --mq-welcome-coin: #ffd65f;
+  --mq-welcome-coin-edge: #efb831;
+  --mq-welcome-eyebrow: #d2b4ed;
+  --mq-welcome-copy: #ded2e9;
+  --mq-welcome-gold: #ffda65;
+  --mq-welcome-gold-shadow: #b88b28;
+  --mq-welcome-muted: #bcaecb;
+  --mq-welcome-link: #e6d7f2;
+  --mq-welcome-error: #ffbcb9;
+  --mq-welcome-focus: #ba83ff;
+  --mq-welcome-edge: #ded3e8;
+  --mq-welcome-claim-paper: #faf7f0;
+  --mq-welcome-ink: #292037;
+  --mq-welcome-claim-copy: #655775;
+  --mq-welcome-action: #7023dc;
+  --mq-welcome-action-shadow: #34155c;
+  --mq-welcome-claim-muted: #7a6c85;
+}

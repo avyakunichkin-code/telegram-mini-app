@@ -21,4 +21,8 @@
 @import './styles/mqx/board.css';
 @import './styles/mqx/pregame.css';
 @import './styles/mqx/ink.css';
+@import './styles/mqx/survey.css';
 @import './styles/admin.css';
+@import './styles/mqx/pocket-board.css';
+@import './styles/mqx/pocket-surfaces.css';
+@import './styles/mqx/guest-welcome.css';

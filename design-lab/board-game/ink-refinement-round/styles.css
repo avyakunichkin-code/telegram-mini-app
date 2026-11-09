@@ -1,0 +1,25 @@
+/* Lab chrome only. Dashboard visuals come from the generated production runtime. */
+html{height:auto;min-height:100%;background:var(--mq-board)}
+body#root{max-width:none;max-height:none;width:100%;height:auto;min-height:100vh;margin:0;overflow:auto;display:block;background:var(--mq-board);color:var(--mq-board-ink)}
+.lab-header{max-width:1680px;margin:auto;padding:28px 24px}
+.lab-header h1{font:900 28px/1.2 Nunito,sans-serif;letter-spacing:0;margin:12px 0;color:var(--mq-board-ink)}
+.lab-header p{max-width:900px;font:14px/1.6 Manrope,sans-serif;color:var(--mq-board-ink-soft)}
+.lab-header a{color:var(--mq-turn)}
+.controls{display:flex;flex-wrap:wrap;gap:16px;margin-top:18px}
+.controls label{display:flex;align-items:center;gap:8px;font:13px Manrope,sans-serif}
+.controls select{font:inherit;min-height:44px;padding:8px 12px;color:var(--mq-board-ink);background:var(--mq-cell);border:2px solid var(--mq-control-edge);border-radius:var(--mq-r-cell)}
+.lab-grid{max-width:1680px;margin:auto;padding:0 24px 32px;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:24px;align-items:start}
+.lab-column{min-width:0}.caption{min-height:122px}.caption h2{font:900 20px/1.3 Nunito,sans-serif;margin:0 0 8px;color:var(--mq-board-ink)}
+.caption p{font:12px/1.6 Manrope,sans-serif;margin:0;color:var(--mq-board-ink-soft)}
+.lab-phone{max-width:390px;margin:auto;background:var(--mq-board);border:1px solid var(--mq-cell-edge);border-radius:var(--mq-r-card);overflow:hidden}
+.lab-status{min-height:36px;font:12px/1.6 Manrope,sans-serif;color:var(--mq-turn);padding:0 12px}
+.lab-forecast{display:flex;justify-content:space-between;align-items:center;gap:12px;color:var(--mq-board-ink);font:13px/1.4 Manrope,sans-serif}
+.lab-forecast strong{font:900 28px/1.2 Nunito,sans-serif;white-space:nowrap}
+.lab-forecast[data-risk=true] strong{color:var(--mq-risk)}
+.lab-step{font:700 13px/1.5 Manrope,sans-serif;color:var(--mq-board-ink-soft);margin:0}
+.lab-goal-progress{padding:12px 16px 16px}.lab-goal-progress p{font:700 13px/1.5 Manrope,sans-serif;margin:0 0 8px;color:var(--mq-board-ink)}
+.lab-state{padding:24px;font:14px/1.6 Manrope,sans-serif}.lab-state h3{font:900 20px Nunito,sans-serif}
+.lab-skeleton{height:100px;margin:16px 0;background:var(--mq-cell-edge);border-radius:var(--mq-r-cell)}
+button:focus-visible,select:focus-visible,a:focus-visible{outline:3px solid var(--mq-turn);outline-offset:3px}
+@media(max-width:1500px){.lab-grid{max-width:860px;grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:760px){.lab-grid{max-width:430px;grid-template-columns:1fr;padding:0 16px 28px}.lab-header{padding:20px 16px}.caption{min-height:0;margin-bottom:16px}}

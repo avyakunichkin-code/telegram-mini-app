@@ -62,7 +62,7 @@ cd design-lab && npx serve .
 cd design-lab/board-game/neobrutal-a-round && ./sync-lab.sh
 ```
 
-Статус: **review** — не утверждено.
+Исторический статус пробы закрыт утверждением BG-4 03.11.2026 для A/K1. Остальные альтернативы не получают approval автоматически. Текущая главная — [current-page-round](../../dashboard/current-page-round/), уточнения 04.11 сохранены в каноне.
 
 ## В prod (пробно, 2026-10-28)
 

@@ -1,0 +1,149 @@
+{
+  "checks": [
+    {
+      "width": 390,
+      "theme": "light",
+      "state": "ready",
+      "pass": true
+    },
+    {
+      "width": 390,
+      "theme": "light",
+      "state": "events",
+      "pass": true
+    },
+    {
+      "width": 390,
+      "theme": "light",
+      "state": "risk",
+      "pass": true
+    },
+    {
+      "width": 390,
+      "theme": "light",
+      "state": "loading",
+      "pass": true
+    },
+    {
+      "width": 390,
+      "theme": "light",
+      "state": "error",
+      "pass": true
+    },
+    {
+      "width": 390,
+      "theme": "light",
+      "state": "empty",
+      "pass": true
+    },
+    {
+      "width": 390,
+      "theme": "dark",
+      "state": "ready",
+      "pass": true
+    },
+    {
+      "width": 390,
+      "theme": "dark",
+      "state": "events",
+      "pass": true
+    },
+    {
+      "width": 390,
+      "theme": "dark",
+      "state": "risk",
+      "pass": true
+    },
+    {
+      "width": 390,
+      "theme": "dark",
+      "state": "loading",
+      "pass": true
+    },
+    {
+      "width": 390,
+      "theme": "dark",
+      "state": "error",
+      "pass": true
+    },
+    {
+      "width": 390,
+      "theme": "dark",
+      "state": "empty",
+      "pass": true
+    },
+    {
+      "width": 1440,
+      "theme": "light",
+      "state": "ready",
+      "pass": true
+    },
+    {
+      "width": 1440,
+      "theme": "light",
+      "state": "events",
+      "pass": true
+    },
+    {
+      "width": 1440,
+      "theme": "light",
+      "state": "risk",
+      "pass": true
+    },
+    {
+      "width": 1440,
+      "theme": "light",
+      "state": "loading",
+      "pass": true
+    },
+    {
+      "width": 1440,
+      "theme": "light",
+      "state": "error",
+      "pass": true
+    },
+    {
+      "width": 1440,
+      "theme": "light",
+      "state": "empty",
+      "pass": true
+    },
+    {
+      "width": 1440,
+      "theme": "dark",
+      "state": "ready",
+      "pass": true
+    },
+    {
+      "width": 1440,
+      "theme": "dark",
+      "state": "events",
+      "pass": true
+    },
+    {
+      "width": 1440,
+      "theme": "dark",
+      "state": "risk",
+      "pass": true
+    },
+    {
+      "width": 1440,
+      "theme": "dark",
+      "state": "loading",
+      "pass": true
+    },
+    {
+      "width": 1440,
+      "theme": "dark",
+      "state": "error",
+      "pass": true
+    },
+    {
+      "width": 1440,
+      "theme": "dark",
+      "state": "empty",
+      "pass": true
+    }
+  ],
+  "errors": []
+}

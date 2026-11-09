@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>ТВОЙ ПЛАН · Финансовый атлас</title>
+  <link rel="stylesheet" href="./lab-base.css">
+  <script src="./preview.js" defer></script>
+</head>
+<body>
+  <a class="skip" href="#main">К содержанию</a>
+  <aside class="lab" aria-label="Настройки дизайн-раунда">
+    <span class="lab-label">DESIGN LAB <b>АТЛАС / 01</b></span>
+    <fieldset><legend>Композиция</legend><label><input type="radio" name="variant" value="map" checked> A1 · Карта</label><label><input type="radio" name="variant" value="action"> A2 · Первый шаг</label></fieldset>
+    <label class="state-label">Состояние <select id="state"><option value="ready">Готовый отчёт</option><option value="loading">Загрузка</option><option value="empty">Нет данных</option><option value="error">Ошибка загрузки</option><option value="offline">Офлайн · только чтение</option><option value="saving">Сохранение шага</option><option value="save-error">Ошибка сохранения</option></select></label>
+    <span class="lab-note">A1 утверждён · 07.11.2026</span>
+  </aside>
+  <div class="shell">
+    <header class="header">
+      <a class="brand" href="#overview" aria-label="ТВОЙ ПЛАН — обзор"><i aria-hidden="true"></i>ТВОЙ ПЛАН</a>
+      <span class="tagline">Деньги отвечают.</span>
+      <nav class="navigation" aria-label="Разделы отчёта"><a href="#overview" aria-current="page">Обзор</a><a href="#goal">Цель</a><a href="#steps">Шаги</a><a href="#details">Подробности</a></nav>
+      <span class="demo">Демо-данные</span>
+    </header>
+    <main id="main" tabindex="-1">
+      <div id="announcement" role="status" class="sr-only"></div>
+      <div id="offline-note" class="notice" hidden><b>Офлайн · только чтение.</b> Сохранённый разбор от 7 ноября 2026, 10:30. Для изменения шагов подключитесь к сети.</div>
+      <div id="placeholder" hidden></div>
+      <div id="report">
+        <section class="intro" id="overview" aria-labelledby="title">
+          <div class="intro-title"><p class="eyebrow">Семейный чекап / Ноябрь 2026 <span>01</span></p><h1 id="title">Ваш план<br>обретает<br><span>форму.</span></h1><p class="intro-description">Видно, где вы сейчас. <br>Понятно, куда двигаться дальше.</p></div>
+          <div class="intro-data">
+            <div class="report-meta"><span>Разбор семьи</span><span class="precision">Уточнённые данные</span></div>
+            <dl class="metrics"><div><dt>Доход в месяц</dt><dd>180 000 <span>₽</span></dd></div><div><dt>Расходы и платежи</dt><dd>135 000 <span>₽</span></dd></div><div class="free"><dt>Остаётся в месяц</dt><dd>45 000 <span>₽</span></dd></div></dl>
+            <div class="insight"><span class="section-num">↗</span><p>До цели — <b>135 000 ₽.</b><br>Ещё <b>3 месяца</b>, если пополнять резерв<br class="desktop-break"> по 45 000 ₽ в месяц.</p></div>
+            <p class="small-note">Расчёт по вашим данным, без процентов и изменения расходов. Срок изменится, если изменится бюджет.</p>
+          </div>
+        </section>
+        <div class="composition">
+          <section class="atlas" id="goal" aria-labelledby="goal-title">
+            <div class="section-heading"><p class="eyebrow">01 / Точка опоры</p><h2 id="goal-title">Ваш маршрут к резерву</h2><span class="map-key">Схема пути, не график доходности</span></div>
+            <svg class="contours" viewBox="0 0 1200 500" preserveAspectRatio="none" aria-hidden="true"><defs><pattern id="terrain" width="600" height="420" patternUnits="userSpaceOnUse"><g fill="none" stroke="currentColor" stroke-width=".8"><path d="M-80 120Q80-40 210 90T480 100T720 10M-80 140Q80-20 210 110T480 120T720 30M-80 160Q80 0 210 130T480 140T720 50M-80 180Q80 20 210 150T480 160T720 70M-80 200Q80 40 210 170T480 180T720 90M-80 220Q80 60 210 190T480 200T720 110M-80 300Q100 180 270 300T620 280M-80 320Q100 200 270 320T620 300M-80 340Q100 220 270 340T620 320M-80 360Q100 240 270 360T620 340M-80 380Q100 260 270 380T620 360"/></g></pattern></defs><rect width="1200" height="500" fill="url(#terrain)"/></svg>
+            <div class="route" aria-label="Резерв: сейчас 270 000 рублей, цель 405 000 рублей">
+              <svg class="route-line" viewBox="0 0 1000 230" preserveAspectRatio="none" aria-hidden="true"><path d="M10 200 C180 200 100 145 285 145 S420 100 510 100 S660 70 740 70 S840 15 965 15"/></svg>
+              <div class="route-point start"><span class="point-label">Сейчас</span><span class="point-name">Резерв семьи</span><strong>270 000 ₽</strong><span>2 месяца расходов</span><i aria-hidden="true"></i></div>
+              <div class="route-point intermediate one"><i aria-hidden="true">1</i><span>Уточнить <br>расходы</span></div>
+              <div class="route-point intermediate two"><i aria-hidden="true">2</i><span>Пополнить <br>резерв</span></div>
+              <div class="route-point intermediate three"><i aria-hidden="true">3</i><span>Проверить <br>план</span></div>
+              <div class="route-point finish"><i aria-hidden="true">↗</i><span class="point-label">Ваша цель</span><strong>405 000 ₽</strong><span>3 месяца расходов</span></div>
+            </div>
+            <div class="map-footer"><p><span class="map-coordinate">02 → 03</span> Ещё один месяц запаса.<br><span class="muted">Цель задана для этого демо-примера.</span></p><a class="button primary" href="#steps">Выбрать первый шаг <span aria-hidden="true">↗</span></a></div>
+          </section>
+          <section class="steps-section" id="steps" aria-labelledby="steps-title">
+            <div class="section-heading"><p class="eyebrow">02 / Переходим к делу</p><h2 id="steps-title">Большой план.<br>Посильные шаги.</h2><p class="muted">Начните с первого. Отметки сохраняются только в этом макете.</p></div>
+            <div class="step-list">
+              <details class="step" open><summary><span class="step-number">01</span><span><b>Уточните обязательные расходы</b><span class="step-caption">Чтобы резерв опирался на реальный бюджет</span></span><span class="expand" aria-hidden="true">+</span></summary><div class="step-body"><p>Проверьте, что в 135 000 ₽ входят жильё, продукты, транспорт и регулярные платежи. Так вы поймёте, на сколько месяцев хватит резерва.</p><div class="checklist"><label><input type="checkbox" data-action="expenses"><span>Сверить расходы за обычный месяц</span></label><label><input type="checkbox" data-action="payments"><span>Проверить регулярные платежи</span></label></div><div class="step-progress"><span id="progress">Выполнено 0 из 2</span><span id="save-status" role="status"></span></div><div id="save-error" class="inline-error" role="alert" hidden>Не удалось сохранить отметку. Изменение не применено. <button type="button" id="retry-save">Повторить</button></div><button type="button" class="text-button" id="dismiss">Не подходит</button><p id="dismiss-note" hidden>Шаг отмечен как «не подходит». <button type="button" id="restore">Вернуть в план</button></p></div></details>
+              <details class="step"><summary><span class="step-number">02</span><span><b>Пополняйте резерв в своём темпе</b><span class="step-caption">45 000 ₽ — весь остаток в демо-расчёте</span></span><span class="expand" aria-hidden="true">+</span></summary><div class="step-body"><p>В этом примере до цели не хватает 135 000 ₽. При пополнении по 45 000 ₽ понадобится 3 месяца. Если часть остатка нужна на другие цели, срок будет больше.</p><p class="small-note">Макет не переводит деньги. Отметку о пополнении ставьте после самостоятельной проверки.</p></div></details>
+              <details class="step"><summary><span class="step-number">03</span><span><b>Вернитесь к плану через месяц</b><span class="step-caption">Сравните новый разбор с текущим</span></span><span class="expand" aria-hidden="true">+</span></summary><div class="step-body"><p>Повторите чекап, когда изменятся доходы, расходы или накопления. Новый разбор покажет актуальное расстояние до цели.</p></div></details>
+            </div>
+          </section>
+        </div>
+        <section class="details-section" id="details" aria-labelledby="details-title"><div class="section-heading"><p class="eyebrow">03 / Вся картина</p><h2 id="details-title">За маршрутом — цифры.</h2></div><div class="detail-columns"><article><span class="signal warning">Требует внимания</span><h3>Подушка</h3><p class="detail-value">2 <small>из 3 месяцев</small></p><p>Резерв покрывает два месяца текущих расходов. До выбранной цели — 135 000 ₽.</p><div class="reserve-scale" role="img" aria-label="Заполнено две трети демонстрационной цели резерва"><i></i><i></i><i></i></div></article><article><span class="signal neutral">По данным примера</span><h3>Бюджет</h3><p class="detail-value">25 <small>% дохода остаётся</small></p><p>180 000 ₽ доходов − 135 000 ₽ расходов и платежей = 45 000 ₽ в месяц.</p><a href="#overview">Посмотреть расчёт <span aria-hidden="true">↗</span></a></article><article><span class="signal neutral">Нужно уточнить</span><h3>Долги и защита</h3><p class="detail-value text-value">Без оценки</p><p>В демо-примере нет полных сведений о долгах, страховках и инвестициях. Делать вывод об их состоянии пока рано.</p></article></div></section>
+      </div>
+      <footer class="footer"><a class="brand" href="#overview"><i aria-hidden="true"></i>ТВОЙ ПЛАН</a><p>План начинается с ясности.</p><p class="small-note">Вымышленные данные. Расчёт — сценарий по введённым значениям, а не обещание результата или персональная финансовая рекомендация.</p></footer>
+    </main>
+  </div>
+</body>
+</html>

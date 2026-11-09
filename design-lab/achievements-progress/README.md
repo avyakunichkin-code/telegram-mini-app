@@ -2,7 +2,7 @@
 
 Запуск: `cd design-lab/achievements-progress && npx serve .`
 
-**Spec:** [`docs/specs/features/SPEC_achievements.md`](../../docs/specs/features/SPEC_achievements.md) §11.
+**Spec:** [`docs/game/specs/features/SPEC_achievements.md`](../../docs/game/specs/features/SPEC_achievements.md) §11.
 
 **Пайплайн:** варианты здесь → утверждение → `mqx/` + `#/dev/mqx` → `DashboardPremium` / `MenuPremium`.
 
