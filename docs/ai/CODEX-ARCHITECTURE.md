@@ -1,6 +1,6 @@
 # Codex architecture
 
-Локальный дополнительный контур. Вход: [AGENTS.md](../../AGENTS.md) → descriptions в [.agents/skills](../../.agents/skills) → один primary → только нужные справки/проверки. Проектный контракт не меняет managed permissions клиента. Claude остаётся самостоятельным контуром; его tool names, permissions и состояние не импортированы.
+Основной проектный контур с 2026-11-03. Вход: [AGENTS.md](../../AGENTS.md) → descriptions в [.agents/skills](../../.agents/skills) → один primary → только нужные справки/проверки. Проектный контракт не меняет managed permissions клиента. Claude сохранён как исторический источник миграции; активные процессы от него не зависят. Его permissions и состояние не импортированы.
 
 Навигация: [аудит](CODEX-AUDIT.md), [migration map](CODEX-MIGRATION-MAP.md), [процессы](CODEX-PROCESSES.md), [команды](COMMANDS.md), [hooks](CODEX-HOOKS.md), [инварианты](CODEX-INVARIANTS.md), [frontend references](FRONTEND-REFERENCES.md), [roadmap](CODEX-ROADMAP.md), [памятка владельца](CODEX-RECOMMENDATIONS.md).
 
@@ -10,7 +10,7 @@
 2. Маршрутизация: корневой AGENTS и 13 обнаруживаемых skills. Процессы guidance/admin и deferred — явно связанная справка delivery, а не невидимые автоправила.
 3. Ролевые карточки ниже — области ответственности одного агента или изолированного прохода. Число ролей не задаёт число процессов/агентов.
 4. Адаптеры: scripts/codex; регистрация только .codex/hooks.json. Состояние .codex-state (gitignored), не .claude.
-5. Проверка: локальные поведенческие тесты, статический checker и дополнительный CI workflow. Нативные hooks требуют trust/runtime evidence отдельно.
+5. Проверка: локальные поведенческие тесты, статический checker и Codex CI workflow. Нативные hooks требуют trust/runtime evidence отдельно.
 
 У каждой роли вход — конкретная задача, затронутые файлы/diff, применимые решения и доступные результаты проверок. Никто не получает права владельца-человека, prod-доступа или разрешения на внешние сообщения. Область записи — договор процесса, не технический sandbox.
 
@@ -34,7 +34,7 @@
 | Проход | Вход / чтение | Запись | Выход и получатель |
 |---|---|---|---|
 | economy-reviewer | diff, spec, invariants, backend pytest evidence | без правок; память Claude не открывается на запись | APPROVED/CONCERNS/NEEDS REVISION; при логике/данных без green pytest — revision → инженер |
-| economy-balance-runner | manifest/policy/seed, sim JSON, baseline | reports в docs/balance/reports; source/baseline не меняет | OK/REVIEW/REGRESSION LIKELY/BLOCKED + метрики → баланс-дизайнер/economy reviewer |
+| economy-balance-runner | manifest/policy/seed, sim JSON, baseline | reports в docs/game/balance/reports; source/baseline не меняет | OK/REVIEW/REGRESSION LIKELY/BLOCKED + метрики → баланс-дизайнер/economy reviewer |
 | mqx-ui-reviewer | diff, размер изменения, lab/prod, реальное approval, canon | без правок | UI verdict, состояния/guardrails/следующий шаг → frontend/дизайнер |
 
 Надпись read-only и TOML не техническая защита. Custom agents наследуют permissions родителя. Claude memory-only guard не подменён фиктивным аналогом: автоматической памяти Codex здесь нет, write isolation требует отдельного подтверждённого runtime-контроля. При отсутствии изоляции называй результат отдельным проходом, не технически read-only исполнением.

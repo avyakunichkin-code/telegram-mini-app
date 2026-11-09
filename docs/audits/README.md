@@ -10,20 +10,25 @@ aliases:
   - "Аудиты — куда класть снимки"
   - AUDITS
 ---
-# Аудиты ТВОЙ ХОД
+# Аудиты монорепозитория
 
 Слой **точечных снимков** продукта, кода, UX и контента. Не канон реализации и не бэклог ([C-1](../../CONVENTIONS.md)).
 
-**Агенту:** новый аудит (продуктовый, технический, UX, …) писать **только сюда**. Сначала этот файл, затем [`templates/AUDIT.md`](../templates/AUDIT.md).
+**Агенту:** выбери владельца: [Game](../game/audits/README.md),
+[Plan](../plan/audits/), либо [общий AI-контур](ai/README.md).
+Продуктовый аудит создавай внутри выбранного продукта. Этот файл хранит общие
+правила и прежний реестр; он не переносит владение продуктами в общий контекст.
 
-При конфликте по-прежнему: **код + тесты** → `docs/specs/features/SPEC_*.md` → `SPEC_PRODUCT.md` → `docs/vision/ideas/`. Аудит **ниже** vision: это мнение на дату, пока его выводы не утверждены в spec / ADR / backlog.
+При конфликте по-прежнему: **код + тесты** → `docs/game/specs/features/SPEC_*.md` → `SPEC_PRODUCT.md` → `docs/game/vision/ideas/`. Аудит **ниже** vision: это мнение на дату, пока его выводы не утверждены в spec / ADR / backlog.
 
 ---
 
 ## Куда класть
 
 ```text
-docs/audits/<kind>/<YYYY-MM-DD>-<slug>.md
+docs/game/audits/<kind>/<YYYY-MM-DD>-<slug>.md
+docs/plan/audits/<YYYY-MM-DD>-<slug>.md
+docs/audits/ai/<YYYY-MM-DD>-<slug>.md
 ```
 
 | `<kind>` | Что это | Пример slug |
@@ -52,8 +57,8 @@ docs/audits/<kind>/<YYYY-MM-DD>-<slug>.md
 ## Обязательный ритуал после записи
 
 1. Строка в таблице «Реестр» ниже.
-2. Запись в [`foundation/DOC_SYNC_LOG.md`](../foundation/DOC_SYNC_LOG.md).
-3. Если выводы меняют приоритеты — ссылка из [`backlog/PRODUCT_BACKLOG.md`](../backlog/PRODUCT_BACKLOG.md) (аудит **не** заменяет бэклог).
+2. Запись в [`foundation/DOC_SYNC_LOG.md`](../game/foundation/DOC_SYNC_LOG.md).
+3. Если выводы меняют приоритеты — ссылка из [`backlog/PRODUCT_BACKLOG.md`](../game/backlog/PRODUCT_BACKLOG.md) (аудит **не** заменяет бэклог).
 4. Утверждённое «делаем так» → **spec** или **ADR**, не правка канона из аудита напрямую.
 
 Шаблон тела: [`templates/AUDIT.md`](../templates/AUDIT.md).
@@ -65,13 +70,13 @@ docs/audits/<kind>/<YYYY-MM-DD>-<slug>.md
 | Артефакт | Канонический адрес |
 |----------|-------------------|
 | ADR («почему в коде так») | `docs/decisions/` |
-| Идея / one-pager | `docs/vision/ideas/` |
-| Контракт фичи | `docs/specs/features/` |
-| Чеклист код ↔ SPEC_PRODUCT (живой) | `docs/foundation/MVP_AUDIT_VS_SPEC.md` |
-| Результаты плейтеста / волны | `docs/foundation/PRE_ALPHA_*` |
+| Идея / one-pager | `docs/game/vision/ideas/` |
+| Контракт фичи | `docs/game/specs/features/` |
+| Чеклист код ↔ SPEC_PRODUCT (живой) | `docs/game/foundation/MVP_AUDIT_VS_SPEC.md` |
+| Результаты плейтеста / волны | `docs/game/foundation/PRE_ALPHA_*` |
 | Headless balance JSON / diff | `docs/balance/reports/` |
 | Аудит скиллов агента | `docs/agents/` (`SKILLS_QUALITY_AUDIT_*`, `LEGACY_NOISE_AUDIT_*`) |
-| Runbook деплоя | `docs/ops/` |
+| Runbook деплоя | `docs/game/ops/` |
 | Cursor Canvas | локальный IDE-артефакт; **источник истины — markdown в этой папке** |
 
 ---
@@ -82,21 +87,21 @@ docs/audits/<kind>/<YYYY-MM-DD>-<slug>.md
 |------|------|------|--------|------|
 | 2026-09-07 | ai | [`ai/2026-09-07-ai-proposals.md`](ai/2026-09-07-ai-proposals.md) | draft | 6 предложений кросс-роли; быстрая победа PR-14; стратегия слоты+вынос picker |
 | 2026-09-07 | ai | [`ai/2026-09-07-runtime-and-dev-ai.md`](ai/2026-09-07-runtime-and-dev-ai.md) | draft | Picker+guidance+Cursor pipeline; нет NPC; C1 пустой месяц, C2 тонкий каталог, C3 pytest вне CI |
-| 2026-09-07 | liveops | [`liveops/2026-09-07-community.md`](liveops/2026-09-07-community.md) | draft | Season 0 CA: нет LTM, daily-nudge vs TB1, фидбек не замкнут |
-| 2026-09-07 | ux | [`ux/2026-09-07-player-surface.md`](ux/2026-09-07-player-surface.md) | draft | Иерархия главной, словарь ход/месяц, оверлеи, FTUE O3 |
-| 2026-09-07 | qa | [`qa/2026-09-07-mechanics.md`](qa/2026-09-07-mechanics.md) | draft | Edge/stress/testability TB1: гонки close/choose/salary, legacy complete-period, CI без pytest |
-| 2026-09-07 | engineering | [`engineering/2026-09-07-architecture.md`](engineering/2026-09-07-architecture.md) | draft | Архитектура Pre-Alpha → production-ready; наследник assessment июня 2026 |
-| 2026-09-07 | product | [`product/2026-09-07-product-game-design.md`](product/2026-09-07-product-game-design.md) | draft | Полный продуктовый + GD аудит Pre-Alpha → production-ready план |
+| 2026-09-07 | liveops | [`liveops/2026-09-07-community.md`](../game/audits/liveops/2026-09-07-community.md) | draft | Season 0 CA: нет LTM, daily-nudge vs TB1, фидбек не замкнут |
+| 2026-09-07 | ux | [`ux/2026-09-07-player-surface.md`](../game/audits/ux/2026-09-07-player-surface.md) | draft | Иерархия главной, словарь ход/месяц, оверлеи, FTUE O3 |
+| 2026-09-07 | qa | [`qa/2026-09-07-mechanics.md`](../game/audits/qa/2026-09-07-mechanics.md) | draft | Edge/stress/testability TB1: гонки close/choose/salary, legacy complete-period, CI без pytest |
+| 2026-09-07 | engineering | [`engineering/2026-09-07-architecture.md`](../game/audits/engineering/2026-09-07-architecture.md) | draft | Архитектура Pre-Alpha → production-ready; наследник assessment июня 2026 |
+| 2026-09-07 | product | [`product/2026-09-07-product-game-design.md`](../game/audits/product/2026-09-07-product-game-design.md) | draft | Полный продуктовый + GD аудит Pre-Alpha → production-ready план |
 
 **Ещё не перенесены** (читать по старым путям, следующий снимок того же kind — уже сюда):
 
 | Kind | Текущий файл | Когда переносить |
 |------|----------------|------------------|
-| engineering | Снимок: [`engineering/2026-09-07-architecture.md`](engineering/2026-09-07-architecture.md). Исторический: [`vision/ARCHITECTURE_ASSESSMENT_2026-06.md`](../vision/ARCHITECTURE_ASSESSMENT_2026-06.md) | Assessment не удалять; следующие снимки — новые даты в `engineering/` |
-| ux | Снимок: [`ux/2026-09-07-player-surface.md`](ux/2026-09-07-player-surface.md). Живой чеклист: [`specs/UI_CONSISTENCY_AUDIT.md`](../specs/UI_CONSISTENCY_AUDIT.md) | Чеклист не удалять; следующие снимки — новые даты в `ux/` |
+| engineering | Снимок: [`engineering/2026-09-07-architecture.md`](../game/audits/engineering/2026-09-07-architecture.md). Исторический: [`vision/ARCHITECTURE_ASSESSMENT_2026-06.md`](../game/vision/ARCHITECTURE_ASSESSMENT_2026-06.md) | Assessment не удалять; следующие снимки — новые даты в `engineering/` |
+| ux | Снимок: [`ux/2026-09-07-player-surface.md`](../game/audits/ux/2026-09-07-player-surface.md). Живой чеклист: [`specs/UI_CONSISTENCY_AUDIT.md`](../game/specs/UI_CONSISTENCY_AUDIT.md) | Чеклист не удалять; следующие снимки — новые даты в `ux/` |
 | content | отчёт `/event-analysis` → [`templates/EVENT_CATALOG_ANALYSIS.md`](../templates/EVENT_CATALOG_ANALYSIS.md) | Снимок «каталог на дату»: `content/YYYY-MM-DD-event-catalog.md` |
 
-Как писать технический: [`engineering/README.md`](engineering/README.md). QA: [`qa/README.md`](qa/README.md). UX: [`ux/README.md`](ux/README.md). Live Ops: [`liveops/README.md`](liveops/README.md). AI: [`ai/README.md`](ai/README.md).
+Как писать технический: [`engineering/README.md`](../game/audits/engineering/README.md). QA: [`qa/README.md`](../game/audits/qa/README.md). UX: [`ux/README.md`](../game/audits/ux/README.md). Live Ops: [`liveops/README.md`](../game/audits/liveops/README.md). AI: [`ai/README.md`](ai/README.md).
 
 ---
 
@@ -111,6 +116,6 @@ docs/audits/<kind>/<YYYY-MM-DD>-<slug>.md
   → verdict DRAFT, пока человек не сказал APPROVED
 ```
 
-Не складывать аудит в `docs/vision/ideas/`, `docs/foundation/`, `docs/handbook/` или только в чат/canvas.
+Не складывать аудит в `docs/game/vision/ideas/`, `docs/game/foundation/`, `docs/game/handbook/` или только в чат/canvas.
 
-**Сводный PO-план** (не шестой kind): [`plans/PLAN_production-ready.md`](../plans/PLAN_production-ready.md).
+**Сводный PO-план** (не шестой kind): [`plans/PLAN_production-ready.md`](../game/plans/PLAN_production-ready.md).

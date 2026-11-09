@@ -1,6 +1,6 @@
 # Отбор frontend-справок
 
-Источник: frontend-react/.claude/skills, пять SKILL.md и slim AGENTS composition/react прочитаны; каталоги rules/references перечислены, применимые разделы AGENTS.full/rules проверяются по задаче. Исходники не изменены. Сверка происхождения — protected-before и source ledger. React ^18.2.0, Vite ^8.0.10 из package.json; @types/react 19 не обновляет React runtime.
+Исторический источник отбора: frontend-react/.claude/skills, пять SKILL.md и slim AGENTS composition/react прочитаны; каталоги rules/references перечислены, применимые разделы AGENTS.full/rules проверяются по задаче. Исходники не изменены. Сверка происхождения — protected-before и source ledger. React ^18.2.0, Vite ^8.0.10 из package.json; @types/react 19 не обновляет React runtime.
 
 | Источник | Взять для React 18/Vite | Исключить / проверить перед применением |
 |---|---|---|
@@ -10,6 +10,6 @@
 | frontend-design | варианты с реальными данными/чёткой композицией внутри бренда | не заменять утверждённый MQX произвольной палитрой/шрифтами; старые system-font и v7 детали сверять с текущим board-game каноном; lab и human approval обязательны |
 | vite | ESM/config/assets/HMR, текущая manifest-команда build | справка основана на Vite 8 beta, её migrations/options проверять по lock/current docs; не переводить JS→TS или SPA→SSR без задачи |
 
-Читать полный upstream гайд только для выбранной проблемы, не все 70 правил на каждый JSX. mqx-design определяет approval, frontend-implementation — исполнение. Состояния: loading/empty/error/disabled; русский/MoneyText, src/api domain и hooks, legacy quarantine — действующие локальные требования.
+Таблица выше — действующая самодостаточная справка Codex; исходные Claude skills не загружать. При конкретной проблеме читать текущие проектные ARCHITECTURE/DESIGN_WORKFLOW и официальную документацию используемой версии. mqx-design определяет approval, frontend-implementation — исполнение. Состояния: loading/empty/error/disabled; русский/MoneyText, src/api domain и hooks, legacy quarantine — действующие локальные требования.
 
 Дополнительно полностью прочитаны composition rules/react19-no-forwardref и vite references/core-config, rolldown-migration; AGENTS.full оглавления/вводные просмотрены выборочно. Не переносить loadEnv с пустым prefix как разрешение читать/выводить секреты или бездумно expose переменные в frontend.

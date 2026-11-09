@@ -54,7 +54,7 @@ aliases:
 ## Consequences
 
 - Нужны миграция SQL, `needs/engine.py`, хук в `game/period.py`, расширение overview.
-- Баланс чисел (`periods_to_empty_target`, штрафы) — **playtest**; формулы зафиксированы в [SPEC_game-character-needs](../specs/features/SPEC_game-character-needs.md).
+- Баланс чисел (`periods_to_empty_target`, штрафы) — **playtest**; формулы зафиксированы в [SPEC_game-character-needs](../game/specs/features/SPEC_game-character-needs.md).
 - Поражение по cash (`negative_periods_count`) остаётся **независимым** каналом.
 
 ## GDD / requirements addressed
@@ -63,5 +63,5 @@ aliases:
 
 ## Связанные артефакты
 
-- Spec: [`SPEC_game-character-needs.md`](../specs/features/SPEC_game-character-needs.md)
-- Vision: [`game-character-needs-foundation.md`](../vision/ideas/game-character-needs-foundation.md)
+- Spec: [`SPEC_game-character-needs.md`](../game/specs/features/SPEC_game-character-needs.md)
+- Vision: [`game-character-needs-foundation.md`](../game/vision/ideas/game-character-needs-foundation.md)

@@ -1,15 +1,6 @@
 ---
-layer: vision
-status: superseded
-superseded_by: ../../archive/dashboard-hero-compact/README.md
-redirect: ../../archive/dashboard-hero-compact/README.md
-last_reviewed: 2026-06-20
-tags:
-  - tvoy-hod/layer/vision
-  - tvoy-hod/status/superseded
-aliases:
-  - dashboard-hero-compact
+status: archived
 ---
-# dashboard-hero-compact (redirect)
+# Исторический адрес
 
-→ **[`docs/archive/dashboard-hero-compact/README.md`](../../archive/dashboard-hero-compact/README.md)**
+Материал перенесён в [архив](../../archive/retired/vision/ideas/dashboard-hero-compact.md). Не использовать как действующую инструкцию.

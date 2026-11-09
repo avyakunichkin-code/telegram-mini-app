@@ -1,5 +1,7 @@
 # Migration map
 
+Исторический реестр переноса. С 2026-11-03 Codex — основной контур: [итог перехода](CODEX-TRANSITION.md). Обычный checker не требует обнаружения Claude skills; для сверки исходного каталога используй `--source-drift`, для bytes — `--protected`. Снимки не обновляются автоматически.
+
 Все 26 корневых навыков прочитаны полностью независимым source_audit; назначения объединены в 13 процессов. Полные поля source/purpose/trigger/input/output/write_scope/dependencies/side_effects/transfer/new_location/verification в [skill-migration.json](skill-migration.json). Источники защищены snapshot; слова «adapted» не означают перенос разрешений или runtime-активацию.
 
 | Исходный навык | Новый процесс | Решение |

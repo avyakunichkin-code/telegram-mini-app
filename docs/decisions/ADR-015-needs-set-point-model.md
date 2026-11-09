@@ -35,7 +35,7 @@ aliases:
 
 ## Калибровка (2026-10-21)
 
-Прогон 4 персон × ботов `idle` / `needs_keeper` / `restructure` (40 периодов, 2 события за период): K_imp 40, потолок `pleasure` 15 на ось, `passive_periods_to_zero` 20, `adaptation_rate` 0.05. Все 4 шаблона переведены на `set_point`. Цена событий — доля зарплаты (`cash_pct_salary`); Профи/Руководитель высвобождают поток перестройкой активов. Таблицы — [план](../plans/PLAN_needs-set-point.md#статус-шага-5-2026-10-21).
+Прогон 4 персон × ботов `idle` / `needs_keeper` / `restructure` (40 периодов, 2 события за период): K_imp 40, потолок `pleasure` 15 на ось, `passive_periods_to_zero` 20, `adaptation_rate` 0.05. Все 4 шаблона переведены на `set_point`. Цена событий — доля зарплаты (`cash_pct_salary`); Профи/Руководитель высвобождают поток перестройкой активов. Таблицы — [план](../game/plans/PLAN_needs-set-point.md#статус-шага-5-2026-10-21).
 
 ## Alternatives considered
 
@@ -54,7 +54,7 @@ aliases:
 
 ## Связанные артефакты
 
-- Spec: [`SPEC_needs-set-point.md`](../specs/features/SPEC_needs-set-point.md)
-- Plan: [`PLAN_needs-set-point.md`](../plans/PLAN_needs-set-point.md)
-- Idea: [`needs-value-curve.md`](../vision/ideas/needs-value-curve.md)
+- Spec: [`SPEC_needs-set-point.md`](../game/specs/features/SPEC_needs-set-point.md)
+- Plan: [`PLAN_needs-set-point.md`](../game/plans/PLAN_needs-set-point.md)
+- Idea: [`needs-value-curve.md`](../game/vision/ideas/needs-value-curve.md)
 - Изменяет: [ADR-005](ADR-005-character-needs-state-and-defeat.md) §3 (decay)

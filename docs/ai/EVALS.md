@@ -40,4 +40,4 @@
 
 Только после штатного review/trust: SessionStart hint, benign operation, blocked-before-action marker, error/timeout semantics с synthetic stubs. Никаких настоящих generated writes/секретов/постов/prod. Статический case не помечать runtime PASS; runbook и статусы в CODEX-HOOKS.
 
-Итог по scope: все 68 tracked changed paths уже присутствовали в исходном status; собственная реализация — только новые файлы в AGENTS.md/.agents/.codex/.codex-state/docs/ai/scripts/codex и отдельный workflow. Общий diff --check найден на docs/reference/brandbook/BRANDBOOK_MQX.md:10–11,158–164; исходные строки не исправлялись.
+Итог по scope: все 68 tracked changed paths уже присутствовали в исходном status; собственная реализация — только новые файлы в AGENTS.md/.agents/.codex/.codex-state/docs/ai/scripts/codex и отдельный workflow. Общий diff --check найден на docs/game/reference/brandbook/BRANDBOOK_MQX.md:10–11,158–164; исходные строки не исправлялись.

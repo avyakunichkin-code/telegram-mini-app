@@ -36,7 +36,7 @@ ADR-013 убрал Plan как **второй `save_kind`** внутри игр�
 
 Сейчас эти расчёты перемешаны с ORM, а модель `GameProfile` смешивает финансовое состояние (cash, подушка) с игровым (needs, лига, streak, исход забега).
 
-Ограничения: команда из 1–2 человек; на пути `backend/` и `frontend-react/` ссылаются ~16.8 тыс. мест в ~4 тыс. файлов (`.claude/`, `docs/`, guardrails, CI); у игры не закрыт P0 из [`PLAN_production-ready`](../plans/PLAN_production-ready.md).
+Ограничения: команда из 1–2 человек; на пути `backend/` и `frontend-react/` ссылаются ~16.8 тыс. мест в ~4 тыс. файлов (`.claude/`, `docs/`, guardrails, CI); у игры не закрыт P0 из [`PLAN_production-ready`](../game/plans/PLAN_production-ready.md).
 
 ## Decision
 
@@ -65,7 +65,7 @@ ADR-013 убрал Plan как **второй `save_kind`** внутри игр�
    - Продуктовый Plan — своя БД `plan` и миграции, реальный вход, хостинг в РФ, деплой (SPL-402+) — после Pre-Alpha gate, SPL-302 и консультации юриста.
    - Каждый срез выноса расчётов — при условии, что balance diff = 0 относительно golden-baseline.
    - Общий движок шагов (`guidance` → `journey`), админ-каркас и UI-kit выносим только при втором реальном потребителе.
-9. **Старый Plan-код не переносится.** `BaseParamsScreen`, `PlanExpenseEditor` и `create/update/revoke_plan_expense_line` удаляются по [`PLAN_game-only`](../plans/PLAN_game-only.md) GO-03. Plan проектируется заново поверх `fincore`.
+9. **Старый Plan-код не переносится.** `BaseParamsScreen`, `PlanExpenseEditor` и `create/update/revoke_plan_expense_line` удаляются по [`PLAN_game-only`](../game/plans/PLAN_game-only.md) GO-03. Plan проектируется заново поверх `fincore`.
 
 ## Consequences
 

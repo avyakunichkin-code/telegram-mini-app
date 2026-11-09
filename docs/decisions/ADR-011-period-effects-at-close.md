@@ -32,5 +32,5 @@ aliases:
 
 ## Связано
 
-- [`SPEC_onboarding-o3.md`](../specs/features/SPEC_onboarding-o3.md)
+- [`SPEC_onboarding-o3.md`](../game/specs/features/SPEC_onboarding-o3.md)
 - `backend/app/game/period.py`, `compute_monthly_burn`

@@ -48,10 +48,10 @@ aliases:
 | Задача | Скилл |
 |--------|--------|
 | Authoring | **`create-event`** (`/create-event`): опциональный brief → YAML → `pytest -k event` |
-| Read-only обзор | **`event-analysis`** (`/event-analysis`): отчёт, gaps; см. [`EVENTS_AGENT.md`](../agents/EVENTS_AGENT.md) |
+| Read-only обзор | **`event-analysis`** (`/event-analysis`): отчёт, gaps; см. [`EVENTS_AGENT.md`](../archive/retired/agents/EVENTS_AGENT.md) |
 | Ревью diff | **`economy-reviewer`** (subagent) |
 
-**Brief** (`docs/vision/ideas/event-briefs/`) — **не обязателен** для loader’а; рекомендуется для новых событий, цепочек и спорного баланса. В YAML можно сослаться комментарием `# brief: …`.
+**Brief** (`docs/game/vision/ideas/event-briefs/`) — **не обязателен** для loader’а; рекомендуется для новых событий, цепочек и спорного баланса. В YAML можно сослаться комментарием `# brief: …`.
 
 ### 4. Персоны
 
@@ -67,6 +67,6 @@ aliases:
 ## Связанные документы
 
 - [`data/events/README.md`](../../data/events/README.md)
-- [`docs/agents/EVENTS_AGENT.md`](../agents/EVENTS_AGENT.md)
-- [`docs/specs/features/SPEC_mvp-11-progression-events.md`](../specs/features/SPEC_mvp-11-progression-events.md)
+- [`docs/agents/EVENTS_AGENT.md`](../archive/retired/agents/EVENTS_AGENT.md)
+- [`docs/game/specs/features/SPEC_mvp-11-progression-events.md`](../game/specs/features/SPEC_mvp-11-progression-events.md)
 - [`backend/migrations/README.md`](../../backend/migrations/README.md)

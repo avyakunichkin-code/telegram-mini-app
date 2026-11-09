@@ -1,5 +1,7 @@
 # Аудит дополнительного контура Codex
 
+Исторический снимок 29–30 октября. С 2026-11-03 контур основной; актуальный срез — [CODEX-TRANSITION](CODEX-TRANSITION.md).
+
 Начат 2026-10-29, продолжен 2026-10-30 (Europe/Moscow). Область — AI-архитектура основного checkout telegram-mini-app; продукт/формулы не менялись. Первый git status получен до любых записей. Сохранённый снимок сделан после создания двух служебных каталогов: строки ?? docs/ai/ и ?? scripts/codex/ в нём принадлежат этой задаче, не пользователю. Исходный git status в [status-before.txt](status-before.txt), SHA-256 защищённых файлов в [protected-before.json](protected-before.json). Уже были многочисленные пользовательские изменения (в том числе CLAUDE, 2 Claude instruction files, CONVENTIONS, backend/frontend/docs, удаления старого Plan и untracked память). Их не откатывали и не включали в собственную реализацию.
 
 ## Инвентарь и полнота

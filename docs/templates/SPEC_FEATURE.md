@@ -48,7 +48,7 @@ aliases:
 |------|-------|--------|
 | 1 | … | … |
 
-Ref: [`foundation/TMA_USER_FLOWS.md`](../foundation/TMA_USER_FLOWS.md)
+Ref: [`foundation/TMA_USER_FLOWS.md`](../game/foundation/TMA_USER_FLOWS.md)
 
 ## Data & API
 
@@ -62,12 +62,12 @@ Ref: [`foundation/TMA_USER_FLOWS.md`](../foundation/TMA_USER_FLOWS.md)
 |--------|------|---------|----------|-------|
 | GET | `/api/…` | … | … | … |
 
-Sync: `frontend-react/src/api.js`, `CLAUDE.md` if public contract changes.
+Sync: `frontend-react/src/api.js`, `AGENTS.md` if public contract changes.
 
 ## UI / UX
 
 - Screens: …
-- Ref: [`specs/SPEC_FRONTEND_UI.md`](../specs/SPEC_FRONTEND_UI.md)
+- Ref: [`specs/SPEC_FRONTEND_UI.md`](../game/specs/SPEC_FRONTEND_UI.md)
 
 ## Rules & edge cases
 
@@ -75,7 +75,7 @@ Sync: `frontend-react/src/api.js`, `CLAUDE.md` if public contract changes.
 
 ## Testing strategy
 
-Skill: **`/critical-test-scenarios`** ([`critical-test-scenarios`](../../.claude/skills/critical-test-scenarios/SKILL.md)).  
+Skill: **`$verify-change`** ([`verify-change`](../../.agents/skills/verify-change/SKILL.md)).
 Цель — **не 100% coverage**, а критичные сценарии (gate G1–G4). Ref: [`backend/tests/README.md`](../../backend/tests/README.md).
 
 | Layer | What to prove |

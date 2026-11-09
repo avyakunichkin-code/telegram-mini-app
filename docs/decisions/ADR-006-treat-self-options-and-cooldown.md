@@ -55,5 +55,5 @@ aliases:
 
 ## Связанные артефакты
 
-- Spec: [`SPEC_game-character-needs.md`](../specs/features/SPEC_game-character-needs.md) §«Порадовать себя»
+- Spec: [`SPEC_game-character-needs.md`](../game/specs/features/SPEC_game-character-needs.md) §«Порадовать себя»
 - ADR: [ADR-005](ADR-005-character-needs-state-and-defeat.md)

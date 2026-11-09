@@ -19,7 +19,7 @@ amended_by: ADR-013-game-only-drop-plan-mode
 
 В коде и API сохранений используется пара **`GameProfile.mode`: `light` | `hardcore`**, а каталог событий фильтруется через **`EventDefinition.mode`** (`light` / `hardcore` / `any`). Продуктовая концепция изменилась: различие «лёгкий / хардкорный симулятор» **не является** главным разделением; целевая модель — **тип сохранения `save_kind`: игра (`game`) или план (`plan`)**, старт из **шаблонов**, победа из **`victory_config`**.
 
-Продолжать расширять `light`/`hardcore` технически возможно, но это **фиксирует устаревшую модель** в БД, API и UI (**`DifficultyScreen`** — снят в G1, см. [`SPEC_game-plan`](../specs/features/SPEC_game-plan.md)) и мешает эволюции.
+Продолжать расширять `light`/`hardcore` технически возможно, но это **фиксирует устаревшую модель** в БД, API и UI (**`DifficultyScreen`** — снят в G1, см. [`SPEC_game-plan`](../game/specs/features/SPEC_game-plan.md)) и мешает эволюции.
 
 Ограничение по релизу: в **ближайшем эпике** реализуется только **Game Mode** и **один полный шаблон end-to-end**. **Plan Mode** отнесён на **MVP 2.0**.
 
@@ -41,7 +41,7 @@ amended_by: ADR-013-game-only-drop-plan-mode
 
 - **Breaking change** для клиентов: тела запросов создания профиля и, возможно, формы списка сохранений меняются; старые клиенты без обновления перестанут быть совместимыми.
 - Нужны **SQL-миграция(и)** и обновление **`backend/main.py`** (лёгкие `ALTER`), **сидов событий**, **`frontend-react/src/api.js`**, экранов старта.
-- Документация: `CLAUDE.md`, `foundation/SPEC_PRODUCT.md` §0, [`specs/features/SPEC_game-plan.md`](../specs/features/SPEC_game-plan.md).
+- Документация: `CLAUDE.md`, `foundation/SPEC_PRODUCT.md` §0, [`specs/features/SPEC_game-plan.md`](../game/specs/features/SPEC_game-plan.md).
 
 ## Alternatives considered
 
@@ -50,5 +50,5 @@ amended_by: ADR-013-game-only-drop-plan-mode
 
 ## Связанные артефакты
 
-- Spec: [`SPEC_game-plan`](../specs/features/SPEC_game-plan.md)
-- Идея / Q&A: [`vision/ideas/tvoy-hod-evolution-after-mvp.md`](../vision/ideas/tvoy-hod-evolution-after-mvp.md) §II
+- Spec: [`SPEC_game-plan`](../game/specs/features/SPEC_game-plan.md)
+- Идея / Q&A: [`vision/ideas/tvoy-hod-evolution-after-mvp.md`](../game/vision/ideas/tvoy-hod-evolution-after-mvp.md) §II

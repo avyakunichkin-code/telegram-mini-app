@@ -9,7 +9,7 @@ spec: ../specs/features/SPEC_<slug>.md
 idea: ../vision/ideas/<slug>.md
 tasks: ../tasks/TASKS_<slug>.md
 traceability: ../TRACEABILITY.md
-next_skill: incremental-implementation
+next_skill: delivery
 tags:
   - tvoy-hod/layer/plan
   - tvoy-hod/layer/template
@@ -25,7 +25,7 @@ aliases:
 
 **Epic ID:** `E1` (строка в [`TRACEABILITY.md`](../TRACEABILITY.md))  
 **Spec:** [`specs/features/SPEC_<slug>.md`](../specs/features/SPEC_<slug>.md)  
-**После утверждения плана:** Agent Skill **`incremental-implementation`** (срезы по задачам ниже).
+**После утверждения плана:** Agent Skill **`delivery`** (срезы по задачам ниже).
 
 ## Summary
 
@@ -45,12 +45,12 @@ DB / migrations
 
 | # | Срез | Phase | Tier | Skill | Satellites | Read if (`when`) | Next skill |
 |---|------|-------|------|-------|------------|------------------|------------|
-| 1 | … end-to-end | `build` | `core` | `incremental-implementation` | `test-driven-development` | — | `test-driven-development` |
-| 2 | UI / MQX | `build` | `core` | `design-lab-mqx` → `frontend-ui-engineering` | — | `lab parity / canon` | `code-review-and-quality` |
-| 3 | Контракт API | `define` | `core` | `api-and-interface-design` | `test-driven-development` | `breaking API change` | `incremental-implementation` |
-| 4 | События YAML | `build` | `core` | `create-event` | `test-driven-development` | — |
+| 1 | … end-to-end | `build` | `core` | `delivery` | `verify-change` | — | `verify-change` |
+| 2 | UI / MQX | `build` | `core` | `mqx-design` → `frontend-implementation` | — | `lab parity / canon` | `review-change` |
+| 3 | Контракт API | `define` | `core` | `api-contract-change` | `verify-change` | `breaking API change` | `delivery` |
+| 4 | События YAML | `build` | `core` | `event-authoring` | `verify-change` | — |
 
-`tier` / satellites: [`TASK_SLICE.md`](TASK_SLICE.md), [`SKILLS_PHASE_CONTENT_AND_DATA.md`](../agents/SKILLS_PHASE_CONTENT_AND_DATA.md).
+`tier` / satellites: [`TASK_SLICE.md`](TASK_SLICE.md), [маршруты Codex](../../AGENTS.md).
 
 ## Risks & mitigations
 
@@ -69,15 +69,15 @@ DB / migrations
 ## Tasks
 
 Шаблон одной задачи: [`TASK_SLICE.md`](TASK_SLICE.md).  
-Выгрузка в трекер (опционально): `docs/tasks/TASKS_<slug>.md`.
+Выгрузка в трекер (опционально): `docs/game/tasks/TASKS_<slug>.md`.
 
 ### MQ-001 — [Title]
 
 - **Phase:** `build`
 - **Tier:** `core`
-- **Skill:** `incremental-implementation`
-- **Satellites:** `test-driven-development`
-- **Next skill:** `test-driven-development`
+- **Skill:** `delivery`
+- **Satellites:** `verify-change`
+- **Next skill:** `verify-change`
 - **Spec:** … §…
 - **Acceptance:** …
 - **Verify:** …

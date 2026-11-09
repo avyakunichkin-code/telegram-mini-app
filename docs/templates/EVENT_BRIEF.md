@@ -7,11 +7,11 @@ aliases:
 ---
 # Event Brief — одно событие (шаблон)
 
-Скопируйте блок в `docs/vision/ideas/event-briefs/<definition_key>.md` или в описание задачи перед `/create-event`.
+Скопируйте блок в `docs/game/vision/ideas/event-briefs/<definition_key>.md` или в описание задачи перед `/event-authoring`.
 
-**Канон баланса:** [`.claude/skills/create-event/event-balance-rules.md`](../../.claude/skills/create-event/event-balance-rules.md) — §1–4 trade-off, **§10 lifecycle**, **§11 оси needs**, §12 MCE.
+**Канон баланса:** [`docs/game/events/event-balance-rules.md`](../game/events/event-balance-rules.md) — §1–4 trade-off, **§10 lifecycle**, **§11 оси needs**, §12 MCE.
 
-**Lifecycle (idea):** [`event-repeat-and-state-ladder.md`](../vision/ideas/event-repeat-and-state-ladder.md)
+**Lifecycle (idea):** [`event-repeat-and-state-ladder.md`](../game/vision/ideas/event-repeat-and-state-ladder.md)
 
 ---
 
@@ -108,9 +108,9 @@ repeat_policy: once_per_profile
 
 ## 3b. Цепочка-«История» (3+ шага)
 
-Один brief на цепочку: [`docs/vision/ideas/event-briefs/<chain_slug>.md`](../vision/ideas/event-briefs/) — образец [`mq11_freelance_project_chain.md`](../vision/ideas/event-briefs/mq11_freelance_project_chain.md).
+Один brief на цепочку: [`docs/game/vision/ideas/event-briefs/<chain_slug>.md`](../game/vision/ideas/event-briefs/) — образец [`mq11_freelance_project_chain.md`](../game/vision/ideas/event-briefs/mq11_freelance_project_chain.md).
 
-Обязательно в brief: таблица шагов (`definition_key`, `after_periods`, период N+k, `mandatory_gate`), ветки (`payment` / `prep` / `branch`), **где есть cash**, **Not doing** (срыв, автопровал, лишние кнопки). После YAML — `/event-analysis` scope `chains`.
+Обязательно в brief: таблица шагов (`definition_key`, `after_periods`, период N+k, `mandatory_gate`), ветки (`payment` / `prep` / `branch`), **где есть cash**, **Not doing** (срыв, автопровал, лишние кнопки). После YAML — `/event-audit` scope `chains`.
 
 ---
 
@@ -123,4 +123,4 @@ repeat_policy: once_per_profile
 - [ ] **§1–3:** trade-off, Pareto, отказ; нет `xp_delta`
 - [ ] Запись в `data/events/mvp11/<domain>.yaml` (`events:`)
 - [ ] `pytest -q` зелёный (`test_event*`, `test_mvp11_yaml_catalog`, `test_event_balance_contract`)
-- [ ] Каталог: `/event-analysis` scope **all** — блоки trade-off + lifecycle + axis (перед массовым merge)
+- [ ] Каталог: `/event-audit` scope **all** — блоки trade-off + lifecycle + axis (перед массовым merge)

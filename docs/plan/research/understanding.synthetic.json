@@ -1,0 +1,9 @@
+{
+  "dataset": "synthetic",
+  "build": "decision-value-fixture-v1",
+  "variant": "A",
+  "sessions": [
+    {"viewport":"mobile","tasks":{"resume":"independent","conclusion":"independent","transfer":"assisted","next_step":"independent","feedback":"unobserved"},"difficulties":["transfer"]},
+    {"viewport":"desktop","tasks":{"resume":"unobserved","conclusion":"error","transfer":"independent","next_step":"assisted","feedback":"independent"},"difficulties":["range","step"]}
+  ]
+}

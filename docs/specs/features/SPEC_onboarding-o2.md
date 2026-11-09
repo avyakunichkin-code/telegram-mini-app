@@ -1,14 +1,6 @@
 ---
-layer: spec
-status: superseded
-superseded_by: SPEC_onboarding-o3.md
-redirect: ../../archive/onboarding-o2/README.md
-tags:
-  - tvoy-hod/layer/spec
-  - tvoy-hod/status/superseded
-aliases:
-  - SPEC_onboarding-o2
+status: archived
 ---
-# Spec: O2 onboarding (redirect)
+# Исторический адрес
 
-→ **[`docs/archive/onboarding-o2/README.md`](../../archive/onboarding-o2/README.md)** · канон: [`SPEC_onboarding-o3.md`](SPEC_onboarding-o3.md)
+Материал перенесён в [архив](../../archive/retired/specs/features/SPEC_onboarding-o2.md). Не использовать как действующую инструкцию.

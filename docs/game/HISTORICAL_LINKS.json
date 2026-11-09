@@ -1,0 +1,49 @@
+{
+  "note": "Existing unavailable or ambiguous references are retained as plain text, not working links.",
+  "references": [
+    {
+      "file": "docs/game/specs/build/project-handbook-documentation.md",
+      "target": "../../../../.cursor/skills/project-handbook-documentation/SKILL.md"
+    },
+    {
+      "file": "docs/game/specs/features/SPEC_achievements.md",
+      "target": "../../../../backend/migrations/0009_achievement_chains.sql"
+    },
+    {
+      "file": "docs/game/ux/screens/character-needs-events.md",
+      "target": "../../../../design-lab/character-needs/events-needs-chips-round/"
+    },
+    {
+      "file": "docs/game/ux/screens/character-needs-help.md",
+      "target": "../../../../design-lab/character-needs/help-sheet-round/"
+    },
+    {
+      "file": "docs/game/ux/screens/character-needs-period-defeat.md",
+      "target": "../../../../design-lab/character-needs/defeat-round/"
+    },
+    {
+      "file": "docs/game/vision/ideas/admin-and-notifications.md",
+      "target": "../../../specs/features/SPEC_admin-and-notifications.md"
+    },
+    {
+      "file": "docs/game/vision/ideas/post-playtest-wave1-two-directions.md",
+      "target": "../../../backend/app/services/game/start.py"
+    },
+    {
+      "file": "docs/game/backlog/PRODUCT_BACKLOG.md",
+      "target": "../../specs/…"
+    },
+    {
+      "file": "docs/game/backlog/PRODUCT_BACKLOG.md",
+      "target": "../../design-lab/onboarding-o2/"
+    },
+    {
+      "file": "docs/game/reference/CHARACTER_MONETKA.md",
+      "target": "../../../design-lab/onboarding-brief/"
+    },
+    {
+      "file": "docs/game/reference/CHARACTER_MONETKA.md",
+      "target": "../../../design-lab/onboarding-brief/APPROVED.md"
+    }
+  ]
+}

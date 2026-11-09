@@ -32,7 +32,7 @@ aliases:
 |---|--------|---------|
 | Q1 | Победа на лёгком шаблоне без инвестиций? | **Нет.** Учебная цепочка с шагом «открыть депозит/облигацию» — **осознанный онбординг**, не баг. Отдельный «no-invest» шаблон — только если появится в каталоге с другим `victory_config_json`. |
 | Q2 | Второй game over по суммарной просрочке? | **Не вводить.** Единственный автоматический game over MVP: **3 подряд закрытых периода с `cash_balance < 0`** после `process_period_end`. Просрочка давит через цели (`no_overdue`), `clean_period_streak`, UX — без отдельного поражения. |
-| Q3 | Событий за период | **2** (`EVENTS_PER_PERIOD` в `backend/app/game/rules.py`). Документация синхронизируется; до 3 — не планировать без пересмотра anti-fatigue ([`event-engagement-anti-fatigue.md`](../vision/ideas/event-engagement-anti-fatigue.md)). |
+| Q3 | Событий за период | **2** (`EVENTS_PER_PERIOD` в `backend/app/game/rules.py`). Документация синхронизируется; до 3 — не планировать без пересмотра anti-fatigue ([`event-engagement-anti-fatigue.md`](../game/vision/ideas/event-engagement-anti-fatigue.md)). |
 
 ### 2. Словарь метрик (канон имён)
 
@@ -91,10 +91,10 @@ aliases:
 ### 3. Источники правды (иерархия)
 
 1. **Код + pytest** (production paths).
-2. **`docs/specs/features/SPEC_*.md`**.
-3. **`docs/foundation/SPEC_PRODUCT.md`**.
-4. Этот ADR + [`game-balance-thresholds-and-constraints.md`](../vision/ideas/game-balance-thresholds-and-constraints.md).
-5. `docs/vision/ideas/` — направление, не детали формул.
+2. **`docs/game/specs/features/SPEC_*.md`**.
+3. **`docs/game/foundation/SPEC_PRODUCT.md`**.
+4. Этот ADR + [`game-balance-thresholds-and-constraints.md`](../game/vision/ideas/game-balance-thresholds-and-constraints.md).
+5. `docs/game/vision/ideas/` — направление, не детали формул.
 
 **Цели победы (редактирование):** `game_starter_templates.victory_config_json` → при наличии строк — override из `victory_goals` ([`goals_store.py`](../../backend/app/victory/goals_store.py)). Legacy `evaluate_mvp_victory` — **только unit-тесты**, не overview.
 
@@ -112,22 +112,22 @@ Overview, victory snap и аналитика потребляют один сн�
 
 ## Consequences
 
-- Синхронизация docs: см. таблицу в [`DOC_SYNC_LOG.md`](../foundation/DOC_SYNC_LOG.md) (запись 2026-05-29, ADR-009).
+- Синхронизация docs: см. таблицу в [`DOC_SYNC_LOG.md`](../game/foundation/DOC_SYNC_LOG.md) (запись 2026-05-29, ADR-009).
 - Новые типы целей victory — только с явной колонкой «база метрики» в spec и проверкой в `goals_lint`.
-- Симуляция баланса: [`backend/scripts/balance_simulate.py`](../../backend/scripts/balance_simulate.py) (40 периодов, политики `tutorial` | `safety_first` | `passive`, JSON + diff); краткий wrapper 12p — [`simulate_student_12p.py`](../../backend/scripts/simulate_student_12p.py); процедура — [`docs/balance/README.md`](../balance/README.md), skill **`balance-playtest`**.
+- Симуляция баланса: [`backend/scripts/balance_simulate.py`](../../backend/scripts/balance_simulate.py) (40 периодов, политики `tutorial` | `safety_first` | `passive`, JSON + diff); краткий wrapper 12p — [`simulate_student_12p.py`](../../backend/scripts/simulate_student_12p.py); процедура — [`docs/game/balance/README.md`](../game/balance/README.md), skill **`balance-playtest`**.
 - UI: backlog — подписи «структурный поток» vs «расходы на жизнь»; переименование streak в копирайте.
 
 ## Alternatives considered
 
-1. **Поднять `EVENTS_PER_PERIOD` до 3** — отклонено: anti-fatigue; канон **~5–10 мин на закрытый период**, **2 события** ([`TARGET_PLAYER_AND_SESSION`](../foundation/TARGET_PLAYER_AND_SESSION.md) §2).
+1. **Поднять `EVENTS_PER_PERIOD` до 3** — отклонено: anti-fatigue; канон **~5–10 мин на закрытый период**, **2 события** ([`TARGET_PLAYER_AND_SESSION`](../game/foundation/TARGET_PLAYER_AND_SESSION.md) §2).
 2. **Game over по просрочке** — отклонено (Q2).
 3. **Убрать invest из tutorial chain** — отклонено (Q1); ломает онбординг капитала.
 4. **Переименовать поля API** (`net_monthly_cashflow` → `net_structural_cashflow`) — отложено; breaking для клиента; сначала UI labels.
 
 ## Связанные артефакты
 
-- [`SPEC_PRODUCT.md`](../foundation/SPEC_PRODUCT.md) §3.3, §7
-- [`GAME.md`](../handbook/GAME.md) §0.2
-- [`MVP_AUDIT_VS_SPEC.md`](../foundation/MVP_AUDIT_VS_SPEC.md)
+- [`SPEC_PRODUCT.md`](../game/foundation/SPEC_PRODUCT.md) §3.3, §7
+- [`GAME.md`](../game/handbook/GAME.md) §0.2
+- [`MVP_AUDIT_VS_SPEC.md`](../game/foundation/MVP_AUDIT_VS_SPEC.md)
 - [`ADR-002`](ADR-002-victory-engine-and-template-config.md), [`ADR-004`](ADR-004-mechanics-unlock-victory-chain.md), [`ADR-008`](ADR-008-events-catalog-single-source.md)
-- [`SKILLS_PHASE_CONTENT_AND_DATA.md`](../agents/SKILLS_PHASE_CONTENT_AND_DATA.md) — границы скиллов
+- [`SKILLS_PHASE_CONTENT_AND_DATA.md`](../archive/retired/agents/SKILLS_PHASE_CONTENT_AND_DATA.md) — границы скиллов

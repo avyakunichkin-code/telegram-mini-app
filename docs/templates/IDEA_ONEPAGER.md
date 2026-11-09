@@ -2,7 +2,7 @@
 status: draft
 owner:
 last_reviewed:
-source: idea-refine
+source: delivery
 tags:
   - tvoy-hod/layer/template
   - tvoy-hod/status/draft
@@ -44,6 +44,6 @@ aliases:
 
 ## Links
 
-- Foundation: [`foundation/SPEC_PRODUCT.md`](../foundation/SPEC_PRODUCT.md)
-- Сохранять в: `docs/vision/ideas/<slug>.md`
+- Foundation: [`foundation/SPEC_PRODUCT.md`](../game/foundation/SPEC_PRODUCT.md)
+- Сохранять в: `docs/game/vision/ideas/<slug>.md`
 - Related specs: …

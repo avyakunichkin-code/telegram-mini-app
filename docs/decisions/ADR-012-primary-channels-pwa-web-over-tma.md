@@ -13,7 +13,7 @@ aliases:
 
 - **ТВОЙ ХОД** изначально позиционировался как **Telegram Mini App**; код и docs часто ставили TMA в центр smoke QA и release gate (`release-tma`).
 - С **2026** доступ к Telegram в ряде регионов **нестабилен или заблокирован** — TMA перестаёт быть надёжным primary channel для привлечения и удержания.
-- В репозитории уже есть **один SPA + один API**: PWA (эпик PW1), браузерный web, опционально wide desktop ([`PLAN_pwa-standalone.md`](../plans/PLAN_pwa-standalone.md), [`PLAN_desktop-wide-web.md`](../plans/PLAN_desktop-wide-web.md)).
+- В репозитории уже есть **один SPA + один API**: PWA (эпик PW1), браузерный web, опционально wide desktop ([`PLAN_pwa-standalone.md`](../game/plans/PLAN_pwa-standalone.md), [`PLAN_desktop-wide-web.md`](../game/plans/PLAN_desktop-wide-web.md)).
 - PW1 частично в коде: manifest, service worker, lifecycle resync — мотивация из lifecycle TMA, но **ценность канала** — standalone вне Telegram.
 
 ## Decision
@@ -25,7 +25,7 @@ aliases:
    - **Telegram Mini App (TMA)** — поддержка и **опциональная регрессия** при изменениях WebApp SDK / initData; **не** блокер новых фич и **не** единственный smoke перед релизом.
 3. **Release gate:** skill **`release-web`** (замена `release-tma`) — guardrails, design-lab parity, pytest, **PWA/web smoke**; TMA smoke — подпункт «если менялся TMA shell».
 4. **Agent priority:** `tier: core` остаётся на контенте, economy, MQX; **`telegram-mini-app-runtime`** и **`release-tma`** — archived/deferred; **`browser-testing-with-devtools`** — чаще при UI/PWA задачах.
-5. **Документация:** [`SPEC_PRODUCT.md`](../foundation/SPEC_PRODUCT.md) §1.1 — канон каналов; vision/plans синхронизированы (PWA не «запасной вход», а **primary**).
+5. **Документация:** [`SPEC_PRODUCT.md`](../game/foundation/SPEC_PRODUCT.md) §1.1 — канон каналов; vision/plans синхронизированы (PWA не «запасной вход», а **primary**).
 
 ## Consequences
 
@@ -52,11 +52,11 @@ aliases:
 |---------|------------|
 | Оставить TMA primary, PWA «запасной» | Не соответствует блокировкам и стратегии 2026 |
 | Отдельное native app | Out of scope MVP; тот же API/SPA достаточен |
-| Fork frontend для web | Против принципа one SPA ([`PLAN_desktop-wide-web.md`](../plans/PLAN_desktop-wide-web.md)) |
+| Fork frontend для web | Против принципа one SPA ([`PLAN_desktop-wide-web.md`](../game/plans/PLAN_desktop-wide-web.md)) |
 
 ## References
 
-- [`PWA_INSTALL.md`](../foundation/PWA_INSTALL.md)
-- [`pwa-standalone-channel.md`](../vision/ideas/pwa-standalone-channel.md)
-- [`TMA_USER_FLOWS.md`](../foundation/TMA_USER_FLOWS.md) — secondary flows
+- [`PWA_INSTALL.md`](../game/foundation/PWA_INSTALL.md)
+- [`pwa-standalone-channel.md`](../game/vision/ideas/pwa-standalone-channel.md)
+- [`TMA_USER_FLOWS.md`](../game/foundation/TMA_USER_FLOWS.md) — secondary flows
 - Skill: `.claude/skills/release-web/SKILL.md`

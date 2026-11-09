@@ -48,7 +48,7 @@ reviews:
     decision: >-
       PO: потребности — двигатель игры и второй путь к поражению; пассивный обязан проигрывать.
       Принята модель «износ + уровень жизни» с инвариантом давления.
-    repo_trace: docs/specs/features/SPEC_needs-set-point.md, docs/decisions/ADR-015-needs-set-point-model.md, docs/plans/PLAN_needs-set-point.md
+    repo_trace: docs/game/specs/features/SPEC_needs-set-point.md, docs/decisions/ADR-015-needs-set-point-model.md, docs/game/plans/PLAN_needs-set-point.md
     decision_changed: true
 
   - id: CY-2026-10-21-game-plan-split
@@ -123,4 +123,24 @@ reviews:
     decision: >-
       Ждёт решения PO; api-client сделан (c6177e6), код игры не тронут.
     repo_trace: packages/api-client, docs/plan/ROADMAP.md
+    decision_changed: false
+
+  - id: CY-2026-11-03-codex-primary
+    date: 2026-11-03
+    subject: Переход с дополнительного Codex-контура на основной
+    human_decision: Проанализировать изменения и полностью перейти на Codex.
+    disagreement: >-
+      CONVENTIONS и точки входа всё ещё назначали Claude основной средой,
+      шаблоны и навыки событий зависели от Claude-контура. Это противоречило поручению.
+    alternative: >-
+      Сделать AGENTS и Codex skills рабочим входом, перенести предметные справки
+      в docs/events, заменить Claude CI на Codex CI; Claude-файлы сохранить как историю.
+    alternative_cost: >-
+      Поддержка справок переходит в docs; native hooks всё ещё требуют наблюдаемого
+      исполнения и штатного trust. Исторический protected drift остаётся видимым.
+    outcome: accepted
+    decision: >-
+      Выполнить порученный полный переход рабочих процессов на Codex в репозитории.
+      Не удалять защищённые Claude-файлы и не подменять настройку trust.
+    repo_trace: AGENTS.md, CONVENTIONS.md, docs/ai/CODEX-TRANSITION.md, .github/workflows/codex-check.yml
     decision_changed: false

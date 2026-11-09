@@ -23,7 +23,7 @@ aliases:
 - фоновые задачи и observability — позже, без смены структуры папок;
 - при декомпозиции **сначала периферия** (уведомления, телеметрия, каталоги), не ядро экономики периода.
 
-Связано: [idea project-structure-standardization](../vision/ideas/project-structure-standardization.md) (направление A — границы + touch-it move-it).
+Связано: [idea project-structure-standardization](../game/vision/ideas/project-structure-standardization.md) (направление A — границы + touch-it move-it).
 
 ## Decision
 
@@ -71,7 +71,7 @@ aliases:
 ## Consequences
 
 - **Плюсы:** предсказуемое размещение; зеркало `routers/` + `services/`; проще искать логику по домену.
-- **Минусы:** одноразовый churn импортов и docs; агенты с устаревшим контекстом могут ссылаться на старые пути — см. [DOC_SYNC_LOG](../foundation/DOC_SYNC_LOG.md) 2026-05-28.
+- **Минусы:** одноразовый churn импортов и docs; агенты с устаревшим контекстом могут ссылаться на старые пути — см. [DOC_SYNC_LOG](../game/foundation/DOC_SYNC_LOG.md) 2026-05-28.
 - **Не делаем сейчас:** отдельный пакет `victory/` на уровне `services/` (движок остаётся в `app/victory/`); очередь/workers; correlation id — backlog инфраструктуры.
 - **Тесты:** 194 pytest после переезда; при добавлении модулей — импорт из доменного пакета, не из роутера.
 

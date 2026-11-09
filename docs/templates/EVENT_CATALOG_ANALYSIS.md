@@ -7,9 +7,9 @@ aliases:
 ---
 # Event Catalog Analysis — шаблон отчёта
 
-Скопируйте в `docs/vision/analysis/event-catalog-<topic>-<YYYY-MM-DD>.md` или отдайте в чат по `/event-analysis`.
+Скопируйте в `docs/game/vision/analysis/event-catalog-<topic>-<YYYY-MM-DD>.md` или отдайте в чат по `/event-audit`.
 
-**Чеклист skill:** [`.claude/skills/event-analysis/SKILL.md`](../../.claude/skills/event-analysis/SKILL.md) · **Баланс:** [`event-balance-rules.md`](../../.claude/skills/create-event/event-balance-rules.md)
+**Чеклист skill:** [`event-audit`](../../.agents/skills/event-audit/SKILL.md) · **Баланс:** [`event-balance-rules.md`](../game/events/event-balance-rules.md)
 
 ```yaml
 scope: all | domain:<name> | tier:<n> | persona:student|professional|pairs
@@ -52,7 +52,7 @@ verdict: HEALTHY | GAPS | CONCERNS | BLOCKED
 
 ## Баланс trade-off (§1–4, §6)
 
-См. [`event-balance-rules.md`](../../.claude/skills/create-event/event-balance-rules.md).
+См. [`event-balance-rules.md`](../game/events/event-balance-rules.md).
 
 | key | free lunch? | Pareto? | отказ 0₽ + needs+? | max \|cash\| | % student | % pro |
 |-----|-------------|---------|---------------------|--------------|-----------|-------|
@@ -62,7 +62,7 @@ verdict: HEALTHY | GAPS | CONCERNS | BLOCKED
 
 ## Lifecycle и повтор (§10) — обязательно при scope all / housing / consumption
 
-См. [`event-repeat-and-state-ladder.md`](../vision/ideas/event-repeat-and-state-ladder.md).
+См. [`event-repeat-and-state-ladder.md`](../game/vision/ideas/event-repeat-and-state-ladder.md).
 
 | key | repeat_policy | cooldown | repeat_max | −lifestyle / downgrade? | рекомендуемый класс | CONCERNS? |
 |-----|---------------|----------|------------|-------------------------|---------------------|-----------|
@@ -97,7 +97,7 @@ verdict: HEALTHY | GAPS | CONCERNS | BLOCKED
 
 | P | gap | suggested domain | next |
 |---|-----|------------------|------|
-| P1 | lifecycle B для housing keys | housing | `/create-event` + EVT1-105 |
+| P1 | lifecycle B для housing keys | housing | `/event-authoring` + EVT1-105 |
 | P1 | free lunch в tier-1 | consumption | rebalance + brief |
 
 ## Risks / handoff

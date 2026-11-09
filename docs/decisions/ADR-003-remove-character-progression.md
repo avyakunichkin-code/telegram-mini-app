@@ -20,7 +20,7 @@ MVP 1.1 вводил **уровень персонажа**, **XP** (период
 - сложность событий из **`event_tier`** ∝ **`period_index`**;
 - мотивацию через **достижения** и **цели победы v2**, без «уровня персонажа».
 
-Два слоя прогрессии перегружали UX и расходились с [`remove-character-xp-and-levels.md`](../vision/ideas/remove-character-xp-and-levels.md).
+Два слоя прогрессии перегружали UX и расходились с [`remove-character-xp-and-levels.md`](../game/vision/ideas/remove-character-xp-and-levels.md).
 
 ## Decision
 
@@ -46,7 +46,7 @@ MVP 1.1 вводил **уровень персонажа**, **XP** (период
 
 ## Связанные артефакты
 
-- Idea (канон): [`remove-character-xp-and-levels.md`](../vision/ideas/remove-character-xp-and-levels.md)
+- Idea (канон): [`remove-character-xp-and-levels.md`](../game/vision/ideas/remove-character-xp-and-levels.md)
 - Supersedes: [`character-xp archive`](../archive/character-xp-progression/README.md) (ADR-003)
-- Spec: [`SPEC_mvp-11-progression-events`](../specs/features/SPEC_mvp-11-progression-events.md)
+- Spec: [`SPEC_mvp-11-progression-events`](../game/specs/features/SPEC_mvp-11-progression-events.md)
 - Migration: `backend/migrations/0031_remove_character_progression.sql`

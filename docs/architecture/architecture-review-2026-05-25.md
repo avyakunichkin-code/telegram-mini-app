@@ -88,13 +88,13 @@ aliases:
 
 ## Doc-sync applied (2026-05-25)
 
-- `docs/vision/ideas/tvoy-hod-evolution-after-mvp.md`
-- `docs/foundation/SPEC_PRODUCT.md`
-- `docs/specs/features/SPEC_victory-v2.md`
-- `docs/foundation/MVP_AUDIT_VS_SPEC.md`
-- `docs/backlog/PRODUCT_BACKLOG.md`
+- `docs/game/vision/ideas/tvoy-hod-evolution-after-mvp.md`
+- `docs/game/foundation/SPEC_PRODUCT.md`
+- `docs/game/specs/features/SPEC_victory-v2.md`
+- `docs/game/foundation/MVP_AUDIT_VS_SPEC.md`
+- `docs/game/backlog/PRODUCT_BACKLOG.md`
 - `docs/TRACEABILITY.md`
-- `docs/specs/features/SPEC_game-plan.md`
+- `docs/game/specs/features/SPEC_game-plan.md`
 - **New:** `docs/decisions/ADR-002-victory-engine-and-template-config.md`
 - **New:** `docs/decisions/ADR-003-remove-character-progression.md`
 

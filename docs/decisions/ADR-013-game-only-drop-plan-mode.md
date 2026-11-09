@@ -22,9 +22,9 @@ aliases:
 
 С мая 2026 канон обещал два типа сохранения: **Game** (шаблоны, TB1, события, Victory v2) и **Plan** (ручной бюджет, мастер, префилл). В prod Plan — плитка **«Скоро»** при живом API (`save_kind=plan`, `BaseParamsScreen`, `PlanExpenseEditor`). Эпик **M2.0** числился обязательным 2.0.
 
-Аудиты 2026-09-07 (product C6; UX α-FB-14; production-ready freeze) и разбор по ролям: [idea `game-only-drop-plan-mode`](../vision/ideas/game-only-drop-plan-mode.md). Два режима = два продукта до одного working loop. ЦА 30+ видит ложный выбор. Команда держит ветвления в start, events, funnel, analytics, скиллах.
+Аудиты 2026-09-07 (product C6; UX α-FB-14; production-ready freeze) и разбор по ролям: [idea `game-only-drop-plan-mode`](../game/vision/ideas/game-only-drop-plan-mode.md). Два режима = два продукта до одного working loop. ЦА 30+ видит ложный выбор. Команда держит ветвления в start, events, funnel, analytics, скиллах.
 
-Вырезание кода в одном PR не делаем: канон сначала, срезы — [`PLAN_game-only.md`](../plans/PLAN_game-only.md).
+Вырезание кода в одном PR не делаем: канон сначала, срезы — [`PLAN_game-only.md`](../game/plans/PLAN_game-only.md).
 
 ## Decision
 
@@ -53,8 +53,8 @@ aliases:
 
 ## Связанные артефакты
 
-- Idea (роли GD / Architect / QA / UX / Live Ops / PO): [`game-only-drop-plan-mode.md`](../vision/ideas/game-only-drop-plan-mode.md)
-- Срезы кода: [`PLAN_game-only.md`](../plans/PLAN_game-only.md)
+- Idea (роли GD / Architect / QA / UX / Live Ops / PO): [`game-only-drop-plan-mode.md`](../game/vision/ideas/game-only-drop-plan-mode.md)
+- Срезы кода: [`PLAN_game-only.md`](../game/plans/PLAN_game-only.md)
 - Предшественник: [ADR-001](ADR-001-save-kind-remove-light-hardcore.md)
-- Spec G1 (Game path остаётся implemented): [`SPEC_game-plan.md`](../specs/features/SPEC_game-plan.md)
-- Сводный план α: [`PLAN_production-ready.md`](../plans/PLAN_production-ready.md) — PR-35 cancelled
+- Spec G1 (Game path остаётся implemented): [`SPEC_game-plan.md`](../game/specs/features/SPEC_game-plan.md)
+- Сводный план α: [`PLAN_production-ready.md`](../game/plans/PLAN_production-ready.md) — PR-35 cancelled

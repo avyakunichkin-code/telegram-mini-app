@@ -24,3 +24,5 @@ aliases:
 Шаблон: [`../templates/ADR.md`](../templates/ADR.md)
 
 Именование: `ADR-NNN-<slug>.md`
+
+- [ADR-018: раздельные рабочие контексты Game и Plan](ADR-018-product-work-contexts.md) (accepted 2026-11-08).

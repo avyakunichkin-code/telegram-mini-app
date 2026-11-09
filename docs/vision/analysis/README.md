@@ -1,11 +1,7 @@
 ---
-tags:
-  - tvoy-hod/layer/vision
-aliases:
-  - "Analysis (read-only выводы агента)"
+status: relocated
 ---
-# Analysis (read-only выводы агента)
+# Документ Game перенесён
 
-Отчёты **`/event-analysis`** — снимки каталога событий, gaps, баланс-ориентиры. Не канон; канон — `data/events/mvp11/`.
-
-Шаблон: [`docs/templates/EVENT_CATALOG_ANALYSIS.md`](../../templates/EVENT_CATALOG_ANALYSIS.md).
+Канонический документ: [ТВОЙ ХОД](../../game/vision/analysis/README.md).
+Этот адрес оставлен только для совместимости.

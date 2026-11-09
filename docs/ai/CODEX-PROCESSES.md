@@ -2,9 +2,15 @@
 
 Общие границы — [AGENTS](../../AGENTS.md). Это явная справка навыка delivery, не автозагрузка всех процессов.
 
+Сначала выбери [Game](../game/README.md) или [Plan](../plan/README.md).
+Пути vision/specs/handbook/TRACEABILITY ниже без префикса Plan относятся к Game;
+для Plan использовать соответствующие слои внутри `docs/plan/`, его ROADMAP и
+[дизайн-процесс](../plan/DESIGN.md). Игровые guidance/admin/MQX не применять к Plan
+по умолчанию. Общие процессы не требуют загрузки документации обоих продуктов.
+
 ## Idea / spec / plan / implementation
 
-Idea: проблема, аудитория, assumptions, MVP/out, открытые вопросы → docs/vision/ideas по IDEA_ONEPAGER. DRAFT; направление подтверждает человек. Spec: approved idea или обоснованный небольшой фикс → SPEC_FEATURE, контракт, CS happy/boundary/error/invariant, AC и traceability; DoR и approval до новой продуктовой реализации. Plan: approved spec → PLAN_FEATURE, вертикальные TASK_SLICE с зависимостями, файлами, verify и откатом. Implementation: только согласованный срез; проверка области, self-review и документирование поведения. Не создавать четыре обязательных артефакта для опечатки/понятного бага. Использовать существующие docs/templates, docs/TRACEABILITY и продуктовый backlog.
+Idea: проблема, аудитория, assumptions, MVP/out, открытые вопросы → docs/game/vision/ideas по IDEA_ONEPAGER. DRAFT; направление подтверждает человек. Spec: approved idea или обоснованный небольшой фикс → SPEC_FEATURE, контракт, CS happy/boundary/error/invariant, AC и traceability; DoR и approval до новой продуктовой реализации. Plan: approved spec → PLAN_FEATURE, вертикальные TASK_SLICE с зависимостями, файлами, verify и откатом. Implementation: только согласованный срез; проверка области, self-review и документирование поведения. Не создавать четыре обязательных артефакта для опечатки/понятного бага. Использовать существующие docs/templates, docs/TRACEABILITY и продуктовый backlog.
 
 Handbook: код/spec → narrative для людей в docs/handbook. Не превращать описание старого Plan Mode в обязательство. ADR фиксирует почему; spec — что, plan — как. Иерархия и канон в docs/DOCUMENTATION_SYSTEM.md.
 
@@ -22,9 +28,9 @@ Handbook: код/spec → narrative для людей в docs/handbook. Не п�
 
 ## Deferred — только по явной задаче
 
-- Release: docs/ops/DEPLOY, ADR-012, PWA_INSTALL, manifests/CI. Сначала readiness: backend при diff, FE unit/build/guardrails, design-lab parity при UI, W1–W5 web/PWA (login, core loop, refresh/resume, desktop/mobile, install). TMA smoke только при shell diff. Локальный отчёт не авторизует deploy/migrate production.
+- Release: docs/game/ops/DEPLOY, ADR-012, PWA_INSTALL, manifests/CI. Сначала readiness: backend при diff, FE unit/build/guardrails, design-lab parity при UI, W1–W5 web/PWA (login, core loop, refresh/resume, desktop/mobile, install). TMA smoke только при shell diff. Локальный отчёт не авторизует deploy/migrate production.
 - TMA: SPEC_APP_SHELL, SDK/initData/theme/viewport и соответствующий FE-код. Реальный WebView smoke отдельно от браузера; initData/токены не логировать.
 - Deprecation: usages и данные → совместимость/миграция/откат → удаление после явного решения. Не возвращать мёртвый Plan/legacy close; риск данных направить в db-migration.
-- Marketing: docs/marketing/README, POST_STYLE, CHANGELOG_TRACKER и git facts. Только drafts по явному запросу. Не менять продукт/CI и не ставить «опубликовано» за человека. Публикация отдельно авторизуется.
+- Marketing: docs/game/marketing/README, POST_STYLE, CHANGELOG_TRACKER и git facts. Только drafts по явному запросу. Не менять продукт/CI и не ставить «опубликовано» за человека. Публикация отдельно авторизуется.
 
 Эти процессы вызываются «$delivery: release readiness»/«guidance ...» обычным текстом. Не переносить Claude slash built-ins или $ARGUMENTS; параметры — текст поручения.

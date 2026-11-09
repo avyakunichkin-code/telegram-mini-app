@@ -1,0 +1,252 @@
+{
+  "schema_version": 1,
+  "imported_at": "2026-11-07",
+  "board": {
+    "name": "ТВОИ ЗАДАЧИ",
+    "url": "https://trello.com/b/2iitpNYi",
+    "id": "ari:cloud:trello::board/workspace/6aef533d7a4b5db210afad90/6aef53e309bd065dab24e97f"
+  },
+  "auto_sync": false,
+  "cards": [
+    {
+      "taskId": "GAME-OWNER-01",
+      "cardId": "ari:cloud:trello::card/workspace/6aef533d7a4b5db210afad90/6aef56308f5c4f9f72015539",
+      "url": "https://trello.com/c/a9bifA0P",
+      "sourceStatus": "ready",
+      "archived": false
+    },
+    {
+      "taskId": "GAME-OWNER-02",
+      "cardId": "ari:cloud:trello::card/workspace/6aef533d7a4b5db210afad90/6aef563b11cbd6d19199c71c",
+      "url": "https://trello.com/c/xuniAqUV",
+      "sourceStatus": "ready",
+      "archived": true
+    },
+    {
+      "taskId": "GAME-OWNER-03",
+      "cardId": "ari:cloud:trello::card/workspace/6aef533d7a4b5db210afad90/6aef563f57b9c299e982acdf",
+      "url": "https://trello.com/c/Eobhj5Sm",
+      "sourceStatus": "waiting",
+      "archived": false
+    },
+    {
+      "taskId": "GAME-OWNER-04",
+      "cardId": "ari:cloud:trello::card/workspace/6aef533d7a4b5db210afad90/6aef56427cceccca9b6d8dc0",
+      "url": "https://trello.com/c/VGiXKn2f",
+      "sourceStatus": "ready",
+      "archived": true
+    },
+    {
+      "taskId": "GAME-OWNER-05",
+      "cardId": "ari:cloud:trello::card/workspace/6aef533d7a4b5db210afad90/6aef5646015940811533dc34",
+      "url": "https://trello.com/c/S1I8UdZ7",
+      "sourceStatus": "waiting",
+      "archived": false
+    },
+    {
+      "taskId": "GAME-OWNER-06",
+      "cardId": "ari:cloud:trello::card/workspace/6aef533d7a4b5db210afad90/6aef564a6f7a7a7aaf96bbd4",
+      "url": "https://trello.com/c/j4klMLTR",
+      "sourceStatus": "ready",
+      "archived": true
+    },
+    {
+      "taskId": "GAME-OWNER-07",
+      "cardId": "ari:cloud:trello::card/workspace/6aef533d7a4b5db210afad90/6aef564d5316f3559524044f",
+      "url": "https://trello.com/c/CGpXUwVo",
+      "sourceStatus": "ready",
+      "archived": false
+    },
+    {
+      "taskId": "GAME-OWNER-08",
+      "cardId": "ari:cloud:trello::card/workspace/6aef533d7a4b5db210afad90/6aef5650e39f6e370317fa5a",
+      "url": "https://trello.com/c/E0NKtP4u",
+      "sourceStatus": "ready",
+      "archived": false
+    },
+    {
+      "taskId": "GAME-OWNER-09",
+      "cardId": "ari:cloud:trello::card/workspace/6aef533d7a4b5db210afad90/6aef565416671dcc1f33fa04",
+      "url": "https://trello.com/c/9XliByNr",
+      "sourceStatus": "ready",
+      "archived": false
+    },
+    {
+      "taskId": "GAME-OWNER-10",
+      "cardId": "ari:cloud:trello::card/workspace/6aef533d7a4b5db210afad90/6aef565785fb69670515542d",
+      "url": "https://trello.com/c/j7bhaagQ",
+      "sourceStatus": "waiting",
+      "archived": false
+    },
+    {
+      "taskId": "GAME-OWNER-11",
+      "cardId": "ari:cloud:trello::card/workspace/6aef533d7a4b5db210afad90/6aef566af46f9e47df456162",
+      "url": "https://trello.com/c/UdwyvuPr",
+      "sourceStatus": "waiting",
+      "archived": false
+    },
+    {
+      "taskId": "GAME-OWNER-12",
+      "cardId": "ari:cloud:trello::card/workspace/6aef533d7a4b5db210afad90/6aef566dd86759291bb5604e",
+      "url": "https://trello.com/c/p3rigyf0",
+      "sourceStatus": "waiting",
+      "archived": false
+    },
+    {
+      "taskId": "GAME-OWNER-13",
+      "cardId": "ari:cloud:trello::card/workspace/6aef533d7a4b5db210afad90/6aef567057a8d9a3c0424d53",
+      "url": "https://trello.com/c/aQMFZwPu",
+      "sourceStatus": "waiting",
+      "archived": false
+    },
+    {
+      "taskId": "GAME-OWNER-14",
+      "cardId": "ari:cloud:trello::card/workspace/6aef533d7a4b5db210afad90/6aef567340b3573be3f53c8f",
+      "url": "https://trello.com/c/flOHpUTZ",
+      "sourceStatus": "waiting",
+      "archived": false
+    },
+    {
+      "taskId": "GAME-OWNER-15",
+      "cardId": "ari:cloud:trello::card/workspace/6aef533d7a4b5db210afad90/6aef56768ab20403ca0efa45",
+      "url": "https://trello.com/c/lD3ReO6a",
+      "sourceStatus": "waiting",
+      "archived": false
+    },
+    {
+      "taskId": "GAME-OWNER-16",
+      "cardId": "ari:cloud:trello::card/workspace/6aef533d7a4b5db210afad90/6aef567a1635051ab6733167",
+      "url": "https://trello.com/c/BbS9RODD",
+      "sourceStatus": "ready",
+      "archived": false
+    },
+    {
+      "taskId": "GAME-OWNER-17",
+      "cardId": "ari:cloud:trello::card/workspace/6aef533d7a4b5db210afad90/6aef567d72658e0640590881",
+      "url": "https://trello.com/c/lERKrKYr",
+      "sourceStatus": "waiting",
+      "archived": false
+    },
+    {
+      "taskId": "GAME-OWNER-18",
+      "cardId": "ari:cloud:trello::card/workspace/6aef533d7a4b5db210afad90/6aef5680659c2a77be301cb6",
+      "url": "https://trello.com/c/KnWnT5U5",
+      "sourceStatus": "ready",
+      "archived": false
+    },
+    {
+      "taskId": "GAME-OWNER-19",
+      "cardId": "ari:cloud:trello::card/workspace/6aef533d7a4b5db210afad90/6aef5683b6d34dd9b579b982",
+      "url": "https://trello.com/c/Wdcbx6uz",
+      "sourceStatus": "waiting",
+      "archived": false
+    },
+    {
+      "taskId": "GAME-OWNER-20",
+      "cardId": "ari:cloud:trello::card/workspace/6aef533d7a4b5db210afad90/6aef5686d73ae4bf95d2f634",
+      "url": "https://trello.com/c/HoJNeRiL",
+      "sourceStatus": "later",
+      "archived": false
+    },
+    {
+      "taskId": "GAME-OWNER-21",
+      "cardId": "ari:cloud:trello::card/workspace/6aef533d7a4b5db210afad90/6aef5694c7ade1b89cd82057",
+      "url": "https://trello.com/c/IYOFllZ2",
+      "sourceStatus": "later",
+      "archived": true
+    },
+    {
+      "taskId": "GAME-OWNER-22",
+      "cardId": "ari:cloud:trello::card/workspace/6aef533d7a4b5db210afad90/6aef5697dfa60523c1485868",
+      "url": "https://trello.com/c/RNgo0tHz",
+      "sourceStatus": "later",
+      "archived": false
+    },
+    {
+      "taskId": "GAME-OWNER-23",
+      "cardId": "ari:cloud:trello::card/workspace/6aef533d7a4b5db210afad90/6aef569a7d56175a61575fbf",
+      "url": "https://trello.com/c/LffWOXHK",
+      "sourceStatus": "later",
+      "archived": false
+    },
+    {
+      "taskId": "GAME-OWNER-24",
+      "cardId": "ari:cloud:trello::card/workspace/6aef533d7a4b5db210afad90/6aef569ec6972dbb357ee221",
+      "url": "https://trello.com/c/jiKKOr2z",
+      "sourceStatus": "later",
+      "archived": false
+    },
+    {
+      "taskId": "GAME-OWNER-25",
+      "cardId": "ari:cloud:trello::card/workspace/6aef533d7a4b5db210afad90/6aef56a0c8b3e9ac2018e755",
+      "url": "https://trello.com/c/3MqmBX3i",
+      "sourceStatus": "ready",
+      "archived": false
+    },
+    {
+      "taskId": "GAME-OWNER-26",
+      "cardId": "ari:cloud:trello::card/workspace/6aef533d7a4b5db210afad90/6aef56a4561bfb94e507b9f1",
+      "url": "https://trello.com/c/Qm0OCHPl",
+      "sourceStatus": "later",
+      "archived": true
+    },
+    {
+      "taskId": "GAME-OWNER-27",
+      "cardId": "ari:cloud:trello::card/workspace/6aef533d7a4b5db210afad90/6aef56a77feb148f77d0bd69",
+      "url": "https://trello.com/c/eFj6kYYI",
+      "sourceStatus": "later",
+      "archived": true
+    },
+    {
+      "taskId": "GAME-OWNER-28",
+      "cardId": "ari:cloud:trello::card/workspace/6aef533d7a4b5db210afad90/6aef56ab692c9be1d50d097b",
+      "url": "https://trello.com/c/J9DgJ22l",
+      "sourceStatus": "ready",
+      "archived": false
+    },
+    {
+      "taskId": "GAME-OWNER-29",
+      "cardId": "ari:cloud:trello::card/workspace/6aef533d7a4b5db210afad90/6aef56aeec654039a5aee2dd",
+      "url": "https://trello.com/c/MDzdLegt",
+      "sourceStatus": "later",
+      "archived": false
+    },
+    {
+      "taskId": "GAME-OWNER-30",
+      "cardId": "ari:cloud:trello::card/workspace/6aef533d7a4b5db210afad90/6aef56b1b4439427d0e6dd89",
+      "url": "https://trello.com/c/wtwmJJAA",
+      "sourceStatus": "later",
+      "archived": true
+    },
+    {
+      "taskId": "GAME-OWNER-31",
+      "cardId": "ari:cloud:trello::card/workspace/6aef533d7a4b5db210afad90/6aef56c466b5ec472a2782fb",
+      "url": "https://trello.com/c/BPDDeick",
+      "sourceStatus": "done",
+      "archived": true
+    },
+    {
+      "taskId": "GAME-OWNER-32",
+      "cardId": "ari:cloud:trello::card/workspace/6aef533d7a4b5db210afad90/6aef56cd12027bd734048dcf",
+      "url": "https://trello.com/c/o67aGxtu",
+      "sourceStatus": "done",
+      "archived": true
+    },
+    {
+      "taskId": "GAME-OWNER-33",
+      "cardId": "ari:cloud:trello::card/workspace/6aef533d7a4b5db210afad90/6aef56d415b8514067fdcea1",
+      "url": "https://trello.com/c/8XdHKwpu",
+      "sourceStatus": "done",
+      "archived": true
+    },
+    {
+      "taskId": "GAME-OWNER-34",
+      "cardId": "ari:cloud:trello::card/workspace/6aef533d7a4b5db210afad90/6aef56dbb55374924cef9def",
+      "url": "https://trello.com/c/3i37KsuX",
+      "sourceStatus": "done",
+      "archived": true
+    }
+  ],
+  "personal_only": true,
+  "corrected_at": "2026-11-07"
+}

@@ -13,13 +13,13 @@ aliases:
 |------|----------|
 | Version | 1.1 |
 | Last Updated | 2026-05-26 |
-| Scope | **Фаза 1:** система потребностей персонажа ([`game-character-needs-foundation.md`](../vision/ideas/game-character-needs-foundation.md)) |
+| Scope | **Фаза 1:** система потребностей персонажа ([`game-character-needs-foundation.md`](../game/vision/ideas/game-character-needs-foundation.md)) |
 | Stack | **FastAPI** + **SQLAlchemy** + **PostgreSQL**; **React** (Vite) TMA; без Alembic — SQL в `backend/migrations/` |
 | GDD / vision covered | `game-character-needs-foundation`, `tvoy-hod-evolution-after-mvp` §II (персонаж/шаблон), `remove-character-xp-and-levels` |
 | ADRs referenced | ADR-001 … ADR-006 (needs: 005, 006) |
 | Technical Director Sign-Off | 2026-05-26 — **APPROVED** (lean: LP-FEASIBILITY skipped) |
 | Lead Programmer Feasibility | **FEASIBLE** (lean) |
-| Related | [`vision/ARCHITECTURE_ASSESSMENT_2026-06.md`](../vision/ARCHITECTURE_ASSESSMENT_2026-06.md) — общая оценка стека, масштаб, ops roadmap |
+| Related | [`vision/ARCHITECTURE_ASSESSMENT_2026-06.md`](../game/vision/ARCHITECTURE_ASSESSMENT_2026-06.md) — общая оценка стека, масштаб, ops roadmap |
 
 ---
 
@@ -139,7 +139,7 @@ aliases:
 }
 ```
 
-`consequence_profile`: `soft` | `standard` | `hard` — сила последствий при <30% и уровень подсказок (поражение при нуле — у всех). См. [SPEC](../specs/features/SPEC_game-character-needs.md).
+`consequence_profile`: `soft` | `standard` | `hard` — сила последствий при <30% и уровень подсказок (поражение при нуле — у всех). См. [SPEC](../game/specs/features/SPEC_game-character-needs.md).
 
 ### `GameProfile` (расширение)
 
@@ -373,7 +373,7 @@ needs_config          GameProfile              events.choose
 4. `POST treat-self` + расширение `period/status` и overview.
 5. `needs_delta` в events + 1–2 seed events.
 6. Frontend: `api.js`, overview hook, `MqxNeedsBars`, кнопка на дашборде; переименование экрана шаблонов → «Выбор персонажа» (копирайт + i18n keys).
-7. Spec: `docs/specs/features/SPEC_game-character-needs.md`.
+7. Spec: `docs/game/specs/features/SPEC_game-character-needs.md`.
 
 ---
 
@@ -419,7 +419,7 @@ needs_config          GameProfile              events.choose
 
 ## Связанные документы
 
-- Vision: [`docs/vision/ideas/game-character-needs-foundation.md`](../vision/ideas/game-character-needs-foundation.md)
-- Следующий шаг: **`docs/specs/features/SPEC_game-character-needs.md`** (формулы, точные пороги, copy)
-- UI: [`docs/specs/SPEC_FRONTEND_UI.md`](../specs/SPEC_FRONTEND_UI.md), MQX workflow
+- Vision: [`docs/game/vision/ideas/game-character-needs-foundation.md`](../game/vision/ideas/game-character-needs-foundation.md)
+- Следующий шаг: **`docs/game/specs/features/SPEC_game-character-needs.md`** (формулы, точные пороги, copy)
+- UI: [`docs/game/specs/SPEC_FRONTEND_UI.md`](../game/specs/SPEC_FRONTEND_UI.md), MQX workflow
 - Период: `backend/app/game/period.py`, `backend/app/routers/period_actions.py`

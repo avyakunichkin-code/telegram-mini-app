@@ -6,6 +6,11 @@ aliases:
 ---
 # Планы (`docs/plans/`)
 
+Здесь остаются общие планы репозитория:
+[выделение ядра](PLAN_game-plan-split.md) и [инфраструктура](PLAN_INFRA.md).
+Планы продуктов: [Game](../game/plans/README.md), [Plan](../plan/plans/).
+Старые игровые адреса ниже — только ссылки совместимости.
+
 **PLAN_*.md** — как строим фичу после утверждённой spec: граф зависимостей, вертикальные срезы, checkpoints.
 
 ## Шаблон
@@ -17,7 +22,7 @@ aliases:
 | Поле | Назначение |
 |------|------------|
 | `epic_id` | ID эпика в [`TRACEABILITY.md`](../TRACEABILITY.md) (`E1`, `M11`, …) |
-| `spec` | Ссылка на `docs/specs/features/SPEC_*.md` |
+| `spec` | Ссылка на `docs/game/specs/features/SPEC_*.md` |
 | `next_skill` | Скилл после **APPROVED** плана (обычно `incremental-implementation`) |
 | `traceability` | [`TRACEABILITY.md`](../TRACEABILITY.md) |
 
@@ -30,8 +35,8 @@ aliases:
 | `verify` | `test-driven-development`, `code-review-and-quality`; браузер — `/run` + встроенный браузер |
 | `ship` | `documentation-and-adrs`, `deprecation-and-migration` |
 
-Карта: [`docs/agents/SKILL_DOC_MAP.md`](../agents/SKILL_DOC_MAP.md). Роутер Cursor: [`.claude/rules/router.md`](../../.claude/rules/router.md).
+Карта: [`docs/agents/SKILL_DOC_MAP.md`](../archive/retired/agents/SKILL_DOC_MAP.md). Роутер Cursor: [`.claude/rules/router.md`](../../.claude/rules/router.md).
 
 ## Задачи
 
-Секция **Tasks** в том же `PLAN_*.md` или выгрузка в [`docs/tasks/`](../tasks/README.md).
+Секция **Tasks** в том же `PLAN_*.md` или выгрузка в [`docs/game/tasks/`](../game/tasks/ENGINEERING.md).

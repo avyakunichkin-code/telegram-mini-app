@@ -12,7 +12,7 @@ aliases:
 ---
 # Kind `ai` — runtime-решения и dev-time агенты
 
-Сюда кладётся снимок **игрового decision-стека** (picker событий, guidance, симы) и **пайплайна LLM/агентов** (Cursor skills, authoring YAML). Не архитектура монолита ([`../engineering/`](../engineering/)), не GD-баланс каталога как продукт ([`../product/`](../product/)), не качество скиллов как rubric ([`../../agents/SKILLS_QUALITY_AUDIT_2026-06-20.md`](../../agents/SKILLS_QUALITY_AUDIT_2026-06-20.md) — архив).
+Сюда кладётся снимок **игрового decision-стека** (picker событий, guidance, симы) и **пайплайна LLM/агентов** (Cursor skills, authoring YAML). Не архитектура монолита ([`../engineering/`](../../game/audits/engineering/)), не GD-баланс каталога как продукт ([`../product/`](../../game/audits/product/)), не качество скиллов как rubric ([`../../agents/SKILLS_QUALITY_AUDIT_2026-06-20.md`](../../archive/retired/agents/SKILLS_QUALITY_AUDIT_2026-06-20.md) — архив).
 
 **Не путать:** в этом репо нет NPC / NavMesh / Unity ML-Agents. «AI» ≠ боевой агент.
 

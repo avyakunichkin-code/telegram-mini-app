@@ -18,7 +18,7 @@ aliases:
 
 В prod кредит из шаблона зачисляет **весь principal на cash**; ипотеку можно «обналичить» и купить что угодно. Продажа актива (`delete_asset`) зачисляет **полную** `asset_value` на cash, **не** гася связанный долг (которого в модели ещё нет).
 
-Продукт требует **два честных пути** владения имуществом/авто и одно правило продажи при целевом кредите. Эпик: [DL1](../vision/ideas/debt-liability-capital-graph.md), spec: [`SPEC_debt-liability-capital-graph`](../specs/features/SPEC_debt-liability-capital-graph.md).
+Продукт требует **два честных пути** владения имуществом/авто и одно правило продажи при целевом кредите. Эпик: [DL1](../game/vision/ideas/debt-liability-capital-graph.md), spec: [`SPEC_debt-liability-capital-graph`](../game/specs/features/SPEC_debt-liability-capital-graph.md).
 
 ## Decision
 
@@ -112,8 +112,8 @@ flowchart LR
 
 ## Связанные артефакты
 
-- Spec: [`SPEC_debt-liability-capital-graph`](../specs/features/SPEC_debt-liability-capital-graph.md)
-- Plan: [`PLAN_debt-liability-capital-graph`](../plans/PLAN_debt-liability-capital-graph.md)
-- Idea: [`debt-liability-capital-graph`](../vision/ideas/debt-liability-capital-graph.md)
+- Spec: [`SPEC_debt-liability-capital-graph`](../game/specs/features/SPEC_debt-liability-capital-graph.md)
+- Plan: [`PLAN_debt-liability-capital-graph`](../game/plans/PLAN_debt-liability-capital-graph.md)
+- Idea: [`debt-liability-capital-graph`](../game/vision/ideas/debt-liability-capital-graph.md)
 - Code (to change): `services/finance/liabilities.py`, `services/finance/assets.py`, `services/insurance/service.py`, `game/period.py`
-- Product: [`SPEC_PRODUCT.md`](../foundation/SPEC_PRODUCT.md) §12.1
+- Product: [`SPEC_PRODUCT.md`](../game/foundation/SPEC_PRODUCT.md) §12.1

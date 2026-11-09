@@ -1,0 +1,6 @@
+{
+  "dataset": "synthetic_case_observations",
+  "build": "FILL_BUILD_BEFORE_SESSION",
+  "variant": "A",
+  "sessions": []
+}

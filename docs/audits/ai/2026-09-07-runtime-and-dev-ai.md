@@ -21,7 +21,7 @@ aliases:
 
 Канон адреса: [`../README.md`](../README.md). Kind: [`README.md`](README.md). Шаблон: [`../../templates/AUDIT.md`](../../templates/AUDIT.md).
 
-Смежные снимки того же дня: [engineering](../engineering/2026-09-07-architecture.md) · [qa](../qa/2026-09-07-mechanics.md) · [product](../product/2026-09-07-product-game-design.md). Предложения кросс-роли: [`2026-09-07-ai-proposals.md`](2026-09-07-ai-proposals.md). Очередь работ: [`PLAN_production-ready`](../../plans/PLAN_production-ready.md) — этот аудит **не** заводит второй roadmap.
+Смежные снимки того же дня: [engineering](../../game/audits/engineering/2026-09-07-architecture.md) · [qa](../../game/audits/qa/2026-09-07-mechanics.md) · [product](../../game/audits/product/2026-09-07-product-game-design.md). Предложения кросс-роли: [`2026-09-07-ai-proposals.md`](2026-09-07-ai-proposals.md). Очередь работ: [`PLAN_production-ready`](../../game/plans/PLAN_production-ready.md) — этот аудит **не** заводит второй roadmap.
 
 Это **не** Unity/Unreal. Нет NPC, NavMesh, behavior tree, GOAP, ML-Agents, player-facing LLM. Применять чеклист «боевого AI» буквально — ошибка жанра. Ниже стек разобран **как есть**: perception → cognition → action в терминах периода и карточек.
 
@@ -201,7 +201,7 @@ Emergent: не «ходят кругами», а **повтор ключей** �
 
 ## План доработки
 
-Не параллельный бэклог: ID ниже = слоты в [`PLAN_production-ready`](../../plans/PLAN_production-ready.md). **Не** внедрять BT/GOAP/ML-Agents.
+Не параллельный бэклог: ID ниже = слоты в [`PLAN_production-ready`](../../game/plans/PLAN_production-ready.md). **Не** внедрять BT/GOAP/ML-Agents.
 
 ### Фаза 1: Стабилизация AI (P0)
 

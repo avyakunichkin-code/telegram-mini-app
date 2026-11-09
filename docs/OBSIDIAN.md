@@ -46,19 +46,19 @@ aliases:
 | Слой | MOC | Основной README |
 |------|-----|-----------------|
 | Вход | [[docs/Home]] | [[docs/README]] |
-| Handbook | [[docs/handbook/_index]] | [[docs/handbook/README]] |
-| Foundation | [[docs/foundation/_index]] | — |
-| Vision / ideas | [[docs/vision/_index]] | — |
-| Specs | [[docs/specs/_index]] | — |
+| Handbook | [[docs/game/handbook/_index]] | [[docs/game/handbook/README]] |
+| Foundation | [[docs/game/foundation/_index]] | — |
+| Vision / ideas | [[docs/game/vision/_index]] | — |
+| Specs | [[docs/game/specs/_index]] | — |
 | Plans | [[docs/plans/README]] | [[docs/plans/README]] |
-| Tasks | [[docs/tasks/README]] | [[docs/tasks/README]] |
+| Tasks | [[docs/game/tasks/ENGINEERING]] | [[docs/game/tasks/ENGINEERING]] |
 | ADR | [[docs/decisions/_index]] | [[docs/decisions/README]] |
-| Backlog | [[docs/backlog/_index]] | — |
-| UX | [[docs/ux/README]] | [[docs/ux/README]] |
-| Agents | [[docs/agents/_index]] | — |
-| Marketing | [[docs/marketing/README]] | [[docs/marketing/README]] |
-| Reference | [[docs/reference/_index]] | — |
-| Ops | [[docs/ops/_index]] | — |
+| Backlog | [[docs/game/backlog/_index]] | — |
+| UX | [[docs/game/ux/README]] | [[docs/game/ux/README]] |
+| Agents | [[docs/archive/retired/agents/_index]] | — |
+| Marketing | [[docs/game/marketing/README]] | [[docs/game/marketing/README]] |
+| Reference | [[docs/game/reference/_index]] | — |
+| Ops | [[docs/game/ops/_index]] | — |
 
 Трассировка эпиков: [[docs/TRACEABILITY]]. Конвейер: [[docs/DOCUMENTATION_SYSTEM]].
 
@@ -86,7 +86,7 @@ aliases:
 
 Для каждого файла генерируются `aliases` — имя файла, заголовок H1, код эпика (`E1`, `ADR-001`, `SPEC_expenses`).
 
-Пример: `[[SPEC_expenses]]` или `[[E1]]` найдут `docs/specs/features/SPEC_expenses.md`.
+Пример: `[[SPEC_expenses]]` или `[[E1]]` найдут `docs/game/specs/features/SPEC_expenses.md`.
 
 ---
 
@@ -116,8 +116,8 @@ Workspace (`workspace.json`) **не коммитится** — у каждого
 При конфликте источников (из [`DOCUMENTATION_SYSTEM`](DOCUMENTATION_SYSTEM.md)):
 
 1. Код + тесты  
-2. `docs/specs/features/SPEC_*.md`  
-3. `docs/foundation/SPEC_PRODUCT.md`  
+2. `docs/game/specs/features/SPEC_*.md`
+3. `docs/game/foundation/SPEC_PRODUCT.md`
 4. Vision / ideas  
 5. Handbook (обзор)
 

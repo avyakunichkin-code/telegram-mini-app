@@ -1,0 +1,27 @@
+{
+  "archived_on": "2026-11-08",
+  "reason": "Explicit archived/superseded status or retired Claude process; compatibility paths retained.",
+  "moves": {
+    "docs/agents/AGENT_SKILLS.md": "docs/archive/retired/agents/AGENT_SKILLS.md",
+    "docs/agents/AI_ONBOARDING.md": "docs/archive/retired/agents/AI_ONBOARDING.md",
+    "docs/agents/EVENTS_AGENT.md": "docs/archive/retired/agents/EVENTS_AGENT.md",
+    "docs/agents/SKILL_DOC_MAP.md": "docs/archive/retired/agents/SKILL_DOC_MAP.md",
+    "docs/agents/SKILLS_PHASE_CONTENT_AND_DATA.md": "docs/archive/retired/agents/SKILLS_PHASE_CONTENT_AND_DATA.md",
+    "docs/agents/LEGACY_NOISE_AUDIT_2026-06-20.md": "docs/archive/retired/agents/LEGACY_NOISE_AUDIT_2026-06-20.md",
+    "docs/agents/SKILLS_QUALITY_AUDIT_2026-06-20.md": "docs/archive/retired/agents/SKILLS_QUALITY_AUDIT_2026-06-20.md",
+    "docs/agents/_index.md": "docs/archive/retired/agents/_index.md",
+    "docs/plans/PLAN_level-xp-progression.md": "docs/archive/retired/plans/PLAN_level-xp-progression.md",
+    "docs/plans/PLAN_onboarding-o2.md": "docs/archive/retired/plans/PLAN_onboarding-o2.md",
+    "docs/plans/PLAN_onboarding-tma.md": "docs/archive/retired/plans/PLAN_onboarding-tma.md",
+    "docs/specs/LANDING_SCREENSHOTS.md": "docs/archive/retired/specs/LANDING_SCREENSHOTS.md",
+    "docs/specs/features/SPEC_onboarding-o2.md": "docs/archive/retired/specs/features/SPEC_onboarding-o2.md",
+    "docs/specs/features/SPEC_onboarding-tma.md": "docs/archive/retired/specs/features/SPEC_onboarding-tma.md",
+    "docs/specs/gameplay/LEVEL_XP_SYSTEM.md": "docs/archive/retired/specs/gameplay/LEVEL_XP_SYSTEM.md",
+    "docs/specs/gameplay/catalogs/XP_EVENTS_ACTIONS_MATRIX.md": "docs/archive/retired/specs/gameplay/catalogs/XP_EVENTS_ACTIONS_MATRIX.md",
+    "docs/vision/ideas/dashboard-hero-compact.md": "docs/archive/retired/vision/ideas/dashboard-hero-compact.md",
+    "docs/vision/ideas/onboarding-o2-progressive-guidance.md": "docs/archive/retired/vision/ideas/onboarding-o2-progressive-guidance.md",
+    "docs/vision/ideas/onboarding-tma-mission-brief.md": "docs/archive/retired/vision/ideas/onboarding-tma-mission-brief.md",
+    "docs/handbook/internal/TEAM_UPDATE_2026-06-01.md": "docs/archive/retired/handbook/internal/TEAM_UPDATE_2026-06-01.md",
+    "docs/ops/NATIVE_SURVEY_V2_2026-11-05.md": "docs/archive/retired/ops/NATIVE_SURVEY_V2_2026-11-05.md"
+  }
+}

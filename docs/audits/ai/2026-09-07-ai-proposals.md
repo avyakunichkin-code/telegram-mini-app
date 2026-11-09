@@ -21,7 +21,7 @@ aliases:
 # Предложения по улучшению AI: кросс‑функциональный анализ
 
 **Kind:** `ai` · **Дата:** 2026-09-07 · **Verdict:** DRAFT.  
-База: [аудит runtime/dev](2026-09-07-runtime-and-dev-ai.md). Очередь: [`PLAN_production-ready`](../../plans/PLAN_production-ready.md).  
+База: [аудит runtime/dev](2026-09-07-runtime-and-dev-ai.md). Очередь: [`PLAN_production-ready`](../../game/plans/PLAN_production-ready.md).
 Не канон. Не NPC/BT/GOAP/player-LLM. «Мир» игры = карточки периода + guidance FSM.
 
 Слоты **PR-*** / **GO-*** уже в сводном плане — здесь не второй бэклог, а **зачем и кому**.

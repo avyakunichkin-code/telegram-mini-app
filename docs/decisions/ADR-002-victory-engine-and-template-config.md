@@ -48,7 +48,7 @@ deciders: проект (architecture-review retroactive, 2026-05-25)
 
 ## Связанные артефакты
 
-- Spec: [`SPEC_victory-v2`](../specs/features/SPEC_victory-v2.md)
+- Spec: [`SPEC_victory-v2`](../game/specs/features/SPEC_victory-v2.md)
 - Code: `backend/app/victory/engine.py`, `backend/app/finance/overview_build.py`, `backend/app/victory/profile.py`, `backend/app/victory/seeds.py` — структура [ADR-007](ADR-007-backend-domain-packages.md)
 - ADR: [ADR-004](ADR-004-mechanics-unlock-victory-chain.md) — `mechanics_unlock` ↔ цели цепочки
-- Idea: [evolution §II](../vision/ideas/tvoy-hod-evolution-after-mvp.md)
+- Idea: [evolution §II](../game/vision/ideas/tvoy-hod-evolution-after-mvp.md)

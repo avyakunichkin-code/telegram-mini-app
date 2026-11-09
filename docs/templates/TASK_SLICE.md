@@ -3,13 +3,12 @@ layer: task
 epic_id: E1
 phase: build
 tier: core
-skill: incremental-implementation
+skill: delivery
 satellites:
-  - test-driven-development
-  - critical-test-scenarios
+  - verify-change
 read_if_when:
   - "progression / event_tier / pool"
-next_skill: critical-test-scenarios
+next_skill: review-change
 spec: ../specs/features/SPEC_<slug>.md
 plan: ../plans/PLAN_<slug>.md
 traceability: ../TRACEABILITY.md
@@ -22,15 +21,15 @@ aliases:
 ---
 ### MQ-042 — Краткое название среза
 
-- **Phase:** `build` — `define` | `build` | `verify` | `ship` (см. [`SKILL_DOC_MAP.md`](../agents/SKILL_DOC_MAP.md))
-- **Tier:** `core` — `core` | `support` | `deferred` | `meta` | `archived` (см. [`SKILLS_PHASE_CONTENT_AND_DATA.md`](../agents/SKILLS_PHASE_CONTENT_AND_DATA.md), [`catalog.yaml`](../../.claude/skills/catalog.yaml))
-- **Skill:** `incremental-implementation` — primary Agent Skill для среза (`tier` скилла в каталоге должен совпадать или быть `support`, если задача явно про plan/review/ADR)
-- **Satellites:** `test-driven-development`, `critical-test-scenarios` — открыть в **той же** сессии до «done» (см. `.claude/rules/router.md` → Primary + satellites)
-- **Next skill:** `critical-test-scenarios` — закрыть min gate G1–G4; затем `code-review-and-quality`
+- **Phase:** `build` — `define` | `build` | `verify` | `ship`
+- **Tier:** `core` — область среза; не механизм автозагрузки
+- **Skill:** `delivery` — один primary из [AGENTS.md](../../AGENTS.md)
+- **Satellites:** `verify-change` — только проверки затронутого риска
+- **Next skill:** `review-change` — отдельный review по необходимости
 - **Spec:** `specs/features/SPEC_<slug>.md` §…
-- **Read if:** **`read_if_when`** — список `when` из `catalog.yaml` → `read_if` для **primary skill**; открыть **только** matching paths (не всю папку spec). Справка: `node .claude/skills/skill-test/_resolve-read-if.mjs <skill>`
+- **Read if:** открыть только относящиеся к срезу spec, код и справки из primary skill; маршруты — [CODEX-PROCESSES](../ai/CODEX-PROCESSES.md)
 - **Acceptance:** …
-- **Critical scenarios:** CS-1 …, CS-2 … (skill `/critical-test-scenarios`, gate G1–G4)
+- **Critical scenarios:** CS-1 …, CS-2 … (skill `$verify-change`, gate G1–G4)
 - **Verify:** `pytest …` / `npm run test:unit` / ручной сценарий из spec
 - **Files:** `backend/…`, `frontend-react/…`
 - **Estimate:** S | M | L
@@ -44,12 +43,12 @@ aliases:
 
 | Срез | `tier` | `skill` | `satellites` |
 |------|--------|---------|--------------|
-| Новое событие в YAML | `core` | `create-event` | `test-driven-development`, `critical-test-scenarios` |
-| Обзор каталога | `core` | `event-analysis` | — (при P1 → `create-event` в follow-up MQ) |
-| Правка `period.py` / victory | `core` | `game-economy-and-victory` | `test-driven-development`, `doubt-driven-development` |
-| Нарезка epic из spec | `support` | `planning-and-task-breakdown` | — |
-| Ревью перед merge | `support` | `code-review-and-quality` | — |
-| ADR: кто владеет полем API | `support` | `documentation-and-adrs` | `spec-driven-development` |
-| Pre-release checklist | `deferred` | `release-web` | `code-review-and-quality` |
+| Новое событие в YAML | `core` | `event-authoring` | `verify-change` |
+| Обзор каталога | `core` | `event-audit` | — (при P1 → `event-authoring` в follow-up MQ) |
+| Правка `period.py` / victory | `core` | `game-economy` | `verify-change`, `balance-playtest` при существенном изменении |
+| Нарезка epic из spec | `support` | `delivery` (plan) | — |
+| Ревью перед merge | `support` | `review-change` | — |
+| ADR: кто владеет полем API | `support` | `architecture-decision` | `delivery` |
+| Pre-release checklist | `deferred` | `delivery` | `review-change` |
 
 `tier: deferred` в задаче — только если пользователь явно просит (release, perf, TMA runtime, …).

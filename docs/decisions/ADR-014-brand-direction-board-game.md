@@ -14,7 +14,7 @@ aliases:
 
 ## Status
 
-**Accepted** (2026-10-14). Основание — разбор фирменного стиля и UI ([рекомендации](../design/tvoy-hod-style-recommendations.html)). Дополняет брендбук v2.0 ([`BRANDBOOK.md`](../reference/brandbook/BRANDBOOK.md), [`BRANDBOOK_MQX.md`](../reference/brandbook/BRANDBOOK_MQX.md)); отдельные визуальные решения по-прежнему проходят ★ в design-lab.
+**Accepted** (2026-10-14). Основание — разбор фирменного стиля и UI ([рекомендации](../design/tvoy-hod-style-recommendations.html)). Дополняет брендбук v2.0 ([`BRANDBOOK.md`](../game/reference/brandbook/BRANDBOOK.md), [`BRANDBOOK_MQX.md`](../game/reference/brandbook/BRANDBOOK_MQX.md)); отдельные визуальные решения по-прежнему проходят ★ в design-lab.
 
 ## Context
 

@@ -4,7 +4,9 @@ PowerShell: команды в таблице выполняются из ука�
 
 | Задача | cwd | Runtime / зависимости | Windows вызов | Результат / побочки |
 |---|---|---|---|---|
+| Shared UI contract | root | зависимости plan-web, Node | `node --test tests/shared-ui/*.test.mjs` | оба адаптера; отдельный CI job |
 | Codex structure/links/map | root | Node 22+, stdlib | `node scripts/codex/check.mjs` | exit 0, без записи |
+| Historical source catalog drift | root | Node | `node scripts/codex/check.mjs --source-drift` | read-only, проверка старого каталога; не обязательный runtime dependency |
 | Codex protected drift | root | Node | `node scripts/codex/check.mjs --protected` | тот же список/263 hashes; без записи |
 | Adapter behavioral smoke | root | Node 22+ | `node --test scripts/codex/*.test.mjs` | stub marker только temp; test logs .codex-state |
 | Skill validator | root | Python + PyYAML, bundled skill-creator | `& .venv/Scripts/python.exe -X utf8 <skill-creator>/scripts/quick_validate.py .agents/skills/<name>` | valid frontmatter, не behavior |

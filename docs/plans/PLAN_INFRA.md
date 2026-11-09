@@ -15,7 +15,7 @@ aliases:
 ---
 # Plan: PLT — Infra / deploy (фаза 0)
 
-**Родитель:** [`PLAN_PLT.md`](PLAN_PLT.md) · **Статус:** **draft** — ждём выбора целевой инфраструктуры.
+**Родитель:** [`PLAN_PLT.md`](../game/plans/PLAN_PLT.md) · **Статус:** **draft** — ждём выбора целевой инфраструктуры.
 
 ## Зачем отдельный план
 
@@ -34,7 +34,7 @@ aliases:
 
 ## Ссылки
 
-- [`DEPLOY.md`](../ops/DEPLOY.md) — текущая схема Render + GitHub Pages
+- [`DEPLOY.md`](../game/ops/DEPLOY.md) — текущая схема Render + GitHub Pages
 - [`render.yaml`](../../render.yaml)
 
 ## Open questions
