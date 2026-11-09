@@ -39,7 +39,7 @@ def open_deposit(db: Session, profile: GameProfile, *, amount: float) -> dict:
     pos = InvestmentPosition(
         game_profile_id=profile.id,
         kind="deposit",
-        title=f"Депозит {annual_rate_percent:.1f}% годовых",
+        title=f"Депозит {f'{annual_rate_percent:g}'.replace('.', ',')}% годовых",
         principal=amount,
         annual_rate_percent=annual_rate_percent,
         started_period=period,

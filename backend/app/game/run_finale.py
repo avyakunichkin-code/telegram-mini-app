@@ -180,6 +180,8 @@ def build_run_finale_payload(
     copy = _scenario_copy(template_key)
     is_win = outcome == "victory"
     period_index = int(profile.period_index or 0)
+    # period_index — открытый ход; закрытие хода увеличивает его и при победе, и при поражении.
+    turns_completed = max(0, period_index - 1)
 
     salary = db.query(FinanceSalary).filter(FinanceSalary.game_profile_id == profile.id).first()
     monthly_income = float(salary.monthly_amount if salary else 0)
@@ -252,7 +254,7 @@ def build_run_finale_payload(
             title="Доходы, расходы и подушка",
             divider_before=False,
             metrics=[
-                _metric("term", "Ходов сыграно", "До исхода", str(period_index)),
+                _metric("term", "Ходов сыграно", "До исхода", str(turns_completed)),
                 _metric("up", "Доходы", "В среднем за ход", f"{_fmt_rub(avg_income)} ₽"),
                 _metric("down", "Расходы", "В среднем за ход", f"{_fmt_rub(avg_expense)} ₽"),
                 _metric(
@@ -297,6 +299,7 @@ def build_run_finale_payload(
     return RunFinalePayload(
         outcome=outcome,
         period_index=period_index,
+        turns_completed=turns_completed,
         template_key=template_key,
         template_title=template_title,
         persona_slug=_persona_slug(template_key),
