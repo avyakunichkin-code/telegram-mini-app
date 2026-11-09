@@ -14,21 +14,20 @@ MECHANIC_CAPITAL_INVEST = "capital_invest"
 MECHANIC_CAPITAL_INSURANCE = "capital_insurance"
 MECHANIC_CAPITAL_PROPERTY = "capital_property"
 MECHANIC_CAPITAL_LIABILITIES = "capital_liabilities"
+MECHANIC_CAPITAL_CAR = "capital_car"
+MECHANIC_CAPITAL_MORTGAGE = "capital_mortgage"
 
 CAPITAL_MECHANIC_KEYS = (
     MECHANIC_CAPITAL_INVEST,
     MECHANIC_CAPITAL_INSURANCE,
     MECHANIC_CAPITAL_PROPERTY,
     MECHANIC_CAPITAL_LIABILITIES,
+    MECHANIC_CAPITAL_CAR,
+    MECHANIC_CAPITAL_MORTGAGE,
 )
 
-# mq_game_basic_v1: только инвестиции; доходы/расходы — всегда (не в flags).
-BASIC_V1_MECHANICS: dict[str, bool] = {
-    MECHANIC_CAPITAL_INVEST: True,
-    MECHANIC_CAPITAL_INSURANCE: False,
-    MECHANIC_CAPITAL_PROPERTY: False,
-    MECHANIC_CAPITAL_LIABILITIES: False,
-}
+# mq_game_basic_v1: потолок — все разделы; когда какой открыть, решает лестница mechanics_unlock.
+BASIC_V1_MECHANICS: dict[str, bool] = {key: True for key in CAPITAL_MECHANIC_KEYS}
 
 DEFAULT_MECHANICS: dict[str, bool] = {k: True for k in CAPITAL_MECHANIC_KEYS}
 
@@ -101,6 +100,30 @@ def resolve_profile_mechanics_effective(db: Session, profile: GameProfile) -> di
         mechanics_unlock=unlock_steps,
     )
     return capital_flags_for_api(result.mechanics_effective)
+
+
+def is_car_asset_kind(kind: str | None) -> bool:
+    return (kind or "").strip().startswith("car")
+
+
+def require_asset_kind_mechanic(db: Session, profile: GameProfile, kind: str | None) -> None:
+    """Покупка авто и покупка жилья открываются разными шагами."""
+    key = MECHANIC_CAPITAL_CAR if is_car_asset_kind(kind) else MECHANIC_CAPITAL_PROPERTY
+    require_capital_mechanic(db, profile, key)
+
+
+def require_secured_loan_mechanic(db: Session, profile: GameProfile, liability_key: str | None) -> None:
+    """Автокредит — вместе с авто, ипотека — своим шагом и только при открытом жилье."""
+    from ..models import LiabilityTemplate
+
+    key = (liability_key or "").strip()
+    tpl = db.query(LiabilityTemplate).filter(LiabilityTemplate.template_key == key).first()
+    if tpl is not None and (getattr(tpl, "liability_kind", None) or "").strip() == "auto_loan":
+        require_capital_mechanic(db, profile, MECHANIC_CAPITAL_LIABILITIES)
+        require_capital_mechanic(db, profile, MECHANIC_CAPITAL_CAR)
+        return
+    require_capital_mechanic(db, profile, MECHANIC_CAPITAL_PROPERTY)
+    require_capital_mechanic(db, profile, MECHANIC_CAPITAL_MORTGAGE)
 
 
 def require_capital_mechanic(

@@ -1,0 +1,819 @@
+# Роль «Студент»: открытие разделов через истории, мечта, диплом, пакет сюжетов (SPEC_student-progression).
+events:
+- definition_key: mq11_student_unlock_insurance
+  content_class: profile
+  event_slot: period_choice
+  audience_template_keys:
+  - mq_game_basic_v1
+  event_domain: insurance
+  title: Разбитый телефон
+  description: 'Телефон упал экраном на асфальт, ремонт — 7 000 ₽. Сосед по этажу платит за полис и такого
+    не боится. В «Капитале» открылись страховки: смотри, что стоит прикрыть.'
+  weight: 1
+  event_tier: 1
+  repeat_policy: once_per_profile
+  scenario_shape: tradeoff
+  prerequisites:
+    requires_mechanics_all:
+    - capital_insurance
+  extra:
+    spawn_priority_when: always
+    spawn_priority_rank: 3
+  choices:
+  - title: Починить сразу
+    effects:
+      cash_delta: -7000
+      needs_delta:
+        comfort: 3
+  - title: Ходить с трещиной
+    effects:
+      cash_delta: 0
+      needs_delta:
+        comfort: -4
+        status: -3
+- definition_key: mq11_student_unlock_credit
+  content_class: profile
+  event_slot: period_choice
+  audience_template_keys:
+  - mq_game_basic_v1
+  event_domain: credit_debt
+  title: Ноутбук не включается
+  description: 'До сдачи курсовой две недели, а ноутбук умер. Новый — 30 000 ₽. Магазин предлагает кредит:
+    деньги сегодня, платёж каждый ход. В «Капитале» открылись кредиты: сравни переплату, прежде чем соглашаться.'
+  weight: 1
+  event_tier: 2
+  repeat_policy: once_per_profile
+  scenario_shape: tradeoff
+  prerequisites:
+    requires_mechanics_all:
+    - capital_liabilities
+  extra:
+    spawn_priority_when: always
+    spawn_priority_rank: 3
+  choices:
+  - title: Купить за свои
+    effects:
+      cash_delta: -30000
+      needs_delta:
+        status: 3
+        comfort: 2
+  - title: Писать курсовую в библиотеке
+    effects:
+      cash_delta: 0
+      needs_delta:
+        comfort: -5
+        social: -2
+- definition_key: mq11_student_unlock_car
+  content_class: profile
+  event_slot: period_choice
+  audience_template_keys:
+  - mq_game_basic_v1
+  event_domain: auto
+  title: Сорок минут в автобусе
+  description: 'Однокурсник купил подержанную машину и теперь спит на час дольше. Но считает бензин, ремонт
+    и страховку. В «Капитале» открылись авто: машина — это расход каждый ход, а не только цена покупки.'
+  weight: 1
+  event_tier: 3
+  repeat_policy: once_per_profile
+  scenario_shape: tradeoff
+  prerequisites:
+    requires_mechanics_all:
+    - capital_car
+  extra:
+    spawn_priority_when: always
+    spawn_priority_rank: 3
+  choices:
+  - title: Взять такси на важную встречу
+    effects:
+      cash_delta: -3000
+      needs_delta:
+        status: 2
+        comfort: 1
+  - title: Остаться на автобусе
+    effects:
+      cash_delta: 0
+      needs_delta:
+        comfort: -3
+        health: -1
+- definition_key: mq11_student_unlock_property
+  content_class: profile
+  event_slot: period_choice
+  audience_template_keys:
+  - mq_game_basic_v1
+  event_domain: housing
+  title: Хозяйка продаёт квартиру
+  description: 'Хозяйка знакомых решила продать жильё и шутит: «Покупай сам, хватит платить чужому дядьке».
+    Ты впервые считаешь, сколько стоит своё. В «Капитале» открылось жильё.'
+  weight: 1
+  event_tier: 3
+  repeat_policy: once_per_profile
+  scenario_shape: tradeoff
+  prerequisites:
+    requires_mechanics_all:
+    - capital_property
+  extra:
+    spawn_priority_when: always
+    spawn_priority_rank: 3
+  choices:
+  - title: Заказать оценку рынка
+    effects:
+      cash_delta: -5000
+      needs_delta:
+        status: 3
+  - title: Не думать об этом
+    effects:
+      cash_delta: 0
+      needs_delta:
+        status: -3
+        comfort: -1
+- definition_key: mq11_student_unlock_mortgage
+  content_class: profile
+  event_slot: period_choice
+  audience_template_keys:
+  - mq_game_basic_v1
+  event_domain: housing
+  title: Разговор в банке
+  description: 'Менеджер показывает график: первый взнос, платёж на годы вперёд и переплата, о которой
+    в рекламе мелким шрифтом. В «Капитале» открылась ипотека: считай платёж вместе с подушкой.'
+  weight: 1
+  event_tier: 3
+  repeat_policy: once_per_profile
+  scenario_shape: tradeoff
+  prerequisites:
+    requires_mechanics_all:
+    - capital_mortgage
+  extra:
+    spawn_priority_when: always
+    spawn_priority_rank: 3
+  choices:
+  - title: Заплатить за консультацию
+    effects:
+      cash_delta: -4000
+      needs_delta:
+        status: 2
+        comfort: 2
+  - title: Уйти без расчёта
+    effects:
+      cash_delta: 0
+      needs_delta:
+        comfort: -3
+        status: -2
+- definition_key: mq11_student_dream_offer
+  content_class: profile
+  event_slot: period_choice
+  audience_template_keys:
+  - mq_game_basic_v1
+  event_domain: consumption
+  title: Чего ты хочешь на самом деле?
+  description: 'Деньги на счету уже есть, а радости от цифры всё меньше. Выбери мечту и откладывай на
+    неё: через шесть ходов придётся решить, покупать или нет.'
+  weight: 84
+  event_tier: 2
+  repeat_policy: once_per_profile
+  scenario_shape: chain
+  prerequisites:
+    min_period_index: 8
+  choices:
+  - title: Поездка мечты — 90 000 ₽
+    effects:
+      cash_delta: 0
+      needs_delta:
+        status: 1
+        social: 1
+        comfort: -1
+      enqueue_event:
+        chain_key: student_dream
+        followup_definition_key: mq11_student_dream_deadline
+        after_periods: 6
+        context:
+          branch: trip
+  - title: Курс по профессии — 150 000 ₽
+    effects:
+      cash_delta: 0
+      needs_delta:
+        status: 2
+        health: -1
+        comfort: -1
+      enqueue_event:
+        chain_key: student_dream
+        followup_definition_key: mq11_student_dream_deadline
+        after_periods: 6
+        context:
+          branch: course
+  - title: Своя музыкальная студия — 60 000 ₽
+    effects:
+      cash_delta: 0
+      needs_delta:
+        comfort: 1
+        social: -1
+      enqueue_event:
+        chain_key: student_dream
+        followup_definition_key: mq11_student_dream_deadline
+        after_periods: 6
+        context:
+          branch: studio
+  - title: Пока ничего не хочу
+    effects:
+      cash_delta: 0
+      needs_delta:
+        comfort: -2
+        status: -2
+- definition_key: mq11_student_dream_deadline
+  content_class: profile
+  event_slot: chain_followup
+  audience_template_keys:
+  - mq_game_basic_v1
+  event_domain: consumption
+  interaction_kind: chain_followup
+  title: Время решать про мечту
+  description: Шесть ходов назад ты выбрал мечту. Деньги либо накоплены, либо нет. Если не хватает, это
+    тоже результат.
+  weight: 1
+  event_tier: 2
+  repeat_policy: once_per_profile
+  scenario_shape: chain
+  mandatory_gate: blocks_period_end
+  choices:
+  - title: Лететь за 90 000 ₽
+    effects:
+      cash_delta: -90000
+      needs_delta:
+        social: 22
+        health: 14
+        comfort: 8
+      requires_chain_branch: trip
+  - title: Оплатить курс за 150 000 ₽
+    effects:
+      cash_delta: -150000
+      needs_delta:
+        status: 26
+        comfort: 6
+        health: -4
+      requires_chain_branch: course
+  - title: Собрать студию за 60 000 ₽
+    effects:
+      cash_delta: -60000
+      needs_delta:
+        comfort: 18
+        social: 6
+        status: 8
+      requires_chain_branch: studio
+  - title: Отказаться от мечты
+    effects:
+      cash_delta: 0
+      needs_delta:
+        status: -8
+        comfort: -6
+- definition_key: mq11_student_diploma_offer
+  content_class: profile
+  event_slot: period_choice
+  audience_template_keys:
+  - mq_game_basic_v1
+  event_domain: income_work
+  title: Диплом на руках
+  description: Защита позади. Куда дальше? От этого выбора зависит зарплата на все следующие ходы.
+  weight: 1
+  event_tier: 2
+  repeat_policy: once_per_profile
+  scenario_shape: chain
+  prerequisites:
+    min_period_index: 13
+  extra:
+    spawn_priority_when: always
+    spawn_priority_rank: 3
+  choices:
+  - title: Стабильная работа в компании
+    effects:
+      cash_delta: 0
+      needs_delta:
+        social: -8
+        health: -6
+      monthly_salary_delta: 12000
+    description: Зарплата +12 000 ₽ сразу, но график плотный.
+  - title: Стартап с друзьями
+    effects:
+      cash_delta: 0
+      needs_delta:
+        status: 6
+        social: 4
+        health: -4
+      enqueue_event:
+        chain_key: student_diploma
+        followup_definition_key: mq11_student_diploma_startup
+        after_periods: 8
+        context:
+          branch: startup
+      monthly_salary_delta: -15000
+    description: Зарплата −15 000 ₽ сейчас; через 8 ходов станет ясно, выстрелило ли.
+  - title: Магистратура
+    effects:
+      cash_delta: -60000
+      needs_delta:
+        status: 8
+        comfort: -4
+      enqueue_event:
+        chain_key: student_diploma
+        followup_definition_key: mq11_student_diploma_masters
+        after_periods: 6
+        context:
+          branch: masters
+      monthly_salary_delta: -5000
+    description: Плата 60 000 ₽ и зарплата −5 000 ₽; через 6 ходов — заметная прибавка.
+- definition_key: mq11_student_diploma_startup
+  content_class: profile
+  event_slot: chain_followup
+  audience_template_keys:
+  - mq_game_basic_v1
+  event_domain: income_work
+  interaction_kind: chain_followup
+  title: 'Стартап: момент истины'
+  description: Появился первый крупный клиент, но команда на пределе. Либо вкладываешься дальше, либо
+    уходишь в найм с опытом.
+  weight: 1
+  event_tier: 3
+  repeat_policy: once_per_profile
+  scenario_shape: chain
+  mandatory_gate: blocks_period_end
+  choices:
+  - title: Остаться и тянуть дальше
+    effects:
+      cash_delta: 0
+      needs_delta:
+        health: -14
+        social: -8
+        comfort: -6
+      monthly_salary_delta: 45000
+  - title: Уйти в найм с опытом
+    effects:
+      cash_delta: 0
+      needs_delta:
+        status: -6
+        social: 2
+      monthly_salary_delta: 25000
+- definition_key: mq11_student_diploma_masters
+  content_class: profile
+  event_slot: chain_followup
+  audience_template_keys:
+  - mq_game_basic_v1
+  event_domain: income_work
+  interaction_kind: chain_followup
+  title: Магистратура окончена
+  description: 'Диплом магистра открыл двери. Предложений два: где больше денег, а где интереснее.'
+  weight: 1
+  event_tier: 3
+  repeat_policy: once_per_profile
+  scenario_shape: chain
+  mandatory_gate: blocks_period_end
+  choices:
+  - title: Крупная компания
+    effects:
+      cash_delta: 0
+      needs_delta:
+        social: -8
+        health: -6
+      monthly_salary_delta: 35000
+  - title: Исследовательская лаборатория
+    effects:
+      cash_delta: 0
+      needs_delta:
+        status: 10
+        comfort: -2
+      monthly_salary_delta: 22000
+- definition_key: mq11_student_friend_loan_offer
+  content_class: profile
+  event_slot: period_choice
+  audience_template_keys:
+  - mq_game_basic_v1
+  event_domain: social_family
+  title: Друг просит в долг
+  description: Лучший друг просит 20 000 ₽ до стипендии и обещает вернуть через четыре хода. Расписку
+    писать неловко.
+  weight: 74
+  event_tier: 2
+  repeat_policy: once_per_profile
+  scenario_shape: chain
+  prerequisites:
+    min_period_index: 4
+  choices:
+  - title: Одолжить
+    effects:
+      cash_delta: -20000
+      needs_delta:
+        social: 6
+      enqueue_event:
+        chain_key: student_friend_loan
+        followup_definition_key: mq11_student_friend_loan_return
+        after_periods: 4
+        context:
+          branch: lent
+  - title: Отказать
+    effects:
+      cash_delta: 0
+      needs_delta:
+        social: -7
+        status: -1
+- definition_key: mq11_student_friend_loan_return
+  content_class: profile
+  event_slot: chain_followup
+  audience_template_keys:
+  - mq_game_basic_v1
+  event_domain: social_family
+  interaction_kind: chain_followup
+  title: Друг вернул не всё
+  description: Прошло четыре хода. Друг принёс 12 000 ₽ и обещает остальное «когда-нибудь».
+  weight: 1
+  event_tier: 2
+  repeat_policy: once_per_profile
+  scenario_shape: chain
+  mandatory_gate: blocks_period_end
+  choices:
+  - title: Взять и простить остаток
+    effects:
+      cash_delta: 12000
+      needs_delta:
+        social: 6
+        comfort: -2
+  - title: Потребовать всё до копейки
+    effects:
+      cash_delta: 20000
+      needs_delta:
+        social: -14
+        status: -2
+- definition_key: mq11_student_session_cram
+  content_class: profile
+  event_slot: period_choice
+  audience_template_keys:
+  - mq_game_basic_v1
+  event_domain: investment_education
+  title: Сессия на носу
+  description: Три экзамена подряд. Репетитор поможет, но стоит денег.
+  weight: 70
+  event_tier: 1
+  repeat_policy: once_per_profile
+  scenario_shape: tradeoff
+  choices:
+  - title: Нанять репетитора
+    effects:
+      cash_delta: -6000
+      needs_delta:
+        status: 5
+        comfort: 2
+  - title: Зубрить ночами
+    effects:
+      cash_delta: 0
+      needs_delta:
+        health: -7
+        comfort: -3
+- definition_key: mq11_student_dorm_or_rent
+  content_class: profile
+  event_slot: period_choice
+  audience_template_keys:
+  - mq_game_basic_v1
+  event_domain: housing
+  title: Общага или съём?
+  description: 'В общежитии дали место: дёшево, но шумно. Друзья зовут снимать вместе.'
+  weight: 70
+  event_tier: 1
+  repeat_policy: once_per_profile
+  scenario_shape: tradeoff
+  choices:
+  - title: Снять с друзьями
+    effects:
+      cash_delta: -9000
+      needs_delta:
+        comfort: 7
+        social: 3
+  - title: Остаться в общаге
+    effects:
+      cash_delta: 0
+      needs_delta:
+        comfort: -4
+        social: 2
+        health: -1
+- definition_key: mq11_student_internship
+  content_class: profile
+  event_slot: period_choice
+  audience_template_keys:
+  - mq_game_basic_v1
+  event_domain: income_work
+  title: Неоплачиваемая стажировка
+  description: Сильная компания берёт на стажировку без оплаты. Смены в кафе придётся бросить.
+  weight: 70
+  event_tier: 1
+  repeat_policy: once_per_profile
+  scenario_shape: tradeoff
+  choices:
+  - title: Пойти на стажировку
+    effects:
+      cash_delta: -8000
+      needs_delta:
+        status: 9
+        health: -2
+  - title: Остаться в кафе
+    effects:
+      cash_delta: 7000
+      needs_delta:
+        status: -5
+        comfort: -1
+- definition_key: mq11_student_birthday_gift
+  content_class: profile
+  event_slot: period_choice
+  audience_template_keys:
+  - mq_game_basic_v1
+  event_domain: social_family
+  title: День рождения подруги
+  description: Все скидываются на подарок. Сумма выше, чем ты планировал.
+  weight: 70
+  event_tier: 1
+  repeat_policy: once_per_profile
+  scenario_shape: tradeoff
+  choices:
+  - title: Скинуться со всеми
+    effects:
+      cash_delta: -3500
+      needs_delta:
+        social: 6
+  - title: Подарить открытку
+    effects:
+      cash_delta: 0
+      needs_delta:
+        social: -6
+        status: -2
+- definition_key: mq11_student_scholarship
+  content_class: profile
+  event_slot: period_choice
+  audience_template_keys:
+  - mq_game_basic_v1
+  event_domain: investment_education
+  title: Повышенная стипендия
+  description: Можно подать на стипендию, но нужно неделю готовить документы и пропустить смены.
+  weight: 70
+  event_tier: 1
+  repeat_policy: once_per_profile
+  scenario_shape: tradeoff
+  choices:
+  - title: Подать документы
+    effects:
+      cash_delta: 9000
+      needs_delta:
+        health: -3
+        comfort: -4
+        social: -3
+  - title: Не тратить время
+    effects:
+      cash_delta: 0
+      needs_delta:
+        status: -4
+        comfort: -1
+- definition_key: mq11_student_cheap_food
+  content_class: profile
+  event_slot: period_choice
+  audience_template_keys:
+  - mq_game_basic_v1
+  event_domain: health
+  title: Лапша третий день
+  description: На еде легко сэкономить. Организм пока терпит.
+  weight: 70
+  event_tier: 1
+  repeat_policy: once_per_profile
+  scenario_shape: tradeoff
+  choices:
+  - title: Нормальная еда неделю
+    effects:
+      cash_delta: -3000
+      needs_delta:
+        health: 7
+        comfort: 2
+  - title: Дотянуть на лапше
+    effects:
+      cash_delta: 0
+      needs_delta:
+        health: -7
+        comfort: -2
+- definition_key: mq11_student_student_club
+  content_class: profile
+  event_slot: period_choice
+  audience_template_keys:
+  - mq_game_basic_v1
+  event_domain: social_family
+  title: Студенческий клуб
+  description: 'Клуб предпринимателей ищет казначея: связи есть, времени нет.'
+  weight: 70
+  event_tier: 2
+  repeat_policy: once_per_profile
+  scenario_shape: tradeoff
+  choices:
+  - title: Согласиться
+    effects:
+      cash_delta: -2000
+      needs_delta:
+        status: 7
+        social: 5
+        health: -3
+  - title: Пройти мимо
+    effects:
+      cash_delta: 0
+      needs_delta:
+        social: -4
+        status: -3
+- definition_key: mq11_student_phone_plan
+  content_class: profile
+  event_slot: period_choice
+  audience_template_keys:
+  - mq_game_basic_v1
+  event_domain: consumption
+  title: Новый смартфон в рассрочку от друга
+  description: Друг отдаёт почти новый телефон за 15 000 ₽.
+  weight: 70
+  event_tier: 1
+  repeat_policy: once_per_profile
+  scenario_shape: tradeoff
+  choices:
+  - title: Купить
+    effects:
+      cash_delta: -15000
+      needs_delta:
+        status: 7
+        comfort: 3
+  - title: Обойтись старым
+    effects:
+      cash_delta: 0
+      needs_delta:
+        status: -4
+        comfort: -2
+- definition_key: mq11_student_freelance_night
+  content_class: profile
+  event_slot: period_choice
+  audience_template_keys:
+  - mq_game_basic_v1
+  event_domain: income_work
+  title: Ночной заказ
+  description: Клиент платит за срочную вёрстку, но сдать нужно к утру.
+  weight: 70
+  event_tier: 2
+  repeat_policy: once_per_profile
+  scenario_shape: tradeoff
+  choices:
+  - title: Взять заказ
+    effects:
+      cash_delta: 11000
+      needs_delta:
+        health: -9
+        comfort: -3
+  - title: Выспаться
+    effects:
+      cash_delta: 0
+      needs_delta:
+        status: -3
+        comfort: -1
+- definition_key: mq11_student_concert
+  content_class: profile
+  event_slot: period_choice
+  audience_template_keys:
+  - mq_game_basic_v1
+  event_domain: consumption
+  title: Концерт любимой группы
+  description: Последние билеты. Дорого, но такой шанс бывает редко.
+  weight: 70
+  event_tier: 1
+  repeat_policy: once_per_profile
+  scenario_shape: tradeoff
+  choices:
+  - title: Пойти
+    effects:
+      cash_delta: -6500
+      needs_delta:
+        social: 8
+        comfort: 4
+  - title: Смотреть запись
+    effects:
+      cash_delta: 0
+      needs_delta:
+        social: -5
+        comfort: -2
+- definition_key: mq11_student_dentist
+  content_class: profile
+  event_slot: period_choice
+  audience_template_keys:
+  - mq_game_basic_v1
+  event_domain: health
+  title: Заныл зуб
+  description: Сейчас пломба, а потом может выйти коронка.
+  weight: 70
+  event_tier: 2
+  repeat_policy: once_per_profile
+  scenario_shape: tradeoff
+  choices:
+  - title: Лечить сейчас
+    effects:
+      cash_delta: -8000
+      needs_delta:
+        health: 9
+  - title: Потерпеть
+    effects:
+      cash_delta: 0
+      needs_delta:
+        health: -9
+        comfort: -5
+- definition_key: mq11_student_roommate_leaves
+  content_class: profile
+  event_slot: period_choice
+  audience_template_keys:
+  - mq_game_basic_v1
+  event_domain: housing
+  title: Сосед съезжает
+  description: Арендная доля на этот ход ляжет на тебя, если не найти замену.
+  weight: 70
+  event_tier: 2
+  repeat_policy: once_per_profile
+  scenario_shape: tradeoff
+  choices:
+  - title: Заплатить за двоих
+    effects:
+      cash_delta: -9000
+      needs_delta:
+        comfort: 3
+        social: 1
+  - title: Искать замену весь ход
+    effects:
+      cash_delta: 0
+      needs_delta:
+        social: -3
+        comfort: -5
+        health: -1
+- definition_key: mq11_student_thesis_help
+  content_class: profile
+  event_slot: period_choice
+  audience_template_keys:
+  - mq_game_basic_v1
+  event_domain: investment_education
+  title: Написать диплом за деньги
+  description: Однокурсник просит написать за него работу и платит 14 000 ₽. Если вскроется, будет плохо.
+  weight: 70
+  event_tier: 2
+  repeat_policy: once_per_profile
+  scenario_shape: tradeoff
+  choices:
+  - title: Написать
+    effects:
+      cash_delta: 14000
+      needs_delta:
+        status: -9
+        comfort: -3
+  - title: Отказать
+    effects:
+      cash_delta: 0
+      needs_delta:
+        social: -5
+        status: -1
+- definition_key: mq11_student_gym_student
+  content_class: profile
+  event_slot: period_choice
+  audience_template_keys:
+  - mq_game_basic_v1
+  event_domain: health
+  title: Студенческий абонемент
+  description: Абонемент в зал со скидкой, но только сегодня.
+  weight: 70
+  event_tier: 1
+  repeat_policy: once_per_profile
+  scenario_shape: tradeoff
+  choices:
+  - title: Купить
+    effects:
+      cash_delta: -4500
+      needs_delta:
+        health: 9
+        status: 1
+  - title: Бегать в парке
+    effects:
+      cash_delta: 0
+      needs_delta:
+        health: -3
+        comfort: -2
+- definition_key: mq11_student_volunteer
+  content_class: profile
+  event_slot: period_choice
+  audience_template_keys:
+  - mq_game_basic_v1
+  event_domain: social_family
+  title: Волонтёрская поездка
+  description: 'Неделя в лагере: без денег, но с людьми и опытом.'
+  weight: 70
+  event_tier: 2
+  repeat_policy: once_per_profile
+  scenario_shape: tradeoff
+  choices:
+  - title: Поехать
+    effects:
+      cash_delta: -2500
+      needs_delta:
+        social: 9
+        status: 4
+        comfort: -3
+  - title: Остаться работать
+    effects:
+      cash_delta: 5000
+      needs_delta:
+        social: -7
+        status: -2

@@ -27,7 +27,7 @@ from ...finance.balance_utils import adjust_balance, adjust_safety_fund_balance,
 from ...finance.expenses import add_expense_line_from_event
 from ...game.rules import clamp_profile_lifestyle_delta
 from ...idempotency import load_stored_body, store_body, try_reserve_key, wait_stored_body
-from ...models import EventChoice, EventDefinition, EventInstance, GameProfile
+from ...models import EventChoice, EventDefinition, EventInstance, FinanceSalary, GameProfile
 from ...needs.engine import apply_needs_delta, needs_values_from_profile, parse_needs_delta
 from ...timeutil import utc_now_naive
 from .needs_rescue import _needs_config_for_profile
@@ -130,6 +130,13 @@ def choose_event(db: Session, profile: GameProfile, event_id: int, choice_id: in
     except Exception:
         db.rollback()
         raise
+
+
+def _apply_monthly_salary_delta(db: Session, profile: GameProfile, delta: float) -> None:
+    """Смена дохода с выбора (диплом): со следующей выплаты; зарплата не уходит ниже нуля."""
+    salary = db.query(FinanceSalary).filter(FinanceSalary.game_profile_id == profile.id).first()
+    if salary is not None:
+        salary.monthly_amount = max(0.0, round(float(salary.monthly_amount or 0) + delta, 2))
 
 
 def _apply_event_choice(
@@ -266,6 +273,10 @@ def _apply_event_choice(
             float(getattr(profile, "delta_monthly_lifestyle_expense", 0) or 0),
             monthly_lifestyle_delta,
         )
+
+    salary_delta = float(effects.get("monthly_salary_delta", 0) or 0)
+    if salary_delta:
+        _apply_monthly_salary_delta(db, profile, salary_delta)
 
     if expense_line_spec is not None:
         _apply_expense_line_effect(

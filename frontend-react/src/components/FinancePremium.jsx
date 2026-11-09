@@ -45,6 +45,8 @@ export function FinancePremium({
       insurance: capitalSectionState(overview, 'capital_insurance'),
       property: capitalSectionState(overview, 'capital_property'),
       liabilities: capitalSectionState(overview, 'capital_liabilities'),
+      car: capitalSectionState(overview, 'capital_car'),
+      mortgage: capitalSectionState(overview, 'capital_mortgage'),
     }),
     [overview],
   );

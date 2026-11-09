@@ -7,7 +7,9 @@ from ..game.session import get_active_game_profile
 from ..starters.mechanics import (
     MECHANIC_CAPITAL_LIABILITIES,
     MECHANIC_CAPITAL_PROPERTY,
+    require_asset_kind_mechanic,
     require_capital_mechanic,
+    require_secured_loan_mechanic,
 )
 from ..schemas import (
     SalaryProfileUpdate,
@@ -49,6 +51,8 @@ from ..services.finance.overview import (
 from ..services.finance.analytics import (
     get_analytics_timeseries as service_get_analytics_timeseries,
 )
+
+from ..models import AssetTemplate
 
 router = APIRouter(prefix="/api/finance", tags=["finance"])
 
@@ -112,8 +116,7 @@ def create_secured_acquisition_route(
     db: Session = Depends(get_db),
 ):
     game_profile = get_active_game_profile(db, current_user.id)
-    require_capital_mechanic(db, game_profile, MECHANIC_CAPITAL_LIABILITIES)
-    require_capital_mechanic(db, game_profile, MECHANIC_CAPITAL_PROPERTY)
+    require_secured_loan_mechanic(db, game_profile, payload.get("liability_key") or payload.get("key"))
     result = create_secured_acquisition(
         db,
         game_profile,
@@ -172,7 +175,7 @@ def create_asset(
     db: Session = Depends(get_db),
 ):
     game_profile = get_active_game_profile(db, current_user.id)
-    require_capital_mechanic(db, game_profile, MECHANIC_CAPITAL_PROPERTY)
+    require_asset_kind_mechanic(db, game_profile, getattr(payload, "kind", None))
     return service_create_asset(db, game_profile, payload)
 
 
@@ -202,8 +205,9 @@ def create_asset_from_template(
     db: Session = Depends(get_db),
 ):
     game_profile = get_active_game_profile(db, current_user.id)
-    require_capital_mechanic(db, game_profile, MECHANIC_CAPITAL_PROPERTY)
     key = (payload.get("key") or "").strip()
+    template = db.query(AssetTemplate).filter(AssetTemplate.template_key == key).first()
+    require_asset_kind_mechanic(db, game_profile, template.kind if template else key)
     return service_create_asset_from_template(db, game_profile, key=key)
 
 

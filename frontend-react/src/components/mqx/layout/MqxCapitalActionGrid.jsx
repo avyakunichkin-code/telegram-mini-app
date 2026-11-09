@@ -19,7 +19,7 @@ const ACTION_GROUPS = [
     hint: 'доход или удобство',
     pieces: [
       { id: 'realestate', section: 'property', glyph: '⌂', title: 'Жильё', tone: 'prop' },
-      { id: 'car', section: 'property', glyph: '◐', title: 'Авто', tone: 'prop' },
+      { id: 'car', section: 'car', glyph: '◐', title: 'Авто', tone: 'prop' },
     ],
   },
   {
@@ -28,7 +28,7 @@ const ACTION_GROUPS = [
     hint: 'деньги сейчас, платёж каждый ход',
     pieces: [
       { id: 'credit', section: 'liabilities', glyph: '−', title: 'Кредит', tone: 'debt' },
-      { id: 'mortgage', section: 'liabilities', glyph: '⌂', title: 'Ипотека', tone: 'debt' },
+      { id: 'mortgage', section: 'mortgage', glyph: '⌂', title: 'Ипотека', tone: 'debt' },
     ],
   },
 ];

@@ -52,3 +52,7 @@ aliases:
 - Migrations: `0036_victory_invest_goal_order.sql`, `0037_harder_invest_unlock_after_cushion.sql`
 - Idea: [`starter-template-mechanics-permissions.md`](../vision/ideas/starter-template-mechanics-permissions.md)
 - Spec: [`SPEC_victory-v2`](../specs/features/SPEC_victory-v2.md) (tutorial chain)
+
+## Уточнение 2026-11-09
+
+Шаг `mechanics_unlock` может иметь `min_period`. П. 4 заменён: у `mq_game_basic_v1` теперь лестница по [SPEC_student-progression](../specs/features/SPEC_student-progression.md), добавлены флаги `capital_car` и `capital_mortgage`.

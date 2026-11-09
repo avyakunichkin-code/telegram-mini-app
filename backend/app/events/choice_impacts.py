@@ -73,6 +73,16 @@ def build_choice_impacts(
             }
         )
 
+    salary_delta = float(effects.get("monthly_salary_delta", 0) or 0)
+    if abs(salary_delta) >= 1e-6:
+        impacts.append(
+            {
+                "kind": "salary",
+                "delta": round(salary_delta, 2),
+                "tip": "Зарплата в месяц",
+            }
+        )
+
     safety = float(effects.get("safety_delta", 0) or 0)
     safety_grant = float(effects.get("safety_grant", 0) or 0)
     if abs(safety_grant) >= 1e-6:

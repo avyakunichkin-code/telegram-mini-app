@@ -13,7 +13,7 @@ class TestMechanicsFromBlueprint:
         assert m == BASIC_V1_MECHANICS
 
     def test_blueprint_overrides_preset(self):
-        bp = {"mechanics": {"capital_insurance": True}}
+        bp = {"mechanics": {"capital_insurance": True, "capital_property": False}}
         m = mechanics_from_blueprint(bp, "mq_game_basic_v1")
         assert m["capital_insurance"] is True
         assert m["capital_invest"] is True
@@ -58,9 +58,14 @@ class TestMechanicsInOverview:
         assert ov.status_code == 200
         mech = ov.json()["mechanics"]
         assert mech["capital_invest"] is True
-        assert mech["capital_insurance"] is False
-        assert mech["capital_property"] is False
-        assert mech["capital_liabilities"] is False
+        # Потолок шаблона открыт, момент открытия задаёт лестница.
+        assert mech["capital_insurance"] is True
+        assert mech["capital_property"] is True
+        assert mech["capital_liabilities"] is True
+        eff = ov.json()["mechanics_effective"]
+        assert eff["capital_insurance"] is False
+        assert eff["capital_property"] is False
+        assert eff["capital_liabilities"] is False
 
     def test_insurance_buy_403_when_disabled(self, client, auth_headers):
         client.post(
