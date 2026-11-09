@@ -11,6 +11,7 @@ from decimal import Decimal
 from typing import Annotated, Literal
 
 from pydantic import BaseModel, Field, PlainSerializer, model_validator
+from .analytics import EventName, event_props
 
 Money = Annotated[
     Decimal,
@@ -132,9 +133,10 @@ class InsuranceRow(BaseModel):
 
 
 class GoalRow(BaseModel):
+    id: Annotated[str, Field(min_length=1, max_length=80)] | None = None
     title: Annotated[str, Field(min_length=1, max_length=60)]
     target_amount: Money
-    target_month: Month
+    target_month: Month | None = None
     saved_amount: Money = Decimal("0")
     priority: Annotated[int, Field(ge=1, le=9)] = 1
 
@@ -204,8 +206,16 @@ class StepPatch(BaseModel):
     status: Literal["suggested", "done", "dismissed"]
 
 
+class StepActionPatch(BaseModel):
+    done: bool = Field(strict=True)
+
+
 class EventIn(BaseModel):
-    name: Literal[
-        "checkup_started", "quick_done", "section_done", "report_viewed", "checkup_completed", "step_done", "step_dismissed"
-    ]
-    props: dict[str, str | int | bool] = {}
+    model_config = {"extra": "forbid"}
+    name: EventName
+    props: dict = Field(default_factory=dict)
+
+    @model_validator(mode="after")
+    def safe_props(self):
+        self.props = event_props(self.name, self.props)
+        return self

@@ -17,7 +17,7 @@ const python = process.env.E2E_PYTHON || path.join(root, 'backend', '.venv', 'Sc
 const apiPort = Number(process.env.E2E_API_PORT || 8021)
 const webPort = Number(process.env.E2E_WEB_PORT || 5191)
 const E2E_API = `http://127.0.0.1:${apiPort}`
-const E2E_WEB = `http://localhost:${webPort}`
+const E2E_WEB = `http://127.0.0.1:${webPort}`
 
 export default defineConfig({
   testDir: './e2e',
@@ -41,7 +41,7 @@ export default defineConfig({
   ],
   webServer: [
     {
-      command: `"${python}" -m uvicorn plan_api.main:create_app --factory --port ${apiPort}`,
+      command: `"${python}" "${path.join(here, 'e2e', 'api_server.py')}" ${apiPort}`,
       cwd: path.join(root, 'apps', 'plan-api'),
       url: `${E2E_API}/api/health`,
       env: {
@@ -54,7 +54,7 @@ export default defineConfig({
       timeout: 120_000,
     },
     {
-      command: `npx vite --port ${webPort} --strictPort`,
+      command: process.env.E2E_PREVIEW === '1' ? `npx vite preview --host 127.0.0.1 --port ${webPort} --strictPort` : `npx vite --host 127.0.0.1 --port ${webPort} --strictPort`,
       cwd: here,
       url: E2E_WEB,
       env: { PLAN_API_URL: E2E_API },

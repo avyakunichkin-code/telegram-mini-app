@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { api } from '../api.js'
 import { Button, Card, ErrorNote, Presets, RangeInput } from '../components.jsx'
+import { quickProblem } from '../quick.js'
 
 const QUESTIONS = [
   ['mortgage', 'Потянем ли ипотеку или крупный кредит?', 'Платёж, нагрузка и запас после взноса'],
@@ -57,8 +58,8 @@ export function Family({ members, onSave, onBack }) {
               <option value="adult">Взрослый</option>
               <option value="child">Ребёнок</option>
             </select>
-            <input aria-label="Год рождения" placeholder="Год рождения" inputMode="numeric" value={m.birth_year || ''}
-              onChange={(e) => update(i, { birth_year: e.target.value ? Number(e.target.value) : null })} />
+            <input aria-label="Год рождения" placeholder="Год" inputMode="numeric" value={m.birth_year || ''}
+              onChange={(e) => { const year = e.target.value.replace(/\D/g, '').slice(0, 4); update(i, { birth_year: year ? Number(year) : null }) }} />
             {rows.length > 1 && (
               <button type="button" className="link danger" onClick={() => setRows(rows.filter((_, j) => j !== i))}>Убрать</button>
             )}
@@ -80,17 +81,22 @@ export function Family({ members, onSave, onBack }) {
   )
 }
 
-const zero = { min: 0, max: 0 }
+const blank = { min: '', max: '' }
 
 export function Quick({ checkup, onDone, onDemo, onSkip }) {
   const kids = checkup.members.filter((m) => m.role === 'child').length
-  const [a, setA] = useState({ income: zero, must_expenses: zero, debt_payments: zero, savings: zero, children: kids })
+  const [a, setA] = useState({ income: blank, must_expenses: blank, debt_payments: blank, savings: blank, children: kids })
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState(null)
   const set = (k) => (v) => setA({ ...a, [k]: v })
 
   async function submit(e) {
     e.preventDefault()
+    const problem = quickProblem(a)
+    if (problem) {
+      setError(new Error(problem))
+      return
+    }
     setBusy(true)
     setError(null)
     try {
@@ -112,10 +118,10 @@ export function Quick({ checkup, onDone, onDemo, onSkip }) {
       <p className="lead">Отвечайте диапазоном, если не помните точно. Черновой разбор появится сразу, точность вырастет при уточнении.</p>
       <Card>
         <RangeInput label="1. Доход семьи в месяц, на руки" value={a.income} onChange={set('income')} />
-        <Presets values={[[50_000, 100_000], [100_000, 150_000], [150_000, 250_000], [250_000, 400_000]]} onPick={set('income')} />
+        <Presets values={[[50_000, 100_000], [100_000, 150_000], [150_000, 250_000], [250_000, 400_000]]} value={a.income} onPick={set('income')} />
         <RangeInput label="2. Обязательные расходы в месяц" value={a.must_expenses} onChange={set('must_expenses')}
           hint="Еда, жильё, коммуналка, транспорт, дети — без платежей по кредитам" />
-        <Presets values={[[30_000, 60_000], [60_000, 100_000], [100_000, 150_000]]} onPick={set('must_expenses')} />
+        <Presets values={[[30_000, 60_000], [60_000, 100_000], [100_000, 150_000]]} value={a.must_expenses} onPick={set('must_expenses')} />
         <RangeInput label="3. Платежи по всем кредитам в месяц" value={a.debt_payments} onChange={set('debt_payments')} />
         <RangeInput label="4. Сколько отложено на чёрный день" value={a.savings} onChange={set('savings')} />
         <label className="field">

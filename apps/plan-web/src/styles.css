@@ -92,6 +92,8 @@ select { font: 600 15px/22px var(--font-text); }
 .brand-mark { display: none; }
 .topnav { display: flex; gap: 6px; flex-wrap: wrap; }
 .topnav .link { background: var(--tile); border-radius: var(--radius-pill); padding: 8px 14px; text-decoration: none; }
+.topnav .link[aria-current="page"] { background: var(--inverse); color: var(--on-inverse); }
+h1[tabindex="-1"]:focus { outline: none; }
 .proto-badge {
   display: inline-block; font-size: 13px; line-height: 18px; font-weight: 600; color: var(--on-tile); background: var(--tile-edge);
   border-radius: var(--radius-pill); padding: 4px 12px; margin: 0 0 var(--gap) 6px;

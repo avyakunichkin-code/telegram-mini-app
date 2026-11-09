@@ -23,7 +23,10 @@ class Payoff:
 
 
 def simulate(liabilities: tuple[Liability, ...], *, extra: float = 0.0, strategy: str = "current") -> Payoff:
-    debts = {li.id: [li, li.total_debt + li.overdue_amount] for li in liabilities if li.total_debt > EPSILON}
+    debts = {
+        li.id: [li, li.total_debt + li.overdue_amount]
+        for li in liabilities if li.total_debt + li.overdue_amount > EPSILON
+    }
     if not debts:
         return Payoff(months=0, total_interest=0.0, order=())
     cascade = strategy in ("avalanche", "snowball")

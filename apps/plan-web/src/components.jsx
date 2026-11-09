@@ -1,13 +1,15 @@
-import { useState } from 'react'
+import { forwardRef, useLayoutEffect, useRef, useState } from 'react'
+import { ButtonBase } from '@tvoy/ui-kit'
 import { monthLabel, rub } from './format.js'
+import { groupDigits, parseMoney } from './quick.js'
 
-export function Button({ variant = 'primary', busy, children, ...props }) {
+export const Button = forwardRef(function Button({ variant = 'primary', busy, children, className = '', ...props }, ref) {
   return (
-    <button className={`btn btn-${variant}`} disabled={busy || props.disabled} {...props}>
+    <ButtonBase {...props} ref={ref} className={`btn btn-${variant}${className ? ` ${className}` : ''}`} busy={busy}>
       {busy ? 'Секунду…' : children}
-    </button>
+    </ButtonBase>
   )
-}
+})
 
 export function ErrorNote({ error }) {
   if (!error) return null
@@ -69,7 +71,28 @@ export function Bars({ points, label }) {
   )
 }
 
-const num = (v) => (v === '' || v === null || v === undefined ? '' : String(v))
+/** Поле суммы с разрядами: курсор остаётся после той же цифры, что и до форматирования. */
+function MoneyField({ value, onValue, ...props }) {
+  const input = useRef(null)
+  const digitsBeforeCaret = useRef(null)
+  useLayoutEffect(() => {
+    if (digitsBeforeCaret.current === null) return
+    const el = input.current
+    let pos = 0
+    for (let seen = 0; pos < el.value.length && seen < digitsBeforeCaret.current; pos++) {
+      if (/\d/.test(el.value[pos])) seen++
+    }
+    el.setSelectionRange(pos, pos)
+    digitsBeforeCaret.current = null
+  })
+  return (
+    <input {...props} ref={input} inputMode="numeric" placeholder="0" autoComplete="off" value={groupDigits(value)}
+      onChange={(e) => {
+        digitsBeforeCaret.current = e.target.value.slice(0, e.target.selectionStart).replace(/\D/g, '').length
+        onValue(parseMoney(e.target.value))
+      }} />
+  )
+}
 
 /** Вилка «от–до»: жёлтый отрезок на дорожке, риска — база (середина). */
 function Fork({ min, max }) {
@@ -100,7 +123,8 @@ export function RangeInput({ label, value, onChange, hint }) {
     <label className="field">
       <span className="field-label">
         {label}
-        <button type="button" className="link" onClick={() => {
+        <button type="button" className="link"
+          aria-label={`${ranged ? 'знаю точно' : 'примерно от–до'}: ${label}`} onClick={() => {
           if (ranged) set({ max: v.min })
           setRanged(!ranged)
         }}>
@@ -110,19 +134,16 @@ export function RangeInput({ label, value, onChange, hint }) {
       {ranged ? (
         <>
           <span className="range ranged">
-            <input inputMode="numeric" aria-label={`${label}: от`} value={num(v.min)}
-              onChange={(e) => set({ min: toNum(e.target.value) })} />
+            <MoneyField aria-label={`${label}: от`} value={v.min} onValue={(min) => set({ min })} />
             <span>—</span>
-            <input inputMode="numeric" aria-label={`${label}: до`} value={num(v.max)}
-              onChange={(e) => set({ max: toNum(e.target.value) })} />
+            <MoneyField aria-label={`${label}: до`} value={v.max} onValue={(max) => set({ max })} />
             <span className="unit">₽</span>
           </span>
           <Fork min={v.min} max={v.max} />
         </>
       ) : (
         <span className="range">
-          <input inputMode="numeric" aria-label={label} value={num(v.min)}
-            onChange={(e) => { const n = toNum(e.target.value); onChange({ min: n, max: n }) }} />
+          <MoneyField aria-label={label} value={v.min} onValue={(n) => onChange({ min: n, max: n })} />
           <span className="unit">₽</span>
         </span>
       )}
@@ -138,14 +159,17 @@ export function toNum(s) {
   return Number.isFinite(n) ? n : ''
 }
 
-export function Presets({ values, onPick }) {
+export function Presets({ values, value, onPick }) {
   return (
     <div className="presets">
-      {values.map(([lo, hi]) => (
-        <button type="button" key={`${lo}-${hi}`} className="chip" onClick={() => onPick({ min: lo, max: hi })}>
-          {hi ? `${short(lo)}–${short(hi)}` : `${short(lo)}+`}
-        </button>
-      ))}
+      {values.map(([lo, hi]) => {
+        const picked = Number(value?.min) === lo && Number(value?.max) === hi
+        return (
+          <button type="button" key={`${lo}-${hi}`} className={`chip ${picked ? 'on' : ''}`} aria-pressed={picked} onClick={() => onPick({ min: lo, max: hi })}>
+            {hi ? `${short(lo)}–${short(hi)}` : `${short(lo)}+`}
+          </button>
+        )
+      })}
     </div>
   )
 }
@@ -160,11 +184,11 @@ function short(n) {
  * Линии ликвидности по месяцам на клетке. series: [{ name, points: [{month, liquid}], tone }].
  * Ноль — красная линия полей; где последняя серия уходит под ноль — кружок и пометка от руки.
  */
-export function LineChart({ series, height = 180, compact = false }) {
+export function LineChart({ series, height = 180, compact = false, domain }) {
   const all = series.flatMap((s) => s.points.map((p) => p.liquid))
   if (!all.length) return null
-  const max = Math.max(0, ...all)
-  const min = Math.min(0, ...all)
+  const max = domain?.[1] ?? Math.max(0, ...all)
+  const min = domain?.[0] ?? Math.min(0, ...all)
   const span = max - min || 1
   const n = series[0].points.length
   const W = 600
