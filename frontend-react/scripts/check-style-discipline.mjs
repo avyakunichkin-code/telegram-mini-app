@@ -2,7 +2,7 @@ import { execFileSync } from 'node:child_process'
 import { colorLiterals, fontUnder12 } from './mqx-style-debt.mjs'
 
 function runGit(args) {
-  return execFileSync('git', args, { encoding: 'utf8' })
+  return execFileSync('git', args, { encoding: 'utf8', maxBuffer: 16 * 1024 * 1024 })
 }
 
 function isRelevantFile(path) {

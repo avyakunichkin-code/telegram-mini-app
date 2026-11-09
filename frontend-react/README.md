@@ -1,8 +1,14 @@
 # ТВОЙ ХОД — фронтенд (React + Vite)
 
-Клиент Telegram Mini App для [ТВОЙ ХОД](../README.md). UI на React 18 и [`@telegram-apps/telegram-ui`](https://github.com/Telegram-Mini-Apps/TelegramUI).
+**Только ТВОЙ ХОД:** [документация](../docs/game/README.md) · [дизайн](../docs/game/DESIGN.md) · [локальные инструкции](AGENTS.md).
+
+Браузерный/PWA клиент (Telegram — дополнительный канал) для [ТВОЙ ХОД](../README.md). UI на React 18 и [`@telegram-apps/telegram-ui`](https://github.com/Telegram-Mini-Apps/TelegramUI).
 
 ---
+
+## Срез 07.11.2026
+
+Публичный `#/` — гостевой старт; `/login` — существующий аккаунт; `/register` для гостя привязывает почту к текущей партии. `screens/game/DashboardScreen.jsx` — пульт, контекстная Монетка Б в hero, labels-only tickets. Гостевой v2 не показывает автоматическую полоску; прежний O3 сохранён. Контракт и ограничения: [CURRENT_GAME](../docs/game/handbook/CURRENT_GAME.md). Локальная PostgreSQL требует migration 0052. Публикация нового старта и баланс ещё не приняты.
 
 ## Скрипты
 
@@ -25,7 +31,7 @@
 | Mini App (игра) | `https://avyakunichkin-code.github.io/telegram-mini-app/#/` — [`HashRouter`](src/App.jsx), для GitHub Pages без history API |
 | Лендинг | `https://avyakunichkin-code.github.io/telegram-mini-app/landing/` — обычный статический URL |
 
-Домашняя страница и base path игры: поле **`homepage`** и `base` в [`vite.config.js`](./vite.config.js).
+Домашняя страница и base path игры: поле **`homepage`** и `base` в [`vite.config.js`](vite.config.js).
 
 ---
 
@@ -34,16 +40,16 @@
 В режиме разработки базовый URL для `fetch` пустой (запросы идут на тот же origin, обычно с прокси Vite к backend или через настройку dev).
 
 Prod API: **`VITE_API_BASE_URL`** (см. [`.env.example`](.env.example)); fallback — Render URL в [`src/api.js`](src/api.js).  
-Деплой и домен: [`docs/ops/DEPLOY.md`](../docs/ops/DEPLOY.md). CI: GitHub Variables `VITE_API_BASE_URL`, `VITE_BASE_PATH`.
+Деплой и домен: [`docs/game/ops/DEPLOY.md`](../docs/game/ops/DEPLOY.md). CI: GitHub Variables `VITE_API_BASE_URL`, `VITE_BASE_PATH`.
 
 ---
 
 ## Документация продукта
 
-- UI/поведение клиента: [`../docs/specs/SPEC_FRONTEND_UI.md`](../docs/specs/SPEC_FRONTEND_UI.md)
-- Бренд и тон: [`../docs/reference/brandbook/BRANDBOOK.md`](../docs/reference/brandbook/BRANDBOOK.md)
+- UI/поведение клиента: [`../docs/game/specs/SPEC_FRONTEND_UI.md`](../docs/game/specs/SPEC_FRONTEND_UI.md)
+- Бренд и тон: [`../docs/game/reference/brandbook/BRANDBOOK.md`](../docs/game/reference/brandbook/BRANDBOOK.md)
 - Карта всей документации: [`../docs/README.md`](../docs/README.md)
-- Описание концепции: [`GAME.md`](../docs/handbook/GAME.md)
+- Описание концепции: [`GAME.md`](../docs/game/handbook/GAME.md)
 
 ---
 

@@ -7,6 +7,7 @@ import {
   FINALE_LOSS_TITLE,
   FINALE_WIN_TITLE,
   finaleDefeatFact,
+  finaleRecap,
   finaleWinStats,
   isFinaleWin,
 } from './runFinaleDisplay';
@@ -24,6 +25,24 @@ function FinaleCell({ portrait, win }) {
           <img className="mqx-run-finale-cell__img" src={portrait.png} alt="" decoding="async" />
         </picture>
       ) : null}
+    </div>
+  );
+}
+
+function FinaleRecap({ recap }) {
+  if (!recap) return null;
+  return (
+    <div className="mqx-run-finale-recap" data-testid="finale-recap">
+      {recap.label ? <p className="mqx-run-finale-recap__label">{recap.label}</p> : null}
+      <ol className="mqx-run-finale-recap__list" aria-label="Решения партии">
+        {recap.items.map((item) => (
+          <li key={item.key} className="mqx-run-finale-recap__item">
+            <span className="mqx-run-finale-recap__meta">{item.event ? `${item.turn} · ${item.event}` : item.turn}</span>
+            <b className="mqx-run-finale-recap__choice">{item.choice}</b>
+            <em className={`mqx-run-finale-recap__amount mqx-run-finale-recap__amount--${item.gain ? 'gain' : 'risk'}`}>{item.amount}</em>
+          </li>
+        ))}
+      </ol>
     </div>
   );
 }
@@ -129,6 +148,8 @@ export function MqxRunFinale({ open, payload, onDismissVictory, onNewGame, onMen
               ) : null}
             </>
           ) : null}
+
+          <FinaleRecap recap={finaleRecap(payload)} />
 
           <div className="mqx-run-finale__actions">
             <button

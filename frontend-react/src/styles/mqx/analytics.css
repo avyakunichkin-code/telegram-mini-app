@@ -431,6 +431,9 @@
 }
 
 .mqx-pclose-sheet__title {
+  display: flex;
+  align-items: center;
+  gap: var(--mq-sp-3);
   margin: 0 36px 10px 0;
   font-size: var(--mq-fs-caption);
   font-weight: 800;

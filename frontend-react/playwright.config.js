@@ -16,8 +16,8 @@ const dbFile = path.join(os.tmpdir(), `tvoy-hod-e2e-${process.pid}.db`).replace(
 // Порты стенда: не пересекаются с dev (8000/5173) и соседними сессиями; переопределяются env.
 const apiPort = Number(process.env.E2E_API_PORT || 8011);
 const webPort = Number(process.env.E2E_WEB_PORT || 5181);
-const E2E_API = `http://localhost:${apiPort}`;
-const E2E_WEB = `http://localhost:${webPort}`;
+const E2E_API = `http://127.0.0.1:${apiPort}`;
+const E2E_WEB = `http://127.0.0.1:${webPort}`;
 // Воркеры наследуют env процесса конфигурации — fixtures.js берёт адрес API отсюда.
 process.env.E2E_API_URL = E2E_API;
 
@@ -59,7 +59,7 @@ export default defineConfig({
       timeout: 120_000,
     },
     {
-      command: `npx vite --port ${webPort} --strictPort`,
+      command: `npx vite --host 127.0.0.1 --port ${webPort} --strictPort`,
       cwd: here,
       url: E2E_WEB,
       env: {

@@ -1,8 +1,12 @@
 import { apiCall } from './client.js';
 import { expensesApi } from './expenses.js';
 import { eventsApi } from './events.js';
+import { PLAYTEST_SURVEY_KEY } from '../utils/playtestSurvey.js';
 
 export const gameApi = {
+  startGuestGame() {
+    return apiCall('/api/game/guest-start', 'POST');
+  },
   getGameProfiles() {
     return apiCall('/api/game/profiles');
   },
@@ -29,13 +33,22 @@ export const gameApi = {
     return apiCall('/api/game/guidance', 'PATCH', payload);
   },
   getGameBootstrap() {
-    return apiCall('/api/game/bootstrap');
+    return apiCall(`/api/game/bootstrap?survey_key=${PLAYTEST_SURVEY_KEY}`);
   },
   dismissRunFinale() {
     return apiCall('/api/game/run-finale/dismiss', 'POST');
   },
   submitRunFeedback(payload) {
     return apiCall('/api/game/run-feedback', 'POST', payload);
+  },
+  getPlaytestSurvey(profileId) {
+    return apiCall(`/api/game/playtest-survey?profile_id=${encodeURIComponent(profileId)}&survey_key=${PLAYTEST_SURVEY_KEY}`);
+  },
+  dismissPlaytestSurvey(profileId) {
+    return apiCall('/api/game/playtest-survey/dismiss', 'POST', { profile_id: profileId, survey_key: PLAYTEST_SURVEY_KEY });
+  },
+  submitPlaytestSurvey(payload) {
+    return apiCall('/api/game/playtest-survey', 'POST', payload);
   },
   /**
    * «Завершить ход» (TB1). Real-time таймера нет — play/pause/status удалены.

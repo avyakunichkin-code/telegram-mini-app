@@ -1,6 +1,7 @@
 import { defineConfig, loadEnv } from 'vite'
 import react from '@vitejs/plugin-react'
 import { VitePWA } from 'vite-plugin-pwa'
+import { fileURLToPath } from 'node:url'
 
 const PWA_ICONS = [
   { src: 'pwa/icon-192.png', sizes: '192x192', type: 'image/png', purpose: 'any' },
@@ -12,10 +13,14 @@ const PWA_ICONS = [
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), '')
   const base = env.VITE_BASE_PATH || '/telegram-mini-app/'
-  // Dev-прокси /api: по умолчанию локальный backend (uvicorn :8000). Прода сейчас нет — см. docs/ops/LOCAL_DEV.md.
+  // Dev-прокси /api: по умолчанию локальный backend (uvicorn :8000). Прода сейчас нет — см. docs/game/ops/LOCAL_DEV.md.
   const apiTarget = (env.VITE_API_BASE_URL || 'http://localhost:8000').replace(/\/$/, '')
 
   return {
+    resolve: {
+      alias: { '@tvoy/ui-kit': fileURLToPath(new URL('../packages/ui-kit/src/index.js', import.meta.url)) },
+      dedupe: ['react', 'react-dom'],
+    },
     plugins: [
       react(),
       VitePWA({

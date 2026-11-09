@@ -10,11 +10,13 @@ import { AdminTable } from './adminTable';
 import { AdminKpiGrid } from './ui/AdminKpiGrid';
 import { notificationProfileId } from './adminUtils';
 import { d7ProxyTile } from '../../utils/d7Proxy';
+import { AdminPlaytestSurveys } from './AdminPlaytestSurveys';
 
 const WATCHTOWER_TAB_LABELS = {
   overview: 'Обзор',
   alerts: 'Алерты',
   feedback: 'Отзывы',
+  survey: 'Опрос',
   guidance: 'Guidance',
 };
 
@@ -472,6 +474,7 @@ export function AdminWatchtowerScreen({ onBack }) {
           {activeTab === 'guidance' ? (
             <OnboardingFunnel funnel={data.onboarding_funnel} />
           ) : null}
+          {activeTab === 'survey' ? <AdminPlaytestSurveys /> : null}
 
           {activeTab === 'alerts' ? (
             <section className="mq-card admin-watchtower__block">

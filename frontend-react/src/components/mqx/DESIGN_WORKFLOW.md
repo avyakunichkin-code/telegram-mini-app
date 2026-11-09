@@ -12,7 +12,7 @@
 | Новый/изменённый layout, порядок блоков, CTA, sheet, accordion | **Нет** — `design-lab/` → утверждение → prod |
 | «Улучшить UX» блока на дашборде / финансах | **Нет** — сначала lab-раунд или обновление `APPROVED.md` |
 
-Скиллы: **design-lab-mqx** (шаг 1) + **frontend-ui-engineering** (шаги 4–5). Сатellite **frontend-design** — не пропускает lab.
+Действующие навыки Codex: **mqx-design** (шаги 1–3) и **frontend-implementation** (шаги 4–5); проверки — **verify-change**.
 
 ---
 
@@ -72,7 +72,7 @@ npx serve .
 
 **Events:** `design-lab/events/sync-all-rounds.sh` или `./sync-lab.sh` в папке раунда.
 
-Правило (path-scoped): `.claude/rules/design-lab.md`. Скилл: `design-lab-mqx`.
+Действующий маршрут: [mqx-design](../../../../.agents/skills/mqx-design/SKILL.md) и [frontend-implementation](../../../../.agents/skills/frontend-implementation/SKILL.md). Claude-файлы — история миграции.
 
 ---
 
@@ -151,7 +151,7 @@ npx serve .
 
 ## Ссылки
 
-- Бренд: [`docs/reference/brandbook/BRANDBOOK.md`](../../../../docs/reference/brandbook/BRANDBOOK.md)
-- UI-контракт: [`docs/specs/SPEC_FRONTEND_UI.md`](../../../../docs/specs/SPEC_FRONTEND_UI.md)
-- Живой каталог: [`README.md`](./README.md) → `#/dev/mqx`
+- Бренд: [`docs/game/reference/brandbook/BRANDBOOK.md`](../../../../docs/game/reference/brandbook/BRANDBOOK.md)
+- UI-контракт: [`docs/game/specs/SPEC_FRONTEND_UI.md`](../../../../docs/game/specs/SPEC_FRONTEND_UI.md)
+- Живой каталог: [`README.md`](README.md) → `#/dev/mqx`
 - Оглавление design-lab: [`design-lab/README.md`](../../../../design-lab/README.md)

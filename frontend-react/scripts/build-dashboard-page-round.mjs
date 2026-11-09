@@ -61,11 +61,25 @@ function prepareOutputDir(outRoundDir, outBlocksDir, blockIds) {
 }
 
 /** Ensure relative assets (./lab-base.css) resolve inside iframe even if serve rewrites URLs. */
-function patchBlockForEmbed(blockDirAbs) {
+function patchBlockForEmbed(blockDirAbs, sourceDirAbs) {
   const indexPath = path.join(blockDirAbs, 'index.html')
   if (!fs.existsSync(indexPath)) return
 
   let html = fs.readFileSync(indexPath, 'utf8')
+  // Cross-round navigation must keep working after copying a round into blocks/page.
+  if (sourceDirAbs) {
+    html = html.replace(/(<a\b[^>]*\bhref=")(\.\.\/[^"#]*)([^"]*")/g, (match, prefix, relative, tail) => {
+      const target = path.resolve(sourceDirAbs, relative)
+      return `${prefix}${posixPath(path.relative(blockDirAbs, target))}${tail}`
+    })
+    const readmePath = path.join(blockDirAbs, 'README.md')
+    if (fs.existsSync(readmePath)) {
+      const readme = fs.readFileSync(readmePath, 'utf8').replace(/\]\((\.\.\/[^)#]+)(#[^)]*)?\)/g, (match, relative, fragment = '') =>
+        `](${posixPath(path.relative(blockDirAbs, path.resolve(sourceDirAbs, relative)))}${fragment})`,
+      )
+      fs.writeFileSync(readmePath, readme, 'utf8')
+    }
+  }
   if (!/<base\s/i.test(html)) {
     html = html.replace(/<head(\s[^>]*)?>/i, (match) => `${match}\n    <base href="./" />`)
   }
@@ -285,7 +299,7 @@ function main() {
     }
     rmSafe(dst)
     copyDir(src, dst)
-    patchBlockForEmbed(dst)
+    patchBlockForEmbed(dst, src)
   }
 
   const html = buildIndexHtml({

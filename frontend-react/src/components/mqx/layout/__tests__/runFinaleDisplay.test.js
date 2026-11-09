@@ -1,9 +1,33 @@
 import assert from 'node:assert/strict';
 import { describe, it } from 'node:test';
 
-import { finaleDefeatFact, finaleWinStats, isFinaleWin } from '../runFinaleDisplay.js';
+import { finaleDefeatFact, finaleRecap, finaleWinStats, isFinaleWin } from '../runFinaleDisplay.js';
 
 describe('runFinaleDisplay (★ BG-2 финал)', () => {
+  it('лента решений: нет данных — нет блока', () => {
+    assert.equal(finaleRecap({ outcome: 'victory' }), null);
+    assert.equal(finaleRecap({ recap: null }), null);
+    assert.equal(finaleRecap({ recap: { decisions_label: 'x', decisions: [] } }), null);
+  });
+
+  it('лента решений: сумма со знаком и подпись из payload', () => {
+    const recap = finaleRecap({
+      recap: {
+        decisions_label: 'Самые крупные решения по счёту',
+        decisions: [
+          { period_index: 5, event_title: 'Подработка', choice_title: 'С авансом', cash_delta: 8000 },
+          { period_index: 13, event_title: 'Ноутбук', choice_title: 'В рассрочку', cash_delta: -48000 },
+        ],
+      },
+    });
+    assert.equal(recap.label, 'Самые крупные решения по счёту');
+    assert.equal(recap.items[0].turn, 'Ход 5');
+    assert.match(recap.items[0].amount, /^\+8\s000\s₽$/);
+    assert.equal(recap.items[0].gain, true);
+    assert.match(recap.items[1].amount, /^−48\s000\s₽$/);
+    assert.equal(recap.items[1].gain, false);
+  });
+
   it('победа: три показателя из payload', () => {
     const stats = finaleWinStats({
       outcome: 'victory',

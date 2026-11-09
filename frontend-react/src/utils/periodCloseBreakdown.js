@@ -89,3 +89,14 @@ export function periodCloseBalanceHeadline(summary) {
     overdueAdded: Number(summary.overdue_added) || 0,
   };
 }
+
+/** Compact A keeps capitalised interest distinct from cash received. */
+export function periodCloseCompactLines(summary) {
+  return periodCloseDetailLines(summary).map(line=>({
+    ...line,
+    title: line.type==='expenses'?'Расходы списаны'
+      :['bond_coupons','bond_coupon'].includes(line.type)?'Купоны на счёт'
+      :line.type==='deposit_interest'?'Проценты во вклад':line.title,
+    note: line.type==='deposit_interest'?'Увеличили вклад, не счёт':line.note,
+  }));
+}

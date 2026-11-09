@@ -87,6 +87,7 @@ export function MqxPeriodActions({
   onContribute,
   onWithdraw,
   onInvest,
+  showSalary = true,
 }) {
   const titleId = useId();
 
@@ -95,14 +96,14 @@ export function MqxPeriodActions({
       <h2 id={titleId} className="mqx-bg-sec-title">
         {ACTIONS_OF_TURN}
       </h2>
-      <SalaryButton
+      {showSalary && <SalaryButton
         hot={salaryHot}
         claimed={salaryClaimed}
         celebrate={salaryCelebrate}
         amount={salaryAmount}
         disabled={busy || salaryDisabled}
         onClick={onSalary}
-      />
+      />}
       <div className="mqx-bg-acts__row">
         <ActionButton
           label="В подушку"

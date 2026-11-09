@@ -1,0 +1,120 @@
+/* Continuation of approved Pocket Board A. Existing layouts and contracts stay native. */
+#root .mq-game-shell--pocket .mqx-cap-flow,
+#root .mq-game-shell--pocket .mqx-capital-net,
+#root .mq-game-shell--pocket .mqx-capital-block {
+  background: var(--mq-cell); border: 1px solid var(--mq-cell-edge); border-radius: 13px;
+  box-shadow: 0 2px 0 var(--mq-cell-edge);
+}
+#root .mq-game-shell--pocket .mqx-cap-flow { background: var(--mq-pocket-note); border-color: var(--mq-pocket-note-edge); }
+#root .mq-game-shell--pocket .mqx-cap-seg { box-shadow: none; border: 1px solid var(--mq-cell-edge); border-radius: 10px; background: var(--mq-cell); }
+#root .mq-game-shell--pocket .mqx-cap-seg__btn.is-active { background: var(--mq-pocket-plum); color: var(--mq-pocket-on); }
+#root .mq-game-shell--pocket .mqx-cap-lot { border: 1px solid var(--mq-cell-edge); border-radius: 14px; box-shadow: 0 2px 0 var(--mq-cell-edge); background: var(--mq-cell); }
+#root .mq-game-shell--pocket .mqx-an-metric { padding: var(--mq-sp-5); }
+#root .mq-game-shell--pocket .mqx-hero,
+#root .mq-game-shell--pocket .mqx-an-head,
+#root .mq-game-shell--pocket .mqx-pg-head {
+  background: transparent; border: 0; box-shadow: none;
+  color: var(--mq-board-ink); border-radius: 0;
+}
+#root .mq-game-shell--pocket .mqx-hero { padding: var(--mq-sp-7); }
+#root .mq-game-shell--pocket .mqx-hero__title,
+#root .mq-game-shell--pocket .mqx-an-head__title,
+#root .mq-game-shell--pocket .mqx-pg-head h1 {
+  font-family: var(--mq-font-display); font-weight: 900; color: var(--mq-board-ink);
+}
+#root .mq-game-shell--pocket .mqx-hero__sub,
+#root .mq-game-shell--pocket .mqx-an-head__sub { color: var(--mq-board-ink-soft); }
+#root .mq-game-shell--pocket .mqx-an-turn {
+  background: var(--mq-pocket-gold); color: var(--mq-pocket-ink);
+  border: 1px solid var(--mq-pocket-ink); border-radius: 8px; box-shadow: 2px 3px 0 var(--mq-pocket-salary-edge);
+  transform: rotate(-4deg);
+}
+#root .mq-game-shell--pocket .mqx-cap-flows {
+  border-color: var(--mq-pocket-note-edge); background: var(--mq-pocket-note);
+  border-radius: 4px 18px 18px 18px; box-shadow: 3px 4px 0 color-mix(in srgb, var(--mq-pocket-note-edge) 40%, transparent);
+}
+#root .mq-game-shell--pocket .mqx-cap-piece {
+  border: 1px solid var(--mq-pocket-ink); border-radius: 10px; background: var(--mq-pocket-lilac);
+  color: var(--mq-pocket-ink); box-shadow: 0 3px 0 var(--mq-pocket-lilac-edge);
+  min-height: 72px;
+}
+#root .mq-game-shell--pocket .mqx-cap-piece--locked {
+  border-style: dashed; background: var(--mq-cell); color: var(--mq-board-ink-soft); box-shadow: none;
+}
+#root .mq-game-shell--pocket .mqx-capital-template-row {
+  border: 1px solid var(--mq-cell-edge); border-radius: 13px; background: var(--mq-cell);
+  box-shadow: 0 2px 0 color-mix(in srgb, var(--mq-pocket-note-edge) 45%, transparent);
+}
+#root .mq-game-shell--pocket .mqx-an-state {
+  background: var(--mq-pocket-plum); color: var(--mq-pocket-on);
+  border: 0; border-radius: 14px 28px 14px 14px; box-shadow: 0 3px 0 var(--mq-pocket-shadow);
+}
+#root .mq-game-shell--pocket .mqx-an-state .mqx-an-caption { color: var(--mq-pocket-muted-on); }
+#root .mq-game-shell--pocket .mqx-an-state__sum { color: var(--mq-pocket-on); }
+#root .mq-game-shell--pocket .mqx-an-state--risk .mqx-an-state__sum { color: var(--mq-pocket-risk-on); }
+#root .mq-game-shell--pocket .mqx-an-state__pill { background: var(--mq-risk-soft); color: var(--mq-risk); }
+#root .mq-game-shell--pocket .mqx-an-metric {
+  background: var(--mq-cell); border: 1px solid var(--mq-cell-edge); border-radius: 12px;
+  box-shadow: 0 2px 0 var(--mq-cell-edge);
+}
+#root .mq-game-shell--pocket .mqx-an-chart {
+  background: var(--mq-cell); border: 1px solid var(--mq-cell-edge); border-radius: 16px;
+  padding: var(--mq-sp-7);
+}
+#root .mq-game-shell--pocket .mqx-pg-save {
+  background: var(--mq-pocket-note); border: 1px solid var(--mq-pocket-note-edge);
+  border-radius: 4px 22px 22px 22px; box-shadow: 3px 4px 0 color-mix(in srgb, var(--mq-pocket-note-edge) 45%, transparent);
+}
+#root .mq-game-shell--pocket .mqx-pg-save .mqx-bg-cta {
+  color: var(--mq-pocket-ink); background: var(--mq-pocket-gold); border: 0;
+  box-shadow: 0 3px 0 var(--mq-pocket-salary-edge);
+}
+#root .mq-game-shell--pocket .mqx-pg-actions .mqx-pg-btn {
+  background: var(--mq-cell); border-color: var(--mq-cell-edge); color: var(--mq-board-ink);
+}
+/* Portalled sheets inherit this identity only while the game shell exists. */
+body:has(.mq-game-shell--pocket) .mqx-sheet,
+body:has(.mq-game-shell--pocket) .mqx-first-investment {
+  background: var(--mq-pocket-paper); color: var(--mq-pocket-board-ink);
+  border-top: 3px solid var(--mq-pocket-plum); border-radius: 24px 24px 0 0;
+}
+body:has(.mq-game-shell--pocket) .mqx-sheet__head { border-bottom: 1px dashed var(--mq-pocket-note-edge); }
+body:has(.mq-game-shell--pocket) .mqx-sheet__title { font-family: var(--mq-font-display); font-weight: 900; }
+body:has(.mq-game-shell--pocket) .mqx-sheet__close {
+  width: 44px; height: 44px; min-height: 44px; color: var(--mq-pocket-board-ink);
+  background: transparent; border: 0; box-shadow: none;
+}
+body:has(.mq-game-shell--pocket) .mqx-sheet .mqx-bg-cta {
+  background: var(--mq-pocket-plum); color: var(--mq-pocket-on); border: 0;
+  box-shadow: 0 3px 0 var(--mq-pocket-shadow);
+}
+body:has(.mq-game-shell--pocket) .mqx-events-card {
+  background: var(--mq-pocket-paper); color: var(--mq-pocket-board-ink);
+  border: 2px solid var(--mq-pocket-plum); border-radius: 16px 28px 16px 16px;
+  box-shadow: 4px 5px 0 color-mix(in srgb, var(--mq-pocket-plum) 35%, transparent);
+}
+body:has(.mq-game-shell--pocket) .mqx-events-card__band {
+  background: var(--mq-pocket-lilac); color: var(--mq-pocket-ink);
+  border-bottom: 1px dashed var(--mq-pocket-lilac-edge);
+}
+body:has(.mq-game-shell--pocket) .mqx-events-card__title { color: var(--mq-pocket-board-ink); font-weight: 900; }
+body:has(.mq-game-shell--pocket) .mqx-events-choice {
+  background: var(--mq-cell); color: var(--mq-board-ink); border: 1px solid var(--mq-cell-edge);
+  border-radius: 11px; box-shadow: 0 2px 0 var(--mq-cell-edge); min-height: 44px;
+}
+body:has(.mq-game-shell--pocket) .mqx-events-choice:hover:not(:disabled) { border-color: var(--mq-turn); }
+body:has(.mq-game-shell--pocket) .mqx-close-clear {
+  background: var(--mq-pocket-paper); color: var(--mq-pocket-board-ink);
+  border-top: 3px solid var(--mq-pocket-plum); border-radius: 24px 24px 0 0;
+}
+body:has(.mq-game-shell--pocket) .mqx-close-clear__heading { color: var(--mq-pocket-board-muted); }
+body:has(.mq-game-shell--pocket) .mqx-close-clear__title { color: var(--mq-pocket-board-ink); font-weight: 900; }
+body:has(.mq-game-shell--pocket) .mqx-close-clear__operations { border-color: var(--mq-pocket-note-edge); }
+body:has(.mq-game-shell--pocket) .mqx-juice-ritual__dismiss {
+  background: var(--mq-pocket-plum); color: var(--mq-pocket-on); border: 0; box-shadow: 0 3px 0 var(--mq-pocket-shadow);
+}
+@media(min-width:1000px) {
+  #root .mq-game-shell--pocket .mqx-hero { padding: calc(var(--mq-sp-7) * 2); padding-bottom: var(--mq-sp-7); }
+  #root .mq-game-shell--pocket .mqx-fin--capital,
+  #root .mq-game-shell--pocket .mqx-tab-page--analytics .mqx-bg-stack { max-width: 1100px; width: 100%; margin-inline: auto; }
+}

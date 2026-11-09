@@ -1,5 +1,5 @@
 import { useCallback, useState } from 'react';
-import { formatApiErrorDetail } from '../api';
+import { authSubmitError } from '../utils/authSubmitError';
 import { useAuth } from '../context/AuthContext';
 import {
   hasFieldErrors,
@@ -17,7 +17,7 @@ export function RegisterForm({ onSwitchToLogin }) {
   const [fieldErrors, setFieldErrors] = useState({});
   const [submitError, setSubmitError] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const { register } = useAuth();
+  const { register, user } = useAuth();
 
   const runValidation = useCallback(() => {
     const errors = validateRegisterFields({
@@ -55,12 +55,7 @@ export function RegisterForm({ onSwitchToLogin }) {
       });
       window.location.href = `${import.meta.env.BASE_URL}#/`;
     } catch (err) {
-      setSubmitError(
-        formatApiErrorDetail(
-          err?.detail ?? err?.message,
-          'Ошибка регистрации. Возможно, почта уже занята.',
-        ),
-      );
+      setSubmitError(authSubmitError(err, 'register'));
     } finally {
       setIsSubmitting(false);
     }
@@ -70,6 +65,7 @@ export function RegisterForm({ onSwitchToLogin }) {
     <div className="mqx-pg mqx-pg--auth">
       <h1 className="mqx-bg-sr-only">Регистрация</h1>
       <BrandLogo variant="full" className="mqx-pg-logo" />
+      {user?.is_guest && <p>Закрепи текущую партию за почтой. Все решения и прогресс сохранятся.</p>}
       <form onSubmit={handleSubmit} className="mqx-pg-form" noValidate aria-label="Регистрация">
         <AuthFormField
           id="register-email"
@@ -135,6 +131,7 @@ export function RegisterForm({ onSwitchToLogin }) {
       <MqxBoardButton hint="войти" onClick={onSwitchToLogin}>
         Уже есть аккаунт
       </MqxBoardButton>
+      {user?.is_guest && <MqxBoardButton variant="link" onClick={() => { window.location.hash = '/'; }}>Продолжить без регистрации</MqxBoardButton>}
     </div>
   );
 }

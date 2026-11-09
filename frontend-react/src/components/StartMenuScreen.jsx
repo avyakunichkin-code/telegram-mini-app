@@ -10,6 +10,7 @@ import { BrandLogo } from './BrandLogo';
 import { MqxSaveCard } from './mqx/pregame/MqxSaveCard';
 import { MqxBoardButton } from './mqx/pregame/MqxBoardButton';
 import { MqxSavesSheet } from './mqx/pregame/MqxSavesSheet';
+import { MqxPlaytestSurvey } from './mqx/layout/MqxPlaytestSurvey';
 import { savesCountHint } from './mqx/utils/pregameDisplay';
 import { suggestDefaultProfileName } from '../utils/suggestDefaultProfileName';
 import { setPwaUpdateSafeZone } from '../utils/pwaUpdate';
@@ -23,6 +24,9 @@ export function StartMenuScreen({ onNewGame, onLoadGame, onLogout }) {
   const [loading, setLoading] = useState(true);
   const [activatingId, setActivatingId] = useState(null);
   const [showLoadModal, setShowLoadModal] = useState(false);
+  const [menuSurvey, setMenuSurvey] = useState(null);
+  const [surveyLoading, setSurveyLoading] = useState(false);
+  const [surveySummary, setSurveySummary] = useState(null);
   const { logout } = useAuth();
 
   // Меню — партии нет на экране: новая версия PWA ставится сразу.
@@ -67,6 +71,16 @@ export function StartMenuScreen({ onNewGame, onLoadGame, onLogout }) {
   };
 
   const primaryProfile = profiles.find((p) => p.is_active) || profiles[0];
+  useEffect(() => {
+    let cancelled = false;
+    setSurveySummary(null);
+    if (primaryProfile?.starter_template_key) {
+      API.getPlaytestSurvey(primaryProfile.id).then(state => {
+        if (!cancelled) setSurveySummary(state);
+      }).catch(() => {});
+    }
+    return () => { cancelled = true; };
+  }, [primaryProfile?.id, primaryProfile?.starter_template_key]);
   const useColdBootstrap = loading && isRemoteProdApi() && isPageColdUiActive();
 
   if (useColdBootstrap) {
@@ -119,6 +133,16 @@ export function StartMenuScreen({ onNewGame, onLoadGame, onLogout }) {
               </MqxBoardButton>
             ) : null}
           </div>
+          {primaryProfile?.starter_template_key ? <MqxBoardButton
+            hint={surveySummary?.state === 'submitted' ? 'Спасибо, ответ получен' : 'Короткий опрос и твой отзыв'} disabled={surveyLoading || activatingId != null}
+            onClick={async () => {
+              setSurveyLoading(true);
+              try { const state = await API.getPlaytestSurvey(primaryProfile.id); setMenuSurvey(state); setSurveySummary(state); }
+              catch { showNotification('Не удалось открыть опрос. Попробуй ещё раз.', 'error'); }
+              finally { setSurveyLoading(false); }
+            }}>
+            {surveyLoading ? 'Открываем опрос…' : 'Поделиться впечатлением'}
+          </MqxBoardButton> : null}
           <MqxBoardButton variant="link" onClick={handleLogout}>
             Выйти из аккаунта
           </MqxBoardButton>
@@ -135,6 +159,15 @@ export function StartMenuScreen({ onNewGame, onLoadGame, onLogout }) {
           void handleActivate(id);
         }}
       />
+      {menuSurvey ? <MqxPlaytestSurvey open key={menuSurvey.profile_id}
+        mode={menuSurvey.state === 'submitted' ? 'success' : 'form'} profileId={menuSurvey.profile_id}
+        onSubmit={async payload => { const state = await API.submitPlaytestSurvey(payload); setSurveySummary(state); return state; }}
+        onClose={(submitted) => {
+          setMenuSurvey(null);
+          if (!submitted) void API.dismissPlaytestSurvey(menuSurvey.profile_id).catch(() => {
+            showNotification('Не удалось сохранить «Позже». Можно попробовать ещё раз из меню.', 'info');
+          });
+        }} /> : null}
     </div>
   );
 }

@@ -2,6 +2,7 @@ import { useId, useMemo, useState } from 'react';
 
 import { buildGoalChainView } from '../utils/goalChainDisplay';
 import { goalFinishText, goalStepCaption } from '../utils/boardDashDisplay';
+import { MqxGoalNextStep } from './MqxGoalNextStep';
 
 function Coin({ className = '' }) {
   return (
@@ -55,7 +56,7 @@ function GoalChain({ chain, view }) {
  * Цель ★ BG-1: свёрнута — «Цель, шаг N из M» + дорожка точек + золотой финиш;
  * раскрыта — список шагов цепочки победы (victory_config_json), без Монетки.
  */
-export function MqxGoalDash({ victory, legacyGoal, defaultExpanded = false }) {
+export function MqxGoalDash({ victory, legacyGoal, defaultExpanded = false, cash, outflow, onContribute, busy = false }) {
   const bodyId = useId();
   const view = useMemo(() => buildGoalChainView(victory, legacyGoal), [victory, legacyGoal]);
   const [expanded, setExpanded] = useState(defaultExpanded);
@@ -93,6 +94,7 @@ export function MqxGoalDash({ victory, legacyGoal, defaultExpanded = false }) {
         <span className="mqx-bg-sr-only">{view.stepAriaLabel}</span>
       </button>
 
+      {view.phase === 'active' && <MqxGoalNextStep goal={view.currentGoal} cash={cash} outflow={outflow} onContribute={onContribute} busy={busy} />}
       {expanded ? (
         <div className="mqx-bg-goal__body" id={bodyId}>
           <GoalChain chain={view.chain} view={view} />

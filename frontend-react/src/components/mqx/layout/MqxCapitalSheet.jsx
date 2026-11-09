@@ -30,6 +30,7 @@ export function MqxCapitalSheet({
         type="button"
         className="mqx-sheet-scrim"
         aria-label="Закрыть"
+        disabled={busy}
         onClick={busy ? undefined : onClose}
       />
       <section
@@ -44,10 +45,11 @@ export function MqxCapitalSheet({
             className="mqx-sheet__close"
             onClick={busy ? undefined : onClose}
             aria-label="Закрыть"
+            disabled={busy}
           >
             ×
           </button>
-          <h2 id={titleId} className="mqx-sheet__title">
+          <h2 id={titleId} className="mqx-sheet__title" tabIndex={-1}>
             {title}
           </h2>
           {subtitle ? <p className="mqx-sheet__sub">{subtitle}</p> : null}

@@ -26,6 +26,13 @@ import { showNotification } from './components/notifications';
 import { startGameWithStudentTemplate } from './utils/startGame';
 import { AppBootstrapGate } from './components/AppBootstrapGate';
 import { readResumeScreen, rememberScreen } from './utils/gameScreenSession';
+import { GuestWelcomeScreen } from './screens/pre-game/GuestWelcomeScreen';
+
+function PlayerEntry() {
+  const { user } = useAuth();
+  if (user?.is_guest && !user.game_profiles_count) return <GuestWelcomeScreen />;
+  return user ? <GameApp /> : <GuestWelcomeScreen />;
+}
 
 function GameAppFlowShell({ children }) {
   return (
@@ -38,8 +45,9 @@ function GameAppFlowShell({ children }) {
 
 function GameApp() {
   const navigate = useNavigate();
+  const { user } = useAuth();
   // start | newGame | gameTemplates | game; партия переживает перезагрузку вкладки.
-  const [screen, setScreen] = useState(readResumeScreen);
+  const [screen, setScreen] = useState(() => user?.is_guest ? 'game' : readResumeScreen());
   const [newGameProfileName, setNewGameProfileName] = useState('');
   const { logout } = useAuth();
 
@@ -199,9 +207,7 @@ function App() {
               }
             />
             <Route path="/" element={
-              <AuthGuard>
-                <GameApp />
-              </AuthGuard>
+              <PlayerEntry />
             } />
           </Routes>
         </HashRouter>

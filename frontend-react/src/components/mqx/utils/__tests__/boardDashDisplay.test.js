@@ -140,4 +140,19 @@ describe('close preview under «Завершить ход»', () => {
     assert.equal(buildTurnTip({ closePreview: minus, overdueCount: 1 }).text, 'Есть просрочка — погаси долг в «Капитале»');
     assert.equal(buildTurnTip({ closePreview: closePreviewView(preview), salaryAvailable: true }).text, 'Забери зарплату до конца хода');
   });
+
+  it('Монетка спокойна, если зарплата закрывает прогнозный минус', () => {
+    const minus = closePreviewView({
+      ...preview,
+      estimated_cash_after_close: -22500,
+      would_be_negative_after_close: true,
+    });
+    assert.deepEqual(buildTurnTip({ closePreview: minus, salaryAvailable: true, salaryAmount: 62500 }), {
+      text: 'Забери зарплату до конца хода',
+      tone: 'normal',
+    });
+    assert.equal(buildTurnTip({ closePreview: minus, salaryAvailable: true, salaryAmount: 10000 }).tone, 'risk');
+    assert.equal(buildTurnTip({ closePreview: minus, salaryAvailable: false, salaryAmount: 62500 }).tone, 'risk');
+    assert.equal(buildTurnTip({ closePreview: minus, salaryAvailable: true }).tone, 'risk');
+  });
 });

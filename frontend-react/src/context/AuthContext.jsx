@@ -58,8 +58,18 @@ export function AuthProvider({ children }) {
         if (cancelled) return;
         setUser(userData);
         markApiWarmedThisSession();
-      } catch {
-        if (!cancelled) logout();
+      } catch (error) {
+        if (!cancelled && error?.status === 401 && localStorage.getItem('tvoy_hod_guest') === '1') {
+          try {
+            const data = await API.resumeGuest();
+            if (cancelled) return;
+            setAuthToken(data.access_token);
+            const resumed = await API.getMe();
+            if (!cancelled) setUser(resumed);
+          } catch {
+            if (!cancelled) logout();
+          }
+        } else if (!cancelled) logout();
       } finally {
         if (!cancelled) {
           setBootPhase(null);
@@ -80,20 +90,36 @@ export function AuthProvider({ children }) {
     setAuthToken(data.access_token);
     const userData = await API.getMe();
     setUser(userData);
+    localStorage.removeItem('tvoy_hod_guest');
     markApiWarmedThisSession();
     return data;
   };
 
-  const register = async (userData) => {
-    const data = await API.register(userData);
+  const startGuest = async () => {
+    const data = await API.startGuest();
     setAuthToken(data.access_token);
-    setUser({ id: data.user_id, username: data.username });
+    localStorage.setItem('tvoy_hod_guest', '1');
+    const userData = await API.getMe();
+    // Keep the welcome mounted until the party is ready.
+    return userData;
+  };
+
+  const enterGuestGame = (userData) => {
+    markApiWarmedThisSession();
+    setUser(userData);
+  };
+
+  const register = async (userData) => {
+    const data = await (user?.is_guest ? API.claimGuest(userData) : API.register(userData));
+    setAuthToken(data.access_token);
+    setUser(await API.getMe());
+    localStorage.removeItem('tvoy_hod_guest');
     markApiWarmedThisSession();
     return data;
   };
 
   return (
-    <AuthContext.Provider value={{ user, loading, bootPhase, login, register, logout }}>
+    <AuthContext.Provider value={{ user, loading, bootPhase, login, register, logout, startGuest, enterGuestGame }}>
       {children}
     </AuthContext.Provider>
   );

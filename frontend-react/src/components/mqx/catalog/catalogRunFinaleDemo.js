@@ -13,6 +13,14 @@ export const CATALOG_RUN_FINALE_WIN = {
   cash_balance: 412000,
   cushion_turns: 6.1,
   can_dismiss: true,
+  recap: {
+    decisions_label: 'Самые крупные решения по счёту',
+    decisions: [
+      { period_index: 5, event_title: 'Подработка', choice_title: 'Взять с авансом', cash_delta: 8000 },
+      { period_index: 13, event_title: 'Сломался ноутбук', choice_title: 'Купить в рассрочку', cash_delta: -48000 },
+      { period_index: 24, event_title: 'Премия', choice_title: 'Забрать на счёт', cash_delta: 30000 },
+    ],
+  },
 };
 
 export const CATALOG_RUN_FINALE_DEFEAT_CASH = {

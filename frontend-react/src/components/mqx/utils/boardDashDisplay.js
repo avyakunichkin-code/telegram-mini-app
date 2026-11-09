@@ -58,6 +58,7 @@ export function buildTurnTip({
   goalView = null,
   closePreview = null,
   safetyBalance = 0,
+  salaryAmount = 0,
 } = {}) {
   if (Number(needsZeroStreak) > 0) {
     const axis = lowestNeedAxis(needs);
@@ -67,8 +68,10 @@ export function buildTurnTip({
   if (Number(overdueCount) > 0) {
     return { text: 'Есть просрочка — погаси долг в «Капитале»', tone: 'risk' };
   }
-  if (closePreview?.negative) {
-    // Превью без зарплаты: не забрана — в конце хода её не будет (C-2).
+  // Превью без зарплаты: не забрана — в конце хода её не будет (C-2).
+  // Если выплата закрывает минус, это обычная задача хода, а не риск.
+  const salaryCoversMinus = salaryAvailable && closePreview?.after + Number(salaryAmount) >= 0;
+  if (closePreview?.negative && !salaryCoversMinus) {
     if (salaryAvailable) return { text: 'Не хватит на расходы — забери зарплату', tone: 'risk' };
     if (Number(safetyBalance) > 0) return { text: 'Не хватит на расходы — сними из подушки', tone: 'risk' };
     return { text: 'Не хватит на расходы хода — уйдёшь в минус', tone: 'risk' };

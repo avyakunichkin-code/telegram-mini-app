@@ -52,6 +52,7 @@ export function MqxFinancePeriodBlock({
   onFlowsNavigate,
   juiceGainActive = false,
   cushionRisk = false,
+  showBalance = true,
 }) {
   const incomeValue = Math.max(0, Number(income?.value) || 0);
   const outflowValue = Math.max(0, Number(outflow) || 0);
@@ -60,12 +61,12 @@ export function MqxFinancePeriodBlock({
   return (
     <section className="mqx-bg-money" aria-label={FINANCES_OF_TURN} data-onboarding-anchor="finance-flows">
       <h2 className="mqx-bg-sr-only">{FINANCES_OF_TURN}</h2>
-      <div
+      {showBalance && <div
         className={['mqx-bg-money__hero', juiceGainActive && 'mqx-bg-money__hero--gain'].filter(Boolean).join(' ')}
         data-mqx-juice-target="balance"
       >
         <span className="mqx-bg-money__avatar" aria-hidden="true">
-          <PersonaPortrait templateKey={templateKey || 'mq_game_basic_v1'} size="pick" />
+          <PersonaPortrait templateKey={templateKey || 'mq_game_basic_v1'} size="avatar" />
         </span>
         <div className="mqx-bg-money__cash" role="group" aria-label={`На счёте ${moneyAria(cash)}`}>
           <small className="mqx-bg-money__label">На счёте</small>
@@ -73,7 +74,7 @@ export function MqxFinancePeriodBlock({
             <MoneyText value={cash} decimals={0} />
           </b>
         </div>
-      </div>
+      </div>}
 
       <div className="mqx-bg-money__grid">
         <MoneyCell

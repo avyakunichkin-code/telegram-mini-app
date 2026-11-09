@@ -278,6 +278,7 @@ function buildHtml({ title, subtitle, items }) {
         <button class="btn" type="button" data-quick-filter="page">Page parity</button>
         <button class="btn" type="button" data-quick-filter="canon">Канон blocks</button>
         <button class="btn" type="button" data-quick-filter="all">Все витрины</button>
+        <button class="btn" type="button" data-archive-toggle aria-pressed="false">Архив</button>
         <span class="pill">npm run design-lab:build</span>
       </div>
       <div id="quick"></div>
@@ -297,6 +298,17 @@ function buildHtml({ title, subtitle, items }) {
       const root = document.getElementById('root');
       const quick = document.getElementById('quick');
       const input = document.getElementById('q');
+      let archiveMode = new URLSearchParams(location.search).get('archive') === '1';
+      const requestedProduct = new URLSearchParams(location.search).get('product');
+      const product = ['game', 'plan'].includes(requestedProduct) ? requestedProduct : null;
+      const belongsToProduct = it => !product || it.product === product;
+      if (product) {
+        const name = product === 'plan' ? 'ТВОЙ ПЛАН' : 'ТВОЙ ХОД';
+        document.title = name + ' — Design Lab';
+        document.querySelector('h1').textContent = document.title;
+      }
+      const isArchived = it => ['archived', 'superseded'].includes(it.status);
+      const archiveButton = document.querySelector('[data-archive-toggle]');
 
       function groupBySection(items) {
         const map = new Map();
@@ -317,6 +329,7 @@ function buildHtml({ title, subtitle, items }) {
       }
 
       function renderQuick() {
+        if (product === 'plan') return;
         const dash = firstPageParity('dashboard');
         const fin = firstPageParity('finance');
 
@@ -353,7 +366,7 @@ function buildHtml({ title, subtitle, items }) {
         const groups = groupBySection(items);
         root.innerHTML = groups.map(g => {
           const cards = g.items.map(it => {
-            const arch = it.status === 'superseded' ? '<span class="arch">архив</span>' : (it.status === 'approved' ? '<span class="arch">★</span>' : '');
+            const arch = isArchived(it) ? '<span class="arch">архив</span>' : (it.status === 'approved' ? '<span class="arch">★</span>' : '');
             const hint = it.hint ? '<div class="card__meta">' + it.hint + '</div>' : '';
             return '<a class="card" href="./' + it.href + '" target="_blank" rel="noreferrer">' +
               '<div class="card__title">' + it.label + '</div>' +
@@ -366,15 +379,29 @@ function buildHtml({ title, subtitle, items }) {
       }
 
       function filter() {
+        archiveButton.setAttribute('aria-pressed', String(archiveMode));
+        archiveButton.textContent = archiveMode ? 'Архив · вернуться к актуальным' : 'Архив';
+        quick.hidden = archiveMode || product === 'plan';
+        const visible = ITEMS.filter(it => belongsToProduct(it) && isArchived(it) === archiveMode);
         const q = (input.value || '').trim().toLowerCase();
-        if (!q) return render(ITEMS);
-        const hit = ITEMS.filter(it =>
+        if (!q) return render(visible);
+        const hit = visible.filter(it =>
           (it.label + ' ' + it.href + ' ' + it.sectionTitle + ' ' + it.hint).toLowerCase().includes(q)
         );
         render(hit);
       }
 
       document.addEventListener('click', (e) => {
+        if (e.target.closest('[data-archive-toggle]')) {
+          archiveMode = !archiveMode;
+          const url = new URL(location.href);
+          if (archiveMode) url.searchParams.set('archive', '1');
+          else url.searchParams.delete('archive');
+          history.replaceState(null, '', url);
+          input.value = '';
+          filter();
+          return;
+        }
         const btn = e.target && e.target.closest && e.target.closest('[data-set-q]');
         if (btn) {
           input.value = btn.getAttribute('data-set-q') || '';
@@ -395,7 +422,7 @@ function buildHtml({ title, subtitle, items }) {
 
       input.addEventListener('input', filter);
       renderQuick();
-      render(ITEMS);
+      filter();
     </script>
   </body>
 </html>
@@ -430,8 +457,16 @@ function main() {
   }
 
   const deduped = dedupeItems(items)
+  const archivedPaths = new Set(nav.archive?.paths ?? [])
+  for (const item of deduped) {
+    if (archivedPaths.has(item.href) || item.href.startsWith('_baseline/')) {
+      item.status = 'archived'
+    }
+  }
   const finalItems = []
   for (const it of deduped) {
+    // Ownership is independent of labels/approval status and covers auto-discovery.
+    it.product = it.href.startsWith('plan-checkup/') ? 'plan' : 'game'
     const abs = path.join(designLabRoot, it.href)
     if (!fs.existsSync(abs)) {
       // eslint-disable-next-line no-console

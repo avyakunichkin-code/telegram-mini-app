@@ -15,6 +15,7 @@ const WATCHTOWER_TABS = [
   { id: 'overview', label: 'Обзор' },
   { id: 'alerts', label: 'Алерты' },
   { id: 'feedback', label: 'Отзывы' },
+  { id: 'survey', label: 'Опрос' },
   { id: 'guidance', label: 'Guidance' },
 ];
 

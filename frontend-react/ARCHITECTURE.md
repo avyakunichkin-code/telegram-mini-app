@@ -1,6 +1,6 @@
 # Frontend — структура `src/`
 
-Канон: [one-pager](../docs/vision/ideas/project-structure-standardization.md).  
+Канон: [one-pager](../docs/game/vision/ideas/project-structure-standardization.md).  
 Стили: [`src/styles/README.md`](src/styles/README.md).  
 MQX UI: [`src/components/mqx/DESIGN_WORKFLOW.md`](src/components/mqx/DESIGN_WORKFLOW.md).
 
@@ -39,7 +39,7 @@ src/
 | Слой | Пример |
 |------|--------|
 | Screen | `screens/pre-game/GameTemplatePickScreen.jsx` |
-| Brand assets | `src/assets/character-portraits/` (`PersonaPortrait`, `npm run persona-portraits:process`) |
+| Brand assets | `src/assets/character-portraits/`, `src/assets/companions/` (`PersonaPortrait`, `PersonaCompanion`); мастера B в `design/system/illustrations/soft-volume/`, генерация `scripts/process-soft-volume-mascots.py` → `node ../scripts/design-assets.mjs` |
 | API | `api/game.js` → `POST /api/game/start` |
 | Styles | `styles/mqx/flows.css`, `styles/mqx/finance.css` (picker), `styles/mqx/dashboard.css` (needs avatar) |
 

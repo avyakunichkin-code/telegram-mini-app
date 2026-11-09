@@ -33,6 +33,8 @@ export function useGame() {
   const [defeatInfo, setDefeatInfo] = useState(null);
   const [runFinale, setRunFinale] = useState(null);
   const [runFinaleOpen, setRunFinaleOpen] = useState(false);
+  const [playtestSurvey, setPlaytestSurvey] = useState(null);
+  const surveyProfileRef = useRef(null);
 
   const periodIndexRef = useRef(null);
   const periodEndInFlightRef = useRef(false);
@@ -40,6 +42,8 @@ export function useGame() {
 
   const applyBootstrapPayload = useCallback((data, { bumpEvents = false, updateTime = true } = {}) => {
     setOverview(data.overview);
+    surveyProfileRef.current = data.playtest_survey?.profile_id ?? null;
+    setPlaytestSurvey(data.playtest_survey ?? null);
     if (updateTime && data.time) {
       setTimeStatus(data.time);
       periodIndexRef.current = data.time.period_index ?? null;
@@ -130,6 +134,17 @@ export function useGame() {
 
   const submitRunFeedback = useCallback(async (payload) => {
     return API.submitRunFeedback(payload);
+  }, []);
+
+  const submitPlaytestSurvey = useCallback(async (payload) => {
+    const state = await API.submitPlaytestSurvey(payload);
+    if (state.profile_id === surveyProfileRef.current) setPlaytestSurvey(state);
+    return state;
+  }, []);
+  const dismissPlaytestSurvey = useCallback(async (profileId) => {
+    const state = await API.dismissPlaytestSurvey(profileId);
+    if (state.profile_id === surveyProfileRef.current) setPlaytestSurvey(state);
+    return state;
   }, []);
 
   const refreshPendingEvent = useCallback(async ({ bumpOverlay = false } = {}) => {
@@ -281,5 +296,8 @@ export function useGame() {
     runFinaleOpen,
     dismissVictoryFinale,
     submitRunFeedback,
+    playtestSurvey,
+    submitPlaytestSurvey,
+    dismissPlaytestSurvey,
   };
 }

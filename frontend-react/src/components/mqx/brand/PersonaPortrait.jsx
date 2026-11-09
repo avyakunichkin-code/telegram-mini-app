@@ -2,7 +2,7 @@ import { getPersonaPortrait } from './personaPortraits';
 
 /**
  * Растровый портрет персонажа (прозрачный PNG/WebP).
- * @param {'pick'|'dash'|'md'} size
+ * @param {'pick'|'dash'|'md'|'avatar'} size
  */
 export function PersonaPortrait({ templateKey, size = 'pick', className = '' }) {
   const portrait = getPersonaPortrait(templateKey, size);

@@ -5,13 +5,17 @@ import { MqxBoardButton } from './mqx/pregame/MqxBoardButton';
 import { buildGoalChainView } from './mqx/utils/goalChainDisplay';
 import { goalStepCaption } from './mqx/utils/boardDashDisplay';
 import { savesCountHint } from './mqx/utils/pregameDisplay';
+import { useAuth } from '../context/AuthContext';
+import { useNavigate } from 'react-router-dom';
 
 /**
  * Меню ★ BG-2 (вкладка игры): игра на паузе — карта текущего сохранения с «Продолжить игру»,
  * спокойные кнопки «Новая игра» / «Все сохранения», текстовая «Выйти из аккаунта».
  * Канон: design-lab/board-game/screens-round/ (Меню), design-lab/pre-game-shell/APPROVED.md.
  */
-export function MenuPremium({ overview, onContinue, onLogout, onNewGame, onLoadGame }) {
+export function MenuPremium({ overview, onContinue, onLogout, onNewGame, onLoadGame, surveyState, onOpenSurvey }) {
+  const { user } = useAuth();
+  const navigate = useNavigate();
   const [savesCount, setSavesCount] = useState(null);
 
   useEffect(() => {
@@ -51,6 +55,7 @@ export function MenuPremium({ overview, onContinue, onLogout, onNewGame, onLoadG
           ) : null}
 
           <div className="mqx-pg-actions">
+            {user?.is_guest && <MqxBoardButton hint="Сохранить доступ на других устройствах" onClick={() => navigate('/register')}>Создать аккаунт</MqxBoardButton>}
             <MqxBoardButton hint="другая жизнь" onClick={() => onNewGame?.()}>
               Новая игра
             </MqxBoardButton>
@@ -58,6 +63,10 @@ export function MenuPremium({ overview, onContinue, onLogout, onNewGame, onLoadG
               Все сохранения
             </MqxBoardButton>
           </div>
+          <MqxBoardButton hint={surveyState?.state === 'submitted' ? 'Спасибо, ответ получен' : 'Короткий опрос и твой отзыв'}
+            onClick={onOpenSurvey} disabled={!surveyState}>
+            Поделиться впечатлением
+          </MqxBoardButton>
           <MqxBoardButton variant="link" onClick={onLogout}>
             Выйти из аккаунта
           </MqxBoardButton>

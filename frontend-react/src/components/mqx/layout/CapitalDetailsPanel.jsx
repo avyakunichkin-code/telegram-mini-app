@@ -129,7 +129,14 @@ export function CapitalDetailsPanel({
           {extraLoading ? (
             skeleton(2)
           ) : investPositions.length === 0 ? (
-            <EmptyNote what="Открыть вклад или купить облигации" onGo={() => onGotoAction('deposit')} />
+            <div className="mqx-first-investment-empty">
+              <p>Пока нет вкладов и облигаций.</p>
+              <p>Деньги можно вложить, оставив на счёте запас на расходы.</p>
+              <div className="mqx-first-investment-empty__actions">
+                <button type="button" className="mqx-bg-btn mqx-first-investment__submit" onClick={()=>onGotoAction('deposit')}>Открыть вклад</button>
+                <button type="button" className="mqx-bg-btn mqx-first-investment-empty__bond" onClick={()=>onGotoAction('bond')}>Купить облигации</button>
+              </div>
+            </div>
           ) : (
             investPositions.map((p) => {
               const label = p.kind === 'bond' ? 'Продать' : 'Закрыть';

@@ -37,6 +37,11 @@ import { applyPwaUpdateAtTurnBoundary } from '../utils/pwaUpdate';
 import { useOffline } from '../hooks/useNetworkStatus';
 import { BACK_ONLINE_COPY, OFFLINE_COPY } from '../utils/networkStatus';
 import { bootstrapErrorAction } from '../utils/bootstrapErrorAction';
+import { shouldOfferPlaytestSurvey } from '../utils/playtestSurvey';
+import { MqxPlaytestSurvey } from './mqx/layout/MqxPlaytestSurvey';
+import { useAuth } from '../context/AuthContext';
+import { useNavigate } from 'react-router-dom';
+import { MqxGuestClaim } from './mqx/pregame/MqxGuestClaim';
 
 /** Эмоциональный слой страницы (TB1: без play/pause — активная партия = playing mood). */
 function gamePageMoodClass(timeStatus) {
@@ -45,6 +50,9 @@ function gamePageMoodClass(timeStatus) {
 }
 
 export function GameScreen({ onLogout, onNewGame, onLoadGame }) {
+  const { user } = useAuth();
+  const navigate = useNavigate();
+  const [claimDismissed, setClaimDismissed] = useState(() => localStorage.getItem(`guest_claim_dismissed_${user?.id}`) === '1');
   const [activeTab, setActiveTab] = useState('dashboard');
   /** @type {['income'|'expense'|null, function]} */
   const [capitalFlowsOpen, setCapitalFlowsOpen] = useState(null);
@@ -56,6 +64,9 @@ export function GameScreen({ onLogout, onNewGame, onLoadGame }) {
   const [queuedPeriodClose, setQueuedPeriodClose] = useState(null);
   const [lastPeriodClose, setLastPeriodClose] = useState(null);
   const [periodCloseOpen, setPeriodCloseOpen] = useState(false);
+  const [surveyMode, setSurveyMode] = useState(null);
+  const [dialogPresent, setDialogPresent] = useState(false);
+  const surveyShownRef = useRef(false);
   const onboardingRootRef = useRef(null);
   const lastOpenedEventsTickRef = useRef(0);
   const deferredEventsTickRef = useRef(0);
@@ -87,6 +98,9 @@ export function GameScreen({ onLogout, onNewGame, onLoadGame }) {
     runFinaleOpen,
     dismissVictoryFinale,
     submitRunFeedback,
+    playtestSurvey,
+    submitPlaytestSurvey,
+    dismissPlaytestSurvey,
   } = useGame();
 
   // Сохранение снятого режима не открывается — уводим в меню, где есть другие партии и «Новая игра».
@@ -178,13 +192,45 @@ export function GameScreen({ onLogout, onNewGame, onLoadGame }) {
     guidance,
   );
   const periodIndex = overview?.period_index ?? timeStatus?.period_index;
-  const blockAutoEventsOverlay = shouldBlockAutoEventsOverlay({
+  const showGuestClaim = Boolean(user?.is_guest && !claimDismissed && Number(periodIndex) >= 2
+    && activeTab === 'dashboard' && !periodCloseOpen && !eventsOpen && !surveyMode
+    && !runFinaleOpen && !dialogPresent && !onboardingUi.lockTabs);
+  const blockAutoEventsOverlay = Boolean(surveyMode) || shouldBlockAutoEventsOverlay({
     periodCloseOpen,
     periodCloseSummary,
     queuedPeriodClose,
     guidance,
     periodIndex,
   });
+
+  useEffect(() => { setSurveyMode(null); }, [playtestSurvey?.profile_id]);
+  useEffect(() => {
+    const update = () => setDialogPresent(Boolean(document.querySelector('[role="dialog"], .mqx-sheet-root')));
+    const observer = new MutationObserver(update);
+    observer.observe(document.body, {childList:true, subtree:true});
+    update();
+    return () => observer.disconnect();
+  }, []);
+  const closeSurvey = useCallback((submitted) => {
+    setSurveyMode(null);
+    surveyShownRef.current = true;
+    if (!submitted && playtestSurvey?.profile_id) {
+      void dismissPlaytestSurvey(playtestSurvey.profile_id).catch(() => {
+        showNotification('Не удалось сохранить «Позже». В этой сессии опрос больше не появится.', 'info');
+      });
+    }
+  }, [playtestSurvey?.profile_id, dismissPlaytestSurvey]);
+  useEffect(() => {
+    const blocked = loading || syncing || offline || surveyMode || runFinaleOpen || periodCloseOpen
+      || periodCloseSummary || queuedPeriodClose || eventsOpen || salaryWarnOpen || inOnboarding
+      || dialogPresent;
+    if (shouldOfferPlaytestSurvey({survey:playtestSurvey, blocked, pendingEvents:pendingEvents?.length,
+      activeTab, sessionShown:surveyShownRef.current})) {
+      surveyShownRef.current = true;
+      setSurveyMode('invite');
+    }
+  }, [playtestSurvey, activeTab, loading, syncing, offline, surveyMode, runFinaleOpen, periodCloseOpen,
+    periodCloseSummary, queuedPeriodClose, eventsOpen, salaryWarnOpen, inOnboarding, pendingEvents, overview, dialogPresent]);
 
   // Итоги периода — до эффектов событий: в одном коммите сначала выставляем periodCloseOpen.
   useEffect(() => {
@@ -404,6 +450,11 @@ export function GameScreen({ onLogout, onNewGame, onLoadGame }) {
       )}
       overlays={(
         <>
+          {surveyMode && playtestSurvey ? <MqxPlaytestSurvey
+            key={playtestSurvey.profile_id}
+            open mode={surveyMode} profileId={playtestSurvey.profile_id}
+            onStart={() => setSurveyMode('form')} onClose={closeSurvey} onSubmit={submitPlaytestSurvey}
+          /> : null}
           <MqxSalaryWarnModal
             open={salaryWarnOpen && !inOnboarding}
             salaryAmount={Number(periodStatus?.salary_amount) || 0}
@@ -412,7 +463,7 @@ export function GameScreen({ onLogout, onNewGame, onLoadGame }) {
           />
 
           <MqxRunFinale
-            open={runFinaleOpen && Boolean(runFinale)}
+            open={runFinaleOpen && Boolean(runFinale) && !surveyMode}
             payload={runFinale}
             onDismissVictory={dismissVictoryFinale}
             onNewGame={onNewGame}
@@ -465,7 +516,12 @@ export function GameScreen({ onLogout, onNewGame, onLoadGame }) {
             <div key={activeTab} className="mq-enter-item mq-enter-item--fill">
               {activeTab === 'dashboard' && (
                 <div ref={onboardingRootRef} className="mqx-onboarding-anchor-root">
+                  {showGuestClaim && <MqxGuestClaim onCreate={() => navigate('/register')} onContinue={() => {
+                    localStorage.setItem(`guest_claim_dismissed_${user.id}`, '1');
+                    setClaimDismissed(true);
+                  }} />}
                   <DashboardPremium
+                    profileId={playtestSurvey?.profile_id}
                     overview={overview}
                     timeStatus={timeStatus}
                     periodStatus={periodStatus}
@@ -506,6 +562,8 @@ export function GameScreen({ onLogout, onNewGame, onLoadGame }) {
               {activeTab === 'menu' && (
                 <MenuPremium
                   overview={overview}
+                  surveyState={playtestSurvey}
+                  onOpenSurvey={() => setSurveyMode(playtestSurvey?.state === 'submitted' ? 'success' : 'form')}
                   onContinue={() => setActiveTab('dashboard')}
                   onLogout={onLogout}
                   onNewGame={onNewGame}
@@ -517,7 +575,7 @@ export function GameScreen({ onLogout, onNewGame, onLoadGame }) {
         </div>
       </div>
       <GameGuidanceLayer
-        guidance={guidance}
+        guidance={guidance?.onboarding_version === 2 || surveyMode || (runFinaleOpen && runFinale) || (eventsOpen && guidance?.onboarding_version === 2) ? null : guidance}
         refreshOverview={refreshOverview}
         scrollRootRef={onboardingRootRef}
         deferForPeriodClose={deferGuidanceForPeriodClose}

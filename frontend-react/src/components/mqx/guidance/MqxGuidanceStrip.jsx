@@ -18,7 +18,8 @@ function renderBody(text) {
 
 /**
  * O2 bottom guidance strip над tab bar.
- * Curriculum: Монетка sit-edge у заголовка; toolbar variant A ★.
+ * Curriculum: Монетка A без надписей у заголовка; toolbar variant A ★.
+ * sit-edge сохраняет прежнее размещение, изображение — приветственная поза A.
  */
 export const MqxGuidanceStrip = forwardRef(function MqxGuidanceStrip({
   mode = 'curriculum',

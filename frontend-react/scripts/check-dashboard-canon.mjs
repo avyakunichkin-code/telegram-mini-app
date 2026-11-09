@@ -28,12 +28,13 @@ function assert(condition, message) {
 function main() {
   const repoRoot = path.resolve(process.cwd(), '..')
   const manifestPath = path.join(repoRoot, 'design-lab', 'dashboard', 'canon.manifest.json')
-  const dashboardPath = path.join(repoRoot, 'frontend-react', 'src', 'components', 'DashboardPremium.jsx')
+  const manifest = readJson(manifestPath)
+  const dashboardPath = path.resolve(repoRoot, manifest.page_parity.prod_entry)
+  assert(dashboardPath.startsWith(path.join(repoRoot, 'frontend-react', 'src') + path.sep), 'Dashboard prod_entry must stay inside frontend-react/src.')
 
   assert(fs.existsSync(manifestPath), `Missing dashboard manifest: ${manifestPath}`)
   assert(fs.existsSync(dashboardPath), `Missing prod file: ${dashboardPath}`)
 
-  const manifest = readJson(manifestPath)
   const expected = manifest?.page_order_prod_components
 
   assert(

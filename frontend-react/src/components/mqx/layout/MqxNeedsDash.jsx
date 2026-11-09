@@ -4,6 +4,7 @@ import { IconHelpQuestion, IconTreatHeartPlus } from '../icons/MqxContextHelpIco
 import { showNotification } from '../../notifications';
 import { MqxProgress } from '../primitives/MqxProgress';
 import { lowestNeedAxis, NEEDS_AXES, pluralRu } from '../utils/boardDashDisplay';
+import { MqxNeedsRecovery } from './MqxNeedsRecovery';
 
 function clampPct(v) {
   const n = Number(v);
@@ -60,9 +61,13 @@ export function MqxNeedsDash({
   needs,
   needsZeroPeriodsStreak = 0,
   treatSelf = null,
+  needsMeta = null,
+  cash = null,
+  busy = false,
   onTreatSelf,
   onHelp,
   className = '',
+  compact = false,
 }) {
   const titleId = useId();
   const values = useMemo(() => pickAxisValues(needs), [needs]);
@@ -125,6 +130,10 @@ export function MqxNeedsDash({
           <NeedBar key={a.key} axis={a} value={values[a.key]} />
         ))}
       </div>
+      {compact && min.value < 40 ? <details className="mqx-pocket-needs-details">
+        <summary>{min.label}: {Math.round(min.value)} / 100 · как восстановить</summary>
+        <MqxNeedsRecovery axis={min} needsMeta={needsMeta} treatSelf={treatSelf} cash={cash} busy={busy} onTreatSelf={onTreatSelf} />
+      </details> : !compact ? <MqxNeedsRecovery axis={min} needsMeta={needsMeta} treatSelf={treatSelf} cash={cash} busy={busy} onTreatSelf={onTreatSelf} /> : null}
     </section>
   );
 }

@@ -82,7 +82,7 @@ export async function apiCall(endpoint, method = 'GET', data = null) {
     headers['Idempotency-Key'] = newIdempotencyKey();
   }
 
-  const options = { method, headers };
+  const options = { method, headers, credentials: 'include' };
   if (data && (method === 'POST' || method === 'PUT' || method === 'PATCH')) {
     options.body = JSON.stringify(data);
   }

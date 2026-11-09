@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { InvestProductForm } from '../../InvestProductForm';
+import { MqxFirstInvestmentSheet } from './MqxFirstInvestmentSheet';
 import { AssetTemplateMetrics } from '../metrics/AssetTemplateMetrics';
 import { LiabilityTemplateMetrics } from '../metrics/LiabilityTemplateMetrics';
 import { MqxStateError } from '../primitives/MqxStateError';
@@ -75,6 +75,7 @@ export function CapitalActionsPanel({
   depositAmount,
   bondAmount,
   maxCash,
+  expenses = 0,
   depositRate,
   bondRate,
   onDepositAmountChange,
@@ -168,34 +169,6 @@ export function CapitalActionsPanel({
 
   const renderSheetBody = () => {
     switch (openSheet) {
-      case 'deposit':
-        return (
-          <InvestProductForm
-            embedded
-            productId="deposit"
-            productTitle="Депозит"
-            amount={depositAmount}
-            maxCash={maxCash}
-            annualRatePercent={depositRate}
-            onAmountChange={onDepositAmountChange}
-            submitLabel="Открыть депозит"
-            onSubmit={() => void onOpenDeposit()}
-          />
-        );
-      case 'bond':
-        return (
-          <InvestProductForm
-            embedded
-            productId="bond"
-            productTitle="Облигации"
-            amount={bondAmount}
-            maxCash={maxCash}
-            annualRatePercent={bondRate}
-            onAmountChange={onBondAmountChange}
-            submitLabel="Купить облигации"
-            onSubmit={() => void onOpenBond()}
-          />
-        );
       case 'realestate':
         return renderTemplateList(propertyTemplates, 'asset', onAddAssetFromTemplate);
       case 'car':
@@ -245,8 +218,13 @@ export function CapitalActionsPanel({
         lockHint={lockHint}
         onOpenSheet={onOpenSheet}
       />
+      {['deposit','bond'].includes(openSheet)&&sections.invest==='open'?<MqxFirstInvestmentSheet key={openSheet}
+        product={openSheet} amount={openSheet==='deposit'?depositAmount:bondAmount} maxCash={maxCash} expenses={expenses}
+        annualRatePercent={openSheet==='deposit'?depositRate:bondRate}
+        onAmountChange={openSheet==='deposit'?onDepositAmountChange:onBondAmountChange}
+        onSubmit={openSheet==='deposit'?onOpenDeposit:onOpenBond} onClose={onCloseSheet}/>:null}
       <MqxCapitalSheet
-        open={Boolean(openSheet && sheetCopy)}
+        open={Boolean(openSheet && sheetCopy && !['deposit','bond'].includes(openSheet))}
         title={sheetCopy?.title}
         subtitle={sheetCopy?.subtitle}
         onClose={onCloseSheet}

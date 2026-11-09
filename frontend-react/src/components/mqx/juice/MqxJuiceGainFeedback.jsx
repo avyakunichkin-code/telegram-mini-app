@@ -9,11 +9,11 @@ export function MqxJuiceGainFeedback({ burstKey = 0, amount = 0, toastVisible = 
   return (
     <div className="mqx-juice-layer" aria-live="polite">
       {flyoutActive ? (
-        <div key={burstKey} className="mqx-juice-flyout mqx-juice-flyout--active">
+        <div key={burstKey} className="mqx-juice-flyout mqx-juice-flyout--active" aria-hidden="true">
           {formatted}
         </div>
       ) : null}
-      <div className={`mqx-juice-toast${toastVisible ? ' mqx-juice-toast--visible' : ''}`}>
+      <div className={`mqx-juice-toast${toastVisible ? ' mqx-juice-toast--visible' : ''}`} aria-hidden={!toastVisible}>
         <span className="mqx-juice-toast__icon" aria-hidden="true">
           ↑
         </span>

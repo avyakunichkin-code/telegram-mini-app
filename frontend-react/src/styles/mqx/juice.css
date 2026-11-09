@@ -607,3 +607,35 @@
     transform: none;
   }
 }
+
+/* Approved clear-result A (2026-11-05): compact facts, optional explanation. */
+.mqx-close-clear-root, .mqx-close-clear, .mqx-close-clear * { box-sizing: border-box; }
+.mqx-juice-ritual-root.mqx-close-clear-root { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: .75rem; background: color-mix(in srgb, var(--mq-board-ink) 35%, transparent); }
+.mqx-juice-ritual.mqx-close-clear { position: relative; inset: auto; min-height: 0; flex: 0 1 auto; width: 100%; max-height: calc(100dvh - 1.5rem); padding: 0; border: .0625rem solid var(--mq-control-edge); border-radius: 1.25rem; background: var(--mq-board); color: var(--mq-board-ink); text-align: left; overflow: hidden; }
+.mqx-close-clear .mqx-close-clear__scroll { flex: 0 1 auto; align-items: stretch; padding: 1.25rem 1.25rem 0; }
+.mqx-close-clear__heading { display: flex; align-items: center; gap: .5rem; font-size: .75rem; color: var(--mq-board-ink-soft); font-weight: 700; }
+.mqx-close-clear__heading > span { display: grid; place-items: center; width: 1.75rem; height: 1.75rem; flex-shrink: 0; border-radius: 50%; background: var(--mq-coin-soft); color: var(--mq-coin-ink); font-size: 1.125rem; }
+.mqx-close-clear__title { font-family: var(--mq-font-display); font-size: 1.625rem; line-height: 1.15; margin: .75rem 0 1rem; }
+.mqx-close-clear__balance { display: grid; gap: .125rem; }
+.mqx-close-clear__balance > span { color: var(--mq-board-ink-soft); font-size: .8125rem; }
+.mqx-close-clear__balance > strong { font: 900 2.25rem/1.15 var(--mq-font-display); letter-spacing: -.02em; }
+.mqx-close-clear__whole-turn { margin: .5rem 0 1rem; color: var(--mq-board-ink-soft); font-size: .75rem; }
+.mqx-close-clear__whole-turn strong { color: var(--mq-board-ink); font-weight: 700; }
+.mqx-close-clear__operations { list-style: none; padding: 0; margin: 0; border-top: .0625rem solid var(--mq-cell-edge); }
+.mqx-close-clear__operations li { display: flex; justify-content: space-between; gap: .625rem; padding: .75rem 0; border-bottom: .0625rem solid var(--mq-cell-edge); font-size: .8125rem; }
+.mqx-close-clear__operations strong { white-space: nowrap; }
+.mqx-close-clear__operations small { display: block; margin-top: .125rem; color: var(--mq-board-ink-soft); font-size: .75rem; }
+.mqx-close-clear__risk { color: var(--mq-risk); }
+.mqx-close-clear__notice { padding: .625rem; margin: .75rem 0; border-radius: .625rem; background: var(--mq-cell); font-size: .75rem; }
+.mqx-close-clear__notice.mqx-close-clear__risk { background: var(--mq-risk-soft); }
+.mqx-close-clear__details { margin-top: .25rem; }
+.mqx-close-clear__details summary { min-height: 2.75rem; display: flex; align-items: center; cursor: pointer; color: var(--mq-turn); font-size: .75rem; font-weight: 700; }
+.mqx-close-clear__details summary::after { content: '⌄'; margin-left: auto; font-size: 1.125rem; }
+.mqx-close-clear__details[open] summary::after { content: '⌃'; }
+.mqx-close-clear__details p { margin: 0 0 .625rem; color: var(--mq-board-ink-soft); font-size: .75rem; }
+.mqx-close-clear__footer { flex-shrink: 0; padding: .75rem 1.25rem 1.25rem; background: var(--mq-board); }
+.mqx-close-clear .mqx-juice-ritual__dismiss { width: 100%; min-height: 3rem; margin: 0; background: var(--mq-turn); color: var(--mq-turn-on); box-shadow: 0 .1875rem 0 var(--mq-turn-deep); opacity: 1; animation: none; }
+.mqx-close-clear summary:focus-visible, .mqx-close-clear button:focus-visible { outline: .1875rem solid var(--mq-turn); outline-offset: .125rem; }
+.mqx-page--guidance-active .mqx-close-clear-root { padding-bottom: calc(.75rem + var(--tma-tabbar-inset,4rem) + var(--mqx-guidance-strip-offset,0px) + .5rem); }
+.mqx-page--guidance-active .mqx-juice-ritual.mqx-close-clear { max-height: calc(100dvh - 2.25rem - var(--tma-tabbar-inset,4rem) - var(--mqx-guidance-strip-offset,0px)); }
+@media (max-width: 23.75rem) { .mqx-close-clear .mqx-close-clear__scroll { padding: 1rem 1rem 0; } .mqx-close-clear__footer { padding: .625rem 1rem 1rem; } .mqx-close-clear__operations li { padding: .625rem 0; } .mqx-close-clear__title { font-size: 1.5rem; margin: .625rem 0 .75rem; } }

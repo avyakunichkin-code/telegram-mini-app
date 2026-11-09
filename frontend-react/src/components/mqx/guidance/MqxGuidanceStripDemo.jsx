@@ -69,16 +69,16 @@ export function MqxGuidanceStripDemo() {
     <div className="mqx-guidance-strip-demo">
       <p className="mqx-catalog__lead" style={{ marginTop: 0 }}>
         <strong>O2 Progressive Guidance</strong> — variant <strong>A ★</strong> (violet bubble dock). Lab:{' '}
-        <code>design-lab/onboarding-o2/guidance-strip-round/</code>. Монетка sit-edge у заголовка; toolbar:{' '}
+        <code>design-lab/onboarding-o2/guidance-strip-round/</code>. Монетка A без надписей у заголовка; toolbar:{' '}
         <code>‹ N из M ›</code> слева, зелёный ✓ + × справа.
       </p>
 
       <div className="mqx-guidance-strip-demo__toolbar">
         {[
-          ['read', 'Read + CTA'],
-          ['done', 'Gate done ✓'],
-          ['dismiss-hint', '2× dismiss hint'],
-          ['nudge', 'Nudge'],
+          ['read', 'Чтение и действие'],
+          ['done', 'Шаг выполнен ✓'],
+          ['dismiss-hint', 'Подсказка пропуска'],
+          ['nudge', 'Напоминание'],
         ].map(([id, label]) => (
           <MqxButton
             key={id}

@@ -1,8 +1,10 @@
+import { useId } from 'react';
 import { asSafeReactText } from '../../../utils/displayText';
-import { EventChoiceImpacts } from './EventChoiceImpacts';
+import { MqxChoiceConsequences } from './MqxChoiceConsequences';
 
 /** ★ BG-2: выбор в карте события — плоская кнопка с чипами последствий. */
 export function EventChoiceButton({ choice, disabled, onPick }) {
+  const consequencesId = useId();
   const choiceLabel = asSafeReactText(choice?.title, 'Вариант ответа');
   const description = choice?.description ? asSafeReactText(choice.description, '') : '';
 
@@ -13,11 +15,12 @@ export function EventChoiceButton({ choice, disabled, onPick }) {
       disabled={disabled}
       title={choiceLabel}
       aria-label={description ? `${choiceLabel}. ${description}` : choiceLabel}
+      aria-describedby={consequencesId}
       onClick={() => { void onPick(choice.id); }}
     >
       <span className="mqx-events-choice__title">{choiceLabel}</span>
       {description ? <span className="mqx-events-choice__desc">{description}</span> : null}
-      <EventChoiceImpacts impacts={choice?.impacts} needsDelta={choice?.needs_delta} />
+      <span id={consequencesId}><MqxChoiceConsequences choice={choice} /></span>
     </button>
   );
 }

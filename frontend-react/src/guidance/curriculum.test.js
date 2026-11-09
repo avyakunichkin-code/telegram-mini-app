@@ -18,6 +18,15 @@ test('isP1GuidanceComplete when p1_close done', () => {
   );
 });
 
+test('гостевой quick-start открывает события вручную и не блокирует первый ход', () => {
+  const guidance = { onboarding_version: 2, show_curriculum: false };
+  assert.equal(areGameEventsUnlocked(guidance, 'draft', 1), true);
+  assert.equal(shouldDeferEventsAutoOpen(guidance, 1), true);
+  assert.equal(shouldDeferEventsAutoOpen(guidance, 2), true);
+  assert.equal(shouldDeferEventsAutoOpen(guidance, 3), true);
+  assert.equal(shouldDeferEventsAutoOpen(guidance, 12), true);
+});
+
 test('isP1GuidanceComplete false during P1', () => {
   assert.equal(
     isP1GuidanceComplete({ show_curriculum: true, completed_beats: ['p1_period'] }),

@@ -1,49 +1,17 @@
-import monetkaDefaultPng from '../../../assets/monetka-mascot.png';
-import monetkaDefaultWebp from '../../../assets/monetka-mascot.webp';
-import monetkaSitEdgePng from '../../../assets/monetka-poses/monetka-sit-edge.png';
-import monetkaSitEdgeWebp from '../../../assets/monetka-poses/monetka-sit-edge.webp';
-import monetkaWinkPng from '../../../assets/monetka-poses/monetka-wink.png';
-import monetkaWinkWebp from '../../../assets/monetka-poses/monetka-wink.webp';
+import { getGuideMascot } from './guideMascots';
 
-const POSE_SRC = {
-  default: { webp: monetkaDefaultWebp, png: monetkaDefaultPng },
-  'sit-edge': { webp: monetkaSitEdgeWebp, png: monetkaSitEdgePng },
-  wink: { webp: monetkaWinkWebp, png: monetkaWinkPng },
-};
-
-/**
- * @param {'default' | 'sit-edge' | 'wink'} [pose]
- * sit-edge — сидит на краю блока, ноги свисают (WebP + alpha, PNG fallback).
- */
-export function MonetkaAvatar({ size = 72, className = '', pose = 'default' }) {
-  const { webp, png } = POSE_SRC[pose] ?? POSE_SRC.default;
+/** Approved A. Small slots use a face crop; sit-edge is a compatibility alias for welcome. */
+export function MonetkaAvatar({ size = 72, className = '', pose = 'default', full = false }) {
+  const selected = pose === 'default' || pose === 'sit-edge' ? 'welcome' : pose;
   const sitEdge = pose === 'sit-edge';
-  const imgClass = [
-    'mqx-onboarding-monetka',
-    sitEdge && 'mqx-onboarding-monetka--sit-edge',
-    className,
-  ]
-    .filter(Boolean)
-    .join(' ');
-
+  const art = getGuideMascot('coin', selected, !full && !sitEdge && size <= 48);
   return (
-    <picture>
-      <source type="image/webp" srcSet={webp} />
-      <img
-        src={png}
-        alt=""
-        aria-hidden="true"
-        width={sitEdge ? undefined : size}
-        height={sitEdge ? undefined : size}
-        className={imgClass}
-        style={
-          sitEdge
-            ? { width: size, maxWidth: '34vw', height: 'auto', minWidth: 0 }
-            : undefined
-        }
-        draggable={false}
-        decoding="async"
-      />
+    <picture data-mascot="monetka" data-pose={selected}>
+      <source type="image/webp" srcSet={art.webp} />
+      <img src={art.png} alt="" aria-hidden="true" width={size} height={size}
+        className={['mqx-onboarding-monetka', sitEdge && 'mqx-onboarding-monetka--sit-edge', className].filter(Boolean).join(' ')}
+        style={sitEdge ? { width: size, maxWidth: '34vw', height: 'auto', minWidth: 0 } : undefined}
+        draggable={false} decoding="async" />
     </picture>
   );
 }

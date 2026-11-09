@@ -1,4 +1,5 @@
 import { apiCall } from './client.js';
+export function getPlaytestSurveyResponses() { return apiCall('/api/admin/playtest-surveys'); }
 
 const API_BASE =
   import.meta.env.DEV

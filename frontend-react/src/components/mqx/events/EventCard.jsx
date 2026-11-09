@@ -92,7 +92,7 @@ export function EventCard({
 
         {description ? (
           <div className="mqx-events-card__bubble-row">
-            <MonetkaAvatar size={44} className="mqx-events-card__monetka" />
+            <MonetkaAvatar pose="surprised" size={44} className="mqx-events-card__monetka" />
             <div className="mqx-events-card__bubble">
               <p className="mqx-events-card__bubble-text">{description}</p>
             </div>

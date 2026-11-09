@@ -25,7 +25,7 @@ export function AuthFormField({
 
   return (
     <label className={`mq-field${error ? ' mq-field--invalid' : ''}`} htmlFor={inputId}>
-      <span className="mq-field__label">{label}</span>
+      <span className="mq-field__label" id={`${inputId}-label`}>{label}</span>
       <input
         id={inputId}
         name={name}
@@ -40,6 +40,7 @@ export function AuthFormField({
         minLength={minLength}
         placeholder={placeholder}
         aria-invalid={error ? true : undefined}
+        aria-labelledby={`${inputId}-label`}
         aria-describedby={describedBy}
       />
       {hint && !error ? (

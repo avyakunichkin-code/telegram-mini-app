@@ -20,7 +20,7 @@ export function MqxStatesCatalogDemo() {
 
       <div className="mqx-catalog-states__grid">
         <div className="mqx-catalog-states__item">
-          <h3 className="mqx-catalog-states__label">S1 — Empty (C′)</h3>
+          <h3 className="mqx-catalog-states__label">Пустой список</h3>
           <div className="mqx-catalog-states__panel">
             <MqxCapitalEmpty
               message="Пока нет открытых позиций"
@@ -32,7 +32,7 @@ export function MqxStatesCatalogDemo() {
         </div>
 
         <div className="mqx-catalog-states__item">
-          <h3 className="mqx-catalog-states__label">S2 — Error (B)</h3>
+          <h3 className="mqx-catalog-states__label">Ошибка загрузки</h3>
           <div className="mqx-catalog-states__panel">
             <MqxStateError
               title="Не удалось загрузить данные"
@@ -43,14 +43,14 @@ export function MqxStatesCatalogDemo() {
         </div>
 
         <div className="mqx-catalog-states__item">
-          <h3 className="mqx-catalog-states__label">S3 — Loading rows (B)</h3>
+          <h3 className="mqx-catalog-states__label">Загрузка строк</h3>
           <div className="mqx-catalog-states__panel">
             <MqxStateSkeleton variant="rows" rows={3} label="Позиции" />
           </div>
         </div>
 
         <div className="mqx-catalog-states__item">
-          <h3 className="mqx-catalog-states__label">S3 — Loading chips (C)</h3>
+          <h3 className="mqx-catalog-states__label">Загрузка показателей</h3>
           <div className="mqx-catalog-states__panel">
             <MqxStateSkeleton variant="chips" label="Финансы периода" />
           </div>
@@ -58,16 +58,16 @@ export function MqxStatesCatalogDemo() {
       </div>
 
       <div className="mqx-catalog-states__ritual" style={{ marginTop: 20 }}>
-        <h3 className="mqx-catalog-states__label">S4 — Ritual beats (A)</h3>
+        <h3 className="mqx-catalog-states__label">Завершение хода</h3>
         <p className="mqx-catalog__note" style={{ margin: '0 0 10px' }}>
           SVG <code>FinanceMetricIcons</code> в <code>MqxPeriodCloseRitual</code> (не символы + / !).
         </p>
         <MqxButton variant="secondary" onClick={() => setRitualOpen(true)}>
           Показать ритуал закрытия
         </MqxButton>
-        <div className="mqx-catalog-states__ritual-host">
+        {ritualOpen ? <div className="mqx-catalog-states__ritual-host">
           <MqxPeriodCloseRitual summary={CATALOG_PERIOD_CLOSE_RITUAL} open={ritualOpen} onClose={() => setRitualOpen(false)} />
-        </div>
+        </div> : null}
       </div>
     </div>
   );

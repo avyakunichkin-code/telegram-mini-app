@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { InvestProductForm } from '../../InvestProductForm';
-import { InvestRateChip } from '../../InvestRateChip';
 import {
   AssetPositionMetrics,
   AssetTemplateMetrics,
@@ -30,26 +29,16 @@ import {
   MetricInlineItem,
   MetricsRow,
   MqxButton,
-  MqxChip,
-  MqxNeedsDash,
-  MqxDashboardHero,
   MqxStarterScenarioPicker,
   MqxSaveCard,
   MqxBoardButton,
   MqxFinancePeriodBlock,
-  MqxPeriodActions,
   MqxPeriodCloseSheet,
-  MqxPeriodChip,
   MqxPill,
-  MqxProgress,
   MqxSubtab,
   MqxModeButton,
-  MqxSectionSeg,
-  MqxCapitalEmpty,
   MqxRowAction,
   MqxFinListRow,
-  MqxConfirmDialog,
-  useMqxConfirm,
   EventCard,
   MqxGuidanceStripDemo,
   MqxJuiceCatalogDemo,
@@ -57,100 +46,51 @@ import {
 import { MqxStatesCatalogDemo } from './MqxStatesCatalogDemo';
 import { MqxEventsTailsCatalogDemo } from './MqxEventsTailsCatalogDemo';
 import { MqxRunFinaleCatalogDemo } from './MqxRunFinaleCatalogDemo';
+import { MqxFirstInvestmentDemo } from './MqxFirstInvestmentDemo';
+import { MqxPlaytestSurveyDemo } from './MqxPlaytestSurveyDemo';
+import { MqxMascotsCatalogDemo } from './MqxMascotsCatalogDemo';
 import { CATALOG_LEGACY_GOAL_DEMO, CATALOG_VICTORY_DEMO } from './catalogVictoryDemo';
 import { CATALOG_EVENTS_L3_BASELINE } from './catalogEventsDemo';
 import { CATALOG_INSURANCE_POLICY, catalogInsurancePlan } from './catalogInsuranceDemo';
 import { CATALOG_PERIOD_CLOSE_SHEET } from './catalogStatesDemo';
+import { CurrentPrimitivesDemo, CurrentRowActionsDemo, CurrentSectionSegDemo, CurrentDashboardDemo } from './MqxCurrentCatalogDemos';
+import { MqxPlayerDecisionsDemo } from './MqxPlayerDecisionsDemo';
+import { MqxPocketBoardDemo } from './MqxPocketBoardDemo';
+import { MqxGuestWelcome } from '../pregame/MqxGuestWelcome';
+import { MqxGuestClaim } from '../pregame/MqxGuestClaim';
 
 const CATALOG_INSURANCE_PLAN = catalogInsurancePlan();
 
-function CatalogSection({ title, children }) {
+function CatalogSection({ title, children, context = 'field' }) {
   return (
     <section className="mqx-catalog-section">
       <h2 className="mqx-catalog-section__title">{title}</h2>
-      {children}
+      {context === 'sheet' ? <div className="mqx-sheet mqx-sheet--amount mqx-sheet--capital mqx-catalog-sheet-preview" role="group" aria-label={title}>
+        <div className="mqx-sheet__body">{children}</div>
+      </div> : children}
     </section>
-  );
-}
-
-/** Витрина MQX-компонентов (только dev: #/dev/mqx). */
-function RowActionsCatalogDemo() {
-  const { confirm, dialog } = useMqxConfirm();
-  const [confirmOpen, setConfirmOpen] = useState(false);
-
-  return (
-    <>
-      {dialog}
-      <p className="mqx-catalog__lead" style={{ marginTop: 0 }}>
-        Канон: <strong>+</strong> / <strong>корзина</strong> по умолчанию (<code>MqxRowAction</code>); символ <strong>−</strong> —{' '}
-        <code>removeVisual=&quot;minus&quot;</code>. Метрики: <code>coin | down | up | percent | term</code> — порядок и суммы без{' '}
-        <code>/мес</code>, см. spec. Статика: <code>design-lab/row-actions/</code>.
-      </p>
-      <div className="mqx-fin-list" style={{ maxWidth: 420, marginTop: 12 }}>
-        <MqxFinListRow
-          title="Кредитная карта"
-          metrics={
-            <LiabilityPositionMetrics
-              totalDebt={180000}
-              monthlyPayment={9000}
-              annualRatePercent={24}
-              overdueAmount={4500}
-            />
-          }
-          trailing={
-            <MqxRowAction
-              variant="remove"
-              ariaLabel="Удалить долг"
-              onClick={async () => {
-                const ok = await confirm({
-                  title: 'Удалить обязательство?',
-                  message: '«Кредитная карта» будет закрыта.',
-                });
-                if (ok) setConfirmOpen(true);
-              }}
-            />
-          }
-        />
-        <MqxFinListRow
-          title="Квартира под сдачу"
-          metrics={
-            <AssetPositionMetrics assetValue={4200000} monthlyMaintenanceCost={12000} monthlyIncome={35000} />
-          }
-          trailing={<MqxRowAction variant="remove" ariaLabel="Удалить актив" onClick={() => {}} />}
-        />
-        <MqxFinListRow
-          title="Вариант F1 — символ −"
-          metrics={<AssetPositionMetrics assetValue={100000} monthlyMaintenanceCost={500} monthlyIncome={0} />}
-          trailing={<MqxRowAction variant="remove" removeVisual="minus" ariaLabel="Удалить" onClick={() => {}} />}
-        />
-        <MqxFinListRow
-          title="Шаблон: Ипотека"
-          subtitle="Долг 3 200 000 ₽"
-          trailing={<MqxRowAction variant="add" ariaLabel="Добавить" onClick={() => {}} />}
-        />
-      </div>
-      <MqxConfirmDialog
-        open={confirmOpen}
-        title="Пример"
-        message="Диалог после подтверждения в демо."
-        onConfirm={() => setConfirmOpen(false)}
-        onClose={() => setConfirmOpen(false)}
-      />
-    </>
   );
 }
 
 export function MqCatalogScreen() {
   const [amount, setAmount] = useState(120000);
+  const [depositNotice, setDepositNotice] = useState('Условный счёт: 420 000 ₽. Действия не меняют партию.');
+  const [templateKey, setTemplateKey] = useState('mq_game_basic_v1');
+  const [activeTab, setActiveTab] = useState('active');
+  const [activeMode, setActiveMode] = useState('add');
+  const [periodCloseOpen, setPeriodCloseOpen] = useState(false);
 
   return (
     <div className="mqx-catalog app-shell mq-page" style={{ padding: 12 }}>
+      <CatalogSection title="Капитал · первое вложение A"><MqxFirstInvestmentDemo /></CatalogSection>
+      <CatalogSection title="Опрос первых ходов · гибрид H"><MqxPlaytestSurveyDemo /></CatalogSection>
       <header className="mqx-catalog__header">
         <h1>MQX — библиотека компонентов</h1>
         <p className="mqx-catalog__lead">
-          Только компоненты <strong>★ в production</strong>. Черновики и отклонённые варианты — в{' '}
+          Утверждённые компоненты и их актуальные состояния. Места подключения указаны в примерах.
+          Черновики и отклонённые варианты — в{' '}
           <code>design-lab/</code>, не здесь. Аудит:{' '}
-          <code>docs/specs/UI_CONSISTENCY_AUDIT.md</code>.
+          <code>docs/game/specs/UI_CONSISTENCY_AUDIT.md</code>.
         </p>
         <Link to="/" className="mqx-catalog__back">
           ← В игру
@@ -161,6 +101,10 @@ export function MqCatalogScreen() {
         <MqxGuidanceStripDemo />
       </CatalogSection>
 
+      <CatalogSection title="Персонажи и маскоты — ★ B Мягкий объём · A Чистый объём">
+        <MqxMascotsCatalogDemo />
+      </CatalogSection>
+
       <CatalogSection title="Выбор жизни (★ BG-2)">
         <p className="mqx-catalog__lead">
           <code>MqxStarterScenarioPicker</code>: карточки персонажей (<code>PersonaPortrait</code> pick), доход за ход,
@@ -168,9 +112,9 @@ export function MqCatalogScreen() {
         </p>
         <div style={{ maxWidth: 420 }}>
           <MqxStarterScenarioPicker
-            value="mq_game_basic_v1"
+            value={templateKey}
             label="Персонаж"
-            onChange={() => {}}
+            onChange={setTemplateKey}
             templates={[
               {
                 template_key: 'mq_game_basic_v1',
@@ -226,54 +170,21 @@ export function MqCatalogScreen() {
         </div>
       </CatalogSection>
 
-      <CatalogSection title="Дашборд ★ BG-1 — настольная игра (ADR-014)">
-        <p className="mqx-catalog__lead">
-          Карта хода → потребности → деньги → цель → действия. Lab:{' '}
-          <code>design-lab/board-game/hybrid-round/</code>.
-        </p>
-        <div className="mqx-catalog__board-demo mqx-tab-page--board">
-          <div className="mqx-content mqx-tab-page__scroll">
-            <div className="mqx-bg-stack">
-              <MqxDashboardHero
-                roleTitle="Студент"
-                periodIndex={4}
-                onCloseMonth={() => {}}
-                pendingEventsCount={2}
-                onOpenEvents={() => {}}
-                tip={{ text: 'Забери зарплату до конца хода', tone: 'normal' }}
-                closePreview={{ charges: 37500, after: 49900, negative: false, defeat: false }}
-              />
-              <MqxNeedsDash
-                needs={{ comfort: 70, status: 45, social: 60, health: 80 }}
-                treatSelf={{ available: true }}
-                onHelp={() => {}}
-                onTreatSelf={() => {}}
-              />
-              <MqxFinancePeriodBlock
-                templateKey="mq_game_basic_v1"
-                cash={87400}
-                safety={45000}
-                cushionPercent={60}
-                income={{ label: 'Доходы за ход', value: 64300 }}
-                outflow={37500}
-                onFlowsNavigate={() => {}}
-              />
-              <MqxGoalDash victory={CATALOG_VICTORY_DEMO} legacyGoal={CATALOG_LEGACY_GOAL_DEMO} />
-              <MqxPeriodActions salaryHot salaryAmount={62500} onSalary={() => {}} onContribute={() => {}} onWithdraw={() => {}} onInvest={() => {}} />
-              <MqxPeriodActions salaryClaimed salaryDisabled onSalary={() => {}} onContribute={() => {}} onWithdraw={() => {}} onInvest={() => {}} />
-            </div>
-          </div>
-        </div>
+      <CatalogSection title="Дашборд ★ А — Игровой пульт">
+        <MqxPocketBoardDemo />
       </CatalogSection>
+      <CatalogSection title="Гостевой старт ★ А"><div data-catalog-demo="guest-first"><MqxGuestWelcome onStart={() => {}} onLogin={() => {}} /><MqxGuestClaim onCreate={() => {}} onContinue={() => {}} /></div></CatalogSection>
+      <CatalogSection title="Понятный выбор B · цель A · потребности A"><MqxPlayerDecisionsDemo /></CatalogSection>
 
       <CatalogSection title="Итог периода ★ (нижний лист)">
         <p className="mqx-catalog__lead" style={{ marginTop: 0 }}>
           <code>MqxPeriodCloseSheet</code> — 6 строк Δ, хвостик с периода 4. Lab: <code>design-lab/period-close/</code>.
         </p>
-        <div style={{ maxWidth: 420, position: 'relative', minHeight: 280 }}>
+        <div className="mqx-catalog-current">
+          <MqxButton variant="ghost" onClick={() => setPeriodCloseOpen(true)}>Показать итоги периода</MqxButton>
           <MqxPeriodCloseSheet
-            open
-            onClose={() => {}}
+            open={periodCloseOpen}
+            onClose={() => setPeriodCloseOpen(false)}
             summary={CATALOG_PERIOD_CLOSE_SHEET}
           />
         </div>
@@ -287,7 +198,7 @@ export function MqCatalogScreen() {
         <MqxEventsTailsCatalogDemo />
       </CatalogSection>
 
-      <CatalogSection title="События ★ L3 — domain band + пузырь">
+      <CatalogSection title="Событие — карта, последствия и реплика ★ BG-4">
         <div className="mqx-stack" style={{ gap: 12, maxWidth: 420 }}>
           <MqxPill events badge={2}>
             События
@@ -341,26 +252,26 @@ export function MqCatalogScreen() {
         </div>
       </CatalogSection>
 
-      <CatalogSection title="Страховки — метрики (asset H)">
+      <CatalogSection title="Страховки — метрики" context="sheet">
         <InsurancePlanMetrics monthlyPremium={2400} payoutAmount={400000} termPeriods={12} />
         <div style={{ marginTop: 10 }}>
           <InsurancePolicyMetrics policy={CATALOG_INSURANCE_POLICY} />
         </div>
       </CatalogSection>
 
-      <CatalogSection title="Страховки — тариф (InsurancePlanCard)">
+      <CatalogSection title="Страховки — тариф (InsurancePlanCard)" context="sheet">
         <InsurancePlanCard plan={CATALOG_INSURANCE_PLAN} onBuy={() => {}} />
       </CatalogSection>
 
-      <CatalogSection title="Страховки — активный полис (InsurancePolicyRow)">
+      <CatalogSection title="Страховки — активный полис (InsurancePolicyRow)" context="sheet">
         <InsurancePolicyRow policy={CATALOG_INSURANCE_POLICY} onCancel={() => {}} />
       </CatalogSection>
 
-      <CatalogSection title="Страховки — блок (InsuranceProductPicker)">
+      <CatalogSection title="Страховки — блок (InsuranceProductPicker)" context="sheet">
         <InsuranceProductPicker onBuy={() => {}} />
       </CatalogSection>
 
-      <CatalogSection title="Страховки — экран (InsuranceSection)">
+      <CatalogSection title="Страховки — экран (InsuranceSection)" context="sheet">
         <InsuranceSection
           policies={[CATALOG_INSURANCE_POLICY]}
           onBuy={() => {}}
@@ -389,93 +300,47 @@ export function MqCatalogScreen() {
         </MetricsRow>
       </CatalogSection>
 
-      <CatalogSection title="Примитивы (D + C + B/A)">
-        <p className="mqx-catalog__lead" style={{ marginTop: 0 }}>
-          Размеры D · шрифты 15/13px (C) · прогресс 6px · emerald-градиент цели.
-        </p>
-        <div
-          style={{
-            marginTop: 12,
-            padding: 14,
-            borderRadius: 16,
-            background: 'linear-gradient(135deg, #6d28d9 0%, #5b21b6 52%, #4338ca 100%)',
-          }}
-        >
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, alignItems: 'center' }}>
-            <MqxButton variant="hero-filled">Пауза</MqxButton>
-            <MqxButton variant="hero-outline">Завершить ход</MqxButton>
-            <MqxPeriodChip value="#3" />
-          </div>
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, marginTop: 10 }}>
-            <MqxPill events badge={2}>
-              События
-            </MqxPill>
-            <MqxPill>Аналитика</MqxPill>
-          </div>
-        </div>
-        <div style={{ maxWidth: 360, marginTop: 12, display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
-          <MqxButton variant="primary">Активы</MqxButton>
-          <MqxButton variant="secondary">Долги</MqxButton>
-        </div>
-        <div
-          style={{
-            maxWidth: 360,
-            marginTop: 12,
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-          }}
-        >
-          <MqxChip>Тег</MqxChip>
-          <span style={{ fontSize: 'var(--mq-fs-caption)', opacity: 0.65 }}>Ход 4 из 12</span>
-        </div>
-        <div style={{ maxWidth: 360, marginTop: 8 }}>
-          <div style={{ fontSize: 'var(--mq-fs-small)', fontWeight: 700, opacity: 0.55, marginBottom: 4 }}>Цель</div>
-          <MqxProgress value={62} aria-label="Прогресс цели" />
-        </div>
+      <CatalogSection title="Примитивы ★ BG-4 — Чернильный край">
+        <CurrentPrimitivesDemo />
       </CatalogSection>
 
-      <CatalogSection title="Паттерны действий (+ / −, confirm)">
-        <RowActionsCatalogDemo />
+      <CatalogSection title="Паттерны действий — список A и подтверждение">
+        <CurrentRowActionsDemo />
       </CatalogSection>
 
-      <CatalogSection title="Сегмент раздела (MqxSectionSeg)">
-        <p className="mqx-catalog__lead" style={{ marginTop: 0, marginBottom: 12 }}>
-          Канон B на странице капитала: «Оформить / Добавить | Мои (N)» внутри карточки раздела. Пустое состояние — см.
-          секцию «Состояния UI».
-        </p>
-        <MqxSectionSeg mode="add" onModeChange={() => {}} addLabel="Добавить" mineLabel="Мои" mineCount={2} />
+      <CatalogSection title="Сегменты капитала — страница и список">
+        <CurrentSectionSegDemo />
       </CatalogSection>
 
       <CatalogSection title="Кнопки и вкладки">
         <div className="mqx-stack" style={{ maxWidth: 360, gap: 8 }}>
           <MqxButton variant="primary" stretched>
-            Primary
+            Основное действие
           </MqxButton>
           <MqxButton variant="secondary" stretched>
-            Secondary
+            Вторичное действие
           </MqxButton>
           <MqxButton variant="ghost" stretched>
-            Ghost
+            Спокойное действие
           </MqxButton>
           <MqxButton variant="destructive" stretched>
-            Destructive
+            Удалить
           </MqxButton>
           <p className="mqx-catalog__note" style={{ margin: 0 }}>
             Ссылка: <MqxButton variant="link">Создать аккаунт</MqxButton>
           </p>
         </div>
         <div className="mqx-fin-subtabs-row" style={{ maxWidth: 360, marginTop: 16 }}>
-          <MqxSubtab active>Активные</MqxSubtab>
-          <MqxSubtab>В рамке</MqxSubtab>
+          <MqxSubtab active={activeTab === 'active'} onClick={() => setActiveTab('active')}>Активные</MqxSubtab>
+          <MqxSubtab active={activeTab === 'closed'} onClick={() => setActiveTab('closed')}>Закрытые</MqxSubtab>
         </div>
         <div className="mqx-capital-mode-grid" style={{ maxWidth: 360, marginTop: 12 }}>
-          <MqxModeButton active>Режим вкл</MqxModeButton>
-          <MqxModeButton>Режим выкл</MqxModeButton>
+          <MqxModeButton active={activeMode === 'add'} onClick={() => setActiveMode('add')}>Добавить</MqxModeButton>
+          <MqxModeButton active={activeMode === 'mine'} onClick={() => setActiveMode('mine')}>Мои позиции</MqxModeButton>
         </div>
       </CatalogSection>
 
-      <CatalogSection title="Шаблон актива">
+      <CatalogSection title="Шаблон актива" context="sheet">
         <CapitalPositionCard
           variant="asset"
           kicker="Недвижимость"
@@ -485,21 +350,22 @@ export function MqCatalogScreen() {
           }
           action={{ className: 'mqx-fin-icon-btn mqx-fin-icon-btn--plus mqx-capital-add-btn', onClick: () => {} }}
           actionLabel="+"
+          actionVerb="Купить"
           actionAriaLabel="Добавить"
         />
       </CatalogSection>
 
-      <CatalogSection title="Позиция актива (компактная строка)">
+      <CatalogSection title="Позиция актива (компактная строка)" context="sheet">
         <MqxFinListRow
           title="Квартира под сдачу"
           metrics={
             <AssetPositionMetrics assetValue={4200000} monthlyMaintenanceCost={12000} monthlyIncome={35000} />
           }
-          trailing={<MqxRowAction variant="remove" ariaLabel="Удалить актив" onClick={() => {}} />}
+          trailing={<MqxRowAction variant="remove" verb="Удалить" ariaLabel="Удалить актив" onClick={() => {}} />}
         />
       </CatalogSection>
 
-      <CatalogSection title="Шаблон долга">
+      <CatalogSection title="Шаблон долга" context="sheet">
         <CapitalPositionCard
           variant="liability"
           kicker="Долг"
@@ -509,10 +375,12 @@ export function MqCatalogScreen() {
           }
           action={{ className: 'mqx-fin-icon-btn mqx-fin-icon-btn--plus mqx-capital-add-btn', onClick: () => {} }}
           actionLabel="+"
+          actionVerb="Взять"
+          actionAriaLabel="Взять ипотеку в примере"
         />
       </CatalogSection>
 
-      <CatalogSection title="Позиция долга (компактная строка)">
+      <CatalogSection title="Позиция долга (компактная строка)" context="sheet">
         <MqxFinListRow
           title="Кредитная карта"
           metrics={
@@ -523,18 +391,19 @@ export function MqCatalogScreen() {
               overdueAmount={4500}
             />
           }
-          trailing={<MqxRowAction variant="remove" ariaLabel="Удалить долг" onClick={() => {}} />}
+          trailing={<MqxRowAction variant="remove" verb="Удалить" ariaLabel="Удалить долг" onClick={() => {}} />}
         />
       </CatalogSection>
 
-      <CatalogSection title="Позиция депозита">
+      <CatalogSection title="Позиция депозита" context="sheet">
         <InvestPositionRow
           position={{ id: 1, title: 'Депозит · 14% годовых', principal: 250000, annual_rate_percent: 14 }}
           onClose={() => {}}
+          useTextAction
         />
       </CatalogSection>
 
-      <CatalogSection title="Цель раскрыта (MqxGoalDash · ★ BG-1)">
+      <CatalogSection title="Цель раскрыта — ★ BG-3 / BG-4">
         <p className="mqx-catalog__lead">
           Шаги цепочки победы без Монетки, золотой финиш. Lab: <code>design-lab/board-game/hybrid-round/</code>.
         </p>
@@ -553,17 +422,19 @@ export function MqCatalogScreen() {
         <MqxStatesCatalogDemo />
       </CatalogSection>
 
-      <CatalogSection title="Форма депозита (variant D)">
-        <InvestRateChip annualRatePercent={12} productId="deposit" />
+      <CatalogSection title="Форма депозита — окно суммы ★ BG-4" context="sheet">
+        <p className="mqx-catalog__lead">Та же форма, что в окне капитала: поле суммы, ставка, ползунок и кнопка-фишка.</p>
         <InvestProductForm
           productId="deposit"
           amount={amount}
           maxCash={420000}
           annualRatePercent={12}
           onAmountChange={setAmount}
-          onSubmit={() => {}}
+          onSubmit={() => setDepositNotice(`В примере открыт депозит на ${amount.toLocaleString('ru-RU')} ₽.`)}
           submitLabel="Открыть депозит"
+          embedded
         />
+        <p role="status">{depositNotice}</p>
       </CatalogSection>
     </div>
   );

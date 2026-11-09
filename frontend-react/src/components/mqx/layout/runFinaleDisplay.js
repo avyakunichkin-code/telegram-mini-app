@@ -35,6 +35,25 @@ export function finaleWinStats(payload) {
   ];
 }
 
+/** Лента решений (вариант Б): null, если показывать нечего. Сумма всегда со знаком, не только цветом. */
+export function finaleRecap(payload) {
+  const decisions = (Array.isArray(payload?.recap?.decisions) ? payload.recap.decisions : [])
+    .map((d) => ({ ...d, delta: Number(d?.cash_delta) }))
+    .filter((d) => Number.isFinite(d.delta) && d.delta !== 0);
+  if (!decisions.length) return null;
+  return {
+    label: payload.recap.decisions_label || '',
+    items: decisions.map((d) => ({
+      key: `${d.period_index}-${d.choice_title}`,
+      turn: `Ход ${d.period_index}`,
+      event: d.event_title || '',
+      choice: d.choice_title || '',
+      amount: `${d.delta > 0 ? '+' : ''}${fmtRub(d.delta)}`,
+      gain: d.delta > 0,
+    })),
+  };
+}
+
 /** Поражение: факт риска (title), деталь (text), не больше двух советов. */
 export function finaleDefeatFact(payload) {
   const fact = payload?.fact;

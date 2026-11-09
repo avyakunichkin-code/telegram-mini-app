@@ -103,8 +103,10 @@ export function isEventsIntroGuidanceComplete(guidance) {
 /**
  * Не автопоказывать карусель событий, пока curriculum ждёт intro на ходе 3+.
  * Ручное открытие «События» на шаге t_events_intro по-прежнему разрешено.
+ * Гостевой старт (onboarding_version 2): колода открывается только вручную, на любом ходу.
  */
 export function shouldDeferEventsAutoOpen(guidance, periodIndex) {
+  if (guidance?.onboarding_version === 2) return true;
   const pi = Number(periodIndex);
   if (!Number.isFinite(pi) || pi < MIN_PERIOD_INDEX_FOR_GAME_EVENTS) return false;
   if (!guidance?.show_curriculum) return false;
@@ -115,6 +117,7 @@ export function shouldDeferEventsAutoOpen(guidance, periodIndex) {
  * События — с хода MIN_PERIOD_INDEX_FOR_GAME_EVENTS; t_events_intro — после spine P1+P2.
  */
 export function areGameEventsUnlocked(guidance, onboardingState, periodIndex = null) {
+  if (guidance?.onboarding_version === 2) return true;
   const pi = Number(periodIndex);
   const pastEventGate = Number.isFinite(pi) && pi >= MIN_PERIOD_INDEX_FOR_GAME_EVENTS;
 

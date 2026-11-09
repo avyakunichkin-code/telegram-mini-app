@@ -2,6 +2,7 @@ import assert from 'node:assert/strict';
 
 import {
   periodCloseBalanceHeadline,
+  periodCloseCompactLines,
   periodCloseDetailLines,
   periodCloseHighlightLines,
 } from './periodCloseBreakdown.js';
@@ -55,3 +56,18 @@ assert.equal(headline.delta, 1500);
 assert.equal(headline.overdueAdded, 5000);
 
 console.log('periodCloseBreakdown.test.js OK');
+
+
+// The cash headline must not include capitalised interest a second time.
+const compact=periodCloseCompactLines({...withHighlights,period_highlights:[
+  {key:'expenses',label:'Расходы',amount:37500},
+  {key:'bond_coupons',label:'Купоны',amount:133},
+  {key:'deposit_interest',label:'Проценты',amount:117},
+]});
+assert.deepEqual(compact.map(line=>[line.title,line.amount]),[
+  ['Расходы списаны',37500],['Купоны на счёт',133],['Проценты во вклад',117],
+]);
+assert.equal(compact[2].note,'Увеличили вклад, не счёт');
+assert.equal(periodCloseCompactLines(sample).find(line=>line.type==='deposit_interest').note,'Увеличили вклад, не счёт');
+assert.deepEqual(periodCloseCompactLines(null),[]);
+assert.equal(periodCloseBalanceHeadline({...sample,new_balance:50133,cash_delta:25133}).balance,50133);

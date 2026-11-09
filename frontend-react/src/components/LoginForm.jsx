@@ -1,5 +1,6 @@
 import { useCallback, useState } from 'react';
 import { useAuth } from '../context/AuthContext';
+import { authSubmitError } from '../utils/authSubmitError';
 import { AuthFormField } from './mqx/auth/AuthFormField';
 import { BrandLogo } from './BrandLogo';
 import { MqxBoardButton } from './mqx/pregame/MqxBoardButton';
@@ -15,7 +16,7 @@ export function LoginForm({ onSwitchToRegister }) {
   const [fieldErrors, setFieldErrors] = useState({});
   const [submitError, setSubmitError] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const { login } = useAuth();
+  const { login, user } = useAuth();
 
   const runValidation = useCallback(() => {
     const errors = validateLoginFields({ username, password });
@@ -44,8 +45,8 @@ export function LoginForm({ onSwitchToRegister }) {
     try {
       await login(username.trim().toLowerCase(), password);
       window.location.href = `${import.meta.env.BASE_URL}#/`;
-    } catch {
-      setSubmitError('Неверная почта или пароль');
+    } catch (err) {
+      setSubmitError(authSubmitError(err, 'login'));
     } finally {
       setIsSubmitting(false);
     }
@@ -55,6 +56,7 @@ export function LoginForm({ onSwitchToRegister }) {
     <div className="mqx-pg mqx-pg--auth">
       <h1 className="mqx-bg-sr-only">Вход</h1>
       <BrandLogo variant="full" className="mqx-pg-logo" />
+      {user?.is_guest && <p>Вход откроет сохранения выбранного аккаунта. Текущая гостевая партия не переносится и остаётся доступной в этом браузере.</p>}
       <form onSubmit={handleSubmit} className="mqx-pg-form" noValidate aria-label="Вход">
         <AuthFormField
           id="login-email"

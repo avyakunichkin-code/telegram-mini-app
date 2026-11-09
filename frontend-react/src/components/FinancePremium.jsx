@@ -1,4 +1,7 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
+import { MqxStateError } from './mqx/primitives/MqxStateError';
+import { MqxStateSkeleton } from './mqx/primitives/MqxStateSkeleton';
+import { buildCapitalPeriodFlows } from '../utils/buildCapitalPeriodFlows';
 import { API } from '../api';
 import {
   BOND_ANNUAL_RATE_PERCENT,
@@ -37,6 +40,17 @@ export function FinancePremium({
   const [extraLoading, setExtraLoading] = useState(true);
   const [securedAcquireBusyKey, setSecuredAcquireBusyKey] = useState(null);
   const [prepayBusy, setPrepayBusy] = useState(false);
+  const [investmentSyncState,setInvestmentSyncState]=useState(null);
+  const investmentSyncStarted=useRef(false);
+  useEffect(()=>{
+    if(investmentSyncState){
+      investmentSyncStarted.current=true;
+      if(investmentSyncState==='error')document.querySelector('.mqx-capital-page .mqx-state-error__btn')?.focus({preventScroll:true});
+    }else if(investmentSyncStarted.current){
+      document.getElementById('capital-tab-details')?.focus({preventScroll:true});
+      investmentSyncStarted.current=false;
+    }
+  },[investmentSyncState]);
 
   /** open | locked | hidden на раздел: закрытые механики видны пунктиром (★ BG-2). */
   const sections = useMemo(
@@ -95,10 +109,12 @@ export function FinancePremium({
       if (Array.isArray(pol)) setPolicies(pol);
       if (Array.isArray(tpl)) setAssetTemplates(tpl);
       if (Array.isArray(ltpl)) setLiabilityTemplates(ltpl);
+      return true;
     } catch (e) {
       if (!quiet) {
         showNotification(e?.detail || e?.message || 'Не удалось обновить разделы капитала', 'error');
       }
+      return false;
     } finally {
       setExtraLoading(false);
     }
@@ -234,35 +250,24 @@ export function FinancePremium({
   const ownedAssets = overview.assets || [];
   const ownedLiabilities = overview.liabilities || [];
 
-  const openDeposit = async () => {
-    try {
-      await API.openDeposit({ amount: depositAmount, annual_rate_percent: DEPOSIT_ANNUAL_RATE_PERCENT });
-      showNotification('Депозит открыт', 'success');
-      setDepositAmount(0);
-      await refreshOverview();
-      await reloadExtra();
-      setOpenSheet(null);
-    } catch (e) {
-      showNotification(e?.detail || e?.message || 'Не удалось открыть депозит', 'error');
-    }
+  const syncInvestment = async () => {
+    setInvestmentSyncState('loading');
+    const [summary,extra]=await Promise.allSettled([refreshOverview(),reloadExtra({quiet:true})]);
+    const synced=summary.status==='fulfilled'&&extra.status==='fulfilled'&&extra.value===true;
+    setInvestmentSyncState(synced?null:'error');
   };
-
-  const openBond = async () => {
-    try {
-      await API.buyBond({
-        amount: bondAmount,
-        annual_rate_percent: BOND_ANNUAL_RATE_PERCENT,
-        title: 'Облигации',
-      });
-      showNotification('Облигации добавлены', 'success');
-      setBondAmount(0);
-      await refreshOverview();
-      await reloadExtra();
-      setOpenSheet(null);
-    } catch (e) {
-      showNotification(e?.detail || e?.message || 'Не удалось добавить облигации', 'error');
-    }
+  const finishInvestment = async (product) => {
+    if(product==='deposit')await API.openDeposit({amount:depositAmount,annual_rate_percent:DEPOSIT_ANNUAL_RATE_PERCENT});
+    else await API.buyBond({amount:bondAmount,annual_rate_percent:BOND_ANNUAL_RATE_PERCENT,title:'Облигации'});
+    // Confirmation belongs to the mutation; a later refresh failure must not offer another purchase.
+    setOpenSheet(null);
+    setPageMode('details');
+    if(product==='deposit')setDepositAmount(0);else setBondAmount(0);
+    showNotification(product==='deposit'?'Вклад открыт':'Облигации добавлены','success');
+    await syncInvestment();
   };
+  const openDeposit = () => finishInvestment('deposit');
+  const openBond = () => finishInvestment('bond');
 
   const closeInvest = async (id) => {
     try {
@@ -295,6 +300,10 @@ export function FinancePremium({
       <main className="mqx-content mqx-tab-page__scroll mqx-capital-page mqx-capital-page--board">
         <div className="mqx-fin mqx-fin--capital">
           <div className="mqx-capital-accordion-stack">
+            {investmentSyncState==='loading'?<MqxStateSkeleton variant="rows" rows={2}/>:
+              investmentSyncState==='error'?<MqxStateError title="Покупка выполнена"
+                message="Не удалось обновить данные. Обнови их, чтобы увидеть позицию и остаток на счёте."
+                retryLabel="Обновить данные" onRetry={()=>void syncInvestment()}/>:<>
             <CapitalPeriodFlowsBlock
               overview={overview}
               investPositions={investPositions}
@@ -338,6 +347,7 @@ export function FinancePremium({
                 depositAmount={depositAmount}
                 bondAmount={bondAmount}
                 maxCash={maxCash}
+                expenses={buildCapitalPeriodFlows({overview,investPositions,policies}).expense.total}
                 depositRate={DEPOSIT_ANNUAL_RATE_PERCENT}
                 bondRate={BOND_ANNUAL_RATE_PERCENT}
                 onDepositAmountChange={setDepositAmount}
@@ -353,6 +363,7 @@ export function FinancePremium({
                 ownedAssets={ownedAssets}
               />
             )}
+            </>}
           </div>
         </div>
       </main>

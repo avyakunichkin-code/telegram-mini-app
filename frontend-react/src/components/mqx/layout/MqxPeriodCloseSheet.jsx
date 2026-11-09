@@ -1,3 +1,4 @@
+import { KvityaMascot } from '../brand/KvityaMascot';
 import {
   IconMetricCoins,
   IconMetricShield,
@@ -84,6 +85,7 @@ export function MqxPeriodCloseSheet({ summary, open, onClose }) {
           ×
         </button>
         <h2 id="mqx-pclose-title" className="mqx-pclose-sheet__title">
+          <KvityaMascot pose={rows[0]?.delta > 0 ? 'joy' : rows[0]?.delta < 0 ? 'think' : 'default'} size={42} />
           {title}
         </h2>
         <ul className="mqx-pclose-sheet__rows">

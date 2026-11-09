@@ -703,3 +703,9 @@ button.mqx-events-choice:disabled {
   opacity: 0.35;
   cursor: not-allowed;
 }
+/* Player decisions: approved consequences B, 2026-11-06. */
+.mqx-choice-money{display:flex;justify-content:space-between;align-items:baseline;gap:8px;font-size:var(--mq-fs-caption);line-height:1.4;margin-top:var(--mq-sp-2);min-width:0;width:100%}
+.mqx-choice-money>span:first-child{min-width:0;text-align:left}
+.mqx-choice-money strong{font-size:var(--mq-fs-caption);white-space:nowrap;flex-shrink:0}
+.mqx-choice-future{display:block;padding-top:6px;margin-top:var(--mq-sp-2);border-top:1px solid var(--mq-cell-edge);color:var(--mq-board-ink)}
+.mqx-choice-future small,.mqx-choice-note{display:block;font-size:var(--mq-fs-caption);font-weight:400;line-height:1.45;text-align:left;margin-top:5px;color:var(--mq-board-ink-soft);overflow-wrap:anywhere}

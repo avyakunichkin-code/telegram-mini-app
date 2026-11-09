@@ -32,8 +32,8 @@ test.describe('Регистрация и первый ход', () => {
     await expect(ritual).toContainText('Ход №1 завершён');
     // Регресс 2026-10-26: стартовый баланс считался доходом хода («+21 000 ₽ за ход» при реальных +6 000).
     const ritualText = await ritual.innerText();
-    const balance = Number(ritualText.match(/На счёте\s*([\d\s\u00a0\u202f]+)₽/)[1].replace(/[^\d]/g, ''));
-    const delta = Number(ritualText.match(/([+−-][\d\s\u00a0\u202f]+)₽ за ход/)[1].replace(/[^\d]/g, ''));
+    const balance = Number(ritualText.match(/На счёте сейчас\s*([\d\s\u00a0\u202f]+)₽/)[1].replace(/[^\d]/g, ''));
+    const delta = Number(ritualText.match(/За весь ход:\s*([+−-][\d\s\u00a0\u202f]+)₽/)[1].replace(/[^\d]/g, ''));
     expect(delta).toBe(balance - startCash);
 
     await dismissRitual(page);
