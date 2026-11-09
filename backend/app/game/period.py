@@ -300,6 +300,8 @@ _TRANSACTION_TYPE_BY_POSTING = {
 
 
 def _post(ctx: _PeriodClose, posting: Posting, description: str) -> None:
+    # ref_id у других проводок указывает не на кредит (например, купон — на вклад).
+    liability_id = int(posting.ref_id) if posting.kind == POSTING_LIABILITY_PAYMENT else None
     adjust_balance(
         db=ctx.db,
         game_profile_id=ctx.profile.id,
@@ -307,6 +309,7 @@ def _post(ctx: _PeriodClose, posting: Posting, description: str) -> None:
         type=_TRANSACTION_TYPE_BY_POSTING[posting.kind],
         description=description,
         period_index=ctx.period_index,
+        liability_id=liability_id,
     )
     ctx.db.refresh(ctx.profile)
 
