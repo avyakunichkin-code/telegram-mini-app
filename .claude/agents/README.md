@@ -29,3 +29,5 @@ Use mqx-ui-reviewer — крупное → lab+prod+APPROVED в одном PR.
 1. **UI крупное** → один PR: lab + prod + APPROVED. **Мелочь** → canon в follow-up (CONCERNS).
 2. **Экономика** → **NEEDS REVISION** без зелёного `pytest -q` при изменении логики/данных.
 3. **pytest** — зона economy-reviewer; guardrails — advisory в mqx-ui-reviewer.
+4. **Baseline** — принимает только человек; economy-balance-runner не имеет Write/Edit и не запускает `--update-baselines`.
+5. **Вход mqx-ui-reviewer** — diff или список файлов от родителя: у агента нет shell. **APPROVED агента** не заменяет утверждение человека.

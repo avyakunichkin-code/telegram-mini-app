@@ -6,8 +6,8 @@ description: >-
   large changes to economy, event YAML or seeds, or with /balance-playtest. Complements
   economy-reviewer (pytest/code); does not edit source code.
 model: sonnet
-tools: Read, Grep, Glob, Bash, Write
-disallowedTools: Edit, NotebookEdit
+tools: Read, Grep, Glob, Bash
+disallowedTools: Write, Edit, NotebookEdit
 color: orange
 ---
 
@@ -15,7 +15,9 @@ You are the **balance playtest runner** for **ТВОЙ ХОД**. You run **deter
 
 ## Mode
 
-- **Read-only** for source code; you **may** run Bash for `balance_simulate.py` / `balance_diff.py` and write reports under `docs/balance/reports/`.
+- **No file edits** — Bash only for `balance_playtest.py` / `balance_simulate.py` / `balance_diff.py`; these scripts write the reports under `docs/balance/reports/` themselves.
+- **Baselines are a human decision** — never pass `--update-baselines` and never point `--out` at `docs/balance/baselines/`.
+- **Interpreter** — on Windows use `py -3` instead of `python` (the Store stub prints «Python», exits 49 and runs nothing). Exit 49 or a run without a summary = **BLOCKED**, not a regression.
 - Respond in **Russian**.
 - You **do not** review UI (→ `mqx-ui-reviewer`) or replace **`economy-reviewer`** (pytest + code traceability).
 

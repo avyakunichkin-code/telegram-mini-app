@@ -35,7 +35,8 @@ You are a senior **economy** reviewer for **ТВОЙ ХОД**. You judge **corre
 |------|--------|
 | Period economics | `backend/app/game/period.py`, `services/period/close.py`, `game/rules.py` |
 | Victory | `backend/app/victory/`, `finance/overview_build.py` if `victory` / `win_reached` |
-| Events | `backend/app/events/` |
+| Events | `backend/app/events/`, `backend/app/services/events/` |
+| Shared kernel | `packages/fincore/` and its game adapters — formulas stay correct, no game concepts (needs, events, victory, turn) in `fincore` ([ADR-016](docs/decisions/ADR-016-two-products-shared-fincore.md)) |
 | Templates / balance data | `backend/app/seeds/`, `backend/migrations/*.sql`, `victory_config_json` |
 | Tests | `backend/tests/` related to above |
 
@@ -83,9 +84,11 @@ If the diff touches **behavior or economy data** (`period.py`, `victory/`, `even
    - tests failed, or
    - logic changed but no test updates when tests exist for that module
 
+   Evidence = the final pytest summary line (`N passed`). On Windows use `py -3 -m pytest -q`: the `python` Store stub prints «Python», exits 49 and runs nothing — report that as **НЕ ЗАПУЩЕН**, not as FAIL or PASS.
+
 3. **APPROVED** for economy only if pytest is green **or** diff is purely comments/docs (state explicitly).
 
-You may use Bash **only** to run pytest (`cd backend && python -m pytest -q`) when parent delegates; default: require evidence from parent.
+You may use Bash **only** for read-only `git diff` / `git log` / `git show` (to see the change under review) and to run pytest when parent delegates; default for pytest: require evidence from parent.
 
 ---
 
@@ -105,7 +108,7 @@ You may use Bash **only** to run pytest (`cd backend && python -m pytest -q`) wh
 
 - [ ] `win_reached` from engine, not router hacks
 - [ ] `chain` / `parallel` and goal order intact
-- [ ] `min_period_index_for_victory` unchanged without spec
+- [ ] No general period gate returns: `min_period_index_for_victory` was removed (migration 0042), period conditions live only in chain goals
 - [ ] `mechanics_unlock` still matches goal keys
 
 ### Period / events

@@ -1,10 +1,27 @@
 # Codex · ТВОЙ ХОД / ТВОЙ ПЛАН
 
-ТВОЙ ХОД — игра финансовой грамотности: PWA/web primary, Telegram secondary.
-ТВОЙ ПЛАН — отдельный прототип в `apps/plan-*`, без продуктивной БД,
-деплоя и реальных пользовательских данных. Не возвращать `save_kind=plan`.
+Codex — основной рабочий контур. Итог перехода и ограничения активации:
+[CODEX-TRANSITION](docs/ai/CODEX-TRANSITION.md). Claude-файлы — история миграции,
+не параллельный источник действующих инструкций.
+
+Два продукта в одном репозитории (ADR-016), с отдельными рабочими контекстами:
+
+| Продукт | Frontend / cwd | API | Документация |
+|---|---|---|---|
+| ТВОЙ ХОД | [frontend-react](frontend-react/AGENTS.md) | [backend](backend/AGENTS.md) | [Game](docs/game/README.md) |
+| ТВОЙ ПЛАН | [apps/plan-web](apps/plan-web/AGENTS.md) | [apps/plan-api](apps/plan-api/AGENTS.md) | [Plan](docs/plan/README.md) |
+
+Перед работой выбери продукт и прочитай его локальный AGENTS и затронутую spec.
+Из корневого cwd вложенные инструкции не считать автоматически загруженными.
+Не загружай второй продукт без задачи на общий контракт. Не возвращать `save_kind=plan`.
+Plan P2 разрешён по ADR-017; реальные пользователи и деплой не входят в обычную
+локальную разработку. Настройка проектов — [WORKSPACES](docs/ai/WORKSPACES.md).
 
 ## Решения и границы
+
+Структура и архив: [PROJECT_STRUCTURE](docs/PROJECT_STRUCTURE.md).
+Для обычной задачи не обходи `docs/archive/`, `design/archive/` и исторический
+Claude-контур; обращайся к конкретному файлу только при проверке истории.
 
 Прочитай [CONVENTIONS.md](CONVENTIONS.md) для вердикта; источники поведения:
 код + тесты → spec фичи → foundation → idea. Backlog задаёт приоритет,
@@ -18,10 +35,8 @@
   [split plan](docs/plans/PLAN_game-plan-split.md) определяют границы продуктов.
 - `packages/fincore` — stdlib/Decimal/DTO и чистые финансовые функции; без IO,
   ORM, HTTP, needs, events, victory и ходов. Адаптеры живут в приложениях.
-- Контент событий — `data/events/mvp11/`, не SQL. Baseline SQL — DDL-only.
-- Новый layout/карточка/CTA/sheet: lab → явное утверждение человека → MQX → prod.
-  Опечатка, a11y-label, мелкий токен без смены layout допускают hotfix по
-  [DESIGN_WORKFLOW](frontend-react/src/components/mqx/DESIGN_WORKFLOW.md).
+- Baseline SQL — DDL-only. Продуктовые правила и дизайн-процесс — в локальных
+  инструкциях: [Game](docs/game/DESIGN.md), [Plan](docs/plan/DESIGN.md).
 - Не редактируй вручную `design-lab/index.html` и `design-lab/**/lab-base.css`.
   Источники и генераторы: [hooks runbook](docs/ai/CODEX-HOOKS.md).
 - Сохраняй существующие изменения пользователя. Claude-контур (`CLAUDE.md`,
@@ -38,11 +53,10 @@
 | Задача | Primary | Дополнение по риску |
 |---|---|---|
 | idea / spec / plan / обычный баг / docs | delivery | различай стадии и approval, не заводи spec для опечатки |
-| зарплата, порог, period/victory/needs | game-economy | verify-change, balance-playtest при существенном изменении |
-| новый YAML event / аудит каталога | event-authoring / event-audit | экономика только при смене движка |
+| игровая экономика / YAML events | game-economy / event-authoring / event-audit | только Game, проверки по риску |
 | API-поле | api-contract-change | backend + frontend контракт и критичный сценарий |
 | схема/SQL/seeds | db-migration | схема ≠ контент событий |
-| новый UI / утверждённый UI | mqx-design / frontend-implementation | lab, состояния, canon; затем review |
+| UI Game / UI Plan | mqx-design + frontend-implementation / delivery | собственные lab, состояния и canon продукта |
 | guidance / admin | delivery | отдельные [процессы](docs/ai/CODEX-PROCESSES.md) |
 | проверка / review | verify-change / review-change | независимые проходы по области |
 | ADR / AI-конфигурация | architecture-decision / codex-config-audit | не второй продуктовый backlog |
@@ -59,11 +73,10 @@
 
 Команды, cwd, Windows и зависимости — [COMMANDS.md](docs/ai/COMMANDS.md).
 Минимум для AI-слоя: `node scripts/codex/check.mjs` и
-`node --test scripts/codex/*.test.mjs`. Для продукта по области:
-backend `python -m pytest -q` (включает fincore); frontend
-`npm run test:unit`, `npm run build`, `npm run check:guardrails`;
-`python scripts/check_conventions.py`; Playwright при критичном UI-пути;
-30–40 периодов и осмысленный baseline diff при существенной экономике.
+`node --test scripts/codex/*.test.mjs`. Для продукта — проверки из его локального
+AGENTS; `python scripts/check_conventions.py` по области. Общий UI-контракт —
+`node --test tests/shared-ui/*.test.mjs`, отдельно от unit-тестов приложений.
+Playwright при критичном UI-пути; 30–40 периодов при существенной экономике Game.
 
 Готово = полный согласованный срез, проверенные контракты и ссылки, результаты
 команд с exit code, оставшиеся риски названы. Не называй runtime-гейт активным
@@ -74,7 +87,7 @@ backend `python -m pytest -q` (включает fincore); frontend
 
 Отмечай только воспроизводимые регрессии с файлом, сценарием и последствием.
 Экономика: без зелёного backend pytest для логики/данных — NEEDS REVISION.
-UI: крупное изменение требует lab + prod + подтверждённого approval и canon
+UI продукта: крупное изменение требует lab + prod + подтверждённого approval и canon
 в одном срезе; небольшое допускает явно названный canon follow-up.
 Формула и желательность баланса — разные вопросы. Не исправляй diff в review
 без отдельного поручения; указывай PASS / CONCERNS / NEEDS REVISION и пробелы.

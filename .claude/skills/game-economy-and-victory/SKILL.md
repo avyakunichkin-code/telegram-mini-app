@@ -50,7 +50,7 @@ allowed-tools: Read, Glob, Grep, Write, Bash(python -m pytest *), Bash(python sc
 
 ## Overview
 
-Prod-победа — **Victory v2** (`victory_config_json` шаблона, `progression_mode: chain` | `parallel`, `min_period_index_for_victory`). Не дублировать условия победы в роутерах вручную — только через `victory/engine.py` и сборку overview.
+Prod-победа — **Victory v2** (`victory_config_json` шаблона, `progression_mode: chain` | `parallel`; общего гейта по периоду нет). Не дублировать условия победы в роутерах вручную — только через `victory/engine.py` и сборку overview.
 
 Legacy MVP-AND («3× подушка + просрочка + cashflow») — **только тесты** (`evaluate_mvp_victory`), не prod.
 

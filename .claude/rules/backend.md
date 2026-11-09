@@ -19,7 +19,7 @@ paths:
 - Изменения контракта профиля/событий → SQL-миграция + `models.py` + **`frontend-react/src/api/<домен>.js`** и экраны старта.
 - **Роутеры**: подключение в `backend/main.py`; префиксы API держать согласованными с фронтом (`/api/...`).
 - **Ошибки API**: предсказуемые статусы и тело ответа; фронт ожидает единый контракт ошибок через `apiCall` в `frontend-react/src/api/client.js`.
-- **Победа (prod: Victory v2):** `GET /api/finance/overview` → `win_reached` и блок `victory` из `victory/engine.py` + `victory_config_json` шаблона (`chain` | `parallel`, gate `min_period_index_for_victory`, обычно 7). Spec: [`SPEC_victory-v2.md`](docs/specs/features/SPEC_victory-v2.md), [ADR-002](docs/decisions/ADR-002-victory-engine-and-template-config.md). Старт Game: [`SPEC_game-plan.md`](docs/specs/features/SPEC_game-plan.md); Plan снят [ADR-013](docs/decisions/ADR-013-game-only-drop-plan-mode.md).
+- **Победа (prod: Victory v2):** `GET /api/finance/overview` → `win_reached` и блок `victory` из `victory/engine.py` + `victory_config_json` шаблона (`chain` | `parallel`; общего гейта по периоду нет, условия по периоду — только в целях chain). Spec: [`SPEC_victory-v2.md`](docs/specs/features/SPEC_victory-v2.md), [ADR-002](docs/decisions/ADR-002-victory-engine-and-template-config.md). Старт Game: [`SPEC_game-plan.md`](docs/specs/features/SPEC_game-plan.md); Plan снят [ADR-013](docs/decisions/ADR-013-game-only-drop-plan-mode.md).
 - **Инварианты логики (tier-окно, победа):** `backend/app/game/rules.py`; победа v2 — `backend/app/victory/engine.py`. Роутеры не дублируют условия победы вручную.
 
 ## Локальные тесты (без CI)

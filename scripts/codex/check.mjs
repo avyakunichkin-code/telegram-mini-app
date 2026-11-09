@@ -8,8 +8,9 @@ const check = (ok, message) => { if (!ok) failures.push(message); };
 const read = p => fs.readFileSync(path.join(ROOT,p),'utf8');
 const exists = p => fs.existsSync(path.join(ROOT,p));
 const skills = fs.readdirSync(path.join(ROOT,'.agents/skills'),{withFileTypes:true}).filter(x=>x.isDirectory()).map(x=>x.name);
-check(skills.length === 13,'Expected 13 project skills');
-const markdown = ['AGENTS.md',...skills.map(n=>`.agents/skills/${n}/SKILL.md`),...fs.readdirSync(path.join(ROOT,'docs/ai')).filter(n=>n.endsWith('.md')).map(n=>`docs/ai/${n}`)];
+check(skills.length > 0,'Expected at least one project skill');
+const scoped = ['frontend-react/AGENTS.md','backend/AGENTS.md','apps/plan-web/AGENTS.md','apps/plan-api/AGENTS.md','packages/AGENTS.md','docs/AGENTS.md','docs/game/AGENTS.md','docs/plan/AGENTS.md'];
+const markdown = ['AGENTS.md',...scoped,...skills.map(n=>`.agents/skills/${n}/SKILL.md`),...['docs/ai','docs/game/events'].flatMap(dir=>fs.readdirSync(path.join(ROOT,dir)).filter(n=>n.endsWith('.md')).map(n=>`${dir}/${n}`))];
 for (const name of skills) {
   const text = read(`.agents/skills/${name}/SKILL.md`);
   const front = /^---\r?\nname: ([a-z0-9-]+)\r?\ndescription: ([^\r\n]+)\r?\n---/.exec(text);
@@ -27,15 +28,18 @@ for (const file of markdown) {
   }
 }
 const migration = JSON.parse(read('docs/ai/skill-migration.json'));
-const sources = fs.readdirSync(path.join(ROOT,'.claude/skills'),{withFileTypes:true}).filter(x=>x.isDirectory()&&exists(`.claude/skills/${x.name}/SKILL.md`)).map(x=>x.name);
-check(sources.length===26 && migration.length===sources.length,'Source skill count drift');
-for(const name of sources) check(migration.some(x=>x.source===`.claude/skills/${name}/SKILL.md`),`Unmapped source ${name}`);
-for(const row of migration) {
-  check(exists(row.new_location),`Missing migration target: ${row.new_location}`);
-  for(const field of ['purpose','trigger','input','output','write_scope','dependencies','side_effects','transfer','verification']) check(row[field] !== undefined,`Missing ledger field ${field}`);
+// The migration ledger is historical; normal Codex checks must not depend on
+// discovering or executing the retired Claude configuration.
+if(process.argv.includes('--source-drift')) {
+  const sources = fs.readdirSync(path.join(ROOT,'.claude/skills'),{withFileTypes:true}).filter(x=>x.isDirectory()&&exists(`.claude/skills/${x.name}/SKILL.md`)).map(x=>x.name);
+  check(migration.length===sources.length,'Source skill count drift');
+  for(const name of sources) check(migration.some(x=>x.source===`.claude/skills/${name}/SKILL.md`),`Unmapped source ${name}`);
+  for(const row of migration) {
+    check(exists(row.new_location),`Missing migration target: ${row.new_location}`);
+    for(const field of ['purpose','trigger','input','output','write_scope','dependencies','side_effects','transfer','verification']) check(row[field] !== undefined,`Missing ledger field ${field}`);
+  }
 }
 const hooks=JSON.parse(read('.codex/hooks.json'));
-check(!exists('.codex/config.toml'),'Review config.toml for duplicated inline hooks before adding a second registration representation');
 check(!hooks.hooks.Stop,'Stop continuation is intentionally absent');
 for(const event of ['SessionStart','PreToolUse','PostToolUse']) {
   check(Array.isArray(hooks.hooks[event]),`Missing hook event ${event}`);

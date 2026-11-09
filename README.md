@@ -1,5 +1,7 @@
 # ТВОЙ ХОД — игра по финансовой грамотности
 
+**Рабочие контексты:** [ТВОЙ ХОД](docs/game/README.md) · [ТВОЙ ПЛАН](docs/plan/README.md) · [настройка Codex](docs/ai/WORKSPACES.md).
+
 **PWA и web** — primary каналы; **Telegram Mini App** — secondary ([ADR-012](docs/decisions/ADR-012-primary-channels-pwa-web-over-tma.md)). Периоды («месяц»), подушка, обязательства, события, инвестиции и страховки MVP.
 
 [![Deploy on Render](https://img.shields.io/badge/Deploy%20on-Render-blue?logo=render)](https://render.com)
@@ -16,17 +18,19 @@
 |-----|-----|
 | **Свод принципов (вердикт)** | [`CONVENTIONS.md`](CONVENTIONS.md) · гейт: `py -3 scripts/check_conventions.py` |
 | Карта `docs/` (foundation, specs, plans, backlog) | [`docs/README.md`](docs/README.md) |
-| Быстрый контекст для разработчиков и агентов | [`CLAUDE.md`](CLAUDE.md) |
+| Быстрый контекст для разработчиков и агентов | [`AGENTS.md`](AGENTS.md) |
 | Конвейер idea → spec → plan → tasks | [`docs/DOCUMENTATION_SYSTEM.md`](docs/DOCUMENTATION_SYSTEM.md) |
-| Продукт и экономика MVP | [`docs/foundation/SPEC_PRODUCT.md`](docs/foundation/SPEC_PRODUCT.md) |
+| Продукт и экономика MVP | [`docs/game/foundation/SPEC_PRODUCT.md`](docs/game/foundation/SPEC_PRODUCT.md) |
 
-Идея и пороги баланса MVP (черновик): [`docs/vision/ideas/game-balance-thresholds-and-constraints.md`](docs/vision/ideas/game-balance-thresholds-and-constraints.md).
+Идея и пороги баланса MVP (черновик): [`docs/game/vision/ideas/game-balance-thresholds-and-constraints.md`](docs/game/vision/ideas/game-balance-thresholds-and-constraints.md).
 
 ---
 
 ## Возможности (текущий MVP)
 
-- JWT-авторизация (логин и пароль)
+Срез 07.11.2026: [текущая игра](docs/game/handbook/CURRENT_GAME.md), [гостевой старт](docs/game/specs/features/SPEC_guest-first-start.md), [три новых направления лендинга](design-lab/landing-author-round/README.md). Локальные проверки не означают публикацию; новый баланс остаётся pending-balance.
+
+- Гостевой старт без обязательной регистрации (локально), JWT; добровольная привязка почты сохраняет партию
 - Старт **только Game** (`save_kind=game`) из каталога **`game_starter_templates`**. Режим Plan **снят** ([ADR-013](docs/decisions/ADR-013-game-only-drop-plan-mode.md))
 - Пошаговые периоды без таймера: «Завершить ход» запускает `process_period_end`
 - Зарплата **раз в период** по кнопке; не забрал до закрытия — за период не повторяется
@@ -36,7 +40,7 @@
 - Прогрессия: **tier событий** от `period_index`; character XP/level сняты ([ADR-003](docs/decisions/ADR-003-remove-character-progression.md)); достижения — backlog M12
 - Интеграция Telegram Web App (тема, viewport)
 
-Подробнее по эндпоинтам и папкам: [`CLAUDE.md`](CLAUDE.md).
+Эндпоинты: [`backend/app/routers/`](backend/app/routers/); фронтенд: [`frontend-react/README.md`](frontend-react/README.md).
 
 ---
 
@@ -61,7 +65,7 @@
 
 ## Локальный запуск
 
-**Windows, с нуля одной командой:** `powershell -ExecutionPolicy Bypass -File scripts\dev-setup.ps1` — подробно в [`docs/ops/LOCAL_DEV.md`](docs/ops/LOCAL_DEV.md) (Python 3.14, PostgreSQL 18).
+**Windows, с нуля одной командой:** `powershell -ExecutionPolicy Bypass -File scripts\dev-setup.ps1` — подробно в [`docs/game/ops/LOCAL_DEV.md`](docs/game/ops/LOCAL_DEV.md) (Python 3.14, PostgreSQL 18).
 
 ### Backend
 
@@ -97,7 +101,7 @@ npm run dev
 - **Закрытие периода** списывает обслуживание активов, платежи по обязательствам (при нехватке cash — просрочка без штрафов MVP), базовые расходы «жизни», премии страховок и начисляет инвестдоход по правилам продукта
 - **Победа:** Victory v2 оценивает цепочку целей из конфигурации стартового шаблона; результат доступен в `GET /api/finance/overview`.
 - **Поражение:** три подряд периода с отрицательным **`cash`** после закрытия периода
-- Финансовый «рейтинг» в overview ([`docs/specs/SPEC_ANALYTICS.md`](docs/specs/SPEC_ANALYTICS.md)) не управляет выпадением событий по уровню персонажа
+- Финансовый «рейтинг» в overview ([`docs/game/specs/SPEC_ANALYTICS.md`](docs/game/specs/SPEC_ANALYTICS.md)) не управляет выпадением событий по уровню персонажа
 
 ---
 
@@ -116,7 +120,7 @@ bash backend/scripts/db.sh migrate
 
 ## Деплой (Pre-Alpha / prod)
 
-Пошагово: **[`docs/ops/DEPLOY.md`](docs/ops/DEPLOY.md)** — свой домен `app.*` + API `api.*`, Render без cold start, GitHub Actions, BotFather, smoke.
+Пошагово: **[`docs/game/ops/DEPLOY.md`](docs/game/ops/DEPLOY.md)** — свой домен `app.*` + API `api.*`, Render без cold start, GitHub Actions, BotFather, smoke.
 
 Кратко:
 
@@ -141,4 +145,4 @@ bash backend/scripts/db.sh migrate
 
 ## Лицензия и вклад
 
-См. репозиторий. Для изменений контрактов API синхронизируйте [`frontend-react/src/api.js`](frontend-react/src/api.js) и вызовы в хуках/экранах (согласовано с [`CLAUDE.md`](CLAUDE.md)).
+См. репозиторий. Для изменений контрактов API синхронизируйте [`frontend-react/src/api.js`](frontend-react/src/api.js) и вызовы в хуках/экранах (согласовано с [`AGENTS.md`](AGENTS.md)).

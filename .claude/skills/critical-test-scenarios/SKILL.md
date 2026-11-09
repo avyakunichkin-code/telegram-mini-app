@@ -173,7 +173,7 @@ review gate                     code-review-and-quality
 ### Победа
 
 - [ ] chain vs parallel по `template_key`
-- [ ] `min_period_index_for_victory` gate
+- [ ] Общий гейт по периоду не вернулся: победа только по целям, условия по периоду — в целях chain
 - [ ] mechanics_unlock после goal keys
 
 ### API / новое поле

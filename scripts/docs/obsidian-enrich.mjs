@@ -17,7 +17,8 @@ const EXTRA_FILES = ['CLAUDE.md', 'landing/README.md'];
 
 /** @param {string} relPath POSIX path from repo root */
 function detectLayer(relPath) {
-  const p = relPath.replace(/\\/g, '/');
+  // Apply existing layer rules within the Game namespace as well.
+  const p = relPath.replace(/\\/g, '/').replace(/^docs\/game\//, 'docs/');
   if (p === 'CLAUDE.md') return 'agent';
   if (p === 'landing/README.md') return 'landing';
   if (p === 'docs/README.md') return 'index';

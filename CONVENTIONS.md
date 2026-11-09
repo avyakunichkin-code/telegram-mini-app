@@ -1,7 +1,7 @@
 ---
 layer: conventions
 status: active
-last_reviewed: 2026-09-09
+last_reviewed: 2026-11-03
 tags:
   - tvoy-hod/layer/conventions
   - tvoy-hod/status/active
@@ -14,15 +14,15 @@ aliases:
 
 Это не стиль и не чеклист «как писать код». Здесь выносится вердикт: работа **соответствует** или **нарушает**. Нарушение — предмет правки, не вкусовщины.
 
-**Среда агента — Claude Code** (`CLAUDE.md`, `.claude/rules`, `.claude/skills`, `.claude/agents`, hooks в `.claude/settings.json`; Cursor снят 2026-10-14). `CLAUDE.md` — индекс, который Claude Code загружает в каждую сессию, не слой выше этого файла.
+**Среда агента — Codex** (`AGENTS.md`, `.agents/skills`, `.codex/agents`, регистрация hooks в `.codex/hooks.json`). `AGENTS.md` — вход для агента, не слой выше этого файла. Claude-контур сохранён как исторический источник миграции и не поддерживается как параллельный процесс. Переход утверждён поручением владельца 2026-11-03; ограничения native hooks — [CODEX-HOOKS](docs/ai/CODEX-HOOKS.md).
 
 ## Иерархия
 
 ```
 CONVENTIONS.md                         ← вердикт: почему так
   → ADR, SPEC, DOCUMENTATION_SYSTEM    ← что решили
-  → .claude/skills + .claude/rules     ← как делать (Claude Code)
-  → CLAUDE.md                          ← индекс для агента
+  → .agents/skills + docs/ai           ← как делать (Codex)
+  → AGENTS.md                          ← индекс для агента
   → README                             ← вход для человека
 ```
 
@@ -51,7 +51,7 @@ CONVENTIONS.md                         ← вердикт: почему так
 
 **Платим.** Пересмотр занимает время человека; агент не имеет права переписать принцип «по ходу задачи».
 
-**Порождает правила.** Раздел «Как менять этот файл» ниже; [`.claude/skills/_shared/clarify-first.md`](.claude/skills/_shared/clarify-first.md) (STOP при конфликте spec vs код).
+**Порождает правила.** Раздел «Как менять этот файл» ниже; [`AGENTS.md`](AGENTS.md) (STOP при конфликте spec vs код).
 
 **Соответствие.** Обязательно.
 
@@ -72,13 +72,13 @@ CONVENTIONS.md                         ← вердикт: почему так
 **Нарушение выглядит так.**
 - Молча собрать полный «учебник принципов» с двенадцатью пунктами и blocking hook, хотя в репозитории уже есть ADR, скиллы и иерархия docs — без предложения короткого слоя (этот срез: разбор [CY-2026-09-09-slim-layer](docs/conventions/reviews.yaml)).
 - «Сделать как сказали» при явном конфликте с ADR-013: снова чинить Plan UI после решения «только Game».
-- Спорить о порядке полей в YAML, когда [event-balance-rules](.claude/skills/create-event/event-balance-rules.md) уже задаёт канон — вкусовщина.
+- Спорить о порядке полей в YAML, когда [event-balance-rules](docs/game/events/event-balance-rules.md) уже задаёт канон — вкусовщина.
 
 **Покупаем.** Ошибки и дыры в постановке ловятся до diff; утверждённое не переигрывается каждым агентом.
 
 **Платим.** Журнал не ловит молчание: пропущенный разбор в него просто не попадает (см. реестр отклонений).
 
-**Порождает правила.** [`.claude/rules/working-agreements.md`](.claude/rules/working-agreements.md) § «Возражай, когда есть причина»; [`.claude/skills/_shared/clarify-first.md`](.claude/skills/_shared/clarify-first.md); [`.claude/skills/_shared/delivery-workflow.md`](.claude/skills/_shared/delivery-workflow.md).
+**Порождает правила.** [`AGENTS.md`](AGENTS.md); [`delivery`](.agents/skills/delivery/SKILL.md); [процессы](docs/ai/CODEX-PROCESSES.md).
 
 **Соответствие.** Обязательно.
 
@@ -88,22 +88,22 @@ CONVENTIONS.md                         ← вердикт: почему так
 
 ## C-1 · Один канон при конфликте
 
-**Ограничение.** Поведение продукта определяется в таком порядке: **код + тесты** → `docs/specs/features/SPEC_*.md` → `docs/foundation/SPEC_PRODUCT.md` → `docs/vision/ideas/`. Бэклог — приоритет, не спецификация. Аудит в `docs/audits/` — снимок на дату, не канон, пока выводы не утверждены в spec/ADR/backlog. Агент и человек не имеют права чинить «по более свежему ощущению», игнорируя верхний слой.
+**Ограничение.** Поведение продукта определяется в таком порядке: **код + тесты** → `docs/game/specs/features/SPEC_*.md` → `docs/game/foundation/SPEC_PRODUCT.md` → `docs/game/vision/ideas/`. Бэклог — приоритет, не спецификация. Аудит в `docs/audits/` — снимок на дату, не канон, пока выводы не утверждены в spec/ADR/backlog. Агент и человек не имеют права чинить «по более свежему ощущению», игнорируя верхний слой.
 
 **Объект вердикта.** PR, idea, audit, agent session, расхождение docs vs код.
 
 **Вопрос ревью.** Если два источника спорят — взят ли верхний слой иерархии, или нижний выдан за истину?
 
 **Нарушение выглядит так.**
-- Трактовать [QA-аудит 2026-09-07](docs/audits/qa/2026-09-07-mechanics.md) (status: DRAFT) как обязательную спеку и плодить фичи «по аудиту» без plan/ADR.
-- Держать в `SPEC_PRODUCT` «ворота победы с 7-го периода сняты», а в [`GLOSSARY.md`](docs/foundation/GLOSSARY.md) оставлять старую формулу 3× подушки как prod-победу без пометки legacy.
-- Писать код по `docs/vision/ideas/` в обход утверждённого spec (конвейер [DOCUMENTATION_SYSTEM](docs/DOCUMENTATION_SYSTEM.md) §3–4).
+- Трактовать [QA-аудит 2026-09-07](docs/game/audits/qa/2026-09-07-mechanics.md) (status: DRAFT) как обязательную спеку и плодить фичи «по аудиту» без plan/ADR.
+- Держать в `SPEC_PRODUCT` «ворота победы с 7-го периода сняты», а в [`GLOSSARY.md`](docs/game/foundation/GLOSSARY.md) оставлять старую формулу 3× подушки как prod-победу без пометки legacy.
+- Писать код по `docs/game/vision/ideas/` в обход утверждённого spec (конвейер [DOCUMENTATION_SYSTEM](docs/DOCUMENTATION_SYSTEM.md) §3–4).
 
 **Покупаем.** Один ответ на «как на самом деле работает игра»; агенты не разъезжаются по слоям docs.
 
 **Платим.** Устаревший spec надо чинить явно, а не «побеждать» его кодом втихую; идея не становится законом от того, что она красноречива.
 
-**Порождает правила.** [`docs/DOCUMENTATION_SYSTEM.md`](docs/DOCUMENTATION_SYSTEM.md) §3; [`.claude/skills/_shared/game-lexicon.md`](.claude/skills/_shared/game-lexicon.md); [`docs/audits/README.md`](docs/audits/README.md); [`.claude/rules/router.md`](.claude/rules/router.md).
+**Порождает правила.** [`docs/DOCUMENTATION_SYSTEM.md`](docs/DOCUMENTATION_SYSTEM.md) §3; [`GLOSSARY.md`](docs/game/foundation/GLOSSARY.md); [`docs/audits/README.md`](docs/audits/README.md); [`AGENTS.md`](AGENTS.md).
 
 **Соответствие.** Обязательно.
 
@@ -129,11 +129,11 @@ CONVENTIONS.md                         ← вердикт: почему так
 
 **Платим.** Legacy-пути нельзя оставить «тихим запасным»; вырезание (GO) дороже, чем вовремя сказать «нет».
 
-**Порождает правила.** [`SPEC_PRODUCT.md`](docs/foundation/SPEC_PRODUCT.md) §1.1 и core loop; [ADR-012](docs/decisions/ADR-012-primary-channels-pwa-web-over-tma.md); [ADR-013](docs/decisions/ADR-013-game-only-drop-plan-mode.md); [`backend/tests/integration/api/test_complete_period_gone.py`](backend/tests/integration/api/test_complete_period_gone.py); skill `release-web`.
+**Порождает правила.** [`SPEC_PRODUCT.md`](docs/game/foundation/SPEC_PRODUCT.md) §1.1 и core loop; [ADR-012](docs/decisions/ADR-012-primary-channels-pwa-web-over-tma.md); [ADR-013](docs/decisions/ADR-013-game-only-drop-plan-mode.md); [`backend/tests/integration/api/test_complete_period_gone.py`](backend/tests/integration/api/test_complete_period_gone.py); процесс release в [CODEX-PROCESSES](docs/ai/CODEX-PROCESSES.md).
 
 **Соответствие.** Обязательно.
 
-**Якорь.** `py -3 -m pytest tests/integration/api/test_complete_period_gone.py tests/unit/period/test_complete_period_gone.py -q` (из `backend/`); гейт свода проверяет, что эти файлы существуют. Каналы: в `docs/foundation/SPEC_PRODUCT.md` есть ADR-012.
+**Якорь.** `py -3 -m pytest tests/integration/api/test_complete_period_gone.py tests/unit/period/test_complete_period_gone.py -q` (из `backend/`); гейт свода проверяет, что эти файлы существуют. Каналы: в `docs/game/foundation/SPEC_PRODUCT.md` есть ADR-012.
 
 ---
 
@@ -147,15 +147,15 @@ CONVENTIONS.md                         ← вердикт: почему так
 
 **Нарушение выглядит так.**
 - Дефолт `annual_rate_percent=12` в админ-создании каталога «с потолка» ([`catalog_create_payload.py`](backend/app/admin/catalog_create_payload.py)) без пометки условности.
-- Сюжет микрозайма как спасения кассы (запрет [TARGET_PLAYER §3](docs/foundation/TARGET_PLAYER_AND_SESSION.md); отвергнутый набросок из исходного диалога).
-- Прогноз аналитики как обещание без disclaimer ([SPEC_ANALYTICS](docs/specs/SPEC_ANALYTICS.md) это уже требует; в UI дисклеймера «не совет» **ещё нет** — см. отклонения).
+- Сюжет микрозайма как спасения кассы (запрет [TARGET_PLAYER §3](docs/game/foundation/TARGET_PLAYER_AND_SESSION.md); отвергнутый набросок из исходного диалога).
+- Прогноз аналитики как обещание без disclaimer ([SPEC_ANALYTICS](docs/game/specs/SPEC_ANALYTICS.md) это уже требует; в UI дисклеймера «не совет» **ещё нет** — см. отклонения).
 - IAP «купи вторую жизнь после поражения» — в продукте нет и не заводится.
 
 **Покупаем.** Образовательный эффект не превращается в дезинформацию и не противоречит уроку.
 
 **Платим.** Не каждое число в YAML — предмет источника; граница «продукт vs быт» требует суда человека. Полного дисклеймера в клиенте пока нет.
 
-**Порождает правила.** [`TARGET_PLAYER_AND_SESSION.md`](docs/foundation/TARGET_PLAYER_AND_SESSION.md) §3–4; [`SPEC_PRODUCT.md`](docs/foundation/SPEC_PRODUCT.md) §1 педагогический тезис; create-event [event-balance-rules](.claude/skills/create-event/event-balance-rules.md) (trade-off, не «бесплатный плюс»).
+**Порождает правила.** [`TARGET_PLAYER_AND_SESSION.md`](docs/game/foundation/TARGET_PLAYER_AND_SESSION.md) §3–4; [`SPEC_PRODUCT.md`](docs/game/foundation/SPEC_PRODUCT.md) §1 педагогический тезис; event-authoring [event-balance-rules](docs/game/events/event-balance-rules.md) (trade-off, не «бесплатный плюс»).
 
 **Соответствие.** По умолчанию.
 
@@ -181,7 +181,7 @@ CONVENTIONS.md                         ← вердикт: почему так
 
 **Платим.** Нужны загрузчик, контракт YAML и дисциплина не «быстренько» поправить цифру в `if`.
 
-**Порождает правила.** [ADR-008](docs/decisions/ADR-008-events-catalog-single-source.md); [`data/events/README.md`](data/events/README.md); skill `create-event` vs `game-economy-and-victory`; [`backend/migrations/README.md`](backend/migrations/README.md) (baseline = DDL, не DML контента); [ADR-002](docs/decisions/ADR-002-victory-engine-and-template-config.md).
+**Порождает правила.** [ADR-008](docs/decisions/ADR-008-events-catalog-single-source.md); [`data/events/README.md`](data/events/README.md); skills `event-authoring` и `game-economy`; [`backend/migrations/README.md`](backend/migrations/README.md) (baseline = DDL, не DML контента); [ADR-002](docs/decisions/ADR-002-victory-engine-and-template-config.md).
 
 **Соответствие.** Обязательно.
 
@@ -194,11 +194,11 @@ CONVENTIONS.md                         ← вердикт: почему так
 | Принцип | Где | Почему нельзя проверить / закрыть сейчас | До чего держим |
 |---------|-----|------------------------------------------|----------------|
 | C-Y | Молчание агента | Журнал видит только записанные разборы | Пока C-Y жив: не выдаём «100% разборов пойманы». Снятие: появятся обязательные session-записи — тогда пересмотреть якорь, не делать вид, что молчание ловится |
-| C-Y | `.claude/settings.json` | Гейт свода **не** в blocking hook | Не раньше **2026-09-16** и не раньше, чем `check_conventions.py` отработает вхолостую ≥7 дней без ложных красных на main-потоке |
+| C-Y | `.codex/hooks.json` | Гейт свода **не** в blocking hook; native runtime не подтверждён | Не раньше **2026-09-16** и не раньше, чем `check_conventions.py` отработает вхолостую ≥7 дней без ложных красных на main-потоке |
 | C-1 | Поведение агента «аудит = spec» | Нет детектора намерения | Пока жив C-1: якорь только структурный (тексты иерархии). Снятие: не планируется автоматика намерения |
 | C-3 | Источник ставки продукта | В каталоге нет поля `source` / `game_fiction` | **2026-12-01** или раньше: поле в шаблонах вкладов/долгов/страховок **или** явный отказ от (1) в формулировке C-3 |
 | C-3 | Дисклеймер «не совет» в UI | В GDD-outline есть, в клиенте нет | **2026-12-01**: экран/футер с границей образования ≠ совет **или** перенос в «Целевое» с новой датой |
-| C-4 | INSERT событий в SQL | Гейт свода не парсит все `migrations/` | Пока ADR-008 принят: проверка на ревью + skill `db-baselines-and-migrations`. Снятие: отдельный скрипт по `migrations/*.sql` |
+| C-4 | INSERT событий в SQL | Гейт свода не парсит все `migrations/` | Пока ADR-008 принят: проверка на ревью + skill `db-migration`. Снятие: отдельный скрипт по `migrations/*.sql` |
 | — | Детерминизм picker (`random.random` без seed) | Не принцип этого свода: нет живой нормы «один сид — один лог» в runtime | Не заводим C-* пока нет продукта «seed в логе». QA-аудит это фиксирует, это не канон |
 
 Бессрочных отклонений без даты/условия нет: «пока принцип жив» — условие, не отмена.
@@ -212,9 +212,9 @@ CONVENTIONS.md                         ← вердикт: почему так
 | Измеримая учебная цель у каждой механики | В репо нет реестра навыков; педагогика — «через прожитый месяц». Заводить реестр = выдумать норму |
 | Детерминизм симуляции как обязательный runtime | Picker не сидирован; это долг QA, не выдержанный вердикт |
 | Версионирование файла сейва | Прогресс — серверный `GameProfile` + SQL-миграции, не клиентский save format |
-| Словарный линтер «термин без первого объяснения» | Граничит со стилем; есть [GLOSSARY](docs/foundation/GLOSSARY.md) как правило |
+| Словарный линтер «термин без первого объяснения» | Граничит со стилем; есть [GLOSSARY](docs/game/foundation/GLOSSARY.md) как правило |
 | Бюджет кадра/памяти числом | Числа нет; skill performance — deferred |
-| Детский COPPA-контур | ЦА 30+ ([TARGET_PLAYER](docs/foundation/TARGET_PLAYER_AND_SESSION.md)); ужесточение «для детей» было бы вымыслом |
+| Детский COPPA-контур | ЦА 30+ ([TARGET_PLAYER](docs/game/foundation/TARGET_PLAYER_AND_SESSION.md)); ужесточение «для детей» было бы вымыслом |
 | Lab ≠ prod, Idempotency-Key, 2 события/период | Точечные **правила** с уже своими тестами/guardrails, не фундамент взаимодействия |
 
 ---

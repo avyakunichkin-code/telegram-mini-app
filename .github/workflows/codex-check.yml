@@ -1,13 +1,48 @@
 name: Codex architecture check
 on:
-  pull_request:
+  push:
+    branches: [main]
     paths:
       - 'AGENTS.md'
+      - '**/AGENTS.md'
+      - 'docs/game/**'
+      - 'docs/plan/**'
+      - 'CONVENTIONS.md'
       - '.agents/**'
       - '.codex/**'
       - 'scripts/codex/**'
+      - 'scripts/check-product-docs.mjs'
+      - 'docs/product-doc-relocations.json'
+      - '.ignore'
+      - '.obsidian/app.json'
+      - 'frontend-react/scripts/build-design-lab-nav.mjs'
+      - 'design-lab/index.html'
+      - 'design-lab/nav.manifest.json'
       - 'docs/ai/**'
-      - '.claude/skills/**'
+      - 'docs/events/**'
+      - 'docs/templates/**'
+      - 'backend/migrations/0000_schema_baseline.sql'
+      - '.github/workflows/codex-check.yml'
+  pull_request:
+    paths:
+      - 'AGENTS.md'
+      - '**/AGENTS.md'
+      - 'docs/game/**'
+      - 'docs/plan/**'
+      - 'CONVENTIONS.md'
+      - '.agents/**'
+      - '.codex/**'
+      - 'scripts/codex/**'
+      - 'scripts/check-product-docs.mjs'
+      - 'docs/product-doc-relocations.json'
+      - '.ignore'
+      - '.obsidian/app.json'
+      - 'frontend-react/scripts/build-design-lab-nav.mjs'
+      - 'design-lab/index.html'
+      - 'design-lab/nav.manifest.json'
+      - 'docs/ai/**'
+      - 'docs/events/**'
+      - 'docs/templates/**'
       - 'backend/migrations/0000_schema_baseline.sql'
       - '.github/workflows/codex-check.yml'
 permissions:
@@ -21,4 +56,5 @@ jobs:
         with:
           node-version: '22'
       - run: node scripts/codex/check.mjs
+      - run: node scripts/check-product-docs.mjs
       - run: node --test scripts/codex/*.test.mjs

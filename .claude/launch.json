@@ -15,6 +15,19 @@
       "port": 4173
     },
     {
+      "name": "landing",
+      "runtimeExecutable": "py",
+      "runtimeArgs": [
+        "-3",
+        "-m",
+        "http.server",
+        "4178",
+        "--directory",
+        "landing/site"
+      ],
+      "port": 4178
+    },
+    {
       "name": "backend",
       "runtimeExecutable": "py",
       "runtimeArgs": [

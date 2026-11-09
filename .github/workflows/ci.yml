@@ -25,6 +25,7 @@ jobs:
     outputs:
       game: ${{ steps.areas.outputs.game }}
       plan: ${{ steps.areas.outputs.plan }}
+      shared_ui: ${{ steps.areas.outputs.shared_ui }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -37,7 +38,7 @@ jobs:
           BASE: ${{ github.event.pull_request.base.sha }}
         run: |
           if [ "$EVENT" != "pull_request" ]; then
-            echo "game=true" >> "$GITHUB_OUTPUT"; echo "plan=true" >> "$GITHUB_OUTPUT"; exit 0
+            echo "game=true" >> "$GITHUB_OUTPUT"; echo "plan=true" >> "$GITHUB_OUTPUT"; echo "shared_ui=true" >> "$GITHUB_OUTPUT"; exit 0
           fi
           files=$(git diff --name-only "$BASE"...HEAD)
           echo "$files"
@@ -50,6 +51,25 @@ jobs:
           [ "$s" = true ] && p=true || p=$(has "$plan")
           echo "game=$g" >> "$GITHUB_OUTPUT"
           echo "plan=$p" >> "$GITHUB_OUTPUT"
+          echo "shared_ui=$(has '^(frontend-react/|apps/plan-web/|packages/|tests/shared-ui/|\.github/)')" >> "$GITHUB_OUTPUT"
+
+  shared-ui:
+    name: Shared UI contract
+    needs: changes
+    if: needs.changes.outputs.shared_ui == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: apps/plan-web/package-lock.json
+      - name: Install contract runtime
+        working-directory: apps/plan-web
+        run: npm ci
+      - name: Check both adapters
+        run: node --test tests/shared-ui/*.test.mjs
 
   backend:
     name: Backend pytest
@@ -223,10 +243,11 @@ jobs:
           pip install -r requirements.txt
           python -m pytest -q
 
-      - name: Plan web build
+      - name: Plan web unit and build
         working-directory: apps/plan-web
         run: |
           npm ci
+          npm run test:unit
           npm run build
 
       - name: Plan web e2e
