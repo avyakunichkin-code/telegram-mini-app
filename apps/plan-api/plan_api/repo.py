@@ -15,9 +15,11 @@ from dataclasses import dataclass
 from datetime import datetime, timezone
 
 from sqlalchemy import text
+from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
-from .schemas import Checkup, CheckupData, Member
+from .documents import CURRENT_SCHEMA_VERSION, load_checkup_data
+from .schemas import Checkup, Member
 from .analytics import event_props
 
 
@@ -35,6 +37,10 @@ def _members_json(members: list[Member]) -> str:
 
 def _members(raw: str) -> list[Member]:
     return [Member.model_validate(m) for m in json.loads(raw)]
+
+
+class CheckupChanged(Exception):
+    """Черновик успели изменить или создать параллельно (другая вкладка или устройство)."""
 
 
 @dataclass
@@ -123,13 +129,13 @@ class Repo:
 
     # --- чекапы -------------------------------------------------------------------------------
 
-    _CK = "SELECT id, entry_question, status, as_of, parent_checkup_id, completed_at, members_json, data_json FROM checkups "
+    _CK = "SELECT id, entry_question, status, as_of, parent_checkup_id, completed_at, members_json, data_json, revision, schema_version FROM checkups "
 
     @staticmethod
     def _checkup(row) -> Checkup:
         return Checkup(
             id=row[0], entry_question=row[1], status=row[2], as_of=row[3], parent_checkup_id=row[4], completed_at=row[5],
-            members=_members(row[6]), data=CheckupData.model_validate_json(row[7]),
+            members=_members(row[6]), data=load_checkup_data(row[7], row[9]), revision=row[8],
         )
 
     def checkups(self, user: User) -> list[Checkup]:
@@ -141,20 +147,27 @@ class Repo:
         return self._checkup(row) if row else None
 
     def insert_checkup(self, user: User, ck: Checkup) -> None:
-        self._exec(
-            "INSERT INTO checkups (id, household_id, entry_question, status, as_of, parent_checkup_id, created_at, members_json, data_json) "
-            "VALUES (:id, :h, :q, :st, :as_of, :p, :at, :m, :d)",
-            id=ck.id, h=user.household_id, q=ck.entry_question, st=ck.status, as_of=ck.as_of, p=ck.parent_checkup_id,
-            at=now_iso(precise=True), m=_members_json(ck.members), d=ck.data.model_dump_json(),
-        )
+        try:
+            self._exec(
+                "INSERT INTO checkups (id, household_id, entry_question, status, as_of, parent_checkup_id, created_at, members_json, data_json, schema_version) "
+                "VALUES (:id, :h, :q, :st, :as_of, :p, :at, :m, :d, :v)",
+                id=ck.id, h=user.household_id, q=ck.entry_question, st=ck.status, as_of=ck.as_of, p=ck.parent_checkup_id,
+                at=now_iso(precise=True), m=_members_json(ck.members), d=ck.data.model_dump_json(), v=CURRENT_SCHEMA_VERSION,
+            )
+        except IntegrityError as exc:
+            raise CheckupChanged from exc
 
     def save_draft(self, user: User, ck: Checkup) -> None:
         """Сохранить черновик; завершённый чекап этим путём не меняется (WHERE status = 'draft')."""
-        self._exec(
-            "UPDATE checkups SET entry_question = :q, members_json = :m, data_json = :d "
-            "WHERE id = :id AND household_id = :h AND status = 'draft'",
-            q=ck.entry_question, m=_members_json(ck.members), d=ck.data.model_dump_json(), id=ck.id, h=user.household_id,
+        result = self._exec(
+            "UPDATE checkups SET entry_question = :q, members_json = :m, data_json = :d, revision = revision + 1, schema_version = :v "
+            "WHERE id = :id AND household_id = :h AND status = 'draft' AND revision = :rev",
+            q=ck.entry_question, m=_members_json(ck.members), d=ck.data.model_dump_json(), v=CURRENT_SCHEMA_VERSION,
+            id=ck.id, h=user.household_id, rev=ck.revision,
         )
+        if result.rowcount != 1:
+            raise CheckupChanged
+        ck.revision += 1
 
     def mark_completed(self, user: User, checkup_id: str, at: str) -> bool:
         """Атомарный переход draft → completed: из двух параллельных complete выигрывает один."""

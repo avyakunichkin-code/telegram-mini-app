@@ -37,7 +37,7 @@ from .continuity import parent_context
 from .goal_progress import add_goal_progress
 from .demo import demo_data, demo_members
 from .mailer import LogMailer
-from .repo import Repo, User, new_id, now_iso
+from .repo import CheckupChanged, Repo, User, new_id, now_iso
 from .schemas import (
     SECTION_ROW,
     Checkup,
@@ -73,7 +73,7 @@ def create_app(settings: Settings | None = None, mailer: LogMailer | None = None
     if not settings.production:
         migrate(db.engine, MIGRATIONS)  # в production — только `py -3 -m plan_api.migrate`
     tokens = TokenIssuer(secret=settings.secret_key, issuer=ISSUER, audience=AUDIENCE, ttl=settings.token_ttl)
-    mailer = mailer or LogMailer()
+    mailer = mailer or LogMailer(log_code=not settings.production)  # код входа не попадает в логи production
 
     app = FastAPI(title="ТВОЙ ПЛАН API", version="0.2.0")
     app.state.settings, app.state.db, app.state.tokens, app.state.mailer = settings, db, tokens, mailer
@@ -84,6 +84,11 @@ def create_app(settings: Settings | None = None, mailer: LogMailer | None = None
     async def _http_error(_: Request, exc: HTTPException) -> JSONResponse:
         detail = exc.detail if isinstance(exc.detail, dict) else {"code": "error", "message": str(exc.detail)}
         return JSONResponse(status_code=exc.status_code, content={"error": detail})
+
+    @app.exception_handler(CheckupChanged)
+    async def _checkup_changed(_: Request, __: CheckupChanged) -> JSONResponse:
+        message = "Данные изменились на другом устройстве. Обновите страницу и повторите"
+        return JSONResponse(status_code=409, content={"error": {"code": "checkup_changed", "message": message}})
 
     def repo(session: Annotated[Session, Depends(db.get_session)]) -> Repo:
         return Repo(session)
@@ -103,8 +108,16 @@ def create_app(settings: Settings | None = None, mailer: LogMailer | None = None
 
     UserDep = Annotated[User, Depends(current_user)]
 
+    def client_ip(request: Request) -> str:
+        # Только свои прокси дописывают адреса справа: левая часть заголовка подделывается клиентом.
+        if settings.trusted_proxies:
+            chain = [p.strip() for p in request.headers.get("x-forwarded-for", "").split(",") if p.strip()]
+            if len(chain) >= settings.trusted_proxies:
+                return chain[-settings.trusted_proxies]
+        return request.client.host if request.client else ""
+
     def ip_hash(request: Request) -> str:
-        ip = request.client.host if request.client else ""
+        ip = client_ip(request)
         return hmac.new(settings.secret_key.encode(), ip.encode(), hashlib.sha256).hexdigest()
 
     def code_hash(email: str, code: str) -> str:

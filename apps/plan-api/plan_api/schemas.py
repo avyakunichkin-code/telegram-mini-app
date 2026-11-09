@@ -186,6 +186,7 @@ class Checkup(BaseModel):
     completed_at: str | None = None
     members: list[Member] = []
     data: CheckupData = CheckupData()
+    revision: int = Field(default=0, exclude=True)  # защита от одновременной записи, в API не отдаётся
 
 
 class CheckupCreate(BaseModel):
