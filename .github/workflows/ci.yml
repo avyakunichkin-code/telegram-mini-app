@@ -98,6 +98,41 @@ jobs:
         working-directory: backend
         run: python -m pytest -q
 
+  # SQL-миграции на настоящем PostgreSQL (docs/game/plans/PLAN_ci-postgres-parity.md, срез 1).
+  # Backend pytest идёт на SQLite и строит схему из моделей, поэтому миграции нигде не выполнялись.
+  # Не required: сначала понаблюдать за стабильностью (срез 4).
+  migrations-pg:
+    name: Postgres migrations
+    needs: changes
+    if: needs.changes.outputs.game == 'true'
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: ci
+          POSTGRES_PASSWORD: ci
+          POSTGRES_DB: tvoyhod_ci
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U ci -d tvoyhod_ci"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    env:
+      DATABASE_URL: postgresql://ci:ci@localhost:5432/tvoyhod_ci
+    steps:
+      - uses: actions/checkout@v4
+
+      # baseline на пустую БД + все инкременты 00NN_* (ON_ERROR_STOP=1: любая ошибка SQL валит job)
+      - name: Migrate from empty database
+        run: bash backend/scripts/db.sh migrate
+
+      # baseline пропускается (схема есть), инкременты обязаны быть идемпотентными (IF NOT EXISTS)
+      - name: Migrate again (idempotency)
+        run: bash backend/scripts/db.sh migrate
+
   # Balance diff игры к эталонам docs/balance/baselines: ядро (fincore/platform) меняется только с diff = 0.
   # Инварианты победимости — warn: их провал известен до SPL-405 (INV-1, DOC_SYNC_LOG 2026-10-25),
   # здесь ловим дрейф чисел, а не калибровку экономики.
