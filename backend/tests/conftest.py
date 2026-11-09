@@ -35,6 +35,19 @@ PG_CRITICAL = (
     "tests/integration/api/test_time_next_lock.py",
     "tests/integration/api/test_overview_victory_contract.py",
     "tests/integration/api/test_choose_replay.py",
+    # Блокировки и гонки: на SQLite запись сериализуется, на PostgreSQL проверяются настоящие блокировки строк.
+    "tests/test_balance_utils_lost_update.py",
+    "tests/unit/period/test_salary_lock.py",
+    "tests/unit/events/test_choose_lock.py",
+    "tests/unit/game/test_time_next_lock.py",
+    # Агрегаты и даты админки: строгий GROUP BY и сравнение времени в PostgreSQL.
+    "tests/test_admin_watchtower.py",
+    "tests/test_admin_product_funnel.py",
+    "tests/test_admin_a4_engagement.py",
+    "tests/integration/api/test_last_seen.py",
+    # Сроки полисов и старт игры (даты, транзакции).
+    "tests/test_insurance_policy_expiry.py",
+    "tests/test_game_bootstrap.py",
 )
 
 
