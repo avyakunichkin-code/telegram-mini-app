@@ -7,6 +7,7 @@ from ..finance.overview_build import build_finance_overview
 from ..models import GameProfile
 from ..services.events.service import build_pending_events_payload
 from ..services.period.status import build_period_status
+from ..services.game.playtest_survey import survey_state
 from ..schemas import GameBootstrapResponse, PendingEventsPayload, TimeStatusResponse
 from .run_finale import (
     build_run_finale_payload,
@@ -22,6 +23,7 @@ def build_game_bootstrap(
     game_session_status: str = "active",
     defeat_reason: str | None = None,
     defeat_period_index: int | None = None,
+    survey_key: str = "first_turns_v2",
 ) -> GameBootstrapResponse:
     overview = build_finance_overview(db, profile)
     win_reached = bool(getattr(overview, "win_reached", False))
@@ -57,4 +59,5 @@ def build_game_bootstrap(
         defeat_reason=defeat_reason,
         defeat_period_index=defeat_period_index,
         run_finale=run_finale,
+        playtest_survey=survey_state(db, profile, survey_key),
     )

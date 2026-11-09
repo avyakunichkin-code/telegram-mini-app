@@ -93,6 +93,8 @@ def get_current_user_optional(
         return None
     
     user = db.query(User).filter(User.id == user_id).first()
+    if user and payload.get("guest") and not user.is_guest:
+        return None
     return user
 
 

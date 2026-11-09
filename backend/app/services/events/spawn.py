@@ -11,6 +11,8 @@ from ...events.taxonomy import audience_matches, event_slot
 from ...game.rules import (
     EVENTS_PER_PERIOD,
     MIN_PERIOD_INDEX_FOR_GAME_EVENTS,
+    min_event_period,
+    is_quick_start,
     event_tier_in_core_window,
     event_tier_in_fallback_primary,
     is_event_definition_eligible,
@@ -65,13 +67,15 @@ def expire_pending_events_for_closed_period(db: Session, game_profile_id: int, c
 
 def _o2_guidance_replaces_events_intro(db: Session, profile: GameProfile) -> bool:
     """O2 p2_events_intro заменяет mq11_events_unlock_intro (SPEC_onboarding-o2)."""
+    if is_quick_start(profile):
+        return True
     user = db.query(User).filter(User.id == profile.user_id).first()
     return user is not None and int(getattr(user, "guidance_completed", 0) or 0) == 0
 
 
 def ensure_events_unlock_intro(db: Session, profile: GameProfile) -> None:
     """Разовое intro-событие при первом доступе к колоде (legacy, без O2 guidance)."""
-    if int(profile.period_index or 1) < MIN_PERIOD_INDEX_FOR_GAME_EVENTS:
+    if int(profile.period_index or 1) < min_event_period(profile):
         return
     if _o2_guidance_replaces_events_intro(db, profile):
         return
@@ -160,7 +164,7 @@ def ensure_period_events(db: Session, game_profile_id: int, period_index: int, s
     if not profile:
         return SPAWN_OK
 
-    if int(period_index) < MIN_PERIOD_INDEX_FOR_GAME_EVENTS:
+    if int(period_index) < min_event_period(profile):
         return SPAWN_SKIPPED_INTRO
 
     ensure_scheduled_chain_events(db, game_profile_id, period_index)

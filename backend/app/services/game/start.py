@@ -25,12 +25,16 @@ from .templates import validate_save_kind
 logger = logging.getLogger(__name__)
 
 
-def start_new_game(db: Session, user_id: int, payload: GameStartRequest) -> GameStartResponse:
+def start_new_game(db: Session, user_id: int, payload: GameStartRequest, *, resume_guest: bool = False) -> GameStartResponse:
     """Новая игра из каталога; template_key обязателен."""
     validate_game_start_request(payload, db)
     save_kind = validate_save_kind(payload.save_kind)
 
-    user = db.query(User).filter(User.id == user_id).first()
+    user = db.query(User).filter(User.id == user_id).with_for_update().first()
+    if resume_guest and user and user.is_guest:
+        existing = db.query(GameProfile).filter(GameProfile.user_id == user_id).order_by(GameProfile.is_active.desc(), GameProfile.id.desc()).first()
+        if existing:
+            return GameStartResponse(profile_id=existing.id, message="Продолжаем твою историю")
     guidance_done = user is not None and int(getattr(user, "guidance_completed", 0) or 0) == 1
 
     starter_template_key = None
@@ -41,7 +45,7 @@ def start_new_game(db: Session, user_id: int, payload: GameStartRequest) -> Game
     assets_list: List[AssetCreate] = []
     starter_liabilities_raw: List[dict] = []
     seeded_budget: dict[str, float] | None = None
-    starter_params_json = "{}"
+    starter_params_json = json.dumps({"onboarding_version": 2}) if user and user.is_guest else "{}"
 
     tk = (payload.template_key or "").strip()
     if tk:
@@ -114,8 +118,7 @@ def start_new_game(db: Session, user_id: int, payload: GameStartRequest) -> Game
     except Exception:
         pass
     db.add(new_profile)
-    db.commit()
-    db.refresh(new_profile)
+    db.flush()
 
     salary = FinanceSalary(
         game_profile_id=new_profile.id,

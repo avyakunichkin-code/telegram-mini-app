@@ -17,6 +17,17 @@ MVP_SAFETY_FUND_OBLIGATIONS_MULTIPLIER = 3.0
 # --- События ---
 MIN_PERIOD_INDEX_FOR_GAME_EVENTS = 3
 EVENTS_PER_PERIOD = 2
+
+
+def is_quick_start(profile) -> bool:
+    try:
+        return json.loads(profile.starter_params_json or "{}").get("onboarding_version") == 2
+    except (ValueError, TypeError, AttributeError):
+        return False
+
+
+def min_event_period(profile) -> int:
+    return 1 if is_quick_start(profile) else MIN_PERIOD_INDEX_FOR_GAME_EVENTS
 EVENT_TIER_WINDOW_BELOW_BAND = 2
 PERIODS_PER_EVENT_TIER = 10
 EVENT_LIFESTYLE_DELTA_ABS_CAP = 15000.0

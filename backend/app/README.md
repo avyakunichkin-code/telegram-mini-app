@@ -42,3 +42,7 @@ app/
 ## Эволюция
 
 См. [`services/README.md`](services/README.md): контракты API, очереди для тяжёлого, observability, при декомпозиции сначала периферия (admin notify, аналитика, каталоги).
+
+## Гостевой старт · 07.11.2026
+
+`services/guest_auth.py` + `routers/auth.py`: POST /api/auth/guest (resume_only query), POST /api/auth/guest/claim. User.is_guest и GuestSession (hash/expiry), migration0052. GET /api/user/me добавляет is_guest. POST /api/game/guest-start повторно продолжает игру; обычный /game/start создаёт новую. Claim сохраняет User.id и FK, отзывает guest capability и guestJWT. Версия обучения хранится в GameProfile.starter_params_json; v2 events с P1, прежние партии с P3. См. docs/game/specs/features/SPEC_guest-first-start.md. Пароли/capability не логировать.

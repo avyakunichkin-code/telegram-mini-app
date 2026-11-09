@@ -7,7 +7,7 @@ from typing import Any
 
 from sqlalchemy.orm import Session
 
-from ..game.rules import MIN_PERIOD_INDEX_FOR_GAME_EVENTS
+from ..game.rules import MIN_PERIOD_INDEX_FOR_GAME_EVENTS, is_quick_start
 from ..game.session import get_active_game_profile
 from ..models import User as UserModel
 from ..models import EventInstance, GameProfile, PeriodSnapshot, User
@@ -457,6 +457,9 @@ def build_guidance_overview(db: Session, user: User | None, profile: GameProfile
     }
     if not user:
         return empty
+    if is_quick_start(profile):
+        from .quick_start import quick_start_guidance
+        return {**empty, **quick_start_guidance(db, profile)}
     if int(getattr(user, "guidance_completed", 0) or 0) == 1:
         nudge = _build_nudge_block(db, user, profile)
         if not nudge:
@@ -627,6 +630,14 @@ def period1_guidance_complete(progress: dict[str, Any]) -> bool:
 def on_period_closed_guidance(db: Session, user_id: int, profile: GameProfile, closed_period_index: int) -> None:
     user = db.query(UserModel).filter(UserModel.id == user_id).first()
     if not user or int(getattr(user, "guidance_completed", 0) or 0) == 1:
+        return
+    if is_quick_start(profile):
+        from ..timeutil import utc_now_naive
+        user.guidance_completed = 1
+        user.guidance_completed_at = utc_now_naive()
+        user.guidance_progress_json = json.dumps({"onboarding_version": 2, "first_period_closed": closed_period_index})
+        profile.onboarding_state = "brief_done"
+        profile.onboarding_step = "farewell"
         return
     progress = _load_progress(user)
     if closed_period_index == 1 and not _is_beat_completed(progress, "p1_close"):
