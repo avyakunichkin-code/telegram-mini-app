@@ -44,7 +44,9 @@ def _weighted_sample_without_replacement(
                 w = max(1, int(round(float(w) * mult)))
         u = max(random.random(), 1e-12)
         scored.append((-math.log(u) / w, d))
-    scored.sort(key=lambda t: t[0], reverse=True)
+    # Exponential-race keys: the smallest -ln(U)/weight wins. Reversing this
+    # order favours low weights and turns fatigue/rescue adjustments around.
+    scored.sort(key=lambda t: t[0])
     return [t[1] for t in scored[:k]]
 
 

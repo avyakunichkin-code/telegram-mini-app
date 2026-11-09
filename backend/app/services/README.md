@@ -34,4 +34,4 @@
 
 Карта всего `app/`: [`../README.md`](../README.md).
 
-См. также [`docs/vision/ideas/project-structure-standardization.md`](../../../docs/vision/ideas/project-structure-standardization.md).
+См. также [`docs/game/vision/ideas/project-structure-standardization.md`](../../../docs/game/vision/ideas/project-structure-standardization.md).

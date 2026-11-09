@@ -1,5 +1,6 @@
 from datetime import datetime
 from typing import Optional, List
+from typing import Literal
 from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
 
 
@@ -38,6 +39,7 @@ class Token(BaseModel):
     token_type: str
     user_id: int
     username: str
+    is_guest: bool = False
 
 
 # User
@@ -48,6 +50,7 @@ class UserResponse(BaseModel):
     email: Optional[str]
     game_profiles_count: int
     created_at: datetime
+    is_guest: bool = False
 
 
 class SalaryProfileUpdate(BaseModel):
@@ -309,7 +312,7 @@ class FinanceOverview(BaseModel):
     negative_periods_count: int = 0
     period_close_preview: Optional[PeriodClosePreview] = None
     profile_is_active: bool = True
-    guidance: Optional[GuidanceOverview] = None
+    guidance: Optional["GuidanceOverview"] = None
 
 
 class AnalyticsTimeseriesPoint(BaseModel):
@@ -453,6 +456,18 @@ class RunFinaleFact(BaseModel):
     tips: List[str] = Field(default_factory=list)
 
 
+class RunFinaleRecapDecision(BaseModel):
+    period_index: int
+    event_title: str
+    choice_title: str
+    cash_delta: float
+
+
+class RunFinaleRecap(BaseModel):
+    decisions_label: str
+    decisions: List[RunFinaleRecapDecision] = Field(default_factory=list)
+
+
 class RunFinalePayload(BaseModel):
     outcome: str  # victory | defeat
     period_index: int
@@ -472,6 +487,8 @@ class RunFinalePayload(BaseModel):
     turns_completed: int = 0
     cash_balance: Optional[float] = None
     cushion_turns: Optional[float] = None
+    # Разбор партии, вариант Б (SPEC_run-finale-recap); null — экран без ленты.
+    recap: Optional[RunFinaleRecap] = None
 
 
 class RunFinaleDismissResponse(BaseModel):
@@ -489,6 +506,55 @@ class RunFeedbackResponse(BaseModel):
     id: int
 
 
+class PlaytestSurveyAnswers(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    salary: Literal["yes", "partly", "no"]
+    safety: Literal["yes", "partly", "no"]
+    close: Literal["yes", "partly", "no"]
+    blocked: bool = Field(strict=True)
+    continue_playing: Literal["yes", "unsure", "no"]
+
+
+class PlaytestSurveyIdentity(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    profile_id: int = Field(gt=0)
+    survey_key: Literal["first_turns_v1", "first_turns_v2"] = "first_turns_v1"
+
+
+class PlaytestSurveyAnswersV2(PlaytestSurveyAnswers):
+    safety_transfer: Literal["yes", "partly", "no"]
+    expense_buffer: Literal["yes", "partly", "no"]
+    close_result: Literal["yes", "partly", "no"]
+    difficulty: Literal["easy", "normal", "hard"]
+
+
+class PlaytestSurveySubmit(PlaytestSurveyIdentity):
+    answers: PlaytestSurveyAnswers | PlaytestSurveyAnswersV2
+    comment: str = Field(default="", max_length=1000)
+
+    @field_validator("comment", mode="before")
+    @classmethod
+    def trim_survey_comment(cls, value):
+        return value.strip() if isinstance(value, str) else value
+
+    @model_validator(mode="after")
+    def match_survey_version(self):
+        is_v2 = isinstance(self.answers, PlaytestSurveyAnswersV2)
+        if is_v2 != (self.survey_key == "first_turns_v2"):
+            raise ValueError("answers must match survey_key")
+        return self
+
+
+class PlaytestSurveyState(BaseModel):
+    survey_key: str = "first_turns_v2"
+    profile_id: int
+    state: Literal["pending", "dismissed", "submitted"]
+    closed_turns: int
+    should_offer: bool
+    can_submit: bool
+    response_id: Optional[int] = None
+
+
 class OnboardingPatchRequest(BaseModel):
     onboarding_state: Optional[str] = None
     onboarding_step: Optional[str] = None
@@ -502,6 +568,7 @@ class OnboardingPatchResponse(BaseModel):
 
 
 class GuidanceOverview(BaseModel):
+    onboarding_version: int = 1
     show_curriculum: bool = False
     beat_id: Optional[str] = None
     title: Optional[str] = None
@@ -640,6 +707,7 @@ class GameBootstrapResponse(BaseModel):
     defeat_reason: Optional[str] = None
     defeat_period_index: Optional[int] = None
     run_finale: Optional[RunFinalePayload] = None
+    playtest_survey: Optional[PlaytestSurveyState] = None
 
 
 class PeriodSummaryResponse(BaseModel):
@@ -650,3 +718,7 @@ class PeriodSummaryResponse(BaseModel):
     safety_fund_total: float
     net_savings: float
     required_actions_completed: bool
+
+
+# GuidanceOverview is declared after FinanceOverview; resolve it before use.
+FinanceOverview.model_rebuild()

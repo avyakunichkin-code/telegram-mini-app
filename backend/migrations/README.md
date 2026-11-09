@@ -97,7 +97,7 @@ bash backend/scripts/db.sh bootstrap
 
 ## Prod (Render)
 
-См. [`docs/ops/DEPLOY.md`](../../docs/ops/DEPLOY.md).
+См. [`docs/game/ops/DEPLOY.md`](../../docs/game/ops/DEPLOY.md).
 
 | Ситуация | Действие |
 |----------|----------|

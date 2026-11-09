@@ -308,6 +308,7 @@ events:
   title: Платёж по кредитной карте
   description: 'Банк выставил счёт: можно закрыть минимум, весь долг или рискнуть просрочкой.'
   weight: 88
+  is_active: 0  # Приостановлено: cash-only «погашение» не уменьшает реальный долг; brief 2026-11-05.
   event_tier: 1
   repeat_policy: repeatable
   scenario_shape: soft_offer
