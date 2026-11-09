@@ -60,16 +60,18 @@ def _join_ru_list(items: list[str]) -> str:
 def granted_capital_mechanics_from_blueprint(
     blueprint: dict[str, Any], template_key: str
 ) -> FrozenSet[str]:
-    """Все разделы капитала, которые откроются по цепочке целей шаблона."""
+    """Разделы капитала, которые шаблон обещает; шаги лестницы по ходам (min_period) не считаются."""
     granted: set[str] = set()
+    later: set[str] = set()
     for step in mechanics_unlock_from_blueprint(blueprint, template_key):
+        target = later if step.get("min_period") else granted
         for key in step.get("grant") or []:
             if isinstance(key, str) and key in CAPITAL_MECHANIC_KEYS:
-                granted.add(key)
+                target.add(key)
     mech = blueprint.get("mechanics")
     if isinstance(mech, dict):
         for key, enabled in mech.items():
-            if enabled and key in CAPITAL_MECHANIC_KEYS:
+            if enabled and key in CAPITAL_MECHANIC_KEYS and key not in later:
                 granted.add(key)
     return frozenset(granted)
 

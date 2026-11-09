@@ -168,7 +168,7 @@ events:
   description: 'Деньги на счету уже есть, а радости от цифры всё меньше. Выбери мечту и откладывай на
     неё: через шесть ходов придётся решить, покупать или нет.'
   weight: 84
-  event_tier: 2
+  event_tier: 1
   repeat_policy: once_per_profile
   scenario_shape: chain
   prerequisites:
@@ -276,6 +276,7 @@ events:
   event_tier: 2
   repeat_policy: once_per_profile
   scenario_shape: chain
+  mandatory_gate: blocks_period_end
   prerequisites:
     min_period_index: 13
   extra:
@@ -389,7 +390,7 @@ events:
   description: Лучший друг просит 20 000 ₽ до стипендии и обещает вернуть через четыре хода. Расписку
     писать неловко.
   weight: 74
-  event_tier: 2
+  event_tier: 1
   repeat_policy: once_per_profile
   scenario_shape: chain
   prerequisites:

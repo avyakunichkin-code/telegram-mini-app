@@ -80,11 +80,16 @@ export async function readCash(page) {
 export async function pressGotIt(page) {
   const strip = guidanceStrip(page);
   const before = await strip.innerText();
-  await strip.getByRole('button', { name: 'Понятно' }).click();
+  const gotIt = strip.getByRole('button', { name: 'Понятно' });
+  await gotIt.click();
+  let attempt = 0;
   await expect(async () => {
-    const visible = await strip.isVisible();
-    expect(visible ? await strip.innerText() : '').not.toBe(before);
-  }).toPass();
+    attempt += 1;
+    const text = (await strip.isVisible()) ? await strip.innerText() : '';
+    // Клик во время перерисовки теряется: повторяем, как игрок, но не раньше, чем дойдёт первый запрос.
+    if (text === before && attempt > 1) await gotIt.click({ timeout: 2_000 }).catch(() => {});
+    expect(text).not.toBe(before);
+  }).toPass({ intervals: [1_500, 2_500, 4_000] });
 }
 
 /**

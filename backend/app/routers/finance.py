@@ -1,4 +1,5 @@
 from fastapi import APIRouter, Depends
+from fastapi import HTTPException
 from sqlalchemy.orm import Session
 
 from ..auth import get_current_user
@@ -175,6 +176,16 @@ def create_asset(
     db: Session = Depends(get_db),
 ):
     game_profile = get_active_game_profile(db, current_user.id)
+    # Свободная форма принимает любую цену и доход: студенту покупки только из каталога.
+    if getattr(game_profile, "starter_template_key", None) == "mq_game_basic_v1":
+        raise HTTPException(
+            status_code=403,
+            detail={
+                "code": "mechanic_disabled",
+                "mechanic": MECHANIC_CAPITAL_PROPERTY,
+                "message": "Эта механика недоступна в текущем сценарии",
+            },
+        )
     require_asset_kind_mechanic(db, game_profile, getattr(payload, "kind", None))
     return service_create_asset(db, game_profile, payload)
 
