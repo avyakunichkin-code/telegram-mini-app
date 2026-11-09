@@ -92,6 +92,8 @@ select { font: 600 15px/22px var(--font-text); }
 .brand-mark { display: none; }
 .topnav { display: flex; gap: 6px; flex-wrap: wrap; }
 .topnav .link { background: var(--tile); border-radius: var(--radius-pill); padding: 8px 14px; text-decoration: none; }
+.topnav .link[aria-current="page"] { background: var(--inverse); color: var(--on-inverse); }
+h1[tabindex="-1"]:focus { outline: none; }
 .proto-badge {
   display: inline-block; font-size: 13px; line-height: 18px; font-weight: 600; color: var(--on-tile); background: var(--tile-edge);
   border-radius: var(--radius-pill); padding: 4px 12px; margin: 0 0 var(--gap) 6px;
@@ -330,29 +332,3 @@ select { font: 600 15px/22px var(--font-text); }
 .mini { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 4px; }
 .mini i { height: 46px; border-radius: 12px; }
 .mini-calm { background: var(--tile-calm); }
-
-/* ── P3-11: точность в мастере и широкая вилка ── */
-.precision-note { display: grid; gap: 6px; padding: 0 6px; justify-items: start; }
-.hint.warn { color: var(--edge-ink); font-weight: 600; }
-
-/* ── ★ Повторный чекап: R2 «С прошлого раза» и G2 карточка цели (recheck-round, 2026-11-02) ── */
-.was { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; }
-.was div { background: var(--well); border-radius: var(--radius-inner); padding: 10px; display: grid; gap: 2px; font-size: 12px; line-height: 16px; color: var(--ink-3); min-width: 0; }
-.was b { font: 600 15px/20px var(--font-display); color: var(--ink); white-space: nowrap; }
-.prev { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
-.prev-row { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 8px; align-items: center; background: var(--well); border-radius: var(--radius-inner); padding: 10px 12px; font-size: 14px; line-height: 20px; }
-.st { font-size: 12px; line-height: 16px; font-weight: 700; border-radius: var(--radius-pill); padding: 3px 9px; white-space: nowrap; color: var(--on-tile); }
-.st-done { background: var(--tile-ok); }
-.st-open { background: var(--tile-edge); }
-.st-no { background: var(--hairline); color: var(--ink-2); }
-.goal-of { font: 500 14px/20px var(--font-text); letter-spacing: 0; }
-.bar { position: relative; height: 12px; border-radius: 6px; background: var(--well); overflow: hidden; }
-.bar i { position: absolute; inset: 0 auto 0 0; border-radius: 6px; }
-.bar .before { background: var(--hairline); }
-.bar .now { background: var(--tile-ok); }
-.bar .mark { position: absolute; top: 0; bottom: 0; width: 2px; background: var(--ink); }
-.goal-meta { display: flex; justify-content: space-between; gap: 4px 12px; font-size: 13px; line-height: 18px; color: var(--ink-3); flex-wrap: wrap; }
-.goal-meta b { color: var(--ink); }
-.goal-warn { color: var(--edge-ink); font-weight: 600; }
-.t-goal { grid-column: 1 / -1; }
-@media (min-width: 760px) { .t-goal { grid-column: span 2; } }

@@ -16,7 +16,9 @@ Theme contract: surface/text, focus and disabled appearance remain in each
 application's styles. This package supplies no shared palette or global CSS.
 See [CONTRACT.md](CONTRACT.md) for the consumer inventory and semantic token mapping.
 
-Verification: `cd apps/plan-web; npm.cmd run test:unit` tests both actual adapters;
+Verification: from repository root, `node --test tests/shared-ui/*.test.mjs`
+tests both actual adapters in a separate contract suite (dependencies from plan-web).
+`cd apps/plan-web; npm.cmd run test:unit` tests only Plan;
 `npm.cmd run test:e2e` covers native keyboard, form, busy and ref behavior.
 Game `cd frontend-react; npm.cmd run test:ui-kit` checks its actual MqxButton in
 Chrome with production CSS, without a backend. Its specs also join normal Game E2E.

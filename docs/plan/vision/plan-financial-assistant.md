@@ -28,7 +28,7 @@ aliases:
 «разбор положения и первые шаги → сравнение вариантов → регулярное сопровождение».
 Открытый сервер должен поддерживать реальные данные и их сохранение. Порядок
 выхода и прежняя зависимость от Pre-Alpha игры пересматриваются в
-[стратегическом интервью](../../vision/ideas/product-strategy-clarification.md).
+[стратегическом интервью](../../game/vision/ideas/product-strategy-clarification.md).
 Ограничение действующего in-memory прототипа остаётся фактом; готовность к открытому
 запуску ещё не подтверждена. Детальный scope, старые метрики и этапы ниже не считаются
 заново утверждёнными этим уточнением.
@@ -159,7 +159,7 @@ ADR-016 п.6 и D5 в `PLAN_game-plan-split` приведены к этим ре
 
 ## Links
 
-- Foundation: [`foundation/SPEC_PRODUCT.md`](../../foundation/SPEC_PRODUCT.md)
+- Foundation: [`foundation/SPEC_PRODUCT.md`](../../game/foundation/SPEC_PRODUCT.md)
 - ADR: [ADR-016](../../decisions/ADR-016-two-products-shared-fincore.md), [ADR-013](../../decisions/ADR-013-game-only-drop-plan-mode.md)
 - План: [`PLAN_game-plan-split.md`](../../plans/PLAN_game-plan-split.md)
 - Spec: [`SPEC_plan-v1.md`](../specs/SPEC_plan-v1.md) (SPL-401)

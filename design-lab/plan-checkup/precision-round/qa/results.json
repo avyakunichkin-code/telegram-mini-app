@@ -1,0 +1,7 @@
+{
+  "status": "PASS",
+  "results": [
+    "Pure model: thresholds 50/85%, 1.1 exact ratio, estimated loan, max-weight candidate, broad >3 and zero boundaries: PASS",
+    "A/B at 375/701/1050/1440: no overflow; precision on all 4 demo sections; broad range saves; exact raises level; correct next section; errors preserve input/retry; zero/invalid/saving/offline/empty: PASS"
+  ]
+}

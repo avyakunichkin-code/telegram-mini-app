@@ -40,7 +40,8 @@ consumers and a mapping in both themes before it extends this package.
 
 ## Verification boundaries
 
-- Plan `npm.cmd run test:unit`: actual Plan and Game adapters, plus report blocks.
+- Root `node --test tests/shared-ui/*.test.mjs`: both actual adapters, separate CI job.
+- Plan `npm.cmd run test:unit`: Plan adapter and report blocks only.
 - Plan `npm.cmd run test:e2e`: browser contract through Plan and product flows.
 - Game `npm.cmd run test:ui-kit`: actual Game adapter with the production CSS
   barrel, mobile/desktop, keyboard/ref/form/busy and seven variants in both themes.

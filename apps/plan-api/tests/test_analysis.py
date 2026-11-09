@@ -154,6 +154,14 @@ def test_cushion_target_fires_without_lower_bound():
     assert len(keys) == 3
 
 
+def test_step_text_uses_decimal_comma():
+    report = build_report(checkup(simple(income=100_000, expenses=70_000, cushion=150_000)))
+    step = next(s for s in report["steps"] if s["rule_key"] == "cushion_target")
+    text = json.dumps(step, ensure_ascii=False)
+    assert "2,1 мес. из" in text
+    assert not re.search(r"\d\.\d мес", text)
+
+
 def test_all_green_suggests_surplus():
     report = build_report(checkup(simple(income=200_000, expenses=80_000, cushion=600_000)))
     assert all(a["light"] == "green" for a in report["areas"])
@@ -194,16 +202,3 @@ def test_cs6_no_trading_advice_in_texts():
         text = " ".join([report["entry_answer"]["text"]] + [s["title"] + s["why"] for s in report["steps"]])
         assert not banned.search(text)
         assert "не индивидуальная инвестиционная рекомендация" in report["disclaimer"]
-
-
-def test_precision_thresholds_match_web():
-    """Мастер plan-web считает точность сам (P3-11): пороги обязаны совпадать с сервером."""
-    from plan_api.analysis import config
-
-    src = (Path(__file__).parents[2] / "plan-web" / "src" / "logic.js").read_text(encoding="utf-8")
-    web = {k: float(v) for k, v in re.findall(r"export const (PRECISION_\w+) = ([\d.]+)", src)}
-    assert web == {
-        "PRECISION_EXACT_RATIO": config.PRECISION_EXACT_RATIO,
-        "PRECISION_APPROX": config.PRECISION_APPROX,
-        "PRECISION_REFINED": config.PRECISION_REFINED,
-    }

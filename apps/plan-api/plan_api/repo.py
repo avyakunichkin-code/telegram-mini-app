@@ -9,6 +9,7 @@ pydantic-схемой `CheckupData` на входе и выходе.
 from __future__ import annotations
 
 import json
+import hashlib
 import secrets
 from dataclasses import dataclass
 from datetime import datetime, timezone
@@ -17,14 +18,15 @@ from sqlalchemy import text
 from sqlalchemy.orm import Session
 
 from .schemas import Checkup, CheckupData, Member
+from .analytics import event_props
 
 
 def new_id(prefix: str) -> str:
     return f"{prefix}_{secrets.token_hex(6)}"
 
 
-def now_iso(now: datetime | None = None) -> str:
-    return (now or datetime.now(timezone.utc)).isoformat(timespec="seconds")
+def now_iso(now: datetime | None = None, *, precise: bool = False) -> str:
+    return (now or datetime.now(timezone.utc)).isoformat(timespec="microseconds" if precise else "seconds")
 
 
 def _members_json(members: list[Member]) -> str:
@@ -143,7 +145,7 @@ class Repo:
             "INSERT INTO checkups (id, household_id, entry_question, status, as_of, parent_checkup_id, created_at, members_json, data_json) "
             "VALUES (:id, :h, :q, :st, :as_of, :p, :at, :m, :d)",
             id=ck.id, h=user.household_id, q=ck.entry_question, st=ck.status, as_of=ck.as_of, p=ck.parent_checkup_id,
-            at=now_iso(), m=_members_json(ck.members), d=ck.data.model_dump_json(),
+            at=now_iso(precise=True), m=_members_json(ck.members), d=ck.data.model_dump_json(),
         )
 
     def save_draft(self, user: User, ck: Checkup) -> None:
@@ -167,6 +169,25 @@ class Repo:
     def report(self, checkup_id: str) -> dict | None:
         row = self._exec("SELECT payload_json FROM reports WHERE checkup_id = :c", c=checkup_id).first()
         return json.loads(row[0]) if row else None
+
+    def history(self, user: User) -> list[dict]:
+        from .history import areas
+        rows = self._exec(
+            "SELECT c.id, c.entry_question, c.status, c.as_of, c.completed_at, r.payload_json "
+            "FROM checkups c LEFT JOIN reports r ON r.checkup_id = c.id "
+            "WHERE c.household_id = :h ORDER BY CASE WHEN c.status = 'draft' THEN 0 ELSE 1 END, "
+            "c.completed_at DESC, c.created_at DESC, c.id DESC", h=user.household_id,
+        ).all()
+        result = []
+        for row in rows:
+            report = json.loads(row[5]) if row[5] else None
+            result.append({
+                "id": row[0], "entry_question": row[1], "status": row[2], "as_of": row[3], "completed_at": row[4],
+                "question": report.get("entry_answer", {}).get("question") if report else None,
+                "report_available": report is not None, "areas": areas(report),
+                "rules_version": report.get("rules_version") if report else None,
+            })
+        return result
 
     def insert_report(self, user: User, checkup_id: str, report: dict) -> None:
         rid = new_id("rp")
@@ -197,6 +218,23 @@ class Repo:
             "UPDATE steps SET status = :st, status_at = :at WHERE id = :id AND household_id = :h", st=status, at=at, id=step_id, h=user.household_id
         )
 
+    def save_step(self, user: User, previous: dict, updated: dict) -> bool:
+        """Compare-and-swap prevents concurrent action updates from losing marks."""
+        row = self._exec(
+            "SELECT payload_json, status, status_at FROM steps WHERE id = :id AND household_id = :h",
+            id=previous["id"], h=user.household_id,
+        ).first()
+        if not row or {**json.loads(row[0]), "status": row[1], "status_at": row[2]} != previous:
+            return False
+        result = self._exec(
+            "UPDATE steps SET payload_json = :p, status = :st, status_at = :at "
+            "WHERE id = :id AND household_id = :h AND payload_json = :old AND status = :old_st "
+            "AND (status_at = :old_at OR (status_at IS NULL AND :old_at IS NULL))",
+            p=json.dumps(updated, ensure_ascii=False), st=updated["status"], at=updated["status_at"],
+            id=previous["id"], h=user.household_id, old=row[0], old_st=row[1], old_at=row[2],
+        )
+        return result.rowcount == 1
+
     def report_with_step_status(self, checkup_id: str) -> dict | None:
         """Сохранённый отчёт с актуальными статусами шагов (отметка «сделано» переживает перезагрузку)."""
         report = self.report(checkup_id)
@@ -204,20 +242,37 @@ class Repo:
             ids = [s["id"] for s in report["steps"]]
             if ids:
                 rows = self._exec(
-                    "SELECT id, status, status_at FROM steps WHERE id IN (" + ",".join(f":s{i}" for i in range(len(ids))) + ")",
+                    "SELECT id, status, status_at, payload_json FROM steps WHERE id IN (" + ",".join(f":s{i}" for i in range(len(ids))) + ")",
                     **{f"s{i}": sid for i, sid in enumerate(ids)},
                 ).all()
-                by_id = {r[0]: (r[1], r[2]) for r in rows}
+                by_id = {r[0]: {**json.loads(r[3]), "status": r[1], "status_at": r[2]} for r in rows}
                 for s in report["steps"]:
-                    s["status"], s["status_at"] = by_id.get(s["id"], (s.get("status"), None))
+                    s.update(by_id.get(s["id"], {}))
         return report
 
     # --- события ------------------------------------------------------------------------------
 
-    def track(self, user_id: str | None, name: str, props: dict) -> None:
+    def checkup_elapsed(self, user: User, checkup_id: str, at: str | None = None) -> int:
+        started = self._exec(
+            "SELECT created_at FROM checkups WHERE id = :id AND household_id = :h",
+            id=checkup_id, h=user.household_id,
+        ).scalar_one()
+        start = datetime.fromisoformat(started)
+        end = datetime.fromisoformat(at or now_iso())
+        return max(0, int((end - start).total_seconds()))
+
+    def delete_events(self, user_id: str) -> None:
+        self._exec("DELETE FROM product_events WHERE user_id = :u", u=user_id)
+
+    def track(self, user_id: str | None, name: str, props: dict, *, once_key: str | None = None) -> None:
+        props = event_props(name, props)
+        if (name == "account_deleted") != (user_id is None):
+            raise ValueError("Only account_deleted is anonymous")
+        # Stable 128-bit milestone id fits the existing VARCHAR(40), SQLite/Postgres.
+        event_id = "ev_" + hashlib.sha256(f"{user_id}:{name}:{once_key}".encode()).hexdigest()[:32] if once_key else new_id("ev")
         self._exec(
-            "INSERT INTO product_events (id, user_id, name, props_json, at) VALUES (:id, :u, :n, :p, :at)",
-            id=new_id("ev"), u=user_id, n=name, p=json.dumps(props, ensure_ascii=False), at=now_iso(),
+            "INSERT INTO product_events (id, user_id, name, props_json, at) VALUES (:id, :u, :n, :p, :at) ON CONFLICT (id) DO NOTHING",
+            id=event_id, u=user_id, n=name, p=json.dumps(props, ensure_ascii=False), at=now_iso(),
         )
 
     def funnel(self, names: list[str]) -> dict[str, int]:
