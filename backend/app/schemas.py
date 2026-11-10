@@ -207,6 +207,8 @@ class GameMechanicsPermissions(BaseModel):
     capital_insurance: bool = True
     capital_property: bool = True
     capital_liabilities: bool = True
+    capital_car: bool = True
+    capital_mortgage: bool = True
 
 
 class NeedsOverview(BaseModel):
@@ -306,6 +308,8 @@ class FinanceOverview(BaseModel):
     onboarding_step: str = "farewell"
     mechanics: GameMechanicsPermissions = Field(default_factory=GameMechanicsPermissions)
     mechanics_effective: GameMechanicsPermissions = Field(default_factory=GameMechanicsPermissions)
+    # Ход следующего открытия раздела, если осталось только дождаться его; иначе null.
+    mechanics_next_unlock_period: Optional[int] = None
     negative_periods_count: int = 0
     period_close_preview: Optional[PeriodClosePreview] = None
     profile_is_active: bool = True

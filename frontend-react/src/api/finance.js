@@ -39,9 +39,6 @@ export const financeApi = {
   deleteLiability(id) {
     return apiCall(`/api/finance/liabilities/${id}`, 'DELETE');
   },
-  addAsset(payload) {
-    return apiCall('/api/finance/assets', 'POST', payload);
-  },
   deleteAsset(id) {
     return apiCall(`/api/finance/assets/${id}`, 'DELETE');
   },

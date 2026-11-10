@@ -71,6 +71,8 @@ class EventProfileContext:
     active_insurance_claim_keys: frozenset[str]
     active_asset_kind_counts: tuple[tuple[str, int], ...] = ()
     monthly_net_flow: float | None = None  # доход − расходы за месяц; None = не считали
+    period_index: int = 0
+    open_capital_mechanics: frozenset[str] = frozenset()
 
 
 @dataclass(frozen=True)
@@ -85,6 +87,8 @@ class EventPrerequisites:
     requires_insurance_any — хотя бы один активный полис с product+insured_object из списка dict.
     min_assets_of_kind — {kind: N}: не меньше N активных активов этого kind (вторая машина).
     negative_monthly_flow — месячные расходы больше доходов (подсказка о дыре в бюджете).
+    min_period_index — событие не раньше этого хода.
+    requires_mechanics_all — все перечисленные разделы капитала уже открыты игроку.
     """
 
     active_asset_kinds_any: frozenset[str] = frozenset()
@@ -96,6 +100,8 @@ class EventPrerequisites:
     forbid_active_asset_kinds_any: frozenset[str] = frozenset()
     min_assets_of_kind: tuple[tuple[str, int], ...] = ()
     negative_monthly_flow: bool = False
+    min_period_index: int = 0
+    requires_mechanics_all: frozenset[str] = frozenset()
 
 
 def parse_event_prerequisites_json(raw: str | None) -> EventPrerequisites:
@@ -139,6 +145,8 @@ def parse_event_prerequisites_json(raw: str | None) -> EventPrerequisites:
         min_active_assets=max(0, int(data.get("min_active_assets") or 0)),
         requires_insurance_any=tuple(ins_specs),
         negative_monthly_flow=bool(data.get("negative_monthly_flow")),
+        min_period_index=max(0, int(data.get("min_period_index") or 0)),
+        requires_mechanics_all=_kind_set("requires_mechanics_all"),
     )
 
 
@@ -169,6 +177,10 @@ def event_prerequisites_met(prereq: EventPrerequisites, ctx: EventProfileContext
     if prereq.negative_monthly_flow and not (
         ctx.monthly_net_flow is not None and ctx.monthly_net_flow < 0
     ):
+        return False
+    if ctx.period_index < prereq.min_period_index:
+        return False
+    if not prereq.requires_mechanics_all.issubset(ctx.open_capital_mechanics):
         return False
     return True
 

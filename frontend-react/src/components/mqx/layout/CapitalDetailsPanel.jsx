@@ -103,6 +103,9 @@ export function CapitalDetailsPanel({
     setPrepayTarget(null);
   };
 
+  /** Купленное авто видно и до открытия жилья. */
+  const assetsOpen = sections.property === 'open' || sections.car === 'open';
+
   /** Подсказка цели — только в первой закрытой карточке, остальные — пунктир и «откроется по цели». */
   const firstLocked = ['invest', 'insurance', 'property', 'liabilities'].find((k) => sections[k] === 'locked');
   const lockedLot = (key, tone, title) => (
@@ -188,7 +191,7 @@ export function CapitalDetailsPanel({
       ) : null}
       {sections.insurance === 'locked' ? lockedLot('insurance', 'insure', 'Страховки') : null}
 
-      {sections.property === 'open' ? (
+      {assetsOpen ? (
         <CapitalLot
           tone="property"
           title="Имущество"
@@ -213,7 +216,7 @@ export function CapitalDetailsPanel({
           )}
         </CapitalLot>
       ) : null}
-      {sections.property === 'locked' ? lockedLot('property', 'property', 'Имущество') : null}
+      {!assetsOpen && sections.property === 'locked' ? lockedLot('property', 'property', 'Имущество') : null}
 
       {sections.liabilities === 'open' ? (
         <CapitalLot

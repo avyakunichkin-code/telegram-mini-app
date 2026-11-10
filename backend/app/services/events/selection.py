@@ -132,7 +132,22 @@ def _load_event_profile_context(db: Session, game_profile_id: int) -> EventProfi
         active_insurance_claim_keys=frozenset(ins_keys),
         active_asset_kind_counts=tuple(sorted(kind_counts.items())),
         monthly_net_flow=_monthly_net_flow(db, game_profile_id),
+        **_progression_context(db, game_profile_id),
     )
+
+
+def _progression_context(db: Session, game_profile_id: int) -> dict:
+    from ...models import GameProfile
+    from ...starters.mechanics import resolve_profile_mechanics_effective
+
+    profile = db.query(GameProfile).filter(GameProfile.id == game_profile_id).first()
+    if profile is None:
+        return {}
+    flags = resolve_profile_mechanics_effective(db, profile)
+    return {
+        "period_index": int(profile.period_index or 1),
+        "open_capital_mechanics": frozenset(k for k, v in flags.items() if v),
+    }
 
 
 def _monthly_net_flow(db: Session, game_profile_id: int) -> float | None:

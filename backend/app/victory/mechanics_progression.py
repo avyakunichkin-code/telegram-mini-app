@@ -11,12 +11,17 @@ MECHANIC_CAPITAL_INVEST = "capital_invest"
 MECHANIC_CAPITAL_INSURANCE = "capital_insurance"
 MECHANIC_CAPITAL_PROPERTY = "capital_property"
 MECHANIC_CAPITAL_LIABILITIES = "capital_liabilities"
+# Подразделы: авто отдельно от жилья, ипотека отдельно от кредитов (SPEC_student-progression).
+MECHANIC_CAPITAL_CAR = "capital_car"
+MECHANIC_CAPITAL_MORTGAGE = "capital_mortgage"
 
 CAPITAL_MECHANIC_KEYS = (
     MECHANIC_CAPITAL_INVEST,
     MECHANIC_CAPITAL_INSURANCE,
     MECHANIC_CAPITAL_PROPERTY,
     MECHANIC_CAPITAL_LIABILITIES,
+    MECHANIC_CAPITAL_CAR,
+    MECHANIC_CAPITAL_MORTGAGE,
 )
 
 MECHANIC_DASHBOARD_CORE = "dashboard_core"
@@ -28,15 +33,26 @@ ALL_MECHANIC_KEYS = (
     *CAPITAL_MECHANIC_KEYS,
 )
 
+# Лестница студента: разовый шаг цепочки + номер хода — оба не откатываются, открытие не отзывается.
+STUDENT_LADDER_GOAL = "tutorial_invest"
+
 DEFAULT_BASIC_UNLOCK: list[dict[str, Any]] = [
     {"after_goal": None, "grant": [MECHANIC_CAPITAL_FLOWS, MECHANIC_CAPITAL_INVEST]},
+    {"after_goal": STUDENT_LADDER_GOAL, "min_period": 6, "grant": [MECHANIC_CAPITAL_INSURANCE]},
+    {"after_goal": STUDENT_LADDER_GOAL, "min_period": 12, "grant": [MECHANIC_CAPITAL_LIABILITIES]},
+    {"after_goal": STUDENT_LADDER_GOAL, "min_period": 20, "grant": [MECHANIC_CAPITAL_CAR]},
+    {"after_goal": STUDENT_LADDER_GOAL, "min_period": 26, "grant": [MECHANIC_CAPITAL_PROPERTY]},
+    {"after_goal": STUDENT_LADDER_GOAL, "min_period": 32, "grant": [MECHANIC_CAPITAL_MORTGAGE]},
 ]
 
 DEFAULT_HARDER_UNLOCK: list[dict[str, Any]] = [
     {"after_goal": None, "grant": [MECHANIC_CAPITAL_FLOWS]},
     {"after_goal": "tutorial_cushion", "grant": [MECHANIC_CAPITAL_LIABILITIES, MECHANIC_CAPITAL_INVEST]},
     {"after_goal": "tutorial_invest", "grant": [MECHANIC_CAPITAL_INSURANCE]},
-    {"after_goal": "tutorial_insurance", "grant": [MECHANIC_CAPITAL_PROPERTY]},
+    {
+        "after_goal": "tutorial_insurance",
+        "grant": [MECHANIC_CAPITAL_PROPERTY, MECHANIC_CAPITAL_CAR, MECHANIC_CAPITAL_MORTGAGE],
+    },
 ]
 
 TEMPLATE_MECHANICS_UNLOCK_PRESETS: dict[str, list[dict[str, Any]]] = {
@@ -72,10 +88,38 @@ def _template_allows_requires(requires: list[str], template_cap: dict[str, bool]
     return True
 
 
+def _step_min_period(step: dict[str, Any]) -> int:
+    try:
+        return int(step.get("min_period") or 0)
+    except (TypeError, ValueError):
+        return 0
+
+
+def _period_reached(step: dict[str, Any], period_index: int | None) -> bool:
+    """Без номера хода условие min_period не проверяем (вызовы вне партии)."""
+    return period_index is None or int(period_index) >= _step_min_period(step)
+
+
+def next_unlock_period(
+    unlock_steps: list[dict[str, Any]],
+    chain_met_goal_keys: set[str],
+    period_index: int,
+) -> int | None:
+    """Ближайший ход открытия, если ждать осталось только его (цель шага уже выполнена)."""
+    pending = [
+        _step_min_period(step)
+        for step in unlock_steps
+        if (step.get("after_goal") is None or step.get("after_goal") in chain_met_goal_keys)
+        and _step_min_period(step) > int(period_index)
+    ]
+    return min(pending) if pending else None
+
+
 def compute_mechanics_effective(
     template_cap: dict[str, bool],
     unlock_steps: list[dict[str, Any]],
     chain_met_goal_keys: set[str],
+    period_index: int | None = None,
 ) -> dict[str, bool]:
     """Эффективные флаги UI/API: grant из unlock_steps после выполненных ключей целей."""
     effective: dict[str, bool] = {
@@ -88,6 +132,8 @@ def compute_mechanics_effective(
     for step in unlock_steps:
         after = step.get("after_goal")
         if after is not None and after not in chain_met_goal_keys:
+            continue
+        if not _period_reached(step, period_index):
             continue
         grants = step.get("grant") or []
         if not isinstance(grants, list):

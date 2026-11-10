@@ -24,5 +24,6 @@ ALLOWED_EFFECT_KEYS = frozenset(
         "chain_action",
         "requires_chain_branch",
         "needs_delta",
+        "monthly_salary_delta",
     }
 )

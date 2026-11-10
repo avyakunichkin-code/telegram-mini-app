@@ -1,4 +1,5 @@
 from fastapi import APIRouter, Depends
+from fastapi import HTTPException
 from sqlalchemy.orm import Session
 
 from ..auth import get_current_user
@@ -7,14 +8,15 @@ from ..game.session import get_active_game_profile
 from ..starters.mechanics import (
     MECHANIC_CAPITAL_LIABILITIES,
     MECHANIC_CAPITAL_PROPERTY,
+    require_asset_kind_mechanic,
     require_capital_mechanic,
+    require_secured_loan_mechanic,
 )
 from ..schemas import (
     SalaryProfileUpdate,
     SalaryProfileResponse,
     LiabilityCreate,
     LiabilityResponse,
-    AssetCreate,
     AssetResponse,
     SecuredAcquisitionResponse,
     FinanceOverview,
@@ -31,7 +33,6 @@ from ..services.finance.liabilities import (
     prepay_liability as service_prepay_liability,
 )
 from ..services.finance.assets import (
-    create_asset as service_create_asset,
     list_assets as service_list_assets,
     delete_asset as service_delete_asset,
     create_asset_from_template as service_create_asset_from_template,
@@ -49,6 +50,8 @@ from ..services.finance.overview import (
 from ..services.finance.analytics import (
     get_analytics_timeseries as service_get_analytics_timeseries,
 )
+
+from ..models import AssetTemplate
 
 router = APIRouter(prefix="/api/finance", tags=["finance"])
 
@@ -112,8 +115,7 @@ def create_secured_acquisition_route(
     db: Session = Depends(get_db),
 ):
     game_profile = get_active_game_profile(db, current_user.id)
-    require_capital_mechanic(db, game_profile, MECHANIC_CAPITAL_LIABILITIES)
-    require_capital_mechanic(db, game_profile, MECHANIC_CAPITAL_PROPERTY)
+    require_secured_loan_mechanic(db, game_profile, payload.get("liability_key") or payload.get("key"))
     result = create_secured_acquisition(
         db,
         game_profile,
@@ -166,14 +168,16 @@ def create_liability_from_template(
 
 
 @router.post("/assets", response_model=AssetResponse)
-def create_asset(
-    payload: AssetCreate,
-    current_user=Depends(get_current_user),
-    db: Session = Depends(get_db),
-):
-    game_profile = get_active_game_profile(db, current_user.id)
-    require_capital_mechanic(db, game_profile, MECHANIC_CAPITAL_PROPERTY)
-    return service_create_asset(db, game_profile, payload)
+def create_asset(current_user=Depends(get_current_user)):
+    """Свободная форма принимала любую цену и доход: имущество покупается только из каталога."""
+    raise HTTPException(
+        status_code=403,
+        detail={
+            "code": "mechanic_disabled",
+            "mechanic": MECHANIC_CAPITAL_PROPERTY,
+            "message": "Имущество покупается только из каталога",
+        },
+    )
 
 
 @router.get("/assets", response_model=list[AssetResponse])
@@ -202,8 +206,9 @@ def create_asset_from_template(
     db: Session = Depends(get_db),
 ):
     game_profile = get_active_game_profile(db, current_user.id)
-    require_capital_mechanic(db, game_profile, MECHANIC_CAPITAL_PROPERTY)
     key = (payload.get("key") or "").strip()
+    template = db.query(AssetTemplate).filter(AssetTemplate.template_key == key).first()
+    require_asset_kind_mechanic(db, game_profile, template.kind if template else key)
     return service_create_asset_from_template(db, game_profile, key=key)
 
 

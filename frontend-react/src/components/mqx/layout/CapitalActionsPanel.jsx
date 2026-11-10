@@ -219,11 +219,13 @@ export function CapitalActionsPanel({
       case 'credit':
         return (
           <>
-            <SecuredAcquisitionList
-              bundles={filterBundlesForSheet(securedBundles, 'car')}
-              onAcquire={onSecuredAcquisition}
-              busyKey={securedAcquireBusyKey}
-            />
+            {sections.car === 'open' ? (
+              <SecuredAcquisitionList
+                bundles={filterBundlesForSheet(securedBundles, 'car')}
+                onAcquire={onSecuredAcquisition}
+                busyKey={securedAcquireBusyKey}
+              />
+            ) : null}
             {creditTemplates.length > 0 ? (
               <>
                 <p className="mqx-capital-sheet-section-label">Потребительские</p>

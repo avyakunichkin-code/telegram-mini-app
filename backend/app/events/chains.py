@@ -53,6 +53,10 @@ CHAIN_FOLLOWUP_EXCLUDE_FROM_RANDOM_POOL = frozenset(
         "mq11_freelance_project_deadline_steady",
         "mq11_freelance_project_epilogue_rush",
         "mq11_freelance_project_epilogue_steady",
+        "mq11_student_dream_deadline",
+        "mq11_student_friend_loan_return",
+        "mq11_student_diploma_startup",
+        "mq11_student_diploma_masters",
         "mq11_second_car_bargain",
         "mq11_second_car_sold_late",
         "mq11_second_car_proceeds",
@@ -72,6 +76,8 @@ CHAIN_KEY_BY_DEFINITION: dict[str, str] = {
     "mq11_freelance_project_deadline_steady": FREELANCE_PROJECT_CHAIN_KEY,
     "mq11_freelance_project_epilogue_rush": FREELANCE_PROJECT_CHAIN_KEY,
     "mq11_freelance_project_epilogue_steady": FREELANCE_PROJECT_CHAIN_KEY,
+    "mq11_student_dream_deadline": "student_dream",
+    "mq11_student_friend_loan_return": "student_friend_loan",
     "mq11_second_car_bargain": SECOND_CAR_CHAIN_KEY,
     "mq11_second_car_sold_late": SECOND_CAR_CHAIN_KEY,
     "mq11_second_car_proceeds": SECOND_CAR_CHAIN_KEY,
@@ -84,6 +90,10 @@ CHAIN_KEY_BY_DEFINITION: dict[str, str] = {
 
 # Шаг, на котором цепочка заканчивается, если выбор не ставит следующий (enqueue_event).
 CHAIN_KEY_BY_FINAL_DEFINITION: dict[str, str] = {
+    "mq11_student_dream_deadline": "student_dream",
+    "mq11_student_friend_loan_return": "student_friend_loan",
+    "mq11_student_diploma_startup": "student_diploma",
+    "mq11_student_diploma_masters": "student_diploma",
     "mq11_family_vacation_card_bill": FAMILY_VACATION_CHAIN_KEY,
     "mq11_family_vacation_card_tail": FAMILY_VACATION_CHAIN_KEY,
     "mq11_family_vacation_trip": FAMILY_VACATION_CHAIN_KEY,
