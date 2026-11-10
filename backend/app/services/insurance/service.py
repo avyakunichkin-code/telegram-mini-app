@@ -225,7 +225,7 @@ def cancel_policy(db: Session, profile: GameProfile, policy_id: int) -> dict:
 
 
 def expire_policies_for_period(db: Session, profile: GameProfile, period_index: int) -> int:
-    """Деактивирует полисы с истёкшим сроком без выплаты. Возвращает число закрытых."""
+    """Деактивирует истёкшие полисы; транзакцией владеет вызывающий код."""
     rows = (
         db.query(InsurancePolicy)
         .filter(
@@ -243,7 +243,7 @@ def expire_policies_for_period(db: Session, profile: GameProfile, period_index: 
             p.is_active = 0
             n += 1
     if n:
-        db.commit()
+        db.flush()
     return n
 
 

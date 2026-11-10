@@ -13,8 +13,53 @@ from app.game import period as period_module
 from app.game.period import process_period_end
 from app.models import FinanceLiability, Transaction
 from tests.fixtures.game import create_profile_ready_for_period_close
+from tests.test_insurance_policy_expiry import _policy
 
 _NO_EVENTS = patch("app.game.period.ensure_period_events", return_value=None)
+
+
+def test_expiry_does_not_skip_another_policys_premium(db_session, test_user, caplog):
+    profile = create_profile_ready_for_period_close(
+        db_session, user_id=test_user.id, cash_balance=10_000.0, period_index=2
+    )
+    expired = _policy(db_session, profile.id, expires_period_index=2)
+    active = _policy(db_session, profile.id, expires_period_index=13, monthly_premium=900)
+    with _NO_EVENTS, caplog.at_level(logging.ERROR, logger="app.game.period"):
+        result = process_period_end(db_session, profile)
+    db_session.refresh(expired)
+    db_session.refresh(active)
+    assert expired.is_active == 0
+    assert active.is_active == 1
+    assert result["new_balance"] == 9_100.0
+    assert not any("Insurance premiums failed" in r.getMessage() for r in caplog.records)
+
+
+def test_failure_after_insurance_rolls_back_expiry_and_earlier_debits(
+    db_session, test_user, monkeypatch
+):
+    from app.services.period.close import close_open_period
+
+    profile = create_profile_ready_for_period_close(
+        db_session, user_id=test_user.id, cash_balance=10_000.0,
+        base_monthly_lifestyle_expense=1_000.0,
+    )
+    expired = _policy(db_session, profile.id, expires_period_index=1)
+    profile_id, policy_id, period = profile.id, expired.id, int(profile.period_index)
+
+    def fail_after_insurance(*args, **kwargs):
+        raise RuntimeError("failure after insurance")
+
+    monkeypatch.setattr(period_module, "_accrue_investments", fail_after_insurance)
+    with pytest.raises(RuntimeError, match="failure after insurance"):
+        close_open_period(db_session, test_user.id, intended_period=period)
+    db_session.expire_all()
+    db_session.refresh(profile)
+    db_session.refresh(expired)
+    assert profile.id == profile_id and expired.id == policy_id
+    assert profile.cash_balance == 10_000.0
+    assert profile.period_index == period
+    assert expired.is_active == 1
+    assert db_session.query(Transaction).filter_by(game_profile_id=profile_id).count() == 0
 
 
 def _annuity(db_session, profile_id: int, *, principal: float, rate: float, term: int) -> FinanceLiability:

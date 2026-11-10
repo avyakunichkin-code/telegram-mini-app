@@ -26,4 +26,5 @@ def get_me(
         email=current_user.email,
         game_profiles_count=game_profiles_count,
         created_at=current_user.created_at,
+        is_guest=bool(current_user.is_guest),
     )
