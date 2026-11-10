@@ -64,7 +64,7 @@ class PlayerPlaytestSurvey(Base):
     closed_turns = Column(Integer, nullable=False, default=0)
     answers_json = Column(Text, nullable=True)
     comment = Column(Text, nullable=False, default="")
-    created_at = Column(DateTime, default=utc_now_naive)
+    created_at = Column(DateTime, nullable=False, default=utc_now_naive)
     dismissed_at = Column(DateTime, nullable=True)
     submitted_at = Column(DateTime, nullable=True)
 
