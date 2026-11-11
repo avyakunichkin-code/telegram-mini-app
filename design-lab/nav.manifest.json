@@ -102,6 +102,12 @@
           "path": "run-finale/index.html",
           "kind": "lab"
         },
+        {
+          "label": "Run finale — «Что решило партию» (DC-07)",
+          "path": "run-finale/decisions-round/index.html",
+          "kind": "lab",
+          "status": "approved"
+        },
         { "label": "Juice round", "path": "game-ui/juice-round/index.html", "kind": "lab", "status": "approved" },
         {
           "label": "UI states + icons (B1-B3)",

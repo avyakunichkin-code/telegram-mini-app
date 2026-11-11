@@ -51,7 +51,7 @@ aliases:
 | **AC1** | Связка аккаунтов TG ↔ email | Backend+Frontend | ⬜ в фокусе; после WD1 v1 / TG2; нет spec |
 | **AF1** | Воронка «игра → советник» (гипотеза) | Doc+Marketing+Frontend | 🟡 handbook; **Pre-Alpha: без CTA советника** (2026-05-30) |
 | **T1** | Пошаговый месяц без таймера (TB1) | DB+Backend+Frontend+Doc | ✅ **implemented** — [idea](../vision/ideas/turn-based-period-no-timer.md) · [plan](../plans/PLAN_turn-based-period-no-timer.md) · TB1.1 чипы — backlog |
-| **GE1** | Run Finale — финал партии, feedback, бейджи сохранений | DB+Backend+Frontend+Doc | 🟢 v1 prod · [SPEC_game-run-finale](../specs/features/SPEC_game-run-finale.md) · `run_outcome`, Watchtower feedback |
+| **GE1** | Run Finale — финал партии, feedback, бейджи сохранений | DB+Backend+Frontend+Doc | 🟢 v1 prod · «Цена решений» DC-01…09 реализована и проверена локально (2026-11-11): A · Чек утверждён PO, порог предварительно 1× среднего дохода; backend 718 passed / 1 skipped, отдельный PostgreSQL migrate/repeat + schema tests 9 passed. Новое расширение не выкладывалось · [SPEC](../specs/features/SPEC_run-finale-decision-cost.md), [план и проверки](../plans/PLAN_run-finale-decision-cost.md) |
 | **DL1** | **Реалистичный долг** — актив↔кредит↔страховка, аннуитет, prepay | DB+Backend+Frontend+Doc | 🟡 **MVP в prod** · spec approved; **DL1-143** REVIEW ([отчёт](../balance/reports/DL1-143_balance_playtest_2026-06-02.md)); polish UI |
 | **EVT1** | Система событий v2 (слоты, informational, global) | DB+Backend+Frontend+Content | 🟡 taxonomy `0041` + rebalance ✅; **мульти-слот** EVT1-030…050 ⬜ |
 | **PLT** | Platform: хостинг, product analytics, TG player, auth | Ops+Backend+Frontend+Doc | 🟡 plan [`PLAN_PLT`](../plans/PLAN_PLT.md); P0 gate → M1.2 |
@@ -396,6 +396,7 @@ aliases:
 - [x] **MQ-108** — дашборд без legacy `character_*`; прогресс победы — см. V2 UI.
 - [x] **O2** — `GameGuidanceLayer`, `MqxGuidanceStrip`, `guidance_completed` на user (2026-06-01).
 - [x] **GE1** — `MqxRunFinale`, `player_run_feedback`, бейджи `run_outcome` в списке сохранений (2026-06-01).
+- [x] **GE1 / DC-01…09** — «Цена решений»: A · Чек в финале обоих исходов, до трёх фактов, предварительный порог 1× среднего регулярного дохода. Реализовано и проверено локально 2026-11-11; PostgreSQL 18 fresh/legacy/repeat пройдены. [Spec](../specs/features/SPEC_run-finale-decision-cost.md), [закрытие](../audits/qa/2026-11-11-run-finale-decision-cost.md).
 - [x] **DL1-160** — secured/prepay/sale preview во вкладке «Капитал» (2026-06-02).
 - [x] P1 **[Frontend+Backend] α-FB-18 (часть)** — `period_highlights` в `period_close` + `MqxPeriodCloseRitual` (расходы, купоны, депозит); полный breakdown по категориям — **E1-115**.
 

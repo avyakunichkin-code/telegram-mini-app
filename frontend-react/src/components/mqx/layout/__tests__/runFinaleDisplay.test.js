@@ -1,9 +1,30 @@
 import assert from 'node:assert/strict';
 import { describe, it } from 'node:test';
 
-import { finaleDefeatFact, finaleWinStats, isFinaleWin } from '../runFinaleDisplay.js';
+import { finaleDecisions, finaleDefeatFact, finaleWinStats, isFinaleWin } from '../runFinaleDisplay.js';
 
 describe('runFinaleDisplay (★ BG-2 финал)', () => {
+  it('решения: порядок API, знак, оценка и месяцы расходов', () => {
+    const result = finaleDecisions({ monthly_burn: 42000, decisions: [
+      { direction: 'cost', title: 'Зарплата', amount: 150000, is_estimate: true },
+      { direction: 'gain', title: 'Вложения', amount: 86000 },
+    ] });
+    assert.equal(result[0].sign, '−');
+    assert.equal(result[0].is_estimate, true);
+    assert.equal(result[0].expenseMonths, '3,6 мес. расходов');
+    assert.equal(result[1].sign, '+');
+    assert.equal(result[1].expenseMonths, '2 мес. расходов');
+  });
+
+  it('пустой/старый payload и некорректные суммы не создают карточки', () => {
+    assert.deepEqual(finaleDecisions({}), []);
+    assert.deepEqual(finaleDecisions({ decisions: [] }), []);
+    assert.deepEqual(finaleDecisions({ decisions: [null, { direction: 'gain', title: 'x', amount: Infinity },
+      { direction: 'cost', title: 'x', amount: -1 }, { direction: 'unknown', title: 'x', amount: 1 }] }), []);
+    for (const monthly_burn of [0, null, undefined, -1]) {
+      assert.equal(finaleDecisions({ monthly_burn, decisions: [{ direction: 'gain', title: 'x', amount: 1 }] })[0].expenseMonths, null);
+    }
+  });
   it('победа: три показателя из payload', () => {
     const stats = finaleWinStats({
       outcome: 'victory',

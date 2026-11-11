@@ -2,6 +2,12 @@
  * Фикстуры финала ★ BG-2 для #/dev/mqx — форма payload `run_finale` (backend/app/game/run_finale.py).
  * Тексты поражения — как отдаёт API (DEFEAT_FACT_COPY), не придуманные.
  */
+export const CATALOG_RUN_FINALE_DECISIONS = [
+  { kind: 'debt_overpaid', direction: 'cost', title: 'Кредит «Авто»', detail: 'Заплачено сверх взятой суммы за 28 ходов', amount: 340000 },
+  { kind: 'salary_missed', direction: 'cost', title: 'Пропущенные зарплаты', detail: 'Не получено за 3 хода', amount: 150000, is_estimate: true },
+  { kind: 'investment_gain', direction: 'gain', title: 'Вклады и облигации', detail: 'Заработано на вложениях за партию', amount: 86000 },
+];
+
 export const CATALOG_RUN_FINALE_WIN = {
   outcome: 'victory',
   period_index: 39,
@@ -13,6 +19,8 @@ export const CATALOG_RUN_FINALE_WIN = {
   cash_balance: 412000,
   cushion_turns: 6.1,
   can_dismiss: true,
+  monthly_burn: 42000,
+  decisions: CATALOG_RUN_FINALE_DECISIONS,
 };
 
 export const CATALOG_RUN_FINALE_DEFEAT_CASH = {
@@ -22,6 +30,8 @@ export const CATALOG_RUN_FINALE_DEFEAT_CASH = {
   persona_slug: 'student',
   scenario_title: 'Бюджет не выдержал три месяца',
   defeat_reason: 'cash_negative_streak',
+  monthly_burn: 42000,
+  decisions: CATALOG_RUN_FINALE_DECISIONS,
   cash_balance: -8200,
   cushion_turns: null,
   fact: {
@@ -41,6 +51,8 @@ export const CATALOG_RUN_FINALE_DEFEAT_NEEDS = {
   persona_slug: 'professional',
   scenario_title: 'Расходы перебили доход',
   defeat_reason: 'needs_depletion',
+  monthly_burn: 42000,
+  decisions: CATALOG_RUN_FINALE_DECISIONS,
   cash_balance: 23500,
   cushion_turns: 0.8,
   fact: {

@@ -2,7 +2,7 @@
  * Финал партии ★ BG-2 «настольная игра про деньги» (ADR-014).
  * Канон: design-lab/board-game/screens-round/ («Финал · Победа», «Финал · Поражение»),
  * design-lab/run-finale/APPROVED.md. Кнопки — .mqx-bg-btn / .mqx-bg-cta из board.css.
- * Роли цвета: золото — клетка финиша и деньги, фиолет — действие, красный — только факт риска.
+ * Роли цвета: золото — финиш и деньги, фиолет — действие, красный — факт риска и расходы решений, зелёный — заработок.
  */
 
 .mqx-run-finale-root {
@@ -57,6 +57,7 @@
 }
 
 .mqx-run-finale__title {
+  color: var(--mq-board-ink);
   margin: var(--mq-sp-2) 0 0;
   font: 900 var(--mq-fs-display) / 1.1 var(--mq-font-display);
 }
@@ -146,6 +147,50 @@
   font-size: var(--mq-fs-note);
   line-height: 1.4;
 }
+
+/* DC-08 · A «Чек», утверждён 2026-11-11. */
+.mqx-run-finale-decisions {
+  display: grid;
+  gap: var(--mq-sp-3);
+  width: 100%;
+  min-width: 0;
+  text-align: left;
+}
+
+.mqx-run-finale-decisions h2 {
+  color: var(--mq-board-ink);
+  margin: var(--mq-sp-1) 0 0;
+  font: 900 var(--mq-fs-lead) / 1.2 var(--mq-font-display);
+}
+
+.mqx-run-finale-decisions__list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border: var(--mq-hair);
+  border-radius: var(--mq-r-cell);
+  background: var(--mq-cell);
+}
+
+.mqx-run-finale-decisions__row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: var(--mq-sp-3);
+  padding: var(--mq-sp-3) var(--mq-sp-4);
+}
+
+.mqx-run-finale-decisions__row + .mqx-run-finale-decisions__row { border-top: var(--mq-hair); }
+.mqx-run-finale-decisions__text,
+.mqx-run-finale-decisions__sum { display: grid; gap: var(--mq-sp-1); min-width: 0; }
+.mqx-run-finale-decisions__text { flex: 1; overflow-wrap: anywhere; }
+.mqx-run-finale-decisions__text b { font-size: var(--mq-fs-note); }
+.mqx-run-finale-decisions__sum { text-align: right; }
+.mqx-run-finale-decisions__amount { font: 900 var(--mq-fs-note) / 1.2 var(--mq-font-display); }
+.mqx-run-finale-decisions__amount--cost { color: var(--mq-risk); }
+.mqx-run-finale-decisions__amount--gain { color: var(--mq-gain); }
+.mqx-run-finale-decisions__text small,
+.mqx-run-finale-decisions__sum small { color: var(--mq-board-ink-soft); font-size: var(--mq-fs-caption); }
 
 /* Кнопки */
 .mqx-run-finale__actions {

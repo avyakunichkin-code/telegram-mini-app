@@ -29,6 +29,7 @@ def add_transaction(
         description: str,
         period_index: int,
         liability_id: Optional[int] = None,
+        event_instance_id: Optional[int] = None,
 ) -> Transaction:
     """
     Создаёт запись транзакции в таблице `transactions`.
@@ -41,6 +42,7 @@ def add_transaction(
         description: описание
         period_index: номер периода
         liability_id: кредит, к которому относится движение
+        event_instance_id: выбранное событие, к которому относится движение
 
     Returns:
         созданный объект Transaction
@@ -52,6 +54,7 @@ def add_transaction(
         description=description,
         period_index=period_index,
         liability_id=liability_id,
+        event_instance_id=event_instance_id,
     )
     db.add(transaction)
     db.flush()  # не commit, чтобы можно было использовать в транзакциях
@@ -82,6 +85,7 @@ def adjust_balance(
         description: str,
         period_index: int,
         liability_id: Optional[int] = None,
+        event_instance_id: Optional[int] = None,
 ) -> float:
     """
     Изменяет cash_balance игрового профиля на указанную сумму
@@ -95,6 +99,7 @@ def adjust_balance(
         description: описание
         period_index: номер периода
         liability_id: кредит, к которому относится движение
+        event_instance_id: выбранное событие, к которому относится движение
 
     Returns:
         новый баланс после изменения
@@ -121,6 +126,7 @@ def adjust_balance(
         description=description,
         period_index=period_index,
         liability_id=liability_id,
+        event_instance_id=event_instance_id,
     )
 
     db.flush()

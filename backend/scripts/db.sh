@@ -119,7 +119,12 @@ cmd_migrate() {
 
   [[ -d "${MIGRATIONS_DIR}" ]] || { echo "migrations dir not found: ${MIGRATIONS_DIR}" >&2; exit 2; }
 
-  mapfile -t files < <(ls -1 "${MIGRATIONS_DIR}"/*.sql 2>/dev/null | xargs -n1 basename | sort)
+  local file
+  mapfile -t files < <(
+    for file in "${MIGRATIONS_DIR}"/*.sql; do
+      [[ -f "$file" ]] && printf '%s\n' "${file##*/}"
+    done | sort
+  )
   if [[ ${#files[@]} -eq 0 ]]; then
     echo "[info] No migrations/*.sql files"
     return 0

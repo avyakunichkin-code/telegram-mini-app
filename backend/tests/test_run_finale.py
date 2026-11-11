@@ -109,6 +109,97 @@ class TestBootstrapRunFinale:
         assert reason == "needs_depletion"
 
 
+class TestRunFinaleDecisions:
+    """CS-7 «Цена решений»: блок decisions в финале при обоих исходах."""
+
+    @staticmethod
+    def _profile_with_missed_salary(db_session, user_id: int):
+        from app.models import PeriodEconomyClosing
+        from tests.fixtures.game import create_profile_ready_for_period_close
+
+        profile = create_profile_ready_for_period_close(
+            db_session, user_id=user_id, salary_already_claimed=False, period_index=2
+        )
+        db_session.add(PeriodEconomyClosing(game_profile_id=profile.id, period_index=1))
+        db_session.commit()
+        return profile
+
+    def test_both_outcomes_include_decisions(self, db_session, test_user):
+        from app.game.run_finale import build_run_finale_payload
+
+        profile = self._profile_with_missed_salary(db_session, test_user.id)
+
+        for outcome in ("victory", "defeat"):
+            payload = build_run_finale_payload(db_session, profile, outcome=outcome, defeat_reason=None)
+            assert [d.kind for d in payload.decisions] == ["salary_missed"]
+            decision = payload.decisions[0]
+            assert decision.direction == "cost"
+            assert decision.amount == 50_000.0
+            assert decision.is_estimate is True
+            assert decision.period_index == 1
+
+    def test_decisions_empty_without_facts(self, db_session, test_user):
+        from app.game.run_finale import build_run_finale_payload
+
+        profile = create_game_profile(db_session, user_id=test_user.id, period_index=3)
+        payload = build_run_finale_payload(db_session, profile, outcome="victory")
+
+        assert payload.decisions == []
+
+    def test_decision_copy_has_no_verdicts(self, db_session, test_user):
+        from app.game.run_finale import build_run_finale_payload
+
+        profile = self._profile_with_missed_salary(db_session, test_user.id)
+        payload = build_run_finale_payload(db_session, profile, outcome="defeat", defeat_reason=None)
+
+        copy = " ".join(f"{d.title} {d.detail}" for d in payload.decisions).lower()
+        for word in ("ошибк", "зря", "надо было", "следовало"):
+            assert word not in copy
+
+    def test_bootstrap_serializes_decisions(self, client, auth_headers, db_session, test_user):
+        profile = self._profile_with_missed_salary(db_session, test_user.id)
+        profile.is_active = 0
+        profile.is_archived = 1
+        profile.run_outcome = "defeat"
+        db_session.add(
+            Transaction(
+                game_profile_id=profile.id,
+                amount=0,
+                type=TRANSACTION_TYPES["GAME_OVER"],
+                description="Поражение: 3 периода подряд с отрицательным балансом",
+                period_index=2,
+            )
+        )
+        db_session.commit()
+
+        body = client.get("/api/game/bootstrap", headers=auth_headers).json()
+
+        decisions = body["run_finale"]["decisions"]
+        from app.finance.expenses import compute_monthly_burn
+        assert body["run_finale"]["monthly_burn"] == round(compute_monthly_burn(db_session, profile).total, 2)
+        assert decisions == [
+            {
+                "kind": "salary_missed",
+                "direction": "cost",
+                "title": "Пропущенные зарплаты",
+                "detail": "Не получено за 1 ход",
+                "amount": 50_000.0,
+                "period_index": 1,
+                "is_estimate": True,
+            }
+        ]
+
+    def test_dismissed_victory_has_no_finale(self, db_session, test_user):
+        from app.game.run_finale import should_show_run_finale
+        from app.timeutil import utc_now_naive
+
+        profile = create_game_profile(db_session, user_id=test_user.id, period_index=10)
+        assert should_show_run_finale(profile, win_reached=True, game_session_status="active") is True
+
+        profile.victory_finale_shown_at = utc_now_naive()
+        assert should_show_run_finale(profile, win_reached=True, game_session_status="active") is False
+
+
 class TestRunFeedback:
     def test_post_run_feedback(self, client, auth_headers, db_session, test_user):
         profile = create_game_profile(

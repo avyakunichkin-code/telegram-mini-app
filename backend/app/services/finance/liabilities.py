@@ -96,6 +96,7 @@ def delete_liability(db: Session, profile: GameProfile, liability_id: int) -> di
             type="liability_close",
             description=f"Закрытие обязательства: {liability.title}",
             period_index=int(profile.period_index),
+            liability_id=int(liability.id),
         )
 
     liability.is_active = 0
@@ -210,6 +211,7 @@ def prepay_liability(db: Session, profile: GameProfile, liability_id: int, amoun
         type="liability_prepay",
         description=f"Досрочное погашение: {liability.title}",
         period_index=int(profile.period_index),
+        liability_id=int(liability.id),
     )
 
     liability.overdue_amount = new_overdue

@@ -32,6 +32,8 @@ docs/audits/qa/<YYYY-MM-DD>-<slug>.md
 
 ## Текущий снимок
 
+Отдельный завершённый срез: [`2026-11-11-run-finale-decision-cost.md`](2026-11-11-run-finale-decision-cost.md) — DC-09, «Цена решений»: backend/UI/контракт, выбор порога 1×, PostgreSQL fresh/legacy/repeat. Это локальный QA-снимок, не подтверждение deploy.
+
 [`2026-10-26-browser-playtest.md`](2026-10-26-browser-playtest.md) (DRAFT) — плейтест в браузере, ходы 1–10; e2e-сценарии `frontend-react/e2e/`.
 
 Предыдущий: [`2026-09-07-mechanics.md`](2026-09-07-mechanics.md) (DRAFT).

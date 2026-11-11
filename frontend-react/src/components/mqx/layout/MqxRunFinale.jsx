@@ -2,11 +2,13 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { getPersonaPortrait } from '../brand/personaPortraits';
 import { getRunFinaleCupPortrait } from '../brand/runFinalePortraits';
 import { showNotification } from '../../notifications';
+import { MoneyText } from '../../MoneyText';
 import {
   FINALE_LOSS_LEAD,
   FINALE_LOSS_TITLE,
   FINALE_WIN_TITLE,
   finaleDefeatFact,
+  finaleDecisions,
   finaleWinStats,
   isFinaleWin,
 } from './runFinaleDisplay';
@@ -91,6 +93,7 @@ export function MqxRunFinale({ open, payload, onDismissVictory, onNewGame, onMen
     ? getRunFinaleCupPortrait(payload.persona_slug)
     : getPersonaPortrait(payload.template_key, 'dash') || getRunFinaleCupPortrait(payload.persona_slug);
   const fact = win ? null : finaleDefeatFact(payload);
+  const decisions = finaleDecisions(payload);
 
   return (
     <div className="mqx-run-finale-root" data-outcome={win ? 'win' : 'defeat'} role="presentation">
@@ -128,6 +131,28 @@ export function MqxRunFinale({ open, payload, onDismissVictory, onNewGame, onMen
                 </ul>
               ) : null}
             </>
+          ) : null}
+
+          {decisions.length ? (
+            <section className="mqx-run-finale-decisions" aria-labelledby="mqx-run-finale-decisions-title">
+              <h2 id="mqx-run-finale-decisions-title">Что решило партию</h2>
+              <ul className="mqx-run-finale-decisions__list">
+                {decisions.map((d, index) => (
+                  <li className="mqx-run-finale-decisions__row" key={`${d.kind}-${index}`}>
+                    <span className="mqx-run-finale-decisions__text">
+                      <b>{d.title}</b>
+                      {d.detail ? <small>{d.detail}</small> : null}
+                    </span>
+                    <span className="mqx-run-finale-decisions__sum">
+                      <b className={`mqx-run-finale-decisions__amount mqx-run-finale-decisions__amount--${d.direction}`}>
+                        {d.is_estimate ? '≈ ' : ''}{d.sign}<MoneyText value={d.amount} decimals={0} />
+                      </b>
+                      {d.expenseMonths ? <small>{d.expenseMonths}</small> : null}
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            </section>
           ) : null}
 
           <div className="mqx-run-finale__actions">

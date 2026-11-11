@@ -223,6 +223,7 @@ def _apply_event_choice(
                 type="event_cash",
                 description=f"Событие: {choice.title}",
                 period_index=profile.period_index,
+                event_instance_id=int(inst.id),
             )
             db.refresh(profile)
 

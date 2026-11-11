@@ -1,8 +1,8 @@
 ---
 layer: spec
-status: approved
+status: implemented
 owner: product
-last_reviewed: 2026-06-01
+last_reviewed: 2026-11-11
 tracks: ge1, pre-alpha, run-finale, player-feedback
 idea: vision/ideas/game-run-finale-pre-alpha.md
 design_lab: design-lab/run-finale/
@@ -10,7 +10,7 @@ related: specs/features/SPEC_victory-v2.md, foundation/SPEC_PRODUCT.md
 not_in_scope: specs/features/SPEC_achievements.md
 tags:
   - tvoy-hod/layer/spec
-  - tvoy-hod/status/approved
+  - tvoy-hod/status/implemented
   - tvoy-hod/topic/ge1
   - tvoy-hod/topic/player-feedback
   - tvoy-hod/topic/pre-alpha
@@ -34,8 +34,10 @@ aliases:
 - [x] `GET /api/game/bootstrap` → `run_finale` при показе финала.
 - [x] `POST /api/game/run-finale/dismiss` — скрыть финал победы (`victory_finale_shown_at`).
 - [x] `POST /api/game/run-feedback` → `player_run_feedback`.
-- [x] FE: `MqxRunFinale` (lab **V1 «Газета»**), бейджи в списке сохранений.
+- [x] FE: `MqxRunFinale` (канон **BG-2**, блок решений **A · Чек**), бейджи в списке сохранений.
 - [x] Admin Watchtower: таблица «Отзывы с финала».
+
+**Расширение «Цена решений» (2026-11-11):** реализовано и проверено локально, DC-01…09. PO утвердил A для обоих исходов и предварительный порог 1× среднего регулярного дохода. Деплой этого расширения не выполнялся; `implemented` описывает состояние кода. Формулы и правила — [`SPEC_run-finale-decision-cost`](SPEC_run-finale-decision-cost.md), результаты — [`план DC`](../../plans/PLAN_run-finale-decision-cost.md).
 
 ---
 
@@ -67,10 +69,13 @@ aliases:
 | `fact` | Только defeat: `title`, `text`, `tips[]` (UI label «Факт») |
 | `defeat_reason` | `cash_negative_streak` \| `needs_depletion` \| … |
 | `can_dismiss` | `true` только для победы |
+| `turns_completed`, `cash_balance`, `cushion_turns` | Показатели победы BG-2: завершённые ходы, деньги на счёте, подушка |
+| `monthly_burn` | Число или `null` (старый payload): база подписи «N мес. расходов»; не порог отбора |
+| `decisions[]` | От 0 до 3 фактов: `kind`, `direction`, `title`, `detail`, положительный `amount`, необязательный `period_index`, `is_estimate` |
 
 Сборка: `backend/app/game/run_finale.py` → `build_run_finale_payload`.
 
-### Игровые заслуги (метрики v1)
+### Дополнительные метрики payload (совместимость v1)
 
 **Не** achievement chains (M12).
 
@@ -83,6 +88,16 @@ aliases:
 7. Просрочка на финале (если > 0)
 
 Средний net cashflow **не** выводится на финале (решение UX V1).
+
+### «Что решило партию» — DC-01…09
+
+- Четыре типа кандидатов: переплата по каждому кредиту, пропущенные зарплаты одной оценкой, самое дорогое списание события, общий заработок на вкладах/облигациях.
+- Порог — **1× среднего регулярного дохода за закрытые ходы**, включая оценку доступных пропущенных зарплат. Сумма ровно на пороге проходит. Без закрытых ходов список пуст; нулевой порог пропускает только положительные суммы.
+- По убыванию суммы, до трёх строк и максимум двух кредитов. Прошедший порог `investment_gain` сохраняет место в списке по текущему правилу замены третьей строки. Вложения агрегированы в одну карточку; разделение на две строки не вводилось.
+- Суммы собирает backend по журналу и связанным объектам. Записи без необходимой связи не восстанавливаются по описанию; оценки помечены `is_estimate`.
+- UI A: на победе после показателей, на поражении после советов, перед кнопками. Нейтральный список, доступные знаки «−»/«+», «≈» для оценок, суммы через `MoneyText`. Пустой список скрывает блок.
+- Подпись масштаба остаётся в месяцах расходов: `amount / monthly_burn`, скрывается при нуле/отсутствии базы. Порог и масштаб подписи используют разные базы по утверждённым решениям.
+- Экономические проводки и правила победы/поражения расширением не меняются. Подробности, исключения и тестовые сценарии — в [`spec «Цена решений»`](SPEC_run-finale-decision-cost.md).
 
 ---
 
@@ -116,7 +131,7 @@ aliases:
 | `comment` | Текст отзыва |
 | `created_at` | Время |
 
-Автомиграция: `main.py` (`ensure_schema_compatibility`); таблица — `Base.metadata.create_all`.
+PostgreSQL: схема создаётся через `bash backend/scripts/db.sh migrate`, startup только сверяет её. `Base.metadata.create_all` используется для одноразовых SQLite-тестов. Связи журнала с кредитом и событием — nullable FK `transactions.liability_id` и `transactions.event_instance_id`, миграции `0051` / `0052`, без backfill. См. [`migrations/README`](../../../backend/migrations/README.md).
 
 ---
 
@@ -129,7 +144,7 @@ aliases:
 | Cup-ассеты | `frontend-react/src/assets/run-finale-cup/*-mascot-cup-dash.{webp,png}` |
 | Хук | `useGame`: `runFinale`, `runFinaleOpen`, `dismissVictoryFinale`, `submitRunFeedback` |
 
-CTA: победа — **Играть дальше** (dismiss) + **К сохранениям**; поражение — **Новая игра** + **К сохранениям**.
+CTA: победа — **Играть дальше** (dismiss) + **Новая игра**; поражение — **Новая игра** + **К сохранениям**. Необязательный отзыв расположен ниже кнопок.
 
 Список сохранений: подзаголовок `Победа` / `Поражение` · … (`run_outcome` / archived).
 
@@ -149,13 +164,16 @@ CTA: победа — **Играть дальше** (dismiss) + **К сохра�
 - M12 achievements на финале  
 - Обязательный комментарий  
 - Комментарий с дашборда (backlog GE1-FB-2)  
-- Lab-варианты S0/V7/V8 в prod (канон — **V1**)
+- Исторические Lab-варианты S0/V7/V8 и V1 «Газета» (текущий канон — **BG-2 + A · Чек**)
 
 ---
 
 ## Тесты
 
 - `backend/tests/test_run_finale.py` — архив defeat, bootstrap `run_finale`, feedback POST, resolve archived.
+- `backend/tests/test_run_finale_decisions.py` — формулы, связи, границы порога 1×, оценка зарплат, отбор.
+- `frontend-react/src/components/mqx/layout/__tests__/runFinaleDisplay.test.js` и `frontend-react/e2e/run-finale.spec.js` — пустой/оценочный блок, оба исхода, 320/390 px и desktop, light/dark.
+- [`DC-09`](../../plans/PLAN_run-finale-decision-cost.md) — свод проверок, отдельный PostgreSQL migrate/repeat и review. Это локальная проверка, не свидетельство deploy.
 
 ---
 

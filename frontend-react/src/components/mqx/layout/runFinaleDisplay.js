@@ -10,6 +10,20 @@ export function isFinaleWin(payload) {
   return payload?.outcome === 'victory';
 }
 
+/** Только отображение выбранных API фактов; порог и ранжирование остаются на backend. */
+export function finaleDecisions(payload) {
+  if (!Array.isArray(payload?.decisions)) return [];
+  const burn = Number(payload.monthly_burn);
+  return payload.decisions.filter((d) => d && ['cost', 'gain'].includes(d.direction)
+    && typeof d.amount === 'number' && Number.isFinite(d.amount) && d.amount > 0
+    && typeof d.title === 'string' && d.title.trim()).slice(0, 3).map((d) => ({
+    ...d,
+    sign: d.direction === 'gain' ? '+' : '−',
+    expenseMonths: Number.isFinite(burn) && burn > 0
+      ? `${(d.amount / burn).toLocaleString('ru-RU', { maximumFractionDigits: 1 })} мес. расходов` : null,
+  }));
+}
+
 function fmtRub(value) {
   if (value == null || value === '') return null;
   const n = Math.round(Number(value));

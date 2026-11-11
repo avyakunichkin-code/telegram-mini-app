@@ -4,7 +4,7 @@ import { defineConfig } from '@playwright/test';
 const port = Number(process.env.E2E_UIKIT_PORT || 5183);
 export default defineConfig({
   testDir: './e2e',
-  testMatch: 'ui-kit.spec.js',
+  testMatch: ['ui-kit.spec.js', 'run-finale.spec.js'],
   workers: 1,
   timeout: 30_000,
   reporter: 'list',

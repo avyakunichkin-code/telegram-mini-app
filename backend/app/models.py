@@ -466,6 +466,7 @@ class Transaction(Base):
     description = Column(Text, nullable=True)
     period_index = Column(Integer, nullable=False)
     liability_id = Column(Integer, ForeignKey("finance_liabilities.id"), nullable=True, index=True)
+    event_instance_id = Column(Integer, ForeignKey("event_instances.id"), nullable=True, index=True)
     timestamp = Column(DateTime, default=utc_now_naive)
 
     game_profile = relationship("GameProfile", back_populates="transactions")

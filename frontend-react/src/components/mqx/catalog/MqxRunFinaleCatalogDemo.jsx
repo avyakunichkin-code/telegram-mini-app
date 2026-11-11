@@ -11,6 +11,8 @@ const VARIANTS = [
   { key: 'win', label: 'Победа', payload: CATALOG_RUN_FINALE_WIN },
   { key: 'cash', label: 'Поражение · минус на счёте', payload: CATALOG_RUN_FINALE_DEFEAT_CASH },
   { key: 'needs', label: 'Поражение · потребности', payload: CATALOG_RUN_FINALE_DEFEAT_NEEDS },
+  { key: 'empty', label: 'Победа · без решений', payload: { ...CATALOG_RUN_FINALE_WIN, decisions: [] } },
+  { key: 'one', label: 'Победа · одна оценка', payload: { ...CATALOG_RUN_FINALE_WIN, monthly_burn: 0, decisions: [CATALOG_RUN_FINALE_WIN.decisions[1]] } },
 ];
 
 /** Финал партии ★ BG-2 — открывается поверх каталога, как в игре. */
@@ -22,7 +24,7 @@ export function MqxRunFinaleCatalogDemo() {
     <>
       <p className="mqx-catalog__lead">
         Канон: <code>design-lab/board-game/screens-round/</code> («Финал · Победа», «Финал · Поражение»),{' '}
-        <code>design-lab/run-finale/APPROVED.md</code>. Любая кнопка финала закрывает демо.
+        <code>design-lab/run-finale/APPROVED.md</code>, решения — A · Чек (2026-11-11). Любая кнопка финала закрывает демо.
       </p>
       <div className="mqx-run-finale-demo">
         {VARIANTS.map((v) => (

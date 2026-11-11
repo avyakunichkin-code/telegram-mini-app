@@ -176,12 +176,22 @@ def _refinance_numbers(row: FinanceLiability, spec: dict[str, Any]) -> tuple[flo
     return rate, n_rem, pay, fee
 
 
-def _pay(db: Session, profile: GameProfile, amount: float, kind: str, title: str) -> None:
+def _pay(
+    db: Session,
+    profile: GameProfile,
+    amount: float,
+    kind: str,
+    title: str,
+    *,
+    liability_id: int | None = None,
+) -> None:
     if amount <= EPSILON:
         return
     if float(profile.cash_balance) + EPSILON < amount:
         raise ValueError("Недостаточно средств на счёте для этого выбора")
-    adjust_balance(db, profile.id, -amount, kind, title, int(profile.period_index))
+    adjust_balance(
+        db, profile.id, -amount, kind, title, int(profile.period_index), liability_id=liability_id
+    )
 
 
 def apply_chain_action(
@@ -219,7 +229,14 @@ def apply_chain_action(
             new_overdue, new_debt, to_od, to_body = prepay_waterfall(
                 part, float(row.overdue_amount or 0), float(row.total_debt or 0)
             )
-            _pay(db, profile, to_od + to_body, "liability_prepay", f"Досрочное погашение: {row.title}")
+            _pay(
+                db,
+                profile,
+                to_od + to_body,
+                "liability_prepay",
+                f"Досрочное погашение: {row.title}",
+                liability_id=int(row.id),
+            )
             row.overdue_amount = new_overdue
             row.total_debt = new_debt
             if new_debt <= EPSILON:
@@ -240,7 +257,14 @@ def apply_chain_action(
         if row is None:
             raise ValueError("Нет кредита для рефинансирования")
         rate, n_rem, pay, fee = _refinance_numbers(row, spec)
-        _pay(db, profile, fee, "liability_fee", f"Комиссия за рефинансирование: {row.title}")
+        _pay(
+            db,
+            profile,
+            fee,
+            "liability_fee",
+            f"Комиссия за рефинансирование: {row.title}",
+            liability_id=int(row.id),
+        )
         old_payment = float(row.monthly_payment or 0)
         row.annual_rate_percent = rate
         row.term_periods = int(row.periods_paid or 0) + n_rem

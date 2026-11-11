@@ -17,12 +17,14 @@ from ..models import (
     PeriodEconomyClosing,
 )
 from ..schemas import (
+    RunFinaleDecision,
     RunFinaleFact,
     RunFinaleMetric,
     RunFinalePayload,
     RunFinaleSection,
 )
 from ..starters.template_presentation import _fmt_rub
+from .run_finale_decisions import build_decisions
 from ..victory.engine import evaluate_victory, parse_victory_config
 from ..victory.goals_store import override_config_goals_from_db
 from ..victory.mechanics_progression import resolve_template_and_unlock
@@ -295,6 +297,18 @@ def build_run_finale_payload(
         )
 
     fact = _build_defeat_fact(profile, defeat_reason) if not is_win else None
+    decisions = [
+        RunFinaleDecision(
+            kind=d.kind,
+            direction=d.direction,
+            title=d.title,
+            detail=d.detail,
+            amount=d.amount,
+            period_index=d.period_index,
+            is_estimate=d.is_estimate,
+        )
+        for d in build_decisions(db, profile)
+    ]
 
     return RunFinalePayload(
         outcome=outcome,
@@ -314,4 +328,6 @@ def build_run_finale_payload(
         can_dismiss=is_win,
         cash_balance=round(float(profile.cash_balance or 0), 2),
         cushion_turns=cushion_months if monthly_burn > 0 else None,
+        monthly_burn=round(monthly_burn, 2),
+        decisions=decisions,
     )

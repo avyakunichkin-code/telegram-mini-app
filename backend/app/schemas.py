@@ -309,7 +309,7 @@ class FinanceOverview(BaseModel):
     negative_periods_count: int = 0
     period_close_preview: Optional[PeriodClosePreview] = None
     profile_is_active: bool = True
-    guidance: Optional[GuidanceOverview] = None
+    guidance: Optional["GuidanceOverview"] = None
 
 
 class AnalyticsTimeseriesPoint(BaseModel):
@@ -453,6 +453,18 @@ class RunFinaleFact(BaseModel):
     tips: List[str] = Field(default_factory=list)
 
 
+class RunFinaleDecision(BaseModel):
+    """«Цена решений» (SPEC_run-finale-decision-cost): факт партии в рублях."""
+
+    kind: str  # debt_overpaid | salary_missed | event_cost | investment_gain
+    direction: str  # cost | gain
+    title: str
+    detail: str
+    amount: float  # всегда > 0, смысл задаёт direction
+    period_index: Optional[int] = None  # None — сумма за всю партию
+    is_estimate: bool = False
+
+
 class RunFinalePayload(BaseModel):
     outcome: str  # victory | defeat
     period_index: int
@@ -472,6 +484,8 @@ class RunFinalePayload(BaseModel):
     turns_completed: int = 0
     cash_balance: Optional[float] = None
     cushion_turns: Optional[float] = None
+    monthly_burn: Optional[float] = None  # база подписи «N мес. расходов», не порог отбора в UI
+    decisions: List[RunFinaleDecision] = Field(default_factory=list)
 
 
 class RunFinaleDismissResponse(BaseModel):

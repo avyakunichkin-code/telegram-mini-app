@@ -29,7 +29,7 @@ import uuid
 from dataclasses import dataclass, field
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Any, Literal
+from typing import Any, Callable, Literal
 
 PolicyName = Literal["tutorial", "safety_first", "passive", "idle", "needs_keeper", "restructure", "chain_runner"]
 POLICY_CHOICES = ("tutorial", "safety_first", "passive", "idle", "needs_keeper", "restructure", "chain_runner")
@@ -150,6 +150,7 @@ def run_balance_simulation(
     rng_seed: int | None = 42,
     needs_model: str | None = None,
     needs_set_point: dict | None = None,
+    observe_finale: Callable[..., None] | None = None,
 ) -> dict[str, Any]:
     """Run simulation in isolated SQLite DB; return JSON-serializable report."""
 
@@ -164,7 +165,7 @@ def run_balance_simulation(
     from app.auth import create_access_token, get_password_hash
     from app.database import Base, engine, get_db
     from app.seeds.runner import seed_all
-    from app.models import User
+    from app.models import GameProfile, User
     from fastapi.testclient import TestClient
     from main import app
     from sqlalchemy.orm import sessionmaker
@@ -214,6 +215,14 @@ def run_balance_simulation(
     client = TestClient(app)
     state = SimState(policy=policy)
     period_rows: list[dict[str, Any]] = []
+    started_profile_id: int | None = None
+
+    def record_finale(outcome: str, period: int) -> None:
+        # Read-only observer at the first outcome, before later free-play turns.
+        if observe_finale is not None:
+            with SessionLocal() as audit_db:
+                profile = audit_db.get(GameProfile, started_profile_id)
+                observe_finale(audit_db, profile, outcome, period)
 
     def overview() -> dict:
         r = client.get("/api/finance/overview", headers=headers)
@@ -221,6 +230,7 @@ def run_balance_simulation(
         return r.json()
 
     def start_game() -> None:
+        nonlocal started_profile_id
         r = client.post(
             "/api/game/start",
             headers=headers,
@@ -231,6 +241,8 @@ def run_balance_simulation(
             },
         )
         r.raise_for_status()
+
+        started_profile_id = int(r.json()["profile_id"])
 
     def _pending_events() -> list[dict]:
         r = client.get("/api/game/events/pending", headers=headers)
@@ -578,8 +590,11 @@ def run_balance_simulation(
 
             if row["win"] and win_at_period is None:
                 win_at_period = p
+                record_finale("victory", p)
 
             if close_body.get("game_over"):
+                if win_at_period is None:
+                    record_finale("defeat", p)
                 defeated = True
                 defeat_reason = close_body.get("defeat_reason") or "game_over"
                 row["is_active"] = False
@@ -587,6 +602,8 @@ def run_balance_simulation(
                 break
 
             if not ov.get("is_active", True):
+                if win_at_period is None:
+                    record_finale("defeat", p)
                 defeated = True
                 pc = close_body.get("period_close") or {}
                 defeat_reason = pc.get("defeat_reason") or "inactive_profile"
