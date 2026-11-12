@@ -1,0 +1,32 @@
+[
+  {
+    "id": "selected",
+    "title": "Выбранный исходный логотип",
+    "src": "logo-wordmark.png"
+  },
+  {
+    "id": "compact",
+    "title": "Полное название без лозунга · превью",
+    "src": "logo-wordmark-compact.png"
+  },
+  {
+    "id": "transparent",
+    "title": "Прозрачный фон · подготовительная версия",
+    "src": "logo-wordmark-transparent.png"
+  },
+  {
+    "id": "dark",
+    "title": "На тёмном фоне",
+    "src": "logo-wordmark-dark.png"
+  },
+  {
+    "id": "cover",
+    "title": "Фирменная обложка",
+    "src": "brand-cover.png"
+  },
+  {
+    "id": "report",
+    "title": "Титул отчёта",
+    "src": "brand-report.png"
+  }
+]

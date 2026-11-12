@@ -2,13 +2,14 @@ name: Codex architecture check
 on:
   pull_request:
     paths:
+      - '**/*.md'
       - 'AGENTS.md'
       - '.agents/**'
       - '.codex/**'
       - 'scripts/codex/**'
-      - 'docs/ai/**'
-      - '.claude/skills/**'
-      - 'backend/migrations/0000_schema_baseline.sql'
+      - 'docs/engineering/**'
+      - 'game/docs/engineering/**'
+      - 'game/api/migrations/0000_schema_baseline.sql'
       - '.github/workflows/codex-check.yml'
 permissions:
   contents: read

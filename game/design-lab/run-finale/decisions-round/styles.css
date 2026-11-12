@@ -1,0 +1,112 @@
+/* run-finale/decisions-round — блок «Что решило партию» (DC-07). Только токены ★ BG-2, без новых цветов. */
+
+/* Как в bg2-page-round: финал — полноэкранная доска */
+.f-phone { background: var(--bg-board); }
+.s-finish__cell--neutral { background: var(--bg-cell); border-color: var(--edge-cell); box-shadow: 0 5px 0 var(--edge-cell); }
+
+/* Общий заголовок блока */
+.dc-title {
+  margin: 4px 0 0;
+  font: var(--display-weight) 17px / 1.2 var(--display);
+  text-align: left;
+}
+.dc-a,
+.dc-b,
+.dc-c {
+  width: 100%;
+  display: grid;
+  gap: 8px;
+  text-align: left;
+}
+
+/* ---------- A · Чек ---------- */
+.dc-a__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  background: var(--bg-cell);
+  border: var(--hair);
+  border-radius: 12px;
+}
+.dc-a__row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 10px 12px;
+}
+.dc-a__row + .dc-a__row { border-top: var(--hair); }
+.dc-a__text,
+.dc-a__sum { display: grid; gap: 2px; }
+.dc-a__text { flex: 1; min-width: 0; }
+.dc-a__sum small { white-space: nowrap; }
+.dc-a__text b { font-size: 14px; }
+.dc-a__text small,
+.dc-a__sum small { color: var(--ink-soft); font-size: 11.5px; }
+.dc-a__sum { text-align: right; }
+.dc-a__sum b { font: var(--display-weight) 15px / 1.15 var(--display); }
+
+/* ---------- B · Колонка ---------- */
+.dc-b__list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: dc-b;
+  display: grid;
+  gap: 10px;
+}
+.dc-b__list li {
+  counter-increment: dc-b;
+  position: relative;
+  display: grid;
+  gap: 2px;
+  padding: 2px 0 10px 30px;
+  border-bottom: var(--hair);
+}
+.dc-b__list li:last-child { border-bottom: 0; padding-bottom: 0; }
+.dc-b__list li::before {
+  content: counter(dc-b);
+  position: absolute;
+  left: 0;
+  top: 2px;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: var(--coin-soft);
+  color: var(--coin-ink);
+  font: var(--display-weight) 13px / 1 var(--display);
+}
+.dc-b__sum { font: var(--display-weight) 20px / 1.1 var(--display); }
+.dc-b__list span { font-size: 13.5px; }
+.dc-b__list small { color: var(--ink-soft); font-size: 11.5px; }
+
+/* ---------- C · Клетки ---------- */
+.dc-c__cells {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+.dc-c__cell {
+  background: var(--bg-cell);
+  border: var(--hair);
+  border-radius: 12px;
+  padding: 8px;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: baseline;
+  column-gap: 3px;
+  row-gap: 2px;
+}
+.dc-c__mark { font: var(--display-weight) 14px / 1 var(--display); }
+.dc-c__cell small { grid-column: 1 / -1; }
+.dc-c__cell--cost .dc-c__mark,
+.dc-c__cell--cost b { color: var(--risk); }
+.dc-c__cell--gain .dc-c__mark,
+.dc-c__cell--gain b { color: var(--gain); }
+.dc-c__cell b { font: var(--display-weight) 14px / 1.15 var(--display); }
+.dc-c__cell small { color: var(--ink-soft); font-size: 11px; line-height: 1.25; }

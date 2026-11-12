@@ -1,0 +1,101 @@
+import { defineConfig, loadEnv } from 'vite'
+import react from '@vitejs/plugin-react'
+import { VitePWA } from 'vite-plugin-pwa'
+import { fileURLToPath } from 'node:url'
+
+const PWA_ICONS = [
+  { src: 'pwa/icon-192.png', sizes: '192x192', type: 'image/png', purpose: 'any' },
+  { src: 'pwa/icon-512.png', sizes: '512x512', type: 'image/png', purpose: 'any' },
+  { src: 'pwa/icon-192-maskable.png', sizes: '192x192', type: 'image/png', purpose: 'maskable' },
+  { src: 'pwa/icon-512-maskable.png', sizes: '512x512', type: 'image/png', purpose: 'maskable' },
+]
+
+export default defineConfig(({ mode }) => {
+  const env = loadEnv(mode, process.cwd(), '')
+  const base = env.VITE_BASE_PATH || '/telegram-mini-app/'
+  // Dev-прокси /api: по умолчанию локальный backend (uvicorn :8000). Прода сейчас нет — см. game/docs/ops/LOCAL_DEV.md.
+  const apiTarget = (env.VITE_API_BASE_URL || 'http://localhost:8000').replace(/\/$/, '')
+
+  return {
+    resolve: {
+      alias: { '@tvoy/ui-kit': fileURLToPath(new URL('../../shared/packages/ui-kit/src/index.js', import.meta.url)) },
+      dedupe: ['react', 'react-dom'],
+    },
+    plugins: [
+      react(),
+      VitePWA({
+        // prompt: новый SW ждёт; pwaUpdate.js ставит его в безопасный момент (меню / после итогов хода).
+        registerType: 'prompt',
+        injectRegister: false,
+        includeAssets: [
+          'favicon-32.png',
+          'favicon-48.png',
+          'pwa/apple-touch-icon.png',
+          'pwa/icon-192.png',
+          'pwa/icon-512.png',
+          'pwa/icon-192-maskable.png',
+          'pwa/icon-512-maskable.png',
+          'favicon-192.png',
+        ],
+        manifest: {
+          name: 'ТВОЙ ХОД',
+          short_name: 'ТВОЙ ХОД',
+          description: 'Игра по финансовой грамотности — периоды, баланс, решения.',
+          theme_color: '#6D28D9',
+          background_color: '#F5F6F8',
+          display: 'standalone',
+          orientation: 'portrait',
+          lang: 'ru',
+          start_url: `${base}#/`,
+          scope: base,
+          icons: PWA_ICONS,
+        },
+        workbox: {
+          // Без skipWaiting: активация только через updateSW(true) из pwaUpdate.js — не посреди события.
+          clientsClaim: true,
+          // HashRouter: без NavigationRoute — иначе iOS Safari часто отдаёт пустую/старую страницу.
+          globPatterns: ['**/*.{js,css,html,ico,svg,woff2}', 'pwa/**/*.png', 'favicon*.png'],
+          globIgnores: [
+            '**/assets/monetka-*.png',
+            '**/assets/monetka-*.webp',
+            '**/assets/logo-full*.png',
+            '**/assets/logo-full*.webp',
+            '**/assets/logo-compact*.png',
+          ],
+          navigateFallback: null,
+          maximumFileSizeToCacheInBytes: 3 * 1024 * 1024,
+        },
+        devOptions: {
+          enabled: mode === 'development',
+        },
+      }),
+    ],
+    base,
+    // Отдельный кэш для e2e-стенда (playwright.config.js), чтобы не делить его с dev-сервером.
+    cacheDir: env.VITE_CACHE_DIR || 'node_modules/.vite',
+    server: {
+      proxy: {
+        '/api': {
+          target: apiTarget,
+          changeOrigin: true,
+          secure: apiTarget.startsWith('https:'),
+        },
+      },
+    },
+    /**
+     * lottie-web выполняет AE-выражения через eval — роллап честно предупреждает.
+     * Отключаем только этот известный случай; см. node_modules/lottie-web/.../lottie.js.
+     */
+    build: {
+      chunkSizeWarningLimit: 600,
+      rollupOptions: {
+        onwarn(warning, handler) {
+          if (warning.code === 'EVAL') return
+          const text = String(warning.message || '')
+          if (text.includes('Use of direct') && text.includes('eval') && text.includes('lottie')) return
+          handler(warning)
+        },
+      },
+    },
+  }
+})

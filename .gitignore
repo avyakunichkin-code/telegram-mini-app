@@ -57,6 +57,8 @@ coverage/
 *.cover
 .hypothesis/
 .pytest_cache/
+**/.pytest-tmp/
+.playwright-mcp/
 
 # ===== Local DB / dumps =====
 *.sqlite
@@ -74,8 +76,8 @@ CLAUDE.local.md
 .cursor/
 
 # Balance playtest — только baselines в git; reports генерируются локально
-docs/balance/reports/*
-!docs/balance/reports/.gitkeep
+game/docs/balance/reports/*
+!game/docs/balance/reports/.gitkeep
 
 # ===== Obsidian (vault settings — shared; workspace — local) =====
 .obsidian/workspace.json

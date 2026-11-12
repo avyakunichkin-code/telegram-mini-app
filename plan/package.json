@@ -1,0 +1,11 @@
+{
+  "name": "tvoy-plan",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "node ../scripts/project.mjs plan dev",
+    "check": "node ../scripts/project.mjs plan check",
+    "build": "node ../scripts/project.mjs plan build",
+    "design-lab:build-nav": "node scripts/build-design-lab.mjs"
+  }
+}

@@ -1,11 +1,18 @@
 ---
 name: api-contract-change
-description: Change backend/frontend API contracts together, including schema, errors, consumers and a critical integration scenario.
+description: Change API contracts and their consumers in the selected product, including schema, errors and a critical integration scenario.
 ---
 
 # api-contract-change
 
-Пример: «добавь API-поле прогноза». Не primary: текст YAML или CSS.
-Прочитай backend/app/README.md, текущие schemas/router/services и frontend-react/src/api/<domain>.js + hook/экран потребителя. Определи тип/nullability/default/error/status, обратную совместимость и auth; проверь finance overview и guidance при их затрагивании. Тест: happy path, boundary, JSON контракт и негатив прав доступа по риску. Схема БД изменилась → $db-migration; новый layout → $mqx-design до prod. Заверши командой и результатом backend/FE проверок, не только OpenAPI-описанием.
+Сначала выбери продукт по задаче и [профилю](../../../docs/engineering/CODEX-PROCESSES.md).
+Читай его schemas, HTTP-вход, сценарий и web API-адаптер/экран потребителя.
+Определи тип, nullability, default, ошибки/status, auth и обратную совместимость.
+Обнови сервер и потребителя в одном срезе; проверь happy path, границу, JSON-контракт
+и негатив прав доступа по риску. Формат ошибок и размещение файлов бери из кода
+выбранного продукта. Изменение схемы → $db-migration; UI следует его дизайн-процессу.
+Общий api-client меняется только при транспортной необходимости с проверкой
+реальных потребителей. Итог — реализация, критичный сценарий и результаты команд,
+а не только OpenAPI. Не импортировать приложение соседнего продукта.
 
-Общие границы и готовность: [AGENTS.md](../../../AGENTS.md). Читай только источники затронутой области.
+Общие границы: [AGENTS.md](../../../AGENTS.md).

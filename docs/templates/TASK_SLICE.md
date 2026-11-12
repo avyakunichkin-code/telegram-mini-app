@@ -3,13 +3,13 @@ layer: task
 epic_id: E1
 phase: build
 tier: core
-skill: incremental-implementation
+skill: delivery
 satellites:
-  - test-driven-development
-  - critical-test-scenarios
+  - verify-change
+  - verify-change
 read_if_when:
   - "progression / event_tier / pool"
-next_skill: critical-test-scenarios
+next_skill: verify-change
 spec: ../specs/features/SPEC_<slug>.md
 plan: ../plans/PLAN_<slug>.md
 traceability: ../TRACEABILITY.md
@@ -23,16 +23,16 @@ aliases:
 ### MQ-042 — Краткое название среза
 
 - **Phase:** `build` — `define` | `build` | `verify` | `ship` (см. [`SKILL_DOC_MAP.md`](../agents/SKILL_DOC_MAP.md))
-- **Tier:** `core` — `core` | `support` | `deferred` | `meta` | `archived` (см. [`SKILLS_PHASE_CONTENT_AND_DATA.md`](../agents/SKILLS_PHASE_CONTENT_AND_DATA.md), [`catalog.yaml`](../../.claude/skills/catalog.yaml))
-- **Skill:** `incremental-implementation` — primary Agent Skill для среза (`tier` скилла в каталоге должен совпадать или быть `support`, если задача явно про plan/review/ADR)
-- **Satellites:** `test-driven-development`, `critical-test-scenarios` — открыть в **той же** сессии до «done» (см. `.claude/rules/router.md` → Primary + satellites)
-- **Next skill:** `critical-test-scenarios` — закрыть min gate G1–G4; затем `code-review-and-quality`
+- **Scope:** продукт и стадия; tier — необязательные метаданные задачи, не runtime-каталог.
+- **Skill:** `delivery` — один primary из `.agents/skills`, выбранный по description.
+- **Satellites:** `verify-change` по риску; дополнительные роли — по правилам клиента.
+- **Next skill:** `verify-change` — закрыть min gate G1–G4; затем `review-change`
 - **Spec:** `specs/features/SPEC_<slug>.md` §…
-- **Read if:** **`read_if_when`** — список `when` из `catalog.yaml` → `read_if` для **primary skill**; открыть **только** matching paths (не всю папку spec). Справка: `node .claude/skills/skill-test/_resolve-read-if.mjs <skill>`
+- **Read if:** только контекст выбранного SKILL.md и затронутые spec/code; scripts для разрешения старого каталога не нужны.
 - **Acceptance:** …
-- **Critical scenarios:** CS-1 …, CS-2 … (skill `/critical-test-scenarios`, gate G1–G4)
+- **Critical scenarios:** CS-1 …, CS-2 … (skill `/verify-change`, gate G1–G4)
 - **Verify:** `pytest …` / `npm run test:unit` / ручной сценарий из spec
-- **Files:** `backend/…`, `frontend-react/…`
+- **Files:** `game/api/…`, `game/web/…`
 - **Estimate:** S | M | L
 - **Depends:** MQ-041
 
@@ -44,12 +44,12 @@ aliases:
 
 | Срез | `tier` | `skill` | `satellites` |
 |------|--------|---------|--------------|
-| Новое событие в YAML | `core` | `create-event` | `test-driven-development`, `critical-test-scenarios` |
-| Обзор каталога | `core` | `event-analysis` | — (при P1 → `create-event` в follow-up MQ) |
-| Правка `period.py` / victory | `core` | `game-economy-and-victory` | `test-driven-development`, `doubt-driven-development` |
-| Нарезка epic из spec | `support` | `planning-and-task-breakdown` | — |
-| Ревью перед merge | `support` | `code-review-and-quality` | — |
-| ADR: кто владеет полем API | `support` | `documentation-and-adrs` | `spec-driven-development` |
-| Pre-release checklist | `deferred` | `release-web` | `code-review-and-quality` |
+| Новое событие в YAML | `core` | `event-authoring` | `verify-change`, `verify-change` |
+| Обзор каталога | `core` | `event-audit` | — (при P1 → `event-authoring` в follow-up MQ) |
+| Правка `period.py` / victory | `core` | `game-economy` | `verify-change`, `review-change` |
+| Нарезка epic из spec | `support` | `delivery` | — |
+| Ревью перед merge | `support` | `review-change` | — |
+| ADR: кто владеет полем API | `support` | `architecture-decision` | `delivery` |
+| Pre-release checklist | `deferred` | `delivery: release` | `review-change` |
 
 `tier: deferred` в задаче — только если пользователь явно просит (release, perf, TMA runtime, …).

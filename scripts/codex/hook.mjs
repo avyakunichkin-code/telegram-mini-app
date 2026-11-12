@@ -11,7 +11,7 @@ try {
     const reason = decide(event);
     if (reason) { console.error(`Codex repository guard: ${reason}`); process.exit(2); }
   } else if (mode === 'session') {
-    console.log(JSON.stringify({ hookSpecificOutput: { hookEventName: 'SessionStart', additionalContext: 'Read AGENTS.md; choose one primary skill in .agents/skills. Hook activation evidence: docs/ai/CODEX-HOOKS.md.' } }));
+    console.log(JSON.stringify({ hookSpecificOutput: { hookEventName: 'SessionStart', additionalContext: 'Read AGENTS.md; choose one primary skill in .agents/skills. Hook activation evidence: docs/engineering/CODEX-HOOKS.md.' } }));
   } else if (mode === 'post') {
     const input = event.tool_input ?? {};
     let targets = [];
@@ -19,8 +19,9 @@ try {
     else if (/write|edit|delete|move|rename/i.test(event.tool_name ?? '')) targets = fileOperations(input,event.tool_name).map(x=>x.target).filter(Boolean);
     const joined = targets.join('/').replaceAll('\\', '/');
     const hints = [];
-    if (/backend\/|packages\/fincore|data\/events/.test(joined)) hints.push('Use verify-change: backend pytest includes fincore; significant economy/data changes need 30–40-period baseline comparison.');
-    if (/frontend-react\/|design-lab\//.test(joined)) hints.push('Use DESIGN_WORKFLOW: new pattern needs lab + human approval, states and canon; run frontend checks by scope.');
+    if (/game\/api\/|shared\/packages\/fincore|game\/data\/events/.test(joined)) hints.push('Use verify-change: GAME pytest includes fincore; significant economy/data changes need 30–40-period baseline comparison.');
+    if (/game\/(?:web|design-lab)\//.test(joined)) hints.push('Use GAME DESIGN_WORKFLOW: new pattern needs lab + human approval, states and canon; run frontend checks by scope.');
+    if (/plan\/(?:web|api|design-lab)\//.test(joined)) hints.push('Use PLAN docs and verify-change; GAME MQX workflow is not the default for PLAN.');
     if (hints.length) {
       const state = path.join(ROOT, '.codex-state'); fs.mkdirSync(state, { recursive: true });
       const p = path.join(state, 'hint-throttle.json');

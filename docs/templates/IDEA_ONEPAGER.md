@@ -44,6 +44,6 @@ aliases:
 
 ## Links
 
-- Foundation: [`foundation/SPEC_PRODUCT.md`](../foundation/SPEC_PRODUCT.md)
-- Сохранять в: `docs/vision/ideas/<slug>.md`
+- Foundation: [`foundation/SPEC_PRODUCT.md`](../../game/docs/foundation/SPEC_PRODUCT.md)
+- Сохранять в: `game/docs/vision/ideas/<slug>.md`
 - Related specs: …

@@ -23,7 +23,7 @@ aliases:
 ---
 # Plan: [Feature name]
 
-**Epic ID:** `E1` (строка в [`TRACEABILITY.md`](../TRACEABILITY.md))  
+**Epic ID:** `E1` (строка в [`TRACEABILITY.md`](../../game/docs/TRACEABILITY.md))\
 **Spec:** [`specs/features/SPEC_<slug>.md`](../specs/features/SPEC_<slug>.md)  
 **После утверждения плана:** Agent Skill **`incremental-implementation`** (срезы по задачам ниже).
 
@@ -69,7 +69,7 @@ DB / migrations
 ## Tasks
 
 Шаблон одной задачи: [`TASK_SLICE.md`](TASK_SLICE.md).  
-Выгрузка в трекер (опционально): `docs/tasks/TASKS_<slug>.md`.
+Выгрузка в трекер (опционально): `game/docs/tasks/TASKS_<slug>.md`.
 
 ### MQ-001 — [Title]
 

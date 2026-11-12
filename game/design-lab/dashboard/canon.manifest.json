@@ -1,0 +1,127 @@
+{
+  "schema_version": 1,
+  "theme": "dashboard",
+  "page_parity": {
+    "name": "Dashboard (★ BG-1 board game, ADR-014)",
+    "prod_entry": "web/src/components/DashboardPremium.jsx",
+    "canonical_page_round": {
+      "path": "design-lab/dashboard/parity-generated-page-round/",
+      "status": "approved",
+      "notes": "Generated from manifest. BG-1 is one whole-page round: blocks sharing a round are embedded once."
+    },
+    "concept_round": {
+      "path": "design-lab/board-game/hybrid-round/",
+      "status": "approved",
+      "approved_at": "2026-10-14"
+    }
+  },
+  "blocks": [
+    {
+      "id": "hero",
+      "kind": "page-block",
+      "prod_component": "MqxDashboardHero",
+      "status": "approved",
+      "canonical_rounds": [
+        {
+          "path": "design-lab/dashboard/bg1-page-round/",
+          "status": "approved"
+        },
+        {
+          "path": "design-lab/board-game/hybrid-round/",
+          "status": "approved"
+        }
+      ],
+      "invariants": [
+        "Turn card on top inside scroll: role left + «Твой ход» (h1), turn number top-right without «из N».",
+        "Order inside card: events plate (N событий) → Monetka one line (most urgent) → compact «Завершить ход»."
+      ]
+    },
+    {
+      "id": "needs",
+      "kind": "page-block",
+      "prod_component": "MqxNeedsDash",
+      "status": "approved",
+      "canonical_rounds": [
+        {
+          "path": "design-lab/dashboard/bg1-page-round/",
+          "status": "approved"
+        },
+        {
+          "path": "design-lab/board-game/hybrid-round/",
+          "status": "approved"
+        }
+      ],
+      "invariants": [
+        "4 thin bars 2×2 with numbers; book+? → help sheet, heart → treat-self (Z-NEEDS kept).",
+        "Bars are gain (as in ★ BG-1); red only for risk (distressed < 30 / zero)."
+      ]
+    },
+    {
+      "id": "finance",
+      "kind": "page-block",
+      "prod_component": "MqxFinancePeriodBlock",
+      "status": "approved",
+      "canonical_rounds": [
+        {
+          "path": "design-lab/dashboard/bg1-page-round/",
+          "status": "approved"
+        },
+        {
+          "path": "design-lab/board-game/hybrid-round/",
+          "status": "approved"
+        }
+      ],
+      "invariants": [
+        "Persona portrait next to «На счёте»; below: cushion, salary (or income) per turn, expenses per turn.",
+        "Expense neutral (ADR-014), income green with «+»."
+      ]
+    },
+    {
+      "id": "goal",
+      "kind": "page-block",
+      "prod_component": "MqxGoalDash",
+      "status": "approved",
+      "canonical_rounds": [
+        {
+          "path": "design-lab/dashboard/bg1-page-round/",
+          "status": "approved"
+        },
+        {
+          "path": "design-lab/board-game/hybrid-round/",
+          "status": "approved"
+        }
+      ],
+      "invariants": [
+        "Collapsed: «Цель, шаг N из M» + unlabeled dot track + gold finish coin.",
+        "Expanded: victory chain steps, no Monetka; finish text shows «с N-го хода» only when min_period_index > 1."
+      ]
+    },
+    {
+      "id": "actions",
+      "kind": "page-block",
+      "prod_component": "MqxPeriodActions",
+      "status": "approved",
+      "canonical_rounds": [
+        {
+          "path": "design-lab/dashboard/bg1-page-round/",
+          "status": "approved"
+        },
+        {
+          "path": "design-lab/board-game/hybrid-round/",
+          "status": "approved"
+        }
+      ],
+      "invariants": [
+        "4 buttons in one row; «Зарплата» gold while claimable.",
+        "Labels «Пополнить» / «Снять» unchanged — separate open task."
+      ]
+    }
+  ],
+  "page_order_prod_components": [
+    "MqxDashboardHero",
+    "MqxNeedsDash",
+    "MqxFinancePeriodBlock",
+    "MqxGoalDash",
+    "MqxPeriodActions"
+  ]
+}

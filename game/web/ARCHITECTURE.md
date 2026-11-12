@@ -1,0 +1,82 @@
+# Frontend — структура `src/`
+
+Канон: [one-pager](../docs/vision/ideas/project-structure-standardization.md).  
+Стили: [`src/styles/README.md`](src/styles/README.md).  
+MQX UI: [`src/components/mqx/DESIGN_WORKFLOW.md`](src/components/mqx/DESIGN_WORKFLOW.md).
+
+---
+
+## Карта папок
+
+```text
+src/
+  api.js                 # barrel → api/
+  api/                   # HTTP, зеркало game/api/app/routers/
+    client.js            # apiCall, ApiError, setAuthToken
+    auth.js, game.js, finance.js, invest.js, insurance.js, admin.js
+    index.js             # API = { ...domains }
+  screens/               # route- / flow-level экраны (тонкие сборки)
+    pre-game/            # новая игра: режим, шаблоны
+    game/                # (цель) вкладки GameScreen — пока legacy *Premium.jsx
+    admin/, dev/         # по мере появления
+  components/            # legacy + мелкие блоки; не расширять для новых экранов
+    mqx/                 # design-lab ★ → prod: примитивы, layout, onboarding
+  hooks/                 # useGame и др.; цель — hooks/<domain>/
+  styles/                # CSS-модули по домену (barrel index.css)
+  config/, utils/, context/
+```
+
+---
+
+## Пять правил
+
+1. **Новый экран потока** → `screens/<flow>/`. Не добавлять route-level JSX в корень `components/`.
+2. **Видимый паттерн MQX** → `components/mqx/` + стили `styles/mqx/<domain>.css` (см. DESIGN_WORKFLOW).
+3. **HTTP** → `api/<domain>.js`; домен = роутер FastAPI (`game`, `finance`, …). Импорт для совместимости: `from '../api'`.
+4. **Состояние** → `hooks/<domain>/` при росте; пока допустим монолитный `useGame.js`.
+5. **В spec фичи** — строка трассировки:
+
+| Слой | Пример |
+|------|--------|
+| Screen | `screens/pre-game/GameTemplatePickScreen.jsx` |
+| Brand assets | `src/assets/character-portraits/` (`PersonaPortrait`, `npm run persona-portraits:process`) |
+| API | `api/game.js` → `POST /api/game/start` |
+| Styles | `styles/mqx/flows.css`, `styles/mqx/finance.css` (picker), `styles/mqx/dashboard.css` (needs avatar) |
+
+---
+
+## Потоки `screens/`
+
+| Папка | Содержимое | Legacy (до переезда) |
+|-------|------------|----------------------|
+| `pre-game/` | `GameTemplatePickScreen` (Выбор жизни ★ BG-2; шаг «Игра / План» удалён, ADR-013) | — (shim `components/new-game/` удалён 2026-07) |
+| `game/` | Дашборд, финансы, аналитика, `GameScreen` | `*Premium.jsx`, `GameScreen.jsx` |
+
+Plan — отдельное приложение в `apps/plan-web`, см. [ADR-016](../../docs/decisions/ADR-016-two-products-shared-fincore.md). Встроенный режим и его редакторы удалены.
+
+---
+
+## Legacy quarantine
+
+- `components/*Section.jsx` — не добавлять фичи (см. SPEC_FRONTEND_UI). Prod: `InsuranceSection` в `mqx/layout/`.
+- `components/*Premium.jsx` — вкладки игры; переезд в `screens/game/` **по касанию** (touch-it move-it).
+
+---
+
+## Backend (зеркало)
+
+| Frontend | Backend |
+|----------|---------|
+| `api/game.js` | `app/routers/game.py`, `period_actions.py`, `events.py` |
+| `api/finance.js` | `app/routers/finance.py`, `app/routers/expenses.py` |
+| `api/invest.js` | `app/routers/invest.py` |
+| `api/insurance.js` | `app/routers/insurance.py` |
+| Seeds каталога Game | `app/seeds/game_starter_templates.py` |
+
+---
+
+## История
+
+| Дата | Изменение |
+|------|-----------|
+| 2026-05-25 | MVP structure: `api/*`, `screens/pre-game/`, `ARCHITECTURE.md`, seeds |

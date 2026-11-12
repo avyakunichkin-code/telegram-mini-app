@@ -1,0 +1,260 @@
+/* Маскоты ★ PO 2026-11-02 — game/design-lab/mascots/ (ink-mascots-round, pregame-monetka-round, companions-round).
+   Цвета персонажей зашиты в SVG и от темы не зависят. */
+
+.mqx-monetka,
+.mqx-monetka-avatar {
+  display: block;
+  flex-shrink: 0;
+}
+
+/* Надпись на ободе — шрифтом игры (inline SVG получает шрифт страницы) */
+.mqx-monetka__rim {
+  font-family: var(--mq-font-display);
+  font-weight: 900;
+}
+
+/* ---------- Квитя: чек = тело, лицо на оторванном крае (★ ink-mascots-round «Итоги хода») ---------- */
+.mqx-kvitya {
+  display: grid;
+  filter: drop-shadow(5px 5px 0 var(--mq-turn));
+}
+
+.mqx-kvitya svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+/* Края чека заходят на тело на 1 px — иначе в шве просвечивает цветная тень */
+.mqx-kvitya svg:first-child {
+  margin-block-end: calc(var(--mq-ink-w) / -2);
+}
+
+.mqx-kvitya svg:last-child {
+  margin-block-start: calc(var(--mq-ink-w) / -2);
+}
+
+.mqx-kvitya__paper {
+  fill: var(--mq-cell);
+}
+
+.mqx-kvitya__edge {
+  fill: none;
+  stroke: var(--mq-ink-line);
+  stroke-width: 3;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+}
+
+.mqx-kvitya__band {
+  fill: var(--mq-turn);
+}
+
+.mqx-kvitya__ink {
+  fill: var(--mq-board-ink);
+}
+
+.mqx-kvitya__smile {
+  fill: none;
+  stroke: var(--mq-board-ink);
+  stroke-width: 3;
+  stroke-linecap: round;
+}
+
+.mqx-kvitya__body {
+  display: grid;
+  gap: var(--mq-sp-3);
+  margin: 0;
+  padding: var(--mq-sp-1) var(--mq-sp-7) var(--mq-sp-5);
+  border-inline: 3px solid var(--mq-ink-line);
+  background: var(--mq-cell);
+  font-size: var(--mq-fs-body);
+}
+
+.mqx-kvitya__row {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--mq-sp-5);
+}
+
+.mqx-kvitya__row dt,
+.mqx-kvitya__row dd {
+  margin: 0;
+}
+
+.mqx-kvitya__row dd {
+  flex-shrink: 0;
+  font-variant-numeric: tabular-nums;
+  font-weight: 700;
+}
+
+.mqx-kvitya__value--gain {
+  color: var(--mq-gain);
+}
+
+.mqx-kvitya__value--loss {
+  color: var(--mq-risk);
+}
+
+.mqx-kvitya__rule {
+  margin: var(--mq-sp-1) 0;
+  border-top: 2px dashed var(--mq-ink-line);
+}
+
+/* Итог за ход выделен маркером — золото «денег» */
+.mqx-kvitya__total {
+  margin: 0 calc(var(--mq-sp-3) * -1);
+  padding: var(--mq-sp-1) var(--mq-sp-3);
+  border-radius: var(--mq-r-cell);
+  background: var(--mq-coin);
+  color: var(--mq-coin-on);
+}
+
+.mqx-kvitya__total dt,
+.mqx-kvitya__total dd {
+  font: 900 var(--mq-fs-cell) / 1.4 var(--mq-font-display);
+}
+
+.mqx-kvitya__foot {
+  color: var(--mq-board-ink-soft);
+}
+
+/* ---------- Знакомство с напарником ★ companions-round B «Карточка персонажа» ---------- */
+.mqx-hero-card {
+  display: grid;
+  gap: var(--mq-sp-5);
+  padding: var(--mq-sp-7);
+  border: var(--mq-ink-w) solid var(--mq-ink-line);
+  border-radius: var(--mq-r-card);
+  background: var(--mq-cell);
+  box-shadow: 4px 4px 0 var(--mq-turn);
+}
+
+.mqx-hero-card__title {
+  margin: 0;
+  color: var(--mq-board-ink);
+  font: 900 var(--mq-fs-display) / 1.2 var(--mq-font-display);
+}
+
+.mqx-hero-card__line {
+  margin: var(--mq-sp-1) 0 0;
+  color: var(--mq-board-ink-soft);
+  font-size: var(--mq-fs-body);
+}
+
+.mqx-hero-card__art {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: var(--mq-sp-1);
+  padding-top: var(--mq-sp-5);
+  border-radius: var(--mq-r-cell);
+  background: var(--mq-turn-soft);
+}
+
+.mqx-hero-card__persona {
+  width: 168px;
+  height: auto;
+}
+
+/* Напарник «выпрыгивает» к персонажу — единственное движение на экране */
+.mqx-hero-card__companion {
+  width: 96px;
+  height: auto;
+  margin-bottom: var(--mq-sp-1);
+  animation: mqx-companion-pop 520ms var(--mq-ease-reward) both;
+}
+
+.mqx-hero-card__mate {
+  margin: 0;
+  font-size: var(--mq-fs-body);
+}
+
+.mqx-hero-card__mate b {
+  font: 800 var(--mq-fs-lead) / 1.3 var(--mq-font-display);
+}
+
+@keyframes mqx-companion-pop {
+  from {
+    transform: translateY(24px) scale(0.6);
+    opacity: 0;
+  }
+  to {
+    transform: none;
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mqx-hero-card__companion {
+    animation: none;
+  }
+}
+
+/* ---------- #/dev/mqx ---------- */
+.mqx-catalog-mascots {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  align-items: flex-end;
+  margin-top: 12px;
+}
+
+.mqx-catalog-mascots__cell {
+  display: grid;
+  justify-items: center;
+  gap: 4px;
+  margin: 0;
+  font-size: var(--mq-fs-caption);
+  color: var(--mq-board-ink-soft);
+}
+
+/* ---------- Монетка в шапке ★ pregame-monetka-round B: экраны до выбора роли ---------- */
+.mqx-pg-voice {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--mq-sp-5);
+}
+
+.mqx-pg-voice__m {
+  width: 56px;
+  height: 56px;
+}
+
+.mqx-pg-voice__title {
+  margin: 0;
+  color: var(--mq-board-ink);
+  font: 900 var(--mq-fs-title) / 1.25 var(--mq-font-display);
+}
+
+.mqx-pg-voice__text {
+  margin: var(--mq-sp-1) 0 0;
+  color: var(--mq-board-ink-soft);
+  font-size: var(--mq-fs-body);
+  line-height: 1.4;
+}
+
+/* Тёмная тема: персонажей не перекрашиваем — светлая обводка-наклейка по силуэту */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) :is(.mqx-pg-voice__m, .mqx-hero-card__art img) {
+    filter: var(--mqx-mascot-sticker);
+  }
+}
+
+:root[data-theme='dark'] :is(.mqx-pg-voice__m, .mqx-hero-card__art img) {
+  filter: var(--mqx-mascot-sticker);
+}
+
+:root {
+  --mqx-mascot-sticker:
+    drop-shadow(1.5px 0 0 var(--mq-board-ink-faint))
+    drop-shadow(-1.5px 0 0 var(--mq-board-ink-faint))
+    drop-shadow(0 1.5px 0 var(--mq-board-ink-faint))
+    drop-shadow(0 -1.5px 0 var(--mq-board-ink-faint));
+}
+
+.mqx-catalog-mascots--cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  align-items: start;
+}

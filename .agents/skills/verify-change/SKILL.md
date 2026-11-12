@@ -1,11 +1,20 @@
 ---
 name: verify-change
-description: Select and run meaningful project checks for changed behavior, regressions and critical API/UI scenarios without forcing full suites for documentation.
+description: Select and run meaningful checks for the selected product or shared contract, scaled to the changed behavior and risk.
 ---
 
 # verify-change
 
-Пример: «проверь изменение API», «добавь регрессию на баг». Не писать зеркальные тесты на опечатку.
-Используй [COMMANDS](../../../docs/ai/COMMANDS.md); выбери риск: G1 happy, G2 boundary, G3 контракт, G4 инвариант; N/A объясни. Баг: докажи failing reproduction, затем минимальный fix и regression; не фабрикуй RED, если тест уже зелёный. Backend/fincore: pytest, FE: node --test через manifest, не выдуманный Vitest. UI-сценарий: Playwright/system Chrome. Существенная экономика: дополнительно $balance-playtest. Для AI-контура node scripts/codex/check.mjs и node --test scripts/codex/*.test.mjs; не запускать Claude report writers. Отчёт: cwd/runtime/команда/exit/log, skipped и причина; самооценка не независимая проверка.
+Определи продукт по путям задачи и [общему маршруту](../../../docs/engineering/CODEX-PROCESSES.md).
+Команды бери из его manifests и [COMMANDS](../../../docs/engineering/COMMANDS.md).
+Для бага воспроизведи сбой до исправления, когда это возможно; не фабрикуй RED.
+Выбери happy/boundary/error/invariant по риску. Документация требует проверки ссылок,
+критичный UI — Playwright, API — контракт и потребитель. GAME economy: pytest,
+существенное изменение чисел — локальный balance-playtest. Изменение fincore —
+тесты ядра и затронутых потребителей, golden и game balance diff по ADR-016.
+Изменение только PLAN не требует запуска GAME без общей зависимости.
+Для AI: node scripts/codex/check.mjs и node --test scripts/codex/*.test.mjs.
+Отчёт: cwd, executable, команда, exit code, результат, skipped и пробелы.
+Повторяй проверки после новых изменений/сбоев, а не ради количества запусков.
 
-Общие границы и готовность: [AGENTS.md](../../../AGENTS.md). Читай только источники затронутой области.
+Общие границы: [AGENTS.md](../../../AGENTS.md).
