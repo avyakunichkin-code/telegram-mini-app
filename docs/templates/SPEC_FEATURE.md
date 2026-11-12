@@ -1,123 +1,80 @@
 ---
+layer: spec
+product:
 status: draft
 owner:
 last_reviewed:
-tracks:
 idea:
 plan:
-# tags + aliases — после сохранения: node scripts/docs/obsidian-enrich.mjs
-tags:
-  - tvoy-hod/layer/template
-  - tvoy-hod/status/draft
-aliases:
-  - "[Feature name]"
-  - "SPEC FEATURE"
-  - SPEC_FEATURE
-  - "Spec: [Feature name]"
 ---
 # Spec: [Feature name]
 
-## Assumptions
-
-1. …
-2. …
-→ Correct before implementation.
+Шаблон общий. Перед сохранением выбери продукт, его docs и реальные ссылки.
+Точки входа — профиль продукта в docs/engineering/CODEX-PROCESSES.md.
 
 ## Objective
 
-**Why:** …  
-**Who:** …  
-**Success criteria:**
-
-- [ ] …
-- [ ] …
+- Проблема и аудитория: …
+- Наблюдаемый результат и критерии успеха: …
+- Допущения, требующие проверки: …
 
 ## Scope
 
-### In scope
-
-- …
-
-### Out of scope
-
-- …
+Входит: …
+Не входит: …
+Применимые согласованные решения и текущая spec: …
 
 ## User flows
 
-| Step | Actor | Result |
-|------|-------|--------|
+| Шаг | Участник | Результат |
+|---|---|---|
 | 1 | … | … |
 
-Ref: [`foundation/TMA_USER_FLOWS.md`](../../game/docs/foundation/TMA_USER_FLOWS.md)
+Источник flows и дизайна — документы выбранного продукта.
 
 ## Data & API
 
-### Models / DB
+Модели/хранение: …
 
-- …
+| Method | Path | Request | Response / errors | Auth |
+|---|---|---|---|---|
+| … | … | … | … | … |
 
-### Endpoints
-
-| Method | Path | Request | Response | Notes |
-|--------|------|---------|----------|-------|
-| GET | `/api/…` | … | … | … |
-
-Sync: `game/web/src/api.js`, `AGENTS.md` if public contract changes.
+Потребители и совместимость: …
+Поля, nullability, default и ошибки синхронизируются с фактическим web-адаптером продукта.
 
 ## UI / UX
 
-- Screens: …
-- Ref: [`specs/SPEC_FRONTEND_UI.md`](../../game/docs/specs/SPEC_FRONTEND_UI.md)
+Экраны, loading/empty/error/disabled, адаптивность и a11y: …
+Раунд, человеческое approval и область утверждения по процессу продукта: …
 
 ## Rules & edge cases
 
-- …
+Инварианты и правила применения: …
+Границы, повтор, отказ и восстановление по риску: …
 
-## Testing strategy
+## Acceptance & verification
 
-Skill: **`/critical-test-scenarios`** ([`critical-test-scenarios`](../../.agents/skills/verify-change/SKILL.md)).\
-Цель — **не 100% coverage**, а критичные сценарии (gate G1–G4). Ref: [`game/api/tests/README.md`](../../game/api/tests/README.md).
+- [ ] …
+- [ ] …
 
-| Layer | What to prove |
-|-------|----------------|
-| Unit | … |
-| API / integration | … |
-| FE contract | … |
-| Manual TMA | … |
+Используй verify-change и команды выбранного продукта; тесты соразмерны риску.
 
-### Critical scenarios (min gate)
+| ID | Сценарий | Уровень | cwd / executable / команда |
+|---|---|---|---|
+| CS-1 | Happy path: … | … | … |
+| CS-2 | Boundary/error/invariant: … | … | … |
 
-| ID | Scenario | Layer | Command / path |
-|----|----------|-------|----------------|
-| CS-1 | Happy path: … | integration | `pytest tests/integration/…` |
-| CS-2 | Boundary / contract: … | unit | `pytest tests/unit/…` |
-
-Commands:
-
-```bash
-# backend
-pytest …
-
-# frontend
-cd frontend-react && npm run build
-```
-
-## Boundaries
-
-- **Always:** …
-- **Ask first:** migrations, new deps, breaking API
-- **Never:** …
+Реальные БД, публикация и внешние отправки не разрешаются наличием spec.
 
 ## Open questions
 
-| # | Question | Owner | Resolution |
-|---|----------|-------|------------|
-| 1 | … | … | … |
+| Вопрос | Ответственный | Решение |
+|---|---|---|
+| … | … | … |
 
 ## Traceability
 
-| Artifact | Link |
-|----------|------|
-| Idea | `vision/ideas/…` |
-| Plan | `plans/PLAN_….md` |
-| Backlog | `backlog/PRODUCT_BACKLOG.md` §… |
+Идея: …
+План: …
+Существующий backlog/roadmap или traceability выбранного продукта: …

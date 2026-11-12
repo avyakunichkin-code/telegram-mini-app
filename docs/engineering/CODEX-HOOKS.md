@@ -21,7 +21,7 @@ Pre adapter не выдаёт ask/allow overrides: exit 2 + фиксирован
 
 Generated: design-lab/index.html и любой design-lab/**/lab-base.css — manual patch/file/write/delete/move deny. Round index.html/styles.css допустимы. Хаб из nav.manifest.json. SQL baseline — консервативный DDL subset: DML/CTE/DO/COPY/CREATE AS SELECT отклоняются; это не полный PostgreSQL parser, ошибки разбора требуют review. Существующий baseline проверяется CLI на целый текст; pre проверяет предлагаемые новые фрагменты, поэтому partial/multi-stage edits не равны проверке итоговой SQL-схемы.
 
-Shell detection — ограниченный guard известных путей, НЕ песочница. Разрешены точные npm(.cmd) run design-lab:build-nav/build из frontend-react и sync-round с одним валидным round path; compound suffix не разрешён. Слово generator ничего не разрешает. Обычные shell-программы могут скрывать запись вычисляемым путём; write_stdin/уже запущенный процесс/внешний MCP/TOCTOU не полностью покрыты. Чтение protected path через shell тоже может блокироваться консервативно; для разрешённых текущих файлов используй адресный file-read; исторический снятый контур не читать. Генераторы доверяют текущим исходникам npm scripts/sync-lab.sh: при их изменении нужен review, не автоматическое доверие названию команды.
+Shell detection — ограниченный guard известных путей, НЕ песочница. Разрешены точные npm(.cmd) run design-lab:build-nav/build из game/web и sync-round с одним валидным round path; из корней game/ и plan/ — только их build-nav без аргументов; compound suffix не разрешён. Слово generator ничего не разрешает. Обычные shell-программы могут скрывать запись вычисляемым путём; write_stdin/уже запущенный процесс/внешний MCP/TOCTOU не полностью покрыты. Чтение protected path через shell тоже может блокироваться консервативно; для разрешённых текущих файлов используй адресный file-read; исторический снятый контур не читать. Генераторы доверяют текущим исходникам npm scripts/sync-lab.sh: при их изменении нужен review, не автоматическое доверие названию команды.
 
 ## Безопасный smoke и наблюдение
 
@@ -29,7 +29,7 @@ Shell detection — ограниченный guard известных путей
 
 Реальный безопасный probe текущего exec_command: `Write-Output 'CODEX_GUARD_SMOKE design-lab/index.html'` выполнился с exit 0. По политике pre эта строка дала бы deny. Следовательно действие нативной блокировки в текущем чате НЕ подтверждено; нельзя называть guard активным. Это не попытка изменить generated-файл. Реальные raw hook payload/trace текущей managed-сессии недоступны без включённых доверенных hooks; фикстуры не выданы за захваченный runtime.
 
-Наблюдалось отдельно: 13 skills добавились в каталог клиента; 3 custom agent types появились в tool schema. CLI features list показывает hooks=true. Ни это, ни наличие hooks.json не доказывает trust/исполнение.
+Историческое наблюдение до разделения областей: 13 skills добавились в каталог клиента; 3 custom agent types появились в tool schema. CLI features list показывает hooks=true. Ни это, ни наличие hooks.json не доказывает trust/исполнение.
 
 ## Последний шаг активации владельцем
 
@@ -42,7 +42,7 @@ Windows commandWindows использует powershell.exe -NoProfile, git-root 
 
 ## Страховка CLI/CI
 
-check.mjs проверяет structure/links/map/DDL без чтения исторических источников; CI codex-check запускает checker и executable tests, без публикации. Существующие CI/guardrails не меняются. .git/hooks содержит только sample hooks, активную регистрацию мы не добавляли. Это дополнительная обнаруживающая проверка, не эквивалент превентивной runtime-защите и не доказательство, что generated output нельзя записать через произвольную программу.
+check.mjs проверяет structure/links/map/DDL без чтения исторических источников; CI codex-check запускает checker и executable tests, без публикации. Продуктовые guardrails сохраняются; AI-пути проверяются отдельными workflows. .git/hooks содержит только sample hooks, активную регистрацию мы не добавляли. Это дополнительная обнаруживающая проверка, не эквивалент превентивной runtime-защите и не доказательство, что generated output нельзя записать через произвольную программу.
 
 Вывод тестов: runner сохраняет полный локальный stdout/stderr в .codex-state/logs, показывает tail и возвращает код процесса; секреты не передавать. Отдельные stdout/stderr ordering и signal→числовой exit не полностью переносимы; signal/spawn failure возвращают 1 с явным статусом. Original after-edit-verify и updatedToolOutput не запускались.
 

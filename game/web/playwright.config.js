@@ -1,5 +1,5 @@
 import os from 'node:os';
-import { existsSync } from 'node:fs';
+import { projectPython } from '../../scripts/lib/project-runtime.mjs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { defineConfig, devices } from '@playwright/test';
@@ -11,8 +11,7 @@ import { defineConfig, devices } from '@playwright/test';
  */
 const here = path.dirname(fileURLToPath(import.meta.url));
 const backendDir = path.resolve(here, '../api');
-const pythonPath = process.platform === 'win32' ? 'Scripts/python.exe' : 'bin/python';
-const python = process.env.E2E_PYTHON || ['../.venv', '../../.venv'].map(dir => path.resolve(here, dir, pythonPath)).find(existsSync) || 'python';
+const python = projectPython(path.resolve(here, '../..'), 'game', process.env.E2E_PYTHON);
 const dbFile = path.join(os.tmpdir(), `tvoy-hod-e2e-${process.pid}.db`).replace(/\\/g, '/');
 
 // Порты стенда: не пересекаются с dev (8000/5173) и соседними сессиями; переопределяются env.

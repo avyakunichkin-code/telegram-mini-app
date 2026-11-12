@@ -42,6 +42,8 @@ jobs:
           fi
           files=$(git diff --name-only "$BASE"...HEAD)
           echo "$files"
+          # Codex instructions/adapters are covered by AI workflows, not product suites.
+          files=$(printf '%s\n' "$files" | grep -Ev '(^|/)\.(agents|codex)/|(^|/)AGENTS(\.override)?\.md$|(^|/)docs/engineering/|^scripts/codex/' || true)
           shared='^(shared/|scripts/|\.github/)'
           game='^game/'
           plan='^plan/'

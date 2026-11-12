@@ -12,9 +12,11 @@ ADR-017 разрешает локальный P2; реальные пользо�
 отдельными условиями. Только синтетические данные; не читать env и реальные анкеты.
 
 Primary — delivery / verify-change; API-поле — api-contract-change.
+Общие навыки выбирают текущие файлы PLAN по [профилю](docs/engineering/CODEX-PROCESSES.md).
+Игровые навыки остаются в области GAME; дубли в PLAN не создаются.
 Дизайн — процесс PLAN; игровые mqx-design и frontend-implementation не primary.
 Из корня продукта: `npm.cmd run check`; runner выбирает `plan/.venv`.
 Адресно из api: `../.venv/Scripts/python.exe -m pytest -q` после установки среды
-продукта; для переходной корневой среды — `../../.venv/Scripts/python.exe`.
+продукта; другой runtime задаётся явно через `PROJECT_PYTHON` / `E2E_PYTHON`.
 Из web: `npm.cmd run test:unit`, `npm.cmd run build`, `npm.cmd run test:e2e`
 для критичного пути. Изменение общего контракта проверяется у обоих потребителей.

@@ -7,7 +7,7 @@ PowerShell: команды в таблице выполняются из ука�
 | Codex structure/links/map | root | Node 22+, stdlib | `node scripts/codex/check.mjs` | exit 0, без записи |
 | Старый флаг protected | root | Node | `node scripts/codex/check.mjs --protected` | совместимый alias обычной проверки, старые файлы/хеши не читает |
 | Adapter behavioral smoke | root | Node 22+ | `node --test scripts/codex/*.test.mjs` | stub marker только temp; test logs .codex-state |
-| Skill validator | root | Python + PyYAML, bundled skill-creator | `& .venv/Scripts/python.exe -X utf8 <skill-creator>/scripts/quick_validate.py .agents/skills/<name>` | valid frontmatter, не behavior |
+| Skill validator | root | Python + PyYAML, bundled skill-creator | `& .venv/Scripts/python.exe -X utf8 <skill-creator>/scripts/quick_validate.py <scope>/.agents/skills/<name>` | valid frontmatter, не behavior |
 | Conventions | root | Python stdlib | `& .venv/Scripts/python.exe -X utf8 scripts/check_conventions.py` | exit 0; read-only, исключает node_modules, .venv, sites и worktrees до обхода |
 | Backend + fincore | game/api | Python 3.14 CI; requirements-dev, editable fincore | `& ../../.venv/Scripts/python.exe -m pytest -q` | SQLite tests; fincore включён testpaths; не запускался для AI-only diff |
 | Fincore отдельно | shared/packages/fincore | Python + pytest, установленное ядро | `& ../../../.venv/Scripts/python.exe -m pytest -q` | pure core tests; не эквивалент game integration |
@@ -32,10 +32,20 @@ PowerShell: команды в таблице выполняются из ука�
 
 Из `game/` или `plan/`: `npm.cmd run dev`, `npm.cmd run build`, `npm.cmd run check`.
 API отдельно: `node ../scripts/project.mjs game api` (или `plan api`).
-Runner предпочитает `.venv` внутри продукта; корневая `.venv` — переходный fallback.
-PLAN API: `../../.venv/Scripts/python.exe -m pytest -q` из `plan/api`; web: unit/build/e2e из `plan/web`.
+Runner и E2E требуют `.venv` внутри продукта; другой Python задаётся явно через PROJECT_PYTHON / E2E_PYTHON.
+PLAN API: `../.venv/Scripts/python.exe -m pytest -q` из `plan/api`; web: unit/build/e2e из `plan/web`.
 Общий UI-контракт имеет свой runtime: `npm ci` из `shared/tests/ui`, затем `npm test`.
 GAME Pages: `npm.cmd run build:pages` из `game/`, артефакт `game/dist/pages`; публикация отдельно.
 Сборка PLAN-лендинга: `npm.cmd run build` из `plan/landing`, без зависимостей.
 В Windows sandbox MSYS и запуск сервисов могут требовать адресного разрешения;
 ошибку среды не обходить ослаблением теста.
+
+Навыки: корневая область — 7 общих, game/.agents/skills — 6 игровых. Валидировать
+конкретный путь навыка, а не предполагать, что все навыки находятся в корне.
+
+Независимый запуск из продукта: `npm.cmd run dev:api` и `npm.cmd run dev`
+в отдельных терминалах. Smoke: `npm.cmd run smoke`; совместно из root:
+`node scripts/smoke-projects.mjs`. Проверяет API, HTML и прокси, использует
+отдельные временные SQLite и пустой envDir, отключает dotenv и очищает свои
+процессы/данные. Порты smoke: GAME 18000/15173, PLAN 18020/15190.
+Runtime runner: `node --test scripts/project.test.mjs`.

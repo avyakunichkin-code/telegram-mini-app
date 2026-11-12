@@ -9,6 +9,7 @@ const packages = path.resolve(here, '../../shared/packages')
 
 // /api проксируется на plan-api (uvicorn :8020). Общие JS-пакеты (SPL-403) — по алиасу из shared/packages/.
 export default defineConfig({
+  envDir: process.env.PROJECT_ENV_DIR,
   plugins: [react(), offlineShell()],
   resolve: {
     alias: {

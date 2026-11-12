@@ -12,6 +12,8 @@ PWA/web primary, Telegram secondary. Одна экономика, один ци�
 [DESIGN_WORKFLOW](web/src/components/mqx/DESIGN_WORKFLOW.md).
 Исходники CSS/ассетов — design, экспорты обновлять генераторами.
 
+Общие навыки наследуются из корня; игровые находятся в `.agents/skills` этой папки.
+Профиль задач — [GAME processes](docs/engineering/CODEX-PROCESSES.md).
 Навыки: delivery для обычных задач; game-economy для экономики; event-authoring /
 event-audit для контента; mqx-design / frontend-implementation для UI;
 api-contract-change, db-migration, review-change, verify-change — по области.
@@ -20,7 +22,7 @@ Review экономики без зелёного backend pytest — NEEDS REVIS
 
 Проверки из корня продукта: `npm.cmd run check`; runner выбирает `game/.venv`.
 Адресно из api: `../.venv/Scripts/python.exe -m pytest -q` после установки среды
-продукта; для переходной корневой среды — `../../.venv/Scripts/python.exe`.
+продукта; другой runtime задаётся явно через `PROJECT_PYTHON` / `E2E_PYTHON`.
 Из web: `npm.cmd run test:unit`, `npm.cmd run build`, `npm.cmd run check:guardrails`;
 Playwright для критичного UI. Review агента или тест не заменяют approval человека.
 Сохраняй пользовательские изменения; не читать env, credentials и реальные анкеты.

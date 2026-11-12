@@ -42,6 +42,7 @@ for (const {name, file} of skills) {
   check(!/\[TODO:/.test(text),`Scaffold in ${name}`);
 }
 for (const file of markdown) {
+  if (!exists(file)) { check(false, `Missing instruction document: ${file}`); continue; }
   const text=read(file);
   for(const m of text.matchAll(/\[[^\]]*\]\(([^)]+)\)/g)) {
     const target=m[1].replace(/^<|>$/g,'').split('#')[0];
@@ -73,4 +74,4 @@ for(const name of ['economy-reviewer','economy-balance-runner','mqx-ui-reviewer'
 check(ddlOnly(read(BASELINE)),'Baseline is not within conservative DDL-only subset');
 if(process.argv.includes('--protected')) console.log('Legacy --protected snapshot retired; checking Codex architecture only (no historical source reads).');
 if(failures.length) { for(const failure of failures) console.error(`FAIL: ${failure}`); process.exitCode=1; }
-else console.log(`PASS: ${skills.length} skills, ${migration.length} source mappings, ${markdown.length} Markdown files, hooks/agents and DDL baseline`);
+else console.log(`PASS: ${skills.length} skills (${skillScopes.map(scope => `${scope || 'root'}=${skillsInScope(ROOT, scope).length}`).join(', ')}), ${migration.length} source mappings, ${markdown.length} Markdown files, hooks/agents and DDL baseline`);

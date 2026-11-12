@@ -1,86 +1,59 @@
 ---
 layer: plan
-epic_id: E1
-phase: define
+product:
+epic_id:
 status: draft
 owner:
 last_reviewed:
-spec: ../specs/features/SPEC_<slug>.md
-idea: ../vision/ideas/<slug>.md
-tasks: ../tasks/TASKS_<slug>.md
-traceability: ../TRACEABILITY.md
-next_skill: incremental-implementation
-tags:
-  - tvoy-hod/layer/plan
-  - tvoy-hod/layer/template
-  - tvoy-hod/status/draft
-aliases:
-  - "[Feature name]"
-  - E1
-  - "PLAN FEATURE"
-  - PLAN_FEATURE
-  - "Plan: [Feature name]"
+spec:
+idea:
+next_skill: delivery
 ---
 # Plan: [Feature name]
 
-**Epic ID:** `E1` (строка в [`TRACEABILITY.md`](../../game/docs/TRACEABILITY.md))\
-**Spec:** [`specs/features/SPEC_<slug>.md`](../specs/features/SPEC_<slug>.md)  
-**После утверждения плана:** Agent Skill **`incremental-implementation`** (срезы по задачам ниже).
+Область: выбранный продукт или shared, стадия и согласованный scope.
+Ссылки на spec, решения и существующий backlog/roadmap продукта: …
+Для обычного бага не создавай новую spec только ради заполнения шаблона.
 
 ## Summary
 
-Один абзац: что строим и в каком порядке (вертикальные срезы).
-
-## Dependency graph
-
-```text
-DB / migrations
-  └── models
-        └── API routers
-              └── api.js + hooks
-                    └── UI components
-```
+Какой результат строим и как проверим готовность: …
 
 ## Vertical slices
 
-| # | Срез | Phase | Tier | Skill | Satellites | Read if (`when`) | Next skill |
-|---|------|-------|------|-------|------------|------------------|------------|
-| 1 | … end-to-end | `build` | `core` | `incremental-implementation` | `test-driven-development` | — | `test-driven-development` |
-| 2 | UI / MQX | `build` | `core` | `design-lab-mqx` → `frontend-ui-engineering` | — | `lab parity / canon` | `code-review-and-quality` |
-| 3 | Контракт API | `define` | `core` | `api-and-interface-design` | `test-driven-development` | `breaking API change` | `incremental-implementation` |
-| 4 | События YAML | `build` | `core` | `create-event` | `test-driven-development` | — |
+| Срез | Результат | Зависимости | Файлы / владелец | Навык | Проверка и откат |
+|---|---|---|---|---|---|
+| 1 | … end-to-end | … | … | delivery / профильный навык | … |
+| 2 | … | … | … | … | … |
 
-`tier` / satellites: [`TASK_SLICE.md`](TASK_SLICE.md), [`SKILLS_PHASE_CONTENT_AND_DATA.md`](../agents/SKILLS_PHASE_CONTENT_AND_DATA.md).
+Общие навыки выбирают продукт. Специализированные навыки берутся только из его
+области. UI следует процессу и approval своего продукта, не соседнего.
+[Шаблон среза](TASK_SLICE.md).
 
 ## Risks & mitigations
 
-| Risk | Mitigation |
-|------|------------|
+| Риск | Решение / способ проверки |
+|---|---|
 | … | … |
 
-## Checkpoints
+## Progress
 
-- [ ] Spec **approved**
-- [ ] Строка в `TRACEABILITY.md` (Plan колонка) обновлена
-- [ ] Slice 1 done + verified
-- [ ] Slice 2 done + verified
-- [ ] Spec status → `implemented`; backlog `[x]`
+- [ ] Scope и необходимые согласования установлены
+- [ ] Срез 1 реализован и проверен
+- [ ] Контракты/ссылки синхронизированы; текущие статусы продукта обновлены по факту
 
-## Tasks
+## Discoveries and decisions
 
-Шаблон одной задачи: [`TASK_SLICE.md`](TASK_SLICE.md).  
-Выгрузка в трекер (опционально): `game/docs/tasks/TASKS_<slug>.md`.
+Факт, причина решения и ссылка на код/spec/ADR: …
 
-### MQ-001 — [Title]
+## Verification evidence
 
-- **Phase:** `build`
-- **Tier:** `core`
-- **Skill:** `incremental-implementation`
-- **Satellites:** `test-driven-development`
-- **Next skill:** `test-driven-development`
-- **Spec:** … §…
-- **Acceptance:** …
-- **Verify:** …
-- **Files:** …
-- **Estimate:** S | M | L
-- **Depends:** —
+| Срез | cwd / executable / команда | Exit | Результат и предел |
+|---|---|---|---|
+| … | … | … | … |
+
+## Recovery and open questions
+
+Следующее конкретное действие: …
+Открытый вопрос / approval и его источник: …
+Откат или восстановление после прерывания: …

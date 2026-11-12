@@ -6,6 +6,9 @@
 
 - GAME: [game/AGENTS.md](game/AGENTS.md). PLAN: [plan/AGENTS.md](plan/AGENTS.md).
   Обычная задача не требует чтения соседнего продукта.
+- Общие навыки — `.agents/skills`; игровые — `game/.agents/skills`.
+  Из корневого чата игровой SKILL.md открывай по явному пути только для задачи GAME.
+  Общий [маршрут](docs/engineering/CODEX-PROCESSES.md) ведёт к одному выбранному профилю.
 - Общие библиотеки: [shared/packages](shared/packages/AGENTS.md). Продукты не
   импортируют друг друга. fincore — stdlib/Decimal/DTO, без IO/ORM/HTTP и игровых
   понятий. Общий контракт проверяется у реальных потребителей. Данные раздельны.

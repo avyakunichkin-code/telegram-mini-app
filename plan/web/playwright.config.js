@@ -1,5 +1,5 @@
 import os from 'node:os'
-import { existsSync } from 'node:fs'
+import { projectPython } from '../../scripts/lib/project-runtime.mjs'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { defineConfig } from '@playwright/test'
@@ -8,13 +8,12 @@ import { defineConfig } from '@playwright/test'
  * E2E прототипа ТВОЙ ПЛАН (CS-11, plan/docs/specs/SPEC_plan-v1.md) в системном Google Chrome.
  * Стенд свой: plan-api на 8021 (БД `plan` — временный файл SQLite на прогон: у `sqlite://` одно соединение
  * на все потоки, параллельные запросы веба его ломают; миграции при старте в dev) и Vite на 5191 —
- * не пересекается с dev (8020/5190). Python — `E2E_PYTHON` или `game/api/.venv` (нужны fastapi, sqlalchemy, pyjwt).
+ * не пересекается с dev (8020/5190). Python — `E2E_PYTHON` или `plan/.venv`.
  * Запуск: `npm run test:e2e`.
  */
 const here = path.dirname(fileURLToPath(import.meta.url))
 const root = path.resolve(here, '../..')
-const pythonPath = process.platform === 'win32' ? 'Scripts/python.exe' : 'bin/python'
-const python = process.env.E2E_PYTHON || [path.join(root, 'plan/.venv', pythonPath), path.join(root, '.venv', pythonPath)].find(existsSync) || 'python'
+const python = projectPython(root, 'plan', process.env.E2E_PYTHON)
 
 const apiPort = Number(process.env.E2E_API_PORT || 8021)
 const webPort = Number(process.env.E2E_WEB_PORT || 5191)

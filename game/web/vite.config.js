@@ -11,12 +11,14 @@ const PWA_ICONS = [
 ]
 
 export default defineConfig(({ mode }) => {
-  const env = loadEnv(mode, process.cwd(), '')
+  const envDir = process.env.PROJECT_ENV_DIR || process.cwd()
+  const env = loadEnv(mode, envDir, '')
   const base = env.VITE_BASE_PATH || '/telegram-mini-app/'
   // Dev-прокси /api: по умолчанию локальный backend (uvicorn :8000). Прода сейчас нет — см. game/docs/ops/LOCAL_DEV.md.
   const apiTarget = (env.VITE_API_BASE_URL || 'http://localhost:8000').replace(/\/$/, '')
 
   return {
+    envDir,
     resolve: {
       alias: { '@tvoy/ui-kit': fileURLToPath(new URL('../../shared/packages/ui-kit/src/index.js', import.meta.url)) },
       dedupe: ['react', 'react-dom'],
