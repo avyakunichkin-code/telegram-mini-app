@@ -9,17 +9,17 @@ aliases:
 ---
 # Agents — MOC
 
-Claude Code skills, design-lab, authoring событий.
+Codex skills, design-lab, authoring событий.
 
-- [[CLAUDE|CLAUDE.md — онбординг кода]]
-- [[docs/agents/AGENT_SKILLS|Agent Skills (Claude Code)]]
+- [[AGENTS|AGENTS.md — онбординг кода]]
+- [[docs/agents/AGENT_SKILLS|Agent Skills (Codex)]]
 - [[docs/agents/AI_ONBOARDING|AI онбординг (агент)]]
 - [[docs/agents/SKILL_DOC_MAP|Skill Doc Map]]
-- [[docs/archive/README|Docs archive (superseded stubs)]]
+- [[game/docs/archive/README|Docs archive (superseded stubs)]]
 - [[docs/agents/SKILLS_PHASE_CONTENT_AND_DATA|Skills Phase]]
 - [[docs/agents/SKILLS_QUALITY_AUDIT_2026-06-20|Skills Quality Audit]]
 - [[docs/agents/LEGACY_NOISE_AUDIT_2026-06-20|Legacy noise audit]]
 - [[docs/agents/EVENTS_AGENT|Events Agent]]
 - [[docs/agents/DESIGN_LAB_NAVIGATION|Design Lab Navigation]]
 
-Каталог skills: `.claude/skills/catalog.yaml`
+Каталог skills: `docs/engineering/skill-migration.json`

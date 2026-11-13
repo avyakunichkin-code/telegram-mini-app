@@ -9,7 +9,7 @@ aliases:
 ---
 # Legacy noise audit
 
-После [ADR-012](../decisions/ADR-012-primary-channels-pwa-web-over-tma.md): что **удалено**, что **подрезано**, что **оставить**.
+После [ADR-012](../../game/docs/decisions/ADR-012-primary-channels-pwa-web-over-tma.md): что **удалено**, что **подрезано**, что **оставить**.
 
 ---
 
@@ -21,9 +21,9 @@ aliases:
 | Deprecated wrapper delete | `AuthMonetkaScreen` → `MonetkaBubbleScreen` в `LoginForm`/`RegisterForm` |
 | Irrelevant `.agents` skills | `nodejs-best-practices`, `nodejs-backend-patterns`, `seo` |
 | Stale docs trim | `PLAN_game-plan`, `ARCHITECTURE`, `tvoy-hod-frontend-core`, `docs/README` O2, design-lab FinanceSection refs |
-| June audit | `SKILLS_QUALITY_AUDIT` → archived; актуальная политика — `.claude/skills/_shared/` |
+| June audit | `SKILLS_QUALITY_AUDIT` → archived; актуальная политика — `source-id:skills/_shared/` |
 
-**Не удалено (осознанно):** `release-tma` alias, `.claude/skills/_archived/`, `InsuranceSection.jsx`, `docs/archive/` stubs.
+**Не удалено (осознанно):** `release-tma` alias, `source-id:skills/_archived/`, `InsuranceSection.jsx`, `game/docs/archive/` stubs.
 
 ---
 
@@ -31,8 +31,8 @@ aliases:
 
 | Путь | Причина |
 |------|---------|
-| `.claude/skills/specs/specs/` (21 файл) | Случайная вложенная копия `specs/`; 0 ссылок в `catalog.yaml` |
-| `.claude/skills/results/skill-test-*-2026-05-*.md` (8 файлов) | Устаревшие прогоны; канон — `*-2026-06-20.md` + `catalog.yaml` |
+| `source-id:skills/specs/specs/` (21 файл) | Случайная вложенная копия `specs/`; 0 ссылок в `catalog.yaml` |
+| `source-id:skills/results/skill-test-*-2026-05-*.md` (8 файлов) | Устаревшие прогоны; канон — `*-2026-06-20.md` + `catalog.yaml` |
 | `docs/agents/SKILLS_AUDIT_2026-06-01.md` | Заменён `SKILLS_QUALITY_AUDIT_2026-06-20.md` |
 
 **Политика results:** хранить только последний прогон на skill/mode; старые удалять после обновления `catalog.yaml`.
@@ -43,12 +43,12 @@ aliases:
 
 | Путь | Изменение |
 |------|-----------|
-| `README.md`, `CLAUDE.md` | Не «Telegram Mini App first» |
-| `docs/handbook/GAME.md`, `PRODUCT_BRIEF.md` | PWA/web primary |
-| `docs/foundation/PROJECT_META.md`, `SPEC_PRODUCT.md` | Единый frontmatter; §1.1 каналы |
-| `docs/specs/SPEC_FRONTEND_UI.md` | SPA/PWA spec, не TMA-only |
-| `docs/handbook/FEATURE_STATUS.md` | Порядок платформ |
-| `docs/foundation/PRE_ALPHA_PLAYTEST_PROTOCOL.md` | PW1 smoke на PWA/web |
+| `README.md`, `исторический entrypoint` | Не «Telegram Mini App first» |
+| `game/docs/handbook/GAME.md`, `PRODUCT_BRIEF.md` | PWA/web primary |
+| `game/docs/foundation/PROJECT_META.md`, `SPEC_PRODUCT.md` | Единый frontmatter; §1.1 каналы |
+| `game/docs/specs/SPEC_FRONTEND_UI.md` | SPA/PWA spec, не TMA-only |
+| `game/docs/handbook/FEATURE_STATUS.md` | Порядок платформ |
+| `game/docs/foundation/PRE_ALPHA_PLAYTEST_PROTOCOL.md` | PW1 smoke на PWA/web |
 | `docs/agents/AGENT_SKILLS.md` | Убрана дублирующая tier-таблица |
 | `docs/plans/README.md` | Ссылка на `tvoy-hod-router`, не legacy rule |
 | `.gitignore` | `.obsidian/graph.json` локально |
@@ -63,9 +63,9 @@ aliases:
 | Redirects | `release-tma` → `release-web` | `/release-tma` invocations |
 | Secondary flows | `TMA_USER_FLOWS.md` | TMA channel, ADR-012 banner |
 | Historical ADR | ADR-001…011 | Контекст решений |
-| Studio archive | `.claude/skills/_archived/` | Явный баннер + `disable-model-invocation` |
-| Marketing drafts | `docs/marketing/posts/draft/` | Narrative; править при публикации |
-| Superseded specs | `SPEC_onboarding-tma`, O2 stubs | [`docs/archive/`](archive/README.md) |
+| Studio archive | `source-id:skills/_archived/` | Явный баннер + `disable-model-invocation` |
+| Marketing drafts | `game/docs/marketing/posts/draft/` | Narrative; править при публикации |
+| Superseded specs | `SPEC_onboarding-tma`, O2 stubs | [`game/docs/archive/`](archive/README.md) |
 
 ---
 
@@ -87,20 +87,20 @@ _Волны 1–5 закрыты. Опционально: investor `deck.html` t
 
 | Действие | Артефакты |
 |----------|-----------|
-| O1 archive stub | `docs/archive/onboarding-o1/README.md`; SPEC/PLAN → redirect |
+| O1 archive stub | `game/docs/archive/onboarding-o1/README.md`; SPEC/PLAN → redirect |
 | Backlinks | TRACEABILITY, CHARACTER_MONETKA, PRODUCT_BACKLOG, O2 spec/idea |
-| UX platform | 10 файлов `docs/ux/` |
+| UX platform | 10 файлов `game/docs/ux/` |
 | Marketing | ep-000 drafts, NARRATIVE_PLAN, INTERVIEW |
-| release-web spec test | `.claude/skills/results/skill-test-spec-release-web-2026-06-20.md` |
+| release-web spec test | `source-id:skills/results/skill-test-spec-release-web-2026-06-20.md` |
 
 ## Волна 3 (2026-06-20) — выполнено
 
 | Действие | Артефакты |
 |----------|-----------|
-| O2 archive | `docs/archive/onboarding-o2/`; `SPEC_onboarding-o2.md` (~300 строк → redirect) |
+| O2 archive | `game/docs/archive/onboarding-o2/`; `SPEC_onboarding-o2.md` (~300 строк → redirect) |
 | O3 канон | backlinks → `SPEC_onboarding-o3.md`; TRACEABILITY O3 row |
-| Character XP | `docs/archive/character-xp-progression/`; LEVEL_XP, XP matrix, PLAN → redirect |
-| Hero compact | `docs/archive/dashboard-hero-compact/`; idea → redirect |
+| Character XP | `game/docs/archive/character-xp-progression/`; LEVEL_XP, XP matrix, PLAN → redirect |
+| Hero compact | `game/docs/archive/dashboard-hero-compact/`; idea → redirect |
 | TEAM_UPDATE | `status: archived` + banner |
 
 ---
@@ -108,4 +108,4 @@ _Волны 1–5 закрыты. Опционально: investor `deck.html` t
 ## Связанные документы
 
 - [SKILLS_QUALITY_AUDIT_2026-06-20.md](SKILLS_QUALITY_AUDIT_2026-06-20.md) §12 Channel strategy
-- [DOC_SYNC_LOG.md](../foundation/DOC_SYNC_LOG.md)
+- [DOC_SYNC_LOG.md](../../game/docs/foundation/DOC_SYNC_LOG.md)

@@ -17,7 +17,7 @@ aliases:
 
 **Kind:** `product` | `engineering` | `ux` | `content` | `ops` | `qa` | `liveops` | `ai`  
 **Дата снимка:** YYYY-MM-DD  
-**Канон адреса:** [`docs/audits/README.md`](../audits/README.md)
+**Канон адреса:** [`game/docs/audits/README.md`](../../game/docs/audits/README.md)
 
 Не канон реализации. Выводы → spec / ADR / backlog только после утверждения человеком.
 

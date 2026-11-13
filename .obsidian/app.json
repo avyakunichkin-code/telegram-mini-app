@@ -8,9 +8,9 @@
   "useMarkdownLinks": true,
   "alwaysUpdateLinks": true,
   "newLinkFormat": "relativePath",
-  "attachmentFolderPath": "docs/reference/brandbook/assets",
+  "attachmentFolderPath": "game/docs/reference/brandbook/assets",
   "newFileLocation": "folder",
-  "newFileFolderPath": "docs/vision/ideas",
+  "newFileFolderPath": "game/docs/vision/ideas",
   "promptDelete": false,
   "foldHeading": true,
   "foldIndent": true,
@@ -19,9 +19,9 @@
   "tabSize": 2,
   "trailingSlash": false,
   "userIgnoreFilters": [
-    "frontend-react/node_modules/",
-    "frontend-react/dist/",
-    "backend/.venv/",
+    "game/web/node_modules/",
+    "game/web/dist/",
+    "game/api/.venv/",
     "**/__pycache__/"
   ]
 }

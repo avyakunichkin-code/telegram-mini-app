@@ -1,144 +1,16 @@
-# ТВОЙ ХОД — игра по финансовой грамотности
+# GAME / PLAN
 
-**PWA и web** — primary каналы; **Telegram Mini App** — secondary ([ADR-012](docs/decisions/ADR-012-primary-channels-pwa-web-over-tma.md)). Периоды («месяц»), подушка, обязательства, события, инвестиции и страховки MVP.
+Два самостоятельных продукта в одном репозитории.
 
-[![Deploy on Render](https://img.shields.io/badge/Deploy%20on-Render-blue?logo=render)](https://render.com)
-[![GitHub Pages](https://img.shields.io/badge/Hosted%20on-GitHub%20Pages-blue?logo=github)](https://avyakunichkin-code.github.io/telegram-mini-app/)
-[![Python](https://img.shields.io/badge/Python-3.14-blue?logo=python)](https://python.org)
-[![FastAPI](https://img.shields.io/badge/FastAPI-0.115-blue?logo=fastapi)](https://fastapi.tiangolo.com/)
-[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-18-blue?logo=postgresql)](https://postgresql.org)
+- [ТВОЙ ХОД — GAME](game/README.md): игра финансовой грамотности.
+- [ТВОЙ ПЛАН — PLAN](plan/README.md): семейный финансовый чекап.
+- [Общие библиотеки](shared/README.md): финансовое ядро, инфраструктура и примитивы.
 
----
+Открывай game/ или plan/ отдельным проектом в Codex.
+[Архитектура](ARCHITECTURE.md) · [Правила](AGENTS.md) · [Документация](docs/README.md).
 
-## Документация и онбординг
-
-| Что | Где |
-|-----|-----|
-| **Свод принципов (вердикт)** | [`CONVENTIONS.md`](CONVENTIONS.md) · гейт: `py -3 scripts/check_conventions.py` |
-| Карта `docs/` (foundation, specs, plans, backlog) | [`docs/README.md`](docs/README.md) |
-| Быстрый контекст для разработчиков и агентов | [`CLAUDE.md`](CLAUDE.md) |
-| Конвейер idea → spec → plan → tasks | [`docs/DOCUMENTATION_SYSTEM.md`](docs/DOCUMENTATION_SYSTEM.md) |
-| Продукт и экономика MVP | [`docs/foundation/SPEC_PRODUCT.md`](docs/foundation/SPEC_PRODUCT.md) |
-
-Идея и пороги баланса MVP (черновик): [`docs/vision/ideas/game-balance-thresholds-and-constraints.md`](docs/vision/ideas/game-balance-thresholds-and-constraints.md).
-
----
-
-## Возможности (текущий MVP)
-
-- JWT-авторизация (логин и пароль)
-- Старт **только Game** (`save_kind=game`) из каталога **`game_starter_templates`**. Режим Plan **снят** ([ADR-013](docs/decisions/ADR-013-game-only-drop-plan-mode.md))
-- Пошаговые периоды без таймера: «Завершить ход» запускает `process_period_end`
-- Зарплата **раз в период** по кнопке; не забрал до закрытия — за период не повторяется
-- Подушка безопасности, активы и обязательства из шаблонов БД, **два** события с выбором на период
-- Инвестиции MVP: депозит (капитализация), облигации (купоны на cash)
-- Страховки MVP: покупка и ежемесячная премия
-- Прогрессия: **tier событий** от `period_index`; character XP/level сняты ([ADR-003](docs/decisions/ADR-003-remove-character-progression.md)); достижения — backlog M12
-- Интеграция Telegram Web App (тема, viewport)
-
-Подробнее по эндпоинтам и папкам: [`CLAUDE.md`](CLAUDE.md).
-
----
-
-## Архитектура репозитория
-
-### Backend (`backend/`)
-
-- `backend/main.py` — FastAPI, проверка схемы PostgreSQL, идемпотентные сиды и роутеры; схема меняется SQL-миграциями (без Alembic)
-- `backend/app/models.py` — профили (`save_kind`, шаблон старта), финансы, события, инвестиции, страховки
-- `backend/app/game/session.py` — активная партия и статус сессии (active | defeated)
-- `backend/app/game/period.py` — экономика закрытия периода: конвейер этапов `process_period_end` (активы → обязательства → расходы → страховки → инвестиции → поражение → потребности → снимок)
-- `backend/app/services/period/close.py` — «Закрыть месяц» (`POST /api/game/time/next`): lock профиля, идемпотентность, replay после поражения
-
-### Frontend (`frontend-react/`)
-
-- React 18 + Vite, `@telegram-apps/telegram-ui`, React Router
-- [`frontend-react/src/hooks/useGame.js`](frontend-react/src/hooks/useGame.js) — обзор, время, переход периода, очередь событий
-- [`frontend-react/src/components/GameScreen.jsx`](frontend-react/src/components/GameScreen.jsx) — основной игровой экран
-- [`frontend-react/README.md`](frontend-react/README.md) — скрипты, деплой на GitHub Pages
-
----
-
-## Локальный запуск
-
-**Windows, с нуля одной командой:** `powershell -ExecutionPolicy Bypass -File scripts\dev-setup.ps1` — подробно в [`docs/ops/LOCAL_DEV.md`](docs/ops/LOCAL_DEV.md) (Python 3.14, PostgreSQL 18).
-
-### Backend
-
-Из каталога `backend`:
-
-```bash
-pip install -r requirements.txt
-```
-
-Переменные окружения (пример): `DATABASE_URL`, `SECRET_KEY`.
-
-```bash
-python main.py
-```
-
-Применение SQL-миграций: `bash backend/scripts/db.sh migrate` (нужны `psql` и `DATABASE_URL`).
-
-### Frontend
-
-Из каталога `frontend-react`:
-
-```bash
-npm install
-npm run dev
-```
-
-Сборка: `npm run build`. Превью сборки: `npm run preview`.
-
----
-
-## Игровая механика (кратко)
-
-- **Закрытие периода** списывает обслуживание активов, платежи по обязательствам (при нехватке cash — просрочка без штрафов MVP), базовые расходы «жизни», премии страховок и начисляет инвестдоход по правилам продукта
-- **Победа:** Victory v2 оценивает цепочку целей из конфигурации стартового шаблона; результат доступен в `GET /api/finance/overview`.
-- **Поражение:** три подряд периода с отрицательным **`cash`** после закрытия периода
-- Финансовый «рейтинг» в overview ([`docs/specs/SPEC_ANALYTICS.md`](docs/specs/SPEC_ANALYTICS.md)) не управляет выпадением событий по уровню персонажа
-
----
-
-## Миграции БД
-
-Alembic не используется. Актуальная схема — DDL-baseline и идемпотентные SQL-инкременты в [`backend/migrations/`](backend/migrations/) (исторические инкременты — в `archive/`, см. [`backend/migrations/README.md`](backend/migrations/README.md)).
-
-Запуск (нужны `psql` и `DATABASE_URL`):
-
-```bash
-export DATABASE_URL="postgresql://..."
-bash backend/scripts/db.sh migrate
-```
-
----
-
-## Деплой (Pre-Alpha / prod)
-
-Пошагово: **[`docs/ops/DEPLOY.md`](docs/ops/DEPLOY.md)** — свой домен `app.*` + API `api.*`, Render без cold start, GitHub Actions, BotFather, smoke.
-
-Кратко:
-
-| Слой | Куда |
-|------|------|
-| API + PostgreSQL | Render ([`render.yaml`](render.yaml), план Starter+) |
-| SPA + лендинг | GitHub Pages (workflow [`.github/workflows/deploy-app.yml`](.github/workflows/deploy-app.yml)) |
-
-Переменные сборки фронта: `VITE_API_BASE_URL`, `VITE_BASE_PATH` — см. [`frontend-react/.env.example`](frontend-react/.env.example).  
-Ручной деплой: `cd frontend-react && npm run deploy` (после export env).
-
----
-
-## Стек технологий
-
-| Слой | Технологии |
-|------|-------------|
-| Backend | FastAPI, SQLAlchemy 2.1, PostgreSQL (`psycopg` 3), JWT (`PyJWT`), uvicorn |
-| Frontend | React 18, Vite 8, `@telegram-apps/telegram-ui`, `@twa-dev/sdk`, axios, React Router |
-
----
-
-## Лицензия и вклад
-
-См. репозиторий. Для изменений контрактов API синхронизируйте [`frontend-react/src/api.js`](frontend-react/src/api.js) и вызовы в хуках/экранах (согласовано с [`CLAUDE.md`](CLAUDE.md)).
+Из папки продукта: npm.cmd run dev, npm.cmd run build, npm.cmd run check.
+API запускается отдельно: node ../scripts/project.mjs game api (или plan api).
+Сначала установи зависимости web и API по их lock/requirements; подробности в README продукта.
+Для одновременных изменений используй отдельные Git worktree и окружения.
+Коммиты и публикации миграцией не выполняются.

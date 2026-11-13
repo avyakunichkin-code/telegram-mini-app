@@ -32,4 +32,4 @@ aliases:
 
 ## Связанные слои
 
-[[docs/specs/_index|Specs]] · [[docs/foundation/SPEC_PRODUCT|SPEC_PRODUCT]]
+[[game/docs/specs/_index|Specs]] · [[game/docs/foundation/SPEC_PRODUCT|SPEC_PRODUCT]]

@@ -1,0 +1,13 @@
+{
+  "name": "tvoy-plan",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "node ../scripts/project.mjs plan dev",
+    "dev:api": "node ../scripts/project.mjs plan api",
+    "smoke": "node ../scripts/smoke-projects.mjs plan",
+    "check": "node ../scripts/project.mjs plan check",
+    "build": "node ../scripts/project.mjs plan build",
+    "design-lab:build-nav": "node scripts/build-design-lab.mjs"
+  }
+}

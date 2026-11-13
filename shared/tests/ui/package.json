@@ -1,0 +1,12 @@
+{
+  "name": "shared-ui-contract",
+  "private": true,
+  "type": "module",
+  "scripts": { "test": "node --test *.test.mjs" },
+  "devDependencies": {
+    "@vitejs/plugin-react": "6.0.1",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
+    "vite": "8.0.10"
+  }
+}

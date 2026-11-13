@@ -1,11 +1,17 @@
 ---
 name: review-change
-description: Review a scoped diff for reproducible correctness, contract and project-process regressions; supports separate economy, balance and MQX passes.
+description: Review a scoped diff for reproducible correctness, contract and process regressions in the selected product or shared code.
 ---
 
 # review-change
 
-Пример: «проверь diff перед merge». Не primary: написать фичу.
-Прочитай [роли](../../../docs/ai/CODEX-ARCHITECTURE.md); получи diff и результаты проверок, не меняй файлы. Проверяй только новые actionable проблемы с file/scenario/consequence. Существенный риск → adversarial pass: null, повтор, порядок, транзакции, проигнорированное событие, ошибка сети. Economy-reviewer требует зелёного backend pytest для логики/данных; economy-balance-runner сравнивает симуляцию, не код; mqx-ui-reviewer сверяет размер изменения и lab/prod/canon/человеческое approval. Делегируй только при разрешении клиента и необходимости изоляции; передай минимальный контекст, не готовый ответ. Нет независимого запуска — честно назови self-review. Verdict PASS/CONCERNS/NEEDS REVISION с проверками и пробелами.
+Определи продукт и применимые правила через [маршрут](../../../docs/engineering/CODEX-PROCESSES.md).
+Получи diff и результаты проверок; не меняй файлы в review. Отмечай новые проблемы
+с файлом, сценарием и последствием; проверяй null, повтор, порядок, транзакции,
+ошибки сети по риску. Для GAME экономики/UI применяй его локальные инварианты и
+MQX approval/canon; для PLAN — его контракт и дизайн. Общий контракт проверяй у
+реальных потребителей. Вердикт PASS / CONCERNS / NEEDS REVISION с пробелами.
+Независимый проход запускай только когда он нужен и разрешён действующими правилами
+клиента. Без него называй результат self-review. Роль и тест не заменяют человека.
 
-Общие границы и готовность: [AGENTS.md](../../../AGENTS.md). Читай только источники затронутой области.
+Общие границы: [AGENTS.md](../../../AGENTS.md).

@@ -1,15 +1,15 @@
-// Раздаёт packages/cookie-consent/cookie-consent.js по всем сайтам. `--check` — только проверка (для CI).
+// Раздаёт shared/packages/cookie-consent/cookie-consent.js по всем сайтам. `--check` — только проверка (для CI).
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
-const src = path.join(root, 'packages/cookie-consent/cookie-consent.js');
+const src = path.join(root, 'shared/packages/cookie-consent/cookie-consent.js');
 const targets = [
-  'landing/site/cookie-consent.js',
-  'sites/tvoy-plan-landing/cookie-consent.js',
-  'apps/plan-web/public/cookie-consent.js',
-  'frontend-react/public/cookie-consent.js',
+  'game/landing/site/cookie-consent.js',
+  'plan/landing/site/cookie-consent.js',
+  'plan/web/public/cookie-consent.js',
+  'game/web/public/cookie-consent.js',
 ];
 const check = process.argv.includes('--check');
 const want = fs.readFileSync(src);

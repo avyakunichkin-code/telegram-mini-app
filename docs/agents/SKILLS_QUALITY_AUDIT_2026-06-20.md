@@ -12,11 +12,11 @@ aliases:
 ---
 # Аудит качества скиллов — 2026-06-20
 
-> **Archived 2026-07-01.** Актуальная политика: [release-ready-quality.md](../../.claude/skills/_shared/release-ready-quality.md), [skill-responsibility-matrix.md](../../.claude/skills/_shared/skill-responsibility-matrix.md), [catalog.yaml](../../.claude/skills/catalog.yaml). История cleanup: [LEGACY_NOISE_AUDIT_2026-06-20.md](LEGACY_NOISE_AUDIT_2026-06-20.md).
+> **Archived 2026-07-01.** Актуальная политика: [release-ready-quality.md](../engineering/CODEX-PROCESSES.md), [skill-responsibility-matrix.md](../engineering/CODEX-PROCESSES.md), [catalog.yaml](../engineering/CODEX-PROCESSES.md). История cleanup: [LEGACY_NOISE_AUDIT_2026-06-20.md](LEGACY_NOISE_AUDIT_2026-06-20.md).
 
 **Цель:** соответствие `quality-rubric.md` (G1–G6), чёткие границы ответственности, вызов только уместных primary, bar **release-ready** (не набросок).
 
-**Static-check:** `node .claude/skills/skill-test/_static-check.mjs` → 30 COMPLIANT.
+**Исторический Static-check (снятый контур, не запускать):** на дату аудита → 30 COMPLIANT; это не результат Codex-checker.
 
 ---
 
@@ -24,13 +24,13 @@ aliases:
 
 | Файл | Назначение |
 |------|------------|
-| [`.claude/skills/_shared/release-ready-quality.md`](../../.claude/skills/_shared/release-ready-quality.md) | Bar merge-ready; чеклист; draft-only исключения |
-| [`.claude/skills/_shared/skill-responsibility-matrix.md`](../../.claude/skills/_shared/skill-responsibility-matrix.md) | Когда primary / When NOT / subagents |
-| [`.claude/skills/_shared/clarify-first.md`](../../.claude/skills/_shared/clarify-first.md) | STOP при неясности; AskUserQuestion до implement |
-| [`.claude/skills/_shared/delivery-workflow.md`](../../.claude/skills/_shared/delivery-workflow.md) | Думаем → Уточняем → Планируем → Делаем |
-| [`.claude/skills/_shared/visual-assets-policy.md`](../../.claude/skills/_shared/visual-assets-policy.md) | Иконки/фоны: согласовать формат → сгенерировать → в репо |
+| [CODEX-PROCESSES.md](../engineering/CODEX-PROCESSES.md) | Bar merge-ready; чеклист; draft-only исключения |
+| [CODEX-PROCESSES.md](../engineering/CODEX-PROCESSES.md) | Когда primary / When NOT / subagents |
+| [CODEX-PROCESSES.md](../engineering/CODEX-PROCESSES.md) | STOP при неясности; AskUserQuestion до implement |
+| [CODEX-PROCESSES.md](../engineering/CODEX-PROCESSES.md) | Думаем → Уточняем → Планируем → Делаем |
+| [engineering-notes.md](../../game/docs/engineering/codex-knowledge/engineering-notes.md) | Иконки/фоны: согласовать формат → сгенерировать → в репо |
 
-Обновлены: `quality-rubric.md` (**G5**, **G6**), `.claude/rules/router.md`, блок «Стандарт качества и вызов» во **всех** product/meta skills.
+Обновлены: `quality-rubric.md` (**G5**, **G6**), `source-id:rules/router.md`, блок «Стандарт качества и вызов» во **всех** product/meta skills.
 
 ---
 
@@ -88,7 +88,7 @@ aliases:
 |---|-----|--------------|
 | 1 | ~~`catalog.yaml` без `read_if`~~ | **Закрыто Sprint B 2026-06-20** — 7 skills tiered |
 | 2 | Не все deferred skills имеют When NOT | Добавить по мере использования |
-| 3 | ~~`_inject-quality-block.mjs`, `_patch-workflow-block.mjs`~~ | **Закрыто Sprint F** — `_maintain.mjs` + [`skill-test/README.md`](../../.claude/skills/skill-test/README.md) |
+| 3 | ~~`_inject-quality-block.mjs`, `_patch-workflow-block.mjs`~~ | **Закрыто Sprint F** — `_maintain.mjs` + [`skill-test/README.md`](../../.agents/skills/codex-config-audit/SKILL.md) |
 | 4 | ~~Behavioral spec `/skill-test category`~~ | **Частично 2026-06-20:** core trilogy `/skill-test spec` → PASS; отчёты в `results/skill-test-spec-*-2026-06-20.md` |
 
 **Закрыто pass 2 (2026-06-20):** clarify-first, delivery-workflow, visual-assets-policy, G6, When NOT на core skills, UI anti-placeholder.
@@ -122,9 +122,9 @@ aliases:
 
 | Артефакт | Назначение |
 |----------|------------|
-| [`.github/workflows/skills-check.yml`](../../.github/workflows/skills-check.yml) | PR/push → `node .claude/skills/skill-test/_static-check.mjs` + `_context-check.mjs` |
+| [`.github/workflows/skills-check.yml`](../../.github/workflows/skills-check.yml) | PR/push → `node scripts/codex/check.mjs` + `_context-check.mjs` |
 | `catalog.yaml` `last_context` | 11 tiered skills → `2026-06-20` / `COMPLIANT` |
-| `db-baselines-and-migrations/SKILL.md` | `backend/main.py` в «Куда писать»; **Дальше:** + next_skill |
+| `db-baselines-and-migrations/SKILL.md` | `game/api/main.py` в «Куда писать»; **Дальше:** + next_skill |
 
 **Локально:** те же команды из корня репо. Context-check: **45 COMPLIANT, 0 WARNINGS** (2026-06-20).
 
@@ -136,9 +136,9 @@ aliases:
 |----------|------------|
 | [`TASK_SLICE.md`](../templates/TASK_SLICE.md) | frontmatter **`read_if_when`** + bullet Read if |
 | [`PLAN_FEATURE.md`](../templates/PLAN_FEATURE.md) | колонка Read if (`when`) в vertical slices |
-| [`_resolve-read-if.mjs`](../../.claude/skills/skill-test/_resolve-read-if.mjs) | `node … <skill>` → таблица `when` / paths для MQ-* |
+| [`_resolve-read-if.mjs`](../../.agents/skills/codex-config-audit/SKILL.md) | `node … <skill>` → таблица `when` / paths для MQ-* |
 | [`AI_ONBOARDING.md`](AI_ONBOARDING.md) | вход для новой сессии агента |
-| `.claude/rules/router.md` § Subagents | когда запускать / не запускать subagents |
+| `source-id:rules/router.md` § Subagents | когда запускать / не запускать subagents |
 | CI `skills-check.yml` | + `_category-check.mjs` (41 COMPLIANT, 0 WARNINGS) |
 
 ---
@@ -147,12 +147,12 @@ aliases:
 
 | Артефакт | Назначение |
 |----------|------------|
-| [`specs/_shared/SMOKE_STUB.md`](../../.claude/skills/specs/_shared/SMOKE_STUB.md) | Общий smoke-протокол для 21 stub spec |
-| [`specs/README.md`](../../.claude/skills/specs/README.md) | Specs ≠ SKILL.md; когда full vs smoke |
-| [`_maintain.mjs`](../../.claude/skills/skill-test/_maintain.mjs) | inject-quality · patch-workflow · sync-smoke-specs · check-archived |
-| [`_archived-check.mjs`](../../.claude/skills/skill-test/_archived-check.mjs) | `disable-model-invocation` + banner + catalog (11 COMPLIANT) |
+| [`specs/_shared/SMOKE_STUB.md`](../engineering/CODEX-PROCESSES.md) | Общий smoke-протокол для 21 stub spec |
+| [`specs/README.md`](../engineering/CODEX-PROCESSES.md) | Specs ≠ SKILL.md; когда full vs smoke |
+| [`_maintain.mjs`](../../.agents/skills/codex-config-audit/SKILL.md) | inject-quality · patch-workflow · sync-smoke-specs · check-archived |
+| [`_archived-check.mjs`](../../.agents/skills/codex-config-audit/SKILL.md) | `disable-model-invocation` + banner + catalog (11 COMPLIANT) |
 | `after-edit-verify.mjs` | Throttle 2 min/bucket; dedupe hints; seeds block merged |
-| `.claude/hooks/.hint-throttle.json` | Local state (gitignored) |
+| `source-id:hooks/.hint-throttle.json` | Local state (gitignored) |
 
 ---
 
@@ -160,7 +160,7 @@ aliases:
 
 | Решение | Артефакты |
 |---------|-----------|
-| Primary = **PWA + web** | [`ADR-012`](../decisions/ADR-012-primary-channels-pwa-web-over-tma.md), `SPEC_PRODUCT` §1.1 |
+| Primary = **PWA + web** | [`ADR-012`](../../game/docs/decisions/ADR-012-primary-channels-pwa-web-over-tma.md), `SPEC_PRODUCT` §1.1 |
 | Release gate | **`release-web`** (guardrails + PWA/web smoke W1–W9) |
 | TMA secondary | **`release-tma`** → deprecated alias; **`telegram-mini-app-runtime`** — optional T1/T2 |
 | Agent docs | `AI_ONBOARDING` §2, `game-lexicon` Channels, router deferred list |
