@@ -3615,8 +3615,8 @@ button.mqx-finance-chip.mqx-finance-chip--action:focus-visible {
 @media (max-width: 23.75rem) { .mqx-close-clear .mqx-close-clear__scroll { padding: 1rem 1rem 0; } .mqx-close-clear__footer { padding: .625rem 1rem 1rem; } .mqx-close-clear__operations li { padding: .625rem 0; } .mqx-close-clear__title { font-size: 1.5rem; margin: .625rem 0 .75rem; } }
 /*
  * Финал партии ★ BG-2 «настольная игра про деньги» (ADR-014).
- * Канон: game/design-lab/board-game/screens-round/ («Финал · Победа», «Финал · Поражение»),
- * game/design-lab/run-finale/APPROVED.md. Кнопки — .mqx-bg-btn / .mqx-bg-cta из board.css.
+ * Канон: design-lab/board-game/screens-round/ («Финал · Победа», «Финал · Поражение»),
+ * design-lab/run-finale/APPROVED.md. Кнопки — .mqx-bg-btn / .mqx-bg-cta из board.css.
  * Роли цвета: золото — клетка финиша и деньги, фиолет — действие, красный — только факт риска.
  */
 .mqx-run-finale-root {
@@ -7295,8 +7295,8 @@ body [class*='modal'] {
 }
 /* ==========================================================================
  * ★ BG-2 «Капитал» — стиль «настольная игра» (ADR-014).
- * Канон: game/design-lab/board-game/screens-round/ (Капитал · Детали / Действия),
- * game/design-lab/capital-page/APPROVED.md. Токены v2 — tokens.css (как в board.css).
+ * Канон: design-lab/board-game/screens-round/ (Капитал · Детали / Действия),
+ * design-lab/capital-page/APPROVED.md. Токены v2 — tokens.css (как в board.css).
  * Роли: --mq-turn — действие, --mq-coin — вложения/деньги, --mq-gain — плюс и имущество,
  * --mq-risk — только долги и риск. Объём (нижняя тень) — только у нажимаемого.
  * ========================================================================== */
@@ -7846,8 +7846,8 @@ body [class*='modal'] {
   border: 1px solid color-mix(in srgb, var(--mqx-ink) 10%, transparent);
 }
 /*
- * Аналитика ★ BG-2 «настольная игра» (ADR-014). Канон: game/design-lab/analytics/APPROVED.md,
- * раунд game/design-lab/board-game/screens-round/ (экран «Аналитика").
+ * Аналитика ★ BG-2 «настольная игра» (ADR-014). Канон: design-lab/analytics/APPROVED.md,
+ * раунд design-lab/board-game/screens-round/ (экран «Аналитика").
  * Сначала вывод (счёт + подушка), потом из чего он. Страница и Монетка — классы ★ BG-1 из board.css.
  */
 /* —— Шапка: заголовок + фишка хода —— */
@@ -9224,8 +9224,8 @@ body.mqx-events-overlay-open .mqx-tab-page__scroll {
 }
 /*
  * ★ BG-2 «Событие» — карта, вытянутая из колоды (ADR-014).
- * Канон: game/design-lab/board-game/APPROVED.md (BG-2), screens-round/ «Событие»;
- * структура L3 — game/design-lab/events/APPROVED.md.
+ * Канон: design-lab/board-game/APPROVED.md (BG-2), screens-round/ «Событие»;
+ * структура L3 — design-lab/events/APPROVED.md.
  * Роли цвета: --mq-turn — карта и действие, --mq-risk — минус денег,
  * --mq-gain — плюс, --mq-coin — сумма сделки. Тёмная тема — через токены --mq-*.
  */
@@ -9424,7 +9424,7 @@ button.mqx-events-choice:focus-visible,
   height: 44px;
   object-fit: contain;
 }
-/* E5-B — game/design-lab/events/tails-round/APPROVED.md: пузырь скроллится внутри */
+/* E5-B — design-lab/events/tails-round/APPROVED.md: пузырь скроллится внутри */
 .mqx-events-card--l3 .mqx-events-card__bubble {
   flex: 1;
   min-width: 0;
@@ -10155,7 +10155,7 @@ button.mqx-events-choice:disabled {
 }
 /*
  * Дашборд ★ BG-1 «настольная игра про деньги» (ADR-014).
- * Канон: game/design-lab/board-game/APPROVED.md, раунд hybrid-round/.
+ * Канон: design-lab/board-game/APPROVED.md, раунд hybrid-round/.
  * Лёгкий стиль: края 1.5px, объём (нижняя тень) только у нажимаемого.
  * Роли цвета: --mq-turn — действие, --mq-coin — деньги/награды/финиш, --mq-gain — плюс, --mq-risk — только риск.
  */
@@ -10720,7 +10720,7 @@ button.mqx-events-choice:disabled {
   background: var(--mq-coin-soft);
 }
 /* —— Действия хода ★ BG-3: «Зарплата» — главная строка, ниже 3 залитые фишки ——
-   Канон: game/design-lab/board-game/frames-round/ (вариант E). Рамок нет — заливка и нижняя кромка. */
+   Канон: design-lab/board-game/frames-round/ (вариант E). Рамок нет — заливка и нижняя кромка. */
 .mqx-bg-acts {
   display: grid;
   gap: var(--mq-sp-3);
@@ -10941,7 +10941,7 @@ button.mqx-events-choice:disabled {
   padding: var(--mq-sp-1);
 }
 /* —— ★ BG-3 (2026-10-25): одна рамка на уровень ——
-   Канон: game/design-lab/board-game/APPROVED.md, раунд frames-round/ (вариант E).
+   Канон: design-lab/board-game/APPROVED.md, раунд frames-round/ (вариант E).
    Край и кромка — только у карты хода; деньги, цель и потребности лежат на поле,
    группу держат заголовок и отступ. Плашка «N событий» — заливка без своей рамки. */
 .mqx-bg-events,
@@ -11007,7 +11007,7 @@ button.mqx-events-choice:disabled {
 .mqx-needs-recovery__risk p{color:inherit}
 /*
  * Оболочка и экраны до партии ★ BG-2: Меню (вкладка и старт), Вход / Регистрация, Выбор жизни.
- * Канон: game/design-lab/board-game/screens-round/ (Меню, Вход, Выбор жизни), game/design-lab/pre-game-shell/APPROVED.md.
+ * Канон: design-lab/board-game/screens-round/ (Меню, Вход, Выбор жизни), design-lab/pre-game-shell/APPROVED.md.
  * Токены v2 (ADR-014): --mq-turn — действие, --mq-coin — деньги, --mq-gain — плюс; объём только у нажимаемого.
  * Главная кнопка — .mqx-bg-cta из board.css (+ .mqx-pg-cta).
  */
@@ -11366,7 +11366,7 @@ button.mqx-events-choice:disabled {
 }
 /*
  * Стиль «Чернильный край» (необрутализм A) — слой поверх ★ BG-1…BG-3.
- * Lab: game/design-lab/board-game/neobrutal-a-round/ (K1, сегмент-шов, чипы и реплика без обводки).
+ * Lab: design-lab/board-game/neobrutal-a-round/ (K1, сегмент-шов, чипы и реплика без обводки).
  * Включается <html data-mqx-style="ink"> (utils/mqxStyle.js); без атрибута — прежний вид.
  *
  * Правило: чернильная тень — у того, что нажимается (нажатие вдавливает фишку в поле);

@@ -9,6 +9,7 @@ from ...events.chains import (
     resolve_choice_effects_for_definition,
 )
 from ...events.choice_impacts import build_choice_impacts
+from ...events.future_payments import preview_future_payments
 from ...events.choice_snapshot import (
     choice_available_for_profile,
     ensure_event_instance_choice_snapshot,
@@ -16,7 +17,7 @@ from ...events.choice_snapshot import (
 )
 from ...events.constants import EVENTS_UNLOCK_INTRO_KEY
 from ...events.taxonomy import event_domain
-from ...game.rules import MIN_PERIOD_INDEX_FOR_GAME_EVENTS
+from ...game.rules import MIN_PERIOD_INDEX_FOR_GAME_EVENTS, min_event_period
 from ...models import EventChoice, EventDefinition, EventInstance, GameProfile
 from ...needs.engine import effective_needs_delta, needs_values_from_profile, parse_needs_delta
 from ...needs.set_point import MODEL_SET_POINT
@@ -130,6 +131,7 @@ def serialize_instance_rows(
                 row["insurance_claim"] = True
             if profile is not None:
                 row["impacts"] = build_choice_impacts(db, profile, effects, chain_ctx=chain_ctx)
+                row["future_payments"] = preview_future_payments(db, profile, effects, chain_context=chain_ctx)
                 needs_cfg = _needs_config_for_profile(db, profile)
                 if needs_cfg and effects.get("needs_delta") is not None:
                     try:
@@ -165,7 +167,7 @@ def serialize_instance_rows(
 def build_pending_events_payload(db: Session, profile: GameProfile) -> dict:
     _ensure_seed_events(db)
 
-    if int(profile.period_index or 1) < MIN_PERIOD_INDEX_FOR_GAME_EVENTS:
+    if int(profile.period_index or 1) < min_event_period(profile):
         return {"events": [], "event": None}
 
     o2_intro = _o2_guidance_replaces_events_intro(db, profile)

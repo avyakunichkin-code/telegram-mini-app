@@ -1,13 +1,38 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Request, Response
 from sqlalchemy.orm import Session
 
 from ..database import get_db
 from ..models import User
 from ..schemas import UserRegister, UserLogin, Token
-from ..auth import get_password_hash, password_needs_rehash, verify_password, create_access_token
+from ..auth import get_password_hash, password_needs_rehash, verify_password, create_access_token, get_current_user
 from ..auth_username import allocate_username_from_email
 
 router = APIRouter(prefix="/api", tags=["auth"])
+
+
+@router.post("/auth/guest", response_model=Token)
+def guest(request: Request, response: Response, resume_only: bool = False, db: Session = Depends(get_db)):
+    from ..services.guest_auth import COOKIE, MAX_AGE, resume_or_create, token_for
+    from ..services.guest_auth import session_for, check_creation_rate
+    capability = request.cookies.get(COOKIE)
+    if not session_for(db, capability):
+        if resume_only:
+            raise HTTPException(401, "Guest session expired")
+        check_creation_rate(request.client.host if request.client else "unknown")
+    user, capability = resume_or_create(db, request.cookies.get(COOKIE))
+    local = request.url.hostname in {"localhost", "127.0.0.1", "testserver"}
+    response.set_cookie(COOKIE, capability, max_age=MAX_AGE, httponly=True,
+                        secure=not local, samesite="lax" if local else "none", path="/api/auth/guest")
+    return token_for(user)
+
+
+@router.post("/auth/guest/claim", response_model=Token)
+def claim_guest(data: UserRegister, request: Request, response: Response,
+                user=Depends(get_current_user), db: Session = Depends(get_db)):
+    from ..services.guest_auth import COOKIE, claim
+    result = claim(db, user, request.cookies.get(COOKIE), data)
+    response.delete_cookie(COOKIE, path="/api/auth/guest")
+    return result
 
 
 @router.post("/register", response_model=Token)

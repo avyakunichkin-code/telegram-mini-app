@@ -5,6 +5,8 @@ const DEFAULT_MECHANICS = Object.freeze({
   capital_insurance: true,
   capital_property: true,
   capital_liabilities: true,
+  capital_car: true,
+  capital_mortgage: true,
 });
 
 function normalizeMechanics(m) {
@@ -16,6 +18,8 @@ function normalizeMechanics(m) {
     capital_insurance: m.capital_insurance === true,
     capital_property: m.capital_property === true,
     capital_liabilities: m.capital_liabilities === true,
+    capital_car: m.capital_car === true,
+    capital_mortgage: m.capital_mortgage === true,
   };
 }
 
@@ -48,6 +52,8 @@ const CAPITAL_MECHANIC_KEYS = [
   'capital_insurance',
   'capital_property',
   'capital_liabilities',
+  'capital_car',
+  'capital_mortgage',
 ];
 
 /** `open` | `locked` | `hidden` — шаблон vs effective для раздела капитала. */
@@ -62,6 +68,10 @@ export function capitalSectionState(overview, mechanicKey) {
 
 /** Подсказка для заблокированного раздела (цели победы, без XP/уровня). */
 export function capitalLockHint(overview) {
+  const nextPeriod = overview?.mechanics_next_unlock_period;
+  if (nextPeriod) {
+    return `Следующий раздел откроется на ходу ${nextPeriod}.`;
+  }
   const victory = overview?.victory;
   if (!victory) {
     return 'Раздел откроется после предыдущих шагов сценария — см. цели на главной.';

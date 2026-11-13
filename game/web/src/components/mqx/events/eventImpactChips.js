@@ -45,6 +45,8 @@ function impactChipText(imp) {
       return `Подушка ${signed(delta, formatRub(delta))}`;
     case 'burn':
       return `Расходы ${signed(delta, formatRub(delta))}/ход`;
+    case 'salary':
+      return `Зарплата ${signed(delta, formatRub(delta))}/мес`;
     case 'insurance_payout':
       return `Выплата +${formatRub(delta)}`;
     case 'coin':

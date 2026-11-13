@@ -151,6 +151,7 @@ def run_balance_simulation(
     needs_model: str | None = None,
     needs_set_point: dict | None = None,
     observe_finale: Callable[..., None] | None = None,
+    guest_start: bool = False,
 ) -> dict[str, Any]:
     """Run simulation in isolated SQLite DB; return JSON-serializable report."""
 
@@ -187,6 +188,7 @@ def run_balance_simulation(
         username=f"bal_{uuid.uuid4().hex[:8]}",
         hashed_password=get_password_hash("secret"),
         email=f"bal_{uuid.uuid4().hex}@example.com",
+        is_guest=int(guest_start),
     )
     db.add(user)
     db.commit()
@@ -668,6 +670,7 @@ def run_balance_simulation(
                 "git_sha": _git_sha_short(),
                 "timestamp": datetime.now(timezone.utc).isoformat(),
                 "rng_seed": rng_seed,
+                "onboarding_version": 2 if guest_start else 1,
             },
             "summary": summary,
             "periods": period_rows,
@@ -730,6 +733,7 @@ def format_report_markdown(report: dict[str, Any]) -> str:
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description="Balance playtest simulation")
     parser.add_argument("--template", default=DEFAULT_TEMPLATE)
+    parser.add_argument("--guest-start", action="store_true", help="Version 2 guest start: events from period 1")
     parser.add_argument("--periods", type=int, default=DEFAULT_PERIODS)
     parser.add_argument(
         "--policy",
@@ -771,6 +775,7 @@ def main(argv: list[str] | None = None) -> int:
         rng_seed=seed,
         needs_model=args.needs_model,
         needs_set_point=args.needs_set_point,
+        guest_start=args.guest_start,
     )
 
     if args.out:

@@ -30,6 +30,8 @@ export default defineConfig({
   reporter: [['list'], ['html', { open: 'never', outputFolder: 'playwright-report' }]],
   use: {
     baseURL: E2E_WEB,
+    // Баннер cookie перекрывает кнопки у нижнего края — тесты стартуют с уже сделанным выбором.
+    storageState: { cookies: [], origins: [{ origin: E2E_WEB, localStorage: [{ name: 'cookie-consent-v1', value: JSON.stringify({ analytics: false, ts: 'e2e' }) }] }] },
     channel: 'chrome',
     locale: 'ru-RU',
     trace: 'retain-on-failure',

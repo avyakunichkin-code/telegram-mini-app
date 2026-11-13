@@ -48,7 +48,7 @@ from ..schemas import (
     VictoryOverview,
 )
 from ..game.rules import MVP_SAFETY_FUND_OBLIGATIONS_MULTIPLIER
-from ..victory.mechanics_progression import capital_flags_for_api, resolve_template_and_unlock
+from ..victory.mechanics_progression import capital_flags_for_api, next_unlock_period, resolve_template_and_unlock
 from ..starters.mechanics import resolve_profile_mechanics
 from ..victory.engine import evaluate_victory, parse_victory_config
 from ..victory.goals_store import override_config_goals_from_db
@@ -177,6 +177,8 @@ def build_finance_overview(db: Session, profile: GameProfile) -> FinanceOverview
         capital_insurance=mech["capital_insurance"],
         capital_property=mech["capital_property"],
         capital_liabilities=mech["capital_liabilities"],
+        capital_car=mech["capital_car"],
+        capital_mortgage=mech["capital_mortgage"],
     )
     eff_cap = capital_flags_for_api(victory_result.mechanics_effective)
     mechanics_effective_permissions = GameMechanicsPermissions(
@@ -184,6 +186,8 @@ def build_finance_overview(db: Session, profile: GameProfile) -> FinanceOverview
         capital_insurance=eff_cap["capital_insurance"],
         capital_property=eff_cap["capital_property"],
         capital_liabilities=eff_cap["capital_liabilities"],
+        capital_car=eff_cap["capital_car"],
+        capital_mortgage=eff_cap["capital_mortgage"],
     )
 
     victory_overview = VictoryOverview(
@@ -354,6 +358,11 @@ def build_finance_overview(db: Session, profile: GameProfile) -> FinanceOverview
         onboarding_step=str(getattr(profile, "onboarding_step", "farewell") or "farewell"),
         mechanics=mechanics_permissions,
         mechanics_effective=mechanics_effective_permissions,
+        mechanics_next_unlock_period=next_unlock_period(
+            mechanics_unlock,
+            {g.key for g in victory_result.goals if g.enabled and g.met},
+            int(profile.period_index or 1),
+        ),
         negative_periods_count=int(getattr(profile, "negative_periods_count", 0) or 0),
         period_close_preview=period_close_preview,
         profile_is_active=int(getattr(profile, "is_active", 1) or 0) == 1,

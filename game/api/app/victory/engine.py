@@ -429,11 +429,12 @@ def _finalize_with_mechanics(
     unlock_steps: list[dict[str, Any]],
     *,
     chain_mode: bool,
+    period_index: int | None = None,
 ) -> tuple[list[VictoryGoalResult], dict[str, bool], int, str | None]:
     requires_by_key = {
         str(g.get("key")): goal_requires_list(g) for g in raw_goals if isinstance(g, dict)
     }
-    effective = compute_mechanics_effective(template_cap, unlock_steps, set())
+    effective = compute_mechanics_effective(template_cap, unlock_steps, set(), period_index)
     chain_results = evaluated
     goals_met = 0
     current_key: str | None = None
@@ -442,7 +443,7 @@ def _finalize_with_mechanics(
         staged = _apply_availability(evaluated, requires_by_key, template_cap, effective)
         if chain_mode:
             chain_results, goals_met, current_key, chain_met_keys = _apply_chain_progression(staged)
-            new_effective = compute_mechanics_effective(template_cap, unlock_steps, chain_met_keys)
+            new_effective = compute_mechanics_effective(template_cap, unlock_steps, chain_met_keys, period_index)
             if pass_i > 0 and new_effective == effective:
                 effective = new_effective
                 break
@@ -456,7 +457,7 @@ def _finalize_with_mechanics(
 
     if chain_mode:
         chain_met_keys = {g.key for g in chain_results if g.enabled and g.met}
-        effective = compute_mechanics_effective(template_cap, unlock_steps, chain_met_keys)
+        effective = compute_mechanics_effective(template_cap, unlock_steps, chain_met_keys, period_index)
         staged = _apply_availability(evaluated, requires_by_key, template_cap, effective)
         chain_results, goals_met, current_key, _ = _apply_chain_progression(staged)
 
@@ -502,6 +503,7 @@ def evaluate_victory(
         template_cap,
         mechanics_unlock,
         chain_mode=chain_mode,
+        period_index=snap.period_index,
     )
 
     enabled_avail = [g for g in goal_results if g.enabled and g.available]

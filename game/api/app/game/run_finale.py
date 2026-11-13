@@ -1,12 +1,17 @@
 """Сборка payload экрана финала партии (GE1, V1 «Газета»)."""
 from __future__ import annotations
 
+import logging
+from collections import Counter, defaultdict
 from typing import Any
 
 from sqlalchemy.orm import Session
 
 from ..finance.expenses import compute_monthly_burn
 from ..models import (
+    EventChoice,
+    EventDefinition,
+    EventInstance,
     FinanceAsset,
     FinanceLiability,
     FinanceSalary,
@@ -15,12 +20,15 @@ from ..models import (
     InsurancePolicy,
     InvestmentPosition,
     PeriodEconomyClosing,
+    Transaction,
 )
 from ..schemas import (
     RunFinaleDecision,
     RunFinaleFact,
     RunFinaleMetric,
     RunFinalePayload,
+    RunFinaleRecap,
+    RunFinaleRecapDecision,
     RunFinaleSection,
 )
 from ..starters.template_presentation import _fmt_rub
@@ -30,6 +38,11 @@ from ..victory.goals_store import override_config_goals_from_db
 from ..victory.mechanics_progression import resolve_template_and_unlock
 from ..victory.seeds import DEFAULT_TEMPLATE_KEY
 from ..victory.snap import build_victory_evaluation_input
+
+logger = logging.getLogger(__name__)
+
+RECAP_DECISIONS_LABEL = "Самые крупные решения по счёту"
+RECAP_DECISIONS_LIMIT = 3
 
 TEMPLATE_KEY_TO_PERSONA_SLUG: dict[str, str] = {
     "mq_game_basic_v1": "student",
@@ -138,6 +151,63 @@ def _build_defeat_fact(profile: GameProfile, defeat_reason: str | None) -> RunFi
     balance = f"{sign}{_fmt_rub(abs(cash))} ₽"
     text = pack["fact_template"].format(balance=balance)
     return RunFinaleFact(title=pack["title"], text=text, tips=list(pack.get("tips") or []))
+
+
+def _collect_recap(db: Session, profile_id: int) -> RunFinaleRecap | None:
+    """Сумма — из фактической транзакции; effects_json мог измениться после партии."""
+    selected = (
+        db.query(EventInstance, EventChoice, EventDefinition)
+        .join(EventChoice, EventInstance.selected_choice_id == EventChoice.id)
+        .join(EventDefinition, EventInstance.definition_id == EventDefinition.id)
+        .filter(EventInstance.game_profile_id == profile_id, EventInstance.status == "selected")
+        .all()
+    )
+    amounts: dict[tuple[int, str], list[float]] = defaultdict(list)
+    for tx in db.query(Transaction).filter(
+        Transaction.game_profile_id == profile_id, Transaction.type == "event_cash"
+    ):
+        amounts[(int(tx.period_index), str(tx.description or ""))].append(float(tx.amount or 0))
+
+    def match_key(instance: EventInstance, choice: EventChoice) -> tuple[int, str]:
+        return (int(instance.period_index), f"Событие: {choice.title}")
+
+    same_text = Counter(match_key(instance, choice) for instance, choice, _ in selected)
+    candidates: list[tuple[EventInstance, EventChoice, EventDefinition, float]] = []
+    for instance, choice, definition in selected:
+        key = match_key(instance, choice)
+        # Связи транзакции с событием нет: неоднозначное совпадение лучше пропустить.
+        if same_text[key] != 1 or len(amounts[key]) != 1 or not amounts[key][0]:
+            continue
+        candidates.append((instance, choice, definition, amounts[key][0]))
+    if not candidates:
+        return None
+
+    candidates.sort(key=lambda c: (-abs(c[3]), int(c[0].period_index), int(c[0].id)))
+    top = sorted(
+        candidates[:RECAP_DECISIONS_LIMIT], key=lambda c: (int(c[0].period_index), int(c[0].id))
+    )
+    return RunFinaleRecap(
+        decisions_label=RECAP_DECISIONS_LABEL,
+        decisions=[
+            RunFinaleRecapDecision(
+                period_index=int(instance.period_index),
+                event_title=definition.title,
+                choice_title=choice.title,
+                cash_delta=round(amount, 2),
+            )
+            for instance, choice, definition, amount in top
+        ],
+    )
+
+
+def _build_recap(db: Session, profile_id: int) -> RunFinaleRecap | None:
+    """Разбор необязателен: его сбой не должен мешать показать финал."""
+    try:
+        with db.begin_nested():
+            return _collect_recap(db, profile_id)
+    except Exception:
+        logger.exception("Run finale recap failed profile_id=%s", profile_id)
+        return None
 
 
 def maybe_mark_victory_outcome(db: Session, profile: GameProfile, *, win_reached: bool) -> None:
@@ -330,4 +400,5 @@ def build_run_finale_payload(
         cushion_turns=cushion_months if monthly_burn > 0 else None,
         monthly_burn=round(monthly_burn, 2),
         decisions=decisions,
+        recap=_build_recap(db, profile.id),
     )

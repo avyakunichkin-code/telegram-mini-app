@@ -8,6 +8,8 @@ from sqlalchemy import text
 from sqlalchemy.orm import Session
 
 from app.finance.expense_defaults import expense_budget_for_template
+from app.starters.mechanics import BASIC_V1_MECHANICS
+from app.victory.mechanics_progression import DEFAULT_BASIC_UNLOCK
 from app.victory.seeds import VICTORY_CONFIG_BY_TEMPLATE_KEY, victory_config_json_for_template
 
 # Порядок по sort_order. ON CONFLICT обновляет blueprint_json — так смена needs.model доходит до живой БД на старте.
@@ -33,15 +35,8 @@ GAME_STARTER_TEMPLATE_SEEDS = [
             "monthly_salary": 62500,
             "assets": [],
             "liabilities": [],
-            "mechanics": {
-                "capital_invest": True,
-                "capital_insurance": False,
-                "capital_property": False,
-                "capital_liabilities": False,
-            },
-            "mechanics_unlock": [
-                {"after_goal": None, "grant": ["capital_flows", "capital_invest"]},
-            ],
+            "mechanics": dict(BASIC_V1_MECHANICS),
+            "mechanics_unlock": [dict(step) for step in DEFAULT_BASIC_UNLOCK],
             "needs": {
                 "enabled": True,
                 # ADR-015: износ рутиной + уровень жизни (SPEC_needs-set-point); параметры — дефолты spec.
@@ -120,7 +115,7 @@ GAME_STARTER_TEMPLATE_SEEDS = [
                 {"after_goal": None, "grant": ["capital_flows"]},
                 {"after_goal": "tutorial_cushion", "grant": ["capital_liabilities", "capital_invest"]},
                 {"after_goal": "tutorial_invest", "grant": ["capital_insurance"]},
-                {"after_goal": "tutorial_insurance", "grant": ["capital_property"]},
+                {"after_goal": "tutorial_insurance", "grant": ["capital_property", "capital_car", "capital_mortgage"]},
             ],
             "needs": {
                 "enabled": True,
@@ -208,7 +203,7 @@ GAME_STARTER_TEMPLATE_SEEDS = [
                 {"after_goal": None, "grant": ["capital_flows"]},
                 {"after_goal": "tutorial_cushion", "grant": ["capital_liabilities", "capital_invest"]},
                 {"after_goal": "tutorial_invest", "grant": ["capital_insurance"]},
-                {"after_goal": "tutorial_insurance", "grant": ["capital_property"]},
+                {"after_goal": "tutorial_insurance", "grant": ["capital_property", "capital_car", "capital_mortgage"]},
             ],
             "needs": {
                 "enabled": True,
@@ -300,7 +295,7 @@ GAME_STARTER_TEMPLATE_SEEDS = [
                 {"after_goal": None, "grant": ["capital_flows"]},
                 {"after_goal": "tutorial_cushion", "grant": ["capital_liabilities", "capital_invest"]},
                 {"after_goal": "tutorial_invest", "grant": ["capital_insurance"]},
-                {"after_goal": "tutorial_insurance", "grant": ["capital_property"]},
+                {"after_goal": "tutorial_insurance", "grant": ["capital_property", "capital_car", "capital_mortgage"]},
             ],
             "needs": {
                 "enabled": True,

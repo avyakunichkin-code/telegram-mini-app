@@ -18,6 +18,7 @@ includes:
 - chains/refinance_loan.yaml
 - chains/used_car.yaml
 - chains/freelance_project.yaml
+- student_progression.yaml
 - profiles.yaml
 - meta/unlock_intro.yaml
 - meta/cashflow_warning.yaml

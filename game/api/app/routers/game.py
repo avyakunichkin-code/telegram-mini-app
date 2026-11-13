@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Optional, Literal
 
 from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.orm import Session
@@ -39,14 +39,33 @@ from ..services.game.run_finale import (
     submit_run_feedback as service_submit_run_feedback,
 )
 from ..services.period.close import go_to_next_period as service_go_to_next_period
+from ..schemas import PlaytestSurveyIdentity, PlaytestSurveyState, PlaytestSurveySubmit
+from ..services.game.playtest_survey import survey_profile, survey_state, save_survey
 
 router = APIRouter(prefix="/api/game", tags=["game"])
+
+
+@router.get("/playtest-survey", response_model=PlaytestSurveyState)
+def get_playtest_survey(profile_id: int = Query(..., gt=0), survey_key: Literal["first_turns_v1", "first_turns_v2"] = "first_turns_v1",
+                       current_user=Depends(get_current_user), db: Session = Depends(get_db)):
+    return survey_state(db, survey_profile(db, current_user.id, profile_id), survey_key)
+
+
+@router.post("/playtest-survey/dismiss", response_model=PlaytestSurveyState)
+def dismiss_playtest_survey(payload: PlaytestSurveyIdentity, current_user=Depends(get_current_user), db: Session = Depends(get_db)):
+    return save_survey(db, current_user.id, payload.profile_id, None, survey_key=payload.survey_key)
+
+
+@router.post("/playtest-survey", response_model=PlaytestSurveyState)
+def submit_playtest_survey(payload: PlaytestSurveySubmit, current_user=Depends(get_current_user), db: Session = Depends(get_db)):
+    return save_survey(db, current_user.id, payload.profile_id, payload)
 
 
 @router.get("/bootstrap", response_model=GameBootstrapResponse)
 def game_bootstrap(
     current_user=Depends(get_current_user),
     db: Session = Depends(get_db),
+    survey_key: Literal["first_turns_v1", "first_turns_v2"] = "first_turns_v1",
 ):
     """Overview + time + period + events одним запросом (Mini App cold start / refresh)."""
     # Заход считаем до открытия партии: 410 на старом сохранении — тоже визит.
@@ -60,6 +79,7 @@ def game_bootstrap(
         game_session_status=session_status,
         defeat_reason=defeat_reason,
         defeat_period_index=defeat_period_index,
+        survey_key=survey_key,
     )
 
 
@@ -157,6 +177,15 @@ def start_new_game(
     db: Session = Depends(get_db),
 ):
     return service_start_new_game(db, current_user.id, payload)
+
+
+@router.post("/guest-start", response_model=GameStartResponse)
+def start_or_resume_guest(current_user=Depends(get_current_user), db: Session = Depends(get_db)):
+    if not current_user.is_guest:
+        raise HTTPException(403, "Guest identity required")
+    return service_start_new_game(db, current_user.id, GameStartRequest(
+        profile_name="Моя история", save_kind="game", template_key="mq_game_basic_v1",
+    ), resume_guest=True)
 
 
 @router.post("/time/next", response_model=TimeStatusResponse)

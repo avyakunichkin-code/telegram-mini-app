@@ -23,9 +23,9 @@ from app.models import GameProfile, NotificationLog, User
 from app.timeutil import utc_now_naive
 
 
-def test_first_salary_claimed_dedupe(db_session, monkeypatch):
+def test_first_salary_claimed_dedupe(db_session, test_user, monkeypatch):
     monkeypatch.setattr("app.admin.notify._send_telegram_message", lambda _t: False)
-    profile = GameProfile(user_id=1, name="A", save_kind="game", period_index=1)
+    profile = GameProfile(user_id=test_user.id, name="A", save_kind="game", period_index=1)
     db_session.add(profile)
     db_session.flush()
 
@@ -40,10 +40,10 @@ def test_first_salary_claimed_dedupe(db_session, monkeypatch):
     assert len(rows) == 1
 
 
-def test_salary_claimed_emits_first_once(db_session, monkeypatch):
+def test_salary_claimed_emits_first_once(db_session, test_user, monkeypatch):
     monkeypatch.setattr("app.admin.notify._send_telegram_message", lambda _t: False)
     profile = GameProfile(
-        user_id=1,
+        user_id=test_user.id,
         name="B",
         save_kind="game",
         period_index=1,
@@ -60,9 +60,9 @@ def test_salary_claimed_emits_first_once(db_session, monkeypatch):
     assert "first_salary_claimed" in kinds
 
 
-def test_first_safety_fund_dedupe(db_session, monkeypatch):
+def test_first_safety_fund_dedupe(db_session, test_user, monkeypatch):
     monkeypatch.setattr("app.admin.notify._send_telegram_message", lambda _t: False)
-    profile = GameProfile(user_id=1, name="C", save_kind="game")
+    profile = GameProfile(user_id=test_user.id, name="C", save_kind="game")
     db_session.add(profile)
     db_session.flush()
 
@@ -81,10 +81,10 @@ def test_first_safety_fund_dedupe(db_session, monkeypatch):
     )
 
 
-def test_period_closed_includes_economy_payload(db_session, monkeypatch):
+def test_period_closed_includes_economy_payload(db_session, test_user, monkeypatch):
     monkeypatch.setattr("app.admin.notify._send_telegram_message", lambda _t: False)
     profile = GameProfile(
-        user_id=1,
+        user_id=test_user.id,
         name="D",
         save_kind="game",
         period_index=2,
@@ -155,11 +155,11 @@ def test_onboarding_stuck_heuristic(db_session):
     assert profile_stuck_kind(profile, user) == "onboarding_stuck"
 
 
-def test_player_stuck_emit_dedupe(db_session, monkeypatch):
+def test_player_stuck_emit_dedupe(db_session, test_user, monkeypatch):
     monkeypatch.setattr("app.admin.notify._send_telegram_message", lambda _t: True)
     stale = utc_now_naive() - timedelta(hours=30)
     profile = GameProfile(
-        user_id=1,
+        user_id=test_user.id,
         name="G",
         save_kind="game",
         is_active=1,

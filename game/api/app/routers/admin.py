@@ -817,6 +817,13 @@ def admin_watchtower(
     )
 
 
+@router.get("/playtest-surveys")
+def list_playtest_surveys(limit: int = Query(50, ge=1, le=200),
+                         _admin: User = Depends(require_admin_user), db: Session = Depends(get_db)):
+    from ..services.game.playtest_survey import admin_survey_rows
+    return {"responses": admin_survey_rows(db, limit)}
+
+
 def _parse_payload(raw: str) -> dict[str, Any]:
     try:
         data = json.loads(raw or "{}")

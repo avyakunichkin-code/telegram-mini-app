@@ -12,6 +12,7 @@ class User(Base):
     username = Column(String(50), unique=True, index=True, nullable=False)
     email = Column(String(100), unique=True, index=True, nullable=True)
     hashed_password = Column(String(200), nullable=False)
+    is_guest = Column(Integer, nullable=False, default=0)
     full_name = Column(String(100))
     telegram_id = Column(Integer, unique=True, nullable=True)
     telegram_chat_id = Column(BigInteger, nullable=True, index=True)
@@ -22,6 +23,14 @@ class User(Base):
     created_at = Column(DateTime, default=utc_now_naive)
     # Последний bootstrap (PR-17): D7-прокси и «застрявшие»; запись не чаще LAST_SEEN_TOUCH_INTERVAL.
     last_seen_at = Column(DateTime, nullable=True, index=True)
+
+
+class GuestSession(Base):
+    __tablename__ = "guest_sessions"
+    id = Column(Integer, primary_key=True)
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=False, index=True)
+    token_hash = Column(String(64), nullable=False, unique=True)
+    expires_at = Column(DateTime, nullable=False)
 
 
 class PlayerRunFeedback(Base):
@@ -38,6 +47,26 @@ class PlayerRunFeedback(Base):
     defeat_reason = Column(String(40), nullable=True)
     comment = Column(Text, nullable=False)
     created_at = Column(DateTime, default=utc_now_naive)
+
+
+class PlayerPlaytestSurvey(Base):
+    """One first-turns questionnaire per account/version, separate from finale feedback."""
+
+    __tablename__ = "player_playtest_surveys"
+    __table_args__ = (UniqueConstraint("user_id", "survey_key", name="uq_playtest_survey_user_version"),)
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+    survey_key = Column(String(40), nullable=False)
+    state = Column(String(16), nullable=False)
+    game_profile_id = Column(Integer, ForeignKey("game_profiles.id"), nullable=False)
+    template_key = Column(String(80), nullable=True)
+    period_index = Column(Integer, nullable=False, default=0)
+    closed_turns = Column(Integer, nullable=False, default=0)
+    answers_json = Column(Text, nullable=True)
+    comment = Column(Text, nullable=False, default="")
+    created_at = Column(DateTime, nullable=False, default=utc_now_naive)
+    dismissed_at = Column(DateTime, nullable=True)
+    submitted_at = Column(DateTime, nullable=True)
 
 
 class ApiIdempotencyRecord(Base):

@@ -3,7 +3,7 @@ from __future__ import annotations
 
 from app.finance.balance_utils import TRANSACTION_TYPES
 from app.game.period import _apply_defeat_to_profile
-from app.models import PlayerRunFeedback, Transaction
+from app.models import EventChoice, EventDefinition, EventInstance, PlayerRunFeedback, Transaction
 from tests.fixtures.game import create_game_profile
 
 
@@ -107,6 +107,111 @@ class TestBootstrapRunFinale:
         assert status == "defeated"
         assert resolved.id == profile.id
         assert reason == "needs_depletion"
+
+
+class TestRunFinaleRecap:
+    """SPEC_run-finale-recap: CS-1…CS-5."""
+
+    _seq = 0
+
+    def _decision(self, db, profile, *, period, amount, title="Купить", effects="{}", event_title="Событие"):
+        TestRunFinaleRecap._seq += 1
+        definition = EventDefinition(key=f"recap_{TestRunFinaleRecap._seq}", title=event_title)
+        db.add(definition)
+        db.flush()
+        choice = EventChoice(definition_id=definition.id, title=title, effects_json=effects)
+        db.add(choice)
+        db.flush()
+        db.add(
+            EventInstance(
+                game_profile_id=profile.id,
+                period_index=period,
+                definition_id=definition.id,
+                status="selected",
+                selected_choice_id=choice.id,
+            )
+        )
+        if amount:
+            db.add(
+                Transaction(
+                    game_profile_id=profile.id,
+                    amount=amount,
+                    type="event_cash",
+                    description=f"Событие: {title}",
+                    period_index=period,
+                )
+            )
+        db.commit()
+
+    def _recap(self, db, profile, outcome="victory"):
+        from app.game.run_finale import build_run_finale_payload
+
+        return build_run_finale_payload(
+            db, profile, outcome=outcome, defeat_reason="cash_negative_streak" if outcome == "defeat" else None
+        ).recap
+
+    def test_top_three_by_amount_in_turn_order(self, db_session, test_user):
+        profile = create_game_profile(db_session, user_id=test_user.id)
+        self._decision(db_session, profile, period=2, amount=-1000, title="Мелочь")
+        self._decision(db_session, profile, period=3, amount=8000, title="Аванс", event_title="Подработка")
+        self._decision(db_session, profile, period=6, amount=-45000, title="Новый")
+        self._decision(db_session, profile, period=9, amount=-9000, title="Ремонт")
+
+        recap = self._recap(db_session, profile)
+
+        assert recap.decisions_label == "Самые крупные решения по счёту"
+        assert [(d.period_index, d.choice_title, d.cash_delta) for d in recap.decisions] == [
+            (3, "Аванс", 8000),
+            (6, "Новый", -45000),
+            (9, "Ремонт", -9000),
+        ]
+        assert recap.decisions[0].event_title == "Подработка"
+
+    def test_amount_comes_from_transaction_not_catalog(self, db_session, test_user):
+        profile = create_game_profile(db_session, user_id=test_user.id)
+        self._decision(db_session, profile, period=4, amount=-3000, effects='{"cash_delta": -999999}')
+        assert self._recap(db_session, profile).decisions[0].cash_delta == -3000
+
+    def test_defeat_gets_recap_in_bootstrap(self, client, auth_headers, db_session, test_user):
+        profile = create_game_profile(
+            db_session, user_id=test_user.id, is_active=0, is_archived=1, period_index=4
+        )
+        profile.run_outcome = "defeat"
+        db_session.add(
+            Transaction(
+                game_profile_id=profile.id,
+                amount=0,
+                type=TRANSACTION_TYPES["GAME_OVER"],
+                description="Поражение: 3 периода подряд с отрицательным балансом",
+                period_index=4,
+            )
+        )
+        self._decision(db_session, profile, period=2, amount=-7000)
+
+        finale = client.get("/api/game/bootstrap", headers=auth_headers).json()["run_finale"]
+
+        assert finale["outcome"] == "defeat"
+        assert finale["recap"]["decisions"][0]["cash_delta"] == -7000
+        assert finale["sections"]
+
+    def test_ambiguous_same_text_in_one_turn_is_skipped(self, db_session, test_user):
+        profile = create_game_profile(db_session, user_id=test_user.id)
+        self._decision(db_session, profile, period=5, amount=-100000, title="Оплатить")
+        self._decision(db_session, profile, period=5, amount=-200, title="Оплатить")
+        self._decision(db_session, profile, period=6, amount=-500, title="Другое")
+
+        assert [d.choice_title for d in self._recap(db_session, profile).decisions] == ["Другое"]
+
+    def test_no_cash_decisions_gives_null(self, db_session, test_user):
+        profile = create_game_profile(db_session, user_id=test_user.id)
+        self._decision(db_session, profile, period=3, amount=0, title="Без денег")
+        assert self._recap(db_session, profile, outcome="defeat") is None
+
+    def test_other_profile_is_not_mixed_in(self, db_session, test_user):
+        profile = create_game_profile(db_session, user_id=test_user.id)
+        other = create_game_profile(db_session, user_id=test_user.id, is_active=0, name="other")
+        self._decision(db_session, other, period=3, amount=-5000)
+        assert self._recap(db_session, profile) is None
 
 
 class TestRunFinaleDecisions:
