@@ -8,7 +8,7 @@
 
 | Папка | Приоритет | Варианты (план) | UX spec |
 |-------|-----------|-----------------|---------|
-| [`dashboard-needs-v7-round/`](dashboard-needs-v7-round) | **★ prod** | v7-e2e3: книга+? + сердце; 4 шкалы всегда | [`character-needs-dashboard.md`](../../docs/ux/screens/character-needs-dashboard.md) |
+| [`dashboard-needs-v7-round/`](../archive/character-needs/dashboard-needs-v7-round) | **История дашборда** | v7-e2e3: книга+? + сердце; 4 шкалы всегда | [`character-needs-dashboard.md`](../../docs/ux/screens/character-needs-dashboard.md) |
 | [`treat-self-round/`](treat-self-round) | **P0** | A card+confirm, B sticky cost | [`character-needs-treat-self.md`](../../docs/ux/screens/character-needs-treat-self.md) |
 | [`help-sheet-round/`](help-sheet-round/) | prod content | 4 flat sections (API) | [`character-needs-help.md`](../../docs/ux/screens/character-needs-help.md) |
 | [`events-needs-chips-round/`](events-needs-chips-round/) | **P0** | A/B/C chips on choices | [`character-needs-events.md`](../../docs/ux/screens/character-needs-events.md) |
@@ -46,7 +46,7 @@
 ## Запуск
 
 ```bash
-cd game/design-lab/character-needs/dashboard-needs-v7-round
+cd game/design-lab/archive/character-needs/dashboard-needs-v7-round
 ./sync-lab.sh
 npx serve .
 # или хаб: cd design-lab && npx serve .

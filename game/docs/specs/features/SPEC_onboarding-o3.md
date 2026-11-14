@@ -6,7 +6,7 @@ last_reviewed: 2026-06-05
 tracks: O3, onboarding, pre-alpha
 supersedes: SPEC_onboarding-o2.md
 idea: ../../vision/ideas/onboarding-o3-hybrid-guidance.md
-design_lab: ../../../design-lab/onboarding-o2/guidance-strip-round/
+design_lab: ../../../design-lab/archive/onboarding-o2/guidance-strip-round/
 character_voice: ../../reference/CHARACTER_MONETKA.md
 tags:
   - tvoy-hod/layer/spec

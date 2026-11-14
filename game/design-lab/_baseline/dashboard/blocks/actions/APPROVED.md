@@ -1,6 +1,6 @@
 # Period actions — утверждено ★
 
-**Раунд:** `game/design-lab/dashboard/period-actions-round/`  
+**Раунд:** `game/design-lab/archive/dashboard/period-actions-round/`
 **Скин:** S5 unified (chip как «Финансы периода»).
 
 ## Компоновка 2×2

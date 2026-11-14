@@ -11,6 +11,9 @@ PWA/web primary, Telegram secondary. Одна экономика, один ци�
 Мелкие layout-neutral исправления — по
 [DESIGN_WORKFLOW](web/src/components/mqx/DESIGN_WORKFLOW.md).
 Исходники CSS/ассетов — design, экспорты обновлять генераторами.
+В рабочих разделах документации и дизайна храни только актуальные материалы.
+Заменённые и закрытые материалы переноси в архив по
+[правилу актуальности](docs/README.md#актуальность-и-архив).
 
 Общие навыки наследуются из корня; игровые находятся в `.agents/skills` этой папки.
 Профиль задач — [GAME processes](docs/engineering/CODEX-PROCESSES.md).

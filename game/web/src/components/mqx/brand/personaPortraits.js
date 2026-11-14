@@ -1,42 +1,10 @@
-/**
- * Портреты персонажей (game/design-lab/game-templates/persona-portraits-round).
- * Размеры: pick (56h) — выбор сценария; dash (108h) — Z-NEEDS; md (72h) — запас.
- */
-import entrepreneurDashPng from '../../../assets/character-portraits/entrepreneur-mascot-dash.png';
-import entrepreneurDashWebp from '../../../assets/character-portraits/entrepreneur-mascot-dash.webp';
-import entrepreneurPickPng from '../../../assets/character-portraits/entrepreneur-mascot-pick.png';
-import entrepreneurPickWebp from '../../../assets/character-portraits/entrepreneur-mascot-pick.webp';
-import managerDashPng from '../../../assets/character-portraits/manager-mascot-dash.png';
-import managerDashWebp from '../../../assets/character-portraits/manager-mascot-dash.webp';
-import managerPickPng from '../../../assets/character-portraits/manager-mascot-pick.png';
-import managerPickWebp from '../../../assets/character-portraits/manager-mascot-pick.webp';
-import professionalDashPng from '../../../assets/character-portraits/professional-mascot-dash.png';
-import professionalDashWebp from '../../../assets/character-portraits/professional-mascot-dash.webp';
-import professionalPickPng from '../../../assets/character-portraits/professional-mascot-pick.png';
-import professionalPickWebp from '../../../assets/character-portraits/professional-mascot-pick.webp';
-import studentDashPng from '../../../assets/character-portraits/student-mascot-dash.png';
-import studentDashWebp from '../../../assets/character-portraits/student-mascot-dash.webp';
-import studentPickPng from '../../../assets/character-portraits/student-mascot-pick.png';
-import studentPickWebp from '../../../assets/character-portraits/student-mascot-pick.webp';
+import student from '../../../assets/character-portraits/student-introduce.webp';
+import professional from '../../../assets/character-portraits/professional-explain.webp';
+import manager from '../../../assets/character-portraits/manager-choice.webp';
+import entrepreneur from '../../../assets/character-portraits/entrepreneur-roadmap.webp';
 
-const BY_SLUG = {
-  student: {
-    pick: { png: studentPickPng, webp: studentPickWebp, height: 56 },
-    dash: { png: studentDashPng, webp: studentDashWebp, height: 108 },
-  },
-  professional: {
-    pick: { png: professionalPickPng, webp: professionalPickWebp, height: 56 },
-    dash: { png: professionalDashPng, webp: professionalDashWebp, height: 108 },
-  },
-  manager: {
-    pick: { png: managerPickPng, webp: managerPickWebp, height: 56 },
-    dash: { png: managerDashPng, webp: managerDashWebp, height: 108 },
-  },
-  entrepreneur: {
-    pick: { png: entrepreneurPickPng, webp: entrepreneurPickWebp, height: 56 },
-    dash: { png: entrepreneurDashPng, webp: entrepreneurDashWebp, height: 108 },
-  },
-};
+const BY_SLUG = { student, professional, manager, entrepreneur };
+const HEIGHT_BY_SIZE = { pick: 56, dash: 108 };
 
 /** template_key → slug персонажа */
 export const TEMPLATE_KEY_TO_PERSONA_SLUG = {
@@ -48,8 +16,8 @@ export const TEMPLATE_KEY_TO_PERSONA_SLUG = {
 
 export function getPersonaPortrait(templateKey, size = 'pick') {
   const slug = TEMPLATE_KEY_TO_PERSONA_SLUG[templateKey];
-  if (!slug) return null;
-  const pack = BY_SLUG[slug]?.[size];
-  if (!pack) return null;
-  return { slug, ...pack };
+  const webp = BY_SLUG[slug];
+  const height = HEIGHT_BY_SIZE[size];
+  if (!webp || !height) return null;
+  return { slug, webp, height };
 }

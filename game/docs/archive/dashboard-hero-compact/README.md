@@ -15,7 +15,7 @@ aliases:
 ## Канон hero
 
 - [TB1 idea](../../vision/ideas/turn-based-period-no-timer.md)
-- Lab: [`game/design-lab/dashboard/hero-no-timer-round/`](../../../design-lab/dashboard/hero-no-timer-round)
+- Lab: [`game/design-lab/archive/dashboard/hero-no-timer-round/`](../../../design-lab/archive/dashboard/hero-no-timer-round)
 - UX: [`dashboard.md`](../../ux/screens/dashboard.md)
 
 Бывшая idea: [`dashboard-hero-compact.md`](../../vision/ideas/dashboard-hero-compact.md) → redirect.

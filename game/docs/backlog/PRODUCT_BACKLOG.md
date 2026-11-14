@@ -408,7 +408,7 @@ aliases:
 
 ### Эпик O1 — онбординг TMA (Pre-Alpha) — **superseded → O2**
 
-Идея (архив): [`onboarding-tma-mission-brief.md`](../vision/ideas/onboarding-tma-mission-brief.md) · Stubs: [`archive/onboarding-o1/`](../archive/onboarding-o1/README.md), [`archive/onboarding-o2/`](../archive/onboarding-o2/README.md) · **O3:** [`SPEC_onboarding-o3.md`](../specs/features/SPEC_onboarding-o3.md) · Lab: [`onboarding-o2/`](../design-lab/onboarding-o2/)
+Идея (архив): [`onboarding-tma-mission-brief.md`](../vision/ideas/onboarding-tma-mission-brief.md) · Stubs: [`archive/onboarding-o1/`](../archive/onboarding-o1/README.md), [`archive/onboarding-o2/`](../archive/onboarding-o2/README.md) · **O3:** [`SPEC_onboarding-o3.md`](../specs/features/SPEC_onboarding-o3.md) · Lab: [`onboarding-o2/`](../design-lab/archive/onboarding-o2/)
 
 - [x] P0 **[Doc+Design]** Guided coach **5 шагов ★** (O1, 2026-05-20; lab снят → O2 strip).
 - [x] P0 **[Doc]** Spec O1 → guided coach (2026-05-20).
@@ -501,7 +501,7 @@ aliases:
 
 ### Эпик T1 — пошаговый месяц без таймера (✅ TB1, 2026-05-26)
 
-Идея: [`turn-based-period-no-timer.md`](../vision/ideas/turn-based-period-no-timer.md) · Plan: [`PLAN_turn-based-period-no-timer.md`](../plans/PLAN_turn-based-period-no-timer.md) · Lab ★: [`hero-no-timer-round/`](../../design-lab/dashboard/hero-no-timer-round).
+Идея: [`turn-based-period-no-timer.md`](../vision/ideas/turn-based-period-no-timer.md) · Plan: [`PLAN_turn-based-period-no-timer.md`](../plans/PLAN_turn-based-period-no-timer.md) · Lab ★: [`hero-no-timer-round/`](../../design-lab/archive/dashboard/hero-no-timer-round).
 
 - [x] P2 **[Backend] T1-1** — `sync_time` не увеличивает `period_index`; переход через `time/next` → `process_period_end`.
 - [x] P2 **[Frontend] T1-2** — hero H2: «Закрыть месяц» + pill «События»; без countdown / auto-next / play-pause.
