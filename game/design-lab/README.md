@@ -1,8 +1,12 @@
-﻿# Design lab
+# Design lab
 
 Статичные HTML-витрины для **этапа 1** процесса MQX: рисуем варианты → выбираем → утверждаем → только потом React в приложении.
 
 Правила: [`game/web/src/components/mqx/DESIGN_WORKFLOW.md`](../web/src/components/mqx/DESIGN_WORKFLOW.md).
+
+При завершении раунда применяйте [правило актуальности и архива](../docs/README.md#актуальность-и-архив).
+При переносе раунда исключите его из рабочей навигации через манифест и
+пересоберите хаб.
 
 ## Навигатор (не ищите файлы по папкам)
 
@@ -16,7 +20,7 @@ npx serve .
 Пересборка хаба и dashboard parity (**только из `game/web/`** — в `design-lab/` нет `package.json`):
 
 ```bash
-cd frontend-react
+cd game/web
 npm run design-lab:check-rounds   # self-contained CSS (./lab-base.css, без ../)
 npm run design-lab:build            # check → parity → check
 # или только дашборд:
@@ -28,10 +32,10 @@ npm run design-lab:build-dashboard-page-round
 ```bash
 cd design-lab/<тема>/<round>
 ./sync-lab.sh          # bash / Git Bash / WSL (канон)
-# или: cd frontend-react && npm run design-lab:sync-round -- design-lab/<тема>/<round>
+# или: cd game/web && npm run design-lab:sync-round -- design-lab/<тема>/<round>
 ```
 
-Затем `cd frontend-react && npm run design-lab:check-rounds`.
+Затем `cd game/web && npm run design-lab:check-rounds`.
 
 Конфиг ссылок: [`nav.manifest.json`](nav.manifest.json) · канон дашборда: [`dashboard/canon.manifest.json`](dashboard/canon.manifest.json).
 
@@ -45,11 +49,10 @@ cd design-lab/<тема>/<round>
 | [invest-forms/](invest-forms) | внедрено в prod | Формы депозита / облигаций |
 | [primitives/](primitives) | **утверждено → prod** | Гибрид D+C+B/A; в `mqx/primitives/` |
 | [finance-insurance/](finance-insurance) | **внедрено в prod** | B: каталог 2×2 + тарифы; карточки asset H |
-| [dashboard/](dashboard) | **★ S5 в prod** | L3+S5 Unified; хвосты: empty/error, иконки — см. one-pager |
+| [dashboard/](dashboard) | **★ BG-1 в prod** | Утверждённый дизайн и актуальная витрина дашборда |
 | [events/](events) | **внедрено в prod** | EventCard, EventCarouselOverlay, MqxPill |
 | [row-actions/](row-actions) | **B + F2 → prod** | MqxRowAction (корзина по умолчанию), MqxFinListRow, confirm; порядок метрик — в spec |
 | [capital-page/](capital-page) | **IA утверждена → вариант A/B на выбор** | 5 табов, бюджет №2, имущество/обязательства строками |
-| [onboarding-o2/](onboarding-o2) | **★ утверждён** → MQX | O2 Guidance strip, progressive curriculum |
 | [pre-game-shell/](pre-game-shell) | v2 (сравнение) | Монетка над пузырём, TGS, без frame |
 | [auth-flow/](auth-flow) | **★ B → prod** | Вход / регистрация (история вариантов A/B/C) |
 | [new-game-mode/](new-game-mode) | **★ B → prod** | Шаг 1: имя + Игра / План |

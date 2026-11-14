@@ -9,6 +9,7 @@
   "discover": {
     "enabled": true,
     "exclude_path_contains": [
+      "archive/",
       "parity-generated-page-round/blocks/"
     ]
   },
@@ -37,18 +38,6 @@
           "label": "Type scale MQX",
           "path": "type-scale-round/index.html",
           "kind": "lab"
-        }
-      ]
-    },
-    {
-      "id": "character-needs",
-      "title": "Потребности (character-needs)",
-      "items": [
-        {
-          "label": "Dashboard needs v7-e2e3 ★ (prod parity)",
-          "path": "character-needs/dashboard-needs-v7-round/index.html",
-          "kind": "lab",
-          "status": "approved"
         }
       ]
     },
@@ -157,12 +146,6 @@
         {
           "label": "Портреты персонажей (4 жизни)",
           "path": "game-templates/persona-portraits-round/index.html",
-          "kind": "lab",
-          "status": "approved"
-        },
-        {
-          "label": "O2 Guidance strip",
-          "path": "onboarding-o2/guidance-strip-round/index.html",
           "kind": "lab",
           "status": "approved"
         }

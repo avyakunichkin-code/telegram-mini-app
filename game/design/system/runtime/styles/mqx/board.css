@@ -92,6 +92,45 @@
   min-width: 0;
 }
 
+.mqx-bg-turn__logo {
+  width: var(--mq-pocket-logo-width, 68px);
+}
+
+.mqx-bg-turn__balance {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--mq-sp-4);
+}
+
+.mqx-bg-turn__balance strong {
+  display: block;
+  font-size: var(--mq-fs-display);
+}
+
+.mqx-bg-turn > .mqx-bg-cta {
+  width: 100%;
+}
+
+.mqx-bg-turn__help {
+  display: grid;
+  min-width: 44px;
+  min-height: 44px;
+  place-items: center;
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+}
+
+.mqx-bg-turn__dialog {
+  width: min(90%, 28rem);
+  padding: var(--mq-sp-7);
+  border: var(--mq-ink-w) solid var(--mq-ink-line);
+  border-radius: var(--mq-r-card);
+  background: var(--mq-cell);
+  color: var(--mq-board-ink);
+}
+
 .mqx-bg-turn__role {
   display: block;
   color: var(--mq-board-ink-soft);
@@ -948,4 +987,90 @@
 .mqx-bg-money__note--risk {
   color: var(--mq-risk);
   font-weight: 700;
+}
+
+/* Pocket Board G: материалы утверждённого превью, только на Главной. */
+.mqx-tab-page--pocket .mqx-bg-turn {
+  border: 0;
+  border-radius: var(--mq-r-cell) calc(var(--mq-r-cell) * 2) var(--mq-r-cell) var(--mq-r-cell);
+  background: repeating-linear-gradient(
+    135deg,
+    transparent 0 10px,
+    color-mix(in srgb, var(--mq-pocket-on) 3%, transparent) 10px 11px
+  ) var(--mq-pocket-plum);
+  color: var(--mq-pocket-on);
+  box-shadow: 0 var(--mq-ink-off) var(--mq-pocket-shadow);
+}
+
+.mqx-tab-page--pocket .mqx-bg-turn__title {
+  color: var(--mq-pocket-on);
+}
+
+.mqx-tab-page--pocket :is(.mqx-bg-turn__role, .mqx-bg-turn__balance > div > span, .mqx-bg-close-preview) {
+  color: var(--mq-pocket-muted-on);
+}
+
+.mqx-tab-page--pocket .mqx-bg-turn__balance > div {
+  min-width: 0;
+}
+
+.mqx-tab-page--pocket .mqx-bg-turn__balance .mq-money {
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+
+.mqx-tab-page--pocket .mqx-bg-turn__balance .mqx-persona-portrait {
+  width: min(30%, 105px);
+}
+
+.mqx-tab-page--pocket .mqx-bg-turn__balance img {
+  width: 100%;
+  object-fit: contain;
+}
+
+.mqx-tab-page--pocket .mqx-bg-turn > .mqx-bg-cta {
+  min-height: 44px;
+  background: var(--mq-pocket-gold);
+  color: var(--mq-pocket-shadow);
+  border: 0;
+  box-shadow: 0 var(--mq-ink-off-s) var(--mq-pocket-shadow);
+}
+
+.mqx-tab-page--pocket .mqx-bg-close-preview {
+  justify-content: space-between;
+  border-top: 1px solid color-mix(in srgb, var(--mq-pocket-on) 25%, transparent);
+  padding-top: var(--mq-sp-4);
+}
+
+.mqx-tab-page--pocket .mqx-bg-close-preview b {
+  color: var(--mq-pocket-on);
+}
+
+.mqx-tab-page--pocket .mqx-bg-close-preview .mqx-bg-close-preview__risk b {
+  color: var(--mq-pocket-risk-on);
+}
+
+.mqx-tab-page--pocket .mqx-bg-events {
+  min-height: 44px;
+  background: var(--mq-pocket-lilac);
+  color: var(--mq-pocket-shadow);
+  box-shadow: none;
+}
+
+.mqx-tab-page--pocket .mqx-bg-events__hint {
+  color: var(--mq-pocket-shadow);
+}
+
+.mqx-tab-page--pocket .mqx-bg-salary {
+  min-height: 48px;
+  color: var(--mq-pocket-shadow);
+  box-shadow: none;
+}
+
+.mqx-tab-page--pocket .mqx-bg-salary--hot {
+  background: var(--mq-pocket-salary);
+}
+
+.mqx-tab-page--pocket .mqx-bg-salary--quiet {
+  background: var(--mq-pocket-paid);
 }

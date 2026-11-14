@@ -4,7 +4,7 @@ status: implemented
 last_reviewed: 2026-05-26
 idea: ../vision/ideas/turn-based-period-no-timer.md
 epic: TB1
-design_lab: ../../design-lab/dashboard/hero-no-timer-round/
+design_lab: ../../design-lab/archive/dashboard/hero-no-timer-round/
 tags:
   - tvoy-hod/layer/plan
   - tvoy-hod/status/implemented
@@ -19,7 +19,7 @@ aliases:
 
 Переход от модели «игровой месяц = 300 секунд real time» к **пошаговому месяцу**: период открыт, пока игрок не нажмёт **закрытие месяца** (`POST /api/game/time/next` → `process_period_end`). Убираем UI-таймер, play/pause, клиентский тик и авто-закрытие по нулю; чиним серверный `sync_time`, чтобы не сдвигать `period_index` без экономики.
 
-**Design-lab ★ FINAL:** [`game/design-lab/dashboard/hero-no-timer-round/`](../../design-lab/dashboard/hero-no-timer-round) — **H2**, CTA **«Закрыть месяц»**. Чипы плана месяца — **TB1.1** (не блокирует TB1).
+**Design-lab ★ FINAL:** [`game/design-lab/archive/dashboard/hero-no-timer-round/`](../../design-lab/archive/dashboard/hero-no-timer-round) — **H2**, CTA **«Закрыть месяц»**. Чипы плана месяца — **TB1.1** (не блокирует TB1).
 
 ## Architecture Decisions
 
@@ -66,7 +66,7 @@ Onboarding + docs + landing demo (если есть таймер)
 - [x] На макете явная **primary** кнопка закрытия месяца и вторичная «События»
 - [x] Нет цифр MM:SS и полосы «прогресс % времени»
 
-**Verification:** `cd game/design-lab/dashboard/hero-no-timer-round && npx serve .`
+**Verification:** `cd game/design-lab/archive/dashboard/hero-no-timer-round && npx serve .`
 
 **Dependencies:** None  
 **Scope:** S (lab only)

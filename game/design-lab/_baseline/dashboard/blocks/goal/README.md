@@ -5,7 +5,7 @@ Design-lab: **связанные кружки** (stepper) в свёрнутом 
 ## Запуск
 
 ```powershell
-cd game/design-lab/dashboard/goal-path-stepper-round
+cd game/design-lab/archive/dashboard/goal-path-stepper-round
 .\sync-lab.sh
 npx serve .
 ```

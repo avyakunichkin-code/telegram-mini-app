@@ -1,5 +1,9 @@
 # Dashboard — утверждено ★ BG-1 «настольная игра про деньги»
 
+BG-1 описывает Главную в текущей ветке. Более поздние утверждения
+«Игровой пульт», карта хода Г и помощь Монетки Б зафиксированы
+в [дизайне приложения](../../design/system/CURRENT_STYLE.md).
+
 **Утверждено:** 2026-10-14, в чате («утверждаем»). **Направление:** [ADR-014](../../docs/decisions/ADR-014-brand-direction-board-game.md).
 **Концепция:** [`../board-game/APPROVED.md`](../board-game/APPROVED.md), раунд [`../board-game/hybrid-round/`](../board-game/hybrid-round).
 **Prod parity (страница целиком):** [`bg1-page-round/`](bg1-page-round) и сгенерированная [`parity-generated-page-round/`](parity-generated-page-round).

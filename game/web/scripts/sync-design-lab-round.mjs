@@ -12,8 +12,8 @@ if (!roundArg) {
       'Usage: npm run design-lab:sync-round -- <round-path>',
       '',
       'Examples:',
-      '  npm run design-lab:sync-round -- design-lab/character-needs/dashboard-needs-v7-round',
-      '  npm run design-lab:sync-round -- ../design-lab/dashboard/hero-no-timer-round',
+      '  npm run design-lab:sync-round -- design-lab/archive/character-needs/dashboard-needs-v7-round',
+      '  npm run design-lab:sync-round -- ../design-lab/archive/dashboard/hero-no-timer-round',
     ].join('\n'),
   )
   process.exit(1)

@@ -75,7 +75,7 @@ node scripts/capture-screens.mjs --source=lab
 
 | PNG | Lab-источник | Селектор |
 |-----|--------------|----------|
-| dashboard | [`game/design-lab/dashboard/goal-chain-round/`](../../design-lab/dashboard/goal-chain-round) | `.lab-states:first-of-type .mqx-dash-stack--unified` |
+| dashboard | [`game/design-lab/archive/dashboard/goal-chain-round/`](../../design-lab/archive/dashboard/goal-chain-round) | `.lab-states:first-of-type .mqx-dash-stack--unified` |
 | capital | [`game/design-lab/capital-page/details-actions-round/`](../../design-lab/capital-page/details-actions-round) | `.phone` |
 | events | [`game/design-lab/events/layout-round/`](../../design-lab/events/layout-round) | `#l1 .ev-card-shell:first-child` |
 

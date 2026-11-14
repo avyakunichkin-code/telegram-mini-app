@@ -69,7 +69,7 @@ export function MqxGuidanceStripDemo() {
     <div className="mqx-guidance-strip-demo">
       <p className="mqx-catalog__lead" style={{ marginTop: 0 }}>
         <strong>O2 Progressive Guidance</strong> — variant <strong>A ★</strong> (violet bubble dock). Lab:{' '}
-        <code>game/design-lab/onboarding-o2/guidance-strip-round/</code>. Монетка-аватар ink у заголовка; toolbar:{' '}
+        <code>game/design-lab/archive/onboarding-o2/guidance-strip-round/</code>. Монетка-аватар ink у заголовка; toolbar:{' '}
         <code>‹ N из M ›</code> слева, зелёный ✓ + × справа.
       </p>
 

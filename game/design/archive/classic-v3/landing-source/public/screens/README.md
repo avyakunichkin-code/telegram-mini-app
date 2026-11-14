@@ -43,7 +43,7 @@ node scripts/capture-screens.mjs --source=lab
 
 | PNG | Lab-источник |
 |-----|----------------|
-| dashboard | `game/design-lab/dashboard/goal-chain-round` |
+| dashboard | `game/design-lab/archive/dashboard/goal-chain-round` |
 | capital | `game/design-lab/capital-page/flows-round` |
 | events | `game/design-lab/events/layout-round` (L1, `#l1 .ev-card-shell`) |
 

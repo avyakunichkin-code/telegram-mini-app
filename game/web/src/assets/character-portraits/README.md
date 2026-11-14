@@ -1,9 +1,9 @@
-# Character portraits (generated)
+# Портреты персонажей v3
 
-Растровые портреты четырёх персонажей Game. **Не править PNG/WebP вручную** — пересобирать из lab-исходников.
+Игра и лендинг используют одни исходники из
+[дизайн-системы](../../../../design/system/assets/Characters/landing-v3/).
+Экспорты задаёт [карта ресурсов](../../../../design/asset-exports.json).
 
-| Команда | Назначение |
-|---------|------------|
-| `npm run persona-portraits:process` | `scripts/process-persona-portraits.py` → эта папка + `game/design-lab/game-templates/persona-portraits-round/assets/` |
-
-Канон: [`game/design-lab/game-templates/persona-portraits-round/APPROVED.md`](../../../../design-lab/game-templates/persona-portraits-round/APPROVED.md) · код: `components/mqx/brand/personaPortraits.js`, `PersonaPortrait.jsx`.
+В игре портреты используются при выборе роли, в сохранениях, на экране
+знакомства с напарником, в блоке финансов и в обычном финале. Иллюстрации
+победы с кубком хранятся отдельно.

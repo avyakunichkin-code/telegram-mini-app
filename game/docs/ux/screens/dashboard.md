@@ -20,7 +20,7 @@ aliases:
 > **Journey Phase(s):** активная партия (core loop), первая сессия (онбординг O1)  
 > **Template:** UX Spec (адаптация studio → `game/docs/ux/screens/`)
 
-**Связанные документы:** [`TMA_USER_FLOWS.md`](../../foundation/TMA_USER_FLOWS.md) · [`SPEC_PRODUCT` §3.1](../../foundation/SPEC_PRODUCT.md) · [TB1 idea](../../vision/ideas/turn-based-period-no-timer.md) · [`SPEC_FRONTEND_UI.md`](../../specs/SPEC_FRONTEND_UI.md) · [`SPEC_victory-v2.md`](../../specs/features/SPEC_victory-v2.md) · [ADR-002](../../decisions/ADR-002-victory-engine-and-template-config.md) · [ADR-004](../../decisions/ADR-004-mechanics-unlock-victory-chain.md) · [`SPEC_onboarding-o3.md`](../../specs/features/SPEC_onboarding-o3.md) · [`game/design-lab/dashboard/hero-no-timer-round/`](../../../design-lab/dashboard/hero-no-timer-round)
+**Связанные документы:** [`TMA_USER_FLOWS.md`](../../foundation/TMA_USER_FLOWS.md) · [`SPEC_PRODUCT` §3.1](../../foundation/SPEC_PRODUCT.md) · [TB1 idea](../../vision/ideas/turn-based-period-no-timer.md) · [`SPEC_FRONTEND_UI.md`](../../specs/SPEC_FRONTEND_UI.md) · [`SPEC_victory-v2.md`](../../specs/features/SPEC_victory-v2.md) · [ADR-002](../../decisions/ADR-002-victory-engine-and-template-config.md) · [ADR-004](../../decisions/ADR-004-mechanics-unlock-victory-chain.md) · [`SPEC_onboarding-o3.md`](../../specs/features/SPEC_onboarding-o3.md) · [`game/design-lab/archive/dashboard/hero-no-timer-round/`](../../../design-lab/archive/dashboard/hero-no-timer-round)
 
 **Реализация:** `DashboardPremium.jsx`, `MqxDashboardHero`, `MqxFinancePeriodBlock`, `MqxGoalDash`, `MqxPeriodActions`; оболочка и оверлеи — `GameScreen.jsx`.
 
@@ -116,10 +116,10 @@ App (HashRouter)
 |-----------|---------------|------------|
 | `MqxDashboardHero` | hero-no-timer-round ★ **H2** | Период #N, «Завершить ход», pill «События» (без таймера) |
 | `MqxFinancePeriodBlock` | dashboard L3 | 4 KPI chips, ссылка «Весь капитал →» |
-| `MqxGoalDash` | goal-chain-round ★ · [`goal-path-stepper-round`](../../../design-lab/dashboard/goal-path-stepper-round) (draft) | Цепочка победы v2 + guidance; свёрнуто — stepper из связанных узлов |
+| `MqxGoalDash` | goal-chain-round ★ · [`goal-path-stepper-round`](../../../design-lab/archive/dashboard/goal-path-stepper-round) (draft) | Цепочка победы v2 + guidance; свёрнуто — stepper из связанных узлов |
 | `MqxPeriodActions` | period-actions-round ★ | Зарплата, вложить, пополнить, снять |
 | `InvestProductForm` + `MqxSafetyFundSheet` | shared MQX | Сумма in/out подушки (как депозит) |
-| `GameGuidanceLayer` | [`onboarding-o2`](../../../design-lab/onboarding-o2) ★ | O2 guidance strip (не дочерний dashboard) |
+| `GameGuidanceLayer` | [`onboarding-o2`](../../../design-lab/archive/onboarding-o2) ★ | O2 guidance strip (не дочерний dashboard) |
 
 ### ASCII Wireframe
 

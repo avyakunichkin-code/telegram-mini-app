@@ -66,7 +66,7 @@ aliases:
 
 - **L3 + S5 Unified** в `DashboardPremium` (`mqx-tab-page--dash-unified`)
 - Hero, 2×2 финансы, **цель** (`MqxGoalDash`), действия, таббар без «пилюли»
-- Lab: [`goal-chain-round`](../../../design-lab/dashboard/goal-chain-round) в паритете с prod; лендинг — [`LANDING_SCREENSHOTS.md`](../../specs/LANDING_SCREENSHOTS.md)
+- Lab: [`goal-chain-round`](../../../design-lab/archive/dashboard/goal-chain-round) в паритете с prod; лендинг — [`LANDING_SCREENSHOTS.md`](../../specs/LANDING_SCREENSHOTS.md)
 
 ### Дашборд — что ещё разобрать (кандидаты в lab)
 

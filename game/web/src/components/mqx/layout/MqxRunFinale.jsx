@@ -23,7 +23,7 @@ function FinaleCell({ portrait, win }) {
       {portrait ? (
         <picture>
           {portrait.webp ? <source srcSet={portrait.webp} type="image/webp" /> : null}
-          <img className="mqx-run-finale-cell__img" src={portrait.png} alt="" decoding="async" />
+          <img className="mqx-run-finale-cell__img" src={portrait.png ?? portrait.webp} alt="" decoding="async" />
         </picture>
       ) : null}
     </div>

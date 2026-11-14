@@ -52,3 +52,9 @@
 cd game/design-lab/mascots/ink-mascots-round
 ./sync-lab.sh
 ```
+
+## Текущий вид Монетки
+
+14.11.2026 утверждены [объёмная Монетка и её аватар](../../../design/system/assets/Monetka/monetka-soft-volume.webp)
+из набора лендинга. В игре они используются в компонентах `Monetka` и `MonetkaAvatar`.
+Этот раунд сохраняет прежние варианты и историю жестов.

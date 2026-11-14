@@ -25,7 +25,7 @@ const source = process.argv.includes('--source=lab') ? 'lab' : 'app';
 const LAB_CAPTURES = [
   {
     name: 'dashboard',
-    dir: 'game/design-lab/dashboard/goal-chain-round',
+    dir: 'game/design-lab/archive/dashboard/goal-chain-round',
     selector: '.lab-states:first-of-type .mqx-dash-stack--unified',
     hide: `
       .lab-header, .lab-intro, .lab-page-order, .lab-states:not(:first-of-type) { display: none !important; }

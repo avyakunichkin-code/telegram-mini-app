@@ -1,6 +1,9 @@
+import { useEffect, useRef } from 'react';
 import { FINISH_TURN_BUTTON, TURN_SINGULAR } from '../../../constants/turnCopy';
+import { BrandLogo } from '../../BrandLogo';
 import { MoneyText } from '../../MoneyText';
 import { MonetkaAvatar } from '../brand/MonetkaAvatar';
+import { PersonaPortrait } from '../brand/PersonaPortrait';
 import { eventsPlateHint, eventsPlateTitle } from '../utils/boardDashDisplay';
 
 function EventsPlate({ count, onOpen }) {
@@ -69,11 +72,6 @@ function ClosePreview({ preview }) {
   );
 }
 
-/**
- * Карта хода ★ BG-1 (ADR-014): роль и «Твой ход» слева, номер хода справа (ходов не ограничено),
- * плашка событий → Монетка одной строкой → компактная «Завершить ход» → превью списания (PR-07).
- * `closePreview` — из `closePreviewView(overview.period_close_preview)`; null — строки нет.
- */
 export function MqxDashboardHero({
   roleTitle = 'Игрок',
   periodIndex,
@@ -83,31 +81,48 @@ export function MqxDashboardHero({
   onOpenEvents,
   tip = null,
   closePreview = null,
+  templateKey,
+  balance,
 }) {
   const turn = Number(periodIndex) || 0;
+  const helpRef = useRef(null);
+  useEffect(() => {
+    helpRef.current?.close();
+  }, [tip?.text, turn]);
 
   return (
     <header className="mqx-bg-turn" data-onboarding-anchor="hero">
       <div className="mqx-bg-turn__top">
+        <BrandLogo variant="full" className="mqx-bg-turn__logo" />
         <div className="mqx-bg-turn__who">
           <span className="mqx-bg-turn__role">{roleTitle}</span>
-          <h1 className="mqx-bg-turn__title">Твой ход</h1>
+          <h1 className="mqx-bg-turn__title">{`${TURN_SINGULAR} ${turn}`}</h1>
         </div>
-        <p className="mqx-bg-turn__num">
-          <span className="mqx-bg-sr-only">{`${TURN_SINGULAR} ${turn}`}</span>
-          <span aria-hidden="true">{turn}</span>
-          <small aria-hidden="true">ход</small>
-        </p>
+        <button
+          type="button"
+          className="mqx-bg-turn__help"
+          aria-label="Подсказка Монетки"
+          aria-haspopup="dialog"
+          disabled={!tip?.text}
+          onClick={() => helpRef.current?.showModal()}
+        >
+          <MonetkaAvatar size={32} />
+        </button>
       </div>
 
-      {onOpenEvents ? <EventsPlate count={pendingEventsCount} onOpen={onOpenEvents} /> : null}
-
-      {tip?.text ? (
-        <p className="mqx-bg-tip" data-tone={tip.tone || 'normal'} title={tip.text}>
-          <MonetkaAvatar size={26} className="mqx-bg-tip__monetka" />
-          <span className="mqx-bg-tip__text">{tip.text}</span>
-        </p>
-      ) : null}
+      <div className="mqx-bg-turn__balance">
+        <div>
+          <span>На счёте</span>
+          <strong><MoneyText value={balance ?? 0} decimals={0} /></strong>
+        </div>
+        <PersonaPortrait templateKey={templateKey} size="dash" />
+      </div>
+      <dialog ref={helpRef} className="mqx-bg-turn__dialog" aria-label="Подсказка Монетки">
+        <p>{tip?.text}</p>
+        <form method="dialog">
+          <button type="submit" className="mqx-bg-btn mqx-bg-cta">Понятно</button>
+        </form>
+      </dialog>
 
       <button
         type="button"
@@ -122,6 +137,7 @@ export function MqxDashboardHero({
       </button>
 
       {closePreview ? <ClosePreview preview={closePreview} /> : null}
+      {onOpenEvents ? <EventsPlate count={pendingEventsCount} onOpen={onOpenEvents} /> : null}
     </header>
   );
 }

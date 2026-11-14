@@ -229,7 +229,7 @@ export function DashboardPremium({
 
     <>
 
-      <div className="mqx-tab-page mqx-tab-page--dash-unified mqx-tab-page--board">
+      <div className="mqx-tab-page mqx-tab-page--dash-unified mqx-tab-page--board mqx-tab-page--pocket">
         <main className="mqx-content mqx-tab-page__scroll">
           <div className="mqx-bg-stack mqx-juice-host">
             <MqxJuiceGainFeedback
@@ -242,6 +242,8 @@ export function DashboardPremium({
             <MqxDashboardHero
               roleTitle={personaRoleTitle(templateKey)}
               periodIndex={periodIndex}
+              templateKey={templateKey}
+              balance={Number(overview?.cash_balance) || 0}
               onCloseMonth={onNextPeriod}
               closeMonthDisabled={closeMonthDisabled || busyAction !== null}
               pendingEventsCount={shownEventsCount}

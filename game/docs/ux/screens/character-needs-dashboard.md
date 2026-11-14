@@ -18,7 +18,7 @@ aliases:
 > **Status:** Approved (базовые решения UX-01…UX-08)  
 > **Parent:** [`dashboard.md`](dashboard.md)  
 > **Product:** [`SPEC_game-character-needs.md`](../../specs/features/SPEC_game-character-needs.md)  
-> **Lab:** [`dashboard-needs-v7-round/`](../../../design-lab/character-needs/dashboard-needs-v7-round) — **v7 в prod** (плоский блок) · v5/v6 архив · **Портрет:** [`persona-portraits-round/`](../../../design-lab/game-templates/persona-portraits-round)
+> **Lab:** [`dashboard-needs-v7-round/`](../../../design-lab/archive/character-needs/dashboard-needs-v7-round) — **v7 в prod** (плоский блок) · v5/v6 архив · **Портрет:** [`persona-portraits-round/`](../../../design-lab/game-templates/persona-portraits-round)
 
 ---
 
@@ -170,4 +170,4 @@ GameScreen → dashboard
 
 ## Design-lab
 
-★ Prod: [`dashboard-needs-v7-round/`](../../../design-lab/character-needs/dashboard-needs-v7-round) (`e2e3`). Сравнение вариантов — `VARIANTS.md` в том же раунде; v5/v6 — архив, не внедрять.
+★ Prod: [`dashboard-needs-v7-round/`](../../../design-lab/archive/character-needs/dashboard-needs-v7-round) (`e2e3`). Сравнение вариантов — `VARIANTS.md` в том же раунде; v5/v6 — архив, не внедрять.

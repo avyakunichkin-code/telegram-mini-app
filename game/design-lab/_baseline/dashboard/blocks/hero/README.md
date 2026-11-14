@@ -5,7 +5,7 @@
 ## Запуск
 
 ```powershell
-cd game/design-lab/dashboard/hero-no-timer-round
+cd game/design-lab/archive/dashboard/hero-no-timer-round
 .\sync-lab.sh
 npx serve .
 ```
