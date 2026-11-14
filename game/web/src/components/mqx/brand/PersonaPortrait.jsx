@@ -1,8 +1,8 @@
 import { getPersonaPortrait } from './personaPortraits';
 
 /**
- * Растровый портрет персонажа (прозрачный PNG/WebP).
- * @param {'pick'|'dash'|'md'} size
+ * Портрет персонажа v3.
+ * @param {'pick'|'dash'} size
  */
 export function PersonaPortrait({ templateKey, size = 'pick', className = '' }) {
   const portrait = getPersonaPortrait(templateKey, size);
@@ -14,7 +14,7 @@ export function PersonaPortrait({ templateKey, size = 'pick', className = '' }) 
     <picture className={cls} data-persona={portrait.slug} data-size={size}>
       <source type="image/webp" srcSet={portrait.webp} />
       <img
-        src={portrait.png}
+        src={portrait.png ?? portrait.webp}
         alt=""
         height={portrait.height}
         className="mqx-persona-portrait__img"

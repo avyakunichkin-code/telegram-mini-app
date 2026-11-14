@@ -28,7 +28,7 @@
 ## Просмотр
 
 ```powershell
-cd game/design-lab/dashboard/cushion-fill-round
+cd game/design-lab/archive/dashboard/cushion-fill-round
 .\sync-lab.sh
 npx serve .
 ```

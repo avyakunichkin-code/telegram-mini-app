@@ -3,18 +3,6 @@
   "description": "Only sources in this project are editable. Targets are generated compatibility exports.",
   "exports": [
     {
-      "source": "archive/classic-v3/assets/Misc/hero.png",
-      "target": "game/web/src/assets/hero.png"
-    },
-    {
-      "source": "archive/classic-v3/assets/Misc/react.svg",
-      "target": "game/web/src/assets/react.svg"
-    },
-    {
-      "source": "archive/classic-v3/assets/Misc/vite.svg",
-      "target": "game/web/src/assets/vite.svg"
-    },
-    {
       "source": "system/assets/Logos/logo-compact.png",
       "target": "game/web/src/assets/brand/logo-compact.png"
     },
@@ -29,142 +17,6 @@
     {
       "source": "system/assets/Logos/logo-full.webp",
       "target": "game/web/src/assets/brand/logo-full.webp"
-    },
-    {
-      "source": "archive/classic-v3/assets/Needs/student-mascot.png",
-      "target": "game/web/src/assets/character-needs/student-mascot.png"
-    },
-    {
-      "source": "archive/classic-v3/assets/Needs/student-mascot.webp",
-      "target": "game/web/src/assets/character-needs/student-mascot.webp"
-    },
-    {
-      "source": "archive/classic-v3/assets/Personas/entrepreneur-mascot-dash.png",
-      "target": "game/web/src/assets/character-portraits/entrepreneur-mascot-dash.png"
-    },
-    {
-      "source": "archive/classic-v3/assets/Personas/entrepreneur-mascot-dash.webp",
-      "target": "game/web/src/assets/character-portraits/entrepreneur-mascot-dash.webp"
-    },
-    {
-      "source": "archive/classic-v3/assets/Personas/entrepreneur-mascot-md.png",
-      "target": "game/web/src/assets/character-portraits/entrepreneur-mascot-md.png"
-    },
-    {
-      "source": "archive/classic-v3/assets/Personas/entrepreneur-mascot-md.webp",
-      "target": "game/web/src/assets/character-portraits/entrepreneur-mascot-md.webp"
-    },
-    {
-      "source": "archive/classic-v3/assets/Personas/entrepreneur-mascot-pick.png",
-      "target": "game/web/src/assets/character-portraits/entrepreneur-mascot-pick.png"
-    },
-    {
-      "source": "archive/classic-v3/assets/Personas/entrepreneur-mascot-pick.webp",
-      "target": "game/web/src/assets/character-portraits/entrepreneur-mascot-pick.webp"
-    },
-    {
-      "source": "archive/classic-v3/assets/Personas/entrepreneur-mascot.png",
-      "target": "game/web/src/assets/character-portraits/entrepreneur-mascot.png"
-    },
-    {
-      "source": "archive/classic-v3/assets/Personas/entrepreneur-mascot.webp",
-      "target": "game/web/src/assets/character-portraits/entrepreneur-mascot.webp"
-    },
-    {
-      "source": "archive/classic-v3/assets/Personas/manager-mascot-dash.png",
-      "target": "game/web/src/assets/character-portraits/manager-mascot-dash.png"
-    },
-    {
-      "source": "archive/classic-v3/assets/Personas/manager-mascot-dash.webp",
-      "target": "game/web/src/assets/character-portraits/manager-mascot-dash.webp"
-    },
-    {
-      "source": "archive/classic-v3/assets/Personas/manager-mascot-md.png",
-      "target": "game/web/src/assets/character-portraits/manager-mascot-md.png"
-    },
-    {
-      "source": "archive/classic-v3/assets/Personas/manager-mascot-md.webp",
-      "target": "game/web/src/assets/character-portraits/manager-mascot-md.webp"
-    },
-    {
-      "source": "archive/classic-v3/assets/Personas/manager-mascot-pick.png",
-      "target": "game/web/src/assets/character-portraits/manager-mascot-pick.png"
-    },
-    {
-      "source": "archive/classic-v3/assets/Personas/manager-mascot-pick.webp",
-      "target": "game/web/src/assets/character-portraits/manager-mascot-pick.webp"
-    },
-    {
-      "source": "archive/classic-v3/assets/Personas/manager-mascot.png",
-      "target": "game/web/src/assets/character-portraits/manager-mascot.png"
-    },
-    {
-      "source": "archive/classic-v3/assets/Personas/manager-mascot.webp",
-      "target": "game/web/src/assets/character-portraits/manager-mascot.webp"
-    },
-    {
-      "source": "archive/classic-v3/assets/Personas/professional-mascot-dash.png",
-      "target": "game/web/src/assets/character-portraits/professional-mascot-dash.png"
-    },
-    {
-      "source": "archive/classic-v3/assets/Personas/professional-mascot-dash.webp",
-      "target": "game/web/src/assets/character-portraits/professional-mascot-dash.webp"
-    },
-    {
-      "source": "archive/classic-v3/assets/Personas/professional-mascot-md.png",
-      "target": "game/web/src/assets/character-portraits/professional-mascot-md.png"
-    },
-    {
-      "source": "archive/classic-v3/assets/Personas/professional-mascot-md.webp",
-      "target": "game/web/src/assets/character-portraits/professional-mascot-md.webp"
-    },
-    {
-      "source": "archive/classic-v3/assets/Personas/professional-mascot-pick.png",
-      "target": "game/web/src/assets/character-portraits/professional-mascot-pick.png"
-    },
-    {
-      "source": "archive/classic-v3/assets/Personas/professional-mascot-pick.webp",
-      "target": "game/web/src/assets/character-portraits/professional-mascot-pick.webp"
-    },
-    {
-      "source": "archive/classic-v3/assets/Personas/professional-mascot.png",
-      "target": "game/web/src/assets/character-portraits/professional-mascot.png"
-    },
-    {
-      "source": "archive/classic-v3/assets/Personas/professional-mascot.webp",
-      "target": "game/web/src/assets/character-portraits/professional-mascot.webp"
-    },
-    {
-      "source": "archive/classic-v3/assets/Personas/student-mascot-dash.png",
-      "target": "game/web/src/assets/character-portraits/student-mascot-dash.png"
-    },
-    {
-      "source": "archive/classic-v3/assets/Personas/student-mascot-dash.webp",
-      "target": "game/web/src/assets/character-portraits/student-mascot-dash.webp"
-    },
-    {
-      "source": "archive/classic-v3/assets/Personas/student-mascot-md.png",
-      "target": "game/web/src/assets/character-portraits/student-mascot-md.png"
-    },
-    {
-      "source": "archive/classic-v3/assets/Personas/student-mascot-md.webp",
-      "target": "game/web/src/assets/character-portraits/student-mascot-md.webp"
-    },
-    {
-      "source": "archive/classic-v3/assets/Personas/student-mascot-pick.png",
-      "target": "game/web/src/assets/character-portraits/student-mascot-pick.png"
-    },
-    {
-      "source": "archive/classic-v3/assets/Personas/student-mascot-pick.webp",
-      "target": "game/web/src/assets/character-portraits/student-mascot-pick.webp"
-    },
-    {
-      "source": "archive/classic-v3/assets/Personas/student-mascot.png",
-      "target": "game/web/src/assets/character-portraits/student-mascot.png"
-    },
-    {
-      "source": "archive/classic-v3/assets/Personas/student-mascot.webp",
-      "target": "game/web/src/assets/character-portraits/student-mascot.webp"
     },
     {
       "source": "archive/classic-v3/fonts/legacy/manrope-cyrillic-400-normal.woff2",
@@ -499,22 +351,6 @@
       "target": "game/web/src/assets/lottie/Fintech.tgs"
     },
     {
-      "source": "system/assets/Characters/student-chibi.svg",
-      "target": "game/web/src/assets/companions/student-chibi.svg"
-    },
-    {
-      "source": "system/assets/Characters/pro-chibi.svg",
-      "target": "game/web/src/assets/companions/pro-chibi.svg"
-    },
-    {
-      "source": "system/assets/Characters/boss-chibi.svg",
-      "target": "game/web/src/assets/companions/boss-chibi.svg"
-    },
-    {
-      "source": "system/assets/Characters/biz-chibi.svg",
-      "target": "game/web/src/assets/companions/biz-chibi.svg"
-    },
-    {
       "source": "system/assets/Companions/studbilet.svg",
       "target": "game/web/src/assets/companions/studbilet.svg"
     },
@@ -529,6 +365,54 @@
     {
       "source": "system/assets/Companions/phone.svg",
       "target": "game/web/src/assets/companions/phone.svg"
+    },
+    {
+      "source": "system/assets/Characters/landing-v3/student-introduce.webp",
+      "target": "game/landing/site/assets/student-introduce.webp"
+    },
+    {
+      "source": "system/assets/Characters/landing-v3/student-introduce.webp",
+      "target": "game/web/src/assets/character-portraits/student-introduce.webp"
+    },
+    {
+      "source": "system/assets/Characters/landing-v3/professional-explain.webp",
+      "target": "game/landing/site/assets/professional-explain.webp"
+    },
+    {
+      "source": "system/assets/Characters/landing-v3/professional-explain.webp",
+      "target": "game/web/src/assets/character-portraits/professional-explain.webp"
+    },
+    {
+      "source": "system/assets/Characters/landing-v3/manager-choice.webp",
+      "target": "game/landing/site/assets/manager-choice.webp"
+    },
+    {
+      "source": "system/assets/Characters/landing-v3/manager-choice.webp",
+      "target": "game/web/src/assets/character-portraits/manager-choice.webp"
+    },
+    {
+      "source": "system/assets/Characters/landing-v3/entrepreneur-roadmap.webp",
+      "target": "game/landing/site/assets/entrepreneur-roadmap.webp"
+    },
+    {
+      "source": "system/assets/Characters/landing-v3/entrepreneur-roadmap.webp",
+      "target": "game/web/src/assets/character-portraits/entrepreneur-roadmap.webp"
+    },
+    {
+      "source": "system/assets/Monetka/monetka-soft-volume.webp",
+      "target": "game/landing/site/assets/monetka-soft-volume.webp"
+    },
+    {
+      "source": "system/assets/Monetka/monetka-soft-volume.webp",
+      "target": "game/web/src/assets/monetka/monetka-soft-volume.webp"
+    },
+    {
+      "source": "system/assets/Monetka/monetka-soft-volume-avatar.webp",
+      "target": "game/landing/site/assets/monetka-soft-volume-avatar.webp"
+    },
+    {
+      "source": "system/assets/Monetka/monetka-soft-volume-avatar.webp",
+      "target": "game/web/src/assets/monetka/monetka-soft-volume-avatar.webp"
     }
   ]
 }

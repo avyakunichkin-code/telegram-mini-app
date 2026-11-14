@@ -5,7 +5,7 @@
 ## Запуск
 
 ```powershell
-cd game/design-lab/dashboard/period-actions-round
+cd game/design-lab/archive/dashboard/period-actions-round
 ```
 
 **Sync CSS** (если `.\sync-lab.sh` падает с ExecutionPolicy):

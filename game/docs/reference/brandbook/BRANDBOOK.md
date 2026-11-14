@@ -60,7 +60,7 @@ aliases:
 | Эталон 3D-цвета | REF | — | `game/design-lab/brand-logo/assets/reference-ep-author-why.png` | Маркетинг, не UI lockup |
 | Монограмма аватар | **ТХ** | 2026-05 | [`assets/logos/avatar-tx.svg`](assets/logos/avatar-tx.svg) | TG 512×512, соцсети |
 | Dashboard unified | S5 | 2026-05 | [`game/design-lab/dashboard/APPROVED.md`](../../../design-lab/dashboard/APPROVED.md) | см. MQX doc |
-| Guided onboarding (O2) | Strip | 2026-06-01 | [`game/design-lab/onboarding-o2/APPROVED.md`](../../../design-lab/onboarding-o2/APPROVED.md) | см. MQX doc |
+| Guided onboarding (O2) | Strip | 2026-06-01 | [`game/design-lab/archive/onboarding-o2/APPROVED.md`](../../../design-lab/archive/onboarding-o2/APPROVED.md) | см. MQX doc |
 | New game mode UI | R2 | 2026-05-20 | [`game/design-lab/new-game-mode/APPROVED.md`](../../../design-lab/new-game-mode/APPROVED.md) | см. MQX doc |
 | Направление «настольная игра про деньги» | **BG** | 2026-10-14 | [ADR-014](../../decisions/ADR-014-brand-direction-board-game.md) | Роли цвета, шрифт PWA, псевдо-3D (перерисовка отложена), «Завершить ход»; визуал — через раунд design-lab |
 | Остальные экраны «настольная игра» | **BG-2** | 2026-10-15 | [`game/design-lab/board-game/APPROVED.md`](../../../design-lab/board-game/APPROVED.md) | Капитал, Аналитика, Меню, событие, вход, выбор жизни, финал; перенос в prod по группам |

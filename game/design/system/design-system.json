@@ -11,6 +11,10 @@
   "assets": [
     "assets/Characters/biz-chibi.svg",
     "assets/Characters/boss-chibi.svg",
+    "assets/Characters/landing-v3/entrepreneur-roadmap.webp",
+    "assets/Characters/landing-v3/manager-choice.webp",
+    "assets/Characters/landing-v3/professional-explain.webp",
+    "assets/Characters/landing-v3/student-introduce.webp",
     "assets/Characters/pro-chibi.svg",
     "assets/Characters/student-chibi.svg",
     "assets/Companions/briefcase.svg",
@@ -66,7 +70,9 @@
     "assets/Monetka/kvitya-joy.svg",
     "assets/Monetka/kvitya-think.svg",
     "assets/Monetka/monetka-ink-avatar.svg",
-    "assets/Monetka/monetka-ink-full.svg"
+    "assets/Monetka/monetka-ink-full.svg",
+    "assets/Monetka/monetka-soft-volume-avatar.webp",
+    "assets/Monetka/monetka-soft-volume.webp"
   ],
   "exports": "../asset-exports.json",
   "archive": "../archive/classic-v3/"

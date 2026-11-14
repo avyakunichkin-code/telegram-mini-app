@@ -17,7 +17,7 @@ aliases:
 - Bottom strip `MqxGuidanceStrip`, curriculum 3 периода, user-once
 - Идея: [`onboarding-o2-progressive-guidance.md`](../../vision/ideas/onboarding-o2-progressive-guidance.md)
 - Бывшие: `SPEC_onboarding-o2.md`, `PLAN_onboarding-o2.md` → redirect сюда
-- Lab: [`game/design-lab/onboarding-o2/`](../../../design-lab/onboarding-o2)
+- Lab: [`game/design-lab/archive/onboarding-o2/`](../../../design-lab/archive/onboarding-o2)
 
 ## Канон (prod)
 
