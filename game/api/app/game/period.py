@@ -686,8 +686,8 @@ def process_period_end(db: Session, profile: GameProfile) -> dict:
 
     achievement_unlocks: list = []
     try:
-        ensure_achievement_catalog(db)
         with db.begin_nested():
+            ensure_achievement_catalog(db, commit=False)
             achievement_unlocks = process_achievement_unlocks(db, profile)
     except Exception:
         logger.exception(
