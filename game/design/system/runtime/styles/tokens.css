@@ -194,14 +194,19 @@ body {
   background: var(--tg-theme-secondary-bg-color, var(--tg-theme-bg-color, #f5f6f8));
 }
 
-/* Pocket Board G dashboard palette. */
-.mqx-tab-page--pocket {
+/* Palette shared by the dashboard and its navigation. */
+.mqx-tab-page--pocket,
+.bottom-nav--dashboard {
   --mq-pocket-plum: #382449;
   --mq-pocket-on: #fff7e9;
   --mq-pocket-muted-on: #ddc8ec;
   --mq-pocket-gold: #ffd165;
+  --mq-dashboard-need-caution: #b65a00;
+  --mq-dashboard-action: linear-gradient(155deg, #763195, #502064);
+  --mq-dashboard-events: linear-gradient(115deg, #652084, #4a1e64);
+  --mq-dashboard-gold: linear-gradient(#ffdc76, var(--mq-pocket-gold) 52%, #f6aa0d);
+  --mq-dashboard-hero: radial-gradient(ellipse at top right, #632080, var(--mq-pocket-plum) 74%);
   --mq-pocket-lilac: #eee2fd;
-  --mq-pocket-salary: #f9d893;
   --mq-pocket-paid: #e2edcc;
   --mq-pocket-shadow: #21182c;
   --mq-pocket-risk-on: #ffd0bc;

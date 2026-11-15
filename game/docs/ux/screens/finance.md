@@ -14,6 +14,8 @@ aliases:
 ---
 # UX Spec: Капитал
 
+[Новый макет Капитала](../../../design-lab/finance-game-round/capital.html) на согласовании. Действующий контракт описан ниже.
+
 > **Status:** Draft — as-built из prod + design-lab; на ревью  
 > **Author:** product + /ux-design session  
 > **Last Updated:** 2026-06-02  

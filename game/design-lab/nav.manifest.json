@@ -15,11 +15,21 @@
   },
   "sections": [
     {
+      "id": "finance-game",
+      "title": "Финансы как игра",
+      "items": [
+        { "label": "Элементы — иконки и кнопки", "path": "finance-game-round/elements.html", "kind": "lab" },
+        { "label": "Главная — утверждённый дизайн", "path": "finance-game-round/compact.html", "kind": "lab", "status": "approved" },
+        { "label": "Капитал — на согласование", "path": "finance-game-round/capital.html", "kind": "lab" },
+        { "label": "Аналитика — на согласование", "path": "finance-game-round/analytics.html", "kind": "lab" }
+      ]
+    },
+    {
       "id": "analytics",
       "title": "Аналитика (AN1)",
       "items": [
         {
-          "label": "Аналитика v2 — AN1-002 (review)",
+          "label": "История дизайна Аналитики — AN1",
           "path": "analytics/v2-round/index.html",
           "kind": "lab"
         }
@@ -236,7 +246,7 @@
           "status": "approved"
         },
         {
-          "label": "Дашборд ★ BG-1 — prod parity (в prod с 2026-10-14)",
+          "label": "Дашборд BG-1 — снимок прежней реализации",
           "path": "dashboard/bg1-page-round/index.html",
           "kind": "lab",
           "status": "approved"

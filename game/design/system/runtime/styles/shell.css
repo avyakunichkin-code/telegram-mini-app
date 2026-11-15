@@ -719,3 +719,36 @@ code {
   animation: spin 0.6s linear infinite;
 }
 @keyframes spin { to { transform: rotate(360deg); } }
+
+/* Нижняя навигация утверждённой Главной. */
+.bottom-nav--dashboard {
+  background: transparent;
+  border-top: 0;
+}
+
+.bottom-nav--dashboard .bottom-nav__track {
+  border-radius: var(--mq-r-cell);
+  background: var(--mq-pocket-plum);
+}
+
+.bottom-nav--dashboard .bottom-nav__cell {
+  color: var(--mq-pocket-on);
+}
+
+.bottom-nav--dashboard .bottom-nav__cell--active {
+  border-color: transparent;
+  color: var(--mq-pocket-gold);
+  background: transparent;
+}
+
+.bottom-nav__art {
+  display: block;
+  width: 1.65rem;
+  aspect-ratio: 1;
+  background: url('../assets/dashboard/goal-nav-icons.png') var(--tab-art-offset) 50% / 517.6% 170.5% no-repeat;
+}
+
+.bottom-nav__art--dashboard { --tab-art-offset: 27%; }
+.bottom-nav__art--finance { --tab-art-offset: 50%; }
+.bottom-nav__art--analytics { --tab-art-offset: 75%; }
+.bottom-nav__art--menu { --tab-art-offset: 98%; }

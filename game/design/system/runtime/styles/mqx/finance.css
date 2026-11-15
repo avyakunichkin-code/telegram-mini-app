@@ -1150,7 +1150,10 @@
 
 /* MQX catalog (dev) */
 .mqx-catalog {
+  width: 100%;
+  min-width: 0;
   max-width: 520px;
+  overflow-wrap: anywhere;
   margin: 0 auto;
 }
 

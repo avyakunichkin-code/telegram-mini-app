@@ -1,0 +1,11 @@
+.menu-options{display:flex;gap:12px;flex-wrap:wrap;font-size:.85rem}
+.menu-options a{color:inherit}
+.menu-card h2{margin:0}
+.menu-card p{margin:.5rem 0}
+.menu-card .primary,.menu-hero .primary{display:grid;place-items:center;text-decoration:none}
+.menu-hero{position:relative}
+.menu-hero .scene{width:90px;height:70px;border-radius:12px;background:url('./campus.png') center/cover}
+.menu-card .row{align-items:center;gap:12px}
+.menu-card .row + .row{border-top:1px solid #eadcf4;padding-top:12px}
+.menu-exit{padding:10px 0;color:#623481}
+.menu-page details summary{cursor:pointer;min-height:44px;align-content:center}

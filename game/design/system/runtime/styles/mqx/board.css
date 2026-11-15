@@ -264,7 +264,9 @@
 
 /* «Завершить ход» — компактная фишка-кнопка */
 .mqx-bg-cta {
-  display: block;
+  display: grid;
+  place-items: center;
+  text-align: center;
   width: 100%;
   min-height: 44px;
   padding: var(--mq-sp-4) var(--mq-sp-6);
@@ -375,38 +377,52 @@
 
 .mqx-bg-needs__grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: var(--mq-sp-3) var(--mq-sp-6);
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--mq-sp-2);
 }
 
 .mqx-bg-need {
   display: grid;
+  grid-template-rows: 1fr auto auto;
+  align-items: end;
   gap: var(--mq-sp-1);
+  min-width: 0;
+  text-align: center;
   font-size: var(--mq-fs-caption);
+}
+
+.mqx-bg-need__label {
+  overflow-wrap: anywhere;
+  color: var(--mq-board-ink-soft);
 }
 
 .mqx-bg-need__row {
   display: flex;
-  justify-content: space-between;
-  color: var(--mq-board-ink-soft);
+  align-items: center;
+  justify-content: center;
+  gap: var(--mq-sp-1);
 }
 
 .mqx-bg-need__row b {
   color: var(--mq-board-ink);
-  font-weight: 600;
+  font-weight: 700;
   font-variant-numeric: tabular-nums;
 }
 
 .mqx-bg-need .mqx-progress.mqx-bg-need__bar {
   margin: 0;
-  height: 6px;
-  border-radius: 4px;
+  height: var(--mq-sp-4);
+  border-radius: var(--mq-r-cell);
   background: var(--mq-cell-edge);
 }
 
 .mqx-bg-need .mqx-progress .mqx-progress__fill {
-  border-radius: 4px;
+  border-radius: inherit;
   background: var(--mq-gain);
+}
+
+.mqx-bg-need .mqx-progress[data-tone='caution'] .mqx-progress__fill {
+  background: var(--mq-dashboard-need-caution);
 }
 
 .mqx-bg-need .mqx-progress[data-tone='risk'] .mqx-progress__fill {
@@ -752,11 +768,14 @@
 
 /* Иконка без плашки — цвет действия */
 .mqx-bg-act__ico {
-  display: grid;
-  place-items: center;
-  width: 22px;
-  height: 22px;
-  color: var(--mq-turn);
+  display: flex;
+}
+
+.mqx-bg-action-icon {
+  display: block;
+  flex: none;
+  height: 1.4em;
+  width: auto;
 }
 
 /* Открыт лист «В подушку» / «Из подушки» */
@@ -765,29 +784,22 @@
   color: var(--mq-turn-on);
 }
 
-.mqx-bg-act--active .mqx-bg-act__ico {
-  color: var(--mq-turn-on);
-}
-
 /* «Зарплата» */
 .mqx-bg-salary {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
-  gap: var(--mq-sp-5);
+  justify-content: center;
+  gap: var(--mq-sp-1) var(--mq-sp-3);
   width: 100%;
   min-height: 52px;
   padding: var(--mq-sp-3) var(--mq-sp-7);
   border: 0;
   border-radius: var(--mq-r-cell);
-  text-align: left;
+  text-align: center;
   transition:
     transform 80ms ease,
     box-shadow 80ms ease;
-}
-
-.mqx-bg-salary__label {
-  flex: 1;
-  min-width: 0;
 }
 
 .mqx-bg-salary__sum {
@@ -821,22 +833,8 @@
   font: 600 var(--mq-fs-body) / 1.2 var(--mq-font-body);
 }
 
-.mqx-bg-salary--quiet .mqx-bg-coin {
+.mqx-bg-salary--quiet .mqx-bg-action-icon {
   opacity: 0.6;
-  box-shadow: none;
-}
-
-/* Монета с ₽ — как Монетка: золотое лицо, фиолетовое кольцо, золотой обод, толщина ребра */
-.mqx-bg-coin--salary {
-  --coin-size: 32px;
-  border: 3px solid var(--mq-turn);
-  background: radial-gradient(circle at 36% 30%, var(--mq-coin-face) 0 10%, var(--mq-coin) 26%);
-  box-shadow:
-    inset 0 0 0 1px var(--mq-coin-rim),
-    0 0 0 1.5px var(--mq-coin),
-    0 0 0 2.5px var(--mq-coin-rim),
-    0 3px 0 2px var(--mq-coin-rim);
-  font-size: var(--mq-fs-caption);
 }
 
 .mqx-bg-salary.mqx-juice-chip--celebrate {
@@ -863,7 +861,7 @@
 
 /* Витрина #/dev/mqx */
 .mqx-catalog__board-demo {
-  max-width: 390px;
+  max-width: min(390px, 100%, calc(100vw - 2 * var(--mq-sp-5)));
   overflow: hidden;
   border: var(--mq-hair);
   border-radius: var(--mq-r-card);
@@ -906,10 +904,6 @@
 
 .mqx-bg-needs {
   margin-top: var(--mq-sp-1);
-}
-
-.mqx-bg-needs__grid {
-  gap: var(--mq-sp-2) var(--mq-sp-6);
 }
 
 .mqx-bg-money {
@@ -1020,7 +1014,7 @@
 }
 
 .mqx-tab-page--pocket .mqx-bg-turn__balance .mqx-persona-portrait {
-  width: min(30%, 105px);
+  width: min(20vw, 105px);
 }
 
 .mqx-tab-page--pocket .mqx-bg-turn__balance img {
@@ -1028,8 +1022,8 @@
   object-fit: contain;
 }
 
-.mqx-tab-page--pocket .mqx-bg-turn > .mqx-bg-cta {
-  min-height: 44px;
+.mqx-tab-page--pocket .mqx-bg-turn > .mqx-bg-cta,
+.mqx-tab-page--pocket .mqx-bg-salary--hot {
   background: var(--mq-pocket-gold);
   color: var(--mq-pocket-shadow);
   border: 0;
@@ -1068,9 +1062,184 @@
 }
 
 .mqx-tab-page--pocket .mqx-bg-salary--hot {
-  background: var(--mq-pocket-salary);
+  box-shadow: 0 var(--mq-ink-off-s) var(--mq-pocket-shadow);
 }
 
 .mqx-tab-page--pocket .mqx-bg-salary--quiet {
   background: var(--mq-pocket-paid);
+}
+
+/* Главная «Финансы как игра». */
+.mqx-bg-turn__persona {
+  display: grid;
+  justify-items: center;
+  gap: var(--mq-sp-1);
+  flex: none;
+}
+
+.mqx-bg-turn__balance > div.mqx-bg-turn__persona {
+  flex: none;
+}
+
+.mqx-bg-turn__balance--gain {
+  color: var(--mq-gain);
+}
+
+.mqx-tab-page--pocket .mqx-bg-turn__balance--gain .mq-money {
+  color: inherit;
+}
+
+.mqx-tab-page--pocket .mqx-bg-turn {
+  background: var(--mq-dashboard-hero);
+}
+
+.mqx-tab-page--pocket .mqx-bg-turn > .mqx-bg-cta,
+.mqx-tab-page--pocket .mqx-bg-salary--hot {
+  background: var(--mq-dashboard-gold);
+}
+
+.mqx-tab-page--pocket .mqx-bg-events {
+  border: var(--mq-hair);
+  background: var(--mq-dashboard-events);
+  color: var(--mq-pocket-on);
+}
+
+.mqx-tab-page--pocket .mqx-bg-events__hint {
+  color: var(--mq-pocket-muted-on);
+}
+
+.mqx-tab-page--pocket :is(.mqx-bg-needs, .mqx-bg-money) {
+  padding: var(--mq-sp-3);
+  border: var(--mq-hair);
+  border-radius: var(--mq-r-cell);
+  background: var(--mq-cell);
+}
+
+.mqx-bg-money__cell {
+  align-content: center;
+  text-align: center;
+}
+
+.mqx-bg-money__cell .mqx-bg-money__value {
+  font-size: clamp(var(--mq-fs-caption), 4vw, var(--mq-fs-lead));
+  overflow-wrap: anywhere;
+}
+
+.mqx-bg-acts__row {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.mqx-bg-acts__row > button {
+  min-width: 0;
+}
+
+.mqx-bg-acts__row .mqx-bg-act {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: var(--mq-sp-2);
+}
+
+.mqx-tab-page--pocket .mqx-bg-act {
+  background: var(--mq-dashboard-action);
+  color: var(--mq-pocket-on);
+}
+
+.mqx-tab-page--pocket .mqx-bg-act--active {
+  background: var(--mq-turn);
+  color: var(--mq-turn-on);
+}
+
+.mqx-bg-acts__row .mqx-bg-salary {
+  padding-inline: var(--mq-sp-2);
+  font-size: var(--mq-fs-caption);
+}
+
+.mqx-bg-acts__row .mqx-bg-salary__sum {
+  font-size: var(--mq-fs-caption);
+}
+
+.mqx-bg-goal__toggle {
+  grid-template-columns: minmax(0, 1fr) auto;
+}
+
+.mqx-bg-goal__chev {
+  grid-column: 2;
+  grid-row: 1;
+}
+
+.mqx-bg-track {
+  grid-column: 1 / -1;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  gap: var(--mq-sp-2);
+}
+
+.mqx-bg-track .mqx-bg-track__dot {
+  display: grid;
+  place-items: center;
+  width: 1.75em;
+  height: 1.75em;
+  margin: 0;
+  color: var(--mq-board-ink);
+  font-weight: 700;
+}
+
+.mqx-bg-track__dot + .mqx-bg-track__dot::before {
+  content: none;
+}
+
+.mqx-bg-track__dot[data-status='done'] {
+  color: var(--mq-cell);
+  background: var(--mq-gain);
+}
+
+.mqx-bg-events__calendar {
+  display: block;
+  width: 2.8em;
+  aspect-ratio: 5 / 3;
+  background: url('../../assets/dashboard/calendar.png') center / contain no-repeat;
+}
+
+.mqx-bg-turn--campus {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+}
+
+.mqx-bg-turn--campus::before {
+  content: '';
+  position: absolute;
+  inset: 0 0 auto;
+  height: clamp(8rem, 43vw, 12rem);
+  z-index: -1;
+  background: url('../../assets/dashboard/campus.png') right 45% / cover no-repeat;
+  mask-image: linear-gradient(black 65%, transparent);
+}
+
+.mqx-bg-turn--campus .mqx-bg-turn__balance {
+  min-height: clamp(4rem, 19vw, 6rem);
+}
+
+.mqx-bg-turn--campus .mqx-bg-turn__persona {
+  align-self: start;
+}
+
+.mqx-tab-page--pocket .mqx-bg-events__title,
+.mqx-tab-page--pocket .mqx-bg-events__go {
+  color: inherit;
+}
+
+.mqx-tab-page--pocket .mqx-bg-close-preview .mqx-bg-close-preview__risk {
+  color: var(--mq-pocket-risk-on);
+}
+
+.mqx-bg-goal__title::before {
+  content: '';
+  display: inline-block;
+  width: 1.65em;
+  aspect-ratio: 1;
+  margin-inline-end: var(--mq-sp-1);
+  vertical-align: middle;
+  background: url('../../assets/dashboard/goal-nav-icons.png') 3% 50% / 517.6% 170.5% no-repeat;
 }
