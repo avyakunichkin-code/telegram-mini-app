@@ -1,5 +1,7 @@
 # Капитал — утверждено ★ BG-2 (prod)
 
+[Предложение в стиле «Финансы как игра»](../finance-game-round/capital.html) на согласовании.
+
 **Утверждено:** 2026-10-15, в чате («замечаний нет»; правки после игры — итерациями). **Направление:** [ADR-014](../../docs/decisions/ADR-014-brand-direction-board-game.md).
 **Канон-раунд:** [`../board-game/screens-round/`](../board-game/screens-round) — экраны «Капитал · Детали» и «Капитал · Действия»; общие инварианты BG-2 — [`../board-game/APPROVED.md`](../board-game/APPROVED.md).
 **Перенесено в prod:** 2026-10-15 — `FinancePremium` (`mqx-capital-page--board`), стили — раздел «★ BG-2» в `game/web/src/styles/mqx/finance.css`, токены v2 из `tokens.css`.

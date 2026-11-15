@@ -2,6 +2,10 @@ import { useId, useMemo } from 'react';
 
 import { IconHelpQuestion, IconTreatHeartPlus } from '../icons/MqxContextHelpIcons';
 import { showNotification } from '../../notifications';
+import homeIcon from '../../../assets/needs/home.svg';
+import rankIcon from '../../../assets/needs/rank.svg';
+import linksIcon from '../../../assets/needs/links.svg';
+import healthIcon from '../../../assets/needs/health.svg';
 import { MqxProgress } from '../primitives/MqxProgress';
 import { lowestNeedAxis, NEEDS_AXES, pluralRu } from '../utils/boardDashDisplay';
 
@@ -20,8 +24,14 @@ function zone(v) {
 }
 
 const ZONE_LABEL = { zero: 'критично', distressed: 'истощение', low: 'низко', ok: 'норма' };
-/** Роли цвета ADR-014: шкалы — рост (как в ★ BG-1); красный — только риск (истощение / ноль). */
-const ZONE_TONE = { zero: 'risk', distressed: 'risk', low: 'gain', ok: 'gain' };
+const NEED_ICON = { comfort: homeIcon, status: rankIcon, social: linksIcon, health: healthIcon };
+
+// Visual bands on the dashboard, independent of gameplay risk thresholds.
+function meterTone(pct) {
+  if (pct < 60) return 'risk';
+  if (pct < 80) return 'caution';
+  return 'gain';
+}
 
 function pickAxisValues(needs) {
   if (!needs || typeof needs !== 'object') return null;
@@ -39,22 +49,23 @@ function NeedBar({ axis, value }) {
   const z = zone(value);
   return (
     <div className="mqx-bg-need" data-zone={z}>
+      <span className="mqx-bg-need__label">{axis.label}</span>
       <span className="mqx-bg-need__row">
-        <span>{axis.label}</span>
-        <b>{pct}</b>
+        <img src={NEED_ICON[axis.key]} width="14" height="14" alt="" />
+        <b>{pct}%</b>
       </span>
       <MqxProgress
         value={pct}
-        tone={ZONE_TONE[z]}
+        tone={meterTone(pct)}
         className="mqx-bg-need__bar"
-        aria-label={`${axis.label}, ${pct} из 100, ${ZONE_LABEL[z]}`}
+        aria-label={`${axis.label}, ${ZONE_LABEL[z]}`}
       />
     </div>
   );
 }
 
 /**
- * Потребности ★ BG-1: 4 тонкие шкалы 2×2 с числом. Книга+? → help sheet, сердце → treat-self (Z-NEEDS).
+ * Потребности: четыре подписанные шкалы. Книга+? → help sheet, сердце → treat-self (Z-NEEDS).
  */
 export function MqxNeedsDash({
   needs,

@@ -1,10 +1,10 @@
+import { getSafetyFundFillFromOverview } from '../utils/safetyFundFill';
 import { useEffect, useMemo, useRef, useState } from 'react';
 
 
 import { showNotification } from './notifications';
 import { suggestSafetyFundAmount } from '../utils/safetyFundAmount';
 
-import { getSafetyFundFillFromOverview } from '../utils/safetyFundFill';
 import { personaRoleTitle } from './mqx/brand/personaRoles';
 import { buildTurnTip, closePreviewView, incomeCell } from './mqx/utils/boardDashDisplay';
 import { buildGoalChainView } from './mqx/utils/goalChainDisplay';
@@ -143,7 +143,6 @@ export function DashboardPremium({
 
   const cashBalance = Math.max(0, Math.floor(Number(overview?.cash_balance) || 0));
   const safetyBalance = Math.max(0, Math.floor(Number(overview?.safety_fund_balance) || 0));
-  const cushionFill = getSafetyFundFillFromOverview(overview);
   const templateKey = overview?.victory?.template_key ?? overview?.starter_template_key;
   const shownEventsCount = eventsUnlocked ? Number(pendingEventsCount) || 0 : 0;
   const salaryAvailable = !salaryClaimed && (periodStatus == null || canClaimSalary);
@@ -248,6 +247,7 @@ export function DashboardPremium({
               closeMonthDisabled={closeMonthDisabled || busyAction !== null}
               pendingEventsCount={shownEventsCount}
               onOpenEvents={eventsUnlocked ? onOpenEvents : undefined}
+              balanceHighlight={salaryCelebrate}
               tip={turnTip}
               closePreview={closePreview}
             />
@@ -261,18 +261,13 @@ export function DashboardPremium({
             />
 
             <MqxFinancePeriodBlock
-              templateKey={templateKey}
-              cash={Number(overview?.cash_balance) || 0}
               safety={Number(overview?.safety_fund_balance) || 0}
-              cushionPercent={cushionFill?.percent ?? null}
+              cushionPercent={getSafetyFundFillFromOverview(overview)?.percent ?? null}
               income={incomeCell(overview)}
               outflow={Number(overview?.total_monthly_outflow) || 0}
               onFlowsNavigate={onGoCapitalFlows}
-              juiceGainActive={salaryCelebrate}
-              cushionRisk={Boolean(closePreview?.negative)}
             />
 
-            <MqxGoalDash victory={overview?.victory} legacyGoal={goal} />
 
             <MqxPeriodActions
               busy={busyAction !== null}
@@ -331,6 +326,8 @@ export function DashboardPremium({
               onInvest={onGoFinanceInvest ?? onGoFinance}
 
             />
+
+            <MqxGoalDash victory={overview?.victory} legacyGoal={goal} />
 
           </div>
 

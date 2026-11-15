@@ -9,6 +9,10 @@
     "illustrations/monetka.js"
   ],
   "assets": [
+    "assets/Actions/action-coins.png",
+    "assets/Actions/action-invest.png",
+    "assets/Actions/action-shield.png",
+    "assets/Actions/action-withdraw.png",
     "assets/Characters/biz-chibi.svg",
     "assets/Characters/boss-chibi.svg",
     "assets/Characters/landing-v3/entrepreneur-roadmap.webp",
@@ -21,6 +25,9 @@
     "assets/Companions/card.svg",
     "assets/Companions/phone.svg",
     "assets/Companions/studbilet.svg",
+    "assets/Dashboard/calendar.png",
+    "assets/Dashboard/campus.png",
+    "assets/Dashboard/goal-nav-icons.png",
     "assets/Icons/coins.svg",
     "assets/Icons/expense.svg",
     "assets/Icons/finance-metrics-sprite.svg",
@@ -72,7 +79,11 @@
     "assets/Monetka/monetka-ink-avatar.svg",
     "assets/Monetka/monetka-ink-full.svg",
     "assets/Monetka/monetka-soft-volume-avatar.webp",
-    "assets/Monetka/monetka-soft-volume.webp"
+    "assets/Monetka/monetka-soft-volume.webp",
+    "assets/Needs/health.svg",
+    "assets/Needs/home.svg",
+    "assets/Needs/links.svg",
+    "assets/Needs/rank.svg"
   ],
   "exports": "../asset-exports.json",
   "archive": "../archive/classic-v3/"

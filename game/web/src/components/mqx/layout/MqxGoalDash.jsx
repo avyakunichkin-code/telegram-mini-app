@@ -1,7 +1,7 @@
 import { useId, useMemo, useState } from 'react';
 
 import { buildGoalChainView } from '../utils/goalChainDisplay';
-import { goalFinishText, goalStepCaption } from '../utils/boardDashDisplay';
+import { goalFinishText } from '../utils/boardDashDisplay';
 
 function Coin({ className = '' }) {
   return (
@@ -11,16 +11,14 @@ function Coin({ className = '' }) {
   );
 }
 
-/** Свёрнутая дорожка: точки шагов без подписей + золотой финиш. */
-function GoalTrack({ chain, phase }) {
+function GoalTrack({ chain }) {
   return (
     <span className="mqx-bg-track" aria-hidden="true">
-      {chain.map((step) => (
-        <i key={step.key} className="mqx-bg-track__dot" data-status={step.status} />
+      {chain.map((step, index) => (
+        <span key={step.key} className="mqx-bg-track__dot" data-status={step.status}>
+          {step.status === 'done' ? '✓' : index + 1}
+        </span>
       ))}
-      <span className={`mqx-bg-track__finish${phase === 'win' ? ' is-won' : ''}`}>
-        <Coin className="mqx-bg-coin--sm" />
-      </span>
     </span>
   );
 }
@@ -69,7 +67,7 @@ export function MqxGoalDash({ victory, legacyGoal, defaultExpanded = false }) {
       data-onboarding-anchor="goal"
     >
       <h2 id={`${bodyId}-title`} className="mqx-bg-sr-only">
-        Цель
+        Цель сценария
       </h2>
       <button
         type="button"
@@ -80,11 +78,11 @@ export function MqxGoalDash({ victory, legacyGoal, defaultExpanded = false }) {
       >
         <span className="mqx-bg-goal__label">
           <span className="mqx-bg-goal__title">
-            Цель
+            Цель сценария
           </span>
-          <small className="mqx-bg-goal__step">{goalStepCaption(view)}</small>
+          <small className="mqx-bg-goal__step">{view.chain.filter((step) => step.status === 'done').length} из {view.total}</small>
         </span>
-        <GoalTrack chain={view.chain} phase={view.phase} />
+        <GoalTrack chain={view.chain} />
         <span className="mqx-bg-goal__chev" aria-hidden="true">
           <svg viewBox="0 0 24 24" fill="none">
             <path d="M8 10l4 4 4-4" stroke="currentColor" strokeWidth="2.25" strokeLinecap="round" strokeLinejoin="round" />

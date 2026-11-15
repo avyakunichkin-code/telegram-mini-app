@@ -2,12 +2,12 @@
   "schema_version": 1,
   "theme": "dashboard",
   "page_parity": {
-    "name": "Dashboard (★ BG-1 board game, ADR-014)",
+    "name": "Главная · Финансы как игра",
     "prod_entry": "web/src/components/DashboardPremium.jsx",
     "canonical_page_round": {
       "path": "design-lab/dashboard/parity-generated-page-round/",
       "status": "approved",
-      "notes": "Generated from manifest. BG-1 is one whole-page round: blocks sharing a round are embedded once."
+      "notes": "Generated technical reference. The approved visual reference is design-lab/finance-game-round/compact.html."
     },
     "concept_round": {
       "path": "design-lab/board-game/hybrid-round/",
@@ -32,8 +32,7 @@
         }
       ],
       "invariants": [
-        "Turn card on top inside scroll: role left + «Твой ход» (h1), turn number top-right without «из N».",
-        "Order inside card: events plate (N событий) → Monetka one line (most urgent) → compact «Завершить ход»."
+        "Turn card: logo, turn number, balance and persona, gold finish button, close preview and events."
       ]
     },
     {
@@ -52,8 +51,8 @@
         }
       ],
       "invariants": [
-        "4 thin bars 2×2 with numbers; book+? → help sheet, heart → treat-self (Z-NEEDS kept).",
-        "Bars are gain (as in ★ BG-1); red only for risk (distressed < 30 / zero)."
+        "Four labeled 10px bars in one row (finance-game-round/compact.html); help and treat-self actions remain available.",
+        "Display bands: red below 60%, orange from 60%, green from 80%. The defeat warning follows the game rules."
       ]
     },
     {
@@ -72,28 +71,7 @@
         }
       ],
       "invariants": [
-        "Persona portrait next to «На счёте»; below: cushion, salary (or income) per turn, expenses per turn.",
-        "Expense neutral (ADR-014), income green with «+»."
-      ]
-    },
-    {
-      "id": "goal",
-      "kind": "page-block",
-      "prod_component": "MqxGoalDash",
-      "status": "approved",
-      "canonical_rounds": [
-        {
-          "path": "design-lab/dashboard/bg1-page-round/",
-          "status": "approved"
-        },
-        {
-          "path": "design-lab/board-game/hybrid-round/",
-          "status": "approved"
-        }
-      ],
-      "invariants": [
-        "Collapsed: «Цель, шаг N из M» + unlabeled dot track + gold finish coin.",
-        "Expanded: victory chain steps, no Monetka; finish text shows «с N-го хода» only when min_period_index > 1."
+        "One row with income, outflow and reserve. Income and outflow link to Capital flows."
       ]
     },
     {
@@ -112,8 +90,26 @@
         }
       ],
       "invariants": [
-        "4 buttons in one row; «Зарплата» gold while claimable.",
-        "Labels «Пополнить» / «Снять» unchanged — separate open task."
+        "2 × 2 grid: salary, invest, contribute, withdraw. Claimable salary shares the gold background of Finish turn."
+      ]
+    },
+    {
+      "id": "goal",
+      "kind": "page-block",
+      "prod_component": "MqxGoalDash",
+      "status": "approved",
+      "canonical_rounds": [
+        {
+          "path": "design-lab/dashboard/bg1-page-round/",
+          "status": "approved"
+        },
+        {
+          "path": "design-lab/board-game/hybrid-round/",
+          "status": "approved"
+        }
+      ],
+      "invariants": [
+        "Goal below the actions. Collapsed state shows completed count and step numbers. Expanded state shows the full victory chain."
       ]
     }
   ],
@@ -121,7 +117,7 @@
     "MqxDashboardHero",
     "MqxNeedsDash",
     "MqxFinancePeriodBlock",
-    "MqxGoalDash",
-    "MqxPeriodActions"
+    "MqxPeriodActions",
+    "MqxGoalDash"
   ]
 }

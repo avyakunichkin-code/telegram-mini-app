@@ -1,4 +1,4 @@
-﻿# MQX — UI kit ТВОЙ ХОД
+# MQX — UI kit ТВОЙ ХОД
 
 Канонические React-компоненты финансового UI (метрики с иконками, карточки портфеля, формы инвестиций, страховки, примитивы).
 
@@ -109,7 +109,7 @@ mqx/
 
 | Компонент | Назначение |
 |-----------|------------|
-| `MqxButton` | Hero filled/outline, primary/secondary на светлом |
+| `MqxButton` | `turn` для завершения хода и доступной зарплаты, `primary` для основного действия экрана или формы, `secondary` для второстепенного, `destructive` для опасного. [Вариант А](../../../../design-lab/mqx-component-library/APPROVED.md) |
 | `MqxPill` | Пилюли hero, badge событий |
 | `MqxPeriodChip` | «Период» + номер в hero |
 | `MqxChip` | XP outline |

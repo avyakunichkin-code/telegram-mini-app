@@ -1,5 +1,7 @@
 # Аналитика — утверждено ★ BG-2 (канон prod)
 
+[Предложение в стиле «Финансы как игра»](../finance-game-round/analytics.html) на согласовании.
+
 **Утверждено:** 2026-10-15, в чате («замечаний нет»; правки после игры — итерациями). Раунд — [`../board-game/screens-round/`](../board-game/screens-round) (экран «Аналитика»), инварианты — [`../board-game/APPROVED.md`](../board-game/APPROVED.md) § ★ BG-2. Бренд — [ADR-014](../../docs/decisions/ADR-014-brand-direction-board-game.md).
 **Статус:** перенесено в prod 2026-10-15 (`AnalyticsPremium.jsx`, `AnalyticsCharts.jsx`, `styles/mqx/analytics.css` → `mqx-an-*`; расчёты — `components/mqx/utils/analyticsBoardDisplay.js`).
 **Prod parity:** [`bg2-page-round/`](bg2-page-round) — три состояния: есть риск, всё устойчиво, начало партии.
