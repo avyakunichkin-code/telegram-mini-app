@@ -4,6 +4,7 @@ import { BrandLogo } from '../../BrandLogo';
 import { MoneyText } from '../../MoneyText';
 import { MonetkaAvatar } from '../brand/MonetkaAvatar';
 import { PersonaPortrait } from '../brand/PersonaPortrait';
+import { MqxButton } from '../primitives/MqxButton';
 import { eventsPlateHint, eventsPlateTitle } from '../utils/boardDashDisplay';
 
 function EventsPlate({ count, onOpen }) {
@@ -15,10 +16,7 @@ function EventsPlate({ count, onOpen }) {
       onClick={onOpen}
       data-onboarding-anchor="events"
     >
-      <span className="mqx-bg-deck" aria-hidden="true">
-        <span />
-        <span />
-      </span>
+      <span className="mqx-bg-events__calendar" aria-hidden="true" />
       <span className="mqx-bg-events__text">
         <b className="mqx-bg-events__title">{eventsPlateTitle(n)}</b>
         <small className="mqx-bg-events__hint">{eventsPlateHint(n)}</small>
@@ -83,19 +81,20 @@ export function MqxDashboardHero({
   closePreview = null,
   templateKey,
   balance,
+  balanceHighlight = false,
 }) {
   const turn = Number(periodIndex) || 0;
+  const hasCampusScene = templateKey === 'mq_game_basic_v1';
   const helpRef = useRef(null);
   useEffect(() => {
     helpRef.current?.close();
   }, [tip?.text, turn]);
 
   return (
-    <header className="mqx-bg-turn" data-onboarding-anchor="hero">
+    <header className={`mqx-bg-turn${hasCampusScene ? ' mqx-bg-turn--campus' : ''}`} data-onboarding-anchor="hero">
       <div className="mqx-bg-turn__top">
         <BrandLogo variant="full" className="mqx-bg-turn__logo" />
         <div className="mqx-bg-turn__who">
-          <span className="mqx-bg-turn__role">{roleTitle}</span>
           <h1 className="mqx-bg-turn__title">{`${TURN_SINGULAR} ${turn}`}</h1>
         </div>
         <button
@@ -113,9 +112,14 @@ export function MqxDashboardHero({
       <div className="mqx-bg-turn__balance">
         <div>
           <span>На счёте</span>
-          <strong><MoneyText value={balance ?? 0} decimals={0} /></strong>
+          <strong className={balanceHighlight ? 'mqx-bg-turn__balance--gain' : undefined} data-mqx-juice-target="balance">
+            <MoneyText value={balance ?? 0} decimals={0} />
+          </strong>
         </div>
-        <PersonaPortrait templateKey={templateKey} size="dash" />
+        <div className="mqx-bg-turn__persona">
+          <span className="mqx-bg-turn__role">{roleTitle}</span>
+          {hasCampusScene ? null : <PersonaPortrait templateKey={templateKey} size="dash" />}
+        </div>
       </div>
       <dialog ref={helpRef} className="mqx-bg-turn__dialog" aria-label="Подсказка Монетки">
         <p>{tip?.text}</p>
@@ -124,8 +128,8 @@ export function MqxDashboardHero({
         </form>
       </dialog>
 
-      <button
-        type="button"
+      <MqxButton
+        variant="turn"
         className="mqx-bg-btn mqx-bg-cta"
         disabled={closeMonthDisabled}
         onClick={onCloseMonth}
@@ -134,7 +138,7 @@ export function MqxDashboardHero({
         aria-describedby={closePreview ? 'mqx-close-preview' : undefined}
       >
         {FINISH_TURN_BUTTON}
-      </button>
+      </MqxButton>
 
       {closePreview ? <ClosePreview preview={closePreview} /> : null}
       {onOpenEvents ? <EventsPlate count={pendingEventsCount} onOpen={onOpenEvents} /> : null}

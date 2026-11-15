@@ -9,6 +9,8 @@ aliases:
 ---
 # Spec: Frontend UI/UX — ТВОЙ ХОД
 
+Визуальная компоновка Главной для следующего внедрения зафиксирована в [утверждении «Финансы как игра»](../../design-lab/dashboard/APPROVED.md). Замеры и схемы текущей реализации сохраняют статус prod parity.
+
 **Статус:** принят (аудит 2026-05; каналы — [ADR-012](../decisions/ADR-012-primary-channels-pwa-web-over-tma.md))  
 **Связанные документы:** [`reference/brandbook/BRANDBOOK.md`](../reference/brandbook/BRANDBOOK.md) (identity), [`reference/brandbook/BRANDBOOK_MQX.md`](../reference/brandbook/BRANDBOOK_MQX.md) (MQX UI), [`foundation/TMA_USER_FLOWS.md`](../foundation/TMA_USER_FLOWS.md) (secondary channel), [AGENTS.md](../../../AGENTS.md)  
 Проектные Agent Skills и приоритеты — [`agents/AGENT_SKILLS.md`](../../../docs/agents/AGENT_SKILLS.md).
@@ -27,6 +29,12 @@ aliases:
 - Агент и разработчик могут свериться с spec + Codex-навыками `mqx-design` / `frontend-implementation` без повторного аудита.
 
 **Вне scope этой spec:** продуктовый переход Game/Plan ([`SPEC_game-plan`](features/SPEC_game-plan.md), [evolution §II](../vision/ideas/tvoy-hod-evolution-after-mvp.md)), бэкенд-контракты.
+
+### Роли кнопок MQX
+
+[Утверждённый вариант А](../../design-lab/mqx-component-library/APPROVED.md) задаёт единые роли действий. Золотой `MqxButton variant="turn"` применяется к завершению хода и доступной зарплате. Фиолетовый `primary` используется для основного действия внутри экрана или формы, `secondary` — для второстепенного, `destructive` — для опасного.
+
+Золотой вариант подключён к обеим кнопкам на Главной и показан в `#/dev/mqx`. Витрина Design Lab также содержит образцы карточек, полей, навигации и состояний для дальнейшего выравнивания экранов.
 
 ### Assumptions
 

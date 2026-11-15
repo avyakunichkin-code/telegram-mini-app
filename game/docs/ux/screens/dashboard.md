@@ -14,6 +14,8 @@ aliases:
 ---
 # UX Spec: Главная (Dashboard)
 
+[Утверждённый дизайн Главной от 15.11.2026](../../../design-lab/dashboard/APPROVED.md) задаёт визуальную компоновку. Порядок блоков в приложении: карта хода с балансом и событиями, потребности, три финансовых показателя, действия 2 × 2, цель сценария. Ниже описано поведение. При расхождении схем расположения действует утверждённый дизайн.
+
 > **Status:** Approved — OQ 1–7 закрыты (2026-05-25); без `h1` на вкладках (решение продукта); EN-audit отложен  
 > **Author:** product + ux-review session  
 > **Last Updated:** 2026-05-25  
@@ -90,7 +92,7 @@ App (HashRouter)
 ### Information Hierarchy
 
 1. **Период и закрытие месяца** (hero H2) — highest: «Месяц открыт», № периода, primary **«Завершить ход»**, pill «События».  
-2. **Потребности** (Z-NEEDS v7) — четыре шкалы всегда видимы; справка и treat в шапке — см. [`character-needs-dashboard.md`](character-needs-dashboard.md).  
+2. **Потребности** (Z-NEEDS v7) — четыре подписанные шкалы по 10 px в один ряд. Заливка красная ниже 60%, оранжевая от 60%, зелёная от 80%. Справка и улучшение потребностей в шапке — см. [`character-needs-dashboard.md`](character-needs-dashboard.md).
 3. **Снимок денег за период** (2×2 chips) — scan за 2–3 с.  
 4. **Прогресс сценария** (цель, свёрнуто по умолчанию) — мотивация, не блокирует действия.  
 5. **Действия периода** (2×2 chips) — primary motor loop.  
@@ -117,7 +119,7 @@ App (HashRouter)
 | `MqxDashboardHero` | hero-no-timer-round ★ **H2** | Период #N, «Завершить ход», pill «События» (без таймера) |
 | `MqxFinancePeriodBlock` | dashboard L3 | 4 KPI chips, ссылка «Весь капитал →» |
 | `MqxGoalDash` | goal-chain-round ★ · [`goal-path-stepper-round`](../../../design-lab/archive/dashboard/goal-path-stepper-round) (draft) | Цепочка победы v2 + guidance; свёрнуто — stepper из связанных узлов |
-| `MqxPeriodActions` | period-actions-round ★ | Зарплата, вложить, пополнить, снять |
+| `MqxPeriodActions` | [Утверждённая Главная](../../../design-lab/finance-game-round/compact.html) | Доступная зарплата того же золотого цвета, что кнопка завершения хода. Текст и иконки с обрезанными полями центрированы. |
 | `InvestProductForm` + `MqxSafetyFundSheet` | shared MQX | Сумма in/out подушки (как депозит) |
 | `GameGuidanceLayer` | [`onboarding-o2`](../../../design-lab/archive/onboarding-o2) ★ | O2 guidance strip (не дочерний dashboard) |
 

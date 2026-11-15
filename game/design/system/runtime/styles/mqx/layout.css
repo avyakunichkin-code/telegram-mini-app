@@ -1,4 +1,4 @@
-﻿/* ==========================================================================
+/* ==========================================================================
  * Premium dashboard (GameScreen -> DashboardPremium)
  * ========================================================================== */
 
@@ -250,6 +250,12 @@
   background: var(--mq-violet);
   border-color: var(--mq-violet-deep);
   color: #fff;
+}
+
+.mqx-btn--turn {
+  background: var(--mq-pocket-gold);
+  border-color: var(--mq-pocket-shadow);
+  color: var(--mq-pocket-shadow);
 }
 
 .mqx-btn--secondary {

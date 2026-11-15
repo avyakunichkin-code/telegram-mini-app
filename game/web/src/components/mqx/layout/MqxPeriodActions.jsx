@@ -1,7 +1,12 @@
 import { useId } from 'react';
 
+import coinsIcon from '../../../assets/actions/action-coins.png';
+import investIcon from '../../../assets/actions/action-invest.png';
+import shieldIcon from '../../../assets/actions/action-shield.png';
+import withdrawIcon from '../../../assets/actions/action-withdraw.png';
 import { ACTIONS_OF_TURN } from '../../../constants/turnCopy';
 import { MoneyText } from '../../MoneyText';
+import { MqxButton } from '../primitives/MqxButton';
 
 function ActionButton({ label, icon, className = '', ...buttonProps }) {
   return (
@@ -14,19 +19,9 @@ function ActionButton({ label, icon, className = '', ...buttonProps }) {
   );
 }
 
-function Glyph({ d }) {
-  return (
-    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-      {d.map((p) => (
-        <path key={p} d={p} />
-      ))}
-    </svg>
-  );
+function ActionIcon({ src }) {
+  return <img className="mqx-bg-action-icon" src={src} alt="" />;
 }
-
-const PLUS = ['M12 5v14', 'M5 12h14'];
-const MINUS = ['M5 12h14'];
-const GROWTH = ['M3 17l6-6 4 4 8-8', 'M14 7h7v7'];
 
 /**
  * Кнопка зарплаты ★ BG-3: пока не забрана — главная золотая на всю ширину с суммой;
@@ -45,8 +40,8 @@ function SalaryButton({ hot, claimed, celebrate, amount, disabled, onClick }) {
   const showAmount = !claimed && Number(amount) > 0;
 
   return (
-    <button
-      type="button"
+    <MqxButton
+      variant={hot && !claimed ? "turn" : "secondary"}
       className={cls}
       disabled={disabled}
       data-onboarding-anchor="salary"
@@ -54,9 +49,7 @@ function SalaryButton({ hot, claimed, celebrate, amount, disabled, onClick }) {
       aria-label={claimed ? 'Зарплата, уже получена' : hot ? 'Зарплата, получить' : 'Зарплата, недоступна'}
       onClick={onClick}
     >
-      <span className="mqx-bg-coin mqx-bg-coin--salary" aria-hidden="true">
-        ₽
-      </span>
+      <ActionIcon src={coinsIcon} />
       <span className="mqx-bg-salary__label">{label}</span>
       {showAmount ? (
         <span className="mqx-bg-salary__sum">
@@ -67,14 +60,11 @@ function SalaryButton({ hot, claimed, celebrate, amount, disabled, onClick }) {
           ✓
         </span>
       ) : null}
-    </button>
+    </MqxButton>
   );
 }
 
-/**
- * Действия хода ★ BG-3 (game/design-lab/board-game/frames-round, вариант E):
- * «Зарплата» — главная строка; «В подушку», «Из подушки», «Вложить» — залитые фишки в ряд.
- */
+/** Четыре действия хода в сетке 2 × 2. */
 export function MqxPeriodActions({
   salaryDisabled = false,
   salaryHot = false,
@@ -92,18 +82,26 @@ export function MqxPeriodActions({
 
   return (
     <section className="mqx-bg-acts" aria-labelledby={titleId}>
-      <h2 id={titleId} className="mqx-bg-sec-title">
+      <h2 id={titleId} className="mqx-bg-sr-only">
         {ACTIONS_OF_TURN}
       </h2>
-      <SalaryButton
-        hot={salaryHot}
-        claimed={salaryClaimed}
-        celebrate={salaryCelebrate}
-        amount={salaryAmount}
-        disabled={busy || salaryDisabled}
-        onClick={onSalary}
-      />
       <div className="mqx-bg-acts__row">
+        <SalaryButton
+          hot={salaryHot}
+          claimed={salaryClaimed}
+          celebrate={salaryCelebrate}
+          amount={salaryAmount}
+          disabled={busy || salaryDisabled}
+          onClick={onSalary}
+        />
+        <ActionButton
+          label="Вложить"
+          disabled={busy || !onInvest}
+          title="Открыть раздел инвестиций"
+          aria-label="Вложить"
+          onClick={onInvest}
+          icon={<ActionIcon src={investIcon} />}
+        />
         <ActionButton
           label="В подушку"
           disabled={busy}
@@ -113,7 +111,7 @@ export function MqxPeriodActions({
           title="Перевести деньги со счёта в подушку"
           aria-label="Положить в подушку"
           onClick={onContribute}
-          icon={<Glyph d={PLUS} />}
+          icon={<ActionIcon src={shieldIcon} />}
         />
 
         <ActionButton
@@ -124,17 +122,9 @@ export function MqxPeriodActions({
           title="Снять деньги с подушки на счёт"
           aria-label="Снять из подушки"
           onClick={onWithdraw}
-          icon={<Glyph d={MINUS} />}
+          icon={<ActionIcon src={withdrawIcon} />}
         />
 
-        <ActionButton
-          label="Вложить"
-          disabled={busy || !onInvest}
-          title="Открыть раздел инвестиций"
-          aria-label="Вложить"
-          onClick={onInvest}
-          icon={<Glyph d={GROWTH} />}
-        />
       </div>
     </section>
   );

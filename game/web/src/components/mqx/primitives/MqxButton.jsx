@@ -5,6 +5,7 @@ const VARIANT_CLASS = {
   'hero-filled': 'mqx-btn mqx-btn--filled',
   'hero-outline': 'mqx-btn mqx-btn--outline',
   primary: 'mqx-btn mqx-btn--primary',
+  turn: 'mqx-btn mqx-btn--turn',
   secondary: 'mqx-btn mqx-btn--secondary',
   ghost: 'mqx-btn mqx-btn--ghost',
   link: 'mqx-btn mqx-btn--link',

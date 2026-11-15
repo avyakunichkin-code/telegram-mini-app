@@ -3,6 +3,50 @@
   "description": "Only sources in this project are editable. Targets are generated compatibility exports.",
   "exports": [
     {
+      "source": "system/assets/Dashboard/goal-nav-icons.png",
+      "target": "game/web/src/assets/dashboard/goal-nav-icons.png"
+    },
+    {
+      "source": "system/assets/Dashboard/calendar.png",
+      "target": "game/web/src/assets/dashboard/calendar.png"
+    },
+    {
+      "source": "system/assets/Dashboard/campus.png",
+      "target": "game/web/src/assets/dashboard/campus.png"
+    },
+    {
+      "source": "system/assets/Actions/action-coins.png",
+      "target": "game/web/src/assets/actions/action-coins.png"
+    },
+    {
+      "source": "system/assets/Actions/action-invest.png",
+      "target": "game/web/src/assets/actions/action-invest.png"
+    },
+    {
+      "source": "system/assets/Actions/action-shield.png",
+      "target": "game/web/src/assets/actions/action-shield.png"
+    },
+    {
+      "source": "system/assets/Actions/action-withdraw.png",
+      "target": "game/web/src/assets/actions/action-withdraw.png"
+    },
+    {
+      "source": "system/assets/Needs/health.svg",
+      "target": "game/web/src/assets/needs/health.svg"
+    },
+    {
+      "source": "system/assets/Needs/links.svg",
+      "target": "game/web/src/assets/needs/links.svg"
+    },
+    {
+      "source": "system/assets/Needs/rank.svg",
+      "target": "game/web/src/assets/needs/rank.svg"
+    },
+    {
+      "source": "system/assets/Needs/home.svg",
+      "target": "game/web/src/assets/needs/home.svg"
+    },
+    {
       "source": "system/assets/Logos/logo-compact.png",
       "target": "game/web/src/assets/brand/logo-compact.png"
     },

@@ -10,7 +10,7 @@ const ITEMS = [
 /** Таббар ★ BG-2: светлая поверхность через токены в обеих темах, активная вкладка — фиолетовая фишка. */
 export function BottomGameNav({ activeTab, setActiveTab, lockTabs = false }) {
   return (
-    <nav className="bottom-nav bottom-nav--icons bottom-nav--unified" aria-label="Основные разделы">
+    <nav className={`bottom-nav bottom-nav--icons bottom-nav--unified${activeTab === 'dashboard' ? ' bottom-nav--dashboard' : ''}`} aria-label="Основные разделы">
       <div className="bottom-nav__track" role="tablist" aria-label="Вкладки игры">
         {ITEMS.map(({ id, label, Icon }) => (
           <button
@@ -29,7 +29,9 @@ export function BottomGameNav({ activeTab, setActiveTab, lockTabs = false }) {
             }}
           >
             <span className="bottom-nav__cell-inner">
-              <Icon size={22} aria-hidden />
+              {activeTab === 'dashboard' ? (
+                <span className={`bottom-nav__art bottom-nav__art--${id}`} aria-hidden="true" />
+              ) : <Icon size={22} aria-hidden />}
               <span className="bottom-nav__label">{label}</span>
             </span>
           </button>
