@@ -10,6 +10,7 @@ import json
 import time
 
 from fastapi import HTTPException
+from sqlalchemy import update
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
@@ -121,12 +122,16 @@ def close_idempotency_key(profile_id: int, period_index: int) -> str:
 
 
 def _lock_active_profile(db: Session, user_id: int) -> GameProfile:
-    query = db.query(GameProfile).filter(
+    active = (
         GameProfile.user_id == user_id,
         GameProfile.is_active == 1,
         GameProfile.is_archived == 0,
     )
-    if db.get_bind().dialect.name != "sqlite":
+    query = db.query(GameProfile).filter(*active).populate_existing()
+    if db.get_bind().dialect.name == "sqlite":
+        # Serialize period close with purchases before taking the balance snapshot.
+        db.execute(update(GameProfile).where(*active).values(cash_balance=GameProfile.cash_balance))
+    else:
         query = query.with_for_update()
     profile = query.first()
     if not profile:

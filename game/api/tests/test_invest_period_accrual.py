@@ -33,12 +33,13 @@ def _profile_ready(db_session, user_id: int, *, cash: float = 500_000) -> GamePr
 
 def test_bond_coupon_on_period_close_same_period_purchase(db_session, test_user):
     profile = _profile_ready(db_session, test_user.id, cash=200_000)
-    buy_bond(
+    first = buy_bond(
         db_session,
         profile,
-        amount=100_000,
+        amount=60_000,
         title="ОФЗ тест",
     )
+    assert buy_bond(db_session, profile, amount=40_000) == first
     db_session.refresh(profile)
 
     pos = (
@@ -70,7 +71,8 @@ def test_bond_coupon_on_period_close_same_period_purchase(db_session, test_user)
 
 def test_deposit_interest_capitalized_on_period_close(db_session, test_user):
     profile = _profile_ready(db_session, test_user.id, cash=300_000)
-    open_deposit(db_session, profile, amount=50_000)
+    first = open_deposit(db_session, profile, amount=30_000)
+    assert open_deposit(db_session, profile, amount=20_000) == first
     db_session.refresh(profile)
 
     result = process_period_end(db_session, profile)

@@ -39,7 +39,8 @@ def run_idempotent(
     """
     Если передан idempotency_key — ключ резервируется ДО handler (уникальный индекс),
     успешный JSON-ответ сохраняется и отдаётся при повторе.
-    handler должен выполнить commit внутри.
+    handler может оставить изменения в текущей транзакции. Тогда store_body
+    фиксирует результат и изменения handler одним commit.
     """
     if not idempotency_key:
         return success_status, handler()
@@ -70,14 +71,18 @@ def run_idempotent(
         )
         raise
 
-    store_body(
-        db,
-        user_id=user_id,
-        route_key=route_key,
-        idempotency_key=idempotency_key,
-        body=body,
-        status_code=success_status,
-    )
+    try:
+        store_body(
+            db,
+            user_id=user_id,
+            route_key=route_key,
+            idempotency_key=idempotency_key,
+            body=body,
+            status_code=success_status,
+        )
+    except Exception:
+        db.rollback()
+        raise
     return success_status, body
 
 
