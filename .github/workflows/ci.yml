@@ -346,6 +346,9 @@ jobs:
       - name: Product roots and navigation
         run: node scripts/check-product-roots.mjs
 
+      - name: Product launcher tests
+        run: node --test scripts/project.test.mjs
+
   plan-landing:
     name: Plan landing
     needs: changes

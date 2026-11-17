@@ -31,20 +31,31 @@ if (process.argv[2] === '--web') {
     let log = '';
     child.stdout.on('data', chunk => { log = (log + chunk).slice(-6000); });
     child.stderr.on('data', chunk => { log = (log + chunk).slice(-6000); });
-    child.on('error', error => { log += error.message; });
-    const record = { child, log: () => log };
+    let spawnError;
+    child.on('error', error => { spawnError = error; });
+    const closed = new Promise(resolve => child.once('close', resolve));
+    const record = { child, closed, log: () => log.trim(), error: () => spawnError, executable };
     children.push(record);
     return record;
   };
-  const stop = async ({ child }) => {
-    if (child.exitCode !== null || child.signalCode !== null) return;
-    const exited = new Promise(resolve => child.once('exit', resolve));
-    child.kill();
-    await exited;
+  const stop = async ({ child, closed }) => {
+    if (child.pid && child.exitCode === null && child.signalCode === null) child.kill();
+    await closed;
   };
   const ready = async (url, record, json = false) => {
+    let lastProbe = 'no response';
+    const diagnostic = () => [
+      `Not ready: ${url}`,
+      `Process: ${record.executable} (PID ${record.child.pid ?? 'none'}, exit ${record.child.exitCode ?? 'pending'}, signal ${record.child.signalCode ?? 'none'})`,
+      `Last probe: ${lastProbe}`,
+      record.error()?.message,
+      record.log() || 'Child process produced no output.',
+    ].filter(Boolean).join('\n');
     for (let attempt = 0; attempt < 120; attempt++) {
-      if (record.child.exitCode !== null) throw new Error(record.log());
+      if (record.error() || record.child.exitCode !== null || record.child.signalCode !== null) {
+        await record.closed;
+        throw new Error(diagnostic());
+      }
       try {
         const response = await fetch(url, { signal: AbortSignal.timeout(1500) });
         if (response.ok) {
@@ -52,10 +63,17 @@ if (process.argv[2] === '--web') {
           else assert.match(await response.text(), /<div id="root"><\/div>/);
           return;
         }
-      } catch { /* allow startup to finish */ }
+        lastProbe = `HTTP ${response.status}`;
+        await response.body?.cancel();
+      } catch (error) {
+        lastProbe = error.cause?.code ?? error.message;
+        if (lastProbe === 'EACCES' || lastProbe === 'EPERM') {
+          throw new Error(`${diagnostic()}\nLoopback access was denied. Run smoke from a local terminal with loopback access.`);
+        }
+      }
       await new Promise(resolve => setTimeout(resolve, 250));
     }
-    throw new Error(`Not ready: ${url}\n${record.log()}`);
+    throw new Error(diagnostic());
   };
   const running = [];
   try {
@@ -74,7 +92,7 @@ if (process.argv[2] === '--web') {
       const web = product === 'game' ? 15173 : 15190;
       const home = path.join(temp, product);
       await mkdir(home);
-      const env = { ...cleanEnv, PYTHON_DOTENV_DISABLED: '1', PYTHONIOENCODING: 'utf-8', PROJECT_ENV_DIR: home,
+      const env = { ...cleanEnv, PYTHON_DOTENV_DISABLED: '1', PYTHONIOENCODING: 'utf-8', PYTHONUNBUFFERED: '1', PROJECT_ENV_DIR: home,
         SECRET_KEY: 'synthetic-smoke-secret-at-least-32-characters', ENVIRONMENT: 'development',
         DATABASE_URL: `sqlite:///${path.join(home, 'game.sqlite').replaceAll('\\', '/')}`,
         PLAN_ENV: 'dev', PLAN_SECRET_KEY: 'synthetic-smoke-secret-at-least-32-characters',
