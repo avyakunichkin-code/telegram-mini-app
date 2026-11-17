@@ -170,7 +170,7 @@ backend/
 | Карта кода frontend | [`frontend-react/ARCHITECTURE.md`](../../../frontend-react/ARCHITECTURE.md) |
 | API по доменам | [`frontend-react/src/api/`](../../../frontend-react/src/api/) |
 | Pre-game screens | [`frontend-react/src/screens/pre-game/`](../../../frontend-react/src/screens/pre-game/) |
-| Plan (задел) | [`frontend-react/src/screens/plan/README.md`](../../../frontend-react/src/screens/plan/README.md) |
+| Plan (задел) | [`frontend-react/src/screens/plan/README.md`](../../../../../../docs/plan/README.md) |
 | Seeds Game templates | [`backend/app/seeds/game_starter_templates.py`](../../../backend/app/seeds/game_starter_templates.py) |
 
 ---
