@@ -1,0 +1,16 @@
+{
+  "status": "PASS",
+  "results": [
+    "B1 375px: no horizontal overflow",
+    "B1 701px: no horizontal overflow",
+    "B1 1050px: no horizontal overflow",
+    "B1 1440px: no horizontal overflow",
+    "B2 375px: all chapter links reveal a single target section",
+    "B2 1440px: all chapter links reveal a single target section",
+    "12-month table available, end forecast equals generated fixture",
+    "4 stress scenarios, first deficit and consistent domain",
+    "History comparisons, read-only record dialog/Escape/focus restore, single/empty/loading/error/version states",
+    "Global states, offline history blocked, save rollback/retry, dismiss/restore: PASS",
+    "No JS errors or failed resources"
+  ]
+}

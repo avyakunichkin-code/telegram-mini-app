@@ -1,0 +1,407 @@
+# Эталонная цепочка «Заказ от Миши» — студент, 4 шага, периоды N / N+2 / N+4 / N+5.
+# Контракт 22 000 ₽; аванс 8 000; остаток 14 000 после защиты; бонус качества 35% (7 700 ₽).
+# Аванс — риск: при сдаче в спешке Миша удерживает 4 000 ₽ из остатка (итог 18 000 против 22 000 без аванса).
+# Цена «времени» 0.5 (разбор 2026-10-21): путь «шашлыки» даёт ≈ +9 needs к пути «работа»,
+# что ≈ 0.5 · needs_points(бонус 7 700 ₽ / зарплата Студента).
+events:
+- definition_key: mq11_freelance_project_offer
+  content_class: profile
+  event_slot: period_choice
+  audience_template_keys:
+  - mq_game_basic_v1
+  event_domain: income_work
+  title: Миша просит помочь с проектом
+  description: 'Одногруппник Миша тянет стартап к защите: нужны тексты и вёрстка лендинга. Гонорар
+    — 22 000 ₽ после защиты (через несколько периодов). Можно попросить аванс 8 000 сейчас — но аванс
+    обязывает: если работа выйдет сырой, Миша вычтет из остатка.'
+  weight: 72
+  event_tier: 2
+  repeat_policy: once_per_profile
+  scenario_shape: chain
+  cooldown_periods: 12
+  choices:
+  - title: Взять заказ с авансом 8 000 ₽
+    effects:
+      cash_delta: 8000
+      needs_delta:
+        status: 3
+        health: -2
+      enqueue_event:
+        chain_key: freelance_project
+        followup_definition_key: mq11_freelance_project_midperiod
+        after_periods: 2
+        context:
+          payment: advance
+          branch: advance
+    description: Аванс на счёт сейчас. Остаток 14 000 ₽ — после защиты; за сырую работу Миша удержит
+      часть остатка.
+  - title: Без аванса — вся оплата после защиты
+    effects:
+      cash_delta: 0
+      needs_delta:
+        status: 3
+        health: -2
+      enqueue_event:
+        chain_key: freelance_project
+        followup_definition_key: mq11_freelance_project_midperiod
+        after_periods: 2
+        context:
+          payment: deferred
+          branch: deferred
+    description: Денег сейчас нет — 22 000 ₽ целиком после защиты при любом качестве работы.
+  - title: Отказаться — сессия важнее
+    effects:
+      cash_delta: 0
+      needs_delta:
+        comfort: 1
+        social: -4
+        status: -2
+- definition_key: mq11_freelance_project_midperiod
+  content_class: profile
+  event_slot: chain_followup
+  audience_template_keys:
+  - mq_game_basic_v1
+  event_domain: income_work
+  interaction_kind: chain_followup
+  title: 'Середина срока: проект или отдых?'
+  description: 'Два периода назад вы взялись за проект Миши, до защиты ещё два. Сейчас не видно,
+    «стоит» ли это в деньгах: только потребности. Шашлыки с друзьями или ещё одна сессия над макетом?'
+  weight: 1
+  event_tier: 2
+  repeat_policy: once_per_profile
+  scenario_shape: chain
+  mandatory_gate: blocks_period_end
+  choices:
+  - title: Шашлыки с друзьями
+    effects:
+      requires_chain_branch: advance
+      needs_delta:
+        social: 8
+        health: 6
+        status: -2
+      enqueue_event:
+        chain_key: freelance_project
+        followup_definition_key: mq11_freelance_project_deadline_rush
+        after_periods: 2
+        context:
+          payment: advance
+          prep: grill
+          branch: advance_grill
+    description: Через два периода — сдача; денег на этом шаге не будет.
+  - title: Шашлыки с друзьями
+    effects:
+      requires_chain_branch: deferred
+      needs_delta:
+        social: 8
+        health: 6
+        status: -2
+      enqueue_event:
+        chain_key: freelance_project
+        followup_definition_key: mq11_freelance_project_deadline_rush
+        after_periods: 2
+        context:
+          payment: deferred
+          prep: grill
+          branch: deferred_grill
+    description: Через два периода — сдача; денег на этом шаге не будет.
+  - title: Сесть за проект
+    effects:
+      requires_chain_branch: advance
+      needs_delta:
+        social: -4
+        health: -4
+        status: 3
+      enqueue_event:
+        chain_key: freelance_project
+        followup_definition_key: mq11_freelance_project_deadline_steady
+        after_periods: 2
+        context:
+          payment: advance
+          prep: grind
+          branch: advance_grind
+    description: Через два периода — финальная сдача; без выплат до защиты.
+  - title: Сесть за проект
+    effects:
+      requires_chain_branch: deferred
+      needs_delta:
+        social: -4
+        health: -4
+        status: 3
+      enqueue_event:
+        chain_key: freelance_project
+        followup_definition_key: mq11_freelance_project_deadline_steady
+        after_periods: 2
+        context:
+          payment: deferred
+          prep: grind
+          branch: deferred_grind
+    description: Через два периода — финальная сдача; без выплат до защиты.
+- definition_key: mq11_freelance_project_deadline_rush
+  content_class: profile
+  event_slot: chain_followup
+  audience_template_keys:
+  - mq_game_basic_v1
+  event_domain: income_work
+  interaction_kind: chain_followup
+  title: 'Дедлайн: сдать в спешке'
+  description: 'Два периода назад вы выбрали шашлыки вместо макета — защита Миши уже близко. Сейчас
+    только работа: денег на этом шаге нет. Остаток по договору — после защиты.'
+  weight: 1
+  event_tier: 2
+  repeat_policy: once_per_profile
+  scenario_shape: chain
+  mandatory_gate: blocks_period_end
+  choices:
+  - title: Дожать самому без доплат
+    effects:
+      requires_chain_branch: advance_grill
+      needs_delta:
+        comfort: -4
+        health: -3
+        status: 2
+      enqueue_event:
+        chain_key: freelance_project
+        followup_definition_key: mq11_freelance_project_epilogue_rush
+        after_periods: 1
+        context:
+          payment: advance
+          prep: grill
+          branch: advance_grill
+    description: Завтра — защита; платёж придёт отдельным событием.
+  - title: Дожать самому без доплат
+    effects:
+      requires_chain_branch: deferred_grill
+      needs_delta:
+        comfort: -4
+        health: -3
+        status: 2
+      enqueue_event:
+        chain_key: freelance_project
+        followup_definition_key: mq11_freelance_project_epilogue_rush
+        after_periods: 1
+        context:
+          payment: deferred
+          prep: grill
+          branch: deferred_grill
+    description: Завтра — защита; платёж придёт отдельным событием.
+  - title: Купить шаблон и плагин (−6 600 ₽)
+    purpose: mitigation
+    effects:
+      requires_chain_branch: advance_grill
+      cash_delta: -6600
+      needs_delta:
+        comfort: -1
+        health: -1
+        status: 3
+      enqueue_event:
+        chain_key: freelance_project
+        followup_definition_key: mq11_freelance_project_epilogue_rush
+        after_periods: 1
+        context:
+          payment: advance
+          prep: grill
+          branch: advance_grill
+    description: 'Сберечь силы за деньги: результат тот же, но без бессонных ночей; остаток — после защиты.'
+  - title: Купить шаблон и плагин (−6 600 ₽)
+    purpose: mitigation
+    effects:
+      requires_chain_branch: deferred_grill
+      cash_delta: -6600
+      needs_delta:
+        comfort: -1
+        health: -1
+        status: 3
+      enqueue_event:
+        chain_key: freelance_project
+        followup_definition_key: mq11_freelance_project_epilogue_rush
+        after_periods: 1
+        context:
+          payment: deferred
+          prep: grill
+          branch: deferred_grill
+    description: 'Сберечь силы за деньги: результат тот же, но без бессонных ночей; оплата — после защиты.'
+- definition_key: mq11_freelance_project_deadline_steady
+  content_class: profile
+  event_slot: chain_followup
+  audience_template_keys:
+  - mq_game_basic_v1
+  event_domain: income_work
+  interaction_kind: chain_followup
+  title: 'Дедлайн: финальная полировка'
+  description: 'Два периода назад вы сели за проект вместо отдыха — черновик готов, осталось довести
+    до защиты. Денег сейчас нет: оплата, как договаривались, только после защиты Миши.'
+  weight: 1
+  event_tier: 2
+  repeat_policy: once_per_profile
+  scenario_shape: chain
+  mandatory_gate: blocks_period_end
+  choices:
+  - title: Сдать как есть
+    effects:
+      requires_chain_branch: advance_grind
+      needs_delta:
+        comfort: -1
+        status: 1
+      enqueue_event:
+        chain_key: freelance_project
+        followup_definition_key: mq11_freelance_project_epilogue_steady
+        after_periods: 1
+        context:
+          payment: advance
+          prep: grind
+          branch: advance_grind
+    description: Лёгкая доработка; выплата — в следующем периоде.
+  - title: Сдать как есть
+    effects:
+      requires_chain_branch: deferred_grind
+      needs_delta:
+        comfort: -1
+        status: 1
+      enqueue_event:
+        chain_key: freelance_project
+        followup_definition_key: mq11_freelance_project_epilogue_steady
+        after_periods: 1
+        context:
+          payment: deferred
+          prep: grind
+          branch: deferred_grind
+    description: Лёгкая доработка; выплата — в следующем периоде.
+  - title: Перечитать и вычитать ещё раз
+    effects:
+      requires_chain_branch: advance_grind
+      needs_delta:
+        comfort: -2
+        health: -1
+        status: 3
+      enqueue_event:
+        chain_key: freelance_project
+        followup_definition_key: mq11_freelance_project_epilogue_steady
+        after_periods: 1
+        context:
+          payment: advance
+          prep: grind
+          branch: advance_grind
+    description: 'Ради репутации: статус выше, но устанете сильнее; деньги — после защиты.'
+  - title: Перечитать и вычитать ещё раз
+    effects:
+      requires_chain_branch: deferred_grind
+      needs_delta:
+        comfort: -2
+        health: -1
+        status: 3
+      enqueue_event:
+        chain_key: freelance_project
+        followup_definition_key: mq11_freelance_project_epilogue_steady
+        after_periods: 1
+        context:
+          payment: deferred
+          prep: grind
+          branch: deferred_grind
+    description: 'Ради репутации: статус выше, но устанете сильнее; деньги — после защиты.'
+# Эпилоги: обе кнопки дают одно и то же (informational, разбор 2026-10-21); blocks_period_end —
+# иначе выплата пропадёт, если игрок закроет месяц, не открыв событие (expire в spawn.py);
+# «откат» причины — в description первой кнопки каждой ветки.
+- definition_key: mq11_freelance_project_epilogue_rush
+  content_class: profile
+  event_slot: informational
+  audience_template_keys:
+  - mq_game_basic_v1
+  event_domain: income_work
+  interaction_kind: informational
+  title: Миша защитил проект
+  description: 'Защита прошла — Миша выдохнул. Остаток по вашему договору приходит на счёт.
+
+    Мелким шрифтом: вы заканчивали в спешке — на слайдах нашли пару опечаток, но комиссия засчитала
+    работу.'
+  weight: 1
+  event_tier: 2
+  repeat_policy: once_per_profile
+  scenario_shape: chain
+  mandatory_gate: blocks_period_end
+  choices:
+  - title: Понятно
+    effects:
+      requires_chain_branch: advance
+      cash_delta: 10000
+      needs_delta:
+        social: 2
+        status: -2
+    description: 'Пять периодов назад вы взяли аванс, в середине срока выбрали шашлыки → работа
+      вышла сырой, Миша удержал 4 000 ₽. Итого по проекту 18 000 ₽ вместо 22 000.'
+  - title: Закрыть
+    effects:
+      requires_chain_branch: advance
+      cash_delta: 10000
+      needs_delta:
+        social: 2
+        status: -2
+  - title: Понятно
+    effects:
+      requires_chain_branch: deferred
+      cash_delta: 22000
+      needs_delta:
+        social: 2
+        status: -2
+    description: 'Пять периодов назад вы отказались от аванса, в середине срока выбрали шашлыки
+      → работа вышла сырой, но договор без аванса — вся сумма после защиты: 22 000 ₽ целиком.'
+  - title: Закрыть
+    effects:
+      requires_chain_branch: deferred
+      cash_delta: 22000
+      needs_delta:
+        social: 2
+        status: -2
+- definition_key: mq11_freelance_project_epilogue_steady
+  content_class: profile
+  event_slot: informational
+  audience_template_keys:
+  - mq_game_basic_v1
+  event_domain: income_work
+  interaction_kind: informational
+  title: Миша защитил проект — и благодарит
+  description: 'Защита удалась. На счёт — остаток и бонус 35% за качество (7 700 ₽ сверх остатка).
+
+    Мелким шрифтом: вы не отвлекались — макет получился лучше, чем Миша рассчитывал; он советует
+    вас следующим заказчикам.'
+  weight: 1
+  event_tier: 2
+  repeat_policy: once_per_profile
+  scenario_shape: chain
+  mandatory_gate: blocks_period_end
+  choices:
+  - title: Понятно
+    effects:
+      requires_chain_branch: advance
+      cash_delta: 21700
+      needs_delta:
+        social: 2
+        status: 2
+        health: -1
+    description: 'Пять периодов назад вы взяли аванс, в середине срока сели за проект → 14 000 ₽
+      остаток + 7 700 ₽ бонус. Итого по проекту 29 700 ₽, из них 8 000 — ещё тогда.'
+  - title: Закрыть
+    effects:
+      requires_chain_branch: advance
+      cash_delta: 21700
+      needs_delta:
+        social: 2
+        status: 2
+        health: -1
+  - title: Понятно
+    effects:
+      requires_chain_branch: deferred
+      cash_delta: 29700
+      needs_delta:
+        social: 2
+        status: 2
+        health: -1
+    description: 'Пять периодов назад вы отказались от аванса, в середине срока сели за проект →
+      22 000 ₽ + бонус 7 700 ₽. Итого 29 700 ₽ — столько же, сколько с авансом, но позже.'
+  - title: Закрыть
+    effects:
+      requires_chain_branch: deferred
+      cash_delta: 29700
+      needs_delta:
+        social: 2
+        status: 2
+        health: -1

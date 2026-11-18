@@ -1,0 +1,5 @@
+# Локальная история заменённых макетов. Оглавление остаётся в Git.
+/design-lab/archive/*
+!/design-lab/archive/README.md
+/docs/archive/local/
+/design/archive/local/

@@ -1,0 +1,942 @@
+{
+  "scenario": "shortfall_defeat",
+  "initial": {
+    "profile": {
+      "period_index": 1,
+      "cash_balance": 9000.0,
+      "safety_fund_balance": 0.0,
+      "negative_periods_count": 0,
+      "clean_period_streak": 0,
+      "is_active": 1,
+      "run_outcome": null
+    },
+    "liabilities": [
+      {
+        "title": "Автокредит",
+        "total_debt": 300000.0,
+        "overdue_amount": 0.0,
+        "overdue_periods": 0,
+        "periods_paid": 0,
+        "is_active": 1
+      },
+      {
+        "title": "Кредитка",
+        "total_debt": 50000.0,
+        "overdue_amount": 0.0,
+        "overdue_periods": 0,
+        "periods_paid": 0,
+        "is_active": 1
+      }
+    ],
+    "investments": [],
+    "policies": [
+      {
+        "title": "ДМС",
+        "is_active": 1
+      }
+    ],
+    "expense_lines": []
+  },
+  "periods": [
+    {
+      "period_index": 1,
+      "burn": {
+        "baseline": 20000.0,
+        "legacy_delta": 0.0,
+        "lines": [
+          {
+            "category_key": "food",
+            "category_title": "Еда",
+            "title": "Еда",
+            "amount": 8800.0,
+            "tier": "must",
+            "source_kind": "legacy_import",
+            "expires_period_index": null
+          },
+          {
+            "category_key": "transport",
+            "category_title": "Транспорт",
+            "title": "Транспорт",
+            "amount": 2800.0,
+            "tier": "must",
+            "source_kind": "legacy_import",
+            "expires_period_index": null
+          },
+          {
+            "category_key": "communications",
+            "category_title": "Связь и подписки",
+            "title": "Связь и подписки",
+            "amount": 1800.0,
+            "tier": "must",
+            "source_kind": "legacy_import",
+            "expires_period_index": null
+          },
+          {
+            "category_key": "health",
+            "category_title": "Здоровье",
+            "title": "Здоровье",
+            "amount": 2000.0,
+            "tier": "must",
+            "source_kind": "legacy_import",
+            "expires_period_index": null
+          },
+          {
+            "category_key": "clothing",
+            "category_title": "Одежда и быт",
+            "title": "Одежда и быт",
+            "amount": 1600.0,
+            "tier": "must",
+            "source_kind": "legacy_import",
+            "expires_period_index": null
+          },
+          {
+            "category_key": "leisure",
+            "category_title": "Досуг",
+            "title": "Досуг",
+            "amount": 3000.0,
+            "tier": "discretionary",
+            "source_kind": "legacy_import",
+            "expires_period_index": null
+          }
+        ],
+        "by_category": [
+          {
+            "category_key": "food",
+            "title": "Еда",
+            "amount": 8800.0,
+            "tier": "must"
+          },
+          {
+            "category_key": "leisure",
+            "title": "Досуг",
+            "amount": 3000.0,
+            "tier": "discretionary"
+          },
+          {
+            "category_key": "transport",
+            "title": "Транспорт",
+            "amount": 2800.0,
+            "tier": "must"
+          },
+          {
+            "category_key": "health",
+            "title": "Здоровье",
+            "amount": 2000.0,
+            "tier": "must"
+          },
+          {
+            "category_key": "communications",
+            "title": "Связь и подписки",
+            "amount": 1800.0,
+            "tier": "must"
+          },
+          {
+            "category_key": "clothing",
+            "title": "Одежда и быт",
+            "amount": 1600.0,
+            "tier": "must"
+          }
+        ],
+        "total": 20000.0
+      },
+      "preview": {
+        "estimated_cash_after_close": -20000.0,
+        "estimated_charges_total": 29000.0,
+        "negative_periods_count": 0,
+        "would_be_negative_after_close": true,
+        "defeat_if_close_negative": false,
+        "breakdown": [
+          {
+            "type": "liability",
+            "title": "Платежи по обязательствам",
+            "amount": 9000.0
+          },
+          {
+            "type": "lifestyle",
+            "title": "Расходы на жизнь",
+            "amount": 20000.0
+          }
+        ]
+      },
+      "close": {
+        "closed_period_index": 1,
+        "cash_delta": -29000.0,
+        "income_delta": 0.0,
+        "expense_delta": 0.0,
+        "safety_fund_delta": 0.0,
+        "invest_capital_delta": 0.0,
+        "debt_delta": 0.0,
+        "total_spent": 0.0,
+        "breakdown": [
+          {
+            "type": "liability",
+            "title": "Автокредит",
+            "due": 10399.6,
+            "paid": 9000.0,
+            "unpaid": 1399.6
+          },
+          {
+            "type": "liability",
+            "title": "Кредитка",
+            "due": 1500.0,
+            "paid": 0.0,
+            "unpaid": 1500.0
+          },
+          {
+            "type": "expense_category",
+            "category_key": "food",
+            "title": "Еда",
+            "amount": 8800.0
+          },
+          {
+            "type": "expense_category",
+            "category_key": "leisure",
+            "title": "Досуг",
+            "amount": 3000.0
+          },
+          {
+            "type": "expense_category",
+            "category_key": "transport",
+            "title": "Транспорт",
+            "amount": 2800.0
+          },
+          {
+            "type": "expense_category",
+            "category_key": "health",
+            "title": "Здоровье",
+            "amount": 2000.0
+          },
+          {
+            "type": "expense_category",
+            "category_key": "communications",
+            "title": "Связь и подписки",
+            "amount": 1800.0
+          },
+          {
+            "type": "expense_category",
+            "category_key": "clothing",
+            "title": "Одежда и быт",
+            "amount": 1600.0
+          },
+          {
+            "type": "lifestyle",
+            "title": "Итого расходы на жизнь",
+            "amount": 20000.0
+          }
+        ],
+        "new_balance": -20000.0,
+        "negative_streak": 1,
+        "game_over": false,
+        "defeat_reason": null,
+        "overdue_added": 2899.6,
+        "period_highlights": [
+          {
+            "key": "expenses",
+            "label": "Расходы списаны",
+            "amount": 29000.0
+          }
+        ]
+      },
+      "transactions": [
+        {
+          "type": "liability_payment",
+          "amount": -9000.0,
+          "description": "Платёж по обязательству: Автокредит (период #1)"
+        },
+        {
+          "type": "lifestyle_expense",
+          "amount": -20000.0,
+          "description": "Расходы на жизнь за период #1"
+        }
+      ],
+      "closing": {
+        "cash_balance": -20000.0,
+        "safety_fund_balance": 0.0,
+        "total_overdue_amount": 2899.6,
+        "monthly_burn_total": 20000.0,
+        "period_income_rate": 0.0,
+        "period_expense_total": 29000.0,
+        "total_debt_balance": 350000.0
+      },
+      "state": {
+        "profile": {
+          "period_index": 2,
+          "cash_balance": -20000.0,
+          "safety_fund_balance": 0.0,
+          "negative_periods_count": 1,
+          "clean_period_streak": 0,
+          "is_active": 1,
+          "run_outcome": null
+        },
+        "liabilities": [
+          {
+            "title": "Автокредит",
+            "total_debt": 300000.0,
+            "overdue_amount": 1399.6,
+            "overdue_periods": 1,
+            "periods_paid": 0,
+            "is_active": 1
+          },
+          {
+            "title": "Кредитка",
+            "total_debt": 50000.0,
+            "overdue_amount": 1500.0,
+            "overdue_periods": 1,
+            "periods_paid": 0,
+            "is_active": 1
+          }
+        ],
+        "investments": [],
+        "policies": [
+          {
+            "title": "ДМС",
+            "is_active": 1
+          }
+        ],
+        "expense_lines": [
+          {
+            "category_key": "food",
+            "amount_monthly": 8800.0,
+            "is_active": 1,
+            "source_kind": "legacy_import"
+          },
+          {
+            "category_key": "transport",
+            "amount_monthly": 2800.0,
+            "is_active": 1,
+            "source_kind": "legacy_import"
+          },
+          {
+            "category_key": "communications",
+            "amount_monthly": 1800.0,
+            "is_active": 1,
+            "source_kind": "legacy_import"
+          },
+          {
+            "category_key": "health",
+            "amount_monthly": 2000.0,
+            "is_active": 1,
+            "source_kind": "legacy_import"
+          },
+          {
+            "category_key": "clothing",
+            "amount_monthly": 1600.0,
+            "is_active": 1,
+            "source_kind": "legacy_import"
+          },
+          {
+            "category_key": "leisure",
+            "amount_monthly": 3000.0,
+            "is_active": 1,
+            "source_kind": "legacy_import"
+          }
+        ]
+      }
+    },
+    {
+      "period_index": 2,
+      "burn": {
+        "baseline": 20000.0,
+        "legacy_delta": 0.0,
+        "lines": [
+          {
+            "category_key": "food",
+            "category_title": "Еда",
+            "title": "Еда",
+            "amount": 8800.0,
+            "tier": "must",
+            "source_kind": "legacy_import",
+            "expires_period_index": null
+          },
+          {
+            "category_key": "transport",
+            "category_title": "Транспорт",
+            "title": "Транспорт",
+            "amount": 2800.0,
+            "tier": "must",
+            "source_kind": "legacy_import",
+            "expires_period_index": null
+          },
+          {
+            "category_key": "communications",
+            "category_title": "Связь и подписки",
+            "title": "Связь и подписки",
+            "amount": 1800.0,
+            "tier": "must",
+            "source_kind": "legacy_import",
+            "expires_period_index": null
+          },
+          {
+            "category_key": "health",
+            "category_title": "Здоровье",
+            "title": "Здоровье",
+            "amount": 2000.0,
+            "tier": "must",
+            "source_kind": "legacy_import",
+            "expires_period_index": null
+          },
+          {
+            "category_key": "clothing",
+            "category_title": "Одежда и быт",
+            "title": "Одежда и быт",
+            "amount": 1600.0,
+            "tier": "must",
+            "source_kind": "legacy_import",
+            "expires_period_index": null
+          },
+          {
+            "category_key": "leisure",
+            "category_title": "Досуг",
+            "title": "Досуг",
+            "amount": 3000.0,
+            "tier": "discretionary",
+            "source_kind": "legacy_import",
+            "expires_period_index": null
+          }
+        ],
+        "by_category": [
+          {
+            "category_key": "food",
+            "title": "Еда",
+            "amount": 8800.0,
+            "tier": "must"
+          },
+          {
+            "category_key": "leisure",
+            "title": "Досуг",
+            "amount": 3000.0,
+            "tier": "discretionary"
+          },
+          {
+            "category_key": "transport",
+            "title": "Транспорт",
+            "amount": 2800.0,
+            "tier": "must"
+          },
+          {
+            "category_key": "health",
+            "title": "Здоровье",
+            "amount": 2000.0,
+            "tier": "must"
+          },
+          {
+            "category_key": "communications",
+            "title": "Связь и подписки",
+            "amount": 1800.0,
+            "tier": "must"
+          },
+          {
+            "category_key": "clothing",
+            "title": "Одежда и быт",
+            "amount": 1600.0,
+            "tier": "must"
+          }
+        ],
+        "total": 20000.0
+      },
+      "preview": {
+        "estimated_cash_after_close": -40900.0,
+        "estimated_charges_total": 20900.0,
+        "negative_periods_count": 1,
+        "would_be_negative_after_close": true,
+        "defeat_if_close_negative": false,
+        "breakdown": [
+          {
+            "type": "lifestyle",
+            "title": "Расходы на жизнь",
+            "amount": 20000.0
+          },
+          {
+            "type": "insurance",
+            "title": "Страховые премии",
+            "amount": 900.0
+          }
+        ]
+      },
+      "close": {
+        "closed_period_index": 2,
+        "cash_delta": -20900.0,
+        "income_delta": 0.0,
+        "expense_delta": -8100.0,
+        "safety_fund_delta": 0.0,
+        "invest_capital_delta": 0.0,
+        "debt_delta": 0.0,
+        "total_spent": 0.0,
+        "breakdown": [
+          {
+            "type": "liability",
+            "title": "Автокредит",
+            "due": 11799.2,
+            "paid": 0.0,
+            "unpaid": 11799.2
+          },
+          {
+            "type": "liability",
+            "title": "Кредитка",
+            "due": 3000.0,
+            "paid": 0.0,
+            "unpaid": 3000.0
+          },
+          {
+            "type": "expense_category",
+            "category_key": "food",
+            "title": "Еда",
+            "amount": 8800.0
+          },
+          {
+            "type": "expense_category",
+            "category_key": "leisure",
+            "title": "Досуг",
+            "amount": 3000.0
+          },
+          {
+            "type": "expense_category",
+            "category_key": "transport",
+            "title": "Транспорт",
+            "amount": 2800.0
+          },
+          {
+            "type": "expense_category",
+            "category_key": "health",
+            "title": "Здоровье",
+            "amount": 2000.0
+          },
+          {
+            "type": "expense_category",
+            "category_key": "communications",
+            "title": "Связь и подписки",
+            "amount": 1800.0
+          },
+          {
+            "type": "expense_category",
+            "category_key": "clothing",
+            "title": "Одежда и быт",
+            "amount": 1600.0
+          },
+          {
+            "type": "lifestyle",
+            "title": "Итого расходы на жизнь",
+            "amount": 20000.0
+          },
+          {
+            "type": "insurance",
+            "title": "Премии",
+            "amount": 900.0
+          }
+        ],
+        "new_balance": -40900.0,
+        "negative_streak": 2,
+        "game_over": false,
+        "defeat_reason": null,
+        "overdue_added": 14799.2,
+        "period_highlights": [
+          {
+            "key": "expenses",
+            "label": "Расходы списаны",
+            "amount": 20900.0
+          }
+        ]
+      },
+      "transactions": [
+        {
+          "type": "lifestyle_expense",
+          "amount": -20000.0,
+          "description": "Расходы на жизнь за период #2"
+        },
+        {
+          "type": "insurance_premium",
+          "amount": -900.0,
+          "description": "Страховые премии за период #2"
+        }
+      ],
+      "closing": {
+        "cash_balance": -40900.0,
+        "safety_fund_balance": 0.0,
+        "total_overdue_amount": 14799.2,
+        "monthly_burn_total": 20000.0,
+        "period_income_rate": 0.0,
+        "period_expense_total": 20900.0,
+        "total_debt_balance": 350000.0
+      },
+      "state": {
+        "profile": {
+          "period_index": 3,
+          "cash_balance": -40900.0,
+          "safety_fund_balance": 0.0,
+          "negative_periods_count": 2,
+          "clean_period_streak": 0,
+          "is_active": 1,
+          "run_outcome": null
+        },
+        "liabilities": [
+          {
+            "title": "Автокредит",
+            "total_debt": 300000.0,
+            "overdue_amount": 11799.2,
+            "overdue_periods": 2,
+            "periods_paid": 0,
+            "is_active": 1
+          },
+          {
+            "title": "Кредитка",
+            "total_debt": 50000.0,
+            "overdue_amount": 3000.0,
+            "overdue_periods": 2,
+            "periods_paid": 0,
+            "is_active": 1
+          }
+        ],
+        "investments": [],
+        "policies": [
+          {
+            "title": "ДМС",
+            "is_active": 1
+          }
+        ],
+        "expense_lines": [
+          {
+            "category_key": "food",
+            "amount_monthly": 8800.0,
+            "is_active": 1,
+            "source_kind": "legacy_import"
+          },
+          {
+            "category_key": "transport",
+            "amount_monthly": 2800.0,
+            "is_active": 1,
+            "source_kind": "legacy_import"
+          },
+          {
+            "category_key": "communications",
+            "amount_monthly": 1800.0,
+            "is_active": 1,
+            "source_kind": "legacy_import"
+          },
+          {
+            "category_key": "health",
+            "amount_monthly": 2000.0,
+            "is_active": 1,
+            "source_kind": "legacy_import"
+          },
+          {
+            "category_key": "clothing",
+            "amount_monthly": 1600.0,
+            "is_active": 1,
+            "source_kind": "legacy_import"
+          },
+          {
+            "category_key": "leisure",
+            "amount_monthly": 3000.0,
+            "is_active": 1,
+            "source_kind": "legacy_import"
+          }
+        ]
+      }
+    },
+    {
+      "period_index": 3,
+      "burn": {
+        "baseline": 20000.0,
+        "legacy_delta": 0.0,
+        "lines": [
+          {
+            "category_key": "food",
+            "category_title": "Еда",
+            "title": "Еда",
+            "amount": 8800.0,
+            "tier": "must",
+            "source_kind": "legacy_import",
+            "expires_period_index": null
+          },
+          {
+            "category_key": "transport",
+            "category_title": "Транспорт",
+            "title": "Транспорт",
+            "amount": 2800.0,
+            "tier": "must",
+            "source_kind": "legacy_import",
+            "expires_period_index": null
+          },
+          {
+            "category_key": "communications",
+            "category_title": "Связь и подписки",
+            "title": "Связь и подписки",
+            "amount": 1800.0,
+            "tier": "must",
+            "source_kind": "legacy_import",
+            "expires_period_index": null
+          },
+          {
+            "category_key": "health",
+            "category_title": "Здоровье",
+            "title": "Здоровье",
+            "amount": 2000.0,
+            "tier": "must",
+            "source_kind": "legacy_import",
+            "expires_period_index": null
+          },
+          {
+            "category_key": "clothing",
+            "category_title": "Одежда и быт",
+            "title": "Одежда и быт",
+            "amount": 1600.0,
+            "tier": "must",
+            "source_kind": "legacy_import",
+            "expires_period_index": null
+          },
+          {
+            "category_key": "leisure",
+            "category_title": "Досуг",
+            "title": "Досуг",
+            "amount": 3000.0,
+            "tier": "discretionary",
+            "source_kind": "legacy_import",
+            "expires_period_index": null
+          }
+        ],
+        "by_category": [
+          {
+            "category_key": "food",
+            "title": "Еда",
+            "amount": 8800.0,
+            "tier": "must"
+          },
+          {
+            "category_key": "leisure",
+            "title": "Досуг",
+            "amount": 3000.0,
+            "tier": "discretionary"
+          },
+          {
+            "category_key": "transport",
+            "title": "Транспорт",
+            "amount": 2800.0,
+            "tier": "must"
+          },
+          {
+            "category_key": "health",
+            "title": "Здоровье",
+            "amount": 2000.0,
+            "tier": "must"
+          },
+          {
+            "category_key": "communications",
+            "title": "Связь и подписки",
+            "amount": 1800.0,
+            "tier": "must"
+          },
+          {
+            "category_key": "clothing",
+            "title": "Одежда и быт",
+            "amount": 1600.0,
+            "tier": "must"
+          }
+        ],
+        "total": 20000.0
+      },
+      "preview": {
+        "estimated_cash_after_close": -61800.0,
+        "estimated_charges_total": 20900.0,
+        "negative_periods_count": 2,
+        "would_be_negative_after_close": true,
+        "defeat_if_close_negative": true,
+        "breakdown": [
+          {
+            "type": "lifestyle",
+            "title": "Расходы на жизнь",
+            "amount": 20000.0
+          },
+          {
+            "type": "insurance",
+            "title": "Страховые премии",
+            "amount": 900.0
+          }
+        ]
+      },
+      "close": {
+        "closed_period_index": 3,
+        "cash_delta": -20900.0,
+        "income_delta": 0.0,
+        "expense_delta": 0.0,
+        "safety_fund_delta": 0.0,
+        "invest_capital_delta": 0.0,
+        "debt_delta": 0.0,
+        "total_spent": 0.0,
+        "breakdown": [
+          {
+            "type": "liability",
+            "title": "Автокредит",
+            "due": 22198.8,
+            "paid": 0.0,
+            "unpaid": 22198.8
+          },
+          {
+            "type": "liability",
+            "title": "Кредитка",
+            "due": 4500.0,
+            "paid": 0.0,
+            "unpaid": 4500.0
+          },
+          {
+            "type": "expense_category",
+            "category_key": "food",
+            "title": "Еда",
+            "amount": 8800.0
+          },
+          {
+            "type": "expense_category",
+            "category_key": "leisure",
+            "title": "Досуг",
+            "amount": 3000.0
+          },
+          {
+            "type": "expense_category",
+            "category_key": "transport",
+            "title": "Транспорт",
+            "amount": 2800.0
+          },
+          {
+            "type": "expense_category",
+            "category_key": "health",
+            "title": "Здоровье",
+            "amount": 2000.0
+          },
+          {
+            "type": "expense_category",
+            "category_key": "communications",
+            "title": "Связь и подписки",
+            "amount": 1800.0
+          },
+          {
+            "type": "expense_category",
+            "category_key": "clothing",
+            "title": "Одежда и быт",
+            "amount": 1600.0
+          },
+          {
+            "type": "lifestyle",
+            "title": "Итого расходы на жизнь",
+            "amount": 20000.0
+          },
+          {
+            "type": "insurance",
+            "title": "Премии",
+            "amount": 900.0
+          }
+        ],
+        "new_balance": -61800.0,
+        "negative_streak": 3,
+        "game_over": true,
+        "defeat_reason": "cash_negative_streak",
+        "overdue_added": 26698.8,
+        "period_highlights": [
+          {
+            "key": "expenses",
+            "label": "Расходы списаны",
+            "amount": 20900.0
+          }
+        ]
+      },
+      "transactions": [
+        {
+          "type": "lifestyle_expense",
+          "amount": -20000.0,
+          "description": "Расходы на жизнь за период #3"
+        },
+        {
+          "type": "insurance_premium",
+          "amount": -900.0,
+          "description": "Страховые премии за период #3"
+        },
+        {
+          "type": "game_over",
+          "amount": 0.0,
+          "description": "Поражение: 3 периода подряд с отрицательным балансом (период #3)"
+        }
+      ],
+      "closing": {
+        "cash_balance": -61800.0,
+        "safety_fund_balance": 0.0,
+        "total_overdue_amount": 26698.8,
+        "monthly_burn_total": 20000.0,
+        "period_income_rate": 0.0,
+        "period_expense_total": 20900.0,
+        "total_debt_balance": 350000.0
+      },
+      "state": {
+        "profile": {
+          "period_index": 4,
+          "cash_balance": -61800.0,
+          "safety_fund_balance": 0.0,
+          "negative_periods_count": 3,
+          "clean_period_streak": 0,
+          "is_active": 0,
+          "run_outcome": "defeat"
+        },
+        "liabilities": [
+          {
+            "title": "Автокредит",
+            "total_debt": 300000.0,
+            "overdue_amount": 22198.8,
+            "overdue_periods": 3,
+            "periods_paid": 0,
+            "is_active": 1
+          },
+          {
+            "title": "Кредитка",
+            "total_debt": 50000.0,
+            "overdue_amount": 4500.0,
+            "overdue_periods": 3,
+            "periods_paid": 0,
+            "is_active": 1
+          }
+        ],
+        "investments": [],
+        "policies": [
+          {
+            "title": "ДМС",
+            "is_active": 1
+          }
+        ],
+        "expense_lines": [
+          {
+            "category_key": "food",
+            "amount_monthly": 8800.0,
+            "is_active": 1,
+            "source_kind": "legacy_import"
+          },
+          {
+            "category_key": "transport",
+            "amount_monthly": 2800.0,
+            "is_active": 1,
+            "source_kind": "legacy_import"
+          },
+          {
+            "category_key": "communications",
+            "amount_monthly": 1800.0,
+            "is_active": 1,
+            "source_kind": "legacy_import"
+          },
+          {
+            "category_key": "health",
+            "amount_monthly": 2000.0,
+            "is_active": 1,
+            "source_kind": "legacy_import"
+          },
+          {
+            "category_key": "clothing",
+            "amount_monthly": 1600.0,
+            "is_active": 1,
+            "source_kind": "legacy_import"
+          },
+          {
+            "category_key": "leisure",
+            "amount_monthly": 3000.0,
+            "is_active": 1,
+            "source_kind": "legacy_import"
+          }
+        ]
+      }
+    }
+  ]
+}

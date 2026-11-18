@@ -98,7 +98,8 @@
 | Условие | Почему |
 |---------|--------|
 | `insurance_claim` в choice | выплата полиса не в YAML |
-| `used_car_action` | cash/asset подставляет движок |
+| `used_car_action` | cash/asset/кредит подставляет движок (пропускается и `free_lunch`) |
+| `chain_action` | продажа актива, досрочка, подушка, рефинанс, полис, кредитка — суммы считает движок (`chain_actions.py`), превью — те же чипы; пропускается и `free_lunch` |
 | `enqueue_event` у **любого** choice в паре | отложенный исход цепочки; сравниваем trade-off в **первом** звене |
 | `requires_chain_branch` у **любого** choice в паре | в UI одновременно видна одна ветка; см. эталон `freelance_project` |
 
@@ -161,7 +162,23 @@ choices:
 | 2 | 5–15% | +5…+12 | −3…−10 |
 | 3+ mandatory | 10–25%+ | по сюжету | редко без cost |
 
-**Правило большого пальца:** каждые **+10 needs** на главной оси ≈ **3–8% salary** или заметный burn (+0.03…+0.08 `monthly_burn_delta_pct`).
+**Цена балла — кривая** ([SPEC_needs-set-point](../../../docs/specs/features/SPEC_needs-set-point.md) §1, код [`needs/value_curve.py`](../../../backend/app/needs/value_curve.py)):
+
+```text
+needs_points(C, S) = 40 · (C / S)^0.30      C — разовая трата, S — зарплата персоны
+```
+
+| Студент, S = 62 500 | Цена | Баллы (сумма needs+) |
+|---|---:|---:|
+| кофе | 300 | 8 |
+| 4% зарплаты | 2 500 | 15 |
+| ужин в баре | 5 000 | 19 (ось ≤ 15) |
+| зарплата | 62 500 | 40 |
+
+- Сумма плюсов выбора с **разовой** тратой — в коридоре `needs_points × [0.5; 1.5]` по зарплатам аудитории события; каждая ось ≤ **15**. Цена события для всех персон — `cash_pct_salary` (решение PO 2026-10-21); выбор помечается `purpose` (`pleasure` по умолчанию; `mitigation` / `investment` / `obligation` — без коридора).
+- Подбор цены под нужные баллы: `cost_for_points(points, S)`.
+- Регулярные расходы (`expense_line`, `monthly_*`) кривой не проверяются: в модели износа они поднимают уровень жизни, а не дают разовые баллы (spec §3).
+- Проверка: `cd backend && python scripts/event_catalog_report.py` → раздел «needs price curve corridor» (предупреждения, не ошибки contract).
 
 Сверяй **`build_choice_impacts`** — игрок видит «Счёт сейчас» и «Расходы на жизнь».
 
@@ -273,6 +290,19 @@ state_ladder:
 
 ---
 
+### 10.1. Приоритетное появление и подсказки с числами (2026-10-22)
+
+| Ключ YAML | Где | Что делает |
+|---|---|---|
+| `prerequisites.negative_monthly_flow: true` | событие | выпадает, только если месячные расходы больше доходов (`app/finance/cashflow.py`, метрики fincore) |
+| `extra.spawn_priority_when: negative_monthly_flow` (или `always`) | событие | занимает слот периода **раньше случайного отбора** и мимо окна tier, но только если этому профилю событие ещё ни разу не выпадало |
+| `extra.spawn_priority_rank: N` | событие | порядок среди приоритетных (меньше — раньше) |
+| `extra.priority_only: true` | событие | никогда не попадает в случайную колоду (только приоритетом) |
+| `extra.description_vars: true` | событие | в `description` подставляются `{monthly_gap}`, `{income}`, `{outflow}`, `{runway_text}`, `{runway_periods}` |
+| `extra.description_when_resolved` | событие | текст вместо описания, если дыры в бюджете уже нет |
+
+Примеры: [`meta/cashflow_warning.yaml`](../../../data/events/mvp11/meta/cashflow_warning.yaml), A1 в [`chains/second_car.yaml`](../../../data/events/mvp11/chains/second_car.yaml). Приоритет занимает слоты из лимита 2 событий — не ставить его на repeatable-события без `priority_only`/ограничений.
+
 ## 11. Согласованность темы и осей `needs_delta`
 
 > **Продукт:** семья → social; жильё → comfort; отдых один → health; отдых с людьми → health + social.
@@ -315,24 +345,11 @@ needs_axis_map: housing → comfort primary; status secondary
 
 ## 12. Подсказка MCE (авторинг, не автозапись YAML)
 
-**MCE** (monthly cost equivalent) — перевод effects в «долю зарплаты» для проверки §1 и §6.
+> **Заменено кривой цены (§6)** с 2026-10-15. Старая формула MCE считала рост ежемесячного расхода как **один** месяц и поэтому недооценивала подписки и аренду в 10–20 раз ([idea](../../../docs/vision/ideas/needs-value-curve.md)).
 
-```text
-cost     = (-cash_delta / S) + (Δburn_monthly / S) + (|monthly_lifestyle_delta| / S если < 0)
-benefit  = Σ w_axis · max(0, needs_delta[axis]) / 100
-penalty  = Σ w_axis · max(0, -needs_delta[axis]) / 100   # отказ
-
-L1: если benefit > ε  →  cost + penalty ≥ k_tier · benefit
-```
-
-| Tier | k_tier *(старт)* |
-|------|------------------|
-| 1 soft | 0.35–0.50 |
-| 2 | 0.45–0.60 |
-
-**Веса осей `w_axis`:** см. [`persona-profiles.md`](persona-profiles.md) (студент: social/health выше; про: status/comfort).
-
-**Использование:** подобрать `|cash_delta|` под целевой `needs+` (**не** генерировать весь YAML из формулы). Ориентир §6 «правило большого пальца»; калибровка — playtest / EVT1-105.
+- Разовая трата → баллы по `needs_points` (§6).
+- Регулярная трата → **не** разовые баллы: вклад в уровень жизни (spec §3.1), считается движком.
+- Веса осей по персонам — [`persona-profiles.md`](persona-profiles.md); какие оси трогать — §11.
 
 ---
 

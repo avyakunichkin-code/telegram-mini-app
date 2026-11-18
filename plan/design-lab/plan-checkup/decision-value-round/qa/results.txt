@@ -1,0 +1,1 @@
+PASS: A/B at 375/701/1050/1440; no overflow or JS/resource errors; wizard navigation, invalid/zero/excess contribution, range endpoint, action wording, loading/empty/error/offline and retained inputs. Lab only; no application/API/resume coverage.

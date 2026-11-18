@@ -1,0 +1,185 @@
+# Цепочка A3 «Рефинансирование» (принято PO 2026-10-22, brief chains-proposals-2026-10-21).
+# Урок: ставка ниже ≠ дешевле. Снизить ставку на 3 п.п. стоит комиссии 2% долга, но экономит на всём сроке;
+# растянуть срок на 24 периода снижает платёж бесплатно — и увеличивает переплату.
+# Цель — самый дорогой аннуитетный кредит: автокредит Профи, ипотека Руководителя и Предпринимателя.
+# Шаги: N (offer) → N+2 (freed: куда разницу) → N+6 (эпилог). Действия — chain_action (chain_actions.py).
+# Заменяет разовый mq11_refinance_bank (is_active: 0).
+events:
+- definition_key: mq11_refinance_offer
+  content_class: instrumental
+  event_slot: period_choice
+  audience_template_keys:
+  - mq_game_tight_budget_v1
+  - mq_game_mortgage_stress_v1
+  - mq_game_debt_stack_v1
+  event_domain: credit_debt
+  title: Банк предлагает рефинансирование
+  description: 'Банк хочет переманить ваш самый дорогой кредит. Два варианта: снизить ставку на 3 п.п. за
+    комиссию 2% от долга или оставить ставку, но растянуть срок на 24 периода — платёж станет меньше
+    без всяких комиссий.'
+  weight: 60
+  event_tier: 4
+  repeat_policy: once_per_profile
+  scenario_shape: chain
+  prerequisites:
+    active_liability_kinds_any:
+    - auto_loan
+    - mortgage
+  choices:
+  - title: Снизить ставку на 3 п.п.
+    purpose: investment
+    effects:
+      chain_action:
+        action: refinance
+        rate_delta_pp: -3
+        fee_pct_debt: 0.02
+      needs_delta:
+        status: 2
+        health: -2
+      enqueue_event:
+        chain_key: refinance_loan
+        followup_definition_key: mq11_refinance_freed
+        after_periods: 2
+        context:
+          branch: rate
+    description: Комиссия сейчас; платёж ниже до конца срока, переплата по кредиту меньше.
+  - title: Растянуть срок на 24 периода
+    purpose: investment
+    effects:
+      chain_action:
+        action: refinance
+        extend_periods: 24
+      needs_delta:
+        comfort: 4
+        status: -2
+      enqueue_event:
+        chain_key: refinance_loan
+        followup_definition_key: mq11_refinance_freed
+        after_periods: 2
+        context:
+          branch: term
+    description: Без комиссии; платёж ниже, но платить на 24 периода дольше.
+  - title: Оставить как есть
+    effects:
+      cash_delta: 0
+      needs_delta:
+        comfort: -1
+- definition_key: mq11_refinance_freed
+  content_class: instrumental
+  event_slot: chain_followup
+  audience_template_keys:
+  - mq_game_tight_budget_v1
+  - mq_game_mortgage_stress_v1
+  - mq_game_debt_stack_v1
+  event_domain: credit_debt
+  interaction_kind: chain_followup
+  title: 'Платёж снизился: куда разницу?'
+  description: 'Два периода назад вы рефинансировали кредит, и платёж стал меньше. Высвободившиеся деньги
+    можно направить в досрочное погашение того же кредита или оставить в бюджете.'
+  weight: 1
+  event_tier: 4
+  repeat_policy: once_per_profile
+  scenario_shape: chain
+  mandatory_gate: blocks_period_end
+  choices:
+  - title: Гасить досрочно (20% зарплаты)
+    purpose: investment
+    effects:
+      requires_chain_branch: rate
+      chain_action:
+        action: prepay_debts
+        target: chain_liability
+        amount_pct_salary: 0.2
+      needs_delta:
+        status: 2
+        comfort: -2
+      enqueue_event:
+        chain_key: refinance_loan
+        followup_definition_key: mq11_refinance_epilogue
+        after_periods: 4
+        context:
+          branch: rate_prepay
+    description: Тело долга меньше → платёж ниже ещё раз, переплата — тоже.
+  - title: Гасить досрочно (20% зарплаты)
+    purpose: investment
+    effects:
+      requires_chain_branch: term
+      chain_action:
+        action: prepay_debts
+        target: chain_liability
+        amount_pct_salary: 0.2
+      needs_delta:
+        status: 2
+        comfort: -2
+      enqueue_event:
+        chain_key: refinance_loan
+        followup_definition_key: mq11_refinance_epilogue
+        after_periods: 4
+        context:
+          branch: term_prepay
+    description: Тело долга меньше → длинный срок обходится дешевле.
+  - title: Оставить разницу в бюджете
+    effects:
+      requires_chain_branch: rate
+      needs_delta:
+        comfort: 3
+        status: -1
+      enqueue_event:
+        chain_key: refinance_loan
+        followup_definition_key: mq11_refinance_epilogue
+        after_periods: 4
+        context:
+          branch: rate_keep
+    description: Жить посвободнее; кредит идёт по новому графику.
+  - title: Оставить разницу в бюджете
+    effects:
+      requires_chain_branch: term
+      needs_delta:
+        comfort: 3
+        status: -1
+      enqueue_event:
+        chain_key: refinance_loan
+        followup_definition_key: mq11_refinance_epilogue
+        after_periods: 4
+        context:
+          branch: term_keep
+    description: Жить посвободнее; кредит идёт по новому, более длинному графику.
+- definition_key: mq11_refinance_epilogue
+  content_class: instrumental
+  event_slot: informational
+  audience_template_keys:
+  - mq_game_tight_budget_v1
+  - mq_game_mortgage_stress_v1
+  - mq_game_debt_stack_v1
+  event_domain: credit_debt
+  interaction_kind: informational
+  title: Итоги рефинансирования
+  description: 'Банк прислал выписку: сколько вы уже заплатили по новому графику и сколько осталось.
+
+    Мелким шрифтом: банк зарабатывает на сроке, а не на ставке.'
+  weight: 1
+  event_tier: 4
+  repeat_policy: once_per_profile
+  scenario_shape: chain
+  mandatory_gate: none
+  choices:
+  - title: Понятно
+    effects:
+      requires_chain_branch: rate_prepay
+    description: 'Шесть периодов назад вы снизили ставку и гасили досрочно → платёж ниже, долг тает
+      быстрее, переплата меньше всего. Комиссия давно окупилась.'
+  - title: Понятно
+    effects:
+      requires_chain_branch: rate_keep
+    description: 'Шесть периодов назад вы снизили ставку и оставили разницу в бюджете → платёж ниже,
+      переплата меньше, чем до рефинансирования. Комиссия окупается за счёт ставки.'
+  - title: Понятно
+    effects:
+      requires_chain_branch: term_prepay
+    description: 'Шесть периодов назад вы растянули срок, но гасили досрочно → платёж ниже, а досрочка
+      съела часть лишней переплаты за длинный срок.'
+  - title: Понятно
+    effects:
+      requires_chain_branch: term_keep
+    description: 'Шесть периодов назад вы растянули срок и оставили разницу в бюджете → платить легче,
+      но на 24 периода дольше: переплата по кредиту выросла сильнее всего.'

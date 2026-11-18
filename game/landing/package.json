@@ -1,0 +1,17 @@
+{
+  "name": "tvoy-hod-landing",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite site --config vite.config.js",
+    "build": "node scripts/build-static.mjs",
+    "preview": "vite preview",
+    "check:design-assets": "node ../scripts/design-assets.mjs --check",
+    "prebuild": "node ../scripts/design-assets.mjs --check"
+  },
+  "devDependencies": {
+    "playwright": "^1.60.0",
+    "vite": "^6.3.5"
+  }
+}

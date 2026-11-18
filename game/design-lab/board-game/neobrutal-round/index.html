@@ -1,0 +1,188 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>ТВОЙ ХОД — необрутализм: раунд</title>
+    <link rel="stylesheet" href="./lab-base.css" />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <header class="lab-bar">
+      <div class="lab-bar__row">
+        <h1>Необрутализм в цветах игры</h1>
+        <div class="lab-controls" role="group" aria-label="Вариант">
+          <button class="lab-toggle" type="button" data-set-variant="a" aria-pressed="true">A · Чернильный край</button>
+          <button class="lab-toggle" type="button" data-set-variant="b" aria-pressed="false">B · Всё поле</button>
+          <button class="lab-toggle" type="button" data-set-variant="c" aria-pressed="false">C · Плакат</button>
+        </div>
+        <div class="lab-controls" role="group" aria-label="Тема">
+          <button class="lab-toggle" type="button" data-set-theme="light" aria-pressed="true">Светлая</button>
+          <button class="lab-toggle" type="button" data-set-theme="dark" aria-pressed="false">Тёмная</button>
+        </div>
+      </div>
+      <p class="lab-note" data-note="a">Ближе всего к канону BG-3: блоки без рамок, чернильный край у всего, что видно, а жёсткая тень — только у того, что нажимается. Карта хода — единственная с фиолетовой тенью. Нажми фишку: она вдавливается в поле.</p>
+      <p class="lab-note" data-note="b">Необрутализм целиком: каждая секция — клетка с тенью, радиус 8, фон экрана — сетка игрового поля. Карта хода — сплошной фиолетовый блок, «Завершить ход» в ней — светлая фишка.</p>
+      <p class="lab-note" data-note="c">Плакат: прямые углы, номер хода и баланс крупно, карта хода — чернильная плита, заголовки секций — чернильные ярлыки, деньги разделены линейкой, а не коробками.</p>
+    </header>
+
+    <main class="nb-stage" data-variant="a">
+      <section class="screen" aria-labelledby="scr-main">
+        <h2 class="screen__name" id="scr-main">Главная</h2>
+        <div class="phone">
+          <article class="turn" aria-label="Твой ход">
+            <div class="turn__top">
+              <div class="turn__who"><small>Студент</small><b>Твой ход</b></div>
+              <div class="turn__no" aria-label="Ход 4">4<small>ход</small></div>
+            </div>
+            <button class="deck piece" type="button">
+              <span class="deck__cards" aria-hidden="true"><span></span><span></span></span>
+              <span class="deck__txt"><b>2 события</b><small>ждут решения в этом ходе</small></span>
+              <span class="deck__go" aria-hidden="true">›</span>
+            </button>
+            <p class="tip" aria-live="polite"><img src="./assets/monetka-mascot.png" alt="Монетка" /><span data-tip>Забери зарплату до конца хода</span></p>
+            <button class="cta piece" type="button">Завершить ход</button>
+          </article>
+
+          <section class="sec sec--box" aria-labelledby="t-needs">
+            <h3 class="sec__title" id="t-needs">Потребности</h3>
+            <div class="needs">
+              <div class="need"><span class="need__row">Комфорт<b>70</b></span><span class="bar"><i style="width:70%"></i></span></div>
+              <div class="need"><span class="need__row">Статус<b>45</b></span><span class="bar"><i style="width:45%"></i></span></div>
+              <div class="need"><span class="need__row">Связи<b>60</b></span><span class="bar"><i style="width:60%"></i></span></div>
+              <div class="need"><span class="need__row">Здоровье<b>80</b></span><span class="bar"><i style="width:80%"></i></span></div>
+            </div>
+          </section>
+
+          <section class="sec sec--box" aria-label="Деньги">
+            <div class="hero">
+              <img src="./assets/student.png" alt="" />
+              <div><small>На счёте</small><b class="money" data-balance>87 400 ₽</b></div>
+            </div>
+            <div class="tiles">
+              <div class="tile"><small>Доходы за ход</small><b class="money gain">+64 300 ₽</b></div>
+              <div class="tile"><small>Расходы за ход</small><b class="money">−37 500 ₽</b></div>
+              <div class="tile tile--wide"><small>Подушка</small><b class="money">45 000 ₽</b></div>
+            </div>
+          </section>
+
+          <button class="goal piece" type="button" aria-label="Цель, шаг 3 из 5">
+            <span class="goal__txt"><b>Цель</b><small>шаг 3 из 5</small></span>
+            <span class="dots" aria-hidden="true"><i class="done"></i><i class="done"></i><i class="now"></i><i></i><i></i><span class="coin coin--s">₽</span></span>
+          </button>
+
+          <section class="sec" aria-labelledby="t-acts">
+            <h3 class="sec__title" id="t-acts">Действия хода</h3>
+            <div class="acts">
+              <button class="act act--salary piece" type="button" data-salary><span class="coin" aria-hidden="true">₽</span><span data-salary-label>Зарплата</span><span class="act__sum money" data-salary-sum>+62 500 ₽</span></button>
+              <button class="act piece" type="button"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>В подушку</button>
+              <button class="act piece" type="button"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" aria-hidden="true"><path d="M5 12h14"/></svg>Из подушки</button>
+              <button class="act piece" type="button"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 17l6-6 4 4 8-8"/><path d="M14 7h7v7"/></svg>Вложить</button>
+            </div>
+          </section>
+
+          <nav class="tabbar" aria-label="Разделы">
+            <button class="tab tab--on" type="button" aria-current="page"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="M4 11l8-6 8 6v8H4z"/></svg>Главная</button>
+            <button class="tab" type="button"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="6" width="18" height="13" rx="2"/><path d="M16 12h2"/></svg>Капитал</button>
+            <button class="tab" type="button"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M5 19V11M12 19V5M19 19v-6"/></svg>Аналитика</button>
+            <button class="tab" type="button"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>Меню</button>
+          </nav>
+        </div>
+      </section>
+
+      <section class="screen" aria-labelledby="scr-ev">
+        <h2 class="screen__name" id="scr-ev">Событие</h2>
+        <div class="phone phone--event">
+          <div class="ev-head">
+            <span class="deck__cards" aria-hidden="true"><span></span><span></span></span>
+            Событие 1 из 2
+            <button class="ev-close piece" type="button" aria-label="Закрыть">×</button>
+          </div>
+          <article class="ev" aria-labelledby="ev-title">
+            <div class="ev__band"><span class="chip">Техника</span><span class="chip">Непредвиденное</span></div>
+            <div class="ev__body">
+              <h3 class="ev__title" id="ev-title">Сломался ноутбук</h3>
+              <div class="bubble"><img src="./assets/monetka-mascot.png" alt="Монетка" /><p>Без ноутбука учёба встанет. Посмотри, что выдержит подушка.</p></div>
+              <div class="choices" role="radiogroup" aria-label="Что сделаешь">
+                <button class="choice piece" type="button" role="radio" aria-checked="false">Починить в сервисе<span class="impacts"><span class="imp imp--risk money">−12 000 ₽</span></span></button>
+                <button class="choice piece" type="button" role="radio" aria-checked="false">Купить новый в кредит<span class="impacts"><span class="imp imp--risk money">−3 000 ₽ × 6 ходов</span><span class="imp imp--gain">Статус +5</span></span></button>
+                <button class="choice piece" type="button" role="radio" aria-checked="false">Пока обойтись без него<span class="impacts"><span class="imp">Комфорт −8</span><span class="imp">Связи −3</span></span></button>
+              </div>
+            </div>
+          </article>
+          <div class="ev-foot">
+            <button class="cta piece" type="button" data-decide disabled>Выбери вариант</button>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <script>
+      (function () {
+        var root = document.documentElement;
+        var stage = document.querySelector('.nb-stage');
+        var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        var fmt = new Intl.NumberFormat('ru-RU', { maximumFractionDigits: 0 });
+        function rub(n) { return fmt.format(n).replace(/\s/g, ' ') + ' ₽'; }
+
+        function press(attr, t) {
+          document.querySelectorAll('[' + attr + ']').forEach(function (b) { b.setAttribute('aria-pressed', String(b === t)); });
+        }
+        function setVariant(v) {
+          stage.dataset.variant = v;
+          document.querySelectorAll('[data-note]').forEach(function (n) { n.hidden = n.dataset.note !== v; });
+          history.replaceState(null, '', '#' + v);
+        }
+
+        // Зарплата: счёт растёт от старого значения, кнопка уходит в спокойную строку
+        var balance = document.querySelector('[data-balance]');
+        function countUp(from, to) {
+          if (reduce) { balance.textContent = rub(to); return; }
+          var t0 = performance.now(), dur = 600;
+          (function step(now) {
+            var k = Math.min(1, (now - t0) / dur), e = 1 - Math.pow(1 - k, 3);
+            balance.textContent = rub(Math.round(from + (to - from) * e));
+            if (k < 1) requestAnimationFrame(step);
+            else { balance.classList.remove('is-pop'); void balance.offsetWidth; balance.classList.add('is-pop'); }
+          })(t0);
+        }
+        function takeSalary(btn) {
+          if (btn.classList.contains('is-done')) return;
+          btn.classList.add('is-done');
+          btn.querySelector('[data-salary-label]').textContent = 'Зарплата получена';
+          btn.querySelector('[data-salary-sum]').textContent = '✓';
+          document.querySelector('[data-tip]').textContent = 'Зарплата на счёте. Можно завершать ход';
+          countUp(87400, 149900);
+        }
+
+        var decide = document.querySelector('[data-decide]');
+        function pick(choice) {
+          var group = choice.parentElement;
+          group.querySelectorAll('.choice').forEach(function (c) {
+            var on = c === choice;
+            c.classList.toggle('is-on', on);
+            c.setAttribute('aria-checked', String(on));
+          });
+          group.classList.add('has-pick');
+          decide.disabled = false;
+          decide.textContent = 'Выбрать этот вариант';
+        }
+
+        document.addEventListener('click', function (e) {
+          var th = e.target.closest('[data-set-theme]');
+          if (th) { root.setAttribute('data-theme', th.dataset.setTheme); press('data-set-theme', th); return; }
+          var v = e.target.closest('[data-set-variant]');
+          if (v) { setVariant(v.dataset.setVariant); press('data-set-variant', v); return; }
+          var s = e.target.closest('[data-salary]');
+          if (s) { takeSalary(s); return; }
+          var c = e.target.closest('.choice');
+          if (c) pick(c);
+        });
+
+        var start = (location.hash || '#a').slice(1);
+        var btn = document.querySelector('[data-set-variant="' + start + '"]') || document.querySelector('[data-set-variant="a"]');
+        setVariant(btn.dataset.setVariant); press('data-set-variant', btn);
+      })();
+    </script>
+  </body>
+</html>

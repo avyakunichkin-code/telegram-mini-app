@@ -1,0 +1,17 @@
+.insights{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1rem;margin-block:1.5rem}
+.insight-card{border:1px solid var(--hairline);border-radius:var(--radius-tile);padding:1.5rem;background:var(--tile);color:var(--ink);min-width:0}
+.insight-wide{grid-column:1/-1}
+.insight-card h2{font-size:1.4rem;line-height:1.3;margin:.25rem 0 .75rem}.insight-card p{line-height:1.65}
+.insight-dark{background:var(--inverse);color:var(--on-inverse)}.atlas-report .insight-dark h2{color:var(--on-inverse)}.insight-dark .insight-note,.insight-dark small,.atlas-report .insight-dark .eyebrow{color:#d4dfcb}
+.insight-note{font-size:12px;color:var(--ink-3)}.insight-risk{color:#ffc9bd}
+.insight-bar{display:flex;height:18px;border-radius:9px;overflow:hidden;background:var(--well);margin:.875rem 0}.insight-bar i{display:block;min-width:3px}
+.c-overdue{background:#c9604f}.c-cushion{background:#8fb1d0}.c-debts{background:#789440}.c-goals{background:#cbf640}.c-unassigned{background:#c5cfbf}
+.insight-rows{display:grid;gap:.625rem;margin:.75rem 0;padding:0;list-style:none}
+.insight-rows li{display:flex;justify-content:space-between;gap:.875rem;align-items:baseline;border-top:1px solid rgba(132,146,126,.3);padding-top:.625rem}.insight-rows li:first-child{border-top:0;padding-top:0}
+.insight-rows b{text-align:right}.insight-dot{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:.5rem}
+.insight-big{display:flex;gap:1.375rem;flex-wrap:wrap;margin:.875rem 0}.insight-big div{flex:1;min-width:7.5rem;display:grid;gap:.25rem}.insight-big strong{font-size:1.625rem;white-space:nowrap}
+.insight-tag{display:inline-block;font-size:12px;font-weight:700;letter-spacing:0;padding:.25rem .625rem;border-radius:99px;background:var(--well)}.insight-tag.warn{background:#fff2ce}.insight-tag.bad{background:#f6dcd6;color:#a53225}
+.insight-checks{list-style:none;margin:.625rem 0 0;padding:0;display:grid;gap:.625rem}.insight-checks li{display:block;padding:.75rem .875rem;border-left:4px solid #c5cfbf;background:var(--well);border-radius:4px 12px 12px 4px;line-height:1.5}.insight-checks li.fix{border-color:#a53225;background:#fbefec}.insight-checks small{color:var(--ink-3)}
+.insight-legacy{margin-block:1.5rem;padding:1rem;background:var(--well);border-radius:var(--radius-inner)}
+@media(max-width:1050px){.insights{grid-template-columns:minmax(0,1fr)}}
+@media(max-width:700px){.insight-card{padding:1.125rem}.insight-big strong{font-size:1.4rem}}

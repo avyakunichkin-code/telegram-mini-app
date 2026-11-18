@@ -1,0 +1,33 @@
+# New game — выбор режима (утверждено)
+
+> **Снято (2026-10-15).** Режим План снят ADR-013; экран выбора режима удалён из prod (`NewProfileKindScreen`, `MqxSaveKindPicker`). Канон потока — [`../pre-game-shell/APPROVED.md`](../pre-game-shell/APPROVED.md).
+
+**Дата:** 2026-05-20  
+**Экран:** шаг 1 «Новая игра»
+
+## Layout (R2)
+
+- Плоский flow, без рамки `mqx-frame`
+- `MqxMonetkaDialogScreen`: Монетка **слева на пузыре** (`--mqx-monetka-perch-left: 26%`), ножки не заходят на текст
+- Пузырь — только подсказка Монетки
+- Заголовок секции **«Режим игры»** между пузырём и рядами
+
+## Иконки (I1)
+
+| Режим | Метафора | Accent |
+|-------|----------|--------|
+| Игра | Сцены жизни (орбита) | violet glow |
+| План | Финплан (блокнот + календарь + рост) | emerald glow |
+
+## Копирайт
+
+- **Заголовок:** Новая игра!
+- **Текст:** Я слышала, что в режиме **Игра** можно выбирать различные жизненные ситуации, а в режиме **План** будет что-то очень интересное
+
+Имя игры — на шаге 2 (шаблоны).
+
+## Prod
+
+- `MqxMonetkaDialogScreen`, `MqxSaveKindPicker`, `ModeIllustrations.jsx`
+- `NewProfileKindScreen`, `GameTemplatePickScreen` (имя)
+- Стили: `.mqx-monetka-dialog__*`, `.mqx-save-kind*` в `index.css`

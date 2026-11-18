@@ -1,0 +1,52 @@
+<!-- @dsCard height=288 -->
+<style>
+  html, body { margin: 0; background: var(--mq-board); }
+  .cv { position: relative; width: 960px; height: 288px; overflow: hidden; background: var(--mq-board); }
+  .cv svg { position: absolute; inset: 0; }
+  .turn { fill: var(--mq-turn); }
+  .deep { fill: var(--mq-turn-deep); }
+  .coin { fill: var(--mq-coin); }
+  .rim { fill: var(--mq-coin-rim); }
+  .ink { fill: var(--mq-board-ink); }
+  .gain { fill: var(--mq-gain); }
+  .soft { fill: var(--mq-turn-soft); }
+  .cell { fill: var(--mq-cell); }
+  .r-card { rx: var(--mq-r-card); }
+  .r-cell { rx: var(--mq-r-cell); }
+  .r-s { rx: var(--mq-r-s); }
+  .open { fill: none; stroke: var(--mq-board); stroke-width: 2; stroke-dasharray: 5 4; rx: var(--mq-r-cell); }
+  .cv__text { position: absolute; left: 40px; bottom: 32px; max-width: 440px; }
+  .cv__name { margin: 0; font: 900 112px/0.95 var(--font-display); color: var(--mq-board-ink); letter-spacing: -0.01em; }
+  .cv__tag { margin: 16px 0 0; font: 600 14px/18px var(--font-body); color: var(--mq-board-ink-soft); }
+</style>
+<div class="cv">
+  <svg viewBox="0 0 960 288" width="960" height="288" aria-hidden="true">
+    <!--
+      blocks: mq-turn slab 360×168 (bleeds top/right), mq-coin 176×136 (bleeds bottom), mq-board-ink 264×140 (bleeds right/bottom), mq-gain 64×40 signal.
+      arrangement: one tall violet slab top-right with gold and ink satellites below — move (violet) above money (gold), like the turn card over the board.
+      pattern: board path — a row of cells on the slab (done = mq-turn-soft, now = mq-cell on mq-turn-deep lift) ending in a coin disc; three open dashed cells ahead on the ink block. Chosen because the brand is "a board game about money": the turn is a cell, the goal a coin.
+      scales: cells 40 (mq-space-10), pitch 56 (40 + mq-space-4), lift 3px (mq-lift-turn), radii mq-r-card / mq-r-cell / mq-r-s.
+    -->
+    <rect class="turn r-card" x="600" y="-20" width="380" height="172"/>
+    <rect class="deep r-card" x="504" y="175" width="176" height="136"/>
+    <rect class="coin r-card" x="504" y="172" width="176" height="136"/>
+    <rect class="ink r-card" x="696" y="168" width="284" height="140"/>
+    <rect class="gain r-s" x="520" y="116" width="64" height="40"/>
+
+    <rect class="soft r-cell" x="624" y="64" width="40" height="40"/>
+    <rect class="soft r-cell" x="680" y="64" width="40" height="40"/>
+    <rect class="soft r-cell" x="736" y="64" width="40" height="40"/>
+    <rect class="deep r-cell" x="792" y="67" width="40" height="40"/>
+    <rect class="cell r-cell" x="792" y="64" width="40" height="40"/>
+    <circle class="rim" cx="888" cy="87" r="22"/>
+    <circle class="coin" cx="888" cy="84" r="22"/>
+
+    <rect class="open" x="728" y="200" width="40" height="40"/>
+    <rect class="open" x="784" y="200" width="40" height="40"/>
+    <rect class="open" x="840" y="200" width="40" height="40"/>
+  </svg>
+  <div class="cv__text">
+    <p class="cv__name">ТВОЙ<br>ХОД</p>
+    <p class="cv__tag">Финансы как игра — поле, клетки, монеты.</p>
+  </div>
+</div>

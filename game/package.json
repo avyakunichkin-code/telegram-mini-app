@@ -1,0 +1,14 @@
+{
+  "name": "tvoy-game",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "node ../scripts/project.mjs game dev",
+    "dev:api": "node ../scripts/project.mjs game api",
+    "smoke": "node ../scripts/smoke-projects.mjs game",
+    "check": "node ../scripts/project.mjs game check",
+    "build": "node ../scripts/project.mjs game build",
+    "build:pages": "node scripts/build-pages.mjs",
+    "design-lab:build-nav": "npm --prefix web run design-lab:build-nav"
+  }
+}
