@@ -75,14 +75,14 @@ export class ApiError extends Error {
   }
 }
 
-export async function apiCall(endpoint, method = 'GET', data = null) {
+export async function apiCall(endpoint, method = 'GET', data = null, { credentials, token = authToken } = {}) {
   const headers = { 'Content-Type': 'application/json' };
-  if (authToken) headers['Authorization'] = `Bearer ${authToken}`;
+  if (token) headers['Authorization'] = `Bearer ${token}`;
   if (shouldAttachIdempotencyKey(method, endpoint)) {
     headers['Idempotency-Key'] = newIdempotencyKey();
   }
 
-  const options = { method, headers };
+  const options = { method, headers, credentials };
   if (data && (method === 'POST' || method === 'PUT' || method === 'PATCH')) {
     options.body = JSON.stringify(data);
   }

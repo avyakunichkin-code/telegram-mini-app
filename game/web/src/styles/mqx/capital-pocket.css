@@ -1,0 +1,307 @@
+.mqx-capital-pocket {
+  box-sizing: border-box;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 6px 9px 16px;
+  background: radial-gradient(ellipse at 50% 18%, var(--mq-menu-wash), var(--mq-menu-board) 80%);
+  color: var(--mq-menu-ink);
+}
+
+.mqx-capital-pocket > * {
+  flex-shrink: 0;
+}
+
+.mqx-capital-pocket__heading {
+  min-height: 75px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding-inline: 16px 8px;
+}
+
+.mqx-capital-pocket__heading img {
+  width: 118px;
+  height: auto;
+}
+
+.mqx-capital-pocket__heading h1 {
+  margin: 0;
+  color: inherit;
+  text-align: right;
+  font: 900 clamp(28px, 9vw, 38px)/1.1 var(--mq-font-display);
+}
+
+.mqx-capital-pocket__board {
+  padding: 11px;
+  border-radius: 23px;
+  background: linear-gradient(155deg, var(--mq-menu-notice), var(--mq-menu-card) 76%);
+  box-shadow: inset 0 1px 0 var(--mq-menu-shade), 0 6px 12px var(--mq-menu-card-shadow);
+}
+
+.mqx-capital-pocket__turn {
+  display: inline-block;
+  margin-bottom: 8px;
+  padding: 4px 13px;
+  border-radius: 13px;
+  background: linear-gradient(var(--mq-menu-gold-border), var(--mq-menu-gold-line), var(--mq-menu-gold-end));
+  color: var(--mq-menu-gold-ink);
+  font: 900 17px/1.2 var(--mq-font-display);
+}
+
+.mqx-capital-pocket .mqx-cap-flows {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.mqx-capital-pocket .mqx-cap-flows .mqx-cap-flow {
+  padding: 8px 10px;
+  border: 1px solid var(--mq-menu-tile-border);
+  border-radius: 13px;
+  background: linear-gradient(var(--mq-menu-tile-light), var(--mq-menu-cream));
+  box-shadow: inset 0 1px 0 var(--mq-menu-tile-border), 0 2px 3px var(--mq-menu-shade);
+  color: var(--mq-menu-ink);
+}
+
+.mqx-capital-pocket .mqx-cap-flows .mqx-cap-flow:first-child {
+  background: linear-gradient(160deg, var(--mq-capital-pocket-gain-top), var(--mq-capital-pocket-gain));
+  color: var(--mq-menu-cream);
+}
+
+.mqx-capital-pocket .mqx-cap-flow.is-open {
+  outline: 2px solid var(--mq-menu-gold-line);
+  outline-offset: -2px;
+}
+
+.mqx-capital-pocket .mqx-cap-flow__label {
+  color: inherit;
+  font: 800 13px/1.15 var(--mq-font-display);
+}
+
+.mqx-capital-pocket .mqx-cap-flow__value {
+  color: inherit;
+  font: 900 clamp(16px, 5.7vw, 27px)/1.15 var(--mq-font-display);
+  overflow-wrap: anywhere;
+}
+
+.mqx-capital-pocket .mqx-cap-net {
+  padding: 7px 10px;
+  border: 0;
+  border-radius: 11px;
+  box-shadow: none;
+  font: 800 14px/1.25 var(--mq-font-display);
+}
+
+.mqx-capital-pocket .mqx-cap-net--gain {
+  background: var(--mq-capital-pocket-mint);
+  color: var(--mq-capital-pocket-gain);
+}
+
+.mqx-capital-pocket .mqx-cap-seg {
+  padding: 2px;
+  border: 1px solid var(--mq-menu-tile-border);
+  border-radius: 15px;
+  box-shadow: inset 0 1px 0 var(--mq-menu-tile-border), 0 2px 4px var(--mq-menu-tile-shadow);
+  background: linear-gradient(var(--mq-menu-tile-deep), var(--mq-menu-count));
+}
+
+.mqx-capital-pocket .mqx-cap-seg .mqx-cap-seg__btn {
+  min-height: 44px;
+  border: 0;
+  border-radius: 13px;
+  color: var(--mq-menu-ink);
+  font: 900 20px/1.15 var(--mq-font-display);
+}
+
+.mqx-capital-pocket .mqx-cap-seg .mqx-cap-seg__btn.is-active {
+  background: var(--mq-menu-card);
+  color: var(--mq-menu-cream);
+}
+
+.mqx-capital-pocket .mqx-cap-lots { gap: 9px; }
+
+.mqx-capital-pocket .mqx-cap-lot {
+  position: relative;
+  padding: 10px 12px;
+  border: 1px solid var(--mq-menu-tile-border);
+  border-radius: 19px;
+  background: linear-gradient(135deg, var(--mq-menu-tile-light), var(--mq-menu-tile-deep));
+  box-shadow: inset 0 1px 0 var(--mq-menu-tile-border), 0 4px 8px var(--mq-menu-tile-shadow);
+  color: var(--mq-menu-ink);
+}
+
+.mqx-capital-pocket .mqx-cap-lot__band {
+  position: absolute;
+  border: 0;
+  inset: 12px auto auto 11px;
+  width: 5px;
+  height: 17px;
+  border-radius: 4px;
+}
+
+.mqx-capital-pocket .mqx-cap-lot--debt:not(:has(.mqx-cap-lot-row)) .mqx-cap-lot__band {
+  background: var(--mq-menu-link);
+}
+
+.mqx-capital-pocket .mqx-cap-lot__head { padding: 0 0 0 12px; }
+.mqx-capital-pocket .mqx-cap-lot__title {
+  color: inherit;
+  font: 900 18px/1.1 var(--mq-font-display);
+}
+
+.mqx-capital-pocket .mqx-cap-lot__meta { display: none; }
+.mqx-capital-pocket .mqx-cap-lot--locked {
+  border-style: dashed;
+  border-color: var(--mq-menu-link);
+  box-shadow: none;
+}
+.mqx-capital-pocket .mqx-cap-lot--locked .mqx-cap-lot__meta {
+  display: inline;
+  color: var(--mq-menu-link);
+}
+.mqx-capital-pocket .mqx-cap-lot-note { min-height: 48px; padding: 0; align-content: center; }
+.mqx-capital-pocket .mqx-cap-lot-row {
+  margin-top: 8px;
+  padding: 7px 10px;
+  border: 0;
+  border-radius: 13px;
+  background: var(--mq-menu-cream);
+}
+.mqx-capital-pocket .mqx-cap-lot-row__title,
+.mqx-capital-pocket .mqx-cap-lot-row__val { color: inherit; }
+.mqx-capital-pocket .mqx-cap-lot--invest .mqx-cap-lot-row {
+  padding-left: 66px;
+  background: var(--mq-menu-cream) url('../../assets/actions/action-coins.png') 8px center / 49px auto no-repeat;
+}
+
+.mqx-capital-pocket .mqx-cap-seg .mqx-cap-seg__btn + .mqx-cap-seg__btn { border: 0; }
+
+.mqx-capital-pocket .mqx-cap-lot-act,
+.mqx-capital-pocket .mqx-cap-lot-empty-link {
+  border: 0;
+  box-shadow: none !important;
+  color: var(--mq-menu-ink);
+  cursor: pointer;
+}
+.mqx-capital-pocket .mqx-cap-lot-row .mqx-cap-lot-act {
+  position: relative;
+  isolation: isolate;
+  min-height: 44px;
+  padding: 0 10px;
+  border-radius: 13px;
+  background: transparent;
+  font: 800 12px/1.2 var(--mq-font-display);
+}
+.mqx-capital-pocket .mqx-cap-lot-row .mqx-cap-lot-act::before {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  inset: 9px 0;
+  border-radius: 13px;
+  background: linear-gradient(var(--mq-menu-tile-deep), var(--mq-menu-count));
+  box-shadow: inset 0 1px 0 var(--mq-menu-tile-border), 0 1px 2px var(--mq-capital-pocket-lilac-edge);
+}
+.mqx-capital-pocket .mqx-cap-lot-empty-link {
+  position: relative;
+  width: 100%;
+  min-height: 48px;
+  padding: 0 0 0 66px;
+  background: transparent;
+  text-align: left;
+  font: 800 15px/1.2 var(--mq-font-display);
+}
+.mqx-capital-pocket .mqx-cap-lot-empty-link::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 7px;
+  width: 48px;
+  height: 43px;
+  transform: translateY(-50%);
+  background: var(--mq-capital-art) center / contain no-repeat;
+}
+.mqx-capital-pocket .mqx-cap-lot--invest { --mq-capital-art: url('../../assets/actions/action-coins.png'); }
+.mqx-capital-pocket .mqx-cap-lot--insure { --mq-capital-art: url('../../assets/capital/insurance.webp'); }
+.mqx-capital-pocket .mqx-cap-lot--debt { --mq-capital-art: url('../../assets/capital/debt.webp'); }
+.mqx-capital-pocket .mqx-cap-lot--property { --mq-capital-art: url('../../assets/capital/property.webp'); }
+.mqx-cap-invest-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+.mqx-cap-invest-chips > span {
+  padding: 2px 7px;
+  border-radius: 12px;
+  background: linear-gradient(var(--mq-menu-tile-deep), var(--mq-menu-count));
+  box-shadow: inset 0 1px 0 var(--mq-menu-tile-border);
+  color: var(--mq-menu-ink);
+  font: 800 12px/1.25 var(--mq-font-display);
+  white-space: nowrap;
+}
+
+.mqx-capital-pocket .mqx-cap-acts { display: grid; gap: 16px; }
+.mqx-capital-pocket .mqx-cap-acts__head { margin: 0 0 7px; padding: 0 4px; }
+.mqx-capital-pocket .mqx-cap-acts__title {
+  font: 900 18px/1.15 var(--mq-font-display);
+  color: var(--mq-menu-ink);
+}
+.mqx-capital-pocket .mqx-cap-acts__hint { display: none; }
+.mqx-capital-pocket .mqx-cap-pieces {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 6px;
+}
+.mqx-capital-pocket .mqx-cap-pieces:has(> :last-child:nth-child(2)) {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+.mqx-capital-pocket .mqx-cap-pieces .mqx-cap-piece {
+  min-height: 77px;
+  padding: 4px;
+  gap: 2px;
+  border: 1px solid var(--mq-menu-tile-border);
+  border-radius: 13px;
+  background: linear-gradient(var(--mq-menu-tile-light), var(--mq-menu-cream));
+  box-shadow: 0 2px 4px var(--mq-menu-tile-shadow);
+  color: var(--mq-menu-ink);
+}
+.mqx-capital-pocket .mqx-cap-pieces .mqx-cap-piece--locked {
+  border-style: dashed;
+  border-color: var(--mq-menu-link);
+}
+.mqx-capital-pocket .mqx-cap-piece .mqx-cap-piece__ico {
+  width: 44px;
+  height: 39px;
+  color: transparent;
+  background: var(--mq-capital-piece-art) center / contain no-repeat;
+}
+.mqx-capital-pocket .mqx-cap-piece__title { font: 900 clamp(12px, 3.7vw, 15px)/1.1 var(--mq-font-display); }
+.mqx-capital-pocket .mqx-cap-piece__note { font-size: 12px; }
+.mqx-capital-pocket [data-capital-piece='deposit'] { --mq-capital-piece-art: url('../../assets/actions/action-coins.png'); }
+.mqx-capital-pocket [data-capital-piece='bond'] { --mq-capital-piece-art: url('../../assets/capital/bond.webp'); }
+.mqx-capital-pocket [data-capital-piece='insurance'] { --mq-capital-piece-art: url('../../assets/capital/insurance.webp'); }
+.mqx-capital-pocket [data-capital-piece='realestate'] { --mq-capital-piece-art: url('../../assets/capital/property.webp'); }
+.mqx-capital-pocket [data-capital-piece='car'] { --mq-capital-piece-art: url('../../assets/capital/car.webp'); }
+.mqx-capital-pocket [data-capital-piece='credit'] { --mq-capital-piece-art: url('../../assets/capital/debt.webp'); }
+.mqx-capital-pocket [data-capital-piece='mortgage'] { --mq-capital-piece-art: url('../../assets/capital/mortgage.webp'); }
+
+.mq-game-shell .mqx-capital-pocket { min-height: 0; overflow-y: auto; width: 100%; max-width: 480px; margin-inline: auto; }
+
+/* Goal-locked actions share the same styling in the game and Design Lab. */
+.mqx-capital-pocket .mqx-cap-pieces .mqx-cap-piece--locked {
+  opacity: 1;
+  background: var(--mq-menu-tile-deep);
+  border: 1px dashed var(--mq-menu-link);
+  box-shadow: none;
+  color: var(--mq-menu-link);
+  cursor: default;
+}
+.mqx-capital-pocket .mqx-cap-piece--locked .mqx-cap-piece__ico {
+  background: var(--mq-capital-piece-art) center / contain no-repeat;
+  color: transparent;
+  filter: grayscale(.82);
+  opacity: .6;
+}
+.mqx-capital-pocket .mqx-cap-piece--locked .mqx-cap-piece__note {
+  color: var(--mq-menu-link);
+}

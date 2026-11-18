@@ -8,6 +8,7 @@ from pathlib import Path
 import sys
 
 BACKEND = Path(__file__).resolve().parents[1]
+BASELINE_DIR = BACKEND.parent / "docs" / "balance" / "baselines"
 sys.path.insert(0, str(BACKEND))
 from balance_simulate import run_balance_simulation
 
@@ -79,10 +80,10 @@ def write_summary(report, output):
     report["po_threshold_decision"] = {"date": "2026-11-11", "multiplier": 1,
                                         "status": "provisional", "quote": "Давай пока 1х"}
     report["limitations"] = [s for s in report.get("limitations", []) if "expense-based" not in s]
-    manifest = yaml.safe_load((BACKEND.parent / "game/docs/balance/baselines/manifest.yaml").read_text(encoding="utf-8"))
+    manifest = yaml.safe_load((BASELINE_DIR / "manifest.yaml").read_text(encoding="utf-8"))
     entries = {e["id"]: e for e in manifest["baselines"]}
     for run in report["runs"]:
-        baseline = json.loads((BACKEND.parent / "game/docs/balance/baselines" / entries[run["id"]]["file"]).read_text(encoding="utf-8"))
+        baseline = json.loads((BASELINE_DIR / entries[run["id"]]["file"]).read_text(encoding="utf-8"))
         for key in ("template_key", "policy", "rng_seed", "periods_requested"):
             if run["meta"].get(key) != baseline["meta"].get(key):
                 raise ValueError(f"Incomparable baseline metadata: {run['id']} / {key}")
@@ -146,7 +147,7 @@ def main():
         write_summary(report, args.out)
         return 0
     import yaml
-    manifest = yaml.safe_load((BACKEND.parent / "game/docs/balance/baselines/manifest.yaml").read_text(encoding="utf-8"))
+    manifest = yaml.safe_load((BASELINE_DIR / "manifest.yaml").read_text(encoding="utf-8"))
     # Ten existing deterministic scenarios; preserve metadata and all baseline files.
     entries = [e for e in manifest["baselines"] if e["id"] != "main__student_safety_first_40p"][:10]
     runs = []

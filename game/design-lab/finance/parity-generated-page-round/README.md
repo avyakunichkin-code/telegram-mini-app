@@ -5,18 +5,18 @@
 Запуск:
 
 ```bash
-cd game/design-lab/finance/parity-generated-page-round
+cd design-lab/finance/parity-generated-page-round
 npx serve .
 ```
 
 Пересборка:
 
 ```bash
-cd frontend-react
+cd web
 npm run design-lab:build-finance-page-round
 ```
 
 Источник правды:
 
-- `game/design-lab/finance/canon.manifest.json`
-- кадры prod «Чернильный край» — `game/design-lab/finance/prod-ink-shots/` (`shots.json`)
+- `design-lab/finance/canon.manifest.json`
+- кадры prod «Чернильный край» — `design-lab/finance/prod-ink-shots/` (`shots.json`)

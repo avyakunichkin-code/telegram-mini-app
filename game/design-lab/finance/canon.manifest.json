@@ -17,7 +17,10 @@
       "prod_component": "FinancePremium",
       "status": "approved",
       "canonical_rounds": [
-        { "path": "design-lab/finance-insurance/", "status": "approved" }
+        {
+          "path": "design-lab/finance-insurance/",
+          "status": "approved"
+        }
       ]
     },
     {
@@ -26,7 +29,10 @@
       "prod_component": "InvestProductForm",
       "status": "approved",
       "canonical_rounds": [
-        { "path": "design-lab/invest-forms/", "status": "approved" }
+        {
+          "path": "design-lab/invest-forms/",
+          "status": "approved"
+        }
       ]
     },
     {
@@ -35,7 +41,10 @@
       "prod_component": "Asset cards",
       "status": "approved",
       "canonical_rounds": [
-        { "path": "design-lab/asset-cards/", "status": "approved" }
+        {
+          "path": "design-lab/asset-cards/",
+          "status": "approved"
+        }
       ]
     },
     {
@@ -44,7 +53,10 @@
       "prod_component": "Row actions",
       "status": "approved",
       "canonical_rounds": [
-        { "path": "design-lab/row-actions/", "status": "approved" }
+        {
+          "path": "design-lab/row-actions/",
+          "status": "approved"
+        }
       ]
     },
     {
@@ -53,15 +65,15 @@
       "prod_component": "Capital page",
       "status": "approved",
       "canonical_rounds": [
-        { "path": "design-lab/board-game/screens-round/", "status": "approved" },
-        { "path": "design-lab/capital-page/details-actions-round/", "status": "superseded" }
+        {
+          "path": "design-lab/board-game/screens-round/",
+          "status": "approved"
+        }
       ]
     }
   ],
   "page_order_prod_components": [
-    "MqxTabHero",
-    "CapitalPeriodFlowsBlock",
-    "MqxCapitalPageModeSeg",
+    "MqxCapitalPage",
     "CapitalDetailsPanel",
     "CapitalActionsPanel"
   ],
@@ -74,6 +86,13 @@
       "CapitalLot(tone=\"property\")",
       "CapitalLot(tone=\"debt\")"
     ]
+  },
+  "page_shell_order": {
+    "prod_entry": "web/src/components/mqx/layout/MqxCapitalPage.jsx",
+    "components": [
+      "BrandLogo",
+      "CapitalPeriodFlowsBlock",
+      "MqxCapitalPageModeSeg"
+    ]
   }
 }
-

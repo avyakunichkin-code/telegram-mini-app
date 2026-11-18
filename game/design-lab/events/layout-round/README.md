@@ -14,7 +14,7 @@ npx serve .
 
 Fallback PNG событий: секция `#l1`, селектор `.ev-card-shell:first-child` (не внутренний `.ev-m2` без оболочки — иначе чёрный кроп на лендинге).
 
-Спека: [`game/docs/specs/LANDING_SCREENSHOTS.md`](../../../docs/specs/LANDING_SCREENSHOTS.md)
+Спека: [`game/docs/archive/LANDING_SCREENSHOTS.md`](../../../docs/archive/LANDING_SCREENSHOTS.md)
 
 ## Prod
 

@@ -16,6 +16,14 @@ idea: ../vision/ideas/player-financial-analytics-an1.md
 
 # Spec: вкладка «Аналитика» (ТВОЙ ХОД)
 
+> **Сверка 2026-11-18:** документ содержит исторический целевой объём AN1:
+> общий экран Game/Plan и прогноз 3/6/12. Plan не является режимом игры
+> ([ADR-013](../decisions/ADR-013-game-only-drop-plan-mode.md)), а утверждённое
+> [превью аналитики](../../design-lab/analytics/APPROVED.md) показывает прогноз
+> на три хода. Целевой объём AN1 и оставшиеся задачи требуют решения в
+> [backlog AN1-002](../backlog/PRODUCT_BACKLOG.md#an1-0--фундамент-p0);
+> утверждение визуала не означает реализацию всех требований ниже.
+
 Документ фиксирует **вижн и дорожную карту** экрана финансовой аналитики: состояние, анализ, прогноз, автоматические рекомендации.
 
 **Эпик:** [AN1](../backlog/PRODUCT_BACKLOG.md#эпик-an1--финансовая-аналитика-игрока) · **Idea (approved):** [player-financial-analytics-an1](../vision/ideas/player-financial-analytics-an1.md) · **Лексика:** [post-playtest §лексика](../vision/ideas/post-playtest-wave1-two-directions.md) · **Метрики:** [ADR-009](../decisions/ADR-009-metrics-dictionary-tb1.md).

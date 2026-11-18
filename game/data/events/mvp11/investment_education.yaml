@@ -6,6 +6,7 @@ events:
   weight: 88
   event_tier: 2
   repeat_policy: repeatable
+  cooldown_periods: 6
   scenario_shape: soft_offer
   choices:
   - title: Записаться на курс
@@ -68,10 +69,10 @@ events:
         status: 11
         comfort: 3
   - title: Только библиотека
+    description: Денег не потратите, но придётся подстраиваться под часы работы библиотеки.
     effects:
       cash_delta: 0
       needs_delta:
-        status: -4
         comfort: -2
 - definition_key: mq11_prof_dev_course_pro
   content_class: profile

@@ -119,7 +119,7 @@ events:
   - all
   event_domain: consumption
   title: Привычки подорожали
-  description: Подписки, доставка и мелкие удобства потихоньку раздувают ежемесячные траты.
+  description: Пора решить, какие подписки оставить на следующие четыре периода.
   weight: 72
   event_tier: 3
   repeat_policy: max_per_profile
@@ -128,11 +128,13 @@ events:
   scenario_shape: soft_offer
   choices:
   - title: Оставить все подписки
+    description: Продлите все подписки на четыре периода.
     effects:
       expense_line:
         category_key: entertainment
         amount_monthly: 900
         title: Подписки и сервисы
+        expires_after_periods: 4
       needs_delta:
         comfort: 6
         status: 3
@@ -145,12 +147,14 @@ events:
         status: -3
         social: -2
   - title: Один сервис, не больше
+    description: Продлите одну подписку на четыре периода.
     effects:
       cash_delta: -600
       expense_line:
         category_key: entertainment
         amount_monthly: 350
         title: Одна подписка
+        expires_after_periods: 4
       needs_delta:
         comfort: 4
         status: 1

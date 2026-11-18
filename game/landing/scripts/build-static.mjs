@@ -6,7 +6,8 @@ import { createHash } from 'node:crypto';
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const source = path.join(root, 'site');
 const out = path.resolve(root, 'dist');
-const base = process.env.BASE_PATH || '/';
+const timeweb = process.argv.includes('--timeweb');
+const base = timeweb ? '/' : process.env.BASE_PATH || '/';
 if (!/^\/(?:[a-zA-Z0-9_-]+\/)*$/.test(base)) throw new Error('BASE_PATH must be an absolute directory path');
 // Only the named, generated game/landing/dist directory may be removed.
 if (out !== path.join(root, 'dist') || !out.startsWith(root + path.sep)) throw new Error('Invalid output path');
@@ -25,7 +26,13 @@ for (const relative of fs.readdirSync(out, { recursive: true }).filter(file => f
   fs.writeFileSync(file, versioned);
 }
 const htmlPath = path.join(out, 'index.html');
-const html = fs.readFileSync(htmlPath, 'utf8').replace('<head>', `<head><base href="${base}">`);
+let html = fs.readFileSync(htmlPath, 'utf8').replace('<head>', `<head><base href="${base}">`);
+if (timeweb) {
+  html = html.replaceAll(
+    'https://avyakunichkin-code.github.io/telegram-mini-app/landing/',
+    'https://tvoihod.com/',
+  );
+}
 fs.writeFileSync(htmlPath, html);
-fs.writeFileSync(path.join(out, '.nojekyll'), '');
+if (!timeweb) fs.writeFileSync(path.join(out, '.nojekyll'), '');
 console.log(`Built approved landing A at ${out}; base ${base}`);

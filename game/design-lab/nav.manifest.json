@@ -18,20 +18,43 @@
       "id": "finance-game",
       "title": "Финансы как игра",
       "items": [
-        { "label": "Элементы — иконки и кнопки", "path": "finance-game-round/elements.html", "kind": "lab" },
-        { "label": "Главная — утверждённый дизайн", "path": "finance-game-round/compact.html", "kind": "lab", "status": "approved" },
-        { "label": "Капитал — на согласование", "path": "finance-game-round/capital.html", "kind": "lab" },
-        { "label": "Аналитика — на согласование", "path": "finance-game-round/analytics.html", "kind": "lab" }
-      ]
-    },
-    {
-      "id": "analytics",
-      "title": "Аналитика (AN1)",
-      "items": [
         {
-          "label": "История дизайна Аналитики — AN1",
-          "path": "analytics/v2-round/index.html",
+          "label": "Лендинг — превью всей страницы",
+          "path": "landing-finance-game/index.html",
           "kind": "lab"
+        },
+        {
+          "label": "Элементы — иконки и кнопки",
+          "path": "finance-game-round/elements.html",
+          "kind": "lab"
+        },
+        {
+          "label": "Главная — утверждённый дизайн",
+          "path": "finance-game-round/compact.html",
+          "kind": "lab",
+          "status": "approved"
+        },
+        {
+          "label": "Веб-версия — рабочее MQX-превью",
+          "path": "finance-game-round/desktop-preview.html",
+          "kind": "lab"
+        },
+        {
+          "label": "Капитал — утверждённый дизайн",
+          "path": "finance-game-round/capital-preview.html",
+          "kind": "lab",
+          "status": "approved"
+        },
+        {
+          "label": "Аналитика — MQX-превью",
+          "path": "finance-game-round/analytics-preview.html",
+          "kind": "lab"
+        },
+        {
+          "label": "Меню — утверждённый дизайн",
+          "path": "finance-game-round/menu-preview.html",
+          "kind": "lab",
+          "status": "approved"
         }
       ]
     },
@@ -95,12 +118,6 @@
           "status": "approved"
         },
         {
-          "label": "Capital — Детали|Действия ★",
-          "path": "capital-page/details-actions-round/index.html",
-          "kind": "lab",
-          "status": "approved"
-        },
-        {
           "label": "Invest forms",
           "path": "invest-forms/index.html",
           "kind": "lab",
@@ -125,35 +142,6 @@
       "title": "Pre-game / старт",
       "items": [
         {
-          "label": "Pre-game shell v2",
-          "path": "pre-game-shell/index.html",
-          "kind": "lab"
-        },
-        {
-          "label": "Auth flow",
-          "path": "auth-flow/index.html",
-          "kind": "lab",
-          "status": "approved"
-        },
-        {
-          "label": "New game mode",
-          "path": "new-game-mode/index.html",
-          "kind": "lab",
-          "status": "approved"
-        },
-        {
-          "label": "Game templates",
-          "path": "game-templates/index.html",
-          "kind": "lab",
-          "status": "approved"
-        },
-        {
-          "label": "Scenario icons (архив SVG)",
-          "path": "game-templates/scenario-icons/index.html",
-          "kind": "lab",
-          "status": "archived"
-        },
-        {
           "label": "Портреты персонажей (4 жизни)",
           "path": "game-templates/persona-portraits-round/index.html",
           "kind": "lab",
@@ -170,11 +158,6 @@
           "path": "period-close/index.html",
           "kind": "lab",
           "status": "approved"
-        },
-        {
-          "label": "Run finale — GE1 (победа / поражение)",
-          "path": "run-finale/index.html",
-          "kind": "lab"
         },
         {
           "label": "Run finale — «Что решило партию» (DC-07)",
@@ -295,16 +278,6 @@
           "path": "board-game/hybrid-round/index.html",
           "kind": "lab",
           "status": "approved"
-        },
-        {
-          "label": "Настольная игра — раунд 2: логика игры (superseded)",
-          "path": "board-game/logic-round/index.html",
-          "kind": "lab"
-        },
-        {
-          "label": "Настольная игра — раунд 1: направление (superseded)",
-          "path": "board-game/direction-round/index.html",
-          "kind": "lab"
         }
       ]
     }

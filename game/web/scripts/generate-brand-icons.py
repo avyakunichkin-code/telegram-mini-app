@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Квадратные favicon / PWA из logo-compact.png (trim прозрачности, крупный contain)."""
+"""Квадратные favicon / PWA из утверждённой монограммы ТХ (trim прозрачности, крупный contain)."""
 from __future__ import annotations
 
 from pathlib import Path
@@ -7,7 +7,7 @@ from pathlib import Path
 from PIL import Image
 
 ROOT = Path(__file__).resolve().parents[1]
-SRC = ROOT.parent / "game/design/system/assets/Logos/logo-compact.png"
+SRC = ROOT.parent / "game/design/system/assets/Logos/finance-game/avatar-tx-128.png"
 PUBLIC = ROOT / "public"
 PWA = PUBLIC / "pwa"
 

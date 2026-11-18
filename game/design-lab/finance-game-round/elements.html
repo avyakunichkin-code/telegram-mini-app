@@ -4,9 +4,20 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Элементы · Финансы как игра</title>
 <link rel="stylesheet" href="./styles.css">
+<link rel="stylesheet" href="./menu-lab.css">
 <main class="content">
   <p><a href="./compact.html">← Главная</a></p>
   <h1>Элементы «Финансы как игра»</h1>
+  <section class="panel menu-lab" aria-labelledby="brand-title">
+    <h2 id="brand-title">Логотип «Твой ход»</h2>
+    <div class="menu-lab__logo-samples">
+      <img src="./brand/logo-240.webp" alt="Твой ход. Финансы как игра" width="120" height="80">
+      <img src="./brand/logo-480.webp" alt="" width="192" height="128">
+    </div>
+    <p><a href="./logo-formats.zip" download>Скачать все форматы</a></p>
+    <p><a href="./brand/logo-master.png">Прозрачный PNG</a> · <a href="./brand/logo-960.webp">WebP 960 px</a></p>
+    <p><a href="./brand/logo-social-512.png">Квадрат 512 × 512</a> · <a href="./brand/logo-banner-1200x400.png">Баннер 1200 × 400</a></p>
+  </section>
   <section class="panel">
     <h2>Иконки</h2>
     <p><span class="game-icon calendar" aria-hidden="true"></span> События</p>
@@ -21,6 +32,19 @@
     <p><img class="need-glyph need-health" src="https://cdn.jsdelivr.net/npm/@phosphor-icons/core@2.1.1/assets/fill/heart-fill.svg" alt="" width="20" height="20"> Здоровье</p>
   </section>
   <section class="panel">
+    <h2>Нижняя навигация</h2>
+    <p><span class="goal-nav-icon home" aria-hidden="true"></span> Главная</p>
+    <p><span class="goal-nav-icon capital" aria-hidden="true"></span> Капитал</p>
+    <p><span class="goal-nav-icon analytics" aria-hidden="true"></span> Аналитика</p>
+    <p><span class="goal-nav-icon menu" aria-hidden="true"></span> Меню</p>
+    <p><a href="./menu-preview.html">Посмотреть в игровом меню</a></p>
+  </section>
+  <section class="panel">
+    <h2>Иконки плиток меню</h2>
+    <p><span class="game-icon coins" aria-hidden="true"></span> Новая игра</p>
+    <p><span class="game-icon invest" aria-hidden="true"></span> Все сохранения</p>
+  </section>
+  <section class="panel">
     <h2>Кнопки</h2>
     <button class="primary" type="button">Завершить ход</button>
     <div class="actions">
@@ -28,5 +52,6 @@
       <button type="button" disabled>Зарплата получена</button>
     </div>
   </section>
+  <section class="panel"><h2>Действия, закрытые по цели</h2><p><a href="./capital-locked-390.png">Доступные и закрытые плитки рядом</a></p><p><a href="http://localhost:5173/telegram-mini-app/#/dev/mqx/capital?state=locked">Проверить состояние в MQX</a></p></section>
 </main>
 </html>

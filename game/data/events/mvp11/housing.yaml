@@ -2,7 +2,7 @@ events:
 - definition_key: mq11_home_internet
   event_domain: housing
   title: Интернет дома
-  description: Провайдер предлагает повысить скорость или сменить тариф.
+  description: Провайдер предлагает повысить скорость на четыре периода или сменить тариф.
   weight: 86
   event_tier: 1
   repeat_policy: max_per_profile
@@ -11,12 +11,14 @@ events:
   cooldown_periods: 12
   choices:
   - title: Тариф повыше
+    description: Доплата за скорость действует четыре периода, затем закончится автоматически.
     effects:
       cash_delta: -1490
       expense_line:
         category_key: communications
         amount_monthly: 500
-        title: Интернет
+        title: Доплата за быстрый интернет
+        expires_after_periods: 4
       needs_delta:
         comfort: 6
         status: 2
@@ -44,16 +46,21 @@ events:
   - title: Переехать в новый город
     effects:
       cash_delta: 28000
-      monthly_burn_delta_pct: 0.28
+      monthly_burn_delta_pct: 0.12
       needs_delta:
         status: 10
         comfort: 5
         social: -6
-    description: Бонус на переезд; расходы на жизнь вырастут примерно на четверть.
+    description: Работодатель выплатит бонус за переезд. Ежемесячные расходы на жизнь могут вырасти на 12%.
   - title: Договориться об удалёнке
+    description: Работодатель даст 15 000 ₽ на обустройство рабочего места. Аренда оборудования обойдётся в 3 000 ₽ за период на шесть периодов.
     effects:
       cash_delta: 15000
-      monthly_burn_delta_pct: 0.05
+      expense_line:
+        category_key: other
+        amount_monthly: 3000
+        title: Оборудование для удалённой работы
+        expires_after_periods: 6
       needs_delta:
         comfort: 8
         status: 4
@@ -111,8 +118,7 @@ events:
     или полностью за свой счёт.'
   weight: 50
   event_tier: 3
-  repeat_policy: repeatable
-  cooldown_periods: 8
+  repeat_policy: once_per_profile
   scenario_shape: asset_linked
   extra:
     secondary_domains:
@@ -140,3 +146,16 @@ events:
       needs_delta:
         health: -2
         comfort: 3
+  - title: Восстанавливать жильё поэтапно
+    description: Без платежа сейчас. По 15 000 ₽ при закрытии шести периодов, включая текущий. Всего 90 000 ₽, а часть жилья пока непригодна.
+    purpose: mitigation
+    effects:
+      cash_delta: 0
+      expense_line:
+        category_key: housing
+        amount_monthly: 15000
+        title: Поэтапный ремонт после затопления
+        expires_after_periods: 6
+      needs_delta:
+        health: -4
+        comfort: -5

@@ -13,7 +13,7 @@
 | **Детали** | `CapitalLot` — карточки собственности с цветной полосой: Вложения → Страховки → Имущество → Долги |
 | **Действия** | `MqxCapitalActionGrid` — фишки 3 в ряд «Вложить / Купить / Занять», закрытые — пунктиром; `MqxCapitalSheet` |
 | **Prod parity** | `screens-round/` + [`../finance/parity-generated-page-round/`](../finance/parity-generated-page-round) |
-| **История** | [`details-actions-round/`](details-actions-round) — канон v2 (2026-06), структура сохранена |
+| **История** | [Архив details-actions-round](../archive/capital-details-actions-2026-11/) — канон v2 (2026-06), структура сохранена |
 
 UX: [`game/docs/ux/screens/finance.md`](../../docs/ux/screens/finance.md).
 
@@ -21,17 +21,16 @@ UX: [`game/docs/ux/screens/finance.md`](../../docs/ux/screens/finance.md).
 
 | Папка | Назначение |
 |-------|------------|
-| [`flows-round/styles.css`](flows-round/styles.css) | Стили блока Доходы/Расходы; подключается из `details-actions-round/sync-lab.sh` |
+| [`flows-round/styles.css`](flows-round/styles.css) | Исторические стили блока Доходы/Расходы; сохранены для воспроизводимости старого макета |
 
 Раунды `orient-round`, `actions-round`, hub `index.html` (6 аккордеонов / «Управление капиталом») удалены **2026-06-01** — git history.
 
 ## Запуск
 
 ```bash
-cd game/design-lab/capital-page/details-actions-round
-./sync-lab.sh
+cd game/design-lab
 npx serve .
-# хаб: cd design-lab && npx serve .
+# актуальное превью: finance-game-round/capital-preview.html
 ```
 
 ## Связанные lab

@@ -7,9 +7,9 @@ aliases:
 ---
 # Лендинг — превью продукта (MQX)
 
-**Статус:** в работе (вариант A)  
+**Статус:** историческая идея прежнего лендинга; текущий лендинг — [landing/README.md](../../../landing/README.md)
 **Дата:** май 2026  
-**Операционная спека:** [`specs/LANDING_SCREENSHOTS.md`](../../specs/LANDING_SCREENSHOTS.md)
+**Архив спецификации:** [`archive/LANDING_SCREENSHOTS.md`](../../archive/LANDING_SCREENSHOTS.md)
 
 ## Problem Statement
 
@@ -32,7 +32,7 @@ aliases:
 4. **Светлые секции** (#how, #learn, #modes) — карточки MQX + при необходимости тёмные скрины в рамке.
 5. **#partners** — без скринов, edutainment-тон.
 
-Источник скринов: [`game/design/archive/classic-v3/landing-source/scripts/capture-screens.mjs`](../../../design/archive/classic-v3/landing-source/scripts/capture-screens.mjs) → [`game/design/archive/classic-v3/landing-source/public/screens/`](../../../design/archive/classic-v3/landing-source/public/screens). Подробно: [`specs/LANDING_SCREENSHOTS.md`](../../specs/LANDING_SCREENSHOTS.md).
+Источник скринов: [`game/design/archive/classic-v3/landing-source/scripts/capture-screens.mjs`](../../../design/archive/classic-v3/landing-source/scripts/capture-screens.mjs) → [`game/design/archive/classic-v3/landing-source/public/screens/`](../../../design/archive/classic-v3/landing-source/public/screens). Подробно: [`archive/LANDING_SCREENSHOTS.md`](../../archive/LANDING_SCREENSHOTS.md).
 
 ## Key Assumptions to Validate
 

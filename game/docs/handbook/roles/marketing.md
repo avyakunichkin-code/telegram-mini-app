@@ -67,7 +67,7 @@ aliases:
 ## TBD (волна 3)
 
 - Одностраничный **factsheet** для партнёров  
-- Согласованный набор скринов — [`LANDING_SCREENSHOTS.md`](../../specs/LANDING_SCREENSHOTS.md)  
+- Исторический набор скринов — [архив спецификации](../../archive/LANDING_SCREENSHOTS.md); актуальный лендинг не использует этот пайплайн.
 - Positioning vs конкуренты — отдельная сессия  
 - CRM: опрос в игре + `partner_id` (см. checklist в `ADVISOR_FUNNEL_AUDIENCE.md` §9.6)  
 

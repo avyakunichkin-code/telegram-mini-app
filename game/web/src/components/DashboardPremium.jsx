@@ -1,3 +1,4 @@
+import { MqxWideDashboard } from './mqx/layout/MqxWideDashboard';
 import { getSafetyFundFillFromOverview } from '../utils/safetyFundFill';
 import { useEffect, useMemo, useRef, useState } from 'react';
 
@@ -40,6 +41,7 @@ function pctClamp01(x) {
 
 
 export function DashboardPremium({
+  wide = false,
 
   overview,
 
@@ -224,6 +226,102 @@ export function DashboardPremium({
 
 
 
+  const heroNode = (
+    <MqxDashboardHero
+      roleTitle={personaRoleTitle(templateKey)}
+      periodIndex={periodIndex}
+      templateKey={templateKey}
+      balance={Number(overview?.cash_balance) || 0}
+      onCloseMonth={onNextPeriod}
+      closeMonthDisabled={closeMonthDisabled || busyAction !== null}
+      pendingEventsCount={shownEventsCount}
+      onOpenEvents={eventsUnlocked ? onOpenEvents : undefined}
+      balanceHighlight={salaryCelebrate}
+      tip={turnTip}
+      closePreview={closePreview}
+    />
+  );
+  const needsNode = (
+    <MqxNeedsDash
+      needs={overview?.needs}
+      needsZeroPeriodsStreak={overview?.needs_zero_periods_streak}
+      treatSelf={overview?.treat_self}
+      onHelp={() => setNeedsHelpOpen(true)}
+      onTreatSelf={() => setTreatOpen(true)}
+    />
+  );
+  const financesNode = (
+    <MqxFinancePeriodBlock
+      safety={Number(overview?.safety_fund_balance) || 0}
+      cushionPercent={getSafetyFundFillFromOverview(overview)?.percent ?? null}
+      income={incomeCell(overview)}
+      outflow={Number(overview?.total_monthly_outflow) || 0}
+      onFlowsNavigate={onGoCapitalFlows}
+    />
+  );
+  const actionsNode = (
+    <MqxPeriodActions
+      busy={busyAction !== null}
+      activeMoneyMode={moneyModal}
+      salaryDisabled={salaryDisabled}
+      salaryHot={salaryAvailable}
+      salaryClaimed={salaryClaimed}
+      salaryAmount={Number(overview?.salary?.monthly_amount) || 0}
+      salaryCelebrate={salaryCelebrate}
+      onSalary={async () => {
+        if (salaryClaimed) {
+          showNotification('Зарплата за этот ход уже получена', 'info');
+          return;
+        }
+        if (periodStatus != null && !canClaimSalary) {
+          showNotification('Зарплату в этом ходе получить нельзя', 'info');
+          return;
+        }
+
+        try {
+          setBusyAction('salary');
+          const result = await claimSalary();
+          if (result?.already_claimed) {
+            showNotification(
+              result.message || 'Зарплата за этот ход уже получена',
+              'info',
+            );
+          } else if (result?.status === 'success') {
+            const amount = Number(result.amount) || 0;
+            if (amount > 0) {
+              if (juiceTimerRef.current) window.clearTimeout(juiceTimerRef.current);
+              setJuiceAmount(amount);
+              setJuiceBurstKey((k) => k + 1);
+              setSalaryCelebrate(true);
+              setJuiceToastVisible(true);
+              juiceTimerRef.current = window.setTimeout(() => {
+                setSalaryCelebrate(false);
+                setJuiceToastVisible(false);
+                juiceTimerRef.current = null;
+              }, 2400);
+            } else {
+              showNotification('Зарплата на счёт', 'success');
+            }
+          }
+        } catch (e) {
+          showNotification(e?.detail || e?.message || 'Не удалось получить зарплату', 'error');
+        } finally {
+          setBusyAction(null);
+        }
+      }}
+
+      onContribute={() => openSafetySheet('in')}
+
+      onWithdraw={() => openSafetySheet('out')}
+
+      onInvest={onGoFinanceInvest ?? onGoFinance}
+
+    />
+  );
+  const goalNode = (
+    <MqxGoalDash victory={overview?.victory} legacyGoal={goal} wide={wide} />
+  );
+
   return (
 
     <>
@@ -238,97 +336,35 @@ export function DashboardPremium({
               toastMessage="Зарплата в кошелёк — ход стал сильнее"
             />
 
-            <MqxDashboardHero
-              roleTitle={personaRoleTitle(templateKey)}
-              periodIndex={periodIndex}
-              templateKey={templateKey}
-              balance={Number(overview?.cash_balance) || 0}
-              onCloseMonth={onNextPeriod}
-              closeMonthDisabled={closeMonthDisabled || busyAction !== null}
-              pendingEventsCount={shownEventsCount}
-              onOpenEvents={eventsUnlocked ? onOpenEvents : undefined}
-              balanceHighlight={salaryCelebrate}
-              tip={turnTip}
-              closePreview={closePreview}
-            />
+            {wide ? (
+              <MqxWideDashboard
+                role={personaRoleTitle(templateKey)}
+                templateKey={templateKey}
+                overview={overview}
+                tip={turnTip}
+                balanceHighlight={salaryCelebrate}
+                close={{ onClose: onNextPeriod, disabled: closeMonthDisabled || busyAction !== null, preview: closePreview }}
+                events={eventsUnlocked && onOpenEvents ? { count: shownEventsCount, onOpen: onOpenEvents } : null}
+                needs={needsNode}
+                finances={financesNode}
+                actions={actionsNode}
+                goal={goalNode}
+              />
+            ) : (
+              <>
+                {heroNode}
 
-            <MqxNeedsDash
-              needs={overview?.needs}
-              needsZeroPeriodsStreak={overview?.needs_zero_periods_streak}
-              treatSelf={overview?.treat_self}
-              onHelp={() => setNeedsHelpOpen(true)}
-              onTreatSelf={() => setTreatOpen(true)}
-            />
+                {needsNode}
 
-            <MqxFinancePeriodBlock
-              safety={Number(overview?.safety_fund_balance) || 0}
-              cushionPercent={getSafetyFundFillFromOverview(overview)?.percent ?? null}
-              income={incomeCell(overview)}
-              outflow={Number(overview?.total_monthly_outflow) || 0}
-              onFlowsNavigate={onGoCapitalFlows}
-            />
+                {financesNode}
 
 
-            <MqxPeriodActions
-              busy={busyAction !== null}
-              activeMoneyMode={moneyModal}
-              salaryDisabled={salaryDisabled}
-              salaryHot={salaryAvailable}
-              salaryClaimed={salaryClaimed}
-              salaryAmount={Number(overview?.salary?.monthly_amount) || 0}
-              salaryCelebrate={salaryCelebrate}
-              onSalary={async () => {
-                if (salaryClaimed) {
-                  showNotification('Зарплата за этот ход уже получена', 'info');
-                  return;
-                }
-                if (periodStatus != null && !canClaimSalary) {
-                  showNotification('Зарплату в этом ходе получить нельзя', 'info');
-                  return;
-                }
+                {actionsNode}
 
-                try {
-                  setBusyAction('salary');
-                  const result = await claimSalary();
-                  if (result?.already_claimed) {
-                    showNotification(
-                      result.message || 'Зарплата за этот ход уже получена',
-                      'info',
-                    );
-                  } else if (result?.status === 'success') {
-                    const amount = Number(result.amount) || 0;
-                    if (amount > 0) {
-                      if (juiceTimerRef.current) window.clearTimeout(juiceTimerRef.current);
-                      setJuiceAmount(amount);
-                      setJuiceBurstKey((k) => k + 1);
-                      setSalaryCelebrate(true);
-                      setJuiceToastVisible(true);
-                      juiceTimerRef.current = window.setTimeout(() => {
-                        setSalaryCelebrate(false);
-                        setJuiceToastVisible(false);
-                        juiceTimerRef.current = null;
-                      }, 2400);
-                    } else {
-                      showNotification('Зарплата на счёт', 'success');
-                    }
-                  }
-                } catch (e) {
-                  showNotification(e?.detail || e?.message || 'Не удалось получить зарплату', 'error');
-                } finally {
-                  setBusyAction(null);
-                }
-              }}
+                {goalNode}
 
-              onContribute={() => openSafetySheet('in')}
-
-              onWithdraw={() => openSafetySheet('out')}
-
-              onInvest={onGoFinanceInvest ?? onGoFinance}
-
-            />
-
-            <MqxGoalDash victory={overview?.victory} legacyGoal={goal} />
-
+              </>
+            )}
           </div>
 
         </main>
@@ -362,4 +398,3 @@ export function DashboardPremium({
   );
 
 }
-

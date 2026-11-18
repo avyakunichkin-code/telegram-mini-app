@@ -85,15 +85,28 @@ export function AuthProvider({ children }) {
   };
 
   const register = async (userData) => {
-    const data = await API.register(userData);
+    const data = await (user?.is_guest ? API.claimGuest(userData) : API.register(userData));
     setAuthToken(data.access_token);
     setUser({ id: data.user_id, username: data.username });
     markApiWarmedThisSession();
     return data;
   };
 
+  const startGuest = async () => {
+    const data = await API.guestSession();
+    const profiles = await API.getGameProfiles(data.access_token);
+    if (!profiles.length) await API.startGuestGame(data.access_token);
+    return { data, returning: profiles.length > 0 };
+  };
+
+  const acceptGuest = (data) => {
+    setAuthToken(data.access_token);
+    setUser({ id: data.user_id, username: data.username, is_guest: true });
+    markApiWarmedThisSession();
+  };
+
   return (
-    <AuthContext.Provider value={{ user, loading, bootPhase, login, register, logout }}>
+    <AuthContext.Provider value={{ user, loading, bootPhase, login, register, logout, startGuest, acceptGuest }}>
       {children}
     </AuthContext.Provider>
   );

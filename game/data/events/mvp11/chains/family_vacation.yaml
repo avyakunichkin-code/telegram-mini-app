@@ -54,6 +54,14 @@ events:
       needs_delta:
         social: -6
         comfort: -2
+  - title: Короткий отдых рядом с домом
+    description: Несколько дней с семьёй рядом с домом. Сейчас спишется 12% зарплаты, без кредита и последующих платежей.
+    purpose: pleasure
+    effects:
+      cash_pct_salary: 0.12
+      needs_delta:
+        health: 6
+        social: 8
 - definition_key: mq11_family_vacation_card_bill
   content_class: profile
   event_slot: chain_followup

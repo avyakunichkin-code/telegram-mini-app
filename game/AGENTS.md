@@ -7,7 +7,7 @@
 PWA/web primary, Telegram secondary. Одна экономика, один цикл периода, один API.
 Контент событий — `data/events/mvp11/`, baseline SQL — DDL-only.
 Финансы используют `../shared/packages/fincore`; адаптеры остаются в api.
-Новый layout/карточка/CTA/sheet: lab → явное утверждение человека → MQX → prod.
+Новый layout/карточка/CTA/sheet: концепт-картинка → обязательный Design Lab на MQX → явное утверждение превью человеком → подключение к игре.
 Мелкие layout-neutral исправления — по
 [DESIGN_WORKFLOW](web/src/components/mqx/DESIGN_WORKFLOW.md).
 Исходники CSS/ассетов — design, экспорты обновлять генераторами.
@@ -29,3 +29,7 @@ Review экономики без зелёного backend pytest — NEEDS REVIS
 Из web: `npm.cmd run test:unit`, `npm.cmd run build`, `npm.cmd run check:guardrails`;
 Playwright для критичного UI. Review агента или тест не заменяют approval человека.
 Сохраняй пользовательские изменения; не читать env, credentials и реальные анкеты.
+
+Актуальное визуальное направление GAME — [«Финансы как игра»](design/system/CURRENT_STYLE.md). Для новых макетов используй [утверждённый логотип и его форматы](design/system/assets/Logos/README.md).
+
+Канон игрового меню и общего таббара — [Меню · утверждено](design-lab/finance-game-round/MENU_APPROVED.md). Используй общие компоненты BrandLogo и BottomGameNav.

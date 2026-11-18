@@ -12,6 +12,8 @@ Stub-страницы вместо разрозненных superseded spec/plan
 
 | Эпик / тема | Stub | Канон |
 |-------------|------|--------|
+| Скриншоты прежнего лендинга | [Архив спецификации](LANDING_SCREENSHOTS.md) | [Текущий лендинг](../../landing/README.md) |
+| Брендбук G1/G2 и печатные версии | [Архив брендбука](brandbook-2026-05/README.md) | [Текущий брендбук](../reference/brandbook/BRANDBOOK.md) |
 | **O1** Guided coach | [`onboarding-o1/`](onboarding-o1/README.md) | → O3 (через O2) |
 | **O2** Progressive Guidance | [`onboarding-o2/`](onboarding-o2/README.md) | [`SPEC_onboarding-o3.md`](../specs/features/SPEC_onboarding-o3.md) |
 | **Character level/XP** | [`character-xp-progression/`](character-xp-progression/README.md) | [`remove-character-xp-and-levels.md`](../vision/ideas/remove-character-xp-and-levels.md) |

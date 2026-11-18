@@ -3,8 +3,11 @@ import { expensesApi } from './expenses.js';
 import { eventsApi } from './events.js';
 
 export const gameApi = {
-  getGameProfiles() {
-    return apiCall('/api/game/profiles');
+  getGameProfiles(token) {
+    return apiCall('/api/game/profiles', 'GET', null, { token });
+  },
+  startGuestGame(token) {
+    return apiCall('/api/game/guest-start', 'POST', null, { token });
   },
   createGameProfile(payload) {
     return apiCall('/api/game/profiles', 'POST', payload);

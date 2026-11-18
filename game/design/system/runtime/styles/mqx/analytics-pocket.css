@@ -1,0 +1,82 @@
+.mqx-analytics-pocket { gap: 19px; padding-inline: 8px; background: var(--mq-analytics-board); }
+.mqx-analytics-pocket .mqx-capital-pocket__board { margin-top: -8px; padding: 8px 16px 12px; background: linear-gradient(155deg,var(--mq-analytics-balance-top),var(--mq-analytics-balance-bottom)); color: var(--mq-menu-cream); }
+.mqx-analytics-pocket .mqx-capital-pocket__turn { margin-bottom: 4px; }
+.mqx-analytics-pocket h2 { margin: 0 0 8px; color: inherit; font: 900 clamp(19px,5.4vw,22px)/1.1 var(--mq-font-display); }
+.mqx-analytics-pocket > section:not(.mqx-capital-pocket__board) { margin-inline: 3px; }
+.mqx-analytics-pocket p { margin: 0; font-size: 15px; line-height: 1.2; }
+.mqx-analytics-pocket dl { display: grid; margin: 0; gap: 6px; }
+.mqx-analytics-pocket dd { margin: 0; white-space: nowrap; font: 900 clamp(22px,7.4vw,31px)/1.1 var(--mq-font-display); }
+.mqx-analytics-pocket__balances { grid-template-columns: repeat(2,minmax(0,1fr)); }
+.mqx-analytics-pocket__balances > div + div { border-left: 1px solid var(--mq-analytics-divider); padding-left: 5vw; }
+.mqx-analytics-pocket__balances dt { font-weight: 800; font-size: 15px; }
+.mqx-analytics-pocket__balances .mqx-analytics-pocket__duration { font-size: 13px; margin-top: 3px; }
+.analytics-calculation { margin-top: 14px; }
+.analytics-calculation summary { display: grid; grid-template-columns: 1.14fr 1fr; gap: 6px; cursor: pointer; }
+.analytics-calculation summary > * { display: block; align-content: center; min-height: 44px; padding: 3px; text-align: center; border: 1px solid var(--mq-analytics-button-border); border-radius: 24px; }
+.analytics-calculation summary strong { font: 900 clamp(14px,4.7vw,19px)/1.1 var(--mq-font-display); background: linear-gradient(var(--mq-analytics-gain-top),var(--mq-analytics-gain-bottom)); }
+.analytics-calculation summary > span { font-size: clamp(12px,3.6vw,15px); font-weight: 800; background: linear-gradient(var(--mq-analytics-action-top),var(--mq-analytics-action-bottom)); }
+.analytics-calculation p { margin-top: 8px; }
+.mqx-analytics-pocket__flows { grid-template-columns: repeat(3,minmax(0,1fr)); }
+.mqx-analytics-pocket__flows > div { padding: 5px clamp(6px,3vw,13px) 9px; border: 1px solid var(--mq-analytics-tile-border); border-radius: 12px; background: var(--mq-analytics-tile); }
+.mqx-analytics-pocket__flows > div:last-child { background: var(--mq-analytics-tile-positive); }
+.mqx-analytics-pocket__flows > .mqx-analytics-pocket__deficit { background: var(--mq-risk-soft); color: var(--mq-risk); }
+.mqx-analytics-pocket__flows dt { font-size: 13px; }
+.mqx-analytics-pocket__flows dd { font-size: clamp(16px,5.2vw,22px); }
+.analytics-preview-chart { margin: 0; }
+.analytics-preview-chart svg { width: 100%; display: block; overflow: visible; }
+.analytics-preview-chart text { fill: currentColor; font-size: var(--mq-fs-caption, 12px); }
+.analytics-grid { stroke: var(--mq-analytics-grid); stroke-width: .7; }
+.analytics-axis { stroke: currentColor; stroke-width: .75; fill: none; }
+.analytics-history { --line: var(--mq-analytics-fact); --area: var(--mq-analytics-fact-fill); }
+.analytics-projection { --line: var(--mq-analytics-forecast); --area: var(--mq-analytics-forecast-fill); }
+.analytics-preview-chart polyline { stroke: var(--line); stroke-width: 2.5; stroke-linecap: round; fill: none; }
+.analytics-preview-chart .analytics-projection polyline { stroke-dasharray: 5 4; }
+.analytics-preview-chart polygon { fill: var(--area); }
+.analytics-preview-chart circle { fill: var(--line); stroke: var(--mq-analytics-chart-white); stroke-width: 1.6; }
+.analytics-callout { --bubble: var(--mq-analytics-fact-label); --border: var(--mq-analytics-fact); }
+.analytics-callout--current { --bubble: var(--mq-analytics-current-label); --border: var(--mq-analytics-current-label); color: var(--mq-analytics-chart-white); }
+.analytics-callout--forecast { --bubble: var(--mq-analytics-forecast-label); --border: var(--mq-analytics-forecast); }
+.analytics-callout path, .analytics-callout rect { fill: var(--bubble); stroke: var(--border); stroke-width: 1.3; }
+.analytics-callout text { font: 900 12px var(--mq-font-display); }
+.analytics-preview-chart figcaption { display: flex; flex-wrap: wrap; justify-content: center; gap: 5px 20px; margin-top: 12px; font-size: 12px; }
+.analytics-preview-chart figcaption span { display: flex; align-items: center; gap: 7px; }
+.analytics-preview-chart figcaption span::before { content: ''; width: 28px; border-top: 3px solid var(--line); }
+.analytics-preview-chart figcaption .analytics-projection::before { border-top-style: dashed; }
+.mqx-analytics-pocket__scenario { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 12px; }
+.mqx-analytics-pocket__scenario select { min-height: 44px; max-width: 100%; }
+
+.analytics-calculation summary strong { overflow-wrap: anywhere; }
+
+.mqx-analytics-pocket h2.analytics-recommendation-title::after {
+  content: '';
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  margin-left: 6px;
+  vertical-align: middle;
+  background:
+    linear-gradient(115deg, transparent 35%, var(--mq-analytics-spark) 36% 65%, transparent 66%) 0 0 / 7px 10px no-repeat,
+    linear-gradient(145deg, transparent 36%, var(--mq-analytics-spark) 37% 65%, transparent 66%) 7px 4px / 12px 9px no-repeat,
+    linear-gradient(170deg, transparent 30%, var(--mq-analytics-spark) 31% 68%, transparent 69%) 9px 14px / 11px 6px no-repeat;
+}
+
+.mqx-analytics-pocket [role='status'] button { min-height: 44px; }
+
+.mq-game-shell--analytics,
+.mq-game-shell--analytics .bottom-nav.bottom-nav--menu { background: var(--mq-analytics-board); }
+
+.mqx-analytics-pocket { box-sizing: border-box; width: 100%; max-width: 480px; margin-inline: auto; }
+.mqx-analytics-pocket .mq-money { white-space: normal; }
+.mqx-analytics-pocket dd { white-space: normal; overflow-wrap: anywhere; }
+.mqx-analytics-pocket__balances dd .analytics-large-amount { font-size: clamp(16px,5vw,23px); }
+.mqx-analytics-pocket__flows dd .analytics-large-amount { font-size: clamp(12px,4vw,18px); }
+.app-shell.mqx-analytics-lab { height: 100dvh; overflow: hidden; background: var(--mq-analytics-board); }
+.mqx-analytics-lab .bottom-nav.bottom-nav--menu { flex-shrink: 0; background: var(--mq-analytics-board); }
+.mq-game-shell--analytics .mqx-analytics-pocket,
+.mqx-analytics-lab .mqx-analytics-pocket {
+  min-height: 0;
+  overflow-y: auto;
+  scrollbar-width: none;
+  overscroll-behavior-y: contain;
+}
+.mqx-analytics-pocket > * { flex-shrink: 0; }

@@ -8,6 +8,7 @@ from app.models import EventChoice, EventDefinition, EventInstance, FinanceSalar
 from app.routers.events import ensure_period_events
 from app.services.events import selection
 from app.services.events.choose import choose_event
+from app.services.events.payload import serialize_instance_rows
 
 
 @pytest.fixture()
@@ -75,6 +76,27 @@ def test_dream_purchase_spends_cash_and_ends_chain(db_session, student):
     choose_event(db_session, student, inst.id, _choice(db_session, defn, "Лететь").id)
     db_session.refresh(student)
     assert float(student.cash_balance) == cash_before - 90_000
+    assert get_active_chain(db_session, student.id, "student_dream") is None
+
+
+@pytest.mark.parametrize(
+    ("branch", "trial_title"),
+    [
+        ("trip", "Устроить поездку выходного дня"),
+        ("course", "Взять один пробный модуль"),
+        ("studio", "Собрать рабочее место по частям"),
+    ],
+)
+def test_dream_trial_matches_branch_and_costs_twenty_percent(db_session, student, branch, trial_title):
+    _, inst = _surface(db_session, student, "student_dream", "mq11_student_dream_deadline", branch=branch)
+    choices = serialize_instance_rows(db_session, [inst], profile=student)[0]["choices"]
+    assert len(choices) == 3
+    trial = next(choice for choice in choices if choice["title"] == trial_title)
+    assert next(impact["delta"] for impact in trial["impacts"] if impact["kind"] == "cash") == -12_500
+
+    choose_event(db_session, student, inst.id, trial["id"])
+    db_session.refresh(student)
+    assert float(student.cash_balance) == 187_500
     assert get_active_chain(db_session, student.id, "student_dream") is None
 
 

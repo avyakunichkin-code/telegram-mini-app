@@ -19,11 +19,11 @@ import { setPwaUpdateSafeZone } from '../utils/pwaUpdate';
  * Меню до партии ★ BG-2: логотип, карта последнего сохранения с «Продолжить игру»,
  * спокойные кнопки «Новая игра» / «Все сохранения», текстовая «Выйти из аккаунта».
  */
-export function StartMenuScreen({ onNewGame, onLoadGame, onLogout }) {
+export function StartMenuScreen({ onNewGame, onLoadGame, onLogout, initiallyShowSaves = false }) {
   const [profiles, setProfiles] = useState([]);
   const [loading, setLoading] = useState(true);
   const [activatingId, setActivatingId] = useState(null);
-  const [showLoadModal, setShowLoadModal] = useState(false);
+  const [showLoadModal, setShowLoadModal] = useState(initiallyShowSaves);
   const { logout } = useAuth();
 
   // Меню — партии нет на экране: новая версия PWA ставится сразу.
@@ -130,7 +130,7 @@ export function StartMenuScreen({ onNewGame, onLoadGame, onLogout }) {
       )}
 
       <MqxSavesSheet
-        open={showLoadModal}
+        open={showLoadModal && !loading}
         onClose={() => setShowLoadModal(false)}
         profiles={profiles}
         busyId={activatingId}

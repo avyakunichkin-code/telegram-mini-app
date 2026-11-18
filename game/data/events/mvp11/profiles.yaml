@@ -308,6 +308,7 @@ events:
   title: Платёж по кредитной карте
   description: 'Банк выставил счёт: можно закрыть минимум, весь долг или рискнуть просрочкой.'
   weight: 88
+  is_active: 0  # Cash-only варианты не уменьшают задолженность по карте.
   event_tier: 1
   repeat_policy: repeatable
   scenario_shape: soft_offer
@@ -362,13 +363,15 @@ events:
       needs_delta:
         social: 10
         status: 12
-  - title: Повысить оклад с следующего месяца
+  - title: Договориться о доплате за проект
+    description: 5 000 ₽ сейчас и по 8 000 ₽ при закрытии трёх периодов, включая текущий. Всего 29 000 ₽.
     effects:
       cash_delta: -5000
       expense_line:
         category_key: other
         amount_monthly: 8000
-        title: Повышение оклада сотруднику
+        title: Доплата сотруднику за проект
+        expires_after_periods: 3
       needs_delta:
         social: 8
         status: 7

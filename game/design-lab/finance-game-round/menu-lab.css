@@ -1,0 +1,14 @@
+.menu-lab h1 { font-size: 1.5rem; }
+.menu-lab__logo-samples {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 14px;
+}
+.menu-lab__logo-samples img {
+  max-width: 100%;
+  height: auto;
+  background: #e8cff6;
+  border-radius: 10px;
+}
+.menu-lab__logo-samples img + img { background: #3d1645; }

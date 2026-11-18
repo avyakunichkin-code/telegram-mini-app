@@ -80,6 +80,7 @@ export function MqxCapitalActionGrid({ sections, notes = {}, lockHint = null, on
                   ]
                     .filter(Boolean)
                     .join(' ')}
+                  data-capital-piece={p.id}
                   disabled={locked}
                   onClick={locked ? undefined : () => onOpenSheet(p.id)}
                 >

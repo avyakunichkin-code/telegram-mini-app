@@ -25,7 +25,7 @@ aliases:
 | Капитал | `FinancePremium.jsx` | ★ | Title «Капитал»; Details \| Actions v2; нейтральные детали, liabilities muted red |
 | Аналитика | `AnalyticsPremium.jsx` | ⚠ | Hero MQX; строки `MqStatRow`, бары `MqxMetricBars` |
 | Меню | `MenuPremium.jsx` | ★ | В основном MQX |
-| События (оверлей) | `EventDeck` → `EventCarouselOverlay` | ★ L3 | `EventCard`, domain band; лендинг: [`LANDING_SCREENSHOTS.md`](LANDING_SCREENSHOTS.md) |
+| События (оверлей) | `EventDeck` → `EventCarouselOverlay` | ★ L3 | `EventCard`, domain band; лендинг: [`LANDING_SCREENSHOTS.md`](../archive/LANDING_SCREENSHOTS.md) |
 | Итог периода | `MqxPeriodCloseSheet` / `Tail` | ★ | Иконки строк — 📋 lab |
 | Онбординг | `MqxGuidanceStrip` (O3) | ★ | [`SPEC_onboarding-o3.md`](features/SPEC_onboarding-o3.md) |
 

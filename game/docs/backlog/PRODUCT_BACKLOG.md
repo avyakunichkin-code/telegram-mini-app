@@ -27,6 +27,12 @@ aliases:
 
 `- [ ] P1 **[Backend]** Заголовок — пояснение; см. [SPEC_…](../specs/…), MQ-0xx`
 
+### Остатки после сверки актуальности · 2026-11-18
+
+- [ ] **[Doc+Design] При изменении стартовых экранов** сверить исторические описания `auth-flow`, `new-game-mode`, `start-menu` и `game-templates` с [реестром дизайна](../../design/system/CURRENT_STYLE.md). Старые витрины — в [архиве](../../design-lab/archive/README.md), а стили и портреты сохраняются, пока используются; переносить только после проверки потребителей.
+- [ ] **[Doc+Frontend] При доработке Капитала** сверить исторические `capital-page/flows-round` и [UI consistency audit](../specs/UI_CONSISTENCY_AUDIT.md) с [утверждением Капитала](../../design-lab/capital-page/APPROVED.md). Уточнить потребителей исходников перед переносом; не использовать старый снимок как актуальный канон.
+- [ ] **[Doc] При изменении соответствующей механики** сверять оставшиеся действующие feature-spec и решения с [каноном геймдизайна](../canon/GAME_DESIGN.md) и [каноном backend](../canon/BACKEND.md). Начальный перенос ADR не доказывает полноту всех feature-spec; конфликт с реализацией фиксировать отдельно.
+
 ---
 
 ## Сводка эпиков (июнь 2026)
@@ -248,7 +254,8 @@ aliases:
 #### AN1-0 — фундамент (P0)
 
 - [ ] P0 **[Doc] AN1-001** — gap-аудит: SPEC ↔ `AnalyticsPremium` ↔ API; зафиксировать удаление victory-блоков из фокуса.
-- [ ] P0 **[Doc+Design] AN1-002** — design-lab [`analytics/v2-round`](../../design-lab/analytics/v2-round) 🟡 review
+- [ ] P0 **[Doc+Design] AN1-002** — уточнить объём review: [AN1 v2](../../design-lab/archive/analytics-v2-2026-11/) заменён, [актуальная аналитика утверждена](../../design-lab/analytics/APPROVED.md) 16.11.2026. Статус задачи требует сверки с актуальным объёмом AN1.
+  Сверка 2026-11-18: утверждённый экран показывает прогноз на три хода; spec AN1 описывает 3/6/12 и общий Game/Plan. Режим Plan в игре снят [ADR-013](../decisions/ADR-013-game-only-drop-plan-mode.md). Уточнить целевой объём аналитики и актуализировать spec и задачи AN1; утверждение внешнего вида само по себе не закрывает backend-задачи.
 - [ ] P0 **[Backend] AN1-011** — `analytics_thresholds` config; поле/контракт **остаток после full outflow** в overview.
 - [ ] P0 **[Backend] AN1-012** — `GET /api/finance/analytics/insights` v1 (rule engine, шаблоны RU).
 - [ ] P0 **[Frontend] AN1-010** — переписка вкладки: блоки §3 SPEC; segmented прогноз 3/6/12.

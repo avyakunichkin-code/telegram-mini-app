@@ -1,6 +1,6 @@
 # hybrid-round — раунд 3: гибрид A + B
 
-Раунд 3 направления [ADR-014](../../../docs/decisions/ADR-014-brand-direction-board-game.md). Собран по отзыву на раунд 2 (`../logic-round/`):
+Раунд 3 направления [ADR-014](../../../docs/decisions/ADR-014-brand-direction-board-game.md). Собран по отзыву на [раунд 2](../../archive/board-game-2026-11/logic-round/README.md):
 
 - компактность — из A;
 - шапка — карта хода из B; «Завершить ход» сверху и чуть меньше;

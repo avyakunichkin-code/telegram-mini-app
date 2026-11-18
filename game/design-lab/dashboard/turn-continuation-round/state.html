@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="ru" data-theme="light" data-mqx-style="ink">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Б · Потребности под картой · Твой ход</title>
+  <link rel="stylesheet" href="./runtime.css">
+  <link rel="stylesheet" href="./styles.css">
+  <script src="./preview.js" defer></script>
+</head>
+<body id="root" class="needs-first">
+  <nav aria-label="Варианты макета">
+    <a href="./index.html">А · Действия</a>
+    <a href="./state.html" aria-current="page">Б · Потребности</a>
+    <button type="button" id="theme" aria-pressed="false">Тёмная тема</button>
+  </nav>
+  <main class="mqx-pocket">
+    <header class="mqx-pocket-hero mqx-pocket-hero--g" data-onboarding-anchor="hero"><div class="mqx-pocket-hero__top"><div class="mqx-pocket-hero__logo"><picture><source type="image/webp" srcset="./assets/logo-full-h70.webp 101w, ./assets/logo-full-h105.webp 151w, ./assets/logo-full-h140.webp 201w, ./assets/logo-full-h210.webp 302w, ./assets/logo-full.webp 402w" sizes="(max-width: 480px) 70vw, 280px"><img class="mqx-brand-logo mqx-brand-logo--full" src="./assets/logo-full.png" alt="ТВОЙ ХОД. Финансы как игра" width="402" height="280" decoding="async" draggable="false"></picture></div><div class="mqx-pocket-turn"><span>Ход</span><b>08</b></div><span class="mqx-pocket-role">Студент</span><picture class="mqx-persona-portrait mqx-pocket-persona" data-persona="student" data-size="dash"><source type="image/webp" srcset="./assets/student-mascot-dash.webp"><img src="./assets/student-mascot-dash.png" alt="" height="108" class="mqx-persona-portrait__img" decoding="async" draggable="false"></picture></div><div class="mqx-pocket-balance" data-mqx-juice-target="balance"><h1>На счёте</h1><strong><span class="mq-money "><span class="mq-money__value">42&nbsp;000</span><span class="mq-money__unit">&nbsp;₽</span></span></strong></div><span class="mqx-bg-sr-only">Ход 8</span><div class="mqx-pocket-close mqx-pocket-close--help"><button type="button" class="mqx-bg-btn mqx-pocket-close__button" data-onboarding-anchor="next_period" aria-label="Завершить ход и перейти к следующему" aria-describedby=":r1:" data-open="close">Завершить ход <span aria-hidden="true">→</span></button><div class="mqx-pocket-forecast" id=":r1:"><span>Спишется <b><span class="mq-money "><span class="mq-money__value">30&nbsp;000</span><span class="mq-money__unit">&nbsp;₽</span></span></b></span><span>Останется <b><span class="mq-money "><span class="mq-money__value">12&nbsp;000</span><span class="mq-money__unit">&nbsp;₽</span></span></b></span></div><button type="button" class="mqx-pocket-help" aria-label="Открыть подсказку Монетки" data-open="tip"><picture data-mascot="monetka" data-pose="think"><source type="image/webp" srcset="./assets/coin-think-avatar.webp"><img src="./assets/coin-think-avatar.png" alt="" aria-hidden="true" width="32" height="32" class="mqx-onboarding-monetka" draggable="false" decoding="async"></picture></button></div></header>
+    <section class="section needs" aria-labelledby="needs-title">
+  <h2 id="needs-title">Потребности</h2>
+  <div class="needs-grid"><div><label for="need-61">Комфорт <b>61</b></label><meter id="need-61" max="100" value="61">61 из 100</meter></div><div><label for="need-40">Статус <b>40</b></label><meter id="need-40" max="100" value="40">40 из 100</meter></div><div><label for="need-39">Связи <b>39</b></label><meter id="need-39" max="100" value="39">39 из 100</meter></div><div><label for="need-46">Здоровье <b>46</b></label><meter id="need-46" max="100" value="46">46 из 100</meter></div></div>
+</section><div class="mqx-pocket-tickets">
+  <button class="mqx-bg-btn mqx-pocket-ticket mqx-pocket-ticket--events" data-open="events"><strong>События</strong><span>2 ждут решения</span></button>
+  <button class="mqx-bg-btn mqx-pocket-ticket mqx-pocket-ticket--salary" data-open="salary"><strong>Получить зарплату</strong><span>50&nbsp;000&nbsp;₽</span></button>
+</div><section class="section" aria-labelledby="money-title">
+  <h2 id="money-title">Деньги</h2>
+  <dl class="money">
+    <div><dt>Доходы за ход</dt><dd class="gain">+50&nbsp;000&nbsp;₽</dd></div>
+    <div><dt>Расходы за ход</dt><dd>30&nbsp;000&nbsp;₽</dd></div>
+    <div><dt>Подушка · 42%</dt><dd>25&nbsp;000&nbsp;₽</dd><dd class="note">Не платит расходы</dd></div>
+  </dl>
+</section>
+    <details class="section goal">
+  <summary><strong>Цель</strong><span>Шаг 4 из 5</span></summary>
+  <p>Подушка на два хода</p>
+  <progress aria-label="Подушка на два хода, рублей" value="25000" max="60000"></progress>
+  <p class="note">25&nbsp;000 из 60&nbsp;000&nbsp;₽ · осталось 35&nbsp;000&nbsp;₽</p>
+</details>
+  </main>
+  <dialog aria-labelledby="dialog-title">
+    <h2 id="dialog-title"></h2>
+    <p id="dialog-text"></p>
+    <form method="dialog"><button type="submit">Закрыть</button></form>
+  </dialog>
+</body>
+</html>

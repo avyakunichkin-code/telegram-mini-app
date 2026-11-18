@@ -2,12 +2,15 @@
 
 import json
 
+import pytest
+
 from app.events.choice_impacts import build_choice_impacts, resolve_lifestyle_delta_from_effects
 from app.models import EventChoice, EventDefinition, EventInstance, GameProfile
 from app.events.mvp11_seeds import ensure_mvp11_event_catalog
 
 
-def test_relocation_pct_raises_burn_about_28_percent(db_session):
+@pytest.mark.parametrize(("existing_delta", "expected_delta"), [(0, 1200), (14_000, 1000)])
+def test_relocation_pct_raises_burn_up_to_12_percent(db_session, existing_delta, expected_delta):
     ensure_mvp11_event_catalog(db_session)
     profile = GameProfile(
         user_id=1,
@@ -16,6 +19,7 @@ def test_relocation_pct_raises_burn_about_28_percent(db_session):
         is_active=1,
         period_index=2,
         base_monthly_lifestyle_expense=10000.0,
+        delta_monthly_lifestyle_expense=existing_delta,
     )
     db_session.add(profile)
     db_session.commit()
@@ -28,8 +32,7 @@ def test_relocation_pct_raises_burn_about_28_percent(db_session):
     )
     effects = json.loads(choice.effects_json)
     delta = resolve_lifestyle_delta_from_effects(db_session, profile, effects)
-    assert delta >= 2500
-    assert delta <= 4000
+    assert delta == expected_delta
 
     impacts = build_choice_impacts(db_session, profile, effects)
     kinds = {i["kind"] for i in impacts}
@@ -37,7 +40,7 @@ def test_relocation_pct_raises_burn_about_28_percent(db_session):
     assert "burn" in kinds
     burn_imp = next(i for i in impacts if i["kind"] == "burn")
     assert float(burn_imp["delta"]) == delta
-    assert float(burn_imp["value_after"]) >= 10000 + delta - 1
+    assert float(burn_imp["value_after"]) == 10_000 + existing_delta + delta
 
 
 def test_sprain_mandatory_with_paid_outcomes(db_session):
