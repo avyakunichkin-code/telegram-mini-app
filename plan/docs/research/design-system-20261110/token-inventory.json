@@ -1,0 +1,118 @@
+{
+  "scope": "plan/web/src/**/*.css; regex inventory, not computed styles or defects",
+  "css_files": 11,
+  "unique_literal_hex_colors": 249,
+  "top_colors": [
+    [
+      "#596451",
+      15
+    ],
+    [
+      "#17211b",
+      12
+    ],
+    [
+      "#fff",
+      9
+    ],
+    [
+      "#cbf640",
+      8
+    ],
+    [
+      "#285448",
+      7
+    ],
+    [
+      "#2b4e3e",
+      6
+    ],
+    [
+      "#17181c",
+      5
+    ],
+    [
+      "#233727",
+      5
+    ],
+    [
+      "#596557",
+      4
+    ],
+    [
+      "#fffef8",
+      4
+    ],
+    [
+      "#263c2d",
+      4
+    ],
+    [
+      "#d6dcd0",
+      4
+    ]
+  ],
+  "files": [
+    {
+      "file": "plan/web/src/error-boundary.css",
+      "literal_colors": 0,
+      "unique_colors": 0
+    },
+    {
+      "file": "plan/web/src/styles.css",
+      "literal_colors": 39,
+      "unique_colors": 31
+    },
+    {
+      "file": "plan/web/src/screens/goal-routes.css",
+      "literal_colors": 16,
+      "unique_colors": 16
+    },
+    {
+      "file": "plan/web/src/screens/history.css",
+      "literal_colors": 69,
+      "unique_colors": 51
+    },
+    {
+      "file": "plan/web/src/screens/previous-step.css",
+      "literal_colors": 33,
+      "unique_colors": 29
+    },
+    {
+      "file": "plan/web/src/screens/report-blocks.css",
+      "literal_colors": 10,
+      "unique_colors": 6
+    },
+    {
+      "file": "plan/web/src/screens/step-actions.css",
+      "literal_colors": 21,
+      "unique_colors": 13
+    },
+    {
+      "file": "plan/web/src/screens/atlas/atlas.css",
+      "literal_colors": 104,
+      "unique_colors": 73
+    },
+    {
+      "file": "plan/web/src/screens/atlas/decision-value.css",
+      "literal_colors": 1,
+      "unique_colors": 1
+    },
+    {
+      "file": "plan/web/src/screens/atlas/insights.css",
+      "literal_colors": 13,
+      "unique_colors": 11
+    },
+    {
+      "file": "plan/web/src/screens/precision/precision.css",
+      "literal_colors": 53,
+      "unique_colors": 37
+    }
+  ],
+  "candidate_contrast": {
+    "#073bfa on #ffffff": 6.97,
+    "#566078 on #faf8f5": 5.93,
+    "#10172c on #faf8f5": 16.77,
+    "#cbf640 on #ffffff": 1.25
+  }
+}

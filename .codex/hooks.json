@@ -1,5 +1,5 @@
 {
-  "description": "Project adapters; activation evidence in docs/ai/CODEX-HOOKS.md.",
+  "description": "Project adapters; activation evidence in docs/engineering/CODEX-HOOKS.md.",
   "hooks": {
     "SessionStart": [
       {

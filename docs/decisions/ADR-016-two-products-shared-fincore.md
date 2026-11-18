@@ -13,11 +13,16 @@ aliases:
 
 # ADR-016: Два продукта (Game и Plan) на общем финансовом ядре
 
+Размещение каталогов и срок переноса GAME изменены
+[ADR-018](ADR-018-product-roots.md) от 2026-11-11: `game/`, `plan/`, `shared/`.
+Прежний п.7 сохраняет исторический контекст; актуальная карта —
+[ARCHITECTURE.md](../../ARCHITECTURE.md). Доменные границы этого ADR действуют.
+
 ## Status
 
-**Accepted** (2026-10-21). **Amended** 2026-10-26: п.6 и риски Plan пересмотрены по итогам idea-refine ([`plan-financial-assistant.md`](../plan/vision/plan-financial-assistant.md)) — вход с персональными данными, контур РФ, обобщённый анализ инвестиций, пенсии и страховок в v1. **Amended** 2026-10-27: п.8 — рабочий прототип Plan разрешён до Pre-Alpha gate игры в границах «без БД, без деплоя, без реальных пользователей»; продуктовый Plan по-прежнему после gate. **Amended** 2026-11-02 [ADR-017](ADR-017-plan-p2-without-game-gate.md): п.8 — продуктовый каркас Plan (P2) не ждёт Pre-Alpha gate; юрист до реальных пользователей, аддитивность ядра и изоляция приложений остаются. Роадмап направления — [`docs/plan/ROADMAP.md`](../plan/ROADMAP.md).
+**Accepted** (2026-10-21). **Amended** 2026-10-26: п.6 и риски Plan пересмотрены по итогам idea-refine ([`plan-financial-assistant.md`](../../plan/docs/vision/plan-financial-assistant.md)) — вход с персональными данными, контур РФ, обобщённый анализ инвестиций, пенсии и страховок в v1. **Amended** 2026-10-27: п.8 — рабочий прототип Plan разрешён до Pre-Alpha gate игры в границах «без БД, без деплоя, без реальных пользователей»; продуктовый Plan по-прежнему после gate. **Amended** 2026-11-02 [ADR-017](ADR-017-plan-p2-without-game-gate.md): п.8 — продуктовый каркас Plan (P2) не ждёт Pre-Alpha gate; юрист до реальных пользователей, аддитивность ядра и изоляция приложений остаются. Роадмап направления — [`plan/docs/ROADMAP.md`](../../plan/docs/ROADMAP.md).
 
-**Частично заменяет [ADR-013](ADR-013-game-only-drop-plan-mode.md):** снимается только п.3 («не обещать Plan, M2.0 cancelled»). Остальные пункты ADR-013 остаются в силе для игры. План работ — [`PLAN_game-plan-split.md`](../plans/PLAN_game-plan-split.md) (эпик **SPL**).
+**Частично заменяет [ADR-013](../../game/docs/decisions/ADR-013-game-only-drop-plan-mode.md):** снимается только п.3 («не обещать Plan, M2.0 cancelled»). Остальные пункты ADR-013 остаются в силе для игры. План работ — [`PLAN_game-plan-split.md`](../plans/PLAN_game-plan-split.md) (эпик **SPL**).
 
 ## Context
 
@@ -32,18 +37,18 @@ ADR-013 убрал Plan как **второй `save_kind`** внутри игр�
 - инвестиционные продукты, страховки;
 - шаг движения денег за месяц (`_pay_liabilities`, `_charge_*`, `_accrue_investments` в `game/period.py`);
 - прогноз закрытия (`period_close_preview`);
-- метрики [ADR-009](ADR-009-metrics-dictionary-tb1.md).
+- метрики [ADR-009](../../game/docs/decisions/ADR-009-metrics-dictionary-tb1.md).
 
 Сейчас эти расчёты перемешаны с ORM, а модель `GameProfile` смешивает финансовое состояние (cash, подушка) с игровым (needs, лига, streak, исход забега).
 
-Ограничения: команда из 1–2 человек; на пути `backend/` и `frontend-react/` ссылаются ~16.8 тыс. мест в ~4 тыс. файлов (`.claude/`, `docs/`, guardrails, CI); у игры не закрыт P0 из [`PLAN_production-ready`](../plans/PLAN_production-ready.md).
+Ограничения: команда из 1–2 человек; на пути `game/api/` и `game/web/` ссылаются ~16.8 тыс. мест в ~4 тыс. файлов (`source-id:`, `docs/`, guardrails, CI); у игры не закрыт P0 из [`PLAN_production-ready`](../../game/docs/plans/PLAN_production-ready.md).
 
 ## Decision
 
 1. **Два продукта.** **Game** — игровое приложение с элементами финансовой грамотности. **Plan** — финансовый помощник: шаги, аналитика, рекомендации. Plan **никогда** не становится `save_kind` игры.
 2. **Монорепозиторий, два деплоя.** Общий код живёт в пакетах репозитория:
-   - `packages/fincore` — финансовое ядро;
-   - `packages/platform` — инфраструктура: config, сессии БД, идемпотентность, JWT/Argon2, health, формат ошибок API.
+   - `shared/packages/fincore` — финансовое ядро;
+   - `shared/packages/platform` — инфраструктура: config, сессии БД, идемпотентность, JWT/Argon2, health, формат ошибок API.
 
    У каждого приложения свой FastAPI-процесс, своя БД и миграции, свои секреты.
 3. **`fincore` — Shared Kernel на чистом Python.** Без `fastapi`, `sqlalchemy`, `pydantic`, без IO и без `app.*`. Только stdlib, `Decimal` и dataclasses.
@@ -56,24 +61,24 @@ ADR-013 убрал Plan как **второй `save_kind`** внутри игр�
    - game ↛ plan, plan ↛ game.
 5. **Учётные записи полностью раздельные.** Две таблицы пользователей в двух БД; у каждого приложения свои JWT `iss`/`aud`. Общий только *код* аутентификации, не данные.
 6. **Plan v1 принимает только ручной ввод; аккаунт — с персональными данными, хостинг в РФ** (ред. 2026-10-26; было «обезличенно»). Вход по e-mail и/или Telegram, способ — в spec SPL-401. Plan — оператор ПДн по 152-ФЗ: согласие, политика, хранение в РФ, удаление по запросу. Импорт выписок и open banking — отдельным решением.
-7. **«Добавляем рядом, не двигаем».** `backend/` (= game-api) и `frontend-react/` (= game-web) остаются на местах. Новое появляется в `packages/` и `apps/plan-*`. Переезд игры в `apps/` — опциональный срез SPL-090 после α.
+7. **«Добавляем рядом, не двигаем».** `game/api/` (= game-api) и `game/web/` (= game-web) остаются на местах. Новое появляется в `shared/packages/` и `apps/plan-*`. Переезд игры в `apps/` — опциональный срез SPL-090 после α.
 8. **Порядок.** Ядро и platform выделяем сейчас. Продуктовая разработка Plan начинается только после Pre-Alpha gate игры.
    - **Исключение — рабочий прототип Plan (ред. 2026-10-27).** `apps/plan-api` и `apps/plan-web` можно строить до gate, чтобы проверить SPEC_plan-v1 на живом пути «вход → анкета → отчёт → шаг». Границы прототипа:
-     - только поверх `fincore`; ни `backend/`, ни `frontend-react/` не импортирует и не меняет;
+     - только поверх `fincore`; ни `game/api/`, ни `game/web/` не импортирует и не меняет;
      - без БД (хранилище в памяти процесса), код входа не отправляется (`dev_code` в ответе), без деплоя и без реальных пользователей — значит, без персональных данных и без 152-ФЗ-обязательств;
      - правки `fincore` под прототип — только аддитивные, с golden и balance diff игры = 0.
    - Продуктовый Plan — своя БД `plan` и миграции, реальный вход, хостинг в РФ, деплой (SPL-402+) — после Pre-Alpha gate, SPL-302 и консультации юриста.
    - Каждый срез выноса расчётов — при условии, что balance diff = 0 относительно golden-baseline.
    - Общий движок шагов (`guidance` → `journey`), админ-каркас и UI-kit выносим только при втором реальном потребителе.
-9. **Старый Plan-код не переносится.** `BaseParamsScreen`, `PlanExpenseEditor` и `create/update/revoke_plan_expense_line` удаляются по [`PLAN_game-only`](../plans/PLAN_game-only.md) GO-03. Plan проектируется заново поверх `fincore`.
+9. **Старый Plan-код не переносится.** `BaseParamsScreen`, `PlanExpenseEditor` и `create/update/revoke_plan_expense_line` удаляются по [`PLAN_game-only`](../../game/docs/plans/PLAN_game-only.md) GO-03. Plan проектируется заново поверх `fincore`.
 
 ## Consequences
 
 - **ADR-013:** п.1–2 и п.4–7 действуют. П.3 заменён этим ADR. GO-05 может сузить `save_kind` до `game` и затем удалить колонку: второго значения не будет.
-- **Канон:** `CLAUDE.md`, `SPEC_PRODUCT` §0, `GLOSSARY`, `TRACEABILITY` (эпик **SPL**, M2.0 остаётся cancelled как бывший save), `PLAN_game-only` GO-05, `DOC_SYNC_LOG`.
+- **Канон:** `AGENTS.md`, `SPEC_PRODUCT` §0, `GLOSSARY`, `TRACEABILITY` (эпик **SPL**, M2.0 остаётся cancelled как бывший save), `PLAN_game-only` GO-05, `DOC_SYNC_LOG`.
 - **Игра получает пользу до появления Plan:** расчёты становятся чистыми функциями с unit-тестами, а закрытие периода — оркестрацией над `fincore.month_step`.
 - **Цена:** ~2–3 недели фокуса на фазы 1–3 SPL. Нельзя параллелить вынос закрытия периода с калибровкой needs (NV-406/407) — тот же `period.py`.
-- **Скиллы и правила:** появляется path-scoped rule `.claude/rules/fincore.md` (SPL-103). Отдельный лексикон и скиллы Plan — не раньше SPL-401.
+- **Скиллы и правила:** появляется path-scoped rule `docs/engineering/CODEX-PROCESSES.md` (SPL-103). Отдельный лексикон и скиллы Plan — не раньше SPL-401.
 - **Риски Plan, которые надо снять до `plan-api` (SPL-402):**
   - аккаунт с e-mail/TG id плюс финансовые данные — это персональные данные (152-ФЗ): уведомление Роскомнадзора, локализация в РФ, данные членов семьи, введённые третьим лицом;
   - рекомендации по ценным бумагам могут подпадать под регулирование индивидуальных инвестиционных рекомендаций.
@@ -92,5 +97,5 @@ ADR-013 убрал Plan как **второй `save_kind`** внутри игр�
 ## Связанные артефакты
 
 - План: [`PLAN_game-plan-split.md`](../plans/PLAN_game-plan-split.md)
-- Idea Plan: [`plan-financial-assistant.md`](../plan/vision/plan-financial-assistant.md)
-- Предшественник: [ADR-013](ADR-013-game-only-drop-plan-mode.md); модульный монолит — [ADR-007](ADR-007-backend-domain-packages.md); эффекты закрытия — [ADR-011](ADR-011-period-effects-at-close.md); метрики — [ADR-009](ADR-009-metrics-dictionary-tb1.md)
+- Idea Plan: [`plan-financial-assistant.md`](../../plan/docs/vision/plan-financial-assistant.md)
+- Предшественник: [ADR-013](../../game/docs/decisions/ADR-013-game-only-drop-plan-mode.md); модульный монолит — [ADR-007](../../game/docs/decisions/ADR-007-backend-domain-packages.md); эффекты закрытия — [ADR-011](../../game/docs/decisions/ADR-011-period-effects-at-close.md); метрики — [ADR-009](../../game/docs/decisions/ADR-009-metrics-dictionary-tb1.md)

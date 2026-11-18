@@ -7,8 +7,8 @@ aliases:
 ---
 # Design Lab — навигация: что, когда и куда
 
-**Для людей и агентов.** Канон процесса: [`DESIGN_WORKFLOW.md`](../../frontend-react/src/components/mqx/DESIGN_WORKFLOW.md).  
-**Скилл:** `design-lab-mqx` · **Правило:** `.claude/rules/design-lab.md`.
+**Для людей и агентов.** Канон процесса: [`DESIGN_WORKFLOW.md`](../../game/web/src/components/mqx/DESIGN_WORKFLOW.md).\
+**Скилл:** `design-lab-mqx` · **Правило:** `docs/engineering/CODEX-PROCESSES.md`.
 
 ---
 
@@ -43,10 +43,10 @@ Lab-HTML **не подменяет** prod: сначала round → ★ в ча�
 
 | Файл | Роль |
 |------|------|
-| [`design-lab/nav.manifest.json`](../../design-lab/nav.manifest.json) | Секции и ссылки хаба (ручное редактирование) |
-| [`design-lab/index.html`](../../design-lab/index.html) | **Генерируется** — не править руками |
-| [`design-lab/dashboard/canon.manifest.json`](../../design-lab/dashboard/canon.manifest.json) | Порядок блоков дашборда → page parity |
-| [`design-lab/finance/canon.manifest.json`](../../design-lab/finance/canon.manifest.json) | То же для вкладки **Капитал** (папка `finance/`) |
+| [`design-lab/nav.manifest.json`](../../game/design-lab/nav.manifest.json) | Секции и ссылки хаба (ручное редактирование) |
+| [`design-lab/index.html`](../../game/design-lab/index.html) | **Генерируется** — не править руками |
+| [`game/design-lab/dashboard/canon.manifest.json`](../../game/design-lab/dashboard/canon.manifest.json) | Порядок блоков дашборда → page parity |
+| [`game/design-lab/finance/canon.manifest.json`](../../game/design-lab/finance/canon.manifest.json) | То же для вкладки **Капитал** (папка `finance/`) |
 
 ### После правок `nav.manifest.json`
 
@@ -74,7 +74,7 @@ npm run design-lab:build
 4. **`npm run design-lab:build-nav`** — обновить хаб.
 5. Показать пользователю ссылку через **хаб**, не «откройте папку round».
 
-Для **events**: после правок родительских стилей — `design-lab/events/sync-all-rounds.sh`.
+Для **events**: после правок родительских стилей — `game/design-lab/events/sync-all-rounds.sh`.
 
 ---
 
@@ -129,6 +129,6 @@ flowchart LR
 
 ## Связанные документы
 
-- [`design-lab/README.md`](../../design-lab/README.md)
-- [`docs/vision/ideas/design-lab-always-actual-canon-manifest-and-parity.md`](../vision/ideas/design-lab-always-actual-canon-manifest-and-parity.md)
+- [`design-lab/README.md`](../../game/design-lab/README.md)
+- [`game/docs/vision/ideas/design-lab-always-actual-canon-manifest-and-parity.md`](../../game/docs/vision/ideas/design-lab-always-actual-canon-manifest-and-parity.md)
 - [`docs/agents/DESIGN_IMPROVEMENTS_BACKLOG.md`](DESIGN_IMPROVEMENTS_BACKLOG.md)

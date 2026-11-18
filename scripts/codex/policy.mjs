@@ -1,9 +1,10 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { isLegacySource } from './dependencies.mjs';
 
 export const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..');
-export const BASELINE = 'backend/migrations/0000_schema_baseline.sql';
+export const BASELINE = 'game/api/migrations/0000_schema_baseline.sql';
 export function relativeTarget(target, cwd = ROOT, root = ROOT) {
   if (typeof target !== 'string' || !target || /[\0\r\n]/.test(target)) throw Error('Missing or invalid target');
   const api = /^[a-z]:[\\/]/i.test(root) ? path.win32 : path;
@@ -21,8 +22,8 @@ export function relativeTarget(target, cwd = ROOT, root = ROOT) {
   }
   return rel.toLowerCase();
 }
-export const isGenerated = p => p === 'design-lab/index.html' || /^design-lab\/(?:.*\/)?lab-base\.css$/.test(p);
-export const isProtected = p => p === 'claude.md' || /(^|\/)(\.claude|\.cursor|\.git)(\/|$)/.test(p);
+export const isGenerated = p => /^(?:(?:game|plan)\/)?design-lab\/index\.html$/.test(p) || /^(?:(?:game|plan)\/)?design-lab\/(?:.*\/)?lab-base\.css$/.test(p);
+export const isProtected = p => isLegacySource(p) || (/(^|\/)\.[^./]+$/.test(p) && isLegacySource(p + '/'));
 
 function sqlCode(text) {
   let result = ''; let i = 0;
@@ -120,7 +121,11 @@ export function decide(event, root = ROOT) {
     // Anchored generator entrypoints; no compound commands or arbitrary extra flags.
     const gen = /^npm(?:\.cmd)? run (design-lab:build-nav|design-lab:build|design-lab:sync-round)(?: -- (design-lab\/[\w/-]+))?$/.exec(cmd.trim());
     if (gen) {
-      if (relativeTarget(path.join(cwd, 'package.json'), root, root) !== 'frontend-react/package.json') return 'Generator requires frontend-react cwd';
+      const manifest = relativeTarget(path.join(cwd, 'package.json'), root, root);
+      if (['game/package.json', 'plan/package.json'].includes(manifest)) {
+        return gen[1] === 'design-lab:build-nav' && !gen[2] ? null : 'Product root supports only its exact lab navigation generator';
+      }
+      if (manifest !== 'game/web/package.json') return 'Generator requires the declared product cwd';
       if (gen[1] === 'design-lab:sync-round') {
         if (!gen[2]) return 'Missing round';
         const rel = relativeTarget(gen[2], root, root);
@@ -129,7 +134,7 @@ export function decide(event, root = ROOT) {
       return null;
     }
     const normal = cmd.replaceAll('\\', '/').toLowerCase();
-    if (/(design-lab|lab-base\.css|0000_schema_baseline|\.claude|\.cursor|\.git\/|claude\.md)/.test(normal)) return 'Protected shell target: use a reviewed generator or file operation';
+    if (/(design-lab|lab-base\.css|0000_schema_baseline|\.git\/)/.test(normal) || normal.split(/\s+/).some(token => isLegacySource(token))) return 'Protected shell target: use a reviewed generator or file operation';
     if (/(-enc(?:odedcommand)?\b|frombase64string|invoke-expression|\biex\b)/i.test(cmd)) return 'Opaque shell command requires review';
     return null; // General shell is outside this path guard's security boundary.
   }

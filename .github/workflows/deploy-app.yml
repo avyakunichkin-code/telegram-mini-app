@@ -6,8 +6,12 @@ on:
   push:
     branches: [main]
     paths:
-      - 'frontend-react/**'
-      - 'landing/**'
+      - 'game/web/**'
+      - 'game/landing/**'
+      - 'game/design/**'
+      - 'game/scripts/**'
+      - 'game/package.json'
+      - 'shared/packages/ui-kit/**'
       - '.github/workflows/deploy-app.yml'
   workflow_dispatch:
 
@@ -39,25 +43,25 @@ jobs:
           node-version: '22'
           cache: npm
           cache-dependency-path: |
-            frontend-react/package-lock.json
-            landing/package-lock.json
+            game/web/package-lock.json
+            game/landing/package-lock.json
 
       - name: Install landing dependencies
-        working-directory: landing
+        working-directory: game/landing
         run: npm ci
 
       - name: Build for Pages
-        working-directory: frontend-react
+        working-directory: game/web
         env:
           VITE_API_BASE_URL: ${{ vars.VITE_API_BASE_URL || 'https://telegram-mini-app-zwfs.onrender.com' }}
           VITE_BASE_PATH: ${{ vars.VITE_BASE_PATH || '/telegram-mini-app/' }}
         run: |
           npm ci
-          npm run build:pages
+          npm --prefix .. run build:pages
 
       - uses: actions/upload-pages-artifact@v3
         with:
-          path: frontend-react/dist
+          path: game/dist/pages
 
       - name: Deploy to GitHub Pages
         id: deployment

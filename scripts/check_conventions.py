@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import datetime as dt
+import os
 import re
 import sys
 from pathlib import Path
@@ -36,9 +37,9 @@ DEV_TABLE_RE = re.compile(
 CLOSED_OUTCOMES = frozenset({"accepted", "partial", "rejected", "withdrawn"})
 TRACE_OUTCOMES = frozenset({"accepted", "partial"})
 PLAYER_SCAN_DIRS = (
-    ROOT / "data" / "events",
-    ROOT / "frontend-react" / "src",
-    ROOT / "landing" / "site",
+    ROOT / "game" / "data" / "events",
+    ROOT / "game/web" / "src",
+    ROOT / "game" / "landing" / "site",
 )
 PLAYER_SUFFIXES = {".yaml", ".yml", ".js", ".jsx", ".css", ".html"}
 FORBIDDEN_PLAYER = (
@@ -98,7 +99,7 @@ def resolve_anchor_token(token: str, errors: list[str], cid: str) -> None:
     if token.startswith("py -3 -m pytest"):
         pytest_files = re.findall(r"tests/[\w./-]+\.py", token)
         for rel in pytest_files:
-            path = ROOT / "backend" / rel
+            path = ROOT / "game/api" / rel
             if not path.is_file():
                 errors.append(f"{cid}: якорь-тест не найден: {path.relative_to(ROOT)}")
         return
@@ -178,11 +179,15 @@ def collect_cid_refs() -> dict[str, set[str]]:
         ".venv",
         "design-lab",
     }
-    for path in ROOT.rglob("*"):
-        if not path.is_file():
-            continue
-        if any(part in skip_parts for part in path.parts):
-            continue
+    def source_files():
+        for base, dirs, names in os.walk(ROOT):
+            dirs[:] = [d for d in dirs if d not in skip_parts | {"sites", ".codex-state", "worktrees", "archive"} and (not d.startswith(".") or d in {".agents", ".codex", ".github"})]
+            for name in names:
+                if Path(base) == ROOT and name.lower().endswith(".md") and name.lower() not in {"agents.md", "readme.md", "conventions.md", "architecture.md"}:
+                    continue
+                yield Path(base) / name
+
+    for path in source_files():
         if path.suffix.lower() not in {".md", ".mdc", ".py", ".yaml", ".yml", ".js", ".jsx"}:
             continue
         try:
@@ -243,16 +248,16 @@ def check() -> int:
     else:
         errors.append("C-1: нет docs/DOCUMENTATION_SYSTEM.md")
 
-    audits = ROOT / "docs" / "audits" / "README.md"
+    audits = ROOT / "game" / "docs" / "audits" / "README.md"
     if audits.is_file():
         if "не канон" not in audits.read_text(encoding="utf-8").lower():
-            errors.append("C-1: docs/audits/README.md должен явно говорить, что аудит не канон")
+            errors.append("C-1: game/docs/audits/README.md должен явно говорить, что аудит не канон")
     else:
-        errors.append("C-1: нет docs/audits/README.md")
+        errors.append("C-1: нет game/docs/audits/README.md")
 
-    catalog = ROOT / "data" / "events" / "mvp11" / "catalog.yaml"
+    catalog = ROOT / "game" / "data" / "events" / "mvp11" / "catalog.yaml"
     if not catalog.is_file():
-        errors.append("C-4: нет data/events/mvp11/catalog.yaml")
+        errors.append("C-4: нет game/data/events/mvp11/catalog.yaml")
 
     dev_table = DEV_TABLE_RE.search(text)
     if not dev_table:
