@@ -16,8 +16,9 @@
     },
     {
       "name": "backend",
-      "runtimeExecutable": "backend/.venv/Scripts/python.exe",
+      "runtimeExecutable": "py",
       "runtimeArgs": [
+        "-3",
         "-m",
         "uvicorn",
         "main:app",
@@ -43,6 +44,35 @@
         "--strictPort"
       ],
       "port": 5173
+    },
+    {
+      "name": "plan-api",
+      "runtimeExecutable": "py",
+      "runtimeArgs": [
+        "-3",
+        "-m",
+        "uvicorn",
+        "plan_api.main:create_app",
+        "--factory",
+        "--reload",
+        "--port",
+        "8020",
+        "--app-dir",
+        "apps/plan-api"
+      ],
+      "env": { "PYTHONPATH": "packages/platform/src", "PLAN_DATABASE_URL": "sqlite:///./apps/plan-api/plan_dev.db" },
+      "port": 8020
+    },
+    {
+      "name": "plan-web",
+      "runtimeExecutable": "npm.cmd",
+      "runtimeArgs": [
+        "--prefix",
+        "apps/plan-web",
+        "run",
+        "dev"
+      ],
+      "port": 5190
     }
   ]
 }

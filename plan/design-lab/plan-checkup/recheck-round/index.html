@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>ТВОЙ ПЛАН — recheck-round (P3-03, P3-07)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;600;700&family=Onest:wght@400;500;600;700&display=swap" />
+  <link rel="stylesheet" href="./lab-base.css" />
+</head>
+<body>
+<main class="lab">
+  <header class="lab-head">
+    <span class="pill pill-edge" style="justify-self:start">★ R2 + G2 утверждены</span>
+    <h1>Повторный чекап: «в прошлый раз» и прогресс целей</h1>
+    <p>P3-03 и P3-07 из плана P3. Человек вернулся через 3 месяца и нажал «Пересчитать». Отчёт — утверждённый C2; меняется только то, где и как показать сравнение с прошлым разбором. Данные API уже есть (<code>report.previous</code>, <code>goals[].progress</code>). Цифры — демо-семья.</p>
+  </header>
+
+  <section class="lab-section">
+    <h2>1. «В прошлый раз вы взялись за…» — где показать</h2>
+    <p class="note">R1 — внутри графитовой плитки ответа, над «С чего начать»: прошлые шаги рядом с новыми. R2 — отдельная плитка сразу под графиком: что сдвинулось (было → стало) и прошлые шаги. R3 — минимально: «было → стало» прямо на плитках светофора, прошлые шаги — одной строкой в плитке ответа.</p>
+    <div class="frames">
+
+      <!-- R1 -->
+      <div class="frame">
+        <div class="frame-cap"><b>R1 · Внутри плитки ответа</b><span>Прошлое и новое — в одном месте, где человек решает, что делать дальше</span></div>
+        <div class="phone">
+          <div class="top"><div class="brand"><b>твой план</b><small>Чекап · ноябрь 2026</small></div><span class="pill">Черновой · 86 %</span></div>
+          <div class="grid2">
+            <div class="tile tile-ok"><span class="eyebrow">Бюджет</span><div class="mid">+14 %</div><span>норма сбережений</span></div>
+            <div class="tile tile-edge"><span class="eyebrow">Долги</span><div class="mid">31 %</div><span>платежи от дохода</span></div>
+            <div class="tile tile-edge"><span class="eyebrow">Подушка</span><div class="mid">1,2 мес.</div><span>цель 3 мес.</span></div>
+            <div class="tile tile-calm"><span class="eyebrow">Защита</span><div class="mid">1 флаг</div><span>нет страховки жизни</span></div>
+          </div>
+          <div class="tile tile-inverse">
+            <span class="eyebrow">Успеем ли накопить на цель?</span>
+            <p><b>Да, к июлю 2027</b> — темп с прошлого раза 20 000 ₽/мес.</p>
+            <span class="eyebrow">В августе вы взялись за</span>
+            <div class="prev">
+              <div class="prev-row"><span>Отложить месяц расходов в подушку</span><span class="st st-done">сделано</span></div>
+              <div class="prev-row"><span>Гасить досрочно кредитную карту</span><span class="st st-open">в работе</span></div>
+              <div class="prev-row"><span>Проверить страхование жизни</span><span class="st st-no">не подошло</span></div>
+            </div>
+            <span class="eyebrow">С чего начать сейчас</span>
+            <div class="step next"><span class="n">1</span><div><b>Довести подушку до 3 мес.</b><span class="muted">25 000 ₽/мес — 7 мес.</span></div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- R2 -->
+      <div class="frame">
+        <div class="frame-cap"><b>R2 · Отдельная плитка «С прошлого раза»</b><span>Под графиком: три цифры было → стало и прошлые шаги; плитка ответа не меняется</span></div>
+        <div class="phone">
+          <div class="top"><div class="brand"><b>твой план</b><small>Чекап · ноябрь 2026</small></div><span class="pill">Черновой · 86 %</span></div>
+          <div class="grid2">
+            <div class="tile tile-ok"><span class="eyebrow">Бюджет</span><div class="mid">+14 %</div></div>
+            <div class="tile tile-edge"><span class="eyebrow">Долги</span><div class="mid">31 %</div></div>
+            <div class="tile tile-edge"><span class="eyebrow">Подушка</span><div class="mid">1,2 мес.</div></div>
+            <div class="tile tile-calm"><span class="eyebrow">Защита</span><div class="mid">1 флаг</div></div>
+          </div>
+          <div class="tile">
+            <div class="chart-head"><span class="t-title">С прошлого раза</span><span class="muted">август → ноябрь</span></div>
+            <div class="was">
+              <div>Подушка<b>0,4 → 1,2</b>мес.</div>
+              <div>Платежи<b>36 → 31 %</b>от дохода</div>
+              <div>Остаётся<b>+21 → +28</b>тыс. ₽/мес</div>
+            </div>
+            <div class="prev">
+              <div class="prev-row"><span>Отложить месяц расходов в подушку</span><span class="st st-done">сделано</span></div>
+              <div class="prev-row"><span>Гасить досрочно кредитную карту</span><span class="st st-open">в работе</span></div>
+            </div>
+          </div>
+          <div class="tile tile-inverse">
+            <span class="eyebrow">Успеем ли накопить на цель?</span>
+            <p><b>Да, к июлю 2027.</b></p>
+            <div class="step next"><span class="n">1</span><div><b>Довести подушку до 3 мес.</b><span class="muted">25 000 ₽/мес — 7 мес.</span></div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- R3 -->
+      <div class="frame">
+        <div class="frame-cap"><b>R3 · Минимально: на плитках светофора</b><span>«Было» маленькой меткой на каждой плитке; прошлые шаги — одной строкой</span></div>
+        <div class="phone">
+          <div class="top"><div class="brand"><b>твой план</b><small>Чекап · ноябрь 2026</small></div><span class="pill">Черновой · 86 %</span></div>
+          <div class="grid2">
+            <div class="tile tile-ok"><span class="eyebrow">Бюджет</span><div class="mid">+14 %</div><span class="delta">было +10 %</span></div>
+            <div class="tile tile-edge"><span class="eyebrow">Долги</span><div class="mid">31 %</div><span class="delta">было 36 %</span></div>
+            <div class="tile tile-edge"><span class="eyebrow">Подушка</span><div class="mid">1,2 мес.</div><span class="delta">было 0,4</span></div>
+            <div class="tile tile-calm"><span class="eyebrow">Защита</span><div class="mid">1 флаг</div><span class="delta">без изменений</span></div>
+          </div>
+          <div class="tile tile-inverse">
+            <span class="eyebrow">Успеем ли накопить на цель?</span>
+            <p><b>Да, к июлю 2027.</b></p>
+            <p class="muted">В августе: 1 шаг из 3 сделан, 1 в работе.</p>
+            <div class="step next"><span class="n">1</span><div><b>Довести подушку до 3 мес.</b><span class="muted">25 000 ₽/мес — 7 мес.</span></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="lab-section">
+    <h2>2. Прогресс цели</h2>
+    <p class="note">Сейчас цели — таблица в конце отчёта. G1 — та же таблица + строка «с прошлого раза». G2 — карточка цели: полоска «накоплено из нужного», риска — где были в прошлый раз, и темп против нужного взноса.</p>
+    <div class="frames">
+      <div class="frame">
+        <div class="frame-cap"><b>G1 · Таблица + строка прогресса</b><span>Минимальная правка текущего блока</span></div>
+        <div class="phone">
+          <div class="tile">
+            <div class="t-title">Цели</div>
+            <div class="prev">
+              <div class="prev-row"><span><b>Отпуск на море, 250 000 ₽</b><br /><span class="muted">к июлю 2027 · нужно 21 000 ₽/мес</span></span><span class="st st-done">успеваете</span></div>
+              <div class="prev-row"><span class="muted">С августа: +60 000 ₽ · 20 000 ₽/мес</span><span class="st st-open">чуть медленнее</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="frame">
+        <div class="frame-cap"><b>G2 · Карточка с полоской</b><span>Видно, сколько уже есть и сколько прибавилось с прошлого раза</span></div>
+        <div class="phone">
+          <div class="tile">
+            <div class="chart-head"><span class="t-title">Отпуск на море</span><span class="muted">к июлю 2027</span></div>
+            <div class="mid">80 000 ₽ <span class="muted" style="font:500 14px/20px var(--font-text)">из 250 000 ₽</span></div>
+            <div class="bar"><i class="now" style="width:32%"></i><i class="before" style="width:8%"></i><span class="mark" style="left:8%"></span></div>
+            <div class="goal-meta"><span>с августа <b>+60 000 ₽</b></span><span>темп 20 000 ₽/мес · нужно 21 000</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="lab-section">
+    <h2>3. Что решить</h2>
+    <div class="table-wrap">
+      <table class="compare">
+        <tr><th>Вопрос</th><th>Варианты</th><th>Рекомендация</th></tr>
+        <tr><td>«В прошлый раз»</td><td>R1 · R2 · R3</td><td><b>R2</b>: не трогает утверждённую плитку ответа, «было → стало» отвечает на главный вопрос повторного чекапа — «стало ли лучше?». R1 перегружает плитку ответа; R3 компактен, но метки на цветных плитках спорят с главной цифрой.</td></tr>
+        <tr><td>Цели</td><td>G1 · G2</td><td><b>G2</b>: полоска с риской «где были» показывает прогресс без чтения цифр; G1 — запасной, если целей много (G2 — по карточке на цель).</td></tr>
+      </table>
+    </div>
+  </section>
+</main>
+</body>
+</html>

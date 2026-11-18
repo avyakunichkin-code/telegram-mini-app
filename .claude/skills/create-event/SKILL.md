@@ -213,10 +213,10 @@ interaction_kind: choice
   - §4: needs_risk;
   - §10: **lifecycle** — не бесконечный downgrade/переезд (`once` / `max_per_profile` / cooldown ≥ 12);
   - §11: **главная ось needs** по теме (жильё → comfort, семья → social, …);
-  - §12: MCE — подсказка `cash` под целевой needs+ (ручная правка YAML).
+  - §6: кривая цены `needs_points` — подбор `cash` под целевой needs+ (`cost_for_points`); §12 MCE заменён.
 - **`needs_delta`:** §11 + persona-profiles; в brief — `needs_axis_map`.
 - **`repeat_policy` / `cooldown_periods`:** класс A/B/C из §10; см. [`event-repeat-and-state-ladder.md`](../../../docs/vision/ideas/event-repeat-and-state-ladder.md).
-- **`cash_delta`:** % от salary; каждые +10 needs ≈ 3–8% salary или burn.
+- **`cash_delta`:** % от salary; needs+ разовой траты — в коридоре кривой `needs_points` ±50%, ось ≤ 15 (§6).
 - Цепочки: `enqueue_event`, follow-up с отсылкой — [`event-catalog-qna-refine.md`](../../../docs/vision/ideas/event-catalog-qna-refine.md).
 
 **Перед записью YAML:** мысленный тест «игрок жмёт только плюсы» и **«могу ли снова удешевить без сюжета»**; impacts по каждой кнопке (§6.1). **Нет `xp_delta`.**
@@ -261,8 +261,8 @@ cd backend && python -m pytest -q -k "event"
 | **Деньги** | Шаг 1: в тексте **остаток только после защиты**; аванс на кнопке; шаги 2–3 — **без cash**; эпилог — остаток; steady — +35% бонус; rush — без бонуса, ремарка про опечатки |
 | **Отказ / срыв** | Отказ **только** на шаге 1; **нет** кнопки «сдаться» на дедлайне; **нет** автопровала |
 | **Кнопки** | Шаг 2 — ровно **2**; шаг 3 — **2** (rush: сам / инструмент; steady: сдать / вычитать) |
-| **Обязательность** | `mandatory_gate: blocks_period_end` на шагах 2–3 |
-| **Informational** | `event_slot: informational`, ≥2 кнопки с лёгким trade-off needs (не дубли 0/0); урок — второй абзац `description` |
+| **Обязательность** | `mandatory_gate: blocks_period_end` на шагах 2–3 и на эпилоге с выплатой (иначе деньги сгорают при expire) |
+| **Informational** | `event_slot: informational`, ≥2 одинаковые кнопки (без ложного выбора); урок — второй абзац `description`; «откат» причины — `description` первой кнопки ветки («N периодов назад вы … → …») |
 | **Тайминг** | `after_periods: 2` → `2` → `1` (периоды **N → N+2 → N+4 → N+5** от старта цепочки) |
 | **Движок** | `chain_key: freelance_project`; `CHAIN_KEY_BY_DEFINITION` + `active_chain_context`; все follow-up в `CHAIN_FOLLOWUP_EXCLUDE_FROM_RANDOM_POOL`; цепочка `complete` на эпилоге |
 | **Баланс** | Pareto не сравнивает пары с `requires_chain_branch` ([`event-balance-rules.md`](event-balance-rules.md) §3.1) |

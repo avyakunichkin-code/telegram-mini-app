@@ -1,0 +1,8 @@
+{
+  "name": "@tvoy/ui-kit",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "exports": "./src/index.js",
+  "peerDependencies": { "react": "^18.2.0" }
+}

@@ -1,0 +1,190 @@
+import json
+import logging
+from typing import List
+
+from fastapi import HTTPException
+from sqlalchemy.orm import Session
+
+from ...finance.expense_defaults import expense_budget_for_template
+from ...finance.expenses import ensure_expense_category_catalog, seed_expense_lines_from_budget
+from ...finance.starter_liability import build_starter_liability
+from ...game.start_validation import validate_game_start_request
+from ...models import (
+    FinanceAsset,
+    FinanceLiability,
+    FinanceSalary,
+    GameProfile,
+    GameStarterTemplate,
+    Transaction,
+    User,
+)
+from ...needs.engine import parse_needs_config, set_profile_needs
+from ...schemas import AssetCreate, GameStartRequest, GameStartResponse
+from .templates import validate_save_kind
+
+logger = logging.getLogger(__name__)
+
+
+def start_new_game(db: Session, user_id: int, payload: GameStartRequest, *, resume_guest: bool = False) -> GameStartResponse:
+    """Новая игра из каталога; template_key обязателен."""
+    validate_game_start_request(payload, db)
+    save_kind = validate_save_kind(payload.save_kind)
+
+    user = db.query(User).filter(User.id == user_id).with_for_update().first()
+    if resume_guest and user and user.is_guest:
+        existing = db.query(GameProfile).filter(GameProfile.user_id == user_id).order_by(GameProfile.is_active.desc(), GameProfile.id.desc()).first()
+        if existing:
+            return GameStartResponse(profile_id=existing.id, message="Продолжаем твою историю")
+    guidance_done = user is not None and int(getattr(user, "guidance_completed", 0) or 0) == 1
+
+    starter_template_key = None
+    base_monthly_lifestyle = 0.0
+    blueprint: dict = {}
+    cash_balance = float(payload.cash_balance)
+    monthly_salary = float(payload.monthly_salary)
+    assets_list: List[AssetCreate] = []
+    starter_liabilities_raw: List[dict] = []
+    seeded_budget: dict[str, float] | None = None
+    starter_params_json = json.dumps({"onboarding_version": 2}) if user and user.is_guest else "{}"
+
+    tk = (payload.template_key or "").strip()
+    if tk:
+        tmpl = (
+            db.query(GameStarterTemplate)
+            .filter(GameStarterTemplate.template_key == tk, GameStarterTemplate.is_active == 1)
+            .first()
+        )
+        if not tmpl:
+            raise HTTPException(status_code=404, detail="starter template not found")
+        try:
+            blueprint = json.loads(tmpl.blueprint_json or "{}")
+        except json.JSONDecodeError:
+            blueprint = {}
+        cash_balance = float(blueprint.get("cash_balance", cash_balance))
+        monthly_salary = float(blueprint.get("monthly_salary", monthly_salary))
+        starter_template_key = tk
+        base_monthly_lifestyle = float(tmpl.base_monthly_lifestyle_expense or 0)
+
+        for a in blueprint.get("assets") or []:
+            if isinstance(a, dict):
+                assets_list.append(
+                    AssetCreate(
+                        title=a.get("title") or "Актив",
+                        kind=a.get("kind") or "generic",
+                        asset_value=float(a.get("asset_value") or 0),
+                        monthly_maintenance_cost=float(a.get("monthly_maintenance_cost") or 0),
+                        monthly_income=float(a.get("monthly_income") or 0),
+                    )
+                )
+        for li in blueprint.get("liabilities") or []:
+            if isinstance(li, dict):
+                starter_liabilities_raw.append(li)
+
+        if base_monthly_lifestyle > 0:
+            seeded_budget = expense_budget_for_template(
+                starter_template_key,
+                base_monthly_lifestyle,
+                blueprint,
+                db,
+            )
+
+    db.query(GameProfile).filter(
+        GameProfile.user_id == user_id,
+        GameProfile.is_active == 1,
+    ).update({"is_active": 0})
+
+    new_profile = GameProfile(
+        user_id=user_id,
+        name=payload.profile_name.strip(),
+        save_kind=save_kind,
+        starter_template_key=starter_template_key,
+        starter_params_json=starter_params_json,
+        base_monthly_lifestyle_expense=base_monthly_lifestyle,
+        delta_monthly_lifestyle_expense=0,
+        is_active=1,
+        cash_balance=cash_balance,
+        safety_fund_balance=0,
+        negative_periods_count=0,
+        period_index=1,
+        base_params_locked=1,
+        onboarding_state="brief_done" if guidance_done else "draft",
+        onboarding_step="farewell" if guidance_done else "period_timer",
+    )
+    try:
+        if save_kind == "game":
+            needs_cfg = parse_needs_config(blueprint)
+            if needs_cfg:
+                set_profile_needs(new_profile, needs_cfg.get("initial") or {})
+    except Exception:
+        pass
+    db.add(new_profile)
+    db.flush()
+
+    salary = FinanceSalary(
+        game_profile_id=new_profile.id,
+        monthly_amount=monthly_salary,
+        monthly_receipts_count=1,
+    )
+    db.add(salary)
+
+    created_assets: List[FinanceAsset] = []
+    for asset_data in assets_list:
+        asset = FinanceAsset(
+            game_profile_id=new_profile.id,
+            acquired_period_index=1,
+            title=asset_data.title,
+            kind=getattr(asset_data, "kind", None) or "generic",
+            asset_value=asset_data.asset_value,
+            monthly_maintenance_cost=asset_data.monthly_maintenance_cost,
+            monthly_income=float(getattr(asset_data, "monthly_income", 0) or 0),
+            has_tenants=int(getattr(asset_data, "has_tenants", 0) or 0),
+            is_active=1,
+        )
+        db.add(asset)
+        created_assets.append(asset)
+
+    db.flush()
+
+    used_secured_asset_ids: set[int] = set()
+    for blueprint_li in starter_liabilities_raw:
+        liability = build_starter_liability(
+            profile_id=new_profile.id,
+            blueprint_li=blueprint_li,
+            assets=created_assets,
+            used_secured_asset_ids=used_secured_asset_ids,
+        )
+        db.add(liability)
+
+    start_transaction = Transaction(
+        game_profile_id=new_profile.id,
+        amount=cash_balance,
+        type="initial_balance",
+        description=f"Стартовый баланс при создании профиля '{new_profile.name}'",
+        period_index=1,
+    )
+    db.add(start_transaction)
+
+    if base_monthly_lifestyle > 0 and seeded_budget:
+        ensure_expense_category_catalog(db)
+        seed_expense_lines_from_budget(
+            db,
+            new_profile,
+            seeded_budget,
+            period_index=1,
+            source_kind="template",
+            source_ref=starter_template_key,
+        )
+
+    db.commit()
+
+    try:
+        from ...admin.notify import notify_game_started
+
+        notify_game_started(db, new_profile)
+    except Exception:
+        logger.warning("Admin notify failed for game_started", exc_info=True)
+
+    return GameStartResponse(
+        profile_id=new_profile.id,
+        message=f"Игра '{new_profile.name}' успешно запущена. Баланс: {cash_balance} ₽",
+    )

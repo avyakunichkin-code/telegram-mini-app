@@ -1,0 +1,13 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "tvoy-hod-fincore"
+version = "0.1.0"
+description = "Финансовое ядро Game и Plan (ADR-016): чистые функции без фреймворков и IO"
+requires-python = ">=3.11"
+dependencies = []
+
+[tool.setuptools.packages.find]
+where = ["src"]

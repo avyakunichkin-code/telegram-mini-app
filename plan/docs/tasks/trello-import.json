@@ -1,0 +1,97 @@
+{
+  "board": "https://trello.com/b/2iitpNYi",
+  "snapshot_date": "2026-11-07",
+  "automatic_sync": false,
+  "cards": [
+    {
+      "task_id": "PLAN-OWNER-01",
+      "card_id": "ari:cloud:trello::card/workspace/6aef533d7a4b5db210afad90/6aef5637f0cc552aad194012",
+      "url": "https://trello.com/c/2E3Xl2uh",
+      "list": "К выполнению"
+    },
+    {
+      "task_id": "PLAN-OWNER-02",
+      "card_id": "ari:cloud:trello::card/workspace/6aef533d7a4b5db210afad90/6aef563b704ca87ceee9a52d",
+      "url": "https://trello.com/c/6EYAYgiq",
+      "list": "Ожидание"
+    },
+    {
+      "task_id": "PLAN-OWNER-03",
+      "card_id": "ari:cloud:trello::card/workspace/6aef533d7a4b5db210afad90/6aef563ebabbde63f2fd8791",
+      "url": "https://trello.com/c/SVG5vRoA",
+      "list": "Ожидание"
+    },
+    {
+      "task_id": "PLAN-OWNER-04",
+      "card_id": "ari:cloud:trello::card/workspace/6aef533d7a4b5db210afad90/6aef5641c8d49909b8b8a129",
+      "url": "https://trello.com/c/KmuKyIoQ",
+      "list": "К выполнению"
+    },
+    {
+      "task_id": "PLAN-OWNER-05",
+      "card_id": "ari:cloud:trello::card/workspace/6aef533d7a4b5db210afad90/6aef56457bd68a70bb23fc76",
+      "url": "https://trello.com/c/oKKxQ4We",
+      "list": "Ожидание"
+    },
+    {
+      "task_id": "PLAN-OWNER-06",
+      "card_id": "ari:cloud:trello::card/workspace/6aef533d7a4b5db210afad90/6aef564afd8362100c0864d3",
+      "url": "https://trello.com/c/X0EK2igL",
+      "list": "К выполнению"
+    },
+    {
+      "task_id": "PLAN-OWNER-07",
+      "card_id": "ari:cloud:trello::card/workspace/6aef533d7a4b5db210afad90/6aef564ec0ff43479edf2128",
+      "url": "https://trello.com/c/vZIVhmii",
+      "list": "К выполнению"
+    },
+    {
+      "task_id": "PLAN-OWNER-08",
+      "card_id": "ari:cloud:trello::card/workspace/6aef533d7a4b5db210afad90/6aef565179f5b4f0be45dd20",
+      "url": "https://trello.com/c/mKT7a5VD",
+      "list": "К выполнению"
+    },
+    {
+      "task_id": "PLAN-OWNER-09",
+      "card_id": "ari:cloud:trello::card/workspace/6aef533d7a4b5db210afad90/6aef56541aa3ce7734c3f716",
+      "url": "https://trello.com/c/mrGWt9vm",
+      "list": "К выполнению"
+    },
+    {
+      "task_id": "PLAN-OWNER-10",
+      "card_id": "ari:cloud:trello::card/workspace/6aef533d7a4b5db210afad90/6aef565892f98dfbf5521944",
+      "url": "https://trello.com/c/95rKPrJx",
+      "list": "К выполнению"
+    },
+    {
+      "task_id": "PLAN-OWNER-11",
+      "card_id": "ari:cloud:trello::card/workspace/6aef533d7a4b5db210afad90/6aef565c1ba075d6b20fc5ee",
+      "url": "https://trello.com/c/fYDmrnqn",
+      "list": "Входящие"
+    },
+    {
+      "task_id": "PLAN-OWNER-12",
+      "card_id": "ari:cloud:trello::card/workspace/6aef533d7a4b5db210afad90/6aef566127e05d4e871f54ba",
+      "url": "https://trello.com/c/hoO5RHYI",
+      "list": "Входящие"
+    },
+    {
+      "task_id": "PLAN-OWNER-13",
+      "card_id": "ari:cloud:trello::card/workspace/6aef533d7a4b5db210afad90/6aef5664d9bc398e512c70ce",
+      "url": "https://trello.com/c/JpDV4jAH",
+      "list": "Ожидание"
+    },
+    {
+      "task_id": "PLAN-OWNER-14",
+      "card_id": "ari:cloud:trello::card/workspace/6aef533d7a4b5db210afad90/6aef5667ee4b4fb5d35ba807",
+      "url": "https://trello.com/c/YreqxZzn",
+      "list": "Готово"
+    },
+    {
+      "task_id": "PLAN-OWNER-15",
+      "card_id": "ari:cloud:trello::card/workspace/6aef533d7a4b5db210afad90/6aef566a1b0bf385325c14b7",
+      "url": "https://trello.com/c/VHW8vGNF",
+      "list": "Готово"
+    }
+  ]
+}

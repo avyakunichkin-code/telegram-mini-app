@@ -1,0 +1,63 @@
+<svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+  <!-- 0=>= MQX: FinanceMetricIcons  stroke icons, currentColor, viewBox 0 0 24 24 -->
+  <symbol id="icon-coins" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75">
+    <ellipse cx="8" cy="7" rx="5" ry="2.2" />
+    <path d="M3 7v4c0 1.2 2.2 2.2 5 2.2s5-1 5-2.2V7" />
+    <ellipse cx="14" cy="13" rx="5" ry="2.2" />
+    <path d="M9 13v4c0 1.2 2.2 2.2 5 2.2s5-1 5-2.2v-4" />
+  </symbol>
+  <symbol id="icon-trend-down" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25">
+    <path stroke-linecap="round" d="M12 5v10" />
+    <path stroke-linecap="round" stroke-linejoin="round" d="M8 13l4 4 4-4" />
+  </symbol>
+  <symbol id="icon-trend-up" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25">
+    <path stroke-linecap="round" d="M12 19V9" />
+    <path stroke-linecap="round" stroke-linejoin="round" d="M8 11l4-4 4 4" />
+  </symbol>
+  <symbol id="icon-term" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75">
+    <circle cx="12" cy="13" r="7.25" />
+    <path stroke-linecap="round" stroke-width="1.85" d="M12 10v4l2.5 1.5" />
+    <path stroke-linecap="round" stroke-width="1.85" d="M12 4.5V3" />
+  </symbol>
+  <symbol id="icon-percent" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.85">
+    <circle cx="7" cy="7" r="2.25" />
+    <circle cx="17" cy="17" r="2.25" />
+    <path stroke-linecap="round" d="M5 19L19 5" />
+  </symbol>
+  <symbol id="icon-shield" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75">
+    <path stroke-linejoin="round" d="M12 3 20 7v6c0 5-3.4 8.2-8 9-4.6-.8-8-4-8-9V7l8-4Z" />
+    <path stroke-linecap="round" d="M9.5 12.2 11 13.7 14.6 10.1" />
+  </symbol>
+  <symbol id="icon-warn" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75">
+    <path stroke-linejoin="round" d="M12 3 22 20H2L12 3Z" />
+    <path stroke-linecap="round" stroke-width="2" d="M12 9v5M12 17h.01" />
+  </symbol>
+  <symbol id="icon-trash" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75">
+    <path stroke-linecap="round" d="M9 3h6l1 2h4v2H4V5h4l1-2Z" />
+    <path d="M6 7v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V7" />
+    <path stroke-linecap="round" d="M10 11v6M14 11v6" />
+  </symbol>
+  <symbol id="icon-wallet" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75">
+    <path d="M7 10V7a5 5 0 0 1 10 0v3" />
+    <path d="M6 10h12v10a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V10Z" />
+    <path stroke-linecap="round" d="M10 14h4" />
+  </symbol>
+  <symbol id="icon-goal" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75">
+    <circle cx="12" cy="12" r="8.5" />
+    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.85" d="M8 12.2 10.8 15 16 9" />
+  </symbol>
+  <symbol id="icon-overdue" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75">
+    <circle cx="12" cy="13" r="7.25" />
+    <path stroke-linecap="round" stroke-width="1.85" d="M12 10v4" />
+    <path stroke-linecap="round" stroke-width="2" d="M12 17.5h.01" />
+  </symbol>
+  <symbol id="icon-expense" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75">
+    <path stroke-linejoin="round" d="M8 7V6a4 4 0 0 1 8 0v1" />
+    <path stroke-linejoin="round" d="M6 8h12l-1.2 11H7.2L6 8Z" />
+    <path stroke-linecap="round" d="M10 12h4" />
+  </symbol>
+  <symbol id="icon-flow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75">
+    <path stroke-linecap="round" d="M5 17h14" />
+    <path stroke-linecap="round" stroke-linejoin="round" d="M13 17l5-7-4-6-7 13" />
+  </symbol>
+</svg>

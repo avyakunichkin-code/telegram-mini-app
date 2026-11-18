@@ -1,0 +1,177 @@
+<!doctype html>
+<html lang="ru" data-font="f3">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>ТВОЙ ХОД — Аналитика ★ BG-2 (prod parity)</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700&family=Nunito:wght@800;900&display=swap" />
+    <link rel="stylesheet" href="./lab-base.css" />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <header class="lab-head">
+      <h1>Аналитика ★ BG-2 — prod parity</h1>
+      <p>Вкладка «Аналитика» как в prod <code>AnalyticsPremium</code> после переноса ★ BG-2 (2026-10-15). Канон — <a href="../APPROVED.md">APPROVED.md</a>, утверждённый раунд — <code>board-game/screens-round/</code>. Три состояния: есть риск, всё устойчиво, начало партии (закрытых ходов ещё нет).</p>
+      <div class="lab-controls">
+        <span>Тема</span>
+        <button class="lab-toggle" type="button" data-set-theme="light" aria-pressed="true">Светлая</button>
+        <button class="lab-toggle" type="button" data-set-theme="dark" aria-pressed="false">Тёмная</button>
+      </div>
+    </header>
+
+    <main class="lab-grid s-grid">
+      <!-- 1. Есть риск: подушка тонкая -->
+      <section class="variant" aria-labelledby="p1">
+        <header>
+          <h2 id="p1">Есть риск</h2>
+          <p>Полоса и пилюля красные — подушки хватит на 1 ход при ориентире 3. Показатель подушки красный, остальные — нейтральные.</p>
+        </header>
+        <div class="phone s-phone">
+          <div class="s-head"><div><h3>Аналитика</h3><small>Как ты стоишь на 12-м ходу</small></div><span class="turn-token" aria-label="Ход 12">12</span></div>
+          <div class="s-state">
+            <div class="s-state__top"><small>Счёт и подушка</small><span class="s-state__pill">Подушка тонкая</span></div>
+            <b class="bg-money">134 900 ₽</b>
+            <small>Подушки хватит на 1 ход расходов. Ориентир — 3 хода.</small>
+          </div>
+          <div class="sec">
+            <div class="sec__title"><b>Куда уходит доход</b><small>65 400 ₽ за ход</small></div>
+            <div class="s-stack" role="img" aria-label="Расходы на жизнь 57%, Платежи по долгам 14%, Остаётся тебе 29%"><i style="width:57%;background:var(--ink-soft)"></i><i style="width:14%;background:var(--risk)"></i><i style="width:29%;background:var(--gain)"></i></div>
+            <div class="s-legend">
+              <div><i style="background:var(--ink-soft)"></i><span>Расходы на жизнь</span><b class="bg-money">−37 500 ₽</b></div>
+              <div><i style="background:var(--risk)"></i><span>Платежи по долгам</span><b class="bg-money">−9 000 ₽</b></div>
+              <div><i style="background:var(--gain)"></i><span>Остаётся тебе</span><b class="bg-money bg-gain">+18 900 ₽</b></div>
+            </div>
+          </div>
+          <div class="s-metrics">
+            <div class="s-metric s-metric--risk"><b>1</b><small>подушка, ходов расходов</small></div>
+            <div class="s-metric"><b>1,9</b><small>хода продержится счёт</small></div>
+            <div class="s-metric"><b>14%</b><small>дохода на долги</small></div>
+          </div>
+          <div class="s-chart">
+            <div class="sec__title"><b>Счёт + подушка</b><small>история и прогноз на 3 хода</small></div>
+            <svg viewBox="0 0 300 110" role="img" aria-label="Было 15 000 ₽ 11 ходов назад, сейчас 134 900 ₽, через 3 хода — около 191 600 ₽">
+              <line x1="0" y1="100" x2="300" y2="100" stroke="var(--edge-cell)" stroke-width="1.5" />
+              <line x1="0" y1="59" x2="300" y2="59" stroke="var(--edge-cell)" stroke-width="1" stroke-dasharray="2 4" />
+              <polyline fill="none" stroke="var(--turn)" stroke-width="3" stroke-linejoin="round" stroke-linecap="round" points="6,100 26,97 47,95 67,90 87,92 108,85 128,79 148,77 168,70 189,66 209,61 229,52" />
+              <polyline fill="none" stroke="var(--coin-rim)" stroke-width="3" stroke-dasharray="6 5" stroke-linecap="round" points="229,52 250,41 270,29 294,18" />
+              <line x1="229" y1="12" x2="229" y2="100" stroke="var(--ink-soft)" stroke-width="1" stroke-dasharray="3 3" />
+              <circle cx="229" cy="52" r="5" fill="var(--turn)" stroke="var(--bg-cell)" stroke-width="2" />
+              <text x="223" y="10" text-anchor="end" font-size="10" fill="var(--ink-soft)">сейчас</text>
+              <text x="294" y="12" text-anchor="end" font-size="10" fill="var(--coin-ink)">≈191 600</text>
+            </svg>
+            <div class="s-chart__legend"><span>было</span><span class="fc">если ничего не менять</span></div>
+          </div>
+          <div class="h-tip-row h-tip-row--one"><img class="h-mascot-inline" src="./assets/monetka-mascot.png" alt="Монетка" /><span>Следующий шаг цели — Подушка на 2 хода</span></div>
+          <nav class="s-tabbar" aria-label="Разделы"><button class="s-tab" type="button"><i></i>Главная</button><button class="s-tab" type="button"><i></i>Капитал</button><button class="s-tab s-tab--on" type="button" aria-current="page"><i></i>Аналитика</button><button class="s-tab" type="button"><i></i>Меню</button></nav>
+        </div>
+      </section>
+
+      <!-- 2. Всё устойчиво -->
+      <section class="variant" aria-labelledby="p2">
+        <header>
+          <h2 id="p2">Всё устойчиво</h2>
+          <p>Риска нет — пилюли нет, полоса изумрудная. Содержание имущества — отдельный нейтральный тон в полосе.</p>
+        </header>
+        <div class="phone s-phone">
+          <div class="s-head"><div><h3>Аналитика</h3><small>Как ты стоишь на 24-м ходу</small></div><span class="turn-token" aria-label="Ход 24">24</span></div>
+          <div class="s-state s-state--ok">
+            <div class="s-state__top"><small>Счёт и подушка</small></div>
+            <b class="bg-money">412 000 ₽</b>
+            <small>Подушки хватит на 4,3 хода расходов — запас в норме.</small>
+          </div>
+          <div class="sec">
+            <div class="sec__title"><b>Куда уходит доход</b><small>82 000 ₽ за ход</small></div>
+            <div class="s-stack" role="img" aria-label="Расходы на жизнь 49%, Содержание имущества 6%, Остаётся тебе 45%"><i style="width:49%;background:var(--ink-soft)"></i><i class="upkeep" style="width:6%;background:color-mix(in srgb, var(--ink-soft) 45%, var(--bg-cell))"></i><i style="width:45%;background:var(--gain)"></i></div>
+            <div class="s-legend">
+              <div><i style="background:var(--ink-soft)"></i><span>Расходы на жизнь</span><b class="bg-money">−40 000 ₽</b></div>
+              <div><i class="upkeep"></i><span>Содержание имущества</span><b class="bg-money">−5 000 ₽</b></div>
+              <div><i style="background:var(--gain)"></i><span>Остаётся тебе</span><b class="bg-money bg-gain">+37 000 ₽</b></div>
+            </div>
+          </div>
+          <div class="s-metrics">
+            <div class="s-metric"><b>4,3</b><small>подушка, ходов расходов</small></div>
+            <div class="s-metric"><b>6,8</b><small>хода продержится счёт</small></div>
+            <div class="s-metric"><b>0%</b><small>дохода на долги</small></div>
+          </div>
+          <div class="s-chart">
+            <div class="sec__title"><b>Счёт + подушка</b><small>история и прогноз на 3 хода</small></div>
+            <svg viewBox="0 0 300 110" role="img" aria-label="Было 180 000 ₽ 12 ходов назад, сейчас 412 000 ₽, через 3 хода — около 523 000 ₽">
+              <line x1="0" y1="100" x2="300" y2="100" stroke="var(--edge-cell)" stroke-width="1.5" />
+              <line x1="0" y1="59" x2="300" y2="59" stroke="var(--edge-cell)" stroke-width="1" stroke-dasharray="2 4" />
+              <polyline fill="none" stroke="var(--turn)" stroke-width="3" stroke-linejoin="round" stroke-linecap="round" points="6,100 25,96 43,93 62,88 80,84 99,82 117,76 136,72 154,67 173,62 191,57 210,55 229,49" />
+              <polyline fill="none" stroke="var(--coin-rim)" stroke-width="3" stroke-dasharray="6 5" stroke-linecap="round" points="229,49 250,38 270,28 294,18" />
+              <line x1="229" y1="12" x2="229" y2="100" stroke="var(--ink-soft)" stroke-width="1" stroke-dasharray="3 3" />
+              <circle cx="229" cy="49" r="5" fill="var(--turn)" stroke="var(--bg-cell)" stroke-width="2" />
+              <text x="223" y="10" text-anchor="end" font-size="10" fill="var(--ink-soft)">сейчас</text>
+              <text x="294" y="12" text-anchor="end" font-size="10" fill="var(--coin-ink)">≈523 000</text>
+            </svg>
+            <div class="s-chart__legend"><span>было</span><span class="fc">если ничего не менять</span></div>
+          </div>
+          <div class="h-tip-row h-tip-row--one"><img class="h-mascot-inline" src="./assets/monetka-mascot.png" alt="Монетка" /><span>Всё устойчиво — так держать</span></div>
+          <nav class="s-tabbar" aria-label="Разделы"><button class="s-tab" type="button"><i></i>Главная</button><button class="s-tab" type="button"><i></i>Капитал</button><button class="s-tab s-tab--on" type="button" aria-current="page"><i></i>Аналитика</button><button class="s-tab" type="button"><i></i>Меню</button></nav>
+        </div>
+      </section>
+
+      <!-- 3. Начало партии: закрытых ходов нет -->
+      <section class="variant" aria-labelledby="p3">
+        <header>
+          <h2 id="p3">Начало партии</h2>
+          <p>Ни одного закрытого хода: график — только «сейчас» и прогноз, под ним понятная строка. Подушки нет — это риск, пилюля «Подушки нет».</p>
+        </header>
+        <div class="phone s-phone">
+          <div class="s-head"><div><h3>Аналитика</h3><small>Как ты стоишь на 1-м ходу</small></div><span class="turn-token" aria-label="Ход 1">1</span></div>
+          <div class="s-state">
+            <div class="s-state__top"><small>Счёт и подушка</small><span class="s-state__pill">Подушки нет</span></div>
+            <b class="bg-money">15 000 ₽</b>
+            <small>Подушки пока нет. Ориентир — 3 хода расходов.</small>
+          </div>
+          <div class="sec">
+            <div class="sec__title"><b>Куда уходит доход</b><small>30 000 ₽ за ход</small></div>
+            <div class="s-stack" role="img" aria-label="Расходы на жизнь 73%, Остаётся тебе 27%"><i style="width:73%;background:var(--ink-soft)"></i><i style="width:27%;background:var(--gain)"></i></div>
+            <div class="s-legend">
+              <div><i style="background:var(--ink-soft)"></i><span>Расходы на жизнь</span><b class="bg-money">−22 000 ₽</b></div>
+              <div><i style="background:var(--gain)"></i><span>Остаётся тебе</span><b class="bg-money bg-gain">+8 000 ₽</b></div>
+            </div>
+          </div>
+          <div class="s-metrics">
+            <div class="s-metric s-metric--risk"><b>0</b><small>подушка, ходов расходов</small></div>
+            <div class="s-metric s-metric--risk"><b>0,7</b><small>хода продержится счёт</small></div>
+            <div class="s-metric"><b>0%</b><small>дохода на долги</small></div>
+          </div>
+          <div class="s-chart">
+            <div class="sec__title"><b>Счёт + подушка</b><small>история и прогноз на 3 хода</small></div>
+            <svg viewBox="0 0 300 110" role="img" aria-label="Сейчас 15 000 ₽, через 3 хода — около 39 000 ₽">
+              <line x1="0" y1="100" x2="300" y2="100" stroke="var(--edge-cell)" stroke-width="1.5" />
+              <line x1="0" y1="59" x2="300" y2="59" stroke="var(--edge-cell)" stroke-width="1" stroke-dasharray="2 4" />
+              <polyline fill="none" stroke="var(--coin-rim)" stroke-width="3" stroke-dasharray="6 5" stroke-linecap="round" points="6,100 102,73 198,45 294,18" />
+              <line x1="6" y1="12" x2="6" y2="100" stroke="var(--ink-soft)" stroke-width="1" stroke-dasharray="3 3" />
+              <circle cx="6" cy="100" r="5" fill="var(--turn)" stroke="var(--bg-cell)" stroke-width="2" />
+              <text x="12" y="10" text-anchor="start" font-size="10" fill="var(--ink-soft)">сейчас</text>
+              <text x="294" y="12" text-anchor="end" font-size="10" fill="var(--coin-ink)">≈39 000</text>
+            </svg>
+            <div class="s-chart__legend"><span>было</span><span class="fc">если ничего не менять</span></div>
+            <p class="s-empty-note">История появится, когда завершишь первый ход.</p>
+          </div>
+          <div class="h-tip-row h-tip-row--one"><img class="h-mascot-inline" src="./assets/monetka-mascot.png" alt="Монетка" /><span>Отложи в подушку хотя бы один ход расходов</span></div>
+          <nav class="s-tabbar" aria-label="Разделы"><button class="s-tab" type="button"><i></i>Главная</button><button class="s-tab" type="button"><i></i>Капитал</button><button class="s-tab s-tab--on" type="button" aria-current="page"><i></i>Аналитика</button><button class="s-tab" type="button"><i></i>Меню</button></nav>
+        </div>
+      </section>
+    </main>
+
+    <script>
+      (function () {
+        var root = document.documentElement;
+        document.addEventListener('click', function (e) {
+          var t = e.target.closest('[data-set-theme]');
+          if (!t) return;
+          root.setAttribute('data-theme', t.dataset.setTheme);
+          document.querySelectorAll('[data-set-theme]').forEach(function (b) {
+            b.setAttribute('aria-pressed', String(b === t));
+          });
+        });
+      })();
+    </script>
+  </body>
+</html>

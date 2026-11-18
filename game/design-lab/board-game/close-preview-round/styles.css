@@ -1,0 +1,45 @@
+/* close-preview-round — PR-07 (UX U2): игрок видит списание до тапа «Завершить ход»
+   и что подушка не платит расходы. База — ★ BG-3 вариант E (frames-round), поле без рамок.
+   Варианты меняют только подачу превью у кнопки; строка подушки общая. */
+
+/* Поле, карта хода и действия — из frames-round E (main data-variant="e"); вариант раунда — data-cp.
+   Деньги — три колонки, как в prod (Доходы → Расходы → Подушка). */
+.f-stage .money { grid-template-columns: repeat(3, 1fr); }
+
+/* ===== A. Строка под кнопкой ===== */
+.cp-under {
+  margin: -2px 0 0; display: flex; flex-wrap: wrap; justify-content: center; gap: 2px 8px;
+  color: var(--ink-soft); font: 600 13px / 1.3 var(--body); text-align: center;
+}
+.cp-under b { color: var(--ink); font-weight: 700; }
+
+/* ===== B. Сумма в кнопке: вторая строка ===== */
+.cp-cta-sum { display: block; margin-top: 3px; font: 600 12px / 1.2 var(--body); opacity: 0.88; }
+
+/* ===== C. Строка-итог над кнопкой: было → списание → останется ===== */
+.cp-ledger {
+  display: grid; grid-template-columns: auto 1fr auto; align-items: baseline; gap: 4px 10px;
+  margin: 0; padding: 10px 12px; border-radius: 12px; background: var(--turn-soft);
+  font: 600 13px / 1.3 var(--body); color: var(--ink-soft);
+}
+.cp-ledger dt { grid-column: 1 / 3; }
+.cp-ledger dd { margin: 0; text-align: right; color: var(--ink); font-weight: 700; }
+.cp-ledger .cp-ledger__total { padding-top: 4px; border-top: var(--hair); font: var(--display-weight) 15px / 1.2 var(--display); color: var(--ink); }
+
+/* ===== Состояния: минус после хода / третий минус — поражение ===== */
+.cp-warn { color: var(--risk); }
+.cp-warn b, .cp-ledger .cp-warn, .cp-ledger dd.cp-warn { color: var(--risk); }
+.f-stage[data-state="minus"] .cp-ledger,
+.f-stage[data-state="defeat"] .cp-ledger { background: var(--risk-soft); }
+.cp-defeat {
+  margin: 0; padding: 8px 12px; border-radius: 12px; background: var(--risk-soft); color: var(--risk);
+  font: 700 13px / 1.3 var(--body); text-align: center;
+}
+
+/* ===== Подушка: вторая строка (общая для A/B/C) ===== */
+.cp-cushion small.cp-cushion__note { display: block; margin-top: 2px; font-size: 12px; line-height: 1.25; color: var(--ink-soft); }
+.cp-cushion small.cp-cushion__note.cp-warn { color: var(--risk); font-weight: 700; }
+
+.f-stage:not([data-cp="a"]) [data-show="a"],
+.f-stage:not([data-cp="b"]) [data-show="b"],
+.f-stage:not([data-cp="c"]) [data-show="c"] { display: none; }
