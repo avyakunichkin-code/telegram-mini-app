@@ -35,7 +35,7 @@ venv/
 **/node_modules/
 **/dist/
 # Lab-раунд лендинга: dist — сама страница и цель design-assets --check, не сборка
-!design-lab/landing-refresh-20261030/dist/
+!game/design-lab/landing-refresh-20261030/dist/
 **/dist-ssr/
 **/.vite/
 **/.vite-temp/
@@ -57,6 +57,8 @@ coverage/
 *.cover
 .hypothesis/
 .pytest_cache/
+**/.pytest-tmp/
+.playwright-mcp/
 
 # ===== Local DB / dumps =====
 *.sqlite
@@ -74,8 +76,8 @@ CLAUDE.local.md
 .cursor/
 
 # Balance playtest — только baselines в git; reports генерируются локально
-docs/balance/reports/*
-!docs/balance/reports/.gitkeep
+game/docs/balance/reports/*
+!game/docs/balance/reports/.gitkeep
 
 # ===== Obsidian (vault settings — shared; workspace — local) =====
 .obsidian/workspace.json

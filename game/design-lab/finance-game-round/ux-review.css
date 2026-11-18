@@ -1,0 +1,68 @@
+body.review:has(.persona) .needs {gap:8px;grid-template-columns:repeat(4,minmax(0,1fr))}
+.review .need {display:grid;align-items:center;grid-template-columns:auto 1fr;gap:4px;min-width:0}
+.review .need span {grid-column:1/-1;font-size:.6875rem;font-weight:700}
+.review .need .need-glyph {margin:0}
+body.review:has(.persona) .status {font-size:clamp(.75rem,3.35cqw,.95rem);flex-wrap:wrap}
+body.review:has(.persona) .events span:not(.game-icon) {font-size:clamp(.75rem,3.3cqw,.95rem)}
+body.review:has(.persona) .numbers dt {font-size:clamp(.75rem,3.35cqw,.95rem)}
+.review .goal summary > strong::after {content:"";display:inline-block;width:.4em;height:.4em;border:solid currentColor;border-width:0 2px 2px 0;transform:translateY(-.18em) rotate(45deg);margin-left:.5em}
+.review .goal[open] summary > strong::after {transform:rotate(225deg)}
+.review nav a {min-height:44px}
+.review nav [aria-disabled] {opacity:.65}
+body.review:has(.persona) .events span:last-child {font-size:1.3rem}
+body.review:has(.persona) :is(.primary,.events) {min-height:44px}
+.review :is(button,a,summary):focus-visible {outline:2px solid #8239b0;outline-offset:2px;box-shadow:0 0 0 2px white}
+
+/* Keep each label, value and track visually grouped. */
+.compact .need {
+  grid-template-columns:auto auto;
+  justify-content:center;
+  column-gap:5px;
+  row-gap:4px;
+}
+.compact .need span {
+  grid-row:1;
+  text-align:center;
+}
+.compact .need .need-glyph {grid-row:2}
+body.review.compact:has(.persona) .need b {
+  grid-row:2;
+  justify-self:start;
+  text-align:left;
+}
+.compact .need meter {
+  grid-row:3;
+  width:100%;
+}
+.review .need .need-glyph {filter:grayscale(1) brightness(.52) sepia(1) hue-rotate(235deg) saturate(2)}
+
+/* Preview colors for the sample needs in this mockup. */
+.compact .need meter {height:10px}
+.compact .need:nth-child(1) {--need-fill:#b65a00}
+.compact .need:nth-child(2) {--need-fill:#b65a00}
+.compact .need:nth-child(3) {--need-fill:#24804c}
+.compact .need:nth-child(4) {--need-fill:#bd3f54}
+.compact .need meter::-webkit-meter-optimum-value {background:var(--need-fill)}
+.compact .need meter::-moz-meter-bar {background:var(--need-fill)}
+
+.compact :is(.primary, .salary) {
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding-block:0;
+  padding-inline:8px;
+  line-height:1.15;
+  text-align:center;
+}
+
+/* Use the visible artwork as the icon's layout box. */
+.compact .actions .game-icon {
+  width:auto;
+  height:1.4em;
+  aspect-ratio:var(--action-icon-ratio);
+  background:var(--action-icon) center / contain no-repeat;
+}
+.compact .actions .coins {--action-icon:url('./action-coins.png');--action-icon-ratio:222 / 197}
+.compact .actions .invest {--action-icon:url('./action-invest.png');--action-icon-ratio:198 / 178}
+.compact .actions .shield {--action-icon:url('./action-shield.png');--action-icon-ratio:204 / 213}
+.compact .actions .withdraw {--action-icon:url('./action-withdraw.png');--action-icon-ratio:281 / 201}

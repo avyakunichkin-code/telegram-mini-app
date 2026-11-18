@@ -1,0 +1,370 @@
+"""Сборка FinanceOverview — переиспользуется /finance/overview и /game/bootstrap."""
+from __future__ import annotations
+
+import logging
+
+from sqlalchemy.orm import Session
+
+from ..achievements.engine import process_achievement_unlocks
+from ..achievements.seeds import ensure_achievement_catalog
+from ..finance.expenses import burn_breakdown_for_api, compute_monthly_burn
+from .period_metrics import avg_net_cashflow_last_closed_intervals as _avg_net_cashflow_last_closed_intervals
+from ..game.adapters.fincore_snapshot import household_metrics
+from ..models import (
+    FinanceAsset,
+    FinanceLiability,
+    FinanceSalary,
+    GameProfile,
+    GameStarterTemplate,
+    User,
+)
+import json
+
+from ..needs.engine import (
+    effective_needs_delta,
+    needs_values_from_profile,
+    normalize_treat_self_options,
+    parse_needs_config,
+    treat_self_availability,
+)
+from ..needs.set_point import MODEL_SET_POINT, build_set_point_snapshot
+from ..finance.period_close_preview import estimate_period_close_preview
+from ..schemas import (
+    AchievementUnlockEvent,
+    AssetResponse,
+    FinanceOverview,
+    GuidanceOverview,
+    LiabilityResponse,
+    MonthlyBurnBreakdown,
+    PeriodClosePreview,
+    SalaryProfileResponse,
+    GameMechanicsPermissions,
+    NeedsLevelSourceOverview,
+    NeedsMetaOverview,
+    NeedsOverview,
+    TreatSelfOverview,
+    TreatSelfOptionOverview,
+    VictoryGoalOverview,
+    VictoryOverview,
+)
+from ..game.rules import MVP_SAFETY_FUND_OBLIGATIONS_MULTIPLIER
+from ..victory.mechanics_progression import capital_flags_for_api, next_unlock_period, resolve_template_and_unlock
+from ..starters.mechanics import resolve_profile_mechanics
+from ..victory.engine import evaluate_victory, parse_victory_config
+from ..victory.goals_store import override_config_goals_from_db
+from ..victory.seeds import DEFAULT_TEMPLATE_KEY
+from ..victory.snap import build_victory_evaluation_input
+
+logger = logging.getLogger(__name__)
+
+
+def build_finance_overview(db: Session, profile: GameProfile) -> FinanceOverview:
+    newly_unlocked_raw: list = []
+    try:
+        ensure_achievement_catalog(db)
+        newly_unlocked_raw = process_achievement_unlocks(db, profile) or []
+        db.commit()
+        db.refresh(profile)
+    except Exception:
+        logger.exception(
+            "Achievement unlock failed in finance overview profile_id=%s",
+            profile.id,
+        )
+        db.rollback()
+        db.refresh(profile)
+        newly_unlocked_raw = []
+
+    salary = db.query(FinanceSalary).filter(FinanceSalary.game_profile_id == profile.id).first()
+    monthly_income = salary.monthly_amount if salary else 0
+
+    liabilities_orm = (
+        db.query(FinanceLiability)
+        .filter(
+            FinanceLiability.game_profile_id == profile.id,
+            FinanceLiability.is_active == 1,
+        )
+        .all()
+    )
+    from .liability_present import liability_to_response
+
+    liabilities = [liability_to_response(l) for l in liabilities_orm]
+
+    assets_orm = (
+        db.query(FinanceAsset)
+        .filter(
+            FinanceAsset.game_profile_id == profile.id,
+            FinanceAsset.is_active == 1,
+        )
+        .all()
+    )
+    assets = [
+        AssetResponse(
+            id=a.id,
+            title=a.title,
+            kind=getattr(a, "kind", "generic") or "generic",
+            asset_value=a.asset_value,
+            monthly_maintenance_cost=a.monthly_maintenance_cost,
+            monthly_income=float(getattr(a, "monthly_income", 0) or 0),
+            created_at=a.created_at,
+            acquisition_mode=getattr(a, "acquisition_mode", None) or "cash",
+        )
+        for a in assets_orm
+    ]
+
+    # Денежные метрики — одна формула `fincore.metrics` для overview, целей победы и аналитики (SPL-207b, ADR-009 §4).
+    # Проекция вкладов (1/12 годовой ставки): депозит капитализирует, облигация платит купон — в UI это «доход за период».
+    metrics = household_metrics(db, profile)
+    total_liability_payment = metrics.liability_payments
+    total_asset_maintenance = metrics.asset_maintenance
+    total_monthly_obligations = metrics.structural_obligations
+    burn_snapshot = compute_monthly_burn(db, profile)
+    monthly_burn_total = float(metrics.lifestyle_burn)
+    monthly_lifestyle_expense = monthly_burn_total
+    burn_breakdown = MonthlyBurnBreakdown(**burn_breakdown_for_api(burn_snapshot))
+    total_income = metrics.income_with_invest_projection
+    total_monthly_outflow = metrics.total_monthly_outflow
+    expense_to_income_ratio = round(metrics.expense_to_income_ratio, 4)
+    net_cashflow = metrics.net_structural_cashflow_with_invest
+    liabilities_ratio = metrics.liabilities_to_income_percent
+    total_overdue_amount = metrics.total_overdue
+    overdue_liabilities_count = sum(
+        1 for l in liabilities_orm if float(getattr(l, "overdue_amount", 0) or 0) > 0
+    )
+
+    avg_cf_6, avg_cf_n = _avg_net_cashflow_last_closed_intervals(db, profile.id, max_intervals=6)
+
+    template_key = getattr(profile, "starter_template_key", None) or DEFAULT_TEMPLATE_KEY
+    template_row = (
+        db.query(GameStarterTemplate)
+        .filter(GameStarterTemplate.template_key == template_key)
+        .first()
+    )
+    blueprint: dict = {}
+    if template_row:
+        template_key = template_row.template_key
+        raw_victory = template_row.victory_config_json
+        try:
+            blueprint = json.loads(template_row.blueprint_json or "{}")
+        except Exception:
+            blueprint = {}
+    else:
+        raw_victory = None
+
+    victory_cfg = parse_victory_config(raw_victory, template_key=template_key)
+    victory_cfg = override_config_goals_from_db(db, template_key=template_key, victory_cfg=victory_cfg)
+    victory_snap = build_victory_evaluation_input(db, profile, metrics)
+    template_cap, mechanics_unlock, template_key = resolve_template_and_unlock(db, profile)
+    victory_result = evaluate_victory(
+        victory_cfg,
+        victory_snap,
+        template_key=template_key,
+        template_cap=template_cap,
+        mechanics_unlock=mechanics_unlock,
+    )
+
+    # Норма подушки: ×3 всех текущих расходов за период (обязательства + burn).
+    pressure_monthly = total_monthly_outflow
+    safety_baseline_target = 0.0
+    if pressure_monthly > 0:
+        safety_baseline_target = round(
+            pressure_monthly * float(MVP_SAFETY_FUND_OBLIGATIONS_MULTIPLIER),
+            2,
+        )
+
+    mech = resolve_profile_mechanics(db, profile)
+    mechanics_permissions = GameMechanicsPermissions(
+        capital_invest=mech["capital_invest"],
+        capital_insurance=mech["capital_insurance"],
+        capital_property=mech["capital_property"],
+        capital_liabilities=mech["capital_liabilities"],
+        capital_car=mech["capital_car"],
+        capital_mortgage=mech["capital_mortgage"],
+    )
+    eff_cap = capital_flags_for_api(victory_result.mechanics_effective)
+    mechanics_effective_permissions = GameMechanicsPermissions(
+        capital_invest=eff_cap["capital_invest"],
+        capital_insurance=eff_cap["capital_insurance"],
+        capital_property=eff_cap["capital_property"],
+        capital_liabilities=eff_cap["capital_liabilities"],
+        capital_car=eff_cap["capital_car"],
+        capital_mortgage=eff_cap["capital_mortgage"],
+    )
+
+    victory_overview = VictoryOverview(
+        schema_version=victory_result.schema_version,
+        template_key=victory_result.template_key,
+        min_period_index=victory_result.min_period_index,
+        period_gate_open=victory_result.period_gate_open,
+        progression_mode=victory_result.progression_mode,
+        current_goal_key=victory_result.current_goal_key,
+        goals_met=victory_result.goals_met,
+        goals_required=victory_result.goals_required,
+        goals_enabled=victory_result.goals_enabled,
+        win_reached=victory_result.win_reached,
+        goals=[
+            VictoryGoalOverview(
+                key=g.key,
+                type=g.type,
+                title=g.title,
+                required=g.required,
+                enabled=g.enabled,
+                met=g.met,
+                progress=g.progress,
+                detail=g.detail,
+                available=g.available,
+                blocked_reason=g.blocked_reason,
+            )
+            for g in victory_result.goals
+        ],
+    )
+
+    # ---- Character needs (Z-NEEDS) ----
+    needs_cfg = None
+    if str(getattr(profile, "save_kind", "game") or "game") == "game":
+        needs_cfg = parse_needs_config(blueprint)
+
+    needs = None
+    needs_meta = None
+    treat_self = None
+    if needs_cfg:
+        nv = needs_values_from_profile(profile)
+        needs = NeedsOverview(**nv)
+        needs_meta = NeedsMetaOverview(
+            character_label=needs_cfg.get("character_label"),
+            consequence_profile=str(needs_cfg.get("consequence_profile") or "standard"),
+            thresholds=dict(needs_cfg.get("thresholds") or {}),
+            player_support=dict(needs_cfg.get("player_support") or {}),
+            model=str(needs_cfg.get("model") or "linear"),
+        )
+        try:
+            # Savepoint: ошибка SQL в расчёте уровня не должна ломать транзакцию overview.
+            with db.begin_nested():
+                sp_snap = build_set_point_snapshot(
+                    db, profile, needs_cfg, blueprint, salary=float(monthly_income or 0), needs_now=nv
+                )
+            level = NeedsOverview(**sp_snap.level)
+            wear = NeedsOverview(**sp_snap.wear)
+            sources = [
+                NeedsLevelSourceOverview(
+                    source=s.source, kind=s.kind, title=s.title, axis=s.axis, delta=s.delta
+                )
+                for s in sp_snap.sources
+            ]
+            needs_meta.level, needs_meta.wear, needs_meta.level_sources = level, wear, sources
+            needs_meta.periods_to_zero_if_idle = dict(sp_snap.periods_to_zero_if_idle)
+        except Exception:
+            logger.warning("needs level snapshot failed profile_id=%s", profile.id, exc_info=True)
+        ts_av = treat_self_availability(
+            needs_cfg,
+            period_index=int(profile.period_index or 0),
+            last_period_index=int(getattr(profile, "treat_self_last_period_index", 0) or 0),
+        )
+        options_norm = normalize_treat_self_options(
+            needs_cfg,
+            monthly_salary=float(monthly_income or 0),
+        )
+        treat_self = TreatSelfOverview(
+            available=bool(ts_av.get("available")),
+            cooldown_periods_remaining=int(ts_av.get("cooldown_periods_remaining") or 0),
+            options=[
+                TreatSelfOptionOverview(
+                    id=str(o.get("id") or ""),
+                    title=str(o.get("title") or ""),
+                    subtitle=o.get("subtitle"),
+                    cost=float(o.get("cost") or 0),
+                    needs_delta=NeedsOverview(
+                        **(
+                            effective_needs_delta(nv, o.get("needs_delta") or {})
+                            if needs_cfg.get("model") == MODEL_SET_POINT
+                            else (o.get("needs_delta") or {})
+                        )
+                    ),
+                )
+                for o in options_norm
+                if isinstance(o, dict)
+            ],
+        )
+
+    # Превью — необязательная часть overview: битые данные снимка не должны ронять весь экран.
+    period_close_preview = None
+    try:
+        with db.begin_nested():
+            close_preview_raw = estimate_period_close_preview(db, profile)
+        period_close_preview = PeriodClosePreview(
+            estimated_cash_after_close=float(close_preview_raw.get("estimated_cash_after_close") or 0),
+            estimated_charges_total=float(close_preview_raw.get("estimated_charges_total") or 0),
+            negative_periods_count=int(close_preview_raw.get("negative_periods_count") or 0),
+            would_be_negative_after_close=bool(close_preview_raw.get("would_be_negative_after_close")),
+            defeat_if_close_negative=bool(close_preview_raw.get("defeat_if_close_negative")),
+            needs_distressed_penalty_estimate=0,
+        )
+    except Exception:
+        logger.exception("Period close preview failed profile_id=%s", profile.id)
+        db.refresh(profile)
+
+    user = db.query(User).filter(User.id == profile.user_id).first()
+    guidance = None
+    try:
+        from ..guidance.engine import build_guidance_overview
+
+        guidance_data = build_guidance_overview(db, user, profile)
+        guidance = GuidanceOverview(**guidance_data)
+    except Exception:
+        logger.warning("guidance overview failed profile_id=%s", profile.id, exc_info=True)
+
+    return FinanceOverview(
+        salary=SalaryProfileResponse(
+            monthly_amount=salary.monthly_amount if salary else 0,
+            monthly_receipts_count=salary.monthly_receipts_count if salary else 1,
+        ),
+        liabilities=liabilities,
+        assets=assets,
+        total_monthly_income=round(total_income, 2),
+        total_monthly_liabilities_payment=round(total_liability_payment, 2),
+        total_monthly_assets_maintenance=round(total_asset_maintenance, 2),
+        monthly_lifestyle_expense=round(max(0.0, monthly_lifestyle_expense), 2),
+        monthly_burn_total=round(max(0.0, monthly_burn_total), 2),
+        monthly_burn_breakdown=burn_breakdown,
+        total_monthly_outflow=round(total_monthly_outflow, 2),
+        expense_to_income_ratio=expense_to_income_ratio,
+        net_monthly_cashflow=round(net_cashflow, 2),
+        liabilities_to_income_ratio=round(liabilities_ratio, 2),
+        period_index=profile.period_index,
+        cash_balance=round(profile.cash_balance, 2),
+        safety_fund_balance=round(profile.safety_fund_balance, 2),
+        total_monthly_obligations=round(total_monthly_obligations, 2),
+        total_overdue_amount=round(total_overdue_amount, 2),
+        overdue_liabilities_count=overdue_liabilities_count,
+        win_target_safety_fund=round(victory_result.win_target_safety_fund, 2),
+        win_progress_safety_fund=round(victory_result.win_progress_safety_fund, 4),
+        safety_fund_baseline_target=safety_baseline_target,
+        win_ready=bool(victory_result.win_ready),
+        win_reached=bool(victory_result.win_reached),
+        clean_period_streak=int(getattr(profile, "clean_period_streak", 0) or 0),
+        avg_net_cashflow_6p=avg_cf_6,
+        avg_net_cashflow_6p_n=avg_cf_n,
+        victory=victory_overview,
+        newly_unlocked=[
+            AchievementUnlockEvent(**item)
+            for item in newly_unlocked_raw
+            if isinstance(item, dict)
+        ],
+        needs=needs,
+        needs_meta=needs_meta,
+        treat_self=treat_self,
+        needs_zero_periods_streak=int(getattr(profile, "needs_zero_periods_streak", 0) or 0),
+        save_kind=str(getattr(profile, "save_kind", "game") or "game"),
+        onboarding_state=str(getattr(profile, "onboarding_state", "brief_done") or "brief_done"),
+        onboarding_step=str(getattr(profile, "onboarding_step", "farewell") or "farewell"),
+        mechanics=mechanics_permissions,
+        mechanics_effective=mechanics_effective_permissions,
+        mechanics_next_unlock_period=next_unlock_period(
+            mechanics_unlock,
+            {g.key for g in victory_result.goals if g.enabled and g.met},
+            int(profile.period_index or 1),
+        ),
+        negative_periods_count=int(getattr(profile, "negative_periods_count", 0) or 0),
+        period_close_preview=period_close_preview,
+        profile_is_active=int(getattr(profile, "is_active", 1) or 0) == 1,
+        guidance=guidance,
+    )

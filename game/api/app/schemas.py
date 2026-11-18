@@ -1,0 +1,742 @@
+from datetime import datetime
+from typing import Optional, List
+from typing import Literal
+from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
+
+
+# Auth
+class UserRegister(BaseModel):
+    # Устарело: username выводится на сервере из email; поле оставлено для совместимости клиентов.
+    username: Optional[str] = Field(default=None, min_length=2, max_length=50)
+    password: str = Field(min_length=6, max_length=128)
+    password_confirm: str = Field(min_length=6, max_length=128)
+    email: str = Field(min_length=5, max_length=100)
+    full_name: Optional[str] = None
+    telegram_id: Optional[int] = None
+
+    @field_validator("email")
+    @classmethod
+    def normalize_email(cls, value: str) -> str:
+        normalized = (value or "").strip().lower()
+        if "@" not in normalized or "." not in normalized.split("@")[-1]:
+            raise ValueError("Valid email is required")
+        return normalized
+
+    @model_validator(mode="after")
+    def passwords_must_match(self) -> "UserRegister":
+        if self.password != self.password_confirm:
+            raise ValueError("Passwords do not match")
+        return self
+
+
+class UserLogin(BaseModel):
+    username: str
+    password: str
+
+
+class Token(BaseModel):
+    access_token: str
+    token_type: str
+    user_id: int
+    username: str
+    is_guest: bool = False
+
+
+# User
+class UserResponse(BaseModel):
+    id: int
+    username: str
+    full_name: Optional[str]
+    email: Optional[str]
+    game_profiles_count: int
+    created_at: datetime
+    is_guest: bool = False
+
+
+class SalaryProfileUpdate(BaseModel):
+    monthly_amount: float
+    monthly_receipts_count: int
+
+
+class SalaryProfileResponse(BaseModel):
+    monthly_amount: float
+    monthly_receipts_count: int
+
+
+class LiabilityCreate(BaseModel):
+    title: Optional[str] = "Обязательство"
+    total_debt: float
+    annual_rate_percent: float
+    monthly_payment: Optional[float] = None  # не используется: платёж считается как тело × %/100 / 12
+
+
+class LiabilityResponse(BaseModel):
+    id: int
+    title: str
+    total_debt: float
+    annual_rate_percent: float
+    monthly_payment: float
+    overdue_amount: float = 0
+    overdue_periods: int = 0
+    created_at: datetime
+    liability_kind: Optional[str] = None
+    secured_asset_id: Optional[int] = None
+    term_periods: Optional[int] = None
+    periods_paid: int = 0
+    original_principal: Optional[float] = None
+    payment_mode: Optional[str] = None
+    remaining_periods: Optional[int] = None
+
+
+class AssetCreate(BaseModel):
+    title: Optional[str] = "Актив"
+    kind: Optional[str] = "generic"
+    asset_value: float
+    monthly_maintenance_cost: float
+    monthly_income: float = 0
+
+
+class AssetResponse(BaseModel):
+    id: int
+    title: str
+    kind: str
+    asset_value: float
+    monthly_maintenance_cost: float
+    monthly_income: float
+    created_at: datetime
+    acquisition_mode: Optional[str] = "cash"
+
+
+class SecuredAcquisitionResponse(BaseModel):
+    asset: AssetResponse
+    liability: LiabilityResponse
+
+
+class VictoryGoalOverview(BaseModel):
+    key: str
+    type: str
+    title: str
+    required: bool = False
+    enabled: bool = True
+    met: bool = False
+    progress: float = 0.0
+    detail: dict = Field(default_factory=dict)
+    available: bool = True
+    blocked_reason: Optional[str] = None
+
+
+class ExpenseCategoryBurnItem(BaseModel):
+    category_key: str
+    title: str
+    amount: float
+    tier: str = "must"
+
+
+class ExpenseLineOverviewItem(BaseModel):
+    id: int
+    category_key: str
+    category_title: str
+    title: str
+    amount: float
+    tier: str = "must"
+    source_kind: str = "template"
+    expires_period_index: Optional[int] = None
+
+
+class MonthlyBurnBreakdown(BaseModel):
+    baseline: float = 0
+    legacy_delta: float = 0
+    lines: List[ExpenseLineOverviewItem] = Field(default_factory=list)
+    by_category: List[ExpenseCategoryBurnItem] = Field(default_factory=list)
+
+
+class ExpenseCategoryPublic(BaseModel):
+    category_key: str
+    title: str
+    default_tier: str = "must"
+    sort_order: int = 100
+
+
+class ExpenseLineCreate(BaseModel):
+    category_key: str
+    amount_monthly: float = Field(ge=0)
+    title: Optional[str] = None
+
+
+class ExpenseLineUpdate(BaseModel):
+    category_key: Optional[str] = None
+    amount_monthly: Optional[float] = Field(default=None, ge=0)
+    title: Optional[str] = None
+
+
+class ExpenseLineResponse(BaseModel):
+    id: int
+    category_key: str
+    category_title: str
+    title: str
+    amount_monthly: float
+    tier: str = "must"
+    source_kind: str = "template"
+    expires_period_index: Optional[int] = None
+
+
+class ExpensesSnapshotResponse(BaseModel):
+    period_index: int
+    total: float
+    monthly_lifestyle_expense: float
+    breakdown: MonthlyBurnBreakdown
+    total_monthly_outflow: float = 0
+    expense_to_income_ratio: float = 0
+
+
+class VictoryOverview(BaseModel):
+    schema_version: int = 1
+    template_key: str = ""
+    min_period_index: int = 1
+    period_gate_open: bool = True
+    progression_mode: str = "chain"
+    current_goal_key: Optional[str] = None
+    goals_met: int = 0
+    goals_required: int = 0
+    goals_enabled: int = 0
+    win_reached: bool = False
+    goals: List[VictoryGoalOverview] = Field(default_factory=list)
+
+
+class GameMechanicsPermissions(BaseModel):
+    """Разрешения разделов «Управление капиталом» из blueprint шаблона."""
+
+    capital_invest: bool = True
+    capital_insurance: bool = True
+    capital_property: bool = True
+    capital_liabilities: bool = True
+    capital_car: bool = True
+    capital_mortgage: bool = True
+
+
+class NeedsOverview(BaseModel):
+    comfort: float = 0
+    status: float = 0
+    social: float = 0
+    health: float = 0
+
+
+class NeedsLevelSourceOverview(BaseModel):
+    source: str  # budget | asset | asset_lost | stress | cap
+    kind: str
+    title: Optional[str] = None
+    axis: str
+    delta: float
+
+
+class NeedsMetaOverview(BaseModel):
+    character_label: Optional[str] = None
+    consequence_profile: str = "standard"
+    thresholds: dict = Field(default_factory=dict)
+    player_support: dict = Field(default_factory=dict)
+    # SPEC_needs-set-point: уровень жизни и износ (превью для любой модели до перевода шаблона)
+    model: str = "linear"
+    level: Optional[NeedsOverview] = None
+    wear: Optional[NeedsOverview] = None
+    level_sources: List[NeedsLevelSourceOverview] = Field(default_factory=list)
+    periods_to_zero_if_idle: dict = Field(default_factory=dict)
+
+
+class TreatSelfOptionOverview(BaseModel):
+    id: str
+    title: str
+    subtitle: Optional[str] = None
+    cost: float = 0
+    needs_delta: NeedsOverview = Field(default_factory=NeedsOverview)
+
+
+class TreatSelfOverview(BaseModel):
+    available: bool = False
+    cooldown_periods_remaining: int = 0
+    options: List[TreatSelfOptionOverview] = Field(default_factory=list)
+
+
+class PeriodClosePreview(BaseModel):
+    """Оценка итога месяца до нажатия «Завершить ход»."""
+
+    estimated_cash_after_close: float = 0
+    estimated_charges_total: float = 0
+    negative_periods_count: int = 0
+    would_be_negative_after_close: bool = False
+    defeat_if_close_negative: bool = False
+    needs_distressed_penalty_estimate: float = 0
+
+
+class FinanceOverview(BaseModel):
+    salary: SalaryProfileResponse
+    liabilities: List[LiabilityResponse]
+    assets: List[AssetResponse]
+    total_monthly_income: float
+    total_monthly_liabilities_payment: float
+    total_monthly_assets_maintenance: float
+    # Расходы на жизнеобеспечение (burn); списываются в конце периода.
+    monthly_lifestyle_expense: float = 0
+    monthly_burn_total: float = 0
+    monthly_burn_breakdown: Optional[MonthlyBurnBreakdown] = None
+    total_monthly_outflow: float = 0
+    expense_to_income_ratio: float = 0
+    net_monthly_cashflow: float
+    liabilities_to_income_ratio: float
+    period_index: int
+    cash_balance: float
+    safety_fund_balance: float
+    total_monthly_obligations: float
+    total_overdue_amount: float = 0
+    overdue_liabilities_count: int = 0
+    win_target_safety_fund: float = 0
+    win_progress_safety_fund: float = 0
+    # Норма подушки для UI (×3 обязательств сейчас), не привязана к victory goals
+    safety_fund_baseline_target: float = 0
+    win_ready: bool = False
+    win_reached: bool = False
+    clean_period_streak: int = 0
+    # Среднее изменение (наличные + подушка) между последовательными закрытиями;
+    # до 6 последних интервалов по PeriodEconomyClosing (цель avg_liquid_delta_6p).
+    avg_net_cashflow_6p: float = 0.0
+    avg_net_cashflow_6p_n: int = 0
+    victory: Optional[VictoryOverview] = None
+    newly_unlocked: List["AchievementUnlockEvent"] = Field(default_factory=list)
+    # Character needs (Z-NEEDS)
+    needs: Optional[NeedsOverview] = None
+    needs_meta: Optional[NeedsMetaOverview] = None
+    treat_self: Optional[TreatSelfOverview] = None
+    needs_zero_periods_streak: int = 0
+    save_kind: str = "game"
+    onboarding_state: str = "brief_done"
+    onboarding_step: str = "farewell"
+    mechanics: GameMechanicsPermissions = Field(default_factory=GameMechanicsPermissions)
+    mechanics_effective: GameMechanicsPermissions = Field(default_factory=GameMechanicsPermissions)
+    # Ход следующего открытия раздела, если осталось только дождаться его; иначе null.
+    mechanics_next_unlock_period: Optional[int] = None
+    negative_periods_count: int = 0
+    period_close_preview: Optional[PeriodClosePreview] = None
+    profile_is_active: bool = True
+    guidance: Optional["GuidanceOverview"] = None
+
+
+class AnalyticsTimeseriesPoint(BaseModel):
+    """Точка истории по закрытому периоду или текущему снимку."""
+
+    period_index: int
+    cash_balance: float
+    safety_fund_balance: float
+    total_overdue_amount: float
+    monthly_burn_total: float = 0
+    period_income_rate: float = 0
+    period_expense_total: float = 0
+    is_projection: bool = False
+
+
+class PeriodCloseBreakdownItem(BaseModel):
+    type: str
+    title: str
+    amount: float
+    category_key: Optional[str] = None
+    paid: Optional[float] = None
+    unpaid: Optional[float] = None
+    due: Optional[float] = None
+
+
+class PeriodCloseHighlight(BaseModel):
+    key: str
+    label: str
+    amount: float = 0
+    note: Optional[str] = None
+
+
+class PeriodCloseNeeds(BaseModel):
+    """Потребности в итоге закрытия периода (SPEC_needs-set-point, NV-404)."""
+
+    model: str = "linear"
+    before: NeedsOverview = Field(default_factory=NeedsOverview)
+    after: NeedsOverview = Field(default_factory=NeedsOverview)
+    level: Optional[NeedsOverview] = None
+    wear: Optional[NeedsOverview] = None
+    zero_streak: int = 0
+
+
+class PeriodCloseSummary(BaseModel):
+    closed_period_index: int = 0
+    cash_delta: float = 0
+    income_delta: float = 0
+    expense_delta: float = 0
+    safety_fund_delta: float = 0
+    invest_capital_delta: float = 0
+    debt_delta: float = 0
+    total_spent: float = 0
+    new_balance: float = 0
+    overdue_added: float = 0
+    breakdown: List[PeriodCloseBreakdownItem] = Field(default_factory=list)
+    period_highlights: List[PeriodCloseHighlight] = Field(default_factory=list)
+    achievement_unlocks: List["AchievementUnlockEvent"] = Field(default_factory=list)
+    events_spawn_failed: bool = False
+    needs: Optional[PeriodCloseNeeds] = None
+
+
+class AchievementTierStatus(BaseModel):
+    tier_key: str
+    tier_index: int
+    title: str
+    description: str = ""
+    unlocked: bool = False
+
+
+class AchievementChainStatus(BaseModel):
+    chain_key: str
+    category: str
+    title: str
+    description: str = ""
+    max_tier: int
+    current_tier: int = 0
+    tiers: List[AchievementTierStatus] = Field(default_factory=list)
+
+
+class AchievementUnlockEvent(BaseModel):
+    chain_key: str
+    tier_key: str
+    tier_index: int
+    title: str
+
+
+class AchievementsOverviewResponse(BaseModel):
+    period_index: int
+    chains: List[AchievementChainStatus] = Field(default_factory=list)
+    newly_unlocked: List[AchievementUnlockEvent] = Field(default_factory=list)
+
+
+class FinanceAnalyticsTimeseriesResponse(BaseModel):
+    """Ряд для графиков («фаза B» аналитики); закрытия пишутся при завершении периода."""
+
+    current_period_index: int
+    clean_period_streak: int
+    points: List["AnalyticsTimeseriesPoint"]
+
+
+class GameProfileCreate(BaseModel):
+    name: str
+    save_kind: str = "game"
+
+
+class GameProfileResponse(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
+    id: int
+    name: str
+    save_kind: str
+    starter_template_key: Optional[str] = None
+    cash_balance: float = 0
+    is_active: int
+    is_archived: int
+    league: str
+    streak: int
+    period_index: int
+    base_params_locked: int
+    onboarding_state: str
+    onboarding_step: str = "period_timer"
+    run_outcome: Optional[str] = None
+
+
+class RunFinaleMetric(BaseModel):
+    glyph: str  # up | down | coin | term | goal
+    headline: str
+    name: str
+    value: str
+
+
+class RunFinaleSection(BaseModel):
+    title: str
+    metrics: List[RunFinaleMetric] = Field(default_factory=list)
+    divider_before: bool = False
+
+
+class RunFinaleFact(BaseModel):
+    title: str
+    text: str
+    tips: List[str] = Field(default_factory=list)
+
+
+class RunFinaleDecision(BaseModel):
+    """«Цена решений» (SPEC_run-finale-decision-cost): факт партии в рублях."""
+
+    kind: str  # debt_overpaid | salary_missed | event_cost | investment_gain
+    direction: str  # cost | gain
+    title: str
+    detail: str
+    amount: float  # всегда > 0, смысл задаёт direction
+    period_index: Optional[int] = None  # None — сумма за всю партию
+    is_estimate: bool = False
+
+class RunFinaleRecapDecision(BaseModel):
+    period_index: int
+    event_title: str
+    choice_title: str
+    cash_delta: float
+
+
+class RunFinaleRecap(BaseModel):
+    decisions_label: str
+    decisions: List[RunFinaleRecapDecision] = Field(default_factory=list)
+
+
+class RunFinalePayload(BaseModel):
+    outcome: str  # victory | defeat
+    period_index: int
+    template_key: Optional[str] = None
+    template_title: Optional[str] = None
+    persona_slug: Optional[str] = None
+    scenario_title: str
+    scenario_line: str
+    gazeta_lead: Optional[str] = None
+    coach_title: str
+    coach_text: str
+    sections: List[RunFinaleSection] = Field(default_factory=list)
+    fact: Optional[RunFinaleFact] = None
+    defeat_reason: Optional[str] = None
+    can_dismiss: bool = False
+    # ★ BG-2 финал: три показателя (завершённые ходы, на счёте, подушка в ходах расходов)
+    turns_completed: int = 0
+    cash_balance: Optional[float] = None
+    cushion_turns: Optional[float] = None
+    monthly_burn: Optional[float] = None  # база подписи «N мес. расходов», не порог отбора в UI
+    decisions: List[RunFinaleDecision] = Field(default_factory=list)
+
+    # Разбор партии, вариант Б (SPEC_run-finale-recap); null — экран без ленты.
+    recap: Optional[RunFinaleRecap] = None
+
+
+class RunFinaleDismissResponse(BaseModel):
+    status: str = "success"
+    victory_finale_shown_at: Optional[datetime] = None
+
+
+class RunFeedbackRequest(BaseModel):
+    text: str
+    outcome: Optional[str] = None
+
+
+class RunFeedbackResponse(BaseModel):
+    status: str = "success"
+    id: int
+
+
+class PlaytestSurveyAnswers(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    salary: Literal["yes", "partly", "no"]
+    safety: Literal["yes", "partly", "no"]
+    close: Literal["yes", "partly", "no"]
+    blocked: bool = Field(strict=True)
+    continue_playing: Literal["yes", "unsure", "no"]
+
+
+class PlaytestSurveyIdentity(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    profile_id: int = Field(gt=0)
+    survey_key: Literal["first_turns_v1", "first_turns_v2"] = "first_turns_v1"
+
+
+class PlaytestSurveyAnswersV2(PlaytestSurveyAnswers):
+    safety_transfer: Literal["yes", "partly", "no"]
+    expense_buffer: Literal["yes", "partly", "no"]
+    close_result: Literal["yes", "partly", "no"]
+    difficulty: Literal["easy", "normal", "hard"]
+
+
+class PlaytestSurveySubmit(PlaytestSurveyIdentity):
+    answers: PlaytestSurveyAnswers | PlaytestSurveyAnswersV2
+    comment: str = Field(default="", max_length=1000)
+
+    @field_validator("comment", mode="before")
+    @classmethod
+    def trim_survey_comment(cls, value):
+        return value.strip() if isinstance(value, str) else value
+
+    @model_validator(mode="after")
+    def match_survey_version(self):
+        is_v2 = isinstance(self.answers, PlaytestSurveyAnswersV2)
+        if is_v2 != (self.survey_key == "first_turns_v2"):
+            raise ValueError("answers must match survey_key")
+        return self
+
+
+class PlaytestSurveyState(BaseModel):
+    survey_key: str = "first_turns_v2"
+    profile_id: int
+    state: Literal["pending", "dismissed", "submitted"]
+    closed_turns: int
+    should_offer: bool
+    can_submit: bool
+    response_id: Optional[int] = None
+
+
+class OnboardingPatchRequest(BaseModel):
+    onboarding_state: Optional[str] = None
+    onboarding_step: Optional[str] = None
+    """1 = пропуск шага; 2 = пропуск всего онбординга (ops-лог)."""
+    onboarding_skip_count: Optional[int] = None
+
+
+class OnboardingPatchResponse(BaseModel):
+    onboarding_state: str
+    onboarding_step: str
+
+
+class GuidanceOverview(BaseModel):
+    onboarding_version: int = 1
+    show_curriculum: bool = False
+    beat_id: Optional[str] = None
+    title: Optional[str] = None
+    body: Optional[str] = None
+    module_step: int = 0
+    module_step_count: int = 0
+    view_index: int = 0
+    last_completed_index: int = -1
+    completed_beats: List[str] = Field(default_factory=list)
+    beat_completed: bool = False
+    dismiss_skip_count: int = 0
+    show_debrief: bool = False
+    nudge_id: Optional[str] = None
+    nudge_title: Optional[str] = None
+    nudge_body: Optional[str] = None
+    is_trigger: bool = False
+
+
+class GuidancePatchRequest(BaseModel):
+    action: str
+    beat_id: Optional[str] = None
+    view_index: Optional[int] = None
+    trigger_id: Optional[str] = None
+
+
+class GuidancePatchResponse(BaseModel):
+    guidance: GuidanceOverview
+
+
+class TimeStatusResponse(BaseModel):
+    """Ответ «Завершить ход» и блок `time` в bootstrap. Real-time таймера нет (TB1)."""
+
+    period_index: int
+    period_close: Optional[PeriodCloseSummary] = None
+    game_over: bool = False
+    defeat_reason: Optional[str] = None
+
+
+class GameStarterTemplatePublic(BaseModel):
+    template_key: str
+    title: str
+    difficulty_rank: int
+    description: Optional[str] = None
+    highlights: List[str] = Field(default_factory=list)
+    scenario_icon: Optional[str] = None
+    compare_note: Optional[str] = None
+
+
+class GameStartRequest(BaseModel):
+    """Тело POST /api/game/start (новый и legacy-формат через model_validator)."""
+
+    model_config = ConfigDict(extra="ignore")
+
+    profile_name: str
+    save_kind: str = "game"
+    template_key: Optional[str] = None
+    cash_balance: float = 0
+    monthly_receipts_count: int = 1
+    monthly_salary: float = 0
+    monthly_amount: Optional[float] = None
+    assets: List[AssetCreate] = Field(default_factory=list)
+    liabilities: List[LiabilityCreate] = Field(default_factory=list)
+
+    @model_validator(mode="after")
+    def normalize_game_start(self):
+        sk = (self.save_kind or "game").strip().lower()
+        # Removed Plan is recognized here so the service returns the documented 400.
+        # Unknown values remain schema errors (422).
+        if sk not in ("game", "plan"):
+            raise ValueError("save_kind must be 'game'")
+        self.save_kind = sk
+        if self.monthly_salary in (0, 0.0) and self.monthly_amount is not None:
+            self.monthly_salary = float(self.monthly_amount)
+        return self
+
+
+class GameStartResponse(BaseModel):
+    profile_id: int
+    message: str
+
+
+# ==================== ДЕЙСТВИЯ ПЕРИОДА ====================
+
+class SafetyFundContribution(BaseModel):
+    amount: float
+
+
+class TreatSelfRequest(BaseModel):
+    option_id: str
+
+
+class TreatSelfResponse(BaseModel):
+    status: str = "success"
+    option_id: str
+    cost: float = 0
+    needs_after: Optional[NeedsOverview] = None
+    message: str = ""
+
+
+class NeedsGuideSection(BaseModel):
+    heading: str
+    items: List[str] = Field(default_factory=list)
+
+
+class NeedsGuideResponse(BaseModel):
+    title: str = "Потребности"
+    sections: List[NeedsGuideSection] = Field(default_factory=list)
+    maintenance: List[str] = Field(default_factory=list)
+    critical: List[str] = Field(default_factory=list)
+
+
+class PeriodStatusResponse(BaseModel):
+    period_index: int
+    salary_claimed: bool
+    salary_amount: float
+    safety_fund_total: float
+    safety_fund_contribution: float
+    can_claim_salary: bool
+    can_contribute_to_fund: bool
+    required_actions_completed: bool
+    total_expenses: float
+    net_income_available: float
+
+
+class PendingEventsPayload(BaseModel):
+    events: List[dict] = Field(default_factory=list)
+    event: Optional[dict] = None
+
+
+class GameBootstrapResponse(BaseModel):
+    overview: FinanceOverview
+    time: TimeStatusResponse
+    period: PeriodStatusResponse
+    events: PendingEventsPayload
+    game_session_status: str = "active"  # active | defeated
+    defeat_reason: Optional[str] = None
+    defeat_period_index: Optional[int] = None
+    run_finale: Optional[RunFinalePayload] = None
+    playtest_survey: Optional[PlaytestSurveyState] = None
+
+
+class PeriodSummaryResponse(BaseModel):
+    period_index: int
+    salary_claimed: bool
+    salary_amount: float
+    safety_fund_contribution: float
+    safety_fund_total: float
+    net_savings: float
+    required_actions_completed: bool
+
+
+# GuidanceOverview is declared after FinanceOverview; resolve it before use.
+FinanceOverview.model_rebuild()

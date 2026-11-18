@@ -1,0 +1,123 @@
+{
+  "schema_version": 1,
+  "theme": "dashboard",
+  "page_parity": {
+    "name": "Главная · Финансы как игра",
+    "prod_entry": "web/src/components/DashboardPremium.jsx",
+    "canonical_page_round": {
+      "path": "design-lab/dashboard/parity-generated-page-round/",
+      "status": "approved",
+      "notes": "Generated technical reference. The approved visual reference is design-lab/finance-game-round/compact.html."
+    },
+    "concept_round": {
+      "path": "design-lab/board-game/hybrid-round/",
+      "status": "approved",
+      "approved_at": "2026-10-14"
+    }
+  },
+  "blocks": [
+    {
+      "id": "hero",
+      "kind": "page-block",
+      "prod_component": "MqxDashboardHero",
+      "status": "approved",
+      "canonical_rounds": [
+        {
+          "path": "design-lab/dashboard/bg1-page-round/",
+          "status": "approved"
+        },
+        {
+          "path": "design-lab/board-game/hybrid-round/",
+          "status": "approved"
+        }
+      ],
+      "invariants": [
+        "Turn card: logo, turn number, balance and persona, gold finish button, close preview and events."
+      ]
+    },
+    {
+      "id": "needs",
+      "kind": "page-block",
+      "prod_component": "MqxNeedsDash",
+      "status": "approved",
+      "canonical_rounds": [
+        {
+          "path": "design-lab/dashboard/bg1-page-round/",
+          "status": "approved"
+        },
+        {
+          "path": "design-lab/board-game/hybrid-round/",
+          "status": "approved"
+        }
+      ],
+      "invariants": [
+        "Four labeled 10px bars in one row (finance-game-round/compact.html); help and treat-self actions remain available.",
+        "Display bands: red below 60%, orange from 60%, green from 80%. The defeat warning follows the game rules."
+      ]
+    },
+    {
+      "id": "finance",
+      "kind": "page-block",
+      "prod_component": "MqxFinancePeriodBlock",
+      "status": "approved",
+      "canonical_rounds": [
+        {
+          "path": "design-lab/dashboard/bg1-page-round/",
+          "status": "approved"
+        },
+        {
+          "path": "design-lab/board-game/hybrid-round/",
+          "status": "approved"
+        }
+      ],
+      "invariants": [
+        "One row with income, outflow and reserve. Income and outflow link to Capital flows."
+      ]
+    },
+    {
+      "id": "actions",
+      "kind": "page-block",
+      "prod_component": "MqxPeriodActions",
+      "status": "approved",
+      "canonical_rounds": [
+        {
+          "path": "design-lab/dashboard/bg1-page-round/",
+          "status": "approved"
+        },
+        {
+          "path": "design-lab/board-game/hybrid-round/",
+          "status": "approved"
+        }
+      ],
+      "invariants": [
+        "2 × 2 grid: salary, invest, contribute, withdraw. Claimable salary shares the gold background of Finish turn."
+      ]
+    },
+    {
+      "id": "goal",
+      "kind": "page-block",
+      "prod_component": "MqxGoalDash",
+      "status": "approved",
+      "canonical_rounds": [
+        {
+          "path": "design-lab/dashboard/bg1-page-round/",
+          "status": "approved"
+        },
+        {
+          "path": "design-lab/board-game/hybrid-round/",
+          "status": "approved"
+        }
+      ],
+      "invariants": [
+        "Goal below the actions. Collapsed state shows completed count and step numbers. Expanded state shows the full victory chain."
+      ]
+    }
+  ],
+  "page_order_prod_components": [
+    "MqxDashboardHero",
+    "MqxNeedsDash",
+    "MqxFinancePeriodBlock",
+    "MqxPeriodActions",
+    "MqxGoalDash"
+  ]
+}

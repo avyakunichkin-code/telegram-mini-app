@@ -1,0 +1,13 @@
+/* B: owner requested left/right alternation, contextual full-body poses. */
+.system-examples .section-presenter{padding:0 0 0 160px;min-height:200px}
+.section-presenter .student-guide{left:0;right:auto;top:0;width:140px;height:200px}
+.professional-example .narrator>img{width:108px;height:150px}
+.choice-section .narrator>img{width:120px;height:160px}
+.roadmap .narrator>img{width:116px;height:160px}
+@media(max-width:720px){
+.system-examples .section-presenter{padding:0 0 0 122px;min-height:172px}
+.section-presenter .student-guide{left:0;right:auto;top:0;width:108px;height:168px}
+.professional-example .narrator>img{width:88px;height:132px}
+.choice-section .narrator>img{width:98px;height:142px}
+.roadmap .narrator>img{width:98px;height:142px}
+}

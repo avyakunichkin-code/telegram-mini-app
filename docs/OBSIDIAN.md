@@ -11,7 +11,7 @@ aliases:
 ---
 # Obsidian: документация ТВОЙ ХОД
 
-Как открыть и использовать репозиторий как **Obsidian vault** без поломки GitHub-ссылок и агентов Claude Code.
+Как открыть и использовать репозиторий как **Obsidian vault** без поломки GitHub-ссылок и агентов Codex.
 
 ---
 
@@ -19,10 +19,10 @@ aliases:
 
 1. **Obsidian → Open folder as vault** → корень репозитория `telegram-mini-app/` (не только `docs/`).
 2. Стартовая страница: [[docs/Home|Home]] или [[docs/README|Карта документации]].
-3. Технический онбординг кода: [[CLAUDE]].
+3. Технический онбординг кода: [[AGENTS]].
 4. После `git pull` при изменении frontmatter: `node scripts/docs/obsidian-enrich.mjs`.
 
-**Почему корень репо:** в документах есть ссылки на `CLAUDE.md`, `landing/`, `design-lab/` — при vault только в `docs/` они ломаются.
+**Почему корень репо:** в документах есть ссылки на `AGENTS.md`, `game/landing/`, `design-lab/` — при vault только в `docs/` они ломаются.
 
 ---
 
@@ -33,7 +33,7 @@ aliases:
 | **`useMarkdownLinks: true`** (в `.obsidian/app.json`) | Обычные `[text](path.md)` работают в Obsidian, GitHub и у агентов |
 | **`tags` + `aliases` в frontmatter** | Поиск, graph filters, автодополнение `[[wikilink]]` |
 | **MOC `_index.md` в папках** | Быстрый вход в слой без дублирования README |
-| **Не конвертировать все ссылки в wikilinks** | Единый источник для CI, `.claude/rules`, GitHub preview |
+| **Не конвертировать все ссылки в wikilinks** | Единый источник для CI, `source-id:rules`, GitHub preview |
 
 Дополнительно можно вручную добавлять wikilinks в MOC-файлах — они не мешают остальному конвейеру.
 
@@ -46,19 +46,19 @@ aliases:
 | Слой | MOC | Основной README |
 |------|-----|-----------------|
 | Вход | [[docs/Home]] | [[docs/README]] |
-| Handbook | [[docs/handbook/_index]] | [[docs/handbook/README]] |
-| Foundation | [[docs/foundation/_index]] | — |
-| Vision / ideas | [[docs/vision/_index]] | — |
-| Specs | [[docs/specs/_index]] | — |
+| Handbook | [[game/docs/handbook/_index]] | [[game/docs/handbook/README]] |
+| Foundation | [[game/docs/foundation/_index]] | — |
+| Vision / ideas | [[game/docs/vision/_index]] | — |
+| Specs | [[game/docs/specs/_index]] | — |
 | Plans | [[docs/plans/README]] | [[docs/plans/README]] |
-| Tasks | [[docs/tasks/README]] | [[docs/tasks/README]] |
+| Tasks | [[game/docs/tasks/README]] | [[game/docs/tasks/README]] |
 | ADR | [[docs/decisions/_index]] | [[docs/decisions/README]] |
-| Backlog | [[docs/backlog/_index]] | — |
-| UX | [[docs/ux/README]] | [[docs/ux/README]] |
+| Backlog | [[game/docs/backlog/_index]] | — |
+| UX | [[game/docs/ux/README]] | [[game/docs/ux/README]] |
 | Agents | [[docs/agents/_index]] | — |
-| Marketing | [[docs/marketing/README]] | [[docs/marketing/README]] |
-| Reference | [[docs/reference/_index]] | — |
-| Ops | [[docs/ops/_index]] | — |
+| Marketing | [[game/docs/marketing/README]] | [[game/docs/marketing/README]] |
+| Reference | [[game/docs/reference/_index]] | — |
+| Ops | [[game/docs/ops/_index]] | — |
 
 Трассировка эпиков: [[docs/TRACEABILITY]]. Конвейер: [[docs/DOCUMENTATION_SYSTEM]].
 
@@ -86,7 +86,7 @@ aliases:
 
 Для каждого файла генерируются `aliases` — имя файла, заголовок H1, код эпика (`E1`, `ADR-001`, `SPEC_expenses`).
 
-Пример: `[[SPEC_expenses]]` или `[[E1]]` найдут `docs/specs/features/SPEC_expenses.md`.
+Пример: `[[SPEC_expenses]]` или `[[E1]]` найдут `game/docs/specs/features/SPEC_expenses.md`.
 
 ---
 
@@ -116,8 +116,8 @@ Workspace (`workspace.json`) **не коммитится** — у каждого
 При конфликте источников (из [`DOCUMENTATION_SYSTEM`](DOCUMENTATION_SYSTEM.md)):
 
 1. Код + тесты  
-2. `docs/specs/features/SPEC_*.md`  
-3. `docs/foundation/SPEC_PRODUCT.md`  
+2. `game/docs/specs/features/SPEC_*.md`\
+3. `game/docs/foundation/SPEC_PRODUCT.md`\
 4. Vision / ideas  
 5. Handbook (обзор)
 
