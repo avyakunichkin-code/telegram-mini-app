@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>ТВОЙ ХОД — Brand Guidelines v2.0</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+    :root {
+      --violet: #6D28D9; --violet-deep: #5B21B6; --gold: #EAB308; --emerald: #059669;
+      --ink: #0F1115; --mist: #F5F6F8; --slate: #6B7280; --line: #E5E7EB;
+      --danger: #DC2626; --warn: #D97706; --dark-bg: #16171D;
+    }
+    * { box-sizing: border-box; }
+    body {
+      font-family: 'Inter', system-ui, sans-serif; font-size: 10.5pt; line-height: 1.45;
+      color: var(--ink); background: #fff; margin: 0; padding: 0 12mm 14mm; max-width: 210mm; margin-inline: auto;
+    }
+    @page { size: A4; margin: 14mm 12mm 16mm 12mm; }
+    h1 { font-size: 22pt; font-weight: 700; margin: 0 0 4mm; color: var(--violet-deep); }
+    h2 { font-size: 12.5pt; font-weight: 600; margin: 7mm 0 3mm; padding-bottom: 1mm; border-bottom: 1px solid var(--line); break-after: avoid; }
+    h3 { font-size: 10.5pt; font-weight: 600; margin: 4mm 0 2mm; break-after: avoid; }
+    p { margin: 0 0 2.5mm; }
+    ul, ol { margin: 0 0 3mm 4mm; padding: 0; }
+    li { margin-bottom: 1.2mm; }
+    .meta { font-size: 8.5pt; color: var(--slate); margin-bottom: 5mm; }
+    .meta code { font-family: 'JetBrains Mono', monospace; font-size: 8pt; background: var(--mist); padding: 0.2mm 1mm; border-radius: 1mm; }
+    .page-break { page-break-before: always; }
+    .cover {
+      min-height: 248mm; display: flex; flex-direction: column; justify-content: center;
+      page-break-after: always; margin: -8mm -12mm 0 -12mm; padding: 18mm 14mm;
+      background: linear-gradient(160deg, var(--mist) 0%, #fff 42%),
+        repeating-linear-gradient(0deg, transparent, transparent 7px, rgba(229,231,235,.35) 7px, rgba(229,231,235,.35) 8px);
+      border-bottom: 4px solid var(--violet);
+    }
+    .cover-tag { font-size: 9.5pt; color: var(--emerald); font-weight: 600; letter-spacing: .06em; text-transform: uppercase; }
+    .cover h1 { font-size: 30pt; margin: 3mm 0; }
+    .cover .version { font-size: 11pt; font-weight: 600; color: var(--violet); }
+    table { width: 100%; border-collapse: collapse; margin: 2mm 0 4mm; font-size: 9pt; break-inside: avoid; }
+    th, td { border: 1px solid var(--line); padding: 1.8mm 2.2mm; text-align: left; vertical-align: top; }
+    th { background: var(--mist); font-weight: 600; }
+    .swatches { display: flex; flex-wrap: wrap; gap: 2.5mm; margin: 2mm 0 3mm; }
+    .swatch { width: 26mm; border-radius: 2mm; overflow: hidden; border: 1px solid var(--line); break-inside: avoid; }
+    .swatch-color { height: 14mm; }
+    .swatch-info { padding: 1.8mm; font-size: 7.5pt; }
+    .logo-row { display: flex; gap: 3mm; flex-wrap: wrap; margin: 3mm 0; }
+    .logo-panel {
+      flex: 1 1 45%; border: 1px solid var(--line); border-radius: 2mm; padding: 3mm;
+      text-align: center; break-inside: avoid;
+    }
+    .logo-panel.dark { background: var(--dark-bg); color: #fff; }
+    .logo-panel img { max-width: 100%; height: auto; max-height: 28mm; }
+    .logo-panel--full img { max-height: 42mm; }
+    .avatar-box img { width: 32mm; height: 32mm; }
+    .callout { border-left: 3px solid var(--violet); background: color-mix(in srgb, var(--violet) 6%, #fff); padding: 2.5mm 3mm; margin: 3mm 0; font-size: 9pt; }
+    .dont { background: #FEF2F2; border: 1px solid #FECACA; border-radius: 2mm; padding: 2.5mm 3mm; margin: 3mm 0; font-size: 9pt; }
+    .checklist { columns: 2; column-gap: 5mm; font-size: 9pt; }
+    .checklist li { list-style: none; padding-left: 4mm; position: relative; break-inside: avoid; }
+    .checklist li::before {
+      content: ''; position: absolute; left: 0; top: .35em; width: 2.5mm; height: 2.5mm;
+      border: 1px solid var(--violet); border-radius: .6mm;
+    }
+    .mascot-row { display: flex; gap: 4mm; align-items: flex-end; margin: 3mm 0; }
+    .mascot-row img { max-height: 45mm; width: auto; }
+    .export-box { margin-top: 5mm; padding: 3mm; background: var(--mist); border-radius: 2mm; font-size: 9pt; }
+    @media print {
+      .cover { margin: -14mm -12mm 0 -12mm; }
+      a { color: inherit; text-decoration: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="cover">
+    <p class="cover-tag">Финансы как игра</p>
+    <p class="version">Brand Guidelines v2.0 · май 2026</p>
+    <h1>ТВОЙ ХОД</h1>
+    <p>Identity: логотип, цвет, типографика, голос, Монетка, маркетинговые носители.</p>
+    <p style="margin-top:4mm;font-size:10pt;"><strong>Product UI (MQX):</strong> отдельный PDF — <code>brandbook-mqx-print.html</code></p>
+  </header>
+
+  <p class="meta">
+    Источник: <code>BRANDBOOK.md</code> · Ассеты: <code>assets/INDEX.md</code> ·
+    Маскот: <code>CHARACTER_MONETKA.md</code> · Посты: <code>POST_STYLE.md</code>
+  </p>
+
+  <h2>1. Реестр утверждений ★</h2>
+  <table>
+    <thead><tr><th>ID</th><th>Решение</th><th>Prod</th></tr></thead>
+    <tbody>
+      <tr><td><strong>G1</strong></td><td>Lockup + tagline, старт</td><td><code>logo-full.png</code></td></tr>
+      <tr><td><strong>G2</strong></td><td>Compact, hero/табы</td><td><code>logo-compact.png</code></td></tr>
+      <tr><td><strong>ТХ</strong></td><td>Аватар, pill</td><td><code>assets/logos/avatar-tx.svg</code></td></tr>
+      <tr><td>S5</td><td>Dashboard unified</td><td>см. Product UI PDF</td></tr>
+    </tbody>
+  </table>
+
+  <h2>2. Логотип (канон PNG)</h2>
+  <p><strong>ТВОЙ</strong> <span style="color:var(--gold)">#EAB308</span> · <strong>ХОД</strong> <span style="color:var(--violet)">#6D28D9</span>. Не использовать MQ, Money Quest, flat SVG L1–L4.</p>
+
+  <div class="logo-row">
+    <div class="logo-panel logo-panel--full dark">
+      <p style="font-size:7.5pt;opacity:.85;margin:0 0 2mm">G1 · старт / auth</p>
+      <img src="assets/logos/logo-full.png" alt="G1 full lockup" />
+    </div>
+    <div class="logo-panel dark">
+      <p style="font-size:7.5pt;opacity:.85;margin:0 0 2mm">G2 · hero в игре</p>
+      <img src="assets/logos/logo-compact.png" alt="G2 compact" />
+    </div>
+  </div>
+
+  <div class="logo-row">
+    <div class="logo-panel avatar-box">
+      <p style="font-size:7.5pt;color:var(--slate);margin:0 0 2mm">ТХ · аватар 512×512</p>
+      <img src="assets/logos/avatar-tx.svg" alt="Монограмма ТХ" width="128" height="128" />
+      <p style="font-size:7pt;color:var(--slate);margin-top:2mm">Экспорт PNG для Telegram</p>
+    </div>
+    <div class="logo-panel" style="font-size:9pt;text-align:left">
+      <strong>Tagline (рекомендация)</strong>
+      <ul style="margin:2mm 0 0 4mm">
+        <li>Старт: в G1 (PNG)</li>
+        <li>Игра / лендинг: G2 + CSS, не в PNG</li>
+        <li>Кандидаты lab: T1, T7</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="dont"><strong>Deprecated:</strong> flat SVG, MQ, <code>game/landing/public/brand/*.svg</code> (до миграции).</div>
+
+  <h2 class="page-break">3. Цвета</h2>
+  <div class="swatches">
+    <div class="swatch"><div class="swatch-color" style="background:#6D28D9"></div><div class="swatch-info"><strong>Quest Violet</strong><br/>#6D28D9<br/><code>--mq-violet</code></div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#EAB308"></div><div class="swatch-info"><strong>Coin Gold</strong><br/>#EAB308<br/>«ТВОЙ»</div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#059669"></div><div class="swatch-info"><strong>Emerald</strong><br/>#059669<br/><code>--mq-emerald</code></div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#0F1115"></div><div class="swatch-info"><strong>Ink</strong><br/>#0F1115</div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#D97706"></div><div class="swatch-info"><strong>Warning</strong><br/>#D97706</div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#DC2626"></div><div class="swatch-info"><strong>Danger</strong><br/>#DC2626</div></div>
+  </div>
+
+  <h2>4. Типографика</h2>
+  <table>
+    <thead><tr><th>Носитель</th><th>Шрифт</th></tr></thead>
+    <tbody>
+      <tr><td>TMA</td><td>Системный стек · 15 / 12 / 11 px — см. Product UI PDF</td></tr>
+      <tr><td>Лендинг, PDF, баннеры</td><td><strong>Inter</strong></td></tr>
+    </tbody>
+  </table>
+
+  <h2>5. Голос</h2>
+  <table>
+    <thead><tr><th>Контекст</th><th>Обращение</th></tr></thead>
+    <tbody>
+      <tr><td>TMA, Монетка</td><td><strong>ты</strong> — напарница, не банк</td></tr>
+      <tr><td>Посты канала</td><td><strong>3-е лицо</strong> — «разработчики добавили…»</td></tr>
+      <tr><td>Пролог ep-000</td><td>1-е лицо, Алексей</td></tr>
+    </tbody>
+  </table>
+  <p style="font-size:9pt">Хештег: <strong>#ТвойХод</strong></p>
+
+  <h2>6. Монетка</h2>
+  <div class="mascot-row">
+    <img src="assets/monetka/monetka-mascot.png" alt="Монетка" />
+    <div style="font-size:9pt">
+      <p>PNG, прозрачный фон. Позы <code>monetka-{pose}.png</code>.</p>
+      <p>Пузырь — CSS. Без ₽ на лице.</p>
+      <p>Канон: <code>CHARACTER_MONETKA.md</code></p>
+    </div>
+  </div>
+
+  <h2>7. Чеклист Brand</h2>
+  <ul class="checklist">
+    <li>G1 / G2 / ТХ из assets/</li>
+    <li>Tagline на маркетинге</li>
+    <li>Нет MQ / flat SVG</li>
+    <li>Монетка: «ты»</li>
+    <li>POST_STYLE для постов</li>
+    <li>WCAG AA где возможно</li>
+  </ul>
+
+  <div class="export-box">
+    <strong>Экспорт PDF</strong><br/>
+    <strong>Brand (этот файл):</strong> Chrome → Ctrl+P → PDF, фоновая графика.<br/>
+    <strong>Product UI:</strong> <code>brandbook-mqx-print.html</code><br/>
+    <strong>Pandoc:</strong> <code>BRANDBOOK.md</code> → TvoyHod-Brand-Guidelines.pdf · <code>BRANDBOOK_MQX.md</code> → TvoyHod-Product-UI.pdf
+  </div>
+
+  <p class="meta" style="margin-top:6mm">ТВОЙ ХОД Brand Guidelines v2.0</p>
+</body>
+</html>

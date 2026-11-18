@@ -1,0 +1,31 @@
+# Подсказка о дыре в бюджете (PO 2026-10-22, экономика Предпринимателя): первый период с событиями,
+# если месячные расходы больше доходов — у любой персоны, но только один раз за партию (приоритет
+# не повторяется). Числа подставляются из профиля (extra.description_vars).
+# Вместе с ней приоритетно выпадает A1 «Вторая машина простаивает» (если у игрока 2+ машины).
+events:
+- definition_key: mq11_cashflow_warning
+  event_domain: credit_debt
+  title: 'Монетка: расходы больше доходов'
+  description: 'Каждый месяц уходит {outflow}, а приходит {income} — бюджет теряет {monthly_gap} за период.
+    Денег на счёте хватит {runway_text}. Посмотрите, что съедает деньги: имущество,
+    которое только стоит денег, дорогие долги, расходы на жизнь. Одно решение в первые месяцы может
+    перевернуть баланс.'
+  weight: 1
+  event_tier: 1
+  repeat_policy: once_per_profile
+  interaction_kind: informational
+  scenario_shape: narrative_once
+  prerequisites:
+    negative_monthly_flow: true
+  extra:
+    spawn_priority_when: negative_monthly_flow
+    spawn_priority_rank: 1
+    priority_only: true
+    description_vars: true
+    description_when_resolved: 'Месяц назад расходы были больше доходов. Сейчас бюджет уже в плюсе
+      — вы вовремя занялись этим. Держите поток положительным: так растёт подушка.'
+  choices:
+  - title: Понятно, займусь
+    effects: {}
+  - title: Посмотрю, что можно продать
+    effects: {}

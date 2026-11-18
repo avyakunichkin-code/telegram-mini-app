@@ -1,0 +1,74 @@
+ M .claude/rules/frontend-core.md
+ M .claude/skills/documentation-and-adrs/SKILL.md
+ M CLAUDE.md
+ M CONVENTIONS.md
+ D GAME.md
+ D QUESTIONNAIRE.md
+ M README.md
+ M game/api/app/finance/expense_defaults.py
+ M game/api/app/finance/expenses.py
+ M game/api/app/game/session.py
+ M game/api/app/game/start_validation.py
+ M game/api/app/models.py
+ M game/api/app/routers/expenses.py
+ M game/api/app/routers/game.py
+ M game/api/app/schemas.py
+ M game/api/app/services/README.md
+ M game/api/app/services/events/spawn.py
+ M game/api/app/services/expenses/service.py
+ M game/api/app/services/game/profiles.py
+ M game/api/app/services/game/start.py
+ M game/api/app/services/game/templates.py
+ M game/api/app/services/period/close.py
+ M game/api/migrations/README.md
+ M game/api/scripts/patch_docs_backend_paths.py
+ M game/api/tests/conftest.py
+ D game/api/tests/fixtures/plan.py
+ D game/api/tests/integration/api/test_plan_expenses_contract.py
+ M game/design-lab/new-game-mode/README.md
+ M docs/Home.md
+ M docs/README.md
+ M docs/ROADMAPS.md
+ M docs/TRACEABILITY.md
+ M game/docs/backlog/PRODUCT_BACKLOG.md
+ M docs/decisions/ADR-009-metrics-dictionary-tb1.md
+ M game/docs/foundation/DOC_SYNC_LOG.md
+ M game/docs/foundation/PRE_ALPHA_PLAYTEST_WAVE0_RESULTS.md
+ M game/docs/foundation/PROJECT_META.md
+ M game/docs/handbook/FEATURE_STATUS.md
+ M game/docs/handbook/GAME.md
+ M game/docs/handbook/HISTORY.md
+ M game/docs/handbook/README.md
+ M game/docs/ops/DEPLOY.md
+ M plan/docs/README.md
+ M plan/docs/ROADMAP.md
+ M docs/plans/PLAN_backlog_may2026.md
+ M docs/plans/PLAN_game-only.md
+ M docs/plans/PLAN_production-ready.md
+ M game/docs/reference/brandbook/BRANDBOOK_MQX.md
+ M game/docs/specs/features/SPEC_achievements.md
+ M game/docs/specs/features/SPEC_expenses.md
+ M game/docs/specs/features/SPEC_game-plan.md
+ M game/docs/specs/features/SPEC_victory-v2.md
+ M game/docs/vision/ideas/admin-and-notifications.md
+ M game/docs/vision/ideas/project-structure-standardization.md
+ M game/web/ARCHITECTURE.md
+ M game/web/README.md
+ M game/web/src/api/expenses.js
+ D game/web/src/components/BaseParamsScreen.jsx
+ M game/web/src/components/admin/AdminCatalogEditorScreen.jsx
+ M game/web/src/components/admin/AdminWatchtowerScreen.jsx
+ M game/web/src/components/admin/adminPlayerColumns.jsx
+ M game/web/src/components/mqx/DESIGN_WORKFLOW.md
+ M game/web/src/components/mqx/index.js
+ D game/web/src/components/mqx/layout/PlanExpenseBudgetEditor.jsx
+ D game/web/src/components/mqx/layout/PlanExpenseEditor.jsx
+ M game/web/src/screens/README.md
+ D game/web/src/screens/plan/README.md
+ D game/web/src/utils/planExpenseBudget.js
+?? .claude/agent-memory/
+?? game/api/tests/integration/api/test_game_only_contract.py
+?? docs/CHANGELOG.md
+?? docs/engineering/
+?? game/docs/design/claude-design-system/
+?? scripts/codex/

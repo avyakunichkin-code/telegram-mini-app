@@ -1,0 +1,57 @@
+/* dashboard/goal-acts-round — раунд 2: одна шкала на оба акта, акт без финала (SPEC_victory-acts, DRAFT). */
+
+.lab-state { margin: 4px 0 -4px; font: 600 12px / 1.3 var(--body); color: var(--ink-soft); text-transform: uppercase; letter-spacing: .04em; }
+.variant-tag { display: inline-block; padding: 2px 8px; border-radius: 999px; background: var(--coin-soft); border: 1px solid var(--coin-rim); font: 700 12px / 1.4 var(--body); }
+.phone.ga-phone { min-height: 0; }
+
+/* Подпись акта: «Акт K из 2 · шаг N из M» */
+.h-goal__act { color: var(--ink); font-weight: 600; }
+
+/* Одна шкала: точки чуть плотнее, чтобы 6 шагов + монета влезали на 412 */
+.ga-dots i + i { margin-left: 8px; }
+.ga-dots i + i::before { width: 8px; }
+
+/* Цель акта 1 — особая точка */
+.ga-dots i.ga-ms { width: 18px; height: 18px; display: grid; place-items: center; font: 800 9px / 1 var(--body); font-style: normal; }
+.ga-dots i.ga-ms + i::before,
+.ga-dots i + i.ga-ms::before { top: 6px; }
+.ga-dots i.ga-ms--gold { border-color: var(--coin-rim); background: var(--coin); color: var(--coin-ink); }
+.ga-dots i.ga-ms--gold.now { box-shadow: 0 0 0 3px var(--coin-soft); }
+.ga-dots i.ga-ms--gold.done { background: var(--coin); color: var(--coin-ink); }
+.ga-dots i.ga-ms--ring { border-color: var(--turn); color: var(--turn); background: var(--bg-cell); }
+.ga-dots i.ga-ms--ring.done,
+.ga-dots i.ga-ms--ring.now { background: var(--turn); color: #fff; }
+
+/* Раскрытая цель: разделители актов, цель акта 1 в списке */
+.b-chain li.ga-act-sep { grid-template-columns: 24px 1fr; padding-bottom: 6px; font: 700 11px / 1.4 var(--body); color: var(--ink-soft); text-transform: uppercase; letter-spacing: .05em; }
+.b-chain li.ga-act-sep::before { display: none; }
+.b-chain li.ga-chain-ms .b-dot { border-color: var(--coin-rim); background: var(--coin); color: var(--coin-ink); }
+.b-chain li small { color: var(--ink-soft); font-weight: 400; }
+
+.ga-tip { display: flex; gap: 8px; align-items: flex-start; font-size: 13px; color: var(--ink-soft); background: var(--coin-soft); border-radius: 12px; padding: 8px 10px; }
+.ga-tip img { width: 28px; height: 28px; object-fit: contain; flex: none; }
+
+.ga-meter { display: grid; gap: 4px; font-size: 12.5px; color: var(--ink-soft); }
+.ga-meter .bar { height: 8px; border-radius: 999px; background: var(--bg-board); overflow: hidden; }
+.ga-meter .bar i { display: block; height: 100%; background: var(--turn); border-radius: inherit; }
+
+/* Итог хода (как prod MqxPeriodCloseRitual в ink) + строка акта и «Дальше — акт 2» */
+.phone.ga-phone--ritual { padding: 0; overflow: hidden; }
+.ga-ritual { display: grid; justify-items: center; gap: 10px; padding: 22px 18px 20px; background: color-mix(in srgb, var(--turn-deep) 88%, #0f1115); color: #fff; text-align: center; }
+.ga-ritual__badge { font: 800 11px / 1 var(--body); letter-spacing: .08em; text-transform: uppercase; opacity: .85; }
+.ga-ritual__title { margin: 0; font: var(--display-weight) 26px / 1.1 var(--display); color: inherit; }
+.ga-ritual__period { font-size: 13px; opacity: .85; margin-top: -4px; }
+.ga-ritual__act { display: inline-flex; align-items: center; gap: 8px; padding: 6px 12px; border-radius: 999px; background: var(--coin); color: var(--coin-ink); font-size: 13px; }
+.ga-ritual__act .bg-coin { --coin-size: 18px; font-size: 8px; }
+.ga-ritual__balance { display: grid; gap: 2px; width: 100%; max-width: 320px; padding: 12px 14px; border: 2px solid var(--ink); border-radius: 16px; background: var(--bg-cell); color: var(--ink); box-shadow: 3px 3px 0 var(--coin); }
+.ga-ritual__balance small { font: 700 12px / 1.3 var(--body); color: var(--ink-soft); }
+.ga-ritual__balance b { font: 850 24px / 1.1 var(--body); font-variant-numeric: tabular-nums; }
+.ga-ritual__balance span { font: 700 13px / 1.3 var(--body); color: var(--gain); }
+.ga-ritual__beats { margin: 0; padding: 0; list-style: none; display: grid; gap: 6px; font-size: 13.5px; text-align: left; width: 100%; max-width: 320px; }
+.ga-ritual__dismiss { margin-top: 4px; padding: 10px 22px; border: 2px solid var(--ink); border-radius: 12px; background: #fff; color: var(--turn-deep); font: 800 14px var(--body); box-shadow: 3px 3px 0 var(--ink); }
+
+/* «Дальше — акт 2»: пунктир, как в финале раунда 1; на фиолетовом поле — золотой пунктир по белой клетке */
+.ga-next { width: 100%; max-width: 320px; text-align: left; display: grid; gap: 2px; background: var(--bg-cell); color: var(--ink); border: 2px dashed var(--coin); border-radius: 14px; padding: 10px 12px; }
+.ga-next small { font: 700 11px / 1.4 var(--body); color: var(--turn); text-transform: uppercase; letter-spacing: .05em; }
+.ga-next b { font: var(--display-weight) 15px / 1.25 var(--display); }
+.ga-next--done small { color: var(--gain); }

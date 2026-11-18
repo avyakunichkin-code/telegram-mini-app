@@ -1,0 +1,158 @@
+/* pregame-monetka-round — Монетка возвращается на экраны до выбора роли (вход, регистрация, меню, выбор жизни).
+   База (токены v3, шрифты, панель лаборатории, --nb-line / --nb-drop) — board-game/neobrutal-round через lab-base.css.
+   Формы экранов — как ★ BG-2 (pre-game-shell/APPROVED.md); стиль — «Чернильный край»: рамка у главного, тень у того, что нажимается. */
+
+.pg {
+  --bw: 2px;
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: var(--mq-space-6) var(--mq-space-4) var(--mq-space-8);
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--mq-space-6);
+  align-items: flex-start;
+}
+.pg-rim { font-family: var(--font-display); font-weight: 900; }
+svg { display: block; width: 100%; height: auto; }
+
+.pg-screen { display: grid; gap: var(--mq-space-2); margin: 0; }
+.pg-screen > figcaption { font: 800 15px/20px var(--font-display); color: var(--mq-board-ink-soft); }
+
+.ph {
+  width: 375px;
+  max-width: 100%;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: var(--mq-space-3);
+  padding: var(--mq-space-5) var(--mq-space-4);
+  border: var(--bw) solid var(--nb-line);
+  border-radius: 28px;
+  background: var(--mq-board);
+}
+.pg-logo { margin: 0; text-align: center; font: 900 22px/28px var(--font-display); letter-spacing: 0.02em; color: var(--mq-turn); }
+
+/* ---------- Голос Монетки ---------- */
+.pg-voice { display: flex; align-items: center; gap: var(--mq-space-3); }
+.pg-voice h2 { margin: 0; font: 900 21px/26px var(--font-display); }
+.pg-voice p { margin: 4px 0 0; font: 400 15px/21px var(--font-body); }
+
+/* A: Монетка крупно, реплика — пузырь на мягком золоте без обводки */
+.pg-voice--a .pg-voice__m { flex-shrink: 0; width: 136px; }
+.pg-voice__bubble {
+  padding: var(--mq-space-3) var(--mq-space-4);
+  border-radius: var(--mq-r-card);
+  background: var(--mq-coin-soft);
+  color: var(--mq-board-ink);
+}
+
+/* B: маленькая Монетка вместо заголовка, без пузыря */
+.pg-voice--b { align-items: flex-start; }
+.pg-voice--b .pg-voice__m { flex-shrink: 0; width: 56px; }
+.pg-voice--b p { color: var(--mq-board-ink-soft); }
+
+/* ---------- Формы и кнопки BG-2 ---------- */
+.pg-card {
+  display: grid;
+  gap: var(--mq-space-3);
+  padding: var(--mq-space-4);
+  border: var(--bw) solid var(--nb-line);
+  border-radius: var(--mq-r-card);
+  background: var(--mq-cell);
+}
+.pg-field { display: grid; gap: 6px; }
+.pg-field label { font: 700 14px/18px var(--font-body); }
+.pg-field input {
+  min-height: var(--mq-tap);
+  padding: 0 var(--mq-space-3);
+  border: 1.5px solid var(--mq-control-edge);
+  border-radius: var(--mq-r-cell);
+  background: var(--mq-board);
+  color: var(--mq-board-ink);
+  font: 400 16px/22px var(--font-body);
+}
+.pg-field input:focus-visible { outline: 2px solid var(--mq-coin); outline-offset: 1px; }
+
+.pg-cta, .pg-calm {
+  min-height: var(--mq-tap);
+  padding: var(--mq-space-3);
+  border: var(--bw) solid var(--nb-line);
+  border-radius: var(--mq-r-card);
+  box-shadow: 3px 3px 0 var(--nb-drop);
+  cursor: pointer;
+  transition: transform var(--mq-dur-press) var(--mq-ease-standard), box-shadow var(--mq-dur-press) var(--mq-ease-standard);
+}
+.pg-cta { background: var(--mq-turn); color: var(--mq-turn-on); font: 900 18px/22px var(--font-display); }
+.pg-calm { background: var(--mq-cell); color: var(--mq-board-ink); font: 700 15px/20px var(--font-body); }
+.pg-cta:active, .pg-calm:active { transform: translate(3px, 3px); box-shadow: 0 0 0 var(--nb-drop); }
+.pg-link {
+  min-height: var(--mq-tap);
+  border: 0;
+  background: none;
+  color: var(--mq-turn-ink);
+  font: 700 15px/20px var(--font-body);
+  cursor: pointer;
+}
+
+/* Карта сохранения: фиолетовая рамка с тенью (главная карта экрана) */
+.pg-save {
+  display: flex;
+  align-items: center;
+  gap: var(--mq-space-3);
+  padding: var(--mq-space-3) var(--mq-space-4);
+  border: var(--bw) solid var(--mq-turn);
+  border-radius: var(--mq-r-card);
+  background: var(--mq-cell);
+  box-shadow: 0 4px 0 var(--mq-turn);
+}
+.pg-save--empty { justify-content: center; text-align: center; padding: var(--mq-space-5) var(--mq-space-4); }
+.pg-save__txt { display: grid; gap: 2px; }
+.pg-save__txt b { font: 800 18px/24px var(--font-display); }
+.pg-save__txt span { font: 700 14px/20px var(--font-body); }
+.pg-save__txt small { color: var(--mq-board-ink-soft); font: 400 13px/18px var(--font-body); }
+
+.pg-portrait {
+  flex-shrink: 0;
+  width: 52px;
+  height: 52px;
+  overflow: hidden;
+  border: var(--bw) solid var(--nb-line);
+  border-radius: 50%;
+  background: var(--mq-turn-soft);
+}
+
+/* Выбор жизни: радиогруппа карточек */
+.pg-pick { display: grid; gap: var(--mq-space-2); }
+.pg-opt {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: var(--mq-space-3);
+  padding: var(--mq-space-2) var(--mq-space-3);
+  border: var(--bw) solid var(--mq-cell-edge);
+  border-radius: var(--mq-r-card);
+  background: var(--mq-cell);
+  cursor: pointer;
+}
+.pg-opt input { position: absolute; opacity: 0; pointer-events: none; }
+.pg-opt.is-on { border-color: var(--mq-turn); box-shadow: 0 3px 0 var(--mq-turn); }
+.pg-opt:has(input:focus-visible) { outline: var(--mq-focus-w) solid var(--mq-focus); outline-offset: 3px; }
+.pg-opt__txt { display: grid; gap: 1px; flex-grow: 1; }
+.pg-opt__txt b { font: 800 16px/20px var(--font-display); }
+.pg-opt__txt .gain { font: 700 13px/18px var(--font-body); }
+.pg-opt__txt small { color: var(--mq-board-ink-soft); font: 400 12px/16px var(--font-body); }
+.pg-opt__dot { flex-shrink: 0; width: 18px; height: 18px; border: 2px solid var(--mq-control-edge); border-radius: 50%; }
+.pg-opt.is-on .pg-opt__dot { border-color: var(--mq-turn); background: radial-gradient(circle, var(--mq-turn) 0 5px, transparent 6px); }
+
+@media (prefers-reduced-motion: reduce) {
+  .pg-cta, .pg-calm { transition: none; }
+}
+
+/* Тёмная тема: персонажей не перекрашиваем — светлая обводка-наклейка по силуэту */
+:root[data-theme="dark"] .pg-voice__m svg {
+  filter:
+    drop-shadow(1.5px 0 0 var(--mq-board-ink-faint))
+    drop-shadow(-1.5px 0 0 var(--mq-board-ink-faint))
+    drop-shadow(0 1.5px 0 var(--mq-board-ink-faint))
+    drop-shadow(0 -1.5px 0 var(--mq-board-ink-faint));
+}

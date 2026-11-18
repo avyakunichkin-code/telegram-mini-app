@@ -8,7 +8,7 @@ aliases:
 # Design improvements — backlog (не в скиллах до spec)
 
 **Назначение:** идеи из UI-аудита (2026-05), которые **ещё не готовы** для обязательных правил агента.  
-**В скиллах сейчас:** только то, что ссылается на существующие spec, токены, lab ★ и [`UI_CONSISTENCY_AUDIT.md`](../specs/UI_CONSISTENCY_AUDIT.md).
+**В скиллах сейчас:** только то, что ссылается на существующие spec, токены, lab ★ и [`UI_CONSISTENCY_AUDIT.md`](../../game/docs/specs/UI_CONSISTENCY_AUDIT.md).
 
 ---
 
@@ -17,18 +17,18 @@ aliases:
 | Тема | Источник правды |
 |------|-----------------|
 | Lab → ★ → MQX → prod | `DESIGN_WORKFLOW.md`, `design-lab-mqx`, `frontend-ui-engineering` |
-| Self-contained lab, sync-lab | `.claude/rules/design-lab.md`, `design-lab-mqx` |
-| Canon Sync после prod | `.claude/rules/canon-sync.md`, `release-web` |
-| Приоритет волны C (**Капитал**) | [`mqx-ui-unification.md`](../vision/ideas/mqx-ui-unification.md), `UI_CONSISTENCY_AUDIT` |
+| Self-contained lab, sync-lab | `docs/engineering/CODEX-PROCESSES.md`, `design-lab-mqx` |
+| Canon Sync после prod | `docs/engineering/CODEX-PROCESSES.md`, `release-web` |
+| Приоритет волны C (**Капитал**) | [`mqx-ui-unification.md`](../../game/docs/vision/ideas/mqx-ui-unification.md), `UI_CONSISTENCY_AUDIT` |
 | Z-NEEDS v7-e2e3 + help `sections[]` | prod `MqxNeedsDash`; lab `dashboard-needs-v7-round` |
 | Токены, типографика, tg-theme | `SPEC_FRONTEND_UI`, `tma-base.css`, `BRANDBOOK_MQX` |
 | Row actions, capital IA | `SPEC_FRONTEND_UI` § Row Actions, capital-page ★ |
 | Empty/error (цель) | Эпик B1 в unification; использовать `MqxCapitalEmpty` где уже есть |
-| A11y Basic | `docs/ux/accessibility-requirements.md` |
-| Juice A/C/D в prod | `design-lab/game-ui/juice-round/APPROVED.md` |
-| UI states + icons (B1–B3) | [`design-lab/ui-states-unified/APPROVED.md`](../../design-lab/ui-states-unified/APPROVED.md) → `MqxCapitalEmpty`, `MqxStateError`, `MqxStateSkeleton`, ritual SVG |
+| A11y Basic | `game/docs/ux/accessibility-requirements.md` |
+| Juice A/C/D в prod | `game/design-lab/game-ui/juice-round/APPROVED.md` |
+| UI states + icons (B1–B3) | [`game/design-lab/ui-states-unified/APPROVED.md`](../../game/design-lab/ui-states-unified/APPROVED.md) → `MqxCapitalEmpty`, `MqxStateError`, `MqxStateSkeleton`, ritual SVG |
 | B4 — цели на дашборде | `MqxGoalDash` ★; `MqxLevelDash` / `.mqx-fin-empty` сняты |
-| E2 / E5 — события | [`tails-round`](../../design-lab/events/tails-round/APPROVED.md) — halo + clamp/scroll |
+| E2 / E5 — события | [`tails-round`](../../game/design-lab/events/tails-round/APPROVED.md) — halo + clamp/scroll |
 
 ---
 
@@ -38,7 +38,7 @@ aliases:
 |---|------|--------------|---------------------|
 | D1 | **Motion tokens** (`--mq-motion-fast` …) | Шкала длительностей, reduced-motion, список компонентов | `tma-base.css` + `BRANDBOOK_MQX` + `SPEC_FRONTEND_UI` |
 | D2 | **Haptic** (Telegram `HapticFeedback`) | Когда: зарплата, +cash, шаг цели; флаг отключения | `SPEC_FRONTEND_UI` или `SPEC_APP_SHELL` + hook |
-| D3 | **Баннер «Рекомендуемое сейчас»** на главной | Продуктовые правила приоритета из `periodStatus` | `docs/ux/screens/dashboard.md` + lab round |
+| D3 | **Баннер «Рекомендуемое сейчас»** на главной | Продуктовые правила приоритета из `periodStatus` | `game/docs/ux/screens/dashboard.md` + lab round |
 | D4 | **Капитал: простой / полный режим** | Порог unlock, что скрывать в MVP | idea-refine + `capital-page` lab |
 | D5 | **Микрокопирайт: neutral / caution / celebrate** | Таблица фраз, запреты (казино-тон) | `BRANDBOOK.md` § голос |
 | D6 | **Spacing / elevation tokens v2** | Имена, не дублировать ad-hoc в `mqx-*` | `styles/README.md` |

@@ -1,0 +1,250 @@
+# Цепочка A2 «Подушка окупилась» (принято PO 2026-10-22, brief chains-proposals-2026-10-21).
+# Урок: подушка и страховка — не «мёртвые деньги»: в аварию они выигрывают у кредитки.
+# Шаг 1 — готовность (КАСКО / подушка / ничего), шаг 2 через 3 периода — ДТП как следствие: ремонт 60% зарплаты.
+# КАСКО: премия 3% зп/пер., выплата 60% зп. Кредитка: долг под 22% годовых (только проценты, пока не погасите).
+# Шаги: N → accident N+3 → epilogue N+6. Действия — chain_action (chain_actions.py).
+events:
+- definition_key: mq11_car_cushion_offer
+  content_class: instrumental
+  event_slot: period_choice
+  audience_template_keys:
+  - mq_game_tight_budget_v1
+  - mq_game_mortgage_stress_v1
+  - mq_game_debt_stack_v1
+  event_domain: insurance
+  title: Сосед разбил машину
+  description: 'У соседа по парковке авария: ремонт встал в полторы зарплаты, страховки не было — теперь
+    он в долгах по кредитке. Вы задумываетесь, что будет, если такое случится с вами.'
+  weight: 58
+  event_tier: 3
+  repeat_policy: once_per_profile
+  scenario_shape: chain
+  prerequisites:
+    active_asset_kinds_any:
+    - car_personal
+  choices:
+  - title: Оформить КАСКО
+    purpose: mitigation
+    effects:
+      chain_action:
+        action: buy_policy
+        product: auto
+        insured_object: property
+        title: КАСКО
+        premium_pct_salary: 0.03
+        payout_pct_salary: 0.6
+        term_periods: 12
+      needs_delta:
+        comfort: 3
+        status: -1
+      enqueue_event:
+        chain_key: car_cushion
+        followup_definition_key: mq11_car_cushion_accident
+        after_periods: 3
+        context:
+          branch: kasko
+    description: Премия каждый период, зато ремонт после аварии оплатит страховая.
+  - title: Отложить 30% зарплаты в подушку
+    purpose: investment
+    effects:
+      chain_action:
+        action: to_safety
+        amount_pct_salary: 0.3
+      needs_delta:
+        comfort: 2
+        status: -1
+      enqueue_event:
+        chain_key: car_cushion
+        followup_definition_key: mq11_car_cushion_accident
+        after_periods: 3
+        context:
+          branch: cushion
+    description: Деньги остаются вашими — просто лежат в запасе на непредвиденное.
+  - title: Со мной такого не случится
+    effects:
+      cash_delta: 0
+      enqueue_event:
+        chain_key: car_cushion
+        followup_definition_key: mq11_car_cushion_accident
+        after_periods: 3
+        context:
+          branch: none
+- definition_key: mq11_car_cushion_accident
+  content_class: instrumental
+  event_slot: chain_followup
+  audience_template_keys:
+  - mq_game_tight_budget_v1
+  - mq_game_mortgage_stress_v1
+  - mq_game_debt_stack_v1
+  event_domain: auto
+  interaction_kind: chain_followup
+  title: ДТП на вашей машине
+  description: 'Скользкая дорога, удар в бампер. Ремонт обойдётся в 60% зарплаты — и машина нужна каждый
+    день, откладывать нельзя.'
+  weight: 1
+  event_tier: 3
+  repeat_policy: once_per_profile
+  scenario_shape: chain
+  mandatory_gate: blocks_period_end
+  choices:
+  - title: Оплатить по КАСКО
+    purpose: mitigation
+    effects:
+      requires_chain_branch: kasko
+      insurance_claim:
+        product: auto
+        insured_object: property
+      chain_action:
+        action: pay_from_safety
+        use_safety: false
+        amount_pct_salary: 0.6
+        title: Ремонт после ДТП
+      needs_delta:
+        comfort: -2
+      enqueue_event:
+        chain_key: car_cushion
+        followup_definition_key: mq11_car_cushion_epilogue
+        after_periods: 3
+        context:
+          branch: kasko_claim
+    description: 'Три периода назад вы оформили КАСКО → страховая выплачивает ремонт, со своих — ничего.'
+  - title: Оплатить из своих, полис сберечь
+    purpose: mitigation
+    effects:
+      requires_chain_branch: kasko
+      chain_action:
+        action: pay_from_safety
+        amount_pct_salary: 0.6
+        title: Ремонт после ДТП
+      needs_delta:
+        comfort: -4
+      enqueue_event:
+        chain_key: car_cushion
+        followup_definition_key: mq11_car_cushion_epilogue
+        after_periods: 3
+        context:
+          branch: kasko_own
+    description: Сначала из подушки, остальное со счёта; КАСКО остаётся на будущее.
+  - title: Оплатить из подушки
+    purpose: mitigation
+    effects:
+      requires_chain_branch: cushion
+      chain_action:
+        action: pay_from_safety
+        amount_pct_salary: 0.6
+        title: Ремонт после ДТП
+      needs_delta:
+        comfort: -2
+      enqueue_event:
+        chain_key: car_cushion
+        followup_definition_key: mq11_car_cushion_epilogue
+        after_periods: 3
+        context:
+          branch: cushion_safety
+    description: 'Три периода назад вы пополнили подушку → ремонт из запаса, остальное со счёта, без
+      долгов.'
+  - title: Ремонт в кредитку под 22%
+    purpose: mitigation
+    effects:
+      requires_chain_branch: cushion
+      chain_action:
+        action: open_card_debt
+        amount_pct_salary: 0.6
+        annual_rate_percent: 22
+        title: Кредитка (ремонт авто)
+      needs_delta:
+        comfort: -1
+        status: -2
+      enqueue_event:
+        chain_key: car_cushion
+        followup_definition_key: mq11_car_cushion_epilogue
+        after_periods: 3
+        context:
+          branch: cushion_card
+    description: Подушка цела, но проценты по карте каждый период, пока не погасите.
+  - title: Оплатить из своих
+    purpose: mitigation
+    effects:
+      requires_chain_branch: none
+      chain_action:
+        action: pay_from_safety
+        amount_pct_salary: 0.6
+        title: Ремонт после ДТП
+      needs_delta:
+        comfort: -5
+      enqueue_event:
+        chain_key: car_cushion
+        followup_definition_key: mq11_car_cushion_epilogue
+        after_periods: 3
+        context:
+          branch: none_own
+    description: Из подушки, если есть, остальное со счёта.
+  - title: Ремонт в кредитку под 22%
+    purpose: mitigation
+    effects:
+      requires_chain_branch: none
+      chain_action:
+        action: open_card_debt
+        amount_pct_salary: 0.6
+        annual_rate_percent: 22
+        title: Кредитка (ремонт авто)
+      needs_delta:
+        comfort: -1
+        status: -2
+      enqueue_event:
+        chain_key: car_cushion
+        followup_definition_key: mq11_car_cushion_epilogue
+        after_periods: 3
+        context:
+          branch: none_card
+    description: 'Три периода назад вы решили, что с вами такого не случится → ремонт в долг, проценты
+      по карте каждый период.'
+- definition_key: mq11_car_cushion_epilogue
+  content_class: instrumental
+  event_slot: informational
+  audience_template_keys:
+  - mq_game_tight_budget_v1
+  - mq_game_mortgage_stress_v1
+  - mq_game_debt_stack_v1
+  event_domain: insurance
+  interaction_kind: informational
+  title: После аварии
+  description: 'Машина давно отремонтирована. Время посчитать, во что обошлась авария.
+
+    Мелким шрифтом: дорого стоит не авария, а долг, в который она превращается.'
+  weight: 1
+  event_tier: 3
+  repeat_policy: once_per_profile
+  scenario_shape: chain
+  mandatory_gate: none
+  choices:
+  - title: Понятно
+    effects:
+      requires_chain_branch: kasko_claim
+    description: 'Шесть периодов назад вы оформили КАСКО → за ремонт в 60% зарплаты вы заплатили только
+      три премии, около 9% зарплаты. Полис окупился почти в семь раз.'
+  - title: Понятно
+    effects:
+      requires_chain_branch: kasko_own
+    description: 'Шесть периодов назад вы оформили КАСКО, но ремонт оплатили сами → полис цел и прикроет
+      следующую аварию, а премии продолжают списываться.'
+  - title: Понятно
+    effects:
+      requires_chain_branch: cushion_safety
+    description: 'Шесть периодов назад вы пополнили подушку → авария обошлась ровно в стоимость ремонта,
+      без процентов. Подушку стоит восстановить.'
+  - title: Понятно
+    effects:
+      requires_chain_branch: cushion_card
+    description: 'Шесть периодов назад вы пополнили подушку, но ремонт взяли в кредитку → подушка цела,
+      а проценты по карте идут уже три периода. Выгоднее закрыть карту из подушки.'
+  - title: Понятно
+    effects:
+      requires_chain_branch: none_own
+    description: 'Шесть периодов назад вы решили, что с вами такого не случится → ремонт съел 60%
+      зарплаты разом. Подушка или полис растянули бы удар.'
+  - title: Понятно
+    effects:
+      requires_chain_branch: none_card
+    description: 'Шесть периодов назад вы решили, что с вами такого не случится → ремонт в кредитке,
+      проценты каждый период. Авария всё ещё стоит вам денег.'

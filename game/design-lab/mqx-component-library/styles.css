@@ -1,0 +1,79 @@
+:root{color-scheme:light;--bg:#f4edf8;--surface:#fff;--text:#281a34;--muted:#5f4a70;--line:#382449;--accent:#593080;--on-accent:#fff;--gold:#ffd165;--gold-ink:#281a34;--danger:#962737;--track:#ded0e8;--success:#267351}
+:root:has(#dark:checked){color-scheme:dark;--bg:#23182e;--surface:#382449;--text:#fff5ff;--muted:#e2cdea;--line:#b099c4;--accent:#dcc0ff;--on-accent:#281a34;--danger:#ffaeb7;--track:#634c76;--success:#82dfae}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:16px/1.5 system-ui,sans-serif}main{max-width:74rem;margin:auto;padding:clamp(1rem,4vw,3rem)}header{max-width:42rem;margin-bottom:2rem}h1,h2,h3,p{margin:0 0 .5rem}h1{font-size:clamp(2rem,7vw,3.25rem);line-height:1.1}.eyebrow,.ref,small{font-size:.875rem;color:var(--muted)}.eyebrow{font-weight:750;letter-spacing:.1em}small{display:block}.theme{display:inline-flex;align-items:center;gap:.5rem;min-height:44px}.variant+.variant{margin-top:2.5rem}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,20rem),1fr));gap:1rem;margin-top:1rem}article,dialog{background:var(--surface);color:var(--text);border:2px solid var(--line);border-radius:18px;padding:1rem;box-shadow:3px 3px var(--line)}.ref{overflow-wrap:anywhere;margin-bottom:1rem}.row,.line,.tabs,.seg{display:flex;align-items:center;gap:.5rem;flex-wrap:wrap}.line,.tabs{justify-content:space-between}.tabs{margin-top:.75rem;border-top:1px solid var(--track);padding-top:.75rem;font-size:.875rem}.seg label,.chip{background:var(--track);border-radius:999px;padding:.35rem .65rem}.seg label{min-height:44px;display:flex;align-items:center;cursor:pointer}.seg label:has(:checked){background:var(--accent);color:var(--on-accent)}button,input{font:inherit}button{min-height:44px;border:1px solid var(--line);border-radius:12px;padding:.5rem .75rem;background:var(--surface);color:var(--text);font-weight:700;cursor:pointer}.primary{background:var(--accent);color:var(--on-accent)}.primary.turn,.b .primary{background:var(--gold);color:var(--gold-ink)}.danger,.error strong{color:var(--danger)}button:disabled{background:var(--track);color:var(--muted);cursor:default}:focus-visible{outline:3px solid var(--accent);outline-offset:3px}.example+.example{border-top:1px solid var(--track);margin-top:.75rem;padding-top:.75rem}.chip{display:inline-block;margin-bottom:.5rem;font-size:.875rem}progress{display:block;width:100%;accent-color:var(--success);height:1rem}.skeleton{display:block;width:65%;height:.875rem;border-radius:1rem;background:var(--track);margin-bottom:.25rem}dialog{width:min(30rem,calc(100% - 2rem));margin:auto auto 1rem}dialog::backdrop{background:#140b20a8}dialog form{display:grid;gap:.75rem}input[type=number]{display:block;width:100%;min-height:44px;background:var(--bg);color:var(--text);border:1px solid var(--line);border-radius:10px;padding:.5rem}
+
+button:not(:disabled):hover {
+  box-shadow: inset 0 0 0 2px currentColor;
+}
+
+button:not(:disabled):active {
+  transform: translateY(1px);
+}
+
+button.danger {
+  border-color: var(--danger);
+}
+
+.money-card {
+  background: var(--bg);
+  border: 1px solid var(--track);
+  border-radius: 14px;
+  padding: 1rem;
+}
+
+.money-card .line strong {
+  font-size: 1.5rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.progress-label {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: .25rem .5rem;
+  margin-top: .75rem;
+  font-size: .875rem;
+}
+
+.progress-label progress {
+  grid-column: 1 / -1;
+}
+
+.tabs {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.tabs button {
+  font-size: .875rem;
+  padding-inline: .25rem;
+  border-color: transparent;
+}
+
+.tabs [aria-current="page"] {
+  background: var(--accent);
+  color: var(--on-accent);
+}
+
+.state,
+.state + .state {
+  padding: .75rem;
+  border: 1px solid var(--track);
+  border-radius: 12px;
+}
+
+.state.error {
+  border-color: var(--danger);
+}
+
+.skeleton {
+  box-shadow: 0 .25rem 0 -.125rem var(--track);
+}
+
+dialog h3 {
+  font-size: 1.25rem;
+}
+
+.feedback:not(:empty) {
+  margin-top: .75rem;
+  color: var(--success);
+}
