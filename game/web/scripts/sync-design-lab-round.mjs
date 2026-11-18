@@ -31,7 +31,7 @@ if (!fs.existsSync(sh)) {
       `Missing ${sh}`,
       '',
       'Канон design-lab: bash sync-lab.sh в папке раунда.',
-      'Пример: design-lab/capital-page/details-actions-round/sync-lab.sh',
+      'Пример: design-lab/board-game/screens-round/sync-lab.sh',
     ].join('\n'),
   )
   process.exit(1)

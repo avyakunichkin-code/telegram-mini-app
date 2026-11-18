@@ -42,7 +42,7 @@ function receiptRows(detailLines, headline) {
  * Итоги хода ★ ink-mascots-round (PO 2026-11-02): чек-Квитя распечатывает ход, Монетка комментирует ниже.
  * Прежний ритуал ★ juice C (бейдж, «удары» с иконками) заменён.
  */
-export function MqxPeriodCloseRitual({ summary, open, onClose }) {
+export function MqxPeriodCloseRitual({ summary, open, onClose, onClaimGuest }) {
   if (!summary || !open) return null;
 
   const periodLabel = periodCloseRitualPeriodLabel(summary);
@@ -85,6 +85,11 @@ export function MqxPeriodCloseRitual({ summary, open, onClose }) {
           ) : null}
         </div>
 
+        {onClaimGuest && (
+          <button type="button" className="mqx-btn mqx-btn--secondary" onClick={onClaimGuest}>
+            Сохранить игру в аккаунте
+          </button>
+        )}
         <button type="button" className="mqx-juice-ritual__dismiss" onClick={onClose}>
           Следующий ход
         </button>

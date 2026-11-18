@@ -6,6 +6,9 @@ export const financeApi = {
    * `level` и `wear` по осям, `level_sources[]` ({ source, kind, title, axis, delta }),
    * `periods_to_zero_if_idle` ({ axis: число периодов | null }).
    */
+  getTransactions() {
+    return apiCall('/api/finance/transactions');
+  },
   getOverview() {
     return apiCall('/api/finance/overview');
   },

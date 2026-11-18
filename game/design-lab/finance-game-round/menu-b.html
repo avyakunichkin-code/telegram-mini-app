@@ -1,15 +1,47 @@
 <!doctype html>
 <html lang="ru">
-<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Меню b · Твой ход</title><link rel="stylesheet" href="./styles.css"><link rel="stylesheet" href="./menu.css"></head>
-<body class="menu-page"><main>
-<header class="hero menu-hero"><div class="hero-top"><img class="brand" src="./logo-full.webp" alt="Твой ход — Финансы как игра"><span class="turn">Ход <b>08</b></span></div><h1>Меню</h1><p>Игра на паузе</p><div class="row"><div><p>Студент</p><strong class="balance">42 000 ₽</strong></div><div class="scene" aria-hidden="true"></div></div><p>Цель: собрать подушку</p><a class="primary" href="./compact.html">Продолжить игру</a></header>
-<div class="content">
-
-<section class="panel menu-card"><h2>Другие партии</h2>
-<details><summary>Новая игра</summary><p>В приложении здесь откроется выбор персонажа.</p></details>
-<details><summary>Все сохранения · 3</summary><p>В приложении здесь откроется список партий.</p></details></section>
-<details class="menu-exit"><summary>Выйти из аккаунта</summary><p>Выход доступен в приложении.</p></details>
-<div class="menu-options"><b>Вариант b</b><a href="./menu-a.html">Сравнить с вариантом a</a></div>
-</div></main>
-<nav aria-label="Игровые вкладки"><a href="./compact.html"><i class="goal-nav-icon home" aria-hidden="true"></i>Главная</a><a href="./capital.html"><i class="goal-nav-icon capital" aria-hidden="true"></i>Капитал</a><a href="./analytics.html"><i class="goal-nav-icon analytics" aria-hidden="true"></i>Аналитика</a><a aria-current="page" href="./menu-b.html"><i class="goal-nav-icon menu" aria-hidden="true"></i>Меню</a></nav>
-</body></html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Меню · Твой ход</title>
+  <link rel="stylesheet" href="./styles.css">
+  <link rel="stylesheet" href="./menu.css">
+</head>
+<body class="menu-page">
+  <main>
+    <header class="menu-heading">
+      <h1>Меню</h1>
+      <img class="brand" src="./logo-full.webp" alt="Твой ход">
+    </header>
+    <section class="save-hero" aria-labelledby="save-title">
+      <span class="turn">Ход <b>08</b></span>
+      <h2 id="save-title">Студент</h2>
+      <p class="save-label">На счёте</p>
+      <strong class="save-value">42 000 ₽</strong>
+      <p class="save-goal">Цель: собрать подушку</p>
+      <a class="primary" href="./compact.html">Продолжить игру <span aria-hidden="true">→</span></a>
+    </section>
+    <section class="menu-actions" aria-labelledby="other-runs">
+      <h2 id="other-runs">Другие партии</h2>
+      <details class="menu-action">
+        <summary><span class="menu-action-icon" aria-hidden="true">+</span><span>Новая игра<small>Выбрать персонажа</small></span></summary>
+        <p>Выбор персонажа доступен в приложении.</p>
+      </details>
+      <details class="menu-action">
+        <summary><span class="menu-action-icon" aria-hidden="true">▤</span><span>Все сохранения<small>3 партии</small></span></summary>
+        <p>Список сохранений доступен в приложении.</p>
+      </details>
+    </section>
+    <details class="menu-exit">
+      <summary>Выйти из аккаунта</summary>
+      <p>Выход доступен в приложении.</p>
+    </details>
+  </main>
+  <nav aria-label="Игровые вкладки">
+    <a href="./compact.html"><i class="goal-nav-icon home" aria-hidden="true"></i>Главная</a>
+    <a href="./capital.html"><i class="goal-nav-icon capital" aria-hidden="true"></i>Капитал</a>
+    <a href="./analytics.html"><i class="goal-nav-icon analytics" aria-hidden="true"></i>Аналитика</a>
+    <a aria-current="page" href="./menu-b.html"><i class="goal-nav-icon menu" aria-hidden="true"></i>Меню</a>
+  </nav>
+</body>
+</html>

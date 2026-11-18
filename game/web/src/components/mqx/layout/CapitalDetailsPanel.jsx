@@ -7,6 +7,7 @@ import {
   formatLotRub,
   formatSaleConfirmMessage,
   investNote,
+  investNoteParts,
   liabilityNote,
   LOCKED_META,
   lotMeta,
@@ -18,14 +19,12 @@ import { MqxLiabilityPrepayForm } from './MqxLiabilityPrepayForm';
 import { canPrepayLiability, findSecuredLiabilityForAsset } from '../../../utils/capitalDl1';
 
 /** Пусто: текст и переход во «Действия». */
-function EmptyNote({ what, onGo }) {
+function EmptyNote({ what, onGo, conciseLabel }) {
   return (
     <CapitalLotNote>
-      Пока ничего нет. {what} —{' '}
-      <button type="button" className="mqx-bg-btn mqx-cap-lot-act mqx-cap-lot-act--inline" onClick={onGo}>
-        во вкладке «Действия»
+      <button type="button" className="mqx-cap-lot-empty-link" title={what} onClick={onGo}>
+        {conciseLabel}
       </button>
-      .
     </CapitalLotNote>
   );
 }
@@ -51,6 +50,8 @@ export function CapitalDetailsPanel({
   onPrepayLiability,
   prepayBusy = false,
   onGotoAction,
+  investmentChips = false,
+  wide = false,
 }) {
   const { confirm, dialog } = useMqxConfirm();
   const [prepayTarget, setPrepayTarget] = useState(null);
@@ -121,7 +122,7 @@ export function CapitalDetailsPanel({
   );
 
   return (
-    <div className="mqx-cap-lots" role="tabpanel" id="capital-panel-details" aria-labelledby="capital-tab-details">
+    <div className="mqx-cap-lots" role={wide ? undefined : "tabpanel"} id="capital-panel-details" aria-labelledby={wide ? undefined : "capital-tab-details"}>
       {dialog}
       {sections.invest === 'open' ? (
         <CapitalLot
@@ -132,7 +133,7 @@ export function CapitalDetailsPanel({
           {extraLoading ? (
             skeleton(2)
           ) : investPositions.length === 0 ? (
-            <EmptyNote what="Открыть вклад или купить облигации" onGo={() => onGotoAction('deposit')} />
+            <EmptyNote conciseLabel="Пока нет вложений" what="Открыть вклад или купить облигации" onGo={() => onGotoAction('deposit')} />
           ) : (
             investPositions.map((p) => {
               const label = p.kind === 'bond' ? 'Продать' : 'Закрыть';
@@ -141,7 +142,11 @@ export function CapitalDetailsPanel({
                   key={p.id}
                   title={p.title}
                   value={formatLotRub(p.principal)}
-                  note={investNote(p)}
+                  note={investmentChips ? (
+                    <span className="mqx-cap-invest-chips">
+                      {investNoteParts(p).reverse().map((part) => <span key={part}>{part}</span>)}
+                    </span>
+                  ) : investNote(p)}
                   actions={
                     <CapitalLotAction
                       ariaLabel={`${label} ${p.title}`}
@@ -162,12 +167,12 @@ export function CapitalDetailsPanel({
         <CapitalLot
           tone="insure"
           title="Страховки"
-          meta={extraLoading ? null : policies.length ? String(policies.length) : 'пусто'}
+          meta={wide && policies.length ? <CapitalLotAction onClick={() => onGotoAction('insurance')}>Оформить полис</CapitalLotAction> : extraLoading ? null : policies.length ? String(policies.length) : 'пусто'}
         >
           {extraLoading ? (
             skeleton(1)
           ) : policies.length === 0 ? (
-            <EmptyNote what="Оформить полис" onGo={() => onGotoAction('insurance')} />
+            <EmptyNote conciseLabel="Пока нет страховок" what="Оформить полис" onGo={() => onGotoAction('insurance')} />
           ) : (
             policies.map((p) => (
               <CapitalLotRow
@@ -198,7 +203,7 @@ export function CapitalDetailsPanel({
           meta={lotMeta(ownedAssets.length, sumBy(ownedAssets, 'asset_value'))}
         >
           {ownedAssets.length === 0 ? (
-            <EmptyNote what="Купить квартиру или авто" onGo={() => onGotoAction('realestate')} />
+            <EmptyNote conciseLabel="Пока нет имущества" what="Купить квартиру или авто" onGo={() => onGotoAction('realestate')} />
           ) : (
             ownedAssets.map((a) => (
               <CapitalLotRow
@@ -225,14 +230,14 @@ export function CapitalDetailsPanel({
           meta={lotMeta(ownedLiabilities.length, sumBy(ownedLiabilities, 'total_debt'))}
         >
           {ownedLiabilities.length === 0 ? (
-            <EmptyNote what="Взять кредит или ипотеку" onGo={() => onGotoAction('credit')} />
+            <EmptyNote conciseLabel="Нет активных долгов" what="Взять кредит или ипотеку" onGo={() => onGotoAction('credit')} />
           ) : (
             ownedLiabilities.map((l) => (
               <CapitalLotRow
                 key={l.id}
                 title={l.title}
                 value={formatLotRub(l.total_debt)}
-                note={liabilityNote(l, ownedAssets)}
+                note={<>{wide && l.annual_rate_percent != null && <>{l.annual_rate_percent}% годовых · </>}{liabilityNote(l, ownedAssets)}</>}
                 actions={
                   <>
                     {canPrepayLiability(l) ? (

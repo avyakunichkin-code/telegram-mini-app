@@ -22,7 +22,7 @@ Plan (`BaseParamsScreen`, `PlanExpenseEditor`) — **вне scope** этой в�
 
 ## Иконки
 
-- В полоске метрик — только утверждённый набор из [`FinanceMetricIcons.jsx`](../../frontend-react/src/components/mqx/icons/FinanceMetricIcons.jsx) через `MetricInlineItem` (`coin`, `down`, `up`, `percent`, `term`).
+- В полоске метрик — только утверждённый набор из [`FinanceMetricIcons.jsx`](../../web/src/components/mqx/icons/FinanceMetricIcons.jsx) через `MetricInlineItem` (`coin`, `down`, `up`, `percent`, `term`).
 - **`IconMetricTrash`** — кнопка удаления по умолчанию (F2).
 
 ## Варианты (таблица)

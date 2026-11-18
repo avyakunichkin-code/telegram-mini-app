@@ -1,10 +1,10 @@
 # flows-round — CSS для Доходы/Расходы
 
-**Не отдельная страница lab.** Папка хранит только `styles.css` — его подключает [`../details-actions-round/sync-lab.sh`](../details-actions-round/sync-lab.sh) (канон Капитала в prod).
+**Исторический CSS.** Папка хранит `styles.css` прежнего макета; текущий канон — [утверждение Капитала](../APPROVED.md).
 
-Полный макет: [`../details-actions-round/`](../details-actions-round).
+Прежний макет: [локальный архив](../../archive/capital-details-actions-2026-11/).
 
 ## Prod
 
 - `CapitalPeriodFlowsBlock`, `buildCapitalPeriodFlows.js`
-- Скрин лендинга «capital»: [`details-actions-round/`](../details-actions-round) — см. [`game/docs/specs/LANDING_SCREENSHOTS.md`](../../../docs/specs/LANDING_SCREENSHOTS.md)
+- История скриншотов лендинга: [`LANDING_SCREENSHOTS.md`](../../../docs/archive/LANDING_SCREENSHOTS.md).

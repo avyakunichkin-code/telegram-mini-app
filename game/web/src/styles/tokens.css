@@ -1,4 +1,4 @@
-﻿:root {
+:root {
   /* Legacy-палитра — алиасы токенов v2 (ADR-014; аудит 2026-10-25, улучшение 8).
      Новый код пишет v2 напрямую: --mq-turn, --mq-gain, --mq-risk, --mq-board-ink, --mq-cell-edge.
      Алиасы сразу следуют тёмной теме v2; контраст текста ≥ 4.5:1 (#059669 давал 3.77, #d97706 — 3.19). */
@@ -219,4 +219,181 @@ body {
   --mq-board: #211c2a;
   --mq-board-ink: #f4eff8;
   --mq-board-ink-soft: #c2b6cf;
+}
+
+:root {
+  --mq-menu-wash: #f4dcff;
+  --mq-menu-board: #e2c4f5;
+  --mq-menu-ink: #3e123e;
+  --mq-menu-card: #411435;
+  --mq-menu-shade: #39133738;
+  --mq-menu-cream: #fff0d8;
+  --mq-menu-card-shadow: #4213484d;
+  --mq-menu-badge-ink: #3b1434;
+  --mq-menu-gold-end: #f6aa0d;
+  --mq-menu-gold-line: #ffd165;
+  --mq-menu-gold-border: #ffe090;
+  --mq-menu-gold-ink: #391235;
+  --mq-menu-gold-shadow: #aa671a;
+  --mq-menu-tile-border: #fff3ff;
+  --mq-menu-tile-light: #fbf1ff;
+  --mq-menu-tile-deep: #efdef9;
+  --mq-menu-tile-shadow: #601d6d29;
+  --mq-menu-count: #e6c8f5;
+  --mq-menu-link: #733886;
+  --mq-menu-focus: #923bbc;
+  --mq-menu-notice: #421642;
+}
+
+:root {
+  --mq-capital-pocket-gain: #076041;
+  --mq-capital-pocket-gain-top: #137d56;
+  --mq-capital-pocket-lilac-edge: #c7a8d7;
+  --mq-capital-pocket-mint: #c5f0da;
+}
+
+:root {
+  --mq-analytics-board: #eed9fa;
+  --mq-analytics-balance-top: #572050;
+  --mq-analytics-balance-bottom: #48173f;
+  --mq-analytics-divider: #e6c3e6;
+  --mq-analytics-button-border: #fff9;
+  --mq-analytics-gain-top: #ffe592;
+  --mq-analytics-gain-bottom: #ffca40;
+  --mq-analytics-action-top: #e8cdf8;
+  --mq-analytics-action-bottom: #d4a7ed;
+  --mq-analytics-tile-border: #fff6;
+  --mq-analytics-tile: #e4c8f3;
+  --mq-analytics-tile-positive: #c6edcd;
+  --mq-analytics-grid: #c9a0e3;
+  --mq-analytics-fact: #7622b9;
+  --mq-analytics-fact-fill: #c18be857;
+  --mq-analytics-forecast: #eea400;
+  --mq-analytics-forecast-fill: #ffe5bd80;
+  --mq-analytics-fact-label: #efdbfa;
+  --mq-analytics-current-label: #6821a4;
+  --mq-analytics-forecast-label: #ffe7ac;
+  --mq-analytics-spark: #ffb900;
+  --mq-analytics-chart-white: #fff;
+}
+
+/* Wide web, approved 2026-11-17. */
+:root {
+  --mq-wide-gain-text: #137313;
+  --mq-wide-ink: #421043;
+  --mq-wide-nav-compact: #441342;
+  --mq-wide-nav-end: #471042;
+  --mq-wide-link: #651970;
+  --mq-wide-action-shadow: #732882;
+  --mq-wide-nav-start: #741768;
+  --mq-wide-forecast-divider: #783981;
+  --mq-wide-dialog-scrim: #31113985;
+  --mq-wide-step-done-end: #1c9e26;
+  --mq-wide-meter-gain: #39a621;
+  --mq-wide-dialog-line: #521a57;
+  --mq-wide-paper-glow: #55106a14;
+  --mq-wide-step-locked-ink: #593c64;
+  --mq-wide-hero-fill: #5d1c57;
+  --mq-wide-hero-fade: #63205cda;
+  --mq-wide-step-shadow: #641c6248;
+  --mq-wide-nav-shadow: #72108c50;
+  --mq-wide-step-active-end: #7800ae;
+  --mq-wide-section-icon: #811b96;
+  --mq-wide-step-done-start: #83cc41;
+  --mq-wide-paper-shadow: #a975bc80;
+  --mq-wide-events-shadow: #ab70be;
+  --mq-wide-badge-shadow: #ac600e;
+  --mq-wide-action-stroke: #b446cb;
+  --mq-wide-button-shadow: #bb751a;
+  --mq-wide-risk-text: #bc1235;
+  --mq-wide-step-active-start: #be46f7;
+  --mq-wide-step-rail: #d4bcd7;
+  --mq-wide-step-locked: #d5bfdf;
+  --mq-wide-step-active-ring: #dc8dfa;
+  --mq-wide-meter-track: #dfd4d3;
+  --mq-wide-divider: #e3c4e5;
+  --mq-wide-events-end: #e3c7ed;
+  --mq-wide-button-stroke: #e69819;
+  --mq-wide-needs-divider: #e7cce7;
+  --mq-wide-goal-highlight: #ead0f4;
+  --mq-wide-board-edge: #ead6fa;
+  --mq-wide-events-start: #f1e2f9;
+  --mq-wide-action-end: #f3e4ef;
+  --mq-wide-meter-risk: #f43948;
+  --mq-wide-board-center: #f5eafc;
+  --mq-wide-meter-caution: #f7ae00;
+  --mq-wide-paper-end: #faece8;
+  --mq-wide-gold-end: #ffb508;
+  --mq-wide-hero-marker: #ffcb37;
+  --mq-wide-gold-start: #ffda61;
+  --mq-wide-balance-gain: #ffdb61;
+  --mq-wide-white: #fff;
+  --mq-wide-gold-highlight: #fff5b3;
+  --mq-wide-nav-ink: #fff6f3;
+  --mq-wide-action-start: #fff7f6;
+  --mq-wide-hero-ink: #fff8f4;
+  --mq-wide-dialog-fill: #fff8f5;
+  --mq-wide-paper-start: #fff8f6;
+  --mq-wide-nav-highlight: #ffffff70;
+  --mq-wide-button-deep-shadow: #ad5c10;
+  --mq-wide-button-accent-stroke: #f8ac13;
+}
+
+/* Утверждённая палитра стартовых экранов B. */
+:root {
+  --mq-start-auth-link: #531664;
+  --mq-start-board-top: #611461;
+  --mq-start-ticket-shadow: #57265866;
+  --mq-start-secondary-shadow: #60186333;
+  --mq-start-ink: #35133e;
+  --mq-start-highlight: #fff8;
+  --mq-start-field-outline: #9865ab;
+  --mq-start-white: #fff;
+  --mq-start-stub-outline: #9154a3;
+  --mq-start-lab-link: #611d76;
+  --mq-start-glow-center: #fff1f8;
+  --mq-start-glow-edge: #fadfed;
+  --mq-start-board-upper: #aa65bf;
+  --mq-start-board-lower: #ca9fe3;
+  --mq-start-board-bottom: #ecd2ef;
+  --mq-start-primary-outline: #f1acda;
+  --mq-start-primary-top: #a021a0;
+  --mq-start-primary-middle: #6c126d;
+  --mq-start-primary-bottom: #5a1059;
+  --mq-start-primary-highlight: #ffaaf180;
+  --mq-start-secondary-outline: #fff9;
+  --mq-start-secondary-top: #f8e5f7;
+  --mq-start-secondary-bottom: #e6c9ef;
+  --mq-start-play: #ffd13d;
+  --mq-start-play-shadow: #5d2044;
+  --mq-start-icon: #55155c;
+  --mq-start-mask: #000;
+  --mq-start-panel-top: #efd9f4;
+  --mq-start-panel-bottom: #e4c4ee;
+  --mq-start-field-icon: #6d2378;
+  --mq-start-field-fill: #f0dcf4;
+  --mq-start-field-placeholder: #71327c;
+  --mq-start-stub-ink: #a25bb9;
+  --mq-start-stub-fill: #e7c9ee80;
+  --mq-start-ticket-outline: #fff3d8;
+  --mq-start-ticket-glow: #ffecdf;
+  --mq-start-ticket-start: #ffe1b9;
+  --mq-start-ticket-end: #ffe17f;
+  --mq-start-ticket-edge: #df9a38;
+  --mq-start-notch: #d6afe8;
+  --mq-start-selected-fill: #ffedbe;
+  --mq-start-selected-outline: #e4a718;
+  --mq-start-selected-badge: #ffca3b;
+  --mq-start-intro-fill: #fff0dc;
+  --mq-start-intro-edge: #e5ad67;
+  --mq-start-portrait-top: #9f64c3;
+  --mq-start-portrait-bottom: #c18fdb;
+  --mq-start-ticket-divider: #d89e3c;
+  --mq-start-companion-glow: #ffd19e;
+  --mq-start-companion-edge: #efafd1;
+  --mq-start-heading: #3c153e;
+  --mq-start-error: #8a163c;
+  --mq-start-back-outline: #85449a;
+  --mq-start-back-fill: #f7e9fb;
+  --mq-start-back-ink: #45124f;
 }

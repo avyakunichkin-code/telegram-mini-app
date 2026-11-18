@@ -58,7 +58,8 @@ mqx/
 | `EventChoiceButton` | Одна кнопка выбора |
 | `EventCarouselOverlay` | Полноэкранный оверлей с каруселью |
 | `EventCarouselNav` | Стрелки ← → |
-| `BrandLogo` / `BrandMark` | PNG G1/G2: `full` — старт по центру + tagline; `compact` — hero/табы, без фона |
+| `MqxMenuPage` | Утверждённая игровая вкладка. Одна разметка для игры и `#/dev/mqx/menu` |
+| `BrandLogo` / `BrandMark` | Общий знак «Финансы как игра», WebP с прозрачностью. `full`, `compact` и `finance-game` задают размеры |
 | `PersonaPortrait` | Растровые портреты 4 жизней (★ persona-portraits-round): pick на `GameTemplatePickScreen`, dash в `MqxNeedsDash` |
 | `useEventCarousel` | Состояние свайпа/слайдов |
 

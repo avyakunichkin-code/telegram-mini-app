@@ -4,6 +4,7 @@ events:
   title: Страховой агент
   description: Предлагают расширить покрытие с небольшой ежемесячной доплатой.
   weight: 70
+  is_active: 0  # Доплата не создаёт полис и не меняет страховое покрытие.
   event_tier: 3
   repeat_policy: repeatable
   cooldown_periods: 10

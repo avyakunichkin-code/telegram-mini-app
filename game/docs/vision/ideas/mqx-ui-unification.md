@@ -66,7 +66,7 @@ aliases:
 
 - **L3 + S5 Unified** в `DashboardPremium` (`mqx-tab-page--dash-unified`)
 - Hero, 2×2 финансы, **цель** (`MqxGoalDash`), действия, таббар без «пилюли»
-- Lab: [`goal-chain-round`](../../../design-lab/archive/dashboard/goal-chain-round) в паритете с prod; лендинг — [`LANDING_SCREENSHOTS.md`](../../specs/LANDING_SCREENSHOTS.md)
+- Lab: [`goal-chain-round`](../../../design-lab/archive/dashboard/goal-chain-round) в паритете с prod; лендинг — [`LANDING_SCREENSHOTS.md`](../../archive/LANDING_SCREENSHOTS.md)
 
 ### Дашборд — что ещё разобрать (кандидаты в lab)
 
@@ -116,7 +116,7 @@ aliases:
 
 ## Этап C — Капитал — **в prod (2026-06-01)**
 
-- ★ [`details-actions-round`](../../../design-lab/capital-page/details-actions-round) → `FinancePremium`: **Детали \| Действия**, sheets, meta M5/M7/M8
+- Исторический [`details-actions-round`](../../../design-lab/archive/capital-details-actions-2026-11/) → `FinancePremium`: **Детали \| Действия**, sheets, meta M5/M7/M8; актуальный вид — [Капитал](../../../design-lab/capital-page/APPROVED.md).
 - Документация: [`finance.md`](../../ux/screens/finance.md), [`TEAM_UPDATE_2026-06-01.md`](../../handbook/internal/TEAM_UPDATE_2026-06-01.md)
 - Хвост: формальный `APPROVED.md`, parity guardrails, EN-audit
 

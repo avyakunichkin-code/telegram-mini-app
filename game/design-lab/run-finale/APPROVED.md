@@ -4,7 +4,7 @@
 **Канон-дизайн:** [`../board-game/screens-round/`](../board-game/screens-round) — экраны «Финал · Победа», «Финал · Поражение».
 **Базовый parity BG-2:** [`bg2-page-round/`](bg2-page-round) — снимок до DC-08, без блока решений, три состояния: победа, поражение по `cash_negative_streak`, поражение по `needs_depletion`. Новый блок — [`decisions-round/index.html`](decisions-round/index.html), вариант A; актуальная React-композиция — `#/dev/mqx`.
 **Prod:** `game/web/src/components/mqx/layout/MqxRunFinale.jsx`, `runFinaleDisplay.js`, `styles/mqx/run-finale.css`; демо — `#/dev/mqx` → «Финал партии ★ BG-2».
-**История:** V1 «Газета» ★ 2026-06-01 ([`index.html`](index.html), [`VARIANTS.md`](VARIANTS.md)) — заменён BG-2, не канон.
+**История:** [V1 «Газета»](../archive/run-finale-v1-2026-11/) ★ 2026-06-01 — заменён BG-2, не канон.
 
 ## Порядок блоков — победа
 

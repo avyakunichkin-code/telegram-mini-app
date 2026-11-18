@@ -1,0 +1,96 @@
+.lab-capital {
+  display: grid;
+  grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr);
+  gap: 16px;
+}
+.lab-capital .lab-capital__panel { display: grid; align-content: start; gap: 16px; padding: 20px; }
+.lab-capital h1, .lab-capital .lab-capital__title {
+  margin: 0; border-inline-start: 8px solid var(--mq-wide-gold-end); padding-inline-start: 14px;
+  font: 900 clamp(26px, 3vw, 46px)/1.1 var(--font-heading, Nunito, sans-serif);
+}
+.lab-capital__summary, .lab-capital__actions, .lab-capital__breakdown { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+.lab-capital__breakdown { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.lab-capital__summary > div, .lab-capital__band, .lab-capital__net, .lab-capital__actions button {
+  display: flex; align-items: center; gap: 8px; padding: 8px 10px; border-radius: 14px;
+}
+.lab-capital__summary > div, .lab-capital__band { background: var(--mq-wide-board-center); }
+.lab-capital__summary > div:first-child, .lab-capital__breakdown > section:first-child h2 { background: #e6efcd; }
+.lab-capital__summary > div:nth-child(2), .lab-capital__breakdown > section:nth-child(2) h2 { background: #f9dce0; }
+.lab-capital__summary strong { display: block; font-size: clamp(17px, 2vw, 30px); }
+.lab-capital__summary span { font-weight: 800; }
+.lab-capital .lab-capital__band { margin: 0; font-size: clamp(16px, 1.55vw, 24px); }
+.lab-capital .lab-capital__actions button {
+  justify-content: flex-start;
+  min-width: 0;
+  min-height: 73px;
+  border: 1px solid var(--mq-menu-tile-border);
+  border-radius: 13px;
+  background: linear-gradient(var(--mq-menu-tile-light), var(--mq-menu-cream));
+  box-shadow: 0 2px 4px var(--mq-menu-tile-shadow);
+  color: var(--mq-menu-ink);
+  font: 900 clamp(13px, 1.35vw, 21px)/1.1 var(--mq-font-display);
+}
+.lab-capital__icon { display: inline-block; flex: 0 0 auto; width: 42px; aspect-ratio: 1; background: url('./capital-wide-icons.png') no-repeat; background-size: 426%; }
+.lab-capital__actions .lab-capital__icon { width: clamp(28px, 3.4vw, 48px); }
+.lab-capital__band .lab-capital__icon, .lab-capital__rows .lab-capital__icon { width: 33px; }
+.lab-capital__rows { list-style: none; margin: 0; padding: 0; }
+.lab-capital__rows li { display: flex; align-items: flex-start; gap: 8px; padding: 8px 6px; border-bottom: 1px solid var(--mq-wide-paper-glow); }
+.lab-capital__rows li div { flex: 1; }
+.lab-capital__rows li small { display: block; margin-top: 3px; font-size: 0.85rem; }
+.lab-capital__rows li b, .lab-capital__net b { text-align: right; white-space: nowrap; }
+.lab-capital__net { background: var(--lab-gold); font-size: clamp(15px, 1.4vw, 22px); }
+.lab-capital__net b { margin-inline-start: auto; }
+@media (max-width: 1023px) {
+  .lab-capital { grid-template-columns: minmax(0, 1fr); }
+}
+@media (max-width: 560px) {
+  .lab-capital__breakdown { grid-template-columns: minmax(0, 1fr); }
+  .lab-capital__summary > div, .lab-capital__actions button { flex-direction: column; text-align: center; }
+  .lab-capital .lab-capital__panel { padding: 12px; }
+}
+
+/* The compact menu tab bar paints a separate surface beneath its buttons. */
+.mqx-wide .mqx-wide__header .bottom-nav.bottom-nav--menu::before {
+  content: none;
+}
+@media (min-width: 1024px) {
+  .mqx-wide .mqx-wide__header .bottom-nav.bottom-nav--menu {
+    position: static;
+    background: transparent;
+  }
+}
+
+.lab-capital__actions button small {
+  display: block;
+  margin-top: 4px;
+  font-size: 0.75rem;
+}
+.lab-capital .mqx-cap-lots {
+  display: grid;
+  gap: 14px;
+}
+.lab-capital .mqx-cap-lot {
+  padding: 0;
+  border: 0;
+  background: none;
+  box-shadow: none;
+}
+.lab-capital .mqx-cap-lot__band,
+.lab-capital .mqx-cap-lot__head::before {
+  display: none;
+}
+.lab-capital .mqx-cap-lot__head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 0;
+  padding: 8px 10px;
+  border-radius: 14px;
+  background: var(--mq-wide-board-center);
+}
+.lab-capital .mqx-cap-lot-row {
+  padding: 8px 10px;
+}
+.lab-capital .mqx-cap-flow-cat {
+  padding: 8px 10px;
+}

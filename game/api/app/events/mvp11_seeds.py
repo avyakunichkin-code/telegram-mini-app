@@ -9,7 +9,8 @@ import json
 
 from sqlalchemy.orm import Session, joinedload
 
-from ..models import EventDefinition, EventChoice
+from ..models import EventDefinition, EventChoice, EventInstance
+from .choice_snapshot import parse_choice_snapshot
 from .mvp11_catalog import load_mvp11_catalog
 from .taxonomy import audience_template_keys, serialize_audience_template_keys
 
@@ -145,7 +146,6 @@ def _mvp11_definition_matches_spec(row: EventDefinition, spec: dict) -> bool:
     expected = _definition_snapshot_from_spec(spec, row)
     actual = _definition_snapshot_from_row(row, choices)
     actual["prerequisites_json"] = _target_prerequisites_json(spec, row)
-    actual["is_active"] = _target_is_active(spec, row)
     return expected == actual
 
 
@@ -220,6 +220,17 @@ def _sync_mvp11_spec(db: Session, spec: dict, existing: EventDefinition | None) 
                 )
         for extra in existing_choices[len(spec_choices) :]:
             db.delete(extra)
+        if existing.key == "mq11_home_water_damage" and len(existing_choices) == 2 and len(spec_choices) == 3:
+            # The new zero-upfront option also unblocks already issued floods.
+            db.flush()
+            repair_choice = (
+                db.query(EventChoice).filter_by(definition_id=existing.id).order_by(EventChoice.id.desc()).first()
+            )
+            pending_instances = db.query(EventInstance).filter_by(definition_id=existing.id, status="pending")
+            for instance in pending_instances:
+                choice_ids = parse_choice_snapshot(instance)
+                if choice_ids is not None:
+                    instance.available_choice_ids_json = json.dumps(sorted(choice_ids | {repair_choice.id}))
         return
     ed = EventDefinition(
         key=spec["key"],

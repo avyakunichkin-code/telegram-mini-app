@@ -7,7 +7,7 @@ import { PersonaPortrait } from '../brand/PersonaPortrait';
 import { MqxButton } from '../primitives/MqxButton';
 import { eventsPlateHint, eventsPlateTitle } from '../utils/boardDashDisplay';
 
-function EventsPlate({ count, onOpen }) {
+export function EventsPlate({ count, onOpen }) {
   const n = Math.max(0, Number(count) || 0);
   return (
     <button
@@ -15,11 +15,13 @@ function EventsPlate({ count, onOpen }) {
       className={['mqx-bg-btn', 'mqx-bg-events', n === 0 && 'mqx-bg-events--done'].filter(Boolean).join(' ')}
       onClick={onOpen}
       data-onboarding-anchor="events"
+      aria-label={`${eventsPlateTitle(n)} — ${eventsPlateHint(n)}`}
     >
       <span className="mqx-bg-events__calendar" aria-hidden="true" />
+      <b className="mqx-bg-events__title">События</b>
       <span className="mqx-bg-events__text">
-        <b className="mqx-bg-events__title">{eventsPlateTitle(n)}</b>
-        <small className="mqx-bg-events__hint">{eventsPlateHint(n)}</small>
+        <b className="mqx-bg-events__count">{n}</b>
+        <small className="mqx-bg-events__hint">{n ? 'осталось' : 'решены'}</small>
       </span>
       <span className="mqx-bg-events__go" aria-hidden="true">
         ›
@@ -52,9 +54,8 @@ function ClosePreview({ preview }) {
             <MoneyText value={charges} decimals={0} />
           </b>
         </span>
-        <span aria-hidden="true">·</span>
         <span className={negative ? 'mqx-bg-close-preview__risk' : undefined}>
-          останется{' '}
+          Останется{' '}
           <b>
             {after < 0 ? '−' : ''}
             <MoneyText value={Math.abs(after)} decimals={0} />
@@ -66,6 +67,25 @@ function ClosePreview({ preview }) {
           Третий минус подряд — игра закончится
         </p>
       ) : null}
+    </>
+  );
+}
+
+export function DashboardFinish({ onClose, disabled, preview }) {
+  return (
+    <>
+      <MqxButton
+        variant="turn"
+        className="mqx-bg-btn mqx-bg-cta"
+        disabled={disabled}
+        onClick={onClose}
+        data-onboarding-anchor="next_period"
+        aria-label="Завершить ход и перейти к следующему"
+        aria-describedby={preview ? 'mqx-close-preview' : undefined}
+      >
+        {FINISH_TURN_BUTTON}
+      </MqxButton>
+      {preview ? <ClosePreview preview={preview} /> : null}
     </>
   );
 }
@@ -93,28 +113,31 @@ export function MqxDashboardHero({
   return (
     <header className={`mqx-bg-turn${hasCampusScene ? ' mqx-bg-turn--campus' : ''}`} data-onboarding-anchor="hero">
       <div className="mqx-bg-turn__top">
-        <BrandLogo variant="full" className="mqx-bg-turn__logo" />
+        <BrandLogo variant="finance-game" className="mqx-bg-turn__logo" />
         <div className="mqx-bg-turn__who">
-          <h1 className="mqx-bg-turn__title">{`${TURN_SINGULAR} ${turn}`}</h1>
+          <h1 className="mqx-bg-turn__title">{TURN_SINGULAR} <b>{turn}</b></h1>
         </div>
-        <button
-          type="button"
-          className="mqx-bg-turn__help"
-          aria-label="Подсказка Монетки"
-          aria-haspopup="dialog"
-          disabled={!tip?.text}
-          onClick={() => helpRef.current?.showModal()}
-        >
-          <MonetkaAvatar size={32} />
-        </button>
+
       </div>
 
       <div className="mqx-bg-turn__balance">
         <div>
           <span>На счёте</span>
-          <strong className={balanceHighlight ? 'mqx-bg-turn__balance--gain' : undefined} data-mqx-juice-target="balance">
-            <MoneyText value={balance ?? 0} decimals={0} />
-          </strong>
+          <div className="mqx-bg-turn__balance-line">
+            <strong className={balanceHighlight ? 'mqx-bg-turn__balance--gain' : undefined} data-mqx-juice-target="balance">
+              <MoneyText value={balance ?? 0} decimals={0} />
+            </strong>
+            <button
+              type="button"
+              className="mqx-bg-turn__help"
+              aria-label="Подсказка Монетки"
+              aria-haspopup="dialog"
+              disabled={!tip?.text}
+              onClick={() => helpRef.current?.showModal()}
+            >
+              <MonetkaAvatar size={32} />
+            </button>
+          </div>
         </div>
         <div className="mqx-bg-turn__persona">
           <span className="mqx-bg-turn__role">{roleTitle}</span>
@@ -128,19 +151,7 @@ export function MqxDashboardHero({
         </form>
       </dialog>
 
-      <MqxButton
-        variant="turn"
-        className="mqx-bg-btn mqx-bg-cta"
-        disabled={closeMonthDisabled}
-        onClick={onCloseMonth}
-        data-onboarding-anchor="next_period"
-        aria-label="Завершить ход и перейти к следующему"
-        aria-describedby={closePreview ? 'mqx-close-preview' : undefined}
-      >
-        {FINISH_TURN_BUTTON}
-      </MqxButton>
-
-      {closePreview ? <ClosePreview preview={closePreview} /> : null}
+      <DashboardFinish onClose={onCloseMonth} disabled={closeMonthDisabled} preview={closePreview} />
       {onOpenEvents ? <EventsPlate count={pendingEventsCount} onOpen={onOpenEvents} /> : null}
     </header>
   );

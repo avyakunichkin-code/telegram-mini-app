@@ -1,3 +1,4 @@
+import { BrandLogo } from '../../BrandLogo';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { InvestProductForm } from '../../InvestProductForm';
@@ -33,8 +34,6 @@ import {
   MqxNeedsDash,
   MqxDashboardHero,
   MqxStarterScenarioPicker,
-  MqxSaveCard,
-  MqxBoardButton,
   MqxFinancePeriodBlock,
   MqxPeriodActions,
   MqxPeriodCloseSheet,
@@ -138,6 +137,8 @@ function RowActionsCatalogDemo() {
   );
 }
 
+if (import.meta.env.DEV) import('./student-portrait-lab.css');
+
 export function MqCatalogScreen() {
   const [capitalMode, setCapitalMode] = useState('add');
   const [amount, setAmount] = useState(120000);
@@ -153,6 +154,8 @@ export function MqCatalogScreen() {
         <Link to="/" className="mqx-catalog__back">
           ← В игру
         </Link>
+        <p><Link to="/dev/mqx/desktop">Веб-версия · Design Lab</Link></p>
+        <p><Link to="/dev/mqx/start">Старт · Design Lab</Link> · <Link to="/dev/mqx/menu">Меню · Design Lab</Link> · <Link to="/dev/mqx/capital">Капитал · Design Lab</Link> · <Link to="/dev/mqx/capital?state=locked">Капитал · закрытые действия</Link></p>
         <nav aria-label="Разделы витрины" className="mqx-fin-subtabs-row" style={{ flexWrap: 'wrap', marginTop: 12 }}>
           <MqxButton variant="secondary" onClick={() => document.getElementById('mqx-actions')?.focus()}>
             Действия
@@ -168,6 +171,13 @@ export function MqCatalogScreen() {
           </MqxButton>
         </nav>
       </header>
+
+      <section aria-labelledby="mqx-brand">
+        <h2 id="mqx-brand">Бренд</h2>
+        <CatalogSection title="Твой ход · Финансы как игра">
+          <BrandLogo variant="finance-game" />
+        </CatalogSection>
+      </section>
 
       <section aria-labelledby="mqx-actions">
         <h2 id="mqx-actions" tabIndex={-1}>Действия</h2>
@@ -337,25 +347,21 @@ export function MqCatalogScreen() {
           </div>
         </CatalogSection>
 
-        <CatalogSection title="Меню ★ BG-2 — карта сохранения и спокойные кнопки">
-          <p className="mqx-catalog__lead">
-            <code>MqxSaveCard</code> (портрет, ход, на счёте, цель + «Продолжить игру») и <code>MqxBoardButton</code>{' '}
-            (подпись + пояснение; <code>variant=&quot;link&quot;</code> — текстовая).
-          </p>
-          <div className="mqx-pg mqx-catalog__pg-demo">
-            <MqxSaveCard
-              templateKey="mq_game_basic_v1"
-              periodIndex={12}
-              cash={87400}
-              note="Цель: шаг 4 из 5"
-              onContinue={() => {}}
-            />
-            <div className="mqx-pg-actions">
-              <MqxBoardButton hint="другая жизнь">Новая игра</MqxBoardButton>
-              <MqxBoardButton hint="3 партии">Все сохранения</MqxBoardButton>
-            </div>
-            <MqxBoardButton variant="link">Выйти из аккаунта</MqxBoardButton>
-          </div>
+        <CatalogSection title="Персонажи · круглые портреты">
+          <ul id="student-portrait-preview" className="mqx-catalog__portraits">
+            {[
+              ['student', 'Студент'],
+              ['professional', 'Профессионал'],
+              ['manager', 'Руководитель'],
+              ['entrepreneur', 'Предприниматель'],
+            ].map(([role, label]) => (
+              <li key={role} data-portrait-role={role}>
+                <span className="mqx-catalog__portrait-swatch" aria-hidden="true" />
+                <span>{label}</span>
+              </li>
+            ))}
+          </ul>
+          <p><Link to="/dev/mqx/menu">Карта текущей партии в утверждённом Меню</Link></p>
         </CatalogSection>
 
         <CatalogSection title="Онбординг — Guidance strip (O2 ★)">

@@ -32,7 +32,7 @@
         }
       ],
       "invariants": [
-        "Turn card: logo, turn number, balance and persona, gold finish button, close preview and events."
+        "Turn card: current BrandLogo, gold turn marker, large balance, persona and separate Monetka help, gold finish button, close preview and events with a distinct remaining count."
       ]
     },
     {
@@ -109,7 +109,7 @@
         }
       ],
       "invariants": [
-        "Goal below the actions. Collapsed state shows completed count and step numbers. Expanded state shows the full victory chain."
+        "Goal below the actions. Collapsed state shows a completion badge and connected steps. Expanded state shows the full victory chain."
       ]
     }
   ],

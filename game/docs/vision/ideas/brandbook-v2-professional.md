@@ -20,10 +20,10 @@ aliases:
 
 | Слой | Markdown | PDF (печать) |
 |------|----------|--------------|
-| **Brand Guidelines** | [`BRANDBOOK.md`](../../reference/brandbook/BRANDBOOK.md) | `brandbook-print.html` |
-| **Product UI (MQX)** | [`BRANDBOOK_MQX.md`](../../reference/brandbook/BRANDBOOK_MQX.md) | `brandbook-mqx-print.html` |
+| **Brand Guidelines** | [`BRANDBOOK.md`](../../archive/brandbook-2026-05/BRANDBOOK.md) | `brandbook-print.html` |
+| **Product UI (MQX)** | [`BRANDBOOK_MQX.md`](../../archive/brandbook-2026-05/BRANDBOOK_MQX.md) | `brandbook-mqx-print.html` |
 
-**Пакет ассетов:** [`game/docs/reference/brandbook/assets/`](../../reference/brandbook/assets/INDEX.md) — G1, G2, monetka, avatar **ТХ** (SVG 512×512).
+**Пакет ассетов:** [`game/docs/archive/brandbook-2026-05/assets/`](../../archive/brandbook-2026-05/assets/INDEX.md) — G1, G2, monetka, avatar **ТХ** (SVG 512×512).
 
 **Tagline (рекомендация до ★ T*):** G1 — tagline в PNG на старте; G2 + tagline в CSS на игре/лендинге (T1/T7 из tagline-round).
 

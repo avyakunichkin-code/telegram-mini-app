@@ -7,9 +7,16 @@ import json
 import pytest
 
 from app.finance.expense_defaults import expense_budget_for_template
-from app.finance.expenses import compute_monthly_burn, ensure_expense_category_catalog, seed_expense_lines_from_budget
+from app.finance.expenses import (
+    compute_monthly_burn,
+    ensure_expense_category_catalog,
+    expire_expense_lines_for_period,
+    seed_expense_lines_from_budget,
+)
 from app.models import EventChoice, EventDefinition, EventInstance, GameProfile, ProfileExpenseLine
 from app.events.mvp11_seeds import ensure_mvp11_event_catalog
+from app.services.events.choose import choose_event
+from app.services.events.payload import serialize_instance_rows
 
 
 @pytest.fixture()
@@ -80,3 +87,45 @@ def test_choose_event_expense_line(client, auth_headers, db_session, profile_wit
     )
     assert len(event_lines) >= 1
     assert any(l.category_key == "communications" for l in event_lines)
+
+
+@pytest.mark.parametrize(
+    ("key", "template", "choice_index", "term", "monthly"),
+    [
+        ("mq11_phone_tariff_student", "mq_game_basic_v1", 0, 3, 1100),
+        ("mq11_phone_tariff_pro", "mq_game_tight_budget_v1", 0, 3, 1400),
+        ("mq11_home_internet", "mq_game_basic_v1", 0, 4, 500),
+        ("mq11_streaming_offer", "mq_game_basic_v1", 0, 4, 400),
+        ("mq11_lifestyle_creep", "mq_game_basic_v1", 0, 4, 900),
+        ("mq11_staff_retention_entrepreneur", "mq_game_debt_stack_v1", 1, 3, 8000),
+        ("mq11_relocation_bonus", "mq_game_tight_budget_v1", 1, 6, 3000),
+    ],
+)
+def test_trial_expense_matches_preview_and_ends_at_term(
+    db_session, profile_with_lines, key, template, choice_index, term, monthly,
+):
+    ensure_mvp11_event_catalog(db_session)
+    profile = profile_with_lines
+    profile.starter_template_key = template
+    start = profile.period_index
+    definition = db_session.query(EventDefinition).filter_by(key=key).one()
+    instance = EventInstance(
+        game_profile_id=profile.id,
+        definition_id=definition.id,
+        period_index=start,
+        status="pending",
+    )
+    db_session.add(instance)
+    db_session.commit()
+
+    payload = serialize_instance_rows(db_session, [instance], profile=profile)[0]
+    choice = payload["choices"][choice_index]
+    burn_impact = next(impact for impact in choice["impacts"] if impact["kind"] == "burn")
+    assert burn_impact["delta"] == monthly
+    before = float(compute_monthly_burn(db_session, profile).total)
+    choose_event(db_session, profile, instance.id, choice["id"])
+    assert float(compute_monthly_burn(db_session, profile).total) == before + monthly
+
+    assert expire_expense_lines_for_period(db_session, profile, start + term - 1) == 0
+    assert expire_expense_lines_for_period(db_session, profile, start + term) == 1
+    assert float(compute_monthly_burn(db_session, profile).total) == before

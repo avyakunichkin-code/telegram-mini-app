@@ -41,4 +41,4 @@ npm run persona-portraits:process
 - `MqxStarterScenarioPicker` (`usePersonaPortraits`, по умолчанию `true`)
 - `MqxNeedsDash` — портрет по `templateKey`
 
-SVG I-Scene остаётся в [`../scenario-icons/`](../scenario-icons) как архив.
+SVG I-Scene сохранён в [архиве](../../archive/scenario-icons-2026-11/).

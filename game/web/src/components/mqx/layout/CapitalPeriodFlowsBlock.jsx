@@ -39,7 +39,7 @@ function FlowLines({ article }) {
   );
 }
 
-function FlowBreakdown({ side, emptyText }) {
+export function FlowBreakdown({ side, emptyText }) {
   const articles = side?.articles || [];
   if (articles.length === 0) return <p className="mqx-cap-flows__empty">{emptyText}</p>;
   return articles.map((article) => (

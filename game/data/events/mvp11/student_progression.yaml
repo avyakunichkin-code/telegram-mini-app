@@ -264,6 +264,30 @@ events:
       needs_delta:
         status: -8
         comfort: -6
+  - title: Устроить поездку выходного дня
+    description: Потратить 20% зарплаты на короткую поездку и сохранить остальное.
+    effects:
+      cash_pct_salary: 0.20
+      needs_delta:
+        social: 11
+        health: 8
+      requires_chain_branch: trip
+  - title: Взять один пробный модуль
+    description: Потратить 20% зарплаты, чтобы оценить программу перед покупкой полного курса.
+    effects:
+      cash_pct_salary: 0.20
+      needs_delta:
+        status: 12
+        comfort: 6
+      requires_chain_branch: course
+  - title: Собрать рабочее место по частям
+    description: Потратить 20% зарплаты на самое необходимое и отложить остальную покупку.
+    effects:
+      cash_pct_salary: 0.20
+      needs_delta:
+        comfort: 10
+        status: 8
+      requires_chain_branch: studio
 - definition_key: mq11_student_diploma_offer
   content_class: profile
   event_slot: period_choice
@@ -589,8 +613,15 @@ events:
     effects:
       cash_delta: 0
       needs_delta:
-        health: -7
+        health: -4
         comfort: -2
+  - title: Приготовить еду на несколько дней
+    description: Купить недорогие продукты и потратить вечер на готовку.
+    effects:
+      cash_delta: -900
+      needs_delta:
+        health: 5
+        comfort: -1
 - definition_key: mq11_student_student_club
   content_class: profile
   event_slot: period_choice
@@ -687,11 +718,11 @@ events:
         social: 8
         comfort: 4
   - title: Смотреть запись
+    description: Послушать бесплатно. Познакомиться с участниками и задать вопросы лично не получится.
     effects:
       cash_delta: 0
       needs_delta:
-        social: -5
-        comfort: -2
+        social: -2
 - definition_key: mq11_student_dentist
   content_class: profile
   event_slot: period_choice
@@ -787,10 +818,11 @@ events:
         health: 9
         status: 1
   - title: Бегать в парке
+    description: Тренировки без абонемента, но на улице придётся подстраиваться под погоду.
     effects:
       cash_delta: 0
       needs_delta:
-        health: -3
+        health: 6
         comfort: -2
 - definition_key: mq11_student_volunteer
   content_class: profile

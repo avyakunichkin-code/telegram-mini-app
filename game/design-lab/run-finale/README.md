@@ -12,7 +12,7 @@
 | Утверждённый блок решений A · Чек для обоих исходов | [`decisions-round/index.html`](decisions-round/index.html), [`утверждение`](decisions-round/APPROVED.md) |
 | Канон-дизайн BG-2 | [`../board-game/screens-round/`](../board-game/screens-round) — «Финал · Победа», «Финал · Поражение» |
 | Утверждённый React | `#/dev/mqx` → «Финал партии ★ BG-2» |
-| История: V1 «Газета» (2026-06-01) | [`index.html`](index.html), [`VARIANTS.md`](VARIANTS.md) |
+| История: V1 «Газета» (2026-06-01) | [Локальный архив](../archive/run-finale-v1-2026-11/) |
 
 ## Запуск
 
@@ -25,8 +25,6 @@ cd game/design-lab/run-finale/bg2-page-round
 ./sync-lab.sh   # lab-base.css из board-game (токены ADR-014 + screens-round) и ассеты
 npx serve .
 ```
-
-История V1: `cd design-lab/run-finale && ./sync-lab.sh && npx serve .`
 
 ## Ассеты победы
 

@@ -59,7 +59,7 @@ export async function startNewGameFromMenu(page) {
   await page.goto('/#/');
   await page.getByRole('button', { name: 'Новая игра' }).click();
   // Знакомство с напарником (★ companions-round B) — между стартом партии и первым ходом.
-  await expect(page.getByText('проведёт тебя через первые шаги')).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Твой напарник' })).toBeVisible();
   await page.getByRole('button', { name: 'Начать первый ход' }).click();
   await expect(page.getByRole('button', { name: 'Завершить ход и перейти к следующему' })).toBeVisible();
   // Партия догрузилась (подсказка шага 1 пришла с сервера) — иначе сценарии с офлайном ловят оборванный стартовый запрос.

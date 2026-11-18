@@ -1,0 +1,302 @@
+:root {
+  --landing-plum: #38204d;
+  --landing-gold: #ffcf61;
+  --landing-cream: #fbf5ea;
+}
+body[data-direction="a"] { background: var(--landing-cream); }
+.landing-brand-logo { display: block; width: 96px; height: auto; }
+body[data-direction="a"] .play {
+  background: var(--landing-gold);
+  color: var(--landing-plum);
+  border: 1px solid #deb250;
+  border-radius: 14px;
+  box-shadow: 0 3px 0 #deb250;
+}
+body[data-direction="a"] .interface { padding-block: clamp(38px, 6vw, 84px); }
+.game-gallery {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(12px, 2vw, 26px);
+  align-items: start;
+}
+.game-gallery figure { margin: 0; padding: 10px; background: #eee5f7; border-radius: 20px; }
+.game-gallery figcaption { padding: 4px 8px 10px; font-weight: 900; }
+.game-gallery img { display: block; width: 100%; border: 0; border-radius: 12px; }
+body[data-direction="a"] .choice-section { background: #ece3f5; }
+body[data-direction="a"] .choice-card,
+body[data-direction="a"] .steps article,
+body[data-direction="a"] .life-grid article {
+  border-color: #ddcce8;
+  border-radius: 18px;
+  box-shadow: 0 3px 0 #ddd0e4;
+}
+body[data-direction="a"] .faq details { border-color: #ded0e4; }
+body[data-direction="a"] .final { background: var(--landing-plum); color: var(--landing-cream); }
+@media (max-width: 760px) {
+  .game-gallery { grid-template-columns: minmax(0, 390px); justify-content: center; }
+  .masthead .landing-brand-logo { width: 78px; }
+
+}
+
+/* Layout follows the original full-page concept. */
+body[data-direction="a"] .masthead {
+  position: relative;
+  inset: auto;
+  min-height: 64px;
+  margin: 10px auto 0;
+  padding: 8px clamp(12px, 3vw, 36px);
+  width: min(1440px, calc(100% - 28px));
+  background: #fffaf3;
+  border: 1px solid #e5d8ea;
+  border-radius: 18px;
+}
+body[data-direction="a"] .hero {
+  min-height: clamp(460px, 46vw, 650px);
+  margin-top: 8px;
+}
+body[data-direction="a"] .hero-content { margin-block: 40px; }
+body[data-direction="a"] .hero-art { width: 72%; left: auto; object-position: center 50%; }
+body[data-direction="a"] .hero-shade {
+  background: linear-gradient(90deg, #fbf5ea 27%, #fbf5eaaa 37%, transparent 58%);
+}
+body[data-direction="a"] .selected-ribbon,
+body[data-direction="a"] .scene-caption,
+body[data-direction="a"] .scroll-cue { display: none; }
+body[data-direction="a"] .interface,
+body[data-direction="a"] .how,
+body[data-direction="a"] .life,
+body[data-direction="a"] .faq { padding-block: clamp(26px, 4vw, 58px); }
+body[data-direction="a"] .game-gallery { margin-top: 20px; }
+body[data-direction="a"] .how { background: var(--landing-cream); }
+body[data-direction="a"] .steps article { padding: 16px; background: #fffaf3; }
+body[data-direction="a"] .choice-section {
+  width: min(1200px, calc(100% - 32px));
+  margin: 0 auto;
+  padding: clamp(18px, 4vw, 48px) 0;
+  border-radius: 24px;
+  background: #e2edf9;
+}
+body[data-direction="a"] .choice-card { background: #fffaf3; }
+body[data-direction="a"] .life { background: var(--landing-cream); color: var(--landing-plum); }
+body[data-direction="a"] .life p { color: #5e4667; }
+body[data-direction="a"] .life-grid {
+  padding: 16px;
+  border-radius: 18px;
+  background: #f0e6f7;
+  gap: 12px;
+}
+body[data-direction="a"] .life-grid article { padding: 16px; background: #fffaf3; }
+body[data-direction="a"] .roadmap { padding-block: clamp(30px, 5vw, 64px); }
+body[data-direction="a"] .route-board { height: auto; min-height: 0; padding: 18px 0 16px; background: none; }
+.roadmap-route .route-diagonal, .roadmap-route .route-road { display: none; }
+.route-board .roadmap-track {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(4,minmax(0,1fr));
+  gap: 18px;
+  padding: 0;
+}
+.roadmap-track::before {
+  content: "";
+  position: absolute;
+  inset: 27px 0 auto;
+  height: 26px;
+  border-radius: 16px;
+  background: repeating-linear-gradient(100deg,#e7c3a2 0 28px,#f6dfbf 29px 54px);
+  transform: rotate(-2deg);
+  z-index: -1;
+}
+body[data-direction="a"] .route-board .milestone {
+  display: grid;
+  align-content: start;
+  justify-items: center;
+  position: relative;
+}
+body[data-direction="a"] .milestone .route-node {
+  position: relative;
+  inset: auto;
+  width: 48px;
+  height: 44px;
+  margin: 0 0 -12px;
+  z-index: 1;
+}
+body[data-direction="a"] .milestone .milestone-copy {
+  position: relative;
+  inset: auto;
+  width: 100%;
+  height: 100%;
+  padding: 26px 15px 15px;
+  border-radius: 18px;
+  border: 1px solid #d7c4e0;
+  background: #f2e9f7;
+}
+body[data-direction="a"] .milestone.done .milestone-copy { background: #e7efdd; }
+body[data-direction="a"] .milestone.current .milestone-copy { background: #fff1c5; border-color: #e8bd58; }
+body[data-direction="a"] .route-player { inset: auto 0 100%; width: 72px; height: auto; }
+body[data-direction="a"] .route-here { display: none; }
+body[data-direction="a"] .final {
+  background: var(--landing-gold);
+  color: var(--landing-plum);
+  width: min(1200px, calc(100% - 32px));
+  margin: 16px auto 0;
+  padding: 24px 0;
+  border-radius: 22px;
+}
+body[data-direction="a"] .final .wrap { display: flex; align-items: center; gap: 20px; justify-content: space-between; }
+body[data-direction="a"] .final h2 { margin: 0; font-size: clamp(27px,4vw,49px); }
+body[data-direction="a"] .final .play { color: #fff6e8; background: var(--landing-plum); border-color: var(--landing-plum); }
+@media (max-width: 760px) {
+  body[data-direction="a"] .hero { display: flex; flex-direction: column-reverse; align-items: stretch; min-height: 0; }
+  body[data-direction="a"] .hero-art { position: static; width: 100%; height: auto; aspect-ratio: 3 / 2; }
+  body[data-direction="a"] .hero-shade { display: none; }
+  body[data-direction="a"] .hero-content { margin-block: 24px; }
+  .route-board .roadmap-track { grid-template-columns: 1fr; padding-left: 18px; }
+  .roadmap-track::before { inset: 0 auto 0 0; height: auto; width: 22px; transform: none; }
+  body[data-direction="a"] .route-player { inset: auto 4px auto auto; top: -18px; width: 56px; z-index: 2; }
+  body[data-direction="a"] .final .wrap { flex-direction: column; align-items: stretch; }
+}
+body[data-direction="a"] .route-board .milestone { padding: 0; border: 0; background: none; }
+body[data-direction="a"] .route-player { inset: auto 6px 100% auto; width: 66px; max-height: 70px; }
+body[data-direction="a"] .route-board { margin-top: 46px; }
+@media (max-width: 760px) {
+  body[data-direction="a"] .route-player { inset: 2px 3px auto auto; width: 48px; }
+}
+
+/* The cutouts sit alongside the copy at the same scale across sections. */
+body[data-direction="a"] .how-mascot {
+  width: clamp(100px, 16vw, 215px);
+  height: auto;
+  max-height: 210px;
+  bottom: -8px;
+  object-position: bottom;
+}
+body[data-direction="a"] .narrator {
+  gap: 10px;
+  align-items: center;
+}
+body[data-direction="a"] .narrator img {
+  width: clamp(105px, 14vw, 190px);
+  height: auto;
+  object-position: bottom;
+}
+body[data-direction="a"] .route-board { margin-top: 80px; }
+body[data-direction="a"] .route-player {
+  inset: auto 0 calc(100% - 17px) auto;
+  width: 112px;
+  max-height: 120px;
+}
+.roadmap-track::before {
+  inset: -55px 0 auto;
+  height: 145px;
+  background: url("./roadmap-trail.png") center 57% / 100% auto no-repeat;
+  transform: none;
+}
+@media (max-width: 760px) {
+  body[data-direction="a"] .how-mascot { width: 96px; max-height: 128px; }
+  body[data-direction="a"] .route-board { margin-top: 22px; }
+  body[data-direction="a"] .route-player {
+    inset: 0 8px auto auto;
+    width: 64px;
+    max-height: 74px;
+  }
+  .roadmap-track::before {
+    inset: 0 auto 0 0;
+    height: auto;
+    background: repeating-linear-gradient(#e7c3a2 0 25px,#f6dfbf 26px 48px);
+  }
+}
+
+/* Heading and supporting copy share a row, as in the first concept. */
+body[data-direction="a"] :is(.interface .section-heading, .roadmap-intro, .life-heading) {
+  display: grid;
+  grid-template-columns: 1.15fr 1fr;
+  align-items: end;
+  gap: 12px 32px;
+  max-width: none;
+}
+body[data-direction="a"] :is(.interface .section-heading, .roadmap-intro, .life-heading) > :is(h2,p) {
+  margin: 0;
+}
+body[data-direction="a"] .game-gallery { align-items: stretch; gap: 14px; }
+body[data-direction="a"] .game-gallery figure {
+  padding: 10px;
+  border: 1px solid #d8c8df;
+  background: #f2e9f7;
+}
+body[data-direction="a"] .how-with-mascot { min-height: 110px; }
+body[data-direction="a"] .how-mascot { bottom: -55px; }
+body[data-direction="a"] .steps { gap: 26px; }
+body[data-direction="a"] .steps article { position: relative; border: 1px solid #dfd0e4; }
+body[data-direction="a"] .steps .number {
+  display: inline-grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #e5d4fa;
+  color: #43255d;
+  font-size: 16px;
+  margin-bottom: 10px;
+}
+body[data-direction="a"] .steps article:nth-child(2) .number { background: #d8eedf; }
+body[data-direction="a"] .steps article:nth-child(3) .number { background: #ffe3a1; }
+body[data-direction="a"] .life-grid { padding: 0; gap: 0; overflow: hidden; }
+body[data-direction="a"] .life-grid article {
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+  background: #f1e8f6;
+  padding: 18px;
+}
+body[data-direction="a"] .life-grid article + article { border-inline-start: 1px solid #dccce4; }
+body[data-direction="a"] .faq details {
+  border: 1px solid #dfd0e4;
+  border-radius: 13px;
+  padding: 8px 14px;
+  margin-bottom: 6px;
+  background: #fffaf3;
+}
+body[data-direction="a"] .faq summary { min-height: 34px; align-content: center; }
+@media (min-width: 761px) {
+  body[data-direction="a"] .steps article:not(:last-child)::after {
+    content: "→";
+    position: absolute;
+    top: 50%;
+    right: -23px;
+    color: var(--landing-plum);
+    font: 900 19px/1 Nunito, sans-serif;
+  }
+}
+@media (max-width: 760px) {
+  body[data-direction="a"] :is(.interface .section-heading, .roadmap-intro, .life-heading) { grid-template-columns: 1fr; }
+  body[data-direction="a"] .how-with-mascot { min-height: 130px; }
+  body[data-direction="a"] .how-mascot { bottom: auto; }
+  body[data-direction="a"] .steps { gap: 12px; }
+  body[data-direction="a"] .life-grid article + article { border-inline-start: 0; border-top: 1px solid #dccce4; }
+}
+
+/* Each role has a separate scene, with the entrepreneur at the end of the route. */
+body[data-direction="a"] .how-mascot { bottom: -24px; }
+body[data-direction="a"] .route-board > .route-player {
+  inset: auto 0 10px auto;
+  width: clamp(110px, 16vw, 210px);
+  max-height: none;
+  z-index: 1;
+}
+@media (min-width: 1000px) {
+  body[data-direction="a"] .route-board { padding-inline-end: clamp(120px, 16vw, 220px); }
+}
+@media (max-width: 999px) {
+  body[data-direction="a"] .route-board > .route-player {
+    position: relative;
+    display: block;
+    inset: auto;
+    margin: 0 0 8px auto;
+    width: 120px;
+  }
+}
+@media (max-width: 760px) {
+  body[data-direction="a"] .how-mascot { bottom: auto; }
+}
+
+.masthead .landing-brand-logo--horizontal { width: clamp(136px, 16vw, 214px); }

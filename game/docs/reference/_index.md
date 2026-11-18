@@ -15,5 +15,5 @@ GDD outline, брендбук, investor deck — вне dev-цикла.
 - [[game/docs/reference/CHARACTER_MONETKA|Character Monetka]]
 - [[game/docs/reference/brandbook/BRANDBOOK|Brandbook]]
 - [[game/docs/reference/brandbook/BRANDBOOK_MQX|Brandbook MQX]]
-- [[game/docs/reference/brandbook/assets/INDEX|Brand Assets]]
+- [Утверждённый логотип и форматы](../../design/system/assets/Logos/README.md)
 - [[game/docs/reference/investor-deck/INVESTOR_DECK|Investor Deck]]

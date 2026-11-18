@@ -12,7 +12,7 @@
 
 ## Визуальные ассеты
 
-Источник: `source-id:skills/_shared/visual-assets-policy.md`. Стиль и имеющиеся файлы — [brandbook](../../reference/brandbook/BRANDBOOK_MQX.md), [asset index](../../reference/brandbook/assets/INDEX.md); процесс — [DESIGN_WORKFLOW](../../../web/src/components/mqx/DESIGN_WORKFLOW.md).
+Источник: `source-id:skills/_shared/visual-assets-policy.md`. Стиль и имеющиеся файлы — [brandbook](../../reference/brandbook/BRANDBOOK_MQX.md), [форматы знака](../../../design/system/assets/Logos/README.md); процесс — [DESIGN_WORKFLOW](../../../web/src/components/mqx/DESIGN_WORKFLOW.md).
 
 Перед изготовлением нового ассета определить тип, формат, размер/aspect, стиль и путь. Если поручение/утверждённый вариант уже задаёт эти параметры, повторное согласование не требуется. Названия инструментов снятого контура и отдельный blanket approval перед генерацией не перенесены.
 

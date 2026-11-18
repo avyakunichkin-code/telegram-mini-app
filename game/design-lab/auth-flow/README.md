@@ -2,7 +2,7 @@
 
 > **История (2026-10-15).** Канон экранов до партии — ★ BG-2: [`../pre-game-shell/APPROVED.md`](../pre-game-shell/APPROVED.md), макет [`../board-game/screens-round/`](../board-game/screens-round).
 
-**Статус:** **★ B · Монетка** внедрён в prod (`LoginForm`, `RegisterForm`).
+**Статус:** исторический вариант B. [Архивная витрина](../archive/pregame-history-2026-11/auth-flow/) · [текущие стартовые экраны](../start-flow-concept-round/APPROVED.md).
 
 | Документ | Назначение |
 |----------|------------|
@@ -13,10 +13,7 @@
 
 ## Запуск
 
-```bash
-cd design-lab/auth-flow
-npx serve .
-```
+[Открыть историческую витрину](../archive/pregame-history-2026-11/auth-flow/index.html).
 
 Переключатель **светлая / тёмная** в шапке. В варианте **C** — табы «Вход | Регистрация» кликабельны.
 

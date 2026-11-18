@@ -22,7 +22,7 @@ aliases:
 > **Journey Phase(s):** активная партия (core loop), сценарий №6 TMA — «финансовая картина»  
 > **Template:** UX Spec (`game/docs/ux/screens/`)
 
-**Связанные документы:** [`TMA_USER_FLOWS.md`](../../foundation/TMA_USER_FLOWS.md) · [`SPEC_FRONTEND_UI.md`](../../specs/SPEC_FRONTEND_UI.md) (§Капитал) · [`ux/screens/dashboard.md`](dashboard.md) · [`accessibility-requirements.md`](../accessibility-requirements.md) · [`game/design-lab/capital-page/details-actions-round/README.md`](../../../design-lab/capital-page/details-actions-round/README.md) · [`game/design-lab/finance-insurance/README.md`](../../../design-lab/finance-insurance/README.md)
+**Связанные документы:** [`TMA_USER_FLOWS.md`](../../foundation/TMA_USER_FLOWS.md) · [`SPEC_FRONTEND_UI.md`](../../specs/SPEC_FRONTEND_UI.md) (§Капитал) · [`ux/screens/dashboard.md`](dashboard.md) · [`accessibility-requirements.md`](../accessibility-requirements.md) · [утверждённый Капитал](../../../design-lab/capital-page/APPROVED.md) · [`game/design-lab/finance-insurance/README.md`](../../../design-lab/finance-insurance/README.md)
 
 **Реализация:** `FinancePremium.jsx`, `CapitalPeriodFlowsBlock`, `MqxCapitalPageModeSeg`, `CapitalDetailsPanel`, `CapitalActionsPanel`, `MqxCapitalActionGrid`, `MqxCapitalSheet`, `InvestProductForm`, `InsuranceProductPicker`; оболочка — `GameScreen.jsx` (`activeTab === 'finance'`).
 
@@ -110,7 +110,7 @@ App (HashRouter)
 
 **Порядок аккордеонов в «Детали» (2026-06):** как выше; видимость по `mechanics_effective` / `capitalSectionState` (страховки locked).
 
-Сводка **Доходы / Расходы** всегда **выше** сегмента и контента ([`details-actions-round`](../../../design-lab/capital-page/details-actions-round)).
+Сводка **Доходы / Расходы** всегда **выше** сегмента и контента ([утверждённый Капитал](../../../design-lab/capital-page/APPROVED.md)).
 
 ### Component Inventory
 

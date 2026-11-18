@@ -64,6 +64,7 @@ function maxBy(items, pick) {
 /** Панель «Действия» ★ BG-2 — фишки по группам + bottom sheets. */
 export function CapitalActionsPanel({
   sections,
+  hideGrid = false,
   lockHint,
   assetTemplates,
   liabilityTemplates,
@@ -241,12 +242,12 @@ export function CapitalActionsPanel({
 
   return (
     <>
-      <MqxCapitalActionGrid
+      {!hideGrid && <MqxCapitalActionGrid
         sections={sections}
         notes={pieceNotes}
         lockHint={lockHint}
         onOpenSheet={onOpenSheet}
-      />
+      />}
       <MqxCapitalSheet
         open={Boolean(openSheet && sheetCopy)}
         title={sheetCopy?.title}

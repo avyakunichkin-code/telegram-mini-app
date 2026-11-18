@@ -9,6 +9,7 @@ from typing import Any
 from sqlalchemy.orm import Session
 
 from ..finance.expenses import compute_monthly_burn
+from ..game.rules import clamp_profile_lifestyle_delta
 from .insurance_hooks import find_policy_for_claim
 
 
@@ -23,6 +24,9 @@ def resolve_lifestyle_delta_from_effects(
     pct = effects.get("monthly_burn_delta_pct")
     if pct is not None:
         delta += round(burn_total * float(pct), 2)
+    if delta:
+        current = float(getattr(profile, "delta_monthly_lifestyle_expense", 0) or 0)
+        delta = clamp_profile_lifestyle_delta(current, delta) - current
     raw_line = effects.get("expense_line")
     if isinstance(raw_line, dict):
         delta += float(raw_line.get("amount_monthly", raw_line.get("amount", 0)) or 0)

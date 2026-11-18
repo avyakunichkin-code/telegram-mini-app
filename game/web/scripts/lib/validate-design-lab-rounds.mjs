@@ -104,7 +104,7 @@ function validateRoundDir(roundDirAbs, repoRoot, { label, enforceFreshLabBase = 
 
   if (hasLegacySyncPs1(roundDirAbs) && !hasSyncLab) {
     errors.push(
-      `${tag}: найден устаревший sync-lab.ps1 без sync-lab.sh — порт на bash (см. details-actions-round/sync-lab.sh).`,
+      `${tag}: найден устаревший sync-lab.ps1 без sync-lab.sh — порт на bash (см. board-game/screens-round/sync-lab.sh).`,
     )
   }
 

@@ -37,9 +37,10 @@ events:
   description: Сильный ушиб после падения. Без лечения ходить больно — отложить визит к врачу нельзя.
   weight: 72
   event_tier: 2
-  repeat_policy: repeatable
+  repeat_policy: max_per_profile
+  repeat_max: 2
   scenario_shape: mandatory
-  cooldown_periods: 4
+  cooldown_periods: 10
   mandatory_gate: blocks_period_end
   choices:
   - title: Травмпункт и перевязки
@@ -52,11 +53,12 @@ events:
   - title: МРТ и ортез
     purpose: mitigation
     effects:
-      cash_delta: -24000
+      cash_delta: -16000
       needs_delta:
-        health: 2
-        comfort: 2
+        health: 7
+        comfort: 4
   - title: Терпеть без врача
+    description: 3 000 ₽ со счёта сразу и 2 800 ₽ при закрытии каждого из двух периодов, включая текущий.
     purpose: mitigation
     effects:
       cash_delta: -3000
@@ -80,21 +82,21 @@ events:
     is_rescue: true
     rescue_axes:
     - health
-    - comfort
   cooldown_periods: 3
   choices:
   - title: Прогуляться
+    description: Бесплатная прогулка на свежем воздухе, даже если на улице неуютно.
     effects:
-      cash_pct_salary: 0.015
+      cash_delta: 0
       needs_delta:
         health: 6
-        comfort: 5
+        comfort: -3
   - title: Остаться дома
     effects:
       cash_delta: 0
       needs_delta:
         health: -2
-        comfort: -2
+        comfort: 2
 - definition_key: mq11_dental_checkup
   content_class: universal
   event_slot: period_choice

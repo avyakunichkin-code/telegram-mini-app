@@ -39,22 +39,26 @@ events:
   cooldown_periods: 12
   choices:
   - title: Один сервис
+    description: Продление на четыре периода.
     effects:
       cash_delta: -599
       expense_line:
         category_key: communications
         amount_monthly: 400
         title: Стриминг
+        expires_after_periods: 4
       needs_delta:
         comfort: 5
         social: 2
   - title: Пакет «всё включено»
+    description: Пакет подписок на четыре периода.
     effects:
       cash_delta: -1290
       expense_line:
         category_key: communications
         amount_monthly: 900
         title: Пакет подписок
+        expires_after_periods: 4
       needs_delta:
         comfort: 8
         social: 3
@@ -68,21 +72,21 @@ events:
 - definition_key: mq11_gym_membership
   event_domain: consumption
   title: Абонемент в спортзал
-  description: Зал предлагает продлить членство со скидкой.
+  description: Как тренироваться в ближайшие три периода?
   weight: 80
   event_tier: 1
   repeat_policy: repeatable
   scenario_shape: soft_offer
   cooldown_periods: 3
   choices:
-  - title: Продлить на год
+  - title: Тренировки с инструктором на квартал
     effects:
-      cash_pct_salary: 0.24
+      cash_pct_salary: 0.15
       needs_delta:
         health: 15
         comfort: 7
         status: 3
-  - title: Продлить на квартал
+  - title: Самостоятельные тренировки на квартал
     effects:
       cash_pct_salary: 0.07
       needs_delta:
@@ -289,7 +293,7 @@ events:
   - mq_game_basic_v1
   event_domain: consumption
   title: Тариф мобильной связи
-  description: Оператор предлагает больше гигабайт и безлимит на мессенджеры — удобно для учёбы и чатов.
+  description: Оператор предлагает пакет трафика на три периода — удобно для учёбы и чатов.
   weight: 80
   event_tier: 1
   repeat_policy: repeatable
@@ -297,22 +301,26 @@ events:
   cooldown_periods: 4
   choices:
   - title: Тариф «безлимит»
+    description: Безлимит на мессенджеры на три периода.
     effects:
       cash_delta: -900
       expense_line:
         category_key: communications
         amount_monthly: 1100
-        title: Мобильная связь
+        title: Доплата за безлимит
+        expires_after_periods: 3
       needs_delta:
         comfort: 7
         social: 4
   - title: Чуть больше трафика
+    description: Дополнительные гигабайты на три периода.
     effects:
       cash_delta: -500
       expense_line:
         category_key: communications
         amount_monthly: 650
-        title: Мобильная связь
+        title: Доплата за пакет трафика
+        expires_after_periods: 3
       needs_delta:
         comfort: 4
         social: 2
@@ -329,7 +337,7 @@ events:
   - mq_game_tight_budget_v1
   event_domain: consumption
   title: Тариф мобильной связи
-  description: Оператор предлагает корпоративный пакет с роумингом — удобно для звонков клиентам, но дороже.
+  description: Оператор предлагает на три периода корпоративный пакет с роумингом для звонков клиентам.
   weight: 80
   event_tier: 1
   repeat_policy: repeatable
@@ -337,22 +345,26 @@ events:
   cooldown_periods: 4
   choices:
   - title: Пакет с роумингом
+    description: Корпоративный пакет с роумингом на три периода.
     effects:
       cash_delta: -1200
       expense_line:
         category_key: communications
         amount_monthly: 1400
-        title: Мобильная связь
+        title: Доплата за роуминг
+        expires_after_periods: 3
       needs_delta:
         comfort: 5
         status: 6
   - title: Базовый апгрейд
+    description: Больше трафика на три периода.
     effects:
       cash_delta: -600
       expense_line:
         category_key: communications
         amount_monthly: 800
-        title: Мобильная связь
+        title: Доплата за базовый пакет
+        expires_after_periods: 3
       needs_delta:
         comfort: 3
         status: 4
