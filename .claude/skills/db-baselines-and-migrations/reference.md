@@ -6,7 +6,7 @@
 ┌─────────────────────────────────────────────────────────┐
 │ 0000_schema_baseline.sql + 00NN_*.sql (psql / db.sh)   │  DDL
 ├─────────────────────────────────────────────────────────┤
-│ Base.metadata.create_all + ensure_schema_compatibility  │  ORM + light patch
+│ app.db_schema.prepare_schema (PG: сверка, SQLite: create_all) │  check only
 ├─────────────────────────────────────────────────────────┤
 │ app.seeds.runner.seed_all (каждый startup)              │  DML upsert
 └─────────────────────────────────────────────────────────┘
@@ -17,7 +17,7 @@
 При добавлении каталога только в SQL:
 
 1. `CREATE TABLE` в новом `00NN_*.sql` **и** в `0000_schema_baseline.sql` (при следующем squash/dump).
-2. `ensure_*_table()` в seed или `ensure_schema_compatibility()` для prod, где migrate не гоняли.
+2. Имя таблицы — в `app/db_schema.RAW_TABLES_BY_DIALECT` (старт упадёт, если migrate не прогнали).
 3. Идемпотентный upsert в `app/seeds/<name>.py`.
 4. Читатели (например `goals_store.py`) — ловить `ProgrammingError` / пустой список до первого seed (defense in depth).
 

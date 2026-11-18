@@ -1,0 +1,21 @@
+{
+  "results": [
+    "map / 375px: no horizontal overflow",
+    "map / 701px: no horizontal overflow",
+    "map / 1050px: no horizontal overflow",
+    "map / 1440px: no horizontal overflow",
+    "action / 375px: no horizontal overflow",
+    "action / 701px: no horizontal overflow",
+    "action / 1050px: no horizontal overflow",
+    "action / 1440px: no horizontal overflow",
+    "loading: visible; boundary behavior checked",
+    "empty: visible; boundary behavior checked",
+    "error: visible; boundary behavior checked",
+    "offline: visible; boundary behavior checked",
+    "saving: visible; boundary behavior checked",
+    "save-error: visible; boundary behavior checked",
+    "Save failure rolls back; retry confirms once; completed step reopens; dismiss/restore; navigation; keyboard focus: PASS",
+    "No JS errors or failed resources"
+  ],
+  "status": "PASS"
+}

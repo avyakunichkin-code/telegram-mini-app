@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 210" role="img" aria-label="Квитя">
+<g stroke="#1d1530" stroke-width="5" stroke-linecap="round" stroke-linejoin="round">
+<path d="M84 176 L84 190" fill="none"/>
+<path d="M116 176 L116 190" fill="none"/>
+<path d="M68 198 Q68 188 78 188 L88 188 Q92 188 92 198 Z" fill="#1d1530"/>
+<path d="M108 198 Q108 188 112 188 L122 188 Q132 188 132 198 Z" fill="#1d1530"/>
+<path d="M64 104 Q42 102 38 84" fill="none"/>
+<circle cx="37" cy="77" r="8" fill="#fcf1c8"/>
+<path d="M136 108 Q158 118 152 138" fill="none"/>
+<circle cx="151" cy="145" r="8" fill="#fcf1c8"/>
+<path d="M70 46 L78 40 L86 46 L94 40 L102 46 L110 40 L118 46 L126 40 L134 46 L142 40 L142 174 L134 182 L126 174 L118 182 L110 174 L102 182 L94 174 L86 182 L78 174 L70 182 Z" fill="#1d1530" stroke="none"/>
+<path d="M64 40 L72 34 L80 40 L88 34 L96 40 L104 34 L112 40 L120 34 L128 40 L136 34 L136 168 L128 176 L120 168 L112 176 L104 168 L96 176 L88 168 L80 176 L72 168 L64 176 Z" fill="#ffffff"/>
+<rect x="76" y="48" width="48" height="7" rx="3.5" fill="#6d28d9" stroke="none"/>
+<circle cx="86" cy="68" r="5.5" fill="#1d1530" stroke="none"/>
+<circle cx="114" cy="68" r="5.5" fill="#1d1530" stroke="none"/>
+<path d="M90 82 Q100 90 110 82" fill="none" stroke-width="4.5"/>
+<path d="M76 100 L124 100 M76 110 L112 110 M76 120 L118 120" fill="none" stroke="#71688a" stroke-width="4"/>
+<path d="M76 131 L124 131" fill="none" stroke-width="2" stroke-dasharray="4 4" stroke-linecap="butt"/>
+<path d="M76 142 L100 142 M112 142 L124 142" fill="none" stroke-width="6"/>
+<rect x="76" y="151" width="15" height="15" fill="#ffffff" stroke-width="2.5"/>
+<g stroke="none" fill="#1d1530"><rect x="78.5" y="153.5" width="4" height="4"/><rect x="84.5" y="153.5" width="4" height="4"/><rect x="78.5" y="159.5" width="4" height="4"/><rect x="85" y="160" width="2.5" height="2.5"/></g>
+<circle cx="118" cy="158" r="9" fill="none" stroke="#6d28d9" stroke-width="2.5"/>
+<circle cx="118" cy="158" r="4.5" fill="none" stroke="#6d28d9" stroke-width="1.5"/>
+</g>
+</svg>

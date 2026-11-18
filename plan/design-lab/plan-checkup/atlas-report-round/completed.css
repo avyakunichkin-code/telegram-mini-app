@@ -1,0 +1,7 @@
+.completion-badge{display:inline-flex;align-items:center;gap:5px;margin-top:7px;padding:4px 9px;border:1px solid #9db48f;border-radius:20px;background:#e0eed5;color:#294724;font-size:11px;line-height:1.5;font-weight:700}
+.step.is-complete>summary .step-number{background:#37572e;color:white;border-radius:50%;width:27px;height:27px;display:grid;place-items:center}
+#live-steps .step.is-complete{border-color:#9eb68e;background:#edf4e6}
+.step.is-complete>summary .step-caption{display:none}
+.step.is-complete>summary b{color:#36562f}
+@media(max-width:700px){.completion-badge{font-size:10px;margin-top:6px;padding:3px 8px}}
+@media(forced-colors:active){.completion-badge{border:2px solid CanvasText}.step.is-complete>summary .step-number{border:2px solid CanvasText}}

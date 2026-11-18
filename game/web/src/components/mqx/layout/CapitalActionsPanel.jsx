@@ -1,0 +1,260 @@
+import { useMemo } from 'react';
+import { InvestProductForm } from '../../InvestProductForm';
+import { AssetTemplateMetrics } from '../metrics/AssetTemplateMetrics';
+import { LiabilityTemplateMetrics } from '../metrics/LiabilityTemplateMetrics';
+import { MqxStateError } from '../primitives/MqxStateError';
+import { MqxStateSkeleton } from '../primitives/MqxStateSkeleton';
+import { formatLotRub } from './CapitalLotNotes';
+import { CapitalPositionCard } from './CapitalPositionCard';
+import { InsuranceProductPicker } from './InsuranceProductPicker';
+import { MqxCapitalActionGrid } from './MqxCapitalActionGrid';
+import { MqxCapitalSheet } from './MqxCapitalSheet';
+import { SecuredAcquisitionList } from './SecuredAcquisitionList';
+import {
+  buildSecuredBundles,
+  filterBundlesForSheet,
+  filterCarAssetTemplates,
+  filterPropertyAssetTemplates,
+  isConsumerLiabilityTemplate,
+} from '../../../utils/capitalDl1';
+
+const SHEET_COPY = {
+  deposit: {
+    title: 'Депозит',
+    subtitle: 'Проценты (1/12 годовой ставки) капитализируются в сумму вклада при завершении хода.',
+  },
+  bond: {
+    title: 'Облигации',
+    subtitle:
+      'Купон (1/12 годовой ставки) зачисляется на счёт при завершении хода.',
+  },
+  realestate: {
+    title: 'Жильё',
+    subtitle: 'Покупка за наличные: полная стоимость списывается со счёта, без кредита.',
+  },
+  car: {
+    title: 'Авто',
+    subtitle: 'Покупка за наличные. Автокредит — в разделе «Кредит».',
+  },
+  insurance: {
+    title: 'Страховки',
+    subtitle:
+      'Первая премия — при оформлении, далее в конце хода. При страховом случае — полная выплата, полис закрывается.',
+  },
+  mortgage: {
+    title: 'Ипотека',
+    subtitle: 'Первый взнос с счёта, кредит на остаток. Сумма кредита на счёт не зачисляется.',
+  },
+  credit: {
+    title: 'Кредиты',
+    subtitle: 'Автокредит, потребительский кредит (до 2). Ипотека — отдельная плитка.',
+  },
+};
+
+function minBy(items, pick) {
+  const vals = (items || []).map(pick).map(Number).filter((n) => Number.isFinite(n) && n > 0);
+  return vals.length ? Math.min(...vals) : null;
+}
+
+function maxBy(items, pick) {
+  const vals = (items || []).map(pick).map(Number).filter((n) => Number.isFinite(n) && n > 0);
+  return vals.length ? Math.max(...vals) : null;
+}
+
+/** Панель «Действия» ★ BG-2 — фишки по группам + bottom sheets. */
+export function CapitalActionsPanel({
+  sections,
+  lockHint,
+  assetTemplates,
+  liabilityTemplates,
+  extraLoading,
+  reloadExtra,
+  openSheet,
+  onOpenSheet,
+  onCloseSheet,
+  depositAmount,
+  bondAmount,
+  maxCash,
+  depositRate,
+  bondRate,
+  onDepositAmountChange,
+  onBondAmountChange,
+  onOpenDeposit,
+  onOpenBond,
+  onBuyInsurance,
+  buyingPlanKey,
+  onAddAssetFromTemplate,
+  onAddLiabilityFromTemplate,
+  onSecuredAcquisition,
+  securedAcquireBusyKey = null,
+  ownedAssets = [],
+}) {
+  const propertyTemplates = useMemo(
+    () => filterPropertyAssetTemplates(assetTemplates),
+    [assetTemplates],
+  );
+  const carTemplates = useMemo(
+    () => filterCarAssetTemplates(assetTemplates),
+    [assetTemplates],
+  );
+  const securedBundles = useMemo(
+    () => buildSecuredBundles(liabilityTemplates, assetTemplates),
+    [liabilityTemplates, assetTemplates],
+  );
+  const creditTemplates = useMemo(
+    () => liabilityTemplates.filter(isConsumerLiabilityTemplate),
+    [liabilityTemplates],
+  );
+
+  const pieceNotes = useMemo(() => {
+    const from = (n) => (n ? `от ${formatLotRub(n)}` : null);
+    const minDown = minBy(filterBundlesForSheet(securedBundles, 'mortgage'), (b) => b.downPayment);
+    const maxCredit = maxBy(creditTemplates, (t) => t.total_debt);
+    return {
+      deposit: `${depositRate}% в год`,
+      bond: `${bondRate}% в год`,
+      insurance: 'защита от событий',
+      realestate: from(minBy(propertyTemplates, (t) => t.asset_value)),
+      car: from(minBy(carTemplates, (t) => t.asset_value)),
+      credit: maxCredit ? `до ${formatLotRub(maxCredit)}` : null,
+      mortgage: minDown ? `взнос ${from(minDown)}` : null,
+    };
+  }, [securedBundles, creditTemplates, propertyTemplates, carTemplates, depositRate, bondRate]);
+
+  const sheetCopy = openSheet ? SHEET_COPY[openSheet] : null;
+
+  const renderTemplateList = (templates, variant, onAdd) => {
+    if (extraLoading) return <MqxStateSkeleton variant="rows" rows={2} />;
+    if (templates.length === 0) {
+      return (
+        <MqxStateError
+          title="Шаблоны не загружены"
+          message="Проверь сеть и попробуй снова"
+          onRetry={() => void reloadExtra?.()}
+        />
+      );
+    }
+    return (
+      <div className="mqx-capital-template-list">
+        {templates.map((t) => (
+          <CapitalPositionCard
+            key={t.key}
+            variant={variant}
+            title={t.title}
+            metrics={
+              variant === 'liability' ? (
+                <LiabilityTemplateMetrics
+                  totalDebt={t.total_debt}
+                  monthlyPayment={t.monthly_payment}
+                  annualRatePercent={t.annual_rate_percent}
+                />
+              ) : (
+                <AssetTemplateMetrics
+                  assetValue={t.asset_value}
+                  monthlyMaintenanceCost={t.monthly_maintenance_cost}
+                  monthlyIncome={t.monthly_income}
+                />
+              )
+            }
+            action={{ onClick: () => void onAdd(t) }}
+            actionLabel="+"
+            actionVerb={variant === 'liability' ? 'Взять' : Number(t.asset_value) > 0 ? 'Купить' : 'Снять'}
+            actionAriaLabel={`Добавить: ${t.title}`}
+          />
+        ))}
+      </div>
+    );
+  };
+
+  const renderSheetBody = () => {
+    switch (openSheet) {
+      case 'deposit':
+        return (
+          <InvestProductForm
+            embedded
+            productId="deposit"
+            productTitle="Депозит"
+            amount={depositAmount}
+            maxCash={maxCash}
+            annualRatePercent={depositRate}
+            onAmountChange={onDepositAmountChange}
+            submitLabel="Открыть депозит"
+            onSubmit={() => void onOpenDeposit()}
+          />
+        );
+      case 'bond':
+        return (
+          <InvestProductForm
+            embedded
+            productId="bond"
+            productTitle="Облигации"
+            amount={bondAmount}
+            maxCash={maxCash}
+            annualRatePercent={bondRate}
+            onAmountChange={onBondAmountChange}
+            submitLabel="Купить облигации"
+            onSubmit={() => void onOpenBond()}
+          />
+        );
+      case 'realestate':
+        return renderTemplateList(propertyTemplates, 'asset', onAddAssetFromTemplate);
+      case 'car':
+        return renderTemplateList(carTemplates, 'asset', onAddAssetFromTemplate);
+      case 'insurance':
+        return (
+          <InsuranceProductPicker
+            ownedAssets={ownedAssets}
+            onBuy={onBuyInsurance}
+            buyingPlanKey={buyingPlanKey}
+          />
+        );
+      case 'mortgage':
+        return (
+          <SecuredAcquisitionList
+            bundles={filterBundlesForSheet(securedBundles, 'mortgage')}
+            onAcquire={onSecuredAcquisition}
+            busyKey={securedAcquireBusyKey}
+          />
+        );
+      case 'credit':
+        return (
+          <>
+            {sections.car === 'open' ? (
+              <SecuredAcquisitionList
+                bundles={filterBundlesForSheet(securedBundles, 'car')}
+                onAcquire={onSecuredAcquisition}
+                busyKey={securedAcquireBusyKey}
+              />
+            ) : null}
+            {creditTemplates.length > 0 ? (
+              <>
+                <p className="mqx-capital-sheet-section-label">Потребительские</p>
+                {renderTemplateList(creditTemplates, 'liability', onAddLiabilityFromTemplate)}
+              </>
+            ) : null}
+          </>
+        );
+      default:
+        return null;
+    }
+  };
+
+  return (
+    <>
+      <MqxCapitalActionGrid
+        sections={sections}
+        notes={pieceNotes}
+        lockHint={lockHint}
+        onOpenSheet={onOpenSheet}
+      />
+      <MqxCapitalSheet
+        open={Boolean(openSheet && sheetCopy)}
+        title={sheetCopy?.title}
+        subtitle={sheetCopy?.subtitle}
+        onClose={onCloseSheet}
+      >
+        {renderSheetBody()}
+      </MqxCapitalSheet>
+    </>
+  );
+}

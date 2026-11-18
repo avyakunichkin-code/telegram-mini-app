@@ -290,6 +290,19 @@ state_ladder:
 
 ---
 
+### 10.1. Приоритетное появление и подсказки с числами (2026-10-22)
+
+| Ключ YAML | Где | Что делает |
+|---|---|---|
+| `prerequisites.negative_monthly_flow: true` | событие | выпадает, только если месячные расходы больше доходов (`app/finance/cashflow.py`, метрики fincore) |
+| `extra.spawn_priority_when: negative_monthly_flow` (или `always`) | событие | занимает слот периода **раньше случайного отбора** и мимо окна tier, но только если этому профилю событие ещё ни разу не выпадало |
+| `extra.spawn_priority_rank: N` | событие | порядок среди приоритетных (меньше — раньше) |
+| `extra.priority_only: true` | событие | никогда не попадает в случайную колоду (только приоритетом) |
+| `extra.description_vars: true` | событие | в `description` подставляются `{monthly_gap}`, `{income}`, `{outflow}`, `{runway_text}`, `{runway_periods}` |
+| `extra.description_when_resolved` | событие | текст вместо описания, если дыры в бюджете уже нет |
+
+Примеры: [`meta/cashflow_warning.yaml`](../../../data/events/mvp11/meta/cashflow_warning.yaml), A1 в [`chains/second_car.yaml`](../../../data/events/mvp11/chains/second_car.yaml). Приоритет занимает слоты из лимита 2 событий — не ставить его на repeatable-события без `priority_only`/ограничений.
+
 ## 11. Согласованность темы и осей `needs_delta`
 
 > **Продукт:** семья → social; жильё → comfort; отдых один → health; отдых с людьми → health + social.

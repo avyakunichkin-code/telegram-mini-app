@@ -1,0 +1,249 @@
+/* Plan palette, approved 2026-11-10: palette-20261110-round/APPROVED.md.
+ * Shared across Plan surfaces; typography, geometry and financial rules stay owned
+ * by their existing components. Game and the shared behavioral ui-kit are separate.
+ */
+:root {
+  --plan-primary: #073bfa;
+  --plan-primary-hover: #0029bd;
+  --plan-secondary: #31549b;
+  --plan-deep: #172b52;
+  --plan-on-action: #ffffff;
+  --plan-on-deep: #ffffff;
+  --plan-on-deep-muted: #d2dcef;
+  --plan-canvas: #faf8f5;
+  --plan-surface: #ffffff;
+  --plan-tint: #eef2fb;
+  --plan-hover: #e1e9fb;
+  --plan-ink: #10172c;
+  --plan-muted: #566078;
+  --plan-border: #dcdfe5;
+  --plan-field-border: #8191ad;
+  --plan-focus: #073bfa;
+  --plan-chart-base: #073bfa;
+  --plan-chart-secondary: #31549b;
+  --plan-good: #276149;
+  --plan-good-surface: #eaf4ed;
+  --plan-caution: #85601c;
+  --plan-caution-surface: #fff1d4;
+  --plan-risk: #a53225;
+  --plan-risk-surface: #fbe9e4;
+  --plan-scheme: light;
+}
+/* Retain automatic dark-mode support, with the same action hierarchy. */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --plan-canvas: #10172c;
+    --plan-surface: #17243c;
+    --plan-tint: #203454;
+    --plan-hover: #294165;
+    --plan-ink: #f1f4fb;
+    --plan-muted: #b8c4d9;
+    --plan-border: #3c4d70;
+    --plan-field-border: #8191ad;
+    --plan-focus: #9db8ff;
+    --plan-chart-base: #7f9eff;
+    --plan-chart-secondary: #b0c4f0;
+    --plan-good: #a8ddbf;
+    --plan-good-surface: #173e32;
+    --plan-caution: #f1d08b;
+    --plan-caution-surface: #42381f;
+    --plan-risk: #ffc1b4;
+    --plan-risk-surface: #482923;
+    --plan-scheme: dark;
+  }
+}
+:root, .app.atlas-shell {
+  --canvas: var(--plan-canvas);
+  --tile: var(--plan-surface);
+  --well: var(--plan-tint);
+  --ink: var(--plan-ink);
+  --ink-2: var(--plan-muted);
+  --ink-3: var(--plan-muted);
+  --rule: var(--plan-field-border);
+  --hairline: var(--plan-border);
+  --inverse: var(--plan-deep);
+  --on-inverse: var(--plan-on-deep);
+  --on-inverse-2: var(--plan-on-deep-muted);
+  --tile-ok: var(--plan-good-surface);
+  --tile-edge: var(--plan-caution-surface);
+  --tile-risk: var(--plan-risk-surface);
+  --tile-calm: var(--plan-tint);
+  --on-tile: var(--plan-ink);
+  --ok-ink: var(--plan-good);
+  --edge-ink: var(--plan-caution);
+  --risk-ink: var(--plan-risk);
+  --focus: var(--plan-focus);
+  --accent: var(--plan-secondary);
+  color-scheme: var(--plan-scheme);
+}
+.crash .btn-primary, .app .btn-primary, .app.atlas-shell .btn-primary,
+.app .previous-current .plan-step-controls .btn-primary,
+.app .atlas-trigger {
+  background: var(--plan-primary); color: var(--plan-on-action); border-color: var(--plan-primary);
+}
+.app .btn-primary:hover:not(:disabled), .app .atlas-step summary:hover .atlas-trigger {
+  background: var(--plan-primary-hover); color: var(--plan-on-action);
+}
+.app .btn-ghost, .app .btn-secondary, .app.atlas-shell .btn-ghost,
+.app .previous-current .plan-step-controls .btn-secondary {
+  background: var(--plan-tint); color: var(--plan-secondary); border-color: var(--plan-field-border);
+}
+.app .topnav .link[aria-current=page], .app .chip.on, .app .tab.on,
+.app .precision-refine .tab.on, .app .precision-modes button[aria-pressed=true],
+.app .atlas-tabs button[aria-selected=true], .app .atlas-scenarios button[aria-pressed=true] {
+  background: var(--plan-secondary); color: var(--plan-on-action); border-color: var(--plan-secondary);
+}
+.app .precision-refine .tab.on, .app .atlas-tabs button[aria-selected=true] {
+  box-shadow: 4px 4px 0 var(--plan-primary);
+}
+.app .precision-refine .tab.on small,
+.app .atlas-tabs button[aria-selected=true] .atlas-nav-icon { color: var(--plan-on-deep-muted); }
+.app .atlas-nav-icon { border-color: var(--plan-field-border); }
+.app .atlas-tabs button[aria-selected=true] .atlas-nav-icon,
+.app .atlas-answer-mark { border-color: var(--plan-on-deep-muted); }
+.app .atlas-tabs button:not([aria-selected=true]) { color: var(--plan-ink); }
+.app .atlas-tabs button:not([aria-selected=true]):hover { background: var(--plan-hover); }
+.app .atlas-tabs:before, .app.atlas-shell .proto-badge { color: var(--plan-muted); }
+.app .brand-mark { background: var(--plan-primary); }
+.app .proto-badge { background: var(--plan-tint); color: var(--plan-muted); }
+.app .atlas-answer { background: var(--plan-deep); color: var(--plan-on-deep); border-color: var(--plan-primary); }
+.app .atlas-answer .atlas-eyebrow, .app .atlas-answer .atlas-answer-mark { color: var(--plan-on-deep-muted); }
+.app .atlas-answer small, .app .insight-dark .insight-note, .app .insight-dark small,
+.app .atlas-report .insight-dark .eyebrow { color: var(--plan-on-deep-muted); }
+.app .atlas-answer-fail .atlas-eyebrow, .app .atlas-answer-fail .atlas-answer-mark { color: #ffc1b4; }
+.app .atlas-answer.atlas-answer-fail { border-left-color: #ffc1b4; }
+.app .atlas-report h1, .app .atlas-report h2, .app .atlas-report h3,
+.app .precision-refine, .app .precision-refine .tab, .app .atlas-scenarios button,
+.app .atlas-report .history { color: var(--plan-ink); }
+.app .atlas-report .insight-dark h2 { color: var(--plan-on-deep); }
+.app .atlas-precision, .app .atlas-caption, .app .atlas-metrics article>span,
+.app .atlas-metrics article>small, .app .atlas-action-label>span,
+.app .atlas-step-body>p, .app .atlas-footnote, .app .atlas-step-progress,
+.app .precision-refine .lead, .app .precision-refine .tab small,
+.app .precision-status details, .app .precision-range label>span,
+.app .precision-range label>div>span, .app .precision-dash,
+.app .precision-field-hint { color: var(--plan-muted); }
+.app .atlas-surface, .app .atlas-metrics article, .app .atlas-metrics article+article,
+.app .atlas-areas article, .app .atlas-strategies article,
+.app .precision-refine>.stack, .app .precision-refine .card,
+.app .precision-refine input, .app .precision-refine select, .app .precision-range label>div {
+  background: var(--plan-surface); border-color: var(--plan-border);
+}
+.app .precision-refine input, .app .precision-refine select { color: var(--plan-ink); border-color: var(--plan-field-border); }
+.app .precision-refine .precision-range input { background: transparent; }
+.app .atlas-table td, .app .atlas-table th, .app .atlas-action-label,
+.app .atlas-metrics article+article, .app .atlas-strategies dl>div { border-color: var(--plan-border); }
+.app .atlas-step, .app .atlas-report .plan-step-list label,
+.app .precision-modes, .app .precision-priority, .app .precision-section-hint,
+.app .atlas-scenarios button, .app .atlas-strategies .accent {
+  background: var(--plan-tint); border-color: var(--plan-field-border); color: var(--plan-ink);
+}
+.app .atlas-strategies .accent { border-color: var(--plan-secondary); }
+.app .precision-pill { background: var(--plan-tint); border-color: var(--plan-border); color: var(--plan-muted); }
+.app .precision-pill[data-level=draft], .app .precision-warning, .app .atlas-offline {
+  background: var(--plan-caution-surface); border-color: var(--plan-caution); color: var(--plan-caution);
+}
+.app .precision-pill[data-level=invalid], .app .precision-invalid {
+  background: var(--plan-risk-surface); border-color: var(--plan-risk); color: var(--plan-risk);
+}
+.app .atlas-disclosure>summary, .app .precision-status summary,
+.app .precision-section-hint button, .app .atlas-scenario-result summary {
+  color: var(--plan-secondary);
+}
+.app .atlas-disclosure>summary { background: var(--plan-tint); border-color: var(--plan-border); }
+.app .atlas-disclosure>summary:hover { background: var(--plan-hover); }
+.app .atlas-scenario-result { background: var(--plan-tint); border-color: var(--plan-secondary); }
+.app .atlas-scenario-result.risk { background: var(--plan-risk-surface); border-color: var(--plan-risk); }
+.app .atlas-complete, .app .atlas-step.is-complete {
+  background: var(--plan-good-surface); color: var(--plan-good); border-color: var(--plan-good);
+}
+.app .atlas-step.is-complete .atlas-step-rank { background: var(--plan-good); color: var(--plan-surface); }
+.app .atlas-metrics progress, .app .atlas-report .plan-step-list input,
+.app .precision-refine input[type=checkbox] { accent-color: var(--plan-secondary); }
+.app .plan-step-actions .plan-step-list label { color: var(--plan-ink); border-color: var(--plan-border); }
+.app .plan-step-actions .plan-step-list label:hover,
+.app .plan-step-actions .plan-step-list label:has(input:focus-visible),
+.app .plan-step-actions .plan-step-list label:has(input:checked) { background: var(--plan-tint); color: var(--plan-ink); }
+.app .plan-step-actions .plan-step-list input { background: var(--plan-surface); border-color: var(--plan-field-border); }
+.app .plan-step-actions .plan-step-list input:checked { background: var(--plan-secondary); border-color: var(--plan-secondary); }
+.app .plan-step-actions .plan-step-list input:checked+span { color: var(--plan-muted); }
+.app .plan-step-actions details>summary,
+.app .first-step-ticket .plan-step-actions details>summary { color: var(--plan-secondary); }
+.app .plan-step-chevron, .app .plan-step-actions progress,
+.app .plan-step-actions progress::-webkit-progress-bar { background: var(--plan-tint); }
+.app .plan-step-actions progress::-webkit-progress-value { background: var(--plan-secondary); }
+.app .plan-step-actions progress::-moz-progress-bar { background: var(--plan-secondary); }
+.app .atlas-report .chart-line { stroke: var(--plan-chart-base); }
+.app .atlas-report .chart-line.tone-pess { stroke: var(--plan-chart-secondary); }
+.app .atlas-report .chart-label, .app .atlas-report .chart-note { fill: var(--plan-muted); }
+.app .atlas-report .chart-zero { stroke: var(--plan-field-border); }
+.app .atlas-report .chart-cell { stroke: var(--plan-border); }
+.app .atlas-report .chart-band { fill: var(--plan-tint); }
+.app .c-cushion { background: #8faee8; }
+.app .c-debts { background: var(--plan-secondary); }
+.app .c-goals { background: var(--plan-primary); }
+.app .c-unassigned { background: var(--plan-field-border); }
+.app .insight-tag.warn { background: var(--plan-caution-surface); color: var(--plan-caution); }
+.app .insight-tag.bad, .app .insight-checks li.fix { background: var(--plan-risk-surface); color: var(--plan-risk); }
+/* Historical comparisons and the bridge retain their structure and status meaning. */
+.app .plan-history, .app .previous-context, .app .goal-routes { color: var(--plan-ink); }
+.app .plan-history { background: var(--plan-canvas); border-color: var(--plan-border); color-scheme: var(--plan-scheme); }
+.app .plan-history .hybrid-panel, .app .plan-history .h-record,
+.app .plan-history .h-record button, .app .previous-bridge, .app .previous-page,
+.app .gr-surface { background: var(--plan-surface); border-color: var(--plan-border); color: var(--plan-ink); }
+.app .plan-history .h-tag, .app .plan-history .h-area, .app .plan-history .h-months button,
+.app .plan-history .h-selectors select, .app .plan-history .h-record.h-after,
+.app .previous-current, .app .gr-main { background: var(--plan-tint); border-color: var(--plan-field-border); color: var(--plan-ink); }
+.app .plan-history .h-months button[aria-pressed=true],
+.app .plan-history .h-presets button[aria-pressed=true] { background: var(--plan-secondary); color: var(--plan-on-action); border-color: var(--plan-secondary); }
+.app .plan-history .h-months button[aria-pressed=true] small { color: var(--plan-on-deep-muted); }
+.app .plan-history .h-presets button, .app .plan-history .h-selectors select,
+.app .plan-history .h-metrics .h-current, .app .previous-open .btn,
+.app .previous-values>span:last-child b { color: var(--plan-secondary); }
+.app .plan-history .h-presets button[aria-pressed=true] { color: var(--plan-on-action); }
+.app .plan-history .history-heading .muted, .app .plan-history .h-section-label,
+.app .plan-history .h-risk-dots, .app .plan-history .h-record-meta, .app .plan-history .h-selectors>span,
+.app .plan-history .h-selectors label, .app .plan-history .h-table-title>span,
+.app .plan-history .h-metrics thead, .app .plan-history .h-metrics .h-delta,
+.app .plan-history .h-footnote, .app .plan-history .h-topline>span small,
+.app .plan-history .h-months button small, .app .plan-history .h-index,
+.app .plan-history .h-metrics tbody td::before, .app .plan-history .eyebrow,
+.app .previous-header>p, .app .previous-date, .app .previous-progress,
+.app .previous-metric>p:first-child, .app .previous-values small,
+.app .previous-values>span:first-child b, .app .previous-delta,
+.app .previous-current .plan-step-status { color: var(--plan-muted); }
+.app .previous-status { background: var(--plan-good-surface); color: var(--plan-good); }
+.app .previous-status-dismissed { background: var(--plan-tint); color: var(--plan-muted); }
+.app .previous-status-suggested, .app .previous-warning, .app .plan-history .history-notice,
+.app .plan-history .h-margin-note { background: var(--plan-caution-surface); color: var(--plan-caution); border-color: var(--plan-caution); }
+.app .plan-history .h-margin-note>span, .app .plan-history .h-margin-note>b,
+.app .plan-history .h-margin-note>small { color: var(--plan-caution); }
+.app .report .previous-current .first-step-ticket { color: var(--plan-ink); }
+.app .goal-routes { --gr-muted: var(--plan-muted); --gr-line: var(--plan-border); }
+.app .gr-meter { background: var(--plan-tint); }
+.app .gr-meter i, .app .gr-finish i { background: var(--plan-secondary); }
+.app .gr-badge { background: var(--plan-caution-surface); color: var(--plan-caution); }
+.app .gr-achievement { background: var(--plan-tint); color: var(--plan-ink); }
+.app .gr-spark { color: var(--plan-secondary); }
+.app :is(button,input,select,summary):focus-visible,
+.app .plan-history :is(button,select,summary):focus-visible,
+.app .gr-other summary:focus-visible { outline-color: var(--plan-focus); }
+@media (prefers-color-scheme: dark) {
+  .app .btn-ghost, .app.atlas-shell .btn-ghost, .app .btn-secondary, .app .atlas-disclosure>summary,
+  .app .precision-status summary, .app .precision-section-hint button,
+  .app .atlas-scenario-result summary, .app .previous-open .btn,
+  .app .plan-history .h-presets button:not([aria-pressed=true]),
+  .app .plan-history .h-selectors select, .app .plan-history .h-metrics .h-current,
+  .app .previous-values>span:last-child b { color: var(--plan-on-deep-muted); }
+}
+@media (max-width:700px) {
+  .app .atlas-tabs { background: var(--plan-deep); border-color: var(--plan-secondary); }
+  .app .atlas-tabs button:not([aria-selected=true]) { color: var(--plan-on-deep-muted); }
+  .app .atlas-tabs button:not([aria-selected=true]):hover { background: var(--plan-secondary); color: var(--plan-on-action); }
+  .app .atlas-tabs button[aria-selected=true] { background: var(--plan-primary); color: var(--plan-on-action); box-shadow: none; }
+}
+@media (forced-colors: active) {
+  .app .atlas-tabs button[aria-selected=true], .app .precision-refine .tab.on,
+  .app .precision-modes button[aria-pressed=true] { outline: 3px solid Highlight; }
+  .app .atlas-report .chart-line { stroke: CanvasText; }
+}

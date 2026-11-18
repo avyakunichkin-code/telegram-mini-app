@@ -1,0 +1,11 @@
+{
+  "status": "PASS",
+  "results": [
+    "375px: 5 distinct tabs, one panel, no horizontal overflow",
+    "701px: 5 distinct tabs, one panel, no horizontal overflow",
+    "1050px: 5 distinct tabs, one panel, no horizontal overflow",
+    "1440px: 5 distinct tabs, one panel, no horizontal overflow",
+    "Arrow/Home/End tabs; scenario assumptions; history, dialog, offline, rollback/retry, global states: PASS",
+    "No JS errors or failed resources; calculation fixture unchanged"
+  ]
+}

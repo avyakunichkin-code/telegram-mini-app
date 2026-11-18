@@ -1,0 +1,38 @@
+/* Scoped list avoids the application's horizontal .actions button group. */
+.plan-step-actions .plan-step-list{display:block;list-style:none;margin:8px 0 0;padding:0}
+.plan-step-actions .plan-step-list li{display:block;margin:0;padding:0;border:0;border-bottom:1px solid #e3e2d6}
+.plan-step-actions .plan-step-list li:last-child{border-bottom:0}
+.plan-step-actions .plan-step-list label{display:grid;grid-template-columns:26px minmax(0,1fr);align-items:start;gap:14px;min-height:60px;margin:0;padding:17px 8px;border-radius:10px;cursor:pointer;font-size:15px;line-height:24px;font-weight:500;color:#343c34;transition:background .15s}
+.plan-step-actions .plan-step-list label:hover{background:#efefe3}
+.plan-step-actions .plan-step-list label:has(input:focus-visible){background:#e8eee3}
+.plan-step-actions .plan-step-list input{appearance:none;-webkit-appearance:none;display:grid;place-content:center;position:relative;flex:none;width:26px;height:26px;min-height:0;margin:0;padding:0;border:1.5px solid #8c9687;border-radius:8px;background:#fffef8;box-shadow:0 2px 3px #273c2810;cursor:pointer;transition:background .15s,border-color .15s}
+.plan-step-actions .plan-step-list input:checked{background:#285448;border-color:#285448;box-shadow:none}
+.plan-step-actions .plan-step-list input:checked::after{content:"";width:7px;height:12px;border:solid #fff;border-width:0 2px 2px 0;transform:translateY(-1px) rotate(45deg)}
+.plan-step-actions .plan-step-list input:checked+span{color:#596a5b;text-decoration:none}
+.plan-step-actions .plan-step-list label:has(input:checked){background:#edf1e6}
+.plan-step-actions .plan-step-list input:disabled{cursor:default;opacity:.65}
+.plan-step-actions .plan-step-list label:has(input:disabled){cursor:default}
+.plan-step-actions{margin-top:18px}
+.plan-step-actions details>summary{display:block;list-style:none;min-height:56px;padding:4px 0 12px;color:#285448;cursor:pointer}
+.plan-step-actions summary::-webkit-details-marker{display:none}
+.plan-step-summary{display:flex;align-items:center;justify-content:space-between;gap:12px;font-size:15px;line-height:24px;font-weight:700}
+.plan-step-chevron{display:grid;place-items:center;width:28px;height:28px;border-radius:50%;background:#e9eddf;flex:none}
+.plan-step-chevron::after{content:"";width:7px;height:7px;border:solid #285448;border-width:0 1.5px 1.5px 0;transform:translateY(-2px) rotate(45deg);transition:transform .15s}
+details[open] .plan-step-chevron::after{transform:translateY(2px) rotate(225deg)}
+.plan-step-actions progress{appearance:none;-webkit-appearance:none;display:block;width:100%;height:4px;margin:12px 0 0;border:0;border-radius:20px;overflow:hidden;background:#e3e5d9}
+.plan-step-actions progress::-webkit-progress-bar{background:#e3e5d9;border-radius:20px}
+.plan-step-actions progress::-webkit-progress-value{background:#285448;border-radius:20px}
+.plan-step-actions progress::-moz-progress-bar{background:#285448;border-radius:20px}
+@media(forced-colors:active){.plan-step-actions .plan-step-list input{appearance:auto}.plan-step-actions .plan-step-list input:checked::after{display:none}}
+@media(prefers-reduced-motion:reduce){.plan-step-actions .plan-step-list label,.plan-step-actions .plan-step-list input,.plan-step-chevron::after{transition:none}}
+
+.plan-step-actions { min-width: 0; margin-top: 16px; }
+.plan-step-actions summary:focus-visible,.plan-step-list input:focus-visible { outline: 3px solid var(--focus); outline-offset: 4px; }
+.plan-step-controls { display:flex; flex-wrap:wrap; gap:10px; margin-top:20px; }
+.step .plan-step-status { min-height:44px; margin:16px 0 0; font-size:14px; line-height:22px; }
+.step .plan-step-actions .hint { margin-top:12px; font-size:13px; line-height:19px; }
+.step .plan-step-summary { font-size:15px; font-weight:700; }
+.plan-step-actions .plan-step-list label { color:inherit; }
+.plan-step-actions .plan-step-list label:hover { color:#343c34; }
+.plan-step-actions details>summary { color:inherit; }
+.first-step-ticket .plan-step-actions details>summary { color:#285448; }
