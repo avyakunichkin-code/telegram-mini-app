@@ -1,5 +1,5 @@
 /**
- * I-Scene — SVG-иллюстрации (архив: game/design-lab/game-templates/scenario-icons).
+ * I-Scene — SVG-иллюстрации (архив: game/design-lab/archive/scenario-icons-2026-11).
  * Prod-канон: PersonaPortrait (persona-portraits-round). Используется при usePersonaPortraits={false}.
  */
 

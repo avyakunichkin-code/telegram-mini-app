@@ -1,4 +1,4 @@
-﻿/* --- Шапка и оболочка игры под TMA --- */
+/* --- Шапка и оболочка игры под TMA --- */
 .tma-app-header {
   display: flex;
   align-items: center;
@@ -63,7 +63,7 @@
   object-position: center;
 }
 
-/* G2 — hero / табы (эталон design-lab: ~36–44px по высоте, без растягивания) */
+/* Компактное размещение в шапках и вкладках. */
 .mqx-brand-logo--compact {
   aspect-ratio: 3 / 2;
   height: 34px;
@@ -72,9 +72,9 @@
   object-position: left center;
 }
 
-/* G1 — lockup + tagline в растре (пропорции мастера ~402×280 @ h280) */
+/* Крупное размещение на стартовых экранах. */
 .mqx-brand-logo--full {
-  aspect-ratio: 402 / 280;
+  aspect-ratio: 3 / 2;
   width: auto;
   height: auto;
   max-width: min(280px, 92vw);

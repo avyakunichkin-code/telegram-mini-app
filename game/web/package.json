@@ -10,12 +10,14 @@
     "lint": "eslint .",
     "check:boundaries": "node scripts/check-front-boundaries.mjs",
     "check:components-quarantine": "node scripts/check-components-quarantine.mjs",
+    "design:sync": "node scripts/sync-design-canon.mjs --write",
+    "check:design-canon": "node scripts/sync-design-canon.mjs",
     "check:canon-sync": "node scripts/check-canon-sync.mjs",
     "check:events-tails-parity": "node scripts/check-events-tails-parity.mjs",
     "check:dashboard-canon": "node scripts/check-dashboard-canon.mjs",
     "check:finance-canon": "node scripts/check-finance-canon.mjs",
     "check:style-discipline": "node scripts/check-style-discipline.mjs",
-    "check:guardrails": "npm run check:boundaries && npm run check:components-quarantine && npm run check:canon-sync && npm run check:events-tails-parity && npm run check:dashboard-canon && npm run check:finance-canon && npm run check:style-discipline && npm run check:mqx-ratchet && npm run design-lab:check-rounds",
+    "check:guardrails": "npm run check:boundaries && npm run check:components-quarantine && npm run check:canon-sync && npm run check:design-canon && npm run check:events-tails-parity && npm run check:dashboard-canon && npm run check:finance-canon && npm run check:style-discipline && npm run check:mqx-ratchet && npm run design-lab:check-rounds",
     "design-lab:check-rounds": "node scripts/check-design-lab-rounds.mjs",
     "design-lab:sync-round": "node scripts/sync-design-lab-round.mjs",
     "design-lab:install-sync-sh": "node scripts/install-design-lab-sync-sh.mjs",
@@ -64,6 +66,7 @@
     "eslint-plugin-react-refresh": "^0.5.2",
     "gh-pages": "^6.3.0",
     "globals": "^17.5.0",
+    "postcss": "8.5.13",
     "vite": "^8.0.10",
     "vite-plugin-pwa": "^1.3.0"
   }

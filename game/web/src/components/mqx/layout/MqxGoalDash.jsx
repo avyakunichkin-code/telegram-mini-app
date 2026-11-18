@@ -15,8 +15,10 @@ function GoalTrack({ chain }) {
   return (
     <span className="mqx-bg-track" aria-hidden="true">
       {chain.map((step, index) => (
-        <span key={step.key} className="mqx-bg-track__dot" data-status={step.status}>
-          {step.status === 'done' ? '✓' : index + 1}
+        <span key={step.key} className="mqx-bg-track__step" data-status={step.status}>
+          <span className="mqx-bg-track__dot" data-status={step.status}>
+            {step.status === 'done' ? '✓' : index + 1}
+          </span>
         </span>
       ))}
     </span>
@@ -53,7 +55,7 @@ function GoalChain({ chain, view }) {
  * Цель ★ BG-1: свёрнута — «Цель, шаг N из M» + дорожка точек + золотой финиш;
  * раскрыта — список шагов цепочки победы (victory_config_json), без Монетки.
  */
-export function MqxGoalDash({ victory, legacyGoal, defaultExpanded = false }) {
+export function MqxGoalDash({ victory, legacyGoal, defaultExpanded = false, wide = false }) {
   const bodyId = useId();
   const view = useMemo(() => buildGoalChainView(victory, legacyGoal), [victory, legacyGoal]);
   const [expanded, setExpanded] = useState(defaultExpanded);
@@ -82,6 +84,7 @@ export function MqxGoalDash({ victory, legacyGoal, defaultExpanded = false }) {
           </span>
           <small className="mqx-bg-goal__step">{view.chain.filter((step) => step.status === 'done').length} из {view.total}</small>
         </span>
+        {wide && <span className="mqx-wide__goal-title">{view.headerTitle}</span>}
         <GoalTrack chain={view.chain} />
         <span className="mqx-bg-goal__chev" aria-hidden="true">
           <svg viewBox="0 0 24 24" fill="none">

@@ -33,12 +33,16 @@ export function formatSaleConfirmMessage(asset, liability) {
   return msg;
 }
 
-export function investNote(p) {
+export function investNoteParts(p) {
   const monthly = investMonthlyAccrual(p.principal, p.annual_rate_percent);
-  return joinNote([
+  return [
     `${formatLotRub(monthly, '+')} за ход`,
     `${Number(p.annual_rate_percent) || 0}% в год`,
-  ]);
+  ];
+}
+
+export function investNote(p) {
+  return joinNote(investNoteParts(p));
 }
 
 export function policyNote(p) {

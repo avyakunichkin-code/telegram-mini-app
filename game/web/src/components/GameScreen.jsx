@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { useWideWeb } from '../hooks/useWideWeb';
 import { useGame } from '../hooks/useGame';
 import { DashboardPremium } from './DashboardPremium';
 import { FinancePremium } from './FinancePremium';
@@ -44,7 +45,7 @@ function gamePageMoodClass(timeStatus) {
   return 'mq-page--mood-playing';
 }
 
-export function GameScreen({ onLogout, onNewGame, onLoadGame }) {
+export function GameScreen({ onLogout, onNewGame, onLoadGame, onClaimGuest }) {
   const [activeTab, setActiveTab] = useState('dashboard');
   /** @type {['income'|'expense'|null, function]} */
   const [capitalFlowsOpen, setCapitalFlowsOpen] = useState(null);
@@ -60,6 +61,7 @@ export function GameScreen({ onLogout, onNewGame, onLoadGame }) {
   const lastOpenedEventsTickRef = useRef(0);
   const deferredEventsTickRef = useRef(0);
   useTabBarInset();
+  const wide = useWideWeb() && !onboardingUi.visible;
   const {
     overview,
     timeStatus,
@@ -314,7 +316,7 @@ export function GameScreen({ onLogout, onNewGame, onLoadGame }) {
 
   if (loading) {
     return (
-      <GameScreenLayout moodClass={`${moodClass} ${guidanceActiveClass}`.trim()}>
+      <GameScreenLayout moodClass={`${moodClass} ${guidanceActiveClass} ${['menu', 'finance'].includes(activeTab) ? 'mq-game-shell--menu' : ''}`.trim()}>
         <MqxShell
           header={
             <MqxTabHero
@@ -394,7 +396,8 @@ export function GameScreen({ onLogout, onNewGame, onLoadGame }) {
 
   return (
     <GameScreenLayout
-      moodClass={`${moodClass} ${guidanceActiveClass}`.trim()}
+      moodClass={`${moodClass} ${guidanceActiveClass} ${activeTab === 'analytics' ? 'mq-game-shell--menu mq-game-shell--analytics' : ''}`.trim()}
+      wideTurn={wide ? (periodIndex ?? 0) : null}
       tabNav={(
         <GameScreenTabNav
           activeTab={activeTab}
@@ -425,6 +428,7 @@ export function GameScreen({ onLogout, onNewGame, onLoadGame }) {
             summary={periodCloseForUi}
             open={Boolean(periodCloseForUi && periodCloseOpen)}
             onClose={handleClosePeriodClose}
+            onClaimGuest={onClaimGuest}
           />
           {showPeriodCloseTail ? (
             <MqxPeriodCloseTail
@@ -466,6 +470,7 @@ export function GameScreen({ onLogout, onNewGame, onLoadGame }) {
               {activeTab === 'dashboard' && (
                 <div ref={onboardingRootRef} className="mqx-onboarding-anchor-root">
                   <DashboardPremium
+                    wide={wide}
                     overview={overview}
                     timeStatus={timeStatus}
                     periodStatus={periodStatus}
@@ -489,6 +494,7 @@ export function GameScreen({ onLogout, onNewGame, onLoadGame }) {
 
               {activeTab === 'finance' && (
                 <FinancePremium
+                  wide={wide}
                   overview={overview}
                   refreshOverview={refreshOverview}
                   openFlowsSection={capitalFlowsOpen}
@@ -510,6 +516,7 @@ export function GameScreen({ onLogout, onNewGame, onLoadGame }) {
                   onLogout={onLogout}
                   onNewGame={onNewGame}
                   onLoadGame={onLoadGame}
+                  onClaimGuest={Number(periodIndex) > 1 ? onClaimGuest : undefined}
                 />
               )}
             </div>

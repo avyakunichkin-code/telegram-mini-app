@@ -23,7 +23,7 @@ aliases:
 
 ## Вкладка «Капитал» — структура Details | Actions v2
 
-**Зачем:** раньше на одном экране смешивались «посмотреть, что есть» и «оформить новое» — длинные аккордеоны, формы внутри списков, тяжело на телефоне. Макет прошёл design-lab [`details-actions-round`](../../../design-lab/capital-page/details-actions-round) и перенесён в prod.
+**Зачем:** раньше на одном экране смешивались «посмотреть, что есть» и «оформить новое» — длинные аккордеоны, формы внутри списков, тяжело на телефоне. Макет прошёл design-lab [`details-actions-round`](../../../design-lab/archive/capital-details-actions-2026-11/) и перенесён в prod.
 
 **Как теперь устроено:**
 
@@ -40,7 +40,7 @@ aliases:
 
 **Ипотека и кредит** в действиях разделены: ипотека — только шаблон `mortgage`; «Кредит» — потребительский, автокредит, кредитная карта. Недвижимость и авто фильтруются по типу шаблона актива.
 
-**Документация:** [`game/docs/ux/screens/finance.md`](../../ux/screens/finance.md), [`SPEC_FRONTEND_UI.md`](../../specs/SPEC_FRONTEND_UI.md) § Капитал, lab [`details-actions-round/README.md`](../../../design-lab/capital-page/details-actions-round/README.md).
+**Документация:** [`game/docs/ux/screens/finance.md`](../../ux/screens/finance.md), [`SPEC_FRONTEND_UI.md`](../../specs/SPEC_FRONTEND_UI.md) § Капитал, архив [`details-actions-round/README.md`](../../../design-lab/archive/capital-details-actions-2026-11/README.md).
 
 ---
 

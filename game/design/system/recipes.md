@@ -9,6 +9,8 @@
 - Один фиолетовый акцент на экран. Всё остальное — клетки.
 - Состояния loading / empty / error — из States, обязательно все три.
 
+Для игрового меню используй [MenuPage](components/MenuPage/README.md). Нижняя навигация использует [общий TabBar](components/TabBar/README.md).
+
 ## Новое действие игрока
 
 - Главное действие экрана — Button `primary` (одно). Второстепенные — `secondary` или BoardButton.
@@ -72,4 +74,4 @@
 - Живой каталог prod-компонентов — `#/dev/mqx` (только dev-сборка).
 - Макеты до утверждения — `design-lab/` (`cd design-lab && npx serve .`).
 - Перед merge UI — субагент `mqx-ui-reviewer`, чеклист экрана в `BRANDBOOK_MQX.md` §9a.
-- Экран смотри в светлой и тёмной теме; обводка и тени — по правилам «Чернильного края» (`game/design-lab/board-game/APPROVED.md`, инварианты).
+- Экран смотри в светлой и тёмной теме; обводку и тени сверяй с утверждением экрана в [каноне](CURRENT_STYLE.md).

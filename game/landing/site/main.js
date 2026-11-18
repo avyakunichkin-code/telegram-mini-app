@@ -1,25 +1,37 @@
 const outcomes = {
-  trip: ['−12 000 ₽ со счёта', 'Ты провёл время вместе. На подушку в этом месяце осталось меньше. Впечатления тоже могут быть осознанным выбором.'],
-  save: ['12 000 ₽ остаются на счёте', 'Можно направить их в подушку. Поездку ты пропустил — стоит найти другой повод увидеться с друзьями.'],
-  meet: ['−3 000 ₽ со счёта', 'В этом примере встреча в городе стоит 3 000 ₽. Ты увиделся с друзьями, а 9 000 ₽ от бюджета поездки остались на счёте.']
+  trip: ['−12 000 ₽', '0 ₽', 'Поедешь с друзьями. Бюджет поездки уйдёт целиком.'],
+  save: ['0 ₽', '12 000 ₽', 'Сможешь направить весь бюджет поездки в подушку.'],
+  meet: ['−3 000 ₽', '9 000 ₽', 'Увидишься с друзьями, а часть бюджета останется.'],
 };
 const result = document.querySelector('#result');
 const reset = document.querySelector('#reset');
-document.querySelectorAll('[data-choice]').forEach(button => button.addEventListener('click', () => {
-  const [title, body] = outcomes[button.dataset.choice];
+const choices = document.querySelectorAll('[data-choice]');
+const choicePrompt = document.querySelector('#choice-prompt');
+choices.forEach(button => button.addEventListener('click', () => {
+  const [spent, remaining, body] = outcomes[button.dataset.choice];
   result.replaceChildren();
-  const strong = document.createElement('strong'); strong.textContent = title;
-  const paragraph = document.createElement('p'); paragraph.textContent = body;
-  const play = document.createElement('a'); play.className = 'play small result-cta';
-  play.href = document.querySelector('.hero-actions .play').href; play.textContent = 'Сыграть всю партию ↗';
-  result.append(strong, paragraph, play); result.hidden = false; reset.hidden = false;
-  document.querySelector('.choices').hidden = true;
-  // The pressed button is now hidden: keep keyboard and screen-reader users on the outcome.
-  result.tabIndex = -1; result.focus();
+  const metrics = document.createElement('dl');
+  metrics.className = 'choice-impact';
+  for (const [label, value] of [['Со счёта', spent], ['Остаток бюджета', remaining]]) {
+    const row = document.createElement('div');
+    const term = document.createElement('dt');
+    const amount = document.createElement('dd');
+    term.textContent = label;
+    amount.textContent = value;
+    if (value.startsWith('−')) amount.className = 'choice-impact-loss';
+    row.append(term, amount);
+    metrics.append(row);
+  }
+  const paragraph = document.createElement('p');
+  paragraph.textContent = body;
+  result.append(metrics, paragraph); result.hidden = false; reset.hidden = false;
+  choices.forEach(choice => choice.setAttribute('aria-pressed', String(choice === button)));
+  choicePrompt.hidden = true;
 }));
 reset.addEventListener('click', () => {
-  result.hidden = true; reset.hidden = true; document.querySelector('.choices').hidden = false;
-  document.querySelector('[data-choice]').focus();
+  result.hidden = true; reset.hidden = true; choicePrompt.hidden = false;
+  choices.forEach(choice => choice.setAttribute('aria-pressed', 'false'));
+  choices[0].focus();
 });
 
 // Static, same-origin design examples size to their actual content and fonts.

@@ -98,3 +98,4 @@ export { MqxRunFinale } from './layout/MqxRunFinale';
 export { MqxJuiceCatalogDemo } from './juice/MqxJuiceCatalogDemo';
 export { MqxGuidanceStrip } from './guidance/MqxGuidanceStrip';
 export { MqxGuidanceStripDemo } from './guidance/MqxGuidanceStripDemo';
+export { MqxMenuPage } from './layout/MqxMenuPage';

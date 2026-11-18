@@ -2,20 +2,17 @@
 
 > **★ BG-2 (2026-10-15):** канон и prod — [`APPROVED.md`](APPROVED.md); раунд v2 ниже — история.
 
-**Статус:** раунд v2 на утверждение (2026-05-25)  
+**Статус:** исторический раунд v2, [снимок в архиве](../archive/pre-game-shell-v2-2026-11/). Актуальные стартовые экраны — в [реестре дизайна](../../design/system/CURRENT_STYLE.md).
 **Спека:** [`game/docs/specs/SPEC_APP_SHELL.md`](../../docs/specs/SPEC_APP_SHELL.md)
 
 Единая система для **до партии**: два route auth, **Монетка B** + TGS-фон, пузырь с хвостом, **без внешней обводки** `mqx-frame` (`mqx-frame--pre-game`), flow flat для new-game, **только `mqx-btn`**.
 
-`sync-lab.sh` тянет `auth-flow/styles.css` + `new-game-mode/styles.css` + локальные дополнения.
+Архивный снимок сохраняет собранные стили; прежняя сборка использовала
+`auth-flow/styles.css`, `new-game-mode/styles.css` и локальные дополнения.
 
-## Запуск
+## Запуск исторического снимка
 
-```powershell
-cd design-lab/pre-game-shell
-.\sync-lab.sh
-npx serve .
-```
+Откройте [архивную витрину](../archive/pre-game-shell-v2-2026-11/index.html).
 
 ## Варианты
 
@@ -28,7 +25,7 @@ npx serve .
 | **P5** | Шаблоны | Flow flat |
 | **P6** | Проверка сессии | Bubble + TGS + playful copy (как AuthGuard) |
 
-См. [`VARIANTS.md`](VARIANTS.md).
+Варианты сохранены в архивной витрине.
 
 ## Prod
 

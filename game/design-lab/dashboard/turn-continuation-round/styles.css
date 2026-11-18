@@ -1,0 +1,136 @@
+#root {
+  display: block;
+  width: auto;
+  max-width: none;
+  min-height: 100vh;
+  margin: 0;
+  background: #f7f2ea;
+  color: #352346;
+}
+
+html[data-theme="dark"] #root {
+  color: #fbf3e9;
+  background: #24192d;
+}
+
+#root main.mqx-pocket {
+  box-sizing: border-box;
+  display: grid;
+  gap: 16px;
+  width: min(calc(100% - 24px), 586px);
+  min-height: 0;
+  margin: 0 auto;
+  padding: 0 0 28px;
+  background: transparent;
+}
+
+nav {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 4px 16px;
+  padding: 6px 12px;
+}
+
+nav a, nav button {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  color: inherit;
+}
+
+nav [aria-current] { font-weight: 800; }
+nav button, dialog button {
+  border: 1px solid currentColor;
+  border-radius: 12px;
+  background: transparent;
+  color: inherit;
+  padding: 0 12px;
+  min-height: 44px;
+  font: inherit;
+  cursor: pointer;
+}
+
+#root .mqx-pocket-hero--g .mqx-pocket-hero__logo { display: flex; }
+#root .mqx-pocket-tickets { margin: 0; }
+#root .mqx-pocket-ticket {
+  min-width: 0;
+  min-height: 78px;
+  display: grid;
+  gap: 4px;
+  text-align: start;
+  align-content: center;
+}
+#root .mqx-pocket-ticket span { font-size: 13px; }
+
+.section {
+  color: inherit;
+  border-top: 1px solid #926ca86b;
+  padding: 12px 0 0;
+}
+.section h2, .goal strong { margin: 0 0 8px; font-size: 17px; }
+.needs-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px 16px;
+}
+.needs label {
+  display: flex;
+  justify-content: space-between;
+  gap: 4px;
+  font-size: 13px;
+}
+meter, progress { display: block; width: 100%; accent-color: #8c53cc; }
+meter { height: 10px; }
+meter::-webkit-meter-bar { border: 0; background: #8c53cc32; }
+meter::-webkit-meter-optimum-value { background: #8c53cc; border-radius: 8px; }
+
+.needs-first .needs {
+  padding: 0;
+  border: 0;
+}
+.needs-first .needs-grid {
+  padding: 8px 12px;
+  border-radius: 12px;
+  background: #926ac021;
+}
+@media (min-width: 500px) {
+  .needs-first .needs-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+}
+
+.money {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  margin: 0;
+}
+.money > div + div { border-inline-start: 1px solid #926ca86b; padding-inline-start: 8px; }
+.money dt, .note { font-size: 12px; }
+.money dd { margin: 3px 0 0; font-weight: 800; }
+.money .note { font-weight: 500; }
+.gain { color: #176644; }
+html[data-theme="dark"] .gain { color: #80dfb2; }
+.goal summary {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  min-height: 44px;
+  cursor: pointer;
+}
+.goal strong { margin: 0; }
+.goal summary span::after { content: ' ＋'; }
+.goal[open] summary span::after { content: ' −'; }
+
+dialog {
+  box-sizing: border-box;
+  width: min(360px, calc(100% - 32px));
+  color: inherit;
+  background: var(--mq-pocket-paper, #f7f2ea);
+  border: 2px solid #694790;
+  border-radius: 18px;
+  padding: 18px;
+}
+html[data-theme="dark"] dialog { background: #352346; }
+dialog::backdrop { background: #201329a8; }
+:focus-visible { outline: 2px solid #a66de6; outline-offset: 3px; }

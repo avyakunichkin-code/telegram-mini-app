@@ -1,0 +1,137 @@
+{
+  "direction": "Финансы как игра",
+  "surfaces": [
+    {
+      "name": "Стартовые экраны",
+      "scope": "game-compact",
+      "status": "implemented",
+      "revision": 1,
+      "preview": "design-lab/start-flow-concept-round/README.md",
+      "approval": "design-lab/start-flow-concept-round/APPROVED.md",
+      "source": "web/src/components/mqx/pregame/MqxStartFlow.jsx",
+      "verification": "web/e2e/onboarding.spec.js"
+    },
+    {
+      "name": "Главная",
+      "status": "implemented",
+      "preview": "design-lab/finance-game-round/compact.html",
+      "approval": "design-lab/dashboard/APPROVED.md",
+      "source": "web/src/components/DashboardPremium.jsx",
+      "verification": "web/scripts/check-dashboard-canon.mjs",
+      "scope": "game-compact",
+      "revision": 1
+    },
+    {
+      "name": "Капитал",
+      "status": "implemented",
+      "preview": "design-lab/finance-game-round/capital-preview.html",
+      "approval": "design-lab/capital-page/APPROVED.md",
+      "source": "web/src/components/FinancePremium.jsx",
+      "verification": "web/scripts/check-finance-canon.mjs",
+      "scope": "game-compact",
+      "revision": 1
+    },
+    {
+      "name": "Аналитика",
+      "status": "implemented",
+      "preview": "design-lab/finance-game-round/analytics-preview.html",
+      "approval": "design-lab/analytics/APPROVED.md",
+      "source": "web/src/components/AnalyticsPremium.jsx",
+      "scope": "game-compact",
+      "revision": 1
+    },
+    {
+      "name": "Меню",
+      "status": "implemented",
+      "preview": "design-lab/finance-game-round/menu-preview.html",
+      "approval": "design-lab/finance-game-round/MENU_APPROVED.md",
+      "source": "web/src/components/MenuPremium.jsx",
+      "scope": "game-compact",
+      "revision": 1
+    },
+    {
+      "name": "Широкий веб-вид",
+      "status": "implemented",
+      "preview": "design-lab/finance-game-round/desktop-preview.html",
+      "approval": "design-lab/finance-game-round/DESKTOP_APPROVED.md",
+      "source": "web/src/components/mqx/layout/MqxWideDashboard.jsx",
+      "verification": "web/e2e/desktop-wide.spec.js",
+      "revision": 1,
+      "scope": "game-wide"
+    },
+    {
+      "name": "Лендинг «Финансы как игра»",
+      "scope": "landing",
+      "status": "preview",
+      "preview": "design-lab/landing-finance-game/index.html"
+    }
+  ],
+  "revision": 1,
+  "scopes": {
+    "game-compact": "Игра · компактный вид",
+    "game-wide": "Игра · широкий веб-вид",
+    "landing": "Лендинг"
+  },
+  "shared": [
+    {
+      "name": "Логотип",
+      "source": "design/system/assets/Logos/README.md",
+      "uses": [
+        {
+          "scope": "game-compact",
+          "path": "web/src/components/BrandLogo.jsx",
+          "state": "shared"
+        },
+        {
+          "scope": "game-wide",
+          "path": "web/src/components/GameScreenLayout.jsx",
+          "state": "shared"
+        },
+        {
+          "scope": "landing",
+          "path": "landing/site/index.html",
+          "preview": "design-lab/landing-finance-game/index.html",
+          "state": "variant"
+        }
+      ]
+    },
+    {
+      "name": "Студент",
+      "source": "design/system/assets/Characters/landing-v3/student-introduce.webp",
+      "uses": [
+        {
+          "scope": "game-compact",
+          "path": "web/src/components/mqx/brand/personaPortraits.js",
+          "preview": "design-lab/landing-finance-game/student-portrait-concept.png",
+          "state": "shared"
+        },
+        {
+          "scope": "game-wide",
+          "path": "web/src/assets/menu/student-campus.png",
+          "state": "variant"
+        },
+        {
+          "scope": "landing",
+          "path": "landing/site/assets/student-board.png",
+          "state": "variant"
+        }
+      ]
+    },
+    {
+      "name": "Завершить ход",
+      "source": "design/system/runtime/styles/mqx/layout.css",
+      "uses": [
+        {
+          "scope": "game-compact",
+          "path": "web/src/components/mqx/layout/MqxDashboardHero.jsx",
+          "state": "shared"
+        },
+        {
+          "scope": "game-wide",
+          "path": "web/src/components/mqx/layout/MqxWideDashboard.jsx",
+          "state": "shared"
+        }
+      ]
+    }
+  ]
+}

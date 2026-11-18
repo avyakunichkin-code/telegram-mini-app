@@ -1,0 +1,22 @@
+html body{background:#f7f3eb;color:#302039;margin:0;font:15px system-ui}
+html[data-theme=dark] body{background:#221a2d;color:#fff6e8}
+nav{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;align-items:center;padding:14px}a{color:inherit}
+body main.mqx-pocket{width:min(100% - 24px,720px);margin:auto;padding:0 0 30px;background:transparent}
+.sample{font-size:12px;margin:0 0 10px}
+main>.mqx-pocket-tickets{margin:10px 0 14px}
+main>.mqx-pocket-tickets button{height:80px}
+.panels{display:grid;gap:12px}
+.panel{padding:13px 0;border-top:1px solid #9c849773;min-width:0}
+.panel h2{font-size:17px;margin:0 0 10px}
+.needs-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px 16px}
+.needs-grid label{display:block;font-size:13px}.needs-grid b{float:right}
+meter,progress{display:block;width:100%;accent-color:#5c2da0}
+.goal summary{cursor:pointer;font-weight:700;min-height:44px}.goal summary small{margin-left:8px;font-weight:400}
+.goal>small{display:block;margin-top:8px}
+.b .panel{padding:14px;border:1px solid #9c849773;border-radius:15px}
+.b .needs-grid{gap:14px}.b .needs-grid>div{padding:7px 8px;background:#8b58bd12;border-radius:8px}
+@media(min-width:650px){.b .panels{grid-template-columns:1fr 1fr}.b .goal{grid-column:1/-1}}
+dialog{max-width:min(340px,calc(100% - 42px));background:#f7f0ff;color:#302039;border:1px solid;border-radius:18px;padding:20px}
+dialog form{float:right} dialog button,#theme{min-height:44px;min-width:44px}
+html body#root{display:block;width:auto;max-width:none;min-height:100vh}
+#root .mqx-pocket-hero--g .mqx-pocket-hero__logo{display:flex}

@@ -4,17 +4,11 @@
 
 Исторический референс снятого экрана.
 
-```bash
-cd design-lab/new-game-mode
-npx serve .
-```
-
-Открыть `index.html`.
+[Историческая витрина](../archive/pregame-history-2026-11/new-game-mode/).
 
 | Документ | Назначение |
 |----------|------------|
-| [`APPROVED.md`](APPROVED.md) | Утверждённый R2 + I1 |
-| [`VARIANTS.md`](VARIANTS.md) | Сводка (без альтернатив) |
+| [`APPROVED.md`](APPROVED.md) | Историческое утверждение R2 + I1; экран снят |
 
 ## Исторические компоненты
 

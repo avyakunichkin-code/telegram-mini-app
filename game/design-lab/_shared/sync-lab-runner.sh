@@ -12,7 +12,7 @@ fi
 
 if [[ ! -f "$PS1" ]]; then
   echo "sync-lab: нет нативного sync-lab.sh и нет sync-lab.ps1 в $ROUND" >&2
-  echo "  Добавьте bash sync-lab.sh (см. capital-page/details-actions-round/)" >&2
+  echo "  Добавьте bash sync-lab.sh (см. board-game/screens-round/)" >&2
   exit 1
 fi
 

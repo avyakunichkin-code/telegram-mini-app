@@ -126,7 +126,7 @@ npm run build:pages
 npx gh-pages -d dist
 ```
 
-**Лендинг:** `build:pages` собирает `game/landing/site/` (`game/landing/scripts/build-static.mjs`) в `dist/landing/`; скрины игры пересъёмки не требуют — прежний пайплайн PNG снят 2026-10-30 ([`specs/LANDING_SCREENSHOTS.md`](../specs/LANDING_SCREENSHOTS.md), архив). Ресурсы дизайна сверяет `npm run check:design-assets` (он же `prebuild`).
+**Лендинг:** `build:pages` собирает `game/landing/site/` (`game/landing/scripts/build-static.mjs`) в `dist/landing/`; скрины игры пересъёмки не требуют — прежний пайплайн PNG снят 2026-10-30 ([`archive/LANDING_SCREENSHOTS.md`](../archive/LANDING_SCREENSHOTS.md), архив). Ресурсы дизайна сверяет `npm run check:design-assets` (он же `prebuild`).
 
 ---
 

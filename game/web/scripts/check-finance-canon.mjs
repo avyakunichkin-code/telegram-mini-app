@@ -100,6 +100,11 @@ function main() {
     label: 'page_order_prod_components',
   })
 
+  const shell = manifest.page_shell_order
+  if (shell) {
+    checkOrder({ repoRoot, manifestRel, fileRel: shell.prod_entry, tokens: shell.components, label: 'page_shell_order.components' })
+  }
+
   const details = manifest?.details_panel_order
   assert(
     details && typeof details.prod_entry === 'string' && details.prod_entry,

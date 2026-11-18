@@ -22,7 +22,7 @@
 | Баланс-дизайнер: существенная смена чисел | метрики, политики, победимость, цена выбора; balance README/THRESHOLDS | данные в рамках принятого rebalance; baseline только после явного принятия | гипотеза/метрики → runner и человек для playtest |
 | Автор/аналитик событий: YAML/каталог | brief, persona, trade-off, lifecycle/axes, loader; EVENT_BRIEF, balance rules | author пишет YAML/brief; audit пишет только отчёт | ключи/effects/tests/gaps → event-audit/economy |
 | Backend/API/DB: контракт или схема | auth/null/error/транзакции/DDL; app README, migrations README, текущие schemas | router/service/schema/models/migrations/seeds по области | contract test + миграционный runbook → FE/QA |
-| UX/MQX-дизайнер: новый паттерн/layout | варианты/состояния/бренд; DESIGN_WORKFLOW, theme APPROVED | только lab до approval | 2–5 вариантов и выбор → человек → frontend |
+| UX/MQX-дизайнер: новый паттерн/layout | варианты/состояния/бренд; DESIGN_WORKFLOW, theme APPROVED | только lab до approval | картинка → MQX-превью → утверждение человеком → подключение к игре |
 | Frontend: утверждённый UI/hotfix | API/state/a11y/React 18; ARCHITECTURE, frontend references | screens/mqx/styles/api/hooks и canon после approval | рабочий UI + проверки → mqx-ui-reviewer |
 | QA/reviewer: регрессия/крупный diff | CS, независимое воспроизведение, доказательства; COMMANDS, текущие тесты | QA тесты при поручении; review без правок | findings/команды/риски → автор |
 | Release/ops: явно перед выпуском | PWA/web readiness, rollback, миграции; ops/DEPLOY, CI | локальный отчёт; внешние действия только отдельной авторизацией | readiness/блокеры → владелец |

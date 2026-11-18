@@ -296,3 +296,15 @@ body {
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
 }
+
+.th-shared-nav-sample { max-width: var(--mq-column); }
+.th-tab-art {
+  display: block;
+  width: 1.65rem;
+  aspect-ratio: 1;
+  background: url('./assets/Dashboard/goal-nav-icons.png') var(--th-tab-art-x) 50% / 517.6% 170.5% no-repeat;
+}
+.th-tab-art--home { --th-tab-art-x: 27%; }
+.th-tab-art--capital { --th-tab-art-x: 50%; }
+.th-tab-art--analytics { --th-tab-art-x: 75%; }
+.th-tab-art--menu { --th-tab-art-x: 98%; }

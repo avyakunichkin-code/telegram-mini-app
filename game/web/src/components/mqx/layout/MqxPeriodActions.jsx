@@ -24,14 +24,14 @@ function ActionIcon({ src }) {
 }
 
 /**
- * Кнопка зарплаты ★ BG-3: пока не забрана — главная золотая на всю ширину с суммой;
- * после выплаты — спокойная пунктирная строка «Зарплата получена».
+ * Доступная зарплата выделяется золотом; после выплаты остаётся неактивное подтверждение.
  */
 function SalaryButton({ hot, claimed, celebrate, amount, disabled, onClick }) {
   const cls = [
     'mqx-bg-btn',
     'mqx-bg-salary',
     hot && !claimed ? 'mqx-bg-salary--hot' : 'mqx-bg-salary--quiet',
+    claimed ? 'mqx-bg-salary--claimed' : '',
     celebrate ? 'mqx-juice-chip--celebrate' : '',
   ]
     .filter(Boolean)
@@ -50,16 +50,14 @@ function SalaryButton({ hot, claimed, celebrate, amount, disabled, onClick }) {
       onClick={onClick}
     >
       <ActionIcon src={coinsIcon} />
-      <span className="mqx-bg-salary__label">{label}</span>
-      {showAmount ? (
-        <span className="mqx-bg-salary__sum">
-          +<MoneyText value={amount} decimals={0} />
-        </span>
-      ) : claimed ? (
-        <span className="mqx-bg-salary__sum" aria-hidden="true">
-          ✓
-        </span>
-      ) : null}
+      <span className="mqx-bg-salary__copy">
+        <span className="mqx-bg-salary__label">{label}{claimed ? <span aria-hidden="true"> ✓</span> : null}</span>
+        {showAmount ? (
+          <span className="mqx-bg-salary__sum">
+            +<MoneyText value={amount} decimals={0} />
+          </span>
+        ) : null}
+      </span>
     </MqxButton>
   );
 }

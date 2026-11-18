@@ -1,0 +1,59 @@
+name: Deploy landing to Timeweb
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/deploy-landing-timeweb.yml'
+      - 'game/landing/**'
+      - 'game/design/**'
+      - 'game/scripts/design-assets.mjs'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: timeweb-landing
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    environment: timeweb
+    env:
+      TIMEWEB_HOST: ${{ vars.TIMEWEB_HOST }}
+      TIMEWEB_USER: ${{ vars.TIMEWEB_USER }}
+      TIMEWEB_PATH: ${{ vars.TIMEWEB_PATH }}
+      TIMEWEB_KNOWN_HOSTS: ${{ vars.TIMEWEB_KNOWN_HOSTS }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: npm --prefix game/landing run build -- --timeweb
+      - name: Upload landing over SFTP
+        env:
+          TIMEWEB_SSH_KEY: ${{ secrets.TIMEWEB_SSH_KEY }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          : "${TIMEWEB_SSH_KEY:?Set TIMEWEB_SSH_KEY in the timeweb environment}"
+          : "${TIMEWEB_KNOWN_HOSTS:?Set TIMEWEB_KNOWN_HOSTS in the timeweb environment}"
+          [[ "$TIMEWEB_HOST" =~ ^[a-zA-Z0-9][a-zA-Z0-9.-]+$ ]]
+          [[ "$TIMEWEB_USER" =~ ^[a-zA-Z0-9_][a-zA-Z0-9_-]*$ ]]
+          [[ "$TIMEWEB_PATH" =~ ^/[a-zA-Z0-9_./-]*/public_html/?$ ]]
+          umask 077
+          ssh_dir="$(mktemp -d)"
+          trap 'rm -f "$ssh_dir/key" "$ssh_dir/known_hosts"; rmdir "$ssh_dir"' EXIT
+          printf '%s\n' "$TIMEWEB_SSH_KEY" > "$ssh_dir/key"
+          printf '%s\n' "$TIMEWEB_KNOWN_HOSTS" > "$ssh_dir/known_hosts"
+          cd game/landing/dist
+          ssh_options=(-i "$ssh_dir/key" -o BatchMode=yes -o IdentitiesOnly=yes
+            -o StrictHostKeyChecking=yes -o UserKnownHostsFile="$ssh_dir/known_hosts")
+          destination="$TIMEWEB_USER@$TIMEWEB_HOST:${TIMEWEB_PATH%/}"
+          scp "${ssh_options[@]}" -r assets ./*.css ./*.js "$destination/"
+          scp "${ssh_options[@]}" index.html "$destination/.landing-index.html"
+          printf 'rename "%s/.landing-index.html" "%s/index.html"\n' "${TIMEWEB_PATH%/}" "${TIMEWEB_PATH%/}" |
+            sftp "${ssh_options[@]}" -b - "$TIMEWEB_USER@$TIMEWEB_HOST"

@@ -1,3 +1,7 @@
+import { MqxWideCapital } from './mqx/layout/MqxWideCapital';
+import { buildCapitalPeriodFlows } from '../utils/buildCapitalPeriodFlows';
+import { sumBy } from './mqx/layout/CapitalLotNotes';
+import { MqxCapitalPage } from './mqx/layout/MqxCapitalPage';
 import { useEffect, useMemo, useState } from 'react';
 import { API } from '../api';
 import {
@@ -8,13 +12,11 @@ import {
 import { capitalLockHint, capitalSectionState } from '../utils/starterMechanics';
 import { CapitalActionsPanel } from './mqx/layout/CapitalActionsPanel';
 import { CapitalDetailsPanel } from './mqx/layout/CapitalDetailsPanel';
-import { CapitalPeriodFlowsBlock } from './mqx/layout/CapitalPeriodFlowsBlock';
-import { MqxCapitalPageModeSeg } from './mqx/layout/MqxCapitalPageModeSeg';
-import { MqxTabHero } from './MqxTabHero';
 import { showNotification } from './notifications';
 
 /** Вкладка «Капитал»: потоки → Детали|Действия → позиции или сетка действий. */
 export function FinancePremium({
+  wide = false,
   overview,
   refreshOverview,
   openFlowsSection = null,
@@ -282,82 +284,89 @@ export function FinancePremium({
     setOpenSheet(sheetId);
   };
 
+  if (wide) {
+    const flows = buildCapitalPeriodFlows({ overview, investPositions, policies });
+    const netCapital = Number(overview.cash_balance ?? 0) + Number(overview.safety_fund_balance ?? 0)
+      + sumBy(investPositions, 'principal') + sumBy(ownedAssets, 'asset_value')
+      - sumBy(ownedLiabilities, 'total_debt');
+    return <MqxWideCapital
+      flows={flows}
+      netCapital={netCapital}
+      sections={sections}
+      onOpenAction={handleGotoAction}
+      details={renderDetails()}
+      sheets={renderActions()}
+    />;
+  }
+
   return (
-    <div className="mqx-tab-page">
-      <MqxTabHero
-        heroClassName="mqx-hero--capital"
-        inlineTitle
-        title="Капитал"
-        titleClassName="mqx-hero__title--capital"
-        subtitleClassName="mqx-hero__sub--capital"
-        subtitle="Что приносит и забирает деньги"
-        turn={Number(overview?.period_index) || 0}
-      />
-
-      <main className="mqx-content mqx-tab-page__scroll mqx-capital-page mqx-capital-page--board">
-        <div className="mqx-fin mqx-fin--capital">
-          <div className="mqx-capital-accordion-stack">
-            <CapitalPeriodFlowsBlock
-              overview={overview}
-              investPositions={investPositions}
-              policies={policies}
-              openFlowsSection={openFlowsSection}
-              showNet={pageMode === 'details'}
-            />
-
-            <MqxCapitalPageModeSeg mode={pageMode} onModeChange={setPageMode} />
-
-            {pageMode === 'details' ? (
-              <CapitalDetailsPanel
-                sections={sections}
-                lockHint={lockHint}
-                investPositions={investPositions}
-                policies={policies}
-                ownedAssets={ownedAssets}
-                ownedLiabilities={ownedLiabilities}
-                extraLoading={extraLoading}
-                onCloseInvest={closeInvest}
-                onCancelPolicy={cancelInsurancePolicy}
-                cancellingPolicyId={cancellingPolicyId}
-                onDeleteAsset={handleDeleteAsset}
-                onDeleteLiability={handleDeleteLiability}
-                onPrepayLiability={handlePrepayLiability}
-                prepayBusy={prepayBusy}
-                maxCash={maxCash}
-                onGotoAction={handleGotoAction}
-              />
-            ) : (
-              <CapitalActionsPanel
-                sections={sections}
-                lockHint={lockHint}
-                assetTemplates={assetTemplates}
-                liabilityTemplates={liabilityTemplates}
-                extraLoading={extraLoading}
-                reloadExtra={reloadExtra}
-                openSheet={openSheet}
-                onOpenSheet={setOpenSheet}
-                onCloseSheet={() => setOpenSheet(null)}
-                depositAmount={depositAmount}
-                bondAmount={bondAmount}
-                maxCash={maxCash}
-                depositRate={DEPOSIT_ANNUAL_RATE_PERCENT}
-                bondRate={BOND_ANNUAL_RATE_PERCENT}
-                onDepositAmountChange={setDepositAmount}
-                onBondAmountChange={setBondAmount}
-                onOpenDeposit={openDeposit}
-                onOpenBond={openBond}
-                onBuyInsurance={buyInsurancePlan}
-                buyingPlanKey={buyingPlanKey}
-                onAddAssetFromTemplate={addAssetFromTemplate}
-                onAddLiabilityFromTemplate={addLiabilityFromTemplate}
-                onSecuredAcquisition={addSecuredAcquisition}
-                securedAcquireBusyKey={securedAcquireBusyKey}
-                ownedAssets={ownedAssets}
-              />
-            )}
-          </div>
-        </div>
-      </main>
-    </div>
+    <MqxCapitalPage
+      overview={overview}
+      investPositions={investPositions}
+      policies={policies}
+      mode={pageMode}
+      onModeChange={setPageMode}
+      openFlowsSection={openFlowsSection}
+    >
+      {pageMode === 'details' ? renderDetails() : renderActions()}
+    </MqxCapitalPage>
   );
+
+  function renderDetails() {
+    return (
+        <CapitalDetailsPanel
+          sections={sections}
+          lockHint={lockHint}
+          investPositions={investPositions}
+          policies={policies}
+          ownedAssets={ownedAssets}
+          ownedLiabilities={ownedLiabilities}
+          extraLoading={extraLoading}
+          onCloseInvest={closeInvest}
+          onCancelPolicy={cancelInsurancePolicy}
+          cancellingPolicyId={cancellingPolicyId}
+          onDeleteAsset={handleDeleteAsset}
+          onDeleteLiability={handleDeleteLiability}
+          onPrepayLiability={handlePrepayLiability}
+          prepayBusy={prepayBusy}
+          maxCash={maxCash}
+          onGotoAction={handleGotoAction}
+          investmentChips
+          wide={wide}
+        />
+    );
+  }
+  function renderActions() {
+    return (
+        <CapitalActionsPanel
+          sections={sections}
+          hideGrid={wide}
+          lockHint={lockHint}
+          assetTemplates={assetTemplates}
+          liabilityTemplates={liabilityTemplates}
+          extraLoading={extraLoading}
+          reloadExtra={reloadExtra}
+          openSheet={openSheet}
+          onOpenSheet={setOpenSheet}
+          onCloseSheet={() => setOpenSheet(null)}
+          depositAmount={depositAmount}
+          bondAmount={bondAmount}
+          maxCash={maxCash}
+          depositRate={DEPOSIT_ANNUAL_RATE_PERCENT}
+          bondRate={BOND_ANNUAL_RATE_PERCENT}
+          onDepositAmountChange={setDepositAmount}
+          onBondAmountChange={setBondAmount}
+          onOpenDeposit={openDeposit}
+          onOpenBond={openBond}
+          onBuyInsurance={buyInsurancePlan}
+          buyingPlanKey={buyingPlanKey}
+          onAddAssetFromTemplate={addAssetFromTemplate}
+          onAddLiabilityFromTemplate={addLiabilityFromTemplate}
+          onSecuredAcquisition={addSecuredAcquisition}
+          securedAcquireBusyKey={securedAcquireBusyKey}
+          ownedAssets={ownedAssets}
+        />
+    );
+  }
+
 }

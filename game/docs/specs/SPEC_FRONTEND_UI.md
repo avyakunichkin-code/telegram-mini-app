@@ -9,7 +9,9 @@ aliases:
 ---
 # Spec: Frontend UI/UX — ТВОЙ ХОД
 
-Визуальная компоновка Главной для следующего внедрения зафиксирована в [утверждении «Финансы как игра»](../../design-lab/dashboard/APPROVED.md). Замеры и схемы текущей реализации сохраняют статус prod parity.
+Общее визуальное направление описано в [каноне «Финансы как игра»](../../design/system/CURRENT_STYLE.md). Визуальная компоновка Главной зафиксирована в [утверждении «Финансы как игра»](../../design-lab/dashboard/APPROVED.md). Замеры и схемы текущей реализации сохраняют статус prod parity.
+
+Границы широкой и компактной игры, лендинга и общих элементов зафиксированы в [ADR-017](../decisions/ADR-017-design-scopes.md).
 
 **Статус:** принят (аудит 2026-05; каналы — [ADR-012](../decisions/ADR-012-primary-channels-pwa-web-over-tma.md))  
 **Связанные документы:** [`reference/brandbook/BRANDBOOK.md`](../reference/brandbook/BRANDBOOK.md) (identity), [`reference/brandbook/BRANDBOOK_MQX.md`](../reference/brandbook/BRANDBOOK_MQX.md) (MQX UI), [`foundation/TMA_USER_FLOWS.md`](../foundation/TMA_USER_FLOWS.md) (secondary channel), [AGENTS.md](../../../AGENTS.md)  
@@ -225,7 +227,7 @@ export function ExampleBlock({ overview }) {
 
 ### Страница «Капитал»
 
-Статика: [`game/design-lab/capital-page/details-actions-round/`](../../design-lab/capital-page/details-actions-round) (**★ prod с 2026-06-01**). Обзор IA: [`capital-page/README`](../../design-lab/capital-page/README.md).
+Текущий вид и утверждение: [реестр дизайна](../../design/system/CURRENT_STYLE.md) и [Капитал](../../design-lab/capital-page/APPROVED.md). Прежний вариант — [архив](../../design-lab/archive/capital-details-actions-2026-11/).
 
 | Решение | Значение |
 |---------|----------|
@@ -363,3 +365,5 @@ Lab ★: [`game/design-lab/game-templates/persona-portraits-round/`](../../desig
 ---
 
 *Живой документ: при изменении паттерна MQX обновляйте этот файл и Codex-навыками `mqx-design` / `frontend-implementation`.*
+
+Игровая вкладка «Меню» реализована по [утверждённому канону](../../design-lab/finance-game-round/MENU_APPROVED.md). Цветовые роли таббара зависят от экрана, набор иконок общий для всех игровых вкладок.

@@ -1,7 +1,7 @@
 import { dismissRitual, expect, gameMain, playTurnOne, pressGotIt, startNewGameFromMenu, test } from './fixtures.js';
 
 test.describe('Капитал', () => {
-  test('покупка облигаций: доход за ход растёт, позиция подписана по-русски', async ({ page, player }) => {
+  test('покупка облигаций: доход за ход растёт, позиция подписана по-русски', async ({ page, player }, testInfo) => {
     await startNewGameFromMenu(page);
     await playTurnOne(page);
     await dismissRitual(page);
@@ -19,7 +19,10 @@ test.describe('Капитал', () => {
     await page.getByRole('button', { name: 'Купить облигации' }).click();
     await expect(page.getByText('Облигации добавлены')).toBeVisible();
 
-    await page.getByRole('tab', { name: 'Детали' }).click();
+    // Wide Capital shows the portfolio alongside actions. Mobile uses the Details tab.
+    if (testInfo.project.name === 'mobile-chrome') {
+      await page.getByRole('tab', { name: 'Детали' }).click();
+    }
     const main = gameMain(page);
     await expect(main).toContainText('Облигации');
     // Регресс 2026-10-26: в названии позиции было «Облигации (easy)».

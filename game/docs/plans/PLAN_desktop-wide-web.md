@@ -39,7 +39,7 @@ aliases:
 | 3 | `PLAN_desktop-wide-web.md` (этот файл) | draft |
 | 4 | [`PRODUCT_BACKLOG.md`](../backlog/PRODUCT_BACKLOG.md) | WD1 |
 | 5 | [`TRACEABILITY.md`](../TRACEABILITY.md) | WD1 |
-| 6 | design-lab `wide-game-shell/` (создать) | ⬜ |
+| 6 | [Широкая Главная · MQX-превью](../../design-lab/finance-game-round/desktop-preview.html) | Утверждено 17.11.2026 |
 
 ---
 

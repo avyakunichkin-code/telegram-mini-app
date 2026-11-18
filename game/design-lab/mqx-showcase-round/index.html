@@ -1,0 +1,20 @@
+<!doctype html>
+<html lang="ru">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MQX · Витрина компонентов</title>
+<link rel="stylesheet" href="./styles.css">
+<main>
+<header><p>ТВОЙ ХОД / ДИЗАЙН-СИСТЕМА</p><h1>Витрина MQX</h1><p>Два способа найти нужный пример. Данные и компоненты одинаковые.</p></header>
+<section><h2>A · Справочник</h2><p>Найти компонент по его типу. Подходит для проверки кнопок и состояний отдельно от экрана.</p>
+<nav aria-label="Справочник"><a href="#a-buttons">Действия</a><a href="#a-turn">Игровые блоки</a><a href="#a-status">Состояния</a></nav>
+<div class="examples" data-order="buttons turn status" data-version="a"></div></section>
+<section><h2>B · По экрану</h2><p>Найти пример по месту в игре. Подходит для сверки целого сценария.</p>
+<nav aria-label="Экраны"><a href="#b-turn">Главная</a><a href="#b-buttons">Капитал</a><a href="#b-status">Общие состояния</a></nav>
+<div class="examples" data-order="turn buttons status" data-version="b"></div></section>
+</main>
+<template id="buttons"><article><small>MqxButton</small><h3>Кнопки</h3><div class="row"><span class="primary">Добавить</span><span>Подробнее</span><span class="danger">Удалить</span><span class="disabled">Недоступно</span></div></article></template>
+<template id="turn"><article><small>MqxDashboardHero</small><h3>Ход 8 · Студент</h3><div class="row"><strong>42 000 ₽</strong><span class="gold">Завершить ход</span></div></article></template>
+<template id="status"><article><small>Состояния MQX</small><h3>Загрузка, пусто, ошибка</h3><ul><li>Загружаем активы…</li><li>У вас пока нет активов</li><li class="danger">Не удалось загрузить активы</li></ul></article></template>
+<script src="./preview.js"></script>
+</html>
