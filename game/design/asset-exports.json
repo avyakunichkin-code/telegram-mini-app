@@ -500,35 +500,35 @@
       "target": "game/web/src/assets/companions/phone.svg"
     },
     {
-      "source": "system/assets/Characters/landing-v3/student-introduce.webp",
+      "source": "archive/landing-v3-portraits/student-introduce.webp",
       "target": "game/design/archive/landing-site-legacy/assets/student-introduce.webp"
     },
     {
-      "source": "system/assets/Characters/landing-v3/student-introduce.webp",
+      "source": "archive/landing-v3-portraits/student-introduce.webp",
       "target": "game/web/src/assets/character-portraits/student-introduce.webp"
     },
     {
-      "source": "system/assets/Characters/landing-v3/professional-explain.webp",
+      "source": "archive/landing-v3-portraits/professional-explain.webp",
       "target": "game/design/archive/landing-site-legacy/assets/professional-explain.webp"
     },
     {
-      "source": "system/assets/Characters/landing-v3/professional-explain.webp",
+      "source": "archive/landing-v3-portraits/professional-explain.webp",
       "target": "game/web/src/assets/character-portraits/professional-explain.webp"
     },
     {
-      "source": "system/assets/Characters/landing-v3/manager-choice.webp",
+      "source": "archive/landing-v3-portraits/manager-choice.webp",
       "target": "game/design/archive/landing-site-legacy/assets/manager-choice.webp"
     },
     {
-      "source": "system/assets/Characters/landing-v3/manager-choice.webp",
+      "source": "archive/landing-v3-portraits/manager-choice.webp",
       "target": "game/web/src/assets/character-portraits/manager-choice.webp"
     },
     {
-      "source": "system/assets/Characters/landing-v3/entrepreneur-roadmap.webp",
+      "source": "archive/landing-v3-portraits/entrepreneur-roadmap.webp",
       "target": "game/design/archive/landing-site-legacy/assets/entrepreneur-roadmap.webp"
     },
     {
-      "source": "system/assets/Characters/landing-v3/entrepreneur-roadmap.webp",
+      "source": "archive/landing-v3-portraits/entrepreneur-roadmap.webp",
       "target": "game/web/src/assets/character-portraits/entrepreneur-roadmap.webp"
     },
     {

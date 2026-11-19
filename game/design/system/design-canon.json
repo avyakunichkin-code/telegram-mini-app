@@ -1,5 +1,11 @@
 {
   "direction": "Финансы как игра",
+  "startPortraits": {
+    "Characters/candidates/student-portrait-concept.png": "Студент",
+    "Characters/candidates/professional-portrait-concept-v3.png": "Специалист",
+    "Characters/candidates/manager-portrait-concept.png": "Руководитель",
+    "Characters/candidates/entrepreneur-portrait-concept-v3.png": "Предприниматель"
+  },
   "surfaces": [
     {
       "name": "Стартовые экраны",
@@ -91,28 +97,6 @@
           "scope": "landing",
           "path": "landing/site/index.html",
           "preview": "design-lab/landing-finance-game/index.html",
-          "state": "variant"
-        }
-      ]
-    },
-    {
-      "name": "Студент",
-      "source": "design/system/assets/Characters/landing-v3/student-introduce.webp",
-      "uses": [
-        {
-          "scope": "game-compact",
-          "path": "web/src/components/mqx/brand/personaPortraits.js",
-          "preview": "design-lab/landing-finance-game/student-portrait-concept.png",
-          "state": "shared"
-        },
-        {
-          "scope": "game-wide",
-          "path": "web/src/assets/menu/student-campus.png",
-          "state": "variant"
-        },
-        {
-          "scope": "landing",
-          "path": "landing/site/assets/student-board.png",
           "state": "variant"
         }
       ]

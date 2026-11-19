@@ -122,9 +122,13 @@ function walk(root) {
   return fs.readdirSync(root, { recursive: true }).filter(file => fs.statSync(path.join(root, file)).isFile()).map(file => file.split(path.sep).join('/')).sort();
 }
 const canon = JSON.parse(fs.readFileSync(path.join(project, 'design-canon.json'), 'utf8'));
+const startPortraits = Object.entries(canon.startPortraits);
+for (const [file] of startPortraits) {
+  if (!fs.existsSync(within(project, 'assets/' + file))) throw new Error('Missing start portrait: ' + file);
+}
 const assetFiles = walk(path.join(project, 'assets')).filter(file =>
   /\.(png|webp|svg|ico)$/.test(file) &&
-  /^(Logos\/finance-game\/|Characters\/landing-v3\/|Monetka\/monetka-soft-volume|Icons\/|Actions\/|Capital\/|Menu\/|Needs\/)/.test(file)
+  /^(Logos\/finance-game\/|Characters\/landing-v3\/student-board\.png$|Monetka\/monetka-soft-volume|Icons\/|Actions\/|Capital\/|Menu\/|Needs\/)/.test(file)
 );
 emit(path.join(project, 'design-system.json'), JSON.stringify({
   schema_version: 1,
@@ -132,15 +136,17 @@ emit(path.join(project, 'design-system.json'), JSON.stringify({
   current_style: canon.direction,
   runtime: 'runtime/',
   tokens: 'tokens.json',
-  assets: assetFiles.map(file => 'assets/' + file),
+  assets: [...assetFiles, ...startPortraits.map(([file]) => file)].sort().map(file => 'assets/' + file),
   exports: '../asset-exports.json',
   archive: '../archive/classic-v3/',
 }, null, 2) + '\n');
 emit(path.join(designRoot, 'index.html'), '<!doctype html><html lang="ru"><meta charset="utf-8"><title>Дизайн ТВОЙ ХОД</title><meta http-equiv="refresh" content="0;url=./system/index.html"><a href="./system/index.html">Актуальная система</a> · <a href="./archive/classic-v3/README.md">Архив</a></html>\n');
-const assetCards = assetFiles.map(file => `<figure><a href="./assets/${file}"><img loading="lazy" src="./assets/${file}" alt="${file}"></a><figcaption>${file}</figcaption></figure>`).join('');
+const assetCard = (file, label = file) => `<figure><a href="./assets/${file}"><img loading="lazy" src="./assets/${file}" alt="${label}"></a><figcaption>${label}</figcaption></figure>`;
+const startPortraitCards = startPortraits.map(([file, role]) => assetCard(file, role)).join('');
+const assetCards = assetFiles.map(file => assetCard(file)).join('');
 const screenLinks = canon.surfaces
   .filter(screen => screen.preview)
   .map(screen => `<li><a href="../../${screen.preview}">${screen.name}</a></li>`).join('');
-emit(path.join(project, 'index.html'), `<!doctype html><html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Твой ход · ${canon.direction}</title><link rel="stylesheet" href="./tokens.css"><style>body{margin:0;padding:32px;font:15px/1.6 Manrope,system-ui;background:var(--mq-board);color:var(--mq-board-ink)}main{max-width:1200px;margin:auto}h1,h2{font-family:Nunito,system-ui}.assets{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:16px}figure{margin:0;background:var(--mq-cell);padding:16px;border-radius:12px}img{width:100%;height:140px;object-fit:contain}figcaption{font-size:12px;overflow-wrap:anywhere}</style></head><body><main><h1>Твой ход · ${canon.direction}</h1><p><a href="./CURRENT_STYLE.md">Утверждения и реализация</a> · <a href="../../docs/reference/brandbook/BRANDBOOK.md">Брендбук</a> · <a href="./assets/Logos/README.md">Форматы логотипа</a></p><h2>Экраны Design Lab</h2><ul>${screenLinks}</ul><h2>Ассеты действующего направления</h2><div class="assets">${assetCards}</div></main></body></html>\n`);
+emit(path.join(project, 'index.html'), `<!doctype html><html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Твой ход · ${canon.direction}</title><link rel="stylesheet" href="./tokens.css"><style>body{margin:0;padding:32px;font:15px/1.6 Manrope,system-ui;background:var(--mq-board);color:var(--mq-board-ink)}main{max-width:1200px;margin:auto}h1,h2{font-family:Nunito,system-ui}.assets{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:16px}figure{margin:0;background:var(--mq-cell);padding:16px;border-radius:12px}img{width:100%;height:140px;object-fit:contain}figcaption{font-size:12px;overflow-wrap:anywhere}</style></head><body><main><h1>Твой ход · ${canon.direction}</h1><p><a href="./CURRENT_STYLE.md">Утверждения и реализация</a> · <a href="../../docs/reference/brandbook/BRANDBOOK.md">Брендбук</a> · <a href="./assets/Logos/README.md">Форматы логотипа</a></p><h2>Экраны Design Lab</h2><ul>${screenLinks}</ul><h2>Портреты старта B для медиа</h2><div class="assets">${startPortraitCards}</div><h2>Другие ассеты дизайн-системы</h2><div class="assets">${assetCards}</div></main></body></html>\n`);
 console.log(`${check ? 'Checked' : 'Synced'} ${targets.size} asset exports + landing design-system examples; ${failures} stale files`);
 process.exitCode = failures ? 1 : 0;
