@@ -1,5 +1,5 @@
 /** Фиксированные ставки MVP (выбор продукта — в бэклоге). */
-export const DEPOSIT_ANNUAL_RATE_PERCENT = 14;
+export const DEPOSIT_ANNUAL_RATE_PERCENT = 15;
 export const BOND_ANNUAL_RATE_PERCENT = 16;
 
 export function investAmountStep(maxAmount) {
