@@ -60,9 +60,6 @@ export default defineConfig(({ mode }) => {
           globIgnores: [
             '**/assets/monetka-*.png',
             '**/assets/monetka-*.webp',
-            '**/assets/logo-full*.png',
-            '**/assets/logo-full*.webp',
-            '**/assets/logo-compact*.png',
           ],
           navigateFallback: null,
           maximumFileSizeToCacheInBytes: 3 * 1024 * 1024,

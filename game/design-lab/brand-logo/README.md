@@ -1,6 +1,6 @@
 # Brand logo — design-lab
 
-Раунд утверждения логотипа **ТВОЙ ХОД** перед переносом в `game/web/src/assets/brand/`.
+Исторический раунд G1/G2. [Текущий утверждённый знак и форматы](../../design/system/assets/Logos/README.md).
 
 ## Запуск
 
@@ -32,4 +32,4 @@ npx serve .
 
 ## Статус
 
-**★ Утверждено → prod** — G1 + G2, tagline как в G1. См. [`APPROVED.md`](APPROVED.md).
+20.05.2026 были утверждены G1 + G2 и подпись из G1. 15.11.2026 их заменил знак «Финансы как игра». См. [`APPROVED.md`](APPROVED.md).

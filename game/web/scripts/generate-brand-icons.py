@@ -7,9 +7,10 @@ from pathlib import Path
 from PIL import Image
 
 ROOT = Path(__file__).resolve().parents[1]
-SRC = ROOT.parent / "game/design/system/assets/Logos/finance-game/avatar-tx-128.png"
+SRC = ROOT.parent / "design/system/assets/Logos/finance-game/avatar-tx-128.png"
 PUBLIC = ROOT / "public"
 PWA = PUBLIC / "pwa"
+LANDING_ASSETS = ROOT.parent / "landing/site/assets"
 
 # Как manifest.background_color / pre-game
 BG_RGBA = (245, 246, 248, 255)
@@ -78,6 +79,7 @@ def main() -> None:
         (PWA / "icon-192.png", 192, PADDING),
         (PWA / "icon-512.png", 512, PADDING),
         (PWA / "apple-touch-icon.png", 180, PADDING),
+        (LANDING_ASSETS / "apple-touch-icon.png", 180, PADDING),
         (PUBLIC / "favicon-32.png", 32, PADDING),
         (PUBLIC / "favicon-48.png", 48, PADDING),
         (PUBLIC / "favicon-192.png", 192, PADDING),
@@ -90,11 +92,11 @@ def main() -> None:
     for path, px, pad in square_targets:
         out = fit_square(logo, px, padding_ratio=pad)
         out.save(path, optimize=True)
-        print(f"Wrote {path.relative_to(ROOT)} ({px}x{px}, pad={pad:.0%})")
+        print(f"Wrote {path.relative_to(ROOT.parent)} ({px}x{px}, pad={pad:.0%})")
     for path, px in maskable_targets:
         out = fit_maskable(logo, px)
         out.save(path, optimize=True)
-        print(f"Wrote {path.relative_to(ROOT)} ({px}x{px}, maskable {MASKABLE_WIDTH_RATIO:.0%})")
+        print(f"Wrote {path.relative_to(ROOT.parent)} ({px}x{px}, maskable {MASKABLE_WIDTH_RATIO:.0%})")
 
 
 if __name__ == "__main__":
