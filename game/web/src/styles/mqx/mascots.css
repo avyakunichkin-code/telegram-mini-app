@@ -1,16 +1,9 @@
-/* Маскоты ★ PO 2026-11-02 — game/design-lab/mascots/ (ink-mascots-round, pregame-monetka-round, companions-round).
-   Цвета персонажей зашиты в SVG и от темы не зависят. */
+/* Золотая Монетка — game/design-lab/mascots/APPROVED.md. */
 
 .mqx-monetka,
 .mqx-monetka-avatar {
   display: block;
   flex-shrink: 0;
-}
-
-/* Надпись на ободе — шрифтом игры (inline SVG получает шрифт страницы) */
-.mqx-monetka__rim {
-  font-family: var(--mq-font-display);
-  font-weight: 900;
 }
 
 /* ---------- Квитя: чек = тело, лицо на оторванном крае (★ ink-mascots-round «Итоги хода») ---------- */

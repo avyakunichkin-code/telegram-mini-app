@@ -67,7 +67,7 @@ export function MqxWideDashboard({ role, templateKey, overview, balanceHighlight
           {tip?.text && (
             <>
               <button type="button" className="mqx-bg-turn__help" aria-label="Подсказка Монетки" aria-haspopup="dialog" onClick={() => helpRef.current?.showModal()}>
-                <MonetkaAvatar size={32} />
+                <MonetkaAvatar size={32} pose={tip.pose} />
               </button>
               <dialog ref={helpRef} className="mqx-bg-turn__dialog" aria-label="Подсказка Монетки">
                 <p>{tip.text}</p>

@@ -1,10 +1,10 @@
-import monetka from '../../../assets/monetka/monetka-soft-volume.webp';
+import { monetkaPoses } from './monetkaPoses';
 
-export function Monetka({ size, label, className = '' }) {
+export function Monetka({ size, label, pose = 'welcome', className = '' }) {
   return (
     <img
       className={['mqx-monetka', className].filter(Boolean).join(' ')}
-      src={monetka}
+      src={monetkaPoses[pose] ?? monetkaPoses.welcome}
       width={size}
       alt={label ?? ''}
     />

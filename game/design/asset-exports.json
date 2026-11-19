@@ -11,8 +11,25 @@
     {"source":"system/assets/Logos/finance-game/logo-120.webp","target":"game/design-lab/dashboard/turn-continuation-round/assets/logo-120.webp"},
     {"source":"system/assets/Logos/finance-game/logo-240.webp","target":"game/design-lab/dashboard/turn-continuation-round/assets/logo-240.webp"},
     {"source":"system/assets/Logos/finance-game/logo-480.webp","target":"game/design-lab/dashboard/turn-continuation-round/assets/logo-480.webp"},
+    {"source":"system/assets/Monetka/poses/welcome.webp","target":"game/web/src/assets/monetka/welcome.webp"},
+    {"source":"system/assets/Monetka/poses/welcome-avatar.webp","target":"game/web/src/assets/monetka/welcome-avatar.webp"},
+    {"source":"system/assets/Monetka/poses/salary.webp","target":"game/web/src/assets/monetka/salary.webp"},
+    {"source":"system/assets/Monetka/poses/salary-avatar.webp","target":"game/web/src/assets/monetka/salary-avatar.webp"},
+    {"source":"system/assets/Monetka/poses/surprised.webp","target":"game/web/src/assets/monetka/surprised.webp"},
+    {"source":"system/assets/Monetka/poses/surprised-avatar.webp","target":"game/web/src/assets/monetka/surprised-avatar.webp"},
+    {"source":"system/assets/Monetka/poses/think.webp","target":"game/web/src/assets/monetka/think.webp"},
+    {"source":"system/assets/Monetka/poses/think-avatar.webp","target":"game/web/src/assets/monetka/think-avatar.webp"},
+    {"source":"system/assets/Monetka/poses/joy.webp","target":"game/web/src/assets/monetka/joy.webp"},
+    {"source":"system/assets/Monetka/poses/joy-avatar.webp","target":"game/web/src/assets/monetka/joy-avatar.webp"},
+    {"source":"system/assets/Monetka/poses/worried.webp","target":"game/web/src/assets/monetka/worried.webp"},
+    {"source":"system/assets/Monetka/poses/worried-avatar.webp","target":"game/web/src/assets/monetka/worried-avatar.webp"},
+    {"source":"system/assets/Monetka/poses/victory.webp","target":"game/web/src/assets/monetka/victory.webp"},
+    {"source":"system/assets/Monetka/poses/victory-avatar.webp","target":"game/web/src/assets/monetka/victory-avatar.webp"},
+    {"source":"system/assets/Monetka/poses/ready.webp","target":"game/web/src/assets/monetka/ready.webp"},
+    {"source":"system/assets/Monetka/poses/ready-avatar.webp","target":"game/web/src/assets/monetka/ready-avatar.webp"},
+    {"source":"system/assets/Monetka/poses/support.webp","target":"game/web/src/assets/monetka/support.webp"},
+    {"source":"system/assets/Monetka/poses/support-avatar.webp","target":"game/web/src/assets/monetka/support-avatar.webp"},
     {"source":"system/assets/Start/board-footer.png","target":"game/web/src/assets/start/board-footer.png"},
-    {"source":"system/assets/Start/monetka-b.png","target":"game/web/src/assets/start/monetka-b.png"},
     {"source":"system/assets/Start/welcome-heroes.png","target":"game/web/src/assets/start/welcome-heroes.png"},
     {"source":"system/runtime/styles/mqx/start.css","target":"game/web/src/styles/mqx/start.css"},
     { "source": "system/assets/Characters/candidates/manager-portrait-concept.png", "target": "game/web/src/assets/character-portraits/manager-portrait-concept.png" },
@@ -305,14 +322,6 @@
       "target": "game/docs/archive/brandbook-2026-05/assets/logos/logo-compact.webp"
     },
     {
-      "source": "archive/classic-v3/assets/Monetka/monetka-mascot.png",
-      "target": "game/docs/reference/brandbook/assets/monetka/monetka-mascot.png"
-    },
-    {
-      "source": "archive/classic-v3/assets/Needs/monetka-mascot.webp",
-      "target": "game/docs/reference/assets/monetka-mascot.webp"
-    },
-    {
       "source": "system/illustrations/characters.js",
       "target": "game/design-lab/mascots/companions-round/characters.js"
     },
@@ -461,20 +470,12 @@
       "target": "game/web/src/assets/character-portraits/entrepreneur-roadmap.webp"
     },
     {
-      "source": "system/assets/Monetka/monetka-soft-volume.webp",
+      "source": "archive/monetka-pre-2026-11-19/monetka-soft-volume.webp",
       "target": "game/design/archive/landing-site-legacy/assets/monetka-soft-volume.webp"
     },
     {
-      "source": "system/assets/Monetka/monetka-soft-volume.webp",
-      "target": "game/web/src/assets/monetka/monetka-soft-volume.webp"
-    },
-    {
-      "source": "system/assets/Monetka/monetka-soft-volume-avatar.webp",
+      "source": "archive/monetka-pre-2026-11-19/monetka-soft-volume-avatar.webp",
       "target": "game/design/archive/landing-site-legacy/assets/monetka-soft-volume-avatar.webp"
-    },
-    {
-      "source": "system/assets/Monetka/monetka-soft-volume-avatar.webp",
-      "target": "game/web/src/assets/monetka/monetka-soft-volume-avatar.webp"
     }
   ]
 }

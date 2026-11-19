@@ -1,10 +1,10 @@
-import monetkaAvatar from '../../../assets/monetka/monetka-soft-volume-avatar.webp';
+import { monetkaAvatars } from './monetkaPoses';
 
-export function MonetkaAvatar({ size = 40, className = '' }) {
+export function MonetkaAvatar({ size = 40, pose = 'welcome', className = '' }) {
   return (
     <img
       className={['mqx-monetka-avatar', className].filter(Boolean).join(' ')}
-      src={monetkaAvatar}
+      src={monetkaAvatars[pose] ?? monetkaAvatars.welcome}
       width={size}
       height={size}
       alt=""

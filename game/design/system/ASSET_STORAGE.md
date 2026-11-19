@@ -3,7 +3,7 @@
 Единственное хранилище — `game/design/`. Текущий набор находится в `system/`, прежняя система и растровые маскоты — в `archive/classic-v3/`.
 
 - `illustrations/characters.js` — чиби и напарники из выбранного холста: Студент + Студбилет, Профессионал + Зарплатная карта, Руководитель + Портфель, Предприниматель + Смартфон.
-- `illustrations/monetka.js`, `assets/Monetka/*.svg` — новая Монетка и Квитя. Прежних PNG в активной галерее нет.
+- `assets/Monetka/monetka-gold.png` — растровый эталон Монетки. `assets/Monetka/poses/` содержит девять исходных PNG и игровые WebP в полном и аватарном кадрах. Прежние изображения Монетки — в [архиве](../archive/monetka-pre-2026-11-19/README.md). SVG Квити хранятся в `assets/Monetka/`.
 - `assets/Logos/` — утверждённый знак «Финансы как игра» в finance-game/. `assets/Icons/`, `fonts/`, `tokens.json`, `components/` — библиотека системы. Действующие примеры отобраны в [каталоге](index.html).
 - `runtime/` — редактируемый CSS приложения (экспорт в `game/web/src/` — `scripts/design-assets.mjs`). Отдельного слоя «Чернильного края» нет: его правила — в CSS блоков, токены `--mq-ink-*` — в `tokens.json` и `runtime/styles/tokens.css`.
 

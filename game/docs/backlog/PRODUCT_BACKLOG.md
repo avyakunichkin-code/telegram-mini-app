@@ -415,11 +415,11 @@ aliases:
 
 ### Эпик O1 — онбординг TMA (Pre-Alpha) — **superseded → O2**
 
-Идея (архив): [`onboarding-tma-mission-brief.md`](../vision/ideas/onboarding-tma-mission-brief.md) · Stubs: [`archive/onboarding-o1/`](../archive/onboarding-o1/README.md), [`archive/onboarding-o2/`](../archive/onboarding-o2/README.md) · **O3:** [`SPEC_onboarding-o3.md`](../specs/features/SPEC_onboarding-o3.md) · Lab: [`onboarding-o2/`](../design-lab/archive/onboarding-o2/)
+Идея (архив): [`onboarding-tma-mission-brief.md`](../vision/ideas/onboarding-tma-mission-brief.md) · Stubs: [`archive/onboarding-o1/`](../archive/onboarding-o1/README.md), [`archive/onboarding-o2/`](../archive/onboarding-o2/README.md) · **O3:** [`SPEC_onboarding-o3.md`](../specs/features/SPEC_onboarding-o3.md) · Lab: [архив O2](../archive/onboarding-o2/README.md)
 
 - [x] P0 **[Doc+Design]** Guided coach **5 шагов ★** (O1, 2026-05-20; lab снят → O2 strip).
 - [x] P0 **[Doc]** Spec O1 → guided coach (2026-05-20).
-- [x] P0 **[Doc]** Ассет Монетки: [`game/docs/reference/assets/monetka-mascot.png`](../reference/assets/monetka-mascot.png).
+- [x] P0 **[Doc]** Ассет Монетки: [`архивный ассет`](../../design/archive/monetka-pre-2026-11-19/reference/monetka-mascot.png).
 - [x] P0 **[Product+Frontend]** Автостарт **простейшего** шаблона после Game Mode (`startGameWithSimplestTemplate`).
 - [x] P0 **[Frontend]** MQX `OnboardingCoach` + `GameOnboardingLayer` на `GameScreen`.
 - [x] P0 **[Backend]** `onboarding_state` + `onboarding_step`; `PATCH /api/game/profile/onboarding`; overview.

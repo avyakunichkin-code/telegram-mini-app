@@ -1,3 +1,4 @@
+import { DEPOSIT_ANNUAL_RATE_PERCENT, BOND_ANNUAL_RATE_PERCENT } from '../../../constants/investProducts';
 import { useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { GameScreenLayout, GameScreenTabNav } from '../../GameScreenLayout';
@@ -12,7 +13,7 @@ const overview = {
   monthly_burn_total: 30000,
 };
 const initialPositions = [
-  { id: 1, kind: 'deposit', title: 'Вклад', principal: 20000, annual_rate_percent: 14 },
+  { id: 1, kind: 'deposit', title: 'Вклад', principal: 20000, annual_rate_percent: DEPOSIT_ANNUAL_RATE_PERCENT },
 ];
 const sections = {
   invest: 'open', insurance: 'open', property: 'open', liabilities: 'open', car: 'open', mortgage: 'open',
@@ -74,8 +75,8 @@ export function MqxCapitalPreview({ desktopParty } = {}) {
                     depositAmount={deposit}
                     bondAmount={bond}
                     maxCash={currentOverview.cash_balance}
-                    depositRate={14}
-                    bondRate={16}
+                    depositRate={DEPOSIT_ANNUAL_RATE_PERCENT}
+                    bondRate={BOND_ANNUAL_RATE_PERCENT}
                     onDepositAmountChange={setDeposit}
                     onBondAmountChange={setBond}
                     onOpenDeposit={() => mockPurchase('deposit')}

@@ -15,7 +15,7 @@ export function lotMeta(count, total) {
   return `${count} · ${formatLotRub(total)}`;
 }
 
-/** Подписи строк карточек собственности ★ BG-2 («+93 ₽ за ход · 14% в год»). */
+/** Подписи строк карточек собственности ★ BG-2 («+125 ₽ за ход · 15% в год»). */
 export const LOCKED_META = 'откроется по цели';
 
 export function sumBy(items, field) {

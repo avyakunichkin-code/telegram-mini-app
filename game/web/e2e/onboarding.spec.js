@@ -72,6 +72,9 @@ test.describe('Регистрация и первый ход', () => {
     expect(response.ok()).toBeTruthy();
     const first = await response.json();
     await expect(page.getByRole('heading', { name: 'Твой напарник' })).toBeVisible();
+    const monetka = page.locator('.start-lab__intro img');
+    await expect(monetka).toHaveAttribute('src', /\/monetka\/welcome\.webp$/);
+    await monetka.evaluate((image) => image.decode());
 
     await page.evaluate(() => {
       localStorage.removeItem('tg_miniapp_token');

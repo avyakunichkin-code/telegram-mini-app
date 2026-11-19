@@ -3,14 +3,29 @@ import { MonetkaAvatar } from '../brand/MonetkaAvatar';
 import { MqxCompanionCard } from '../brand/MqxCompanionCard';
 
 const COMPANION_TEMPLATES = ['mq_game_basic_v1', 'mq_game_tight_budget_v1', 'mq_game_mortgage_stress_v1', 'mq_game_debt_stack_v1'];
+const MONETKA_POSES = [
+  ['welcome', 'Приветствие'],
+  ['salary', 'Напоминание о зарплате'],
+  ['surprised', 'Удивление'],
+  ['think', 'Объяснение'],
+  ['joy', 'Радость'],
+  ['worried', 'Предупреждение'],
+  ['victory', 'Победа'],
+  ['ready', 'Завершение хода'],
+  ['support', 'Поддержка'],
+];
 
-/** Маскоты ★ ink-mascots-round, companions-round (PO 2026-11-02). */
 export function MqxMascotsCatalogDemo() {
   return (
     <>
-      <p className="mqx-catalog__lead">Объёмная Монетка и аватар.</p>
       <div className="mqx-catalog-mascots">
-        <Monetka size={140} label="Монетка" />
+        {MONETKA_POSES.map(([pose, label]) => (
+          <figure key={pose} className="mqx-catalog-mascots__cell">
+            <Monetka size={140} pose={pose} />
+            <MonetkaAvatar size={40} pose={pose} />
+            <figcaption>{label}</figcaption>
+          </figure>
+        ))}
       </div>
       <div className="mqx-catalog-mascots mqx-catalog-mascots--sizes">
         {[56, 40, 24].map((size) => (

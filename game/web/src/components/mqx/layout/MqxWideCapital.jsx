@@ -1,18 +1,21 @@
 import { FlowBreakdown } from './CapitalPeriodFlowsBlock';
 import { useState } from 'react';
+import { DEPOSIT_ANNUAL_RATE_PERCENT, investMonthlyAccrual } from '../../../constants/investProducts';
 import { MqxButton } from '../primitives/MqxButton';
 import { MqxCapitalSheet } from './MqxCapitalSheet';
 import './capital-wide.css';
+
+const depositIncome = investMonthlyAccrual(80000, DEPOSIT_ANNUAL_RATE_PERCENT);
 
 const actions = [
   ['deposit', 'Депозит', 'invest'], ['bond', 'Облигации', 'invest'],
   ['credit', 'Кредиты', 'liabilities'], ['mortgage', 'Ипотека', 'mortgage'],
   ['realestate', 'Недвижимость', 'property'], ['car', 'Авто', 'car'],
 ];
-const incomes = [[11, 'Зарплата', 60000], [12, 'Проценты по депозиту', 933], [1, 'Купон по облигациям', 1600], [4, 'Аренда', 8000]];
+const incomes = [[11, 'Зарплата', 60000], [12, 'Проценты по депозиту', depositIncome], [1, 'Купон по облигациям', 1600], [4, 'Аренда', 8000]];
 const expenses = [[3, 'Жильё', 25000], [13, 'Повседневные расходы', 7500], [14, 'Платёж по ипотеке', 10000], [4, 'Содержание квартиры', 2000], [15, 'Страховой взнос', 500]];
 const portfolio = [
-  ['Вложения', [[0, 'Депозит', 80000, '14% годовых · +933 ₽ за ход'], [1, 'Облигации', 120000, '16% годовых · +1 600 ₽ за ход']]],
+  ['Вложения', [[0, 'Депозит', 80000, `${DEPOSIT_ANNUAL_RATE_PERCENT}% годовых · +${new Intl.NumberFormat('ru-RU').format(depositIncome)} ₽ за ход`], [1, 'Облигации', 120000, '16% годовых · +1 600 ₽ за ход']]],
   ['Имущество', [[4, 'Квартира', 900000, 'Аренда +8 000 ₽ · содержание −2 000 ₽ за ход']]],
   ['Долги', [[3, 'Ипотека', 500000, '12% годовых · платёж 10 000 ₽ за ход', 'Осталось 70 ходов · залог: квартира']]],
   ['Страховки', [[15, 'Полис жилья', 300000, 'Взнос 500 ₽ за ход · до хода 12']]],
