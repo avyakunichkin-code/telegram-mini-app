@@ -2,6 +2,9 @@
 
 from __future__ import annotations
 
+from pathlib import Path
+import re
+
 import pytest
 from fastapi import HTTPException
 
@@ -9,6 +12,17 @@ from app.finance.invest_products import INVEST_PRODUCTS
 from app.models import GameProfile, InvestmentPosition
 from app.services.invest import service as invest_service
 from app.services.invest.service import close_position, open_deposit
+
+
+@pytest.mark.parametrize("kind", ["deposit", "bond"])
+def test_frontend_invest_rate_matches_server_catalog(kind):
+    constants = Path(__file__).resolve().parents[2] / "web/src/constants/investProducts.js"
+    match = re.search(
+        rf"export const {kind.upper()}_ANNUAL_RATE_PERCENT = ([\d.]+);",
+        constants.read_text(encoding="utf-8"),
+    )
+    assert match is not None
+    assert float(match.group(1)) == INVEST_PRODUCTS[kind].annual_rate_percent
 
 
 def _active_profile(db_session, user_id: int, *, cash: float = 200_000) -> GameProfile:
