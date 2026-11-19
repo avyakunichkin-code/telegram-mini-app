@@ -18,9 +18,6 @@
 | Логотип | [Источник](assets/Logos/README.md) | Игра · компактный вид | Общий | [Потребитель](../../web/src/components/BrandLogo.jsx) | — |
 | Логотип | [Источник](assets/Logos/README.md) | Игра · широкий веб-вид | Общий | [Потребитель](../../web/src/components/GameScreenLayout.jsx) | — |
 | Логотип | [Источник](assets/Logos/README.md) | Лендинг | Согласованный вариант | [Потребитель](../../landing/site/index.html) | [Lab](../../design-lab/landing-finance-game/index.html) |
-| Студент | [Источник](assets/Characters/landing-v3/student-introduce.webp) | Игра · компактный вид | Общий | [Потребитель](../../web/src/components/mqx/brand/personaPortraits.js) | [Lab](../../design-lab/landing-finance-game/student-portrait-concept.png) |
-| Студент | [Источник](assets/Characters/landing-v3/student-introduce.webp) | Игра · широкий веб-вид | Согласованный вариант | [Потребитель](../../web/src/assets/menu/student-campus.png) | — |
-| Студент | [Источник](assets/Characters/landing-v3/student-introduce.webp) | Лендинг | Согласованный вариант | [Потребитель](../../landing/site/assets/student-board.png) | — |
 | Завершить ход | [Источник](runtime/styles/mqx/layout.css) | Игра · компактный вид | Общий | [Потребитель](../../web/src/components/mqx/layout/MqxDashboardHero.jsx) | — |
 | Завершить ход | [Источник](runtime/styles/mqx/layout.css) | Игра · широкий веб-вид | Общий | [Потребитель](../../web/src/components/mqx/layout/MqxWideDashboard.jsx) | — |
 <!-- design-canon:end -->
@@ -33,7 +30,20 @@
 |---|---|---|
 | Помощь Монетки | Вариант Б: Монетка в верхнем блоке, контекстная помощь по нажатию, без разделяющей строки и сдвига при получении зарплаты. Эмоции соответствуют зарплате, событиям, готовности завершить ход и финансовому риску. | Подсказка открывается в диалоге из верхнего блока. Используется утверждённый объёмный аватар. Набор эмоций ещё предстоит восстановить. |
 | Старт | Гостевой старт А «Твои решения. Твой финансовый опыт». Короткое обучение первого хода и добровольное закрепление партии за аккаунтом после первого итога. | Гостевой старт подключён в оформлении B. Игрок может продолжить существующую гостевую партию и закрепить её за аккаунтом. |
-| Иллюстрации ролей | Утверждённые портреты v3 с лендинга | В игре подключены обычные портреты всех четырёх ролей. Победные иллюстрации с кубком используют прежний набор. |
+| Иллюстрации ролей | Для медиа ориентир — четыре портрета из утверждённого старта B. | Старт B использует PNG. Игровые компоненты на базе `personaPortraits.js` используют WebP из набора v3 с лендинга. Победные иллюстрации с кубком хранятся отдельно. |
+
+### Портреты ролей для медиа
+
+Исходники портретов [утверждённого старта B](../../design-lab/start-flow-concept-round/APPROVED.md) перечислены ниже. Имена файлов и каталог `candidates` сохранены для действующих экспортов. Утверждение относится к стартовому экрану в сборе. Отдельного решения о замене портретов на остальных экранах в записи об утверждении нет.
+
+| Роль | Исходник портрета старта B |
+|---|---|
+| Студент | [student-portrait-concept.png](assets/Characters/candidates/student-portrait-concept.png) |
+| Специалист (Профессионал в наборе v3) | [professional-portrait-concept-v3.png](assets/Characters/candidates/professional-portrait-concept-v3.png) |
+| Руководитель | [manager-portrait-concept.png](assets/Characters/candidates/manager-portrait-concept.png) |
+| Предприниматель | [entrepreneur-portrait-concept-v3.png](assets/Characters/candidates/entrepreneur-portrait-concept-v3.png) |
+
+На приветственном экране используется отдельная [групповая иллюстрация](assets/Start/welcome-heroes.png). Индивидуальные PNG показываются при выборе роли, знакомстве с напарником и в списке сохранений стартового потока.
 
 Для широкой веб-Главной ориентиром служит исходное MQX-превью из таблицы: верхняя навигация, две колонки и завершение хода с прогнозом над потребностями. Статус в таблице относится к реализации в этой рабочей копии.
 
@@ -41,7 +51,7 @@
 
 Pocket Board и InkEdge описывают существующие реализации и предыдущие итерации. В витринах показываем игровые снимки или действующие компоненты с указанием источника.
 
-Редактируемый runtime CSS находится в `game/design/system/runtime/`. Пути `game/web/src/index.css` и `game/web/src/styles/` — его проверяемые экспорты. Иллюстрации ролей v3 находятся в `assets/Characters/landing-v3/`, объёмная Монетка и аватар — в `assets/Monetka/`.
+Редактируемый runtime CSS находится в `game/design/system/runtime/`. Пути `game/web/src/index.css` и `game/web/src/styles/` — его проверяемые экспорты. Совместимые игровые экспорты портретов v3 идут из [архива](../archive/landing-v3-portraits/README.md), объёмная Монетка и аватар — в `assets/Monetka/`.
 
 ## Цепочка источников
 
