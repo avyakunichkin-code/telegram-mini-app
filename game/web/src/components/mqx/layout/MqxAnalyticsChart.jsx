@@ -4,13 +4,14 @@ const compact = new Intl.NumberFormat('ru-RU', { notation: 'compact', maximumFra
 const compactRubles = (value) => `${compact.format(value)} ₽`;
 const calloutAmount = (value) => Math.abs(value) >= 100_000_000 ? compactRubles(value) : rubles(value);
 
-export function MqxAnalyticsChart({ turn, total, delta, history }) {
+export function MqxAnalyticsChart({ turn, total, delta, history, horizon = 3, labLayout }) {
   const closed = history.filter((point) => !point.is_projection && point.period_index < turn).slice(-3);
   const past = closed.length;
-  const turns = [...closed.map((point) => point.period_index), turn, turn + 1, turn + 2, turn + 3];
+  const forecastOffsets = [horizon / 3, 2 * horizon / 3, horizon];
+  const turns = [...closed.map((point) => point.period_index), turn, ...forecastOffsets.map((offset) => turn + offset)];
   const values = [
     ...closed.map((point) => Number(point.cash_balance) + Number(point.safety_fund_balance)),
-    total, total + delta, total + 2 * delta, total + 3 * delta,
+    total, ...forecastOffsets.map((offset) => total + offset * delta),
   ];
   const min = Math.min(...values);
   const max = Math.max(...values);
@@ -21,7 +22,13 @@ export function MqxAnalyticsChart({ turn, total, delta, history }) {
   const top = Math.max(bottom + step, Math.ceil(max / step) * step);
   const ticks = Array.from({ length: (top - bottom) / step + 1 }, (_, index) => top - index * step);
   const y = (value) => 164 - (value - bottom) / (top - bottom) * 136;
-  const points = values.map((value, index) => [76 + index * 278 / (values.length - 1), y(value)]);
+  const firstTurn = turns[0];
+  const points = values.map((value, index) => {
+    const progress = horizon === 3
+      ? index / (values.length - 1)
+      : (turns[index] - firstTurn) / (turns.at(-1) - firstTurn);
+    return [76 + progress * 278, y(value)];
+  });
   const actual = points.slice(0, past + 1);
   const forecast = points.slice(past);
   const last = points.length - 1;
@@ -56,20 +63,23 @@ export function MqxAnalyticsChart({ turn, total, delta, history }) {
       {series(actual, false)}
       {series(forecast, true)}
       <path className="analytics-axis" d="M67 28 V164 H368" />
+      {labLayout && <line className="analytics-now-marker" x1={points[past][0]} x2={points[past][0]} y1={points[past][1]} y2="164" />}
       {points.map(([x, pointY], index) => <g key={index}>
         <line className="analytics-axis" x1={x} x2={x} y1="164" y2="169" />
         <circle className={index > past ? 'analytics-projection' : 'analytics-history'} cx={x} cy={pointY} r="4.3">
           <title>{rubles(values[index])}</title>
         </circle>
-        <text textAnchor="middle" x={x} y="183">Ход {String(turns[index]).padStart(2, '0')}</text>
+        {(labLayout ? index === 0 || index === past || index === last : horizon === 3 || index === 0 || index >= past) && (
+          <text textAnchor="middle" x={x} y="183">Ход {String(turns[index]).padStart(2, '0')}</text>
+        )}
       </g>)}
-      {past > 1 && callout(0, calloutAmount(values[0]), 'start', 53)}
-      {callout(past, calloutAmount(total), 'current', 43)}
-      {callout(last, `≈${calloutAmount(values[last])}`, 'forecast', 34)}
+      {!labLayout && past > 1 && callout(0, calloutAmount(values[0]), 'start', 53)}
+      {callout(past, labLayout ? 'Сейчас' : calloutAmount(total), 'current', 43)}
+      {!labLayout && callout(last, `≈${calloutAmount(values[last])}`, 'forecast', 34)}
     </svg>
     <figcaption>
       <span className="analytics-history">Факт</span>
-      <span className="analytics-projection">Если доходы и расходы сохранятся</span>
+      <span className="analytics-projection">{labLayout ? 'Прогноз' : 'Если доходы и расходы сохранятся'}</span>
     </figcaption>
   </figure>;
 }

@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { API, ApiError, formatApiErrorDetail } from '../api';
-import { MqxAnalyticsPage } from './mqx/layout/MqxAnalyticsPage';
+import { AnalyticsForecastControls, MqxAnalyticsPage } from './mqx/layout/MqxAnalyticsPage';
 
 function useAnalyticsTimeseries(overview) {
   const [state, setState] = useState({ ts: null, error: null });
@@ -28,10 +28,14 @@ function useAnalyticsTimeseries(overview) {
 }
 
 export function AnalyticsPremium({ overview }) {
+  const [horizon, setHorizon] = useState(3);
   const { ts, error, retry } = useAnalyticsTimeseries(overview);
 
   return (
     <MqxAnalyticsPage
+      an1Layout
+      horizon={horizon}
+      forecastControls={<AnalyticsForecastControls horizon={horizon} onChange={setHorizon} />}
       cash={Number(overview.cash_balance) || 0}
       reserve={Number(overview.safety_fund_balance) || 0}
       income={Number(overview.total_monthly_income) || 0}

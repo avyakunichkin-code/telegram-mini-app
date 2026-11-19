@@ -43,6 +43,7 @@
       "preview": "design-lab/finance-game-round/analytics-preview.html",
       "approval": "design-lab/analytics/APPROVED.md",
       "source": "web/src/components/AnalyticsPremium.jsx",
+      "verification": "web/e2e/analytics.spec.js",
       "scope": "game-compact",
       "revision": 1
     },
