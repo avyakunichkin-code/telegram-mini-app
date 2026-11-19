@@ -12,7 +12,7 @@ from fastapi import HTTPException
 from fincore.invest import InvestProduct, UnknownInvestProduct, find_invest_product
 
 INVEST_PRODUCTS: dict[str, InvestProduct] = {
-    "deposit": InvestProduct(kind="deposit", annual_rate_percent=14.0, default_title="Депозит"),
+    "deposit": InvestProduct(kind="deposit", annual_rate_percent=15.0, default_title="Депозит"),
     "bond": InvestProduct(kind="bond", annual_rate_percent=16.0, default_title="ОФЗ (условно)"),
 }
 

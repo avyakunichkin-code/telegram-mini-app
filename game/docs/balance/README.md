@@ -30,7 +30,7 @@ python scripts/balance_diff.py --current ../docs/balance/reports/current.json --
 
 | ID | Поведение |
 |----|-----------|
-| `tutorial` | зарплата → события (max affordable Δcash) → подушка 5k (1×) → депозит 10k @14% (1×) |
+| `tutorial` | зарплата → события (max affordable Δcash) → подушка 5k (1×) → депозит 10k по текущей серверной ставке (1×) |
 | `safety_first` | то же по событиям; переводы в подушку до `safety_fund_baseline_target`, оставляя на счёте месячные платежи и расходы |
 | `passive` | зарплата → события (min affordable Δcash); без проактивной подушки/инвеста |
 | `idle` | зарплата → события (самый дешёвый выбор); без подушки/инвеста — проверка давления потребностей |
